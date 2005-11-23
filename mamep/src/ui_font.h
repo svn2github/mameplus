@@ -1,8 +1,9 @@
 /*********************************************************************
 
-  ui_font.h
+    ui_font.c
 
-  日本語文字列を処理する補助マクロ及び関数を提供します。
+    Build font for MAME's user interface.
+    By NJ and the MAME Plus! Team
 
 *********************************************************************/
 
@@ -24,4 +25,5 @@ void convert_command_move(char *buf);
 
 
 extern pen_t uifont_colortable[MAX_COLORTABLE];
+
 #endif

@@ -1,10 +1,11 @@
-/*****************************************************************************
+/*********************************************************************
 
-  ui_font.c
+    ui_font.c
 
-  Original version by NJ (NMAME)
+    Build font for MAME's user interface.
+    By NJ and the MAME Plus! Team
 
-*****************************************************************************/
+*********************************************************************/
 
 #include <windows.h>
 #include "driver.h"
@@ -15,19 +16,20 @@
 #define COLOR_BUTTONS	(90)
 #define MAX_GLYPH_FONT	(150)
 
-
 pen_t uifont_colortable[MAX_COLORTABLE];
 static gfx_element *uirotfont_sb;
 static gfx_element *uirotfont_db;
 static UINT16 _uifonttable[65536];
 static int need_font_warning;
 
-/****************************************************************************/
-
-/* in artwork.c */
+/* artwork */
 static int gamescale;
 
-/****************************************************************************/
+/*************************************
+ *
+ *  Font data
+ *
+ *************************************/
 
 INLINE void get_ext_font_info(UINT8 *gc1, UINT8 *gc2, UINT8 *gsz)
 {
@@ -125,7 +127,8 @@ static UINT16 uifont_buildtable(UINT16 code)
 		{
 			if (0x81 <= c1 && c1 <= 0x9f)
 				code = (c1 - 0x81) * 0xc0 + (c2 - 0x40);
-			else if (0xe0 <= c1 && c1 <= 0xfc)
+			else
+			if (0xe0 <= c1 && c1 <= 0xfc)
 				code = (c1 - 0xe0 + (0xa0 - 0x81)) * 0xc0 + (c2 - 0x40);
 		}
 		break;
@@ -135,7 +138,8 @@ static UINT16 uifont_buildtable(UINT16 code)
 		{
 			if( 0x40 <= c2 && c2 <= 0x7E )
 				code = (c1 - 0x81) * 0xBE + (c2 - 0x40);
-			else if( 0x80 <= c2 && c2 <= 0xFE )
+			else
+			if( 0x80 <= c2 && c2 <= 0xFE )
 				code = (c1 - 0x81) * 0xBE + (c2 - 0x80 + 0x3F);
 		}
 		break;
@@ -145,7 +149,8 @@ static UINT16 uifont_buildtable(UINT16 code)
 		{
 			if( 0x40 <= c2 && c2 <= 0x7E )
 				code = (c1 - 0xA1) * 0x9D + (c2 - 0x40);
-			else if( 0xA1 <= c2 && c2 <= 0xFE )
+			else
+			if( 0xA1 <= c2 && c2 <= 0xFE )
 				code = (c1 - 0xA1) * 0x9D + (c2 - 0xA1 + 0x3F);
 		}
 		break;
@@ -155,9 +160,11 @@ static UINT16 uifont_buildtable(UINT16 code)
 		{
 			if( 0x41 <= c2 && c2 <= 0x5A )
 				code = (c1 - 0x81) * 0xB2 + (c2 - 0x41);
-			else if( 0x61 <= c2 && c2 <= 0x7A )
+			else
+			if( 0x61 <= c2 && c2 <= 0x7A )
 				code = (c1 - 0x81) * 0xB2 + (c2 - 0x61 + 0x1A);
-			else if( 0x81 <= c2 && c2 <= 0xFE )
+			else
+			if( 0x81 <= c2 && c2 <= 0xFE )
 				code = (c1 - 0x81) * 0xB2 + (c2 - 0x81 + 0x1A + 0x1A);
 		}
 		break;
@@ -986,7 +993,7 @@ void uifont_drawchar(mame_bitmap *dest, UINT16 code, int color, int sx, int sy, 
 	if (color)
 		uifont_colortable[FONT_COLOR_NORMAL] = get_white_pen();
 	else
-		uifont_colortable[FONT_COLOR_NORMAL] = get_black_pen()
+		uifont_colortable[FONT_COLOR_NORMAL] = get_black_pen();
 #endif /* UI_COLOR_DISPLAY */
 
 	if (code > 0x00ff && uirotfont_db != NULL)

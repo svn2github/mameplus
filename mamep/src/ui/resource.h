@@ -357,11 +357,10 @@
 #define IDC_EFFECTOVERRIDES             1301
 #define IDC_CONFIRM_QUIT                1302
 
-//#if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-//ks hcmame s switch m68k core
-#define IDC_M68K_CORE                   1303
-#define IDC_M68K_CORETEXT               1304
-//#endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
+#if 1
+#define IDC_M68K_CORE                   1303 // ks hcmame s switch m68k core
+#define IDC_M68K_CORETEXT               1304 // ks hcmame s switch m68k core
+#endif
 
 #ifdef USE_VOLUME_AUTO_ADJUST
 #define IDC_VOLUME_ADJUST               1305
