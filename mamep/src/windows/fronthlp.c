@@ -742,7 +742,7 @@ int frontend_help (const char *gamename)
 			}
 			else if (res == MISSING_OPTIONAL)
 			{
-				printf ("is missing optional files\n");
+				printf (_WINDOWS("is missing optional files\n"));
 				correct++;
 			}
 			if (res)
