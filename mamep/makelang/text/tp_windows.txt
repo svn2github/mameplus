@@ -62,7 +62,7 @@
  - digital
 
 
-# windows/fronthlp.c: 762
+# windows/fronthlp.c: 767
 %d %s found, %d were OK.\n
 
 
@@ -130,7 +130,7 @@ Configuration options
 Couldn't find the documentation.
 
 
-# windows/fronthlp.c: 782
+# windows/fronthlp.c: 787
 ERROR     %s\n
 
 
@@ -374,7 +374,7 @@ Joystick %d axis %d is now %s\n
 Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 
 
-# windows/fronthlp.c: 783
+# windows/fronthlp.c: 788
 KNOWN     %s\n
 
 
@@ -502,7 +502,7 @@ OSD bar color (medium)
 Out of memory!\n
 
 
-# windows/fronthlp.c: 785
+# windows/fronthlp.c: 790
 PARTKNOWN %s\n
 
 
@@ -598,7 +598,7 @@ Texture
 Toggle fullscreen
 
 
-# windows/fronthlp.c: 784
+# windows/fronthlp.c: 789
 UNKNOWN   %s\n
 
 
@@ -734,11 +734,11 @@ Windows sound options
 Windows video options
 
 
-# windows/fronthlp.c: 755
+# windows/fronthlp.c: 760
 \"%8s\" not found!\n
 
 
-# windows/fronthlp.c: 757
+# windows/fronthlp.c: 762
 \"%8s\" not supported!\n
 
 
@@ -1254,6 +1254,10 @@ is best available\n
 is good\n
 
 
+# windows/fronthlp.c: 745
+is missing optional files\n
+
+
 # windows/input.c: 222, 812, 1195
 lightgun
 
@@ -1346,7 +1350,7 @@ report romsets that have problems
 report samplesets that have problems
 
 
-# windows/fronthlp.c: 753
+# windows/fronthlp.c: 758
 romset
 
 
@@ -1354,7 +1358,7 @@ romset
 romset %s 
 
 
-# windows/fronthlp.c: 763
+# windows/fronthlp.c: 768
 romsets
 
 
@@ -1374,7 +1378,7 @@ run in a window/run on full screen
 running %s (%s) [press return]
 
 
-# windows/fronthlp.c: 753
+# windows/fronthlp.c: 758
 sampleset
 
 
@@ -1382,7 +1386,7 @@ sampleset
 sampleset %s 
 
 
-# windows/fronthlp.c: 763
+# windows/fronthlp.c: 768
 samplesets
 
 

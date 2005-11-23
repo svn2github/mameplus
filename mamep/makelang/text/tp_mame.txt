@@ -754,7 +754,7 @@ Cabinet Type
 Calibrate Joysticks
 
 
-# drivers/getrivia.c: 264 drivers/segac2.c: 2794 
+# drivers/getrivia.c: 264 drivers/segac2.c: 1339 
 Cancel
 
 
@@ -762,7 +762,7 @@ Cancel
 Card Number:
 
 
-# drivers/namcos22.c: 4100, 4174 ui_text.c: 230
+# drivers/namcos22.c: 4064, 4138 ui_text.c: 230
 Center
 
 
@@ -782,7 +782,7 @@ Cheats
 Chi
 
 
-# drivers/afega.c: 546 drivers/fuukifg2.c: 222, 306 drivers/nmk16.c: 2508 drivers/pgm.c: 566, 651, 843 drivers/ssv.c: 2951 drivers/toaplan2.c: 3211, 3320, 3465
+# drivers/afega.c: 541 drivers/fuukifg2.c: 222, 306 drivers/nmk16.c: 2508 drivers/pgm.c: 566, 660, 852 drivers/ssv.c: 2951 drivers/toaplan2.c: 3211, 3320, 3465
 China
 
 
@@ -854,7 +854,7 @@ Coin Chutes
 Coin Chutes?
 
 
-# drivers/airbustr.c: 457 drivers/asteroid.c: 399 drivers/bloodbro.c: 164, 254, 345 drivers/cabal.c: 348 drivers/exidy.c: 369 drivers/galpanic.c: 450, 561, 630 drivers/holeland.c: 122, 189 drivers/m62.c: 628, 681, 731, 783, 835, 887, 939, 989, 1039, 1090, 1141, 1191 drivers/m72.c: 958, 1030, 1101, 1171, 1241, 1308, 1378, 1445, 1513, 1586, 1668, 1756, 1838, 1923 drivers/m90.c: 222, 267, 316, 361, 409, 457, 523, 595, 640 drivers/m92.h: 77, 93, 109, 125 drivers/mcatadv.c: 342 drivers/midzeus.c: 1229 drivers/mpatrol.c: 154 drivers/playch10.c: 635 drivers/playmark.c: 423, 574, 674 drivers/raiden.c: 159 drivers/rallyx.c: 638 drivers/shisen.c: 159 drivers/sshangha.c: 246 drivers/system18.c: 1326 drivers/tagteam.c: 229 drivers/taito_l.c: 1924 drivers/travrusa.c: 158, 188 drivers/troangel.c: 109 drivers/vigilant.c: 269, 359 drivers/welltris.c: 566 drivers/wilytowr.c: 406 drivers/yard.c: 134
+# drivers/airbustr.c: 457 drivers/asteroid.c: 399 drivers/bloodbro.c: 164, 254, 345 drivers/cabal.c: 348 drivers/exidy.c: 369 drivers/galpanic.c: 450, 561, 630 drivers/holeland.c: 122, 189 drivers/m62.c: 628, 681, 731, 783, 835, 887, 939, 989, 1039, 1090, 1141, 1191 drivers/m72.c: 957, 1029, 1100, 1170, 1240, 1307, 1377, 1444, 1512, 1585, 1667, 1755, 1837, 1922 drivers/m90.c: 222, 267, 316, 361, 409, 457, 523, 595, 640 drivers/m92.h: 77, 93, 109, 125 drivers/mcatadv.c: 342 drivers/midzeus.c: 1229 drivers/mpatrol.c: 154 drivers/playch10.c: 635 drivers/playmark.c: 423, 574, 674 drivers/raiden.c: 159 drivers/rallyx.c: 638 drivers/shisen.c: 159 drivers/sshangha.c: 246 drivers/system18.c: 1326 drivers/tagteam.c: 229 drivers/taito_l.c: 1924 drivers/travrusa.c: 158, 188 drivers/troangel.c: 109 drivers/vigilant.c: 269, 359 drivers/welltris.c: 566 drivers/wilytowr.c: 406 drivers/yard.c: 134
 Coin Mode
 
 
@@ -886,7 +886,7 @@ Command List not available
 Comment
 
 
-# drivers/alpha68k.c: 1645 drivers/armedf.c: 557 drivers/bbusters.c: 457, 528 drivers/boogwing.c: 180 drivers/deco32.c: 1090 drivers/gaelco2.c: 714, 1157 drivers/gijoe.c: 307 drivers/itech8.c: 1599 drivers/konamigq.c: 525 drivers/konamigx.c: 1730 drivers/lethal.c: 544 drivers/m92.h: 77, 93, 109, 125 drivers/marinedt.c: 317 drivers/mcr68.c: 740 drivers/moo.c: 514, 583 drivers/mystwarr.c: 1082, 1150, 1223 drivers/segac2.c: 2488 drivers/segas18.c: 916, 972, 1028, 1077, 1143, 1160, 1204 drivers/snk.c: 2734, 2790, 2847, 2904 drivers/sslam.c: 463 drivers/suprslam.c: 232 drivers/system18.c: 1327 drivers/system24.c: 1258, 1334, 1405, 1475, 1535
+# drivers/alpha68k.c: 1645 drivers/armedf.c: 557 drivers/bbusters.c: 457, 528 drivers/boogwing.c: 180 drivers/deco32.c: 1090 drivers/gaelco2.c: 714, 1157 drivers/gijoe.c: 307 drivers/itech8.c: 1599 drivers/konamigq.c: 525 drivers/konamigx.c: 1730 drivers/lethal.c: 544 drivers/m92.h: 77, 93, 109, 125 drivers/marinedt.c: 317 drivers/mcr68.c: 740 drivers/moo.c: 514, 583 drivers/mystwarr.c: 1082, 1150, 1223 drivers/segac2.c: 1205 drivers/segas18.c: 916, 972, 1028, 1077, 1143, 1160, 1204 drivers/snk.c: 2734, 2790, 2847, 2904 drivers/sslam.c: 463 drivers/suprslam.c: 232 drivers/system18.c: 1327 drivers/system24.c: 1258, 1334, 1405, 1475, 1535
 Common
 
 
@@ -950,7 +950,7 @@ Could not load controller file %s.cfg\n
 Could not read MAME save file header
 
 
-# drivers/aerofgt.c: 1024, 1111 drivers/bbusters.c: 581 drivers/bwing.c: 297 drivers/cischeat.c: 1086, 1142 drivers/crshrace.c: 382, 538 drivers/ddenlovr.c: 4317 drivers/f1gp.c: 307, 412 drivers/fuukifg2.c: 221, 305 drivers/kaneko16.c: 1208, 1304 drivers/midtunit.c: 347, 450, 553 drivers/midwunit.c: 324, 503 drivers/midxunit.c: 112 drivers/midyunit.c: 239, 702 drivers/psikyo.c: 623, 743, 981, 1185, 1283, 1472 drivers/seta.c: 3458, 3783, 3890, 4104, 4273 drivers/ssv.c: 2950 drivers/st0016.c: 527 drivers/stv.c: 3916 drivers/suprslam.c: 274 drivers/tail2nos.c: 208 drivers/taotaido.c: 306
+# drivers/aerofgt.c: 1024, 1111 drivers/bbusters.c: 581 drivers/bwing.c: 297 drivers/cischeat.c: 1086, 1142 drivers/crshrace.c: 382, 538 drivers/ddenlovr.c: 4317 drivers/f1gp.c: 307, 412 drivers/fuukifg2.c: 221, 305 drivers/kaneko16.c: 1208, 1304 drivers/midtunit.c: 347, 450, 553 drivers/midwunit.c: 324, 503 drivers/midxunit.c: 112 drivers/midyunit.c: 239, 702 drivers/psikyo.c: 623, 743, 981, 1185, 1283, 1472 drivers/seta.c: 3458, 3783, 3890, 4104, 4273 drivers/ssv.c: 2950 drivers/st0016.c: 527 drivers/stv.c: 3917 drivers/suprslam.c: 274 drivers/tail2nos.c: 208 drivers/taotaido.c: 306
 Country
 
 
@@ -1254,7 +1254,7 @@ Europe
 Expert
 
 
-# cheat.c: 6555 debug/mamedbg.c: 787 drivers/4enraya.c: 120 drivers/8080bw.c: 698, 790 drivers/alpha68k.c: 1579, 1633 drivers/amidar.c: 186 drivers/angelkds.c: 481 drivers/bestleag.c: 279 drivers/bigstrkb.c: 160 drivers/brkthru.c: 234, 237, 279, 282 drivers/cninja.c: 728 drivers/cps1.c: 1072, 1342 drivers/darius.c: 680, 718, 756 drivers/ddragon3.c: 426 drivers/deniam.c: 278 drivers/epos.c: 152, 155, 161 drivers/fuukifg3.c: 355 drivers/gameplan.c: 400, 851 drivers/karnov.c: 462 drivers/m62.c: 612, 663, 714, 764, 816, 868, 922, 1022, 1073 drivers/mcr.c: 1010 drivers/metro.c: 3083 drivers/ninjaw.c: 543 drivers/nmg5.c: 226 drivers/nmk16.c: 2580 drivers/phoenix.c: 345 drivers/quizdna.c: 154, 242, 344 drivers/rohga.c: 444, 512 drivers/safarir.c: 189 drivers/segas16a.c: 1272 drivers/segas16b.c: 2503 drivers/sidepckt.c: 232 drivers/slapfght.c: 519 drivers/ssv.c: 2573 drivers/suprridr.c: 252 drivers/system1.c: 928, 1764 drivers/system16.c: 1796 drivers/taito_f2.c: 3929, 3981 drivers/taito_l.c: 1805, 1958 drivers/taito_z.c: 2364, 2433 drivers/tecmo16.c: 208 drivers/thepit.c: 218, 273, 314 drivers/trackfld.c: 540, 551 drivers/vigilant.c: 241 drivers/vsnes.c: 1042, 1444, 1668, 1726, 1752 drivers/wallc.c: 188 drivers/warriorb.c: 345 drivers/wc90.c: 251 drivers/wc90b.c: 268 drivers/xain.c: 400 drivers/yamato.c: 252 drivers/zac2650.c: 84, 134 drivers/zerozone.c: 149 ui_text.c: 205
+# cheat.c: 6555 debug/mamedbg.c: 787 drivers/4enraya.c: 120 drivers/8080bw.c: 698, 790 drivers/alpha68k.c: 1579, 1633 drivers/amidar.c: 186 drivers/angelkds.c: 481 drivers/bestleag.c: 279 drivers/bigstrkb.c: 160 drivers/brkthru.c: 234, 237, 279, 282 drivers/cninja.c: 728 drivers/cps1.c: 1072, 1342 drivers/darius.c: 680, 718, 756 drivers/ddragon3.c: 426 drivers/deniam.c: 278 drivers/epos.c: 152, 155, 161 drivers/fuukifg3.c: 355 drivers/gameplan.c: 400, 851 drivers/karnov.c: 462 drivers/m62.c: 612, 663, 714, 764, 816, 868, 922, 1022, 1073 drivers/mcr.c: 1010 drivers/megaplay.c: 225 drivers/metro.c: 3083 drivers/ninjaw.c: 543 drivers/nmg5.c: 226 drivers/nmk16.c: 2580 drivers/phoenix.c: 345 drivers/quizdna.c: 154, 242, 344 drivers/rohga.c: 444, 512 drivers/safarir.c: 189 drivers/segas16a.c: 1272 drivers/segas16b.c: 2503 drivers/sidepckt.c: 232 drivers/slapfght.c: 519 drivers/ssv.c: 2573 drivers/suprridr.c: 252 drivers/system1.c: 928, 1764 drivers/system16.c: 1796 drivers/taito_f2.c: 3929, 3981 drivers/taito_l.c: 1805, 1958 drivers/taito_z.c: 2364, 2433 drivers/tecmo16.c: 208 drivers/thepit.c: 218, 273, 314 drivers/trackfld.c: 540, 551 drivers/vigilant.c: 241 drivers/vsnes.c: 1042, 1444, 1668, 1726, 1752 drivers/wallc.c: 188 drivers/warriorb.c: 345 drivers/wc90.c: 251 drivers/wc90b.c: 268 drivers/xain.c: 400 drivers/yamato.c: 252 drivers/zac2650.c: 84, 134 drivers/zerozone.c: 149 ui_text.c: 205
 Fast
 
 
@@ -1290,7 +1290,7 @@ Frameskip Dec
 Frameskip Inc
 
 
-# drivers/lockon.c: 258 drivers/lvpoker.c: 308 drivers/pgm.c: 545, 633, 724 drivers/segas16a.c: 1224 drivers/segas16b.c: 2455 drivers/taito_z.c: 1961, 2032 drivers/turbo.c: 409
+# drivers/lockon.c: 258 drivers/lvpoker.c: 308 drivers/pgm.c: 545, 642, 733 drivers/segas16a.c: 1224 drivers/segas16b.c: 2455 drivers/taito_z.c: 1961, 2032 drivers/turbo.c: 409
 Free
 
 
@@ -1298,7 +1298,7 @@ Free
 Free Play
 
 
-# drivers/1942.c: 204 drivers/1943.c: 148 drivers/40love.c: 1079 drivers/aerofgt.c: 743 drivers/airbustr.c: 486 drivers/alpha68k.c: 1173, 1499, 1552, 1604, 1659, 1685, 1785 drivers/atetris.c: 228, 254 drivers/baraduke.c: 257, 330 drivers/battlex.c: 116 drivers/bbusters.c: 470, 557 drivers/bionicc.c: 227 drivers/blktiger.c: 214 drivers/bwing.c: 294 drivers/compgolf.c: 136 drivers/cps1.c: 494, 663, 744, 837, 921, 1000, 1187, 1277, 1358, 1450, 1554, 1649, 1739, 1821, 1904, 1998, 2060, 2185, 2288, 2396, 2515, 2625, 2718, 2811, 2865, 2918, 2970, 3024, 3067, 3168, 3268, 3369, 3462, 3516 drivers/dec8.c: 1243, 1674 drivers/docastle.c: 360 drivers/exedexes.c: 138 drivers/flstory.c: 525 drivers/funkybee.c: 114, 164, 214 drivers/funkyjet.c: 175, 243 drivers/galaga.c: 1007, 1083, 1154, 1228, 1342, 1581, 1640 drivers/gunsmoke.c: 192 drivers/hal21.c: 423 drivers/higemaru.c: 81 drivers/ikki.c: 120 drivers/jcross.c: 219 drivers/karnov.c: 594 drivers/kingobox.c: 290, 376 drivers/kyugo.c: 226, 257, 294, 325, 355, 385, 415 drivers/ladybug.c: 165, 438 drivers/legionna.c: 829, 917 drivers/lsasquad.c: 195 drivers/mainsnk.c: 159 drivers/mappy.c: 1041, 1174, 1305, 1366, 1434 drivers/markham.c: 152 drivers/marvins.c: 312, 401, 492 drivers/midtunit.c: 339 drivers/midvunit.c: 580 drivers/mitchell.c: 609 drivers/ms32.c: 776, 846, 913 drivers/mugsmash.c: 297, 379 drivers/munchmo.c: 201 drivers/mwarr.c: 209 drivers/namcond1.c: 111 drivers/namcos1.c: 603, 643, 665, 702, 764, 786, 800, 873, 883, 905, 915 drivers/namcos12.c: 1171, 1221 drivers/namcos86.c: 571, 661, 731, 809, 888, 967 drivers/neogeo.c: 1115, 1212 drivers/nycaptor.c: 722 drivers/ohmygod.c: 322 drivers/onetwo.c: 143 drivers/pacland.c: 334 drivers/pandoras.c: 288 drivers/prehisle.c: 157 drivers/rollrace.c: 152 drivers/rungun.c: 386 drivers/sauro.c: 248 drivers/scobra.c: 643 drivers/seta2.c: 554 drivers/sf.c: 339, 517, 655 drivers/sgladiat.c: 326 drivers/shootout.c: 174 drivers/sidearms.c: 249 drivers/skykid.c: 170, 249 drivers/snk.c: 2752, 2808, 2865, 2922, 2979, 3050, 3137, 3191, 3249, 3277, 3337, 3408, 3464, 3541, 3606, 3711, 3835, 3976 drivers/snk68.c: 260, 407, 444, 595 drivers/sonson.c: 196 drivers/ssrj.c: 134 drivers/starwars.c: 277, 354 drivers/statriv2.c: 438 drivers/strnskil.c: 178, 266 drivers/superqix.c: 537, 677 drivers/suprnova.c: 558, 633 drivers/tceptor.c: 368, 424 drivers/tmnt.c: 1862, 1948, 2148 drivers/toypop.c: 402, 487 drivers/tsamurai.c: 471, 664 drivers/tumbleb.c: 654 drivers/vastar.c: 234 drivers/zaccaria.c: 408, 517 drivers/zn.c: 3104 drivers/zodiack.c: 221
+# drivers/1942.c: 204 drivers/1943.c: 148 drivers/40love.c: 1079 drivers/aerofgt.c: 743 drivers/airbustr.c: 486 drivers/alpha68k.c: 1173, 1499, 1552, 1604, 1659, 1685, 1785 drivers/atetris.c: 228, 254 drivers/baraduke.c: 257, 330 drivers/battlex.c: 116 drivers/bbusters.c: 470, 557 drivers/bionicc.c: 227 drivers/blktiger.c: 214 drivers/bwing.c: 294 drivers/compgolf.c: 136 drivers/cps1.c: 494, 663, 744, 837, 921, 1000, 1187, 1277, 1358, 1450, 1554, 1649, 1739, 1821, 1904, 1998, 2060, 2185, 2288, 2396, 2515, 2625, 2718, 2811, 2865, 2918, 2970, 3024, 3067, 3168, 3268, 3369, 3462, 3516 drivers/dec8.c: 1243, 1674 drivers/docastle.c: 360 drivers/exedexes.c: 138 drivers/fcrash.c: 260 drivers/flstory.c: 525 drivers/funkybee.c: 114, 164, 214 drivers/funkyjet.c: 175, 243 drivers/galaga.c: 1007, 1083, 1154, 1228, 1342, 1581, 1640 drivers/gunsmoke.c: 192 drivers/hal21.c: 423 drivers/higemaru.c: 81 drivers/ikki.c: 120 drivers/jcross.c: 219 drivers/karnov.c: 594 drivers/kingobox.c: 290, 376 drivers/kyugo.c: 226, 257, 294, 325, 355, 385, 415 drivers/ladybug.c: 165, 438 drivers/legionna.c: 829, 917 drivers/lsasquad.c: 195 drivers/mainsnk.c: 159 drivers/mappy.c: 1041, 1174, 1305, 1366, 1434 drivers/markham.c: 152 drivers/marvins.c: 312, 401, 492 drivers/midtunit.c: 339 drivers/midvunit.c: 580 drivers/mitchell.c: 609 drivers/ms32.c: 776, 846, 913 drivers/mugsmash.c: 297, 379 drivers/munchmo.c: 201 drivers/mwarr.c: 209 drivers/namcond1.c: 111 drivers/namcos1.c: 603, 643, 665, 702, 764, 786, 800, 873, 883, 905, 915 drivers/namcos12.c: 1171, 1221 drivers/namcos86.c: 571, 661, 731, 809, 888, 967 drivers/neogeo.c: 1115, 1212 drivers/nycaptor.c: 722 drivers/ohmygod.c: 322 drivers/onetwo.c: 143 drivers/pacland.c: 334 drivers/pandoras.c: 288 drivers/prehisle.c: 157 drivers/rollrace.c: 152 drivers/rungun.c: 386 drivers/sauro.c: 248 drivers/scobra.c: 643 drivers/seta2.c: 554 drivers/sf.c: 339, 517, 655 drivers/sgladiat.c: 326 drivers/shootout.c: 174 drivers/sidearms.c: 249 drivers/skykid.c: 170, 249 drivers/snk.c: 2752, 2808, 2865, 2922, 2979, 3050, 3137, 3191, 3249, 3277, 3337, 3408, 3464, 3541, 3606, 3711, 3835, 3976 drivers/snk68.c: 260, 407, 444, 595 drivers/sonson.c: 196 drivers/ssrj.c: 134 drivers/starwars.c: 277, 354 drivers/statriv2.c: 438 drivers/strnskil.c: 178, 266 drivers/superqix.c: 537, 677 drivers/suprnova.c: 558, 633 drivers/tceptor.c: 368, 424 drivers/tmnt.c: 1862, 1948, 2148 drivers/toypop.c: 402, 487 drivers/tsamurai.c: 471, 664 drivers/tumbleb.c: 654 drivers/vastar.c: 234 drivers/zaccaria.c: 408, 517 drivers/zn.c: 3104 drivers/zodiack.c: 221
 Freeze
 
 
@@ -1314,7 +1314,7 @@ Full
 GAME: 
 
 
-# drivers/bublbobl.c: 578 drivers/cps1.c: 607, 689, 770, 853, 937, 1022, 1115, 1200, 1290, 1371, 1567, 1662, 1752, 1834, 1917, 2011, 2107, 2198, 2301, 2409, 2528, 2638, 2731, 2824, 3181, 3281, 3382, 3475, 3629, 3742 drivers/dec0.c: 778 drivers/macs.c: 336 drivers/missile.c: 306 drivers/pacman.c: 1367 drivers/turbo.c: 417 
+# drivers/bublbobl.c: 578 drivers/cps1.c: 607, 689, 770, 853, 937, 1022, 1115, 1200, 1290, 1371, 1567, 1662, 1752, 1834, 1917, 2011, 2107, 2198, 2301, 2409, 2528, 2638, 2731, 2824, 3181, 3281, 3382, 3475, 3629, 3742 drivers/dec0.c: 778 drivers/fcrash.c: 273 drivers/macs.c: 336 drivers/missile.c: 306 drivers/pacman.c: 1367 drivers/turbo.c: 417 
 Game
 
 
@@ -1474,7 +1474,7 @@ Hold 5
 Home
 
 
-# drivers/aerofgt.c: 1115 drivers/cave.c: 1682 drivers/f1gp.c: 312 drivers/nmk16.c: 2507 drivers/pgm.c: 655, 847 drivers/psikyo.c: 627, 747, 985, 1189 drivers/toaplan1.c: 1188, 1256, 1345 drivers/toaplan2.c: 2357, 2546, 2607, 2842, 2960, 3075, 3152, 3213, 3322, 3646
+# drivers/aerofgt.c: 1115 drivers/cave.c: 1682 drivers/f1gp.c: 312 drivers/nmk16.c: 2507 drivers/pgm.c: 664, 856 drivers/psikyo.c: 627, 747, 985, 1189 drivers/toaplan1.c: 1188, 1256, 1345 drivers/toaplan2.c: 2357, 2546, 2607, 2842, 2960, 3075, 3152, 3213, 3322, 3646
 Hong Kong
 
 
@@ -1486,7 +1486,7 @@ Hopper Reset
 Horizontal
 
 
-# drivers/afega.c: 214, 377
+# drivers/afega.c: 214, 291, 372
 Horizontally
 
 
@@ -1522,7 +1522,7 @@ Ignore Decrement By
 Increased By Value
 
 
-# drivers/aerofgt.c: 731, 832, 910, 980, 1065 drivers/alpha68k.c: 1646 drivers/armedf.c: 558 drivers/bbusters.c: 458, 529 drivers/boogwing.c: 181 drivers/cinemat.c: 742 drivers/crshrace.c: 284, 462 drivers/deco32.c: 1091 drivers/itech8.c: 1600 drivers/marinedt.c: 318 drivers/mcr68.c: 739 drivers/segac2.c: 2489 drivers/segas18.c: 917, 973, 1029, 1078, 1144, 1161, 1205 drivers/sslam.c: 464 drivers/system18.c: 1328 drivers/system24.c: 1406 drivers/taotaido.c: 233
+# drivers/aerofgt.c: 731, 832, 910, 980, 1065 drivers/alpha68k.c: 1646 drivers/armedf.c: 558 drivers/bbusters.c: 458, 529 drivers/boogwing.c: 181 drivers/cinemat.c: 742 drivers/crshrace.c: 284, 462 drivers/deco32.c: 1091 drivers/itech8.c: 1600 drivers/marinedt.c: 318 drivers/mcr68.c: 739 drivers/segac2.c: 1206 drivers/segas18.c: 917, 973, 1029, 1078, 1144, 1161, 1205 drivers/sslam.c: 464 drivers/system18.c: 1328 drivers/system24.c: 1406 drivers/taotaido.c: 233
 Individual
 
 
@@ -1634,7 +1634,7 @@ Invincibility PL1
 Invincibility PL2
 
 
-# drivers/equites.c: 564 drivers/fantland.c: 381, 455, 570 drivers/m72.c: 971, 1043, 1114, 1184, 1320 drivers/namcos1.c: 699 drivers/namcos86.c: 806, 885 drivers/oneshot.c: 273 drivers/seicross.c: 389 drivers/snowbros.c: 458, 532 drivers/system1.c: 2167 drivers/toaplan1.c: 585, 654, 723, 792, 862, 945, 1029, 1106, 1174, 1242, 1331 drivers/toaplan2.c: 2391, 2461, 2532, 2595, 2638, 2684, 2743, 2825, 2901, 2948, 3013, 3061, 3138, 3197, 3254, 3305, 3365, 3692, 3808 drivers/yard.c: 146
+# drivers/equites.c: 564 drivers/fantland.c: 381, 455, 570 drivers/m72.c: 970, 1042, 1113, 1183, 1319 drivers/namcos1.c: 699 drivers/namcos86.c: 806, 885 drivers/oneshot.c: 273 drivers/seicross.c: 389 drivers/snowbros.c: 458, 532 drivers/system1.c: 2167 drivers/toaplan1.c: 585, 654, 723, 792, 862, 945, 1029, 1106, 1174, 1242, 1331 drivers/toaplan2.c: 2391, 2461, 2532, 2595, 2638, 2684, 2743, 2825, 2901, 2948, 3013, 3061, 3138, 3197, 3254, 3305, 3365, 3692, 3808 drivers/yard.c: 146
 Invulnerability
 
 
@@ -1666,7 +1666,7 @@ Kan
 Keyboard
 
 
-# drivers/aerofgt.c: 1114 drivers/cave.c: 1684 drivers/crshrace.c: 386, 542 drivers/f1gp.c: 311 drivers/fuukifg2.c: 224, 308 drivers/nmk16.c: 2505 drivers/pgm.c: 565, 654, 846 drivers/psikyo.c: 626, 746, 984, 1188 drivers/stv.c: 3921 drivers/taotaido.c: 311 drivers/toaplan1.c: 1189, 1257, 1346 drivers/toaplan2.c: 2359, 2403, 2545, 2610, 2840, 2959, 3074, 3151, 3212, 3321
+# drivers/aerofgt.c: 1114 drivers/cave.c: 1684 drivers/crshrace.c: 386, 542 drivers/f1gp.c: 311 drivers/fuukifg2.c: 224, 308 drivers/nmk16.c: 2505 drivers/pgm.c: 565, 663, 855 drivers/psikyo.c: 626, 746, 984, 1188 drivers/stv.c: 3922 drivers/taotaido.c: 311 drivers/toaplan1.c: 1189, 1257, 1346 drivers/toaplan2.c: 2359, 2403, 2545, 2610, 2840, 2959, 3074, 3151, 3212, 3321
 Korea
 
 
@@ -1854,7 +1854,7 @@ Master
 Matches found
 
 
-# drivers/bwing.c: 346 drivers/holeland.c: 144 drivers/travrusa.c: 91 ui_text.c: 180
+# drivers/bwing.c: 346 drivers/holeland.c: 144 drivers/megaplay.c: 226 drivers/travrusa.c: 91 ui_text.c: 180
 Max
 
 
@@ -3594,7 +3594,7 @@ Red
 Refresh rate
 
 
-# cheat.c: 2922, 3630 inptport.c: 380
+# cheat.c: 2922, 3630 drivers/pgm.c: 561, 572 inptport.c: 380
 Region
 
 
@@ -3730,7 +3730,7 @@ Search not initialized
 Second Bonus
 
 
-# cheat.c: 2861, 2935 drivers/bwidow.c: 629 drivers/maxaflex.c: 303 drivers/nbmj8688.c: 2758 drivers/segac2.c: 2942, 3053 drivers/trackfld.c: 617
+# cheat.c: 2861, 2935 drivers/bwidow.c: 629 drivers/maxaflex.c: 303 drivers/megaplay.c: 74 drivers/megatech.c: 95 drivers/nbmj8688.c: 2758 drivers/trackfld.c: 617
 Select
 
 
@@ -3774,7 +3774,7 @@ Select position to save to
 Sensitivity
 
 
-# drivers/djmain.c: 500 drivers/wallc.c: 190 inptport.c: 806
+# drivers/djmain.c: 500 drivers/pgm.c: 517 drivers/wallc.c: 190 inptport.c: 806
 Service
 
 
@@ -3858,7 +3858,7 @@ Size
 Skip Bytes
 
 
-# cheat.c: 6557 drivers/4enraya.c: 119 drivers/8080bw.c: 697, 789 drivers/amidar.c: 185 drivers/angelkds.c: 479 drivers/bestleag.c: 277 drivers/bigstrkb.c: 158 drivers/brkthru.c: 233, 236, 278, 281 drivers/btime.c: 804 drivers/cninja.c: 726 drivers/cps1.c: 1070, 1341 drivers/deniam.c: 276 drivers/epos.c: 151, 154, 160 drivers/fuukifg3.c: 353 drivers/gameplan.c: 399, 850 drivers/m62.c: 611, 661, 712, 763, 815, 867, 921, 1020, 1071 drivers/mcr.c: 1011 drivers/metro.c: 3081 drivers/nmg5.c: 227 drivers/nmk16.c: 2578 drivers/phoenix.c: 342 drivers/portrait.c: 202 drivers/quizdna.c: 152, 240, 342 drivers/rohga.c: 442, 510 drivers/safarir.c: 188 drivers/segas16a.c: 1271 drivers/segas16b.c: 2502 drivers/sf.c: 334, 512, 650 drivers/sidepckt.c: 230 drivers/solomon.c: 168 drivers/suprridr.c: 250 drivers/system1.c: 1763 drivers/system16.c: 1795 drivers/taito_z.c: 2362, 2431 drivers/tecmo16.c: 210 drivers/thepit.c: 217, 272, 313 drivers/trackfld.c: 550 drivers/vigilant.c: 240 drivers/vsnes.c: 1040, 1751 drivers/wallc.c: 186 drivers/wilytowr.c: 461 drivers/xain.c: 398 drivers/yamato.c: 251 drivers/zac2650.c: 83, 133 ui_text.c: 207
+# cheat.c: 6557 drivers/4enraya.c: 119 drivers/8080bw.c: 697, 789 drivers/amidar.c: 185 drivers/angelkds.c: 479 drivers/bestleag.c: 277 drivers/bigstrkb.c: 158 drivers/brkthru.c: 233, 236, 278, 281 drivers/btime.c: 804 drivers/cninja.c: 726 drivers/cps1.c: 1070, 1341 drivers/deniam.c: 276 drivers/epos.c: 151, 154, 160 drivers/fuukifg3.c: 353 drivers/gameplan.c: 399, 850 drivers/m62.c: 611, 661, 712, 763, 815, 867, 921, 1020, 1071 drivers/mcr.c: 1011 drivers/megaplay.c: 223 drivers/metro.c: 3081 drivers/nmg5.c: 227 drivers/nmk16.c: 2578 drivers/phoenix.c: 342 drivers/portrait.c: 202 drivers/quizdna.c: 152, 240, 342 drivers/rohga.c: 442, 510 drivers/safarir.c: 188 drivers/segas16a.c: 1271 drivers/segas16b.c: 2502 drivers/sf.c: 334, 512, 650 drivers/sidepckt.c: 230 drivers/solomon.c: 168 drivers/suprridr.c: 250 drivers/system1.c: 1763 drivers/system16.c: 1795 drivers/taito_z.c: 2362, 2431 drivers/tecmo16.c: 210 drivers/thepit.c: 217, 272, 313 drivers/trackfld.c: 550 drivers/vigilant.c: 240 drivers/vsnes.c: 1040, 1751 drivers/wallc.c: 186 drivers/wilytowr.c: 461 drivers/xain.c: 398 drivers/yamato.c: 251 drivers/zac2650.c: 83, 133 ui_text.c: 207
 Slow
 
 
@@ -3906,7 +3906,7 @@ Status (bits or flags)
 Stereo
 
 
-# drivers/bmcbowl.c: 372 drivers/holeland.c: 146, 214 drivers/pgm.c: 548, 636, 727 drivers/popper.c: 277 drivers/toaplan2.c: 2347 drivers/turbo.c: 412
+# drivers/bmcbowl.c: 372 drivers/holeland.c: 146, 214 drivers/pgm.c: 548, 645, 736 drivers/popper.c: 277 drivers/toaplan2.c: 2347 drivers/turbo.c: 412
 Stop
 
 
@@ -3934,7 +3934,7 @@ THIS GAME DOESN'T WORK PROPERLY
 THIS GAME DOESN'T WORK PROPERLY\n
 
 
-# drivers/aerofgt.c: 1026, 1116 drivers/cave.c: 1683 drivers/f1gp.c: 313 drivers/midzeus.c: 1219 drivers/pgm.c: 652, 844 drivers/psikyo.c: 628, 748, 986, 1190 drivers/toaplan1.c: 1190, 1258, 1347 drivers/toaplan2.c: 2358, 2405, 2475, 2547, 2608, 2651, 2697, 2844, 2961, 3076, 3153, 3214, 3323
+# drivers/aerofgt.c: 1026, 1116 drivers/cave.c: 1683 drivers/f1gp.c: 313 drivers/midzeus.c: 1219 drivers/pgm.c: 661, 853 drivers/psikyo.c: 628, 748, 986, 1190 drivers/toaplan1.c: 1190, 1258, 1347 drivers/toaplan2.c: 2358, 2405, 2475, 2547, 2608, 2651, 2697, 2844, 2961, 3076, 3153, 3214, 3323
 Taiwan
 
 
@@ -3950,7 +3950,7 @@ Territory
 Test
 
 
-# drivers/8080bw.c: 1309, 1955, 2506, 2586 drivers/btime.c: 784 drivers/ddenlovr.c: 3011 drivers/eolith.c: 139 drivers/ertictac.c: 226 drivers/galpani3.c: 146 drivers/halleys.c: 1702 drivers/homedata.c: 954 drivers/hornet.c: 771 drivers/jchan.c: 733 drivers/laserbas.c: 118 drivers/macs.c: 348 drivers/nwk-tr.c: 436 drivers/nycaptor.c: 613 drivers/ohmygod.c: 222 drivers/panicr.c: 210 drivers/quasar.c: 321 drivers/raiden2.c: 426, 502, 551 drivers/segas16a.c: 1462 drivers/segas16b.c: 2783 drivers/seicross.c: 226 drivers/snk.c: 3551, 3616 drivers/ssfindo.c: 443 drivers/st0016.c: 530 drivers/suprnova.c: 624 drivers/system1.c: 1838, 2027
+# drivers/8080bw.c: 1309, 1955, 2506, 2586 drivers/btime.c: 784 drivers/ddenlovr.c: 3011 drivers/eolith.c: 139 drivers/ertictac.c: 226 drivers/galpani3.c: 146 drivers/halleys.c: 1702 drivers/homedata.c: 954 drivers/hornet.c: 782 drivers/jchan.c: 733 drivers/laserbas.c: 118 drivers/macs.c: 348 drivers/nwk-tr.c: 436 drivers/nycaptor.c: 613 drivers/ohmygod.c: 222 drivers/panicr.c: 210 drivers/quasar.c: 321 drivers/raiden2.c: 426, 502, 551 drivers/segas16a.c: 1462 drivers/segas16b.c: 2783 drivers/seicross.c: 226 drivers/snk.c: 3551, 3616 drivers/ssfindo.c: 443 drivers/st0016.c: 530 drivers/suprnova.c: 624 drivers/system1.c: 1838, 2027
 Test Mode
 
 
@@ -4050,11 +4050,11 @@ Tickets dispensed
 Tilt
 
 
-# drivers/8080bw.c: 1310, 1366, 1389, 1449, 1499, 1913, 1951, 2204, 2260, 2483, 2572 drivers/amspdwy.c: 182 drivers/cinemat.c: 393, 552 drivers/cps1.c: 3588, 3701 drivers/drtomy.c: 211 drivers/fitfight.c: 315, 453, 595 drivers/gomoku.c: 117 drivers/homedata.c: 874, 951 drivers/lazercmd.c: 570 drivers/m107.c: 276 drivers/m92.c: 1000 drivers/megasys1.c: 1409, 2172 drivers/metlclsh.c: 226 drivers/metro.c: 2526, 2621 drivers/nbmj8688.c: 2166, 2240 drivers/pacman.c: 2134, 2235 drivers/paradise.c: 177, 245 drivers/pcktgal.c: 163 drivers/pktgaldx.c: 252 drivers/punchout.c: 506, 577 drivers/realbrk.c: 413 drivers/segac2.c: 3193 drivers/segaorun.c: 622, 654, 737 drivers/segas16b.c: 2110 drivers/segaxbd.c: 759, 863, 944 drivers/snowbros.c: 915 drivers/starfire.c: 219, 268 drivers/supbtime.c: 306 drivers/system1.c: 926, 1088, 1140 drivers/system16.c: 1034 drivers/taito_f2.c: 4168, 4265 drivers/taito_l.c: 1263, 1792, 1948, 1948 drivers/taitosj.c: 896, 981, 1423 drivers/troangel.c: 74 drivers/tubep.c: 706 drivers/tumbleb.c: 867 drivers/vicdual.c: 311 drivers/vsnes.c: 830, 1350 drivers/wwfsstar.c: 249 drivers/zac2650.c: 182
+# drivers/8080bw.c: 1310, 1366, 1389, 1449, 1499, 1913, 1951, 2204, 2260, 2483, 2572 drivers/amspdwy.c: 182 drivers/cinemat.c: 393, 552 drivers/cps1.c: 3588, 3701 drivers/drtomy.c: 211 drivers/fitfight.c: 315, 453, 595 drivers/gomoku.c: 117 drivers/homedata.c: 874, 951 drivers/lazercmd.c: 570 drivers/m107.c: 276 drivers/m92.c: 1000 drivers/megaplay.c: 245 drivers/megasys1.c: 1409, 2172 drivers/metlclsh.c: 226 drivers/metro.c: 2526, 2621 drivers/nbmj8688.c: 2166, 2240 drivers/pacman.c: 2134, 2235 drivers/paradise.c: 177, 245 drivers/pcktgal.c: 163 drivers/pktgaldx.c: 252 drivers/punchout.c: 506, 577 drivers/realbrk.c: 413 drivers/segaorun.c: 622, 654, 737 drivers/segas16b.c: 2110 drivers/segaxbd.c: 759, 863, 944 drivers/snowbros.c: 915 drivers/starfire.c: 219, 268 drivers/supbtime.c: 306 drivers/system1.c: 926, 1088, 1140 drivers/system16.c: 1034 drivers/taito_f2.c: 4168, 4265 drivers/taito_l.c: 1263, 1792, 1948, 1948 drivers/taitosj.c: 896, 981, 1423 drivers/troangel.c: 74 drivers/tubep.c: 706 drivers/tumbleb.c: 867 drivers/vicdual.c: 311 drivers/vsnes.c: 830, 1350 drivers/wwfsstar.c: 249 drivers/zac2650.c: 182
 Time
 
 
-# drivers/chinagat.c: 439 drivers/ddragon.c: 710 drivers/fuukifg3.c: 352 drivers/jollyjgr.c: 177 drivers/m62.c: 711, 762, 814, 866 drivers/quizdna.c: 151, 239, 341 drivers/segac2.c: 3172 drivers/segas16a.c: 968 drivers/segas16b.c: 1876 drivers/shisen.c: 140 drivers/system16.c: 646 drivers/taito_f2.c: 2174, 2226, 2278, 4079 drivers/toaplan2.c: 3749, 3864 drivers/vsnes.c: 1442, 1750
+# drivers/chinagat.c: 439 drivers/ddragon.c: 710 drivers/fuukifg3.c: 352 drivers/jollyjgr.c: 177 drivers/m62.c: 711, 762, 814, 866 drivers/megaplay.c: 193 drivers/quizdna.c: 151, 239, 341 drivers/segas16a.c: 968 drivers/segas16b.c: 1876 drivers/shisen.c: 140 drivers/system16.c: 646 drivers/taito_f2.c: 2174, 2226, 2278, 4079 drivers/toaplan2.c: 3749, 3864 drivers/vsnes.c: 1442, 1750
 Timer
 
 
@@ -4386,7 +4386,7 @@ Version
 Vertical
 
 
-# drivers/afega.c: 215, 378
+# drivers/afega.c: 215, 292, 373
 Vertically
 
 
@@ -4414,7 +4414,7 @@ Very Slow
 View Last Results
 
 
-# drivers/cps1.c: 3599 drivers/ms32.c: 761, 834, 899 drivers/pgm.c: 542, 630, 721 drivers/ssv.c: 1678, 1863 drivers/tetrisp2.c: 432, 494
+# drivers/cps1.c: 3599 drivers/ms32.c: 761, 834, 899 drivers/pgm.c: 542, 639, 730 drivers/ssv.c: 1678, 1863 drivers/tetrisp2.c: 432, 494
 Voice
 
 
@@ -4646,7 +4646,7 @@ disabled
 enabled
 
 
-# ui_font.c: 78
+# ui_font.c: 80
 font\\fontname.fnt
 
 

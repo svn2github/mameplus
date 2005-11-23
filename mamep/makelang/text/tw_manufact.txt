@@ -322,7 +322,7 @@ Daiichi Denshi
 Daiki
 
 
-# Vamp 1/2 (Korea)
+# Vamp 1/2 (Korea version)
 Danbi & F2 System
 
 
@@ -1346,7 +1346,7 @@ Seibu Kaihatsu Inc.
 SemiCom
 
 
-# Cool Mini
+# Cool Minigame Collection
 Semicom
 
 
@@ -1406,7 +1406,7 @@ Sisteme
 Soft
 
 
-# Jolly Poker (Croatia)
+# Jolly Card (Croatia)
 Soft Design
 
 
@@ -1456,6 +1456,10 @@ Sun Amusement
 
 # Speak & Rescue
 Sun Electronics
+
+
+# Top Shooter
+Sun Mixing
 
 
 # Goindol (World)

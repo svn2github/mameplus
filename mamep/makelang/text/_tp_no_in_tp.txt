@@ -3802,34 +3802,34 @@ Ambiguous help request, did you mean:\n
 # debug/debughlp.c: 933
   help %s?\n
 
-# debug/debugvw.c: 369, 1374, 1942
+# debug/debugvw.c: 373, 1392, 1960
 Attempt to get invalid property %d on debug view type %d\n
 
-# debug/debugvw.c: 503, 1414, 2029
+# debug/debugvw.c: 511, 1432, 2047
 Attempt to set invalid property %d on debug view type %d\n
 
-# debug/debugvw.c: 895
+# debug/debugvw.c: 913
 cycles:%-8d
 
-# debug/debugvw.c: 900
+# debug/debugvw.c: 918
 beamx:%3d
 
-# debug/debugvw.c: 904
+# debug/debugvw.c: 922
 beamy:%3d
 
-# debug/debugvw.c: 908
+# debug/debugvw.c: 926
 flags:%s
 
-# debug/debugvw.c: 1132
+# debug/debugvw.c: 1150
 disasm_generate_bytes: unknown size = %d\n
 
-# debug/debugvw.c: 1203
+# debug/debugvw.c: 1221
 <unmapped>
 
-# debug/debugvw.c: 1647
+# debug/debugvw.c: 1665
 0123456789abcdef
 
-# debug/debugvw.c: 1737
+# debug/debugvw.c: 1755
  %*s%%0%dX 
 
 # debug/express.c: 393
@@ -5761,61 +5761,61 @@ right
 # drivers/aerofgt.c: 1383, 1387, 1607, 1611, 1639, 1643, 1647
 mono
 
-# drivers/afega.c: 160, 237, 323, 404, 488
+# drivers/afega.c: 160, 237, 318, 399, 483
 IN0
 
-# drivers/afega.c: 171, 248, 334, 415, 499
+# drivers/afega.c: 171, 248, 329, 410, 494
 IN1
 
-# drivers/afega.c: 189, 266, 352, 433, 517
+# drivers/afega.c: 189, 266, 347, 428, 512
 IN2
 
-# drivers/afega.c: 360
+# drivers/afega.c: 355
 Bombs
 
-# drivers/afega.c: 451
+# drivers/afega.c: 446
 Free Credit
 
-# drivers/afega.c: 452
+# drivers/afega.c: 447
 500k
 
-# drivers/afega.c: 453
+# drivers/afega.c: 448
 800k
 
-# drivers/afega.c: 454
+# drivers/afega.c: 449
 1000k
 
-# drivers/afega.c: 455
+# drivers/afega.c: 450
 1500k
 
-# drivers/afega.c: 518
+# drivers/afega.c: 513
 Show Dip-Switch Settings
 
-# drivers/afega.c: 533
+# drivers/afega.c: 528
 Number of Bombs
 
-# drivers/afega.c: 550
+# drivers/afega.c: 545
 Continue Coins
 
-# drivers/afega.c: 551
+# drivers/afega.c: 546
 1 Coin
 
-# drivers/afega.c: 552
+# drivers/afega.c: 547
 2 Coins
 
-# drivers/afega.c: 553
+# drivers/afega.c: 548
 3 Coins
 
-# drivers/afega.c: 554
+# drivers/afega.c: 549
 4 Coins
 
-# drivers/afega.c: 697, 701, 706
+# drivers/afega.c: 692, 696, 701
 left
 
-# drivers/afega.c: 697, 702, 707
+# drivers/afega.c: 692, 697, 702
 right
 
-# drivers/afega.c: 768, 772, 776
+# drivers/afega.c: 763, 767, 771
 mono
 
 # drivers/airbustr.c: 421
@@ -14146,6 +14146,48 @@ FAKE
 # drivers/fcombat.c: 333, 336, 339, 342
 mono
 
+# drivers/fcrash.c: 208
+IN0
+
+# drivers/fcrash.c: 218
+DSWA
+
+# drivers/fcrash.c: 220
+2 Coins to Start, 1 to Continue
+
+# drivers/fcrash.c: 227
+DSWB
+
+# drivers/fcrash.c: 228
+Difficulty Level 1
+
+# drivers/fcrash.c: 237
+Difficulty Level 2
+
+# drivers/fcrash.c: 243
+100k
+
+# drivers/fcrash.c: 244
+200k
+
+# drivers/fcrash.c: 245
+100k and every 200k
+
+# drivers/fcrash.c: 251
+DSWC
+
+# drivers/fcrash.c: 272
+Game Mode
+
+# drivers/fcrash.c: 276
+IN1
+
+# drivers/fcrash.c: 283
+P1 Button 3 (Cheat)
+
+# drivers/fcrash.c: 291
+P2 Button 3 (Cheat)
+
 # drivers/fgoal.c: 303
 Display Coinage Settings
 
@@ -15844,6 +15886,9 @@ mono
 # drivers/gcpinbal.c: 407, 411, 415
 mono
 
+# drivers/genesis.c: 686, 689, 690
+mono
+
 # drivers/getrivia.c: 175
 Questions
 
@@ -16276,7 +16321,7 @@ DSW7
 # drivers/goldstar.c: 219
 Show Woman
 
-# drivers/goldstar.c: 313, 316, 320, 349, 352, 356
+# drivers/goldstar.c: 319, 322, 326, 355, 358, 362, 390, 393, 397
 mono
 
 # drivers/gomoku.c: 192, 196
@@ -17905,46 +17950,34 @@ comm1_w: %08X, %08X, %08X\n
 # drivers/hornet.c: 546
 comm0_unk_r: %08X, %08X\n
 
-# drivers/hornet.c: 581
-sndcomm68k_r: %08X, %08X\n
-
-# drivers/hornet.c: 592
-sndcomm68k_w: %08X, %08X, %08X at %08X\n
-
-# drivers/hornet.c: 599
-rf5c400_r: %08X, %08X at %08X\n
-
-# drivers/hornet.c: 636
-rf5c400_w: %08X, %08X, %08X at %08X\n
-
-# drivers/hornet.c: 676
+# drivers/hornet.c: 687
 pci_3dfx_r: %08X at %08X\n
 
-# drivers/hornet.c: 724
+# drivers/hornet.c: 735
 pci_3dfx_w: %08X, %08X at %08X\n
 
-# drivers/hornet.c: 766
+# drivers/hornet.c: 777
 Service Button
 
-# drivers/hornet.c: 774
+# drivers/hornet.c: 785
 DIP2
 
-# drivers/hornet.c: 777
+# drivers/hornet.c: 788
 DIP3
 
-# drivers/hornet.c: 780
+# drivers/hornet.c: 791
 DIP4
 
-# drivers/hornet.c: 783
+# drivers/hornet.c: 794
 DIP5
 
-# drivers/hornet.c: 786
+# drivers/hornet.c: 797
 DIP6
 
-# drivers/hornet.c: 789
+# drivers/hornet.c: 800
 DIP7
 
-# drivers/hornet.c: 792
+# drivers/hornet.c: 803
 24/15KHz
 
 # drivers/hotblock.c: 211, 215
@@ -20860,70 +20893,70 @@ Teleport (Cheat)
 # drivers/m62.c: 1199
 Frame Advance (Cheat)
 
-# drivers/m72.c: 944, 1016
+# drivers/m72.c: 943, 1015
 50K 150K 250K 400K 600K
 
-# drivers/m72.c: 945, 1017
+# drivers/m72.c: 944, 1016
 100K 200K 350K 500K 700K
 
-# drivers/m72.c: 959, 1031, 1102, 1172, 1242, 1309, 1379, 1446, 1514, 1587, 1669, 1757, 1839, 1924
+# drivers/m72.c: 958, 1030, 1101, 1171, 1241, 1308, 1378, 1445, 1513, 1586, 1668, 1756, 1838, 1923
 Mode 1
 
-# drivers/m72.c: 960, 1032, 1103, 1173, 1243, 1310, 1380, 1447, 1515, 1588, 1670, 1758, 1840, 1925
+# drivers/m72.c: 959, 1031, 1102, 1172, 1242, 1309, 1379, 1446, 1514, 1587, 1669, 1757, 1839, 1924
 Mode 2
 
-# drivers/m72.c: 963, 1035
+# drivers/m72.c: 962, 1034
 Difficult
 
-# drivers/m72.c: 968, 1040, 1111, 1181, 1251, 1317, 1455, 1521
+# drivers/m72.c: 967, 1039, 1110, 1180, 1250, 1316, 1454, 1520
 Stop Mode
 
-# drivers/m72.c: 1087
+# drivers/m72.c: 1086
 80K 200K 350K
 
-# drivers/m72.c: 1088
+# drivers/m72.c: 1087
 100K 250K 400K
 
-# drivers/m72.c: 1228
+# drivers/m72.c: 1227
 Debug Mode 2lap
 
-# drivers/m72.c: 1518, 1584, 1666, 1836
+# drivers/m72.c: 1517, 1583, 1665, 1835
 Upright (2P)
 
-# drivers/m72.c: 1567
+# drivers/m72.c: 1566
 Continue Limit
 
-# drivers/m72.c: 1595, 1847, 1932
+# drivers/m72.c: 1594, 1846, 1931
 2 Coins/1 Credit, 1 Coin/Continue
 
-# drivers/m72.c: 1638
+# drivers/m72.c: 1637
 Round Time
 
-# drivers/m72.c: 1643
+# drivers/m72.c: 1642
 Matches/Credit (2P)
 
-# drivers/m72.c: 1646
+# drivers/m72.c: 1645
 Rounds/Match
 
-# drivers/m72.c: 1652
+# drivers/m72.c: 1651
 Trackball Size
 
-# drivers/m72.c: 1653
+# drivers/m72.c: 1652
 Small
 
-# drivers/m72.c: 1654
+# drivers/m72.c: 1653
 Large
 
-# drivers/m72.c: 1682
+# drivers/m72.c: 1681
 1 Coin/1 Credit, 1 Coin/Continue
 
-# drivers/m72.c: 1897
+# drivers/m72.c: 1896
 Difficulty?
 
-# drivers/m72.c: 2036, 2040, 2076, 2080, 2084, 2120, 2124, 2128, 2164, 2168, 2172, 2207, 2211, 2215, 2251, 2255, 2259, 2294, 2298, 2302, 2337, 2341, 2345, 2381, 2385, 2389, 2424, 2428, 2432, 2467, 2471, 2475
+# drivers/m72.c: 2034, 2038, 2073, 2077, 2081, 2116, 2120, 2124, 2159, 2163, 2167, 2201, 2205, 2209, 2244, 2248, 2252, 2286, 2290, 2294, 2328, 2332, 2336, 2371, 2375, 2379, 2413, 2417, 2421, 2455, 2459, 2463
 left
 
-# drivers/m72.c: 2036, 2041, 2076, 2081, 2085, 2120, 2125, 2129, 2164, 2169, 2173, 2207, 2212, 2216, 2251, 2256, 2260, 2294, 2299, 2303, 2337, 2342, 2346, 2381, 2386, 2390, 2424, 2429, 2433, 2467, 2472, 2476
+# drivers/m72.c: 2034, 2039, 2073, 2078, 2082, 2116, 2121, 2125, 2159, 2164, 2168, 2201, 2206, 2210, 2244, 2249, 2253, 2286, 2291, 2295, 2328, 2333, 2337, 2371, 2376, 2380, 2413, 2418, 2422, 2455, 2460, 2464
 right
 
 # drivers/m90.c: 53
@@ -22486,6 +22519,147 @@ Extended Play Time
 # drivers/meadows.c: 660, 663, 667
 mono
 
+# drivers/megaplay.c: 74
+0x6400 bit 1
+
+# drivers/megaplay.c: 74
+0x6400 bit 2
+
+# drivers/megaplay.c: 74
+0x6400 bit 3
+
+# drivers/megaplay.c: 74
+0x6400 bit 4
+
+# drivers/megaplay.c: 74
+0x6400 bit 5
+
+# drivers/megaplay.c: 74
+0x6400 bit 6
+
+# drivers/megaplay.c: 96, 116
+1 coin/1 credit - 2 coins/3 credits
+
+# drivers/megaplay.c: 96, 116
+1 coin/1 credit - 4 coins/5 credits
+
+# drivers/megaplay.c: 96, 116
+1 coin/1 credit - 5 coins/6 credits
+
+# drivers/megaplay.c: 96, 116
+2 coins/1 credit - 4 coins/3 credits
+
+# drivers/megaplay.c: 96, 116
+2 coins/1 credit - 5 coins/3 credits - 6 coins/4 credits
+
+# drivers/megaplay.c: 96
+Coin slot 1
+
+# drivers/megaplay.c: 116
+ 1 coin/1 credit
+
+# drivers/megaplay.c: 116
+Coin slot 2
+
+# drivers/megaplay.c: 153, 189
+Initial Players
+
+# drivers/megaplay.c: 185
+Life
+
+# drivers/megaplay.c: 218
+2P Mode Games
+
+# drivers/megaplay.c: 222
+Speed / Difficulty
+
+# drivers/megaplay.c: 224
+Middle
+
+# drivers/megaplay.c: 247
+Short
+
+# drivers/megaplay.c: 249
+Level
+
+# drivers/megaplay.c: 327
+2P-Play Continue
+
+# drivers/megaplay.c: 328
+1 Credit
+
+# drivers/megaplay.c: 329
+2 Credits
+
+# drivers/megaplay.c: 342
+DSW C-1
+
+# drivers/megaplay.c: 346
+DSW C-2
+
+# drivers/megaplay.c: 350
+DSW C-3
+
+# drivers/megaplay.c: 354
+DSW C-4
+
+# drivers/megaplay.c: 369
+Initial Players (Normal mode)
+
+# drivers/megaplay.c: 375
+Initial Players (Dual mode)
+
+# drivers/megaplay.c: 653, 656, 657, 670, 673
+mono
+
+# drivers/megaplay.c: 682
+Megaplay Bios (Ver. 1)
+
+# drivers/megaplay.c: 682
+ver1
+
+# drivers/megaplay.c: 683
+Megaplay Bios (Ver. 2)
+
+# drivers/megaplay.c: 683
+ver2
+
+# drivers/megaplay.c: 689
+ep15294.ic2
+
+# drivers/megaplay.c: 689
+epr-a15294.ic2
+
+# drivers/megaplay.c: 887
+Mega Play BIOS
+
+# drivers/megaplay.c: 888
+Sonic The Hedgehog (Mega Play)
+
+# drivers/megaplay.c: 889
+Golden Axe II (Mega Play)
+
+# drivers/megaplay.c: 890
+Grand Slam (Mega Play)
+
+# drivers/megaplay.c: 891
+Tecmo World Cup (Mega Play)
+
+# drivers/megaplay.c: 892
+Streets of Rage II (Mega Play)
+
+# drivers/megaplay.c: 893
+Bio-hazard Battle (Mega Play)
+
+# drivers/megaplay.c: 894
+Sonic The Hedgehog 2 (Mega Play)
+
+# drivers/megaplay.c: 898
+Mazin Wars (Mega Play)
+
+# drivers/megaplay.c: 900
+Columns III (Mega Play)
+
 # drivers/megasys1.c: 680, 684, 689, 694, 706
 left
 
@@ -22671,6 +22845,213 @@ Credits To Continue (Vs)
 
 # drivers/megasys1.c: 3279
 40k
+
+# drivers/megatech.c: 96
+0x6800 bit 1
+
+# drivers/megatech.c: 97
+0x6800 bit 2
+
+# drivers/megatech.c: 98
+0x6800 bit 3
+
+# drivers/megatech.c: 99
+Door 1
+
+# drivers/megatech.c: 100
+Door 2
+
+# drivers/megatech.c: 101
+0x6800 bit 6
+
+# drivers/megatech.c: 102
+Test mode
+
+# drivers/megatech.c: 109
+Service coin
+
+# drivers/megatech.c: 110
+Enter
+
+# drivers/megatech.c: 119
+port DD bit 4
+
+# drivers/megatech.c: 120
+port DD bit 5
+
+# drivers/megatech.c: 121
+port DD bit 6
+
+# drivers/megatech.c: 122
+port DD bit 7
+
+# drivers/megatech.c: 135
+Coin slot 3
+
+# drivers/megatech.c: 136, 139, 158, 162
+Inhibit
+
+# drivers/megatech.c: 137, 140
+Accept
+
+# drivers/megatech.c: 138
+Coin slot 4
+
+# drivers/megatech.c: 141
+Coin slot 3/4 value
+
+# drivers/megatech.c: 149
+1 Coin/10 credits
+
+# drivers/megatech.c: 150
+Coin slot 2 value
+
+# drivers/megatech.c: 161
+Coin Slot 1 value
+
+# drivers/megatech.c: 172
+1 coin/10 credits
+
+# drivers/megatech.c: 173
+1 coin/11 credits
+
+# drivers/megatech.c: 174
+1 coin/12 credits
+
+# drivers/megatech.c: 175
+1 coin/13 credits
+
+# drivers/megatech.c: 176
+1 coin/14 credits
+
+# drivers/megatech.c: 177
+1 coin/15 credits
+
+# drivers/megatech.c: 178
+Time per credit
+
+# drivers/megatech.c: 455, 458, 459, 485, 488
+mono
+
+# drivers/megatech.c: 973
+Mega-Tech BIOS
+
+# drivers/megatech.c: 974
+Altered Beast (Mega-Tech)
+
+# drivers/megatech.c: 975
+Space Harrier II (Mega-Tech)
+
+# drivers/megatech.c: 976
+Super Thunder Blade (Mega-Tech)
+
+# drivers/megatech.c: 977
+Great Golf (Mega-Tech)
+
+# drivers/megatech.c: 978
+Great Soccer (Mega-Tech)
+
+# drivers/megatech.c: 980
+Alien Syndrome (Mega-Tech)
+
+# drivers/megatech.c: 981
+Shinobi (Mega-Tech)
+
+# drivers/megatech.c: 983
+After Burner (Mega-Tech)
+
+# drivers/megatech.c: 984
+Tecno Soft / Sega
+
+# drivers/megatech.c: 984
+Thunder Force II MD (Mega-Tech)
+
+# drivers/megatech.c: 986
+Astro Warrior (Mega-Tech)
+
+# drivers/megatech.c: 993
+Last Battle (Mega-Tech)
+
+# drivers/megatech.c: 994
+World Championship Soccer (Mega-Tech)
+
+# drivers/megatech.c: 995
+Tetris (Mega-Tech)
+
+# drivers/megatech.c: 996
+Capcom / Sega
+
+# drivers/megatech.c: 996
+Ghouls'n Ghosts (Mega-Tech)
+
+# drivers/megatech.c: 997
+Super Hang-On (Mega-Tech)
+
+# drivers/megatech.c: 998
+Golden Axe (Mega-Tech)
+
+# drivers/megatech.c: 1000
+Mystic Defender (Mega-Tech)
+
+# drivers/megatech.c: 1001
+The Revenge of Shinobi (Mega-Tech)
+
+# drivers/megatech.c: 1002
+Parlour Games (Mega-Tech)
+
+# drivers/megatech.c: 1004
+Arnold Palmer Tournament Golf (Mega-Tech)
+
+# drivers/megatech.c: 1008
+Tommy Lasorda Baseball (Mega-Tech)
+
+# drivers/megatech.c: 1009
+Columns (Mega-Tech)
+
+# drivers/megatech.c: 1011
+Cyber Police ESWAT: Enhanced Special Weapons and Tactics (Mega-Tech)
+
+# drivers/megatech.c: 1012
+Super Monaco GP (Mega-Tech)
+
+# drivers/megatech.c: 1013
+Moonwalker (Mega-Tech)
+
+# drivers/megatech.c: 1014
+Crack Down (Mega-Tech)
+
+# drivers/megatech.c: 1017
+Arrow Flash (Mega-Tech)
+
+# drivers/megatech.c: 1020
+Alien Storm (Mega-Tech
+
+# drivers/megatech.c: 1022
+Bonanza Bros. (Mega-Tech)
+
+# drivers/megatech.c: 1025
+Sonic The Hedgehog (Mega-Tech, set 1)
+
+# drivers/megatech.c: 1026
+Sonic The Hedgehog (Mega-Tech, set 2)
+
+# drivers/megatech.c: 1027
+Fire Shark (Mega-Tech)
+
+# drivers/megatech.c: 1027
+Toaplan / Sega
+
+# drivers/megatech.c: 1031
+Golden Axe II (Mega-Tech)
+
+# drivers/megatech.c: 1032
+Joe Montana II: Sports Talk Football (Mega-Tech)
+
+# drivers/megatech.c: 1034
+Kid Chameleon (Mega-Tech)
+
+# drivers/megatech.c: 1036
+Sonic The Hedgehog 2 (Mega-Tech)
 
 # drivers/megazone.c: 196
 IN0
@@ -26941,169 +27322,169 @@ DSW7
 # drivers/namcos21.c: 2020, 2097, 2178
 DSW8
 
-# drivers/namcos22.c: 2013, 2017, 2036, 3712, 3792, 3830, 3898, 4030
+# drivers/namcos22.c: 1990, 1994, 2013, 3680, 3760, 3798, 3862, 3994
 MCUP5A
 
-# drivers/namcos22.c: 2040, 3728, 3842, 3908, 4040
+# drivers/namcos22.c: 2017, 3696, 3810, 3872, 4004
 MCUP5B
 
-# drivers/namcos22.c: 2294, 2299, 2301
+# drivers/namcos22.c: 2262, 2267, 2269
 left
 
-# drivers/namcos22.c: 2294, 2298, 2300
+# drivers/namcos22.c: 2262, 2266, 2268
 right
 
-# drivers/namcos22.c: 3687, 4000
+# drivers/namcos22.c: 3655, 3964
 DIP4-1
 
-# drivers/namcos22.c: 3690, 3808, 4003
+# drivers/namcos22.c: 3658, 3776, 3967
 DIP4-2
 
-# drivers/namcos22.c: 3693, 3811, 4006
+# drivers/namcos22.c: 3661, 3779, 3970
 DIP4-3
 
-# drivers/namcos22.c: 3696, 3814, 4009
+# drivers/namcos22.c: 3664, 3782, 3973
 DIP4-4
 
-# drivers/namcos22.c: 3699, 3817, 4012
+# drivers/namcos22.c: 3667, 3785, 3976
 DIP4-5
 
-# drivers/namcos22.c: 3702, 3820, 4015
+# drivers/namcos22.c: 3670, 3788, 3979
 DIP4-6
 
-# drivers/namcos22.c: 3705, 3823, 4018
+# drivers/namcos22.c: 3673, 3791, 3982
 DIP4-7
 
-# drivers/namcos22.c: 3708, 3826, 4021
+# drivers/namcos22.c: 3676, 3794, 3985
 DIP4-8
 
-# drivers/namcos22.c: 3729
+# drivers/namcos22.c: 3697
 DIP5-1
 
-# drivers/namcos22.c: 3732
+# drivers/namcos22.c: 3700
 DIP5-2
 
-# drivers/namcos22.c: 3735
+# drivers/namcos22.c: 3703
 DIP5-3
 
-# drivers/namcos22.c: 3738
+# drivers/namcos22.c: 3706
 DIP5-4
 
-# drivers/namcos22.c: 3741
+# drivers/namcos22.c: 3709
 DIP5-5
 
-# drivers/namcos22.c: 3744
+# drivers/namcos22.c: 3712
 DIP5-6
 
-# drivers/namcos22.c: 3747
+# drivers/namcos22.c: 3715
 DIP5-7
 
-# drivers/namcos22.c: 3750
+# drivers/namcos22.c: 3718
 DIP5-8
 
-# drivers/namcos22.c: 3758, 3855
+# drivers/namcos22.c: 3726, 3823
 DIP1
 
-# drivers/namcos22.c: 3761, 3858
+# drivers/namcos22.c: 3729, 3826
 DIP2
 
-# drivers/namcos22.c: 3764, 3861
+# drivers/namcos22.c: 3732, 3829
 DIP3
 
-# drivers/namcos22.c: 3767, 3864
+# drivers/namcos22.c: 3735, 3832
 DIP4
 
-# drivers/namcos22.c: 3770, 3867
+# drivers/namcos22.c: 3738, 3835
 DIP5
 
-# drivers/namcos22.c: 3773, 3870
+# drivers/namcos22.c: 3741, 3838
 DIP6
 
-# drivers/namcos22.c: 3776, 3873
+# drivers/namcos22.c: 3744, 3841
 DIP7
 
-# drivers/namcos22.c: 3779, 3876
+# drivers/namcos22.c: 3747, 3844
 DIP8
 
-# drivers/namcos22.c: 3805
+# drivers/namcos22.c: 3773
 DIP4-1 (Test Mode)
 
-# drivers/namcos22.c: 3921, 4048, 4122
+# drivers/namcos22.c: 3885, 4012, 4086
 DIP2-1
 
-# drivers/namcos22.c: 3924, 4051, 4125, 4201, 4276
+# drivers/namcos22.c: 3888, 4015, 4089, 4165, 4240
 DIP2-2
 
-# drivers/namcos22.c: 3927, 4054, 4128, 4204, 4279
+# drivers/namcos22.c: 3891, 4018, 4092, 4168, 4243
 DIP2-3
 
-# drivers/namcos22.c: 3930, 4057, 4131, 4207, 4282
+# drivers/namcos22.c: 3894, 4021, 4095, 4171, 4246
 DIP2-4
 
-# drivers/namcos22.c: 3933, 4060, 4134, 4210, 4285
+# drivers/namcos22.c: 3897, 4024, 4098, 4174, 4249
 DIP2-5
 
-# drivers/namcos22.c: 3936, 4063, 4137, 4213, 4288
+# drivers/namcos22.c: 3900, 4027, 4101, 4177, 4252
 DIP2-6
 
-# drivers/namcos22.c: 3939, 4066, 4140, 4216, 4291
+# drivers/namcos22.c: 3903, 4030, 4104, 4180, 4255
 DIP2-7
 
-# drivers/namcos22.c: 3942, 4069, 4143, 4219, 4294
+# drivers/namcos22.c: 3906, 4033, 4107, 4183, 4258
 DIP2-8
 
-# drivers/namcos22.c: 3945, 4072, 4146, 4222, 4297
+# drivers/namcos22.c: 3909, 4036, 4110, 4186, 4261
 DIP3-1
 
-# drivers/namcos22.c: 3948, 4075, 4149, 4225, 4300
+# drivers/namcos22.c: 3912, 4039, 4113, 4189, 4264
 DIP3-2
 
-# drivers/namcos22.c: 3951, 4078, 4152, 4228, 4303
+# drivers/namcos22.c: 3915, 4042, 4116, 4192, 4267
 DIP3-3
 
-# drivers/namcos22.c: 3954, 4081, 4155, 4231, 4306
+# drivers/namcos22.c: 3918, 4045, 4119, 4195, 4270
 DIP3-4
 
-# drivers/namcos22.c: 3957, 4084, 4158, 4234, 4309
+# drivers/namcos22.c: 3921, 4048, 4122, 4198, 4273
 DIP3-5
 
-# drivers/namcos22.c: 3960, 4087, 4161, 4237, 4312
+# drivers/namcos22.c: 3924, 4051, 4125, 4201, 4276
 DIP3-6
 
-# drivers/namcos22.c: 3963, 4315
+# drivers/namcos22.c: 3927, 4279
 DIP3-7
 
-# drivers/namcos22.c: 3966, 4243, 4318
+# drivers/namcos22.c: 3930, 4207, 4282
 DIP3-8
 
-# drivers/namcos22.c: 4090, 4164
+# drivers/namcos22.c: 4054, 4128
 DIP3-7 (TEST MODE?)
 
-# drivers/namcos22.c: 4093, 4167
+# drivers/namcos22.c: 4057, 4131
 DIP3-8 (TEST MODE?)
 
-# drivers/namcos22.c: 4098, 4172
+# drivers/namcos22.c: 4062, 4136
 Shift
 
-# drivers/namcos22.c: 4099, 4173
+# drivers/namcos22.c: 4063, 4137
 Up
 
-# drivers/namcos22.c: 4101, 4175
+# drivers/namcos22.c: 4065, 4139
 Down
 
-# drivers/namcos22.c: 4189
+# drivers/namcos22.c: 4153
 Motion Stop
 
-# drivers/namcos22.c: 4198
+# drivers/namcos22.c: 4162
 DIP2-1 (test mode?)
 
-# drivers/namcos22.c: 4240
+# drivers/namcos22.c: 4204
 DIP3-7 (TEST MODE)
 
-# drivers/namcos22.c: 4248, 4323
+# drivers/namcos22.c: 4212, 4287
 Stick Shift
 
-# drivers/namcos22.c: 4273
+# drivers/namcos22.c: 4237
 DIP2-1 (test mode)
 
 # drivers/namcos23.c: 361
@@ -30142,16 +30523,25 @@ wb
 # drivers/pgm.c: 313
 z80ram.bin
 
-# drivers/pgm.c: 539, 627, 718
+# drivers/pgm.c: 481
+P1P2
+
+# drivers/pgm.c: 499
+P3P4
+
+# drivers/pgm.c: 537
+DSW
+
+# drivers/pgm.c: 539, 636, 727
 Music
 
-# drivers/pgm.c: 653
+# drivers/pgm.c: 662
 Japan (Alta License)
 
-# drivers/pgm.c: 845
+# drivers/pgm.c: 854
 Japan (Cave License)
 
-# drivers/pgm.c: 917, 920
+# drivers/pgm.c: 926, 929
 mono
 
 # drivers/phoenix.c: 146, 193, 241, 288, 418, 465, 559
@@ -31280,6 +31670,9 @@ Invulnerability (Cheat)
 mono
 
 # drivers/pturn.c: 270, 273, 276
+mono
+
+# drivers/puckpkmn.c: 175, 179, 180, 183, 188
 mono
 
 # drivers/punchout.c: 507, 578
@@ -33451,515 +33844,212 @@ trek28.wav
 # drivers/sega.c: 921, 925, 945, 949, 964, 987, 991, 1011, 1015
 mono
 
-# drivers/segac2.c: 2067
-1 Coin/1 Credit (Freeplay if Coin B also)
+# drivers/segac2.c: 843, 951, 976, 1007, 1069, 1103, 1136, 1165, 1189, 1227, 1254, 1277, 1301, 1336
+P1
 
-# drivers/segac2.c: 2067, 2086
-1 Coin/1 Credit, 2/3
+# drivers/segac2.c: 853, 955, 980, 1010, 1072, 1108, 1140, 1168, 1193, 1230, 1258, 1281, 1304, 1343
+P2
 
-# drivers/segac2.c: 2067, 2086
-1 Coin/1 Credit, 4/5
+# drivers/segac2.c: 863
+PORTC
 
-# drivers/segac2.c: 2067, 2086
-1 Coin/1 Credit, 5/6
+# drivers/segac2.c: 868
+PORTD
 
-# drivers/segac2.c: 2067, 2086
+# drivers/segac2.c: 871, 1075, 1346
+SERVICE
+
+# drivers/segac2.c: 881, 1349
+COINAGE
+
+# drivers/segac2.c: 886, 903
 2 Coins/1 Credit 5/3 6/4
 
-# drivers/segac2.c: 2067, 2086
-2 Coins/1 Credit, 4/3
+# drivers/segac2.c: 887, 904
+2 Coins/1 Credit 4/3
 
-# drivers/segac2.c: 2086
-1 Coin/1 Credit (Freeplay if Coin A also)
+# drivers/segac2.c: 889, 906
+1 Coin/1 Credit 2/3
 
-# drivers/segac2.c: 2190, 2382
+# drivers/segac2.c: 890, 907
+1 Coin/1 Credit 4/5
+
+# drivers/segac2.c: 891, 908
+1 Coin/1 Credit 5/6
+
+# drivers/segac2.c: 898
+Free Play (if Coin B too) or 1/1
+
+# drivers/segac2.c: 915
+Free Play (if Coin A too) or 1/1
+
+# drivers/segac2.c: 917, 959, 984, 1013, 1041, 1079, 1113, 1144, 1171, 1197, 1233, 1262, 1285, 1307, 1375
+DSW
+
+# drivers/segac2.c: 943
+PORTH
+
+# drivers/segac2.c: 991, 1148
 VS. Mode Credits/Match
 
-# drivers/segac2.c: 2195
+# drivers/segac2.c: 996
 Flash Mode Difficulty
 
-# drivers/segac2.c: 2234, 2283, 2326, 2481, 2637
+# drivers/segac2.c: 1014, 1042, 1080, 1114, 1198, 1289
 Credits to Start
 
-# drivers/segac2.c: 2240
+# drivers/segac2.c: 1020
 Lives 1P Mode
 
-# drivers/segac2.c: 2245
+# drivers/segac2.c: 1025
 Lives 2P Mode
 
-# drivers/segac2.c: 2295
+# drivers/segac2.c: 1054
 10k, 70k, 150k
 
-# drivers/segac2.c: 2296
+# drivers/segac2.c: 1055
 20k, 100k, 200k
 
-# drivers/segac2.c: 2297
+# drivers/segac2.c: 1056
 40k, 150k, 300k
 
-# drivers/segac2.c: 2385
+# drivers/segac2.c: 1086
+Buy In
+
+# drivers/segac2.c: 1094
+Seat Type
+
+# drivers/segac2.c: 1096
+Moving
+
+# drivers/segac2.c: 1151
 1P Mode Difficulty
 
-# drivers/segac2.c: 2396, 2501
+# drivers/segac2.c: 1156, 1218
 Moving Seat
 
-# drivers/segac2.c: 2397, 2502, 2688
+# drivers/segac2.c: 1157, 1219, 1310
 No Use
 
-# drivers/segac2.c: 2398, 2503
+# drivers/segac2.c: 1158, 1220
 In Use
 
-# drivers/segac2.c: 2438
+# drivers/segac2.c: 1180
 Match Mode Price
 
-# drivers/segac2.c: 2487
+# drivers/segac2.c: 1204
 Coin Chute Type
 
-# drivers/segac2.c: 2490
+# drivers/segac2.c: 1207
 Credits to Continue
 
-# drivers/segac2.c: 2493
+# drivers/segac2.c: 1210
 Buy-In
 
-# drivers/segac2.c: 2532
+# drivers/segac2.c: 1234
 Game Difficulty 1
 
-# drivers/segac2.c: 2535
+# drivers/segac2.c: 1237
 Game Difficulty 2
 
-# drivers/segac2.c: 2634
+# drivers/segac2.c: 1286
 VS Mode Price
 
-# drivers/segac2.c: 2635
+# drivers/segac2.c: 1287
 Same as Ordinary
 
-# drivers/segac2.c: 2636
+# drivers/segac2.c: 1288
 Double as Ordinary
 
-# drivers/segac2.c: 2686
+# drivers/segac2.c: 1308
 Rannyu Off Button
 
-# drivers/segac2.c: 2687
+# drivers/segac2.c: 1309
 Use
 
-# drivers/segac2.c: 2692
+# drivers/segac2.c: 1314
 Turn Direction
 
-# drivers/segac2.c: 2693
+# drivers/segac2.c: 1315
 1:Right  2:Left
 
-# drivers/segac2.c: 2694
+# drivers/segac2.c: 1316
 1:Left  2:Right
 
-# drivers/segac2.c: 2700
+# drivers/segac2.c: 1322
 VS Mode Match/1 Play
 
-# drivers/segac2.c: 2705
+# drivers/segac2.c: 1327
 Battle Start credit
 
-# drivers/segac2.c: 2793
+# drivers/segac2.c: 1338
 Ok
 
-# drivers/segac2.c: 2811
+# drivers/segac2.c: 1359
 Unknown 4-4
 
-# drivers/segac2.c: 2814
+# drivers/segac2.c: 1362
 Unknown 4-5
 
-# drivers/segac2.c: 2817
+# drivers/segac2.c: 1365
 Unknown 4-6
 
-# drivers/segac2.c: 2820
+# drivers/segac2.c: 1368
 Unknown 4-7
 
-# drivers/segac2.c: 2823
+# drivers/segac2.c: 1371
 Unknown 4-8
 
-# drivers/segac2.c: 2828
+# drivers/segac2.c: 1376
 Unknown 5-1
 
-# drivers/segac2.c: 2831
+# drivers/segac2.c: 1379
 Unknown 5-2
 
-# drivers/segac2.c: 2834
+# drivers/segac2.c: 1382
 Unknown 5-3
 
-# drivers/segac2.c: 2837
+# drivers/segac2.c: 1385
 Unknown 5-4
 
-# drivers/segac2.c: 2840
+# drivers/segac2.c: 1388
 Unknown 5-5
 
-# drivers/segac2.c: 2846
+# drivers/segac2.c: 1394
 Unknown 5-7
 
-# drivers/segac2.c: 2849
+# drivers/segac2.c: 1397
 Unknown 5-8
 
-# drivers/segac2.c: 2937
-SMS VDP Display (fake)
-
-# drivers/segac2.c: 2943
-0x6800 bit 1
-
-# drivers/segac2.c: 2944
-0x6800 bit 2
-
-# drivers/segac2.c: 2945
-0x6800 bit 3
-
-# drivers/segac2.c: 2946
-Door 1
-
-# drivers/segac2.c: 2947
-Door 2
-
-# drivers/segac2.c: 2948
-0x6800 bit 6
-
-# drivers/segac2.c: 2949
-Test mode
-
-# drivers/segac2.c: 2956
-Service coin
-
-# drivers/segac2.c: 2957
-Enter
-
-# drivers/segac2.c: 2966
-port DD bit 4
-
-# drivers/segac2.c: 2967
-port DD bit 5
-
-# drivers/segac2.c: 2968
-port DD bit 6
-
-# drivers/segac2.c: 2969
-port DD bit 7
-
-# drivers/segac2.c: 2982
-Coin slot 3
-
-# drivers/segac2.c: 2983, 2986, 3005, 3009
-Inhibit
-
-# drivers/segac2.c: 2984, 2987
-Accept
-
-# drivers/segac2.c: 2985
-Coin slot 4
-
-# drivers/segac2.c: 2988
-Coin slot 3/4 value
-
-# drivers/segac2.c: 2996
-1 Coin/10 credits
-
-# drivers/segac2.c: 2997
-Coin slot 2 value
-
-# drivers/segac2.c: 3008
-Coin Slot 1 value
-
-# drivers/segac2.c: 3019
-1 coin/10 credits
-
-# drivers/segac2.c: 3020
-1 coin/11 credits
-
-# drivers/segac2.c: 3021
-1 coin/12 credits
-
-# drivers/segac2.c: 3022
-1 coin/13 credits
-
-# drivers/segac2.c: 3023
-1 coin/14 credits
-
-# drivers/segac2.c: 3024
-1 coin/15 credits
-
-# drivers/segac2.c: 3025
-Time per credit
-
-# drivers/segac2.c: 3053
-0x6400 bit 1
-
-# drivers/segac2.c: 3053
-0x6400 bit 2
-
-# drivers/segac2.c: 3053
-0x6400 bit 3
-
-# drivers/segac2.c: 3053
-0x6400 bit 4
-
-# drivers/segac2.c: 3053
-0x6400 bit 5
-
-# drivers/segac2.c: 3053
-0x6400 bit 6
-
-# drivers/segac2.c: 3075, 3095
-1 coin/1 credit - 2 coins/3 credits
-
-# drivers/segac2.c: 3075, 3095
-1 coin/1 credit - 4 coins/5 credits
-
-# drivers/segac2.c: 3075, 3095
-1 coin/1 credit - 5 coins/6 credits
-
-# drivers/segac2.c: 3075, 3095
-2 coins/1 credit - 4 coins/3 credits
-
-# drivers/segac2.c: 3075, 3095
-2 coins/1 credit - 5 coins/3 credits - 6 coins/4 credits
-
-# drivers/segac2.c: 3075
-Coin slot 1
-
-# drivers/segac2.c: 3095
- 1 coin/1 credit
-
-# drivers/segac2.c: 3095
-Coin slot 2
-
-# drivers/segac2.c: 3132, 3168
-Initial Players
-
-# drivers/segac2.c: 3164
-Life
-
-# drivers/segac2.c: 3195
-Short
-
-# drivers/segac2.c: 3197
-Level
-
-# drivers/segac2.c: 3275
-2P-Play Continue
-
-# drivers/segac2.c: 3276
-1 Credit
-
-# drivers/segac2.c: 3277
-2 Credits
-
-# drivers/segac2.c: 3290
-DSW C-1
-
-# drivers/segac2.c: 3294
-DSW C-2
-
-# drivers/segac2.c: 3298
-DSW C-3
-
-# drivers/segac2.c: 3302
-DSW C-4
-
-# drivers/segac2.c: 3317
-Initial Players (Normal mode)
-
-# drivers/segac2.c: 3323
-Initial Players (Dual mode)
-
-# drivers/segac2.c: 3381, 3385, 3386, 3389, 3401, 3419, 3450, 3453, 3454, 3482, 3485, 3511, 3514, 3515, 3528, 3531
+# drivers/segac2.c: 1454, 1458, 1462, 1474
 mono
 
-# drivers/segac2.c: 4457
-Megaplay Bios (Ver. 1)
-
-# drivers/segac2.c: 4457
-ver1
-
-# drivers/segac2.c: 4458
-Megaplay Bios (Ver. 2)
-
-# drivers/segac2.c: 4458
-ver2
-
-# drivers/segac2.c: 4464
-ep15294.ic2
-
-# drivers/segac2.c: 4464
-megaplay.bin
-
-# drivers/segac2.c: 4606, 4607, 4608
+# drivers/segac2.c: 1850, 1851, 1852
 C2_main
 
-# drivers/segac2.c: 4606
+# drivers/segac2.c: 1850
 Int 2 Status
 
-# drivers/segac2.c: 4607
+# drivers/segac2.c: 1851
 Int 4 Status
 
-# drivers/segac2.c: 4608
+# drivers/segac2.c: 1852
 Int 6 Status
 
-# drivers/segac2.c: 4610
+# drivers/segac2.c: 1853
 C2_IO
 
-# drivers/segac2.c: 4610
+# drivers/segac2.c: 1853
 I/O Writes
 
-# drivers/segac2.c: 4612, 4613
+# drivers/segac2.c: 1854, 1855
 C2 Protection
 
-# drivers/segac2.c: 4612
+# drivers/segac2.c: 1854
 Write Buffer
 
-# drivers/segac2.c: 4613
+# drivers/segac2.c: 1855
 Read Buffer
-
-# drivers/segac2.c: 4772
-\n0x
-
-# drivers/segac2.c: 5046
-Mega-Tech BIOS
-
-# drivers/segac2.c: 5047
-Altered Beast (Mega-Tech)
-
-# drivers/segac2.c: 5048
-Space Harrier II (Mega-Tech)
-
-# drivers/segac2.c: 5049
-Super Thunder Blade (Mega-Tech)
-
-# drivers/segac2.c: 5050
-Great Golf (Mega-Tech)
-
-# drivers/segac2.c: 5051
-Great Soccer (Mega-Tech)
-
-# drivers/segac2.c: 5053
-Alien Syndrome (Mega-Tech)
-
-# drivers/segac2.c: 5054
-Shinobi (Mega-Tech)
-
-# drivers/segac2.c: 5056
-After Burner (Mega-Tech)
-
-# drivers/segac2.c: 5057
-Tecno Soft / Sega
-
-# drivers/segac2.c: 5057
-Thunder Force II MD (Mega-Tech)
-
-# drivers/segac2.c: 5059
-Astro Warrior (Mega-Tech)
-
-# drivers/segac2.c: 5066
-Last Battle (Mega-Tech)
-
-# drivers/segac2.c: 5067
-World Championship Soccer (Mega-Tech)
-
-# drivers/segac2.c: 5068
-Tetris (Mega-Tech)
-
-# drivers/segac2.c: 5069
-Capcom / Sega
-
-# drivers/segac2.c: 5069
-Ghouls'n Ghosts (Mega-Tech)
-
-# drivers/segac2.c: 5070
-Super Hang-On (Mega-Tech)
-
-# drivers/segac2.c: 5071
-Golden Axe (Mega-Tech)
-
-# drivers/segac2.c: 5073
-Mystic Defender (Mega-Tech)
-
-# drivers/segac2.c: 5074
-The Revenge of Shinobi (Mega-Tech)
-
-# drivers/segac2.c: 5075
-Parlour Games (Mega-Tech)
-
-# drivers/segac2.c: 5077
-Arnold Palmer Tournament Golf (Mega-Tech)
-
-# drivers/segac2.c: 5081
-Tommy Lasorda Baseball (Mega-Tech)
-
-# drivers/segac2.c: 5082
-Columns (Mega-Tech)
-
-# drivers/segac2.c: 5084
-Cyber Police ESWAT: Enhanced Special Weapons and Tactics (Mega-Tech)
-
-# drivers/segac2.c: 5085
-Super Monaco GP (Mega-Tech)
-
-# drivers/segac2.c: 5086
-Moonwalker (Mega-Tech)
-
-# drivers/segac2.c: 5087
-Crack Down (Mega-Tech)
-
-# drivers/segac2.c: 5090
-Arrow Flash (Mega-Tech)
-
-# drivers/segac2.c: 5093
-Alien Storm (Mega-Tech
-
-# drivers/segac2.c: 5095
-Bonanza Bros. (Mega-Tech)
-
-# drivers/segac2.c: 5098
-Sonic The Hedgehog (Mega-Tech, set 1)
-
-# drivers/segac2.c: 5099
-Sonic The Hedgehog (Mega-Tech, set 2)
-
-# drivers/segac2.c: 5100
-Fire Shark (Mega-Tech)
-
-# drivers/segac2.c: 5100
-Toaplan / Sega
-
-# drivers/segac2.c: 5104
-Golden Axe II (Mega-Tech)
-
-# drivers/segac2.c: 5105
-Joe Montana II: Sports Talk Football (Mega-Tech)
-
-# drivers/segac2.c: 5107
-Kid Chameleon (Mega-Tech)
-
-# drivers/segac2.c: 5109
-Sonic The Hedgehog 2 (Mega-Tech)
-
-# drivers/segac2.c: 5139
-Mega Play BIOS
-
-# drivers/segac2.c: 5140
-Sonic The Hedgehog (Mega Play)
-
-# drivers/segac2.c: 5141
-Golden Axe II (Mega Play)
-
-# drivers/segac2.c: 5142
-Grand Slam (Mega Play)
-
-# drivers/segac2.c: 5143
-Tecmo World Cup (Mega Play)
-
-# drivers/segac2.c: 5144
-Streets of Rage II (Mega Play)
-
-# drivers/segac2.c: 5145
-Bio-hazard Battle (Mega Play)
-
-# drivers/segac2.c: 5146
-Sonic The Hedgehog 2 (Mega Play)
-
-# drivers/segac2.c: 5150
-Mazin Wars (Mega Play)
 
 # drivers/segahang.c: 110
 mcu
@@ -39571,175 +39661,175 @@ Second Practice
 # drivers/strnskil.c: 363, 366, 369
 mono
 
-# drivers/stv.c: 1680
+# drivers/stv.c: 1681
 cpu #%d (PC=%08X) CDBLOCK_COMMAND 0xe0
 
-# drivers/stv.c: 1784
+# drivers/stv.c: 1785
 Cmd 0x93...pc= %08X
 
-# drivers/stv.c: 2480
+# drivers/stv.c: 2481
 Read from PORT_AD
 
-# drivers/stv.c: 3602
+# drivers/stv.c: 3603
 Prot read at %06x with data = %08x
 
-# drivers/stv.c: 3824, 3948
+# drivers/stv.c: 3825, 3949
 PDR1
 
-# drivers/stv.c: 3850, 3974
+# drivers/stv.c: 3851, 3975
 PDR2
 
-# drivers/stv.c: 3895, 4019
+# drivers/stv.c: 3896, 4020
 1P Push Switch
 
-# drivers/stv.c: 3896, 4020
+# drivers/stv.c: 3897, 4021
 2P Push Switch
 
-# drivers/stv.c: 3918
+# drivers/stv.c: 3919
 Asia Ntsc
 
-# drivers/stv.c: 3920
+# drivers/stv.c: 3921
 Sud America Ntsc
 
-# drivers/stv.c: 3922
+# drivers/stv.c: 3923
 Asia Pal
 
-# drivers/stv.c: 3923
+# drivers/stv.c: 3924
 Europe/Other Pal
 
-# drivers/stv.c: 3924
+# drivers/stv.c: 3925
 Sud America Pal
 
-# drivers/stv.c: 3927
+# drivers/stv.c: 3928
 B
 
-# drivers/stv.c: 3928
+# drivers/stv.c: 3929
 C
 
-# drivers/stv.c: 3929
+# drivers/stv.c: 3930
 A
 
-# drivers/stv.c: 3930
+# drivers/stv.c: 3931
 Start
 
-# drivers/stv.c: 3931
+# drivers/stv.c: 3932
 Up
 
-# drivers/stv.c: 3932
+# drivers/stv.c: 3933
 Down
 
-# drivers/stv.c: 3933
+# drivers/stv.c: 3934
 Left
 
-# drivers/stv.c: 3934
+# drivers/stv.c: 3935
 Right
 
-# drivers/stv.c: 3937
+# drivers/stv.c: 3938
 L trig
 
-# drivers/stv.c: 3938
+# drivers/stv.c: 3939
 Z
 
-# drivers/stv.c: 3939
+# drivers/stv.c: 3940
 Y
 
-# drivers/stv.c: 3940
+# drivers/stv.c: 3941
 X
 
-# drivers/stv.c: 3941
+# drivers/stv.c: 3942
 R trig
 
-# drivers/stv.c: 4214
+# drivers/stv.c: 4215
 a
 
-# drivers/stv.c: 4214
+# drivers/stv.c: 4215
 stvinfo.txt
 
-# drivers/stv.c: 4254
+# drivers/stv.c: 4255
 puyosun
 
-# drivers/stv.c: 4255
+# drivers/stv.c: 4256
 mausuke
 
-# drivers/stv.c: 4256
+# drivers/stv.c: 4257
 groovef
 
-# drivers/stv.c: 4257
+# drivers/stv.c: 4258
 batmanfr
 
-# drivers/stv.c: 4258
+# drivers/stv.c: 4259
 colmns97
 
-# drivers/stv.c: 4405, 4409
+# drivers/stv.c: 4406, 4410
 left
 
-# drivers/stv.c: 4405, 4410
+# drivers/stv.c: 4406, 4411
 right
 
-# drivers/stv.c: 4416
+# drivers/stv.c: 4417
 20091.bin
 
-# drivers/stv.c: 4416
+# drivers/stv.c: 4417
 epr19730.ic8
 
-# drivers/stv.c: 4416
+# drivers/stv.c: 4417
 mp17951a.s
 
-# drivers/stv.c: 4416
+# drivers/stv.c: 4417
 mp17952a.s
 
-# drivers/stv.c: 4416
+# drivers/stv.c: 4417
 mp17953a.ic8
 
-# drivers/stv.c: 4416
+# drivers/stv.c: 4417
 mp17954a.s
 
-# drivers/stv.c: 4416
+# drivers/stv.c: 4417
 saturn.bin
 
-# drivers/stv.c: 4416
+# drivers/stv.c: 4417
 stv110.bin
 
-# drivers/stv.c: 4437
+# drivers/stv.c: 4438
 Japan (bios epr19730)
 
-# drivers/stv.c: 4437
+# drivers/stv.c: 4438
 japan
 
-# drivers/stv.c: 4438
+# drivers/stv.c: 4439
 Japan (bios mp17951a)
 
-# drivers/stv.c: 4438
+# drivers/stv.c: 4439
 japana
 
-# drivers/stv.c: 4439
+# drivers/stv.c: 4440
 USA (bios mp17952a)
 
-# drivers/stv.c: 4439
+# drivers/stv.c: 4440
 us
 
-# drivers/stv.c: 4440
+# drivers/stv.c: 4441
 Japan (bios 20091)
 
-# drivers/stv.c: 4440
+# drivers/stv.c: 4441
 japanb
 
-# drivers/stv.c: 4441
+# drivers/stv.c: 4442
 Taiwan (bios mp17953a)
 
-# drivers/stv.c: 4441
+# drivers/stv.c: 4442
 taiwan
 
-# drivers/stv.c: 4442
+# drivers/stv.c: 4443
 Europe (bios mp17954a)
 
-# drivers/stv.c: 4442
+# drivers/stv.c: 4443
 europe
 
-# drivers/stv.c: 4443
+# drivers/stv.c: 4444
 unknown (debug?)
 
-# drivers/stv.c: 5262, 5285
+# drivers/stv.c: 5263, 5286
 sfish2
 
 # drivers/subs.c: 98
@@ -43440,6 +43530,9 @@ P1 Throw
 
 # drivers/toobin.c: 166
 P2 Throw
+
+# drivers/topshoot.c: 263, 266, 267, 283, 286
+mono
 
 # drivers/topspeed.c: 521
 Price to Continue
@@ -60124,9 +60217,6 @@ BIOS8:
 # ui/mame32.rc: 1226
 IPS
 
-# ui/mame32.rc: 1233
-IPS:
-
 # ui/mame32.rc: 1274
 A
 
@@ -62932,10 +63022,10 @@ can't find submenu for show folders context menu
 # ui/win32ui.c: 6952
 loading %-12s\r
 
-# ui_font.c: 78
+# ui_font.c: 80
 rb
 
-# ui_font.c: 889
+# ui_font.c: 896
 Fatal error: could not allocate memory for UI font!
 
 # ui_lang.c: 9
@@ -63179,7 +63269,7 @@ Local font file is not installed. You must install CJK font into font directory 
 %s %3ddB
 
 # version.c: 2
-0.100u1 (
+0.100u2 (
 
 # vidhrdw/actfancr.c: 85
 control_1
@@ -64843,31 +64933,28 @@ spelunkr_palbank
 # vidhrdw/m62.c: 238
 irem_textram
 
-# vidhrdw/m72.c: 162
-rastersplit
-
-# vidhrdw/m72.c: 162, 163, 164, 165, 166, 167, 168, 169
-video
-
-# vidhrdw/m72.c: 163
+# vidhrdw/m72.c: 160
 splitline
 
-# vidhrdw/m72.c: 164
+# vidhrdw/m72.c: 160, 161, 162, 163, 164, 165, 166
+video
+
+# vidhrdw/m72.c: 161
 video_off
 
-# vidhrdw/m72.c: 165
+# vidhrdw/m72.c: 162
 scrollx1
 
-# vidhrdw/m72.c: 166
+# vidhrdw/m72.c: 163
 scrolly1
 
-# vidhrdw/m72.c: 167
+# vidhrdw/m72.c: 164
 scrollx2
 
-# vidhrdw/m72.c: 168
+# vidhrdw/m72.c: 165
 scrolly2
 
-# vidhrdw/m72.c: 169
+# vidhrdw/m72.c: 166
 m72_spriteram
 
 # vidhrdw/m90.c: 71
@@ -65566,85 +65653,82 @@ RnGTTL
 # vidhrdw/rungun.c: 130
 VRAM
 
-# vidhrdw/segac2.c: 183, 184, 185, 198, 199, 200, 201
+# vidhrdw/segac2.c: 185, 186, 187, 199, 200, 201, 202
 C2_VDP
 
-# vidhrdw/segac2.c: 183
+# vidhrdw/segac2.c: 185
 VDP Registers
 
-# vidhrdw/segac2.c: 184
+# vidhrdw/segac2.c: 186
 VDP VRam
 
-# vidhrdw/segac2.c: 185
+# vidhrdw/segac2.c: 187
 VDP VSRam
 
-# vidhrdw/segac2.c: 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 202, 203, 204, 205, 206
+# vidhrdw/segac2.c: 188
+Background Pal Lookup
+
+# vidhrdw/segac2.c: 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 203, 204, 205, 206, 207
 C2_Video
 
-# vidhrdw/segac2.c: 186
-Palette Bank
-
-# vidhrdw/segac2.c: 187
-Background Pal Base
-
-# vidhrdw/segac2.c: 188
+# vidhrdw/segac2.c: 189
 Sprite Pal Base
 
-# vidhrdw/segac2.c: 189
+# vidhrdw/segac2.c: 190
 Display Enabled
 
-# vidhrdw/segac2.c: 190
+# vidhrdw/segac2.c: 191
 Scroll A Base in VRAM
 
-# vidhrdw/segac2.c: 191
+# vidhrdw/segac2.c: 192
 Scroll B Base in VRAM
 
-# vidhrdw/segac2.c: 192
+# vidhrdw/segac2.c: 193
 Window Base in VRAM
 
-# vidhrdw/segac2.c: 193
+# vidhrdw/segac2.c: 194
 Sprite Table Base in VRAM
 
-# vidhrdw/segac2.c: 194
+# vidhrdw/segac2.c: 195
 HScroll Data Base in VRAM
 
-# vidhrdw/segac2.c: 195
+# vidhrdw/segac2.c: 196
 vdp_hscrollmask
 
-# vidhrdw/segac2.c: 196
+# vidhrdw/segac2.c: 197
 vdp_hscrollsize
 
-# vidhrdw/segac2.c: 197
+# vidhrdw/segac2.c: 198
 vdp_vscrollmode
 
-# vidhrdw/segac2.c: 198
+# vidhrdw/segac2.c: 199
 VDP Command Part
 
-# vidhrdw/segac2.c: 199
+# vidhrdw/segac2.c: 200
 VDP Current Code
 
-# vidhrdw/segac2.c: 200
+# vidhrdw/segac2.c: 201
 VDP Address
 
-# vidhrdw/segac2.c: 201
+# vidhrdw/segac2.c: 202
 VDP DMA Mode
 
-# vidhrdw/segac2.c: 202
+# vidhrdw/segac2.c: 203
 scrollheight
 
-# vidhrdw/segac2.c: 203
+# vidhrdw/segac2.c: 204
 scrollwidth
 
-# vidhrdw/segac2.c: 204
+# vidhrdw/segac2.c: 205
 Background Colour
 
-# vidhrdw/segac2.c: 205
+# vidhrdw/segac2.c: 206
 Window Horz
 
-# vidhrdw/segac2.c: 206
+# vidhrdw/segac2.c: 207
 Window Vert
 
-# vidhrdw/segac2.c: 742
+# vidhrdw/segac2.c: 678
 Video height = 240!
 
 # vidhrdw/segaic16.c: 846, 1082
@@ -66205,79 +66289,79 @@ kx = %x, ky = %x
 # vidhrdw/stvvdp2.c: 2158
 kast = %x, dkast = %x, dkax = %x
 
-# vidhrdw/stvvdp2.c: 3479
+# vidhrdw/stvvdp2.c: 3481
 Window control enabled on a tilemap plane = %02x\n
 
-# vidhrdw/stvvdp2.c: 3486
+# vidhrdw/stvvdp2.c: 3488
 Mosaic control enabled = %04x\n
 
-# vidhrdw/stvvdp2.c: 5196
+# vidhrdw/stvvdp2.c: 5198
 NBG3 %sabled
 
-# vidhrdw/stvvdp2.c: 5196, 5201, 5206, 5211, 5216, 5221
+# vidhrdw/stvvdp2.c: 5198, 5203, 5208, 5213, 5218, 5223
 dis
 
-# vidhrdw/stvvdp2.c: 5196, 5201, 5206, 5211, 5216, 5221
+# vidhrdw/stvvdp2.c: 5198, 5203, 5208, 5213, 5218, 5223
 en
 
-# vidhrdw/stvvdp2.c: 5201
+# vidhrdw/stvvdp2.c: 5203
 NBG2 %sabled
 
-# vidhrdw/stvvdp2.c: 5206
+# vidhrdw/stvvdp2.c: 5208
 NBG1 %sabled
 
-# vidhrdw/stvvdp2.c: 5211
+# vidhrdw/stvvdp2.c: 5213
 NBG0 %sabled
 
-# vidhrdw/stvvdp2.c: 5216
+# vidhrdw/stvvdp2.c: 5218
 RBG0 %sabled
 
-# vidhrdw/stvvdp2.c: 5221
+# vidhrdw/stvvdp2.c: 5223
 SPRITE %sabled
 
-# vidhrdw/stvvdp2.c: 5243
+# vidhrdw/stvvdp2.c: 5245
 Warning: VRAM Size = 8 MBit!\n
 
-# vidhrdw/stvvdp2.c: 5248
+# vidhrdw/stvvdp2.c: 5250
 Warning: Color RAM Coefficient Table Ctrl used\n
 
-# vidhrdw/stvvdp2.c: 5305
+# vidhrdw/stvvdp2.c: 5307
 mamevdp1
 
-# vidhrdw/stvvdp2.c: 5305, 5339, 5345, 5351, 5357, 5363, 5369, 5375, 5381, 5387
+# vidhrdw/stvvdp2.c: 5307, 5341, 5347, 5353, 5359, 5365, 5371, 5377, 5383, 5389
 w+b
 
-# vidhrdw/stvvdp2.c: 5317
+# vidhrdw/stvvdp2.c: 5319
 r+b
 
-# vidhrdw/stvvdp2.c: 5317
+# vidhrdw/stvvdp2.c: 5319
 vdp1_vram.bin
 
-# vidhrdw/stvvdp2.c: 5339
+# vidhrdw/stvvdp2.c: 5341
 workraml.dmp
 
-# vidhrdw/stvvdp2.c: 5345
+# vidhrdw/stvvdp2.c: 5347
 workramh.dmp
 
-# vidhrdw/stvvdp2.c: 5351
+# vidhrdw/stvvdp2.c: 5353
 scu.dmp
 
-# vidhrdw/stvvdp2.c: 5357
+# vidhrdw/stvvdp2.c: 5359
 stv_a0_vram.dmp
 
-# vidhrdw/stvvdp2.c: 5363
+# vidhrdw/stvvdp2.c: 5365
 stv_a1_vram.dmp
 
-# vidhrdw/stvvdp2.c: 5369
+# vidhrdw/stvvdp2.c: 5371
 stv_b0_vram.dmp
 
-# vidhrdw/stvvdp2.c: 5375
+# vidhrdw/stvvdp2.c: 5377
 stv_b1_vram.dmp
 
-# vidhrdw/stvvdp2.c: 5381
+# vidhrdw/stvvdp2.c: 5383
 cram.dmp
 
-# vidhrdw/stvvdp2.c: 5387
+# vidhrdw/stvvdp2.c: 5389
 68k.dmp
 
 # vidhrdw/suna8.c: 449

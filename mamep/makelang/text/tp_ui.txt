@@ -1158,7 +1158,7 @@ Horizontal
 How cheats work
 
 
-# ui/layout.c: 104
+# ui/layout.c: 104 ui/mame32.rc: 1233
 IPS Patch
 
 

@@ -1122,7 +1122,7 @@ Horizontal
 How cheats work
 如何使用作弊引擎
 
-# ui/layout.c: 104
+# ui/layout.c: 104 ui/mame32.rc: 1233
 IPS Patch
 IPS 修補程式
 
