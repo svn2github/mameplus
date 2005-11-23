@@ -606,7 +606,7 @@ static void neogeo_custom_memory(void)
 
 	if (!strcmp(Machine->gamedrv->name,"kof2000") ||
 		!strcmp(Machine->gamedrv->name,"kof2000n") ||
-		!strcmp(Machine->gamedrv->name,"kof2000d"))
+		!strcmp(Machine->gamedrv->name,"kof2knd"))
 	{
 		/* Patch out loop to disable console mode */
 		UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
@@ -716,7 +716,7 @@ static void neogeo_custom_memory(void)
 			!strcmp(Machine->gamedrv->name,"kof99nd") ||
 			!strcmp(Machine->gamedrv->name,"kof2000") ||
 			!strcmp(Machine->gamedrv->name,"kof2000n") ||
-			!strcmp(Machine->gamedrv->name,"kof2000d") ||
+			!strcmp(Machine->gamedrv->name,"kof2knd") ||
 			!strcmp(Machine->gamedrv->name,"kizuna") ||
 			!strcmp(Machine->gamedrv->name,"lastblad") ||
 			!strcmp(Machine->gamedrv->name,"lastblda") ||

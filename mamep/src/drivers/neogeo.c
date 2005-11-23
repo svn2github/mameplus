@@ -6217,7 +6217,7 @@ ROM_START( mslug3nd )
 	ROM_LOAD16_BYTE( "256-c8d.bin",  0x3000001, 0x800000, CRC(a369f9d4) SHA1(f8146ea80a1a23da7e7e04c88f778ee9abdfeb5c) ) /* Plane 2,3 */
 ROM_END
 
-ROM_START( kof2000d )
+ROM_START( kof2knd )
 	ROM_REGION( 0x500000, REGION_CPU1, 0 )
 	ROM_LOAD16_WORD_SWAP( "257-p1n.bin",  0x000000, 0x100000, CRC(5f809dbe) SHA1(2bc233dcff5622de86d01e3b74b840c7caf12982) )
 	ROM_LOAD16_WORD_SWAP( "257-p2n.bin",  0x100000, 0x400000, CRC(693c2c5e) SHA1(dc9121b7369ef46596343cac055a00aec81704d4) )
@@ -7305,7 +7305,7 @@ DRIVER_INIT( garoud )
 	init_neogeo();
 }
 
-DRIVER_INIT( kof2000d )
+DRIVER_INIT( kof2knd )
 {
 	int i;
 	extern int neogeo_fix_bank_type;
@@ -7603,11 +7603,11 @@ GAMEB( 2002, neonopon, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Blast
 GAMEB( 2002, neopong,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Neodev", "Neo Pong (v1.1)" )
 GAMEB( 2002, npong10,  neopong,  neogeo, neogeo, neogeo,  neogeo,   ROT0, "Neodev", "Neo Pong (v1.0)" )
 
-/* Decrypted sets. These are hacks or bootleggs */
-GAMEB( 1999, kof99nd,  kof99,    neogeo, raster, neogeo,  sfixdec,  ROT0, "SNK", "The King of Fighters '99 - Millennium Battle (non encrypted P,decrypted C)" )
+/* Decrypted sets. These are hacks or bootlegs */
+GAMEB( 1999, kof99nd,  kof99,   neogeo, raster, neogeo,  sfixdec,  ROT0, "SNK", "The King of Fighters '99 - Millennium Battle (non encrypted P,decrypted C)" )
 GAMEB( 1999, garoud,   garou,    neogeo, ras320, neogeo,  garoud,   ROT0, "SNK", "Garou - Mark of the Wolves (decrypted C)" )
-GAMEB( 2000, mslug3nd, mslug3,   neogeo, raster, neogeo,  mslug3nd, ROT0, "SNK", "Metal Slug 3 (non encrypted P,decrypted C)" )
-GAMEB( 2000, kof2000d, kof2000,  neogeo, neogeo, neogeo,  kof2000d, ROT0, "SNK", "The King of Fighters 2000 (non encrypted P,decrypted C)" )
+GAMEB( 2000, mslug3nd, mslug3,  neogeo, raster, neogeo,  mslug3nd, ROT0, "SNK", "Metal Slug 3 (non encrypted P,decrypted C)" )
+GAMEB( 2000, kof2knd,  kof2000, neogeo, neogeo, neogeo,  kof2knd,  ROT0, "SNK", "The King of Fighters 2000 (non encrypted P,decrypted C)" )
 GAMEB( 2001, zupapad,  zupapa,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Zupapa! (custom decrypted C)" )
 GAMEB( 2001, sengok3d, sengoku3, neogeo, neo320, neogeo,  sfixdec,  ROT0, "SNK", "Sengoku 3 / Sengoku Legends 2001 (decrypted P,decrypted C)" )
 GAMEB( 2000, nitdd,    nitd,     neogeo, neo320, neogeo,  sfixdec,  ROT0, "Eleven / Gavaking", "Nightmare in the Dark (decrypted C)" )

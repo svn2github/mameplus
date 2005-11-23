@@ -4524,7 +4524,7 @@ static void onscrd_overclock(int increment,int arg)
 		sprintf(buf,"%s %s %3d%%", ui_getstring (UI_allcpus), ui_getstring (UI_overclock), oc);
 	else
 		sprintf(buf,"%s %s%d %3d%%", ui_getstring (UI_overclock), ui_getstring (UI_cpu), arg, oc);
-	displayosd(buf,oc/2,100/2);
+	displayosd(buf,oc/3,100/3);
 }
 
 static void onscrd_refresh(int increment,int arg)

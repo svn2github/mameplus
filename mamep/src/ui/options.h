@@ -185,7 +185,6 @@ typedef struct
 	BOOL   erroroslog;
 	BOOL   old_timing;
 	BOOL   skip_gameinfo;
-	BOOL   skip_validitychecks;
 	char*  bios;
 	char*  statename;
 #ifdef ROM_PATCH
@@ -196,7 +195,7 @@ typedef struct
 	BOOL   auto_pause_playback;
 #endif /* AUTO_PAUSE_PLAYBACK */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-        //ks hcmame e switch m68k core
+	/* ks hcmame e switch m68k core */
 	int    m68k_core;
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 #ifdef TRANS_UI

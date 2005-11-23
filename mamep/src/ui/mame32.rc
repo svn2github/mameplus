@@ -530,21 +530,21 @@ BEGIN
     CONTROL         "Run in a window",IDC_WINDOWED,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,10,45,117,10,0,HIDC_WINDOWED
     CONTROL         "Start out maximized",IDC_MAXIMIZE,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,58,117,10,0,HIDC_MAXIMIZE
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,59,117,10,0,HIDC_MAXIMIZE
     CONTROL         "Enforce aspect ratio",IDC_KEEPASPECT,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,71,117,10,0,
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,73,117,10,0,
                     HIDC_KEEPASPECT
     CONTROL         "Throttle",IDC_THROTTLE,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,10,84,117,10,0,HIDC_THROTTLE
-    GROUPBOX        "Rotation",IDC_STATIC,4,98,123,65
-    COMBOBOX        IDC_ROTATE,10,111,111,72,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP,10,87,117,10,0,HIDC_THROTTLE
+    GROUPBOX        "Rotation",IDC_STATIC,4,101,123,65
+    COMBOBOX        IDC_ROTATE,10,114,111,72,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP,0,HIDC_ROTATE
     CONTROL         "Flip screen upside-down",IDC_FLIPY,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,131,111,10,0,HIDC_FLIPY
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,134,111,10,0,HIDC_FLIPY
     CONTROL         "Flip screen left-right",IDC_FLIPX,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,146,111,10,0,HIDC_FLIPX
-    GROUPBOX        "Screen",IDC_SCREENTEXT,4,167,123,38
-    COMBOBOX        IDC_SCREEN,10,182,111,64,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP,0,HIDC_SCREEN
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,148,111,10,0,HIDC_FLIPX
+    GROUPBOX        "Screen",IDC_SCREENTEXT,4,170,123,35
+    COMBOBOX        IDC_SCREEN,10,185,111,64,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP,0,HIDC_SCREEN
     GROUPBOX        "Gamma correction",IDC_STATIC,134,101,110,32
     CONTROL         "GammaSlider",IDC_GAMMA,"msctls_trackbar32",TBS_BOTH | 
                     TBS_NOTICKS | WS_TABSTOP,140,115,79,10,0,HIDC_GAMMA
@@ -835,11 +835,8 @@ BEGIN
     CONTROL         "Skip game info",IDC_SKIP_GAME_INFO,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,115,125,10,0,
                     HIDC_SKIP_GAME_INFO
-    CONTROL         "Skip validity checks",IDC_SKIP_VALIDITY_CHECKS,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,129,125,10,0,
-                    HIDC_SKIP_VALIDITY_CHECKS
     CONTROL         "Confirm on exit game",IDC_CONFIRM_QUIT,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,143,125,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,129,125,10
     GROUPBOX        "",IDC_STATIC,137,45,108,110,WS_DISABLED
     CONTROL         "Use additional Artwork",IDC_ARTWORK,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,143,45,96,10,0,HIDC_ARTWORK

@@ -340,7 +340,6 @@
 #define IDC_GAME_CAPTION                1224
 #define IDC_SCREENSHOT_BORDERSIZE       1225
 #define IDC_SCREENSHOT_BORDERCOLOR      1226
-#define IDC_SKIP_VALIDITY_CHECKS        1227
 #define IDC_CYCLETIMESECTXT             1230
 #define IDC_SCREENSHOT_BORDERSIZETXT    1232
 #define IDC_PADDLE                      1234
@@ -356,12 +355,8 @@
 
 #define IDC_EFFECTOVERRIDES             1301
 #define IDC_CONFIRM_QUIT                1302
-
-#if 1
 #define IDC_M68K_CORE                   1303 // ks hcmame s switch m68k core
 #define IDC_M68K_CORETEXT               1304 // ks hcmame s switch m68k core
-#endif
-
 #ifdef USE_VOLUME_AUTO_ADJUST
 #define IDC_VOLUME_ADJUST               1305
 #endif /* USE_VOLUME_AUTO_ADJUST */

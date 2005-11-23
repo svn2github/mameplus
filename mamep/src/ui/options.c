@@ -543,7 +543,6 @@ static struct rc_option rc_game_opts[] =
 	{ "log", NULL, rc_bool, &gOpts.errorlog, "0", 0, 0, NULL, "generate error.log" },
 	{ "oslog", NULL, rc_bool, &gOpts.erroroslog, "0", 0, 0, NULL, "output error log to debugger" },
 	{ "skip_gameinfo", NULL, rc_bool, &gOpts.skip_gameinfo, "0", 0, 0, NULL, "skip displaying the game info screen" },
-	{ "skip_validitychecks", NULL, rc_bool, &gOpts.skip_validitychecks, "1", 0, 0, NULL, "skip doing the code validity checks" },
 	{ "bios", NULL, rc_string, &gOpts.bios, "default", 0, 14, NULL, "change system bios" },
 	{ "state", NULL, rc_string, &gOpts.statename, NULL, 0, 0, NULL, "state to load" },
 #ifdef ROM_PATCH
@@ -554,7 +553,7 @@ static struct rc_option rc_game_opts[] =
 	{ "auto_pause_playback", NULL, rc_bool, &gOpts.auto_pause_playback, "0", 0, 0, NULL, "automatic pause when playback is started and finished" },
 #endif /* AUTO_PAUSE_PLAYBACK */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-	//ks hcmame s switch m68k core
+	/* ks hcmame s switch m68k core */
 	{ "m68k_core", NULL, rc_int, &gOpts.m68k_core, "0", 0, 2, NULL, "change m68k core (0:C, 1:DRC, 2:ASM+DRC)" },
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 #ifdef TRANS_UI

@@ -1094,7 +1094,6 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sleds",                    pOpts->leds            ? "" : "no");
 
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sskip_gameinfo",           pOpts->skip_gameinfo   ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sskip_validitychecks",     pOpts->skip_validitychecks ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%shigh_priority",           pOpts->high_priority   ? "" : "no");
 
 	if (DriverHasOptionalBIOS(nGameIndex))
@@ -1111,7 +1110,7 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -ui_transparency %d",        pOpts->ui_transparency);
 #endif /* TRANS_UI */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-	//ks hcmame s switch m68k core
+	/* ks hcmame s switch m68k core */
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -m68k_core %d",              pOpts->m68k_core);
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 
