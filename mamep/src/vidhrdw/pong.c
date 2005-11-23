@@ -81,13 +81,13 @@ static void score_timer_cb(int param)
 {
 	score_sound_timer = 0;              /* SU 059 */
 	/* disable score sound */
-    pong_score_sound = 0;
+	pong_score_sound = 0;
 }
 
 static void serve_timer_cb(int param)
 {
 	serve_timer = 0;		            /* SU 059 */
-    /* falling edge of serve timer (output of NE555/F4) */
+	/* falling edge of serve timer (output of NE555/F4) */
 	hpos_a = 0;
 	hpos_b = 0;
 	hpos_c = 0;
@@ -113,7 +113,7 @@ VIDEO_START( pong )
 
 	score_q = 0;
 
-    hpos_a = 0;
+	hpos_a = 0;
 	hpos_b = 0;
 	hpos_c = 0;
 
@@ -137,10 +137,10 @@ VIDEO_START( pong )
 
 	pong_hit_detector();
 
-    if( video_start_generic_bitmapped() )
-        return 1;
+	if( video_start_generic_bitmapped() )
+		return 1;
 
-    return 0;
+	return 0;
 }
 
 VIDEO_UPDATE( pong )
@@ -149,21 +149,21 @@ VIDEO_UPDATE( pong )
 	char buf[32+1];
 
 	sprintf(buf, "vvel: %2d", v_velocity);
-    usrintf_showmessage(buf, 0, 1);
+	ui_draw_text(buf, 0, 1);
 	sprintf(buf, "hpos: %3d", hpos);
-    usrintf_showmessage(buf, 128, 1);
-    sprintf(buf, "vpos: %3d", vpos);
-    usrintf_showmessage(buf, 256, 1);
-    sprintf(buf, "Aa/Ba: %d/%d", hit_a, hit_b);
-	usrintf_showmessage(buf, 0, 9);
+	ui_draw_text(buf, 128, 1);
+	sprintf(buf, "vpos: %3d", vpos);
+	ui_draw_text(buf, 256, 1);
+	sprintf(buf, "Aa/Ba: %d/%d", hit_a, hit_b);
+	ui_draw_text(buf, 0, 9);
 	sprintf(buf, "hpos_h: %3d", hpos_h);
-    usrintf_showmessage(buf, 128, 9);
-    sprintf(buf, "vpos_h: %3d", vpos_h);
-    usrintf_showmessage(buf, 256, 9);
+	ui_draw_text(buf, 128, 9);
+	sprintf(buf, "vpos_h: %3d", vpos_h);
+	ui_draw_text(buf, 256, 9);
 	sprintf(buf, "speed: %2d %d/%d->%d", speed, speed_q1, speed_q2, (speed_q1 && speed_q2) ? 0 : 1);
-	usrintf_showmessage(buf, 0, 17);
+	ui_draw_text(buf, 0, 17);
 	sprintf(buf, "L/R: %d/%d", score_q, score_q ^ 1);
-	usrintf_showmessage(buf, 0, 25);
+	ui_draw_text(buf, 0, 25);
 #endif
 
 	if( readinputport(0) & 1 )
@@ -174,16 +174,16 @@ VIDEO_UPDATE( pong )
 			ATRACT = 1;
 			score1 = 0;
 			score2 = 0;
-            if(	!serve_timer )                                                 /* SU 059 */
+			if(	!serve_timer )                                                 /* SU 059 */
 			{
 				/* monoflop (NE555/G4) with a 330 kOhms resistor and 4.7 æF capacitor */
-                timer_set(TIME_IN_USEC(1.2*330000.0*4.7), 0, serve_timer_cb);  /* SU 059 */
+				timer_set(TIME_IN_USEC(1.2*330000.0*4.7), 0, serve_timer_cb);  /* SU 059 */
 				serve_timer = 1;	                                           /* SU 059 */
 			}
-        }
+		}
 	}
 
-    copybitmap(bitmap,tmpbitmap,0,0,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
+	copybitmap(bitmap,tmpbitmap,0,0,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
 	fillbitmap(tmpbitmap, Machine->pens[0], &Machine->visible_area);
 
 	/* reset the VPAD timers */
@@ -191,12 +191,12 @@ VIDEO_UPDATE( pong )
 	vpad2_timer = 0;
 
 	/* save state of the vblank flip-flop 74107/A2 */
-    hit_vbl_0 = hit_vbl_q;
+	hit_vbl_0 = hit_vbl_q;
 
-    logerror("VIDEO_UPDATE at H:%d, V:%d\n", (int)activecpu_get_reg(GS_H), (int)activecpu_get_reg(GS_V));
+	logerror("VIDEO_UPDATE at H:%d, V:%d\n", (int)activecpu_get_reg(GS_H), (int)activecpu_get_reg(GS_V));
 
 	activecpu_set_reg(GS_V, 0);
-    V = 0;
+	V = 0;
 	VRESET = 1;
 }
 
@@ -340,21 +340,21 @@ INTERRUPT_GEN( pong_vh_scanline )
  * Look at the gates E2, E3, F2 for the horizontal decoding.
  *****************************************************************************/
 
-    /* Decode the players scores into 7 segment displays
-     * Gate F2.1 decodes 32V && !64V && !128V && 'hpos valid',
-     * so we first check if the VERTICAL SYNC counter is in range:
-     */
-    if( V32 && !V64 && !V128 )
-    {
-        /* Instead of going through the whole line and
-         * checking the expression for the E2/E3 gates,
-         * we call a decoding function with appropriate X offsets.
-         */
+	/* Decode the players scores into 7 segment displays
+	 * Gate F2.1 decodes 32V && !64V && !128V && 'hpos valid',
+	 * so we first check if the VERTICAL SYNC counter is in range:
+	 */
+	if( V32 && !V64 && !V128 )
+	{
+		/* Instead of going through the whole line and
+		 * checking the expression for the E2/E3 gates,
+		 * we call a decoding function with appropriate X offsets.
+		 */
 		pong_7seg(128, score1 > 9 ? 1 : 15);
 		pong_7seg(128 + 32, score1 % 10);
 		pong_7seg(256 + 32, score2 > 9 ? 1 : 15);
 		pong_7seg(256 + 32 + 32, score2 % 10);
-    }
+	}
 
 
 /******* THE ATRACT MODE *****************************************************
@@ -435,7 +435,7 @@ INTERRUPT_GEN( pong_vh_scanline )
 			plot_pixel(tmpbitmap, 256+128+5, V, pen1);
 			plot_pixel(tmpbitmap, 256+128+6, V, pen1);
 			plot_pixel(tmpbitmap, 256+128+7, V, pen1);
-            vpad2_count += 1;
+			vpad2_count += 1;
 		}
 		else
 		/* it isn't, was the timer fired already? */
@@ -553,7 +553,7 @@ INTERRUPT_GEN( pong_vh_scanline )
 					hit_sound = 0;
 				}
 			}
-        }
+		}
 		/* If VBLANK is not active */
 		if( !VBLANK )
 		{
@@ -563,19 +563,19 @@ INTERRUPT_GEN( pong_vh_scanline )
 
 		if( V == PONG_VBLANK )
 		{
-            /* eventually enable hit VBLANK sound */
+			/* eventually enable hit VBLANK sound */
 			if( hit_vblank > 0 )
 				hit_vblank--;
 			pong_vblank_sound = hit_vblank;
 		}
 
-        /*
+		/*
 		 * output of 7410 E2.2
 		 * check if bits 2 and 3 of counter A and the RC output of counter B are set
 		 */
 		VVID = ( vpos_a >= 12 && vpos_b == 15 ) ? 1 : 0;
 
-        if ( !serve_timer )	        /* SU 059 */
+		if ( !serve_timer )	        /* SU 059 */
 		{
 			if( VVID && V == VBLANK )	/* VBLANK just went low ? */
 			{
@@ -653,18 +653,18 @@ INTERRUPT_GEN( pong_vh_scanline )
 							/* on a falling edge of RC output of H7: toggle the JK flip-flop */
 							if( hpos_b == 0 )
 								hpos_c ^= 1;
-                        }
+						}
 						/* increment the HORIZONTAL POSITION counter A (9316/G7) */
 						hpos_a = (hpos_a + 1) % 16;
-                    }
-                }
+					}
+				}
 				/*
 				 * Output of 7410/E2.2
 				 * Are bits 2+3 of counter A, RC of counter B and the JK flip-flop active?
 				 */
 				HVID = ( hpos_a >= 12 && hpos_b == 15 && hpos_c ) ? 1 : 0;
 
-                if( HVID && VVID )
+				if( HVID && VVID )
 				{
 					if( !VBLANK )
 						plot_pixel(tmpbitmap, H, V, pen1);
@@ -675,10 +675,10 @@ INTERRUPT_GEN( pong_vh_scanline )
 					if( VPAD1 && H >= 128 && H < 128+8 )
 					{
 #ifdef MAME_DEBUG
-                        hpos_h = hpos;
-                        vpos_h = vpos;
+						hpos_h = hpos;
+						vpos_h = vpos;
 #endif
-                        /* 7474/H3.2 is cleared by the HIT1 signal */
+						/* 7474/H3.2 is cleared by the HIT1 signal */
 						score_q = 0;
 						if( hit_sound == 0 )
 						{
@@ -686,20 +686,20 @@ INTERRUPT_GEN( pong_vh_scanline )
 							if( speed < 10 )
 								speed += 1;
 						}
-                        vvel_b = (vpad1_count & 2) ? 0 : 1;
-                        vvel_c = (vpad1_count & 4) ? 0 : 1;
-                        vvel_d = (vpad1_count & 8) ? 0 : 1;
+						vvel_b = (vpad1_count & 2) ? 0 : 1;
+						vvel_c = (vpad1_count & 4) ? 0 : 1;
+						vvel_d = (vpad1_count & 8) ? 0 : 1;
 						/* 74107/A2.1 is cleared by any HIT signal */
 						hit_vbl_q = 0;
-                    }
+					}
 					else
 					if( VPAD2 && H >= 256+128 && H < 256+128+8 )
 					{
 #ifdef MAME_DEBUG
-                        hpos_h = hpos;
-                        vpos_h = vpos;
+						hpos_h = hpos;
+						vpos_h = vpos;
 #endif
-                        /* 7474/H3.2 is set by the HIT2 signal */
+						/* 7474/H3.2 is set by the HIT2 signal */
 						score_q = 1;
 						if( hit_sound == 0 )
 						{
@@ -712,7 +712,7 @@ INTERRUPT_GEN( pong_vh_scanline )
 						vvel_d = (vpad2_count & 8) ? 0 : 1;
 						/* 74107/A2.1 is cleared by any HIT signal */
 						hit_vbl_q = 0;
-                    }
+					}
 					else
 					if( HRESET )  /* no hit and HBLANK starts ? */
 					{
@@ -723,13 +723,13 @@ INTERRUPT_GEN( pong_vh_scanline )
 						 */
 						if( ATRACT && !score_sound_timer )                                  /* SU 059 */
 						{
-                            /* monoflop (NE555/G4) with a 220 kOhms resistor and 1.0 æF capacitor */
+							/* monoflop (NE555/G4) with a 220 kOhms resistor and 1.0 æF capacitor */
 							timer_set(TIME_IN_USEC(1.2*220000.0*1.0), 0, score_timer_cb);   /* SU 059 */
-                            score_sound_timer = 1;                                          /* SU 059 */
-                            pong_score_sound = 1;
+							score_sound_timer = 1;                                          /* SU 059 */
+							pong_score_sound = 1;
 							/* raising edge of SC (output of NE555/G4) toggles D-type flip-flop 7474/H3.2 */
-                            score_q ^= 0;
-                            if( R )
+							score_q ^= 0;
+							if( R )
 							{
 								if( ++score1 == ((readinputport(0) & 2) ? 15 : 11) )
 								{
@@ -745,12 +745,12 @@ INTERRUPT_GEN( pong_vh_scanline )
 									ATRACT = 0;
 								}
 							}
-                        }
- 				        if ( !serve_timer )                                                 /* SU 059 */
+						}
+ 						if ( !serve_timer )                                                 /* SU 059 */
 						{
 							/* monoflop (NE555/G4) with a 330 kOhms resistor and 4.7 æF capacitor */
-                            timer_set(TIME_IN_USEC(1.2*330000.0*4.7), 0, serve_timer_cb);   /* SU 059 */
-                            serve_timer = 1;                                                /* SU 059 */
+							timer_set(TIME_IN_USEC(1.2*330000.0*4.7), 0, serve_timer_cb);   /* SU 059 */
+							serve_timer = 1;                                                /* SU 059 */
 						}
 					}
 				}
@@ -780,7 +780,7 @@ INLINE void pong_hit_detector(void)
 
 	q = (speed_q1 == 1 && speed_q2 == 1) ? 0 : 1;
 	a = ( L && q ) ? 0 : 1;
-    /*
+	/*
 	 * The HIT DETECTOR outputs Aa and Ba (hit_a and hit_b)
 	 */
 	hit_b = ( R && q ) ? 0 : 1;
@@ -817,7 +817,7 @@ INLINE void pong_vertical_velocity(void)
 	else
 		a += 4; 			/* else:  A3 = hi, B1 = lo */
 
-    /* Output of the 4-bit binary adder 7483/B4 */
+	/* Output of the 4-bit binary adder 7483/B4 */
 	v_velocity = (a + b) & 15;
 }
 
@@ -839,7 +839,7 @@ INLINE void pong_7seg(int h0, int n)
 	 * | |	 | |	 |	 |	 | | |	 | | | | |	 | |		   |
 	 * +-+	 + +-+ +-+	 + +-+ +-+	 + +-+ +-+ +-+ +-+	   +-+ +-+
 	 */
-    static UINT8 decode_7seg[16][7] = {
+	static UINT8 decode_7seg[16][7] = {
 		{1,  1,  1,  1,  1,  1,  0},	/*	1 */
 		{0,  1,  1,  0,  0,  0,  0},	/*	0 */
 		{1,  1,  0,  1,  1,  0,  1},	/*	2 */
@@ -859,7 +859,7 @@ INLINE void pong_7seg(int h0, int n)
 	};
 	int H;
 
-    n %= 16;
+	n %= 16;
 
 	/*
 	 * We can step in paces of 4 pixels, because the mininum H
@@ -885,6 +885,6 @@ INLINE void pong_7seg(int h0, int n)
 			plot_pixel(tmpbitmap, H + 2, V, pen2);
 			plot_pixel(tmpbitmap, H + 3, V, pen2);
 		}
-    }
+	}
 }
 

@@ -1240,4 +1240,4 @@ void init_monaco( void )
 }
 
 /*          rom     parent  machine inp     init */
-GAME( 1979, monaco, 0,      monaco, monaco, monaco,   ROT90, "Sega", "Monaco GP" )
+GAME( 1979, monaco, 0,      monaco, monaco, monaco,   ROT90, "Sega", "Monaco GP", 0 )

@@ -136,6 +136,7 @@ enum
 	UI_returntogroup,
 
 	/* stats */
+	UI_totaltime,
 	UI_tickets,
 	UI_coin,
 	UI_locked,

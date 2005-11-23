@@ -86,4 +86,4 @@ MACHINE_DRIVER_END
 
 #define rom_pong 0	/* this game has no ROMs */
 
-GAME( 1972, pong, 0, pong, pong, 0, ROT0, "Atari", "Pong" )
+GAME( 1972, pong, 0, pong, pong, 0, ROT0, "Atari", "Pong", 0 )

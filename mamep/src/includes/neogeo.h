@@ -30,9 +30,6 @@ void neogeo_register_main_savestate(void);
 extern UINT16 *neogeo_ram16;
 extern UINT16 *neogeo_sram16;
 
-extern int memcard_status;
-extern UINT8 *neogeo_memcard;
-
 extern UINT8 *neogeo_game_vectors;
 
 MACHINE_INIT( neogeo );
@@ -47,11 +44,13 @@ NVRAM_HANDLER( neogeo );
 
 READ16_HANDLER( neogeo_memcard16_r );
 WRITE16_HANDLER( neogeo_memcard16_w );
+
+extern int neogeo_memcard_is_loaded;
+
 int neogeo_memcard_load(int);
 void neogeo_memcard_save(void);
 void neogeo_memcard_eject(void);
 int neogeo_memcard_create(int);
-
 
 /*----------- defined in machine/neocrypt.c -----------*/
 
