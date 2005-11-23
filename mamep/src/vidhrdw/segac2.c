@@ -246,6 +246,7 @@ VIDEO_START( megatech )
 
 	if (start_megatech_video_normal())
 		return 1;
+	//scanbase = 256*2;
 	scanbase = 0;	/* removed BIOS screen menu */
 
 	return 0;
@@ -338,12 +339,15 @@ VIDEO_UPDATE( megatech )
 	int y;
 
 	/* generate the final screen */
-	for (y = cliprect->min_y+192; y <= cliprect->max_y; y++)
-		drawline((UINT16 *)bitmap->line[y], y-192, 0);
+	//for (y = cliprect->min_y+192; y <= cliprect->max_y; y++)
+	//	drawline((UINT16 *)bitmap->line[y], y-192, 0);
+	for (y = cliprect->min_y; y <= cliprect->max_y; y++)	/* removed BIOS screen menu */
+		drawline((UINT16 *)bitmap->line[y], y, 0);	/* removed BIOS screen menu */
 
 	/* sms display should be on second monitor, for now we control it with a fake dipswitch while
        the driver is in development */
 	/*if (readinputport(5)&0x01)*/
+	if (readinputport(5)&0x01)	/* BIOS screen off by default */
 		update_megatech_video_normal(bitmap, cliprect);
 
 }

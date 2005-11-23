@@ -16,6 +16,7 @@
 
 INLINE void verboselog( int n_level, const char *s_fmt, ... )
 {
+#ifdef __GNUC__
 	if( VERBOSE_LEVEL >= n_level )
 	{
 		va_list v;
@@ -25,6 +26,7 @@ INLINE void verboselog( int n_level, const char *s_fmt, ... )
 		va_end( v );
 		logerror( "%08x: %s", activecpu_get_pc(), buf );
 	}
+#endif
 }
 
 #define MAX_CHANNEL ( 24 )

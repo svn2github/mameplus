@@ -663,9 +663,11 @@ int win_create_window(int width, int height, int depth, int attributes, double a
 
 void win_destroy_window(void)
 {
+#if defined(MAME_DEBUG) && defined(NEW_DEBUGGER)
 	// possibly kill the debug window
 	if (options.mame_debug)
 		debugwin_destroy_windows();
+#endif
 
 	// kill directdraw
 	if (win_use_directx)

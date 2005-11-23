@@ -504,36 +504,38 @@
 #define ID_VIEW_TAB_TITLE               40056
 #define ID_VIEW_TAB_CONTROL_PANEL       40057
 #define ID_VIEW_TAB_HISTORY             40058
-#define ID_OPTIONS_BG                   40059
-#define ID_TOGGLE_TAB_SCREENSHOT        40060
-#define ID_TOGGLE_TAB_FLYER             40061
-#define ID_TOGGLE_TAB_CABINET           40062
-#define ID_TOGGLE_TAB_MARQUEE           40063
-#define ID_TOGGLE_TAB_TITLE             40064
-#define ID_TOGGLE_TAB_CONTROL_PANEL     40065
-#define ID_TOGGLE_TAB_HISTORY           40066
-#define ID_VIEW_FULLSCREEN              40067
-#define ID_CONTEXT_RESET_PLAYTIME       40068
-#define ID_CONTEXT_RESET_PLAYCOUNT      40069
-#define ID_FOLDER_PROPERTIES            40070
-#define ID_FOLDER_AUDIT                 40071
-#define ID_UI_UP                        40072
-#define ID_UI_DOWN                      40073
-#define ID_UI_LEFT                      40074
-#define ID_UI_RIGHT                     40075
-#define ID_UI_START                     40076
-#define ID_UI_PGUP                      40077
-#define ID_UI_PGDOWN                    40078
-#define ID_UI_HOME                      40079
-#define ID_UI_END                       40080
-#define ID_UI_HISTORY_UP                40081
-#define ID_UI_HISTORY_DOWN              40082
-#define ID_FILE_LOADSTATE               40083
-#define ID_SOURCE_PROPERTIES            40084
 #ifdef STORY_DATAFILE
-#define ID_VIEW_TAB_STORY               40085
-#define ID_TOGGLE_TAB_STORY             40086
+#define ID_VIEW_TAB_STORY               40059
 #endif /* STORY_DATAFILE */
+#define ID_OPTIONS_BG                   40060
+#define ID_TOGGLE_TAB_SCREENSHOT        40061
+#define ID_TOGGLE_TAB_FLYER             40062
+#define ID_TOGGLE_TAB_CABINET           40063
+#define ID_TOGGLE_TAB_MARQUEE           40064
+#define ID_TOGGLE_TAB_TITLE             40065
+#define ID_TOGGLE_TAB_CONTROL_PANEL     40066
+#define ID_TOGGLE_TAB_HISTORY           40067
+#ifdef STORY_DATAFILE
+#define ID_TOGGLE_TAB_STORY             40068
+#endif /* STORY_DATAFILE */
+#define ID_VIEW_FULLSCREEN              40069
+#define ID_CONTEXT_RESET_PLAYTIME       40070
+#define ID_CONTEXT_RESET_PLAYCOUNT      40071
+#define ID_FOLDER_PROPERTIES            40072
+#define ID_FOLDER_AUDIT                 40073
+#define ID_UI_UP                        40074
+#define ID_UI_DOWN                      40075
+#define ID_UI_LEFT                      40076
+#define ID_UI_RIGHT                     40077
+#define ID_UI_START                     40078
+#define ID_UI_PGUP                      40079
+#define ID_UI_PGDOWN                    40080
+#define ID_UI_HOME                      40081
+#define ID_UI_END                       40082
+#define ID_UI_HISTORY_UP                40083
+#define ID_UI_HISTORY_DOWN              40084
+#define ID_FILE_LOADSTATE               40085
+#define ID_SOURCE_PROPERTIES            40086
 #ifdef UI_COLOR_DISPLAY
 #define ID_OPTIONS_PALETTE              40087
 #endif /* UI_COLOR_DISPLAY */

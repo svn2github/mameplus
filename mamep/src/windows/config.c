@@ -975,7 +975,7 @@ static char *win_dirname(char *filename)
 	dirname = malloc(strlen(filename) + 1);
 	if (!dirname)
 	{
-		fprintf(stderr, "error: malloc failed in win_dirname\n");
+		fprintf(stderr, _WINDOWS("error: malloc failed in win_dirname\n"));
 		return NULL;
 	}
 
@@ -1015,7 +1015,7 @@ static char *win_strip_extension(char *filename)
 	newname = malloc(strlen(filename) + 1);
 	if (!newname)
 	{
-		fprintf(stderr, "error: malloc failed in win_strip_extension\n");
+		fprintf(stderr, _WINDOWS("error: malloc failed in win_strip_extension\n"));
 		return NULL;
 	}
 

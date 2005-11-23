@@ -2230,13 +2230,15 @@ void cpu_save(int config_type, xml_data_node *parentnode)
 
 	for (i = 0; i < MAX_CPU; i++)
 	{
-		if (cpu_clocks[i] && cpu_clocks[i] != 100)
+		int clock = cpunum_get_clockscale(i) * 100.0 + 0.5;
+
+		if (clock && clock != 100)
 		{
 			xml_data_node *childnode = xml_add_child(parentnode, "clock", NULL);
 			if (childnode)
 			{
 				xml_set_attribute_int(childnode, "index", i);
-				xml_set_attribute_int(childnode, "value", cpu_clocks[i]);
+				xml_set_attribute_int(childnode, "value", clock);
 			}
 		}
 	}

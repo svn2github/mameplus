@@ -39,7 +39,7 @@ enum
 };
 
 
-// can't be the same as the VerifyRomSet() results, listed in audit.h
+// can't be the same as the audit_verify_roms() results, listed in audit.h
 enum
 {
 	UNKNOWN	= -1

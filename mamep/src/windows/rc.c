@@ -158,7 +158,7 @@ struct rc_struct *rc_create(void)
 
    if(!(rc = calloc(1, sizeof(struct rc_struct))))
    {
-      fprintf(stderr, "error: malloc failed for: struct rc_struct\n");
+      fprintf(stderr, _WINDOWS("error: malloc failed for: struct rc_struct\n"));
       return NULL;
    }
 
@@ -198,7 +198,7 @@ int rc_register(struct rc_struct *rc, struct rc_option *option)
 #endif
       if (!tmp)
       {
-         fprintf(stderr, "error: malloc failed in rc_register_option\n");
+         fprintf(stderr, _WINDOWS("error: malloc failed in rc_register_option\n"));
          return -1;
       }
       rc->option = tmp;
@@ -598,7 +598,7 @@ int rc_parse_commandline(struct rc_struct *rc, int argc, char *argv[],
             if (!tmp)
             {
                fprintf(stderr,
-                  "error: malloc failed in rc_parse_commadline\n");
+                  _WINDOWS("error: malloc failed in rc_parse_commadline\n"));
                return -1;
             }
             rc->arg = tmp;
@@ -800,7 +800,7 @@ int rc_set_option3(struct rc_option *option, const char *arg, int priority)
             char *str;
             if ( !( str = malloc(strlen(arg)+1) ) )
             {
-               fprintf(stderr, "error: malloc failed for %s\n", option->name);
+               fprintf(stderr, _WINDOWS("error: malloc failed for %s\n"), option->name);
                return -1;
             }
             strcpy(str, arg);
@@ -855,7 +855,7 @@ int rc_set_option3(struct rc_option *option, const char *arg, int priority)
          break;
       default:
          fprintf(stderr,
-            "error: unknown option type: %d, this should not happen!\n",
+            _WINDOWS("error: unknown option type: %d, this should not happen!\n"),
             option->type);
          return -1;
    }

@@ -226,6 +226,15 @@ int MIN_HEIGHT = DBU_MIN_HEIGHT;
 #define NO_FOLDER -1
 #define STATESAVE_VERSION 1
 
+enum
+{
+	FILETYPE_INPUT_FILES = 0,
+	FILETYPE_SAVESTATE_FILES,
+	FILETYPE_WAVE_FILES,
+	FILETYPE_IMAGE_FILES,
+	FILETYPE_MAX
+};
+
 typedef BOOL (WINAPI *common_file_dialog_procW)(LPOPENFILENAMEW lpofn);
 typedef BOOL (WINAPI *common_file_dialog_procA)(LPOPENFILENAMEA lpofn);
 
@@ -270,7 +279,7 @@ static void             UpdateStatusBar(void);
 static BOOL             PickerHitTest(HWND hWnd);
 static BOOL             TreeViewNotify(NMHDR *nm);
 
-static void             ResetBackground(char *szFile);
+static void             ResetBackground(const char *szFile);
 static void             RandomSelectBackground(void);
 static void             LoadBackgroundBitmap(void);
 static void             PaintBackgroundImage(HWND hWnd, HRGN hRgn, int x, int y);
@@ -302,8 +311,8 @@ static void             MamePlayRecordGame(void);
 static void             MamePlayBackGame(void);
 static void             MamePlayRecordWave(void);
 static void             MameLoadState(void);
-static BOOL             CommonFileDialogW(common_file_dialog_procW cfd,char *filename, int filetype);
-static BOOL             CommonFileDialogA(common_file_dialog_procA cfd,char *filename, int filetype);
+static BOOL             CommonFileDialogW(BOOL open_for_write, char *filename, int filetype);
+static BOOL             CommonFileDialogA(BOOL open_for_write, char *filename, int filetype);
 static BOOL             CommonFileDialog(BOOL open_for_write,char *filename, int filetype);
 static void             MamePlayGame(void);
 static void             MamePlayGameWithOptions(int nGame);
@@ -380,6 +389,9 @@ HWND GetGameWindow(LPPROCESS_INFORMATION lpProcessInformation);
 #endif
 
 static BOOL CALLBACK EnumWindowCallBack(HWND hwnd, LPARAM lParam);
+
+static const char *GetLastDir(void);
+
 /***************************************************************************
     External variables
  ***************************************************************************/
@@ -716,6 +728,46 @@ static char * g_pSaveStateName = NULL;
 static char * g_pRecordWaveName = NULL;
 static char * override_playback_directory = NULL;
 static char * override_savestate_directory = NULL;
+
+static struct
+{
+	const char *filter;
+	const char *title_load;
+	const char *title_save;
+	const char *(*dir)(void);
+	const char *ext;
+} cfg_data[FILETYPE_MAX] =
+{
+	{
+		MAMENAME " input files (*.inp,*.zip)\0*.inp;*.zip\0All files (*.*)\0*.*\0",
+		"Select a recorded file",
+		"Select a file to record",
+		GetInpDir,
+		"inp"
+	},
+	{
+		MAMENAME " savestate files (*.sta)\0*.sta;\0All files (*.*)\0*.*\0",
+		"Select a savestate file",
+		NULL,
+		GetStateDir,
+		"sta"
+	},
+	{
+		"Sounds (*.wav)\0*.wav;\0All files (*.*)\0*.*\0",
+		NULL,
+		"Select a sound file to record",
+		GetLastDir,
+		"wav"
+	},
+	{
+		"Image Files (*.png,*.bmp)\0*.png;*.bmp\0",
+		"Select a Background Image",
+		NULL,
+		GetBgDir,
+		"png"
+	}
+};
+
 
 /***************************************************************************
     Global variables
@@ -2024,7 +2076,7 @@ int CLIB_DECL DriverDataCompareFunc(const void *arg1,const void *arg2)
 	return strcmp( ((driver_data_type *)arg1)->name, ((driver_data_type *)arg2)->name );
 }
 
-static void ResetBackground(char *szFile)
+static void ResetBackground(const char *szFile)
 {
 	char szDestFile[MAX_PATH];
 
@@ -4899,33 +4951,12 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 
 	case ID_OPTIONS_BG:
 		{
-			OPENFILENAMEA OpenFileName;
-			static char szFile[MAX_PATH] = "\0";
+			char filename[MAX_PATH];
+			*filename = 0;
 
-			OpenFileName.lStructSize       = sizeof(OPENFILENAME);
-			OpenFileName.hwndOwner         = hMain;
-			OpenFileName.hInstance         = 0;
-			OpenFileName.lpstrFilter       = "Image Files (*.png, *.bmp)\0*.PNG;*.BMP\0";
-			OpenFileName.lpstrCustomFilter = NULL;
-			OpenFileName.nMaxCustFilter    = 0;
-			OpenFileName.nFilterIndex      = 1;
-			OpenFileName.lpstrFile         = szFile;
-			OpenFileName.nMaxFile          = sizeof(szFile);
-			OpenFileName.lpstrFileTitle    = NULL;
-			OpenFileName.nMaxFileTitle     = 0;
-			OpenFileName.lpstrInitialDir   = GetBgDir();
-			OpenFileName.lpstrTitle        = _UI("Select a Background Image");
-			OpenFileName.nFileOffset       = 0;
-			OpenFileName.nFileExtension    = 0;
-			OpenFileName.lpstrDefExt       = NULL;
-			OpenFileName.lCustData         = 0;
-			OpenFileName.lpfnHook          = NULL;
-			OpenFileName.lpTemplateName    = NULL;                                    
-			OpenFileName.Flags             = OFN_NOCHANGEDIR | OFN_SHOWHELP | OFN_EXPLORER;
-
-			if (GetOpenFileNameA(&OpenFileName))
+			if (CommonFileDialog(FALSE, filename, FILETYPE_IMAGE_FILES))
 			{
-				ResetBackground(szFile);
+				ResetBackground(filename);
 				LoadBackgroundBitmap();
 				InvalidateRect(hMain, NULL, TRUE);
 				return TRUE;
@@ -5731,20 +5762,23 @@ static void SetRandomPickItem(void)
 	}
 }
 
-enum
+static const char *GetLastDir(void)
 {
-	FILETYPE_INPUT_FILES = 1,
-	FILETYPE_SAVESTATE_FILES = 2,
-	FILETYPE_WAVE_FILES = 3,
-};
-static BOOL CommonFileDialogW(common_file_dialog_procW cfd, char *filename, int filetype)
+	return last_directory;
+}
+
+static BOOL CommonFileDialogW(BOOL open_for_write, char *filename, int filetype)
 {
 	BOOL success;
 
 	OPENFILENAMEW of;
+	common_file_dialog_procW cfd;
 	WCHAR fn[MAX_PATH];
 	WCHAR *p, buf[256];
 	const char *s = NULL;
+	WCHAR dir[256];
+	WCHAR title[256];
+	WCHAR ext[256];
 
 	lstrcpy(fn, _Unicode(filename));
 
@@ -5752,27 +5786,54 @@ static BOOL CommonFileDialogW(common_file_dialog_procW cfd, char *filename, int 
 	of.hwndOwner         = hMain;
 	of.hInstance         = NULL;
 
-	switch (filetype)
+	of.lpstrInitialDir   = NULL;
+	of.lpstrTitle        = NULL;
+	of.lpstrDefExt       = NULL;
+	of.Flags             = OFN_EXPLORER | OFN_NOCHANGEDIR | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
+
+	if (open_for_write)
 	{
-	case FILETYPE_INPUT_FILES :
-		s   = MAMENAME " input files (*.inp,*.zip)\0*.inp;*.zip\0All files (*.*)\0*.*\0";
-		break;
-	case FILETYPE_SAVESTATE_FILES :
-		s   = MAMENAME " savestate files (*.sta)\0*.sta;\0All files (*.*)\0*.*\0";
-		break;
-	case FILETYPE_WAVE_FILES :
-		s   = "Sounds (*.wav)\0*.wav;\0All files (*.*)\0*.*\0";
-		break;
+		cfd = GetSaveFileNameW;
+
+		if (cfg_data[filetype].title_save)
+		{
+			lstrcpy(title, _Unicode(_UI(cfg_data[filetype].title_save)));
+			of.lpstrTitle = title;
+		}
+	}
+	else
+	{
+		cfd = GetOpenFileNameW;
+		of.Flags |= OFN_FILEMUSTEXIST;
+
+		if (cfg_data[filetype].title_load)
+		{
+			lstrcpy(title, _Unicode(_UI(cfg_data[filetype].title_load)));
+			of.lpstrTitle = title;
+		}
 	}
 
+	if (cfg_data[filetype].dir)
+	{
+		lstrcpy(dir, _Unicode(cfg_data[filetype].dir()));
+		of.lpstrInitialDir = dir;
+	}
+
+	if (cfg_data[filetype].ext)
+	{
+		lstrcpy(ext, _Unicode(_UI(cfg_data[filetype].ext)));
+		of.lpstrDefExt = ext;
+	}
+
+	s = cfg_data[filetype].filter;
 	for (p = buf; *s; s += strlen(s) + 1)
 	{
 		lstrcpy(p, _Unicode(_UI(s)));
 		p += lstrlen(p) + 1;
 	}
 	*p = '\0';
-	of.lpstrFilter   = buf;
 
+	of.lpstrFilter       = buf;
 	of.lpstrCustomFilter = NULL;
 	of.nMaxCustFilter    = 0;
 	of.nFilterIndex      = 1;
@@ -5780,27 +5841,8 @@ static BOOL CommonFileDialogW(common_file_dialog_procW cfd, char *filename, int 
 	of.nMaxFile          = MAX_PATH;
 	of.lpstrFileTitle    = NULL;
 	of.nMaxFileTitle     = 0;
-	if (filetype == FILETYPE_SAVESTATE_FILES)
-		of.lpstrInitialDir = _Unicode(GetStateDir());
-	else
-		of.lpstrInitialDir = _Unicode(last_directory);
-	of.lpstrTitle        = NULL;
-	of.Flags             = OFN_EXPLORER | OFN_NOCHANGEDIR | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
 	of.nFileOffset       = 0;
 	of.nFileExtension    = 0;
-	switch (filetype)
-	{
-	case FILETYPE_INPUT_FILES :
-		of.lpstrDefExt       = TEXT("inp");
-		break;
-	case FILETYPE_SAVESTATE_FILES :
-		of.lpstrDefExt       = TEXT("sta");
-		break;
-	case FILETYPE_WAVE_FILES :
-		of.lpstrDefExt       = TEXT("wav");
-		break;
-	}
-	of.lpstrDefExt       = NULL;
 	of.lCustData         = 0;
 	of.lpfnHook          = NULL;
 	of.lpTemplateName    = NULL;
@@ -5816,14 +5858,18 @@ static BOOL CommonFileDialogW(common_file_dialog_procW cfd, char *filename, int 
 	return success;
 }
 
-static BOOL CommonFileDialogA(common_file_dialog_procA cfd, char *filename, int filetype)
+static BOOL CommonFileDialogA(BOOL open_for_write, char *filename, int filetype)
 {
 	BOOL success;
 
 	OPENFILENAMEA of;
+	common_file_dialog_procA cfd;
 	char fn[MAX_PATH];
 	char *p, buf[256];
 	const char *s = NULL;
+	char dir[256];
+	char title[256];
+	char ext[256];
 
 	strcpy(fn, filename);
 
@@ -5831,27 +5877,54 @@ static BOOL CommonFileDialogA(common_file_dialog_procA cfd, char *filename, int 
 	of.hwndOwner         = hMain;
 	of.hInstance         = NULL;
 
-	switch (filetype)
+	of.lpstrInitialDir   = NULL;
+	of.lpstrTitle        = NULL;
+	of.lpstrDefExt       = NULL;
+	of.Flags             = OFN_EXPLORER | OFN_NOCHANGEDIR | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
+
+	if (open_for_write)
 	{
-	case FILETYPE_INPUT_FILES :
-		s   = MAMENAME " input files (*.inp,*.zip)\0*.inp;*.zip\0All files (*.*)\0*.*\0";
-		break;
-	case FILETYPE_SAVESTATE_FILES :
-		s   = MAMENAME " savestate files (*.sta)\0*.sta;\0All files (*.*)\0*.*\0";
-		break;
-	case FILETYPE_WAVE_FILES :
-		s   = "Sounds (*.wav)\0*.wav;\0All files (*.*)\0*.*\0";
-		break;
+		cfd = GetSaveFileNameA;
+
+		if (cfg_data[filetype].title_save)
+		{
+			strcpy(title, _UI(cfg_data[filetype].title_save));
+			of.lpstrTitle = title;
+		}
+	}
+	else
+	{
+		cfd = GetOpenFileNameA;
+		of.Flags |= OFN_FILEMUSTEXIST;
+
+		if (cfg_data[filetype].title_load)
+		{
+			strcpy(title, _UI(cfg_data[filetype].title_load));
+			of.lpstrTitle = title;
+		}
 	}
 
+	if (cfg_data[filetype].dir)
+	{
+		strcpy(dir, cfg_data[filetype].dir());
+		of.lpstrInitialDir = dir;
+	}
+
+	if (cfg_data[filetype].ext)
+	{
+		strcpy(ext, _UI(cfg_data[filetype].ext));
+		of.lpstrDefExt = ext;
+	}
+
+	s = cfg_data[filetype].filter;
 	for (p = buf; *s; s += strlen(s) + 1)
 	{
 		strcpy(p, _UI(s));
 		p += strlen(p) + 1;
 	}
 	*p = '\0';
-	of.lpstrFilter   = buf;
 
+	of.lpstrFilter       = buf;
 	of.lpstrCustomFilter = NULL;
 	of.nMaxCustFilter    = 0;
 	of.nFilterIndex      = 1;
@@ -5859,27 +5932,8 @@ static BOOL CommonFileDialogA(common_file_dialog_procA cfd, char *filename, int 
 	of.nMaxFile          = MAX_PATH;
 	of.lpstrFileTitle    = NULL;
 	of.nMaxFileTitle     = 0;
-	if (filetype == FILETYPE_SAVESTATE_FILES)
-		of.lpstrInitialDir = GetStateDir();
-	else
-		of.lpstrInitialDir = last_directory;
-	of.lpstrTitle        = NULL;
-	of.Flags             = OFN_EXPLORER | OFN_NOCHANGEDIR | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
 	of.nFileOffset       = 0;
 	of.nFileExtension    = 0;
-	switch (filetype)
-	{
-	case FILETYPE_INPUT_FILES :
-		of.lpstrDefExt       = "inp";
-		break;
-	case FILETYPE_SAVESTATE_FILES :
-		of.lpstrDefExt       = "sta";
-		break;
-	case FILETYPE_WAVE_FILES :
-		of.lpstrDefExt       = "wav";
-		break;
-	}
-	of.lpstrDefExt       = NULL;
 	of.lCustData         = 0;
 	of.lpfnHook          = NULL;
 	of.lpTemplateName    = NULL;
@@ -5888,7 +5942,7 @@ static BOOL CommonFileDialogA(common_file_dialog_procA cfd, char *filename, int 
 	if (success)
 	{
 		strcpy(filename, fn);
-		//dprintf("got filename %s nFileExtension %u\n",filename,of.nFileExtension);
+		//dprintf("got filename %s nFileExtension %u\n",filename,_String(of.nFileExtension));
 		/*GetDirectory(filename,last_directory,sizeof(last_directory));*/
 	}
 
@@ -5898,9 +5952,9 @@ static BOOL CommonFileDialogA(common_file_dialog_procA cfd, char *filename, int 
 static BOOL CommonFileDialog(BOOL open_for_write, char *filename, int filetype)
 {
 	if (OnNT())
-		return CommonFileDialogW(open_for_write ? GetSaveFileNameW : GetOpenFileNameW, filename, filetype);
+		return CommonFileDialogW(open_for_write, filename, filetype);
 	else
-		return CommonFileDialogA(open_for_write ? GetSaveFileNameA : GetOpenFileNameA, filename, filetype);
+		return CommonFileDialogA(open_for_write, filename, filetype);
 }
 
 
@@ -6583,7 +6637,7 @@ static void UpdateMenu(HMENU hMenu)
 	}
 	else
 	{
-		snprintf(buf, sizeof(buf), _UI("&Play %s"), _UI("Game"));
+		snprintf(buf, sizeof(buf), _UI("&Play %s"), "...");
 
 		mItem.cbSize     = sizeof(mItem);
 		mItem.fMask      = MIIM_TYPE;
@@ -6593,7 +6647,7 @@ static void UpdateMenu(HMENU hMenu)
 
 		SetMenuItemInfo(hMenu, ID_FILE_PLAY, FALSE, &mItem);
 
-		snprintf(buf, sizeof(buf) / sizeof(buf[0]), _UI("Proper&ties of %s"), _UI("Driver"));
+		snprintf(buf, sizeof(buf) / sizeof(buf[0]), _UI("Proper&ties of %s"), "...");
 
 		mItem.cbSize     = sizeof(mItem);
 		mItem.fMask      = MIIM_TYPE;

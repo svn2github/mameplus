@@ -3336,6 +3336,7 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_LEDS,          DM_BOOL, CT_BUTTON,   &pGameOpts->leds,          DM_BOOL, &pGameOpts->leds,          0, 0, 0);
 	DataMapAdd(IDC_BIOS,          DM_INT,  CT_COMBOBOX, &g_nBiosIndex,             DM_STRING, &pGameOpts->bios,        0, 0, AssignBios);
 	DataMapAdd(IDC_SKIP_GAME_INFO,  DM_BOOL,CT_BUTTON,  &pGameOpts->skip_gameinfo, DM_BOOL, &pGameOpts->skip_gameinfo, 0, 0, 0);
+	DataMapAdd(IDC_SKIP_VALIDITY_CHECKS, DM_BOOL,CT_BUTTON,  &pGameOpts->skip_validitychecks, DM_BOOL, &pGameOpts->skip_validitychecks, 0, 0, 0);
 	DataMapAdd(IDC_CONFIRM_QUIT,  DM_BOOL, CT_BUTTON,   &pGameOpts->confirm_quit,  DM_BOOL, &pGameOpts->confirm_quit,  0, 0, 0);
 #ifdef TRANS_UI
 	DataMapAdd(IDC_TRANSUI,       DM_BOOL, CT_BUTTON,   &pGameOpts->use_transui,   DM_BOOL, &pGameOpts->use_transui,   0, 0, 0);
