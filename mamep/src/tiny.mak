@@ -51,6 +51,7 @@ OBJS = \
 	$(OBJ)/vidhrdw/phoenix.o $(OBJ)/sndhrdw/phoenix.o $(OBJ)/drivers/phoenix.o \
 	$(OBJ)/sndhrdw/pleiads.o \
 	$(OBJ)/vidhrdw/ladybug.o $(OBJ)/drivers/ladybug.o \
+	$(OBJ)/vidhrdw/redclash.o $(OBJ)/drivers/redclash.o \
 	$(OBJ)/machine/8255ppi.o $(OBJ)/machine/7474.o \
 	$(OBJ)/vidhrdw/res_net.o \
 

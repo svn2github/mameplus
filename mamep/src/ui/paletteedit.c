@@ -143,11 +143,14 @@ static void InitializePaletteUI(HWND hwnd)
 			palette_tmp[i][2] = (unsigned char)c;
 
 			ComboBox_AddString(hCtrl, _Unicode(_UI(palette_names[i])));
-
-			SendMessage(GetDlgItem(hwnd, IDC_PALETTE_R + i), TBM_SETRANGE,
-			            (WPARAM)FALSE,
-			            (LPARAM)MAKELONG(0, 255));
 		}
+	}
+
+	for (i = 0; i < 3; i++)
+	{
+		SendMessage(GetDlgItem(hwnd, IDC_PALETTE_R + i), TBM_SETRANGE,
+				(WPARAM)FALSE,
+				(LPARAM)MAKELONG(0, 255));
 	}
 
 	ComboBox_SetCurSel(GetDlgItem(hwnd, IDC_PALETTE_COMBO), 0);

@@ -28,7 +28,7 @@ UINT8 *neogeo_memcard;		/* Pointer to 2kb RAM zone */
 UINT8 *neogeo_game_vectors;
 
 int memcard_status;
-static int memcard_number;
+int memcard_number;
 
 static void neogeo_custom_memory(void);
 static void neogeo_register_sub_savestate(void);

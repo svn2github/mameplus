@@ -188,6 +188,9 @@ static struct rc_option opts[] = {
 #ifdef MESS
 	{ NULL, NULL, rc_link, mess_opts, NULL, 0,	0, NULL, NULL },
 #endif
+#ifdef UI_COLOR_DISPLAY
+	{ NULL, NULL, rc_link, palette_opts, NULL, 0,	0, NULL, NULL },
+#endif /* UI_COLOR_DISPLAY */
 
 	/* options supported by the mame core */
 	/* video */
@@ -255,11 +258,6 @@ static struct rc_option opts[] = {
 	{ "use_trans_ui", NULL, rc_bool, &options.use_transui, "1", 0, 0, NULL, "use transparent background for UI text" },
 	{ "ui_transparency", NULL, rc_int, &options.ui_transparency, "160", 0, 255, NULL, "transparency of UI background [0 - 255]" },
 #endif /* TRANS_UI */
-
-#ifdef UI_COLOR_DISPLAY
-	/* palette */
-	{ NULL, NULL, rc_link, palette_opts, NULL, 0,	0, NULL, NULL },
-#endif /* UI_COLOR_DISPLAY */
 
 	/* config options */
 	{ "Configuration options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },

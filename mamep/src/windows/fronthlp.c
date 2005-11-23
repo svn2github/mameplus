@@ -740,6 +740,11 @@ int frontend_help (const char *gamename)
 				printf (_WINDOWS("is best available\n"));
 				correct++;
 			}
+			else if (res == MISSING_OPTIONAL)
+			{
+				printf ("is missing optional files\n");
+				correct++;
+			}
 			if (res)
 				err = res;
 

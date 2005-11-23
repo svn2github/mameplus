@@ -4510,7 +4510,7 @@ static void onscrd_overclock(int increment,int arg)
 		overclock = cpunum_get_clockscale(arg);
 		overclock += 0.01 * increment;
 		if (overclock < 0.01) overclock = 0.01;
-		if (overclock > 2.0) overclock = 2.0;
+		if (overclock > 3.0) overclock = 3.0;
 		if( doallcpus )
 			for( cpu = 0; cpu < cpu_gettotalcpu(); cpu++ )
 				cpunum_set_clockscale(cpu, overclock);
