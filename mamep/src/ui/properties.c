@@ -2364,9 +2364,6 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT), (ddraw && hws) || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATION),    (ddraw && hws) || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOD),    (ddraw && hws) || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_ZOOM),            (ddraw && hws) || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_ZOOMTEXT),        (ddraw && hws) || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_ZOOMDIST),        (ddraw && hws) || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_SCANLINES),       !g_nEffectIndex && (!ddraw || !(hws)) && !d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_CLEAN_STRETCH),   (ddraw && hws) || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_CLEAN_STRETCHTEXT), (ddraw && hws) || d3d);
@@ -2379,6 +2376,9 @@ static void SetPropEnabledControls(HWND hWnd)
 #endif /* USE_SCALE_EFFECTS */
 
 	// d3d
+	EnableWindow(GetDlgItem(hWnd,IDC_ZOOM),d3d);
+	EnableWindow(GetDlgItem(hWnd,IDC_ZOOMTEXT),d3d);
+	EnableWindow(GetDlgItem(hWnd,IDC_ZOOMDIST),d3d);
 	EnableWindow(GetDlgItem(hWnd,IDC_D3D_FILTER),d3d);
 	EnableWindow(GetDlgItem(hWnd,IDC_D3D_FILTERTEXT),d3d);
 	EnableWindow(GetDlgItem(hWnd,IDC_D3D_TEXTURE_MANAGEMENT),d3d);

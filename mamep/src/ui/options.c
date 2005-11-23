@@ -461,6 +461,7 @@ static struct rc_option rc_game_opts[] =
 
 	{ "Windows sound options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
 	{ "audio_latency", NULL, rc_int, &gOpts.audio_latency, "1", 1, 4, NULL, "set audio latency (increase to reduce glitches)" },
+	{ "wavwrite", NULL, rc_string, &gOpts.wavwrite, NULL, 0, 0, NULL, "save sound in wav file" },
 
 	{ "Input device options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
 	{ "mouse", NULL, rc_bool, &gOpts.use_mouse, "0", 0, 0, NULL, "enable mouse input" },

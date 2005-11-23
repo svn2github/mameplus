@@ -110,6 +110,7 @@ typedef struct
 
 	/* sound */
 	int audio_latency;
+	char* wavwrite;
 
 	/* input */
 	BOOL   use_mouse;

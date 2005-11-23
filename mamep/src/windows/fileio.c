@@ -139,7 +139,7 @@ struct rc_option fileio_opts[] =
 #ifdef ROM_PATCH
 	{ "ips_directory", NULL, rc_string, &pathlist[FILETYPE_PATCH].rawpath, "ips", 0, 0, NULL, "directory for ips patch" },
 #endif /* ROM_PATCH */
-	{ "lang_directory", NULL, rc_string, &lang_directory, "lang", 0, 0, NULL, NULL },
+	{ "lang_directory", NULL, rc_string, &lang_directory, "lang", 0, 0, NULL, "directory for localized language files" },
 	{ "cheat_file", NULL, rc_string, &cheatfile, "cheat.dat", 0, 0, NULL, "cheat filename" },
 	{ "history_file", NULL, rc_string, &history_filename, "history.dat", 0, 0, NULL, NULL },
 #ifdef STORY_DATAFILE

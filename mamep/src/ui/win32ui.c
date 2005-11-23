@@ -6583,7 +6583,7 @@ static void UpdateMenu(HMENU hMenu)
 	}
 	else
 	{
-		snprintf(buf, sizeof(buf), _UI("&Play %s"), "...");
+		snprintf(buf, sizeof(buf), _UI("&Play %s"), _UI("Game"));
 
 		mItem.cbSize     = sizeof(mItem);
 		mItem.fMask      = MIIM_TYPE;
@@ -6593,7 +6593,7 @@ static void UpdateMenu(HMENU hMenu)
 
 		SetMenuItemInfo(hMenu, ID_FILE_PLAY, FALSE, &mItem);
 
-		snprintf(buf, sizeof(buf) / sizeof(buf[0]), _UI("Proper&ties of %s"), "...");
+		snprintf(buf, sizeof(buf) / sizeof(buf[0]), _UI("Proper&ties of %s"), _UI("Driver"));
 
 		mItem.cbSize     = sizeof(mItem);
 		mItem.fMask      = MIIM_TYPE;

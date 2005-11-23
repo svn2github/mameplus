@@ -239,23 +239,23 @@ static struct rc_option opts[] = {
 	{ "skip_gameinfo", NULL, rc_bool, &options.skip_gameinfo, "0", 0, 0, NULL, "skip displaying the " GAMENOUN " info screen" },
 	{ "skip_validitychecks", NULL, rc_bool, &options.skip_validitychecks, "1", 0, 0, NULL, "skip doing the code validity checks" },
 	{ "bios", NULL, rc_string, &options.bios, "default", 0, 14, NULL, "change system bios" },
-#ifdef AUTO_PAUSE_PLAYBACK
-	{ "auto_pause_playback", NULL, rc_bool, &options.auto_pause_playback, "0", 0, 0, NULL, "automatic pause when playback is started and finished" },
-#endif /* AUTO_PAUSE_PLAYBACK */
 	{ "state", NULL, rc_string, &statename, NULL, 0, 0, NULL, "state to load" },
-	{ "confirm_quit", NULL, rc_bool, &options.confirm_quit, "1", 0, 0, NULL, "confirm quit" },
 #ifdef ROM_PATCH
 	{ "ips_patch", NULL, rc_string, &options.patchname, NULL, 0, 0, NULL, "ips patch datfile name"},
 #endif /* ROM_PATCH */
+	{ "confirm_quit", NULL, rc_bool, &options.confirm_quit, "1", 0, 0, NULL, "confirm quit" },
+#ifdef AUTO_PAUSE_PLAYBACK
+	{ "auto_pause_playback", NULL, rc_bool, &options.auto_pause_playback, "0", 0, 0, NULL, "automatic pause when playback is started and finished" },
+#endif /* AUTO_PAUSE_PLAYBACK */
+#if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
+	//ks hcmame s switch m68k core
+	{ "m68k_core", NULL, rc_int, &options.m68k_core, "0", 0, 2, NULL, "change m68k core (0:C, 1:DRC, 2:ASM+DRC)" },
+#endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 #ifdef TRANS_UI
 	{ "use_trans_ui", NULL, rc_bool, &options.use_transui, "1", 0, 0, NULL, "use transparent background for UI text" },
 	{ "ui_transparency", NULL, rc_int, &options.ui_transparency, "160", 0, 255, NULL, "transparency of UI background [0 - 255]" },
 #endif /* TRANS_UI */
-//ks hcmame s switch m68k core
-#if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-	{ "m68k_core", NULL, rc_int, &options.m68k_core, "0", 0, 2, NULL, "change m68k core (0:C, 1:DRC, 2:ASM+DRC)" },
-#endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
-//ks hcmame e switch m68k core
+
 #ifdef UI_COLOR_DISPLAY
 	/* palette */
 	{ NULL, NULL, rc_link, palette_opts, NULL, 0,	0, NULL, NULL },
