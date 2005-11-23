@@ -1,0 +1,92 @@
+# 4726
+BIOS
+
+
+# 5710
+Ball & Paddle
+
+
+# 5524
+Breakout
+
+
+# 4704
+Casino
+
+
+# 5429
+Climbing
+
+
+# 2989
+Driving
+
+
+# 3952
+Fighter
+
+
+# Title
+Genre
+
+
+# 7
+Maze
+
+
+# 5722
+Mini-Games
+
+
+# 5446
+Misc.
+
+
+# 5768
+Misc. Betting
+
+
+# 3345
+Multiplay
+
+
+# 5795
+Pinball
+
+
+# 4754
+Platform
+
+
+# 3384
+Puzzle
+
+
+# 5599
+Quiz
+
+
+# 5752
+Rhythm
+
+
+# 781
+Shooter
+
+
+# 2362
+Sports
+
+
+# 3696
+Tabletop
+
+
+# 475
+Unplayable
+
+
+# 3297
+Wrestling
+
+

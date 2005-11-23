@@ -1,0 +1,1748 @@
+# windows/input.c: 898
+         all -- all axes on all joysticks are digital\n
+         tutti -- tutti gli assi su tutte le leve sono digitali\n
+
+# windows/input.c: 904
+         j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
+         j1,j2a2 -- tutti gli assi della leva 1 e l'asse 2 della leva 2 sono digitali\n
+
+# windows/input.c: 902
+         j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
+         j1a5a6 -- assi 5 e 6 sulla leva 1 sono digitali\n
+
+# windows/input.c: 899
+         j<N> -- all axes on joystick <N> are digital\n
+         j<N> -- tutti gli assi della leva <N> sono digitali\n
+
+# windows/input.c: 900
+         j<N>a<M> -- axis <M> on joystick <N> is digital\n
+         j<N>a<M> -- asse <M> su leva <N> è digitale\n
+
+# windows/input.c: 897
+         none -- no axes on any joysticks are digital\n
+         nessuno -- nessun asse di alcuna leva è digitale\n
+
+# windows/fronthlp.c: 562
+        MAME -createconfig to create a configuration ini\n\n
+        MAME -createconfig per creare un ini di configurazione\n\n
+
+# windows/fronthlp.c: 560
+        MAME -createconfig to create a mame.ini\n\n
+        MAME -createconfig per creare un mame.ini\n\n
+
+# windows/fronthlp.c: 555
+        MAME -list         for a brief list of supported games\n
+        MAME -list         per una breve lista dei giochi supportati\n
+
+# windows/fronthlp.c: 556
+        MAME -listfull     for a full list of supported games\n
+        MAME -listfull     per una lista completa dei giochi supportati\n
+
+# windows/fronthlp.c: 558
+        MAME -showconfig   for a list of configuration options\n
+        MAME -showconfig   per la lista delle opzioni di configurazione\n
+
+# windows/fronthlp.c: 557
+        MAME -showusage    for a brief list of options\n
+        MAME -showusage    per una breve lista delle opzioni\n
+
+# windows/input.c: 901
+    Multiple axes can be specified for one joystick:\n
+    Assi multipli possono essere specificati per una leva:\n
+
+# windows/input.c: 903
+    Multiple joysticks can be specified separated by commas:\n
+    Multiple leve possono specificarsi separate da virgole:\n
+
+# windows/rc.c: 328, 395
+   ignoring line\n
+   sto ignorando la lenea\n
+
+# windows/input.c: 1870
+  Axis %d (%s)%s\n
+  Asse %d (%s)%s\n
+
+# windows/config.c: 534
+ %s running parameters
+ %s parametri funzionanti
+
+# windows/wind3d.c: 639
+ (%.2lfMB video memory available)
+ (%.2lfMB memoria video disponibili)
+
+# windows/input.c: 1870
+ - digital
+ - digitale
+
+# windows/fronthlp.c: 783
+ romname driver     
+ nome rom driver     
+
+# windows/fronthlp.c: 1828
+%d %s found, %d were OK.\n
+%d %s trovato, %d era OK.\n
+
+# windows/wind3d.c: 1635
+%s surface created: %s (%s)\n
+%s superficie creata: %s (%s)\n
+
+# windows/fronthlp.c: 232
+(BAD) 
+(SCORRETTA) 
+
+# windows/video.c: 222
+(dd) stretch video using the hardware
+(dd) stira il video usando l'hardware
+
+# windows/input.c: 937
+Autoenabling joysticks due to presence of a %s\n
+Autoabilitazione leve a seguito della presenza di %s\n
+
+# windows/input.c: 945
+Autoenabling lightguns due to presence of a %s\n
+Autoabilitazione pistole dovuta alla presenza di %s\n
+
+# windows/input.c: 929
+Autoenabling mice due to presence of a %s\n
+Autoabilitazione mouse dovuta alla presenza di %s\n
+
+# windows/video.c: 674
+Average FPS: %f (%d frames)\n
+FPS Stimato: %f (%d quadri)\n
+
+# windows/wind3d.c: 2666 windows/winddraw.c: 1464, 1763
+Avg Flip = %d
+Flip Stim= %d
+
+# windows/wind3d.c: 1007 windows/winddraw.c: 579
+Best mode = %dx%dx%d @ %d Hz\n
+Modalità migliore = %dx%dx%d @ %d Hz\n
+
+# windows/wind3d.c: 1009 windows/winddraw.c: 581
+Best mode = %dx%dx%d @ default Hz\n
+Modo migliore = %dx%dx%d @ predefinito Hz\n
+
+# windows/winddraw.c: 887
+Blit surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
+Superfice Blit creata: %dx%dx%d (R=%08x G=%08x B=%08x)\n
+
+# windows/wind3d.c: 1639
+Blit surface created: %s\n
+Superficie blit creata: %s\n
+
+# windows/wind3d.c: 774
+Blitter initialisation complete (%.2lfMB video memory free)\n
+Inizializzazione blitter completa (%.2lfMB meoria video liberi)\n
+
+# windows/config.c: 282
+Configuration options
+Opzioni configurazione
+
+# windows/fronthlp.c: 1848
+ERROR     %s\n
+ERRORE    %s\n
+
+# windows/wind3d.c: 718
+Error creating Direct3D7 device: %08x\n
+Errore creando device Direct3D7: %08x\n 
+
+# windows/wind3d.c: 623
+Error creating Direct3D7: %08x\n
+Errore creando Direct3D7: %08x\n
+
+# windows/wind3d.c: 616
+Error creating DirectDraw7: %08x\n
+Errore creando DirectDraw7: %08x\n
+
+# windows/winddraw.c: 253
+Error creating DirectDraw: %08x\n
+Errore creando DirectDraw: %08x\n
+
+# windows/sound.c: 644
+Error creating DirectSound buffer: %08x\n
+Errore creando buffer DirectSound : %08x\n
+
+# windows/sound.c: 502
+Error creating DirectSound: %08x\n
+Errore creando DirectSound: %08x\n
+
+# windows/wind3d.c: 1241
+Error creating RGB effects surface: %08x\n
+Errore creando superficie effetti RGB: %08x\n
+
+# windows/wind3d.c: 1171
+Error creating back surface: %08x\n
+Errore creando la superficie back: %08x\n
+
+# windows/wind3d.c: 1469 windows/winddraw.c: 870
+Error creating blit surface: %08x\n
+Errore creando la superfice blit : %08x\n
+
+# windows/wind3d.c: 1718 windows/winddraw.c: 961
+Error creating clipper: %08x\n
+Errore creando clipper: %08x\n
+
+# windows/rc.c: 936
+Error creating dir %s
+Errore creando la cartella %s
+
+# windows/wind3d.c: 1578
+Error creating preprocess surface: %08x\n
+Errore creando superfice preprocessi: %08x\n
+
+# windows/sound.c: 609
+Error creating primary buffer: %08x\n
+Errore creando il buffer primario: %08x\n
+
+# windows/wind3d.c: 1120 windows/winddraw.c: 650
+Error creating primary surface: %08x\n
+Errore creando la superfice primaria: %08x\n
+
+# windows/wind3d.c: 1599 windows/winddraw.c: 742
+Error creating scale surface: %08x\n
+Errore creando superfice scalata: %08x\n
+
+# windows/wind3d.c: 1271, 1279
+Error creating scanline surface[%d]: %08x\n
+Errore creando la superficie x lineescansione[%d]: %08x\n
+
+# windows/wind3d.c: 1494
+Error creating texture surface: %08x\n
+Errore creando la superfice trame: %08x\n
+
+# windows/wind3d.c: 1000 windows/winddraw.c: 572
+Error enumerating modes: %08x\n
+Errore enumerando le modalità: %08x\n
+
+# windows/winddraw.c: 268
+Error getting DirectDraw capabilities: %08x\n
+Errore acquisendo le capacità DirectDraw capabilities: %08x\n
+
+# windows/sound.c: 511
+Error getting DirectSound capabilities: %08x\n
+Errore acquisendo le capacità DirectSound: %08x\n
+
+# windows/wind3d.c: 1182 windows/winddraw.c: 687
+Error getting attached back surface: %08x\n
+Errore acquisendo la superfice connesa posteriore: %08x\n
+
+# windows/wind3d.c: 1611, 1620 windows/winddraw.c: 878
+Error getting blit surface desc: %08x\n
+Errore acquisendo desc superficie blit: %08x\n
+
+# windows/wind3d.c: 981, 1030 windows/winddraw.c: 550, 605
+Error getting display mode: %08x\n
+Errore acquisendo la modalità schermo: %08x\n
+
+# windows/sound.c: 625
+Error getting primary format: %08x\n
+Errore acquisendo il formato primario: %08x\n
+
+# windows/wind3d.c: 1128 windows/winddraw.c: 658
+Error getting primary surface desc: %08x\n
+Errore acquisendo la desc. superficie primaria: %08x\n
+
+# windows/winddraw.c: 750
+Error getting scale surface desc: %08x\n
+Errore acquisendo desc sup. scal: %08x\n
+
+# windows/wind3d.c: 609
+Error importing DirectDrawCreateEx() function\n
+Errore importando la funzione DirectDrawCreateEx()\n
+
+# windows/wind3d.c: 602
+Error importing ddraw.dll\n
+Errore importando ddraw.dll\n
+
+# windows/wind3d.c: 680 windows/winddraw.c: 244
+Error initialising software scale effects\n
+Errore inizializzando effetti scalatura software\n
+
+# windows/sound.c: 652
+Error locking stream buffer: %08x\n
+Errore bloccando lo stream buffer: %08x\n
+
+# windows/rc.c: 944
+Error opening %s
+Errore aprendo %s
+
+# windows/sound.c: 556
+Error playing: %08x\n
+Errore eseguendo: %08x\n
+
+# windows/sound.c: 519
+Error setting DirectSound cooperative level: %08x\n
+Errore impostando livello cooperativo DirectSound: %08x\n
+
+# windows/wind3d.c: 1726 windows/winddraw.c: 969
+Error setting clipper hwnd: %08x\n
+Errore impostando clipper hwnd: %08x\n
+
+# windows/wind3d.c: 1734 windows/winddraw.c: 977
+Error setting clipper on primary surface: %08x\n
+Errore impostando il clipper sula superfice primaria: %08x\n
+
+# windows/wind3d.c: 695 windows/winddraw.c: 283
+Error setting cooperative level: %08x\n
+Errore impostando livello cooperativo: %08x\n
+
+# windows/wind3d.c: 1700 windows/winddraw.c: 943
+Error setting gamma ramp: %08x\n
+Errore impostando la ramp gamma: %08x\n
+
+# windows/wind3d.c: 1019 windows/winddraw.c: 594
+Error setting mode: %08x\n
+Errore impostando modo: %08x\n
+
+# windows/sound.c: 617
+Error setting primary format: %08x\n
+Errore impostando formato primario: %08x\n
+
+# windows/wind3d.c: 257
+Error: 3D hardware can't render scanlines (no support for multi-texturing)\n
+Errore: l'3D hardware non puo tracciare lineescansione (nom è supportato la multi-trama)\n
+
+# windows/wind3d.c: 374
+Error: RGB effects (multiply & add mode) not supported\n
+Errore: effetti RGB (multiplicazione & modo aggiunta) non supportati\n
+
+# windows/wind3d.c: 361
+Error: RGB effects (multiply mode) not supported\n
+Errore: Effetti RGB (modalità moltiplica) non supportati\n
+
+# windows/wind3d.c: 1419
+Error: required texture size too large (max: %ix%i, need %ix%i)\n
+Errore: richiesta trama troppo larga (mass: %ix%i, neces %ix%i)\n
+
+# windows/fronthlp.c: 564
+For usage instructions, please consult the file windows.txt\n
+Per le istruzioni d'uso, prego consultare l'archivio windows.txt\n
+
+# windows/fronthlp.c: 74
+Frontend Related
+Relativo al Frontend
+
+# windows/window.c: 717
+Full Screen\tAlt+Enter
+Schermo Pieno\tAlt+Invio
+
+# windows/fronthlp.c: 716
+Game \"%s\" not supported!\n
+Gioco \"%s\" non supportato!\n
+
+# windows/winddraw.c: 276
+Hardware stretching supported\n
+Supportato stiramento hardware\n
+
+# windows/wind3d.c: 636
+Initialising DirectDraw & Direct3D 7 blitter
+Inizializzazione blitter DirectDraw & Direct3D 7
+
+# windows/input.c: 219
+Input device options
+Opzioni periferica d'entrata
+
+# windows/input.c: 1712
+Joystick %d axis %d is now %s\n
+Leva %d asse %d è ora %s\n
+
+# windows/input.c: 1853
+Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
+Leva %d: %s (%d assi, %d pulsanti, %d POVs)\n
+
+# windows/fronthlp.c: 1849
+KNOWN     %s\n
+CONOSCIUTO %s\n
+
+# windows/input.c: 1246
+Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
+Tastiera=%d  Mice=%d  Leve=%d  Pistole=%d\n
+
+# windows/input.c: 230
+LED mode (ps/2|usb)
+Modo LED (ps/2|usb)
+
+# windows/config.c: 289
+Language options
+Opzioni linguaggio
+
+# windows/input.c: 1842
+Lightgun %d X
+Pistola %d X
+
+# windows/input.c: 1844
+Lightgun %d Y
+Pistole %d Y
+
+# windows/input.c: 2197
+Lightgun not supported in windowed mode
+Pistola non supportata nel modo finestra
+
+# windows/fronthlp.c: 80
+List supported games matching gamename, or all, gamename may contain * and ? wildcards
+Lista giochi supportati rispondenti al nome gioco, o tutti, il nome gioco può contenere * e ? wildcards
+
+# windows/fronthlp.c: 547
+M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2005 by Nicola Salmoria and the MAME Team\n\n
+M.A.M.E. v%s - Multiple Arcade Machine Emulator\nDiritti (C) 1997-2005 di Nicola Salmoria e del Gruppo MAME\n\n
+
+# windows/blit.c: 1152
+MMX not supported\n
+MMX non supportato\n
+
+# windows/blit.c: 1150
+MMX supported\n
+MMX supportato\n
+
+# windows/config.c: 240
+Mame CORE misc options
+Mame CORE opzioni varie
+
+# windows/video.c: 254
+Mame CORE palette options
+Mame CORE opzioni tavolozza
+
+# windows/config.c: 229
+Mame CORE sound options
+Mame CORE opzioni sonore
+
+# windows/config.c: 221
+Mame CORE vector game options
+Mame CORE opzioni giochi vettoriali
+
+# windows/config.c: 207
+Mame CORE video options
+Mame CORE opzioni video
+
+# windows/wind3d.c: 1635
+Managed texture
+Trame gestite
+
+# windows/fronthlp.c: 273
+NO MATCH\n
+NON CORRISPONDENTE\n
+
+# windows/fronthlp.c: 268
+NOT A ROM\n
+NON UNA ROM\n
+
+# windows/fronthlp.c: 653
+Name:     Description:\n
+Nome:     Descrizione:\n
+
+# windows/fronthlp.c: 680
+Name:     Samples dir:\n
+Nome:     Cart. camp.:\n
+
+# windows/fronthlp.c: 1056
+Name:    Clone of:\n
+Nome:    Clone di:\n
+
+# windows/video.c: 264
+OSD bar color (dark)
+OSD barra colori(scura)
+
+# windows/video.c: 265
+OSD bar color (default)
+OSD barra colori (default)
+
+# windows/video.c: 263
+OSD bar color (light)
+OSD barra colori (chiara)
+
+# windows/video.c: 262
+OSD bar color (medium)
+OSD barra colori (media)
+
+# windows/fileio.c: 372
+Out of memory!\n
+Memoria Esaurita!\n
+
+# windows/fronthlp.c: 1851
+PARTKNOWN %s\n
+PARTECONOSCIUTA %s\n
+
+# windows/config.c: 583
+Playing back previously recorded game %s (%s) [press return]\n
+Riproduci un gioco precedentemente registrato %s (%s) [premi invio]\n
+
+# windows/wind3d.c: 1644
+Pre-process texture surface created: %s\n
+Creata superficie pre-processo trama: %s\n
+
+# windows/sound.c: 629
+Primary buffer: %d Hz, %d bits, %d channels\n
+Buffer primario: %d Hz, %d bits, %d canali\n
+
+# windows/winddraw.c: 671
+Primary surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
+Superficie primaria creata: %dx%dx%d (R=%08x G=%08x B=%08x)\n
+
+# windows/wind3d.c: 1146
+Primary surface created: %s (%s)\n
+Superficie primaria creata: %s (%s)\n
+
+# windows/wind3d.c: 1250
+RGB effects surface created: %s\n
+Superficie effetti RGB creata: %s\n
+
+# windows/wind3dfx.c: 802
+RGB pattern has a wrong filesize (expected %i bytes, found %i)\n
+La mappa RGB ha un'errata dim archivio (attesi %i bytes, trovati %i)\n
+
+# windows/winddraw.c: 1387, 1472, 1771
+Recreating surfaces\n
+Ricreate superfici\n
+
+# windows/wind3d.c: 1139
+Rendering to an off-screen surface and using blt()\n
+Disegnando su una superficie fuori-schermo e usando blt()\n
+
+# windows/wind3d.c: 2317, 2688
+Restoring surfaces\n
+Ristabilisco le superfici\n
+
+# windows/blit.c: 1148
+SSE supported\n
+SSE supportato\n
+
+# windows/blit.c: 1146
+SSE2 supported\n
+SSE2 supportato\n
+
+# windows/video.c: 220
+SaI scale effect
+Effetto scalatura SaI
+
+# windows/winddraw.c: 756
+Scale surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
+Superfice scal. creata: %dx%dx%d (R=%08x G=%08x B=%08x)\n
+
+# windows/wind3d.c: 1288
+Scanline surface[%i] created: %s\n
+Superficie interlinea[%i] creata: %s\n
+
+# windows/sound.c: 238, 242
+Sound buffer: overflows=%d underflows=%d\n
+Buffer sonoro: overflows=%d underflows=%d\n 
+
+# windows/input.c: 1788
+Stick %d %s +
+Leva  %d %s +
+
+# windows/input.c: 1781
+Stick %d %s -
+Leva  %d %s -
+
+# windows/input.c: 1790
+Stick %s +
+Leva  %s +
+
+# windows/input.c: 1783
+Stick %s -
+Leva  %s -
+
+# windows/wind3d.c: 1635
+Texture
+Trama  
+
+# windows/input.c: 2348
+Toggle fullscreen
+Acc/Speg Schermopieno
+
+# windows/fronthlp.c: 643
+Total ROM sets displayed: %4d - 
+Gruppi ROM tot. mostrate: %4d - 
+
+# windows/fronthlp.c: 645
+Total ROM sets supported: %4d\n
+Totale dgli insiemi rom supportati: %4d\n
+
+# windows/fronthlp.c: 1850
+UNKNOWN   %s\n
+SCONOSCIUTO   %s\n
+
+# windows/wind3d.c: 2679
+Unable to blt RGB effect to back_surface: %08x\n
+Incapace di applicare effetti RGB blt alla superficie_back: %08x\n
+
+# windows/wind3d.c: 2646
+Unable to blt back_surface to primary_surface: %08x\n
+Incapace di blt la back_surface alla primary_surface: %08x\n
+
+# windows/wind3d.c: 2265
+Unable to blt blit_surface to texture_surface: %08x\n
+Incapace di blt la blit_surface alla superfice_trame: %08x\n
+
+# windows/wind3d.c: 2242
+Unable to blt scale_surface to texture_surface: %08x\n
+Incapace di blt scale_surface a texture_surface: %08x\n
+
+# windows/winddraw.c: 1436
+Unable to blt target_surface: %08x\n
+Incapace di blt target_surface: %08x\n
+
+# windows/input.c: 2616, 2623
+Unable to close the keyboard device. (error %d)\n
+Incapace di chiudere la periferica tastiera. (errore %d)\n
+
+# windows/wind3dfx.c: 793
+Unable to find RGB effects pattern\n
+Incapace di trovare la mappatura degli effetti RGB\n
+
+# windows/wind3d.c: 2100, 2191, 2213 windows/winddraw.c: 1230, 1303
+Unable to lock blit_surface: %08x\n
+Incapace di bloccare la superfice blit: %08x\n 
+
+# windows/winddraw.c: 1606, 1706
+Unable to lock target_surface: %08x\n
+Incapace di bloccare la superfice bersaglio: %08x\n 
+
+# windows/input.c: 2567, 2577
+Unable to open the keyboard device. (error %d)\n
+Incapace di aprire la periferica tastiera. (errore %d)\n
+
+# windows/wind3d.c: 2599
+Unable to render to back_surface: %08x\n
+Incapace di tracciare sulla back_surface: %08x\n
+
+# windows/wind3d.c: 2486
+Unable to render to preprocess texture: %08x\n
+Incapace tracciare a mappa preprocesso: %08x\n
+
+# windows/fronthlp.c: 554
+Usage:  MAME gamename [options]\n\n
+Uso: MAME nomegioco: [opzioni]\n\n
+
+# windows/config.c: 541
+Usage: %s [game] [options]\nOptions:\n
+Uso: %s [gioco] [opzioni]\nOpzioni:\n
+
+# windows/wind3d.c: 686
+Using %s pre-scale effect\n
+Usando l'effetto %s di pre-scalatura\n
+
+# windows/winddraw.c: 298
+Using %s scale effect\n
+Usando %s effet. scal.\n
+
+# windows/input.c: 1186
+Using DirectInput %d\n
+Usando DirectInput %d\n
+
+# windows/wind3d.c: 1141
+Using a %s buffer and pageflipping\n
+Usindo un %s buffer e pageflipping\n
+
+# windows/wind3d.c: 337
+Warning: anisotropic (mag) filtering not supported, falling back to bi-linear\n
+Attenzione: filtro asintropico (mag) non supportato, ritorno al bi-lineare\n
+
+# windows/wind3d.c: 346
+Warning: anisotropic (min) filtering not supported, falling back to bi-linear\n
+Attenzione: filtro asintropico (min) non supportato, ritorno al bi-lineare\n
+
+# windows/wind3d.c: 1678 windows/winddraw.c: 921
+Warning: could not create gamma control to change brightness: %08x\n
+Attenzione: non posso creare il controllo gamma per cambiare la luminosità: %08x\n
+
+# windows/wind3d.c: 309
+Warning: flat bi-cubic filtering not supported, falling back to bi-linear\n
+Attenzione: filtraggio bi-cubico piano non supportato, torno al bi-lineare\n
+
+# windows/wind3d.c: 323
+Warning: gaussian bi-cubic filtering not supported, falling back to bi-linear\n
+Attenzione: filtro bi-cubico gaussiano non supportato, ritorno al bi-lineare\n
+
+# windows/window.c: 646
+Warning: hardware-accelerated blitting-effects selected, but currently disabled\n         use the -direct3d option to enable hardware acceleration\n
+Attenzione: selezionati effetti blitting accelerati hardware, ma ccorrentemente disabilitati\n         usa l'opzione -direct3d per abilitare l'accelerazione hardware\n
+
+# windows/window.c: 640
+Warning: non-hardware-accelerated blitting-effects engine enabled\n         use the -d3deffect option to enable hardware acceleration\n
+Attenzione: motore per effetti blitting senza accelerazione hardware attivo\n            usa l'opzione-d3deffect  per attivare l'accelerazione hardware\n
+
+# windows/wind3d.c: 1529
+Warning: required texture size too large for prescale, disabling prescale\n
+Attenzione: richieste dime. trama troppo larga per prescalatura, disabilito prescalatura\n
+
+# windows/winddraw.c: 701
+Warning: scale effect %s is disabled.\n
+Attenzione: l'effetto scalatura %s è disbilitato.\n
+
+# windows/wind3d.c: 269
+Warning: using fall-back method for scanline blending.\n
+Attenzione: sto usando il metodo precedente per il blending delle lineescansione.\n 
+
+# windows/wind3dfx.c: 183
+Windows Direct3D 2D video options
+Windows Direct3D 2D opzioni video
+
+# windows/fileio.c: 113
+Windows path and directory options
+Opzioni percoso Windows e cartelle
+
+# windows/sound.c: 123
+Windows sound options
+Opzioni suono Windows
+
+# windows/video.c: 211
+Windows video options
+Opzioni video Windows
+
+# windows/fronthlp.c: 1821
+\"%8s\" not found!\n
+\"%8s\" non trovato!\n
+
+# windows/fronthlp.c: 1823
+\"%8s\" not supported!\n
+\"%8s\" non supportato!\n
+
+# windows/input.c: 1248
+\"%s\" controller support enabled\n
+\"%s\" supporto controllo abilitato\n
+
+# windows/fronthlp.c: 627
+\nMAME currently supports the following games:\n\n
+\nMAME correntemente supporta i seguenti giochi:\n\n
+
+# windows/config.c: 636
+\n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
+\n\"%s\" approssivativamente corrispondoni ai seguenti\ngiochi supportati (prima le migliori corrispondenze):\n\n
+
+# windows/wind3dfx.c: 194
+additional customised settings (undocumented)
+impostazioni addizionali personalizzate (non documentate)
+
+# windows/config.c: 218
+additional pause brightness
+pausa addizinale luminosità
+
+# windows/fronthlp.c: 87
+all available info on driver in XML format
+tutte le informazioni disponibili sul driver in formato XML
+
+# windows/video.c: 243
+allow MAME to give back time to the system when it's not needed
+permette al MAME di restituire cicli al sistema se non necessari
+
+# windows/input.c: 1709
+analog
+analogico
+
+# windows/input.c: 1194
+analog joystick
+leva analogica
+
+# windows/config.c: 246
+artwork resolution (0 for auto)
+risoluzione fondali (0 per automatica)
+
+# windows/video.c: 232
+attempt to match the game's refresh rate
+prova a rispettare li rinfresco del gioco
+
+# windows/config.c: 260
+automatic pause when playback is started and finished
+pausa automaticamente quando la riproduzione e partita e finita
+
+# windows/config.c: 212
+automatically rotate screen anti-clockwise for vertical games
+ruota automaticamente lo schermo in senso anti-orario per i giochi verticali
+
+# windows/config.c: 211
+automatically rotate screen clockwise for vertical games
+ruota automaticamente schermo in senso orario con giochi verticali
+
+# windows/config.c: 217
+brightness correction
+correzione luminosità
+
+# windows/video.c: 272
+button color (aqua)
+colore pulsante (acqua)
+
+# windows/video.c: 269
+button color (blue)
+colore pulsante (blu)
+
+# windows/video.c: 268
+button color (green)
+colore pulsante (verde)
+
+# windows/video.c: 275
+button color (lime)
+colore pulsante (lime)
+
+# windows/video.c: 274
+button color (navy)
+colore pulsante (navy)
+
+# windows/video.c: 271
+button color (pink)
+colore pulsante (rosa)
+
+# windows/video.c: 270
+button color (purple)
+colore pulsante (porpora)
+
+# windows/video.c: 266
+button color (red)
+colore pulsante (rosso)
+
+# windows/video.c: 273
+button color (silver)
+colore pulsante (argento)
+
+# windows/video.c: 267
+button color (yellow)
+colore pulsante (giallo)
+
+# windows/config.c: 273
+change m68k core (0:C, 1:DRC, 2:ASM+DRC)
+cambia nucleo m68k (0:C, 1:DRC, 2:ASM+DRC)
+
+# windows/config.c: 258
+change system bios
+Cambia bios sistema
+
+# windows/fileio.c: 141
+cheat filename
+nome archivio trucchi
+
+# windows/fronthlp.c: 100
+class of cpu's used by year
+classe delle cpu usate per anno
+
+# windows/fronthlp.c: 122
+compare files with known MAME roms
+confronta archivi con ROM conosciute MAME
+
+# windows/fronthlp.c: 123
+compare files with known MAME roms (brief)
+confronta archivi con ROM conosciute MAME (breve)
+
+# windows/config.c: 263
+confirm quit
+conferma chisura
+
+# windows/fronthlp.c: 99
+cpu's used
+cpu usata
+
+# windows/config.c: 283
+create the default configuration file
+crea un archivio configurazione predefinito
+
+# windows/config.c: 245
+crop artwork to game screen only
+taglia fondali al solo schermo gioco
+
+# windows/video.c: 276
+cursor color
+colore cursore
+
+# windows/wind3dfx.c: 193
+customised blitting effects preset
+insiemi effetti blitting personalizzati
+
+# windows/fronthlp.c: 83
+detailed info
+informazioni dettagliate
+
+# windows/input.c: 246, 1197
+dial
+chiama
+
+# windows/input.c: 252, 1709
+digital
+digitale
+
+# windows/fileio.c: 133
+directory for Artwork (Overlays etc.)
+cartella per Fondali (Overlays etc.)
+
+# windows/fileio.c: 135
+directory for hard drive image difference files
+cartella per gli archivi delle differenze immagini dischi fissi
+
+# windows/fileio.c: 138
+directory for ips patch
+cartella per le modifiche ips
+
+# windows/fileio.c: 134
+directory for screenshots (.png format)
+cartella per le copieschermo (formato .png)
+
+# windows/fileio.c: 127
+directory to save configurations
+cartella per salvare le configurazioni
+
+# windows/fileio.c: 136
+directory to save controller definitions
+cartella per salvare le definizioni dei controlli
+
+# windows/fileio.c: 131
+directory to save hiscores
+cartella per salvare i punteggi massimi
+
+# windows/fileio.c: 130
+directory to save input device logs
+cartella per salvare i tracciati periferica entrata
+
+# windows/fileio.c: 129
+directory to save memory card contents
+cartella per salvare i contenuti delle carte di memoria
+
+# windows/fileio.c: 128
+directory to save nvram contents
+cartella per salvare i contenuti nvram (ram non volatile)
+
+# windows/fileio.c: 132
+directory to save states
+cartella per salvare stati
+
+# windows/config.c: 287
+display additional diagnostic information
+mostra informazioni diagnostiche addizionali
+
+# windows/config.c: 284
+display running parameters in rc style
+mostra i parametri di funzionamento in stile rc
+
+# windows/config.c: 208
+do not apply rotation
+non applicare rotazione
+
+# windows/wind3d.c: 1141
+double
+doppia
+
+# windows/config.c: 222
+draw antialiased vectors
+disegna vettori non scalettati
+
+# windows/config.c: 223
+draw translucent vectors
+disegna vettori traslucenti
+
+# windows/fronthlp.c: 85
+driver sourcefile
+archivio sorgente driver
+
+# windows/fronthlp.c: 101
+drivers missing sound support
+drivers mancanti del supporto sonoro
+
+# windows/fronthlp.c: 93
+duplicate crc's
+crc dupplicato
+
+# windows/video.c: 227
+emulate win_old_scanlines
+emula vecchie interlinee windows
+
+# windows/input.c: 243
+enable (keyboard|mouse|joystick) if a paddle control is present
+abilita (tastiera|mouse|leva|pistola) se è presente un controllo a manopola
+
+# windows/input.c: 246
+enable (keyboard|mouse|joystick|lightgun) if a dial control is present
+abilita (tastiera|mouse|leva|pistola) se è presente un controllo a chiamata
+
+# windows/input.c: 248
+enable (keyboard|mouse|joystick|lightgun) if a lightgun control is present
+abilita (tastiera|mouse|leva|pistola) se è presente un controllo a pistol
+
+# windows/input.c: 250
+enable (keyboard|mouse|joystick|lightgun) if a mouse control is present
+abilita (tastiera|mouse|leva|pistola) se è presente un controllo a mouse
+
+# windows/input.c: 245
+enable (keyboard|mouse|joystick|lightgun) if a pedal control is present
+abilita (tastiera|mouse|leva|pistola) se è presente un controllo a pedale
+
+# windows/input.c: 247
+enable (keyboard|mouse|joystick|lightgun) if a trackball control is present
+abilita (tastiera|mouse|leva|pistola) se è presente un controllo a sfera
+
+# windows/input.c: 244
+enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is present
+abilita (tastiera|mouse|leva|pistola) se è presente un controllo a leva analogica
+
+# windows/input.c: 223
+enable dual lightgun input
+abilita entrata doppia pistola
+
+# windows/input.c: 221
+enable joystick input
+abilita l'entrata leva analogica
+
+# windows/input.c: 229
+enable keyboard LED emulation
+abilita l'emulazione LED tastiera
+
+# windows/input.c: 222
+enable lightgun input
+abilita l'entrata pistola
+
+# windows/input.c: 220
+enable mouse input
+abilita l'entrata mouse
+
+# windows/wind3dfx.c: 190
+enable rotation of effects for rotated games
+abilita la rotazione effetti per i giochi ruotati
+
+# windows/input.c: 228
+enable steadykey support
+abilita il supporto steadykey
+
+# windows/input.c: 225
+enable stick-type mouse input
+abilita entrata mouse stile-leva
+
+# windows/config.c: 247
+enable/disable cheat subsystem
+abilita/disabilita il sottosistema trucchi
+
+# windows/fronthlp.c: 109
+enable/disable clones
+abilita/disabilita cloni
+
+# windows/config.c: 248
+enable/disable debugger (only if available)
+abilita/disbilita debugger (solo se disponibile)
+
+# windows/config.c: 291
+enable/disable language list
+abilita/disabilita lista linguaggi
+
+# windows/config.c: 286
+enable/disable loading of configfiles
+abilita/disabilita la lettura degli archivi configurazione
+
+# windows/config.c: 233
+enable/disable sound and sound CPUs
+abilita/disabilita suoni e CPU sonore
+
+# windows/video.c: 231
+enforce aspect ratio
+forza rapporto proporzioni
+
+# windows/rc.c: 698, 801, 813
+error invalid value for %s: %s\n
+errore valore non valido per %s: %s\n
+
+# windows/config.c: 481
+error on rc creation\n
+errore nella creazione rc\n
+
+# windows/config.c: 489
+error while parsing cmdline\n
+errore durante l'analisi della linea comandi\n
+
+# windows/rc.c: 315, 382
+error: %s requires an argument, on line %d of file: %s\n
+errore: %s richiede un argomento, alla linea %d dell'archivio: %s\n
+
+# windows/rc.c: 550
+error: %s requires an argument\n
+errore: %s richiede un argomento\n
+
+# windows/rc.c: 827
+error: couldn't open file: %s\n
+errore: non posso aprire l'archivio: %s\n
+
+# windows/config.c: 865
+error: duplicate gamename: %s\n
+errore: nomegioco dupplicato: %s\n
+
+# windows/rc.c: 358
+error: garbage \"%s\" on line %d of file: %s\n
+errore: spazzatura \"%s\" alla linea %d dell'archivio: %s\n
+
+# windows/input.c: 816
+error: invalid value for %s: %s\n
+errore: valore non valido per %s: %s\n
+
+# windows/video.c: 418
+error: invalid value for aspect ratio: %s\n
+errore: valore non valido per rapporto proporzioni: %s\n
+
+# windows/wind3dfx.c: 287
+error: invalid value for d3dprescale: %s\n
+errore: val scorretto per d3dprescale: %s\n
+
+# windows/config.c: 146
+error: invalid value for debugres: %s\n
+erore: valore non valido per debugres: %s\n
+
+# windows/input.c: 896
+error: invalid value for digital: %s -- valid values are:\n
+errore: valore non valido per digitale: %s -- i valori validi sono:\n
+
+# windows/video.c: 397
+error: invalid value for effect: %s\n
+errore: valore non valido per l'effetto: %s\n
+
+# windows/config.c: 182
+error: invalid value for language: %s\nUse %s\n
+errore: valore non valido per il linguaggio: %s\nUsa %s\n
+
+# windows/input.c: 791
+error: invalid value for led_mode: %s\n
+errore: valore non valido per led_mode: %s\n
+
+# windows/video.c: 446
+error: invalid value for palette: %s\n
+errore: valore non valido per la tavolozza: %s\n
+
+# windows/video.c: 340, 350
+error: invalid value for resolution: %s\n
+errore: valore non valido per la risoluzione: %s\n
+
+# windows/config.c: 881
+error: no gamename given in %s\n
+errore: non è stato dato il nomegioco in %s\n
+
+# windows/rc.c: 321, 388
+error: trailing garbage: \"%s\" on line: %d of file: %s\n
+errore: trailing spazzatura: \"%s\" alla linea: %d dell'archivio: %s\n
+
+# windows/rc.c: 309, 376
+error: unknown option %s, on line %d of file: %s\n
+errore: opzione sconosciuta %s, alla linea %d dell'archivio: %s\n
+
+# windows/rc.c: 566, 718, 740, 764
+error: unknown option %s\n
+erore: opzione sconosciuta %s\n
+
+# windows/config.c: 557
+failed to open %s for playback\n
+fallita apertura di %s per riproduzione\n
+
+# windows/config.c: 684
+failed to open %s for recording\n
+fallita apertura di %s per registrazione\n
+
+# windows/wind3dfx.c: 188
+feedback strength
+forza ritorno
+
+# windows/config.c: 214
+flip screen left-right
+ribalta schermo sinistra-destra
+
+# windows/config.c: 213
+flip screen upside-down
+ribalta schermo alto-basso
+
+# windows/video.c: 255
+font blank color
+fonte colore nero
+
+# windows/video.c: 256
+font normal color
+fonte colore normale
+
+# windows/video.c: 257
+font special color
+fonte colore speciale
+
+# windows/wind3dfx.c: 184
+force specific zoom level
+forza un'ingrandimento specifico
+
+# windows/fronthlp.c: 765
+game      clone of  description\n
+gioco     clone di  descrizione\n
+
+# windows/fronthlp.c: 86
+games per sourcefile
+giochi per archivio sorgente
+
+# windows/fronthlp.c: 103
+games with nvram
+giochi con nvram
+
+# windows/config.c: 216
+gamma correction
+correzione gamma
+
+# windows/config.c: 251
+generate error.log
+genera error.log
+
+# windows/video.c: 245
+increase thread priority
+incrementa la priorità processo
+
+# windows/rc.c: 253
+info: trying to parse: %s\n
+informazioni: provo ad analizzare: %s\n
+
+# windows/wind3dfx.c: 186
+interpolation method
+metodo interpolazione
+
+# windows/input.c: 1709
+invalid
+invalido
+
+# windows/config.c: 265
+ips patch datfile name
+nome archivio dati modifiche ips
+
+# windows/fronthlp.c: 1795
+is bad\n
+è sbagliato\n
+
+# windows/fronthlp.c: 1806
+is best available\n
+è il migliore disponibile\n
+
+# windows/fronthlp.c: 1801
+is good\n
+è corretto\n
+
+# windows/input.c: 222, 812, 1195
+lightgun
+pistola
+
+# windows/fronthlp.c: 111
+list available devices
+lista periferiche disp
+
+# windows/fronthlp.c: 112
+list available file extensions
+lista estensioni archivi disponibili
+
+# windows/fronthlp.c: 116
+list optional samples for a driver
+lista campioni audio opzionali per il driver
+
+# windows/fronthlp.c: 115
+list required roms for a driver
+lista roms richieste per il driver
+
+# windows/climain.c: 30
+loading %-12s\r
+sto leggendo %-12s\r
+
+# windows/input.c: 252
+mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
+segna alcune leve o assi come digitali (nessuno|tutti|j<N>*|j<N>a<M>[,...])
+
+# windows/config.c: 252
+maximum error.log size (in KB)
+dim massima error.log (in KB)
+
+# windows/input.c: 231
+minimal analog value for digital input
+valore analogico minimo per l'entrata digitale
+
+# windows/fronthlp.c: 105
+missing roms
+roms mancanti
+
+# windows/fronthlp.c: 786
+name\n
+nome\n
+
+# windows/rc.c: 639, 676
+no help available
+aiuto non disponibile
+
+# windows/input.c: 227
+offscreen shots reload
+ricarica colpi fuorischermo
+
+# windows/config.c: 253
+output error log to debugger
+invio il tracciato errori al debugger
+
+# windows/fronthlp.c: 84
+output gamelist.txt main body
+emetto oò corpo principale di gamelist.txt
+
+# windows/input.c: 243, 1193
+paddle
+manopola
+
+# windows/fronthlp.c: 98
+palette size
+dimensine tavolozza colori
+
+# windows/config.c: 417
+parsing %s...
+analizzo %s...
+
+# windows/fileio.c: 123, 125
+path to ini files
+percorso per archivi ini
+
+# windows/fileio.c: 115
+path to romsets
+percorso per insiemi roms
+
+# windows/fileio.c: 121
+path to samplesets
+percorso per insiemi campioni audio
+
+# windows/input.c: 245, 1196
+pedal
+pedale
+
+# windows/config.c: 249
+playback an input file
+riproduci un archivio entrate
+
+# windows/input.c: 232
+preconfigure for specified controller
+preconfigura per un controllo specifico
+
+# windows/video.c: 244
+prefer RDTSC over QueryPerformanceCounter for timing
+preferisci RDTSC a QueryPerformanceCounter per le temporizzazioni
+
+# windows/wind3dfx.c: 191
+prescale effect
+effetto prescalatura
+
+# windows/config.c: 425
+problem parsing %s\n
+problema analizzando %s\n
+
+# windows/config.c: 250
+record an input file
+registra un archivio entrate
+
+# windows/fronthlp.c: 117
+report romsets that have problems
+documenta insiemi roms che hanno problemi
+
+# windows/fronthlp.c: 120
+report samplesets that have problems
+documenta insiemi campioni audio che hanno problemi
+
+# windows/config.c: 232
+resample if samplerate does not match
+ricampiona se la frequenza campionamento non coincide
+
+# windows/fronthlp.c: 96
+rom distribution
+distribuzione rom
+
+# windows/fronthlp.c: 95, 97
+rom size
+dimensione rom
+
+# windows/fronthlp.c: 1819
+romset
+insieme rom
+
+# windows/fronthlp.c: 1758
+romset %s 
+insieme rom %s
+
+# windows/fronthlp.c: 1829
+romsets
+insiemi rom
+
+# windows/config.c: 210
+rotate screen anti-clockwise
+ruota lo schermo in senso anti-orario
+
+# windows/config.c: 209
+rotate screen clockwise
+ruoto lo schermo in senso orario
+
+# windows/video.c: 216
+run in a window/run on full screen
+esegui in una finestra/esegui a schermo pieno
+
+# windows/config.c: 627
+running %s (%s) [press return]
+sto avviando %s (%s) [premi invio]
+
+# windows/fronthlp.c: 1819
+sampleset
+insieme campioni audio
+
+# windows/fronthlp.c: 1786
+sampleset %s 
+insiemecampaudio %s 
+
+# windows/fronthlp.c: 1829
+samplesets
+insiemi campioni audio
+
+# windows/sound.c: 125
+save sound in wav file
+salva suono in archivo wav
+
+# windows/wind3d.c: 1650
+scale effects surface created: %s\n
+effetti scalatura superfice creati: %s\n
+
+# windows/wind3dfx.c: 189
+scanline intensity
+intensità interlinee
+
+# windows/config.c: 290
+select translation language
+scegli il linguaggio di traduzione
+
+# windows/sound.c: 124
+set audio latency (increase to reduce glitches)
+imposta latenza audio (aumenta per ridurre salti)
+
+# windows/config.c: 224
+set beam width in vector games
+seleziona larghezza raggio nei giochi vettoriali
+
+# windows/config.c: 225
+set flickering in vector games
+imposta lo sfarfallamento per i giochi vettoriali
+
+# windows/video.c: 213
+set frameskip explicitly (autoframeskip needs to be off)
+seleziona esplicitamente i saltaquadri (il saltaquadri automatico deve essere spento)
+
+# windows/config.c: 226
+set intensity in vector games
+imposta intensità nei giochi vettoriali
+
+# windows/input.c: 234
+set joystick ID (Player1)
+imposta ID leva analogica (Giocatore1)
+
+# windows/input.c: 235
+set joystick ID (Player2)
+imposta ID leva analogica (Giocatore 2)
+
+# windows/input.c: 236
+set joystick ID (Player3)
+imposta ID leva analogica (Giocatore3)
+
+# windows/input.c: 237
+set joystick ID (Player4)
+imposta ID leva analogica (Giocatore 4)
+
+# windows/input.c: 238
+set joystick ID (Player5)
+imposta ID leva (Giocatore5) 
+
+# windows/input.c: 239
+set joystick ID (Player6)
+imposta ID leva (Giocatore6)
+
+# windows/input.c: 240
+set joystick ID (Player7)
+imposta ID leva (Giocatore7)
+
+# windows/input.c: 241
+set joystick ID (Player8)
+imposta ID leva (Giocatore8)
+
+# windows/video.c: 225
+set resolution
+imposta la risoluzione
+
+# windows/config.c: 215
+set resolution for debugger window
+imposta risoluzione per finestra debugger
+
+# windows/config.c: 230
+set samplerate
+imposta la frequenza campioni audio
+
+# windows/video.c: 226
+set specific monitor refresh rate
+imposta frequenza aggiornamento specifica x monitor
+
+# windows/video.c: 235
+sets the brightness in full screen mode
+imposta la luminosità nella modalita schemo pieno
+
+# windows/video.c: 236
+sets the number of frames to run within the game
+imposta il numero di quadri da utilizzare nel gioco
+
+# windows/fronthlp.c: 89
+shared sample directory
+condividi cartella campioni audio
+
+# windows/fronthlp.c: 81
+short name, full name
+nome breve, nome completo
+
+# windows/fronthlp.c: 88
+show clones
+mostra cloni
+
+# windows/fronthlp.c: 76, 77
+show help message
+mostra messaggio aiuto
+
+# windows/config.c: 285
+show this help
+mostra quest'aiuto
+
+# windows/config.c: 254
+skip displaying the disclaimer screen
+salta visualizzazione schermata implicazioni legali
+
+# windows/config.c: 255
+skip displaying the game info screen
+salta lo schermo introduttivo gioco
+
+# windows/video.c: 212
+skip frames to speed up emulation
+salta quadri per accelerare emulazione
+
+# windows/fronthlp.c: 124
+sort by descriptive name
+ordina per nome descrittivo
+
+# windows/fronthlp.c: 125
+sort by driver
+ordina per driver
+
+# windows/config.c: 233 
+sound
+suono
+
+# windows/fronthlp.c: 102
+sound chips used
+cpu sonora usato
+
+# windows/video.c: 238
+specify an alternate monitor aspect ratio
+specifica un rapporto schermo alternativo
+
+# windows/video.c: 237
+specify the blitting effect
+specifica l'effetto blitting
+
+# windows/wind3dfx.c: 192
+specify the blitting effects
+specifica gli effetti blitting
+
+# windows/video.c: 230
+start out maximized
+parti massimizzato
+
+# windows/config.c: 262
+state to load
+stato da caricare
+
+# windows/video.c: 224
+stretch to integer ratios
+stira a ratei interi
+
+# windows/video.c: 229
+switch color depths to best fit
+commuta i colori al numero che meglio s'adatta
+
+# windows/video.c: 228
+switch resolutions to best fit
+commuta la risoluzione alla migliore possibile
+
+# windows/video.c: 233
+syncronize only to the monitor refresh
+sincronizza al solo rinfresco dello schermo
+
+# windows/video.c: 234
+throttle speed to the game's framerate
+accelera velocità alla velocità schermo del gioco
+
+# windows/input.c: 247, 1198
+trackball
+sfera
+
+# windows/config.c: 269
+transparency of UI background [0 - 255]
+trasparenza dell'Interf.Graf [0 - 255]
+
+# windows/wind3d.c: 1141
+triple
+tripla
+
+# windows/video.c: 215
+triple buffering (only if fullscreen)
+Buffering triplo (solo se schermo pieno)
+
+# windows/config.c: 162
+unable to open log file\n
+incapace di aprire l'archivio traccia\n
+
+# windows/video.c: 218
+use Direct3D for rendering
+usa Direct3D per tracciamento
+
+# windows/video.c: 217
+use DirectDraw for rendering
+usa DirectDraw per il tracciamneto
+
+# windows/wind3dfx.c: 185
+use DirectX texture management
+usa gestione mappe DirectX
+
+# windows/config.c: 241
+use additional game artwork (sets default for specific options below)
+usa fondali addizionali (imposta le condiz predefinite per le opzioni sottostanti)
+
+# windows/config.c: 242
+use backdrop artwork
+usa fondali sfondo
+
+# windows/config.c: 244
+use bezel artwork
+usa fondali bezel
+
+# windows/config.c: 257
+use only CRC for all integrity checks
+usa solo CRC per tutti i controlli integrità
+
+# windows/config.c: 243
+use overlay artwork
+usa fondali sovrapposti
+
+# windows/config.c: 231
+use samples
+usa campioni audio
+
+# windows/config.c: 268
+use transparent background for UI text
+usa sfondo trasparente per testo Interf Graf
+
+# windows/fronthlp.c: 121
+verify a sampleset
+verifica insiemi campioni audio
+
+# windows/fronthlp.c: 119
+verify checksums of a romset (verbose)
+verifica il checksums  di un insieme ROM (verboso)
+
+# windows/fronthlp.c: 118
+verify checksums of romsets (terse)
+verifica checksums degli insiemi ROM (minimale)
+
+# windows/config.c: 234
+volume (range [-32,0])
+volume (variazione [-32,0])
+
+# windows/video.c: 214
+wait for vertical sync (reduces tearing)
+attendi sincronismo verticale (riduce strappi)
+
+# windows/config.c: 503
+who am I? cannot determine the name I was called with\n
+Chi sono? non posso determinare il nome con cui sono stato chiamato\n
+
+# windows/video.c: 258
+window background color
+colore sfondo finestra
+
+# windows/video.c: 261
+window frame color (dark)
+colore riquadro finestra (scuro)
+
+# windows/video.c: 260
+window frame color (light)
+colore riquadro finestra (leggero)
+
+# windows/video.c: 259
+window frame color (medium)
+colore riquadro finestra (medio)
+
+# windows/fronthlp.c: 108
+wrong fps
+fps sbagliato
+
+# windows/fronthlp.c: 94
+wrong merge attempts
+tentativo errato di fusione
+
+# windows/fronthlp.c: 107
+wrong orientation
+orientazione errata
+
+# windows/fronthlp.c: 82
+year, manufacturer and full name
+anno, produttore e nome completo
+
+# windows/fronthlp.c: 90
+CRC-32s
+
+
+# windows/video.c: 537
+Enumerating video device %s\n
+
+
+# windows/video.c: 602
+Error enumerating DirectDraw: %08x\n
+
+
+# windows/input.c: 1929
+J%d %s D
+
+
+# windows/input.c: 1933
+J%d %s L
+
+
+# windows/input.c: 1937
+J%d %s R
+
+
+# windows/input.c: 1925
+J%d %s U
+
+
+# windows/fronthlp.c: 92
+MD5s
+
+
+# windows/input.c: 1820, 1829
+Mouse %d %s
+
+
+# windows/input.c: 1761
+Mouse %d X
+
+
+# windows/input.c: 1763
+Mouse %d Y
+
+
+# windows/input.c: 1822, 1831
+Mouse %s
+
+
+# windows/fronthlp.c: 91
+SHA-1s
+
+
+# windows/video.c: 609
+Screen %s not found\n
+
+
+# windows/config.c: 236
+enable/disable volume auto adjust
+
+
+# windows/video.c: 315
+error: invalid value for cleanstretch: %s\n
+
+
+# windows/video.c: 372
+error: invalid value for frames_to_run: %s\n
+
+
+# windows/video.c: 223
+specify which screen to use
+
+

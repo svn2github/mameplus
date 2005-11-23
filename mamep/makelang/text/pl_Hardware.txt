@@ -1,0 +1,1624 @@
+# 58
+Atari / 6502 Color Raster
+Atari / 6502 Kolorowy raster
+
+# 70
+Atari / 6502 Vector
+Atari / 6502 Wektor
+
+# 115
+Atari / Arcade Classics
+Atari / Klasyka Arcade
+
+# 144
+Atari / Dual 68000
+Atari / Podwójny 68000
+
+# 6
+Allied Leisure / Unique
+
+
+# 9
+Alpha / 68000
+
+
+# 26
+Alpha / Equites
+
+
+# 33
+Atari / 6502 BW Raster
+
+
+# 105
+Atari / 6800
+
+
+# 76
+Atari / 68000
+
+
+# 118
+Atari / Asteroids
+
+
+# 126
+Atari / Centipede
+
+
+# 137
+Atari / Cojag
+
+
+# 150
+Atari / G1
+
+
+# 165
+Atari / GT
+
+
+# 168
+Atari / GX2
+
+
+# 158
+Atari / Gauntlet
+
+
+# 170
+Atari / Hard drivin
+
+
+# 182
+Atari / Star Wars
+
+
+# 186
+Atari / System 1
+
+
+# 200
+Atari / System 2
+
+
+# 208
+Atari / Unique
+
+
+# 231
+Atari / Vector
+
+
+# 251
+Atlus / Oh My God
+
+
+# 254
+Atlus / Unique
+
+
+# 256
+Bally Midway / Unique
+
+
+# 261
+BanPresto / Unique
+
+
+# 258
+Banpresto / Macross Plus
+
+
+# 264
+Banpresto-Bandai / Unique
+
+
+# 266
+Banpresto-Toei Animation / Unique
+
+
+# 268
+Capcom / Last Duel
+
+
+# 275
+Capcom / Play System 1
+
+
+# 377
+Capcom / Play System 2
+
+
+# 529
+Capcom / Section Z
+
+
+# 541
+Capcom / Side Arms
+
+
+# 548
+Capcom / Tiger Road
+
+
+# 553
+Capcom / Unique
+
+
+# 599
+Cinematronics / Cerberus
+
+
+# 623
+Cinematronics / Jack the Giantkiller
+
+
+# 635
+Cinematronics / Space Wars
+
+
+# 656
+Comad / Pushman
+
+
+# 659
+Comad / Zero Zone
+
+
+# 664
+Data East / Act-Fancer
+
+
+# 669
+Data East / Astro Fighter
+
+
+# 675
+Data East / B-Wings
+
+
+# 681
+Data East / Boomer Rang'r
+
+
+# 686
+Data East / Break Thru
+
+
+# 690
+Data East / Burger Time
+
+
+# 705
+Data East / Deco 16
+
+
+# 728
+Data East / Deco 32
+
+
+# 739
+Data East / Deco 8
+
+
+# 760
+Data East / Deco Cassette
+
+
+# 795
+Data East / Edward Randy
+
+
+# 810
+Data East / Karnov
+
+
+# 817
+Data East / Super Burger Time
+
+
+# 821
+Data East / Tumble Pop
+
+
+# 828
+Data East / Unique
+
+
+# 873
+Deniam / Karian Cross
+
+
+# 878
+Dooyong / Gun Dealer
+
+
+# 884
+Dooyong / Last Day
+
+
+# 897
+Dyna Electronics
+
+
+# 901
+Exidy / 440
+
+
+# 914
+Exidy / 6502
+
+
+# 930
+Exidy / Circus
+
+
+# 935
+Exidy / Star Fire
+
+
+# 939
+Exidy / Unique
+
+
+# 943
+Gaelco / Big Karnak
+
+
+# 947
+Gaelco / CG-1V GAE1
+
+
+# 955
+Gaelco / Unique
+
+
+# 961
+Generic / Afega
+
+
+# 966
+Generic / Alba
+
+
+# 972
+Generic / Amenip-Centuri
+
+
+# 984
+Generic / Amstar
+
+
+# 996
+Generic / Art and Magic
+
+
+# 1001
+Generic / Bootleg
+
+
+# 1004
+Generic / Cave
+
+
+# 1024
+Generic / Century Electronics CVS
+
+
+# 1043
+Generic / Dynax
+
+
+# 1062
+Generic / ETM
+
+
+# 1051
+Generic / Electronic Devices
+
+
+# 1054
+Generic / Epos
+
+
+# 1064
+Generic / Face
+
+
+# 1070
+Generic / Falcon
+
+
+# 1078
+Generic / Fuuki
+
+
+# 1082
+Generic / GamePlan
+
+
+# 1087
+Generic / Gottlieb
+
+
+# 1102
+Generic / Gremlin
+
+
+# 1108
+Generic / HomeData
+
+
+# 1123
+Generic / Leland
+
+
+# 1131
+Generic / Metro
+
+
+# 1163
+Generic / NMK
+
+
+# 1155
+Generic / Nihon System
+
+
+# 1167
+Generic / Pacific Novelty
+
+
+# 1172
+Generic / Playmark
+
+
+# 1176
+Generic / Space
+
+
+# 1180
+Generic / Status Games
+
+
+# 1184
+Generic / Stern
+
+
+# 1193
+Generic / TCH
+
+
+# 1188
+Generic / Taiyo
+
+
+# 1196
+Generic / Tuning
+
+
+# 1200
+Generic / U.S. Games
+
+
+# 1207
+Generic / Zaccaria
+
+
+# Title
+Hardware
+
+
+# 1212
+IGS / PolyGame Master
+
+
+# 1220
+IGS / Unique
+
+
+# 1264
+Incredible Technologies / Capcom Bowling
+
+
+# 1223
+Incredible technologies / 32b
+
+
+# 1242
+Incredible technologies / 8b
+
+
+# 1269
+Irem / IPM Invader
+
+
+# 1356
+Irem / Meikyu Jima
+
+
+# 1361
+Irem / Traverse Usa
+
+
+# 1365
+Irem / Unique
+
+
+# 1274
+Irem / m107
+
+
+# 1277
+Irem / m62
+
+
+# 1297
+Irem / m72
+
+
+# 1322
+Irem / m90
+
+
+# 1329
+Irem / m92
+
+
+# 1376
+Jaleco / Argus
+
+
+# 1380
+Jaleco / Cisco Heat
+
+
+# 1385
+Jaleco / Formation Z
+
+
+# 1388
+Jaleco / Mega System 1
+
+
+# 1416
+Jaleco / Mega System 32
+
+
+# 1429
+Jaleco / Naughty Boy
+
+
+# 1436
+Jaleco / Unique
+
+
+# 1450
+Kaneko / Berlin Wall
+
+
+# 1461
+Kaneko / Fly-Boy
+
+
+# 1469
+Kaneko / Gals Panic
+
+
+# 1477
+Kaneko / Super Nova
+
+
+# 1495
+Kaneko / Unique
+
+
+# 1498
+Kaneko / Vs Gong Fight
+
+
+# 1510
+Konami / 6809
+
+
+# 1537
+Konami / 8080
+
+
+# 1542
+Konami / Amidar
+
+
+# 1550
+Konami / Battlantis
+
+
+# 1556
+Konami / Blades of Steel
+
+
+# 1561
+Konami / Chequered Flag
+
+
+# 1573
+Konami / Contra
+
+
+# 1594
+Konami / Devil World
+
+
+# 1607
+Konami / Double Dribble
+
+
+# 1618
+Konami / Dual 6809
+
+
+# 1622
+Konami / FrameBuffer
+
+
+# 1634
+Konami / GX
+
+
+# 1627
+Konami / Green Beret
+
+
+# 1647
+Konami / Hyper Sports
+
+
+# 1652
+Konami / Loco-Motion
+
+
+# 1661
+Konami / Main Event
+
+
+# 1670
+Konami / Mystic Warrior
+
+
+# 1682
+Konami / Nemesis
+
+
+# 1699
+Konami / Scramble
+
+
+# 1759
+Konami / TMNT 1-2
+
+
+# 1749
+Konami / Thunder Cross
+
+
+# 1754
+Konami / Time Pilot
+
+
+# 1816
+Konami / Vendetta
+
+
+# 1824
+Konami / WEC Le Mans 24
+
+
+# 1827
+Konami / X-Men
+
+
+# 1834
+Konami / Xexex
+
+
+# 1852
+Konami / Z80
+
+
+# 1861
+Meadows / Bigfoot Bonkers
+
+
+# 1865
+Meadows / Dead Eye
+
+
+# 1869
+Midway / 8080 Hardware
+
+
+# 1947
+Midway / Bally Midway Astrocade
+
+
+# 1955
+Midway / Bally Midway MCR1
+
+
+# 1959
+Midway / Bally Midway MCR2
+
+
+# 1970
+Midway / Bally Midway MCR3
+
+
+# 1990
+Midway / Bally Midway MCR68k
+
+
+# 2000
+Midway / Bally Sente SAC-1
+
+
+# 2027
+Midway / T Unit
+
+
+# 2044
+Midway / Unique
+
+
+# 2050
+Midway / V Unit
+
+
+# 2059
+Midway / Williams 6809
+
+
+# 2092
+Midway / Wolf Unit
+
+
+# 2104
+Midway / Y Unit
+
+
+# 2129
+Mitchell / Funky Jet
+
+
+# 2132
+Mitchell / Mahjong Gakuen
+
+
+# 2154
+Mitchell / Unique
+
+
+# 2156
+Nakanihon / Unique
+
+
+# 2162
+Namco / Bomb Bee
+
+
+# 2168
+Namco / Dragon Buster
+
+
+# 2265
+Namco / GaPlus
+
+
+# 2173
+Namco / Galaga
+
+
+# 2197
+Namco / Galaxian
+
+
+# 2273
+Namco / Gee Bee
+
+
+# 2280
+Namco / Kosodate Quiz My Angel
+
+
+# 2287
+Namco / Libble Rabble
+
+
+# 2290
+Namco / NA1 NA2
+
+
+# 2306
+Namco / NB1 NB2
+
+
+# 2319
+Namco / ND1
+
+
+# 2323
+Namco / Pac-Land
+
+
+# 2332
+Namco / Pac-Man
+
+
+# 2382
+Namco / Pole Position
+
+
+# 2391
+Namco / Rally X
+
+
+# 2396
+Namco / Super Pac-Man
+
+
+# 2414
+Namco / System 1
+
+
+# 2412
+Namco / System 11
+
+
+# 2452
+Namco / System 2
+
+
+# 2447
+Namco / System 21
+
+
+# 2450
+Namco / System 22
+
+
+# 2495
+Namco / System 86
+
+
+# 2504
+Namco / Unique
+
+
+# 2508
+Nichibutsu / Armed Formation
+
+
+# 2516
+Nichibutsu / City Love
+
+
+# 2540
+Nichibutsu / Cop 01
+
+
+# 2544
+Nichibutsu / Crazy Climber
+
+
+# 2562
+Nichibutsu / Frisky Tom
+
+
+# 2568
+Nichibutsu / Galivan
+
+
+# 2576
+Nichibutsu / Mahjong Gal no Kaika
+
+
+# 2594
+Nichibutsu / Mahjong Gottsu ee-kanji
+
+
+# 2619
+Nichibutsu / Mahjong Hana no Momoko gumi
+
+
+# 2642
+Nichibutsu / Taisen Quiz
+
+
+# 2645
+Nichibutsu / Terra Cresta
+
+
+# 2653
+Nichibutsu / Tube Panic
+
+
+# 2656
+Nichibutsu / Unique
+
+
+# 2663
+Nintendo / Playchoice 10
+
+
+# 2716
+Nintendo / Punch-Out
+
+
+# 2721
+Nintendo / Radar Scope
+
+
+# 2743
+Nintendo / Sky Skipper
+
+
+# 2749
+Nintendo / Super System
+
+
+# 2762
+Nintendo / Unique
+
+
+# 2771
+Nintendo / Vs
+
+
+# 2813
+Omori Electric / Unique
+
+
+# 2817
+Orca / Changes
+
+
+# 2827
+Orca / Espial
+
+
+# 2831
+Orca / Funky Bee
+
+
+# 2834
+Orca / Percussor
+
+
+# 2844
+Psikyo / Samurai Aces
+
+
+# 2855
+Psikyo / Strikers 1945 II
+
+
+# 2864
+Psikyo / Taisen Hot Gimmick
+
+
+# 2871
+Ramtek / Hitme
+
+
+# 2875
+Ramtek / Unique
+
+
+# 2878
+Rare / Killer Instinct
+
+
+# 2881
+Rare / Unique
+
+
+# 3280
+SNK / 68000
+
+
+# 3290
+SNK / Beast Busters
+
+
+# 3293
+SNK / Hal21
+
+
+# 3297
+SNK / Lasso
+
+
+# 3303
+SNK / Marvin's Maze
+
+
+# 3307
+SNK / Neo-Geo
+
+
+# 3468
+SNK / Sasuke vs. Commander
+
+
+# 3479
+SNK / Tnk III
+
+
+# 3510
+SNK / Unique
+
+
+# 2883
+Sanritsu / Unique
+
+
+# 2898
+Sega / G-80 Vector
+
+
+# 2888
+Sega / G-80 raster
+
+
+# 2907
+Sega / Multi 32
+
+
+# 2911
+Sega / Outrun
+
+
+# 2917
+Sega / Sg-1000
+
+
+# 2920
+Sega / Space Harrier
+
+
+# 2926
+Sega / System 1-2
+
+
+# 2981
+Sega / System 16
+
+
+# 3042
+Sega / System 18
+
+
+# 3053
+Sega / System 24
+
+
+# 3058
+Sega / System 32
+
+
+# 3076
+Sega / System C-MegaPlay-MegaTech
+
+
+# 3112
+Sega / System E
+
+
+# 3117
+Sega / System X
+
+
+# 3120
+Sega / Unique
+
+
+# 3124
+Sega / Vic-Dual
+
+
+# 3147
+Sega / Z80
+
+
+# 3167
+Sega / Zaxxon
+
+
+# 3177
+Seibu / D-Con
+
+
+# 3180
+Seibu / Unique
+
+
+# 3186
+Seibu Denshi / Stinger
+
+
+# 3194
+Seibu Kaihatsu / Unique
+
+
+# 3205
+Seta / Super Real Mahjong Part 2
+
+
+# 3212
+Seta / Thundercade
+
+
+# 3252
+Seta / Unique
+
+
+# 3254
+Seta Sammy Visco
+
+
+# 3274
+Sigma Ent. Inc. / Unique
+
+
+# 3518
+Stern / Unique
+
+
+# 3520
+Sun Electronics / Funky Fish
+
+
+# 3525
+Sun Electronics / Pettan Pyuu
+
+
+# 3529
+Sun Electronics / Speak and Rescue
+
+
+# 3536
+Sun Electronics / Unique
+
+
+# 3541
+SunA / Back Street Soccer
+
+
+# 3544
+SunA / Hard Head
+
+
+# 3548
+SunA / Unique
+
+
+# 3557
+Sunsoft / Shangai
+
+
+# 3553
+Sunsoft / Shangai III
+
+
+# 3560
+Tad / Blood Bros.
+
+
+# 3564
+Tad / Unique
+
+
+# 3573
+Taito / 40 love
+
+
+# 3577
+Taito / 68020
+
+
+# 3583
+Taito / Birdie King
+
+
+# 3587
+Taito / Bonze Adventure
+
+
+# 3601
+Taito / Bubble Bobble
+
+
+# 3609
+Taito / Darius II
+
+
+# 3613
+Taito / Fairyland story
+
+
+# 3618
+Taito / Gyrodine
+
+
+# 3630
+Taito / Halley's Comet
+
+
+# 3635
+Taito / Kick and Run
+
+
+# 3639
+Taito / New Zealand Story
+
+
+# 3657
+Taito / Ninja Warriors
+
+
+# 3661
+Taito / Qix
+
+
+# 3678
+Taito / Super Qix
+
+
+# 3682
+Taito / System B
+
+
+# 3708
+Taito / System F2
+
+
+# 3761
+Taito / System F3
+
+
+# 3838
+Taito / System H
+
+
+# 3842
+Taito / System L
+
+
+# 3862
+Taito / System SJ
+
+
+# 3884
+Taito / System X
+
+
+# 3891
+Taito / System Z
+
+
+# 3908
+Taito / Tiger Heli
+
+
+# 3923
+Taito / Unique
+
+
+# 3998
+Tecfri / Hole Land
+
+
+# 4001
+Tecfri / Unique
+
+
+# 4010
+Technos / Double Dragon
+
+
+# 4005
+Technos / Double Dragon 3
+
+
+# 4019
+Technos / Mat Mania
+
+
+# 4024
+Technos / Scrambled Egg
+
+
+# 4028
+Technos / Unique
+
+
+# 4059
+Tecmo / Final Star Force
+
+
+# 4062
+Tecmo / Ninja Gaiden
+
+
+# 4071
+Tecmo / Rygar
+
+
+# 4078
+Tecmo / Unique
+
+
+# 4086
+Tehkan / Senjyo
+
+
+# 4092
+Tehkan / Tehkan World Cup
+
+
+# 4096
+Tehkan / Unique
+
+
+# 4101
+Toaplan / Flying Shark
+
+
+# 4110
+Toaplan / Ghox
+
+
+# 4135
+Toaplan / Rally Bike
+
+
+# 4151
+Toaplan / Snow Bros
+
+
+# 4160
+Toaplan / Unique
+
+
+# 4371
+UPL / Atomic Robokid
+
+
+# 4376
+UPL / Bio-Ship Paladin
+
+
+# 4401
+UPL / Mutant Night
+
+
+# 4404
+UPL / Unique
+
+
+# 4165
+Unico / Unique
+
+
+# 4168
+Unico Electronics / BurglarX
+
+
+# 4173
+Unico Electronics / Unique
+
+
+# 4176
+Unique / Alba
+
+
+# 4178
+Unique / Alpha
+
+
+# 4183
+Unique / Bootleg
+
+
+# 4188
+Unique / Centuri
+
+
+# 4190
+Unique / Chuo Co. Ltd
+
+
+# 4193
+Unique / Cosmic Chasm
+
+
+# 4198
+Unique / DRKorea
+
+
+# 4196
+Unique / Dongsung
+
+
+# 4210
+Unique / ESD
+
+
+# 4200
+Unique / Electronic Device Italy
+
+
+# 4203
+Unique / Electronic Devices
+
+
+# 4205
+Unique / Elettronolo
+
+
+# 4207
+Unique / Enerdyne Technologies
+
+
+# 4213
+Unique / Excellent system
+
+
+# 4215
+Unique / GM Shoji
+
+
+# 4217
+Unique / Gottlieb
+
+
+# 4219
+Unique / Grand Cross
+
+
+# 4221
+Unique / Graphic Techno
+
+
+# 4223
+Unique / Gumbo
+
+
+# 4225
+Unique / Hot-B
+
+
+# 4228
+Unique / Human
+
+
+# 4230
+Unique / IDSA
+
+
+# 4232
+Unique / Kiwako
+
+
+# 4236
+Unique / Komax
+
+
+# 4238
+Unique / Midcoin
+
+
+# 4240
+Unique / Model Racing
+
+
+# 4250
+Unique / NIX
+
+
+# 4243
+Unique / Nasco
+
+
+# 4247
+Unique / Nippon Amusement
+
+
+# 4253
+Unique / Oksan
+
+
+# 4255
+Unique / Olympia
+
+
+# 4258
+Unique / Pacific Novelty
+
+
+# 4260
+Unique / Philko Corp.
+
+
+# 4262
+Unique / Playtronic
+
+
+# 4264
+Unique / Poby-Virus
+
+
+# 4266
+Unique / Raster Elite
+
+
+# 4268
+Unique / Sesame Japan
+
+
+# 4271
+Unique / Shoei
+
+
+# 4275
+Unique / Sigma
+
+
+# 4273
+Unique / Sigma Enterprises Inc.
+
+
+# 4277
+Unique / Sunwise
+
+
+# 4293
+Unique / TIC
+
+
+# 4279
+Unique / Tamtex
+
+
+# 4284
+Unique / Technosoft
+
+
+# 4287
+Unique / Tekunon Koygyou
+
+
+# 4296
+Unique / Tong Electronic
+
+
+# 4301
+Unique / Universal
+
+
+# 4303
+Unique / Unknown
+
+
+# 4305
+Unique / VEB Polytechnik Karl-Marx-Stadt
+
+
+# 4307
+Unique / Videa
+
+
+# 4314
+Unique / Woodplace
+
+
+# 4309
+Unique / Woodplace Inc
+
+
+# 4319
+Unique / Yachiyo Electronics, Ltd.
+
+
+# 4321
+Unique / Zilec
+
+
+# 4289
+Unique / the Game Room
+
+
+# 4324
+Universal / Cosmic Alien
+
+
+# 4339
+Universal / Lady Bug
+
+
+# 4346
+Universal / Mr Do Castle
+
+
+# 4359
+Universal / Unique
+
+
+# 4367
+Universal / Zero Hour
+
+
+# 4419
+V-System / Aero Fighters
+
+
+# 4433
+V-System / Final Romance
+
+
+# 4444
+V-System / Unique
+
+
+# 4447
+V-System Co / F1 GP
+
+
+# 4450
+V-System Co / Hatris
+
+
+# 4454
+V-System Co / Unique
+
+
+# 4458
+V-System Co. / Ojanko Yakata
+
+
+# 4463
+V-System Co. / Rabio Lepus
+
+
+# 4469
+V-System Co. / Unique
+
+
+# 4472
+Valadon Automation / Bagman
+
+
+# 4480
+Valadon Automation / Unique
+
+
+# 4482
+Venture Line / Looping
+
+
+# 4486
+Venture Line / Unique
+
+
+# 4490
+Yun Sung / Cannon Ball
+
+
+# 4493
+Yun Sung / Shocking
+
+
+# 4496
+Yun Sung / Unique
+
+

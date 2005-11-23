@@ -1,0 +1,4404 @@
+# datafile.c: 2799
+          DIAL:  %4d\n
+	  DIAL:  %4d\n	 
+
+# datafile.c: 2805
+         OTHER:  %4d\n
+         EGYÉB:  %4d\n
+
+# datafile.c: 2803
+         PEDAL:  %4d\n
+         GÁZPEDÁL:  %4d\n
+
+# datafile.c: 2801
+         STICK:  %4d\n
+         KAR:  %4d\n
+
+# datafile.c: 2798
+        PADDLE:  %4d\n
+        PADDLE:  %4d\n
+
+# common.c: 1169
+       FOUND: %s\n
+       KAPOTT ÉRTÉK: %s\n
+
+# datafile.c: 2792
+       JOY2WAY:  %4d\n
+       2 IRÁNYOS JOY:  %4d\n 
+
+# datafile.c: 2793
+       JOY4WAY:  %4d\n
+       4 IRÁNYOS JOY:  %4d\n
+
+# datafile.c: 2794
+       JOY8WAY:  %4d\n
+       8 IRÁNYOS JOY:  %4d\n
+
+# datafile.c: 2802
+      LIGHTGUN:  %4d\n
+      FÉNYPISZTOLY:  %4d\n
+
+# datafile.c: 2725
+     GAMES WITH  %d CPUs: %4d\n
+     JÁTÉKOK %d PROCESSZOROKKAL: %4d\n
+
+# datafile.c: 2786
+     PLAYERS %d:  %4d\n
+     JÁTÉKOSOK %d:  %4d\n
+
+# datafile.c: 2800
+     TRACKBALL:  %4d\n
+     EGÉR:  %4d\n
+
+# datafile.c: 2814
+    BUTTONS%3d:  %4d\n
+    GOMBOK%3d:  %4d\n
+
+# common.c: 1163
+    EXPECTED: %s\n
+    MEGFELELÕ: %s\n
+
+# datafile.c: 2820
+    NO BUTTONS:  %4d\n
+    NINCSENEK GOMBOK:  %4d\n
+
+# audit.c: 444, 481
+   FOUND: 
+   KAPOTT ÉRTÉK:
+
+# datafile.c: 2620
+ %4d HARDDISK\n
+ %4d MEREVLEMEZ\n
+
+# datafile.c: 2616
+ %4d HORIZONTAL + %4d\n %4d VERTICAL   + %4d\n
+ %4d VÍZSZINTES + %4d\n %4d FÜGGÕLEGES   + %4d\n
+
+# datafile.c: 2612
+ %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
+ %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
+
+# datafile.c: 2614
+ %4d RASTER     + %4d\n %4d VECTOR     + %4d\n
+ %4d RASZTER     + %4d\n %4d VEKTOR     + %4d\n
+
+# datafile.c: 2618
+ %4d STEREO     + %4d\n
+ %4d SZTEREÓ     + %4d\n
+
+# common.c: 1956
+ BAD
+ ROSSZ
+
+# datafile.c: 2795
+ DOUBLEJOY2WAY:  %4d\n
+ 2 IRÁNYOS IKER JOY:  %4d\n
+
+# datafile.c: 2796
+ DOUBLEJOY4WAY:  %4d\n
+ 4 IRÁNYOS IKER JOY:  %4d\n
+
+# datafile.c: 2797
+ DOUBLEJOY8WAY:  %4d\n
+ 8 IRÁNYOS IKER JOY:  %4d\n
+
+# datafile.c: 2756
+ GAMES WITH  %d SNDINTRF: %4d\n
+ JÁTÉKOK  %d SNDINTRF: %4d\n
+
+# common.c: 1962
+ NO GOOD DUMP KNOWN
+ NINCS ISMERT MEGFELELÕ ROM KÉPFÁJL
+
+# common.c: 1224
+%-12s NO GOOD DUMP KNOWN\n
+%-12s NINCS ISMERT MEGFELELÕ ROM KÉPFÁJL
+
+# common.c: 1132
+%-12s NOT FOUND (NO GOOD DUMP KNOWN)\n
+%-12s ROM NEM TALÁLHATÓ (NINCS ISMERT MEGFELELÕ ROM KÉPFÁJL)\n
+
+# common.c: 1139, 1741
+%-12s NOT FOUND\n
+%-12s NEM TALÁLHATÓ\n
+
+# common.c: 1233
+%-12s ROM NEEDS REDUMP\n
+%-12s ROM ÚJRA LETÁROLÁSA SZÜKSÉGES\n
+
+# common.c: 1739, 1778, 1792
+%-12s UNSUPPORTED CHD VERSION\n
+%-12s NEM TÁMOGATOTT CHD VERZIÓ\n
+
+# common.c: 1756
+%-12s WRONG CHECKSUMS:\n
+%-12s HIBÁS ELLENÕRZÕÖSSZEG:\n
+
+# common.c: 1217
+%-12s WRONG LENGTH (expected: %08x found: %08x)\n
+%-12s HIBÁS MÉRET (elvárt: %08x talált: %08x)\n
+
+# common.c: 1780
+%-12s: CAN'T CREATE DIFF FILE\n
+%-12s: DIFF FÁJL LÉTREHOZÁSA SIKERTELEN\n
+
+# common.c: 1794
+%-12s: CAN'T OPEN DIFF FILE\n
+%-12s: DIFF FÁJL MEGNYITÁSA SIKERTELEN\n
+
+# audit.c: 437
+%-8s: %-12s %7d bytes FOUND BUT NO GOOD DUMP KNOWN\n
+%-8s: %-12s %7d bájt TALÁLHATÓ DE NINCS ISMERT MEGFELELÕ ROM KÉPFÁJL\n
+
+# audit.c: 441
+%-8s: %-12s %7d bytes INCORRECT CHECKSUM:\n
+%-8s: %-12s %7d bájt NEM MEGFELELÕ ELLENÕRZÕÖSSZEG:\n
+
+# audit.c: 454
+%-8s: %-12s %7d bytes INCORRECT LENGTH: %8d\n
+%-8s: %-12s %7d bájt NEM MEGFELELÕ MÉRET: %8d\n
+
+# audit.c: 433
+%-8s: %-12s %7d bytes NOT FOUND - NO GOOD DUMP KNOWN\n
+%-8s: %-12s %7d bájt NEM TALÁLHATÓ - NINCS ISMERT MEGFELELÕ ROM KÉPFÁJL\n
+
+# audit.c: 428
+%-8s: %-12s %7d bytes NOT FOUND BUT OPTIONAL\n
+%-8s: %-12s %7d bájt NEM TALÁLHATÓ DE VÁLASZTHATÓ\n
+
+# audit.c: 423
+%-8s: %-12s %7d bytes NOT FOUND\n
+%-8s: %-12s %7d bájt NEM TALÁLHATÓ\n
+
+# audit.c: 460
+%-8s: %-12s %7d bytes ROM GOOD\n
+%-8s: %-12s %7d bájt ROM MEGFELELÕ\n
+
+# audit.c: 447
+%-8s: %-12s %7d bytes ROM NEEDS REDUMP\n
+%-8s: %-12s %7d bájt ROM ÚJRA LETÁROLÁSA SZÜKSÉGES\n
+
+# audit.c: 488
+%-8s: %-12s FOUND BUT NO GOOD DUMP KNOWN\n
+%-8s: %-12s ROM MEGVAN DE NINCS ISMERT MEGFELELÕ ROM KÉPFÁJL\n
+
+# audit.c: 467
+%-8s: %-12s GOOD\n
+%-8s: %-12s MEGFELELÕ\n
+
+# audit.c: 478
+%-8s: %-12s INCORRECT CHECKSUM:\n
+%-8s: %-12s NEM MEGFELELÕ ELLENÕRZÕÖSSZEG:\n
+
+# audit.c: 484
+%-8s: %-12s NO GOOD DUMP KNOWN\n
+%-8s: %-12s NINCS ISMERT MEGFELELÕ ROM KÉPFÁJL\n
+
+# audit.c: 473
+%-8s: %-12s NOT FOUND\n
+%-8s: %-12s NEM TALÁLHATÓ\n
+
+# audit.c: 612
+%-8s: %s NOT FOUND\n
+%-8s: %s NEM TALÁLHATÓ\n
+
+# cheat.c: 8018
+%.8X-%.8X MEMORY
+%.8X-%.8X MEMÓRIA
+
+# cheat.c: 2759, 5406
+%d cheats saved
+%d csalások elmentve
+
+# cheat.c: 4875, 5255
+%d results found
+%d talált eredmények
+
+# usrintrf.c: 1951, 2166
+%s Analog
+%s Analóg
+
+# usrintrf.c: 1958, 2174
+%s Dec
+%s Csökkentés
+
+# usrintrf.c: 1965, 2182
+%s Inc
+%s Növelés
+
+# cheat.c: 2725, 2741
+%s activated
+%s bekapcsolva
+
+# state.c: 526
+%s'%s' is not a valid savestate file for game '%s'.
+%s'%s' nem érvényes állásmentés fájl a játékhoz '%s'.
+
+# state.c: 541
+%sIncompatible save file (signature %08x, expected %08x)
+%snem kompatibilis mentés fájl (aláírás %08x, megfelelõ %08x)
+
+# state.c: 510
+%sThis is not a MAME save file
+%sEz nem egy MAME mentés
+
+# state.c: 518
+%sWrong version in save file (%d, 1 expected)
+%sHibás verzió a mentésben (%d, 1 megfelelõ)
+
+# ui_text.c: 156
+(It already exists ?)
+(Már létezik ?)
+
+# ui_text.c: 145
+(locked)
+(lezárva)
+
+# cheat.c: 2326, 3081, 3098, 3113, 3131, 5032, 5345, 6076 ui_text.c: 39
+(none)
+(nincs)
+
+# inptport.c: 354
+1 Coin/1 Credit
+1 érme/1 kredit
+
+# inptport.c: 360
+1 Coin/2 Credits
+1 érme/2 kredit
+
+# inptport.c: 363
+1 Coin/3 Credits
+1 érme/3 kredit
+
+# inptport.c: 366
+1 Coin/4 Credits
+1 érme/4 kredit
+
+# inptport.c: 367
+1 Coin/5 Credits
+1 érme/5 kredit
+
+# inptport.c: 368
+1 Coin/6 Credits
+1 érme/6 kredit
+
+# inptport.c: 369
+1 Coin/7 Credits
+1 érme/7 kredit
+
+# inptport.c: 370
+1 Coin/8 Credits
+1 érme/8 kredit
+
+# inptport.c: 371
+1 Coin/9 Credits
+1 érme/9 kredit
+
+# inptport.c: 758
+1 Player Start
+1 játékos kezdés
+
+# cheat.c: 4883, 5261
+1 result found, added to list
+1 eredmény találva, hozzáadva a listához
+
+# cheat.c: 2901, 6019
+16 Bit
+16 Bit
+
+# drivers/cop01.c: 255 drivers/gottlieb.c: 802 drivers/marineb.c: 189, 385 drivers/marvins.c: 327 drivers/nova2001.c: 108 drivers/omegrace.c: 424
+1st Bonus Life
+Elsõ bónusz élet
+
+# inptport.c: 347
+2 Coins/1 Credit
+2 érme/1 kredit
+
+# inptport.c: 353
+2 Coins/2 Credits
+2 érme/2 kredit
+
+# inptport.c: 357
+2 Coins/3 Credits
+2 érme/3 kredit
+
+# inptport.c: 359
+2 Coins/4 Credits
+2 érme/4 kredit
+
+# inptport.c: 361
+2 Coins/5 Credits
+2 érme/5 kredit
+
+# inptport.c: 362
+2 Coins/6 Credits
+2 érme/6 kredit
+
+# inptport.c: 364
+2 Coins/7 Credits
+2 érme/7 kredit
+
+# inptport.c: 365
+2 Coins/8 Credits
+2 érme/8 kredit
+
+# inptport.c: 759
+2 Players Start
+2 játékos kezdés
+
+# cheat.c: 2902
+24 Bit
+24 Bi
+
+# datafile.c: 2876
+24-BIT DISPLAY : %3d  + %3d\n
+24-BITES KIJELZÕ : %3d  + %3d\n
+
+# drivers/cop01.c: 258 drivers/marineb.c: 192, 380 drivers/marvins.c: 336
+2nd Bonus Life
+Második bónusz élet
+
+# inptport.c: 344
+3 Coins/1 Credit
+3 érme/1 kredit
+
+# inptport.c: 349
+3 Coins/2 Credits
+3 érme/2 kredit
+
+# inptport.c: 352
+3 Coins/3 Credits
+3 érme/3 kredit
+
+# inptport.c: 356
+3 Coins/4 Credits
+3 érme/4 kredit
+
+# inptport.c: 760
+3 Players Start
+3 játékos kezdés
+
+# cheat.c: 2903, 6020
+32 Bit
+32 Bit
+
+# inptport.c: 343
+4 Coins/1 Credit
+4 érme/1 kredit
+
+# inptport.c: 346
+4 Coins/2 Credits
+4 érme/2 kredit
+
+# inptport.c: 350
+4 Coins/3 Credits
+4 érme/3 kredit
+
+# inptport.c: 351
+4 Coins/4 Credits
+4 érme/5 kredit
+
+# inptport.c: 355
+4 Coins/5 Credits
+4 érme/5 kredit
+
+# inptport.c: 358
+4 Coins/7 Credits
+4 érme/7 kredit
+
+# inptport.c: 761
+4 Players Start
+4 játékos kezdés
+
+# inptport.c: 342
+5 Coins/1 Credit
+5 érme/1 kredit
+
+# inptport.c: 348
+5 Coins/3 Credits
+5 érme/3 kredit
+
+# inptport.c: 762
+5 Players Start
+5 játékos kezdés
+
+# inptport.c: 341
+6 Coins/1 Credit
+6 érme/1 kredit
+
+# inptport.c: 763
+6 Players Start
+6 játékos kezdés
+
+# inptport.c: 340
+7 Coins/1 Credit
+7 érme/1 kredit
+
+# inptport.c: 764
+7 Players Start
+7 játékos kezdés
+
+# cheat.c: 2900, 6018
+8 Bit
+8 Bit
+
+# inptport.c: 339
+8 Coins/1 Credit
+8 érme/1 kredit
+
+# inptport.c: 345
+8 Coins/3 Credits
+8 érme/3 kredit
+
+# inptport.c: 765
+8 Players Start
+8 játékos kezdés
+
+# inptport.c: 338
+9 Coins/1 Credit
+9 érme/1 kredit
+
+# inptport.c: 869
+AD Stick X
+AD Kar X
+
+# inptport.c: 870
+AD Stick X 2
+AD Kar X 
+
+# inptport.c: 871
+AD Stick X 3
+AD Kar X 3
+
+# inptport.c: 872
+AD Stick X 4
+AD Kar X 4
+
+# inptport.c: 873
+AD Stick X 5
+AD Kar X 5
+
+# inptport.c: 874
+AD Stick X 6
+AD Kar X 6
+
+# inptport.c: 875
+AD Stick X 7
+AD Kar X 7
+
+# inptport.c: 876
+AD Stick X 8
+AD Kar X 8
+
+# inptport.c: 878
+AD Stick Y
+AD Kar Y
+
+# inptport.c: 879
+AD Stick Y 2
+AD Kar Y 2
+
+# inptport.c: 880
+AD Stick Y 3
+AD Kar Y 3
+
+# inptport.c: 881
+AD Stick Y 4
+AD Kar Y 
+
+# inptport.c: 882
+AD Stick Y 5
+AD Kar Y 5
+
+# inptport.c: 883
+AD Stick Y 6
+AD Kar Y 6
+
+# inptport.c: 884
+AD Stick Y 7
+AD Kar Y 7
+
+# inptport.c: 885
+AD Stick Y 8
+AD Kar Y 8
+
+# inptport.c: 887
+AD Stick Z
+AD Kar Z
+
+# inptport.c: 888
+AD Stick Z 2
+AD Kar Z 2
+
+# inptport.c: 889
+AD Stick Z 3
+AD Kar Z 3
+
+# inptport.c: 890
+AD Stick Z 4
+AD Kar Z 4
+
+# inptport.c: 891
+AD Stick Z 5
+AD Kar Z 5
+
+# inptport.c: 892
+AD Stick Z 6
+AD Kar Z 6
+
+# inptport.c: 893
+AD Stick Z 7
+AD Kar Z 7
+
+# inptport.c: 894
+AD Stick Z 8
+AD Kar Z 8
+
+# ui_text.c: 51
+ALL CHANNELS
+MINDEN CSATORNA
+
+# ui_text.c: 57
+ALL CPUS
+MINDEN PROCESSZOR
+
+# cheat.c: 3123 ui_text.c: 178
+Activation Key
+Aktivációs kód
+
+# cheat.c: 2840
+Add
+Hozzáadás
+
+# inptport.c: 969
+Add Cheat
+Csalás hozzáadás
+
+# cheat.c: 6110
+Add Value
+Érték hozzáadás
+
+# ui_text.c: 161
+Add/Edit a Cheat
+Csalás hozzáadása/szerkesztése
+
+# cheat.c: 2829, 3358
+Add/Subtract
+Hozzáadás/Kivétel
+
+# cheat.c: 1088, 3674, 6047 ui_text.c: 41
+Address
+Cím
+
+# cheat.c: 3633
+Address Index
+Cím jegyzék
+
+# cheat.c: 6116
+Address Shift
+Cím cserélés
+
+# cheat.c: 3608
+Address Size
+Cím méret
+
+# cheat.c: 6906 drivers/mcr68.c: 835 
+Advanced
+Egyedi
+
+# cheat.c: 6512 ui_text.c: 209
+All Memory
+Teljes memória
+
+# ui_text.c: 217
+All values saved
+Minden érték mentve
+
+# inptport.c: 422
+Allow Continue
+Folytatás engedélyezése
+
+# inptport.c: 431 sound/ay8910.c: 790
+Alternate
+Változtatás
+
+# ui_text.c: 95
+Analog Controls
+Analóg irányító
+
+# drivers/aerofgt.c: 905
+Any
+Bármely
+
+# drivers/epos.c: 179 drivers/lethal.c: 388 drivers/neogeo.c: 1176, 1225, 1302, 1351
+Arcade
+Játéktermi
+
+# profiler.c: 126 
+Artwork
+Képalkotás
+
+# inptport.c: 387
+Asia
+Ázsia
+
+# drivers/bottom9.c: 272, 369 drivers/btime.c: 718 drivers/csk.c: 285, 445 drivers/galaga.c: 1001, 1077 drivers/pacman.c: 2686 drivers/seta.c: 4579 
+Auto
+Automatikus
+
+# cheat.c: 6913
+Auto Save Cheats
+Csalások automatikus mentése
+
+# ui_text.c: 125
+Autocenter Speed
+Automata sebesség
+
+# drivers/neogeo.c: 1114
+Autofire (in some games)
+Automata tüzelés (némely játékban)
+
+# ui_text.c: 227
+Autofire Delay
+Automata tüzelés törlése
+
+# ui_text.c: 105
+Autofire Setting
+Automata tüzelés beállítás
+
+# drivers/dynax.c: 2219, 2352 drivers/speedspn.c: 240 
+Automatic
+Automatikus
+
+# cheat.c: 7989
+BANK%.2d
+BANK%.2d
+
+# cheat.c: 3497
+BCD
+BCD
+
+# drivers/metro.c: 2354 drivers/nbmj8891.c: 2391 drivers/pacman.c: 2670
+Beginner
+Kezdõ
+
+# inptport.c: 775
+Bill 1
+Bankjegy 1
+
+# cheat.c: 1096 ui_text.c: 196
+Binary
+Kettõs
+
+# cheat.c: 958
+Bit
+Bit
+
+# inptport.c: 332
+Bonus Life
+Bónusz élet
+
+# drivers/polyplay.c: 208 ui_text.c: 100
+Bookkeeping Info
+Nyivántartási infó
+
+# drivers/namcos1.c: 643 ui_text.c: 52
+Brightness
+Fényerõ
+
+# cheat.c: 3533
+Byte Length
+Byte hosszúság
+
+# drivers/neogeo.c: 1114, 1202
+COMM Setting
+COMM beállítás
+
+# cheat.c: 3572, 3597, 5024, 6052 ui_text.c: 40
+CPU
+Processzor
+
+# cheat.c: 8005
+CPU%.2d 
+Processzor.2d
+
+# inptport.c: 373 
+Cabinet
+Játékgép
+
+# drivers/gstriker.c: 413 drivers/segaxbd.c: 632, 689 drivers/taito_f2.c: 2800, 2880, 2960, 3406, 3470
+Cabinet Type
+Játékgép típus
+
+# ui_text.c: 96
+Calibrate Joysticks
+Joystick beállítás
+
+# drivers/getrivia.c: 263 drivers/segac2.c: 2786 
+Cancel
+Mégsem
+
+# drivers/namcos22.c: 3637, 3711 ui_text.c: 230
+Center
+Középsõ
+
+# ui_text.c: 109
+Cheat
+Csalás
+
+# ui_text.c: 182
+Cheat conflict found: disabling
+Csalás ütközés keletkezett: törölve
+
+# ui_text.c: 172
+Cheats
+Csalások
+
+# drivers/dynax.c: 1070, 1107, 2106 drivers/homedata.c: 806, 981 drivers/metro.c: 2957 drivers/mjkjidai.c: 228 drivers/neogeo.c: 1257 drivers/seta2.c: 844 drivers/ssv.c: 1046, 1093, 1208, 1298, 1498, 1857, 1958 drivers/system24.c: 1600
+Chi
+Chi
+
+# drivers/afega.c: 448 drivers/fuukifg2.c: 211, 295 drivers/nmk16.c: 2355 drivers/pgm.c: 566, 651, 843 drivers/ssv.c: 2547 drivers/toaplan2.c: 3254, 3363, 3508
+China
+Kína
+
+# cheat.c: 6906
+Classic
+Klasszikus
+
+# cheat.c: 2847 drivers/gladiatr.c: 393
+Clear
+Tiszta
+
+# inptport.c: 375
+Cocktail
+Vegyes mód
+
+# ui_text.c: 179
+Code
+Kód
+
+# ui_text.c: 144
+Coin
+Érme
+
+# drivers/mexico86.c: 330 drivers/midyunit.c: 392 inptport.c: 767
+Coin 1
+Érme 1
+
+# drivers/mexico86.c: 335 drivers/midyunit.c: 383 inptport.c: 768
+Coin 2
+Érme 2
+
+# inptport.c: 769
+Coin 3
+Érme 3
+
+# inptport.c: 770
+Coin 4
+Érme 4
+
+# inptport.c: 771
+Coin 5
+Érme 5
+
+# inptport.c: 772
+Coin 6
+Érme 6
+
+# inptport.c: 773
+Coin 7
+Érme 7
+
+# inptport.c: 774
+Coin 8
+Érme 8
+
+# inptport.c: 336
+Coin A
+Érme A
+
+# inptport.c: 337
+Coin B
+Érme B
+
+# drivers/arabian.c: 313 drivers/bking2.c: 321, 435 drivers/marinedt.c: 314 drivers/mcr68.c: 777 drivers/powerins.c: 248 drivers/segas18.c: 813 drivers/system18.c: 1259
+Coin Chutes
+Érme dobás
+
+# drivers/neogeo.c: 1114, 1196
+Coin Chutes?
+Érme dobás?
+
+# drivers/airbustr.c: 452 drivers/asteroid.c: 394 drivers/bloodbro.c: 163, 253, 344 drivers/cabal.c: 278 drivers/exidy.c: 365 drivers/galpanic.c: 450, 561, 630 drivers/holeland.c: 119, 186 drivers/m62.c: 644, 697, 747, 799, 851, 903, 955, 1005, 1055, 1106, 1157, 1207 drivers/m72.c: 950, 1022, 1093, 1163, 1233, 1300, 1370, 1437, 1505, 1578, 1660, 1748, 1830, 1915 drivers/m90.c: 216, 261, 310, 355, 421, 468 drivers/m92.h: 77, 93, 109 drivers/mcatadv.c: 259 drivers/midzeus.c: 1229 drivers/mpatrol.c: 153 drivers/playch10.c: 617 drivers/playmark.c: 339 drivers/raiden.c: 157 drivers/rallyx.c: 636 drivers/shisen.c: 153 drivers/sshangha.c: 244 drivers/system18.c: 1324 drivers/tagteam.c: 227 drivers/travrusa.c: 158, 188 drivers/troangel.c: 109 drivers/tumblep.c: 950 drivers/vigilant.c: 254, 344 drivers/welltris.c: 563 drivers/wilytowr.c: 403 drivers/yard.c: 140, 188
+Coin Mode
+Érme mód
+
+# drivers/aerofgt.c: 540, 641, 701, 771, 856 drivers/crshrace.c: 279, 457 drivers/gaelco2.c: 702 drivers/taotaido.c: 228
+Coin Slot
+Érme nyílás
+
+# drivers/alpha68k.c: 1558 drivers/armedf.c: 493 drivers/bbusters.c: 444, 515 drivers/buggychl.c: 328 drivers/cps1.c: 1430, 2148, 2251, 2505, 2615, 3131 drivers/cshooter.c: 273 drivers/deco32.c: 1083 drivers/flstory.c: 422 drivers/freekick.c: 669, 783 drivers/galaxian.c: 2772 drivers/itech8.c: 1294 drivers/lkage.c: 266 drivers/m92.h: 77, 93, 109 drivers/nycaptor.c: 634 drivers/spdbuggy.c: 264 drivers/sslam.c: 475 drivers/suprslam.c: 228
+Coin Slots
+Érme nyílások
+
+# inptport.c: 335
+Coinage
+Fémpénz
+
+# ui_text.c: 65
+Command List not available
+Parancssor nem elérhetõ
+
+# cheat.c: 2814, 2887, 3108
+Comment
+Magyarázat
+
+# drivers/alpha68k.c: 1559 drivers/armedf.c: 494 drivers/bbusters.c: 445, 516 drivers/deco32.c: 1084 drivers/gaelco2.c: 704, 1138 drivers/gijoe.c: 305 drivers/itech8.c: 1295 drivers/konamigq.c: 511 drivers/konamigx.c: 1763 drivers/lethal.c: 390 drivers/m92.h: 77, 93, 109 drivers/marinedt.c: 315 drivers/mcr68.c: 779 drivers/moo.c: 511, 580 drivers/mystwarr.c: 1003, 1071, 1144 drivers/segac2.c: 2480 drivers/segas18.c: 882, 954, 1009, 1062, 1079, 1123 drivers/snk.c: 2672, 2728, 2785, 2842 drivers/sslam.c: 476 drivers/suprslam.c: 229 drivers/system18.c: 1325 drivers/system24.c: 1181, 1257, 1329
+Common
+Általános
+
+# cheat.c: 4994
+Comparison
+Egyeztetés
+
+# inptport.c: 934
+Config Menu
+Beállítás menû
+
+# ui_text.c: 166
+Configure Watchpoints
+Figyelési pontok beállítása
+
+# drivers/drgnmst.c: 249 drivers/ksayakyu.c: 170 drivers/metro.c: 2567 drivers/nemesis.c: 1562 drivers/seta.c: 3215 drivers/tmnt.c: 1820, 1906 drivers/yboard.c: 415, 474
+Continue
+Folytatás
+
+# drivers/toaplan2.c: 2548, 3082, 3152
+Continue Mode
+Folytatás mód
+
+# inptport.c: 416
+Continue Price
+Érték megtartása
+
+# ui_text.c: 163
+Continue Search
+Keresés folytatása
+
+# inptport.c: 421
+Continues
+Folytatások
+
+# drivers/taito_b.c: 1763 drivers/taito_f2.c: 3514 
+Control
+Irányítás
+
+# drivers/brkthru.c: 236, 281 drivers/metro.c: 2371 drivers/st0016.c: 519 drivers/tail2nos.c: 202 
+Control Panel
+Irányító gombok
+
+# inptport.c: 417
+Controller
+Irányító
+
+# inptport.c: 412
+Controls
+Irányítás
+
+# cheat.c: 3521
+Copy Previous Value
+Elõzõ értékek másolása
+
+# inptport.c: 1055
+Could not load controller file %s.cfg\n
+Irányító fájl betöltése sikertelen %s.cfg\n
+
+# state.c: 559
+Could not read MAME save file header
+MAME mentés fájl fejléce nem olvasható
+
+# drivers/aerofgt.c: 817, 904 drivers/bbusters.c: 569 drivers/bwing.c: 295 drivers/cischeat.c: 1084, 1140 drivers/coolpool.c: 487 drivers/crshrace.c: 379, 535 drivers/f1gp.c: 304, 409 drivers/fuukifg2.c: 210, 294 drivers/kaneko16.c: 1283, 1379 drivers/midtunit.c: 347, 450, 553 drivers/midwunit.c: 324, 503 drivers/midxunit.c: 112 drivers/midyunit.c: 215, 678 drivers/psikyo.c: 615, 735, 973, 1177, 1275, 1464 drivers/seta.c: 3395, 3720, 3827, 4041, 4210 drivers/ssv.c: 2546 drivers/st0016.c: 522 drivers/stv.c: 3731 drivers/suprslam.c: 271 drivers/tail2nos.c: 205 drivers/taotaido.c: 303
+Country
+Ország
+
+# ui_text.c: 150
+Create Memory Card
+Memória kártya létrehozása
+
+# cheat.c: 1019
+Current Data
+Jelenlegi adatok
+
+# cheat.c: 2878 sndhrdw/bzone.c: 280 sndhrdw/phoenix.c: 613 sndhrdw/redbaron.c: 210 sndintrf.c: 442 
+Custom
+Egyedi
+
+# ui_text.c: 98
+Custom Buttons
+Egyéni gombok
+
+# ui_text.c: 157
+DAMN!! Internal Error!
+FRANCBA!! Belsõ hiba !
+
+# drivers/cinemat.c: 249, 845 
+DIAL
+DIAL
+
+# datafile.c: 2874
+DUAL MONITOR   : %3d  + %3d\n
+IKER MONITOR   : %3d  + %3d\n
+
+# cheat.c: 3451
+Data
+Adat
+
+# cheat.c: 6121
+Data Shift
+Adatcsere
+
+# cheat.c: 1095 ui_text.c: 195
+Decimal
+Decimális
+
+# drivers/asuka.c: 711, 753, 795 drivers/bwing.c: 340 drivers/cps1.c: 835, 919 drivers/fgoal.c: 313 drivers/mcr68.c: 709 drivers/ms32.c: 1128, 1133 drivers/taito_b.c: 1306 drivers/wwfsstar.c: 252 
+Default
+Alap
+
+# ui_text.c: 204
+Default Search Speed
+Alap keresési sebesség
+
+# cheat.c: 3211
+Delay
+Késés
+
+# inptport.c: 970
+Delete Cheat
+Csalás törlés
+
+# inptport.c: 334
+Demo Sounds
+Bemutató hang
+
+# ui_text.c: 177
+Description
+Leírás
+
+# drivers/ssv.c: 2368 inptport.c: 833
+Dial
+Dial
+
+# inptport.c: 834
+Dial 2
+Dial 2
+
+# inptport.c: 835
+Dial 3
+Dial 3
+
+# inptport.c: 836
+Dial 4
+Dial 4
+
+# inptport.c: 837
+Dial 5
+Dial 5
+
+# inptport.c: 838
+Dial 6
+Dial 6
+
+# inptport.c: 839
+Dial 7
+Dial 7
+
+# inptport.c: 840
+Dial 8
+Dial 8
+
+# inptport.c: 842
+Dial V
+Dial V
+
+# inptport.c: 843
+Dial V 2
+Dial V 2
+
+# inptport.c: 844
+Dial V 3
+Dial V 3
+
+# inptport.c: 845
+Dial V 4
+Dial V 4
+
+# inptport.c: 846
+Dial V 5
+Dial V 5
+
+# inptport.c: 847
+Dial V 6
+Dial V 6
+
+# inptport.c: 848
+Dial V 7
+Dial V 7
+
+# inptport.c: 849
+Dial V 8
+Dial V 8
+
+# inptport.c: 333
+Difficulty
+Nehézség
+
+# drivers/cps1.c: 2370 drivers/pipedrm.c: 474 drivers/speedbal.c: 145
+Difficulty 1
+Nehézség 1
+
+# drivers/cps1.c: 2379 drivers/hcastle.c: 181 drivers/pipedrm.c: 479 drivers/speedbal.c: 150
+Difficulty 2
+Nehézség 2
+
+# ui_text.c: 124
+Digital Speed
+Digitális sebesség
+
+# ui_text.c: 94
+Dip Switches
+Dip kapcsolók
+
+# drivers/amidar.c: 66
+Disable All Coins
+Minden érme megszüntetve
+
+# drivers/blockade.c: 380 drivers/hyperspt.c: 262, 363 drivers/junofrst.c: 336 drivers/lvpoker.c: 176, 259 drivers/metro.c: 2380 drivers/midvunit.c: 829 drivers/nemesis.c: 814, 1415, 1509, 1526, 1623, 1720, 1808 drivers/pacman.c: 1187, 1249 drivers/rallyx.c: 583 drivers/rocnrope.c: 130 drivers/seattle.c: 2687 drivers/trackfld.c: 388, 483 drivers/tutankhm.c: 338 drivers/twin16.c: 376 ui_text.c: 171
+Disabled
+Kikapcsolva
+
+# cheat.c: 6080 ui_text.c: 187
+Display Type
+Kijelzõ típusa
+
+# cheat.c: 5039
+Do Search
+Keress
+
+# drivers/seta.c: 5602 drivers/tail2nos.c: 206
+Domestic
+Hazai
+
+# inptport.c: 784
+Door Interlock
+Ajtózár
+
+# ui_text.c: 61
+Driverinfo not available
+Meghajtóprogram nem elérhetõ
+
+# inptport.c: 413
+Dual
+Iker
+
+# cheat.c: 2888
+EEPROM
+EEPROM
+
+# common.c: 1259
+ERROR: required files are missing, the game cannot be run.\n
+HIBA: Szükséges fájlok hiányoznak, a játék nem mûködhet.\n
+
+# audit.c: 443, 480
+EXPECTED: 
+MEGFELELÕ:
+
+# inptport.c: 398
+Easy
+Könnyû
+
+# inptport.c: 973
+Edit Cheat
+Csalás szerkesztése
+
+# ui_text.c: 149
+Eject Memory Card
+Memória kártya kiadása
+
+# cheat.c: 6061
+Element Size
+Összetevõk mérete
+
+# cheat.c: 6100
+Elements Per Line
+Soronkénti összetevõk
+
+# ui_text.c: 160
+Enable/Disable a Cheat
+Csalás bekapcsolva/Csalás kikapcsolva
+
+# inptport.c: 2025
+End of playback
+Visszajátszás vége
+
+# cheat.c: 3545
+Endianness
+Endianness
+
+# ui_text.c: 201
+Energy (greater or less)
+Energia (több vagy kevesebb)
+
+# drivers/kaneko16.c: 1284, 1380 drivers/nmk16.c: 2353
+England
+Anglia
+
+# drivers/snowbros.c: 533, 610 inptport.c: 391
+English
+Angol
+
+# cheat.c: 1029, 4564, 4574
+Equal
+Azonos
+
+# unzip.c: 27
+Error in zipfile %s\n%s\n
+Hiba a csomagolt fájlban %s\n%s\n
+
+# state.c: 580
+Error: 
+Hiba:
+
+# cpuexec.c: 592
+Error: Failed to load state
+Hiba: Mentés betöltése sikertelen
+
+# cpuexec.c: 537
+Error: Failed to save state
+Hiba: Állás mentése sikertelen
+
+# usrintrf.c: 4148
+Error: illegal caption file
+Hiba: illegális felirat fájl 
+
+# inptport.c: 386
+Europe
+Európa
+
+# drivers/metro.c: 2360 drivers/nbmj8891.c: 2392
+Expert
+Gyakorlott
+
+# ui_text.c: 155
+Failed To Create Memory Card!
+Memória kártya létrehozása sikertelen!
+
+# ui_text.c: 151
+Failed To Load Memory Card!
+Memória kártya betöltése sikertelen!
+
+# cheat.c: 6508 debug/mamedbg.c: 784 drivers/4enraya.c: 117 drivers/8080bw.c: 680, 765 drivers/alpha68k.c: 1493, 1547 drivers/amidar.c: 186 drivers/bigstrkb.c: 159 drivers/brkthru.c: 232, 235, 277, 280 drivers/cninja.c: 725 drivers/cps1.c: 1078, 1348 drivers/darius.c: 663, 701, 739 drivers/ddragon3.c: 424 drivers/deniam.c: 275 drivers/epos.c: 163, 166, 172 drivers/fuukifg3.c: 351 drivers/gameplan.c: 396, 847 drivers/karnov.c: 460 drivers/m62.c: 628, 679, 730, 780, 832, 884, 938, 1038, 1089 drivers/mcr2.c: 569 drivers/metro.c: 3187 drivers/mexico86.c: 257 drivers/ninjaw.c: 546 drivers/nmk16.c: 2427 drivers/phoenix.c: 345 drivers/quizdna.c: 148, 236, 338 drivers/rohga.c: 503 drivers/safarir.c: 188 drivers/segas16a.c: 1257 drivers/segas16b.c: 2464 drivers/sidepckt.c: 230 drivers/slapfght.c: 514 drivers/ssv.c: 2137 drivers/suprridr.c: 249 drivers/system1.c: 919, 1755 drivers/system16.c: 1785 drivers/taito_f2.c: 3925, 3977 drivers/taito_l.c: 1761 drivers/taito_z.c: 2362, 2431 drivers/tecmo16.c: 201 drivers/thepit.c: 211, 266, 307 drivers/trackfld.c: 540, 551 drivers/vigilant.c: 226 drivers/vsnes.c: 1040, 1442, 1667, 1725, 1752 drivers/wallc.c: 232 drivers/warriorb.c: 346 drivers/wc90.c: 250 drivers/wc90b.c: 255 drivers/xain.c: 399 drivers/yamato.c: 249 drivers/yboard.c: 348, 356 drivers/zac2650.c: 84, 134 drivers/zerozone.c: 148 ui_text.c: 205
+Fast
+Gyors
+
+# drivers/ninjakid.c: 281 drivers/rocnrope.c: 165 drivers/xxmissio.c: 253
+First Bonus
+Elsõ bónusz
+
+# cheat.c: 1021
+First Data
+Elsõ adat
+
+# inptport.c: 376
+Flip Screen
+Képernyõ tükrözés
+
+# cheat.c: 2830
+Force Range
+Kényszerített tartomány
+
+# drivers/seta.c: 5603
+Foreign
+Külföldi
+
+# inptport.c: 939
+Frameskip Dec
+Képkocka kihagyás emelése
+
+# inptport.c: 940
+Frameskip Inc
+Képkocka kihagyás csökkentése
+
+# drivers/lvpoker.c: 248 drivers/pgm.c: 545, 633, 724 drivers/segas16a.c: 1209 drivers/taito_z.c: 1959, 2030 drivers/turbo.c: 407
+Free
+Szabad
+
+# inptport.c: 372
+Free Play
+Szabad játék
+
+# drivers/1942.c: 203 drivers/1943.c: 147 drivers/40love.c: 1076 drivers/aerofgt.c: 554 drivers/airbustr.c: 481 drivers/alpha68k.c: 1147, 1413, 1466, 1518, 1573, 1599, 1699 drivers/atetris.c: 226, 252 drivers/baraduke.c: 256, 329 drivers/battlex.c: 113 drivers/bbusters.c: 458, 545 drivers/bionicc.c: 226 drivers/blktiger.c: 211 drivers/bwing.c: 292 drivers/compgolf.c: 135 drivers/cps1.c: 500, 669, 750, 843, 927, 1006, 1193, 1283, 1364, 1456, 1560, 1655, 1745, 1827, 1910, 2004, 2066, 2191, 2294, 2402, 2521, 2631, 2724, 2817, 2871, 2924, 2976, 3030, 3073, 3174, 3274, 3375, 3468, 3522 drivers/dec8.c: 1230, 1661 drivers/docastle.c: 357 drivers/exedexes.c: 136 drivers/flstory.c: 522 drivers/funkybee.c: 111, 161 drivers/funkyjet.c: 173, 241 drivers/galaga.c: 1008, 1084, 1155, 1229, 1343, 1582, 1641 drivers/gunsmoke.c: 191 drivers/hal21.c: 421 drivers/higemaru.c: 80 drivers/ikki.c: 119 drivers/jcross.c: 229 drivers/karnov.c: 592 drivers/kingobox.c: 284, 370 drivers/kyugo.c: 222, 253, 290, 321, 351, 381, 411 drivers/ladybug.c: 145, 418 drivers/legionna.c: 828, 916 drivers/lsasquad.c: 193 drivers/mainsnk.c: 166 drivers/mappy.c: 926, 1059, 1190, 1251, 1319 drivers/markham.c: 151 drivers/marvins.c: 322, 411, 502 drivers/midtunit.c: 339 drivers/midvunit.c: 580 drivers/ms32.c: 775, 845, 912 drivers/mugsmash.c: 295, 377 drivers/munchmo.c: 211 drivers/mwarr.c: 208 drivers/namcond1.c: 117 drivers/namcos1.c: 600, 640, 662, 699, 764, 783, 797, 870, 880, 902, 912 drivers/namcos12.c: 499, 544 drivers/namcos86.c: 569, 660, 730, 808, 887, 966 drivers/neogeo.c: 1114, 1211 drivers/nycaptor.c: 614 drivers/ohmygod.c: 321 drivers/onetwo.c: 139 drivers/pacland.c: 333 drivers/pandoras.c: 286 drivers/prehisle.c: 153 drivers/rollrace.c: 151 drivers/rungun.c: 381 drivers/sauro.c: 245 drivers/scobra.c: 638 drivers/seta2.c: 553 drivers/sf.c: 335, 513, 651 drivers/sgladiat.c: 328 drivers/shootout.c: 173 drivers/sidearms.c: 245 drivers/skykid.c: 169, 248 drivers/snk.c: 2690, 2746, 2803, 2860, 2917, 2988, 3075, 3129, 3187, 3215, 3275, 3346, 3402, 3479, 3544, 3649, 3773 drivers/snk68.c: 255, 402, 439, 590 drivers/sonson.c: 195 drivers/ssrj.c: 133 drivers/ssv.c: 2474 drivers/starwars.c: 275, 352 drivers/statriv2.c: 437 drivers/strnskil.c: 177, 265 drivers/superqix.c: 543, 683 drivers/suprnova.c: 555, 635 drivers/tceptor.c: 371, 427 drivers/tmnt.c: 1874, 1960, 2160 drivers/toypop.c: 401, 486 drivers/tsamurai.c: 487, 680 drivers/vastar.c: 231 drivers/zaccaria.c: 405, 514 drivers/zn.c: 2994 drivers/zodiack.c: 219
+Freeze
+Fagyás
+
+# inptport.c: 394 ui_lang.c: 14
+French
+Francia
+
+# drivers/funybubl.c: 168 drivers/metro.c: 2490, 2821 drivers/warriorb.c: 407 
+Full
+Teljes
+
+# datafile.c: 1294
+GAME: 
+JÁTÉK:
+
+# drivers/bublbobl.c: 559 drivers/cps1.c: 613, 695, 776, 859, 943, 1028, 1121, 1206, 1296, 1377, 1573, 1668, 1758, 1840, 1923, 2017, 2113, 2204, 2307, 2415, 2534, 2644, 2737, 2830, 3187, 3287, 3388, 3481, 3635, 3748 drivers/dec0.c: 775 drivers/missile.c: 299 drivers/pacman.c: 1357 drivers/turbo.c: 415 
+Game
+Játék
+
+# ui_text.c: 104
+Game Documents
+Játék dokumentumok
+
+# ui_text.c: 116
+Game Driverinfo
+Játék meghajtóprogram infó
+
+# ui_text.c: 113
+Game History
+Játék történet
+
+# ui_text.c: 103
+Game Information
+Játék információ
+
+# ui_text.c: 115
+Game Mameinfo
+Játék Mame infó
+
+# drivers/gotcha.c: 168 
+Game Selection
+Játék választás
+
+# drivers/neogeo.c: 1177, 1226, 1352 inptport.c: 1413
+Game Slots
+Játék nyílások
+
+# inptport.c: 415
+Game Time
+Játék idõ
+
+# ui_text.c: 53
+Gamma
+Sötétség
+
+# drivers/midzeus.c: 1228 
+General
+Általános
+
+# ui_text.c: 167
+General Help
+Általános súgó
+
+# inptport.c: 393 ui_lang.c: 17
+German
+Német
+
+# drivers/kaneko16.c: 1286, 1382 drivers/midzeus.c: 1210 drivers/nmk16.c: 2348
+Germany
+Németország
+
+# cheat.c: 1028, 4566
+Greater
+Nagyobb
+
+# cheat.c: 1031
+Greater Or Equal
+Nagyobb vagy egyenlõ
+
+# cheat.c: 4568
+Greater or Equal
+Nagyobb vagy egyenlõ
+
+# datafile.c: 2878
+HI/TRUE BITMAP : %3d  + %3d\n
+MAGAS/VALÓS BITTÉRKÉP : %3d  + %3d\n
+
+# datafile.c: 2882
+HIGHLIGHTS     : %3d  + %3d\n
+FONTOS RÉSZLETEK     : %3d  + %3d\n
+
+# inptport.c: 401
+Hard
+Hehéz
+
+# inptport.c: 402
+Harder
+Nehezebb
+
+# inptport.c: 403
+Hardest
+Legnehezebb
+
+# drivers/ddenlovr.c: 1762 drivers/shanghai.c: 889 
+Help
+Súgó
+
+# ui_text.c: 183
+Help not available yet
+Súgó nem elérhetõ
+
+# cheat.c: 1094 ui_text.c: 194
+Hex
+Hexa
+
+# inptport.c: 407 
+High
+Magas
+
+# drivers/balsente.c: 285, 339, 522, 576, 681, 769, 948 drivers/zaccaria.c: 423, 533 
+High Scores
+Magas pontok
+
+# inptport.c: 408
+Higher
+Magasabb
+
+# inptport.c: 409
+Highest
+Legmagasabb
+
+# inptport.c: 389
+Hispanic
+Spanyol
+
+# ui_text.c: 58
+History not available
+Történet nem elérhetõ
+
+# drivers/neogeo.c: 1175, 1224, 1301, 1350
+Home
+Otthoni
+
+# drivers/aerofgt.c: 908 drivers/cave.c: 1603 drivers/f1gp.c: 309 drivers/nmk16.c: 2354 drivers/pgm.c: 655, 847 drivers/psikyo.c: 619, 739, 977, 1181 drivers/toaplan1.c: 1187, 1255, 1344 drivers/toaplan2.c: 2395, 2589, 2650, 2885, 3003, 3118, 3195, 3256, 3365, 3689
+Hong Kong
+Hong Kong
+
+# drivers/findout.c: 215 drivers/gameplan.c: 562, 707 
+Horizontal
+Vízszintes
+
+# drivers/afega.c: 198, 279
+Horizontally
+Vízszintesen
+
+# ui_text.c: 26
+IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
+Ha nem jogszerûen használja a következõ játékot: \"%s\" ezen az emulátoron, nyomjon ESC billentyût.
+
+# datafile.c: 2637
+IMPERFECT COLORS   : %3d  %3d\n
+HIBÁS SZÍNEK    : %3d  %3d\n
+
+# datafile.c: 2633
+IMPERFECT GRAPHICS : %3d  %3d\n
+HIBÁS GRAFIKA  : %3d  %3d\n
+
+# datafile.c: 2641
+IMPERFECT SOUND    : %3d  %3d\n
+HIBÁS HANG: %3d  %3d\n
+
+# drivers/travrusa.c: 91, 91 ui_text.c: 38
+INVALID
+ÉRVÉNYTELEN
+
+# cheat.c: 2812
+Ignore Decrement
+Csökkentés mellõzése
+
+# cheat.c: 3223
+Ignore Decrement By
+Csökkentés mellõzése a következõvel
+
+# cheat.c: 1033
+Increased By Value
+Emelés ezzel az értékkel
+
+# drivers/aerofgt.c: 542, 643, 703, 773, 858 drivers/alpha68k.c: 1560 drivers/armedf.c: 495 drivers/bbusters.c: 446, 517 drivers/cinemat.c: 733 drivers/crshrace.c: 281, 459 drivers/deco32.c: 1085 drivers/itech8.c: 1296 drivers/marinedt.c: 316 drivers/mcr68.c: 778 drivers/segac2.c: 2481 drivers/segas18.c: 883, 955, 1010, 1063, 1080, 1124 drivers/sslam.c: 477 drivers/system18.c: 1326 drivers/system24.c: 1182, 1258, 1330 drivers/taotaido.c: 230
+Individual
+Egyedi
+
+# cheat.c: 927 inptport.c: 424
+Infinite
+Végtelen
+
+# ui_text.c: 93
+Input (general)
+Irányítás (általános)
+
+# ui_text.c: 102
+Input (this game)
+Irányítás (ez a játék)
+
+# inptport.c: 383
+International
+Nemzetközi
+
+# drivers/ajax.c: 169 drivers/taito_z.c: 2900, 2917, 2968, 2985
+Inverted
+Fordított
+
+# cheat.c: 905 drivers/bwing.c: 267 drivers/cop01.c: 337 drivers/liberate.c: 259 drivers/runaway.c: 235
+Invincibility
+Legyõzhetetlenség
+
+# drivers/equites.c: 553 drivers/fantland.c: 188, 262 drivers/m72.c: 963, 1035, 1106, 1176, 1312 drivers/namcos1.c: 696 drivers/namcos86.c: 805, 884 drivers/oneshot.c: 269 drivers/seicross.c: 385 drivers/snowbros.c: 427, 501 drivers/toaplan1.c: 584, 653, 722, 791, 861, 944, 1028, 1105, 1173, 1241, 1330 drivers/toaplan2.c: 2429, 2504, 2575, 2638, 2681, 2727, 2786, 2868, 2944, 2991, 3056, 3104, 3181, 3240, 3297, 3348, 3408, 3735, 3860
+Invulnerability
+Sebezhetetlenség
+
+# inptport.c: 395 ui_lang.c: 16
+Italian
+Olasz
+
+# drivers/kaneko16.c: 1285, 1381 drivers/midyunit.c: 750 drivers/midzeus.c: 1214
+Italy
+Olaszország
+
+# inptport.c: 384
+Japan
+Japán
+
+# inptport.c: 392 ui_lang.c: 10
+Japanese
+Japán
+
+# inptport.c: 419
+Joystick
+Joystick
+
+# drivers/dynax.c: 1070, 1107, 2091 drivers/homedata.c: 791, 981 drivers/metro.c: 2957 drivers/mjkjidai.c: 220 drivers/neogeo.c: 1258 drivers/seta2.c: 827 drivers/ssv.c: 1048, 1076, 1192, 1317, 1517, 1876, 1977 drivers/system24.c: 1609
+Kan
+Kan
+
+# drivers/ssv.c: 1034, 1150, 1432 inptport.c: 932
+Keyboard
+Billentyûzet
+
+# drivers/aerofgt.c: 907 drivers/cave.c: 1605 drivers/crshrace.c: 383, 539 drivers/drgnmst.c: 277 drivers/f1gp.c: 308 drivers/fuukifg2.c: 213, 297 drivers/nmk16.c: 2352 drivers/pgm.c: 565, 654, 846 drivers/psikyo.c: 618, 738, 976, 1180 drivers/stv.c: 3736 drivers/taotaido.c: 308 drivers/toaplan1.c: 1188, 1256, 1345 drivers/toaplan2.c: 2397, 2441, 2588, 2653, 2883, 3002, 3117, 3194, 3255, 3364
+Korea
+Korea
+
+# cheat.c: 4990
+LHS
+LHS
+
+# ui_text.c: 189
+Label
+Cimke
+
+# cheat.c: 6065 ui_text.c: 188
+Label Type
+Cimke típus
+
+# inptport.c: 390 ui_text.c: 321
+Language
+Nyelv
+
+# cheat.c: 6057
+Length
+Hosszúság
+
+# cheat.c: 1027, 4565 drivers/cninja.c: 735 drivers/dec0.c: 544 drivers/warriorb.c: 387
+Less
+Kevesebb
+
+# cheat.c: 1030
+Less Or Equal
+Kevesebb vagy egyenlõ
+
+# cheat.c: 4567
+Less or Equal
+Kevesebb vagy egyenlõ
+
+# inptport.c: 423
+Level Select
+Pálya választás
+
+# inptport.c: 418
+Light Gun
+Fénypisztoly
+
+# inptport.c: 896
+Lightgun X
+Fénypisztoly X
+
+# inptport.c: 897
+Lightgun X 2
+Fénypisztoly X 2
+
+# inptport.c: 898
+Lightgun X 3
+Fénypisztoly X 3
+
+# inptport.c: 899
+Lightgun X 4
+Fénypisztoly X 4
+
+# inptport.c: 900
+Lightgun X 5
+Fénypisztoly X 5
+
+# inptport.c: 901
+Lightgun X 6
+Fénypisztoly X 6
+
+# inptport.c: 902
+Lightgun X 7
+Fénypisztoly X 7
+
+# inptport.c: 903
+Lightgun X 8
+Fénypisztoly X 8
+
+# inptport.c: 905
+Lightgun Y
+Fénypisztoly Y
+
+# inptport.c: 906
+Lightgun Y 2
+Fénypisztoly Y 2
+
+# inptport.c: 907
+Lightgun Y 3
+Fénypisztoly Y 3
+
+# inptport.c: 908
+Lightgun Y 4
+Fénypisztoly Y 4
+
+# inptport.c: 909
+Lightgun Y 5
+Fénypisztoly Y 5
+
+# inptport.c: 910
+Lightgun Y 6
+Fénypisztoly Y 6
+
+# inptport.c: 911
+Lightgun Y 7
+Fénypisztoly Y 7
+
+# inptport.c: 912
+Lightgun Y 8
+Fénypisztoly Y 8
+
+# inptport.c: 331
+Lives
+Életek
+
+# ui_text.c: 199
+Lives (or another value)
+Életek (vagy egyéb érték)
+
+# ui_text.c: 148
+Load Memory Card
+Memória kártya betöltése
+
+# ui_text.c: 152
+Load OK!
+Betöltés rendben!
+
+# inptport.c: 968
+Load State
+Mentés betöltés
+
+# usrintrf.c: 5318
+Load cancelled
+Betöltés törölve
+
+# usrintrf.c: 5310
+Load from position %c
+Betöltés a következõ helyrõl %c
+
+# cheat.c: 3556
+Location
+Hely
+
+# inptport.c: 406
+Low
+Alacsony
+
+# ui_text.c: 117
+MAME Statistics
+MAME statisztika
+
+# common.c: 92
+MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n\n
+MAME egy emulátor: lemásolja, többé kevésbé hitelesen, a mûködését\nszámos játéktermi automatának. De a hardver használhatatlan szoftver nélkül, ezért szükséges\negy ROM kép ami fut a hardveren. Az ilyen ROMok mint egyéb\nforgalmazott szoftverek, jogvédett anyagok ezért használatuk illegális\naz eredeti játéktermi automata birtoklása nélkül. Szükségtelen megemlíteni, hogy a ROMok\nnem kerülnek kiadásra a MAME emulátorral. MAME megjelentetése ROM képekkel együtt\na jogvédelmi törvények megsértése amit haladéktalanul jelenteni kell\na készítõnek hogy a megfelelõ jogszerû intézkedést végrehajtsák.\n\n
+
+# datafile.c: 1280
+MAMEInfo:\n
+MAME infó:\n
+
+# drivers/neogeo.c: 1174, 1223, 1300, 1349 inptport.c: 1412
+Machine Mode
+Automata mód
+
+# ui_text.c: 60
+Mameinfo not available
+Mame infó nem elérhetõ
+
+# drivers/alpha68k.c: 1284 drivers/freekick.c: 648 drivers/liberate.c: 236, 318, 401 
+Manufacturer
+Gyártó
+
+# cheat.c: 2877
+Mapped Memory
+Feltérképezett memória
+
+# cheat.c: 3345
+Mask
+Maszk
+
+# drivers/asuka.c: 715, 757, 799 drivers/cischeat.c: 1200 drivers/gstriker.c: 435 drivers/metro.c: 2361 drivers/midvunit.c: 569
+Master
+Elsõdleges
+
+# ui_text.c: 211
+Matches found
+Talált értékek
+
+# drivers/bwing.c: 344 drivers/holeland.c: 141 drivers/travrusa.c: 91 ui_text.c: 180
+Max
+Maximum
+
+# drivers/aerofgt.c: 704 drivers/cps1.c: 1433, 2151, 2254, 2387, 2508, 2618 drivers/dassault.c: 358, 429 drivers/deco32.c: 1086 drivers/hyhoo.c: 130 drivers/mexico86.c: 269 drivers/seta.c: 5766 drivers/shisen.c: 166 drivers/sslam.c: 446 drivers/taito_l.c: 1491
+Max Players
+Maximális játékosok
+
+# cheat.c: 3387
+Maximum Boundary
+Maximum határ
+
+# cheat.c: 6509 inptport.c: 400 ui_text.c: 206
+Medium
+Közepes
+
+# ui_text.c: 110
+Memory Card
+Memória kártya
+
+# ui_text.c: 154
+Memory Card Created OK!
+Memória kártya létrehozása sikeres!
+
+# ui_text.c: 153
+Memory Card Ejected!
+Memória kártya kiadva!
+
+# cheat.c: 3374
+Minimum Boundary
+Minimum határ
+
+# cheat.c: 3475
+Minimum Displayed Value
+Minimális kijelzett érték
+
+# cheat.c: 3486
+Minimum Value
+Minimális érték
+
+# inptport.c: 426
+Mono
+Monó
+
+# ui_text.c: 174
+More Info
+További infó
+
+# ui_text.c: 175
+More Info for
+További infó a következõhöz
+
+# inptport.c: 914
+Mouse X
+Egér X 
+
+# inptport.c: 915
+Mouse X 2
+Egér X 2
+
+# inptport.c: 916
+Mouse X 3
+Egér X 3
+
+# inptport.c: 917
+Mouse X 4
+Egér X 4
+
+# inptport.c: 918
+Mouse X 5
+Egér X 5
+
+# inptport.c: 919
+Mouse X 6
+Egér X 6
+
+# inptport.c: 920
+Mouse X 7
+Egér X 7
+
+# inptport.c: 921
+Mouse X 8
+Egér X 8
+
+# inptport.c: 923
+Mouse Y
+Egér Y
+
+# inptport.c: 924
+Mouse Y 2
+Egér Y 2 
+
+# inptport.c: 925
+Mouse Y 3
+Egér Y 3
+
+# inptport.c: 926
+Mouse Y 4
+Egér Y 4
+
+# inptport.c: 927
+Mouse Y 5
+Egér Y 5
+
+# inptport.c: 928
+Mouse Y 6
+Egér Y 6
+
+# inptport.c: 929
+Mouse Y 7
+Egér Y 7
+
+# inptport.c: 930
+Mouse Y 8
+Egér Y 8
+
+# ui_text.c: 36
+NA
+NA
+
+# datafile.c: 2643
+NO COCKTAIL        : %3d  %3d\n
+NINCS VEGYES MÓD        : %3d  %3d\n
+
+# datafile.c: 2645
+NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
+NINCS ISMERT MEGFELELÕ ROM KÉPFÁJL : %3d  %3d\n(%3d ROM-ok %d JÁTÉKOK)\n
+
+# romcmp.c: 483 
+NO MATCH\n
+NEM MEGFELELÕ\n
+
+# datafile.c: 2639
+NO SOUND           : %3d  %3d\n
+NINCS HANG         : %3d  %3d\n
+
+# datafile.c: 2625
+NON-WORKING        : %3d  %3d\n
+NEM MÛKÖDIK      : %3d  %3d\n
+
+# cheat.c: 3076, 3093, 5028 ui_text.c: 176
+Name
+Név
+
+# cheat.c: 1034
+Near To
+Közel
+
+# drivers/neogeo.c: 1104
+Next Game
+Következõ játék
+
+# drivers/holeland.c: 106
+Nihongo
+Nihongo
+
+# drivers/popeye.c: 301, 385 drivers/punchout.c: 540, 611 sndintrf.c: 693
+Nintendo
+Nintendo
+
+# drivers/popeye.c: 303, 387 drivers/punchout.c: 541, 612
+Nintendo of America
+Nintendo of America
+
+# inptport.c: 329 
+No
+Nem
+
+# ui_text.c: 213
+No previous values saved
+Nincs elõzõleg mentett érték
+
+# cheat.c: 1087, 2852 inptport.c: 432 
+None
+Nincs
+
+# cheat.c: 2860, 2875 inptport.c: 399
+Normal
+Normál
+
+# cheat.c: 2810
+Normal/Delay
+Normál/Törlés
+
+# cheat.c: 1032, 4569, 4575
+Not Equal
+Nem egyenlõ
+
+# debug/mamedbg.c: 4415 
+Not found
+Nem található
+
+# cheat.c: 2835
+Null
+Semmi
+
+# ui_text.c: 186
+Number of bytes
+Bájtok száma
+
+# ui_text.c: 37
+OK
+RENDBEN
+
+# common.c: 1125
+OPTIONAL %-12s NOT FOUND\n
+ÁLLÍTHATÓ %-12s NEM TALÁLHATÓ\n
+
+# inptport.c: 327 ui_text.c: 35, 224
+Off
+Kikapcsol
+
+# inptport.c: 328 ui_text.c: 34, 225
+On
+Bekapcsol
+
+# inptport.c: 935
+On Screen Display
+Képernyõ felirat
+
+# cheat.c: 3187 sound/discrete.h: 2770
+One Shot
+Egy lövés
+
+# ui_text.c: 218
+One match found - added to list
+Egy megfelelõ találva - listához hozzáadva
+
+# cheat.c: 3318
+Operation
+Mûvelet
+
+# drivers/fgoal.c: 309 ui_text.c: 168 
+Options
+Beállítások
+
+# drivers/findout.c: 214 
+Orientation
+Orientáció
+
+# ui_text.c: 139
+Other Controls
+Egyéb irányítás
+
+# ui_text.c: 27
+Otherwise, type OK to continue
+Ellenkezõ esetben, gépeljen OK-t a folytatáshoz.
+
+# audit.c: 451
+Out of memory reading ROM %s\n
+Memória elfogyott ROM olvasás közben %s\n
+
+# ui_text.c: 56
+Overclock
+Túlpörgetés
+
+# drivers/deadang.c: 178, 248 drivers/tail2nos.c: 207
+Overseas
+Tengeren túli
+
+# inptport.c: 473
+P1 Button 1
+P1 Gomb 1
+
+# inptport.c: 482
+P1 Button 10
+P1 Gomb 10
+
+# inptport.c: 474
+P1 Button 2
+P1 Gomb 2
+
+# inptport.c: 475
+P1 Button 3
+P1 Gomb 3
+
+# inptport.c: 476
+P1 Button 4
+P1 Gomb 4
+
+# inptport.c: 477
+P1 Button 5
+P1 Gomb 5
+
+# inptport.c: 478
+P1 Button 6
+P1 Gomb 6
+
+# inptport.c: 479
+P1 Button 7
+P1 Gomb 7
+
+# inptport.c: 480
+P1 Button 8
+P1 Gomb 8
+
+# inptport.c: 481
+P1 Button 9
+P1 Gomb 9
+
+# inptport.c: 510
+P1 Custom 1
+P1 Egyedi 1
+
+# inptport.c: 511
+P1 Custom 2
+P1 Egyedi 2
+
+# inptport.c: 512
+P1 Custom 3
+P1 Egyedi 3
+
+# inptport.c: 513
+P1 Custom 4
+P1 Egyedi 4
+
+# drivers/4enraya.c: 132 inptport.c: 454, 460
+P1 Down
+P1 Le
+
+# inptport.c: 455, 461
+P1 Left
+P1 Balra
+
+# inptport.c: 470
+P1 Left/Down
+P1 Balra/Le
+
+# inptport.c: 471
+P1 Left/Left
+P1 Balra/Balra
+
+# inptport.c: 472
+P1 Left/Right
+P1 Balra/Jobbra
+
+# inptport.c: 469
+P1 Left/Up
+P1 Balra/Fel
+
+# inptport.c: 485
+P1 Mahjong A
+P1 Madzsong A
+
+# inptport.c: 486
+P1 Mahjong B
+P1 Madzsong B
+
+# inptport.c: 504
+P1 Mahjong Bet
+P1 Madzsong tét
+
+# inptport.c: 487
+P1 Mahjong C
+P1 Madzsong C
+
+# inptport.c: 501
+P1 Mahjong Chi
+P1 Madzsong Chi
+
+# inptport.c: 488
+P1 Mahjong D
+P1 Madzsong D
+
+# inptport.c: 507
+P1 Mahjong Double Up
+P1 Madzsong duplázás
+
+# inptport.c: 489
+P1 Mahjong E
+P1 Madzsong E
+
+# inptport.c: 490
+P1 Mahjong F
+P1 Madzsong F
+
+# inptport.c: 508
+P1 Mahjong Flip Flop
+P1 Madzsong átfordítás
+
+# inptport.c: 491
+P1 Mahjong G
+P1 Madzsong G
+
+# inptport.c: 492
+P1 Mahjong H
+P1 Madzsong H
+
+# inptport.c: 493
+P1 Mahjong I
+P1 Madzsong I
+
+# inptport.c: 494
+P1 Mahjong J
+P1 Madzsong J
+
+# inptport.c: 495
+P1 Mahjong K
+P1 Madzsong K
+
+# inptport.c: 499
+P1 Mahjong Kan
+P1 Madzsong Kan
+
+# inptport.c: 496
+P1 Mahjong L
+P1 Madzsong L
+
+# inptport.c: 505
+P1 Mahjong Last Chance
+P1 Madzsong utolsó lehetõség
+
+# inptport.c: 497
+P1 Mahjong M
+P1 Madzsong M
+
+# inptport.c: 498
+P1 Mahjong N
+P1 Madzsong N
+
+# inptport.c: 500
+P1 Mahjong Pon
+P1 Madzsong Pon
+
+# inptport.c: 502
+P1 Mahjong Reach
+P1 Madzsong elérés 
+
+# inptport.c: 503
+P1 Mahjong Ron
+P1 Madzsong Ron
+
+# inptport.c: 506
+P1 Mahjong Score
+P1 Madzsong pont
+
+# inptport.c: 788
+P1 Pedal 1
+P1 Gázpedál 1
+
+# inptport.c: 797
+P1 Pedal 2
+P1 Gázpedál 2
+
+# inptport.c: 806
+P1 Pedal 3
+P1 Gázpedál 3
+
+# inptport.c: 456, 462
+P1 Right
+P1 Jobbra
+
+# inptport.c: 466
+P1 Right/Down
+P1 Jobbra/Le
+
+# inptport.c: 467
+P1 Right/Left
+P1 Jobbra/Balra
+
+# inptport.c: 468
+P1 Right/Right
+P1 Jobbra/Jobbra
+
+# inptport.c: 465
+P1 Right/Up
+P1 Jobbra/Fel
+
+# drivers/lemmings.c: 138 drivers/nss.c: 87 inptport.c: 484
+P1 Select
+P1 Választás
+
+# drivers/nss.c: 88 drivers/srmp2.c: 631 inptport.c: 483
+P1 Start
+P1 Kezdés
+
+# inptport.c: 453, 459
+P1 Up
+P1 Fel
+
+# inptport.c: 528
+P2 Button 1
+P2 Gomb 1
+
+# inptport.c: 537
+P2 Button 10
+P2 Gomb 10
+
+# inptport.c: 529
+P2 Button 2
+P2 Gomb 2
+
+# inptport.c: 530
+P2 Button 3
+P2 Gomb 3
+
+# inptport.c: 531
+P2 Button 4
+P2 Gomb 4
+
+# inptport.c: 532
+P2 Button 5
+P2 Gomb 5
+
+# inptport.c: 533
+P2 Button 6
+P2 Gomb 6
+
+# inptport.c: 534
+P2 Button 7
+P2 Gomb 7
+
+# inptport.c: 535
+P2 Button 8
+P2 Gomb 8
+
+# inptport.c: 536
+P2 Button 9
+P2 Gomb 9
+
+# inptport.c: 565
+P2 Custom 1
+P2 Egyedi 1
+
+# inptport.c: 566
+P2 Custom 2
+P2 Egyedi 2
+
+# inptport.c: 567
+P2 Custom 3
+P2 Egyedi 3
+
+# inptport.c: 568
+P2 Custom 4
+P2 Egyedi 4
+
+# drivers/4enraya.c: 134 inptport.c: 517
+P2 Down
+P2 Le
+
+# inptport.c: 518
+P2 Left
+P2 Balra
+
+# inptport.c: 525
+P2 Left/Down
+P2 Balra/Le
+
+# inptport.c: 526
+P2 Left/Left
+P2 Balra/Balra
+
+# inptport.c: 527
+P2 Left/Right
+P2 Balra/Jobbra
+
+# inptport.c: 524
+P2 Left/Up
+P2 Balra/Fel
+
+# inptport.c: 540
+P2 Mahjong A
+P2 Madzsong A
+
+# inptport.c: 541
+P2 Mahjong B
+P2 Madzsong B
+
+# inptport.c: 559
+P2 Mahjong Bet
+P2 Madzsong tét
+
+# inptport.c: 542
+P2 Mahjong C
+P2 Madzsong C
+
+# inptport.c: 556
+P2 Mahjong Chi
+P2 Madzsong Chi
+
+# inptport.c: 543
+P2 Mahjong D
+P2 Madzsong D
+
+# inptport.c: 562
+P2 Mahjong Double Up
+P2 Madzsong duplázás
+
+# inptport.c: 544
+P2 Mahjong E
+P2 Madzsong E
+
+# inptport.c: 545
+P2 Mahjong F
+P2 Madzsong F
+
+# inptport.c: 563
+P2 Mahjong Flip Flop
+P2 Madzsong átfordítás
+
+# inptport.c: 546
+P2 Mahjong G
+P2 Madzsong G
+
+# inptport.c: 547
+P2 Mahjong H
+P2 Madzsong H
+
+# inptport.c: 548
+P2 Mahjong I
+P2 Madzsong I
+
+# inptport.c: 549
+P2 Mahjong J
+P2 Madzsong J
+
+# inptport.c: 550
+P2 Mahjong K
+P2 Madzsong K
+
+# inptport.c: 554
+P2 Mahjong Kan
+P2 Madzsong Kan
+
+# inptport.c: 551
+P2 Mahjong L
+P2 Madzsong L
+
+# inptport.c: 560
+P2 Mahjong Last Chance
+P2 Madzsong utolsó lehetõség
+
+# inptport.c: 552
+P2 Mahjong M
+P2 Madzsong M
+
+# inptport.c: 553
+P2 Mahjong N
+P2 Madzsong N
+
+# inptport.c: 555
+P2 Mahjong Pon
+P2 Madzsong Pon
+
+# inptport.c: 557
+P2 Mahjong Reach
+P2 Madzsong elérés 
+
+# inptport.c: 558
+P2 Mahjong Ron
+P2 Madzsong Ron
+
+# inptport.c: 561
+P2 Mahjong Score
+P2 Madzsong pont
+
+# inptport.c: 789
+P2 Pedal 1
+P2 Gázpedál 1
+
+# inptport.c: 798
+P2 Pedal 2
+P2 Gázpedál 2
+
+# inptport.c: 807
+P2 Pedal 3
+P2 Pedal 3
+
+# inptport.c: 519
+P2 Right
+P2 Jobbra
+
+# inptport.c: 521
+P2 Right/Down
+P2 Jobbra/Le
+
+# inptport.c: 522
+P2 Right/Left
+P2 Jobbra/Balra
+
+# inptport.c: 523
+P2 Right/Right
+P2 Jobbra/Jobbra
+
+# inptport.c: 520
+P2 Right/Up
+P2 Jobbra/Fel
+
+# drivers/lemmings.c: 141 drivers/nss.c: 102 inptport.c: 539
+P2 Select
+P2 Választás
+
+# drivers/nss.c: 103 inptport.c: 538
+P2 Start
+P2 Kezdés
+
+# inptport.c: 516
+P2 Up
+P2 Fel
+
+# inptport.c: 584
+P3 Button 1
+P3 Gomb 1
+
+# inptport.c: 593
+P3 Button 10
+P3 Gomb 10
+
+# inptport.c: 585
+P3 Button 2
+P3 Gomb 2
+
+# inptport.c: 586
+P3 Button 3
+P3 Gomb 3
+
+# inptport.c: 587
+P3 Button 4
+P3 Gomb 4
+
+# inptport.c: 588
+P3 Button 5
+P3 Gomb 5
+
+# inptport.c: 589
+P3 Button 6
+P3 Gomb 6
+
+# inptport.c: 590
+P3 Button 7
+P3 Gomb 7
+
+# inptport.c: 591
+P3 Button 8
+P3 Gomb 8
+
+# inptport.c: 592
+P3 Button 9
+P3 Gomb 9
+
+# inptport.c: 597
+P3 Custom 1
+P3 Egyedi 1
+
+# inptport.c: 598
+P3 Custom 2
+P3 Egyedi 2
+
+# inptport.c: 599
+P3 Custom 3
+P3 Egyedi 3
+
+# inptport.c: 600
+P3 Custom 4
+P3 Egyedi 4
+
+# inptport.c: 573
+P3 Down
+P3 Le
+
+# inptport.c: 574
+P3 Left
+P3 Balra
+
+# inptport.c: 581
+P3 Left/Down
+P3 Balra/Le
+
+# inptport.c: 582
+P3 Left/Left
+P3 Balra/Balra
+
+# inptport.c: 583
+P3 Left/Right
+P3 Balra/Jobbra
+
+# inptport.c: 580
+P3 Left/Up
+P3 Balra/Fel
+
+# inptport.c: 790
+P3 Pedal 1
+P3 Gázpedál 1
+
+# inptport.c: 799
+P3 Pedal 2
+P3 Gázpedál 2
+
+# inptport.c: 808
+P3 Pedal 3
+P3 Gázpedál 3
+
+# inptport.c: 575
+P3 Right
+P3 Jobbra
+
+# inptport.c: 577
+P3 Right/Down
+P3 Jobbra/Le
+
+# inptport.c: 578
+P3 Right/Left
+P3 Jobbra/Balra
+
+# inptport.c: 579
+P3 Right/Right
+P3 Jobbra/Jobbra
+
+# inptport.c: 576
+P3 Right/Up
+P3 Jobbra/Fel
+
+# drivers/nss.c: 117 inptport.c: 595
+P3 Select
+P3 Választás
+
+# drivers/nss.c: 118 inptport.c: 594
+P3 Start
+P3 Kezdés
+
+# inptport.c: 572
+P3 Up
+P3 Fel
+
+# inptport.c: 615
+P4 Button 1
+P4 Gomb 1
+
+# inptport.c: 624
+P4 Button 10
+P4 Gomb 10
+
+# inptport.c: 616
+P4 Button 2
+P4 Gomb 2
+
+# inptport.c: 617
+P4 Button 3
+P4 Gomb 3
+
+# inptport.c: 618
+P4 Button 4
+P4 Gomb 4
+
+# inptport.c: 619
+P4 Button 5
+P4 Gomb 5
+
+# inptport.c: 620
+P4 Button 6
+P4 Gomb 6
+
+# inptport.c: 621
+P4 Button 7
+P4 Gomb 7
+
+# inptport.c: 622
+P4 Button 8
+P4 Gomb 8
+
+# inptport.c: 623
+P4 Button 9
+P4 Gomb 9
+
+# inptport.c: 628
+P4 Custom 1
+P4 Egyedi 1
+
+# inptport.c: 629
+P4 Custom 2
+P4 Egyedi 2
+
+# inptport.c: 630
+P4 Custom 3
+P4 Egyedi 3
+
+# inptport.c: 631
+P4 Custom 4
+P4 Egyedi 4
+
+# inptport.c: 604
+P4 Down
+P4 Le
+
+# inptport.c: 605
+P4 Left
+P4 Balra
+
+# inptport.c: 612
+P4 Left/Down
+P4 Balra/Le
+
+# inptport.c: 613
+P4 Left/Left
+P4 Balra/Balra
+
+# inptport.c: 614
+P4 Left/Right
+P4 Balra/Jobbra
+
+# inptport.c: 611
+P4 Left/Up
+P4 Balra/Fel
+
+# inptport.c: 791
+P4 Pedal 1
+P4 Gázpedál 1
+
+# inptport.c: 800
+P4 Pedal 2
+P4 Gázpedál 2
+
+# inptport.c: 809
+P4 Pedal 3
+P4 Gázpedál 3
+
+# inptport.c: 606
+P4 Right
+P4 Jobbra
+
+# inptport.c: 608
+P4 Right/Down
+P4 Jobbra/Le
+
+# inptport.c: 609
+P4 Right/Left
+P4 Jobbra/Balra
+
+# inptport.c: 610
+P4 Right/Right
+P4 Jobbra/Jobbra
+
+# inptport.c: 607
+P4 Right/Up
+P4 Jobbra/Fel
+
+# drivers/nss.c: 132 inptport.c: 626
+P4 Select
+P4 Választás
+
+# drivers/nss.c: 133 inptport.c: 625
+P4 Start
+P4 Kezdés
+
+# inptport.c: 603
+P4 Up
+P4 Fel
+
+# inptport.c: 646
+P5 Button 1
+P5 Gomb 1
+
+# inptport.c: 655
+P5 Button 10
+P5 Gomb 10
+
+# inptport.c: 647
+P5 Button 2
+P5 Gomb 2
+
+# inptport.c: 648
+P5 Button 3
+P5 Gomb 3
+
+# inptport.c: 649
+P5 Button 4
+P5 Gomb 4
+
+# inptport.c: 650
+P5 Button 5
+P5 Gomb 5
+
+# inptport.c: 651
+P5 Button 6
+P5 Gomb 6
+
+# inptport.c: 652
+P5 Button 7
+P5 Gomb 7
+
+# inptport.c: 653
+P5 Button 8
+P5 Gomb 8
+
+# inptport.c: 654
+P5 Button 9
+P5 Gomb 9
+
+# inptport.c: 659
+P5 Custom 1
+P5 Egyedi 1
+
+# inptport.c: 660
+P5 Custom 2
+P5 Egyedi 2
+
+# inptport.c: 661
+P5 Custom 3
+P5 Egyedi 3
+
+# inptport.c: 662
+P5 Custom 4
+P5 Egyedi 4
+
+# inptport.c: 635
+P5 Down
+P5 Le
+
+# inptport.c: 636
+P5 Left
+P5 Balra
+
+# inptport.c: 643
+P5 Left/Down
+P5 Balra/Le
+
+# inptport.c: 644
+P5 Left/Left
+P5 Balra/Balra
+
+# inptport.c: 645
+P5 Left/Right
+P5 Balra/Jobbra
+
+# inptport.c: 642
+P5 Left/Up
+P5 Balra/Fel
+
+# inptport.c: 792
+P5 Pedal 1
+P5 Gázpedál 1
+
+# inptport.c: 801
+P5 Pedal 2
+P5 Gázpedál 2
+
+# inptport.c: 810
+P5 Pedal 3
+P5 Gázpedál 3
+
+# inptport.c: 637
+P5 Right
+P5 Jobbra
+
+# inptport.c: 639
+P5 Right/Down
+P5 Jobbra/Le
+
+# inptport.c: 640
+P5 Right/Left
+P5 Jobbra/Balra
+
+# inptport.c: 641
+P5 Right/Right
+P5 Jobbra/Jobbra
+
+# inptport.c: 638
+P5 Right/Up
+P5 Jobbra/Fel
+
+# inptport.c: 657
+P5 Select
+P5 Választás
+
+# inptport.c: 656
+P5 Start
+P5 Kezdés
+
+# inptport.c: 634
+P5 Up
+P5 Fel
+
+# inptport.c: 677
+P6 Button 1
+P6 Gomb 1
+
+# inptport.c: 686
+P6 Button 10
+P6 Gomb 10
+
+# inptport.c: 678
+P6 Button 2
+P6 Gomb 2
+
+# inptport.c: 679
+P6 Button 3
+P6 Gomb 3
+
+# inptport.c: 680
+P6 Button 4
+P6 Gomb 4
+
+# inptport.c: 681
+P6 Button 5
+P6 Gomb 5
+
+# inptport.c: 682
+P6 Button 6
+P6 Gomb 6
+
+# inptport.c: 683
+P6 Button 7
+P6 Gomb 7
+
+# inptport.c: 684
+P6 Button 8
+P6 Gomb 8
+
+# inptport.c: 685
+P6 Button 9
+P6 Gomb 9
+
+# inptport.c: 690
+P6 Custom 1
+P6 Egyedi 1
+
+# inptport.c: 691
+P6 Custom 2
+P6 Egyedi 2
+
+# inptport.c: 692
+P6 Custom 3
+P6 Egyedi 3
+
+# inptport.c: 693
+P6 Custom 4
+P6 Egyedi 
+
+# inptport.c: 666
+P6 Down
+P6 Le
+
+# inptport.c: 667
+P6 Left
+P6 Balra
+
+# inptport.c: 674
+P6 Left/Down
+P6 Balra/Le
+
+# inptport.c: 675
+P6 Left/Left
+P6 Balra/Balra
+
+# inptport.c: 676
+P6 Left/Right
+P6 Balra/Jobbra
+
+# inptport.c: 673
+P6 Left/Up
+P6 Balra/Fel
+
+# inptport.c: 793
+P6 Pedal 1
+P6 Gázpedál 1
+
+# inptport.c: 802
+P6 Pedal 2
+P6 Gázpedál 2
+
+# inptport.c: 811
+P6 Pedal 3
+P6 Gázpedál 3
+
+# inptport.c: 668
+P6 Right
+P6 Jobbra
+
+# inptport.c: 670
+P6 Right/Down
+P6 Jobbra/Le
+
+# inptport.c: 671
+P6 Right/Left
+P6 Jobbra/Balra
+
+# inptport.c: 672
+P6 Right/Right
+P6 Jobbra/Jobbra
+
+# inptport.c: 669
+P6 Right/Up
+P6 Jobbra/Fel
+
+# inptport.c: 688
+P6 Select
+P6 Választás
+
+# inptport.c: 687
+P6 Start
+P6 Kezdés
+
+# inptport.c: 665
+P6 Up
+P6 Fel
+
+# inptport.c: 708
+P7 Button 1
+P7 Gomb 1
+
+# inptport.c: 717
+P7 Button 10
+P7 Gomb 10
+
+# inptport.c: 709
+P7 Button 2
+P7 Gomb 2
+
+# inptport.c: 710
+P7 Button 3
+P7 Gomb 3
+
+# inptport.c: 711
+P7 Button 4
+P7 Gomb 4
+
+# inptport.c: 712
+P7 Button 5
+P7 Gomb 5
+
+# inptport.c: 713
+P7 Button 6
+P7 Gomb 6
+
+# inptport.c: 714
+P7 Button 7
+P7 Gomb 7
+
+# inptport.c: 715
+P7 Button 8
+P7 Gomb 8
+
+# inptport.c: 716
+P7 Button 9
+P7 Gomb 9
+
+# inptport.c: 721
+P7 Custom 1
+P7 Egyedi 1
+
+# inptport.c: 722
+P7 Custom 2
+P7 Egyedi 2
+
+# inptport.c: 723
+P7 Custom 3
+P7 Egyedi 3
+
+# inptport.c: 724
+P7 Custom 4
+P7 Egyedi 4
+
+# inptport.c: 697
+P7 Down
+P7 Le
+
+# inptport.c: 698
+P7 Left
+P7 Balra
+
+# inptport.c: 705
+P7 Left/Down
+P7 Balra/Le
+
+# inptport.c: 706
+P7 Left/Left
+P7 Balra/Balra
+
+# inptport.c: 707
+P7 Left/Right
+P7 Balra/Jobbra
+
+# inptport.c: 704
+P7 Left/Up
+P7 Balra/Fel
+
+# inptport.c: 794
+P7 Pedal 1
+P7 Gázpedál 1
+
+# inptport.c: 803
+P7 Pedal 2
+P7 Gázpedál 2
+
+# inptport.c: 812
+P7 Pedal 3
+P7 Gázpedál 3
+
+# inptport.c: 699
+P7 Right
+P7 Jobbra
+
+# inptport.c: 701
+P7 Right/Down
+P7 Jobbra/Le
+
+# inptport.c: 702
+P7 Right/Left
+P7 Jobbra/Balra
+
+# inptport.c: 703
+P7 Right/Right
+P7 Jobbra/Jobbra
+
+# inptport.c: 700
+P7 Right/Up
+P7 Jobbra/Fel
+
+# inptport.c: 719
+P7 Select
+P7 Választás
+
+# inptport.c: 718
+P7 Start
+P7 Kezdés
+
+# inptport.c: 696
+P7 Up
+P7 Fel
+
+# inptport.c: 739
+P8 Button 1
+P8 Gomb 1
+
+# inptport.c: 748
+P8 Button 10
+P8 Gomb 10
+
+# inptport.c: 740
+P8 Button 2
+P8 Gomb 2
+
+# inptport.c: 741
+P8 Button 3
+P8 Gomb 3
+
+# inptport.c: 742
+P8 Button 4
+P8 Gomb 4
+
+# inptport.c: 743
+P8 Button 5
+P8 Gomb 5
+
+# inptport.c: 744
+P8 Button 6
+P8 Gomb 6
+
+# inptport.c: 745
+P8 Button 7
+P8 Gomb 7
+
+# inptport.c: 746
+P8 Button 8
+P8 Gomb 8
+
+# inptport.c: 747
+P8 Button 9
+P8 Gomb 9
+
+# inptport.c: 752
+P8 Custom 1
+P8 Egyedi 1
+
+# inptport.c: 753
+P8 Custom 2
+P8 Egyedi 2
+
+# inptport.c: 754
+P8 Custom 3
+P8 Egyedi 3
+
+# inptport.c: 755
+P8 Custom 4
+P8 Egyedi 4
+
+# inptport.c: 728
+P8 Down
+P8 Le
+
+# inptport.c: 729
+P8 Left
+P8 Balra
+
+# inptport.c: 736
+P8 Left/Down
+P8 Balra/Le
+
+# inptport.c: 737
+P8 Left/Left
+P8 Balra/Balra
+
+# inptport.c: 738
+P8 Left/Right
+P8 Balra/Jobbra
+
+# inptport.c: 735
+P8 Left/Up
+P8 Balra/Fel
+
+# inptport.c: 795
+P8 Pedal 1
+P8 Gázpedál 1
+
+# inptport.c: 804
+P8 Pedal 2
+P8 Gázpedál 2
+
+# inptport.c: 813
+P8 Pedal 3
+P8 Gázpedál 3
+
+# inptport.c: 730
+P8 Right
+P8 Jobbra
+
+# inptport.c: 732
+P8 Right/Down
+P8 Jobbra/Le
+
+# inptport.c: 733
+P8 Right/Left
+P8 Jobbra/Balra
+
+# inptport.c: 734
+P8 Right/Right
+P8 Jobbra/Jobbra
+
+# inptport.c: 731
+P8 Right/Up
+P8 Jobbra/Fel
+
+# inptport.c: 750
+P8 Select
+P8 Választás
+
+# inptport.c: 749
+P8 Start
+P8 Kezdés
+
+# inptport.c: 727
+P8 Up
+P8 Fel
+
+# drivers/taito_f2.c: 3516 inptport.c: 815
+Paddle
+Paddle
+
+# inptport.c: 816
+Paddle 2
+Paddle 2 
+
+# inptport.c: 817
+Paddle 3
+Paddle 3
+
+# inptport.c: 818
+Paddle 4
+Paddle 4
+
+# inptport.c: 819
+Paddle 5
+Paddle 5
+
+# inptport.c: 820
+Paddle 6
+Paddle 6
+
+# inptport.c: 821
+Paddle 7
+Paddle 7
+
+# inptport.c: 822
+Paddle 8
+Paddle 8
+
+# inptport.c: 824
+Paddle V
+Paddle V
+
+# inptport.c: 825
+Paddle V 2
+Paddle V 2
+
+# inptport.c: 826
+Paddle V 3
+Paddle V 3
+
+# inptport.c: 827
+Paddle V 4
+Paddle V 4
+
+# inptport.c: 828
+Paddle V 5
+Paddle V 5
+
+# inptport.c: 829
+Paddle V 6
+Paddle V 6
+
+# inptport.c: 830
+Paddle V 7
+Paddle V 7
+
+# inptport.c: 831
+Paddle V 8
+Paddle V 8
+
+# usrintrf.c: 3072
+Palettesize: %d\n
+Palettaméret: %d\n
+
+# inptport.c: 959
+Pan Down
+Pásztázás le
+
+# inptport.c: 960
+Pan Left
+Pásztázás balra
+
+# inptport.c: 961
+Pan Right
+Pásztázás jobbra
+
+# inptport.c: 958
+Pan Up
+Pásztázás fel
+
+# inptport.c: 378, 936
+Pause
+Szünet
+
+# drivers/astrocde.c: 283 drivers/bottom9.c: 235 drivers/deniam.c: 272 drivers/destroyr.c: 209 drivers/firetrk.c: 594, 662, 745 drivers/galpanic.c: 702 drivers/skyraid.c: 157 drivers/snk.c: 3775 drivers/sprint2.c: 345, 417 drivers/sprint4.c: 273 drivers/sprint8.c: 330, 465 drivers/sspeedr.c: 180 drivers/starshp1.c: 296 drivers/suprslam.c: 259 drivers/tank8.c: 240 drivers/triplhnt.c: 179 drivers/wolfpack.c: 240 
+Play Time
+Játék idõ
+
+# ui_text.c: 131
+Player 1 Controls
+1. játékos irányítás
+
+# ui_text.c: 132
+Player 2 Controls
+2. játékos irányítás
+
+# ui_text.c: 133
+Player 3 Controls
+3. játékos irányítás
+
+# ui_text.c: 134
+Player 4 Controls
+4. játékos irányítás
+
+# ui_text.c: 135
+Player 5 Controls
+5. játékos irányítás
+
+# ui_text.c: 136
+Player 6 Controls
+6. játékos irányítás
+
+# ui_text.c: 137
+Player 7 Controls
+7. játékos irányítás
+
+# ui_text.c: 138
+Player 8 Controls
+8. játékos irányítás
+
+# inptport.c: 411
+Players
+Játékosok
+
+# drivers/dynax.c: 1070, 1107, 2114 drivers/homedata.c: 814, 981 drivers/metro.c: 2957 drivers/mjkjidai.c: 229 drivers/neogeo.c: 1256 drivers/seta2.c: 852 drivers/ssv.c: 1047, 1101, 1216, 1288, 1488, 1847, 1988 drivers/system24.c: 1601
+Pon
+Pon
+
+# cheat.c: 3508
+Prefill
+Elõtöltés
+
+# ui_text.c: 32
+Press Any Key
+Nyomja le bármelyik billentyût
+
+# ui_text.c: 33
+Press Select Key/Button
+Nyomja le a választ billentyût/gombot
+
+# common.c: 1274
+Press any key to continue\n
+Nyomja le bármelyik billentyût a folytatáshoz\n
+
+# cheat.c: 1020
+Previous Data
+Elõzõ adat
+
+# drivers/neogeo.c: 1104
+Previous Game
+Elõzõ játék
+
+# ui_text.c: 214
+Previous values already restored
+Elõzõ értékek már visszaállítva
+
+# usrintrf.c: 5436
+Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
+Kilép a játékból?\n\nNyomja le a kiválaszt billentyût/gombot a  kilépéshez,\ntöröl billentyût/gombot a folytatáshoz.
+
+# cheat.c: 4998
+RHS
+RHS
+
+# datafile.c: 2647
+ROM NEEDS REDUMP   : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
+ROM ÚJRA LETÁROLÁSA SZÜKSÉGES   : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
+
+# cheat.c: 3417
+Range Maximum
+Maximális terjedelem
+
+# cheat.c: 3404
+Range Minimum
+Minimális terjedelem
+
+# drivers/dynax.c: 1070, 1107, 2099 drivers/homedata.c: 799, 981 drivers/metro.c: 2957 drivers/mjkjidai.c: 221 drivers/neogeo.c: 1260 drivers/seta2.c: 836 drivers/ssv.c: 1056, 1085, 1201, 1307, 1507, 1866, 1967 drivers/system24.c: 1610
+Reach
+Elérés
+
+# ui_text.c: 221
+Refresh rate
+Képernyõ frissítés
+
+# cheat.c: 2876, 3584 inptport.c: 382
+Region
+Régió
+
+# ui_text.c: 50
+Relative
+Relatív
+
+# cheat.c: 2879
+Relative Address
+Relatív cím
+
+# ui_text.c: 169
+Reload Database
+Adatbázis újratöltése
+
+# drivers/arcadia.c: 164 drivers/djmain.c: 500 drivers/hanaroku.c: 157 drivers/playch10.c: 439 drivers/sengokmj.c: 339 
+Reset
+Újraindítás
+
+# inptport.c: 937 ui_text.c: 106
+Reset Game
+Játék újraindítása
+
+# drivers/seattle.c: 1702, 2568, 2675 drivers/vegas.c: 1470, 1555, 1657, 1730, 1827, 2057 
+Resolution
+Felbontás
+
+# ui_text.c: 215
+Restoration successful
+Helyreállítás sikeres
+
+# ui_text.c: 165
+Restore Previous Results
+Elõzõ eredmények helyreállítása
+
+# cheat.c: 3198
+Restore Previous Value
+Elõzõ értékek helyreállítása
+
+# ui_text.c: 107
+Return to Game
+Vissza a játékhoz
+
+# ui_text.c: 140
+Return to Groups
+Vissza a csoportokhoz
+
+# ui_text.c: 30
+Return to Main Menu
+Vissza a fõmenûbe
+
+# ui_text.c: 31
+Return to Prior Menu
+Vissza az elõzõ menûbe
+
+# inptport.c: 430 ui_text.c: 126
+Reverse
+Ellenkezõ
+
+# drivers/dynax.c: 1070, 1107, 2107 drivers/homedata.c: 807, 981 drivers/metro.c: 2957 drivers/mjkjidai.c: 222 drivers/neogeo.c: 1259 drivers/seta2.c: 845 drivers/ssv.c: 1057, 1094, 1209, 1297, 1497, 1856, 1957 drivers/system24.c: 1611
+Ron
+Ron
+
+# drivers/epos.c: 164 
+Rotation
+Forgatás
+
+# datafile.c: 2880
+SHADOWS        : %3d  + %3d\n
+ÁRNYÉKOK        : %3d  + %3d\n
+
+# drivers/aerofgt.c: 541, 641, 642, 702, 772, 857 drivers/crshrace.c: 280, 458 drivers/taotaido.c: 229
+Same
+Azonos
+
+# drivers/superqix.c: 147 sndhrdw/cclimber.c: 18 sndhrdw/fghtbskt.c: 24 sndhrdw/pbillian.c: 11 sndhrdw/suna8.c: 42 sndintrf.c: 454 
+Samples
+Minták
+
+# inptport.c: 971
+Save Cheat
+Csalás mentése
+
+# cheat.c: 5043
+Save Memory
+Memória mentése
+
+# inptport.c: 943
+Save Snapshot
+Pillanatkép mentése
+
+# inptport.c: 967
+Save State
+Állás mentése
+
+# usrintrf.c: 5316
+Save cancelled
+Mentés törölve
+
+# usrintrf.c: 5308
+Save to position %c
+Mentés a következõ helyre %c
+
+# drivers/turbo.c: 412 png.c: 428 
+Screen
+Képernyõ
+
+# ui_text.c: 47
+Screen Resolution
+Képfelbontás
+
+# ui_text.c: 86
+Screen flipping in cocktail mode is not supported.
+Képtükrözés a vegyes módban nem támogatott.
+
+# datafile.c: 1327
+Screen flipping in cocktail mode is not supported.\n
+Képtükrözés a vegyes módban nem támogatott.\n
+
+# cheat.c: 6905
+Search Dialog Style
+Keresés párbeszéd stílusa
+
+# cheat.c: 6541
+Search Speed
+Keresési sebesség
+
+# ui_text.c: 212
+Search not initialized
+Keresés nem iniciált
+
+# drivers/ninjakid.c: 284
+Second Bonus
+Második bónusz
+
+# cheat.c: 2815, 2889 drivers/bwidow.c: 628 drivers/maxaflex.c: 301 drivers/nbmj8688.c: 2741 drivers/segac2.c: 2934, 3045 drivers/trackfld.c: 617
+Select
+Választás
+
+# ui_text.c: 210
+Select Memory Areas
+Memória terület választása
+
+# cheat.c: 6897
+Select Search
+Keresés választása
+
+# ui_text.c: 216
+Select a value
+Érték választás
+
+# usrintrf.c: 5282
+Select position to load from
+Válasszon helyet mentés betöltéshez
+
+# usrintrf.c: 5280
+Select position to save to
+Válasszon helyet állás mentéshez
+
+# ui_text.c: 127
+Sensitivity
+Érzékenység
+
+# drivers/djmain.c: 500 drivers/wallc.c: 234 inptport.c: 782
+Service
+Javítás
+
+# inptport.c: 777
+Service 1
+Javítás 1
+
+# inptport.c: 778
+Service 2
+Javítás 2
+
+# inptport.c: 779
+Service 3
+Javítás 3
+
+# inptport.c: 780
+Service 4
+Javítás 4
+
+# inptport.c: 377
+Service Mode
+Javítási mód
+
+# drivers/ambush.c: 127
+Service Mode/Free Play
+Javítási mód/Szabad játék
+
+# cheat.c: 2846 drivers/arcadia.c: 165 drivers/trackfld.c: 607 ui_text.c: 181
+Set
+Beállítás
+
+# cheat.c: 3430
+Set/Clear
+Beállítás/Törlés
+
+# cheat.c: 2831
+Set/Clear Bits
+Bitek beállítása/törlése
+
+# inptport.c: 945
+Show Cheat List
+Csalás lista mutatása
+
+# inptport.c: 949
+Show Command
+Parancs mutatása
+
+# ui_text.c: 120
+Show Command List
+Parancssor mutatása
+
+# inptport.c: 942
+Show FPS
+FPS kijelzése
+
+# inptport.c: 938
+Show Gfx
+Gfx kijelzése
+
+# inptport.c: 962
+Show Profiler
+Profil mutatása
+
+# cheat.c: 6909
+Show Search Labels
+Keresõ cimkék kijelzése
+
+# cheat.c: 5019
+Signed
+Bejegyzett
+
+# inptport.c: 414
+Single
+Egyes
+
+# cheat.c: 5011
+Size
+Méret
+
+# cheat.c: 6095
+Skip Bytes
+Bájtok átugrása
+
+# cheat.c: 6510 drivers/4enraya.c: 116 drivers/8080bw.c: 679, 764 drivers/amidar.c: 185 drivers/bigstrkb.c: 157 drivers/brkthru.c: 231, 234, 276, 279 drivers/btime.c: 784 drivers/cninja.c: 723 drivers/cps1.c: 1076, 1347 drivers/deniam.c: 273 drivers/epos.c: 162, 165, 171 drivers/fuukifg3.c: 349 drivers/gameplan.c: 395, 846 drivers/m62.c: 627, 677, 728, 779, 831, 883, 937, 1036, 1087 drivers/mcr2.c: 570 drivers/metro.c: 3185 drivers/mexico86.c: 255 drivers/nmk16.c: 2425 drivers/phoenix.c: 342 drivers/portrait.c: 201 drivers/quizdna.c: 146, 234, 336 drivers/rohga.c: 501 drivers/safarir.c: 187 drivers/segas16a.c: 1256 drivers/segas16b.c: 2463 drivers/sf.c: 330, 508, 646 drivers/sidepckt.c: 228 drivers/solomon.c: 166 drivers/suprridr.c: 247 drivers/system1.c: 1754 drivers/system16.c: 1784 drivers/taito_z.c: 2360, 2429 drivers/tecmo16.c: 203 drivers/thepit.c: 210, 265, 306 drivers/trackfld.c: 550 drivers/vigilant.c: 225 drivers/vsnes.c: 1038 drivers/wallc.c: 230 drivers/wilytowr.c: 458 drivers/xain.c: 397 drivers/yamato.c: 248 drivers/zac2650.c: 83, 133 ui_text.c: 207
+Slow
+Lassú
+
+# ui_text.c: 203
+Slow But Sure (changed or not)
+Lassú de biztos (változtatva vagy nem)
+
+# drivers/balsente.c: 675 drivers/contra.c: 221 drivers/gijoe.c: 294 drivers/mosaic.c: 202 drivers/tmnt.c: 2049, 2131, 2377 drivers/zaxxon.c: 881 ui_text.c: 43
+Sound
+Hang
+
+# inptport.c: 396 ui_lang.c: 15
+Spanish
+Spanyol
+
+# inptport.c: 429 
+Standard
+Alap
+
+# ui_text.c: 162
+Start a New Cheat Search
+Új csalás keresés kezdése
+
+# ui_text.c: 62
+Statistics not available
+Statisztika nem elérhetõ
+
+# ui_text.c: 202
+Status (bits or flags)
+Állapot (bitek vagy jelzõk)
+
+# inptport.c: 425 
+Stereo
+Sztereó
+
+# drivers/bmcbowl.c: 370 drivers/holeland.c: 143, 211 drivers/pgm.c: 548, 636, 727 drivers/popper.c: 276 drivers/toaplan2.c: 2385 drivers/turbo.c: 410
+Stop
+Leállítás
+
+# cheat.c: 1089
+String
+Szál
+
+# cheat.c: 2841
+Subtract
+Kivonás
+
+# cheat.c: 2861, 5015
+Swap
+Csere
+
+# ui_text.c: 87
+THIS GAME DOESN'T WORK PROPERLY
+EZ A JÁTÉK NEM MÛKÖDIK MEGFELELÕEN
+
+# datafile.c: 1301
+THIS GAME DOESN'T WORK PROPERLY\n
+EZ A JÁTÉK NEM MÛKÖDIK MEGFELELÕEN\n
+
+# drivers/aerofgt.c: 819, 909 drivers/cave.c: 1604 drivers/f1gp.c: 310 drivers/midzeus.c: 1219 drivers/pgm.c: 652, 844 drivers/psikyo.c: 620, 740, 978, 1182 drivers/toaplan1.c: 1189, 1257, 1346 drivers/toaplan2.c: 2396, 2443, 2518, 2590, 2651, 2694, 2740, 2887, 3004, 3119, 3196, 3257, 3366
+Taiwan
+Taiwan
+
+# drivers/neogeo.c: 1170, 1219, 1296, 1345 drivers/toaplan1.c: 594, 663, 732, 1118, 1183, 1251, 1340 drivers/toaplan2.c: 2391, 2437, 2512, 2584, 2646, 2689, 2735, 2794, 2876, 2999, 3112, 3190, 3249, 3358, 3503, 3594, 3684 inptport.c: 1411
+Territory
+Terület
+
+# drivers/dbz2.c: 276, 369 inptport.c: 379
+Test
+Teszt
+
+# drivers/8080bw.c: 1277, 1894, 2434, 2510 drivers/btime.c: 764 drivers/ddenlovr.c: 1802 drivers/ertictac.c: 226 drivers/galpani3.c: 145 drivers/halleys.c: 1704 drivers/homedata.c: 952 drivers/jchan.c: 732 drivers/nycaptor.c: 518 drivers/ohmygod.c: 221 drivers/quasar.c: 320 drivers/raiden2.c: 426, 502, 551 drivers/segas16a.c: 1447 drivers/segas16b.c: 2700 drivers/seicross.c: 222 drivers/snk.c: 3489, 3554 drivers/ssfindo.c: 443 drivers/st0016.c: 525 drivers/suprnova.c: 626 drivers/system1.c: 1829, 2018
+Test Mode
+Teszt mód
+
+# drivers/dbz2.c: 276, 369 drivers/kinst.c: 390, 494 drivers/konamigq.c: 456 drivers/konamigv.c: 374, 554, 701 drivers/mcr68.c: 774 drivers/midtunit.c: 108, 215, 318, 421, 524 drivers/midvunit.c: 931 drivers/midwunit.c: 92, 245, 307, 431, 484 drivers/midxunit.c: 132 drivers/midyunit.c: 198, 409, 475, 570, 660 drivers/midzeus.c: 1027, 1108, 1234 drivers/namcos10.c: 94 drivers/namcos11.c: 682, 748, 814, 880 drivers/namcos12.c: 526, 571 drivers/namcos21.c: 1290, 1367, 1444 drivers/neogeo.c: 1114, 1150, 1193, 1313 drivers/seattle.c: 2340, 2462, 2584, 2691 drivers/vegas.c: 1956 drivers/zn.c: 2966
+Test Switch
+Teszt kapcsoló
+
+# drivers/megasys1.c: 2126 ui_text.c: 48
+Text
+Szöveg
+
+# cheat.c: 6069
+Text Label
+Szöveg cimke
+
+# ui_text.c: 82
+The colors are completely wrong.
+A színek teljesen hibásak.
+
+# datafile.c: 1315
+The colors are completely wrong.\n
+A színek teljesen hibásak.\n
+
+# ui_text.c: 81
+The colors aren't 100% accurate.
+A színek nem 100% hitelesek.
+
+# datafile.c: 1318
+The colors aren't 100% accurate.\n
+A színek nem 100% hitelesek.\n
+
+# unzip.c: 16
+The format of this zipfile is not supported, please recompress it
+A tömörített fájlok formátuma nem támogatott, kérem csomagolja újra
+
+# ui_text.c: 88
+The game has protection which isn't fully emulated.
+A játék védelemmel van ellátva, melynek emulálása nem tökéletes.
+
+# datafile.c: 1304
+The game has protection which isn't fully emulated.\n
+A játék védelemmel van ellátva, melynek emulálása nem tökéletes.\n
+
+# ui_text.c: 85
+The game lacks sound.
+A játéknak hiányzik a hangja.
+
+# datafile.c: 1321
+The game lacks sound.\n
+A játéknak hiányzik a hangja.\n
+
+# ui_text.c: 79
+The game uses hardware which isn't fully simulated.
+A játék olyan hardvert használ ami nincs teljesen szimulálva.
+
+# datafile.c: 1308
+The game uses hardware which isn't fully simulated.\n
+A játék olyan hardvert használ ami nincs hibátlanul szimulálva.\n
+
+# datafile.c: 1330
+The game uses two or more monitors.\n
+A játék kettõ vagy több monitort használ.\n
+
+# ui_text.c: 84
+The sound emulation isn't 100% accurate.
+A hang emuláció nem 100% tökéletes.
+
+# datafile.c: 1324
+The sound emulation isn't 100% accurate.\n
+A hang emuláció nem 100% tökéletes.\n
+
+# ui_text.c: 83
+The video emulation isn't 100% accurate.
+A videó emuláció nem 100% tökéletes.
+
+# datafile.c: 1312
+The video emulation isn't 100% accurate.\n
+A videó emuláció nem 100% tökéletes.\n
+
+# unzip.c: 14
+The zipfile seems to be corrupt, please check it
+A csomagolt fájl hibásnak tûnik, kérem ellenõrizze
+
+# ui_text.c: 77
+There are known problems with this game:
+A játéknak következõ problémái ismertek:
+
+# ui_text.c: 89
+There are working clones of this game. They are:
+A játéknak léteznek mûködõ klónjai. A következõk:
+
+# common.c: 1929
+This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
+Itt a drivert igényelõ ROMok listája \"%s\".\nNév            Méret Ellenõrzõösszeg\n
+
+# inptport.c: 941 
+Throttle
+Lassítás
+
+# drivers/segaxbd.c: 676
+Throttle Lever
+Lassítás mértéke
+
+# ui_text.c: 143
+Tickets dispensed
+Jegyek kiosztva
+
+# inptport.c: 380, 783
+Tilt
+Tiltás
+
+# drivers/8080bw.c: 1278, 1334, 1357, 1417, 1467, 1852, 1890, 2132, 2188, 2411, 2496 drivers/amspdwy.c: 181 drivers/cinemat.c: 384, 543 drivers/cps1.c: 3594, 3707 drivers/fitfight.c: 251, 389, 531 drivers/gomoku.c: 117 drivers/homedata.c: 872, 949 drivers/lazercmd.c: 566 drivers/m107.c: 275 drivers/m92.c: 1071 drivers/megasys1.c: 1401, 2131 drivers/metlclsh.c: 224 drivers/metro.c: 2675, 2725 drivers/nbmj8688.c: 2149, 2223 drivers/pacman.c: 2118, 2219 drivers/paradise.c: 160, 228 drivers/pcktgal.c: 160 drivers/punchout.c: 502, 573 drivers/realbrk.c: 327 drivers/segac2.c: 3185 drivers/segaorun.c: 486, 518, 601 drivers/segas16b.c: 2152 drivers/segaxbd.c: 695, 881, 919 drivers/starfire.c: 219, 268 drivers/supbtime.c: 304 drivers/system1.c: 917, 1079, 1131 drivers/system16.c: 1023 drivers/taito_f2.c: 4164, 4261 drivers/taito_l.c: 1219, 1748 drivers/taitosj.c: 824, 906, 1342 drivers/troangel.c: 74 drivers/tubep.c: 695 drivers/vicdual.c: 270 drivers/vsnes.c: 828, 1348 drivers/wwfsstar.c: 250 drivers/zac2650.c: 182
+Time
+Idõ
+
+# drivers/chinagat.c: 437 drivers/ddragon.c: 707 drivers/fuukifg3.c: 348 drivers/m62.c: 727, 778, 830, 882 drivers/mexico86.c: 254 drivers/quizdna.c: 145, 233, 335 drivers/segac2.c: 3164 drivers/segas16a.c: 953 drivers/segas16b.c: 1855 drivers/shisen.c: 134 drivers/system16.c: 635 drivers/taito_f2.c: 2170, 2222, 2274, 4075 drivers/toaplan2.c: 3801, 3916 drivers/vsnes.c: 1440, 1750
+Timer
+Idõzítõ
+
+# ui_text.c: 200
+Timers (+/- some value)
+Idõzítõk (némely érték +/-)
+
+# drivers/bigevglf.c: 270 drivers/chqflag.c: 305 drivers/gaiden.c: 620 drivers/seta.c: 3242, 3475, 5245 drivers/seta2.c: 661 drivers/travrusa.c: 168 drivers/yunsung8.c: 252 
+Title
+Címkép
+
+# drivers/toaplan1.c: 802
+Toaplan
+Toaplan
+
+# ui_text.c: 226
+Toggle
+Kapcsolás
+
+# inptport.c: 946
+Toggle Autofire
+Automata tüzelés kapcsolás
+
+# inptport.c: 944
+Toggle Cheat
+Csalások kapcsolása
+
+# inptport.c: 974
+Toggle Crosshair
+Célkereszt kapcsolás
+
+# inptport.c: 966
+Toggle Debugger
+Hibakeresõ kapcsolása
+
+# inptport.c: 851
+Track X
+Sáv X 
+
+# inptport.c: 852
+Track X 2
+Sáv X 2
+
+# inptport.c: 853
+Track X 3
+Sáv X 3
+
+# inptport.c: 854
+Track X 4
+Sáv X 4
+
+# inptport.c: 855
+Track X 5
+Sáv X 5
+
+# inptport.c: 856
+Track X 6
+Sáv X 6
+
+# inptport.c: 857
+Track X 7
+Sáv X 7
+
+# inptport.c: 858
+Track X 8
+Sáv X 8 
+
+# inptport.c: 860
+Track Y
+Sáv Y 
+
+# inptport.c: 861
+Track Y 2
+Sáv Y 2
+
+# inptport.c: 862
+Track Y 3
+Sáv Y 3
+
+# inptport.c: 863
+Track Y 4
+Sáv Y 4
+
+# inptport.c: 864
+Track Y 5
+Sáv Y 5
+
+# inptport.c: 865
+Track Y 6
+Sáv Y 6
+
+# inptport.c: 866
+Track Y 7
+Sáv Y 7
+
+# inptport.c: 867
+Track Y 8
+Sáv Y 8
+
+# inptport.c: 420 
+Trackball
+Egér
+
+# cheat.c: 3149 drivers/lastduel.c: 417 
+Type
+Típus
+
+# ui_text.c: 90
+Type OK to continue
+Gépeljen OK-t a folytatáshoz
+
+# inptport.c: 957
+UI Cancel
+UI törölve
+
+# inptport.c: 953
+UI Down
+UI le
+
+# inptport.c: 954
+UI Left
+UI balra
+
+# inptport.c: 955
+UI Right
+UI jobbra
+
+# inptport.c: 956
+UI Select
+UI választás
+
+# inptport.c: 964
+UI Toggle
+UI váltás
+
+# inptport.c: 952
+UI Up
+UI fel
+
+# datafile.c: 2627
+UNEMULATED PROTEC. : %3d  %3d\n
+NEM EMULÁLT VÉDELEM: %3d  %3d\n
+
+# cheat.c: 8022 common.c: 1160 drivers/ms32.c: 433 drivers/segahang.c: 493 drivers/segaorun.c: 397, 587
+UNKNOWN
+ISMERETLEN
+
+# datafile.c: 2630
+UNSIM'D. HARDWARE. : %3d  %3d\n
+NEM SZIM. HARDVER. : %3d  %3d\n
+
+# drivers/bbusters.c: 572 drivers/taotaido.c: 304 drivers/toaplan1.c: 597, 666, 735, 1185, 1253, 1342 ui_lang.c: 9
+US
+US
+
+# inptport.c: 385
+USA
+USA
+
+# inptport.c: 428 
+Unknown
+Ismeretlen
+
+# drivers/csk.c: 261 drivers/goldstar.c: 162, 170, 194 drivers/segas16a.c: 911 drivers/segas16b.c: 2661, 2662 drivers/spy.c: 491 drivers/system16.c: 2031, 2032
+Unlimited
+Nem használatos
+
+# inptport.c: 427
+Unused
+Nem használatos
+
+# cheat.c: 2891
+Unused (10)
+Nem használatos (11)
+
+# cheat.c: 2891
+Unused (11)
+Nem használatos (11)
+
+# cheat.c: 2891
+Unused (12)
+Nem használatos (12)
+
+# cheat.c: 2892
+Unused (13)
+Nem használatos (13)
+
+# cheat.c: 2892
+Unused (14)
+Nem használatos (14)
+
+# cheat.c: 2892
+Unused (15)
+Nem használatos (15)
+
+# cheat.c: 2892
+Unused (16)
+Nem használatos (16)
+
+# cheat.c: 2892
+Unused (17)
+Nem használatos (17)
+
+# cheat.c: 2893
+Unused (18)
+Nem használatos (18)
+
+# cheat.c: 2893
+Unused (19)
+Nem használatos (19)
+
+# cheat.c: 2893
+Unused (20)
+Nem használatos (20)
+
+# cheat.c: 2893
+Unused (21)
+Nem használatos (21)
+
+# cheat.c: 2893
+Unused (22)
+Nem használatos (22)
+
+# cheat.c: 2894
+Unused (23)
+Nem használatos (23)
+
+# cheat.c: 2894
+Unused (24)
+Nem használatos (24)
+
+# cheat.c: 2894
+Unused (25)
+Nem használatos (25)
+
+# cheat.c: 2894
+Unused (26)
+Nem használatos (26)
+
+# cheat.c: 2894
+Unused (27)
+Nem használatos (27)
+
+# cheat.c: 2895
+Unused (28)
+Nem használatos (28)
+
+# cheat.c: 2895
+Unused (29)
+Nem használatos (29)
+
+# cheat.c: 2895
+Unused (30)
+Nem használatos (30)
+
+# cheat.c: 2895
+Unused (31)
+Nem használatos (31)
+
+# cheat.c: 2832, 2890
+Unused (4)
+Nem használatos (5)
+
+# cheat.c: 2833, 2880, 2890
+Unused (5)
+Nem használatos (5)
+
+# cheat.c: 2834, 2881, 2890
+Unused (6)
+Nem használatos (6)
+
+# cheat.c: 2882, 2890
+Unused (7)
+Nem használatos (7)
+
+# cheat.c: 2891
+Unused (8)
+Nem használatos (8)
+
+# cheat.c: 2891
+Unused (9)
+Nem használatos (9)
+
+# inptport.c: 374
+Upright
+Egyenes
+
+# drivers/segaxbd.c: 633
+Upright 1
+Egyenes 1
+
+# ui_text.c: 25
+Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.
+Az emulátor használata jogtalanul birtokolt ROM-okkal a jogvédelmi törvényt sérti.
+
+# ui_text.c: 130
+User Interface
+Felhasználói felület
+
+# cheat.c: 3462
+User Select
+Felhasználó választás
+
+# cheat.c: 1022, 5002 ui_text.c: 42
+Value
+Érték
+
+# ui_text.c: 54
+Vector Flicker
+Vektor villanás
+
+# ui_text.c: 46
+Vector Game
+Vektor játék
+
+# ui_text.c: 55
+Vector Intensity
+Vektor intenzitás
+
+# inptport.c: 381 ui_text.c: 316
+Version
+Verzió
+
+# drivers/findout.c: 216 drivers/gameplan.c: 563, 708 
+Vertical
+Függõleges
+
+# drivers/afega.c: 199, 280
+Vertically
+Függõlegesen
+
+# inptport.c: 397
+Very Easy
+Nagyon könnyû
+
+# inptport.c: 404
+Very Hard
+Nagyon nehéz
+
+# inptport.c: 410
+Very High
+Nagyon magas
+
+# inptport.c: 405
+Very Low
+Nagyon alacsony
+
+# cheat.c: 6511 drivers/cps1.c: 1346 drivers/m62.c: 936 drivers/rohga.c: 500 ui_text.c: 208
+Very Slow
+Nagyon lassú
+
+# ui_text.c: 164
+View Last Results
+Az utolsó eredmények megtekintése
+
+# drivers/cps1.c: 3605 drivers/ms32.c: 760, 833, 898 drivers/pgm.c: 542, 630, 721 drivers/ssv.c: 1242, 1427 drivers/tetrisp2.c: 431, 493
+Voice
+Hang
+
+# ui_text.c: 49
+Volume
+Hangerõ
+
+# inptport.c: 785
+Volume Down
+Hangerõ fel
+
+# inptport.c: 786
+Volume Up
+Hangerõ le
+
+# common.c: 1263
+WARNING: the game might not run correctly.\n
+FIGYELEM: a játék valószínûleg nem mûködik hibátlanul.\n
+
+# datafile.c: 2635
+WRONG COLORS       : %3d  %3d\n
+HIBÁS SZÍNEK       : %3d  %3d\n
+
+# cheat.c: 2811
+Wait
+Várakozás
+
+# state.c: 586
+Warning: Game was saved with sound off, but sound is on.  Result may be interesting.
+Figyelem: A játék kikapcsolt hanggal volt elmentve, de a hang be van kapcsolva. Érdekes eredmény lehet.
+
+# state.c: 591
+Warning: Game was saved with sound on, but sound is off.  Result may be interesting.
+Figyelem: A játék bekapcsolt hanggal volt elmentve, de a hang ki van kapcsolva. Érdekes eredmény lehet.
+
+# cheat.c: 2813 ui_text.c: 192
+Watch
+Figyelés
+
+# cheat.c: 7628
+Watch %.8X (%d)
+Figyelés %.8X (%d)
+
+# cheat.c: 3284
+Watch Add Value
+Érték hozzáadás figyelése
+
+# cheat.c: 3295
+Watch Format
+Formátum figyelése
+
+# cheat.c: 3306
+Watch Label
+Cimke figyelése
+
+# cheat.c: 3264
+Watch Per Line
+Figyelés soronként
+
+# cheat.c: 3238
+Watch Size
+Méret figyelés
+
+# cheat.c: 3251
+Watch Skip
+Átugrás figyelés
+
+# inptport.c: 972
+Watch Value
+Érték figyelés
+
+# ui_text.c: 170
+Watchpoint
+Figyelési pont
+
+# ui_text.c: 173
+Watchpoints
+Figyelési pontok
+
+# inptport.c: 388
+World
+Világ
+
+# cheat.c: 2828
+Write
+Írás
+
+# ui_text.c: 190
+X Position
+X Pozíció
+
+# cheat.c: 6126 machine/scudsp.c: 799
+XOR
+XOR
+
+# ui_text.c: 191
+Y Position
+Y Pozíció
+
+# inptport.c: 330 
+Yes
+Igen
+
+# unzip.c: 15
+Your filesystem seems to be corrupt, please check it
+A fájlrendszere hibásnak tûnik, kérem ellenõrizze
+
+# datafile.c: 2775
+\n    TOTAL: %4d\n
+\n    TELJES: %4d\n
+
+# datafile.c: 2746
+\n   TOTAL: %4d\n
+\n   TELJES: %4d\n
+
+# datafile.c: 2763
+\n SNDINTRF: (1)  (2)  (3)  (4)\n\n
+\n SNDINTRF: (1)  (2)  (3)  (4)\n\n
+
+# datafile.c: 1466, 1484
+\nORIGINAL:\n
+\nEREDETI:\n
+
+# datafile.c: 1407
+\nROM REGION:\n
+\nROM RÉGIÓ:\n
+
+# datafile.c: 2690
+\nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d MB (UNCOMPRESSED)\n%d MB + %d MB MERGED\n
+\nROMFÁJLOK: %d\n%d + %d EGYESÍTETT ROMOK\n\nFÁJLMÉRET: %d MB (TÖMÖRÍTETLEN)\n%d MB + %d MB EGYESÍTVE\n
+
+# datafile.c: 1513
+\nSOURCE: %s\n
+\nFORRÁS: %s\n
+
+# datafile.c: 2911
+\nWARNING: FPS number too high!\n
+\nFIGYELMEZTETÉS: FPS értéke túl magas!\n
+
+# datafile.c: 2610
+\n\n %4d GAMES (ALL)\n %4d ORIGINALS  + %4d CLNS\n %4d NEOGEO     + %4d\n
+\n\n %4d JÁTÉKOK (MIND)\n %4d EREDETI  + %4d KLÓNOK\n %4d NEOGEO     + %4d\n
+
+# datafile.c: 2780
+\n\nCABINET INPUT CONTROL: (ALL)\n\n
+\n\nCABINET BEMENETI ELLENÕRZÉS: (MIND)\n\n
+
+# datafile.c: 1470, 1488
+\n\nCLONES:\n
+\n\nKLÓNOK:\n
+
+# datafile.c: 2720
+\n\nCPU HARDWARE (ORIGINAL GAMES)\n\n
+\n\nCPU HARDVER (EREDETI JÁTÉKOK)\n\n
+
+# datafile.c: 2887
+\n\nFRAMES PER SECOND (%d): (ALL)\n\n
+\n\nMÁSODPERCENKÉNTI KÉPKOCKA (%d): (MIND)\n\n
+
+# datafile.c: 2624
+\n\nGAME INFO FLAGS   : ORIG CLNS\n\n
+\n\nJÁTÉK INFÓ JELZÉSEK   : EREDETI KLÓNOK\n\n
+
+# datafile.c: 3010
+\n\nMAME VERSIONS (%3d)\n\n
+\n\nMAME VERZIÓK (%3d)\n\n
+
+# datafile.c: 2971
+\n\nRESOLUTION & PALETTESIZE: (ALL)\n    (%d)          (%d)\n\n
+\n\nFELBONTÁS & PALETTAMÉRET: (MIND)\n    (%d)          (%d)\n\n
+
+# datafile.c: 2692
+\n\nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d KB (UNCOMPRESSED)\n%d KB + %d KB MERGED\n
+\n\nROMFÁJLOK: %d\n%d + %d EGYESÍTETT ROMOK\n\nFÁJLMÉRET: %d KB (TÖMÖRÍTETLEN)\n%d KB + %d KB EGYESÍTETT\n
+
+# datafile.c: 2751
+\n\nSOUND SYSTEM (ORIGINAL GAMES)\n\n
+\n\nHANG RENDSZER (EREDETI JÁTÉKOK)\n\n
+
+# datafile.c: 2698
+\n\nTYPICAL ROMSET SIZE (ALL)\n
+\n\nTIPIKUS ROMSET MÉRET (MIND)\n
+
+# datafile.c: 3000
+\n\nVERSION - DRIVERS - SUPPORT:\n\n
+\n\nVERZIÓ - MEGHAJTÓ - TÁMOGATÁS:\n\n
+
+# datafile.c: 2859
+\n\nVIDEO ASPECT RATIO X:Y (ALL)\n\n
+\n\nVIDEO FELBONTÁS X:Y (MIND)\n\n
+
+# datafile.c: 2873
+\n\nVIDEO NEEDS... : ORIG   CLNS\n\n
+\n\nVIDEO IGÉNYEL... : EREDETI   KLÓNOK\n\n
+
+# datafile.c: 2710
+\n\nYEAR    NEW GAMES\n\n
+\n\nÉV    ÚJ JÁTÉKOK\n\n
+
+# datafile.c: 2654
+\n\nYEAR: ORIG  CLNS NEOGEO  ALL\n\n
+\n\nÉV: EREDETI  KLÓN NEOGEO  ALL\n\n
+
+# cheat.c: 6816
+\tPlease Go To\n\thttp://cheat.retrogames.com/faq.htm\n\tFor Documentation\n
+\tKérem látogasson el a\n\thttp://cheat.retrogames.com/faq.htm\n\tDokumentációkért\n
+
+# cheat.c: 2481
+cheat database not found
+Csalások adatbázisa nem található
+
+# cheat.c: 6991
+cheat database reloaded
+Csalások adatbázisa újratöltve
+
+# info.c: 192 
+dial
+dial
+
+# debug/debugcmd.c: 811, 995 drivers/neogeo.c: 456
+disabled
+kikapcsolva
+
+# debug/debugcmd.c: 811, 995 drivers/neogeo.c: 456
+enabled
+bekapcsolva
+
+# ui_font.c: 90
+font\\fontname.fnt
+betû\\betûnév.fnt
+
+# memory.c: 2839 
+invalid
+érvénytelen
+
+# info.c: 204 
+lightgun
+fénypisztoly
+
+# input.c: 967, 1261
+n/a
+n/a
+
+# cheat.c: 5606
+no results for this region
+nincs eredmény ehhez a régióhoz
+
+# cheat.c: 5608
+no results found
+nem található eredmény
+
+# input.c: 962
+not
+nem
+
+# cheat.c: 2418
+null name
+semmi név
+
+# input.c: 963
+or
+vagy
+
+# info.c: 189 
+paddle
+paddle
+
+# drivers/neogeo.c: 456
+raster effects %s
+raszter effekt %s
+
+# cheat.c: 5778, 6646
+region invalidated - %d results remain
+régió érvénytelenítve - %d eredmények megmaradtak
+
+# cheat.c: 4877, 5273
+saved all memory regions
+minden memória régió elmentve
+
+# drivers/harddriv.c: 3463 drivers/rainbow.c: 798 drivers/segas16b.c: 938, 1011 drivers/taito_f2.c: 6678 sndhrdw/m72.c: 111, 112 sound/iremga20.c: 251, 252 ui_text.c: 44 xml2info.c: 597, 598, 613
+sound
+hang
+
+# ui_text.c: 45
+stereo
+sztereó
+
+# cheat.c: 2474
+there are no cheats for this game
+ehhez a játékhoz nincsenek csalások
+
+# cheat.c: 1938
+there are no old values
+nincsenek régi értékek
+
+# info.c: 196 
+trackball
+hanyattegér
+
+# cheat.c: 2486
+unzip it and place it in the MAME directory
+csomagolja ki és helyezze a MAME mappába
+
+# cheat.c: 1934
+values restored
+eredmények visszaállítva
+

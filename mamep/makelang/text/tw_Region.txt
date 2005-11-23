@@ -1,0 +1,72 @@
+# 1670
+France
+法國版
+
+# 1681
+Germany
+德國版
+
+# 1656
+Hispanic
+西班牙版
+
+# 1673
+Italy
+意大利版
+
+# 67
+Japan
+日版
+
+# 1316
+Korea
+韓國版
+
+# Title
+Region
+區域
+
+# 1676
+Taiwan
+台灣版
+
+# 1338
+USA
+美版
+
+# 1043
+World
+世界版
+
+# 903
+* Bootleg
+
+
+# 1330
+* Hacks
+
+
+# 7
+* Prototype
+
+
+# 1282
+Asia
+
+
+# 1686
+Brazil
+
+
+# 1649
+China
+
+
+# 1653
+Denmark
+
+
+# 1259
+Europe
+
+

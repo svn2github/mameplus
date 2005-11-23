@@ -1,0 +1,10 @@
+call rebuild-br.bat
+call rebuild-cn.bat
+call rebuild-es.bat
+call rebuild-de.bat
+call rebuild-fr.bat
+call rebuild-it.bat
+call rebuild-jp.bat
+call rebuild-kr.bat
+call rebuild-tw.bat
+call rebuild-pl.bat

@@ -1,0 +1,996 @@
+# 25
+Aero Fighers
+에어로 파이터즈
+
+# 54
+Arkanoid
+알카노이드
+
+# 81
+Art of Fighting
+아트 오브 파이팅 / 용호의 권
+
+# 87
+Asteroids
+아스테로이드
+
+# 126
+Baraduke
+바라듀크
+
+# 146
+Battle Garegga
+배틀 가레가
+
+# 163
+Birdie King
+버디 킹
+
+# 176
+Bomb Jack
+봄 잭
+
+# 202
+Breakers
+브레이커즈
+
+# 206
+Bubble Bobble
+버블 보블
+
+# 221
+Burger Time
+버거 타임
+
+# 232
+Burnin' Rubber
+버닌 러버
+
+# 244
+Castlevania
+캐슬배니아 / 악마성 드라큐라
+
+# 252
+Centipede
+센터피드
+
+# 262
+Chase HQ
+체이스 HQ
+
+# 270
+Columns
+컬럼스
+
+# 276
+Commando
+코만도
+
+# 299
+Cosmo Gang
+코스모 갱
+
+# 309
+Crazy Climber
+크레이지 클라임버
+
+# 320
+Crime Fighters
+크라임 파이터즈
+
+# 343
+CyberBall
+사이버볼
+
+# 349
+Daitoride
+대 토리대
+
+# 359
+Darius
+다리우스
+
+# 372
+Dark Seal
+다크 실
+
+# 403
+Defender
+디펜더
+
+# 412
+Dig Dug
+디그 더그
+
+# 426
+Dodge Ball
+돗지 볼
+
+# 446
+Donpachi
+돈파치
+
+# 453
+Double Dragon
+더블 드래곤
+
+# 464
+Double Dribble
+더블 드리블
+
+# 472
+Dragon Spirit
+드래곤 스피리트
+
+# 492
+Dungeons & Dragons
+던전스 & 드래곤스
+
+# 530
+Dynamite duke
+다이나마이트 듀크
+
+# 539
+Elevator Action
+엘리베이터 액션
+
+# 546
+Empire city
+엠파이어 시티
+
+# 553
+Excite Bike
+익사이트 바이크
+
+# 562
+Fantasia
+판타지아
+
+# 568
+Fatal Fury
+페탈 퓨리 / 아랑전설
+
+# 616
+Galaxian
+갤럭시안
+
+# 647
+Gals Panic
+갈스 패닉
+
+# 654
+Gauntlet
+건틀렛
+
+# 698
+Golden Tee Golf
+골든 티 골프
+
+# 717
+Gun Frontier
+건 프론티어
+
+# 723
+Gunbird
+건버드
+
+# 729
+Gunforce
+건포스
+
+# 742
+Hard Drivin'
+하드 드라이븐
+
+# 751
+Hat Trick Hero
+해트 트릭 히어로
+
+# 791
+Ikari Warriors
+이카리 워리어즈
+
+# 809
+Killer Instinct
+킬러 인스팅트
+
+# 839
+Lode Runner
+로드 런너
+
+# 848
+Logic Pro
+로직 프로
+
+# 857
+Magical Drop
+매지컬 드롭
+
+# 896
+Mahou Daisakusen
+마법 대작전
+
+# 909
+Mappy
+매피
+
+# 914
+Mario Bros
+마리오 브로스
+
+# 945
+Mille Miglia
+그레이트 1000 마일 랠리
+
+# 951
+Missile Command
+미사일 커맨드
+
+# 975
+Mortal Kombat
+모탈 컴뱃
+
+# 996
+Mr Do!
+미스터 도 !
+
+# 1066
+Out Run
+아웃 런
+
+# 1114
+Pang
+팡
+
+# 1125
+Parodius
+파로디우스
+
+# 1170
+Prehistoric Isle
+원시도
+
+# 1180
+Punch Out
+펀치 아웃
+
+# 1186
+Puyo Puyo
+뿌요 뿌요
+
+# 1192
+Puzzle & Action
+퍼즐 & 액션
+
+# 1200
+Puzzle Bobble
+퍼즐 버블
+
+# 1216
+Qbert
+큐버트
+
+# 1223
+Qix
+퀵스
+
+# 1235
+Quarterback
+쿼터백
+
+# 1245
+Quartet
+퀄텟
+
+# 1263
+R-Type
+R-타입
+
+# 1272
+Rad Mobile
+래드 모빌
+
+# 1276
+Rally X
+랠리 X
+
+# 1282
+Rastan
+라스탄
+
+# 1301
+Robocop
+로보캅
+
+# 1323
+Rolling Thunder
+롤링 썬더
+
+# 1334
+Rygar
+라이거 / 아르고스의 전사
+
+# 1352
+Samurai Shodown
+사무라이 쇼다운
+
+# 1367
+Savage Reign
+세비지 레인
+
+# Title
+Series
+시리즈
+
+# 1406
+Shinobi
+시노비
+
+# 1428
+Slammaster
+슬램 마스터
+
+# 1438
+Snow Bros
+스노우 브로스
+
+# 1453
+Space Invaders
+스페이스 인베이더
+
+# 1520
+Star Force
+스타 포스
+
+# 1537
+Street Fighter
+스트리트 파이터
+
+# 1607
+Strikers
+스트라이커즈
+
+# 1632
+Super Sidekicks
+수퍼 사이드킥
+
+# 1639
+Super Volleyball
+수퍼 발리볼
+
+# 1668
+Tecmo Bowl
+테크모 볼
+
+# 1745
+Thunder Cross
+썬더 크로스
+
+# 1751
+Thunder Dragon
+썬더 드래곤
+
+# 1757
+Time Pilot
+타임 파일롯
+
+# 1790
+Trojan
+트로잔
+
+# 1800
+Twin Bee
+트윈비
+
+# 1830
+Vindicators
+빈더케이터
+
+# 1835
+Violence Fight
+바이올런스 파이트
+
+# 1883
+WWF
+WWF 레슬링
+
+# 1839
+Wonder Boy
+원더 보이
+
+# 1859
+World Heroes
+월드 히어로즈
+
+# 1866
+World Series - the season
+월드 시리즈 - 더 시즌
+
+# 1872
+World Stadium
+월드 스타디움
+
+# 1889
+Xevious
+제비우스
+
+# 1901
+Zaxxon
+잭슨
+
+# 1719
+the Goonies
+구니스
+
+# 1723
+the King of Fighters
+더 킹 오브 파이터즈
+
+# 7
+19??
+
+
+# 109
+AV2Mahjong
+
+
+# 33
+After Burner
+
+
+# 37
+Alpha Mission
+
+
+# 41
+Altered Beast
+
+
+# 47
+Area88
+
+
+# 72
+Armored Warriors
+
+
+# 98
+Astro Fighter
+
+
+# 104
+Athena
+
+
+# 113
+Bagman
+
+
+# 122
+Balloon Fight
+
+
+# 131
+Baseball
+
+
+# 137
+Baseball Stars
+
+
+# 142
+Battle Flip Shot
+
+
+# 153
+Battle Zone
+
+
+# 159
+Bijokko Mahjong
+
+
+# 168
+Bishoujo Janshi Pretty Sailor
+
+
+# 172
+Blockade
+
+
+# 182
+Bomber Man
+
+
+# 189
+Bosconian
+
+
+# 197
+Boulder Dash
+
+
+# 240
+Capcom World
+
+
+# 287
+Contra
+
+
+# 305
+Crayon Shinchan
+
+
+# 316
+Crazy Cross
+
+
+# 331
+Cruis'n USA
+
+
+# 339
+Crystal Gal
+
+
+# 355
+Danger Zone
+
+
+# 381
+DarkStalkers
+
+
+# 420
+Disco No 1
+
+
+# 431
+Donkey Kong
+
+
+# 468
+Dr. Mario
+
+
+# 478
+Dragonball Z
+
+
+# 482
+Drift Out
+
+
+# 488
+Duck Hunt
+
+
+# 507
+Dungeons & Dragons (Unoff)
+
+
+# 534
+E-Swat
+
+
+# 558
+F1 Grand Prix
+
+
+# 581
+Fighters History Dynamite
+
+
+# 585
+Final Lap
+
+
+# 597
+Flying Shark
+
+
+# 607
+Frogger (unoff)
+
+
+# 662
+Gee Bee
+
+
+# 668
+Ghosts'n Goblins
+
+
+# 680
+Gigas
+
+
+# 685
+Golden Axe
+
+
+# 704
+Green Beret
+
+
+# 710
+Gun Dealer
+
+
+# 736
+Hang-On
+
+
+# 763
+High Impact Football
+
+
+# 768
+Hogan's Alley
+
+
+# 772
+Hot Pinball
+
+
+# 776
+House Mannequin
+
+
+# 780
+Ice Climber
+
+
+# 785
+Idol Mahjong
+
+
+# 799
+Jan Jan Paradise
+
+
+# 803
+Joust
+
+
+# 813
+King of the Monsters
+
+
+# 818
+Kosodate Quiz My Angel
+
+
+# 822
+Kung-Fu Master
+
+
+# 830
+Last Blade
+
+
+# 835
+Lock'n'Chase
+
+
+# 853
+Macross
+
+
+# 861
+Mahjong Doukyuusei
+
+
+# 865
+Mahjong Gakuen
+
+
+# 870
+Mahjong Gakuensai
+
+
+# 874
+Mahjong Gal
+
+
+# 879
+Mahjong Hourouki
+
+
+# 884
+Mahjong Hyper Reaction
+
+
+# 888
+Mahjong Koi
+
+
+# 892
+Mahjong Triple Wars
+
+
+# 902
+Major Title
+
+
+# 926
+Medal Mahjong
+
+
+# 930
+Megaman
+
+
+# 938
+Metal Slug
+
+
+# 957
+Moon Cresta
+
+
+# 1015
+NBA Jam
+
+
+# 1025
+Nemesis
+
+
+# 1040
+Ninja Kid
+
+
+# 1048
+Numan Athletics
+
+
+# 1053
+Ojanko Mahjong
+
+
+# 1058
+Operation Wolf
+
+
+# 1072
+P-47
+
+
+# 1077
+Pac-Man
+
+
+# 1132
+Phoenix
+
+
+# 1146
+Pinball Action
+
+
+# 1152
+Play Girls
+
+
+# 1156
+Pole Position
+
+
+# 1166
+Power Instinct
+
+
+# 1176
+Pulstar (Unoff)
+
+
+# 1251
+Quiz Daisousa Sen
+
+
+# 1255
+Quiz Kokology
+
+
+# 1259
+Quiz Tonosama no Yabou
+
+
+# 1292
+Real Mahjong Haihai
+
+
+# 1297
+Road Fighter
+
+
+# 1313
+Robotron
+
+
+# 1329
+Run and Gun
+
+
+# 1340
+Salamander
+
+
+# 1347
+Samurai Aces
+
+
+# 1358
+Sangokushi (Unoff)
+
+
+# 1363
+Sangokushi (Unofficial)
+
+
+# 1371
+Scramble
+
+
+# 1380
+Sea Wolf
+
+
+# 1384
+Sengoku Denshou
+
+
+# 1390
+Shadow Warriors
+
+
+# 1399
+Shangai
+
+
+# 1415
+Shock Troopers
+
+
+# 1420
+Sky Kid
+
+
+# 1447
+Sonic
+
+
+# 1489
+Space Stranger
+
+
+# 1493
+Special Forces
+
+
+# 1497
+Spelunker
+
+
+# 1502
+Sprint
+
+
+# 1511
+Spy Hunter
+
+
+# 1516
+Stakes Winner
+
+
+# 1526
+Star Wars
+
+
+# 1532
+Steel gunner
+
+
+# 1615
+Stroke and Match Golf
+
+
+# 1621
+Super Off-Road
+
+
+# 1625
+Super Real Mahjong
+
+
+# 1648
+Suzuka 8 Hours
+
+
+# 1652
+Taisen Hot Gimmick
+
+
+# 1657
+Taisen Quiz Hyhoo
+
+
+# 1661
+Targ
+
+
+# 1673
+Tecmo World Cup
+
+
+# 1679
+Teenage Mutant Ninja Turtles
+
+
+# 1693
+Tenchi Wo Kurau
+
+
+# 1701
+Tennis
+
+
+# 1705
+Tetris Plus
+
+
+# 1741
+Thunder & Lightning
+
+
+# 1764
+Toffy
+
+
+# 1768
+Tokoro San no Mahmahjan
+
+
+# 1772
+Tornado Baseball
+
+
+# 1778
+Track & Field
+
+
+# 1796
+Truxton
+
+
+# 1806
+Twin Cobra
+
+
+# 1812
+US Games
+
+
+# 1820
+Vanguard
+
+
+# 1825
+Vasara
+
+
+# 1855
+World Court
+
+
+# 1907
+Zero Point
+
+
+# 1711
+the Big Pro Wrestling!
+
+

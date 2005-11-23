@@ -1,0 +1,1900 @@
+# Conquer
+<unknown>
+<inconnu>
+
+# Sea Bass Fishing (JUET 971110 V0.001)
+A wave inc.
+
+
+# Blomby Car
+ABM & Gecas
+
+
+# Nozokimeguri Mahjong Peep Show (Japan 890404)
+AC
+
+
+# Starspinner (Dutch/Nederlands)
+ACE
+
+
+# Gals Hustler
+ACE International
+
+
+# World Heroes 2
+ADK
+
+
+# Omotesandou (Japan 890215)
+ANIME TEC
+
+
+# Mr. Kougar
+ATW
+
+
+# New Sinbad 7
+ATW USA, Inc.
+
+
+# AV2Mahjong No.1 Bay Bridge no Seijo (Japan)
+AV JAPAN
+
+
+# Baluba-louk no Densetsu
+Able Corp, Ltd.
+
+
+# David Crane's Amazing Tennis (Nintendo Super System)
+Absolute Entertainment Inc.
+
+
+# Vs. Tetris
+Academysoft-Elory
+
+
+# NBA Jam Extreme
+Acclaim
+
+
+# Imago
+Acom
+
+
+# Stagger I (Japan)
+Afega
+
+
+# Jyanshin Densetsu - Quest of Jongmaster
+Aicom
+
+
+# Real Mahjong Haihai (Japan)
+Alba
+
+
+# Delta Race
+Allied Leisure
+
+
+# Rezon
+Allumer
+
+
+# Miss Bubble 2
+Alpha Co
+
+
+# Shougi
+Alpha Denshi
+
+
+# Magician Lord (set 1)
+Alpha Denshi Co.
+
+
+# Virtua Bowling
+Alta
+
+
+# Naughty Mouse (set 1)
+Amenip
+
+
+# Naughty Mouse (set 2)
+Amenip Nova Games Ltd.
+
+
+# AmeriDarts (set 1)
+Ameri
+
+
+# Krazy Bowl
+American Sammy
+
+
+# Phoenix (Amstar)
+Amstar
+
+
+# Minesweeper
+Amutech
+
+
+# Otona no Mahjong (Japan 880628)
+Apple
+
+
+# SportTime Table Hockey (Arcadia, V 2.1)
+Arcadia Systems
+
+
+# Street Fighter EX (USA 961219)
+Arika
+
+
+# War of the Bugs or Monsterous Manouvers in a Mushroom Maze
+Armenia
+
+
+# Ultimate Tennis
+Art & Magic
+
+
+# Mars
+Artic
+
+
+# Dingo (encrypted)
+Ashby Computers and Graphics LTD.
+
+
+# Son of Phoenix
+Associated Overseas MFR, Inc
+
+
+# Pong
+Atari
+
+
+# The Empire Strikes Back
+Atari Games
+
+
+# Pro Mahjong Kiwame S (J 951020 V1.208)
+Athena
+
+
+# Power Instinct 3 - Groove On Fight (J 970416 V1.001)
+Atlus
+
+
+# BMC Bowling
+BMC
+
+
+# Mahjong Nanpa Story (Japan 890713)
+BROOKS
+
+
+# Jump Shot
+Bally Midway
+
+
+# Ultraman (Japan)
+Bandai
+
+
+# Pretty Soldier Sailor Moon (95/03/22B)
+Banpresto
+
+
+# One + Two
+Barko
+
+
+# Many Block
+Bee-Oh
+
+
+# Neo No Panepon (beta)
+Blastar
+
+
+# The Crystal of Kings
+Brezzasoft
+
+
+# Herbie at the Olympics (DK conversion)
+CVS
+
+
+# Truco Clemente
+Caloi Miky SRL
+
+
+# 1942 (PlayChoice-10)
+Capcom
+
+
+# Progear (US 010117)
+Capcom, supported by Cave
+
+
+# Giga Wing (US 990222)
+Capcom, supported by Takumi
+
+
+# 906III Video Poker
+Casino Electronics Inc.
+
+
+# Cool Pool
+Catalina
+
+
+# Power Instinct 2 (USA)
+Cave
+
+
+# Night Love (Japan 860705)
+Central Denshi
+
+
+# Eagle (set 1)
+Centuri
+
+
+# Hunchback (Galaxian hardware)
+Century Electronics
+
+
+# Slither (set 1)
+Century II
+
+
+# Paint & Puzzle
+Century?
+
+
+# Funny Mouse
+Chuo Co. Ltd
+
+
+# Cerberus
+Cinematronics
+
+
+# Gulf War II
+Comad
+
+
+# Hot Pinball
+Comad & New Japan System
+
+
+# Puyo Puyo Sun (J 961115 V0.001)
+Compile
+
+
+# Battle of Atlantis (set 1)
+Comsoft
+
+
+# SWAT
+Coreland
+
+
+# Cherry Master (v8.01)
+Corsica
+
+
+# PK Scramble
+Cosmo Electronics Corporation
+
+
+# Dorachan
+Craul Denshi
+
+
+# Run Deep
+Cream
+
+
+# Hexa
+D. R. Korea
+
+
+# Pipeline
+Daehyun Electronics
+
+
+# Orange Club - Maruhi Kagai Jugyou (Japan 880213)
+Daiichi Denshi
+
+
+# Find Love (J 971212 V1.000)
+Daiki
+
+
+# Vamp 1/2 (Korea)
+Danbi & F2 System
+
+
+# Super Casino
+Data Amusement
+
+
+# Suikoenbu (J 950314 V2.001)
+Data East
+
+
+# Alpha Fighter / Head On
+Data East Corporation
+
+
+# Tattoo Assassins (US Prototype)
+Data East Pinball
+
+
+# Zoar
+Data East USA
+
+
+# Logic Pro (Japan)
+Deniam
+
+
+# Heiankyo Alien
+Denki Onkyo
+
+
+# Little Casino
+Digital Controls Inc.
+
+
+# Idol no Himitsu [BET] (Japan 890304)
+Digital Soft
+
+
+# Eyes (Digitrex Techstar)
+Digitrex Techstar
+
+
+# Double Point
+Dong Bang Electron
+
+
+# Got-cha
+Dongsung
+
+
+# Gun Dealer (set 1)
+Dooyong
+
+
+# Scorpion (Moon Cresta hardware)
+Dorneer
+
+
+# The Masters of Kin
+Du Tech
+
+
+# Buccaneers (set 1)
+Duintronic
+
+
+# V-Liner (set 1)
+Dyna
+
+
+# Watashiha Suzumechan (Japan)
+Dyna Electronics
+
+
+# Mazinger Z
+Dynamic Pl. Toei Animation
+
+
+# Big Bucks
+Dynasoft Inc.
+
+
+# Hana Fubuki [BET] (Japan)
+Dynax
+
+
+# 9-Ball Shootout (set 1)
+E-Scape EnterMedia
+
+
+# Hot Shocker
+E.G. Felaco
+
+
+# Miyasu Nonki no Quiz 18-Kin
+EIM
+
+
+# Behind Enemy Lines
+EPL Productions
+
+
+# Jumping Pop
+ESD
+
+
+# Tugboat
+ETM
+
+
+# Dangerous Dungeons
+East Coast Coin Company
+
+
+# Gigandes
+East Technology
+
+
+# Hoccer (set 1)
+Eastern Micro Electronics, Inc.
+
+
+# The Alphax Z (Japan)
+Ed
+
+
+# Battle Bakraid (Japan) (Wed Apr 7 1999)
+Eighting
+
+
+# Space Force (set 2)
+Elcon
+
+
+# Jan Jan Paradise
+Electro Design
+
+
+# Diamond Derby (set 1)
+Electrocoin
+
+
+# Rabbit
+Electronic Arts
+
+
+# Twins
+Electronic Devices
+
+
+# Mug Smashers
+Electronic Devices Italy
+
+
+# Ping Pong Masters '93
+Electronic Devices S.R.L.
+
+
+# Jackpot Pool (Italy, bootleg)
+Electronic Projects
+
+
+# Twin Brats
+Elettronica Video-Games S.R.L.
+
+
+# Red Robin
+Elettronolo
+
+
+# Nightmare in the Dark
+Eleven
+
+
+# Trivia Master
+Enerdyne Technologies Inc.
+
+
+# American Speedway (set 1)
+Enerdyne Technologies, Inc.
+
+
+# Act Raiser (Nintendo Super System)
+Enix
+
+
+# Turbo Sub
+Entertainment Sciences
+
+
+# The King of Fighters 2001 (set 1)
+Eolith
+
+
+# Boardwalk Casino
+Epos Corporation
+
+
+# Mouja (Japan)
+Etona
+
+
+# Rage of the Dragons
+Evoga
+
+
+# Grand Cross
+Excellent System
+
+
+# Varia Metal
+Excellent Systems
+
+
+# Bandido
+Exidy
+
+
+# Cross Pang
+F2 System
+
+
+# Mahjong Gal 10-renpatsu (Japan)
+FUJIC
+
+
+# Mahjong Gakuen 2 Gakuen-chou no Fukushuu
+Face
+
+
+# Super Crown Golf
+Face?
+
+
+# Crazy Kong (set 1)
+Falcon
+
+
+# Space Thunderbird
+Fortrek
+
+
+# The Anteater (UK)
+Free Enterprise Games
+
+
+# Bonus Card? (Austria)
+Fun World
+
+
+# Go Go! Mile Smile
+Fuuki
+
+
+# Selection (Version 40.02TMB)
+G.E.I.
+
+
+# Dambusters (set 2)
+GAT
+
+
+# Piranha
+GL
+
+
+# Super Cross 2 (Japan set 1)
+GM Shoji
+
+
+# Abunai Houkago - Mou Matenai (Japan 890325)
+GREEN SOFT
+
+
+# Xor World (prototype)
+Gaelco
+
+
+# Table Tennis Championships / Peno Cup?
+Gamart?
+
+
+# Dark Tower
+Game Room
+
+
+# Got-Ya (12/24/1981, prototype?)
+Game-A-Tron
+
+
+# Space Laser
+GamePlan
+
+
+# Wheel Of Fortune
+GameTek
+
+
+# Super Trio
+Gameace
+
+
+# Puckman Pockimon
+Genie
+
+
+# Joinem
+Global Corporation
+
+
+# Reactor
+Gottlieb
+
+
+# Taxi Driver
+Graphic Techno
+
+
+# Trivia (UK Version 5.07)
+Grayhound Electronics
+
+
+# Moon Cresta (Gremlin)
+Gremlin
+
+
+# Trivia (Version 1.03a)
+Greyhound Electronics
+
+
+# Lotto Fun
+H.A.R. Management
+
+
+# Double Cheese
+HAR
+
+
+# Laser Base (set 1)
+HOEI
+
+
+# Ghost Hunter
+Hanaho Games
+
+
+# Super Triv
+Hara Industries
+
+
+# Fantasy '95
+Hi-max Technology Inc.
+
+
+# Mahjong Hourouki Part 1 - Seisyun Hen (Japan)
+Home Data
+
+
+# Schmeiser Robo (Japan)
+Hot B
+
+
+# Play Girls
+Hot-B.
+
+
+# Far East of Eden - Kabuki Klash / Tengai Makyou - Shin Den
+Hudson
+
+
+# Grand Striker
+Human
+
+
+# Blazing Tornado
+Human Amusement
+
+
+# Super Soccer (Nintendo Super System)
+Human Inc.
+
+
+# Kisekae Mahjong
+I'Max
+
+
+# Harem
+I.G.R.
+
+
+# 4 En Raya
+IDSA
+
+
+# Golden Star
+IGS
+
+
+# See See Find Out
+Icarus
+
+
+# Magic Card II (Bulgaria)
+Impera
+
+
+# Capcom Bowling (set 1)
+Incredible Technologies
+
+
+# Inter Game Poker?
+Inter Games
+
+
+# Pandora's Palace
+Interlogic
+
+
+# Born To Fight
+International Games
+
+
+# UniWar S
+Irem
+
+
+# Hammerin' Harry (US)
+Irem America
+
+
+# Tut's Tomb
+Island Design
+
+
+# Poker Night
+JMK
+
+
+# Check Man (Japan)
+Jaleco
+
+
+# Jatre Specter (set 1)
+Jatre
+
+
+# Final Tetris
+Jeil Computer System
+
+
+# Bongo
+Jetsoft
+
+
+# Defender (bootleg)
+Jeutel
+
+
+# Trivia Challenge
+Joyland
+
+
+# Kaitei Takara Sagashi (K'K-Tokki)
+K.K. Tokki
+
+
+# Diamond Run
+KH Video
+
+
+# Blocken (Japan)
+KID
+
+
+# Triple Punch
+KKI
+
+
+# Knock Out!!
+KKK
+
+
+# Fly-Boy
+Kaneko
+
+
+# Van-Van Car (Karateco)
+Karateco
+
+
+# Mahjong Circuit no Mehyou (Japan)
+Kawakusu
+
+
+# Sexual Trivia (Version 1.02SB set 1)
+Kinky Kit and Game Co.
+
+
+# Malzak
+Kitronix
+
+
+# Mr. Jong (Japan)
+Kiwako
+
+
+# Flower
+Komax
+
+
+# Scramble
+Konami
+
+
+# Make Trax (set 1)
+Kural
+
+
+# Crush Roller (Kural - bootleg?)
+Kural Electric
+
+
+# Crush Roller (Kural Esco - bootleg?)
+Kural Esco Electric
+
+
+# Crush Roller (Kural Samno)
+Kural Samno Electric
+
+
+# Crush Roller (Kural TWT)
+Kural TWT
+
+
+# '99: The Last War (Kyugo)
+Kyugo
+
+
+# Zig Zag (Galaxian hardware, set 1)
+LAX
+
+
+# Monza GP
+Leante Games
+
+
+# Space War (Leijac)
+Leijac
+
+
+# Super Baseball Double Play Home Run Derby
+Leland Corp.
+
+
+# Poker Ladies (Leprechaun ver. 510)
+Leprechaun
+
+
+# Star Wars Trilogy
+LucasArts
+
+
+# Mahjong Kaguyahime [BET] (Japan 880521)
+MIKI SYOUJI
+
+
+# Medal Mahjong Pachi-Slot Tengoku [BET] (Japan)
+MIKI SYOUJI/AV JAPAN
+
+
+# Wakakusamonogatari Mahjong Yonshimai (Japan)
+Maboroshi Ware
+
+
+# Mahjong Doukyuusei
+Make Software
+
+
+# Mahjong Gakuensai (Japan)
+MakeSoft
+
+
+# Hotdog Storm
+Marble
+
+
+# Desert Tank
+Martin Marietta
+
+
+# Dead Eye
+Meadows
+
+
+# Lazer Command
+Meadows Games, Inc.
+
+
+# Tokimeki Mahjong Paradise - Dear My Love
+Media
+
+
+# Rapid Hero (Japan?)
+Media Trading Corp
+
+
+# Metal Slug 4
+Mega
+
+
+# Pit Boss
+Merit
+
+
+# Pang Poms
+Metro
+
+
+# Wild Arrow
+Meyco Games
+
+
+# The Return of Lady Frog
+Microhard
+
+
+# Virtual Mahjong 2 - My Fair Lady (J 980608 V1.000)
+Micronet
+
+
+# F-15 Strike Eagle (rev. 2.1)
+Microprose
+
+
+# Toffy
+Midas
+
+
+# A. D. 2083
+Midcoin
+
+
+# Ms. Pac-Man
+Midway
+
+
+# CarnEvil
+Midway Games
+
+
+# Gumbo
+Min Corp.
+
+
+# Black Jack (Mirco)
+Mirco
+
+
+# Pang! 3 (Euro 950511)
+Mitchell
+
+
+# Mighty! Pang (Japan 001011)
+Mitchell, distributed by Capcom
+
+
+# Space Invaders (Model Racing)
+Model Racing
+
+
+# Lady Frog
+Mondial Games
+
+
+# Minnasanno Okagesamadesu
+Monolith Corp.
+
+
+# Tylz (prototype)
+Mylstar
+
+
+# Vantris (Vanguard hardware)
+N.Kehrer
+
+
+# Pirates
+NIX
+
+
+# Zed Blade / Operation Ragnarok
+NMK
+
+
+# Super-X (NTC)
+NTC
+
+
+# Quiz Channel Question (Ver 1.00) (Japan)
+Nakanihon
+
+
+# PuckMan (Japan set 1, Probably Bootleg)
+Namco
+
+
+# Vs. TKO Boxing
+Namco LTD.
+
+
+# Crowns Golf (set 1)
+Nasco Japan
+
+
+# Neo Turf Masters / Big Tournament Golf
+Nazca
+
+
+# Neo Pong (v1.1)
+Neodev
+
+
+# Moon Cresta (Nichibutsu)
+Nichibutsu
+
+
+# Moon Cresta (Nichibutsu, unencrypted)
+Nichibutsu USA
+
+
+# Mahjong Housoukyoku Honbanchuu (Japan)
+Nichibutsu?
+
+
+# Dragon Bowl
+Nics
+
+
+# Hot Blocks - Tetrix II
+Nics?
+
+
+# Pocket Gal Deluxe (Japan v3.00)
+Nihon System
+
+
+# Space Fever (set 1)
+Nintendo
+
+
+# Donkey Kong (US set 1)
+Nintendo of America
+
+
+# Ambush
+Nippon Amuse Co-Ltd
+
+
+# Gaia Crusaders
+Noise Factory
+
+
+# Tri-Pool (Casino Tech)
+Noma
+
+
+# Port Man
+Nova Games Ltd.
+
+
+# Zarya Vostoka
+Nova Games of Canada
+
+
+# Rallys (bootleg?)
+Novar
+
+
+# American Poker II (set 1)
+Novomatic
+
+
+# The Addams Family (Nintendo Super System)
+Ocean
+
+
+# Vs. Platoon
+Ocean Software Limited
+
+
+# Pass
+Oksan
+
+
+# Nibbler (Olympia)
+Olympia
+
+
+# Lup Lup Puzzle / Zhuan Zhuan Puzzle (version 3.0 / 990128)
+Omega System
+
+
+# Strafe Bomb
+Omni
+
+
+# Space Guerilla
+Omori
+
+
+# Battle Cross
+Omori Electric
+
+
+# Sky Base
+Omori Electric Co., Ltd.
+
+
+# Marine Boy
+Orca
+
+
+# 1945k III
+Oriental
+
+
+# Defence Command
+Outer Limits
+
+
+# Bowl-O-Rama
+P&P Marketing
+
+
+# Shark Attack
+Pacific Novelty
+
+
+# Agress
+Palco
+
+
+# Kanatsuen no Onna [BET] (Japan 880905)
+Panac
+
+
+# Hot Bubble
+Pandora
+
+
+# Metamoqester
+Pandorabox
+
+
+# Fighting Basketball
+Paradise Co. Ltd.
+
+
+# Zero Time
+Petaco S.A.
+
+
+# Turtle Ship (Japan)
+Philko
+
+
+# Super Slam (set 1)
+Playmark
+
+
+# Truco-Tron
+Playtronic SRL
+
+
+# News
+Poby
+
+
+# Ozon I
+Proma
+
+
+# Perestroika Girls
+Promat
+
+
+# Zero Gunner (Model 2A)
+Psikyo
+
+
+# Shadow of the Beast (Neo Demo)
+Psygnosis
+
+
+# Heaven's Gate
+RACDYM
+
+
+# Kyukyoku no Hito [BET] (Japan 880824)
+ROLLER TRON
+
+
+# Azurian Attack
+Rait Electronics Ltd
+
+
+# Sorcer Striker (World)
+Raizing
+
+
+# Dimahoo (US 000121)
+Raizing, distributed by Capcom
+
+
+# M79 Ambush
+RamTek
+
+
+# R.C. Pro-Am (PlayChoice-10)
+Rare
+
+
+# Vs. Slalom
+Rare LTD.
+
+
+# Tickee Tickats
+Raster Elite
+
+
+# Astro Fire
+Rene Pierre
+
+
+# Nibbler (set 1)
+Rock-Ola
+
+
+# Jump Bug
+Rock-ola
+
+
+# Romar Triv
+Romar
+
+
+# Attack Ufo
+Ryoto Electric Co.
+
+
+# Safari Rally (Japan)
+SNK
+
+
+# Prehistoric Isle in 1930 (US)
+SNK of America
+
+
+# Bishoujo Janshi Pretty Sailor 18-kin (Japan)
+SPHINX
+
+
+# Elan Doree - Legend of Dragon (JUET 980922 V1.006)
+Sai-Mate
+
+
+# Viewpoint
+Sammy
+
+
+# Sokonuke Taisen Game (Japan)
+Sammy Industries
+
+
+# Extreme Downhill (v1.5)
+Sammy Industries Japan
+
+
+# Dream Shopper
+Sanritsu
+
+
+# Quiz King of Fighters
+Saurus
+
+
+# NCAA Basketball (Nintendo Super System)
+Sculptured Software Inc.
+
+
+# Eight Ball Action (Pac-Man conversion)
+Seatongrove Ltd
+
+
+# Monaco GP
+Sega
+
+
+# Panic Road
+Seibu
+
+
+# Stinger
+Seibu Denshi
+
+
+# Shot Rider
+Seibu Kaihatsu
+
+
+# Kung-Fu Taikun
+Seibu Kaihatsu Inc.
+
+
+# Hyper Pacman
+SemiCom
+
+
+# Cool Mini
+Semicom
+
+
+# Special Forces
+Senko Industries
+
+
+# Sente Diagnostic Cartridge
+Sente
+
+
+# Vastar (set 1)
+Sesame Japan
+
+
+# Championship Bowling
+Seta
+
+
+# Speed Attack!
+Seta Kikaku Corp.
+
+
+# Hex Pool
+Shinkai
+
+
+# Driving Force (Pac-Man conversion)
+Shinkai Inc.
+
+
+# Streaking
+Shoei
+
+
+# Condor
+Sidam
+
+
+# Lucky Today
+Sigma
+
+
+# Ponpoko
+Sigma Enterprises Inc.
+
+
+# Orbitron
+Signatron USA
+
+
+# Erotictac/Tactic
+Sisteme
+
+
+# Cannon Ball (Crazy Climber hardware)
+Soft
+
+
+# Jolly Poker (Croatia)
+Soft Design
+
+
+# Mosaic
+Space
+
+
+# Evil Stone
+Spacy Industrial, Ltd.
+
+
+# Rad Racer (PlayChoice-10)
+Square
+
+
+# Rack + Roll
+Status
+
+
+# Hangman
+Status Games
+
+
+# Armored Car (set 1)
+Stern
+
+
+# Pisces
+Subelectro
+
+
+# Penguin Brothers (Japan)
+Subsino
+
+
+# RyuKyu (Japan, FD1094 317-5023)
+Success
+
+
+# Mission Craft (version 2.4)
+Sun
+
+
+# Jockey Grand Prix
+Sun Amusement
+
+
+# Speak & Rescue
+Sun Electronics
+
+
+# Goindol (World)
+Sun a Electronics
+
+
+# Rough Ranger (v2.0)
+SunA
+
+
+# Vs. Freedom Force
+Sunsoft
+
+
+# Othello Derby (Japan)
+Sunwise
+
+
+# Idol-Mahjong Housoukyoku (Japan)
+System Service
+
+
+# Pairs (System Ten) (Japan 890826)
+System Ten
+
+
+# Pebble Beach - The Great Shot (JUE 950913 V0.990)
+T&E Soft
+
+
+# The Hand
+T.I.C.
+
+
+# Mahjong Gal no Kokuhaku (Japan)
+T.R.TEC
+
+
+# Jolly Card (Austria)
+TAB-Austria
+
+
+# Speed Spin
+TCH
+
+
+# Black Hole
+TDS
+
+
+# Cosmo
+TDS & Mints
+
+
+# Cannonball set 2
+TV Game Gruenberg
+
+
+# Ameisenbaer (German)
+TV-Tuning 2000
+
+
+# Cabal (US set 1)
+Tad
+
+
+# Rock Climber
+Taito
+
+
+# Tiger Heli (US)
+Taito America Corp.
+
+
+# Qix (set 1)
+Taito America Corporation
+
+
+# Tiger Heli (Japan set 1)
+Taito Corp.
+
+
+# Space Seeker
+Taito Corporation
+
+
+# Darius (World)
+Taito Corporation Japan
+
+
+# Rambo III (Europe set 1)
+Taito Europe Corporation
+
+
+# Jungle Hunt (Brazil)
+Taito do Brasil
+
+
+# Galaxy Wars (Taito?)
+Taito?
+
+
+# Dynamic Ski
+Taiyo
+
+
+# Battle Arena Toshinden 2 (USA 951124)
+Takara
+
+
+# Koro Koro Quest (Japan)
+Takumi
+
+
+# Sichuan II (hack?) (set 1)
+Tamtex
+
+
+# Lock-On
+Tatsumi
+
+
+# Hole Land
+Tecfri
+
+
+# Double Dragon (PlayChoice-10)
+Technos
+
+
+# Bogey Manor
+Technos Japan
+
+
+# Hyper Duel (Japan set 1)
+Technosoft
+
+
+# Eyes (Techstar)
+Techstar
+
+
+# Vs. Mighty Bomb Jack (Japan)
+Tecmo
+
+
+# Thunder Force II MD (Mega-Tech)
+Tecno Soft
+
+
+# Swimmer (set 1)
+Tehkan
+
+
+# Beam Invader
+Tekunon Kougyou
+
+
+# Mr. TNT
+Telko
+
+
+# Galaxian Test ROM
+Test ROM
+
+
+# The Couples (Set 1)
+The Couples
+
+
+# Lethal Justice
+The Game Room
+
+
+# Area 51 (Time Warner License)
+Time Warner
+
+
+# Performan (Japan)
+Toaplan
+
+
+# Masked Riders Club Battle Race
+Toei
+
+
+# Leprechaun
+Tong Electronic
+
+
+# Golden Fire II
+Topis Corp
+
+
+# Radiant Silvergun (JUET 980523 V1.000)
+Treasure
+
+
+# MTV Rock-N-Roll Trivia (Part 2)
+Triumph Software Inc.
+
+
+# Ultraman Club - Tatakae! Ultraman Kyoudai!!
+Tsuburaya Prod.
+
+
+# Bubble 2000
+Tuning
+
+
+# Super Duper Casino (California V3.2)
+U.S. Games
+
+
+# Mouser
+UPL
+
+
+# Fancy World - Earth of Crisis
+Unico
+
+
+# Cosmic Guerilla
+Universal
+
+
+# Mighty Monkey
+Universal Video Games
+
+
+# Capitol
+Universal Video Spiel
+
+
+# Taiwan Chess Legend
+Uniwang
+
+
+# Digger Man
+Unknown
+
+
+# Rabio Lepus (Japan)
+V-System Co.
+
+
+# Poly-Play
+VEB Polytechnik Karl-Marx-Stadt
+
+
+# Meteorites
+VGG
+
+
+# Millpac
+Valadon Automation
+
+
+# Barrier
+Vectorbeam
+
+
+# Pinball Champ '95 (bootleg?)
+Veltmeijer Automaten
+
+
+# Space Force
+Venture Line
+
+
+# Fight Fever (set 1)
+Viccom
+
+
+# Gridlee
+Videa
+
+
+# Space Attack
+Video Games GMBH
+
+
+# Super Tank
+Video Games GmbH
+
+
+# Sonic Wings Limited (JAPAN)
+Video System
+
+
+# Power Spikes II
+Video System Co.
+
+
+# Griffon
+Videotron
+
+
+# Galmedes (Japan)
+Visco
+
+
+# Devil Fish (Galaxian hardware, bootleg?)
+Vision
+
+
+# Ambush (Volt Elec co-ltd)
+Volt Elec co-ltd
+
+
+# Talbot
+Volt Electronics
+
+
+# Ashita no Joe (Japan)
+WAVE
+
+
+# Shienryu (JUET 961226 V1.000)
+Warashi
+
+
+# Sukeban Jansi Ryuko (set 1, System 16A, FD1089B 317-5021)
+White Board
+
+
+# Hit the Ice (US)
+Williams
+
+
+# Jitsuroku Maru-chi Mahjong (Japan)
+Windom
+
+
+# Yosaku To Donbei (set 1)
+Wing
+
+
+# Magical Cat Adventure
+Wintechno
+
+
+# King of Boxer (English)
+Woodplace
+
+
+# Clash-Road
+Woodplace Inc.
+
+
+# Vegas Roulette
+World Game
+
+
+# Kyros
+World Games Inc
+
+
+# Swinging Singles
+Yachiyo
+
+
+# Space Stranger
+Yachiyo Electronics, Ltd.
+
+
+# War of Aero - Project MEIOU
+Yang Cheng
+
+
+# Moeyo Gonta!! (Japan)
+Yanyaka
+
+
+# Mahjong Yoshimoto Gekijou (Japan)
+Yoshimoto Kougyou
+
+
+# Mahjong Uranai Densetsu (Japan)
+Yubis
+
+
+# Mahjong Janjan Baribari (Japan)
+Yubis/AV JAPAN
+
+
+# Mahjong Gakuen
+Yuga
+
+
+# Blazing Star
+Yumekobo
+
+
+# Paradise
+Yun Sung
+
+
+# Scorpion (set 1)
+Zaccaria
+
+
+# Quasar
+Zelco
+
+
+# Space Attack II
+Zenitone-Microsec Ltd
+
+
+# Invader's Revenge
+Zenitone-Microsec Ltd.
+
+
+# Wizz Quiz (version 4)
+Zilec - Zenitone
+
+
+# Blue Print (Midway)
+Zilec Electronics
+
+
+# Space Phantoms
+Zilec Games
+
+
+# Check Man
+Zilec-Zenitone
+
+
+# Magic Brush
+bootleg
+
+
+# Omega
+bootleg?
+
+
+# X-Files
+dgPIX Entertainment Inc.
+
+
+# Puckman (Falcom?)
+hack
+
+
+# Chewing Gum
+unknown
+
+

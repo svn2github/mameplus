@@ -1,0 +1,92 @@
+# 4710
+BIOS
+BIOS
+
+# 5694
+Ball & Paddle
+Bola y Paleta
+
+# 5508
+Breakout
+Fugas
+
+# 4688
+Casino
+Casino
+
+# 5413
+Climbing
+Montañismo
+
+# 2976
+Driving
+Carreras
+
+# 3936
+Fighter
+Lucha
+
+# Title
+Genre
+Genero
+
+# 7
+Maze
+Laberinto
+
+# 5706
+Mini-Games
+Mini-Juegos
+
+# 5430
+Misc.
+Variados
+
+# 5752
+Misc. Betting
+Apuestas Variadas
+
+# 3330
+Multiplay
+Multijugador
+
+# 5762
+Pinball
+Pimball
+
+# 4738
+Platform
+Plataformas
+
+# 3369
+Puzzle
+Rompecabezas
+
+# 5583
+Quiz
+Concurso
+
+# 5736
+Rhythm
+Rítmico
+
+# 769
+Shooter
+Tiros
+
+# 2349
+Sports
+Deportes
+
+# 3680
+Tabletop
+Juego de Mesa
+
+# 475
+Unplayable
+No Jugable
+
+# 3284
+Wrestling
+Combate / Catch
+

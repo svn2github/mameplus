@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>How to Compile MAME Plus!</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<base target="_blank">
+<style>
+a {target:;}
+a:visited {color:#666666;}
+h1 {font: bold 16px Arial;}
+p {font: 12px Arial;}
+td {font: 10px Arial; padding:4px;}
+th {font: italic 10px Arial; padding:4px;}
+table {border:0; background-color: #EEEEEE}
+.doscmd {font:12px Courier New; color:#E0E0E0; padding:1px;}
+.bluestyle {color: #0000FF;}
+.plusstyle {color:#FF8080; font-weight:bold;}
+</style>
+</head>
+<body> 
+<h1>How to Compile MAME Plus! </h1> 
+<p><strong>NOTE</strong>: <br>
+  - 
+Items marked <span class="plusstyle">pink</span> are downloadable from <a href="http://mameplus.emu-france.com/">MAME / MAME32 Plus!</a></p> 
+<h1> I. Preparing compile utilities</h1> 
+<p>- Run <span class="plusstyle">mingw-gcc-xxxx.exe</span>, extract to D:\MinGW\<br> 
+  - Extract <span class="plusstyle">extra-xxxx</span> to D:\mamesrc\</p> 
+<table> 
+  <tr> 
+    <th>- File Lhttp://www.mamedev.com/ist - </th> 
+  </tr> 
+  <tr> 
+    <td>[MinGW]<br> 
+      <span class="bluestyle">&nbsp;&nbsp;[bin]<br> 
+&nbsp;&nbsp;[include]<br> 
+&nbsp;&nbsp;[lib]</span><br> 
+      [mamesrc]<br> 
+&nbsp;&nbsp;[extra]<br> 
+      <span class="bluestyle">&nbsp;&nbsp;&nbsp;&nbsp;[bin]<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;[include]<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;[lib]</span></td> 
+  </tr> 
+</table> 
+<h1>II. Preparing official MAME source</h1> 
+<p>- Extract official <a href="http://www.mamedev.com/">MAME</a> source to D:\mamesrc\<br> 
+  - if <a href="http://www.mamedev.com/">diff</a> available:<br> 
+  &nbsp;&nbsp;&nbsp;- Extract official MAME source diff to D:\mamesrc\ <br> 
+  &nbsp;&nbsp;&nbsp;- Extract <span class="plusstyle">patch-xxxx</span> to D:\mamesrc\</p> 
+<table> 
+  <tr> 
+    <th>- File List - </th> 
+  </tr> 
+  <tr> 
+    <td>[MinGW]<br> 
+      ... <br> 
+      [mamesrc]<br> 
+&nbsp;&nbsp;[extra]<br> 
+&nbsp;&nbsp;...<br> 
+      <span class="bluestyle">&nbsp;&nbsp;[docs]<br> 
+&nbsp;&nbsp;[src]<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;[cpu]<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;[drivers]<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;...<br> 
+&nbsp;&nbsp;makefile<br> 
+&nbsp;&nbsp;whatsnew.txt<br> 
+&nbsp;&nbsp;u1.diff<br> 
+&nbsp;&nbsp;cygwin1.dll<br> 
+&nbsp;&nbsp;patch.exe</span></td> 
+  </tr> 
+</table> 
+<p> &nbsp;&nbsp;&nbsp;- Apply official patch:<br> 
+&nbsp;&nbsp;&nbsp;&nbsp; <span class="doscmd" style="background-color:#000000;"> D:\mamesrc&gt;patch -p0 -E &lt;u1.diff<br> 
+  </span>- Extract  MAME Plus! source diff (exactly same version as official MAME) on top of D:\mamesrc\</p> 
+<table> 
+  <tr> 
+    <th>- File List - </th> 
+  </tr> 
+  <tr> 
+    <td>[MinGW]<br> 
+      ... <br> 
+      [mamesrc]<br> 
+&nbsp;&nbsp;[extra]<br> 
+&nbsp;&nbsp;...<br> 
+      <span class="bluestyle">&nbsp;&nbsp;[src]<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;...<br> 
+&nbsp;&nbsp;makefile<br> 
+&nbsp;&nbsp;env.bat</span></td> 
+  </tr> 
+</table> 
+<h1>III. Compile </h1>
+<p>- Open env.bat, if needed, modify PATH to your MinGW folder: <br>
+&nbsp;&nbsp; <span class="doscmd" style="background-color:#000080;">set PATH=D:\MinGW\bin;extra\bin;%PATH%</span><br>
+  - Run env.bat, then type &quot;make&quot; or &quot;make I686=1&quot; to compile. warnings are expected.<br>
+&nbsp;&nbsp; <span class="doscmd" style="background-color:#000000;">D:\mamesrc&gt;env</span><br>
+&nbsp;&nbsp; <span class="doscmd" style="background-color:#000000;">D:\mamesrc&gt;make</span></p>
+</body>
+</html>

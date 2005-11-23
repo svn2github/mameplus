@@ -1,0 +1,72 @@
+# 903
+* Bootleg
+
+
+# 1330
+* Hacks
+
+
+# 7
+* Prototype
+
+
+# 1282
+Asia
+
+
+# 1686
+Brazil
+
+
+# 1649
+China
+
+
+# 1653
+Denmark
+
+
+# 1259
+Europe
+
+
+# 1670
+France
+
+
+# 1681
+Germany
+
+
+# 1656
+Hispanic
+
+
+# 1673
+Italy
+
+
+# 67
+Japan
+
+
+# 1316
+Korea
+
+
+# Title
+Region
+
+
+# 1676
+Taiwan
+
+
+# 1338
+USA
+
+
+# 1043
+World
+
+

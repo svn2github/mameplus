@@ -1,0 +1,72 @@
+# 903
+* Bootleg
+* 해적판
+
+# 1330
+* Hacks
+* 해킹
+
+# 7
+* Prototype
+* 시험판
+
+# 1282
+Asia
+아시아
+
+# 1686
+Brazil
+브라질
+
+# 1649
+China
+중국
+
+# 1653
+Denmark
+덴마크
+
+# 1259
+Europe
+유럽
+
+# 1670
+France
+프랑스
+
+# 1681
+Germany
+독일
+
+# 1656
+Hispanic
+스페인
+
+# 1673
+Italy
+이탈리아
+
+# 67
+Japan
+일본
+
+# 1316
+Korea
+한국
+
+# Title
+Region
+지역
+
+# 1676
+Taiwan
+대만
+
+# 1338
+USA
+미국
+
+# 1043
+World
+세계판
+

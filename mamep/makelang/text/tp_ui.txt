@@ -1,0 +1,2636 @@
+# ui/mame32.rc: 381
+                                
+
+
+# ui/properties.c: 1050
+%d colors 
+
+
+# ui/win32ui.c: 238, 3505
+%d games
+
+
+# ui/mame32.rc: 154
+&About
+
+
+# ui/mame32.rc: 44
+&About MAME32
+
+
+# ui/mame32.rc: 63, 166
+&Add to Custom Folder...
+
+
+# ui/mame32.rc: 989
+&All games to use default options
+
+
+# ui/mame32.rc: 206
+&Audit
+
+
+# ui/mame32.rc: 68
+&Audit all games
+
+
+# ui/mame32.rc: 129
+&Background Image...
+
+
+# ui/mame32.rc: 1037
+&Broadcast selected game to all windows
+
+
+# ui/mame32.rc: 86, 222, 235
+&Cabinet
+
+
+# ui/mame32.rc: 402, 971, 998, 1015, 1082, 1152
+&Cancel
+
+
+# ui/audit32.c: 393
+&Close
+
+
+# ui/mame32.rc: 148
+&Contents\tF1
+
+
+# ui/audit32.c: 270
+&Continue
+
+
+# ui/mame32.rc: 168, 198
+&Custom Filters...
+
+
+# ui/mame32.rc: 115
+&Custom Filters...\tCtrl+F
+
+
+# ui/mame32.rc: 986
+&Default game options
+
+
+# ui/mame32.rc: 967
+&Description filter
+
+
+# ui/mame32.rc: 100
+&Details
+
+
+# ui/mame32.rc: 122
+&Directories...
+
+
+# ui/mame32.rc: 40
+&Exit
+
+
+# ui/mame32.rc: 38, 50
+&File
+
+
+# ui/mame32.rc: 85, 221, 234
+&Flyer
+
+
+# ui/mame32.rc: 992
+&Folder 'filters'
+
+
+# ui/mame32.rc: 80
+&Fullscreen\tF11
+
+
+# ui/mame32.rc: 101
+&Grouped
+
+
+# ui/mame32.rc: 42, 146
+&Help
+
+
+# ui/mame32.rc: 91, 227, 239
+&History
+
+
+# ui/mame32.rc: 128
+&Interface Options...
+
+
+# ui/mame32.rc: 130
+&Language
+
+
+# ui/mame32.rc: 99
+&List
+
+
+# ui/mame32.rc: 152
+&Mame Release Notes
+
+
+# ui/mame32.rc: 87, 223, 236
+&Marquee
+
+
+# ui/mame32.rc: 151
+&New Game Changes
+
+
+# ui/mame32.rc: 366, 970, 997, 1014, 1081, 1151
+&OK
+
+
+# ui/mame32.rc: 118
+&Options
+
+
+# ui/mame32.rc: 125
+&Palette Setting...
+
+
+# ui/audit32.c: 265 ui/mame32.rc: 401
+&Pause
+
+
+# ui/mame32.rc: 77
+&Picture Area\tAlt+P
+
+
+# ui/mame32.rc: 52, 162 ui/win32ui.c: 3619
+&Play
+
+
+# ui/win32ui.c: 237, 3653, 6558, 6586
+&Play %s
+
+
+# ui/mame32.rc: 208
+&Properties
+
+
+# ui/mame32.rc: 959
+&Raster Graphics
+
+
+# ui/mame32.rc: 114
+&Refresh\tF5
+
+
+# ui/mame32.rc: 197
+&Rename
+
+
+# ui/mame32.rc: 127
+&Reset to Default...
+
+
+# ui/mame32.rc: 1025
+&Search for new games on start
+
+
+# ui/mame32.rc: 61, 170
+&Select Random Game
+
+
+# ui/mame32.rc: 200
+&Show Folders
+
+
+# ui/mame32.rc: 84, 220, 233
+&Snapshot
+
+
+# ui/mame32.rc: 75
+&Status bar\tAlt+S
+
+
+# ui/mame32.rc: 88, 224, 237
+&Title
+
+
+# ui/mame32.rc: 74
+&Toolbar\tAlt+T
+
+
+# ui/mame32.rc: 149
+&Troubleshooting
+
+
+# ui/mame32.rc: 956
+&Unavailable
+
+
+# ui/mame32.rc: 983
+&User Interface (Fonts, Colors, Sizes)
+
+
+# ui/mame32.rc: 948
+&Vector Graphics
+
+
+# ui/mame32.rc: 72
+&View
+
+
+# ui/mame32.rc: 965
+&Working
+
+
+# ui/win32ui.c: 6164
+'%s' is not a valid savestate file for game '%s'.
+
+
+# ui/mame32.rc: 972
+(*) = inherited from parent folder
+
+
+# ui/properties.c: 446
+25% scanlines
+
+
+# ui/properties.c: 447
+50% scanlines
+
+
+# ui/properties.c: 448
+75% scanlines
+
+
+# ui/properties.c: 449
+75% vertical scanlines
+
+
+# ui/mame32.rc: 458
+<- Remove
+
+
+# ui/treeview.c: 515, 536, 1126
+<unknown>
+
+
+# ui/m32util.c: 253
+A sharing violation occurred.
+
+
+# ui/mame32.rc: 175
+A&udit
+
+
+# ui/treeview.c: 1284
+AD STICK
+
+
+# ui/mame32.rc: 1116
+ADStick device
+
+
+# ui/win32ui.c: 647
+About
+
+
+# ui/mame32.rc: 363
+About MAME32
+
+
+# ui/mame32.rc: 457
+Add ->
+
+
+# ui/mame32.rc: 1172
+Add Game To Custom Folder
+
+
+# ui/mame32.rc: 1610
+Add currently selected game to a custom folder
+
+
+# ui/mame32.rc: 375
+Additional MAME32 code by
+
+
+# ui/mame32.rc: 665
+Advanced
+
+
+# ui/dialogs.c: 206
+All
+
+
+# ui/layout.c: 50
+All Games
+
+
+# ui/win32ui.c: 5758, 5761, 5764, 5837, 5840, 5843
+All files (*.*)
+
+
+# ui/mame32.rc: 1028
+Allow game selection by a &joystick (requires restart)
+
+
+# ui/mame32.rc: 1031
+Allow game selection by custom &key sequences
+
+
+# ui/mame32.rc: 1585
+Allow restoring options to 'sane' values.
+
+
+# ui/mame32.rc: 1610
+Allows filtering out games from a folder
+
+
+# ui/mame32.rc: 751
+Analog deadzone
+
+
+# ui/properties.c: 520
+Anisotropic
+
+
+# ui/properties.c: 4047
+Anti-clockwise
+
+
+# ui/properties.c: 465
+Aperture grille
+
+
+# ui/mame32.rc: 103
+Arrange &Icons
+
+
+# ui/mame32.rc: 1631
+Arranges icons in a grid
+
+
+# ui/layout.c: 111
+Artwork
+
+
+# ui/mame32.rc: 854
+Artwork resolution
+
+
+# ui/mame32.rc: 694
+Aspect ratio
+
+
+# ui/mame32.rc: 654
+Audio latency
+
+
+# ui/mame32.rc: 504
+Audit
+
+
+# ui/mame32.rc: 1547, 1610, 1610
+Audit ROM and samples sets
+
+
+# ui/audit32.c: 392
+Audit complete.\n
+
+
+# ui/properties.c: 415, 432, 464, 3966, 4068, 4125, 4296
+Auto
+
+
+# ui/properties.c: 4050
+Auto anti-clockwise
+
+
+# ui/properties.c: 4049
+Auto clockwise
+
+
+# ui/mame32.rc: 565
+Automatic
+
+
+# ui/layout.c: 51
+Available
+
+
+# ui/mame32.rc: 453
+Available fields:
+
+
+# ui/properties.c: 4168
+Axis
+
+
+# ui/properties.c: 4178
+AxisId
+
+
+# ui/mame32.rc: 870, 1187
+BIOS
+
+
+# ui/treeview.c: 1267
+BUTTONS 1
+
+
+# ui/treeview.c: 1268
+BUTTONS 2
+
+
+# ui/treeview.c: 1269
+BUTTONS 3
+
+
+# ui/treeview.c: 1270
+BUTTONS 4
+
+
+# ui/treeview.c: 1271
+BUTTONS 5
+
+
+# ui/treeview.c: 1272
+BUTTONS 6
+
+
+# ui/treeview.c: 1273
+BUTTONS 7
+
+
+# ui/treeview.c: 1274
+BUTTONS 8
+
+
+# ui/treeview.c: 1275
+BUTTONS 9
+
+
+# ui/treeview.c: 1276
+BUTTONS10
+
+
+# ui/mame32.rc: 846
+Backdrops
+
+
+# ui/layout.c: 122
+Background Images
+
+
+# ui/treeview.c: 1046, 1047
+Bad Dump
+
+
+# ui/mame32.rc: 891
+Beam width
+
+
+# ui/audit32.c: 444
+Best available
+
+
+# ui/mame32.rc: 848
+Bezels
+
+
+# ui/properties.c: 517
+Bilinear
+
+
+# ui/mame32.rc: 1061
+Bookkeeping
+
+
+# ui/mame32.rc: 553
+Brightness correction
+
+
+# ui/mame32.rc: 443
+Browse...
+
+
+# ui/paletteedit.c: 125
+Button (10)
+
+
+# ui/paletteedit.c: 123
+Button (8)
+
+
+# ui/paletteedit.c: 124
+Button (9)
+
+
+# ui/paletteedit.c: 116
+Button (A or 1)
+
+
+# ui/paletteedit.c: 117
+Button (B or 2)
+
+
+# ui/paletteedit.c: 118
+Button (C or 3)
+
+
+# ui/paletteedit.c: 119
+Button (D or 4)
+
+
+# ui/paletteedit.c: 120
+Button (K or 5)
+
+
+# ui/paletteedit.c: 121
+Button (P or 6)
+
+
+# ui/paletteedit.c: 122
+Button (S or 7)
+
+
+# ui/mame32.rc: 951
+C&lones
+
+
+# ui/layout.c: 58 
+CPU
+
+
+# ui/dialogs.c: 198 ui/options.c: 246
+Cabinet
+
+
+# ui/layout.c: 114
+Cabinets
+
+
+# ui/mame32.rc: 442, 467, 1182
+Cancel
+
+
+# ui/columnedit.c: 50
+Cannot Move Selected Item
+
+
+# ui/mame32.rc: 982
+Categories
+
+
+# ui/columnedit.c: 257
+Changing this item is not permitted
+
+
+# ui/audit32.c: 192, 201
+Checking Game %s - %s
+
+
+# ui/mame32.rc: 512, 514
+Checking...
+
+
+# ui/mame32.rc: 298, 376
+Christopher Kirmse and Michael Soderstrom
+
+
+# ui/mame32.rc: 701
+Clean stretch
+
+
+# ui/properties.c: 4046
+Clockwise
+
+
+# ui/win32ui.c: 741
+Clone Of
+
+
+# ui/mame32.rc: 498
+Clone of:
+
+
+# ui/layout.c: 66
+Clones
+
+
+# ui/properties.c: 1088
+Colors are completely wrong
+
+
+# ui/properties.c: 1094
+Colors aren't 100% accurate
+
+
+# ui/mame32.rc: 494
+Colors:
+
+
+# ui/layout.c: 106
+Config
+
+
+# ui/mame32.rc: 841
+Confirm on exit game
+
+
+# ui/mame32.rc: 1539
+Contains commands for displaying help
+
+
+# ui/mame32.rc: 1539
+Contains commands for manupulating the view
+
+
+# ui/mame32.rc: 1603
+Contains commands for sorting by various columns
+
+
+# ui/mame32.rc: 1539
+Contains commands for user interface options
+
+
+# ui/mame32.rc: 1539
+Contains commands for working with the selected items
+
+
+# ui/layout.c: 70
+Control
+
+
+# ui/mame32.rc: 89, 225, 238
+Control &Panel
+
+
+# ui/dialogs.c: 204 ui/options.c: 249
+Control Panel
+
+
+# ui/layout.c: 117
+Control Panels
+
+
+# ui/layout.c: 119
+Controller Files
+
+
+# ui/mame32.rc: 785
+Controller ID layout
+
+
+# ui/mame32.rc: 1106
+Controller Mapping
+
+
+# ui/mame32.rc: 740
+Controllers
+
+
+# ui/mame32.rc: 370
+Copyright (C) 1997-2005 The MAME Team
+
+
+# ui/mame32.rc: 405, 415
+Correct:
+
+
+# ui/win32ui.c: 6075
+Could not open '%s' as a valid input file.
+
+
+# ui/win32ui.c: 6175
+Could not open '%s' as a valid savestate file.
+
+
+# ui/mame32.rc: 852
+Crop Artwork
+
+
+# ui/properties.c: 518
+Cubic (flat kernel)
+
+
+# ui/properties.c: 519
+Cubic (gaussian kernel)
+
+
+# ui/paletteedit.c: 126
+Cursor
+
+
+# ui/win32ui.c: 4355, 4383
+Custom
+
+
+# ui/mame32.rc: 116, 189
+Customi&ze Fields...
+
+
+# ui/mame32.rc: 450
+Customize Fields
+
+
+# ui/mame32.rc: 1585
+Customize interface options.
+
+
+# ui/mame32.rc: 1560
+Customize which columns are used in the game list
+
+
+# ui/treeview.c: 1286
+DIAL
+
+
+# ui/treeview.c: 1280
+DOUBLEJOY2WAY
+
+
+# ui/treeview.c: 1281
+DOUBLEJOY4WAY
+
+
+# ui/treeview.c: 1282
+DOUBLEJOY8WAY
+
+
+# ui/properties.c: 4045
+Default
+
+
+# ui/properties.c: 813
+Default Game
+
+
+# ui/mame32.rc: 123
+Default Game &Options...
+
+
+# ui/mame32.rc: 776
+Default input layout
+
+
+# ui/mame32.rc: 445
+Delete
+
+
+# ui/mame32.rc: 715
+Depth:
+
+
+# ui/mame32.rc: 421, 515 ui/options.c: 280 ui/win32ui.c: 645
+Details
+
+
+# ui/mame32.rc: 1122
+Dial device
+
+
+# ui/mame32.rc: 1131
+Digital joystick axes
+
+
+# ui/mame32.rc: 576
+Direct3D
+
+
+# ui/mame32.rc: 430
+Directories
+
+
+# ui/mame32.rc: 436
+Directories:
+
+
+# ui/win32ui.c: 735
+Directory
+
+
+# ui/directories.c: 602, 697
+Directory does not exist, continue anyway?
+
+
+# ui/directories.c: 845, 887
+Directory name:
+
+
+# ui/mame32.rc: 523
+Display
+
+
+# ui/mame32.rc: 1592
+Display help contents
+
+
+# ui/mame32.rc: 1560
+Display items by using large icons.
+
+
+# ui/mame32.rc: 1560
+Display items by using small icons.
+
+
+# ui/mame32.rc: 1610
+Display the properties of the currently selected folder
+
+
+# ui/mame32.rc: 1547
+Display the properties of the selected items
+
+
+# ui/mame32.rc: 1547
+Display the source file properties of the selected game
+
+
+# ui/mame32.rc: 1560
+Displays detailed information about each item in the window.
+
+
+# ui/mame32.rc: 1560
+Displays items in a list.
+
+
+# ui/mame32.rc: 1592
+Displays program and copyright information
+
+
+# ui/mame32.rc: 1560
+Displays using `Detail View', but grouped by parent games.
+
+
+# ui/dialogs.c: 118
+Do you wish to continue?
+
+
+# ui/properties.c: 467
+Dot medium bright
+
+
+# ui/properties.c: 466
+Dot medium mask
+
+
+# ui/mame32.rc: 887
+Draw antialiased vectors
+
+
+# ui/properties.c: 4023
+Draw every frame
+
+
+# ui/mame32.rc: 889
+Draw translucent vectors
+
+
+# ui/win32ui.c: 6596
+Driver
+
+
+# ui/mame32.rc: 773
+Dual lightgun
+
+
+# ui/layout.c: 62
+Dumping Status
+
+
+# ui/mame32.rc: 70
+E&xit
+
+
+# ui/win32ui.c: 7056
+ERROR: required files are missing, the game cannot be run.
+
+
+# ui/mame32.rc: 1059
+Edit Not Working Game Color
+
+
+# ui/mame32.rc: 595
+Effect
+
+
+# ui/mame32.rc: 601
+Effect Overrides
+
+
+# ui/mame32.rc: 723
+Effects
+
+
+# ui/mame32.rc: 825
+Enable game cheats
+
+
+# ui/mame32.rc: 748
+Enable joystick input
+
+
+# ui/mame32.rc: 780
+Enable keyboard LED
+
+
+# ui/mame32.rc: 767
+Enable lightgun input
+
+
+# ui/mame32.rc: 756
+Enable mouse input
+
+
+# ui/mame32.rc: 763
+Enable pointing stick input
+
+
+# ui/mame32.rc: 637
+Enable sound and sound CPUs
+
+
+# ui/mame32.rc: 759
+Enable steadykey support
+
+
+# ui/mame32.rc: 534
+Enforce aspect ratio
+
+
+# ui/audit32.c: 101 ui/properties.c: 828, 924
+Error
+
+
+# ui/treeview.c: 2491
+Error finding custom file name to save
+
+
+# ui/mame32.rc: 827
+Error log (for developers)
+
+
+# ui/win32ui.c: 7149
+Error searching for custom folder
+
+
+# ui/treeview.c: 2420
+Error while renaming custom file %s to %s
+
+
+# ui/treeview.c: 2562
+Error while saving custom file %s
+
+
+# ui/mame32.rc: 1547
+Exit the application
+
+
+# ui/layout.c: 71
+FPS
+
+
+# ui/audit32.c: 453
+Failed
+
+
+# ui/mame32.rc: 611
+Feedback
+
+
+# ui/audit32.c: 208 ui/mame32.rc: 398
+File Audit
+
+
+# ui/mame32.rc: 592
+Filter
+
+
+# ui/dialogs.c: 404
+Filters for %s Folder
+
+
+# ui/mame32.rc: 895
+Flicker
+
+
+# ui/mame32.rc: 544
+Flip screen left-right
+
+
+# ui/mame32.rc: 542
+Flip screen upside-down
+
+
+# ui/dialogs.c: 196 ui/options.c: 245
+Flyer
+
+
+# ui/layout.c: 113
+Flyers
+
+
+# ui/mame32.rc: 76
+Fold&er List\tAlt+D
+
+
+# ui/paletteedit.c: 105
+Font (blank)
+
+
+# ui/paletteedit.c: 106
+Font (normal)
+
+
+# ui/paletteedit.c: 107
+Font (special)
+
+
+# ui/mame32.rc: 564
+Frame skipping
+
+
+# ui/properties.c: 416, 431
+Full
+
+
+# ui/mame32.rc: 704
+Full screen brightness
+
+
+# ui/win32ui.c: 732, 6586
+Game
+
+
+# ui/mame32.rc: 942
+Game Filters
+
+
+# ui/mame32.rc: 121
+Game List &Clone Color...
+
+
+# ui/mame32.rc: 120
+Game List &Font...
+
+
+# ui/mame32.rc: 1024
+Game Selection
+
+
+# ui/mame32.rc: 947
+Game filters
+
+
+# ui/mame32.rc: 945
+Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
+
+
+# ui/properties.c: 1106
+Game lacks sound
+
+
+# ui/properties.c: 1082
+Game protection isn't fully emulated
+
+
+# ui/win32ui.c: 3274
+Game search %d%% complete
+
+
+# ui/mame32.rc: 548
+Gamma correction
+
+
+# ui/mame32.rc: 472
+General
+
+
+# ui/properties.c: 1150
+Global folder options\nDefault options used by all games in the folder
+
+
+# ui/properties.c: 1148
+Global game options\nDefault options used by all games
+
+
+# ui/mame32.rc: 390
+Go to Microsoft's DirectX Web Page
+
+
+# ui/options.c: 281, 701 ui/win32ui.c: 646
+Grouped
+
+
+# ui/layout.c: 120
+Hard Drive Difference
+
+
+# ui/win32ui.c: 648
+Help
+
+
+# ui/mame32.rc: 1040
+Hide &mouse cursor (requires restart)
+
+
+# ui/properties.c: 4298
+High
+
+
+# ui/layout.c: 107
+High Scores
+
+
+# ui/mame32.rc: 833
+High thread priority
+
+
+# ui/options.c: 251, 254
+History
+
+
+# ui/properties.c: 433 ui/treeview.c: 958, 959
+Horizontal
+
+
+# ui/mame32.rc: 1592
+How cheats work
+
+
+# ui/layout.c: 104
+IPS Patch
+
+
+# ui/layout.c: 121
+Icons
+
+
+# ui/mame32.rc: 729
+Image Enhancement
+
+
+# ui/win32ui.c: 4908
+Image Files (*.png, *.bmp)
+
+
+# ui/layout.c: 61
+Imperfect
+
+
+# ui/treeview.c: 997
+Imperfect Colors
+
+
+# ui/treeview.c: 998
+Imperfect Graphics
+
+
+# ui/treeview.c: 1000
+Imperfect Sound
+
+
+# ui/mame32.rc: 407, 416
+Incorrect:
+
+
+# ui/mame32.rc: 1052
+Inheritable Filters
+
+
+# ui/layout.c: 102
+Ini Files
+
+
+# ui/layout.c: 109
+Input files (*.inp)
+
+
+# ui/mame32.rc: 444
+Insert
+
+
+# ui/mame32.rc: 900
+Intensity
+
+
+# ui/mame32.rc: 1021
+Interface Options
+
+
+# ui/treeview.c: 1277
+JOY2WAY
+
+
+# ui/treeview.c: 1278
+JOY4WAY
+
+
+# ui/treeview.c: 1279
+JOY8WAY
+
+
+# ui/properties.c: 603, 4163
+Joystick
+
+
+# ui/properties.c: 4173
+JoystickId
+
+
+# ui/properties.c: 601
+Keyboard
+
+
+# ui/mame32.rc: 97
+L&arge Icons
+
+
+# ui/treeview.c: 1288
+LIGHTGUN
+
+
+# ui/options.c: 277 ui/win32ui.c: 642
+Large Icons
+
+
+# ui/layout.c: 75, 75 ui/properties.c: 604
+Lightgun
+
+
+# ui/mame32.rc: 1128
+Lightgun device
+
+
+# ui/mame32.rc: 112
+Line &Up Icons
+
+
+# ui/options.c: 279 ui/win32ui.c: 644
+List
+
+
+# ui/mame32.rc: 59
+Loa&d Savestate...
+
+
+# ui/win32ui.c: 6972
+Loading %s
+
+
+# ui/mame32.rc: 1603
+Localize GUI and MAME core.
+
+
+# ui/mame32.rc: 866
+M68000 CPU Core
+
+
+# ui/win32ui.c: 5758, 5837
+MAME input files (*.inp,*.zip)
+
+
+# ui/mame32.rc: 1592
+MAME release notes
+
+
+# ui/win32ui.c: 5761, 5840
+MAME savestate files (*.sta)
+
+
+# ui/options.c: 301
+MAME32 has changed *.ini file directory.\n\nWould you like to migrate old configurations to the new directory?
+
+
+# ui/options.c: 4207
+MAME32 has detected outdated configuration data.\n\nThe detected configuration data is from Version %s of MAME32.\nThe current version is %s. It is recommended that the\nconfiguration is set to the new defaults.\n\nWould you like to use the new configuration?
+
+
+# ui/mame32.rc: 372
+MAME32 version by
+
+
+# ui/dialogs.c: 113
+MAME32 will now reset the selected\n
+
+
+# ui/mame32.rc: 363, 387, 398, 430, 450, 472, 504, 523, 576, 629, 665, 740, 818, 880, 915, 942, 979, 1004, 1021, 1106, 1144, 1172, 1187, 1226 ui/options.c: 713 ui/translate.c: 102
+MS Sans Serif
+
+
+# ui/mame32.rc: 479
+Manufactured:
+
+
+# ui/layout.c: 55 ui/win32ui.c: 739
+Manufacturer
+
+
+# ui/dialogs.c: 200 ui/options.c: 247
+Marquee
+
+
+# ui/layout.c: 115
+Marquees
+
+
+# ui/mame32.rc: 677
+Match game refresh rate
+
+
+# ui/layout.c: 112 
+Memory Card
+
+
+# ui/mame32.rc: 818
+Miscellaneous
+
+
+# ui/treeview.c: 999
+Missing Sound
+
+
+# ui/audit32.c: 457
+Missing optional
+
+
+# ui/properties.c: 602
+Mouse
+
+
+# ui/mame32.rc: 465
+Move Down
+
+
+# ui/columnedit.c: 50
+Move Item
+
+
+# ui/mame32.rc: 464
+Move Up
+
+
+# ui/layout.c: 78
+Multi-Monitor
+
+
+# ui/layout.c: 118
+NVRAM
+
+
+# ui/mame32.rc: 1592
+New game changes
+
+
+# ui/audit32.c: 124 ui/win32ui.c: 5209
+No
+
+
+# ui/treeview.c: 1001
+No Cocktail
+
+
+# ui/treeview.c: 1049, 1050
+No Dump
+
+
+# ui/win32ui.c: 3635
+No Selection
+
+
+# ui/mame32.rc: 1066
+No offset for clones missing parent in view
+
+
+# ui/mame32.rc: 953
+Non-Wor&king
+
+
+# ui/dialogs.c: 208 ui/properties.c: 414, 430, 445, 463, 516, 528, 600, 4048, 4453
+None
+
+
+# ui/audit32.c: 301, 305
+None required
+
+
+# ui/layout.c: 64
+Not Working
+
+
+# ui/audit32.c: 449
+Not found
+
+
+# ui/properties.c: 1070
+Not working
+
+
+# ui/mame32.rc: 441, 466, 1181 
+OK
+
+
+# ui/paletteedit.c: 112
+OSD bar
+
+
+# ui/paletteedit.c: 114
+OSD bar (dark)
+
+
+# ui/paletteedit.c: 115
+OSD bar (default)
+
+
+# ui/paletteedit.c: 113
+OSD bar (light)
+
+
+# ui/mame32.rc: 770
+Offscreen shots reload
+
+
+# ui/mame32.rc: 962
+Ori&ginals
+
+
+# ui/layout.c: 60
+Orientation
+
+
+# ui/layout.c: 65
+Originals
+
+
+# ui/mame32.rc: 850
+Overlays
+
+
+# ui/mame32.rc: 55
+P&layback Input...
+
+
+# ui/treeview.c: 1285
+PADDLE
+
+
+# ui/treeview.c: 1289
+PEDAL
+
+
+# ui/treeview.c: 1259
+PLAYERS 1
+
+
+# ui/treeview.c: 1260
+PLAYERS 2
+
+
+# ui/treeview.c: 1261
+PLAYERS 3
+
+
+# ui/treeview.c: 1262
+PLAYERS 4
+
+
+# ui/treeview.c: 1263
+PLAYERS 5
+
+
+# ui/treeview.c: 1264
+PLAYERS 6
+
+
+# ui/treeview.c: 1265
+PLAYERS 7
+
+
+# ui/treeview.c: 1266
+PLAYERS 8
+
+
+# ui/properties.c: 587
+PS/2 Keyboard
+
+
+# ui/mame32.rc: 1113
+Paddle device
+
+
+# ui/mame32.rc: 1144
+Palette
+
+
+# ui/audit32.c: 440
+Passed
+
+
+# ui/mame32.rc: 559
+Pause Brightness
+
+
+# ui/mame32.rc: 1119
+Pedal device
+
+
+# ui/options.c: 2861 ui/win32ui.c: 743
+Play Time
+
+
+# ui/mame32.rc: 1547
+Play a game starting with the given savestate
+
+
+# ui/mame32.rc: 54, 164
+Play and &Record Input...
+
+
+# ui/mame32.rc: 57
+Play and Record &Wave Output...
+
+
+# ui/mame32.rc: 1547
+Play currently selected game
+
+
+# ui/mame32.rc: 1547
+Playback a recorded game
+
+
+# ui/win32ui.c: 738
+Played
+
+
+# ui/mame32.rc: 66, 178
+Pr&operties
+
+
+# ui/mame32.rc: 598
+Prescale
+
+
+# ui/win32ui.c: 3664, 6571, 6596
+Proper&ties of %s
+
+
+# ui/properties.c: 827, 923
+Propery Sheet Error %d %X
+
+
+# ui/mame32.rc: 64, 167
+R&emove From This Folder
+
+
+# ui/properties.c: 480
+RGB 16 pixel triad
+
+
+# ui/properties.c: 475
+RGB 3 pixel triad
+
+
+# ui/properties.c: 476
+RGB 4 pixel triad
+
+
+# ui/properties.c: 479
+RGB 6 pixel triad
+
+
+# ui/properties.c: 470
+RGB maximum bright
+
+
+# ui/properties.c: 469
+RGB medium mask
+
+
+# ui/properties.c: 471
+RGB micro
+
+
+# ui/properties.c: 468
+RGB minimum mask
+
+
+# ui/mame32.rc: 1150
+RGB setting:
+
+
+# ui/properties.c: 456
+RGB sharp
+
+
+# ui/properties.c: 455, 472
+RGB tiny
+
+
+# ui/properties.c: 450
+RGB triad of 16 pixels
+
+
+# ui/properties.c: 454
+RGB triad of 3 pixels
+
+
+# ui/properties.c: 452
+RGB triad of 4 pixels
+
+
+# ui/properties.c: 453
+RGB triad of 4 vertical pixels
+
+
+# ui/properties.c: 451
+RGB triad of 6 pixels
+
+
+# ui/mame32.rc: 511
+ROM check:
+
+
+# ui/layout.c: 100 ui/mame32.rc: 406 ui/win32ui.c: 733
+ROMs
+
+
+# ui/properties.c: 1126
+ROMs missing
+
+
+# ui/mame32.rc: 1610
+Randomly select a game.
+
+
+# ui/layout.c: 67 ui/win32ui.c: 5201
+Raster
+
+
+# ui/win32ui.c: 3439
+Ready
+
+
+# ui/mame32.rc: 1547
+Record a game for later playback
+
+
+# ui/mame32.rc: 1547
+Record the sound output of a game
+
+
+# ui/mame32.rc: 1560
+Refresh game list
+
+
+# ui/mame32.rc: 719
+Refresh:
+
+
+# ui/options.c: 1809
+Reload configurations
+
+
+# ui/mame32.rc: 1610
+Remove currently selected game from this folder
+
+
+# ui/mame32.rc: 1610
+Rename currently selected folder
+
+
+# ui/mame32.rc: 569, 622, 658, 733, 811, 873, 906, 1136, 1218, 1250
+Reset
+
+
+# ui/mame32.rc: 979
+Reset Options
+
+
+# ui/mame32.rc: 172
+Reset Pl&aycount
+
+
+# ui/mame32.rc: 173
+Reset Pla&y Time
+
+
+# ui/mame32.rc: 1064
+Reset all Play Times
+
+
+# ui/mame32.rc: 1062
+Reset all Playcounts
+
+
+# ui/mame32.rc: 1610
+Reset play count of currently selected game
+
+
+# ui/mame32.rc: 1610
+Reset play time of currently selected game
+
+
+# ui/mame32.rc: 710
+Resolution
+
+
+# ui/mame32.rc: 570, 623, 659, 734, 812, 874, 907, 1137, 1219, 1251
+Restore Default Settings
+
+
+# ui/dialogs.c: 120
+Restore Settings
+
+
+# ui/mame32.rc: 589
+Rotate effects
+
+
+# ui/mame32.rc: 539
+Rotation
+
+
+# ui/mame32.rc: 530
+Run in a window
+
+
+# ui/mame32.rc: 82, 218
+S&how Pictures
+
+
+# ui/mame32.rc: 98
+S&mall Icons
+
+
+# ui/mame32.rc: 1048
+S&tretch screenshot larger than natural size
+
+
+# ui/treeview.c: 1283
+STICK
+
+
+# ui/mame32.rc: 513
+Sample check:
+
+
+# ui/mame32.rc: 646
+Sample rate
+
+
+# ui/layout.c: 80, 101 ui/mame32.rc: 412 ui/win32ui.c: 734
+Samples
+
+
+# ui/mame32.rc: 603
+Scanlines
+
+
+# ui/properties.c: 481
+Scanlines 25%
+
+
+# ui/properties.c: 482
+Scanlines 50%
+
+
+# ui/properties.c: 483, 483
+Scanlines 75%
+
+
+# ui/layout.c: 72 ui/mame32.rc: 546
+Screen
+
+
+# ui/win32ui.c: 3233
+Screen flip support is missing
+
+
+# ui/properties.c: 1118
+Screen flipping is not supported
+
+
+# ui/mame32.rc: 492
+Screen:
+
+
+# ui/mame32.rc: 1043
+Screenshot &Cycletime in Seconds:
+
+
+# ui/mame32.rc: 1069
+Screenshot Area
+
+
+# ui/mame32.rc: 1070
+Screenshot Bordersize:
+
+
+# ui/mame32.rc: 78
+Screenshot Ta&b\tAlt+B
+
+
+# ui/mame32.rc: 1034
+Select &random background image
+
+
+# ui/columnedit.c: 257
+Select Item
+
+
+# ui/win32ui.c: 4917
+Select a Background Image
+
+
+# ui/mame32.rc: 1585
+Select a background image file
+
+
+# ui/mame32.rc: 1560
+Select fullscreen or window mode in GUI
+
+
+# ui/mame32.rc: 1656
+Select the cabinet image
+
+
+# ui/mame32.rc: 1656
+Select the control panel image
+
+
+# ui/mame32.rc: 1656
+Select the flyer image
+
+
+# ui/mame32.rc: 1656
+Select the history information
+
+
+# ui/mame32.rc: 1656
+Select the marquee image
+
+
+# ui/mame32.rc: 995
+Select the options to be restored to the default settings.  The options will be restored when MAME32 is run next.
+
+
+# ui/mame32.rc: 1656
+Select the screen shot image
+
+
+# ui/mame32.rc: 1664
+Select the story information
+
+
+# ui/mame32.rc: 1656
+Select the title image
+
+
+# ui/mame32.rc: 1075
+Set Screenshot Border Color
+
+
+# ui/mame32.rc: 1578
+Set default game options
+
+
+# ui/mame32.rc: 1578
+Set directory configuration
+
+
+# ui/mame32.rc: 1578
+Set game list and folder list font
+
+
+# ui/mame32.rc: 1583
+Set in-game UI color palette
+
+
+# ui/mame32.rc: 1578
+Set list font color for clone games
+
+
+# ui/mame32.rc: 1054
+Show Game Ca&ption
+
+
+# ui/mame32.rc: 1078
+Show History on Tab:
+
+
+# ui/mame32.rc: 216
+Show Tab &Control
+
+
+# ui/mame32.rc: 433
+Show directories for:
+
+
+# ui/mame32.rc: 1610
+Show or hide folder
+
+
+# ui/mame32.rc: 1642
+Show or hide the cabinet image
+
+
+# ui/mame32.rc: 1642
+Show or hide the control panel image
+
+
+# ui/mame32.rc: 1642
+Show or hide the flyer image
+
+
+# ui/mame32.rc: 1560
+Show or hide the folder list
+
+
+# ui/mame32.rc: 1642
+Show or hide the history information
+
+
+# ui/mame32.rc: 1642
+Show or hide the marquee image
+
+
+# ui/mame32.rc: 1560
+Show or hide the picture area
+
+
+# ui/mame32.rc: 1560, 1603
+Show or hide the pictures
+
+
+# ui/mame32.rc: 1642
+Show or hide the screen shot image
+
+
+# ui/mame32.rc: 1560
+Show or hide the screen shot tab
+
+
+# ui/mame32.rc: 1560
+Show or hide the status bar
+
+
+# ui/mame32.rc: 1650
+Show or hide the story information
+
+
+# ui/mame32.rc: 1642
+Show or hide the title image
+
+
+# ui/mame32.rc: 1560
+Show or hide the toolbar
+
+
+# ui/mame32.rc: 1147
+Show palette for:
+
+
+# ui/mame32.rc: 459
+Show these fields in this order:
+
+
+# ui/mame32.rc: 711
+Size:
+
+
+# ui/properties.c: 4024
+Skip 1 of 12 frames
+
+
+# ui/properties.c: 4033
+Skip 10 of 12 frames
+
+
+# ui/properties.c: 4034
+Skip 11 of 12 frames
+
+
+# ui/properties.c: 4025
+Skip 2 of 12 frames
+
+
+# ui/properties.c: 4026
+Skip 3 of 12 frames
+
+
+# ui/properties.c: 4027
+Skip 4 of 12 frames
+
+
+# ui/properties.c: 4028
+Skip 5 of 12 frames
+
+
+# ui/properties.c: 4029
+Skip 6 of 12 frames
+
+
+# ui/properties.c: 4030
+Skip 7 of 12 frames
+
+
+# ui/properties.c: 4031
+Skip 8 of 12 frames
+
+
+# ui/properties.c: 4032
+Skip 9 of 12 frames
+
+
+# ui/mame32.rc: 835
+Skip game info
+
+
+# ui/mame32.rc: 838
+Skip validity checks
+
+
+# ui/mame32.rc: 829
+Sleep when possible
+
+
+# ui/options.c: 278 ui/win32ui.c: 643
+Small Icons
+
+
+# ui/dialogs.c: 194 ui/options.c: 244
+Snapshot
+
+
+# ui/layout.c: 108
+Snapshots
+
+
+# ui/mame32.rc: 186
+Sort &Ascending
+
+
+# ui/mame32.rc: 187
+Sort &Descending
+
+
+# ui/mame32.rc: 1631
+Sort by number of plays
+
+
+# ui/mame32.rc: 1625
+Sort column in ascending (A-Z) order
+
+
+# ui/mame32.rc: 1625
+Sort column in descending (Z-A) order
+
+
+# ui/mame32.rc: 1631
+Sort items by directories
+
+
+# ui/mame32.rc: 1631
+Sort items by game
+
+
+# ui/mame32.rc: 1631
+Sort items by manufacturer
+
+
+# ui/mame32.rc: 1631
+Sort items by type
+
+
+# ui/mame32.rc: 1631
+Sort items by year
+
+
+# ui/layout.c: 59 ui/mame32.rc: 629 
+Sound
+
+
+# ui/properties.c: 1112
+Sound emulation isn't 100% accurate
+
+
+# ui/mame32.rc: 488
+Sound:
+
+
+# ui/win32ui.c: 5764, 5843
+Sounds (*.wav)
+
+
+# ui/layout.c: 57 ui/win32ui.c: 742
+Source
+
+
+# ui/mame32.rc: 65, 177 ui/win32ui.c: 3626
+Source Proper&ties
+
+
+# ui/mame32.rc: 496
+Source:
+
+
+# ui/mame32.rc: 93, 229, 241
+St&ory
+
+
+# ui/options.c: 476 ui/properties.c: 2700, 2703, 2997, 3000, 4219, 4297
+Standard
+
+
+# ui/mame32.rc: 532
+Start out maximized
+
+
+# ui/layout.c: 110
+State
+
+
+# ui/mame32.rc: 481
+Status:
+
+
+# ui/layout.c: 77
+Stereo
+
+
+# ui/options.c: 252
+Story
+
+
+# ui/mame32.rc: 691
+Stretch using hardware
+
+
+# ui/mame32.rc: 688
+Switch color depths to fit
+
+
+# ui/mame32.rc: 685
+Switch resolutions to fit
+
+
+# ui/mame32.rc: 680
+Sync to monitor refresh
+
+
+# ui/treeview.c: 1287
+TRACKBALL
+
+
+# ui/mame32.rc: 586
+Texture Management
+
+
+# ui/dialogs.c: 116
+The new settings will take effect\n
+
+
+# ui/m32util.c: 233
+The operating system is out of memory or resources.
+
+
+# ui/m32util.c: 237
+The specified file was not found.
+
+
+# ui/m32util.c: 249
+The specified path was not found.
+
+
+# ui/m32util.c: 241
+There is no application associated with the given filename extension.
+
+
+# ui/m32util.c: 245
+There was not enough memory to complete the operation.
+
+
+# ui/mame32.rc: 537
+Throttle
+
+
+# ui/dialogs.c: 202 ui/options.c: 248
+Title
+
+
+# ui/layout.c: 116
+Titles
+
+
+# ui/win32ui.c: 640
+Toggle Folder List
+
+
+# ui/win32ui.c: 641
+Toggle Screen Shot
+
+
+# ui/mame32.rc: 408, 417
+Total:
+
+
+# ui/layout.c: 74 ui/win32ui.c: 737
+Trackball
+
+
+# ui/mame32.rc: 1125
+Trackball device
+
+
+# ui/mame32.rc: 1670
+Translate into English (US)
+
+
+# ui/mame32.rc: 1670
+Translate into French
+
+
+# ui/mame32.rc: 1670
+Translate into German
+
+
+# ui/mame32.rc: 1670
+Translate into Hungarian
+
+
+# ui/mame32.rc: 1670
+Translate into Italian
+
+
+# ui/mame32.rc: 1670
+Translate into Japanese
+
+
+# ui/mame32.rc: 1670
+Translate into Korean
+
+
+# ui/mame32.rc: 1670
+Translate into Polish
+
+
+# ui/mame32.rc: 1670
+Translate into Portuguese (BRA)
+
+
+# ui/mame32.rc: 1670
+Translate into Simplified Chinese
+
+
+# ui/mame32.rc: 1670
+Translate into Spanish
+
+
+# ui/mame32.rc: 1670
+Translate into Traditional Chinese
+
+
+# ui/mame32.rc: 674
+Triple buffering
+
+
+# ui/mame32.rc: 1592
+Troubleshooting Documentation
+
+
+# ui/win32ui.c: 736
+Type
+
+
+# ui/properties.c: 588
+USB Keyboard
+
+
+# ui/audit32.c: 101
+Unable to Load Riched32.dll
+
+
+# ui/treeview.c: 2431
+Unable to add game to non-custom folder
+
+
+# ui/treeview.c: 2448
+Unable to remove game from non-custom folder
+
+
+# ui/layout.c: 53
+Unavailable
+
+
+# ui/treeview.c: 995
+Unemulated Protection
+
+
+# ui/audit32.c: 435 ui/properties.c: 1064
+Unknown
+
+
+# ui/m32util.c: 257
+Unknown error.
+
+
+# ui/mame32.rc: 584
+Use Direct3D
+
+
+# ui/mame32.rc: 672
+Use DirectDraw
+
+
+# ui/mame32.rc: 1057
+Use Driver Icon for Not Working Game
+
+
+# ui/win32ui.c: 649
+Use Local Language Game List
+
+
+# ui/mame32.rc: 831
+Use RDTSC timing system
+
+
+# ui/mame32.rc: 844
+Use additional Artwork
+
+
+# ui/mame32.rc: 724
+Use classic scanlines
+
+
+# ui/mame32.rc: 640
+Use samples
+
+
+# ui/mame32.rc: 859
+Use transparent in-game menu
+
+
+# ui/mame32.rc: 643
+Use volume auto adjust
+
+
+# ui/layout.c: 68 ui/mame32.rc: 880 ui/options.c: 1120, 2821 ui/properties.c: 877 ui/treeview.c: 299 ui/win32ui.c: 5199
+Vector
+
+
+# ui/treeview.c: 1228
+Vector %4dx%4d
+
+
+# ui/properties.c: 1025 
+Vector Game
+
+
+# ui/mame32.rc: 369
+Version 0
+
+
+# ui/options.c: 4221
+Version Mismatch
+
+
+# ui/properties.c: 434 ui/treeview.c: 954, 955
+Vertical
+
+
+# ui/properties.c: 1100
+Video emulation isn't 100% accurate
+
+
+# ui/mame32.rc: 650
+Volume attenuation
+
+
+# ui/win32ui.c: 7059
+WARNING: the game might not run correctly.
+
+
+# ui/mame32.rc: 683
+Wait for vertical sync
+
+
+# ui/mame32.rc: 1592
+What's new in MAME
+
+
+# ui/paletteedit.c: 108
+Window background
+
+
+# ui/paletteedit.c: 109
+Window frame
+
+
+# ui/paletteedit.c: 111
+Window frame (dark)
+
+
+# ui/paletteedit.c: 110
+Window frame (light)
+
+
+# ui/options.c: 720
+Windows UI specific GUI joystick options
+
+
+# ui/options.c: 735
+Windows UI specific GUI keyboard options
+
+
+# ui/options.c: 641
+Windows UI specific directory options
+
+
+# ui/options.c: 3103
+Windows UI specific folder list filters options
+
+
+# ui/options.c: 668
+Windows UI specific general options
+
+
+# ui/options.c: 774
+Windows UI specific hide folder options
+
+
+# ui/options.c: 711
+Windows UI specific list font options
+
+
+# ui/options.c: 700
+Windows UI specific list options
+
+
+# ui/options.c: 652
+Windows UI specific startup options
+
+
+# ui/options.c: 693
+Windows UI specific window position options
+
+
+# ui/options.c: 457 
+Windows misc options
+
+
+# ui/layout.c: 63 ui/properties.c: 1072
+Working
+
+
+# ui/treeview.c: 996
+Wrong Colors
+
+
+# ui/layout.c: 56 ui/win32ui.c: 740
+Year
+
+
+# ui/audit32.c: 119 ui/win32ui.c: 5207
+Yes
+
+
+# ui/mame32.rc: 618
+Zoom
+
+
+# ui/options.c: 656
+allow game selection by a joystick
+
+
+# ui/mame32.rc: 380
+and John Hardy IV
+
+
+# ui/options.c: 658
+broadcast selected game to all windows
+
+
+# ui/mame32.rc: 110
+by &Date
+
+
+# ui/mame32.rc: 107
+by &Manufacturer
+
+
+# ui/mame32.rc: 105
+by &Name
+
+
+# ui/mame32.rc: 109
+by &Type
+
+
+# ui/mame32.rc: 106
+by D&irectory
+
+
+# ui/mame32.rc: 108
+by Times &Played
+
+
+# ui/options.c: 705
+column order settings
+
+
+# ui/options.c: 704
+column width settings
+
+
+# ui/options.c: 653
+config version
+
+
+# ui/options.c: 654
+enable version mismatch warning
+
+
+# ui/options.c: 3666, 3707, 3794, 3847, 3989 
+error invalid value for %s: %s\n
+
+
+# ui/treeview.c: 77
+folder
+
+
+# ui/dialogs.c: 114
+items to the original, installation\n
+
+
+# ui/options.c: 709
+last selected folder id
+
+
+# ui/options.c: 672
+last selected game name
+
+
+# ui/mame32.rc: 1504, 1504, 1504, 1504, 1504, 1504, 1504, 1504
+res\\toolbar.bmp
+
+
+# ui/options.c: 655
+search for new games
+
+
+# ui/dialogs.c: 115
+settings then exit.\n\n
+
+
+# ui/options.c: 676
+show folder list
+
+
+# ui/options.c: 677
+show image picture
+
+
+# ui/options.c: 675
+show status bar
+
+
+# ui/options.c: 674
+show tool bar
+
+
+# ui/options.c: 707
+sort column
+
+
+# ui/layout.c: 59 ui/options.c: 524 ui/treeview.c: 87 
+sound
+
+
+# ui/options.c: 702
+splitter position
+
+
+# ui/dialogs.c: 117
+the next time MAME32 is run.\n\n
+
+
+# ui/options.c: 701
+view mode
+
+
+# ui/options.c: 697
+window height
+
+
+# ui/options.c: 694
+window left position
+
+
+# ui/options.c: 695
+window top position
+
+
+# ui/options.c: 696
+window width
+
+

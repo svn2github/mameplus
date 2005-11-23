@@ -1,0 +1,72 @@
+# 903
+* Bootleg
+* 盗版
+
+# 1330
+* Hacks
+* 修改版
+
+# 7
+* Prototype
+* 原型
+
+# 1282
+Asia
+亚洲
+
+# 1686
+Brazil
+巴西
+
+# 1649
+China
+中国
+
+# 1653
+Denmark
+丹麦
+
+# 1259
+Europe
+欧洲
+
+# 1670
+France
+法国
+
+# 1681
+Germany
+德国
+
+# 1656
+Hispanic
+西班牙
+
+# 1673
+Italy
+意大利
+
+# 67
+Japan
+日本
+
+# 1316
+Korea
+韩国
+
+# Title
+Region
+区域
+
+# 1676
+Taiwan
+台湾
+
+# 1338
+USA
+美国
+
+# 1043
+World
+世界
+
