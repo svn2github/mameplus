@@ -1086,13 +1086,13 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -wavwrite \"%s\"",           g_pRecordWaveName);
 	if (g_pSaveStateName != NULL)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -state \"%s\"",              g_pSaveStateName);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sautosave",                pOpts->auto_save       ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%slog",                     pOpts->errorlog        ? "" : "no");
-//	sprintf(&pCmdLine[strlen(pCmdLine)], " -%soslog",                   pOpts->errorlog        ? "" : "no");
+//	sprintf(&pCmdLine[strlen(pCmdLine)], " -%soslog",                   pOpts->erroroslog      ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%ssleep",                   pOpts->sleep           ? "" : "no");
 	if (pOpts->old_timing)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -rdtsc");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sleds",                    pOpts->leds            ? "" : "no");
-
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sskip_gameinfo",           pOpts->skip_gameinfo   ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%shigh_priority",           pOpts->high_priority   ? "" : "no");
 

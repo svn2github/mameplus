@@ -545,6 +545,7 @@ static struct rc_option rc_game_opts[] =
 	{ "skip_gameinfo", NULL, rc_bool, &gOpts.skip_gameinfo, "0", 0, 0, NULL, "skip displaying the game info screen" },
 	{ "bios", NULL, rc_string, &gOpts.bios, "default", 0, 14, NULL, "change system bios" },
 	{ "state", NULL, rc_string, &gOpts.statename, NULL, 0, 0, NULL, "state to load" },
+	{ "autosave", NULL, rc_bool, &gOpts.auto_save, "0", 0, 0, NULL, "enable automatic restore at startup and save at exit" },
 #ifdef ROM_PATCH
 	{ "ips_patch", NULL, rc_string, &gOpts.patchname, NULL, 0, 0, NULL, "ips patch datfile name"},
 #endif /* ROM_PATCH */

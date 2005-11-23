@@ -2,19 +2,8 @@
 // Microsoft Developer Studio generated include file.
 // Used by mame32.rc
 //
-#if 0 /* For RC Editors */
-#define USE_SCALE_EFFECTS
-#define TRANS_UI
-#define UI_COLOR_DISPLAY
-#define ROM_PATCH
-#define JOYSTICK_ID
-#define HAS_M68000
-#define USE_JOY_MOUSE_MOVE
-#endif /* For RC Editors */
-
 #define IDPAUSE                         3
 #define IDAPPLY                         4
-
 #define IDS_UI_FILE                     71
 #define IDS_UI_FONT                     72
 #define IDS_UI_VIEW                     73
@@ -22,15 +11,11 @@
 #define IDS_UI_HELP                     75
 #define IDS_UI_TOOLBAR                  76
 #define IDS_UI_STATUSBAR                77
-#ifdef UI_COLOR_DISPLAY
-#define IDS_UI_LANGUAGE                 80	// IDS_UI_FONT + 8
-#else /* UI_COLOR_DISPLAY */
-#define IDS_UI_LANGUAGE                 79	// IDS_UI_FONT + 7
-#endif /* UI_COLOR_DISPLAY */
+#define IDS_UI_LANGUAGE                 80	// status bar (IDS_UI_FONT + 8)
 #define IDS_UI_FOLDERLIST               81
 #define IDS_UI_SCREENSHOT               82
 #define IDS_UI_SPACER1                  83
-#define IDS_UI_SHOWPICTURES             84	// IDS_UI_TOOLBAR + 8
+#define IDS_UI_SHOWPICTURES             84	// status bar (IDS_UI_TOOLBAR + 8)
 #define IDS_UI_LARGEICONS               85
 #define IDS_UI_SMALLICONS               86
 #define IDS_UI_LIST                     87
@@ -38,7 +23,7 @@
 #define IDS_UI_LINEUPICONS              89
 #define IDS_UI_REFRESH                  90
 #define IDS_UI_CUSTOMIZE                91
-#define IDS_UI_ARRANGE                  92	// IDS_UI_TOOLBAR + 16
+#define IDS_UI_ARRANGE                  92	// status bar (IDS_UI_TOOLBAR + 16)
 #define IDS_UI_DETAILS                  93
 
 #define IDD_MAIN                        101
@@ -106,13 +91,9 @@
 #define IDI_HEADER_DOWN                 183
 #define IDD_PROP_DIRECT3D               184
 #define IDD_PROP_CONTROLLER             185
-#ifdef UI_COLOR_DISPLAY
-#define IDD_PALETTE                     190
-#endif /* UI_COLOR_DISPLAY */
+#define IDD_PALETTE                     190 // UI_COLOR_DISPLAY
 #define IDD_PROP_BIOS                   191
-#ifdef ROM_PATCH
-#define IDD_PROP_IPS                    192
-#endif /* ROM_PATCH */
+#define IDD_PROP_IPS                    192 // ROM_PATCH
 #define IDB_TOOLBAR_US                  193
 #define IDB_TOOLBAR_JP                  194
 #define IDB_TOOLBAR_CN                  195
@@ -264,7 +245,7 @@
 #define IDC_KEEPASPECT                  1139
 #define IDC_MATCHREFRESH                1140
 #define IDC_SYNCREFRESH                 1141
-#define IDC_USE_STICKPOINT              1142	// by miko2u@hotmail.com
+#define IDC_USE_STICKPOINT              1142	// USE_STICKPOINT (miko2u@hotmail.com)
 #define IDC_USE_MOUSE                   1143
 #define IDC_THROTTLE                    1144
 #define IDC_RESDEPTH                    1145
@@ -350,6 +331,8 @@
 #define IDC_LIGHTGUNDEVICE              1239
 #define IDC_ANALOG_AXES_TEXT            1240
 #define IDC_ANALOG_AXES                 1241
+#define IDC_AUTO_SAVE                   1242
+
 #define ID_CONTEXT_SHOW_FOLDER_START    39000
 #define ID_CONTEXT_SHOW_FOLDER_END      39200
 
@@ -357,31 +340,27 @@
 #define IDC_CONFIRM_QUIT                1302
 #define IDC_M68K_CORE                   1303 // ks hcmame s switch m68k core
 #define IDC_M68K_CORETEXT               1304 // ks hcmame s switch m68k core
-#ifdef USE_VOLUME_AUTO_ADJUST
-#define IDC_VOLUME_ADJUST               1305
-#endif /* USE_VOLUME_AUTO_ADJUST */
+#define IDC_VOLUME_ADJUST               1305 // USE_VOLUME_AUTO_ADJUST
 #define IDC_BROKEN_ICON                 1306
 #define IDC_EDIT_BROKEN_COLOR           1307
 
-#ifdef JOYSTICK_ID
-#define IDC_JOYID1                      1308
-#define IDC_JOYID2                      1309
-#define IDC_JOYID3                      1310
-#define IDC_JOYID4                      1311
-#define IDC_JOYID5                      1312
-#define IDC_JOYID6                      1313
-#define IDC_JOYID7                      1314
-#define IDC_JOYID8                      1315
-#define IDC_JOYIDTEXT                   1316
-#define IDC_JOYID1TEXT                  1317
-#define IDC_JOYID2TEXT                  1318
-#define IDC_JOYID3TEXT                  1319
-#define IDC_JOYID4TEXT                  1320
-#define IDC_JOYID5TEXT                  1321
-#define IDC_JOYID6TEXT                  1322
-#define IDC_JOYID7TEXT                  1323
-#define IDC_JOYID8TEXT                  1324
-#endif /* JOYSTICK_ID */
+#define IDC_JOYID1                      1308 // JOYSTICK_ID
+#define IDC_JOYID2                      1309 // JOYSTICK_ID
+#define IDC_JOYID3                      1310 // JOYSTICK_ID
+#define IDC_JOYID4                      1311 // JOYSTICK_ID
+#define IDC_JOYID5                      1312 // JOYSTICK_ID
+#define IDC_JOYID6                      1313 // JOYSTICK_ID
+#define IDC_JOYID7                      1314 // JOYSTICK_ID
+#define IDC_JOYID8                      1315 // JOYSTICK_ID
+#define IDC_JOYIDTEXT                   1316 // JOYSTICK_ID
+#define IDC_JOYID1TEXT                  1317 // JOYSTICK_ID
+#define IDC_JOYID2TEXT                  1318 // JOYSTICK_ID
+#define IDC_JOYID3TEXT                  1319 // JOYSTICK_ID
+#define IDC_JOYID4TEXT                  1320 // JOYSTICK_ID
+#define IDC_JOYID5TEXT                  1321 // JOYSTICK_ID
+#define IDC_JOYID6TEXT                  1322 // JOYSTICK_ID
+#define IDC_JOYID7TEXT                  1323 // JOYSTICK_ID
+#define IDC_JOYID8TEXT                  1324 // JOYSTICK_ID
 
 #define IDC_BIOS1                       1325
 #define IDC_BIOS2                       1326
@@ -408,38 +387,30 @@
 #define IDC_D3D_PRESCALETEXT            1347
 #define IDC_USE_LIST                    1348
 
-#ifdef USE_SCALE_EFFECTS
-#define IDC_SCALEEFFECT                 1349
-#define IDC_SCALEEFFECTTEXT             1350
-#endif /* USE_SCALE_EFFECTS */
+#define IDC_SCALEEFFECT                 1349 // USE_SCALE_EFFECTS
+#define IDC_SCALEEFFECTTEXT             1350 // USE_SCALE_EFFECTS
 
-#ifdef UI_COLOR_DISPLAY
-#define IDC_PALETTE_COMBO               1351
-#define IDC_PALETTE_R                   1352
-#define IDC_PALETTE_G                   1353
-#define IDC_PALETTE_B                   1354
-#define IDC_PALETTE_VIEW                1355
-#define IDC_PALETTE_TEXTR               1356
-#define IDC_PALETTE_TEXTG               1357
-#define IDC_PALETTE_TEXTB               1358
-#endif /* UI_COLOR_DISPLAY */
+#define IDC_PALETTE_COMBO               1351 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_R                   1352 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_G                   1353 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_B                   1354 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_VIEW                1355 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_TEXTR               1356 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_TEXTG               1357 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_TEXTB               1358 // UI_COLOR_DISPLAY
 
-#ifdef TRANS_UI
-#define IDC_TRANSUI                     1359
-#define IDC_TRANSPARENCY                1360
-#define IDC_TRANSPARENCYDISP            1361
-#endif /* TRANS_UI */
+#define IDC_TRANSUI                     1359 // TRANS_UI
+#define IDC_TRANSPARENCY                1360 // TRANS_UI
+#define IDC_TRANSPARENCYDISP            1361 // TRANS_UI
 
-#ifdef ROM_PATCH
-#define IDC_IPS1                        1362
-#define IDC_IPS2                        1363
-#define IDC_IPS3                        1364
-#define IDC_IPS4                        1365
-#define IDC_IPS5                        1366
-#define IDC_IPS6                        1367
-#define IDC_IPS7                        1368
-#define IDC_IPS8                        1369
-#endif /* ROM_PATCH */
+#define IDC_IPS1                        1362 // ROM_PATCH
+#define IDC_IPS2                        1363 // ROM_PATCH
+#define IDC_IPS3                        1364 // ROM_PATCH
+#define IDC_IPS4                        1365 // ROM_PATCH
+#define IDC_IPS5                        1366 // ROM_PATCH
+#define IDC_IPS6                        1367 // ROM_PATCH
+#define IDC_IPS7                        1368 // ROM_PATCH
+#define IDC_IPS8                        1369 // ROM_PATCH
 
 #define ID_FILE_EXIT                    40001
 #define ID_ABOUT                        40002
@@ -482,13 +453,13 @@
 #define ID_GAME_AUDIT                   40039
 #define ID_VIEW_PAGETAB                 40040
 #define ID_VIEW_FOLDERS                 40041
-#define ID_VIEW_SHOWPICTURES            40042	// ID_VIEW_PAGETAB + 2
+#define ID_VIEW_SHOWPICTURES            40042	// status bar (ID_VIEW_PAGETAB + 2)
 #define ID_VIEW_TOOLBARS                40043
 #define ID_VIEW_STATUS                  40044
 #define ID_CONTEXT_RENAME_CUSTOM        40045
 #define ID_CONTEXT_FILTERS              40046
 #define ID_CONTEXT_ADD_CUSTOM           40047
-#define ID_CONTEXT_SHOW_FOLDER          40048	// ID_CONTEXT_RENAME_CUSTOM + 3, ID_CONTEXT_FILTERS + 2
+#define ID_CONTEXT_SHOW_FOLDER          40048	// status bar (ID_CONTEXT_RENAME_CUSTOM + 3, ID_CONTEXT_FILTERS + 2)
 #define ID_CONTEXT_REMOVE_CUSTOM        40049
 #define ID_CONTEXT_SELECT_RANDOM        40050
 #define ID_OPTIONS_LANGUAGE             40051
@@ -499,9 +470,7 @@
 #define ID_VIEW_TAB_TITLE               40056
 #define ID_VIEW_TAB_CONTROL_PANEL       40057
 #define ID_VIEW_TAB_HISTORY             40058
-#ifdef STORY_DATAFILE
-#define ID_VIEW_TAB_STORY               40059
-#endif /* STORY_DATAFILE */
+#define ID_VIEW_TAB_STORY               40059 // STORY_DATAFILE
 #define ID_OPTIONS_BG                   40060
 #define ID_TOGGLE_TAB_SCREENSHOT        40061
 #define ID_TOGGLE_TAB_FLYER             40062
@@ -510,9 +479,7 @@
 #define ID_TOGGLE_TAB_TITLE             40065
 #define ID_TOGGLE_TAB_CONTROL_PANEL     40066
 #define ID_TOGGLE_TAB_HISTORY           40067
-#ifdef STORY_DATAFILE
-#define ID_TOGGLE_TAB_STORY             40068
-#endif /* STORY_DATAFILE */
+#define ID_TOGGLE_TAB_STORY             40068 // STORY_DATAFILE
 #define ID_VIEW_FULLSCREEN              40069
 #define ID_CONTEXT_RESET_PLAYTIME       40070
 #define ID_CONTEXT_RESET_PLAYCOUNT      40071
@@ -531,9 +498,7 @@
 #define ID_UI_HISTORY_DOWN              40084
 #define ID_FILE_LOADSTATE               40085
 #define ID_SOURCE_PROPERTIES            40086
-#ifdef UI_COLOR_DISPLAY
-#define ID_OPTIONS_PALETTE              40087
-#endif /* UI_COLOR_DISPLAY */
+#define ID_OPTIONS_PALETTE              40087 // UI_COLOR_DISPLAY
 
 #define ID_LANGUAGE_ENGLISH_US          40101
 #define ID_LANGUAGE_JAPANESE            40102

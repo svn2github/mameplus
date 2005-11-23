@@ -187,6 +187,7 @@ typedef struct
 	BOOL   skip_gameinfo;
 	char*  bios;
 	char*  statename;
+	BOOL   auto_save;
 #ifdef ROM_PATCH
 	char*  patchname;
 #endif /* ROM_PATCH */
