@@ -1,1 +1,1 @@
-Place cpanels files here
+Place cpanel files here
