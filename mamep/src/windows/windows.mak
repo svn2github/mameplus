@@ -1,8 +1,6 @@
 # nasm for Windows (but not cygwin) has a "w" at the end
 ifndef COMPILESYSTEM_CYGWIN
-ifndef USE_XGCC
 ASM = @nasmw
-endif
 endif
 
 DEFS += -DMAMENAME=APPNAME
