@@ -273,7 +273,10 @@ void update_palettemap(void)
 		palettized_colormap[idx] = i;
 	}
 
-	for (i = 65534 - total_colors; i < MAX_COLORTABLE; i++)
+	i = 65534 - total_colors;
+	if (i < 0)
+		i = 0;
+	for (; i < MAX_COLORTABLE; i++)
 		uifont_colortable[i] =
 		    find_near_palette_by_index(palettized_colormap_index[total_colors + i]);
 

@@ -5,27 +5,26 @@
 #define IDPAUSE                         3
 #define IDAPPLY                         4
 #define IDS_UI_FILE                     71
-#define IDS_UI_FONT                     72
-#define IDS_UI_VIEW                     73
-#define IDS_UI_OPTIONS                  74
-#define IDS_UI_HELP                     75
+#define IDS_UI_VIEW                     72
+#define IDS_UI_OPTIONS                  73
+#define IDS_UI_HELP                     74
+#define IDS_UI_FONT                     75
 #define IDS_UI_TOOLBAR                  76
 #define IDS_UI_STATUSBAR                77
-#define IDS_UI_LANGUAGE                 80	// status bar (IDS_UI_FONT + 8)
+#define IDS_UI_SPACER1                  78
+#define IDS_UI_SPACER2                  79
 #define IDS_UI_FOLDERLIST               81
 #define IDS_UI_SCREENSHOT               82
-#define IDS_UI_SPACER1                  83
+#define IDS_UI_LANGUAGE                 83	// status bar (IDS_UI_FONT + 8)
 #define IDS_UI_SHOWPICTURES             84	// status bar (IDS_UI_TOOLBAR + 8)
 #define IDS_UI_LARGEICONS               85
 #define IDS_UI_SMALLICONS               86
 #define IDS_UI_LIST                     87
-#define IDS_UI_SPACER2                  88
-#define IDS_UI_LINEUPICONS              89
-#define IDS_UI_REFRESH                  90
-#define IDS_UI_CUSTOMIZE                91
+#define IDS_UI_LINEUPICONS              88
+#define IDS_UI_REFRESH                  89
+#define IDS_UI_CUSTOMIZE                90
+#define IDS_UI_DETAILS                  91
 #define IDS_UI_ARRANGE                  92	// status bar (IDS_UI_TOOLBAR + 16)
-#define IDS_UI_DETAILS                  93
-
 #define IDD_MAIN                        101
 #define IDA_TAB_KEYS                    106
 #define IDI_MAME32_ICON                 107

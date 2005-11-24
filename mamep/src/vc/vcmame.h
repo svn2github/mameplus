@@ -32,7 +32,6 @@
 //---------------------------------------------------------------------------
 // Compiler Warnings
 
-#pragma warning(disable:592)		// "variable is used before its value is set"
 #pragma warning(disable:4018)		// "signed/unsigned mismatch"
 #pragma warning(disable:4022)		// "pointer mismatch for actual parameter"
 #pragma warning(disable:4090)		// "different 'const' qualifiers"

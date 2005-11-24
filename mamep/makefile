@@ -332,6 +332,7 @@ ifdef USE_GCC
 			-Wundef \
 			-Wwrite-strings \
 			-Wdeclaration-after-statement
+		#	-Wno-unused-functions
 		#	-Wformat-security
     endif
 

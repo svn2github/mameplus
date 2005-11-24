@@ -3880,13 +3880,14 @@ static void VolumeSelectionChange(HWND hwnd)
 static void AudioLatencySelectionChange(HWND hwnd)
 {
 	char buffer[100];
-	int value;
+	int value, nValue;
 
 	// Get the current value of the control
 	value = SendMessage(GetDlgItem(hwnd,IDC_AUDIO_LATENCY), TBM_GETPOS, 0, 0);
+	nValue = SendMessage(GetDlgItem(hwnd,IDC_AUDIO_LATENCY), TBM_GETPOS, 0, 0) + 1;
 
 	/* Set the static display to the new value */
-	snprintf(buffer,sizeof(buffer),"%i/4",value);
+	snprintf(buffer,sizeof(buffer),"%i/5 - %d/5", value, nValue);
 	Static_SetTextA(GetDlgItem(hwnd,IDC_AUDIO_LATENCY_DISP),buffer);
 }
 
