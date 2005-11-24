@@ -59,12 +59,12 @@ typedef HANDLE HTHEME;
 
 #ifdef ROM_PATCH
 #define PATCH_MAX 8
+#endif /* ROM_PATCH */
 #ifdef UNICODE
 #define TTM_SETTITLE            TTM_SETTITLEW
 #else
 #define TTM_SETTITLE            TTM_SETTITLEA
 #endif
-#endif /* ROM_PATCH */
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
@@ -3114,6 +3114,7 @@ static void ResetDataMap(void)
 	if (IS_GAME && pGameOpts->patchname)
 	{
 		char *s = strdup(pGameOpts->patchname);
+		
 		int patch_count = HasPatch(drivers[g_nGame]->name, "*");
 		char *patch_list = malloc(64 * patch_count);
 		int n = 0;
@@ -3125,7 +3126,6 @@ static void ResetDataMap(void)
 
 		for (p = s; *p; p = q)
 		{
-
 			for (q = p; *q; q++)
 				if (*q == ',')
 				{

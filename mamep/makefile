@@ -68,7 +68,7 @@ NEW_DEBUGGER = 1
 # X86_M68K_DRC = 1
 
 # uncomment next line to use DRC MIPS3 engine
-X86_MIPS3_DRC = 1
+# X86_MIPS3_DRC = 1
 
 # uncomment next line to use DRC PowerPC engine
 X86_PPC_DRC = 1

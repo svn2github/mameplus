@@ -827,6 +827,7 @@ const game_driver *drivers[] =
 	DRIVER( timecris )
 	DRIVER( timecrsa )
 	DRIVER( alpinr2b )
+	DRIVER( alpinesa )
 	DRIVER( propcycl )	/* (c) 1996 */
 
 	/* Namco System 23 */
@@ -1895,6 +1896,8 @@ const game_driver *drivers[] =
 	DRIVER( sidebs )	/* E23 (c) 199? Taito Corporation */
 	DRIVER( sidebs2 )	/* E38 (c) 199? Taito Corporation */
 
+	/* Taito "Wolf" System */
+	DRIVER( pf2012 )	/* (c) 1997 Taito */
 
 	/* Toaplan games */
 	DRIVER( perfrman )	/* (c) 1985 Data East Corporation (Japan) */
@@ -4791,6 +4794,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( maxforce )	/*     ??           (c) 1996 */
 	DRIVER( maxf_102 )	/*     ??           (c) 1996 */
 	DRIVER( vcircle )	/* (proto)          (c) 1996 */
+	DRIVER( a51site4 )	/*     ??           (c) 1998 */
 
 	/* SNK / Rock-ola games */
 	DRIVER( sasuke )	/* [1980] Shin Nihon Kikaku (SNK) */
@@ -5927,7 +5931,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( gutsn )		/* (c) 2000 Kaneko / Kouyousha (Japan) */
 	DRIVER( puzzloop )	/* (c) 1998 Mitchell (Europe) */
 	DRIVER( puzloopj )	/* (c) 1998 Mitchell (Japan) */
-	DRIVER( puzloopk )	/* (c) 1998 Mitchell (Japan) */
+	DRIVER( puzloopk )	/* (c) 1998 Mitchell (Korea) */
 	DRIVER( puzloopu )	/* (c) 1998 Mitchell (USA) */
 	DRIVER( jjparads )	/* (c) 1996 Electro Design Co. (Japan) */
 	DRIVER( jjparad2 )	/* (c) 1997 Electro Design Co. (Japan) */
@@ -6047,6 +6051,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	/* Atlus games */
 	DRIVER( powerins )	/* (c) 1993 Atlus (Japan) */
 	DRIVER( powerina )	/* (c) 1993 Atlus (Japan) */
+	DRIVER( powerinj )	/* (c) 1993 Atlus (Japan) */
 	DRIVER( ohmygod )	/* (c) 1993 Atlus (Japan) */
 	DRIVER( naname )	/* (c) 1994 Atlus (Japan) */
 	DRIVER( blmbycar )	/* (c) 1994 ABM & Gecas - uses same gfx chip as powerins? */
