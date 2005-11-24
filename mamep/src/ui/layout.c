@@ -59,7 +59,7 @@ FOLDERDATA g_folderData[] =
 	{"Sound",           "sound",             FOLDER_SND,          IDI_FOLDER,               0,             0,            CreateSoundFolders },
 	{"Orientation",     "orientation",       FOLDER_ORIENTATION,  IDI_FOLDER,               0,             0,            CreateOrientationFolders },
 	{"Imperfect",       "imperfect",         FOLDER_DEFICIENCY,   IDI_FOLDER,               0,             0,            CreateDeficiencyFolders },
-  	{"Dumping Status",  "dumping",           FOLDER_DUMPING,      IDI_FOLDER,               0,             0,            CreateDumpingFolders },
+	{"Dumping Status",  "dumping",           FOLDER_DUMPING,      IDI_FOLDER,               0,             0,            CreateDumpingFolders },
 	{"Working",         "working",           FOLDER_WORKING,      IDI_WORKING,              F_WORKING,     F_NONWORKING, NULL,                       DriverIsBroken,    FALSE },
 	{"Not Working",     "nonworking",        FOLDER_NONWORKING,   IDI_NONWORKING,           F_NONWORKING,  F_WORKING,    NULL,                       DriverIsBroken,    TRUE },
 	{"Originals",       "originals",         FOLDER_ORIGINAL,     IDI_FOLDER,               F_ORIGINALS,   F_CLONES,     NULL,                       DriverIsClone,     FALSE },
@@ -77,7 +77,8 @@ FOLDERDATA g_folderData[] =
 	{"Stereo",          "stereo",            FOLDER_STEREO,       IDI_SOUND,                0,             0,            NULL,                       DriverIsStereo,    TRUE },
  	{"Multi-Monitor",   "multimon",          FOLDER_MULTIMON,     IDI_FOLDER,               0,             0,            NULL,                       DriverIsMultiMon,  TRUE },
 	{"CHD",             "harddisk",          FOLDER_HARDDISK,     IDI_HARDDISK,             0,             0,            NULL,                       DriverIsHarddisk,  TRUE },
-  	{"Samples",    	    "samples",           FOLDER_SAMPLES,      IDI_FOLDER,               0,             0,            NULL,                       DriverUsesSamples,  TRUE },
+	{"Samples",    	    "samples",           FOLDER_SAMPLES,      IDI_FOLDER,               0,             0,            NULL,                       DriverUsesSamples,  TRUE },
+	{"Support Save",    "savestate",         FOLDER_SAVESTATE,    IDI_FOLDER,               0,             0,            NULL,                       DriverSupportsSaveState,  TRUE },
 	{ NULL }
 };
 
@@ -149,11 +150,11 @@ const PROPERTYSHEETINFO g_propSheets[] =
 	{ TRUE,		NULL,					IDD_PROP_DIRECT3D,		GameOptionsProc },
 	{ TRUE,		NULL,					IDD_PROP_SOUND,			GameOptionsProc },
 	{ TRUE,		NULL,					IDD_PROP_INPUT,			GameOptionsProc },
-	{ TRUE,		NULL,					IDD_PROP_CONTROLLER,	        GameOptionsProc },
+	{ TRUE,		NULL,					IDD_PROP_CONTROLLER,	GameOptionsProc },
 	{ TRUE,		NULL,					IDD_PROP_MISC,			GameOptionsProc },
-	{ TRUE,		PropSheetFilter_BIOS,			IDD_PROP_BIOS,			GameOptionsProc },
-	{ FALSE,	PropSheetFilter_IPS,			IDD_PROP_IPS,			GameOptionsProc },
-	{ FALSE,	PropSheetFilter_Vector,			IDD_PROP_VECTOR,		GameOptionsProc },
+	{ TRUE,		PropSheetFilter_BIOS,	IDD_PROP_BIOS,			GameOptionsProc },
+	{ FALSE,	PropSheetFilter_IPS,	IDD_PROP_IPS,			GameOptionsProc },
+	{ FALSE,	PropSheetFilter_Vector,	IDD_PROP_VECTOR,		GameOptionsProc },
 	{ FALSE }
 };
 

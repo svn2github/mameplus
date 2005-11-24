@@ -295,17 +295,13 @@ static HICON            GetSelectedPickItemIcon(void);
 static void             SetRandomPickItem(void);
 static void             PickColor(COLORREF *cDefault);
 
-#if 1 //INHERIT
 static LPTREEFOLDER     GetSelectedFolder(void);
 static HICON            GetSelectedFolderIcon(void);
-#endif /* INHERIT */
 
 static LRESULT CALLBACK HistoryWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 static LRESULT CALLBACK PictureFrameWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 static LRESULT CALLBACK PictureWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-//static INT_PTR CALLBACK LanguageDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam);
 
-//static BOOL             SelectLanguageFile(HWND hWnd, TCHAR* filename);
 static void             ChangeLanguage(int id);
 static void             MamePlayRecordGame(void);
 static void             MamePlayBackGame(void);
@@ -1047,7 +1043,7 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	if (DriverIsVector(nGameIndex))
 	{
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%saa",                      pOpts->antialias       ? "" : "no");
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -%stl",                       pOpts->translucency    ? "" : "no");
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -%stl",                      pOpts->translucency    ? "" : "no");
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -beam %f",                   pOpts->f_beam);
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -flicker %f",                pOpts->f_flicker);
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -intensity %f",              pOpts->f_intensity);
@@ -1056,13 +1052,13 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -sr %d",                     pOpts->samplerate);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%ssamples",                 pOpts->use_samples     ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%ssound",                   pOpts->enable_sound    ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -vol %d",                 pOpts->attenuation);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -vol %d",                    pOpts->attenuation);
 #ifdef USE_VOLUME_AUTO_ADJUST
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%svolume_adjust",           pOpts->use_volume_adjust ? "" : "no");
 #endif /* USE_VOLUME_AUTO_ADJUST */
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -audio_latency %i",          pOpts->audio_latency);
 	/* misc artwork options */
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sart",                 pOpts->use_artwork     ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sart",                     pOpts->use_artwork     ? "" : "no");
 
 	if (pOpts->use_artwork == TRUE)
 	{
@@ -1075,18 +1071,17 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 
 	/* misc */
 	if (pOpts->cheat)
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sc",                   pOpts->cheat ? "" : "no");
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sc",                       pOpts->cheat ? "" : "no");
 	if (pOpts->mame_debug)
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sd",               pOpts->mame_debug ? "" : "no");
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sd",                       pOpts->mame_debug ? "" : "no");
 	if (g_pPlayBkName != NULL)
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -pb \"%s\"",             g_pPlayBkName);
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -pb \"%s\"",                 g_pPlayBkName);
 	if (g_pRecordName != NULL)
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -rec \"%s\"",            g_pRecordName);
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -rec \"%s\"",                g_pRecordName);
 	if (g_pRecordWaveName != NULL)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -wavwrite \"%s\"",           g_pRecordWaveName);
 	if (g_pSaveStateName != NULL)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -state \"%s\"",              g_pSaveStateName);
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sautosave",                pOpts->auto_save       ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%slog",                     pOpts->errorlog        ? "" : "no");
 //	sprintf(&pCmdLine[strlen(pCmdLine)], " -%soslog",                   pOpts->erroroslog      ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%ssleep",                   pOpts->sleep           ? "" : "no");
@@ -1095,6 +1090,8 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sleds",                    pOpts->leds            ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sskip_gameinfo",           pOpts->skip_gameinfo   ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%shigh_priority",           pOpts->high_priority   ? "" : "no");
+	if (pOpts->autosave)
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -autosave");
 
 	if (DriverHasOptionalBIOS(nGameIndex))
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -bios %s",pOpts->bios);		
@@ -1103,7 +1100,7 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sconfirm_quit",            pOpts->confirm_quit    ? "" : "no");
 #ifdef ROM_PATCH
 	if (pOpts->patchname != NULL)
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -ips_patch %s",          pOpts->patchname);
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -ips_patch %s",            pOpts->patchname);
 #endif /* ROM_PATCH */
 #ifdef TRANS_UI
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%suse_trans_ui",            pOpts->use_transui     ? "" : "no");
@@ -2497,7 +2494,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	}
 
 #ifdef MAME_DEBUG
-	if (mame_validitychecks())
+	if (mame_validitychecks(-1))
 	{
 		MessageBoxA(hMain, MAMENAME " has failed its validity checks.  The GUI will "
 			"still work, but emulations will fail to execute", MAMENAME, MB_OK);
@@ -4970,15 +4967,6 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		return TRUE;
 #endif /* UI_COLOR_DISPLAY */
 
-#if 0
-	case ID_OPTIONS_LANGUAGE:
-		DialogBox(GetModuleHandle(NULL),
-				  MAKEINTRESOURCE(IDD_LANGUAGE),
-				  hMain,
-				  LanguageDialogProc);
-		return TRUE;
-#endif
-
 	case ID_HELP_ABOUT:
 		DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT),
 				  hMain, AboutDialogProc);
@@ -5955,109 +5943,6 @@ static BOOL CommonFileDialog(BOOL open_for_write, char *filename, int filetype)
 	else
 		return CommonFileDialogA(open_for_write, filename, filetype);
 }
-
-
-#if 0
-static BOOL SelectLanguageFile(HWND hWnd, TCHAR* filename)
-{
-	OPENFILENAME of;
-
-	of.lStructSize       = sizeof(of);
-	of.hwndOwner         = hWnd;
-	of.hInstance         = NULL;
-	of.lpstrFilter       = MAMENAME " Language files (*.lng)\0*.lng\0";
-	of.lpstrCustomFilter = NULL;
-	of.nMaxCustFilter    = 0;
-	of.nFilterIndex      = 1;
-	of.lpstrFile         = filename;
-	of.nMaxFile          = MAX_PATH;
-	of.lpstrFileTitle    = NULL;
-	of.nMaxFileTitle     = 0;
-	of.lpstrInitialDir   = NULL;
-	of.lpstrTitle        = NULL;
-	of.Flags             = OFN_EXPLORER | OFN_NOCHANGEDIR | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | OFN_FILEMUSTEXIST;
-	of.nFileOffset       = 0;
-	of.nFileExtension    = 0;
-	of.lpstrDefExt       = "lng";
-	of.lCustData         = 0;
-	of.lpfnHook          = NULL;
-	of.lpTemplateName    = NULL;
-
-	return GetOpenFileName(&of);
-}
-
-static INT_PTR CALLBACK LanguageDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
-{
-	TCHAR pLangFile[MAX_PATH];
-	DWORD dwHelpIDs[] = { IDC_LANGUAGECHECK, HIDC_LANGUAGECHECK,
-	                      IDC_LANGUAGEEDIT,  HIDC_LANGUAGEEDIT,
-	                      0, 0};
-
-	switch (Msg)
-	{
-	case WM_INITDIALOG:
-		TranslateDialog(hDlg, lParam, FALSE);
-
-		{
-			const char* pLang = GetLanguage();
-			if (pLang == NULL || *pLang == '\0')
-			{
-				Edit_SetText(GetDlgItem(hDlg, IDC_LANGUAGEEDIT), "");
-				Button_SetCheck(GetDlgItem(hDlg, IDC_LANGUAGECHECK), FALSE);
-				EnableWindow(GetDlgItem(hDlg, IDC_LANGUAGEEDIT),   FALSE);
-				EnableWindow(GetDlgItem(hDlg, IDC_LANGUAGEBROWSE), FALSE);
-			}
-			else
-			{
-				Edit_SetText(GetDlgItem(hDlg, IDC_LANGUAGEEDIT), pLang);
-				Button_SetCheck(GetDlgItem(hDlg, IDC_LANGUAGECHECK), TRUE);
-				EnableWindow(GetDlgItem(hDlg, IDC_LANGUAGEEDIT),   TRUE);
-				EnableWindow(GetDlgItem(hDlg, IDC_LANGUAGEBROWSE), TRUE);
-			}
-
-			return TRUE;
-		}
-
-	case WM_HELP:
-		HelpFunction(((LPHELPINFO)lParam)->hItemHandle, MAME32CONTEXTHELP, HH_TP_HELP_WM_HELP, (DWORD)dwHelpIDs);
-		break;
-
-	case WM_CONTEXTMENU:
-		HelpFunction((HWND)wParam, MAME32CONTEXTHELP, HH_TP_HELP_CONTEXTMENU, (DWORD)dwHelpIDs);
-		break;
-
-	case WM_COMMAND:
-		switch (GET_WM_COMMAND_ID(wParam, lParam))
-		{
-		case IDOK:
-			Edit_GetText(GetDlgItem(hDlg, IDC_LANGUAGEEDIT), pLangFile, MAX_PATH);
-			SetLanguage(pLangFile);
-
-		case IDCANCEL:
-			EndDialog(hDlg, 0);
-			return TRUE;
-
-		case IDC_LANGUAGECHECK:
-		{
-			BOOL bCheck = Button_GetCheck(GetDlgItem(hDlg, IDC_LANGUAGECHECK));
-			EnableWindow(GetDlgItem(hDlg, IDC_LANGUAGEEDIT),   bCheck);
-			EnableWindow(GetDlgItem(hDlg, IDC_LANGUAGEBROWSE), bCheck);
-			if (bCheck == FALSE)
-				Edit_SetText(GetDlgItem(hDlg, IDC_LANGUAGEEDIT), "");
-			return TRUE;
-		}
-
-		case IDC_LANGUAGEBROWSE:
-			Edit_GetText(GetDlgItem(hDlg, IDC_LANGUAGEEDIT), pLangFile, MAX_PATH);
-			if (SelectLanguageFile(hDlg, pLangFile) == TRUE)
-				Edit_SetText(GetDlgItem(hDlg, IDC_LANGUAGEEDIT), pLangFile);
-			break;
-		}
-		break;
-	}
-	return 0;
-}
-#endif
 
 void SetStatusBarText(int part_index, const char *message)
 {

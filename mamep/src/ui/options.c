@@ -545,7 +545,7 @@ static struct rc_option rc_game_opts[] =
 	{ "skip_gameinfo", NULL, rc_bool, &gOpts.skip_gameinfo, "0", 0, 0, NULL, "skip displaying the game info screen" },
 	{ "bios", NULL, rc_string, &gOpts.bios, "default", 0, 14, NULL, "change system bios" },
 	{ "state", NULL, rc_string, &gOpts.statename, NULL, 0, 0, NULL, "state to load" },
-	{ "autosave", NULL, rc_bool, &gOpts.auto_save, "0", 0, 0, NULL, "enable automatic restore at startup and save at exit" },
+	{ "autosave", NULL, rc_bool, &gOpts.autosave, "0", 0, 0, NULL, "enable automatic restore at startup and save at exit" },
 #ifdef ROM_PATCH
 	{ "ips_patch", NULL, rc_string, &gOpts.patchname, NULL, 0, 0, NULL, "ips patch datfile name"},
 #endif /* ROM_PATCH */
@@ -639,7 +639,6 @@ static struct rc_option rc_mamew_opts[] =
 static struct rc_option rc_winui_opts[] =
 {
 	{ "Windows UI specific directory options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-//	{ "language", NULL, rc_string, &settings.language, "english", 0, 0, NULL, "select mame ui language" },
 	{ "flyer_directory", NULL, rc_string, &settings.flyerdir, "flyers", 0, 0, NULL, "directory for flyers" },
 	{ "cabinet_directory", NULL, rc_string, &settings.cabinetdir, "cabinets", 0, 0, NULL, "directory for cabinets" },
 	{ "marquee_directory", NULL, rc_string, &settings.marqueedir, "marquees", 0, 0, NULL, "directory for marquees" },
@@ -1737,21 +1736,6 @@ BOOL GetSortReverse(void)
 {
 	return settings.sort_reverse;
 }
-
-/*
-const char* GetLanguage(void)
-{
-	return settings.language;
-}
-
-void SetLanguage(const char* lang)
-{
-	FreeIfAllocated(&settings.language);
-
-	if (lang != NULL)
-		settings.language = strdup(lang);
-}
-*/
 
 const char* GetRomDirs(void)
 {

@@ -187,7 +187,7 @@ typedef struct
 	BOOL   skip_gameinfo;
 	char*  bios;
 	char*  statename;
-	BOOL   auto_save;
+	BOOL   autosave;
 #ifdef ROM_PATCH
 	char*  patchname;
 #endif /* ROM_PATCH */
@@ -350,7 +350,6 @@ typedef struct
 	BOOL     hide_mouse;    // Should mouse cursor be hidden on startup?
 	BOOL     full_screen;   // Should we fake fullscreen?
 
-//	char*    language;
 	char*    flyerdir;
 	char*    cabinetdir;
 	char*    marqueedir;
@@ -565,11 +564,6 @@ int  GetSortColumn(void);
 
 void SetSortReverse(BOOL reverse);
 BOOL GetSortReverse(void);
-
-/*
-const char* GetLanguage(void);
-void SetLanguage(const char* lang);
-*/
 
 const char* GetRomDirs(void);
 void SetRomDirs(const char* paths);

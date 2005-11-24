@@ -83,7 +83,7 @@
 #define IDD_INTERFACE_OPTIONS           173
 #define IDD_PROP_HISTORY                176
 #define IDD_ROM_ERROR                   177
-#define IDD_LANGUAGE                    178
+
 #define IDD_ERROR                       179
 #define IDR_CONTEXT_SCREENSHOT          181
 #define IDI_HEADER_UP                   182
@@ -229,9 +229,9 @@
 #define IDC_TRIPLE_BUFFER               1123
 #define IDC_LOAD_ROMNAME                1124
 #define IDC_DEFAULT_INPUT               1125
-#define IDC_LANGUAGECHECK               1126
-#define IDC_LANGUAGEBROWSE              1127
-#define IDC_LANGUAGEEDIT                1128
+
+
+
 #define IDC_FILTER_EDIT                 1129
 #define IDC_ABOUT                       1130
 #define IDC_PROP_DISPLAY                1131
@@ -277,6 +277,7 @@
 #define IDC_LOAD_STATUS                 1173
 #define IDC_ERROR_TEXT                  1174
 #define IDC_ARTMISCTEXT                 1175
+#define IDC_ENABLE_AUTOSAVE             1176
 #define IDC_SKIP_GAME_INFO              1177
 #define IDC_PROP_SOURCE                 1178
 #define IDC_OLD_TIMING                  1179
@@ -330,8 +331,6 @@
 #define IDC_LIGHTGUNDEVICE              1239
 #define IDC_ANALOG_AXES_TEXT            1240
 #define IDC_ANALOG_AXES                 1241
-#define IDC_AUTO_SAVE                   1242
-
 #define ID_CONTEXT_SHOW_FOLDER_START    39000
 #define ID_CONTEXT_SHOW_FOLDER_END      39200
 
@@ -461,7 +460,7 @@
 #define ID_CONTEXT_SHOW_FOLDER          40048	// status bar (ID_CONTEXT_RENAME_CUSTOM + 3, ID_CONTEXT_FILTERS + 2)
 #define ID_CONTEXT_REMOVE_CUSTOM        40049
 #define ID_CONTEXT_SELECT_RANDOM        40050
-#define ID_OPTIONS_LANGUAGE             40051
+
 #define ID_VIEW_TAB_SCREENSHOT          40052
 #define ID_VIEW_TAB_FLYER               40053
 #define ID_VIEW_TAB_CABINET             40054

@@ -279,8 +279,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,101,0,0
- PRODUCTVERSION 0,101,0,0
+ FILEVERSION 0,102,0,0
+ PRODUCTVERSION 0,102,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -299,13 +299,13 @@ BEGIN
             VALUE "Comments", "Multiple Arcade Machine Emulator for Win32\0"
             VALUE "CompanyName", "MAME Team\0"
             VALUE "FileDescription", "Multiple Arcade Machine Emulator for Win32\0"
-            VALUE "FileVersion", "0, 101, 0, 0\0"
+            VALUE "FileVersion", "0, 102, 0, 0\0"
             VALUE "InternalName", "MAME32\0"
             VALUE "LegalCopyright", "Copyright 1997-2005 Nicola Salmoria and the MAME team\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "MAME32.exe\0"
             VALUE "ProductName", "MAME32\0"
-            VALUE "ProductVersion", "0, 101, 0, 0\0"
+            VALUE "ProductVersion", "0, 102, 0, 0\0"
         END
     END
     BLOCK "VarFileInfo"
@@ -650,11 +650,11 @@ BEGIN
     GROUPBOX        "Volume attenuation",IDC_VOLUMETEXT,68,120,124,30
     CONTROL         "Slider1",IDC_VOLUME,"msctls_trackbar32",TBS_BOTH | 
                     TBS_NOTICKS | WS_TABSTOP,74,134,74,11,0,HIDC_VOLUME
-    CTEXT           "0dB",IDC_VOLUMEDISP,153,134,34,10,SS_CENTERIMAGE
+    CTEXT           "0dB",IDC_VOLUMEDISP,153,134,35,10,SS_CENTERIMAGE
     GROUPBOX        "Audio latency",IDC_AUDIO_LATENCY_TEXT,68,153,124,30
     CONTROL         "Slider1",IDC_AUDIO_LATENCY,"msctls_trackbar32",TBS_BOTH | 
                     TBS_NOTICKS | WS_TABSTOP,74,166,74,11,0,HIDC_AUDIO_LATENCY
-    CTEXT           "1/5 - 2/5",IDC_AUDIO_LATENCY_DISP,153,166,34,10,SS_CENTERIMAGE
+    CTEXT           "1/5 ~ 2/5",IDC_AUDIO_LATENCY_DISP,153,166,35,10,SS_CENTERIMAGE
     PUSHBUTTON      "Reset",IDC_PROP_RESET,4,225,117,14,0,0,HIDC_PROP_RESET
     PUSHBUTTON      "Restore Default Settings",IDC_USE_DEFAULT,138,225,117,14,
                     0,0,HIDC_USE_DEFAULT
@@ -835,8 +835,8 @@ BEGIN
     CONTROL         "Skip game info",IDC_SKIP_GAME_INFO,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,115,135,10,0,
                     HIDC_SKIP_GAME_INFO
-    CONTROL         "Auto restore and save (only if available)",IDC_AUTO_SAVE,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,129,135,10
+    CONTROL         "Auto restore and save (only if available)",IDC_ENABLE_AUTOSAVE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,129,135,10,0,HIDC_ENABLE_AUTOSAVE
     CONTROL         "Confirm on exit game",IDC_CONFIRM_QUIT,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,143,135,10
     GROUPBOX        "",IDC_STATIC,147,45,108,110,WS_DISABLED
@@ -1072,25 +1072,6 @@ BEGIN
     DEFPUSHBUTTON   "&OK",IDOK,156,213,60,14
     PUSHBUTTON      "&Cancel",IDCANCEL,224,213,60,14
 END
-
-/*
-IDD_LANGUAGE DIALOGEX 0, 0, 186, 66
-STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
-EXSTYLE WS_EX_CONTEXTHELP
-CAPTION "Language"
-FONT 8, "MS Sans Serif"
-BEGIN
-    GROUPBOX        "",IDC_STATIC,6,4,178,34
-    CONTROL         "Use language file",IDC_LANGUAGECHECK,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,7,79,10,0,
-                    HIDC_LANGUAGECHECK
-    EDITTEXT        IDC_LANGUAGEEDIT,7,22,154,13,ES_AUTOHSCROLL,0,
-                    HIDC_LANGUAGEEDIT
-    PUSHBUTTON      "...",IDC_LANGUAGEBROWSE,166,22,13,13
-    DEFPUSHBUTTON   "OK",IDOK,41,45,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,95,45,50,14
-END
-*/
 
 IDD_PROP_CONTROLLER DIALOGEX 0, 0, 260, 245
 STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
@@ -1473,16 +1454,6 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 191
     END
-
-/*
-    IDD_LANGUAGE, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 179
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 59
-    END
-*/
 END
 #endif    // APSTUDIO_INVOKED
 

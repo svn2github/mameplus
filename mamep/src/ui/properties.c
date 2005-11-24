@@ -335,8 +335,6 @@ static DWORD dwHelpIDs[] =
 	IDC_INTENSITY,          HIDC_INTENSITY,
 	IDC_JOYSTICK,           HIDC_JOYSTICK,
 	IDC_KEEPASPECT,         HIDC_KEEPASPECT,
-//	IDC_LANGUAGECHECK,      HIDC_LANGUAGECHECK,
-//	IDC_LANGUAGEEDIT,       HIDC_LANGUAGEEDIT,
 	IDC_LEDS,               HIDC_LEDS,
 	IDC_LOG,                HIDC_LOG,
 	IDC_SLEEP,              HIDC_SLEEP,
@@ -405,6 +403,7 @@ static DWORD dwHelpIDs[] =
 	IDC_DIAL,				HIDC_DIAL,
 	IDC_TRACKBALL,			HIDC_TRACKBALL,
 	IDC_LIGHTGUNDEVICE,		HIDC_LIGHTGUNDEVICE,
+	IDC_ENABLE_AUTOSAVE,    HIDC_ENABLE_AUTOSAVE,
 	0,                      0
 };
 
@@ -3335,7 +3334,7 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_LEDS,          DM_BOOL, CT_BUTTON,   &pGameOpts->leds,          DM_BOOL, &pGameOpts->leds,          0, 0, 0);
 	DataMapAdd(IDC_BIOS,          DM_INT,  CT_COMBOBOX, &g_nBiosIndex,             DM_STRING, &pGameOpts->bios,        0, 0, AssignBios);
 	DataMapAdd(IDC_SKIP_GAME_INFO,  DM_BOOL,CT_BUTTON,  &pGameOpts->skip_gameinfo, DM_BOOL, &pGameOpts->skip_gameinfo, 0, 0, 0);
-	DataMapAdd(IDC_AUTO_SAVE,     DM_BOOL, CT_BUTTON,   &pGameOpts->auto_save,     DM_BOOL, &pGameOpts->auto_save,     0, 0, 0);
+	DataMapAdd(IDC_ENABLE_AUTOSAVE, DM_BOOL, CT_BUTTON, &pGameOpts->autosave,      DM_BOOL, &pGameOpts->autosave,     0, 0, 0);
 	DataMapAdd(IDC_CONFIRM_QUIT,  DM_BOOL, CT_BUTTON,   &pGameOpts->confirm_quit,  DM_BOOL, &pGameOpts->confirm_quit,  0, 0, 0);
 #ifdef TRANS_UI
 	DataMapAdd(IDC_TRANSUI,       DM_BOOL, CT_BUTTON,   &pGameOpts->use_transui,   DM_BOOL, &pGameOpts->use_transui,   0, 0, 0);
@@ -3880,14 +3879,13 @@ static void VolumeSelectionChange(HWND hwnd)
 static void AudioLatencySelectionChange(HWND hwnd)
 {
 	char buffer[100];
-	int value, nValue;
+	int value;
 
 	// Get the current value of the control
 	value = SendMessage(GetDlgItem(hwnd,IDC_AUDIO_LATENCY), TBM_GETPOS, 0, 0);
-	nValue = SendMessage(GetDlgItem(hwnd,IDC_AUDIO_LATENCY), TBM_GETPOS, 0, 0) + 1;
 
 	/* Set the static display to the new value */
-	snprintf(buffer,sizeof(buffer),"%i/5 - %d/5", value, nValue);
+	snprintf(buffer,sizeof(buffer),"%i/5 ~ %i/5", value, value + 1);
 	Static_SetTextA(GetDlgItem(hwnd,IDC_AUDIO_LATENCY_DISP),buffer);
 }
 
