@@ -6,9 +6,21 @@
 A wave inc.
 A wave inc.
 
+# Magic's 10 (ver. 16.55)
+A.W.P. Games
+A.W.P. Games
+
+# Water Balls
+ABM
+ABM
+
 # Blomby Car
 ABM & Gecas
 ABM & Gecas
+
+# Magic's 10 2 (ver 1.1)
+ABM Games
+ABM Games
 
 # Nozokimeguri Mahjong Peep Show (Japan 890404)
 AC
@@ -194,6 +206,10 @@ Banpresto
 Barko
 Barko
 
+# Zip & Zap
+Barko Corp
+Barko Corp
+
 # Many Block
 Bee-Oh
 Bee-Oh
@@ -209,10 +225,6 @@ Brezzasoft
 # Herbie at the Olympics (DK conversion)
 CVS
 CVS
-
-# Truco Clemente
-Caloi Miky SRL
-Caloi Miky SRL
 
 # 1942 (PlayChoice-10)
 Capcom
@@ -266,6 +278,10 @@ Chuo Co. Ltd
 Cinematronics
 Cinematronics
 
+# Quizmaster
+Coinmaster
+Coinmaster
+
 # Gulf War II
 Comad
 Comad
@@ -318,7 +334,7 @@ Daiichi Denshi
 Daiki
 Daiki
 
-# Vamp 1/2 (Korea)
+# Vamp 1/2 (Korea version)
 Danbi & F2 System
 Danbi & F2 System
 
@@ -554,9 +570,13 @@ Face
 Face?
 Face?
 
-# Crazy Kong (set 1)
+# Frogger (Falcon bootleg)
 Falcon
 Falcon
+
+# Metal Saver
+First Amusement
+First Amusement
 
 # Space Thunderbird
 Fortrek
@@ -566,7 +586,7 @@ Fortrek
 Free Enterprise Games
 Free Enterprise Games
 
-# Bonus Card? (Austria)
+# Jolly Card (Austria, Fun World)
 Fun World
 Fun World
 
@@ -730,7 +750,7 @@ Impera
 Incredible Technologies
 Incredible Technologies
 
-# Inter Game Poker?
+# Jolly Card (Austria, Fun World, bootleg)
 Inter Games
 Inter Games
 
@@ -741,6 +761,10 @@ Interlogic
 # Born To Fight
 International Games
 International Games
+
+# Egg Hunt
+Invi Image
+Invi Image
 
 # UniWar S
 Irem
@@ -969,6 +993,10 @@ Midway
 # CarnEvil
 Midway Games
 Midway Games
+
+# Truco Clemente
+Miky SRL
+Miky SRL
 
 # Gumbo
 Min Corp.
@@ -1338,7 +1366,7 @@ Seibu Kaihatsu Inc.
 SemiCom
 SemiCom
 
-# Cool Mini
+# Cool Minigame Collection
 Semicom
 Semicom
 
@@ -1398,7 +1426,7 @@ Sisteme
 Soft
 Soft
 
-# Jolly Poker (Croatia)
+# Jolly Card (Croatia)
 Soft Design
 Soft Design
 
@@ -1449,6 +1477,10 @@ Sun Amusement
 # Speak & Rescue
 Sun Electronics
 Sun Electronics
+
+# Top Shooter
+Sun Mixing
+Sun Mixing
 
 # Goindol (World)
 Sun a Electronics

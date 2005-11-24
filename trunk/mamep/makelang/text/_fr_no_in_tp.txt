@@ -1,0 +1,116 @@
+#  (fr_mame.txt)
+The game uses hardware which isn't fully simulated.
+Le jeu utilise du hardware qui n'est pas complètement simulé.
+
+#  (fr_mame.txt)
+The game uses hardware which isn't fully simulated.\n
+Le jeu utilise du hardware qui n'est pas complétement simulé.\n
+
+#  (fr_ui.txt)
+Artwork resolution:
+Résolution de l'Artwork :
+
+#  (fr_ui.txt)
+Aspect ratio:
+Ratio d'affichage :
+
+#  (fr_ui.txt)
+Beam width:
+Largeur du faisceau :
+
+#  (fr_ui.txt)
+Classic MAME scanlines
+Scanlines classique MAME
+
+#  (fr_ui.txt)
+Clean stretch:
+Etirer correctement :
+
+#  (fr_ui.txt)
+Confirm on exit
+Confirmer pour quitter
+
+#  (fr_ui.txt)
+Effect overrides
+Effet overrides
+
+#  (fr_ui.txt)
+Effect:
+Effet :
+
+#  (fr_ui.txt)
+Filter:
+Filtre :
+
+#  (fr_ui.txt)
+Flicker:
+Osciller :
+
+#  (fr_ui.txt)
+Full screen brightness:
+Luminosité en Plein écran :
+
+#  (fr_ui.txt)
+Image Enhancement:
+Amélioration de l'image :
+
+#  (fr_ui.txt)
+Increase thread priority
+Augmenter la priorité thread
+
+#  (fr_ui.txt)
+Intensity:
+Intensité :
+
+#  (fr_ui.txt)
+M68K Core:
+Core M68K :
+
+#  (fr_ui.txt)
+Minimal analog value for digital input:
+valeur analog. mini. pour l'entrée num.:
+
+#  (fr_ui.txt)
+Monitor
+Moniteur
+
+#  (fr_ui.txt)
+Rendering
+Rendu
+
+#  (fr_ui.txt)
+Samplerate:
+Taux d'échantillonage:
+
+#  (fr_ui.txt)
+Sleep when idle
+Mise en veille
+
+#  (fr_ui.txt)
+Texture management
+Gestionnaire de texture
+
+#  (fr_ui.txt)
+Unsimulated Hardware
+Hardware non simulé
+
+#  (fr_ui.txt)
+Use additional game artwork
+Utiliser les Artworks supplémentaire
+
+#  (fr_ui.txt)
+Zoom:
+Zoom :
+
+#  (fr_windows.txt)
+list available devices
+Liste des périphériques disponible
+
+#  (fr_windows.txt)
+list available file extensions
+Liste des fichiers d'extension disponible
+
+#  (fr_windows.txt)
+who am I? cannot determine the name I was called with\n
+Qui suis-je? Je ne peux définir le nom que j'avais\n
+

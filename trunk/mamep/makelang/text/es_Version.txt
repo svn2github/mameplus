@@ -42,6 +42,18 @@
 .100
 0.99
 
+# 6330
+.100u1
+0.100 Actualización 1
+
+# 6338
+.100u2
+0.100 Actualización 2
+
+# 6349
+.100u3
+0.100 Actualización 3
+
 # 91
 .11
 0.11
@@ -1014,7 +1026,7 @@
 .99u5
 0.99 Actualización 5
 
-# 6293
+# 6292
 .99u6
 0.99 Actualización 6
 
@@ -1030,7 +1042,7 @@
 .99u9
 0.99 Actualización 9
 
-# 6328
+# 6364
 Extra Games
 Juegos Extras
 

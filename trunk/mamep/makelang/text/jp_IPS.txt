@@ -1,6 +1,6 @@
 # Title
-Hack
-ハック
+IPS
+IPS
 
 # 7
 Misc
@@ -10,7 +10,7 @@ Misc
 Neo-Geo
 ネオジオ
 
-# 67
+# 78
 Translation
 翻訳版
 

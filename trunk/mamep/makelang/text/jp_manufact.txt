@@ -654,8 +654,20 @@ hack
 A wave inc.
 
 
+# Magic's 10 (ver. 16.55)
+A.W.P. Games
+
+
+# Water Balls
+ABM
+
+
 # Blomby Car
 ABM & Gecas
+
+
+# Magic's 10 2 (ver 1.1)
+ABM Games
 
 
 # Nozokimeguri Mahjong Peep Show (Japan 890404)
@@ -782,6 +794,10 @@ Bandai
 Barko
 
 
+# Zip & Zap
+Barko Corp
+
+
 # Many Block
 Bee-Oh
 
@@ -830,6 +846,10 @@ Century?
 Cinematronics
 
 
+# Quizmaster
+Coinmaster
+
+
 # Gulf War II
 Comad
 
@@ -874,7 +894,7 @@ Daehyun Electronics
 Daiki
 
 
-# Vamp 1/2 (Korea)
+# Vamp 1/2 (Korea version)
 Danbi & F2 System
 
 
@@ -1022,6 +1042,10 @@ Face?
 Falcon
 
 
+# Metal Saver
+First Amusement
+
+
 # Space Thunderbird
 Fortrek
 
@@ -1030,7 +1054,7 @@ Fortrek
 Free Enterprise Games
 
 
-# Bonus Card? (Austria)
+# Jolly Card (Austria, Fun World)
 Fun World
 
 
@@ -1142,7 +1166,7 @@ Icarus
 Impera
 
 
-# Inter Game Poker?
+# Jolly Card (Austria, Fun World, bootleg)
 Inter Games
 
 
@@ -1152,6 +1176,10 @@ Interlogic
 
 # Born To Fight
 International Games
+
+
+# Egg Hunt
+Invi Image
 
 
 # Tut's Tomb
@@ -1554,7 +1582,7 @@ Seibu Kaihatsu Inc.
 SemiCom
 
 
-# Cool Mini
+# Cool Minigame Collection
 Semicom
 
 
@@ -1598,7 +1626,7 @@ Sisteme
 Soft
 
 
-# Jolly Poker (Croatia)
+# Jolly Card (Croatia)
 Soft Design
 
 
@@ -1624,6 +1652,10 @@ Subsino
 
 # Mission Craft (version 2.4)
 Sun
+
+
+# Top Shooter
+Sun Mixing
 
 
 # Goindol (World)

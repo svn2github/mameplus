@@ -1,16 +1,16 @@
 # Title
-Hack
-Hack
+IPS
+IPS
 
 # 7
 Misc
-Vegyes
+Különféle
 
 # 25
 Neo-Geo
 Neo-Geo
 
-# 67
+# 78
 Translation
 Fordítás
 

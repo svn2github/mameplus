@@ -1,32 +1,28 @@
-# ui/properties.c: 943
- (sound)
- (hang)
-
-# ui/properties.c: 1022
+# ui/properties.c: 1049
 %d colors 
 %d színek
 
-# ui/win32ui.c: 238, 3517
+# ui/win32ui.c: 247, 3556
 %d games
 %d játék
 
-# ui/mame32.rc: 151
+# ui/mame32.rc: 154
 &About
 &Névjegy
 
 # ui/mame32.rc: 44
 &About MAME32
-&MAME32 névjegy
+&MAME32 névjegye
 
-# ui/mame32.rc: 63, 163
+# ui/mame32.rc: 63, 166
 &Add to Custom Folder...
 &Hozzáadás az egyéni mappához...
 
-# ui/mame32.rc: 1016
+# ui/mame32.rc: 986
 &All games to use default options
 &Minden játék használja az alap beállításokat
 
-# ui/mame32.rc: 203
+# ui/mame32.rc: 206
 &Audit
 &Ellenõrzés
 
@@ -34,19 +30,19 @@
 &Audit all games
 &Az összes játék ellenõrzése
 
-# ui/mame32.rc: 126
+# ui/mame32.rc: 129
 &Background Image...
 &Háttérkép...
 
-# ui/mame32.rc: 1063
+# ui/mame32.rc: 1034
 &Broadcast selected game to all windows
 &A választott játék közvetítése minden ablakba
 
-# ui/mame32.rc: 86, 219, 229
+# ui/mame32.rc: 86, 222, 235
 &Cabinet
 &Játékgép
 
-# ui/mame32.rc: 394, 998, 1025, 1041, 1121, 1153
+# ui/mame32.rc: 402, 968, 995, 1012, 1079, 1149
 &Cancel
 &Mégsem
 
@@ -54,7 +50,7 @@
 &Close
 &Bezárás
 
-# ui/mame32.rc: 145
+# ui/mame32.rc: 148
 &Contents\tF1
 &Tartalom\tF1
 
@@ -62,27 +58,27 @@
 &Continue
 &Folytatás
 
-# ui/mame32.rc: 165, 195
+# ui/mame32.rc: 168, 198
 &Custom Filters...
 &Egyéni szûrõk...
 
-# ui/mame32.rc: 112
+# ui/mame32.rc: 115
 &Custom Filters...\tCtrl+F
 &Egyéni szûrõk...\tCtrl+F
 
-# ui/mame32.rc: 1013
+# ui/mame32.rc: 983
 &Default game options
 &Játék alap beállítások
 
-# ui/mame32.rc: 994
+# ui/mame32.rc: 964
 &Description filter
 &Típus szûrõ
 
-# ui/mame32.rc: 97
+# ui/mame32.rc: 100
 &Details
 &Részletek
 
-# ui/mame32.rc: 119
+# ui/mame32.rc: 122
 &Directories...
 &Könyvtárak...
 
@@ -94,67 +90,67 @@
 &File
 &Fájl
 
-# ui/mame32.rc: 85, 218, 228
+# ui/mame32.rc: 85, 221, 234
 &Flyer
 &Plakát
 
-# ui/mame32.rc: 1019
+# ui/mame32.rc: 989
 &Folder 'filters'
 &Mappa szûrõk
 
 # ui/mame32.rc: 80
 &Fullscreen\tF11
-&Teljesképernyõ\tF11
+&Teljes képernyõ\tF11
 
-# ui/mame32.rc: 98
+# ui/mame32.rc: 101
 &Grouped
 &Csoportosítva
 
-# ui/mame32.rc: 42, 143
+# ui/mame32.rc: 42, 146
 &Help
 &Súgó
 
-# ui/mame32.rc: 91, 224, 234
+# ui/mame32.rc: 91, 227, 239
 &History
-&Történet
+&Ismertetõ
 
-# ui/mame32.rc: 125
+# ui/mame32.rc: 128
 &Interface Options...
 &Megjelenés beállítás...
 
-# ui/mame32.rc: 127
+# ui/mame32.rc: 130
 &Language
 &Nyelv
 
-# ui/mame32.rc: 96
+# ui/mame32.rc: 99
 &List
 &Lista
 
-# ui/mame32.rc: 149
+# ui/mame32.rc: 152
 &Mame Release Notes
 &Mame megjelenések
 
-# ui/mame32.rc: 87, 220, 230
+# ui/mame32.rc: 87, 223, 236
 &Marquee
 &Matrica
 
-# ui/mame32.rc: 148
+# ui/mame32.rc: 151
 &New Game Changes
 &Új játék változások
 
-# ui/mame32.rc: 358, 997, 1024, 1040, 1120, 1152
+# ui/mame32.rc: 366, 967, 994, 1011, 1078, 1148
 &OK
 &Rendben
 
-# ui/mame32.rc: 115
+# ui/mame32.rc: 118
 &Options
 &Beállítások
 
-# ui/mame32.rc: 122
+# ui/mame32.rc: 125
 &Palette Setting...
 &Paletta beállítás...
 
-# ui/audit32.c: 265 ui/mame32.rc: 393
+# ui/audit32.c: 265 ui/mame32.rc: 401
 &Pause
 &Szünet
 
@@ -162,47 +158,47 @@
 &Picture Area\tAlt+P
 &Kép terület\tAlt+P
 
-# ui/mame32.rc: 52, 159 ui/win32ui.c: 3582
+# ui/mame32.rc: 52, 162 ui/win32ui.c: 3670
 &Play
 &Játék
 
-# ui/win32ui.c: 237, 3616, 6513
+# ui/win32ui.c: 246, 3704, 6611, 6639
 &Play %s
 &Játék %s
 
-# ui/mame32.rc: 205
+# ui/mame32.rc: 208
 &Properties
 &Tulajdonságok
 
-# ui/mame32.rc: 986
+# ui/mame32.rc: 956
 &Raster Graphics
 &Raszter grafika
 
-# ui/mame32.rc: 111
+# ui/mame32.rc: 114
 &Refresh\tF5
 &Frissítés\tF5
 
-# ui/mame32.rc: 194
+# ui/mame32.rc: 197
 &Rename
 &Átnevezés
 
-# ui/mame32.rc: 124
+# ui/mame32.rc: 127
 &Reset to Default...
 &Alapbeállítások visszaállítása...
 
-# ui/mame32.rc: 1051
+# ui/mame32.rc: 1022
 &Search for new games on start
 &Új játékok keresése induláskor
 
-# ui/mame32.rc: 61, 167
+# ui/mame32.rc: 61, 170
 &Select Random Game
 &Véletlenszerû játék választás
 
-# ui/mame32.rc: 197
+# ui/mame32.rc: 200
 &Show Folders
 &Mappák megjelenítése
 
-# ui/mame32.rc: 84, 217, 227
+# ui/mame32.rc: 84, 220, 233
 &Snapshot
 &Pillanatkép
 
@@ -210,7 +206,7 @@
 &Status bar\tAlt+S
 &Állapotsor\tAlt+S
 
-# ui/mame32.rc: 88, 221, 231
+# ui/mame32.rc: 88, 224, 237
 &Title
 &Kezdõkép
 
@@ -218,19 +214,19 @@
 &Toolbar\tAlt+T
 &Eszköztár\tAlt+T
 
-# ui/mame32.rc: 146
+# ui/mame32.rc: 149
 &Troubleshooting
 &Hibakeresés
 
-# ui/mame32.rc: 983
+# ui/mame32.rc: 953
 &Unavailable
 &Nem elérhetõ
 
-# ui/mame32.rc: 1010
+# ui/mame32.rc: 980
 &User Interface (Fonts, Colors, Sizes)
 &Felhasználói felület (betûk, színek, méretek)
 
-# ui/mame32.rc: 975
+# ui/mame32.rc: 945
 &Vector Graphics
 &Vektor grafika
 
@@ -238,151 +234,159 @@
 &View
 &Nézet
 
-# ui/mame32.rc: 992
+# ui/mame32.rc: 962
 &Working
 &Mûködõ
 
-# ui/win32ui.c: 6119
+# ui/win32ui.c: 6217
 '%s' is not a valid savestate file for game '%s'.
 '%s' nem érvényes fájl játékmentéshez '%s'.
 
-# ui/mame32.rc: 999
+# ui/mame32.rc: 969
 (*) = inherited from parent folder
 (*) = fõkönyvtárból örökölt
 
-# ui/properties.c: 447
+# ui/properties.c: 445
 25% scanlines
 25% képsor
 
-# ui/properties.c: 448
+# ui/properties.c: 446
 50% scanlines
 50% képsor
 
-# ui/properties.c: 449
+# ui/properties.c: 447
 75% scanlines
 75% képsor
 
-# ui/properties.c: 450
+# ui/properties.c: 448
 75% vertical scanlines
 75% függõleges képsor
 
-# ui/mame32.rc: 450
+# ui/mame32.rc: 458
 <- Remove
 <- Elmozdít
 
-# ui/treeview.c: 516, 537, 1110
+# ui/treeview.c: 516, 537, 1127
 <unknown>
 <Ismeretlen>
 
-# ui/m32util.c: 251
+# ui/m32util.c: 253
 A sharing violation occurred.
 Egy megosztás áthágás történt.
 
-# ui/mame32.rc: 172
+# ui/mame32.rc: 175
 A&udit
 E&llenõrzés
 
-# ui/treeview.c: 1268
+# ui/treeview.c: 1285
 AD STICK
-ANALÓG/DIGITÁLIS KAR
+Analóg/digitális
 
-# ui/win32ui.c: 644
+# ui/mame32.rc: 1113
+ADStick device
+Analóg/digitális eszköz
+
+# ui/win32ui.c: 659
 About
 Névjegy
 
-# ui/mame32.rc: 355
+# ui/mame32.rc: 363
 About MAME32
-MAME32 névjegy
+MAME32 névjegye
 
-# ui/mame32.rc: 449
+# ui/mame32.rc: 457
 Add ->
 Hozzáad ->
 
-# ui/mame32.rc: 1173
+# ui/mame32.rc: 1169
 Add Game To Custom Folder
 Játék hozzáadása az egyedi mappához
 
-# ui/mame32.rc: 1611
+# ui/mame32.rc: 1607
 Add currently selected game to a custom folder
 A kiválasztott játék egyedi mappához rendelése
 
-# ui/mame32.rc: 367
+# ui/mame32.rc: 375
 Additional MAME32 code by
 Kiegészítõ MAME32 kód:
 
-# ui/mame32.rc: 682
+# ui/mame32.rc: 665
 Advanced
-Egyedi
+Haladó
 
-# ui/dialogs.c: 205
+# ui/dialogs.c: 206
 All
 Mind
 
-# ui/layout.c: 49
+# ui/layout.c: 50
 All Games
 Minden játék
 
-# ui/win32ui.c: 5713, 5716, 5719, 5792, 5795, 5798
+# ui/win32ui.c: 742, 749, 756
 All files (*.*)
 Minden fájl (*.*)
 
-# ui/mame32.rc: 1054
+# ui/mame32.rc: 1025
 Allow game selection by a &joystick (requires restart)
 Játék választáshoz &joystick (újraindítást igényel)
 
-# ui/mame32.rc: 1057
+# ui/mame32.rc: 1028
 Allow game selection by custom &key sequences
-Játék kiválasztás egyéni &gombkombinációkkal
+Játék választás egyedi &gombkombinációkkal
 
-# ui/mame32.rc: 1586
+# ui/mame32.rc: 1582
 Allow restoring options to 'sane' values.
 Eredetileg használt beállítások alkalmazása.
 
-# ui/mame32.rc: 1611
+# ui/mame32.rc: 1607
 Allows filtering out games from a folder
-Játékok mappából történõ kiszûrés
+Játékok válogatásának lehetõsége egy mappából
 
-# ui/properties.c: 521
-Anisotropic
-Anisotropic
+# ui/mame32.rc: 751
+Analog deadzone
+Analóg holt terület
 
-# ui/properties.c: 3639
+# ui/properties.c: 519
+Anisotropic
+Anizotróp
+
+# ui/properties.c: 4046
 Anti-clockwise
 Órajárásával ellentétes
 
-# ui/properties.c: 466
+# ui/properties.c: 464
 Aperture grille
 Aperture grille
 
-# ui/mame32.rc: 100
+# ui/mame32.rc: 103
 Arrange &Icons
 &Ikonok rendezése
 
-# ui/mame32.rc: 1632
+# ui/mame32.rc: 1628
 Arranges icons in a grid
 Ikonok rendezése rácshálóba
 
-# ui/layout.c: 110
+# ui/layout.c: 111
 Artwork
 Illusztráció
 
-# ui/mame32.rc: 854
-Artwork resolution:
-Illusztráció felbontása:
+# ui/mame32.rc: 851
+Artwork resolution
+Illusztráció felbontása
 
-# ui/mame32.rc: 724
-Aspect ratio:
-Képarány:
+# ui/mame32.rc: 694
+Aspect ratio
+Képarány
 
-# ui/mame32.rc: 670
+# ui/mame32.rc: 654
 Audio latency
-Hang lecsengés
+Hang reakcióidõ
 
-# ui/mame32.rc: 496
+# ui/mame32.rc: 504
 Audit
 Ellenõrzés
 
-# ui/mame32.rc: 1548, 1611, 1611
+# ui/mame32.rc: 1544, 1607, 1607
 Audit ROM and samples sets
 ROM és hangminta csoportok ellenõrzése
 
@@ -390,107 +394,119 @@ ROM és hangminta csoportok ellenõrzése
 Audit complete.\n
 Ellenõrzés kész.\n
 
-# ui/properties.c: 416, 433, 465, 3558, 3660, 3701, 3816
+# ui/properties.c: 414, 431, 463, 3965, 4067, 4124, 4295
 Auto
 Automatikus
 
-# ui/properties.c: 3642
+# ui/properties.c: 4049
 Auto anti-clockwise
 Automatán balra
 
-# ui/properties.c: 3641
+# ui/properties.c: 4048
 Auto clockwise
 Automatán jobbra
 
-# ui/mame32.rc: 564, 742
+# ui/mame32.rc: 565
 Automatic
 Automatikus
 
-# ui/layout.c: 50
+# ui/layout.c: 51
 Available
 Meglévõ
 
-# ui/mame32.rc: 445
+# ui/mame32.rc: 453
 Available fields:
 Meglévõ terület:
 
-# ui/treeview.c: 1251
+# ui/properties.c: 4167
+Axis
+Irány
+
+# ui/properties.c: 4177
+AxisId
+Irány azonosító
+
+# ui/mame32.rc: 867, 1184
+BIOS
+BIOS
+
+# ui/treeview.c: 1268
 BUTTONS 1
 GOMBOK 1
 
-# ui/treeview.c: 1252
+# ui/treeview.c: 1269
 BUTTONS 2
 GOMBOK 2
 
-# ui/treeview.c: 1253
+# ui/treeview.c: 1270
 BUTTONS 3
 GOMBOK 3
 
-# ui/treeview.c: 1254
+# ui/treeview.c: 1271
 BUTTONS 4
-GOMBOK 4 
+GOMBOK 4
 
-# ui/treeview.c: 1255
+# ui/treeview.c: 1272
 BUTTONS 5
 GOMBOK 5
 
-# ui/treeview.c: 1256
+# ui/treeview.c: 1273
 BUTTONS 6
 GOMBOK 6
 
-# ui/treeview.c: 1257
+# ui/treeview.c: 1274
 BUTTONS 7
 GOMBOK 7
 
-# ui/treeview.c: 1258
+# ui/treeview.c: 1275
 BUTTONS 8
 GOMBOK 8
 
-# ui/treeview.c: 1259
+# ui/treeview.c: 1276
 BUTTONS 9
 GOMBOK 9
 
-# ui/treeview.c: 1260
+# ui/treeview.c: 1277
 BUTTONS10
 GOMBOK 10
 
-# ui/mame32.rc: 848
+# ui/mame32.rc: 843
 Backdrops
 Hátterek
 
-# ui/layout.c: 121
+# ui/layout.c: 122
 Background Images
 Háttér kép
 
-# ui/treeview.c: 1030, 1031
+# ui/treeview.c: 1047, 1048
 Bad Dump
 Hibás letárolás
 
-# ui/mame32.rc: 920
-Beam width:
-Sugárzási távolság:
+# ui/mame32.rc: 888
+Beam width
+Sugárzási távolság
 
 # ui/audit32.c: 444
 Best available
 Meglévõ legjobb
 
-# ui/mame32.rc: 850
+# ui/mame32.rc: 845
 Bezels
 Ablakok
 
-# ui/properties.c: 518
+# ui/properties.c: 516
 Bilinear
-Bilinear
+Bilineáris
 
-# ui/mame32.rc: 1101
+# ui/mame32.rc: 1058
 Bookkeeping
-Nyilvántartás
+Rendszerezés
 
-# ui/mame32.rc: 584
+# ui/mame32.rc: 553
 Brightness correction
 Fényerõ állítás
 
-# ui/mame32.rc: 435
+# ui/mame32.rc: 443
 Browse...
 Keresés...
 
@@ -534,31 +550,31 @@ Gomb (P vagy 6)
 Button (S or 7)
 Gomb (S vagy 7)
 
-# ui/mame32.rc: 978
+# ui/mame32.rc: 948
 C&lones
 K&lónok
 
-# ui/layout.c: 57 
+# ui/layout.c: 58 
 CPU
 Processzor
 
-# ui/dialogs.c: 197 ui/options.c: 248
+# ui/dialogs.c: 198 ui/options.c: 246
 Cabinet
 Játékgép
 
-# ui/layout.c: 113
+# ui/layout.c: 114
 Cabinets
 Játékgépek
 
-# ui/mame32.rc: 434, 459, 1181
+# ui/mame32.rc: 442, 467, 1179
 Cancel
 Mégsem
 
 # ui/columnedit.c: 50
 Cannot Move Selected Item
-A választott rész nem mozdítható
+A választott rész nem mozgatható
 
-# ui/mame32.rc: 1009
+# ui/mame32.rc: 979
 Categories
 Kategóriák
 
@@ -570,207 +586,223 @@ A kijelölt rész változtatása nem engedélyezett
 Checking Game %s - %s
 Játék ellenõrzése %s - %s
 
-# ui/mame32.rc: 504, 506
+# ui/mame32.rc: 512, 514
 Checking...
 Ellenõrzés...
 
-# ui/mame32.rc: 748
-Classic MAME scanlines
-Klasszikus MAME képsorok
+# ui/mame32.rc: 298, 376
+Christopher Kirmse and Michael Soderstrom
+Christopher Kirmse és Michael Soderstrom
 
-# ui/mame32.rc: 706
-Clean stretch:
-Növelés:
+# ui/mame32.rc: 701
+Clean stretch
+Kép nyújtás
 
-# ui/properties.c: 3638
+# ui/properties.c: 4045
 Clockwise
 Órajárásával megegyezõ
 
-# ui/win32ui.c: 738
+# ui/win32ui.c: 793
 Clone Of
 Klón
 
-# ui/mame32.rc: 490
+# ui/mame32.rc: 498
 Clone of:
 Klón:
 
-# ui/layout.c: 65
+# ui/layout.c: 66
 Clones
 Klónok
 
-# ui/properties.c: 1068
+# ui/properties.c: 1087
 Colors are completely wrong
 A színek teljesen rosszak
 
-# ui/properties.c: 1074
+# ui/properties.c: 1093
 Colors aren't 100% accurate
 A színek nem 100% tökéletesek
 
-# ui/mame32.rc: 486
+# ui/mame32.rc: 494
 Colors:
 Színek:
 
-# ui/layout.c: 105
+# ui/layout.c: 106
 Config
 Beállítás
 
-# ui/mame32.rc: 883
-Confirm on exit
+# ui/mame32.rc: 838
+Confirm on exit game
 Kilépés megerõsítése
 
-# ui/mame32.rc: 1540
+# ui/mame32.rc: 1536
 Contains commands for displaying help
-Utasításokat tartalmaz a súgó kijelzéséhez
+Utasításokat tartalmaz a megjelenített súgóhoz
 
-# ui/mame32.rc: 1540
+# ui/mame32.rc: 1536
 Contains commands for manupulating the view
 Utasításokat tartalmaz a nézet állításához
 
-# ui/mame32.rc: 1604
+# ui/mame32.rc: 1600
 Contains commands for sorting by various columns
-Sorok rendezésének lehetõségei
+Utasításokat tartalmaz az oszlopokba rendezéshez
 
-# ui/mame32.rc: 1540
+# ui/mame32.rc: 1536
 Contains commands for user interface options
 Utasításokat tartalmaz a képi megjelenéshez
 
-# ui/mame32.rc: 1540
+# ui/mame32.rc: 1536
 Contains commands for working with the selected items
-Utasításokat tartalmaz a kijelöltel való mûködéshez
+Utasításokat tartalmaz a kijelölt elemmel való mûködtetéshez
 
-# ui/layout.c: 69
+# ui/layout.c: 70
 Control
 Irányítás
 
-# ui/mame32.rc: 89, 222, 232
+# ui/mame32.rc: 89, 225, 238
 Control &Panel
 Irányító &gombok
 
-# ui/dialogs.c: 203 ui/options.c: 251
+# ui/dialogs.c: 204 ui/options.c: 249
 Control Panel
 Irányító gombok
 
-# ui/layout.c: 116
+# ui/layout.c: 117
 Control Panels
 Vezérlõpult
 
-# ui/layout.c: 118
+# ui/layout.c: 119
 Controller Files
 Vezérlõ fájlok
 
-# ui/mame32.rc: 764
+# ui/mame32.rc: 785
+Controller ID layout
+Irányító azonosítók
+
+# ui/mame32.rc: 1103
+Controller Mapping
+Irányító kiosztás
+
+# ui/mame32.rc: 740
 Controllers
 Játékvezérlõk
 
-# ui/mame32.rc: 362
+# ui/mame32.rc: 370
 Copyright (C) 1997-2005 The MAME Team
-Szerzõi jog (C) 1997-2005 The MAME Team
+Szerzõi jog: (C) 1997-2005 The MAME Team
 
-# ui/mame32.rc: 397, 407
+# ui/mame32.rc: 405, 415
 Correct:
 Helyes:
 
-# ui/win32ui.c: 6030
+# ui/win32ui.c: 6128
 Could not open '%s' as a valid input file.
 Nem lehet '%s' érvényes bemenetként megnyitni.
 
-# ui/win32ui.c: 6130
+# ui/win32ui.c: 6228
 Could not open '%s' as a valid savestate file.
 Érvényes játékmentés fájlként való megnyitás '%s' sikertelen.
 
-# ui/mame32.rc: 857
-Crop artwork
-Illusztráció kivágása
+# ui/mame32.rc: 849
+Crop Artwork
+Illusztráció méretezése
 
-# ui/properties.c: 519
+# ui/properties.c: 517
 Cubic (flat kernel)
-Cubic (flat kernel)
+Köbös (flat kernel)
 
-# ui/properties.c: 520
+# ui/properties.c: 518
 Cubic (gaussian kernel)
-Cubic (gaussian kernel)
+Köbös (gaussian kernel)
 
 # ui/paletteedit.c: 126
 Cursor
 Kurzor
 
-# ui/win32ui.c: 4318, 4346
+# ui/win32ui.c: 4406, 4434
 Custom
 Saját
 
-# ui/mame32.rc: 113, 186
+# ui/mame32.rc: 116, 189
 Customi&ze Fields...
 Oszlop&ok rendezése...
 
-# ui/mame32.rc: 442
+# ui/mame32.rc: 450
 Customize Fields
 Oszlopok rendezése
 
-# ui/mame32.rc: 1586
+# ui/mame32.rc: 1582
 Customize interface options.
 Megjelenítés beállításai.
 
-# ui/mame32.rc: 1561
+# ui/mame32.rc: 1557
 Customize which columns are used in the game list
 A játéklistában használatos oszlopok bállítása
 
-# ui/treeview.c: 1270
+# ui/treeview.c: 1287
 DIAL
 DIAL
 
-# ui/treeview.c: 1264
+# ui/treeview.c: 1281
 DOUBLEJOY2WAY
 IKER JOY 2 IRÁNYOS
 
-# ui/treeview.c: 1265
+# ui/treeview.c: 1282
 DOUBLEJOY4WAY
 IKER JOY 4 IRÁNYOS
 
-# ui/treeview.c: 1266
+# ui/treeview.c: 1283
 DOUBLEJOY8WAY
 IKER JOY 8 IRÁNYOS
 
-# ui/properties.c: 3637
+# ui/properties.c: 4044
 Default
 Alapértelmezett
 
-# ui/properties.c: 798
+# ui/properties.c: 812
 Default Game
 Alapértelmezett játék
 
-# ui/mame32.rc: 120
+# ui/mame32.rc: 123
 Default Game &Options...
 Játék &alapbeállítások...
 
-# ui/mame32.rc: 828
+# ui/mame32.rc: 776
 Default input layout
-Alap bemenet tervezet
+Alapértelmezett irányítás
 
-# ui/mame32.rc: 437
+# ui/mame32.rc: 445
 Delete
 Törlés
 
-# ui/mame32.rc: 734
+# ui/mame32.rc: 715
 Depth:
 Színmélység:
 
-# ui/mame32.rc: 413, 507 ui/options.c: 271 ui/win32ui.c: 642
+# ui/mame32.rc: 421, 515 ui/options.c: 280 ui/win32ui.c: 657
 Details
 Részletek
 
-# ui/mame32.rc: 594
+# ui/mame32.rc: 1119
+Dial device
+Dial eszköz
+
+# ui/mame32.rc: 1128
+Digital joystick axes
+Digitális joystick irányok
+
+# ui/mame32.rc: 576
 Direct3D
 Direct3D
 
-# ui/mame32.rc: 422
+# ui/mame32.rc: 430
 Directories
 Mappák
 
-# ui/mame32.rc: 428
+# ui/mame32.rc: 436
 Directories:
 Mappák:
 
-# ui/win32ui.c: 732
+# ui/win32ui.c: 787
 Directory
 Mappa
 
@@ -782,79 +814,79 @@ A mappa nem létezik, mindenképp folytatja?
 Directory name:
 Mappa név:
 
-# ui/mame32.rc: 515
+# ui/mame32.rc: 523
 Display
 Kijelzõ
 
-# ui/mame32.rc: 1593
+# ui/mame32.rc: 1589
 Display help contents
 Súgó megjelenítése
 
-# ui/mame32.rc: 1561
+# ui/mame32.rc: 1557
 Display items by using large icons.
 Megjelenítés nagy ikonok használatával.
 
-# ui/mame32.rc: 1561
+# ui/mame32.rc: 1557
 Display items by using small icons.
 Megjelenítés kis ikonok használatával.
 
-# ui/mame32.rc: 1611
+# ui/mame32.rc: 1607
 Display the properties of the currently selected folder
 A kiválsztott mappa tulajdonságainak megjelenítése
 
-# ui/mame32.rc: 1548
+# ui/mame32.rc: 1544
 Display the properties of the selected items
-A kiválsztott elemek tulajdonságainak megjelenítése
+A kiválasztott elemek tulajdonságainak megjelenítése
 
-# ui/mame32.rc: 1548
+# ui/mame32.rc: 1544
 Display the source file properties of the selected game
-A kiválsztott játék forrásfájl tulajdonságainak megjelenítése
+A kiválasztott játék forrásfájl tulajdonságainak megjelenítése
 
-# ui/mame32.rc: 1561
+# ui/mame32.rc: 1557
 Displays detailed information about each item in the window.
 Részletezett információ megjelenítése mindenrõl az ablakban.
 
-# ui/mame32.rc: 1561
+# ui/mame32.rc: 1557
 Displays items in a list.
 Lista megjelenítése.
 
-# ui/mame32.rc: 1593
+# ui/mame32.rc: 1589
 Displays program and copyright information
-Programok és jogvédelmi információk megjelenítése
+Program és jogvédelmi információk megjelenítése
 
-# ui/mame32.rc: 1561
+# ui/mame32.rc: 1557
 Displays using `Detail View', but grouped by parent games.
 Megjelenítés részletesen, de alapjátékok szerint csoportosítva.
 
-# ui/dialogs.c: 117
+# ui/dialogs.c: 118
 Do you wish to continue?
 Kívánja folytatni?
 
-# ui/properties.c: 468
+# ui/properties.c: 466
 Dot medium bright
 Közepes fényesség
 
-# ui/properties.c: 467
+# ui/properties.c: 465
 Dot medium mask
 Közepes maszk
 
-# ui/mame32.rc: 914
+# ui/mame32.rc: 884
 Draw antialiased vectors
 Élsimított vektorok megjelenítése
 
-# ui/properties.c: 3615
+# ui/properties.c: 4022
 Draw every frame
 Megjelenik mind
 
-# ui/mame32.rc: 917
+# ui/mame32.rc: 886
 Draw translucent vectors
 Átlátszó vektorok megjelenítése
 
-# ui/mame32.rc: 815
+# ui/mame32.rc: 773
 Dual lightgun
 Kettõs fénypisztoly
 
-# ui/layout.c: 61
+# ui/layout.c: 62
 Dumping Status
 Letárolási állapot
 
@@ -862,91 +894,91 @@ Letárolási állapot
 E&xit
 K&ilépés
 
-# ui/win32ui.c: 6993
+# ui/win32ui.c: 7109
 ERROR: required files are missing, the game cannot be run.
 HIBA: szükséges fájlok hiányoznak, a játék nem mûködhet.
 
-# ui/mame32.rc: 1086
+# ui/mame32.rc: 1056
 Edit Not Working Game Color
 Nem mûködõ játékok színbeállítása
 
-# ui/mame32.rc: 619
-Effect overrides
+# ui/mame32.rc: 595
+Effect
+Effektus
+
+# ui/mame32.rc: 601
+Effect Overrides
 Effekt túlvezérlés
 
-# ui/mame32.rc: 613
-Effect:
-Effektus:
-
-# ui/mame32.rc: 544, 747
+# ui/mame32.rc: 723
 Effects
 Effektek
 
-# ui/mame32.rc: 866
+# ui/mame32.rc: 825
 Enable game cheats
 Játék csalások kapcsolása
 
-# ui/mame32.rc: 798
+# ui/mame32.rc: 748
 Enable joystick input
-Joystick bekapcsolása
+Joystick használata
 
-# ui/mame32.rc: 824
+# ui/mame32.rc: 780
 Enable keyboard LED
 Billentyûzet LED-ek használata
 
-# ui/mame32.rc: 812
+# ui/mame32.rc: 767
 Enable lightgun input
-Fénypisztoly bekapcsolása
+Fénypisztoly használata
 
-# ui/mame32.rc: 805
+# ui/mame32.rc: 756
 Enable mouse input
-Egér használat engedélyezése
+Egér engedélyezése
 
-# ui/mame32.rc: 809
+# ui/mame32.rc: 763
 Enable pointing stick input
 Irányzék használata
 
-# ui/mame32.rc: 649
+# ui/mame32.rc: 637
 Enable sound and sound CPUs
-Hang és processzor hangok bekapcsolása
+Összes hang bekapcsolása
 
-# ui/mame32.rc: 821
+# ui/mame32.rc: 759
 Enable steadykey support
-Állandó billentyû használat
+Állandó billentyûk használata
 
-# ui/mame32.rc: 526
+# ui/mame32.rc: 534
 Enforce aspect ratio
 Kényszerített képarány
 
-# ui/audit32.c: 101 ui/properties.c: 813, 909
+# ui/audit32.c: 101 ui/properties.c: 827, 923
 Error
 Hiba
 
-# ui/treeview.c: 2433
+# ui/treeview.c: 2492
 Error finding custom file name to save
-Hiba az egyedi fájlnév keresésekor mentéshez
+Hiba a megfelelõ fájlnév keresésekor mentéshez
 
-# ui/mame32.rc: 875
+# ui/mame32.rc: 827
 Error log (for developers)
 Hiba bejegyzés (fejlesztõknek)
 
-# ui/win32ui.c: 7085
+# ui/win32ui.c: 7202
 Error searching for custom folder
 Hiba az egyedi mappa keresésekor
 
-# ui/treeview.c: 2362
+# ui/treeview.c: 2421
 Error while renaming custom file %s to %s
 Hiba az egyedi fájl %s átnevezésekor %s
 
-# ui/treeview.c: 2504
+# ui/treeview.c: 2563
 Error while saving custom file %s
 Hiba az egyedi fájl mentésekor %s
 
-# ui/mame32.rc: 1548
+# ui/mame32.rc: 1544
 Exit the application
 Kilépés a programból
 
-# ui/layout.c: 70
+# ui/layout.c: 71
 FPS
 Képfrissítés
 
@@ -954,39 +986,39 @@ Képfrissítés
 Failed
 Sikertelen
 
-# ui/mame32.rc: 627
+# ui/mame32.rc: 611
 Feedback
 Visszacsatolás
 
-# ui/audit32.c: 208 ui/mame32.rc: 390
+# ui/audit32.c: 208 ui/mame32.rc: 398
 File Audit
 Fájl ellenõrzés
 
-# ui/mame32.rc: 610
-Filter:
+# ui/mame32.rc: 592
+Filter
 Szûrõ
 
-# ui/dialogs.c: 403
+# ui/dialogs.c: 404
 Filters for %s Folder
 Szûrõ a %s mappához
 
-# ui/mame32.rc: 924
-Flicker:
-Villogás:
+# ui/mame32.rc: 892
+Flicker
+Villogás
 
-# ui/mame32.rc: 541
+# ui/mame32.rc: 544
 Flip screen left-right
 A kép oldalak cseréje
 
-# ui/mame32.rc: 539
+# ui/mame32.rc: 542
 Flip screen upside-down
-A kép fejjel lefelé fordítása
+A kép fejjel-lefelé fordítása
 
-# ui/dialogs.c: 195 ui/options.c: 247
+# ui/dialogs.c: 196 ui/options.c: 245
 Flyer
 Plakát
 
-# ui/layout.c: 112
+# ui/layout.c: 113
 Flyers
 Plakátok
 
@@ -1000,209 +1032,229 @@ Betû (üres)
 
 # ui/paletteedit.c: 106
 Font (normal)
-Betû (normal)
+Betû (normál)
 
 # ui/paletteedit.c: 107
 Font (special)
 Betû (speciális)
 
-# ui/mame32.rc: 563, 741
+# ui/mame32.rc: 564
 Frame skipping
 Képkocka kihagyás
 
-# ui/properties.c: 417, 432
+# ui/properties.c: 415, 430
 Full
 Teljes
 
-# ui/mame32.rc: 719
-Full screen brightness:
-Teljes képernyõ fényereje:
+# ui/mame32.rc: 704
+Full screen brightness
+Teljes képernyõ fényereje
 
-# ui/win32ui.c: 729
+# ui/win32ui.c: 784
 Game
 Játék
 
-# ui/mame32.rc: 969
+# ui/mame32.rc: 939
 Game Filters
 Játék szûrõk
 
-# ui/mame32.rc: 118
+# ui/mame32.rc: 121
 Game List &Clone Color...
 Klón játékok &színe...
 
-# ui/mame32.rc: 117
+# ui/mame32.rc: 120
 Game List &Font...
 Játéklista &betûkészlete...
 
-# ui/mame32.rc: 1050
+# ui/mame32.rc: 1021
 Game Selection
 Játék választás
 
-# ui/mame32.rc: 974
+# ui/mame32.rc: 944
 Game filters
 Játékszûrõk
 
-# ui/mame32.rc: 972
+# ui/mame32.rc: 942
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 A játékszûrõk lehetõvé teszik a megfelelõ mappában, elõre meghatározott szabályok alapján a játékok listázását.
 
-# ui/properties.c: 1086
+# ui/properties.c: 1105
 Game lacks sound
 Hiányzik a játék hangja
 
-# ui/properties.c: 1054
+# ui/properties.c: 1081
 Game protection isn't fully emulated
 A játék védelme nincs teljesen emulálva
 
-# ui/win32ui.c: 3286
+# ui/win32ui.c: 3325
 Game search %d%% complete
 Játék keresés %d%% befejezõdött
 
-# ui/mame32.rc: 585
+# ui/mame32.rc: 548
 Gamma correction
 Sötétség állítás
 
-# ui/mame32.rc: 464
+# ui/mame32.rc: 472
 General
 Általános
 
-# ui/properties.c: 1130
+# ui/properties.c: 1149
 Global folder options\nDefault options used by all games in the folder
 Átfogó mappa beállítások\nAlapbeállítások használata a mappa minden játékához
 
-# ui/properties.c: 1128
+# ui/properties.c: 1147
 Global game options\nDefault options used by all games
 Minden játék beállítása\nvalamennyi játék által használt alapbeállítás
 
-# ui/mame32.rc: 382
+# ui/mame32.rc: 390
 Go to Microsoft's DirectX Web Page
 Menjen a Microsoft DirectX internetes oldalára
 
-# ui/options.c: 272, 679 ui/win32ui.c: 643
+# ui/options.c: 281, 700 ui/win32ui.c: 658
 Grouped
 Csoportosított
 
-# ui/layout.c: 119
+# ui/layout.c: 120
 Hard Drive Difference
 Merevlemez eltérés
 
-# ui/win32ui.c: 645
+# ui/win32ui.c: 660
 Help
 Súgó
 
-# ui/mame32.rc: 1066
+# ui/mame32.rc: 1037
 Hide &mouse cursor (requires restart)
 Egér &kurzor elrejtése (újraindítást igényel)
 
-# ui/properties.c: 3818
+# ui/properties.c: 4297
 High
 Magas
 
-# ui/layout.c: 106
+# ui/layout.c: 107
 High Scores
 Magas pontok
 
-# ui/options.c: 252
-History
-Történet
+# ui/mame32.rc: 833
+High thread priority
+Magas prioritás
 
-# ui/properties.c: 434 ui/treeview.c: 936, 937
+# ui/options.c: 251, 254
+History
+Ismertetõ
+
+# ui/properties.c: 432 ui/treeview.c: 959, 960
 Horizontal
 Vízszintes
 
-# ui/mame32.rc: 1593
+# ui/mame32.rc: 1589
 How cheats work
 Hogy mûködnek a csalások
 
-# ui/layout.c: 103
+# ui/layout.c: 104 ui/mame32.rc: 1230
 IPS Patch
 IPS javítás
 
-# ui/layout.c: 120
+# ui/layout.c: 121
 Icons
 Ikonok
 
-# ui/mame32.rc: 753
-Image Enhancement:
-Kép javítás:
+# ui/mame32.rc: 729
+Image Enhancement
+Kép javítás
 
-# ui/layout.c: 60
+# ui/layout.c: 61
 Imperfect
 Hibás
 
-# ui/treeview.c: 981
+# ui/treeview.c: 998
 Imperfect Colors
 Hibás színek
 
-# ui/treeview.c: 982
+# ui/treeview.c: 999
 Imperfect Graphics
 Hibás grafika
 
-# ui/treeview.c: 984
+# ui/treeview.c: 1001
 Imperfect Sound
 Hibás hang
 
-# ui/mame32.rc: 399, 408
+# ui/mame32.rc: 407, 416
 Incorrect:
 Hibás:
 
-# ui/mame32.rc: 573
-Increase thread priority
-Prioritás növelése
-
-# ui/mame32.rc: 1078
+# ui/mame32.rc: 1049
 Inheritable Filters
 Öröklött szûrõk
 
-# ui/layout.c: 101
+# ui/layout.c: 102
 Ini Files
 Ini fájlok
 
-# ui/layout.c: 108
+# ui/layout.c: 109
 Input files (*.inp)
 Bemeneti fájlok (*.inp)
 
-# ui/mame32.rc: 436
+# ui/mame32.rc: 444
 Insert
 Beszúrás
 
-# ui/mame32.rc: 928
-Intensity:
-Erõsség:
+# ui/mame32.rc: 897
+Intensity
+Erõsség
 
-# ui/mame32.rc: 1047
+# ui/mame32.rc: 1018
 Interface Options
 Megjelenítési beállítások
 
-# ui/treeview.c: 1261
+# ui/treeview.c: 1278
 JOY2WAY
 JOY 2 IRÁNYOS
 
-# ui/treeview.c: 1262
+# ui/treeview.c: 1279
 JOY4WAY
 JOY 4 IRÁNYOS
 
-# ui/treeview.c: 1263
+# ui/treeview.c: 1280
 JOY8WAY
 JOY 8 IRÁNYOS
 
-# ui/mame32.rc: 94
+# ui/properties.c: 602, 4162
+Joystick
+Joystick
+
+# ui/properties.c: 4172
+JoystickId
+Joystick azonosító
+
+# ui/properties.c: 600
+Keyboard
+Billentyûzet
+
+# ui/mame32.rc: 97
 L&arge Icons
 N&agy ikonok
 
-# ui/treeview.c: 1272
+# ui/treeview.c: 1289
 LIGHTGUN
 FÉNYPISZTOLY
 
-# ui/options.c: 268 ui/win32ui.c: 639
+# ui/options.c: 277 ui/win32ui.c: 654
 Large Icons
 Nagy ikonok
 
-# ui/mame32.rc: 109
+# ui/layout.c: 75, 75 ui/properties.c: 603
+Lightgun
+Fénypisztoly
+
+# ui/mame32.rc: 1125
+Lightgun device
+Fénypisztoly eszköz
+
+# ui/mame32.rc: 112
 Line &Up Icons
 Ikonok &sorba rendezése
 
-# ui/options.c: 270 ui/win32ui.c: 641
+# ui/options.c: 279 ui/win32ui.c: 656
 List
 Lista
 
@@ -1210,75 +1262,79 @@ Lista
 Loa&d Savestate...
 Men&tett állás betöltése...
 
-# ui/win32ui.c: 6910
+# ui/win32ui.c: 7025
 Loading %s
 Betöltés %s
 
-# ui/mame32.rc: 1604
+# ui/mame32.rc: 1600
 Localize GUI and MAME core.
 MAME megjelenéshez alkalmazott nyelv kiválasztása.
 
-# ui/mame32.rc: 887
-M68K Core:
-M68K mag:
+# ui/mame32.rc: 863
+M68000 CPU Core
+M68000 CPU mag
 
-# ui/mame32.rc: 1593
+# ui/win32ui.c: 742
+MAME input files (*.inp,*.zip)
+MAME bemeneti fájlok (*.inp,*.zip)
+
+# ui/mame32.rc: 1589
 MAME release notes
 MAME megjelenés infók
 
-# ui/options.c: 292
+# ui/win32ui.c: 749
+MAME savestate files (*.sta)
+MAME állásmentések (*.sta)
+
+# ui/options.c: 301
 MAME32 has changed *.ini file directory.\n\nWould you like to migrate old configurations to the new directory?
-MAME32-ben megváltozott *.az ini fájl mappája\n\nKívánja a régi beállításokat behozni az új mappába?
+MAME32-ben megváltozott *.ini fájl mappája\n\nKívánja a régi beállításokat behozni az új mappába?
 
-# ui/options.c: 4152
+# ui/options.c: 4206
 MAME32 has detected outdated configuration data.\n\nThe detected configuration data is from Version %s of MAME32.\nThe current version is %s. It is recommended that the\nconfiguration is set to the new defaults.\n\nWould you like to use the new configuration?
-MAME32 elavult beállításokat észlelt\n\nAz észlelt beállítás a következõ MAME32 verzóból %s származik\nA jelenlegi verzó %s. Célszerû lenne\naz új alpbeállításokat alkalmazni.\n\nKívánja az új beállításokat használni?
+MAME32 elavult beállításokat észlelt\n\nAz észlelt beállítás a következõ MAME32 verzóból %s származik\nA jelenlegi verzó %s. Célszerû lenne\naz új alapbeállításokat alkalmazni.\n\nKívánja az új beállításokat használni?
 
-# ui/mame32.rc: 364
+# ui/mame32.rc: 372
 MAME32 version by
 MAME32 verzió:
 
-# ui/dialogs.c: 112
+# ui/dialogs.c: 113
 MAME32 will now reset the selected\n
 MAME32 visszaáll a választottra\n
 
-# ui/mame32.rc: 355, 379, 390, 422, 442, 464, 496, 515, 594, 641, 682, 764, 838, 907, 942, 969, 1006, 1031, 1047, 1145, 1173, 1188, 1227 ui/options.c: 691 ui/translate.c: 102
+# ui/mame32.rc: 363, 387, 398, 430, 450, 472, 504, 523, 576, 629, 665, 740, 818, 877, 912, 939, 976, 1001, 1018, 1103, 1141, 1169, 1184, 1223 ui/options.c: 712 ui/translate.c: 102
 MS Sans Serif
 MS Sans Serif
 
-# ui/mame32.rc: 471
+# ui/mame32.rc: 479
 Manufactured:
 Gyártja:
 
-# ui/layout.c: 54 ui/win32ui.c: 736
+# ui/layout.c: 55 ui/win32ui.c: 791
 Manufacturer
 Gyártó
 
-# ui/dialogs.c: 199 ui/options.c: 249
+# ui/dialogs.c: 200 ui/options.c: 247
 Marquee
 Matrica
 
-# ui/layout.c: 114
+# ui/layout.c: 115
 Marquees
-Matrica
+Matricák
 
-# ui/mame32.rc: 695
+# ui/mame32.rc: 677
 Match game refresh rate
 Eredeti képfrissítés
 
-# ui/layout.c: 111 
+# ui/layout.c: 112 
 Memory Card
 Memória kártya
 
-# ui/mame32.rc: 801
-Minimal analog value for digital input:
-Legkisebb analóg érték a digitális bemenethez:
-
-# ui/mame32.rc: 838
+# ui/mame32.rc: 818
 Miscellaneous
-Különféle
+Vegyes
 
-# ui/treeview.c: 983
+# ui/treeview.c: 1000
 Missing Sound
 Hiányzó hang
 
@@ -1286,7 +1342,11 @@ Hiányzó hang
 Missing optional
 Hiányzó beállítás
 
-# ui/mame32.rc: 457
+# ui/properties.c: 601
+Mouse
+Egér
+
+# ui/mame32.rc: 465
 Move Down
 Lefelé
 
@@ -1294,47 +1354,47 @@ Lefelé
 Move Item
 A kijelölés mozgatása
 
-# ui/mame32.rc: 456
+# ui/mame32.rc: 464
 Move Up
 Felfelé
 
-# ui/layout.c: 77
+# ui/layout.c: 78
 Multi-Monitor
 Iker monitor
 
-# ui/layout.c: 117
+# ui/layout.c: 118
 NVRAM
 NVRAM
 
-# ui/mame32.rc: 1593
+# ui/mame32.rc: 1589
 New game changes
 Új játék változások
 
-# ui/audit32.c: 124 ui/win32ui.c: 5164
+# ui/audit32.c: 124 ui/win32ui.c: 5239
 No
 Nem
 
-# ui/treeview.c: 985
+# ui/treeview.c: 1002
 No Cocktail
 Nincs vegyes mód
 
-# ui/treeview.c: 1033, 1034
+# ui/treeview.c: 1050, 1051
 No Dump
 Nincs letárolás
 
-# ui/win32ui.c: 3598
+# ui/win32ui.c: 3686
 No Selection
 Nincs kijelölés
 
-# ui/mame32.rc: 1106
+# ui/mame32.rc: 1063
 No offset for clones missing parent in view
 A klónok megjelenése azonos az eredetiekével
 
-# ui/mame32.rc: 980
+# ui/mame32.rc: 950
 Non-Wor&king
 Ne&m mûködõ
 
-# ui/dialogs.c: 207 ui/properties.c: 415, 431, 446, 464, 517, 529, 3640, 3911
+# ui/dialogs.c: 208 ui/properties.c: 413, 429, 444, 462, 515, 527, 599, 4047, 4452
 None
 Nincs
 
@@ -1342,7 +1402,7 @@ Nincs
 None required
 Nem szükséges
 
-# ui/layout.c: 63
+# ui/layout.c: 64
 Not Working
 Nem mûködik
 
@@ -1350,11 +1410,11 @@ Nem mûködik
 Not found
 Nem található
 
-# ui/properties.c: 1042
+# ui/properties.c: 1069
 Not working
 Nem mûködik
 
-# ui/mame32.rc: 433, 458, 1180 
+# ui/mame32.rc: 441, 466, 1178 
 OK
 Rendben
 
@@ -1374,75 +1434,79 @@ OSD sor (alap)
 OSD bar (light)
 OSD sor (világos)
 
-# ui/mame32.rc: 818
+# ui/mame32.rc: 770
 Offscreen shots reload
 Kívülre lövések újratöltése
 
-# ui/mame32.rc: 989
+# ui/mame32.rc: 959
 Ori&ginals
 Ere&deti
 
-# ui/layout.c: 59
+# ui/layout.c: 60
 Orientation
 Képernyõ helyzet
 
-# ui/layout.c: 64
+# ui/layout.c: 65
 Originals
 Eredeti
 
-# ui/mame32.rc: 852
+# ui/mame32.rc: 847
 Overlays
-Átlátszók
+Átfedõk
 
 # ui/mame32.rc: 55
 P&layback Input...
 B&emenet visszajátszása...
 
-# ui/treeview.c: 1269
+# ui/treeview.c: 1286
 PADDLE
 PADDLE
 
-# ui/treeview.c: 1273
+# ui/treeview.c: 1290
 PEDAL
 GÁZPEDÁL
 
-# ui/treeview.c: 1243
+# ui/treeview.c: 1260
 PLAYERS 1
 1 JÁTÉKOS
 
-# ui/treeview.c: 1244
+# ui/treeview.c: 1261
 PLAYERS 2
 2 JÁTÉKOS
 
-# ui/treeview.c: 1245
+# ui/treeview.c: 1262
 PLAYERS 3
 3 JÁTÉKOS
 
-# ui/treeview.c: 1246
+# ui/treeview.c: 1263
 PLAYERS 4
 4 JÁTÉKOS
 
-# ui/treeview.c: 1247
+# ui/treeview.c: 1264
 PLAYERS 5
 5 JÁTÉKOS
 
-# ui/treeview.c: 1248
+# ui/treeview.c: 1265
 PLAYERS 6
 6 JÁTÉKOS
 
-# ui/treeview.c: 1249
+# ui/treeview.c: 1266
 PLAYERS 7
 7 JÁTÉKOS
 
-# ui/treeview.c: 1250
+# ui/treeview.c: 1267
 PLAYERS 8
 8 JÁTÉKOS
 
-# ui/properties.c: 588
+# ui/properties.c: 586
 PS/2 Keyboard
 PS/2 billentyûzet
 
-# ui/mame32.rc: 1145
+# ui/mame32.rc: 1110
+Paddle device
+Paddle eszköz
+
+# ui/mame32.rc: 1141
 Palette
 Paletta
 
@@ -1450,19 +1514,23 @@ Paletta
 Passed
 Sikeres
 
-# ui/mame32.rc: 583
+# ui/mame32.rc: 559
 Pause Brightness
 Fényerõ szünetkor
 
-# ui/options.c: 2854 ui/win32ui.c: 740
+# ui/mame32.rc: 1116
+Pedal device
+Gázpedál eszköz
+
+# ui/options.c: 2860 ui/win32ui.c: 795
 Play Time
 Játék idõ
 
-# ui/mame32.rc: 1548
+# ui/mame32.rc: 1544
 Play a game starting with the given savestate
 Játék kezdése az adott mentéstõl
 
-# ui/mame32.rc: 54, 161
+# ui/mame32.rc: 54, 164
 Play and &Record Input...
 Indítás& és a bemenet rögzítése...
 
@@ -1470,287 +1538,279 @@ Indítás& és a bemenet rögzítése...
 Play and Record &Wave Output...
 Indítás és a &kimeneti hullám rözítése...
 
-# ui/mame32.rc: 1548
+# ui/mame32.rc: 1544
 Play currently selected game
 A kiválasztott játék indítása
 
-# ui/mame32.rc: 1548
+# ui/mame32.rc: 1544
 Playback a recorded game
 Egy rögzített játék visszajátszása
 
-# ui/win32ui.c: 735
+# ui/win32ui.c: 790
 Played
 Játszott
 
-# ui/mame32.rc: 66, 175
+# ui/mame32.rc: 66, 178
 Pr&operties
 Tu&lajdonságok
 
-# ui/mame32.rc: 616
-Prescale:
-Elõreosztás:
+# ui/mame32.rc: 598
+Prescale
+Elõosztó
 
-# ui/win32ui.c: 3627, 6526
+# ui/win32ui.c: 3715, 6624, 6649
 Proper&ties of %s
 Tulaj&donságok %s
 
-# ui/properties.c: 812, 908
+# ui/properties.c: 826, 922
 Propery Sheet Error %d %X
-Propery lemez hiba %d %X
+Sajátos lemez hiba %d %X
 
-# ui/mame32.rc: 64, 164
+# ui/mame32.rc: 64, 167
 R&emove From This Folder
 Ki&vétel ebbõl a mappából
 
-# ui/properties.c: 481
+# ui/properties.c: 479
 RGB 16 pixel triad
 RGB 16 képpont harmad
 
-# ui/properties.c: 476
+# ui/properties.c: 474
 RGB 3 pixel triad
 RGB 3 képpont harmad
 
-# ui/properties.c: 477
+# ui/properties.c: 475
 RGB 4 pixel triad
 RGB 4 képpont harmad
 
-# ui/properties.c: 480
+# ui/properties.c: 478
 RGB 6 pixel triad
 RGB 6 képpont harmad
 
-# ui/properties.c: 471
+# ui/properties.c: 469
 RGB maximum bright
 RGB maximális fény
 
-# ui/properties.c: 470
+# ui/properties.c: 468
 RGB medium mask
 RGB közepes maszk
 
-# ui/properties.c: 472
+# ui/properties.c: 470
 RGB micro
 RGB mikro
 
-# ui/properties.c: 469
+# ui/properties.c: 467
 RGB minimum mask
 RGB minimális maszk
 
-# ui/mame32.rc: 1151
+# ui/mame32.rc: 1147
 RGB setting:
 RGB beállítás:
 
-# ui/properties.c: 457
+# ui/properties.c: 455
 RGB sharp
 RGB éles
 
-# ui/properties.c: 456, 473
+# ui/properties.c: 454, 471
 RGB tiny
 RGB halvány
 
-# ui/properties.c: 451
+# ui/properties.c: 449
 RGB triad of 16 pixels
 RGB 16 képpont harmad
 
-# ui/properties.c: 455
+# ui/properties.c: 453
 RGB triad of 3 pixels
 RGB 3 képpont harmad
 
-# ui/properties.c: 453
+# ui/properties.c: 451
 RGB triad of 4 pixels
 RGB 4 képpont harmad
 
-# ui/properties.c: 454
+# ui/properties.c: 452
 RGB triad of 4 vertical pixels
 RGB 4 függ. képpont harm.
 
-# ui/properties.c: 452
+# ui/properties.c: 450
 RGB triad of 6 pixels
 RGB 6 képpont harmad
 
-# ui/mame32.rc: 503
+# ui/mame32.rc: 511
 ROM check:
 ROM ellenõrzés:
 
-# ui/layout.c: 99 ui/mame32.rc: 398 ui/win32ui.c: 730
+# ui/layout.c: 100 ui/mame32.rc: 406 ui/win32ui.c: 785
 ROMs
 ROM-ok
 
-# ui/properties.c: 1106
+# ui/properties.c: 1125
 ROMs missing
 Hiányzó ROM-ok
 
-# ui/mame32.rc: 1611
+# ui/mame32.rc: 1607
 Randomly select a game.
 Véletlenszerûen választott játék.
 
-# ui/layout.c: 66 ui/win32ui.c: 5156
+# ui/layout.c: 67 ui/win32ui.c: 5231
 Raster
 Raszter
 
-# ui/win32ui.c: 3451
+# ui/win32ui.c: 3490
 Ready
 Kész
 
-# ui/mame32.rc: 1548
+# ui/mame32.rc: 1544
 Record a game for later playback
 Játék rögzítése késõbbi viszajátszáshoz
 
-# ui/mame32.rc: 1548
+# ui/mame32.rc: 1544
 Record the sound output of a game
 Játék hang rögzítése
 
-# ui/mame32.rc: 1561
+# ui/mame32.rc: 1557
 Refresh game list
 Játék lista frissítése
 
-# ui/mame32.rc: 737
+# ui/mame32.rc: 719
 Refresh:
 Frissítés:
 
-# ui/options.c: 1794
+# ui/options.c: 1808
 Reload configurations
 Beállítások újratöltése
 
-# ui/mame32.rc: 1611
+# ui/mame32.rc: 1607
 Remove currently selected game from this folder
 A kiválsztott játék törlése a mappából
 
-# ui/mame32.rc: 1611
+# ui/mame32.rc: 1607
 Rename currently selected folder
 A kiválasztott mappa átnevezése
 
-# ui/mame32.rc: 689
-Rendering
-Hozzáadás
-
-# ui/mame32.rc: 654
-Resample if samplerate does not match
-Mintavételezés ha a minta nem megfelelõ
-
-# ui/mame32.rc: 576, 634, 675, 757, 831, 900, 933, 1219, 1258
+# ui/mame32.rc: 569, 622, 658, 733, 811, 870, 903, 1133, 1215, 1247
 Reset
 Visszaállítás
 
-# ui/mame32.rc: 1006
+# ui/mame32.rc: 976
 Reset Options
 Alap beállítások
 
-# ui/mame32.rc: 169
+# ui/mame32.rc: 172
 Reset Pl&aycount
 Játékszámláló n&ullázása
 
-# ui/mame32.rc: 170
+# ui/mame32.rc: 173
 Reset Pla&y Time
 Játékidõ n&ullázása
 
-# ui/mame32.rc: 1104
+# ui/mame32.rc: 1061
 Reset all Play Times
 Összes játékidõ nullázása
 
-# ui/mame32.rc: 1102
+# ui/mame32.rc: 1059
 Reset all Playcounts
 Számlálók nullázása
 
-# ui/mame32.rc: 1611
+# ui/mame32.rc: 1607
 Reset play count of currently selected game
 A választott játék számlálójának nullázása
 
-# ui/mame32.rc: 1611
+# ui/mame32.rc: 1607
 Reset play time of currently selected game
 A választott játék játékidejének nullázása
 
-# ui/mame32.rc: 730
+# ui/mame32.rc: 710
 Resolution
 Felbontás
 
-# ui/mame32.rc: 577, 635, 676, 758, 832, 901, 934, 1220, 1259
+# ui/mame32.rc: 570, 623, 659, 734, 812, 871, 904, 1134, 1216, 1248
 Restore Default Settings
 Alap beállítások visszaállítása
 
-# ui/dialogs.c: 119
+# ui/dialogs.c: 120
 Restore Settings
 Beállítások visszaállítása
 
-# ui/mame32.rc: 607
+# ui/mame32.rc: 589
 Rotate effects
 Effekt váltogatás
 
-# ui/mame32.rc: 536
+# ui/mame32.rc: 539
 Rotation
 Forgatás
 
-# ui/mame32.rc: 522
+# ui/mame32.rc: 530
 Run in a window
 Ablakban futtatás
 
-# ui/mame32.rc: 82, 215
+# ui/mame32.rc: 82, 218
 S&how Pictures
 K&ép megjelenítés
 
-# ui/mame32.rc: 95
+# ui/mame32.rc: 98
 S&mall Icons
 K&is ikonok
 
-# ui/mame32.rc: 1074
+# ui/mame32.rc: 1045
 S&tretch screenshot larger than natural size
 P&illanatkép eredetinél nagyobbra állítása
 
-# ui/treeview.c: 1267
+# ui/treeview.c: 1284
 STICK
 KAR
 
-# ui/mame32.rc: 505
+# ui/mame32.rc: 513
 Sample check:
 Hangminta ellenõrzés:
 
-# ui/mame32.rc: 662
-Samplerate:
-Mintavételezés:
+# ui/mame32.rc: 646
+Sample rate
+Mintavételi sûrûség
 
-# ui/layout.c: 79, 100 ui/mame32.rc: 404 ui/win32ui.c: 731
+# ui/layout.c: 80, 101 ui/mame32.rc: 412 ui/win32ui.c: 786
 Samples
 Hangminták
 
-# ui/mame32.rc: 620
+# ui/mame32.rc: 603
 Scanlines
 Képsorjelenítés
 
-# ui/properties.c: 482
+# ui/properties.c: 480
 Scanlines 25%
 Képsor 25%
 
-# ui/properties.c: 483
+# ui/properties.c: 481
 Scanlines 50%
 Képsor 50%
 
-# ui/properties.c: 484, 484
+# ui/properties.c: 482, 482
 Scanlines 75%
 Képsor 75%
 
-# ui/layout.c: 71
+# ui/layout.c: 72 ui/mame32.rc: 546
 Screen
 Képernyõ
 
-# ui/win32ui.c: 3245
+# ui/win32ui.c: 3284
 Screen flip support is missing
-Képernyõ tükrözés hiányzik
+A kép oldalak cseréje funkció nem mûködik
 
-# ui/properties.c: 1098
+# ui/properties.c: 1117
 Screen flipping is not supported
 Képernyõ tükrözés nem támogatott
 
-# ui/mame32.rc: 484
+# ui/mame32.rc: 492
 Screen:
 Képernyõ:
 
-# ui/mame32.rc: 1069
+# ui/mame32.rc: 1040
 Screenshot &Cycletime in Seconds:
 Pillanatképek &váltogatása másodpercekben:
 
-# ui/mame32.rc: 1109
+# ui/mame32.rc: 1066
 Screenshot Area
 Pillanatképek
 
-# ui/mame32.rc: 1110
+# ui/mame32.rc: 1067
 Screenshot Bordersize:
 Képkeret méret:
 
@@ -1758,459 +1818,475 @@ Képkeret méret:
 Screenshot Ta&b\tAlt+B
 &Képek eszközsor\tAlt+B
 
-# ui/mame32.rc: 1060
+# ui/mame32.rc: 1031
 Select &random background image
 Tetszõleges &háttér választás
 
 # ui/columnedit.c: 257
 Select Item
-Téma válsztás
+Elem választás
 
-# ui/win32ui.c: 4872
+# ui/win32ui.c: 764
 Select a Background Image
-Háttérkép választása
+Háttérkép választás
 
-# ui/mame32.rc: 1586
+# ui/mame32.rc: 1582
 Select a background image file
 Háttérkép kiválasztása
 
-# ui/mame32.rc: 1561
+# ui/mame32.rc: 1557
 Select fullscreen or window mode in GUI
 Teljeskép vagy ablakban futtatás választása
 
-# ui/mame32.rc: 1654
+# ui/mame32.rc: 1653
 Select the cabinet image
 Játékgép kép választása
 
-# ui/mame32.rc: 1654
+# ui/mame32.rc: 1653
 Select the control panel image
 Irányító gombok képének választása
 
-# ui/mame32.rc: 1654
+# ui/mame32.rc: 1653
 Select the flyer image
 Plakát választása
 
-# ui/mame32.rc: 1654
+# ui/mame32.rc: 1653
 Select the history information
-Történet információ választása
+Ismertetõ információ választása
 
-# ui/mame32.rc: 1654
+# ui/mame32.rc: 1653
 Select the marquee image
 Matrica választása
 
-# ui/mame32.rc: 1022
+# ui/mame32.rc: 992
 Select the options to be restored to the default settings.  The options will be restored when MAME32 is run next.
 Beállítás választás alapértékkénti visszaállításhoz.  A visszaállítás a MAME32 következõ indításakor fog megtörténni.
 
-# ui/mame32.rc: 1654
+# ui/mame32.rc: 1653
 Select the screen shot image
 Pillanatkép választása
 
-# ui/mame32.rc: 1654
+# ui/mame32.rc: 1661
+Select the story information
+Történet információ választása
+
+# ui/mame32.rc: 1653
 Select the title image
 Kezdõkép választása
 
-# ui/mame32.rc: 1114
+# ui/mame32.rc: 1072
 Set Screenshot Border Color
 Képkeret szín
 
-# ui/mame32.rc: 1579
+# ui/mame32.rc: 1575
 Set default game options
 Alapértelmezett játékbeállítások
 
-# ui/mame32.rc: 1579
+# ui/mame32.rc: 1575
 Set directory configuration
 Mappa beállítások
 
-# ui/mame32.rc: 1579
+# ui/mame32.rc: 1575
 Set game list and folder list font
 Játék és mappa lista betû beállítások
 
-# ui/mame32.rc: 1584
+# ui/mame32.rc: 1580
 Set in-game UI color palette
 Játék színpaletta beállítása
 
-# ui/mame32.rc: 1579
+# ui/mame32.rc: 1575
 Set list font color for clone games
-Klón játéklista betû beállítás
+Klón játéklista betûkészlet beállítása
 
-# ui/mame32.rc: 1080
+# ui/mame32.rc: 1051
 Show Game Ca&ption
 Játék felirat mut&atása
 
-# ui/mame32.rc: 1117
+# ui/mame32.rc: 1075
 Show History on Tab:
-Történet a kép alatt:
+Ismertetõ a kép alatt:
 
-# ui/mame32.rc: 213
+# ui/mame32.rc: 216
 Show Tab &Control
 Irányítás sor &mutatása
 
-# ui/mame32.rc: 425
+# ui/mame32.rc: 433
 Show directories for:
 Könyvtárak mutatása:
 
-# ui/mame32.rc: 1611
+# ui/mame32.rc: 1607
 Show or hide folder
 Mappa mutatása vagy elrejtése
 
-# ui/mame32.rc: 1643
+# ui/mame32.rc: 1639
 Show or hide the cabinet image
-Játékgép kép mutatása vagy elrejtése
+Játékgép képek mutatása vagy elrejtése
 
-# ui/mame32.rc: 1643
+# ui/mame32.rc: 1639
 Show or hide the control panel image
 Irányító gombok képének mutatása vagy elrejtése
 
-# ui/mame32.rc: 1643
+# ui/mame32.rc: 1639
 Show or hide the flyer image
 Plakátok mutatása vagy elrejtése
 
-# ui/mame32.rc: 1561
+# ui/mame32.rc: 1557
 Show or hide the folder list
 Mappa lista mutatása vagy elrejtése
 
-# ui/mame32.rc: 1643
+# ui/mame32.rc: 1639
 Show or hide the history information
-Történet információ mutatása vagy elrejtése
+Ismertetõ információ mutatása vagy elrejtése
 
-# ui/mame32.rc: 1643
+# ui/mame32.rc: 1639
 Show or hide the marquee image
 Matricák mutatása vagy elrejtése
 
-# ui/mame32.rc: 1561
+# ui/mame32.rc: 1557
 Show or hide the picture area
 Kép terület mutatása vagy elrejtése
 
-# ui/mame32.rc: 1561, 1604
+# ui/mame32.rc: 1557, 1600
 Show or hide the pictures
 Képek mutatása vagy elrejtése
 
-# ui/mame32.rc: 1643
+# ui/mame32.rc: 1639
 Show or hide the screen shot image
 Pillanatképek mutatása vagy elrejtése
 
-# ui/mame32.rc: 1561
+# ui/mame32.rc: 1557
 Show or hide the screen shot tab
 Játék képsor mutatása vagy elrejtése
 
-# ui/mame32.rc: 1561
+# ui/mame32.rc: 1557
 Show or hide the status bar
 Állapotsor mutatása vagy elrejtése
 
-# ui/mame32.rc: 1643
+# ui/mame32.rc: 1647
+Show or hide the story information
+Történet információ mutatása vagy elrejtése
+
+# ui/mame32.rc: 1639
 Show or hide the title image
 Kezdõkép mutatása vagy elrejtése
 
-# ui/mame32.rc: 1561
+# ui/mame32.rc: 1557
 Show or hide the toolbar
 Eszközsor mutatása vagy elrejtése
 
-# ui/mame32.rc: 1148
+# ui/mame32.rc: 1144
 Show palette for:
 Paletta mutatása:
 
-# ui/mame32.rc: 451
+# ui/mame32.rc: 459
 Show these fields in this order:
 Mezõk mutatása ilyen sorban:
 
-# ui/mame32.rc: 731
+# ui/mame32.rc: 711
 Size:
 Méret:
 
-# ui/properties.c: 3616
+# ui/properties.c: 4023
 Skip 1 of 12 frames
 1 kihagyása 12-bõl
 
-# ui/properties.c: 3625
+# ui/properties.c: 4032
 Skip 10 of 12 frames
 10 kihagyása 12-bõl
 
-# ui/properties.c: 3626
+# ui/properties.c: 4033
 Skip 11 of 12 frames
 11 kihagyása 12-bõl
 
-# ui/properties.c: 3617
+# ui/properties.c: 4024
 Skip 2 of 12 frames
 2 kihagyása 12-bõl
 
-# ui/properties.c: 3618
+# ui/properties.c: 4025
 Skip 3 of 12 frames
 3 kihagyása 12-bõl
 
-# ui/properties.c: 3619
+# ui/properties.c: 4026
 Skip 4 of 12 frames
 4 kihagyása 12-bõl
 
-# ui/properties.c: 3620
+# ui/properties.c: 4027
 Skip 5 of 12 frames
 5 kihagyása 12-bõl
 
-# ui/properties.c: 3621
+# ui/properties.c: 4028
 Skip 6 of 12 frames
 6 kihagyása 12-bõl
 
-# ui/properties.c: 3622
+# ui/properties.c: 4029
 Skip 7 of 12 frames
 7 kihagyása 12-bõl
 
-# ui/properties.c: 3623
+# ui/properties.c: 4030
 Skip 8 of 12 frames
 8 kihagyása 12-bõl
 
-# ui/properties.c: 3624
+# ui/properties.c: 4031
 Skip 9 of 12 frames
 9 kihagyása 12-bõl
 
-# ui/mame32.rc: 877
-Skip disclaimer
-Nyilatkozat mellõzés
-
-# ui/mame32.rc: 880
+# ui/mame32.rc: 835
 Skip game info
 Játék infó mellõzés
 
-# ui/mame32.rc: 568
-Sleep when idle
-Üresjáratban készenlét
+# ui/mame32.rc: 829
+Sleep when possible
+Készenlét ha lehet
 
-# ui/options.c: 269 ui/win32ui.c: 640
+# ui/options.c: 278 ui/win32ui.c: 655
 Small Icons
 Kis ikonok
 
-# ui/dialogs.c: 193 ui/options.c: 246
+# ui/dialogs.c: 194 ui/options.c: 244
 Snapshot
 Pillanatkép
 
-# ui/layout.c: 107
+# ui/layout.c: 108
 Snapshots
 Pillanatképek
 
-# ui/mame32.rc: 183
+# ui/mame32.rc: 186
 Sort &Ascending
 Listázás &növekvõ sorba
 
-# ui/mame32.rc: 184
+# ui/mame32.rc: 187
 Sort &Descending
 Listázás &csökkenõ sorba
 
-# ui/mame32.rc: 1632
+# ui/mame32.rc: 1628
 Sort by number of plays
 Listázás játszásonként
 
-# ui/mame32.rc: 1626
+# ui/mame32.rc: 1622
 Sort column in ascending (A-Z) order
 Oszlopok listázása növekvõ (A-Z) sorba
 
-# ui/mame32.rc: 1626
+# ui/mame32.rc: 1622
 Sort column in descending (Z-A) order
 Oszlopok listázása csökkenõ (Z-A) sorba
 
-# ui/mame32.rc: 1632
+# ui/mame32.rc: 1628
 Sort items by directories
 Listázás mappák szerint
 
-# ui/mame32.rc: 1632
+# ui/mame32.rc: 1628
 Sort items by game
 Listázás játékok alapján
 
-# ui/mame32.rc: 1632
+# ui/mame32.rc: 1628
 Sort items by manufacturer
 Listázás gyártók szerint
 
-# ui/mame32.rc: 1632
+# ui/mame32.rc: 1628
 Sort items by type
 Listázás típus alapján
 
-# ui/mame32.rc: 1632
+# ui/mame32.rc: 1628
 Sort items by year
 Listázás év alapján
 
-# ui/layout.c: 58 ui/mame32.rc: 641 
+# ui/layout.c: 59 ui/mame32.rc: 629 
 Sound
 Hang
 
-# ui/properties.c: 1092
+# ui/properties.c: 1111
 Sound emulation isn't 100% accurate
 A hang emuláció nem 100% tökéletes
 
-# ui/mame32.rc: 480
+# ui/mame32.rc: 488
 Sound:
 Hang:
 
-# ui/win32ui.c: 5719, 5798
+# ui/win32ui.c: 756
 Sounds (*.wav)
 Hangok (*.wav)
 
-# ui/layout.c: 56 ui/win32ui.c: 739
+# ui/layout.c: 57 ui/win32ui.c: 794
 Source
 Forrás
 
-# ui/mame32.rc: 65, 174 ui/win32ui.c: 3589
+# ui/mame32.rc: 65, 177 ui/win32ui.c: 3677
 Source Proper&ties
 Forrás tulajdons&ágok
 
-# ui/mame32.rc: 488
+# ui/mame32.rc: 496
 Source:
 Forrás:
 
-# ui/options.c: 461 ui/properties.c: 2493, 2496, 2652, 2655, 3739, 3817
+# ui/mame32.rc: 93, 229, 241
+St&ory
+Tö&rténet
+
+# ui/options.c: 476 ui/properties.c: 2699, 2702, 2996, 2999, 4218, 4296
 Standard
 Alap
 
-# ui/mame32.rc: 524
+# ui/mame32.rc: 532
 Start out maximized
 Indítás teljes méretrõl
 
-# ui/layout.c: 109
+# ui/layout.c: 110
 State
-Állapot
+Állás
 
-# ui/mame32.rc: 473
+# ui/mame32.rc: 481
 Status:
 Állapot:
 
-# ui/layout.c: 76
+# ui/layout.c: 77
 Stereo
 Sztereó
 
-# ui/mame32.rc: 703
+# ui/options.c: 252
+Story
+Történet
+
+# ui/mame32.rc: 691
 Stretch using hardware
 Hardveres képnyújtás
 
-# ui/mame32.rc: 716
+# ui/mame32.rc: 688
 Switch color depths to fit
 Eredeti színmélység állítás
 
-# ui/mame32.rc: 713
+# ui/mame32.rc: 685
 Switch resolutions to fit
 Eredeti felbontás állítás
 
-# ui/mame32.rc: 698
+# ui/mame32.rc: 680
 Sync to monitor refresh
 Monitor frissítéshez állítás
 
-# ui/treeview.c: 1271
+# ui/treeview.c: 1288
 TRACKBALL
 HANYATTEGÉR
 
-# ui/mame32.rc: 604
-Texture management
+# ui/mame32.rc: 586
+Texture Management
 Textúra támogatás
 
-# ui/dialogs.c: 115
+# ui/dialogs.c: 116
 The new settings will take effect\n
 Az új beállítások érvényesülni fognak\n
 
-# ui/m32util.c: 231
+# ui/m32util.c: 233
 The operating system is out of memory or resources.
 Az operációs rendszer memória készlete elfogyott.
 
-# ui/m32util.c: 235
+# ui/m32util.c: 237
 The specified file was not found.
 A meghatározott fájl nem található.
 
-# ui/m32util.c: 247
+# ui/m32util.c: 249
 The specified path was not found.
-A meghatározott elérési út nem található.
+A megadott könyvtár nem található
 
-# ui/m32util.c: 239
+# ui/m32util.c: 241
 There is no application associated with the given filename extension.
-Nem található a megadott fájlnév kiterjesztéshez megfelelõ adat.
+Nincs társított program a megadott fájlnév kiterjesztéshez.
 
-# ui/m32util.c: 243
+# ui/m32util.c: 245
 There was not enough memory to complete the operation.
 Nem volt elegendõ memória a mûvelet elvégzéséhez.
 
-# ui/mame32.rc: 529
+# ui/mame32.rc: 537
 Throttle
 Lassítás
 
-# ui/dialogs.c: 201 ui/options.c: 250
+# ui/dialogs.c: 202 ui/options.c: 248
 Title
 Kezdõkép
 
-# ui/layout.c: 115
+# ui/layout.c: 116
 Titles
 Kezdõképek
 
-# ui/win32ui.c: 637
+# ui/win32ui.c: 652
 Toggle Folder List
 Mappa lista kapcsolása
 
-# ui/win32ui.c: 638
+# ui/win32ui.c: 653
 Toggle Screen Shot
 Játék képek kapcsolása
 
-# ui/mame32.rc: 400, 409
+# ui/mame32.rc: 408, 417
 Total:
 Összesen:
 
-# ui/layout.c: 73 ui/win32ui.c: 734
+# ui/layout.c: 74 ui/win32ui.c: 789
 Trackball
 Hanyattegér
 
-# ui/mame32.rc: 1665
+# ui/mame32.rc: 1122
+Trackball device
+Hanyattegér eszköz
+
+# ui/mame32.rc: 1667
 Translate into English (US)
 Angolra fordítás (USA)
 
-# ui/mame32.rc: 1665
+# ui/mame32.rc: 1667
 Translate into French
 Franciára fordítás
 
-# ui/mame32.rc: 1665
+# ui/mame32.rc: 1667
 Translate into German
 Németre fordítás
 
-# ui/mame32.rc: 1665
+# ui/mame32.rc: 1667
 Translate into Hungarian
 Magyarra fordítás
 
-# ui/mame32.rc: 1665
+# ui/mame32.rc: 1667
 Translate into Italian
 Olaszra fordítás
 
-# ui/mame32.rc: 1665
+# ui/mame32.rc: 1667
 Translate into Japanese
 Japánra fordítás
 
-# ui/mame32.rc: 1665
+# ui/mame32.rc: 1667
 Translate into Korean
 Koreaira fordítás
 
-# ui/mame32.rc: 1665
+# ui/mame32.rc: 1667
 Translate into Polish
 Lengyelre fordítás
 
-# ui/mame32.rc: 1665
+# ui/mame32.rc: 1667
 Translate into Portuguese (BRA)
 Portugálra fordítás
 
-# ui/mame32.rc: 1665
+# ui/mame32.rc: 1667
 Translate into Simplified Chinese
 Egyszerûsített kínaira fordítás
 
-# ui/mame32.rc: 1665
+# ui/mame32.rc: 1667
 Translate into Spanish
 Spanyolra fordítás
 
-# ui/mame32.rc: 1665
+# ui/mame32.rc: 1667
 Translate into Traditional Chinese
 Hagyományos kínaira fordítás
 
-# ui/mame32.rc: 692
+# ui/mame32.rc: 674
 Triple buffering
 Háromszoros letárolás
 
-# ui/mame32.rc: 1593
+# ui/mame32.rc: 1589
 Troubleshooting Documentation
 Hibakeresési dokumentáció
 
-# ui/win32ui.c: 733
+# ui/win32ui.c: 788
 Type
 Típus
 
-# ui/properties.c: 589
+# ui/properties.c: 587
 USB Keyboard
 USB billentyûzet
 
@@ -2218,115 +2294,111 @@ USB billentyûzet
 Unable to Load Riched32.dll
 Riched32.dll betöltése sikertelen
 
-# ui/treeview.c: 2373
+# ui/treeview.c: 2432
 Unable to add game to non-custom folder
 A játék hozzáadása a nem egyedi mappához sikertelen
 
-# ui/treeview.c: 2390
+# ui/treeview.c: 2449
 Unable to remove game from non-custom folder
 A játék kivétele a nem egyedi mappából sikertelen
 
-# ui/layout.c: 52
+# ui/layout.c: 53
 Unavailable
 Hiányzó
 
-# ui/treeview.c: 976
+# ui/treeview.c: 996
 Unemulated Protection
 Emulálatlan védelem
 
-# ui/audit32.c: 435 ui/properties.c: 1036
+# ui/audit32.c: 435 ui/properties.c: 1063
 Unknown
 Ismeretlen
 
-# ui/m32util.c: 255
+# ui/m32util.c: 257
 Unknown error.
 Ismeretlen hiba.
 
-# ui/properties.c: 1061 ui/treeview.c: 978
-Unsimulated Hardware
-Hamisítatlan hardver
-
-# ui/mame32.rc: 602
+# ui/mame32.rc: 584
 Use Direct3D
 Direct3D használata
 
-# ui/mame32.rc: 690
+# ui/mame32.rc: 672
 Use DirectDraw
 DirectDraw használata
 
-# ui/mame32.rc: 1083
+# ui/mame32.rc: 1054
 Use Driver Icon for Not Working Game
-Ikon használata a nem mûködõ játékokhoz
+Ikon használat a nem mûködõ játékokhoz
 
-# ui/win32ui.c: 646
+# ui/win32ui.c: 661
 Use Local Language Game List
 Helyi nyelv játéklista használata
 
-# ui/mame32.rc: 570
+# ui/mame32.rc: 831
 Use RDTSC timing system
 RDTSC idõzítõ használata
 
-# ui/mame32.rc: 846
-Use additional game artwork
-Kiegészítõ illusztrációk
+# ui/mame32.rc: 841
+Use additional Artwork
+Illusztrációk használata
 
-# ui/mame32.rc: 652
+# ui/mame32.rc: 724
+Use classic scanlines
+Klasszikus képsorok
+
+# ui/mame32.rc: 640
 Use samples
 Hangminta használata
 
-# ui/mame32.rc: 545
-Use scanlines
-Képsorok mutatása
-
-# ui/mame32.rc: 894
+# ui/mame32.rc: 856
 Use transparent in-game menu
 Átlátszó menü a játékban
 
-# ui/mame32.rc: 658
+# ui/mame32.rc: 643
 Use volume auto adjust
-Automatikus hangszabályozás beállítása
+Automatikus hangszabályozás használata
 
-# ui/layout.c: 67 ui/mame32.rc: 907 ui/options.c: 1095, 2794 ui/properties.c: 862 ui/treeview.c: 299 ui/win32ui.c: 5154
+# ui/layout.c: 68 ui/mame32.rc: 877 ui/options.c: 1119, 2820 ui/properties.c: 876 ui/treeview.c: 299 ui/win32ui.c: 5229
 Vector
 Vektor
 
-# ui/treeview.c: 1212
+# ui/treeview.c: 1229
 Vector %4dx%4d
 Vektor %4dx%4d
 
-# ui/properties.c: 997 
+# ui/properties.c: 1024 
 Vector Game
 Vektor játék
 
-# ui/mame32.rc: 361
+# ui/mame32.rc: 369
 Version 0
 Verzió 0
 
-# ui/options.c: 4166
+# ui/options.c: 4220
 Version Mismatch
 Verzió eltérés
 
-# ui/properties.c: 435 ui/treeview.c: 932, 933
+# ui/properties.c: 433 ui/treeview.c: 955, 956
 Vertical
 Függõleges
 
-# ui/properties.c: 1080
+# ui/properties.c: 1099
 Video emulation isn't 100% accurate
 A videó emuláció nem 100% tökéletes
 
-# ui/mame32.rc: 666
+# ui/mame32.rc: 650
 Volume attenuation
 Hangerõ szabályozás
 
-# ui/win32ui.c: 6996
+# ui/win32ui.c: 7112
 WARNING: the game might not run correctly.
 FIGYELEM: a játék valószínûleg nem mûködik megfelelõen.
 
-# ui/mame32.rc: 701
+# ui/mame32.rc: 683
 Wait for vertical sync
 Függõleges szinkron
 
-# ui/mame32.rc: 1593
+# ui/mame32.rc: 1589
 What's new in MAME
 MAME újdonságok
 
@@ -2346,111 +2418,123 @@ Ablak képkocka (sötét)
 Window frame (light)
 Ablak képkocka (világos)
 
-# ui/options.c: 698
+# ui/options.c: 719
 Windows UI specific GUI joystick options
 Windows használatkor joystick beállítás
 
-# ui/options.c: 625
+# ui/options.c: 734
+Windows UI specific GUI keyboard options
+Windows nyelvének megfelelõ billentyûzet beállításai
+
+# ui/options.c: 640
 Windows UI specific directory options
 Windows megjelenítés egyedi mappa beállítás
 
-# ui/options.c: 3093
+# ui/options.c: 3102
 Windows UI specific folder list filters options
 Windows megjelenítés egyedi mappa lista szûrés beállítás
 
-# ui/options.c: 652
+# ui/options.c: 667
 Windows UI specific general options
 Windows megjelenítés általános beállításai
 
-# ui/options.c: 749
+# ui/options.c: 773
 Windows UI specific hide folder options
 Windows megjelenítés mappa elrejtés beállításai
 
-# ui/options.c: 689
+# ui/options.c: 710
 Windows UI specific list font options
 Windows megjelenítés lista betûtípus beállítása
 
-# ui/options.c: 678
+# ui/options.c: 699
 Windows UI specific list options
 Windows megjelenítés lista beállítások
 
-# ui/options.c: 636
+# ui/options.c: 651
 Windows UI specific startup options
 Windows megjelenítés indítási beállítások
 
-# ui/options.c: 671
+# ui/options.c: 692
 Windows UI specific window position options
 Windows megjelenítési ablak helyzetének beállítása
 
-# ui/layout.c: 62 ui/properties.c: 1044
+# ui/options.c: 457 
+Windows misc options
+Windows egyéb beállítások
+
+# ui/layout.c: 63 ui/properties.c: 1071
 Working
 Mûködik
 
-# ui/treeview.c: 980
+# ui/treeview.c: 997
 Wrong Colors
 Rossz színek
 
-# ui/layout.c: 55 ui/win32ui.c: 737
+# ui/layout.c: 56 ui/win32ui.c: 792
 Year
 Év
 
-# ui/audit32.c: 119 ui/win32ui.c: 5162
+# ui/audit32.c: 119 ui/win32ui.c: 5237
 Yes
 Igen
 
-# ui/mame32.rc: 712
-Zoom:
-Nagyítás:
+# ui/mame32.rc: 618
+Zoom
+Nagyítás
 
-# ui/options.c: 640
+# ui/options.c: 655
 allow game selection by a joystick
 játék választáshoz joystick
 
-# ui/options.c: 642
+# ui/mame32.rc: 380
+and John Hardy IV
+és John Hardy IV
+
+# ui/options.c: 657
 broadcast selected game to all windows
 a kiválasztott játék közvetítése minden ablakba
 
-# ui/mame32.rc: 107
+# ui/mame32.rc: 110
 by &Date
 Idõ&rendben
 
-# ui/mame32.rc: 104
+# ui/mame32.rc: 107
 by &Manufacturer
 Gyár&tó szerint
 
-# ui/mame32.rc: 102
+# ui/mame32.rc: 105
 by &Name
 Név &szerint
 
-# ui/mame32.rc: 106
+# ui/mame32.rc: 109
 by &Type
 Típus &alapján
 
-# ui/mame32.rc: 103
+# ui/mame32.rc: 106
 by D&irectory
 Mapp&ánként
 
-# ui/mame32.rc: 105
+# ui/mame32.rc: 108
 by Times &Played
 Használ&atonként
 
-# ui/options.c: 683
+# ui/options.c: 704
 column order settings
 oszlop rendszerezés beállítás
 
-# ui/options.c: 682
+# ui/options.c: 703
 column width settings
 oszlop szélesség állítás
 
-# ui/options.c: 637
+# ui/options.c: 652
 config version
 verzió konfigurálás
 
-# ui/options.c: 638
+# ui/options.c: 653
 enable version mismatch warning
-nem megfelelõ elérhetõ verzió figyelmeztetés
+verzió eltérés figyelmeztetés bekapcsolása
 
-# ui/options.c: 3599, 3640, 3727, 3780, 3922 
+# ui/options.c: 3665, 3706, 3793, 3846, 3988 
 error invalid value for %s: %s\n
 hiba - érvénytelen érték %s: %s\n
 
@@ -2458,83 +2542,103 @@ hiba - érvénytelen érték %s: %s\n
 folder
 mappa
 
-# ui/dialogs.c: 113
+# ui/dialogs.c: 114
 items to the original, installation\n
-kijelölések az eredetihez, telepítés\n
+elemek az eredetihez, telepítés\n
 
-# ui/options.c: 687
+# ui/options.c: 708
 last selected folder id
 utoljára válsztott mappa azonosítója
 
-# ui/options.c: 656
+# ui/options.c: 671
 last selected game name
 utoljára válsztott játék neve
 
-# ui/mame32.rc: 1505, 1505, 1505, 1505, 1505, 1505, 1505, 1505
+# ui/mame32.rc: 1501, 1501, 1501, 1501, 1501, 1501, 1501, 1501
 res\\toolbar.bmp
 res\\toolbar.bmp
 
-# ui/options.c: 639
+# ui/options.c: 654
 search for new games
-Új játékok keresése
+új játékok keresése
 
-# ui/dialogs.c: 114
+# ui/dialogs.c: 115
 settings then exit.\n\n
 beállítást követõen kilépés.\n\n
 
-# ui/options.c: 660
+# ui/options.c: 675
 show folder list
 mappa lista megjelenítése
 
-# ui/options.c: 661
+# ui/options.c: 676
 show image picture
 kép megjelenítése
 
-# ui/options.c: 659
+# ui/options.c: 674
 show status bar
 állapotsor megjelenítése
 
-# ui/options.c: 658
+# ui/options.c: 673
 show tool bar
 eszköztár megjelenítése
 
-# ui/options.c: 685
+# ui/options.c: 706
 sort column
-oszlopok rendszerezése
+oszlopokba rendezés
 
-# ui/layout.c: 58 ui/options.c: 508 ui/treeview.c: 87 
+# ui/layout.c: 59 ui/options.c: 524 ui/treeview.c: 87 
 sound
 hang
 
-# ui/options.c: 680
+# ui/options.c: 701
 splitter position
 megosztás helyzete
 
-# ui/dialogs.c: 116
+# ui/dialogs.c: 117
 the next time MAME32 is run.\n\n
-MAME32 legközelebbi indulásakor.\n\n
+MAME32 legközelebbi indításakor.\n\n
 
-# ui/options.c: 679
+# ui/options.c: 700
 view mode
 nézet beállítás
 
-# ui/options.c: 675
+# ui/options.c: 696
 window height
 ablak magasság
 
-# ui/options.c: 672
+# ui/options.c: 693
 window left position
 ablak bal oldali helyzete
 
-# ui/options.c: 673
+# ui/options.c: 694
 window top position
 ablak fenti helyzete
 
-# ui/options.c: 674
+# ui/options.c: 695
 window width
 ablak szélesség
 
-# ui/mame32.rc: 373
+# ui/mame32.rc: 381
                                 
+
+
+# ui/win32ui.c: 763
+Image Files (*.png,*.bmp)
+
+
+# ui/win32ui.c: 744
+Select a file to record
+
+
+# ui/win32ui.c: 743
+Select a recorded file
+
+
+# ui/win32ui.c: 750
+Select a savestate file
+
+
+# ui/win32ui.c: 758
+Select a sound file to record
 
 

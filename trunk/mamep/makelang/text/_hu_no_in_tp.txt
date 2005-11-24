@@ -1,0 +1,40 @@
+# ui/win32ui.c: 6596 (hu_ui.txt)
+Driver
+Driver
+
+# ui/win32ui.c: 4908 (hu_ui.txt)
+Image Files (*.png, *.bmp)
+Kép fájlok (*.png, *.bmp)
+
+# ui/mame32.rc: 838 (hu_ui.txt)
+Skip validity checks
+Érvényesítés kihagyása
+
+# windows/climain.c: 94 windows/winmain.c: 167 (hu_windows.txt)
+Couldn't find the documentation.
+A dokumentáció nem található
+
+# windows/rc.c: 976 (hu_windows.txt)
+Error %s exists but isn't a dir\n
+Hiba %s lépett fel de nem egy könyvtárban\n
+
+# windows/climain.c: 94 windows/winmain.c: 167 (hu_windows.txt)
+Error...
+Hiba...
+
+# windows/climain.c: 79 windows/winmain.c: 152 (hu_windows.txt)
+M.A.M.E. usage information...
+M.A.M.E. felhasználói információ...
+
+# windows/climain.c: 55 windows/winmain.c: 128 (hu_windows.txt)
+M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2005 by Nicola Salmoria and the MAME Team\n\nM.A.M.E. is a console application, you should launch it from a command prompt.\n\nUsage:\tMAME gamename [options]\n\n\tMAME -showusage\t\tfor a brief list of options\n\tMAME -showconfig\t\tfor a list of configuration options\n\tMAME -createconfig\tto create a mame.ini\n\nPlease consult the documentation for more information.\n\nWould you like to open the documentation now?
+M.A.M.E. v%s - Multiple Arcade Machine Emulator\nSzerzõi jog: (C) 1997-2005 Nicola Salmoria és a MAME készítõi csapat\n\nM.A.M.E. egy konzol program, parancssorból indítható.\n\nHasználat:\tMAME játéknév [options]\n\n\tMAME -showusage\t\ta fõbb beállítások listázásához\n\tMAME -showconfig\t\ta beállítási lehetõségek listázásához\n\tMAME -createconfig\ta mame.ini elkészítéséhez\n\nKérjük olvassa el a dokumentációt további információkért.\n\nKívánja most megnyitni a dokumentációt?
+
+# windows/rc.c: 928 (hu_windows.txt)
+error: malloc faild for homedir string\n
+error: malloc faild for homedir string\n
+
+# windows/config.c: 240 (hu_windows.txt)
+skip doing the code validity checks
+a kód érvényességi ellenõrzésének kihagyása
+

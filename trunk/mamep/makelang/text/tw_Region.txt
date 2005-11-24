@@ -1,3 +1,35 @@
+# 903
+* Bootleg
+* 盜版
+
+# 1330
+* Hacks
+* Hack
+
+# 7
+* Prototype
+* 開發版
+
+# 1282
+Asia
+亞洲版
+
+# 1686
+Brazil
+巴西版
+
+# 1649
+China
+中國版
+
+# 1653
+Denmark
+丹麥版
+
+# 1259
+Europe
+歐洲版
+
 # 1670
 France
 法國版
@@ -16,7 +48,7 @@ Italy
 
 # 67
 Japan
-日版
+日本版
 
 # 1316
 Korea
@@ -32,41 +64,9 @@ Taiwan
 
 # 1338
 USA
-美版
+美國版
 
 # 1043
 World
 世界版
-
-# 903
-* Bootleg
-
-
-# 1330
-* Hacks
-
-
-# 7
-* Prototype
-
-
-# 1282
-Asia
-
-
-# 1686
-Brazil
-
-
-# 1649
-China
-
-
-# 1653
-Denmark
-
-
-# 1259
-Europe
-
 

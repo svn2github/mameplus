@@ -766,7 +766,7 @@ BEGIN
 #endif /* USE_JOY_MOUSE_MOVE */
     GROUPBOX        "",IDC_STATIC,4,98,114,45,WS_DISABLED
     CONTROL         "Enable lightgun input",IDC_LIGHTGUN,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,98,93,10,0,
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,98,95,10,0,
                     HIDC_LIGHTGUN
     CONTROL         "Offscreen shots reload",IDC_RELOAD,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,113,103,10,0,

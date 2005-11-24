@@ -6,6 +6,10 @@
 A wave inc.
 
 
+# Water Balls
+ABM
+
+
 # Blomby Car
 ABM & Gecas
 
@@ -194,6 +198,10 @@ Banpresto
 Barko
 
 
+# Zip & Zip
+Barko Corp
+
+
 # Many Block
 Bee-Oh
 
@@ -208,10 +216,6 @@ Brezzasoft
 
 # Herbie at the Olympics (DK conversion)
 CVS
-
-
-# Truco Clemente
-Caloi Miky SRL
 
 
 # 1942 (PlayChoice-10)
@@ -266,6 +270,10 @@ Chuo Co. Ltd
 Cinematronics
 
 
+# Quizmaster
+Coinmaster
+
+
 # Gulf War II
 Comad
 
@@ -318,7 +326,7 @@ Daiichi Denshi
 Daiki
 
 
-# Vamp 1/2 (Korea)
+# Vamp 1/2 (Korea version)
 Danbi & F2 System
 
 
@@ -554,8 +562,12 @@ Face
 Face?
 
 
-# Crazy Kong (set 1)
+# Frogger (Falcon bootleg)
 Falcon
+
+
+# Metal Saver
+First Amusement
 
 
 # Space Thunderbird
@@ -740,6 +752,10 @@ Interlogic
 
 # Born To Fight
 International Games
+
+
+# Egg Hunt
+Invi Image
 
 
 # UniWar S
@@ -968,6 +984,10 @@ Midway
 
 # CarnEvil
 Midway Games
+
+
+# Truco Clemente
+Miky SRL
 
 
 # Gumbo
@@ -1338,7 +1358,7 @@ Seibu Kaihatsu Inc.
 SemiCom
 
 
-# Cool Mini
+# Cool Minigame Collection
 Semicom
 
 
@@ -1398,7 +1418,7 @@ Sisteme
 Soft
 
 
-# Jolly Poker (Croatia)
+# Jolly Card (Croatia)
 Soft Design
 
 
@@ -1448,6 +1468,10 @@ Sun Amusement
 
 # Speak & Rescue
 Sun Electronics
+
+
+# Top Shooter
+Sun Mixing
 
 
 # Goindol (World)

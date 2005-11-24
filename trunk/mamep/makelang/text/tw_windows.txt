@@ -126,10 +126,6 @@ CRC-32
 Configuration options
 設定選項
 
-# windows/climain.c: 94 windows/winmain.c: 167
-Couldn't find the documentation.
-找不到文件。
-
 # windows/fronthlp.c: 787
 ERROR     %s\n
 錯誤      %s\n
@@ -137,10 +133,6 @@ ERROR     %s\n
 # windows/video.c: 537
 Enumerating video device %s\n
 正在列舉視訊裝置 %s\n
-
-# windows/rc.c: 976
-Error %s exists but isn't a dir\n
-錯誤: %s 存在，但是不是一個目錄\n
 
 # windows/wind3d.c: 718
 Error creating Direct3D7 device: %08x\n
@@ -302,10 +294,6 @@ Error setting mode: %08x\n
 Error setting primary format: %08x\n
 設定主要格式時發生錯誤: %08x\n
 
-# windows/climain.c: 94 windows/winmain.c: 167
-Error...
-錯誤...
-
 # windows/wind3d.c: 257
 Error: 3D hardware can't render scanlines (no support for multi-texturing)\n
 錯誤: 3D 硬體無法演算描繪掃描線 (不支援多重材質)\n
@@ -330,7 +318,7 @@ For usage instructions, please consult the file windows.txt\n
 Frontend Related
 Frontend 相關
 
-# windows/window.c: 718
+# windows/window.c: 720
 Full Screen\tAlt+Enter
 全螢幕\tAlt+Enter
 
@@ -388,7 +376,7 @@ LED 模式 (ps/2|usb)
 
 # windows/config.c: 272
 Language options
-語系選項
+語言選項
 
 # windows/input.c: 1850
 Lightgun %d X
@@ -402,17 +390,9 @@ Lightgun %d Y
 Lightgun not supported in windowed mode
 在視窗模式中不支援光線槍
 
-# windows/climain.c: 79 windows/winmain.c: 152
-M.A.M.E. usage information...
-M.A.M.E. 使用方法資訊...
-
 # windows/fronthlp.c: 445
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2005 by Nicola Salmoria and the MAME Team\n\n
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\n著作權 (C) 1997-2005 隸屬於 Nicola Salmoria 與 MAME 團隊\n\n
-
-# windows/climain.c: 55 windows/winmain.c: 128
-M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2005 by Nicola Salmoria and the MAME Team\n\nM.A.M.E. is a console application, you should launch it from a command prompt.\n\nUsage:\tMAME gamename [options]\n\n\tMAME -showusage\t\tfor a brief list of options\n\tMAME -showconfig\t\tfor a list of configuration options\n\tMAME -createconfig\tto create a mame.ini\n\nPlease consult the documentation for more information.\n\nWould you like to open the documentation now?
-M.A.M.E. v%s - Multiple Arcade Machine Emulator\n著作權 (C) 1997-2005 隸屬於 Nicola Salmoria 與 MAME 團隊\n\nM.A.M.E. 是一個主控台應用程式，您必須從命令提示字元啟動它。\n\n用法:\tMAME 遊戲名稱 [選項]\n\n\tMAME -showusage\t\t列出選項的簡短描述\n\tMAME -showconfig\t\t列出設定選項的清單\n\tMAME -createconfig\t建立 mame.ini 檔案\n\n請查閱\文件以取得更多資訊。\n\n您現在要開啟文件嗎?
 
 # windows/blit.c: 1152
 MMX not supported\n
@@ -842,7 +822,7 @@ button color (yellow)
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 變更 m68k 核心 (0:C, 1:DRC, 2:ASM+DRC)
 
-# windows/config.c: 241
+# windows/config.c: 240
 change system bios
 變更系統 BIOS
 
@@ -994,6 +974,10 @@ enable (keyboard|mouse|joystick|lightgun) if a trackball control is present
 enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is present
 啟用 (keyboard|mouse|joystick|lightgun) 如果類比搖桿控制存在
 
+# windows/config.c: 242
+enable automatic restore at startup and save at exit
+啟用自動在啟動時回存與結束時儲存
+
 # windows/input.c: 223
 enable dual lightgun input
 啟用雙光線槍輸入
@@ -1034,13 +1018,13 @@ enable/disable cheat subsystem
 enable/disable debugger (only if available)
 啟用/停用 除錯程式 (如果可用)
 
-# windows/config.c: 274
-enable/disable language list
-啟用/停用 中文遊戲清單
-
 # windows/config.c: 269
 enable/disable loading of configfiles
 啟用/停用 載入設定檔
+
+# windows/config.c: 274
+enable/disable local language game list
+啟用/停用 當地語言遊戲清單
 
 # windows/config.c: 218
 enable/disable sound and sound CPUs
@@ -1129,10 +1113,6 @@ error: invalid value for palette: %s\n
 # windows/video.c: 340, 350
 error: invalid value for resolution: %s\n
 錯誤: 無效的 resolution 值: %s\n
-
-# windows/rc.c: 928
-error: malloc faild for homedir string\n
-錯誤: homedir string 記憶體分配失敗\n
 
 # windows/rc.c: 803
 error: malloc failed for %s\n
@@ -1408,7 +1388,7 @@ script for debugger (only if available)
 
 # windows/config.c: 273
 select translation language
-選擇翻譯語系
+選擇翻譯語言
 
 # windows/sound.c: 124
 set audio latency (increase to reduce glitches)
@@ -1502,10 +1482,6 @@ show this help
 skip displaying the game info screen
 略過顯示遊戲資訊畫面
 
-# windows/config.c: 240
-skip doing the code validity checks
-略過編碼有效性檢查
-
 # windows/video.c: 212
 skip frames to speed up emulation
 省略畫面加速模擬
@@ -1534,7 +1510,7 @@ specify which screen to use
 start out maximized
 啟動時最大化
 
-# windows/config.c: 242
+# windows/config.c: 241
 state to load
 載入狀態
 

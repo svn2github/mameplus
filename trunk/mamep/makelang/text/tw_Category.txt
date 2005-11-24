@@ -288,11 +288,11 @@ Quiz / Chinese
 
 # 2962
 Quiz / English
-問答 / 英語
+問答 / 英文
 
 # 2996
 Quiz / English *Mature*
-問答 / 英語 *成人*
+問答 / 英文 *成人*
 
 # 3008
 Quiz / French
@@ -300,23 +300,23 @@ Quiz / French
 
 # 3012
 Quiz / Italian
-問答 / 義大利語
+問答 / 義大利文
 
 # 3015
 Quiz / Japanese
-問答 / 日本語
+問答 / 日文
 
 # 3072
 Quiz / Japanese *Mature*
-問答 / 日本語 *成人*
+問答 / 日文 *成人*
 
 # 3077
 Quiz / Music English
-問答 / 音樂 英語
+問答 / 音樂 英文
 
 # 3081
 Quiz / Music Japanese
-問答 / 音樂 日本語
+問答 / 音樂 日文
 
 # 3085
 Rhythm

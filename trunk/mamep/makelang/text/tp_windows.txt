@@ -126,20 +126,12 @@ CRC-32s
 Configuration options
 
 
-# windows/climain.c: 94 windows/winmain.c: 167
-Couldn't find the documentation.
-
-
 # windows/fronthlp.c: 787
 ERROR     %s\n
 
 
 # windows/video.c: 537
 Enumerating video device %s\n
-
-
-# windows/rc.c: 976
-Error %s exists but isn't a dir\n
 
 
 # windows/wind3d.c: 718
@@ -302,10 +294,6 @@ Error setting mode: %08x\n
 Error setting primary format: %08x\n
 
 
-# windows/climain.c: 94 windows/winmain.c: 167
-Error...
-
-
 # windows/wind3d.c: 257
 Error: 3D hardware can't render scanlines (no support for multi-texturing)\n
 
@@ -330,7 +318,7 @@ For usage instructions, please consult the file windows.txt\n
 Frontend Related
 
 
-# windows/window.c: 718
+# windows/window.c: 720
 Full Screen\tAlt+Enter
 
 
@@ -402,16 +390,8 @@ Lightgun %d Y
 Lightgun not supported in windowed mode
 
 
-# windows/climain.c: 79 windows/winmain.c: 152
-M.A.M.E. usage information...
-
-
 # windows/fronthlp.c: 445
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2005 by Nicola Salmoria and the MAME Team\n\n
-
-
-# windows/climain.c: 55 windows/winmain.c: 128
-M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2005 by Nicola Salmoria and the MAME Team\n\nM.A.M.E. is a console application, you should launch it from a command prompt.\n\nUsage:\tMAME gamename [options]\n\n\tMAME -showusage\t\tfor a brief list of options\n\tMAME -showconfig\t\tfor a list of configuration options\n\tMAME -createconfig\tto create a mame.ini\n\nPlease consult the documentation for more information.\n\nWould you like to open the documentation now?
 
 
 # windows/blit.c: 1152
@@ -842,7 +822,7 @@ button color (yellow)
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 
 
-# windows/config.c: 241
+# windows/config.c: 240
 change system bios
 
 
@@ -994,6 +974,10 @@ enable (keyboard|mouse|joystick|lightgun) if a trackball control is present
 enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is present
 
 
+# windows/config.c: 242
+enable automatic restore at startup and save at exit
+
+
 # windows/input.c: 223
 enable dual lightgun input
 
@@ -1034,12 +1018,12 @@ enable/disable cheat subsystem
 enable/disable debugger (only if available)
 
 
-# windows/config.c: 274
-enable/disable language list
-
-
 # windows/config.c: 269
 enable/disable loading of configfiles
+
+
+# windows/config.c: 274
+enable/disable local language game list
 
 
 # windows/config.c: 218
@@ -1128,10 +1112,6 @@ error: invalid value for palette: %s\n
 
 # windows/video.c: 340, 350
 error: invalid value for resolution: %s\n
-
-
-# windows/rc.c: 928
-error: malloc faild for homedir string\n
 
 
 # windows/rc.c: 803
@@ -1502,10 +1482,6 @@ show this help
 skip displaying the game info screen
 
 
-# windows/config.c: 240
-skip doing the code validity checks
-
-
 # windows/video.c: 212
 skip frames to speed up emulation
 
@@ -1534,7 +1510,7 @@ specify which screen to use
 start out maximized
 
 
-# windows/config.c: 242
+# windows/config.c: 241
 state to load
 
 

@@ -1,12 +1,12 @@
-# ui/mame32.rc: 382
+# ui/mame32.rc: 381
                                 
 Japanese game list by 俺、ぶろん
 
-# ui/properties.c: 1050
+# ui/properties.c: 1048
 %d colors 
 %d 色 
 
-# ui/win32ui.c: 238, 3505
+# ui/win32ui.c: 247, 3553
 %d games
 %d ゲーム
 
@@ -22,7 +22,7 @@ MAME32について(&A)
 &Add to Custom Folder...
 カスタムフォルダに追加(&A)...
 
-# ui/mame32.rc: 984
+# ui/mame32.rc: 988
 &All games to use default options
 全ゲームにデフォルトオプション適用(&A)
 
@@ -38,7 +38,7 @@ MAME32について(&A)
 &Background Image...
 背景画像(&B)...
 
-# ui/mame32.rc: 1031
+# ui/mame32.rc: 1033
 &Broadcast selected game to all windows
 選択したゲームをブロードキャストする(&B)
 
@@ -46,7 +46,7 @@ MAME32について(&A)
 &Cabinet
 筐体(&C)
 
-# ui/mame32.rc: 403, 966, 993, 1009, 1075, 1145
+# ui/mame32.rc: 402, 970, 997, 1014, 1073, 1124
 &Cancel
 キャンセル(&C)
 
@@ -70,11 +70,11 @@ MAME32について(&A)
 &Custom Filters...\tCtrl+F
 ゲームフィルタ(&C)...\tCtrl+F
 
-# ui/mame32.rc: 981
+# ui/mame32.rc: 985
 &Default game options
 デフォルトゲームオプション(&D)
 
-# ui/mame32.rc: 962
+# ui/mame32.rc: 966
 &Description filter
 説明のフィルタ(&D)
 
@@ -98,7 +98,7 @@ MAME32について(&A)
 &Flyer
 広告ポスター(&F)
 
-# ui/mame32.rc: 987
+# ui/mame32.rc: 991
 &Folder 'filters'
 ゲームフィルタ(&F)
 
@@ -114,7 +114,7 @@ MAME32について(&A)
 &Help
 ヘルプ(&H)
 
-# ui/mame32.rc: 91, 227, 240
+# ui/mame32.rc: 91, 227, 239
 &History
 ゲームの歴史(&H)
 
@@ -142,7 +142,7 @@ MAME32について(&A)
 &New Game Changes
 新しいゲームの変更点(&N)
 
-# ui/mame32.rc: 367, 965, 992, 1008, 1074, 1144
+# ui/mame32.rc: 366, 969, 996, 1013, 1072, 1123
 &OK
 &OK
 
@@ -154,7 +154,7 @@ MAME32について(&A)
 &Palette Setting...
 パレット設定(&P)...
 
-# ui/audit32.c: 265 ui/mame32.rc: 402
+# ui/audit32.c: 265 ui/mame32.rc: 401
 &Pause
 一時停止(&P)
 
@@ -162,11 +162,11 @@ MAME32について(&A)
 &Picture Area\tAlt+P
 画像エリア(&P)\tAlt+P
 
-# ui/mame32.rc: 52, 162 ui/win32ui.c: 3619
+# ui/mame32.rc: 52, 162 ui/win32ui.c: 3667
 &Play
 プレイ(&P)
 
-# ui/win32ui.c: 237, 3653, 6558, 6586
+# ui/win32ui.c: 246, 3701, 6496, 6524
 &Play %s
 プレイ(&P) %s
 
@@ -174,7 +174,7 @@ MAME32について(&A)
 &Properties
 プロパティ(&P)
 
-# ui/mame32.rc: 954
+# ui/mame32.rc: 958
 &Raster Graphics
 ラスタグラフィック(&R)
 
@@ -190,7 +190,7 @@ MAME32について(&A)
 &Reset to Default...
 設定の初期化(&R)...
 
-# ui/mame32.rc: 1019
+# ui/mame32.rc: 1024
 &Search for new games on start
 起動時に新しいゲームを検索(&S)
 
@@ -222,15 +222,15 @@ MAME32について(&A)
 &Troubleshooting
 トラブルシューティング(&T)
 
-# ui/mame32.rc: 951
+# ui/mame32.rc: 955
 &Unavailable
 未所有(&U)
 
-# ui/mame32.rc: 978
+# ui/mame32.rc: 982
 &User Interface (Fonts, Colors, Sizes)
 ユーザインタフェース(フォント、色、サイズ)(&U)
 
-# ui/mame32.rc: 943
+# ui/mame32.rc: 947
 &Vector Graphics
 ベクタグラフィック(&V)
 
@@ -238,43 +238,43 @@ MAME32について(&A)
 &View
 表\示(&V)
 
-# ui/mame32.rc: 960
+# ui/mame32.rc: 964
 &Working
 動作可(&W)
 
-# ui/win32ui.c: 6164
+# ui/win32ui.c: 6102
 '%s' is not a valid savestate file for game '%s'.
 '%s'はゲーム'%s'に適切なステートではありません。
 
-# ui/mame32.rc: 967
+# ui/mame32.rc: 971
 (*) = inherited from parent folder
 (*) = 親のフォルダから継承
 
-# ui/properties.c: 446
+# ui/properties.c: 444
 25% scanlines
 25% スキャンライン
 
-# ui/properties.c: 447
+# ui/properties.c: 445
 50% scanlines
 50% スキャンライン
 
-# ui/properties.c: 448
+# ui/properties.c: 446
 75% scanlines
 75% スキャンライン
 
-# ui/properties.c: 449
+# ui/properties.c: 447
 75% vertical scanlines
 75% 垂直スキャンライン
 
-# ui/mame32.rc: 459
+# ui/mame32.rc: 458
 <- Remove
 <- 削除
 
-# ui/treeview.c: 515, 536, 1126
+# ui/treeview.c: 516, 537, 1127
 <unknown>
 <不明>
 
-# ui/m32util.c: 253
+# ui/m32util.c: 254
 A sharing violation occurred.
 共有違反が発生しました。
 
@@ -282,35 +282,39 @@ A sharing violation occurred.
 A&udit
 監査(&U)
 
-# ui/treeview.c: 1284
+# ui/treeview.c: 1285
 AD STICK
 アナログスティック
 
-# ui/mame32.rc: 1108
+# ui/mame32.rc: 1088
 ADStick device
 ADスティックデバイス
 
-# ui/win32ui.c: 647
+# ui/win32ui.c: 655
 About
 このソ\フトウェアについて
 
-# ui/mame32.rc: 364
+# ui/mame32.rc: 363
 About MAME32
 MAME32 について
 
-# ui/mame32.rc: 458
+# ui/mame32.rc: 457
 Add ->
 追加 ->
 
-# ui/mame32.rc: 1165
+# ui/mame32.rc: 1144
 Add Game To Custom Folder
 ゲームをカスタムフォルダに追加
 
-# ui/mame32.rc: 1610
+# ui/mame32.rc: 1572
 Add currently selected game to a custom folder
 選択されたゲームをカスタムフォルダに追加します
 
-# ui/mame32.rc: 667
+# ui/mame32.rc: 375
+Additional MAME32 code by
+Additional MAME32 code by
+
+# ui/mame32.rc: 665
 Advanced
 高度な設定
 
@@ -322,35 +326,39 @@ All
 All Games
 全ゲーム
 
-# ui/win32ui.c: 5758, 5761, 5764, 5837, 5840, 5843
+# ui/win32ui.c: 738, 745, 752
 All files (*.*)
 全てのファイル (*.*)
 
-# ui/mame32.rc: 1022
+# ui/mame32.rc: 1027
 Allow game selection by a &joystick (requires restart)
 ジョイスティックでゲーム選択を有効(要再起動)(&J)
 
-# ui/mame32.rc: 1025
+# ui/mame32.rc: 1029
 Allow game selection by custom &key sequences
 カスタマイズしたキー配置でゲーム選択を有効(&K)
 
-# ui/mame32.rc: 1585
+# ui/mame32.rc: 1547
 Allow restoring options to 'sane' values.
 各オプション値をデフォルトに戻します
 
-# ui/mame32.rc: 1610
+# ui/mame32.rc: 1572
 Allows filtering out games from a folder
 フォルダに対してフィルタリングを設定します
 
-# ui/properties.c: 520
+# ui/mame32.rc: 751
+Analog deadzone
+アナログ変換の割合
+
+# ui/properties.c: 518
 Anisotropic
 アニソ\トロピック
 
-# ui/properties.c: 4047
+# ui/properties.c: 4046
 Anti-clockwise
 反時計回り
 
-# ui/properties.c: 465
+# ui/properties.c: 463
 Aperture grille
 アパーチャグリル
 
@@ -358,31 +366,31 @@ Aperture grille
 Arrange &Icons
 整列(&I)
 
-# ui/mame32.rc: 1631
+# ui/mame32.rc: 1593
 Arranges icons in a grid
 アイコンを等間隔に整列します
 
-# ui/layout.c: 111
+# ui/layout.c: 112
 Artwork
 アートワーク
 
-# ui/mame32.rc: 834
-Artwork resolution:
-アートワーク画面解像度:
+# ui/mame32.rc: 853
+Artwork resolution
+アートワーク画面解像度
 
-# ui/mame32.rc: 709
-Aspect ratio:
-アスペクト比:
+# ui/mame32.rc: 694
+Aspect ratio
+アスペクト比
 
-# ui/mame32.rc: 655
+# ui/mame32.rc: 654
 Audio latency
 オーディオのレイテンシ
 
-# ui/mame32.rc: 505
+# ui/mame32.rc: 504
 Audit
 監査
 
-# ui/mame32.rc: 1547, 1610, 1610
+# ui/mame32.rc: 1509, 1572, 1572
 Audit ROM and samples sets
 ロムファイルとサンプルファイルを監査します
 
@@ -390,19 +398,23 @@ Audit ROM and samples sets
 Audit complete.\n
 チェック終了\n
 
-# ui/properties.c: 415, 432, 464, 3966, 4068, 4125, 4296
+# ui/properties.c: 413, 430, 462, 3965, 4067, 4124, 4295
 Auto
 自動
 
-# ui/properties.c: 4050
+# ui/properties.c: 4049
 Auto anti-clockwise
 自動的に反時計回り
 
-# ui/properties.c: 4049
+# ui/properties.c: 4048
 Auto clockwise
 自動的に時計回り
 
-# ui/mame32.rc: 561
+# ui/mame32.rc: 838
+Auto restore and save (only if available)
+自動の起動時読みと終了時保存         
+
+# ui/mame32.rc: 565
 Automatic
 自動
 
@@ -410,95 +422,99 @@ Automatic
 Available
 所有しているゲーム
 
-# ui/mame32.rc: 454
+# ui/mame32.rc: 453
 Available fields:
 利用可能\フィールド:
 
-# ui/properties.c: 4168
+# ui/properties.c: 4167
 Axis
 軸
 
-# ui/properties.c: 4178
+# ui/properties.c: 4177
 AxisId
 軸ID
 
-# ui/treeview.c: 1267
+# ui/mame32.rc: 869, 1159
+BIOS
+BIOS
+
+# ui/treeview.c: 1268
 BUTTONS 1
  1ボタン
 
-# ui/treeview.c: 1268
+# ui/treeview.c: 1269
 BUTTONS 2
  2ボタン
 
-# ui/treeview.c: 1269
+# ui/treeview.c: 1270
 BUTTONS 3
  3ボタン
 
-# ui/treeview.c: 1270
+# ui/treeview.c: 1271
 BUTTONS 4
  4ボタン
 
-# ui/treeview.c: 1271
+# ui/treeview.c: 1272
 BUTTONS 5
  5ボタン
 
-# ui/treeview.c: 1272
+# ui/treeview.c: 1273
 BUTTONS 6
  6ボタン
 
-# ui/treeview.c: 1273
+# ui/treeview.c: 1274
 BUTTONS 7
  7ボタン
 
-# ui/treeview.c: 1274
+# ui/treeview.c: 1275
 BUTTONS 8
  8ボタン
 
-# ui/treeview.c: 1275
+# ui/treeview.c: 1276
 BUTTONS 9
  9ボタン
 
-# ui/treeview.c: 1276
+# ui/treeview.c: 1277
 BUTTONS10
 10ボタン
 
-# ui/mame32.rc: 828
+# ui/mame32.rc: 845
 Backdrops
 バックドロップ
 
-# ui/layout.c: 122
+# ui/layout.c: 123
 Background Images
 背景画像
 
-# ui/treeview.c: 1046, 1047
+# ui/treeview.c: 1047, 1048
 Bad Dump
 吸出し不良
 
-# ui/mame32.rc: 888
-Beam width:
-ビーム:
+# ui/mame32.rc: 890
+Beam width
+ビーム
 
 # ui/audit32.c: 444
 Best available
 最良の状態です
 
-# ui/mame32.rc: 830
+# ui/mame32.rc: 847
 Bezels
 ベゼル
 
-# ui/properties.c: 517
+# ui/properties.c: 515
 Bilinear
 バイリニア
 
-# ui/mame32.rc: 1055
+# ui/mame32.rc: 1054
 Bookkeeping
 プレイ記録
 
-# ui/mame32.rc: 577
+# ui/mame32.rc: 553
 Brightness correction
 明るさ
 
-# ui/mame32.rc: 444
+# ui/mame32.rc: 443
 Browse...
 参照...
 
@@ -542,7 +558,7 @@ Button (P or 6)
 Button (S or 7)
 ボタン (S or 7)
 
-# ui/mame32.rc: 946
+# ui/mame32.rc: 950
 C&lones
 クローン(C)
 
@@ -554,11 +570,11 @@ CPU
 Cabinet
 筐体
 
-# ui/layout.c: 114
+# ui/layout.c: 115
 Cabinets
 筐体
 
-# ui/mame32.rc: 443, 468, 1173
+# ui/mame32.rc: 442, 467, 1154
 Cancel
 キャンセル
 
@@ -566,7 +582,7 @@ Cancel
 Cannot Move Selected Item
 選択された項目は移動できません
 
-# ui/mame32.rc: 977
+# ui/mame32.rc: 981
 Categories
 カテゴリ
 
@@ -578,27 +594,27 @@ Changing this item is not permitted
 Checking Game %s - %s
 チェック中 ゲーム %s - %s
 
-# ui/mame32.rc: 513, 515
+# ui/mame32.rc: 512, 514
 Checking...
 チェック中...
 
-# ui/mame32.rc: 728
-Classic MAME scanlines
-かつてのスキャンライン
+# ui/mame32.rc: 298, 376
+Christopher Kirmse and Michael Soderstrom
+Christopher Kirmse and Michael Soderstrom
 
-# ui/mame32.rc: 697
-Clean stretch:
-整数倍に拡大:
+# ui/mame32.rc: 701
+Clean stretch
+整数倍に拡大
 
-# ui/properties.c: 4046
+# ui/properties.c: 4045
 Clockwise
 時計回り
 
-# ui/win32ui.c: 741
+# ui/win32ui.c: 789
 Clone Of
 原作
 
-# ui/mame32.rc: 499
+# ui/mame32.rc: 498
 Clone of:
 原作:
 
@@ -606,43 +622,43 @@ Clone of:
 Clones
 クローン
 
-# ui/properties.c: 1088
+# ui/properties.c: 1086
 Colors are completely wrong
 色が再現されない
 
-# ui/properties.c: 1094
+# ui/properties.c: 1092
 Colors aren't 100% accurate
 色の再現が不完全
 
-# ui/mame32.rc: 495
+# ui/mame32.rc: 494
 Colors:
 色数:
 
-# ui/layout.c: 106
+# ui/layout.c: 107
 Config
 設定ファイル
 
-# ui/mame32.rc: 852
-Confirm on exit
-終了時に確認する
+# ui/mame32.rc: 840
+Confirm on exit game
+ゲーム終了時に確認する
 
-# ui/mame32.rc: 1539
+# ui/mame32.rc: 1501
 Contains commands for displaying help
 ヘルプを表\示するコマンドが含まれています
 
-# ui/mame32.rc: 1539
+# ui/mame32.rc: 1501
 Contains commands for manupulating the view
 表\示方法を操作するコマンドが含まれています
 
-# ui/mame32.rc: 1603
+# ui/mame32.rc: 1565
 Contains commands for sorting by various columns
 指定項目を元に整列します
 
-# ui/mame32.rc: 1539
+# ui/mame32.rc: 1501
 Contains commands for user interface options
 ユーザインターフェースの設定を行うコマンドが含まれています
 
-# ui/mame32.rc: 1539
+# ui/mame32.rc: 1501
 Contains commands for working with the selected items
 選択されたアイテムによって動作するコマンドが含まれています
 
@@ -658,43 +674,51 @@ Control &Panel
 Control Panel
 コンパネ
 
-# ui/layout.c: 117
+# ui/layout.c: 118
 Control Panels
 コントロールパネル
 
-# ui/layout.c: 119
+# ui/layout.c: 120
 Controller Files
 コントローラ定義ファイル
 
-# ui/mame32.rc: 1099
+# ui/mame32.rc: 785
+Controller ID layout
+コントローラのID配置
+
+# ui/mame32.rc: 1078
 Controller Mapping
 コントローラ割り当て
 
-# ui/mame32.rc: 744
+# ui/mame32.rc: 740
 Controllers
 コントローラ
 
-# ui/mame32.rc: 406, 416
+# ui/mame32.rc: 370
+Copyright (C) 1997-2005 The MAME Team
+Copyright (C) 1997-2005 The MAME Team
+
+# ui/mame32.rc: 405, 415
 Correct:
 正常:
 
-# ui/win32ui.c: 6075
+# ui/win32ui.c: 6013
 Could not open '%s' as a valid input file.
 「%s」を有効な再生ファイルとしてオープンできません
 
-# ui/win32ui.c: 6175
+# ui/win32ui.c: 6113
 Could not open '%s' as a valid savestate file.
 '%s'は正常はステートとして開けません。
 
-# ui/mame32.rc: 837
-Crop artwork
+# ui/mame32.rc: 851
+Crop Artwork
 ゲーム画面外をカット
 
-# ui/properties.c: 518
+# ui/properties.c: 516
 Cubic (flat kernel)
 フラットバイキュービック
 
-# ui/properties.c: 519
+# ui/properties.c: 517
 Cubic (gaussian kernel)
 ガウスバイキュービック
 
@@ -702,7 +726,7 @@ Cubic (gaussian kernel)
 Cursor
 カーソ\ル
 
-# ui/win32ui.c: 4355, 4383
+# ui/win32ui.c: 4403, 4431
 Custom
 カスタム
 
@@ -710,39 +734,39 @@ Custom
 Customi&ze Fields...
 フィールド項目(&Z)...
 
-# ui/mame32.rc: 451
+# ui/mame32.rc: 450
 Customize Fields
 フィールド項目
 
-# ui/mame32.rc: 1585
+# ui/mame32.rc: 1547
 Customize interface options.
 インターフェイスオプションを変更します
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1522
 Customize which columns are used in the game list
 ゲームリストに用いる表\示項目を設定します
 
-# ui/treeview.c: 1286
+# ui/treeview.c: 1287
 DIAL
 ダイヤル
 
-# ui/treeview.c: 1280
+# ui/treeview.c: 1281
 DOUBLEJOY2WAY
 デュアル2方向スティック
 
-# ui/treeview.c: 1281
+# ui/treeview.c: 1282
 DOUBLEJOY4WAY
 デュアル4方向スティック
 
-# ui/treeview.c: 1282
+# ui/treeview.c: 1283
 DOUBLEJOY8WAY
 デュアル8方向スティック
 
-# ui/properties.c: 4045
+# ui/properties.c: 4044
 Default
 デフォルト
 
-# ui/properties.c: 813
+# ui/properties.c: 811
 Default Game
 標準のゲーム
 
@@ -750,43 +774,43 @@ Default Game
 Default Game &Options...
 デフォルトゲームオプション(&O)...
 
-# ui/mame32.rc: 808
+# ui/mame32.rc: 776
 Default input layout
 標準のキー入力配置
 
-# ui/mame32.rc: 446
+# ui/mame32.rc: 445
 Delete
 削除
 
-# ui/mame32.rc: 721
+# ui/mame32.rc: 715
 Depth:
 色数:
 
-# ui/mame32.rc: 422, 516 ui/options.c: 280 ui/win32ui.c: 645
+# ui/mame32.rc: 421, 515 ui/options.c: 280 ui/win32ui.c: 653
 Details
 詳細
 
-# ui/mame32.rc: 1114
+# ui/mame32.rc: 1094
 Dial device
 ダイアルデバイス
 
-# ui/mame32.rc: 1123
+# ui/mame32.rc: 1103
 Digital joystick axes
 デジタルスティックの軸
 
-# ui/mame32.rc: 583
+# ui/mame32.rc: 576
 Direct3D
 Direct3D
 
-# ui/mame32.rc: 431
+# ui/mame32.rc: 430
 Directories
 ディレクトリ設定
 
-# ui/mame32.rc: 437
+# ui/mame32.rc: 436
 Directories:
 ディレクトリ:
 
-# ui/win32ui.c: 735
+# ui/win32ui.c: 783
 Directory
 ディレクトリ
 
@@ -798,47 +822,47 @@ Directory does not exist, continue anyway?
 Directory name:
 フォルダ名:
 
-# ui/mame32.rc: 524
+# ui/mame32.rc: 523
 Display
 画面
 
-# ui/mame32.rc: 1592
+# ui/mame32.rc: 1554
 Display help contents
 ヘルプコンテンツを表\示します
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1522
 Display items by using large icons.
 大きいアイコン形式で表\示します
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1522
 Display items by using small icons.
 小さいアイコン形式で表\示します
 
-# ui/mame32.rc: 1610
+# ui/mame32.rc: 1572
 Display the properties of the currently selected folder
 選択されたフォルダのプロパティを表\示します
 
-# ui/mame32.rc: 1547
+# ui/mame32.rc: 1509
 Display the properties of the selected items
 選択アイテムのプロパティを表\示します
 
-# ui/mame32.rc: 1547
+# ui/mame32.rc: 1509
 Display the source file properties of the selected game
 選択されたゲームのソ\ースのプロパティを表\示します
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1522
 Displays detailed information about each item in the window.
 詳細な情報形式で表\示します
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1522
 Displays items in a list.
 一覧形式で表\示します
 
-# ui/mame32.rc: 1592
+# ui/mame32.rc: 1554
 Displays program and copyright information
 プログラム情報および著作権情報を表\示します
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1522
 Displays using `Detail View', but grouped by parent games.
 親子間でグループ化し、詳細な情報形式で表\示します
 
@@ -846,27 +870,27 @@ Displays using `Detail View', but grouped by parent games.
 Do you wish to continue?
 続けますか？
 
-# ui/properties.c: 467
+# ui/properties.c: 465
 Dot medium bright
 ドットマスク（中・高輝度）
 
-# ui/properties.c: 466
+# ui/properties.c: 464
 Dot medium mask
 ドットマスク（中）
 
-# ui/mame32.rc: 882
+# ui/mame32.rc: 886
 Draw antialiased vectors
 アンチエイリアス
 
-# ui/properties.c: 4023
+# ui/properties.c: 4022
 Draw every frame
 フレームスキップなし
 
-# ui/mame32.rc: 885
+# ui/mame32.rc: 888
 Draw translucent vectors
 透過
 
-# ui/mame32.rc: 795
+# ui/mame32.rc: 773
 Dual lightgun
 デュアル光線銃
 
@@ -878,87 +902,91 @@ Dumping Status
 E&xit
 終了(&X)
 
-# ui/win32ui.c: 7056
+# ui/win32ui.c: 6994
 ERROR: required files are missing, the game cannot be run.
 エラー: 必要なファイルが不足しています。 このゲームは実行出来ません。
 
-# ui/mame32.rc: 1053
+# ui/mame32.rc: 1046
 Edit Not Working Game Color
 動作不可ゲームの色を変更
 
-# ui/mame32.rc: 608
-Effect overrides
+# ui/mame32.rc: 595
+Effect
+エフェクト
+
+# ui/mame32.rc: 601
+Effect Overrides
 エフェクト調整
 
-# ui/mame32.rc: 602
-Effect:
-エフェクト:
-
-# ui/mame32.rc: 727
+# ui/mame32.rc: 723
 Effects
 エフェクト表\示
 
-# ui/mame32.rc: 842
+# ui/mame32.rc: 1050
+Emulation
+エミュレーション
+
+# ui/mame32.rc: 825
 Enable game cheats
 ゲームチートを有効化
 
-# ui/mame32.rc: 778
+# ui/mame32.rc: 748
 Enable joystick input
 ジョイスティックを使用する
 
-# ui/mame32.rc: 804
+# ui/mame32.rc: 780
 Enable keyboard LED
 キーボードLEDを有効
 
-# ui/mame32.rc: 792
+# ui/mame32.rc: 767
 Enable lightgun input
 光線銃を使用
 
-# ui/mame32.rc: 785
+# ui/mame32.rc: 756
 Enable mouse input
 マウスまたはトラックボールを使用
 
-# ui/mame32.rc: 789
+# ui/mame32.rc: 763
 Enable pointing stick input
 スティック型マウスを使用
 
-# ui/mame32.rc: 638
+# ui/mame32.rc: 637
 Enable sound and sound CPUs
 サウンドとサウンドCPUを有効
 
-# ui/mame32.rc: 801
+# ui/mame32.rc: 759
 Enable steadykey support
 ボタンの同時押し認識を容易にする
 
-# ui/mame32.rc: 535
+# ui/mame32.rc: 534
 Enforce aspect ratio
 表\示比率を固定
 
-# ui/audit32.c: 101 ui/properties.c: 828, 924
+# ui/audit32.c: 101 ui/properties.c: 826, 922
 Error
 エラー
 
-# ui/treeview.c: 2491
+# ui/treeview.c: 2492
 Error finding custom file name to save
 保存するカスタムファイルが見つかりません
 
-# ui/mame32.rc: 844
+# ui/mame32.rc: 827
 Error log (for developers)
 エラーログを出力(開発者向け)
 
-# ui/win32ui.c: 7149
+# ui/win32ui.c: 7087
 Error searching for custom folder
 カスタムフォルダが見つかりません
 
-# ui/treeview.c: 2420
+# ui/treeview.c: 2421
 Error while renaming custom file %s to %s
 カスタムファイルの名前を %s から %s への変更でエラーが発生しました
 
-# ui/treeview.c: 2562
+# ui/treeview.c: 2563
 Error while saving custom file %s
 カスタムファイル %s の保存でエラーが発生しました
 
-# ui/mame32.rc: 1547
+# ui/mame32.rc: 1509
 Exit the application
 アプリケーションを終了します
 
@@ -970,31 +998,31 @@ FPS
 Failed
 異常です
 
-# ui/mame32.rc: 616
+# ui/mame32.rc: 611
 Feedback
 フィードバック
 
-# ui/audit32.c: 208 ui/mame32.rc: 399
+# ui/audit32.c: 208 ui/mame32.rc: 398
 File Audit
 ファイル監査
 
-# ui/mame32.rc: 599
-Filter:
-フィルタ:
+# ui/mame32.rc: 592
+Filter
+フィルタ
 
 # ui/dialogs.c: 404
 Filters for %s Folder
 「%s」フォルダのフィルタ
 
-# ui/mame32.rc: 892
-Flicker:
-フリッカー:
+# ui/mame32.rc: 894
+Flicker
+フリッカー
 
-# ui/mame32.rc: 545
+# ui/mame32.rc: 544
 Flip screen left-right
 左右反転
 
-# ui/mame32.rc: 543
+# ui/mame32.rc: 542
 Flip screen upside-down
 上下反転
 
@@ -1002,7 +1030,7 @@ Flip screen upside-down
 Flyer
 広告ポスター
 
-# ui/layout.c: 113
+# ui/layout.c: 114
 Flyers
 広告ポスター
 
@@ -1022,23 +1050,23 @@ Font (normal)
 Font (special)
 フォント (特殊)
 
-# ui/mame32.rc: 560
+# ui/mame32.rc: 564
 Frame skipping
 フレームスキップ
 
-# ui/properties.c: 416, 431
+# ui/properties.c: 414, 429
 Full
 フル
 
 # ui/mame32.rc: 704
-Full screen brightness:
-フルスクリーンの明るさ:
+Full screen brightness
+フルスクリーンの明るさ
 
-# ui/win32ui.c: 732
+# ui/win32ui.c: 780
 Game
 ゲーム名
 
-# ui/mame32.rc: 937
+# ui/mame32.rc: 941
 Game Filters
 ゲームフィルタ
 
@@ -1050,167 +1078,171 @@ Game List &Clone Color...
 Game List &Font...
 ゲームリストフォント(&F)...
 
-# ui/mame32.rc: 1018
+# ui/mame32.rc: 1023
 Game Selection
 ゲーム選択
 
-# ui/mame32.rc: 942
+# ui/mame32.rc: 946
 Game filters
 ゲームフィルタ
 
-# ui/mame32.rc: 940
+# ui/mame32.rc: 944
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 下記より選択された項目をリスト上非表\示にします
 
-# ui/properties.c: 1106
+# ui/properties.c: 1104
 Game lacks sound
 サウンドが未対応
 
-# ui/properties.c: 1082
+# ui/properties.c: 1080
 Game protection isn't fully emulated
 プロテクトのため動作が不完全
 
-# ui/win32ui.c: 3274
+# ui/win32ui.c: 3322
 Game search %d%% complete
 ゲームの検索 %d%% 完了
 
-# ui/mame32.rc: 578
+# ui/mame32.rc: 548
 Gamma correction
 ガンマ値
 
-# ui/mame32.rc: 473
+# ui/mame32.rc: 472
 General
 全般
 
-# ui/properties.c: 1150
+# ui/properties.c: 1148
 Global folder options\nDefault options used by all games in the folder
 グローバルフォルダオプションです。\nこのフォルダ内の全ゲームのデフォルト設定として使用されます。
 
-# ui/properties.c: 1148
+# ui/properties.c: 1146
 Global game options\nDefault options used by all games
 グローバルゲームオプションです。\n全ゲームのデフォルト設定として使用されます。
 
-# ui/mame32.rc: 391
+# ui/mame32.rc: 390
 Go to Microsoft's DirectX Web Page
 Microsoft's DirectX Webページを表\示
 
-# ui/options.c: 281, 700 ui/win32ui.c: 646
+# ui/options.c: 281, 700 ui/win32ui.c: 654
 Grouped
 グループ化
 
-# ui/layout.c: 120
+# ui/layout.c: 121
 Hard Drive Difference
 ハードディスク差分ファイル
 
-# ui/win32ui.c: 648
+# ui/win32ui.c: 656
 Help
 ヘルプ
 
-# ui/mame32.rc: 1034
+# ui/mame32.rc: 1036
 Hide &mouse cursor (requires restart)
 マウスカーソ\ルを隠す(要再起動)(&M)
 
-# ui/properties.c: 4298
+# ui/properties.c: 4297
 High
 高い
 
-# ui/layout.c: 107
+# ui/layout.c: 108
 High Scores
 ハイスコア
+
+# ui/mame32.rc: 833
+High thread priority
+スレッド優先度を高くする
 
 # ui/options.c: 251, 254
 History
 ゲームの歴史
 
-# ui/properties.c: 433 ui/treeview.c: 958, 959
+# ui/properties.c: 431 ui/treeview.c: 959, 960
 Horizontal
 横型
 
-# ui/mame32.rc: 1592
+# ui/mame32.rc: 1554
 How cheats work
 チートの使用方法を説明します
 
-# ui/layout.c: 104
+# ui/layout.c: 105 ui/mame32.rc: 1205
 IPS Patch
 IPSパッチ
 
-# ui/layout.c: 121
+# ui/layout.c: 122
 Icons
 アイコン
 
-# ui/mame32.rc: 733
-Image Enhancement:
-イメージを向上:
+# ui/mame32.rc: 729
+Image Enhancement
+イメージを向上
+
+# ui/win32ui.c: 759
+Image Files (*.png,*.bmp)
+画像ファイル (*.png,*.bmp)
 
 # ui/layout.c: 61
 Imperfect
 不完全な動作
 
-# ui/treeview.c: 997
+# ui/treeview.c: 998
 Imperfect Colors
 色の再現が不完全
 
-# ui/treeview.c: 998
+# ui/treeview.c: 999
 Imperfect Graphics
 画像の再現が不完全
 
-# ui/treeview.c: 1000
+# ui/treeview.c: 1001
 Imperfect Sound
 音の再現が不完全
 
-# ui/mame32.rc: 408, 417
+# ui/mame32.rc: 407, 416
 Incorrect:
 異常:
 
-# ui/mame32.rc: 570
-Increase thread priority
-スレッド優先度を高くする
-
-# ui/mame32.rc: 1046
+# ui/mame32.rc: 1039
 Inheritable Filters
 フィルタを継承可能\にする
 
-# ui/layout.c: 102
+# ui/layout.c: 103
 Ini Files
 INIファイル
 
-# ui/layout.c: 109
+# ui/layout.c: 110
 Input files (*.inp)
 再生ファイル (*.inp)
 
-# ui/mame32.rc: 445
+# ui/mame32.rc: 444
 Insert
 追加
 
-# ui/mame32.rc: 896
-Intensity:
-強度:
+# ui/mame32.rc: 899
+Intensity
+強度
 
-# ui/mame32.rc: 1015
+# ui/mame32.rc: 1020
 Interface Options
 インターフェイスオプション
 
-# ui/treeview.c: 1277
+# ui/treeview.c: 1278
 JOY2WAY
 2方向スティック
 
-# ui/treeview.c: 1278
+# ui/treeview.c: 1279
 JOY4WAY
 4方向スティック
 
-# ui/treeview.c: 1279
+# ui/treeview.c: 1280
 JOY8WAY
 8方向スティック
 
-# ui/properties.c: 603, 4163
+# ui/properties.c: 601, 4162
 Joystick
 ジョイスティック
 
-# ui/properties.c: 4173
+# ui/properties.c: 4172
 JoystickId
 ジョイスティックID
 
-# ui/properties.c: 601
+# ui/properties.c: 599
 Keyboard
 キーボード
 
@@ -1218,19 +1250,19 @@ Keyboard
 L&arge Icons
 大きなアイコン(&A)
 
-# ui/treeview.c: 1288
+# ui/treeview.c: 1289
 LIGHTGUN
 光線銃
 
-# ui/options.c: 277 ui/win32ui.c: 642
+# ui/options.c: 277 ui/win32ui.c: 650
 Large Icons
 大きなアイコン
 
-# ui/layout.c: 75, 75 ui/properties.c: 604
+# ui/layout.c: 75, 75 ui/properties.c: 602
 Lightgun
 光線銃
 
-# ui/mame32.rc: 1120
+# ui/mame32.rc: 1100
 Lightgun device
 光線銃デバイス
 
@@ -1238,7 +1270,7 @@ Lightgun device
 Line &Up Icons
 アイコンの整列(&U)
 
-# ui/options.c: 279 ui/win32ui.c: 644
+# ui/options.c: 279 ui/win32ui.c: 652
 List
 リスト
 
@@ -1246,43 +1278,55 @@ List
 Loa&d Savestate...
 ステートを読み込む(&D)...
 
-# ui/win32ui.c: 6972
+# ui/win32ui.c: 6910
 Loading %s
 ロード中 %s
 
-# ui/mame32.rc: 1603
+# ui/mame32.rc: 1565
 Localize GUI and MAME core.
 GUIとMAMEコアの言語を切り替えます
 
-# ui/mame32.rc: 856
-M68K Core:
-M68K コア:
+# ui/mame32.rc: 865
+M68000 CPU Core
+M68000 CPUコア
 
-# ui/mame32.rc: 1592
+# ui/win32ui.c: 738
+MAME input files (*.inp,*.zip)
+MAME 再生ファイル (*.inp,*.zip)
+
+# ui/mame32.rc: 1554
 MAME release notes
 MAMEリリースノートを表\示します
+
+# ui/win32ui.c: 745
+MAME savestate files (*.sta)
+MAME ステートファイル (*.sta)
 
 # ui/options.c: 301
 MAME32 has changed *.ini file directory.\n\nWould you like to migrate old configurations to the new directory?
 MAME32は *.iniファイルディレクトリを変更しました。\n\n古い設定を新しいディレクトリに移動しますか？
 
-# ui/options.c: 4206
+# ui/options.c: 4191
 MAME32 has detected outdated configuration data.\n\nThe detected configuration data is from Version %s of MAME32.\nThe current version is %s. It is recommended that the\nconfiguration is set to the new defaults.\n\nWould you like to use the new configuration?
 MAME32 は、古い設定情報を検出しました。\n\n検出した情報は、MAME32 バージョン %s のものです。\n現在のバージョンは %s です。\n現在のバージョンによる新しいデフォルト設定を使用することを推奨します。\n\n新しい設定を使用しますか？
+
+# ui/mame32.rc: 372
+MAME32 version by
+MAME32 version by
 
 # ui/dialogs.c: 113
 MAME32 will now reset the selected\n
 MAME32 は選択された項目をリセットし\n
 
-# ui/mame32.rc: 364, 388, 399, 431, 451, 473, 505, 524, 583, 630, 667, 744, 818, 875, 910, 937, 974, 999, 1015, 1099, 1137, 1165, 1180, 1219 ui/options.c: 712 ui/translate.c: 102
+# ui/mame32.rc: 363, 387, 398, 430, 450, 472, 504, 523, 576, 629, 665, 740, 818, 879, 914, 941, 978, 1003, 1020, 1078, 1116, 1144, 1159, 1198 ui/options.c: 712 ui/translate.c: 102
 MS Sans Serif
 ＭＳ Ｐゴシック
 
-# ui/mame32.rc: 480
+# ui/mame32.rc: 479
 Manufactured:
 製造元:
 
-# ui/layout.c: 55 ui/win32ui.c: 739
+# ui/layout.c: 55 ui/win32ui.c: 787
 Manufacturer
 製造元
 
@@ -1290,27 +1334,23 @@ Manufacturer
 Marquee
 マーキー
 
-# ui/layout.c: 115
+# ui/layout.c: 116
 Marquees
 マーキー
 
-# ui/mame32.rc: 680
+# ui/mame32.rc: 677
 Match game refresh rate
 リフレッシュレートを変更
 
-# ui/layout.c: 112 
+# ui/layout.c: 113 
 Memory Card
 メモリカード
-
-# ui/mame32.rc: 781
-Minimal analog value for digital input:
-デジタル入力へ変換するアナログの最小値:
 
 # ui/mame32.rc: 818
 Miscellaneous
 その他
 
-# ui/treeview.c: 999
+# ui/treeview.c: 1000
 Missing Sound
 サウンド無し
 
@@ -1318,15 +1358,11 @@ Missing Sound
 Missing optional
 追加のROMがありません
 
-# ui/mame32.rc: 715
-Monitor
-モニタ
-
-# ui/properties.c: 602
+# ui/properties.c: 600
 Mouse
 マウス
 
-# ui/mame32.rc: 466
+# ui/mame32.rc: 465
 Move Down
 下に移動
 
@@ -1334,7 +1370,7 @@ Move Down
 Move Item
 項目の移動
 
-# ui/mame32.rc: 465
+# ui/mame32.rc: 464
 Move Up
 上に移動
 
@@ -1342,39 +1378,39 @@ Move Up
 Multi-Monitor
 マルチモニタ
 
-# ui/layout.c: 118
+# ui/layout.c: 119
 NVRAM
 NVRAMファイル
 
-# ui/mame32.rc: 1592
+# ui/mame32.rc: 1554
 New game changes
 新しいゲームの変更点を表\示します
 
-# ui/audit32.c: 124 ui/win32ui.c: 5209
+# ui/audit32.c: 124 ui/win32ui.c: 5227
 No
 いいえ
 
-# ui/treeview.c: 1001
+# ui/treeview.c: 1002
 No Cocktail
 カクテルモード未対応
 
-# ui/treeview.c: 1049, 1050
+# ui/treeview.c: 1050, 1051
 No Dump
 未ダンプ
 
-# ui/win32ui.c: 3635
+# ui/win32ui.c: 3683
 No Selection
 選択されていません
 
-# ui/mame32.rc: 1060
+# ui/mame32.rc: 1041
 No offset for clones missing parent in view
 親セットが無いクローンをインデントしない
 
-# ui/mame32.rc: 948
+# ui/mame32.rc: 952
 Non-Wor&king
 動作不可(&K)
 
-# ui/dialogs.c: 208 ui/properties.c: 414, 430, 445, 463, 516, 528, 600, 4048, 4453
+# ui/dialogs.c: 208 ui/properties.c: 412, 428, 443, 461, 514, 526, 598, 4047, 4452
 None
 なし
 
@@ -1390,11 +1426,11 @@ Not Working
 Not found
 見つかりません
 
-# ui/properties.c: 1070
+# ui/properties.c: 1068
 Not working
 動作不可
 
-# ui/mame32.rc: 442, 467, 1172 
+# ui/mame32.rc: 441, 466, 1153 
 OK
 OK
 
@@ -1414,11 +1450,11 @@ OSD バー (デフォルト)
 OSD bar (light)
 OSD バー (明)
 
-# ui/mame32.rc: 798
+# ui/mame32.rc: 770
 Offscreen shots reload
-画面外をショットを割り当てる
+画面外をショットを再ロード
 
-# ui/mame32.rc: 957
+# ui/mame32.rc: 961
 Ori&ginals
 原作(&G)
 
@@ -1430,7 +1466,7 @@ Orientation
 Originals
 原作
 
-# ui/mame32.rc: 832
+# ui/mame32.rc: 849
 Overlays
 オーバーレイ
 
@@ -1438,55 +1474,55 @@ Overlays
 P&layback Input...
 入力の再現(&L)...
 
-# ui/treeview.c: 1285
+# ui/treeview.c: 1286
 PADDLE
 パドル
 
-# ui/treeview.c: 1289
+# ui/treeview.c: 1290
 PEDAL
 ペダル
 
-# ui/treeview.c: 1259
+# ui/treeview.c: 1260
 PLAYERS 1
 1人用
 
-# ui/treeview.c: 1260
+# ui/treeview.c: 1261
 PLAYERS 2
 2人用
 
-# ui/treeview.c: 1261
+# ui/treeview.c: 1262
 PLAYERS 3
 3人用
 
-# ui/treeview.c: 1262
+# ui/treeview.c: 1263
 PLAYERS 4
 4人用
 
-# ui/treeview.c: 1263
+# ui/treeview.c: 1264
 PLAYERS 5
 5人用
 
-# ui/treeview.c: 1264
+# ui/treeview.c: 1265
 PLAYERS 6
 6人用
 
-# ui/treeview.c: 1265
+# ui/treeview.c: 1266
 PLAYERS 7
 7人用
 
-# ui/treeview.c: 1266
+# ui/treeview.c: 1267
 PLAYERS 8
 8人用
 
-# ui/properties.c: 587
+# ui/properties.c: 585
 PS/2 Keyboard
 PS/2 キーボード
 
-# ui/mame32.rc: 1105
+# ui/mame32.rc: 1085
 Paddle device
 パドルデバイス
 
-# ui/mame32.rc: 1137
+# ui/mame32.rc: 1116
 Palette
 パレット設定
 
@@ -1494,19 +1530,19 @@ Palette
 Passed
 正常です
 
-# ui/mame32.rc: 576
+# ui/mame32.rc: 559
 Pause Brightness
 ポーズ中の明るさ
 
-# ui/mame32.rc: 1111
+# ui/mame32.rc: 1091
 Pedal device
 ペダルディバイス
 
-# ui/options.c: 2860 ui/win32ui.c: 743
+# ui/options.c: 2845 ui/win32ui.c: 791
 Play Time
 プレイ時間
 
-# ui/mame32.rc: 1547
+# ui/mame32.rc: 1509
 Play a game starting with the given savestate
 起動時にステートを使用してゲームをプレイします。
 
@@ -1518,15 +1554,15 @@ Play and &Record Input...
 Play and Record &Wave Output...
 サウンドを保存しながら実行(&W)...
 
-# ui/mame32.rc: 1547
+# ui/mame32.rc: 1509
 Play currently selected game
 現在選択しているゲームを開始します
 
-# ui/mame32.rc: 1547
+# ui/mame32.rc: 1509
 Playback a recorded game
 保存した入力を再現します
 
-# ui/win32ui.c: 738
+# ui/win32ui.c: 786
 Played
 プレイ済み
 
@@ -1534,15 +1570,15 @@ Played
 Pr&operties
 プロパティ(&O)
 
-# ui/mame32.rc: 605
-Prescale:
-プリスケール:
+# ui/mame32.rc: 598
+Prescale
+プリスケール
 
-# ui/win32ui.c: 3664, 6571, 6596
+# ui/win32ui.c: 3712, 6509, 6534
 Proper&ties of %s
 %sのプロパティ(&T)
 
-# ui/properties.c: 827, 923
+# ui/properties.c: 825, 921
 Propery Sheet Error %d %X
 プロパティシートのエラーです %d %X
 
@@ -1550,131 +1586,127 @@ Propery Sheet Error %d %X
 R&emove From This Folder
 このフォルダから削除(&E)
 
-# ui/properties.c: 480
+# ui/properties.c: 478
 RGB 16 pixel triad
 RGBマスク（16ドット）
 
-# ui/properties.c: 475
+# ui/properties.c: 473
 RGB 3 pixel triad
 RGBマスク（3ドット）
 
-# ui/properties.c: 476
+# ui/properties.c: 474
 RGB 4 pixel triad
 RGBマスク（4ドット）
 
-# ui/properties.c: 479
+# ui/properties.c: 477
 RGB 6 pixel triad
 RGBマスク（6ドット）
 
-# ui/properties.c: 470
+# ui/properties.c: 468
 RGB maximum bright
 RGBマスク（大・高輝度）
 
-# ui/properties.c: 469
+# ui/properties.c: 467
 RGB medium mask
 RGBマスク（中）
 
-# ui/properties.c: 471
+# ui/properties.c: 469
 RGB micro
 RGBマスク（超極小）
 
-# ui/properties.c: 468
+# ui/properties.c: 466
 RGB minimum mask
 RGBマスク（小）
 
-# ui/mame32.rc: 1143
+# ui/mame32.rc: 1122
 RGB setting:
 RGB設定:
 
-# ui/properties.c: 456
+# ui/properties.c: 454
 RGB sharp
 RGB シャープ
 
-# ui/properties.c: 455, 472
+# ui/properties.c: 453, 470
 RGB tiny
 RGBマスク（極小）
 
-# ui/properties.c: 450
+# ui/properties.c: 448
 RGB triad of 16 pixels
 RGBマスク（16ドット）
 
-# ui/properties.c: 454
+# ui/properties.c: 452
 RGB triad of 3 pixels
 RGBマスク（3ドット）
 
-# ui/properties.c: 452
+# ui/properties.c: 450
 RGB triad of 4 pixels
 RGBマスク（4ドット）
 
-# ui/properties.c: 453
+# ui/properties.c: 451
 RGB triad of 4 vertical pixels
 RGBマスク（垂直4ドット）
 
-# ui/properties.c: 451
+# ui/properties.c: 449
 RGB triad of 6 pixels
 RGBマスク（6ドット）
 
-# ui/mame32.rc: 512
+# ui/mame32.rc: 511
 ROM check:
 ロムファイル:
 
-# ui/layout.c: 100 ui/mame32.rc: 407 ui/win32ui.c: 733
+# ui/layout.c: 101 ui/mame32.rc: 406 ui/win32ui.c: 781
 ROMs
 ROM
 
-# ui/properties.c: 1126
+# ui/properties.c: 1124
 ROMs missing
 ROMが見つかりません
 
-# ui/mame32.rc: 1610
+# ui/mame32.rc: 1572
 Randomly select a game.
 ゲームをランダムに選択します
 
-# ui/layout.c: 67 ui/win32ui.c: 5201
+# ui/layout.c: 67 ui/win32ui.c: 5219
 Raster
 ラスタ
 
-# ui/win32ui.c: 3439
+# ui/win32ui.c: 3487
 Ready
 起動中
 
-# ui/mame32.rc: 1547
+# ui/mame32.rc: 1509
 Record a game for later playback
 現在のゲームを実行し、その入力を保存します
 
-# ui/mame32.rc: 1547
+# ui/mame32.rc: 1509
 Record the sound output of a game
 ゲームのサウンドを録音する
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1522
 Refresh game list
 ゲームリストを最新の情報に更新します
 
-# ui/mame32.rc: 724
+# ui/mame32.rc: 719
 Refresh:
 リフレッシュ:
 
-# ui/options.c: 1808
+# ui/options.c: 1793
 Reload configurations
 設定の再読み込み
 
-# ui/mame32.rc: 1610
+# ui/mame32.rc: 1572
 Remove currently selected game from this folder
 選択されたゲームをこのフォルダから削除します
 
-# ui/mame32.rc: 1610
+# ui/mame32.rc: 1572
 Rename currently selected folder
 選択されたフォルダの名前を変更します
 
-# ui/mame32.rc: 674
-Rendering
-レンダリング
-
-# ui/mame32.rc: 573, 623, 660, 737, 811, 868, 901, 1129, 1211, 1250
+# ui/mame32.rc: 569, 622, 658, 733, 811, 872, 905, 1108, 1190, 1222
 Reset
 リセット
 
-# ui/mame32.rc: 974
+# ui/mame32.rc: 978
 Reset Options
 設定の初期化
 
@@ -1686,27 +1718,27 @@ Reset Pl&aycount
 Reset Pla&y Time
 プレイ時間をリセットする(&Y)
 
-# ui/mame32.rc: 1058
+# ui/mame32.rc: 1057
 Reset all Play Times
 全てのプレイ時間をリセットする
 
-# ui/mame32.rc: 1056
+# ui/mame32.rc: 1055
 Reset all Playcounts
 全てのプレイ回数をリセットする
 
-# ui/mame32.rc: 1610
+# ui/mame32.rc: 1572
 Reset play count of currently selected game
 選択されているゲームのプレイ回数をリセットします
 
-# ui/mame32.rc: 1610
+# ui/mame32.rc: 1572
 Reset play time of currently selected game
 選択されているゲームのプレイ時間をリセットします
 
-# ui/mame32.rc: 717
+# ui/mame32.rc: 710
 Resolution
 画面解像度
 
-# ui/mame32.rc: 574, 624, 661, 738, 812, 869, 902, 1130, 1212, 1251
+# ui/mame32.rc: 570, 623, 659, 734, 812, 873, 906, 1109, 1191, 1223
 Restore Default Settings
 デフォルト設定に戻す
 
@@ -1714,15 +1746,15 @@ Restore Default Settings
 Restore Settings
 設定の初期化
 
-# ui/mame32.rc: 596
+# ui/mame32.rc: 589
 Rotate effects
 エフェクトを回転
 
-# ui/mame32.rc: 540
+# ui/mame32.rc: 539
 Rotation
 画面回転表\示
 
-# ui/mame32.rc: 531
+# ui/mame32.rc: 530
 Run in a window
 ウインドウ表\示
 
@@ -1734,75 +1766,75 @@ S&how Pictures
 S&mall Icons
 小さいアイコン(&M)
 
-# ui/mame32.rc: 1042
+# ui/mame32.rc: 1060
 S&tretch screenshot larger than natural size
 スクリーンショットを拡大する(&T)
 
-# ui/treeview.c: 1283
+# ui/treeview.c: 1284
 STICK
 ジョイスティック
 
-# ui/mame32.rc: 514
+# ui/mame32.rc: 513
 Sample check:
 サンプルファイル:
 
-# ui/mame32.rc: 647
-Samplerate:
-サンプルレート:
+# ui/mame32.rc: 646
+Sample rate
+サンプルレート
 
-# ui/layout.c: 80, 101 ui/mame32.rc: 413 ui/win32ui.c: 734
+# ui/layout.c: 80, 102 ui/mame32.rc: 412 ui/win32ui.c: 782
 Samples
 サンプルファイル
 
-# ui/mame32.rc: 609
+# ui/mame32.rc: 603
 Scanlines
 スキャンライン
 
-# ui/properties.c: 481
+# ui/properties.c: 479
 Scanlines 25%
 25% スキャンライン
 
-# ui/properties.c: 482
+# ui/properties.c: 480
 Scanlines 50%
 50% スキャンライン
 
-# ui/properties.c: 483, 483
+# ui/properties.c: 481, 481
 Scanlines 75%
 75% スキャンライン
 
-# ui/layout.c: 72
+# ui/layout.c: 72 ui/mame32.rc: 546
 Screen
 画面
 
-# ui/win32ui.c: 3233
+# ui/win32ui.c: 3281
 Screen flip support is missing
 カクテルモードの画面反転に未対応
 
-# ui/properties.c: 1118
+# ui/properties.c: 1116
 Screen flipping is not supported
 カクテルモードの画面反転に未対応
 
-# ui/mame32.rc: 493
+# ui/mame32.rc: 492
 Screen:
 画面サイズ:
 
-# ui/mame32.rc: 1037
-Screenshot &Cycletime in Seconds:
-画像を周期的に切り替える時間(秒):(&C)
-
-# ui/mame32.rc: 1063
+# ui/mame32.rc: 1059
 Screenshot Area
 スクリーンショット領域
 
-# ui/mame32.rc: 1064
-Screenshot Bordersize:
-スクリーンショットの縁の幅:
+# ui/mame32.rc: 1067
+Screenshot Bordersize
+スクリーンショットの縁の幅
+
+# ui/mame32.rc: 1063
+Screenshot Cycletime in Seconds
+画像を周期的に切り替える時間(秒)
 
 # ui/mame32.rc: 78
 Screenshot Ta&b\tAlt+B
 スクリーンショットタブ(&B)\tAlt+B
 
-# ui/mame32.rc: 1028
+# ui/mame32.rc: 1031
 Select &random background image
 背景画像をランダムに選択する(&R)
 
@@ -1810,223 +1842,235 @@ Select &random background image
 Select Item
 項目の選択
 
-# ui/win32ui.c: 4917
+# ui/win32ui.c: 760
 Select a Background Image
-背景画像を選択します
+背景画像を選択
 
-# ui/mame32.rc: 1585
+# ui/mame32.rc: 1547
 Select a background image file
 背景画像を選択します
 
-# ui/mame32.rc: 1560
+# ui/win32ui.c: 740
+Select a file to record
+記録するファイルを選択
+
+# ui/win32ui.c: 739
+Select a recorded file
+記録されたファイルを選択
+
+# ui/win32ui.c: 746
+Select a savestate file
+ステートファイルを選択
+
+# ui/win32ui.c: 754
+Select a sound file to record
+記録するサウンドファイルを選択
+
+# ui/mame32.rc: 1522
 Select fullscreen or window mode in GUI
 フルスクリーンとウインドウ表\示を切り替える
 
-# ui/mame32.rc: 1656
+# ui/mame32.rc: 1618
 Select the cabinet image
 筐体の画像を選択します
 
-# ui/mame32.rc: 1656
+# ui/mame32.rc: 1618
 Select the control panel image
 コントロールパネルの画像を選択します
 
-# ui/mame32.rc: 1656
+# ui/mame32.rc: 1618
 Select the flyer image
 広告ポスターの画像を選択します
 
-# ui/mame32.rc: 1656
+# ui/mame32.rc: 1618
 Select the history information
 ゲームの歴史情報を選択します
 
-# ui/mame32.rc: 1656
+# ui/mame32.rc: 1618
 Select the marquee image
 マーキーの画像を選択します
 
-# ui/mame32.rc: 990
+# ui/mame32.rc: 994
 Select the options to be restored to the default settings.  The options will be restored when MAME32 is run next.
 選択したカテゴリがデフォルト設定に戻ります。\n変更内容は、次回起動時から反映されます。
 
-# ui/mame32.rc: 1656
+# ui/mame32.rc: 1618
 Select the screen shot image
 スクリーンショットの画像を選択します
 
-# ui/mame32.rc: 1664
+# ui/mame32.rc: 1626
 Select the story information
 ゲームのストーリー情報を選択します
 
-# ui/mame32.rc: 1656
+# ui/mame32.rc: 1618
 Select the title image
 タイトル画面の画像を選択します
 
-# ui/mame32.rc: 1068
+# ui/mame32.rc: 1071
 Set Screenshot Border Color
 スクリーンショットの縁の色を変更
 
-# ui/mame32.rc: 1578
+# ui/mame32.rc: 1540
 Set default game options
 デフォルトゲームオプションを設定します
 
-# ui/mame32.rc: 1578
+# ui/mame32.rc: 1540
 Set directory configuration
 参照ディレクトリを設定します
 
-# ui/mame32.rc: 1578
+# ui/mame32.rc: 1540
 Set game list and folder list font
 ゲームリストとフォルダリストに使用するフォントを設定します
 
-# ui/mame32.rc: 1583
+# ui/mame32.rc: 1545
 Set in-game UI color palette
 ゲーム中のUIカラーパレットを設定します
 
-# ui/mame32.rc: 1578
+# ui/mame32.rc: 1540
 Set list font color for clone games
 クローンゲームのリストに使用するフォントを設定します
 
-# ui/mame32.rc: 1048
+# ui/mame32.rc: 1051
 Show Game Ca&ption
 ゲームのキャプションを表\示(&P)
 
-# ui/mame32.rc: 1071
-Show History on Tab:
-歴史情報を表\示するタブ:
+# ui/mame32.rc: 1048
+Show History on Tab
+歴史情報を表\示するタブ
 
 # ui/mame32.rc: 216
 Show Tab &Control
 タブコントロールを表\示(&C)
 
-# ui/mame32.rc: 434
+# ui/mame32.rc: 433
 Show directories for:
 設定対象ディレクトリ:
 
-# ui/mame32.rc: 1610
+# ui/mame32.rc: 1572
 Show or hide folder
 フォルダの表\示/非表\示を切り替えます
 
-# ui/mame32.rc: 1642
+# ui/mame32.rc: 1604
 Show or hide the cabinet image
 筐体の画像の表\示/非表\示を切り替えます
 
-# ui/mame32.rc: 1642
+# ui/mame32.rc: 1604
 Show or hide the control panel image
 コントロールパネルの画像の表\示/非表\示を切り替えます
 
-# ui/mame32.rc: 1642
+# ui/mame32.rc: 1604
 Show or hide the flyer image
 広告ポスターの画像の表\示/非表\示を切り替えます
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1522
 Show or hide the folder list
 フォルダリストの表\示/非表\示を切り替えます
 
-# ui/mame32.rc: 1642
+# ui/mame32.rc: 1604
 Show or hide the history information
 ゲームの歴史情報の表\示/非表\示を切り替えます
 
-# ui/mame32.rc: 1642
+# ui/mame32.rc: 1604
 Show or hide the marquee image
 マーキーの画像の表\示/非表\示を切り替えます
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1522
 Show or hide the picture area
 画像の表\示/非表\示を切り替えます
 
-# ui/mame32.rc: 1560, 1603
+# ui/mame32.rc: 1522, 1565
 Show or hide the pictures
 画像の表\示/非表\示を切り替えます
 
-# ui/mame32.rc: 1642
+# ui/mame32.rc: 1604
 Show or hide the screen shot image
 スクリーンショットの画像の表\示/非表\示を切り替えます
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1522
 Show or hide the screen shot tab
 スクリーンショットタブの表\示/非表\示を切り替えます
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1522
 Show or hide the status bar
 ステータスバーの表\示/非表\示を切り替えます
 
-# ui/mame32.rc: 1650
+# ui/mame32.rc: 1612
 Show or hide the story information
 ゲームのストーリー情報の表\示/非表\示を切り替えます
 
-# ui/mame32.rc: 1642
+# ui/mame32.rc: 1604
 Show or hide the title image
 タイトルの画像の表\示/非表\示を切り替えます
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1522
 Show or hide the toolbar
 ツールバーの表\示/非表\示を切り替えます
 
-# ui/mame32.rc: 1140
+# ui/mame32.rc: 1119
 Show palette for:
 設定対象パレット:
 
-# ui/mame32.rc: 460
+# ui/mame32.rc: 459
 Show these fields in this order:
 表\示設定済みフィールド:
 
-# ui/mame32.rc: 718
+# ui/mame32.rc: 711
 Size:
 サイズ:
 
-# ui/properties.c: 4024
+# ui/properties.c: 4023
 Skip 1 of 12 frames
 12フレームに1回スキップ
 
-# ui/properties.c: 4033
+# ui/properties.c: 4032
 Skip 10 of 12 frames
 12フレームに10回スキップ
 
-# ui/properties.c: 4034
+# ui/properties.c: 4033
 Skip 11 of 12 frames
 12フレームに11回スキップ
 
-# ui/properties.c: 4025
+# ui/properties.c: 4024
 Skip 2 of 12 frames
 12フレームに2回スキップ
 
-# ui/properties.c: 4026
+# ui/properties.c: 4025
 Skip 3 of 12 frames
 12フレームに3回スキップ
 
-# ui/properties.c: 4027
+# ui/properties.c: 4026
 Skip 4 of 12 frames
 12フレームに4回スキップ
 
-# ui/properties.c: 4028
+# ui/properties.c: 4027
 Skip 5 of 12 frames
 12フレームに5回スキップ
 
-# ui/properties.c: 4029
+# ui/properties.c: 4028
 Skip 6 of 12 frames
 12フレームに6回スキップ
 
-# ui/properties.c: 4030
+# ui/properties.c: 4029
 Skip 7 of 12 frames
 12フレームに7回スキップ
 
-# ui/properties.c: 4031
+# ui/properties.c: 4030
 Skip 8 of 12 frames
 12フレームに8回スキップ
 
-# ui/properties.c: 4032
+# ui/properties.c: 4031
 Skip 9 of 12 frames
 12フレームに9回スキップ
 
-# ui/mame32.rc: 846
+# ui/mame32.rc: 835
 Skip game info
 ゲーム情報をスキップ
 
-# ui/mame32.rc: 849
-Skip validity checks
-妥当性検査処理をスキップ
-
-# ui/mame32.rc: 565
-Sleep when idle
+# ui/mame32.rc: 829
+Sleep when possible
 アイドル時にCPUを開放
 
-# ui/options.c: 278 ui/win32ui.c: 643
+# ui/options.c: 278 ui/win32ui.c: 651
 Small Icons
 小さなアイコン
 
@@ -2034,7 +2078,7 @@ Small Icons
 Snapshot
 スクリーンショット
 
-# ui/layout.c: 108
+# ui/layout.c: 109
 Snapshots
 スクリーンショット
 
@@ -2046,83 +2090,83 @@ Sort &Ascending
 Sort &Descending
 降順に整列(&D)
 
-# ui/mame32.rc: 1631
+# ui/mame32.rc: 1593
 Sort by number of plays
 プレイ回数で整列します
 
-# ui/mame32.rc: 1625
+# ui/mame32.rc: 1587
 Sort column in ascending (A-Z) order
 昇順で整列します
 
-# ui/mame32.rc: 1625
+# ui/mame32.rc: 1587
 Sort column in descending (Z-A) order
 降順で整列します
 
-# ui/mame32.rc: 1631
+# ui/mame32.rc: 1593
 Sort items by directories
 ディレクトリ名で整列します
 
-# ui/mame32.rc: 1631
+# ui/mame32.rc: 1593
 Sort items by game
 ゲーム名で整列します
 
-# ui/mame32.rc: 1631
+# ui/mame32.rc: 1593
 Sort items by manufacturer
 製造元で整列します
 
-# ui/mame32.rc: 1631
+# ui/mame32.rc: 1593
 Sort items by type
 種別で整列します
 
-# ui/mame32.rc: 1631
+# ui/mame32.rc: 1593
 Sort items by year
 製造年で整列します
 
-# ui/layout.c: 59 ui/mame32.rc: 630 
+# ui/layout.c: 59 ui/mame32.rc: 629 
 Sound
 サウンド
 
-# ui/properties.c: 1112
+# ui/properties.c: 1110
 Sound emulation isn't 100% accurate
 音の再現が不完全
 
-# ui/mame32.rc: 489
+# ui/mame32.rc: 488
 Sound:
 サウンド:
 
-# ui/win32ui.c: 5764, 5843
+# ui/win32ui.c: 752
 Sounds (*.wav)
 サウンド (*.wav)
 
-# ui/layout.c: 57 ui/win32ui.c: 742
+# ui/layout.c: 57 ui/win32ui.c: 790
 Source
 ソ\ースファイル
 
-# ui/mame32.rc: 65, 177 ui/win32ui.c: 3626
+# ui/mame32.rc: 65, 177 ui/win32ui.c: 3674
 Source Proper&ties
 ソ\ースのプロパティ(&T)
 
-# ui/mame32.rc: 497
+# ui/mame32.rc: 496
 Source:
 ソ\ース:
 
-# ui/mame32.rc: 93, 229, 242
+# ui/mame32.rc: 93, 229, 241
 St&ory
 ストーリー(&O)
 
-# ui/options.c: 475 ui/properties.c: 2700, 2703, 2997, 3000, 4219, 4297
+# ui/options.c: 476 ui/properties.c: 2698, 2701, 2995, 2998, 4218, 4296
 Standard
 標準
 
-# ui/mame32.rc: 533
+# ui/mame32.rc: 532
 Start out maximized
 ウィンドウ最大化
 
-# ui/layout.c: 110
+# ui/layout.c: 111
 State
 ゲームステート
 
-# ui/mame32.rc: 482
+# ui/mame32.rc: 481
 Status:
 状態:
 
@@ -2134,55 +2178,59 @@ Stereo
 Story
 ストーリー
 
-# ui/mame32.rc: 694
+# ui/mame32.rc: 691
 Stretch using hardware
 ハードウェア拡大表\示
 
-# ui/mame32.rc: 691
+# ui/layout.c: 81
+Support Save
+セーブに対応
+
+# ui/mame32.rc: 688
 Switch color depths to fit
 画面色数を変更
 
-# ui/mame32.rc: 688
+# ui/mame32.rc: 685
 Switch resolutions to fit
 画面解像度を変更
 
-# ui/mame32.rc: 683
+# ui/mame32.rc: 680
 Sync to monitor refresh
 モニタと同期
 
-# ui/treeview.c: 1287
+# ui/treeview.c: 1288
 TRACKBALL
 トラックボール
 
-# ui/mame32.rc: 593
-Texture management
+# ui/mame32.rc: 586
+Texture Management
 テクスチャ管理
 
 # ui/dialogs.c: 116
 The new settings will take effect\n
 新しい設定は、次回の MAME32 起動時に\n
 
-# ui/m32util.c: 233
+# ui/m32util.c: 234
 The operating system is out of memory or resources.
 メモリもしくはリソ\ースが不足しています。
 
-# ui/m32util.c: 237
+# ui/m32util.c: 238
 The specified file was not found.
 指定されたファイルが見つかりません。
 
-# ui/m32util.c: 249
+# ui/m32util.c: 250
 The specified path was not found.
 指定されたパスが見つかりません。
 
-# ui/m32util.c: 241
+# ui/m32util.c: 242
 There is no application associated with the given filename extension.
 拡張子に関連付けられたアプリケーションがありません。
 
-# ui/m32util.c: 245
+# ui/m32util.c: 246
 There was not enough memory to complete the operation.
 処理を続行するためのメモリが不足しました。
 
-# ui/mame32.rc: 538
+# ui/mame32.rc: 537
 Throttle
 速度制限を有効
 
@@ -2190,91 +2238,91 @@ Throttle
 Title
 タイトル画面
 
-# ui/layout.c: 116
+# ui/layout.c: 117
 Titles
 タイトル画面
 
-# ui/win32ui.c: 640
+# ui/win32ui.c: 648
 Toggle Folder List
 フォルダリスト
 
-# ui/win32ui.c: 641
+# ui/win32ui.c: 649
 Toggle Screen Shot
 スクリーンショット
 
-# ui/mame32.rc: 409, 418
+# ui/mame32.rc: 408, 417
 Total:
 合計:
 
-# ui/layout.c: 74 ui/win32ui.c: 737
+# ui/layout.c: 74 ui/win32ui.c: 785
 Trackball
 トラックボール
 
-# ui/mame32.rc: 1117
+# ui/mame32.rc: 1097
 Trackball device
 トラックボールディバイス
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1632
 Translate into English (US)
 言語を英語(US)に切り替えます
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1632
 Translate into French
 言語をフランス語に切り替えます
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1632
 Translate into German
 言語をドイツ語に切り替えます
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1632
 Translate into Hungarian
 言語をハンガリー語に切り替えます
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1632
 Translate into Italian
 言語をイタリア語に切り替えます
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1632
 Translate into Japanese
 言語を日本語に切り替えます
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1632
 Translate into Korean
 言語を韓国語に切り替えます
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1632
 Translate into Polish
 言語をポーランド語に切り替えます
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1632
 Translate into Portuguese (BRA)
 言語をポルトガル語 (ブラジル)に切り替えます
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1632
 Translate into Simplified Chinese
 言語を中国語(中国)に切り替えます
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1632
 Translate into Spanish
 言語をスペイン語に切り替えます
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1632
 Translate into Traditional Chinese
 言語を中国語(台湾)に切り替えます
 
-# ui/mame32.rc: 677
+# ui/mame32.rc: 674
 Triple buffering
 トリプルバッファ使用
 
-# ui/mame32.rc: 1592
+# ui/mame32.rc: 1554
 Troubleshooting Documentation
 トラブルシューティング情報を表\示します
 
-# ui/win32ui.c: 736
+# ui/win32ui.c: 784
 Type
 種別
 
-# ui/properties.c: 588
+# ui/properties.c: 586
 USB Keyboard
 USB キーボード
 
@@ -2282,11 +2330,11 @@ USB キーボード
 Unable to Load Riched32.dll
 Riched32.dllが読み込めません
 
-# ui/treeview.c: 2431
+# ui/treeview.c: 2432
 Unable to add game to non-custom folder
 カスタムフォルダ以外にはゲームを追加出来ません
 
-# ui/treeview.c: 2448
+# ui/treeview.c: 2449
 Unable to remove game from non-custom folder
 カスタムフォルダ以外からゲームを削除出来ません
 
@@ -2294,95 +2342,99 @@ Unable to remove game from non-custom folder
 Unavailable
 未所有のゲーム
 
-# ui/treeview.c: 995
+# ui/treeview.c: 996
 Unemulated Protection
 プロテクトの再現が不完全
 
-# ui/audit32.c: 435 ui/properties.c: 1064
+# ui/audit32.c: 435 ui/properties.c: 1062
 Unknown
 不明
 
-# ui/m32util.c: 257
+# ui/m32util.c: 258
 Unknown error.
 原因不明のエラーが発生しました。
 
-# ui/mame32.rc: 591
+# ui/mame32.rc: 584
 Use Direct3D
 Direct3Dを使用
 
-# ui/mame32.rc: 675
+# ui/mame32.rc: 672
 Use DirectDraw
 DirectDrawを使用
 
-# ui/mame32.rc: 1051
+# ui/mame32.rc: 1044
 Use Driver Icon for Not Working Game
 動作不可ゲームにドライバのアイコンを使用
 
-# ui/win32ui.c: 649
+# ui/win32ui.c: 657
 Use Local Language Game List
 日本語ゲームリストを使用する
 
-# ui/mame32.rc: 567
+# ui/mame32.rc: 831
 Use RDTSC timing system
 タイマにRDTSCを使用
 
-# ui/mame32.rc: 826
-Use additional game artwork
+# ui/mame32.rc: 843
+Use additional Artwork
 背景アートワークを使用
 
-# ui/mame32.rc: 641
+# ui/mame32.rc: 724
+Use classic scanlines
+かつてのスキャンライン
+
+# ui/mame32.rc: 640
 Use samples
 サンプルを使用
 
-# ui/mame32.rc: 862
+# ui/mame32.rc: 858
 Use transparent in-game menu
 ゲーム中のメニューを透過する
 
-# ui/mame32.rc: 644
+# ui/mame32.rc: 643
 Use volume auto adjust
 自動音量調整機能\を使用
 
-# ui/layout.c: 68 ui/mame32.rc: 875 ui/options.c: 1119, 2820 ui/properties.c: 877 ui/treeview.c: 299 ui/win32ui.c: 5199
+# ui/layout.c: 68 ui/mame32.rc: 879 ui/options.c: 1119, 2805 ui/properties.c: 875 ui/treeview.c: 299 ui/win32ui.c: 5217
 Vector
 ベクタ
 
-# ui/treeview.c: 1228
+# ui/treeview.c: 1229
 Vector %4dx%4d
 ベクタ %4dx%4d
 
-# ui/properties.c: 1025 
+# ui/properties.c: 1023 
 Vector Game
 ベクタゲーム
 
-# ui/mame32.rc: 370
+# ui/mame32.rc: 369
 Version 0
 バージョン0
 
-# ui/options.c: 4220
+# ui/options.c: 4205
 Version Mismatch
 バージョンの相違
 
-# ui/properties.c: 434 ui/treeview.c: 954, 955
+# ui/properties.c: 432 ui/treeview.c: 955, 956
 Vertical
 縦型
 
-# ui/properties.c: 1100
+# ui/properties.c: 1098
 Video emulation isn't 100% accurate
 画像の再現が不完全
 
-# ui/mame32.rc: 651
+# ui/mame32.rc: 650
 Volume attenuation
 ボリューム
 
-# ui/win32ui.c: 7059
+# ui/win32ui.c: 6997
 WARNING: the game might not run correctly.
 警告: このゲームは正常に実行出来ません。
 
-# ui/mame32.rc: 686
+# ui/mame32.rc: 683
 Wait for vertical sync
 Vsyncを待つ
 
-# ui/mame32.rc: 1592
+# ui/mame32.rc: 1554
 What's new in MAME
 MAMEの新しい機能\を表\示します
 
@@ -2406,11 +2458,15 @@ Window frame (light)
 Windows UI specific GUI joystick options
 Windows UI版GUIのジョイスティック設定
 
-# ui/options.c: 640
+# ui/options.c: 734
+Windows UI specific GUI keyboard options
+Windows UI版GUIのキーボードオプション
+
+# ui/options.c: 641
 Windows UI specific directory options
 Windows UI版ディレクトリ設定
 
-# ui/options.c: 3102
+# ui/options.c: 3087
 Windows UI specific folder list filters options
 Windows UI版フォルダリストフラグ設定
 
@@ -2438,29 +2494,37 @@ Windows UI版スタートアップ設定
 Windows UI specific window position options
 Windows UI版ウィンドウ位置設定
 
-# ui/layout.c: 63 ui/properties.c: 1072
+# ui/options.c: 457 
+Windows misc options
+Windows版：その他の設定
+
+# ui/layout.c: 63 ui/properties.c: 1070
 Working
 動作可
 
-# ui/treeview.c: 996
+# ui/treeview.c: 997
 Wrong Colors
 色が再現されない
 
-# ui/layout.c: 56 ui/win32ui.c: 740
+# ui/layout.c: 56 ui/win32ui.c: 788
 Year
 製造年
 
-# ui/audit32.c: 119 ui/win32ui.c: 5207
+# ui/audit32.c: 119 ui/win32ui.c: 5225
 Yes
 はい
 
-# ui/mame32.rc: 703
-Zoom:
-ズーム:
+# ui/mame32.rc: 618
+Zoom
+ズーム
 
 # ui/options.c: 655
 allow game selection by a joystick
 ゲーム選択にジョイスティックを使用する
+
+# ui/mame32.rc: 380
+and John Hardy IV
+and John Hardy IV
 
 # ui/options.c: 657
 broadcast selected game to all windows
@@ -2506,7 +2570,7 @@ config version
 enable version mismatch warning
 起動時にバージョンチェックを有効
 
-# ui/options.c: 3665, 3706, 3793, 3846, 3988 
+# ui/options.c: 3650, 3691, 3778, 3831, 3973 
 error invalid value for %s: %s\n
 エラー %s に不正な値を指定しました: %s\n
 
@@ -2526,7 +2590,7 @@ last selected folder id
 last selected game name
 最後に選択されたゲーム名
 
-# ui/mame32.rc: 1504, 1504, 1504, 1504, 1504, 1504, 1504, 1504
+# ui/mame32.rc: 1466, 1466, 1466, 1466, 1466, 1466, 1466, 1466
 res\\toolbar.bmp
 res\\toolbarj.bmp
 
@@ -2558,7 +2622,7 @@ show tool bar
 sort column
 どのカラムでソ\ートするかを指定
 
-# ui/layout.c: 59 ui/options.c: 523 ui/treeview.c: 87 
+# ui/layout.c: 59 ui/options.c: 524 ui/treeview.c: 87 
 sound
 音源
 
@@ -2589,16 +2653,4 @@ window top position
 # ui/options.c: 695
 window width
 ウィンドウの幅
-
-# ui/mame32.rc: 376
-Additional MAME32 code by
-
-
-# ui/mame32.rc: 371
-Copyright (C) 1997-2005 The MAME Team
-
-
-# ui/mame32.rc: 373
-MAME32 version by
-
 

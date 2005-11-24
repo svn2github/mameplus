@@ -6,8 +6,20 @@
 A wave inc.
 
 
+# Magic's 10 (ver. 16.55)
+A.W.P. Games
+
+
+# Water Balls
+ABM
+
+
 # Blomby Car
 ABM & Gecas
+
+
+# Magic's 10 2 (ver 1.1)
+ABM Games
 
 
 # Nozokimeguri Mahjong Peep Show (Japan 890404)
@@ -192,6 +204,10 @@ Banpresto
 
 # One + Two
 Barko
+
+
+# Zip & Zap
+Barko Corp
 
 
 # Many Block
@@ -558,6 +574,10 @@ Face?
 Falcon
 
 
+# Metal Saver
+First Amusement
+
+
 # Space Thunderbird
 Fortrek
 
@@ -566,7 +586,7 @@ Fortrek
 Free Enterprise Games
 
 
-# Bonus Card? (Austria)
+# Jolly Card (Austria, Fun World)
 Fun World
 
 
@@ -730,7 +750,7 @@ Impera
 Incredible Technologies
 
 
-# Inter Game Poker?
+# Jolly Card (Austria, Fun World, bootleg)
 Inter Games
 
 
@@ -740,6 +760,10 @@ Interlogic
 
 # Born To Fight
 International Games
+
+
+# Egg Hunt
+Invi Image
 
 
 # UniWar S
