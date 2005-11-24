@@ -74,8 +74,6 @@ typedef struct
 	BOOL   use_ddraw;
 	BOOL   use_d3d;
 	BOOL   ddraw_stretch;
-	char*  screen;
-	char*  clean_stretch;
 	char*  resolution;
 	int    gfx_refresh;
 	BOOL   scanlines;
@@ -90,6 +88,8 @@ typedef struct
 	int    frames_to_display;
 	char*  effect;
 	char*  aspect;
+	char*  screen;
+	char*  clean_stretch;
 #ifdef USE_SCALE_EFFECTS
 	char*  scale_effect;
 #endif /* USE_SCALE_EFFECTS */
@@ -123,8 +123,8 @@ typedef struct
 	char*  ledmode;
 	float  f_a2d;
 	char*  ctrlr;
-#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device by miko2u@hotmail.com
-	BOOL   use_stickpoint;
+#ifdef USE_JOY_MOUSE_MOVE
+	BOOL   use_stickpoint;	// Support Stick-type Pointing Device (miko2u@hotmail.com)
 #endif /* USE_JOY_MOUSE_MOVE */
 #ifdef JOYSTICK_ID
 	int    joyid[8];
@@ -188,9 +188,9 @@ typedef struct
 	char*  bios;
 	char*  statename;
 	BOOL   autosave;
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 	char*  patchname;
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 	BOOL   confirm_quit;
 #ifdef AUTO_PAUSE_PLAYBACK
 	BOOL   auto_pause_playback;
@@ -368,9 +368,9 @@ typedef struct
 	char*    artdir;
 	char*    imgdir;
 	char*    diffdir;
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 	char*    patchdir;
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 	char*    iconsdir;
 	char*    bgdir;
 	char*    cheat_filename;
@@ -625,10 +625,10 @@ void SetBgDir(const char *path);
 const char* GetCtrlrDir(void);
 void SetCtrlrDir(const char* path);
 
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 const char *GetPatchDir(void);
 void SetPatchDir(const char *path);
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 
 const char *GetLangDir(void);
 void SetLangDir(const char *path);

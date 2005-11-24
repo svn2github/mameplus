@@ -101,9 +101,9 @@ const DIRECTORYINFO g_directoryInfo[] =
 	{ "ROMs",                  GetRomDirs,         SetRomDirs,         TRUE,  DIRDLG_ROMS },
 	{ "Samples",               GetSampleDirs,      SetSampleDirs,      TRUE,  DIRDLG_SAMPLES },
 	{ "Ini Files",             GetIniDir,          SetIniDir,          FALSE, DIRDLG_INI },
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 	{ "IPS Patch",             GetPatchDir,        SetPatchDir,        FALSE, 0 },
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 	{ "Config",                GetCfgDir,          SetCfgDir,          FALSE, DIRDLG_CFG },
 	{ "High Scores",           GetHiDir,           SetHiDir,           FALSE, DIRDLG_HI },
 	{ "Snapshots",             GetImgDir,          SetImgDir,          FALSE, DIRDLG_IMG },

@@ -32,12 +32,12 @@
 #include "M32Util.h"
 #include "translate.h"
 
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 #include <io.h>
 #include "bitmask.h"
 #include "options.h"
 #include "patch.h"
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 
 /***************************************************************************
 	function prototypes
@@ -537,7 +537,7 @@ int DriverParentIndex(int driver_index)
 	return GetDriversInfo(driver_index)->parentIndex;
 }
 
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 int HasPatch(const char *game_name, const char *patch_name)
 {
 	int Count = 0;
@@ -691,7 +691,7 @@ LPWSTR GetPatchDesc(const char *game_name, const char *patch_name)
 
 	return desc;
 }
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 
 
 void FlushFileCaches(void)

@@ -50,11 +50,11 @@ BOOL DriverSupportsSaveState(int driver_index);
 BOOL DriverHasM68K(int driver_index);
 int DriverParentIndex(int driver_index);
 
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 int HasPatch(const char *game_name, const char *patch_name);
 int GetPatchName(char *patch_name, const char *game_name, const int patch_index);
 LPWSTR GetPatchDesc(const char *game_name, const char *patch_name);
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 
 void FlushFileCaches(void);
 void SetCorePathList(int file_type,const char *s);

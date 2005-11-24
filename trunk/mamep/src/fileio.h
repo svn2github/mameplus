@@ -42,10 +42,10 @@ enum
 #ifdef MESS
 	FILETYPE_HASH,
 #endif
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 	FILETYPE_PATCH,
 	FILETYPE_IPS,
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 #ifdef INP_CAPTION
 	FILETYPE_INPCAPTION,
 #endif /* INP_CAPTION */

@@ -293,8 +293,8 @@ ifneq ($(LAMER),)
     DEFS += -DLAMER
 endif
 
-ifneq ($(ROM_PATCH),)
-    DEFS += -DROM_PATCH
+ifneq ($(IPS_PATCH),)
+    DEFS += -DIPS_PATCH
 endif
 
 ifneq ($(EXTRA_GAMES),)
@@ -325,6 +325,7 @@ ifdef USE_GCC
 			$(ARCH) -O3 -fno-strict-aliasing \
 			-Wall \
 			-Wno-sign-compare \
+			-Wno-unused-functions \
 			-Wpointer-arith \
 			-Wbad-function-cast \
 			-Wcast-align \
@@ -332,7 +333,6 @@ ifdef USE_GCC
 			-Wundef \
 			-Wwrite-strings \
 			-Wdeclaration-after-statement
-		#	-Wno-unused-functions
 		#	-Wformat-security
     endif
 
@@ -530,7 +530,7 @@ ifneq ($(NO_DLL),)
         endif
     endif
 
-    ifneq ($(USE_UPX),)
+    ifneq ($(UPX),)
 		upx -9 $(EMULATOR)
     endif
 
@@ -543,7 +543,7 @@ else
     else
 		$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) -dll -out:$@ $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVLIBS) $(OSDBGOBJS) $(MAPDLLFLAGS)
     endif
-    ifneq ($(USE_UPX),)
+    ifneq ($(UPX),)
 		upx -9 $@
     endif
 
@@ -555,7 +555,7 @@ else
     else
 		$(LD) $(LDFLAGS) $(WINDOWS_PROGRAM) $(EMULATORLIB).lib $(GUIOBJS) -out:$@ $(GUILIBS) $(LIBS) $(MAPGUIFLAGS)
     endif
-    ifneq ($(USE_UPX),)
+    ifneq ($(UPX),)
 		upx -9 $@
     endif
 
@@ -567,7 +567,7 @@ else
     else
 		$(LD) $(LDFLAGS) $(CONSOLE_PROGRAM) $(EMULATORLIB).lib $(CLIOBJS) -out:$@ $(CLILIBS) $(MAPCLIFLAGS)
     endif
-    ifneq ($(USE_UPX),)
+    ifneq ($(UPX),)
 		upx -9 $@
     endif
 

@@ -92,7 +92,7 @@
 #define IDD_PROP_CONTROLLER             185
 #define IDD_PALETTE                     190 // UI_COLOR_DISPLAY
 #define IDD_PROP_BIOS                   191
-#define IDD_PROP_IPS                    192 // ROM_PATCH
+#define IDD_PROP_IPS                    192 // IPS_PATCH
 #define IDB_TOOLBAR_US                  193
 #define IDB_TOOLBAR_JP                  194
 #define IDB_TOOLBAR_CN                  195
@@ -268,6 +268,7 @@
 #define IDC_ARTRESTEXT                  1163
 #define IDC_PLAY_GAME                   1164
 #define IDC_LIGHTGUN                    1165
+#define IDC_ASPECTRATIOTEXT2            1166
 #define IDC_SSTAB                       1167
 #define IDC_GAME_ICON                   1168
 #define IDC_RANDOM_BG                   1169
@@ -401,14 +402,14 @@
 #define IDC_TRANSPARENCY                1360 // TRANS_UI
 #define IDC_TRANSPARENCYDISP            1361 // TRANS_UI
 
-#define IDC_IPS1                        1362 // ROM_PATCH
-#define IDC_IPS2                        1363 // ROM_PATCH
-#define IDC_IPS3                        1364 // ROM_PATCH
-#define IDC_IPS4                        1365 // ROM_PATCH
-#define IDC_IPS5                        1366 // ROM_PATCH
-#define IDC_IPS6                        1367 // ROM_PATCH
-#define IDC_IPS7                        1368 // ROM_PATCH
-#define IDC_IPS8                        1369 // ROM_PATCH
+#define IDC_IPS1                        1362 // IPS_PATCH
+#define IDC_IPS2                        1363 // IPS_PATCH
+#define IDC_IPS3                        1364 // IPS_PATCH
+#define IDC_IPS4                        1365 // IPS_PATCH
+#define IDC_IPS5                        1366 // IPS_PATCH
+#define IDC_IPS6                        1367 // IPS_PATCH
+#define IDC_IPS7                        1368 // IPS_PATCH
+#define IDC_IPS8                        1369 // IPS_PATCH
 
 #define ID_FILE_EXIT                    40001
 #define ID_ABOUT                        40002

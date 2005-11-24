@@ -124,10 +124,10 @@ mame_file *mame_fopen(const char *gamename, const char *filename, int filetype, 
 #ifdef INP_CAPTION
 		case FILETYPE_INPCAPTION:
 #endif /* INP_CAPTION */
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 		case FILETYPE_PATCH:
 		case FILETYPE_IPS:
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 			if (openforwrite)
 			{
 				logerror("mame_fopen: type %02x write not supported\n", filetype);
@@ -281,13 +281,13 @@ mame_file *mame_fopen(const char *gamename, const char *filename, int filetype, 
 			return generic_fopen(filetype, NULL, gamename, 0, openforwrite ? FILEFLAG_OPENWRITE : FILEFLAG_OPENREAD);
 #endif
 
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 		case FILETYPE_PATCH:
 			return generic_fopen(filetype, gamename, filename, 0, FILEFLAG_OPENREAD);
 
 		case FILETYPE_IPS:
 			return generic_fopen(filetype, gamename, filename, 0, FILEFLAG_OPENREAD);
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 
 		/* anything else */
 		default:
@@ -897,7 +897,7 @@ static const char *get_extension_for_filetype(int filetype)
 			break;
 #endif
 
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 		case FILETYPE_PATCH:
 			extension = "dat";
 			break;
@@ -906,7 +906,7 @@ static const char *get_extension_for_filetype(int filetype)
 			/* if patch file contains '.', generic_fopen do not add extension */
 			extension = NULL;
 			break;
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 	}
 	return extension;
 }

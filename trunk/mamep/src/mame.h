@@ -244,9 +244,9 @@ struct _global_options
 	int		auto_save;		/* 1 to automatically save/restore at startup/quitting time */
 	char *	bios;			/* specify system bios (if used), 0 is default */
 
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 	char*	patchname;
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 
 //ks hcmame s switch m68k core
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020)

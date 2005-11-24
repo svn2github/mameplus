@@ -240,9 +240,9 @@ static struct rc_option opts[] = {
 	{ "bios", NULL, rc_string, &options.bios, "default", 0, 14, NULL, "change system bios" },
 	{ "state", NULL, rc_string, &statename, NULL, 0, 0, NULL, "state to load" },
 	{ "autosave", NULL, rc_bool, &options.auto_save, "0", 0, 0, NULL, "enable automatic restore at startup and save at exit" },
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 	{ "ips_patch", NULL, rc_string, &options.patchname, NULL, 0, 0, NULL, "ips patch datfile name"},
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 	{ "confirm_quit", NULL, rc_bool, &options.confirm_quit, "1", 0, 0, NULL, "confirm quit" },
 #ifdef AUTO_PAUSE_PLAYBACK
 	{ "auto_pause_playback", NULL, rc_bool, &options.auto_pause_playback, "0", 0, 0, NULL, "automatic pause when playback is started and finished" },
@@ -271,7 +271,7 @@ static struct rc_option opts[] = {
 
 	{ "Language options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
 	{ "language", "lang", rc_string, &langname, "auto", 0, 0, init_language, "select translation language" },
-	{ "use_lang_list", NULL, rc_bool, &options.use_lang_list, "1", 0, 0, NULL, "enable/disable language list" },
+	{ "use_lang_list", NULL, rc_bool, &options.use_lang_list, "1", 0, 0, NULL, "enable/disable local language game list" },
 	{ NULL,	NULL, rc_end, NULL, NULL, 0, 0,	NULL, NULL }
 };
 

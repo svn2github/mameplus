@@ -282,6 +282,12 @@ MODRM_TABLE MODRM_table[256];
 
 /***********************************************************************************/
 
+INLINE UINT32 i386_translate(int segment, UINT32 ip)
+{
+	// TODO: segment limit
+	return I.sreg[segment].base + ip;
+}
+
 INLINE int translate_address(UINT32 *address)
 {
 	UINT32 a = *address;

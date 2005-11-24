@@ -35,7 +35,7 @@ endif
 
 COREOBJS += $(sort $(DBGOBJS))
 
-ifneq ($(ROM_PATCH),)
+ifneq ($(IPS_PATCH),)
 COREOBJS += $(OBJ)/patch.o
 endif
 

@@ -22,12 +22,6 @@
 
 #define INT_DEBUG	1
 
-INLINE UINT32 i386_translate(int segment, UINT32 ip)
-{
-	// TODO: segment limit
-	return I.sreg[segment].base + ip;
-}
-
 void i386_load_segment_descriptor( int segment )
 {
 	UINT32 v1,v2;

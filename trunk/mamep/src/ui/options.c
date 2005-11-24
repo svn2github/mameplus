@@ -474,7 +474,8 @@ static struct rc_option rc_game_opts[] =
 	{ "led_mode", NULL, rc_string, &gOpts.ledmode, "ps/2", 0, 0, LedmodeDecodeString, "LED mode (ps/2|usb)" },
 	{ "a2d_deadzone", "a2d", rc_float, &gOpts.f_a2d, "0.3", 0.0, 1.0, NULL, "minimal analog value for digital input" },
 	{ "ctrlr", NULL, rc_string, &gOpts.ctrlr, "Standard", 0, 0, NULL, "preconfigure for specified controller" },
-#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device by miko2u@hotmail.com
+#ifdef USE_JOY_MOUSE_MOVE
+	/* Support Stick-type Pointing Device (miko2u@hotmail.com) */
 	{ "stickpoint", "stick", rc_bool, &gOpts.use_stickpoint, "0", 0, 0, NULL, "enable stick-type mouse input" },
 #endif /* USE_JOY_MOUSE_MOVE */
 #ifdef JOYSTICK_ID
@@ -546,9 +547,9 @@ static struct rc_option rc_game_opts[] =
 	{ "bios", NULL, rc_string, &gOpts.bios, "default", 0, 14, NULL, "change system bios" },
 	{ "state", NULL, rc_string, &gOpts.statename, NULL, 0, 0, NULL, "state to load" },
 	{ "autosave", NULL, rc_bool, &gOpts.autosave, "0", 0, 0, NULL, "enable automatic restore at startup and save at exit" },
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 	{ "ips_patch", NULL, rc_string, &gOpts.patchname, NULL, 0, 0, NULL, "ips patch datfile name"},
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 	{ "confirm_quit", NULL, rc_bool, &gOpts.confirm_quit, "1", 0, 0, NULL, "enable confirm quit" },
 #ifdef AUTO_PAUSE_PLAYBACK
 	{ "auto_pause_playback", NULL, rc_bool, &gOpts.auto_pause_playback, "0", 0, 0, NULL, "automatic pause when playback is started and finished" },
@@ -585,9 +586,9 @@ static struct rc_option rc_mamew_opts[] =
 	{ "snapshot_directory", NULL, rc_string, &settings.imgdir, "snap", 0, 0, NULL, "directory for screenshots (.png format)" },
 	{ "diff_directory", NULL, rc_string, &settings.diffdir, "diff", 0, 0, NULL, "directory for hard drive image difference files" },
 	{ "ctrlr_directory", NULL, rc_string, &settings.ctrlrdir, "ctrlr", 0, 0, NULL, "directory to save controller definitions" },
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 	{ "ips_directory", NULL, rc_string, &settings.patchdir, "ips", 0, 0, NULL, "directory for ips patch" },
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 	{ "lang_directory", NULL, rc_string, &settings.langdir, "lang", 0, 0, NULL, "directory for localized language files" },
 	{ "cheat_file", NULL, rc_string, &settings.cheat_filename, "cheat.dat", 0, 0, NULL, "cheat filename" },
 	{ "history_file", NULL, rc_string, &settings.history_filename, "history.dat", 0, 0, NULL, NULL },
@@ -631,7 +632,7 @@ static struct rc_option rc_mamew_opts[] =
 
 	{ "Language options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
 	{ "language", "lang", rc_string, &rc_dummy_args.langname, "auto", 0, 0, LanguageDecodeString, "select translation language" },
-	{ "use_lang_list", NULL, rc_bool, &settings.use_lang_list, "1", 0, 0, NULL, "enable/disable language list" },
+	{ "use_lang_list", NULL, rc_bool, &settings.use_lang_list, "1", 0, 0, NULL, "enable/disable local language game list" },
 
 	{ NULL,	NULL, rc_end, NULL, NULL, 0, 0,	NULL, NULL }
 };
@@ -646,10 +647,10 @@ static struct rc_option rc_winui_opts[] =
 	{ "cpanel_directory", NULL, rc_string, &settings.cpaneldir, "cpanel", 0, 0, NULL, "directory for control panel" },
 	{ "icon_directory", NULL, rc_string, &settings.iconsdir, "icons", 0, 0, NULL, "directory for icons" },
 	{ "bkground_directory", NULL, rc_string, &settings.bgdir, "bkground", 0, 0, NULL, "directory for bkground" },
-	{ "folder_directory", NULL, rc_string, &settings.folderdir, "folders", 0, 0, NULL, "directory for folders" },
+	{ "folder_directory", NULL, rc_string, &settings.folderdir, "folders", 0, 0, NULL, "directory for folders-ini" },
 
 	{ "Windows UI specific startup options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "save_version", NULL, rc_string, &rc_dummy_args.save_version, "", 0, 0, NULL, "config version" },
+	{ "save_version", NULL, rc_string, &rc_dummy_args.save_version, "", 0, 0, NULL, "save version" },
 	{ "reset_gui", NULL, rc_bool, &bResetGUI, "0", 0, 0, NULL, "enable version mismatch warning" },
 	{ "game_check", NULL, rc_bool, &settings.game_check, "1", 0, 0, NULL, "search for new games" },
 	{ "joygui", NULL, rc_bool, &settings.use_joygui, "0", 0, 0, NULL, "allow game selection by a joystick" },
@@ -660,9 +661,9 @@ static struct rc_option rc_winui_opts[] =
 	{ "stretch_screenshot_larger", NULL, rc_bool, &settings.stretch_screenshot_larger, "0", 0, 0, NULL, "stretch screenshot larger" },
 	{ "screenshot_bordersize", NULL, rc_int, &settings.screenshot_bordersize, "11", 0, 999, NULL, "screen shot border size" },
 	{ "screenshot_bordercolor", NULL, rc_int, &settings.screenshot_bordercolor, "-1", -1, (UINT)-1, NULL, "screen shot border color" },
-	{ "inherit_filter", NULL, rc_bool, &settings.inherit_filter, "0", 0, 0, NULL, "inherit filter setting" },
-	{ "offset_clones", NULL, rc_bool, &settings.offset_clones, "1", 0, 0, NULL, "offset clone setting" },
-	{ "game_caption", NULL, rc_bool, &settings.game_caption, "1", 0, 0, NULL, "game caption setting" },
+	{ "inherit_filter", NULL, rc_bool, &settings.inherit_filter, "0", 0, 0, NULL, "inheritable filters" },
+	{ "offset_clones", NULL, rc_bool, &settings.offset_clones, "1", 0, 0, NULL, "no offset for clones missing parent in view" },
+	{ "game_caption", NULL, rc_bool, &settings.game_caption, "1", 0, 0, NULL, "show game caption" },
 
 	{ "Windows UI specific general options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
 #ifdef MESS
@@ -684,7 +685,7 @@ static struct rc_option rc_winui_opts[] =
 	// TAB_ALL = 9
 	{ "history_tab", NULL, rc_int, &settings.history_tab, "9", 0, MAX_TAB_TYPES+TAB_SUBTRACT, NULL, "where to show history on tab" },
 #endif /* STORY_DATAFILE */
-	{ "exec_command", NULL, rc_string, &settings.exec_command, NULL, 0, 0, NULL, "execute commandline" },
+	{ "exec_command", NULL, rc_string, &settings.exec_command, NULL, 0, 0, NULL, "execute command line" },
 	{ "exec_wait", NULL, rc_int, &settings.exec_wait, "0", 0, 0, NULL, "execute wait" },
 	{ "hide_mouse", NULL, rc_bool, &settings.hide_mouse, "0", 0, 0, NULL, "hide mouse" },
 	{ "full_screen", NULL, rc_bool, &settings.full_screen, "0", 0, 0, NULL, "full screen" },
@@ -1995,7 +1996,7 @@ void SetDiffDir(const char* path)
 		settings.diffdir = strdup(path);
 }
 
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 const char *GetPatchDir(void)
 {
 	return settings.patchdir;
@@ -2008,7 +2009,7 @@ void SetPatchDir(const char *path)
 	if (path != NULL)
 		settings.patchdir = strdup(path);
 }
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 
 const char* GetLangDir(void)
 {

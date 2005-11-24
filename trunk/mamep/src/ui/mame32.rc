@@ -692,10 +692,11 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_TABSTOP,136,45,120,10,0,
                     HIDC_HWSTRETCH
     LTEXT           "Aspect ratio",IDC_ASPECTRATIOTEXT,142,61,61,10,
-                    SS_CENTERIMAGE
+                    SS_CENTERIMAGE,0,HIDC_ASPECTRATION
     EDITTEXT        IDC_ASPECTRATION,206,60,15,12,ES_RIGHT | ES_AUTOHSCROLL | 
                     ES_NUMBER,0,HIDC_ASPECTRATION
-    LTEXT           ":",IDC_STATIC,226,60,8,10,SS_CENTERIMAGE | NOT WS_GROUP
+    LTEXT           ":",IDC_ASPECTRATIOTEXT2,226,60,8,10,SS_CENTERIMAGE | NOT WS_GROUP,
+                    0,HIDC_ASPECTRATION
     EDITTEXT        IDC_ASPECTRATIOD,232,60,15,12,ES_RIGHT | ES_AUTOHSCROLL | 
                     ES_NUMBER,0,HIDC_ASPECTRATIOD
     GROUPBOX        "Clean stretch",IDC_CLEAN_STRETCHTEXT,136,76,120,30
@@ -927,7 +928,7 @@ BEGIN
     GROUPBOX        "",IDC_SPLITTER2,109,28,8,172,BS_NOTIFY | NOT WS_VISIBLE
     CONTROL         "",IDC_SSFRAME,"Static",SS_ETCHEDFRAME | SS_NOTIFY,121,
                     11,181,194
-    CONTROL         "",IDC_SSTAB,"SysTabControl32",TCS_HOTTRACK,121,0,181,18
+    CONTROL         "",IDC_SSTAB,"SysTabControl32",0,121,0,181,18
     CONTROL         "",IDC_SSPICTURE,"Static",SS_BITMAP | NOT WS_VISIBLE,141,
                     18,141,127
     EDITTEXT        IDC_HISTORY,129,150,167,49,ES_MULTILINE | ES_READONLY | 
@@ -1192,7 +1193,7 @@ BEGIN
                     0,0,HIDC_USE_DEFAULT
 END
 
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 IDD_PROP_IPS DIALOGEX 0, 0, 260, 245
 STYLE WS_CHILD | WS_CAPTION
 CAPTION "IPS"
@@ -1223,7 +1224,7 @@ BEGIN
     PUSHBUTTON      "Restore Default Settings",IDC_USE_DEFAULT,138,225,117,14,
                     0,0,HIDC_USE_DEFAULT
 END
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 
 
 /////////////////////////////////////////////////////////////////////////////

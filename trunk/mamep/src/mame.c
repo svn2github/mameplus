@@ -146,9 +146,9 @@
 #include "harddisk.h"
 #include "config.h"
 #include "zlib.h"
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 #include "patch.h"
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 
 
 /***************************************************************************
@@ -442,10 +442,10 @@ static int init_machine(void)
 	/* now set up all the CPUs */
 	cpu_init();
 
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 	if (options.patchname)
 		PatchGame(options.patchname);
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 
 #ifdef MESS
 	/* initialize the devices */

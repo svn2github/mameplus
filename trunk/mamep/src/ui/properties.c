@@ -19,7 +19,6 @@
     Created 8/29/98 by Mike Haaland (mhaaland@hypertech.com)
 
 ***************************************************************************/
-
 #define WIN32_LEAN_AND_MEAN
 #define UNICODE
 #define NONAMELESSUNION 1
@@ -57,9 +56,10 @@
 
 typedef HANDLE HTHEME;
 
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 #define PATCH_MAX 8
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
+
 #ifdef UNICODE
 #define TTM_SETTITLE            TTM_SETTITLEW
 #else
@@ -155,9 +155,9 @@ static void InitializeD3DEffectUI(HWND hwnd);
 static void InitializeD3DPrescaleUI(HWND hwnd);
 static void InitializeDefaultBIOSUI(HWND hwnd);
 static void InitializeBIOSUI(HWND hwnd);
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 static void InitializeIPSUI(HWND hwnd);
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 static void InitializeLEDModeUI(HWND hwnd);
 static void InitializeCleanStretchUI(HWND hwnd);
 static void InitializeControllerMappingUI(HWND hwnd);
@@ -226,10 +226,10 @@ static int  g_nCleanStretchIndex = 0;
 static int  g_nD3DEffectIndex  = 0;
 static int  g_nD3DPrescaleIndex  = 0;
 static int  g_nBiosIndex       = 0;
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 static int  g_nIpsIndex[PATCH_MAX];
 static HWND hTooltipWnd = NULL;
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 #ifdef USE_SCALE_EFFECTS
 static int  g_nScaleEffectIndex= 0;
 #endif /* USE_SCALE_EFFECTS */
@@ -283,7 +283,7 @@ BOOL PropSheetFilter_BIOS(void)
 	return 0;
 }
 
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 BOOL PropSheetFilter_IPS(void)
 {
 	if (IS_GAME)
@@ -291,7 +291,7 @@ BOOL PropSheetFilter_IPS(void)
 
 	return 0;
 }
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 
 
 /* Help IDs */
@@ -305,6 +305,8 @@ static DWORD dwHelpIDs[] =
 	IDC_ARTWORK_CROP,       HIDC_ARTWORK_CROP,
 	IDC_ASPECTRATIOD,       HIDC_ASPECTRATIOD,
 	IDC_ASPECTRATION,       HIDC_ASPECTRATION,
+	IDC_ASPECTRATIOTEXT,    HIDC_ASPECTRATION,
+	IDC_ASPECTRATIOTEXT2,   HIDC_ASPECTRATION,
 	IDC_AUTOFRAMESKIP,      HIDC_AUTOFRAMESKIP,
 	IDC_BACKDROPS,          HIDC_BACKDROPS,
 	IDC_BEAM,               HIDC_BEAM,
@@ -595,7 +597,6 @@ static struct ComboBoxDevices
 	const char*	m_pData;
 } g_ComboBoxDevice[] = 
 {
-	{ "None",                  "none"      },
 	{ "Keyboard",              "keyboard"  },
 	{ "Mouse",	           "mouse"     },
 	{ "Joystick",              "joystick"  },
@@ -608,7 +609,7 @@ static struct ComboBoxDevices
  * Public functions
  ***************************************************************/
 
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 void InitTooltip (HWND hParent)
 {
     // struct specifying control classes to register
@@ -687,7 +688,7 @@ void UpdateToolTipText(HWND hParent, LPWSTR sczBuff, const char *sczTipTitle)
 	SendMessage(hTooltipWnd, TTM_SETTITLE, 1, (LPARAM)(void *)_Unicode(sczTipTitle));
 	SendMessage(hTooltipWnd, TTM_UPDATETIPTEXT, (WPARAM)0, (LPARAM)&ti);
 }
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 
 typedef HTHEME (WINAPI *OpenThemeProc)(HWND hwnd, LPCWSTR pszClassList);
 
@@ -814,9 +815,9 @@ void InitDefaultPropertyPage(HINSTANCE hInst, HWND hWnd)
 	pshead.DUMMYUNIONNAME3.ppsp       = pspage;
 
 	/* Create the Property sheet and display it */
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 	hTooltipWnd = NULL;
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 	if (PropertySheet(&pshead) == -1)
 	{
 		char temp[100];
@@ -911,9 +912,9 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIco
 	pshead.DUMMYUNIONNAME3.ppsp       = pspage;
 
 	/* Create the Property sheet and display it */
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 	hTooltipWnd = NULL;
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 	if (PropertySheet(&pshead) == -1)
 	{
 		char temp[100];
@@ -1249,11 +1250,11 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 	HWND hWndCtrl    = GET_WM_COMMAND_HWND(wParam, lParam);
 	WORD wNotifyCode = GET_WM_COMMAND_CMD(wParam, lParam);
 	BOOL changed     = FALSE;
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 	int nCount;
 	char patchName[256];
 	LPWSTR desc;
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 
 	switch (wID)
 	{
@@ -1351,7 +1352,7 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 			changed = TRUE;
 		break;
 
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 	case IDC_IPS1 :
 	case IDC_IPS2 :
 	case IDC_IPS3 :
@@ -1402,7 +1403,7 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 			changed = TRUE;
 		}
 		break;
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 
 	case IDC_PROP_RESET:
 		if (wNotifyCode != BN_CLICKED)
@@ -2360,6 +2361,7 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_BRIGHTNESSTEXT),  ddraw || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_BRIGHTNESSDISP),  ddraw || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT), (ddraw && hws) || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT2),(ddraw && hws) || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATION),    (ddraw && hws) || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOD),    (ddraw && hws) || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_SCANLINES),       !g_nEffectIndex && (!ddraw || !(hws)) && !d3d);
@@ -2695,8 +2697,9 @@ static void AssignInput(HWND hWnd)
 	}
 	pGameOpts->ctrlr = (char *)malloc(new_length + 1);
 	ComboBox_GetLBTextA (hWnd, g_nInputIndex, pGameOpts->ctrlr);
-	if (!strcmp(pGameOpts->ctrlr, _UI("Standard")))
+	if (strcmp(pGameOpts->ctrlr, _UI("Standard")) == 0)
 	{
+		// we display Standard, but keep it blank internally
 		FreeIfAllocated(&pGameOpts->ctrlr);
 		pGameOpts->ctrlr = strdup("Standard");
 	}
@@ -2794,7 +2797,7 @@ static void AssignAnalogAxes(HWND hWnd)
 	{
 		// no axes are treated as digital, which is the default...
 		FreeIfAllocated(&pGameOpts->digital);
-		pGameOpts->digital = strdup("");
+		pGameOpts->digital = strdup("none");
 	}
 }
 
@@ -2811,61 +2814,48 @@ static void AssignPaddle(HWND hWnd)
 {
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nPaddleIndex);
 	FreeIfAllocated(&pGameOpts->paddle);
-	if (ptr != NULL && strlen(ptr)>0 && strcmp(ptr,"none") != 0 )
+	if (ptr != NULL)
 		pGameOpts->paddle = strdup(ptr);
-	else
-		pGameOpts->paddle = strdup("");
-
 }
 
 static void AssignADStick(HWND hWnd)
 {
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nADStickIndex);
 	FreeIfAllocated(&pGameOpts->adstick);
-	if (ptr != NULL && strlen(ptr)>0 && strcmp(ptr,"none") != 0 )
+	if (ptr != NULL)
 		pGameOpts->adstick = strdup(ptr);
-	else
-		pGameOpts->adstick = strdup("");
 }
 
 static void AssignPedal(HWND hWnd)
 {
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nPedalIndex);
 	FreeIfAllocated(&pGameOpts->pedal);
-	if (ptr != NULL && strlen(ptr)>0 && strcmp(ptr,"none") != 0 )
+	if (ptr != NULL)
 		pGameOpts->pedal = strdup(ptr);
-	else
-		pGameOpts->pedal = strdup("");
 }
 
 static void AssignDial(HWND hWnd)
 {
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nDialIndex);
 	FreeIfAllocated(&pGameOpts->dial);
-	if (ptr != NULL && strlen(ptr)>0 && strcmp(ptr,"none") != 0 )
+	if (ptr != NULL)
 		pGameOpts->dial = strdup(ptr);
-	else
-		pGameOpts->dial = strdup("");
 }
 
 static void AssignTrackball(HWND hWnd)
 {
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nTrackballIndex);
 	FreeIfAllocated(&pGameOpts->trackball);
-	if (ptr != NULL && strlen(ptr)>0 && strcmp(ptr,"none") != 0 )
+	if (ptr != NULL)
 		pGameOpts->trackball = strdup(ptr);
-	else
-		pGameOpts->trackball = strdup("");
 }
 
 static void AssignLightgun(HWND hWnd)
 {
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nLightgunIndex);
 	FreeIfAllocated(&pGameOpts->lightgun_device);
-	if (ptr != NULL && strlen(ptr)>0 && strcmp(ptr,"none") != 0 )
+	if (ptr != NULL)
 		pGameOpts->lightgun_device = strdup(ptr);
-	else
-		pGameOpts->lightgun_device = strdup("");
 }
 
 static void AssignD3DEffect(HWND hWnd)
@@ -2918,7 +2908,7 @@ AssignDefaultBios(5)
 AssignDefaultBios(6)
 AssignDefaultBios(7)
 
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 static void AssignIPS(HWND hWnd)
 {
 	int n;
@@ -2950,7 +2940,7 @@ static void AssignIPS(HWND hWnd)
 			}
 		}
 }
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 
 #ifdef USE_SCALE_EFFECTS
 static void AssignScaleEffect(HWND hWnd)
@@ -3107,7 +3097,7 @@ static void ResetDataMap(void)
 		}
 	}
 
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 	for (i = 0; i < PATCH_MAX; i++)
 		g_nIpsIndex[i] = 0;
 
@@ -3143,7 +3133,7 @@ static void ResetDataMap(void)
 		free(patch_list);
 		free(s);
 	}
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 
 #ifdef USE_SCALE_EFFECTS
 	g_nScaleEffectIndex = 0;
@@ -3251,7 +3241,8 @@ static void BuildDataMap(void)
 	/* input */
 	DataMapAdd(IDC_DEFAULT_INPUT, DM_INT,  CT_COMBOBOX, &g_nInputIndex,            DM_STRING, &pGameOpts->ctrlr,       0, 0, AssignInput);
 	DataMapAdd(IDC_USE_MOUSE,     DM_BOOL, CT_BUTTON,   &pGameOpts->use_mouse,     DM_BOOL,   &pGameOpts->use_mouse,   0, 0, 0);   
-#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device by miko2u@hotmail.com
+#ifdef USE_JOY_MOUSE_MOVE
+	/* Support Stick-type Pointing Device (miko2u@hotmail.com) */
 	DataMapAdd(IDC_USE_STICKPOINT,DM_BOOL, CT_BUTTON,   &pGameOpts->use_stickpoint,DM_BOOL,   &pGameOpts->use_stickpoint, 0, 0, 0);
 #endif /* USE_JOY_MOUSE_MOVE */
 	DataMapAdd(IDC_JOYSTICK,      DM_BOOL, CT_BUTTON,   &pGameOpts->use_joystick,  DM_BOOL,   &pGameOpts->use_joystick,0, 0, 0);
@@ -3367,7 +3358,7 @@ static void BuildDataMap(void)
 			DataMapAdd(IDC_BIOS8,         DM_INT,  CT_COMBOBOX, &default_bios_index[7],    DM_NONE, NULL,                      0, 0, AssignDefaultBios7);
 	}
 
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 	if (IS_GAME)
 	{
 		int n;
@@ -3375,7 +3366,7 @@ static void BuildDataMap(void)
 		for (n = 0; n < PATCH_MAX; n++)
 			DataMapAdd(IDC_IPS1 + n,      DM_INT,  CT_COMBOBOX, &g_nIpsIndex[n],           DM_NONE, NULL,                      0, 0, AssignIPS);
 	}
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 
 #ifdef MESS
 	DataMapAdd(IDC_USE_NEW_UI,    DM_BOOL, CT_BUTTON,   &pGameOpts->mess.use_new_ui,DM_BOOL, &pGameOpts->mess.use_new_ui, 0, 0, 0);
@@ -3522,9 +3513,9 @@ static void InitializeOptions(HWND hDlg)
 	InitializeD3DPrescaleUI(hDlg);
 	InitializeBIOSUI(hDlg);
 	InitializeDefaultBIOSUI(hDlg);
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 	InitializeIPSUI(hDlg);
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 	InitializeLEDModeUI(hDlg);
 	InitializeCleanStretchUI(hDlg);
 	InitializeControllerMappingUI(hDlg);
@@ -4225,9 +4216,6 @@ static void InitializeDefaultInputUI(HWND hwnd)
 		{
 			do 
 			{
-				if (FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-					continue;
-
 				// copy the filename
 				strcpy (root,FindFileData.cFileName);
 
@@ -4435,7 +4423,7 @@ static void InitializeDefaultBIOSUI(HWND hwnd)
 	}
 }
 
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 static void InitializeIPSUI(HWND hwnd)
 {
 	if (IS_GAME)
@@ -4468,7 +4456,7 @@ static void InitializeIPSUI(HWND hwnd)
 	if (hTooltipWnd == NULL)
 		InitTooltip(hwnd);	//fixme: create tooltip window only once
 }
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 
 static void InitializeCleanStretchUI(HWND hwnd)
 {

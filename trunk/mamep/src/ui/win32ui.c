@@ -838,9 +838,9 @@ static int GetTotalPathLen(void)
 	len += strlen(GetMAMEInfoFileName());
 	len += strlen(GetHiscoreFileName());
 	len += strlen(GetCtrlrDir());
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 	len += strlen(GetPatchDir());
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 	len += strlen(GetLangDir());
 
 	if (g_pPlayBkName != NULL)
@@ -886,9 +886,9 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -diff_directory \"%s\"",     GetDiffDir());
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -cheat_file \"%s\"",         GetCheatFileName());
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -ctrlr_directory \"%s\"",    GetCtrlrDir());
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -ips_directory \"%s\"",      GetPatchDir());
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -lang_directory \"%s\"",     GetLangDir());
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -history_file \"%s\"",       GetHistoryFileName());
 #ifdef STORY_DATAFILE
@@ -1098,10 +1098,10 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 
 	/* confirm quit */
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sconfirm_quit",            pOpts->confirm_quit    ? "" : "no");
-#ifdef ROM_PATCH
+#ifdef IPS_PATCH
 	if (pOpts->patchname != NULL)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -ips_patch %s",            pOpts->patchname);
-#endif /* ROM_PATCH */
+#endif /* IPS_PATCH */
 #ifdef TRANS_UI
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%suse_trans_ui",            pOpts->use_transui     ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -ui_transparency %d",        pOpts->ui_transparency);
