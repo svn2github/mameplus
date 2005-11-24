@@ -184,7 +184,7 @@ struct _bank_data
 	UINT8 					spacenum;				/* the address space it is used for */
 	offs_t 					base;					/* the base offset */
 	UINT8					curentry;				/* current entry */
-	void *					entry[MAX_BANK_ENTRIES]; /* array of entries for this bank */
+	void *					entry[MAX_BANK_ENTRIES];/* array of entries for this bank */
 };
 typedef struct _bank_data bank_data;
 
@@ -1207,6 +1207,11 @@ static int preflight_memory(void)
 						if (bank >= 1 && bank <= MAX_EXPLICIT_BANKS)
 						{
 							bank_data *bdata = &bankdata[bank];
+
+							/* wire up state saving for the entry the first time we see it */
+							if (!bdata->used)
+								state_save_register_UINT8("memory", bank, "bank.entry", &bdata->curentry, 1);
+
 							bdata->used = 1;
 							bdata->dynamic = 0;
 							bdata->cpunum = cpunum;
@@ -1224,6 +1229,7 @@ static int preflight_memory(void)
 					space->write.handlers[entrynum].mask &= space->mask;
 				}
 			}
+
 	return 1;
 }
 
@@ -1297,6 +1303,10 @@ static void install_mem_handler(addrspace_data *space, int iswrite, int databits
 		bdata->spacenum = space->spacenum;
 		bdata->base = start;
 		bdata->curentry = MAX_BANK_ENTRIES;
+
+		/* if we're allowed to, wire up state saving for the entry */
+		if (state_save_registration_allowed())
+			state_save_register_UINT8("memory", HANDLER_TO_BANK(handler), "bank.entry", &bdata->curentry, 1);
 	}
 
 	/* adjust the incoming addresses */
@@ -2110,15 +2120,9 @@ static int find_memory(void)
 					break;
 				}
 
-			/* if this is a non-dynamic bank, register for save */
-			if (!bankdata[banknum].dynamic)
-			{
-				state_save_register_UINT8("memory", banknum, "bank.entry", &bankdata[banknum].curentry, 1);
-
-				/* if the entry was set ahead of time, override the automatically found pointer */
-				if (bankdata[banknum].curentry != MAX_BANK_ENTRIES)
-					bank_ptr[banknum] = bankdata[banknum].entry[bankdata[banknum].curentry];
-			}
+			/* if the entry was set ahead of time, override the automatically found pointer */
+			if (!bankdata[banknum].dynamic && bankdata[banknum].curentry != MAX_BANK_ENTRIES)
+				bank_ptr[banknum] = bankdata[banknum].entry[bankdata[banknum].curentry];
 		}
 
 	/* request a callback to fix up the banks when done */
@@ -2196,11 +2200,11 @@ static void *memory_find_base(int cpunum, int spacenum, int readwrite, offs_t of
 -------------------------------------------------*/
 
 #define READBYTE8(name,spacenum)														\
-UINT8 name(offs_t address)															\
+UINT8 name(offs_t address)																\
 {																						\
 	UINT32 entry;																		\
 	MEMREADSTART();																		\
-	PERFORM_LOOKUP(readlookup,active_address_space[spacenum],~0);								\
+	PERFORM_LOOKUP(readlookup,active_address_space[spacenum],~0);						\
 	CHECK_WATCHPOINTS(cur_context, spacenum, WATCHPOINT_READ, address, 1, 0);			\
 																						\
 	/* handle banks inline */															\
@@ -2215,11 +2219,11 @@ UINT8 name(offs_t address)															\
 }																						\
 
 #define READBYTE(name,spacenum,xormacro,handlertype,ignorebits,shiftbytes,masktype)		\
-UINT8 name(offs_t address)															\
+UINT8 name(offs_t address)																\
 {																						\
 	UINT32 entry;																		\
 	MEMREADSTART();																		\
-	PERFORM_LOOKUP(readlookup,active_address_space[spacenum],~0);								\
+	PERFORM_LOOKUP(readlookup,active_address_space[spacenum],~0);						\
 	CHECK_WATCHPOINTS(cur_context, spacenum, WATCHPOINT_READ, address, 1, 0);			\
 																						\
 	/* handle banks inline */															\
@@ -2250,11 +2254,11 @@ UINT8 name(offs_t address)															\
 -------------------------------------------------*/
 
 #define READWORD16(name,spacenum)														\
-UINT16 name(offs_t address)															\
+UINT16 name(offs_t address)																\
 {																						\
 	UINT32 entry;																		\
 	MEMREADSTART();																		\
-	PERFORM_LOOKUP(readlookup,active_address_space[spacenum],~1);								\
+	PERFORM_LOOKUP(readlookup,active_address_space[spacenum],~1);						\
 	CHECK_WATCHPOINTS(cur_context, spacenum, WATCHPOINT_READ, address, 2, 0);			\
 																						\
 	/* handle banks inline */															\
@@ -2269,17 +2273,17 @@ UINT16 name(offs_t address)															\
 }																						\
 
 #define READWORD(name,spacenum,xormacro,handlertype,ignorebits,shiftbytes,masktype)		\
-UINT16 name(offs_t address)															\
+UINT16 name(offs_t address)																\
 {																						\
 	UINT32 entry;																		\
 	MEMREADSTART();																		\
-	PERFORM_LOOKUP(readlookup,active_address_space[spacenum],~1);								\
+	PERFORM_LOOKUP(readlookup,active_address_space[spacenum],~1);						\
 	CHECK_WATCHPOINTS(cur_context, spacenum, WATCHPOINT_READ, address, 2, 0);			\
 																						\
 	/* handle banks inline */															\
 	address = (address - active_address_space[spacenum].readhandlers[entry].offset) & active_address_space[spacenum].readhandlers[entry].mask;\
 	if (entry <= STATIC_RAM)															\
-		MEMREADEND(*(UINT16 *)&bank_ptr[entry][xormacro(address)]);					\
+		MEMREADEND(*(UINT16 *)&bank_ptr[entry][xormacro(address)]);						\
 																						\
 	/* fall back to the handler */														\
 	else																				\
@@ -2302,11 +2306,11 @@ UINT16 name(offs_t address)															\
 -------------------------------------------------*/
 
 #define READDWORD32(name,spacenum)														\
-UINT32 name(offs_t address)															\
+UINT32 name(offs_t address)																\
 {																						\
 	UINT32 entry;																		\
 	MEMREADSTART();																		\
-	PERFORM_LOOKUP(readlookup,active_address_space[spacenum],~3);								\
+	PERFORM_LOOKUP(readlookup,active_address_space[spacenum],~3);						\
 	CHECK_WATCHPOINTS(cur_context, spacenum, WATCHPOINT_READ, address, 4, 0);			\
 																						\
 	/* handle banks inline */															\
@@ -2321,17 +2325,17 @@ UINT32 name(offs_t address)															\
 }																						\
 
 #define READDWORD(name,spacenum,xormacro,handlertype,ignorebits,shiftbytes,masktype)	\
-UINT32 name(offs_t address)															\
+UINT32 name(offs_t address)																\
 {																						\
 	UINT32 entry;																		\
 	MEMREADSTART();																		\
-	PERFORM_LOOKUP(readlookup,active_address_space[spacenum],~3);								\
+	PERFORM_LOOKUP(readlookup,active_address_space[spacenum],~3);						\
 	CHECK_WATCHPOINTS(cur_context, spacenum, WATCHPOINT_READ, address, 4, 0);			\
 																						\
 	/* handle banks inline */															\
 	address = (address - active_address_space[spacenum].readhandlers[entry].offset) & active_address_space[spacenum].readhandlers[entry].mask;\
 	if (entry <= STATIC_RAM)															\
-		MEMREADEND(*(UINT32 *)&bank_ptr[entry][xormacro(address)]);					\
+		MEMREADEND(*(UINT32 *)&bank_ptr[entry][xormacro(address)]);						\
 																						\
 	/* fall back to the handler */														\
 	else																				\
@@ -2352,11 +2356,11 @@ UINT32 name(offs_t address)															\
 -------------------------------------------------*/
 
 #define READQWORD64(name,spacenum)														\
-UINT64 name(offs_t address)															\
+UINT64 name(offs_t address)																\
 {																						\
 	UINT32 entry;																		\
 	MEMREADSTART();																		\
-	PERFORM_LOOKUP(readlookup,active_address_space[spacenum],~7);								\
+	PERFORM_LOOKUP(readlookup,active_address_space[spacenum],~7);						\
 	CHECK_WATCHPOINTS(cur_context, spacenum, WATCHPOINT_READ, address, 8, 0);			\
 																						\
 	/* handle banks inline */															\
@@ -2380,7 +2384,7 @@ void name(offs_t address, UINT8 data)													\
 {																						\
 	UINT32 entry;																		\
 	MEMWRITESTART();																	\
-	PERFORM_LOOKUP(writelookup,active_address_space[spacenum],~0);								\
+	PERFORM_LOOKUP(writelookup,active_address_space[spacenum],~0);						\
 	CHECK_WATCHPOINTS(cur_context, spacenum, WATCHPOINT_WRITE, address, 1, data);		\
 																						\
 	/* handle banks inline */															\
@@ -2398,7 +2402,7 @@ void name(offs_t address, UINT8 data)													\
 {																						\
 	UINT32 entry;																		\
 	MEMWRITESTART();																	\
-	PERFORM_LOOKUP(writelookup,active_address_space[spacenum],~0);								\
+	PERFORM_LOOKUP(writelookup,active_address_space[spacenum],~0);						\
 	CHECK_WATCHPOINTS(cur_context, spacenum, WATCHPOINT_WRITE, address, 1, data);		\
 																						\
 	/* handle banks inline */															\
@@ -2428,11 +2432,11 @@ void name(offs_t address, UINT8 data)													\
 -------------------------------------------------*/
 
 #define WRITEWORD16(name,spacenum)														\
-void name(offs_t address, UINT16 data)												\
+void name(offs_t address, UINT16 data)													\
 {																						\
 	UINT32 entry;																		\
 	MEMWRITESTART();																	\
-	PERFORM_LOOKUP(writelookup,active_address_space[spacenum],~1);								\
+	PERFORM_LOOKUP(writelookup,active_address_space[spacenum],~1);						\
 	CHECK_WATCHPOINTS(cur_context, spacenum, WATCHPOINT_WRITE, address, 2, data);		\
 																						\
 	/* handle banks inline */															\
@@ -2446,17 +2450,17 @@ void name(offs_t address, UINT16 data)												\
 }																						\
 
 #define WRITEWORD(name,spacenum,xormacro,handlertype,ignorebits,shiftbytes,masktype)	\
-void name(offs_t address, UINT16 data)												\
+void name(offs_t address, UINT16 data)													\
 {																						\
 	UINT32 entry;																		\
 	MEMWRITESTART();																	\
-	PERFORM_LOOKUP(writelookup,active_address_space[spacenum],~1);								\
+	PERFORM_LOOKUP(writelookup,active_address_space[spacenum],~1);						\
 	CHECK_WATCHPOINTS(cur_context, spacenum, WATCHPOINT_WRITE, address, 2, data);		\
 																						\
 	/* handle banks inline */															\
 	address = (address - active_address_space[spacenum].writehandlers[entry].offset) & active_address_space[spacenum].writehandlers[entry].mask;\
 	if (entry <= STATIC_RAM)															\
-		MEMWRITEEND(*(UINT16 *)&bank_ptr[entry][xormacro(address)] = data);			\
+		MEMWRITEEND(*(UINT16 *)&bank_ptr[entry][xormacro(address)] = data);				\
 																						\
 	/* fall back to the handler */														\
 	else																				\
@@ -2478,11 +2482,11 @@ void name(offs_t address, UINT16 data)												\
 -------------------------------------------------*/
 
 #define WRITEDWORD32(name,spacenum)														\
-void name(offs_t address, UINT32 data)												\
+void name(offs_t address, UINT32 data)													\
 {																						\
 	UINT32 entry;																		\
 	MEMWRITESTART();																	\
-	PERFORM_LOOKUP(writelookup,active_address_space[spacenum],~3);								\
+	PERFORM_LOOKUP(writelookup,active_address_space[spacenum],~3);						\
 	CHECK_WATCHPOINTS(cur_context, spacenum, WATCHPOINT_WRITE, address, 4, data);		\
 																						\
 	/* handle banks inline */															\
@@ -2496,17 +2500,17 @@ void name(offs_t address, UINT32 data)												\
 }																						\
 
 #define WRITEDWORD(name,spacenum,xormacro,handlertype,ignorebits,shiftbytes,masktype)	\
-void name(offs_t address, UINT32 data)												\
+void name(offs_t address, UINT32 data)													\
 {																						\
 	UINT32 entry;																		\
 	MEMWRITESTART();																	\
-	PERFORM_LOOKUP(writelookup,active_address_space[spacenum],~3);								\
+	PERFORM_LOOKUP(writelookup,active_address_space[spacenum],~3);						\
 	CHECK_WATCHPOINTS(cur_context, spacenum, WATCHPOINT_WRITE, address, 4, data);		\
 																						\
 	/* handle banks inline */															\
 	address = (address - active_address_space[spacenum].writehandlers[entry].offset) & active_address_space[spacenum].writehandlers[entry].mask;\
 	if (entry <= STATIC_RAM)															\
-		MEMWRITEEND(*(UINT32 *)&bank_ptr[entry][xormacro(address)] = data);			\
+		MEMWRITEEND(*(UINT32 *)&bank_ptr[entry][xormacro(address)] = data);				\
 																						\
 	/* fall back to the handler */														\
 	else																				\
@@ -2526,11 +2530,11 @@ void name(offs_t address, UINT32 data)												\
 -------------------------------------------------*/
 
 #define WRITEQWORD64(name,spacenum)														\
-void name(offs_t address, UINT64 data)												\
+void name(offs_t address, UINT64 data)													\
 {																						\
 	UINT32 entry;																		\
 	MEMWRITESTART();																	\
-	PERFORM_LOOKUP(writelookup,active_address_space[spacenum],~7);								\
+	PERFORM_LOOKUP(writelookup,active_address_space[spacenum],~7);						\
 	CHECK_WATCHPOINTS(cur_context, spacenum, WATCHPOINT_WRITE, address, 8, data);		\
 																						\
 	/* handle banks inline */															\

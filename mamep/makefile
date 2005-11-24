@@ -107,7 +107,7 @@ ifdef USE_GCC
     else
         AR = @i686-pc-mingw32-ar
         CC = @i686-pc-mingw32-gcc
-        XCC = @gcc
+        XCC = @i686-pc-mingw32-gcc
         LD = @i686-pc-mingw32-gcc
         DLLWRAP = @i686-pc-mingw32-dllwrap
     endif
@@ -325,7 +325,6 @@ ifdef USE_GCC
 			$(ARCH) -O3 -fno-strict-aliasing \
 			-Wall \
 			-Wno-sign-compare \
-			-Wno-unused-functions \
 			-Wpointer-arith \
 			-Wbad-function-cast \
 			-Wcast-align \

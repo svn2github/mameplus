@@ -2301,7 +2301,7 @@ V-V                           TP-027
 #ifdef EXTRA_GAMES
 //	DRIVER( sf2m8 )		/* hack */
 //	DRIVER( sf2m13 )	/* hack */
-//	DRIVER( sf2ceh )	/* hack, Hispanic 990804 */
+	DRIVER( sf2ceh )	/* hack, Hispanic 990804 */
 	DRIVER( sf2tlona )	/* hack, Tu Long set 1 */
 	DRIVER( sf2tlonb )	/* hack, Tu Long set 2 */
 #endif /* EXTRA_GAMES */
@@ -2339,7 +2339,7 @@ V-V                           TP-027
 	DRIVER( mbombrdj )	/* 06/12/1993 (c) 1993 (Japan) (CPS1 + QSound) */
 	DRIVER( pnickj )	/* 08/06/1994 (c) 1994 Compile + Capcom license (Japan) not listed on Capcom's site */
 #ifdef EXTRA_GAMES
-//	DRIVER( pnicku )
+	DRIVER( pnicku )
 #endif /* EXTRA_GAMES */
 	DRIVER( qad )		/* 01/07/1992 (c) 1992 (US)    */
 	DRIVER( qadj )		/* 21/09/1994 (c) 1994 (Japan) */
@@ -6783,6 +6783,6 @@ Other Sun games
 	DRIVER( egghunt )	/* (c) 1995 Invi Image */
 	DRIVER( magic10 )	/* (c) 1995 A.W.P. Games */
 	DRIVER( magic10a )	/* (c) 1995 A.W.P. Games */
-	DRIVER( magic10_2 )	/* (c) 1997 ABM Games */
+	DRIVER( magic102 )	/* (c) 1997 ABM Games */
 
 #endif	/* DRIVER_RECURSIVE */

@@ -591,7 +591,7 @@ static void handle_save(void)
 		/* if more than a second has passed, we're probably screwed */
 		if (sub_mame_times(mame_timer_get_time(), loadsave_schedule_time).seconds > 0)
 		{
-			ui_popup("Unable to save due to pending anonymous timers. See error.log for details.");
+			ui_popup(_("Unable to save due to pending anonymous timers. See error.log for details."));
 			cpu_loadsave_reset();
 		}
 		return;
@@ -604,7 +604,7 @@ static void handle_save(void)
 		/* write the save state */
 		if (state_save_save_begin(file))
 		{
-			ui_popup("Error: Unable to save state due to illegal registrations. See error.log for details.");
+			ui_popup(_("Error: Unable to save state due to illegal registrations. See error.log for details."));
 			cpu_loadsave_reset();
 			mame_fclose(file);
 			return;
@@ -686,6 +686,9 @@ static void handle_load(void)
 				state_save_load_continue();
 				state_save_pop_tag();
 
+				/* make sure banking is set */
+				activecpu_reset_banking();
+
 				cpuintrf_pop_context();
 			}
 
@@ -716,7 +719,7 @@ static void handle_loadsave(void)
 	/* if we're not allowed, say so */
 	if (!loadsave_allowed)
 	{
-		ui_popup("Save/load capability not implemented for this game. See error.log for details.");
+		ui_popup(_("Save/load capability not implemented for this game. See error.log for details."));
 		cpu_loadsave_reset();
 	}
 
