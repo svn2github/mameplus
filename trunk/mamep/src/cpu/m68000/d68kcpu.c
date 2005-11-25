@@ -46,6 +46,7 @@ static const char* copyright_notice =
 #define MAX_INSTRUCTIONS	512
 #define MAX_BPI			2048
 //#define LOG_COMPILE
+//#define LOG_CODE_MODIFY
 
 #define ADD_CYCLES(A)    m68ki_remaining_cycles += (A)
 #define USE_CYCLES(A)    m68ki_remaining_cycles -= (A)
@@ -887,96 +888,207 @@ static int drc_register_code(drc_core *drc, UINT32 pc)
 	return 1;
 }
 
-static UINT8 *m68kdrc_code_veiry_top;
-static UINT8 *m68kdrc_code_veiry_end;
-static int m68kdrc_code_veiry_size;
+static UINT8 *m68kdrc_code_verify_top;
+static UINT8 *m68kdrc_code_verify_end;
+static int m68kdrc_code_verify_size;
 
-void m68kdrc_append_code_veiry(drc_core *drc)
+static void *m68kdrc_call_cpu_opptr(uint32 pc)
+{
+	return cpu_opptr(pc);
+}
+
+void m68kdrc_append_code_verify(drc_core *drc)
 {
 	uint addr = ADDRESS_68K(REG68K_PPC);
 	int size = m68kdrc_instr_size;
+	int bus32 = CPU_TYPE_IS_EC020_PLUS(CPU_TYPE);
+	UINT8 *codeptr;
 	UINT8 *save_top = NULL;
 	int pass = 0;
+	UINT8 *do_recompile = drc->recompile;
+#ifdef LOG_CODE_MODIFY
+	extern int activecpu;
+	link_info link_verify_ok;
+	int i;
+#endif
 
 	if (m68kdrc_recompile_flag & (RECOMPILE_VNCZ_FLAGS_DIRTY | RECOMPILE_VNCXZ_FLAGS_DIRTY))
 		size += 2;
 
-	if (m68kdrc_code_veiry_size == 0)
+	if (m68kdrc_code_verify_size == 0)
 	{
-		m68kdrc_code_veiry_top = drc->cache_top;
+		m68kdrc_code_verify_top = drc->cache_top;
 		pass = 1;
 	}
 	else
 	{
 		save_top = drc->cache_top;
-		drc->cache_top = m68kdrc_code_veiry_top;
-		//printf("modify (%d->%d) ", m68kdrc_code_veiry_size, size);
+		drc->cache_top = m68kdrc_code_verify_top;
+		//printf("pass 2 (%d->%d) ", m68kdrc_code_verify_size, size);
+	}
+
+	if (bus32)
+	{
+		addr &= ~3;
+		size = (size + 3) & ~3;
+		codeptr = cpu_opptr(addr);
+	}
+	else
+	{
+		//addr &= ~1;
+		//size = (size + 1) & ~1;
+		codeptr = cpu_opptr(addr);
 	}
 
 	//printf("verify code: %08x - %08x\n", addr, addr + size - 1);
 	//printf("%p - ", drc->cache_top);
 
-	m68kdrc_code_veiry_size = size;
+	m68kdrc_code_verify_size = size;
 
-	while (size > 0)
+	_push_imm(addr);
+	_call(m68kdrc_call_cpu_opptr);
+	_add_r32_imm(REG_ESP, 4);
+
+	_cmp_r32_imm(REG_EAX, (uint32)codeptr);
+#ifdef LOG_CODE_MODIFY
+	_jcc_near_link(COND_E, &link_verify_ok);
+
+do_recompile = drc->cache_top;
+	_push_imm(addr + size - 1);
+	_push_imm(addr);
+	_push_imm(activecpu);
+	_push_imm("cpu #%d: PC=%06x - %06x: code modified\n");
+	_call(printf);
+	_add_r32_imm(REG_ESP, 16);
+
+	if (bus32)
 	{
-		uint imm = 0x12345678;
-
-		_push_imm(addr);
-
-		if (size > 2)
+		for (i = 0; i < size; i += 4)
 		{
-			if (!pass)
-				imm = m68k_read_immediate_32(addr);
-
-			m68kdrc_read_pcrel_32();
-			_cmp_r32_imm(REG_EAX, imm);
-
-			addr += 4;
-			size -= 4;
+			_push_imm(m68k_read_immediate_32(addr + i));
+			_push_imm("%08x ");
+			_call(printf);
+			_add_r32_imm(REG_ESP, 8);
 		}
-		else
-		{
-			if (!pass)
-				imm = m68k_read_immediate_16(addr);
-
-			m68kdrc_read_pcrel_16();
-			_cmp_r32_imm(REG_EAX, imm);
-
-			addr += 2;
-			size -= 2;
-		}
-
-		_jcc(COND_NE, drc->recompile);
-	}
-
-	//printf("%p (%p)\n", drc->cache_top, m68kdrc_code_veiry_end);
-
-	if (pass)
-	{
-		m68kdrc_code_veiry_end = drc->cache_top;
 	}
 	else
 	{
-		if (m68kdrc_code_veiry_end != drc->cache_top)
+		for (i = 0; i < size; i += 2)
 		{
-			if (m68kdrc_code_veiry_end - drc->cache_top < 128)
+			_push_imm(m68k_read_immediate_16(addr + i));
+			_push_imm("%04x ");
+			_call(printf);
+			_add_r32_imm(REG_ESP, 8);
+		}
+	}
+
+	_push_imm("\n");
+	_call(printf);
+	_add_r32_imm(REG_ESP, 4);
+
+	if (bus32)
+	{
+		for (i = 0; i < size; i += 4)
+		{
+			_push_imm(addr + i);
+			m68kdrc_read_pcrel_32();
+			_push_r32(REG_EAX);
+			_push_imm("%08x ");
+			_call(printf);
+			_add_r32_imm(REG_ESP, 8);
+		}
+	}
+	else
+	{
+		for (i = 0; i < size; i += 2)
+		{
+			_push_imm(addr + i);
+			m68kdrc_read_pcrel_16();
+			_push_r32(REG_EAX);
+			_push_imm("%04x ");
+			_call(printf);
+			_add_r32_imm(REG_ESP, 8);
+		}
+	}
+
+	_push_imm("\n");
+	_call(printf);
+	_add_r32_imm(REG_ESP, 4);
+
+	_jmp(drc->recompile);
+
+_resolve_link(&link_verify_ok);
+#else
+	_jcc(COND_NE, do_recompile);
+#endif
+
+	if (bus32)
+	{
+		while (size > 0)
+		{
+			uint32 imm = 0x12345678;
+
+			if (!pass)
+				imm = *(uint32 *)codeptr;
+
+			_cmp_m32bd_imm(REG_EAX, 0, imm);
+			_jcc(COND_NE, do_recompile);
+			_add_r32_imm(REG_EAX, 4);
+
+			addr += 4;
+			codeptr += 4;
+			size -= 4;
+		}
+	}
+	else
+	{
+		_xor_r32_r32(REG_EBX, REG_EBX);
+
+		while (size > 0)
+		{
+			uint16 imm = 0x5678;
+
+			if (!pass)
+				imm = *(uint16 *)codeptr;
+
+			_mov_r16_m16bd(REG_BX, REG_EAX, 0);
+			_cmp_r32_imm(REG_EBX, imm);
+			_jcc(COND_NE, do_recompile);
+			_add_r32_imm(REG_EAX, 2);
+
+			addr += 2;
+			codeptr += 2;
+			size -= 2;
+		}
+	}
+
+	//printf("%p (%p)\n", drc->cache_top, m68kdrc_code_verify_end);
+
+	if (pass)
+	{
+		m68kdrc_code_verify_end = drc->cache_top;
+	}
+	else
+	{
+		if (m68kdrc_code_verify_end != drc->cache_top)
+		{
+			if (m68kdrc_code_verify_end - drc->cache_top < 128)
 			{
 				link_info link1;
 
 				_jmp_short_link(&link1);
 
-				if (drc->cache_top > m68kdrc_code_veiry_end)
+				if (drc->cache_top > m68kdrc_code_verify_end)
 					osd_die("%p: over flow\n", drc->cache_top);
 
-				drc->cache_top = m68kdrc_code_veiry_end;
+				drc->cache_top = m68kdrc_code_verify_end;
 				_resolve_link(&link1);
 			}
 			else
-				_jmp(m68kdrc_code_veiry_end);
+				_jmp(m68kdrc_code_verify_end);
 		}
 
-		if (drc->cache_top > m68kdrc_code_veiry_end)
+		if (drc->cache_top > m68kdrc_code_verify_end)
 			osd_die("%p: over flow\n", drc->cache_top);
 
 		drc->cache_top = save_top;
@@ -992,7 +1104,7 @@ static uint32 recompile_instruction(drc_core *drc, uint32 pc)
 	m68kdrc_recompile_flag = 0;
 	m68kdrc_cycles = CYC_INSTRUCTION[REG68K_IR];
 	m68kdrc_instr_size = 0;
-	m68kdrc_code_veiry_size = 0;
+	m68kdrc_code_verify_size = 0;
 	//m68kdrc_check_code_modify = 1;
 
 #ifdef MAME_DEBUG
@@ -1023,7 +1135,7 @@ static uint32 recompile_instruction(drc_core *drc, uint32 pc)
 	}
 
 	if (m68kdrc_check_code_modify)
-		m68kdrc_append_code_veiry(drc);
+		m68kdrc_append_code_verify(drc);
 
 #ifdef MAME_DEBUG
 	if (m68kdrc_recompile_flag & (RECOMPILE_VNCZ_FLAGS_DIRTY | RECOMPILE_VNCXZ_FLAGS_DIRTY))

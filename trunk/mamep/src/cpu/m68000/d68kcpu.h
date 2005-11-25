@@ -1457,8 +1457,8 @@ extern uint32	m68kdrc_real_write_32_fc(uint fc, uint32 address, uint32 value);
 #endif
 
 
-extern void m68kdrc_append_code_veiry(drc_core *drc);
-#define DRC_CODE_VERIFY(n)		do { m68kdrc_instr_size = (n); if (m68kdrc_check_code_modify) m68kdrc_append_code_veiry(drc); } while (0)
+extern void m68kdrc_append_code_verify(drc_core *drc);
+#define DRC_CODE_VERIFY(n)		do { m68kdrc_instr_size = (n); if (m68kdrc_check_code_modify) m68kdrc_append_code_verify(drc); } while (0)
 
 
 /* --------------------- Effective Address Calculation -------------------- */
