@@ -228,7 +228,7 @@ struct rc_option input_opts[] =
 	{ "keyboard_leds", "leds", rc_bool, &use_keyboard_leds, "1", 0, 0, NULL, "enable keyboard LED emulation" },
 	{ "led_mode", NULL, rc_string, &ledmode, "ps/2", 0, 0, decode_ledmode, "LED mode (ps/2|usb)" },
 	{ "a2d_deadzone", "a2d", rc_float, &a2d_deadzone, "0.3", 0.0, 1.0, NULL, "minimal analog value for digital input" },
-	{ "ctrlr", NULL, rc_string, &options.controller, 0, 0, 0, NULL, "preconfigure for specified controller" },
+	{ "ctrlr", NULL, rc_string, &options.controller, "Standard", 0, 0, NULL, "preconfigure for specified controller" },
 #ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device by miko2u@hotmail.com
  	{ "stickpoint", "stick", rc_bool, &use_stickpoint, "0", 0, 0, NULL, "enable stick-type mouse input" },
 #endif /* USE_JOY_MOUSE_MOVE */

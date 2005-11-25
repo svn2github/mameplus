@@ -188,9 +188,9 @@ typedef struct
 	char*  bios;
 	char*  statename;
 	BOOL   autosave;
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 	char*  patchname;
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 	BOOL   confirm_quit;
 #ifdef AUTO_PAUSE_PLAYBACK
 	BOOL   auto_pause_playback;
@@ -238,12 +238,12 @@ enum
 	MAX_TAB_TYPES,
 	BACKGROUND,
 	TAB_ALL,
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 	TAB_NONE,
 	TAB_IPS
-#else /* IPS_PATCH */
+#else /* USE_IPS */
 	TAB_NONE
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 };
 // Because we have added the Options after MAX_TAB_TYPES, we have to subtract 3 here
 // (that's how many options we have after MAX_TAB_TYPES)
@@ -373,9 +373,9 @@ typedef struct
 	char*    artdir;
 	char*    imgdir;
 	char*    diffdir;
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 	char*    patchdir;
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 	char*    iconsdir;
 	char*    bgdir;
 	char*    cheat_filename;
@@ -630,10 +630,10 @@ void SetBgDir(const char *path);
 const char* GetCtrlrDir(void);
 void SetCtrlrDir(const char* path);
 
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 const char *GetPatchDir(void);
 void SetPatchDir(const char *path);
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 const char *GetLangDir(void);
 void SetLangDir(const char *path);

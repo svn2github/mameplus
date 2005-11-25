@@ -7,10 +7,10 @@ rem --------------------------------------
 set PATH=\MinGW\bin;\binutils\bin;extra\bin;%PATH%
 
 rem --------------------------------------
-rem HtmlHelp Directory Configure
+rem HtmlHelp Path Configure
 rem --------------------------------------
 
 set C_INCLUDE_PATH=extra\include
 set LIBRARY_PATH=extra\lib
 
-echo make WINUI=1
+echo make

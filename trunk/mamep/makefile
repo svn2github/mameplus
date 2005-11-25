@@ -295,12 +295,12 @@ ifneq ($(USE_NEOGEO_HACKS),)
     DEFS+= -DUSE_NEOGEO_HACKS
 endif
 
-ifneq ($(LAMER),)
-    DEFS += -DLAMER
+ifneq ($(SHOW_UNAVAILABLE_FOLDER),)
+    DEFS += -DSHOW_UNAVAILABLE_FOLDER
 endif
 
-ifneq ($(IPS_PATCH),)
-    DEFS += -DIPS_PATCH
+ifneq ($(USE_IPS),)
+    DEFS += -DUSE_IPS
 endif
 
 ifdef USE_VOLUME_AUTO_ADJUST

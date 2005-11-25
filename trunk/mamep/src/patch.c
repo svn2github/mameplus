@@ -80,7 +80,7 @@ static int load_ips_file(ips_chunk **p, const char *ips_dir, const char *ips_nam
 	UINT8 buffer[8];
 	int len;
 
-	logerror("IPS: load patch flie \"%s/%s\"\n", ips_dir, ips_name);
+	logerror("IPS: load ips flie \"%s/%s\"\n", ips_dir, ips_name);
 
 	file = mame_fopen(ips_dir, ips_name, FILETYPE_IPS, 0);
 	if (file == NULL)
@@ -216,12 +216,12 @@ static int parse_ips_patch(ips_entry **ips_p, const char *patch_name, rom_load_d
 	mame_file *fpDat;
 	int result = 0;
 
-	logerror("IPS: load patch \"%s\"\n", patch_name);
+	logerror("IPS: load ips \"%s\"\n", patch_name);
 
 	if ((fpDat = mame_fopen(Machine->gamedrv->name, patch_name, FILETYPE_PATCH, 0)) == NULL)
 	{
 		sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
-			_("ERROR: %s: IPS patch is not found\n"), patch_name);
+			_("ERROR: %s: IPS file is not found\n"), patch_name);
 		romdata->errors++;
 
 		return 0;
@@ -258,7 +258,7 @@ static int parse_ips_patch(ips_entry **ips_p, const char *patch_name, rom_load_d
 			if (!current)
 			{
 				sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
-					_("ERROR: ROM entry \"%s\" is not found for IPS patch \"%s\"\n"), rom_name, patch_name);
+					_("ERROR: ROM entry \"%s\" is not found for IPS file \"%s\"\n"), rom_name, patch_name);
 				goto parse_ips_patch_fail;
 			}
 
@@ -364,7 +364,7 @@ int open_ips_entry(const char *patch_name, rom_load_data *romdata, const rom_ent
 	if (!result)
 	{
 		sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
-			_("ERROR: %s: IPS patch is not found\n"), patch_name);
+			_("ERROR: %s: IPS file is not found\n"), patch_name);
 		romdata->errors++;
 	}
 
@@ -385,7 +385,7 @@ int close_ips_entry(rom_load_data *romdata)
 		if (p->current.data)
 		{
 			sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
-				_("ERROR: %s: patch is not applied correctly to ROM entry \"%s\"\n"), p->ips_name, p->rom_name);
+				_("ERROR: %s: ips is not applied correctly to ROM entry \"%s\"\n"), p->ips_name, p->rom_name);
 			romdata->errors++;
 
 			result = 0;

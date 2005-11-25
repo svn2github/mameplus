@@ -604,6 +604,11 @@ void ui_draw_text(const char *buf, int x, int y)
  *
  *************************************/
 
+INLINE int myisspace(unsigned char c)
+{
+	return isspace(c);
+}
+
 void ui_draw_text_full(const char *s, int x, int y, int wrapwidth, int offset, int maxlines, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, int *totalwidth, int *totalheight)
 {
 	const char *linestart;
@@ -774,7 +779,7 @@ void ui_draw_text_full(const char *s, int x, int y, int wrapwidth, int offset, i
 				if (*check == '\n')
 					check++;
 				else
-					while (*check && isspace(*check)) check++;
+					while (*check && myisspace(*check)) check++;
 			}
 
 			if (*check)
@@ -845,7 +850,7 @@ void ui_draw_text_full(const char *s, int x, int y, int wrapwidth, int offset, i
 		if (*s == '\n')
 			s++;
 		else
-			while (*s && isspace(*s)) s++;
+			while (*s && myisspace(*s)) s++;
 	}
 
 	/* report the width and height of the resulting space */
@@ -1542,6 +1547,9 @@ static int handle_keys(mame_bitmap *bitmap)
 
 	if (menu_handler == NULL && input_ui_pressed(IPT_UI_CHEAT))
 	{
+		/* initialize the menu state */
+		ui_menu_stack_reset();
+
 		/* start cheat menu by shortcut key */
 		ui_menu_stack_push(menu_cheat, (1 << 31) | (1 << 30) | (1 << 8) | 1);
 
@@ -1552,6 +1560,9 @@ static int handle_keys(mame_bitmap *bitmap)
 #ifdef CMD_LIST
 	if (menu_handler == NULL && input_ui_pressed(IPT_UI_COMMAND))
 	{
+		/* initialize the menu state */
+		ui_menu_stack_reset();
+
 		/* start command menu by shortcut key */
 		ui_menu_stack_push(menu_command, 1 << 24);
 

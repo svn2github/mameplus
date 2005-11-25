@@ -84,7 +84,7 @@ void CreateDeficiencyFolders(int parent_index);
 void CreateDumpingFolders(int parent_index);
 #ifdef MISC_FOLDER
 void CreateFPSFolders(int parent_index);
-void CreateScreenFolders(int parent_index);
+void CreateResolutionFolders(int parent_index);
 void CreateControlFolders(int parent_index);
 #endif /* MISC_FOLDER */
 
@@ -97,7 +97,7 @@ enum
 	FOLDER_NONE = 0,
 	FOLDER_ALLGAMES,
 	FOLDER_AVAILABLE,
-#ifdef LAMER
+#ifdef SHOW_UNAVAILABLE_FOLDER
 	FOLDER_UNAVAILABLE,
 #endif
 	FOLDER_MANUFACTURER,
@@ -119,7 +119,7 @@ enum
 	FOLDER_SAVESTATE,
 #ifdef MISC_FOLDER
 	FOLDER_FPS,
-	FOLDER_SCREEN,
+	FOLDER_RESOLUTION,
 	FOLDER_CONTROL,
 #else /* MISC_FOLDER */
 	FOLDER_TRACKBALL,

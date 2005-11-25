@@ -223,10 +223,10 @@ int MIN_HEIGHT = DBU_MIN_HEIGHT;
 /* Max number of bkground picture files */
 #define MAX_BGFILES 100
 
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 #define MAX_PATCHES 32
 #define MAX_PATCHNAME 64
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 #define NO_FOLDER -1
 #define STATESAVE_VERSION 1
@@ -717,9 +717,9 @@ HTREEITEM prev_drag_drop_target; /* which tree view item we're currently highlig
 
 static BOOL g_in_treeview_edit = FALSE;
 
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 static char *g_IPSMenuSelectName;
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 typedef struct
 {
@@ -848,9 +848,9 @@ static int GetTotalPathLen(void)
 	len += strlen(GetMAMEInfoFileName());
 	len += strlen(GetHiscoreFileName());
 	len += strlen(GetCtrlrDir());
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 	len += strlen(GetPatchDir());
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 	len += strlen(GetLangDir());
 
 	if (g_pPlayBkName != NULL)
@@ -896,9 +896,9 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -diff_directory \"%s\"",     GetDiffDir());
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -cheat_file \"%s\"",         GetCheatFileName());
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -ctrlr_directory \"%s\"",    GetCtrlrDir());
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -ips_directory \"%s\"",      GetPatchDir());
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -lang_directory \"%s\"",     GetLangDir());
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -history_file \"%s\"",       GetHistoryFileName());
 #ifdef STORY_DATAFILE
@@ -1005,8 +1005,8 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -joyid8 %d",                 pOpts->joyid[7]);
 #endif /* JOYSTICK_ID */
 
-	if (strlen(pOpts->ctrlr) > 0)
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -ctrlr \"%s\"",              pOpts->ctrlr);
+	if (pOpts->ctrlr && strlen(pOpts->ctrlr) > 0)
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -ctrlr \"%s\"",              pOpts->ctrlr);
 	if (strlen(pOpts->digital) > 0)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -digital \"%s\"",            pOpts->digital);
 	/* controller mapping*/
@@ -1105,10 +1105,10 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 
 	/* confirm quit */
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sconfirm_quit",            pOpts->confirm_quit    ? "" : "no");
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 	if (pOpts->patchname != NULL)
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -ips_patch %s",            pOpts->patchname);
-#endif /* IPS_PATCH */
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -ips %s",            pOpts->patchname);
+#endif /* USE_IPS */
 #ifdef TRANS_UI
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%suse_trans_ui",            pOpts->use_transui     ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -ui_transparency %d",        pOpts->ui_transparency);
@@ -1708,12 +1708,12 @@ void UpdateScreenShot(void)
 
 	if (have_selection)
 	{
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 		// load and set image, or empty it if we don't have one
 		if (g_IPSMenuSelectName)
 			LoadScreenShot(Picker_GetSelectedItem(hwndList), g_IPSMenuSelectName, TAB_IPS);
 		else
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 			LoadScreenShot(Picker_GetSelectedItem(hwndList), NULL, TabView_GetCurrentTab(hTabCtrl));
 	}
 
@@ -2149,9 +2149,9 @@ void SetMainTitle(void)
 
 static void TabSelectionChanged(void)
 {
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 	FreeIfAllocated(&g_IPSMenuSelectName);
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 	UpdateScreenShot();
 }
@@ -2593,9 +2593,9 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 	int 		i;
 	char		szClass[128];
 	
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 	static char patch_name[MAX_PATCHNAME];
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 	switch (message)
 	{
@@ -2646,7 +2646,7 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 		return TRUE;
 
 	case WM_MENUSELECT:
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 		//menu closed, do not UpdateScreenShot() for EditControl scrolling
 		if ((int)(HIWORD(wParam)) == 0xFFFF)
 		{
@@ -2669,7 +2669,7 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 			dprintf("menusele:none, updateSS");
 			UpdateScreenShot();
 		}
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 		return Statusbar_MenuSelect(hWnd, wParam, lParam);
 
@@ -3606,10 +3606,10 @@ static void UpdateStatusBar(void)
 
 static BOOL NeedScreenShotImage(void)
 {
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 	if (g_IPSMenuSelectName)
 		return TRUE;
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 	if (TabView_GetCurrentTab(hTabCtrl) == TAB_HISTORY && GetShowTab(TAB_HISTORY))
 		return FALSE;
@@ -3624,10 +3624,10 @@ static BOOL NeedScreenShotImage(void)
 
 static BOOL NeedHistoryText(void)
 {
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 	if (g_IPSMenuSelectName)
 		return TRUE;
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 	if (TabView_GetCurrentTab(hTabCtrl) == TAB_HISTORY)
 		return TRUE;
@@ -3660,11 +3660,11 @@ static void UpdateHistory(void)
 	{
 		LPCWSTR histText;
 
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 		if (g_IPSMenuSelectName)
 			histText = GetPatchDesc(drivers[Picker_GetSelectedItem(hwndList)]->name, g_IPSMenuSelectName);
 		else
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 #ifdef STORY_DATAFILE
 			if (TabView_GetCurrentTab(hTabCtrl) == TAB_STORY)
 				histText = GetGameStory(Picker_GetSelectedItem(hwndList));
@@ -4603,7 +4603,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		return TRUE;
 	}
 
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 	if ((id >= ID_PLAY_PATCH) && (id < ID_PLAY_PATCH + MAX_PATCHES))
 	{
 		int  nGame = Picker_GetSelectedItem(hwndList);
@@ -4664,7 +4664,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		FreeIfAllocated(&g_IPSMenuSelectName);
 		UpdateScreenShot();
 	}
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 	switch (id)
 	{
@@ -6588,7 +6588,7 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 
 	UpdateMenu(hMenu);
 
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 	if (have_selection)
 	{
 		int  nGame = Picker_GetSelectedItem(hwndList);
@@ -6632,7 +6632,7 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 			}
 		}
 	}
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 	dprintf("%d,%d,%d,%d", tpmp.rcExclude.left,tpmp.rcExclude.right,tpmp.rcExclude.top,tpmp.rcExclude.bottom);
 	//the menu should not overlap SSFRAME

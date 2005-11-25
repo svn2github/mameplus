@@ -1176,7 +1176,52 @@ void CreateFPSFolders(int parent_index)
 	}
 }
 
-void CreateScreenFolders(int parent_index)
+
+#if 1 // New CreateResolutionFolders (Horizonal / Vertical)
+void CreateResolutionFolders(int parent_index)
+{
+	int i,jj;
+	int nGames = GetNumGames();
+	int start_folder = numFolders;
+	machine_config drv;
+	char Screen[20];
+	LPTREEFOLDER lpFolder = treeFolders[parent_index];
+
+	// no games in top level folder
+	SetAllBits(lpFolder->m_lpGameBits,FALSE);
+
+	for (jj = 0; jj < nGames; jj++)
+	{
+		expand_machine_driver(drivers[jj]->drv, &drv);
+
+		if (drv.video_attributes & VIDEO_TYPE_VECTOR)
+			continue;
+		else
+			sprintf(Screen,"%4dx%d %s",
+					drv.default_visible_area.max_x - drv.default_visible_area.min_x + 1,
+					drv.default_visible_area.max_y - drv.default_visible_area.min_y + 1,
+					drivers[jj]->flags & ORIENTATION_SWAP_XY ? _UI("(V)") : _UI("(H)"));
+
+		for (i=numFolders-1;i>=start_folder;i--)
+		{
+			if (strcmp(treeFolders[i]->m_lpTitle, Screen) == 0)
+			{
+				AddGame(treeFolders[i],jj);
+				break;
+			}
+		}
+		if (i == start_folder-1)
+		{
+			LPTREEFOLDER lpTemp;
+			lpTemp = NewFolder(Screen, 0, FALSE, next_folder_id++, parent_index, IDI_FOLDER,
+							   GetFolderFlags(Screen));
+			AddFolder(lpTemp);
+			AddGame(lpTemp,jj);
+		}
+	}
+}
+#else // !New CreateResolutionFolders (Horizonal / Vertical)
+void CreateResolutionFolders(int parent_index)
 {
 	int i,jj;
 	int nGames = GetNumGames();
@@ -1241,6 +1286,8 @@ void CreateScreenFolders(int parent_index)
 		AddGame(map[jj],i);
 	}
 }
+#endif // !New CreateResolutionFolders (Horizonal / Vertical)
+
 
 void CreateControlFolders(int parent_index)
 {

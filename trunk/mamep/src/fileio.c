@@ -124,10 +124,10 @@ mame_file *mame_fopen(const char *gamename, const char *filename, int filetype, 
 #ifdef INP_CAPTION
 		case FILETYPE_INPCAPTION:
 #endif /* INP_CAPTION */
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 		case FILETYPE_PATCH:
 		case FILETYPE_IPS:
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 			if (openforwrite)
 			{
 				logerror("mame_fopen: type %02x write not supported\n", filetype);
@@ -281,13 +281,13 @@ mame_file *mame_fopen(const char *gamename, const char *filename, int filetype, 
 			return generic_fopen(filetype, NULL, gamename, 0, openforwrite ? FILEFLAG_OPENWRITE : FILEFLAG_OPENREAD);
 #endif
 
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 		case FILETYPE_PATCH:
 			return generic_fopen(filetype, gamename, filename, 0, FILEFLAG_OPENREAD);
 
 		case FILETYPE_IPS:
 			return generic_fopen(filetype, gamename, filename, 0, FILEFLAG_OPENREAD);
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 		/* anything else */
 		default:
@@ -897,16 +897,16 @@ static const char *get_extension_for_filetype(int filetype)
 			break;
 #endif
 
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 		case FILETYPE_PATCH:
 			extension = "dat";
 			break;
 
 		case FILETYPE_IPS:
-			/* if patch file contains '.', generic_fopen do not add extension */
+			/* if ips file contains '.', generic_fopen do not add extension */
 			extension = NULL;
 			break;
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 	}
 	return extension;
 }

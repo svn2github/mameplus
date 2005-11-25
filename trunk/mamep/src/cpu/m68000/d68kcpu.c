@@ -114,9 +114,8 @@ static const char* copyright_notice =
 int m68kdrc_cycles;
 int m68kdrc_recompile_flag;
 int m68kdrc_check_code_modify;
-#ifdef MAME_DEBUG
-unsigned int m68kdrc_nextpc;
-#endif
+unsigned int m68kdrc_instr_size;
+link_info m68kdrc_link_make_cc;
 
 
 /* ======================================================================== */
@@ -888,20 +887,113 @@ static int drc_register_code(drc_core *drc, UINT32 pc)
 	return 1;
 }
 
+static UINT8 *m68kdrc_code_veiry_top;
+static UINT8 *m68kdrc_code_veiry_end;
+static int m68kdrc_code_veiry_size;
+
+void m68kdrc_append_code_veiry(drc_core *drc)
+{
+	uint addr = ADDRESS_68K(REG68K_PPC);
+	int size = m68kdrc_instr_size;
+	UINT8 *save_top = NULL;
+	int pass = 0;
+
+	if (m68kdrc_recompile_flag & (RECOMPILE_VNCZ_FLAGS_DIRTY | RECOMPILE_VNCXZ_FLAGS_DIRTY))
+		size += 2;
+
+	if (m68kdrc_code_veiry_size == 0)
+	{
+		m68kdrc_code_veiry_top = drc->cache_top;
+		pass = 1;
+	}
+	else
+	{
+		save_top = drc->cache_top;
+		drc->cache_top = m68kdrc_code_veiry_top;
+		//printf("modify (%d->%d) ", m68kdrc_code_veiry_size, size);
+	}
+
+	//printf("verify code: %08x - %08x\n", addr, addr + size - 1);
+	//printf("%p - ", drc->cache_top);
+
+	m68kdrc_code_veiry_size = size;
+
+	while (size > 0)
+	{
+		uint imm = 0x12345678;
+
+		_push_imm(addr);
+
+		if (size > 2)
+		{
+			if (!pass)
+				imm = m68k_read_immediate_32(addr);
+
+			m68kdrc_read_pcrel_32();
+			_cmp_r32_imm(REG_EAX, imm);
+
+			addr += 4;
+			size -= 4;
+		}
+		else
+		{
+			if (!pass)
+				imm = m68k_read_immediate_16(addr);
+
+			m68kdrc_read_pcrel_16();
+			_cmp_r32_imm(REG_EAX, imm);
+
+			addr += 2;
+			size -= 2;
+		}
+
+		_jcc(COND_NE, drc->recompile);
+	}
+
+	//printf("%p (%p)\n", drc->cache_top, m68kdrc_code_veiry_end);
+
+	if (pass)
+	{
+		m68kdrc_code_veiry_end = drc->cache_top;
+	}
+	else
+	{
+		if (m68kdrc_code_veiry_end != drc->cache_top)
+		{
+			if (m68kdrc_code_veiry_end - drc->cache_top < 128)
+			{
+				link_info link1;
+
+				_jmp_short_link(&link1);
+
+				if (drc->cache_top > m68kdrc_code_veiry_end)
+					osd_die("%p: over flow\n", drc->cache_top);
+
+				drc->cache_top = m68kdrc_code_veiry_end;
+				_resolve_link(&link1);
+			}
+			else
+				_jmp(m68kdrc_code_veiry_end);
+		}
+
+		if (drc->cache_top > m68kdrc_code_veiry_end)
+			osd_die("%p: over flow\n", drc->cache_top);
+
+		drc->cache_top = save_top;
+	}
+}
+
 static uint32 recompile_instruction(drc_core *drc, uint32 pc)
 {
 	REG68K_PPC = REG68K_PC = pc;
-	REG68K_IR = m68ki_read_imm_16(drc);
-
-	if (m68kdrc_check_code_modify)
-	{
-		if (REG68K_PC & 3)
-			drc_append_verify_code(drc, cpu_opptr(ADDRESS_68K(REG68K_PC)), 4);
-	}
+	REG68K_IR = m68ki_read_imm_16();
 
 	//printf("recompile %08x: %04x\n", pc, REG68K_IR);
 	m68kdrc_recompile_flag = 0;
 	m68kdrc_cycles = CYC_INSTRUCTION[REG68K_IR];
+	m68kdrc_instr_size = 0;
+	m68kdrc_code_veiry_size = 0;
+	//m68kdrc_check_code_modify = 1;
 
 #ifdef MAME_DEBUG
 	/* check stack pointer */
@@ -916,13 +1008,26 @@ static uint32 recompile_instruction(drc_core *drc, uint32 pc)
 	/* do compile */
 	m68kdrc_instruction_compile_table[REG68K_IR](drc);
 
+	if (pc + m68kdrc_instr_size != REG68K_PC)
+	{
+		fprintf(stderr, "PC = %06lx, checked %06lx but next PC = %06x\n",
+			pc, pc + m68kdrc_instr_size, REG68K_PC);
+
+		while (pc < REG68K_PC)
+		{
+			fprintf(stderr, "%04x ", m68k_read_immediate_16(pc));
+			pc += 2;
+		}
+
+		osd_die("\nExiting... %p\n", m68kdrc_instruction_compile_table[REG68K_IR]);
+	}
+
+	if (m68kdrc_check_code_modify)
+		m68kdrc_append_code_veiry(drc);
+
 #ifdef MAME_DEBUG
 	if (m68kdrc_recompile_flag & (RECOMPILE_VNCZ_FLAGS_DIRTY | RECOMPILE_VNCXZ_FLAGS_DIRTY))
 	{
-		if (m68kdrc_nextpc != REG68K_PC)
-			osd_die("PC = %06x, checked %06x but next PC = %06x\n",
-				REG68K_PPC, m68kdrc_nextpc, REG68K_PC);
-
 		if (m68kdrc_recompile_flag & RECOMPILE_VNCXZ_FLAGS_DIRTY)
 			_mov_m32abs_imm(&m68kdrc_cpu.flags_dirty_mark, 0x001f);
 		if (m68kdrc_recompile_flag & RECOMPILE_VNCZ_FLAGS_DIRTY)
@@ -944,7 +1049,6 @@ static uint32 recompile_instruction(drc_core *drc, uint32 pc)
 static uint32 compile_one(drc_core *drc, uint32 pc)
 {
 	int pcdelta, cycles;
-	UINT32 *opptr;
 	uint32 result;
 
 	/* register this instruction */
@@ -953,7 +1057,6 @@ static uint32 compile_one(drc_core *drc, uint32 pc)
 
 	/* get a pointer to the current instruction */
 	change_pc(pc);
-	opptr = cpu_opptr(pc);
 
 	/* emit debugging */
 	drc_append_call_debugger(drc);
@@ -963,10 +1066,8 @@ static uint32 compile_one(drc_core *drc, uint32 pc)
 
 	/* handle the results */		
 	if (!(result & RECOMPILE_SUCCESSFUL))
-	{
-		printf("Unimplemented op %08X (%02X,%02X)\n", *opptr, *opptr >> 26, *opptr & 0x3f);
-		exit(1);
-	}
+		osd_die("Unimplemented op %08lx: %04x\n", pc, m68k_read_immediate_16(pc));
+
 	pcdelta = (sint8)(result >> 24);
 	cycles = (uint8)(result >> 16);
 

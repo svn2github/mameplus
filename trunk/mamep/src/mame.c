@@ -936,8 +936,8 @@ static int init_game_options(void)
 	/* get orientation right */
 	Machine->ui_orientation = options.ui_orientation;
 
-//ks hcmame s switch m68k core
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
+  /* ks hcmame s switch m68k core */
 	{
 		static const char *names[] = { "C", "DRC", "ASM" };
 		int cpunum, type;
@@ -1004,7 +1004,6 @@ static int init_game_options(void)
 		}
 	}
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
-//ks hcmame e switch m68k core
 
 	return 0;
 }

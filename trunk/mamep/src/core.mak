@@ -60,7 +60,7 @@ endif
 
 COREOBJS += $(sort $(DBGOBJS))
 
-ifneq ($(IPS_PATCH),)
+ifneq ($(USE_IPS),)
 COREOBJS += $(OBJ)/patch.o
 endif
 

@@ -536,7 +536,7 @@ static struct rc_option rc_game_opts[] =
 	{ "use_bezels", "bezel", rc_bool, &gOpts.bezels, "1", 0, 0, NULL, "use bezel artwork" },
 	{ "artwork_crop", "artcrop", rc_bool, &gOpts.artwork_crop, "0", 0, 0, NULL, "crop artwork to game screen only" },
 	{ "artwork_resolution", "artres", rc_int, &gOpts.artres, "0", 0, 0, NULL, "artwork resolution (0 for auto)" },
-	{ "cheat", "c", rc_bool, &gOpts.cheat, "1", 0, 0, NULL, "enable/disable cheat subsystem" },
+	{ "cheat", "c", rc_bool, &gOpts.cheat, "0", 0, 0, NULL, "enable/disable cheat subsystem" },
 	{ "debug", "d", rc_bool, &gOpts.mame_debug, "0", 0, 0, NULL, "enable/disable debugger (only if available)" },
 	{ "debugscript", NULL, rc_string, &gOpts.mame_debugscript, NULL, 0, 0, NULL, "script for debugger (only if available)" },
 	{ "playback", "pb", rc_string, &gOpts.playbackname, NULL, 0, 0, NULL, "playback an input file" },
@@ -547,9 +547,9 @@ static struct rc_option rc_game_opts[] =
 	{ "bios", NULL, rc_string, &gOpts.bios, "default", 0, 14, NULL, "change system bios" },
 	{ "state", NULL, rc_string, &gOpts.statename, NULL, 0, 0, NULL, "state to load" },
 	{ "autosave", NULL, rc_bool, &gOpts.autosave, "0", 0, 0, NULL, "enable automatic restore at startup and save at exit" },
-#ifdef IPS_PATCH
-	{ "ips_patch", NULL, rc_string, &gOpts.patchname, NULL, 0, 0, NULL, "ips patch datfile name"},
-#endif /* IPS_PATCH */
+#ifdef USE_IPS
+	{ "ips", NULL, rc_string, &gOpts.patchname, NULL, 0, 0, NULL, "ips datfile name"},
+#endif /* USE_IPS */
 	{ "confirm_quit", NULL, rc_bool, &gOpts.confirm_quit, "1", 0, 0, NULL, "enable confirm quit" },
 #ifdef AUTO_PAUSE_PLAYBACK
 	{ "auto_pause_playback", NULL, rc_bool, &gOpts.auto_pause_playback, "0", 0, 0, NULL, "automatic pause when playback is started and finished" },
@@ -586,9 +586,9 @@ static struct rc_option rc_mamew_opts[] =
 	{ "snapshot_directory", NULL, rc_string, &settings.imgdir, "snap", 0, 0, NULL, "directory for screenshots (.png format)" },
 	{ "diff_directory", NULL, rc_string, &settings.diffdir, "diff", 0, 0, NULL, "directory for hard drive image difference files" },
 	{ "ctrlr_directory", NULL, rc_string, &settings.ctrlrdir, "ctrlr", 0, 0, NULL, "directory to save controller definitions" },
-#ifdef IPS_PATCH
-	{ "ips_directory", NULL, rc_string, &settings.patchdir, "ips", 0, 0, NULL, "directory for ips patch" },
-#endif /* IPS_PATCH */
+#ifdef USE_IPS
+	{ "ips_directory", NULL, rc_string, &settings.patchdir, "ips", 0, 0, NULL, "directory for ips files" },
+#endif /* USE_IPS */
 	{ "lang_directory", NULL, rc_string, &settings.langdir, "lang", 0, 0, NULL, "directory for localized language files" },
 	{ "cheat_file", NULL, rc_string, &settings.cheat_filename, "cheat.dat", 0, 0, NULL, "cheat filename" },
 	{ "history_file", NULL, rc_string, &settings.history_filename, "history.dat", 0, 0, NULL, NULL },
@@ -702,8 +702,8 @@ static struct rc_option rc_winui_opts[] =
 	{ "splitters", NULL, rc_string, &rc_dummy_args.splitter, "150,300", 0, 0, SplitterDecodeString, "splitter position" },
 	/* re-arrange default column_width, column_order, sort_column */
 	{ "column_widths", NULL, rc_string, &rc_dummy_args.column_width, "186,68,84,84,64,88,74,108,60,144,84,60", 0, 0, ColumnDecodeWidths, "column width settings" },
-	{ "column_order", NULL, rc_string, &rc_dummy_args.column_order, "0,2,3,4,5,6,7,8,9,1,10,11", 0, 0, ColumnOrderDecodeString, "column order settings" },
-	{ "column_shown", NULL, rc_string, &rc_dummy_args.column_shown, "1,1,1,1,1,1,1,1,1,1,1,0", 0, 0, ColumnShownDecodeString, "show or hide column settings" },
+	{ "column_order", NULL, rc_string, &rc_dummy_args.column_order, "0,2,3,4,5,6,7,8,9,10,11,1", 0, 0, ColumnOrderDecodeString, "column order settings" },
+	{ "column_shown", NULL, rc_string, &rc_dummy_args.column_shown, "1,0,1,1,1,1,1,1,1,1,1,1", 0, 0, ColumnShownDecodeString, "show or hide column settings" },
 	{ "sort_column", NULL, rc_int, &settings.sort_column, "0", 0, COLUMN_MAX-1, NULL, "sort column" },
 	{ "sort_reverse", NULL, rc_bool, &settings.sort_reverse, "0", 0, 0, NULL, "sort descending" },
 	{ "folder_id", NULL, rc_int, &settings.folder_id, "0", 0, (UINT)-1, NULL, "last selected folder id" },
@@ -771,8 +771,8 @@ static struct rc_option rc_winui_opts[] =
 	{ "ui_key_view_tab_title", NULL, rc_string, &rc_dummy_args.ui_key_view_tab_title, "KEYCODE_LALT KEYCODE_5", 0, 0, KeySeqDecodeString, "keyboard to view tab title" },
 	{ "ui_key_quit", NULL, rc_string, &rc_dummy_args.ui_key_quit, "KEYCODE_LALT KEYCODE_Q", 0, 0, KeySeqDecodeString, "keyboard to quit application" },
 
-	{ "Windows UI specific hide folder options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "hide_folders", NULL, rc_string, &rc_dummy_args.ui_hide_folder, NULL, 0, 0, HideFolderDecodeString, "hide folder in tree" },
+	{ "Windows UI specific folder list hide options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+	{ "folder_hide", NULL, rc_string, &rc_dummy_args.ui_hide_folder, NULL, 0, 0, HideFolderDecodeString, "hide selected item in folder list" },
 
 	{FOLDERFLAG_OPT, NULL, rc_use_function, NULL, NULL, 0, 0, FolderFlagDecodeString, "folder list filters settings" },
 
@@ -1144,12 +1144,12 @@ options_type * GetGameOptions(int driver_index)
 	if (game_variables[driver_index].use_default)
 	{
 		options_type *opt = GetParentOptions(driver_index);
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 		// HACK: DO NOT INHERIT IPS CONFIGURATION
 		char *patchname = game_options[driver_index].patchname;
 
 		game_options[driver_index].patchname = NULL;
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 		// DO NOT OVERRIDE if game name is same as parent
 		if (opt != &game_options[driver_index])
@@ -1160,9 +1160,9 @@ options_type * GetGameOptions(int driver_index)
 			CopyGameOptions(opt,&game_options[driver_index]);
 		}
 
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 		game_options[driver_index].patchname = patchname;
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 	}
 
 	if (game_variables[driver_index].options_loaded == FALSE)
@@ -2006,7 +2006,7 @@ void SetDiffDir(const char* path)
 		settings.diffdir = strdup(path);
 }
 
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 const char *GetPatchDir(void)
 {
 	return settings.patchdir;
@@ -2019,7 +2019,7 @@ void SetPatchDir(const char *path)
 	if (path != NULL)
 		settings.patchdir = strdup(path);
 }
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 const char* GetLangDir(void)
 {
@@ -3145,7 +3145,7 @@ static int rc_load_config(int driver_index)
 		retval = osd_rc_read(rc_game, file, filename, 1, 1);
 		game_options[driver_index] = gOpts;
 
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 		// HACK: DO NOT INHERIT IPS CONFIGURATION
 		if (game_options[driver_index].patchname)
 		{
@@ -3155,13 +3155,13 @@ static int rc_load_config(int driver_index)
 
 			if (IsOptionEqual(&game_options[driver_index], GetParentOptions(driver_index)))
 			{
-				dprintf("%s: use_default with ips_patch", drivers[driver_index]->name);
+				dprintf("%s: use_default with ips", drivers[driver_index]->name);
 				game_variables[driver_index].use_default = TRUE;
 			}
 
 			game_options[driver_index].patchname = patchname;
 		}
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 	}
 	else
 	{
@@ -3204,11 +3204,11 @@ static int rc_game_is_changed(struct rc_option *option, void *param)
 		switch (option->type)
 		{
 		case rc_string:
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 			// HACK: DO NOT INHERIT IPS CONFIGURATION
 			if (option->dest == &gOpts.patchname)
 				return (gOpts.patchname != NULL);
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 			if (*(char **)option->dest == *(char **)compare)
 				retval = 0;
 			else if (!*(char **)option->dest || !*(char **)compare)
@@ -3247,12 +3247,12 @@ static int rc_save_config(int driver_index)
 		validate_game_option(&gOpts);
 		SortD3DEffectByOverrides();
 
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 		// HACK: DO NOT INHERIT IPS CONFIGURATION
 		if (game_variables[driver_index].use_default && !gOpts.patchname)
-#else /* IPS_PATCH */
+#else /* USE_IPS */
 		if (game_variables[driver_index].use_default)
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 		{
 			sprintf(filename, "%s\\%s.ini", settings.inidirs, drivers[driver_index]->name);
 			unlink(filename);
@@ -4090,7 +4090,6 @@ static int HideFolderDecodeString(struct rc_option *option, const char *arg, int
 		{
 			if (strcmp(g_folderData[j].short_name, token) == 0)
 			{
-				//dprintf("found folder to hide %i",g_folderData[j].m_nFolderId);
 				ClearBit(settings.show_folder_flags, g_folderData[j].m_nFolderId);
 				break;
 			}

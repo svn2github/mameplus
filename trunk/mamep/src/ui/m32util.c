@@ -32,12 +32,12 @@
 #include "M32Util.h"
 #include "translate.h"
 
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 #include <io.h>
 #include "bitmask.h"
 #include "options.h"
 #include "patch.h"
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 /***************************************************************************
 	function prototypes
@@ -537,7 +537,7 @@ int DriverParentIndex(int driver_index)
 	return GetDriversInfo(driver_index)->parentIndex;
 }
 
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 int HasPatch(const char *game_name, const char *patch_name)
 {
 	int Count = 0;
@@ -682,10 +682,6 @@ LPWSTR GetPatchDesc(const char *game_name, const char *patch_name)
 		/* Get localized desc */
 		desc = GetPatchDescByLangcode(fp, GetLangcode());
 
-		/* Get S.Chinese desc if T.Chinese version is not found */
-		if (!desc && GetLangcode() == UI_LANG_ZH_TW)
-			desc = GetPatchDescByLangcode(fp, UI_LANG_ZH_CN);
-
 		/* Get English desc if localized version is not found */
 		if (desc == NULL)
 			desc = GetPatchDescByLangcode(fp, UI_LANG_EN_US);
@@ -695,7 +691,7 @@ LPWSTR GetPatchDesc(const char *game_name, const char *patch_name)
 
 	return desc;
 }
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 
 void FlushFileCaches(void)

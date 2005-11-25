@@ -14,9 +14,9 @@
 #include "state.h"
 #include <stdarg.h>
 #include <ctype.h>
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 #include "patch.h"
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 
 //#define LOG_LOAD
@@ -1330,13 +1330,13 @@ static int open_rom_file(rom_load_data *romdata, const rom_entry *romp)
 		if (drv->name && *drv->name)
 		{
 			romdata->file = mame_fopen_rom(drv->name, ROM_GETNAME(romp), ROM_GETHASHDATA(romp));
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 			if (romdata->file)
 				romdata->patch = assign_ips_patch(romp);
 
 			if (romdata->patch)
-				debugload("ROM %s: has patch\n", ROM_GETNAME(romp));
-#endif /* IPS_PATCH */
+				debugload("ROM %s: has ips\n", ROM_GETNAME(romp));
+#endif /* USE_IPS */
 		}
 
 	/* return the result */
@@ -1361,10 +1361,10 @@ static int rom_fread(rom_load_data *romdata, UINT8 *buffer, int length)
 	else
 		fill_random(buffer, length);
 
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 	if (romdata->patch)
 		apply_ips_patch(romdata->patch, buffer, length);
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 	return result;
 }
@@ -1818,13 +1818,13 @@ int rom_load(const rom_entry *romp)
 	/* determine the correct biosset to load based on options.bios string */
 	system_bios = determine_bios_rom(Machine->gamedrv->bios);
 
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 	if (options.patchname)
 	{
 		if (!open_ips_entry(options.patchname, &romdata, romp))
 			return display_rom_load_results(&romdata);
 	}
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 	/* loop until we hit the end */
 	for (region = romp, regnum = 0; region; region = rom_next_region(region), regnum++)
@@ -1887,13 +1887,13 @@ int rom_load(const rom_entry *romp)
 			regionlist[regiontype] = region;
 	}
 
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 	if (options.patchname)
 	{
 		if (!close_ips_entry(&romdata))
 			return display_rom_load_results(&romdata);
 	}
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 	/* post-process the regions */
 	for (regnum = 0; regnum < REGION_MAX; regnum++)

@@ -136,9 +136,9 @@ struct rc_option fileio_opts[] =
 	{ "snapshot_directory", NULL, rc_string, &pathlist[FILETYPE_SCREENSHOT].rawpath, "snap", 0, 0, NULL, "directory for screenshots (.png format)" },
 	{ "diff_directory", NULL, rc_string, &pathlist[FILETYPE_IMAGE_DIFF].rawpath, "diff", 0, 0, NULL, "directory for hard drive image difference files" },
 	{ "ctrlr_directory", NULL, rc_string, &pathlist[FILETYPE_CTRLR].rawpath, "ctrlr", 0, 0, NULL, "directory to save controller definitions" },
-#ifdef IPS_PATCH
-	{ "ips_directory", NULL, rc_string, &pathlist[FILETYPE_PATCH].rawpath, "ips", 0, 0, NULL, "directory for ips patch" },
-#endif /* IPS_PATCH */
+#ifdef USE_IPS
+	{ "ips_directory", NULL, rc_string, &pathlist[FILETYPE_PATCH].rawpath, "ips", 0, 0, NULL, "directory for ips files" },
+#endif /* USE_IPS */
 	{ "lang_directory", NULL, rc_string, &lang_directory, "lang", 0, 0, NULL, "directory for localized language files" },
 	{ "cheat_file", NULL, rc_string, &cheatfile, "cheat.dat", 0, 0, NULL, "cheat filename" },
 	{ "history_file", NULL, rc_string, &history_filename, "history.dat", 0, 0, NULL, NULL },
@@ -420,11 +420,11 @@ static const char *get_path_for_filetype(int filetype, int pathindex, DWORD *cou
 			break;
 #endif
 
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 		case FILETYPE_IPS:
 			list = &pathlist[FILETYPE_PATCH];
 			break;
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 #ifdef INP_CAPTION
 		case FILETYPE_INPCAPTION:

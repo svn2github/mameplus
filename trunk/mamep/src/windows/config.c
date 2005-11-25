@@ -108,10 +108,10 @@ static char *win_strip_extension(char *filename);
 
 static char *langname;
 
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 // HACK: DO NOT INHERIT IPS CONFIGURATION
 static int ips_pri = 0;
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 
 static int video_set_beam(struct rc_option *option, const char *arg, int priority)
@@ -183,14 +183,14 @@ static int init_language(struct rc_option *option, const char *arg, int priority
 }
 
 
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 // HACK: DO NOT INHERIT IPS CONFIGURATION
 static int init_ips(struct rc_option *option, const char *arg, int priority)
 {
 	ips_pri = option->priority = priority;
 	return 0;
 }
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 
 
 /* struct definitions */
@@ -256,15 +256,15 @@ static struct rc_option opts[] = {
 	{ "bios", NULL, rc_string, &options.bios, "default", 0, 14, NULL, "change system bios" },
 	{ "state", NULL, rc_string, &statename, NULL, 0, 0, NULL, "state to load" },
 	{ "autosave", NULL, rc_bool, &options.auto_save, "0", 0, 0, NULL, "enable automatic restore at startup and save at exit" },
-#ifdef IPS_PATCH
-	{ "ips_patch", NULL, rc_string, &options.patchname, NULL, 0, 0, init_ips, "ips patch datfile name"},
-#endif /* IPS_PATCH */
+#ifdef USE_IPS
+	{ "ips", NULL, rc_string, &options.patchname, NULL, 0, 0, init_ips, "ips datfile name"},
+#endif /* USE_IPS */
 	{ "confirm_quit", NULL, rc_bool, &options.confirm_quit, "1", 0, 0, NULL, "confirm quit" },
 #ifdef AUTO_PAUSE_PLAYBACK
 	{ "auto_pause_playback", NULL, rc_bool, &options.auto_pause_playback, "0", 0, 0, NULL, "automatic pause when playback is started and finished" },
 #endif /* AUTO_PAUSE_PLAYBACK */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-	//ks hcmame s switch m68k core
+	/* ks hcmame s switch m68k core */
 	{ "m68k_core", NULL, rc_int, &options.m68k_core, "0", 0, 2, NULL, "change m68k core (0:C, 1:DRC, 2:ASM+DRC)" },
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 #ifdef TRANS_UI
@@ -406,14 +406,14 @@ int parse_config (const char* filename, const game_driver *gamedrv)
 				return retval;
 		}
 		sprintf(buffer, "%s.ini", gamedrv->name);
-#ifdef IPS_PATCH
+#ifdef USE_IPS
 		// HACK: DO NOT INHERIT IPS CONFIGURATION
 		if (ips_pri < 2)
 		{
 			free(options.patchname);
 			options.patchname = NULL;
 		}
-#endif /* IPS_PATCH */
+#endif /* USE_IPS */
 	}
 	else
 	{

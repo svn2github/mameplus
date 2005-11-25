@@ -244,15 +244,12 @@ struct _global_options
 	int		auto_save;		/* 1 to automatically save/restore at startup/quitting time */
 	char *	bios;			/* specify system bios (if used), 0 is default */
 
-#ifdef IPS_PATCH
-	char*	patchname;
-#endif /* IPS_PATCH */
-
-//ks hcmame s switch m68k core
+#ifdef USE_IPS
+	char*	patchname;			/* International Patching System */
+#endif /* USE_IPS */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020)
-	int m68k_core;
+	int m68k_core;			/* ks hcmame s switch m68k core */
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020) */
-//ks hcmame e switch m68k core
 
 	int		autofiredelay[MAX_PLAYERS];
 

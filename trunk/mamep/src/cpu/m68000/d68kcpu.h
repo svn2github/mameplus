@@ -55,10 +55,8 @@
 extern int m68kdrc_cycles;
 extern int m68kdrc_recompile_flag;
 extern int m68kdrc_check_code_modify;
-#ifdef MAME_DEBUG
-extern unsigned int m68kdrc_nextpc;
-#endif
-
+extern unsigned int m68kdrc_instr_size;
+extern link_info m68kdrc_link_make_cc;
 
 #define m68kdrc_cpu		m68ki_cpu
 #define m68kdrc_cpu_core	m68ki_cpu_core
@@ -446,7 +444,7 @@ extern unsigned int m68kdrc_nextpc;
 			m68kdrc_recompile_flag |= RECOMPILE_ADD_DISPATCH | RECOMPILE_END_OF_STRING; \
 		} while (0)
 #else
-	#define m68kdrc_cmpild_callback(unsigned int val, int reg)
+	#define m68kdrc_cmpild_callback(val,reg)
 #endif /* M68K_CMPILD_HAS_CALLBACK */
 
 #if M68K_RTE_HAS_CALLBACK
@@ -583,9 +581,9 @@ extern unsigned int m68kdrc_nextpc;
 
 
 /* Effective Address Calculations */
-#define OPER_I_8()     m68ki_read_imm_8(drc)
-#define OPER_I_16()    m68ki_read_imm_16(drc)
-#define OPER_I_32()    m68ki_read_imm_32(drc)
+#define OPER_I_8()     m68ki_read_imm_8()
+#define OPER_I_16()    m68ki_read_imm_16()
+#define OPER_I_32()    m68ki_read_imm_32()
 
 
 /* address register indirect */
@@ -941,30 +939,26 @@ DRC_CFLAG_NEG_32(EAX, ECX)
 
 
 #define m68kdrc_cond(flag,value,cond) \
-	link_info link_make_cc; \
 	_and_m32abs_imm(&flag, value); \
-	_jcc_near_link(cond, &link_make_cc)
+	_jcc_near_link(cond, &m68kdrc_link_make_cc)
 
 #define m68kdrc_cond_nv(fail_cond) \
-	link_info link_make_cc; \
 	_mov_r8_m8abs(REG_AL, &FLAG_N); \
 	_mov_r8_m8abs(REG_BL, &FLAG_V); \
 	_xor_r32_r32(REG_EAX, REG_EBX); \
 	_and_r32_imm(REG_EAX, NFLAG_SET); 	/* M68K_COND_LT() if EAX != 0 */ \
-	_jcc_near_link(fail_cond, &link_make_cc)
+	_jcc_near_link(fail_cond, &m68kdrc_link_make_cc)
 
 #define m68kdrc_cond_hi(fail_cond) \
-	link_info link_make_cc; \
 	_mov_r16_m16abs(REG_AX, &FLAG_C); \
 	_and_r32_imm(REG_EAX, CFLAG_SET);	/* M68K_COND_CC() if EAX == 0 */ \
  \
 	_test_m32abs_imm(&FLAG_Z, ZFLAG_CLEAR); \
 	_setcc_r8(COND_Z, REG_AL);		/* M68K_COND_NE() if AL == 0 */ \
 	_or_r32_r32(REG_EAX, REG_EAX);		/* M68K_COND_HI() if EAX == 0 */ \
-	_jcc_near_link(fail_cond, &link_make_cc)
+	_jcc_near_link(fail_cond, &m68kdrc_link_make_cc)
 
 #define m68kdrc_cond_gt(fail_cond) \
-	link_info link_make_cc; \
 	_mov_r8_m8abs(REG_AL, &FLAG_N); \
 	_mov_r8_m8abs(REG_BL, &FLAG_V); \
 	_xor_r32_r32(REG_EAX, REG_EBX); \
@@ -973,7 +967,7 @@ DRC_CFLAG_NEG_32(EAX, ECX)
 	_test_m32abs_imm(&FLAG_Z, ZFLAG_CLEAR); \
 	_setcc_r8(COND_Z, REG_AH);		/* M68K_COND_NE() if AH == 0 */ \
 	_or_r32_r32(REG_EAX, REG_EAX);		/* M68K_COND_GT() if EAX == 0 */ \
-	_jcc_near_link(fail_cond, &link_make_cc)
+	_jcc_near_link(fail_cond, &m68kdrc_link_make_cc)
 
 
 /* Conditions */
@@ -1110,7 +1104,7 @@ DRC_CFLAG_NEG_32(EAX, ECX)
 #endif
 
 /* map read immediate 8 to read immediate 16 */
-#define m68ki_read_imm_8(drc) MASK_OUT_ABOVE_8(m68ki_read_imm_16(drc))
+#define m68ki_read_imm_8() MASK_OUT_ABOVE_8(m68ki_read_imm_16())
 
 /* Map PC-relative reads */
 #define m68ki_read_pcrel_8(A) m68k_read_pcrelative_8(A)
@@ -1225,8 +1219,8 @@ extern uint           m68ki_aerr_write_mode;
 extern uint           m68ki_aerr_fc;
 
 /* Read data immediately after the program counter */
-INLINE uint m68ki_read_imm_16(drc_core *drc);
-INLINE uint m68ki_read_imm_32(drc_core *drc);
+INLINE uint m68ki_read_imm_16(void);
+INLINE uint m68ki_read_imm_32(void);
 
 /* Read data with specific function code */
 INLINE uint m68ki_read_8_fc  (uint address, uint fc);
@@ -1276,7 +1270,7 @@ char* m68ki_disassemble_quick(unsigned int pc, unsigned int cpu_type);
 /* Handles all immediate reads, does address error check, function code setting,
  * and prefetching if they are enabled in m68kconf.h
  */
-INLINE uint m68ki_read_imm_16(drc_core *drc)
+INLINE uint m68ki_read_imm_16(void)
 {
 	m68ki_set_fc(FLAG_S | FUNCTION_CODE_USER_PROGRAM); /* auto-disable (see m68kcpu.h) */
 	m68ki_check_address_error(REG68K_PC, MODE_READ, FLAG_S | FUNCTION_CODE_USER_PROGRAM); /* auto-disable (see m68kcpu.h) */
@@ -1286,24 +1280,15 @@ INLINE uint m68ki_read_imm_16(drc_core *drc)
 	{
 		CPU_PREF_ADDR = MASK_OUT_BELOW_2(REG68K_PC);
 		CPU_PREF_DATA = m68k_read_immediate_32(ADDRESS_68K(CPU_PREF_ADDR));
-
-		if (m68kdrc_check_code_modify)
-			drc_append_verify_code(drc, cpu_opptr(ADDRESS_68K(CPU_PREF_ADDR)), 4);
 	}
 	REG68K_PC += 2;
 	return MASK_OUT_ABOVE_16(CPU_PREF_DATA >> ((2-((REG68K_PC-2)&2))<<3));
 #else
-	if (m68kdrc_check_code_modify)
-	{
-		if ((REG68K_PC & 3) == 0)
-			drc_append_verify_code(drc, cpu_opptr(ADDRESS_68K(REG68K_PC)), 4);
-	}
-
 	REG68K_PC += 2;
 	return m68k_read_immediate_16(ADDRESS_68K(REG68K_PC-2));
 #endif /* M68K_EMULATE_PREFETCH */
 }
-INLINE uint m68ki_read_imm_32(drc_core *drc)
+INLINE uint m68ki_read_imm_32(void)
 {
 #if M68K_EMULATE_PREFETCH
 	uint temp_val;
@@ -1315,9 +1300,6 @@ INLINE uint m68ki_read_imm_32(drc_core *drc)
 	{
 		CPU_PREF_ADDR = MASK_OUT_BELOW_2(REG68K_PC);
 		CPU_PREF_DATA = m68k_read_immediate_32(ADDRESS_68K(CPU_PREF_ADDR));
-
-		if (m68kdrc_check_code_modify)
-			drc_append_verify_code(drc, cpu_opptr(ADDRESS_68K(CPU_PREF_ADDR)), 4);
 	}
 	temp_val = CPU_PREF_DATA;
 	REG68K_PC += 2;
@@ -1325,10 +1307,6 @@ INLINE uint m68ki_read_imm_32(drc_core *drc)
 	{
 		CPU_PREF_ADDR = MASK_OUT_BELOW_2(REG68K_PC);
 		CPU_PREF_DATA = m68k_read_immediate_32(ADDRESS_68K(CPU_PREF_ADDR));
-
-		if (m68kdrc_check_code_modify)
-			drc_append_verify_code(drc, cpu_opptr(ADDRESS_68K(CPU_PREF_ADDR)), 4);
-
 		temp_val = MASK_OUT_ABOVE_32((temp_val << 16) | (CPU_PREF_DATA >> 16));
 	}
 	REG68K_PC += 2;
@@ -1337,14 +1315,6 @@ INLINE uint m68ki_read_imm_32(drc_core *drc)
 #else
 	m68ki_set_fc(FLAG_S | FUNCTION_CODE_USER_PROGRAM); /* auto-disable (see m68kcpu.h) */
 	m68ki_check_address_error(REG68K_PC, MODE_READ, FLAG_S | FUNCTION_CODE_USER_PROGRAM); /* auto-disable (see m68kcpu.h) */
-
-	if (m68kdrc_check_code_modify)
-	{
-		if ((REG68K_PC & 3) == 0)
-			drc_append_verify_code(drc, cpu_opptr(ADDRESS_68K(REG68K_PC)), 4);
-		else
-			drc_append_verify_code(drc, cpu_opptr(ADDRESS_68K(REG68K_PC) + 4), 4);
-	}
 
 	REG68K_PC += 4;
 	return m68k_read_immediate_32(ADDRESS_68K(REG68K_PC-4));
@@ -1487,6 +1457,10 @@ extern uint32	m68kdrc_real_write_32_fc(uint fc, uint32 address, uint32 value);
 #endif
 
 
+extern void m68kdrc_append_code_veiry(drc_core *drc);
+#define DRC_CODE_VERIFY(n)		do { m68kdrc_instr_size = (n); if (m68kdrc_check_code_modify) m68kdrc_append_code_veiry(drc); } while (0)
+
+
 /* --------------------- Effective Address Calculation -------------------- */
 
 /* The program counter relative addressing modes cause operands to be
@@ -1555,6 +1529,8 @@ INLINE void m68kdrc_get_ea_ix(drc_core *drc, uint *pAn)
 	uint bd = 0;                        /* Base Displacement */
 	uint od = 0;                        /* Outer Displacement */
 
+	m68kdrc_instr_size += 2 - 10;	// adjust (10: maximum for code modify check)
+
 	if(CPU_TYPE_IS_010_LESS(CPU_TYPE))
 	{
 		/* Calculate index */
@@ -1622,7 +1598,18 @@ INLINE void m68kdrc_get_ea_ix(drc_core *drc, uint *pAn)
 
 	/* Check if base displacement is present */
 	if(BIT_5(extension))                /* BD SIZE */
-		bd = BIT_4(extension) ? OPER_I_32() : MAKE_INT_16(OPER_I_16());
+	{
+		if (BIT_4(extension))
+		{
+			bd = OPER_I_32();
+			m68kdrc_instr_size += 4;
+		}
+		else
+		{
+			bd = MAKE_INT_16(OPER_I_16());
+			m68kdrc_instr_size += 2;
+		}
+	}
 
 	/* If no indirect action, we are done */
 	if(!(extension&7))                  /* No Memory Indirect */
@@ -1638,7 +1625,18 @@ INLINE void m68kdrc_get_ea_ix(drc_core *drc, uint *pAn)
 
 	/* Check if outer displacement is present */
 	if(BIT_1(extension))                /* I/IS:  od */
-		od = BIT_0(extension) ? OPER_I_32() : MAKE_INT_16(OPER_I_16());
+	{
+		if (BIT_0(extension))
+		{
+			od = OPER_I_32();
+			m68kdrc_instr_size += 4;
+		}
+		else
+		{
+			od = MAKE_INT_16(OPER_I_16());
+			m68kdrc_instr_size += 2;
+		}
+	}
 
 	/* Postindex */
 	if(BIT_2(extension))                /* I/IS:  0 = preindex, 1 = postindex */
@@ -2008,13 +2006,15 @@ INLINE void m68kdrc_set_sr(drc_core *drc)
 INLINE int m68kdrc_update_vncz_check(void)
 {
 #if 1
-	uint16 next_ir = m68k_read_immediate_16(REG68K_PC);
+	uint16 next_ir;
+
+	m68kdrc_instr_size -= 2;
+	next_ir = m68k_read_immediate_16(ADDRESS_68K(REG68K_PPC + m68kdrc_instr_size));
 
 	if (INSTR_FLAG_DIRTY[next_ir])
 	{
 #ifdef MAME_DEBUG
 		m68kdrc_recompile_flag |= RECOMPILE_VNCZ_FLAGS_DIRTY;
-		m68kdrc_nextpc = REG68K_PC;
 #endif
 		return 0;
 	}
@@ -2027,13 +2027,15 @@ INLINE int m68kdrc_update_vncz_check(void)
 INLINE int m68kdrc_update_vncxz_check(void)
 {
 #if 1
-	uint16 next_ir = m68k_read_immediate_16(REG68K_PC);
+	uint16 next_ir;
+
+	m68kdrc_instr_size -= 2;
+	next_ir = m68k_read_immediate_16(ADDRESS_68K(REG68K_PPC + m68kdrc_instr_size));
 
 	if (INSTR_FLAG_DIRTY[next_ir] == 2)
 	{
 #ifdef MAME_DEBUG
 		m68kdrc_recompile_flag |= RECOMPILE_VNCXZ_FLAGS_DIRTY;
-		m68kdrc_nextpc = REG68K_PC;
 #endif
 		return 0;
 	}

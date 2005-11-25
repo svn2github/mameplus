@@ -124,6 +124,8 @@ const char* g_version = "3.3";
 #define ID_OPHANDLER_CC         ID_BASE "_CC"
 #define ID_OPHANDLER_NOT_CC     ID_BASE "_NOT_CC"
 
+#define ID_OPHANDLER_VERIFY       ID_BASE "_CODE_VERIFY("
+
 #define ID_UPDATE_BASE          ID_BASE "_UPDATE_"
 #define ID_UPDATE_VNCZ_NAME     ID_BASE "_UPDATE_VNCZ"
 #define ID_UPDATE_VNCXZ_NAME    ID_BASE "_UPDATE_VNCXZ"
@@ -204,6 +206,7 @@ typedef struct
 	const char* ea_add;
 	unsigned int mask_add;
 	unsigned int match_add;
+	int oper_len;
 } ea_info_struct;
 
 
@@ -281,20 +284,20 @@ opcode_struct g_opcode_output_table[MAX_OPCODE_OUTPUT_TABLE_LENGTH];
 int g_opcode_output_table_length = 0;
 
 ea_info_struct g_ea_info_table[13] =
-{/* fname    ea        mask  match */
-	{"",     "",       0x00, 0x00}, /* EA_MODE_NONE */
-	{"ai",   "AY_AI",  0x38, 0x10}, /* EA_MODE_AI   */
-	{"pi",   "AY_PI",  0x38, 0x18}, /* EA_MODE_PI   */
-	{"pi7",  "A7_PI",  0x3f, 0x1f}, /* EA_MODE_PI7  */
-	{"pd",   "AY_PD",  0x38, 0x20}, /* EA_MODE_PD   */
-	{"pd7",  "A7_PD",  0x3f, 0x27}, /* EA_MODE_PD7  */
-	{"di",   "AY_DI",  0x38, 0x28}, /* EA_MODE_DI   */
-	{"ix",   "AY_IX",  0x38, 0x30}, /* EA_MODE_IX   */
-	{"aw",   "AW",     0x3f, 0x38}, /* EA_MODE_AW   */
-	{"al",   "AL",     0x3f, 0x39}, /* EA_MODE_AL   */
-	{"pcdi", "PCDI",   0x3f, 0x3a}, /* EA_MODE_PCDI */
-	{"pcix", "PCIX",   0x3f, 0x3b}, /* EA_MODE_PCIX */
-	{"i",    "I",      0x3f, 0x3c}, /* EA_MODE_I    */
+{    /* fname    ea        mask  match  len */
+	{"",     "",       0x00, 0x00,  0  }, /* EA_MODE_NONE */
+	{"ai",   "AY_AI",  0x38, 0x10,  0  }, /* EA_MODE_AI   */
+	{"pi",   "AY_PI",  0x38, 0x18,  0  }, /* EA_MODE_PI   */
+	{"pi7",  "A7_PI",  0x3f, 0x1f,  0  }, /* EA_MODE_PI7  */
+	{"pd",   "AY_PD",  0x38, 0x20,  0  }, /* EA_MODE_PD   */
+	{"pd7",  "A7_PD",  0x3f, 0x27,  0  }, /* EA_MODE_PD7  */
+	{"di",   "AY_DI",  0x38, 0x28,  2  }, /* EA_MODE_DI   */
+	{"ix",   "AY_IX",  0x38, 0x30,  10 }, /* EA_MODE_IX   */	// kludge
+	{"aw",   "AW",     0x3f, 0x38,  2  }, /* EA_MODE_AW   */
+	{"al",   "AL",     0x3f, 0x39,  4  }, /* EA_MODE_AL   */
+	{"pcdi", "PCDI",   0x3f, 0x3a,  2  }, /* EA_MODE_PCDI */
+	{"pcix", "PCIX",   0x3f, 0x3b,  10 }, /* EA_MODE_PCIX */	// kludge
+	{"i",    "I",      0x3f, 0x3c,  -1 }, /* EA_MODE_I    */
 };
 
 
@@ -882,11 +885,31 @@ void set_opcode_struct(opcode_struct* src, opcode_struct* dst, int ea_mode)
 }
 
 
+static int get_oplen_ea(int ea_mode, int size)
+{
+	if (g_ea_info_table[ea_mode].oper_len < 0)
+		return size > 16 ? 4 : 2;
+
+	return g_ea_info_table[ea_mode].oper_len;
+}
+
+static int get_oplen(const char *mode, int size)
+{
+	int i;
+
+	for (i = 0; i < sizeof (g_ea_info_table) / sizeof (g_ea_info_table[0]); i++)
+		if (strcmp(g_ea_info_table[i].fname_add, mode) == 0)
+			return get_oplen_ea(i, size);
+
+	return 0;
+}
+
 /* Generate a final opcode handler from the provided data */
 void generate_opcode_handler(FILE* filep, body_struct* body, replace_struct* replace, opcode_struct* opinfo, int ea_mode)
 {
 	char str[MAX_LINE_LENGTH+1];
 	opcode_struct* op = malloc(sizeof(opcode_struct));
+	int oplen = 2;
 
 	/* Set the opcode structure and write the tables, prototypes, etc */
 	set_opcode_struct(opinfo, op, ea_mode);
@@ -894,6 +917,32 @@ void generate_opcode_handler(FILE* filep, body_struct* body, replace_struct* rep
 	write_prototype(g_prototype_file, str);
 	add_opcode_output_table_entry(op, str);
 	write_function_name(filep, str);
+
+	if (strcmp(opinfo->spec_proc, UNSPECIFIED) != 0)
+	{
+		//fprintf(filep, "//spec_proc: %s\n", opinfo->spec_proc);
+		oplen += get_oplen(opinfo->spec_proc, opinfo->size);
+	}
+
+	if (strcmp(opinfo->spec_ea, UNSPECIFIED) != 0)
+	{
+		//fprintf(filep, "//spec_ea: %s\n", opinfo->spec_ea);
+		oplen += get_oplen(opinfo->spec_ea, opinfo->size);
+	}
+
+	if (ea_mode != EA_MODE_NONE)
+	{
+		//fprintf(filep, "//ea_mode: %s\n", g_ea_info_table[ea_mode].fname_add);
+		oplen += get_oplen_ea(ea_mode, opinfo->size);
+	}
+
+	if (oplen)
+	{
+		//fprintf(filep, "//oplen: %d\n", oplen);
+	}
+
+	sprintf(str, "DRC_CODE_VERIFY(%d+", oplen);
+	add_replace_string(replace, ID_OPHANDLER_VERIFY, str);
 
 	/* Add any replace strings needed */
 	if(ea_mode != EA_MODE_NONE)

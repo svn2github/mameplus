@@ -49,7 +49,7 @@ FOLDERDATA g_folderData[] =
 {
 	{"All Games",       "allgames",          FOLDER_ALLGAMES,     IDI_FOLDER,				0,             0,            NULL,                       NULL,              TRUE },
 	{"Available",       "available",         FOLDER_AVAILABLE,    IDI_FOLDER_AVAILABLE,     F_AVAILABLE,   F_UNAVAILABLE,NULL,                       FilterAvailable,              TRUE },
-#ifdef LAMER
+#ifdef SHOW_UNAVAILABLE_FOLDER
 	{"Unavailable",     "unavailable",       FOLDER_UNAVAILABLE,  IDI_FOLDER_UNAVAILABLE,	F_UNAVAILABLE, F_AVAILABLE,  NULL,                       FilterAvailable,              FALSE },
 #endif
 	{"Manufacturer",    "manufacturer",      FOLDER_MANUFACTURER, IDI_FOLDER_MANUFACTURER,  0,             0,            CreateManufacturerFolders },
@@ -69,7 +69,7 @@ FOLDERDATA g_folderData[] =
 #ifdef MISC_FOLDER
 	{"Control",         "control",           FOLDER_CONTROL,      IDI_FOLDER,               0,             0,            CreateControlFolders },
 	{"FPS",             "fps",               FOLDER_FPS,          IDI_FOLDER,               0,             0,            CreateFPSFolders },
-	{"Resolution",      "screen",            FOLDER_SCREEN,       IDI_FOLDER,               0,             0,            CreateScreenFolders },
+	{"Resolution",      "resolution",        FOLDER_RESOLUTION,   IDI_FOLDER,               0,             0,            CreateResolutionFolders },
 #else /* MISC_FOLDER */
 	{"Trackball",       "trackball",         FOLDER_TRACKBALL,    IDI_FOLDER,               0,             0,            NULL,                       DriverUsesTrackball,	TRUE },
 	{"Lightgun",        "Lightgun",          FOLDER_LIGHTGUN,     IDI_FOLDER,               0,             0,            NULL,                       DriverUsesLightGun,TRUE },
@@ -101,9 +101,9 @@ const DIRECTORYINFO g_directoryInfo[] =
 	{ "ROMs",                  GetRomDirs,         SetRomDirs,         TRUE,  DIRDLG_ROMS },
 	{ "Samples",               GetSampleDirs,      SetSampleDirs,      TRUE,  DIRDLG_SAMPLES },
 	{ "Ini Files",             GetIniDir,          SetIniDir,          FALSE, DIRDLG_INI },
-#ifdef IPS_PATCH
-	{ "IPS Patch",             GetPatchDir,        SetPatchDir,        FALSE, 0 },
-#endif /* IPS_PATCH */
+#ifdef USE_IPS
+	{ "IPS Files",             GetPatchDir,        SetPatchDir,        FALSE, 0 },
+#endif /* USE_IPS */
 	{ "Config",                GetCfgDir,          SetCfgDir,          FALSE, DIRDLG_CFG },
 	{ "High Scores",           GetHiDir,           SetHiDir,           FALSE, DIRDLG_HI },
 	{ "Snapshots",             GetImgDir,          SetImgDir,          FALSE, DIRDLG_IMG },

@@ -142,8 +142,8 @@ ifneq ($(USE_UI_COLOR_DISPLAY),)
 RCDEFS += -DUI_COLOR_DISPLAY
 endif
 
-ifneq ($(IPS_PATCH),)
-RCDEFS += -DIPS_PATCH
+ifneq ($(USE_IPS),)
+RCDEFS += -DUSE_IPS
 endif
 
 ifneq ($(USE_SCALE_EFFECTS),0)

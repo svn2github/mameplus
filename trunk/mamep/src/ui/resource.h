@@ -498,7 +498,7 @@
 #define ID_LANGUAGE_POLISH              40111
 #define ID_LANGUAGE_HUNGARIAN           40112
 
-#define ID_PLAY_PATCH                   40200	//IPS_PATCH
+#define ID_PLAY_PATCH                   40200	// USE_IPS
 
 #define IDC_STATIC                      -1
 
