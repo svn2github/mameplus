@@ -111,6 +111,7 @@ const char* g_version = "3.3";
 #define ID_OPHANDLER_HEADER     ID_BASE "_OPCODE_HANDLER_HEADER"
 #define ID_OPHANDLER_FOOTER     ID_BASE "_OPCODE_HANDLER_FOOTER"
 #define ID_OPHANDLER_BODY       ID_BASE "_OPCODE_HANDLER_BODY"
+#define ID_UPDATE_VNCZ_BODY     ID_BASE "_UPDATE_VNCZ_BODY"
 #define ID_END                  ID_BASE "_END"
 
 #define ID_OPHANDLER_NAME       ID_BASE "_OP"
@@ -123,6 +124,7 @@ const char* g_version = "3.3";
 #define ID_OPHANDLER_CC         ID_BASE "_CC"
 #define ID_OPHANDLER_NOT_CC     ID_BASE "_NOT_CC"
 
+#define ID_UPDATE_VNCZ_NAME     ID_BASE "_UPDATE_VNCZ"
 
 #ifndef DECL_SPEC
 #define DECL_SPEC
@@ -189,6 +191,7 @@ typedef struct
 	char cpu_mode[NUM_CPUS];              /* User or supervisor mode */
 	char cpus[NUM_CPUS+1];                /* Allowed CPUs */
 	unsigned char cycles[NUM_CPUS];       /* cycles for 000, 010, 020 */
+	int vncz_flag_dirty;
 } opcode_struct;
 
 
@@ -858,7 +861,7 @@ void write_table_entry(FILE* filep, opcode_struct* op)
 			fprintf(filep, ", ");
 	}
 
-	fprintf(filep, "}},\n");
+	fprintf(filep, "}, %d},\n", op->vncz_flag_dirty);
 }
 
 /* Fill out an opcode struct with a specific addressing mode of the source opcode struct */
@@ -1084,6 +1087,151 @@ void process_opcode_handlers(void)
 
 	free(replace);
 	free(body);
+}
+
+
+int extract_update_vncz_flags_info(char* src, char* name, int* size, char* spec_proc, char* spec_ea)
+{
+	char* ptr = strstr(src, ID_UPDATE_VNCZ_NAME);
+
+	if(ptr == NULL)
+		return 0;
+
+	ptr += strlen(ID_UPDATE_VNCZ_NAME) + 1;
+
+	ptr += check_strcncpy(name, ptr, ',', MAX_NAME_LENGTH);
+	if(*ptr != ',') return 0;
+	ptr++;
+	ptr += skip_spaces(ptr);
+
+	*size = atoi(ptr);
+	ptr = strstr(ptr, ",");
+	if(ptr == NULL) return 0;
+    ptr++;
+	ptr += skip_spaces(ptr);
+
+	ptr += check_strcncpy(spec_proc, ptr, ',', MAX_SPEC_PROC_LENGTH);
+	if(*ptr != ',') return 0;
+	ptr++;
+	ptr += skip_spaces(ptr);
+
+	ptr += check_strcncpy(spec_ea, ptr, ')', MAX_SPEC_EA_LENGTH);
+	if(*ptr != ')') return 0;
+	ptr++;
+	ptr += skip_spaces(ptr);
+
+	return 1;
+}
+
+
+void generate_update_vncz_flags_handler(FILE* filep, opcode_struct* opinfo, int ea_mode)
+{
+	char str[MAX_LINE_LENGTH+1];
+	opcode_struct* op = malloc(sizeof(opcode_struct));
+	int i;
+	int found = 0;
+
+	/* Set the opcode structure and write the tables, prototypes, etc */
+	set_opcode_struct(opinfo, op, ea_mode);
+	get_base_name(str, op);
+	free(op);
+
+	for (i = 0; i < g_opcode_output_table_length; i++)
+	{
+		op = g_opcode_output_table + i;
+		if (strcmp(str, op->name) == 0)
+		{
+			op->vncz_flag_dirty = 1;
+			found = 1;
+		}
+	}
+
+	if (!found)
+	{
+		fprintf(stderr, "%s: not found\n", str);
+		exit(1);
+	}
+}
+
+void generate_update_vncz_flags_ea_variants(FILE* filep, opcode_struct* op)
+{
+	/* No ea modes available for this opcode */
+	if(HAS_NO_EA_MODE(op->ea_allowed))
+	{
+		generate_update_vncz_flags_handler(filep, op, EA_MODE_NONE);
+		return;
+	}
+
+	/* Check for and create specific opcodes for each available addressing mode */
+	if(HAS_EA_AI(op->ea_allowed))
+		generate_update_vncz_flags_handler(filep, op, EA_MODE_AI);
+	if(HAS_EA_PI(op->ea_allowed))
+	{
+		generate_update_vncz_flags_handler(filep, op, EA_MODE_PI);
+		if(op->size == 8)
+			generate_update_vncz_flags_handler(filep, op, EA_MODE_PI7);
+	}
+	if(HAS_EA_PD(op->ea_allowed))
+	{
+		generate_update_vncz_flags_handler(filep, op, EA_MODE_PD);
+		if(op->size == 8)
+			generate_update_vncz_flags_handler(filep, op, EA_MODE_PD7);
+	}
+	if(HAS_EA_DI(op->ea_allowed))
+		generate_update_vncz_flags_handler(filep, op, EA_MODE_DI);
+	if(HAS_EA_IX(op->ea_allowed))
+		generate_update_vncz_flags_handler(filep, op, EA_MODE_IX);
+	if(HAS_EA_AW(op->ea_allowed))
+		generate_update_vncz_flags_handler(filep, op, EA_MODE_AW);
+	if(HAS_EA_AL(op->ea_allowed))
+		generate_update_vncz_flags_handler(filep, op, EA_MODE_AL);
+	if(HAS_EA_PCDI(op->ea_allowed))
+		generate_update_vncz_flags_handler(filep, op, EA_MODE_PCDI);
+	if(HAS_EA_PCIX(op->ea_allowed))
+		generate_update_vncz_flags_handler(filep, op, EA_MODE_PCIX);
+	if(HAS_EA_I(op->ea_allowed))
+		generate_update_vncz_flags_handler(filep, op, EA_MODE_I);
+}
+
+/* Process the opcode handlers section of the input file */
+void process_update_vncz_flags(void)
+{
+	FILE* input_file = g_input_file;
+	FILE* output_file;
+	char func_name[MAX_LINE_LENGTH+1];
+	char oper_name[MAX_LINE_LENGTH+1];
+	int  oper_size;
+	char oper_spec_proc[MAX_LINE_LENGTH+1];
+	char oper_spec_ea[MAX_LINE_LENGTH+1];
+	opcode_struct* opinfo;
+
+
+	output_file = g_table_file;
+
+	for(;;)
+	{
+		/* Find the first line of the function */
+		func_name[0] = 0;
+		while(strstr(func_name, ID_UPDATE_VNCZ_NAME) == NULL)
+		{
+			if(strcmp(func_name, ID_INPUT_SEPARATOR) == 0)
+				return; /* all done */
+			if(fgetline(func_name, MAX_LINE_LENGTH, input_file) < 0)
+				error_exit("Premature end of file when getting function name");
+		}
+		g_num_primitives++;
+
+		/* Extract the function name information */
+		if(!extract_update_vncz_flags_info(func_name, oper_name, &oper_size, oper_spec_proc, oper_spec_ea))
+			error_exit("Invalid " ID_UPDATE_VNCZ_NAME " format");
+
+		/* Find the corresponding table entry */
+		opinfo = find_opcode(oper_name, oper_size, oper_spec_proc, oper_spec_ea);
+		if(opinfo == NULL)
+			error_exit("Unable to find matching table entry for %s", func_name);
+
+		generate_update_vncz_flags_ea_variants(output_file, opinfo);
+	}
 }
 
 
@@ -1413,6 +1561,7 @@ int main(int argc, char **argv)
 				error_exit("Duplicate table body");
 
 			populate_table();
+
 			table_body_read = 1;
 		}
 		else if(strcmp(section_id, ID_OPHANDLER_BODY) == 0)
@@ -1432,6 +1581,10 @@ int main(int argc, char **argv)
 			process_opcode_handlers();
 
 			ophandler_body_read = 1;
+		}
+		else if(strcmp(section_id, ID_UPDATE_VNCZ_BODY) == 0)
+		{
+			process_update_vncz_flags();
 		}
 		else if(strcmp(section_id, ID_END) == 0)
 		{

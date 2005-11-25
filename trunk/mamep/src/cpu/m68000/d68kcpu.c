@@ -112,6 +112,8 @@ static const char* copyright_notice =
 int m68kdrc_cycles;
 int m68kdrc_recompile_flag;
 
+int m68kdrc_update_vncz_flag;
+
 
 /* ======================================================================== */
 /* =============================== CALLBACKS ============================== */
@@ -897,6 +899,8 @@ static void m68kdrc_recompile(drc_core *drc)
 
 	//printf("recompile_callback @ PC=%08X\n", pc);
 
+	m68kdrc_update_vncz_flag = 0;
+
 	/* begin the sequence */
 	drc_begin_sequence(drc, pc);
 
@@ -904,6 +908,9 @@ static void m68kdrc_recompile(drc_core *drc)
 	while (--remaining != 0)
 	{
 		uint32 result;
+
+		if (remaining == 1)
+			m68kdrc_update_vncz_flag = 1;
 
 		/* compile one instruction */
 		result = compile_one(drc, pc);
@@ -992,6 +999,7 @@ void m68kdrc_init(void)
 	if(!emulation_initialized)
 	{
 		m68kdrc_build_opcode_table();
+		INSTR_VNCZ_FLAG_DIRTY = m68kdrc_vncz_flag_dirty_table;
 		emulation_initialized = 1;
 	}
 
