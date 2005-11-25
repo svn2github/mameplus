@@ -8,6 +8,7 @@
 
 static const char *stat_versions[] =
 {
+	"0.101u5   November   4th 2005",
 	"0.101u4   October   30th 2005",
 	"0.101u3   October   24th 2005",
 	"0.101u2   October   17th 2005",
@@ -297,6 +298,7 @@ static const char *stat_versions[] =
 
 static const char *stat_history[] =
 {
+	"0.101u5    844    5833  +5",
 	"0.101u4    844    5828  +7",
 	"0.101u3    841    5821  +4",
 	"0.101u2    841    5817  +4",
@@ -585,7 +587,7 @@ static const char *stat_newgames[] =
 	"2002:    6      +  441",
 	"2003:   36      + 1109",
 	"2004:   65      +  675",
-	"2005:   63      +  448",
+	"2005:   63      +  453",	
 	0
 };
 
@@ -2542,7 +2544,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 		{
 			begin_resource_tracking();
 		
-			inp = input_port_allocate(drivers[i]->construct_ipt);
+			inp = input_port_allocate(drivers[i]->construct_ipt, NULL);
 			while (inp->type != IPT_END)
 			{
 				if (n < inp->player + 1)

@@ -1322,7 +1322,7 @@ void CreateControlFolders(int parent_index)
 #ifdef USE_NEOGEO_HACKS
 		Machine->gamedrv = drivers[i];
 #endif /* USE_NEOGEO_HACKS */
-		inp = input_port_allocate(drivers[i]->construct_ipt);
+		inp = input_port_allocate(drivers[i]->construct_ipt, NULL);
 
 		for (; inp->type != IPT_END; inp++)
 		{

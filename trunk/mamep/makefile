@@ -73,6 +73,9 @@ X86_MIPS3_DRC = 1
 # uncomment next line to use DRC PowerPC engine
 X86_PPC_DRC = 1
 
+# uncomment next line to use DRC Voodoo rasterizers
+# X86_VOODOO_DRC = 1
+
 # uncomment next line to use cygwin compiler
 # COMPILESYSTEM_CYGWIN	= 1
 
@@ -146,6 +149,9 @@ ifeq ($(MAMEOS),msdos)
     PREFIX = d
 else
     PREFIX =
+endif
+ifdef X86_VOODOO_DRC
+DEFS += -DVOODOO_DRC
 endif
 
 ifdef USE_GCC
@@ -617,6 +623,10 @@ else
 	@echo -n Compiling\040
 	$(CC) $(CDEFS) $(CFLAGS) -Fo$@ -c $<
 endif
+
+$(OBJ)/%.pp: src/%.c
+	@echo Compiling $<...
+	$(CC) $(CDEFS) $(CFLAGS) -E $< -o $@
 
 # compile generated C files for the 68000 emulator
 $(M68000_GENERATED_OBJS): $(OBJ)/cpu/m68000/m68kmake$(EXE)

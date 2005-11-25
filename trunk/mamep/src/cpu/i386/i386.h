@@ -216,7 +216,7 @@ static I386_REGS I;
 /* Forward declarations */
 static void I386OP(decode_opcode)(void);
 static void I386OP(decode_two_byte)(void);
-INLINE UINT32 i386_translate(int, UINT32);
+
 
 extern int parity_table[256];
 

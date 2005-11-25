@@ -47,12 +47,17 @@
 #define RECOMPILE_CHECK_INTERRUPTS	0x0008
 #define RECOMPILE_ADD_DISPATCH		0x0010
 #define RECOMPILE_DONT_ADD_PCDELTA	0x0020
+#define RECOMPILE_VNCXZ_FLAGS_DIRTY	0x0100
+#define RECOMPILE_VNCZ_FLAGS_DIRTY	0x0200
 #define RECOMPILE_SUCCESSFUL		0x0001
 #define RECOMPILE_SUCCESSFUL_CP(c,p)	(RECOMPILE_SUCCESSFUL | m68kdrc_recompile_flag | (((c) & 0xff) << 16) | (((p) & 0xff) << 24))
 
 extern int m68kdrc_cycles;
 extern int m68kdrc_recompile_flag;
 extern int m68kdrc_check_code_modify;
+#ifdef MAME_DEBUG
+extern unsigned int m68kdrc_nextpc;
+#endif
 
 
 #define m68kdrc_cpu		m68ki_cpu
@@ -1196,7 +1201,11 @@ typedef struct
 	void *generate_exception_format_error;
 	void *generate_exception_address_error;
 	void *generate_exception_interrupt;
+
 	int *flag_dirty;
+#ifdef MAME_DEBUG
+	uint flags_dirty_mark;
+#endif
 } m68kdrc_cpu_core;
 
 
@@ -2002,7 +2011,13 @@ INLINE int m68kdrc_update_vncz_check(void)
 	uint16 next_ir = m68k_read_immediate_16(REG68K_PC);
 
 	if (INSTR_FLAG_DIRTY[next_ir])
+	{
+#ifdef MAME_DEBUG
+		m68kdrc_recompile_flag |= RECOMPILE_VNCZ_FLAGS_DIRTY;
+		m68kdrc_nextpc = REG68K_PC;
+#endif
 		return 0;
+	}
 #endif
 
 	return 1;
@@ -2015,7 +2030,13 @@ INLINE int m68kdrc_update_vncxz_check(void)
 	uint16 next_ir = m68k_read_immediate_16(REG68K_PC);
 
 	if (INSTR_FLAG_DIRTY[next_ir] == 2)
+	{
+#ifdef MAME_DEBUG
+		m68kdrc_recompile_flag |= RECOMPILE_VNCXZ_FLAGS_DIRTY;
+		m68kdrc_nextpc = REG68K_PC;
+#endif
 		return 0;
+	}
 #endif
 
 	return 1;

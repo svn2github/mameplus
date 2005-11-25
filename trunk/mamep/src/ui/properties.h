@@ -57,6 +57,9 @@ extern const PROPERTYSHEETINFO g_propSheets[];
 
 BOOL PropSheetFilter_Vector(void);
 BOOL PropSheetFilter_BIOS(void);
+#ifdef IPS_PATCH
+BOOL PropSheetFilter_IPS(void);
+#endif /* IPS_PATCH */
 
 INT_PTR CALLBACK GamePropertiesDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam);
 INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam);

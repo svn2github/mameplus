@@ -1188,6 +1188,39 @@ BEGIN
                     0,0,HIDC_USE_DEFAULT
 END
 
+#ifdef IPS_PATCH
+IDD_PROP_IPS DIALOGEX 0, 0, 260, 245
+STYLE WS_CHILD | WS_CAPTION
+CAPTION "IPS"
+FONT 8, "MS Sans Serif"
+BEGIN
+    ICON            IDI_MAME32_ICON,IDC_STATIC,20,10,20,20
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,195,25,
+                    SS_NOPREFIX
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
+    GROUPBOX        "IPS Patch",IDC_STATIC,4,45,251,175
+    COMBOBOX        IDC_IPS1,50,58,200,200,CBS_DROPDOWNLIST |
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_IPS2,50,78,200,200,CBS_DROPDOWNLIST |
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_IPS3,50,98,200,200,CBS_DROPDOWNLIST |
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_IPS4,50,118,200,200,CBS_DROPDOWNLIST |
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_IPS5,50,138,200,200,CBS_DROPDOWNLIST |
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_IPS6,50,158,200,200,CBS_DROPDOWNLIST |
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_IPS7,50,178,200,200,CBS_DROPDOWNLIST |
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_IPS8,50,198,200,200,CBS_DROPDOWNLIST |
+                    WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Reset",IDC_PROP_RESET,4,225,117,14,0,0,HIDC_PROP_RESET
+    PUSHBUTTON      "Restore Default Settings",IDC_USE_DEFAULT,138,225,117,14,
+                    0,0,HIDC_USE_DEFAULT
+END
+#endif /* IPS_PATCH */
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1409,6 +1442,15 @@ BEGIN
         BOTTOMMARGIN, 226
         HORZGUIDE, 208
     END
+
+    IDD_PROP_IPS, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 216
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 191
+    END
+END
 #endif    // APSTUDIO_INVOKED
 
 

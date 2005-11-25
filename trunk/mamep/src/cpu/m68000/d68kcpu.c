@@ -114,6 +114,9 @@ static const char* copyright_notice =
 int m68kdrc_cycles;
 int m68kdrc_recompile_flag;
 int m68kdrc_check_code_modify;
+#ifdef MAME_DEBUG
+unsigned int m68kdrc_nextpc;
+#endif
 
 
 /* ======================================================================== */
@@ -775,6 +778,9 @@ _resolve_link(&link1);
 
 static void m68kdrc_reset(drc_core *drc)
 {
+	extern int activecpu;
+
+	logerror("cpu #%d: frame %d: DRC cache reset\n", activecpu, cpu_getcurrentframe());
 	//printf("DRC reset: %p\n", drc->cache_top);
 
 	append_generate_exception(trap);
@@ -808,14 +814,19 @@ static void check_stack(uint32 sp)
 	static uint32 old_sp;
 
 	if (!old_sp)
-	{
 		old_sp = sp;
-	}
 	else if (old_sp != sp)
-	{
-		printf("%08x: wrong sp\n", REG68K_PC);
-		exit(1);
-	}
+		osd_die("%08x: wrong sp\n", REG68K_PC);
+}
+
+void m68kdrc_flag_str_mark_dirty(char *str)
+{
+	uint dirty = m68kdrc_cpu.flags_dirty_mark;
+	int i;
+
+	for (i = 0; i < 16; i++)
+		if (dirty & (1 << (15 - i)))
+			str[i] = '@';
 }
 #endif
 
@@ -905,6 +916,22 @@ static uint32 recompile_instruction(drc_core *drc, uint32 pc)
 	/* do compile */
 	m68kdrc_instruction_compile_table[REG68K_IR](drc);
 
+#ifdef MAME_DEBUG
+	if (m68kdrc_recompile_flag & (RECOMPILE_VNCZ_FLAGS_DIRTY | RECOMPILE_VNCXZ_FLAGS_DIRTY))
+	{
+		if (m68kdrc_nextpc != REG68K_PC)
+			osd_die("PC = %06x, checked %06x but next PC = %06x\n",
+				REG68K_PPC, m68kdrc_nextpc, REG68K_PC);
+
+		if (m68kdrc_recompile_flag & RECOMPILE_VNCXZ_FLAGS_DIRTY)
+			_mov_m32abs_imm(&m68kdrc_cpu.flags_dirty_mark, 0x001f);
+		if (m68kdrc_recompile_flag & RECOMPILE_VNCZ_FLAGS_DIRTY)
+			_mov_m32abs_imm(&m68kdrc_cpu.flags_dirty_mark, 0x000f);
+	}
+	else
+		_mov_m32abs_imm(&m68kdrc_cpu.flags_dirty_mark, 0x0000);
+#endif
+
 	if (m68kdrc_recompile_flag & RECOMPILE_UNIMPLEMENTED)
 		return m68kdrc_recompile_flag;
 
@@ -987,12 +1014,11 @@ static void m68kdrc_recompile(drc_core *drc)
 		if (result & RECOMPILE_END_OF_STRING)
 			break;
 
-		if (drc->cache_top >= drc->cache_end)
-			osd_die("M68K DRC: cache overflow!\n");
-
 		if (drc->cache_top + MAX_BPI > drc->cache_end)
 		{
+#ifdef LOG_COMPILE
 			printf("%08x: %d: Danger!\n", REG68K_PPC, drc->cache_end - drc->cache_top);
+#endif
 			remaining = 0;
 			break;
 		}

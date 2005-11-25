@@ -3806,7 +3806,7 @@ static ADDRESS_MAP_START( stv_mem, ADDRESS_SPACE_PROGRAM, 32 )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_mem, ADDRESS_SPACE_PROGRAM, 16 )
-	AM_RANGE(0x000000, 0x07ffff) AM_RAM AM_BASE(&sound_ram)
+	AM_RANGE(0x000000, 0x07ffff) AM_RAM AM_REGION(REGION_CPU3, 0) AM_BASE(&sound_ram)
 	AM_RANGE(0x100000, 0x100fff) AM_READWRITE(SCSP_0_r, SCSP_0_w)
 ADDRESS_MAP_END
 
@@ -5391,6 +5391,7 @@ GAMEB( 1995, decathlt,  stvbios, stvbios, stv, stv,  ic13,  	 ROT0,   "Sega", 	 
 GAMEB( 1999, ffreveng,  stvbios, stvbios, stv, stv,  stv,       ROT0,   "Capcom",     				  "Final Fight Revenge (JUET 990714 V1.000)", GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
 
 /* there are probably a bunch of other games (some fishing games with cd-rom,Print Club 2 etc.) */
+
 /* CD games */
 GAME( 1995, sfish2,    0,       stv, stv,  sfish2,    ROT0,   "Sega",	     			  "Sport Fishing 2 (UET 951106 V1.10e)", GAME_NO_SOUND | GAME_NOT_WORKING )
 GAME( 1995, sfish2j,   sfish2,  stv, stv,  sfish2j,   ROT0,   "Sega",	     			  "Sport Fishing 2 (J 951201 V1.100)", GAME_NO_SOUND | GAME_NOT_WORKING )

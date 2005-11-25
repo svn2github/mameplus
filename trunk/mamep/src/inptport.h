@@ -30,14 +30,14 @@
 #define MAX_PLAYERS			8
 #define MAX_BITS_PER_PORT	32
 
-#define AUTOFIRE_ON		1	/* Autofire enable bit */
-#define AUTOFIRE_TOGGLE		2	/* Autofire toggle enable bit */
-
-#define MAX_NORMAL_BUTTONS	10
-
-#ifdef USE_CUSTOM_BUTTON
-#define MAX_CUSTOM_BUTTONS	4
-#endif /* USE_CUSTOM_BUTTON */
+#define AUTOFIRE_ON		1	/* Autofire enable bit */
+#define AUTOFIRE_TOGGLE		2	/* Autofire toggle enable bit */
+
+#define MAX_NORMAL_BUTTONS	10
+
+#ifdef USE_CUSTOM_BUTTON
+#define MAX_CUSTOM_BUTTONS	4
+#endif /* USE_CUSTOM_BUTTON */
 
 
 #define IP_ACTIVE_HIGH		0x00000000
@@ -171,7 +171,7 @@ enum
 	IPT_VOLUME_DOWN,
 
 	/* autofire control buttons */
-	IPT_TOGGLE_AUTOFIRE,
+	IPT_TOGGLE_AUTOFIRE,
 
 	/* mahjong inputs */
 	IPT_MAHJONG_A,
@@ -240,10 +240,10 @@ enum
 	IPT_UI_SNAPSHOT,
 	IPT_UI_RECORD_MOVIE,
 	IPT_UI_TOGGLE_CHEAT,
-	IPT_UI_CHEAT,
-#ifdef CMD_LIST
-	IPT_UI_COMMAND,
-#endif /* CMD_LIST */
+	IPT_UI_CHEAT,
+#ifdef CMD_LIST
+	IPT_UI_COMMAND,
+#endif /* CMD_LIST */
 	IPT_UI_UP,
 	IPT_UI_DOWN,
 	IPT_UI_LEFT,
@@ -507,7 +507,7 @@ struct _input_port_entry
 	} keyboard;
 #endif
 
-	int autofire_setting;
+	int autofire_setting;
 };
 typedef struct _input_port_entry input_port_entry;
 
@@ -679,10 +679,10 @@ extern const char *input_port_default_strings[];
 #define DEF_STR(str_num) (input_port_default_strings[STR_##str_num])
 
 
-#ifdef USE_CUSTOM_BUTTON
-extern UINT16 custom_button[MAX_PLAYERS][MAX_CUSTOM_BUTTONS];
-extern int custom_buttons;
-#endif /* USE_CUSTOM_BUTTON */
+#ifdef USE_CUSTOM_BUTTON
+extern UINT16 custom_button[MAX_PLAYERS][MAX_CUSTOM_BUTTONS];
+extern int custom_buttons;
+#endif /* USE_CUSTOM_BUTTON */
 
 
 
@@ -698,7 +698,7 @@ void input_port_load(int config_type, xml_data_node *parentnode);
 void input_port_save(int config_type, xml_data_node *parentnode);
 
 input_port_entry *input_port_initialize(input_port_init_params *params, UINT32 type, const char *tag, UINT32 mask);
-input_port_entry *input_port_allocate(void (*construct_ipt)(input_port_init_params *));
+input_port_entry *input_port_allocate(void (*construct_ipt)(input_port_init_params *), input_port_entry *memory);
 
 input_port_default_entry *get_input_port_list(void);
 const input_port_default_entry *get_input_port_list_defaults(void);

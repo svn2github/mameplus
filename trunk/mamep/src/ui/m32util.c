@@ -403,7 +403,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			if (gamedrv->construct_ipt != NULL)
 			{
 				begin_resource_tracking();
-				input_ports = input_port_allocate(gamedrv->construct_ipt);
+				input_ports = input_port_allocate(gamedrv->construct_ipt, NULL);
 				while (1)
 				{
 					UINT32 type;

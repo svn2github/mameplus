@@ -883,7 +883,6 @@ typedef struct
 	void (*set_fc_callback)(unsigned int new_fc);     /* Called when the CPU function code changes */
 	void (*instr_hook_callback)(void);                /* Called every instruction cycle prior to execution */
 
-
 	/* DRC staff */
 	struct _drc_core *drc;
 	void *generate_exception_trap;
@@ -896,6 +895,11 @@ typedef struct
 	void *generate_exception_format_error;
 	void *generate_exception_address_error;
 	void *generate_exception_interrupt;
+
+	int *flag_dirty;
+#ifdef MAME_DEBUG
+	uint flags_dirty_mark;
+#endif
 } m68ki_cpu_core;
 
 

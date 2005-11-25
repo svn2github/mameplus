@@ -68,7 +68,7 @@ extern SHAREDOBJ_DATA char   build_version[];
 extern SHAREDOBJ_DATA global_options options;
 extern SHAREDOBJ_DATA running_machine *Machine;
 extern SHAREDOBJ_FUNC(void)  expand_machine_driver(void (*constructor)(machine_config *), machine_config *output);
-extern SHAREDOBJ_FUNC(int)   mame_validitychecks(int game);
+extern SHAREDOBJ_FUNC(int)   mame_validitychecks(void);
 
 #include "osdepend.h"
 extern SHAREDOBJ_FUNC(void) logerror(const char *text,...);
@@ -123,7 +123,7 @@ SHAREDOBJ_FUNC(void) seq_copy(input_seq *seqdst, const input_seq *seqsrc);
 SHAREDOBJ_FUNC(int)  string_to_seq(const char *string, input_seq *seq);
 
 #include "inptport.h"
-SHAREDOBJ_FUNC(input_port_entry *) input_port_allocate(void construct_ipt(input_port_init_params *params));
+SHAREDOBJ_FUNC(input_port_entry *) input_port_allocate(void (*construct_ipt)(input_port_init_params *), input_port_entry *memory);
 
 #include "sndintrf.h"
 extern SHAREDOBJ_FUNC(void)         sndintrf_init(void);
