@@ -1,0 +1,182 @@
+International
+國際版
+
+Japanese Board
+日文機板
+
+Japanese
+日文
+
+Japan Board
+日本機板
+
+Japan
+日本版
+
+World
+世界版
+
+US
+美國版
+
+USA
+美國版
+
+UK
+英國版
+
+English Version
+英文版
+
+English
+英文
+
+Chinese Board
+中文機板
+
+Chinese
+中文
+
+China
+中國版
+
+Hong Kong
+香港版
+
+Asia
+亞洲版
+
+Oceania
+大洋洲版
+
+Europe
+歐洲版
+
+Euro
+歐洲版
+
+Korean Board
+韓文機板
+
+Korean board
+韓文機板
+
+Korean
+韓文
+
+Korea
+韓國版
+
+France
+法國版
+
+French
+法文
+
+Germany
+德國版
+
+German
+德文
+
+Hispanic
+西班牙版
+
+Brazil
+巴西版
+
+Denmark
+丹麥版
+
+Austria
+奧地利版
+
+Italy
+義大利版
+
+Taiwan
+台灣版
+
+Newer
+新
+
+New Ver.
+新版
+
+new version
+新版
+
+new encryption
+新加密版
+
+older version
+舊版
+
+older
+舊
+
+Old Ver.
+舊版
+
+old version
+舊版
+
+old encryption
+舊加密版
+
+old rev
+舊版
+
+old
+舊
+
+not encrypted
+未加密
+
+non encrypted
+未加密
+
+encrypted
+加密
+
+decrypted
+解密
+
+Cocktail
+檯面型
+
+cocktail
+檯面型
+
+upright
+直立型
+
+Upright
+直立型
+
+joystick version
+搖桿版
+
+Joystick
+搖桿
+
+Trackball
+軌跡球
+
+trackball
+軌跡球
+
+dual screen
+雙螢幕
+
+Prototype
+開發版
+
+prototype
+開發版
+
+Bootleg
+盜版
+
+bootleg
+盜版
