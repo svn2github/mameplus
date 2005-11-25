@@ -361,6 +361,7 @@ static HWND             InitStatusBar(HWND hParent);
 
 static LRESULT          Statusbar_MenuSelect(HWND hwnd, WPARAM wParam, LPARAM lParam);
 
+static BOOL             NeedScreenShotImage(void);
 static BOOL             NeedHistoryText(void);
 static void             UpdateHistory(void);
 
@@ -717,7 +718,7 @@ HTREEITEM prev_drag_drop_target; /* which tree view item we're currently highlig
 static BOOL g_in_treeview_edit = FALSE;
 
 #ifdef IPS_PATCH
-static char g_IPSName[MAX_PATCHNAME];
+static char *g_IPSMenuSelectName;
 #endif /* IPS_PATCH */
 
 typedef struct
@@ -1707,10 +1708,12 @@ void UpdateScreenShot(void)
 
 	if (have_selection)
 	{
+#ifdef IPS_PATCH
 		// load and set image, or empty it if we don't have one
-		if (g_IPSName[0] != '\0')
-			LoadScreenShot(Picker_GetSelectedItem(hwndList), g_IPSName, 255);
+		if (g_IPSMenuSelectName)
+			LoadScreenShot(Picker_GetSelectedItem(hwndList), g_IPSMenuSelectName, TAB_IPS);
 		else
+#endif /* IPS_PATCH */
 			LoadScreenShot(Picker_GetSelectedItem(hwndList), NULL, TabView_GetCurrentTab(hTabCtrl));
 	}
 
@@ -1746,13 +1749,8 @@ void UpdateScreenShot(void)
 		           rect.right  - rect.left,
 		           rect.bottom - rect.top,
 		           TRUE);
-		
-		ShowWindow(GetDlgItem(hMain,IDC_SSPICTURE),
-				   (TabView_GetCurrentTab(hTabCtrl) != TAB_HISTORY)
-#ifdef STORY_DATAFILE
-				   && (TabView_GetCurrentTab(hTabCtrl) != TAB_STORY)
-#endif /* STORY_DATAFILE */
-		           ? SW_SHOW : SW_HIDE);
+
+		ShowWindow(GetDlgItem(hMain,IDC_SSPICTURE), NeedScreenShotImage() ? SW_SHOW : SW_HIDE);
 		ShowWindow(GetDlgItem(hMain,IDC_SSFRAME),SW_SHOW);
 		ShowWindow(GetDlgItem(hMain,IDC_SSTAB),bShowTabCtrl ? SW_SHOW : SW_HIDE);
 
@@ -1764,7 +1762,6 @@ void UpdateScreenShot(void)
 		ShowWindow(GetDlgItem(hMain,IDC_SSFRAME),SW_HIDE);
 		ShowWindow(GetDlgItem(hMain,IDC_SSTAB),SW_HIDE);
 	}
-
 }
 
 void ResizePickerControls(HWND hWnd)
@@ -2150,6 +2147,15 @@ void SetMainTitle(void)
 	SetWindowText(hMain,_Unicode(buffer));
 }
 
+static void TabSelectionChanged(void)
+{
+#ifdef IPS_PATCH
+	FreeIfAllocated(&g_IPSMenuSelectName);
+#endif /* IPS_PATCH */
+
+	UpdateScreenShot();
+}
+
 static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	WNDCLASS wndclass;
@@ -2246,7 +2252,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 
 	SetMainTitle();
 	hTabCtrl = GetDlgItem(hMain, IDC_SSTAB);
-	
+
 	{
 		struct TabViewOptions opts;
 
@@ -2260,7 +2266,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 
 			GetImageTabShortName,	// pfnGetTabShortName
 			GetImageTabLongName,	// pfnGetTabLongName
-			UpdateScreenShot		// pfnOnSelectionChanged
+			TabSelectionChanged		// pfnOnSelectionChanged
 		};
 
 		memset(&opts, 0, sizeof(opts));
@@ -2587,7 +2593,9 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 	int 		i;
 	char		szClass[128];
 	
+#ifdef IPS_PATCH
 	static char patch_name[MAX_PATCHNAME];
+#endif /* IPS_PATCH */
 
 	switch (message)
 	{
@@ -2638,28 +2646,30 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 		return TRUE;
 
 	case WM_MENUSELECT:
-		if((int)(HIWORD(wParam)) == 0xFFFF)	//menu closed, do not UpdateScreenShot() for EditControl scrolling
+#ifdef IPS_PATCH
+		//menu closed, do not UpdateScreenShot() for EditControl scrolling
+		if ((int)(HIWORD(wParam)) == 0xFFFF)
 		{
 			dprintf("menusele: clear");
-			g_IPSName[0] = '\0';
 			return 0;
 		}
-		
-		patch_name[0] = '\0';
-		GetPatchName(patch_name, drivers[Picker_GetSelectedItem(hwndList)]->name, (int)(LOWORD(wParam))-ID_PLAY_PATCH);
-		if (patch_name[0] != '\0')
+
+		i = (int)(LOWORD(wParam)) - ID_PLAY_PATCH;
+		if (i >= 0 && i < MAX_PATCHES && GetPatchName(patch_name, drivers[Picker_GetSelectedItem(hwndList)]->name, i))
 		{
-			strcpy(g_IPSName, patch_name);
+			FreeIfAllocated(&g_IPSMenuSelectName);
+			g_IPSMenuSelectName = strdup(patch_name);
 			dprintf("menusele: %d %s, updateSS", (int)(LOWORD(wParam)), patch_name);
 			UpdateScreenShot();
 		}
-		else if (g_IPSName[0]!= '\0')
+		else if (g_IPSMenuSelectName)
 		{
-			g_IPSName[0] = '\0';
+			FreeIfAllocated(&g_IPSMenuSelectName);
 			dprintf("menusele:none, updateSS");
 			UpdateScreenShot();
 		}
-		
+#endif /* IPS_PATCH */
+
 		return Statusbar_MenuSelect(hWnd, wParam, lParam);
 
 	case MM_PLAY_GAME:
@@ -2672,12 +2682,8 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 
 	case WM_CONTEXTMENU:
 		if (HandleTreeContextMenu(hWnd, wParam, lParam)
-		||	HandleScreenShotContextMenu(hWnd, wParam, lParam))
+		 || HandleScreenShotContextMenu(hWnd, wParam, lParam))
 			return FALSE;
-		break;
-
-	case WM_MENUCOMMAND:
-		dprintf("dasdfasdf");
 		break;
 
 	case WM_COMMAND:
@@ -3597,8 +3603,31 @@ static void UpdateStatusBar(void)
 		SetStatusBarTextW(1, GameInfoStatus(i, FALSE));
 }
 
+static BOOL NeedScreenShotImage(void)
+{
+#ifdef IPS_PATCH
+	if (g_IPSMenuSelectName)
+		return TRUE;
+#endif /* IPS_PATCH */
+
+	if (TabView_GetCurrentTab(hTabCtrl) == TAB_HISTORY && GetShowTab(TAB_HISTORY))
+		return FALSE;
+
+#ifdef STORY_DATAFILE
+	if (TabView_GetCurrentTab(hTabCtrl) == TAB_STORY && GetShowTab(TAB_STORY))
+		return FALSE;
+#endif /* STORY_DATAFILE */
+
+	return TRUE;
+}
+
 static BOOL NeedHistoryText(void)
 {
+#ifdef IPS_PATCH
+	if (g_IPSMenuSelectName)
+		return TRUE;
+#endif /* IPS_PATCH */
+
 	if (TabView_GetCurrentTab(hTabCtrl) == TAB_HISTORY)
 		return TRUE;
 	if (GetShowTab(TAB_HISTORY) == FALSE)
@@ -3630,9 +3659,11 @@ static void UpdateHistory(void)
 	{
 		LPCWSTR histText;
 
-		if (g_IPSName[0] != '\0')
-			histText = GetPatchDesc(drivers[Picker_GetSelectedItem(hwndList)]->name, g_IPSName);
+#ifdef IPS_PATCH
+		if (g_IPSMenuSelectName)
+			histText = GetPatchDesc(drivers[Picker_GetSelectedItem(hwndList)]->name, g_IPSMenuSelectName);
 		else
+#endif /* IPS_PATCH */
 #ifdef STORY_DATAFILE
 			if (TabView_GetCurrentTab(hTabCtrl) == TAB_STORY)
 				histText = GetGameStory(Picker_GetSelectedItem(hwndList));
@@ -3651,11 +3682,7 @@ static void UpdateHistory(void)
 		sRect.left = history_rect.left;
 		sRect.right = history_rect.right;
 
-		if ((TabView_GetCurrentTab(hTabCtrl) == TAB_HISTORY && GetShowTab(TAB_HISTORY))
-#ifdef STORY_DATAFILE
-		 || (TabView_GetCurrentTab(hTabCtrl) == TAB_STORY && GetShowTab(TAB_STORY))
-#endif /* STORY_DATAFILE */
-		)
+		if (!NeedScreenShotImage())
 		{
 			// We're using the new mode, with the history filling the entire tab (almost)
 			sRect.top = history_rect.top + 14;
@@ -3672,8 +3699,8 @@ static void UpdateHistory(void)
 			sRect.left, sRect.top,
 			sRect.right, sRect.bottom, TRUE);
 
-		Edit_GetRect(GetDlgItem(hMain, IDC_HISTORY),&rect);
-		nLines = Edit_GetLineCount(GetDlgItem(hMain, IDC_HISTORY) );
+		Edit_GetRect(GetDlgItem(hMain, IDC_HISTORY), &rect);
+		nLines = Edit_GetLineCount(GetDlgItem(hMain, IDC_HISTORY));
 		hDC = GetDC(GetDlgItem(hMain, IDC_HISTORY));
 		GetTextMetrics (hDC, &tm);
 		nLineHeight = tm.tmHeight - tm.tmInternalLeading;
@@ -3830,10 +3857,10 @@ static void PaintBackgroundImage(HWND hWnd, HRGN hRgn, int x, int y)
 	for (i = rcClient.left-x; i < rcClient.right; i += bmDesc.bmWidth)
 		for (j = rcClient.top-y; j < rcClient.bottom; j += bmDesc.bmHeight)
 			BitBlt(hDC, i, j, bmDesc.bmWidth, bmDesc.bmHeight, htempDC, 0, 0, SRCCOPY);
-	
+
 	SelectObject(htempDC, oldBitmap);
 	DeleteDC(htempDC);
-	
+
 	if (GetBackgroundPalette() == NULL)
 	{
 		DeleteObject(hPAL);
@@ -3879,50 +3906,50 @@ static BOOL TreeViewNotify(LPNMHDR nm)
 	case TVN_SELCHANGEDW :
 	case TVN_SELCHANGEDA:
 	    {
-		    HTREEITEM hti = TreeView_GetSelection(hTreeView);
-		    TVITEM	  tvi;
-    
-		    tvi.mask  = TVIF_PARAM | TVIF_HANDLE;
-		    tvi.hItem = hti;
-		    
-		    if (TreeView_GetItem(hTreeView, &tvi))
-		    {
-			    SetCurrentFolder((LPTREEFOLDER)tvi.lParam);
-			    if (bListReady)
-			    {
-				    ResetListView();
-				    UpdateScreenShot();
-			    }
-		    }
-		    return TRUE;
+		HTREEITEM hti = TreeView_GetSelection(hTreeView);
+		TVITEM	  tvi;
+
+		tvi.mask  = TVIF_PARAM | TVIF_HANDLE;
+		tvi.hItem = hti;
+
+		if (TreeView_GetItem(hTreeView, &tvi))
+		{
+			SetCurrentFolder((LPTREEFOLDER)tvi.lParam);
+			if (bListReady)
+			{
+				ResetListView();
+				UpdateScreenShot();
+			}
+		}
+		return TRUE;
 	    }
 	case TVN_BEGINLABELEDITW :
 	case TVN_BEGINLABELEDITA :
 	    {
-		    TV_DISPINFO *ptvdi = (TV_DISPINFO *)nm;
-		    LPTREEFOLDER folder = (LPTREEFOLDER)ptvdi->item.lParam;
-    
-		    if (folder->m_dwFlags & F_CUSTOM)
-		    {
-			    // user can edit custom folder names
-			    g_in_treeview_edit = TRUE;
-			    return FALSE;
-		    }
-		    // user can't edit built in folder names
-		    return TRUE;
+		TV_DISPINFO *ptvdi = (TV_DISPINFO *)nm;
+		LPTREEFOLDER folder = (LPTREEFOLDER)ptvdi->item.lParam;
+
+		if (folder->m_dwFlags & F_CUSTOM)
+		{
+			// user can edit custom folder names
+			g_in_treeview_edit = TRUE;
+			return FALSE;
+		}
+		// user can't edit built in folder names
+		return TRUE;
 	    }
 	case TVN_ENDLABELEDITW :
 	case TVN_ENDLABELEDITA :
 	    {
-		    TV_DISPINFO *ptvdi = (TV_DISPINFO *)nm;
-		    LPTREEFOLDER folder = (LPTREEFOLDER)ptvdi->item.lParam;
-    
-		    g_in_treeview_edit = FALSE;
-    
-			if (ptvdi->item.pszText == NULL || lstrlen(ptvdi->item.pszText) == 0)
-			    return FALSE;
-    
-			return TryRenameCustomFolder(folder,_String(ptvdi->item.pszText));
+		TV_DISPINFO *ptvdi = (TV_DISPINFO *)nm;
+		LPTREEFOLDER folder = (LPTREEFOLDER)ptvdi->item.lParam;
+
+		g_in_treeview_edit = FALSE;
+
+		if (ptvdi->item.pszText == NULL || lstrlen(ptvdi->item.pszText) == 0)
+			return FALSE;
+
+		return TryRenameCustomFolder(folder,_String(ptvdi->item.pszText));
 	    }
 	}
 	return FALSE;
@@ -4389,9 +4416,9 @@ static void ResetListView(void)
 	{
 		/* If last folder was empty, select the first item in this folder */
 		if (no_selection)
-		    Picker_SetSelectedPick(hwndList, 0);
+			Picker_SetSelectedPick(hwndList, 0);
 		else
-		    Picker_SetSelectedItem(hwndList, current_game);
+			Picker_SetSelectedItem(hwndList, current_game);
 	}
 
 	/*RS Instead of the Arrange Call that was here previously on all Views
@@ -4429,10 +4456,10 @@ static void UpdateGameList(void)
 }
 
 UINT_PTR CALLBACK CFHookProc(
-  HWND hdlg,      // handle to dialog box
-  UINT uiMsg,     // message identifier
-  WPARAM wParam,  // message parameter
-  LPARAM lParam   // message parameter
+	HWND hdlg,      // handle to dialog box
+	UINT uiMsg,     // message identifier
+	WPARAM wParam,  // message parameter
+	LPARAM lParam   // message parameter
 )
 {
 	int iIndex, i;
@@ -4584,49 +4611,57 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		if (GetPatchName(patch_name, drivers[nGame]->name, id-ID_PLAY_PATCH))
 		{
 			options_type* pOpts = GetGameOptions(nGame);
-			char *token;
-			BOOL is_new = TRUE;	//new checked menu item
-			char old_opt[MAX_PATCHNAME * MAX_PATCHES];
-			char new_opt[MAX_PATCHNAME * MAX_PATCHES];
-			memset(new_opt, 0, sizeof(new_opt));
+			static char new_opt[MAX_PATCHNAME * MAX_PATCHES];
 
-			if (pOpts->patchname != NULL)
+			new_opt[0] = '\0';
+
+			if (pOpts->patchname)
 			{
-				strcpy(old_opt, pOpts->patchname);
+				char *temp = strdup(pOpts->patchname);
+				char *token = NULL;
 
-				token = strtok(old_opt, ",");
-				while(token)
+				if (temp)
+					token = strtok(temp, ",");
+
+				while (token)
 				{
-					if(!strcmp(patch_name, token))
+					if (!strcmp(patch_name, token))
 					{
 						dprintf("dup!");
-						is_new = FALSE;
+						patch_name[0] = '\0';
 					}
 					else
 					{
+						if (new_opt[0] != '\0')
+							strcat(new_opt, ",");
 						strcat(new_opt, token);
-						strcat(new_opt, ",");
 					}
 
 					token = strtok(NULL, ",");
 				}
+
+				free(temp);
 			}
 
-			if (is_new)
+			if (patch_name[0] != '\0')
+			{
+				if (new_opt[0] != '\0')
+					strcat(new_opt, ",");
 				strcat(new_opt, patch_name);
-			else
-				new_opt[strlen(new_opt)-1] = '\0';	//remove ,
+			}
 
-			if (pOpts->patchname)
-				FreeIfAllocated(&pOpts->patchname);
-			
-			if (strlen(new_opt))
+			FreeIfAllocated(&pOpts->patchname);
+			if (new_opt[0] != '\0')
 				pOpts->patchname = strdup(new_opt);
-			SetGameUsesDefaults(nGame,FALSE);	//fixme uncheck, resto default opt
 
 			dprintf("%s / %s | %d", patch_name, pOpts->patchname, strlen(new_opt));
 		}
 		return TRUE;
+	}
+	else if (g_IPSMenuSelectName && id != IDC_HISTORY)
+	{
+		FreeIfAllocated(&g_IPSMenuSelectName);
+		UpdateScreenShot();
 	}
 #endif /* IPS_PATCH */
 
@@ -6563,13 +6598,21 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 		char *token;
 		int  i;
 
-		if (patch_count > MAX_PATCHES) patch_count = MAX_PATCHES;
+		if (patch_count > MAX_PATCHES)
+			patch_count = MAX_PATCHES;
+
 		while (patch_count--)
 		{
 			if (GetPatchName(patch_name, drivers[nGame]->name, patch_count))
 			{
-				snprintf(buf, ARRAY_LENGTH(buf), "   %s", patch_name);
-				InsertMenu(hMenu, 1, MF_BYPOSITION, ID_PLAY_PATCH + patch_count, _Unicode(buf));
+				LPWSTR patch_desc = GetPatchDesc(drivers[nGame]->name, patch_name);
+
+				if (patch_desc && patch_desc[0])
+					snprintf(buf, ARRAY_LENGTH(buf), "   %s", strtok(_String(patch_desc), "\r\n"));
+				else
+					snprintf(buf, ARRAY_LENGTH(buf), "   %s", patch_name);
+
+				InsertMenu(hMenu, 1, MF_BYPOSITION, ID_PLAY_PATCH + patch_count, _Unicode(ConvertAmpersandString(buf)));
 
 				if (pOpts->patchname != NULL)
 				{
@@ -6577,7 +6620,7 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 					token = strtok(buf, ",");
 					for (i = 0; i < MAX_PATCHES && token; i++)
 					{
-						if(!strcmp(patch_name, token))
+						if (!strcmp(patch_name, token))
 						{
 							CheckMenuItem(hMenu,ID_PLAY_PATCH + patch_count, MF_BYCOMMAND | MF_CHECKED);
 							break;

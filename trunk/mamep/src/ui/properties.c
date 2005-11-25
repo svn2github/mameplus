@@ -1367,7 +1367,6 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 				if (desc)
 				{
 					UpdateToolTipText(hDlg,desc,patchName);
-					free(desc);
 					ShowTooltip(hDlg, TRUE);
 				}
 			}
@@ -1386,7 +1385,6 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 				if (desc)
 				{
 					UpdateToolTipText(hDlg,desc,patchName);
-					free(desc);
 					ShowTooltip(hDlg, TRUE);
 				}
 				else
@@ -1394,7 +1392,11 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 			}
 			else
 				ShowTooltip(hDlg, FALSE);
-			changed = TRUE;
+
+			// HACK: DO NOT INHERIT IPS CONFIGURATION
+			//changed = TRUE;
+			PropSheet_Changed(GetParent(hDlg), hDlg);
+			g_bReset = TRUE;
 		}
 		break;
 #endif /* IPS_PATCH */
@@ -1451,8 +1453,22 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 			{
 				if (IS_GAME)
 				{
-					PropSheet_UnChanged(GetParent(hDlg), hDlg);
-					g_bReset = FALSE;
+#ifdef IPS_PATCH
+					// HACK: DO NOT INHERIT IPS CONFIGURATION
+					if ((origGameOpts.patchname != pGameOpts->patchname
+					  && (!origGameOpts.patchname || !pGameOpts->patchname))
+					 || (origGameOpts.patchname && pGameOpts->patchname
+					  && strcmp(origGameOpts.patchname, pGameOpts->patchname)))
+					{
+						PropSheet_Changed(GetParent(hDlg), hDlg);
+						g_bReset = TRUE;
+					}
+					else
+#endif /* IPS_PATCH */
+					{
+						PropSheet_UnChanged(GetParent(hDlg), hDlg);
+						g_bReset = FALSE;
+					}
 				}
 				else
 				{

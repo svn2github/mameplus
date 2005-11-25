@@ -85,7 +85,11 @@ static BOOL LoadSoftwareScreenShot(const struct GameDriver *drv, LPCSTR lpSoftwa
 #ifdef MESS
 BOOL LoadScreenShotEx(int nGame, LPCSTR lpSoftwareName, int nType)
 #else /* !MESS */
+#ifdef IPS_PATCH
 BOOL LoadScreenShot(int nGame, const char* lpIPSName, int nType)
+#else /* IPS_PATCH */
+BOOL LoadScreenShot(int nGame, int nType)
+#endif /* IPS_PATCH */
 #endif /* MESS */
 {
 	BOOL loaded = FALSE;
@@ -111,12 +115,14 @@ BOOL LoadScreenShot(int nGame, const char* lpIPSName, int nType)
 	if (!loaded)
 #endif /* MESS */
 	{
+#ifdef IPS_PATCH
 		if (lpIPSName)
 		{
 			sprintf(buf, "%s/%s", drivers[nGame]->name, lpIPSName);
 			dprintf("found ipsname: %s", buf);
 		}
 		else
+#endif /* IPS_PATCH */
 		{
 			sprintf(buf, "%s", drivers[nGame]->name);
 			dprintf("not found ipsname: %s", buf);
@@ -125,18 +131,25 @@ BOOL LoadScreenShot(int nGame, const char* lpIPSName, int nType)
 	}
 
 	/* If not loaded, see if there is a clone and try that */
-	if (!loaded && drivers[nGame]->clone_of != NULL && !lpIPSName)
+	if (!loaded && drivers[nGame]->clone_of != NULL)
 	{
+#ifdef IPS_PATCH
 		if (lpIPSName)
+		{
 			sprintf(buf, "%s/%s", drivers[nGame]->clone_of->name, lpIPSName);
+			dprintf("found clone ipsname: %s", buf);
+		}
 		else
+#endif /* IPS_PATCH */
 			sprintf(buf, "%s", drivers[nGame]->clone_of->name);
 		loaded = LoadDIB(buf, &m_hDIB, &m_hPal, nType);
 		if (!loaded && drivers[nGame]->clone_of->clone_of)
 		{
+#ifdef IPS_PATCH
 			if (lpIPSName)
 				sprintf(buf, "%s/%s", drivers[nGame]->clone_of->clone_of->name, lpIPSName);
 			else
+#endif /* IPS_PATCH */
 				sprintf(buf, "%s", drivers[nGame]->clone_of->clone_of->name);
 			loaded = LoadDIB(buf, &m_hDIB, &m_hPal, nType);
 		}
@@ -226,10 +239,12 @@ BOOL LoadDIB(LPCTSTR filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type)
 		SetCorePathList(FILETYPE_ARTWORK,GetBgDir());
 		zip_name = "bkground";
 		break;
-	case 255 :
+#ifdef IPS_PATCH
+	case TAB_IPS :
 		SetCorePathList(FILETYPE_ARTWORK,GetPatchDir());
 		zip_name = "ips";
 		break;
+#endif /* IPS_PATCH */
 	default :
 		// in case a non-image tab gets here, which can happen
 		return FALSE;

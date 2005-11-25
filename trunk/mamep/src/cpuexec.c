@@ -2270,7 +2270,7 @@ void cpu_save(int config_type, xml_data_node *parentnode)
 	if (!parentnode)
 		return;
 
-	for (i = 0; i < MAX_CPU; i++)
+	for (i = 0; i < cpu_gettotalcpu(); i++)
 	{
 		int clock = cpunum_get_clockscale(i) * 100.0 + 0.5;
 

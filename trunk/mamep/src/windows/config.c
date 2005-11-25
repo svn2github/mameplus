@@ -108,6 +108,12 @@ static char *win_strip_extension(char *filename);
 
 static char *langname;
 
+#ifdef IPS_PATCH
+// HACK: DO NOT INHERIT IPS CONFIGURATION
+static int ips_pri = 0;
+#endif /* IPS_PATCH */
+
+
 static int video_set_beam(struct rc_option *option, const char *arg, int priority)
 {
 	options.beam = (int)(f_beam * 0x00010000);
@@ -177,6 +183,16 @@ static int init_language(struct rc_option *option, const char *arg, int priority
 }
 
 
+#ifdef IPS_PATCH
+// HACK: DO NOT INHERIT IPS CONFIGURATION
+static int init_ips(struct rc_option *option, const char *arg, int priority)
+{
+	ips_pri = option->priority = priority;
+	return 0;
+}
+#endif /* IPS_PATCH */
+
+
 /* struct definitions */
 static struct rc_option opts[] = {
 	/* name, shortname, type, dest, deflt, min, max, func, help */
@@ -241,7 +257,7 @@ static struct rc_option opts[] = {
 	{ "state", NULL, rc_string, &statename, NULL, 0, 0, NULL, "state to load" },
 	{ "autosave", NULL, rc_bool, &options.auto_save, "0", 0, 0, NULL, "enable automatic restore at startup and save at exit" },
 #ifdef IPS_PATCH
-	{ "ips_patch", NULL, rc_string, &options.patchname, NULL, 0, 0, NULL, "ips patch datfile name"},
+	{ "ips_patch", NULL, rc_string, &options.patchname, NULL, 0, 0, init_ips, "ips patch datfile name"},
 #endif /* IPS_PATCH */
 	{ "confirm_quit", NULL, rc_bool, &options.confirm_quit, "1", 0, 0, NULL, "confirm quit" },
 #ifdef AUTO_PAUSE_PLAYBACK
@@ -390,6 +406,14 @@ int parse_config (const char* filename, const game_driver *gamedrv)
 				return retval;
 		}
 		sprintf(buffer, "%s.ini", gamedrv->name);
+#ifdef IPS_PATCH
+		// HACK: DO NOT INHERIT IPS CONFIGURATION
+		if (ips_pri < 2)
+		{
+			free(options.patchname);
+			options.patchname = NULL;
+		}
+#endif /* IPS_PATCH */
 	}
 	else
 	{

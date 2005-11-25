@@ -15,16 +15,16 @@
 #define IDS_UI_SPACER2                  79
 #define IDS_UI_FOLDERLIST               81
 #define IDS_UI_SCREENSHOT               82
-#define IDS_UI_LANGUAGE                 83	// status bar (IDS_UI_FONT + 8)
 #define IDS_UI_SHOWPICTURES             84	// status bar (IDS_UI_TOOLBAR + 8)
-#define IDS_UI_LARGEICONS               85
-#define IDS_UI_SMALLICONS               86
+#define IDS_UI_LANGUAGE                 86	// status bar (IDS_UI_FONT + 11)
 #define IDS_UI_LIST                     87
 #define IDS_UI_LINEUPICONS              88
 #define IDS_UI_REFRESH                  89
 #define IDS_UI_CUSTOMIZE                90
 #define IDS_UI_DETAILS                  91
 #define IDS_UI_ARRANGE                  92	// status bar (IDS_UI_TOOLBAR + 16)
+#define IDS_UI_LARGEICONS               93
+#define IDS_UI_SMALLICONS               94
 #define IDD_MAIN                        101
 #define IDA_TAB_KEYS                    106
 #define IDI_MAME32_ICON                 107

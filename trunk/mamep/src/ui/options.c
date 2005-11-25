@@ -1144,6 +1144,12 @@ options_type * GetGameOptions(int driver_index)
 	if (game_variables[driver_index].use_default)
 	{
 		options_type *opt = GetParentOptions(driver_index);
+#ifdef IPS_PATCH
+		// HACK: DO NOT INHERIT IPS CONFIGURATION
+		char *patchname = game_options[driver_index].patchname;
+
+		game_options[driver_index].patchname = NULL;
+#endif /* IPS_PATCH */
 
 		// DO NOT OVERRIDE if game name is same as parent
 		if (opt != &game_options[driver_index])
@@ -1153,6 +1159,10 @@ options_type * GetGameOptions(int driver_index)
 
 			CopyGameOptions(opt,&game_options[driver_index]);
 		}
+
+#ifdef IPS_PATCH
+		game_options[driver_index].patchname = patchname;
+#endif /* IPS_PATCH */
 	}
 
 	if (game_variables[driver_index].options_loaded == FALSE)
@@ -3134,6 +3144,24 @@ static int rc_load_config(int driver_index)
 		gOpts = game_options[driver_index];
 		retval = osd_rc_read(rc_game, file, filename, 1, 1);
 		game_options[driver_index] = gOpts;
+
+#ifdef IPS_PATCH
+		// HACK: DO NOT INHERIT IPS CONFIGURATION
+		if (game_options[driver_index].patchname)
+		{
+			char *patchname = game_options[driver_index].patchname;
+
+			game_options[driver_index].patchname = NULL;
+
+			if (IsOptionEqual(&game_options[driver_index], GetParentOptions(driver_index)))
+			{
+				dprintf("%s: use_default with ips_patch", drivers[driver_index]->name);
+				game_variables[driver_index].use_default = TRUE;
+			}
+
+			game_options[driver_index].patchname = patchname;
+		}
+#endif /* IPS_PATCH */
 	}
 	else
 	{
@@ -3176,6 +3204,11 @@ static int rc_game_is_changed(struct rc_option *option, void *param)
 		switch (option->type)
 		{
 		case rc_string:
+#ifdef IPS_PATCH
+			// HACK: DO NOT INHERIT IPS CONFIGURATION
+			if (option->dest == &gOpts.patchname)
+				return (gOpts.patchname != NULL);
+#endif /* IPS_PATCH */
 			if (*(char **)option->dest == *(char **)compare)
 				retval = 0;
 			else if (!*(char **)option->dest || !*(char **)compare)
@@ -3214,7 +3247,12 @@ static int rc_save_config(int driver_index)
 		validate_game_option(&gOpts);
 		SortD3DEffectByOverrides();
 
+#ifdef IPS_PATCH
+		// HACK: DO NOT INHERIT IPS CONFIGURATION
+		if (game_variables[driver_index].use_default && !gOpts.patchname)
+#else /* IPS_PATCH */
 		if (game_variables[driver_index].use_default)
+#endif /* IPS_PATCH */
 		{
 			sprintf(filename, "%s\\%s.ini", settings.inidirs, drivers[driver_index]->name);
 			unlink(filename);

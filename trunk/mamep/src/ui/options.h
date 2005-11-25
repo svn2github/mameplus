@@ -238,7 +238,12 @@ enum
 	MAX_TAB_TYPES,
 	BACKGROUND,
 	TAB_ALL,
+#ifdef IPS_PATCH
+	TAB_NONE,
+	TAB_IPS
+#else /* IPS_PATCH */
 	TAB_NONE
+#endif /* IPS_PATCH */
 };
 // Because we have added the Options after MAX_TAB_TYPES, we have to subtract 3 here
 // (that's how many options we have after MAX_TAB_TYPES)

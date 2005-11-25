@@ -24,7 +24,11 @@ typedef struct _mybitmapinfo
 extern BOOL LoadScreenShotEx(int nGame, LPCSTR lpSoftwareName, int nType);
 #endif /* MESS */
 
+#ifdef IPS_PATCH
 extern BOOL LoadScreenShot(int nGame, const char* lpIPSName, int nType);
+#else /* IPS_PATCH */
+extern BOOL LoadScreenShot(int nGame, int nType);
+#endif /* IPS_PATCH */
 extern HANDLE GetScreenShotHandle(void);
 extern int GetScreenShotWidth(void);
 extern int GetScreenShotHeight(void);
