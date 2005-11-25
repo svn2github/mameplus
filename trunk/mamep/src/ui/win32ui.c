@@ -2650,6 +2650,7 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 		//menu closed, do not UpdateScreenShot() for EditControl scrolling
 		if ((int)(HIWORD(wParam)) == 0xFFFF)
 		{
+			FreeIfAllocated(&g_IPSMenuSelectName);
 			dprintf("menusele: clear");
 			return 0;
 		}

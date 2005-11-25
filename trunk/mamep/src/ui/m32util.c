@@ -682,6 +682,10 @@ LPWSTR GetPatchDesc(const char *game_name, const char *patch_name)
 		/* Get localized desc */
 		desc = GetPatchDescByLangcode(fp, GetLangcode());
 
+		/* Get S.Chinese desc if T.Chinese version is not found */
+		if (!desc && GetLangcode() == UI_LANG_ZH_TW)
+			desc = GetPatchDescByLangcode(fp, UI_LANG_ZH_CN);
+
 		/* Get English desc if localized version is not found */
 		if (desc == NULL)
 			desc = GetPatchDescByLangcode(fp, UI_LANG_EN_US);

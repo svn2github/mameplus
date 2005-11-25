@@ -5089,11 +5089,19 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( sengok3d )	/* 0261 (c) 2001 SNK */
 	DRIVER( kof2001 )	/* 0262 (c) 2001 Eolith / SNK */
 	DRIVER( kof2001h )	/* 0262 (c) 2001 Eolith / SNK */
+	DRIVER( kf2k1pls )	/* 0262 (c) 2001 bootleg */
+	DRIVER( kf2k1pla )	/* 0262 (c) 2001 bootleg */
 	DRIVER( mslug4 )	/* 0263 (c) 2002 Mega Enterprise */
 	DRIVER( ms4plus )	/* 0263 bootleg */
 	DRIVER( rotd )		/* 0264 (c) 2002 Evoga */
 	DRIVER( kof2002 )	/* 0265 (c) 2002 Eolith / Playmore */
+	DRIVER( kof2002b )	/* 0265 (c) 2002 bootleg */
+	DRIVER( kf2k2pls )	/* 0265 (c) 2002 bootleg */
+	DRIVER( kf2k2pla )	/* 0265 (c) 2002 bootleg */
+	DRIVER( kf2k2plb )	/* 0265 (c) 2002 bootleg */
+	DRIVER( kof2k2mp )	/* 0265 (c) 2002 bootleg */
 	DRIVER( matrim )	/* 0266 (c) 2002 Atlus */
+	DRIVER( matrimbl )	/* 0266 (c) 2002 bootleg */
 
 	/* The BreezaSoft games don't have proper ID codes */
 	DRIVER( jockeygp )

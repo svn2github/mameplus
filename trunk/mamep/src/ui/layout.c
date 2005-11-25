@@ -150,11 +150,10 @@ const PROPERTYSHEETINFO g_propSheets[] =
 	{ TRUE,		NULL,					IDD_PROP_DIRECT3D,		GameOptionsProc },
 	{ TRUE,		NULL,					IDD_PROP_SOUND,			GameOptionsProc },
 	{ TRUE,		NULL,					IDD_PROP_INPUT,			GameOptionsProc },
-	{ TRUE,		NULL,					IDD_PROP_CONTROLLER,		GameOptionsProc },
+	{ TRUE,		NULL,					IDD_PROP_CONTROLLER,	GameOptionsProc },
 	{ TRUE,		NULL,					IDD_PROP_MISC,			GameOptionsProc },
-	{ TRUE, 	PropSheetFilter_Vector,			IDD_PROP_VECTOR,		GameOptionsProc },
-	{ TRUE,		PropSheetFilter_BIOS,			IDD_PROP_BIOS,			GameOptionsProc },
-	{ FALSE,	PropSheetFilter_IPS,			IDD_PROP_IPS,			GameOptionsProc },
+	{ TRUE, 	PropSheetFilter_Vector,	IDD_PROP_VECTOR,		GameOptionsProc },
+	{ TRUE,		PropSheetFilter_BIOS,	IDD_PROP_BIOS,			GameOptionsProc },
 	{ FALSE }
 };
 
@@ -162,7 +161,7 @@ const ICONDATA g_iconData[] =
 {
 	{ IDI_WIN_NOROMS,			"noroms" },
 	{ IDI_WIN_ROMS,				"roms" },
-	{ IDI_WIN_UNKNOWN,		"unknown" },
+	{ IDI_WIN_UNKNOWN,			"unknown" },
 	{ IDI_WIN_CLONE,			"clone" },
 	{ IDI_WIN_REDX,				"warning" },
 	{ 0 }
