@@ -516,9 +516,11 @@ int win_init_window(void)
 		return 1;
 
 	// possibly create the debug window, but don't show it yet
+#ifdef MAME_DEBUG
 	if (options.mame_debug)
 		if (debugwin_init_windows())
 			return 1;
+#endif
 
 	// update system menu
 	update_system_menu();
@@ -1334,8 +1336,10 @@ void win_toggle_full_screen(void)
 
 	// hide the window
 	ShowWindow(win_video_window, SW_HIDE);
+#ifdef MAME_DEBUG
 	if (win_window_mode)
 		debugwin_show(SW_HIDE);
+#endif
 
 	// toggle the window mode
 	win_window_mode = !win_window_mode;
@@ -1383,8 +1387,10 @@ void win_toggle_full_screen(void)
 
 	// show and adjust the window
 	ShowWindow(win_video_window, SW_SHOW);
+#ifdef MAME_DEBUG
 	if (win_window_mode)
 		debugwin_show(SW_SHOW);
+#endif
 
 	// reinit
 	if (win_use_directx)

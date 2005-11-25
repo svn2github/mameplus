@@ -511,7 +511,7 @@ int cli_frontend_init (int argc, char **argv)
 	sprintf (buffer, "%s.ini", cmd_name);
 
 	/* parse mame.ini/mess.ini even if called with another name */
-	if (my_stricmp(cmd_name, APPNAME) != 0)
+	if (mame_stricmp(cmd_name, APPNAME) != 0)
 	{
 		if (parse_config (APPNAME".ini", NULL))
 			exit(1);
@@ -606,7 +606,7 @@ int cli_frontend_init (int argc, char **argv)
 	{
 		/* do we have a driver for this? */
 		for (i = 0; drivers[i]; i++)
-			if (stricmp(gamename,drivers[i]->name) == 0)
+			if (mame_stricmp(gamename,drivers[i]->name) == 0)
 			{
 				game_index = i;
 				break;
@@ -706,16 +706,12 @@ int cli_frontend_init (int argc, char **argv)
 		mame_fwrite(options.record, &inp_header, sizeof(inp_header));
 	}
 
-	if( statename )
-	{
+	if (statename)
 		options.savegame = statename;
-	}
 
-#ifdef NEW_DEBUGGER
+#if defined(MAME_DEBUG) && defined(NEW_DEBUGGER)
 	if (debugscript)
-	{
 		debug_source_script(debugscript);
-	}
 #endif
 
 	/* need a decent default for debug width/height */

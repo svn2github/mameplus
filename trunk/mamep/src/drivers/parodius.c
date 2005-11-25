@@ -20,10 +20,24 @@ VIDEO_START( parodius );
 VIDEO_UPDATE( parodius );
 
 static int videobank;
+static unsigned char *ram;
 
 static INTERRUPT_GEN( parodius_interrupt )
 {
 	if (K052109_is_IRQ_enabled()) cpunum_set_input_line(0, 0, HOLD_LINE);
+}
+
+static READ8_HANDLER( bankedram_r )
+{
+	if (videobank & 0x01)
+	{
+		if (videobank & 0x04)
+			return paletteram_r(offset + 0x0800);
+		else
+			return paletteram_r(offset);
+	}
+	else
+		return ram[offset];
 }
 
 static WRITE8_HANDLER( bankedram_w )
@@ -31,12 +45,12 @@ static WRITE8_HANDLER( bankedram_w )
 	if (videobank & 0x01)
 	{
 		if (videobank & 0x04)
-			paletteram_xBBBBBGGGGGRRRRR_swap_w(offset + 0x0800, data);
+			paletteram_xBBBBBGGGGGRRRRR_swap_w(offset + 0x0800,data);
 		else
-			paletteram_xBBBBBGGGGGRRRRR_swap_w(offset, data);
+			paletteram_xBBBBBGGGGGRRRRR_swap_w(offset,data);
 	}
 	else
-		paletteram[offset + 0x1000] = data;
+		ram[offset] = data;
 }
 
 static READ8_HANDLER( parodius_052109_053245_r )
@@ -63,16 +77,6 @@ static WRITE8_HANDLER( parodius_videobank_w )
 	/* bit 1 = select 052109 or 053245 at 2000-27ff */
 	/* bit 2 = select palette bank 0 or 1 */
 	videobank = data;
-
-	if (videobank & 0x01)
-	{
-		if (videobank & 0x04)
-			memory_set_bank(1, 1);
-		else
-			memory_set_bank(1, 0);
-	}
-	else
-		memory_set_bank(1, 2);
 }
 
 static WRITE8_HANDLER( parodius_3fc0_w )
@@ -125,51 +129,54 @@ static WRITE8_HANDLER( sound_arm_nmi_w )
 	timer_set(TIME_IN_USEC(50),0,nmi_callback);	/* kludge until the K053260 is emulated correctly */
 }
 
-static READ8_HANDLER( speedup_r )
-{
-	int data = memory_region(REGION_CPU1)[0x1837];
-
-	if ( activecpu_get_pc() == 0xa400 && data == 0 )
-		cpu_spinuntil_int();
-
-	return data;
-}
-
-static WRITE8_HANDLER( speedup_w )
-{
-	memory_region(REGION_CPU1)[0x1837] = data;
-}
-
 /********************************************/
 
-static ADDRESS_MAP_START( parodius_map, ADDRESS_SPACE_PROGRAM, 8 )
-	AM_RANGE(0x0000, 0x07ff) AM_READWRITE(MRA8_BANK1, bankedram_w)		/* banked RAM */
-	AM_RANGE(0x1837, 0x1837) AM_READWRITE(speedup_r, speedup_w)
-	AM_RANGE(0x0800, 0x1fff) AM_RAM
+static ADDRESS_MAP_START( parodius_readmem, ADDRESS_SPACE_PROGRAM, 8 )
+	AM_RANGE(0x0000, 0x07ff) AM_READ(bankedram_r)
+	AM_RANGE(0x0800, 0x1fff) AM_READ(MRA8_RAM)
 	AM_RANGE(0x3f8c, 0x3f8c) AM_READ(input_port_0_r)
 	AM_RANGE(0x3f8d, 0x3f8d) AM_READ(input_port_1_r)
 	AM_RANGE(0x3f8e, 0x3f8e) AM_READ(input_port_4_r)
 	AM_RANGE(0x3f8f, 0x3f8f) AM_READ(input_port_2_r)
 	AM_RANGE(0x3f90, 0x3f90) AM_READ(input_port_3_r)
-	AM_RANGE(0x3fa0, 0x3faf) AM_READWRITE(K053244_r, K053244_w)
-	AM_RANGE(0x3fb0, 0x3fbf) AM_WRITE(K053251_w)
-	AM_RANGE(0x3fc0, 0x3fc0) AM_READWRITE(watchdog_reset_r, parodius_3fc0_w)
-	AM_RANGE(0x3fc4, 0x3fc4) AM_WRITE(parodius_videobank_w)
-	AM_RANGE(0x3fc8, 0x3fc8) AM_WRITE(parodius_sh_irqtrigger_w)
-	AM_RANGE(0x3fcc, 0x3fcd) AM_READWRITE(parodius_sound_r, K053260_0_w)	/* K053260 */
-	AM_RANGE(0x2000, 0x27ff) AM_READWRITE(parodius_052109_053245_r, parodius_052109_053245_w)
-	AM_RANGE(0x2000, 0x5fff) AM_READWRITE(K052109_r, K052109_w)
-	AM_RANGE(0x6000, 0x9fff) AM_ROMBANK(2)					/* banked ROM */
-	AM_RANGE(0xa000, 0xffff) AM_ROM						/* ROM */
+	AM_RANGE(0x3fa0, 0x3faf) AM_READ(K053244_r)
+	AM_RANGE(0x3fc0, 0x3fc0) AM_READ(watchdog_reset_r)
+	AM_RANGE(0x3fcc, 0x3fcd) AM_READ(parodius_sound_r)	/* K053260 */
+	AM_RANGE(0x2000, 0x27ff) AM_READ(parodius_052109_053245_r)
+	AM_RANGE(0x2000, 0x5fff) AM_READ(K052109_r)
+	AM_RANGE(0x6000, 0x9fff) AM_READ(MRA8_BANK1)			/* banked ROM */
+	AM_RANGE(0xa000, 0xffff) AM_READ(MRA8_ROM)			/* ROM */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( parodius_map_sound, ADDRESS_SPACE_PROGRAM, 8 )
-	AM_RANGE(0x0000, 0xefff) AM_ROM
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM
+static ADDRESS_MAP_START( parodius_writemem, ADDRESS_SPACE_PROGRAM, 8 )
+	AM_RANGE(0x0000, 0x07ff) AM_WRITE(bankedram_w) AM_BASE(&ram)
+	AM_RANGE(0x0800, 0x1fff) AM_WRITE(MWA8_RAM)
+	AM_RANGE(0x3fa0, 0x3faf) AM_WRITE(K053244_w)
+	AM_RANGE(0x3fb0, 0x3fbf) AM_WRITE(K053251_w)
+	AM_RANGE(0x3fc0, 0x3fc0) AM_WRITE(parodius_3fc0_w)
+	AM_RANGE(0x3fc4, 0x3fc4) AM_WRITE(parodius_videobank_w)
+	AM_RANGE(0x3fc8, 0x3fc8) AM_WRITE(parodius_sh_irqtrigger_w)
+	AM_RANGE(0x3fcc, 0x3fcd) AM_WRITE(K053260_0_w)
+	AM_RANGE(0x2000, 0x27ff) AM_WRITE(parodius_052109_053245_w)
+	AM_RANGE(0x2000, 0x5fff) AM_WRITE(K052109_w)
+	AM_RANGE(0x6000, 0x9fff) AM_WRITE(MWA8_ROM)					/* banked ROM */
+	AM_RANGE(0xa000, 0xffff) AM_WRITE(MWA8_ROM)					/* ROM */
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( parodius_readmem_sound, ADDRESS_SPACE_PROGRAM, 8 )
+	AM_RANGE(0x0000, 0xefff) AM_READ(MRA8_ROM)
+	AM_RANGE(0xf000, 0xf7ff) AM_READ(MRA8_RAM)
+	AM_RANGE(0xf801, 0xf801) AM_READ(YM2151_status_port_0_r)
+	AM_RANGE(0xfc00, 0xfc2f) AM_READ(K053260_0_r)
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( parodius_writemem_sound, ADDRESS_SPACE_PROGRAM, 8 )
+	AM_RANGE(0x0000, 0xefff) AM_WRITE(MWA8_ROM)
+	AM_RANGE(0xf000, 0xf7ff) AM_WRITE(MWA8_RAM)
 	AM_RANGE(0xf800, 0xf800) AM_WRITE(YM2151_register_port_0_w)
-	AM_RANGE(0xf801, 0xf801) AM_READWRITE(YM2151_status_port_0_r, YM2151_data_port_0_w)
+	AM_RANGE(0xf801, 0xf801) AM_WRITE(YM2151_data_port_0_w)
 	AM_RANGE(0xfa00, 0xfa00) AM_WRITE(sound_arm_nmi_w)
-	AM_RANGE(0xfc00, 0xfc2f) AM_READWRITE(K053260_0_r, K053260_0_w)
+	AM_RANGE(0xfc00, 0xfc2f) AM_WRITE(K053260_0_w)
 ADDRESS_MAP_END
 
 /***************************************************************************
@@ -294,12 +301,12 @@ static MACHINE_DRIVER_START( parodius )
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD(KONAMI, 3000000)		/* 053248 */
-	MDRV_CPU_PROGRAM_MAP(parodius_map, 0)
+	MDRV_CPU_PROGRAM_MAP(parodius_readmem,parodius_writemem)
 	MDRV_CPU_VBLANK_INT(parodius_interrupt,1)
 
 	MDRV_CPU_ADD(Z80, 3579545)
 	/* audio CPU */
-	MDRV_CPU_PROGRAM_MAP(parodius_map_sound, 0)
+	MDRV_CPU_PROGRAM_MAP(parodius_readmem_sound,parodius_writemem_sound)
 								/* NMIs are triggered by the 053260 */
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -335,7 +342,7 @@ MACHINE_DRIVER_END
 ***************************************************************************/
 
 ROM_START( parodius )
-	ROM_REGION( 0x51800, REGION_CPU1, 0 ) /* code + banked roms + palette RAM */
+	ROM_REGION( 0x51000, REGION_CPU1, 0 ) /* code + banked roms + palette RAM */
 	ROM_LOAD( "955l01.bin", 0x10000, 0x20000, CRC(49a658eb) SHA1(dd53060c4da99b8e1f896ebfec572296ef2b5665) )
 	ROM_LOAD( "955l02.bin", 0x30000, 0x18000, CRC(161d7322) SHA1(a752f28c19c58263680221ad1119f2fd57df4723) )
 	ROM_CONTINUE(           0x08000, 0x08000 )
@@ -356,7 +363,7 @@ ROM_START( parodius )
 ROM_END
 
 ROM_START( parodisj )
-	ROM_REGION( 0x51800, REGION_CPU1, 0 ) /* code + banked roms + palette RAM */
+	ROM_REGION( 0x51000, REGION_CPU1, 0 ) /* code + banked roms + palette RAM */
 	ROM_LOAD( "955e01.bin", 0x10000, 0x20000, CRC(49baa334) SHA1(8902fbb2228111b15de6537bd168241933df134d) )
 	ROM_LOAD( "955e02.bin", 0x30000, 0x18000, CRC(14010d6f) SHA1(69fe162ea08c3bd4b3e78e9d10d278bd15444af4) )
 	ROM_CONTINUE(           0x08000, 0x08000 )
@@ -384,24 +391,28 @@ ROM_END
 
 static void parodius_banking(int lines)
 {
-	int n = 0;
+	unsigned char *RAM = memory_region(REGION_CPU1);
+	int offs = 0;
 
 	if (lines & 0xf0) logerror("%04x: setlines %02x\n",activecpu_get_pc(),lines);
 
-	n = ((lines & 0x0f)^0x0f) + 4;
-	if (n >= 0x12) n -= 0x10;
-	memory_set_bank(2, n);
+	offs = 0x10000 + (((lines & 0x0f)^0x0f) * 0x4000);
+	if (offs >= 0x48000) offs -= 0x40000;
+	memory_set_bankptr( 1, &RAM[offs] );
 }
 
 static MACHINE_INIT( parodius )
 {
+	unsigned char *RAM = memory_region(REGION_CPU1);
+
 	cpunum_set_info_fct(0, CPUINFO_PTR_KONAMI_SETLINES_CALLBACK, (genf *)parodius_banking);
+
+	paletteram = &memory_region(REGION_CPU1)[0x48000];
 
 	videobank = 0;
 
 	/* init the default bank */
-	memory_set_bank(1, 2);
-	memory_set_bank(2, 4);
+	memory_set_bankptr(1,&RAM[0x10000]);
 }
 
 
@@ -409,11 +420,6 @@ static DRIVER_INIT( parodius )
 {
 	konami_rom_deinterleave_2(REGION_GFX1);
 	konami_rom_deinterleave_2(REGION_GFX2);
-
-	paletteram = &memory_region(REGION_CPU1)[0x50000];
-
-	memory_configure_bank(1, 0, 3, paletteram, 0x800);
-	memory_configure_bank(2, 0, 0x12, memory_region(REGION_CPU1), 0x4000);
 }
 
 

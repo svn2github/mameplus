@@ -41,13 +41,25 @@ endif
 # the first two targets generate the prefix.h header
 # note this requires that OSOBJS be the first target
 #
-OSOBJS = $(OBJ)/windows/winmain.o $(OBJ)/windows/fileio.o $(OBJ)/windows/config.o \
-	 $(OBJ)/windows/ticker.o $(OBJ)/windows/fronthlp.o $(OBJ)/windows/video.o \
-	 $(OBJ)/windows/input.o $(OBJ)/windows/sound.o $(OBJ)/windows/blit.o \
-	 $(OBJ)/windows/snprintf.o $(OBJ)/windows/rc.o $(OBJ)/windows/misc.o \
-	 $(OBJ)/windows/window.o $(OBJ)/windows/wind3d.o $(OBJ)/windows/wind3dfx.o \
-	 $(OBJ)/windows/winddraw.o \
-	 $(OBJ)/windows/asmblit.o $(OBJ)/windows/asmtile.o
+OSOBJS = \
+	$(OBJ)/windows/asmblit.o \
+	$(OBJ)/windows/asmtile.o \
+	$(OBJ)/windows/blit.o \
+	$(OBJ)/windows/config.o \
+	$(OBJ)/windows/fileio.o \
+	$(OBJ)/windows/fronthlp.o \
+	$(OBJ)/windows/input.o \
+	$(OBJ)/windows/misc.o \
+	$(OBJ)/windows/rc.o \
+	$(OBJ)/windows/snprintf.o \
+	$(OBJ)/windows/sound.o \
+	$(OBJ)/windows/ticker.o \
+	$(OBJ)/windows/video.o \
+	$(OBJ)/windows/window.o \
+	$(OBJ)/windows/wind3d.o \
+	$(OBJ)/windows/wind3dfx.o \
+	$(OBJ)/windows/winddraw.o \
+	$(OBJ)/windows/winmain.o
 
 # extra targets and rules for the scale effects
 ifneq ($(USE_SCALE_EFFECTS),)
@@ -115,19 +127,21 @@ endif
 # add resource file
 CLIOBJS += $(OBJ)/windows/mame.res
 
+# add debugging info
+ifdef DEBUG
 ifdef NEW_DEBUGGER
 OSOBJS += $(OBJ)/windows/debugwin.o
 endif
 
 # enable guard pages on all memory allocations in the debug build
-#ifdef DEBUG
 #DEFS += -DMALLOC_DEBUG
+#
 #OSDBGOBJS = $(OBJ)/windows/winalloc.o
 #OSDBGLDFLAGS = -Wl,--allow-multiple-definition
-#else
+else
 OSDBGOBJS =
 OSDBGLDFLAGS =
-#endif
+endif
 
 # video blitting functions
 $(OBJ)/windows/asmblit.o: src/windows/asmblit.asm
