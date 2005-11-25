@@ -1577,7 +1577,6 @@ ROM_START( nibblero )
 	ROM_LOAD( "g-0959-45.ic53", 0x1000, 0x0800, CRC(33189917) SHA1(01a1b1693db0172609780daeb60430fa0c8bcec2) )
 ROM_END
 
-#ifdef EXTRA_GAMES
 ROM_START( vantris )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 ) /* 64k for code */
 	ROM_LOAD( "sk4_ic07.bin", 0x4000, 0x1000, CRC(6a29e354) SHA1(ff953962ebc14a28cfc96f8e269cb1e1c188ed8a) )
@@ -1608,7 +1607,6 @@ ROM_START( vantris )
 	ROM_LOAD( "sk6_ic08.bin", 0x4800, 0x0800, CRC(3b7e9d7c) SHA1(d9033188068b2aaa1502c89cf09f955eded8fa7a) )
 	ROM_LOAD( "sk6_ic11.bin", 0x5000, 0x0800, CRC(c36df041) SHA1(8b51934229b961180d1edb99be3a4d337d37f66f) )
 ROM_END
-#endif /* EXTRA_GAMES */
 
 /* Game Drivers */
 
@@ -1626,7 +1624,4 @@ GAME( 1982, nibbler,  0,        nibbler,  nibbler,  0, ROT90, "Rock-Ola", "Nibbl
 GAME( 1982, nibblera, nibbler,  nibbler,  nibbler,  0, ROT90, "Rock-Ola", "Nibbler (set 2)", 0 )
 GAME( 1982, nibblerb, nibbler,  nibbler,  nibbler,  0, ROT90, "Rock-Ola", "Nibbler (set 3)", 0 )
 GAME( 1983, nibblero, nibbler,  nibbler,  nibbler,  0, ROT90, "Olympia",  "Nibbler (Olympia)", 0 )
-
-#ifdef EXTRA_GAMES
-GAME( 1998, vantris,  0,        vanguard, vanguard, 0, ROT90, "N.Kehrer", "Vantris (Vanguard hardware)", 0 )
-#endif /* EXTRA_GAMES */
+GAME ( 1998, vantris,  0,        vanguard, vanguard, 0, ROT90, "N.Kehrer", "Vantris (Vanguard hardware)", 0 )

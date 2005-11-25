@@ -83,7 +83,6 @@
 #define IDD_INTERFACE_OPTIONS           173
 #define IDD_PROP_HISTORY                176
 #define IDD_ROM_ERROR                   177
-
 #define IDD_ERROR                       179
 #define IDR_CONTEXT_SCREENSHOT          181
 #define IDI_HEADER_UP                   182
@@ -229,9 +228,6 @@
 #define IDC_TRIPLE_BUFFER               1123
 #define IDC_LOAD_ROMNAME                1124
 #define IDC_DEFAULT_INPUT               1125
-
-
-
 #define IDC_FILTER_EDIT                 1129
 #define IDC_ABOUT                       1130
 #define IDC_PROP_DISPLAY                1131
@@ -461,7 +457,6 @@
 #define ID_CONTEXT_SHOW_FOLDER          40048	// status bar (ID_CONTEXT_RENAME_CUSTOM + 3, ID_CONTEXT_FILTERS + 2)
 #define ID_CONTEXT_REMOVE_CUSTOM        40049
 #define ID_CONTEXT_SELECT_RANDOM        40050
-
 #define ID_VIEW_TAB_SCREENSHOT          40052
 #define ID_VIEW_TAB_FLYER               40053
 #define ID_VIEW_TAB_CABINET             40054
@@ -511,6 +506,8 @@
 #define ID_LANGUAGE_PORTUGUESE_BRA      40110
 #define ID_LANGUAGE_POLISH              40111
 #define ID_LANGUAGE_HUNGARIAN           40112
+
+#define ID_PLAY_PATCH                   40200	//IPS_PATCH
 
 #define IDC_STATIC                      -1
 

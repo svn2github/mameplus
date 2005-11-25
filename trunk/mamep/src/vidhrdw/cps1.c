@@ -333,9 +333,7 @@ static struct CPS1config cps1_config_table[]=
 	{"knights", BATTRY_4, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 3 },
 	{"knightsu",BATTRY_4, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 3 },
 	{"knightsj",BATTRY_4, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 3 },
-#ifdef EXTRA_GAMES
 	{"knightsh",NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 3 },
-#endif /* EXTRA_GAMES */
 	{"sf2ce",   NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff },
 	{"sf2ceua", NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff },
 	{"sf2ceub", NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff },
@@ -353,13 +351,11 @@ static struct CPS1config cps1_config_table[]=
 	{"sf2m5",   NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
 	{"sf2m6",   NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
 	{"sf2m7",   NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
-#ifdef EXTRA_GAMES
 	{"sf2m8",   HACK_B_4, 2,2,2, 0x0000,0xffff,0x0000,0xffff },
 	{"sf2m13",  HACK_B_2, 2,2,2, 0x0000,0xffff,0x0000,0xffff },
 	{"sf2ceh",  NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff },
 	{"sf2tlona",NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
 	{"sf2tlonb",NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
-#endif /* EXTRA_GAMES */
 	{"sf2yyc",  NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
 	{"sf2koryu",NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
 	{"varth",   CPS_B_04, 0,0,0, 0x0000,0xffff,0x0c00,0x0fff },	/* CPSB test has been patched out (60=0008) */
@@ -370,17 +366,13 @@ static struct CPS1config cps1_config_table[]=
 	{"wofa",    NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* bootleg? */
 	{"wofu",    QSOUND_1, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"wofj",    QSOUND_1, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
-#ifdef EXTRA_GAMES
 	{"wofh",    HACK_B_3, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 11 },
 	{"wof3js",  CPS_B_01, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"wof3sj",  HACK_B_3, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 11 },
-#endif /* EXTRA_GAMES */
 	{"dino",    QSOUND_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
 	{"dinou",   QSOUND_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
 	{"dinoj",   QSOUND_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
-#ifdef EXTRA_GAMES
 	{"dinoh",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
-#endif /* EXTRA_GAMES */
 	{"punisher",QSOUND_3, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"punishru",QSOUND_3, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"punishrj",QSOUND_3, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
@@ -398,15 +390,11 @@ static struct CPS1config cps1_config_table[]=
 	{"megaman", NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"rockmanj",NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"pnickj",  NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
-#ifdef EXTRA_GAMES
 	{"pnicku",  NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
-#endif /* EXTRA_GAMES */
 	{"pang3",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 5 },	/* EEPROM port is among the CPS registers */
 	{"pang3j",  NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 5 },	/* EEPROM port is among the CPS registers */
-#ifdef EXTRA_GAMES
 	{"sfzch",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"sfach",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
-#endif /* EXTRA_GAMES */
 #ifdef MESS
 	{"sfzch",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 #endif
@@ -491,14 +479,12 @@ static MACHINE_INIT( cps )
 		rom[0xe5332/2] = 0x6014;
 	}
 
-#ifdef EXTRA_GAMES
 	if (strcmp(gamename, "dinoh" )==0)
 	{
 		/* Patch out Q-Sound test */
 		UINT16 *rom = (UINT16 *)memory_region(REGION_CPU1);	
 		rom[0xaacf4/2] = 0x4e71;
 	}
-#endif /* EXTRA_GAMES */
 
 #if 0
 	if (strcmp(gamename, "sf2accp2" )==0)
@@ -791,14 +777,15 @@ DRIVER_INIT( cps2 )
 {
 	UINT16 *rom = (UINT16 *)memory_region(REGION_CPU1);
 	UINT16 *xor = (UINT16 *)memory_region(REGION_USER1);
+	int length = memory_region_length(REGION_CPU1);
 	int i;
 
 
-	for (i = 0;i < memory_region_length(REGION_CPU1)/2;i++)
+	for (i = 0;i < length/2;i++)
 		xor[i] ^= rom[i];
 
-	memory_set_opcode_base(0,xor);
-	m68k_set_encrypted_opcode_range(0,0,memory_region_length(REGION_CPU1));
+	memory_set_decrypted_region(0, 0x000000, length - 1, xor);
+	m68k_set_encrypted_opcode_range(0,0,length);
 
 	cps2_gfx_decode();
 

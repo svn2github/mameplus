@@ -52,15 +52,16 @@ void neogeo_memcard_save(void);
 void neogeo_memcard_eject(void);
 int neogeo_memcard_create(int);
 
+
 /*----------- defined in machine/neocrypt.c -----------*/
 
 extern int neogeo_fix_bank_type;
 
 void kof99_neogeo_gfx_decrypt(int extra_xor);
 void kof2000_neogeo_gfx_decrypt(int extra_xor);
-#ifdef EXTRA_GAMES
+void cmc42_neogeo_gfx_decrypt(int extra_xor);
+void cmc50_neogeo_gfx_decrypt(int extra_xor);
 void neogeo_sfix_decrypt(void);
-#endif /* EXTRA_GAMES */
 
 /*----------- defined in vidhrdw/neogeo.c -----------*/
 

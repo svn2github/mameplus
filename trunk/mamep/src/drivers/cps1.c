@@ -203,13 +203,11 @@ static WRITE16_HANDLER( qsound_sharedram2_w )
 		qsound_sharedram2[offset] = data;
 }
 
-#ifdef EXTRA_GAMES
 static WRITE16_HANDLER( dinoh_sound_command_w )
 {
 	/* Pass the Sound Code to the Q-Sound Shared Ram */
 	qsound_sharedram1[0x0001] = data;
 }
-#endif /* EXTRA_GAMES */
 
 static WRITE8_HANDLER( qsound_banksw_w )
 {
@@ -2557,7 +2555,6 @@ INPUT_PORTS_START( knights )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
 INPUT_PORTS_END
 
-#ifdef EXTRA_GAMES
 INPUT_PORTS_START( knightsh )
 	PORT_START_TAG("IN0")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -2667,7 +2664,6 @@ INPUT_PORTS_START( knightsh )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
 	PORT_BIT( 0x400,IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(3) //fixme
 INPUT_PORTS_END
-#endif /* EXTRA_GAMES */
 
 INPUT_PORTS_START( varth )
 	PORT_START_TAG("IN0")
@@ -2896,7 +2892,6 @@ INPUT_PORTS_START( wof )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
 INPUT_PORTS_END
 
-#ifdef EXTRA_GAMES
 INPUT_PORTS_START( wofh )
 	PORT_START_TAG("IN0")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -2948,7 +2943,6 @@ INPUT_PORTS_START( wofh )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN3 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
 INPUT_PORTS_END
-#endif /* EXTRA_GAMES */
 
 /* Needs further checking */
 INPUT_PORTS_START( dino )
@@ -3003,7 +2997,6 @@ INPUT_PORTS_START( dino )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
 INPUT_PORTS_END
 
-#ifdef EXTRA_GAMES
 INPUT_PORTS_START( dinoh )
 	PORT_START_TAG("IN0")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -3056,7 +3049,6 @@ INPUT_PORTS_START( dinoh )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
 	PORT_BIT( 0x100, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(3) //fixme
 INPUT_PORTS_END
-#endif /* EXTRA_GAMES */
 
 /* Needs further checking */
 INPUT_PORTS_START( punisher )
@@ -3817,7 +3809,6 @@ INPUT_PORTS_START( rockmanj )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-#ifdef EXTRA_GAMES
 INPUT_PORTS_START( sfzch )
 	PORT_START_TAG("IN0")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_PLAYER(1)
@@ -3862,7 +3853,6 @@ INPUT_PORTS_START( sfzch )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(2)
 INPUT_PORTS_END
-#endif /* EXTRA_GAMES */
 
 static gfx_layout layout8x8 =
 {
@@ -6021,7 +6011,6 @@ ROM_START( knightsj )
 	ROM_LOAD( "kr_19.rom",    0x20000, 0x20000, CRC(bfc654e9) SHA1(01b3d92e4dedf55ea3933d387c7ddb9ba2549773) )
 ROM_END
 
-#ifdef EXTRA_GAMES
 ROM_START( knightsh )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "krh_23.rom",   0x00000, 0x80000, CRC(fa2ff63d) SHA1(f3800102aadeccd13ed49c88039732453266283a) )
@@ -6048,7 +6037,6 @@ ROM_START( knightsh )
 	ROM_LOAD( "kr_18.rom",    0x00000, 0x20000, CRC(da69d15f) SHA1(9616207e693bae85705f786cef60b9f6951b5067) )
 	ROM_LOAD( "kr_19.rom",    0x20000, 0x20000, CRC(bfc654e9) SHA1(01b3d92e4dedf55ea3933d387c7ddb9ba2549773) )
 ROM_END
-#endif /* EXTRA_GAMES */
 
 ROM_START( sf2ce )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
@@ -6604,7 +6592,6 @@ ROM_START( sf2m7 )
 	ROM_LOAD( "s92_19.bin",    0x20000, 0x20000, CRC(beade53f) SHA1(277c397dc12752719ec6b47d2224750bd1c07f79) )
 ROM_END
 
-#ifdef EXTRA_GAMES
 ROM_START( sf2m8 )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_BYTE( "k4-222", 0x000000, 0x80000, CRC(db567b66) )
@@ -6670,7 +6657,6 @@ ROM_START( sf2m13 )
 	ROM_LOAD( "s92_18.bin",    0x00000, 0x20000, CRC(7f162009) SHA1(346bf42992b4c36c593e21901e22c87ae4a7d86d) )
 	ROM_LOAD( "s92_19.bin",    0x20000, 0x20000, CRC(beade53f) SHA1(277c397dc12752719ec6b47d2224750bd1c07f79) )
 ROM_END
-#endif /* EXTRA_GAMES */
 
 ROM_START( sf2yyc )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
@@ -6740,7 +6726,6 @@ ROM_START( sf2koryu )
 	ROM_LOAD( "s92_19.bin",    0x20000, 0x20000, CRC(beade53f) SHA1(277c397dc12752719ec6b47d2224750bd1c07f79) )
 ROM_END
 
-#ifdef EXTRA_GAMES
 ROM_START( sf2tlona )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_BYTE( "tl4mt.1",   0x000000, 0x80000, CRC(158635ca) SHA1(878b56064861993ac92fbd88eb1117d3680fe7d7) )
@@ -6838,7 +6823,6 @@ ROM_START( sf2ceh )
 	ROM_LOAD( "s92_18.bin",    0x00000, 0x20000, CRC(7f162009) SHA1(346bf42992b4c36c593e21901e22c87ae4a7d86d) )
 	ROM_LOAD( "s92_19.bin",    0x20000, 0x20000, CRC(beade53f) SHA1(277c397dc12752719ec6b47d2224750bd1c07f79) )
 ROM_END
-#endif /* EXTRA_GAMES */
 
 ROM_START( varth )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
@@ -6983,7 +6967,7 @@ ROM_START( wof )
 	ROM_REGION( 0x8000, REGION_GFX2, 0 )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
 
-	ROM_REGION( 2*0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
+	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* QSound Z80 code */
 	ROM_LOAD( "tk2_qa.rom",     0x00000, 0x08000, CRC(c9183a0d) SHA1(d8b1d41c572f08581f8ab9eb878de77d6ea8615d) )
 	ROM_CONTINUE(               0x10000, 0x18000 )
 
@@ -7012,7 +6996,7 @@ ROM_START( wofa )
 	ROM_REGION( 0x8000, REGION_GFX2, 0 )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
 
-	ROM_REGION( 2*0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
+	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* QSound Z80 code */
 	ROM_LOAD( "tk2_qa.rom",     0x00000, 0x08000, CRC(c9183a0d) SHA1(d8b1d41c572f08581f8ab9eb878de77d6ea8615d) )
 	ROM_CONTINUE(               0x10000, 0x18000 )
 
@@ -7041,7 +7025,7 @@ ROM_START( wofu )
 	ROM_REGION( 0x8000, REGION_GFX2, 0 )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
 
-	ROM_REGION( 2*0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
+	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* QSound Z80 code */
 	ROM_LOAD( "tk2_qa.rom",     0x00000, 0x08000, CRC(c9183a0d) SHA1(d8b1d41c572f08581f8ab9eb878de77d6ea8615d) )
 	ROM_CONTINUE(               0x10000, 0x18000 )
 
@@ -7070,7 +7054,7 @@ ROM_START( wofj )
 	ROM_REGION( 0x8000, REGION_GFX2, 0 )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
 
-	ROM_REGION( 2*0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
+	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* QSound Z80 code */
 	ROM_LOAD( "tk2_qa.rom",     0x00000, 0x08000, CRC(c9183a0d) SHA1(d8b1d41c572f08581f8ab9eb878de77d6ea8615d) )
 	ROM_CONTINUE(               0x10000, 0x18000 )
 
@@ -7081,7 +7065,6 @@ ROM_START( wofj )
 	ROM_LOAD( "tk2_q4.rom",     0x180000, 0x80000, CRC(36642e88) SHA1(8ab25b19e2b67215a5cb1f3aa81b9d26009cfeb8) )
 ROM_END
 
-#ifdef EXTRA_GAMES
 ROM_START( wofh )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "sgyx.800",  0x000000, 0x100000, CRC(3703a650) )
@@ -7173,7 +7156,6 @@ ROM_START( wof3sj )
 	ROM_LOAD( "tk2_q3.rom",     0x100000, 0x80000, CRC(bfcf6f52) SHA1(2a85ff3fc89b4cbabd20779ec12da2e116333c7c) )
 	ROM_LOAD( "tk2_q4.rom",     0x180000, 0x80000, CRC(36642e88) SHA1(8ab25b19e2b67215a5cb1f3aa81b9d26009cfeb8) )
 ROM_END
-#endif /* EXTRA_GAMES */
 
 ROM_START( sf2hf )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
@@ -7290,7 +7272,7 @@ ROM_START( dino )
 	ROM_REGION( 0x8000, REGION_GFX2, 0 )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
 
-	ROM_REGION( 2*0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
+	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* QSound Z80 code */
 	ROM_LOAD( "cd_q.rom",       0x00000, 0x08000, CRC(605fdb0b) SHA1(9da90ddc6513aaaf2260f0c69719c6b0e585ba8c) )
 	ROM_CONTINUE(               0x10000, 0x18000 )
 
@@ -7320,7 +7302,7 @@ ROM_START( dinou )
 	ROM_REGION( 0x8000, REGION_GFX2, 0 )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
 
-	ROM_REGION( 2*0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
+	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* QSound Z80 code */
 	ROM_LOAD( "cd_q.rom",       0x00000, 0x08000, CRC(605fdb0b) SHA1(9da90ddc6513aaaf2260f0c69719c6b0e585ba8c) )
 	ROM_CONTINUE(               0x10000, 0x18000 )
 
@@ -7350,7 +7332,7 @@ ROM_START( dinoj )
 	ROM_REGION( 0x8000, REGION_GFX2, 0 )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
 
-	ROM_REGION( 2*0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
+	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* QSound Z80 code */
 	ROM_LOAD( "cd_q.rom",       0x00000, 0x08000, CRC(605fdb0b) SHA1(9da90ddc6513aaaf2260f0c69719c6b0e585ba8c) )
 	ROM_CONTINUE(               0x10000, 0x18000 )
 
@@ -7361,7 +7343,6 @@ ROM_START( dinoj )
 	ROM_LOAD( "cd_q4.rom",      0x180000, 0x80000, CRC(2c67821d) SHA1(6e2528d0b22508300a6a142a796dd3bf53a66946) )
 ROM_END
 
-#ifdef EXTRA_GAMES
 ROM_START( dinoh )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "cda_23h.rom",  0x000000, 0x80000, CRC(8e2a9cf0) SHA1(01111582e579bd3b43b52d0e0c445c32fe5e053b) )
@@ -7392,7 +7373,6 @@ ROM_START( dinoh )
 	ROM_LOAD( "cd_q3.rom",      0x100000, 0x80000, CRC(2f273ffc) SHA1(f0de462f6c4d251911258e0ebd886152c14d1586) )
 	ROM_LOAD( "cd_q4.rom",      0x180000, 0x80000, CRC(2c67821d) SHA1(6e2528d0b22508300a6a142a796dd3bf53a66946) )
 ROM_END
-#endif /* EXTRA_GAMES */
 
 ROM_START( punisher )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
@@ -7419,7 +7399,7 @@ ROM_START( punisher )
 	ROM_REGION( 0x8000, REGION_GFX2, 0 )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
 
-	ROM_REGION( 2*0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
+	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* QSound Z80 code */
 	ROM_LOAD( "ps_q.rom",       0x00000, 0x08000, CRC(49ff4446) SHA1(87af12f87a940a6c5428b4574ad44a4b54867bc3) )
 	ROM_CONTINUE(               0x10000, 0x18000 )
 
@@ -7455,7 +7435,7 @@ ROM_START( punishru )
 	ROM_REGION( 0x8000, REGION_GFX2, 0 )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
 
-	ROM_REGION( 2*0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
+	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* QSound Z80 code */
 	ROM_LOAD( "ps_q.rom",       0x00000, 0x08000, CRC(49ff4446) SHA1(87af12f87a940a6c5428b4574ad44a4b54867bc3) )
 	ROM_CONTINUE(               0x10000, 0x18000 )
 
@@ -7485,7 +7465,7 @@ ROM_START( punishrj )
 	ROM_REGION( 0x8000, REGION_GFX2, 0 )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
 
-	ROM_REGION( 2*0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
+	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* QSound Z80 code */
 	ROM_LOAD( "ps_q.rom",       0x00000, 0x08000, CRC(49ff4446) SHA1(87af12f87a940a6c5428b4574ad44a4b54867bc3) )
 	ROM_CONTINUE(               0x10000, 0x18000 )
 
@@ -7523,7 +7503,7 @@ ROM_START( slammast )
 	ROM_REGION( 0x8000, REGION_GFX2, 0 )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
 
-	ROM_REGION( 2*0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
+	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* QSound Z80 code */
 	ROM_LOAD( "mb_qa.rom",      0x00000, 0x08000, CRC(e21a03c4) SHA1(98c03fd2c9b6bf8a4fc25a4edca87fff7c3c3819) )
 	ROM_CONTINUE(               0x10000, 0x18000 )
 
@@ -7568,7 +7548,7 @@ ROM_START( slammasu )
 	ROM_REGION( 0x8000, REGION_GFX2, 0 )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
 
-	ROM_REGION( 2*0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
+	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* QSound Z80 code */
 	ROM_LOAD( "mb_qa.rom",      0x00000, 0x08000, CRC(e21a03c4) SHA1(98c03fd2c9b6bf8a4fc25a4edca87fff7c3c3819) )
 	ROM_CONTINUE(               0x10000, 0x18000 )
 
@@ -7613,7 +7593,7 @@ ROM_START( mbomberj )
 	ROM_REGION( 0x8000, REGION_GFX2, 0 )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
 
-	ROM_REGION( 2*0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
+	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* QSound Z80 code */
 	ROM_LOAD( "mb_qa.rom",      0x00000, 0x08000, CRC(e21a03c4) SHA1(98c03fd2c9b6bf8a4fc25a4edca87fff7c3c3819) )
 	ROM_CONTINUE(               0x10000, 0x18000 )
 
@@ -7661,7 +7641,7 @@ ROM_START( mbombrd )
 	ROM_REGION( 0x8000, REGION_GFX2, 0 )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
 
-	ROM_REGION( 2*0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
+	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* QSound Z80 code */
 	ROM_LOAD( "mb_q.bin",       0x00000, 0x08000, CRC(d6fa76d1) SHA1(3bfcb703e0e458ef1bb843230f8537167f1d4c3c) )
 	ROM_CONTINUE(               0x10000, 0x18000 )
 
@@ -7706,7 +7686,7 @@ ROM_START( mbombrdj )
 	ROM_REGION( 0x8000, REGION_GFX2, 0 )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
 
-	ROM_REGION( 2*0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
+	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* QSound Z80 code */
 	ROM_LOAD( "mb_q.bin",       0x00000, 0x08000, CRC(d6fa76d1) SHA1(3bfcb703e0e458ef1bb843230f8537167f1d4c3c) )
 	ROM_CONTINUE(               0x10000, 0x18000 )
 
@@ -7756,7 +7736,6 @@ ROM_START( pnickj )
 	ROM_LOAD( "pnij25.bin",   0x20000, 0x20000, CRC(22109aaa) SHA1(cf21e75674d81b2daae2083d02f9f4b6e52722c6) )
 ROM_END
 
-#ifdef EXTRA_GAMES
 ROM_START( pnicku )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_BYTE( "pnij36.bin",   0x00000, 0x20000, CRC(2d4ffb2b) SHA1(6e49cf89a36834fd1de8b4b860fe66f3d7d67a84) )
@@ -7791,7 +7770,6 @@ ROM_START( pnicku )
 	ROM_LOAD( "pnij24.bin",   0x00000, 0x20000, CRC(5092257d) SHA1(95dc9d10940653b2fb37baf5c1ed27145b02104e) )
 	ROM_LOAD( "pnij25.bin",   0x20000, 0x20000, CRC(22109aaa) SHA1(cf21e75674d81b2daae2083d02f9f4b6e52722c6) )
 ROM_END
-#endif /* EXTRA_GAMES */
 
 ROM_START( qad )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
@@ -7993,7 +7971,6 @@ ROM_START( rockmanj )
 	ROM_LOAD( "rcm_19.rom",    0x20000, 0x20000, CRC(f257dbe1) SHA1(967def6b6f93039dbc46373caabeb3301577be75) )
 ROM_END
 
-#ifdef EXTRA_GAMES
 ROM_START( sfzch )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "sfzch23",        0x000000, 0x80000, CRC(1140743f) SHA1(10bcedb5cca266f2aa3ed99ede6f9a64fc877539))
@@ -8067,7 +8044,6 @@ ROM_START( sfach )
 	ROM_LOAD( "sfz18",         0x00000, 0x20000, CRC(61022b2d) SHA1(6369d0c1d08a30ee19b94e52ab1463a7784b9de5) )
 	ROM_LOAD( "sfz19",         0x20000, 0x20000, CRC(3b5886d5) SHA1(7e1b7d40ef77b5df628dd663d45a9a13c742cf58) )
 ROM_END
-#endif /* EXTRA_GAMES */
 
 
 
@@ -8083,7 +8059,6 @@ static DRIVER_INIT( dino )
 	init_cps1();
 }
 
-#ifdef EXTRA_GAMES
 static DRIVER_INIT( dinoh )
 {	
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x800180, 0x800181, 0, 0, dinoh_sound_command_w);
@@ -8371,7 +8346,6 @@ static DRIVER_INIT( sf2m2 )
 	mem8[0xC0671] = 0x4E;
 	init_cps1();
 }
-#endif /* EXTRA_GAMES */
 
 static DRIVER_INIT( kodb )
 {
@@ -8730,9 +8704,7 @@ GAME( 1991, captcomj, captcomm, cps1,     captcomm, cps1,     ROT0,   "Capcom", 
 GAME( 1991, knights,  0,        cps1,     knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (World 911127)", 0 )				// "ETC"
 GAME( 1991, knightsu, knights,  cps1,     knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (US 911127)", 0 )
 GAME( 1991, knightsj, knights,  cps1,     knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (Japan 911127)", 0 )
-#ifdef EXTRA_GAMES
 GAME( 1991, knightsh, knights,  cps1,     knightsh, cps1,     ROT0,   "hack",   "Knights of the Round (hack)", 0 )
-#endif /* EXTRA_GAMES */
 GAME( 1992, sf2ce,    0,        sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (World 920313)", 0 )	// "ETC"
 GAME( 1992, sf2ceua,  sf2ce,    sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (US 920313)", 0 )
 GAME( 1992, sf2ceub,  sf2ce,    sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (US 920513)", 0 )
@@ -8750,13 +8722,11 @@ GAME (1992, sf2m4,    sf2ce,    sf2,      sf2j,     cps1,     ROT0,   "hack","St
 GAME (1992, sf2m5,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (M5)", 0 )
 GAME (1992, sf2m6,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (Xiang Long set 2)", 0 )
 GAME (1992, sf2m7,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (M7)", 0 )
-#ifdef EXTRA_GAMES
 GAME (1992, sf2m8,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack",  "Street Fighter II' - Champion Edition (M8)", GAME_NOT_WORKING )
 GAME (1992, sf2m13,   sf2ce,    sf2,      sf2j,     cps1,     ROT0,   "hack",  "Street Fighter II' - Champion Edition (M13)", GAME_NOT_WORKING )
 GAME( 1999, sf2ceh,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack",  "Street Fighter II' - Champion Edition (Hispanic 990804)", 0 )
 GAME( 1992, sf2tlona, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack",	"Street Fighter II' - Champion Edition (Tu Long set 1)", 0 )
 GAME( 1992, sf2tlonb, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack",	"Street Fighter II' - Champion Edition (Tu Long set 2)", 0 )
-#endif /* EXTRA_GAMES */
 GAME (1992, sf2yyc,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (YYC)", 0 )
 GAME (1992, sf2koryu, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (Xiang Long set 1)", 0 )	// title should use Chinese Reading instead of Japanese
 GAME( 1992, varth,    0,        cps1,     varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (World 920612)", 0 )		// "ETC"
@@ -8776,17 +8746,13 @@ GAME( 1992, wof,      0,        qsound,   wof,      wof,      ROT0,   "Capcom", 
 GAME( 1992, wofa,     wof,      qsound,   wof,      wof,      ROT0,   "Capcom", "Sangokushi II (Asia 921005)", 0 )					// World "warning"
 GAME( 1992, wofu,     wof,      qsound,   wof,      wof,      ROT0,   "Capcom", "Warriors of Fate (US 921031)", 0 )					// World "warning"
 GAME( 1992, wofj,     wof,      qsound,   wof,      wof,      ROT0,   "Capcom", "Tenchi wo Kurau II - Sekiheki no Tatakai (Japan 921031)", 0 )
-#ifdef EXTRA_GAMES
 GAME( 1999, wofh,     wof,      qsound,   wofh,     wofh,     ROT0,   "hack",  "Sanguo Yingxiong Zhuan", GAME_IMPERFECT_SOUND )
 GAME( 1997, wof3js,   wof,      qsound,   wofh,     wof3js,   ROT0,   "hack",  "San Jian Sheng", 0 )
 GAME( 1997, wof3sj,   wof,      qsound,   wofh,     wof3sj,   ROT0,   "hack",  "San Sheng Jian", GAME_IMPERFECT_SOUND )
-#endif /* EXTRA_GAMES */
 GAME( 1993, dino,     0,        qsound,   dino,     dino,     ROT0,   "Capcom", "Cadillacs and Dinosaurs (World 930201)", 0 )			// "ETC"
 GAME( 1993, dinou,    dino,     qsound,   dino,     dino ,    ROT0,   "Capcom", "Cadillacs and Dinosaurs (US 930201)", 0 )
 GAME( 1993, dinoj,    dino,     qsound,   dino,     dino ,    ROT0,   "Capcom", "Cadillacs Kyouryuu-Shinseiki (Japan 930201)", 0 )
-#ifdef EXTRA_GAMES
 GAME( 1993, dinoh,    dino,     qsound,   dinoh,    dinoh,    ROT0,   "hack",   "Cadillacs and Dinosaurs (hack)", 0 )
-#endif /* EXTRA_GAMES */
 GAME( 1993, punisher, 0,        qsound,   punisher, punisher, ROT0,   "Capcom", "The Punisher (World 930422)", 0 )					// "ETC"
 GAME( 1993, punishru, punisher, qsound,   punisher, punisher, ROT0,   "Capcom", "The Punisher (US 930422)", 0 )
 GAME( 1993, punishrj, punisher, qsound,   punisher, punisher, ROT0,   "Capcom", "The Punisher (Japan 930422)", 0 )
@@ -8797,15 +8763,11 @@ GAME( 1993, mbombrd,  slammast, qsound,   slammast, slammast, ROT0,   "Capcom", 
 GAME( 1993, mbombrdj, slammast, qsound,   slammast, slammast, ROT0,   "Capcom", "Muscle Bomber Duo - Heat Up Warriors (Japan 931206)", 0 )
 
 GAME( 1994, pnickj,   0,        cps1,     pnickj,   cps1,     ROT0,   "Compile (Capcom license)", "Pnickies (Japan 940608)", 0 )
-#ifdef EXTRA_GAMES
 GAME( 1994, pnicku,   pnickj,   cps1,     pnickj,   cps1,     ROT0,   "Compile (Capcom license)", "Pnickies (US 940608)", 0 )
-#endif /* EXTRA_GAMES */
 /* Japanese version of Pang 3 is encrypted, Euro version is not */
 GAME( 1995, pang3,    0,        pang3,    pang3,    cps1,     ROT0,   "Mitchell", "Pang! 3 (Euro 950511)", 0 )
 GAME( 1995, pang3j,   pang3,    pang3,    pang3,    pang3,    ROT0,   "Mitchell", "Pang! 3 (Japan 950511)", 0 )
 
-#ifdef EXTRA_GAMES
 /* CPS Changer */
 GAME( 1995, sfzch,    0,        cps1,     sfzch,    cps1,     ROT0,   "Capcom", "Street Fighter Zero (CPS Changer Japan 951020)", 0 )
 GAME( 1995, sfach,    sfzch,    cps1,     sfzch,    cps1,     0,      "Capcom", "Street Fighter Alpha (Publicity US 950727)", 0 )
-#endif /* EXTRA_GAMES */

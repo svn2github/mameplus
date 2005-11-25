@@ -55,10 +55,8 @@ const game_driver *drivers[] =
 
 #else	/* DRIVER_RECURSIVE */
 
-#ifdef EXTRA_GAMES
 	DRIVER( pong )		/* (c) 1972 Atari */
 	DRIVER( monaco )	/* (c) 1979 SEGA */
-#endif /* EXTRA_GAMES */
 
 	/* "Pacman hardware" games */
 	DRIVER( puckman ) /* (c) 1980 Namco */
@@ -1977,6 +1975,7 @@ const game_driver *drivers[] =
 	DRIVER( grindstm )	/* TP-027 (c) 1993 Toaplan + Unite Trading license (Korea) */
 	DRIVER( grindsta )	/* TP-027 (c) 1993 Toaplan + Unite Trading license (Korea) */
 	DRIVER( batsugun )	/* TP-030 (c) 1993 Toaplan */
+	DRIVER( batsugna )	/* TP-030 (c) 1993 Toaplan */
 	DRIVER( batugnsp )	/* TP-??? (c) 1993 Toaplan */
 	DRIVER( snowbro2 )	/* TP-??? (c) 1994 Hanafram */
 	/* see http://www.vsa-ag.ch/r8zing/ for a list of Raizing/8ing games */
@@ -2281,9 +2280,7 @@ V-V                           TP-027
 	DRIVER( knights )	/* 27/11/1991 (c) 1991 (World) */
 	DRIVER( knightsu )	/* 27/11/1991 (c) 1991 (US)    */
 	DRIVER( knightsj )	/* 27/11/1991 (c) 1991 (Japan) */
-#ifdef EXTRA_GAMES
 	DRIVER( knightsh )	/* hack */
-#endif /* EXTRA_GAMES */
 	DRIVER( sf2ce )		/* 13/03/1992 (c) 1992 (World) */
 	DRIVER( sf2ceua )	/* 13/03/1992 (c) 1992 (US)    */
 	DRIVER( sf2ceub )	/* 13/05/1992 (c) 1992 (US)    */
@@ -2301,13 +2298,11 @@ V-V                           TP-027
 	DRIVER( sf2m5 )		/* hack */
 	DRIVER( sf2m6 )		/* hack */
 	DRIVER( sf2m7 )		/* hack */
-#ifdef EXTRA_GAMES
 //	DRIVER( sf2m8 )		/* hack */
 //	DRIVER( sf2m13 )	/* hack */
 	DRIVER( sf2ceh )	/* hack, Hispanic 990804 */
 	DRIVER( sf2tlona )	/* hack, Tu Long set 1 */
 	DRIVER( sf2tlonb )	/* hack, Tu Long set 2 */
-#endif /* EXTRA_GAMES */
 	DRIVER( sf2yyc )	/* hack */
 	DRIVER( sf2koryu )	/* hack */
 	DRIVER( varth )		/* 12/06/1992 (c) 1992 (World) */
@@ -2318,20 +2313,16 @@ V-V                           TP-027
 	DRIVER( wofa )		/* 05/10/1992 (c) 1992 (Asia)  (CPS1 + QSound) */
 	DRIVER( wofu )		/* 31/10/1992 (c) 1992 (US) (CPS1 + QSound) */
 	DRIVER( wofj )		/* 31/10/1992 (c) 1992 (Japan) (CPS1 + QSound) */
-#ifdef EXTRA_GAMES
 	DRIVER( wofh ) 		/* 1999  Sanguo Yingxiong Zhuan */
 	DRIVER( wof3js )	/* 1997  San Jian Sheng */
 	DRIVER( wof3sj )	/* 1997  San Sheng Jian */
-#endif /* EXTRA_GAMES */
 	DRIVER( sf2hf )		/* 09/12/1992 (c) 1992 (World) */
 	DRIVER( sf2t )		/* 09/12/1992 (c) 1992 (US)    */
 	DRIVER( sf2tj )		/* 09/12/1992 (c) 1992 (Japan) */
 	DRIVER( dino )		/* 01/02/1993 (c) 1993 (World) (CPS1 + QSound) */
 	DRIVER( dinou )		/* 01/02/1993 (c) 1993 (US)    (CPS1 + QSound) */
 	DRIVER( dinoj )		/* 01/02/1993 (c) 1993 (Japan) (CPS1 + QSound) */
-#ifdef EXTRA_GAMES
 	DRIVER( dinoh )		/* hack */
-#endif /* EXTRA_GAMES */
 	DRIVER( punisher )	/* 22/04/1993 (c) 1993 (World) (CPS1 + QSound) */
 	DRIVER( punishru )	/* 22/04/1993 (c) 1993 (US)    (CPS1 + QSound) */
 	DRIVER( punishrj )	/* 22/04/1993 (c) 1993 (Japan) (CPS1 + QSound) */
@@ -2341,9 +2332,7 @@ V-V                           TP-027
 	DRIVER( mbombrd )	/* 06/12/1993 (c) 1993 (World) (CPS1 + QSound) */
 	DRIVER( mbombrdj )	/* 06/12/1993 (c) 1993 (Japan) (CPS1 + QSound) */
 	DRIVER( pnickj )	/* 08/06/1994 (c) 1994 Compile + Capcom license (Japan) not listed on Capcom's site */
-#ifdef EXTRA_GAMES
 	DRIVER( pnicku )
-#endif /* EXTRA_GAMES */
 	DRIVER( qad )		/* 01/07/1992 (c) 1992 (US)    */
 	DRIVER( qadj )		/* 21/09/1994 (c) 1994 (Japan) */
 	DRIVER( qtono2 )	/* 23/01/1995 (c) 1995 (Japan) */
@@ -2351,10 +2340,8 @@ V-V                           TP-027
 	DRIVER( pang3j )	/* 11/05/1995 (c) 1995 Mitchell (Japan) not listed on Capcom's site */
 	DRIVER( megaman )	/* 06/10/1995 (c) 1995 (Asia)  */
 	DRIVER( rockmanj )	/* 22/09/1995 (c) 1995 (Japan) */
-#ifdef EXTRA_GAMES
 	DRIVER( sfzch )		/* 1995  Street Fighter Zero (CPS Changer) */
 	DRIVER( sfach )		/* 1995  Street Fighter Alpha (Publicity CPS Changer) */
-#endif /* EXTRA_GAMES */
 
 	DRIVER( fcrash )	/* bootleg of Final Fight */
 
@@ -2576,6 +2563,7 @@ V-V                           TP-027
 	DRIVER( jgakuen )	/* Justice Gakuen (JAPAN 971117) */
 	DRIVER( sfex2 )		/* Street Fighter EX 2 (USA 980526) */
 	DRIVER( sfex2j )	/* Street Fighter EX 2 (JAPAN 980312) */
+	DRIVER( sfex2a )	/* Street Fighter EX 2 (ASIA 980312) */
 	DRIVER( plsmaswd )	/* Plasma Sword (USA 980316) */
 	DRIVER( stargld2 )	/* Star Gladiator 2 (JAPAN 980316) */
 	DRIVER( tgmj )		/* Tetris The Grand Master (JAPAN 980710) */
@@ -2808,6 +2796,7 @@ V-V                           TP-027
 	DRIVER( gt99 )		/* (c) 1999 Incredible Technologies */
 	DRIVER( gt99s100 )	/* (c) 1999 Incredible Technologies */
 	DRIVER( gt99t400 )	/* (c) 1999 Incredible Technologies */
+	DRIVER( gtroyal )	/* (c) 1999 Incredible Technologies */
 	DRIVER( gt2k )		/* (c) 2000 Incredible Technologies */
 	DRIVER( gt2ks100 )	/* (c) 2000 Incredible Technologies */
 	DRIVER( gt2kt500 )	/* (c) 2000 Incredible Technologies */
@@ -4811,9 +4800,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( nibblera )	/* (c) 1982 Rock-ola */
  	DRIVER( nibblerb )	/* (c) 1982 Rock-ola */
 	DRIVER( nibblero )	/* (c) 1982 Olympia */
-#ifdef EXTRA_GAMES
 	DRIVER( vantris )	/* (c) 1998 Norbert Kehrer */
-#endif /* EXTRA_GAMES */
 
 	/* later SNK games, each game can be identified by PCB code and ROM
     code, the ROM code is the same between versions, and usually based
@@ -4974,6 +4961,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( pspikes2 )	/* 0068 (c) 1994 Video System Co. */
 	DRIVER( fatfury3 )	/* 0069 (c) 1995 SNK */
 	DRIVER( zupapa )	/* 0070 Zupapa - released in 2001, 1994 prototype probably exists */
+	DRIVER( zupapad )	/* 0070 Zupapa - released in 2001, 1994 prototype probably exists */
 	/* 0071 Bang Bang Busters (prototype) 1994 Visco */
 	/* 0072 Last Odyssey Pinball Fantasia (prototype) 1995 Monolith */
 	DRIVER( panicbom )	/* 0073 (c) 1994 Eighting / Hudson */
@@ -5071,20 +5059,29 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( kof99e )	/* 0251 (c) 1999 SNK */
 	DRIVER( kof99n )	/* 0251 (c) 1999 SNK */
 	DRIVER( kof99p )	/* 0251 (c) 1999 SNK */
+	DRIVER( kof99d )	/* 0251 (c) 1999 SNK */
 	DRIVER( ganryu )	/* 0252 (c) 1999 Visco */
+	DRIVER( ganryud )	/* 0252 (c) 1999 Visco */
 	DRIVER( garou )		/* 0253 (c) 1999 SNK */
 	DRIVER( garouo )	/* 0253 (c) 1999 SNK */
 	DRIVER( garoup )	/* 0253 (c) 1999 SNK */
+	DRIVER( garoud )	/* 0253 (c) 1999 SNK */
 	DRIVER( s1945p )	/* 0254 (c) 1999 Psikyo */
+	DRIVER( s1945pd )	/* 0254 (c) 1999 Psikyo */
 	DRIVER( preisle2 )	/* 0255 (c) 1999 Yumekobo */
+	DRIVER( preisl2d )	/* 0255 (c) 1999 Yumekobo */
 	DRIVER( mslug3 )	/* 0256 (c) 2000 SNK */
 	DRIVER( mslug3n )	/* 0256 (c) 2000 SNK */
+	DRIVER( mslug3d )	/* 0256 (c) 2000 SNK */
 	DRIVER( kof2000 )	/* 0257 (c) 2000 SNK */
 	DRIVER( kof2000n )	/* 0257 (c) 2000 SNK */
+	DRIVER( kof2000d )	/* 0257 (c) 2000 SNK */
 	/* 0258 SNK vs. Capcom? (prototype) */
 	DRIVER( bangbead )	/* 0259 (c) 2000 Visco */
 	DRIVER( nitd )		/* 0260 (c) 2000 Eleven / Gavaking */
+	DRIVER( nitdd )		/* 0260 (c) 2000 Eleven / Gavaking */
 	DRIVER( sengoku3 )	/* 0261 (c) 2001 SNK */
+	DRIVER( sengok3d )	/* 0261 (c) 2001 SNK */
 	DRIVER( kof2001 )	/* 0262 (c) 2001 Eolith / SNK */
 	DRIVER( kof2001h )	/* 0262 (c) 2001 Eolith / SNK */
 	DRIVER( mslug4 )	/* 0263 (c) 2002 Mega Enterprise */
@@ -5098,7 +5095,6 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( vliner )
 	DRIVER( vlinero )
 
-#ifdef EXTRA_GAMES
 	DRIVER( beast )
 	DRIVER( columnsn )
 	DRIVER( poknight )
@@ -5106,18 +5102,6 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( neonopon )	/* xxxx (c) 2002 Blastar */
 	DRIVER( neopong )	/* xxxx (c) 2002 Neodev */
 	DRIVER( npong10 )	/* xxxx (c) 2002 Neodev */
-
-	DRIVER( zupapad )	/* 0070 Zupapa - released in 2001, 1994 prototype probably exists */
-	DRIVER( kof99nd )	/* 0251 (c) 1999 SNK */
-	DRIVER( ganryud )	/* 0252 (c) 1999 Visco */
-	DRIVER( garoud )	/* 0253 (c) 1999 SNK */
-	DRIVER( s1945pd )	/* 0254 (c) 1999 Psikyo */
-	DRIVER( preisl2d )	/* 0255 (c) 1999 Yumekobo */
-	DRIVER( mslug3nd )	/* 0256 (c) 2000 SNK */
-	DRIVER( kof2knd )	/* 0257 (c) 2000 SNK */
-	DRIVER( nitdd )		/* 0260 (c) 2000 Eleven / Gavaking */
-	DRIVER( sengok3d )	/* 0261 (c) 2001 SNK */
-#endif /* EXTRA_GAMES */
 
 	/* Hyper NeoGeo 64 uses a 3 digit rom code? */
 
@@ -5853,6 +5837,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( wrally )	/* (c) 1993 - Ref 930705 */
 	DRIVER( wrallya )	/* (c) 1993 - Ref 930705 */
 	DRIVER( glass )		/* (c) 1993 - Ref 931021 */
+	DRIVER( glassa )	/* (c) 1993 - Ref 931021 */
 	DRIVER( targeth )	/* (c) 1994 - Ref 940531 */
 	DRIVER( thoop2 )	/* (c) 1994 - Ref ??? */
 	DRIVER( aligator )	/* (c) 1994 - Ref 940411 */

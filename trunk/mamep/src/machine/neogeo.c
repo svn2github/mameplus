@@ -607,7 +607,7 @@ static void neogeo_custom_memory(void)
 
 	if (!strcmp(Machine->gamedrv->name,"kof2000") ||
 		!strcmp(Machine->gamedrv->name,"kof2000n") ||
-		!strcmp(Machine->gamedrv->name,"kof2knd"))
+		!strcmp(Machine->gamedrv->name,"kof2000d"))
 	{
 		/* Patch out loop to disable console mode */
 		UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
@@ -627,7 +627,7 @@ static void neogeo_custom_memory(void)
 	{
 		/* Patch out loop to disable console mode */
 		UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
-		mem16[0x00d04/2] = 0x4e71;
+		mem16[0x00d04 >> 1] = 0x4e71;
 	}
 
 	if (!strcmp(Machine->gamedrv->name,"zupapa") ||
@@ -635,7 +635,42 @@ static void neogeo_custom_memory(void)
 	{
 		/* Patch out loop to disable console mode */
 		UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
-		mem16[0x80290/2] = 0x4e71;
+		mem16[0x80290 >> 1] = 0x4e71;
+	}
+
+	if (!strcmp(Machine->gamedrv->name,"mslug4")  ||
+		!strcmp(Machine->gamedrv->name,"mslug4d") ||
+		!strcmp(Machine->gamedrv->name,"ms4plus"))
+	{
+		/* the game hangs after a while without this patch */
+		UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
+		mem16[0x966 >> 1] = 0x4e71;
+		mem16[0x96e >> 1] = 0x4e71;
+
+		/* Patch out loop to disable console mode */
+		mem16[0xad8c >> 1] = 0x4e75;
+	}
+
+	if (!strcmp(Machine->gamedrv->name,"rotd") ||
+		!strcmp(Machine->gamedrv->name,"rotdd"))
+	{
+		/* Patch out loop to disable console mode */
+		UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
+		mem16[0x1020 >> 1] = 0x4e71;
+		mem16[0x2400 >> 1] = 0x4e71;
+	}
+
+	if (!strcmp(Machine->gamedrv->name,"matrim")  ||
+		!strcmp(Machine->gamedrv->name,"matrimd") ||
+		!strcmp(Machine->gamedrv->name,"matrimbl"))
+	{
+		/* the game hangs after a while without this patch */
+		UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
+		mem16[0x310 >> 1] = 0x4e71;
+		mem16[0x318 >> 1] = 0x4e71;
+
+		/* Patch out loop to disable console mode */
+		mem16[0x1050 >> 1] = 0x4e75;
 	}
 
 	if (!Machine->sample_rate &&
@@ -643,7 +678,10 @@ static void neogeo_custom_memory(void)
 	/* the game hangs after a while without this patch */
 		memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x104fbc, 0x104fbd, 0, 0, popbounc_sfix_16_r);
 
-	if (!strcmp(Machine->gamedrv->name,"kof99") || !strcmp(Machine->gamedrv->name,"kof99a") || !strcmp(Machine->gamedrv->name,"kof99e"))
+	if (!strcmp(Machine->gamedrv->name,"kof99") ||
+		!strcmp(Machine->gamedrv->name,"kof99a") ||
+		!strcmp(Machine->gamedrv->name,"kof99e") ||
+		!strcmp(Machine->gamedrv->name,"kof99d"))
 	{
 		/* special ROM banking handler */
 		memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2ffff0, 0x2ffff1, 0, 0, kof99_bankswitch_w);
@@ -662,8 +700,7 @@ static void neogeo_custom_memory(void)
 		memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2fe446, 0x2fe447, 0, 0, prot_9a37_r);
 	}
 
-	if (!strcmp(Machine->gamedrv->name,"garouo") ||
-		!strcmp(Machine->gamedrv->name,"garouod"))
+	if (!strcmp(Machine->gamedrv->name,"garouo"))
 	{
 		/* special ROM banking handler */
 		memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2fffc0, 0x2fffc1, 0, 0, garouo_bankswitch_w);
@@ -672,7 +709,8 @@ static void neogeo_custom_memory(void)
 		memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2fe446, 0x2fe447, 0, 0, prot_9a37_r);
 	}
 
-	if (!strcmp(Machine->gamedrv->name,"mslug3"))
+	if (!strcmp(Machine->gamedrv->name,"mslug3") ||
+		!strcmp(Machine->gamedrv->name,"mslug3d"))
 	{
 		/* special ROM banking handler */
 		memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2fffe4, 0x2fffe5, 0, 0, mslug3_bankswitch_w);
@@ -681,7 +719,8 @@ static void neogeo_custom_memory(void)
 		memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2fe446, 0x2fe447, 0, 0, prot_9a37_r);
 	}
 
-	if (!strcmp(Machine->gamedrv->name,"kof2000"))
+	if (!strcmp(Machine->gamedrv->name,"kof2000") ||
+		!strcmp(Machine->gamedrv->name,"kof2000d"))
 	{
 		/* special ROM banking handler */
 		memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2fffec, 0x2fffed, 0, 0, kof2000_bankswitch_w);
@@ -714,10 +753,10 @@ static void neogeo_custom_memory(void)
 			!strcmp(Machine->gamedrv->name,"kof99e") ||
 			!strcmp(Machine->gamedrv->name,"kof99n") ||
 			!strcmp(Machine->gamedrv->name,"kof99p") ||
-			!strcmp(Machine->gamedrv->name,"kof99nd") ||
+			!strcmp(Machine->gamedrv->name,"kof99d") ||
 			!strcmp(Machine->gamedrv->name,"kof2000") ||
 			!strcmp(Machine->gamedrv->name,"kof2000n") ||
-			!strcmp(Machine->gamedrv->name,"kof2knd") ||
+			!strcmp(Machine->gamedrv->name,"kof2000d") ||
 			!strcmp(Machine->gamedrv->name,"kizuna") ||
 			!strcmp(Machine->gamedrv->name,"lastblad") ||
 			!strcmp(Machine->gamedrv->name,"lastblda") ||
