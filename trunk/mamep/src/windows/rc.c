@@ -453,7 +453,10 @@ static int real_rc_write_changes(struct rc_option *option, mame_file *f, const c
 				mame_fprintf(f, "%f\n", *(float *)option[i].dest);
 				break;
 			case rc_string:
-				mame_fprintf(f, "%s\n", rc_quote_string(*(char **)option[i].dest));
+				if (strchr(*(char **)option[i].dest, ' '))
+							mame_fprintf(f, "\"%s\"\n", *(char **)option[i].dest);
+				else
+							mame_fprintf(f, "%s\n", *(char **)option[i].dest);
 				break;
 			}
 			break;

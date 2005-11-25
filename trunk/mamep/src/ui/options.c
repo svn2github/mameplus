@@ -475,8 +475,8 @@ static struct rc_option rc_game_opts[] =
 	{ "a2d_deadzone", "a2d", rc_float, &gOpts.f_a2d, "0.3", 0.0, 1.0, NULL, "minimal analog value for digital input" },
 	{ "ctrlr", NULL, rc_string, &gOpts.ctrlr, "Standard", 0, 0, NULL, "preconfigure for specified controller" },
 #ifdef USE_JOY_MOUSE_MOVE
-	/* Support Stick-type Pointing Device (miko2u@hotmail.com) */
-	{ "stickpoint", "stick", rc_bool, &gOpts.use_stickpoint, "0", 0, 0, NULL, "enable stick-type mouse input" },
+	// Support Stick-type Pointing Device (miko2u@hotmail.com)
+	{ "stickpoint", NULL, rc_bool, &gOpts.use_stickpoint, "0", 0, 0, NULL, "enable pointing stick input" },
 #endif /* USE_JOY_MOUSE_MOVE */
 #ifdef JOYSTICK_ID
 	{ "joyid1", NULL, rc_int, &gOpts.joyid[0], "0", 0, 0, NULL, "set joystick ID (Player1)" },

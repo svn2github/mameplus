@@ -86,6 +86,7 @@ void CreateDumpingFolders(int parent_index);
 void CreateFPSFolders(int parent_index);
 void CreateResolutionFolders(int parent_index);
 void CreateControlFolders(int parent_index);
+void CreateSaveStateFolders(int parent_index);
 #endif /* MISC_FOLDER */
 
 

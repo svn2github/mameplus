@@ -522,10 +522,12 @@ BOOL DriverUsesLightGun(int driver_index)
 	return GetDriversInfo(driver_index)->usesLightGun;
 }
 
+#ifndef MISC_FOLDER
 BOOL DriverSupportsSaveState(int driver_index)
 {
 	return GetDriversInfo(driver_index)->supportsSaveState;
 }
+#endif /* !MISC_FOLDER */
 
 BOOL DriverHasM68K(int driver_index)
 {

@@ -46,7 +46,9 @@ BOOL DriverUsesSamples(int driver_index);
 BOOL DriverUsesYM3812(int driver_index);
 BOOL DriverUsesTrackball(int driver_index);
 BOOL DriverUsesLightGun(int driver_index);
+#ifndef MISC_FOLDER
 BOOL DriverSupportsSaveState(int driver_index);
+#endif /* !MISC_FOLDER */
 BOOL DriverHasM68K(int driver_index);
 int DriverParentIndex(int driver_index);
 

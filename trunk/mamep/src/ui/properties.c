@@ -344,9 +344,6 @@ static DWORD dwHelpIDs[] =
 	IDC_TRIPLE_BUFFER,      HIDC_TRIPLE_BUFFER,
 	IDC_USE_DEFAULT,        HIDC_USE_DEFAULT,
 	IDC_USE_MOUSE,          HIDC_USE_MOUSE,
-#ifdef USE_JOY_MOUSE_MOVE
-	IDC_USE_STICKPOINT,     HIDC_USE_MOUSE,		// Support Stick-type Pointing Device (miko2u@hotmail.com)
-#endif /* USE_JOY_MOUSE_MOVE */
 	IDC_USE_SOUND,          HIDC_USE_SOUND,
 	IDC_VOLUME,             HIDC_VOLUME,
 	IDC_WAITVSYNC,          HIDC_WAITVSYNC,
@@ -908,7 +905,7 @@ static LPWSTR GameInfoScreen(UINT nIndex)
 	expand_machine_driver(drivers[nIndex]->drv, &drv);
 
 	if (drv.video_attributes & VIDEO_TYPE_VECTOR)
-		strcpy(buf, _UI("Vector Game"));
+		sprintf(buf, _UI("%s %f Hz"),drivers[nIndex]->flags & ORIENTATION_SWAP_XY ? _UI("Vector (V)") : _UI("Vector (H)"), drv.frames_per_second);
 	else
 	{
 		if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
@@ -1153,7 +1150,6 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 #ifdef USE_SCALE_EFFECTS
 	case IDC_SCALEEFFECT:
 #endif /* USE_SCALE_EFFECTS */
-	case IDC_LEDMODE:
 #ifdef JOYSTICK_ID
 	case IDC_JOYID1:
 	case IDC_JOYID2:
@@ -1181,6 +1177,13 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 			changed = TRUE;
 		}
 		break;
+
+			case IDC_LEDMODE:
+				if (wNotifyCode == CBN_SELCHANGE)
+				{
+					changed = TRUE;
+				}
+				break;
 
 	case IDC_PADDLE:
 	case IDC_ADSTICK:
@@ -1630,7 +1633,8 @@ static void PropToOptions(HWND hWnd, options_type *o)
 
 	if (IS_GAME)
 		SetGameUsesDefaults(g_nGame,g_bUseDefaults);
-	else if (IS_FOLDER)
+	else
+	if (IS_FOLDER)
 		SetFolderUsesDefaults(g_pFolder,g_bUseDefaults);
 
 	/* resolution size */
@@ -1718,7 +1722,6 @@ static void PropToOptions(HWND hWnd, options_type *o)
 		FreeIfAllocated(&o->aspect);
 		o->aspect = strdup(buffer);
 	}
-
 	/*analog axes*/
 	hCtrl = GetDlgItem(hWnd, IDC_ANALOG_AXES);	
 	if (hCtrl)
@@ -1761,7 +1764,6 @@ static void PropToOptions(HWND hWnd, options_type *o)
 				strcat(digital, _String(buffer));
 			}
 		}
-
 		if (mame_stricmp (digital,o->digital) != 0)
 		{
 			// save the new setting
@@ -1769,6 +1771,9 @@ static void PropToOptions(HWND hWnd, options_type *o)
 			o->digital = strdup(digital);
 		}
 	}
+#ifdef MESS
+	MessPropToOptions(g_nGame, hWnd, o);
+#endif
 }
 
 /* Populate controls that are not handled in the DataMap */
@@ -2303,18 +2308,28 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_ANALOG_AXES),		joystick_attached);
 	EnableWindow(GetDlgItem(hWnd, IDC_ANALOG_AXES_TEXT),joystick_attached);
 	/* Trackball / Mouse options */
-	if ((nIndex == GLOBAL_OPTIONS || nIndex == FOLDER_OPTIONS) || DriverUsesTrackball(nIndex) || DriverUsesLightGun(nIndex))
-		Button_Enable(GetDlgItem(hWnd,IDC_USE_MOUSE),TRUE);
-	else
-		Button_Enable(GetDlgItem(hWnd,IDC_USE_MOUSE),FALSE);
-
-	if (!in_window && ((nIndex == GLOBAL_OPTIONS || nIndex == FOLDER_OPTIONS) || DriverUsesLightGun(nIndex)))
+	if (nIndex <= -1 || DriverUsesTrackball(nIndex) || DriverUsesLightGun(nIndex))
 	{
-		BOOL enable = Button_GetCheck(GetDlgItem(hWnd,IDC_LIGHTGUN));
+		Button_Enable(GetDlgItem(hWnd,IDC_USE_MOUSE),TRUE);
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
+		Button_Enable(GetDlgItem(hWnd,IDC_USE_STICKPOINT),TRUE);
+#endif /* USE_JOY_MOUSE_MOVE */
+	}
+	else
+	{
+		Button_Enable(GetDlgItem(hWnd,IDC_USE_MOUSE),FALSE);
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
+		Button_Enable(GetDlgItem(hWnd,IDC_USE_STICKPOINT),FALSE);
+#endif /* USE_JOY_MOUSE_MOVE */
+	}
 
+	if (!in_window && (nIndex <= -1 || DriverUsesLightGun(nIndex)))
+	{
+		BOOL use_lightgun;
 		Button_Enable(GetDlgItem(hWnd,IDC_LIGHTGUN), TRUE);
-		Button_Enable(GetDlgItem(hWnd,IDC_DUAL_LIGHTGUN), enable);
-		Button_Enable(GetDlgItem(hWnd,IDC_RELOAD), enable);
+		use_lightgun = Button_GetCheck(GetDlgItem(hWnd,IDC_LIGHTGUN));
+		Button_Enable(GetDlgItem(hWnd,IDC_DUAL_LIGHTGUN),use_lightgun);
+		Button_Enable(GetDlgItem(hWnd,IDC_RELOAD),use_lightgun);
 	}
 	else
 	{
@@ -2323,19 +2338,13 @@ static void SetPropEnabledControls(HWND hWnd)
 		Button_Enable(GetDlgItem(hWnd,IDC_RELOAD), FALSE);
 	}
 
-	/* Keyboard LED */
-	if (Button_GetCheck(GetDlgItem(hWnd, IDC_LEDS)))
-		EnableWindow(GetDlgItem(hWnd, IDC_LEDMODE),  TRUE);
-	else
-		EnableWindow(GetDlgItem(hWnd, IDC_LEDMODE),  FALSE);
-
 
 	/* Sound options */
 	hCtrl = GetDlgItem(hWnd, IDC_USE_SOUND);
 	if (hCtrl)
 	{
 		sound = Button_GetCheck(hCtrl);
-		ComboBox_Enable(GetDlgItem(hWnd, IDC_SAMPLERATE), sound);
+		ComboBox_Enable(GetDlgItem(hWnd, IDC_SAMPLERATE), (sound != 0));
 
 		EnableWindow(GetDlgItem(hWnd,IDC_VOLUME),sound);
 		EnableWindow(GetDlgItem(hWnd,IDC_RATETEXT),sound);
@@ -2359,7 +2368,11 @@ static void SetPropEnabledControls(HWND hWnd)
 
 
 	// misc
-	//if (nIndex == GLOBAL_OPTIONS || DriverHasOptionalBIOS(nIndex))
+	if (Button_GetCheck(GetDlgItem(hWnd, IDC_LEDS)))
+		EnableWindow(GetDlgItem(hWnd, IDC_LEDMODE), TRUE);
+	else
+		EnableWindow(GetDlgItem(hWnd, IDC_LEDMODE), FALSE);
+
 	if (g_biosinfo)
 	{
 		ShowWindow(GetDlgItem(hWnd,IDC_BIOSTEXT), SW_SHOW);
@@ -2997,7 +3010,7 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_DUAL_LIGHTGUN, DM_BOOL, CT_BUTTON,   &pGameOpts->dual_lightgun, DM_BOOL,   &pGameOpts->dual_lightgun, 0, 0, 0);
 	DataMapAdd(IDC_RELOAD,DM_BOOL, CT_BUTTON,  &pGameOpts->offscreen_reload,DM_BOOL, &pGameOpts->offscreen_reload, 0, 0, 0);
 #ifdef USE_JOY_MOUSE_MOVE
-	/* Support Stick-type Pointing Device (miko2u@hotmail.com) */
+	// Support Stick-type Pointing Device (miko2u@hotmail.com)
 	DataMapAdd(IDC_USE_STICKPOINT,DM_BOOL, CT_BUTTON,   &pGameOpts->use_stickpoint,DM_BOOL,   &pGameOpts->use_stickpoint, 0, 0, 0);
 #endif /* USE_JOY_MOUSE_MOVE */
 #ifdef JOYSTICK_ID
@@ -3830,7 +3843,6 @@ static void InitializeResDepthUI(HWND hwnd)
 static void InitializeScreenUI(HWND hwnd)
 {
 	HWND hCtrl = GetDlgItem(hwnd, IDC_SCREEN);
-
 	if (hCtrl)
 	{
 		int iMonitors = DirectDraw_GetNumDisplays();

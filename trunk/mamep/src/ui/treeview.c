@@ -1163,7 +1163,7 @@ void CreateFPSFolders(int parent_index)
 		{
 			char buf[50];
 
-			sprintf(buf, "%f", f);
+			sprintf(buf, "%f Hz", f);
 
 			lpTemp = NewFolder(buf, 0, FALSE, next_folder_id++, parent_index, IDI_FOLDER,
 			                   GetFolderFlags(buf));
@@ -1193,9 +1193,9 @@ void CreateResolutionFolders(int parent_index)
 		expand_machine_driver(drivers[jj]->drv, &drv);
 
 		if (drv.video_attributes & VIDEO_TYPE_VECTOR)
-			continue;
+			sprintf(Screen, _UI("Vector %s"), drivers[jj]->flags & ORIENTATION_SWAP_XY ? _UI("(V)") : _UI("(H)"));
 		else
-			sprintf(Screen,"%4dx%d %s",
+			sprintf(Screen, "%4dx%d %s",
 					drv.default_visible_area.max_x - drv.default_visible_area.min_x + 1,
 					drv.default_visible_area.max_y - drv.default_visible_area.min_y + 1,
 					drivers[jj]->flags & ORIENTATION_SWAP_XY ? _UI("(V)") : _UI("(H)"));
@@ -1396,6 +1396,50 @@ void CreateControlFolders(int parent_index)
 			AddGame(map[w],i);
 
 		end_resource_tracking();
+	}
+}
+
+void CreateSaveStateFolders(int parent_index)
+{
+	int jj;
+	BOOL bSupported  = FALSE;
+	BOOL bUnsupported = FALSE;
+	int nGames = GetNumGames();
+	LPTREEFOLDER lpFolder = treeFolders[parent_index];
+	const game_driver *gamedrv;
+
+	// create our two subfolders
+	LPTREEFOLDER lpSupported, lpUnsupported;
+	lpSupported = NewFolder(_UI("Supported"), 0, TRUE, next_folder_id, parent_index, IDI_FOLDER,
+ 					   GetFolderFlags("Supported"));
+	AddFolder(lpSupported);
+	lpUnsupported = NewFolder(_UI("Unsupported"), 0, TRUE, next_folder_id, parent_index, IDI_FOLDER,
+ 					   GetFolderFlags("Unsupported"));
+	AddFolder(lpUnsupported);
+
+	// no games in top level folder
+	SetAllBits(lpFolder->m_lpGameBits,FALSE);
+
+	for (jj = 0; jj < nGames; jj++)
+	{
+		gamedrv = drivers[jj];
+
+		bSupported = FALSE;
+		bUnsupported = FALSE;
+
+			if (drivers[jj]->flags & GAME_SUPPORTS_SAVE)
+				bSupported = TRUE;		
+			else
+				bUnsupported = TRUE;
+
+		if (bSupported)
+		{
+			AddGame(lpSupported,jj);
+		}
+		if (bUnsupported)
+		{
+			AddGame(lpUnsupported,jj);
+		}
 	}
 }
 #endif /* MISC_FOLDER */

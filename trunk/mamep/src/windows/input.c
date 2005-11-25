@@ -51,7 +51,7 @@ extern int win_window_mode;
 #define MAX_BUTTONS			32
 #define MAX_POV				4
 
-#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device by miko2u@hotmail.com
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
 #define MAX_MOUSEAXES		3		//	Mouse is (X,Y,Z)
 #endif /* USE_JOY_MOUSE_MOVE */
 
@@ -142,7 +142,7 @@ static int					use_joystick;
 static int					use_lightgun;
 static int					use_lightgun_dual;
 static int					use_lightgun_reload;
-#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device by miko2u@hotmail.com
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
 static int					use_stickpoint;
 #endif /* USE_JOY_MOUSE_MOVE */
 static int					use_keyboard_leds;
@@ -168,7 +168,7 @@ static int					mouse_count;
 static LPDIRECTINPUTDEVICE	mouse_device[MAX_MICE];
 static LPDIRECTINPUTDEVICE2	mouse_device2[MAX_MICE];
 static DIDEVCAPS			mouse_caps[MAX_MICE];
-#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device by miko2u@hotmail.com
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
 static DIMOUSESTATE2			mouse_state[MAX_MICE];
 #else /* USE_JOY_MOUSE_MOVE */
 static DIMOUSESTATE			mouse_state[MAX_MICE];
@@ -176,7 +176,7 @@ static DIMOUSESTATE			mouse_state[MAX_MICE];
 static int					lightgun_count;
 static POINT				lightgun_dual_player_pos[4];
 static int					lightgun_dual_player_state[4];
-#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device by miko2u@hotmail.com
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
 static DIPROPRANGE			mouse_range[MAX_MICE][MAX_AXES];
 #endif /* USE_JOY_MOUSE_MOVE */
 
@@ -229,8 +229,9 @@ struct rc_option input_opts[] =
 	{ "led_mode", NULL, rc_string, &ledmode, "ps/2", 0, 0, decode_ledmode, "LED mode (ps/2|usb)" },
 	{ "a2d_deadzone", "a2d", rc_float, &a2d_deadzone, "0.3", 0.0, 1.0, NULL, "minimal analog value for digital input" },
 	{ "ctrlr", NULL, rc_string, &options.controller, "Standard", 0, 0, NULL, "preconfigure for specified controller" },
-#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device by miko2u@hotmail.com
- 	{ "stickpoint", "stick", rc_bool, &use_stickpoint, "0", 0, 0, NULL, "enable stick-type mouse input" },
+#ifdef USE_JOY_MOUSE_MOVE
+	// Support Stick-type Pointing Device (miko2u@hotmail.com)
+ 	{ "stickpoint", NULL, rc_bool, &use_stickpoint, "0", 0, 0, NULL, "enable pointing stick input" },
 #endif /* USE_JOY_MOUSE_MOVE */
 #ifdef JOYSTICK_ID
 	{ "joyid1", NULL, rc_int, &joyid[0], "0", 0, 0, NULL, "set joystick ID (Player1)" },
@@ -302,7 +303,7 @@ static void poll_lightguns(void);
 #define CODETYPE_MOUSEAXIS			9
 #define CODETYPE_MOUSEBUTTON		10
 #define CODETYPE_GUNAXIS			11
-#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device by miko2u@hotmail.com
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
 #define CODETYPE_MOUSEAXIS_NEG		12
 #define CODETYPE_MOUSEAXIS_POS		13
 #endif /* USE_JOY_MOUSE_MOVE */
@@ -748,7 +749,7 @@ static int joy_trans_table[][2] =
 	{ JOYCODE(7, CODETYPE_JOYAXIS, 1),	JOYCODE_8_ANALOG_Y },
 	{ JOYCODE(7, CODETYPE_JOYAXIS, 2),	JOYCODE_8_ANALOG_Z },
 
-#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device by miko2u@hotmail.com
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
 	{ JOYCODE(0, CODETYPE_MOUSEAXIS_NEG, 0),JOYCODE_MOUSE_1_LEFT },
 	{ JOYCODE(0, CODETYPE_MOUSEAXIS_POS, 0),JOYCODE_MOUSE_1_RIGHT },
 	{ JOYCODE(0, CODETYPE_MOUSEAXIS_NEG, 1),JOYCODE_MOUSE_1_UP },
@@ -1050,7 +1051,7 @@ static BOOL CALLBACK enum_mouse_callback(LPCDIDEVICEINSTANCE instance, LPVOID re
 		goto cant_set_axis_mode;
 
 	// attempt to set the data format
-#ifdef USE_JOY_MOUSE_MOVE
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
 	result = IDirectInputDevice_SetDataFormat(mouse_device[mouse_count], &c_dfDIMouse2);
 #else /* USE_JOY_MOUSE_MOVE */
 	result = IDirectInputDevice_SetDataFormat(mouse_device[mouse_count], &c_dfDIMouse);
@@ -1347,7 +1348,7 @@ void win_pause_input(int paused)
 
 		// acquire all our mice if active
 		if (mouse_active && !win_has_menu())
-#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device by miko2u@hotmail.com
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
 			for (i = 0; i < mouse_count && (use_mouse || use_lightgun || use_stickpoint); i++)
 #else /* USE_JOY_MOUSE_MOVE */
 			for (i = 0; i < mouse_count && (use_mouse || use_lightgun); i++)
@@ -1474,7 +1475,7 @@ void win_poll_input(void)
 
 	// poll all our mice if active
 	if (mouse_active && !win_has_menu())
-#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device by miko2u@hotmail.com(0.69a-0601)
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
 		for (i = 0; i < mouse_count && (use_mouse||use_lightgun||use_stickpoint); i++)
 #else /* USE_JOY_MOUSE_MOVE */
 		for (i = 0; i < mouse_count && (use_mouse||use_lightgun); i++)
@@ -1508,7 +1509,7 @@ void win_poll_input(void)
 
 int win_is_mouse_captured(void)
 {
-#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device by miko2u@hotmail.com
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
 	return (!input_paused && mouse_active && mouse_count > 0 && (use_mouse || use_stickpoint) && !win_has_menu());
 #else /* USE_JOY_MOUSE_MOVE */
 	return (!input_paused && mouse_active && mouse_count > 0 && use_mouse && !win_has_menu());
@@ -1791,7 +1792,7 @@ static void init_joycodes(void)
 		sprintf(tempname, _WINDOWS("Mouse %d Z"), mouse + 1);
 		add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSEAXIS, 2), CODE_OTHER_ANALOG_RELATIVE);
 
-#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device by miko2u@hotmail.com
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
 		// add joy-mouse axes
 		// loop over all axes
 		for (axis = 0; axis < MAX_MOUSEAXES; axis++)
@@ -1836,7 +1837,8 @@ static void init_joycodes(void)
 
 			// attempt to get the object info
 			instance.dwSize = STRUCTSIZE(DIDEVICEOBJECTINSTANCE);
-#ifdef USE_JOY_MOUSE_MOVE		// for VAIO U101 Center Button Patch
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
+			// for VAIO U101 Center Button Patch
 			result = IDirectInputDevice_GetObjectInfo(mouse_device[mouse], &instance, offsetof(DIMOUSESTATE2, rgbButtons[button]), DIPH_BYOFFSET);
 #else /* USE_JOY_MOUSE_MOVE */
 			result = IDirectInputDevice_GetObjectInfo(mouse_device[mouse], &instance, offsetof(DIMOUSESTATE, rgbButtons[button]), DIPH_BYOFFSET);
@@ -1850,7 +1852,8 @@ static void init_joycodes(void)
 					sprintf(tempname, _WINDOWS("Mouse %s"), instance.tszName);
 				add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSEBUTTON, button), CODE_OTHER_DIGITAL);
 			}
-#ifdef USE_JOY_MOUSE_MOVE		// for VAIO U101 Center Button Patch
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
+			// for VAIO U101 Center Button Patch
 			else if (button == 2)
 			{
 				if (mouse_count > 1)
@@ -2077,7 +2080,7 @@ static INT32 get_joycode_value(os_code joycode)
 #endif /* JOYSTICK_ID */
 			return ((pov & 0xffff) != 0xffff && (pov >= 22500 && pov <= 31500));
 
-#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device by miko2u@hotmail.com
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
 		// joy-mouse axis
 		case CODETYPE_MOUSEAXIS_POS:
 		case CODETYPE_MOUSEAXIS_NEG:
@@ -2122,7 +2125,7 @@ static INT32 get_joycode_value(os_code joycode)
 		// analog mouse axis
 		case CODETYPE_MOUSEAXIS:
 			// if the mouse isn't yet active, make it so
-#ifdef USE_JOY_MOUSE_MOVE
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
 			if (!mouse_active && (use_mouse||use_stickpoint) && !win_has_menu())
 #else /* USE_JOY_MOUSE_MOVE */
 			if (!mouse_active && use_mouse && !win_has_menu())
