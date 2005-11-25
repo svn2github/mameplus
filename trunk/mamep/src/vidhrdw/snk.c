@@ -270,7 +270,7 @@ void athena_draw_sprites( mame_bitmap *bitmap, int xscroll, int yscroll )
 		if(*(UINT32*)(spriteram+offs) == 0 || *(UINT32*)(spriteram+offs) == -1) continue;
 
 		tile_number = spriteram[offs+1];
-		attributes  = spriteram[offs+3]; /* YBFX.CCCC */
+		attributes  = spriteram[offs+3]; /* YBBX.CCCC */
 		if(attributes & 0x40) tile_number |= 256;
 		if(attributes & 0x20) tile_number |= 512;
 
@@ -291,7 +291,7 @@ void athena_draw_sprites( mame_bitmap *bitmap, int xscroll, int yscroll )
 /* Same as tnk3 but sprite attribute bit 5 is extra bank bit instead of y-flip. */
 VIDEO_UPDATE( athena )
 {
-	unsigned char *ram = memory_region(REGION_CPU1);
+	UINT8 *ram = snk_rambase - 0xd000;
 	int attributes = ram[0xc800];
 	/*
         X-------

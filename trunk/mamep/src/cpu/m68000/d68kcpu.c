@@ -44,6 +44,7 @@ static const char* copyright_notice =
 
 #define CACHE_SIZE			(8 * 1024 * 1024)
 #define MAX_INSTRUCTIONS	512
+#define MAX_BPI			1536
 
 #define ADD_CYCLES(A)    m68ki_remaining_cycles += (A)
 #define USE_CYCLES(A)    m68ki_remaining_cycles -= (A)
@@ -112,7 +113,7 @@ static const char* copyright_notice =
 int m68kdrc_cycles;
 int m68kdrc_recompile_flag;
 
-int m68kdrc_update_vncz_flag;
+//int m68kdrc_update_vncz_flag;
 
 
 /* ======================================================================== */
@@ -899,7 +900,7 @@ static void m68kdrc_recompile(drc_core *drc)
 
 	//printf("recompile_callback @ PC=%08X\n", pc);
 
-	m68kdrc_update_vncz_flag = 0;
+	//m68kdrc_update_vncz_flag = 0;
 
 	/* begin the sequence */
 	drc_begin_sequence(drc, pc);
@@ -909,14 +910,24 @@ static void m68kdrc_recompile(drc_core *drc)
 	{
 		uint32 result;
 
-		if (remaining == 1)
-			m68kdrc_update_vncz_flag = 1;
+		//if (remaining == 1)
+		//	m68kdrc_update_vncz_flag = 1;
 
 		/* compile one instruction */
 		result = compile_one(drc, pc);
 		pc += (sint8)(result >> 24);
 		if (result & RECOMPILE_END_OF_STRING)
 			break;
+
+		if (drc->cache_top >= drc->cache_end)
+			osd_die("M68K DRC: cache overflow!\n");
+
+		if (drc->cache_top + MAX_BPI > drc->cache_end)
+		{
+			//printf("%08x: %d: Danger!\n", REG68K_PPC, drc->cache_end - drc->cache_top);
+			remaining = 0;
+			break;
+		}
 	}
 
 	/* add dispatcher just in case */
@@ -925,6 +936,9 @@ static void m68kdrc_recompile(drc_core *drc)
 
 	/* end the sequence */
 	drc_end_sequence(drc);
+
+	if (drc->cache_top >= drc->cache_end)
+		osd_die("M68K DRC: cache overflow!\n");
 
 	REG68K_PC = savepc;
 }

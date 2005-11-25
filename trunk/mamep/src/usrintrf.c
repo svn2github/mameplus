@@ -1543,7 +1543,7 @@ static int handle_keys(mame_bitmap *bitmap)
 	if (menu_handler == NULL && input_ui_pressed(IPT_UI_CHEAT))
 	{
 		/* start cheat menu by shortcut key */
-		ui_menu_stack_push(menu_cheat, (1 << 17) | (1 << 16) | (1 << 8) | 1);
+		ui_menu_stack_push(menu_cheat, (1 << 31) | (1 << 30) | (1 << 8) | 1);
 
 		/* kill the thermometer view */
 		therm_state = 0;
@@ -3070,7 +3070,7 @@ static UINT32 menu_command_contents(UINT32 state)
 
 static UINT32 menu_cheat(UINT32 state)
 {
-	int shortcut = (state >> 17) & 1;
+	int shortcut = (state >> 31) & 1;
 
 	state = cheat_menu(state);
 	if ((state & ((1 << 8) - 1)) == 0)

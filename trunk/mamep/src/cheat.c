@@ -1864,9 +1864,9 @@ UINT32 cheat_menu(UINT32 state)
 	UINT8			total;
 
 	int sel = state & ((1 << 8) - 1);
-	int submenu_choice = (state  >> 8) & ((1 << 8) - 1);
-	int firstEntry = (state >> 16) & 1;
-	int shortcut = (state >> 17) & 1;
+	int submenu_choice = (state  >> 8) & ((1 << 16) - 1);
+	int firstEntry = (state >> 30) & 1;
+	int shortcut = (state >> 31) & 1;
 
 	memset(menu_item, 0, sizeof(menu_item));
 
@@ -1930,7 +1930,7 @@ UINT32 cheat_menu(UINT32 state)
 		if(submenu_choice == -1)
 			submenu_choice = 0;
 
-		return (sel + 1) | (submenu_choice << 8) | (firstEntry << 16) | (shortcut << 17);
+		return (sel + 1) | (submenu_choice << 8) | (firstEntry << 30) | (shortcut << 31);
 	}
 
 	menu_item[total++].text = ui_getstring(UI_enablecheat);
@@ -2006,7 +2006,7 @@ UINT32 cheat_menu(UINT32 state)
 		schedule_full_refresh();
 	}
 
-	return (sel + 1) | (submenu_choice << 8) | (firstEntry << 16) | (shortcut << 17);
+	return (sel + 1) | (submenu_choice << 8) | (firstEntry << 30) | (shortcut << 31);
 }
 
 static UINT32 DoShift(UINT32 input, INT8 shift)

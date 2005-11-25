@@ -28,6 +28,7 @@
 
 INLINE void verboselog( int n_level, const char *s_fmt, ... )
 {
+#ifdef __GNUC__
 	if( VERBOSE_LEVEL >= n_level )
 	{
 		va_list v;
@@ -44,6 +45,7 @@ INLINE void verboselog( int n_level, const char *s_fmt, ... )
 			logerror( "(timer) : %s", buf );
 		}
 	}
+#endif
 }
 
 struct FLATVERTEX

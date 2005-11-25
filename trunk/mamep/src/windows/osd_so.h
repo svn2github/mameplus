@@ -23,7 +23,6 @@
 
 #include "driver.h"
 extern SHAREDOBJ_DATA const game_driver *drivers[];
-//extern SHAREDOBJ_DATA const game_driver *test_drivers[];
 
 #include "audit.h"
 extern SHAREDOBJ_FUNC(int) audit_roms(int game, audit_record **audit);
@@ -69,9 +68,7 @@ extern SHAREDOBJ_DATA char   build_version[];
 extern SHAREDOBJ_DATA global_options options;
 extern SHAREDOBJ_DATA running_machine *Machine;
 extern SHAREDOBJ_FUNC(void)  expand_machine_driver(void (*constructor)(machine_config *), machine_config *output);
-#ifdef MAME_DEBUG
-extern SHAREDOBJ_FUNC(int)  mame_validitychecks(void);
-#endif
+extern SHAREDOBJ_FUNC(int)   mame_validitychecks(int game);
 
 #include "osdepend.h"
 extern SHAREDOBJ_FUNC(void) logerror(const char *text,...);

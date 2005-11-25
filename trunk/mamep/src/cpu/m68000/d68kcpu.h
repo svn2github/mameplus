@@ -52,7 +52,7 @@
 
 extern int m68kdrc_cycles;
 extern int m68kdrc_recompile_flag;
-extern int m68kdrc_update_vncz_flag;
+//extern int m68kdrc_update_vncz_flag;
 
 
 #define m68kdrc_cpu		m68ki_cpu
@@ -1976,7 +1976,8 @@ INLINE int m68kdrc_update_vncz_check(void)
 	if (INSTR_VNCZ_FLAG_DIRTY[next_ir])
 	{
 		//printf("PC=%06x, IR=%04x: dirty\n", REG68K_PC, next_ir);
-		return m68kdrc_update_vncz_flag;
+		//return m68kdrc_update_vncz_flag;
+		return 0;
 	}
 
 #endif

@@ -387,9 +387,7 @@ static DWORD dwHelpIDs[] =
 	IDC_D3D_TEXTURE_MANAGEMENT, HIDC_D3D_TEXTURE_MANAGEMENT,
 	IDC_AUDIO_LATENCY,      HIDC_AUDIO_LATENCY,
 	IDC_D3D_PRESCALE,       HIDC_D3D_PRESCALE,
-	IDC_D3D_SCANLINES_ENABLE, HIDC_D3D_SCANLINES,
 	IDC_D3D_SCANLINES,      HIDC_D3D_SCANLINES,
-	IDC_D3D_FEEDBACK_ENABLE, HIDC_D3D_FEEDBACK,
 	IDC_D3D_FEEDBACK,       HIDC_D3D_FEEDBACK,
 	IDC_ZOOM,               HIDC_ZOOM,
 	IDC_BIOS,               HIDC_BIOS,
@@ -416,11 +414,7 @@ static const char *d3d_prescale_name[] =
 	"Full",
 	"2",
 	"3",
-	"4",
-	"5",
-	"6",
-	"7",
-	"8"
+	"4"
 };
 
 #define NUMD3DPRESCALE (sizeof(d3d_prescale_name) / sizeof(d3d_prescale_name[0]))
@@ -2388,25 +2382,13 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd,IDC_D3D_PRESCALETEXT),d3d);
 	EnableWindow(GetDlgItem(hWnd,IDC_D3D_ROTATE_EFFECTS),d3d);
 	EnableWindow(GetDlgItem(hWnd,IDC_EFFECTOVERRIDES),d3d);
+	EnableWindow(GetDlgItem(hWnd,IDC_D3D_SCANLINES),d3d);
+	EnableWindow(GetDlgItem(hWnd,IDC_D3D_SCANLINES_DISP),d3d);
 	EnableWindow(GetDlgItem(hWnd,IDC_D3D_SCANLINES_ENABLE),d3d);
+	EnableWindow(GetDlgItem(hWnd,IDC_D3D_FEEDBACK),d3d);
+	EnableWindow(GetDlgItem(hWnd,IDC_D3D_FEEDBACK_DISP),d3d);
 	EnableWindow(GetDlgItem(hWnd,IDC_D3D_FEEDBACK_ENABLE),d3d);
 
-	hCtrl = GetDlgItem(hWnd,IDC_D3D_SCANLINES_ENABLE);
-	if (hCtrl)
-	{
-		BOOL enable = d3d && Button_GetCheck(hCtrl);
-		EnableWindow(GetDlgItem(hWnd,IDC_D3D_SCANLINES),enable);
-		EnableWindow(GetDlgItem(hWnd,IDC_D3D_SCANLINES_DISP),enable);
-	}
-	
-	hCtrl = GetDlgItem(hWnd,IDC_D3D_FEEDBACK_ENABLE);
-	if (hCtrl)
-	{
-		BOOL enable = d3d && Button_GetCheck(hCtrl);
-		EnableWindow(GetDlgItem(hWnd,IDC_D3D_FEEDBACK),enable);
-		EnableWindow(GetDlgItem(hWnd,IDC_D3D_FEEDBACK_DISP),enable);
-	}
-	
 #ifdef TRANS_UI
 	hCtrl = GetDlgItem(hWnd, IDC_TRANSUI);
 	useart = Button_GetCheck(hCtrl);
@@ -3231,10 +3213,8 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_D3D_EFFECT,    DM_INT,  CT_COMBOBOX, &g_nD3DEffectIndex,        DM_STRING, &pGameOpts->d3d_effect,  0, 0, AssignD3DEffect);
 	DataMapAdd(IDC_D3D_PRESCALE,  DM_INT,  CT_COMBOBOX, &g_nD3DPrescaleIndex,      DM_STRING, &pGameOpts->d3d_prescale,0, 0, AssignD3DPrescale);
 	DataMapAdd(IDC_D3D_ROTATE_EFFECTS,DM_BOOL,CT_BUTTON,&pGameOpts->d3d_rotate_effects,DM_BOOL,&pGameOpts->d3d_rotate_effects, 0, 0, 0);
-	DataMapAdd(IDC_D3D_SCANLINES_ENABLE,DM_BOOL, CT_BUTTON, &pGameOpts->d3d_scanlines_enable, DM_BOOL, &pGameOpts->d3d_scanlines_enable, 0, 0, 0);
 	DataMapAdd(IDC_D3D_SCANLINES, DM_INT,  CT_SLIDER,   &pGameOpts->d3d_scanlines, DM_INT, &pGameOpts->d3d_scanlines,  0, 0, 0);
 	DataMapAdd(IDC_D3D_SCANLINES_DISP, DM_NONE,  CT_NONE,   NULL, DM_INT, &pGameOpts->d3d_scanlines, 0, 0, 0);
-	DataMapAdd(IDC_D3D_FEEDBACK_ENABLE,DM_BOOL, CT_BUTTON, &pGameOpts->d3d_feedback_enable, DM_BOOL, &pGameOpts->d3d_feedback_enable, 0, 0, 0);
 	DataMapAdd(IDC_D3D_FEEDBACK,  DM_INT,  CT_SLIDER,   &pGameOpts->d3d_feedback,  DM_INT, &pGameOpts->d3d_feedback,   0, 0, 0);
 	DataMapAdd(IDC_D3D_FEEDBACK_DISP,  DM_NONE,  CT_NONE,   NULL,  DM_INT, &pGameOpts->d3d_feedback, 0, 0, 0);
 

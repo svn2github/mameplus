@@ -936,11 +936,8 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3deffect %s",      pOpts->d3d_effect);
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3dprescale %s",    pOpts->d3d_prescale);
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sd3deffectrotate", pOpts->d3d_rotate_effects ? "" : "no");
-
-		if (pOpts->d3d_scanlines_enable)
-			sprintf(&pCmdLine[strlen(pCmdLine)], " -d3dscan %i",pOpts->d3d_scanlines);
-		if (pOpts->d3d_feedback_enable)
-			sprintf(&pCmdLine[strlen(pCmdLine)], " -d3dfeedback %i",pOpts->d3d_feedback);
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3dscan %i",        pOpts->d3d_scanlines);
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3dfeedback %i",    pOpts->d3d_feedback);
 	}
 	else
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -nod3d");
@@ -5552,9 +5549,12 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 	switch (sort_subitem)
 	{
 	case COLUMN_GAMES:
+		value = 0;
+
 		if (UseLangList())
 			value = stricmp(game_readings[index1], game_readings[index2]);
-		else
+
+		if (value == 0)
 			value = stricmp(ModifyThe(drivers[index1]->description),
 			                ModifyThe(drivers[index2]->description));
 		break;

@@ -69,7 +69,7 @@ FOLDERDATA g_folderData[] =
 #ifdef MISC_FOLDER
 	{"Control",         "control",           FOLDER_CONTROL,      IDI_FOLDER,               0,             0,            CreateControlFolders },
 	{"FPS",             "fps",               FOLDER_FPS,          IDI_FOLDER,               0,             0,            CreateFPSFolders },
-	{"Screen",          "screen",            FOLDER_SCREEN,       IDI_FOLDER,               0,             0,            CreateScreenFolders },
+	{"Resolution",      "screen",            FOLDER_SCREEN,       IDI_FOLDER,               0,             0,            CreateScreenFolders },
 #else /* MISC_FOLDER */
 	{"Trackball",       "trackball",         FOLDER_TRACKBALL,    IDI_FOLDER,               0,             0,            NULL,                       DriverUsesTrackball,	TRUE },
 	{"Lightgun",        "Lightgun",          FOLDER_LIGHTGUN,     IDI_FOLDER,               0,             0,            NULL,                       DriverUsesLightGun,TRUE },
@@ -162,7 +162,7 @@ const ICONDATA g_iconData[] =
 {
 	{ IDI_WIN_NOROMS,			"noroms" },
 	{ IDI_WIN_ROMS,				"roms" },
-	{ IDI_WIN_UNKNOWN,			"unknown" },
+	{ IDI_WIN_UNKNOWN,		"unknown" },
 	{ IDI_WIN_CLONE,			"clone" },
 	{ IDI_WIN_REDX,				"warning" },
 	{ 0 }
