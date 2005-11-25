@@ -998,6 +998,7 @@ static const input_port_default_entry default_ports_builtin[] =
 	INPUT_PORT_DIGITAL_DEF( 0, IPG_UI,      UI_WATCH_VALUE,		"Watch Value",			SEQ_DEF_1(KEYCODE_W) )
 	INPUT_PORT_DIGITAL_DEF( 0, IPG_UI,      UI_EDIT_CHEAT,		"Edit Cheat",			SEQ_DEF_1(KEYCODE_E) )
 	INPUT_PORT_DIGITAL_DEF( 0, IPG_UI,      UI_TOGGLE_CROSSHAIR,"Toggle Crosshair",		SEQ_DEF_1(KEYCODE_F1) )
+	INPUT_PORT_DIGITAL_DEF( 0, IPG_UI,      UI_TOGGLE_LOCK_SCROLL,	"UI Toggle Lock Scroll",	SEQ_DEF_0 )
 
 	INPUT_PORT_DIGITAL_DEF( 0, IPG_UI,      OSD_1,				NULL,					SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_DEF( 0, IPG_UI,      OSD_2,				NULL,					SEQ_DEF_0 )

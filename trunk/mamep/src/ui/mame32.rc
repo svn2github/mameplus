@@ -102,12 +102,12 @@ BEGIN
         MENUITEM SEPARATOR
         POPUP "Arrange &Icons"
         BEGIN
-            MENUITEM "by &Name",                    ID_VIEW_BYGAME
-            MENUITEM "by D&irectory",               ID_VIEW_BYDIRECTORY
+            MENUITEM "by &Description",             ID_VIEW_BYGAME
+            MENUITEM "by &Name",                    ID_VIEW_BYDIRECTORY
             MENUITEM "by &Manufacturer",            ID_VIEW_BYMANUFACTURER
-            MENUITEM "by Times &Played",            ID_VIEW_BYTIMESPLAYED
+            MENUITEM "by &Playcount",               ID_VIEW_BYTIMESPLAYED
             MENUITEM "by &Type",                    ID_VIEW_BYTYPE
-            MENUITEM "by &Date",                    ID_VIEW_BYYEAR
+            MENUITEM "by &Year",                    ID_VIEW_BYYEAR
         END
         MENUITEM "Line &Up Icons",              ID_VIEW_LINEUPICONS
         MENUITEM SEPARATOR
@@ -282,8 +282,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,102,0,0
- PRODUCTVERSION 0,102,0,0
+ FILEVERSION 0,103,0,0
+ PRODUCTVERSION 0,103,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -302,13 +302,13 @@ BEGIN
             VALUE "Comments", "Multiple Arcade Machine Emulator for Win32\0"
             VALUE "CompanyName", "MAME Team\0"
             VALUE "FileDescription", "Multiple Arcade Machine Emulator for Win32\0"
-            VALUE "FileVersion", "0, 102, 0, 0\0"
+            VALUE "FileVersion", "0, 103, 0, 0\0"
             VALUE "InternalName", "MAME32\0"
             VALUE "LegalCopyright", "Copyright 1997-2005 Nicola Salmoria and the MAME team\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "MAME32.exe\0"
             VALUE "ProductName", "MAME32\0"
-            VALUE "ProductVersion", "0, 102, 0, 0\0"
+            VALUE "ProductVersion", "0, 103, 0, 0\0"
         END
     END
     BLOCK "VarFileInfo"
@@ -476,30 +476,30 @@ CAPTION "General"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_MAME32_ICON,IDC_GAME_ICON,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,195,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     LTEXT           "Manufactured:",IDC_STATIC,18,45,47,9
-    LTEXT           "Static",IDC_PROP_MANUFACTURED,75,45,175,9,SS_NOPREFIX
+    LTEXT           "Static",IDC_PROP_MANUFACTURED,75,45,170,9,SS_NOPREFIX
     LTEXT           "Status:",IDC_STATIC,18,55,47,9
-    LTEXT           "Static",IDC_PROP_STATUS,75,55,175,25
-    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,84,240,1
-    LTEXT           "CPU:",IDC_STATIC,18,88,47,9
-    LTEXT           "Static\nStatic\nStatic\nStatic\nStatic\nStatic\nStatic\nStatic",
-                    IDC_PROP_CPU,75,88,175,48
-    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,138,240,1
-    LTEXT           "Sound:",IDC_STATIC,18,142,47,9
+    LTEXT           "Static\nStatic\nStatic\nStatic",IDC_PROP_STATUS,75,55,170,32
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,89,240,1
+    LTEXT           "CPU:",IDC_STATIC,18,93,47,9
+    LTEXT           "Static\nStatic\nStatic\nStatic\nStatic\nStatic",
+                    IDC_PROP_CPU,75,93,170,48
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,143,240,1
+    LTEXT           "Sound:",IDC_STATIC,18,147,47,9
     LTEXT           "Static\nStatic\nStatic\nStatic\nStatic",IDC_PROP_SOUND,
-                    75,142,175,40
-    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,188,240,1
-    LTEXT           "Screen:",IDC_STATIC,18,192,47,9
-    LTEXT           "Static",IDC_PROP_SCREEN,75,192,175,9
-    LTEXT           "Colors:",IDC_STATIC,18,202,47,9
-    LTEXT           "Static",IDC_PROP_COLORS,75,202,175,9
-    LTEXT           "Source:",IDC_STATIC,18,211,47,9
-    LTEXT           "Static",IDC_PROP_SOURCE,75,211,175,9
-    LTEXT           "Clone of:",IDC_PROP_CLONEOF_TEXT,18,221,50,9
-    LTEXT           "Static",IDC_PROP_CLONEOF,75,221,175,18
+                    75,147,170,40
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,189,240,1
+    LTEXT           "Screen:",IDC_STATIC,18,193,47,9
+    LTEXT           "Static",IDC_PROP_SCREEN,75,193,170,9
+    LTEXT           "Colors:",IDC_STATIC,18,203,47,9
+    LTEXT           "Static",IDC_PROP_COLORS,75,203,170,9
+    LTEXT           "Source:",IDC_STATIC,18,212,47,9
+    LTEXT           "Static",IDC_PROP_SOURCE,75,212,170,9
+    LTEXT           "Clone of:",IDC_PROP_CLONEOF_TEXT,18,222,50,9
+    LTEXT           "Static",IDC_PROP_CLONEOF,75,222,170,18
 END
 
 IDD_PROP_AUDIT DIALOG DISCARDABLE  0, 0, 260, 245
@@ -508,7 +508,7 @@ CAPTION "Audit"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_CHECKMARK,IDC_STATIC,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,195,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     LTEXT           "ROM check:",IDC_STATIC,10,45,60,9
@@ -527,7 +527,7 @@ CAPTION "Display"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_DISPLAY,IDC_STATIC,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,195,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     CONTROL         "Run in a window",IDC_WINDOWED,"Button",BS_AUTOCHECKBOX | 
@@ -580,7 +580,7 @@ CAPTION "Direct3D"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_DISPLAY,IDC_STATIC,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,195,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     GROUPBOX        "",IDC_STATIC,4,45,251,160,WS_DISABLED
@@ -626,7 +626,7 @@ CAPTION "Sound"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_SOUNDTAB,IDC_STATIC,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,195,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     GROUPBOX        "",IDC_STATIC,4,45,251,160,WS_DISABLED
@@ -662,7 +662,7 @@ CAPTION "Advanced"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_DISPLAY,IDC_STATIC,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,195,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     CONTROL         "Use DirectDraw",IDC_DDRAW,"Button",BS_AUTOCHECKBOX | 
@@ -687,13 +687,13 @@ BEGIN
     CONTROL         "Stretch using hardware",IDC_HWSTRETCH,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,136,45,120,10,0,
                     HIDC_HWSTRETCH
-    LTEXT           "Aspect ratio",IDC_ASPECTRATIOTEXT,142,60,61,12,
+    LTEXT           "Aspect ratio",IDC_ASPECTRATIOTEXT,136,60,61,12,
                     SS_CENTERIMAGE,0,HIDC_ASPECTRATION
-    EDITTEXT        IDC_ASPECTRATION,206,60,15,12,ES_RIGHT | ES_AUTOHSCROLL | 
+    EDITTEXT        IDC_ASPECTRATION,200,60,18,12,ES_RIGHT | ES_AUTOHSCROLL | 
                     ES_NUMBER,0,HIDC_ASPECTRATION
-    LTEXT           ":",IDC_ASPECTRATIOTEXT2,226,60,8,12,SS_CENTERIMAGE | NOT WS_GROUP,
+    LTEXT           ":",IDC_ASPECTRATIOTEXT2,223,60,8,12,SS_CENTERIMAGE | NOT WS_GROUP,
                     0,HIDC_ASPECTRATION
-    EDITTEXT        IDC_ASPECTRATIOD,232,60,15,12,ES_RIGHT | ES_AUTOHSCROLL | 
+    EDITTEXT        IDC_ASPECTRATIOD,229,60,18,12,ES_RIGHT | ES_AUTOHSCROLL | 
                     ES_NUMBER,0,HIDC_ASPECTRATIOD
     GROUPBOX        "Clean stretch",IDC_CLEAN_STRETCHTEXT,136,76,120,30
     COMBOBOX        IDC_CLEAN_STRETCH,142,88,108,100,CBS_DROPDOWNLIST | 
@@ -738,7 +738,7 @@ CAPTION "Controllers"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_JOYSTICK,IDC_STATIC,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,195,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     GROUPBOX        "",IDC_STATIC,4,45,114,51,WS_DISABLED
@@ -815,7 +815,7 @@ CAPTION "Miscellaneous"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_MAME32_ICON,IDC_STATIC,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,195,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     CONTROL         "Enable game cheats",IDC_CHEAT,"Button",BS_AUTOCHECKBOX | 
@@ -876,7 +876,7 @@ CAPTION "Vector"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_MAME32_ICON,IDC_STATIC,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,195,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     CONTROL         "Draw antialiased vectors",IDC_ANTIALIAS,"Button",
@@ -1075,7 +1075,7 @@ CAPTION "Controller Mapping"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_JOYSTICK,IDC_STATIC,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,195,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     GROUPBOX        "Paddle device",IDC_STATIC,4,45,123,28
@@ -1156,7 +1156,7 @@ CAPTION "BIOS"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_MAME32_ICON,IDC_STATIC,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,195,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     GROUPBOX        "BIOS1:",IDC_BIOSTEXT1,4,45,123,36
@@ -1528,7 +1528,7 @@ BEGIN
     ID_CONTEXT_REMOVE_CUSTOM "Remove currently selected game from this folder"
     ID_CONTEXT_RENAME_CUSTOM "Rename currently selected folder"
     ID_CONTEXT_SELECT_RANDOM "Randomly select a game."
-    ID_CONTEXT_RESET_PLAYCOUNT "Reset play count of currently selected game"
+    ID_CONTEXT_RESET_PLAYCOUNT "Reset playcount of currently selected game"
     ID_CONTEXT_RESET_PLAYTIME "Reset play time of currently selected game"
     ID_GAME_AUDIT           "Audit ROM and samples sets"
     ID_CONTEXT_SHOW_FOLDER  "Show or hide folder"
@@ -1544,12 +1544,12 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    ID_VIEW_BYGAME          "Sort items by game"
-    ID_VIEW_BYDIRECTORY     "Sort items by directories"
+    ID_VIEW_BYGAME          "Sort items by game description"
+    ID_VIEW_BYDIRECTORY     "Sort items by name"
     ID_VIEW_BYMANUFACTURER  "Sort items by manufacturer"
     ID_VIEW_BYYEAR          "Sort items by year"
     ID_VIEW_BYTYPE          "Sort items by type"
-    ID_VIEW_BYTIMESPLAYED   "Sort by number of plays"
+    ID_VIEW_BYTIMESPLAYED   "Sort items by playcount"
     ID_VIEW_LINEUPICONS     "Arranges icons in a grid"
 END
 

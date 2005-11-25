@@ -2522,7 +2522,7 @@ static void AssignInput(HWND hWnd)
 	}
 	pGameOpts->ctrlr = (char *)malloc(new_length + 1);
 	ComboBox_GetLBTextA (hWnd, g_nInputIndex, pGameOpts->ctrlr);
-	if (strcmp(pGameOpts->ctrlr, _UI("(not set)")) == 0)
+	if (strcmp(pGameOpts->ctrlr, _UI("Standard")) == 0)
 	{
 		FreeIfAllocated(&pGameOpts->ctrlr);
 		pGameOpts->ctrlr = strdup("Standard");
@@ -2772,7 +2772,7 @@ static void ResetDataMap(void)
 #endif /* TRANS_UI */
 
 	// if no controller type was specified or it was standard
-	if (pGameOpts->ctrlr == NULL || mame_stricmp(pGameOpts->ctrlr,"(Standard)") == 0)
+	if (pGameOpts->ctrlr == NULL || mame_stricmp(pGameOpts->ctrlr,"Standard") == 0)
 	{
 		FreeIfAllocated(&pGameOpts->ctrlr);
 		pGameOpts->ctrlr = strdup("Standard");
@@ -3952,7 +3952,7 @@ static void InitializeDefaultInputUI(HWND hwnd)
 
 	if (hCtrl)
 	{
-		ComboBox_AddStringA(hCtrl, _UI("(not set)"));
+		ComboBox_AddStringA(hCtrl, _UI("Standard"));
 
 		sprintf (path, "%s\\*.*", GetCtrlrDir());
 

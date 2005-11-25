@@ -143,6 +143,8 @@ static char menu_string_pool[MENU_STRING_POOL_SIZE];
 static int single_step;
 static int auto_pause;
 static int scroll_reset;
+static int ui_need_scroll;
+static int ui_lock_scroll;
 
 static int showfps;
 static int showfpstemp;
@@ -345,6 +347,8 @@ void ui_set_visible_area(int xmin, int ymin, int xmax, int ymax)
 
 int ui_update_and_render(mame_bitmap *bitmap)
 {
+	ui_need_scroll = FALSE;
+
 	/* if we're single-stepping, pause now */
 	if (single_step)
 	{
@@ -400,6 +404,9 @@ int ui_update_and_render(mame_bitmap *bitmap)
 
 	/* finally, display any popup messages */
 	ui_display_popup();
+
+	if (!ui_need_scroll)
+		ui_lock_scroll = FALSE;
 
 	/* flush the UI to the bitmap */
 	render_ui(bitmap);
@@ -1283,85 +1290,93 @@ static int ui_message_window_keys(void)
 	static int fast = 6;
 	int pan_lines;
 	int max_scroll;
-	int do_scroll;
 
 	max_scroll = multiline_text_box_target_lines - multiline_text_box_visible_lines;
 	pan_lines = multiline_text_box_visible_lines - 1;
+
+	ui_need_scroll = TRUE;
 
 	if (scroll_reset)
 	{
 		message_window_scroll = 0;
 		scroll_reset = 0;
+		ui_lock_scroll = FALSE;
 	}
 
-	do_scroll = FALSE;
-
-	/* up backs up by one item */
-	if (input_ui_pressed_repeat(IPT_UI_UP, fast))
+	if (!ui_lock_scroll)
 	{
-		message_window_scroll--;
-		do_scroll = TRUE;
-	}
+		int do_scroll = FALSE;
 
-	/* down advances by one item */
-	if (input_ui_pressed_repeat(IPT_UI_DOWN, fast))
-	{
-		message_window_scroll++;
-		do_scroll = TRUE;
-	}
-
-	/* pan-up goes to previous page */
-	if (input_ui_pressed_repeat(IPT_UI_PAN_UP,8))
-	{
-		message_window_scroll -= pan_lines;
-		do_scroll = TRUE;
-	}
-
-	/* pan-down goes to next page */
-	if (input_ui_pressed_repeat(IPT_UI_PAN_DOWN,8))
-	{
-		message_window_scroll += pan_lines;
-		do_scroll = TRUE;
-	}
-
-	/* home goes to the start */
-	if (input_ui_pressed(IPT_UI_HOME))
-	{
-		message_window_scroll = 0;
-		do_scroll = TRUE;
-	}
-
-	/* end goes to the last */
-	if (input_ui_pressed(IPT_UI_END))
-	{
-		message_window_scroll = max_scroll;
-		do_scroll = TRUE;
-	}
-
-	if (message_window_scroll < 0)
-		message_window_scroll = 0;
-	if (message_window_scroll > max_scroll)
-		message_window_scroll = max_scroll;
-
-	if (input_port_type_pressed(IPT_UI_UP,0) || input_port_type_pressed(IPT_UI_DOWN,0))
-	{
-		if (++counter == 25)
+		/* up backs up by one item */
+		if (input_ui_pressed_repeat(IPT_UI_UP, fast))
 		{
-			fast--;
-			if (fast < 1)
-				fast = 0;
+			message_window_scroll--;
+			do_scroll = TRUE;
+		}
 
+		/* down advances by one item */
+		if (input_ui_pressed_repeat(IPT_UI_DOWN, fast))
+		{
+			message_window_scroll++;
+			do_scroll = TRUE;
+		}
+
+		/* pan-up goes to previous page */
+		if (input_ui_pressed_repeat(IPT_UI_PAN_UP,8))
+		{
+			message_window_scroll -= pan_lines;
+			do_scroll = TRUE;
+		}
+
+		/* pan-down goes to next page */
+		if (input_ui_pressed_repeat(IPT_UI_PAN_DOWN,8))
+		{
+			message_window_scroll += pan_lines;
+			do_scroll = TRUE;
+		}
+
+		/* home goes to the start */
+		if (input_ui_pressed(IPT_UI_HOME))
+		{
+			message_window_scroll = 0;
+			do_scroll = TRUE;
+		}
+
+		/* end goes to the last */
+		if (input_ui_pressed(IPT_UI_END))
+		{
+			message_window_scroll = max_scroll;
+			do_scroll = TRUE;
+		}
+
+		if (message_window_scroll < 0)
+			message_window_scroll = 0;
+		if (message_window_scroll > max_scroll)
+			message_window_scroll = max_scroll;
+
+		if (input_port_type_pressed(IPT_UI_UP,0) || input_port_type_pressed(IPT_UI_DOWN,0))
+		{
+			if (++counter == 25)
+			{
+				fast--;
+				if (fast < 1)
+					fast = 0;
+
+				counter = 0;
+			}
+		}
+		else
+		{
+			fast = 6;
 			counter = 0;
 		}
-	}
-	else
-	{
-		fast = 6;
-		counter = 0;
+
+		if (do_scroll)
+			return -1;
 	}
 
-	if (do_scroll)
-		return -1;
+	if (input_ui_pressed(IPT_UI_TOGGLE_LOCK_SCROLL))
+		ui_lock_scroll = !ui_lock_scroll;
 
 	if (input_ui_pressed(IPT_UI_SELECT))
 	{
@@ -5014,7 +5029,12 @@ static void render_ui(mame_bitmap *dest)
 		if (color == RGB_BLACK)
 			color = get_black_pen();
 		else if (color == RGB_WHITE)
-			color = get_white_pen();
+		{
+			if (ui_lock_scroll)
+				color = uifont_colortable[FONT_COLOR_SPECIAL];
+			else
+				color = get_white_pen();
+		}
 		else if (color < MAX_COLORTABLE)
 			color = uifont_colortable[color];
 #else /* UI_COLOR_DISPLAY */

@@ -771,7 +771,7 @@ static struct rc_option rc_winui_opts[] =
 	{ "ui_key_view_tab_title", NULL, rc_string, &rc_dummy_args.ui_key_view_tab_title, "KEYCODE_LALT KEYCODE_5", 0, 0, KeySeqDecodeString, "keyboard to view tab title" },
 	{ "ui_key_quit", NULL, rc_string, &rc_dummy_args.ui_key_quit, "KEYCODE_LALT KEYCODE_Q", 0, 0, KeySeqDecodeString, "keyboard to quit application" },
 
-	{ "Windows UI specific folder list options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+	{ "Windows UI specific folder list hide options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
 	{ "folder_hide", NULL, rc_string, &rc_dummy_args.ui_hide_folder, NULL, 0, 0, HideFolderDecodeString, "hide selected item in folder list" },
 
 	{FOLDERFLAG_OPT, NULL, rc_use_function, NULL, NULL, 0, 0, FolderFlagDecodeString, "folder list filters settings" },

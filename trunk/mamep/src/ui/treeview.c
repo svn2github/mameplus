@@ -1176,8 +1176,6 @@ void CreateFPSFolders(int parent_index)
 	}
 }
 
-
-#if 1 // New CreateResolutionFolders (Horizonal / Vertical)
 void CreateResolutionFolders(int parent_index)
 {
 	int i,jj;
@@ -1220,74 +1218,6 @@ void CreateResolutionFolders(int parent_index)
 		}
 	}
 }
-#else // !New CreateResolutionFolders (Horizonal / Vertical)
-void CreateResolutionFolders(int parent_index)
-{
-	int i,jj;
-	int nGames = GetNumGames();
-	int nFolder = numFolders;
-	LPTREEFOLDER lpFolder = treeFolders[parent_index];
-	LPTREEFOLDER map[400];
-	UINT32 screen[400];
-	int nScreen = 0;
-
-	// no games in top level folder
-	SetAllBits(lpFolder->m_lpGameBits,FALSE);
-
-	for (i = 0; i < nGames; i++)
-	{
-		LPTREEFOLDER lpTemp;
-		UINT32 s;
-		int x, y;
-		machine_config drv;
-
-		expand_machine_driver(drivers[i]->drv,&drv);
-
-		if (drivers[i]->flags & ORIENTATION_SWAP_XY)
-		{
-			x = drv.default_visible_area.max_y - drv.default_visible_area.min_y + 1;
-			y = drv.default_visible_area.max_x - drv.default_visible_area.min_x + 1;
-		}
-		else
-		{
-			x = drv.default_visible_area.max_x - drv.default_visible_area.min_x + 1;
-			y = drv.default_visible_area.max_y - drv.default_visible_area.min_y + 1;
-		}
-
-		s = x << 16 | y;
-
-#if 0
-		if (drv.video_attributes & VIDEO_TYPE_VECTOR)
-			s = ~s;
-#endif
-
-		for (jj = 0; jj < nScreen; jj++)
-			if (screen[jj] == s)
-				break;
-
-		if (nScreen == jj)
-		{
-			char buf[50];
-
-#if 0
-			if (drv.video_attributes & VIDEO_TYPE_VECTOR)
-				sprintf(buf, "Vector %4dx%4d", x, y);
-			else
-#endif
-				sprintf(buf, "%4dx%4d", x, y);
-
-			lpTemp = NewFolder(buf, 0, FALSE, next_folder_id++, parent_index, IDI_FOLDER,
-			                   GetFolderFlags(buf));
-			AddFolder(lpTemp);
-			map[nScreen] = treeFolders[nFolder++];
-			screen[nScreen++] = s;
-		}
-
-		AddGame(map[jj],i);
-	}
-}
-#endif // !New CreateResolutionFolders (Horizonal / Vertical)
-
 
 void CreateControlFolders(int parent_index)
 {

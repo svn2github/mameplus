@@ -793,7 +793,7 @@ const char* column_names[COLUMN_MAX] =
 	"Name",
 	"Type",
 	"Trackball",
-	"Played",
+	"Playcount",
 	"Manufacturer",
 	"Year",
 	"Clone Of",
@@ -2509,7 +2509,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	}
 
 #ifdef MAME_DEBUG
-	if (mame_validitychecks(-1))
+	if (mame_validitychecks())
 	{
 		MessageBoxA(hMain, MAMENAME " has failed its validity checks.  The GUI will "
 			"still work, but emulations will fail to execute", MAMENAME, MB_OK);
