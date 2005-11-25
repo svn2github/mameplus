@@ -190,12 +190,12 @@ enum
 	JOYCODE_1_BUTTON32,
 	JOYCODE_1_START,
 	JOYCODE_1_SELECT,
-#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device by miko2u@hotmail.com
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device by miko2u@hotmail.com
 	JOYCODE_MOUSE_1_LEFT,
 	JOYCODE_MOUSE_1_RIGHT,
 	JOYCODE_MOUSE_1_UP,
-	JOYCODE_MOUSE_1_DOWN,
-#endif /* USE_JOY_MOUSE_MOVE */
+	JOYCODE_MOUSE_1_DOWN,
+#endif /* USE_JOY_MOUSE_MOVE */
 	JOYCODE_2_LEFT,
 	JOYCODE_2_RIGHT,
 	JOYCODE_2_UP,
@@ -463,13 +463,13 @@ enum
 	JOYCODE_8_START,
 	JOYCODE_8_SELECT,
 
-#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device by miko2u@hotmail.com
-	MOUSECODE_1_LEFT,
-	MOUSECODE_1_RIGHT,
-	MOUSECODE_1_UP,
-	MOUSECODE_1_DOWN,
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device by miko2u@hotmail.com
+	MOUSECODE_1_LEFT,
+	MOUSECODE_1_RIGHT,
+	MOUSECODE_1_UP,
+	MOUSECODE_1_DOWN,
 #endif /* USE_JOY_MOUSE_MOVE */
-
+
 	/* digital mouse codes */
 	MOUSECODE_1_BUTTON1,
 	MOUSECODE_1_BUTTON2,

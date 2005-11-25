@@ -533,14 +533,14 @@ static void neogeo_gfx_decrypt(int extra_xor)
 /* the S data comes from the end of the C data */
 void neogeo_sfix_decrypt(void)
 {
-		int i;
+	int i;
 	int rom_size = memory_region_length(REGION_GFX3);
-		int tx_size = memory_region_length(REGION_GFX1);
-		UINT8 *src = memory_region(REGION_GFX3)+rom_size-tx_size;
-		UINT8 *dst = memory_region(REGION_GFX1);
+	int tx_size = memory_region_length(REGION_GFX1);
+	UINT8 *src = memory_region(REGION_GFX3)+rom_size-tx_size;
+	UINT8 *dst = memory_region(REGION_GFX1);
 
-		for (i = 0;i < tx_size;i++)
-			dst[i] = src[(i & ~0x1f) + ((i & 7) << 2) + ((~i & 8) >> 2) + ((i & 0x10) >> 4)];
+	for (i = 0;i < tx_size;i++)
+		dst[i] = src[(i & ~0x1f) + ((i & 7) << 2) + ((~i & 8) >> 2) + ((i & 0x10) >> 4)];
 }
 
 

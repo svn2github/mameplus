@@ -23,18 +23,18 @@ enum
 
 typedef struct
 {
-	DWORD       dwCtrlId;
-	int dmType;
-	int cType;
-	BOOL        bValue;
-	BOOL*       bVar;
-	int         nValue;
-	int         nMin;
-	int         nMax;
-	int*        nVar;
-	int encoded_type;
-	void *encoded_var;
-	void        (*func)(HWND hWnd);
+	DWORD		dwCtrlId;
+	int			dmType;
+	int			cType;
+	BOOL		bValue;
+	BOOL*		bVar;
+	int			nValue;
+	int			nMin;
+	int			nMax;
+	int*		nVar;
+	int			encoded_type;
+	void		*encoded_var;
+	void		(*func)(HWND hWnd);
 } DATA_MAP;
 
 void InitDataMap(void);
