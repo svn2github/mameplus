@@ -147,7 +147,7 @@ int TabView_GetCurrentTab(HWND hwndTabView)
 		{
 			for (i = 0; i < pTabViewInfo->nTabCount; i++)
 			{
-				if (!stricmp(pszTab, pTabViewInfo->pCallbacks->pfnGetTabShortName(i)))
+				if (!mame_stricmp(pszTab, pTabViewInfo->pCallbacks->pfnGetTabShortName(i)))
 				{
 					nTab = i;
 					break;

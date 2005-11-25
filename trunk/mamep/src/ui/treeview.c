@@ -2203,7 +2203,7 @@ static int InitExtraFolders(void)
 				strcpy(buf, files.name);
 				ext = strrchr(buf, '.');
 
-				if (ext && *(ext + 1) && !stricmp(ext + 1, "ini"))
+				if (ext && *(ext + 1) && !mame_stricmp(ext + 1, "ini"))
 				{
 					ExtraFolderData[count] = malloc(sizeof(EXFOLDERDATA));
 					if (ExtraFolderData[count]) 

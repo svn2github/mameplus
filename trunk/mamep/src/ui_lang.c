@@ -55,9 +55,9 @@ int lang_find_langname(const char *name)
 
 	for (i = 0; i < UI_LANG_MAX; i++)
 	{
-		if (!stricmp(ui_lang_info[i].name, name))
+		if (!mame_stricmp(ui_lang_info[i].name, name))
 			return i;
-		if (!stricmp(ui_lang_info[i].shortname, name))
+		if (!mame_stricmp(ui_lang_info[i].shortname, name))
 			return i;
 	}
 

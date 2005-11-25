@@ -164,14 +164,14 @@ static int init_errorlog(struct rc_option *option, const char *arg, int priority
 /* initialization function of gettext */
 static int init_language(struct rc_option *option, const char *arg, int priority)
 {
-	options.langcode = stricmp(langname, "auto") ?
+	options.langcode = mame_stricmp(langname, "auto") ?
 		lang_find_langname(langname) :
 		lang_find_codepage(GetOEMCP());
 
 	if (options.langcode < 0)
 	{
 		options.langcode = UI_LANG_EN_US;
-		if (stricmp(langname, "auto"))
+		if (mame_stricmp(langname, "auto"))
 			fprintf(stderr, _WINDOWS("error: invalid value for language: %s\nUse %s\n"),
 		                arg, ui_lang_info[options.langcode].description);
 	}

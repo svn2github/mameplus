@@ -900,7 +900,7 @@ static int CALLBACK Picker_CompareProc(LPARAM index1, LPARAM index2, LPARAM nPar
 				szBuffer1, sizeof(szBuffer1) / sizeof(szBuffer1[0]));
 			s2 = Picker_CallGetItemString(pcpp->hwndPicker, index2, pcpp->nSortColumn,
 				szBuffer2, sizeof(szBuffer2) / sizeof(szBuffer2[0]));
-			nResult = stricmp(s1, s2);
+			nResult = mame_stricmp(s1, s2);
 		}
 
 		if (pcpp->bReverse)

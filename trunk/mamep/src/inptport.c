@@ -1937,7 +1937,7 @@ input_port_entry *input_port_allocate(void (*construct_ipt)(input_port_init_para
 	int remove_neogeo_territory = 0;
 	int remove_neogeo_arcade = 0;
 
-	if (Machine->gamedrv && !stricmp(Machine->gamedrv->source_file+12, "neogeo.c"))
+	if (Machine->gamedrv && !mame_stricmp(Machine->gamedrv->source_file+12, "neogeo.c"))
 	{
 		int system_bios = determine_bios_rom(Machine->gamedrv->bios);
 

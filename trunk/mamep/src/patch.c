@@ -54,7 +54,7 @@ static const rom_entry *find_rom_entry(const rom_entry *romp, const char *name)
 			if (!ROMENTRY_ISFILE(rom))
 				continue;
 
-			if (stricmp(ROM_GETNAME(rom), name) == 0)
+			if (mame_stricmp(ROM_GETNAME(rom), name) == 0)
 				return rom;
 		}
 	}
@@ -422,7 +422,7 @@ void *assign_ips_patch(const rom_entry *romp)
 	{
 		memset(&p->current, 0, sizeof (p->current));
 
-		if (stricmp(p->rom_name, name) == 0)
+		if (mame_stricmp(p->rom_name, name) == 0)
 		{
 			logerror("IPS: assign IPS file \"%s\" to ROM entry \"%s\"\n", p->ips_name, p->rom_name);
 			p->current = *p->chunk;

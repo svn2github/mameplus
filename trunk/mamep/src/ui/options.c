@@ -4128,7 +4128,7 @@ static int LanguageDecodeString(struct rc_option *option, const char *arg, int p
 	if (arg == NULL)
 		langcode = -1;
 	else
-		langcode = stricmp(arg, "auto") ? lang_find_langname(arg) : -1;
+		langcode = mame_stricmp(arg, "auto") ? lang_find_langname(arg) : -1;
 
 	SetLangcode(langcode);
 	FreeIfAllocated((char **)option->dest);
