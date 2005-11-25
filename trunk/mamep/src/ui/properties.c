@@ -56,10 +56,6 @@
 
 typedef HANDLE HTHEME;
 
-#ifdef IPS_PATCH
-#define PATCH_MAX 8
-#endif /* IPS_PATCH */
-
 #ifdef UNICODE
 #define TTM_SETTITLE            TTM_SETTITLEW
 #else
@@ -155,9 +151,6 @@ static void InitializeD3DEffectUI(HWND hwnd);
 static void InitializeD3DPrescaleUI(HWND hwnd);
 static void InitializeDefaultBIOSUI(HWND hwnd);
 static void InitializeBIOSUI(HWND hwnd);
-#ifdef IPS_PATCH
-static void InitializeIPSUI(HWND hwnd);
-#endif /* IPS_PATCH */
 static void InitializeLEDModeUI(HWND hwnd);
 static void InitializeCleanStretchUI(HWND hwnd);
 static void InitializeControllerMappingUI(HWND hwnd);
@@ -226,10 +219,6 @@ static int  g_nCleanStretchIndex = 0;
 static int  g_nD3DEffectIndex  = 0;
 static int  g_nD3DPrescaleIndex  = 0;
 static int  g_nBiosIndex       = 0;
-#ifdef IPS_PATCH
-static int  g_nIpsIndex[PATCH_MAX];
-static HWND hTooltipWnd = NULL;
-#endif /* IPS_PATCH */
 #ifdef USE_SCALE_EFFECTS
 static int  g_nScaleEffectIndex= 0;
 #endif /* USE_SCALE_EFFECTS */
@@ -282,16 +271,6 @@ BOOL PropSheetFilter_BIOS(void)
 
 	return 0;
 }
-
-#ifdef IPS_PATCH
-BOOL PropSheetFilter_IPS(void)
-{
-	if (IS_GAME)
-		return HasPatch(drivers[g_nGame]->name, "*");
-
-	return 0;
-}
-#endif /* IPS_PATCH */
 
 
 /* Help IDs */
@@ -603,87 +582,6 @@ static struct ComboBoxDevices
  * Public functions
  ***************************************************************/
 
-#ifdef IPS_PATCH
-void InitTooltip (HWND hParent)
-{
-    // struct specifying control classes to register
-    INITCOMMONCONTROLSEX iccex; 
-    // struct specifying info about tool in ToolTip control
-    TOOLINFO ti;
-    LPTSTR lptstr = 0;
-
-    /* INITIALIZE COMMON CONTROLS */
-	iccex.dwICC = ICC_BAR_CLASSES;
-    iccex.dwSize = sizeof(INITCOMMONCONTROLSEX);
-
-	if(!InitCommonControlsEx(&iccex))
-	   return;
-
-    /* CREATE A TOOLTIP WINDOW */
-    hTooltipWnd = CreateWindowEx(WS_EX_TOPMOST,
-        TOOLTIPS_CLASS,
-        NULL,
-        WS_POPUP | TTS_NOPREFIX | TTS_BALLOON,		
-        CW_USEDEFAULT,
-        CW_USEDEFAULT,
-        CW_USEDEFAULT,
-        CW_USEDEFAULT,
-        hParent,
-        NULL,
-        NULL,
-        NULL
-        );
-
-    /* INITIALIZE MEMBERS OF THE TOOLINFO STRUCTURE */
-    ti.cbSize = sizeof(TOOLINFO);
-    ti.uFlags = TTF_IDISHWND | TTF_TRANSPARENT | TTF_TRACK | TTF_ABSOLUTE;
-    ti.hwnd = hParent;
-    ti.hinst = NULL;
-    ti.uId = (UINT)hParent;
-    ti.lpszText = lptstr;
-
-	ti.rect.left = ti.rect.top = ti.rect.bottom = ti.rect.right = 0;
-
-    /* SEND AN ADDTOOL MESSAGE TO THE TOOLTIP CONTROL WINDOW */
-    SendMessage(hTooltipWnd, TTM_SETMAXTIPWIDTH, 0, 4096);
-    SendMessage(hTooltipWnd, TTM_ADDTOOL, 0, (LPARAM) (LPTOOLINFO) &ti);
-}
-
-void ShowTooltip (HWND hParent, BOOL bShow)
-{
-	TOOLINFO    ti;
-	ti.cbSize = sizeof(TOOLINFO);
-	ti.uFlags = TTF_IDISHWND;
-	ti.hwnd   = hParent;
-	ti.uId    = (UINT)hParent;
-	SendMessage(hTooltipWnd,TTM_TRACKACTIVATE,(WPARAM)bShow,(LPARAM)&ti);
-}
-
-void SetToolTipPosition(HWND hCtrl)
-{
-	RECT rt = {0,0,0,0};
-	GetWindowRect(hCtrl, &rt);
-
-	// move position
-	SendMessage(hTooltipWnd, TTM_TRACKPOSITION, 0,(LPARAM)MAKELPARAM(rt.right + 3, rt.top + 8));
-	// make it top most
-	SetWindowPos(hTooltipWnd, HWND_TOPMOST ,0,0,0,0, SWP_NOSIZE|SWP_NOACTIVATE|SWP_NOMOVE);
-}
-
-void UpdateToolTipText(HWND hParent, LPWSTR sczBuff, const char *sczTipTitle)
-{
-	TOOLINFO    ti;
-
-	ti.cbSize = sizeof(TOOLINFO);
-	ti.uFlags = TTF_IDISHWND;
-	ti.hwnd   = hParent;
-	ti.uId    = (UINT)hParent;
-	ti.lpszText = sczBuff;
-	SendMessage(hTooltipWnd, TTM_SETTITLE, 1, (LPARAM)(void *)_Unicode(sczTipTitle));
-	SendMessage(hTooltipWnd, TTM_UPDATETIPTEXT, (WPARAM)0, (LPARAM)&ti);
-}
-#endif /* IPS_PATCH */
-
 typedef HTHEME (WINAPI *OpenThemeProc)(HWND hwnd, LPCWSTR pszClassList);
 
 HMODULE hThemes;
@@ -809,9 +707,6 @@ void InitDefaultPropertyPage(HINSTANCE hInst, HWND hWnd)
 	pshead.DUMMYUNIONNAME3.ppsp       = pspage;
 
 	/* Create the Property sheet and display it */
-#ifdef IPS_PATCH
-	hTooltipWnd = NULL;
-#endif /* IPS_PATCH */
 	if (PropertySheet(&pshead) == -1)
 	{
 		char temp[100];
@@ -906,9 +801,6 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIco
 	pshead.DUMMYUNIONNAME3.ppsp       = pspage;
 
 	/* Create the Property sheet and display it */
-#ifdef IPS_PATCH
-	hTooltipWnd = NULL;
-#endif /* IPS_PATCH */
 	if (PropertySheet(&pshead) == -1)
 	{
 		char temp[100];
@@ -1244,11 +1136,6 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 	HWND hWndCtrl    = GET_WM_COMMAND_HWND(wParam, lParam);
 	WORD wNotifyCode = GET_WM_COMMAND_CMD(wParam, lParam);
 	BOOL changed     = FALSE;
-#ifdef IPS_PATCH
-	int nCount;
-	char patchName[256];
-	LPWSTR desc;
-#endif /* IPS_PATCH */
 
 	switch (wID)
 	{
@@ -1346,61 +1233,6 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 			changed = TRUE;
 		break;
 
-#ifdef IPS_PATCH
-	case IDC_IPS1 :
-	case IDC_IPS2 :
-	case IDC_IPS3 :
-	case IDC_IPS4 :
-	case IDC_IPS5 :
-	case IDC_IPS6 :
-	case IDC_IPS7 :
-	case IDC_IPS8 :
-		if (wNotifyCode == CBN_SETFOCUS)
-		{
-			SetToolTipPosition(hWndCtrl);
-
-			nCount = ComboBox_GetCurSel(hWndCtrl);
-			if (nCount > 0)
-			{
-				ComboBox_GetLBTextA(hWndCtrl, nCount, patchName);
-				desc = GetPatchDesc(drivers[g_nGame]->name, patchName);
-				if (desc)
-				{
-					UpdateToolTipText(hDlg,desc,patchName);
-					ShowTooltip(hDlg, TRUE);
-				}
-			}
-		}
-		else if (wNotifyCode == CBN_KILLFOCUS)
-		{
-			ShowTooltip(hDlg, FALSE);
-		}
-		else if (wNotifyCode == CBN_SELCHANGE)
-		{
-			nCount = ComboBox_GetCurSel(hWndCtrl);
-			if (nCount > 0)
-			{
-				ComboBox_GetLBTextA(hWndCtrl, nCount, patchName);
-				desc = GetPatchDesc(drivers[g_nGame]->name, patchName);
-				if (desc)
-				{
-					UpdateToolTipText(hDlg,desc,patchName);
-					ShowTooltip(hDlg, TRUE);
-				}
-				else
-					ShowTooltip(hDlg, FALSE);
-			}
-			else
-				ShowTooltip(hDlg, FALSE);
-
-			// HACK: DO NOT INHERIT IPS CONFIGURATION
-			//changed = TRUE;
-			PropSheet_Changed(GetParent(hDlg), hDlg);
-			g_bReset = TRUE;
-		}
-		break;
-#endif /* IPS_PATCH */
-
 	case IDC_PROP_RESET:
 		if (wNotifyCode != BN_CLICKED)
 			break;
@@ -1453,22 +1285,8 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 			{
 				if (IS_GAME)
 				{
-#ifdef IPS_PATCH
-					// HACK: DO NOT INHERIT IPS CONFIGURATION
-					if ((origGameOpts.patchname != pGameOpts->patchname
-					  && (!origGameOpts.patchname || !pGameOpts->patchname))
-					 || (origGameOpts.patchname && pGameOpts->patchname
-					  && strcmp(origGameOpts.patchname, pGameOpts->patchname)))
-					{
-						PropSheet_Changed(GetParent(hDlg), hDlg);
-						g_bReset = TRUE;
-					}
-					else
-#endif /* IPS_PATCH */
-					{
 						PropSheet_UnChanged(GetParent(hDlg), hDlg);
 						g_bReset = FALSE;
-					}
 				}
 				else
 				{
@@ -2906,40 +2724,6 @@ AssignDefaultBios(5)
 AssignDefaultBios(6)
 AssignDefaultBios(7)
 
-#ifdef IPS_PATCH
-static void AssignIPS(HWND hWnd)
-{
-	int n;
-
-	FreeIfAllocated(&pGameOpts->patchname);
-
-	for (n = 0; n < PATCH_MAX; n++)
-		if (g_nIpsIndex[n])
-		{
-			char patchName[64];
-
-			if (GetPatchName(patchName, drivers[g_nGame]->name, g_nIpsIndex[n] - 1))
-			{
-				if (pGameOpts->patchname)
-				{
-					char *p;
-					int len = strlen(pGameOpts->patchname);
-
-					len += strlen(patchName) + 2;
-					p = malloc(len);
-					sprintf(p, "%s,%s", pGameOpts->patchname, patchName);
-					FreeIfAllocated(&pGameOpts->patchname);
-					pGameOpts->patchname = p;
-				}
-				else
-				{
-					pGameOpts->patchname = strdup(patchName);
-				}
-			}
-		}
-}
-#endif /* IPS_PATCH */
-
 #ifdef USE_SCALE_EFFECTS
 static void AssignScaleEffect(HWND hWnd)
 {
@@ -3094,44 +2878,6 @@ static void ResetDataMap(void)
 			}
 		}
 	}
-
-#ifdef IPS_PATCH
-	for (i = 0; i < PATCH_MAX; i++)
-		g_nIpsIndex[i] = 0;
-
-	if (IS_GAME && pGameOpts->patchname)
-	{
-		char *s = strdup(pGameOpts->patchname);
-		
-		int patch_count = HasPatch(drivers[g_nGame]->name, "*");
-		char *patch_list = malloc(64 * patch_count);
-		int n = 0;
-		char *p, *q;
-
-		for (i = 0; i < patch_count; i++)
-			if (!GetPatchName(patch_list + i * 64, drivers[g_nGame]->name, i))
-				patch_list[i * 64] = '\0';
-
-		for (p = s; *p; p = q)
-		{
-			for (q = p; *q; q++)
-				if (*q == ',')
-				{
-					*q++ = '\0';
-					break;
-				}
-
-			for (i = 0; i < patch_count; i++)
-				if (stricmp(p, patch_list + i * 64) == 0)
-				{
-					g_nIpsIndex[n++] = i + 1;
-				}
-		}
-
-		free(patch_list);
-		free(s);
-	}
-#endif /* IPS_PATCH */
 
 #ifdef USE_SCALE_EFFECTS
 	g_nScaleEffectIndex = 0;
@@ -3354,16 +3100,6 @@ static void BuildDataMap(void)
 			DataMapAdd(IDC_BIOS8,         DM_INT,  CT_COMBOBOX, &default_bios_index[7],    DM_NONE, NULL,                      0, 0, AssignDefaultBios7);
 	}
 
-#ifdef IPS_PATCH
-	if (IS_GAME)
-	{
-		int n;
-
-		for (n = 0; n < PATCH_MAX; n++)
-			DataMapAdd(IDC_IPS1 + n,      DM_INT,  CT_COMBOBOX, &g_nIpsIndex[n],           DM_NONE, NULL,                      0, 0, AssignIPS);
-	}
-#endif /* IPS_PATCH */
-
 #ifdef MESS
 	DataMapAdd(IDC_USE_NEW_UI,    DM_BOOL, CT_BUTTON,   &pGameOpts->mess.use_new_ui,DM_BOOL, &pGameOpts->mess.use_new_ui, 0, 0, 0);
 #endif
@@ -3509,9 +3245,6 @@ static void InitializeOptions(HWND hDlg)
 	InitializeD3DPrescaleUI(hDlg);
 	InitializeBIOSUI(hDlg);
 	InitializeDefaultBIOSUI(hDlg);
-#ifdef IPS_PATCH
-	InitializeIPSUI(hDlg);
-#endif /* IPS_PATCH */
 	InitializeLEDModeUI(hDlg);
 	InitializeCleanStretchUI(hDlg);
 	InitializeControllerMappingUI(hDlg);
@@ -4424,41 +4157,6 @@ static void InitializeDefaultBIOSUI(HWND hwnd)
 		}
 	}
 }
-
-#ifdef IPS_PATCH
-static void InitializeIPSUI(HWND hwnd)
-{
-	if (IS_GAME)
-	{
-		int patch_count = HasPatch(drivers[g_nGame]->name, "*");
-		int n;
-		int i;
-		char patchName[64];
-
-		for (n = 0; n < PATCH_MAX; n++)
-		{
-			HWND hCtrl = GetDlgItem(hwnd,IDC_IPS1+n);
-			if (hCtrl)
-				ComboBox_AddStringA(hCtrl, _UI("None"));
-		}
-
-		for (i = 0; i < patch_count; i++)
-		{
-			if (GetPatchName(patchName, drivers[g_nGame]->name, i))
-			{
-				for (n = 0; n < PATCH_MAX; n++)
-				{
-					HWND hCtrl = GetDlgItem(hwnd,IDC_IPS1+n);
-					if (hCtrl)
-						ComboBox_AddStringA(hCtrl, patchName);
-				}
-			}
-		}
-	}
-	if (hTooltipWnd == NULL)
-		InitTooltip(hwnd);	//fixme: create tooltip window only once
-}
-#endif /* IPS_PATCH */
 
 static void InitializeCleanStretchUI(HWND hwnd)
 {
