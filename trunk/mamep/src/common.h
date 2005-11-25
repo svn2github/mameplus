@@ -53,6 +53,9 @@ struct _rom_load_data
 	int romstotal;				/* total number of ROMs to read */
 
 	void * file;				/* current file */
+#ifdef IPS_PATCH
+	void * patch;				/* current patch */
+#endif /* IPS_PATCH */
 
 	UINT8 *	regionbase;			/* base of current region */
 	UINT32 regionlength;			/* length of current region */

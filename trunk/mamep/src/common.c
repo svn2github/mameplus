@@ -14,6 +14,9 @@
 #include "state.h"
 #include <stdarg.h>
 #include <ctype.h>
+#ifdef IPS_PATCH
+#include "patch.h"
+#endif /* IPS_PATCH */
 
 
 //#define LOG_LOAD
@@ -1325,7 +1328,16 @@ static int open_rom_file(rom_load_data *romdata, const rom_entry *romp)
 	romdata->file = NULL;
 	for (drv = Machine->gamedrv; !romdata->file && drv; drv = drv->clone_of)
 		if (drv->name && *drv->name)
+		{
 			romdata->file = mame_fopen_rom(drv->name, ROM_GETNAME(romp), ROM_GETHASHDATA(romp));
+#ifdef IPS_PATCH
+			if (romdata->file)
+				romdata->patch = assign_ips_patch(romp);
+
+			if (romdata->patch)
+				debugload("ROM %s: has patch\n", ROM_GETNAME(romp));
+#endif /* IPS_PATCH */
+		}
 
 	/* return the result */
 	return (romdata->file != NULL);
@@ -1339,15 +1351,22 @@ static int open_rom_file(rom_load_data *romdata, const rom_entry *romp)
 
 static int rom_fread(rom_load_data *romdata, UINT8 *buffer, int length)
 {
+	int result = length;
+
 	/* files just pass through */
 	if (romdata->file)
-		return mame_fread(romdata->file, buffer, length);
+		result = mame_fread(romdata->file, buffer, length);
 
 	/* otherwise, fill with randomness */
 	else
 		fill_random(buffer, length);
 
-	return length;
+#ifdef IPS_PATCH
+	if (romdata->patch)
+		apply_ips_patch(romdata->patch, buffer, length);
+#endif /* IPS_PATCH */
+
+	return result;
 }
 
 
@@ -1799,6 +1818,14 @@ int rom_load(const rom_entry *romp)
 	/* determine the correct biosset to load based on options.bios string */
 	system_bios = determine_bios_rom(Machine->gamedrv->bios);
 
+#ifdef IPS_PATCH
+	if (options.patchname)
+	{
+		if (!open_ips_entry(options.patchname, &romdata, romp))
+			return display_rom_load_results(&romdata);
+	}
+#endif /* IPS_PATCH */
+
 	/* loop until we hit the end */
 	for (region = romp, regnum = 0; region; region = rom_next_region(region), regnum++)
 	{
@@ -1859,6 +1886,14 @@ int rom_load(const rom_entry *romp)
 		if (regiontype < REGION_MAX)
 			regionlist[regiontype] = region;
 	}
+
+#ifdef IPS_PATCH
+	if (options.patchname)
+	{
+		if (!close_ips_entry(&romdata))
+			return display_rom_load_results(&romdata);
+	}
+#endif /* IPS_PATCH */
 
 	/* post-process the regions */
 	for (regnum = 0; regnum < REGION_MAX; regnum++)

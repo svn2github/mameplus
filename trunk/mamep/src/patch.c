@@ -1,176 +1,349 @@
 #include "driver.h"
 #include "patch.h"
 
+
+#define UTF8_SIGNATURE	"\xef\xbb\xbf"
+#define IPS_SIGNATURE	"PATCH"
+#define IPS_TAG_EOF	"EOF"
+#define IPS_EXT		".ips"
+#define CRC_STAG	"CRC("
+#define CRC_ETAG	")"
+
 #define BYTE3_TO_UINT(bp) \
-     (((unsigned int)(bp)[0] << 16) & 0x00FF0000) | \
-     (((unsigned int)(bp)[1] << 8) & 0x0000FF00) | \
-     ((unsigned int)(bp)[2] & 0x000000FF)
+	(((bp[0] << 16) & 0x00ff0000) | \
+	 ((bp[1] << 8)  & 0x0000ff00) | \
+	 ((bp[2] << 0)  & 0x000000ff))
 
 #define BYTE2_TO_UINT(bp) \
-    (((unsigned int)(bp)[0] << 8) & 0xFF00) | \
-    ((unsigned int) (bp)[1] & 0x00FF)
+	(((bp[0] << 8) & 0xff00) | \
+	 ((bp[1] << 0) & 0x00ff))
 
-typedef struct
+
+typedef struct _ips_chunk
 {
-	char   ips_dir[_MAX_PATH];
-	char   ips_filename[_MAX_PATH];
-	UINT8  region;
-} file_patch;
+	struct _ips_chunk *next;
+	int offset;
+	int size;
+	char *data;
+} ips_chunk;
 
-static void PatchFile(const file_patch *p, const rom_entry *romp)
+typedef struct _ips_entry
 {
-	int datashift = ROM_GETBITSHIFT(romp);
-	int datamask = ((1 << ROM_GETBITWIDTH(romp)) - 1) << datashift;
-	int groupsize = ROM_GETGROUPSIZE(romp);
-	int skip = ROM_GETSKIPCOUNT(romp);
-	int reversed = ROM_ISREVERSED(romp);
-	UINT8 *base = memory_region(p->region) + (skip?(ROM_GETOFFSET(romp) ^ 0x01):(ROM_GETOFFSET(romp)));
-	int i;
-	char buf[6];
-	mame_file *f;
-	int Offset,Size;
-	UINT8 *mem8;
-
-	logerror("Applying patch: %s: %s\n", p->ips_dir, p->ips_filename);
-
-	if ((f = mame_fopen(p->ips_dir, p->ips_filename, FILETYPE_IPS, 0)) == NULL)
-	{
-		logerror("open fail: %s: %s\n", p->ips_dir, p->ips_filename);
-		return;
-	}
-
-	skip += groupsize;
-	memset(buf, 0, sizeof buf);
-	mame_fread(f, buf, 5);
-	if (strcmp(buf, "PATCH"))
-	{
-		logerror("Incorrent header: %s: %s\n", p->ips_dir, p->ips_filename);
-		return;
-	}
-	else
-	{
-		while (!mame_feof(f))
-		{
-			UINT8 ch = 0;
-			int bRLE;
-
-			mame_fread(f, buf, 3);
-			buf[3] = 0;
-			if (!strcmp(buf, "EOF")) break;
-
-			Offset = BYTE3_TO_UINT(buf);
-			// for ROM_CONTINUE, just a temp solution
-			if (Offset >= romp->_length) Offset -= ( romp->_length) << 1;
-			mame_fread(f, buf, 2);
-			Size = BYTE2_TO_UINT(buf);
-
-			bRLE = Size == 0;
-			if (bRLE)
-			{
-				mame_fread(f, buf, 2);
-				Size = BYTE2_TO_UINT(buf);
-				ch = mame_fgetc(f);
-			}
-
-			while (Size--)
-			{
-				i = Offset % groupsize;
-				mem8 = base + (Offset / groupsize) * skip + (reversed ? i : groupsize -1 - i);
-				Offset++;
-				if (datamask == 0xff)
-					*mem8 = bRLE?ch:mame_fgetc(f);
-				else
-					*mem8 =  (*mem8 & ~datamask) | (((bRLE  ?ch : mame_fgetc(f)) << datashift) & datamask);
-			}
-		}
-	}
-	mame_fclose(f);
-}
-
-static void DoPatchGame(const char *patch_name)
-{
-	const rom_entry *region, *rom;
-//	const rom_entry *chunk;
-	char s[_MAX_PATH];
-	char *p;
+	struct _ips_entry *next;
 	char *rom_name;
 	char *ips_name;
-	mame_file *fpDat;
-	file_patch fp;
+	ips_chunk *chunk;
+	ips_chunk current;
+} ips_entry;
 
-	logerror("Patching %s\n", patch_name);
 
-	if ((fpDat = mame_fopen(Machine->gamedrv->name, patch_name, FILETYPE_PATCH, 0)) != NULL)
+static ips_entry *ips_list;
+
+
+static const rom_entry *find_rom_entry(const rom_entry *romp, const char *name)
+{
+	const rom_entry *region, *rom;
+
+	for (region = romp; region; region = rom_next_region(region))
 	{
-		while (!mame_feof(fpDat))
+		if (!ROMREGION_ISROMDATA(region))
+			continue;
+
+		for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
 		{
-			if (mame_fgets(s, _MAX_PATH, fpDat) != NULL)
-			{
-				p = s;
-				
-				if (s[0] == (INT8)0xef && s[1] == (INT8)0xbb && s[2] == (INT8)0xbf)	//UTF-8 sig: EF BB BF
-					p += 3;
+			if (!ROMENTRY_ISFILE(rom))
+				continue;
 
-				if (s[0] == (INT8)0x5b)	//'['
-					break;
-
-				rom_name = strtok(p, " \t\r\n");
-				if (!rom_name)
-					continue;
-				if (*rom_name == '#')
-					continue;
-
-				ips_name = strtok(NULL, " \t\r\n");
-				if (!ips_name)
-					continue;
-
-				strtok(NULL, "\r\n");
-
-				logerror("rom name: \"%s\"\n", rom_name);
-				logerror("ips name: \"%s\"\n", ips_name);
-
-				if (strchr(ips_name, '\\'))
-				{
-					strcpy(fp.ips_dir, strtok(ips_name, "\\"));
-					ips_name = strtok(NULL, "\\");
-				}
-				else
-				{
-					strcpy(fp.ips_dir, Machine->gamedrv->name);
-				}
-
-				sprintf(fp.ips_filename, "%s.ips", ips_name);
-
-				for (region = rom_first_region(Machine->gamedrv); region; region = rom_next_region(region))
-				{
-					fp.region = ROMREGION_GETTYPE(region); 
-
-					for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
-					{
-						if (stricmp(rom_name, ROM_GETNAME(rom)))
-							continue;
-/*
-						for (chunk = rom_first_chunk(rom); chunk; chunk = rom_next_chunk(chunk))
-						{
-							PatchFile(&fp, chunk);
-						}
-*/
-						PatchFile(&fp, rom);
-					}
-				}
-			}
+			if (stricmp(ROM_GETNAME(rom), name) == 0)
+				return rom;
 		}
-		mame_fclose(fpDat);
 	}
+
+	return NULL;
 }
 
-void PatchGame(const char *patch_name)
+static UINT32 get_rom_total_length(const rom_entry *romp)
 {
+	const rom_entry *chunk;
+	UINT32 length = 0;
+
+	for (chunk = rom_first_chunk(romp); chunk; chunk = rom_next_chunk(chunk))
+		length += ROM_GETLENGTH(chunk);
+
+	return length;
+}
+
+static int load_ips_file(ips_chunk **p, const char *ips_dir, const char *ips_name, rom_load_data *romdata, UINT32 length)
+{
+	mame_file *file;
+	UINT32 pos = 0;
+	UINT8 buffer[8];
+	int len;
+
+	logerror("IPS: load patch flie \"%s/%s\"\n", ips_dir, ips_name);
+
+	file = mame_fopen(ips_dir, ips_name, FILETYPE_IPS, 0);
+	if (file == NULL)
+	{
+		sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
+			_("ERROR: %s/%s: open fail\n"), ips_dir, ips_name);
+		romdata->errors++;
+
+		return 0;
+	}
+
+	len = strlen(IPS_SIGNATURE);
+	if (mame_fread(file, buffer, len) != len || strncmp(buffer, IPS_SIGNATURE, len) != 0)
+	{
+		sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
+			_("ERROR: %s/%s: incorrent IPS header\n"), ips_dir, ips_name);
+		goto load_ips_file_fail;
+	}
+
+	while (!mame_feof(file))
+	{
+		UINT32 offset;
+		UINT16 size;
+		int bRLE = 0;
+
+		if (mame_fread(file, buffer, 3) != 3)
+			goto load_ips_file_unexpected_eof;
+
+		if (strncmp(buffer, IPS_TAG_EOF, 3) == 0)
+			break;
+
+		offset = BYTE3_TO_UINT(buffer);
+
+		if (mame_fread(file, buffer, 2) != 2)
+			goto load_ips_file_unexpected_eof;
+
+		size = BYTE2_TO_UINT(buffer);
+		if (size == 0)
+		{
+			if (mame_fread(file, buffer, 3) != 3)
+				goto load_ips_file_unexpected_eof;
+
+			size = BYTE2_TO_UINT(buffer);
+			bRLE = 1;
+		}
+
+		*p = malloc(sizeof (ips_chunk));
+		if (*p)
+			(*p)->data = malloc(size);
+
+		if (!*p || !(*p)->data)
+		{
+			strcat(romdata->errorbuf, _("ERROR: IPS: not enough memory\n"));
+			goto load_ips_file_fail;
+		}
+
+		if (bRLE)
+			memset((*p)->data, buffer[2], size);
+		else
+		{
+			if (mame_fread(file, (*p)->data, size) != size)
+				goto load_ips_file_unexpected_eof;
+		}
+
+		if (offset < pos || offset + size > length)
+		{
+			sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
+				_("ERROR: %s/%s: %06x: wrong offset (ROM size: %06x)\n"), ips_dir, ips_name, offset, length);
+			goto load_ips_file_fail;
+		}
+
+		//logerror("IPS: offset = %d, size = %d\n", offset, size);
+		offset -= pos;
+		(*p)->offset = offset;
+		(*p)->size = size;
+		(*p)->next = NULL;
+
+		p = &(*p)->next;
+		pos += offset + size;
+	}
+
+	mame_fclose(file);
+
+	return 1;
+
+load_ips_file_unexpected_eof:
+	sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
+		_("ERROR: %s/%s: unexpected EOF\n"), ips_dir, ips_name);
+
+load_ips_file_fail:
+	mame_fclose(file);
+
+	romdata->errors++;
+
+	return 0;
+}
+
+static int check_crc(char *crc, const char *rom_hash)
+{
+	char ips_hash[HASH_BUF_SIZE];
+	char tmp[10];
+	int slen = strlen(CRC_STAG);
+	int elen = strlen(CRC_ETAG);
+
+	if (crc == NULL)
+		return 0;
+
+	if (strlen(crc) != 8 + slen + elen)
+		return 0;
+
+	if (strncmp(crc, CRC_STAG, slen) != 0)
+		return 0;
+
+	if (strcmp(crc + 8 + slen, CRC_ETAG) != 0)
+		return 0;
+
+	strcpy(tmp, crc + slen);
+	tmp[8] = '\0';
+
+	hash_data_clear(ips_hash);
+	if (hash_data_insert_printable_checksum(ips_hash, HASH_CRC, tmp) != 1)
+		return 0;
+
+	if (hash_data_is_equal(rom_hash, ips_hash, HASH_CRC) != 1)
+		return 0;
+
+	return 1;
+}
+
+static int parse_ips_patch(ips_entry **ips_p, const char *patch_name, rom_load_data *romdata, const rom_entry *romp)
+{
+	UINT8 buffer[1024];
+	mame_file *fpDat;
+	int result = 0;
+
+	logerror("IPS: load patch \"%s\"\n", patch_name);
+
+	if ((fpDat = mame_fopen(Machine->gamedrv->name, patch_name, FILETYPE_PATCH, 0)) == NULL)
+	{
+		sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
+			_("ERROR: %s: IPS patch is not found\n"), patch_name);
+		romdata->errors++;
+
+		return 0;
+	}
+
+	while (!mame_feof(fpDat))
+	{
+		if (mame_fgets(buffer, sizeof (buffer), fpDat) != NULL)
+		{
+			ips_entry *entry;
+			const rom_entry *current;
+			UINT8 *p = buffer;
+			char *rom_name;
+			const char *ips_dir;
+			char *ips_name;
+			char *crc;
+
+			// skip UTF-8 sig
+			if (strncmp(p, UTF8_SIGNATURE, strlen(UTF8_SIGNATURE)) == 0)
+				p += strlen(UTF8_SIGNATURE);
+
+			if (p[0] == '[')	// '['
+				break;
+
+			rom_name = strtok(p, " \t\r\n");
+			if (!rom_name)
+				continue;
+			if (rom_name[0] == '#')
+				continue;
+
+			logerror("IPS: target rom name: \"%s\"\n", rom_name);
+
+			current = find_rom_entry(romp, rom_name);
+			if (!current)
+			{
+				sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
+					_("ERROR: ROM entry \"%s\" is not found for IPS patch \"%s\"\n"), rom_name, patch_name);
+				goto parse_ips_patch_fail;
+			}
+
+			ips_name = strtok(NULL, " \t\r\n");
+			if (!ips_name)
+			{
+				sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
+					_("ERROR: IPS file is not defined for ROM entry \"%s\"\n"), rom_name);
+				goto parse_ips_patch_fail;
+			}
+
+			crc = strtok(NULL, "\r\n");
+			strtok(NULL, "\r\n");
+
+			if (crc && !check_crc(crc, ROM_GETHASHDATA(current)))
+			{
+				sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
+					_("ERROR: wrong CRC for ROM entry \"%s\"\n"), rom_name);
+				goto parse_ips_patch_fail;
+			}
+
+			result = 1;
+
+			if (strchr(ips_name, '\\'))
+			{
+				ips_dir = strtok(ips_name, "\\");
+				ips_name = strtok(NULL, "\\");
+			}
+			else
+			{
+				ips_dir = Machine->gamedrv->name;
+			}
+
+			entry = malloc(sizeof (*entry));
+			memset(entry, 0, sizeof (*entry));
+			*ips_p = entry;
+			ips_p = &entry->next;
+
+			entry->rom_name = strdup(rom_name);
+			entry->ips_name = malloc(strlen(ips_name) + sizeof (IPS_EXT));
+			if (!entry->rom_name || !entry->ips_name)
+			{
+				strcat(romdata->errorbuf, _("ERROR: IPS: not enough memory\n"));
+				goto parse_ips_patch_fail;
+			}
+
+			sprintf(entry->ips_name, "%s%s", ips_name, IPS_EXT);
+
+			if (!load_ips_file(&entry->chunk, ips_dir, entry->ips_name, romdata, get_rom_total_length(current)))
+				goto parse_ips_patch_fail;
+
+			if (entry->chunk == NULL)
+			{
+				sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
+					_("ERROR: %s/%s: IPS data is empty\n"), ips_dir, entry->ips_name);
+				goto parse_ips_patch_fail;
+			}
+		}
+	}
+	mame_fclose(fpDat);
+
+	return result;
+
+parse_ips_patch_fail:
+	mame_fclose(fpDat);
+
+	romdata->errors++;
+
+	return 0;
+}
+
+
+int open_ips_entry(const char *patch_name, rom_load_data *romdata, const rom_entry *romp)
+{
+	int result = 0;
 	char *s = strdup(patch_name);
 	char *p, *q;
+	ips_entry **list;
+
+	ips_list = NULL;
+	list = &ips_list;
 
 	for (p = s; *p; p = q)
 	{
+
 		for (q = p; *q; q++)
 			if (*q == ',')
 			{
@@ -178,8 +351,141 @@ void PatchGame(const char *patch_name)
 				break;
 			}
 
-		DoPatchGame(p);
+		result = parse_ips_patch(list, p, romdata, romp);
+		if (!result)
+			return result;
+
+		while (*list)
+			list = &(*list)->next;
 	}
 
 	free(s);
+
+	if (!result)
+	{
+		sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
+			_("ERROR: %s: IPS patch is not found\n"), patch_name);
+		romdata->errors++;
+	}
+
+	return result;
+}
+
+int close_ips_entry(rom_load_data *romdata)
+{
+	ips_entry *p;
+	ips_entry *next;
+	int result = 1;
+
+	for (p = ips_list; p; p = next)
+	{
+		ips_chunk *chunk;
+		ips_chunk *next_chunk;
+
+		if (p->current.data)
+		{
+			sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
+				_("ERROR: %s: patch is not applied correctly to ROM entry \"%s\"\n"), p->ips_name, p->rom_name);
+			romdata->errors++;
+
+			result = 0;
+		}
+
+		for (chunk = p->chunk; chunk; chunk = next_chunk)
+		{
+			next_chunk = chunk->next;
+			free(chunk);
+		}
+
+		if (p->ips_name)
+			free(p->ips_name);
+
+		if (p->rom_name)
+			free(p->rom_name);
+
+		next = p->next;
+		free(p);
+	}
+
+	ips_list = NULL;
+
+	return result;
+}
+
+void *assign_ips_patch(const rom_entry *romp)
+{
+	const char *name = ROM_GETNAME(romp);
+	ips_entry *p;
+	int found = 0;
+
+	for (p = ips_list; p; p = p->next)
+	{
+		memset(&p->current, 0, sizeof (p->current));
+
+		if (stricmp(p->rom_name, name) == 0)
+		{
+			logerror("IPS: assign IPS file \"%s\" to ROM entry \"%s\"\n", p->ips_name, p->rom_name);
+			p->current = *p->chunk;
+
+			found = 1;
+		}
+	}
+
+	if (found)
+		return ips_list;
+
+	return NULL;
+}
+
+static void apply_ips_patch_single(ips_chunk *p, UINT8 *buffer, int length)
+{
+	if (!p->data)
+		return;
+
+	while (1)
+	{
+		if (p->offset >= length)
+		{
+			p->offset -= length;
+			return;
+		}
+
+		length -= p->offset;
+		buffer += p->offset;
+		p->offset = 0;
+
+		if (p->size > length)
+		{
+			//logerror("IPS: apply %d bytes\n", length);
+			memcpy(buffer, p->data, length);
+			p->size -= length;
+			p->data += length;
+			return;
+		}
+
+		//logerror("IPS: apply %d bytes\n", p->size);
+		memcpy(buffer, p->data, p->size);
+		length -= p->size;
+		buffer += p->size;
+
+		p->size = 0;
+		p->data = NULL;
+
+		if (!p->next)
+		{
+			logerror("IPS: apply IPS done\n");
+			return;
+		}
+
+		*p = *p->next;
+	}
+}
+
+void apply_ips_patch(void *patch, UINT8 *buffer, int length)
+{
+	ips_entry *p;
+
+	for (p = (ips_entry *)patch; p; p = p->next)
+		if (p->current.data)
+			apply_ips_patch_single(&p->current, buffer, length);
 }

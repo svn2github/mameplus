@@ -223,6 +223,11 @@ int MIN_HEIGHT = DBU_MIN_HEIGHT;
 /* Max number of bkground picture files */
 #define MAX_BGFILES 100
 
+#ifdef IPS_PATCH
+#define MAX_PATCHES 32
+#define MAX_PATCHNAME 64
+#endif /* IPS_PATCH */
+
 #define NO_FOLDER -1
 #define STATESAVE_VERSION 1
 
@@ -710,6 +715,10 @@ int game_dragged; /* which game started the drag */
 HTREEITEM prev_drag_drop_target; /* which tree view item we're currently highlighting */
 
 static BOOL g_in_treeview_edit = FALSE;
+
+#ifdef IPS_PATCH
+static char g_IPSName[MAX_PATCHNAME];
+#endif /* IPS_PATCH */
 
 typedef struct
 {
@@ -1699,7 +1708,10 @@ void UpdateScreenShot(void)
 	if (have_selection)
 	{
 		// load and set image, or empty it if we don't have one
-		LoadScreenShot(Picker_GetSelectedItem(hwndList), TabView_GetCurrentTab(hTabCtrl));
+		if (g_IPSName[0] != '\0')
+			LoadScreenShot(Picker_GetSelectedItem(hwndList), g_IPSName, 255);
+		else
+			LoadScreenShot(Picker_GetSelectedItem(hwndList), NULL, TabView_GetCurrentTab(hTabCtrl));
 	}
 
 	// figure out if we have a history or not, to place our other windows properly
@@ -2574,6 +2586,8 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 #endif // MULTISESSION
 	int 		i;
 	char		szClass[128];
+	
+	static char patch_name[MAX_PATCHNAME];
 
 	switch (message)
 	{
@@ -2624,6 +2638,28 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 		return TRUE;
 
 	case WM_MENUSELECT:
+		if((int)(HIWORD(wParam)) == 0xFFFF)	//menu closed, do not UpdateScreenShot() for EditControl scrolling
+		{
+			dprintf("menusele: clear");
+			g_IPSName[0] = '\0';
+			return 0;
+		}
+		
+		patch_name[0] = '\0';
+		GetPatchName(patch_name, drivers[Picker_GetSelectedItem(hwndList)]->name, (int)(LOWORD(wParam))-ID_PLAY_PATCH);
+		if (patch_name[0] != '\0')
+		{
+			strcpy(g_IPSName, patch_name);
+			dprintf("menusele: %d %s, updateSS", (int)(LOWORD(wParam)), patch_name);
+			UpdateScreenShot();
+		}
+		else if (g_IPSName[0]!= '\0')
+		{
+			g_IPSName[0] = '\0';
+			dprintf("menusele:none, updateSS");
+			UpdateScreenShot();
+		}
+		
 		return Statusbar_MenuSelect(hWnd, wParam, lParam);
 
 	case MM_PLAY_GAME:
@@ -2638,6 +2674,10 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 		if (HandleTreeContextMenu(hWnd, wParam, lParam)
 		||	HandleScreenShotContextMenu(hWnd, wParam, lParam))
 			return FALSE;
+		break;
+
+	case WM_MENUCOMMAND:
+		dprintf("dasdfasdf");
 		break;
 
 	case WM_COMMAND:
@@ -3590,12 +3630,15 @@ static void UpdateHistory(void)
 	{
 		LPCWSTR histText;
 
-#ifdef STORY_DATAFILE
-		if (TabView_GetCurrentTab(hTabCtrl) == TAB_STORY)
-			histText = GetGameStory(Picker_GetSelectedItem(hwndList));
+		if (g_IPSName[0] != '\0')
+			histText = GetPatchDesc(drivers[Picker_GetSelectedItem(hwndList)]->name, g_IPSName);
 		else
+#ifdef STORY_DATAFILE
+			if (TabView_GetCurrentTab(hTabCtrl) == TAB_STORY)
+				histText = GetGameStory(Picker_GetSelectedItem(hwndList));
+			else
 #endif /* STORY_DATAFILE */
-			histText = GetGameHistory(Picker_GetSelectedItem(hwndList));
+				histText = GetGameHistory(Picker_GetSelectedItem(hwndList));
 
 		have_history = (histText && histText[0]) ? TRUE : FALSE;
 		Edit_SetText(GetDlgItem(hMain, IDC_HISTORY), histText);
@@ -4531,6 +4574,61 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		ChangeLanguage(id);
 		return TRUE;
 	}
+
+#ifdef IPS_PATCH
+	if ((id >= ID_PLAY_PATCH) && (id < ID_PLAY_PATCH + MAX_PATCHES))
+	{
+		int  nGame = Picker_GetSelectedItem(hwndList);
+		char patch_name[MAX_PATCHNAME];
+
+		if (GetPatchName(patch_name, drivers[nGame]->name, id-ID_PLAY_PATCH))
+		{
+			options_type* pOpts = GetGameOptions(nGame);
+			char *token;
+			BOOL is_new = TRUE;	//new checked menu item
+			char old_opt[MAX_PATCHNAME * MAX_PATCHES];
+			char new_opt[MAX_PATCHNAME * MAX_PATCHES];
+			memset(new_opt, 0, sizeof(new_opt));
+
+			if (pOpts->patchname != NULL)
+			{
+				strcpy(old_opt, pOpts->patchname);
+
+				token = strtok(old_opt, ",");
+				while(token)
+				{
+					if(!strcmp(patch_name, token))
+					{
+						dprintf("dup!");
+						is_new = FALSE;
+					}
+					else
+					{
+						strcat(new_opt, token);
+						strcat(new_opt, ",");
+					}
+
+					token = strtok(NULL, ",");
+				}
+			}
+
+			if (is_new)
+				strcat(new_opt, patch_name);
+			else
+				new_opt[strlen(new_opt)-1] = '\0';	//remove ,
+
+			if (pOpts->patchname)
+				FreeIfAllocated(&pOpts->patchname);
+			
+			if (strlen(new_opt))
+				pOpts->patchname = strdup(new_opt);
+			SetGameUsesDefaults(nGame,FALSE);	//fixme uncheck, resto default opt
+
+			dprintf("%s / %s | %d", patch_name, pOpts->patchname, strlen(new_opt));
+		}
+		return TRUE;
+	}
+#endif /* IPS_PATCH */
 
 	switch (id)
 	{
@@ -6442,6 +6540,11 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 {
 	HMENU hMenuLoad;
 	HMENU hMenu;
+	
+	TPMPARAMS tpmp;
+	ZeroMemory(&tpmp,sizeof(tpmp));
+	tpmp.cbSize = sizeof(tpmp);
+	GetWindowRect(GetDlgItem(hMain, IDC_SSFRAME), &tpmp.rcExclude);
 
 	hMenuLoad = LoadMenu(hInst, MAKEINTRESOURCE(IDR_CONTEXT_MENU));
 	hMenu = GetSubMenu(hMenuLoad, 0);
@@ -6449,7 +6552,47 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 
 	UpdateMenu(hMenu);
 
-	TrackPopupMenu(hMenu,TPM_LEFTALIGN | TPM_RIGHTBUTTON,pt.x,pt.y,0,hMain,NULL);
+#ifdef IPS_PATCH
+	if (have_selection)
+	{
+		int  nGame = Picker_GetSelectedItem(hwndList);
+		options_type* pOpts = GetGameOptions(nGame);
+		int  patch_count = HasPatch(drivers[nGame]->name, "*");
+		char patch_name[MAX_PATCHNAME];
+		char buf[MAX_PATCHNAME * MAX_PATCHES];
+		char *token;
+		int  i;
+
+		if (patch_count > MAX_PATCHES) patch_count = MAX_PATCHES;
+		while (patch_count--)
+		{
+			if (GetPatchName(patch_name, drivers[nGame]->name, patch_count))
+			{
+				snprintf(buf, ARRAY_LENGTH(buf), "   %s", patch_name);
+				InsertMenu(hMenu, 1, MF_BYPOSITION, ID_PLAY_PATCH + patch_count, _Unicode(buf));
+
+				if (pOpts->patchname != NULL)
+				{
+					strcpy(buf, pOpts->patchname);
+					token = strtok(buf, ",");
+					for (i = 0; i < MAX_PATCHES && token; i++)
+					{
+						if(!strcmp(patch_name, token))
+						{
+							CheckMenuItem(hMenu,ID_PLAY_PATCH + patch_count, MF_BYCOMMAND | MF_CHECKED);
+							break;
+						}
+						token = strtok(NULL, ",");
+					}
+				}
+			}
+		}
+	}
+#endif /* IPS_PATCH */
+
+	dprintf("%d,%d,%d,%d", tpmp.rcExclude.left,tpmp.rcExclude.right,tpmp.rcExclude.top,tpmp.rcExclude.bottom);
+	//the menu should not overlap SSFRAME
+	TrackPopupMenuEx(hMenu,TPM_LEFTALIGN | TPM_RIGHTBUTTON,pt.x,pt.y,hMain,&tpmp);
 
 	DestroyMenu(hMenuLoad);
 }
@@ -6604,7 +6747,6 @@ static void UpdateMenu(HMENU hMenu)
 		else
 			CheckMenuItem(hMenu,ID_CONTEXT_SHOW_FOLDER_START + i,MF_BYCOMMAND | MF_UNCHECKED);
 	}
-
 }
 
 void InitTreeContextMenu(HMENU hTreeMenu)

@@ -85,10 +85,11 @@ static BOOL LoadSoftwareScreenShot(const struct GameDriver *drv, LPCSTR lpSoftwa
 #ifdef MESS
 BOOL LoadScreenShotEx(int nGame, LPCSTR lpSoftwareName, int nType)
 #else /* !MESS */
-BOOL LoadScreenShot(int nGame, int nType)
+BOOL LoadScreenShot(int nGame, const char* lpIPSName, int nType)
 #endif /* MESS */
 {
 	BOOL loaded = FALSE;
+	char buf [64];
 
 	/* No need to reload the same one again */
 #ifndef MESS
@@ -110,15 +111,35 @@ BOOL LoadScreenShot(int nGame, int nType)
 	if (!loaded)
 #endif /* MESS */
 	{
-		loaded = LoadDIB(drivers[nGame]->name, &m_hDIB, &m_hPal, nType);
+		if (lpIPSName)
+		{
+			sprintf(buf, "%s/%s", drivers[nGame]->name, lpIPSName);
+			dprintf("found ipsname: %s", buf);
+		}
+		else
+		{
+			sprintf(buf, "%s", drivers[nGame]->name);
+			dprintf("not found ipsname: %s", buf);
+		}
+		loaded = LoadDIB(buf, &m_hDIB, &m_hPal, nType);
 	}
 
 	/* If not loaded, see if there is a clone and try that */
-	if (!loaded && drivers[nGame]->clone_of != NULL)
+	if (!loaded && drivers[nGame]->clone_of != NULL && !lpIPSName)
 	{
-		loaded = LoadDIB(drivers[nGame]->clone_of->name, &m_hDIB, &m_hPal, nType);
+		if (lpIPSName)
+			sprintf(buf, "%s/%s", drivers[nGame]->clone_of->name, lpIPSName);
+		else
+			sprintf(buf, "%s", drivers[nGame]->clone_of->name);
+		loaded = LoadDIB(buf, &m_hDIB, &m_hPal, nType);
 		if (!loaded && drivers[nGame]->clone_of->clone_of)
-			loaded = LoadDIB(drivers[nGame]->clone_of->clone_of->name, &m_hDIB, &m_hPal, nType);
+		{
+			if (lpIPSName)
+				sprintf(buf, "%s/%s", drivers[nGame]->clone_of->clone_of->name, lpIPSName);
+			else
+				sprintf(buf, "%s", drivers[nGame]->clone_of->clone_of->name);
+			loaded = LoadDIB(buf, &m_hDIB, &m_hPal, nType);
+		}
 	}
 
 	if (loaded)
@@ -205,12 +226,17 @@ BOOL LoadDIB(LPCTSTR filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type)
 		SetCorePathList(FILETYPE_ARTWORK,GetBgDir());
 		zip_name = "bkground";
 		break;
+	case 255 :
+		SetCorePathList(FILETYPE_ARTWORK,GetPatchDir());
+		zip_name = "ips";
+		break;
 	default :
 		// in case a non-image tab gets here, which can happen
 		return FALSE;
 	}
 
 	// look for the raw file
+	dprintf("LoadDIB %s", filename);
 	mfile = mame_fopen(NULL,filename,FILETYPE_ARTWORK,0);
 	if (mfile == NULL)
 	{
