@@ -364,8 +364,8 @@ static DWORD dwHelpIDs[] =
 	IDC_TRIPLE_BUFFER,      HIDC_TRIPLE_BUFFER,
 	IDC_USE_DEFAULT,        HIDC_USE_DEFAULT,
 	IDC_USE_MOUSE,          HIDC_USE_MOUSE,
-#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device by miko2u@hotmail.com
-	IDC_USE_STICKPOINT,     HIDC_USE_MOUSE,
+#ifdef USE_JOY_MOUSE_MOVE
+	IDC_USE_STICKPOINT,     HIDC_USE_MOUSE,		// Support Stick-type Pointing Device (miko2u@hotmail.com)
 #endif /* USE_JOY_MOUSE_MOVE */
 	IDC_USE_SOUND,          HIDC_USE_SOUND,
 	IDC_VOLUME,             HIDC_VOLUME,
@@ -396,13 +396,13 @@ static DWORD dwHelpIDs[] =
 	IDC_STRETCH_SCREENSHOT_LARGER, HIDC_STRETCH_SCREENSHOT_LARGER,
 	IDC_LEDMODE,            HIDC_LEDMODE,
 	IDC_SCREEN,             HIDC_SCREEN,
-	IDC_ANALOG_AXES,		HIDC_ANALOG_AXES,
-	IDC_PADDLE,				HIDC_PADDLE,
-	IDC_ADSTICK,			HIDC_ADSTICK,
-	IDC_PEDAL,				HIDC_PEDAL,
-	IDC_DIAL,				HIDC_DIAL,
-	IDC_TRACKBALL,			HIDC_TRACKBALL,
-	IDC_LIGHTGUNDEVICE,		HIDC_LIGHTGUNDEVICE,
+	IDC_ANALOG_AXES,        HIDC_ANALOG_AXES,
+	IDC_PADDLE,             HIDC_PADDLE,
+	IDC_ADSTICK,            HIDC_ADSTICK,
+	IDC_PEDAL,              HIDC_PEDAL,
+	IDC_DIAL,               HIDC_DIAL,
+	IDC_TRACKBALL,          HIDC_TRACKBALL,
+	IDC_LIGHTGUNDEVICE,     HIDC_LIGHTGUNDEVICE,
 	IDC_ENABLE_AUTOSAVE,    HIDC_ENABLE_AUTOSAVE,
 	0,                      0
 };
@@ -3869,7 +3869,10 @@ static void D3DScanlinesSelectionChange(HWND hwnd)
 	value = SendMessage(GetDlgItem(hwnd,IDC_D3D_SCANLINES), TBM_GETPOS, 0, 0);
 
 	/* Set the static display to the new value */
-	snprintf(buffer,sizeof(buffer),"%i",value);
+	if (value == 100)
+		snprintf(buffer,sizeof(buffer),_UI("Disabled"));
+	else
+		snprintf(buffer,sizeof(buffer),"%i",value);
 	Static_SetTextA(GetDlgItem(hwnd,IDC_D3D_SCANLINES_DISP),buffer);
 
 }
@@ -3883,7 +3886,10 @@ static void D3DFeedbackSelectionChange(HWND hwnd)
 	value = SendMessage(GetDlgItem(hwnd,IDC_D3D_FEEDBACK), TBM_GETPOS, 0, 0);
 
 	/* Set the static display to the new value */
-	snprintf(buffer,sizeof(buffer),"%i",value);
+	if (value == 0)
+		snprintf(buffer,sizeof(buffer),_UI("Disabled"));
+	else
+		snprintf(buffer,sizeof(buffer),"%i",value);
 	Static_SetTextA(GetDlgItem(hwnd,IDC_D3D_FEEDBACK_DISP),buffer);
 
 }

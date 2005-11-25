@@ -777,10 +777,10 @@ static MYBITMAPINFO     bmDesc;
 /* List view Column text */
 const char* column_names[COLUMN_MAX] =
 {
-	"Game",
+	"Description",
 	"ROMs",
 	"Samples",
-	"Directory",
+	"Name",
 	"Type",
 	"Trackball",
 	"Played",
