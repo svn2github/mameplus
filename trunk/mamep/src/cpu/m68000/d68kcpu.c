@@ -113,6 +113,7 @@ static const char* copyright_notice =
 
 int m68kdrc_cycles;
 int m68kdrc_recompile_flag;
+int m68kdrc_check_code_modify;
 
 
 /* ======================================================================== */
@@ -819,35 +820,25 @@ static void check_stack(uint32 sp)
 #endif
 
 
-static uint32 recompile_instruction(drc_core *drc, uint32 pc)
+static int is_memory_in_rom(uint32 pc)
 {
-	REG68K_PPC = REG68K_PC = pc;
-	REG68K_IR = m68ki_read_imm_16();
+	UINT8 entry;
 
-	//printf("recompile %08x: %04x\n", pc, REG68K_IR);
-	m68kdrc_recompile_flag = 0;
-	m68kdrc_cycles = CYC_INSTRUCTION[REG68K_IR];
+	pc &= active_address_space[ADDRESS_SPACE_PROGRAM].addrmask;
+	entry = active_address_space[ADDRESS_SPACE_PROGRAM].writelookup[LEVEL1_INDEX(pc)];
+	if (entry >= SUBTABLE_BASE)
+		entry = active_address_space[ADDRESS_SPACE_PROGRAM].writelookup[LEVEL2_INDEX(entry,pc)];
 
-#ifdef MAME_DEBUG
-	/* check stack pointer */
-	_push_r32(REG_ESP);
-	_call(check_stack);
-	_add_r32_imm(REG_ESP, 4);
-#endif
+	switch (entry)
+	{
+	case STATIC_ROM:
+	case STATIC_NOP:
+	case STATIC_UNMAP:
+		return 1;
+	}
 
-	/* update previous PC */
-	_mov_m32abs_r32(&REG68K_PPC, REG_EDI);
-
-	/* do compile */
-	m68kdrc_instruction_compile_table[REG68K_IR](drc);
-
-	if (m68kdrc_recompile_flag & RECOMPILE_UNIMPLEMENTED)
-		return m68kdrc_recompile_flag;
-
-	if (m68kdrc_recompile_flag & RECOMPILE_DONT_ADD_PCDELTA)
-		return RECOMPILE_SUCCESSFUL_CP(m68kdrc_cycles, 0);
-
-	return RECOMPILE_SUCCESSFUL_CP(m68kdrc_cycles, REG68K_PC - pc);
+	//printf("pc %06lx is not in static ROM (%d)\n", pc, entry);
+	return 0;
 }
 
 static int drc_register_code(drc_core *drc, UINT32 pc)
@@ -886,6 +877,43 @@ static int drc_register_code(drc_core *drc, UINT32 pc)
 	return 1;
 }
 
+static uint32 recompile_instruction(drc_core *drc, uint32 pc)
+{
+	REG68K_PPC = REG68K_PC = pc;
+	REG68K_IR = m68ki_read_imm_16(drc);
+
+	if (m68kdrc_check_code_modify)
+	{
+		if (REG68K_PC & 3)
+			drc_append_verify_code(drc, cpu_opptr(ADDRESS_68K(REG68K_PC)), 4);
+	}
+
+	//printf("recompile %08x: %04x\n", pc, REG68K_IR);
+	m68kdrc_recompile_flag = 0;
+	m68kdrc_cycles = CYC_INSTRUCTION[REG68K_IR];
+
+#ifdef MAME_DEBUG
+	/* check stack pointer */
+	_push_r32(REG_ESP);
+	_call(check_stack);
+	_add_r32_imm(REG_ESP, 4);
+#endif
+
+	/* update previous PC */
+	_mov_m32abs_r32(&REG68K_PPC, REG_EDI);
+
+	/* do compile */
+	m68kdrc_instruction_compile_table[REG68K_IR](drc);
+
+	if (m68kdrc_recompile_flag & RECOMPILE_UNIMPLEMENTED)
+		return m68kdrc_recompile_flag;
+
+	if (m68kdrc_recompile_flag & RECOMPILE_DONT_ADD_PCDELTA)
+		return RECOMPILE_SUCCESSFUL_CP(m68kdrc_cycles, 0);
+
+	return RECOMPILE_SUCCESSFUL_CP(m68kdrc_cycles, REG68K_PC - pc);
+}
+
 static uint32 compile_one(drc_core *drc, uint32 pc)
 {
 	int pcdelta, cycles;
@@ -900,9 +928,8 @@ static uint32 compile_one(drc_core *drc, uint32 pc)
 	change_pc(pc);
 	opptr = cpu_opptr(pc);
 
-	/* emit debugging and self-modifying code checks */
+	/* emit debugging */
 	drc_append_call_debugger(drc);
-	drc_append_verify_code(drc, opptr, 4);
 
 	/* compile the instruction */
 	result = recompile_instruction(drc, pc);
@@ -942,6 +969,8 @@ static void m68kdrc_recompile(drc_core *drc)
 
 	/* begin the sequence */
 	drc_begin_sequence(drc, pc);
+
+	m68kdrc_check_code_modify = !is_memory_in_rom(pc);
 
 	/* loop until we hit an unconditional branch */
 	while (--remaining != 0)
@@ -1061,7 +1090,7 @@ void m68kdrc_init(void)
 	if(!emulation_initialized)
 	{
 		m68kdrc_build_opcode_table();
-		INSTR_VNCZ_FLAG_DIRTY = m68kdrc_vncz_flag_dirty_table;
+		INSTR_FLAG_DIRTY = m68kdrc_flag_dirty_table;
 		emulation_initialized = 1;
 	}
 

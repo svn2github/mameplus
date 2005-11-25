@@ -112,7 +112,7 @@ M68KMAKE_PROTOTYPE_FOOTER
 void m68kdrc_build_opcode_table(void);
 
 extern void (*m68kdrc_instruction_compile_table[0x10000])(struct _drc_core *drc); /* opcode handler jump table */
-extern int m68kdrc_vncz_flag_dirty_table[0x10000];
+extern int m68kdrc_flag_dirty_table[0x10000];
 extern unsigned char m68ki_cycles[][0x10000];
 
 
@@ -136,7 +136,7 @@ M68KMAKE_TABLE_HEADER
 #define NUM_CPU_TYPES 4
 
 void  (*m68kdrc_instruction_compile_table[0x10000])(struct _drc_core *drc); /* opcode handler jump table */
-int m68kdrc_vncz_flag_dirty_table[0x10000];
+int m68kdrc_flag_dirty_table[0x10000];
 
 /* This is used to generate the opcode handler jump table */
 typedef struct
@@ -145,7 +145,7 @@ typedef struct
 	unsigned int  mask;                  /* mask on opcode */
 	unsigned int  match;                 /* what to match after masking */
 	unsigned char cycles[NUM_CPU_TYPES]; /* cycles each cpu type takes */
-	int vncz_flag_dirty;
+	int flag_dirty;
 } opcode_handler_struct;
 
 
@@ -176,7 +176,7 @@ void m68kdrc_build_opcode_table(void)
 	{
 		/* default to illegal */
 		m68kdrc_instruction_compile_table[i] = m68kdrc_op_illegal;
-		m68kdrc_vncz_flag_dirty_table[i] = 0;
+		m68kdrc_flag_dirty_table[i] = 0;
 		for(k=0;k<NUM_CPU_TYPES;k++)
 			m68ki_cycles[k][i] = 0;
 	}
@@ -189,7 +189,7 @@ void m68kdrc_build_opcode_table(void)
 			if((i & ostruct->mask) == ostruct->match)
 			{
 				m68kdrc_instruction_compile_table[i] = ostruct->opcode_handler;
-				m68kdrc_vncz_flag_dirty_table[i] = ostruct->vncz_flag_dirty;
+				m68kdrc_flag_dirty_table[i] = ostruct->flag_dirty;
 				for(k=0;k<NUM_CPU_TYPES;k++)
 					m68ki_cycles[k][i] = ostruct->cycles[k];
 			}
@@ -203,7 +203,7 @@ void m68kdrc_build_opcode_table(void)
 			if ((i & ostruct->mask) == ostruct->match)
 			{
 				m68kdrc_instruction_compile_table[i] = ostruct->opcode_handler;
-				m68kdrc_vncz_flag_dirty_table[i] = ostruct->vncz_flag_dirty;
+				m68kdrc_flag_dirty_table[i] = ostruct->flag_dirty;
 				for(k=0;k<NUM_CPU_TYPES;k++)
 					m68ki_cycles[k][i] = ostruct->cycles[k];
 			}
@@ -215,7 +215,7 @@ void m68kdrc_build_opcode_table(void)
 		for(i = 0;i <= 0xff;i++)
 		{
 			m68kdrc_instruction_compile_table[ostruct->match | i] = ostruct->opcode_handler;
-			m68kdrc_vncz_flag_dirty_table[ostruct->match | i] = ostruct->vncz_flag_dirty;
+			m68kdrc_flag_dirty_table[ostruct->match | i] = ostruct->flag_dirty;
 			for(k=0;k<NUM_CPU_TYPES;k++)
 				m68ki_cycles[k][ostruct->match | i] = ostruct->cycles[k];
 		}
@@ -229,7 +229,7 @@ void m68kdrc_build_opcode_table(void)
 			{
 				instr = ostruct->match | (i << 9) | j;
 				m68kdrc_instruction_compile_table[instr] = ostruct->opcode_handler;
-				m68kdrc_vncz_flag_dirty_table[instr] = ostruct->vncz_flag_dirty;
+				m68kdrc_flag_dirty_table[instr] = ostruct->flag_dirty;
 				for(k=0;k<NUM_CPU_TYPES;k++)
 					m68ki_cycles[k][instr] = ostruct->cycles[k];
 				if((instr & 0xf000) == 0xe000 && (!(instr & 0x20)))
@@ -243,7 +243,7 @@ void m68kdrc_build_opcode_table(void)
 		for(i = 0;i <= 0x0f;i++)
 		{
 			m68kdrc_instruction_compile_table[ostruct->match | i] = ostruct->opcode_handler;
-			m68kdrc_vncz_flag_dirty_table[ostruct->match | i] = ostruct->vncz_flag_dirty;
+			m68kdrc_flag_dirty_table[ostruct->match | i] = ostruct->flag_dirty;
 			for(k=0;k<NUM_CPU_TYPES;k++)
 				m68ki_cycles[k][ostruct->match | i] = ostruct->cycles[k];
 		}
@@ -254,7 +254,7 @@ void m68kdrc_build_opcode_table(void)
 		for(i = 0;i <= 0x07;i++)
 		{
 			m68kdrc_instruction_compile_table[ostruct->match | (i << 9)] = ostruct->opcode_handler;
-			m68kdrc_vncz_flag_dirty_table[ostruct->match | (i << 9)] = ostruct->vncz_flag_dirty;
+			m68kdrc_flag_dirty_table[ostruct->match | (i << 9)] = ostruct->flag_dirty;
 			for(k=0;k<NUM_CPU_TYPES;k++)
 				m68ki_cycles[k][ostruct->match | (i << 9)] = ostruct->cycles[k];
 		}
@@ -265,7 +265,7 @@ void m68kdrc_build_opcode_table(void)
 		for(i = 0;i <= 0x07;i++)
 		{
 			m68kdrc_instruction_compile_table[ostruct->match | i] = ostruct->opcode_handler;
-			m68kdrc_vncz_flag_dirty_table[ostruct->match | i] = ostruct->vncz_flag_dirty;
+			m68kdrc_flag_dirty_table[ostruct->match | i] = ostruct->flag_dirty;
 			for(k=0;k<NUM_CPU_TYPES;k++)
 				m68ki_cycles[k][ostruct->match | i] = ostruct->cycles[k];
 		}
@@ -274,7 +274,7 @@ void m68kdrc_build_opcode_table(void)
 	while(ostruct->mask == 0xffff)
 	{
 		m68kdrc_instruction_compile_table[ostruct->match] = ostruct->opcode_handler;
-		m68kdrc_vncz_flag_dirty_table[ostruct->match] = ostruct->vncz_flag_dirty;
+		m68kdrc_flag_dirty_table[ostruct->match] = ostruct->flag_dirty;
 		for(k=0;k<NUM_CPU_TYPES;k++)
 			m68ki_cycles[k][ostruct->match] = ostruct->cycles[k];
 		ostruct++;
@@ -2787,10 +2787,12 @@ _resolve_link(&link_make_cc);
 
 M68KMAKE_OP(bcc, 16, ., .)
 {
+	uint32 oper = OPER_I_16();
+
 	M68KMAKE_CC;
 
 	m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
-	m68kdrc_branch_16(OPER_I_16(), 1);
+	m68kdrc_branch_16(oper, 1);
 
 _resolve_link(&link_make_cc);
 	DRC_USE_CYCLES(CYC_BCC_NOTAKE_W);
@@ -2801,10 +2803,12 @@ M68KMAKE_OP(bcc, 32, ., .)
 {
 	if (CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 	{
+		uint32 ea = OPER_I_32();
+
 		M68KMAKE_CC;
 
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
-		m68kdrc_branch_32(OPER_I_32(), 1);
+		m68kdrc_branch_32(ea, 1);
 _resolve_link(&link_make_cc);
 	}
 	else
@@ -4598,9 +4602,11 @@ M68KMAKE_OP(bra, 8, ., .)
 
 M68KMAKE_OP(bra, 16, ., .)
 {
+	uint32 ea = OPER_I_16();
+
 	m68ki_trace_t0();				   /* auto-disable (see m68kcpu.h) */
 
-	m68kdrc_branch_16(OPER_I_16(), 1);
+	m68kdrc_branch_16(ea, 1);
 
 	m68kdrc_recompile_flag |= RECOMPILE_END_OF_STRING;
 }
@@ -4610,9 +4616,10 @@ M68KMAKE_OP(bra, 32, ., .)
 {
 	if (CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 	{
+		uint32 ea = OPER_I_32();
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
-		m68kdrc_branch_32(OPER_I_32(), 1);
+		m68kdrc_branch_32(ea, 1);
 
 		m68kdrc_recompile_flag |= RECOMPILE_END_OF_STRING;
 	}
@@ -6438,6 +6445,7 @@ M68KMAKE_OP(dbt, 16, ., .)
 
 M68KMAKE_OP(dbf, 16, ., .)
 {
+	uint32 ea = OPER_I_16();
 	link_info link1;
 
 	_movzx_r32_m16abs(REG_EAX, &DY);
@@ -6449,7 +6457,7 @@ M68KMAKE_OP(dbf, 16, ., .)
 	m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
 	DRC_USE_CYCLES(CYC_DBCC_F_NOEXP);
-	m68kdrc_branch_16(OPER_I_16(), 0);
+	m68kdrc_branch_16(ea, 0);
 
 _resolve_link(&link1);
 	DRC_USE_CYCLES(CYC_DBCC_F_EXP);
@@ -6458,6 +6466,7 @@ _resolve_link(&link1);
 
 M68KMAKE_OP(dbcc, 16, ., .)
 {
+	uint32 ea = OPER_I_16();
 	link_info link1;
 
 	M68KMAKE_NOT_CC;
@@ -6471,7 +6480,7 @@ M68KMAKE_OP(dbcc, 16, ., .)
 	m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
 	DRC_USE_CYCLES(CYC_DBCC_F_NOEXP);
-	m68kdrc_branch_16(OPER_I_16(), 0);
+	m68kdrc_branch_16(ea, 0);
 
 _resolve_link(&link1);
 	DRC_USE_CYCLES(CYC_DBCC_F_EXP);
@@ -13673,8 +13682,59 @@ M68KMAKE_OP(unpk, 16, mm, .)
 
 
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-M68KMAKE_UPDATE_VNCZ_BODY
+M68KMAKE_UPDATE_FLAG_BODY
 
+M68KMAKE_UPDATE_VNCZ(abcd, 8, rr, .)
+M68KMAKE_UPDATE_VNCZ(abcd, 8, mm, ax7)
+M68KMAKE_UPDATE_VNCZ(abcd, 8, mm, ay7)
+M68KMAKE_UPDATE_VNCZ(abcd, 8, mm, axy7)
+M68KMAKE_UPDATE_VNCZ(abcd, 8, mm, .)
+M68KMAKE_UPDATE_VNCXZ(add, 8, er, d)
+M68KMAKE_UPDATE_VNCXZ(add, 8, er, .)
+M68KMAKE_UPDATE_VNCXZ(add, 16, er, d)
+M68KMAKE_UPDATE_VNCXZ(add, 16, er, a)
+M68KMAKE_UPDATE_VNCXZ(add, 16, er, .)
+M68KMAKE_UPDATE_VNCXZ(add, 32, er, d)
+M68KMAKE_UPDATE_VNCXZ(add, 32, er, a)
+M68KMAKE_UPDATE_VNCXZ(add, 32, er, .)
+M68KMAKE_UPDATE_VNCXZ(add, 8, re, .)
+M68KMAKE_UPDATE_VNCXZ(add, 16, re, .)
+M68KMAKE_UPDATE_VNCXZ(add, 32, re, .)
+M68KMAKE_UPDATE_VNCXZ(addi, 8, ., d)
+M68KMAKE_UPDATE_VNCXZ(addi, 8, ., .)
+M68KMAKE_UPDATE_VNCXZ(addi, 16, ., d)
+M68KMAKE_UPDATE_VNCXZ(addi, 16, ., .)
+M68KMAKE_UPDATE_VNCXZ(addi, 32, ., d)
+M68KMAKE_UPDATE_VNCXZ(addi, 32, ., .)
+M68KMAKE_UPDATE_VNCXZ(addq, 8, ., d)
+M68KMAKE_UPDATE_VNCXZ(addq, 8, ., .)
+M68KMAKE_UPDATE_VNCXZ(addq, 16, ., d)
+M68KMAKE_UPDATE_VNCXZ(addq, 16, ., .)
+M68KMAKE_UPDATE_VNCXZ(addq, 32, ., d)
+M68KMAKE_UPDATE_VNCXZ(addq, 32, ., .)
+M68KMAKE_UPDATE_VNCZ(addx, 8, rr, .)
+M68KMAKE_UPDATE_VNCZ(addx, 16, rr, .)
+M68KMAKE_UPDATE_VNCZ(addx, 32, rr, .)
+M68KMAKE_UPDATE_VNCZ(addx, 8, mm, ax7)
+M68KMAKE_UPDATE_VNCZ(addx, 8, mm, ay7)
+M68KMAKE_UPDATE_VNCZ(addx, 8, mm, axy7)
+M68KMAKE_UPDATE_VNCZ(addx, 8, mm, .)
+M68KMAKE_UPDATE_VNCZ(addx, 16, mm, .)
+M68KMAKE_UPDATE_VNCZ(addx, 32, mm, .)
+M68KMAKE_UPDATE_VNCXZ(asr, 8, s, .)
+M68KMAKE_UPDATE_VNCXZ(asr, 16, s, .)
+M68KMAKE_UPDATE_VNCXZ(asr, 32, s, .)
+M68KMAKE_UPDATE_VNCXZ(asr, 8, r, .)
+M68KMAKE_UPDATE_VNCXZ(asr, 16, r, .)
+M68KMAKE_UPDATE_VNCXZ(asr, 32, r, .)
+M68KMAKE_UPDATE_VNCXZ(asr, 16, ., .)
+M68KMAKE_UPDATE_VNCXZ(asl, 8, s, .)
+M68KMAKE_UPDATE_VNCXZ(asl, 16, s, .)
+M68KMAKE_UPDATE_VNCXZ(asl, 32, s, .)
+M68KMAKE_UPDATE_VNCXZ(asl, 8, r, .)
+M68KMAKE_UPDATE_VNCXZ(asl, 16, r, .)
+M68KMAKE_UPDATE_VNCXZ(asl, 32, r, .)
+M68KMAKE_UPDATE_VNCXZ(asl, 16, ., .)
 M68KMAKE_UPDATE_VNCZ(and, 8, er, d)
 M68KMAKE_UPDATE_VNCZ(and, 8, er, .)
 M68KMAKE_UPDATE_VNCZ(and, 16, er, d)
@@ -13706,28 +13766,16 @@ M68KMAKE_UPDATE_VNCZ(cmpa, 32, ., a)
 M68KMAKE_UPDATE_VNCZ(cmpa, 32, ., .)
 M68KMAKE_UPDATE_VNCZ(cmpi, 8, ., d)
 M68KMAKE_UPDATE_VNCZ(cmpi, 8, ., .)
-M68KMAKE_UPDATE_VNCZ(cmpi, 8, ., pcdi)
-M68KMAKE_UPDATE_VNCZ(cmpi, 8, ., pcix)
 M68KMAKE_UPDATE_VNCZ(cmpi, 16, ., d)
 M68KMAKE_UPDATE_VNCZ(cmpi, 16, ., .)
-M68KMAKE_UPDATE_VNCZ(cmpi, 16, ., pcdi)
-M68KMAKE_UPDATE_VNCZ(cmpi, 16, ., pcix)
 M68KMAKE_UPDATE_VNCZ(cmpi, 32, ., d)
 M68KMAKE_UPDATE_VNCZ(cmpi, 32, ., .)
-M68KMAKE_UPDATE_VNCZ(cmpi, 32, ., pcdi)
-M68KMAKE_UPDATE_VNCZ(cmpi, 32, ., pcix)
 M68KMAKE_UPDATE_VNCZ(cmpm, 8, ., ax7)
 M68KMAKE_UPDATE_VNCZ(cmpm, 8, ., ay7)
 M68KMAKE_UPDATE_VNCZ(cmpm, 8, ., axy7)
 M68KMAKE_UPDATE_VNCZ(cmpm, 8, ., .)
 M68KMAKE_UPDATE_VNCZ(cmpm, 16, ., .)
 M68KMAKE_UPDATE_VNCZ(cmpm, 32, ., .)
-M68KMAKE_UPDATE_VNCZ(divs, 16, ., d)
-M68KMAKE_UPDATE_VNCZ(divs, 16, ., .)
-M68KMAKE_UPDATE_VNCZ(divu, 16, ., d)
-M68KMAKE_UPDATE_VNCZ(divu, 16, ., .)
-M68KMAKE_UPDATE_VNCZ(divl, 32, ., d)
-M68KMAKE_UPDATE_VNCZ(divl, 32, ., .)
 M68KMAKE_UPDATE_VNCZ(eor, 8, ., d)
 M68KMAKE_UPDATE_VNCZ(eor, 8, ., .)
 M68KMAKE_UPDATE_VNCZ(eor, 16, ., d)
@@ -13742,7 +13790,20 @@ M68KMAKE_UPDATE_VNCZ(eori, 32, ., d)
 M68KMAKE_UPDATE_VNCZ(eori, 32, ., .)
 M68KMAKE_UPDATE_VNCZ(ext, 16, ., .)
 M68KMAKE_UPDATE_VNCZ(ext, 32, ., .)
-M68KMAKE_UPDATE_VNCZ(extb, 32, ., .)
+M68KMAKE_UPDATE_VNCXZ(lsr, 8, s, .)
+M68KMAKE_UPDATE_VNCXZ(lsr, 16, s, .)
+M68KMAKE_UPDATE_VNCXZ(lsr, 32, s, .)
+M68KMAKE_UPDATE_VNCXZ(lsr, 8, r, .)
+M68KMAKE_UPDATE_VNCXZ(lsr, 16, r, .)
+M68KMAKE_UPDATE_VNCXZ(lsr, 32, r, .)
+M68KMAKE_UPDATE_VNCXZ(lsr, 16, ., .)
+M68KMAKE_UPDATE_VNCXZ(lsl, 8, s, .)
+M68KMAKE_UPDATE_VNCXZ(lsl, 16, s, .)
+M68KMAKE_UPDATE_VNCXZ(lsl, 32, s, .)
+M68KMAKE_UPDATE_VNCXZ(lsl, 8, r, .)
+M68KMAKE_UPDATE_VNCXZ(lsl, 16, r, .)
+M68KMAKE_UPDATE_VNCXZ(lsl, 32, r, .)
+M68KMAKE_UPDATE_VNCXZ(lsl, 16, ., .)
 M68KMAKE_UPDATE_VNCZ(move, 8, d, d)
 M68KMAKE_UPDATE_VNCZ(move, 8, d, .)
 M68KMAKE_UPDATE_VNCZ(move, 8, ai, d)
@@ -13816,6 +13877,20 @@ M68KMAKE_UPDATE_VNCZ(muls, 16, ., d)
 M68KMAKE_UPDATE_VNCZ(muls, 16, ., .)
 M68KMAKE_UPDATE_VNCZ(mulu, 16, ., d)
 M68KMAKE_UPDATE_VNCZ(mulu, 16, ., .)
+M68KMAKE_UPDATE_VNCZ(nbcd, 8, ., d)
+M68KMAKE_UPDATE_VNCZ(nbcd, 8, ., .)
+M68KMAKE_UPDATE_VNCXZ(neg, 8, ., d)
+M68KMAKE_UPDATE_VNCXZ(neg, 8, ., .)
+M68KMAKE_UPDATE_VNCXZ(neg, 16, ., d)
+M68KMAKE_UPDATE_VNCXZ(neg, 16, ., .)
+M68KMAKE_UPDATE_VNCXZ(neg, 32, ., d)
+M68KMAKE_UPDATE_VNCXZ(neg, 32, ., .)
+M68KMAKE_UPDATE_VNCZ(negx, 8, ., d)
+M68KMAKE_UPDATE_VNCZ(negx, 8, ., .)
+M68KMAKE_UPDATE_VNCZ(negx, 16, ., d)
+M68KMAKE_UPDATE_VNCZ(negx, 16, ., .)
+M68KMAKE_UPDATE_VNCZ(negx, 32, ., d)
+M68KMAKE_UPDATE_VNCZ(negx, 32, ., .)
 M68KMAKE_UPDATE_VNCZ(not, 8, ., d)
 M68KMAKE_UPDATE_VNCZ(not, 8, ., .)
 M68KMAKE_UPDATE_VNCZ(not, 16, ., d)
@@ -13837,7 +13912,76 @@ M68KMAKE_UPDATE_VNCZ(ori, 16, ., d)
 M68KMAKE_UPDATE_VNCZ(ori, 16, ., .)
 M68KMAKE_UPDATE_VNCZ(ori, 32, ., d)
 M68KMAKE_UPDATE_VNCZ(ori, 32, ., .)
+M68KMAKE_UPDATE_VNCZ(ror, 8, s, .)
+M68KMAKE_UPDATE_VNCZ(ror, 16, s, .)
+M68KMAKE_UPDATE_VNCZ(ror, 32, s, .)
+M68KMAKE_UPDATE_VNCZ(ror, 8, r, .)
+M68KMAKE_UPDATE_VNCZ(ror, 16, r, .)
+M68KMAKE_UPDATE_VNCZ(ror, 32, r, .)
+M68KMAKE_UPDATE_VNCZ(ror, 16, ., .)
+M68KMAKE_UPDATE_VNCZ(rol, 8, s, .)
+M68KMAKE_UPDATE_VNCZ(rol, 16, s, .)
+M68KMAKE_UPDATE_VNCZ(rol, 32, s, .)
+M68KMAKE_UPDATE_VNCZ(rol, 8, r, .)
+M68KMAKE_UPDATE_VNCZ(rol, 16, r, .)
+M68KMAKE_UPDATE_VNCZ(rol, 32, r, .)
+M68KMAKE_UPDATE_VNCZ(rol, 16, ., .)
+M68KMAKE_UPDATE_VNCZ(roxr, 8, s, .)
+M68KMAKE_UPDATE_VNCZ(roxr, 16, s, .)
+M68KMAKE_UPDATE_VNCZ(roxr, 32, s, .)
+M68KMAKE_UPDATE_VNCZ(roxr, 8, r, .)
+M68KMAKE_UPDATE_VNCZ(roxr, 16, r, .)
+M68KMAKE_UPDATE_VNCZ(roxr, 32, r, .)
+M68KMAKE_UPDATE_VNCZ(roxr, 16, ., .)
+M68KMAKE_UPDATE_VNCZ(roxl, 8, s, .)
+M68KMAKE_UPDATE_VNCZ(roxl, 16, s, .)
+M68KMAKE_UPDATE_VNCZ(roxl, 32, s, .)
+M68KMAKE_UPDATE_VNCZ(roxl, 8, r, .)
+M68KMAKE_UPDATE_VNCZ(roxl, 16, r, .)
+M68KMAKE_UPDATE_VNCZ(roxl, 32, r, .)
+M68KMAKE_UPDATE_VNCZ(roxl, 16, ., .)
+M68KMAKE_UPDATE_VNCXZ(sub, 8, er, d)
+M68KMAKE_UPDATE_VNCXZ(sub, 8, er, .)
+M68KMAKE_UPDATE_VNCXZ(sub, 16, er, d)
+M68KMAKE_UPDATE_VNCXZ(sub, 16, er, a)
+M68KMAKE_UPDATE_VNCXZ(sub, 16, er, .)
+M68KMAKE_UPDATE_VNCXZ(sub, 32, er, d)
+M68KMAKE_UPDATE_VNCXZ(sub, 32, er, a)
+M68KMAKE_UPDATE_VNCXZ(sub, 32, er, .)
+M68KMAKE_UPDATE_VNCXZ(sub, 8, re, .)
+M68KMAKE_UPDATE_VNCXZ(sub, 16, re, .)
+M68KMAKE_UPDATE_VNCXZ(sub, 32, re, .)
+M68KMAKE_UPDATE_VNCXZ(subi, 8, ., d)
+M68KMAKE_UPDATE_VNCXZ(subi, 8, ., .)
+M68KMAKE_UPDATE_VNCXZ(subi, 16, ., d)
+M68KMAKE_UPDATE_VNCXZ(subi, 16, ., .)
+M68KMAKE_UPDATE_VNCXZ(subi, 32, ., d)
+M68KMAKE_UPDATE_VNCXZ(subi, 32, ., .)
+M68KMAKE_UPDATE_VNCXZ(subq, 8, ., d)
+M68KMAKE_UPDATE_VNCXZ(subq, 8, ., .)
+M68KMAKE_UPDATE_VNCXZ(subq, 16, ., d)
+M68KMAKE_UPDATE_VNCXZ(subq, 16, ., .)
+M68KMAKE_UPDATE_VNCXZ(subq, 32, ., d)
+M68KMAKE_UPDATE_VNCXZ(subq, 32, ., .)
+M68KMAKE_UPDATE_VNCZ(subx, 8, rr, .)
+M68KMAKE_UPDATE_VNCZ(subx, 16, rr, .)
+M68KMAKE_UPDATE_VNCZ(subx, 32, rr, .)
+M68KMAKE_UPDATE_VNCZ(subx, 8, mm, ax7)
+M68KMAKE_UPDATE_VNCZ(subx, 8, mm, ay7)
+M68KMAKE_UPDATE_VNCZ(subx, 8, mm, axy7)
+M68KMAKE_UPDATE_VNCZ(subx, 8, mm, .)
+M68KMAKE_UPDATE_VNCZ(subx, 16, mm, .)
+M68KMAKE_UPDATE_VNCZ(subx, 32, mm, .)
 M68KMAKE_UPDATE_VNCZ(swap, 32, ., .)
+M68KMAKE_UPDATE_VNCZ(tas, 8, ., d)
+M68KMAKE_UPDATE_VNCZ(tas, 8, ., .)
+M68KMAKE_UPDATE_VNCZ(tst, 8, ., d)
+M68KMAKE_UPDATE_VNCZ(tst, 8, ., .)
+M68KMAKE_UPDATE_VNCZ(tst, 8, ., pcdi)
+M68KMAKE_UPDATE_VNCZ(tst, 16, ., d)
+M68KMAKE_UPDATE_VNCZ(tst, 16, ., .)
+M68KMAKE_UPDATE_VNCZ(tst, 32, ., d)
+M68KMAKE_UPDATE_VNCZ(tst, 32, ., .)
 
 
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

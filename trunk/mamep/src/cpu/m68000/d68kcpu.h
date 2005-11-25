@@ -52,6 +52,7 @@
 
 extern int m68kdrc_cycles;
 extern int m68kdrc_recompile_flag;
+extern int m68kdrc_check_code_modify;
 
 
 #define m68kdrc_cpu		m68ki_cpu
@@ -344,7 +345,7 @@ extern int m68kdrc_recompile_flag;
 #define CALLBACK_SET_FC       m68kdrc_cpu.set_fc_callback
 #define CALLBACK_INSTR_HOOK   m68kdrc_cpu.instr_hook_callback
 
-#define INSTR_VNCZ_FLAG_DIRTY	m68kdrc_cpu.vncz_flag_dirty
+#define INSTR_FLAG_DIRTY	m68kdrc_cpu.flag_dirty
 
 
 
@@ -577,9 +578,9 @@ extern int m68kdrc_recompile_flag;
 
 
 /* Effective Address Calculations */
-#define OPER_I_8()     m68ki_read_imm_8()
-#define OPER_I_16()    m68ki_read_imm_16()
-#define OPER_I_32()    m68ki_read_imm_32()
+#define OPER_I_8()     m68ki_read_imm_8(drc)
+#define OPER_I_16()    m68ki_read_imm_16(drc)
+#define OPER_I_32()    m68ki_read_imm_32(drc)
 
 
 /* address register indirect */
@@ -657,9 +658,9 @@ extern int m68kdrc_recompile_flag;
 #define DRC_EA_PCIX_32()   DRC_EA_PCIX_8()
 
 
-#define DRC_OPER_I_8()     _mov_r32_imm(REG_EAX, OPER_I_8())
-#define DRC_OPER_I_16()    _mov_r32_imm(REG_EAX, OPER_I_16())
-#define DRC_OPER_I_32()    _mov_r32_imm(REG_EAX, OPER_I_32())
+#define DRC_OPER_I_8()     { uint32 ea = OPER_I_8(); _mov_r32_imm(REG_EAX, ea); } while (0)
+#define DRC_OPER_I_16()    { uint32 ea = OPER_I_16(); _mov_r32_imm(REG_EAX, ea); } while (0)
+#define DRC_OPER_I_32()    { uint32 ea = OPER_I_32(); _mov_r32_imm(REG_EAX, ea); } while (0)
 
 
 /* --------------------------- Status Register ---------------------------- */
@@ -1104,7 +1105,7 @@ DRC_CFLAG_NEG_32(EAX, ECX)
 #endif
 
 /* map read immediate 8 to read immediate 16 */
-#define m68ki_read_imm_8() MASK_OUT_ABOVE_8(m68ki_read_imm_16())
+#define m68ki_read_imm_8(drc) MASK_OUT_ABOVE_8(m68ki_read_imm_16(drc))
 
 /* Map PC-relative reads */
 #define m68ki_read_pcrel_8(A) m68k_read_pcrelative_8(A)
@@ -1195,7 +1196,7 @@ typedef struct
 	void *generate_exception_format_error;
 	void *generate_exception_address_error;
 	void *generate_exception_interrupt;
-	int *vncz_flag_dirty;
+	int *flag_dirty;
 } m68kdrc_cpu_core;
 
 
@@ -1215,8 +1216,8 @@ extern uint           m68ki_aerr_write_mode;
 extern uint           m68ki_aerr_fc;
 
 /* Read data immediately after the program counter */
-INLINE uint m68ki_read_imm_16(void);
-INLINE uint m68ki_read_imm_32(void);
+INLINE uint m68ki_read_imm_16(drc_core *drc);
+INLINE uint m68ki_read_imm_32(drc_core *drc);
 
 /* Read data with specific function code */
 INLINE uint m68ki_read_8_fc  (uint address, uint fc);
@@ -1266,34 +1267,48 @@ char* m68ki_disassemble_quick(unsigned int pc, unsigned int cpu_type);
 /* Handles all immediate reads, does address error check, function code setting,
  * and prefetching if they are enabled in m68kconf.h
  */
-INLINE uint m68ki_read_imm_16(void)
+INLINE uint m68ki_read_imm_16(drc_core *drc)
 {
 	m68ki_set_fc(FLAG_S | FUNCTION_CODE_USER_PROGRAM); /* auto-disable (see m68kcpu.h) */
 	m68ki_check_address_error(REG68K_PC, MODE_READ, FLAG_S | FUNCTION_CODE_USER_PROGRAM); /* auto-disable (see m68kcpu.h) */
+
 #if M68K_EMULATE_PREFETCH
 	if(MASK_OUT_BELOW_2(REG68K_PC) != CPU_PREF_ADDR)
 	{
 		CPU_PREF_ADDR = MASK_OUT_BELOW_2(REG68K_PC);
 		CPU_PREF_DATA = m68k_read_immediate_32(ADDRESS_68K(CPU_PREF_ADDR));
+
+		if (m68kdrc_check_code_modify)
+			drc_append_verify_code(drc, cpu_opptr(ADDRESS_68K(CPU_PREF_ADDR)), 4);
 	}
 	REG68K_PC += 2;
 	return MASK_OUT_ABOVE_16(CPU_PREF_DATA >> ((2-((REG68K_PC-2)&2))<<3));
 #else
+	if (m68kdrc_check_code_modify)
+	{
+		if ((REG68K_PC & 3) == 0)
+			drc_append_verify_code(drc, cpu_opptr(ADDRESS_68K(REG68K_PC)), 4);
+	}
+
 	REG68K_PC += 2;
 	return m68k_read_immediate_16(ADDRESS_68K(REG68K_PC-2));
 #endif /* M68K_EMULATE_PREFETCH */
 }
-INLINE uint m68ki_read_imm_32(void)
+INLINE uint m68ki_read_imm_32(drc_core *drc)
 {
 #if M68K_EMULATE_PREFETCH
 	uint temp_val;
 
 	m68ki_set_fc(FLAG_S | FUNCTION_CODE_USER_PROGRAM); /* auto-disable (see m68kcpu.h) */
 	m68ki_check_address_error(REG68K_PC, MODE_READ, FLAG_S | FUNCTION_CODE_USER_PROGRAM); /* auto-disable (see m68kcpu.h) */
+
 	if(MASK_OUT_BELOW_2(REG68K_PC) != CPU_PREF_ADDR)
 	{
 		CPU_PREF_ADDR = MASK_OUT_BELOW_2(REG68K_PC);
 		CPU_PREF_DATA = m68k_read_immediate_32(ADDRESS_68K(CPU_PREF_ADDR));
+
+		if (m68kdrc_check_code_modify)
+			drc_append_verify_code(drc, cpu_opptr(ADDRESS_68K(CPU_PREF_ADDR)), 4);
 	}
 	temp_val = CPU_PREF_DATA;
 	REG68K_PC += 2;
@@ -1301,6 +1316,10 @@ INLINE uint m68ki_read_imm_32(void)
 	{
 		CPU_PREF_ADDR = MASK_OUT_BELOW_2(REG68K_PC);
 		CPU_PREF_DATA = m68k_read_immediate_32(ADDRESS_68K(CPU_PREF_ADDR));
+
+		if (m68kdrc_check_code_modify)
+			drc_append_verify_code(drc, cpu_opptr(ADDRESS_68K(CPU_PREF_ADDR)), 4);
+
 		temp_val = MASK_OUT_ABOVE_32((temp_val << 16) | (CPU_PREF_DATA >> 16));
 	}
 	REG68K_PC += 2;
@@ -1309,6 +1328,15 @@ INLINE uint m68ki_read_imm_32(void)
 #else
 	m68ki_set_fc(FLAG_S | FUNCTION_CODE_USER_PROGRAM); /* auto-disable (see m68kcpu.h) */
 	m68ki_check_address_error(REG68K_PC, MODE_READ, FLAG_S | FUNCTION_CODE_USER_PROGRAM); /* auto-disable (see m68kcpu.h) */
+
+	if (m68kdrc_check_code_modify)
+	{
+		if ((REG68K_PC & 3) == 0)
+			drc_append_verify_code(drc, cpu_opptr(ADDRESS_68K(REG68K_PC)), 4);
+		else
+			drc_append_verify_code(drc, cpu_opptr(ADDRESS_68K(REG68K_PC) + 4), 4);
+	}
+
 	REG68K_PC += 4;
 	return m68k_read_immediate_32(ADDRESS_68K(REG68K_PC-4));
 #endif /* M68K_EMULATE_PREFETCH */
@@ -1458,8 +1486,9 @@ extern uint32	m68kdrc_real_write_32_fc(uint fc, uint32 address, uint32 value);
 INLINE void m68kdrc_get_ea_pcdi(drc_core *drc)
 {
 	uint old_pc = REG68K_PC;
+	uint32 ea = MAKE_INT_16(OPER_I_16());
 	m68ki_use_program_space(); /* auto-disable */
-	_mov_r32_imm(REG_EAX, old_pc + MAKE_INT_16(OPER_I_16()));
+	_mov_r32_imm(REG_EAX, old_pc + ea);
 }
 
 INLINE void m68kdrc_get_ea_pcix(drc_core *drc)
@@ -1970,15 +1999,27 @@ INLINE void m68kdrc_set_sr(drc_core *drc)
 INLINE int m68kdrc_update_vncz_check(void)
 {
 #if 1
-	uint16 next_ir = m68k_read_immediate_16(ADDRESS_68K(REG68K_PC));;
+	uint16 next_ir = m68k_read_immediate_16(REG68K_PC);
 
-	if (INSTR_VNCZ_FLAG_DIRTY[next_ir])
+	if (INSTR_FLAG_DIRTY[next_ir])
 		return 0;
 #endif
 
 	return 1;
 }
 
+/* Check we have to update VNCXZ falgs? */
+INLINE int m68kdrc_update_vncxz_check(void)
+{
+#if 1
+	uint16 next_ir = m68k_read_immediate_16(REG68K_PC);
+
+	if (INSTR_FLAG_DIRTY[next_ir] == 2)
+		return 0;
+#endif
+
+	return 1;
+}
 
 INLINE void m68kdrc_vncz_flag_move_8(drc_core *drc)
 {
@@ -2017,93 +2058,120 @@ INLINE void m68kdrc_vncz_flag_move_32(drc_core *drc)
 
 INLINE void m68kdrc_vncxz_flag_add_8(drc_core *drc)
 {
-	DRC_VFLAG_ADD_8();			/* break EBX, ECX */
-	DRC_NFLAG_8();
-	DRC_CXFLAG_8();
+	if (m68kdrc_update_vncxz_check())
+	{
+		DRC_VFLAG_ADD_8();			/* break EBX, ECX */
+		DRC_NFLAG_8();
+		DRC_CXFLAG_8();
 
-	_movzx_r32_r8(REG_EAX, REG_AL);
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		_movzx_r32_r8(REG_EAX, REG_AL);
+		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+	}
 }
 
 INLINE void m68kdrc_vncxz_flag_add_16(drc_core *drc)
 {
-	DRC_VFLAG_ADD_16();			/* break EBX, ECX */
-	DRC_NFLAG_16();
-	DRC_CXFLAG_16();			/* break EBX */
+	if (m68kdrc_update_vncxz_check())
+	{
+		DRC_VFLAG_ADD_16();			/* break EBX, ECX */
+		DRC_NFLAG_16();
+		DRC_CXFLAG_16();			/* break EBX */
 
-	_movzx_r32_r16(REG_EAX, REG_AX);
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		_movzx_r32_r16(REG_EAX, REG_AX);
+		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+	}
 }
 
 INLINE void m68kdrc_vncxz_flag_add_32(drc_core *drc)
 {
-	DRC_CXFLAG_COND_C();
-	DRC_VFLAG_ADD_32();			/* break EBX, ECX */
-	DRC_NFLAG_32();				/* break ECX */
+	if (m68kdrc_update_vncxz_check())
+	{
+		DRC_CXFLAG_COND_C();
+		DRC_VFLAG_ADD_32();			/* break EBX, ECX */
+		DRC_NFLAG_32();				/* break ECX */
 
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+	}
 }
 
 INLINE void m68kdrc_vncxz_flag_addx_8(drc_core *drc)
 {
-	DRC_VFLAG_ADD_8();			/* break EBX, ECX */
-	DRC_NFLAG_8();
-	DRC_CXFLAG_8();
+	if (m68kdrc_update_vncxz_check())
+	{
+		DRC_VFLAG_ADD_8();			/* break EBX, ECX */
+		DRC_NFLAG_8();
+		DRC_CXFLAG_8();
 
-	_mov_r8_m8abs(REG_BL, &FLAG_Z);
-	_or_r32_r32(REG_EBX, REG_EAX);
-	_mov_m8abs_r8(&FLAG_Z, REG_BL);
+		_mov_r8_m8abs(REG_BL, &FLAG_Z);
+		_or_r32_r32(REG_EBX, REG_EAX);
+		_mov_m8abs_r8(&FLAG_Z, REG_BL);
+	}
 }
 
 INLINE void m68kdrc_vncxz_flag_addx_16(drc_core *drc)
 {
-	DRC_VFLAG_ADD_16();			/* break EBX, ECX */
-	DRC_NFLAG_16();
-	DRC_CXFLAG_16();			/* break EBX */
+	if (m68kdrc_update_vncxz_check())
+	{
+		DRC_VFLAG_ADD_16();			/* break EBX, ECX */
+		DRC_NFLAG_16();
+		DRC_CXFLAG_16();			/* break EBX */
 
-	_mov_r16_m16abs(REG_BX, &FLAG_Z);
-	_or_r32_r32(REG_EBX, REG_EAX);
-	_mov_m16abs_r16(&FLAG_Z, REG_BX);
+		_mov_r16_m16abs(REG_BX, &FLAG_Z);
+		_or_r32_r32(REG_EBX, REG_EAX);
+		_mov_m16abs_r16(&FLAG_Z, REG_BX);
+	}
 }
 
 INLINE void m68kdrc_vncxz_flag_addx_32(drc_core *drc)
 {
-	DRC_CXFLAG_COND_C();
-	DRC_VFLAG_ADD_32();			/* break EBX, ECX */
-	DRC_NFLAG_32();				/* break ECX */
+	if (m68kdrc_update_vncxz_check())
+	{
+		DRC_CXFLAG_COND_C();
+		DRC_VFLAG_ADD_32();			/* break EBX, ECX */
+		DRC_NFLAG_32();				/* break ECX */
 
-	_mov_r32_m32abs(REG_EBX, &FLAG_Z);
-	_or_r32_r32(REG_EBX, REG_EAX);
-	_mov_m32abs_r32(&FLAG_Z, REG_EBX);
+		_mov_r32_m32abs(REG_EBX, &FLAG_Z);
+		_or_r32_r32(REG_EBX, REG_EAX);
+		_mov_m32abs_r32(&FLAG_Z, REG_EBX);
+	}
 }
 
 INLINE void m68kdrc_vncxz_flag_sub_8(drc_core *drc)
 {
-	DRC_VFLAG_SUB_8();			/* break EBX, ECX */
-	DRC_NFLAG_8();
-	DRC_CXFLAG_8();
+	if (m68kdrc_update_vncxz_check())
+	{
+		DRC_VFLAG_SUB_8();			/* break EBX, ECX */
+		DRC_NFLAG_8();
+		DRC_CXFLAG_8();
 
-	_movzx_r32_r8(REG_EAX, REG_AL);
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		_movzx_r32_r8(REG_EAX, REG_AL);
+		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+	}
 }
 
 INLINE void m68kdrc_vncxz_flag_sub_16(drc_core *drc)
 {
-	DRC_VFLAG_SUB_16();			/* break EBX, ECX */
-	DRC_NFLAG_16();
-	DRC_CXFLAG_16();			/* break EBX */
+	if (m68kdrc_update_vncxz_check())
+	{
+		DRC_VFLAG_SUB_16();			/* break EBX, ECX */
+		DRC_NFLAG_16();
+		DRC_CXFLAG_16();			/* break EBX */
 
-	_movzx_r32_r16(REG_EAX, REG_AX);
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		_movzx_r32_r16(REG_EAX, REG_AX);
+		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+	}
 }
 
 INLINE void m68kdrc_vncxz_flag_sub_32(drc_core *drc)
 {
-	DRC_CXFLAG_COND_C();
-	DRC_VFLAG_SUB_32();			/* break EBX, ECX */
-	DRC_NFLAG_32();				/* break ECX */
+	if (m68kdrc_update_vncxz_check())
+	{
+		DRC_CXFLAG_COND_C();
+		DRC_VFLAG_SUB_32();			/* break EBX, ECX */
+		DRC_NFLAG_32();				/* break ECX */
 
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+	}
 }
 
 INLINE void m68kdrc_vncz_flag_sub_8(drc_core *drc)
@@ -2147,35 +2215,44 @@ INLINE void m68kdrc_vncz_flag_sub_32(drc_core *drc)
 
 INLINE void m68kdrc_vncxz_flag_subx_8(drc_core *drc)
 {
-	DRC_VFLAG_SUB_8();			/* break EBX, ECX */
-	DRC_NFLAG_8();
-	DRC_CXFLAG_8();
+	if (m68kdrc_update_vncxz_check())
+	{
+		DRC_VFLAG_SUB_8();			/* break EBX, ECX */
+		DRC_NFLAG_8();
+		DRC_CXFLAG_8();
 
-	_mov_r8_m8abs(REG_BL, &FLAG_Z);		/* break EBX */
-	_or_r32_r32(REG_EBX, REG_EAX);
-	_mov_m8abs_r8(&FLAG_Z, REG_BL);
+		_mov_r8_m8abs(REG_BL, &FLAG_Z);		/* break EBX */
+		_or_r32_r32(REG_EBX, REG_EAX);
+		_mov_m8abs_r8(&FLAG_Z, REG_BL);
+	}
 }
 
 INLINE void m68kdrc_vncxz_flag_subx_16(drc_core *drc)
 {
-	DRC_VFLAG_SUB_16();			/* break EBX, ECX */
-	DRC_NFLAG_16();
-	DRC_CXFLAG_16();			/* break EBX */
+	if (m68kdrc_update_vncxz_check())
+	{
+		DRC_VFLAG_SUB_16();			/* break EBX, ECX */
+		DRC_NFLAG_16();
+		DRC_CXFLAG_16();			/* break EBX */
 
-	_mov_r16_m16abs(REG_BX, &FLAG_Z);	/* break EBX */
-	_or_r32_r32(REG_EBX, REG_EAX);
-	_mov_m16abs_r16(&FLAG_Z, REG_BX);
+		_mov_r16_m16abs(REG_BX, &FLAG_Z);	/* break EBX */
+		_or_r32_r32(REG_EBX, REG_EAX);
+		_mov_m16abs_r16(&FLAG_Z, REG_BX);
+	}
 }
 
 INLINE void m68kdrc_vncxz_flag_subx_32(drc_core *drc)
 {
-	DRC_CXFLAG_COND_C();
-	DRC_VFLAG_SUB_32();			/* break EBX, ECX */
-	DRC_NFLAG_32();				/* break ECX */
+	if (m68kdrc_update_vncxz_check())
+	{
+		DRC_CXFLAG_COND_C();
+		DRC_VFLAG_SUB_32();			/* break EBX, ECX */
+		DRC_NFLAG_32();				/* break ECX */
 
-	_mov_r32_m32abs(REG_EBX, &FLAG_Z);	/* break EBX */
-	_or_r32_r32(REG_EBX, REG_EAX);
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		_mov_r32_m32abs(REG_EBX, &FLAG_Z);	/* break EBX */
+		_or_r32_r32(REG_EBX, REG_EAX);
+		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+	}
 }
 
 INLINE void m68kdrc_vncz_flag_cmp_8(drc_core *drc)
@@ -2218,64 +2295,82 @@ INLINE void m68kdrc_vncz_flag_cmp_32(drc_core *drc)
 
 INLINE void m68kdrc_vncxz_flag_neg_8(drc_core *drc)
 {
-	DRC_VFLAG_NEG_8();			/* break EBX */
-	DRC_CXFLAG_NEG_8();			/* break EBX */
-	DRC_NFLAG_8();
+	if (m68kdrc_update_vncxz_check())
+	{
+		DRC_VFLAG_NEG_8();			/* break EBX */
+		DRC_CXFLAG_NEG_8();			/* break EBX */
+		DRC_NFLAG_8();
 
-	_movzx_r32_r8(REG_EAX, REG_AL);
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		_movzx_r32_r8(REG_EAX, REG_AL);
+		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+	}
 }
 
 INLINE void m68kdrc_vncxz_flag_neg_16(drc_core *drc)
 {
-	DRC_VFLAG_NEG_16();			/* break EBX */
-	DRC_CXFLAG_NEG_16();			/* break EBX */
-	DRC_NFLAG_16();
+	if (m68kdrc_update_vncxz_check())
+	{
+		DRC_VFLAG_NEG_16();			/* break EBX */
+		DRC_CXFLAG_NEG_16();			/* break EBX */
+		DRC_NFLAG_16();
 
-	_movzx_r32_r16(REG_EAX, REG_AX);
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		_movzx_r32_r16(REG_EAX, REG_AX);
+		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+	}
 }
 
 INLINE void m68kdrc_vncxz_flag_neg_32(drc_core *drc)
 {
-	DRC_VFLAG_NEG_32();			/* break EBX */
-	DRC_CXFLAG_NEG_32();			/* break EBX */
-	DRC_NFLAG_32();				/* break ECX */
+	if (m68kdrc_update_vncxz_check())
+	{
+		DRC_VFLAG_NEG_32();			/* break EBX */
+		DRC_CXFLAG_NEG_32();			/* break EBX */
+		DRC_NFLAG_32();				/* break ECX */
 
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+	}
 }
 
 INLINE void m68kdrc_vncxz_flag_negx_8(drc_core *drc)
 {
-	DRC_VFLAG_NEG_8();			/* break EBX */
-	DRC_CXFLAG_NEG_8();			/* break EBX */
-	DRC_NFLAG_8();
+	if (m68kdrc_update_vncxz_check())
+	{
+		DRC_VFLAG_NEG_8();			/* break EBX */
+		DRC_CXFLAG_NEG_8();			/* break EBX */
+		DRC_NFLAG_8();
 
-	_mov_r8_m8abs(REG_BL, &FLAG_Z);		/* break EBX */
-	_or_r32_r32(REG_EBX, REG_EAX);
-	_mov_m8abs_r8(&FLAG_Z, REG_BL);
+		_mov_r8_m8abs(REG_BL, &FLAG_Z);		/* break EBX */
+		_or_r32_r32(REG_EBX, REG_EAX);
+		_mov_m8abs_r8(&FLAG_Z, REG_BL);
+	}
 }
 
 INLINE void m68kdrc_vncxz_flag_negx_16(drc_core *drc)
 {
-	DRC_VFLAG_NEG_16();			/* break EBX */
-	DRC_CXFLAG_NEG_16();			/* break EBX */
-	DRC_NFLAG_16();
+	if (m68kdrc_update_vncxz_check())
+	{
+		DRC_VFLAG_NEG_16();			/* break EBX */
+		DRC_CXFLAG_NEG_16();			/* break EBX */
+		DRC_NFLAG_16();
 
-	_mov_r16_m16abs(REG_BX, &FLAG_Z);	/* break EBX */
-	_or_r32_r32(REG_EBX, REG_EAX);
-	_mov_m16abs_r16(&FLAG_Z, REG_BX);
+		_mov_r16_m16abs(REG_BX, &FLAG_Z);	/* break EBX */
+		_or_r32_r32(REG_EBX, REG_EAX);
+		_mov_m16abs_r16(&FLAG_Z, REG_BX);
+	}
 }
 
 INLINE void m68kdrc_vncxz_flag_negx_32(drc_core *drc)
 {
-	DRC_VFLAG_NEG_32();			/* break EBX */
-	DRC_CXFLAG_NEG_32();			/* break EBX */
-	DRC_NFLAG_32();				/* break ECX */
+	if (m68kdrc_update_vncxz_check())
+	{
+		DRC_VFLAG_NEG_32();			/* break EBX */
+		DRC_CXFLAG_NEG_32();			/* break EBX */
+		DRC_NFLAG_32();				/* break ECX */
 
-	_mov_r32_m32abs(REG_EBX, &FLAG_Z);	/* break EBX */
-	_or_r32_r32(REG_EBX, REG_EAX);
-	_mov_m32abs_r32(&FLAG_Z, REG_EBX);
+		_mov_r32_m32abs(REG_EBX, &FLAG_Z);	/* break EBX */
+		_or_r32_r32(REG_EBX, REG_EAX);
+		_mov_m32abs_r32(&FLAG_Z, REG_EBX);
+	}
 }
 
 
