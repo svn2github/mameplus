@@ -637,8 +637,8 @@ static LPWSTR GetPatchDescByLangcode(FILE *fp, int langcode)
 						break;
 					}
 
-				if (*s == '\0')
-					continue;
+//				if (*s == '\0')
+//					continue;
 
 				if (desc)
 				{
@@ -646,8 +646,8 @@ static LPWSTR GetPatchDescByLangcode(FILE *fp, int langcode)
 					int len = strlen(desc);
 
 					len += strlen(s) + 2;
-					p = malloc(len);
-					sprintf(p, "%s\n%s", desc, s);
+					p = malloc(len + 1);
+					sprintf(p, "%s\r\n%s", desc, s);
 					FreeIfAllocated(&desc);
 					desc = p;
 				}

@@ -471,7 +471,7 @@ $(OBJ)/cave.a: \
 	$(OBJ)/vidhrdw/cave.o $(OBJ)/drivers/cave.o \
 
 $(OBJ)/kyugo.a: \
-	$(OBJ)/vidhrdw/kyugo.o $(OBJ)/machine/kyugo.o $(OBJ)/drivers/kyugo.o \
+	$(OBJ)/vidhrdw/kyugo.o $(OBJ)/drivers/kyugo.o \
 
 $(OBJ)/williams.a: \
 	$(OBJ)/machine/williams.o $(OBJ)/vidhrdw/williams.o $(OBJ)/sndhrdw/williams.o $(OBJ)/drivers/williams.o \
@@ -789,7 +789,7 @@ $(OBJ)/atari.a: \
 	$(OBJ)/sndhrdw/bsktball.o \
 	$(OBJ)/vidhrdw/centiped.o $(OBJ)/drivers/centiped.o \
 	$(OBJ)/vidhrdw/runaway.o $(OBJ)/drivers/runaway.o \
-	$(OBJ)/machine/missile.o $(OBJ)/vidhrdw/missile.o $(OBJ)/drivers/missile.o \
+	$(OBJ)/vidhrdw/missile.o $(OBJ)/drivers/missile.o \
 	$(OBJ)/vidhrdw/foodf.o $(OBJ)/drivers/foodf.o \
 	$(OBJ)/drivers/tunhunt.o $(OBJ)/vidhrdw/tunhunt.o \
 	$(OBJ)/vidhrdw/liberatr.o $(OBJ)/drivers/liberatr.o \
@@ -1232,6 +1232,7 @@ $(OBJ)/other68k.a: \
 	$(OBJ)/drivers/pkscram.o \
 	$(OBJ)/drivers/jackpool.o \
 	$(OBJ)/drivers/magic10.o \
+	$(OBJ)/drivers/wheelfir.o \
 
 $(OBJ)/otherz80.a: \
 	$(OBJ)/vidhrdw/astinvad.o $(OBJ)/sndhrdw/astinvad.o $(OBJ)/drivers/astinvad.o \
@@ -1277,6 +1278,7 @@ $(OBJ)/otherz80.a: \
 	$(OBJ)/drivers/wink.o \
 	$(OBJ)/drivers/fortecar.o \
 	$(OBJ)/drivers/coinmstr.o \
+	$(OBJ)/drivers/dwarfd.o \
 
 $(OBJ)/other.a: \
 	$(OBJ)/vidhrdw/monaco.o $(OBJ)/drivers/monaco.o \
@@ -1326,6 +1328,7 @@ $(OBJ)/other.a: \
 	$(OBJ)/drivers/vp906iii.o \
 	$(OBJ)/drivers/murogem.o \
 	$(OBJ)/drivers/attckufo.o $(OBJ)/sndhrdw/attckufo.o $(OBJ)/vidhrdw/attckufo.o \
+	$(OBJ)/drivers/trvquest.o \
 
 
 COREOBJS += $(OBJ)/driver.o $(OBJ)/cheat.o

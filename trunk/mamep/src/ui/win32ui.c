@@ -3637,7 +3637,7 @@ static void UpdateHistory(void)
 		hDC = GetDC(GetDlgItem(hMain, IDC_HISTORY));
 		GetTextMetrics (hDC, &tm);
 		nLineHeight = tm.tmHeight - tm.tmInternalLeading;
-		if( ( (rect.bottom - rect.top) / nLineHeight) < (nLines) )
+		if ((rect.bottom - rect.top) / nLineHeight < nLines)
 		{
 			//more than one Page, so show Scrollbar
 			SetScrollRange(GetDlgItem(hMain, IDC_HISTORY), SB_VERT, 0, nLines, TRUE); 

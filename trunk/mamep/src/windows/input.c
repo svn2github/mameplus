@@ -22,6 +22,8 @@
 #include "input.h"
 #include "debugwin.h"
 
+#define ENABLE_POLL_INPUT_HACK_FOR_SINGLE_STEP
+
 
 //============================================================
 //  IMPORTS
@@ -1369,6 +1371,9 @@ void win_poll_input(void)
 	HWND focus = GetFocus();
 	HRESULT result = 1;
 	int i, j;
+#ifdef ENABLE_POLL_INPUT_HACK_FOR_SINGLE_STEP
+	static int is_last_keypress_from_non_di;
+#endif /* ENABLE_POLL_INPUT_HACK_FOR_SINGLE_STEP */
 
 	// remember when this happened
 	last_poll = osd_cycles();
@@ -1385,6 +1390,11 @@ void win_poll_input(void)
 	}
 
 	// poll all keyboards
+#ifdef ENABLE_POLL_INPUT_HACK_FOR_SINGLE_STEP
+	if (is_last_keypress_from_non_di)
+		result = DIERR_NOTACQUIRED;
+	else
+#endif /* ENABLE_POLL_INPUT_HACK_FOR_SINGLE_STEP */
 	for (i = 0; i < keyboard_count; i++)
 	{
 		// first poll the device
@@ -1408,6 +1418,10 @@ void win_poll_input(void)
 				keyboard_state[i][j] >>= 7;
 	}
 
+#ifdef ENABLE_POLL_INPUT_HACK_FOR_SINGLE_STEP
+	is_last_keypress_from_non_di = 0;
+#endif /* ENABLE_POLL_INPUT_HACK_FOR_SINGLE_STEP */
+
 	// if we couldn't poll the keyboard that way, poll it via GetAsyncKeyState
 	if (result != DI_OK)
 		for (i = 0; codelist[i].oscode; i++)
@@ -1418,7 +1432,13 @@ void win_poll_input(void)
 
 				// if we have a non-zero VK, query it
 				if (vk)
+				{
 					keyboard_state[0][dik] = (GetAsyncKeyState(vk) >> 15) & 1;
+#ifdef ENABLE_POLL_INPUT_HACK_FOR_SINGLE_STEP
+					if (keyboard_state[0][dik])
+						is_last_keypress_from_non_di = 1;
+#endif /* ENABLE_POLL_INPUT_HACK_FOR_SINGLE_STEP */
+				}
 			}
 
 	// update the lagged keyboard
