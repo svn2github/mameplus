@@ -52,7 +52,6 @@
 
 extern int m68kdrc_cycles;
 extern int m68kdrc_recompile_flag;
-//extern int m68kdrc_update_vncz_flag;
 
 
 #define m68kdrc_cpu		m68ki_cpu
@@ -945,17 +944,17 @@ DRC_CFLAG_NEG_32(EAX, ECX)
 	_mov_r8_m8abs(REG_AL, &FLAG_N); \
 	_mov_r8_m8abs(REG_BL, &FLAG_V); \
 	_xor_r32_r32(REG_EAX, REG_EBX); \
-	_and_r32_imm(REG_EAX, NFLAG_SET); 	/* M68KM68K_COND_LT() if EAX != 0 */ \
+	_and_r32_imm(REG_EAX, NFLAG_SET); 	/* M68K_COND_LT() if EAX != 0 */ \
 	_jcc_near_link(fail_cond, &link_make_cc)
 
 #define m68kdrc_cond_hi(fail_cond) \
 	link_info link_make_cc; \
 	_mov_r16_m16abs(REG_AX, &FLAG_C); \
-	_and_r32_imm(REG_EAX, CFLAG_SET);	/* M68KM68K_COND_CC() if EAX == 0 */ \
+	_and_r32_imm(REG_EAX, CFLAG_SET);	/* M68K_COND_CC() if EAX == 0 */ \
  \
 	_test_m32abs_imm(&FLAG_Z, ZFLAG_CLEAR); \
-	_setcc_r8(COND_Z, REG_AL);		/* M68KM68K_COND_NE() if AL == 0 */ \
-	_or_r32_r32(REG_EAX, REG_EAX);		/* M68KM68K_COND_HI() if EAX == 0 */ \
+	_setcc_r8(COND_Z, REG_AL);		/* M68K_COND_NE() if AL == 0 */ \
+	_or_r32_r32(REG_EAX, REG_EAX);		/* M68K_COND_HI() if EAX == 0 */ \
 	_jcc_near_link(fail_cond, &link_make_cc)
 
 #define m68kdrc_cond_gt(fail_cond) \
@@ -963,11 +962,11 @@ DRC_CFLAG_NEG_32(EAX, ECX)
 	_mov_r8_m8abs(REG_AL, &FLAG_N); \
 	_mov_r8_m8abs(REG_BL, &FLAG_V); \
 	_xor_r32_r32(REG_EAX, REG_EBX); \
-	_and_r32_imm(REG_EAX, NFLAG_SET); 	/* M68KM68K_COND_GE() if EAX == 0 */  \
+	_and_r32_imm(REG_EAX, NFLAG_SET); 	/* M68K_COND_GE() if EAX == 0 */  \
  \
 	_test_m32abs_imm(&FLAG_Z, ZFLAG_CLEAR); \
-	_setcc_r8(COND_Z, REG_AH);		/* M68KM68K_COND_NE() if AH == 0 */ \
-	_or_r32_r32(REG_EAX, REG_EAX);		/* M68KM68K_COND_GT() if EAX == 0 */ \
+	_setcc_r8(COND_Z, REG_AH);		/* M68K_COND_NE() if AH == 0 */ \
+	_or_r32_r32(REG_EAX, REG_EAX);		/* M68K_COND_GT() if EAX == 0 */ \
 	_jcc_near_link(fail_cond, &link_make_cc)
 
 
@@ -1974,13 +1973,9 @@ INLINE int m68kdrc_update_vncz_check(void)
 	uint16 next_ir = m68k_read_immediate_16(ADDRESS_68K(REG68K_PC));;
 
 	if (INSTR_VNCZ_FLAG_DIRTY[next_ir])
-	{
-		//printf("PC=%06x, IR=%04x: dirty\n", REG68K_PC, next_ir);
-		//return m68kdrc_update_vncz_flag;
 		return 0;
-	}
-
 #endif
+
 	return 1;
 }
 

@@ -42,9 +42,10 @@ static const char* copyright_notice =
 /* ================================ DEFINES =============================== */
 /* ======================================================================== */
 
-#define CACHE_SIZE			(8 * 1024 * 1024)
+#define CACHE_SIZE		(8 * 1024 * 1024)
 #define MAX_INSTRUCTIONS	512
-#define MAX_BPI			1536
+#define MAX_BPI			2048
+//#define LOG_COMPILE
 
 #define ADD_CYCLES(A)    m68ki_remaining_cycles += (A)
 #define USE_CYCLES(A)    m68ki_remaining_cycles -= (A)
@@ -112,8 +113,6 @@ static const char* copyright_notice =
 
 int m68kdrc_cycles;
 int m68kdrc_recompile_flag;
-
-//int m68kdrc_update_vncz_flag;
 
 
 /* ======================================================================== */
@@ -851,6 +850,42 @@ static uint32 recompile_instruction(drc_core *drc, uint32 pc)
 	return RECOMPILE_SUCCESSFUL_CP(m68kdrc_cycles, REG68K_PC - pc);
 }
 
+static int drc_register_code(drc_core *drc, UINT32 pc)
+{
+	UINT32 l1index = pc >> drc->l1shift;
+	UINT32 l2index = ((pc & drc->l2mask) * drc->l2scale) / 4;
+
+	/* register this instruction in sequence_list */
+	drc_register_code_at_cache_top(drc, pc);
+
+	/* allocate memory if necessary */
+	if (drc->lookup_l1[l1index] == drc->lookup_l2_recompile)
+	{
+		/* create a new copy of the recompile table */
+		drc->lookup_l1[l1index] = malloc(sizeof(*drc->lookup_l2_recompile) * (1 << drc->l2bits));
+		if (!drc->lookup_l1[l1index])
+			exit(1);
+		memcpy(drc->lookup_l1[l1index], drc->lookup_l2_recompile, sizeof(*drc->lookup_l2_recompile) * (1 << drc->l2bits));
+	}
+
+	/* if this instruction has been compiled, jump to it */
+	if (drc->lookup_l1[l1index][l2index] != drc->recompile
+	 && drc->lookup_l1[l1index][l2index] != drc->cache_top)
+	{
+#ifdef LOG_COMPILE
+		printf("%06x: already compiled\n", pc);
+#endif
+		_jmp(drc->lookup_l1[l1index][l2index]);
+
+		return 0;
+	}
+
+	/* or register this instruction */
+	drc->lookup_l1[l1index][l2index] = drc->cache_top;
+
+	return 1;
+}
+
 static uint32 compile_one(drc_core *drc, uint32 pc)
 {
 	int pcdelta, cycles;
@@ -858,7 +893,8 @@ static uint32 compile_one(drc_core *drc, uint32 pc)
 	uint32 result;
 
 	/* register this instruction */
-	drc_register_code_at_cache_top(drc, pc);
+	if (!drc_register_code(drc, pc))
+		return RECOMPILE_END_OF_STRING;
 
 	/* get a pointer to the current instruction */
 	change_pc(pc);
@@ -897,10 +933,12 @@ static void m68kdrc_recompile(drc_core *drc)
 	int remaining = MAX_INSTRUCTIONS;
 	uint32 savepc = REG68K_PC;
 	uint32 pc = savepc;
+#ifdef LOG_COMPILE
+	UINT8 *top = drc->cache_top;
+	int instructions = 0;
+#endif
 
 	//printf("recompile_callback @ PC=%08X\n", pc);
-
-	//m68kdrc_update_vncz_flag = 0;
 
 	/* begin the sequence */
 	drc_begin_sequence(drc, pc);
@@ -910,8 +948,9 @@ static void m68kdrc_recompile(drc_core *drc)
 	{
 		uint32 result;
 
-		//if (remaining == 1)
-		//	m68kdrc_update_vncz_flag = 1;
+#ifdef LOG_COMPILE
+		instructions++;
+#endif
 
 		/* compile one instruction */
 		result = compile_one(drc, pc);
@@ -924,7 +963,7 @@ static void m68kdrc_recompile(drc_core *drc)
 
 		if (drc->cache_top + MAX_BPI > drc->cache_end)
 		{
-			//printf("%08x: %d: Danger!\n", REG68K_PPC, drc->cache_end - drc->cache_top);
+			printf("%08x: %d: Danger!\n", REG68K_PPC, drc->cache_end - drc->cache_top);
 			remaining = 0;
 			break;
 		}
@@ -932,13 +971,22 @@ static void m68kdrc_recompile(drc_core *drc)
 
 	/* add dispatcher just in case */
 	if (remaining == 0)
-		drc_append_dispatcher(drc);
+		drc_append_fixed_dispatcher(drc, pc);
 
 	/* end the sequence */
 	drc_end_sequence(drc);
 
 	if (drc->cache_top >= drc->cache_end)
 		osd_die("M68K DRC: cache overflow!\n");
+
+#ifdef LOG_COMPILE
+	printf("%06lx - %06x: %d bytes in %d instr (avg %d BPI), %d bytes available\n",
+		savepc,
+		REG68K_PC - 1,
+		drc->cache_top - top, instructions,
+		(drc->cache_top - top) / instructions,
+		drc->cache_end - drc->cache_top);
+#endif
 
 	REG68K_PC = savepc;
 }
