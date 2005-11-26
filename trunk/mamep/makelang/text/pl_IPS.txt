@@ -1,16 +1,28 @@
-# Title
-Hack
-Modyfikowane
-
-# 7
+# 14
 Misc
 Ró¿ne
 
-# 25
+# 36
 Neo-Geo
 Neo-Geo
 
-# 67
+# 7
 Translation
 T³umaczenie
+
+# 22
+CPS1
+
+
+# 31
+CPS2
+
+
+# Title
+IPS
+
+
+# 89
+PGM
+
 

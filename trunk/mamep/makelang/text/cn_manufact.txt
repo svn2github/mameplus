@@ -226,8 +226,20 @@ bootleg?
 A wave inc.
 
 
+# Magic's 10 (ver. 16.55)
+A.W.P. Games
+
+
+# Water Balls
+ABM
+
+
 # Blomby Car
 ABM & Gecas
+
+
+# Magic's 10 2 (ver 1.1)
+ABM Games
 
 
 # Nozokimeguri Mahjong Peep Show (Japan 890404)
@@ -306,7 +318,7 @@ Alpha Co
 Alpha Denshi
 
 
-# Virtua Bowling
+# Virtua Bowling (World, V101XCM)
 Alta
 
 
@@ -400,6 +412,14 @@ Banpresto
 
 # One + Two
 Barko
+
+
+# Zip & Zap
+Barko Corp
+
+
+# Honey Dolls
+Barko Corp.
 
 
 # Many Block
@@ -630,6 +650,10 @@ Elcon
 Electro Design
 
 
+# Dwarfs Den
+Electro-Sport
+
+
 # Diamond Derby (set 1)
 Electrocoin
 
@@ -730,6 +754,10 @@ Face?
 Falcon
 
 
+# Metal Saver
+First Amusement
+
+
 # Space Thunderbird
 Fortrek
 
@@ -738,7 +766,7 @@ Fortrek
 Free Enterprise Games
 
 
-# Bonus Card? (Austria)
+# Jolly Card (Austria, Fun World)
 Fun World
 
 
@@ -762,7 +790,7 @@ GREEN SOFT
 Gaelco
 
 
-# Table Tennis Championships / Peno Cup?
+# Table Tennis Champions (set 1)
 Gamart?
 
 
@@ -886,7 +914,7 @@ Impera
 Incredible Technologies
 
 
-# Inter Game Poker?
+# Jolly Card (Austria, Fun World, bootleg)
 Inter Games
 
 
@@ -896,6 +924,10 @@ Interlogic
 
 # Born To Fight
 International Games
+
+
+# Egg Hunt
+Invi Image
 
 
 # UniWar S
@@ -1350,6 +1382,14 @@ Rare LTD.
 Raster Elite
 
 
+# Frog Feast
+Rastersoft
+
+
+# Zintrick / Oshidashi Zentrix (CD to MVS Conversion)
+Razoola
+
+
 # Astro Fire
 Rene Pierre
 
@@ -1446,6 +1486,10 @@ Shinkai Inc.
 Shoei
 
 
+# Time Attacker
+Shonan
+
+
 # Condor
 Sidam
 
@@ -1526,6 +1570,10 @@ Sun Mixing
 SunA
 
 
+# Trivia Quest
+Sunn
+
+
 # Vs. Freedom Force
 Sunsoft
 
@@ -1566,7 +1614,7 @@ TCH
 TDS & Mints
 
 
-# Cannonball set 2
+# Cannonball (set 2)
 TV Game Gruenberg
 
 

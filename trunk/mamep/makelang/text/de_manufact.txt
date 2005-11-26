@@ -6,12 +6,28 @@
 A wave inc.
 
 
+# Magic's 10 (ver. 16.55)
+A.W.P. Games
+
+
+# Water Balls
+ABM
+
+
 # Blomby Car
 ABM & Gecas
 
 
+# Magic's 10 2 (ver 1.1)
+ABM Games
+
+
 # Nozokimeguri Mahjong Peep Show (Japan 890404)
 AC
+
+
+# Starspinner (Dutch/Nederlands)
+ACE
 
 
 # Gals Hustler
@@ -90,6 +106,10 @@ Alpha Denshi
 Alpha Denshi Co.
 
 
+# Virtua Bowling (World, V101XCM)
+Alta
+
+
 # Naughty Mouse (set 1)
 Amenip
 
@@ -98,7 +118,7 @@ Amenip
 Amenip Nova Games Ltd.
 
 
-# AmeriDarts
+# AmeriDarts (set 1)
 Ameri
 
 
@@ -162,10 +182,6 @@ Athena
 Atlus
 
 
-# Dr.Who The Timelord
-BFM
-
-
 # BMC Bowling
 BMC
 
@@ -190,6 +206,14 @@ Banpresto
 Barko
 
 
+# Zip & Zap
+Barko Corp
+
+
+# Honey Dolls
+Barko Corp.
+
+
 # Many Block
 Bee-Oh
 
@@ -206,10 +230,6 @@ Brezzasoft
 CVS
 
 
-# Truco Clemente
-Caloi Miky SRL
-
-
 # 1942 (PlayChoice-10)
 Capcom
 
@@ -220,6 +240,10 @@ Capcom, supported by Cave
 
 # Giga Wing (US 990222)
 Capcom, supported by Takumi
+
+
+# 906III Video Poker
+Casino Electronics Inc.
 
 
 # Cool Pool
@@ -258,6 +282,10 @@ Chuo Co. Ltd
 Cinematronics
 
 
+# Quizmaster
+Coinmaster
+
+
 # Gulf War II
 Comad
 
@@ -280,6 +308,10 @@ Coreland
 
 # Cherry Master (v8.01)
 Corsica
+
+
+# PK Scramble
+Cosmo Electronics Corporation
 
 
 # Dorachan
@@ -306,7 +338,7 @@ Daiichi Denshi
 Daiki
 
 
-# Vamp 1/2 (Korea)
+# Vamp 1/2 (Korea version)
 Danbi & F2 System
 
 
@@ -378,7 +410,7 @@ Duintronic
 Dyna
 
 
-# Royal Casino
+# Watashiha Suzumechan (Japan)
 Dyna Electronics
 
 
@@ -404,10 +436,6 @@ E.G. Felaco
 
 # Miyasu Nonki no Quiz 18-Kin
 EIM
-
-
-# Quintoon (Dutch/Nederlands)
-ELAM
 
 
 # Behind Enemy Lines
@@ -450,6 +478,10 @@ Elcon
 Electro Design
 
 
+# Dwarfs Den
+Electro-Sport
+
+
 # Diamond Derby (set 1)
 Electrocoin
 
@@ -470,8 +502,8 @@ Electronic Devices Italy
 Electronic Devices S.R.L.
 
 
-# Born To Fight
-Electronic Devices?
+# Jackpot Pool (Italy, bootleg)
+Electronic Projects
 
 
 # Twin Brats
@@ -546,8 +578,12 @@ Face
 Face?
 
 
-# Crazy Kong (set 1)
+# Frogger (Falcon bootleg)
 Falcon
+
+
+# Metal Saver
+First Amusement
 
 
 # Space Thunderbird
@@ -556,6 +592,10 @@ Fortrek
 
 # The Anteater (UK)
 Free Enterprise Games
+
+
+# Jolly Card (Austria, Fun World)
+Fun World
 
 
 # Go Go! Mile Smile
@@ -586,7 +626,7 @@ GREEN SOFT
 Gaelco
 
 
-# Table Tennis Championships / Peno Cup?
+# Table Tennis Champions (set 1)
 Gamart?
 
 
@@ -654,7 +694,7 @@ HOEI
 Hanaho Games
 
 
-# Treasure Hunt (Japan?)
+# Super Triv
 Hara Industries
 
 
@@ -702,7 +742,7 @@ I.G.R.
 IDSA
 
 
-# Champion Skill (with Ability)
+# Golden Star
 IGS
 
 
@@ -710,12 +750,28 @@ IGS
 Icarus
 
 
+# Magic Card II (Bulgaria)
+Impera
+
+
 # Capcom Bowling (set 1)
 Incredible Technologies
 
 
+# Jolly Card (Austria, Fun World, bootleg)
+Inter Games
+
+
 # Pandora's Palace
 Interlogic
+
+
+# Born To Fight
+International Games
+
+
+# Egg Hunt
+Invi Image
 
 
 # UniWar S
@@ -740,6 +796,10 @@ Jaleco
 
 # Jatre Specter (set 1)
 Jatre
+
+
+# Final Tetris
+Jeil Computer System
 
 
 # Bongo
@@ -822,6 +882,10 @@ Kural Esco Electric
 Kural Samno Electric
 
 
+# Crush Roller (Kural TWT)
+Kural TWT
+
+
 # '99: The Last War (Kyugo)
 Kyugo
 
@@ -898,7 +962,7 @@ Media Trading Corp
 Mega
 
 
-# Phraze Craze
+# Pit Boss
 Merit
 
 
@@ -936,6 +1000,10 @@ Midway
 
 # CarnEvil
 Midway Games
+
+
+# Truco Clemente
+Miky SRL
 
 
 # Gumbo
@@ -1066,6 +1134,10 @@ Nova Games of Canada
 Novar
 
 
+# American Poker II (set 1)
+Novomatic
+
+
 # The Addams Family (Nintendo Super System)
 Ocean
 
@@ -1146,11 +1218,11 @@ Paradise Co. Ltd.
 Petaco S.A.
 
 
-# Turtle Ship
+# Turtle Ship (Japan)
 Philko
 
 
-# Super Derby
+# Super Slam (set 1)
 Playmark
 
 
@@ -1214,8 +1286,16 @@ Rare LTD.
 Raster Elite
 
 
+# Frog Feast
+Rastersoft
+
+
+# Zintrick / Oshidashi Zentrix (CD to MVS Conversion)
+Razoola
+
+
 # Astro Fire
-René Pierre
+Rene Pierre
 
 
 # Nibbler (set 1)
@@ -1224,6 +1304,14 @@ Rock-Ola
 
 # Jump Bug
 Rock-ola
+
+
+# Romar Triv
+Romar
+
+
+# Attack Ufo
+Ryoto Electric Co.
 
 
 # Safari Rally (Japan)
@@ -1294,7 +1382,7 @@ Seibu Kaihatsu Inc.
 SemiCom
 
 
-# Cool Mini
+# Cool Minigame Collection
 Semicom
 
 
@@ -1330,6 +1418,10 @@ Shinkai Inc.
 Shoei
 
 
+# Time Attacker
+Shonan
+
+
 # Condor
 Sidam
 
@@ -1352,6 +1444,10 @@ Sisteme
 
 # Cannon Ball (Crazy Climber hardware)
 Soft
+
+
+# Jolly Card (Croatia)
+Soft Design
 
 
 # Mosaic
@@ -1402,12 +1498,20 @@ Sun Amusement
 Sun Electronics
 
 
+# Top Shooter
+Sun Mixing
+
+
 # Goindol (World)
 Sun a Electronics
 
 
 # Rough Ranger (v2.0)
 SunA
+
+
+# Trivia Quest
+Sunn
 
 
 # Vs. Freedom Force
@@ -1438,6 +1542,10 @@ T.I.C.
 T.R.TEC
 
 
+# Jolly Card (Austria)
+TAB-Austria
+
+
 # Speed Spin
 TCH
 
@@ -1448,6 +1556,10 @@ TDS
 
 # Cosmo
 TDS & Mints
+
+
+# Cannonball (set 2)
+TV Game Gruenberg
 
 
 # Ameisenbaer (German)
@@ -1502,6 +1614,10 @@ Taiyo
 Takara
 
 
+# Koro Koro Quest (Japan)
+Takumi
+
+
 # Sichuan II (hack?) (set 1)
 Tamtex
 
@@ -1538,7 +1654,7 @@ Tecmo
 Tecno Soft
 
 
-# Lovely Poker [BET]
+# Swimmer (set 1)
 Tehkan
 
 
@@ -1650,7 +1766,7 @@ Valadon Automation
 Vectorbeam
 
 
-# Pinball Champ '95
+# Pinball Champ '95 (bootleg?)
 Veltmeijer Automaten
 
 
@@ -1832,5 +1948,9 @@ dgPIX Entertainment Inc.
 
 # Puckman (Falcom?)
 hack
+
+
+# Chewing Gum
+unknown
 
 

@@ -1,6 +1,6 @@
 # Title
 Multiplayer
-
+マルチプレイヤー
 
 # 7
 1P
@@ -56,4 +56,5 @@ Multiplayer
 
 # 5810
 BIOS
+
 

@@ -42,7 +42,7 @@ Taito Brasiliana
 Unknown
 Sconosciuto
 
-# Newpuc2
+# Puckman (Falcom?)
 hack
 modificato
 
@@ -50,12 +50,28 @@ modificato
 A wave inc.
 
 
+# Magic's 10 (ver. 16.55)
+A.W.P. Games
+
+
+# Water Balls
+ABM
+
+
 # Blomby Car
 ABM & Gecas
 
 
+# Magic's 10 2 (ver 1.1)
+ABM Games
+
+
 # Nozokimeguri Mahjong Peep Show (Japan 890404)
 AC
+
+
+# Starspinner (Dutch/Nederlands)
+ACE
 
 
 # World Heroes 2
@@ -126,6 +142,10 @@ Alpha Denshi
 Alpha Denshi Co.
 
 
+# Virtua Bowling (World, V101XCM)
+Alta
+
+
 # Naughty Mouse (set 1)
 Amenip
 
@@ -134,7 +154,7 @@ Amenip
 Amenip Nova Games Ltd.
 
 
-# AmeriDarts
+# AmeriDarts (set 1)
 Ameri
 
 
@@ -174,10 +194,6 @@ Art & Magic
 Artic
 
 
-# V-Liner
-Aruze
-
-
 # Dingo (encrypted)
 Ashby Computers and Graphics LTD.
 
@@ -200,10 +216,6 @@ Athena
 
 # Power Instinct 3 - Groove On Fight (J 970416 V1.001)
 Atlus
-
-
-# Quintoon
-BFM
 
 
 # BMC Bowling
@@ -230,6 +242,14 @@ Banpresto
 Barko
 
 
+# Zip & Zap
+Barko Corp
+
+
+# Honey Dolls
+Barko Corp.
+
+
 # Many Block
 Bee-Oh
 
@@ -246,16 +266,16 @@ Brezzasoft
 CVS
 
 
-# Truco Clemente
-Caloi Miky SRL
-
-
 # 1942 (PlayChoice-10)
 Capcom
 
 
 # Progear (US 010117)
 Capcom, supported by Cave
+
+
+# 906III Video Poker
+Casino Electronics Inc.
 
 
 # Cool Pool
@@ -294,6 +314,10 @@ Chuo Co. Ltd
 Cinematronics
 
 
+# Quizmaster
+Coinmaster
+
+
 # Gulf War II
 Comad
 
@@ -318,6 +342,10 @@ Coreland
 Corsica
 
 
+# PK Scramble
+Cosmo Electronics Corporation
+
+
 # Dorachan
 Craul Denshi
 
@@ -330,8 +358,8 @@ Cream
 D. R. Korea
 
 
-# Test Tape (Cassette)
-DECO
+# Pipeline
+Daehyun Electronics
 
 
 # Orange Club - Maruhi Kagai Jugyou (Japan 880213)
@@ -342,7 +370,7 @@ Daiichi Denshi
 Daiki
 
 
-# Vamp 1/2 (Korea)
+# Vamp 1/2 (Korea version)
 Danbi & F2 System
 
 
@@ -406,11 +434,15 @@ Dorneer
 Du Tech
 
 
-# Buccaneers
+# Buccaneers (set 1)
 Duintronic
 
 
-# Royal Casino
+# V-Liner (set 1)
+Dyna
+
+
+# Watashiha Suzumechan (Japan)
 Dyna Electronics
 
 
@@ -436,10 +468,6 @@ E.G. Felaco
 
 # Miyasu Nonki no Quiz 18-Kin
 EIM
-
-
-# Focus (Dutch/Nederlands)
-ELAM
 
 
 # Behind Enemy Lines
@@ -482,6 +510,10 @@ Elcon
 Electro Design
 
 
+# Dwarfs Den
+Electro-Sport
+
+
 # Diamond Derby (set 1)
 Electrocoin
 
@@ -502,8 +534,8 @@ Electronic Devices Italy
 Electronic Devices S.R.L.
 
 
-# Born To Fight
-Electronic Devices?
+# Jackpot Pool (Italy, bootleg)
+Electronic Projects
 
 
 # Twin Brats
@@ -530,6 +562,10 @@ Enerdyne Technologies, Inc.
 Enix
 
 
+# Turbo Sub
+Entertainment Sciences
+
+
 # The King of Fighters 2001 (set 1)
 Eolith
 
@@ -542,7 +578,7 @@ Epos Corporation
 Etona
 
 
-# Evolution Soccer
+# Rage of the Dragons
 Evoga
 
 
@@ -574,8 +610,12 @@ Face
 Face?
 
 
-# Crazy Kong (set 1)
+# Frogger (Falcon bootleg)
 Falcon
+
+
+# Metal Saver
+First Amusement
 
 
 # Space Thunderbird
@@ -586,6 +626,10 @@ Fortrek
 Free Enterprise Games
 
 
+# Jolly Card (Austria, Fun World)
+Fun World
+
+
 # Go Go! Mile Smile
 Fuuki
 
@@ -594,11 +638,15 @@ Fuuki
 G.E.I.
 
 
+# Dambusters (set 2)
+GAT
+
+
 # Piranha
 GL
 
 
-# Super Cross 2 (Japan)
+# Super Cross 2 (Japan set 1)
 GM Shoji
 
 
@@ -608,6 +656,10 @@ GREEN SOFT
 
 # Xor World (prototype)
 Gaelco
+
+
+# Table Tennis Champions (set 1)
+Gamart?
 
 
 # Dark Tower
@@ -634,8 +686,8 @@ Gameace
 Genie
 
 
-# Join 'Em
-Global
+# Joinem
+Global Corporation
 
 
 # Reactor
@@ -666,7 +718,15 @@ H.A.R. Management
 HAR
 
 
-# Treasure Hunt (Japan?)
+# Laser Base (set 1)
+HOEI
+
+
+# Ghost Hunter
+Hanaho Games
+
+
+# Super Triv
 Hara Industries
 
 
@@ -678,7 +738,7 @@ Hi-max Technology Inc.
 Home Data
 
 
-# Schmeiser Robo
+# Schmeiser Robo (Japan)
 Hot B
 
 
@@ -714,7 +774,7 @@ I.G.R.
 IDSA
 
 
-# Champion Skill (with Ability)
+# Golden Star
 IGS
 
 
@@ -722,12 +782,28 @@ IGS
 Icarus
 
 
+# Magic Card II (Bulgaria)
+Impera
+
+
 # Capcom Bowling (set 1)
 Incredible Technologies
 
 
+# Jolly Card (Austria, Fun World, bootleg)
+Inter Games
+
+
 # Pandora's Palace
 Interlogic
+
+
+# Born To Fight
+International Games
+
+
+# Egg Hunt
+Invi Image
 
 
 # UniWar S
@@ -736,6 +812,10 @@ Irem
 
 # Hammerin' Harry (US)
 Irem America
+
+
+# Tut's Tomb
+Island Design
 
 
 # Poker Night
@@ -750,12 +830,20 @@ Jaleco
 Jatre
 
 
+# Final Tetris
+Jeil Computer System
+
+
 # Bongo
 Jetsoft
 
 
-# Defender ? (bootleg)
+# Defender (bootleg)
 Jeutel
+
+
+# Trivia Challenge
+Joyland
 
 
 # Kaitei Takara Sagashi (K'K-Tokki)
@@ -826,6 +914,10 @@ Kural Esco Electric
 Kural Samno Electric
 
 
+# Crush Roller (Kural TWT)
+Kural TWT
+
+
 # '99: The Last War (Kyugo)
 Kyugo
 
@@ -846,7 +938,7 @@ Leijac
 Leland Corp.
 
 
-# Poker Ladies (Leprechaun)
+# Poker Ladies (Leprechaun ver. 510)
 Leprechaun
 
 
@@ -902,12 +994,16 @@ Media Trading Corp
 Mega
 
 
-# Phraze Craze
+# Pit Boss
 Merit
 
 
 # Pang Poms
 Metro
+
+
+# Wild Arrow
+Meyco Games
 
 
 # The Return of Lady Frog
@@ -918,7 +1014,7 @@ Microhard
 Micronet
 
 
-# F-15 Strike Eagle
+# F-15 Strike Eagle (rev. 2.1)
 Microprose
 
 
@@ -926,7 +1022,7 @@ Microprose
 Midas
 
 
-# Wall Crash
+# A. D. 2083
 Midcoin
 
 
@@ -936,6 +1032,10 @@ Midway
 
 # CarnEvil
 Midway Games
+
+
+# Truco Clemente
+Miky SRL
 
 
 # Gumbo
@@ -950,7 +1050,7 @@ Mirco
 Mitchell
 
 
-# Dribbling
+# Space Invaders (Model Racing)
 Model Racing
 
 
@@ -1026,7 +1126,7 @@ Nics
 Nics?
 
 
-# Pocket Gal Deluxe
+# Pocket Gal Deluxe (Japan v3.00)
 Nihon System
 
 
@@ -1054,6 +1154,10 @@ Nova Games Ltd.
 Novar
 
 
+# American Poker II (set 1)
+Novomatic
+
+
 # The Addams Family (Nintendo Super System)
 Ocean
 
@@ -1070,12 +1174,16 @@ Oksan
 Olympia
 
 
-# Super Lup Lup Puzzle / Zhuan Zhuan Puzzle (version 4.0 / 990518)
+# Lup Lup Puzzle / Zhuan Zhuan Puzzle (version 3.0 / 990128)
 Omega System
 
 
 # Strafe Bomb
 Omni
+
+
+# Space Guerilla
+Omori
 
 
 # Battle Cross
@@ -1130,11 +1238,11 @@ Paradise Co. Ltd.
 Petaco S.A.
 
 
-# Turtle Ship
+# Turtle Ship (Japan)
 Philko
 
 
-# Super Derby
+# Super Slam (set 1)
 Playmark
 
 
@@ -1194,8 +1302,16 @@ Rare LTD.
 Raster Elite
 
 
+# Frog Feast
+Rastersoft
+
+
+# Zintrick / Oshidashi Zentrix (CD to MVS Conversion)
+Razoola
+
+
 # Astro Fire
-RenÅEPierre
+Rene Pierre
 
 
 # Nibbler (set 1)
@@ -1204,6 +1320,14 @@ Rock-Ola
 
 # Jump Bug
 Rock-ola
+
+
+# Romar Triv
+Romar
+
+
+# Attack Ufo
+Ryoto Electric Co.
 
 
 # Safari Rally (Japan)
@@ -1250,7 +1374,7 @@ Seatongrove Ltd
 Sega
 
 
-# Seibu Cup Soccer
+# Panic Road
 Seibu
 
 
@@ -1270,7 +1394,7 @@ Seibu Kaihatsu Inc.
 SemiCom
 
 
-# Cool Mini
+# Cool Minigame Collection
 Semicom
 
 
@@ -1286,12 +1410,16 @@ Sente
 Sesame Japan
 
 
-# Hana Awase (Flower Matching)
+# Championship Bowling
 Seta
 
 
 # Speed Attack!
 Seta Kikaku Corp.
+
+
+# Hex Pool
+Shinkai
 
 
 # Driving Force (Pac-Man conversion)
@@ -1300,6 +1428,10 @@ Shinkai Inc.
 
 # Streaking
 Shoei
+
+
+# Time Attacker
+Shonan
 
 
 # Condor
@@ -1326,6 +1458,10 @@ Sisteme
 Soft
 
 
+# Jolly Card (Croatia)
+Soft Design
+
+
 # Mosaic
 Space
 
@@ -1336,6 +1472,10 @@ Spacy Industrial, Ltd.
 
 # Rad Racer (PlayChoice-10)
 Square
+
+
+# Rack + Roll
+Status
 
 
 # Hangman
@@ -1370,12 +1510,20 @@ Sun Amusement
 Sun Electronics
 
 
+# Top Shooter
+Sun Mixing
+
+
 # Goindol (World)
 Sun a Electronics
 
 
 # Rough Ranger (v2.0)
 SunA
+
+
+# Trivia Quest
+Sunn
 
 
 # Vs. Freedom Force
@@ -1406,6 +1554,10 @@ T.I.C.
 T.R.TEC
 
 
+# Jolly Card (Austria)
+TAB-Austria
+
+
 # Speed Spin
 TCH
 
@@ -1416,6 +1568,10 @@ TDS
 
 # Cosmo
 TDS & Mints
+
+
+# Cannonball (set 2)
+TV Game Gruenberg
 
 
 # Ameisenbaer (German)
@@ -1466,11 +1622,15 @@ Taiyo
 Takara
 
 
+# Koro Koro Quest (Japan)
+Takumi
+
+
 # Sichuan II (hack?) (set 1)
 Tamtex
 
 
-# Apache 3
+# Lock-On
 Tatsumi
 
 
@@ -1486,7 +1646,7 @@ Technos
 Technos Japan
 
 
-# Hyper Duel (World)
+# Hyper Duel (Japan set 1)
 Technosoft
 
 
@@ -1502,7 +1662,7 @@ Tecmo
 Tecno Soft
 
 
-# Lovely Poker [BET]
+# Swimmer (set 1)
 Tehkan
 
 
@@ -1516,6 +1676,10 @@ Telko
 
 # Galaxian Test ROM
 Test ROM
+
+
+# The Couples (Set 1)
+The Couples
 
 
 # Lethal Justice
@@ -1606,7 +1770,7 @@ Valadon Automation
 Vectorbeam
 
 
-# Pinball Champ '95
+# Pinball Champ '95 (bootleg?)
 Veltmeijer Automaten
 
 
@@ -1650,6 +1814,10 @@ Visco
 Vision
 
 
+# Ambush (Volt Elec co-ltd)
+Volt Elec co-ltd
+
+
 # Talbot
 Volt Electronics
 
@@ -1662,7 +1830,7 @@ WAVE
 Warashi
 
 
-# Sukeban Jansi Ryuko (System 16A, FD1089B 317-5021)
+# Sukeban Jansi Ryuko (set 1, System 16A, FD1089B 317-5021)
 White Board
 
 
@@ -1780,5 +1948,9 @@ bootleg?
 
 # X-Files
 dgPIX Entertainment Inc.
+
+
+# Chewing Gum
+unknown
 
 

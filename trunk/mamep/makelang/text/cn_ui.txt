@@ -1,12 +1,16 @@
-# ui/properties.c: 1050
+# ui/properties.c: 967
 %d colors 
 %d 色 
 
-# ui/win32ui.c: 247, 3557
+# ui/win32ui.c: 252, 3600
 %d games
 %d 个游戏
 
-# ui/mame32.rc: 154
+# ui/properties.c: 3877
+%li bit
+%li 位元
+
+# ui/mame32.rc: 157
 &About
 关于(&A)
 
@@ -14,35 +18,35 @@
 &About MAME32
 关于 MAME32(&A)
 
-# ui/mame32.rc: 63, 166
+# ui/mame32.rc: 63, 169
 &Add to Custom Folder...
 添加到自定义文件夹(&A)...
 
-# ui/mame32.rc: 989
+# ui/mame32.rc: 968
 &All games to use default options
-所有游戏使用默认选项(&A)
+全部游戏都使用默认选项(&A)
 
-# ui/mame32.rc: 206
+# ui/mame32.rc: 209
 &Audit
-校验(&A)
+验证(&A)
 
 # ui/mame32.rc: 68
 &Audit all games
-校验所有游戏(&A)
+验证全部游戏(&A)
 
-# ui/mame32.rc: 129
+# ui/mame32.rc: 131
 &Background Image...
-背景图片(&B)...
+背景图像(&B)...
 
-# ui/mame32.rc: 1037
+# ui/mame32.rc: 1013
 &Broadcast selected game to all windows
-将所选的游戏广播到所有窗口(&B)
+将选定的游戏广播到所有窗口(&B)
 
-# ui/mame32.rc: 86, 222, 235
+# ui/mame32.rc: 86, 225, 238
 &Cabinet
-筐体(&C)
+筐体图(&C)
 
-# ui/mame32.rc: 402, 971, 998, 1015, 1082, 1152
+# ui/mame32.rc: 405, 950, 977, 994, 1053, 1104
 &Cancel
 取消(&C)
 
@@ -50,35 +54,35 @@
 &Close
 关闭(&C)
 
-# ui/mame32.rc: 148
+# ui/mame32.rc: 151
 &Contents\tF1
-內容(&C)\tF1
+内容(&C)\tF1
 
 # ui/audit32.c: 270
 &Continue
 继续(&C)
 
-# ui/mame32.rc: 168, 198
+# ui/mame32.rc: 171, 201
 &Custom Filters...
-自定义过滤器(&C)...
+自定义过滤程序(&C)...
 
 # ui/mame32.rc: 115
 &Custom Filters...\tCtrl+F
-自定义过滤器(&C)...\tCtrl+F
+自定义过滤程序(&C)...\tCtrl+F
 
-# ui/mame32.rc: 986
+# ui/mame32.rc: 965
 &Default game options
 默认游戏选项(&D)
 
-# ui/mame32.rc: 967
+# ui/mame32.rc: 946
 &Description filter
-描述过滤器(&D)
+过滤描述(&D)
 
 # ui/mame32.rc: 100
 &Details
-明细(&D)
+详细数据(&D)
 
-# ui/mame32.rc: 122
+# ui/mame32.rc: 123
 &Directories...
 目录(&D)...
 
@@ -90,35 +94,35 @@
 &File
 文件(&F)
 
-# ui/mame32.rc: 85, 221, 234
+# ui/mame32.rc: 85, 224, 237
 &Flyer
-宣传画(&F)
+广告图(&F)
 
-# ui/mame32.rc: 992
+# ui/mame32.rc: 971
 &Folder 'filters'
-&文件夹'过滤器'(&F)
+文件夹过滤程序(&F)
 
 # ui/mame32.rc: 80
 &Fullscreen\tF11
-全屏幕(&F)\tF11
+全屏(&F)\tF11
 
 # ui/mame32.rc: 101
 &Grouped
-分组(&G)
+群组(&G)
 
-# ui/mame32.rc: 42, 146
+# ui/mame32.rc: 42, 149
 &Help
 帮助(&H)
 
-# ui/mame32.rc: 91, 227, 239
+# ui/mame32.rc: 91, 230, 242
 &History
 历史(&H)
 
-# ui/mame32.rc: 128
-&Interface Options...
-界面选项(&I)...
-
 # ui/mame32.rc: 130
+&Interface Options...
+介面选项(&I)
+
+# ui/mame32.rc: 133
 &Language
 语言(&L)
 
@@ -126,19 +130,19 @@
 &List
 列表(&L)
 
-# ui/mame32.rc: 152
+# ui/mame32.rc: 155
 &Mame Release Notes
-MAME 版本说明(&M)
+MAME 版本信息(&M)
 
-# ui/mame32.rc: 87, 223, 236
+# ui/mame32.rc: 87, 226, 239
 &Marquee
-Marquee(&M)
+标签图(&M)
 
-# ui/mame32.rc: 151
+# ui/mame32.rc: 154
 &New Game Changes
-新游戏更新点(&N)
+游戏新建异动(&N)
 
-# ui/mame32.rc: 366, 970, 997, 1014, 1081, 1151
+# ui/mame32.rc: 369, 949, 976, 993, 1052, 1103
 &OK
 确定(&O)
 
@@ -146,331 +150,367 @@ Marquee(&M)
 &Options
 选项(&O)
 
-# ui/mame32.rc: 125
+# ui/mame32.rc: 126
 &Palette Setting...
 色盘设置(&P)...
 
-# ui/audit32.c: 265 ui/mame32.rc: 401
+# ui/audit32.c: 265 ui/mame32.rc: 404
 &Pause
 暂停(&P)
 
 # ui/mame32.rc: 77
 &Picture Area\tAlt+P
-图片区域(&P)\tAlt+P
+预览图(&P)\tAlt+P
 
-# ui/mame32.rc: 52, 162 ui/win32ui.c: 3671
+# ui/mame32.rc: 52, 165 ui/win32ui.c: 3739
 &Play
 运行(&P)
 
-# ui/win32ui.c: 246, 3705, 6612, 6640
+# ui/win32ui.c: 251, 3773, 6688, 6716
 &Play %s
-运行(&P) %s
+运行 %s(&P)
 
-# ui/mame32.rc: 208
+# ui/mame32.rc: 211
 &Properties
 属性(&P)
 
-# ui/mame32.rc: 959
+# ui/mame32.rc: 938
 &Raster Graphics
-点阵画面(&R)
+位图形(&R)
 
 # ui/mame32.rc: 114
 &Refresh\tF5
 刷新(&R)\tF5
 
-# ui/mame32.rc: 197
+# ui/mame32.rc: 200
 &Rename
 重命名(&R)
 
-# ui/mame32.rc: 127
+# ui/mame32.rc: 129
 &Reset to Default...
-重置为默认(&R)...
+复位默认(&R)...
 
-# ui/mame32.rc: 1025
+# ui/mame32.rc: 1004
 &Search for new games on start
-启动时搜索新游戏(&S)
+启动时搜索新的游戏(&S)
 
-# ui/mame32.rc: 61, 170
+# ui/mame32.rc: 61, 173
 &Select Random Game
 随机选定游戏(&S)
 
-# ui/mame32.rc: 200
+# ui/mame32.rc: 203
 &Show Folders
 显示文件夹(&S)
 
-# ui/mame32.rc: 84, 220, 233
+# ui/mame32.rc: 84, 223, 236
 &Snapshot
-快照(&S)
+游戏图(&S)
 
 # ui/mame32.rc: 75
 &Status bar\tAlt+S
 状态栏(&S)\tAlt+S
 
-# ui/mame32.rc: 88, 224, 237
+# ui/mame32.rc: 88, 227, 240
 &Title
-标题(&T)
+标题图(&T)
 
 # ui/mame32.rc: 74
 &Toolbar\tAlt+T
 工具栏(&T)\tAlt+T
 
-# ui/mame32.rc: 149
+# ui/mame32.rc: 152
 &Troubleshooting
 疑难解答(&T)
 
-# ui/mame32.rc: 956
+# ui/mame32.rc: 935
 &Unavailable
-未拥有的游戏(&U)
+没有游戏(&U)
 
-# ui/mame32.rc: 983
+# ui/mame32.rc: 962
 &User Interface (Fonts, Colors, Sizes)
-用户界面 (字体, 颜色, 大小)(&U)
+使用介面(字体、颜色、大小)(&U)
 
-# ui/mame32.rc: 948
+# ui/mame32.rc: 927
 &Vector Graphics
-矢量画面(&V)
+矢量图形(&V)
 
 # ui/mame32.rc: 72
 &View
-查看(&V)
+视图(&V)
 
-# ui/mame32.rc: 965
+# ui/mame32.rc: 944
 &Working
 可以运行(&W)
 
-# ui/win32ui.c: 6218
+# ui/win32ui.c: 6239
 '%s' is not a valid savestate file for game '%s'.
-'%s' 不是游戏 '%s' 的有效进度文件。
+'%s' 不是有效的保存状态档于游戏 '%s'。
 
-# ui/mame32.rc: 972
+# ui/mame32.rc: 951
 (*) = inherited from parent folder
-(*) = 从上层文件夹继承
+(*) = 继承自主文件夹的设置数值
 
-# ui/properties.c: 446
+# ui/properties.c: 417
 25% scanlines
-25%扫描线
+25% 扫描线
 
-# ui/properties.c: 447
+# ui/properties.c: 418
 50% scanlines
-50%扫描线
+50% 扫描线
 
-# ui/properties.c: 448
+# ui/properties.c: 419
 75% scanlines
-75%扫描线
+75% 扫描线
 
-# ui/properties.c: 449
+# ui/properties.c: 420
 75% vertical scanlines
-75%垂直扫描线
+75% 垂直扫描线
 
-# ui/mame32.rc: 458
+# ui/mame32.rc: 461
 <- Remove
 <- 移除
 
 # ui/treeview.c: 516, 537, 1127
 <unknown>
-<未知>
+<未知的>
 
-# ui/m32util.c: 253
+# ui/m32util.c: 254
 A sharing violation occurred.
-发生共享冲突。
+发生共用违规。
 
-# ui/mame32.rc: 175
+# ui/mame32.rc: 178
 A&udit
-校验(&U)
+验证(&U)
 
-# ui/treeview.c: 1285
+# ui/treeview.c: 1373
 AD STICK
-AD 游戏杆
+AD 摇杆
 
-# ui/win32ui.c: 659
+# ui/mame32.rc: 1068
+ADStick device
+AD 摇杆装置
+
+# ui/win32ui.c: 661
 About
 关于
 
-# ui/mame32.rc: 363
+# ui/mame32.rc: 366
 About MAME32
 关于 MAME32
 
-# ui/mame32.rc: 457
+# ui/mame32.rc: 460
 Add ->
 添加 ->
 
-# ui/mame32.rc: 1172
+# ui/mame32.rc: 1124
 Add Game To Custom Folder
-添加游戏到自定义文件夹
+添加游戏到自定文件夹
 
-# ui/mame32.rc: 1610
+# ui/mame32.rc: 1510
 Add currently selected game to a custom folder
-添加当前所选的游戏到一个自定义文件夹
+添加当前选定的游戏到自定文件夹
 
-# ui/mame32.rc: 375
+# ui/mame32.rc: 378
 Additional MAME32 code by
-附加的 MAME32 代码
+附加的的 MAME32 编码作者
 
-# ui/mame32.rc: 665
+# ui/mame32.rc: 663
 Advanced
 高级
 
-# ui/dialogs.c: 206
+# ui/dialogs.c: 203
 All
-所有
+全部
 
 # ui/layout.c: 50
 All Games
-所有游戏
+全部游戏
 
-# ui/win32ui.c: 742, 749, 756
+# ui/win32ui.c: 748, 755, 762
 All files (*.*)
 所有文件 (*.*)
 
-# ui/mame32.rc: 1028
+# ui/mame32.rc: 1007
 Allow game selection by a &joystick (requires restart)
-允许使用游戏杆选定游戏(&J) (需要重新启动)
+允许\\使用摇杆选择游戏(需重新启动)(&J)
 
-# ui/mame32.rc: 1031
+# ui/mame32.rc: 1009
 Allow game selection by custom &key sequences
-允许使用自定义键序列选定游戏(&K)
+允许\\使用自定键组合来选择游戏(&K)
 
-# ui/mame32.rc: 1585
+# ui/mame32.rc: 1485
 Allow restoring options to 'sane' values.
-允许还原选项为合法值
+允许\\将选项还原成默认的设置数值。
 
-# ui/mame32.rc: 1610
+# ui/mame32.rc: 1510
 Allows filtering out games from a folder
-允许从文件夹中过滤游戏
+允许\\自文件夹过滤出游戏
 
-# ui/properties.c: 520
+# ui/mame32.rc: 761
+Analog deadzone
+数字输入的最小模拟值
+
+# ui/properties.c: 491
 Anisotropic
-各向异性过滤
+非等向性
 
-# ui/properties.c: 4048
+# ui/properties.c: 3843
 Anti-clockwise
 逆时针
 
-# ui/properties.c: 465
+# ui/properties.c: 436
 Aperture grille
-柱面荫栅
+栅状映像管
 
 # ui/mame32.rc: 103
 Arrange &Icons
-排序图标(&I)
+排列图标(&I)
 
-# ui/mame32.rc: 1631
+# ui/mame32.rc: 1531
 Arranges icons in a grid
-均匀排列图标
+在格在线排列图标
 
-# ui/layout.c: 111
+# ui/layout.c: 116
 Artwork
 Artwork
 
-# ui/mame32.rc: 654
+# ui/mame32.rc: 834
+Artwork resolution
+Artwork 分辨率
+
+# ui/mame32.rc: 691
+Aspect ratio
+长宽比例
+
+# ui/mame32.rc: 652
 Audio latency
 音频等待时间
 
-# ui/mame32.rc: 504
+# ui/mame32.rc: 509
 Audit
-校验
+验证
 
-# ui/mame32.rc: 1547, 1610, 1610
+# ui/mame32.rc: 1447, 1510, 1510
 Audit ROM and samples sets
-校验 ROM 和采样文件集
+验证 ROM 与样本档的集合
 
 # ui/audit32.c: 392
 Audit complete.\n
-校验完成。\n
+验证完成。\n
 
-# ui/properties.c: 415, 432, 464, 3967, 4069, 4126, 4297
+# ui/properties.c: 390, 403, 435, 3762, 3864, 3920, 4074
 Auto
 自动
 
-# ui/properties.c: 4051
+# ui/properties.c: 3846
 Auto anti-clockwise
 自动逆时针
 
-# ui/properties.c: 4050
+# ui/properties.c: 3845
 Auto clockwise
 自动顺时针
 
-# ui/mame32.rc: 565
+# ui/mame32.rc: 819
+Auto restore and save (only if available)
+自动在启动时回存与退出时保存
+
+# ui/mame32.rc: 570
 Automatic
 自动
 
 # ui/layout.c: 51
 Available
-拥有的游戏
+拥有游戏
 
-# ui/mame32.rc: 453
+# ui/mame32.rc: 456
 Available fields:
-可用栏目:
+可用的区域:
 
-# ui/treeview.c: 1268
+# ui/properties.c: 3963
+Axis
+轴
+
+# ui/properties.c: 3973
+AxisId
+轴 ID
+
+# ui/treeview.c: 1356
 BUTTONS 1
-1个按钮
+按钮数 1
 
-# ui/treeview.c: 1269
+# ui/treeview.c: 1357
 BUTTONS 2
-2个按钮
+按钮数 2
 
-# ui/treeview.c: 1270
+# ui/treeview.c: 1358
 BUTTONS 3
-3个按钮
+按钮数 3
 
-# ui/treeview.c: 1271
+# ui/treeview.c: 1359
 BUTTONS 4
-4个按钮
+按钮数 4
 
-# ui/treeview.c: 1272
+# ui/treeview.c: 1360
 BUTTONS 5
-5个按钮
+按钮数 5
 
-# ui/treeview.c: 1273
+# ui/treeview.c: 1361
 BUTTONS 6
-6个按钮
+按钮数 6
 
-# ui/treeview.c: 1274
+# ui/treeview.c: 1362
 BUTTONS 7
-7个按钮
+按钮数 7
 
-# ui/treeview.c: 1275
+# ui/treeview.c: 1363
 BUTTONS 8
-8个按钮
+按钮数 8
 
-# ui/treeview.c: 1276
+# ui/treeview.c: 1364
 BUTTONS 9
-9个按钮
+按钮数 9
 
-# ui/treeview.c: 1277
+# ui/treeview.c: 1365
 BUTTONS10
-10个按钮
+按钮数 10
 
-# ui/mame32.rc: 846
+# ui/mame32.rc: 826
 Backdrops
 背景图
 
-# ui/layout.c: 122
+# ui/layout.c: 127
 Background Images
-背景图片
+背景图象
+
+# ui/treeview.c: 1047, 1048
+Bad Dump
+错误 DUMP
+
+# ui/mame32.rc: 870
+Beam width
+光束宽度
 
 # ui/audit32.c: 444
 Best available
-最佳可用状态
+可用的最佳状态
 
-# ui/mame32.rc: 848
+# ui/mame32.rc: 828
 Bezels
 外框图
 
-# ui/properties.c: 517
+# ui/properties.c: 488
 Bilinear
-双线性过滤
+双线插补
 
-# ui/mame32.rc: 1061
+# ui/mame32.rc: 1034
 Bookkeeping
-小记
+记录
 
-# ui/mame32.rc: 553
+# ui/mame32.rc: 559
 Brightness correction
 亮度修正
 
-# ui/mame32.rc: 443
+# ui/mame32.rc: 446
 Browse...
 浏览...
 
@@ -514,417 +554,473 @@ Button (P or 6)
 Button (S or 7)
 按钮 (S 或 7)
 
-# ui/mame32.rc: 951
+# ui/mame32.rc: 930
 C&lones
-克隆(&L)
+仿制版(&L)
 
-# ui/layout.c: 58 
-CPU
-CPU
-
-# ui/dialogs.c: 198 ui/options.c: 246
+# ui/dialogs.c: 195 ui/options.c: 246
 Cabinet
-筐体
+筐体图
 
-# ui/layout.c: 114
+# ui/layout.c: 119
 Cabinets
-筐体
+筐体图 (cabinets)
 
-# ui/mame32.rc: 442, 467, 1182
+# ui/mame32.rc: 445, 470, 1134
 Cancel
 取消
 
 # ui/columnedit.c: 50
 Cannot Move Selected Item
-不能移动所选项目
+不能移动选定的项目
 
-# ui/mame32.rc: 982
+# ui/mame32.rc: 961
 Categories
-分类
+类别
 
 # ui/columnedit.c: 257
 Changing this item is not permitted
-不允许更改此项
+不允许\\更改这个项目
 
 # ui/audit32.c: 192, 201
 Checking Game %s - %s
 正在检查游戏 %s - %s
 
-# ui/mame32.rc: 512, 514
+# ui/mame32.rc: 517, 519
 Checking...
 正在检查...
 
-# ui/properties.c: 4047
+# ui/mame32.rc: 301, 379
+Christopher Kirmse and Michael Soderstrom
+Christopher Kirmse 与 Michael Soderstrom
+
+# ui/mame32.rc: 699
+Clean stretch
+整数比例延展
+
+# ui/properties.c: 3842
 Clockwise
 顺时针
 
-# ui/win32ui.c: 793
+# ui/win32ui.c: 799
 Clone Of
 原作
 
-# ui/mame32.rc: 498
+# ui/mame32.rc: 503
 Clone of:
 原作:
 
 # ui/layout.c: 66
 Clones
-克隆
+仿制版
 
-# ui/properties.c: 1088
+# ui/properties.c: 1005
 Colors are completely wrong
-颜色完全错误
+颜色是完全错误的
 
-# ui/properties.c: 1094
+# ui/properties.c: 1011
 Colors aren't 100% accurate
-颜色不是100%精确
+颜色尚未达到 100% 精确
 
-# ui/mame32.rc: 494
+# ui/mame32.rc: 497
 Colors:
 颜色:
 
-# ui/layout.c: 106
+# ui/layout.c: 111
 Config
-配置
+配置文件
 
-# ui/mame32.rc: 1539
+# ui/mame32.rc: 821
+Confirm on exit game
+退出游戏时要先确认
+
+# ui/mame32.rc: 1439
 Contains commands for displaying help
-包含显示帮助的命令
+包含显示帮助用的命令
 
-# ui/mame32.rc: 1539
+# ui/mame32.rc: 1439
 Contains commands for manupulating the view
-包含管理视图的命令
+包含处理查看的命令
 
-# ui/mame32.rc: 1603
+# ui/mame32.rc: 1503
 Contains commands for sorting by various columns
-包含按各栏目排序的命令
+包含在窗口中排列项目用的命令
 
-# ui/mame32.rc: 1539
+# ui/mame32.rc: 1439
 Contains commands for user interface options
-包含用户界面选项的命令
+包含使用介面选项的命令
 
-# ui/mame32.rc: 1539
+# ui/mame32.rc: 1439
 Contains commands for working with the selected items
-包含运行所选的项目的命令
+包含用于操作选定项目的命令
 
-# ui/layout.c: 70
+# ui/layout.c: 74
 Control
 控制器
 
-# ui/mame32.rc: 89, 225, 238
+# ui/mame32.rc: 89, 228, 241
 Control &Panel
-控制面板(&P)
+控制器(&P)
 
-# ui/dialogs.c: 204 ui/options.c: 249
+# ui/dialogs.c: 201 ui/options.c: 249
 Control Panel
-控制面板
+控制器
 
-# ui/layout.c: 117
+# ui/layout.c: 122
 Control Panels
-控制面板
+控制器图 (cpanel)
 
-# ui/layout.c: 119
+# ui/layout.c: 124
 Controller Files
-控制器文件
+控制器配置文件
 
-# ui/mame32.rc: 740
+# ui/mame32.rc: 774
+Controller ID layout
+控制器 ID 配置
+
+# ui/mame32.rc: 1058
+Controller Mapping
+控制器映射
+
+# ui/mame32.rc: 737
 Controllers
 控制器
 
-# ui/mame32.rc: 405, 415
+# ui/mame32.rc: 373
+Copyright (C) 1997-2005 The MAME Team
+著作权 (C) 1997-2005 MAME 团队
+
+# ui/mame32.rc: 408, 418
 Correct:
 正确:
 
-# ui/win32ui.c: 6129
+# ui/win32ui.c: 6150
 Could not open '%s' as a valid input file.
-无效的输入指令文件, 不能打开 '%s'。
+不能打开 '%s' 为有效的输入档。
 
-# ui/win32ui.c: 6229
+# ui/win32ui.c: 6250
 Could not open '%s' as a valid savestate file.
-'%s'不是有效的进度文件。
+不能打开 '%s' 为有效的保存状态档。
 
-# ui/properties.c: 518
+# ui/mame32.rc: 832
+Crop Artwork
+裁切 Artwork 图片
+
+# ui/properties.c: 489
 Cubic (flat kernel)
-双三次过滤
+立体 (平面核心)
 
-# ui/properties.c: 519
+# ui/properties.c: 490
 Cubic (gaussian kernel)
-高斯模糊
+立体 (高斯核心)
 
 # ui/paletteedit.c: 126
 Cursor
 光标
 
-# ui/mame32.rc: 116, 189
+# ui/win32ui.c: 4475, 4503
+Custom
+自定义
+
+# ui/mame32.rc: 116, 192
 Customi&ze Fields...
-自定义栏目(&Z)...
+自定义区域(&Z)...
 
-# ui/mame32.rc: 450
+# ui/mame32.rc: 453
 Customize Fields
-自定义栏目
+自定义区域
 
-# ui/mame32.rc: 1585
+# ui/mame32.rc: 1485
 Customize interface options.
-自定义界面选项
+自定介面选项。
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1460
 Customize which columns are used in the game list
-自定义游戏列表使用的栏目
+自定义游戏列表中所显示的区域
 
-# ui/treeview.c: 1287
+# ui/treeview.c: 1375
 DIAL
 方向盘
 
-# ui/treeview.c: 1281
+# ui/treeview.c: 1369
 DOUBLEJOY2WAY
-双2方向游戏杆
+2 方向双摇杆
 
-# ui/treeview.c: 1282
+# ui/treeview.c: 1370
 DOUBLEJOY4WAY
-双4方向游戏杆
+4 方向双摇杆
 
-# ui/treeview.c: 1283
+# ui/treeview.c: 1371
 DOUBLEJOY8WAY
-双8方向游戏杆
+8 方向双摇杆
 
-# ui/properties.c: 4046
+# ui/properties.c: 3841
 Default
 默认
 
-# ui/properties.c: 813
+# ui/properties.c: 702
 Default Game
 默认游戏
 
-# ui/mame32.rc: 123
+# ui/mame32.rc: 124
 Default Game &Options...
-默认游戏选项(&O)...
+默认游戏选项(&O)
 
-# ui/mame32.rc: 776
+# ui/mame32.rc: 765
 Default input layout
-默认输入布局
+默认输入配置
 
-# ui/mame32.rc: 445
+# ui/mame32.rc: 448
 Delete
 删除
 
-# ui/mame32.rc: 715
+# ui/mame32.rc: 712
 Depth:
-颜色质量:
+深度:
 
-# ui/mame32.rc: 421, 515 ui/options.c: 280 ui/win32ui.c: 657
+# ui/win32ui.c: 790 
+Description
+描述
+
+# ui/mame32.rc: 424, 520 ui/options.c: 280 ui/win32ui.c: 659
 Details
-明细
+详细数据
 
-# ui/mame32.rc: 576
+# ui/mame32.rc: 1074
+Dial device
+方向盘装置
+
+# ui/mame32.rc: 1083
+Digital joystick axes
+数字摇杆或轴
+
+# ui/mame32.rc: 581
 Direct3D
 Direct3D
 
-# ui/mame32.rc: 430
+# ui/mame32.rc: 433
 Directories
 目录
 
-# ui/mame32.rc: 436
+# ui/mame32.rc: 439
 Directories:
 目录:
 
-# ui/win32ui.c: 787
-Directory
-目录
-
 # ui/directories.c: 602, 697
 Directory does not exist, continue anyway?
-目录不存在, 是否继续?
+目录不存在，是否是否继续?
 
 # ui/directories.c: 845, 887
 Directory name:
-目录名:
+目录名称:
 
-# ui/mame32.rc: 523
+# ui/properties.c: 3693, 3710 
+Disabled
+已禁用
+
+# ui/mame32.rc: 528
 Display
 显示
 
-# ui/mame32.rc: 1592
+# ui/mame32.rc: 1492
 Display help contents
-显示帮助內容
+显示帮助内容
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1460
 Display items by using large icons.
-以大图标显示项目
+使用大型图标显示项目。
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1460
 Display items by using small icons.
-以小图标显示项目
+使用小型图标显示项目。
 
-# ui/mame32.rc: 1610
+# ui/mame32.rc: 1510
 Display the properties of the currently selected folder
-显示当前所选文件夹的属性
+显示当前选定文件夹的内容
 
-# ui/mame32.rc: 1547
+# ui/mame32.rc: 1447
 Display the properties of the selected items
-显示所选的项目的属性
+显示选定项目的内容
 
-# ui/mame32.rc: 1547
+# ui/mame32.rc: 1447
 Display the source file properties of the selected game
-显示当前所选游戏的源代码文件的属性
+显示选定游戏的原始码内容
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1460
 Displays detailed information about each item in the window.
-在窗口中显示每一项目的详细信息
+显示窗口中各个项目的相关信息。
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1460
 Displays items in a list.
-显示项目列表
+将项目显示成列表。
 
-# ui/mame32.rc: 1592
+# ui/mame32.rc: 1492
 Displays program and copyright information
-显示程序和版权信息
+显示程序信息与著作权信息
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1460
 Displays using `Detail View', but grouped by parent games.
-以'明细查看'显示, 但是按原作游戏分组。
+以群组查看来显示详细数据
 
 # ui/dialogs.c: 118
 Do you wish to continue?
-是否要继续?
+是否是否继续?
 
-# ui/properties.c: 467
+# ui/properties.c: 438
 Dot medium bright
-点状荫罩(中·高亮)
+中亮圆点
 
-# ui/properties.c: 466
+# ui/properties.c: 437
 Dot medium mask
-点状荫罩(中)
+中掩码圆点
 
-# ui/mame32.rc: 887
+# ui/mame32.rc: 866
 Draw antialiased vectors
-抗锯齿描绘矢量
+描绘反锯齿矢量图形
 
-# ui/properties.c: 4024
+# ui/properties.c: 3819
 Draw every frame
-不跳帧
+描绘出全部画面
 
-# ui/mame32.rc: 889
+# ui/mame32.rc: 868
 Draw translucent vectors
-半透明描绘矢量
+描绘半透明矢量图形
 
-# ui/mame32.rc: 773
+# ui/mame32.rc: 759
 Dual lightgun
-双光枪
+双光线枪
+
+# ui/layout.c: 62
+Dumping Status
+DUMP 状态
 
 # ui/mame32.rc: 70
 E&xit
 退出(&X)
 
-# ui/win32ui.c: 7110
+# ui/win32ui.c: 7187
 ERROR: required files are missing, the game cannot be run.
-错误: 缺少必要的文件, 游戏不能运行。
+错误: 必要的文件遗失，游戏无法运行。
 
-# ui/mame32.rc: 723
+# ui/mame32.rc: 1026
+Edit Not Working Game Color
+编辑不可运行的游戏列表颜色
+
+# ui/mame32.rc: 600
+Effect
+效果
+
+# ui/mame32.rc: 720
 Effects
 效果
 
-# ui/mame32.rc: 825
+# ui/mame32.rc: 1030
+Emulation
+模拟
+
+# ui/mame32.rc: 806
 Enable game cheats
-启用游戏作弊码
+启用游戏作弊引擎
 
-# ui/mame32.rc: 748
+# ui/mame32.rc: 744
 Enable joystick input
-启用游戏杆输入
+启用摇杆输入
 
-# ui/mame32.rc: 780
+# ui/mame32.rc: 769
 Enable keyboard LED
-启用键盘 LED
+启用键盘 LED 模拟
 
-# ui/mame32.rc: 767
+# ui/mame32.rc: 755
 Enable lightgun input
-启用光枪输入
+启用光线枪输入
 
-# ui/mame32.rc: 756
+# ui/mame32.rc: 746
 Enable mouse input
 启用鼠标输入
 
-# ui/mame32.rc: 763
+# ui/mame32.rc: 751
 Enable pointing stick input
-启用指点杆输入
+启用指标控制杆输入
 
-# ui/mame32.rc: 637
+# ui/mame32.rc: 635
 Enable sound and sound CPUs
-启用声音和声音处理器
+启用声音与声音 CPU
 
-# ui/mame32.rc: 759
+# ui/mame32.rc: 748
 Enable steadykey support
 启用多键同时输入支持
 
-# ui/mame32.rc: 534
+# ui/mame32.rc: 539
 Enforce aspect ratio
-强制调整外观比例
+强制长宽比例
 
-# ui/audit32.c: 101 ui/properties.c: 828, 924
+# ui/audit32.c: 101 ui/properties.c: 714, 806
 Error
 错误
 
-# ui/treeview.c: 2492
+# ui/treeview.c: 2580
 Error finding custom file name to save
-搜索要保存的自定义文件名时发生错误
+查找自定义文件名保存时发生错误
 
-# ui/mame32.rc: 827
+# ui/mame32.rc: 808
 Error log (for developers)
-错误记录(开发用)
+错误记录(程序开发用)
 
-# ui/win32ui.c: 7203
+# ui/win32ui.c: 7279
 Error searching for custom folder
-搜索自定义文件夹时发生错误
+查找自定义文件夹时发生错误
 
-# ui/treeview.c: 2421
+# ui/treeview.c: 2509
 Error while renaming custom file %s to %s
 重命名自定义文件 %s 到 %s 时发生错误
 
-# ui/treeview.c: 2563
+# ui/treeview.c: 2651
 Error while saving custom file %s
-保存自定义文件 %s 时发生错误
+保存自定义文件 %s 时发生错误\n\n注意: 无法编辑只读属性的文件夹 INI 文件
 
-# ui/mame32.rc: 1547
+# ui/mame32.rc: 1447
 Exit the application
 退出应用程序
-
-# ui/layout.c: 71
-FPS
-FPS
 
 # ui/audit32.c: 453
 Failed
 失败
 
 # ui/mame32.rc: 611
-Feedback
-反馈
+Feedback strength
+反应烈度
 
-# ui/audit32.c: 208 ui/mame32.rc: 398
+# ui/audit32.c: 208 ui/mame32.rc: 401
 File Audit
-文件校验
+文件验证
 
-# ui/dialogs.c: 404
+# ui/dialogs.c: 395
 Filters for %s Folder
-%s 文件夹的过滤器
+过滤 %s 文件夹
 
-# ui/mame32.rc: 544
+# ui/mame32.rc: 874
+Flicker
+闪烁度
+
+# ui/mame32.rc: 549
 Flip screen left-right
 左右翻转画面
 
-# ui/mame32.rc: 542
+# ui/mame32.rc: 547
 Flip screen upside-down
 上下翻转画面
 
-# ui/dialogs.c: 196 ui/options.c: 245
+# ui/dialogs.c: 193 ui/options.c: 245
 Flyer
-宣传画
+广告图
 
-# ui/layout.c: 113
+# ui/layout.c: 118
 Flyers
-宣传画
+广告图 (flyers)
 
 # ui/mame32.rc: 76
 Fold&er List\tAlt+D
-文件夹列表(&D)\tAlt+D
+文件夹列表(&E)\tAlt+D
 
 # ui/paletteedit.c: 105
 Font (blank)
@@ -932,257 +1028,309 @@ Font (blank)
 
 # ui/paletteedit.c: 106
 Font (normal)
-字体 (正常)
+字体 (标准)
 
 # ui/paletteedit.c: 107
 Font (special)
 字体 (特殊)
 
-# ui/mame32.rc: 564
-Frame skipping
-跳帧
+# ui/mame32.rc: 616
+Force zoom level
+强制缩放倍数
 
-# ui/properties.c: 416, 431
+# ui/mame32.rc: 569
+Frame skipping
+画面省略
+
+# ui/properties.c: 391, 402
 Full
 完全
 
-# ui/win32ui.c: 784, 6640
-Game
-游戏
+# ui/mame32.rc: 702
+Full screen brightness
+全屏亮度
 
-# ui/mame32.rc: 942
+# ui/mame32.rc: 921
 Game Filters
-游戏过滤器
+游戏过滤
 
 # ui/mame32.rc: 121
 Game List &Clone Color...
-克隆游戏列表颜色(&C)...
+仿制版游戏列表颜色(&C)
 
 # ui/mame32.rc: 120
 Game List &Font...
 游戏列表字体(&F)...
 
-# ui/mame32.rc: 1024
+# ui/mame32.rc: 1003
 Game Selection
-游戏选定
+选择游戏
 
-# ui/mame32.rc: 947
+# ui/mame32.rc: 926
 Game filters
-游戏过滤器
+游戏过滤
 
-# ui/mame32.rc: 945
+# ui/mame32.rc: 924
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
-游戏过滤器允许在每个文件夹自定义隐藏符合过滤条件的游戏。
+游戏过滤程序能够在各个文件夹中\n自定义隐藏所符合过滤条件的游戏。
 
-# ui/properties.c: 1106
+# ui/properties.c: 1023
 Game lacks sound
-游戏尚未支持声音
+游戏缺少声音
 
-# ui/properties.c: 1082
+# ui/properties.c: 999
 Game protection isn't fully emulated
 游戏的保护尚未完全模拟
 
-# ui/win32ui.c: 3326
+# ui/win32ui.c: 3369
 Game search %d%% complete
-游戏搜索 %d%% 完成
+完成 %d%% 游戏搜索
 
-# ui/mame32.rc: 548
+# ui/mame32.rc: 554
 Gamma correction
 Gamma 修正
 
-# ui/mame32.rc: 472
+# ui/mame32.rc: 475
 General
-普通
+常规
 
-# ui/properties.c: 1150
-Global folder options\nDefault options used by all games in the folder
-全局文件夹选项\n文件夹中的所有游戏使用的默认选项
-
-# ui/properties.c: 1148
+# ui/properties.c: 1065
 Global game options\nDefault options used by all games
-全局游戏选项\n所有游戏使用的默认选项
+通用游戏选项\n供全部游戏使用的默认选项
 
-# ui/mame32.rc: 390
+# ui/mame32.rc: 393
 Go to Microsoft's DirectX Web Page
-访问微软 DirectX 网页
+转到 Microsoft 的 DirectX 网页
 
-# ui/options.c: 281, 701 ui/win32ui.c: 658
+# ui/options.c: 281, 701 ui/win32ui.c: 660
 Grouped
-分组
+群组
 
-# ui/layout.c: 120
+# ui/layout.c: 125
 Hard Drive Difference
-硬盘差分
+硬盘差异档
 
-# ui/win32ui.c: 660
+# ui/win32ui.c: 662
 Help
-帮助
+说明
 
-# ui/mame32.rc: 1040
+# ui/mame32.rc: 1016
 Hide &mouse cursor (requires restart)
-隐藏鼠标光标(&M) (需要重新启动)
+隐藏鼠标指标(需重新启动)(&M)
 
-# ui/properties.c: 4299
+# ui/properties.c: 4076
 High
 高
 
-# ui/layout.c: 107
+# ui/layout.c: 112
 High Scores
-高分纪录
+高分记录
+
+# ui/mame32.rc: 814
+High thread priority
+增加线程优先权
 
 # ui/options.c: 251, 254
 History
 历史
 
-# ui/properties.c: 433 ui/treeview.c: 959, 960
+# ui/properties.c: 404 ui/treeview.c: 959, 960
 Horizontal
 水平
 
-# ui/mame32.rc: 1592
+# ui/mame32.rc: 1492
 How cheats work
-如何使用作弊码
+如何使用作弊引擎
 
-# ui/layout.c: 104 ui/mame32.rc: 1233
-IPS Patch
-IPS 补丁
+# ui/layout.c: 109
+IPS Files
+IPS 文件
 
-# ui/layout.c: 121
+# ui/layout.c: 126
 Icons
 图标
 
+# ui/mame32.rc: 726
+Image Enhancement
+影像增强
+
+# ui/win32ui.c: 769
+Image Files (*.png,*.bmp)
+图象文件 (*.png,*.bmp)
+
 # ui/layout.c: 61
 Imperfect
-不精确
+不完美
 
 # ui/treeview.c: 998
 Imperfect Colors
-颜色不精确
+颜色不完美
 
 # ui/treeview.c: 999
 Imperfect Graphics
-不精确的图像
+图形不完美
 
 # ui/treeview.c: 1001
 Imperfect Sound
-不精确的声音
+声音不完美
 
-# ui/mame32.rc: 407, 416
+# ui/mame32.rc: 410, 419
 Incorrect:
-错误:
+不正确:
 
-# ui/mame32.rc: 1052
+# ui/mame32.rc: 1019
 Inheritable Filters
-可继承的过滤器
+继承过滤程序的设置数值
 
-# ui/layout.c: 102
+# ui/layout.c: 107
 Ini Files
 Ini 文件
 
-# ui/layout.c: 109
+# ui/layout.c: 114
 Input files (*.inp)
-输入指令文件 (*.inp)
+输入档 (*.inp)
 
-# ui/mame32.rc: 444
+# ui/mame32.rc: 447
 Insert
 插入
 
-# ui/mame32.rc: 1021
+# ui/mame32.rc: 879
+Intensity
+饱和度
+
+# ui/mame32.rc: 1000
 Interface Options
-界面选项
+介面选项
 
-# ui/treeview.c: 1278
+# ui/mame32.rc: 597
+Interpolation method
+插补方式
+
+# ui/treeview.c: 1366
 JOY2WAY
-2方向游戏杆
+2 方向摇杆
 
-# ui/treeview.c: 1279
+# ui/treeview.c: 1367
 JOY4WAY
-4方向游戏杆
+4 方向摇杆
 
-# ui/treeview.c: 1280
+# ui/treeview.c: 1368
 JOY8WAY
-8方向游戏杆
+8 方向摇杆
+
+# ui/properties.c: 573, 3958
+Joystick
+摇杆
+
+# ui/properties.c: 3968
+JoystickId
+摇杆 ID
+
+# ui/properties.c: 571
+Keyboard
+键盘
 
 # ui/mame32.rc: 97
 L&arge Icons
-大图标(&A)
+大型图标(&A)
 
-# ui/treeview.c: 1289
+# ui/treeview.c: 1377
 LIGHTGUN
-光枪
+光线枪
 
-# ui/options.c: 277 ui/win32ui.c: 654
+# ui/options.c: 277 ui/win32ui.c: 656
 Large Icons
-大图标
+大型图标
+
+# ui/layout.c: 77 ui/properties.c: 574
+Lightgun
+光线枪
+
+# ui/mame32.rc: 1080
+Lightgun device
+光线枪装置
 
 # ui/mame32.rc: 112
 Line &Up Icons
-贴齐图标(&U)
+对齐图标(&U)
 
-# ui/options.c: 279 ui/win32ui.c: 656
+# ui/options.c: 279 ui/win32ui.c: 658
 List
 列表
 
 # ui/mame32.rc: 59
 Loa&d Savestate...
-载入游戏进度(&D)
+加载保存状态(&D)...
 
-# ui/win32ui.c: 7026
+# ui/win32ui.c: 7104
 Loading %s
-正在载入 %s
+正在加载 %s
 
-# ui/mame32.rc: 1603
+# ui/mame32.rc: 1503
 Localize GUI and MAME core.
-本地化图形用户界面和 MAME 核心。
+当地化的图形使用介面与 MAME 核心。
 
-# ui/mame32.rc: 1592
+# ui/mame32.rc: 846
+M68000 CPU Core
+M68000 CPU 核心
+
+# ui/win32ui.c: 748
+MAME input files (*.inp,*.zip)
+MAME 输入档 (*.inp,*.zip)
+
+# ui/mame32.rc: 1492
 MAME release notes
-MAME 版本说明
+MAME 版本信息
+
+# ui/win32ui.c: 755
+MAME savestate files (*.sta)
+MAME 保存状态档 (*.sta)
 
 # ui/options.c: 301
 MAME32 has changed *.ini file directory.\n\nWould you like to migrate old configurations to the new directory?
-MAME32 已更改 *.ini 文件的目录。\n\n您希望移植旧的配置到新目录吗?
+MAME32 已经更改 *.ini 文件目录。\n\n您想要转移旧设置到这个新的目录吗?
 
-# ui/options.c: 4207
+# ui/options.c: 4229
 MAME32 has detected outdated configuration data.\n\nThe detected configuration data is from Version %s of MAME32.\nThe current version is %s. It is recommended that the\nconfiguration is set to the new defaults.\n\nWould you like to use the new configuration?
-MAME32 检测到过时的配置数据。\n\n检测到的配置数据来自 %s 版的 MAME32。\n当前的版本是 %s。\n推荐设置为新版本的默认值。\n\n你要使用新的配置吗?
+MAME32 发现旧的配置数据。\n\n所发现的这个配置数据是来自版本为 %s 的 MAME32。\n当前运行的版本是 %s。\n建议把这个版本的配置设置成新的默认。\n\n您想要使用这个新的配置吗?
 
-# ui/mame32.rc: 372
+# ui/mame32.rc: 375
 MAME32 version by
-MAME32 版作者
+MAME32 版本作者
 
 # ui/dialogs.c: 113
 MAME32 will now reset the selected\n
-MAME32 将重置所选的\n
+MAME32 现在将会复位选定\n
 
-# ui/mame32.rc: 363, 387, 398, 430, 450, 472, 504, 523, 576, 629, 665, 740, 818, 880, 915, 942, 979, 1004, 1021, 1106, 1144, 1172, 1187, 1226 ui/options.c: 713 ui/translate.c: 102
+# ui/mame32.rc: 366, 390, 401, 433, 453, 475, 509, 528, 581, 627, 663, 737, 799, 859, 894, 921, 958, 983, 1000, 1058, 1096, 1124, 1139 ui/options.c: 713 ui/translate.c: 102
 MS Sans Serif
 宋体
 
-# ui/mame32.rc: 479
+# ui/mame32.rc: 482
 Manufactured:
-制造商:
+制造厂商:
 
-# ui/layout.c: 55 ui/win32ui.c: 791
+# ui/layout.c: 55 ui/win32ui.c: 797
 Manufacturer
-制造商
+制造厂商
 
-# ui/dialogs.c: 200 ui/options.c: 247
+# ui/dialogs.c: 197 ui/options.c: 247
 Marquee
-Marquee
+标签图
 
-# ui/layout.c: 115
+# ui/layout.c: 120
 Marquees
-Marquees
+标签图 (marquees)
 
-# ui/mame32.rc: 677
+# ui/mame32.rc: 675
 Match game refresh rate
-匹配游戏刷新率
+符合游戏的更新频率
 
-# ui/layout.c: 112 
+# ui/layout.c: 117 
 Memory Card
 记忆卡
 
-# ui/mame32.rc: 818
+# ui/mame32.rc: 799
 Miscellaneous
 杂项
 
@@ -1192,9 +1340,13 @@ Missing Sound
 
 # ui/audit32.c: 457
 Missing optional
-缺少可选 ROM
+遗失可省略的
 
-# ui/mame32.rc: 465
+# ui/properties.c: 572
+Mouse
+鼠标
+
+# ui/mame32.rc: 468
 Move Down
 下移
 
@@ -1202,43 +1354,51 @@ Move Down
 Move Item
 移动项目
 
-# ui/mame32.rc: 464
+# ui/mame32.rc: 467
 Move Up
 上移
 
-# ui/layout.c: 78
+# ui/layout.c: 80
 Multi-Monitor
 多显示器
 
-# ui/layout.c: 118
+# ui/layout.c: 123
 NVRAM
-NVRAM
+NVRAM 档
 
-# ui/mame32.rc: 1592
+# ui/win32ui.c: 793 
+Name
+名称
+
+# ui/mame32.rc: 1492
 New game changes
-新游戏更新点
+游戏的新建异动
 
-# ui/audit32.c: 124 ui/win32ui.c: 5240
+# ui/audit32.c: 124 ui/win32ui.c: 5361
 No
 否
 
 # ui/treeview.c: 1002
 No Cocktail
-不支持平躺型筐体
+无台面型
 
-# ui/win32ui.c: 3687
+# ui/treeview.c: 1050, 1051
+No Dump
+尚未 DUMP
+
+# ui/win32ui.c: 3755
 No Selection
-没有选定
+未选定游戏
 
-# ui/mame32.rc: 1066
+# ui/mame32.rc: 1021
 No offset for clones missing parent in view
-缺少原作的克隆版游戏在视图中不缩进
+群组查看中未列出原作的仿制版游戏列表不后移
 
-# ui/mame32.rc: 953
+# ui/mame32.rc: 932
 Non-Wor&king
-不可运行(&K)
+不可运行(&k)
 
-# ui/dialogs.c: 208 ui/properties.c: 414, 430, 445, 463, 516, 528, 600, 4049, 4454
+# ui/dialogs.c: 205 ui/properties.c: 389, 401, 416, 434, 487, 499, 3844
 None
 无
 
@@ -1246,41 +1406,45 @@ None
 None required
 不需要
 
+# ui/layout.c: 64
+Not Working
+不可运行
+
 # ui/audit32.c: 449
 Not found
 未找到
 
-# ui/properties.c: 1070
+# ui/properties.c: 987
 Not working
 不可运行
 
-# ui/mame32.rc: 441, 466, 1181 
+# ui/mame32.rc: 444, 469, 1133 
 OK
 确定
 
 # ui/paletteedit.c: 112
 OSD bar
-屏幕显示列
+参数调整列
 
 # ui/paletteedit.c: 114
 OSD bar (dark)
-屏幕显示列 (暗)
+参数调整列 (暗)
 
 # ui/paletteedit.c: 115
 OSD bar (default)
-屏幕显示列 (默认)
+参数调整列 (默认)
 
 # ui/paletteedit.c: 113
 OSD bar (light)
-屏幕显示列 (明)
+参数调整列 (明)
 
-# ui/mame32.rc: 770
+# ui/mame32.rc: 757
 Offscreen shots reload
-画面外装弹
+射击画面外区域重新加载
 
-# ui/mame32.rc: 962
+# ui/mame32.rc: 941
 Ori&ginals
-原作(&G)
+原作版(&G)
 
 # ui/layout.c: 60
 Orientation
@@ -1288,61 +1452,65 @@ Orientation
 
 # ui/layout.c: 65
 Originals
-原作
+原作版
 
-# ui/mame32.rc: 850
+# ui/mame32.rc: 830
 Overlays
-前景图
+重叠图
 
 # ui/mame32.rc: 55
 P&layback Input...
-回放输入指令(&L)...
+播放输入档(&L)...
 
-# ui/treeview.c: 1286
+# ui/treeview.c: 1374
 PADDLE
 操纵杆
 
-# ui/treeview.c: 1290
+# ui/treeview.c: 1378
 PEDAL
 踏板
 
-# ui/treeview.c: 1260
+# ui/treeview.c: 1348
 PLAYERS 1
-1P
+玩家数 1
 
-# ui/treeview.c: 1261
+# ui/treeview.c: 1349
 PLAYERS 2
-2P
+玩家数 2
 
-# ui/treeview.c: 1262
+# ui/treeview.c: 1350
 PLAYERS 3
-3P
+玩家数 3
 
-# ui/treeview.c: 1263
+# ui/treeview.c: 1351
 PLAYERS 4
-4P
+玩家数 4
 
-# ui/treeview.c: 1264
+# ui/treeview.c: 1352
 PLAYERS 5
-5P
+玩家数 5
 
-# ui/treeview.c: 1265
+# ui/treeview.c: 1353
 PLAYERS 6
-6P
+玩家数 6
 
-# ui/treeview.c: 1266
+# ui/treeview.c: 1354
 PLAYERS 7
-7P
+玩家数 7
 
-# ui/treeview.c: 1267
+# ui/treeview.c: 1355
 PLAYERS 8
-8P
+玩家数 8
 
-# ui/properties.c: 587
+# ui/properties.c: 558
 PS/2 Keyboard
 PS/2 键盘
 
-# ui/mame32.rc: 1144
+# ui/mame32.rc: 1065
+Paddle device
+操纵杆装置
+
+# ui/mame32.rc: 1096
 Palette
 色盘
 
@@ -1350,1303 +1518,1087 @@ Palette
 Passed
 通过
 
-# ui/mame32.rc: 559
+# ui/mame32.rc: 565
 Pause Brightness
-暂停画面亮度
+暂停亮度
 
-# ui/options.c: 2861 ui/win32ui.c: 795
+# ui/mame32.rc: 1071
+Pedal device
+踏板装置
+
+# ui/options.c: 2856 ui/win32ui.c: 801
 Play Time
-游戏时间
+运行时间
 
-# ui/mame32.rc: 1547
+# ui/mame32.rc: 1447
 Play a game starting with the given savestate
-从指定的进度开始运行游戏
+以指定的保存状态开始运行游戏
 
-# ui/mame32.rc: 54, 164
+# ui/mame32.rc: 54, 167
 Play and &Record Input...
-运行并录制输入指令(&R)...
+运行并录制输入档(&R)...
 
-# ui/mame32.rc: 1547
+# ui/mame32.rc: 57
+Play and Record &Wave Output...
+运行并录制 Wave 输出(&W)
+
+# ui/mame32.rc: 1447
 Play currently selected game
-运行当前所选的游戏
+运行当前所选定的游戏
 
-# ui/mame32.rc: 1547
+# ui/mame32.rc: 1447
 Playback a recorded game
-播放已录制的游戏
+播放一段已录制的游戏
 
-# ui/win32ui.c: 790
-Played
-游戏次数
+# ui/win32ui.c: 796
+Playcount
+运行次数
 
-# ui/mame32.rc: 66, 178
+# ui/mame32.rc: 66, 181
 Pr&operties
 属性(&O)
 
-# ui/win32ui.c: 3716, 6625, 6650
+# ui/mame32.rc: 603
+Prescale
+预缩放
+
+# ui/win32ui.c: 3784, 6701, 6726
 Proper&ties of %s
-%s 的属性(&T)
+%s 内容(&T)
 
-# ui/properties.c: 827, 923
+# ui/properties.c: 713, 805
 Propery Sheet Error %d %X
-属性表单错误 %d %X
+内容表错误 %d %X
 
-# ui/mame32.rc: 64, 167
+# ui/mame32.rc: 64, 170
 R&emove From This Folder
-从这个文件夹移除(&E)
+从这个文件夹中移除(&E)
 
-# ui/properties.c: 480
+# ui/properties.c: 451
 RGB 16 pixel triad
-RGB荫罩(16像素萤光组)
+RGB triad 16 象素
 
-# ui/properties.c: 475
+# ui/properties.c: 446
 RGB 3 pixel triad
-RGB荫罩(3像素萤光组)
+RGB triad 3 象素
 
-# ui/properties.c: 476
+# ui/properties.c: 447
 RGB 4 pixel triad
-RGB荫罩(4像素萤光组)
+RGB triad 4 象素
 
-# ui/properties.c: 479
+# ui/properties.c: 450
 RGB 6 pixel triad
-RGB荫罩(6像素萤光组)
+RGB triad 6 象素
 
-# ui/properties.c: 470
+# ui/properties.c: 441
 RGB maximum bright
-RGB荫罩(大·高亮)
+RGB 最亮
 
-# ui/properties.c: 469
+# ui/properties.c: 440
 RGB medium mask
-RGB荫罩(中)
+RGB 中掩码
 
-# ui/properties.c: 471
-RGB micro
-RGB荫罩(超微)
-
-# ui/properties.c: 468
+# ui/properties.c: 439
 RGB minimum mask
-RGB荫罩(小)
+RGB 小掩码
 
-# ui/mame32.rc: 1150
+# ui/mame32.rc: 1102
 RGB setting:
 RGB 设置:
 
-# ui/properties.c: 456
-RGB sharp
-RGB锐化
-
-# ui/properties.c: 455, 472
-RGB tiny
-RGB荫罩(微小)
-
-# ui/properties.c: 450
+# ui/properties.c: 421
 RGB triad of 16 pixels
-RGB荫罩(16像素萤光组)
+RGB triad 16 象素
 
-# ui/properties.c: 454
+# ui/properties.c: 425
 RGB triad of 3 pixels
-RGB荫罩(3像素萤光组)
+RGB triad 3 象素
 
-# ui/properties.c: 452
+# ui/properties.c: 423
 RGB triad of 4 pixels
-RGB荫罩(4像素萤光组)
+RGB triad 4 象素
 
-# ui/properties.c: 453
+# ui/properties.c: 424
 RGB triad of 4 vertical pixels
-RGB荫罩(4垂直像素萤光组)
+RGB triad 4 垂直象素
 
-# ui/properties.c: 451
+# ui/properties.c: 422
 RGB triad of 6 pixels
-RGB荫罩(6像素萤光组)
+RGB triad 6 象素
 
-# ui/mame32.rc: 511
+# ui/mame32.rc: 516
 ROM check:
 ROM 检查:
 
-# ui/layout.c: 100 ui/mame32.rc: 406 ui/win32ui.c: 785
+# ui/layout.c: 105 ui/mame32.rc: 409 ui/win32ui.c: 791
 ROMs
-ROMs
+ROM
 
-# ui/properties.c: 1126
+# ui/properties.c: 1043
 ROMs missing
-缺少 ROM
+ROM 档遗失
 
-# ui/mame32.rc: 1610
+# ui/mame32.rc: 1510
 Randomly select a game.
-随机选定游戏
+随机选定一个游戏。
 
-# ui/layout.c: 67 ui/win32ui.c: 5232
+# ui/layout.c: 67 ui/win32ui.c: 5353
 Raster
 点阵
 
-# ui/win32ui.c: 3491
+# ui/win32ui.c: 3533
 Ready
-就绪
+准备完毕
 
-# ui/mame32.rc: 1547
+# ui/mame32.rc: 1447
 Record a game for later playback
-录制游戏供以后播放
+录制一段游戏留待以后播放
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1447
+Record the sound output of a game
+录制游戏的声音输出
+
+# ui/mame32.rc: 1460
 Refresh game list
 刷新游戏列表
 
-# ui/mame32.rc: 719
+# ui/mame32.rc: 716
 Refresh:
-刷新率:
+频率:
 
-# ui/options.c: 1809
+# ui/options.c: 1804
 Reload configurations
-重新载入配置
+重新加载设置
 
-# ui/mame32.rc: 1610
+# ui/mame32.rc: 1510
 Remove currently selected game from this folder
-从这个文件夹移除当前所选的游戏
+从自定文件夹中移除当前选定的游戏
 
-# ui/mame32.rc: 1610
+# ui/mame32.rc: 1510
 Rename currently selected folder
-重命名当前所选的文件夹
+重命名当前选定的文件夹
 
-# ui/mame32.rc: 569, 622, 658, 733, 811, 873, 906, 1136, 1218, 1250
+# ui/mame32.rc: 574, 620, 656, 730, 792, 852, 885, 1088, 1170
 Reset
-重设
+复位
 
-# ui/mame32.rc: 979
+# ui/mame32.rc: 958
 Reset Options
-重设选项
+复位选项
 
-# ui/mame32.rc: 172
+# ui/mame32.rc: 175
 Reset Pl&aycount
-重设游戏次数(&A)
+复位运行次数(&A)
 
-# ui/mame32.rc: 173
+# ui/mame32.rc: 176
 Reset Pla&y Time
-重设游戏时间(&Y)
+复位运行时间(&Y)
 
-# ui/mame32.rc: 1064
+# ui/mame32.rc: 1037
 Reset all Play Times
-重设所有游戏时间
+复位全部运行时间
 
-# ui/mame32.rc: 1062
+# ui/mame32.rc: 1035
 Reset all Playcounts
-重设所有游戏次数
+复位全部运行次数
 
-# ui/mame32.rc: 1610
-Reset play count of currently selected game
-重设当前所选游戏次数
-
-# ui/mame32.rc: 1610
+# ui/mame32.rc: 1510
 Reset play time of currently selected game
-重设当前所选游戏时间
+复位当前选定游戏的运行时间
 
-# ui/mame32.rc: 710
+# ui/mame32.rc: 1510
+Reset playcount of currently selected game
+复位当前选定游戏的运行次数
+
+# ui/layout.c: 70 ui/mame32.rc: 708
 Resolution
 分辨率
 
-# ui/mame32.rc: 570, 623, 659, 734, 812, 874, 907, 1137, 1219, 1251
+# ui/mame32.rc: 575, 621, 657, 731, 793, 853, 886, 1089, 1171
 Restore Default Settings
-还原默认设置
+还原默认
 
 # ui/dialogs.c: 120
 Restore Settings
-还原设置
+还原设置数值
 
-# ui/mame32.rc: 589
-Rotate effects
-旋转效果
-
-# ui/mame32.rc: 539
+# ui/mame32.rc: 544
 Rotation
 旋转
 
-# ui/mame32.rc: 530
-Run in a window
-在窗口中运行
+# ui/mame32.rc: 594
+Rotation of effects for rotated games
+旋转游戏画面时也旋转所有效果
 
-# ui/mame32.rc: 82, 218
+# ui/mame32.rc: 535
+Run in a window
+以窗口模式运行
+
+# ui/mame32.rc: 82, 221
 S&how Pictures
 显示图片(&H)
 
 # ui/mame32.rc: 98
 S&mall Icons
-小图标(&M)
+小型图标(&M)
 
-# ui/mame32.rc: 1048
+# ui/mame32.rc: 1040
 S&tretch screenshot larger than natural size
-拉伸显示屏幕快照(&T)
+延展预览图至合适的大小(&T)
 
-# ui/treeview.c: 1284
+# ui/treeview.c: 1372
 STICK
-游戏杆
+控制杆
 
-# ui/mame32.rc: 513
+# ui/mame32.rc: 518
 Sample check:
-采样文件检查:
+样本档检查:
 
-# ui/layout.c: 80, 101 ui/mame32.rc: 412 ui/win32ui.c: 786
+# ui/mame32.rc: 644
+Sample rate
+采样频率
+
+# ui/layout.c: 82, 106 ui/mame32.rc: 415 ui/win32ui.c: 792
 Samples
-采样文件
+样本档
 
-# ui/mame32.rc: 603
-Scanlines
-扫描线
+# ui/mame32.rc: 606
+Scanline intensity
+扫描线饱和度
 
-# ui/properties.c: 481
+# ui/properties.c: 452
 Scanlines 25%
-25%扫描线
+25% 扫描线
 
-# ui/properties.c: 482
+# ui/properties.c: 453
 Scanlines 50%
-50%扫描线
+50% 扫描线
 
-# ui/properties.c: 483, 483
+# ui/properties.c: 454, 454
 Scanlines 75%
-75%扫描线
+75% 扫描线
 
-# ui/layout.c: 72 ui/mame32.rc: 546
+# ui/mame32.rc: 551
 Screen
 屏幕
 
-# ui/win32ui.c: 3285
+# ui/win32ui.c: 3328
 Screen flip support is missing
-不支持画面翻转
+尚未支持画面翻转
 
-# ui/properties.c: 1118
+# ui/properties.c: 1035
 Screen flipping is not supported
-不支持画面翻转
+尚未支持画面翻转
 
-# ui/mame32.rc: 492
+# ui/mame32.rc: 495
 Screen:
-屏幕:
+画面:
+
+# ui/mame32.rc: 1039
+Screenshot Area
+预览图区域
+
+# ui/mame32.rc: 1047
+Screenshot Bordersize
+预览图外框大小
+
+# ui/mame32.rc: 1043
+Screenshot Cycletime in Seconds
+循环预览图秒数
 
 # ui/mame32.rc: 78
 Screenshot Ta&b\tAlt+B
-屏幕快照选项卡(&B)\tAlt+B
+预览图索引标签(&B)\tAlt+B
 
-# ui/mame32.rc: 1034
+# ui/mame32.rc: 1011
 Select &random background image
-随机选定背景图片(&R)
+随机选定背景图像(&R)
 
 # ui/columnedit.c: 257
 Select Item
 选定项目
 
-# ui/win32ui.c: 764
+# ui/win32ui.c: 770
 Select a Background Image
-选定一个背景图片
+选定一个背景图像
 
-# ui/mame32.rc: 1585
+# ui/mame32.rc: 1485
 Select a background image file
-选定一个背景图片文件
+选定背景图象文件
 
-# ui/mame32.rc: 1560
+# ui/win32ui.c: 750
+Select a file to record
+选定一个文件来录制
+
+# ui/win32ui.c: 749
+Select a recorded file
+选定一个已录制的文件
+
+# ui/win32ui.c: 756
+Select a savestate file
+选定一个保存状态档
+
+# ui/win32ui.c: 764
+Select a sound file to record
+选定一个声音文件来录制
+
+# ui/mame32.rc: 1460
 Select fullscreen or window mode in GUI
-选定全屏幕或窗口模式的图形用户界面
+选定全屏或窗口模式的图形使用介面
 
-# ui/mame32.rc: 1656
+# ui/mame32.rc: 1556
 Select the cabinet image
-选定筐体图片
+选定筐体图
 
-# ui/mame32.rc: 1656
+# ui/mame32.rc: 1556
 Select the control panel image
-选定控制面板图片
+选定控制器图
 
-# ui/mame32.rc: 1656
+# ui/mame32.rc: 1556
 Select the flyer image
-选定宣传画图片
+选定广告图
 
-# ui/mame32.rc: 1656
+# ui/mame32.rc: 1556
 Select the history information
-选定游戏历史信息
+选定历史信息
 
-# ui/mame32.rc: 1656
+# ui/mame32.rc: 1556
 Select the marquee image
-选定 marquee 图片
+选定标签图
 
-# ui/mame32.rc: 995
+# ui/mame32.rc: 974
 Select the options to be restored to the default settings.  The options will be restored when MAME32 is run next.
-请选定要还原为默认设置的选项。\n选项将在 MAME32 下一次运行时生效。
+选定的选项将会还原为默认的设置数值。在\n下次运行 MAME32 时便会还原这些选项。
 
-# ui/mame32.rc: 1656
+# ui/mame32.rc: 1556
 Select the screen shot image
-选定屏幕快照图片
+选定游戏图
 
-# ui/mame32.rc: 1656
+# ui/mame32.rc: 1564
+Select the story information
+选定故事信息
+
+# ui/mame32.rc: 1556
 Select the title image
-选定标题图片
+选定标题图
 
-# ui/mame32.rc: 1578
+# ui/mame32.rc: 1051
+Set Screenshot Border Color
+设置预览图外框颜色
+
+# ui/mame32.rc: 1478
 Set default game options
 设置默认游戏选项
 
-# ui/mame32.rc: 1578
+# ui/mame32.rc: 1478
 Set directory configuration
 设置目录配置
 
-# ui/mame32.rc: 1578
+# ui/mame32.rc: 1478
 Set game list and folder list font
-设置游戏列表和文件夹列表的字体
+设置游戏列表与文件夹列表字体
 
-# ui/mame32.rc: 1583
+# ui/mame32.rc: 1483
 Set in-game UI color palette
-设置游戏中菜单界面的色盘
+设置游戏中设置菜单的色盘
 
-# ui/mame32.rc: 1578
+# ui/mame32.rc: 1478
 Set list font color for clone games
-设置克隆版游戏列表的字体颜色
+设置仿制版游戏列表字体颜色
 
-# ui/mame32.rc: 1078
-Show History on Tab:
-在选项卡上显示历史:
+# ui/mame32.rc: 1031
+Show Game Ca&ption
+显示游戏窗口标题
 
-# ui/mame32.rc: 216
+# ui/mame32.rc: 1028
+Show History on Tab
+显示历史在索引标签
+
+# ui/mame32.rc: 219
 Show Tab &Control
-显示选项卡控件(&C)
+显示预览图索引标签(&C)
 
-# ui/mame32.rc: 433
+# ui/mame32.rc: 436
 Show directories for:
-显示目录:
+显示目录类型:
 
-# ui/mame32.rc: 1610
+# ui/mame32.rc: 1510
 Show or hide folder
 显示或隐藏文件夹
 
-# ui/mame32.rc: 1642
+# ui/mame32.rc: 1542
 Show or hide the cabinet image
-显示或隐藏筐体图片
+显示或隐藏筐体图
 
-# ui/mame32.rc: 1642
+# ui/mame32.rc: 1542
 Show or hide the control panel image
-显示或隐藏控制面板图片
+显示或隐藏控制器图片
 
-# ui/mame32.rc: 1642
+# ui/mame32.rc: 1542
 Show or hide the flyer image
-显示或隐藏宣传画图片
+显示或隐藏广告图
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1460
 Show or hide the folder list
 显示或隐藏文件夹列表
 
-# ui/mame32.rc: 1642
+# ui/mame32.rc: 1542
 Show or hide the history information
-显示或隐藏游戏历史信息
+显示或隐藏历史信息
 
-# ui/mame32.rc: 1642
+# ui/mame32.rc: 1542
 Show or hide the marquee image
-显示或隐藏 marquee 图片
+显示或隐藏标签图
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1460
 Show or hide the picture area
-显示或隐藏图片区域
+显示或隐藏预览图
 
-# ui/mame32.rc: 1560, 1603
+# ui/mame32.rc: 1460, 1503
 Show or hide the pictures
 显示或隐藏图片
 
-# ui/mame32.rc: 1642
+# ui/mame32.rc: 1542
 Show or hide the screen shot image
-显示或隐藏屏幕快照图片
+显示或隐藏游戏图
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1460
 Show or hide the screen shot tab
-显示或隐藏屏幕快照选项卡
+显示或隐藏预览图索引标签
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1460
 Show or hide the status bar
 显示或隐藏状态栏
 
-# ui/mame32.rc: 1642
-Show or hide the title image
-显示或隐藏标题图片
+# ui/mame32.rc: 1550
+Show or hide the story information
+显示或隐藏故事信息
 
-# ui/mame32.rc: 1560
+# ui/mame32.rc: 1542
+Show or hide the title image
+显示或隐藏标题图
+
+# ui/mame32.rc: 1460
 Show or hide the toolbar
 显示或隐藏工具栏
 
-# ui/mame32.rc: 1147
+# ui/mame32.rc: 1099
 Show palette for:
-显示以下色盘:
+显示色盘类型:
 
-# ui/mame32.rc: 459
+# ui/mame32.rc: 462
 Show these fields in this order:
-按以下顺序显示栏目:
+按照这个顺序显示区域:
 
-# ui/mame32.rc: 711
+# ui/mame32.rc: 709
 Size:
 大小:
 
-# ui/properties.c: 4025
+# ui/properties.c: 3820
 Skip 1 of 12 frames
-跳帧 1/12
+每 12 画面省略 1 个
 
-# ui/properties.c: 4034
+# ui/properties.c: 3829
 Skip 10 of 12 frames
-跳帧 10/12
+每 12 画面省略 10 个
 
-# ui/properties.c: 4035
+# ui/properties.c: 3830
 Skip 11 of 12 frames
-跳帧 11/12
+每 12 画面省略 11 个
 
-# ui/properties.c: 4026
+# ui/properties.c: 3821
 Skip 2 of 12 frames
-跳帧 2/12
+每 12 画面省略 2 个
 
-# ui/properties.c: 4027
+# ui/properties.c: 3822
 Skip 3 of 12 frames
-跳帧 3/12
+每 12 画面省略 3 个
 
-# ui/properties.c: 4028
+# ui/properties.c: 3823
 Skip 4 of 12 frames
-跳帧 4/12
+每 12 画面省略 4 个
 
-# ui/properties.c: 4029
+# ui/properties.c: 3824
 Skip 5 of 12 frames
-跳帧 5/12
+每 12 画面省略 5 个
 
-# ui/properties.c: 4030
+# ui/properties.c: 3825
 Skip 6 of 12 frames
-跳帧 6/12
+每 12 画面省略 6 个
 
-# ui/properties.c: 4031
+# ui/properties.c: 3826
 Skip 7 of 12 frames
-跳帧 7/12
+每 12 画面省略 7 个
 
-# ui/properties.c: 4032
+# ui/properties.c: 3827
 Skip 8 of 12 frames
-跳帧 8/12
+每 12 画面省略 8 个
 
-# ui/properties.c: 4033
+# ui/properties.c: 3828
 Skip 9 of 12 frames
-跳帧 9/12
+每 12 画面省略 9 个
 
-# ui/mame32.rc: 835
+# ui/mame32.rc: 816
 Skip game info
 跳过游戏信息画面
 
-# ui/options.c: 278 ui/win32ui.c: 655
+# ui/mame32.rc: 810
+Sleep when possible
+适时释放占用中的系统资源
+
+# ui/options.c: 278 ui/win32ui.c: 657
 Small Icons
-小图标
+小型图标
 
-# ui/dialogs.c: 194 ui/options.c: 244
+# ui/dialogs.c: 191 ui/options.c: 244
 Snapshot
-快照
+游戏图
 
-# ui/layout.c: 108
+# ui/layout.c: 113
 Snapshots
-快照
+游戏图 (snap)
 
-# ui/mame32.rc: 186
+# ui/mame32.rc: 189
 Sort &Ascending
-升序排序(&A)
+递增排序(&A)
 
-# ui/mame32.rc: 187
+# ui/mame32.rc: 190
 Sort &Descending
-降序排序(&D)
+递减排序(&D)
 
-# ui/mame32.rc: 1631
-Sort by number of plays
-按游戏次数排序
-
-# ui/mame32.rc: 1625
+# ui/mame32.rc: 1525
 Sort column in ascending (A-Z) order
-按升序(A-Z)排序栏目
+以递增顺序 (A-Z) 排序区域
 
-# ui/mame32.rc: 1625
+# ui/mame32.rc: 1525
 Sort column in descending (Z-A) order
-按降序(Z-A)排序栏目
+以递减顺序 (Z-A) 排序区域
 
-# ui/mame32.rc: 1631
-Sort items by directories
-按目录名排序项目
+# ui/mame32.rc: 1531
+Sort items by game description
+依游戏描述排列项目
 
-# ui/mame32.rc: 1631
-Sort items by game
-按游戏名排序项目
-
-# ui/mame32.rc: 1631
+# ui/mame32.rc: 1531
 Sort items by manufacturer
-按制造商排序项目
+依制造厂商排列项目
 
-# ui/mame32.rc: 1631
+# ui/mame32.rc: 1531
+Sort items by name
+按名称排列项目
+
+# ui/mame32.rc: 1531
+Sort items by playcount
+依运行次数排列项目
+
+# ui/mame32.rc: 1531
 Sort items by type
-按类型排序项目
+按类型排列项目
 
-# ui/mame32.rc: 1631
+# ui/mame32.rc: 1531
 Sort items by year
-按年代排序项目
+依年代排列项目
 
-# ui/layout.c: 59 ui/mame32.rc: 629 
+# ui/layout.c: 59 ui/mame32.rc: 627 
 Sound
 声音
 
-# ui/properties.c: 1112
+# ui/properties.c: 1029
 Sound emulation isn't 100% accurate
-声音模拟不是100%精确
+声音模拟尚未达到 100% 精确
 
-# ui/mame32.rc: 488
+# ui/mame32.rc: 491
 Sound:
 声音:
 
-# ui/layout.c: 57 ui/win32ui.c: 794
+# ui/win32ui.c: 762
+Sounds (*.wav)
+声音档 (*.wav)
+
+# ui/layout.c: 57 ui/win32ui.c: 800
 Source
-源代码
+原始码
 
-# ui/mame32.rc: 65, 177 ui/win32ui.c: 3678
+# ui/mame32.rc: 180 ui/win32ui.c: 3746
 Source Proper&ties
-源代码属性(&T)
+原始码内容(&T)
 
-# ui/mame32.rc: 496
+# ui/mame32.rc: 501
 Source:
-源代码:
+原始码:
 
-# ui/options.c: 476 ui/properties.c: 2700, 2703, 2997, 3000, 4220, 4298
+# ui/mame32.rc: 93, 232, 244
+St&ory
+故事(&O)
+
+# ui/options.c: 476 ui/properties.c: 2580, 2585, 2588, 2835, 2838, 4014, 4037, 4075 
 Standard
 标准
 
-# ui/mame32.rc: 532
+# ui/mame32.rc: 537
 Start out maximized
 启动时最大化
 
-# ui/layout.c: 110
+# ui/layout.c: 115
 State
-游戏进度
+状态档
 
-# ui/mame32.rc: 481
+# ui/mame32.rc: 484
 Status:
 状态:
 
-# ui/layout.c: 77
+# ui/layout.c: 79
 Stereo
 立体声
 
-# ui/mame32.rc: 691
+# ui/options.c: 252
+Story
+故事
+
+# ui/mame32.rc: 689
 Stretch using hardware
-使用硬件拉伸
+使用硬件延展
 
-# ui/mame32.rc: 688
+# ui/mame32.rc: 686
 Switch color depths to fit
-切换到最适的颜色质量
+切换至最符合的颜色深度
 
-# ui/mame32.rc: 685
+# ui/mame32.rc: 683
 Switch resolutions to fit
-切换到最适的分辨率
+切换至最符合的分辨率
 
-# ui/mame32.rc: 680
+# ui/mame32.rc: 678
 Sync to monitor refresh
-同步显示器刷新率
+同步于显示器的频率
 
-# ui/treeview.c: 1288
+# ui/treeview.c: 1376
 TRACKBALL
 轨迹球
 
 # ui/dialogs.c: 116
 The new settings will take effect\n
-新设置将在 MAME32\n
+这些新的设置数值将会在下次\n
 
-# ui/m32util.c: 233
+# ui/m32util.c: 234
 The operating system is out of memory or resources.
-操作系统内存或资源不足。
+操作系统的内存或资源不足。
 
-# ui/m32util.c: 237
+# ui/m32util.c: 238
 The specified file was not found.
 未找到指定的文件。
 
-# ui/m32util.c: 249
+# ui/m32util.c: 250
 The specified path was not found.
 未找到指定的路径。
 
-# ui/m32util.c: 241
+# ui/m32util.c: 242
 There is no application associated with the given filename extension.
-没有应用程序与指定的文件扩展名关联。
+没有应用程序与这个扩展名相关联。
 
-# ui/m32util.c: 245
+# ui/m32util.c: 246
 There was not enough memory to complete the operation.
-没有足够的内存完成操作。
+内存不足无法完成这项操作。
 
-# ui/mame32.rc: 537
+# ui/mame32.rc: 542
 Throttle
 限制速度
 
-# ui/dialogs.c: 202 ui/options.c: 248
+# ui/dialogs.c: 199 ui/options.c: 248
 Title
-标题
+标题图
 
-# ui/layout.c: 116
+# ui/layout.c: 121
 Titles
-标题
+标题图 (titles)
 
-# ui/win32ui.c: 652
+# ui/win32ui.c: 654
 Toggle Folder List
 切换文件夹列表
 
-# ui/win32ui.c: 653
+# ui/win32ui.c: 655
 Toggle Screen Shot
-切换屏幕快照
+切换预览图
 
-# ui/mame32.rc: 408, 417
+# ui/mame32.rc: 411, 420
 Total:
-合计:
+总数:
 
-# ui/layout.c: 74 ui/win32ui.c: 789
+# ui/layout.c: 76 ui/win32ui.c: 795
 Trackball
 轨迹球
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1077
+Trackball device
+轨迹球装置
+
+# ui/mame32.rc: 1570
 Translate into English (US)
-翻译为英文(美国)
+英文翻译
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1570
 Translate into French
-翻译为法文
+法文翻译
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1570
 Translate into German
-翻译为德文
+德文翻译
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1570
+Translate into Hungarian
+匈牙利文翻译
+
+# ui/mame32.rc: 1570
 Translate into Italian
-翻译为意大利文
+义大利文翻译
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1570
 Translate into Japanese
-翻译为日文
+日文翻译
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1570
 Translate into Korean
-翻译为韩文
+韩文翻译
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1570
+Translate into Polish
+波兰文翻译
+
+# ui/mame32.rc: 1570
 Translate into Portuguese (BRA)
-翻译为葡萄牙文 (巴西)
+葡萄牙文翻译
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1570
 Translate into Simplified Chinese
-翻译为简体中文
+简体中文翻译
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1570
 Translate into Spanish
-翻译为西班牙文
+西班牙文翻译
 
-# ui/mame32.rc: 1670
+# ui/mame32.rc: 1570
 Translate into Traditional Chinese
-翻译为繁体中文
+繁体中文翻译
 
-# ui/mame32.rc: 674
+# ui/mame32.rc: 672
 Triple buffering
 三重缓冲
 
-# ui/mame32.rc: 1592
+# ui/mame32.rc: 1492
 Troubleshooting Documentation
-疑难解答文档
+疑难解答文件
 
-# ui/win32ui.c: 788
+# ui/win32ui.c: 794
 Type
 类型
 
-# ui/properties.c: 588
+# ui/properties.c: 559
 USB Keyboard
 USB 键盘
 
 # ui/audit32.c: 101
 Unable to Load Riched32.dll
-无法载入 Riched32.dll
+无法加载 Riched32.dll
 
-# ui/treeview.c: 2432
+# ui/treeview.c: 2520
 Unable to add game to non-custom folder
 无法添加游戏到非自定义文件夹
 
-# ui/treeview.c: 2449
+# ui/treeview.c: 2537
 Unable to remove game from non-custom folder
-无法从非自定义文件夹移除游戏
+无法从非自定义文件夹中移除游戏
 
 # ui/layout.c: 53
 Unavailable
-未拥有的游戏
+没有游戏
 
 # ui/treeview.c: 996
 Unemulated Protection
-未模拟的保护
+未模拟保护
 
-# ui/audit32.c: 435 ui/properties.c: 1064
+# ui/audit32.c: 435 ui/properties.c: 981
 Unknown
-未知
+未知的
 
-# ui/m32util.c: 257
+# ui/m32util.c: 258
 Unknown error.
-未知错误。
+未知的错误。
 
-# ui/mame32.rc: 584
+# ui/mame32.rc: 589
 Use Direct3D
 使用 Direct3D
 
-# ui/mame32.rc: 672
+# ui/mame32.rc: 670
 Use DirectDraw
 使用 DirectDraw
 
-# ui/win32ui.c: 661
+# ui/mame32.rc: 1024
+Use Driver Icon for Not Working Game
+显示驱动图标在不可运行的游戏
+
+# ui/win32ui.c: 663
 Use Local Language Game List
 使用中文游戏列表
 
-# ui/mame32.rc: 831
+# ui/mame32.rc: 812
 Use RDTSC timing system
 使用 RDTSC 时序系统
 
-# ui/mame32.rc: 640
+# ui/mame32.rc: 824
+Use additional Artwork
+使用附加的 Artwork 图片
+
+# ui/mame32.rc: 721
+Use classic scanlines
+使用传统扫描线
+
+# ui/mame32.rc: 638
 Use samples
-使用采样文件
+使用样本档
 
-# ui/mame32.rc: 859
+# ui/mame32.rc: 591
+Use texture management
+使用材质管理
+
+# ui/mame32.rc: 839
 Use transparent in-game menu
-使用透明的游戏中菜单
+使用半透明的游戏中设置菜单
 
-# ui/layout.c: 68 ui/mame32.rc: 880 ui/options.c: 1120, 2821 ui/properties.c: 877 ui/treeview.c: 299 ui/win32ui.c: 5230
+# ui/mame32.rc: 641
+Use volume auto adjust
+使用音量自动调整
+
+# ui/layout.c: 68 ui/mame32.rc: 859 ui/options.c: 1120, 2816 ui/properties.c: 763 ui/treeview.c: 299 ui/win32ui.c: 5351
 Vector
 矢量
 
-# ui/treeview.c: 1229
-Vector %4dx%4d
-矢量 %4dx%4d
+# ui/treeview.c: 1150, 1151
+Vector (H)
+矢量 (水平)
 
-# ui/properties.c: 1025 
-Vector Game
-矢量游戏
+# ui/treeview.c: 1147, 1148
+Vector (V)
+矢量 (垂直)
 
-# ui/mame32.rc: 369
-Version 0
-版本号 0
-
-# ui/options.c: 4221
+# ui/options.c: 4243
 Version Mismatch
-版本不匹配
+版本不符
 
-# ui/properties.c: 434 ui/treeview.c: 955, 956
+# ui/properties.c: 405 ui/treeview.c: 955, 956
 Vertical
 垂直
 
-# ui/properties.c: 1100
+# ui/properties.c: 1017
 Video emulation isn't 100% accurate
-视频模拟不是100%精确
+视频模拟尚未达到 100% 精确
 
-# ui/mame32.rc: 650
+# ui/mame32.rc: 648
 Volume attenuation
 音量衰减
 
-# ui/win32ui.c: 7113
+# ui/win32ui.c: 7190
 WARNING: the game might not run correctly.
-警告: 游戏可能不能正确运行。
+警告: 这个游戏可能无法正确运行。
 
-# ui/mame32.rc: 683
+# ui/mame32.rc: 681
 Wait for vertical sync
 等待垂直同步
 
-# ui/mame32.rc: 1592
+# ui/mame32.rc: 1492
 What's new in MAME
-MAME 更新点
+MAME 的新建异动
 
 # ui/paletteedit.c: 108
 Window background
-窗口背景
+窗口的背景色
 
 # ui/paletteedit.c: 109
 Window frame
-窗口边框
+窗口的边框
 
 # ui/paletteedit.c: 111
 Window frame (dark)
-窗口边框 (暗)
+窗口的边框 (暗)
 
 # ui/paletteedit.c: 110
 Window frame (light)
-窗口边框 (亮)
+窗口的边框 (明)
 
 # ui/options.c: 720
 Windows UI specific GUI joystick options
-Windows UI 版专用图形用户界面游戏杆选项
+Windows UI 特定的图形使用介面摇杆选项
 
-# ui/options.c: 641
+# ui/options.c: 735
+Windows UI specific GUI keyboard options
+Windows UI 特定的图形使用介面键盘选项
+
+# ui/options.c: 642
 Windows UI specific directory options
-Windows UI 版专用目录选项
+Windows UI 特定的目录选项
 
-# ui/options.c: 3103
+# ui/options.c: 3098
 Windows UI specific folder list filters options
-Windows UI 版专用文件夹列表标记选项
+Windows UI 特定的文件夹列表过滤程序选项
+
+# ui/options.c: 774
+Windows UI specific folder list hide options
+Windows UI 特定的文件夹列表隐藏选项
 
 # ui/options.c: 668
 Windows UI specific general options
-Windows UI 版专用通用选项
-
-# ui/options.c: 774
-Windows UI specific hide folder options
-Windows UI 版专用隐藏文件夹选项
+Windows UI 特定的常规选项
 
 # ui/options.c: 711
 Windows UI specific list font options
-Windows UI 版专用列表字体选项
+Windows UI 特定的列表字体选项
 
 # ui/options.c: 700
 Windows UI specific list options
-Windows UI 版专用列表选项
+Windows UI 特定的列表选项
 
 # ui/options.c: 652
 Windows UI specific startup options
-Windows UI 版专用启动选项
+Windows UI 特定的启动选项
 
 # ui/options.c: 693
 Windows UI specific window position options
-Windows UI 版专用窗口位置选项
+Windows UI 特定的窗口位置选项
 
-# ui/layout.c: 63 ui/properties.c: 1072
+# ui/options.c: 457 
+Windows misc options
+Windows 杂项选项
+
+# ui/layout.c: 63 ui/properties.c: 989
 Working
 可以运行
 
 # ui/treeview.c: 997
 Wrong Colors
-错误的颜色
+颜色错误
 
-# ui/layout.c: 56 ui/win32ui.c: 792
+# ui/layout.c: 56 ui/win32ui.c: 798
 Year
 年代
 
-# ui/audit32.c: 119 ui/win32ui.c: 5238
+# ui/audit32.c: 119 ui/win32ui.c: 5359
 Yes
 是
 
-# ui/options.c: 656
-allow game selection by a joystick
-允许使用游戏杆选定游戏
+# ui/mame32.rc: 383
+and John Hardy IV
+与 John Hardy IV
 
-# ui/options.c: 658
-broadcast selected game to all windows
-将所选的游戏广播到所有窗口
-
-# ui/mame32.rc: 110
-by &Date
-按日期(&D)
+# ui/mame32.rc: 105
+by &Description
+依描述(&D)
 
 # ui/mame32.rc: 107
 by &Manufacturer
-按制造商(&M)
+依制造厂商(&M)
 
-# ui/mame32.rc: 105
+# ui/mame32.rc: 106
 by &Name
 按名称(&N)
+
+# ui/mame32.rc: 108
+by &Playcount
+依运行次数(&P)
 
 # ui/mame32.rc: 109
 by &Type
 按类型(&T)
 
-# ui/mame32.rc: 106
-by D&irectory
-按目录(&I)
+# ui/mame32.rc: 110
+by &Year
+依年代(&Y)
 
-# ui/mame32.rc: 108
-by Times &Played
-按游戏次数(&P)
-
-# ui/options.c: 705
-column order settings
-栏目顺序设置
-
-# ui/options.c: 704
-column width settings
-栏目宽度设置
-
-# ui/options.c: 653
-config version
-配置文件版本
-
-# ui/options.c: 654
-enable version mismatch warning
-启用版本不匹配警告
-
-# ui/options.c: 3666, 3707, 3794, 3847, 3989 
+# ui/options.c: 3689, 3730, 3817, 3870, 4012 
 error invalid value for %s: %s\n
-错误 无效的值 %s: %s\n
-
-# ui/treeview.c: 77
-folder
-文件夹
+错误: 无效的 %s 值: %s\n
 
 # ui/dialogs.c: 114
 items to the original, installation\n
-项目为安装时的原设置\n
-
-# ui/options.c: 709
-last selected folder id
-最后选定的文件夹 ID
-
-# ui/options.c: 672
-last selected game name
-最后选定的游戏名
-
-# ui/mame32.rc: 1504, 1504, 1504, 1504, 1504, 1504, 1504, 1504
-res\\toolbar.bmp
-res\\toolbarc.bmp
-
-# ui/options.c: 655
-search for new games
-搜索新游戏
+的项目回到原始安装设置数值\n
 
 # ui/dialogs.c: 115
 settings then exit.\n\n
-并退出。\n\n
-
-# ui/options.c: 676
-show folder list
-显示文件夹列表
-
-# ui/options.c: 677
-show image picture
-显示图片
-
-# ui/options.c: 675
-show status bar
-显示状态栏
-
-# ui/options.c: 674
-show tool bar
-显示工具栏
-
-# ui/options.c: 707
-sort column
-排序栏目
-
-# ui/layout.c: 59 ui/options.c: 524 ui/treeview.c: 87 
-sound
-声音
-
-# ui/options.c: 702
-splitter position
-分隔条位置
+，然后退出程序。\n\n
 
 # ui/dialogs.c: 117
 the next time MAME32 is run.\n\n
-MAME32 下一次运行时生效。\n\n
+运行 MAME32 时实现。\n\n
 
-# ui/options.c: 701
-view mode
-列表模式
-
-# ui/options.c: 697
-window height
-窗口高度
-
-# ui/options.c: 694
-window left position
-窗口位置(左)
-
-# ui/options.c: 695
-window top position
-窗口位置(上)
-
-# ui/options.c: 696
-window width
-窗口宽度
-
-# ui/mame32.rc: 381
+# ui/mame32.rc: 384
                                 
 
 
-# ui/mame32.rc: 1116
-ADStick device
+# ui/treeview.c: 1181
+%dx%d (H)
 
 
-# ui/mame32.rc: 751
-Analog deadzone
+# ui/treeview.c: 1175
+%dx%d (V)
 
 
-# ui/mame32.rc: 854
-Artwork resolution
+# ui/layout.c: 71
+Aspect Ratio
 
 
-# ui/mame32.rc: 694
-Aspect ratio
-
-
-# ui/properties.c: 4169
-Axis
-
-
-# ui/properties.c: 4179
-AxisId
-
-
-# ui/mame32.rc: 870, 1187
+# ui/mame32.rc: 849, 1139
 BIOS
 
 
-# ui/treeview.c: 1047, 1048
-Bad Dump
+# ui/layout.c: 58 
+CPU
 
 
-# ui/mame32.rc: 891
-Beam width
+# ui/layout.c: 72
+FPS
 
 
-# ui/mame32.rc: 298, 376
-Christopher Kirmse and Michael Soderstrom
+# ui/properties.c: 1067
+Global folder options\nCustom options used by all games in the %s
 
 
-# ui/mame32.rc: 701
-Clean stretch
+# ui/properties.c: 442
+RGB micro
 
 
-# ui/mame32.rc: 841
-Confirm on exit game
+# ui/properties.c: 427
+RGB sharp
 
 
-# ui/mame32.rc: 785
-Controller ID layout
+# ui/properties.c: 426, 443
+RGB tiny
 
 
-# ui/mame32.rc: 1106
-Controller Mapping
+# ui/properties.c: 950
+Raster %d x %d (H) (%d:%d) %f Hz
 
 
-# ui/mame32.rc: 370
-Copyright (C) 1997-2005 The MAME Team
+# ui/properties.c: 938
+Raster %d x %d (V) (%d:%d) %f Hz
 
 
-# ui/mame32.rc: 852
-Crop Artwork
+# ui/layout.c: 73, 84
+Save State
 
 
-# ui/win32ui.c: 4407, 4435
-Custom
+# ui/mame32.rc: 499
+Save State:
 
 
-# ui/mame32.rc: 1122
-Dial device
+# ui/properties.c: 1101 ui/treeview.c: 1310, 1311
+Supported
 
 
-# ui/mame32.rc: 1131
-Digital joystick axes
+# ui/properties.c: 1103 ui/treeview.c: 1313, 1314
+Unsupported
 
 
-# ui/win32ui.c: 6650
-Driver
+# ui/properties.c: 925
+Vector (H) (%d:%d) %f Hz
 
 
-# ui/layout.c: 62
-Dumping Status
-
-
-# ui/mame32.rc: 1059
-Edit Not Working Game Color
-
-
-# ui/mame32.rc: 595
-Effect
-
-
-# ui/mame32.rc: 601
-Effect Overrides
-
-
-# ui/mame32.rc: 592
-Filter
-
-
-# ui/mame32.rc: 895
-Flicker
-
-
-# ui/mame32.rc: 704
-Full screen brightness
-
-
-# ui/mame32.rc: 833
-High thread priority
-
-
-# ui/mame32.rc: 729
-Image Enhancement
-
-
-# ui/win32ui.c: 763
-Image Files (*.png,*.bmp)
-
-
-# ui/mame32.rc: 900
-Intensity
-
-
-# ui/properties.c: 603, 4164
-Joystick
-
-
-# ui/properties.c: 4174
-JoystickId
-
-
-# ui/properties.c: 601
-Keyboard
-
-
-# ui/layout.c: 75, 75 ui/properties.c: 604
-Lightgun
-
-
-# ui/mame32.rc: 1128
-Lightgun device
-
-
-# ui/mame32.rc: 866
-M68000 CPU Core
-
-
-# ui/win32ui.c: 742
-MAME input files (*.inp,*.zip)
-
-
-# ui/win32ui.c: 749
-MAME savestate files (*.sta)
-
-
-# ui/properties.c: 602
-Mouse
-
-
-# ui/treeview.c: 1050, 1051
-No Dump
-
-
-# ui/layout.c: 64
-Not Working
-
-
-# ui/mame32.rc: 1113
-Paddle device
-
-
-# ui/mame32.rc: 1119
-Pedal device
-
-
-# ui/mame32.rc: 57
-Play and Record &Wave Output...
-
-
-# ui/mame32.rc: 598
-Prescale
-
-
-# ui/mame32.rc: 1547
-Record the sound output of a game
-
-
-# ui/mame32.rc: 646
-Sample rate
-
-
-# ui/mame32.rc: 1043
-Screenshot &Cycletime in Seconds:
-
-
-# ui/mame32.rc: 1069
-Screenshot Area
-
-
-# ui/mame32.rc: 1070
-Screenshot Bordersize:
-
-
-# ui/win32ui.c: 744
-Select a file to record
-
-
-# ui/win32ui.c: 743
-Select a recorded file
-
-
-# ui/win32ui.c: 750
-Select a savestate file
-
-
-# ui/win32ui.c: 758
-Select a sound file to record
-
-
-# ui/mame32.rc: 1664
-Select the story information
-
-
-# ui/mame32.rc: 1075
-Set Screenshot Border Color
-
-
-# ui/mame32.rc: 1054
-Show Game Ca&ption
-
-
-# ui/mame32.rc: 1650
-Show or hide the story information
-
-
-# ui/mame32.rc: 838
-Skip validity checks
-
-
-# ui/mame32.rc: 829
-Sleep when possible
-
-
-# ui/win32ui.c: 756
-Sounds (*.wav)
-
-
-# ui/mame32.rc: 93, 229, 241
-St&ory
-
-
-# ui/options.c: 252
-Story
-
-
-# ui/mame32.rc: 586
-Texture Management
-
-
-# ui/mame32.rc: 1125
-Trackball device
-
-
-# ui/mame32.rc: 1670
-Translate into Hungarian
-
-
-# ui/mame32.rc: 1670
-Translate into Polish
-
-
-# ui/mame32.rc: 1057
-Use Driver Icon for Not Working Game
-
-
-# ui/mame32.rc: 844
-Use additional Artwork
-
-
-# ui/mame32.rc: 724
-Use classic scanlines
-
-
-# ui/mame32.rc: 643
-Use volume auto adjust
-
-
-# ui/options.c: 735
-Windows UI specific GUI keyboard options
-
-
-# ui/options.c: 457 
-Windows misc options
-
-
-# ui/mame32.rc: 618
-Zoom
-
-
-# ui/mame32.rc: 380
-and John Hardy IV
+# ui/properties.c: 915
+Vector (V) (%d:%d) %f Hz
 
 

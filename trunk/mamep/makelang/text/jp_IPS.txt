@@ -2,15 +2,27 @@
 IPS
 IPS
 
-# 7
+# 14
 Misc
 その他
 
-# 25
+# 36
 Neo-Geo
 ネオジオ
 
-# 78
+# 7
 Translation
 翻訳版
+
+# 22
+CPS1
+
+
+# 31
+CPS2
+
+
+# 89
+PGM
+
 

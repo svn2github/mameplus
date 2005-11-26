@@ -2,15 +2,27 @@
 IPS
 IPS
 
-# 7
+# 14
 Misc
 Varios
 
-# 25
+# 36
 Neo-Geo
 Neo-Geo
 
-# 78
+# 7
 Translation
 Traducción
+
+# 22
+CPS1
+
+
+# 31
+CPS2
+
+
+# 89
+PGM
+
 

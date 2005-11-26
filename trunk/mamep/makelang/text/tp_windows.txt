@@ -1,24 +1,24 @@
-# windows/input.c: 898
+# windows/input.c: 901
          all -- all axes on all joysticks are digital\n
 
 
-# windows/input.c: 904
+# windows/input.c: 907
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
 
 
-# windows/input.c: 902
+# windows/input.c: 905
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
 
 
-# windows/input.c: 899
+# windows/input.c: 902
          j<N> -- all axes on joystick <N> are digital\n
 
 
-# windows/input.c: 900
+# windows/input.c: 903
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
 
 
-# windows/input.c: 897
+# windows/input.c: 900
          none -- no axes on any joysticks are digital\n
 
 
@@ -34,11 +34,11 @@
         MAME -showusage    for a brief list of options\n
 
 
-# windows/input.c: 901
+# windows/input.c: 904
     Multiple axes can be specified for one joystick:\n
 
 
-# windows/input.c: 903
+# windows/input.c: 906
     Multiple joysticks can be specified separated by commas:\n
 
 
@@ -46,11 +46,11 @@
    ignoring line\n
 
 
-# windows/input.c: 1878
+# windows/input.c: 1901
   Axis %d (%s)%s\n
 
 
-# windows/config.c: 514
+# windows/config.c: 538
  %s running parameters
 
 
@@ -58,7 +58,7 @@
  (%.2lfMB video memory available)
 
 
-# windows/input.c: 1878
+# windows/input.c: 1901
  - digital
 
 
@@ -78,15 +78,15 @@
 (dd) stretch video using the hardware
 
 
-# windows/input.c: 937
+# windows/input.c: 940
 Autoenabling joysticks due to presence of a %s\n
 
 
-# windows/input.c: 945
+# windows/input.c: 948
 Autoenabling lightguns due to presence of a %s\n
 
 
-# windows/input.c: 929
+# windows/input.c: 932
 Autoenabling mice due to presence of a %s\n
 
 
@@ -122,7 +122,7 @@ Blitter initialisation complete (%.2lfMB video memory free)\n
 CRC-32s
 
 
-# windows/config.c: 265
+# windows/config.c: 281
 Configuration options
 
 
@@ -174,7 +174,7 @@ Error creating blit surface: %08x\n
 Error creating clipper: %08x\n
 
 
-# windows/rc.c: 954
+# windows/rc.c: 957
 Error creating dir %s
 
 
@@ -258,7 +258,7 @@ Error initialising software scale effects\n
 Error locking stream buffer: %08x\n
 
 
-# windows/rc.c: 962
+# windows/rc.c: 965
 Error opening %s
 
 
@@ -318,7 +318,7 @@ For usage instructions, please consult the file windows.txt\n
 Frontend Related
 
 
-# windows/window.c: 720
+# windows/window.c: 722
 Full Screen\tAlt+Enter
 
 
@@ -334,31 +334,31 @@ Hardware stretching supported\n
 Initialising DirectDraw & Direct3D 7 blitter
 
 
-# windows/input.c: 219
+# windows/input.c: 221
 Input device options
 
 
-# windows/input.c: 1937
+# windows/input.c: 1960
 J%d %s D
 
 
-# windows/input.c: 1941
+# windows/input.c: 1964
 J%d %s L
 
 
-# windows/input.c: 1945
+# windows/input.c: 1968
 J%d %s R
 
 
-# windows/input.c: 1933
+# windows/input.c: 1956
 J%d %s U
 
 
-# windows/input.c: 1718
+# windows/input.c: 1739
 Joystick %d axis %d is now %s\n
 
 
-# windows/input.c: 1861
+# windows/input.c: 1884
 Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 
 
@@ -366,27 +366,27 @@ Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 KNOWN     %s\n
 
 
-# windows/input.c: 1252
+# windows/input.c: 1255
 Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 
 
-# windows/input.c: 227
+# windows/input.c: 229
 LED mode (ps/2|usb)
 
 
-# windows/config.c: 272
+# windows/config.c: 288
 Language options
 
 
-# windows/input.c: 1850
+# windows/input.c: 1873
 Lightgun %d X
 
 
-# windows/input.c: 1852
+# windows/input.c: 1875
 Lightgun %d Y
 
 
-# windows/input.c: 2207
+# windows/input.c: 2230
 Lightgun not supported in windowed mode
 
 
@@ -394,15 +394,15 @@ Lightgun not supported in windowed mode
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2005 by Nicola Salmoria and the MAME Team\n\n
 
 
-# windows/blit.c: 1152
+# windows/blit.c: 1153
 MMX not supported\n
 
 
-# windows/blit.c: 1150
+# windows/blit.c: 1151
 MMX supported\n
 
 
-# windows/config.c: 225
+# windows/config.c: 241
 Mame CORE misc options
 
 
@@ -410,15 +410,15 @@ Mame CORE misc options
 Mame CORE palette options
 
 
-# windows/config.c: 215
+# windows/config.c: 231
 Mame CORE sound options
 
 
-# windows/config.c: 207
+# windows/config.c: 223
 Mame CORE vector game options
 
 
-# windows/config.c: 194
+# windows/config.c: 210
 Mame CORE video options
 
 
@@ -426,23 +426,23 @@ Mame CORE video options
 Managed texture
 
 
-# windows/input.c: 1828, 1837
+# windows/input.c: 1850, 1860
 Mouse %d %s
 
 
-# windows/input.c: 1767
+# windows/input.c: 1788
 Mouse %d X
 
 
-# windows/input.c: 1769
+# windows/input.c: 1790
 Mouse %d Y
 
 
-# windows/input.c: 1771
+# windows/input.c: 1792
 Mouse %d Z
 
 
-# windows/input.c: 1830, 1839
+# windows/input.c: 1852, 1862
 Mouse %s
 
 
@@ -486,7 +486,7 @@ Out of memory!\n
 PARTKNOWN %s\n
 
 
-# windows/config.c: 562
+# windows/config.c: 586
 Playing back previously recorded game %s (%s) [press return]\n
 
 
@@ -526,11 +526,11 @@ Rendering to an off-screen surface and using blt()\n
 Restoring surfaces\n
 
 
-# windows/blit.c: 1148
+# windows/blit.c: 1149
 SSE supported\n
 
 
-# windows/blit.c: 1146
+# windows/blit.c: 1147
 SSE2 supported\n
 
 
@@ -554,19 +554,19 @@ Screen %s not found\n
 Sound buffer: overflows=%d underflows=%d\n
 
 
-# windows/input.c: 1796
+# windows/input.c: 1817
 Stick %d %s +
 
 
-# windows/input.c: 1789
+# windows/input.c: 1810
 Stick %d %s -
 
 
-# windows/input.c: 1798
+# windows/input.c: 1819
 Stick %s +
 
 
-# windows/input.c: 1791
+# windows/input.c: 1812
 Stick %s -
 
 
@@ -574,7 +574,7 @@ Stick %s -
 Texture
 
 
-# windows/input.c: 2358
+# windows/input.c: 2381
 Toggle fullscreen
 
 
@@ -602,7 +602,7 @@ Unable to blt scale_surface to texture_surface: %08x\n
 Unable to blt target_surface: %08x\n
 
 
-# windows/input.c: 2626, 2633
+# windows/input.c: 2649, 2656
 Unable to close the keyboard device. (error %d)\n
 
 
@@ -618,7 +618,7 @@ Unable to lock blit_surface: %08x\n
 Unable to lock target_surface: %08x\n
 
 
-# windows/input.c: 2577, 2587
+# windows/input.c: 2600, 2610
 Unable to open the keyboard device. (error %d)\n
 
 
@@ -634,7 +634,7 @@ Unable to render to preprocess texture: %08x\n
 Usage:  MAME gamename [options]\n\n
 
 
-# windows/config.c: 521
+# windows/config.c: 545
 Usage: %s [game] [options]\nOptions:\n
 
 
@@ -646,7 +646,7 @@ Using %s pre-scale effect\n
 Using %s scale effect\n
 
 
-# windows/input.c: 1186
+# windows/input.c: 1189
 Using DirectInput %d\n
 
 
@@ -674,11 +674,11 @@ Warning: flat bi-cubic filtering not supported, falling back to bi-linear\n
 Warning: gaussian bi-cubic filtering not supported, falling back to bi-linear\n
 
 
-# windows/window.c: 647
+# windows/window.c: 649
 Warning: hardware-accelerated blitting-effects selected, but currently disabled\n         use the -direct3d option to enable hardware acceleration\n
 
 
-# windows/window.c: 641
+# windows/window.c: 643
 Warning: non-hardware-accelerated blitting-effects engine enabled\n         use the -d3deffect option to enable hardware acceleration\n
 
 
@@ -722,11 +722,11 @@ Windows video options
 \"%8s\" not supported!\n
 
 
-# windows/input.c: 1254
+# windows/input.c: 1257
 \"%s\" controller support enabled\n
 
 
-# windows/config.c: 615
+# windows/config.c: 639
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 
 
@@ -734,7 +734,7 @@ Windows video options
 additional customised settings (undocumented)
 
 
-# windows/config.c: 204
+# windows/config.c: 220
 additional pause brightness
 
 
@@ -746,15 +746,15 @@ all available info on driver in XML format
 allow MAME to give back time to the system when it's not needed
 
 
-# windows/input.c: 1715
+# windows/input.c: 1736
 analog
 
 
-# windows/input.c: 1194
+# windows/input.c: 1197
 analog joystick
 
 
-# windows/config.c: 231
+# windows/config.c: 247
 artwork resolution (0 for auto)
 
 
@@ -762,19 +762,19 @@ artwork resolution (0 for auto)
 attempt to match the game's refresh rate
 
 
-# windows/config.c: 248
+# windows/config.c: 264
 automatic pause when playback is started and finished
 
 
-# windows/config.c: 199
+# windows/config.c: 215
 automatically rotate screen anti-clockwise for vertical games
 
 
-# windows/config.c: 198
+# windows/config.c: 214
 automatically rotate screen clockwise for vertical games
 
 
-# windows/config.c: 203
+# windows/config.c: 219
 brightness correction
 
 
@@ -818,11 +818,11 @@ button color (silver)
 button color (yellow)
 
 
-# windows/config.c: 252
+# windows/config.c: 268
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 
 
-# windows/config.c: 240
+# windows/config.c: 256
 change system bios
 
 
@@ -838,15 +838,15 @@ compare files with known MAME roms
 compare files with known MAME roms (brief)
 
 
-# windows/config.c: 246
+# windows/config.c: 262
 confirm quit
 
 
-# windows/config.c: 266
+# windows/config.c: 282
 create the default configuration file
 
 
-# windows/config.c: 230
+# windows/config.c: 246
 crop artwork to game screen only
 
 
@@ -858,11 +858,11 @@ cursor color
 customised blitting effects preset
 
 
-# windows/input.c: 246, 1197
+# windows/input.c: 249, 1200
 dial
 
 
-# windows/input.c: 252, 1715
+# windows/input.c: 255, 1736
 digital
 
 
@@ -875,7 +875,7 @@ directory for hard drive image difference files
 
 
 # windows/fileio.c: 140
-directory for ips patch
+directory for ips files
 
 
 # windows/fileio.c: 142
@@ -914,15 +914,15 @@ directory to save nvram contents
 directory to save states
 
 
-# windows/config.c: 270
+# windows/config.c: 286
 display additional diagnostic information
 
 
-# windows/config.c: 267
+# windows/config.c: 283
 display running parameters in rc style
 
 
-# windows/config.c: 195
+# windows/config.c: 211
 do not apply rotation
 
 
@@ -930,11 +930,11 @@ do not apply rotation
 double
 
 
-# windows/config.c: 208
+# windows/config.c: 224
 draw antialiased vectors
 
 
-# windows/config.c: 209
+# windows/config.c: 225
 draw translucent vectors
 
 
@@ -946,91 +946,91 @@ driver sourcefile
 emulate win_old_scanlines
 
 
-# windows/input.c: 243
+# windows/input.c: 246
 enable (keyboard|mouse|joystick) if a paddle control is present
 
 
-# windows/input.c: 246
+# windows/input.c: 249
 enable (keyboard|mouse|joystick|lightgun) if a dial control is present
 
 
-# windows/input.c: 248
+# windows/input.c: 251
 enable (keyboard|mouse|joystick|lightgun) if a lightgun control is present
 
 
-# windows/input.c: 250
+# windows/input.c: 253
 enable (keyboard|mouse|joystick|lightgun) if a mouse control is present
 
 
-# windows/input.c: 245
+# windows/input.c: 248
 enable (keyboard|mouse|joystick|lightgun) if a pedal control is present
 
 
-# windows/input.c: 247
+# windows/input.c: 250
 enable (keyboard|mouse|joystick|lightgun) if a trackball control is present
 
 
-# windows/input.c: 244
+# windows/input.c: 247
 enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is present
 
 
-# windows/config.c: 242
+# windows/config.c: 258
 enable automatic restore at startup and save at exit
 
 
-# windows/input.c: 223
+# windows/input.c: 225
 enable dual lightgun input
 
 
-# windows/input.c: 221
+# windows/input.c: 223
 enable joystick input
 
 
-# windows/input.c: 226
+# windows/input.c: 228
 enable keyboard LED emulation
 
 
-# windows/input.c: 222
+# windows/input.c: 224
 enable lightgun input
 
 
-# windows/input.c: 220
+# windows/input.c: 222
 enable mouse input
+
+
+# windows/input.c: 234
+enable pointing stick input
 
 
 # windows/wind3dfx.c: 190
 enable rotation of effects for rotated games
 
 
-# windows/input.c: 225
+# windows/input.c: 227
 enable steadykey support
 
 
-# windows/input.c: 231
-enable stick-type mouse input
-
-
-# windows/config.c: 232
+# windows/config.c: 248
 enable/disable cheat subsystem
 
 
-# windows/config.c: 233
+# windows/config.c: 249
 enable/disable debugger (only if available)
 
 
-# windows/config.c: 269
+# windows/config.c: 285
 enable/disable loading of configfiles
 
 
-# windows/config.c: 274
+# windows/config.c: 290
 enable/disable local language game list
 
 
-# windows/config.c: 218
+# windows/config.c: 234
 enable/disable sound and sound CPUs
 
 
-# windows/config.c: 221
+# windows/config.c: 237
 enable/disable volume auto adjust
 
 
@@ -1038,15 +1038,15 @@ enable/disable volume auto adjust
 enforce aspect ratio
 
 
-# windows/rc.c: 716, 819, 831
+# windows/rc.c: 719, 822, 834
 error invalid value for %s: %s\n
 
 
-# windows/config.c: 464
+# windows/config.c: 488
 error on rc creation\n
 
 
-# windows/config.c: 471
+# windows/config.c: 495
 error while parsing cmdline\n
 
 
@@ -1054,15 +1054,15 @@ error while parsing cmdline\n
 error: %s requires an argument, on line %d of file: %s\n
 
 
-# windows/rc.c: 568
+# windows/rc.c: 571
 error: %s requires an argument\n
 
 
-# windows/rc.c: 845
+# windows/rc.c: 848
 error: couldn't open file: %s\n
 
 
-# windows/config.c: 850
+# windows/config.c: 870
 error: duplicate gamename: %s\n
 
 
@@ -1070,7 +1070,7 @@ error: duplicate gamename: %s\n
 error: garbage \"%s\" on line %d of file: %s\n
 
 
-# windows/input.c: 816
+# windows/input.c: 819
 error: invalid value for %s: %s\n
 
 
@@ -1086,7 +1086,7 @@ error: invalid value for cleanstretch: %s\n
 error: invalid value for d3dprescale: %s\n
 
 
-# windows/input.c: 896
+# windows/input.c: 899
 error: invalid value for digital: %s -- valid values are:\n
 
 
@@ -1098,11 +1098,11 @@ error: invalid value for effect: %s\n
 error: invalid value for frames_to_run: %s\n
 
 
-# windows/config.c: 169
+# windows/config.c: 175
 error: invalid value for language: %s\nUse %s\n
 
 
-# windows/input.c: 791
+# windows/input.c: 794
 error: invalid value for led_mode: %s\n
 
 
@@ -1114,7 +1114,7 @@ error: invalid value for palette: %s\n
 error: invalid value for resolution: %s\n
 
 
-# windows/rc.c: 803
+# windows/rc.c: 806
 error: malloc failed for %s\n
 
 
@@ -1122,7 +1122,7 @@ error: malloc failed for %s\n
 error: malloc failed for: struct rc_struct\n
 
 
-# windows/rc.c: 601
+# windows/rc.c: 604
 error: malloc failed in rc_parse_commadline\n
 
 
@@ -1130,15 +1130,15 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 
 
-# windows/config.c: 978
+# windows/config.c: 998
 error: malloc failed in win_dirname\n
 
 
-# windows/config.c: 1018
+# windows/config.c: 1038
 error: malloc failed in win_strip_extension\n
 
 
-# windows/config.c: 866
+# windows/config.c: 886
 error: no gamename given in %s\n
 
 
@@ -1150,19 +1150,19 @@ error: trailing garbage: \"%s\" on line: %d of file: %s\n
 error: unknown option %s, on line %d of file: %s\n
 
 
-# windows/rc.c: 584, 736, 758, 782
+# windows/rc.c: 587, 739, 761, 785
 error: unknown option %s\n
 
 
-# windows/rc.c: 858
+# windows/rc.c: 861
 error: unknown option type: %d, this should not happen!\n
 
 
-# windows/config.c: 537
+# windows/config.c: 561
 failed to open %s for playback\n
 
 
-# windows/config.c: 663
+# windows/config.c: 687
 failed to open %s for recording\n
 
 
@@ -1170,11 +1170,11 @@ failed to open %s for recording\n
 feedback strength
 
 
-# windows/config.c: 201
+# windows/config.c: 217
 flip screen left-right
 
 
-# windows/config.c: 200
+# windows/config.c: 216
 flip screen upside-down
 
 
@@ -1194,11 +1194,11 @@ font special color
 force specific zoom level
 
 
-# windows/config.c: 202
+# windows/config.c: 218
 gamma correction
 
 
-# windows/config.c: 237
+# windows/config.c: 253
 generate error.log
 
 
@@ -1214,12 +1214,12 @@ info: trying to parse: %s\n
 interpolation method
 
 
-# windows/input.c: 1715
+# windows/input.c: 1736
 invalid
 
 
-# windows/config.c: 244
-ips patch datfile name
+# windows/config.c: 260
+ips datfile name
 
 
 # windows/fronthlp.c: 730
@@ -1238,7 +1238,7 @@ is good\n
 is missing optional files\n
 
 
-# windows/input.c: 222, 812, 1195
+# windows/input.c: 224, 815, 1198
 lightgun
 
 
@@ -1254,31 +1254,31 @@ list required roms for a driver
 loading %-12s\r
 
 
-# windows/input.c: 252
+# windows/input.c: 255
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 
 
-# windows/input.c: 228
+# windows/input.c: 230
 minimal analog value for digital input
 
 
-# windows/rc.c: 657, 694
+# windows/rc.c: 660, 697
 no help available
 
 
-# windows/input.c: 224
+# windows/input.c: 226
 offscreen shots reload
 
 
-# windows/config.c: 238
+# windows/config.c: 254
 output error log to debugger
 
 
-# windows/input.c: 243, 1193
+# windows/input.c: 246, 1196
 paddle
 
 
-# windows/config.c: 400
+# windows/config.c: 424
 parsing %s...
 
 
@@ -1294,15 +1294,15 @@ path to romsets
 path to samplesets
 
 
-# windows/input.c: 245, 1196
+# windows/input.c: 248, 1199
 pedal
 
 
-# windows/config.c: 235
+# windows/config.c: 251
 playback an input file
 
 
-# windows/input.c: 229
+# windows/input.c: 231
 preconfigure for specified controller
 
 
@@ -1314,11 +1314,11 @@ prefer RDTSC over QueryPerformanceCounter for timing
 prescale effect
 
 
-# windows/config.c: 408
+# windows/config.c: 432
 problem parsing %s\n
 
 
-# windows/config.c: 236
+# windows/config.c: 252
 record an input file
 
 
@@ -1342,11 +1342,11 @@ romset %s
 romsets
 
 
-# windows/config.c: 197
+# windows/config.c: 213
 rotate screen anti-clockwise
 
 
-# windows/config.c: 196
+# windows/config.c: 212
 rotate screen clockwise
 
 
@@ -1354,7 +1354,7 @@ rotate screen clockwise
 run in a window/run on full screen
 
 
-# windows/config.c: 606
+# windows/config.c: 630
 running %s (%s) [press return]
 
 
@@ -1382,11 +1382,11 @@ scale effects surface created: %s\n
 scanline intensity
 
 
-# windows/config.c: 234
+# windows/config.c: 250
 script for debugger (only if available)
 
 
-# windows/config.c: 273
+# windows/config.c: 289
 select translation language
 
 
@@ -1394,11 +1394,11 @@ select translation language
 set audio latency (increase to reduce glitches)
 
 
-# windows/config.c: 210
+# windows/config.c: 226
 set beam width in vector games
 
 
-# windows/config.c: 211
+# windows/config.c: 227
 set flickering in vector games
 
 
@@ -1406,39 +1406,39 @@ set flickering in vector games
 set frameskip explicitly (autoframeskip needs to be off)
 
 
-# windows/config.c: 212
+# windows/config.c: 228
 set intensity in vector games
 
 
-# windows/input.c: 234
+# windows/input.c: 237
 set joystick ID (Player1)
 
 
-# windows/input.c: 235
+# windows/input.c: 238
 set joystick ID (Player2)
 
 
-# windows/input.c: 236
+# windows/input.c: 239
 set joystick ID (Player3)
 
 
-# windows/input.c: 237
+# windows/input.c: 240
 set joystick ID (Player4)
 
 
-# windows/input.c: 238
+# windows/input.c: 241
 set joystick ID (Player5)
 
 
-# windows/input.c: 239
+# windows/input.c: 242
 set joystick ID (Player6)
 
 
-# windows/input.c: 240
+# windows/input.c: 243
 set joystick ID (Player7)
 
 
-# windows/input.c: 241
+# windows/input.c: 244
 set joystick ID (Player8)
 
 
@@ -1446,7 +1446,7 @@ set joystick ID (Player8)
 set resolution
 
 
-# windows/config.c: 216
+# windows/config.c: 232
 set samplerate
 
 
@@ -1474,11 +1474,11 @@ show clones
 show help message
 
 
-# windows/config.c: 268
+# windows/config.c: 284
 show this help
 
 
-# windows/config.c: 239
+# windows/config.c: 255
 skip displaying the game info screen
 
 
@@ -1486,7 +1486,7 @@ skip displaying the game info screen
 skip frames to speed up emulation
 
 
-# windows/config.c: 218 
+# windows/config.c: 234 
 sound
 
 
@@ -1510,7 +1510,7 @@ specify which screen to use
 start out maximized
 
 
-# windows/config.c: 241
+# windows/config.c: 257
 state to load
 
 
@@ -1534,11 +1534,11 @@ syncronize only to the monitor refresh
 throttle speed to the game's framerate
 
 
-# windows/input.c: 247, 1198
+# windows/input.c: 250, 1201
 trackball
 
 
-# windows/config.c: 256
+# windows/config.c: 272
 transparency of UI background [0 - 255]
 
 
@@ -1550,7 +1550,7 @@ triple
 triple buffering (only if fullscreen)
 
 
-# windows/config.c: 149
+# windows/config.c: 155
 unable to open log file\n
 
 
@@ -1566,31 +1566,31 @@ use DirectDraw for rendering
 use DirectX texture management
 
 
-# windows/config.c: 226
+# windows/config.c: 242
 use additional game artwork (sets default for specific options below)
 
 
-# windows/config.c: 227
+# windows/config.c: 243
 use backdrop artwork
 
 
-# windows/config.c: 229
+# windows/config.c: 245
 use bezel artwork
 
 
-# windows/config.c: 228
+# windows/config.c: 244
 use overlay artwork
 
 
-# windows/config.c: 217
+# windows/config.c: 233
 use samples
 
 
-# windows/config.c: 255
+# windows/config.c: 271
 use transparent background for UI text
 
 
-# windows/config.c: 219
+# windows/config.c: 235
 volume (range [-32,0])
 
 

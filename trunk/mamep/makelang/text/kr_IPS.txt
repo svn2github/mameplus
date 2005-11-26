@@ -1,16 +1,28 @@
-# Title
-Hack
-핵버전
-
-# 7
+# 14
 Misc
 기타
 
-# 25
+# 36
 Neo-Geo
 네오지오
 
-# 67
+# 7
 Translation
 번역
+
+# 22
+CPS1
+
+
+# 31
+CPS2
+
+
+# Title
+IPS
+
+
+# 89
+PGM
+
 

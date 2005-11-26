@@ -1,8 +1,0 @@
-# NOT FOUND IN SRC (tp_ui.txt ) ##
-BIOS:
-
-
-# NOT FOUND IN SRC (tp_ui.txt ) ##
-Rendering
-
-

@@ -106,7 +106,7 @@ Alpha Denshi
 Alpha Denshi Co.
 
 
-# Virtua Bowling
+# Virtua Bowling (World, V101XCM)
 Alta
 
 
@@ -208,6 +208,10 @@ Barko
 
 # Zip & Zap
 Barko Corp
+
+
+# Honey Dolls
+Barko Corp.
 
 
 # Many Block
@@ -474,6 +478,10 @@ Elcon
 Electro Design
 
 
+# Dwarfs Den
+Electro-Sport
+
+
 # Diamond Derby (set 1)
 Electrocoin
 
@@ -618,7 +626,7 @@ GREEN SOFT
 Gaelco
 
 
-# Table Tennis Championships / Peno Cup?
+# Table Tennis Champions (set 1)
 Gamart?
 
 
@@ -1278,6 +1286,14 @@ Rare LTD.
 Raster Elite
 
 
+# Frog Feast
+Rastersoft
+
+
+# Zintrick / Oshidashi Zentrix (CD to MVS Conversion)
+Razoola
+
+
 # Astro Fire
 Rene Pierre
 
@@ -1402,6 +1418,10 @@ Shinkai Inc.
 Shoei
 
 
+# Time Attacker
+Shonan
+
+
 # Condor
 Sidam
 
@@ -1490,6 +1510,10 @@ Sun a Electronics
 SunA
 
 
+# Trivia Quest
+Sunn
+
+
 # Vs. Freedom Force
 Sunsoft
 
@@ -1534,7 +1558,7 @@ TDS
 TDS & Mints
 
 
-# Cannonball set 2
+# Cannonball (set 2)
 TV Game Gruenberg
 
 

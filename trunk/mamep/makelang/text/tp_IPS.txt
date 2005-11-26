@@ -1,16 +1,28 @@
+# 22
+CPS1
+
+
+# 31
+CPS2
+
+
 # Title
 IPS
 
 
-# 7
+# 14
 Misc
 
 
-# 25
+# 36
 Neo-Geo
 
 
-# 78
+# 89
+PGM
+
+
+# 7
 Translation
 
 

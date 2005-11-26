@@ -1,16 +1,28 @@
-# Title
-Hack
-Hack
-
-# 7
+# 14
 Misc
 Misto
 
-# 25
+# 36
 Neo-Geo
 Neo-Geo
 
-# 67
+# 7
 Translation
 Tradução
+
+# 22
+CPS1
+
+
+# 31
+CPS2
+
+
+# Title
+IPS
+
+
+# 89
+PGM
+
 

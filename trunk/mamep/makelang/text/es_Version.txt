@@ -54,6 +54,18 @@
 .100u3
 0.100 Actualización 3
 
+# 6364
+.100u4
+0.100 Actualización 4
+
+# 6380
+.101u1
+0.101 Actualización 1
+
+# 6385
+.101u2
+0.101 Actualización 2
+
 # 91
 .11
 0.11
@@ -1042,11 +1054,35 @@
 .99u9
 0.99 Actualización 9
 
-# 6364
-Extra Games
-Juegos Extras
-
 # Title
 Version
 Versión
+
+# 6377
+.101
+
+
+# 6391
+.101u3
+
+
+# 6397
+.101u4
+
+
+# 6407
+.101u5
+
+
+# 6414
+.102
+
+
+# 6432
+.102u1
+
+
+# 6445
+Plus!
+
 

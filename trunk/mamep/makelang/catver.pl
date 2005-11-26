@@ -87,7 +87,7 @@ __HEAD__
 	{
 		if (open (EXTRA, "extra.txt"))
 		{
-			print OUT "[Extra Games]\n";
+			print OUT "[Plus!]\n";
 			while (<EXTRA>)
 			{
 				print OUT;

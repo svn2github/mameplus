@@ -1,16 +1,28 @@
-# 7
+# 14
 Misc
 ∆‰À˚
 
-# 78
+# 7
 Translation
 ∑≠“Î
+
+# 22
+CPS1
+
+
+# 31
+CPS2
+
 
 # Title
 IPS
 
 
-# 25
+# 36
 Neo-Geo
+
+
+# 89
+PGM
 
 

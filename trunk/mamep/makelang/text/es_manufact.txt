@@ -106,7 +106,7 @@ Alpha Denshi
 Alpha Denshi Co.
 Alpha Denshi Co.
 
-# Virtua Bowling
+# Virtua Bowling (World, V101XCM)
 Alta
 Alta
 
@@ -618,7 +618,7 @@ GREEN SOFT
 Gaelco
 Gaelco
 
-# Table Tennis Championships / Peno Cup?
+# Table Tennis Champions (set 1)
 Gamart?
 Gamart?
 
@@ -1534,7 +1534,7 @@ TDS
 TDS & Mints
 TDS & Mints
 
-# Cannonball set 2
+# Cannonball (set 2)
 TV Game Gruenberg
 TV Game Gruenberg
 
@@ -1929,4 +1929,28 @@ hackeado
 # Chewing Gum
 unknown
 desconocido
+
+# Honey Dolls
+Barko Corp.
+
+
+# Dwarfs Den
+Electro-Sport
+
+
+# Frog Feast
+Rastersoft
+
+
+# Zintrick / Oshidashi Zentrix (CD to MVS Conversion)
+Razoola
+
+
+# Time Attacker
+Shonan
+
+
+# Trivia Quest
+Sunn
+
 
