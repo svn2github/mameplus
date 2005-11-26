@@ -75,6 +75,10 @@ enum
 #define UI_BOX_TB_BORDER		(ui_get_char_width(' ') / 2)
 #endif /* UI_COLOR_DISPLAY */
 
+#ifdef UI_COLOR_DISPLAY
+#define UI_SCROLL_TEXT_COLOR		MAX_COLORTABLE
+#endif /* UI_COLOR_DISPLAY */
+
 
 
 /*************************************
@@ -143,8 +147,8 @@ static char menu_string_pool[MENU_STRING_POOL_SIZE];
 static int single_step;
 static int auto_pause;
 static int scroll_reset;
-static int ui_need_scroll;
 static int ui_lock_scroll;
+static rgb_t text_color;
 
 static int showfps;
 static int showfpstemp;
@@ -189,6 +193,9 @@ static int elemindex;
  *  Local prototypes
  *
  *************************************/
+
+static void ui_draw_message_window_scroll(const char *text);
+static int ui_window_scroll_keys(void);
 
 static void draw_multiline_text_box(const char *text, int offset, int justify, float xpos, float ypos);
 static void create_font(void);
@@ -278,6 +285,8 @@ int ui_init(void)
 #endif /* UI_COLOR_DISPLAY */
 #endif /* TRANS_UI */
 
+	text_color = RGB_WHITE;
+
 	/* initialize the menu state */
 	ui_menu_stack_reset();
 
@@ -347,8 +356,6 @@ void ui_set_visible_area(int xmin, int ymin, int xmax, int ymax)
 
 int ui_update_and_render(mame_bitmap *bitmap)
 {
-	ui_need_scroll = FALSE;
-
 	/* if we're single-stepping, pause now */
 	if (single_step)
 	{
@@ -404,9 +411,6 @@ int ui_update_and_render(mame_bitmap *bitmap)
 
 	/* finally, display any popup messages */
 	ui_display_popup();
-
-	if (!ui_need_scroll)
-		ui_lock_scroll = FALSE;
 
 	/* flush the UI to the bitmap */
 	render_ui(bitmap);
@@ -1225,7 +1229,7 @@ static void draw_multiline_text_box(const char *text, int offset, int justify, f
 
 	/* compute the multi-line target width/height */
 	ui_draw_text_full(text, 0, 0, ui_width - 2 * UI_BOX_LR_BORDER - 2, 0, 0,
-				justify, WRAP_WORD, DRAW_NONE, RGB_WHITE, RGB_BLACK, &target_width, &target_height);
+				justify, WRAP_WORD, DRAW_NONE, text_color, RGB_BLACK, &target_width, &target_height);
 
 	multiline_text_box_target_lines = target_height / ui_get_line_height();
 
@@ -1266,13 +1270,13 @@ static void draw_multiline_text_box(const char *text, int offset, int justify, f
 	               target_y + target_height - 1 + margin_y);
 
 	ui_draw_text_full(text, target_x, target_y, target_width, offset, multiline_text_box_visible_lines,
-				justify, WRAP_WORD, DRAW_NORMAL, RGB_WHITE, RGB_BLACK, NULL, NULL);
+				justify, WRAP_WORD, DRAW_NORMAL, text_color, RGB_BLACK, NULL, NULL);
 }
 
 
 void ui_draw_message_window(const char *text)
 {
-	draw_multiline_text_box(text, message_window_scroll, JUSTIFY_LEFT, 0.5, 0.5);
+	draw_multiline_text_box(text, 0, JUSTIFY_LEFT, 0.5, 0.5);
 }
 
 
@@ -1284,7 +1288,15 @@ static void ui_draw_message_window_under(const char *text)
 #endif /* INP_CAPTION */
 
 
-static int ui_message_window_keys(void)
+static void ui_draw_message_window_scroll(const char *text)
+{
+	text_color = UI_SCROLL_TEXT_COLOR;
+	draw_multiline_text_box(text, message_window_scroll, JUSTIFY_LEFT, 0.5, 0.5);
+	text_color = RGB_WHITE;
+}
+
+
+static int ui_window_scroll_keys(void)
 {
 	static int counter = 0;
 	static int fast = 6;
@@ -1293,8 +1305,6 @@ static int ui_message_window_keys(void)
 
 	max_scroll = multiline_text_box_target_lines - multiline_text_box_visible_lines;
 	pan_lines = multiline_text_box_visible_lines - 1;
-
-	ui_need_scroll = TRUE;
 
 	if (scroll_reset)
 	{
@@ -2736,9 +2746,9 @@ static UINT32 menu_game_info(UINT32 state)
 	bufptr += sprintf(bufptr, "\n\t%s %s %s", ui_getstring(UI_lefthilight), ui_getstring(UI_returntomain), ui_getstring(UI_righthilight));
 
 	/* draw the text */
-	ui_draw_message_window(buf);
+	ui_draw_message_window_scroll(buf);
 
-	res = ui_message_window_keys();
+	res = ui_window_scroll_keys();
 	if (res > 0)
 		return ui_menu_stack_pop();
 
@@ -2860,7 +2870,7 @@ static UINT32 menu_document_contents(UINT32 state)
 
 	/* draw the text */
 	if (bufptr)
-		ui_draw_message_window(bufptr);
+		ui_draw_message_window_scroll(bufptr);
 	else
 	{
 		char msg[80];
@@ -2895,10 +2905,10 @@ static UINT32 menu_document_contents(UINT32 state)
 		strcat(msg, " ");
 		strcat(msg, ui_getstring(UI_righthilight));
 
-		ui_draw_message_window(msg);
+		ui_draw_message_window_scroll(msg);
 	}
 
-	res = ui_message_window_keys();
+	res = ui_window_scroll_keys();
 	if (res > 0)
 		return ui_menu_stack_pop();
 
@@ -2981,9 +2991,9 @@ static UINT32 menu_command(UINT32 state)
 		strcat(buf, " ");
 		strcat(buf, ui_getstring(UI_righthilight));
 
-		ui_draw_message_window(buf);
+		ui_draw_message_window_scroll(buf);
 
-		res = ui_message_window_keys();
+		res = ui_window_scroll_keys();
 		if (res > 0)
 			return ui_menu_stack_pop();
 	}
@@ -3058,7 +3068,7 @@ static UINT32 menu_command_contents(UINT32 state)
 
 	/* draw the text */
 	if (bufptr)
-		ui_draw_message_window(bufptr);
+		ui_draw_message_window_scroll(bufptr);
 	else
 	{
 		char buf[80];
@@ -3075,10 +3085,10 @@ static UINT32 menu_command_contents(UINT32 state)
 		strcat(buf, " ");
 		strcat(buf, ui_getstring(UI_righthilight));
 
-		ui_draw_message_window(buf);
+		ui_draw_message_window_scroll(buf);
 	}
 
-	res = ui_message_window_keys();
+	res = ui_window_scroll_keys();
 	if (res > 0)
 		return ui_menu_stack_pop();
 
@@ -4130,13 +4140,13 @@ int ui_display_game_warnings(mame_bitmap *bitmap)
 
 			ui_get_bounds(&ui_width, &ui_height);
 			add_filled_box_black(0, 0, ui_width - 1, ui_height - 1);
-			ui_draw_message_window(buf);
+			ui_draw_message_window_scroll(buf);
 
 			/* render and update */
 			render_ui(bitmap);
 			update_video_and_audio();
 
-			res = ui_message_window_keys();
+			res = ui_window_scroll_keys();
 			if (res == 2)
 				return 1;
 			if (res >= 0)
@@ -4181,13 +4191,13 @@ int ui_display_game_info(mame_bitmap *bitmap)
 		add_filled_box_black(0, 0, ui_width - 1, ui_height - 1);
 
 		/* draw the window */
-		ui_draw_message_window(buf);
+		ui_draw_message_window_scroll(buf);
 
 		/* render and update */
 		render_ui(bitmap);
 		update_video_and_audio();
 
-		res = ui_message_window_keys();
+		res = ui_window_scroll_keys();
 	} while (res <= 0);
 
 	/* clear the input memory */
@@ -4215,13 +4225,13 @@ int ui_display_game_info(mame_bitmap *bitmap)
 		add_filled_box_black(0, 0, ui_width - 1, ui_height - 1);
 
 		/* draw the window */
-		ui_draw_message_window(buf);
+		ui_draw_message_window_scroll(buf);
 
 		/* render and update */
 		render_ui(bitmap);
 		update_video_and_audio();
 
-		res = ui_message_window_keys();
+		res = ui_window_scroll_keys();
 	} while (res <= 0);
 #endif
 
@@ -5006,7 +5016,9 @@ static void add_filled_box_black(int x1, int y1, int x2, int y2)
 
 static void render_ui(mame_bitmap *dest)
 {
+	int ui_need_scroll = FALSE;
 	int i;
+
 #ifndef UI_COLOR_DISPLAY
 	uifont_colortable[0] = get_black_pen();
 	uifont_colortable[1] = get_white_pen();
@@ -5025,10 +5037,15 @@ static void render_ui(mame_bitmap *dest)
 		rectangle bounds;
 		rgb_t color = elem->color;
 
+		if (color == UI_SCROLL_TEXT_COLOR)
+			ui_need_scroll = TRUE;
+
 #ifdef UI_COLOR_DISPLAY
 		if (color == RGB_BLACK)
 			color = get_black_pen();
 		else if (color == RGB_WHITE)
+			color = get_white_pen();
+		else if (color == UI_SCROLL_TEXT_COLOR)
 		{
 			if (ui_lock_scroll)
 				color = uifont_colortable[FONT_COLOR_SPECIAL];
@@ -5078,6 +5095,9 @@ static void render_ui(mame_bitmap *dest)
 				break;
 		}
 	}
+
+	if (!ui_need_scroll)
+		ui_lock_scroll = FALSE;
 
 	elemindex = 0;
 }

@@ -1108,7 +1108,8 @@ void convert_command_move(char *buf)
 #ifdef COMMAND_CONVERT_TEXT
 			if (c[0] == COMMAND_CONVERT_TEXT)
 			{
-				int i = 0;
+				int len = 0;
+				int i;
 
 				if (c[0] == c[1])
 				{
@@ -1117,27 +1118,31 @@ void convert_command_move(char *buf)
 					continue;
 				}
 
-				while (convert_text[i].glyph_str)
+				for (i = 0; convert_text[i].glyph_str; i++)
 				{
-					int len = strlen(convert_text[i].glyph_str);
+					len = strlen(convert_text[i].glyph_str);
 
 					if (strncmp(c + 1, convert_text[i].glyph_str, len) == 0)
-					{
-						c[0] = gc1 + (convert_text[i].glyph_code / gsz);
-						c[1] = gc2 + (convert_text[i].glyph_code % gsz);
-						for (i = 2; i < len + 1; i++)
-							c[i] = NULL_SPACE1;
-						c += len + 1;
 						break;
-					}
-					i++;
+				}
+
+				if (convert_text[i].glyph_str)
+				{
+					c[0] = gc1 + (convert_text[i].glyph_code / gsz);
+					c[1] = gc2 + (convert_text[i].glyph_code % gsz);
+
+					for (i = 2; i < len + 1; i++)
+						c[i] = NULL_SPACE1;
+
+					c += len + 1;
+					continue;
 				}
 			}
 #endif /* COMMAND_CONVERT_TEXT */
 
 			if (c[0] == '\\' && c[1] == 'n')
 			{
-				c[0]     = '\n';
+				c[0] = '\n';
 				c[1] = NULL_SPACE1;
 				c+=2;
 			}
