@@ -84,6 +84,7 @@ void CreateDeficiencyFolders(int parent_index);
 void CreateDumpingFolders(int parent_index);
 #ifdef MISC_FOLDER
 void CreateFPSFolders(int parent_index);
+void CreateAspectFolders(int parent_index);
 void CreateResolutionFolders(int parent_index);
 void CreateControlFolders(int parent_index);
 void CreateSaveStateFolders(int parent_index);
@@ -117,15 +118,16 @@ enum
 	FOLDER_HARDDISK,
 	FOLDER_SAMPLES,
 	FOLDER_DUMPING,
-	FOLDER_SAVESTATE,
 #ifdef MISC_FOLDER
-	FOLDER_FPS,
 	FOLDER_RESOLUTION,
+	FOLDER_ASPECT,
+	FOLDER_FPS,
 	FOLDER_CONTROL,
 #else /* MISC_FOLDER */
 	FOLDER_TRACKBALL,
 	FOLDER_LIGHTGUN,
 #endif /* MISC_FOLDER */
+	FOLDER_SAVESTATE,
  	FOLDER_MULTIMON,
 	FOLDER_ORIENTATION,
 #ifdef MESS

@@ -1133,6 +1133,129 @@ void CreateYearFolders(int parent_index)
 }
 
 #ifdef MISC_FOLDER
+void CreateResolutionFolders(int parent_index)
+{
+	int i,jj;
+	int nGames = GetNumGames();
+	int start_folder = numFolders;
+	machine_config drv;
+	char Resolution[20];
+	LPTREEFOLDER lpFolder = treeFolders[parent_index];
+
+	// create our two subfolders - Vector (V) & Vector (H)
+	LPTREEFOLDER lpVectorV, lpVectorH;
+	lpVectorV = NewFolder("Vector (V)", 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER,
+ 					   GetFolderFlags("Vector (V)"));
+	AddFolder(lpVectorV);
+	lpVectorH = NewFolder("Vector (H)", 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER,
+ 					   GetFolderFlags("Vector (H)"));
+	AddFolder(lpVectorH);
+
+	// no games in top level folder
+	SetAllBits(lpFolder->m_lpGameBits,FALSE);
+
+	for (jj = 0; jj < nGames; jj++)
+	{
+		expand_machine_driver(drivers[jj]->drv, &drv);
+
+		if (drv.video_attributes & VIDEO_TYPE_VECTOR)
+		{
+			if (drivers[jj]->flags & ORIENTATION_SWAP_XY)
+			{
+				AddGame(lpVectorV,jj);
+			}
+			else
+			{
+				AddGame(lpVectorH,jj);
+			}
+		}
+		else
+		if (drivers[jj]->flags & ORIENTATION_SWAP_XY)
+		{
+			sprintf(Resolution, "%dx%d (V)",
+						drv.default_visible_area.max_y - drv.default_visible_area.min_y + 1,
+						drv.default_visible_area.max_x - drv.default_visible_area.min_x + 1);
+		}
+		else
+		{
+			sprintf(Resolution, "%dx%d (H)",
+						drv.default_visible_area.max_x - drv.default_visible_area.min_x + 1,
+						drv.default_visible_area.max_y - drv.default_visible_area.min_y + 1);
+		}
+
+		for (i=numFolders-1;i>=start_folder;i--)
+		{
+			if (strcmp(treeFolders[i]->m_lpTitle, Resolution) == 0)
+			{
+				AddGame(treeFolders[i],jj);
+				break;
+			}
+		}
+		if (i == start_folder-1)
+		{
+			LPTREEFOLDER lpTemp;
+			lpTemp = NewFolder(Resolution, 0, FALSE, next_folder_id++, parent_index, IDI_FOLDER,
+							   GetFolderFlags(Resolution));
+			AddFolder(lpTemp);
+			AddGame(lpTemp,jj);
+		}
+	}
+}
+
+void CreateAspectFolders(int parent_index)
+{
+	int i,jj;
+	int nGames = GetNumGames();
+	int start_folder = numFolders;
+	machine_config drv;
+	char Aspect[20];
+	LPTREEFOLDER lpFolder = treeFolders[parent_index];
+
+	// no games in top level folder
+	SetAllBits(lpFolder->m_lpGameBits,FALSE);
+
+	for (jj = 0; jj < nGames; jj++)
+	{
+		expand_machine_driver(drivers[jj]->drv, &drv);
+
+		if (drivers[jj]->flags & ORIENTATION_SWAP_XY)
+		{
+			if (drv.aspect_y == 0 && drv.aspect_x == 0)
+			{
+				drv.aspect_y = 3;
+				drv.aspect_x = 4;
+			}
+			sprintf(Aspect, "%d:%d", drv.aspect_y, drv.aspect_x);
+		}
+		else
+		{
+			if (drv.aspect_x == 0 && drv.aspect_y == 0)
+			{
+				drv.aspect_x = 4;
+				drv.aspect_y = 3;
+			}
+			sprintf(Aspect, "%d:%d", drv.aspect_x, drv.aspect_y);
+		}
+
+		for (i=numFolders-1;i>=start_folder;i--)
+		{
+			if (strcmp(treeFolders[i]->m_lpTitle, Aspect) == 0)
+			{
+				AddGame(treeFolders[i],jj);
+				break;
+			}
+		}
+		if (i == start_folder-1)
+		{
+			LPTREEFOLDER lpTemp;
+			lpTemp = NewFolder(Aspect, 0, FALSE, next_folder_id++, parent_index, IDI_FOLDER,
+							   GetFolderFlags(Aspect));
+			AddFolder(lpTemp);
+			AddGame(lpTemp,jj);
+		}
+	}
+}
+
 void CreateFPSFolders(int parent_index)
 {
 	int i,jj;
@@ -1176,45 +1299,33 @@ void CreateFPSFolders(int parent_index)
 	}
 }
 
-void CreateResolutionFolders(int parent_index)
+void CreateSaveStateFolders(int parent_index)
 {
-	int i,jj;
+	int jj;
 	int nGames = GetNumGames();
-	int start_folder = numFolders;
-	machine_config drv;
-	char Screen[20];
 	LPTREEFOLDER lpFolder = treeFolders[parent_index];
+
+	// create our two subfolders
+	LPTREEFOLDER lpSupported, lpUnsupported;
+	lpSupported = NewFolder("Supported", 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER,
+ 					   GetFolderFlags("Supported"));
+	AddFolder(lpSupported);
+	lpUnsupported = NewFolder("Unsupported", 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER,
+ 					   GetFolderFlags("Unsupported"));
+	AddFolder(lpUnsupported);
 
 	// no games in top level folder
 	SetAllBits(lpFolder->m_lpGameBits,FALSE);
 
 	for (jj = 0; jj < nGames; jj++)
 	{
-		expand_machine_driver(drivers[jj]->drv, &drv);
-
-		if (drv.video_attributes & VIDEO_TYPE_VECTOR)
-			sprintf(Screen, _UI("Vector %s"), drivers[jj]->flags & ORIENTATION_SWAP_XY ? _UI("(V)") : _UI("(H)"));
-		else
-			sprintf(Screen, "%4dx%d %s",
-					drv.default_visible_area.max_x - drv.default_visible_area.min_x + 1,
-					drv.default_visible_area.max_y - drv.default_visible_area.min_y + 1,
-					drivers[jj]->flags & ORIENTATION_SWAP_XY ? _UI("(V)") : _UI("(H)"));
-
-		for (i=numFolders-1;i>=start_folder;i--)
+		if (drivers[jj]->flags & GAME_SUPPORTS_SAVE)
 		{
-			if (strcmp(treeFolders[i]->m_lpTitle, Screen) == 0)
-			{
-				AddGame(treeFolders[i],jj);
-				break;
-			}
+			AddGame(lpSupported,jj);
 		}
-		if (i == start_folder-1)
+		else
 		{
-			LPTREEFOLDER lpTemp;
-			lpTemp = NewFolder(Screen, 0, FALSE, next_folder_id++, parent_index, IDI_FOLDER,
-							   GetFolderFlags(Screen));
-			AddFolder(lpTemp);
-			AddGame(lpTemp,jj);
+			AddGame(lpUnsupported,jj);
 		}
 	}
 }
@@ -1396,50 +1507,6 @@ void CreateControlFolders(int parent_index)
 			AddGame(map[w],i);
 
 		end_resource_tracking();
-	}
-}
-
-void CreateSaveStateFolders(int parent_index)
-{
-	int jj;
-	BOOL bSupported  = FALSE;
-	BOOL bUnsupported = FALSE;
-	int nGames = GetNumGames();
-	LPTREEFOLDER lpFolder = treeFolders[parent_index];
-	const game_driver *gamedrv;
-
-	// create our two subfolders
-	LPTREEFOLDER lpSupported, lpUnsupported;
-	lpSupported = NewFolder(_UI("Supported"), 0, TRUE, next_folder_id, parent_index, IDI_FOLDER,
- 					   GetFolderFlags("Supported"));
-	AddFolder(lpSupported);
-	lpUnsupported = NewFolder(_UI("Unsupported"), 0, TRUE, next_folder_id, parent_index, IDI_FOLDER,
- 					   GetFolderFlags("Unsupported"));
-	AddFolder(lpUnsupported);
-
-	// no games in top level folder
-	SetAllBits(lpFolder->m_lpGameBits,FALSE);
-
-	for (jj = 0; jj < nGames; jj++)
-	{
-		gamedrv = drivers[jj];
-
-		bSupported = FALSE;
-		bUnsupported = FALSE;
-
-			if (drivers[jj]->flags & GAME_SUPPORTS_SAVE)
-				bSupported = TRUE;		
-			else
-				bUnsupported = TRUE;
-
-		if (bSupported)
-		{
-			AddGame(lpSupported,jj);
-		}
-		if (bUnsupported)
-		{
-			AddGame(lpUnsupported,jj);
-		}
 	}
 }
 #endif /* MISC_FOLDER */

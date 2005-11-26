@@ -62,7 +62,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Add to Custom Folder...",    ID_CONTEXT_ADD_CUSTOM
         MENUITEM "R&emove From This Folder",    ID_CONTEXT_REMOVE_CUSTOM
-        MENUITEM "Source Proper&ties",          ID_SOURCE_PROPERTIES
+        MENUITEM "Proper&ties of Source",       ID_SOURCE_PROPERTIES
         MENUITEM "Pr&operties",                 ID_GAME_PROPERTIES
         MENUITEM SEPARATOR
         MENUITEM "&Audit all games",            ID_FILE_AUDIT
@@ -483,23 +483,25 @@ BEGIN
     LTEXT           "Static",IDC_PROP_MANUFACTURED,75,45,170,9,SS_NOPREFIX
     LTEXT           "Status:",IDC_STATIC,18,55,47,9
     LTEXT           "Static\nStatic\nStatic\nStatic",IDC_PROP_STATUS,75,55,170,32
-    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,89,240,1
-    LTEXT           "CPU:",IDC_STATIC,18,93,47,9
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,88,240,1
+    LTEXT           "CPU:",IDC_STATIC,18,91,47,9
     LTEXT           "Static\nStatic\nStatic\nStatic\nStatic\nStatic",
-                    IDC_PROP_CPU,75,93,170,48
-    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,143,240,1
-    LTEXT           "Sound:",IDC_STATIC,18,147,47,9
+                    IDC_PROP_CPU,75,91,170,48
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,140,240,1
+    LTEXT           "Sound:",IDC_STATIC,18,143,47,9
     LTEXT           "Static\nStatic\nStatic\nStatic\nStatic",IDC_PROP_SOUND,
-                    75,147,170,40
-    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,189,240,1
-    LTEXT           "Screen:",IDC_STATIC,18,193,47,9
-    LTEXT           "Static",IDC_PROP_SCREEN,75,193,170,9
-    LTEXT           "Colors:",IDC_STATIC,18,203,47,9
-    LTEXT           "Static",IDC_PROP_COLORS,75,203,170,9
-    LTEXT           "Source:",IDC_STATIC,18,212,47,9
-    LTEXT           "Static",IDC_PROP_SOURCE,75,212,170,9
-    LTEXT           "Clone of:",IDC_PROP_CLONEOF_TEXT,18,222,50,9
-    LTEXT           "Static",IDC_PROP_CLONEOF,75,222,170,18
+                    75,143,170,40
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,184,240,1
+    LTEXT           "Screen:",IDC_STATIC,18,187,47,9
+    LTEXT           "Static",IDC_PROP_SCREEN,75,187,170,9
+    LTEXT           "Colors:",IDC_STATIC,18,197,47,9
+    LTEXT           "Static",IDC_PROP_COLORS,75,197,170,9
+    LTEXT           "Save State:",IDC_STATIC,18,207,47,9
+    LTEXT           "Static",IDC_PROP_SAVESTATE,75,207,170,9
+    LTEXT           "Source:",IDC_STATIC,18,217,47,9
+    LTEXT           "Static",IDC_PROP_SOURCE,75,217,170,9
+    LTEXT           "Clone of:",IDC_PROP_CLONEOF_TEXT,18,227,50,9
+    LTEXT           "Static",IDC_PROP_CLONEOF,75,227,170,16
 END
 
 IDD_PROP_AUDIT DIALOG DISCARDABLE  0, 0, 260, 245

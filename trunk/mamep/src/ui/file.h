@@ -14,7 +14,6 @@
 #define FILE_H
 
 // from windows fileio.c
-// defined in osd_so.h
 //extern void set_pathlist(int file_type,const char *new_rawpath);
 
 #endif

@@ -1,6 +1,6 @@
 /*********************************************************************
 
-    ui_font.c
+    ui_font.h
 
     Build font for MAME's user interface.
     By NJ and the MAME Plus! Team
@@ -22,7 +22,6 @@ void uifont_drawchar(mame_bitmap *dest, UINT16 code, int color, int sx, int sy, 
 #ifdef UI_COLOR_DISPLAY
 void convert_command_move(char *buf);
 #endif /* UI_COLOR_DISPLAY */
-
 
 extern pen_t uifont_colortable[MAX_COLORTABLE];
 

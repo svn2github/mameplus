@@ -786,9 +786,8 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIco
 	pshead.hInstance                  = hInst;
 	if (!g_pFolder)
 	{
-		pshead.pszCaption             = _Unicode(UseLangList()
-		                                  ? _LST(drivers[g_nGame]->description)
-		                                  : ModifyThe(drivers[g_nGame]->description));
+//		pshead.pszCaption = ModifyThe(drivers[g_nGame]->description);
+		pshead.pszCaption             = _Unicode(_UI(drivers[g_nGame]->name));
 	}
 	else
 	{
@@ -905,19 +904,54 @@ static LPWSTR GameInfoScreen(UINT nIndex)
 	expand_machine_driver(drivers[nIndex]->drv, &drv);
 
 	if (drv.video_attributes & VIDEO_TYPE_VECTOR)
-		sprintf(buf, _UI("%s %f Hz"),drivers[nIndex]->flags & ORIENTATION_SWAP_XY ? _UI("Vector (V)") : _UI("Vector (H)"), drv.frames_per_second);
+	{
+		if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
+		{
+			if (drv.aspect_y == 0 && drv.aspect_x == 0)
+			{
+				drv.aspect_y = 3;
+				drv.aspect_x = 4;
+			}
+			sprintf(buf,_UI("Vector (V) (%d:%d) %f Hz"),
+					drv.aspect_y, drv.aspect_x, drv.frames_per_second);
+		}
+		else
+		{
+			if (drv.aspect_x == 0 && drv.aspect_y == 0)
+			{
+				drv.aspect_x = 4;
+				drv.aspect_y = 3;
+			}
+			sprintf(buf,_UI("Vector (H) (%d:%d) %f Hz"),
+					drv.aspect_x, drv.aspect_y, drv.frames_per_second);
+		}
+	}
 	else
 	{
 		if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
-			sprintf(buf,_UI("%d x %d (V) %f Hz"),
+		{
+			if (drv.aspect_y == 0 && drv.aspect_x == 0)
+			{
+				drv.aspect_y = 3;
+				drv.aspect_x = 4;
+			}
+			sprintf(buf,_UI("Raster %d x %d (V) (%d:%d) %f Hz"),
 					drv.default_visible_area.max_y - drv.default_visible_area.min_y + 1,
 					drv.default_visible_area.max_x - drv.default_visible_area.min_x + 1,
-					drv.frames_per_second);
+					drv.aspect_y, drv.aspect_x, drv.frames_per_second);
+		}
 		else
-			sprintf(buf,_UI("%d x %d (H) %f Hz"),
+		{
+			if (drv.aspect_x == 0 && drv.aspect_y == 0)
+			{
+				drv.aspect_x = 4;
+				drv.aspect_y = 3;
+			}
+			sprintf(buf,_UI("Raster %d x %d (H) (%d:%d) %f Hz"),
 					drv.default_visible_area.max_x - drv.default_visible_area.min_x + 1,
 					drv.default_visible_area.max_y - drv.default_visible_area.min_y + 1,
-					drv.frames_per_second);
+					drv.aspect_x, drv.aspect_y, drv.frames_per_second);
+		}
 	}
 	return _Unicode(buf);
 }
@@ -1030,7 +1064,7 @@ LPWSTR GameInfoTitle(UINT nIndex)
 	if (nIndex == GLOBAL_OPTIONS)
 		strcpy(buf, _UI("Global game options\nDefault options used by all games"));
 	else if (nIndex == FOLDER_OPTIONS)
-		strcpy(buf, _UI("Global folder options\nDefault options used by all games in the folder"));
+		sprintf(buf, _UI("Global folder options\nCustom options used by all games in the %s"), IS_FOLDER);
 	else
 		UseLangList()?
 			sprintf(buf, "%s [%s]", _LST(drivers[nIndex]->description), drivers[nIndex]->name):
@@ -1055,6 +1089,18 @@ static LPWSTR GameInfoCloneOf(UINT nIndex)
 				ConvertAmpersandString(ModifyThe(drivers[nIndex]->clone_of->description)),
 				drivers[nIndex]->clone_of->name);
 	}
+
+	return _Unicode(buf);
+}
+
+static LPWSTR GameInfoSaveState(int driver_index)
+{
+	char buf[1024];
+
+	if (drivers[driver_index]->flags & GAME_SUPPORTS_SAVE)
+		sprintf(buf, _UI("Supported"));
+	else
+		sprintf(buf, _UI("Unsupported"));
 
 	return _Unicode(buf);
 }
@@ -1105,6 +1151,7 @@ INT_PTR CALLBACK GamePropertiesDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LP
 			Static_SetText(GetDlgItem(hDlg, IDC_PROP_SCREEN),        GameInfoScreen(g_nGame));
 			Static_SetText(GetDlgItem(hDlg, IDC_PROP_COLORS),        GameInfoColors(g_nGame));
 			Static_SetText(GetDlgItem(hDlg, IDC_PROP_CLONEOF),       GameInfoCloneOf(g_nGame));
+			Static_SetText(GetDlgItem(hDlg, IDC_PROP_SAVESTATE),     GameInfoSaveState(g_nGame));
 			Static_SetText(GetDlgItem(hDlg, IDC_PROP_SOURCE),        GameInfoSource(g_nGame));
 
 			if (DriverIsClone(g_nGame))

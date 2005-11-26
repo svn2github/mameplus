@@ -219,6 +219,7 @@
 #define IDC_CONFIGURETEXT               1113
 #define IDC_JOYMAPTEXT                  1114
 #define IDC_START_GAME_CHECK            1115
+#define IDC_PROP_SAVESTATE              1116
 #define IDC_VOLUME                      1117
 #define IDC_VOLUMEDISP                  1118
 #define IDC_PROP_HISTORY                1119

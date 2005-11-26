@@ -3316,11 +3316,11 @@ static int sprintf_game_info(char *buf)
 
 	/* display screen resolution and refresh rate info for raster games */
 	else
-		bufptr += sprintf(bufptr,"\n%s:\n%d x %d (%s) %f Hz\n",
+		bufptr += sprintf(bufptr,"\n%s:\n%d x %d %s %f Hz\n",
 				ui_getstring(UI_screenres),
 				Machine->visible_area.max_x - Machine->visible_area.min_x + 1,
 				Machine->visible_area.max_y - Machine->visible_area.min_y + 1,
-				(Machine->gamedrv->flags & ORIENTATION_SWAP_XY) ? "V" : "H",
+				(Machine->gamedrv->flags & ORIENTATION_SWAP_XY) ? _("(V)") : _("(H)"),
 				Machine->refresh_rate);
 	return bufptr - buf;
 }
