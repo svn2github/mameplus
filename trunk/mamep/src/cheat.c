@@ -1501,12 +1501,12 @@ static void old_style_menu(const char **items, const char **subitems, char *flag
 	for (menu_items = 0; items[menu_items]; menu_items++)
 		;
 
-	if (alloc_count != menu_items + 1)
+	if (alloc_count != menu_items)
 	{
 		if (item_list)
 			free(item_list);
 
-		alloc_count = menu_items + 1;
+		alloc_count = menu_items;
 		item_list = malloc(sizeof (item_list[0]) * alloc_count);
 	}
 
