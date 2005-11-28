@@ -1,6 +1,6 @@
 # ui/mame32.rc: 384
                                 
-Traducido por Juanen <juanenrak@gmail.com> 30-10-2005
+Traducido por Juanen <juanenrak@gmail.com> 19-11-2005
 
 # ui/properties.c: 967
 %d colors 
@@ -9,6 +9,10 @@ Traducido por Juanen <juanenrak@gmail.com> 30-10-2005
 # ui/win32ui.c: 252, 3600
 %d games
 %d juegos
+
+# ui/properties.c: 3877
+%li bit
+%li bit
 
 # ui/mame32.rc: 157
 &About
@@ -336,7 +340,7 @@ Permitir seleccionar juego con un &joystick (requiere reiniciar)
 
 # ui/mame32.rc: 1009
 Allow game selection by custom &key sequences
-Permitir seleccionar juego por secuencia de tecla personalizada
+Permitir seleccionar juego por secuencia de teclas personalizadas
 
 # ui/mame32.rc: 1485
 Allow restoring options to 'sane' values.
@@ -384,7 +388,7 @@ Modo pantalla
 
 # ui/mame32.rc: 652
 Audio latency
-Latencia de audio:
+Latencia de audio
 
 # ui/mame32.rc: 509
 Audit
@@ -512,7 +516,7 @@ Contadores
 
 # ui/mame32.rc: 559
 Brightness correction
-Corrección de Brillo:
+Corrección de Brillo
 
 # ui/mame32.rc: 446
 Browse...
@@ -604,7 +608,7 @@ Christopher Kirmse y Michael Soderstrom
 
 # ui/mame32.rc: 699
 Clean stretch
-Limpiar estirado:
+Limpiar estirado
 
 # ui/properties.c: 3842
 Clockwise
@@ -776,7 +780,7 @@ Default Game &Options...
 
 # ui/mame32.rc: 765
 Default input layout
-Disposición de entrada por defecto:
+Disposición de entrada por defecto
 
 # ui/mame32.rc: 448
 Delete
@@ -785,6 +789,10 @@ Borrar
 # ui/mame32.rc: 712
 Depth:
 Profundidad:
+
+# ui/win32ui.c: 790 
+Description
+Descripción
 
 # ui/mame32.rc: 424, 520 ui/options.c: 280 ui/win32ui.c: 659
 Details
@@ -817,6 +825,10 @@ El directorio no existe, ¿Continuar de todas formas?
 # ui/directories.c: 845, 887
 Directory name:
 Nombre del directorio:
+
+# ui/properties.c: 3693, 3710 
+Disabled
+Desactivado
 
 # ui/mame32.rc: 528
 Display
@@ -912,7 +924,7 @@ Efectos
 
 # ui/mame32.rc: 720
 Effects
-Efectos:
+Efectos
 
 # ui/mame32.rc: 1030
 Emulation
@@ -944,7 +956,7 @@ Habilitar TrackPoint
 
 # ui/mame32.rc: 635
 Enable sound and sound CPUs
-Habilitar sonidos y CPUs de sonido
+Habilitar sonidos y CPUs de sonido:
 
 # ui/mame32.rc: 748
 Enable steadykey support
@@ -990,6 +1002,10 @@ Imágenes por Segundo
 Failed
 Fallado
 
+# ui/mame32.rc: 611
+Feedback strength
+Votar fuerza
+
 # ui/audit32.c: 208 ui/mame32.rc: 401
 File Audit
 Verificación de Archivos
@@ -1034,9 +1050,13 @@ Fuente (normal)
 Font (special)
 Fuente (especial)
 
+# ui/mame32.rc: 616
+Force zoom level
+Forzar nivel de zoom
+
 # ui/mame32.rc: 569
 Frame skipping
-Saltos de Imágenes:
+Saltos de Imágenes
 
 # ui/properties.c: 391, 402
 Full
@@ -1044,7 +1064,7 @@ Completo
 
 # ui/mame32.rc: 702
 Full screen brightness
-Luminosidad:
+Luminosidad
 
 # ui/mame32.rc: 921
 Game Filters
@@ -1084,7 +1104,7 @@ Búsqueda de juego %d%% completada
 
 # ui/mame32.rc: 554
 Gamma correction
-Corrección Gamma:
+Corrección Gamma
 
 # ui/mame32.rc: 475
 General
@@ -1138,13 +1158,17 @@ Horizontal
 How cheats work
 Cómo funcionan los trucos
 
+# ui/layout.c: 109
+IPS Files
+Archivos IPS
+
 # ui/layout.c: 126
 Icons
 Iconos
 
 # ui/mame32.rc: 726
 Image Enhancement
-Imagen Realzada:
+Imagen Realzada
 
 # ui/win32ui.c: 769
 Image Files (*.png,*.bmp)
@@ -1193,6 +1217,10 @@ Intensidad
 # ui/mame32.rc: 1000
 Interface Options
 Opciones de la Interfaz
+
+# ui/mame32.rc: 597
+Interpolation method
+Metodo de interpolación
 
 # ui/treeview.c: 1366
 JOY2WAY
@@ -1354,6 +1382,10 @@ Multi-Pantalla
 NVRAM
 NVRAM
 
+# ui/win32ui.c: 793 
+Name
+Nombre
+
 # ui/mame32.rc: 1492
 New game changes
 Cambios en juego nuevo
@@ -1424,7 +1456,7 @@ Barra OSD (luz)
 
 # ui/mame32.rc: 757
 Offscreen shots reload
-Cargar tiros fuera de pantalla
+Recargar disparos fuera de pantalla
 
 # ui/mame32.rc: 941
 Ori&ginals
@@ -1504,7 +1536,7 @@ Pasado
 
 # ui/mame32.rc: 565
 Pause Brightness
-Brillo de Pausa:
+Brillo de Pausa
 
 # ui/mame32.rc: 1071
 Pedal device
@@ -1533,6 +1565,10 @@ Jugar juego seleccionado
 # ui/mame32.rc: 1447
 Playback a recorded game
 Reproducir un juego grabado
+
+# ui/win32ui.c: 796
+Playcount
+Partidas Jugadas
 
 # ui/mame32.rc: 66, 181
 Pr&operties
@@ -1698,9 +1734,13 @@ Reiniciar todas las Partidas Jugadas
 Reset play time of currently selected game
 Reiniciar tiempo de juego seleccionado
 
+# ui/mame32.rc: 1510
+Reset playcount of currently selected game
+Reiniciar partidas jugadas del juego seleccionado
+
 # ui/layout.c: 70 ui/mame32.rc: 708
 Resolution
-Resolución:
+Resolución
 
 # ui/mame32.rc: 575, 621, 657, 731, 793, 853, 886, 1089, 1171
 Restore Default Settings
@@ -1713,6 +1753,10 @@ Restaurar Cambios
 # ui/mame32.rc: 544
 Rotation
 Rotación:
+
+# ui/mame32.rc: 594
+Rotation of effects for rotated games
+Rotación de efectos para juegos rotados
 
 # ui/mame32.rc: 535
 Run in a window
@@ -1740,11 +1784,15 @@ Chequeo de muestras:
 
 # ui/mame32.rc: 644
 Sample rate
-Frecuencia de muestreo:
+Frecuencia de muestreo
 
 # ui/layout.c: 82, 106 ui/mame32.rc: 415 ui/win32ui.c: 792
 Samples
 Muestras de Sonido
+
+# ui/mame32.rc: 606
+Scanline intensity
+Intensidad de línea de escaneado
 
 # ui/properties.c: 452
 Scanlines 25%
@@ -2055,8 +2103,20 @@ Sort column in descending (Z-A) order
 Ordenar la columna en orden descendente (A-Z)
 
 # ui/mame32.rc: 1531
+Sort items by game description
+Ordenar objetos por descripción de juego
+
+# ui/mame32.rc: 1531
 Sort items by manufacturer
 Ordenar objetos por creador
+
+# ui/mame32.rc: 1531
+Sort items by name
+Ordenar objetos por nombre
+
+# ui/mame32.rc: 1531
+Sort items by playcount
+Ordenar objetos por partidas jugadas
 
 # ui/mame32.rc: 1531
 Sort items by type
@@ -2128,7 +2188,7 @@ Estirar usando hardware
 
 # ui/mame32.rc: 686
 Switch color depths to fit
-Cambiar color para ajustar
+Cambiar profundidades de color para ajustar
 
 # ui/mame32.rc: 683
 Switch resolutions to fit
@@ -2292,7 +2352,7 @@ Error desconocido.
 
 # ui/mame32.rc: 589
 Use Direct3D
-Direct3D (Por Software)
+Usar Direct3D (Por Software):
 
 # ui/mame32.rc: 670
 Use DirectDraw
@@ -2322,6 +2382,10 @@ Líneas de escaneado clásicas
 Use samples
 Usar muestras de sonido
 
+# ui/mame32.rc: 591
+Use texture management
+Usar texturas  administradas
+
 # ui/mame32.rc: 839
 Use transparent in-game menu
 Transparencias en menú de juego
@@ -2348,7 +2412,7 @@ La emulación del vídeo no es 100% exacta
 
 # ui/mame32.rc: 648
 Volume attenuation
-Control de atenuación:
+Control de atenuación
 
 # ui/win32ui.c: 7190
 WARNING: the game might not run correctly.
@@ -2394,6 +2458,10 @@ Directorio de opciones específicas de Windows
 Windows UI specific folder list filters options
 Opciones de filtrado de la lista de carpetas de Windows
 
+# ui/options.c: 774
+Windows UI specific folder list hide options
+Esconder lista de opciones de la carpeta especifica de la Interfaz
+
 # ui/options.c: 668
 Windows UI specific general options
 Opciones generales específicas de Windows
@@ -2438,6 +2506,10 @@ Si
 and John Hardy IV
 y John Hardy IV
 
+# ui/mame32.rc: 105
+by &Description
+por &Descripción
+
 # ui/mame32.rc: 107
 by &Manufacturer
 por &Creador
@@ -2446,9 +2518,17 @@ por &Creador
 by &Name
 por &Nombre
 
+# ui/mame32.rc: 108
+by &Playcount
+por &Partidas Jugadas
+
 # ui/mame32.rc: 109
 by &Type
 por &Tipo
+
+# ui/mame32.rc: 110
+by &Year
+por &Año
 
 # ui/options.c: 3689, 3730, 3817, 3870, 4012 
 error invalid value for %s: %s\n
@@ -2474,48 +2554,12 @@ la próxima vez MAME32 Plus! se ejecutara.\n\n
 %dx%d (V)
 
 
-# ui/properties.c: 3877
-%li bit
-
-
 # ui/layout.c: 71
 Aspect Ratio
 
 
-# ui/win32ui.c: 790 
-Description
-
-
-# ui/properties.c: 3693, 3710 
-Disabled
-
-
-# ui/mame32.rc: 611
-Feedback strength
-
-
-# ui/mame32.rc: 616
-Force zoom level
-
-
 # ui/properties.c: 1067
 Global folder options\nCustom options used by all games in the %s
-
-
-# ui/layout.c: 109
-IPS Files
-
-
-# ui/mame32.rc: 597
-Interpolation method
-
-
-# ui/win32ui.c: 793 
-Name
-
-
-# ui/win32ui.c: 796
-Playcount
 
 
 # ui/properties.c: 950
@@ -2526,14 +2570,6 @@ Raster %d x %d (H) (%d:%d) %f Hz
 Raster %d x %d (V) (%d:%d) %f Hz
 
 
-# ui/mame32.rc: 1510
-Reset playcount of currently selected game
-
-
-# ui/mame32.rc: 594
-Rotation of effects for rotated games
-
-
 # ui/layout.c: 73, 84
 Save State
 
@@ -2542,32 +2578,12 @@ Save State
 Save State:
 
 
-# ui/mame32.rc: 606
-Scanline intensity
-
-
-# ui/mame32.rc: 1531
-Sort items by game description
-
-
-# ui/mame32.rc: 1531
-Sort items by name
-
-
-# ui/mame32.rc: 1531
-Sort items by playcount
-
-
 # ui/properties.c: 1101 ui/treeview.c: 1310, 1311
 Supported
 
 
 # ui/properties.c: 1103 ui/treeview.c: 1313, 1314
 Unsupported
-
-
-# ui/mame32.rc: 591
-Use texture management
 
 
 # ui/treeview.c: 1150, 1151
@@ -2584,21 +2600,5 @@ Vector (V)
 
 # ui/properties.c: 915
 Vector (V) (%d:%d) %f Hz
-
-
-# ui/options.c: 774
-Windows UI specific folder list hide options
-
-
-# ui/mame32.rc: 105
-by &Description
-
-
-# ui/mame32.rc: 108
-by &Playcount
-
-
-# ui/mame32.rc: 110
-by &Year
 
 

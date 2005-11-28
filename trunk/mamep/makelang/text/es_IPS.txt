@@ -1,3 +1,11 @@
+# 22
+CPS1
+Capcom System 1
+
+# 31
+CPS2
+Capcom System 2
+
 # Title
 IPS
 IPS
@@ -10,19 +18,11 @@ Varios
 Neo-Geo
 Neo-Geo
 
+# 89
+PGM
+PolyGame Master
+
 # 7
 Translation
 Traducción
-
-# 22
-CPS1
-
-
-# 31
-CPS2
-
-
-# 89
-PGM
-
 

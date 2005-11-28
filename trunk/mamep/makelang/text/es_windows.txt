@@ -874,6 +874,10 @@ directorio para Decorados (Overlays etc.)
 directory for hard drive image difference files
 directorio para archivos .diff
 
+# windows/fileio.c: 140
+directory for ips files
+directorio para archivos IPS
+
 # windows/fileio.c: 142
 directory for localized language files
 directorio para archivos de idiomas localizados
@@ -1209,6 +1213,10 @@ metodo de interpolacion
 # windows/input.c: 1736
 invalid
 inválido
+
+# windows/config.c: 260
+ips datfile name
+nombre de archivo de datos IPS
 
 # windows/fronthlp.c: 730
 is bad\n
@@ -1606,15 +1614,7 @@ color marco de ventana (medio)
 year, manufacturer and full name
 Año, creador y nombre completo
 
-# windows/fileio.c: 140
-directory for ips files
-
-
 # windows/input.c: 234
 enable pointing stick input
-
-
-# windows/config.c: 260
-ips datfile name
 
 

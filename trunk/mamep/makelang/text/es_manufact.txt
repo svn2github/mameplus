@@ -474,6 +474,10 @@ Elcon
 Electro Design
 Electro Design
 
+# Dwarfs Den
+Electro-Sport
+Electro-Sport
+
 # Diamond Derby (set 1)
 Electrocoin
 Electrocoin
@@ -1278,6 +1282,14 @@ Rare LTD.
 Raster Elite
 Raster Elite
 
+# Frog Feast
+Rastersoft
+Rastersoft
+
+# Zintrick / Oshidashi Zentrix (CD to MVS Conversion)
+Razoola
+Razoola
+
 # Astro Fire
 Rene Pierre
 Rene Pierre
@@ -1402,6 +1414,10 @@ Shinkai Inc.
 Shoei
 Shoei
 
+# Time Attacker
+Shonan
+Shonan
+
 # Condor
 Sidam
 Sidam
@@ -1489,6 +1505,10 @@ Sun a Electronics
 # Rough Ranger (v2.0)
 SunA
 SunA
+
+# Trivia Quest
+Sunn
+Sunn
 
 # Vs. Freedom Force
 Sunsoft
@@ -1932,25 +1952,5 @@ desconocido
 
 # Honey Dolls
 Barko Corp.
-
-
-# Dwarfs Den
-Electro-Sport
-
-
-# Frog Feast
-Rastersoft
-
-
-# Zintrick / Oshidashi Zentrix (CD to MVS Conversion)
-Razoola
-
-
-# Time Attacker
-Shonan
-
-
-# Trivia Quest
-Sunn
 
 
