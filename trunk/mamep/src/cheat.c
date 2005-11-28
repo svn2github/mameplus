@@ -1494,8 +1494,13 @@ static int ReadKeyAsync(int flush)
 
 static void old_style_menu(const char **items, const char **subitems, char *flag, int selected, int arrowize_subitem)
 {
-	static ui_menu_item item_list[1000];
+	static ui_menu_item *item_list;
 	int menu_items;
+
+	for (menu_items = 0; items[menu_items]; menu_items++)
+		;
+
+	item_list = malloc(sizeof (item_list[0]) * (menu_items + 1));
 
 	for (menu_items = 0; items[menu_items]; menu_items++)
 	{
