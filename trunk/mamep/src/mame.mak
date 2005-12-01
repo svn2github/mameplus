@@ -1140,7 +1140,6 @@ $(OBJ)/igs.a: \
 	$(OBJ)/vidhrdw/pgm.o $(OBJ)/drivers/pgm.o \
 	$(OBJ)/machine/pgmprot.o $(OBJ)/machine/pgmcrypt.o \
 	$(OBJ)/machine/pgmy2ks.o \
-	$(OBJ)/drivers/vbowl.o \
 	$(OBJ)/drivers/igs_blit.o \
 
 $(OBJ)/ramtek.a: \
