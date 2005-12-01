@@ -71,7 +71,7 @@ FOLDERDATA g_folderData[] =
 	{"Aspect Ratio",    "aspect",            FOLDER_ASPECT,       IDI_FOLDER,               0,             0,            CreateAspectFolders },
 	{"FPS",             "fps",               FOLDER_FPS,          IDI_FOLDER,               0,             0,            CreateFPSFolders },
 	{"Save State",      "savestate",         FOLDER_SAVESTATE,    IDI_FOLDER,               0,             0,            CreateSaveStateFolders },
-	{"Control",         "control",           FOLDER_CONTROL,      IDI_FOLDER,               0,             0,            CreateControlFolders },
+	{"Control Type",    "control",           FOLDER_CONTROL,      IDI_FOLDER,               0,             0,            CreateControlFolders },
 #else /* MISC_FOLDER */
 	{"Trackball",       "trackball",         FOLDER_TRACKBALL,    IDI_FOLDER,               0,             0,            NULL,                       DriverUsesTrackball,	TRUE },
 	{"Lightgun",        "lightgun",          FOLDER_LIGHTGUN,     IDI_FOLDER,               0,             0,            NULL,                       DriverUsesLightGun,TRUE },

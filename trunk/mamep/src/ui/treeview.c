@@ -1337,46 +1337,48 @@ void CreateControlFolders(int parent_index)
 		FOLDER_PLAYER5, FOLDER_PLAYER6, FOLDER_PLAYER7, FOLDER_PLAYER8,
 		FOLDER_BUTTON1, FOLDER_BUTTON2, FOLDER_BUTTON3, FOLDER_BUTTON4, FOLDER_BUTTON5,
 		FOLDER_BUTTON6, FOLDER_BUTTON7, FOLDER_BUTTON8, FOLDER_BUTTON9, FOLDER_BUTTON10,
-		FOLDER_2WAY, FOLDER_4WAY, FOLDER_8WAY,
-		FOLDER_DUAL2WAY, FOLDER_DUAL4WAY, FOLDER_DUAL8WAY,
-		FOLDER_STICK, FOLDER_ADSTICK,
-		FOLDER_PADDLE, FOLDER_DIAL, FOLDER_TRACK, FOLDER_GUN, FOLDER_PEDAL,
+		FOLDER_JOY2WAY, FOLDER_JOY4WAY, FOLDER_JOY8WAY,
+//		FOLDER_VJOY2WAY,
+		FOLDER_DOUBLEJOY2WAY, FOLDER_DOUBLEJOY4WAY, FOLDER_DOUBLEJOY8WAY,
+//		FOLDER_VDOUBLEJOY2WAY,
+		FOLDER_ADSTICK, FOLDER_PADDLE, FOLDER_DIAL, FOLDER_TRACKBALL, FOLDER_LIGHTGUN,
 		FOLDER_MAX
 	};
 
 	static const char *ctrl_names[FOLDER_MAX] = {
-		"PLAYERS 1",
-		"PLAYERS 2",
-		"PLAYERS 3",
-		"PLAYERS 4",
-		"PLAYERS 5",
-		"PLAYERS 6",
-		"PLAYERS 7",
-		"PLAYERS 8",
-		"BUTTONS 1",
-		"BUTTONS 2",
-		"BUTTONS 3",
-		"BUTTONS 4",
-		"BUTTONS 5",
-		"BUTTONS 6",
-		"BUTTONS 7",
-		"BUTTONS 8",
-		"BUTTONS 9",
-		"BUTTONS10",
-		"JOY2WAY",
-		"JOY4WAY",
-		"JOY8WAY",
-		"DOUBLEJOY2WAY",
-		"DOUBLEJOY4WAY",
-		"DOUBLEJOY8WAY",
-		"STICK",
-		"AD STICK",
-		"PADDLE",
-		"DIAL",
-		"TRACKBALL",
-		"LIGHTGUN",
-		"PEDAL"
+		"Players 1",
+		"Players 2",
+		"Players 3",
+		"Players 4",
+		"Players 5",
+		"Players 6",
+		"Players 7",
+		"Players 8",
+		"Buttons 1",
+		"Buttons 2",
+		"Buttons 3",
+		"Buttons 4",
+		"Buttons 5",
+		"Buttons 6",
+		"Buttons 7",
+		"Buttons 8",
+		"Buttons 9",
+		"Buttons 10",
+		"Joy 2-Way",
+		"Joy 4-Way",
+		"Joy 8-Way",
+//		"Joy 2-Way (V)",
+		"Double Joy 2-Way",
+		"Double Joy 4-Way",
+		"Double Joy 8-Way",
+//		"Double Joy 2-Way (V)",
+		"AD Stick",
+		"Paddle",
+		"Dial",
+		"Trackball",
+		"Lightgun"
 	};
+
 	int i;
 	int nGames = GetNumGames();
 	int nFolder = numFolders;
@@ -1398,7 +1400,7 @@ void CreateControlFolders(int parent_index)
 
 	for (i = 0; i < nGames; i++)
 	{
-		const input_port_entry *inp;
+		const input_port_entry *input;
 		int b = 0;
 		int p = 0;
 		int w = 0;
@@ -1407,65 +1409,60 @@ void CreateControlFolders(int parent_index)
 			continue;
 
 		begin_resource_tracking();
-#ifdef USE_NEOGEO_HACKS
-		Machine->gamedrv = drivers[i];
-#endif /* USE_NEOGEO_HACKS */
-		inp = input_port_allocate(drivers[i]->construct_ipt, NULL);
 
-		for (; inp->type != IPT_END; inp++)
+		input = input_port_allocate(drivers[i]->construct_ipt, NULL);
+
+		while (input->type != IPT_END)
 		{
 			int n;
 
-			if (p < inp->player + 1)
-				p = inp->player + 1;
+			if (p < input->player + 1)
+				p = input->player + 1;
 
-			n = inp->type - IPT_BUTTON1 + 1;
+				n = input->type - IPT_BUTTON1 + 1;
+
 			if (n >= 1 && n <= MAX_NORMAL_BUTTONS && n > b)
 			{
 				b = n;
 				continue;
 			}
 
-			switch (inp->type)
+			switch (input->type)
 			{
 			case IPT_JOYSTICK_LEFT:
 			case IPT_JOYSTICK_RIGHT:
-				AddGame(map[FOLDER_STICK],i);
 
 				if (!w)
-					w = FOLDER_2WAY;
+					w = FOLDER_JOY2WAY;
 				break;
 
 			case IPT_JOYSTICK_UP:
 			case IPT_JOYSTICK_DOWN:
-				AddGame(map[FOLDER_STICK],i);
 
-				if (inp->four_way)
-					w = FOLDER_4WAY;
-				else
-					w = FOLDER_8WAY;
+					if (input->four_way)
+						w = FOLDER_JOY4WAY;
+					else
+						w = FOLDER_JOY8WAY;
 				break;
 
-			case IPT_JOYSTICKLEFT_LEFT:
-			case IPT_JOYSTICKLEFT_RIGHT:
 			case IPT_JOYSTICKRIGHT_LEFT:
 			case IPT_JOYSTICKRIGHT_RIGHT:
-				AddGame(map[FOLDER_STICK],i);
+			case IPT_JOYSTICKLEFT_LEFT:
+			case IPT_JOYSTICKLEFT_RIGHT:
 
 				if (!w)
-					w = FOLDER_DUAL2WAY;
+					w = FOLDER_DOUBLEJOY2WAY;
 				break;
 
 			case IPT_JOYSTICKRIGHT_UP:
 			case IPT_JOYSTICKRIGHT_DOWN:
 			case IPT_JOYSTICKLEFT_UP:
 			case IPT_JOYSTICKLEFT_DOWN:
-				AddGame(map[FOLDER_STICK],i);
 
-				if (inp->four_way)
-					w = FOLDER_DUAL4WAY;
-				else
-					w = FOLDER_DUAL8WAY;
+					if (input->four_way)
+						w = FOLDER_DOUBLEJOY4WAY;
+					else
+						w = FOLDER_DOUBLEJOY8WAY;
 				break;
 
 			case IPT_PADDLE:
@@ -1478,7 +1475,7 @@ void CreateControlFolders(int parent_index)
 
 			case IPT_TRACKBALL_X:
 			case IPT_TRACKBALL_Y:
-				AddGame(map[FOLDER_TRACK],i);
+				AddGame(map[FOLDER_TRACKBALL],i);
 				break;
 
 			case IPT_AD_STICK_X:
@@ -1488,13 +1485,10 @@ void CreateControlFolders(int parent_index)
 
 			case IPT_LIGHTGUN_X:
 			case IPT_LIGHTGUN_Y:
-				AddGame(map[FOLDER_GUN],i);
-				break;
-
-			case IPT_PEDAL:
-				AddGame(map[FOLDER_PEDAL],i);
+				AddGame(map[FOLDER_LIGHTGUN],i);
 				break;
 			}
+		++input;
 		}
 
 		if (p)

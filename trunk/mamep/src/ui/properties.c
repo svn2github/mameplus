@@ -786,7 +786,6 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIco
 	pshead.hInstance                  = hInst;
 	if (!g_pFolder)
 	{
-//		pshead.pszCaption = ModifyThe(drivers[g_nGame]->description);
 		pshead.pszCaption             = _Unicode(_UI(drivers[g_nGame]->name));
 	}
 	else
@@ -935,7 +934,7 @@ static LPWSTR GameInfoScreen(UINT nIndex)
 				drv.aspect_y = 3;
 				drv.aspect_x = 4;
 			}
-			sprintf(buf,_UI("Raster %d x %d (V) (%d:%d) %f Hz"),
+			sprintf(buf,_UI("%d x %d (V) (%d:%d) %f Hz"),
 					drv.default_visible_area.max_y - drv.default_visible_area.min_y + 1,
 					drv.default_visible_area.max_x - drv.default_visible_area.min_x + 1,
 					drv.aspect_y, drv.aspect_x, drv.frames_per_second);
@@ -947,7 +946,7 @@ static LPWSTR GameInfoScreen(UINT nIndex)
 				drv.aspect_x = 4;
 				drv.aspect_y = 3;
 			}
-			sprintf(buf,_UI("Raster %d x %d (H) (%d:%d) %f Hz"),
+			sprintf(buf,_UI("%d x %d (H) (%d:%d) %f Hz"),
 					drv.default_visible_area.max_x - drv.default_visible_area.min_x + 1,
 					drv.default_visible_area.max_y - drv.default_visible_area.min_y + 1,
 					drv.aspect_x, drv.aspect_y, drv.frames_per_second);
@@ -1064,7 +1063,7 @@ LPWSTR GameInfoTitle(UINT nIndex)
 	if (nIndex == GLOBAL_OPTIONS)
 		strcpy(buf, _UI("Global game options\nDefault options used by all games"));
 	else if (nIndex == FOLDER_OPTIONS)
-		sprintf(buf, _UI("Global folder options\nCustom options used by all games in the %s"), IS_FOLDER);
+		sprintf(buf, _UI("Global game options\nCustom options used by all games in the %s"), IS_FOLDER);
 	else
 		UseLangList()?
 			sprintf(buf, "%s [%s]", _LST(drivers[nIndex]->description), drivers[nIndex]->name):
