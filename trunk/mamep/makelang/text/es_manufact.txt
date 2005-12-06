@@ -210,6 +210,10 @@ Barko
 Barko Corp
 Barko Corp
 
+# Honey Dolls
+Barko Corp.
+Barko Corp.
+
 # Many Block
 Bee-Oh
 Bee-Oh
@@ -514,7 +518,7 @@ Elettronolo
 Eleven
 Eleven
 
-# Trivia Master
+# Trivia Master (set 1)
 Enerdyne Technologies Inc.
 Enerdyne Technologies Inc.
 
@@ -1874,6 +1878,10 @@ Yang Cheng
 Yanyaka
 Yanyaka
 
+# Spectrum 2000
+Yonatech
+Yonatech
+
 # Mahjong Yoshimoto Gekijou (Japan)
 Yoshimoto Kougyou
 Yoshimoto Kougyou
@@ -1949,8 +1957,4 @@ hackeado
 # Chewing Gum
 unknown
 desconocido
-
-# Honey Dolls
-Barko Corp.
-
 

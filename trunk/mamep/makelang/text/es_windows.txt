@@ -998,6 +998,10 @@ activar entrada de pistola
 enable mouse input
 activar entrada raton
 
+# windows/input.c: 234
+enable pointing stick input
+activar entrada del puntero del joystick
+
 # windows/wind3dfx.c: 190
 enable rotation of effects for rotated games
 activar rotación de efectos para rotar juegos
@@ -1613,8 +1617,4 @@ color marco de ventana (medio)
 # windows/fronthlp.c: 66
 year, manufacturer and full name
 Año, creador y nombre completo
-
-# windows/input.c: 234
-enable pointing stick input
-
 

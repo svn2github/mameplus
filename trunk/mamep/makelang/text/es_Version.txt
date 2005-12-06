@@ -86,6 +86,10 @@
 .102
 0.102
 
+# 6432
+.102u1
+0.102 Actualización 1
+
 # 91
 .11
 0.11
@@ -1074,15 +1078,11 @@
 .99u9
 0.99 Actualización 9
 
+# 6447
+Plus!
+Plus!
+
 # Title
 Version
 Versión
-
-# 6432
-.102u1
-
-
-# 6445
-Plus!
-
 
