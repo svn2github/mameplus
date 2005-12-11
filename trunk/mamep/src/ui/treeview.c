@@ -49,6 +49,7 @@
 #include "translate.h"
 
 #ifdef _MSC_VER
+#define snprintf _snprintf
 #if _MSC_VER > 1200
 #define HAS_DUMMYUNIONNAME
 #endif

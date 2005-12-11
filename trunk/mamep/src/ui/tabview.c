@@ -34,6 +34,9 @@
 #include "tabview.h"
 #include "m32util.h"
 
+#ifdef _MSC_VER
+#define snprintf _snprintf
+#endif
 
 
 struct TabViewInfo
