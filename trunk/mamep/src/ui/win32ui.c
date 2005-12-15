@@ -2737,12 +2737,7 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 			/* save current item */
 			RECT rect;
 			AREA area;
-			int widths[COLUMN_MAX];
-			int order[COLUMN_MAX];
-			int shown[COLUMN_MAX];
-			int tmpOrder[COLUMN_MAX];
 			int nItem;
-			int nColumnMax = 0;
 			WINDOWPLACEMENT wndpl;
 			UINT state;
 
@@ -2767,39 +2762,10 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 				SetSplitterPos(i, nSplitterOffset[i]);
 			SetWindowState(state);
 
-			GetColumnOrder(order);
-			GetColumnShown(shown);
-			GetColumnWidths(widths);
-
-			// switch the list view to LVS_REPORT style so column widths reported correctly
-			SetWindowLong(hwndList,GWL_STYLE,
-			              (GetWindowLong(hwndList, GWL_STYLE) & ~LVS_TYPEMASK) | LVS_REPORT);
-
-			nColumnMax = Picker_GetNumColumns(hwndList);
-
-			if (oldControl)
-			{
-				for (i = 0; i < nColumnMax; i++)
-				{
-					widths[Picker_GetRealColumnFromViewColumn(hwndList, i)] =
-						ListView_GetColumnWidth(hwndList, i);
-				}
-			}
-			else
-			{
-				/* Get the Column Order and save it */
-				ListView_GetColumnOrderArray(hwndList, nColumnMax, tmpOrder);
-
-				for (i = 0; i < nColumnMax; i++)
-				{
-					widths[Picker_GetRealColumnFromViewColumn(hwndList, i)]
-						= ListView_GetColumnWidth(hwndList, i);
-					order[i] = Picker_GetRealColumnFromViewColumn(hwndList, tmpOrder[i]);
-				}
-			}
-
-			SetColumnWidths(widths);
-			SetColumnOrder(order);
+			Picker_SaveColumnWidths(hwndList);
+#ifdef MESS
+			Picker_SaveColumnWidths(GetDlgItem(hMain, IDC_SWLIST));
+#endif /* MESS */
 
 			GetWindowRect(hWnd, &rect);
 			area.x		= rect.left;
@@ -3126,8 +3092,6 @@ static BOOL OnIdle(HWND hWnd)
 	{
 		bResetList = FALSE;
 		bFirstTime = FALSE;
-		if (bListReady)
-			Picker_ResetHeaderSortIcon(hwndList);
 	}
 	if (bDoGameCheck)
 	{

@@ -742,7 +742,7 @@ static const char *Picker_CallGetItemString(HWND hwndPicker,
 
 
 // put the arrow on the new sort column
-void Picker_ResetHeaderSortIcon(HWND hwndPicker)
+static void Picker_ResetHeaderSortIcon(HWND hwndPicker)
 {
 	struct PickerInfo *pPickerInfo;
 	HWND hwndHeader;
@@ -1640,4 +1640,71 @@ void Picker_SetHeaderImageList(HWND hwndPicker, HIMAGELIST hHeaderImages)
 	HWND hwndHeader;
 	hwndHeader = ListView_GetHeader(hwndPicker);
 	SendMessage(hwndHeader, HDM_SETIMAGELIST, 0, (LPARAM) (void *) hHeaderImages);
+}
+
+
+
+BOOL Picker_SaveColumnWidths(HWND hwndPicker)
+{
+	struct PickerInfo *pPickerInfo;
+	int *widths;
+	int *order;
+	int *tmpOrder;
+	int nColumnMax, i;
+	BOOL bSuccess = FALSE;
+
+	pPickerInfo = GetPickerInfo(hwndPicker);
+
+	/* allocate space for the column info */
+	widths = malloc(pPickerInfo->nColumnCount * sizeof(*widths));
+	order = malloc(pPickerInfo->nColumnCount * sizeof(*order));
+	tmpOrder = malloc(pPickerInfo->nColumnCount * sizeof(*tmpOrder));
+	if (!widths || !order || !tmpOrder)
+		goto done;
+
+	/* retrieve the values */
+	memset(widths, 0, pPickerInfo->nColumnCount * sizeof(*widths));
+	memset(order, 0, pPickerInfo->nColumnCount * sizeof(*order));
+	pPickerInfo->pCallbacks->pfnGetColumnWidths(widths);
+	pPickerInfo->pCallbacks->pfnGetColumnOrder(order);
+
+	/* switch the list view to LVS_REPORT style so column widths reported correctly */
+	SetWindowLong(hwndPicker, GWL_STYLE,
+					(GetWindowLong(hwndPicker, GWL_STYLE) & ~LVS_TYPEMASK) | LVS_REPORT);
+
+	nColumnMax = Picker_GetNumColumns(hwndPicker);
+
+	if (GetUseOldControl())
+	{
+		for (i = 0; i < nColumnMax; i++)
+		{
+			widths[Picker_GetRealColumnFromViewColumn(hwndPicker, i)] =
+				ListView_GetColumnWidth(hwndPicker, i);
+		}
+	}
+	else
+	{
+		/* Get the Column Order and save it */
+		ListView_GetColumnOrderArray(hwndPicker, nColumnMax, tmpOrder);
+
+		for (i = 0; i < nColumnMax; i++)
+		{
+			widths[Picker_GetRealColumnFromViewColumn(hwndPicker, i)]
+				= ListView_GetColumnWidth(hwndPicker, i);
+			order[i] = Picker_GetRealColumnFromViewColumn(hwndPicker, tmpOrder[i]);
+		}
+	}
+
+	pPickerInfo->pCallbacks->pfnSetColumnWidths(widths);
+	pPickerInfo->pCallbacks->pfnSetColumnOrder(order);
+	bSuccess = TRUE;
+
+done:
+	if (widths)
+		free(widths);
+	if (order)
+		free(order);
+	if (tmpOrder)
+		free(tmpOrder);
+	return bSuccess;
 }

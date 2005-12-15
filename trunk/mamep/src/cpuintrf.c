@@ -193,6 +193,7 @@ void tx0_8kw_get_info(UINT32 state, union cpuinfo *info);
 void z80gb_get_info(UINT32 state, union cpuinfo *info);
 void tms7000_get_info(UINT32 state, union cpuinfo *info);
 void tms7000_exl_get_info(UINT32 state, union cpuinfo *info);
+void cop411_get_info(UINT32 state, union cpuinfo *info);
 #endif
 
 
@@ -769,6 +770,9 @@ const struct
 #endif
 #if (HAS_TMS7000_EXL)
 	{ CPU_TMS7000_EXL, tms7000_exl_get_info },
+#endif
+#if (HAS_COP411)
+	{ CPU_COP411, cop411_get_info },
 #endif
 #endif /* MESS */
 

@@ -2634,9 +2634,6 @@ int load_driver_statistics (char *buffer, int bufsize)
 				case IPT_LIGHTGUN_Y:
 					controltmp[4] = 1;
 					break;
-				case IPT_PEDAL:
-					controltmp[5] = 1;
-					break;
 				}
 				++inp;
 			}
@@ -3124,9 +3121,8 @@ int load_driver_statistics (char *buffer, int bufsize)
 	if (control[27]) { sprintf(name, _("        PADDLE:  %4d\n"), control[27]); strcat(buffer, name); }
 	if (control[28]) { sprintf(name, _("          DIAL:  %4d\n"), control[28]); strcat(buffer, name); }
 	if (control[29]) { sprintf(name, _("     TRACKBALL:  %4d\n"), control[29]); strcat(buffer, name); }
-	if (control[30]) { sprintf(name, _("         STICK:  %4d\n"), control[30]); strcat(buffer, name); }
+	if (control[30]) { sprintf(name, _("      AD STICK:  %4d\n"), control[30]); strcat(buffer, name); }
 	if (control[31]) { sprintf(name, _("      LIGHTGUN:  %4d\n"), control[31]); strcat(buffer, name); }
-	if (control[32]) { sprintf(name, _("         PEDAL:  %4d\n"), control[32]); strcat(buffer, name); }
 
 	sprintf(name, _("         OTHER:  %4d\n"), noinput);
 	strcat(buffer, name);

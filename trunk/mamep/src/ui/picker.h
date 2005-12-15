@@ -82,7 +82,7 @@ void Picker_ResetIdle(HWND hwndPicker);
 BOOL Picker_IsIdling(HWND hwndPicker);
 void Picker_SetHeaderImageList(HWND hwndPicker, HIMAGELIST hHeaderImages);
 int Picker_InsertItemSorted(HWND hwndPicker, int nParam);
-void Picker_ResetHeaderSortIcon(HWND hWnd);
+BOOL Picker_SaveColumnWidths(HWND hwndPicker);
 
 // These are used to handle events received by the parent regarding
 // picker controls
