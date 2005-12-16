@@ -518,7 +518,7 @@ Elettronolo
 Eleven
 
 
-# Trivia Master
+# Trivia Master (set 1)
 Enerdyne Technologies Inc.
 
 
@@ -604,6 +604,10 @@ Fuuki
 
 # Selection (Version 40.02TMB)
 G.E.I.
+
+
+# Flame Gunner
+GAPS Inc.
 
 
 # Dambusters (set 2)
@@ -910,7 +914,7 @@ Leland Corp.
 Leprechaun
 
 
-# Star Wars Trilogy
+# Star Wars Trilogy (ver A)
 LucasArts
 
 
@@ -1876,6 +1880,10 @@ Yang Cheng
 
 # Moeyo Gonta!! (Japan)
 Yanyaka
+
+
+# Spectrum 2000
+Yonatech
 
 
 # Mahjong Yoshimoto Gekijou (Japan)

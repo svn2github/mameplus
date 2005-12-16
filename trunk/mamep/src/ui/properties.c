@@ -1063,7 +1063,7 @@ LPWSTR GameInfoTitle(UINT nIndex)
 	if (nIndex == GLOBAL_OPTIONS)
 		strcpy(buf, _UI("Global game options\nDefault options used by all games"));
 	else if (nIndex == FOLDER_OPTIONS)
-		sprintf(buf, _UI("Global game options\nCustom options used by all games in the %s"), IS_FOLDER);
+		sprintf(buf, _UI("Global folder options\nCustom options used by all games in the %s"), IS_FOLDER);
 	else
 		UseLangList()?
 			sprintf(buf, "%s [%s]", _LST(drivers[nIndex]->description), drivers[nIndex]->name):

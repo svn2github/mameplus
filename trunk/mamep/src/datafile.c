@@ -8,6 +8,8 @@
 
 static const char *stat_versions[] =
 {
+	"0.102u4   December  15th 2005",
+	"0.102u3   December   9th 2005",
 	"0.102u2   December   1st 2005",
 	"0.102u1   November  21st 2005",
 	"0.102     November  13th 2005",
@@ -301,6 +303,8 @@ static const char *stat_versions[] =
 
 static const char *stat_history[] =
 {
+	"0.102u4    846    5893  +11",
+	"0.102u3    846    5882  +11",
 	"0.102u2    845    5871  +13",
 	"0.102u1    845    5858  +10",
 	"0.102      845    5848  +15",
@@ -593,7 +597,7 @@ static const char *stat_newgames[] =
 	"2002:    6      +  441",
 	"2003:   36      + 1109",
 	"2004:   65      +  675",
-	"2005:   64      +  491",
+	"2005:   65      +  513",
 	0
 };
 
@@ -2634,6 +2638,9 @@ int load_driver_statistics (char *buffer, int bufsize)
 				case IPT_LIGHTGUN_Y:
 					controltmp[4] = 1;
 					break;
+				case IPT_PEDAL:
+					controltmp[5] = 1;
+					break;
 				}
 				++inp;
 			}
@@ -3123,6 +3130,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 	if (control[29]) { sprintf(name, _("     TRACKBALL:  %4d\n"), control[29]); strcat(buffer, name); }
 	if (control[30]) { sprintf(name, _("      AD STICK:  %4d\n"), control[30]); strcat(buffer, name); }
 	if (control[31]) { sprintf(name, _("      LIGHTGUN:  %4d\n"), control[31]); strcat(buffer, name); }
+	if (control[32]) { sprintf(name, _("         PEDAL:  %4d\n"), control[32]); strcat(buffer, name); }
 
 	sprintf(name, _("         OTHER:  %4d\n"), noinput);
 	strcat(buffer, name);

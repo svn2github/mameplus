@@ -50,7 +50,7 @@
   Axis %d (%s)%s\n
   軸%d (%s)%s\n
 
-# windows/config.c: 538
+# windows/config.c: 533
  %s running parameters
  %sの現在の設定です
 
@@ -486,7 +486,7 @@ Out of memory!\n
 PARTKNOWN %s\n
 一部判明  %s\n
 
-# windows/config.c: 586
+# windows/config.c: 581
 Playing back previously recorded game %s (%s) [press return]\n
 リターンキーを押すと、記録されたゲーム%s (%s)の再生を開始します\n
 
@@ -634,7 +634,7 @@ Unable to render to preprocess texture: %08x\n
 Usage:  MAME gamename [options]\n\n
 使用法:  MAME ゲーム名 [オプション]\n\n
 
-# windows/config.c: 545
+# windows/config.c: 540
 Usage: %s [game] [options]\nOptions:\n
 使用法: %s [ゲーム] [オプション]\nオプション:\n
 
@@ -726,7 +726,7 @@ Windows版：表\示設定
 \"%s\" controller support enabled\n
 コントローラ「%s」のサポートが有効です\n
 
-# windows/config.c: 639
+# windows/config.c: 634
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n「%s」に似たゲームは下記の通りです\nサポートされているゲーム (似ているもの順):\n\n
 
@@ -873,6 +873,10 @@ directory for Artwork (Overlays etc.)
 # windows/fileio.c: 137
 directory for hard drive image difference files
 ハードディスクイメージの差分ファイルのパス指定
+
+# windows/fileio.c: 140
+directory for ips files
+IPSファイルのディレクトリ
 
 # windows/fileio.c: 142
 directory for localized language files
@@ -1038,11 +1042,11 @@ enforce aspect ratio
 error invalid value for %s: %s\n
 エラー %s に不正な値を指定しました: %s\n
 
-# windows/config.c: 488
+# windows/config.c: 483
 error on rc creation\n
 設定の初期化が出来ません\n
 
-# windows/config.c: 495
+# windows/config.c: 490
 error while parsing cmdline\n
 コマンドライン引数が不正です\n
 
@@ -1058,7 +1062,7 @@ error: %s requires an argument\n
 error: couldn't open file: %s\n
 エラー: ファイルが開けません: %s\n
 
-# windows/config.c: 870
+# windows/config.c: 872
 error: duplicate gamename: %s\n
 エラー: ゲーム名%sが重複しています\n
 
@@ -1126,15 +1130,15 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 エラー: 関数rc_register_optionでmallocで失敗しました\n
 
-# windows/config.c: 998
+# windows/config.c: 1000
 error: malloc failed in win_dirname\n
 エラー: 関数win_dirnameでmallocで失敗しました\n
 
-# windows/config.c: 1038
+# windows/config.c: 1040
 error: malloc failed in win_strip_extension\n
 エラー: 関数win_strip_extensionでmallocで失敗しました\n
 
-# windows/config.c: 886
+# windows/config.c: 888
 error: no gamename given in %s\n
 エラー: ゲーム名%sはありません\n
 
@@ -1154,11 +1158,11 @@ error: unknown option %s\n
 error: unknown option type: %d, this should not happen!\n
 エラー: 不明なオプションタイプ: %d、これは起こりえません!\n
 
-# windows/config.c: 561
+# windows/config.c: 556
 failed to open %s for playback\n
 再生ファイル%sが読み込めません\n
 
-# windows/config.c: 687
+# windows/config.c: 689
 failed to open %s for recording\n
 入力を保存するファイル%sが作成できません\n
 
@@ -1213,6 +1217,10 @@ interpolation method
 # windows/input.c: 1736
 invalid
 不正
+
+# windows/config.c: 260
+ips datfile name
+IPSデータファイル名
 
 # windows/fronthlp.c: 730
 is bad\n
@@ -1270,10 +1278,6 @@ output error log to debugger
 paddle
 パドル
 
-# windows/config.c: 424
-parsing %s...
-%s 読み込み中...
-
 # windows/fileio.c: 125, 127
 path to ini files
 iniファイルへのパスを指定
@@ -1305,10 +1309,6 @@ prefer RDTSC over QueryPerformanceCounter for timing
 # windows/wind3dfx.c: 191
 prescale effect
 プリスケールエフェクト
-
-# windows/config.c: 432
-problem parsing %s\n
-設定ファイル%sに問題があります\n
 
 # windows/config.c: 252
 record an input file
@@ -1346,7 +1346,7 @@ rotate screen clockwise
 run in a window/run on full screen
 ウインドウ表\示
 
-# windows/config.c: 630
+# windows/config.c: 625
 running %s (%s) [press return]
 リターンキーを押すと、ゲーム%s (%s)の実行を開始します
 
@@ -1609,12 +1609,4 @@ window frame color (medium)
 # windows/fronthlp.c: 66
 year, manufacturer and full name
 サポートゲーム、製造年、メーカーのリストを表\示
-
-# windows/fileio.c: 140
-directory for ips files
-
-
-# windows/config.c: 260
-ips datfile name
-
 

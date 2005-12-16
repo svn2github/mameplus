@@ -1342,12 +1342,12 @@ void CreateControlFolders(int parent_index)
 //		FOLDER_VJOY2WAY,
 		FOLDER_DOUBLEJOY2WAY, FOLDER_DOUBLEJOY4WAY, FOLDER_DOUBLEJOY8WAY,
 //		FOLDER_VDOUBLEJOY2WAY,
-		FOLDER_ADSTICK, FOLDER_PADDLE, FOLDER_DIAL, FOLDER_TRACKBALL, FOLDER_LIGHTGUN,
+		FOLDER_ADSTICK, FOLDER_PADDLE, FOLDER_DIAL, FOLDER_TRACKBALL, FOLDER_LIGHTGUN, FOLDER_PEDAL,
 		FOLDER_MAX
 	};
 
 	static const char *ctrl_names[FOLDER_MAX] = {
-		"Players 1",
+		"Player 1",
 		"Players 2",
 		"Players 3",
 		"Players 4",
@@ -1355,7 +1355,7 @@ void CreateControlFolders(int parent_index)
 		"Players 6",
 		"Players 7",
 		"Players 8",
-		"Buttons 1",
+		"Button 1",
 		"Buttons 2",
 		"Buttons 3",
 		"Buttons 4",
@@ -1377,7 +1377,8 @@ void CreateControlFolders(int parent_index)
 		"Paddle",
 		"Dial",
 		"Trackball",
-		"Lightgun"
+		"Lightgun",
+		"Pedal"
 	};
 
 	int i;
@@ -1487,6 +1488,9 @@ void CreateControlFolders(int parent_index)
 			case IPT_LIGHTGUN_X:
 			case IPT_LIGHTGUN_Y:
 				AddGame(map[FOLDER_LIGHTGUN],i);
+				break;
+			case IPT_PEDAL:
+				AddGame(map[FOLDER_PEDAL],i);
 				break;
 			}
 		++input;

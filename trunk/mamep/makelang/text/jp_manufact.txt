@@ -1022,7 +1022,7 @@ Elettronica Video-Games S.R.L.
 Elettronolo
 
 
-# Trivia Master
+# Trivia Master (set 1)
 Enerdyne Technologies Inc.
 
 
@@ -1068,6 +1068,10 @@ Fun World
 
 # Selection (Version 40.02TMB)
 G.E.I.
+
+
+# Flame Gunner
+GAPS Inc.
 
 
 # Dambusters (set 2)
@@ -1274,7 +1278,7 @@ Leland Corp.
 Leprechaun
 
 
-# Star Wars Trilogy
+# Star Wars Trilogy (ver A)
 LucasArts
 
 
@@ -1900,6 +1904,10 @@ World Games Inc
 
 # Swinging Singles
 Yachiyo
+
+
+# Spectrum 2000
+Yonatech
 
 
 # Mahjong Yoshimoto Gekijou (Japan)
