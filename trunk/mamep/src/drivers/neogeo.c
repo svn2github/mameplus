@@ -8092,49 +8092,6 @@ DRIVER_INIT( matrimd )
 
 #define MATRIMBLFIX(i) (i^(BITSWAP8(i&0x3,4,3,1,2,0,7,6,5)<<8))
 
-DRIVER_INIT( matrimbl )
-{
-	UINT8 *src2 = memory_region(REGION_CPU2)+0x10000;
-        UINT8 *dst2 = malloc(0x20000);
-	int i; int j=0;
-	memcpy(dst2,src2,0x20000);
-	for(i=0x00000;i<0x20000;i++)
-	{
-		if (i&0x10000)
-		{
-			if (i&0x800)
-			{
-			j=MATRIMBLFIX(i);
-			j=j^0x10000;
-			}
-		else
-		{
-			j=MATRIMBLFIX((i^0x01));
-		}
-		}
-		else
-		{
-			if (i&0x800)
-			{
-			j=MATRIMBLFIX((i^0x01));
-			j=j^0x10000;
-			}
-			else
-			{
-			j=MATRIMBLFIX(i);
-			}
-		}
-		src2[j]=dst2[i];
-	}
-	free(dst2);
-	memcpy(src2-0x10000,src2,0x10000);
-	kof2002_decrypt();
-	cthd2003_c(0);
-	neogeo_sfix_decrypt();
-	neogeo_fix_bank_type = 2;
-	init_neogeo();
-}
-
 static UINT16 *brza_sram;
 
 READ16_HANDLER( vliner_2c0000_r )
@@ -8502,7 +8459,48 @@ DRIVER_INIT( cthd2003 )
  	init_neogeo();
 }
 
-
+DRIVER_INIT( matrimbl )
+{
+	UINT8 *src2 = memory_region(REGION_CPU2)+0x10000;
+        UINT8 *dst2 = malloc(0x20000);
+	int i; int j=0;
+	memcpy(dst2,src2,0x20000);
+	for(i=0x00000;i<0x20000;i++)
+	{
+		if (i&0x10000)
+		{
+			if (i&0x800)
+			{
+			j=MATRIMBLFIX(i);
+			j=j^0x10000;
+			}
+		else
+		{
+			j=MATRIMBLFIX((i^0x01));
+		}
+		}
+		else
+		{
+			if (i&0x800)
+			{
+			j=MATRIMBLFIX((i^0x01));
+			j=j^0x10000;
+			}
+			else
+			{
+			j=MATRIMBLFIX(i);
+			}
+		}
+		src2[j]=dst2[i];
+	}
+	free(dst2);
+	memcpy(src2-0x10000,src2,0x10000);
+	kof2002_decrypt();
+	cthd2003_c(0);
+	neogeo_sfix_decrypt();
+	neogeo_fix_bank_type = 2;
+	init_neogeo();
+}
 
 DRIVER_INIT( kof2k4se )
 {

@@ -381,34 +381,6 @@ static WRITE32_HANDLER( hotgmck_pcm_bank_w )
 		set_hotgmck_pcm_bank(1);
 }
 
-#define PCM_BANK_NO(n)	((ps4_io_select[0] >> (n * 4 + 24)) & 0x07)
-
-static void set_hotgmck_pcm_bank(int n)
-{
-	UINT8 *ymf_pcmbank = memory_region(REGION_SOUND1) + 0x200000;
-	UINT8 *pcm_rom = memory_region(REGION_SOUND2);
-
-	memcpy(ymf_pcmbank + n * 0x100000, pcm_rom + PCM_BANK_NO(n) * 0x100000, 0x100000);
-}
-
-static WRITE32_HANDLER( hotgmck_pcm_bank_w )
-{
-	int old_bank0 = PCM_BANK_NO(0);
-	int old_bank1 = PCM_BANK_NO(1);
-	int new_bank0, new_bank1;
-
-	COMBINE_DATA(&ps4_io_select[0]);
-
-	new_bank0 = PCM_BANK_NO(0);
-	new_bank1 = PCM_BANK_NO(1);
-
-	if (old_bank0 != new_bank0)
-		set_hotgmck_pcm_bank(0);
-
-	if (old_bank1 != new_bank1)
-		set_hotgmck_pcm_bank(1);
-}
-
 static ADDRESS_MAP_START( ps4_readmem, ADDRESS_SPACE_PROGRAM, 32 )
 	AM_RANGE(0x00000000, 0x000fffff) AM_READ(MRA32_ROM)	// program ROM (1 meg)
 	AM_RANGE(0x02000000, 0x021fffff) AM_READ(MRA32_BANK1) // data ROM
