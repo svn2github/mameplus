@@ -734,6 +734,10 @@ Bookkeeping Info
 Brightness
 明るさ
 
+# drivers/m107.c: 297 drivers/m92.c: 1021 drivers/usgames.c: 143 
+Button 1
+ボタン 1
+
 # cheat.c: 3592
 Byte Length
 バイト長
@@ -937,6 +941,10 @@ Control
 # drivers/brkthru.c: 238, 283 drivers/metro.c: 2219 drivers/st0016.c: 523 drivers/tail2nos.c: 205 
 Control Panel
 コンパネ
+
+# drivers/changela.c: 962 drivers/nbmj8891.c: 1072, 1168 drivers/taitosj.c: 1746 drivers/tumbleb.c: 1249 
+Control Type
+コントロールの種類
 
 # inptport.c: 417
 Controller
@@ -3494,6 +3502,10 @@ Pause
 Payout
 払い出し
 
+# drivers/turbo.c: 468 
+Pedal
+ペダル
+
 # drivers/astrocde.c: 296 drivers/bottom9.c: 236 drivers/deniam.c: 275 drivers/destroyr.c: 209 drivers/firetrk.c: 595, 663, 746 drivers/galpanic.c: 799 drivers/skyraid.c: 157 drivers/snk.c: 3770, 3911 drivers/sprint2.c: 346, 418 drivers/sprint4.c: 273 drivers/sprint8.c: 330, 465 drivers/sspeedr.c: 182 drivers/starshp1.c: 296 drivers/suprslam.c: 262 drivers/tank8.c: 285 drivers/triplhnt.c: 180 drivers/wolfpack.c: 240 
 Play Time
 プレイ時間
@@ -4757,16 +4769,4 @@ MAMEと同じフォルダにチートデータを置いてください
 # cheat.c: 1995
 values restored
 前回の結果に戻しました
-
-# drivers/m107.c: 297 drivers/m92.c: 1021 drivers/usgames.c: 143 
-Button 1
-
-
-# drivers/changela.c: 962 drivers/nbmj8891.c: 1072, 1168 drivers/taitosj.c: 1746 drivers/tumbleb.c: 1249 
-Control Type
-
-
-# drivers/turbo.c: 468 
-Pedal
-
 
