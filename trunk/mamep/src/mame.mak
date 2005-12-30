@@ -750,7 +750,7 @@ $(OBJ)/atari.a: \
 	$(OBJ)/drivers/mgolf.o \
 	$(OBJ)/vidhrdw/sprint2.o $(OBJ)/drivers/sprint2.o \
 	$(OBJ)/sndhrdw/sprint2.o \
-	$(OBJ)/vidhrdw/sprint4.o $(OBJ)/drivers/sprint4.o \
+	$(OBJ)/vidhrdw/sprint4.o $(OBJ)/sndhrdw/sprint4.o $(OBJ)/drivers/sprint4.o \
 	$(OBJ)/vidhrdw/sprint8.o $(OBJ)/drivers/sprint8.o \
 	$(OBJ)/vidhrdw/tank8.o $(OBJ)/drivers/tank8.o $(OBJ)/sndhrdw/tank8.o \
 	$(OBJ)/vidhrdw/nitedrvr.o $(OBJ)/machine/nitedrvr.o $(OBJ)/drivers/nitedrvr.o \
@@ -765,7 +765,6 @@ $(OBJ)/atari.a: \
 	$(OBJ)/vidhrdw/canyon.o $(OBJ)/drivers/canyon.o \
 	$(OBJ)/sndhrdw/canyon.o \
 	$(OBJ)/vidhrdw/destroyr.o $(OBJ)/drivers/destroyr.o \
-	$(OBJ)/drivers/ultratnk.o $(OBJ)/sndhrdw/ultratnk.o \
 	$(OBJ)/vidhrdw/wolfpack.o $(OBJ)/drivers/wolfpack.o \
 	$(OBJ)/vidhrdw/boxer.o $(OBJ)/drivers/boxer.o \
 	$(OBJ)/vidhrdw/skyraid.o $(OBJ)/drivers/skyraid.o \
@@ -1022,7 +1021,8 @@ $(OBJ)/kaneko.a: \
 	$(OBJ)/vidhrdw/suprnova.o $(OBJ)/drivers/suprnova.o \
 
 $(OBJ)/neogeo.a: \
-	$(OBJ)/machine/neogeo.o $(OBJ)/machine/pd4990a.o $(OBJ)/machine/neocrypt.o \
+	$(OBJ)/machine/neogeo.o $(OBJ)/machine/pd4990a.o \
+	$(OBJ)/machine/neocrypt.o $(OBJ)/machine/neoprot.o $(OBJ)/machine/neoboot.o \
 	$(OBJ)/vidhrdw/neogeo.o $(OBJ)/drivers/neogeo.o \
 
 $(OBJ)/seta.a: \
@@ -1149,6 +1149,7 @@ $(OBJ)/omori.a: \
 	$(OBJ)/vidhrdw/battlex.o $(OBJ)/drivers/battlex.o \
 	$(OBJ)/vidhrdw/carjmbre.o $(OBJ)/drivers/carjmbre.o \
 	$(OBJ)/vidhrdw/popper.o $(OBJ)/drivers/popper.o \
+	$(OBJ)/drivers/shuttlei.o \
 
 $(OBJ)/tch.a: \
 	$(OBJ)/vidhrdw/speedspn.o $(OBJ)/drivers/speedspn.o \
@@ -1235,6 +1236,7 @@ $(OBJ)/other68k.a: \
 	$(OBJ)/drivers/wheelfir.o \
 	$(OBJ)/drivers/littlerb.o \
 	$(OBJ)/drivers/rbmk.o \
+	$(OBJ)/drivers/go2000.o \
 
 $(OBJ)/otherz80.a: \
 	$(OBJ)/vidhrdw/astinvad.o $(OBJ)/sndhrdw/astinvad.o $(OBJ)/drivers/astinvad.o \
@@ -1333,6 +1335,7 @@ $(OBJ)/other.a: \
 	$(OBJ)/drivers/attckufo.o $(OBJ)/sndhrdw/attckufo.o $(OBJ)/vidhrdw/attckufo.o \
 	$(OBJ)/drivers/trvquest.o \
 	$(OBJ)/drivers/f-32.o \
+	$(OBJ)/drivers/cardline.o \
 
 
 COREOBJS += $(OBJ)/driver.o $(OBJ)/cheat.o
