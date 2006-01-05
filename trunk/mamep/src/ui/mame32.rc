@@ -62,7 +62,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Add to Custom Folder...",    ID_CONTEXT_ADD_CUSTOM
         MENUITEM "R&emove From This Folder",    ID_CONTEXT_REMOVE_CUSTOM
-        MENUITEM "Proper&ties of Source",       ID_SOURCE_PROPERTIES
+        MENUITEM "Proper&ties of Driver",       ID_SOURCE_PROPERTIES
         MENUITEM "Pr&operties",                 ID_GAME_PROPERTIES
         MENUITEM SEPARATOR
         MENUITEM "&Audit all games",            ID_FILE_AUDIT
@@ -177,7 +177,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "A&udit",                      ID_GAME_AUDIT
         MENUITEM SEPARATOR
-        MENUITEM "Source Proper&ties",          ID_SOURCE_PROPERTIES
+        MENUITEM "Proper&ties of Driver",       ID_SOURCE_PROPERTIES
         MENUITEM "Pr&operties",                 ID_GAME_PROPERTIES
     END
 END
@@ -476,7 +476,7 @@ CAPTION "General"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_MAME32_ICON,IDC_GAME_ICON,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,210,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     LTEXT           "Manufactured:",IDC_STATIC,18,45,47,9
@@ -498,7 +498,7 @@ BEGIN
     LTEXT           "Static",IDC_PROP_COLORS,75,197,170,9
     LTEXT           "Save State:",IDC_STATIC,18,207,47,9
     LTEXT           "Static",IDC_PROP_SAVESTATE,75,207,170,9
-    LTEXT           "Source:",IDC_STATIC,18,217,47,9
+    LTEXT           "Driver:",IDC_STATIC,18,217,47,9
     LTEXT           "Static",IDC_PROP_SOURCE,75,217,170,9
     LTEXT           "Clone of:",IDC_PROP_CLONEOF_TEXT,18,227,50,9
     LTEXT           "Static",IDC_PROP_CLONEOF,75,227,170,16
@@ -510,7 +510,7 @@ CAPTION "Audit"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_CHECKMARK,IDC_STATIC,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,210,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     LTEXT           "ROM check:",IDC_STATIC,10,45,60,9
@@ -529,7 +529,7 @@ CAPTION "Display"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_DISPLAY,IDC_STATIC,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,210,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     CONTROL         "Run in a window",IDC_WINDOWED,"Button",BS_AUTOCHECKBOX | 
@@ -582,7 +582,7 @@ CAPTION "Direct3D"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_DISPLAY,IDC_STATIC,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,210,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     GROUPBOX        "",IDC_STATIC,4,45,251,160,WS_DISABLED
@@ -628,7 +628,7 @@ CAPTION "Sound"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_SOUNDTAB,IDC_STATIC,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,210,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     GROUPBOX        "",IDC_STATIC,4,45,251,160,WS_DISABLED
@@ -664,7 +664,7 @@ CAPTION "Advanced"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_DISPLAY,IDC_STATIC,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,210,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     CONTROL         "Use DirectDraw",IDC_DDRAW,"Button",BS_AUTOCHECKBOX | 
@@ -738,7 +738,7 @@ CAPTION "Controllers"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_JOYSTICK,IDC_STATIC,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,210,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     CONTROL         "Enable joystick input",IDC_JOYSTICK,"Button",
@@ -800,7 +800,7 @@ CAPTION "Miscellaneous"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_MAME32_ICON,IDC_STATIC,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,210,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     CONTROL         "Enable game cheats",IDC_CHEAT,"Button",BS_AUTOCHECKBOX | 
@@ -860,7 +860,7 @@ CAPTION "Vector"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_MAME32_ICON,IDC_STATIC,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,210,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     CONTROL         "Draw antialiased vectors",IDC_ANTIALIAS,"Button",
@@ -1059,7 +1059,7 @@ CAPTION "Controller Mapping"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_JOYSTICK,IDC_STATIC,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,210,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     GROUPBOX        "Paddle device",IDC_STATIC,4,45,123,28
@@ -1140,7 +1140,7 @@ CAPTION "BIOS"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_MAME32_ICON,IDC_STATIC,20,10,20,20
-    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,210,25,
+    LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     GROUPBOX        "BIOS1:",IDC_BIOSTEXT1,4,45,123,36
@@ -1449,7 +1449,7 @@ BEGIN
     ID_FILE_PLAY_BACK       "Playback a recorded game"
     ID_FILE_PLAY_RECORD_WAVE "Record the sound output of a game"
     ID_FILE_LOADSTATE       "Play a game starting with the given savestate"
-    ID_SOURCE_PROPERTIES    "Display the source file properties of the selected game"
+    ID_SOURCE_PROPERTIES    "Display the driver properties of the selected game"
     ID_GAME_PROPERTIES      "Display the properties of the selected items"
     ID_FILE_AUDIT           "Audit ROM and samples sets"
     ID_FILE_EXIT            "Exit the application"

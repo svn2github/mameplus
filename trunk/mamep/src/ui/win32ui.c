@@ -797,7 +797,7 @@ const char* column_names[COLUMN_MAX] =
 	"Manufacturer",
 	"Year",
 	"Clone Of",
-	"Source",
+	"Driver",
 	"Play Time"
 };
 
@@ -3707,7 +3707,7 @@ static void DisableSelection()
 	mmi.cbSize         = sizeof(mmi);
 	mmi.fMask          = MIIM_TYPE;
 	mmi.fType          = MFT_STRING;
-	mmi.dwTypeData     = _Unicode(_UI("Source Proper&ties"));
+	mmi.dwTypeData     = _Unicode(_UI("Proper&ties of Driver"));
 	mmi.cch            = lstrlen(mmi.dwTypeData);
 	SetMenuItemInfo(hMenu, ID_SOURCE_PROPERTIES, FALSE, &mmi);
 

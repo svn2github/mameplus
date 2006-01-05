@@ -60,6 +60,7 @@ static const char * StatusString(int iStatus);
  ***************************************************************************/
 
 #define SAMPLES_NOT_USED    3
+#define MAX_TEXT		   2147483647
 
 HWND hAudit;
 static int rom_index;
@@ -232,7 +233,11 @@ static INT_PTR CALLBACK AuditWindowProc(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 		//RS 20030613 Set Bkg of RichEdit Ctrl
 		hEdit = GetDlgItem(hAudit, IDC_AUDIT_DETAILS);
 		if (hEdit != NULL)
+		{
 			SendMessage(hEdit, EM_SETBKGNDCOLOR, FALSE, GetSysColor(COLOR_BTNFACE) );
+			//RS Standard is MAX_UINT, which seems not to be enough, so we use a higher Number...
+			SendMessage( hEdit, EM_EXLIMITTEXT, 0, MAX_TEXT );
+		}
 		SendDlgItemMessage(hDlg, IDC_ROMS_PROGRESS,    PBM_SETRANGE, 0, MAKELPARAM(0, GetNumGames()));
 		SendDlgItemMessage(hDlg, IDC_SAMPLES_PROGRESS, PBM_SETRANGE, 0, MAKELPARAM(0, GetNumGames()));
 		bPaused = FALSE;
