@@ -658,7 +658,8 @@ fghtatck	F/A / Fighter & Attacker (USA”Å)	‚¦‚Ó‚¦[	Namco
 fa	F/A (“ú–{”Å)	‚¦‚Ó‚¦[	Namco
 knckhead	ƒiƒbƒNƒ‹ƒwƒbƒY (ŠCŠO”Å)	‚È‚Á‚­‚é‚Ö‚Á‚¸	Namco
 knckhedj	ƒiƒbƒNƒ‹ƒwƒbƒY (“ú–{”Å)	‚È‚Á‚­‚é‚Ö‚Á‚¸	Namco
-swcourt	ƒX[ƒp[ƒ[ƒ‹ƒhƒR[ƒg (“ú–{”Å)	‚·[‚Ï[‚í[‚é‚Ç‚±[‚Æ	Namco
+swcourt	ƒX[ƒp[ƒ[ƒ‹ƒhƒR[ƒg (ŠCŠO”Å)	‚·[‚Ï[‚í[‚é‚Ç‚±[‚Æ	Namco
+swcourtj	ƒX[ƒp[ƒ[ƒ‹ƒhƒR[ƒg (“ú–{”Å)	‚·[‚Ï[‚í[‚é‚Ç‚±[‚Æ	Namco
 emeralda	ƒGƒƒ‰ƒ‹ƒfƒBƒA (“ú–{”Å ver B)	‚¦‚ß‚ç‚é‚Å‚¡‚ 	Namco
 emerldaa	ƒGƒƒ‰ƒ‹ƒfƒBƒA (“ú–{”Å)	‚¦‚ß‚ç‚é‚Å‚¡‚ 	Namco
 numanath	ƒjƒ…[ƒ}ƒ“ƒAƒXƒŒƒ`ƒbƒNƒX (ŠCŠO”Å)	‚É‚ã[‚Ü‚ñ‚ ‚·‚ê‚¿‚Á‚­‚·	Namco
@@ -1739,7 +1740,8 @@ fireshrk	LILILI / Fire Shark	‚³‚ß‚³‚ß‚³‚ß	Toaplan
 samesame	LILILI	‚³‚ß‚³‚ß‚³‚ß	Toaplan
 samesam2	LILILI (2P ver)	‚³‚ß‚³‚ß‚³‚ß	Toaplan
 outzone	ƒAƒEƒgƒ][ƒ“ (set 1)	‚ ‚¤‚Æ‚¼[‚ñ	Toaplan
-outzonea	ƒAƒEƒgƒ][ƒ“ (set 2)	‚ ‚¤‚Æ‚¼[‚ñ	Toaplan
+outzonea	ƒAƒEƒgƒ][ƒ“ (set 2 prototype?)	‚ ‚¤‚Æ‚¼[‚ñ	Toaplan
+outzoneb	ƒAƒEƒgƒ][ƒ“ (set 3)	‚ ‚¤‚Æ‚¼[‚ñ	Toaplan
 vimana	ƒ”ƒBƒ}ƒi	‚Ñ‚Ü‚È	Toaplan
 vimana1	ƒ”ƒBƒ}ƒi (old set)	‚Ñ‚Ü‚È	Toaplan
 vimanan	ƒ”ƒBƒ}ƒi (Nova Apparate GMBH & Co)	‚Ñ‚Ü‚È	Toaplan (Nova Apparate GMBH &amp; Co license)
@@ -2739,7 +2741,8 @@ goldnax1	ƒS[ƒ‹ƒfƒ“ƒAƒbƒNƒX (ŠCŠO”Å set 1 FD1094 317-0110)	‚²[‚é‚Å‚ñ‚ ‚Á‚­‚·_1	
 hwchamp	ƒwƒr[ƒEƒGƒCƒgƒ`ƒƒƒ“ƒv	‚Ö‚Ñ[‚¤‚¦‚¢‚Æ‚¿‚á‚ñ‚Õ	Sega
 mvp	M.V.P. (USA”Å set 2 FD1094 317-0143)	‚¦‚Ş‚Ô‚¢‚Ò[	Sega
 mvpj	M.V.P. (“ú–{”Å set 1 FD1094 317-0142)	‚¦‚Ş‚Ô‚¢‚Ò[	Sega
-passsht	ƒpƒbƒVƒ“ƒOƒVƒ‡ƒbƒg (2 players FD1094 317-0080)	‚Ï‚Á‚µ‚ñ‚®‚µ‚å‚Á‚Æ	Sega
+passsht	ƒpƒbƒVƒ“ƒOƒVƒ‡ƒbƒg (ŠCŠO”Å 2 Players FD1094 317-0080)	‚Ï‚Á‚µ‚ñ‚®‚µ‚å‚Á‚Æ	Sega
+passshta	ƒpƒbƒVƒ“ƒOƒVƒ‡ƒbƒg (ŠCŠO”Å 4 Players FD1094 317-0074)	‚Ï‚Á‚µ‚ñ‚®‚µ‚å‚Á‚Æ	Sega
 passshtj	ƒpƒbƒVƒ“ƒOƒVƒ‡ƒbƒg (“ú–{”Å 4 players FD1094 317-0070)	‚Ï‚Á‚µ‚ñ‚®‚µ‚å‚Á‚Æ	Sega
 riotcity	ƒ‰ƒCƒIƒbƒgƒVƒeƒB (“ú–{”Å)	‚ç‚¢‚¨‚Á‚Æ‚µ‚Ä‚¡	Sega / Westone
 ryukyu	—®‹… (“ú–{”Å FD1094 317-5023)	‚è‚ã‚¤‚«‚ã‚¤	Success / Sega
@@ -2955,6 +2958,7 @@ znpwfv	‘S“ú–{ƒvƒƒŒƒX Featuring ƒo[ƒ`ƒƒ (“ú–{”Å 971123 ver 1.000)	‚º‚ñ‚É‚Ù‚ñ‚Õ‚
 danchih	’c’n‚Å‰ÔD -‰œ‚³‚ñ•Ä‰®‚Å‚·‚æI (“ú–{”Å 990607 ver 1.400)	‚¾‚ñ‚¿‚Å‚Í‚È‚Ó‚¾	Altron (Tecmo license)
 mausuke	‚Ü‚¤‚·‚¯‚ÌƒIƒWƒƒƒ} ‚´ ‚í`‚é‚Ç (“ú–{”Å 960314 ver 1.000)	‚Ü‚¤‚·‚¯‚Ì‚¨‚¶‚á‚Ü‚´‚í[‚é‚Ç	Data East
 batmanfr	ƒoƒbƒgƒ}ƒ“ ƒtƒH[ƒGƒ”ƒ@[ (“ú–{ / USA / ‰¢B”Å 960507 ver 1.000)	‚Î‚Á‚Æ‚Ü‚ñ‚Ó‚§[‚¦‚Î[	Acclaim
+critcrsh	ƒ^ƒ^ƒRƒbƒg / Critter Crusher (EA 951204 ver 1.000)	‚½‚½‚±‚Á‚Æ	Sega
 sfish2	ƒXƒ|[ƒcƒtƒBƒbƒVƒ“ƒO2 (USA / ‰¢B / ‘ä˜p”Å 951106 ver 1.10e)	‚·‚Û[‚Â‚Ó‚¡‚Á‚µ‚ñ‚®2	Sega
 sfish2j	ƒXƒ|[ƒcƒtƒBƒbƒVƒ“ƒO2 (“ú–{”Å 951201 ver 1.100)	‚·‚Û[‚Â‚Ó‚¡‚Á‚µ‚ñ‚®2	Sega
 daytona	ƒfƒCƒgƒiUSA (“ú–{”Å)	‚Å‚¢‚Æ‚È‚ä[‚¦‚·‚¦[_1	Sega
@@ -3331,6 +3335,7 @@ chokchok	ƒ`ƒ‡ƒL[Iƒ`ƒ‡ƒL[I	‚¿‚å‚«[‚¿‚å‚«[	SemiCom
 metlsavr	ƒƒ^ƒ‹ƒZ[ƒo[	‚ß‚½‚é‚¹[‚Î[	First Amusement
 bcstry	B.C.ƒXƒg[ƒŠ[ (set 1)	‚Ñ[‚µ[‚·‚Æ[‚è[	SemiCom
 bcstrya	B.C.ƒXƒg[ƒŠ[ (set 2)	‚Ñ[‚µ[‚·‚Æ[‚è[	SemiCom
+semibase	–³ŒÀŸ•‰ (SemiCom Baseball)	‚Ş‚°‚ñ‚µ‚å‚¤‚Ô	SemiCom
 suprtrio	ƒX[ƒp[ƒgƒŠƒI	‚·[‚Ï[‚Æ‚è‚¨	Gameace
 lemmings	ƒŒƒ~ƒ“ƒOƒX (USA”Å prototype)	‚ê‚İ‚ñ‚®‚·	Data East USA
 dragngun	ƒhƒ‰ƒSƒ“ƒKƒ“ (USA”Å)	‚Ç‚ç‚²‚ñ‚ª‚ñ	Data East Corporation
@@ -4199,6 +4204,7 @@ madcrash	ƒ}ƒbƒhƒNƒ‰ƒbƒVƒƒ[	‚Ü‚Á‚Ç‚­‚ç‚Á‚µ‚á[	SNK
 vangrd2	ƒ”ƒ@ƒ“ƒK[ƒhII	‚Î‚ñ‚ª[‚Ç_2	SNK
 jcross	ƒWƒƒƒ“ƒsƒ“ƒOƒNƒƒX	‚¶‚á‚ñ‚Ò‚ñ‚®‚­‚ë‚·	SNK
 mainsnk	ƒƒCƒ“ƒCƒxƒ“ƒg	‚ß‚¢‚ñ‚¢‚×‚ñ‚Æ	SNK
+canvas	ƒLƒƒƒ“ƒoƒXƒNƒƒbƒL[	‚«‚á‚ñ‚Î‚·‚­‚ë‚Á‚«[	SNK
 sgladiat	ƒOƒ‰ƒfƒBƒGƒCƒ^[	‚®‚ç‚Å‚¡‚¦‚¢‚½[	SNK
 hal21	ƒnƒ‹21	‚Í‚é21	SNK
 hal21j	ƒnƒ‹21 (“ú–{”Å)	‚Í‚é21	SNK
@@ -4441,8 +4447,9 @@ kof2001	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2001 (set 1)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_08_
 kof2001h	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2001 (set 2)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_08_1_2001	Eolith / SNK
 kof2001d	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2001 (decrypted C)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_08_1_2001	Eolith / SNK
 cthd2003	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2001 / Crouching Tiger Hidden Dragon 2003 (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_08_3_2001	bootleg
+ct2k3sp	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2001 / Crouching Tiger Hidden Dragon 2003 Super Plus (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_08_3_2001	bootleg
 kf2k1pls	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2001 / The King of Fighters 2001 Plus (ŠC‘¯”Å set 1)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_08_2_2001	bootleg
-kf2k1pla	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2001 / The King of Fighters 2001 Plus (ŠC‘¯”Å set 2)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_08_2_2001	bootleg
+kf2k1pa	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2001 / The King of Fighters 2001 Plus (ŠC‘¯”Å set 2)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_08_2_2001	bootleg
 mslug4	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO4	‚ß‚½‚é‚·‚ç‚Á‚®_4_1	Mega
 mslug4d	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO4 (decrypted C)	‚ß‚½‚é‚·‚ç‚Á‚®_4_1	Mega
 ms4plus	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO4 Plus (ŠC‘¯”Å)	‚ß‚½‚é‚·‚ç‚Á‚®_4_2‚Õ‚ç‚·	bootleg
@@ -4451,12 +4458,14 @@ rotdd	ƒŒƒCƒWEƒIƒuEƒUEƒhƒ‰ƒSƒ“ƒY (decrypted C)	‚ê‚¢‚¶‚¨‚Ô‚´‚Ç‚ç‚²‚ñ‚¸	Evoga / 
 kof2002	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 -Challenge to Ultimate Battle	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_1_2002	Eolith / Playmore
 kof2002d	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 -Challenge to Ultimate Battle (decrypted C)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_1_2002	Eolith / Playmore
 kof2002b	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 -Challenge to Ultimate Battle (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_1_2002	bootleg
-kof10th	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / King Of Fighters 10th Anniversary (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
-kof2k4se	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters Special Edition 2004 (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	Bootleg
 kf2k2pls	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Plus (ŠC‘¯”Å set 1)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
-kf2k2pla	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Plus (ŠC‘¯”Å set 2)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
-kf2k2plb	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Plus (ŠC‘¯”Å set 3)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
-kof2k2mp	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Magic Plus (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
+kf2k2pa	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Plus (ŠC‘¯”Å set 2)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
+kf2k2pb	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Plus (ŠC‘¯”Å set 3)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
+kf2k2mp2	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Magic Plus II (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
+kof10th	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / King Of Fighters 10th Anniversary (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
+kf2k5uni	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 10th Anniversary 2005 Unique (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
+kf10thep	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 10th Anniversary Extra Plus (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
+kof2k4se	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters Special Edition 2004 (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
 matrim	V‹ŒŒ›ˆê‘° “¬¥ -Matrimelee	‚µ‚ñ‚²‚¤‚¯‚Â‚¶‚¢‚¿‚¼‚­‚Æ‚¤‚±‚ñ	Noise Factory / Atlus
 matrimd	V‹ŒŒ›ˆê‘° “¬¥ -Matrimelee (decrypted C)	‚µ‚ñ‚²‚¤‚¯‚Â‚¶‚¢‚¿‚¼‚­‚Æ‚¤‚±‚ñ	Noise Factory / Atlus
 matrimbl	V‹ŒŒ›ˆê‘° “¬¥ -Matrimelee (ŠC‘¯”Å)	‚µ‚ñ‚²‚¤‚¯‚Â‚¶‚¢‚¿‚¼‚­‚Æ‚¤‚±‚ñ	bootleg
@@ -4490,6 +4499,7 @@ exctscc2	ƒGƒLƒTƒCƒeƒBƒ“ƒOƒTƒbƒJ[2	‚¦‚«‚³‚¢‚Ä‚¡‚ñ‚®‚³‚Á‚©[_2	Alpha Denshi Co.
 talbot	ƒ^ƒ‹ƒ{ƒbƒg	‚½‚é‚Ú‚Á‚Æ	Volt Electronics (Alpha license)
 equites	ƒGƒNƒCƒeƒX	‚¦‚­‚¢‚Ä‚·	Alpha Denshi Co.
 equitess	ƒGƒNƒCƒeƒX (Sega)	‚¦‚­‚¢‚Ä‚·	Alpha Denshi Co. (Sega license)
+gekisou	Œƒ‘– (“ú–{”Å)	‚°‚«‚»‚¤	Eastern
 bullfgtr	ƒuƒ‹ƒtƒ@ƒCƒ^[	‚Ô‚é‚Ó‚Ÿ‚¢‚½[	Alpha Denshi Co.
 bullfgts	ƒuƒ‹ƒtƒ@ƒCƒ^[ (Sega)	‚Ô‚é‚Ó‚Ÿ‚¢‚½[	Alpha Denshi Co. (Sega license)
 kouyakyu	ƒUE‚Z–ì‹…	‚´‚±‚¤‚±‚¤‚â‚«‚ã‚¤	Alpha Denshi Co.
@@ -4848,8 +4858,10 @@ airraid	ƒNƒƒXƒVƒ…[ƒ^[ / Air Raid (encrypted)	‚­‚ë‚·‚µ‚ã[‚½[	Seibu Kaihatsu
 panicr	ƒpƒjƒbƒNƒ[ƒh	‚Ï‚É‚Á‚­‚ë[‚Ç	Seibu
 deadang	ƒŠ[ƒhƒAƒ“ƒOƒ‹ / Dead Angle	‚è[‚Ç‚ ‚ñ‚®‚é	Seibu Kaihatsu
 ghunter	ƒŠ[ƒhƒAƒ“ƒOƒ‹ / Gang Hunter (ƒXƒyƒCƒ“”Å)	‚è[‚Ç‚ ‚ñ‚®‚é	Seibu Kaihatsu (Segasa/Sonic license)
-dynduke	ƒ_ƒCƒiƒ}ƒCƒgƒfƒ…[ƒN	‚¾‚¢‚È‚Ü‚¢‚Æ‚Å‚ã[‚­	Seibu Kaihatsu (Fabtek license)
-dbldyn	ƒ_ƒuƒ‹ƒfƒ…[ƒN / The Double Dynamites	‚¾‚Ô‚é‚Å‚ã[‚­	Seibu Kaihatsu (Fabtek license)
+dynduke	ƒ_ƒCƒiƒ}ƒCƒgƒfƒ…[ƒN (USA”Å)	‚¾‚¢‚È‚Ü‚¢‚Æ‚Å‚ã[‚­	Seibu Kaihatsu (Fabtek license)
+dyndukj	ƒ_ƒCƒiƒ}ƒCƒgƒfƒ…[ƒN (“ú–{”Å)	‚¾‚¢‚È‚Ü‚¢‚Æ‚Å‚ã[‚­	Seibu Kaihatsu
+dbldyn	ƒ_ƒuƒ‹ƒfƒ…[ƒN / The Double Dynamites (USA”Å)	‚¾‚Ô‚é‚Å‚ã[‚­	Seibu Kaihatsu (Fabtek license)
+dbldynj	ƒ_ƒuƒ‹ƒfƒ…[ƒN (“ú–{”Å)	‚¾‚Ô‚é‚Å‚ã[‚­	Seibu Kaihatsu
 raiden	—‹“d	‚ç‚¢‚Å‚ñ_1	Seibu Kaihatsu
 raidena	—‹“d (alt hardware)	‚ç‚¢‚Å‚ñ_1	Seibu Kaihatsu
 raidenk	—‹“d (ŠØ‘”Å)	‚ç‚¢‚Å‚ñ_1	Seibu Kaihatsu (IBL Corporation license)
@@ -5286,9 +5298,10 @@ mayjisn2	‘w‚µ«Šû ŒÜŒwí2	‚Í‚â‚´‚µ‚µ‚å‚¤‚¬‚ß‚¢‚¶‚ñ‚¹‚ñ_2	Seta
 srmp6	ƒX[ƒp[ƒŠƒAƒ‹–ƒPVI (“ú–{”Å)	‚·[‚Ï[‚è‚ ‚é‚Ü[‚¶‚á‚ñ‚Ò[_6	Seta
 11beat	ƒCƒŒƒuƒ“ƒr[ƒgEƒ[ƒ‹ƒhƒg[ƒiƒƒ“ƒg	‚¢‚ê‚Ô‚ñ‚Ñ[‚Æ‚í[‚é‚Ç‚Æ[‚È‚ß‚ñ‚Æ	Hudson
 mtetrisc	ƒ}ƒWƒJƒ‹ƒeƒgƒŠƒXƒ`ƒƒƒŒƒ“ƒW featuring ƒ~ƒbƒL[ (“ú–{”Å 981009)	‚Ü‚¶‚©‚é‚Ä‚Æ‚è‚·‚¿‚á‚ê‚ñ‚¶‚Ó‚¡[‚¿‚á‚è‚ñ‚®‚İ‚Á‚«[	Capcom
-powerins	‹ŒŒ›ˆê‘° / Power Instinct (USA”Å) (ŠC‘¯”Å set 1)	‚²‚¤‚¯‚Â‚¶‚¢‚¿‚¼‚­_1	Atlus
-powerina	‹ŒŒ›ˆê‘° / Power Instinct (USA”Å) (ŠC‘¯”Å set 2)	‚²‚¤‚¯‚Â‚¶‚¢‚¿‚¼‚­_1	Atlus
-powerinj	‹ŒŒ›ˆê‘° (“ú–{”Å) (ŠC‘¯”Å)	‚²‚¤‚¯‚Â‚¶‚¢‚¿‚¼‚­_1	Atlus
+powerins	‹ŒŒ›ˆê‘° (“ú–{”Å)	‚²‚¤‚¯‚Â‚¶‚¢‚¿‚¼‚­_1	Atlus
+powerina	‹ŒŒ›ˆê‘° / Power Instinct (USA”Å) (ŠC‘¯”Å set 1)	‚²‚¤‚¯‚Â‚¶‚¢‚¿‚¼‚­_1	Atlus
+powerinb	‹ŒŒ›ˆê‘° / Power Instinct (USA”Å) (ŠC‘¯”Å set 2)	‚²‚¤‚¯‚Â‚¶‚¢‚¿‚¼‚­_1	Atlus
+powernjb	‹ŒŒ›ˆê‘° (“ú–{”Å) (ŠC‘¯”Å)	‚²‚¤‚¯‚Â‚¶‚¢‚¿‚¼‚­_1	Atlus
 ohmygod	ƒI[ƒ}ƒCƒKƒ@[I (“ú–{”Å)	‚¨[‚Ü‚¢‚ª‚Ÿ[	Atlus
 naname	‚È‚È‚ß‚Å‚Ü‚¶‚Á‚­I (“ú–{”Å)	‚È‚È‚ß‚Å‚Ü‚¶‚Á‚­	Atlus
 blmbycar	ƒuƒƒ“ƒr[ƒJ[	‚Ô‚ë‚ñ‚Ñ[‚©[	ABM &amp; Gecas
@@ -5373,6 +5386,7 @@ lvgirl94	ƒ‰ƒXƒxƒKƒXƒK[ƒ‹ -ƒK[ƒ‹'94	‚ç‚·‚×‚ª‚·‚ª[‚é	Comad
 hotpinbl	ƒzƒbƒgƒsƒ“ƒ{[ƒ‹	‚Ù‚Á‚Æ‚Ò‚ñ‚Ú[‚é	Comad &amp; New Japan System
 galspnbl	ƒMƒƒƒ‹ƒYƒsƒ“ƒ{[ƒ‹	‚¬‚á‚é‚¸‚Ò‚ñ‚Ú[‚é	Comad
 fantasia	ƒtƒ@ƒ“ƒ^ƒWƒA	‚Ó‚Ÿ‚ñ‚½‚¶‚ _1	Comad &amp; New Japan System
+supmodel	ƒX[ƒp[ƒ‚ƒfƒ‹	‚·[‚Ï[‚à‚Å‚é	Comad &amp; New Japan System
 newfant	ƒjƒ…[ƒtƒ@ƒ“ƒ^ƒWƒA	‚É‚ã[‚Ó‚Ÿ‚ñ‚½‚¶‚ 	Comad &amp; New Japan System
 fantsy95	ƒtƒ@ƒ“ƒ^ƒW['95	‚Ó‚Ÿ‚ñ‚½‚¶[95	Hi-max Technology Inc.
 zipzap	ƒWƒbƒv&ƒUƒbƒv	‚¶‚Á‚Õ‚ ‚ñ‚Ç‚´‚Á‚Õ	Barko Corp
@@ -5399,7 +5413,8 @@ natodef	NATOƒfƒBƒtƒFƒ“ƒX	‚È‚Æ[‚Å‚¡‚Ó‚¥‚ñ‚·	Pacific Novelty
 natodefa	NATOƒfƒBƒtƒFƒ“ƒX (alt mazes)	‚È‚Æ[‚Å‚¡‚Ó‚¥‚ñ‚·	Pacific Novelty
 mrflea	ƒWEƒAƒƒCƒWƒ“ƒOƒAƒhƒxƒ“ƒ`ƒƒ[ƒYEƒIƒuEMr.F.ƒŠ[	‚¶‚ ‚ß‚¢‚¶‚ñ‚®‚ ‚Ç‚×‚ñ‚¿‚á[‚¸‚¨‚Ô‚İ‚·‚½[‚Ó‚è[	Pacific Novelty
 holeland	ƒz[ƒ‹ƒ‰ƒ“ƒh	‚Ù[‚é‚ç‚ñ‚Ç	Tecfri
-crzrally	ƒNƒŒƒCƒW[ƒ‰ƒŠ[	‚­‚ê‚¢‚¶[‚ç‚è[	Tecfri
+crzrally	ƒNƒŒƒCƒW[ƒ‰ƒŠ[ (set 1)	‚­‚ê‚¢‚¶[‚ç‚è[	Tecfri
+crzralla	ƒNƒŒƒCƒW[ƒ‰ƒŠ[ (set 2)	‚­‚ê‚¢‚¶[‚ç‚è[	Tecfri
 crzrallg	ƒNƒŒƒCƒW[ƒ‰ƒŠ[ (Gecas license)	‚­‚ê‚¢‚¶[‚ç‚è[	Tecfri (Gecas license)
 speedbal	ƒXƒs[ƒhƒ{[ƒ‹	‚·‚Ò[‚Ç‚Ú[‚é	Tecfri
 sauro	ƒTƒEƒ	‚³‚¤‚ë	Tecfri
@@ -5444,6 +5459,7 @@ paradise	ƒpƒ‰ƒ_ƒCƒX	‚Ï‚ç‚¾‚¢‚·	Yun Sung
 tgtball	ƒ^[ƒQƒbƒgƒ{[ƒ‹ (Nude)	‚½[‚°‚Á‚Æ‚Ú[‚é	Yun Sung
 tgtballa	ƒ^[ƒQƒbƒgƒ{[ƒ‹	‚½[‚°‚Á‚Æ‚Ú[‚é	Yun Sung
 torus	ƒg[ƒ‰ƒX	‚Æ[‚ç‚·	Yun Sung
+madball	ƒ}ƒbƒhƒ{[ƒ‹ (ver 2.0)	‚Ü‚Á‚Ç‚Ú[‚é	Yun Sung
 cannball	ƒLƒƒƒmƒ“ƒ{[ƒ‹	‚«‚á‚Ì‚ñ‚Ú[‚é	Yun Sung / Soft Vision
 magix	ƒ}ƒWƒbƒNƒX	‚Ü‚¶‚Á‚­‚·_1	Yun Sung
 magicbub	ƒ}ƒWƒbƒNƒoƒuƒ‹	‚Ü‚¶‚Á‚­‚Î‚Ô‚é	Yun Sung
@@ -5453,6 +5469,7 @@ nmg5	ƒ}ƒ‹ƒ`5	‚Ü‚é‚¿‚Ó‚Ÿ‚¢‚Ô	Yun Sung
 searchey	ƒT[ƒ`ƒAƒC	‚³[‚¿‚ ‚¢	Yun Sung
 pclubys	ƒpƒYƒ‹ƒNƒ‰ƒu (Yun Sung set 1)	‚Ï‚¸‚é‚­‚ç‚Ô	Yun Sung
 pclubysa	ƒpƒYƒ‹ƒNƒ‰ƒu (Yun Sung set 2)	‚Ï‚¸‚é‚­‚ç‚Ô	Yun Sung
+garogun	ƒKƒƒKƒ“ƒZƒƒ„ƒ“ (ŠØ‘”Å)	‚ª‚ë‚ª‚ñ‚¹‚ë‚â‚ñ	Yun Sung
 wondstck	ƒƒ“ƒ_[ƒXƒeƒBƒbƒN	‚í‚ñ‚¾[‚·‚Ä‚¡‚Á‚­	Yun Sung
 blueprnt	ƒuƒ‹[ƒvƒŠƒ“ƒg (Midway)	‚Ô‚é[‚Õ‚è‚ñ‚Æ	[Zilec Electronics] Bally Midway
 blueprnj	ƒuƒ‹[ƒvƒŠƒ“ƒg (Jaleco)	‚Ô‚é[‚Õ‚è‚ñ‚Æ	[Zilec Electronics] Jaleco
@@ -5584,11 +5601,14 @@ kov2106	Oš í‹I •«‘ˆ”e (106)	‚³‚ñ‚²‚­‚¹‚ñ‚«_2_1	IGS
 kov2p	Oš í‹I •«‘ˆ”e ƒvƒ‰ƒX -Nine Dragons	‚³‚ñ‚²‚­‚¹‚ñ‚«_2_2	IGS
 ddp2	“{ñ—Ì–III	‚Ç‚Ç‚ñ‚Ï‚¿_2	IGS
 puzzli2	‚Ï‚Ã‚è2 ƒX[ƒp[	‚Ï‚Ã‚è_2‚·[‚Ï[	IGS
+martmast	ƒ}[ƒVƒƒƒ‹ƒ}ƒXƒ^[ƒY	‚Ü|‚µ‚á‚é‚Ü‚·‚½[‚¸	IGS
+dmnfrnt	ƒf[ƒ‚ƒ“ƒtƒƒ“ƒg	‚Å[‚à‚ñ‚Ó‚ë‚ñ‚Æ	IGS
 hitme	ƒqƒbƒgƒ~[	‚Ğ‚Á‚Æ‚İ[	RamTek
 mblkjack	ƒuƒ‰ƒbƒNƒWƒƒƒbƒN (Mirco)	‚Ô‚ç‚Á‚­‚¶‚á‚Á‚­	Mirco
 barricad	ƒoƒŠƒP[ƒh	‚Î‚è‚¯[‚Ç	RamTek
 brickyrd	ƒuƒŠƒbƒNƒ„[ƒh	‚Ô‚è‚Á‚­‚â[‚Ç	RamTek
 starcrus	ƒXƒ^[ƒNƒ‹[ƒU[	‚·‚½[‚­‚é[‚´[	RamTek
+shuttlei	ƒVƒƒƒgƒ‹ƒCƒ“ƒx[ƒ_[	‚µ‚á‚Æ‚é‚¢‚ñ‚×[‚¾[	Omori
 battlex	ƒoƒgƒ‹ƒNƒƒX	‚Î‚Æ‚é‚­‚ë‚·	Omori Electric
 carjmbre	ƒJ[ƒWƒƒƒ“ƒ{ƒŠ[	‚©[‚¶‚á‚ñ‚Ú‚è[	Omori Electric Co., Ltd.
 popper	ƒ|ƒbƒp[	‚Û‚Á‚Ï[	Omori Electric Co., Ltd.
@@ -5600,6 +5620,7 @@ usg32	ƒX[ƒp[ƒfƒ…[ƒp[ƒJƒWƒm (California ver 3.2)	‚·[‚Ï[‚Å‚ã[‚Ï[‚©‚¶‚Ì	U.S
 usg82	ƒX[ƒp[ƒeƒ“ V8.2	‚·[‚Ï[‚Ä‚ñV82	U.S. Games
 usg83	ƒX[ƒp[ƒeƒ“ V8.3	‚·[‚Ï[‚Ä‚ñV83_1	U.S. Games
 usg83x	ƒX[ƒp[ƒeƒ“ V8.3X	‚·[‚Ï[‚Ä‚ñV83_2‚¦‚Á‚­‚·	U.S. Games
+usg182	ƒQ[ƒ€ƒX (ver 18.2)	‚°[‚Ş‚·	U.S. Games
 usg185	ƒQ[ƒ€ƒY V18.7C	‚°[‚Ş‚¸_1V18.7‚µ[	U.S. Games
 usg252	ƒQ[ƒ€ƒY V25.4X	‚°[‚Ş‚¸_2V25.4‚¦‚Á‚­‚·	U.S. Games
 mermaid	ƒˆƒbƒgƒ}ƒ“ / Mermaid	‚æ‚Á‚Æ‚Ü‚ñ	[Sanritsu] Rock-Ola
@@ -5841,10 +5862,12 @@ portrata	ƒ|[ƒgƒŒ[ƒg (set 2)	‚Û[‚Æ‚ê[‚Æ	Olympia
 enigma2	ƒGƒjƒOƒ}2	‚¦‚É‚®‚Ü2	GamePlan (Zilec Electronics license)
 enigma2a	ƒGƒjƒOƒ}2 (Space Invaders hardware)	‚¦‚É‚®‚Ü2	Zilec Electronics
 ltcasino	ƒŠƒgƒ‹ƒJƒWƒm	‚è‚Æ‚é‚©‚¶‚Ì_1	Digital Controls Inc.
+mv4in1	ƒŠƒgƒ‹ƒJƒWƒm / Mini Vegas 4in1	‚è‚Æ‚é‚©‚¶‚Ì_1	Entertainment Enterprises
 ltcasin2	ƒŠƒgƒ‹ƒJƒWƒm2	‚è‚Æ‚é‚©‚¶‚Ì_2	Digital Controls Inc.
 coolmini	ƒN[ƒ‹ƒ~ƒjƒQ[ƒ€ƒRƒŒƒNƒVƒ‡ƒ“	‚­[‚é‚İ‚É‚°[‚Ş‚±‚ê‚­‚µ‚å‚ñ	Semicom
 luplup	ƒ‰ƒbƒvƒ‰ƒbƒvƒpƒYƒ‹ (ver 3.0 / 990128)	‚ç‚Á‚Õ‚ç‚Á‚Õ‚Ï‚¸‚é	Omega System
 luplup29	ƒ‰ƒbƒvƒ‰ƒbƒvƒpƒYƒ‹ (ver 2.9 / 990108)	‚ç‚Á‚Õ‚ç‚Á‚Õ‚Ï‚¸‚é	Omega System
+puzlbang	ƒ‰ƒbƒvƒ‰ƒbƒvƒpƒYƒ‹ (ver 2.8 / 990106)	‚ç‚Á‚Õ‚ç‚Á‚Õ‚Ï‚¸‚é	Omega System
 suplup	ƒX[ƒp[ƒ‰ƒbƒvƒ‰ƒbƒvƒpƒYƒ‹ (ver 4.0 / 990518)	‚·[‚Ï[‚ç‚Á‚Õ‚ç‚Á‚Õ‚Ï‚¸‚é	Omega System
 vamphalf	ƒ”ƒ@ƒ“ƒv~1^2 (ŠØ‘”Å)	‚Î‚ñ‚Õ‚Í[‚Ó	Danbi &amp; F2 System
 misncrft	ƒ~ƒbƒVƒ‡ƒ“ƒNƒ‰ƒtƒg (ver 2.4)	‚İ‚Á‚µ‚å‚ñ‚­‚ç‚Ó‚Æ	Sun
@@ -5885,6 +5908,7 @@ onetwo	ƒƒ“{ƒc[	‚í‚ñ‚Õ‚ç‚·‚Â[	Barko
 1945kiii	1945k III	‚È‚¢‚ñ‚Ä‚¡[‚ñ‚Ó‚§[‚Ä‚¡[‚Ó‚Ÿ‚¢‚Ô‚¯[‚·‚è[	Oriental
 witch	ƒEƒBƒbƒ`	‚¤‚¡‚Á‚¿	Sega / Vic Tokai
 pbchmp95	ƒEƒBƒbƒ` / Pinball Champ '95 (ŠC‘¯”Å?)	‚¤‚¡‚Á‚¿	Veltmeijer Automaten
+cardline	ƒJ[ƒhƒ‰ƒCƒ“	‚©[‚Ç‚ç‚¢‚ñ	Veltmeijer
 bmcbowl	Ÿö‹…‚Ì¯	‚±‚ñ‚«‚ã‚¤‚Ì‚Ù‚µ	BMC
 pitboss	ƒsƒbƒgƒ{ƒX	‚Ò‚Á‚Æ‚Ú‚·	Merit
 trvwhiz	ƒgƒŠƒrƒA? ƒEƒBƒY (question set 1)	‚Æ‚è‚Ñ‚ _2_‚¤‚¡‚¸	Merit
@@ -5960,3 +5984,4 @@ littlerb	ƒŠƒgƒ‹ƒƒrƒ“	‚è‚Æ‚é‚ë‚Ñ‚ñ	TCH
 tattack	ƒ^ƒCƒ€ƒAƒ^ƒbƒJ[	‚½‚¢‚Ş‚ ‚½‚Á‚©[	Shonan
 mosaicf2	ƒ‚ƒUƒCƒN (F2 System)	‚à‚´‚¢‚­	F2 System
 rbmk	Àí–ƒ«‰¤	‚¶‚Á‚¹‚ñ‚Ü[‚¶‚á‚ñ‚¨‚¤	GMS
+go2000	ƒS[2000	‚²[‚Â[‚³‚¤‚´‚ñ	SA

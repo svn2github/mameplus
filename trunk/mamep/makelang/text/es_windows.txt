@@ -50,7 +50,7 @@
   Axis %d (%s)%s\n
   Ejes %d (%s)%s\n
 
-# windows/config.c: 538
+# windows/config.c: 533
  %s running parameters
  %s ejecutando parametros
 
@@ -486,7 +486,7 @@ Fuera de memoria!\n
 PARTKNOWN %s\n
 PARTE CONOCIDA %s\n
 
-# windows/config.c: 586
+# windows/config.c: 581
 Playing back previously recorded game %s (%s) [press return]\n
 Reproduciendo grabacción previa del juego %s (%s) [pulsa esc]\n
 
@@ -634,7 +634,7 @@ Deseleccionado para renderizar textura de preproceso: %08x\n
 Usage:  MAME gamename [options]\n\n
 Usar: MAME nombredejuego [opciones]\n\n
 
-# windows/config.c: 545
+# windows/config.c: 540
 Usage: %s [game] [options]\nOptions:\n
 Usar: %s [juego] [opciones]\nOpciones:\n
 
@@ -726,7 +726,7 @@ Opciones de vídeo de Windows
 \"%s\" controller support enabled\n
 \"%s\" activar soporte de controlador\n
 
-# windows/config.c: 639
+# windows/config.c: 634
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 
@@ -1042,11 +1042,11 @@ imponer ratio de aspecto
 error invalid value for %s: %s\n
 error valor inválido para %s: %s\n
 
-# windows/config.c: 488
+# windows/config.c: 483
 error on rc creation\n
 error en creación rc\n
 
-# windows/config.c: 495
+# windows/config.c: 490
 error while parsing cmdline\n
 error mienstras analiza cmdline\n
 
@@ -1062,7 +1062,7 @@ error: %s requiere un argumento\n
 error: couldn't open file: %s\n
 error: no se puede abrir archivo: %s\n
 
-# windows/config.c: 870
+# windows/config.c: 872
 error: duplicate gamename: %s\n
 error: nombre de juego duplicado: %s\n
 
@@ -1130,15 +1130,15 @@ error: fallo reservando memoria en rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 error: fallo reservando memoria en rc_register_option\n
 
-# windows/config.c: 998
+# windows/config.c: 1000
 error: malloc failed in win_dirname\n
 error: fallo reservando memoria en win_dirname\n
 
-# windows/config.c: 1038
+# windows/config.c: 1040
 error: malloc failed in win_strip_extension\n
 error: fallo reservando memoria en win_strip_extension\n
 
-# windows/config.c: 886
+# windows/config.c: 888
 error: no gamename given in %s\n
 error: sin nombre de juego dado en %s\n
 
@@ -1158,11 +1158,11 @@ error: opción desconocida %s\n
 error: unknown option type: %d, this should not happen!\n
 error: tipo de opción desconocida: %d, esto no deberia suceder!\n
 
-# windows/config.c: 561
+# windows/config.c: 556
 failed to open %s for playback\n
 fallo para abrir %s para reproducción\n
 
-# windows/config.c: 687
+# windows/config.c: 689
 failed to open %s for recording\n
 fallo para abrir %s para grabación\n
 
@@ -1278,10 +1278,6 @@ salida de log de errores a depurador
 paddle
 paleta
 
-# windows/config.c: 424
-parsing %s...
-analizando %s...
-
 # windows/fileio.c: 125, 127
 path to ini files
 ruta para archivos ini
@@ -1313,10 +1309,6 @@ preferido RDTSC ante QueryPerformanceCounter para contador
 # windows/wind3dfx.c: 191
 prescale effect
 efecto prescala
-
-# windows/config.c: 432
-problem parsing %s\n
-problema analizando %s\n
 
 # windows/config.c: 252
 record an input file
@@ -1354,7 +1346,7 @@ rotar pantalla en el sentido de la agujas del reloj
 run in a window/run on full screen
 ejecutar en una ventana/ejecutar en pantalla completa
 
-# windows/config.c: 630
+# windows/config.c: 625
 running %s (%s) [press return]
 ejecutando %s (%s) [pulsa esc]
 
@@ -1617,4 +1609,16 @@ color marco de ventana (medio)
 # windows/fronthlp.c: 66
 year, manufacturer and full name
 Año, creador y nombre completo
+
+# windows/config.c: 429
+Parsing %s : ERROR\n
+
+
+# windows/config.c: 439
+Parsing %s : N/A\n
+
+
+# windows/config.c: 434
+Parsing %s : OK\n
+
 

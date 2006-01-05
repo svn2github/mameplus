@@ -14,7 +14,7 @@
    ignoring line\n
    줄 무시\n
 
-# windows/config.c: 538
+# windows/config.c: 533
  %s running parameters
  %s 를 매개변수로 실행
 
@@ -286,7 +286,7 @@ Out of memory!\n
 PARTKNOWN %s\n
 부분 알려짐 %s\n
 
-# windows/config.c: 586
+# windows/config.c: 581
 Playing back previously recorded game %s (%s) [press return]\n
 리플레이 파일 재생 %s (%s) [엔터를 누르세요]\n
 
@@ -338,7 +338,7 @@ Unable to open the keyboard device. (error %d)\n
 Usage:  MAME gamename [options]\n\n
 사용:  MAME 게임명 [옵션]\n\n
 
-# windows/config.c: 545
+# windows/config.c: 540
 Usage: %s [game] [options]\nOptions:\n
 사용: %s [게임] [옵션]\n옵션:\n
 
@@ -370,7 +370,7 @@ Windows video options
 \"%s\" controller support enabled\n
 \"%s\" 입력기 지원이 활성화됨\n
 
-# windows/config.c: 639
+# windows/config.c: 634
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" 는 대체로 다음과 같은 지원 게임과\n일치합니다. (최적맞춤 우선):\n\n
 
@@ -562,11 +562,11 @@ enforce aspect ratio
 error invalid value for %s: %s\n
 잘못된 값  %s: %s\n
 
-# windows/config.c: 488
+# windows/config.c: 483
 error on rc creation\n
 rc 생성 오류\n
 
-# windows/config.c: 495
+# windows/config.c: 490
 error while parsing cmdline\n
 커맨드라인 붙여넣기 오류\n
 
@@ -582,7 +582,7 @@ error: %s requires an argument\n
 error: couldn't open file: %s\n
 오류: 파일 열기 실패: %s\n
 
-# windows/config.c: 870
+# windows/config.c: 872
 error: duplicate gamename: %s\n
 오류: 게임이름 복사: %s\n
 
@@ -610,7 +610,7 @@ error: invalid value for palette: %s\n
 error: invalid value for resolution: %s\n
 오류: 잘못된 해상도 값: %s\n
 
-# windows/config.c: 886
+# windows/config.c: 888
 error: no gamename given in %s\n
 오류: %s에 게임이름 지정안됨\n
 
@@ -626,11 +626,11 @@ error: unknown option %s, on line %d of file: %s\n
 error: unknown option %s\n
 오류: 알려지지 않은 옵션 %s\n
 
-# windows/config.c: 561
+# windows/config.c: 556
 failed to open %s for playback\n
 %s 열기 실패 (재생용)\n
 
-# windows/config.c: 687
+# windows/config.c: 689
 failed to open %s for recording\n
 %s 열기 실패 (녹화용)\n
 
@@ -702,10 +702,6 @@ no help available
 output error log to debugger
 디버거로 오류 로그를 출력
 
-# windows/config.c: 424
-parsing %s...
-붙여넣는중 %s...
-
 # windows/fileio.c: 125, 127
 path to ini files
 ini 파일 경로
@@ -729,10 +725,6 @@ preconfigure for specified controller
 # windows/video.c: 244
 prefer RDTSC over QueryPerformanceCounter for timing
 RDTSC 를 QueryPerformanceCounter 타이밍을 위해 제공
-
-# windows/config.c: 432
-problem parsing %s\n
-붙여넣기 오류 %s\n
 
 # windows/config.c: 252
 record an input file
@@ -770,7 +762,7 @@ rotate screen clockwise
 run in a window/run on full screen
 창에서 실행/전체화면에서 실행
 
-# windows/config.c: 630
+# windows/config.c: 625
 running %s (%s) [press return]
 실행중 %s (%s) [엔터를 누르세요]
 
@@ -1166,6 +1158,18 @@ Mouse %d Y
 Mouse %d Z
 
 
+# windows/config.c: 429
+Parsing %s : ERROR\n
+
+
+# windows/config.c: 439
+Parsing %s : N/A\n
+
+
+# windows/config.c: 434
+Parsing %s : OK\n
+
+
 # windows/wind3d.c: 1645
 Pre-process texture surface created: %s\n
 
@@ -1486,11 +1490,11 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 
 
-# windows/config.c: 998
+# windows/config.c: 1000
 error: malloc failed in win_dirname\n
 
 
-# windows/config.c: 1038
+# windows/config.c: 1040
 error: malloc failed in win_strip_extension\n
 
 

@@ -14,7 +14,7 @@
    ignoring line\n
    ignorowanie linii\n
 
-# windows/config.c: 538
+# windows/config.c: 533
  %s running parameters
  parametry uruchomieniowe %s
 
@@ -386,7 +386,7 @@ Brak pamiêci!\n
 PARTKNOWN %s\n
 CZÊŒÆZNANA %s\n
 
-# windows/config.c: 586
+# windows/config.c: 581
 Playing back previously recorded game %s (%s) [press return]\n
 Odtwarzanie wczeœniej nagranej gry (dema) %s (%s) [wciœnij return]\n
 
@@ -530,7 +530,7 @@ Nie mo¿na rednerowaæ tekstur preprocesingu: %08x\n
 Usage:  MAME gamename [options]\n\n
 U¿ycie: MAME nazwa gry [opcje]\n\n
 
-# windows/config.c: 545
+# windows/config.c: 540
 Usage: %s [game] [options]\nOptions:\n
 U¿ycie: %s [gra] [opcje]\nOpcje:\n
 
@@ -618,7 +618,7 @@ Opcje video
 \"%s\" controller support enabled\n
 obs³uga kontrolera \"%s\" w³¹czona\n
 
-# windows/config.c: 639
+# windows/config.c: 634
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" w przybli¿eniu pasuje do nastêpuj¹cych\nobs³ugiwanych gier (pierwsze najbardziej pasuj¹ce):\n\n
 
@@ -866,11 +866,11 @@ zachowanie proporcji
 error invalid value for %s: %s\n
 b³¹d niepoprawnej wartoœci dla %s: %s\n
 
-# windows/config.c: 488
+# windows/config.c: 483
 error on rc creation\n
 b³¹d podczas tworzenia rc\n
 
-# windows/config.c: 495
+# windows/config.c: 490
 error while parsing cmdline\n
 b³¹d przy analizie podanych argumentów (linii poleceñ)\n
 
@@ -886,7 +886,7 @@ b³¹d: %s wymaga argumentu\n
 error: couldn't open file: %s\n
  b³¹d: nie mo¿na otworzyæ pliku: %s\n
 
-# windows/config.c: 870
+# windows/config.c: 872
 error: duplicate gamename: %s\n
  b³¹d: zdublowana nazwa gry: %s\n
 
@@ -918,7 +918,7 @@ error: invalid value for palette: %s\n
 error: invalid value for resolution: %s\n
  b³¹d: niepoprawna wartoœæ dla rozdzielczoœci: %s\n
 
-# windows/config.c: 886
+# windows/config.c: 888
 error: no gamename given in %s\n
 b³¹d: brak nazwy gry w %s\n
 
@@ -934,11 +934,11 @@ error: unknown option %s, on line %d of file: %s\n
 error: unknown option %s\n
  b³¹d: nieznana opcja %s\n
 
-# windows/config.c: 561
+# windows/config.c: 556
 failed to open %s for playback\n
 b³¹d otwarcia %s do odtwarzania\n
 
-# windows/config.c: 687
+# windows/config.c: 689
 failed to open %s for recording\n
 b³¹d otwarcia %s do nagrywania\n
 
@@ -1030,10 +1030,6 @@ strza³ poza ekran prze³adowuje
 output error log to debugger
 wyjœcie log'u b³êdów dla debugger'a
 
-# windows/config.c: 424
-parsing %s...
-analiza %s...
-
 # windows/fileio.c: 125, 127
 path to ini files
 œcie¿ka dla plików ini
@@ -1061,10 +1057,6 @@ preferowany zegar RDTSC nad QueryPerformanceCounter
 # windows/wind3dfx.c: 191
 prescale effect
 efekt pre-skalowania
-
-# windows/config.c: 432
-problem parsing %s\n
-problem przy analizie %s\n
 
 # windows/config.c: 252
 record an input file
@@ -1102,7 +1094,7 @@ obrót ekranu w prawo
 run in a window/run on full screen
 uruchom w oknie/na pe³nym ekranie
 
-# windows/config.c: 630
+# windows/config.c: 625
 running %s (%s) [press return]
 uruchamianie %s (%s) [wciœnij return]
 
@@ -1454,6 +1446,18 @@ Mouse %d Y
 Mouse %d Z
 
 
+# windows/config.c: 429
+Parsing %s : ERROR\n
+
+
+# windows/config.c: 439
+Parsing %s : N/A\n
+
+
+# windows/config.c: 434
+Parsing %s : OK\n
+
+
 # windows/video.c: 625
 Screen %s not found\n
 
@@ -1566,11 +1570,11 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 
 
-# windows/config.c: 998
+# windows/config.c: 1000
 error: malloc failed in win_dirname\n
 
 
-# windows/config.c: 1038
+# windows/config.c: 1040
 error: malloc failed in win_strip_extension\n
 
 

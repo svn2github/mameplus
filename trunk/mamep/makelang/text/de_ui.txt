@@ -2,11 +2,11 @@
                                 
 Translated by Luzie <Luzie@t-online.de>
 
-# ui/properties.c: 967
+# ui/properties.c: 966
 %d colors 
 %d Farben
 
-# ui/win32ui.c: 252, 3600
+# ui/win32ui.c: 252, 3564
 %d games
 %d Spiele
 
@@ -50,7 +50,7 @@ Gehäuse (&c)
 &Cancel
 &Abbrechen
 
-# ui/audit32.c: 393
+# ui/audit32.c: 398
 &Close
 &Schliessen
 
@@ -58,7 +58,7 @@ Gehäuse (&c)
 &Contents\tF1
 &Inhalt\tF1
 
-# ui/audit32.c: 270
+# ui/audit32.c: 275
 &Continue
 &Fortsetzen
 
@@ -154,7 +154,7 @@ Vollbild (&F)\tF11
 &Palette Setting...
 &Palette Einstellungen...
 
-# ui/audit32.c: 265 ui/mame32.rc: 404
+# ui/audit32.c: 270 ui/mame32.rc: 404
 &Pause
 &Pause
 
@@ -162,11 +162,11 @@ Vollbild (&F)\tF11
 &Picture Area\tAlt+P
 Bild-Bereich\tAlt+&P
 
-# ui/mame32.rc: 52, 165 ui/win32ui.c: 3739
+# ui/mame32.rc: 52, 165 ui/win32ui.c: 3703
 &Play
 &Spiele
 
-# ui/win32ui.c: 251, 3773, 6688, 6716
+# ui/win32ui.c: 251, 3737, 6652, 6680
 &Play %s
 &Spiele %s
 
@@ -242,7 +242,7 @@ Zeige die&se Ordner
 &Working
 &Funktionierende
 
-# ui/win32ui.c: 6239
+# ui/win32ui.c: 6203
 '%s' is not a valid savestate file for game '%s'.
 '%s' ist keine korrekte Speicherstatus-Datei für Spiel '%s'.
 
@@ -266,11 +266,11 @@ Zeige die&se Ordner
 <- Remove
 <- Löschen
 
-# ui/treeview.c: 516, 537, 1127
+# ui/treeview.c: 517, 538, 1128
 <unknown>
 <unbekannt>
 
-# ui/m32util.c: 254
+# ui/m32util.c: 256
 A sharing violation occurred.
 Ein Zugriffsfehler ist aufgetreten.
 
@@ -334,7 +334,7 @@ Erlaubt das Wiederherstellen von Optionen aus 'vernünftigen' Werten
 Allows filtering out games from a folder
 Filterung von Spielen in einem Verzeichnis erlauben
 
-# ui/properties.c: 3843
+# ui/properties.c: 3847
 Anti-clockwise
 Gegen den Uhrzeigersinn
 
@@ -362,11 +362,11 @@ Audit
 Audit ROM and samples sets
 Überprüfen aller ROMs und Sample Sätze
 
-# ui/audit32.c: 392
+# ui/audit32.c: 397
 Audit complete.\n
 Überprüfen komplett.\n
 
-# ui/properties.c: 390, 403, 435, 3762, 3864, 3920, 4074
+# ui/properties.c: 390, 403, 435, 3766, 3868, 3924, 4078
 Auto
 Auto
 
@@ -386,7 +386,7 @@ Verfügbare Felder:
 Background Images
 Hintergrund Bilder
 
-# ui/audit32.c: 444
+# ui/audit32.c: 449
 Best available
 Bester verfügbarer
 
@@ -474,7 +474,7 @@ Kategorien
 Changing this item is not permitted
 Ändern dieses Eintrages is nicht erlaubt
 
-# ui/audit32.c: 192, 201
+# ui/audit32.c: 193, 202
 Checking Game %s - %s
 Überprüfe Spiel %s - %s
 
@@ -482,7 +482,7 @@ Checking Game %s - %s
 Checking...
 Überprüfe...
 
-# ui/properties.c: 3842
+# ui/properties.c: 3846
 Clockwise
 Im Uhrzeigersinn
 
@@ -498,11 +498,11 @@ Klon von:
 Clones
 Klone
 
-# ui/properties.c: 1005
+# ui/properties.c: 1004
 Colors are completely wrong
 Die Farben sind komplett verkehrt
 
-# ui/properties.c: 1011
+# ui/properties.c: 1010
 Colors aren't 100% accurate
 Die Farben sind nicht 100% akkurat
 
@@ -534,10 +534,6 @@ Enthält Befehle für Benutzer-Oberflächen-Optionen
 Contains commands for working with the selected items
 Enthält Befehle um mit ausgewählten Einträgen zu arbeiten
 
-# ui/layout.c: 74
-Control
-Steuerung
-
 # ui/mame32.rc: 89, 228, 241
 Control &Panel
 Steuerungs Anzeige (&P)
@@ -566,15 +562,15 @@ Copyright (C) 1997-2005 The MAME Team
 Correct:
 Richtig:
 
-# ui/win32ui.c: 6150
+# ui/win32ui.c: 6114
 Could not open '%s' as a valid input file.
 Kann '%s' nicht als korrekte Eingabe-Datei öffnen.
 
-# ui/win32ui.c: 6250
+# ui/win32ui.c: 6214
 Could not open '%s' as a valid savestate file.
 Kann '%s' nicht als korrekte Speicherstatus-Datei öffnen.
 
-# ui/win32ui.c: 4475, 4503
+# ui/win32ui.c: 4439, 4467
 Custom
 Benutzerdefiniert
 
@@ -594,7 +590,7 @@ Benutzer-Oberfläche-Optionen konfigurieren.
 Customize which columns are used in the game list
 Einstellen, welche Spalten in der Spiele-Liste benutzt werden.
 
-# ui/properties.c: 3841
+# ui/properties.c: 3845
 Default
 Standard
 
@@ -666,10 +662,6 @@ Zeige die Eigenschaften des aktuell gewählten Verzeichnisses
 Display the properties of the selected items
 Anzeige der Eigenschaften der ausgewählten Einträge
 
-# ui/mame32.rc: 1447
-Display the source file properties of the selected game
-Zeige die Quellcode-Eigenschaften des gewählten Spiels
-
 # ui/mame32.rc: 1460
 Displays detailed information about each item in the window.
 Zeigt detaillierte Informationen über jeden Eintrag im Fenster an.
@@ -690,7 +682,7 @@ Willst du fortfahren?
 Draw antialiased vectors
 Vektoren geglättet anzeigen
 
-# ui/properties.c: 3819
+# ui/properties.c: 3823
 Draw every frame
 Jedes Bild anzeigen
 
@@ -702,7 +694,7 @@ Vektoren durchscheinend anzeigen
 E&xit
 Verlassen (&X)
 
-# ui/win32ui.c: 7187
+# ui/win32ui.c: 7151
 ERROR: required files are missing, the game cannot be run.
 FEHLER: Benötigte Dateien fehlen, das Spiel kann nicht gestartet werden.
 
@@ -750,11 +742,11 @@ Steadykey-Unterstützung einschalten
 Enforce aspect ratio
 Aspekt Verh. erzwingen
 
-# ui/audit32.c: 101 ui/properties.c: 714, 806
+# ui/audit32.c: 102 ui/properties.c: 714, 805
 Error
 Fehler
 
-# ui/treeview.c: 2580
+# ui/treeview.c: 2579
 Error finding custom file name to save
 Fehler beim finden eines benutzerdefinierten Dateinamens zum speichern
 
@@ -762,15 +754,15 @@ Fehler beim finden eines benutzerdefinierten Dateinamens zum speichern
 Error log (for developers)
 Fehler Log (für Entwickler)
 
-# ui/win32ui.c: 7279
+# ui/win32ui.c: 7243
 Error searching for custom folder
 Fehler bei der Suche nach benutzerdefiniertem Verzeichnis
 
-# ui/treeview.c: 2509
+# ui/treeview.c: 2508
 Error while renaming custom file %s to %s
 Fehler beim Umbenennen der benutzerdefinierten Datei %s in %s
 
-# ui/treeview.c: 2651
+# ui/treeview.c: 2650
 Error while saving custom file %s
 Fehler beim Speichern der benutzerdefinierten Daten %s
 
@@ -778,11 +770,11 @@ Fehler beim Speichern der benutzerdefinierten Daten %s
 Exit the application
 Programm beenden
 
-# ui/audit32.c: 453
+# ui/audit32.c: 458
 Failed
 Mißlungen
 
-# ui/audit32.c: 208 ui/mame32.rc: 401
+# ui/audit32.c: 209 ui/mame32.rc: 401
 File Audit
 Datei Prüfung
 
@@ -854,15 +846,15 @@ Spiele Filter
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 Spiele Filter erlauben es die Anzeige von Spielen eines Ordners zu unterdrücken, die den Filtern entsprechen.
 
-# ui/properties.c: 1023
+# ui/properties.c: 1022
 Game lacks sound
 Dem Spiel fehlt der Sound
 
-# ui/properties.c: 999
+# ui/properties.c: 998
 Game protection isn't fully emulated
 Spiel-Schutz ist nicht voll emuliert
 
-# ui/win32ui.c: 3369
+# ui/win32ui.c: 3333
 Game search %d%% complete
 Spiele Suche %d%% fertig
 
@@ -874,7 +866,7 @@ Gamma Korrektur
 General
 Allgemein
 
-# ui/properties.c: 1065
+# ui/properties.c: 1064
 Global game options\nDefault options used by all games
 Globale Spiel-Optionen\nStandard-Optionen für alle Spiele
 
@@ -898,7 +890,7 @@ Hilfe
 Hide &mouse cursor (requires restart)
 Verberge &Maus-Zeiger (erfordert Neustart)
 
-# ui/properties.c: 4076
+# ui/properties.c: 4080
 High
 Hoch
 
@@ -910,7 +902,7 @@ Höchstpunktzahlen
 History
 Historie
 
-# ui/properties.c: 404 ui/treeview.c: 959, 960
+# ui/properties.c: 404 ui/treeview.c: 960, 961
 Horizontal
 Horizontal
 
@@ -926,15 +918,15 @@ Symbole
 Imperfect
 Nicht perfekt
 
-# ui/treeview.c: 998
+# ui/treeview.c: 999
 Imperfect Colors
 Falsche Farben
 
-# ui/treeview.c: 999
+# ui/treeview.c: 1000
 Imperfect Graphics
 Nicht perfekte Grafik
 
-# ui/treeview.c: 1001
+# ui/treeview.c: 1002
 Imperfect Sound
 Nicht perfekter Sound
 
@@ -982,7 +974,7 @@ Auflisten
 Loa&d Savestate...
 La&den Speicherstatus (=Savestate)...
 
-# ui/win32ui.c: 7104
+# ui/win32ui.c: 7068
 Loading %s
 Lade %s
 
@@ -1042,7 +1034,7 @@ Speicher Karte
 Miscellaneous
 Verschiedenes
 
-# ui/treeview.c: 1000
+# ui/treeview.c: 1001
 Missing Sound
 Fehlender Sound
 
@@ -1066,19 +1058,19 @@ NVRAM
 New game changes
 Änderungen neuer Spiele
 
-# ui/audit32.c: 124 ui/win32ui.c: 5361
+# ui/audit32.c: 125 ui/win32ui.c: 5325
 No
 Nein
 
-# ui/treeview.c: 1002
+# ui/treeview.c: 1003
 No Cocktail
 Kein Cocktail-Mode
 
-# ui/treeview.c: 1050, 1051
+# ui/treeview.c: 1051, 1052
 No Dump
 Kein Dump
 
-# ui/win32ui.c: 3755
+# ui/win32ui.c: 3719
 No Selection
 Keine Auswahl
 
@@ -1090,11 +1082,11 @@ Kein Offset für Klone deren Eltern in Anzeige fehlen
 Non-Wor&king
 Nicht-Funktionie&rende
 
-# ui/dialogs.c: 205 ui/properties.c: 389, 401, 416, 434, 487, 499, 3844
+# ui/dialogs.c: 205 ui/properties.c: 389, 401, 416, 434, 487, 499, 3848
 None
 Keine
 
-# ui/audit32.c: 301, 305
+# ui/audit32.c: 306, 310
 None required
 Keine benötigt
 
@@ -1102,11 +1094,11 @@ Keine benötigt
 Not Working
 Nicht funktionierend
 
-# ui/audit32.c: 449
+# ui/audit32.c: 454
 Not found
 Nicht gefunden
 
-# ui/properties.c: 987
+# ui/properties.c: 986
 Not working
 Nicht funktionierend
 
@@ -1158,7 +1150,7 @@ PS/2 Tastatur
 Palette
 Palette
 
-# ui/audit32.c: 440
+# ui/audit32.c: 445
 Passed
 In Ordnung
 
@@ -1194,11 +1186,11 @@ Wiedergabe eines aufgenommenen Spieles
 Pr&operties
 Eigenschaften (&o)
 
-# ui/win32ui.c: 3784, 6701, 6726
+# ui/win32ui.c: 3748, 6665, 6690
 Proper&ties of %s
 Eigenschaf&ten von %s
 
-# ui/properties.c: 713, 805
+# ui/properties.c: 713, 804
 Propery Sheet Error %d %X
 Propery (Property?) Blatt Fehler %d %X
 
@@ -1250,7 +1242,7 @@ ROM Überprüfung:
 ROMs
 ROMs
 
-# ui/properties.c: 1043
+# ui/properties.c: 1042
 ROMs missing
 Fehlende ROMs
 
@@ -1258,11 +1250,11 @@ Fehlende ROMs
 Randomly select a game.
 Wähle zufällig ein Spiel. 
 
-# ui/layout.c: 67 ui/win32ui.c: 5353
+# ui/layout.c: 67 ui/win32ui.c: 5317
 Raster
 Raster
 
-# ui/win32ui.c: 3533
+# ui/win32ui.c: 3497
 Ready
 Fertig
 
@@ -1366,11 +1358,11 @@ Samples
 Screen
 Bildschirm
 
-# ui/win32ui.c: 3328
+# ui/win32ui.c: 3292
 Screen flip support is missing
 Bild spiegeln-Unterstützung fehlt
 
-# ui/properties.c: 1035
+# ui/properties.c: 1034
 Screen flipping is not supported
 Bild spiegeln wird nicht unterstützt
 
@@ -1542,47 +1534,47 @@ Zeige die Felder in dieser Reihenfolge:
 Size:
 Größe:
 
-# ui/properties.c: 3820
+# ui/properties.c: 3824
 Skip 1 of 12 frames
 Übergehe 1 von 12 Bildern
 
-# ui/properties.c: 3829
+# ui/properties.c: 3833
 Skip 10 of 12 frames
 Übergehe 10 von 12 Bildern
 
-# ui/properties.c: 3830
+# ui/properties.c: 3834
 Skip 11 of 12 frames
 Übergehe 11 von 12 Bildern
 
-# ui/properties.c: 3821
+# ui/properties.c: 3825
 Skip 2 of 12 frames
 Übergehe 2 von 12 Bildern
 
-# ui/properties.c: 3822
+# ui/properties.c: 3826
 Skip 3 of 12 frames
 Übergehe 3 von 12 Bildern
 
-# ui/properties.c: 3823
+# ui/properties.c: 3827
 Skip 4 of 12 frames
 Übergehe 4 von 12 Bildern
 
-# ui/properties.c: 3824
+# ui/properties.c: 3828
 Skip 5 of 12 frames
 Übergehe 5 von 12 Bildern
 
-# ui/properties.c: 3825
+# ui/properties.c: 3829
 Skip 6 of 12 frames
 Übergehe 6 von 12 Bildern
 
-# ui/properties.c: 3826
+# ui/properties.c: 3830
 Skip 7 of 12 frames
 Übergehe 7 von 12 Bildern
 
-# ui/properties.c: 3827
+# ui/properties.c: 3831
 Skip 8 of 12 frames
 Übergehe 8 von 12 Bildern
 
-# ui/properties.c: 3828
+# ui/properties.c: 3832
 Skip 9 of 12 frames
 Übergehe 9 von 12 Bildern
 
@@ -1634,7 +1626,7 @@ Sortiere Einträge nach Jahr
 Sound
 Sound
 
-# ui/properties.c: 1029
+# ui/properties.c: 1028
 Sound emulation isn't 100% accurate
 Sound Emulation ist nicht 100% akkurat
 
@@ -1646,19 +1638,7 @@ Sound:
 Sounds (*.wav)
 Sounds (*.wav)
 
-# ui/layout.c: 57 ui/win32ui.c: 800
-Source
-Quell-Code
-
-# ui/mame32.rc: 180 ui/win32ui.c: 3746
-Source Proper&ties
-Quellcode Eigenschaf&ten
-
-# ui/mame32.rc: 501
-Source:
-Quell-Code:
-
-# ui/options.c: 476 ui/properties.c: 2580, 2585, 2588, 2835, 2838, 4014, 4037, 4075 
+# ui/options.c: 476 ui/properties.c: 2584, 2589, 2592, 2839, 2842, 4018, 4041, 4079 
 Standard
 Standard
 
@@ -1698,23 +1678,23 @@ Sync zu Bild-Wiederholrate
 The new settings will take effect\n
 Die neuen Einstellung werden aktiv\n
 
-# ui/m32util.c: 234
+# ui/m32util.c: 236
 The operating system is out of memory or resources.
 Das Betriebssystem hat keinen Speicher oder Resourcen mehr.
 
-# ui/m32util.c: 238
+# ui/m32util.c: 240
 The specified file was not found.
 Die gewählte Datei wurde nciht gefunden.
 
-# ui/m32util.c: 250
+# ui/m32util.c: 252
 The specified path was not found.
 Der gewählte Pfad wurde nicht gefunden.
 
-# ui/m32util.c: 242
+# ui/m32util.c: 244
 There is no application associated with the given filename extension.
 Es ist keine Anwendung mit dem angegebenen Dateinamen verknüpft.
 
-# ui/m32util.c: 246
+# ui/m32util.c: 248
 There was not enough memory to complete the operation.
 Es stand nicht genug Speicher zur Verfügung um die Operation abzuschliessen.
 
@@ -1742,7 +1722,7 @@ Bildschirmfoto ein/aus
 Total:
 Total:
 
-# ui/layout.c: 76 ui/win32ui.c: 795
+# ui/layout.c: 76 ui/treeview.c: 1379 ui/win32ui.c: 795
 Trackball
 Trackball
 
@@ -1806,15 +1786,15 @@ Typ
 USB Keyboard
 USB Tastatur
 
-# ui/audit32.c: 101
+# ui/audit32.c: 102
 Unable to Load Riched32.dll
 Konnte Riched32.dll nicht laden
 
-# ui/treeview.c: 2520
+# ui/treeview.c: 2519
 Unable to add game to non-custom folder
 Unmöglich das Spiel einen nicht-benutzerdefierten Ordner hinzuzufügen
 
-# ui/treeview.c: 2537
+# ui/treeview.c: 2536
 Unable to remove game from non-custom folder
 Unmöglich ein Spiel aus eine nicht-benutzerdefierten Ordner zu löschen
 
@@ -1822,15 +1802,15 @@ Unmöglich ein Spiel aus eine nicht-benutzerdefierten Ordner zu löschen
 Unavailable
 Nicht verfügbar
 
-# ui/treeview.c: 996
+# ui/treeview.c: 997
 Unemulated Protection
 Nicht emulierter Kopierschutz
 
-# ui/audit32.c: 435 ui/properties.c: 981
+# ui/audit32.c: 440 ui/properties.c: 980
 Unknown
 Unbekannt
 
-# ui/m32util.c: 258
+# ui/m32util.c: 260
 Unknown error.
 Unbekannt Fehler.
 
@@ -1866,7 +1846,7 @@ Benutze transpar. In-Spiel-Menü
 Use volume auto adjust
 Benutze automatische Lautstärke-Einstellung
 
-# ui/layout.c: 68 ui/mame32.rc: 859 ui/options.c: 1120, 2816 ui/properties.c: 763 ui/treeview.c: 299 ui/win32ui.c: 5351
+# ui/layout.c: 68 ui/mame32.rc: 859 ui/options.c: 1120, 2816 ui/properties.c: 763 ui/treeview.c: 300 ui/win32ui.c: 5315
 Vector
 Vektor
 
@@ -1874,11 +1854,11 @@ Vektor
 Version Mismatch
 Versions Fehler
 
-# ui/properties.c: 405 ui/treeview.c: 955, 956
+# ui/properties.c: 405 ui/treeview.c: 956, 957
 Vertical
 Vertikal
 
-# ui/properties.c: 1017
+# ui/properties.c: 1016
 Video emulation isn't 100% accurate
 Video emulation ist nicht 100% akkurat
 
@@ -1886,7 +1866,7 @@ Video emulation ist nicht 100% akkurat
 Volume attenuation
 Lautstärke Einstellung
 
-# ui/win32ui.c: 7190
+# ui/win32ui.c: 7154
 WARNING: the game might not run correctly.
 WARNUNG: Das Spiel läuft evtl. nicht korrekt.
 
@@ -1946,11 +1926,11 @@ Windows Benutzeroberfläche-spezifische Autostart-Optionen
 Windows UI specific window position options
 Windows Benutzeroberfläche-spezifische Positions-Optionen
 
-# ui/layout.c: 63 ui/properties.c: 989
+# ui/layout.c: 63 ui/properties.c: 988
 Working
 Funktionierend
 
-# ui/treeview.c: 997
+# ui/treeview.c: 998
 Wrong Colors
 Falsche Farben
 
@@ -1958,7 +1938,7 @@ Falsche Farben
 Year
 Jahr
 
-# ui/audit32.c: 119 ui/win32ui.c: 5359
+# ui/audit32.c: 120 ui/win32ui.c: 5323
 Yes
 Ja
 
@@ -1990,15 +1970,23 @@ Einstellungen dann beende.\n\n
 the next time MAME32 is run.\n\n
 das nächste Mal wenn MAME32 gestartet wird.\n\n
 
-# ui/treeview.c: 1181
+# ui/properties.c: 949
+%d x %d (H) (%d:%d) %f Hz
+
+
+# ui/properties.c: 937
+%d x %d (V) (%d:%d) %f Hz
+
+
+# ui/treeview.c: 1182
 %dx%d (H)
 
 
-# ui/treeview.c: 1175
+# ui/treeview.c: 1176
 %dx%d (V)
 
 
-# ui/properties.c: 3877
+# ui/properties.c: 3881
 %li bit
 
 
@@ -2006,8 +1994,8 @@ das nächste Mal wenn MAME32 gestartet wird.\n\n
 (*) = inherited from parent folder
 
 
-# ui/treeview.c: 1373
-AD STICK
+# ui/treeview.c: 1376
+AD Stick
 
 
 # ui/mame32.rc: 1068
@@ -2038,11 +2026,11 @@ Aspect Ratio
 Aspect ratio
 
 
-# ui/properties.c: 3846
+# ui/properties.c: 3850
 Auto anti-clockwise
 
 
-# ui/properties.c: 3845
+# ui/properties.c: 3849
 Auto clockwise
 
 
@@ -2050,11 +2038,11 @@ Auto clockwise
 Auto restore and save (only if available)
 
 
-# ui/properties.c: 3963
+# ui/properties.c: 3967
 Axis
 
 
-# ui/properties.c: 3973
+# ui/properties.c: 3977
 AxisId
 
 
@@ -2062,51 +2050,15 @@ AxisId
 BIOS
 
 
-# ui/treeview.c: 1356
-BUTTONS 1
-
-
-# ui/treeview.c: 1357
-BUTTONS 2
-
-
-# ui/treeview.c: 1358
-BUTTONS 3
-
-
-# ui/treeview.c: 1359
-BUTTONS 4
-
-
-# ui/treeview.c: 1360
-BUTTONS 5
-
-
-# ui/treeview.c: 1361
-BUTTONS 6
-
-
-# ui/treeview.c: 1362
-BUTTONS 7
-
-
-# ui/treeview.c: 1363
-BUTTONS 8
-
-
-# ui/treeview.c: 1364
-BUTTONS 9
-
-
-# ui/treeview.c: 1365
-BUTTONS10
+# ui/properties.c: 1040
+BIOS missing
 
 
 # ui/mame32.rc: 826
 Backdrops
 
 
-# ui/treeview.c: 1047, 1048
+# ui/treeview.c: 1048, 1049
 Bad Dump
 
 
@@ -2122,6 +2074,46 @@ Bezels
 Bilinear
 
 
+# ui/treeview.c: 1358
+Button 1
+
+
+# ui/treeview.c: 1367
+Buttons 10
+
+
+# ui/treeview.c: 1359
+Buttons 2
+
+
+# ui/treeview.c: 1360
+Buttons 3
+
+
+# ui/treeview.c: 1361
+Buttons 4
+
+
+# ui/treeview.c: 1362
+Buttons 5
+
+
+# ui/treeview.c: 1363
+Buttons 6
+
+
+# ui/treeview.c: 1364
+Buttons 7
+
+
+# ui/treeview.c: 1365
+Buttons 8
+
+
+# ui/treeview.c: 1366
+Buttons 9
+
+
 # ui/mame32.rc: 301, 379
 Christopher Kirmse and Michael Soderstrom
 
@@ -2132,6 +2124,10 @@ Clean stretch
 
 # ui/mame32.rc: 821
 Confirm on exit game
+
+
+# ui/layout.c: 74
+Control Type
 
 
 # ui/mame32.rc: 774
@@ -2158,24 +2154,12 @@ Cubic (gaussian kernel)
 Cursor
 
 
-# ui/treeview.c: 1375
-DIAL
-
-
-# ui/treeview.c: 1369
-DOUBLEJOY2WAY
-
-
-# ui/treeview.c: 1370
-DOUBLEJOY4WAY
-
-
-# ui/treeview.c: 1371
-DOUBLEJOY8WAY
-
-
 # ui/win32ui.c: 790 
 Description
+
+
+# ui/treeview.c: 1378
+Dial
 
 
 # ui/mame32.rc: 1074
@@ -2186,8 +2170,12 @@ Dial device
 Digital joystick axes
 
 
-# ui/properties.c: 3693, 3710 
+# ui/properties.c: 3697, 3714 
 Disabled
+
+
+# ui/mame32.rc: 1447
+Display the driver properties of the selected game
 
 
 # ui/mame32.rc: 1460
@@ -2200,6 +2188,26 @@ Dot medium bright
 
 # ui/properties.c: 437
 Dot medium mask
+
+
+# ui/treeview.c: 1372
+Double Joy 2-Way
+
+
+# ui/treeview.c: 1373
+Double Joy 4-Way
+
+
+# ui/treeview.c: 1374
+Double Joy 8-Way
+
+
+# ui/layout.c: 57 ui/win32ui.c: 800
+Driver
+
+
+# ui/mame32.rc: 501
+Driver:
 
 
 # ui/mame32.rc: 759
@@ -2238,8 +2246,12 @@ Force zoom level
 Full screen brightness
 
 
-# ui/properties.c: 1067
-Global folder options\nCustom options used by all games in the %s
+# ui/properties.c: 1070
+Global driver options\nCustom options used by all games in the %s
+
+
+# ui/properties.c: 1068
+Global vector options\nCustom options used by all games in the Vector
 
 
 # ui/mame32.rc: 814
@@ -2266,23 +2278,23 @@ Intensity
 Interpolation method
 
 
-# ui/treeview.c: 1366
-JOY2WAY
-
-
-# ui/treeview.c: 1367
-JOY4WAY
-
-
 # ui/treeview.c: 1368
-JOY8WAY
+Joy 2-Way
 
 
-# ui/properties.c: 573, 3958
+# ui/treeview.c: 1369
+Joy 4-Way
+
+
+# ui/treeview.c: 1370
+Joy 8-Way
+
+
+# ui/properties.c: 573, 3962
 Joystick
 
 
-# ui/properties.c: 3968
+# ui/properties.c: 3972
 JoystickId
 
 
@@ -2290,11 +2302,7 @@ JoystickId
 Keyboard
 
 
-# ui/treeview.c: 1377
-LIGHTGUN
-
-
-# ui/layout.c: 77 ui/properties.c: 574
+# ui/layout.c: 77 ui/properties.c: 574 ui/treeview.c: 1380
 Lightgun
 
 
@@ -2314,7 +2322,7 @@ MAME input files (*.inp,*.zip)
 MAME savestate files (*.sta)
 
 
-# ui/audit32.c: 457
+# ui/audit32.c: 462
 Missing optional
 
 
@@ -2334,44 +2342,8 @@ Name
 Offscreen shots reload
 
 
-# ui/treeview.c: 1374
-PADDLE
-
-
-# ui/treeview.c: 1378
-PEDAL
-
-
-# ui/treeview.c: 1348
-PLAYERS 1
-
-
-# ui/treeview.c: 1349
-PLAYERS 2
-
-
-# ui/treeview.c: 1350
-PLAYERS 3
-
-
-# ui/treeview.c: 1351
-PLAYERS 4
-
-
-# ui/treeview.c: 1352
-PLAYERS 5
-
-
-# ui/treeview.c: 1353
-PLAYERS 6
-
-
-# ui/treeview.c: 1354
-PLAYERS 7
-
-
-# ui/treeview.c: 1355
-PLAYERS 8
+# ui/treeview.c: 1377
+Paddle
 
 
 # ui/mame32.rc: 1065
@@ -2386,8 +2358,44 @@ Pedal device
 Playcount
 
 
+# ui/treeview.c: 1350
+Player 1
+
+
+# ui/treeview.c: 1351
+Players 2
+
+
+# ui/treeview.c: 1352
+Players 3
+
+
+# ui/treeview.c: 1353
+Players 4
+
+
+# ui/treeview.c: 1354
+Players 5
+
+
+# ui/treeview.c: 1355
+Players 6
+
+
+# ui/treeview.c: 1356
+Players 7
+
+
+# ui/treeview.c: 1357
+Players 8
+
+
 # ui/mame32.rc: 603
 Prescale
+
+
+# ui/mame32.rc: 65, 180 ui/win32ui.c: 3710
+Proper&ties of Driver
 
 
 # ui/properties.c: 451
@@ -2418,24 +2426,12 @@ RGB medium mask
 RGB micro
 
 
-# ui/properties.c: 950
-Raster %d x %d (H) (%d:%d) %f Hz
-
-
-# ui/properties.c: 938
-Raster %d x %d (V) (%d:%d) %f Hz
-
-
 # ui/mame32.rc: 1510
 Reset playcount of currently selected game
 
 
 # ui/mame32.rc: 594
 Rotation of effects for rotated games
-
-
-# ui/treeview.c: 1372
-STICK
 
 
 # ui/mame32.rc: 644
@@ -2526,12 +2522,8 @@ St&ory
 Story
 
 
-# ui/properties.c: 1101 ui/treeview.c: 1310, 1311
+# ui/properties.c: 1105 ui/treeview.c: 1311, 1312
 Supported
-
-
-# ui/treeview.c: 1376
-TRACKBALL
 
 
 # ui/mame32.rc: 1077
@@ -2542,7 +2534,7 @@ Trackball device
 Translate into German
 
 
-# ui/properties.c: 1103 ui/treeview.c: 1313, 1314
+# ui/properties.c: 1107 ui/treeview.c: 1314, 1315
 Unsupported
 
 
@@ -2558,19 +2550,19 @@ Use classic scanlines
 Use texture management
 
 
-# ui/treeview.c: 1150, 1151
+# ui/treeview.c: 1151, 1152
 Vector (H)
 
 
-# ui/properties.c: 925
+# ui/properties.c: 924
 Vector (H) (%d:%d) %f Hz
 
 
-# ui/treeview.c: 1147, 1148
+# ui/treeview.c: 1148, 1149
 Vector (V)
 
 
-# ui/properties.c: 915
+# ui/properties.c: 914
 Vector (V) (%d:%d) %f Hz
 
 

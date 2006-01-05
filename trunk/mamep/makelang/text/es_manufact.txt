@@ -910,7 +910,7 @@ Leland Corp.
 Leprechaun
 Leprechaun
 
-# Star Wars Trilogy
+# Star Wars Trilogy (ver A)
 LucasArts
 LucasArts
 
@@ -1162,7 +1162,7 @@ Omega System
 Omni
 Omni
 
-# Space Guerilla
+# Shuttle Invader
 Omori
 Omori
 
@@ -1878,7 +1878,7 @@ Yang Cheng
 Yanyaka
 Yanyaka
 
-# Spectrum 2000
+# Spectrum 2000 (Euro)
 Yonatech
 Yonatech
 
@@ -1957,4 +1957,36 @@ hackeado
 # Chewing Gum
 unknown
 desconocido
+
+# Gekisou (Japan)
+Eastern
+
+
+# Noah's Ark
+Enter-Tech
+
+
+# Mini Vegas 4in1
+Entertainment Enterprises
+
+
+# Flame Gunner
+GAPS Inc.
+
+
+# Real Battle Mahjong King
+GMS
+
+
+# Quiz (Revision 2)
+Italian bootleg
+
+
+# Go 2000
+SA
+
+
+# Card Line
+Veltmeijer
+
 

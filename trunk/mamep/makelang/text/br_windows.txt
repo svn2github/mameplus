@@ -14,7 +14,7 @@
    ignoring line\n
    ignorando linha\n
 
-# windows/config.c: 538
+# windows/config.c: 533
  %s running parameters
  %s rodando parâmetros
 
@@ -390,7 +390,7 @@ Falta de memória!\n
 PARTKNOWN %s\n
 PARTKNOWN %s\n
 
-# windows/config.c: 586
+# windows/config.c: 581
 Playing back previously recorded game %s (%s) [press return]\n
 Tocando jogo gravado previamente %s (%s) [tecle return]\n
 
@@ -534,7 +534,7 @@ Impossível renderizar no pre-processo de textura: %08x\n
 Usage:  MAME gamename [options]\n\n
 Uso:  MAME nomejogo [opções]\n\n
 
-# windows/config.c: 545
+# windows/config.c: 540
 Usage: %s [game] [options]\nOptions:\n
 Uso: %s [jogo] [opções]\nOpções:\n
 
@@ -622,7 +622,7 @@ Windows video options
 \"%s\" controller support enabled\n
 \"%s\" suporte de controle habilitado\n
 
-# windows/config.c: 639
+# windows/config.c: 634
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" se iguala aproximadamente ao seguintes\njogos suportados (mais corretos primeiro):\n\n
 
@@ -870,11 +870,11 @@ forca aspecto de tela
 error invalid value for %s: %s\n
 erro valor inválido para %s: %s\n
 
-# windows/config.c: 488
+# windows/config.c: 483
 error on rc creation\n
 erro na criação do rc\n
 
-# windows/config.c: 495
+# windows/config.c: 490
 error while parsing cmdline\n
 erro ao analizar cmdline\n
 
@@ -890,7 +890,7 @@ erro: %s requer uma argumento\n
 error: couldn't open file: %s\n
 erro: impossível abrir arquivo: %s\n
 
-# windows/config.c: 870
+# windows/config.c: 872
 error: duplicate gamename: %s\n
 erro: nomejogo duplicado: %s\n
 
@@ -922,7 +922,7 @@ erro: valor inválido para paleta: %s\n
 error: invalid value for resolution: %s\n
 error: valor inválido para resolução: %s\n
 
-# windows/config.c: 886
+# windows/config.c: 888
 error: no gamename given in %s\n
 erro: nomejogo não dado em in %s\n
 
@@ -938,11 +938,11 @@ erro: opção desconhecida %s, na linha %d do arquivo: %s\n
 error: unknown option %s\n
 erro: opção desconhecida %s\n
 
-# windows/config.c: 561
+# windows/config.c: 556
 failed to open %s for playback\n
 falha ao abrir %s para playback\n
 
-# windows/config.c: 687
+# windows/config.c: 689
 failed to open %s for recording\n
 falha ao abrir %s para gravação\n
 
@@ -1034,10 +1034,6 @@ recarrega atirando fora da tela
 output error log to debugger
 logar erro de saída no debugador
 
-# windows/config.c: 424
-parsing %s...
-analizando %s...
-
 # windows/fileio.c: 125, 127
 path to ini files
 path para arquivos ini
@@ -1065,10 +1061,6 @@ preferir RDTSC sobre QueryPerformanceCounter para temporizador
 # windows/wind3dfx.c: 191
 prescale effect
 Efeito pre-escala
-
-# windows/config.c: 432
-problem parsing %s\n
-problema analizando %s\n
 
 # windows/config.c: 252
 record an input file
@@ -1106,7 +1098,7 @@ rotaciona tela horário
 run in a window/run on full screen
 roda em janela/roda em tela cheia
 
-# windows/config.c: 630
+# windows/config.c: 625
 running %s (%s) [press return]
 rodando %s (%s) [tecle return]
 
@@ -1450,6 +1442,18 @@ Mouse %d Y
 Mouse %d Z
 
 
+# windows/config.c: 429
+Parsing %s : ERROR\n
+
+
+# windows/config.c: 439
+Parsing %s : N/A\n
+
+
+# windows/config.c: 434
+Parsing %s : OK\n
+
+
 # windows/video.c: 625
 Screen %s not found\n
 
@@ -1562,11 +1566,11 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 
 
-# windows/config.c: 998
+# windows/config.c: 1000
 error: malloc failed in win_dirname\n
 
 
-# windows/config.c: 1038
+# windows/config.c: 1040
 error: malloc failed in win_strip_extension\n
 
 

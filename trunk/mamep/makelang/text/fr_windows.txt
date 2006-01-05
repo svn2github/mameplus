@@ -14,7 +14,7 @@
    ignoring line\n
    ligne ignorée\n
 
-# windows/config.c: 538
+# windows/config.c: 533
  %s running parameters
  %s Paramètres en cours
 
@@ -302,7 +302,7 @@ Couleur barre OSD (moyenne)
 Out of memory!\n
 Plus de mémoire!\n
 
-# windows/config.c: 586
+# windows/config.c: 581
 Playing back previously recorded game %s (%s) [press return]\n
 Relecture de la sauvegarde du jeu %s (%s) [presser return]\n
 
@@ -354,7 +354,7 @@ Ouverture de l'interface clavier impossible (erreur %d)\n
 Usage:  MAME gamename [options]\n\n
 Usage:  MAME nom_du_jeu [options]\n\n
 
-# windows/config.c: 545
+# windows/config.c: 540
 Usage: %s [game] [options]\nOptions:\n
 Usage: %s [jeu] [options]\nOptions:\n
 
@@ -394,7 +394,7 @@ Options vidéo
 \"%s\" controller support enabled\n
 \"%s\" support contrôleur activé\n
 
-# windows/config.c: 639
+# windows/config.c: 634
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" correspond approximativement aux jeux\nles jeux supportés (plus proches d'abords):\n\n
 
@@ -650,11 +650,11 @@ forcer l'aspect w/h
 error invalid value for %s: %s\n
 erreur valeur invalide pour %s: %s\n
 
-# windows/config.c: 488
+# windows/config.c: 483
 error on rc creation\n
 erreur à la création de rc\n
 
-# windows/config.c: 495
+# windows/config.c: 490
 error while parsing cmdline\n
 erreur lors de la lecture de la ligne de commande\n
 
@@ -670,7 +670,7 @@ erreur: %s requiere un argument\n
 error: couldn't open file: %s\n
 erreur: ne peux ouvrir le fichier: %s\n
 
-# windows/config.c: 870
+# windows/config.c: 872
 error: duplicate gamename: %s\n
 erreur: nom de jeu dupliqué: %s\n
 
@@ -722,7 +722,7 @@ erreur: valeur invalide pour la palette: %s\n
 error: invalid value for resolution: %s\n
 erreur: valeur invalide pour la résolution: %s\n
 
-# windows/config.c: 886
+# windows/config.c: 888
 error: no gamename given in %s\n
 erreur: pas de nom donné dans %s\n
 
@@ -738,11 +738,11 @@ erreur: option inconnue %s, en ligne %d du fichier: %s\n
 error: unknown option %s\n
 erreur: option inconnue %s\n
 
-# windows/config.c: 561
+# windows/config.c: 556
 failed to open %s for playback\n
 imposible d'ouvrir %s pour relecture\n
 
-# windows/config.c: 687
+# windows/config.c: 689
 failed to open %s for recording\n
 impossible d'ouvrir %s pour enregistrement\n
 
@@ -842,10 +842,6 @@ log d'erreur pour le debugger
 paddle
 manette
 
-# windows/config.c: 424
-parsing %s...
-parsing de %s...
-
 # windows/fileio.c: 125, 127
 path to ini files
 chemin des fichiers INI
@@ -874,10 +870,6 @@ préfère RDTSC sur QueryPerformanceCounter pour le timing
 prescale effect
 Effet Prescale
 
-# windows/config.c: 432
-problem parsing %s\n
-problème en parsant %s\n
-
 # windows/config.c: 252
 record an input file
 enregistrement d'un fichier input
@@ -902,7 +894,7 @@ retourner l'écran (clockwise)
 run in a window/run on full screen
 lancer dans une fenêtre/lancer en plein écran
 
-# windows/config.c: 630
+# windows/config.c: 625
 running %s (%s) [press return]
 jouer %s (%s) [presser return]
 
@@ -1326,6 +1318,18 @@ Mouse %d Z
 PARTKNOWN %s\n
 
 
+# windows/config.c: 429
+Parsing %s : ERROR\n
+
+
+# windows/config.c: 439
+Parsing %s : N/A\n
+
+
+# windows/config.c: 434
+Parsing %s : OK\n
+
+
 # windows/wind3d.c: 1645
 Pre-process texture surface created: %s\n
 
@@ -1550,11 +1554,11 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 
 
-# windows/config.c: 998
+# windows/config.c: 1000
 error: malloc failed in win_dirname\n
 
 
-# windows/config.c: 1038
+# windows/config.c: 1040
 error: malloc failed in win_strip_extension\n
 
 

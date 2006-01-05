@@ -50,7 +50,7 @@
   Axis %d (%s)%s\n
   轴 %d (%s)%s\n
 
-# windows/config.c: 538
+# windows/config.c: 533
  %s running parameters
  %s 运行参数
 
@@ -486,7 +486,7 @@ Out of memory!\n
 PARTKNOWN %s\n
 部分已知  %s\n
 
-# windows/config.c: 586
+# windows/config.c: 581
 Playing back previously recorded game %s (%s) [press return]\n
 单击 [Enter] 播放先前录制的游戏 %s (%s)\n
 
@@ -634,7 +634,7 @@ Unable to render to preprocess texture: %08x\n
 Usage:  MAME gamename [options]\n\n
 用法:   MAME 游戏名称 [选项]\n\n
 
-# windows/config.c: 545
+# windows/config.c: 540
 Usage: %s [game] [options]\nOptions:\n
 用法: %s [游戏] [选项]\n选项:\n
 
@@ -726,7 +726,7 @@ Windows 版本视频选项
 \"%s\" controller support enabled\n
 \"%s\" 控制器支持 启用\n
 
-# windows/config.c: 639
+# windows/config.c: 634
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" 约略相似下列支持的游戏\n(依相似度排序):\n\n
 
@@ -1042,11 +1042,11 @@ enforce aspect ratio
 error invalid value for %s: %s\n
 错误: 无效的 %s 值: %s\n
 
-# windows/config.c: 488
+# windows/config.c: 483
 error on rc creation\n
 创建 rc 发生错误\n
 
-# windows/config.c: 495
+# windows/config.c: 490
 error while parsing cmdline\n
 分析命令时发生错误\n
 
@@ -1062,7 +1062,7 @@ error: %s requires an argument\n
 error: couldn't open file: %s\n
 错误: 不能打开文件: %s\n
 
-# windows/config.c: 870
+# windows/config.c: 872
 error: duplicate gamename: %s\n
 错误: 重复的游戏名称: %s\n
 
@@ -1130,15 +1130,15 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 错误: rc_register_option 内存分配失败\n
 
-# windows/config.c: 998
+# windows/config.c: 1000
 error: malloc failed in win_dirname\n
 错误: win_dirname 内存分配失败\n
 
-# windows/config.c: 1038
+# windows/config.c: 1040
 error: malloc failed in win_strip_extension\n
 错误: win_strip_extension 内存分配失败\n
 
-# windows/config.c: 886
+# windows/config.c: 888
 error: no gamename given in %s\n
 错误: 在 %s 中没有指定游戏名称\n
 
@@ -1158,11 +1158,11 @@ error: unknown option %s\n
 error: unknown option type: %d, this should not happen!\n
 错误: 未知的选项类型: %d, 该选项不应该出现!\n
 
-# windows/config.c: 561
+# windows/config.c: 556
 failed to open %s for playback\n
 打开 %s 播放失败\n
 
-# windows/config.c: 687
+# windows/config.c: 689
 failed to open %s for recording\n
 打开 %s 录制失败\n
 
@@ -1278,10 +1278,6 @@ output error log to debugger
 paddle
 操纵杆
 
-# windows/config.c: 424
-parsing %s...
-正在分析 %s...
-
 # windows/fileio.c: 125, 127
 path to ini files
 ini 档路径
@@ -1313,10 +1309,6 @@ prefer RDTSC over QueryPerformanceCounter for timing
 # windows/wind3dfx.c: 191
 prescale effect
 预缩放效果
-
-# windows/config.c: 432
-problem parsing %s\n
-正在分析问题 %s\n
 
 # windows/config.c: 252
 record an input file
@@ -1354,7 +1346,7 @@ rotate screen clockwise
 run in a window/run on full screen
 以窗口模式运行/以全屏运行
 
-# windows/config.c: 630
+# windows/config.c: 625
 running %s (%s) [press return]
 单击 [Enter] 运行 %s (%s)
 
@@ -1617,4 +1609,16 @@ window frame color (medium)
 # windows/fronthlp.c: 66
 year, manufacturer and full name
 年代，制造厂商和完整名称
+
+# windows/config.c: 429
+Parsing %s : ERROR\n
+
+
+# windows/config.c: 439
+Parsing %s : N/A\n
+
+
+# windows/config.c: 434
+Parsing %s : OK\n
+
 

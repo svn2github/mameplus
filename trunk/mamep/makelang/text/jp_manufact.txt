@@ -974,6 +974,10 @@ ETM
 East Coast Coin Company
 
 
+# Gekisou (Japan)
+Eastern
+
+
 # Hoccer (set 1)
 Eastern Micro Electronics, Inc.
 
@@ -1030,6 +1034,14 @@ Enerdyne Technologies Inc.
 Enerdyne Technologies, Inc.
 
 
+# Noah's Ark
+Enter-Tech
+
+
+# Mini Vegas 4in1
+Entertainment Enterprises
+
+
 # Turbo Sub
 Entertainment Sciences
 
@@ -1080,6 +1092,10 @@ GAT
 
 # Piranha
 GL
+
+
+# Real Battle Mahjong King
+GMS
 
 
 # Abunai Houkago - Mou Matenai (Japan 890325)
@@ -1196,6 +1212,10 @@ Invi Image
 
 # Tut's Tomb
 Island Design
+
+
+# Quiz (Revision 2)
+Italian bootleg
 
 
 # Poker Night
@@ -1450,7 +1470,7 @@ Omega System
 Omni
 
 
-# Space Guerilla
+# Shuttle Invader
 Omori
 
 
@@ -1568,6 +1588,10 @@ Romar
 
 # Attack Ufo
 Ryoto Electric Co.
+
+
+# Go 2000
+SA
 
 
 # Safari Rally (Japan)
@@ -1830,6 +1854,10 @@ Valadon Automation
 Vectorbeam
 
 
+# Card Line
+Veltmeijer
+
+
 # Pinball Champ '95 (bootleg?)
 Veltmeijer Automaten
 
@@ -1906,7 +1934,7 @@ World Games Inc
 Yachiyo
 
 
-# Spectrum 2000
+# Spectrum 2000 (Euro)
 Yonatech
 
 

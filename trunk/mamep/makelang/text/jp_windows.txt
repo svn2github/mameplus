@@ -1610,3 +1610,15 @@ window frame color (medium)
 year, manufacturer and full name
 サポートゲーム、製造年、メーカーのリストを表\示
 
+# windows/config.c: 429
+Parsing %s : ERROR\n
+
+
+# windows/config.c: 439
+Parsing %s : N/A\n
+
+
+# windows/config.c: 434
+Parsing %s : OK\n
+
+

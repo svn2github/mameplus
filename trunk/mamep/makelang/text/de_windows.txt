@@ -14,7 +14,7 @@
    ignoring line\n
    ignorier zeile\n
 
-# windows/config.c: 538
+# windows/config.c: 533
  %s running parameters
  %s start parameter
 
@@ -274,7 +274,7 @@ Nicht genug Speicher!\n
 PARTKNOWN %s\n
 PARTKNOWN %s\n
 
-# windows/config.c: 586
+# windows/config.c: 581
 Playing back previously recorded game %s (%s) [press return]\n
 Abspielen des vorher aufgezeichneten Spiels %s (%s) [Drücke Enter]\n
 
@@ -326,7 +326,7 @@ Nicht möglich das Tastatur-Gerät zu öffnen. (Error %d)\n
 Usage:  MAME gamename [options]\n\n
 Nutzung:  MAME Spielname [Optionen]\n\n
 
-# windows/config.c: 545
+# windows/config.c: 540
 Usage: %s [game] [options]\nOptions:\n
 Nutzung: %s [Spiel] [Optionen]\nOptionen:\n
 
@@ -358,7 +358,7 @@ Windows Video Optionen
 \"%s\" controller support enabled\n
 \"%s\" Steuerungs-Unterstützung eingeschaltet\n
 
-# windows/config.c: 639
+# windows/config.c: 634
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" beinhaltet vermutlich die folgenden\nunterstützten Spiele (Bester Treffer zuerst):\n\n
 
@@ -562,11 +562,11 @@ Anzeige-Aspekt beibehalten
 error invalid value for %s: %s\n
 Fehlerhafter Wert für %s: %s\n
 
-# windows/config.c: 488
+# windows/config.c: 483
 error on rc creation\n
 Fehler bei rc creation\n
 
-# windows/config.c: 495
+# windows/config.c: 490
 error while parsing cmdline\n
 Fehler beim Abarbeiten der Kommandozeile\n
 
@@ -582,7 +582,7 @@ Fehler: %s benötgit ein Argument\n
 error: couldn't open file: %s\n
 Fehler: Kann Datei: %s nicht öffnen\n
 
-# windows/config.c: 870
+# windows/config.c: 872
 error: duplicate gamename: %s\n
 Fehler: Doppelter Spielename: %s\n
 
@@ -610,7 +610,7 @@ Fehler: Falscher Wert für Palette: %s\n
 error: invalid value for resolution: %s\n
 Fehler: Falscher Wert für Auflösung: %s\n
 
-# windows/config.c: 886
+# windows/config.c: 888
 error: no gamename given in %s\n
 Fehler: Kein Spielename angegeben in %s\n
 
@@ -626,11 +626,11 @@ Fehler: Unbekannte Option %s, in Zeile %d von Datei: %s\n
 error: unknown option %s\n
 Fehler: Unbekannte Option %s\n
 
-# windows/config.c: 561
+# windows/config.c: 556
 failed to open %s for playback\n
 Fehler beim öffnen von %s für Wiedergabe\n
 
-# windows/config.c: 687
+# windows/config.c: 689
 failed to open %s for recording\n
 Fehler beim öffnen von %s für Aufnahme\n
 
@@ -702,10 +702,6 @@ Keine Hilfe verfügbar
 output error log to debugger
 Ausgabe des Error.log zum Debugger
 
-# windows/config.c: 424
-parsing %s...
-verarbeite %s...
-
 # windows/fileio.c: 125, 127
 path to ini files
 Pfad zu INI-Dateien
@@ -729,10 +725,6 @@ Voreingestellen für gewählte Steuerung
 # windows/video.c: 244
 prefer RDTSC over QueryPerformanceCounter for timing
 Bevorzuge RDTSC vor QueryPerformanceCounter für Timing
-
-# windows/config.c: 432
-problem parsing %s\n
-Problem beim Verarbeiten von %s\n
 
 # windows/config.c: 252
 record an input file
@@ -770,7 +762,7 @@ Rotiere Bild im Uhrzeigersinn
 run in a window/run on full screen
 Laufe in einem Fenster/laufe Vollbild
 
-# windows/config.c: 630
+# windows/config.c: 625
 running %s (%s) [press return]
 starte %s (%s) [Drücke ENTER]
 
@@ -1174,6 +1166,18 @@ Mouse %d Y
 Mouse %d Z
 
 
+# windows/config.c: 429
+Parsing %s : ERROR\n
+
+
+# windows/config.c: 439
+Parsing %s : N/A\n
+
+
+# windows/config.c: 434
+Parsing %s : OK\n
+
+
 # windows/wind3d.c: 1645
 Pre-process texture surface created: %s\n
 
@@ -1482,11 +1486,11 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 
 
-# windows/config.c: 998
+# windows/config.c: 1000
 error: malloc failed in win_dirname\n
 
 
-# windows/config.c: 1038
+# windows/config.c: 1040
 error: malloc failed in win_strip_extension\n
 
 

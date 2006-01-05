@@ -1,8 +1,8 @@
-# ui/properties.c: 967
+# ui/properties.c: 966
 %d colors 
 %d színek
 
-# ui/win32ui.c: 252, 3600
+# ui/win32ui.c: 252, 3564
 %d games
 %d játék
 
@@ -46,7 +46,7 @@
 &Cancel
 &Mégsem
 
-# ui/audit32.c: 393
+# ui/audit32.c: 398
 &Close
 &Bezárás
 
@@ -54,7 +54,7 @@
 &Contents\tF1
 &Tartalom\tF1
 
-# ui/audit32.c: 270
+# ui/audit32.c: 275
 &Continue
 &Folytatás
 
@@ -150,7 +150,7 @@
 &Palette Setting...
 &Paletta beállítás...
 
-# ui/audit32.c: 265 ui/mame32.rc: 404
+# ui/audit32.c: 270 ui/mame32.rc: 404
 &Pause
 &Szünet
 
@@ -158,11 +158,11 @@
 &Picture Area\tAlt+P
 &Kép terület\tAlt+P
 
-# ui/mame32.rc: 52, 165 ui/win32ui.c: 3739
+# ui/mame32.rc: 52, 165 ui/win32ui.c: 3703
 &Play
 &Játék
 
-# ui/win32ui.c: 251, 3773, 6688, 6716
+# ui/win32ui.c: 251, 3737, 6652, 6680
 &Play %s
 &Játék %s
 
@@ -238,7 +238,7 @@
 &Working
 &Mûködõ
 
-# ui/win32ui.c: 6239
+# ui/win32ui.c: 6203
 '%s' is not a valid savestate file for game '%s'.
 '%s' nem érvényes fájl játékmentéshez '%s'.
 
@@ -266,21 +266,17 @@
 <- Remove
 <- Elmozdít
 
-# ui/treeview.c: 516, 537, 1127
+# ui/treeview.c: 517, 538, 1128
 <unknown>
 <Ismeretlen>
 
-# ui/m32util.c: 254
+# ui/m32util.c: 256
 A sharing violation occurred.
 Egy megosztás áthágás történt.
 
 # ui/mame32.rc: 178
 A&udit
 E&llenõrzés
-
-# ui/treeview.c: 1373
-AD STICK
-Analóg/digitális
 
 # ui/mame32.rc: 1068
 ADStick device
@@ -350,7 +346,7 @@ Analóg holt terület
 Anisotropic
 Anizotróp
 
-# ui/properties.c: 3843
+# ui/properties.c: 3847
 Anti-clockwise
 Órajárásával ellentétes
 
@@ -390,19 +386,19 @@ Ellenõrzés
 Audit ROM and samples sets
 ROM és hangminta csoportok ellenõrzése
 
-# ui/audit32.c: 392
+# ui/audit32.c: 397
 Audit complete.\n
 Ellenõrzés kész.\n
 
-# ui/properties.c: 390, 403, 435, 3762, 3864, 3920, 4074
+# ui/properties.c: 390, 403, 435, 3766, 3868, 3924, 4078
 Auto
 Automatikus
 
-# ui/properties.c: 3846
+# ui/properties.c: 3850
 Auto anti-clockwise
 Automatán balra
 
-# ui/properties.c: 3845
+# ui/properties.c: 3849
 Auto clockwise
 Automatán jobbra
 
@@ -418,57 +414,17 @@ Meglévõ
 Available fields:
 Meglévõ terület:
 
-# ui/properties.c: 3963
+# ui/properties.c: 3967
 Axis
 Irány
 
-# ui/properties.c: 3973
+# ui/properties.c: 3977
 AxisId
 Irány azonosító
 
 # ui/mame32.rc: 849, 1139
 BIOS
 BIOS
-
-# ui/treeview.c: 1356
-BUTTONS 1
-GOMBOK 1
-
-# ui/treeview.c: 1357
-BUTTONS 2
-GOMBOK 2
-
-# ui/treeview.c: 1358
-BUTTONS 3
-GOMBOK 3
-
-# ui/treeview.c: 1359
-BUTTONS 4
-GOMBOK 4
-
-# ui/treeview.c: 1360
-BUTTONS 5
-GOMBOK 5
-
-# ui/treeview.c: 1361
-BUTTONS 6
-GOMBOK 6
-
-# ui/treeview.c: 1362
-BUTTONS 7
-GOMBOK 7
-
-# ui/treeview.c: 1363
-BUTTONS 8
-GOMBOK 8
-
-# ui/treeview.c: 1364
-BUTTONS 9
-GOMBOK 9
-
-# ui/treeview.c: 1365
-BUTTONS10
-GOMBOK 10
 
 # ui/mame32.rc: 826
 Backdrops
@@ -478,7 +434,7 @@ Hátterek
 Background Images
 Háttér kép
 
-# ui/treeview.c: 1047, 1048
+# ui/treeview.c: 1048, 1049
 Bad Dump
 Hibás letárolás
 
@@ -486,7 +442,7 @@ Hibás letárolás
 Beam width
 Sugárzási távolság
 
-# ui/audit32.c: 444
+# ui/audit32.c: 449
 Best available
 Meglévõ legjobb
 
@@ -582,7 +538,7 @@ Kategóriák
 Changing this item is not permitted
 A kijelölt rész változtatása nem engedélyezett
 
-# ui/audit32.c: 192, 201
+# ui/audit32.c: 193, 202
 Checking Game %s - %s
 Játék ellenõrzése %s - %s
 
@@ -598,7 +554,7 @@ Christopher Kirmse és Michael Soderstrom
 Clean stretch
 Kép nyújtás
 
-# ui/properties.c: 3842
+# ui/properties.c: 3846
 Clockwise
 Órajárásával megegyezõ
 
@@ -614,11 +570,11 @@ Klón:
 Clones
 Klónok
 
-# ui/properties.c: 1005
+# ui/properties.c: 1004
 Colors are completely wrong
 A színek teljesen rosszak
 
-# ui/properties.c: 1011
+# ui/properties.c: 1010
 Colors aren't 100% accurate
 A színek nem 100% tökéletesek
 
@@ -653,10 +609,6 @@ Utasításokat tartalmaz a képi megjelenéshez
 # ui/mame32.rc: 1439
 Contains commands for working with the selected items
 Utasításokat tartalmaz a kijelölt elemmel való mûködtetéshez
-
-# ui/layout.c: 74
-Control
-Irányítás
 
 # ui/mame32.rc: 89, 228, 241
 Control &Panel
@@ -694,11 +646,11 @@ Szerzõi jog: (C) 1997-2005 The MAME Team
 Correct:
 Helyes:
 
-# ui/win32ui.c: 6150
+# ui/win32ui.c: 6114
 Could not open '%s' as a valid input file.
 Nem lehet '%s' érvényes bemenetként megnyitni.
 
-# ui/win32ui.c: 6250
+# ui/win32ui.c: 6214
 Could not open '%s' as a valid savestate file.
 Érvényes játékmentés fájlként való megnyitás '%s' sikertelen.
 
@@ -718,7 +670,7 @@ Köbös (gaussian kernel)
 Cursor
 Kurzor
 
-# ui/win32ui.c: 4475, 4503
+# ui/win32ui.c: 4439, 4467
 Custom
 Saját
 
@@ -738,23 +690,7 @@ Megjelenítés beállításai.
 Customize which columns are used in the game list
 A játéklistában használatos oszlopok bállítása
 
-# ui/treeview.c: 1375
-DIAL
-DIAL
-
-# ui/treeview.c: 1369
-DOUBLEJOY2WAY
-IKER JOY 2 IRÁNYOS
-
-# ui/treeview.c: 1370
-DOUBLEJOY4WAY
-IKER JOY 4 IRÁNYOS
-
-# ui/treeview.c: 1371
-DOUBLEJOY8WAY
-IKER JOY 8 IRÁNYOS
-
-# ui/properties.c: 3841
+# ui/properties.c: 3845
 Default
 Alapértelmezett
 
@@ -834,10 +770,6 @@ A kiválsztott mappa tulajdonságainak megjelenítése
 Display the properties of the selected items
 A kiválasztott elemek tulajdonságainak megjelenítése
 
-# ui/mame32.rc: 1447
-Display the source file properties of the selected game
-A kiválasztott játék forrásfájl tulajdonságainak megjelenítése
-
 # ui/mame32.rc: 1460
 Displays detailed information about each item in the window.
 Részletezett információ megjelenítése mindenrõl az ablakban.
@@ -870,7 +802,7 @@ Közepes maszk
 Draw antialiased vectors
 Élsimított vektorok megjelenítése
 
-# ui/properties.c: 3819
+# ui/properties.c: 3823
 Draw every frame
 Megjelenik mind
 
@@ -890,7 +822,7 @@ Letárolási állapot
 E&xit
 K&ilépés
 
-# ui/win32ui.c: 7187
+# ui/win32ui.c: 7151
 ERROR: required files are missing, the game cannot be run.
 HIBA: szükséges fájlok hiányoznak, a játék nem mûködhet.
 
@@ -942,11 +874,11 @@ Enable steadykey support
 Enforce aspect ratio
 Kényszerített képarány
 
-# ui/audit32.c: 101 ui/properties.c: 714, 806
+# ui/audit32.c: 102 ui/properties.c: 714, 805
 Error
 Hiba
 
-# ui/treeview.c: 2580
+# ui/treeview.c: 2579
 Error finding custom file name to save
 Hiba a megfelelõ fájlnév keresésekor mentéshez
 
@@ -954,15 +886,15 @@ Hiba a megfelelõ fájlnév keresésekor mentéshez
 Error log (for developers)
 Hiba bejegyzés (fejlesztõknek)
 
-# ui/win32ui.c: 7279
+# ui/win32ui.c: 7243
 Error searching for custom folder
 Hiba az egyedi mappa keresésekor
 
-# ui/treeview.c: 2509
+# ui/treeview.c: 2508
 Error while renaming custom file %s to %s
 Hiba az egyedi fájl %s átnevezésekor %s
 
-# ui/treeview.c: 2651
+# ui/treeview.c: 2650
 Error while saving custom file %s
 Hiba az egyedi fájl mentésekor %s
 
@@ -974,11 +906,11 @@ Kilépés a programból
 FPS
 Képfrissítés
 
-# ui/audit32.c: 453
+# ui/audit32.c: 458
 Failed
 Sikertelen
 
-# ui/audit32.c: 208 ui/mame32.rc: 401
+# ui/audit32.c: 209 ui/mame32.rc: 401
 File Audit
 Fájl ellenõrzés
 
@@ -1058,15 +990,15 @@ Játékszûrõk
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 A játékszûrõk lehetõvé teszik a megfelelõ mappában, elõre meghatározott szabályok alapján a játékok listázását.
 
-# ui/properties.c: 1023
+# ui/properties.c: 1022
 Game lacks sound
 Hiányzik a játék hangja
 
-# ui/properties.c: 999
+# ui/properties.c: 998
 Game protection isn't fully emulated
 A játék védelme nincs teljesen emulálva
 
-# ui/win32ui.c: 3369
+# ui/win32ui.c: 3333
 Game search %d%% complete
 Játék keresés %d%% befejezõdött
 
@@ -1078,7 +1010,7 @@ Sötétség állítás
 General
 Általános
 
-# ui/properties.c: 1065
+# ui/properties.c: 1064
 Global game options\nDefault options used by all games
 Minden játék beállítása\nvalamennyi játék által használt alapbeállítás
 
@@ -1102,7 +1034,7 @@ Súgó
 Hide &mouse cursor (requires restart)
 Egér &kurzor elrejtése (újraindítást igényel)
 
-# ui/properties.c: 4076
+# ui/properties.c: 4080
 High
 Magas
 
@@ -1118,7 +1050,7 @@ Magas prioritás
 History
 Ismertetõ
 
-# ui/properties.c: 404 ui/treeview.c: 959, 960
+# ui/properties.c: 404 ui/treeview.c: 960, 961
 Horizontal
 Vízszintes
 
@@ -1138,15 +1070,15 @@ Kép javítás
 Imperfect
 Hibás
 
-# ui/treeview.c: 998
+# ui/treeview.c: 999
 Imperfect Colors
 Hibás színek
 
-# ui/treeview.c: 999
+# ui/treeview.c: 1000
 Imperfect Graphics
 Hibás grafika
 
-# ui/treeview.c: 1001
+# ui/treeview.c: 1002
 Imperfect Sound
 Hibás hang
 
@@ -1178,23 +1110,11 @@ Erõsség
 Interface Options
 Megjelenítési beállítások
 
-# ui/treeview.c: 1366
-JOY2WAY
-JOY 2 IRÁNYOS
-
-# ui/treeview.c: 1367
-JOY4WAY
-JOY 4 IRÁNYOS
-
-# ui/treeview.c: 1368
-JOY8WAY
-JOY 8 IRÁNYOS
-
-# ui/properties.c: 573, 3958
+# ui/properties.c: 573, 3962
 Joystick
 Joystick
 
-# ui/properties.c: 3968
+# ui/properties.c: 3972
 JoystickId
 Joystick azonosító
 
@@ -1206,15 +1126,11 @@ Billentyûzet
 L&arge Icons
 N&agy ikonok
 
-# ui/treeview.c: 1377
-LIGHTGUN
-FÉNYPISZTOLY
-
 # ui/options.c: 277 ui/win32ui.c: 656
 Large Icons
 Nagy ikonok
 
-# ui/layout.c: 77 ui/properties.c: 574
+# ui/layout.c: 77 ui/properties.c: 574 ui/treeview.c: 1380
 Lightgun
 Fénypisztoly
 
@@ -1234,7 +1150,7 @@ Lista
 Loa&d Savestate...
 Men&tett állás betöltése...
 
-# ui/win32ui.c: 7104
+# ui/win32ui.c: 7068
 Loading %s
 Betöltés %s
 
@@ -1306,11 +1222,11 @@ Memória kártya
 Miscellaneous
 Vegyes
 
-# ui/treeview.c: 1000
+# ui/treeview.c: 1001
 Missing Sound
 Hiányzó hang
 
-# ui/audit32.c: 457
+# ui/audit32.c: 462
 Missing optional
 Hiányzó beállítás
 
@@ -1342,19 +1258,19 @@ NVRAM
 New game changes
 Új játék változások
 
-# ui/audit32.c: 124 ui/win32ui.c: 5361
+# ui/audit32.c: 125 ui/win32ui.c: 5325
 No
 Nem
 
-# ui/treeview.c: 1002
+# ui/treeview.c: 1003
 No Cocktail
 Nincs vegyes mód
 
-# ui/treeview.c: 1050, 1051
+# ui/treeview.c: 1051, 1052
 No Dump
 Nincs letárolás
 
-# ui/win32ui.c: 3755
+# ui/win32ui.c: 3719
 No Selection
 Nincs kijelölés
 
@@ -1366,11 +1282,11 @@ A klónok megjelenése azonos az eredetiekével
 Non-Wor&king
 Ne&m mûködõ
 
-# ui/dialogs.c: 205 ui/properties.c: 389, 401, 416, 434, 487, 499, 3844
+# ui/dialogs.c: 205 ui/properties.c: 389, 401, 416, 434, 487, 499, 3848
 None
 Nincs
 
-# ui/audit32.c: 301, 305
+# ui/audit32.c: 306, 310
 None required
 Nem szükséges
 
@@ -1378,11 +1294,11 @@ Nem szükséges
 Not Working
 Nem mûködik
 
-# ui/audit32.c: 449
+# ui/audit32.c: 454
 Not found
 Nem található
 
-# ui/properties.c: 987
+# ui/properties.c: 986
 Not working
 Nem mûködik
 
@@ -1430,46 +1346,6 @@ Overlays
 P&layback Input...
 B&emenet visszajátszása...
 
-# ui/treeview.c: 1374
-PADDLE
-PADDLE
-
-# ui/treeview.c: 1378
-PEDAL
-GÁZPEDÁL
-
-# ui/treeview.c: 1348
-PLAYERS 1
-1 JÁTÉKOS
-
-# ui/treeview.c: 1349
-PLAYERS 2
-2 JÁTÉKOS
-
-# ui/treeview.c: 1350
-PLAYERS 3
-3 JÁTÉKOS
-
-# ui/treeview.c: 1351
-PLAYERS 4
-4 JÁTÉKOS
-
-# ui/treeview.c: 1352
-PLAYERS 5
-5 JÁTÉKOS
-
-# ui/treeview.c: 1353
-PLAYERS 6
-6 JÁTÉKOS
-
-# ui/treeview.c: 1354
-PLAYERS 7
-7 JÁTÉKOS
-
-# ui/treeview.c: 1355
-PLAYERS 8
-8 JÁTÉKOS
-
 # ui/properties.c: 558
 PS/2 Keyboard
 PS/2 billentyûzet
@@ -1482,7 +1358,7 @@ Paddle eszköz
 Palette
 Paletta
 
-# ui/audit32.c: 440
+# ui/audit32.c: 445
 Passed
 Sikeres
 
@@ -1526,11 +1402,11 @@ Tu&lajdonságok
 Prescale
 Elõosztó
 
-# ui/win32ui.c: 3784, 6701, 6726
+# ui/win32ui.c: 3748, 6665, 6690
 Proper&ties of %s
 Tulaj&donságok %s
 
-# ui/properties.c: 713, 805
+# ui/properties.c: 713, 804
 Propery Sheet Error %d %X
 Sajátos lemez hiba %d %X
 
@@ -1610,7 +1486,7 @@ ROM ellenõrzés:
 ROMs
 ROM-ok
 
-# ui/properties.c: 1043
+# ui/properties.c: 1042
 ROMs missing
 Hiányzó ROM-ok
 
@@ -1618,11 +1494,11 @@ Hiányzó ROM-ok
 Randomly select a game.
 Véletlenszerûen választott játék.
 
-# ui/layout.c: 67 ui/win32ui.c: 5353
+# ui/layout.c: 67 ui/win32ui.c: 5317
 Raster
 Raszter
 
-# ui/win32ui.c: 3533
+# ui/win32ui.c: 3497
 Ready
 Kész
 
@@ -1714,10 +1590,6 @@ K&is ikonok
 S&tretch screenshot larger than natural size
 P&illanatkép eredetinél nagyobbra állítása
 
-# ui/treeview.c: 1372
-STICK
-KAR
-
 # ui/mame32.rc: 518
 Sample check:
 Hangminta ellenõrzés:
@@ -1746,11 +1618,11 @@ Képsor 75%
 Screen
 Képernyõ
 
-# ui/win32ui.c: 3328
+# ui/win32ui.c: 3292
 Screen flip support is missing
 A kép oldalak cseréje funkció nem mûködik
 
-# ui/properties.c: 1035
+# ui/properties.c: 1034
 Screen flipping is not supported
 Képernyõ tükrözés nem támogatott
 
@@ -1930,47 +1802,47 @@ Mezõk mutatása ilyen sorban:
 Size:
 Méret:
 
-# ui/properties.c: 3820
+# ui/properties.c: 3824
 Skip 1 of 12 frames
 1 kihagyása 12-bõl
 
-# ui/properties.c: 3829
+# ui/properties.c: 3833
 Skip 10 of 12 frames
 10 kihagyása 12-bõl
 
-# ui/properties.c: 3830
+# ui/properties.c: 3834
 Skip 11 of 12 frames
 11 kihagyása 12-bõl
 
-# ui/properties.c: 3821
+# ui/properties.c: 3825
 Skip 2 of 12 frames
 2 kihagyása 12-bõl
 
-# ui/properties.c: 3822
+# ui/properties.c: 3826
 Skip 3 of 12 frames
 3 kihagyása 12-bõl
 
-# ui/properties.c: 3823
+# ui/properties.c: 3827
 Skip 4 of 12 frames
 4 kihagyása 12-bõl
 
-# ui/properties.c: 3824
+# ui/properties.c: 3828
 Skip 5 of 12 frames
 5 kihagyása 12-bõl
 
-# ui/properties.c: 3825
+# ui/properties.c: 3829
 Skip 6 of 12 frames
 6 kihagyása 12-bõl
 
-# ui/properties.c: 3826
+# ui/properties.c: 3830
 Skip 7 of 12 frames
 7 kihagyása 12-bõl
 
-# ui/properties.c: 3827
+# ui/properties.c: 3831
 Skip 8 of 12 frames
 8 kihagyása 12-bõl
 
-# ui/properties.c: 3828
+# ui/properties.c: 3832
 Skip 9 of 12 frames
 9 kihagyása 12-bõl
 
@@ -2026,7 +1898,7 @@ Listázás év alapján
 Sound
 Hang
 
-# ui/properties.c: 1029
+# ui/properties.c: 1028
 Sound emulation isn't 100% accurate
 A hang emuláció nem 100% tökéletes
 
@@ -2038,23 +1910,11 @@ Hang:
 Sounds (*.wav)
 Hangok (*.wav)
 
-# ui/layout.c: 57 ui/win32ui.c: 800
-Source
-Forrás
-
-# ui/mame32.rc: 180 ui/win32ui.c: 3746
-Source Proper&ties
-Forrás tulajdons&ágok
-
-# ui/mame32.rc: 501
-Source:
-Forrás:
-
 # ui/mame32.rc: 93, 232, 244
 St&ory
 Tö&rténet
 
-# ui/options.c: 476 ui/properties.c: 2580, 2585, 2588, 2835, 2838, 4014, 4037, 4075 
+# ui/options.c: 476 ui/properties.c: 2584, 2589, 2592, 2839, 2842, 4018, 4041, 4079 
 Standard
 Alap
 
@@ -2094,31 +1954,27 @@ Eredeti felbontás állítás
 Sync to monitor refresh
 Monitor frissítéshez állítás
 
-# ui/treeview.c: 1376
-TRACKBALL
-HANYATTEGÉR
-
 # ui/dialogs.c: 116
 The new settings will take effect\n
 Az új beállítások érvényesülni fognak\n
 
-# ui/m32util.c: 234
+# ui/m32util.c: 236
 The operating system is out of memory or resources.
 Az operációs rendszer memória készlete elfogyott.
 
-# ui/m32util.c: 238
+# ui/m32util.c: 240
 The specified file was not found.
 A meghatározott fájl nem található.
 
-# ui/m32util.c: 250
+# ui/m32util.c: 252
 The specified path was not found.
 A megadott könyvtár nem található
 
-# ui/m32util.c: 242
+# ui/m32util.c: 244
 There is no application associated with the given filename extension.
 Nincs társított program a megadott fájlnév kiterjesztéshez.
 
-# ui/m32util.c: 246
+# ui/m32util.c: 248
 There was not enough memory to complete the operation.
 Nem volt elegendõ memória a mûvelet elvégzéséhez.
 
@@ -2146,7 +2002,7 @@ Játék képek kapcsolása
 Total:
 Összesen:
 
-# ui/layout.c: 76 ui/win32ui.c: 795
+# ui/layout.c: 76 ui/treeview.c: 1379 ui/win32ui.c: 795
 Trackball
 Hanyattegér
 
@@ -2218,15 +2074,15 @@ Típus
 USB Keyboard
 USB billentyûzet
 
-# ui/audit32.c: 101
+# ui/audit32.c: 102
 Unable to Load Riched32.dll
 Riched32.dll betöltése sikertelen
 
-# ui/treeview.c: 2520
+# ui/treeview.c: 2519
 Unable to add game to non-custom folder
 A játék hozzáadása a nem egyedi mappához sikertelen
 
-# ui/treeview.c: 2537
+# ui/treeview.c: 2536
 Unable to remove game from non-custom folder
 A játék kivétele a nem egyedi mappából sikertelen
 
@@ -2234,15 +2090,15 @@ A játék kivétele a nem egyedi mappából sikertelen
 Unavailable
 Hiányzó
 
-# ui/treeview.c: 996
+# ui/treeview.c: 997
 Unemulated Protection
 Emulálatlan védelem
 
-# ui/audit32.c: 435 ui/properties.c: 981
+# ui/audit32.c: 440 ui/properties.c: 980
 Unknown
 Ismeretlen
 
-# ui/m32util.c: 258
+# ui/m32util.c: 260
 Unknown error.
 Ismeretlen hiba.
 
@@ -2286,7 +2142,7 @@ Use transparent in-game menu
 Use volume auto adjust
 Automatikus hangszabályozás használata
 
-# ui/layout.c: 68 ui/mame32.rc: 859 ui/options.c: 1120, 2816 ui/properties.c: 763 ui/treeview.c: 299 ui/win32ui.c: 5351
+# ui/layout.c: 68 ui/mame32.rc: 859 ui/options.c: 1120, 2816 ui/properties.c: 763 ui/treeview.c: 300 ui/win32ui.c: 5315
 Vector
 Vektor
 
@@ -2294,11 +2150,11 @@ Vektor
 Version Mismatch
 Verzió eltérés
 
-# ui/properties.c: 405 ui/treeview.c: 955, 956
+# ui/properties.c: 405 ui/treeview.c: 956, 957
 Vertical
 Függõleges
 
-# ui/properties.c: 1017
+# ui/properties.c: 1016
 Video emulation isn't 100% accurate
 A videó emuláció nem 100% tökéletes
 
@@ -2306,7 +2162,7 @@ A videó emuláció nem 100% tökéletes
 Volume attenuation
 Hangerõ szabályozás
 
-# ui/win32ui.c: 7190
+# ui/win32ui.c: 7154
 WARNING: the game might not run correctly.
 FIGYELEM: a játék valószínûleg nem mûködik megfelelõen.
 
@@ -2374,11 +2230,11 @@ Windows megjelenítési ablak helyzetének beállítása
 Windows misc options
 Windows egyéb beállítások
 
-# ui/layout.c: 63 ui/properties.c: 989
+# ui/layout.c: 63 ui/properties.c: 988
 Working
 Mûködik
 
-# ui/treeview.c: 997
+# ui/treeview.c: 998
 Wrong Colors
 Rossz színek
 
@@ -2386,7 +2242,7 @@ Rossz színek
 Year
 Év
 
-# ui/audit32.c: 119 ui/win32ui.c: 5359
+# ui/audit32.c: 120 ui/win32ui.c: 5323
 Yes
 Igen
 
@@ -2426,16 +2282,28 @@ MAME32 legközelebbi indításakor.\n\n
                                 
 
 
-# ui/treeview.c: 1181
+# ui/properties.c: 949
+%d x %d (H) (%d:%d) %f Hz
+
+
+# ui/properties.c: 937
+%d x %d (V) (%d:%d) %f Hz
+
+
+# ui/treeview.c: 1182
 %dx%d (H)
 
 
-# ui/treeview.c: 1175
+# ui/treeview.c: 1176
 %dx%d (V)
 
 
-# ui/properties.c: 3877
+# ui/properties.c: 3881
 %li bit
+
+
+# ui/treeview.c: 1376
+AD Stick
 
 
 # ui/layout.c: 71
@@ -2446,12 +2314,88 @@ Aspect Ratio
 Auto restore and save (only if available)
 
 
+# ui/properties.c: 1040
+BIOS missing
+
+
+# ui/treeview.c: 1358
+Button 1
+
+
+# ui/treeview.c: 1367
+Buttons 10
+
+
+# ui/treeview.c: 1359
+Buttons 2
+
+
+# ui/treeview.c: 1360
+Buttons 3
+
+
+# ui/treeview.c: 1361
+Buttons 4
+
+
+# ui/treeview.c: 1362
+Buttons 5
+
+
+# ui/treeview.c: 1363
+Buttons 6
+
+
+# ui/treeview.c: 1364
+Buttons 7
+
+
+# ui/treeview.c: 1365
+Buttons 8
+
+
+# ui/treeview.c: 1366
+Buttons 9
+
+
+# ui/layout.c: 74
+Control Type
+
+
 # ui/win32ui.c: 790 
 Description
 
 
-# ui/properties.c: 3693, 3710 
+# ui/treeview.c: 1378
+Dial
+
+
+# ui/properties.c: 3697, 3714 
 Disabled
+
+
+# ui/mame32.rc: 1447
+Display the driver properties of the selected game
+
+
+# ui/treeview.c: 1372
+Double Joy 2-Way
+
+
+# ui/treeview.c: 1373
+Double Joy 4-Way
+
+
+# ui/treeview.c: 1374
+Double Joy 8-Way
+
+
+# ui/layout.c: 57 ui/win32ui.c: 800
+Driver
+
+
+# ui/mame32.rc: 501
+Driver:
 
 
 # ui/mame32.rc: 1030
@@ -2466,8 +2410,12 @@ Feedback strength
 Force zoom level
 
 
-# ui/properties.c: 1067
-Global folder options\nCustom options used by all games in the %s
+# ui/properties.c: 1070
+Global driver options\nCustom options used by all games in the %s
+
+
+# ui/properties.c: 1068
+Global vector options\nCustom options used by all games in the Vector
 
 
 # ui/layout.c: 109
@@ -2482,20 +2430,64 @@ Image Files (*.png,*.bmp)
 Interpolation method
 
 
+# ui/treeview.c: 1368
+Joy 2-Way
+
+
+# ui/treeview.c: 1369
+Joy 4-Way
+
+
+# ui/treeview.c: 1370
+Joy 8-Way
+
+
 # ui/win32ui.c: 793 
 Name
+
+
+# ui/treeview.c: 1377
+Paddle
 
 
 # ui/win32ui.c: 796
 Playcount
 
 
-# ui/properties.c: 950
-Raster %d x %d (H) (%d:%d) %f Hz
+# ui/treeview.c: 1350
+Player 1
 
 
-# ui/properties.c: 938
-Raster %d x %d (V) (%d:%d) %f Hz
+# ui/treeview.c: 1351
+Players 2
+
+
+# ui/treeview.c: 1352
+Players 3
+
+
+# ui/treeview.c: 1353
+Players 4
+
+
+# ui/treeview.c: 1354
+Players 5
+
+
+# ui/treeview.c: 1355
+Players 6
+
+
+# ui/treeview.c: 1356
+Players 7
+
+
+# ui/treeview.c: 1357
+Players 8
+
+
+# ui/mame32.rc: 65, 180 ui/win32ui.c: 3710
+Proper&ties of Driver
 
 
 # ui/mame32.rc: 1510
@@ -2558,11 +2550,11 @@ Sort items by name
 Sort items by playcount
 
 
-# ui/properties.c: 1101 ui/treeview.c: 1310, 1311
+# ui/properties.c: 1105 ui/treeview.c: 1311, 1312
 Supported
 
 
-# ui/properties.c: 1103 ui/treeview.c: 1313, 1314
+# ui/properties.c: 1107 ui/treeview.c: 1314, 1315
 Unsupported
 
 
@@ -2570,19 +2562,19 @@ Unsupported
 Use texture management
 
 
-# ui/treeview.c: 1150, 1151
+# ui/treeview.c: 1151, 1152
 Vector (H)
 
 
-# ui/properties.c: 925
+# ui/properties.c: 924
 Vector (H) (%d:%d) %f Hz
 
 
-# ui/treeview.c: 1147, 1148
+# ui/treeview.c: 1148, 1149
 Vector (V)
 
 
-# ui/properties.c: 915
+# ui/properties.c: 914
 Vector (V) (%d:%d) %f Hz
 
 

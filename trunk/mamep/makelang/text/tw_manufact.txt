@@ -474,6 +474,10 @@ East Coast Coin Company
 East Technology
 
 
+# Gekisou (Japan)
+Eastern
+
+
 # Hoccer (set 1)
 Eastern Micro Electronics, Inc.
 
@@ -534,7 +538,7 @@ Elettronolo
 Eleven
 
 
-# Trivia Master
+# Trivia Master (set 1)
 Enerdyne Technologies Inc.
 
 
@@ -544,6 +548,14 @@ Enerdyne Technologies, Inc.
 
 # Act Raiser (Nintendo Super System)
 Enix
+
+
+# Noah's Ark
+Enter-Tech
+
+
+# Mini Vegas 4in1
+Entertainment Enterprises
 
 
 # Turbo Sub
@@ -622,6 +634,10 @@ Fuuki
 G.E.I.
 
 
+# Flame Gunner
+GAPS Inc.
+
+
 # Dambusters (set 2)
 GAT
 
@@ -632,6 +648,10 @@ GL
 
 # Super Cross 2 (Japan set 1)
 GM Shoji
+
+
+# Real Battle Mahjong King
+GMS
 
 
 # Abunai Houkago - Mou Matenai (Japan 890325)
@@ -802,6 +822,10 @@ Irem America
 Island Design
 
 
+# Quiz (Revision 2)
+Italian bootleg
+
+
 # Poker Night
 JMK
 
@@ -926,7 +950,7 @@ Leland Corp.
 Leprechaun
 
 
-# Star Wars Trilogy
+# Star Wars Trilogy (ver A)
 LucasArts
 
 
@@ -1178,7 +1202,7 @@ Omega System
 Omni
 
 
-# Space Guerilla
+# Shuttle Invader
 Omori
 
 
@@ -1328,6 +1352,10 @@ Romar
 
 # Attack Ufo
 Ryoto Electric Co.
+
+
+# Go 2000
+SA
 
 
 # Safari Rally (Japan)
@@ -1778,6 +1806,10 @@ Valadon Automation
 Vectorbeam
 
 
+# Card Line
+Veltmeijer
+
+
 # Pinball Champ '95 (bootleg?)
 Veltmeijer Automaten
 
@@ -1888,6 +1920,10 @@ Yang Cheng
 
 # Moeyo Gonta!! (Japan)
 Yanyaka
+
+
+# Spectrum 2000 (Euro)
+Yonatech
 
 
 # Mahjong Yoshimoto Gekijou (Japan)

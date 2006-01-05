@@ -18,7 +18,7 @@ Japanese game list by 俺、ぶろん
 %dx%d (V)
 %dx%d (V)
 
-# ui/properties.c: 3876
+# ui/properties.c: 3881
 %li bit
 %li ビット
 
@@ -62,7 +62,7 @@ MAME32について(&A)
 &Cancel
 キャンセル(&C)
 
-# ui/audit32.c: 393
+# ui/audit32.c: 398
 &Close
 閉じる(&C)
 
@@ -70,7 +70,7 @@ MAME32について(&A)
 &Contents\tF1
 ヘルプコンテンツ(&H)\tF1
 
-# ui/audit32.c: 270
+# ui/audit32.c: 275
 &Continue
 継続(&P)
 
@@ -166,7 +166,7 @@ MAME32について(&A)
 &Palette Setting...
 パレット設定(&P)...
 
-# ui/audit32.c: 265 ui/mame32.rc: 404
+# ui/audit32.c: 270 ui/mame32.rc: 404
 &Pause
 一時停止(&P)
 
@@ -366,7 +366,7 @@ Analog deadzone
 Anisotropic
 アニソ\トロピック
 
-# ui/properties.c: 3842
+# ui/properties.c: 3847
 Anti-clockwise
 反時計回り
 
@@ -410,19 +410,19 @@ Audit
 Audit ROM and samples sets
 ロムファイルとサンプルファイルを監査します
 
-# ui/audit32.c: 392
+# ui/audit32.c: 397
 Audit complete.\n
 チェック終了\n
 
-# ui/properties.c: 390, 403, 435, 3761, 3863, 3919, 4073
+# ui/properties.c: 390, 403, 435, 3766, 3868, 3924, 4078
 Auto
 自動
 
-# ui/properties.c: 3845
+# ui/properties.c: 3850
 Auto anti-clockwise
 自動的に反時計回り
 
-# ui/properties.c: 3844
+# ui/properties.c: 3849
 Auto clockwise
 自動的に時計回り
 
@@ -442,11 +442,11 @@ Available
 Available fields:
 利用可能\フィールド:
 
-# ui/properties.c: 3962
+# ui/properties.c: 3967
 Axis
 軸
 
-# ui/properties.c: 3972
+# ui/properties.c: 3977
 AxisId
 軸ID
 
@@ -470,7 +470,7 @@ Bad Dump
 Beam width
 ビーム
 
-# ui/audit32.c: 444
+# ui/audit32.c: 449
 Best available
 最良の状態です
 
@@ -606,7 +606,7 @@ Categories
 Changing this item is not permitted
 このアイテムの変更は許可されていません
 
-# ui/audit32.c: 192, 201
+# ui/audit32.c: 193, 202
 Checking Game %s - %s
 チェック中 ゲーム %s - %s
 
@@ -622,7 +622,7 @@ Christopher Kirmse and Michael Soderstrom
 Clean stretch
 整数倍に拡大
 
-# ui/properties.c: 3841
+# ui/properties.c: 3846
 Clockwise
 時計回り
 
@@ -762,7 +762,7 @@ Customize interface options.
 Customize which columns are used in the game list
 ゲームリストに用いる表\示項目を設定します
 
-# ui/properties.c: 3840
+# ui/properties.c: 3845
 Default
 デフォルト
 
@@ -826,7 +826,7 @@ Directory does not exist, continue anyway?
 Directory name:
 フォルダ名:
 
-# ui/properties.c: 3692, 3709 
+# ui/properties.c: 3697, 3714 
 Disabled
 無効
 
@@ -853,10 +853,6 @@ Display the properties of the currently selected folder
 # ui/mame32.rc: 1447
 Display the properties of the selected items
 選択アイテムのプロパティを表\示します
-
-# ui/mame32.rc: 1447
-Display the source file properties of the selected game
-選択されたゲームのソ\ースのプロパティを表\示します
 
 # ui/mame32.rc: 1460
 Displays detailed information about each item in the window.
@@ -902,7 +898,7 @@ Double Joy 8-Way
 Draw antialiased vectors
 アンチエイリアス
 
-# ui/properties.c: 3818
+# ui/properties.c: 3823
 Draw every frame
 フレームスキップなし
 
@@ -978,7 +974,7 @@ Enable steadykey support
 Enforce aspect ratio
 表\示比率を固定
 
-# ui/audit32.c: 101 ui/properties.c: 714, 805
+# ui/audit32.c: 102 ui/properties.c: 714, 805
 Error
 エラー
 
@@ -1010,7 +1006,7 @@ Exit the application
 FPS
 FPS
 
-# ui/audit32.c: 453
+# ui/audit32.c: 458
 Failed
 異常です
 
@@ -1018,7 +1014,7 @@ Failed
 Feedback strength
 フィードバックの強さ
 
-# ui/audit32.c: 208 ui/mame32.rc: 401
+# ui/audit32.c: 209 ui/mame32.rc: 401
 File Audit
 ファイル監査
 
@@ -1122,10 +1118,6 @@ Gamma correction
 General
 全般
 
-# ui/properties.c: 1066
-Global folder options\nCustom options used by all games in the %s
-グローバルフォルダオプションです。\n%s内の全ゲームのカスタム設定として使用されます。
-
 # ui/properties.c: 1064
 Global game options\nDefault options used by all games
 グローバルゲームオプションです。\n全ゲームのデフォルト設定として使用されます。
@@ -1150,7 +1142,7 @@ Help
 Hide &mouse cursor (requires restart)
 マウスカーソ\ルを隠す(要再起動)(&M)
 
-# ui/properties.c: 4075
+# ui/properties.c: 4080
 High
 高い
 
@@ -1250,11 +1242,11 @@ Joy 4-Way
 Joy 8-Way
 8方向スティック
 
-# ui/properties.c: 573, 3957
+# ui/properties.c: 573, 3962
 Joystick
 ジョイスティック
 
-# ui/properties.c: 3967
+# ui/properties.c: 3972
 JoystickId
 ジョイスティックID
 
@@ -1366,7 +1358,7 @@ Miscellaneous
 Missing Sound
 サウンド無し
 
-# ui/audit32.c: 457
+# ui/audit32.c: 462
 Missing optional
 追加のROMがありません
 
@@ -1402,7 +1394,7 @@ Name
 New game changes
 新しいゲームの変更点を表\示します
 
-# ui/audit32.c: 124 ui/win32ui.c: 5325
+# ui/audit32.c: 125 ui/win32ui.c: 5325
 No
 いいえ
 
@@ -1426,11 +1418,11 @@ No offset for clones missing parent in view
 Non-Wor&king
 動作不可(&K)
 
-# ui/dialogs.c: 205 ui/properties.c: 389, 401, 416, 434, 487, 499, 3843
+# ui/dialogs.c: 205 ui/properties.c: 389, 401, 416, 434, 487, 499, 3848
 None
 なし
 
-# ui/audit32.c: 301, 305
+# ui/audit32.c: 306, 310
 None required
 必要ありません
 
@@ -1438,7 +1430,7 @@ None required
 Not Working
 動作不可
 
-# ui/audit32.c: 449
+# ui/audit32.c: 454
 Not found
 見つかりません
 
@@ -1506,17 +1498,13 @@ Paddle device
 Palette
 パレット設定
 
-# ui/audit32.c: 440
+# ui/audit32.c: 445
 Passed
 正常です
 
 # ui/mame32.rc: 565
 Pause Brightness
 ポーズ中の明るさ
-
-# ui/treeview.c: 1381
-Pedal
-ペダル
 
 # ui/mame32.rc: 1071
 Pedal device
@@ -2038,47 +2026,47 @@ Show these fields in this order:
 Size:
 サイズ:
 
-# ui/properties.c: 3819
+# ui/properties.c: 3824
 Skip 1 of 12 frames
 12フレームに1回スキップ
 
-# ui/properties.c: 3828
+# ui/properties.c: 3833
 Skip 10 of 12 frames
 12フレームに10回スキップ
 
-# ui/properties.c: 3829
+# ui/properties.c: 3834
 Skip 11 of 12 frames
 12フレームに11回スキップ
 
-# ui/properties.c: 3820
+# ui/properties.c: 3825
 Skip 2 of 12 frames
 12フレームに2回スキップ
 
-# ui/properties.c: 3821
+# ui/properties.c: 3826
 Skip 3 of 12 frames
 12フレームに3回スキップ
 
-# ui/properties.c: 3822
+# ui/properties.c: 3827
 Skip 4 of 12 frames
 12フレームに4回スキップ
 
-# ui/properties.c: 3823
+# ui/properties.c: 3828
 Skip 5 of 12 frames
 12フレームに5回スキップ
 
-# ui/properties.c: 3824
+# ui/properties.c: 3829
 Skip 6 of 12 frames
 12フレームに6回スキップ
 
-# ui/properties.c: 3825
+# ui/properties.c: 3830
 Skip 7 of 12 frames
 12フレームに7回スキップ
 
-# ui/properties.c: 3826
+# ui/properties.c: 3831
 Skip 8 of 12 frames
 12フレームに8回スキップ
 
-# ui/properties.c: 3827
+# ui/properties.c: 3832
 Skip 9 of 12 frames
 12フレームに9回スキップ
 
@@ -2158,23 +2146,11 @@ Sound:
 Sounds (*.wav)
 サウンド (*.wav)
 
-# ui/layout.c: 57 ui/win32ui.c: 800
-Source
-ソ\ースファイル
-
-# ui/mame32.rc: 180 ui/win32ui.c: 3710
-Source Proper&ties
-ソ\ースのプロパティ(&T)
-
-# ui/mame32.rc: 501
-Source:
-ソ\ース:
-
 # ui/mame32.rc: 93, 232, 244
 St&ory
 ストーリー(&O)
 
-# ui/options.c: 476 ui/properties.c: 2579, 2584, 2587, 2834, 2837, 4013, 4036, 4074 
+# ui/options.c: 476 ui/properties.c: 2584, 2589, 2592, 2839, 2842, 4018, 4041, 4079 
 Standard
 標準
 
@@ -2202,7 +2178,7 @@ Story
 Stretch using hardware
 ハードウェア拡大表\示
 
-# ui/properties.c: 1100 ui/treeview.c: 1311, 1312
+# ui/properties.c: 1105 ui/treeview.c: 1311, 1312
 Supported
 対応
 
@@ -2338,7 +2314,7 @@ Type
 USB Keyboard
 USB キーボード
 
-# ui/audit32.c: 101
+# ui/audit32.c: 102
 Unable to Load Riched32.dll
 Riched32.dllが読み込めません
 
@@ -2358,7 +2334,7 @@ Unavailable
 Unemulated Protection
 プロテクトの再現が不完全
 
-# ui/audit32.c: 435 ui/properties.c: 980
+# ui/audit32.c: 440 ui/properties.c: 980
 Unknown
 不明
 
@@ -2366,7 +2342,7 @@ Unknown
 Unknown error.
 原因不明のエラーが発生しました。
 
-# ui/properties.c: 1102 ui/treeview.c: 1314, 1315
+# ui/properties.c: 1107 ui/treeview.c: 1314, 1315
 Unsupported
 未対応
 
@@ -2534,7 +2510,7 @@ Wrong Colors
 Year
 製造年
 
-# ui/audit32.c: 119 ui/win32ui.c: 5323
+# ui/audit32.c: 120 ui/win32ui.c: 5323
 Yes
 はい
 
@@ -2581,4 +2557,40 @@ settings then exit.\n\n
 # ui/dialogs.c: 117
 the next time MAME32 is run.\n\n
 反映されます。\n\n
+
+# ui/properties.c: 949
+%d x %d (H) (%d:%d) %f Hz
+
+
+# ui/properties.c: 937
+%d x %d (V) (%d:%d) %f Hz
+
+
+# ui/properties.c: 1040
+BIOS missing
+
+
+# ui/mame32.rc: 1447
+Display the driver properties of the selected game
+
+
+# ui/layout.c: 57 ui/win32ui.c: 800
+Driver
+
+
+# ui/mame32.rc: 501
+Driver:
+
+
+# ui/properties.c: 1070
+Global driver options\nCustom options used by all games in the %s
+
+
+# ui/properties.c: 1068
+Global vector options\nCustom options used by all games in the Vector
+
+
+# ui/mame32.rc: 65, 180 ui/win32ui.c: 3710
+Proper&ties of Driver
+
 

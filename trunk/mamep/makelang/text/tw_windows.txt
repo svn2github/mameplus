@@ -50,7 +50,7 @@
   Axis %d (%s)%s\n
   軸 %d (%s)%s\n
 
-# windows/config.c: 538
+# windows/config.c: 533
  %s running parameters
  %s 執行參數
 
@@ -486,7 +486,19 @@ Out of memory!\n
 PARTKNOWN %s\n
 部分已知  %s\n
 
-# windows/config.c: 586
+# windows/config.c: 429
+Parsing %s : ERROR\n
+正在分析 %s : 錯誤\n
+
+# windows/config.c: 439
+Parsing %s : N/A\n
+正在分析 %s : N/A\n
+
+# windows/config.c: 434
+Parsing %s : OK\n
+正在分析 %s : OK\n
+
+# windows/config.c: 581
 Playing back previously recorded game %s (%s) [press return]\n
 按一下 [Enter] 播放先前錄製的遊戲 %s (%s)\n
 
@@ -634,7 +646,7 @@ Unable to render to preprocess texture: %08x\n
 Usage:  MAME gamename [options]\n\n
 用法:   MAME 遊戲名稱 [選項]\n\n
 
-# windows/config.c: 545
+# windows/config.c: 540
 Usage: %s [game] [options]\nOptions:\n
 用法: %s [遊戲] [選項]\n選項:\n
 
@@ -726,7 +738,7 @@ Windows 版本視訊選項
 \"%s\" controller support enabled\n
 \"%s\" 控制器支援 啟用\n
 
-# windows/config.c: 639
+# windows/config.c: 634
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" 約略相似下列支援的遊戲\n(依相似度排序):\n\n
 
@@ -1042,11 +1054,11 @@ enforce aspect ratio
 error invalid value for %s: %s\n
 錯誤: 無效的 %s 值: %s\n
 
-# windows/config.c: 488
+# windows/config.c: 483
 error on rc creation\n
 建立 rc 發生錯誤\n
 
-# windows/config.c: 495
+# windows/config.c: 490
 error while parsing cmdline\n
 分析指令時發生錯誤\n
 
@@ -1062,7 +1074,7 @@ error: %s requires an argument\n
 error: couldn't open file: %s\n
 錯誤: 無法開啟檔案: %s\n
 
-# windows/config.c: 870
+# windows/config.c: 872
 error: duplicate gamename: %s\n
 錯誤: 重複的遊戲名稱: %s\n
 
@@ -1130,15 +1142,15 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 錯誤: rc_register_option 記憶體分配失敗\n
 
-# windows/config.c: 998
+# windows/config.c: 1000
 error: malloc failed in win_dirname\n
 錯誤: win_dirname 記憶體分配失敗\n
 
-# windows/config.c: 1038
+# windows/config.c: 1040
 error: malloc failed in win_strip_extension\n
 錯誤: win_strip_extension 記憶體分配失敗\n
 
-# windows/config.c: 886
+# windows/config.c: 888
 error: no gamename given in %s\n
 錯誤: 在 %s 中沒有指定遊戲名稱\n
 
@@ -1158,11 +1170,11 @@ error: unknown option %s\n
 error: unknown option type: %d, this should not happen!\n
 錯誤: 未知的選項類型: %d, 這個選項不應該出現!\n
 
-# windows/config.c: 561
+# windows/config.c: 556
 failed to open %s for playback\n
 開啟 %s 播放失敗\n
 
-# windows/config.c: 687
+# windows/config.c: 689
 failed to open %s for recording\n
 開啟 %s 錄製失敗\n
 
@@ -1278,10 +1290,6 @@ output error log to debugger
 paddle
 操縱桿
 
-# windows/config.c: 424
-parsing %s...
-正在分析 %s...
-
 # windows/fileio.c: 125, 127
 path to ini files
 ini 檔路徑
@@ -1313,10 +1321,6 @@ prefer RDTSC over QueryPerformanceCounter for timing
 # windows/wind3dfx.c: 191
 prescale effect
 預縮放效果
-
-# windows/config.c: 432
-problem parsing %s\n
-正在分析問題 %s\n
 
 # windows/config.c: 252
 record an input file
@@ -1354,7 +1358,7 @@ rotate screen clockwise
 run in a window/run on full screen
 以視窗模式執行/以全螢幕執行
 
-# windows/config.c: 630
+# windows/config.c: 625
 running %s (%s) [press return]
 按一下 [Enter] 執行 %s (%s)
 
