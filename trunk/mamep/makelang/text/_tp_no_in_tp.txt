@@ -3124,9 +3124,6 @@ cvs.c
 # datafile.c: 3065
 \n         CPU:  (1)  (2)  (3)  (4)\n\n
 
-# datafile.c: 3135
-         PEDAL:  %4d\n
-
 # datafile.c: 3199
 \nWARNING: ASPECT RATIO number too high!\n
 
@@ -3148,409 +3145,412 @@ command.dat
 # datafile.c: 3451
 command\\
 
-# debug/debugcmd.c: 81
+# debug/debugcmd.c: 82
 min
 
-# debug/debugcmd.c: 82
+# debug/debugcmd.c: 83
 max
 
-# debug/debugcmd.c: 83
+# debug/debugcmd.c: 84
 if
 
-# debug/debugcmd.c: 86
+# debug/debugcmd.c: 87
 help
 
-# debug/debugcmd.c: 87
+# debug/debugcmd.c: 88
 printf
 
-# debug/debugcmd.c: 88
+# debug/debugcmd.c: 89
 logerror
 
-# debug/debugcmd.c: 89
+# debug/debugcmd.c: 90
 tracelog
 
-# debug/debugcmd.c: 90
+# debug/debugcmd.c: 91
 quit
 
-# debug/debugcmd.c: 91
+# debug/debugcmd.c: 92
 do
 
-# debug/debugcmd.c: 92
+# debug/debugcmd.c: 93
 step
 
-# debug/debugcmd.c: 93
+# debug/debugcmd.c: 94
 s
 
-# debug/debugcmd.c: 94
+# debug/debugcmd.c: 95
 over
 
-# debug/debugcmd.c: 95
+# debug/debugcmd.c: 96
 o
 
-# debug/debugcmd.c: 96
+# debug/debugcmd.c: 97
 out
 
-# debug/debugcmd.c: 97
+# debug/debugcmd.c: 98
 go
 
-# debug/debugcmd.c: 98
+# debug/debugcmd.c: 99
 g
 
-# debug/debugcmd.c: 99
+# debug/debugcmd.c: 100
 gvblank
 
-# debug/debugcmd.c: 100
+# debug/debugcmd.c: 101
 gv
 
-# debug/debugcmd.c: 101
+# debug/debugcmd.c: 102
 gint
 
-# debug/debugcmd.c: 102
+# debug/debugcmd.c: 103
 gi
 
-# debug/debugcmd.c: 103
+# debug/debugcmd.c: 104
 next
 
-# debug/debugcmd.c: 104
+# debug/debugcmd.c: 105
 n
 
-# debug/debugcmd.c: 105
+# debug/debugcmd.c: 106
 focus
 
-# debug/debugcmd.c: 106
+# debug/debugcmd.c: 107
 ignore
 
-# debug/debugcmd.c: 107
+# debug/debugcmd.c: 108
 observe
 
-# debug/debugcmd.c: 109
+# debug/debugcmd.c: 110
 bpset
 
-# debug/debugcmd.c: 110
+# debug/debugcmd.c: 111
 bp
 
-# debug/debugcmd.c: 111
+# debug/debugcmd.c: 112
 bpclear
 
-# debug/debugcmd.c: 112
+# debug/debugcmd.c: 113
 bpdisable
 
-# debug/debugcmd.c: 113
+# debug/debugcmd.c: 114
 bpenable
 
-# debug/debugcmd.c: 114
+# debug/debugcmd.c: 115
 bplist
 
-# debug/debugcmd.c: 116
+# debug/debugcmd.c: 117
 wpset
 
-# debug/debugcmd.c: 117
+# debug/debugcmd.c: 118
 wp
 
-# debug/debugcmd.c: 118
+# debug/debugcmd.c: 119
 wpdset
 
-# debug/debugcmd.c: 119
+# debug/debugcmd.c: 120
 wpd
 
-# debug/debugcmd.c: 120
+# debug/debugcmd.c: 121
 wpiset
 
-# debug/debugcmd.c: 121
+# debug/debugcmd.c: 122
 wpi
 
-# debug/debugcmd.c: 122
+# debug/debugcmd.c: 123
 wpclear
 
-# debug/debugcmd.c: 123
+# debug/debugcmd.c: 124
 wpdisable
 
-# debug/debugcmd.c: 124
+# debug/debugcmd.c: 125
 wpenable
 
-# debug/debugcmd.c: 125
+# debug/debugcmd.c: 126
 wplist
 
-# debug/debugcmd.c: 127
+# debug/debugcmd.c: 128
 hotspot
 
-# debug/debugcmd.c: 129
+# debug/debugcmd.c: 130
 save
 
-# debug/debugcmd.c: 130
+# debug/debugcmd.c: 131
 saved
 
-# debug/debugcmd.c: 131
+# debug/debugcmd.c: 132
 savei
 
-# debug/debugcmd.c: 133
+# debug/debugcmd.c: 134
 dump
 
-# debug/debugcmd.c: 134
+# debug/debugcmd.c: 135
 dumpd
 
-# debug/debugcmd.c: 135
+# debug/debugcmd.c: 136
 dumpi
 
-# debug/debugcmd.c: 137
+# debug/debugcmd.c: 138
 f
 
-# debug/debugcmd.c: 138
+# debug/debugcmd.c: 139
 find
 
-# debug/debugcmd.c: 139
+# debug/debugcmd.c: 140
 fd
 
-# debug/debugcmd.c: 140
+# debug/debugcmd.c: 141
 findd
 
-# debug/debugcmd.c: 141
+# debug/debugcmd.c: 142
 fi
 
-# debug/debugcmd.c: 142
+# debug/debugcmd.c: 143
 findi
 
-# debug/debugcmd.c: 144
+# debug/debugcmd.c: 145
 dasm
 
-# debug/debugcmd.c: 146
+# debug/debugcmd.c: 147
 trace
 
-# debug/debugcmd.c: 147
+# debug/debugcmd.c: 148
 traceover
 
 # debug/debugcmd.c: 149
-snap
+traceflush
 
 # debug/debugcmd.c: 151
-source
+snap
 
 # debug/debugcmd.c: 153
-map
-
-# debug/debugcmd.c: 154
-mapd
+source
 
 # debug/debugcmd.c: 155
-mapi
+map
 
 # debug/debugcmd.c: 156
+mapd
+
+# debug/debugcmd.c: 157
+mapi
+
+# debug/debugcmd.c: 158
 memdump
 
-# debug/debugcmd.c: 220, 237
+# debug/debugcmd.c: 222, 239
 Error in expression: %s\n
 
-# debug/debugcmd.c: 254
+# debug/debugcmd.c: 256
 Error in command: %s\n
 
-# debug/debugcmd.c: 336, 352
+# debug/debugcmd.c: 338, 354
 Not enough parameters for format!
 
-# debug/debugcmd.c: 453
+# debug/debugcmd.c: 455
 Exited via the debugger\n
 
-# debug/debugcmd.c: 577, 1202, 1369, 1476, 1625
+# debug/debugcmd.c: 579, 1204, 1371, 1478, 1627
 Invalid CPU number!
 
-# debug/debugcmd.c: 591
+# debug/debugcmd.c: 593
 Now focused on CPU %d
 
-# debug/debugcmd.c: 617
+# debug/debugcmd.c: 619
 Currently ignoring CPU %d
 
-# debug/debugcmd.c: 624
+# debug/debugcmd.c: 626
 Not currently ignoring any CPUs
 
-# debug/debugcmd.c: 638, 709
+# debug/debugcmd.c: 640, 711
 Invalid CPU number! (%d)
 
-# debug/debugcmd.c: 655
+# debug/debugcmd.c: 657
 Can't ignore all CPUs!\n
 
-# debug/debugcmd.c: 660
+# debug/debugcmd.c: 662
 Now ignoring CPU %d
 
-# debug/debugcmd.c: 688
+# debug/debugcmd.c: 690
 Currently observing CPU %d
 
-# debug/debugcmd.c: 695
+# debug/debugcmd.c: 697
 Not currently observing any CPUs
 
-# debug/debugcmd.c: 718
+# debug/debugcmd.c: 720
 Now observing CPU %d
 
-# debug/debugcmd.c: 750
+# debug/debugcmd.c: 752
 Breakpoint %d set\n
 
-# debug/debugcmd.c: 778
+# debug/debugcmd.c: 780
 Cleared all breakpoints
 
-# debug/debugcmd.c: 788
+# debug/debugcmd.c: 790
 Breakpoint %X cleared
 
-# debug/debugcmd.c: 790, 834
+# debug/debugcmd.c: 792, 836
 Invalid breakpoint number %X
 
-# debug/debugcmd.c: 820
+# debug/debugcmd.c: 822
 Disabled all breakpoints
 
-# debug/debugcmd.c: 822
+# debug/debugcmd.c: 824
 Enabled all breakpoints
 
-# debug/debugcmd.c: 832
+# debug/debugcmd.c: 834
 Breakpoint %X %s
 
-# debug/debugcmd.c: 858
+# debug/debugcmd.c: 860
 CPU %d breakpoints:
 
-# debug/debugcmd.c: 866, 1058
+# debug/debugcmd.c: 868, 1060
  if %s
 
-# debug/debugcmd.c: 868, 1060
+# debug/debugcmd.c: 870, 1062
  do %s
 
-# debug/debugcmd.c: 876
+# debug/debugcmd.c: 878
 No breakpoints currently installed
 
-# debug/debugcmd.c: 902
+# debug/debugcmd.c: 904
 r
 
-# debug/debugcmd.c: 904, 1219, 1492, 1632, 1767
+# debug/debugcmd.c: 906, 1221, 1494, 1634, 1779
 w
 
-# debug/debugcmd.c: 906
+# debug/debugcmd.c: 908
 rw
 
-# debug/debugcmd.c: 906
+# debug/debugcmd.c: 908
 wr
 
-# debug/debugcmd.c: 910
+# debug/debugcmd.c: 912
 Invalid watchpoint type: expected r, w, or rw\n
 
-# debug/debugcmd.c: 924
+# debug/debugcmd.c: 926
 Watchpoint %d set\n
 
-# debug/debugcmd.c: 957
+# debug/debugcmd.c: 959
 Cleared all watchpoints
 
-# debug/debugcmd.c: 967
+# debug/debugcmd.c: 969
 Watchpoint %X cleared
 
-# debug/debugcmd.c: 969, 1018
+# debug/debugcmd.c: 971, 1020
 Invalid watchpoint number %X
 
-# debug/debugcmd.c: 1004
+# debug/debugcmd.c: 1006
 Disabled all watchpoints
 
-# debug/debugcmd.c: 1006
+# debug/debugcmd.c: 1008
 Enabled all watchpoints
 
-# debug/debugcmd.c: 1016
+# debug/debugcmd.c: 1018
 Watchpoint %X %s
 
-# debug/debugcmd.c: 1030
+# debug/debugcmd.c: 1032
 I/O
 
-# debug/debugcmd.c: 1030
+# debug/debugcmd.c: 1032
 data
 
-# debug/debugcmd.c: 1030
+# debug/debugcmd.c: 1032
 program
 
-# debug/debugcmd.c: 1047
+# debug/debugcmd.c: 1049
 r/w  
 
-# debug/debugcmd.c: 1047
+# debug/debugcmd.c: 1049
 read 
 
-# debug/debugcmd.c: 1047
+# debug/debugcmd.c: 1049
 unkn 
 
-# debug/debugcmd.c: 1047
+# debug/debugcmd.c: 1049
 write
 
-# debug/debugcmd.c: 1050
+# debug/debugcmd.c: 1052
 CPU %d %s space watchpoints:
 
-# debug/debugcmd.c: 1070
+# debug/debugcmd.c: 1072
 No watchpoints currently installed
 
-# debug/debugcmd.c: 1098
+# debug/debugcmd.c: 1100
 Cleared hotspot tracking on CPU %d\n
 
-# debug/debugcmd.c: 1121
+# debug/debugcmd.c: 1123
 Now tracking hotspots on CPU %d using %d slots with a threshhold of %d\n
 
-# debug/debugcmd.c: 1123
+# debug/debugcmd.c: 1125
 Error setting up the hotspot tracking\n
 
-# debug/debugcmd.c: 1153
+# debug/debugcmd.c: 1155
 wb
 
-# debug/debugcmd.c: 1156, 1222, 1495, 1644
+# debug/debugcmd.c: 1158, 1224, 1497, 1646
 Error opening file '%s'
 
-# debug/debugcmd.c: 1171
+# debug/debugcmd.c: 1173
 Data saved successfully
 
-# debug/debugcmd.c: 1212
+# debug/debugcmd.c: 1214
 Invalid width! (must be 1,2,4 or 8)
 
-# debug/debugcmd.c: 1340, 1596
+# debug/debugcmd.c: 1342, 1598
 Data dumped successfully
 
-# debug/debugcmd.c: 1385
+# debug/debugcmd.c: 1387
 ' && pdata[strlen(pdata) - 1] == '
 
-# debug/debugcmd.c: 1439
+# debug/debugcmd.c: 1441
 Found at %08X\n
 
-# debug/debugcmd.c: 1446
+# debug/debugcmd.c: 1448
 Not found\n
 
-# debug/debugcmd.c: 1545
+# debug/debugcmd.c: 1547
 <unmapped>
 
-# debug/debugcmd.c: 1621
+# debug/debugcmd.c: 1623
 off
 
-# debug/debugcmd.c: 1637
+# debug/debugcmd.c: 1639
 a
 
-# debug/debugcmd.c: 1652
+# debug/debugcmd.c: 1654
 Tracing CPU %d to file %s\n
 
-# debug/debugcmd.c: 1654
+# debug/debugcmd.c: 1656
 Stopped tracing on CPU %d\n
 
-# debug/debugcmd.c: 1688
+# debug/debugcmd.c: 1700
 Saved snapshot\n
 
-# debug/debugcmd.c: 1696
+# debug/debugcmd.c: 1708
 Error creating file '%s'\n
 
-# debug/debugcmd.c: 1701
+# debug/debugcmd.c: 1713
 Saved snapshot as '%s'\n
 
-# debug/debugcmd.c: 1738
+# debug/debugcmd.c: 1750
 %08X logical -> %08X physical\n
 
-# debug/debugcmd.c: 1741
+# debug/debugcmd.c: 1753
 %08X logical -> unmapped\n
 
-# debug/debugcmd.c: 1746
+# debug/debugcmd.c: 1758
 %08X physical\n
 
-# debug/debugcmd.c: 1749
+# debug/debugcmd.c: 1761
   -> read: %s\n
 
-# debug/debugcmd.c: 1750
+# debug/debugcmd.c: 1762
   -> write: %s\n
 
-# debug/debugcmd.c: 1763
+# debug/debugcmd.c: 1775
 memdump.log
 
-# debug/debugcmd.c: 1765
+# debug/debugcmd.c: 1777
 Dumping memory to %s\n
 
 # debug/debugcon.c: 80
@@ -3598,97 +3598,97 @@ data
 # debug/debugcpu.c: 46
 program
 
-# debug/debugcpu.c: 167
+# debug/debugcpu.c: 166
 set_ea_info: invalid <size>!
 
-# debug/debugcpu.c: 249
+# debug/debugcpu.c: 248
 wpaddr
 
-# debug/debugcpu.c: 250
+# debug/debugcpu.c: 249
 wpdata
 
-# debug/debugcpu.c: 251
+# debug/debugcpu.c: 250
 cycles
 
-# debug/debugcpu.c: 252
+# debug/debugcpu.c: 251
 cpunum
 
-# debug/debugcpu.c: 258
+# debug/debugcpu.c: 257
 temp%d
 
-# debug/debugcpu.c: 715
+# debug/debugcpu.c: 714
 Stopped on interrupt (CPU %d, IRQ %d)\n
 
-# debug/debugcpu.c: 732
+# debug/debugcpu.c: 731
 Stopped at temporary breakpoint %X on CPU %d\n
 
-# debug/debugcpu.c: 768
+# debug/debugcpu.c: 767
 User-initiated break\n
 
-# debug/debugcpu.c: 874
+# debug/debugcpu.c: 873
 \n   (loops for %d instructions)\n\n
 
-# debug/debugcpu.c: 998
+# debug/debugcpu.c: 1005
 Stopped at VBLANK\n
 
-# debug/debugcpu.c: 1104
+# debug/debugcpu.c: 1111
 Stopped at breakpoint %X
 
-# debug/debugcpu.c: 1261
+# debug/debugcpu.c: 1268
 0bytes
 
-# debug/debugcpu.c: 1261
+# debug/debugcpu.c: 1268
 3bytes
 
-# debug/debugcpu.c: 1261
+# debug/debugcpu.c: 1268
 5bytes
 
-# debug/debugcpu.c: 1261
+# debug/debugcpu.c: 1268
 6bytes
 
-# debug/debugcpu.c: 1261
+# debug/debugcpu.c: 1268
 7bytes
 
-# debug/debugcpu.c: 1261
+# debug/debugcpu.c: 1268
 byte
 
-# debug/debugcpu.c: 1261
+# debug/debugcpu.c: 1268
 dword
 
-# debug/debugcpu.c: 1261
+# debug/debugcpu.c: 1268
 qword
 
-# debug/debugcpu.c: 1261
+# debug/debugcpu.c: 1268
 word
 
-# debug/debugcpu.c: 1277
+# debug/debugcpu.c: 1284
 Stopped at watchpoint %X writing %s to %08X
 
-# debug/debugcpu.c: 1279
+# debug/debugcpu.c: 1286
  (data=%X%08X)
 
-# debug/debugcpu.c: 1281
+# debug/debugcpu.c: 1288
  (data=%X)
 
-# debug/debugcpu.c: 1284
+# debug/debugcpu.c: 1291
 Stopped at watchpoint %X reading %s from %08X
 
-# debug/debugcpu.c: 1447
+# debug/debugcpu.c: 1454
 Out of memory allocating hotspot info
 
-# debug/debugcpu.c: 1481
+# debug/debugcpu.c: 1488
 Hotspot @ %s %08X (PC=%08X) hit %d times (fell off bottom)\n
 
-# debug/debugcpu.c: 1867
+# debug/debugcpu.c: 1874
 debug_read_opcode: unknown type = %d\n
 
-# debug/debugcpu.c: 1882
+# debug/debugcpu.c: 1889
 debug_read_opcode: address %x mapped to invalid memory %p\n
 
-# debug/debugcpu.c: 1979
+# debug/debugcpu.c: 1986
 r
 
-# debug/debugcpu.c: 1981
+# debug/debugcpu.c: 1988
 Cannot open command file '%s'\n
 
 # debug/debughlp.c: 56
@@ -3869,87 +3869,93 @@ traceover
 \n  traceover {<filename>|OFF}[,<cpunum>[,<action>]]\n\nStarts or stops tracing of the execution of the specified <cpunum>. When tracing reaches\na subroutine or call, tracing will skip over the subroutine. The same algorithm is used as is\nused in the step over command. This means that traceover will not work properly when calls\nare recusive or the return address is not immediately following the call instruction. If\n<cpunum> is omitted, the currently active CPU is specified. When enabling tracing, specify the\nfilename in the <filename> parameter. To disable tracing, substitute the keyword 'off' for\n<filename>. If you wish to log additional information on each trace, you can append an <action>\nparameter which is a command that is executed before each trace is logged. Generally, this is\nused to include a 'tracelog' command. Note that you may need to embed the action within braces\n{ } in order to prevent commas and semicolons from being interpreted as applying to the trace\ncommand itself.\n\nExamples:\n\ntraceover dribling.tr,0\n  Begin tracing the execution of CPU #0, logging output to dribling.tr.\n\ntraceover joust.tr\n  Begin tracing the currently active CPU, logging output to joust.tr.\n\ntraceover off,0\n  Turn off tracing on CPU #0.\n\ntraceover asteroid.tr,0,{tracelog \"A=%02X \",a}\n  Begin tracing the execution of CPU #0, logging output to asteroid.tr. Before each line,\n  output A=<aval> to the tracelog.\n\n
 
 # debug/debughlp.c: 663
-bpset
+traceflush
 
 # debug/debughlp.c: 664
+\n  traceflush\n\nFlushes all open trace files.\n
+
+# debug/debughlp.c: 670
+bpset
+
+# debug/debughlp.c: 671
 \n  bp[set] <address>[,<condition>[,<action>]]\n\nSets a new execution breakpoint at the specified <address>. The optional <condition>\nparameter lets you specify an expression that will be evaluated each time the breakpoint is\nhit. If the result of the expression is true (non-zero), the breakpoint will actually halt\nexecution; otherwise, execution will continue with no notification. The optional <action>\nparameter provides a command that is executed whenever the breakpoint is hit and the\n<condition> is true. Note that you may need to embed the action within braces { } in order\nto prevent commas and semicolons from being interpreted as applying to the bpset command\nitself. Each breakpoint that is set is assigned an index which can be used in other\nbreakpoint commands to reference this breakpoint.\n\nExamples:\n\nbp 1234\n  Set a breakpoint that will halt execution whenever the PC is equal to 1234.\n\nbp 23456,a0 == 0 && a1 == 0\n  Set a breakpoint that will halt execution whenever the PC is equal to 23456 AND the\n  expression (a0 == 0 && a1 == 0) is true.\n\nbp 3456,1,{printf \"A0=%08X\\n\",a0; g}\n  Set a breakpoint that will halt execution whenever the PC is equal to 3456. When\n  this happens, print A0=<a0val> and continue executing.\n\nbp 45678,a0==100,{do a0 = ff; g}\n  Set a breakpoint that will halt execution whenever the PC is equal to 45678 AND the\n  expression (a0 == 100) is true. When that happens, set a0 to ff and resume execution.\n\ndo temp0 = 0; bp 567890,++temp0 >= 10\n  Set a breakpoint that will halt execution whenever the PC is equal to 567890 AND the\n  expression (++temp0 >= 10) is true. This effectively breaks only after the breakpoint\n  has been hit 16 times.\n\n
 
-# debug/debughlp.c: 701
+# debug/debughlp.c: 708
 bpclear
 
-# debug/debughlp.c: 702
+# debug/debughlp.c: 709
 \n  bpclear [<bpnum>]\n\nThe bpclear command clears a breakpoint. If <bpnum> is specified, only the requested\nbreakpoint is cleared, otherwise all breakpoints are cleared.\n\nExamples:\n\nbpclear 3\n  Clear breakpoint index 3.\n\nbpclear\n  Clear all breakpoints.\n\n
 
-# debug/debughlp.c: 718
+# debug/debughlp.c: 725
 bpdisable
 
-# debug/debughlp.c: 719
+# debug/debughlp.c: 726
 \n  bpdisable [<bpnum>]\n\nThe bpdisable command disables a breakpoint. If <bpnum> is specified, only the requested\nbreakpoint is disabled, otherwise all breakpoints are disabled. Note that disabling a\nbreakpoint does not delete it, it just temporarily marks the breakpoint as inactive.\n\nExamples:\n\nbpdisable 3\n  Disable breakpoint index 3.\n\nbpdisable\n  Disable all breakpoints.\n\n
 
-# debug/debughlp.c: 736
+# debug/debughlp.c: 743
 bpenable
 
-# debug/debughlp.c: 737
+# debug/debughlp.c: 744
 \n  bpenable [<bpnum>]\n\nThe bpenable command enables a breakpoint. If <bpnum> is specified, only the requested\nbreakpoint is enabled, otherwise all breakpoints are enabled.\n\nExamples:\n\nbpenable 3\n  Enable breakpoint index 3.\n\nbpenable\n  Enable all breakpoints.\n\n
 
-# debug/debughlp.c: 753
+# debug/debughlp.c: 760
 bplist
 
-# debug/debughlp.c: 754
+# debug/debughlp.c: 761
 \n  bplist\n\nThe bplist command lists all the current breakpoints, along with their index and any\nconditions or actions attached to them.\n\n
 
-# debug/debughlp.c: 762
+# debug/debughlp.c: 769
 wpset
 
-# debug/debughlp.c: 763
+# debug/debughlp.c: 770
 \n  wp[{d|i}][set] <address>,<length>,<type>[,<condition>[,<action>]]\n\nSets a new watchpoint starting at the specified <address> and extending for <length>. The\ninclusive range of the watchpoint is <address> through <address> + <length> - 1. The 'wpset'\ncommand sets a watchpoint on program memory; the 'wpdset' command sets a watchpoint on data\nmemory; and the 'wpiset' sets a watchpoint on I/O memory. The <type> parameter specifies\nwhich sort of accesses to trap on. It can be one of three values: 'r' for a read watchpoint\n'w' for a write watchpoint, and 'rw' for a read/write watchpoint.\n\nThe optional <condition> parameter lets you specify an expression that will be evaluated each\ntime the watchpoint is hit. If the result of the expression is true (non-zero), the watchpoint\nwill actually halt execution; otherwise, execution will continue with no notification. The\noptional <action> parameter provides a command that is executed whenever the watchpoint is hit\nand the <condition> is true. Note that you may need to embed the action within braces { } in\norder to prevent commas and semicolons from being interpreted as applying to the wpset command\nitself. Each watchpoint that is set is assigned an index which can be used in other\nwatchpoint commands to reference this watchpoint.\n\nIn order to help <condition> expressions, two variables are available. For all watchpoints,\nthe variable 'wpaddr' is set to the address that actually triggered the watchpoint. For write\nwatchpoints, the variable 'wpdata' is set to the data that is being written.\n\nExamples:\n\nwp 1234,6,rw\n  Set a watchpoint that will halt execution whenever a read or write occurs in the address\n  range 1234-1239 inclusive.\n\nwp 23456,a,w,wpdata == 1\n  Set a watchpoint that will halt execution whenever a write occurs in the address range\n  23456-2345f AND the data written is equal to 1.\n\nwp 3456,20,r,1,{printf \"Read @ %08X\\n\",wpaddr; g}\n  Set a watchpoint that will halt execution whenever a read occurs in the address range\n  3456-3475. When this happens, print Read @ <wpaddr> and continue executing.\n\ndo temp0 = 0; wp 45678,1,writeval==f0,{do temp0++; g}\n  Set a watchpoint that will halt execution whenever a write occurs to the address 45678 AND\n  the value being written is equal to f0. When that happens, increment the variable temp0 and\n  resume execution.\n\n
 
-# debug/debughlp.c: 807
+# debug/debughlp.c: 814
 wpclear
 
-# debug/debughlp.c: 808
+# debug/debughlp.c: 815
 \n  wpclear [<wpnum>]\n\nThe wpclear command clears a watchpoint. If <wpnum> is specified, only the requested\nwatchpoint is cleared, otherwise all watchpoints are cleared.\n\nExamples:\n\nwpclear 3\n  Clear watchpoint index 3.\n\nwpclear\n  Clear all watchpoints.\n\n
 
-# debug/debughlp.c: 824
+# debug/debughlp.c: 831
 wpdisable
 
-# debug/debughlp.c: 825
+# debug/debughlp.c: 832
 \n  wpdisable [<wpnum>]\n\nThe wpdisable command disables a watchpoint. If <wpnum> is specified, only the requested\nwatchpoint is disabled, otherwise all watchpoints are disabled. Note that disabling a\nwatchpoint does not delete it, it just temporarily marks the watchpoint as inactive.\n\nExamples:\n\nwpdisable 3\n  Disable watchpoint index 3.\n\nwpdisable\n  Disable all watchpoints.\n\n
 
-# debug/debughlp.c: 842
+# debug/debughlp.c: 849
 wpenable
 
-# debug/debughlp.c: 843
+# debug/debughlp.c: 850
 \n  wpenable [<wpnum>]\n\nThe wpenable command enables a watchpoint. If <wpnum> is specified, only the requested\nwatchpoint is enabled, otherwise all watchpoints are enabled.\n\nExamples:\n\nwpenable 3\n  Enable watchpoint index 3.\n\nwpenable\n  Enable all watchpoints.\n\n
 
-# debug/debughlp.c: 859
+# debug/debughlp.c: 866
 wplist
 
-# debug/debughlp.c: 860
+# debug/debughlp.c: 867
 \n  wplist\n\nThe wplist command lists all the current watchpoints, along with their index and any\nconditions or actions attached to them.\n\n
 
-# debug/debughlp.c: 868
+# debug/debughlp.c: 875
 hotspot
 
-# debug/debughlp.c: 869
+# debug/debughlp.c: 876
 \n  hotspot [<cpunum>,[<depth>[,<hits>]]]\n\nThe hotspot command attempts to help locate hotspots in the code where speedup opportunities\nmight be present. <cpunum>, which defaults to the currently active CPU, specified which\nprocessor's memory to track. <depth>, which defaults to 64, controls the depth of the search\nbuffer. The search buffer tracks the last <depth> memory reads from unique PCs. The <hits>\nparameter, which defaults to 250, specifies the minimum number of hits to report.\n\nThe basic theory of operation is like this: each memory read is trapped by the debugger and\nlogged in the search buffer according to the address which was read and the PC that executed\nthe opcode. If the search buffer already contains a matching entry, that entry's count is\nincremented and the entry is moved to the top of the list. If the search buffer does not\ncontain a matching entry, the entry from the bottom of the list is removed, and a new entry\nis created at the top with an initial count of 1. Entries which fall off the bottom are\nexamined and if their count is larger than <hits>, they are reported to the debugger\nconsole.\n\nExamples:\n\nhotspot 0,10\n  Looks for hotspots on CPU 0 using a search buffer of 16 entries, reporting any entries which\n  end up with 250 or more hits.\n\nhotspot 1,40,#1000\n  Looks for hotspots on CPU 1 using a search buffer of 64 entries, reporting any entries which\n  end up with 1000 or more hits.\n
 
-# debug/debughlp.c: 898
+# debug/debughlp.c: 905
 map
 
-# debug/debughlp.c: 899
+# debug/debughlp.c: 906
 \n  map[{d|i}] <address>\n\nThe map/mapd/mapi commands map a logical address in memory to the correct physical address, as\nwell as specifying the bank. 'map' will map program space memory, while 'mapd' will map data space\nmemory and 'mapi' will map I/O space memory.\n\nExample:\n\nmap 152d0\n  Gives physical address and bank for logical address 152d0 in program memory\n\n
 
-# debug/debughlp.c: 913
+# debug/debughlp.c: 920
 memdump
 
-# debug/debughlp.c: 914
+# debug/debughlp.c: 921
 \n  memdump [<filename>]\n\nDumps the current memory map to <filename>. If <filename> is omitted, then dumps\nto memdump.log\nExamples:\n\nmemdump mylog.log\n  Dumps memory to mylog.log.\n\nmemdump\n  Dumps memory to memdump.log.\n\n
 
-# debug/debughlp.c: 971
+# debug/debughlp.c: 978
 Ambiguous help request, did you mean:\n
 
-# debug/debughlp.c: 974
+# debug/debughlp.c: 981
   help %s?\n
 
 # debug/debugvw.c: 365, 1447, 2051
@@ -5110,7 +5116,7 @@ mono
 # drivers/8080bw.c: 124, 199, 250, 315, 401, 453, 508, 570, 652, 742, 828, 879, 930, 982, 1035, 1086, 1140, 1210, 1221, 1284, 1343, 1423, 1479, 1554, 1648, 1745, 1783, 1822, 1887, 1935, 1986, 2086, 2188, 2238, 2295, 2480, 2533, 2568, 2618, 2661, 2716, 2776, 2847, 2894, 2943, 2999, 3054, 3154, 3205, 3258
 IN0
 
-# drivers/8080bw.c: 134, 209, 260, 325, 411, 463, 518, 580, 662, 752, 838, 889, 940, 992, 1045, 1096, 1150, 1289, 1350, 1433, 1486, 1564, 1658, 1786, 1825, 1897, 1942, 1996, 2100, 2195, 2248, 2304, 2438, 2489, 2536, 2571, 2628, 2671, 2726, 2786, 2858, 2904, 2914, 2954, 3009, 3064, 3164, 3215
+# drivers/8080bw.c: 134, 209, 260, 325, 411, 463, 518, 580, 662, 752, 838, 889, 940, 992, 1045, 1096, 1150, 1289, 1350, 1433, 1486, 1564, 1658, 1786, 1825, 1897, 1942, 1996, 2100, 2195, 2248, 2304, 2438, 2489, 2536, 2571, 2628, 2671, 2726, 2786, 2858, 2904, 2914, 2954, 3009, 3064, 3164, 3215, 3404
 IN1
 
 # drivers/8080bw.c: 144, 219, 270, 335, 421, 473, 528, 590, 672, 762, 848, 899, 950, 1002, 1055, 1107, 1160, 1231, 1574, 1668, 1754, 2006, 2110, 2417, 2681, 2736, 2868, 2964, 3021, 3074, 3225, 3268
@@ -5500,76 +5506,79 @@ Number of Catch Animals
 # drivers/8080bw.c: 3285
 DUMMY
 
-# drivers/8080bw.c: 4193
+# drivers/8080bw.c: 3377
+DSW
+
+# drivers/8080bw.c: 4294
 Sea Wolf
 
-# drivers/8080bw.c: 4194
+# drivers/8080bw.c: 4295
 Gun Fight
 
-# drivers/8080bw.c: 4195
+# drivers/8080bw.c: 4296
 Tornado Baseball
 
-# drivers/8080bw.c: 4196
+# drivers/8080bw.c: 4297
 Datsun 280 Zzzap
 
-# drivers/8080bw.c: 4197
+# drivers/8080bw.c: 4298
 Amazing Maze
 
-# drivers/8080bw.c: 4198
+# drivers/8080bw.c: 4299
 Boot Hill
 
-# drivers/8080bw.c: 4199
+# drivers/8080bw.c: 4300
 Checkmate
 
-# drivers/8080bw.c: 4200
+# drivers/8080bw.c: 4301
 Desert Gun
 
-# drivers/8080bw.c: 4201
+# drivers/8080bw.c: 4302
 Double Play
 
-# drivers/8080bw.c: 4202
+# drivers/8080bw.c: 4303
 Laguna Racer
 
-# drivers/8080bw.c: 4203
+# drivers/8080bw.c: 4304
 Guided Missile
 
-# drivers/8080bw.c: 4204
+# drivers/8080bw.c: 4305
 M-4
 
-# drivers/8080bw.c: 4205
+# drivers/8080bw.c: 4306
 Clowns (rev. 2)
 
-# drivers/8080bw.c: 4206
+# drivers/8080bw.c: 4307
 Clowns (rev. 1)
 
-# drivers/8080bw.c: 4208
+# drivers/8080bw.c: 4309
 Extra Inning
 
-# drivers/8080bw.c: 4209
+# drivers/8080bw.c: 4310
 Shuffleboard
 
-# drivers/8080bw.c: 4210
+# drivers/8080bw.c: 4311
 Dog Patch
 
-# drivers/8080bw.c: 4211
+# drivers/8080bw.c: 4312
 Space Encounters
 
-# drivers/8080bw.c: 4212
+# drivers/8080bw.c: 4313
 Phantom II
 
-# drivers/8080bw.c: 4213
+# drivers/8080bw.c: 4314
 4 Player Bowling Alley
 
-# drivers/8080bw.c: 4214
+# drivers/8080bw.c: 4315
 Space Invaders
 
-# drivers/8080bw.c: 4215
+# drivers/8080bw.c: 4316
 Blue Shark
 
-# drivers/8080bw.c: 4216
+# drivers/8080bw.c: 4317
 Space Invaders II (Midway, cocktail)
 
-# drivers/8080bw.c: 4217
+# drivers/8080bw.c: 4318
 Space Invaders Deluxe
 
 # drivers/88games.c: 66
@@ -7972,40 +7981,40 @@ Never
 # drivers/beezer.c: 116, 119
 mono
 
-# drivers/berzerk.c: 81
+# drivers/berzerk.c: 57
 1 Coin/10 Credits
 
-# drivers/berzerk.c: 81
+# drivers/berzerk.c: 57
 1 Coin/14 Credits
 
-# drivers/berzerk.c: 81
+# drivers/berzerk.c: 57
 Coin 
 
-# drivers/berzerk.c: 136, 236
+# drivers/berzerk.c: 112, 212
 Input Test Mode
 
-# drivers/berzerk.c: 139, 239
+# drivers/berzerk.c: 115, 215
 Crosshair Pattern
 
-# drivers/berzerk.c: 150
+# drivers/berzerk.c: 126
 Color Test
 
-# drivers/berzerk.c: 155
+# drivers/berzerk.c: 131
 5000 and 10000
 
-# drivers/berzerk.c: 174, 308
+# drivers/berzerk.c: 150, 284
 Stats
 
-# drivers/berzerk.c: 246
+# drivers/berzerk.c: 222
 Coins/Credit B
 
-# drivers/berzerk.c: 266
+# drivers/berzerk.c: 242
 Coins/Credit A
 
-# drivers/berzerk.c: 286
+# drivers/berzerk.c: 262
 Coin Multiplier
 
-# drivers/berzerk.c: 337, 341
+# drivers/berzerk.c: 313, 317
 mono
 
 # drivers/bestleag.c: 276
@@ -9250,28 +9259,28 @@ Game Sec/Real Sec
 # drivers/cave.c: 424
 *10011xxxx
 
-# drivers/cave.c: 1558
+# drivers/cave.c: 1559
 2 Co./1 Cr./1 Cont.
 
-# drivers/cave.c: 1574
+# drivers/cave.c: 1575
 150k/350k
 
-# drivers/cave.c: 1575
+# drivers/cave.c: 1576
 Damage
 
-# drivers/cave.c: 1584
+# drivers/cave.c: 1585
 Medium Hard
 
-# drivers/cave.c: 1585
+# drivers/cave.c: 1586
 Hard 1
 
-# drivers/cave.c: 1586
+# drivers/cave.c: 1587
 Hard 2
 
-# drivers/cave.c: 2118, 2122, 2157, 2161, 2196, 2200, 2205, 2238, 2242, 2274, 2278, 2311, 2315, 2354, 2358, 2360, 2362, 2364, 2369, 2404, 2408, 2448, 2452, 2454, 2456, 2458, 2463, 2503, 2507, 2512, 2517, 2559, 2563, 2565, 2567, 2569, 2574, 2579, 2620, 2623, 2628, 2633, 2665, 2669
+# drivers/cave.c: 2119, 2123, 2158, 2162, 2197, 2201, 2206, 2239, 2243, 2275, 2279, 2312, 2316, 2355, 2359, 2361, 2363, 2365, 2370, 2405, 2409, 2449, 2453, 2455, 2457, 2459, 2464, 2504, 2508, 2513, 2518, 2560, 2564, 2566, 2568, 2570, 2575, 2580, 2621, 2624, 2629, 2634, 2666, 2670
 left
 
-# drivers/cave.c: 2118, 2123, 2157, 2162, 2196, 2201, 2206, 2238, 2243, 2274, 2279, 2311, 2316, 2354, 2359, 2361, 2363, 2365, 2370, 2404, 2409, 2448, 2453, 2455, 2457, 2459, 2464, 2503, 2508, 2513, 2518, 2559, 2564, 2566, 2568, 2570, 2575, 2580, 2620, 2624, 2629, 2634, 2665, 2670
+# drivers/cave.c: 2119, 2124, 2158, 2163, 2197, 2202, 2207, 2239, 2244, 2275, 2280, 2312, 2317, 2355, 2360, 2362, 2364, 2366, 2371, 2405, 2410, 2449, 2454, 2456, 2458, 2460, 2465, 2504, 2509, 2514, 2519, 2560, 2565, 2567, 2569, 2571, 2576, 2581, 2621, 2625, 2630, 2635, 2666, 2671
 right
 
 # drivers/cball.c: 135
@@ -9461,10 +9470,10 @@ Demo mode
 Diag Step
 
 # drivers/centiped.c: 1036
-Upright (no overlay)
+Upright (overlay)
 
 # drivers/centiped.c: 1037
-Cocktail (overlay)
+Cocktail (no overlay)
 
 # drivers/centiped.c: 1055
 Music
@@ -11344,10 +11353,10 @@ left
 # drivers/crshrace.c: 651, 656, 658
 right
 
-# drivers/crystal.c: 845, 849
+# drivers/crystal.c: 848, 852
 left
 
-# drivers/crystal.c: 845, 850
+# drivers/crystal.c: 848, 853
 right
 
 # drivers/cshooter.c: 260
@@ -12016,505 +12025,508 @@ Extend
 # drivers/ddayjlc.c: 431, 435, 438
 mono
 
-# drivers/ddenlovr.c: 181
+# drivers/ddenlovr.c: 182
 warning dynax_blit_flip = %02x
 
-# drivers/ddenlovr.c: 291
+# drivers/ddenlovr.c: 292
 GFX ROM OVER %06x
 
-# drivers/ddenlovr.c: 314
+# drivers/ddenlovr.c: 315
 %06x: warning unknown pixel command %02x
 
-# drivers/ddenlovr.c: 344, 425
+# drivers/ddenlovr.c: 345, 426
 warning: pen_size %d arg_size %d
 
-# drivers/ddenlovr.c: 598
+# drivers/ddenlovr.c: 599
 LINE X
 
-# drivers/ddenlovr.c: 601
+# drivers/ddenlovr.c: 602
 LINE X clipx=%03x clipy=%03x ctrl=%x
 
-# drivers/ddenlovr.c: 604
+# drivers/ddenlovr.c: 605
 LINE X flip=%x
 
-# drivers/ddenlovr.c: 628
+# drivers/ddenlovr.c: 629
 LINE Y
 
-# drivers/ddenlovr.c: 631
+# drivers/ddenlovr.c: 632
 LINE Y clipx=%03x clipy=%03x ctrl=%x
 
-# drivers/ddenlovr.c: 781, 952, 1150
+# drivers/ddenlovr.c: 782, 953, 1151
 unknown blitter command %02x
 
-# drivers/ddenlovr.c: 1339
+# drivers/ddenlovr.c: 1340
 priority = %02x
 
-# drivers/ddenlovr.c: 1354
+# drivers/ddenlovr.c: 1355
 priority2 = %02x
 
-# drivers/ddenlovr.c: 2711, 3106
+# drivers/ddenlovr.c: 2712, 3107
 Unknown 1-1
 
-# drivers/ddenlovr.c: 2714, 3109, 3242
+# drivers/ddenlovr.c: 2715, 3110, 3243
 Unknown 1-2
 
-# drivers/ddenlovr.c: 2717, 3112, 3245, 3416, 3642
+# drivers/ddenlovr.c: 2718, 3113, 3246, 3417, 3643
 Unknown 1-3
 
-# drivers/ddenlovr.c: 2720, 3065, 3248, 3419, 3645
+# drivers/ddenlovr.c: 2721, 3066, 3249, 3420, 3646
 Unknown 1-4
 
-# drivers/ddenlovr.c: 2723, 2878
+# drivers/ddenlovr.c: 2724, 2879
 Unknown 1-5*
 
-# drivers/ddenlovr.c: 2726, 2783
+# drivers/ddenlovr.c: 2727, 2784
 Unknown 1-6*
 
-# drivers/ddenlovr.c: 2729, 2786, 3160
+# drivers/ddenlovr.c: 2730, 2787, 3161
 Unknown 1-7*
 
-# drivers/ddenlovr.c: 2791
+# drivers/ddenlovr.c: 2792
 Unknown 2-0&1*
 
-# drivers/ddenlovr.c: 2796, 3085
+# drivers/ddenlovr.c: 2797, 3086
 Unknown 2-2
 
-# drivers/ddenlovr.c: 2799
+# drivers/ddenlovr.c: 2800
 Unknown 2-3*
 
-# drivers/ddenlovr.c: 2802, 3176, 4297
+# drivers/ddenlovr.c: 2803, 3177, 4298
 Unknown 2-4*
 
-# drivers/ddenlovr.c: 2805, 3179, 4300
+# drivers/ddenlovr.c: 2806, 3180, 4301
 Unknown 2-5*
 
-# drivers/ddenlovr.c: 2808, 3182
+# drivers/ddenlovr.c: 2809, 3183
 Unknown 2-6*
 
-# drivers/ddenlovr.c: 2811, 3185
+# drivers/ddenlovr.c: 2812, 3186
 Unknown 2-7*
 
-# drivers/ddenlovr.c: 2816
+# drivers/ddenlovr.c: 2817
 Unknown 1-8*
 
-# drivers/ddenlovr.c: 2820
+# drivers/ddenlovr.c: 2821
 Unknown 2-8*
 
-# drivers/ddenlovr.c: 2823
+# drivers/ddenlovr.c: 2824
 Unknown 2-9*
 
-# drivers/ddenlovr.c: 2827, 2916
+# drivers/ddenlovr.c: 2828, 2917
 8 OPTION
 
-# drivers/ddenlovr.c: 2827, 2916
+# drivers/ddenlovr.c: 2828, 2917
 Detailed Tests
 
-# drivers/ddenlovr.c: 2881
+# drivers/ddenlovr.c: 2882
 Unknown 1-6&7
 
-# drivers/ddenlovr.c: 2888
+# drivers/ddenlovr.c: 2889
 Unknown 2-0&1
 
-# drivers/ddenlovr.c: 2893, 3437, 3663
+# drivers/ddenlovr.c: 2894, 3438, 3664
 Unknown 2-2&3
 
-# drivers/ddenlovr.c: 2898, 3091
+# drivers/ddenlovr.c: 2899, 3092
 Unknown 2-4
 
-# drivers/ddenlovr.c: 2901, 3094, 3276
+# drivers/ddenlovr.c: 2902, 3095, 3277
 Unknown 2-5
 
-# drivers/ddenlovr.c: 2904, 3097
+# drivers/ddenlovr.c: 2905, 3098
 Unknown 2-6
 
-# drivers/ddenlovr.c: 2907
+# drivers/ddenlovr.c: 2908
 Unknown 2-7
 
-# drivers/ddenlovr.c: 2912
+# drivers/ddenlovr.c: 2913
 Unknown 3-0
 
-# drivers/ddenlovr.c: 2919
+# drivers/ddenlovr.c: 2920
 Unknown 3-3
 
-# drivers/ddenlovr.c: 2997
+# drivers/ddenlovr.c: 2998
 VS Round
 
-# drivers/ddenlovr.c: 3017
+# drivers/ddenlovr.c: 3018
 Select Round
 
-# drivers/ddenlovr.c: 3071
+# drivers/ddenlovr.c: 3072
 Unknown 1-6
 
-# drivers/ddenlovr.c: 3074, 3190
+# drivers/ddenlovr.c: 3075, 3191
 Set Date
 
-# drivers/ddenlovr.c: 3079
+# drivers/ddenlovr.c: 3080
 Unknown 2-0
 
-# drivers/ddenlovr.c: 3082
+# drivers/ddenlovr.c: 3083
 Unknown 2-1
 
-# drivers/ddenlovr.c: 3088
+# drivers/ddenlovr.c: 3089
 Unknown 2-3
 
-# drivers/ddenlovr.c: 3103
+# drivers/ddenlovr.c: 3104
 Unknown 1-0
 
-# drivers/ddenlovr.c: 3154, 4275
+# drivers/ddenlovr.c: 3155, 4276
 Linked Cabinets
 
-# drivers/ddenlovr.c: 3165
+# drivers/ddenlovr.c: 3166
 Unknown 2-0*
 
-# drivers/ddenlovr.c: 3171, 4292
+# drivers/ddenlovr.c: 3172, 4293
 Unknown 2-2&3*
 
-# drivers/ddenlovr.c: 3194, 3293
+# drivers/ddenlovr.c: 3195, 3294
 Unknown 3-2*
 
-# drivers/ddenlovr.c: 3197
+# drivers/ddenlovr.c: 3198
 Unknown 3-3*
 
-# drivers/ddenlovr.c: 3200, 3297
+# drivers/ddenlovr.c: 3201, 3298
 Unknown 3-4
 
-# drivers/ddenlovr.c: 3203, 3300
+# drivers/ddenlovr.c: 3204, 3301
 Unknown 3-5
 
-# drivers/ddenlovr.c: 3206
+# drivers/ddenlovr.c: 3207
 Unknown 3-6*
 
-# drivers/ddenlovr.c: 3209
+# drivers/ddenlovr.c: 3210
 Unknown 3-7*
 
-# drivers/ddenlovr.c: 3251
+# drivers/ddenlovr.c: 3252
 Difficulty?
 
-# drivers/ddenlovr.c: 3268
+# drivers/ddenlovr.c: 3269
 Unknown 2-2*
 
-# drivers/ddenlovr.c: 3271
+# drivers/ddenlovr.c: 3272
 Unknown 2-3&4
 
-# drivers/ddenlovr.c: 3279
+# drivers/ddenlovr.c: 3280
 Pirate Fight
 
-# drivers/ddenlovr.c: 3282
+# drivers/ddenlovr.c: 3283
 Taito Copyright
 
-# drivers/ddenlovr.c: 3287
+# drivers/ddenlovr.c: 3288
 Unknown 3-0*
 
-# drivers/ddenlovr.c: 3290
+# drivers/ddenlovr.c: 3291
 Tickets
 
-# drivers/ddenlovr.c: 3303
+# drivers/ddenlovr.c: 3304
 Unknown 3-6
 
-# drivers/ddenlovr.c: 3306
+# drivers/ddenlovr.c: 3307
 Unknown 3-7
 
-# drivers/ddenlovr.c: 3407, 3633
+# drivers/ddenlovr.c: 3408, 3634
 Unknown 1-0&1&2
 
-# drivers/ddenlovr.c: 3422, 3648
+# drivers/ddenlovr.c: 3423, 3649
 Unknown 1-5&6
 
-# drivers/ddenlovr.c: 3427
+# drivers/ddenlovr.c: 3428
 Unknown 1-7
 
-# drivers/ddenlovr.c: 3442, 3668
+# drivers/ddenlovr.c: 3443, 3669
 Unknown 2-4&5
 
-# drivers/ddenlovr.c: 3447, 3673
+# drivers/ddenlovr.c: 3448, 3674
 Unknown 2-6&7
 
-# drivers/ddenlovr.c: 3454
+# drivers/ddenlovr.c: 3455
 Game Type
 
-# drivers/ddenlovr.c: 3455
+# drivers/ddenlovr.c: 3456
 8 Cards
 
-# drivers/ddenlovr.c: 3456
+# drivers/ddenlovr.c: 3457
 6 Cards (Bets)
 
-# drivers/ddenlovr.c: 3457
+# drivers/ddenlovr.c: 3458
 6 Cards (Bets)?
 
-# drivers/ddenlovr.c: 3458
+# drivers/ddenlovr.c: 3459
 6 Cards (Bets)??
 
-# drivers/ddenlovr.c: 3459, 3686
+# drivers/ddenlovr.c: 3460, 3687
 (C) Nihon (Censored)
 
-# drivers/ddenlovr.c: 3462, 3689
+# drivers/ddenlovr.c: 3463, 3690
 Unknown 3-3&4
 
-# drivers/ddenlovr.c: 3467, 3694
+# drivers/ddenlovr.c: 3468, 3695
 Unknown 3-5&6
 
-# drivers/ddenlovr.c: 3472
+# drivers/ddenlovr.c: 3473
 Girl
 
-# drivers/ddenlovr.c: 3480, 3707
+# drivers/ddenlovr.c: 3481, 3708
 Unknown 4-1
 
-# drivers/ddenlovr.c: 3483, 3710
+# drivers/ddenlovr.c: 3484, 3711
 Unknown 4-2
 
-# drivers/ddenlovr.c: 3486, 3713
+# drivers/ddenlovr.c: 3487, 3714
 Unknown 4-3
 
-# drivers/ddenlovr.c: 3489, 3716
+# drivers/ddenlovr.c: 3490, 3717
 Unknown 4-4
 
-# drivers/ddenlovr.c: 3492, 3719
+# drivers/ddenlovr.c: 3493, 3720
 Unknown 4-5
 
-# drivers/ddenlovr.c: 3496, 3723
+# drivers/ddenlovr.c: 3497, 3724
 Hanafuda
 
-# drivers/ddenlovr.c: 3497, 3724
+# drivers/ddenlovr.c: 3498, 3725
 Mahjong
 
-# drivers/ddenlovr.c: 3498, 3725
+# drivers/ddenlovr.c: 3499, 3726
 Unknown 4-7
 
-# drivers/ddenlovr.c: 3503, 3730
+# drivers/ddenlovr.c: 3504, 3731
 Unknown 1-8
 
-# drivers/ddenlovr.c: 3506, 3733
+# drivers/ddenlovr.c: 3507, 3734
 Unknown 1-9
 
-# drivers/ddenlovr.c: 3509, 3736
+# drivers/ddenlovr.c: 3510, 3737
 Unknown 2-8&9
 
-# drivers/ddenlovr.c: 3514, 3741
+# drivers/ddenlovr.c: 3515, 3742
 Unknown 3-8
 
-# drivers/ddenlovr.c: 3517, 3744
+# drivers/ddenlovr.c: 3518, 3745
 Unknown 3-9
 
-# drivers/ddenlovr.c: 3520, 3747, 3980, 4215
+# drivers/ddenlovr.c: 3521, 3748, 3981, 4216
 Unknown 4-8
 
-# drivers/ddenlovr.c: 3526
+# drivers/ddenlovr.c: 3527
 Allow Bets
 
-# drivers/ddenlovr.c: 3531
+# drivers/ddenlovr.c: 3532
 ? Hopper M.
 
-# drivers/ddenlovr.c: 3653, 3963, 4201
+# drivers/ddenlovr.c: 3654, 3964, 4202
 Credits Per Note
 
-# drivers/ddenlovr.c: 3662, 3893, 4128
+# drivers/ddenlovr.c: 3663, 3894, 4129
 1 Coin/10 Credits
 
-# drivers/ddenlovr.c: 3680
+# drivers/ddenlovr.c: 3681
 Game Type?
 
-# drivers/ddenlovr.c: 3683
+# drivers/ddenlovr.c: 3684
 Unknown 3-2
 
-# drivers/ddenlovr.c: 3699
+# drivers/ddenlovr.c: 3700
 Girl?
 
-# drivers/ddenlovr.c: 3753
+# drivers/ddenlovr.c: 3754
 Disable Bets
 
-# drivers/ddenlovr.c: 3860, 4095
+# drivers/ddenlovr.c: 3861, 4096
 Pay Out Rate (%)
 
-# drivers/ddenlovr.c: 3877, 4112
+# drivers/ddenlovr.c: 3878, 4113
 Odds Rate
 
-# drivers/ddenlovr.c: 3882, 4117
+# drivers/ddenlovr.c: 3883, 4118
 Max Bet
 
-# drivers/ddenlovr.c: 3894, 4129
+# drivers/ddenlovr.c: 3895, 4130
 Min Credits To Start
 
-# drivers/ddenlovr.c: 3904
+# drivers/ddenlovr.c: 3905
 W-BET
 
-# drivers/ddenlovr.c: 3907
+# drivers/ddenlovr.c: 3908
 Last Chance
 
-# drivers/ddenlovr.c: 3912, 4148
+# drivers/ddenlovr.c: 3913, 4149
 YAKUMAN Bonus
 
-# drivers/ddenlovr.c: 3913, 4149
+# drivers/ddenlovr.c: 3914, 4150
 Cut
 
-# drivers/ddenlovr.c: 3914, 4150
+# drivers/ddenlovr.c: 3915, 4151
 1 T
 
-# drivers/ddenlovr.c: 3921, 4157
+# drivers/ddenlovr.c: 3922, 4158
 YAKUMAN Times
 
-# drivers/ddenlovr.c: 3926
+# drivers/ddenlovr.c: 3927
 3 BAI In YAKUMAN Bonus Chance
 
-# drivers/ddenlovr.c: 3929
+# drivers/ddenlovr.c: 3930
 Auto Tsumo
 
-# drivers/ddenlovr.c: 3932
+# drivers/ddenlovr.c: 3933
 Credit Timing
 
-# drivers/ddenlovr.c: 3940, 4176
+# drivers/ddenlovr.c: 3941, 4177
 In Game Music
 
-# drivers/ddenlovr.c: 3943
+# drivers/ddenlovr.c: 3944
 Girls (Demo)
 
-# drivers/ddenlovr.c: 3946
+# drivers/ddenlovr.c: 3947
 Girls Show After 3 Renso
 
-# drivers/ddenlovr.c: 3949
+# drivers/ddenlovr.c: 3950
 Girls (Play)
 
-# drivers/ddenlovr.c: 3952
+# drivers/ddenlovr.c: 3953
 Boys In Game
 
-# drivers/ddenlovr.c: 3955
+# drivers/ddenlovr.c: 3956
 Boys
 
-# drivers/ddenlovr.c: 3958
+# drivers/ddenlovr.c: 3959
 Don Den Key
 
-# drivers/ddenlovr.c: 3959
+# drivers/ddenlovr.c: 3960
 Start
 
-# drivers/ddenlovr.c: 3960
+# drivers/ddenlovr.c: 3961
 Flip/Flop
 
-# drivers/ddenlovr.c: 3969
+# drivers/ddenlovr.c: 3970
 Computer Strength
 
-# drivers/ddenlovr.c: 3970, 4205
+# drivers/ddenlovr.c: 3971, 4206
 Weak
 
-# drivers/ddenlovr.c: 3972, 4207
+# drivers/ddenlovr.c: 3973, 4208
 Strong
 
-# drivers/ddenlovr.c: 3973, 4208
+# drivers/ddenlovr.c: 3974, 4209
 Very Strong
 
-# drivers/ddenlovr.c: 3974
+# drivers/ddenlovr.c: 3975
 Game Style
 
-# drivers/ddenlovr.c: 3975
+# drivers/ddenlovr.c: 3976
 Credit
 
-# drivers/ddenlovr.c: 3976
+# drivers/ddenlovr.c: 3977
 Credit Time
 
-# drivers/ddenlovr.c: 3977
+# drivers/ddenlovr.c: 3978
 Start Method (Credit Time)
 
-# drivers/ddenlovr.c: 3979
+# drivers/ddenlovr.c: 3980
 Rate
 
-# drivers/ddenlovr.c: 3983, 4218
+# drivers/ddenlovr.c: 3984, 4219
 Unknown 4-9
 
-# drivers/ddenlovr.c: 3988
+# drivers/ddenlovr.c: 3989
 Bets?
 
-# drivers/ddenlovr.c: 4179
+# drivers/ddenlovr.c: 4180
 Girls
 
-# drivers/ddenlovr.c: 4181
+# drivers/ddenlovr.c: 4182
 Dressed
 
-# drivers/ddenlovr.c: 4182
+# drivers/ddenlovr.c: 4183
 Underwear
 
-# drivers/ddenlovr.c: 4183
+# drivers/ddenlovr.c: 4184
 Nude
 
-# drivers/ddenlovr.c: 4184
+# drivers/ddenlovr.c: 4185
 Girls Speech
 
-# drivers/ddenlovr.c: 4204
+# drivers/ddenlovr.c: 4205
 Computer Strength?
 
-# drivers/ddenlovr.c: 4281
+# drivers/ddenlovr.c: 4282
 Play Rock Smash
 
-# drivers/ddenlovr.c: 4286
+# drivers/ddenlovr.c: 4287
 2 Player Game
 
-# drivers/ddenlovr.c: 4303
+# drivers/ddenlovr.c: 4304
 Unknown 2-6&7*
 
-# drivers/ddenlovr.c: 4310
+# drivers/ddenlovr.c: 4311
 Continue?
 
-# drivers/ddenlovr.c: 4314
+# drivers/ddenlovr.c: 4315
 Debug Text
 
-# drivers/ddenlovr.c: 4359, 4362, 4365, 4369, 4458, 4461, 4465, 4533, 4536, 4539, 4543, 4596, 4599, 4603, 4655
+# drivers/ddenlovr.c: 4360, 4363, 4366, 4370, 4459, 4462, 4466, 4534, 4537, 4540, 4544, 4597, 4600, 4604, 4656
 mono
 
-# drivers/ddragon.c: 278, 536
+# drivers/ddragon.c: 186
+tstrike
+
+# drivers/ddragon.c: 295, 553
 IN4
 
-# drivers/ddragon.c: 546, 572, 753
+# drivers/ddragon.c: 563, 589, 804
 DSW0
 
-# drivers/ddragon.c: 608
+# drivers/ddragon.c: 625
 IN0
 
-# drivers/ddragon.c: 608
+# drivers/ddragon.c: 625
 IN1
 
-# drivers/ddragon.c: 633, 667, 698, 729, 789
+# drivers/ddragon.c: 650, 684, 718, 749, 780, 840
 DSW1
 
-# drivers/ddragon.c: 680
+# drivers/ddragon.c: 731
 20k
 
-# drivers/ddragon.c: 681
+# drivers/ddragon.c: 732
 40k
 
-# drivers/ddragon.c: 682
+# drivers/ddragon.c: 733
 30k and every 60k
 
-# drivers/ddragon.c: 683
+# drivers/ddragon.c: 734
 40k and every 80k
 
-# drivers/ddragon.c: 688
+# drivers/ddragon.c: 739
 Infinite (Cheat)
 
-# drivers/ddragon.c: 707
+# drivers/ddragon.c: 758
 Hurricane Kick
 
-# drivers/ddragon.c: 763, 780
+# drivers/ddragon.c: 814, 831
 4 Coin/6 Credits
 
-# drivers/ddragon.c: 764, 781
+# drivers/ddragon.c: 815, 832
 3 Coin/5 Credits
 
-# drivers/ddragon.c: 766, 783
+# drivers/ddragon.c: 817, 834
 3 Coin/6 Credits
 
-# drivers/ddragon.c: 799
+# drivers/ddragon.c: 850
 30k, 50k and 100k
 
-# drivers/ddragon.c: 800
+# drivers/ddragon.c: 851
 50k and 100k
 
-# drivers/ddragon.c: 801
+# drivers/ddragon.c: 852
 100k and 200k
 
-# drivers/ddragon.c: 929, 933, 934, 938, 942, 979, 983, 984, 988, 992, 1026, 1030, 1031, 1035, 1039, 1073, 1077, 1078, 1082
+# drivers/ddragon.c: 978, 982, 983, 987, 991, 1028, 1032, 1033, 1037, 1041, 1075, 1079, 1080, 1084, 1088, 1122, 1126, 1127, 1131
 mono
 
-# drivers/ddragon.c: 1112, 1116
+# drivers/ddragon.c: 1161, 1165
 left
 
-# drivers/ddragon.c: 1112, 1117
+# drivers/ddragon.c: 1161, 1166
 right
 
 # drivers/ddragon3.c: 239, 319, 400
@@ -12748,37 +12760,43 @@ Power
 # drivers/dec8.c: 2103, 2106, 2107, 2108, 2109, 2113, 2143, 2146, 2147, 2148, 2149, 2153, 2181, 2184, 2185, 2186, 2187, 2191, 2220, 2223, 2224, 2225, 2226, 2230, 2262, 2265, 2266, 2267, 2268, 2272, 2303, 2306, 2307, 2308, 2309, 2313, 2344, 2347, 2348, 2349, 2350, 2354, 2386, 2389, 2390, 2391, 2392, 2396, 2400, 2429, 2432, 2433, 2434, 2435, 2439
 mono
 
-# drivers/deco32.c: 1074
-Continue Coin
-
-# drivers/deco32.c: 1075
-1 Start/1 Continue
-
-# drivers/deco32.c: 1076
-2 Start/1 Continue
-
-# drivers/deco32.c: 1092
-Play Mode
-
-# drivers/deco32.c: 1093
-2 Player
-
-# drivers/deco32.c: 1094
-4 Player
-
-# drivers/deco32.c: 1186
-Stage Select
-
-# drivers/deco32.c: 1610, 1614, 1619, 1624, 1654, 1658, 1663, 1668, 1698, 1702, 1707, 1712, 1744, 1748, 1753, 1758, 1763, 1795, 1799, 1804, 1809, 1814, 1845, 1849
+# drivers/deco156.c: 435, 439, 444, 470, 474, 500, 504
 left
 
-# drivers/deco32.c: 1610, 1615, 1620, 1625, 1654, 1659, 1664, 1669, 1698, 1703, 1708, 1713, 1744, 1749, 1754, 1759, 1764, 1795, 1800, 1805, 1810, 1815, 1845, 1850
+# drivers/deco156.c: 435, 440, 445, 470, 475, 500, 505
 right
 
-# drivers/deco_mlc.c: 377, 381, 415, 419
+# drivers/deco32.c: 1196
+Continue Coin
+
+# drivers/deco32.c: 1197
+1 Start/1 Continue
+
+# drivers/deco32.c: 1198
+2 Start/1 Continue
+
+# drivers/deco32.c: 1214
+Play Mode
+
+# drivers/deco32.c: 1215
+2 Player
+
+# drivers/deco32.c: 1216
+4 Player
+
+# drivers/deco32.c: 1308
+Stage Select
+
+# drivers/deco32.c: 1800, 1804, 1809, 1814, 1844, 1848, 1853, 1858, 1888, 1892, 1897, 1902, 1934, 1938, 1943, 1948, 1953, 1985, 1989, 1994, 1999, 2004, 2035, 2039, 2068, 2072, 2077, 2082
 left
 
-# drivers/deco_mlc.c: 377, 382, 415, 420
+# drivers/deco32.c: 1800, 1805, 1810, 1815, 1844, 1849, 1854, 1859, 1888, 1893, 1898, 1903, 1934, 1939, 1944, 1949, 1954, 1985, 1990, 1995, 2000, 2005, 2035, 2040, 2068, 2073, 2078, 2083
+right
+
+# drivers/deco_mlc.c: 438, 442, 468, 472
+left
+
+# drivers/deco_mlc.c: 438, 443, 468, 473
 right
 
 # drivers/decocass.c: 228
@@ -14383,10 +14401,10 @@ Service Mode (buggy)
 # drivers/exzisus.c: 400, 404, 405
 mono
 
-# drivers/f-32.c: 159, 162, 167
+# drivers/f-32.c: 209, 212, 217
 left
 
-# drivers/f-32.c: 159, 163, 168
+# drivers/f-32.c: 209, 213, 218
 right
 
 # drivers/f1gp.c: 255, 360
@@ -14614,28 +14632,28 @@ Initial Extra Credit Score
 # drivers/finalizr.c: 436, 439, 442
 mono
 
-# drivers/findout.c: 211
+# drivers/findout.c: 212
 Game Repetition
 
-# drivers/findout.c: 217
+# drivers/findout.c: 218
 Buy Letter
 
-# drivers/findout.c: 220
+# drivers/findout.c: 221
 Starting Letter
 
-# drivers/findout.c: 223
+# drivers/findout.c: 224
 Bonus Letter
 
-# drivers/findout.c: 250
+# drivers/findout.c: 251
 Questions
 
-# drivers/findout.c: 255
+# drivers/findout.c: 256
 Show Answer
 
-# drivers/findout.c: 267
+# drivers/findout.c: 268
 No Coin Counter
 
-# drivers/findout.c: 319, 322
+# drivers/findout.c: 320, 323
 mono
 
 # drivers/firetrap.c: 604, 607, 611, 641, 644, 648
@@ -16780,16 +16798,16 @@ mono
 # drivers/gomoku.c: 192, 196
 mono
 
-# drivers/gotcha.c: 163
+# drivers/gotcha.c: 203
 1 Coin/99 Credits
 
-# drivers/gotcha.c: 164
+# drivers/gotcha.c: 204
 Info
 
-# drivers/gotcha.c: 167
+# drivers/gotcha.c: 207
 Explane Type
 
-# drivers/gotcha.c: 263, 267, 268, 272
+# drivers/gotcha.c: 303, 307, 308, 312
 mono
 
 # drivers/gottlieb.c: 226, 236, 546, 594, 654, 712, 771, 823, 876, 930, 983, 1058, 1111, 1164, 1216, 1271, 1324, 1377
@@ -18811,16 +18829,16 @@ mono
 # drivers/inufuku.c: 429, 433, 434, 435
 mono
 
-# drivers/iqblock.c: 175
+# drivers/iqblock.c: 179
 Unknown SW 0-0&1
 
-# drivers/iqblock.c: 180
+# drivers/iqblock.c: 184
 Helps
 
-# drivers/iqblock.c: 199
+# drivers/iqblock.c: 203
 Demo Sounds?
 
-# drivers/iqblock.c: 302, 305, 331, 334
+# drivers/iqblock.c: 306, 309, 335, 338
 mono
 
 # drivers/irobot.c: 198
@@ -21409,88 +21427,88 @@ Teleport (Cheat)
 # drivers/m62.c: 1199
 Frame Advance (Cheat)
 
-# drivers/m72.c: 945, 1017
+# drivers/m72.c: 948, 1020
 50K 150K 250K 400K 600K
 
-# drivers/m72.c: 946, 1018
+# drivers/m72.c: 949, 1021
 100K 200K 350K 500K 700K
 
-# drivers/m72.c: 960, 1032, 1103, 1173, 1243, 1310, 1381, 1448, 1516, 1589, 1671, 1759, 1841, 1926
+# drivers/m72.c: 963, 1035, 1106, 1176, 1246, 1313, 1384, 1451, 1519, 1592, 1674, 1762, 1844, 1929
 Mode 1
 
-# drivers/m72.c: 961, 1033, 1104, 1174, 1244, 1311, 1382, 1449, 1517, 1590, 1672, 1760, 1842, 1927
+# drivers/m72.c: 964, 1036, 1107, 1177, 1247, 1314, 1385, 1452, 1520, 1593, 1675, 1763, 1845, 1930
 Mode 2
 
-# drivers/m72.c: 964, 1036
+# drivers/m72.c: 967, 1039
 Difficult
 
-# drivers/m72.c: 969, 1041, 1112, 1182, 1252, 1318, 1457, 1523
+# drivers/m72.c: 972, 1044, 1115, 1185, 1255, 1321, 1460, 1526
 Stop Mode
 
-# drivers/m72.c: 1088
+# drivers/m72.c: 1091
 80K 200K 350K
 
-# drivers/m72.c: 1089
+# drivers/m72.c: 1092
 100K 250K 400K
 
-# drivers/m72.c: 1229
+# drivers/m72.c: 1232
 Debug Mode 2lap
 
-# drivers/m72.c: 1355
+# drivers/m72.c: 1358
 DSW1
 
-# drivers/m72.c: 1371, 1376, 1377, 1378, 1379
+# drivers/m72.c: 1374, 1379, 1380, 1381, 1382
 DSW2
 
-# drivers/m72.c: 1376
+# drivers/m72.c: 1379
 Upright (single)
 
-# drivers/m72.c: 1378
+# drivers/m72.c: 1381
 Upright (double) On
 
-# drivers/m72.c: 1379
+# drivers/m72.c: 1382
 Upright (double) Off
 
-# drivers/m72.c: 1386
+# drivers/m72.c: 1389
 Upright (double) Mode
 
-# drivers/m72.c: 1520, 1586, 1668, 1838
+# drivers/m72.c: 1523, 1589, 1671, 1841
 Upright (2P)
 
-# drivers/m72.c: 1569
+# drivers/m72.c: 1572
 Continue Limit
 
-# drivers/m72.c: 1597, 1849, 1934
+# drivers/m72.c: 1600, 1852, 1937
 2 Coins/1 Credit, 1 Coin/Continue
 
-# drivers/m72.c: 1640
+# drivers/m72.c: 1643
 Round Time
 
-# drivers/m72.c: 1645
+# drivers/m72.c: 1648
 Matches/Credit (2P)
 
-# drivers/m72.c: 1648
+# drivers/m72.c: 1651
 Rounds/Match
 
-# drivers/m72.c: 1654
+# drivers/m72.c: 1657
 Trackball Size
 
-# drivers/m72.c: 1655
+# drivers/m72.c: 1658
 Small
 
-# drivers/m72.c: 1656
+# drivers/m72.c: 1659
 Large
 
-# drivers/m72.c: 1684
+# drivers/m72.c: 1687
 1 Coin/1 Credit, 1 Coin/Continue
 
-# drivers/m72.c: 1899
+# drivers/m72.c: 1902
 Difficulty?
 
-# drivers/m72.c: 2037, 2041, 2076, 2080, 2084, 2119, 2123, 2127, 2162, 2166, 2170, 2204, 2208, 2212, 2247, 2251, 2255, 2289, 2293, 2297, 2331, 2335, 2339, 2374, 2378, 2382, 2416, 2420, 2424, 2458, 2462, 2466
+# drivers/m72.c: 2040, 2044, 2079, 2083, 2087, 2122, 2126, 2130, 2165, 2169, 2173, 2207, 2211, 2215, 2250, 2254, 2258, 2292, 2296, 2300, 2334, 2338, 2342, 2377, 2381, 2385, 2419, 2423, 2427, 2461, 2465, 2469
 left
 
-# drivers/m72.c: 2037, 2042, 2076, 2081, 2085, 2119, 2124, 2128, 2162, 2167, 2171, 2204, 2209, 2213, 2247, 2252, 2256, 2289, 2294, 2298, 2331, 2336, 2340, 2374, 2379, 2383, 2416, 2421, 2425, 2458, 2463, 2467
+# drivers/m72.c: 2040, 2045, 2079, 2084, 2088, 2122, 2127, 2131, 2165, 2170, 2174, 2207, 2212, 2216, 2250, 2255, 2259, 2292, 2297, 2301, 2334, 2339, 2343, 2377, 2382, 2386, 2419, 2424, 2428, 2461, 2466, 2470
 right
 
 # drivers/m90.c: 53
@@ -23812,232 +23830,232 @@ Enemies Energy
 # drivers/metlclsh.c: 344, 347, 348, 349, 350, 354
 mono
 
-# drivers/metro.c: 2115, 2158, 2200, 2317, 2462, 2513, 2555, 2601, 2664, 2764, 2850, 2978, 3063, 3108, 3152, 3196, 3258, 3317, 3366
+# drivers/metro.c: 2116, 2159, 2201, 2318, 2463, 2514, 2556, 2602, 2665, 2765, 2851, 2979, 3064, 3109, 3153, 3197, 3259, 3318, 3367
 IN0
 
-# drivers/metro.c: 2118, 2161, 2248, 2362, 2465, 2516, 2558, 2604, 2664, 2764, 2850, 2996, 3066, 3111, 3155, 3199, 3261, 3320, 3369
+# drivers/metro.c: 2119, 2162, 2249, 2363, 2466, 2517, 2559, 2605, 2665, 2765, 2851, 2997, 3067, 3112, 3156, 3200, 3262, 3321, 3370
 IN1
 
-# drivers/metro.c: 2122, 2165, 2292, 2428, 2469, 2520, 2562, 2607, 2701, 2730, 2764, 2850, 3006, 3069, 3115, 3159, 3203, 3265, 3323, 3373
+# drivers/metro.c: 2123, 2166, 2293, 2429, 2470, 2521, 2563, 2608, 2702, 2731, 2765, 2851, 3007, 3070, 3116, 3160, 3204, 3266, 3324, 3374
 IN2
 
-# drivers/metro.c: 2124
+# drivers/metro.c: 2125
 Difficulty?
 
-# drivers/metro.c: 2129, 2533, 2790, 2828, 3170, 3276, 3387
+# drivers/metro.c: 2130, 2534, 2791, 2829, 3171, 3277, 3388
 2 Players Game
 
-# drivers/metro.c: 2130, 2535, 2792, 2830, 3171, 3277, 3389
+# drivers/metro.c: 2131, 2536, 2793, 2831, 3172, 3278, 3390
 1 Credit
 
-# drivers/metro.c: 2131, 2534, 2791, 2829, 3172, 3278, 3388
+# drivers/metro.c: 2132, 2535, 2792, 2830, 3173, 3279, 3389
 2 Credits
 
-# drivers/metro.c: 2148, 2190, 2296, 2432, 2496, 2546, 2631, 2670, 2764, 2850, 3053, 3072, 3142, 3186, 3326, 3400
+# drivers/metro.c: 2149, 2191, 2297, 2433, 2497, 2547, 2632, 2671, 2765, 2851, 3054, 3073, 3143, 3187, 3327, 3401
 IN3
 
-# drivers/metro.c: 2220
+# drivers/metro.c: 2221
 4 Players
 
-# drivers/metro.c: 2222
+# drivers/metro.c: 2223
 1P & 2P Tag only
 
-# drivers/metro.c: 2223
+# drivers/metro.c: 2224
 1P & 2P vs only
 
-# drivers/metro.c: 2224
+# drivers/metro.c: 2225
 Half Continue
 
-# drivers/metro.c: 2225
+# drivers/metro.c: 2226
 6C to start, 3C to continue
 
-# drivers/metro.c: 2226
+# drivers/metro.c: 2227
 4C to start, 2C to continue
 
-# drivers/metro.c: 2227
+# drivers/metro.c: 2228
 2C to start, 1C to continue
 
-# drivers/metro.c: 2271
+# drivers/metro.c: 2272
 CP Single
 
-# drivers/metro.c: 2276
+# drivers/metro.c: 2277
 CP Tag
 
-# drivers/metro.c: 2281
+# drivers/metro.c: 2282
 Vs Single
 
-# drivers/metro.c: 2286
+# drivers/metro.c: 2287
 Vs Tag
 
-# drivers/metro.c: 2300, 2435, 2655, 2670, 2778, 2850, 3075, 3329
+# drivers/metro.c: 2301, 2436, 2656, 2671, 2779, 2851, 3076, 3330
 IN4
 
-# drivers/metro.c: 2318
+# drivers/metro.c: 2319
 Player Vs Com
 
-# drivers/metro.c: 2323
+# drivers/metro.c: 2324
 1P Vs 2P
 
-# drivers/metro.c: 2328, 2336
+# drivers/metro.c: 2329, 2337
 Extra Time
 
-# drivers/metro.c: 2337
+# drivers/metro.c: 2338
 Sudden Death
 
-# drivers/metro.c: 2376
+# drivers/metro.c: 2377
 4 Coins/6 Credits
 
-# drivers/metro.c: 2378
+# drivers/metro.c: 2379
 3 Coins/5 Credits
 
-# drivers/metro.c: 2380
+# drivers/metro.c: 2381
 4 Coins/8 Credits
 
-# drivers/metro.c: 2381
+# drivers/metro.c: 2382
 3 Coins/6 Credits
 
-# drivers/metro.c: 2384
+# drivers/metro.c: 2385
 3 Coins/7 Credits
 
-# drivers/metro.c: 2386
+# drivers/metro.c: 2387
 3 Coins/8 Credits
 
-# drivers/metro.c: 2404
+# drivers/metro.c: 2405
 Same as Coin A
 
-# drivers/metro.c: 2405
+# drivers/metro.c: 2406
 Credits to Start
 
-# drivers/metro.c: 2410
+# drivers/metro.c: 2411
 Credits to Continue
 
-# drivers/metro.c: 2421
+# drivers/metro.c: 2422
 Playmode
 
-# drivers/metro.c: 2422
+# drivers/metro.c: 2423
 1 Credit for 1 Player
 
-# drivers/metro.c: 2423
+# drivers/metro.c: 2424
 1 Credit for 2 Players
 
-# drivers/metro.c: 2480, 3040, 3173
+# drivers/metro.c: 2481, 3041, 3174
 Winning Rounds (Player VS Player)
 
-# drivers/metro.c: 2483, 2787, 2825, 3384
+# drivers/metro.c: 2484, 2788, 2826, 3385
 Retry Level On Continue
 
-# drivers/metro.c: 2484, 2788, 2826, 3385
+# drivers/metro.c: 2485, 2789, 2827, 3386
 Ask Player
 
-# drivers/metro.c: 2524, 3382
+# drivers/metro.c: 2525, 3383
 Table 1
 
-# drivers/metro.c: 2527, 3383
+# drivers/metro.c: 2528, 3384
 Table 2
 
-# drivers/metro.c: 2542
+# drivers/metro.c: 2543
 Freeze (Cheat)
 
-# drivers/metro.c: 2712
+# drivers/metro.c: 2713
 Nudity
 
-# drivers/metro.c: 2713
+# drivers/metro.c: 2714
 Partial
 
-# drivers/metro.c: 2764, 2764
+# drivers/metro.c: 2765, 2765
 test mode
 
-# drivers/metro.c: 2799, 2837
+# drivers/metro.c: 2800, 2838
 Tiles
 
-# drivers/metro.c: 2800, 2838
+# drivers/metro.c: 2801, 2839
 Mahjong
 
-# drivers/metro.c: 2803, 2850, 3098, 3352
+# drivers/metro.c: 2804, 2851, 3099, 3353
 IN5
 
-# drivers/metro.c: 2839
+# drivers/metro.c: 2840
 Cards
 
-# drivers/metro.c: 2909
+# drivers/metro.c: 2910
 IN6
 
-# drivers/metro.c: 2927
+# drivers/metro.c: 2928
 Game Sound
 
-# drivers/metro.c: 2930
+# drivers/metro.c: 2931
 Auto TSUMO after REACH
 
-# drivers/metro.c: 2934
+# drivers/metro.c: 2935
 IN7
 
-# drivers/metro.c: 2938
+# drivers/metro.c: 2939
 CPU wears clothes on RON
 
-# drivers/metro.c: 2941
+# drivers/metro.c: 2942
 CPU clothes on continue play
 
-# drivers/metro.c: 2942
+# drivers/metro.c: 2943
 Return to default
 
-# drivers/metro.c: 2943
+# drivers/metro.c: 2944
 Keep current status
 
-# drivers/metro.c: 2945
+# drivers/metro.c: 2946
 Self Test
 
-# drivers/metro.c: 2948
+# drivers/metro.c: 2949
 Unknown 2-5
 
-# drivers/metro.c: 2951
+# drivers/metro.c: 2952
 Unknown 2-6
 
-# drivers/metro.c: 2954
+# drivers/metro.c: 2955
 Unknown 2-7
 
-# drivers/metro.c: 3037
+# drivers/metro.c: 3038
 Winning Rounds (Player VS Computer)
 
-# drivers/metro.c: 3076
+# drivers/metro.c: 3077
 Time Speed
 
-# drivers/metro.c: 3077
+# drivers/metro.c: 3078
 Slowest
 
-# drivers/metro.c: 3087
+# drivers/metro.c: 3088
 400k and 800k
 
-# drivers/metro.c: 3088
+# drivers/metro.c: 3089
 400k
 
-# drivers/metro.c: 3089
+# drivers/metro.c: 3090
 800k
 
-# drivers/metro.c: 3167, 3273
+# drivers/metro.c: 3168, 3274
 Join In
 
-# drivers/metro.c: 3245
+# drivers/metro.c: 3246
 Helps
 
-# drivers/metro.c: 3279
+# drivers/metro.c: 3280
 Bombs
 
-# drivers/metro.c: 3341
+# drivers/metro.c: 3342
 100K, every 400K
 
-# drivers/metro.c: 3342
+# drivers/metro.c: 3343
 200K, every 400K
 
-# drivers/metro.c: 3343
+# drivers/metro.c: 3344
 200K
 
-# drivers/metro.c: 3381
+# drivers/metro.c: 3382
 Levels
 
-# drivers/metro.c: 3566, 3570, 3598, 3602, 3636, 3640, 3645, 3679, 3683, 3687, 3721, 3725, 3729, 3763, 3767, 3771, 3805, 3809, 3813, 3846, 3850, 3854, 3881, 3885, 3889, 3931, 3935, 3939, 3968, 3972, 3976, 4005, 4009, 4013, 4047, 4051, 4055, 4089, 4093, 4097, 4131, 4135, 4140, 4174, 4178, 4182, 4216, 4220, 4224, 4252, 4255, 4259, 4292, 4296, 4298, 4331, 4335, 4337
+# drivers/metro.c: 3567, 3571, 3599, 3603, 3637, 3641, 3646, 3680, 3684, 3688, 3722, 3726, 3730, 3764, 3768, 3772, 3806, 3810, 3814, 3847, 3851, 3855, 3882, 3886, 3890, 3932, 3936, 3940, 3969, 3973, 3977, 4006, 4010, 4014, 4048, 4052, 4056, 4090, 4094, 4098, 4132, 4136, 4141, 4175, 4179, 4183, 4217, 4221, 4225, 4253, 4256, 4260, 4293, 4297, 4299, 4332, 4336, 4338
 left
 
-# drivers/metro.c: 3566, 3571, 3598, 3603, 3636, 3641, 3646, 3679, 3684, 3688, 3721, 3726, 3730, 3763, 3768, 3772, 3805, 3810, 3814, 3846, 3851, 3855, 3881, 3886, 3890, 3931, 3936, 3940, 3968, 3973, 3977, 4005, 4010, 4014, 4047, 4052, 4056, 4089, 4094, 4098, 4131, 4136, 4141, 4174, 4179, 4183, 4216, 4221, 4225, 4252, 4256, 4260, 4292, 4297, 4299, 4331, 4336, 4338
+# drivers/metro.c: 3567, 3572, 3599, 3604, 3637, 3642, 3647, 3680, 3685, 3689, 3722, 3727, 3731, 3764, 3769, 3773, 3806, 3811, 3815, 3847, 3852, 3856, 3882, 3887, 3891, 3932, 3937, 3941, 3969, 3974, 3978, 4006, 4011, 4015, 4048, 4053, 4057, 4090, 4095, 4099, 4132, 4137, 4142, 4175, 4180, 4184, 4217, 4222, 4226, 4253, 4257, 4261, 4293, 4298, 4300, 4332, 4337, 4339
 right
 
 # drivers/mexico86.c: 178, 214
@@ -25502,6 +25520,9 @@ DSW1
 4 (Hard)
 
 # drivers/mikie.c: 274, 277, 280
+mono
+
+# drivers/mirax.c: 200, 202, 204
 mono
 
 # drivers/missb2.c: 217
@@ -42046,10 +42067,10 @@ left
 # drivers/taito_f3.c: 522, 527
 right
 
-# drivers/taito_f3.c: 3105
+# drivers/taito_f3.c: 3102
 coinword
 
-# drivers/taito_f3.c: 3105
+# drivers/taito_f3.c: 3102
 f3
 
 # drivers/taito_h.c: 346
@@ -45097,109 +45118,109 @@ mono
 # drivers/tugboat.c: 391, 394
 mono
 
-# drivers/tumbleb.c: 538, 628
+# drivers/tumbleb.c: 540, 630
 2 Coins to Start, 1 to Continue
 
-# drivers/tumbleb.c: 554, 645
+# drivers/tumbleb.c: 556, 647
 Remove Monsters
 
-# drivers/tumbleb.c: 561, 652
+# drivers/tumbleb.c: 563, 654
 Edit Levels
 
-# drivers/tumbleb.c: 624, 998
+# drivers/tumbleb.c: 626, 1000
 Korean
 
-# drivers/tumbleb.c: 739, 800
+# drivers/tumbleb.c: 741, 802
 Stage Skip
 
-# drivers/tumbleb.c: 820, 860
+# drivers/tumbleb.c: 822, 862
 VS Round
 
-# drivers/tumbleb.c: 875, 1007
+# drivers/tumbleb.c: 877, 1009
 60 Seconds
 
-# drivers/tumbleb.c: 876
+# drivers/tumbleb.c: 878
 90 Seconds
 
-# drivers/tumbleb.c: 877
+# drivers/tumbleb.c: 879
 Starting Balls
 
-# drivers/tumbleb.c: 999
+# drivers/tumbleb.c: 1001
 Life Meter
 
-# drivers/tumbleb.c: 1005
+# drivers/tumbleb.c: 1007
 30 Seconds
 
-# drivers/tumbleb.c: 1006
+# drivers/tumbleb.c: 1008
 40 Seconds
 
-# drivers/tumbleb.c: 1008
+# drivers/tumbleb.c: 1010
 80 Seconds
 
-# drivers/tumbleb.c: 1113
+# drivers/tumbleb.c: 1115
 Picture Viewer
 
-# drivers/tumbleb.c: 1116
+# drivers/tumbleb.c: 1118
 BG Type
 
-# drivers/tumbleb.c: 1216, 1298
+# drivers/tumbleb.c: 1218, 1300
 Level 1
 
-# drivers/tumbleb.c: 1217, 1299
+# drivers/tumbleb.c: 1219, 1301
 Level 2
 
-# drivers/tumbleb.c: 1218, 1300
+# drivers/tumbleb.c: 1220, 1302
 Level 3
 
-# drivers/tumbleb.c: 1219, 1301
+# drivers/tumbleb.c: 1221, 1303
 Level 4
 
-# drivers/tumbleb.c: 1220, 1302
+# drivers/tumbleb.c: 1222, 1304
 Level 5
 
-# drivers/tumbleb.c: 1221, 1303
+# drivers/tumbleb.c: 1223, 1305
 Level 6
 
-# drivers/tumbleb.c: 1222, 1304
+# drivers/tumbleb.c: 1224, 1306
 Level 7
 
-# drivers/tumbleb.c: 1223, 1305
+# drivers/tumbleb.c: 1225, 1307
 Level 8
 
-# drivers/tumbleb.c: 1253
+# drivers/tumbleb.c: 1255
 Event Free (Allow Event Selection)
 
-# drivers/tumbleb.c: 1257
+# drivers/tumbleb.c: 1259
 Joystick + Buttons
 
-# drivers/tumbleb.c: 1258
+# drivers/tumbleb.c: 1260
 Buttons Only
 
-# drivers/tumbleb.c: 1259
+# drivers/tumbleb.c: 1261
 Test Mode (Easy Event Select)
 
-# drivers/tumbleb.c: 1341
+# drivers/tumbleb.c: 1343
 Full Set Price
 
-# drivers/tumbleb.c: 1342
+# drivers/tumbleb.c: 1344
 4 Credits
 
-# drivers/tumbleb.c: 1343
+# drivers/tumbleb.c: 1345
 6 Credits
 
-# drivers/tumbleb.c: 1524, 1528, 1554, 1558
+# drivers/tumbleb.c: 1526, 1530, 1556, 1560
 mono
 
-# drivers/tumbleb.c: 1581, 1584, 1589, 1645, 1649, 1654, 1669, 1683, 1712, 1715, 1720, 1749, 1753
+# drivers/tumbleb.c: 1583, 1586, 1591, 1647, 1651, 1656, 1671, 1685, 1714, 1717, 1722, 1751, 1755
 left
 
-# drivers/tumbleb.c: 1581, 1585, 1590, 1645, 1650, 1655, 1670, 1684, 1712, 1716, 1721, 1749, 1754
+# drivers/tumbleb.c: 1583, 1587, 1592, 1647, 1652, 1657, 1672, 1686, 1714, 1718, 1723, 1751, 1756
 right
 
-# drivers/tumbleb.c: 2620
+# drivers/tumbleb.c: 2622
 hcatch
 
-# drivers/tumbleb.c: 2620
+# drivers/tumbleb.c: 2622
 w+b
 
 # drivers/tumblep.c: 224
@@ -45321,9 +45342,6 @@ Collisions
 
 # drivers/turbo.c: 467
 Accel by
-
-# drivers/turbo.c: 468
-Pedal
 
 # drivers/turbo.c: 469
 Button
@@ -48706,6 +48724,258 @@ left
 # drivers/zr107.c: 411, 416, 421
 right
 
+# drivers/複製 -neogeo.c: 1613, 1623, 1633, 1643
+000-lo.lo
+
+# drivers/複製 -neogeo.c: 1610
+236-bios.bin
+
+# drivers/複製 -neogeo.c: 1579
+Asia AES
+
+# drivers/複製 -neogeo.c: 1567
+Asia MVS (Ver. 3)
+
+# drivers/複製 -neogeo.c: 1372
+Clear Credit
+
+# drivers/複製 -neogeo.c: 1088, 1166
+DSW
+
+# drivers/複製 -neogeo.c: 1578
+Debug MVS (Hack?)
+
+# drivers/複製 -neogeo.c: 1564
+Europe MVS (Ver. 1)
+
+# drivers/複製 -neogeo.c: 1563
+Europe MVS (Ver. 2)
+
+# drivers/複製 -neogeo.c: 1374
+Hopper Out
+
+# drivers/複製 -neogeo.c: 1056, 1242, 1294, 1343
+IN0
+
+# drivers/複製 -neogeo.c: 1067, 1245, 1303
+IN1
+
+# drivers/複製 -neogeo.c: 1078, 1255, 1355, 1385
+IN2
+
+# drivers/複製 -neogeo.c: 1112, 1366
+IN4
+
+# drivers/複製 -neogeo.c: 1142, 1191, 1268, 1317, 1376, 1397
+IN5
+
+# drivers/複製 -neogeo.c: 1124, 1279
+IN6
+
+# drivers/複製 -neogeo.c: 1209, 1289, 1335
+IN7
+
+# drivers/複製 -neogeo.c: 1219, 1338
+IN8
+
+# drivers/複製 -neogeo.c: 1229
+IN9
+
+# drivers/複製 -neogeo.c: 388
+IRQ2 enabled, need raster driver
+
+# drivers/複製 -neogeo.c: 1570
+Japan MVS (Ver. 1)
+
+# drivers/複製 -neogeo.c: 1569
+Japan MVS (Ver. 2)
+
+# drivers/複製 -neogeo.c: 1568
+Japan MVS (Ver. 3)
+
+# drivers/複製 -neogeo.c: 1173
+Mahjong Control Panel
+
+# drivers/複製 -neogeo.c: 1371
+Operator Menu
+
+# drivers/複製 -neogeo.c: 1350
+P1 Double Up
+
+# drivers/複製 -neogeo.c: 1351
+P1 Start/Collect
+
+# drivers/複製 -neogeo.c: 1566
+US MVS (Ver. 1)
+
+# drivers/複製 -neogeo.c: 1565
+US MVS (Ver. 2?)
+
+# drivers/複製 -neogeo.c: 1572
+Unibios MVS (Hack, Ver. 1.0)
+
+# drivers/複製 -neogeo.c: 1573
+Unibios MVS (Hack, Ver. 1.1)
+
+# drivers/複製 -neogeo.c: 1574
+Unibios MVS (Hack, Ver. 1.2)
+
+# drivers/複製 -neogeo.c: 1575
+Unibios MVS (Hack, Ver. 1.3)
+
+# drivers/複製 -neogeo.c: 1576
+Unibios MVS (Hack, Ver. 2.0)
+
+# drivers/複製 -neogeo.c: 1577
+Unibios MVS (Hack, Ver. 2.1)
+
+# drivers/複製 -neogeo.c: 1585
+aes-bios.bin
+
+# drivers/複製 -neogeo.c: 1567
+asia
+
+# drivers/複製 -neogeo.c: 1579
+asia-aes
+
+# drivers/複製 -neogeo.c: 1585
+asia-s3.rom
+
+# drivers/複製 -neogeo.c: 7997
+bank
+
+# drivers/複製 -neogeo.c: 7999
+cpu1_second_bankaddress
+
+# drivers/複製 -neogeo.c: 7984
+current_rastercounter
+
+# drivers/複製 -neogeo.c: 7985
+current_rasterline
+
+# drivers/複製 -neogeo.c: 1578
+debug
+
+# drivers/複製 -neogeo.c: 1563
+euro
+
+# drivers/複製 -neogeo.c: 1564
+euro-s1
+
+# drivers/複製 -neogeo.c: 7992
+fc
+
+# drivers/複製 -neogeo.c: 7988
+irq2control
+
+# drivers/複製 -neogeo.c: 7989
+irq2pos_value
+
+# drivers/複製 -neogeo.c: 7987
+irq2start
+
+# drivers/複製 -neogeo.c: 1568
+japan
+
+# drivers/複製 -neogeo.c: 1570
+japan-s1
+
+# drivers/複製 -neogeo.c: 1569
+japan-s2
+
+# drivers/複製 -neogeo.c: 1490, 1494, 1498
+left
+
+# drivers/複製 -neogeo.c: 1585
+neodebug.rom
+
+# drivers/複製 -neogeo.c: 7982, 7983, 7984, 7985, 7986, 7987, 7988, 7989, 7990, 7991, 7992, 7993, 7994, 7995, 7996, 7997, 7998, 7999
+neogeo
+
+# drivers/複製 -neogeo.c: 7982
+neogeo_frame_counter
+
+# drivers/複製 -neogeo.c: 7983
+neogeo_frame_counter_speed
+
+# drivers/複製 -neogeo.c: 7993
+neogeo_raster_enable
+
+# drivers/複製 -neogeo.c: 7998
+neogeo_rng
+
+# drivers/複製 -neogeo.c: 7994
+pending_command
+
+# drivers/複製 -neogeo.c: 7995
+result_code
+
+# drivers/複製 -neogeo.c: 1490, 1495, 1499
+right
+
+# drivers/複製 -neogeo.c: 7991
+scanline_int
+
+# drivers/複製 -neogeo.c: 7986
+scanline_read
+
+# drivers/複製 -neogeo.c: 1655, 1661, 1667
+sfix.sfx
+
+# drivers/複製 -neogeo.c: 1613, 1623, 1633, 1643
+sm1.sm1
+
+# drivers/複製 -neogeo.c: 1585
+sp-e.sp1
+
+# drivers/複製 -neogeo.c: 1585
+sp-j2.rom
+
+# drivers/複製 -neogeo.c: 1585
+sp-s.sp1
+
+# drivers/複製 -neogeo.c: 1585
+sp-s2.sp1
+
+# drivers/複製 -neogeo.c: 1585
+sp1.jipan.1024
+
+# drivers/複製 -neogeo.c: 7996
+ts
+
+# drivers/複製 -neogeo.c: 1572, 1585
+uni-bios.10
+
+# drivers/複製 -neogeo.c: 1573, 1585
+uni-bios.11
+
+# drivers/複製 -neogeo.c: 1574, 1585
+uni-bios.12
+
+# drivers/複製 -neogeo.c: 1575, 1585
+uni-bios.13
+
+# drivers/複製 -neogeo.c: 1576, 1585
+uni-bios.20
+
+# drivers/複製 -neogeo.c: 1577, 1585
+uni-bios.21
+
+# drivers/複製 -neogeo.c: 1565
+us
+
+# drivers/複製 -neogeo.c: 1566
+us-e
+
+# drivers/複製 -neogeo.c: 1585
+usa_2slt.bin
+
+# drivers/複製 -neogeo.c: 7990
+vblank_int
+
+# drivers/複製 -neogeo.c: 1585
+vs-bios.rom
+
 # etc/fd1094dp.c: 69
 %s/00%04x.tbl
 
@@ -50004,6 +50274,9 @@ in_set
 
 # machine/6821pia.c: 574
 %04x: PIA%d control B write = %02X\n
+
+# machine/74181.c: 30, 31, 32
+TTL74181
 
 # machine/7474.c: 165, 166, 167, 168, 169, 170, 171, 172, 173
 ttl7474
@@ -52813,10 +53086,10 @@ PPU->CPU
 # machine/snesdsp1.c: 1226
 Unhandled DSP1 command: %02x\n
 
-# machine/starwars.c: 237
+# machine/starwars.c: 238
 \n(MPA:%x), Strobe: %x, IP7: %d, IP6_0:%x\n
 
-# machine/starwars.c: 238
+# machine/starwars.c: 239
 (BIC: %x), A: %x, B: %x, C: %x, ACC: %x\n
 
 # machine/stvcd.c: 423
@@ -63799,9 +64072,6 @@ corporation
 # ui/treeview.c: 1290
 %f Hz
 
-# ui/treeview.c: 1381
-Pedal
-
 # ui/treeview.c: 1585
 Internal inconsistency with non-built-in folder, but not custom
 
@@ -64615,6 +64885,393 @@ can't find submenu for show folders context menu
 # ui/win32ui.c: 7049
 loading %-12s\r
 
+# ui/複製 -mame32.rc: 263
+#define NOWINRES\r\n#include windows.h\r\n#include commctrl.h\r\n
+
+# ui/複製 -mame32.rc: 299
+040904b0
+
+# ui/複製 -mame32.rc: 651
+0dB
+
+# ui/複製 -mame32.rc: 1193
+A
+
+# ui/複製 -mame32.rc: 301
+Author
+
+# ui/複製 -mame32.rc: 1109, 1113, 1194
+B
+
+# ui/複製 -mame32.rc: 1146
+BIOS1:
+
+# ui/複製 -mame32.rc: 1149
+BIOS2:
+
+# ui/複製 -mame32.rc: 1152
+BIOS3:
+
+# ui/複製 -mame32.rc: 1155
+BIOS4:
+
+# ui/複製 -mame32.rc: 1158
+BIOS5:
+
+# ui/複製 -mame32.rc: 1161
+BIOS6:
+
+# ui/複製 -mame32.rc: 1164
+BIOS7:
+
+# ui/複製 -mame32.rc: 1167
+BIOS8:
+
+# ui/複製 -mame32.rc: 871
+BeamSlider
+
+# ui/複製 -mame32.rc: 535, 537, 539, 542, 547, 549, 570, 589, 591, 594, 635, 638, 642, 670, 672, 675, 678, 681, 683, 686, 689, 721, 744, 746, 748, 751, 755, 757, 759, 769, 806, 808, 810, 812, 814, 816, 819, 821, 824, 826, 828, 830, 832, 839, 866, 868, 927, 930, 932, 935, 938, 941, 944, 963, 965, 969, 971, 1005, 1008, 1010, 1011, 1014, 1017, 1019, 1022, 1024, 1031, 1035, 1037, 1041
+Button
+
+# ui/複製 -mame32.rc: 487
+CPU:
+
+# ui/複製 -mame32.rc: 137
+Chinese (Simp)
+
+# ui/複製 -mame32.rc: 138
+Chinese (Trad)
+
+# ui/複製 -mame32.rc: 301
+Comments
+
+# ui/複製 -mame32.rc: 301
+CompanyName
+
+# ui/複製 -mame32.rc: 163
+Context Menu
+
+# ui/複製 -mame32.rc: 198
+Context Menu Tree
+
+# ui/複製 -mame32.rc: 217
+Context Screen Shot
+
+# ui/複製 -mame32.rc: 301
+Copyright 1997-2005 Nicola Salmoria and the MAME team
+
+# ui/複製 -mame32.rc: 1129
+CustomTree
+
+# ui/複製 -mame32.rc: 1195
+D
+
+# ui/複製 -mame32.rc: 135
+English (US)
+
+# ui/複製 -mame32.rc: 1196
+F
+
+# ui/複製 -mame32.rc: 301
+FileDescription
+
+# ui/複製 -mame32.rc: 301
+FileVersion
+
+# ui/複製 -mame32.rc: 875
+FlickerSlider
+
+# ui/複製 -mame32.rc: 1107, 1112
+G
+
+# ui/複製 -mame32.rc: 555, 560
+GammaSlider
+
+# ui/複製 -mame32.rc: 187
+Header Context Menu
+
+# ui/複製 -mame32.rc: 146
+Hungarian
+
+# ui/複製 -mame32.rc: 762, 841, 880
+IntensitySlider
+
+# ui/複製 -mame32.rc: 301
+InternalName
+
+# ui/複製 -mame32.rc: 139
+Korean
+
+# ui/複製 -mame32.rc: 301
+LegalCopyright
+
+# ui/複製 -mame32.rc: 301
+LegalTrademarks
+
+# ui/複製 -mame32.rc: 440, 457, 464, 903, 1084
+List1
+
+# ui/複製 -mame32.rc: 301
+MAME Team
+
+# ui/複製 -mame32.rc: 301, 301, 390
+MAME32
+
+# ui/複製 -mame32.rc: 894
+MAME32 - overwritten at runtime
+
+# ui/複製 -mame32.rc: 301
+MAME32.exe
+
+# ui/複製 -mame32.rc: 894
+MainClass
+
+# ui/複製 -mame32.rc: 381
+Mike Haaland, Andrew Kirmse, Jeff Miller
+
+# ui/複製 -mame32.rc: 370
+Multiple Arcade Machine Emulator
+
+# ui/複製 -mame32.rc: 301, 301
+Multiple Arcade Machine Emulator for Win32
+
+# ui/複製 -mame32.rc: 301
+OriginalFilename
+
+# ui/複製 -mame32.rc: 1198
+P
+
+# ui/複製 -mame32.rc: 775
+P1
+
+# ui/複製 -mame32.rc: 777
+P2
+
+# ui/複製 -mame32.rc: 779
+P3
+
+# ui/複製 -mame32.rc: 781
+P4
+
+# ui/複製 -mame32.rc: 783
+P5
+
+# ui/複製 -mame32.rc: 785
+P6
+
+# ui/複製 -mame32.rc: 787
+P7
+
+# ui/複製 -mame32.rc: 789
+P8
+
+# ui/複製 -mame32.rc: 145
+Polish
+
+# ui/複製 -mame32.rc: 144
+Portuguese (BRA)
+
+# ui/複製 -mame32.rc: 301
+ProductName
+
+# ui/複製 -mame32.rc: 301
+ProductVersion
+
+# ui/複製 -mame32.rc: 406, 416, 985
+Progress1
+
+# ui/複製 -mame32.rc: 1105, 1111, 1199
+R
+
+# ui/複製 -mame32.rc: 426
+RichEdit20W
+
+# ui/複製 -mame32.rc: 1200
+S
+
+# ui/複製 -mame32.rc: 566, 607, 649, 653, 704, 1044, 1048
+Slider1
+
+# ui/複製 -mame32.rc: 612
+Slider3
+
+# ui/複製 -mame32.rc: 377, 385, 481, 483, 486, 490, 494, 496, 498, 500, 502, 504, 515, 534, 587, 633, 669, 743, 805, 865, 898, 908, 911, 1064, 1114, 1145
+Static
+
+# ui/複製 -mame32.rc: 485
+Static\nStatic\nStatic\nStatic
+
+# ui/複製 -mame32.rc: 492
+Static\nStatic\nStatic\nStatic\nStatic
+
+# ui/複製 -mame32.rc: 488
+Static\nStatic\nStatic\nStatic\nStatic\nStatic
+
+# ui/複製 -mame32.rc: 297
+StringFileInfo
+
+# ui/複製 -mame32.rc: 440, 457, 464, 903, 1084
+SysListView32
+
+# ui/複製 -mame32.rc: 910
+SysTabControl32
+
+# ui/複製 -mame32.rc: 899, 1129
+SysTreeView32
+
+# ui/複製 -mame32.rc: 1201
+T
+
+# ui/複製 -mame32.rc: 479, 513, 532, 585, 631, 667, 741, 803, 863, 1062, 1143
+Title\nDirectory\nExtra
+
+# ui/複製 -mame32.rc: 316
+Translation
+
+# ui/複製 -mame32.rc: 899
+Tree1
+
+# ui/複製 -mame32.rc: 1197
+U
+
+# ui/複製 -mame32.rc: 314
+VarFileInfo
+
+# ui/複製 -mame32.rc: 372
+Version 0
+
+# ui/複製 -mame32.rc: 406, 416, 985
+msctls_progress32
+
+# ui/複製 -mame32.rc: 555, 560, 566, 607, 612, 617, 649, 653, 704, 762, 841, 871, 875, 880, 1044, 1048, 1105, 1107, 1109
+msctls_trackbar32
+
+# ui/複製 -mame32.rc: 205
+overridden by code
+
+# ui/複製 -mame32.rc: 1423
+res\\Splith.cur
+
+# ui/複製 -mame32.rc: 1404
+res\\about.bmp
+
+# ui/複製 -mame32.rc: 330
+res\\checkmark.ico
+
+# ui/複製 -mame32.rc: 330
+res\\cpu.ico
+
+# ui/複製 -mame32.rc: 330
+res\\display.ico
+
+# ui/複製 -mame32.rc: 330
+res\\foldavail.ico
+
+# ui/複製 -mame32.rc: 330
+res\\folder.ico
+
+# ui/複製 -mame32.rc: 330
+res\\foldmanu.ico
+
+# ui/複製 -mame32.rc: 330
+res\\foldopen.ico
+
+# ui/複製 -mame32.rc: 330
+res\\foldsrc.ico
+
+# ui/複製 -mame32.rc: 330
+res\\foldunav.ico
+
+# ui/複製 -mame32.rc: 330
+res\\foldyear.ico
+
+# ui/複製 -mame32.rc: 330
+res\\harddisk.ico
+
+# ui/複製 -mame32.rc: 330
+res\\header_down.ico
+
+# ui/複製 -mame32.rc: 330
+res\\header_up.ico
+
+# ui/複製 -mame32.rc: 330
+res\\joystick.ico
+
+# ui/複製 -mame32.rc: 330
+res\\keyboard.ico
+
+# ui/複製 -mame32.rc: 330
+res\\mame32.ico
+
+# ui/複製 -mame32.rc: 1430
+res\\mame32.manifest
+
+# ui/複製 -mame32.rc: 330
+res\\manufact.ico
+
+# ui/複製 -mame32.rc: 330
+res\\nonwork.ico
+
+# ui/複製 -mame32.rc: 330
+res\\samples.ico
+
+# ui/複製 -mame32.rc: 330
+res\\sound.ico
+
+# ui/複製 -mame32.rc: 330
+res\\source.ico
+
+# ui/複製 -mame32.rc: 1404, 1404, 1404, 1404, 1404, 1404, 1404, 1404
+res\\toolbar.bmp
+
+# ui/複製 -mame32.rc: 1404, 1404
+res\\toolbarc.bmp
+
+# ui/複製 -mame32.rc: 1404
+res\\toolbarj.bmp
+
+# ui/複製 -mame32.rc: 1404
+res\\toolbark.bmp
+
+# ui/複製 -mame32.rc: 330
+res\\win_clone.ico
+
+# ui/複製 -mame32.rc: 330
+res\\win_noro.ico
+
+# ui/複製 -mame32.rc: 330
+res\\win_redx.ico
+
+# ui/複製 -mame32.rc: 330
+res\\win_roms.ico
+
+# ui/複製 -mame32.rc: 330
+res\\win_unkn.ico
+
+# ui/複製 -mame32.rc: 330
+res\\working.ico
+
+# ui/複製 -mame32.rc: 330
+res\\year.ico
+
+# ui/複製 -mame32.rc: 258
+resource.h
+
+# ui/複製 
+Japanese
+
+# ui/複製 
+French
+
+# ui/複製 
+Spanish
+
+# ui/複製 
+Italian
+
+# ui/複製 
+German
+
 # ui_font.c: 80
 rb
 
@@ -65034,6 +65691,9 @@ Sound:     %8dm\n
 
 # validity.c: 950
 MESS:      %8dm\n
+
+# version.c: 2
+0.103u1 (
 
 # vidhrdw/actfancr.c: 85
 control_1
@@ -66067,20 +66727,14 @@ Deco16: Playfield switched into 8x8 mode but no tilemap defined
 # vidhrdw/deco16ic.c: 657
 Deco16: Playfield switched into 16x16 mode but no tilemap defined
 
-# vidhrdw/deco32.c: 847, 874
+# vidhrdw/deco32.c: 1045, 1073
 SCTRL
 
-# vidhrdw/deco32.c: 847, 874
+# vidhrdw/deco32.c: 1045, 1073, 1103
 deco32
 
-# vidhrdw/deco_mlc.c: 411
-vram.dmp
-
-# vidhrdw/deco_mlc.c: 411, 419
-wb
-
-# vidhrdw/deco_mlc.c: 419
-vram2.dmp
+# vidhrdw/deco32.c: 1103
+pri
 
 # vidhrdw/decocass.c: 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
 decocass

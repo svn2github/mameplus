@@ -386,7 +386,7 @@ Digitrex Techstar
 Dong Bang Electron
 Dong Bang Electron
 
-# Got-cha
+# Got-cha Mini Game Festival
 Dongsung
 Dongsung
 
@@ -1957,6 +1957,10 @@ hackeado
 # Chewing Gum
 unknown
 desconocido
+
+# Mirax
+Current Technologies
+
 
 # Gekisou (Japan)
 Eastern
