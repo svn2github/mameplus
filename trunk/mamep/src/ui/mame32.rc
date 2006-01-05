@@ -479,28 +479,28 @@ BEGIN
     LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
-    LTEXT           "Manufactured:",IDC_STATIC,18,45,47,9
+    LTEXT           "Manufactured:",IDC_STATIC,18,45,55,9
     LTEXT           "Static",IDC_PROP_MANUFACTURED,75,45,170,9,SS_NOPREFIX
-    LTEXT           "Status:",IDC_STATIC,18,55,47,9
+    LTEXT           "Status:",IDC_STATIC,18,55,55,9
     LTEXT           "Static\nStatic\nStatic\nStatic",IDC_PROP_STATUS,75,55,170,32
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,88,240,1
-    LTEXT           "CPU:",IDC_STATIC,18,91,47,9
+    LTEXT           "CPU:",IDC_STATIC,18,91,55,9
     LTEXT           "Static\nStatic\nStatic\nStatic\nStatic\nStatic",
                     IDC_PROP_CPU,75,91,170,48
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,140,240,1
-    LTEXT           "Sound:",IDC_STATIC,18,143,47,9
+    LTEXT           "Sound:",IDC_STATIC,18,143,55,9
     LTEXT           "Static\nStatic\nStatic\nStatic\nStatic",IDC_PROP_SOUND,
                     75,143,170,40
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,184,240,1
-    LTEXT           "Screen:",IDC_STATIC,18,187,47,9
+    LTEXT           "Screen:",IDC_STATIC,18,187,55,9
     LTEXT           "Static",IDC_PROP_SCREEN,75,187,170,9
-    LTEXT           "Colors:",IDC_STATIC,18,197,47,9
+    LTEXT           "Colors:",IDC_STATIC,18,197,55,9
     LTEXT           "Static",IDC_PROP_COLORS,75,197,170,9
-    LTEXT           "Save State:",IDC_STATIC,18,207,47,9
+    LTEXT           "Save State:",IDC_STATIC,18,207,55,9
     LTEXT           "Static",IDC_PROP_SAVESTATE,75,207,170,9
-    LTEXT           "Driver:",IDC_STATIC,18,217,47,9
+    LTEXT           "Driver:",IDC_STATIC,18,217,55,9
     LTEXT           "Static",IDC_PROP_SOURCE,75,217,170,9
-    LTEXT           "Clone of:",IDC_PROP_CLONEOF_TEXT,18,227,50,9
+    LTEXT           "Clone of:",IDC_PROP_CLONEOF_TEXT,18,227,55,9
     LTEXT           "Static",IDC_PROP_CLONEOF,75,227,170,16
 END
 
