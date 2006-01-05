@@ -333,7 +333,6 @@ $(OBJ)/nintendo.a: \
 	$(OBJ)/sndhrdw/snes.o $(OBJ)/drivers/nss.o \
 
 $(OBJ)/midw8080.a: \
-	$(OBJ)/machine/74123.o \
 	$(OBJ)/machine/8080bw.o \
 	$(OBJ)/vidhrdw/8080bw.o $(OBJ)/sndhrdw/8080bw.o $(OBJ)/drivers/8080bw.o \
 	$(OBJ)/vidhrdw/sspeedr.o $(OBJ)/drivers/sspeedr.o \
@@ -719,8 +718,6 @@ $(OBJ)/konami.a: \
 
 $(OBJ)/exidy.a: \
 	$(OBJ)/machine/carpolo.o $(OBJ)/vidhrdw/carpolo.o $(OBJ)/drivers/carpolo.o \
-	$(OBJ)/machine/74153.o \
-	$(OBJ)/machine/74148.o \
 	$(OBJ)/vidhrdw/exidy.o $(OBJ)/sndhrdw/exidy.o $(OBJ)/drivers/exidy.o \
 	$(OBJ)/sndhrdw/targ.o \
 	$(OBJ)/vidhrdw/circus.o $(OBJ)/drivers/circus.o $(OBJ)/sndhrdw/circus.o \
@@ -1284,6 +1281,7 @@ $(OBJ)/otherz80.a: \
 	$(OBJ)/drivers/coinmstr.o \
 	$(OBJ)/drivers/dwarfd.o \
 	$(OBJ)/drivers/tattack.o \
+	$(OBJ)/drivers/mirax.o \
 
 $(OBJ)/other.a: \
 	$(OBJ)/vidhrdw/monaco.o $(OBJ)/drivers/monaco.o \
@@ -1350,6 +1348,10 @@ OBJS += \
 	$(OBJ)/machine/8255ppi.o \
 	$(OBJ)/machine/6522via.o \
 	$(OBJ)/machine/7474.o \
+	$(OBJ)/machine/74123.o \
+	$(OBJ)/machine/74148.o \
+	$(OBJ)/machine/74153.o \
+	$(OBJ)/machine/74181.o \
 	$(OBJ)/machine/idectrl.o \
 	$(OBJ)/machine/ticket.o \
 	$(OBJ)/machine/random.o \
