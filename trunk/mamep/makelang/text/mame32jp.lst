@@ -1794,8 +1794,10 @@ batridra	アームドポリス バトライダー (日本版 ver A)	あーむどぽりす ばとらいだー	
 batridrk	アームドポリス バトライダー (韓国版 ver B)	あーむどぽりす ばとらいだー	Raizing / Eighting
 bbakraid	バトルバクレイド (日本版 Wed Apr 7 1999)	ばとるばくれいど	Eighting
 bbakradu	バトルバクレイド (日本版 Unlimited ver Tue Jun 8 1999)	ばとるばくれいど	Eighting
-pwrinst2	豪血寺一族2 / Power Instinct 2 (USA版)	ごうけつじいちぞく_2	Atlus/Cave
-pwrins2j	豪血寺一族2 (日本版)	ごうけつじいちぞく_2	Atlus/Cave
+pwrinst2	豪血寺一族2 / Power Instinct 2 (USA版)	ごうけつじ_2いちぞく	Atlus/Cave
+pwrins2j	豪血寺一族2 (日本版)	ごうけつじ_2いちぞく	Atlus/Cave
+plegends	豪血寺外伝 最強伝説 / Power Instinct Legends (USA版)	ごうけつじ_3がいでん	Atlus/Cave
+plegendj	豪血寺外伝 最強伝説 (日本版)	ごうけつじ_3がいでん	Atlus/Cave
 mazinger	マジンガーZ	まじんがーぜっと	Banpresto/Dynamic Pl. Toei Animation
 donpachi	首領蜂 (USA版)	どんぱち	Atlus/Cave
 donpachj	首領蜂 (日本版)	どんぱち	Atlus/Cave
@@ -3172,6 +3174,7 @@ abattle	アストロファイター / Astro Battle (set 1)	あすとろふぁいたー	Sidam
 abattle2	アストロファイター / Astro Battle (set 2)	あすとろふぁいたー	Sidam
 afire	アストロファイター / Astro Fire	あすとろふぁいたー	Rene Pierre
 acombat	アストロファイター / Astro Combat	あすとろふぁいたー	bootleg
+sstarbtl	アストロファイター/ Super Star Battle	あすとろふぁいたー	bootleg
 tomahawk	トマホーク777 (rev 1)	とまほーく777	Data East
 tomahaw5	トマホーク777 (rev 5)	とまほーく777	Data East
 prosoccr	プロサッカー	ぷろさっかー	Data East Corporation
@@ -3359,18 +3362,18 @@ dblewing	雙翼 <ダブルウイングス>	だぶるういんぐす	Mitchell
 fghthist	ファイターズヒストリー (USA版)	ふぁいたーずひすとりー_1	Data East Corporation
 fghthstw	ファイターズヒストリー (海外版)	ふぁいたーずひすとりー_1	Data East Corporation
 fghthsta	ファイターズヒストリー (USA版 alt hardware)	ふぁいたーずひすとりー_1	Data East Corporation
-hvysmsh	ハイパーハンドボール ヘビースマッシュ -The Future Sports	はいぱーはんどぼーるへびーすまっしゅ	Data East
-nslasher	ナイトスラッシャーズ	ないとすらっしゃーず	Data East Corporation
-nslashej	ナイトスラッシャーズ (日本版)	ないとすらっしゃーず	Data East Corporation
+hvysmsh	ハイパーハンドボール ヘビースマッシュ -The Future Sports (日本版 ver -2)	はいぱーはんどぼーるへびーすまっしゅ	Data East Corporation
+nslasher	ナイトスラッシャーズ (韓国版 rev 1.3)	ないとすらっしゃーず	Data East Corporation
+nslashej	ナイトスラッシャーズ (日本版 rev 1.2)	ないとすらっしゃーず	Data East Corporation
 lockload	ガンハード / Locked 'n Loaded (USA版)	がんはーど	Data East Corporation
 joemacr	ジョー&マック リターンズ (海外版 ver 1.1 1994.05.27)	じょーあんどまっくりたーんず	Data East
 joemacra	ジョー&マック リターンズ (海外版 ver 1.0 1994.05.19)	じょーあんどまっくりたーんず	Data East
 tattass	タトゥーアサシン (USA版 prototype)	たとぅーあさしん	Data East Pinball
 tattassa	タトゥーアサシン (アジア版 prototype)	たとぅーあさしん	Data East Pinball
 charlien	チャーリー忍者	ちゃーりーにんじゃ	Mitchell
-wcvol95	ワールドカップバレーボール'95	わーるどかっぷばれーぼーる95	Data East
-backfire	バックファイア！	ばっくふぁいあ	Data East
-backfira	バックファイア！ (set 2)	ばっくふぁいあ	Data East
+wcvol95	ワールドカップバレーボール'95 (日本版 ver 1.0)	わーるどかっぷばれーぼーる95	Data East Corporation
+backfire	バックファイア！	ばっくふぁいあ	Data East Corporation
+backfira	バックファイア！ (set 2)	ばっくふぁいあ	Data East Corporation
 prtytime	がんばれ！ゴンタ！！2 -Gonta the Diver II / Party Time -Gonta the Diver II (海外版)	がんばれごんた2	Mitchell
 gangonta	がんばれ！ゴンタ！！2 -Gonta the Diver II (日本版)	がんばれごんた2	Mitchell
 chainrec	マジカルドロップ / Chain Reaction (海外版 ver 2.2 1995.09.25)	まじかるどろっぷ_1_1	Data East
@@ -3381,9 +3384,10 @@ candance	キャノンダンサー (日本版)	きゃのんだんさー	Mitchell (Atlus License)
 sotsugyo	卒業証書	そつぎょうしょうしょ	Mitchell (Atlus license)
 sshangha	スーパー上海 ドラゴンズアイ (日本版)	すーぱーしゃんはいどらごんずあい	Hot-B.
 sshanghb	スーパー上海 ドラゴンズアイ (海外版) (海賊版)	すーぱーしゃんはいどらごんずあい	bootleg
-hoops96	ダンクドリーム'95 / Hoops '96	だんくどりーむ_295	Data East Corporation
-ddream95	ダンクドリーム'95	だんくどりーむ_295	Data East Corporation
-avengrgs	アベンジャーズ・イン・ギャラクティックストーム (海外版)	あべんじゃーずいんぎゃらくてぃっくすとーむ	Data East Corporation
+hoops96	ダンクドリーム'95 / Hoops '96 (欧州 / アジア版 2.0)	だんくどりーむ_295	Data East Corporation
+ddream95	ダンクドリーム'95 (日本版 1.4 EAM)	だんくどりーむ_295	Data East Corporation
+hoops95	ダンクドリーム'95 / Hoops (欧州 / アジア版 1.7)	だんくどりーむ_295	Data East Corporation
+avengrgs	アベンジャーズ・イン・ギャラクティックストーム (USA版)	あべんじゃーずいんぎゃらくてぃっくすとーむ	Data East Corporation
 avengrgj	アベンジャーズ・イン・ギャラクティックストーム (日本版)	あべんじゃーずいんぎゃらくてぃっくすとーむ	Data East Corporation
 skullfng	スカルファング -空牙外伝 (日本版)	すかるふぁんぐ	Data East Corporation
 stadhr96	スタジアムヒーロー'96 (ver EAD)	すたじあむひーろー_296	Data East Corporation
@@ -4572,7 +4576,8 @@ toffy	トッフィー	とっふぃー	Midas
 stoffy	スーパートッフィー	すーぱーとっふぃー	Midas (Unico license)
 ddungeon	デンジャラスダンジョン	でんじゃらすだんじょん	East Coast Coin Company (Melbourne)
 darktowr	ダークタワー	だーくたわー	Game Room
-tstrike	サンダーストライク	さんだーすとらいく	Game Room
+tstrike	サンダーストライク (newer)	さんだーすとらいく	East Coast Coin Company (Melbourne)
+tstrikea	サンダーストライク (older)	さんだーすとらいく	East Coast Coin Company (Melbourne)
 ctribe	ザ・コンバットライブス (USA版)	ざこんばっとらいぶす	Technos
 ctribeb	ザ・コンバットライブス (海賊版)	ざこんばっとらいぶす	bootleg
 blockout	ブロックアウト (set 1)	ぶろっくあうと	Technos + California Dreams
@@ -5298,10 +5303,10 @@ mayjisn2	早指し将棋 五月陣戦2	はやざししょうぎめいじんせん_2	Seta
 srmp6	スーパーリアル麻雀PVI (日本版)	すーぱーりあるまーじゃんぴー_6	Seta
 11beat	イレブンビート・ワールドトーナメント	いれぶんびーとわーるどとーなめんと	Hudson
 mtetrisc	マジカルテトリスチャレンジ featuring ミッキー (日本版 981009)	まじかるてとりすちゃれんじふぃーちゃりんぐみっきー	Capcom
-powerins	豪血寺一族 (日本版)	ごうけつじいちぞく_1	Atlus
-powerina	豪血寺一族 / Power Instinct (USA版) (海賊版 set 1)	ごうけつじいちぞく_1	Atlus
-powerinb	豪血寺一族 / Power Instinct (USA版) (海賊版 set 2)	ごうけつじいちぞく_1	Atlus
-powernjb	豪血寺一族 (日本版) (海賊版)	ごうけつじいちぞく_1	Atlus
+powerins	豪血寺一族 (日本版)	ごうけつじ_1いちぞく	Atlus
+powerina	豪血寺一族 / Power Instinct (USA版) (海賊版 set 1)	ごうけつじ_1いちぞく	Atlus
+powerinb	豪血寺一族 / Power Instinct (USA版) (海賊版 set 2)	ごうけつじ_1いちぞく	Atlus
+powernjb	豪血寺一族 (日本版) (海賊版)	ごうけつじ_1いちぞく	Atlus
 ohmygod	オーマイガァー！ (日本版)	おーまいがぁー	Atlus
 naname	ななめでまじっく！ (日本版)	ななめでまじっく	Atlus
 blmbycar	ブロンビーカー	ぶろんびーかー	ABM &amp; Gecas
@@ -5534,6 +5539,7 @@ quiz365	毎日替わるクイズ番組 クイズ365 (日本版)	まいにちかわるくいずばんぐみくい
 quiz365t	毎日替わるクイズ番組 クイズ365 (香港 / 台湾版)	まいにちかわるくいずばんぐみくいずさんろくご	Nakanihon + Taito
 rongrong	龍龍 / Rong Rong (欧州版)	ろんろん	Nakanihon
 rongrngg	龍龍 / Rong Rong (ドイツ版)	ろんろん	Nakanihon
+mjdchuka	麻将 大中華圈 (中国版 ver D111)	まーじゃんだいちゅうかけん	Dynax
 nettoqc	熱答クイズチャンピオン (日本版)	ねっとうくいずちゃんぴおん	Nakanihon
 ddenlovr	ドンデンラバー Vol.1 白黒つけよっ (香港版)	どんでんらばーぼりゅーむ1	Dynax
 hanakanz	花かんざし (日本版)	はなかんざし	Dynax
@@ -5787,6 +5793,7 @@ gt103aa	トリビア (ver 1.03a alt questions 1)	とりびあ_1_103AAQ1	Greyhound Electr
 gt103ab	トリビア (ver 1.03a alt questions 2)	とりびあ_1_103AAQ2	Greyhound Electronics
 findout	ファインドアウト (ver 4.04)	ふぁいんどあうと	Elettronolo
 quiz	クイズ (rev 2)	くいず	Italian bootleg
+quiz211	クイズ (rev 2.1)	くいず	Elettronolo
 gs4002	セレクション (ver 40.02TMB)	せれくしょん	G.E.I.
 gt102c	トリビア (ver 1.02C)	とりびあ_1_102C	Greyhound Electronics
 gt102b	トリビア (ver 1.02B)	とりびあ_1_102B	Greyhound Electronics
@@ -5820,6 +5827,7 @@ maddonnb	マッドンナ (set 2)	まっどんな	Tuning
 tugboat	タグボート	たぐぼーと	ETM
 noahsark	ノアズアーク	のあずあーく	Enter-Tech
 gotcha	ガッチャ -Mini Game Festival	がっちゃ	Dongsung
+ppchamp	ガッチャ -Mini Game Festival / Pasha Pasha Champ Mini Game Festival	がっちゃ	Dongsung
 amerdart	アメリダーツ (set 1)	あめりだーつ	Ameri
 amerdar2	アメリダーツ (set 2)	あめりだーつ	Ameri
 coolpool	クールプール	くーるぷーる	Catalina
@@ -5985,3 +5993,4 @@ tattack	タイムアタッカー	たいむあたっかー	Shonan
 mosaicf2	モザイク (F2 System)	もざいく	F2 System
 rbmk	実戦麻将王	じっせんまーじゃんおう	GMS
 go2000	ゴー2000	ごーつーさうざん	SA
+mirax	ミラックス	みらっくす	Current Technologies
