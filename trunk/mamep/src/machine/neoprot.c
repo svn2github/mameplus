@@ -587,30 +587,28 @@ void garou_install_protection(void)
 {
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2fffc0, 0x2fffc1, 0, 0, garou_bankswitch_w);
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2fe446, 0x2fe447, 0, 0, prot_9a37_r);
-	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2ffff8, 0x2ffff9, 0, 0, sma_random_r);
-	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2ffffa, 0x2ffffb, 0, 0, sma_random_r);
+	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2fffcc, 0x2fffcd, 0, 0, sma_random_r);
+	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2ffff0, 0x2ffff1, 0, 0, sma_random_r);
 }
 
 void garouo_install_protection(void)
 {
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2fffc0, 0x2fffc1, 0, 0, garouo_bankswitch_w);
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2fe446, 0x2fe447, 0, 0, prot_9a37_r);
-	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2ffff8, 0x2ffff9, 0, 0, sma_random_r);
-	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2ffffa, 0x2ffffb, 0, 0, sma_random_r);
+	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2fffcc, 0x2fffcd, 0, 0, sma_random_r);
+	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2ffff0, 0x2ffff1, 0, 0, sma_random_r);
 }
 
 void mslug3_install_protection(void)
 {
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2fffe4, 0x2fffe5, 0, 0, mslug3_bankswitch_w);
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2fe446, 0x2fe447, 0, 0, prot_9a37_r);
-	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2ffff8, 0x2ffff9, 0, 0, sma_random_r);
-	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2ffffa, 0x2ffffb, 0, 0, sma_random_r);
 }
 
 void kof2000_install_protection(void)
 {
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2fffec, 0x2fffed, 0, 0, kof2000_bankswitch_w);
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2fe446, 0x2fe447, 0, 0, prot_9a37_r);
-	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2ffff8, 0x2ffff9, 0, 0, sma_random_r);
-	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2ffffa, 0x2ffffb, 0, 0, sma_random_r);
+	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2fffd8, 0x2fffd9, 0, 0, sma_random_r);
+	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2fffda, 0x2fffdb, 0, 0, sma_random_r);
 }
