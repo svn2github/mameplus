@@ -5126,6 +5126,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( mslug3d )	/* 0256 (c) 2000 SNK */
 	DRIVER( kof2000 )	/* 0257 (c) 2000 SNK */
 	DRIVER( kof2000n )	/* 0257 (c) 2000 SNK */
+	DRIVER( kof2000d )	/* 0257 (c) 2000 SNK */
 				/* 0258 SNK vs. Capcom? */
 	DRIVER( bangbead )	/* 0259 (c) 2000 Visco */
 //	DRIVER( bangbedp )	/* 0259 (c) 2000 Visco */

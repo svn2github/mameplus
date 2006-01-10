@@ -676,3 +676,79 @@ void lans2004_decrypt_68k( void )
 	rom[0xBBE42/2] = 0x6002;
 }
 
+
+void kof96ep_px_decrypt(void)
+{
+	int i,j;
+	UINT8 *rom = memory_region( REGION_CPU1 );
+	for ( i=0; i < 0x080000; i++ )
+	{
+		j=i+0x300000;
+		if (rom[j] - rom[i] == 8) rom[j]=rom[i];
+	}
+	memcpy(rom, rom+0x300000, 0x080000);
+}
+
+void kf2k1pa_sx_decrypt(void)
+{
+	UINT8 *rom = memory_region(REGION_GFX1);
+	int i;
+
+	for (i = 0; i < 0x20000; i++)
+		rom[i] = BITSWAP8(rom[i], 3, 2, 4, 5, 1, 6, 0, 7);
+}
+
+void kf2k2mp_px_decrypt(void)
+{
+	unsigned char *src = memory_region(REGION_CPU1);
+	unsigned char *dst = (unsigned char*)malloc(0x80);
+	int i, j;
+
+	if (dst)
+	{
+		for (i = 0; i < 0x500000; i+=0x80)
+		{
+			for (j = 0; j < 0x80 / 2; j++)
+			{
+				int ofst = BITSWAP8( j, 6, 7, 2, 3, 4, 5, 0, 1 );
+				memcpy(dst + j * 2, src + i + ofst * 2, 2);
+			}
+			memcpy(src + i, dst, 0x80);
+		}
+	}
+	free(dst);
+}
+
+
+// Decryption code by IQ_132 -- http;//neosource.1emulation.com
+void kof2002b_gfx_decrypt(UINT8 *src, int size)
+{
+	int i, j;
+	int t[8][10] =
+	{
+		{ 0, 8, 7, 3, 4, 5, 6, 2, 1 },
+		{ 1, 0, 8, 4, 5, 3, 7, 6, 2 },
+		{ 2, 1, 0, 3, 4, 5, 8, 7, 6 },
+		{ 6, 2, 1, 5, 3, 4, 0, 8, 7 },
+		{ 7, 6, 2, 5, 3, 4, 1, 0, 8 },
+		{ 0, 1, 2, 3, 4, 5, 6, 7, 8 },
+		{ 2, 1, 0, 4, 5, 3, 6, 7, 8 },
+		{ 8, 0, 7, 3, 4, 5, 6, 2, 1 },
+	};
+
+	UINT8 *dst = malloc(0x10000);
+
+	for (i = 0; i < size; i+=0x10000)
+	{
+		memcpy(dst, src+i,0x10000);
+
+		for (j = 0; j < 0x200; j++)
+		{
+			int n = ((j % 0x40) / 8);
+			int ofst = BITSWAP16(j, 15, 14, 13, 12, 11, 10, 9, t[n][0], t[n][1], t[n][2],
+					        t[n][3], t[n][4], t[n][5], t[n][6], t[n][7], t[n][8]);
+			memcpy(src+i+ofst*128, dst+j*128, 128);
+		}
+	}
+	free(dst);
+}

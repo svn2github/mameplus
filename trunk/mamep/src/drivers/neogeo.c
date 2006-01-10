@@ -7413,18 +7413,9 @@ DRIVER_INIT( ssideki )
 	ssideki_install_protection();
 }
 
-//fixme
 DRIVER_INIT( kof96ep )
 {
-	int i,j;
-	UINT8 *rom = memory_region( REGION_CPU1 );
-	for ( i=0; i < 0x080000; i++ )
-	{
-		j=i+0x300000;
-		if (rom[j] - rom[i] == 8) rom[j]=rom[i];
-	}
-	memcpy(rom, rom+0x300000, 0x080000);
-
+	kof96ep_px_decrypt();
 	init_neogeo();
 }
 
@@ -7471,18 +7462,8 @@ DRIVER_INIT( garouo )
 DRIVER_INIT( garoud )
 {
 	garou_decrypt_68k();
-//fixme
-	int i;
-	extern int neogeo_fix_bank_type;
-	int tx_size = memory_region_length(REGION_GFX1);
-	int rom_size = memory_region_length(REGION_GFX3);
-	UINT8 *src = memory_region(REGION_GFX3)+rom_size-tx_size;
-	UINT8 *dst = memory_region(REGION_GFX1);
 	neogeo_fix_bank_type = 1;
-
-	for (i = 0;i < tx_size;i++)
-	dst [ i ] = src[(i & ~0x1f) + ((i & 7) << 2) + ((~i & 8) >> 2) + ((i & 0x10) >> 4)];
-
+	neogeo_sfix_decrypt();
 	init_neogeo();
 	garou_install_protection();
 }
@@ -7526,22 +7507,16 @@ DRIVER_INIT( kof2001 )
 	init_neogeo();
 }
 
-//fixme
 DRIVER_INIT( kf2k1pls )
 {
 	cmc50_neogeo_gfx_decrypt(0x1e);
 	init_neogeo();
 }
 
-//fixme
 DRIVER_INIT( kf2k1pa )
 {
-	UINT8 *rom = (memory_region(REGION_GFX1));
-	int i;
-	for (i=0;i<0x20000;i++)
-		rom[i]=BITSWAP8(rom[i],3,2,4,5,1,6,0,7);
-
 	neogeo_fix_bank_type = 1;
+	kf2k1pa_sx_decrypt();
 	cmc50_neogeo_gfx_decrypt(0x1e);
 	init_neogeo();
 }
@@ -7559,13 +7534,6 @@ DRIVER_INIT( mslug4d )
 	neogeo_fix_bank_type = 1;
 	neogeo_sfix_decrypt();
 	neo_pcm2_snk_1999(8);
-	init_neogeo();
-}
-
-DRIVER_INIT( kof99n )
-{
-	neogeo_fix_bank_type = 1;
-	kof99_neogeo_gfx_decrypt(0x00);
 	init_neogeo();
 }
 
@@ -7590,11 +7558,20 @@ DRIVER_INIT( preisle2 )
 	init_neogeo();
 }
 
+DRIVER_INIT( kof99n )
+{
+	neogeo_fix_bank_type = 1;
+	kof99_neogeo_gfx_decrypt(0x00);
+	init_neogeo();
+	//kof99n_install_protection();
+}
+
 DRIVER_INIT( mslug3n )
 {
 	neogeo_fix_bank_type = 1;
 	kof99_neogeo_gfx_decrypt(0xad);
 	init_neogeo();
+	//mslug3n_install_protection();
 }
 
 DRIVER_INIT( kof2000n )
@@ -7602,6 +7579,7 @@ DRIVER_INIT( kof2000n )
 	neogeo_fix_bank_type = 2;
 	kof2000_neogeo_gfx_decrypt(0x00);
 	init_neogeo();
+	//kof2000n_install_protection();
 }
 
 DRIVER_INIT( bangbead )
@@ -7648,12 +7626,24 @@ DRIVER_INIT( mjneogeo )
 	init_neogeo();
 }
 
+
+static READ16_HANDLER( popbounc_sfix_16_r )
+{
+	if (activecpu_get_pc()==0x6b10)
+		return 0;
+	return neogeo_ram16[0x4fbc/2];
+}
+
 /* Pop and Bounce and use a custom Spinner for Controls */
 DRIVER_INIT( popbounc )
 {
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x300000, 0x300001, 0, 0, popbounc1_16_r);
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x340000, 0x340001, 0, 0, popbounc2_16_r);
 	init_neogeo();
+
+	/* the game hangs after a while without this patch */
+	if (!Machine->sample_rate)
+		memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x104fbc, 0x104fbd, 0, 0, popbounc_sfix_16_r);
 }
 
 DRIVER_INIT( rotd )
@@ -7700,37 +7690,14 @@ DRIVER_INIT( kof2km2 )
 	init_neogeo();
 }
 
-// Decryption code by IQ_132 -- http;//neosource.1emulation.com
-static void kof2002b_gfx_decrypt(UINT8 *src, int size)
+DRIVER_INIT( kf2k2mp )
 {
-	int i, j;
-	int t[8][10] =
-	{
-		{ 0, 8, 7, 3, 4, 5, 6, 2, 1 },
-		{ 1, 0, 8, 4, 5, 3, 7, 6, 2 },
-		{ 2, 1, 0, 3, 4, 5, 8, 7, 6 },
-		{ 6, 2, 1, 5, 3, 4, 0, 8, 7 },
-		{ 7, 6, 2, 5, 3, 4, 1, 0, 8 },
-		{ 0, 1, 2, 3, 4, 5, 6, 7, 8 },
-		{ 2, 1, 0, 4, 5, 3, 6, 7, 8 },
-		{ 8, 0, 7, 3, 4, 5, 6, 2, 1 },
-	};
-
-	UINT8 *dst = malloc(0x10000);
-
-	for (i = 0; i < size; i+=0x10000)
-	{
-		memcpy(dst, src+i,0x10000);
-
-		for (j = 0; j < 0x200; j++)
-		{
-			int n = ((j % 0x40) / 8);
-			int ofst = BITSWAP16(j, 15, 14, 13, 12, 11, 10, 9, t[n][0], t[n][1], t[n][2],
-					        t[n][3], t[n][4], t[n][5], t[n][6], t[n][7], t[n][8]);
-			memcpy(src+i+ofst*128, dst+j*128, 128);
-		}
-	}
-	free(dst);
+	kf2k2mp_px_decrypt();
+	neo_pcm2_swap(0);
+	neogeo_bootleg_sx_decrypt(2);
+	neogeo_fix_bank_type = 0;
+	cmc50_neogeo_gfx_decrypt(0xec);
+	init_neogeo();
 }
 
 DRIVER_INIT( kof2002d )
@@ -7748,43 +7715,6 @@ DRIVER_INIT( kof2002b )
 	neo_pcm2_swap(0);
 	kof2002b_gfx_decrypt(memory_region(REGION_GFX3),0x4000000);
 	kof2002b_gfx_decrypt(memory_region(REGION_GFX1),0x20000);
-	init_neogeo();
-}
-
-static void kof2k2pc_sx_decrypt( void )
-{
-	UINT8 *rom = memory_region( REGION_GFX1 );
-	int rom_size = memory_region_length( REGION_GFX1 );
-	int i;
-
-	for( i = 0; i < rom_size; i++ ) {
-		rom[ i ] = BITSWAP8( rom[ i ], 7, 6, 0, 4, 3, 2, 1, 5 );
-	}
-}
-
-DRIVER_INIT( kf2k2mp )
-{
-	unsigned char *src = memory_region(REGION_CPU1);
-	unsigned char *dst = (unsigned char*)malloc(0x80);
-	int i, j;
-
-	if (dst)
-	{
-		for (i = 0; i < 0x500000; i+=0x80)
-		{
-			for (j = 0; j < 0x80 / 2; j++)
-			{
-				int ofst = BITSWAP8( j, 6, 7, 2, 3, 4, 5, 0, 1 );
-				memcpy(dst + j * 2, src + i + ofst * 2, 2);
-			}
-			memcpy(src + i, dst, 0x80);
-		}
-	}
-	free(dst);
-	neogeo_fix_bank_type = 0;
-	kof2k2pc_sx_decrypt();
-	cmc50_neogeo_gfx_decrypt(0xec);
-	neo_pcm2_swap(0);
 	init_neogeo();
 }
 
