@@ -6830,7 +6830,6 @@ ROM_START( kf2k2pla ) /* bootleg */
 	ROM_LOAD16_BYTE( "265-c8.bin", 0x3000001, 0x800000, CRC(ab0bb549) SHA1(d23afb60b7f831f7d4a98ad3c4a00ee19877a1ce) ) /* Plane 2,3 */
 ROM_END
 
-
 ROM_START( kf2k2plb ) /* bootleg */
 	ROM_REGION( 0x500000, REGION_CPU1, 0 )
 	ROM_LOAD16_WORD_SWAP( "265-p1p.bin",0x000000, 0x100000, CRC(3ab03781) )
@@ -6859,7 +6858,6 @@ ROM_START( kf2k2plb ) /* bootleg */
 	ROM_LOAD16_BYTE( "265-c8.bin", 0x3000001, 0x800000, CRC(ab0bb549) SHA1(d23afb60b7f831f7d4a98ad3c4a00ee19877a1ce) ) /* Plane 2,3 */
 ROM_END
 
-
 ROM_START( kf2k2mp )
 	ROM_REGION( 0x800000, REGION_CPU1, 0 )
 	ROM_LOAD16_WORD_SWAP( "kf02m-p1.bin", 0x000000, 0x400000, CRC(ff7c6ec0) SHA1(704c14d671dcb4cfed44d9f978a289cb7dd9d065) )
@@ -6887,7 +6885,6 @@ ROM_START( kf2k2mp )
 	ROM_LOAD16_BYTE( "265-c8.bin", 0x3000001, 0x800000, CRC(ab0bb549) SHA1(d23afb60b7f831f7d4a98ad3c4a00ee19877a1ce) ) /* Plane 2,3 */
 ROM_END
 
-
 ROM_START( kf2k2mp2 ) /* bootleg */
 	ROM_REGION( 0x600000, REGION_CPU1, 0 )
 	ROM_LOAD16_WORD_SWAP( "k2k2m2p1.bin", 0x000000, 0x200000, CRC(1016806c) SHA1(a583b45e9c0d6f67b95c52e44444aabe88f68d97) )
@@ -6914,7 +6911,6 @@ ROM_START( kf2k2mp2 ) /* bootleg */
 	ROM_LOAD16_BYTE( "265-c7.bin", 0x3000000, 0x800000, CRC(1a2749d8) SHA1(af7d9ec1d576209826fa568f676bbff92f6d6ddd) ) /* Plane 0,1 */
 	ROM_LOAD16_BYTE( "265-c8.bin", 0x3000001, 0x800000, CRC(ab0bb549) SHA1(d23afb60b7f831f7d4a98ad3c4a00ee19877a1ce) ) /* Plane 2,3 */
 ROM_END
-
 
 ROM_START( kof2002d )
 	ROM_REGION( 0x500000, REGION_CPU1, 0 )
@@ -7069,6 +7065,7 @@ ROM_START( matrimbl )
 	ROM_LOAD16_BYTE( "266-c7b.bin", 0x3000000, 0x800000, CRC(ab481bb6) ) /* Plane 0,1 */
 	ROM_LOAD16_BYTE( "266-c8b.bin", 0x3000001, 0x800000, CRC(906cf267) ) /* Plane 2,3 */
 ROM_END
+
 
 ROM_START( pnyaa ) /* Encrypted Set */
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )
@@ -7726,18 +7723,9 @@ DRIVER_INIT( ssideki )
 	ssideki_install_protection();
 }
 
-//fixme
 DRIVER_INIT( kof96ep )
 {
-	int i,j;
-	UINT8 *rom = memory_region( REGION_CPU1 );
-	for ( i=0; i < 0x080000; i++ )
-	{
-		j=i+0x300000;
-		if (rom[j] - rom[i] == 8) rom[j]=rom[i];
-	}
-	memcpy(rom, rom+0x300000, 0x080000);
-
+	kof96ep_px_decrypt();
 	init_neogeo();
 }
 
@@ -7784,18 +7772,8 @@ DRIVER_INIT( garouo )
 DRIVER_INIT( garoud )
 {
 	garou_decrypt_68k();
-//fixme
-	int i;
-	extern int neogeo_fix_bank_type;
-	int tx_size = memory_region_length(REGION_GFX1);
-	int rom_size = memory_region_length(REGION_GFX3);
-	UINT8 *src = memory_region(REGION_GFX3)+rom_size-tx_size;
-	UINT8 *dst = memory_region(REGION_GFX1);
 	neogeo_fix_bank_type = 1;
-
-	for (i = 0;i < tx_size;i++)
-	dst [ i ] = src[(i & ~0x1f) + ((i & 7) << 2) + ((~i & 8) >> 2) + ((i & 0x10) >> 4)];
-
+	neogeo_sfix_decrypt();
 	init_neogeo();
 	garou_install_protection();
 }
@@ -7839,22 +7817,16 @@ DRIVER_INIT( kof2001 )
 	init_neogeo();
 }
 
-//fixme
 DRIVER_INIT( kf2k1pls )
 {
 	cmc50_neogeo_gfx_decrypt(0x1e);
 	init_neogeo();
 }
 
-//fixme
 DRIVER_INIT( kf2k1pa )
 {
-	UINT8 *rom = (memory_region(REGION_GFX1));
-	int i;
-	for (i=0;i<0x20000;i++)
-		rom[i]=BITSWAP8(rom[i],3,2,4,5,1,6,0,7);
-
 	neogeo_fix_bank_type = 1;
+	kf2k1pa_sx_decrypt();
 	cmc50_neogeo_gfx_decrypt(0x1e);
 	init_neogeo();
 }
@@ -7872,13 +7844,6 @@ DRIVER_INIT( mslug4d )
 	neogeo_fix_bank_type = 1;
 	neogeo_sfix_decrypt();
 	neo_pcm2_snk_1999(8);
-	init_neogeo();
-}
-
-DRIVER_INIT( kof99n )
-{
-	neogeo_fix_bank_type = 1;
-	kof99_neogeo_gfx_decrypt(0x00);
 	init_neogeo();
 }
 
@@ -7903,11 +7868,20 @@ DRIVER_INIT( preisle2 )
 	init_neogeo();
 }
 
+DRIVER_INIT( kof99n )
+{
+	neogeo_fix_bank_type = 1;
+	kof99_neogeo_gfx_decrypt(0x00);
+	init_neogeo();
+	//kof99n_install_protection();
+}
+
 DRIVER_INIT( mslug3n )
 {
 	neogeo_fix_bank_type = 1;
 	kof99_neogeo_gfx_decrypt(0xad);
 	init_neogeo();
+	//mslug3n_install_protection();
 }
 
 DRIVER_INIT( kof2000n )
@@ -7915,6 +7889,7 @@ DRIVER_INIT( kof2000n )
 	neogeo_fix_bank_type = 2;
 	kof2000_neogeo_gfx_decrypt(0x00);
 	init_neogeo();
+	//kof2000n_install_protection();
 }
 
 DRIVER_INIT( bangbead )
@@ -7961,12 +7936,24 @@ DRIVER_INIT( mjneogeo )
 	init_neogeo();
 }
 
+
+static READ16_HANDLER( popbounc_sfix_16_r )
+{
+	if (activecpu_get_pc()==0x6b10)
+		return 0;
+	return neogeo_ram16[0x4fbc/2];
+}
+
 /* Pop and Bounce and use a custom Spinner for Controls */
 DRIVER_INIT( popbounc )
 {
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x300000, 0x300001, 0, 0, popbounc1_16_r);
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x340000, 0x340001, 0, 0, popbounc2_16_r);
 	init_neogeo();
+
+	/* the game hangs after a while without this patch */
+	if (!Machine->sample_rate)
+		memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x104fbc, 0x104fbd, 0, 0, popbounc_sfix_16_r);
 }
 
 DRIVER_INIT( rotd )
@@ -8023,39 +8010,6 @@ DRIVER_INIT( kof2km2 )
 	init_neogeo();
 }
 
-// Decryption code by IQ_132 -- http;//neosource.1emulation.com
-static void kof2002b_gfx_decrypt(UINT8 *src, int size)
-{
-	int i, j;
-	int t[8][10] =
-	{
-		{ 0, 8, 7, 3, 4, 5, 6, 2, 1 },
-		{ 1, 0, 8, 4, 5, 3, 7, 6, 2 },
-		{ 2, 1, 0, 3, 4, 5, 8, 7, 6 },
-		{ 6, 2, 1, 5, 3, 4, 0, 8, 7 },
-		{ 7, 6, 2, 5, 3, 4, 1, 0, 8 },
-		{ 0, 1, 2, 3, 4, 5, 6, 7, 8 },
-		{ 2, 1, 0, 4, 5, 3, 6, 7, 8 },
-		{ 8, 0, 7, 3, 4, 5, 6, 2, 1 },
-	};
-
-	UINT8 *dst = malloc(0x10000);
-
-	for (i = 0; i < size; i+=0x10000)
-	{
-		memcpy(dst, src+i,0x10000);
-
-		for (j = 0; j < 0x200; j++)
-		{
-			int n = ((j % 0x40) / 8);
-			int ofst = BITSWAP16(j, 15, 14, 13, 12, 11, 10, 9, t[n][0], t[n][1], t[n][2],
-					        t[n][3], t[n][4], t[n][5], t[n][6], t[n][7], t[n][8]);
-			memcpy(src+i+ofst*128, dst+j*128, 128);
-		}
-	}
-	free(dst);
-}
-
 DRIVER_INIT( kof2002d )
 {
 	kof2002_decrypt_68k();
@@ -8072,17 +8026,6 @@ DRIVER_INIT( kof2002b )
 	kof2002b_gfx_decrypt(memory_region(REGION_GFX3),0x4000000);
 	kof2002b_gfx_decrypt(memory_region(REGION_GFX1),0x20000);
 	init_neogeo();
-}
-
-static void kof2k2pc_sx_decrypt( void )
-{
-	UINT8 *rom = memory_region( REGION_GFX1 );
-	int rom_size = memory_region_length( REGION_GFX1 );
-	int i;
-
-	for( i = 0; i < rom_size; i++ ) {
-		rom[ i ] = BITSWAP8( rom[ i ], 7, 6, 0, 4, 3, 2, 1, 5 );
-	}
 }
 
 DRIVER_INIT( matrim )
@@ -8460,7 +8403,7 @@ GAMEB( 1996, samsho4,  neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK",
 GAMEB( 1996, rbffspec, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "Real Bout Fatal Fury Special / Real Bout Garou Densetsu Special", 0 )
 GAMEB( 1997, kof97,    neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "The King of Fighters '97 (set 1)", 0 )
 GAMEB( 1997, kof97a,   kof97,    neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "The King of Fighters '97 (set 2)", 0 )
-GAMEB( 2003, kof97pls, kof97,    neogeo, neogeo, neogeo,  neogeo,   ROT0, "bootleg", "The King of Fighters '97 Plus (bootleg / set 1)", 0 )
+GAMEB( 2003, kof97pls, kof97,    neogeo, neogeo, neogeo,  neogeo,   ROT0, "bootleg", "The King of Fighters '97 Plus (bootleg)", 0 )
 GAMEB( 1997, kog,      kof97,    neogeo, neogeo, neogeo,  kog,      ROT0, "bootleg", "King of Gladiator (The King of Fighters '97 bootleg)", GAME_NOT_WORKING ) // protected bootleg
 GAMEB( 1997, lastblad, neogeo,   neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "The Last Blade / Bakumatsu Roman - Gekka no Kenshi (set 1)", 0 )
 GAMEB( 1997, lastblda, lastblad, neogeo, neo320, neogeo,  neogeo,   ROT0, "SNK", "The Last Blade / Bakumatsu Roman - Gekka no Kenshi (set 2)", 0 )
@@ -8506,7 +8449,7 @@ GAMEB( 2002, kof2002d, kof2002,	 neogeo, neogeo, neogeo,  kof2002d, ROT0, "Eolit
 GAMEB( 2002, kof2002b, kof2002,  neogeo, neogeo, neogeo,  kof2002b, ROT0, "bootleg", "The King of Fighters 2002 (bootleg)", 0 )
 GAMEB( 2002, kf2k2pls, kof2002,  neogeo, neogeo, neogeo,  kf2k2pls, ROT0, "bootleg", "The King of Fighters 2002 Plus (set 1, bootleg)" , 0) /* Encrypted GFX */
 GAMEB( 2002, kf2k2pla, kof2002,  neogeo, neogeo, neogeo,  kf2k2pls, ROT0, "bootleg", "The King of Fighters 2002 Plus (set 2, bootleg)" , 0) /* Encrypted GFX */
-GAMEB( 2002, kf2k2plb, kof2002,  neogeo, neogeo, neogeo,  kf2k2pls, ROT0, "bootleg", "The King of Fighters 2002 Plus (set 3, bootleg)", 0 ) /* Encrypted GFX */
+GAMEB( 2002, kf2k2plb, kof2002,  neogeo, neogeo, neogeo,  kf2k2pls, ROT0, "bootleg", "The King of Fighters 2002 Plus (set 3, bootleg)" , 0) /* Encrypted GFX */
 GAMEB( 2002, kf2k2mp,  kof2002,  neogeo, neogeo, neogeo,  kf2k2mp,  ROT0, "bootleg", "The King of Fighters 2002 Magic Plus (bootleg)" , 0) /* Encrypted GFX */
 GAMEB( 2002, kf2k2mp2, kof2002,  neogeo, neogeo, neogeo,  kof2km2,  ROT0, "bootleg", "The King of Fighters 2002 Magic Plus II (bootleg)" , 0) /* Encrypted GFX */
 GAMEB( 2002, kof10th,  kof2002,  neogeo, raster, neogeo,  kof10th,  ROT0, "bootleg", "The King Of Fighters 10th Anniversary (The King of Fighters 2002 bootleg)", 0 ) // fake SNK copyright
@@ -8650,7 +8593,7 @@ GAMEB( 1998, breakrev, breakers, neogeo, neo320, neogeo,  neogeo,   ROT0, "Visco
 GAMEB( 1998, flipshot, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Battle Flip Shot", 0 )
 GAMEB( 1999, ctomaday, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Captain Tomaday", 0 )
 GAMEB( 1999, ganryu,   neogeo,   neogeo, neogeo, neogeo,  ganryu,   ROT0, "Visco", "Ganryu / Musashi Ganryuki" , 0)	/* Encrypted GFX */
-GAMEB( 1999, ganryud,  ganryu,   neogeo, neogeo, neogeo,  gfxdec42, ROT0, "Visco", "Musashi Ganryuuki (decrypted C)", 0 )
+GAMEB( 1999, ganryud,  ganryu,   neogeo, neogeo, neogeo,  gfxdec42, ROT0, "Visco", "Ganryu / Musashi Ganryuki (decrypted C)", 0 )
 GAMEB( 2000, bangbead, neogeo,   neogeo, raster, neogeo,  bangbead, ROT0, "Visco", "Bang Bead", 0 )
 //GAMEB( 2000, bangbedp, bangbead, neogeo, raster, neogeo,  neogeo,   ROT0, "Visco", "Bang Bead (prototype)", 0 )
 

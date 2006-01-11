@@ -5127,6 +5127,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( mslug3d )	/* 0256 (c) 2000 SNK */
 	DRIVER( kof2000 )	/* 0257 (c) 2000 SNK */
 	DRIVER( kof2000n )	/* 0257 (c) 2000 SNK */
+	DRIVER( kof2000d )	/* 0257 (c) 2000 SNK */
 				/* 0258 SNK vs. Capcom? */
 	DRIVER( bangbead )	/* 0259 (c) 2000 Visco */
 //	DRIVER( bangbedp )	/* 0259 (c) 2000 Visco */
@@ -5151,7 +5152,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( kof2002b )	/* 0265 (c) 2002 bootleg */
 	DRIVER( kf2k2pls )	/* bootleg */
 	DRIVER( kf2k2pla )	/* bootleg */
-	DRIVER( kf2k2plb )	/* 0265 (c) 2002 bootleg */
+	DRIVER( kf2k2plb )	/* bootleg */
 	DRIVER( kf2k2mp )	/* bootleg */
 	DRIVER( kf2k2mp2 )	/* bootleg */
 	DRIVER( kof10th )	/* bootleg of kof2002 */
