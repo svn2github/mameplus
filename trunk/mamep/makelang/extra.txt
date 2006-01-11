@@ -23,6 +23,7 @@ preisl2d
 mslug3d
 nitdd
 sengok3d
+kof2000d
 kof2001d
 kf2k1pls
 kf2k1pa
