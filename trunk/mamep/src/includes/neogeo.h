@@ -102,13 +102,13 @@ void install_pvc_protection(void);
 
 /* machine/neoboot.c */
 void kog_px_decrypt(void);
-void kog_sx_decrypt(void);
-void kog_cx_decrypt(void);
+void neogeo_bootleg_cx_decrypt(void);
 void install_kof10th_protection(void);
 void decrypt_kof10th(void);
 void decrypt_kf10thep(void);
 void decrypt_kf2k5uni(void);
 void neogeo_bootleg_sx_decrypt(int value);
+void kf2k2mp_decrypt(void);
 void kof2km2_px_decrypt(void);
 void decrypt_cthd2003(void);
 void patch_cthd2003(void);
@@ -117,12 +117,6 @@ void decrypt_matrimbl(void);
 void decrypt_kof2k4se_68k(void);
 void lans2004_decrypt_68k(void);
 void lans2004_vx_decrypt(void);
-void lans2004_sx_decrypt(void);
-void lans2004_cx_decrypt(void);
-void kof96ep_px_decrypt(void);
-void kf2k1pa_sx_decrypt(void);
-void kf2k2mp_px_decrypt(void);
-void kof2002b_gfx_decrypt(UINT8 *src, int size);
 
 /* vidhrdw/neogeo.c */
 
