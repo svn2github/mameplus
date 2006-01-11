@@ -282,8 +282,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,103,0,0
- PRODUCTVERSION 0,103,0,0
+ FILEVERSION 0,104,0,0
+ PRODUCTVERSION 0,104,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -302,13 +302,13 @@ BEGIN
             VALUE "Comments", "Multiple Arcade Machine Emulator for Win32\0"
             VALUE "CompanyName", "MAME Team\0"
             VALUE "FileDescription", "Multiple Arcade Machine Emulator for Win32\0"
-            VALUE "FileVersion", "0, 103, 0, 0\0"
+            VALUE "FileVersion", "0, 104, 0, 0\0"
             VALUE "InternalName", "MAME32\0"
-            VALUE "LegalCopyright", "Copyright 1997-2005 Nicola Salmoria and the MAME team\0"
+            VALUE "LegalCopyright", "Copyright 1997-2006 Nicola Salmoria and the MAME team\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "MAME32.exe\0"
             VALUE "ProductName", "MAME32\0"
-            VALUE "ProductVersion", "0, 103, 0, 0\0"
+            VALUE "ProductVersion", "0, 104, 0, 0\0"
         END
     END
     BLOCK "VarFileInfo"
@@ -370,7 +370,7 @@ BEGIN
     CTEXT           "Multiple Arcade Machine Emulator",IDC_STATIC,147,7,142,
                     11,NOT WS_GROUP
     CTEXT           "Version 0",IDC_VERSION,147,18,142,11,NOT WS_GROUP
-    CTEXT           "Copyright (C) 1997-2005 The MAME Team",IDC_STATIC,147,
+    CTEXT           "Copyright (C) 1997-2006 The MAME Team",IDC_STATIC,147,
                     29,142,10,NOT WS_GROUP
     CTEXT           "MAME32 version by",IDC_STATIC,147,51,142,10,NOT 
                     WS_GROUP
@@ -479,28 +479,28 @@ BEGIN
     LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
-    LTEXT           "Manufactured:",IDC_STATIC,18,45,47,9
+    LTEXT           "Manufactured:",IDC_STATIC,18,45,55,9
     LTEXT           "Static",IDC_PROP_MANUFACTURED,75,45,170,9,SS_NOPREFIX
-    LTEXT           "Status:",IDC_STATIC,18,55,47,9
+    LTEXT           "Status:",IDC_STATIC,18,55,55,9
     LTEXT           "Static\nStatic\nStatic\nStatic",IDC_PROP_STATUS,75,55,170,32
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,88,240,1
-    LTEXT           "CPU:",IDC_STATIC,18,91,47,9
+    LTEXT           "CPU:",IDC_STATIC,18,91,55,9
     LTEXT           "Static\nStatic\nStatic\nStatic\nStatic\nStatic",
                     IDC_PROP_CPU,75,91,170,48
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,140,240,1
-    LTEXT           "Sound:",IDC_STATIC,18,143,47,9
+    LTEXT           "Sound:",IDC_STATIC,18,143,55,9
     LTEXT           "Static\nStatic\nStatic\nStatic\nStatic",IDC_PROP_SOUND,
                     75,143,170,40
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,184,240,1
-    LTEXT           "Screen:",IDC_STATIC,18,187,47,9
+    LTEXT           "Screen:",IDC_STATIC,18,187,55,9
     LTEXT           "Static",IDC_PROP_SCREEN,75,187,170,9
-    LTEXT           "Colors:",IDC_STATIC,18,197,47,9
+    LTEXT           "Colors:",IDC_STATIC,18,197,55,9
     LTEXT           "Static",IDC_PROP_COLORS,75,197,170,9
-    LTEXT           "Save State:",IDC_STATIC,18,207,47,9
+    LTEXT           "Save State:",IDC_STATIC,18,207,55,9
     LTEXT           "Static",IDC_PROP_SAVESTATE,75,207,170,9
-    LTEXT           "Driver:",IDC_STATIC,18,217,47,9
+    LTEXT           "Driver:",IDC_STATIC,18,217,55,9
     LTEXT           "Static",IDC_PROP_SOURCE,75,217,170,9
-    LTEXT           "Clone of:",IDC_PROP_CLONEOF_TEXT,18,227,50,9
+    LTEXT           "Clone of:",IDC_PROP_CLONEOF_TEXT,18,227,55,9
     LTEXT           "Static",IDC_PROP_CLONEOF,75,227,170,16
 END
 

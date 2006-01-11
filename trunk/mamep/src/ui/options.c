@@ -3299,7 +3299,7 @@ static int rc_load_alt_config(alt_options_type *alt_option)
 
 	alt_option->variable->use_default = TRUE;
 	SetCorePathList(FILETYPE_INI, settings.inidirs);
-	sprintf(filename, "drivers\\%s", alt_option->name);
+	sprintf(filename, "%s", alt_option->name);
 	len = strlen(filename);
 
 	if (len > 2 && filename[len - 2] == '.' && filename[len - 1] == 'c')
@@ -3340,7 +3340,7 @@ static int rc_save_alt_config(alt_options_type *alt_option)
 	validate_game_option(&gOpts);
 	SortD3DEffectByOverrides();
 
-	sprintf(filename, "drivers\\%s", strlower(alt_option->name));
+	sprintf(filename, "%s", strlower(alt_option->name));
 	len = strlen(filename);
 
 	if (len > 2 && filename[len - 2] == '.' && filename[len - 1] == 'c')
