@@ -309,7 +309,7 @@ static LRESULT CALLBACK PictureWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 
 static void             ChangeLanguage(int id);
 static void             MamePlayRecordGame(void);
-static void             MamePlayBackGame(void);
+static void             MamePlayBackGame(const char* fname_playback);
 static void             MamePlayRecordWave(void);
 static void             MameLoadState(void);
 static BOOL             CommonFileDialogW(BOOL open_for_write, char *filename, int filetype);
@@ -873,7 +873,7 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 
 	pOpts = GetGameOptions(nGameIndex);
 
-	sprintf(pCmdLine, "%s %s -norc", pModule, drivers[nGameIndex]->name);
+	sprintf(pCmdLine, "\"%s\" %s -norc", pModule, drivers[nGameIndex]->name);
 
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -rp \"%s\"",            GetRomDirs());
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -sp \"%s\"",         GetSampleDirs());
@@ -2365,6 +2365,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	ShowWindow(hStatusBar, (bShowStatusBar) ? SW_SHOW : SW_HIDE);
 	CheckMenuItem(GetMenu(hMain), ID_VIEW_PAGETAB, (bShowTabCtrl) ? MF_CHECKED : MF_UNCHECKED);
 	ToolBar_CheckButton(hToolBar, IDC_USE_LIST, UseLangList() ^ (GetLangcode() == UI_LANG_EN_US) ? MF_CHECKED : MF_UNCHECKED);
+	DragAcceptFiles(hMain, TRUE);
 
 	if (oldControl)
 	{
@@ -2521,6 +2522,8 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 
 static void Win32UI_exit()
 {
+	DragAcceptFiles(hMain, FALSE);
+
 	if (g_bDoBroadcast == TRUE)
 	{
         ATOM a = GlobalAddAtomA("");
@@ -2828,6 +2831,29 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 		else
 			/* for splitters */
 			OnLButtonUp(hWnd, (UINT)wParam, MAKEPOINTS(lParam));
+		break;
+
+	case WM_DROPFILES:
+		{
+			HDROP hDrop = (HDROP)wParam;
+			char fileName[MAX_PATH];
+
+			if (OnNT())
+			{
+				WCHAR fileNameW[MAX_PATH];
+				DragQueryFileW(hDrop, 0, fileNameW, MAX_PATH);
+				strcpy(fileName, _String((LPTSTR)fileNameW));
+			} else {
+				DragQueryFileA(hDrop, 0, fileName, MAX_PATH);
+			}
+			DragFinish(hDrop);
+
+			DragAcceptFiles(hMain, FALSE);
+			SetForegroundWindow(hMain);
+			MamePlayBackGame(fileName);
+			DragAcceptFiles(hMain, TRUE);
+
+		}
 		break;
 
 	case WM_NOTIFY:
@@ -4645,7 +4671,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		return TRUE;
 
 	case ID_FILE_PLAY_BACK:
-		MamePlayBackGame();
+		MamePlayBackGame(NULL);
 		return TRUE;
 
 	case ID_FILE_PLAY_RECORD_WAVE:
@@ -6078,18 +6104,27 @@ static void MameMessageBox(const char *fmt, ...)
 	va_end(va);
 }
 
-static void MamePlayBackGame()
+static void MamePlayBackGame(const char *fname_playback)
 {
-	int nGame;
+	int nGame = -1;
 	char filename[MAX_PATH];
 
-	*filename = 0;
+	if (fname_playback)
+	{
+		strcpy(filename, fname_playback);
+	}
+	else
+	{
+		*filename = 0;
 
-	nGame = Picker_GetSelectedItem(hwndList);
-	if (nGame != -1)
-		strcpy(filename, drivers[nGame]->name);
+		nGame = Picker_GetSelectedItem(hwndList);
+		if (nGame != -1)
+			strcpy(filename, drivers[nGame]->name);
 
-	if (CommonFileDialog(FALSE, filename, FILETYPE_INPUT_FILES))
+		if (!CommonFileDialog(FALSE, filename, FILETYPE_INPUT_FILES)) return;
+	}
+	
+	if (*filename)
 	{
 		mame_file* pPlayBack;
 		char drive[_MAX_DRIVE];
