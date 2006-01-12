@@ -94,7 +94,7 @@ Autoenabling mice due to presence of a %s\n
 Average FPS: %f (%d frames)\n
 平均FPS: %f (%d フレーム)\n
 
-# windows/wind3d.c: 2668 windows/winddraw.c: 1466, 1765
+# windows/wind3d.c: 2669 windows/winddraw.c: 1467, 1766
 Avg Flip = %d
 平均 Flip = %d
 
@@ -486,6 +486,18 @@ Out of memory!\n
 PARTKNOWN %s\n
 一部判明  %s\n
 
+# windows/config.c: 429
+Parsing %s : ERROR\n
+%sを読み込み : エラー\n
+
+# windows/config.c: 439
+Parsing %s : N/A\n
+%sを読み込み : なし
+
+# windows/config.c: 434
+Parsing %s : OK\n
+%sを読み込み : OK\n
+
 # windows/config.c: 581
 Playing back previously recorded game %s (%s) [press return]\n
 リターンキーを押すと、記録されたゲーム%s (%s)の再生を開始します\n
@@ -514,7 +526,7 @@ RGBエフェクト用画面バッファが作成されました: %s\n
 RGB pattern has a wrong filesize (expected %i bytes, found %i)\n
 RGBパターンのファイルサイズが異常です (正常値 %i バイト、見つかった物 %i)\n
 
-# windows/winddraw.c: 1389, 1474, 1773
+# windows/winddraw.c: 1389, 1475, 1774
 Recreating surfaces\n
 画面バッファを再生成中\n
 
@@ -522,7 +534,7 @@ Recreating surfaces\n
 Rendering to an off-screen surface and using blt()\n
 オフスクリーンに描画し、blt()を使用します\n
 
-# windows/wind3d.c: 2319, 2690
+# windows/wind3d.c: 2319, 2691
 Restoring surfaces\n
 画面バッファを再作成中\n
 
@@ -582,11 +594,11 @@ Toggle fullscreen
 UNKNOWN   %s\n
 不明      %s\n
 
-# windows/wind3d.c: 2681
+# windows/wind3d.c: 2682
 Unable to blt RGB effect to back_surface: %08x\n
 RGBエフェクトから裏画面バッファに描画出来ません: %08x\n
 
-# windows/wind3d.c: 2648
+# windows/wind3d.c: 2649
 Unable to blt back_surface to primary_surface: %08x\n
 back_surfaceからprimary_surfaceに描画出来ません: %08x\n
 
@@ -598,7 +610,7 @@ blit_surfaceからtexture_surfaceに描画出来ません: %08x\n
 Unable to blt scale_surface to texture_surface: %08x\n
 スケール描画バッファからテクスチャ画面バッファに描画出来ません: %08x\n
 
-# windows/winddraw.c: 1438
+# windows/winddraw.c: 1439
 Unable to blt target_surface: %08x\n
 画面バッファに描画出来ません: %08x\n
 
@@ -614,7 +626,7 @@ RGBエフェクトパターンが見つかりません\n
 Unable to lock blit_surface: %08x\n
 描画画面バッファをロック出来ません: %08x\n
 
-# windows/winddraw.c: 1608, 1708
+# windows/winddraw.c: 1609, 1709
 Unable to lock target_surface: %08x\n
 対象となる画面バッファがロック出来ません: %08x\n
 
@@ -1609,16 +1621,4 @@ window frame color (medium)
 # windows/fronthlp.c: 66
 year, manufacturer and full name
 サポートゲーム、製造年、メーカーのリストを表\示
-
-# windows/config.c: 429
-Parsing %s : ERROR\n
-
-
-# windows/config.c: 439
-Parsing %s : N/A\n
-
-
-# windows/config.c: 434
-Parsing %s : OK\n
-
 

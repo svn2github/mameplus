@@ -1496,2061 +1496,2082 @@ no CPU
 The MAME team
 
 # datafile.c: 11
-0.102u5   December  22th 2005
+0.103u2   January   10th 2006
 
 # datafile.c: 12
-0.102u4   December  15th 2005
+0.103u1   January    4th 2006
 
 # datafile.c: 13
-0.102u3   December   9th 2005
+0.103     December  30th 2005
 
 # datafile.c: 14
-0.102u2   December   1st 2005
+0.102u5   December  22th 2005
 
 # datafile.c: 15
-0.102u1   November  21st 2005
+0.102u4   December  15th 2005
 
 # datafile.c: 16
-0.102     November  13th 2005
+0.102u3   December   9th 2005
 
 # datafile.c: 17
-0.101u5   November   4th 2005
+0.102u2   December   1st 2005
 
 # datafile.c: 18
-0.101u4   October   30th 2005
+0.102u1   November  21st 2005
 
 # datafile.c: 19
-0.101u3   October   24th 2005
+0.102     November  13th 2005
 
 # datafile.c: 20
-0.101u2   October   17th 2005
+0.101u5   November   4th 2005
 
 # datafile.c: 21
-0.101u1   October   13th 2005
+0.101u4   October   30th 2005
 
 # datafile.c: 22
-0.101     October    8th 2005
+0.101u3   October   24th 2005
 
 # datafile.c: 23
-0.100u4   October    6th 2005
+0.101u2   October   17th 2005
 
 # datafile.c: 24
-0.100u3   September 29th 2005
+0.101u1   October   13th 2005
 
 # datafile.c: 25
-0.100u2   September 22nd 2005
+0.101     October    8th 2005
 
 # datafile.c: 26
-0.100u1   September 16th 2005
+0.100u4   October    6th 2005
 
 # datafile.c: 27
-0.100     September 14th 2005
+0.100u3   September 29th 2005
 
 # datafile.c: 28
-0.99u10   September 12th 2005
+0.100u2   September 22nd 2005
 
 # datafile.c: 29
-0.99u9    September 10th 2005
+0.100u1   September 16th 2005
 
 # datafile.c: 30
-0.99u8    September  9th 2005
+0.100     September 14th 2005
 
 # datafile.c: 31
-0.99u7    September  5th 2005
+0.99u10   September 12th 2005
 
 # datafile.c: 32
-0.99u6    August    29th 2005
+0.99u9    September 10th 2005
 
 # datafile.c: 33
-0.99u5    August    29th 2005
+0.99u8    September  9th 2005
 
 # datafile.c: 34
-0.99u4    August    24th 2005
+0.99u7    September  5th 2005
 
 # datafile.c: 35
-0.99u3    August    22nd 2005
+0.99u6    August    29th 2005
 
 # datafile.c: 36
-0.99u2    August    14th 2005
+0.99u5    August    29th 2005
 
 # datafile.c: 37
-0.99u1    August    10th 2005
+0.99u4    August    24th 2005
 
 # datafile.c: 38
-0.99      August     6th 2005
+0.99u3    August    22nd 2005
 
 # datafile.c: 39
-0.98u4    August     4th 2005
+0.99u2    August    14th 2005
 
 # datafile.c: 40
-0.98u3    July      31st 2005
+0.99u1    August    10th 2005
 
 # datafile.c: 41
-0.98u2    July      21st 2005
+0.99      August     6th 2005
 
 # datafile.c: 42
-0.98u1    July      16th 2005
+0.98u4    August     4th 2005
 
 # datafile.c: 43
-0.98      July      10th 2005
+0.98u3    July      31st 2005
 
 # datafile.c: 44
-0.97u7    July       7th 2005
+0.98u2    July      21st 2005
 
 # datafile.c: 45
-0.97u4    July       2nd 2005
+0.98u1    July      16th 2005
 
 # datafile.c: 46
-0.97u3    June      26th 2005
+0.98      July      10th 2005
 
 # datafile.c: 47
-0.97u2    June      19th 2005
+0.97u7    July       7th 2005
 
 # datafile.c: 48
-0.97u1    June       9th 2005
+0.97u4    July       2nd 2005
 
 # datafile.c: 49
-0.97      June       2nd 2005
+0.97u3    June      26th 2005
 
 # datafile.c: 50
-0.96u4    May       30th 2005
+0.97u2    June      19th 2005
 
 # datafile.c: 51
-0.96u3    May       24th 2005
+0.97u1    June       9th 2005
 
 # datafile.c: 52
-0.96u2    May       16th 2005
+0.97      June       2nd 2005
 
 # datafile.c: 53
-0.96u1    May        5th 2005
+0.96u4    May       30th 2005
 
 # datafile.c: 54
-0.96      May        3rd 2005
+0.96u3    May       24th 2005
 
 # datafile.c: 55
-0.95u6    April     25th 2005
+0.96u2    May       16th 2005
 
 # datafile.c: 56
-0.95u5    April     21st 2005
+0.96u1    May        5th 2005
 
 # datafile.c: 57
-0.95u4    April     21st 2005
+0.96      May        3rd 2005
 
 # datafile.c: 58
-0.95u3    April     18th 2005
+0.95u6    April     25th 2005
 
 # datafile.c: 59
-0.95u2    April      5th 2005
+0.95u5    April     21st 2005
 
 # datafile.c: 60
-0.95u1    April      1st 2005
+0.95u4    April     21st 2005
 
 # datafile.c: 61
-0.95      March     27th 2005
+0.95u3    April     18th 2005
 
 # datafile.c: 62
-0.94u5    March     22nd 2005
+0.95u2    April      5th 2005
 
 # datafile.c: 63
-0.94u4    March     18th 2005
+0.95u1    April      1st 2005
 
 # datafile.c: 64
-0.94u3    March     15th 2005
+0.95      March     27th 2005
 
 # datafile.c: 65
-0.94u2    March     14th 2005
+0.94u5    March     22nd 2005
 
 # datafile.c: 66
-0.94u1    March      7th 2005
+0.94u4    March     18th 2005
 
 # datafile.c: 67
-0.94      March      6th 2005
+0.94u3    March     15th 2005
 
 # datafile.c: 68
-0.93u3    March      4th 2005
+0.94u2    March     14th 2005
 
 # datafile.c: 69
-0.93u2    March      3rd 2005
+0.94u1    March      7th 2005
 
 # datafile.c: 70
-0.93u1    March      1st 2005
+0.94      March      6th 2005
 
 # datafile.c: 71
-0.93      February  27th 2005
+0.93u3    March      4th 2005
 
 # datafile.c: 72
-0.92u2000 February  15th 2005
+0.93u2    March      3rd 2005
 
 # datafile.c: 73
-0.92      February  13th 2005
+0.93u1    March      1st 2005
 
 # datafile.c: 74
-0.91u2    February   3rd 2005
+0.93      February  27th 2005
 
 # datafile.c: 75
-0.91u1    January   30th 2005
+0.92u2000 February  15th 2005
 
 # datafile.c: 76
-0.91      January   29th 2005
+0.92      February  13th 2005
 
 # datafile.c: 77
-0.90u4    January   23rd 2005
+0.91u2    February   3rd 2005
 
 # datafile.c: 78
-0.90u3    January   17th 2005
+0.91u1    January   30th 2005
 
 # datafile.c: 79
-0.90u2    January   12th 2005
+0.91      January   29th 2005
 
 # datafile.c: 80
-0.90u1    January    8th 2005
+0.90u4    January   23rd 2005
 
 # datafile.c: 81
-0.90      January    4th 2005
+0.90u3    January   17th 2005
 
 # datafile.c: 82
-0.89u6    December  17th 2004
+0.90u2    January   12th 2005
 
 # datafile.c: 83
-0.89u5    December  15th 2004
+0.90u1    January    8th 2005
 
 # datafile.c: 84
-0.89u4    December  11th 2004
+0.90      January    4th 2005
 
 # datafile.c: 85
-0.89u3    December   7th 2004
+0.89u6    December  17th 2004
 
 # datafile.c: 86
-0.89u2    December   3rd 2004
+0.89u5    December  15th 2004
 
 # datafile.c: 87
-0.89u1    November  28th 2004
+0.89u4    December  11th 2004
 
 # datafile.c: 88
-0.89      November  24th 2004
+0.89u3    December   7th 2004
 
 # datafile.c: 89
-0.88u7    November  20th 2004
+0.89u2    December   3rd 2004
 
 # datafile.c: 90
-0.88u6    November  17th 2004
+0.89u1    November  28th 2004
 
 # datafile.c: 91
-0.88u5    November  15th 2004
+0.89      November  24th 2004
 
 # datafile.c: 92
-0.88u4    November  11th 2004
+0.88u7    November  20th 2004
 
 # datafile.c: 93
-0.88u3    November   7th 2004
+0.88u6    November  17th 2004
 
 # datafile.c: 94
-0.88u2    October   31st 2004
+0.88u5    November  15th 2004
 
 # datafile.c: 95
-0.88u1    October   28th 2004
+0.88u4    November  11th 2004
 
 # datafile.c: 96
-0.88      October   25th 2004
+0.88u3    November   7th 2004
 
 # datafile.c: 97
-0.87u4    October   16th 2004
+0.88u2    October   31st 2004
 
 # datafile.c: 98
-0.87u3    October   12th 2004
+0.88u1    October   28th 2004
 
 # datafile.c: 99
-0.87u2    October   10th 2004
+0.88      October   25th 2004
 
 # datafile.c: 100
-0.87u1    September 29th 2004
+0.87u4    October   16th 2004
 
 # datafile.c: 101
-0.87      September 21st 2004
+0.87u3    October   12th 2004
 
 # datafile.c: 102
-0.86u5    September 15th 2004
+0.87u2    October   10th 2004
 
 # datafile.c: 103
-0.86u4    September  9th 2004
+0.87u1    September 29th 2004
 
 # datafile.c: 104
-0.86u3    September  3rd 2004
+0.87      September 21st 2004
 
 # datafile.c: 105
-0.86u2    August    31st 2004
+0.86u5    September 15th 2004
 
 # datafile.c: 106
-0.86u1    August    27th 2004
+0.86u4    September  9th 2004
 
 # datafile.c: 107
-0.86      August    23rd 2004
+0.86u3    September  3rd 2004
 
 # datafile.c: 108
-0.85u3    August    21st 2004
+0.86u2    August    31st 2004
 
 # datafile.c: 109
-0.85u2    August    13th 2004
+0.86u1    August    27th 2004
 
 # datafile.c: 110
-0.85u1    August    10th 2004
+0.86      August    23rd 2004
 
 # datafile.c: 111
-0.85      August     7th 2004
+0.85u3    August    21st 2004
 
 # datafile.c: 112
-0.84u6    August     3rd 2004
+0.85u2    August    13th 2004
 
 # datafile.c: 113
-0.84u5    July      27th 2004
+0.85u1    August    10th 2004
 
 # datafile.c: 114
-0.84u4    July      25th 2004
+0.85      August     7th 2004
 
 # datafile.c: 115
-0.84u3    July      15th 2004
+0.84u6    August     3rd 2004
 
 # datafile.c: 116
-0.84u2    July      11th 2004
+0.84u5    July      27th 2004
 
 # datafile.c: 117
-0.84u1    July       4th 2004
+0.84u4    July      25th 2004
 
 # datafile.c: 118
-0.84      July       2nd 2004
+0.84u3    July      15th 2004
 
 # datafile.c: 119
-0.83      June       5th 2004
+0.84u2    July      11th 2004
 
 # datafile.c: 120
-0.82u3    May       27th 2004
+0.84u1    July       4th 2004
 
 # datafile.c: 121
-0.82u2    May       23rd 2004
+0.84      July       2nd 2004
 
 # datafile.c: 122
-0.82u1    May       13th 2004
+0.83      June       5th 2004
 
 # datafile.c: 123
-0.82      May        6th 2004
+0.82u3    May       27th 2004
 
 # datafile.c: 124
-0.81u9    April     28th 2004
+0.82u2    May       23rd 2004
 
 # datafile.c: 125
-0.81u8    April     27th 2004
+0.82u1    May       13th 2004
 
 # datafile.c: 126
-0.81u7    April     22nd 2004
+0.82      May        6th 2004
 
 # datafile.c: 127
-0.81u6    April     17th 2004
+0.81u9    April     28th 2004
 
 # datafile.c: 128
-0.81u5    April     14th 2004
+0.81u8    April     27th 2004
 
 # datafile.c: 129
-0.81u4    April      8th 2004
+0.81u7    April     22nd 2004
 
 # datafile.c: 130
-0.81u3    April      4th 2004
+0.81u6    April     17th 2004
 
 # datafile.c: 131
-0.81      April      1st 2004
+0.81u5    April     14th 2004
 
 # datafile.c: 132
-0.80u3    March     28th 2004
+0.81u4    April      8th 2004
 
 # datafile.c: 133
-0.80u2    March     27th 2004
+0.81u3    April      4th 2004
 
 # datafile.c: 134
-0.80u1    March     11th 2004
+0.81      April      1st 2004
 
 # datafile.c: 135
-0.80      March      6th 2004
+0.80u3    March     28th 2004
 
 # datafile.c: 136
-0.79u4    February  28th 2004
+0.80u2    March     27th 2004
 
 # datafile.c: 137
-0.79u3    February  25th 2004
+0.80u1    March     11th 2004
 
 # datafile.c: 138
-0.79u2    February  21st 2004
+0.80      March      6th 2004
 
 # datafile.c: 139
-0.79u1    February   8th 2004
+0.79u4    February  28th 2004
 
 # datafile.c: 140
-0.79      January   28th 2004
+0.79u3    February  25th 2004
 
 # datafile.c: 141
-0.78u6    January   20th 2004
+0.79u2    February  21st 2004
 
 # datafile.c: 142
-0.78u5    January   18th 2004
+0.79u1    February   8th 2004
 
 # datafile.c: 143
-0.78u4    January   13th 2004
+0.79      January   28th 2004
 
 # datafile.c: 144
-0.78u3    January   11th 2004
+0.78u6    January   20th 2004
 
 # datafile.c: 145
-0.78u2    January    9th 2004
+0.78u5    January   18th 2004
 
 # datafile.c: 146
-0.78u1    January    4th 2004
+0.78u4    January   13th 2004
 
 # datafile.c: 147
-0.78      December  25th 2003
+0.78u3    January   11th 2004
 
 # datafile.c: 148
-0.77u3    December  13th 2003
+0.78u2    January    9th 2004
 
 # datafile.c: 149
-0.77u2    December   1st 2003
+0.78u1    January    4th 2004
 
 # datafile.c: 150
-0.77u1    November  21st 2003
+0.78      December  25th 2003
 
 # datafile.c: 151
-0.77      November  12th 2003
+0.77u3    December  13th 2003
 
 # datafile.c: 152
-0.76u2    November   1st 2003
+0.77u2    December   1st 2003
 
 # datafile.c: 153
-0.76u1    October   25th 2003
+0.77u1    November  21st 2003
 
 # datafile.c: 154
-0.76      October   19th 2003
+0.77      November  12th 2003
 
 # datafile.c: 155
-0.75u1    October   14th 2003
+0.76u2    November   1st 2003
 
 # datafile.c: 156
-0.75      October   13th 2003
+0.76u1    October   25th 2003
 
 # datafile.c: 157
-0.74u2    October    6th 2003
+0.76      October   19th 2003
 
 # datafile.c: 158
-0.74u1    September 23rd 2003
+0.75u1    October   14th 2003
 
 # datafile.c: 159
-0.74      September 14th 2003
+0.75      October   13th 2003
 
 # datafile.c: 160
-0.73      September  4th 2003
+0.74u2    October    6th 2003
 
 # datafile.c: 161
-0.72u2    August    25th 2003
+0.74u1    September 23rd 2003
 
 # datafile.c: 162
-0.72u1    August    15th 2003
+0.74      September 14th 2003
 
 # datafile.c: 163
-0.72      August     9th 2003
+0.73      September  4th 2003
 
 # datafile.c: 164
-0.71u2    July      12th 2003
+0.72u2    August    25th 2003
 
 # datafile.c: 165
-0.71u1    July       8th 2003
+0.72u1    August    15th 2003
 
 # datafile.c: 166
-0.71      July       5th 2003
+0.72      August     9th 2003
 
 # datafile.c: 167
-0.70u5    June      29th 2003
+0.71u2    July      12th 2003
 
 # datafile.c: 168
-0.70u4    June      21st 2003
+0.71u1    July       8th 2003
 
 # datafile.c: 169
-0.70u3    June      21st 2003
+0.71      July       5th 2003
 
 # datafile.c: 170
-0.70u2    June      19th 2003
+0.70u5    June      29th 2003
 
 # datafile.c: 171
-0.70u1    June      12th 2003
+0.70u4    June      21st 2003
 
 # datafile.c: 172
-0.70      June      11th 2003
+0.70u3    June      21st 2003
 
 # datafile.c: 173
-0.69u3    June       5th 2003
+0.70u2    June      19th 2003
 
 # datafile.c: 174
-0.69b     June       2nd 2003
+0.70u1    June      12th 2003
 
 # datafile.c: 175
-0.69a     May       31st 2003
+0.70      June      11th 2003
 
 # datafile.c: 176
-0.69      May       24th 2003
+0.69u3    June       5th 2003
 
 # datafile.c: 177
-0.68      May       16th 2003
+0.69b     June       2nd 2003
 
 # datafile.c: 178
-0.67      April      6th 2003
+0.69a     May       31st 2003
 
 # datafile.c: 179
-0.66      March     10th 2003
+0.69      May       24th 2003
 
 # datafile.c: 180
-0.65      February  10th 2003
+0.68      May       16th 2003
 
 # datafile.c: 181
-0.64      January   26th 2003
+0.67      April      6th 2003
 
 # datafile.c: 182
-0.63      January   12th 2003
+0.66      March     10th 2003
 
 # datafile.c: 183
-0.62      November  12th 2002
+0.65      February  10th 2003
 
 # datafile.c: 184
-0.61      July       4th 2002
+0.64      January   26th 2003
 
 # datafile.c: 185
-0.60      May        1st 2002
+0.63      January   12th 2003
 
 # datafile.c: 186
-0.59      March     22nd 2002
+0.62      November  12th 2002
 
 # datafile.c: 187
-0.58      February   6th 2002
+0.61      July       4th 2002
 
 # datafile.c: 188
-0.57      January    1st 2002
+0.60      May        1st 2002
 
 # datafile.c: 189
-0.56      November   1st 2001
+0.59      March     22nd 2002
 
 # datafile.c: 190
-0.55      September 17th 2001
+0.58      February   6th 2002
 
 # datafile.c: 191
-0.54      August    25th 2001
+0.57      January    1st 2002
 
 # datafile.c: 192
-0.53      August    12th 2001
+0.56      November   1st 2001
 
 # datafile.c: 193
-0.37b16   July       2nd 2001
+0.55      September 17th 2001
 
 # datafile.c: 194
-0.37b15   May       24th 2001
+0.54      August    25th 2001
 
 # datafile.c: 195
-0.37b14   April      7th 2001
+0.53      August    12th 2001
 
 # datafile.c: 196
-0.37b13   March     10th 2001
+0.37b16   July       2nd 2001
 
 # datafile.c: 197
-0.37b12   February  15th 2001
+0.37b15   May       24th 2001
 
 # datafile.c: 198
-0.37b11   January   16th 2001
+0.37b14   April      7th 2001
 
 # datafile.c: 199
-0.37b10   December   6th 2000
+0.37b13   March     10th 2001
 
 # datafile.c: 200
-0.37b9    November   6th 2000
+0.37b12   February  15th 2001
 
 # datafile.c: 201
-0.37b8    October    3rd 2000
+0.37b11   January   16th 2001
 
 # datafile.c: 202
-0.37b7    September  5th 2000
+0.37b10   December   6th 2000
 
 # datafile.c: 203
-0.37b6    August    20th 2000
+0.37b9    November   6th 2000
 
 # datafile.c: 204
-0.37b5    July      28th 2000
+0.37b8    October    3rd 2000
 
 # datafile.c: 205
-0.37b4    June      16th 2000
+0.37b7    September  5th 2000
 
 # datafile.c: 206
-0.37b3    May       27th 2000
+0.37b6    August    20th 2000
 
 # datafile.c: 207
-0.37b2    May        6th 2000
+0.37b5    July      28th 2000
 
 # datafile.c: 208
-0.37b1    April      6th 2000
+0.37b4    June      16th 2000
 
 # datafile.c: 209
-0.36      March     21st 2000
+0.37b3    May       27th 2000
 
 # datafile.c: 210
-0.36RC2   March     13th 2000
+0.37b2    May        6th 2000
 
 # datafile.c: 211
-0.36RC1   February  26th 2000
+0.37b1    April      6th 2000
 
 # datafile.c: 212
-0.36b16   February   4th 2000
+0.36      March     21st 2000
 
 # datafile.c: 213
-0.36b15   January   21st 2000
+0.36RC2   March     13th 2000
 
 # datafile.c: 214
-0.36b14   January   11th 2000
+0.36RC1   February  26th 2000
 
 # datafile.c: 215
-0.36b13   December  30th 1999
+0.36b16   February   4th 2000
 
 # datafile.c: 216
-0.36b12   December  18th 1999
+0.36b15   January   21st 2000
 
 # datafile.c: 217
-0.36b11   December   6th 1999
+0.36b14   January   11th 2000
 
 # datafile.c: 218
-0.36b10   November  20th 1999
+0.36b13   December  30th 1999
 
 # datafile.c: 219
-0.36b91   November  14th 1999
+0.36b12   December  18th 1999
 
 # datafile.c: 220
-0.36b9    November  13th 1999
+0.36b11   December   6th 1999
 
 # datafile.c: 221
-0.36b8    October   30th 1999
+0.36b10   November  20th 1999
 
 # datafile.c: 222
-0.36b7    October   17th 1999
+0.36b91   November  14th 1999
 
 # datafile.c: 223
-0.36b6    September 29th 1999
+0.36b9    November  13th 1999
 
 # datafile.c: 224
-0.36b5    September 18th 1999
+0.36b8    October   30th 1999
 
 # datafile.c: 225
-0.36b4    September  4th 1999
+0.36b7    October   17th 1999
 
 # datafile.c: 226
-0.36b3    August    22nd 1999
+0.36b6    September 29th 1999
 
 # datafile.c: 227
-0.36b2    August     8th 1999
+0.36b5    September 18th 1999
 
 # datafile.c: 228
-0.36b1    July      19th 1999
+0.36b4    September  4th 1999
 
 # datafile.c: 229
-0.35fix   July       5th 1999
+0.36b3    August    22nd 1999
 
 # datafile.c: 230
-0.35      July       4th 1999
+0.36b2    August     8th 1999
 
 # datafile.c: 231
-0.35RC2   June      24th 1999
+0.36b1    July      19th 1999
 
 # datafile.c: 232
-0.35RC1   June      13th 1999
+0.35fix   July       5th 1999
 
 # datafile.c: 233
-0.35b13   May       24th 1999
+0.35      July       4th 1999
 
 # datafile.c: 234
-0.35b12   May        1st 1999
+0.35RC2   June      24th 1999
 
 # datafile.c: 235
-0.35b11   April     22nd 1999
+0.35RC1   June      13th 1999
 
 # datafile.c: 236
-0.35b10   April      8th 1999
+0.35b13   May       24th 1999
 
 # datafile.c: 237
-0.35b9    March     30th 1999
+0.35b12   May        1st 1999
 
 # datafile.c: 238
-0.35b8    March     24th 1999
+0.35b11   April     22nd 1999
 
 # datafile.c: 239
-0.35b7    March     18th 1999
+0.35b10   April      8th 1999
 
 # datafile.c: 240
-0.35b6    March     15th 1999
+0.35b9    March     30th 1999
 
 # datafile.c: 241
-0.35b5    March      7th 1999
+0.35b8    March     24th 1999
 
 # datafile.c: 242
-0.35b4    March      1st 1999
+0.35b7    March     18th 1999
 
 # datafile.c: 243
-0.35b3    February  15th 1999
+0.35b6    March     15th 1999
 
 # datafile.c: 244
-0.35b2    January   24th 1999
+0.35b5    March      7th 1999
 
 # datafile.c: 245
-0.35b1    January    7th 1999
+0.35b4    March      1st 1999
 
 # datafile.c: 246
-0.34      December  31st 1998
+0.35b3    February  15th 1999
 
 # datafile.c: 247
-0.34RC2   December  21st 1998
+0.35b2    January   24th 1999
 
 # datafile.c: 248
-0.34RC1   December  14th 1998
+0.35b1    January    7th 1999
 
 # datafile.c: 249
-0.34b8    November  29th 1998
+0.34      December  31st 1998
 
 # datafile.c: 250
-0.34b7    November  10th 1998
+0.34RC2   December  21st 1998
 
 # datafile.c: 251
-0.34b6    October   28th 1998
+0.34RC1   December  14th 1998
 
 # datafile.c: 252
-0.34b5    October   16th 1998
+0.34b8    November  29th 1998
 
 # datafile.c: 253
-0.34b4    October    4th 1998
+0.34b7    November  10th 1998
 
 # datafile.c: 254
-0.34b3    September 17th 1998
+0.34b6    October   28th 1998
 
 # datafile.c: 255
-0.34b2    August    30th 1998
+0.34b5    October   16th 1998
 
 # datafile.c: 256
-0.34b1    August    16th 1998
+0.34b4    October    4th 1998
 
 # datafile.c: 257
-0.33      August    10th 1998
+0.34b3    September 17th 1998
 
 # datafile.c: 258
-0.33RC1   July      29th 1998
+0.34b2    August    30th 1998
 
 # datafile.c: 259
-0.33b7    July      21st 1998
+0.34b1    August    16th 1998
 
 # datafile.c: 260
-0.33b6    June      16th 1998
+0.33      August    10th 1998
 
 # datafile.c: 261
-0.33b5    June      10th 1998
+0.33RC1   July      29th 1998
 
 # datafile.c: 262
-0.33b4    May       31st 1998
+0.33b7    July      21st 1998
 
 # datafile.c: 263
-0.33b3    May       17th 1998
+0.33b6    June      16th 1998
 
 # datafile.c: 264
-0.33b2    May        8th 1998
+0.33b5    June      10th 1998
 
 # datafile.c: 265
-0.33b1    May        3rd 1998
+0.33b4    May       31st 1998
 
 # datafile.c: 266
-0.31      April     25th 1998
+0.33b3    May       17th 1998
 
 # datafile.c: 267
-0.30      January    7th 1998
+0.33b2    May        8th 1998
 
 # datafile.c: 268
-0.29      October   20th 1997
+0.33b1    May        3rd 1998
 
 # datafile.c: 269
-0.28      September  7th 1997
+0.31      April     25th 1998
 
 # datafile.c: 270
-0.27      August    10th 1997
+0.30      January    7th 1998
 
 # datafile.c: 271
-0.26a     July      18th 1997
+0.29      October   20th 1997
 
 # datafile.c: 272
-0.26      July      14th 1997
+0.28      September  7th 1997
 
 # datafile.c: 273
-0.25      June      28th 1997
+0.27      August    10th 1997
 
 # datafile.c: 274
-0.24      June      13th 1997
+0.26a     July      18th 1997
 
 # datafile.c: 275
-0.23a     June       3rd 1997
+0.26      July      14th 1997
 
 # datafile.c: 276
-0.23      June       2nd 1997
+0.25      June      28th 1997
 
 # datafile.c: 277
-0.22      May       25th 1997
+0.24      June      13th 1997
 
 # datafile.c: 278
-0.21.5    May       16th 1997
+0.23a     June       3rd 1997
 
 # datafile.c: 279
-0.21      May       12th 1997
+0.23      June       2nd 1997
 
 # datafile.c: 280
-0.20      May        5th 1997
+0.22      May       25th 1997
 
 # datafile.c: 281
-0.19      April     26th 1997
+0.21.5    May       16th 1997
 
 # datafile.c: 282
-0.18      April     20th 1997
+0.21      May       12th 1997
 
 # datafile.c: 283
-0.17      April     14th 1997
+0.20      May        5th 1997
 
 # datafile.c: 284
-0.16      April     13th 1997
+0.19      April     26th 1997
 
 # datafile.c: 285
-0.15      April      6th 1997
+0.18      April     20th 1997
 
 # datafile.c: 286
-0.14      April      2nd 1997
+0.17      April     14th 1997
 
 # datafile.c: 287
-0.13      March     30th 1997
+0.16      April     13th 1997
 
 # datafile.c: 288
-0.12      March     23rd 1997
+0.15      April      6th 1997
 
 # datafile.c: 289
-0.11      March     16th 1997
+0.14      April      2nd 1997
 
 # datafile.c: 290
-0.10      March     13th 1997
+0.13      March     30th 1997
 
 # datafile.c: 291
-0.091     March      9th 1997
+0.12      March     23rd 1997
 
 # datafile.c: 292
-0.09      March      9th 1997
+0.11      March     16th 1997
 
 # datafile.c: 293
-0.081     March      4th 1997
+0.10      March     13th 1997
 
 # datafile.c: 294
-0.08      March      4th 1997
+0.091     March      9th 1997
 
 # datafile.c: 295
-0.07      February  27th 1997
+0.09      March      9th 1997
 
 # datafile.c: 296
-0.06      February  23rd 1997
+0.081     March      4th 1997
 
 # datafile.c: 297
-0.05      February  20th 1997
+0.08      March      4th 1997
 
 # datafile.c: 298
-0.04      February  16th 1997
+0.07      February  27th 1997
 
 # datafile.c: 299
-0.03      February  13th 1997
+0.06      February  23rd 1997
 
 # datafile.c: 300
-0.02      February   9th 1997
+0.05      February  20th 1997
 
 # datafile.c: 301
+0.04      February  16th 1997
+
+# datafile.c: 302
+0.03      February  13th 1997
+
+# datafile.c: 303
+0.02      February   9th 1997
+
+# datafile.c: 304
 0.01      February   5th 1997
 
-# datafile.c: 307
-0.102u5    849    5915  +22
-
-# datafile.c: 308
-0.102u4    846    5893  +11
-
-# datafile.c: 309
-0.102u3    846    5882  +11
-
 # datafile.c: 310
-0.102u2    845    5871  +13
+0.103u2    854    5993  +41
 
 # datafile.c: 311
-0.102u1    845    5858  +10
+0.103u1    851    5952  +9
 
 # datafile.c: 313
-0.101u5    844    5833  +5
+0.102u5    849    5915  +22
 
 # datafile.c: 314
-0.101u4    844    5828  +7
+0.102u4    846    5893  +11
 
 # datafile.c: 315
-0.101u3    841    5821  +4
+0.102u3    846    5882  +11
 
 # datafile.c: 316
-0.101u2    841    5817  +4
+0.102u2    845    5871  +13
 
 # datafile.c: 317
-0.101u1    839    5813  +3
+0.102u1    845    5858  +10
 
 # datafile.c: 319
-0.100u4    839    5810  +7
+0.101u5    844    5833  +5
 
 # datafile.c: 320
-0.100u3    838    5803  +12
+0.101u4    844    5828  +7
 
 # datafile.c: 321
-0.100u2    836    5791  +8
+0.101u3    841    5821  +4
 
 # datafile.c: 322
-0.100u1    831    5783  +5
+0.101u2    841    5817  +4
 
-# datafile.c: 324
-0.99u10    829    5776  +3
+# datafile.c: 323
+0.101u1    839    5813  +3
 
 # datafile.c: 325
-0.99u9     829    5773  +2
+0.100u4    839    5810  +7
 
 # datafile.c: 326
-0.99u8     829    5771  +8
+0.100u3    838    5803  +12
 
 # datafile.c: 327
-0.99u7     829    5763  +7
+0.100u2    836    5791  +8
 
 # datafile.c: 328
-0.99u6     830    5756  +2
-
-# datafile.c: 329
-0.99u5     830    5754  +2
+0.100u1    831    5783  +5
 
 # datafile.c: 330
-0.99u4     829    5752  +3
+0.99u10    829    5776  +3
 
 # datafile.c: 331
-0.99u3     829    5749  +6
+0.99u9     829    5773  +2
 
 # datafile.c: 332
-0.99u2     827    5743  +33
+0.99u8     829    5771  +8
 
 # datafile.c: 333
-0.99u1     813    5710  +5
+0.99u7     829    5763  +7
+
+# datafile.c: 334
+0.99u6     830    5756  +2
 
 # datafile.c: 335
-0.98u4     812    5705  +4
+0.99u5     830    5754  +2
 
 # datafile.c: 336
-0.98u3     813    5701  +3
+0.99u4     829    5752  +3
 
 # datafile.c: 337
-0.98u2     812    5698  +6
+0.99u3     829    5749  +6
 
 # datafile.c: 338
-0.98u1     811    5692  +5
+0.99u2     827    5743  +33
 
-# datafile.c: 340
-0.97u5     810    5687  +3
+# datafile.c: 339
+0.99u1     813    5710  +5
 
 # datafile.c: 341
-0.97u4     811    5684  +5
+0.98u4     812    5705  +4
 
 # datafile.c: 342
-0.97u3     811    5679  +5
+0.98u3     813    5701  +3
 
 # datafile.c: 343
-0.97u2     811    5674  +5
+0.98u2     812    5698  +6
 
 # datafile.c: 344
-0.97u1     811    5669  +8
+0.98u1     811    5692  +5
 
 # datafile.c: 346
-0.96u3     811    5660  +14
+0.97u5     810    5687  +3
 
 # datafile.c: 347
-0.96u2     809    5646  +10
+0.97u4     811    5684  +5
 
 # datafile.c: 348
-0.96u1     809    5636  +4
+0.97u3     811    5679  +5
+
+# datafile.c: 349
+0.97u2     811    5674  +5
 
 # datafile.c: 350
-0.95u6     805    5613  +4
-
-# datafile.c: 351
-0.95u5     804    5609  +0
+0.97u1     811    5669  +8
 
 # datafile.c: 352
-0.95u4     804    5609  +4
+0.96u3     811    5660  +14
 
 # datafile.c: 353
-0.95u3     804    5605  +10
+0.96u2     809    5646  +10
 
 # datafile.c: 354
-0.95u2     804    5595  +11
+0.96u1     809    5636  +4
 
-# datafile.c: 355
-0.95u1     800    5584  +6
+# datafile.c: 356
+0.95u6     805    5613  +4
 
 # datafile.c: 357
-0.94u5     800    5565  +6
+0.95u5     804    5609  +0
 
 # datafile.c: 358
-0.94u4     799    5559  +6
+0.95u4     804    5609  +4
 
 # datafile.c: 359
-0.94u3     799    5553  +9
+0.95u3     804    5605  +10
 
 # datafile.c: 360
-0.94u1     799    5544  +6
+0.95u2     804    5595  +11
 
-# datafile.c: 362
-0.93u3     797    5537  +1
+# datafile.c: 361
+0.95u1     800    5584  +6
 
 # datafile.c: 363
-0.93u2     797    5536  +10
+0.94u5     800    5565  +6
 
 # datafile.c: 364
-0.93u1     797    5525  +1
+0.94u4     799    5559  +6
+
+# datafile.c: 365
+0.94u3     799    5553  +9
 
 # datafile.c: 366
-0.92u2000  796    5512  +4
+0.94u1     799    5544  +6
 
 # datafile.c: 368
-0.91u2     790    5443  +4
+0.93u3     797    5537  +1
 
 # datafile.c: 369
-0.91u1     788    5439  +11
+0.93u2     797    5536  +10
 
-# datafile.c: 371
-0.90u4     782    5419  +10
+# datafile.c: 370
+0.93u1     797    5525  +1
 
 # datafile.c: 372
-0.90u3     782    5409  +11
-
-# datafile.c: 373
-0.90u2     782    5398  +3
+0.92u2000  796    5512  +4
 
 # datafile.c: 374
-0.90u1     782    5395  +2
+0.91u2     790    5443  +4
 
-# datafile.c: 376
-0.89u6     781    5380  +17
+# datafile.c: 375
+0.91u1     788    5439  +11
 
 # datafile.c: 377
-0.89u4     779    5363  +9
+0.90u4     782    5419  +10
 
 # datafile.c: 378
-0.89u3     779    5354  +13
+0.90u3     782    5409  +11
 
 # datafile.c: 379
-0.89u2     780    5341  +10
+0.90u2     782    5398  +3
 
 # datafile.c: 380
-0.89u1     780    5331  +18
+0.90u1     782    5395  +2
 
 # datafile.c: 382
-0.88u7     779    5312  +12
+0.89u6     781    5380  +17
 
 # datafile.c: 383
-0.88u6     777    5300  +14
+0.89u4     779    5363  +9
 
 # datafile.c: 384
-0.88u4     776    5286  +11
+0.89u3     779    5354  +13
 
 # datafile.c: 385
-0.88u3     775    5275  +15
+0.89u2     780    5341  +10
 
 # datafile.c: 386
-0.88u2     774    5260  +7
+0.89u1     780    5331  +18
 
-# datafile.c: 387
-0.88u1     774    5253  +5
+# datafile.c: 388
+0.88u7     779    5312  +12
 
 # datafile.c: 389
-0.87u4     774    5227  +10
+0.88u6     777    5300  +14
 
 # datafile.c: 390
-0.87u3     770    5217  +18
+0.88u4     776    5286  +11
 
 # datafile.c: 391
-0.87u2     770    5199  +14
+0.88u3     775    5275  +15
 
 # datafile.c: 392
-0.87u1     770    5185  +40
+0.88u2     774    5260  +7
 
-# datafile.c: 394
-0.86u5     764    5141  +3
+# datafile.c: 393
+0.88u1     774    5253  +5
 
 # datafile.c: 395
-0.86u4     763    5138  +5
+0.87u4     774    5227  +10
 
 # datafile.c: 396
-0.86u3     761    5133  +2
+0.87u3     770    5217  +18
 
 # datafile.c: 397
-0.86u2     761    5131  +37
+0.87u2     770    5199  +14
 
 # datafile.c: 398
-0.86u1     761    5094  +6
+0.87u1     770    5185  +40
 
 # datafile.c: 400
-0.85u3     753    5074  +3
+0.86u5     764    5141  +3
 
 # datafile.c: 401
-0.85u2     752    5071  +3
+0.86u4     763    5138  +5
 
 # datafile.c: 402
-0.85u1     752    5068  +7
+0.86u3     761    5133  +2
+
+# datafile.c: 403
+0.86u2     761    5131  +37
 
 # datafile.c: 404
-0.84u6     751    5060  +6
-
-# datafile.c: 405
-0.84u5     751    5054  +20
+0.86u1     761    5094  +6
 
 # datafile.c: 406
-0.84u3     749    5034  +13
+0.85u3     753    5074  +3
 
 # datafile.c: 407
-0.84u2     747    5021  +1
+0.85u2     752    5071  +3
 
 # datafile.c: 408
-0.84u1     747    5020  +6
+0.85u1     752    5068  +7
+
+# datafile.c: 410
+0.84u6     751    5060  +6
 
 # datafile.c: 411
-0.82u3     739    4942  +7
+0.84u5     751    5054  +20
 
 # datafile.c: 412
-0.82u2     738    4935  +7
+0.84u3     749    5034  +13
 
 # datafile.c: 413
-0.82u1     737    4928  +7
+0.84u2     747    5021  +1
 
-# datafile.c: 415
-0.81u9     736    4906  +11
-
-# datafile.c: 416
-0.81u7     732    4895  +4
+# datafile.c: 414
+0.84u1     747    5020  +6
 
 # datafile.c: 417
-0.81u6     732    4891  +7
+0.82u3     739    4942  +7
 
 # datafile.c: 418
-0.81u5     731    4884  +7
+0.82u2     738    4935  +7
 
 # datafile.c: 419
-0.81u4     731    4877  +16
+0.82u1     737    4928  +7
 
-# datafile.c: 420
-0.81u3     728    4861  +20
+# datafile.c: 421
+0.81u9     736    4906  +11
 
 # datafile.c: 422
-0.80u3     724    4830  +5
+0.81u7     732    4895  +4
 
 # datafile.c: 423
-0.80u2     723    4825  +24
+0.81u6     732    4891  +7
 
 # datafile.c: 424
-0.80u1     714    4801  +5
+0.81u5     731    4884  +7
+
+# datafile.c: 425
+0.81u4     731    4877  +16
 
 # datafile.c: 426
-0.79u4     712    4790  +22
+0.81u3     728    4861  +20
 
-# datafile.c: 427
-0.79u1     707    4768  +16
+# datafile.c: 428
+0.80u3     724    4830  +5
 
 # datafile.c: 429
-0.78u6     708    4731  +0
+0.80u2     723    4825  +24
 
 # datafile.c: 430
-0.78u5     708    4731  +4
-
-# datafile.c: 431
-0.78u4     708    4727  +2
+0.80u1     714    4801  +5
 
 # datafile.c: 432
-0.78u3     711    4725  +7
+0.79u4     712    4790  +22
 
 # datafile.c: 433
-0.78u2     711    4718  +0
+0.79u1     707    4768  +16
 
-# datafile.c: 434
-0.78u1     711    4718  +13
+# datafile.c: 435
+0.78u6     708    4731  +0
 
 # datafile.c: 436
-0.77u3     707    4668  +8
+0.78u5     708    4731  +4
 
 # datafile.c: 437
-0.77u2     705    4660  +20
+0.78u4     708    4727  +2
+
+# datafile.c: 438
+0.78u3     711    4725  +7
 
 # datafile.c: 439
-0.76u2     699    4608  +2
+0.78u2     711    4718  +0
 
 # datafile.c: 440
-0.76u1     698    4606  +107
+0.78u1     711    4718  +13
 
 # datafile.c: 442
-0.75u1     696    4474  +1
+0.77u3     707    4668  +8
 
-# datafile.c: 444
-0.74u2     693    4447  +313
+# datafile.c: 443
+0.77u2     705    4660  +20
 
 # datafile.c: 445
-0.74u1     690    4134  +11
+0.76u2     699    4608  +2
+
+# datafile.c: 446
+0.76u1     698    4606  +107
 
 # datafile.c: 448
-0.72u2     683    4107  +19
+0.75u1     696    4474  +1
 
-# datafile.c: 449
-0.72u1     680    4088  +5
+# datafile.c: 450
+0.74u2     693    4447  +313
 
 # datafile.c: 451
-0.71u2     677    4052  +25
-
-# datafile.c: 452
-0.71u1     669    4027  +3
+0.74u1     690    4134  +11
 
 # datafile.c: 454
-0.70u5     667    4014  +8
+0.72u2     683    4107  +19
 
 # datafile.c: 455
-0.70u4     667    4006  +11
-
-# datafile.c: 456
-0.70u3     666    3995  +2
+0.72u1     680    4088  +5
 
 # datafile.c: 457
-0.70u2     666    3993  +2
+0.71u2     677    4052  +25
 
 # datafile.c: 458
-0.70u1     665    3991  +1
+0.71u1     669    4027  +3
 
 # datafile.c: 460
-0.69u3     664    3988  +10
+0.70u5     667    4014  +8
 
 # datafile.c: 461
-0.69b      664    3978  +7
+0.70u4     667    4006  +11
 
 # datafile.c: 462
+0.70u3     666    3995  +2
+
+# datafile.c: 463
+0.70u2     666    3993  +2
+
+# datafile.c: 464
+0.70u1     665    3991  +1
+
+# datafile.c: 466
+0.69u3     664    3988  +10
+
+# datafile.c: 467
+0.69b      664    3978  +7
+
+# datafile.c: 468
 0.69a      663    3971  +7
 
-# datafile.c: 480
+# datafile.c: 486
 0.37b16    498    3008  +78
 
-# datafile.c: 481
+# datafile.c: 487
 0.37b15    478    2930  +47
 
-# datafile.c: 482
+# datafile.c: 488
 0.37b14    476    2883  +44
 
-# datafile.c: 483
+# datafile.c: 489
 0.37b13    471    2839  +66
 
-# datafile.c: 484
+# datafile.c: 490
 0.37b12    460    2773  +109
 
-# datafile.c: 485
+# datafile.c: 491
 0.37b11    448    2664  +125
 
-# datafile.c: 486
+# datafile.c: 492
 0.37b10    438    2539  +63
 
-# datafile.c: 487
+# datafile.c: 493
 0.37b9     421    2476  +65
 
-# datafile.c: 488
+# datafile.c: 494
 0.37b8     417    2411  +74
 
-# datafile.c: 489
+# datafile.c: 495
 0.37b7     407    2337  +54
 
-# datafile.c: 490
+# datafile.c: 496
 0.37b6     400    2283  +43
 
-# datafile.c: 491
+# datafile.c: 497
 0.37b5     393    2240  +83
 
-# datafile.c: 492
+# datafile.c: 498
 0.37b4     383    2157  +12
 
-# datafile.c: 493
+# datafile.c: 499
 0.37b3     382    2145  +42
 
-# datafile.c: 494
+# datafile.c: 500
 0.37b2     375    2103  +30
 
-# datafile.c: 495
+# datafile.c: 501
 0.37b1     369    2073  +25
 
-# datafile.c: 497
+# datafile.c: 503
 0.36RC2    366    2048  +27
 
-# datafile.c: 498
+# datafile.c: 504
 0.36RC1    364    2021  +21
 
-# datafile.c: 499
+# datafile.c: 505
 0.36b16    364    2000  +29
 
-# datafile.c: 500
+# datafile.c: 506
 0.36b15    366    1971  +20
 
-# datafile.c: 501
+# datafile.c: 507
 0.36b14    362    1951  +19
 
-# datafile.c: 502
+# datafile.c: 508
 0.36b13    361    1932  +20
 
-# datafile.c: 503
+# datafile.c: 509
 0.36b12    356    1912  +12
 
-# datafile.c: 504
+# datafile.c: 510
 0.36b11    353    1900  +23
 
-# datafile.c: 505
+# datafile.c: 511
 0.36b10    352    1877  +19
 
-# datafile.c: 506
+# datafile.c: 512
 0.36b91    345    1858  + 0
 
-# datafile.c: 507
+# datafile.c: 513
 0.36b9     345    1858  +27
 
-# datafile.c: 508
+# datafile.c: 514
 0.36b8     342    1831  +37
 
-# datafile.c: 509
+# datafile.c: 515
 0.36b7     339    1794  +29
 
-# datafile.c: 510
+# datafile.c: 516
 0.36b6     336    1765  +42
 
-# datafile.c: 511
+# datafile.c: 517
 0.36b5     330    1723  +39
 
-# datafile.c: 512
+# datafile.c: 518
 0.36b4     325    1684  +42
 
-# datafile.c: 513
+# datafile.c: 519
 0.36b3     320    1642  +41
 
-# datafile.c: 514
+# datafile.c: 520
 0.36b2     312    1601  +69
 
-# datafile.c: 515
+# datafile.c: 521
 0.36b1     297    1532  +58
 
-# datafile.c: 516
+# datafile.c: 522
 0.35fix    287    1474  + 0
 
-# datafile.c: 518
+# datafile.c: 524
 0.35RC2    287    1459  +22
 
-# datafile.c: 519
+# datafile.c: 525
 0.35RC1    286    1437  +37
 
-# datafile.c: 520
+# datafile.c: 526
 0.35b13    285    1400  +58
 
-# datafile.c: 521
+# datafile.c: 527
 0.35b12    273    1342  +25
 
-# datafile.c: 522
+# datafile.c: 528
 0.35b11    268    1317  +54
 
-# datafile.c: 523
+# datafile.c: 529
 0.35b10    262    1263  + 9
 
-# datafile.c: 524
+# datafile.c: 530
 0.35b9     261    1254  +13
 
-# datafile.c: 525
+# datafile.c: 531
 0.35b8     258    1241  +22
 
-# datafile.c: 526
+# datafile.c: 532
 0.35b7     256    1219  + 2
 
-# datafile.c: 527
+# datafile.c: 533
 0.35b6     257    1217  +31
 
-# datafile.c: 528
+# datafile.c: 534
 0.35b5     255    1186  + 8
 
-# datafile.c: 529
+# datafile.c: 535
 0.35b4     255    1178  +30
 
-# datafile.c: 530
+# datafile.c: 536
 0.35b3     252    1148  +41
 
-# datafile.c: 531
+# datafile.c: 537
 0.35b2     251    1107  +60
 
-# datafile.c: 532
+# datafile.c: 538
 0.35b1     247    1047  +23
 
-# datafile.c: 534
+# datafile.c: 540
 0.34RC2    243    1024  + 0
 
-# datafile.c: 535
+# datafile.c: 541
 0.34RC1    243    1024  + 1
 
-# datafile.c: 536
+# datafile.c: 542
 0.34b8     244    1023  +43
 
-# datafile.c: 537
+# datafile.c: 543
 0.34b7     236     980  +42
 
-# datafile.c: 538
+# datafile.c: 544
 0.34b6     234     938  +34
 
-# datafile.c: 539
+# datafile.c: 545
 0.34b5     231     904  +50
 
-# datafile.c: 540
+# datafile.c: 546
 0.34b4     230     854  +50
 
-# datafile.c: 541
+# datafile.c: 547
 0.34b3     226     804  +38
 
-# datafile.c: 542
+# datafile.c: 548
 0.34b2     226     766  +64
 
-# datafile.c: 543
+# datafile.c: 549
 0.34b1     218     702  +73
 
-# datafile.c: 545
+# datafile.c: 551
 0.33RC1    210     629  + 1
 
-# datafile.c: 546
+# datafile.c: 552
 0.33b7     210     628  +24
 
-# datafile.c: 547
+# datafile.c: 553
 0.33b6     200     604  +21
 
-# datafile.c: 548
+# datafile.c: 554
 0.33b5             583  +18
 
-# datafile.c: 549
+# datafile.c: 555
 0.33b4             565  +25
 
-# datafile.c: 550
+# datafile.c: 556
 0.33b3             540  +40
 
-# datafile.c: 551
+# datafile.c: 557
 0.33b2             500  + 7
 
-# datafile.c: 552
+# datafile.c: 558
 0.33b1             493  +15
 
-# datafile.c: 558
+# datafile.c: 564
 0.26a              168  + 1
 
-# datafile.c: 562
+# datafile.c: 568
 0.23a              124  + 0
 
-# datafile.c: 649
+# datafile.c: 656
 $info
 
-# datafile.c: 650
+# datafile.c: 657
 $bio
 
-# datafile.c: 652
+# datafile.c: 659
 $story
 
-# datafile.c: 654
+# datafile.c: 661
 $mame
 
-# datafile.c: 655
+# datafile.c: 662
 $drv
 
-# datafile.c: 658
+# datafile.c: 665
 $cmd
 
-# datafile.c: 659
+# datafile.c: 666
 $end
 
-# datafile.c: 1695
+# datafile.c: 1702
  ...[TRUNCATED]
 
-# datafile.c: 1929, 3392
+# datafile.c: 1936, 3399
 lang
 
-# datafile.c: 1976, 3453
+# datafile.c: 1983, 3460
 .dat
 
-# datafile.c: 2089, 2093
+# datafile.c: 2096, 2100
 history.dat
 
-# datafile.c: 2093, 2096
+# datafile.c: 2100, 2103
 history/
 
-# datafile.c: 2113, 2124
+# datafile.c: 2120, 2131
 story.dat
 
-# datafile.c: 2124, 2127
+# datafile.c: 2131, 2134
 story/
 
-# datafile.c: 2198, 2202, 2315
+# datafile.c: 2205, 2209, 2322
 mameinfo.dat
 
-# datafile.c: 2202, 2205
+# datafile.c: 2209, 2212
 mameinfo/
 
-# datafile.c: 2224
+# datafile.c: 2231
 cpu1
 
-# datafile.c: 2225
+# datafile.c: 2232
 cpu2
 
-# datafile.c: 2226
+# datafile.c: 2233
 cpu3
 
-# datafile.c: 2227
+# datafile.c: 2234
 cpu4
 
-# datafile.c: 2228
+# datafile.c: 2235
 cpu5
 
-# datafile.c: 2229
+# datafile.c: 2236
 cpu6
 
-# datafile.c: 2230
+# datafile.c: 2237
 cpu7
 
-# datafile.c: 2231
+# datafile.c: 2238
 cpu8
 
-# datafile.c: 2232
+# datafile.c: 2239
 gfx1
 
-# datafile.c: 2233
+# datafile.c: 2240
 gfx2
 
-# datafile.c: 2234
+# datafile.c: 2241
 gfx3
 
-# datafile.c: 2235
+# datafile.c: 2242
 gfx4
 
-# datafile.c: 2236
+# datafile.c: 2243
 gfx5
 
-# datafile.c: 2237
+# datafile.c: 2244
 gfx6
 
-# datafile.c: 2238
+# datafile.c: 2245
 gfx7
 
-# datafile.c: 2239
+# datafile.c: 2246
 gfx8
 
-# datafile.c: 2240
+# datafile.c: 2247
 prom
 
-# datafile.c: 2241
+# datafile.c: 2248
 snd1
 
-# datafile.c: 2242
+# datafile.c: 2249
 snd2
 
-# datafile.c: 2243
+# datafile.c: 2250
 snd3
 
-# datafile.c: 2244
+# datafile.c: 2251
 snd4
 
-# datafile.c: 2245
+# datafile.c: 2252
 snd5
 
-# datafile.c: 2246
+# datafile.c: 2253
 snd6
 
-# datafile.c: 2247
+# datafile.c: 2254
 snd7
 
-# datafile.c: 2248
+# datafile.c: 2255
 snd8
 
-# datafile.c: 2249
+# datafile.c: 2256
 usr1
 
-# datafile.c: 2250
+# datafile.c: 2257
 usr2
 
-# datafile.c: 2251
+# datafile.c: 2258
 usr3
 
-# datafile.c: 2252
+# datafile.c: 2259
 usr4
 
-# datafile.c: 2253
+# datafile.c: 2260
 usr5
 
-# datafile.c: 2254
+# datafile.c: 2261
 usr6
 
-# datafile.c: 2255
+# datafile.c: 2262
 usr7
 
-# datafile.c: 2256
+# datafile.c: 2263
 usr8
 
-# datafile.c: 2388
+# datafile.c: 2395
 MAME 
 
-# datafile.c: 2504, 2692, 3001
+# datafile.c: 2511, 2699, 3008
 neogeo.c
 
-# datafile.c: 2510
+# datafile.c: 2517
 playch10.c
 
-# datafile.c: 2516
+# datafile.c: 2523
 decocass.c
 
-# datafile.c: 2522
+# datafile.c: 2529
 cvs.c
 
-# datafile.c: 3032
+# datafile.c: 3039
 \n    0 -     5 KB:  %4d\n    5 -    10 KB:  %4d\n   10 -    50 KB:  %4d\n   50 -   100 KB:  %4d\n
 
-# datafile.c: 3034
+# datafile.c: 3041
   100 -   500 KB:  %4d\n  500 -  1000 KB:  %4d\n 1000 -  5000 KB:  %4d\n 5000 - 10000 KB:  %4d\n
 
-# datafile.c: 3036
+# datafile.c: 3043
 10000 - 50000 KB:  %4d\n      > 50000 KB:  %4d\n
 
-# datafile.c: 3065
+# datafile.c: 3072
 \n         CPU:  (1)  (2)  (3)  (4)\n\n
 
-# datafile.c: 3199
+# datafile.c: 3206
 \nWARNING: ASPECT RATIO number too high!\n
 
-# datafile.c: 3234
+# datafile.c: 3241
   FPS %f:  %4d\n
 
-# datafile.c: 3310
+# datafile.c: 3317
   %dx%d: %3d    
 
-# datafile.c: 3325
+# datafile.c: 3332
 \nWARNING: Resolution number too high!\n
 
-# datafile.c: 3328
+# datafile.c: 3335
 \nWARNING: Palettesize number too high!\n
 
-# datafile.c: 3389, 3422
+# datafile.c: 3396, 3429
 command.dat
 
-# datafile.c: 3451
+# datafile.c: 3458
 command\\
 
-# debug/debugcmd.c: 82
+# debug/debugcmd.c: 83
 min
 
-# debug/debugcmd.c: 83
+# debug/debugcmd.c: 84
 max
 
-# debug/debugcmd.c: 84
+# debug/debugcmd.c: 85
 if
 
-# debug/debugcmd.c: 87
+# debug/debugcmd.c: 88
 help
 
-# debug/debugcmd.c: 88
+# debug/debugcmd.c: 89
 printf
 
-# debug/debugcmd.c: 89
+# debug/debugcmd.c: 90
 logerror
 
-# debug/debugcmd.c: 90
+# debug/debugcmd.c: 91
 tracelog
 
-# debug/debugcmd.c: 91
+# debug/debugcmd.c: 92
 quit
 
-# debug/debugcmd.c: 92
+# debug/debugcmd.c: 93
 do
 
-# debug/debugcmd.c: 93
+# debug/debugcmd.c: 94
 step
 
-# debug/debugcmd.c: 94
+# debug/debugcmd.c: 95
 s
 
-# debug/debugcmd.c: 95
+# debug/debugcmd.c: 96
 over
 
-# debug/debugcmd.c: 96
+# debug/debugcmd.c: 97
 o
 
-# debug/debugcmd.c: 97
+# debug/debugcmd.c: 98
 out
 
-# debug/debugcmd.c: 98
+# debug/debugcmd.c: 99
 go
 
-# debug/debugcmd.c: 99
+# debug/debugcmd.c: 100
 g
 
-# debug/debugcmd.c: 100
+# debug/debugcmd.c: 101
 gvblank
 
-# debug/debugcmd.c: 101
+# debug/debugcmd.c: 102
 gv
 
-# debug/debugcmd.c: 102
+# debug/debugcmd.c: 103
 gint
 
-# debug/debugcmd.c: 103
+# debug/debugcmd.c: 104
 gi
 
-# debug/debugcmd.c: 104
-next
-
 # debug/debugcmd.c: 105
-n
+gtime
 
 # debug/debugcmd.c: 106
-focus
+gt
 
 # debug/debugcmd.c: 107
-ignore
+next
 
 # debug/debugcmd.c: 108
-observe
+n
+
+# debug/debugcmd.c: 109
+focus
 
 # debug/debugcmd.c: 110
-bpset
+ignore
 
 # debug/debugcmd.c: 111
-bp
-
-# debug/debugcmd.c: 112
-bpclear
+observe
 
 # debug/debugcmd.c: 113
-bpdisable
+bpset
 
 # debug/debugcmd.c: 114
-bpenable
+bp
 
 # debug/debugcmd.c: 115
-bplist
+bpclear
+
+# debug/debugcmd.c: 116
+bpdisable
 
 # debug/debugcmd.c: 117
-wpset
+bpenable
 
 # debug/debugcmd.c: 118
-wp
-
-# debug/debugcmd.c: 119
-wpdset
+bplist
 
 # debug/debugcmd.c: 120
-wpd
+wpset
 
 # debug/debugcmd.c: 121
-wpiset
+wp
 
 # debug/debugcmd.c: 122
-wpi
+wpdset
 
 # debug/debugcmd.c: 123
-wpclear
+wpd
 
 # debug/debugcmd.c: 124
-wpdisable
+wpiset
 
 # debug/debugcmd.c: 125
-wpenable
+wpi
 
 # debug/debugcmd.c: 126
-wplist
+wpclear
+
+# debug/debugcmd.c: 127
+wpdisable
 
 # debug/debugcmd.c: 128
-hotspot
+wpenable
 
-# debug/debugcmd.c: 130
-save
+# debug/debugcmd.c: 129
+wplist
 
 # debug/debugcmd.c: 131
-saved
+hotspot
 
-# debug/debugcmd.c: 132
-savei
+# debug/debugcmd.c: 133
+save
 
 # debug/debugcmd.c: 134
-dump
+saved
 
 # debug/debugcmd.c: 135
-dumpd
+savei
 
-# debug/debugcmd.c: 136
-dumpi
+# debug/debugcmd.c: 137
+dump
 
 # debug/debugcmd.c: 138
-f
+dumpd
 
 # debug/debugcmd.c: 139
-find
-
-# debug/debugcmd.c: 140
-fd
+dumpi
 
 # debug/debugcmd.c: 141
-findd
+f
 
 # debug/debugcmd.c: 142
-fi
+find
 
 # debug/debugcmd.c: 143
-findi
+fd
+
+# debug/debugcmd.c: 144
+findd
 
 # debug/debugcmd.c: 145
-dasm
+fi
 
-# debug/debugcmd.c: 147
-trace
+# debug/debugcmd.c: 146
+findi
 
 # debug/debugcmd.c: 148
-traceover
+dasm
 
-# debug/debugcmd.c: 149
-traceflush
+# debug/debugcmd.c: 150
+trace
 
 # debug/debugcmd.c: 151
+traceover
+
+# debug/debugcmd.c: 152
+traceflush
+
+# debug/debugcmd.c: 154
 snap
 
-# debug/debugcmd.c: 153
+# debug/debugcmd.c: 156
 source
 
-# debug/debugcmd.c: 155
+# debug/debugcmd.c: 158
 map
 
-# debug/debugcmd.c: 156
+# debug/debugcmd.c: 159
 mapd
 
-# debug/debugcmd.c: 157
+# debug/debugcmd.c: 160
 mapi
 
-# debug/debugcmd.c: 158
+# debug/debugcmd.c: 161
 memdump
 
-# debug/debugcmd.c: 222, 239
+# debug/debugcmd.c: 225, 242
 Error in expression: %s\n
 
-# debug/debugcmd.c: 256
+# debug/debugcmd.c: 259
 Error in command: %s\n
 
-# debug/debugcmd.c: 338, 354
+# debug/debugcmd.c: 341, 357
 Not enough parameters for format!
 
-# debug/debugcmd.c: 455
+# debug/debugcmd.c: 458
 Exited via the debugger\n
 
-# debug/debugcmd.c: 579, 1204, 1371, 1478, 1627
+# debug/debugcmd.c: 598, 1223, 1390, 1497, 1646
 Invalid CPU number!
 
-# debug/debugcmd.c: 593
+# debug/debugcmd.c: 612
 Now focused on CPU %d
 
-# debug/debugcmd.c: 619
+# debug/debugcmd.c: 638
 Currently ignoring CPU %d
 
-# debug/debugcmd.c: 626
+# debug/debugcmd.c: 645
 Not currently ignoring any CPUs
 
-# debug/debugcmd.c: 640, 711
+# debug/debugcmd.c: 659, 730
 Invalid CPU number! (%d)
 
-# debug/debugcmd.c: 657
+# debug/debugcmd.c: 676
 Can't ignore all CPUs!\n
 
-# debug/debugcmd.c: 662
+# debug/debugcmd.c: 681
 Now ignoring CPU %d
 
-# debug/debugcmd.c: 690
+# debug/debugcmd.c: 709
 Currently observing CPU %d
 
-# debug/debugcmd.c: 697
+# debug/debugcmd.c: 716
 Not currently observing any CPUs
 
-# debug/debugcmd.c: 720
+# debug/debugcmd.c: 739
 Now observing CPU %d
 
-# debug/debugcmd.c: 752
+# debug/debugcmd.c: 771
 Breakpoint %d set\n
 
-# debug/debugcmd.c: 780
+# debug/debugcmd.c: 799
 Cleared all breakpoints
 
-# debug/debugcmd.c: 790
+# debug/debugcmd.c: 809
 Breakpoint %X cleared
 
-# debug/debugcmd.c: 792, 836
+# debug/debugcmd.c: 811, 855
 Invalid breakpoint number %X
 
-# debug/debugcmd.c: 822
+# debug/debugcmd.c: 841
 Disabled all breakpoints
 
-# debug/debugcmd.c: 824
+# debug/debugcmd.c: 843
 Enabled all breakpoints
 
-# debug/debugcmd.c: 834
+# debug/debugcmd.c: 853
 Breakpoint %X %s
 
-# debug/debugcmd.c: 860
+# debug/debugcmd.c: 879
 CPU %d breakpoints:
 
-# debug/debugcmd.c: 868, 1060
+# debug/debugcmd.c: 887, 1079
  if %s
 
-# debug/debugcmd.c: 870, 1062
+# debug/debugcmd.c: 889, 1081
  do %s
 
-# debug/debugcmd.c: 878
+# debug/debugcmd.c: 897
 No breakpoints currently installed
 
-# debug/debugcmd.c: 904
+# debug/debugcmd.c: 923
 r
 
-# debug/debugcmd.c: 906, 1221, 1494, 1634, 1779
+# debug/debugcmd.c: 925, 1240, 1513, 1653, 1798
 w
 
-# debug/debugcmd.c: 908
+# debug/debugcmd.c: 927
 rw
 
-# debug/debugcmd.c: 908
+# debug/debugcmd.c: 927
 wr
 
-# debug/debugcmd.c: 912
+# debug/debugcmd.c: 931
 Invalid watchpoint type: expected r, w, or rw\n
 
-# debug/debugcmd.c: 926
+# debug/debugcmd.c: 945
 Watchpoint %d set\n
 
-# debug/debugcmd.c: 959
+# debug/debugcmd.c: 978
 Cleared all watchpoints
 
-# debug/debugcmd.c: 969
+# debug/debugcmd.c: 988
 Watchpoint %X cleared
 
-# debug/debugcmd.c: 971, 1020
+# debug/debugcmd.c: 990, 1039
 Invalid watchpoint number %X
 
-# debug/debugcmd.c: 1006
+# debug/debugcmd.c: 1025
 Disabled all watchpoints
 
-# debug/debugcmd.c: 1008
+# debug/debugcmd.c: 1027
 Enabled all watchpoints
 
-# debug/debugcmd.c: 1018
+# debug/debugcmd.c: 1037
 Watchpoint %X %s
 
-# debug/debugcmd.c: 1032
+# debug/debugcmd.c: 1051
 I/O
 
-# debug/debugcmd.c: 1032
+# debug/debugcmd.c: 1051
 data
 
-# debug/debugcmd.c: 1032
+# debug/debugcmd.c: 1051
 program
 
-# debug/debugcmd.c: 1049
+# debug/debugcmd.c: 1068
 r/w  
 
-# debug/debugcmd.c: 1049
+# debug/debugcmd.c: 1068
 read 
 
-# debug/debugcmd.c: 1049
+# debug/debugcmd.c: 1068
 unkn 
 
-# debug/debugcmd.c: 1049
+# debug/debugcmd.c: 1068
 write
 
-# debug/debugcmd.c: 1052
+# debug/debugcmd.c: 1071
 CPU %d %s space watchpoints:
 
-# debug/debugcmd.c: 1072
+# debug/debugcmd.c: 1091
 No watchpoints currently installed
 
-# debug/debugcmd.c: 1100
+# debug/debugcmd.c: 1119
 Cleared hotspot tracking on CPU %d\n
 
-# debug/debugcmd.c: 1123
+# debug/debugcmd.c: 1142
 Now tracking hotspots on CPU %d using %d slots with a threshhold of %d\n
 
-# debug/debugcmd.c: 1125
+# debug/debugcmd.c: 1144
 Error setting up the hotspot tracking\n
 
-# debug/debugcmd.c: 1155
+# debug/debugcmd.c: 1174
 wb
 
-# debug/debugcmd.c: 1158, 1224, 1497, 1646
+# debug/debugcmd.c: 1177, 1243, 1516, 1665
 Error opening file '%s'
 
-# debug/debugcmd.c: 1173
+# debug/debugcmd.c: 1192
 Data saved successfully
 
-# debug/debugcmd.c: 1214
+# debug/debugcmd.c: 1233
 Invalid width! (must be 1,2,4 or 8)
 
-# debug/debugcmd.c: 1342, 1598
+# debug/debugcmd.c: 1361, 1617
 Data dumped successfully
 
-# debug/debugcmd.c: 1387
+# debug/debugcmd.c: 1406
 ' && pdata[strlen(pdata) - 1] == '
 
-# debug/debugcmd.c: 1441
+# debug/debugcmd.c: 1460
 Found at %08X\n
 
-# debug/debugcmd.c: 1448
+# debug/debugcmd.c: 1467
 Not found\n
 
-# debug/debugcmd.c: 1547
+# debug/debugcmd.c: 1566
 <unmapped>
 
-# debug/debugcmd.c: 1623
+# debug/debugcmd.c: 1642
 off
 
-# debug/debugcmd.c: 1639
+# debug/debugcmd.c: 1658
 a
 
-# debug/debugcmd.c: 1654
+# debug/debugcmd.c: 1673
 Tracing CPU %d to file %s\n
 
-# debug/debugcmd.c: 1656
+# debug/debugcmd.c: 1675
 Stopped tracing on CPU %d\n
 
-# debug/debugcmd.c: 1700
+# debug/debugcmd.c: 1719
 Saved snapshot\n
 
-# debug/debugcmd.c: 1708
+# debug/debugcmd.c: 1727
 Error creating file '%s'\n
 
-# debug/debugcmd.c: 1713
+# debug/debugcmd.c: 1732
 Saved snapshot as '%s'\n
 
-# debug/debugcmd.c: 1750
+# debug/debugcmd.c: 1769
 %08X logical -> %08X physical\n
 
-# debug/debugcmd.c: 1753
+# debug/debugcmd.c: 1772
 %08X logical -> unmapped\n
 
-# debug/debugcmd.c: 1758
+# debug/debugcmd.c: 1777
 %08X physical\n
 
-# debug/debugcmd.c: 1761
+# debug/debugcmd.c: 1780
   -> read: %s\n
 
-# debug/debugcmd.c: 1762
+# debug/debugcmd.c: 1781
   -> write: %s\n
 
-# debug/debugcmd.c: 1775
+# debug/debugcmd.c: 1794
 memdump.log
 
-# debug/debugcmd.c: 1777
+# debug/debugcmd.c: 1796
 Dumping memory to %s\n
 
 # debug/debugcon.c: 80
@@ -3598,97 +3619,100 @@ data
 # debug/debugcpu.c: 46
 program
 
-# debug/debugcpu.c: 166
+# debug/debugcpu.c: 168
 set_ea_info: invalid <size>!
 
-# debug/debugcpu.c: 248
+# debug/debugcpu.c: 250
 wpaddr
 
-# debug/debugcpu.c: 249
+# debug/debugcpu.c: 251
 wpdata
 
-# debug/debugcpu.c: 250
+# debug/debugcpu.c: 252
 cycles
 
-# debug/debugcpu.c: 251
+# debug/debugcpu.c: 253
 cpunum
 
-# debug/debugcpu.c: 257
+# debug/debugcpu.c: 259
 temp%d
 
-# debug/debugcpu.c: 714
+# debug/debugcpu.c: 734
 Stopped on interrupt (CPU %d, IRQ %d)\n
 
-# debug/debugcpu.c: 731
+# debug/debugcpu.c: 742
+Stopped at time interval %.1g\n
+
+# debug/debugcpu.c: 759
 Stopped at temporary breakpoint %X on CPU %d\n
 
-# debug/debugcpu.c: 767
+# debug/debugcpu.c: 795
 User-initiated break\n
 
-# debug/debugcpu.c: 873
+# debug/debugcpu.c: 901
 \n   (loops for %d instructions)\n\n
 
-# debug/debugcpu.c: 1005
+# debug/debugcpu.c: 1033
 Stopped at VBLANK\n
 
-# debug/debugcpu.c: 1111
+# debug/debugcpu.c: 1139
 Stopped at breakpoint %X
 
-# debug/debugcpu.c: 1268
+# debug/debugcpu.c: 1296
 0bytes
 
-# debug/debugcpu.c: 1268
+# debug/debugcpu.c: 1296
 3bytes
 
-# debug/debugcpu.c: 1268
+# debug/debugcpu.c: 1296
 5bytes
 
-# debug/debugcpu.c: 1268
+# debug/debugcpu.c: 1296
 6bytes
 
-# debug/debugcpu.c: 1268
+# debug/debugcpu.c: 1296
 7bytes
 
-# debug/debugcpu.c: 1268
+# debug/debugcpu.c: 1296
 byte
 
-# debug/debugcpu.c: 1268
+# debug/debugcpu.c: 1296
 dword
 
-# debug/debugcpu.c: 1268
+# debug/debugcpu.c: 1296
 qword
 
-# debug/debugcpu.c: 1268
+# debug/debugcpu.c: 1296
 word
 
-# debug/debugcpu.c: 1284
+# debug/debugcpu.c: 1312
 Stopped at watchpoint %X writing %s to %08X
 
-# debug/debugcpu.c: 1286
+# debug/debugcpu.c: 1314
  (data=%X%08X)
 
-# debug/debugcpu.c: 1288
+# debug/debugcpu.c: 1316
  (data=%X)
 
-# debug/debugcpu.c: 1291
+# debug/debugcpu.c: 1319
 Stopped at watchpoint %X reading %s from %08X
 
-# debug/debugcpu.c: 1454
+# debug/debugcpu.c: 1482
 Out of memory allocating hotspot info
 
-# debug/debugcpu.c: 1488
+# debug/debugcpu.c: 1516
 Hotspot @ %s %08X (PC=%08X) hit %d times (fell off bottom)\n
 
-# debug/debugcpu.c: 1874
+# debug/debugcpu.c: 1902
 debug_read_opcode: unknown type = %d\n
 
-# debug/debugcpu.c: 1889
+# debug/debugcpu.c: 1917
 debug_read_opcode: address %x mapped to invalid memory %p\n
 
-# debug/debugcpu.c: 1986
+# debug/debugcpu.c: 2014
 r
 
-# debug/debugcpu.c: 1988
+# debug/debugcpu.c: 2016
 Cannot open command file '%s'\n
 
 # debug/debughlp.c: 56
@@ -3833,129 +3857,135 @@ gint
 \n  gi[nt] [<irqline>]\n\nThe gint command resumes execution of the current code. Control will not be returned to the\ndebugger until a breakpoint or watchpoint is hit, or until an IRQ is asserted and acknowledged\non the current CPU. You can specify <irqline> if you wish to stop execution only on a particular\nIRQ line being asserted and acknowledged. If <irqline> is omitted, then any IRQ line will stop\nexecution.\n\nExamples:\n\ngi\n  Resume execution until the next break/watchpoint or until any IRQ is asserted and acknowledged\n  on the current CPU.\n\ngint 4\n  Resume execution until the next break/watchpoint or until IRQ line 4 is asserted and\n  acknowledged on the current CPU.\n\n
 
 # debug/debughlp.c: 532
-next
+gtime
 
 # debug/debughlp.c: 533
+\n  gt[ime] <milliseconds>\n\nThe gtime command resumes execution of the current code. Control will not be returned to the\ndebugger until	a specified delay has elapsed. The delay is in milliseconds.\n\nExample:\n\ngtime #10000\n  Resume execution for ten seconds\n\n
+
+# debug/debughlp.c: 546
+next
+
+# debug/debughlp.c: 547
 \n  n[ext]\n\nThe next command resumes execution and continues executing until the next time a different\nCPU is scheduled. Note that if you have used 'ignore' to ignore certain CPUs, you will not\nstop until a non-'ignore'd CPU is scheduled.\n
 
-# debug/debughlp.c: 541
+# debug/debughlp.c: 555
 focus
 
-# debug/debughlp.c: 542
+# debug/debughlp.c: 556
 \n  focus <cpunum>\n\nSets the debugger focus exclusively to the given <cpunum>. This is equivalent to specifying\n'ignore' on all other CPUs.\n\nExamples:\n\nfocus 1\n  Focus exclusively CPU #1 while ignoring all other CPUs when using the debugger.\n\n
 
-# debug/debughlp.c: 555
+# debug/debughlp.c: 569
 ignore
 
-# debug/debughlp.c: 556
+# debug/debughlp.c: 570
 \n  ignore [<cpunum>[,<cpunum>[,...]]]\n\nIgnores the specified <cpunum> in the debugger. This means that you won't ever see execution\non that CPU, nor will you be able to set breakpoints on that CPU. To undo this change use\nthe 'observe' command. You can specify multiple <cpunum>s in a single command. Note also that\nyou are not permitted to ignore all CPUs; at least one must be active at all times.\n\nExamples:\n\nignore 1\n  Ignore CPU #1 when using the debugger.\n\nignore 2,3,4\n  Ignore CPU #2, #3 and #4 when using the debugger.\n\nignore\n  List the CPUs that are currently ignored.\n\n
 
-# debug/debughlp.c: 577
+# debug/debughlp.c: 591
 observe
 
-# debug/debughlp.c: 578
+# debug/debughlp.c: 592
 \n  observe [<cpunum>[,<cpunum>[,...]]]\n\nRe-enables interaction with the specified <cpunum> in the debugger. This command undoes the\neffects of the 'ignore' command. You can specify multiple <cpunum>s in a single command.\n\nExamples:\n\nobserve 1\n  Stop ignoring CPU #1 when using the debugger.\n\nobserve 2,3,4\n  Stop ignoring CPU #2, #3 and #4 when using the debugger.\n\nobserve\n  List the CPUs that are currently observed.\n\n
 
-# debug/debughlp.c: 597
+# debug/debughlp.c: 611
 trace
 
-# debug/debughlp.c: 598
+# debug/debughlp.c: 612
 \n  trace {<filename>|OFF}[,<cpunum>[,<action>]]\n\nStarts or stops tracing of the execution of the specified <cpunum>. If <cpunum> is omitted,\nthe currently active CPU is specified. When enabling tracing, specify the filename in the\n<filename> parameter. To disable tracing, substitute the keyword 'off' for <filename>. If you\nwish to log additional information on each trace, you can append an <action> parameter which\nis a command that is executed before each trace is logged. Generally, this is used to include\na 'tracelog' command. Note that you may need to embed the action within braces { } in order\nto prevent commas and semicolons from being interpreted as applying to the trace command\nitself.\n\nExamples:\n\ntrace dribling.tr,0\n  Begin tracing the execution of CPU #0, logging output to dribling.tr.\n\ntrace joust.tr\n  Begin tracing the currently active CPU, logging output to joust.tr.\n\ntrace >>pigskin.tr\n  Begin tracing the currently active CPU, appending log output to pigskin.tr.\n\ntrace off,0\n  Turn off tracing on CPU #0.\n\ntrace asteroid.tr,0,{tracelog \"A=%02X \",a}\n  Begin tracing the execution of CPU #0, logging output to asteroid.tr. Before each line,\n  output A=<aval> to the tracelog.\n\n
 
-# debug/debughlp.c: 630
+# debug/debughlp.c: 644
 traceover
 
-# debug/debughlp.c: 631
+# debug/debughlp.c: 645
 \n  traceover {<filename>|OFF}[,<cpunum>[,<action>]]\n\nStarts or stops tracing of the execution of the specified <cpunum>. When tracing reaches\na subroutine or call, tracing will skip over the subroutine. The same algorithm is used as is\nused in the step over command. This means that traceover will not work properly when calls\nare recusive or the return address is not immediately following the call instruction. If\n<cpunum> is omitted, the currently active CPU is specified. When enabling tracing, specify the\nfilename in the <filename> parameter. To disable tracing, substitute the keyword 'off' for\n<filename>. If you wish to log additional information on each trace, you can append an <action>\nparameter which is a command that is executed before each trace is logged. Generally, this is\nused to include a 'tracelog' command. Note that you may need to embed the action within braces\n{ } in order to prevent commas and semicolons from being interpreted as applying to the trace\ncommand itself.\n\nExamples:\n\ntraceover dribling.tr,0\n  Begin tracing the execution of CPU #0, logging output to dribling.tr.\n\ntraceover joust.tr\n  Begin tracing the currently active CPU, logging output to joust.tr.\n\ntraceover off,0\n  Turn off tracing on CPU #0.\n\ntraceover asteroid.tr,0,{tracelog \"A=%02X \",a}\n  Begin tracing the execution of CPU #0, logging output to asteroid.tr. Before each line,\n  output A=<aval> to the tracelog.\n\n
 
-# debug/debughlp.c: 663
+# debug/debughlp.c: 677
 traceflush
 
-# debug/debughlp.c: 664
+# debug/debughlp.c: 678
 \n  traceflush\n\nFlushes all open trace files.\n
 
-# debug/debughlp.c: 670
+# debug/debughlp.c: 684
 bpset
 
-# debug/debughlp.c: 671
+# debug/debughlp.c: 685
 \n  bp[set] <address>[,<condition>[,<action>]]\n\nSets a new execution breakpoint at the specified <address>. The optional <condition>\nparameter lets you specify an expression that will be evaluated each time the breakpoint is\nhit. If the result of the expression is true (non-zero), the breakpoint will actually halt\nexecution; otherwise, execution will continue with no notification. The optional <action>\nparameter provides a command that is executed whenever the breakpoint is hit and the\n<condition> is true. Note that you may need to embed the action within braces { } in order\nto prevent commas and semicolons from being interpreted as applying to the bpset command\nitself. Each breakpoint that is set is assigned an index which can be used in other\nbreakpoint commands to reference this breakpoint.\n\nExamples:\n\nbp 1234\n  Set a breakpoint that will halt execution whenever the PC is equal to 1234.\n\nbp 23456,a0 == 0 && a1 == 0\n  Set a breakpoint that will halt execution whenever the PC is equal to 23456 AND the\n  expression (a0 == 0 && a1 == 0) is true.\n\nbp 3456,1,{printf \"A0=%08X\\n\",a0; g}\n  Set a breakpoint that will halt execution whenever the PC is equal to 3456. When\n  this happens, print A0=<a0val> and continue executing.\n\nbp 45678,a0==100,{do a0 = ff; g}\n  Set a breakpoint that will halt execution whenever the PC is equal to 45678 AND the\n  expression (a0 == 100) is true. When that happens, set a0 to ff and resume execution.\n\ndo temp0 = 0; bp 567890,++temp0 >= 10\n  Set a breakpoint that will halt execution whenever the PC is equal to 567890 AND the\n  expression (++temp0 >= 10) is true. This effectively breaks only after the breakpoint\n  has been hit 16 times.\n\n
 
-# debug/debughlp.c: 708
+# debug/debughlp.c: 722
 bpclear
 
-# debug/debughlp.c: 709
+# debug/debughlp.c: 723
 \n  bpclear [<bpnum>]\n\nThe bpclear command clears a breakpoint. If <bpnum> is specified, only the requested\nbreakpoint is cleared, otherwise all breakpoints are cleared.\n\nExamples:\n\nbpclear 3\n  Clear breakpoint index 3.\n\nbpclear\n  Clear all breakpoints.\n\n
 
-# debug/debughlp.c: 725
+# debug/debughlp.c: 739
 bpdisable
 
-# debug/debughlp.c: 726
+# debug/debughlp.c: 740
 \n  bpdisable [<bpnum>]\n\nThe bpdisable command disables a breakpoint. If <bpnum> is specified, only the requested\nbreakpoint is disabled, otherwise all breakpoints are disabled. Note that disabling a\nbreakpoint does not delete it, it just temporarily marks the breakpoint as inactive.\n\nExamples:\n\nbpdisable 3\n  Disable breakpoint index 3.\n\nbpdisable\n  Disable all breakpoints.\n\n
 
-# debug/debughlp.c: 743
+# debug/debughlp.c: 757
 bpenable
 
-# debug/debughlp.c: 744
+# debug/debughlp.c: 758
 \n  bpenable [<bpnum>]\n\nThe bpenable command enables a breakpoint. If <bpnum> is specified, only the requested\nbreakpoint is enabled, otherwise all breakpoints are enabled.\n\nExamples:\n\nbpenable 3\n  Enable breakpoint index 3.\n\nbpenable\n  Enable all breakpoints.\n\n
 
-# debug/debughlp.c: 760
+# debug/debughlp.c: 774
 bplist
 
-# debug/debughlp.c: 761
+# debug/debughlp.c: 775
 \n  bplist\n\nThe bplist command lists all the current breakpoints, along with their index and any\nconditions or actions attached to them.\n\n
 
-# debug/debughlp.c: 769
+# debug/debughlp.c: 783
 wpset
 
-# debug/debughlp.c: 770
+# debug/debughlp.c: 784
 \n  wp[{d|i}][set] <address>,<length>,<type>[,<condition>[,<action>]]\n\nSets a new watchpoint starting at the specified <address> and extending for <length>. The\ninclusive range of the watchpoint is <address> through <address> + <length> - 1. The 'wpset'\ncommand sets a watchpoint on program memory; the 'wpdset' command sets a watchpoint on data\nmemory; and the 'wpiset' sets a watchpoint on I/O memory. The <type> parameter specifies\nwhich sort of accesses to trap on. It can be one of three values: 'r' for a read watchpoint\n'w' for a write watchpoint, and 'rw' for a read/write watchpoint.\n\nThe optional <condition> parameter lets you specify an expression that will be evaluated each\ntime the watchpoint is hit. If the result of the expression is true (non-zero), the watchpoint\nwill actually halt execution; otherwise, execution will continue with no notification. The\noptional <action> parameter provides a command that is executed whenever the watchpoint is hit\nand the <condition> is true. Note that you may need to embed the action within braces { } in\norder to prevent commas and semicolons from being interpreted as applying to the wpset command\nitself. Each watchpoint that is set is assigned an index which can be used in other\nwatchpoint commands to reference this watchpoint.\n\nIn order to help <condition> expressions, two variables are available. For all watchpoints,\nthe variable 'wpaddr' is set to the address that actually triggered the watchpoint. For write\nwatchpoints, the variable 'wpdata' is set to the data that is being written.\n\nExamples:\n\nwp 1234,6,rw\n  Set a watchpoint that will halt execution whenever a read or write occurs in the address\n  range 1234-1239 inclusive.\n\nwp 23456,a,w,wpdata == 1\n  Set a watchpoint that will halt execution whenever a write occurs in the address range\n  23456-2345f AND the data written is equal to 1.\n\nwp 3456,20,r,1,{printf \"Read @ %08X\\n\",wpaddr; g}\n  Set a watchpoint that will halt execution whenever a read occurs in the address range\n  3456-3475. When this happens, print Read @ <wpaddr> and continue executing.\n\ndo temp0 = 0; wp 45678,1,writeval==f0,{do temp0++; g}\n  Set a watchpoint that will halt execution whenever a write occurs to the address 45678 AND\n  the value being written is equal to f0. When that happens, increment the variable temp0 and\n  resume execution.\n\n
 
-# debug/debughlp.c: 814
+# debug/debughlp.c: 828
 wpclear
 
-# debug/debughlp.c: 815
+# debug/debughlp.c: 829
 \n  wpclear [<wpnum>]\n\nThe wpclear command clears a watchpoint. If <wpnum> is specified, only the requested\nwatchpoint is cleared, otherwise all watchpoints are cleared.\n\nExamples:\n\nwpclear 3\n  Clear watchpoint index 3.\n\nwpclear\n  Clear all watchpoints.\n\n
 
-# debug/debughlp.c: 831
+# debug/debughlp.c: 845
 wpdisable
 
-# debug/debughlp.c: 832
+# debug/debughlp.c: 846
 \n  wpdisable [<wpnum>]\n\nThe wpdisable command disables a watchpoint. If <wpnum> is specified, only the requested\nwatchpoint is disabled, otherwise all watchpoints are disabled. Note that disabling a\nwatchpoint does not delete it, it just temporarily marks the watchpoint as inactive.\n\nExamples:\n\nwpdisable 3\n  Disable watchpoint index 3.\n\nwpdisable\n  Disable all watchpoints.\n\n
 
-# debug/debughlp.c: 849
+# debug/debughlp.c: 863
 wpenable
 
-# debug/debughlp.c: 850
+# debug/debughlp.c: 864
 \n  wpenable [<wpnum>]\n\nThe wpenable command enables a watchpoint. If <wpnum> is specified, only the requested\nwatchpoint is enabled, otherwise all watchpoints are enabled.\n\nExamples:\n\nwpenable 3\n  Enable watchpoint index 3.\n\nwpenable\n  Enable all watchpoints.\n\n
 
-# debug/debughlp.c: 866
+# debug/debughlp.c: 880
 wplist
 
-# debug/debughlp.c: 867
+# debug/debughlp.c: 881
 \n  wplist\n\nThe wplist command lists all the current watchpoints, along with their index and any\nconditions or actions attached to them.\n\n
 
-# debug/debughlp.c: 875
+# debug/debughlp.c: 889
 hotspot
 
-# debug/debughlp.c: 876
+# debug/debughlp.c: 890
 \n  hotspot [<cpunum>,[<depth>[,<hits>]]]\n\nThe hotspot command attempts to help locate hotspots in the code where speedup opportunities\nmight be present. <cpunum>, which defaults to the currently active CPU, specified which\nprocessor's memory to track. <depth>, which defaults to 64, controls the depth of the search\nbuffer. The search buffer tracks the last <depth> memory reads from unique PCs. The <hits>\nparameter, which defaults to 250, specifies the minimum number of hits to report.\n\nThe basic theory of operation is like this: each memory read is trapped by the debugger and\nlogged in the search buffer according to the address which was read and the PC that executed\nthe opcode. If the search buffer already contains a matching entry, that entry's count is\nincremented and the entry is moved to the top of the list. If the search buffer does not\ncontain a matching entry, the entry from the bottom of the list is removed, and a new entry\nis created at the top with an initial count of 1. Entries which fall off the bottom are\nexamined and if their count is larger than <hits>, they are reported to the debugger\nconsole.\n\nExamples:\n\nhotspot 0,10\n  Looks for hotspots on CPU 0 using a search buffer of 16 entries, reporting any entries which\n  end up with 250 or more hits.\n\nhotspot 1,40,#1000\n  Looks for hotspots on CPU 1 using a search buffer of 64 entries, reporting any entries which\n  end up with 1000 or more hits.\n
 
-# debug/debughlp.c: 905
+# debug/debughlp.c: 919
 map
 
-# debug/debughlp.c: 906
+# debug/debughlp.c: 920
 \n  map[{d|i}] <address>\n\nThe map/mapd/mapi commands map a logical address in memory to the correct physical address, as\nwell as specifying the bank. 'map' will map program space memory, while 'mapd' will map data space\nmemory and 'mapi' will map I/O space memory.\n\nExample:\n\nmap 152d0\n  Gives physical address and bank for logical address 152d0 in program memory\n\n
 
-# debug/debughlp.c: 920
+# debug/debughlp.c: 934
 memdump
 
-# debug/debughlp.c: 921
+# debug/debughlp.c: 935
 \n  memdump [<filename>]\n\nDumps the current memory map to <filename>. If <filename> is omitted, then dumps\nto memdump.log\nExamples:\n\nmemdump mylog.log\n  Dumps memory to mylog.log.\n\nmemdump\n  Dumps memory to memdump.log.\n\n
 
-# debug/debughlp.c: 978
+# debug/debughlp.c: 992
 Ambiguous help request, did you mean:\n
 
-# debug/debughlp.c: 981
+# debug/debughlp.c: 995
   help %s?\n
 
 # debug/debugvw.c: 365, 1447, 2051
@@ -5917,97 +5947,100 @@ right
 # drivers/aerofgt.c: 1383, 1387, 1607, 1611, 1639, 1643, 1647
 mono
 
-# drivers/afega.c: 160, 237, 318, 396, 481, 565, 649
+# drivers/afega.c: 253, 330, 410, 488, 573, 657, 741, 823
 IN0
 
-# drivers/afega.c: 171, 248, 329, 407, 492, 576, 660
+# drivers/afega.c: 264, 341, 421, 499, 584, 668, 752, 834
 IN1
 
-# drivers/afega.c: 189, 266, 347, 426, 510, 594, 678
+# drivers/afega.c: 282, 359, 439, 518, 602, 686, 770, 852
 IN2
 
-# drivers/afega.c: 355
+# drivers/afega.c: 447
 Bombs
 
-# drivers/afega.c: 528
+# drivers/afega.c: 620
 Free Credit
 
-# drivers/afega.c: 529
+# drivers/afega.c: 621
 500k
 
-# drivers/afega.c: 530
+# drivers/afega.c: 622
 800k
 
-# drivers/afega.c: 531
+# drivers/afega.c: 623
 1000k
 
-# drivers/afega.c: 532
+# drivers/afega.c: 624
 1500k
 
-# drivers/afega.c: 595
+# drivers/afega.c: 687
 Show Dip-Switch Settings
 
-# drivers/afega.c: 610
+# drivers/afega.c: 702
 Number of Bombs
 
-# drivers/afega.c: 627
+# drivers/afega.c: 719
 Continue Coins
 
-# drivers/afega.c: 628
+# drivers/afega.c: 720
 1 Coin
 
-# drivers/afega.c: 629
+# drivers/afega.c: 721
 2 Coins
 
-# drivers/afega.c: 630
+# drivers/afega.c: 722
 3 Coins
 
-# drivers/afega.c: 631
+# drivers/afega.c: 723
 4 Coins
 
-# drivers/afega.c: 686
+# drivers/afega.c: 778
 Number of Bomb
 
-# drivers/afega.c: 689
+# drivers/afega.c: 781
 Copyright Notice
 
-# drivers/afega.c: 856, 860, 865
+# drivers/afega.c: 884
+Bombs?
+
+# drivers/afega.c: 1033, 1037, 1042
 left
 
-# drivers/afega.c: 856, 861, 866
+# drivers/afega.c: 1033, 1038, 1043
 right
 
-# drivers/afega.c: 944, 948, 952
+# drivers/afega.c: 1121, 1125, 1129, 1168, 1172
 mono
 
-# drivers/airbustr.c: 421
+# drivers/airbustr.c: 431
 IN0
 
-# drivers/airbustr.c: 431
+# drivers/airbustr.c: 441
 IN1
 
-# drivers/airbustr.c: 441
+# drivers/airbustr.c: 451
 IN2
 
-# drivers/airbustr.c: 451, 461, 462, 463, 464, 465, 466, 467, 468, 470, 471, 472, 473, 474, 475, 476, 477, 503
+# drivers/airbustr.c: 461, 471, 472, 473, 474, 475, 476, 477, 478, 480, 481, 482, 483, 484, 485, 486, 487, 513
 DSW1
 
-# drivers/airbustr.c: 458
+# drivers/airbustr.c: 468
 Mode 1
 
-# drivers/airbustr.c: 459
+# drivers/airbustr.c: 469
 Mode 2
 
-# drivers/airbustr.c: 479
+# drivers/airbustr.c: 489
 DSW2
 
-# drivers/airbustr.c: 483
+# drivers/airbustr.c: 493
 Difficult
 
-# drivers/airbustr.c: 484
+# drivers/airbustr.c: 494
 Very Difficult
 
-# drivers/airbustr.c: 613, 617, 618, 619, 620, 624
+# drivers/airbustr.c: 623, 627, 628, 629, 630, 634
 mono
 
 # drivers/ajax.c: 102
@@ -7525,6 +7558,45 @@ IN3
 # drivers/aztarac.c: 194, 197, 200, 203, 206
 mono
 
+# drivers/backfire.c: 70, 71, 72, 73, 74, 75, 76, 77, 78, 79
+BFVIDEO
+
+# drivers/backfire.c: 70
+Playfield 1 Data
+
+# drivers/backfire.c: 71
+Playfield 2 Data
+
+# drivers/backfire.c: 72
+Playfield 3 Data
+
+# drivers/backfire.c: 73
+Playfield 4 Data
+
+# drivers/backfire.c: 74
+Playfield 1 Rowscroll
+
+# drivers/backfire.c: 75
+Playfield 2 Rowscroll
+
+# drivers/backfire.c: 76
+Playfield 3 Rowscroll
+
+# drivers/backfire.c: 77
+Playfield 4 Rowscroll
+
+# drivers/backfire.c: 78
+Playfield 1+2 Control Registers
+
+# drivers/backfire.c: 79
+Playfield 3+4 Control Registers
+
+# drivers/backfire.c: 479, 483
+left
+
+# drivers/backfire.c: 479, 484
+right
+
 # drivers/badlands.c: 467, 470, 471
 mono
 
@@ -8037,6 +8109,561 @@ left
 
 # drivers/bestleag.c: 340, 345
 right
+
+# drivers/bfm_sc2.c: 1094
+slide %d ON
+
+# drivers/bfm_sc2.c: 1111
+slide %d OFF
+
+# drivers/bfm_sc2.c: 1717, 1849, 1951, 2063, 2156, 2259, 2353, 2468, 2571, 2677, 2769
+COINS
+
+# drivers/bfm_sc2.c: 1722, 2774
+C5
+
+# drivers/bfm_sc2.c: 1723, 2775
+C6
+
+# drivers/bfm_sc2.c: 1724, 2776
+C7
+
+# drivers/bfm_sc2.c: 1725, 2777
+C8
+
+# drivers/bfm_sc2.c: 1727, 1856, 1958, 2070, 2163, 2266, 2360, 2475, 2578, 2684, 2779
+STROBE0
+
+# drivers/bfm_sc2.c: 1730, 1859, 1961, 2073, 2166, 2269, 2363, 2478, 2581, 2687, 2782
+STROBE1
+
+# drivers/bfm_sc2.c: 1731
+I10
+
+# drivers/bfm_sc2.c: 1732
+I11
+
+# drivers/bfm_sc2.c: 1733
+I12
+
+# drivers/bfm_sc2.c: 1734
+I13
+
+# drivers/bfm_sc2.c: 1735
+I14
+
+# drivers/bfm_sc2.c: 1738, 1867, 1967, 2081, 2173, 2276, 2370, 2485, 2589, 2693, 2790
+STROBE2
+
+# drivers/bfm_sc2.c: 1739
+I20
+
+# drivers/bfm_sc2.c: 1740
+I21
+
+# drivers/bfm_sc2.c: 1741
+I22
+
+# drivers/bfm_sc2.c: 1742
+I23
+
+# drivers/bfm_sc2.c: 1743
+I24
+
+# drivers/bfm_sc2.c: 1746, 1874, 1975, 2087, 2181, 2284, 2378, 2493, 2595, 2701, 2795
+STROBE3
+
+# drivers/bfm_sc2.c: 1747
+I30
+
+# drivers/bfm_sc2.c: 1748
+I31
+
+# drivers/bfm_sc2.c: 1749
+I32
+
+# drivers/bfm_sc2.c: 1750
+I33
+
+# drivers/bfm_sc2.c: 1751
+I34
+
+# drivers/bfm_sc2.c: 1754, 1877, 1978, 2090, 2184, 2289, 2385, 2498, 2598, 2705, 2801
+STROBE4
+
+# drivers/bfm_sc2.c: 1755, 1878, 1979, 2091, 2185, 2290, 2386, 2499, 2599, 2706, 2796
+Cashbox Door
+
+# drivers/bfm_sc2.c: 1756, 1879, 1980, 2092, 2186, 2291, 2387, 2500, 2600, 2707, 2797
+Front Door
+
+# drivers/bfm_sc2.c: 1757, 1880, 1981, 2093, 2187, 2292, 2388, 2501, 2601, 2708, 2798
+Refill Key
+
+# drivers/bfm_sc2.c: 1758
+I43
+
+# drivers/bfm_sc2.c: 1759
+I44
+
+# drivers/bfm_sc2.c: 1762, 1883, 1984, 2096, 2190, 2296, 2392, 2505, 2604, 2711, 2804
+STROBE5
+
+# drivers/bfm_sc2.c: 1763
+I50
+
+# drivers/bfm_sc2.c: 1764
+I51
+
+# drivers/bfm_sc2.c: 1765
+I52
+
+# drivers/bfm_sc2.c: 1766
+I53
+
+# drivers/bfm_sc2.c: 1767
+I54
+
+# drivers/bfm_sc2.c: 1770, 1886, 1987, 2099, 2193, 2300, 2396, 2509, 2607, 2714, 2807
+STROBE6
+
+# drivers/bfm_sc2.c: 1771
+I60
+
+# drivers/bfm_sc2.c: 1772
+I61
+
+# drivers/bfm_sc2.c: 1773
+I62
+
+# drivers/bfm_sc2.c: 1774
+I63
+
+# drivers/bfm_sc2.c: 1775
+I64
+
+# drivers/bfm_sc2.c: 1778, 1889, 1990, 2102, 2196, 2304, 2400, 2513, 2610, 2717, 2819
+STROBE7
+
+# drivers/bfm_sc2.c: 1779
+I70
+
+# drivers/bfm_sc2.c: 1780
+I71
+
+# drivers/bfm_sc2.c: 1781
+I72
+
+# drivers/bfm_sc2.c: 1782
+I73
+
+# drivers/bfm_sc2.c: 1783
+I74
+
+# drivers/bfm_sc2.c: 1786, 1892, 1993, 2105, 2199, 2308, 2404, 2517, 2613, 2720, 2822
+STROBE8
+
+# drivers/bfm_sc2.c: 1787
+I80
+
+# drivers/bfm_sc2.c: 1788
+I81
+
+# drivers/bfm_sc2.c: 1789
+I82
+
+# drivers/bfm_sc2.c: 1790
+I83
+
+# drivers/bfm_sc2.c: 1791
+I84
+
+# drivers/bfm_sc2.c: 1794, 1895, 1996, 2108, 2202, 2312, 2408, 2521, 2616, 2723, 2825
+STROBE9
+
+# drivers/bfm_sc2.c: 1796, 2827
+DIL02
+
+# drivers/bfm_sc2.c: 1799, 2207, 2830
+DIL03
+
+# drivers/bfm_sc2.c: 1802, 2210, 2833
+DIL04
+
+# drivers/bfm_sc2.c: 1805, 2213, 2836
+DIL05
+
+# drivers/bfm_sc2.c: 1809, 1910, 2011, 2123, 2217, 2328, 2423, 2533, 2631, 2738, 2840
+STROBE10
+
+# drivers/bfm_sc2.c: 1810, 1911, 2739, 2841
+DIL06
+
+# drivers/bfm_sc2.c: 1813, 2221, 2844
+DIL07
+
+# drivers/bfm_sc2.c: 1816, 2224, 2847
+DIL08
+
+# drivers/bfm_sc2.c: 1819, 2227, 2850
+DIL10
+
+# drivers/bfm_sc2.c: 1822, 1922, 2853
+DIL11
+
+# drivers/bfm_sc2.c: 1826, 1926, 2027, 2029, 2030, 2031, 2032, 2130, 2234, 2334, 2442, 2545, 2651, 2747, 2857
+STROBE11
+
+# drivers/bfm_sc2.c: 1827, 1927, 2235, 2858
+DIL12
+
+# drivers/bfm_sc2.c: 1830, 1930, 2238, 2861
+DIL13
+
+# drivers/bfm_sc2.c: 1833, 2864
+DIL14
+
+# drivers/bfm_sc2.c: 1836, 2867
+DIL15
+
+# drivers/bfm_sc2.c: 1839, 2870
+DIL16
+
+# drivers/bfm_sc2.c: 1850, 1952, 2064, 2263, 2575, 2681
+Fl 5.00
+
+# drivers/bfm_sc2.c: 1851, 1953, 2065, 2262, 2574, 2680
+Fl 2.50
+
+# drivers/bfm_sc2.c: 1852, 1954, 2066, 2261, 2573, 2679
+Fl 1.00
+
+# drivers/bfm_sc2.c: 1853
+Fl 0.50
+
+# drivers/bfm_sc2.c: 1860
+Select Stake
+
+# drivers/bfm_sc2.c: 1897, 1998, 2618, 2725
+Coin 1 Inhibit?
+
+# drivers/bfm_sc2.c: 1900, 2001, 2621, 2728
+Coin 2 Inhibit?
+
+# drivers/bfm_sc2.c: 1903, 2004, 2624, 2731
+Coin 3 Inhibit?
+
+# drivers/bfm_sc2.c: 1906, 2007, 2627, 2734
+Coin 4 Inhibit?
+
+# drivers/bfm_sc2.c: 1914, 2012, 2143
+Attract mode language
+
+# drivers/bfm_sc2.c: 1916, 2013, 2144, 2638
+Dutch
+
+# drivers/bfm_sc2.c: 1917, 2018
+Skill Level
+
+# drivers/bfm_sc2.c: 1919, 2020, 2642
+Medium-Low
+
+# drivers/bfm_sc2.c: 1920, 2021, 2643
+Medium-High
+
+# drivers/bfm_sc2.c: 1933, 2139, 2335, 2449, 2658, 2751
+Attract mode
+
+# drivers/bfm_sc2.c: 1936, 2490
+Stake
+
+# drivers/bfm_sc2.c: 1937, 2029
+4 credits per game
+
+# drivers/bfm_sc2.c: 1938, 2031
+1 credit  per round
+
+# drivers/bfm_sc2.c: 1939
+2 credit  per round
+
+# drivers/bfm_sc2.c: 1940, 2032
+4 credits per round
+
+# drivers/bfm_sc2.c: 1942, 2054, 2147, 2344, 2459, 2562, 2668, 2760
+DEBUGPORT
+
+# drivers/bfm_sc2.c: 1944, 2056, 2149, 2252, 2346, 2461, 2564, 2670, 2762
+Alpha display toggle
+
+# drivers/bfm_sc2.c: 1955, 2067, 2260, 2572, 2678
+Fl 0.25
+
+# drivers/bfm_sc2.c: 1963, 2271, 2365, 2480
+Reel 1
+
+# drivers/bfm_sc2.c: 1964, 2273, 2367, 2482
+Reel 2
+
+# drivers/bfm_sc2.c: 1965, 2277, 2371, 2486
+Reel 3
+
+# drivers/bfm_sc2.c: 1968, 2278, 2372, 2487
+Reel 4
+
+# drivers/bfm_sc2.c: 1969
+Reel 5
+
+# drivers/bfm_sc2.c: 1970
+Reel 6
+
+# drivers/bfm_sc2.c: 1972
+Hall Of Fame
+
+# drivers/bfm_sc2.c: 2015
+Max number of spins
+
+# drivers/bfm_sc2.c: 2023
+Base Pricing on:
+
+# drivers/bfm_sc2.c: 2024
+Full Game
+
+# drivers/bfm_sc2.c: 2025
+Individual Rounds
+
+# drivers/bfm_sc2.c: 2028
+Credits required:
+
+# drivers/bfm_sc2.c: 2030
+2 credits per game
+
+# drivers/bfm_sc2.c: 2042, 2549
+Attract Mode
+
+# drivers/bfm_sc2.c: 2045, 2131, 2748
+Time bar
+
+# drivers/bfm_sc2.c: 2048
+Time bar speed
+
+# drivers/bfm_sc2.c: 2075, 2168, 2688
+Hand 1
+
+# drivers/bfm_sc2.c: 2076, 2169, 2689
+Hand 2
+
+# drivers/bfm_sc2.c: 2077, 2170, 2690
+Hand 3
+
+# drivers/bfm_sc2.c: 2078, 2171
+Hand 4
+
+# drivers/bfm_sc2.c: 2082, 2174
+Hand 5
+
+# drivers/bfm_sc2.c: 2110, 2314
+Fl 0.25 Inhibit?
+
+# drivers/bfm_sc2.c: 2113, 2317
+Fl 1.00 Inhibit?
+
+# drivers/bfm_sc2.c: 2116, 2320
+Fl 2.50 Inhibit?
+
+# drivers/bfm_sc2.c: 2119, 2323
+Fl 5.00 Inhibit?
+
+# drivers/bfm_sc2.c: 2126
+Coin Jam Alarm
+
+# drivers/bfm_sc2.c: 2135
+Clear credits on reset
+
+# drivers/bfm_sc2.c: 2157
+10p
+
+# drivers/bfm_sc2.c: 2158
+20p
+
+# drivers/bfm_sc2.c: 2159
+50p
+
+# drivers/bfm_sc2.c: 2167
+Collect/Strobe Advance
+
+# drivers/bfm_sc2.c: 2204, 2546
+Clear credits on reset?
+
+# drivers/bfm_sc2.c: 2218
+Coin Lockout
+
+# drivers/bfm_sc2.c: 2230
+Stake per Game / Jackpot
+
+# drivers/bfm_sc2.c: 2231
+20p / £6
+
+# drivers/bfm_sc2.c: 2232
+50p / £20
+
+# drivers/bfm_sc2.c: 2241
+Target percentage
+
+# drivers/bfm_sc2.c: 2279, 2373, 2488
+Start
+
+# drivers/bfm_sc2.c: 2330, 2438, 2541
+Coin jam alarm
+
+# drivers/bfm_sc2.c: 2338, 2662, 2754
+Timebar speed
+
+# drivers/bfm_sc2.c: 2355
+Token
+
+# drivers/bfm_sc2.c: 2356
+20 BFr
+
+# drivers/bfm_sc2.c: 2357
+50 BFr
+
+# drivers/bfm_sc2.c: 2379
+Tube 1 level switch
+
+# drivers/bfm_sc2.c: 2380
+Tube 2 level switch
+
+# drivers/bfm_sc2.c: 2410
+CashMeters in refill menu
+
+# drivers/bfm_sc2.c: 2413
+Token Inhibit?
+
+# drivers/bfm_sc2.c: 2416
+20 Bfr Inhibit?
+
+# drivers/bfm_sc2.c: 2419
+50 Bfr Inhibit?
+
+# drivers/bfm_sc2.c: 2428
+Payout Percentage
+
+# drivers/bfm_sc2.c: 2443
+Timebar
+
+# drivers/bfm_sc2.c: 2446
+Clear credits
+
+# drivers/bfm_sc2.c: 2452
+Show hints
+
+# drivers/bfm_sc2.c: 2455
+Win to credits
+
+# drivers/bfm_sc2.c: 2471
+Bfr 20
+
+# drivers/bfm_sc2.c: 2472
+Bfr 50
+
+# drivers/bfm_sc2.c: 2523
+Hopper Limit
+
+# drivers/bfm_sc2.c: 2527
+Attendant payout
+
+# drivers/bfm_sc2.c: 2528
+1000 Bfr
+
+# drivers/bfm_sc2.c: 2529
+1250 Bfr
+
+# drivers/bfm_sc2.c: 2530
+1500 Bfr
+
+# drivers/bfm_sc2.c: 2531
+1750 Bfr
+
+# drivers/bfm_sc2.c: 2534
+Bfr 20 Inhibit?
+
+# drivers/bfm_sc2.c: 2552
+Target Percentage
+
+# drivers/bfm_sc2.c: 2582, 2694
+Start 1 Player Game(Left)
+
+# drivers/bfm_sc2.c: 2583, 2696
+Start 2 Player Game(Right)
+
+# drivers/bfm_sc2.c: 2585
+Column 1
+
+# drivers/bfm_sc2.c: 2586
+Column 2
+
+# drivers/bfm_sc2.c: 2590
+Column 3
+
+# drivers/bfm_sc2.c: 2592
+Start(Enter)
+
+# drivers/bfm_sc2.c: 2632
+Joker
+
+# drivers/bfm_sc2.c: 2640
+Payout level
+
+# drivers/bfm_sc2.c: 2652
+Winlines to go
+
+# drivers/bfm_sc2.c: 2695
+Start (Enter)
+
+# drivers/bfm_sc2.c: 2697
+Hand 3 Right
+
+# drivers/bfm_sc2.c: 2698
+Hand 2 Right
+
+# drivers/bfm_sc2.c: 2702
+Hand 1 Right
+
+# drivers/bfm_sc2.c: 2743
+Coin Jam alarm
+
+# drivers/bfm_sc2.c: 2791
+Exchange
+
+# drivers/bfm_sc2.c: 2808
+PERCENTAGE KEY
+
+# drivers/bfm_sc2.c: 2809
+No key
+
+# drivers/bfm_sc2.c: 2810
+Key 1
+
+# drivers/bfm_sc2.c: 2811
+Key 2
+
+# drivers/bfm_sc2.c: 2812
+Key 3
+
+# drivers/bfm_sc2.c: 2813
+Key 4
+
+# drivers/bfm_sc2.c: 2814
+Key 5
+
+# drivers/bfm_sc2.c: 2815
+Key 6
+
+# drivers/bfm_sc2.c: 2816
+Key 7
+
+# drivers/bfm_sc2.c: 2916, 2919, 2922
+mono
 
 # drivers/bigevglf.c: 266
 Difficult
@@ -10075,205 +10702,223 @@ mono
 # drivers/circusc.c: 270, 273, 276, 279
 mono
 
-# drivers/cischeat.c: 896
+# drivers/cischeat.c: 997
 FAKE
 
-# drivers/cischeat.c: 897, 1038, 1122
+# drivers/cischeat.c: 998, 1139, 1223
 P1 Accelerator
 
-# drivers/cischeat.c: 897, 1020, 1122
+# drivers/cischeat.c: 998, 1121, 1223
 P1 High Gear
 
-# drivers/cischeat.c: 897, 1020, 1122
+# drivers/cischeat.c: 998, 1121, 1223
 P1 Low Gear
 
-# drivers/cischeat.c: 901, 1023, 1133, 1314, 1364
+# drivers/cischeat.c: 1002, 1124, 1234, 1415, 1465, 1538
 IN1
 
-# drivers/cischeat.c: 911, 1033, 1165, 1332, 1367
+# drivers/cischeat.c: 1012, 1134, 1266, 1433, 1468, 1541
 IN2
 
-# drivers/cischeat.c: 912, 1034, 1172
+# drivers/cischeat.c: 1013, 1135, 1273
 P1 Brake
 
-# drivers/cischeat.c: 919, 1041
+# drivers/cischeat.c: 1020, 1142
 P1 Horn
 
-# drivers/cischeat.c: 921, 1043, 1175, 1335
+# drivers/cischeat.c: 1022, 1144, 1276, 1436, 1563
 IN3
 
-# drivers/cischeat.c: 922, 1044
+# drivers/cischeat.c: 1023, 1145
 Up Limit SW
 
-# drivers/cischeat.c: 925, 1047
+# drivers/cischeat.c: 1026, 1148
 Down Limit SW
 
-# drivers/cischeat.c: 941, 1061, 1199
+# drivers/cischeat.c: 1042, 1162, 1300
 IN4
 
-# drivers/cischeat.c: 943
+# drivers/cischeat.c: 1044
 Unknown 3-0&1*
 
-# drivers/cischeat.c: 951
+# drivers/cischeat.c: 1052
 Unknown 3-3
 
-# drivers/cischeat.c: 954
+# drivers/cischeat.c: 1055
 Move Cabinet
 
-# drivers/cischeat.c: 962
+# drivers/cischeat.c: 1063
 Automatic Game Start
 
-# drivers/cischeat.c: 964
+# drivers/cischeat.c: 1065
 After 15 Seconds
 
-# drivers/cischeat.c: 992, 1093, 1215
+# drivers/cischeat.c: 1093, 1194, 1316
 IN5
 
-# drivers/cischeat.c: 994, 1070, 1203
+# drivers/cischeat.c: 1095, 1171, 1304
 Unit ID
 
-# drivers/cischeat.c: 995
+# drivers/cischeat.c: 1096
 1 (Blue-White Car)
 
-# drivers/cischeat.c: 996
+# drivers/cischeat.c: 1097
 2 (Green-White Car)
 
-# drivers/cischeat.c: 997
+# drivers/cischeat.c: 1098
 3 (Red-White Car)
 
-# drivers/cischeat.c: 998
+# drivers/cischeat.c: 1099
 4 (Yellow Car)
 
-# drivers/cischeat.c: 1005, 1218
+# drivers/cischeat.c: 1106, 1319
 IN6
 
-# drivers/cischeat.c: 1019, 1121, 1264, 1345
+# drivers/cischeat.c: 1120, 1222, 1365, 1446, 1524
 IN0
 
-# drivers/cischeat.c: 1052
+# drivers/cischeat.c: 1153
 Right Limit SW
 
-# drivers/cischeat.c: 1055
+# drivers/cischeat.c: 1156
 Left Limit SW
 
-# drivers/cischeat.c: 1071, 1097
+# drivers/cischeat.c: 1172, 1198
 0 (Red Car)
 
-# drivers/cischeat.c: 1072, 1098
+# drivers/cischeat.c: 1173, 1199
 1 (Blue Car)
 
-# drivers/cischeat.c: 1073, 1099
+# drivers/cischeat.c: 1174, 1200
 2 (Yellow Car)
 
-# drivers/cischeat.c: 1074
+# drivers/cischeat.c: 1175
 3 (Green Car)
 
-# drivers/cischeat.c: 1080, 1152
+# drivers/cischeat.c: 1181, 1253
 Infinite Time (Cheat)
 
-# drivers/cischeat.c: 1095
+# drivers/cischeat.c: 1196
 Unit ID (2)
 
-# drivers/cischeat.c: 1096
+# drivers/cischeat.c: 1197
 Use other
 
-# drivers/cischeat.c: 1135
+# drivers/cischeat.c: 1236
 Free Play (UK FR)
 
-# drivers/cischeat.c: 1145
+# drivers/cischeat.c: 1246
 UK
 
-# drivers/cischeat.c: 1146
+# drivers/cischeat.c: 1247
 France
 
-# drivers/cischeat.c: 1158
+# drivers/cischeat.c: 1259
 Choose Race (US UK FR)
 
-# drivers/cischeat.c: 1161
+# drivers/cischeat.c: 1262
 Vibrations
 
-# drivers/cischeat.c: 1162
+# drivers/cischeat.c: 1263
 Torque
 
-# drivers/cischeat.c: 1163
+# drivers/cischeat.c: 1264
 Shake
 
-# drivers/cischeat.c: 1200
+# drivers/cischeat.c: 1301
 This Unit Is
 
-# drivers/cischeat.c: 1201
+# drivers/cischeat.c: 1302
 Slave
 
-# drivers/cischeat.c: 1204
+# drivers/cischeat.c: 1305
 0 (Red-White Car)
 
-# drivers/cischeat.c: 1205
+# drivers/cischeat.c: 1306
 1 (Red Car)
 
-# drivers/cischeat.c: 1206
+# drivers/cischeat.c: 1307
 2 (Blue-White Car)
 
-# drivers/cischeat.c: 1207
+# drivers/cischeat.c: 1308
 3 (Blue Car)
 
-# drivers/cischeat.c: 1219
+# drivers/cischeat.c: 1320
 Coin A (JP US)
 
-# drivers/cischeat.c: 1228
+# drivers/cischeat.c: 1329
 Coin B (JP US)
 
-# drivers/cischeat.c: 1237
+# drivers/cischeat.c: 1338
 IN7
 
-# drivers/cischeat.c: 1238
+# drivers/cischeat.c: 1339
 Coin A (UK FR)
 
-# drivers/cischeat.c: 1247
+# drivers/cischeat.c: 1348
 Coin B (UK FR)
 
-# drivers/cischeat.c: 1330
+# drivers/cischeat.c: 1431
 Emergency Button
 
-# drivers/cischeat.c: 1373
+# drivers/cischeat.c: 1474
 Time To Hit
 
-# drivers/cischeat.c: 1374
+# drivers/cischeat.c: 1475
 2 s
 
-# drivers/cischeat.c: 1375
+# drivers/cischeat.c: 1476
 3 s
 
-# drivers/cischeat.c: 1376
+# drivers/cischeat.c: 1477
 4 s
 
-# drivers/cischeat.c: 1377
+# drivers/cischeat.c: 1478
 5 s
 
-# drivers/cischeat.c: 1384
+# drivers/cischeat.c: 1485
 Unknown 1-6
 
-# drivers/cischeat.c: 1387
+# drivers/cischeat.c: 1488
 Unknown 1-7
 
-# drivers/cischeat.c: 1400
+# drivers/cischeat.c: 1501
 Unknown 2-3
 
-# drivers/cischeat.c: 1403
+# drivers/cischeat.c: 1504
 Unknown 2-4
 
-# drivers/cischeat.c: 1406
+# drivers/cischeat.c: 1507
 Unknown 2-5
 
-# drivers/cischeat.c: 1409
+# drivers/cischeat.c: 1510
 Unknown 2-6
 
-# drivers/cischeat.c: 1412
+# drivers/cischeat.c: 1513
 Unknown 2-7
 
-# drivers/cischeat.c: 1609, 1612, 1617, 1735, 1739, 1744
+# drivers/cischeat.c: 1553
+15 s
+
+# drivers/cischeat.c: 1554
+20 s
+
+# drivers/cischeat.c: 1555
+25 s
+
+# drivers/cischeat.c: 1556
+30 s
+
+# drivers/cischeat.c: 1585
+Demo Arm
+
+# drivers/cischeat.c: 1587
+Side
+
+# drivers/cischeat.c: 1781, 1784, 1789, 1907, 1911, 1916
 left
 
-# drivers/cischeat.c: 1609, 1613, 1621, 1735, 1740, 1745
+# drivers/cischeat.c: 1781, 1785, 1793, 1907, 1912, 1917
 right
 
 # drivers/citycon.c: 71
@@ -12025,509 +12670,515 @@ Extend
 # drivers/ddayjlc.c: 431, 435, 438
 mono
 
-# drivers/ddenlovr.c: 182
+# drivers/ddenlovr.c: 183
 warning dynax_blit_flip = %02x
 
-# drivers/ddenlovr.c: 292
+# drivers/ddenlovr.c: 293
 GFX ROM OVER %06x
 
-# drivers/ddenlovr.c: 315
+# drivers/ddenlovr.c: 316
 %06x: warning unknown pixel command %02x
 
-# drivers/ddenlovr.c: 345, 426
+# drivers/ddenlovr.c: 346, 427
 warning: pen_size %d arg_size %d
 
-# drivers/ddenlovr.c: 599
+# drivers/ddenlovr.c: 600
 LINE X
 
-# drivers/ddenlovr.c: 602
+# drivers/ddenlovr.c: 603
 LINE X clipx=%03x clipy=%03x ctrl=%x
 
-# drivers/ddenlovr.c: 605
+# drivers/ddenlovr.c: 606
 LINE X flip=%x
 
-# drivers/ddenlovr.c: 629
+# drivers/ddenlovr.c: 630
 LINE Y
 
-# drivers/ddenlovr.c: 632
+# drivers/ddenlovr.c: 633
 LINE Y clipx=%03x clipy=%03x ctrl=%x
 
-# drivers/ddenlovr.c: 782, 953, 1151
+# drivers/ddenlovr.c: 783, 954, 1152
 unknown blitter command %02x
 
-# drivers/ddenlovr.c: 1340
+# drivers/ddenlovr.c: 1341
 priority = %02x
 
-# drivers/ddenlovr.c: 1355
+# drivers/ddenlovr.c: 1356
 priority2 = %02x
 
-# drivers/ddenlovr.c: 2712, 3107
+# drivers/ddenlovr.c: 2846, 3241
 Unknown 1-1
 
-# drivers/ddenlovr.c: 2715, 3110, 3243
+# drivers/ddenlovr.c: 2849, 3244, 3377
 Unknown 1-2
 
-# drivers/ddenlovr.c: 2718, 3113, 3246, 3417, 3643
+# drivers/ddenlovr.c: 2852, 3247, 3380, 3551, 3777
 Unknown 1-3
 
-# drivers/ddenlovr.c: 2721, 3066, 3249, 3420, 3646
+# drivers/ddenlovr.c: 2855, 3200, 3383, 3554, 3780
 Unknown 1-4
 
-# drivers/ddenlovr.c: 2724, 2879
+# drivers/ddenlovr.c: 2858, 3013
 Unknown 1-5*
 
-# drivers/ddenlovr.c: 2727, 2784
+# drivers/ddenlovr.c: 2861, 2918
 Unknown 1-6*
 
-# drivers/ddenlovr.c: 2730, 2787, 3161
+# drivers/ddenlovr.c: 2864, 2921, 3295
 Unknown 1-7*
 
-# drivers/ddenlovr.c: 2792
+# drivers/ddenlovr.c: 2926
 Unknown 2-0&1*
 
-# drivers/ddenlovr.c: 2797, 3086
+# drivers/ddenlovr.c: 2931, 3220
 Unknown 2-2
 
-# drivers/ddenlovr.c: 2800
+# drivers/ddenlovr.c: 2934
 Unknown 2-3*
 
-# drivers/ddenlovr.c: 2803, 3177, 4298
+# drivers/ddenlovr.c: 2937, 3311, 4432
 Unknown 2-4*
 
-# drivers/ddenlovr.c: 2806, 3180, 4301
+# drivers/ddenlovr.c: 2940, 3314, 4435
 Unknown 2-5*
 
-# drivers/ddenlovr.c: 2809, 3183
+# drivers/ddenlovr.c: 2943, 3317
 Unknown 2-6*
 
-# drivers/ddenlovr.c: 2812, 3186
+# drivers/ddenlovr.c: 2946, 3320
 Unknown 2-7*
 
-# drivers/ddenlovr.c: 2817
+# drivers/ddenlovr.c: 2951
 Unknown 1-8*
 
-# drivers/ddenlovr.c: 2821
+# drivers/ddenlovr.c: 2955
 Unknown 2-8*
 
-# drivers/ddenlovr.c: 2824
+# drivers/ddenlovr.c: 2958
 Unknown 2-9*
 
-# drivers/ddenlovr.c: 2828, 2917
+# drivers/ddenlovr.c: 2962, 3051
 8 OPTION
 
-# drivers/ddenlovr.c: 2828, 2917
+# drivers/ddenlovr.c: 2962, 3051
 Detailed Tests
 
-# drivers/ddenlovr.c: 2882
+# drivers/ddenlovr.c: 3016
 Unknown 1-6&7
 
-# drivers/ddenlovr.c: 2889
+# drivers/ddenlovr.c: 3023
 Unknown 2-0&1
 
-# drivers/ddenlovr.c: 2894, 3438, 3664
+# drivers/ddenlovr.c: 3028, 3572, 3798
 Unknown 2-2&3
 
-# drivers/ddenlovr.c: 2899, 3092
+# drivers/ddenlovr.c: 3033, 3226
 Unknown 2-4
 
-# drivers/ddenlovr.c: 2902, 3095, 3277
+# drivers/ddenlovr.c: 3036, 3229, 3411
 Unknown 2-5
 
-# drivers/ddenlovr.c: 2905, 3098
+# drivers/ddenlovr.c: 3039, 3232
 Unknown 2-6
 
-# drivers/ddenlovr.c: 2908
+# drivers/ddenlovr.c: 3042
 Unknown 2-7
 
-# drivers/ddenlovr.c: 2913
+# drivers/ddenlovr.c: 3047
 Unknown 3-0
 
-# drivers/ddenlovr.c: 2920
+# drivers/ddenlovr.c: 3054
 Unknown 3-3
 
-# drivers/ddenlovr.c: 2998
+# drivers/ddenlovr.c: 3132
 VS Round
 
-# drivers/ddenlovr.c: 3018
+# drivers/ddenlovr.c: 3152
 Select Round
 
-# drivers/ddenlovr.c: 3072
+# drivers/ddenlovr.c: 3206
 Unknown 1-6
 
-# drivers/ddenlovr.c: 3075, 3191
+# drivers/ddenlovr.c: 3209, 3325
 Set Date
 
-# drivers/ddenlovr.c: 3080
+# drivers/ddenlovr.c: 3214
 Unknown 2-0
 
-# drivers/ddenlovr.c: 3083
+# drivers/ddenlovr.c: 3217
 Unknown 2-1
 
-# drivers/ddenlovr.c: 3089
+# drivers/ddenlovr.c: 3223
 Unknown 2-3
 
-# drivers/ddenlovr.c: 3104
+# drivers/ddenlovr.c: 3238
 Unknown 1-0
 
-# drivers/ddenlovr.c: 3155, 4276
+# drivers/ddenlovr.c: 3289, 4410
 Linked Cabinets
 
-# drivers/ddenlovr.c: 3166
+# drivers/ddenlovr.c: 3300
 Unknown 2-0*
 
-# drivers/ddenlovr.c: 3172, 4293
+# drivers/ddenlovr.c: 3306, 4427
 Unknown 2-2&3*
 
-# drivers/ddenlovr.c: 3195, 3294
+# drivers/ddenlovr.c: 3329, 3428
 Unknown 3-2*
 
-# drivers/ddenlovr.c: 3198
+# drivers/ddenlovr.c: 3332
 Unknown 3-3*
 
-# drivers/ddenlovr.c: 3201, 3298
+# drivers/ddenlovr.c: 3335, 3432
 Unknown 3-4
 
-# drivers/ddenlovr.c: 3204, 3301
+# drivers/ddenlovr.c: 3338, 3435
 Unknown 3-5
 
-# drivers/ddenlovr.c: 3207
+# drivers/ddenlovr.c: 3341
 Unknown 3-6*
 
-# drivers/ddenlovr.c: 3210
+# drivers/ddenlovr.c: 3344
 Unknown 3-7*
 
-# drivers/ddenlovr.c: 3252
+# drivers/ddenlovr.c: 3386
 Difficulty?
 
-# drivers/ddenlovr.c: 3269
+# drivers/ddenlovr.c: 3403
 Unknown 2-2*
 
-# drivers/ddenlovr.c: 3272
+# drivers/ddenlovr.c: 3406
 Unknown 2-3&4
 
-# drivers/ddenlovr.c: 3280
+# drivers/ddenlovr.c: 3414
 Pirate Fight
 
-# drivers/ddenlovr.c: 3283
+# drivers/ddenlovr.c: 3417
 Taito Copyright
 
-# drivers/ddenlovr.c: 3288
+# drivers/ddenlovr.c: 3422
 Unknown 3-0*
 
-# drivers/ddenlovr.c: 3291
+# drivers/ddenlovr.c: 3425
 Tickets
 
-# drivers/ddenlovr.c: 3304
+# drivers/ddenlovr.c: 3438
 Unknown 3-6
 
-# drivers/ddenlovr.c: 3307
+# drivers/ddenlovr.c: 3441
 Unknown 3-7
 
-# drivers/ddenlovr.c: 3408, 3634
+# drivers/ddenlovr.c: 3542, 3768
 Unknown 1-0&1&2
 
-# drivers/ddenlovr.c: 3423, 3649
+# drivers/ddenlovr.c: 3557, 3783
 Unknown 1-5&6
 
-# drivers/ddenlovr.c: 3428
+# drivers/ddenlovr.c: 3562
 Unknown 1-7
 
-# drivers/ddenlovr.c: 3443, 3669
+# drivers/ddenlovr.c: 3577, 3803
 Unknown 2-4&5
 
-# drivers/ddenlovr.c: 3448, 3674
+# drivers/ddenlovr.c: 3582, 3808
 Unknown 2-6&7
 
-# drivers/ddenlovr.c: 3455
+# drivers/ddenlovr.c: 3589
 Game Type
 
-# drivers/ddenlovr.c: 3456
+# drivers/ddenlovr.c: 3590
 8 Cards
 
-# drivers/ddenlovr.c: 3457
+# drivers/ddenlovr.c: 3591
 6 Cards (Bets)
 
-# drivers/ddenlovr.c: 3458
+# drivers/ddenlovr.c: 3592
 6 Cards (Bets)?
 
-# drivers/ddenlovr.c: 3459
+# drivers/ddenlovr.c: 3593
 6 Cards (Bets)??
 
-# drivers/ddenlovr.c: 3460, 3687
+# drivers/ddenlovr.c: 3594, 3821
 (C) Nihon (Censored)
 
-# drivers/ddenlovr.c: 3463, 3690
+# drivers/ddenlovr.c: 3597, 3824
 Unknown 3-3&4
 
-# drivers/ddenlovr.c: 3468, 3695
+# drivers/ddenlovr.c: 3602, 3829
 Unknown 3-5&6
 
-# drivers/ddenlovr.c: 3473
+# drivers/ddenlovr.c: 3607
 Girl
 
-# drivers/ddenlovr.c: 3481, 3708
+# drivers/ddenlovr.c: 3615, 3842
 Unknown 4-1
 
-# drivers/ddenlovr.c: 3484, 3711
+# drivers/ddenlovr.c: 3618, 3845
 Unknown 4-2
 
-# drivers/ddenlovr.c: 3487, 3714
+# drivers/ddenlovr.c: 3621, 3848
 Unknown 4-3
 
-# drivers/ddenlovr.c: 3490, 3717
+# drivers/ddenlovr.c: 3624, 3851
 Unknown 4-4
 
-# drivers/ddenlovr.c: 3493, 3720
+# drivers/ddenlovr.c: 3627, 3854
 Unknown 4-5
 
-# drivers/ddenlovr.c: 3497, 3724
+# drivers/ddenlovr.c: 3631, 3858
 Hanafuda
 
-# drivers/ddenlovr.c: 3498, 3725
+# drivers/ddenlovr.c: 3632, 3859
 Mahjong
 
-# drivers/ddenlovr.c: 3499, 3726
+# drivers/ddenlovr.c: 3633, 3860
 Unknown 4-7
 
-# drivers/ddenlovr.c: 3504, 3731
+# drivers/ddenlovr.c: 3638, 3865
 Unknown 1-8
 
-# drivers/ddenlovr.c: 3507, 3734
+# drivers/ddenlovr.c: 3641, 3868
 Unknown 1-9
 
-# drivers/ddenlovr.c: 3510, 3737
+# drivers/ddenlovr.c: 3644, 3871
 Unknown 2-8&9
 
-# drivers/ddenlovr.c: 3515, 3742
+# drivers/ddenlovr.c: 3649, 3876
 Unknown 3-8
 
-# drivers/ddenlovr.c: 3518, 3745
+# drivers/ddenlovr.c: 3652, 3879
 Unknown 3-9
 
-# drivers/ddenlovr.c: 3521, 3748, 3981, 4216
+# drivers/ddenlovr.c: 3655, 3882, 4115, 4350
 Unknown 4-8
 
-# drivers/ddenlovr.c: 3527
+# drivers/ddenlovr.c: 3661
 Allow Bets
 
-# drivers/ddenlovr.c: 3532
+# drivers/ddenlovr.c: 3666
 ? Hopper M.
 
-# drivers/ddenlovr.c: 3654, 3964, 4202
+# drivers/ddenlovr.c: 3788, 4098, 4336, 4644
 Credits Per Note
 
-# drivers/ddenlovr.c: 3663, 3894, 4129
+# drivers/ddenlovr.c: 3797, 4028, 4263, 4557
 1 Coin/10 Credits
 
-# drivers/ddenlovr.c: 3681
+# drivers/ddenlovr.c: 3815
 Game Type?
 
-# drivers/ddenlovr.c: 3684
+# drivers/ddenlovr.c: 3818
 Unknown 3-2
 
-# drivers/ddenlovr.c: 3700
+# drivers/ddenlovr.c: 3834
 Girl?
 
-# drivers/ddenlovr.c: 3754
+# drivers/ddenlovr.c: 3888
 Disable Bets
 
-# drivers/ddenlovr.c: 3861, 4096
+# drivers/ddenlovr.c: 3995, 4230, 4524
 Pay Out Rate (%)
 
-# drivers/ddenlovr.c: 3878, 4113
+# drivers/ddenlovr.c: 4012, 4247, 4541
 Odds Rate
 
-# drivers/ddenlovr.c: 3883, 4118
+# drivers/ddenlovr.c: 4017, 4252, 4546
 Max Bet
 
-# drivers/ddenlovr.c: 3895, 4130
+# drivers/ddenlovr.c: 4029, 4264, 4558
 Min Credits To Start
 
-# drivers/ddenlovr.c: 3905
+# drivers/ddenlovr.c: 4039
 W-BET
 
-# drivers/ddenlovr.c: 3908
+# drivers/ddenlovr.c: 4042
 Last Chance
 
-# drivers/ddenlovr.c: 3913, 4149
+# drivers/ddenlovr.c: 4047, 4283, 4563
 YAKUMAN Bonus
 
-# drivers/ddenlovr.c: 3914, 4150
+# drivers/ddenlovr.c: 4048, 4284, 4564
 Cut
 
-# drivers/ddenlovr.c: 3915, 4151
+# drivers/ddenlovr.c: 4049, 4285, 4565
 1 T
 
-# drivers/ddenlovr.c: 3922, 4158
+# drivers/ddenlovr.c: 4056, 4292, 4577
 YAKUMAN Times
 
-# drivers/ddenlovr.c: 3927
+# drivers/ddenlovr.c: 4061
 3 BAI In YAKUMAN Bonus Chance
 
-# drivers/ddenlovr.c: 3930
+# drivers/ddenlovr.c: 4064
 Auto Tsumo
 
-# drivers/ddenlovr.c: 3933
+# drivers/ddenlovr.c: 4067
 Credit Timing
 
-# drivers/ddenlovr.c: 3941, 4177
+# drivers/ddenlovr.c: 4075, 4311, 4604
 In Game Music
 
-# drivers/ddenlovr.c: 3944
+# drivers/ddenlovr.c: 4078
 Girls (Demo)
 
-# drivers/ddenlovr.c: 3947
+# drivers/ddenlovr.c: 4081
 Girls Show After 3 Renso
 
-# drivers/ddenlovr.c: 3950
+# drivers/ddenlovr.c: 4084
 Girls (Play)
 
-# drivers/ddenlovr.c: 3953
+# drivers/ddenlovr.c: 4087
 Boys In Game
 
-# drivers/ddenlovr.c: 3956
+# drivers/ddenlovr.c: 4090
 Boys
 
-# drivers/ddenlovr.c: 3959
+# drivers/ddenlovr.c: 4093
 Don Den Key
 
-# drivers/ddenlovr.c: 3960
+# drivers/ddenlovr.c: 4094
 Start
 
-# drivers/ddenlovr.c: 3961
+# drivers/ddenlovr.c: 4095
 Flip/Flop
 
-# drivers/ddenlovr.c: 3970
+# drivers/ddenlovr.c: 4104
 Computer Strength
 
-# drivers/ddenlovr.c: 3971, 4206
+# drivers/ddenlovr.c: 4105, 4340, 4628
 Weak
 
-# drivers/ddenlovr.c: 3973, 4208
+# drivers/ddenlovr.c: 4107, 4342, 4630
 Strong
 
-# drivers/ddenlovr.c: 3974, 4209
+# drivers/ddenlovr.c: 4108, 4343, 4631
 Very Strong
 
-# drivers/ddenlovr.c: 3975
+# drivers/ddenlovr.c: 4109
 Game Style
 
-# drivers/ddenlovr.c: 3976
+# drivers/ddenlovr.c: 4110
 Credit
 
-# drivers/ddenlovr.c: 3977
+# drivers/ddenlovr.c: 4111
 Credit Time
 
-# drivers/ddenlovr.c: 3978
+# drivers/ddenlovr.c: 4112
 Start Method (Credit Time)
 
-# drivers/ddenlovr.c: 3980
+# drivers/ddenlovr.c: 4114
 Rate
 
-# drivers/ddenlovr.c: 3984, 4219
+# drivers/ddenlovr.c: 4118, 4353
 Unknown 4-9
 
-# drivers/ddenlovr.c: 3989
+# drivers/ddenlovr.c: 4123
 Bets?
 
-# drivers/ddenlovr.c: 4180
+# drivers/ddenlovr.c: 4314
 Girls
 
-# drivers/ddenlovr.c: 4182
+# drivers/ddenlovr.c: 4316
 Dressed
 
-# drivers/ddenlovr.c: 4183
+# drivers/ddenlovr.c: 4317
 Underwear
 
-# drivers/ddenlovr.c: 4184
+# drivers/ddenlovr.c: 4318
 Nude
 
-# drivers/ddenlovr.c: 4185
+# drivers/ddenlovr.c: 4319
 Girls Speech
 
-# drivers/ddenlovr.c: 4205
+# drivers/ddenlovr.c: 4339, 4627
 Computer Strength?
 
-# drivers/ddenlovr.c: 4282
+# drivers/ddenlovr.c: 4416
 Play Rock Smash
 
-# drivers/ddenlovr.c: 4287
+# drivers/ddenlovr.c: 4421
 2 Player Game
 
-# drivers/ddenlovr.c: 4304
+# drivers/ddenlovr.c: 4438
 Unknown 2-6&7*
 
-# drivers/ddenlovr.c: 4311
+# drivers/ddenlovr.c: 4445
 Continue?
 
-# drivers/ddenlovr.c: 4315
+# drivers/ddenlovr.c: 4449
 Debug Text
 
-# drivers/ddenlovr.c: 4360, 4363, 4366, 4370, 4459, 4462, 4466, 4534, 4537, 4540, 4544, 4597, 4600, 4604, 4656
+# drivers/ddenlovr.c: 4678, 4681, 4684, 4688, 4777, 4780, 4784, 4852, 4855, 4858, 4862, 4915, 4918, 4922, 4974, 5048
 mono
 
-# drivers/ddragon.c: 186
+# drivers/ddragon.c: 214
 tstrike
 
-# drivers/ddragon.c: 295, 553
+# drivers/ddragon.c: 323, 585
 IN4
 
-# drivers/ddragon.c: 563, 589, 804
+# drivers/ddragon.c: 595, 621, 836
 DSW0
 
-# drivers/ddragon.c: 625
+# drivers/ddragon.c: 657
 IN0
 
-# drivers/ddragon.c: 625
+# drivers/ddragon.c: 657
 IN1
 
-# drivers/ddragon.c: 650, 684, 718, 749, 780, 840
+# drivers/ddragon.c: 682, 716, 750, 781, 812, 872
 DSW1
 
-# drivers/ddragon.c: 731
+# drivers/ddragon.c: 763
 20k
 
-# drivers/ddragon.c: 732
+# drivers/ddragon.c: 764
 40k
 
-# drivers/ddragon.c: 733
+# drivers/ddragon.c: 765
 30k and every 60k
 
-# drivers/ddragon.c: 734
+# drivers/ddragon.c: 766
 40k and every 80k
 
-# drivers/ddragon.c: 739
+# drivers/ddragon.c: 771
 Infinite (Cheat)
 
-# drivers/ddragon.c: 758
+# drivers/ddragon.c: 790
 Hurricane Kick
 
-# drivers/ddragon.c: 814, 831
+# drivers/ddragon.c: 846, 863
 4 Coin/6 Credits
 
-# drivers/ddragon.c: 815, 832
+# drivers/ddragon.c: 847, 864
 3 Coin/5 Credits
 
-# drivers/ddragon.c: 817, 834
+# drivers/ddragon.c: 849, 866
 3 Coin/6 Credits
 
-# drivers/ddragon.c: 850
+# drivers/ddragon.c: 882
 30k, 50k and 100k
 
-# drivers/ddragon.c: 851
+# drivers/ddragon.c: 883
 50k and 100k
 
-# drivers/ddragon.c: 852
+# drivers/ddragon.c: 884
 100k and 200k
 
-# drivers/ddragon.c: 978, 982, 983, 987, 991, 1028, 1032, 1033, 1037, 1041, 1075, 1079, 1080, 1084, 1088, 1122, 1126, 1127, 1131
+# drivers/ddragon.c: 1010, 1014, 1015, 1019, 1023, 1060, 1064, 1065, 1069, 1073, 1107, 1111, 1112, 1116, 1120, 1154, 1158, 1159, 1163
 mono
 
-# drivers/ddragon.c: 1161, 1165
+# drivers/ddragon.c: 1193, 1197
 left
 
-# drivers/ddragon.c: 1161, 1166
+# drivers/ddragon.c: 1193, 1198
 right
+
+# drivers/ddragon.c: 1663
+bank
+
+# drivers/ddragon.c: 1663
+ddragon
 
 # drivers/ddragon3.c: 239, 319, 400
 Continue Discount
@@ -12760,43 +13411,43 @@ Power
 # drivers/dec8.c: 2103, 2106, 2107, 2108, 2109, 2113, 2143, 2146, 2147, 2148, 2149, 2153, 2181, 2184, 2185, 2186, 2187, 2191, 2220, 2223, 2224, 2225, 2226, 2230, 2262, 2265, 2266, 2267, 2268, 2272, 2303, 2306, 2307, 2308, 2309, 2313, 2344, 2347, 2348, 2349, 2350, 2354, 2386, 2389, 2390, 2391, 2392, 2396, 2400, 2429, 2432, 2433, 2434, 2435, 2439
 mono
 
-# drivers/deco156.c: 435, 439, 444, 470, 474, 500, 504
+# drivers/deco156.c: 323, 327, 332, 358, 362
 left
 
-# drivers/deco156.c: 435, 440, 445, 470, 475, 500, 505
+# drivers/deco156.c: 323, 328, 333, 358, 363
 right
 
-# drivers/deco32.c: 1196
+# drivers/deco32.c: 1207
 Continue Coin
 
-# drivers/deco32.c: 1197
+# drivers/deco32.c: 1208
 1 Start/1 Continue
 
-# drivers/deco32.c: 1198
+# drivers/deco32.c: 1209
 2 Start/1 Continue
 
-# drivers/deco32.c: 1214
+# drivers/deco32.c: 1225
 Play Mode
 
-# drivers/deco32.c: 1215
+# drivers/deco32.c: 1226
 2 Player
 
-# drivers/deco32.c: 1216
+# drivers/deco32.c: 1227
 4 Player
 
-# drivers/deco32.c: 1308
+# drivers/deco32.c: 1319
 Stage Select
 
-# drivers/deco32.c: 1800, 1804, 1809, 1814, 1844, 1848, 1853, 1858, 1888, 1892, 1897, 1902, 1934, 1938, 1943, 1948, 1953, 1985, 1989, 1994, 1999, 2004, 2035, 2039, 2068, 2072, 2077, 2082
+# drivers/deco32.c: 1811, 1815, 1820, 1825, 1855, 1859, 1864, 1869, 1899, 1903, 1908, 1913, 1945, 1949, 1954, 1959, 1964, 1996, 2000, 2005, 2010, 2015, 2046, 2050, 2080, 2084, 2089, 2094
 left
 
-# drivers/deco32.c: 1800, 1805, 1810, 1815, 1844, 1849, 1854, 1859, 1888, 1893, 1898, 1903, 1934, 1939, 1944, 1949, 1954, 1985, 1990, 1995, 2000, 2005, 2035, 2040, 2068, 2073, 2078, 2083
+# drivers/deco32.c: 1811, 1816, 1821, 1826, 1855, 1860, 1865, 1870, 1899, 1904, 1909, 1914, 1945, 1950, 1955, 1960, 1965, 1996, 2001, 2006, 2011, 2016, 2046, 2051, 2080, 2085, 2090, 2095
 right
 
-# drivers/deco_mlc.c: 438, 442, 468, 472
+# drivers/deco_mlc.c: 439, 443, 469, 473
 left
 
-# drivers/deco_mlc.c: 438, 443, 468, 473
+# drivers/deco_mlc.c: 439, 444, 469, 474
 right
 
 # drivers/decocass.c: 228
@@ -19579,163 +20230,163 @@ filter.0.1
 # drivers/junofrst.c: 385
 filter.0.2
 
-# drivers/kaneko16.c: 1060
+# drivers/kaneko16.c: 1061
 Unknown 1-2
 
-# drivers/kaneko16.c: 1063
+# drivers/kaneko16.c: 1064
 Unknown 1-3
 
-# drivers/kaneko16.c: 1066
+# drivers/kaneko16.c: 1067
 Unknown 1-4
 
-# drivers/kaneko16.c: 1069, 1329
+# drivers/kaneko16.c: 1070, 1330
 Unknown 1-5
 
-# drivers/kaneko16.c: 1072, 1332
+# drivers/kaneko16.c: 1073, 1333
 Unknown 1-6
 
-# drivers/kaneko16.c: 1075
+# drivers/kaneko16.c: 1076
 Unknown 1-7
 
-# drivers/kaneko16.c: 1169, 1265, 1531, 1537, 1540
+# drivers/kaneko16.c: 1170, 1266, 1532, 1538, 1541
 Reserved
 
-# drivers/kaneko16.c: 1206, 1302
+# drivers/kaneko16.c: 1207, 1303
 Freeze Screen
 
-# drivers/kaneko16.c: 1350, 1368
+# drivers/kaneko16.c: 1351, 1369
 6 Coins/3 Credits
 
-# drivers/kaneko16.c: 1355, 1373
+# drivers/kaneko16.c: 1356, 1374
 5 Coins/6 Credits
 
-# drivers/kaneko16.c: 1460
+# drivers/kaneko16.c: 1461
 1 Easy
 
-# drivers/kaneko16.c: 1467
+# drivers/kaneko16.c: 1468
 8 Hard
 
-# drivers/kaneko16.c: 1468
+# drivers/kaneko16.c: 1469
 Join During Game
 
-# drivers/kaneko16.c: 1531
+# drivers/kaneko16.c: 1532
 Ticket dispenser
 
-# drivers/kaneko16.c: 1534
+# drivers/kaneko16.c: 1535
 Title Level Display
 
-# drivers/kaneko16.c: 1601
+# drivers/kaneko16.c: 1602
 1 Joystick
 
-# drivers/kaneko16.c: 1602
+# drivers/kaneko16.c: 1603
 2 Joysticks
 
-# drivers/kaneko16.c: 1603, 1678
+# drivers/kaneko16.c: 1604, 1679
 Wheel (360)
 
-# drivers/kaneko16.c: 1604
+# drivers/kaneko16.c: 1605
 Wheel (270)
 
-# drivers/kaneko16.c: 1605
+# drivers/kaneko16.c: 1606
 Use Brake
 
-# drivers/kaneko16.c: 1608
+# drivers/kaneko16.c: 1609
 National Anthem & Flag
 
-# drivers/kaneko16.c: 1609
+# drivers/kaneko16.c: 1610
 Use Memory
 
-# drivers/kaneko16.c: 1610
+# drivers/kaneko16.c: 1611
 Anthem Only
 
-# drivers/kaneko16.c: 1611
+# drivers/kaneko16.c: 1612
 Flag Only
 
-# drivers/kaneko16.c: 1661
+# drivers/kaneko16.c: 1662
 IN 3-6
 
-# drivers/kaneko16.c: 1665
+# drivers/kaneko16.c: 1666
 Communication
 
-# drivers/kaneko16.c: 1667
+# drivers/kaneko16.c: 1668
 Machine 1
 
-# drivers/kaneko16.c: 1668
+# drivers/kaneko16.c: 1669
 Machine 2
 
-# drivers/kaneko16.c: 1669
+# drivers/kaneko16.c: 1670
 Machine 3
 
-# drivers/kaneko16.c: 1670
+# drivers/kaneko16.c: 1671
 Machine 4
 
-# drivers/kaneko16.c: 1679
+# drivers/kaneko16.c: 1680
 Wheel (270D)
 
-# drivers/kaneko16.c: 1680
+# drivers/kaneko16.c: 1681
 Wheel (270A)
 
-# drivers/kaneko16.c: 1681
+# drivers/kaneko16.c: 1682
 Pedal Function
 
-# drivers/kaneko16.c: 1682
+# drivers/kaneko16.c: 1683
 Microswitch
 
-# drivers/kaneko16.c: 1699
+# drivers/kaneko16.c: 1700
 IN 1-0
 
-# drivers/kaneko16.c: 1699
+# drivers/kaneko16.c: 1700
 sound test
 
-# drivers/kaneko16.c: 1703
+# drivers/kaneko16.c: 1704
 IN 1-4
 
-# drivers/kaneko16.c: 1703
+# drivers/kaneko16.c: 1704
 IN 1-5
 
-# drivers/kaneko16.c: 1703
+# drivers/kaneko16.c: 1704
 IN 1-6
 
-# drivers/kaneko16.c: 1703
+# drivers/kaneko16.c: 1704
 view memory
 
-# drivers/kaneko16.c: 1703
+# drivers/kaneko16.c: 1704
 view sprites ?
 
-# drivers/kaneko16.c: 1703
+# drivers/kaneko16.c: 1704
 view tiles
 
-# drivers/kaneko16.c: 1846
+# drivers/kaneko16.c: 1847
 Bombs
 
-# drivers/kaneko16.c: 1857
+# drivers/kaneko16.c: 1858
 100K, 300K
 
-# drivers/kaneko16.c: 1858
+# drivers/kaneko16.c: 1859
 200K, 500K
 
-# drivers/kaneko16.c: 1859
+# drivers/kaneko16.c: 1860
 500K, 1000K
 
-# drivers/kaneko16.c: 1860
+# drivers/kaneko16.c: 1861
 1000K, 3000K
 
-# drivers/kaneko16.c: 1955
+# drivers/kaneko16.c: 1956
 Can Join During Game
 
-# drivers/kaneko16.c: 1958
+# drivers/kaneko16.c: 1959
 Special Continue Mode
 
-# drivers/kaneko16.c: 2116, 2120, 2127, 2217, 2220, 2420, 2424, 2429
+# drivers/kaneko16.c: 2117, 2121, 2128, 2218, 2221, 2421, 2425, 2430
 left
 
-# drivers/kaneko16.c: 2116, 2123, 2128, 2217, 2221, 2420, 2425, 2430
+# drivers/kaneko16.c: 2117, 2124, 2129, 2218, 2222, 2421, 2426, 2431
 right
 
-# drivers/kaneko16.c: 2160, 2163, 2167, 2171, 2172, 2263, 2267, 2268, 2272, 2273, 2355, 2358, 2362, 2366, 2367, 2484, 2488, 2489, 2493, 2494
+# drivers/kaneko16.c: 2161, 2164, 2168, 2172, 2173, 2264, 2268, 2269, 2273, 2274, 2356, 2359, 2363, 2367, 2368, 2485, 2489, 2490, 2494, 2495
 mono
 
-# drivers/kaneko16.c: 2539
+# drivers/kaneko16.c: 2540
 gtmr SOUND1 region too small
 
 # drivers/kangaroo.c: 324
@@ -20530,6 +21181,12 @@ Upright Two Players
 # drivers/lastduel.c: 462
 Background Music
 
+# drivers/lastfght.c: 111
+left
+
+# drivers/lastfght.c: 111
+right
+
 # drivers/lazercmd.c: 521
 60 seconds
 
@@ -21103,127 +21760,103 @@ DSW4
 # drivers/lucky8.c: 401, 405
 mono
 
-# drivers/lvcards.c: 96
+# drivers/lvcards.c: 198, 282, 365
 IN0
 
-# drivers/lvcards.c: 97
+# drivers/lvcards.c: 199, 283
 Analyzer
 
-# drivers/lvcards.c: 106
+# drivers/lvcards.c: 208, 292, 375
 IN1
 
-# drivers/lvcards.c: 112
+# drivers/lvcards.c: 214
 Deal / Double
 
-# drivers/lvcards.c: 116
+# drivers/lvcards.c: 218, 302, 385
 IN2
 
-# drivers/lvcards.c: 118
+# drivers/lvcards.c: 220, 304
 Cancel / Take Score
 
-# drivers/lvcards.c: 126
+# drivers/lvcards.c: 228, 312
 DSW0
 
-# drivers/lvcards.c: 148
+# drivers/lvcards.c: 250
 Reset?
 
-# drivers/lvcards.c: 152
+# drivers/lvcards.c: 254, 337, 395
 DSW1
 
-# drivers/lvcards.c: 153
+# drivers/lvcards.c: 255
 1 COIN =
 
-# drivers/lvcards.c: 229, 233
-mono
-
-# drivers/lvpoker.c: 189, 267
-IN0
-
-# drivers/lvpoker.c: 192
-Reset All
-
-# drivers/lvpoker.c: 193, 271
+# drivers/lvcards.c: 286, 369
 Clear Stats
 
-# drivers/lvpoker.c: 194
-Call Attendant
-
-# drivers/lvpoker.c: 199, 277
-IN1
-
-# drivers/lvpoker.c: 203
-Bonus Game
-
-# drivers/lvpoker.c: 206
-Use Credit
-
-# drivers/lvpoker.c: 207, 285
-Remove Credit as coins
-
-# drivers/lvpoker.c: 209, 287
-IN2
-
-# drivers/lvpoker.c: 219, 322
-DSW1
-
-# drivers/lvpoker.c: 220, 298
-Winning Percentage
-
-# drivers/lvpoker.c: 230, 313
-Payment Method
-
-# drivers/lvpoker.c: 231, 314
-Credit In/Coin Out
-
-# drivers/lvpoker.c: 232, 316
-Coin In/Coin Out
-
-# drivers/lvpoker.c: 233, 315
-Credit In/Credit Out
-
-# drivers/lvpoker.c: 235
-Reset All Switch
-
-# drivers/lvpoker.c: 237, 320
-Enabled
-
-# drivers/lvpoker.c: 239
-DSW2
-
-# drivers/lvpoker.c: 257, 340
-1 Coin/10 Credits
-
-# drivers/lvpoker.c: 258, 341
-Coin C (Service Switch)
-
-# drivers/lvpoker.c: 259, 342
-1 Push/1 Credit
-
-# drivers/lvpoker.c: 260, 343
-1 Push/10 Credits
-
-# drivers/lvpoker.c: 268
-Analyzer
-
-# drivers/lvpoker.c: 283
+# drivers/lvcards.c: 298
 Deal/Double
 
-# drivers/lvpoker.c: 289
-Cancel / Take Score
+# drivers/lvcards.c: 300, 383
+Remove Credit as coins
 
-# drivers/lvpoker.c: 297
-DSW0
+# drivers/lvcards.c: 313, 396
+Winning Percentage
 
-# drivers/lvpoker.c: 307
+# drivers/lvcards.c: 322
 Max. Payout Adjustment
 
-# drivers/lvpoker.c: 310
+# drivers/lvcards.c: 325
 Bonus Game Difficulty
 
-# drivers/lvpoker.c: 318
+# drivers/lvcards.c: 328, 406
+Payment Method
+
+# drivers/lvcards.c: 329, 407
+Credit In/Coin Out
+
+# drivers/lvcards.c: 330, 409
+Credit In/Credit Out
+
+# drivers/lvcards.c: 331, 408
+Coin In/Coin Out
+
+# drivers/lvcards.c: 333
 Memory Reset Switch
 
-# drivers/lvpoker.c: 407, 410
+# drivers/lvcards.c: 335, 413
+Enabled
+
+# drivers/lvcards.c: 355, 433
+1 Coin/10 Credits
+
+# drivers/lvcards.c: 356, 434
+Coin C (Service Switch)
+
+# drivers/lvcards.c: 357, 435
+1 Push/1 Credit
+
+# drivers/lvcards.c: 358, 436
+1 Push/10 Credits
+
+# drivers/lvcards.c: 368
+Reset All
+
+# drivers/lvcards.c: 370
+Call Attendant
+
+# drivers/lvcards.c: 379
+Bonus Game
+
+# drivers/lvcards.c: 382
+Use Credit
+
+# drivers/lvcards.c: 411
+Reset All Switch
+
+# drivers/lvcards.c: 415
+DSW2
+
+# drivers/lvcards.c: 495, 499
 mono
 
 # drivers/lwings.c: 141
@@ -22426,7 +23059,10 @@ Unknown SW 2-7
 # drivers/marvins.c: 545, 548, 551, 555, 591, 594, 597, 601
 mono
 
-# drivers/matmania.c: 371, 374, 377, 380, 428, 432, 435
+# drivers/matmania.c: 221
+Tournament Time
+
+# drivers/matmania.c: 370, 373, 376, 379, 427, 431, 434
 mono
 
 # drivers/maxaflex.c: 244
@@ -26236,6 +26872,294 @@ Stop Mode (Cheat)
 # drivers/mpatrol.c: 211, 231
 DSW0
 
+# drivers/mpu4.c: 238
+%04x IC3 PIA Port A Set to %2x (lamp strobes 1 - 9)\n
+
+# drivers/mpu4.c: 245
+%04x IC3 PIA Port B Set to %2x  (lamp strobes 10 - 17)\n
+
+# drivers/mpu4.c: 252
+%04x IC3 PIA Read of Port A\n
+
+# drivers/mpu4.c: 258
+%04x IC3 PIA Read of Port B\n
+
+# drivers/mpu4.c: 264
+%04x IC3 PIA Write CA (alpha data), %02X\n
+
+# drivers/mpu4.c: 272
+%04x IC3 PIA Write CB (alpha reset), %02X\n
+
+# drivers/mpu4.c: 280
+%04x IC3 PIA Read CA1\n
+
+# drivers/mpu4.c: 286
+%04x IC3 PIA Read CA2\n
+
+# drivers/mpu4.c: 291
+%04x IC3 PIA Read CB1\n
+
+# drivers/mpu4.c: 296
+%04x IC3 PIA Read CB2\n
+
+# drivers/mpu4.c: 368
+%04x IC4 PIA Write CA (input MUX strobe), %02X\n
+
+# drivers/mpu4.c: 379
+%04x I43 PIA Write CB (T39, connector PL13 pin 2), %02X\n
+
+# drivers/mpu4.c: 566
+%04x IC8 PIA Port A Set to %2x\n
+
+# drivers/mpu4.c: 571
+%04x IC8 PIA Port B Set to %2x\n
+
+# drivers/mpu4.c: 576
+%04x IC8 PIA Read of Port A (MUX input data)\n
+
+# drivers/mpu4.c: 585
+%04x IC8 PIA Read of Port B\n
+
+# drivers/mpu4.c: 591
+%04x IC8 PIA Read of CA1\n
+
+# drivers/mpu4.c: 597
+%04x IC8 PIA Read of CA2\n
+
+# drivers/mpu4.c: 603
+%04x IC8 PIA write CB (alpha clock) %02X\n
+
+# drivers/mpu4.c: 614
+%04x IC8 PIA write CA2 (input_strobe bit 2) %02X\n
+
+# drivers/mpu4.c: 811
+scn2674_write_init_regs %02x %02x\n
+
+# drivers/mpu4.c: 824
+IR0 - Double Ht Wd %02x\n
+
+# drivers/mpu4.c: 825
+IR0 - Scanlines per Character Row %02x\n
+
+# drivers/mpu4.c: 826
+IR0 - Sync Select %02x\n
+
+# drivers/mpu4.c: 827
+IR0 - Buffer Mode Select %02x\n
+
+# drivers/mpu4.c: 834
+IR1 - Interlace Enable %02x\n
+
+# drivers/mpu4.c: 835
+IR1 - Equalizing Constant %02x\n
+
+# drivers/mpu4.c: 843
+IR2 - Row Table %02x\n
+
+# drivers/mpu4.c: 844
+IR2 - Horizontal Sync Width %02x\n
+
+# drivers/mpu4.c: 845
+IR2 - Horizontal Back Porch %02x\n
+
+# drivers/mpu4.c: 852
+IR3 - Vertical Front Porch %02x\n
+
+# drivers/mpu4.c: 853
+IR3 - Vertical Back Porch %02x\n
+
+# drivers/mpu4.c: 860
+IR4 - Rows Per Screen %02x\n
+
+# drivers/mpu4.c: 861
+IR4 - Character Blink Rate %02x\n
+
+# drivers/mpu4.c: 869
+IR5 - Active Characters Per Row %02x\n
+
+# drivers/mpu4.c: 880
+IR8 - Display Buffer First Address LSB %02x\n
+
+# drivers/mpu4.c: 886
+IR9 - Display Buffer First Address MSB %02x\n
+
+# drivers/mpu4.c: 887
+IR9 - Display Buffer Last Address %02x\n
+
+# drivers/mpu4.c: 892
+IR10 - Display Pointer Address Lower %02x\n
+
+# drivers/mpu4.c: 897
+IR11 - Display Pointer Address Lower %02x\n
+
+# drivers/mpu4.c: 903
+IR12 - Scroll Start %02x\n
+
+# drivers/mpu4.c: 904
+IR12 - Split Register 1 %02x\n
+
+# drivers/mpu4.c: 910
+IR13 - Scroll End %02x\n
+
+# drivers/mpu4.c: 911
+IR13 - Split Register 2 %02x\n
+
+# drivers/mpu4.c: 938
+scn2674_write_command %02x\n
+
+# drivers/mpu4.c: 943
+master reset %02x\n
+
+# drivers/mpu4.c: 949
+set IR pointer %02x\n
+
+# drivers/mpu4.c: 961
+disable GFX %02x\n
+
+# drivers/mpu4.c: 968
+enable GFX %02x\n
+
+# drivers/mpu4.c: 980
+display OFF - float DADD bus %02x\n
+
+# drivers/mpu4.c: 982
+display OFF - no float DADD bus %02x\n
+
+# drivers/mpu4.c: 993
+display ON - next field %02x\n
+
+# drivers/mpu4.c: 995
+display ON - next scanline %02x\n
+
+# drivers/mpu4.c: 1002
+cursor off %02x\n
+
+# drivers/mpu4.c: 1009
+cursor on %02x\n
+
+# drivers/mpu4.c: 1019
+reset interrupt / status bit %02x\n
+
+# drivers/mpu4.c: 1021
+Split 2   IRQ: %d Reset\n
+
+# drivers/mpu4.c: 1022
+Ready     IRQ: %d Reset\n
+
+# drivers/mpu4.c: 1023
+Split 1   IRQ: %d Reset\n
+
+# drivers/mpu4.c: 1024
+Line Zero IRQ: %d Reset\n
+
+# drivers/mpu4.c: 1025
+V-Blank   IRQ: %d Reset\n
+
+# drivers/mpu4.c: 1044
+disable interrupt %02x\n
+
+# drivers/mpu4.c: 1045
+Split 2   IRQ: %d Disabled\n
+
+# drivers/mpu4.c: 1046
+Ready     IRQ: %d Disabled\n
+
+# drivers/mpu4.c: 1047
+Split 1   IRQ: %d Disabled\n
+
+# drivers/mpu4.c: 1048
+Line Zero IRQ: %d Disabled\n
+
+# drivers/mpu4.c: 1049
+V-Blank   IRQ: %d Disabled\n
+
+# drivers/mpu4.c: 1066
+enable interrupt %02x\n
+
+# drivers/mpu4.c: 1067
+Split 2   IRQ: %d Enabled\n
+
+# drivers/mpu4.c: 1068
+Ready     IRQ: %d Enabled\n
+
+# drivers/mpu4.c: 1069
+Split 1   IRQ: %d Enabled\n
+
+# drivers/mpu4.c: 1070
+Line Zero IRQ: %d Enabled\n
+
+# drivers/mpu4.c: 1071
+V-Blank   IRQ: %d Enabled\n
+
+# drivers/mpu4.c: 1082
+read at pointer address %02x\n
+
+# drivers/mpu4.c: 1088
+write at pointer address %02x\n
+
+# drivers/mpu4.c: 1094
+increase cursor address %02x\n
+
+# drivers/mpu4.c: 1100
+read at cursor address %02x\n
+
+# drivers/mpu4.c: 1106
+write at cursor address %02x\n
+
+# drivers/mpu4.c: 1112
+read at cursor address+incrememnt %02x\n
+
+# drivers/mpu4.c: 1118
+write at cursor address+incrememnt %02x\n
+
+# drivers/mpu4.c: 1124
+write from cursor address to pointer address %02x\n
+
+# drivers/mpu4.c: 1130
+read from cursor address to pointer address %02x\n
+
+# drivers/mpu4.c: 1165
+Read Irq Register %06x\n
+
+# drivers/mpu4.c: 1171
+Read Status Register %06x\n
+
+# drivers/mpu4.c: 1174
+Read Screen1_l Register %06x\n
+
+# drivers/mpu4.c: 1175
+Read Screen1_h Register %06x\n
+
+# drivers/mpu4.c: 1176
+Read Cursor_l Register %06x\n
+
+# drivers/mpu4.c: 1177
+Read Cursor_h Register %06x\n
+
+# drivers/mpu4.c: 1178
+Read Screen2_l Register %06x\n
+
+# drivers/mpu4.c: 1179
+Read Screen2_h Register %06x\n
+
+# drivers/mpu4.c: 1386
+6850 write to %02x = %02x\n
+
+# drivers/mpu4.c: 1498
+vblank irq\n
+
+# drivers/mpu4.c: 1613, 1615
+mono
+
+# drivers/mpu4.c: 1617, 1619
+left
+
+# drivers/mpu4.c: 1617, 1620
+right
+
+# drivers/mpu4.c: 1632
+vid.p1
+
 # drivers/mrdo.c: 69
 IN0
 
@@ -26665,19 +27589,19 @@ namco_road
 # drivers/namcoic.c: 1622
 RoadRAM
 
-# drivers/namcona1.c: 198, 262
+# drivers/namcona1.c: 336, 392, 408, 472
 DIP2 (Freeze)
 
-# drivers/namcona1.c: 201, 265
+# drivers/namcona1.c: 339, 395, 411, 475
 DIP1 (Test)
 
-# drivers/namcona1.c: 207, 271
+# drivers/namcona1.c: 417, 481
 SERVICE
 
-# drivers/namcona1.c: 958, 962
+# drivers/namcona1.c: 1387, 1392, 1475, 1479
 left
 
-# drivers/namcona1.c: 958, 963
+# drivers/namcona1.c: 1387, 1391, 1475, 1480
 right
 
 # drivers/namconb1.c: 1254, 1387
@@ -28033,178 +28957,175 @@ DSW7
 # drivers/namcos21.c: 2020, 2097, 2178
 DSW8
 
-# drivers/namcos22.c: 1558
-0x%08x uploading dsp%d code (dst=0x%04x; len=0x%04x)\n
-
-# drivers/namcos22.c: 1835
+# drivers/namcos22.c: 1833
 insufficient mem for spot ram\n
 
-# drivers/namcos22.c: 2026, 2030, 2049, 3841, 3921, 3964, 4028, 4160
+# drivers/namcos22.c: 2024, 2028, 2047, 3839, 3919, 3962, 4026, 4158
 MCUP5A
 
-# drivers/namcos22.c: 2053, 3857, 3933, 3976, 4038, 4170
+# drivers/namcos22.c: 2051, 3855, 3931, 3974, 4036, 4168
 MCUP5B
 
-# drivers/namcos22.c: 2302, 2307, 2309
+# drivers/namcos22.c: 2300, 2305, 2307
 left
 
-# drivers/namcos22.c: 2302, 2306, 2308
+# drivers/namcos22.c: 2300, 2304, 2306
 right
 
-# drivers/namcos22.c: 3816, 4130
+# drivers/namcos22.c: 3814, 4128
 DIP4-1
 
-# drivers/namcos22.c: 3819, 3942, 4133
+# drivers/namcos22.c: 3817, 3940, 4131
 DIP4-2
 
-# drivers/namcos22.c: 3822, 3945, 4136
+# drivers/namcos22.c: 3820, 3943, 4134
 DIP4-3
 
-# drivers/namcos22.c: 3825, 3948, 4139
+# drivers/namcos22.c: 3823, 3946, 4137
 DIP4-4
 
-# drivers/namcos22.c: 3828, 3951, 4142
+# drivers/namcos22.c: 3826, 3949, 4140
 DIP4-5
 
-# drivers/namcos22.c: 3831, 3954, 4145
+# drivers/namcos22.c: 3829, 3952, 4143
 DIP4-6
 
-# drivers/namcos22.c: 3834, 3957, 4148
+# drivers/namcos22.c: 3832, 3955, 4146
 DIP4-7
 
-# drivers/namcos22.c: 3837, 3960, 4151
+# drivers/namcos22.c: 3835, 3958, 4149
 DIP4-8
 
-# drivers/namcos22.c: 3858
+# drivers/namcos22.c: 3856
 DIP5-1
 
-# drivers/namcos22.c: 3861
+# drivers/namcos22.c: 3859
 DIP5-2
 
-# drivers/namcos22.c: 3864
+# drivers/namcos22.c: 3862
 DIP5-3
 
-# drivers/namcos22.c: 3867
+# drivers/namcos22.c: 3865
 DIP5-4
 
-# drivers/namcos22.c: 3870
+# drivers/namcos22.c: 3868
 DIP5-5
 
-# drivers/namcos22.c: 3873
+# drivers/namcos22.c: 3871
 DIP5-6
 
-# drivers/namcos22.c: 3876
+# drivers/namcos22.c: 3874
 DIP5-7
 
-# drivers/namcos22.c: 3879
+# drivers/namcos22.c: 3877
 DIP5-8
 
-# drivers/namcos22.c: 3887, 3989
+# drivers/namcos22.c: 3885, 3987
 DIP1
 
-# drivers/namcos22.c: 3890, 3992
+# drivers/namcos22.c: 3888, 3990
 DIP2
 
-# drivers/namcos22.c: 3893, 3995
+# drivers/namcos22.c: 3891, 3993
 DIP3
 
-# drivers/namcos22.c: 3896, 3998
+# drivers/namcos22.c: 3894, 3996
 DIP4
 
-# drivers/namcos22.c: 3899, 4001
+# drivers/namcos22.c: 3897, 3999
 DIP5
 
-# drivers/namcos22.c: 3902, 4004
+# drivers/namcos22.c: 3900, 4002
 DIP6
 
-# drivers/namcos22.c: 3905, 4007
+# drivers/namcos22.c: 3903, 4005
 DIP7
 
-# drivers/namcos22.c: 3908, 4010
+# drivers/namcos22.c: 3906, 4008
 DIP8
 
-# drivers/namcos22.c: 3939
+# drivers/namcos22.c: 3937
 DIP4-1 (Test Mode)
 
-# drivers/namcos22.c: 4051, 4178, 4252
+# drivers/namcos22.c: 4049, 4176, 4250
 DIP2-1
 
-# drivers/namcos22.c: 4054, 4181, 4255, 4331, 4406
+# drivers/namcos22.c: 4052, 4179, 4253, 4329, 4404
 DIP2-2
 
-# drivers/namcos22.c: 4057, 4184, 4258, 4334, 4409
+# drivers/namcos22.c: 4055, 4182, 4256, 4332, 4407
 DIP2-3
 
-# drivers/namcos22.c: 4060, 4187, 4261, 4337, 4412
+# drivers/namcos22.c: 4058, 4185, 4259, 4335, 4410
 DIP2-4
 
-# drivers/namcos22.c: 4063, 4190, 4264, 4340, 4415
+# drivers/namcos22.c: 4061, 4188, 4262, 4338, 4413
 DIP2-5
 
-# drivers/namcos22.c: 4066, 4193, 4267, 4343, 4418
+# drivers/namcos22.c: 4064, 4191, 4265, 4341, 4416
 DIP2-6
 
-# drivers/namcos22.c: 4069, 4196, 4270, 4346, 4421
+# drivers/namcos22.c: 4067, 4194, 4268, 4344, 4419
 DIP2-7
 
-# drivers/namcos22.c: 4072, 4199, 4273, 4349, 4424
+# drivers/namcos22.c: 4070, 4197, 4271, 4347, 4422
 DIP2-8
 
-# drivers/namcos22.c: 4075, 4202, 4276, 4352, 4427
+# drivers/namcos22.c: 4073, 4200, 4274, 4350, 4425
 DIP3-1
 
-# drivers/namcos22.c: 4078, 4205, 4279, 4355, 4430
+# drivers/namcos22.c: 4076, 4203, 4277, 4353, 4428
 DIP3-2
 
-# drivers/namcos22.c: 4081, 4208, 4282, 4358, 4433
+# drivers/namcos22.c: 4079, 4206, 4280, 4356, 4431
 DIP3-3
 
-# drivers/namcos22.c: 4084, 4211, 4285, 4361, 4436
+# drivers/namcos22.c: 4082, 4209, 4283, 4359, 4434
 DIP3-4
 
-# drivers/namcos22.c: 4087, 4214, 4288, 4364, 4439
+# drivers/namcos22.c: 4085, 4212, 4286, 4362, 4437
 DIP3-5
 
-# drivers/namcos22.c: 4090, 4217, 4291, 4367, 4442
+# drivers/namcos22.c: 4088, 4215, 4289, 4365, 4440
 DIP3-6
 
-# drivers/namcos22.c: 4093, 4445
+# drivers/namcos22.c: 4091, 4443
 DIP3-7
 
-# drivers/namcos22.c: 4096, 4373, 4448
+# drivers/namcos22.c: 4094, 4371, 4446
 DIP3-8
 
-# drivers/namcos22.c: 4220, 4294
+# drivers/namcos22.c: 4218, 4292
 DIP3-7 (TEST MODE?)
 
-# drivers/namcos22.c: 4223, 4297
+# drivers/namcos22.c: 4221, 4295
 DIP3-8 (TEST MODE?)
 
-# drivers/namcos22.c: 4228, 4302
+# drivers/namcos22.c: 4226, 4300
 Shift
 
-# drivers/namcos22.c: 4229, 4303
+# drivers/namcos22.c: 4227, 4301
 Up
 
-# drivers/namcos22.c: 4231, 4305
+# drivers/namcos22.c: 4229, 4303
 Down
 
-# drivers/namcos22.c: 4319
+# drivers/namcos22.c: 4317
 Motion Stop
 
-# drivers/namcos22.c: 4328
+# drivers/namcos22.c: 4326
 DIP2-1 (test mode?)
 
-# drivers/namcos22.c: 4370
+# drivers/namcos22.c: 4368
 DIP3-7 (TEST MODE)
 
-# drivers/namcos22.c: 4378, 4453
+# drivers/namcos22.c: 4376, 4451
 Stick Shift
 
-# drivers/namcos22.c: 4403
+# drivers/namcos22.c: 4401
 DIP2-1 (test mode)
 
-# drivers/namcos22.c: 4720
+# drivers/namcos22.c: 4718
 Alpine Surfer (Rev. AF2 Ver.A)
 
 # drivers/namcos23.c: 361
@@ -29353,61 +30274,61 @@ sm1.sm1
 # drivers/neogeo.c: 1655, 1661, 1667
 sfix.sfx
 
-# drivers/neogeo.c: 7982, 7983, 7984, 7985, 7986, 7987, 7988, 7989, 7990, 7991, 7992, 7993, 7994, 7995, 7996, 7997, 7998, 7999
+# drivers/neogeo.c: 8305, 8306, 8307, 8308, 8309, 8310, 8311, 8312, 8313, 8314, 8315, 8316, 8317, 8318, 8319, 8320, 8321, 8322
 neogeo
 
-# drivers/neogeo.c: 7982
+# drivers/neogeo.c: 8305
 neogeo_frame_counter
 
-# drivers/neogeo.c: 7983
+# drivers/neogeo.c: 8306
 neogeo_frame_counter_speed
 
-# drivers/neogeo.c: 7984
+# drivers/neogeo.c: 8307
 current_rastercounter
 
-# drivers/neogeo.c: 7985
+# drivers/neogeo.c: 8308
 current_rasterline
 
-# drivers/neogeo.c: 7986
+# drivers/neogeo.c: 8309
 scanline_read
 
-# drivers/neogeo.c: 7987
+# drivers/neogeo.c: 8310
 irq2start
 
-# drivers/neogeo.c: 7988
+# drivers/neogeo.c: 8311
 irq2control
 
-# drivers/neogeo.c: 7989
+# drivers/neogeo.c: 8312
 irq2pos_value
 
-# drivers/neogeo.c: 7990
+# drivers/neogeo.c: 8313
 vblank_int
 
-# drivers/neogeo.c: 7991
+# drivers/neogeo.c: 8314
 scanline_int
 
-# drivers/neogeo.c: 7992
+# drivers/neogeo.c: 8315
 fc
 
-# drivers/neogeo.c: 7993
+# drivers/neogeo.c: 8316
 neogeo_raster_enable
 
-# drivers/neogeo.c: 7994
+# drivers/neogeo.c: 8317
 pending_command
 
-# drivers/neogeo.c: 7995
+# drivers/neogeo.c: 8318
 result_code
 
-# drivers/neogeo.c: 7996
+# drivers/neogeo.c: 8319
 ts
 
-# drivers/neogeo.c: 7997
+# drivers/neogeo.c: 8320
 bank
 
-# drivers/neogeo.c: 7998
+# drivers/neogeo.c: 8321
 neogeo_rng
 
-# drivers/neogeo.c: 7999
+# drivers/neogeo.c: 8322
 cpu1_second_bankaddress
 
 # drivers/news.c: 57
@@ -29752,67 +30673,67 @@ Priority Reg
 # drivers/nmg5.c: 981
 Input Data
 
-# drivers/nmk16.c: 1277
+# drivers/nmk16.c: 1282
 Slot System
 
-# drivers/nmk16.c: 1280
+# drivers/nmk16.c: 1285
 Explanation
 
-# drivers/nmk16.c: 1316
+# drivers/nmk16.c: 1321
 Plate Probability
 
-# drivers/nmk16.c: 1317
+# drivers/nmk16.c: 1322
 Bad
 
-# drivers/nmk16.c: 1319
+# drivers/nmk16.c: 1324
 Better
 
-# drivers/nmk16.c: 1320
+# drivers/nmk16.c: 1325
 Best
 
-# drivers/nmk16.c: 1397
+# drivers/nmk16.c: 1402
 200k
 
-# drivers/nmk16.c: 1398
+# drivers/nmk16.c: 1403
 200k and 1 Mil
 
-# drivers/nmk16.c: 1399
+# drivers/nmk16.c: 1404
 200k, 500k & 1,2,3,5 Mil
 
-# drivers/nmk16.c: 1635
+# drivers/nmk16.c: 1640
 100k and every 200k
 
-# drivers/nmk16.c: 1636
+# drivers/nmk16.c: 1641
 200k and every 200k
 
-# drivers/nmk16.c: 1637
+# drivers/nmk16.c: 1642
 300k and every 300k
 
-# drivers/nmk16.c: 1700
+# drivers/nmk16.c: 1705
 50k and 100k
 
-# drivers/nmk16.c: 1701
+# drivers/nmk16.c: 1706
 100k and 100k
 
-# drivers/nmk16.c: 1702
+# drivers/nmk16.c: 1707
 100k and 200k
 
-# drivers/nmk16.c: 2500
+# drivers/nmk16.c: 2583
 Starting level
 
-# drivers/nmk16.c: 2502
+# drivers/nmk16.c: 2585
 Thailand
 
-# drivers/nmk16.c: 2503
+# drivers/nmk16.c: 2586
 Nevada
 
-# drivers/nmk16.c: 2577
+# drivers/nmk16.c: 2660
 Life Decrease Speed
 
-# drivers/nmk16.c: 2581
+# drivers/nmk16.c: 2664
 Very Fast
 
-# drivers/nmk16.c: 2758, 2762, 2763, 2764, 2765, 2769, 2773, 2804, 2808, 2809, 2810, 2811, 2815, 2819, 2847, 2851, 2852, 2853, 2854, 2858, 2862, 2919, 2923, 2924, 2925, 2926, 2930, 2934, 2961, 2965, 2966, 2967, 2968, 2972, 2976, 3003, 3007, 3008, 3009, 3010, 3014, 3018, 3076, 3080, 3081, 3082, 3083, 3087, 3091, 3122, 3126, 3154, 3158, 3159, 3160, 3161, 3165, 3169, 3197, 3201, 3202, 3203, 3204, 3208, 3212, 3240, 3244, 3245, 3246, 3247, 3251, 3255, 3283, 3287, 3288, 3289, 3290, 3294, 3298, 3331, 3335, 3339, 3343, 3375, 3379, 3383, 3387, 3421, 3425, 3429, 3433, 3460, 3464, 3468
+# drivers/nmk16.c: 2841, 2845, 2846, 2847, 2848, 2852, 2856, 2887, 2891, 2892, 2893, 2894, 2898, 2902, 2930, 2934, 2935, 2936, 2937, 2941, 2945, 3002, 3006, 3007, 3008, 3009, 3013, 3017, 3044, 3048, 3049, 3050, 3051, 3055, 3059, 3086, 3090, 3091, 3092, 3093, 3097, 3101, 3159, 3163, 3164, 3165, 3166, 3170, 3174, 3205, 3209, 3237, 3241, 3242, 3243, 3244, 3248, 3252, 3280, 3284, 3285, 3286, 3287, 3291, 3295, 3323, 3327, 3328, 3329, 3330, 3334, 3338, 3366, 3370, 3371, 3372, 3373, 3377, 3381, 3414, 3418, 3422, 3426, 3458, 3462, 3466, 3470, 3504, 3508, 3512, 3516, 3543, 3547, 3551
 mono
 
 # drivers/nova2001.c: 110
@@ -33013,10 +33934,10 @@ DSW2
 # drivers/rastan.c: 368, 372, 373, 377
 mono
 
-# drivers/rbmk.c: 530, 534
+# drivers/rbmk.c: 526, 530
 left
 
-# drivers/rbmk.c: 530, 535
+# drivers/rbmk.c: 526, 531
 right
 
 # drivers/rcasino.c: 204
@@ -43477,85 +44398,85 @@ P2 Buttons 1+2 (Debug Cheat)
 # drivers/terracre.c: 596, 599, 602, 605, 633, 636, 639, 642, 670, 673, 674, 675, 676, 679, 680, 681, 682, 685, 688
 mono
 
-# drivers/tetrisp2.c: 141
+# drivers/tetrisp2.c: 177, 207
 !!!!! ADPCM BANK OVER:%01X (%04X) !!!!!
 
-# drivers/tetrisp2.c: 168, 355, 531
+# drivers/tetrisp2.c: 237, 602, 778
 IN1
 
-# drivers/tetrisp2.c: 355, 513
+# drivers/tetrisp2.c: 602, 760
 IN0
 
-# drivers/tetrisp2.c: 395, 457, 549
+# drivers/tetrisp2.c: 642, 704, 796, 889
 IN2
 
-# drivers/tetrisp2.c: 423, 487
+# drivers/tetrisp2.c: 670, 734
 Vs Mode Rounds
 
-# drivers/tetrisp2.c: 429
+# drivers/tetrisp2.c: 676
 F.B.I Logo
 
-# drivers/tetrisp2.c: 476
+# drivers/tetrisp2.c: 723
 Unknown 1-6
 
-# drivers/tetrisp2.c: 479
+# drivers/tetrisp2.c: 726
 Unknown 1-7
 
-# drivers/tetrisp2.c: 491
+# drivers/tetrisp2.c: 738
 Unknown 2-4
 
-# drivers/tetrisp2.c: 550
+# drivers/tetrisp2.c: 797, 890
 DIPSW 1-1
 
-# drivers/tetrisp2.c: 553
+# drivers/tetrisp2.c: 800, 893
 DIPSW 1-2
 
-# drivers/tetrisp2.c: 556
+# drivers/tetrisp2.c: 803, 896
 DIPSW 1-3
 
-# drivers/tetrisp2.c: 559
+# drivers/tetrisp2.c: 806, 899
 DIPSW 1-4
 
-# drivers/tetrisp2.c: 562
+# drivers/tetrisp2.c: 809, 902
 DIPSW 1-5
 
-# drivers/tetrisp2.c: 565
+# drivers/tetrisp2.c: 812, 905
 DIPSW 1-6
 
-# drivers/tetrisp2.c: 568
+# drivers/tetrisp2.c: 815, 908
 DIPSW 1-7
 
-# drivers/tetrisp2.c: 571
+# drivers/tetrisp2.c: 818, 911
 DIPSW 1-8
 
-# drivers/tetrisp2.c: 575
+# drivers/tetrisp2.c: 822, 915
 DIPSW 2-1
 
-# drivers/tetrisp2.c: 578
+# drivers/tetrisp2.c: 825, 918
 DIPSW 2-2
 
-# drivers/tetrisp2.c: 581
+# drivers/tetrisp2.c: 828, 921
 DIPSW 2-3
 
-# drivers/tetrisp2.c: 584
+# drivers/tetrisp2.c: 831, 924
 DIPSW 2-4
 
-# drivers/tetrisp2.c: 587
+# drivers/tetrisp2.c: 834, 927
 DIPSW 2-5
 
-# drivers/tetrisp2.c: 590
+# drivers/tetrisp2.c: 837, 930
 DIPSW 2-6
 
-# drivers/tetrisp2.c: 593
+# drivers/tetrisp2.c: 840, 933
 DIPSW 2-7
 
-# drivers/tetrisp2.c: 596
+# drivers/tetrisp2.c: 843, 936
 DIPSW 2-8
 
-# drivers/tetrisp2.c: 705, 709, 736, 740
+# drivers/tetrisp2.c: 1099, 1103, 1130, 1134, 1163, 1167, 1200, 1204
 left
 
-# drivers/tetrisp2.c: 705, 710, 736, 741
+# drivers/tetrisp2.c: 1099, 1104, 1130, 1135, 1163, 1168, 1200, 1205
 right
 
 # drivers/thedeep.c: 210
@@ -46240,14 +47161,8 @@ nbanfl
 # drivers/vegas.c: 2250
 cartfury
 
-# drivers/vegas.c: 2262
+# drivers/vegas.c: 2262, 2274, 2286
 sf2049
-
-# drivers/vegas.c: 2274
-sf2049se
-
-# drivers/vegas.c: 2286
-sf2049te
 
 # drivers/vendetta.c: 378, 437, 476, 535
 IN0
@@ -47773,31 +48688,31 @@ Start 2C/Continue 1C
 # drivers/wrally.c: 254, 258
 mono
 
-# drivers/wwfsstar.c: 188
+# drivers/wwfsstar.c: 229
 Button A (1P VS CPU - Power Up)
 
-# drivers/wwfsstar.c: 197
+# drivers/wwfsstar.c: 238
 Button C (1P/2P VS CPU)
 
-# drivers/wwfsstar.c: 198
+# drivers/wwfsstar.c: 239
 Button B (1P VS 2P - Buy-in)
 
-# drivers/wwfsstar.c: 229
+# drivers/wwfsstar.c: 270
 Unused SW 0-6
 
-# drivers/wwfsstar.c: 245
+# drivers/wwfsstar.c: 286
 Super Techniques
 
-# drivers/wwfsstar.c: 253
+# drivers/wwfsstar.c: 294
 Unused SW 1-6
 
-# drivers/wwfsstar.c: 256
+# drivers/wwfsstar.c: 297
 Health For Winning
 
-# drivers/wwfsstar.c: 349, 353, 358
+# drivers/wwfsstar.c: 386, 390, 395
 left
 
-# drivers/wwfsstar.c: 349, 354, 359
+# drivers/wwfsstar.c: 386, 391, 396
 right
 
 # drivers/wwfwfest.c: 281
@@ -48724,258 +49639,6 @@ left
 # drivers/zr107.c: 411, 416, 421
 right
 
-# drivers/½Æ»s -neogeo.c: 1613, 1623, 1633, 1643
-000-lo.lo
-
-# drivers/½Æ»s -neogeo.c: 1610
-236-bios.bin
-
-# drivers/½Æ»s -neogeo.c: 1579
-Asia AES
-
-# drivers/½Æ»s -neogeo.c: 1567
-Asia MVS (Ver. 3)
-
-# drivers/½Æ»s -neogeo.c: 1372
-Clear Credit
-
-# drivers/½Æ»s -neogeo.c: 1088, 1166
-DSW
-
-# drivers/½Æ»s -neogeo.c: 1578
-Debug MVS (Hack?)
-
-# drivers/½Æ»s -neogeo.c: 1564
-Europe MVS (Ver. 1)
-
-# drivers/½Æ»s -neogeo.c: 1563
-Europe MVS (Ver. 2)
-
-# drivers/½Æ»s -neogeo.c: 1374
-Hopper Out
-
-# drivers/½Æ»s -neogeo.c: 1056, 1242, 1294, 1343
-IN0
-
-# drivers/½Æ»s -neogeo.c: 1067, 1245, 1303
-IN1
-
-# drivers/½Æ»s -neogeo.c: 1078, 1255, 1355, 1385
-IN2
-
-# drivers/½Æ»s -neogeo.c: 1112, 1366
-IN4
-
-# drivers/½Æ»s -neogeo.c: 1142, 1191, 1268, 1317, 1376, 1397
-IN5
-
-# drivers/½Æ»s -neogeo.c: 1124, 1279
-IN6
-
-# drivers/½Æ»s -neogeo.c: 1209, 1289, 1335
-IN7
-
-# drivers/½Æ»s -neogeo.c: 1219, 1338
-IN8
-
-# drivers/½Æ»s -neogeo.c: 1229
-IN9
-
-# drivers/½Æ»s -neogeo.c: 388
-IRQ2 enabled, need raster driver
-
-# drivers/½Æ»s -neogeo.c: 1570
-Japan MVS (Ver. 1)
-
-# drivers/½Æ»s -neogeo.c: 1569
-Japan MVS (Ver. 2)
-
-# drivers/½Æ»s -neogeo.c: 1568
-Japan MVS (Ver. 3)
-
-# drivers/½Æ»s -neogeo.c: 1173
-Mahjong Control Panel
-
-# drivers/½Æ»s -neogeo.c: 1371
-Operator Menu
-
-# drivers/½Æ»s -neogeo.c: 1350
-P1 Double Up
-
-# drivers/½Æ»s -neogeo.c: 1351
-P1 Start/Collect
-
-# drivers/½Æ»s -neogeo.c: 1566
-US MVS (Ver. 1)
-
-# drivers/½Æ»s -neogeo.c: 1565
-US MVS (Ver. 2?)
-
-# drivers/½Æ»s -neogeo.c: 1572
-Unibios MVS (Hack, Ver. 1.0)
-
-# drivers/½Æ»s -neogeo.c: 1573
-Unibios MVS (Hack, Ver. 1.1)
-
-# drivers/½Æ»s -neogeo.c: 1574
-Unibios MVS (Hack, Ver. 1.2)
-
-# drivers/½Æ»s -neogeo.c: 1575
-Unibios MVS (Hack, Ver. 1.3)
-
-# drivers/½Æ»s -neogeo.c: 1576
-Unibios MVS (Hack, Ver. 2.0)
-
-# drivers/½Æ»s -neogeo.c: 1577
-Unibios MVS (Hack, Ver. 2.1)
-
-# drivers/½Æ»s -neogeo.c: 1585
-aes-bios.bin
-
-# drivers/½Æ»s -neogeo.c: 1567
-asia
-
-# drivers/½Æ»s -neogeo.c: 1579
-asia-aes
-
-# drivers/½Æ»s -neogeo.c: 1585
-asia-s3.rom
-
-# drivers/½Æ»s -neogeo.c: 7997
-bank
-
-# drivers/½Æ»s -neogeo.c: 7999
-cpu1_second_bankaddress
-
-# drivers/½Æ»s -neogeo.c: 7984
-current_rastercounter
-
-# drivers/½Æ»s -neogeo.c: 7985
-current_rasterline
-
-# drivers/½Æ»s -neogeo.c: 1578
-debug
-
-# drivers/½Æ»s -neogeo.c: 1563
-euro
-
-# drivers/½Æ»s -neogeo.c: 1564
-euro-s1
-
-# drivers/½Æ»s -neogeo.c: 7992
-fc
-
-# drivers/½Æ»s -neogeo.c: 7988
-irq2control
-
-# drivers/½Æ»s -neogeo.c: 7989
-irq2pos_value
-
-# drivers/½Æ»s -neogeo.c: 7987
-irq2start
-
-# drivers/½Æ»s -neogeo.c: 1568
-japan
-
-# drivers/½Æ»s -neogeo.c: 1570
-japan-s1
-
-# drivers/½Æ»s -neogeo.c: 1569
-japan-s2
-
-# drivers/½Æ»s -neogeo.c: 1490, 1494, 1498
-left
-
-# drivers/½Æ»s -neogeo.c: 1585
-neodebug.rom
-
-# drivers/½Æ»s -neogeo.c: 7982, 7983, 7984, 7985, 7986, 7987, 7988, 7989, 7990, 7991, 7992, 7993, 7994, 7995, 7996, 7997, 7998, 7999
-neogeo
-
-# drivers/½Æ»s -neogeo.c: 7982
-neogeo_frame_counter
-
-# drivers/½Æ»s -neogeo.c: 7983
-neogeo_frame_counter_speed
-
-# drivers/½Æ»s -neogeo.c: 7993
-neogeo_raster_enable
-
-# drivers/½Æ»s -neogeo.c: 7998
-neogeo_rng
-
-# drivers/½Æ»s -neogeo.c: 7994
-pending_command
-
-# drivers/½Æ»s -neogeo.c: 7995
-result_code
-
-# drivers/½Æ»s -neogeo.c: 1490, 1495, 1499
-right
-
-# drivers/½Æ»s -neogeo.c: 7991
-scanline_int
-
-# drivers/½Æ»s -neogeo.c: 7986
-scanline_read
-
-# drivers/½Æ»s -neogeo.c: 1655, 1661, 1667
-sfix.sfx
-
-# drivers/½Æ»s -neogeo.c: 1613, 1623, 1633, 1643
-sm1.sm1
-
-# drivers/½Æ»s -neogeo.c: 1585
-sp-e.sp1
-
-# drivers/½Æ»s -neogeo.c: 1585
-sp-j2.rom
-
-# drivers/½Æ»s -neogeo.c: 1585
-sp-s.sp1
-
-# drivers/½Æ»s -neogeo.c: 1585
-sp-s2.sp1
-
-# drivers/½Æ»s -neogeo.c: 1585
-sp1.jipan.1024
-
-# drivers/½Æ»s -neogeo.c: 7996
-ts
-
-# drivers/½Æ»s -neogeo.c: 1572, 1585
-uni-bios.10
-
-# drivers/½Æ»s -neogeo.c: 1573, 1585
-uni-bios.11
-
-# drivers/½Æ»s -neogeo.c: 1574, 1585
-uni-bios.12
-
-# drivers/½Æ»s -neogeo.c: 1575, 1585
-uni-bios.13
-
-# drivers/½Æ»s -neogeo.c: 1576, 1585
-uni-bios.20
-
-# drivers/½Æ»s -neogeo.c: 1577, 1585
-uni-bios.21
-
-# drivers/½Æ»s -neogeo.c: 1565
-us
-
-# drivers/½Æ»s -neogeo.c: 1566
-us-e
-
-# drivers/½Æ»s -neogeo.c: 1585
-usa_2slt.bin
-
-# drivers/½Æ»s -neogeo.c: 7990
-vblank_int
-
-# drivers/½Æ»s -neogeo.c: 1585
-vs-bios.rom
-
 # etc/fd1094dp.c: 69
 %s/00%04x.tbl
 
@@ -49306,94 +49969,94 @@ C
 # expat/xmltok.h: 9
 C
 
-# fileio.c: 376, 382, 388
+# fileio.c: 380, 386, 392
 mame_faccess: trying %s\n
 
-# fileio.c: 381
+# fileio.c: 385
 %s.zip
 
-# fileio.c: 834
+# fileio.c: 839
 chd
 
-# fileio.c: 839
+# fileio.c: 844
 dif
 
-# fileio.c: 843
+# fileio.c: 848
 wav
 
-# fileio.c: 848
+# fileio.c: 853
 png
 
-# fileio.c: 852
+# fileio.c: 857
 mng
 
-# fileio.c: 856
+# fileio.c: 861
 nv
 
-# fileio.c: 860
+# fileio.c: 865
 hi
 
-# fileio.c: 864
+# fileio.c: 869
 lng
 
-# fileio.c: 869
+# fileio.c: 874
 cfg
 
-# fileio.c: 873
+# fileio.c: 878
 inp
 
-# fileio.c: 878
+# fileio.c: 883
 cap
 
-# fileio.c: 883
+# fileio.c: 888
 sta
 
-# fileio.c: 887
+# fileio.c: 892
 mem
 
-# fileio.c: 891
+# fileio.c: 896
 ini
 
-# fileio.c: 896
+# fileio.c: 901
 hsi
 
-# fileio.c: 902
+# fileio.c: 907
 dat
 
-# fileio.c: 922
+# fileio.c: 927
 r+b
 
-# fileio.c: 922
+# fileio.c: 927
 r+bg
 
-# fileio.c: 922, 922, 922, 922, 1199
+# fileio.c: 927, 927, 927, 927, 1203
 rb
 
-# fileio.c: 922
+# fileio.c: 927
 wb
 
-# fileio.c: 922
+# fileio.c: 927
 wbg
 
-# fileio.c: 939
+# fileio.c: 944
 generic_fopen(%d, %s, %s, %s, %X)\n
 
-# fileio.c: 948
+# fileio.c: 953
 Can't use HASH option with WRITE option in generic_fopen!\n
 
-# fileio.c: 973
+# fileio.c: 978
 Trying %s\n
 
-# fileio.c: 1009
+# fileio.c: 1014
 w+b
 
-# fileio.c: 1057, 1151
+# fileio.c: 1062, 1155
 Using (mame_fopen) zip file for %s\n
 
-# fileio.c: 1079, 1081
+# fileio.c: 1084, 1086
 zip
 
-# fileio.c: 1083
+# fileio.c: 1087
 Trying %s file\n
 
 # hash.c: 168
@@ -50274,6 +50937,66 @@ in_set
 
 # machine/6821pia.c: 574
 %04x: PIA%d control B write = %02X\n
+
+# machine/6840ptm.c: 78
+000 continous mode
+
+# machine/6840ptm.c: 79
+001 freq comparison mode
+
+# machine/6840ptm.c: 80
+010 continous mode
+
+# machine/6840ptm.c: 81
+011 pulse width comparison mode
+
+# machine/6840ptm.c: 82
+100 single shot mode
+
+# machine/6840ptm.c: 83
+101 freq comparison mode
+
+# machine/6840ptm.c: 84
+110 single shot mode
+
+# machine/6840ptm.c: 85
+111 pulse width comparison mode
+
+# machine/6840ptm.c: 297
+6840PTM #%d control reg %d = %02X\n
+
+# machine/6840ptm.c: 298
+  output    enable = %d\n  interrupt enable = %d\n  operation mode   = %s\n  use %s clock \n  %s counting mode\n
+
+# machine/6840ptm.c: 307
+E
+
+# machine/6840ptm.c: 307
+external
+
+# machine/6840ptm.c: 308
+16 bit
+
+# machine/6840ptm.c: 308
+dual 8 bit
+
+# machine/6840ptm.c: 315
+6840PTM #%d msbbuf1 = %02X\n
+
+# machine/6840ptm.c: 323
+6840PTM #%d lsb latch 1 = %02X\n
+
+# machine/6840ptm.c: 332
+6840PTM #%d msbbuf2 = %02X\n
+
+# machine/6840ptm.c: 340
+6840PTM #%d lsb latch 2 = %02X\n
+
+# machine/6840ptm.c: 348
+6840PTM #%d msbbuf3 = %02X\n
+
+# machine/6840ptm.c: 356
+6840PTM #%d lsb latch 3 = %02X\n
 
 # machine/74181.c: 30, 31, 32
 TTL74181
@@ -51184,10 +51907,10 @@ mutantw.txt
 # machine/decoprot.c: 1289
 mutantr.txt
 
-# machine/ds2404.c: 45
+# machine/ds2404.c: 43
 DS2404: Unknown ROM command %02X\n
 
-# machine/ds2404.c: 80
+# machine/ds2404.c: 78
 DS2404: Unknown command %02X\n
 
 # machine/eeprom.c: 87
@@ -51850,7 +52573,16 @@ garouo
 # machine/neoprot.c: 158
 garoup
 
+# machine/neoprot.c: 159
+samsho5
+
+# machine/neoprot.c: 160
+samsho5h
+
 # machine/neoprot.c: 161
+samsh5sp
+
+# machine/neoprot.c: 164
 pulstar
 
 # machine/nmk004.c: 272
@@ -53214,6 +53946,9 @@ DSP_to_Z80_RAM_bank
 
 # machine/twincobr.c: 392
 Wardner_MemBank
+
+# machine/vacfdisp.c: 71, 80
+@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_ £\"#$%%'()*+.-./0123456789&%<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_ £\"#$%%'()*+.-./0123456789&%<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_ £\"#$%%'()*+.-./0123456789&%<=>?
 
 # machine/vertigo.c: 136, 142
 COIN
@@ -57622,13 +58357,13 @@ Data East Wavetable
 # sound/bsmt2000.c: 526
 Copyright (c) 2004, The MAME Team
 
-# sound/c140.c: 447
+# sound/c140.c: 509
 C140
 
-# sound/c140.c: 448
+# sound/c140.c: 510
 Namco PCM
 
-# sound/c140.c: 451
+# sound/c140.c: 513
 Copyright (c) 2004, The MAME Team
 
 # sound/c352.c: 589
@@ -57688,10 +58423,10 @@ Namco PCM
 # sound/c352.c: 692
 Copyright (c) 2004, The MAME Team
 
-# sound/c6280.c: 336
+# sound/c6280.c: 340
 HuC6280
 
-# sound/c6280.c: 340
+# sound/c6280.c: 344
 Copyright (c) 2004, The MAME Team
 
 # sound/cdda.c: 75
@@ -61730,7 +62465,7 @@ Comments
 CompanyName
 
 # ui/mame32.rc: 301
-Copyright 1997-2005 Nicola Salmoria and the MAME team
+Copyright 1997-2006 Nicola Salmoria and the MAME team
 
 # ui/mame32.rc: 301
 FileDescription
@@ -63601,9 +64336,6 @@ Has Samples
 # ui/options.c: 3264, 3307
 .ini
 
-# ui/options.c: 3302, 3343
-drivers\\%s
-
 # ui/options.c: 3470, 3492
 full
 
@@ -63819,6 +64551,9 @@ IsAppThemed
 
 # ui/properties.c: 887
  %d.%03d kHz
+
+# ui/properties.c: 1040
+BIOS missing
 
 # ui/properties.c: 1701, 1709, 1713
 %dx%d
@@ -64885,393 +65620,6 @@ can't find submenu for show folders context menu
 # ui/win32ui.c: 7049
 loading %-12s\r
 
-# ui/½Æ»s -mame32.rc: 263
-#define NOWINRES\r\n#include windows.h\r\n#include commctrl.h\r\n
-
-# ui/½Æ»s -mame32.rc: 299
-040904b0
-
-# ui/½Æ»s -mame32.rc: 651
-0dB
-
-# ui/½Æ»s -mame32.rc: 1193
-A
-
-# ui/½Æ»s -mame32.rc: 301
-Author
-
-# ui/½Æ»s -mame32.rc: 1109, 1113, 1194
-B
-
-# ui/½Æ»s -mame32.rc: 1146
-BIOS1:
-
-# ui/½Æ»s -mame32.rc: 1149
-BIOS2:
-
-# ui/½Æ»s -mame32.rc: 1152
-BIOS3:
-
-# ui/½Æ»s -mame32.rc: 1155
-BIOS4:
-
-# ui/½Æ»s -mame32.rc: 1158
-BIOS5:
-
-# ui/½Æ»s -mame32.rc: 1161
-BIOS6:
-
-# ui/½Æ»s -mame32.rc: 1164
-BIOS7:
-
-# ui/½Æ»s -mame32.rc: 1167
-BIOS8:
-
-# ui/½Æ»s -mame32.rc: 871
-BeamSlider
-
-# ui/½Æ»s -mame32.rc: 535, 537, 539, 542, 547, 549, 570, 589, 591, 594, 635, 638, 642, 670, 672, 675, 678, 681, 683, 686, 689, 721, 744, 746, 748, 751, 755, 757, 759, 769, 806, 808, 810, 812, 814, 816, 819, 821, 824, 826, 828, 830, 832, 839, 866, 868, 927, 930, 932, 935, 938, 941, 944, 963, 965, 969, 971, 1005, 1008, 1010, 1011, 1014, 1017, 1019, 1022, 1024, 1031, 1035, 1037, 1041
-Button
-
-# ui/½Æ»s -mame32.rc: 487
-CPU:
-
-# ui/½Æ»s -mame32.rc: 137
-Chinese (Simp)
-
-# ui/½Æ»s -mame32.rc: 138
-Chinese (Trad)
-
-# ui/½Æ»s -mame32.rc: 301
-Comments
-
-# ui/½Æ»s -mame32.rc: 301
-CompanyName
-
-# ui/½Æ»s -mame32.rc: 163
-Context Menu
-
-# ui/½Æ»s -mame32.rc: 198
-Context Menu Tree
-
-# ui/½Æ»s -mame32.rc: 217
-Context Screen Shot
-
-# ui/½Æ»s -mame32.rc: 301
-Copyright 1997-2005 Nicola Salmoria and the MAME team
-
-# ui/½Æ»s -mame32.rc: 1129
-CustomTree
-
-# ui/½Æ»s -mame32.rc: 1195
-D
-
-# ui/½Æ»s -mame32.rc: 135
-English (US)
-
-# ui/½Æ»s -mame32.rc: 1196
-F
-
-# ui/½Æ»s -mame32.rc: 301
-FileDescription
-
-# ui/½Æ»s -mame32.rc: 301
-FileVersion
-
-# ui/½Æ»s -mame32.rc: 875
-FlickerSlider
-
-# ui/½Æ»s -mame32.rc: 1107, 1112
-G
-
-# ui/½Æ»s -mame32.rc: 555, 560
-GammaSlider
-
-# ui/½Æ»s -mame32.rc: 187
-Header Context Menu
-
-# ui/½Æ»s -mame32.rc: 146
-Hungarian
-
-# ui/½Æ»s -mame32.rc: 762, 841, 880
-IntensitySlider
-
-# ui/½Æ»s -mame32.rc: 301
-InternalName
-
-# ui/½Æ»s -mame32.rc: 139
-Korean
-
-# ui/½Æ»s -mame32.rc: 301
-LegalCopyright
-
-# ui/½Æ»s -mame32.rc: 301
-LegalTrademarks
-
-# ui/½Æ»s -mame32.rc: 440, 457, 464, 903, 1084
-List1
-
-# ui/½Æ»s -mame32.rc: 301
-MAME Team
-
-# ui/½Æ»s -mame32.rc: 301, 301, 390
-MAME32
-
-# ui/½Æ»s -mame32.rc: 894
-MAME32 - overwritten at runtime
-
-# ui/½Æ»s -mame32.rc: 301
-MAME32.exe
-
-# ui/½Æ»s -mame32.rc: 894
-MainClass
-
-# ui/½Æ»s -mame32.rc: 381
-Mike Haaland, Andrew Kirmse, Jeff Miller
-
-# ui/½Æ»s -mame32.rc: 370
-Multiple Arcade Machine Emulator
-
-# ui/½Æ»s -mame32.rc: 301, 301
-Multiple Arcade Machine Emulator for Win32
-
-# ui/½Æ»s -mame32.rc: 301
-OriginalFilename
-
-# ui/½Æ»s -mame32.rc: 1198
-P
-
-# ui/½Æ»s -mame32.rc: 775
-P1
-
-# ui/½Æ»s -mame32.rc: 777
-P2
-
-# ui/½Æ»s -mame32.rc: 779
-P3
-
-# ui/½Æ»s -mame32.rc: 781
-P4
-
-# ui/½Æ»s -mame32.rc: 783
-P5
-
-# ui/½Æ»s -mame32.rc: 785
-P6
-
-# ui/½Æ»s -mame32.rc: 787
-P7
-
-# ui/½Æ»s -mame32.rc: 789
-P8
-
-# ui/½Æ»s -mame32.rc: 145
-Polish
-
-# ui/½Æ»s -mame32.rc: 144
-Portuguese (BRA)
-
-# ui/½Æ»s -mame32.rc: 301
-ProductName
-
-# ui/½Æ»s -mame32.rc: 301
-ProductVersion
-
-# ui/½Æ»s -mame32.rc: 406, 416, 985
-Progress1
-
-# ui/½Æ»s -mame32.rc: 1105, 1111, 1199
-R
-
-# ui/½Æ»s -mame32.rc: 426
-RichEdit20W
-
-# ui/½Æ»s -mame32.rc: 1200
-S
-
-# ui/½Æ»s -mame32.rc: 566, 607, 649, 653, 704, 1044, 1048
-Slider1
-
-# ui/½Æ»s -mame32.rc: 612
-Slider3
-
-# ui/½Æ»s -mame32.rc: 377, 385, 481, 483, 486, 490, 494, 496, 498, 500, 502, 504, 515, 534, 587, 633, 669, 743, 805, 865, 898, 908, 911, 1064, 1114, 1145
-Static
-
-# ui/½Æ»s -mame32.rc: 485
-Static\nStatic\nStatic\nStatic
-
-# ui/½Æ»s -mame32.rc: 492
-Static\nStatic\nStatic\nStatic\nStatic
-
-# ui/½Æ»s -mame32.rc: 488
-Static\nStatic\nStatic\nStatic\nStatic\nStatic
-
-# ui/½Æ»s -mame32.rc: 297
-StringFileInfo
-
-# ui/½Æ»s -mame32.rc: 440, 457, 464, 903, 1084
-SysListView32
-
-# ui/½Æ»s -mame32.rc: 910
-SysTabControl32
-
-# ui/½Æ»s -mame32.rc: 899, 1129
-SysTreeView32
-
-# ui/½Æ»s -mame32.rc: 1201
-T
-
-# ui/½Æ»s -mame32.rc: 479, 513, 532, 585, 631, 667, 741, 803, 863, 1062, 1143
-Title\nDirectory\nExtra
-
-# ui/½Æ»s -mame32.rc: 316
-Translation
-
-# ui/½Æ»s -mame32.rc: 899
-Tree1
-
-# ui/½Æ»s -mame32.rc: 1197
-U
-
-# ui/½Æ»s -mame32.rc: 314
-VarFileInfo
-
-# ui/½Æ»s -mame32.rc: 372
-Version 0
-
-# ui/½Æ»s -mame32.rc: 406, 416, 985
-msctls_progress32
-
-# ui/½Æ»s -mame32.rc: 555, 560, 566, 607, 612, 617, 649, 653, 704, 762, 841, 871, 875, 880, 1044, 1048, 1105, 1107, 1109
-msctls_trackbar32
-
-# ui/½Æ»s -mame32.rc: 205
-overridden by code
-
-# ui/½Æ»s -mame32.rc: 1423
-res\\Splith.cur
-
-# ui/½Æ»s -mame32.rc: 1404
-res\\about.bmp
-
-# ui/½Æ»s -mame32.rc: 330
-res\\checkmark.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\cpu.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\display.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\foldavail.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\folder.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\foldmanu.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\foldopen.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\foldsrc.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\foldunav.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\foldyear.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\harddisk.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\header_down.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\header_up.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\joystick.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\keyboard.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\mame32.ico
-
-# ui/½Æ»s -mame32.rc: 1430
-res\\mame32.manifest
-
-# ui/½Æ»s -mame32.rc: 330
-res\\manufact.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\nonwork.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\samples.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\sound.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\source.ico
-
-# ui/½Æ»s -mame32.rc: 1404, 1404, 1404, 1404, 1404, 1404, 1404, 1404
-res\\toolbar.bmp
-
-# ui/½Æ»s -mame32.rc: 1404, 1404
-res\\toolbarc.bmp
-
-# ui/½Æ»s -mame32.rc: 1404
-res\\toolbarj.bmp
-
-# ui/½Æ»s -mame32.rc: 1404
-res\\toolbark.bmp
-
-# ui/½Æ»s -mame32.rc: 330
-res\\win_clone.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\win_noro.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\win_redx.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\win_roms.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\win_unkn.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\working.ico
-
-# ui/½Æ»s -mame32.rc: 330
-res\\year.ico
-
-# ui/½Æ»s -mame32.rc: 258
-resource.h
-
-# ui/½Æ»s 
-Japanese
-
-# ui/½Æ»s 
-French
-
-# ui/½Æ»s 
-Spanish
-
-# ui/½Æ»s 
-Italian
-
-# ui/½Æ»s 
-German
-
 # ui_font.c: 80
 rb
 
@@ -65693,7 +66041,7 @@ Sound:     %8dm\n
 MESS:      %8dm\n
 
 # version.c: 2
-0.103u1 (
+0.103u2 (
 
 # vidhrdw/actfancr.c: 85
 control_1
@@ -66118,6 +66466,12 @@ bin: %d, lin:
 # vidhrdw/avgdvg.c: 768
  scale: %f
 
+# vidhrdw/bfm_adr2.c: 238
+Door Closed
+
+# vidhrdw/bfm_adr2.c: 240
+Door Open  
+
 # vidhrdw/btoads.c: 469
 disp%d.log
 
@@ -66202,13 +66556,13 @@ pressed0
 # vidhrdw/cischeat.c: 247, 341, 436, 479
 vreg %04X read!
 
-# vidhrdw/cischeat.c: 310, 403, 538, 591
+# vidhrdw/cischeat.c: 310, 403, 538, 592
 vreg %04X <- %04X
 
-# vidhrdw/cischeat.c: 1124
+# vidhrdw/cischeat.c: 1125
 0:%04X 2:%04X 4:%04X 6:%04X c:%04X
 
-# vidhrdw/cischeat.c: 1350
+# vidhrdw/cischeat.c: 1351
 Cmd: %04X Pos:%04X Lim:%04X Inp:%04X
 
 # vidhrdw/cps1.c: 273

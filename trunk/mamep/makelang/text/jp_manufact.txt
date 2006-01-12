@@ -18,7 +18,7 @@ Able Corp, Ltd.
 Academysoft-Elory
 アカデミーソ\フト
 
-# Stagger I (Japan)
+# Twin Action
 Afega
 アフェーガ
 
@@ -706,6 +706,10 @@ Acclaim
 Acom
 
 
+# Pochi and Nyaa
+Aiky
+
+
 # Delta Race
 Allied Leisure
 
@@ -774,6 +778,10 @@ Ashby Computers and Graphics LTD.
 Associated Overseas MFR, Inc
 
 
+# Quintoon (UK, Game Card 95-750-203)
+BFM
+
+
 # BMC Bowling
 BMC
 
@@ -788,6 +796,10 @@ Bally Midway
 
 # Ultraman (Japan)
 Bandai
+
+
+# The Crystal Maze: Team Challenge (SWP)
+Barcrest
 
 
 # One + Two
@@ -960,6 +972,10 @@ E.G. Felaco
 
 # Miyasu Nonki no Quiz 18-Kin
 EIM
+
+
+# Quintoon (Dutch, Game Card 95-750-136)
+ELAM
 
 
 # Behind Enemy Lines
@@ -1526,6 +1542,10 @@ Philko
 Playmark
 
 
+# SvC Chaos - SNK vs Capcom (set 1)
+Playmore
+
+
 # Truco-Tron
 Playtronic SRL
 
@@ -1600,6 +1620,10 @@ SA
 
 # Safari Rally (Japan)
 SNK
+
+
+# Metal Slug 5
+SNK Playmore
 
 
 # Bishoujo Janshi Pretty Sailor 18-kin (Japan)
@@ -1948,6 +1972,10 @@ Yoshimoto Kougyou
 
 # Mahjong Uranai Densetsu (Japan)
 Yubis
+
+
+# Samurai Shodown V / Samurai Spirits Zero (set 1)
+Yuki Enterprise
 
 
 # Paradise

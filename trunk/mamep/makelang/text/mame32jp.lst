@@ -2883,7 +2883,8 @@ radmu	ƒ‰ƒbƒhƒ‚ƒr[ƒ‹ (USA”Å)	‚ç‚Á‚Ç‚à‚Ñ[‚é	Sega
 radr	ƒ‰ƒbƒhƒ‰ƒŠ[ (ŠCŠO”Å)	‚ç‚Á‚Ç‚ç‚è[	Sega
 radru	ƒ‰ƒbƒhƒ‰ƒŠ[ (USA”Å)	‚ç‚Á‚Ç‚ç‚è[	Sega
 f1en	F1ƒGƒLƒ][ƒXƒgƒm[ƒg	‚¦‚Ó‚í‚ñ_1‚¦‚«‚¼[‚·‚Æ‚Ì[‚Æ	Sega
-alien3	ƒGƒCƒŠƒAƒ“3 ƒUEƒKƒ“	‚¦‚¢‚è‚ ‚ñ3‚´‚ª‚ñ	Sega
+alien3	ƒGƒCƒŠƒAƒ“3 ƒUEƒKƒ“ (ŠCŠO”Å)	‚¦‚¢‚è‚ ‚ñ3‚´‚ª‚ñ	Sega
+alien3u	ƒGƒCƒŠƒAƒ“3 ƒUEƒKƒ“ (USA”Å)	‚¦‚¢‚è‚ ‚ñ3‚´‚ª‚ñ	Sega
 sonic	ƒ\ƒjƒbƒNEƒUEƒwƒbƒWƒzƒbƒO (“ú–{”Å rev C)	‚»‚É‚Á‚­‚´‚Ö‚Á‚¶‚Ù‚Á‚®_1	Sega
 sonicp	ƒ\ƒjƒbƒNEƒUEƒwƒbƒWƒzƒbƒO (“ú–{”Å prototype)	‚»‚É‚Á‚­‚´‚Ö‚Á‚¶‚Ù‚Á‚®_1	Sega
 jpark	ƒWƒ…ƒ‰ƒVƒbƒNEƒp[ƒN	‚¶‚ã‚ç‚µ‚Á‚­‚Ï[‚­	Sega
@@ -3200,8 +3201,8 @@ cntsteer	ƒJƒEƒ“ƒ^[ƒXƒeƒA	‚©‚¤‚ñ‚½[‚·‚Ä‚ 	Data East Corporation
 zerotrgt	Œ‚’Ä‰¤ / Zero Target (ŠCŠO”Å)	‚°‚«‚Â‚¢‚¨‚¤	Data East Corporation
 gekitsui	Œ‚’Ä‰¤ (“ú–{”Å)	‚°‚«‚Â‚¢‚¨‚¤	Data East Corporation
 tryout	ƒvƒ–ì‹…“ü’cƒeƒXƒg ƒgƒ‰ƒCƒAƒEƒg (“ú–{”Å)	‚Õ‚ë‚â‚«‚ã‚¤‚É‚ã‚¤‚¾‚ñ‚Ä‚·‚Æ‚Æ‚ç‚¢‚ ‚¤‚Æ	Data East Corporation
-firetrap	ƒtƒ@ƒCƒA[ƒgƒ‰ƒbƒv (USA”Å)	‚Ó‚Ÿ‚¢‚ [‚Æ‚ç‚Á‚Õ	Data East USA
-firetpbl	ƒtƒ@ƒCƒA[ƒgƒ‰ƒbƒv (“ú–{”Å) (ŠC‘¯”Å)	‚Ó‚Ÿ‚¢‚ [‚Æ‚ç‚Á‚Õ	bootleg
+firetrap	ƒtƒ@ƒCƒ„[ƒgƒ‰ƒbƒv (USA”Å)	‚Ó‚Ÿ‚¢‚â[‚Æ‚ç‚Á‚Õ	Data East USA
+firetpbl	ƒtƒ@ƒCƒ„[ƒgƒ‰ƒbƒv (“ú–{”Å) (ŠC‘¯”Å)	‚Ó‚Ÿ‚¢‚â[‚Æ‚ç‚Á‚Õ	bootleg
 metlclsh	ƒƒ^ƒ‹ƒNƒ‰ƒbƒVƒ… (“ú–{”Å)	‚ß‚½‚é‚­‚ç‚Á‚µ‚ã	Data East
 brkthru	‹­s“Ë”j / Break Thru (USA”Å)	‚«‚å‚¤‚±‚¤‚Æ‚Á‚Ï	Data East USA
 brkthruj	‹­s“Ë”j (“ú–{”Å)	‚«‚å‚¤‚±‚¤‚Æ‚Á‚Ï	Data East Corporation
@@ -4463,8 +4464,9 @@ kof2002	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 -Challenge to Ultimate Battle	‚´‚«‚ñ
 kof2002d	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 -Challenge to Ultimate Battle (decrypted C)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_1_2002	Eolith / Playmore
 kof2002b	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 -Challenge to Ultimate Battle (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_1_2002	bootleg
 kf2k2pls	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Plus (ŠC‘¯”Å set 1)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
-kf2k2pa	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Plus (ŠC‘¯”Å set 2)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
-kf2k2pb	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Plus (ŠC‘¯”Å set 3)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
+kf2k2pla	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Plus (ŠC‘¯”Å set 2)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
+kf2k2plb	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Plus (ŠC‘¯”Å set 3)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
+kf2k2mp	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Magic Plus (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
 kf2k2mp2	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Magic Plus II (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
 kof10th	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / King Of Fighters 10th Anniversary (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
 kf2k5uni	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 10th Anniversary 2005 Unique (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
@@ -4473,6 +4475,15 @@ kof2k4se	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters Special Edit
 matrim	V‹ŒŒ›ˆê‘° “¬¥ -Matrimelee	‚µ‚ñ‚²‚¤‚¯‚Â‚¶‚¢‚¿‚¼‚­‚Æ‚¤‚±‚ñ	Noise Factory / Atlus
 matrimd	V‹ŒŒ›ˆê‘° “¬¥ -Matrimelee (decrypted C)	‚µ‚ñ‚²‚¤‚¯‚Â‚¶‚¢‚¿‚¼‚­‚Æ‚¤‚±‚ñ	Noise Factory / Atlus
 matrimbl	V‹ŒŒ›ˆê‘° “¬¥ -Matrimelee (ŠC‘¯”Å)	‚µ‚ñ‚²‚¤‚¯‚Â‚¶‚¢‚¿‚¼‚­‚Æ‚¤‚±‚ñ	bootleg
+pnyaa	ƒ|ƒ`ƒb‚Æ‚É‚á`	‚Û‚¿‚Á‚Æ‚É‚á[	Aiky / Taito
+mslug5	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO5	‚ß‚½‚é‚·‚ç‚Á‚®_5	SNK Playmore
+svcchaos	SNK VS. CAPCOM -SVC CHAOS (set 1)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ	Playmore
+svchaosa	SNK VS. CAPCOM -SVC CHAOS (set 2)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ	Playmore
+samsho5	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ë (set 1)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_1‚º‚ë	Yuki Enterprise / SNK Playmore
+samsho5h	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ë (set 2)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_1‚º‚ë	Yuki Enterprise / SNK Playmore
+kof2003	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 (“ú–{”Å JAMMA PCB)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_2003	SNK Playmore
+kof2003a	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 (ŠCŠO / USA”Å MVS)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_2003	SNK Playmore
+samsh5sp	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ëƒXƒyƒVƒƒƒ‹	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_2‚º‚ë‚·‚Ø‚µ‚á‚é	Yuki Enterprise / SNK Playmore
 jockeygp	ƒWƒ‡ƒbƒL[ƒOƒ‰ƒ“ƒvƒŠ	‚¶‚å‚Á‚«[‚®‚ç‚ñ‚Õ‚è	Sun Amusement / BrezzaSoft
 vliner	V-ƒ‰ƒCƒi[ (set 1)	‚Ô‚¢‚ç‚¢‚È[	Dyna / BreezaSoft
 vlinero	V-ƒ‰ƒCƒi[ (set 2)	‚Ô‚¢‚ç‚¢‚È[	Dyna / BreezaSoft
@@ -4665,6 +4676,7 @@ sabotnba	ƒTƒ{ƒeƒ“ƒ{ƒ“ƒo[ƒY (set 2)	‚³‚Ú‚Ä‚ñ‚Ú‚ñ‚Î[‚¸	NMK / Tecmo
 nouryoku	”]—ÍŒüãˆÏˆõ‰ï	‚Ì‚¤‚è‚å‚­‚±‚¤‚¶‚å‚¤‚¢‚¢‚ñ‚©‚¢	Tecmo
 manybloc	ƒƒj[ƒuƒƒbƒN	‚ß‚É[‚Ô‚ë‚Á‚­	Bee-Oh
 ssmissin	S.S.ƒ~ƒbƒVƒ‡ƒ“(“Á–½)	‚¦‚·‚¦‚·‚İ‚Á‚µ‚å‚ñ	Comad
+airattck	‹óP / Air Attack	‚­‚¤‚µ‚ã‚¤	Comad
 raphero	ƒ‰ƒsƒbƒhƒq[ƒ[ (“ú–{”Å?)	‚ç‚Ò‚Á‚Ç‚Ğ[‚ë[	Media Trading Corp
 daireika	–ƒ‘å—ìŠE	‚Ü[‚¶‚á‚ñ‚¾‚¢‚ê‚¢‚©‚¢	Jaleco / NMK
 mjzoomin	–ƒ‚¿‚á‚ñ‚Ë‚éƒY[ƒ€ƒCƒ“I	‚Ü[‚¶‚á‚ñ‚¿‚á‚ñ‚Ë‚é‚¸[‚Ş‚¢‚ñ	Jaleco
@@ -4963,12 +4975,18 @@ homerun	”R‚¦‚ëIIƒvƒ–ì‹… ƒz[ƒ€ƒ‰ƒ“‹£‘ˆ	‚à‚¦‚ë‚Õ‚ë‚â‚«‚ã‚¤‚Ù[‚Ş‚ç‚ñ‚«‚å‚¤‚»‚¤
 bigrun	ƒrƒbƒOƒ‰ƒ“ -The Supreme 4WD Challenge (11th Rallye ver)	‚Ñ‚Á‚®‚ç‚ñ	Jaleco
 cischeat	ƒVƒXƒRƒq[ƒg	‚µ‚·‚±‚Ğ[‚Æ	Jaleco
 f1gpstar	ƒOƒ‰ƒ“ƒvƒŠƒXƒ^[	‚®‚ç‚ñ‚Õ‚è‚·‚½[	Jaleco
+armchmp2	ƒA[ƒ€ƒ`ƒƒƒ“ƒvƒX II	‚ [‚Ş‚¿‚á‚ñ‚Õ‚·_2	Jaleco
 wildplt	ƒƒCƒ‹ƒhƒpƒCƒƒbƒg	‚í‚¢‚é‚Ç‚Ï‚¢‚ë‚Á‚Æ	Jaleco
 f1gpstr2	F-1ƒOƒ‰ƒ“ƒvƒŠƒXƒ^[II	‚¦‚Ó‚í‚ñ‚®‚ç‚ñ‚Õ‚è‚·‚½[2	Jaleco
 scudhamm	ƒXƒJƒbƒhƒnƒ“ƒ}[	‚·‚©‚Á‚Ç‚Í‚ñ‚Ü[	Jaleco
 tetrisp2	ƒeƒgƒŠƒXƒvƒ‰ƒX2 (ŠCŠO”Å?)	‚Ä‚Æ‚è‚·_2‚Õ‚ç‚·_2	Jaleco / The Tetris Company
 teplus2j	ƒeƒgƒŠƒXƒvƒ‰ƒX2 (“ú–{”Å)	‚Ä‚Æ‚è‚·_2‚Õ‚ç‚·_2	Jaleco / The Tetris Company
-rockn	ƒƒbƒNƒ“ƒgƒŒƒbƒh (“ú–{”Å)	‚ë‚Á‚­‚ñ‚Æ‚ê‚Á‚Ç	Jaleco
+rockn	ƒƒbƒNƒ“ƒgƒŒƒbƒh (“ú–{”Å)	‚ë‚Á‚­‚ñ_1‚Æ‚ê‚Á‚Ç	Jaleco
+rocknb	ƒƒbƒNƒ“ƒgƒŒƒbƒh (“ú–{”Å) (ŠC‘¯”Å)	‚ë‚Á‚­‚ñ_1‚Æ‚ê‚Á‚Ç	Jaleco
+rockn2b	ƒƒbƒNƒ“ƒgƒŒƒbƒh2 (“ú–{”Å) (ŠC‘¯”Å)	‚ë‚Á‚­‚ñ_2‚Ç‚ê‚Á‚Ç2	Jaleco
+rocknmsb	ƒƒbƒNƒ“ƒƒKƒZƒbƒVƒ‡ƒ“ (“ú–{”Å) (ŠC‘¯”Å)	‚ë‚Á‚­‚ñ‚ß‚ª‚¹‚Á‚µ‚å‚ñ	bootleg
+rockn3b	ƒƒbƒNƒ“ƒXƒŠ[ (“ú–{”Å) (ŠC‘¯”Å)	‚ë‚Á‚­‚ñ_3‚·‚è[	bootleg
+rockn4b	ƒƒbƒNƒ“ƒtƒH[ (“ú–{”Å prototype) (ŠC‘¯”Å)	‚ë‚Á‚­‚ñ_4‚Ó‚§[	bootleg
 lomakai	–‚Š@“`à / Legend of Makai (ŠCŠO”Å)	‚Ü‚©‚¢‚Å‚ñ‚¹‚Â	Jaleco
 makaiden	–‚Š@“`à (“ú–{”Å)	‚Ü‚©‚¢‚Å‚ñ‚¹‚Â	Jaleco
 p47	P-47 -ƒUEƒtƒŠ[ƒ_ƒ€ƒtƒ@ƒCƒ^[ / P-47 -The Phantom Fighter (ŠCŠO”Å)	‚Ò[47_1	Jaleco
@@ -5167,8 +5185,9 @@ jchan2	ƒWƒƒƒbƒL[Eƒ`ƒFƒ“ ƒCƒ“ ƒtƒBƒXƒcƒIƒuƒtƒ@ƒCƒ„[ -¬—´“`à	‚¶‚á‚Á‚«[‚¿‚¥‚ñ
 galpani3	ƒMƒƒƒ‹ƒYƒpƒjƒbƒN3	‚¬‚á‚é‚¸‚Ï‚É‚Á‚­_3	Kaneko
 berlwall	ƒxƒ‹ƒŠƒ“‚Ì•Ç / The Berlin Wall	‚×‚é‚è‚ñ‚Ì‚©‚×	Kaneko
 berlwalt	ƒxƒ‹ƒŠƒ“‚Ì•Ç / The Berlin Wall (ŠC‘¯”Å?)	‚×‚é‚è‚ñ‚Ì‚©‚×	Kaneko
-mgcrystl	ƒ}ƒWƒJƒ‹ƒNƒŠƒXƒ^ƒ‹ (ŠCŠO”Å)	‚Ü‚¶‚©‚é‚­‚è‚·‚½‚é	Kaneko
-mgcrystj	ƒ}ƒWƒJƒ‹ƒNƒŠƒXƒ^ƒ‹ (“ú–{”Å)	‚Ü‚¶‚©‚é‚­‚è‚·‚½‚é	Kaneko (Atlus license)
+mgcrystl	ƒ}ƒWƒJƒ‹ƒNƒŠƒXƒ^ƒ‹ƒY (ŠCŠO”Å 92/01/10)	‚Ü‚¶‚©‚é‚­‚è‚·‚½‚é‚¸	Kaneko
+mgcrysto	ƒ}ƒWƒJƒ‹ƒNƒŠƒXƒ^ƒ‹ƒY (ŠCŠO”Å 91/12/10)	‚Ü‚¶‚©‚é‚­‚è‚·‚½‚é‚¸	Kaneko
+mgcrystj	ƒ}ƒWƒJƒ‹ƒNƒŠƒXƒ^ƒ‹ƒY (“ú–{”Å 92/01/13)	‚Ü‚¶‚©‚é‚­‚è‚·‚½‚é‚¸	Kaneko (Atlus license)
 blazeon	ƒuƒŒƒCƒ]ƒ“ (“ú–{”Å)	‚Ô‚ê‚¢‚¼‚ñ	Atlus
 sandscrp	ƒTƒ“ƒhEƒXƒR[ƒsƒIƒ“ -å¶ (set 1)	‚³‚ñ‚Ç‚·‚±[‚Ò‚¨‚ñ	Face
 sandscra	ƒTƒ“ƒhEƒXƒR[ƒsƒIƒ“ -å¶ (set 2)	‚³‚ñ‚Ç‚·‚±[‚Ò‚¨‚ñ	Face
@@ -5489,6 +5508,7 @@ zeropnt	ƒ[ƒƒ|ƒCƒ“ƒg (set 1)	‚º‚ë‚Û‚¢‚ñ‚Æ_1	Unico
 zeropnta	ƒ[ƒƒ|ƒCƒ“ƒg (set 2)	‚º‚ë‚Û‚¢‚ñ‚Æ_1	Unico
 zeropnt2	ƒ[ƒƒ|ƒCƒ“ƒg2	‚º‚ë‚Û‚¢‚ñ‚Æ_2	Unico
 silkroad	ƒUEƒŒƒWƒFƒ“ƒhEƒIƒuEƒVƒ‹ƒNƒ[ƒh	‚´‚ê‚¶‚¥‚ñ‚Ç‚¨‚Ô‚µ‚é‚­‚ë[‚Ç	Unico
+twinactn	ƒcƒCƒ“ƒAƒNƒVƒ‡ƒ“	‚Â‚¢‚ñ‚ ‚­‚µ‚å‚ñ	Afega
 stagger1	ƒXƒeƒbƒK[I (“ú–{”Å)	‚·‚Ä‚Á‚ª[‚í‚ñ	Afega
 redhawk	ƒXƒeƒbƒK[I / Red Hawk (USA”Å)	‚·‚Ä‚Á‚ª[‚í‚ñ	Afega
 redhawkb	ƒXƒeƒbƒK[I / Red Hawk (ŠC‘¯”Å)	‚·‚Ä‚Á‚ª[‚í‚ñ	bootleg
@@ -5535,6 +5555,7 @@ quizchq	ƒNƒCƒYƒ`ƒƒƒ“ƒlƒ‹EƒNƒGƒXƒ`ƒ‡ƒ“ (“ú–{”Å ver 1.00)	‚­‚¢‚¸‚¿‚á‚ñ‚Ë‚é‚­‚¦‚·‚
 quizchql	ƒNƒCƒYƒ`ƒƒƒ“ƒlƒ‹EƒNƒGƒXƒ`ƒ‡ƒ“ (‘ä˜p”Å? ver 1.23)	‚­‚¢‚¸‚¿‚á‚ñ‚Ë‚é‚­‚¦‚·‚¿‚å‚ñ	Nakanihon (Laxan license)
 funkyfig	ƒUEƒtƒ@[ƒXƒgEƒtƒ@ƒ“ƒL[Eƒtƒ@ƒCƒ^[	‚´‚Ó‚Ÿ[‚·‚Æ‚Ó‚Ÿ‚ñ‚«[‚Ó‚Ÿ‚¢‚½[	Nakanihon + East Technology (Taito license)
 animaljr	ƒƒCƒƒCƒAƒjƒ}ƒ‹ƒ‰ƒ“ƒhJr. / Animalandia Jr.	‚í‚¢‚í‚¢‚ ‚É‚Ü‚é‚ç‚ñ‚Ç‚¶‚ã‚É‚ 	Nakanihon + East Technology (Taito license)
+mjmyster	ƒ}[ƒWƒƒƒ“ ƒU¥ƒ~ƒXƒeƒŠƒAƒXƒ[ƒ‹ƒh	‚Ü[‚¶‚á‚ñ‚´‚İ‚·‚Ä‚è‚ ‚·‚í[‚é‚Ç	Dynax
 quiz365	–ˆ“ú‘Ö‚í‚éƒNƒCƒY”Ô‘g ƒNƒCƒY365 (“ú–{”Å)	‚Ü‚¢‚É‚¿‚©‚í‚é‚­‚¢‚¸‚Î‚ñ‚®‚İ‚­‚¢‚¸‚³‚ñ‚ë‚­‚²	Nakanihon
 quiz365t	–ˆ“ú‘Ö‚í‚éƒNƒCƒY”Ô‘g ƒNƒCƒY365 (` / ‘ä˜p”Å)	‚Ü‚¢‚É‚¿‚©‚í‚é‚­‚¢‚¸‚Î‚ñ‚®‚İ‚­‚¢‚¸‚³‚ñ‚ë‚­‚²	Nakanihon + Taito
 rongrong	—´—´ / Rong Rong (‰¢B”Å)	‚ë‚ñ‚ë‚ñ	Nakanihon
@@ -5608,7 +5629,8 @@ kov2p	Oš í‹I •«‘ˆ”e ƒvƒ‰ƒX -Nine Dragons	‚³‚ñ‚²‚­‚¹‚ñ‚«_2_2	IGS
 ddp2	“{ñ—Ì–III	‚Ç‚Ç‚ñ‚Ï‚¿_2	IGS
 puzzli2	‚Ï‚Ã‚è2 ƒX[ƒp[	‚Ï‚Ã‚è_2‚·[‚Ï[	IGS
 martmast	ƒ}[ƒVƒƒƒ‹ƒ}ƒXƒ^[ƒY	‚Ü|‚µ‚á‚é‚Ü‚·‚½[‚¸	IGS
-dmnfrnt	ƒf[ƒ‚ƒ“ƒtƒƒ“ƒg	‚Å[‚à‚ñ‚Ó‚ë‚ñ‚Æ	IGS
+dmnfrnt	ƒf[ƒ‚ƒ“ƒtƒƒ“ƒg (V102)	‚Å[‚à‚ñ‚Ó‚ë‚ñ‚Æ	IGS
+dmnfrnta	ƒf[ƒ‚ƒ“ƒtƒƒ“ƒg (V105)	‚Å[‚à‚ñ‚Ó‚ë‚ñ‚Æ	IGS
 hitme	ƒqƒbƒgƒ~[	‚Ğ‚Á‚Æ‚İ[	RamTek
 mblkjack	ƒuƒ‰ƒbƒNƒWƒƒƒbƒN (Mirco)	‚Ô‚ç‚Á‚­‚¶‚á‚Á‚­	Mirco
 barricad	ƒoƒŠƒP[ƒh	‚Î‚è‚¯[‚Ç	RamTek
@@ -5721,6 +5743,24 @@ ar_xeon	ƒ[ƒmƒ“ (Arcadia ver 2.3)	‚º‚Ì‚ñ	Arcadia Systems
 mquake	ƒ€[ƒ“ƒNƒGƒCƒN	‚Ş[‚ñ‚­‚¦‚¢‚­	Sente
 crysking	ƒUEƒNƒŠƒXƒ^ƒ‹ƒIƒuƒLƒ“ƒOƒX	‚´‚­‚è‚·‚½‚é‚¨‚Ô‚«‚ñ‚®‚·	Brezzasoft
 evosocc	ƒGƒ{ƒŠƒ…[ƒVƒ‡ƒ“ƒTƒbƒJ[	‚¦‚Ú‚è‚ã[‚µ‚å‚ñ‚³‚Á‚©[	Evoga
+qntoondo	ƒNƒCƒ“ƒgƒD[ƒ“ (ƒIƒ‰ƒ“ƒ_”Å Game Card 95-750-136)	‚­‚¢‚ñ‚Æ‚£[‚ñ	BFM/ELAM
+quintoon	ƒNƒCƒ“ƒgƒD[ƒ“ (UK”Å Game Card 95-750-203)	‚­‚¢‚ñ‚Æ‚£[‚ñ	BFM
+qntoond	ƒNƒCƒ“ƒgƒD[ƒ“ (ƒIƒ‰ƒ“ƒ_”Å Game Card 95-750-243)	‚­‚¢‚ñ‚Æ‚£[‚ñ	BFM/ELAM
+pokio	ƒ|ƒLƒI (ƒIƒ‰ƒ“ƒ_”Å Game Card 95-750-278)	‚Û‚«‚¨	BFM/ELAM
+slotsnl	ƒXƒƒbƒc (ƒIƒ‰ƒ“ƒ_”Å Game Card 95-750-368)	‚·‚ë‚Á‚Â	BFM/ELAM
+paradice	ƒpƒ‰ƒ_ƒCƒX (ƒIƒ‰ƒ“ƒ_”Å Game Card 95-750-615)	‚Ï‚ç‚¾‚¢‚·	BFM/ELAM
+pyramid	ƒsƒ‰ƒ~ƒbƒh (ƒIƒ‰ƒ“ƒ_”Å Game Card 95-750-898)	‚Ò‚ç‚İ‚Á‚Ç	BFM/ELAM
+sltblgtk	ƒXƒƒbƒc (ƒxƒ‹ƒM[”Å Token Game Card 95-750-943)	‚·‚ë‚Á‚Â	BFM/ELAM
+sltblgpo	ƒXƒƒbƒc (ƒxƒ‹ƒM[”Å Cash Game Card 95-770-938)	‚·‚ë‚Á‚Â	BFM/ELAM
+sltblgp1	ƒXƒƒbƒc (ƒxƒ‹ƒM[”Å Cash Game Card 95-752-008)	‚·‚ë‚Á‚Â	BFM/ELAM
+gldncrwn	ƒS[ƒ‹ƒfƒ“ƒNƒ‰ƒEƒ“ (ƒIƒ‰ƒ“ƒ_”Å Game Card 95-752-011)	‚²[‚é‚Å‚ñ‚­‚ç‚¤‚ñ	BFM/ELAM
+crmaze	ƒUEƒNƒŠƒXƒ^ƒ‹ƒƒCƒY -Team Challenge (SWP)	‚´‚­‚è‚·‚½‚é‚ß‚¢‚¸	Barcrest
+crmazea	ƒUEƒNƒŠƒXƒ^ƒ‹ƒƒCƒY (AMLD ver SWP)	‚´‚­‚è‚·‚½‚é‚ß‚¢‚¸	Barcrest
+crmazeb	ƒUEƒNƒŠƒXƒ^ƒ‹ƒƒCƒY - Now Featuring Ocean Zone (AMLD ver SWP)	‚´‚­‚è‚·‚½‚é‚ß‚¢‚¸	Barcrest
+turnover	ƒ^[ƒ“ƒI[ƒo[	‚½[‚ñ‚¨[‚Î[	Barcrest
+skiltrek	ƒXƒLƒ‹ƒgƒŒƒbƒN	‚·‚«‚é‚Æ‚ê‚Á‚­	Barcrest
+mating	ƒUEƒ}ƒbƒ`ƒ“ƒOƒQ[ƒ€ (Datapak)	‚´‚Ü‚Á‚¿‚ñ‚®‚°[‚Ş	Barcrest
+matinga	ƒUEƒ}ƒbƒ`ƒ“ƒOƒQ[ƒ€ (Standard)	‚´‚Ü‚Á‚¿‚ñ‚®‚°[‚Ş	Barcrest
 astinvad	ƒJƒ~ƒJƒ[ / Astro Invader	‚©‚İ‚©‚º	Stern
 kosmokil	ƒJƒ~ƒJƒ[ / Kosmo Killer	‚©‚İ‚©‚º	bootleg
 kamikaze	ƒJƒ~ƒJƒ[	‚©‚İ‚©‚º	Leijac
@@ -5994,3 +6034,4 @@ mosaicf2	ƒ‚ƒUƒCƒN (F2 System)	‚à‚´‚¢‚­	F2 System
 rbmk	Àí–ƒ«‰¤	‚¶‚Á‚¹‚ñ‚Ü[‚¶‚á‚ñ‚¨‚¤	GMS
 go2000	ƒS[2000	‚²[‚Â[‚³‚¤‚´‚ñ	SA
 mirax	ƒ~ƒ‰ƒbƒNƒX	‚İ‚ç‚Á‚­‚·	Current Technologies
+lastfght	ƒ‰ƒXƒgƒtƒ@ƒCƒeƒBƒ“ƒO	‚ç‚·‚Æ‚Ó‚Ÿ‚¢‚Ä‚¡‚ñ‚®	Subsino

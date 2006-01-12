@@ -30,43 +30,43 @@
 %li bit
 
 
-# ui/mame32.rc: 157 ui/複製 
+# ui/mame32.rc: 157
 &About
 
 
-# ui/mame32.rc: 44 ui/複製 
+# ui/mame32.rc: 44
 &About MAME32
 
 
-# ui/mame32.rc: 63, 169 ui/複製 
+# ui/mame32.rc: 63, 169
 &Add to Custom Folder...
 
 
-# ui/mame32.rc: 968 ui/複製 
+# ui/mame32.rc: 968
 &All games to use default options
 
 
-# ui/mame32.rc: 209 ui/複製 
+# ui/mame32.rc: 209
 &Audit
 
 
-# ui/mame32.rc: 68 ui/複製 
+# ui/mame32.rc: 68
 &Audit all games
 
 
-# ui/mame32.rc: 131 ui/複製 
+# ui/mame32.rc: 131
 &Background Image...
 
 
-# ui/mame32.rc: 1013 ui/複製 
+# ui/mame32.rc: 1013
 &Broadcast selected game to all windows
 
 
-# ui/mame32.rc: 86, 225, 238 ui/複製 
+# ui/mame32.rc: 86, 225, 238
 &Cabinet
 
 
-# ui/mame32.rc: 405, 950, 977, 994, 1053, 1104 ui/複製 
+# ui/mame32.rc: 405, 950, 977, 994, 1053, 1104
 &Cancel
 
 
@@ -74,7 +74,7 @@
 &Close
 
 
-# ui/mame32.rc: 151 ui/複製 
+# ui/mame32.rc: 151
 &Contents\tF1
 
 
@@ -82,107 +82,107 @@
 &Continue
 
 
-# ui/mame32.rc: 171, 201 ui/複製 
+# ui/mame32.rc: 171, 201
 &Custom Filters...
 
 
-# ui/mame32.rc: 115 ui/複製 
+# ui/mame32.rc: 115
 &Custom Filters...\tCtrl+F
 
 
-# ui/mame32.rc: 965 ui/複製 
+# ui/mame32.rc: 965
 &Default game options
 
 
-# ui/mame32.rc: 946 ui/複製 
+# ui/mame32.rc: 946
 &Description filter
 
 
-# ui/mame32.rc: 100 ui/複製 
+# ui/mame32.rc: 100
 &Details
 
 
-# ui/mame32.rc: 123 ui/複製 
+# ui/mame32.rc: 123
 &Directories...
 
 
-# ui/mame32.rc: 40 ui/複製 
+# ui/mame32.rc: 40
 &Exit
 
 
-# ui/mame32.rc: 38, 50 ui/複製 
+# ui/mame32.rc: 38, 50
 &File
 
 
-# ui/mame32.rc: 85, 224, 237 ui/複製 
+# ui/mame32.rc: 85, 224, 237
 &Flyer
 
 
-# ui/mame32.rc: 971 ui/複製 
+# ui/mame32.rc: 971
 &Folder 'filters'
 
 
-# ui/mame32.rc: 80 ui/複製 
+# ui/mame32.rc: 80
 &Fullscreen\tF11
 
 
-# ui/mame32.rc: 101 ui/複製 
+# ui/mame32.rc: 101
 &Grouped
 
 
-# ui/mame32.rc: 42, 149 ui/複製 
+# ui/mame32.rc: 42, 149
 &Help
 
 
-# ui/mame32.rc: 91, 230, 242 ui/複製 
+# ui/mame32.rc: 91, 230, 242
 &History
 
 
-# ui/mame32.rc: 130 ui/複製 
+# ui/mame32.rc: 130
 &Interface Options...
 
 
-# ui/mame32.rc: 133 ui/複製 
+# ui/mame32.rc: 133
 &Language
 
 
-# ui/mame32.rc: 99 ui/複製 
+# ui/mame32.rc: 99
 &List
 
 
-# ui/mame32.rc: 155 ui/複製 
+# ui/mame32.rc: 155
 &Mame Release Notes
 
 
-# ui/mame32.rc: 87, 226, 239 ui/複製 
+# ui/mame32.rc: 87, 226, 239
 &Marquee
 
 
-# ui/mame32.rc: 154 ui/複製 
+# ui/mame32.rc: 154
 &New Game Changes
 
 
-# ui/mame32.rc: 369, 949, 976, 993, 1052, 1103 ui/複製 
+# ui/mame32.rc: 369, 949, 976, 993, 1052, 1103
 &OK
 
 
-# ui/mame32.rc: 118 ui/複製 
+# ui/mame32.rc: 118
 &Options
 
 
-# ui/mame32.rc: 126 ui/複製 
+# ui/mame32.rc: 126
 &Palette Setting...
 
 
-# ui/audit32.c: 270 ui/mame32.rc: 404 ui/複製 
+# ui/audit32.c: 270 ui/mame32.rc: 404
 &Pause
 
 
-# ui/mame32.rc: 77 ui/複製 
+# ui/mame32.rc: 77
 &Picture Area\tAlt+P
 
 
-# ui/mame32.rc: 52, 165 ui/win32ui.c: 3703 ui/複製 
+# ui/mame32.rc: 52, 165 ui/win32ui.c: 3703
 &Play
 
 
@@ -190,75 +190,75 @@
 &Play %s
 
 
-# ui/mame32.rc: 211 ui/複製 
+# ui/mame32.rc: 211
 &Properties
 
 
-# ui/mame32.rc: 938 ui/複製 
+# ui/mame32.rc: 938
 &Raster Graphics
 
 
-# ui/mame32.rc: 114 ui/複製 
+# ui/mame32.rc: 114
 &Refresh\tF5
 
 
-# ui/mame32.rc: 200 ui/複製 
+# ui/mame32.rc: 200
 &Rename
 
 
-# ui/mame32.rc: 129 ui/複製 
+# ui/mame32.rc: 129
 &Reset to Default...
 
 
-# ui/mame32.rc: 1004 ui/複製 
+# ui/mame32.rc: 1004
 &Search for new games on start
 
 
-# ui/mame32.rc: 61, 173 ui/複製 
+# ui/mame32.rc: 61, 173
 &Select Random Game
 
 
-# ui/mame32.rc: 203 ui/複製 
+# ui/mame32.rc: 203
 &Show Folders
 
 
-# ui/mame32.rc: 84, 223, 236 ui/複製 
+# ui/mame32.rc: 84, 223, 236
 &Snapshot
 
 
-# ui/mame32.rc: 75 ui/複製 
+# ui/mame32.rc: 75
 &Status bar\tAlt+S
 
 
-# ui/mame32.rc: 88, 227, 240 ui/複製 
+# ui/mame32.rc: 88, 227, 240
 &Title
 
 
-# ui/mame32.rc: 74 ui/複製 
+# ui/mame32.rc: 74
 &Toolbar\tAlt+T
 
 
-# ui/mame32.rc: 152 ui/複製 
+# ui/mame32.rc: 152
 &Troubleshooting
 
 
-# ui/mame32.rc: 935 ui/複製 
+# ui/mame32.rc: 935
 &Unavailable
 
 
-# ui/mame32.rc: 962 ui/複製 
+# ui/mame32.rc: 962
 &User Interface (Fonts, Colors, Sizes)
 
 
-# ui/mame32.rc: 927 ui/複製 
+# ui/mame32.rc: 927
 &Vector Graphics
 
 
-# ui/mame32.rc: 72 ui/複製 
+# ui/mame32.rc: 72
 &View
 
 
-# ui/mame32.rc: 944 ui/複製 
+# ui/mame32.rc: 944
 &Working
 
 
@@ -266,7 +266,7 @@
 '%s' is not a valid savestate file for game '%s'.
 
 
-# ui/mame32.rc: 951 ui/複製 
+# ui/mame32.rc: 951
 (*) = inherited from parent folder
 
 
@@ -286,7 +286,7 @@
 75% vertical scanlines
 
 
-# ui/mame32.rc: 461 ui/複製 
+# ui/mame32.rc: 461
 <- Remove
 
 
@@ -298,7 +298,7 @@
 A sharing violation occurred.
 
 
-# ui/mame32.rc: 178 ui/複製 
+# ui/mame32.rc: 178
 A&udit
 
 
@@ -306,7 +306,7 @@ A&udit
 AD Stick
 
 
-# ui/mame32.rc: 1068 ui/複製 
+# ui/mame32.rc: 1068
 ADStick device
 
 
@@ -314,27 +314,27 @@ ADStick device
 About
 
 
-# ui/mame32.rc: 366 ui/複製 
+# ui/mame32.rc: 366
 About MAME32
 
 
-# ui/mame32.rc: 460 ui/複製 
+# ui/mame32.rc: 460
 Add ->
 
 
-# ui/mame32.rc: 1124 ui/複製 
+# ui/mame32.rc: 1124
 Add Game To Custom Folder
 
 
-# ui/mame32.rc: 1510 ui/複製 
+# ui/mame32.rc: 1510
 Add currently selected game to a custom folder
 
 
-# ui/mame32.rc: 378 ui/複製 
+# ui/mame32.rc: 378
 Additional MAME32 code by
 
 
-# ui/mame32.rc: 663 ui/複製 
+# ui/mame32.rc: 663
 Advanced
 
 
@@ -350,23 +350,23 @@ All Games
 All files (*.*)
 
 
-# ui/mame32.rc: 1007 ui/複製 
+# ui/mame32.rc: 1007
 Allow game selection by a &joystick (requires restart)
 
 
-# ui/mame32.rc: 1009 ui/複製 
+# ui/mame32.rc: 1009
 Allow game selection by custom &key sequences
 
 
-# ui/mame32.rc: 1485 ui/複製 
+# ui/mame32.rc: 1485
 Allow restoring options to 'sane' values.
 
 
-# ui/mame32.rc: 1510 ui/複製 
+# ui/mame32.rc: 1510
 Allows filtering out games from a folder
 
 
-# ui/mame32.rc: 761 ui/複製 
+# ui/mame32.rc: 761
 Analog deadzone
 
 
@@ -382,11 +382,11 @@ Anti-clockwise
 Aperture grille
 
 
-# ui/mame32.rc: 103 ui/複製 
+# ui/mame32.rc: 103
 Arrange &Icons
 
 
-# ui/mame32.rc: 1531 ui/複製 
+# ui/mame32.rc: 1531
 Arranges icons in a grid
 
 
@@ -394,7 +394,7 @@ Arranges icons in a grid
 Artwork
 
 
-# ui/mame32.rc: 834 ui/複製 
+# ui/mame32.rc: 834
 Artwork resolution
 
 
@@ -402,19 +402,19 @@ Artwork resolution
 Aspect Ratio
 
 
-# ui/mame32.rc: 691 ui/複製 
+# ui/mame32.rc: 691
 Aspect ratio
 
 
-# ui/mame32.rc: 652 ui/複製 
+# ui/mame32.rc: 652
 Audio latency
 
 
-# ui/mame32.rc: 509 ui/複製 
+# ui/mame32.rc: 509
 Audit
 
 
-# ui/mame32.rc: 1447, 1510, 1510 ui/複製 
+# ui/mame32.rc: 1447, 1510, 1510
 Audit ROM and samples sets
 
 
@@ -434,11 +434,11 @@ Auto anti-clockwise
 Auto clockwise
 
 
-# ui/mame32.rc: 819 ui/複製 
+# ui/mame32.rc: 819
 Auto restore and save (only if available)
 
 
-# ui/mame32.rc: 570 ui/複製 
+# ui/mame32.rc: 570
 Automatic
 
 
@@ -446,7 +446,7 @@ Automatic
 Available
 
 
-# ui/mame32.rc: 456 ui/複製 
+# ui/mame32.rc: 456
 Available fields:
 
 
@@ -458,15 +458,11 @@ Axis
 AxisId
 
 
-# ui/mame32.rc: 849, 1139 ui/複製 
+# ui/mame32.rc: 849, 1139
 BIOS
 
 
-# ui/properties.c: 1040
-BIOS missing
-
-
-# ui/mame32.rc: 826 ui/複製 
+# ui/mame32.rc: 826
 Backdrops
 
 
@@ -478,7 +474,7 @@ Background Images
 Bad Dump
 
 
-# ui/mame32.rc: 870 ui/複製 
+# ui/mame32.rc: 870
 Beam width
 
 
@@ -486,7 +482,7 @@ Beam width
 Best available
 
 
-# ui/mame32.rc: 828 ui/複製 
+# ui/mame32.rc: 828
 Bezels
 
 
@@ -494,15 +490,15 @@ Bezels
 Bilinear
 
 
-# ui/mame32.rc: 1034 ui/複製 
+# ui/mame32.rc: 1034
 Bookkeeping
 
 
-# ui/mame32.rc: 559 ui/複製 
+# ui/mame32.rc: 559
 Brightness correction
 
 
-# ui/mame32.rc: 446 ui/複製 
+# ui/mame32.rc: 446
 Browse...
 
 
@@ -586,7 +582,7 @@ Buttons 8
 Buttons 9
 
 
-# ui/mame32.rc: 930 ui/複製 
+# ui/mame32.rc: 930
 C&lones
 
 
@@ -602,7 +598,7 @@ Cabinet
 Cabinets
 
 
-# ui/mame32.rc: 445, 470, 1134 ui/複製 
+# ui/mame32.rc: 445, 470, 1134
 Cancel
 
 
@@ -610,7 +606,7 @@ Cancel
 Cannot Move Selected Item
 
 
-# ui/mame32.rc: 961 ui/複製 
+# ui/mame32.rc: 961
 Categories
 
 
@@ -622,15 +618,15 @@ Changing this item is not permitted
 Checking Game %s - %s
 
 
-# ui/mame32.rc: 517, 519 ui/複製 
+# ui/mame32.rc: 517, 519
 Checking...
 
 
-# ui/mame32.rc: 301, 379 ui/複製 
+# ui/mame32.rc: 301, 379
 Christopher Kirmse and Michael Soderstrom
 
 
-# ui/mame32.rc: 699 ui/複製 
+# ui/mame32.rc: 699
 Clean stretch
 
 
@@ -642,7 +638,7 @@ Clockwise
 Clone Of
 
 
-# ui/mame32.rc: 503 ui/複製 
+# ui/mame32.rc: 503
 Clone of:
 
 
@@ -658,7 +654,7 @@ Colors are completely wrong
 Colors aren't 100% accurate
 
 
-# ui/mame32.rc: 497 ui/複製 
+# ui/mame32.rc: 497
 Colors:
 
 
@@ -666,31 +662,31 @@ Colors:
 Config
 
 
-# ui/mame32.rc: 821 ui/複製 
+# ui/mame32.rc: 821
 Confirm on exit game
 
 
-# ui/mame32.rc: 1439 ui/複製 
+# ui/mame32.rc: 1439
 Contains commands for displaying help
 
 
-# ui/mame32.rc: 1439 ui/複製 
+# ui/mame32.rc: 1439
 Contains commands for manupulating the view
 
 
-# ui/mame32.rc: 1503 ui/複製 
+# ui/mame32.rc: 1503
 Contains commands for sorting by various columns
 
 
-# ui/mame32.rc: 1439 ui/複製 
+# ui/mame32.rc: 1439
 Contains commands for user interface options
 
 
-# ui/mame32.rc: 1439 ui/複製 
+# ui/mame32.rc: 1439
 Contains commands for working with the selected items
 
 
-# ui/mame32.rc: 89, 228, 241 ui/複製 
+# ui/mame32.rc: 89, 228, 241
 Control &Panel
 
 
@@ -710,23 +706,23 @@ Control Type
 Controller Files
 
 
-# ui/mame32.rc: 774 ui/複製 
+# ui/mame32.rc: 774
 Controller ID layout
 
 
-# ui/mame32.rc: 1058 ui/複製 
+# ui/mame32.rc: 1058
 Controller Mapping
 
 
-# ui/mame32.rc: 737 ui/複製 
+# ui/mame32.rc: 737
 Controllers
 
 
-# ui/mame32.rc: 373 ui/複製 
-Copyright (C) 1997-2005 The MAME Team
+# ui/mame32.rc: 373
+Copyright (C) 1997-2006 The MAME Team
 
 
-# ui/mame32.rc: 408, 418 ui/複製 
+# ui/mame32.rc: 408, 418
 Correct:
 
 
@@ -738,7 +734,7 @@ Could not open '%s' as a valid input file.
 Could not open '%s' as a valid savestate file.
 
 
-# ui/mame32.rc: 832 ui/複製 
+# ui/mame32.rc: 832
 Crop Artwork
 
 
@@ -758,19 +754,19 @@ Cursor
 Custom
 
 
-# ui/mame32.rc: 116, 192 ui/複製 
+# ui/mame32.rc: 116, 192
 Customi&ze Fields...
 
 
-# ui/mame32.rc: 453 ui/複製 
+# ui/mame32.rc: 453
 Customize Fields
 
 
-# ui/mame32.rc: 1485 ui/複製 
+# ui/mame32.rc: 1485
 Customize interface options.
 
 
-# ui/mame32.rc: 1460 ui/複製 
+# ui/mame32.rc: 1460
 Customize which columns are used in the game list
 
 
@@ -782,19 +778,19 @@ Default
 Default Game
 
 
-# ui/mame32.rc: 124 ui/複製 
+# ui/mame32.rc: 124
 Default Game &Options...
 
 
-# ui/mame32.rc: 765 ui/複製 
+# ui/mame32.rc: 765
 Default input layout
 
 
-# ui/mame32.rc: 448 ui/複製 
+# ui/mame32.rc: 448
 Delete
 
 
-# ui/mame32.rc: 712 ui/複製 
+# ui/mame32.rc: 712
 Depth:
 
 
@@ -802,7 +798,7 @@ Depth:
 Description
 
 
-# ui/mame32.rc: 424, 520 ui/options.c: 280 ui/win32ui.c: 659 ui/複製 
+# ui/mame32.rc: 424, 520 ui/options.c: 280 ui/win32ui.c: 659
 Details
 
 
@@ -810,23 +806,23 @@ Details
 Dial
 
 
-# ui/mame32.rc: 1074 ui/複製 
+# ui/mame32.rc: 1074
 Dial device
 
 
-# ui/mame32.rc: 1083 ui/複製 
+# ui/mame32.rc: 1083
 Digital joystick axes
 
 
-# ui/mame32.rc: 581 ui/複製 
+# ui/mame32.rc: 581
 Direct3D
 
 
-# ui/mame32.rc: 433 ui/複製 
+# ui/mame32.rc: 433
 Directories
 
 
-# ui/mame32.rc: 439 ui/複製 
+# ui/mame32.rc: 439
 Directories:
 
 
@@ -842,47 +838,47 @@ Directory name:
 Disabled
 
 
-# ui/mame32.rc: 528 ui/複製 
+# ui/mame32.rc: 528
 Display
 
 
-# ui/mame32.rc: 1492 ui/複製 
+# ui/mame32.rc: 1492
 Display help contents
 
 
-# ui/mame32.rc: 1460 ui/複製 
+# ui/mame32.rc: 1460
 Display items by using large icons.
 
 
-# ui/mame32.rc: 1460 ui/複製 
+# ui/mame32.rc: 1460
 Display items by using small icons.
 
 
-# ui/mame32.rc: 1447 ui/複製 
+# ui/mame32.rc: 1447
 Display the driver properties of the selected game
 
 
-# ui/mame32.rc: 1510 ui/複製 
+# ui/mame32.rc: 1510
 Display the properties of the currently selected folder
 
 
-# ui/mame32.rc: 1447 ui/複製 
+# ui/mame32.rc: 1447
 Display the properties of the selected items
 
 
-# ui/mame32.rc: 1460 ui/複製 
+# ui/mame32.rc: 1460
 Displays detailed information about each item in the window.
 
 
-# ui/mame32.rc: 1460 ui/複製 
+# ui/mame32.rc: 1460
 Displays items in a list.
 
 
-# ui/mame32.rc: 1492 ui/複製 
+# ui/mame32.rc: 1492
 Displays program and copyright information
 
 
-# ui/mame32.rc: 1460 ui/複製 
+# ui/mame32.rc: 1460
 Displays using `Detail View', but grouped by parent games.
 
 
@@ -910,7 +906,7 @@ Double Joy 4-Way
 Double Joy 8-Way
 
 
-# ui/mame32.rc: 866 ui/複製 
+# ui/mame32.rc: 866
 Draw antialiased vectors
 
 
@@ -918,7 +914,7 @@ Draw antialiased vectors
 Draw every frame
 
 
-# ui/mame32.rc: 868 ui/複製 
+# ui/mame32.rc: 868
 Draw translucent vectors
 
 
@@ -926,11 +922,11 @@ Draw translucent vectors
 Driver
 
 
-# ui/mame32.rc: 501 ui/複製 
+# ui/mame32.rc: 501
 Driver:
 
 
-# ui/mame32.rc: 759 ui/複製 
+# ui/mame32.rc: 759
 Dual lightgun
 
 
@@ -938,7 +934,7 @@ Dual lightgun
 Dumping Status
 
 
-# ui/mame32.rc: 70 ui/複製 
+# ui/mame32.rc: 70
 E&xit
 
 
@@ -946,55 +942,55 @@ E&xit
 ERROR: required files are missing, the game cannot be run.
 
 
-# ui/mame32.rc: 1026 ui/複製 
+# ui/mame32.rc: 1026
 Edit Not Working Game Color
 
 
-# ui/mame32.rc: 600 ui/複製 
+# ui/mame32.rc: 600
 Effect
 
 
-# ui/mame32.rc: 720 ui/複製 
+# ui/mame32.rc: 720
 Effects
 
 
-# ui/mame32.rc: 1030 ui/複製 
+# ui/mame32.rc: 1030
 Emulation
 
 
-# ui/mame32.rc: 806 ui/複製 
+# ui/mame32.rc: 806
 Enable game cheats
 
 
-# ui/mame32.rc: 744 ui/複製 
+# ui/mame32.rc: 744
 Enable joystick input
 
 
-# ui/mame32.rc: 769 ui/複製 
+# ui/mame32.rc: 769
 Enable keyboard LED
 
 
-# ui/mame32.rc: 755 ui/複製 
+# ui/mame32.rc: 755
 Enable lightgun input
 
 
-# ui/mame32.rc: 746 ui/複製 
+# ui/mame32.rc: 746
 Enable mouse input
 
 
-# ui/mame32.rc: 751 ui/複製 
+# ui/mame32.rc: 751
 Enable pointing stick input
 
 
-# ui/mame32.rc: 635 ui/複製 
+# ui/mame32.rc: 635
 Enable sound and sound CPUs
 
 
-# ui/mame32.rc: 748 ui/複製 
+# ui/mame32.rc: 748
 Enable steadykey support
 
 
-# ui/mame32.rc: 539 ui/複製 
+# ui/mame32.rc: 539
 Enforce aspect ratio
 
 
@@ -1006,7 +1002,7 @@ Error
 Error finding custom file name to save
 
 
-# ui/mame32.rc: 808 ui/複製 
+# ui/mame32.rc: 808
 Error log (for developers)
 
 
@@ -1022,7 +1018,7 @@ Error while renaming custom file %s to %s
 Error while saving custom file %s
 
 
-# ui/mame32.rc: 1447 ui/複製 
+# ui/mame32.rc: 1447
 Exit the application
 
 
@@ -1034,11 +1030,11 @@ FPS
 Failed
 
 
-# ui/mame32.rc: 611 ui/複製 
+# ui/mame32.rc: 611
 Feedback strength
 
 
-# ui/audit32.c: 209 ui/mame32.rc: 401 ui/複製 
+# ui/audit32.c: 209 ui/mame32.rc: 401
 File Audit
 
 
@@ -1046,15 +1042,15 @@ File Audit
 Filters for %s Folder
 
 
-# ui/mame32.rc: 874 ui/複製 
+# ui/mame32.rc: 874
 Flicker
 
 
-# ui/mame32.rc: 549 ui/複製 
+# ui/mame32.rc: 549
 Flip screen left-right
 
 
-# ui/mame32.rc: 547 ui/複製 
+# ui/mame32.rc: 547
 Flip screen upside-down
 
 
@@ -1066,7 +1062,7 @@ Flyer
 Flyers
 
 
-# ui/mame32.rc: 76 ui/複製 
+# ui/mame32.rc: 76
 Fold&er List\tAlt+D
 
 
@@ -1082,11 +1078,11 @@ Font (normal)
 Font (special)
 
 
-# ui/mame32.rc: 616 ui/複製 
+# ui/mame32.rc: 616
 Force zoom level
 
 
-# ui/mame32.rc: 569 ui/複製 
+# ui/mame32.rc: 569
 Frame skipping
 
 
@@ -1094,31 +1090,31 @@ Frame skipping
 Full
 
 
-# ui/mame32.rc: 702 ui/複製 
+# ui/mame32.rc: 702
 Full screen brightness
 
 
-# ui/mame32.rc: 921 ui/複製 
+# ui/mame32.rc: 921
 Game Filters
 
 
-# ui/mame32.rc: 121 ui/複製 
+# ui/mame32.rc: 121
 Game List &Clone Color...
 
 
-# ui/mame32.rc: 120 ui/複製 
+# ui/mame32.rc: 120
 Game List &Font...
 
 
-# ui/mame32.rc: 1003 ui/複製 
+# ui/mame32.rc: 1003
 Game Selection
 
 
-# ui/mame32.rc: 926 ui/複製 
+# ui/mame32.rc: 926
 Game filters
 
 
-# ui/mame32.rc: 924 ui/複製 
+# ui/mame32.rc: 924
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 
 
@@ -1134,11 +1130,11 @@ Game protection isn't fully emulated
 Game search %d%% complete
 
 
-# ui/mame32.rc: 554 ui/複製 
+# ui/mame32.rc: 554
 Gamma correction
 
 
-# ui/mame32.rc: 475 ui/複製 
+# ui/mame32.rc: 475
 General
 
 
@@ -1154,7 +1150,7 @@ Global game options\nDefault options used by all games
 Global vector options\nCustom options used by all games in the Vector
 
 
-# ui/mame32.rc: 393 ui/複製 
+# ui/mame32.rc: 393
 Go to Microsoft's DirectX Web Page
 
 
@@ -1170,7 +1166,7 @@ Hard Drive Difference
 Help
 
 
-# ui/mame32.rc: 1016 ui/複製 
+# ui/mame32.rc: 1016
 Hide &mouse cursor (requires restart)
 
 
@@ -1182,7 +1178,7 @@ High
 High Scores
 
 
-# ui/mame32.rc: 814 ui/複製 
+# ui/mame32.rc: 814
 High thread priority
 
 
@@ -1194,7 +1190,7 @@ History
 Horizontal
 
 
-# ui/mame32.rc: 1492 ui/複製 
+# ui/mame32.rc: 1492
 How cheats work
 
 
@@ -1206,7 +1202,7 @@ IPS Files
 Icons
 
 
-# ui/mame32.rc: 726 ui/複製 
+# ui/mame32.rc: 726
 Image Enhancement
 
 
@@ -1230,11 +1226,11 @@ Imperfect Graphics
 Imperfect Sound
 
 
-# ui/mame32.rc: 410, 419 ui/複製 
+# ui/mame32.rc: 410, 419
 Incorrect:
 
 
-# ui/mame32.rc: 1019 ui/複製 
+# ui/mame32.rc: 1019
 Inheritable Filters
 
 
@@ -1246,19 +1242,19 @@ Ini Files
 Input files (*.inp)
 
 
-# ui/mame32.rc: 447 ui/複製 
+# ui/mame32.rc: 447
 Insert
 
 
-# ui/mame32.rc: 879 ui/複製 
+# ui/mame32.rc: 879
 Intensity
 
 
-# ui/mame32.rc: 1000 ui/複製 
+# ui/mame32.rc: 1000
 Interface Options
 
 
-# ui/mame32.rc: 597 ui/複製 
+# ui/mame32.rc: 597
 Interpolation method
 
 
@@ -1286,7 +1282,7 @@ JoystickId
 Keyboard
 
 
-# ui/mame32.rc: 97 ui/複製 
+# ui/mame32.rc: 97
 L&arge Icons
 
 
@@ -1298,11 +1294,11 @@ Large Icons
 Lightgun
 
 
-# ui/mame32.rc: 1080 ui/複製 
+# ui/mame32.rc: 1080
 Lightgun device
 
 
-# ui/mame32.rc: 112 ui/複製 
+# ui/mame32.rc: 112
 Line &Up Icons
 
 
@@ -1310,7 +1306,7 @@ Line &Up Icons
 List
 
 
-# ui/mame32.rc: 59 ui/複製 
+# ui/mame32.rc: 59
 Loa&d Savestate...
 
 
@@ -1318,11 +1314,11 @@ Loa&d Savestate...
 Loading %s
 
 
-# ui/mame32.rc: 1503 ui/複製 
+# ui/mame32.rc: 1503
 Localize GUI and MAME core.
 
 
-# ui/mame32.rc: 846 ui/複製 
+# ui/mame32.rc: 846
 M68000 CPU Core
 
 
@@ -1330,7 +1326,7 @@ M68000 CPU Core
 MAME input files (*.inp,*.zip)
 
 
-# ui/mame32.rc: 1492 ui/複製 
+# ui/mame32.rc: 1492
 MAME release notes
 
 
@@ -1346,7 +1342,7 @@ MAME32 has changed *.ini file directory.\n\nWould you like to migrate old config
 MAME32 has detected outdated configuration data.\n\nThe detected configuration data is from Version %s of MAME32.\nThe current version is %s. It is recommended that the\nconfiguration is set to the new defaults.\n\nWould you like to use the new configuration?
 
 
-# ui/mame32.rc: 375 ui/複製 
+# ui/mame32.rc: 375
 MAME32 version by
 
 
@@ -1354,11 +1350,11 @@ MAME32 version by
 MAME32 will now reset the selected\n
 
 
-# ui/mame32.rc: 366, 390, 401, 433, 453, 475, 509, 528, 581, 627, 663, 737, 799, 859, 894, 921, 958, 983, 1000, 1058, 1096, 1124, 1139 ui/options.c: 713 ui/translate.c: 102 ui/複製 
+# ui/mame32.rc: 366, 390, 401, 433, 453, 475, 509, 528, 581, 627, 663, 737, 799, 859, 894, 921, 958, 983, 1000, 1058, 1096, 1124, 1139 ui/options.c: 713 ui/translate.c: 102
 MS Sans Serif
 
 
-# ui/mame32.rc: 482 ui/複製 
+# ui/mame32.rc: 482
 Manufactured:
 
 
@@ -1374,7 +1370,7 @@ Marquee
 Marquees
 
 
-# ui/mame32.rc: 675 ui/複製 
+# ui/mame32.rc: 675
 Match game refresh rate
 
 
@@ -1382,7 +1378,7 @@ Match game refresh rate
 Memory Card
 
 
-# ui/mame32.rc: 799 ui/複製 
+# ui/mame32.rc: 799
 Miscellaneous
 
 
@@ -1398,7 +1394,7 @@ Missing optional
 Mouse
 
 
-# ui/mame32.rc: 468 ui/複製 
+# ui/mame32.rc: 468
 Move Down
 
 
@@ -1406,7 +1402,7 @@ Move Down
 Move Item
 
 
-# ui/mame32.rc: 467 ui/複製 
+# ui/mame32.rc: 467
 Move Up
 
 
@@ -1422,7 +1418,7 @@ NVRAM
 Name
 
 
-# ui/mame32.rc: 1492 ui/複製 
+# ui/mame32.rc: 1492
 New game changes
 
 
@@ -1442,11 +1438,11 @@ No Dump
 No Selection
 
 
-# ui/mame32.rc: 1021 ui/複製 
+# ui/mame32.rc: 1021
 No offset for clones missing parent in view
 
 
-# ui/mame32.rc: 932 ui/複製 
+# ui/mame32.rc: 932
 Non-Wor&king
 
 
@@ -1470,7 +1466,7 @@ Not found
 Not working
 
 
-# ui/mame32.rc: 444, 469, 1133 ui/複製 
+# ui/mame32.rc: 444, 469, 1133 
 OK
 
 
@@ -1490,11 +1486,11 @@ OSD bar (default)
 OSD bar (light)
 
 
-# ui/mame32.rc: 757 ui/複製 
+# ui/mame32.rc: 757
 Offscreen shots reload
 
 
-# ui/mame32.rc: 941 ui/複製 
+# ui/mame32.rc: 941
 Ori&ginals
 
 
@@ -1506,11 +1502,11 @@ Orientation
 Originals
 
 
-# ui/mame32.rc: 830 ui/複製 
+# ui/mame32.rc: 830
 Overlays
 
 
-# ui/mame32.rc: 55 ui/複製 
+# ui/mame32.rc: 55
 P&layback Input...
 
 
@@ -1522,11 +1518,11 @@ PS/2 Keyboard
 Paddle
 
 
-# ui/mame32.rc: 1065 ui/複製 
+# ui/mame32.rc: 1065
 Paddle device
 
 
-# ui/mame32.rc: 1096 ui/複製 
+# ui/mame32.rc: 1096
 Palette
 
 
@@ -1534,7 +1530,7 @@ Palette
 Passed
 
 
-# ui/mame32.rc: 565 ui/複製 
+# ui/mame32.rc: 565
 Pause Brightness
 
 
@@ -1542,7 +1538,7 @@ Pause Brightness
 Pedal
 
 
-# ui/mame32.rc: 1071 ui/複製 
+# ui/mame32.rc: 1071
 Pedal device
 
 
@@ -1550,23 +1546,23 @@ Pedal device
 Play Time
 
 
-# ui/mame32.rc: 1447 ui/複製 
+# ui/mame32.rc: 1447
 Play a game starting with the given savestate
 
 
-# ui/mame32.rc: 54, 167 ui/複製 
+# ui/mame32.rc: 54, 167
 Play and &Record Input...
 
 
-# ui/mame32.rc: 57 ui/複製 
+# ui/mame32.rc: 57
 Play and Record &Wave Output...
 
 
-# ui/mame32.rc: 1447 ui/複製 
+# ui/mame32.rc: 1447
 Play currently selected game
 
 
-# ui/mame32.rc: 1447 ui/複製 
+# ui/mame32.rc: 1447
 Playback a recorded game
 
 
@@ -1606,11 +1602,11 @@ Players 7
 Players 8
 
 
-# ui/mame32.rc: 66, 181 ui/複製 
+# ui/mame32.rc: 66, 181
 Pr&operties
 
 
-# ui/mame32.rc: 603 ui/複製 
+# ui/mame32.rc: 603
 Prescale
 
 
@@ -1618,7 +1614,7 @@ Prescale
 Proper&ties of %s
 
 
-# ui/mame32.rc: 65, 180 ui/win32ui.c: 3710 ui/複製 
+# ui/mame32.rc: 65, 180 ui/win32ui.c: 3710
 Proper&ties of Driver
 
 
@@ -1626,7 +1622,7 @@ Proper&ties of Driver
 Propery Sheet Error %d %X
 
 
-# ui/mame32.rc: 64, 170 ui/複製 
+# ui/mame32.rc: 64, 170
 R&emove From This Folder
 
 
@@ -1662,7 +1658,7 @@ RGB micro
 RGB minimum mask
 
 
-# ui/mame32.rc: 1102 ui/複製 
+# ui/mame32.rc: 1102
 RGB setting:
 
 
@@ -1694,11 +1690,11 @@ RGB triad of 4 vertical pixels
 RGB triad of 6 pixels
 
 
-# ui/mame32.rc: 516 ui/複製 
+# ui/mame32.rc: 516
 ROM check:
 
 
-# ui/layout.c: 105 ui/mame32.rc: 409 ui/win32ui.c: 791 ui/複製 
+# ui/layout.c: 105 ui/mame32.rc: 409 ui/win32ui.c: 791
 ROMs
 
 
@@ -1706,7 +1702,7 @@ ROMs
 ROMs missing
 
 
-# ui/mame32.rc: 1510 ui/複製 
+# ui/mame32.rc: 1510
 Randomly select a game.
 
 
@@ -1718,19 +1714,19 @@ Raster
 Ready
 
 
-# ui/mame32.rc: 1447 ui/複製 
+# ui/mame32.rc: 1447
 Record a game for later playback
 
 
-# ui/mame32.rc: 1447 ui/複製 
+# ui/mame32.rc: 1447
 Record the sound output of a game
 
 
-# ui/mame32.rc: 1460 ui/複製 
+# ui/mame32.rc: 1460
 Refresh game list
 
 
-# ui/mame32.rc: 716 ui/複製 
+# ui/mame32.rc: 716
 Refresh:
 
 
@@ -1738,51 +1734,51 @@ Refresh:
 Reload configurations
 
 
-# ui/mame32.rc: 1510 ui/複製 
+# ui/mame32.rc: 1510
 Remove currently selected game from this folder
 
 
-# ui/mame32.rc: 1510 ui/複製 
+# ui/mame32.rc: 1510
 Rename currently selected folder
 
 
-# ui/mame32.rc: 574, 620, 656, 730, 792, 852, 885, 1088, 1170 ui/複製 
+# ui/mame32.rc: 574, 620, 656, 730, 792, 852, 885, 1088, 1170
 Reset
 
 
-# ui/mame32.rc: 958 ui/複製 
+# ui/mame32.rc: 958
 Reset Options
 
 
-# ui/mame32.rc: 175 ui/複製 
+# ui/mame32.rc: 175
 Reset Pl&aycount
 
 
-# ui/mame32.rc: 176 ui/複製 
+# ui/mame32.rc: 176
 Reset Pla&y Time
 
 
-# ui/mame32.rc: 1037 ui/複製 
+# ui/mame32.rc: 1037
 Reset all Play Times
 
 
-# ui/mame32.rc: 1035 ui/複製 
+# ui/mame32.rc: 1035
 Reset all Playcounts
 
 
-# ui/mame32.rc: 1510 ui/複製 
+# ui/mame32.rc: 1510
 Reset play time of currently selected game
 
 
-# ui/mame32.rc: 1510 ui/複製 
+# ui/mame32.rc: 1510
 Reset playcount of currently selected game
 
 
-# ui/layout.c: 70 ui/mame32.rc: 708 ui/複製 
+# ui/layout.c: 70 ui/mame32.rc: 708
 Resolution
 
 
-# ui/mame32.rc: 575, 621, 657, 731, 793, 853, 886, 1089, 1171 ui/複製 
+# ui/mame32.rc: 575, 621, 657, 731, 793, 853, 886, 1089, 1171
 Restore Default Settings
 
 
@@ -1790,39 +1786,39 @@ Restore Default Settings
 Restore Settings
 
 
-# ui/mame32.rc: 544 ui/複製 
+# ui/mame32.rc: 544
 Rotation
 
 
-# ui/mame32.rc: 594 ui/複製 
+# ui/mame32.rc: 594
 Rotation of effects for rotated games
 
 
-# ui/mame32.rc: 535 ui/複製 
+# ui/mame32.rc: 535
 Run in a window
 
 
-# ui/mame32.rc: 82, 221 ui/複製 
+# ui/mame32.rc: 82, 221
 S&how Pictures
 
 
-# ui/mame32.rc: 98 ui/複製 
+# ui/mame32.rc: 98
 S&mall Icons
 
 
-# ui/mame32.rc: 1040 ui/複製 
+# ui/mame32.rc: 1040
 S&tretch screenshot larger than natural size
 
 
-# ui/mame32.rc: 518 ui/複製 
+# ui/mame32.rc: 518
 Sample check:
 
 
-# ui/mame32.rc: 644 ui/複製 
+# ui/mame32.rc: 644
 Sample rate
 
 
-# ui/layout.c: 82, 106 ui/mame32.rc: 415 ui/win32ui.c: 792 ui/複製 
+# ui/layout.c: 82, 106 ui/mame32.rc: 415 ui/win32ui.c: 792
 Samples
 
 
@@ -1830,11 +1826,11 @@ Samples
 Save State
 
 
-# ui/mame32.rc: 499 ui/複製 
+# ui/mame32.rc: 499
 Save State:
 
 
-# ui/mame32.rc: 606 ui/複製 
+# ui/mame32.rc: 606
 Scanline intensity
 
 
@@ -1850,7 +1846,7 @@ Scanlines 50%
 Scanlines 75%
 
 
-# ui/mame32.rc: 551 ui/複製 
+# ui/mame32.rc: 551
 Screen
 
 
@@ -1862,27 +1858,27 @@ Screen flip support is missing
 Screen flipping is not supported
 
 
-# ui/mame32.rc: 495 ui/複製 
+# ui/mame32.rc: 495
 Screen:
 
 
-# ui/mame32.rc: 1039 ui/複製 
+# ui/mame32.rc: 1039
 Screenshot Area
 
 
-# ui/mame32.rc: 1047 ui/複製 
+# ui/mame32.rc: 1047
 Screenshot Bordersize
 
 
-# ui/mame32.rc: 1043 ui/複製 
+# ui/mame32.rc: 1043
 Screenshot Cycletime in Seconds
 
 
-# ui/mame32.rc: 78 ui/複製 
+# ui/mame32.rc: 78
 Screenshot Ta&b\tAlt+B
 
 
-# ui/mame32.rc: 1011 ui/複製 
+# ui/mame32.rc: 1011
 Select &random background image
 
 
@@ -1894,7 +1890,7 @@ Select Item
 Select a Background Image
 
 
-# ui/mame32.rc: 1485 ui/複製 
+# ui/mame32.rc: 1485
 Select a background image file
 
 
@@ -1914,155 +1910,155 @@ Select a savestate file
 Select a sound file to record
 
 
-# ui/mame32.rc: 1460 ui/複製 
+# ui/mame32.rc: 1460
 Select fullscreen or window mode in GUI
 
 
-# ui/mame32.rc: 1556 ui/複製 
+# ui/mame32.rc: 1556
 Select the cabinet image
 
 
-# ui/mame32.rc: 1556 ui/複製 
+# ui/mame32.rc: 1556
 Select the control panel image
 
 
-# ui/mame32.rc: 1556 ui/複製 
+# ui/mame32.rc: 1556
 Select the flyer image
 
 
-# ui/mame32.rc: 1556 ui/複製 
+# ui/mame32.rc: 1556
 Select the history information
 
 
-# ui/mame32.rc: 1556 ui/複製 
+# ui/mame32.rc: 1556
 Select the marquee image
 
 
-# ui/mame32.rc: 974 ui/複製 
+# ui/mame32.rc: 974
 Select the options to be restored to the default settings.  The options will be restored when MAME32 is run next.
 
 
-# ui/mame32.rc: 1556 ui/複製 
+# ui/mame32.rc: 1556
 Select the screen shot image
 
 
-# ui/mame32.rc: 1564 ui/複製 
+# ui/mame32.rc: 1564
 Select the story information
 
 
-# ui/mame32.rc: 1556 ui/複製 
+# ui/mame32.rc: 1556
 Select the title image
 
 
-# ui/mame32.rc: 1051 ui/複製 
+# ui/mame32.rc: 1051
 Set Screenshot Border Color
 
 
-# ui/mame32.rc: 1478 ui/複製 
+# ui/mame32.rc: 1478
 Set default game options
 
 
-# ui/mame32.rc: 1478 ui/複製 
+# ui/mame32.rc: 1478
 Set directory configuration
 
 
-# ui/mame32.rc: 1478 ui/複製 
+# ui/mame32.rc: 1478
 Set game list and folder list font
 
 
-# ui/mame32.rc: 1483 ui/複製 
+# ui/mame32.rc: 1483
 Set in-game UI color palette
 
 
-# ui/mame32.rc: 1478 ui/複製 
+# ui/mame32.rc: 1478
 Set list font color for clone games
 
 
-# ui/mame32.rc: 1031 ui/複製 
+# ui/mame32.rc: 1031
 Show Game Ca&ption
 
 
-# ui/mame32.rc: 1028 ui/複製 
+# ui/mame32.rc: 1028
 Show History on Tab
 
 
-# ui/mame32.rc: 219 ui/複製 
+# ui/mame32.rc: 219
 Show Tab &Control
 
 
-# ui/mame32.rc: 436 ui/複製 
+# ui/mame32.rc: 436
 Show directories for:
 
 
-# ui/mame32.rc: 1510 ui/複製 
+# ui/mame32.rc: 1510
 Show or hide folder
 
 
-# ui/mame32.rc: 1542 ui/複製 
+# ui/mame32.rc: 1542
 Show or hide the cabinet image
 
 
-# ui/mame32.rc: 1542 ui/複製 
+# ui/mame32.rc: 1542
 Show or hide the control panel image
 
 
-# ui/mame32.rc: 1542 ui/複製 
+# ui/mame32.rc: 1542
 Show or hide the flyer image
 
 
-# ui/mame32.rc: 1460 ui/複製 
+# ui/mame32.rc: 1460
 Show or hide the folder list
 
 
-# ui/mame32.rc: 1542 ui/複製 
+# ui/mame32.rc: 1542
 Show or hide the history information
 
 
-# ui/mame32.rc: 1542 ui/複製 
+# ui/mame32.rc: 1542
 Show or hide the marquee image
 
 
-# ui/mame32.rc: 1460 ui/複製 
+# ui/mame32.rc: 1460
 Show or hide the picture area
 
 
-# ui/mame32.rc: 1460, 1503 ui/複製 
+# ui/mame32.rc: 1460, 1503
 Show or hide the pictures
 
 
-# ui/mame32.rc: 1542 ui/複製 
+# ui/mame32.rc: 1542
 Show or hide the screen shot image
 
 
-# ui/mame32.rc: 1460 ui/複製 
+# ui/mame32.rc: 1460
 Show or hide the screen shot tab
 
 
-# ui/mame32.rc: 1460 ui/複製 
+# ui/mame32.rc: 1460
 Show or hide the status bar
 
 
-# ui/mame32.rc: 1550 ui/複製 
+# ui/mame32.rc: 1550
 Show or hide the story information
 
 
-# ui/mame32.rc: 1542 ui/複製 
+# ui/mame32.rc: 1542
 Show or hide the title image
 
 
-# ui/mame32.rc: 1460 ui/複製 
+# ui/mame32.rc: 1460
 Show or hide the toolbar
 
 
-# ui/mame32.rc: 1099 ui/複製 
+# ui/mame32.rc: 1099
 Show palette for:
 
 
-# ui/mame32.rc: 462 ui/複製 
+# ui/mame32.rc: 462
 Show these fields in this order:
 
 
-# ui/mame32.rc: 709 ui/複製 
+# ui/mame32.rc: 709
 Size:
 
 
@@ -2110,11 +2106,11 @@ Skip 8 of 12 frames
 Skip 9 of 12 frames
 
 
-# ui/mame32.rc: 816 ui/複製 
+# ui/mame32.rc: 816
 Skip game info
 
 
-# ui/mame32.rc: 810 ui/複製 
+# ui/mame32.rc: 810
 Sleep when possible
 
 
@@ -2130,47 +2126,47 @@ Snapshot
 Snapshots
 
 
-# ui/mame32.rc: 189 ui/複製 
+# ui/mame32.rc: 189
 Sort &Ascending
 
 
-# ui/mame32.rc: 190 ui/複製 
+# ui/mame32.rc: 190
 Sort &Descending
 
 
-# ui/mame32.rc: 1525 ui/複製 
+# ui/mame32.rc: 1525
 Sort column in ascending (A-Z) order
 
 
-# ui/mame32.rc: 1525 ui/複製 
+# ui/mame32.rc: 1525
 Sort column in descending (Z-A) order
 
 
-# ui/mame32.rc: 1531 ui/複製 
+# ui/mame32.rc: 1531
 Sort items by game description
 
 
-# ui/mame32.rc: 1531 ui/複製 
+# ui/mame32.rc: 1531
 Sort items by manufacturer
 
 
-# ui/mame32.rc: 1531 ui/複製 
+# ui/mame32.rc: 1531
 Sort items by name
 
 
-# ui/mame32.rc: 1531 ui/複製 
+# ui/mame32.rc: 1531
 Sort items by playcount
 
 
-# ui/mame32.rc: 1531 ui/複製 
+# ui/mame32.rc: 1531
 Sort items by type
 
 
-# ui/mame32.rc: 1531 ui/複製 
+# ui/mame32.rc: 1531
 Sort items by year
 
 
-# ui/layout.c: 59 ui/mame32.rc: 627 ui/複製 
+# ui/layout.c: 59 ui/mame32.rc: 627 
 Sound
 
 
@@ -2178,7 +2174,7 @@ Sound
 Sound emulation isn't 100% accurate
 
 
-# ui/mame32.rc: 491 ui/複製 
+# ui/mame32.rc: 491
 Sound:
 
 
@@ -2186,7 +2182,7 @@ Sound:
 Sounds (*.wav)
 
 
-# ui/mame32.rc: 93, 232, 244 ui/複製 
+# ui/mame32.rc: 93, 232, 244
 St&ory
 
 
@@ -2194,7 +2190,7 @@ St&ory
 Standard
 
 
-# ui/mame32.rc: 537 ui/複製 
+# ui/mame32.rc: 537
 Start out maximized
 
 
@@ -2202,7 +2198,7 @@ Start out maximized
 State
 
 
-# ui/mame32.rc: 484 ui/複製 
+# ui/mame32.rc: 484
 Status:
 
 
@@ -2214,7 +2210,7 @@ Stereo
 Story
 
 
-# ui/mame32.rc: 689 ui/複製 
+# ui/mame32.rc: 689
 Stretch using hardware
 
 
@@ -2222,15 +2218,15 @@ Stretch using hardware
 Supported
 
 
-# ui/mame32.rc: 686 ui/複製 
+# ui/mame32.rc: 686
 Switch color depths to fit
 
 
-# ui/mame32.rc: 683 ui/複製 
+# ui/mame32.rc: 683
 Switch resolutions to fit
 
 
-# ui/mame32.rc: 678 ui/複製 
+# ui/mame32.rc: 678
 Sync to monitor refresh
 
 
@@ -2258,7 +2254,7 @@ There is no application associated with the given filename extension.
 There was not enough memory to complete the operation.
 
 
-# ui/mame32.rc: 542 ui/複製 
+# ui/mame32.rc: 542
 Throttle
 
 
@@ -2278,7 +2274,7 @@ Toggle Folder List
 Toggle Screen Shot
 
 
-# ui/mame32.rc: 411, 420 ui/複製 
+# ui/mame32.rc: 411, 420
 Total:
 
 
@@ -2286,63 +2282,63 @@ Total:
 Trackball
 
 
-# ui/mame32.rc: 1077 ui/複製 
+# ui/mame32.rc: 1077
 Trackball device
 
 
-# ui/mame32.rc: 1570 ui/複製 
+# ui/mame32.rc: 1570
 Translate into English (US)
 
 
-# ui/mame32.rc: 1570 ui/複製 
+# ui/mame32.rc: 1570
 Translate into French
 
 
-# ui/mame32.rc: 1570 ui/複製 
+# ui/mame32.rc: 1570
 Translate into German
 
 
-# ui/mame32.rc: 1570 ui/複製 
+# ui/mame32.rc: 1570
 Translate into Hungarian
 
 
-# ui/mame32.rc: 1570 ui/複製 
+# ui/mame32.rc: 1570
 Translate into Italian
 
 
-# ui/mame32.rc: 1570 ui/複製 
+# ui/mame32.rc: 1570
 Translate into Japanese
 
 
-# ui/mame32.rc: 1570 ui/複製 
+# ui/mame32.rc: 1570
 Translate into Korean
 
 
-# ui/mame32.rc: 1570 ui/複製 
+# ui/mame32.rc: 1570
 Translate into Polish
 
 
-# ui/mame32.rc: 1570 ui/複製 
+# ui/mame32.rc: 1570
 Translate into Portuguese (BRA)
 
 
-# ui/mame32.rc: 1570 ui/複製 
+# ui/mame32.rc: 1570
 Translate into Simplified Chinese
 
 
-# ui/mame32.rc: 1570 ui/複製 
+# ui/mame32.rc: 1570
 Translate into Spanish
 
 
-# ui/mame32.rc: 1570 ui/複製 
+# ui/mame32.rc: 1570
 Translate into Traditional Chinese
 
 
-# ui/mame32.rc: 672 ui/複製 
+# ui/mame32.rc: 672
 Triple buffering
 
 
-# ui/mame32.rc: 1492 ui/複製 
+# ui/mame32.rc: 1492
 Troubleshooting Documentation
 
 
@@ -2386,15 +2382,15 @@ Unknown error.
 Unsupported
 
 
-# ui/mame32.rc: 589 ui/複製 
+# ui/mame32.rc: 589
 Use Direct3D
 
 
-# ui/mame32.rc: 670 ui/複製 
+# ui/mame32.rc: 670
 Use DirectDraw
 
 
-# ui/mame32.rc: 1024 ui/複製 
+# ui/mame32.rc: 1024
 Use Driver Icon for Not Working Game
 
 
@@ -2402,35 +2398,35 @@ Use Driver Icon for Not Working Game
 Use Local Language Game List
 
 
-# ui/mame32.rc: 812 ui/複製 
+# ui/mame32.rc: 812
 Use RDTSC timing system
 
 
-# ui/mame32.rc: 824 ui/複製 
+# ui/mame32.rc: 824
 Use additional Artwork
 
 
-# ui/mame32.rc: 721 ui/複製 
+# ui/mame32.rc: 721
 Use classic scanlines
 
 
-# ui/mame32.rc: 638 ui/複製 
+# ui/mame32.rc: 638
 Use samples
 
 
-# ui/mame32.rc: 591 ui/複製 
+# ui/mame32.rc: 591
 Use texture management
 
 
-# ui/mame32.rc: 839 ui/複製 
+# ui/mame32.rc: 839
 Use transparent in-game menu
 
 
-# ui/mame32.rc: 641 ui/複製 
+# ui/mame32.rc: 641
 Use volume auto adjust
 
 
-# ui/layout.c: 68 ui/mame32.rc: 859 ui/options.c: 1120, 2816 ui/properties.c: 763 ui/treeview.c: 300 ui/win32ui.c: 5315 ui/複製 
+# ui/layout.c: 68 ui/mame32.rc: 859 ui/options.c: 1120, 2816 ui/properties.c: 763 ui/treeview.c: 300 ui/win32ui.c: 5315
 Vector
 
 
@@ -2462,7 +2458,7 @@ Vertical
 Video emulation isn't 100% accurate
 
 
-# ui/mame32.rc: 648 ui/複製 
+# ui/mame32.rc: 648
 Volume attenuation
 
 
@@ -2470,11 +2466,11 @@ Volume attenuation
 WARNING: the game might not run correctly.
 
 
-# ui/mame32.rc: 681 ui/複製 
+# ui/mame32.rc: 681
 Wait for vertical sync
 
 
-# ui/mame32.rc: 1492 ui/複製 
+# ui/mame32.rc: 1492
 What's new in MAME
 
 
@@ -2554,31 +2550,31 @@ Year
 Yes
 
 
-# ui/mame32.rc: 383 ui/複製 
+# ui/mame32.rc: 383
 and John Hardy IV
 
 
-# ui/mame32.rc: 105 ui/複製 
+# ui/mame32.rc: 105
 by &Description
 
 
-# ui/mame32.rc: 107 ui/複製 
+# ui/mame32.rc: 107
 by &Manufacturer
 
 
-# ui/mame32.rc: 106 ui/複製 
+# ui/mame32.rc: 106
 by &Name
 
 
-# ui/mame32.rc: 108 ui/複製 
+# ui/mame32.rc: 108
 by &Playcount
 
 
-# ui/mame32.rc: 109 ui/複製 
+# ui/mame32.rc: 109
 by &Type
 
 
-# ui/mame32.rc: 110 ui/複製 
+# ui/mame32.rc: 110
 by &Year
 
 

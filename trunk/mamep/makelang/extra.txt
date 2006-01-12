@@ -31,7 +31,7 @@ mslug4d
 rotdd
 kof2002d
 kof2002b
-kf2k2pb
+kf2k2plb
 matrimd
 matrimbl
 beast
