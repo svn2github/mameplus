@@ -4443,6 +4443,7 @@ mslug3n	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO3 (not encrypted)	‚ß‚½‚é‚·‚ç‚Á‚®_3	SNK
 mslug3d	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO3 (decrypted C)	‚ß‚½‚é‚·‚ç‚Á‚®_3	SNK
 kof2000	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2000	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_07_1_2000	SNK
 kof2000n	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2000 (not encrypted)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_07_1_2000	SNK
+kof2000d	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2000 (decrypted C)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_07_1_2000	SNK
 bangbead	ƒoƒ“ƒr[ƒh	‚Î‚ñ‚Ñ[‚Ç	Visco
 nitd	ƒiƒCƒgƒƒAEƒCƒ“EƒUEƒ_[ƒN	‚È‚¢‚Æ‚ß‚ ‚¢‚ñ‚´‚¾[‚­	Eleven / Gavaking
 nitdd	ƒiƒCƒgƒƒAEƒCƒ“EƒUEƒ_[ƒN (decrypted C)	‚È‚¢‚Æ‚ß‚ ‚¢‚ñ‚´‚¾[‚­	Eleven / Gavaking
@@ -4676,7 +4677,7 @@ sabotnba	ƒTƒ{ƒeƒ“ƒ{ƒ“ƒo[ƒY (set 2)	‚³‚Ú‚Ä‚ñ‚Ú‚ñ‚Î[‚¸	NMK / Tecmo
 nouryoku	”]—ÍŒüãˆÏˆõ‰ï	‚Ì‚¤‚è‚å‚­‚±‚¤‚¶‚å‚¤‚¢‚¢‚ñ‚©‚¢	Tecmo
 manybloc	ƒƒj[ƒuƒƒbƒN	‚ß‚É[‚Ô‚ë‚Á‚­	Bee-Oh
 ssmissin	S.S.ƒ~ƒbƒVƒ‡ƒ“(“Á–½)	‚¦‚·‚¦‚·‚İ‚Á‚µ‚å‚ñ	Comad
-airattck	‹óP / Air Attack	‚­‚¤‚µ‚ã‚¤	Comad
+airattck	‹óP -Air Attack	‚­‚¤‚µ‚ã‚¤	Comad
 raphero	ƒ‰ƒsƒbƒhƒq[ƒ[ (“ú–{”Å?)	‚ç‚Ò‚Á‚Ç‚Ğ[‚ë[	Media Trading Corp
 daireika	–ƒ‘å—ìŠE	‚Ü[‚¶‚á‚ñ‚¾‚¢‚ê‚¢‚©‚¢	Jaleco / NMK
 mjzoomin	–ƒ‚¿‚á‚ñ‚Ë‚éƒY[ƒ€ƒCƒ“I	‚Ü[‚¶‚á‚ñ‚¿‚á‚ñ‚Ë‚é‚¸[‚Ş‚¢‚ñ	Jaleco
@@ -5555,7 +5556,7 @@ quizchq	ƒNƒCƒYƒ`ƒƒƒ“ƒlƒ‹EƒNƒGƒXƒ`ƒ‡ƒ“ (“ú–{”Å ver 1.00)	‚­‚¢‚¸‚¿‚á‚ñ‚Ë‚é‚­‚¦‚·‚
 quizchql	ƒNƒCƒYƒ`ƒƒƒ“ƒlƒ‹EƒNƒGƒXƒ`ƒ‡ƒ“ (‘ä˜p”Å? ver 1.23)	‚­‚¢‚¸‚¿‚á‚ñ‚Ë‚é‚­‚¦‚·‚¿‚å‚ñ	Nakanihon (Laxan license)
 funkyfig	ƒUEƒtƒ@[ƒXƒgEƒtƒ@ƒ“ƒL[Eƒtƒ@ƒCƒ^[	‚´‚Ó‚Ÿ[‚·‚Æ‚Ó‚Ÿ‚ñ‚«[‚Ó‚Ÿ‚¢‚½[	Nakanihon + East Technology (Taito license)
 animaljr	ƒƒCƒƒCƒAƒjƒ}ƒ‹ƒ‰ƒ“ƒhJr. / Animalandia Jr.	‚í‚¢‚í‚¢‚ ‚É‚Ü‚é‚ç‚ñ‚Ç‚¶‚ã‚É‚ 	Nakanihon + East Technology (Taito license)
-mjmyster	ƒ}[ƒWƒƒƒ“ ƒU¥ƒ~ƒXƒeƒŠƒAƒXƒ[ƒ‹ƒh	‚Ü[‚¶‚á‚ñ‚´‚İ‚·‚Ä‚è‚ ‚·‚í[‚é‚Ç	Dynax
+mjmyster	–ƒ ¢ŠE‚Ì_”é -The Mysterious World	‚Ü[‚¶‚á‚ñ‚¹‚©‚¢‚Ì‚µ‚ñ‚Ò	Dynax
 quiz365	–ˆ“ú‘Ö‚í‚éƒNƒCƒY”Ô‘g ƒNƒCƒY365 (“ú–{”Å)	‚Ü‚¢‚É‚¿‚©‚í‚é‚­‚¢‚¸‚Î‚ñ‚®‚İ‚­‚¢‚¸‚³‚ñ‚ë‚­‚²	Nakanihon
 quiz365t	–ˆ“ú‘Ö‚í‚éƒNƒCƒY”Ô‘g ƒNƒCƒY365 (` / ‘ä˜p”Å)	‚Ü‚¢‚É‚¿‚©‚í‚é‚­‚¢‚¸‚Î‚ñ‚®‚İ‚­‚¢‚¸‚³‚ñ‚ë‚­‚²	Nakanihon + Taito
 rongrong	—´—´ / Rong Rong (‰¢B”Å)	‚ë‚ñ‚ë‚ñ	Nakanihon
@@ -5754,9 +5755,9 @@ sltblgtk	ƒXƒƒbƒc (ƒxƒ‹ƒM[”Å Token Game Card 95-750-943)	‚·‚ë‚Á‚Â	BFM/ELAM
 sltblgpo	ƒXƒƒbƒc (ƒxƒ‹ƒM[”Å Cash Game Card 95-770-938)	‚·‚ë‚Á‚Â	BFM/ELAM
 sltblgp1	ƒXƒƒbƒc (ƒxƒ‹ƒM[”Å Cash Game Card 95-752-008)	‚·‚ë‚Á‚Â	BFM/ELAM
 gldncrwn	ƒS[ƒ‹ƒfƒ“ƒNƒ‰ƒEƒ“ (ƒIƒ‰ƒ“ƒ_”Å Game Card 95-752-011)	‚²[‚é‚Å‚ñ‚­‚ç‚¤‚ñ	BFM/ELAM
-crmaze	ƒUEƒNƒŠƒXƒ^ƒ‹ƒƒCƒY -Team Challenge (SWP)	‚´‚­‚è‚·‚½‚é‚ß‚¢‚¸	Barcrest
+crmaze	ƒUEƒNƒŠƒXƒ^ƒ‹ƒƒCƒY ƒ`[ƒ€ƒ`ƒƒƒŒƒ“ƒW (SWP)	‚´‚­‚è‚·‚½‚é‚ß‚¢‚¸‚¿[‚Ş‚¿‚á‚ê‚ñ‚¶	Barcrest
 crmazea	ƒUEƒNƒŠƒXƒ^ƒ‹ƒƒCƒY (AMLD ver SWP)	‚´‚­‚è‚·‚½‚é‚ß‚¢‚¸	Barcrest
-crmazeb	ƒUEƒNƒŠƒXƒ^ƒ‹ƒƒCƒY - Now Featuring Ocean Zone (AMLD ver SWP)	‚´‚­‚è‚·‚½‚é‚ß‚¢‚¸	Barcrest
+crmazeb	ƒUEƒNƒŠƒXƒ^ƒ‹ƒƒCƒY ƒiƒE ƒtƒB[ƒ`ƒƒƒŠƒ“ƒO ƒI[ƒVƒƒƒ“ƒ][ƒ“ (AMLD ver SWP)	‚´‚­‚è‚·‚½‚é‚ß‚¢‚¸‚È‚¤‚Ó‚¡[‚¿‚á‚è‚ñ‚®‚¨[‚µ‚á‚ñ‚¼[‚ñ	Barcrest
 turnover	ƒ^[ƒ“ƒI[ƒo[	‚½[‚ñ‚¨[‚Î[	Barcrest
 skiltrek	ƒXƒLƒ‹ƒgƒŒƒbƒN	‚·‚«‚é‚Æ‚ê‚Á‚­	Barcrest
 mating	ƒUEƒ}ƒbƒ`ƒ“ƒOƒQ[ƒ€ (Datapak)	‚´‚Ü‚Á‚¿‚ñ‚®‚°[‚Ş	Barcrest
