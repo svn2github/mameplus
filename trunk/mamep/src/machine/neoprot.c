@@ -112,6 +112,15 @@ void install_sram_protection(void)
 		mem16[0x1050 >> 1] = 0x4e75;
 	}
 
+	if (!strcmp(Machine->gamedrv->name,"mslug5") ||
+		!strcmp(Machine->gamedrv->name,"mslug5d"))
+	{
+		/* Patch out loop to disable console mode */
+		UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
+		mem16[0x0122a >> 1] = 0x4e71;
+		mem16[0x0122c >> 1] = 0x4e71;
+	}
+
 	/* hacks to make the games which do protection checks run in arcade mode */
 	/* we write protect a SRAM location so it cannot be set to 1 */
 	neogeo_sram_protection_hack = ~0;
