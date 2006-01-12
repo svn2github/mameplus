@@ -1575,8 +1575,9 @@ SYSTEM_BIOS_START( neogeo )
 	SYSTEM_BIOS_ADD(11, "uni-bios.13","Unibios MVS (Hack, Ver. 1.3)" )
 	SYSTEM_BIOS_ADD(12, "uni-bios.20","Unibios MVS (Hack, Ver. 2.0)" )
 	SYSTEM_BIOS_ADD(13, "uni-bios.21","Unibios MVS (Hack, Ver. 2.1)" )
-	SYSTEM_BIOS_ADD(14, "debug",      "Debug MVS (Hack?)" )
-	SYSTEM_BIOS_ADD(15, "asia-aes",   "Asia AES" )
+	SYSTEM_BIOS_ADD(14, "uni-bios.22","Unibios MVS (Hack, Ver. 2.2)" )
+	SYSTEM_BIOS_ADD(15, "debug",      "Debug MVS (Hack?)" )
+	SYSTEM_BIOS_ADD(16, "asia-aes",   "Asia AES" )
 SYSTEM_BIOS_END
 
 //#define ROM_LOAD16_WORD_SWAP_BIOS(bios,name,offset,length,hash)
@@ -1598,8 +1599,9 @@ SYSTEM_BIOS_END
 	ROM_LOAD16_WORD_SWAP_BIOS(11, "uni-bios.13",  0x00000, 0x020000, CRC(b24b44a0) SHA1(eca8851d30557b97c309a0d9f4a9d20e5b14af4e) ) /* Universe Bios v1.3 (hack) */ \
 	ROM_LOAD16_WORD_SWAP_BIOS(12, "uni-bios.20",  0x00000, 0x020000, CRC(0c12c2ad) SHA1(37bcd4d30f3892078b46841d895a6eff16dc921e) ) /* Universe Bios v2.0 (hack) */ \
 	ROM_LOAD16_WORD_SWAP_BIOS(13, "uni-bios.21",  0x00000, 0x020000, CRC(8dabf76b) SHA1(c23732c4491d966cf0373c65c83c7a4e88f0082c) ) /* Universe Bios v2.1 (hack) */ \
-	ROM_LOAD16_WORD_SWAP_BIOS(14, "neodebug.rom", 0x00000, 0x020000, CRC(698ebb7d) SHA1(081c49aa8cc7dad5939833dc1b18338321ea0a07) ) /* Debug (Development) Bios */ \
-	ROM_LOAD16_WORD_SWAP_BIOS(15, "aes-bios.bin", 0x00000, 0x020000, CRC(d27a71f1) SHA1(1b3b22092f30c4d1b2c15f04d1670eb1e9fbea07) ) /* AES Console (Asia?) Bios */ \
+	ROM_LOAD16_WORD_SWAP_BIOS(14, "uni-bios.22",  0x00000, 0x020000, CRC(2d50996a) SHA1(5241a4fb0c63b1a23fd1da8efa9c9a9bd3b4279c) ) /* Universe Bios v2.2 (hack) */ \
+	ROM_LOAD16_WORD_SWAP_BIOS(15, "neodebug.rom", 0x00000, 0x020000, CRC(698ebb7d) SHA1(081c49aa8cc7dad5939833dc1b18338321ea0a07) ) /* Debug (Development) Bios */ \
+	ROM_LOAD16_WORD_SWAP_BIOS(16, "aes-bios.bin", 0x00000, 0x020000, CRC(d27a71f1) SHA1(1b3b22092f30c4d1b2c15f04d1670eb1e9fbea07) ) /* AES Console (Asia?) Bios */ \
 
 /* note you'll have to modify the last for lines of each block to use the extra bios roms,
    they're hacks / homebrew / console bios roms so Mame doesn't list them by default */
