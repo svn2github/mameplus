@@ -1569,15 +1569,9 @@ SYSTEM_BIOS_START( neogeo )
 	SYSTEM_BIOS_ADD( 6, "japan-s2",   "Japan MVS (Ver. 2)" )
 	SYSTEM_BIOS_ADD( 7, "japan-s1",   "Japan MVS (Ver. 1)" )
 
-	SYSTEM_BIOS_ADD( 8, "uni-bios.10","Unibios MVS (Hack, Ver. 1.0)" )
-	SYSTEM_BIOS_ADD( 9, "uni-bios.11","Unibios MVS (Hack, Ver. 1.1)" )
-	SYSTEM_BIOS_ADD(10, "uni-bios.12","Unibios MVS (Hack, Ver. 1.2)" )
-	SYSTEM_BIOS_ADD(11, "uni-bios.13","Unibios MVS (Hack, Ver. 1.3)" )
-	SYSTEM_BIOS_ADD(12, "uni-bios.20","Unibios MVS (Hack, Ver. 2.0)" )
-	SYSTEM_BIOS_ADD(13, "uni-bios.21","Unibios MVS (Hack, Ver. 2.1)" )
-	SYSTEM_BIOS_ADD(14, "uni-bios.22","Unibios MVS (Hack, Ver. 2.2)" )
-	SYSTEM_BIOS_ADD(15, "debug",      "Debug MVS (Hack?)" )
-	SYSTEM_BIOS_ADD(16, "asia-aes",   "Asia AES" )
+	SYSTEM_BIOS_ADD( 8, "uni-bios.22","Unibios MVS (Hack, Ver. 2.2)" )
+	SYSTEM_BIOS_ADD( 9, "debug",      "Debug MVS (Hack?)" )
+	SYSTEM_BIOS_ADD(10, "asia-aes",   "Asia AES" )
 SYSTEM_BIOS_END
 
 //#define ROM_LOAD16_WORD_SWAP_BIOS(bios,name,offset,length,hash)

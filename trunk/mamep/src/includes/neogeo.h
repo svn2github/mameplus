@@ -11,7 +11,7 @@
 
 #ifdef USE_NEOGEO_HACKS
 #define NEOGEO_BIOS_EURO	0	// Europe MVS (Ver. 2)
-#define NEOGEO_BIOS_DEBUG	15	// Debug MVS (Hack?)
+#define NEOGEO_BIOS_DEBUG	9	// Debug MVS (Hack?)
 #endif /* USE_NEOGEO_HACKS */
 
 
