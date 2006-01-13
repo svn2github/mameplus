@@ -1946,17 +1946,20 @@ input_port_entry *input_port_allocate(void (*construct_ipt)(input_port_init_para
 		remove_neogeo_territory = 1;
 		remove_neogeo_arcade = 1;
 
-		switch (system_bios)
+		if (Machine->gamedrv->bios)
 		{
-		// enable arcade/console and territory
-		case NEOGEO_BIOS_EURO:
-			remove_neogeo_arcade = 0;
-			remove_neogeo_territory = 0;
-			break;
+			switch (system_bios)
+			{
+			// enable arcade/console and territory
+			case NEOGEO_BIOS_EURO:
+				remove_neogeo_arcade = 0;
+				remove_neogeo_territory = 0;
+				break;
 
-		// enable territory
-		case NEOGEO_BIOS_DEBUG:
-			remove_neogeo_territory = 0;
+			// enable territory
+			case NEOGEO_BIOS_DEBUG:
+				remove_neogeo_territory = 0;
+			}
 		}
 
 		// enable arcade/console and territory

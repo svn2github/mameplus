@@ -50,47 +50,50 @@ MACHINE_INIT( neogeo )
 	memset (neogeo_ram16, 0, 0x10000);
 
 #ifdef USE_NEOGEO_HACKS
-	if (system_bios == NEOGEO_BIOS_EURO)
+	if (Machine->gamedrv->bios)
 	{
-	    /* Set up machine country */
-	    src = readinputport(5);
-	    res = src & 0x3;
-    
-	    /* Console/arcade mode */
-		    if (src & 0x04) 
-	    res |= 0x8000;
-    
-	    /* write the ID in the system BIOS ROM */
-	    mem16[0x0200] = res;
-    
-	    if (memcard_manager==1)
-	    {
-		    memcard_manager=0;
-		    mem16[0x11b1a/2] = 0x500a;
-	    }
-	    else
-	    {
-		    mem16[0x11b1a/2] = 0x1b6a;
-	    }
-	}
-
-	if (system_bios == NEOGEO_BIOS_DEBUG)
-	{
-		/* Set up machine country */
-		src = readinputport(5);
-		res = src & 0x3;
-
-		/* write the ID in the system BIOS ROM */
-		mem16[0x0200] = res;
-
-		if (memcard_manager==1)
+		if (system_bios == NEOGEO_BIOS_EURO)
 		{
-			memcard_manager=0;
-			mem16[0x11b1a/2] = 0x3cac;
+			/* Set up machine country */
+			src = readinputport(5);
+			res = src & 0x3;
+
+			/* Console/arcade mode */
+			if (src & 0x04) 
+				res |= 0x8000;
+
+			/* write the ID in the system BIOS ROM */
+			mem16[0x0200] = res;
+
+			if (memcard_manager==1)
+			{
+				memcard_manager=0;
+				mem16[0x11b1a/2] = 0x500a;
+			}
+			else
+			{
+				mem16[0x11b1a/2] = 0x1b6a;
+			}
 		}
-		else
+
+		if (system_bios == NEOGEO_BIOS_DEBUG)
 		{
-			mem16[0x1194c/2] = 0x1b6a;
+			/* Set up machine country */
+			src = readinputport(5);
+			res = src & 0x3;
+
+			/* write the ID in the system BIOS ROM */
+			mem16[0x0200] = res;
+
+			if (memcard_manager==1)
+			{
+				memcard_manager=0;
+				mem16[0x11b1a/2] = 0x3cac;
+			}
+			else
+			{
+				mem16[0x1194c/2] = 0x1b6a;
+			}
 		}
 	}
 
@@ -283,24 +286,27 @@ DRIVER_INIT( neogeo )
 		neogeo_has_trackball = 0;
 
 #ifdef USE_NEOGEO_HACKS
-		if (system_bios == NEOGEO_BIOS_EURO)
+		if (Machine->gamedrv->bios)
 		{
-			/* Remove memory check for now */
-			mem16[0x11b00/2] = 0x4e71;
-			mem16[0x11b02/2] = 0x4e71;
-			mem16[0x11b16/2] = 0x4ef9;
-			mem16[0x11b18/2] = 0x00c1;
-			mem16[0x11b1a/2] = 0x1b6a;
+			if (system_bios == NEOGEO_BIOS_EURO)
+			{
+				/* Remove memory check for now */
+				mem16[0x11b00/2] = 0x4e71;
+				mem16[0x11b02/2] = 0x4e71;
+				mem16[0x11b16/2] = 0x4ef9;
+				mem16[0x11b18/2] = 0x00c1;
+				mem16[0x11b1a/2] = 0x1b6a;
 
-			/* Patch bios rom, for Calendar errors */
-			mem16[0x11c14/2] = 0x4e71;
-			mem16[0x11c16/2] = 0x4e71;
-			mem16[0x11c1c/2] = 0x4e71;
-			mem16[0x11c1e/2] = 0x4e71;
+				/* Patch bios rom, for Calendar errors */
+				mem16[0x11c14/2] = 0x4e71;
+				mem16[0x11c16/2] = 0x4e71;
+				mem16[0x11c1c/2] = 0x4e71;
+				mem16[0x11c1e/2] = 0x4e71;
 
-			/* Rom internal checksum fails for now.. */
-			mem16[0x11c62/2] = 0x4e71;
-			mem16[0x11c64/2] = 0x4e71;
+				/* Rom internal checksum fails for now.. */
+				mem16[0x11c62/2] = 0x4e71;
+				mem16[0x11c64/2] = 0x4e71;
+			}
 		}
 #endif /* USE_NEOGEO_HACKS */
 	}
