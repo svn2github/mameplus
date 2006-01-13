@@ -1587,15 +1587,9 @@ SYSTEM_BIOS_END
 	ROM_LOAD16_WORD_SWAP_BIOS( 6, "sp-j2.rom",    0x00000, 0x020000, CRC(acede59c) SHA1(b6f97acd282fd7e94d9426078a90f059b5e9dd91) ) /* Japan, Older */ \
 	ROM_LOAD16_WORD_SWAP_BIOS( 7, "sp1.jipan.1024",0x00000, 0x020000,  CRC(9fb0abe4) SHA1(18a987ce2229df79a8cf6a84f968f0e42ce4e59d) ) /* Japan, Older */ \
 \
-	ROM_LOAD16_WORD_SWAP_BIOS( 8, "uni-bios.10",  0x00000, 0x020000, CRC(0ce453a0) SHA1(3b4c0cd26c176fc6b26c3a2f95143dd478f6abf9) ) /* Universe Bios v1.0 (hack) */ \
-	ROM_LOAD16_WORD_SWAP_BIOS( 9, "uni-bios.11",  0x00000, 0x020000, CRC(5dda0d84) SHA1(4153d533c02926a2577e49c32657214781ff29b7) ) /* Universe Bios v1.1 (hack) */ \
-	ROM_LOAD16_WORD_SWAP_BIOS(10, "uni-bios.12",  0x00000, 0x020000, CRC(4fa698e9) SHA1(682e13ec1c42beaa2d04473967840c88fd52c75a) ) /* Universe Bios v1.2 (hack) */ \
-	ROM_LOAD16_WORD_SWAP_BIOS(11, "uni-bios.13",  0x00000, 0x020000, CRC(b24b44a0) SHA1(eca8851d30557b97c309a0d9f4a9d20e5b14af4e) ) /* Universe Bios v1.3 (hack) */ \
-	ROM_LOAD16_WORD_SWAP_BIOS(12, "uni-bios.20",  0x00000, 0x020000, CRC(0c12c2ad) SHA1(37bcd4d30f3892078b46841d895a6eff16dc921e) ) /* Universe Bios v2.0 (hack) */ \
-	ROM_LOAD16_WORD_SWAP_BIOS(13, "uni-bios.21",  0x00000, 0x020000, CRC(8dabf76b) SHA1(c23732c4491d966cf0373c65c83c7a4e88f0082c) ) /* Universe Bios v2.1 (hack) */ \
-	ROM_LOAD16_WORD_SWAP_BIOS(14, "uni-bios.22",  0x00000, 0x020000, CRC(2d50996a) SHA1(5241a4fb0c63b1a23fd1da8efa9c9a9bd3b4279c) ) /* Universe Bios v2.2 (hack) */ \
-	ROM_LOAD16_WORD_SWAP_BIOS(15, "neodebug.rom", 0x00000, 0x020000, CRC(698ebb7d) SHA1(081c49aa8cc7dad5939833dc1b18338321ea0a07) ) /* Debug (Development) Bios */ \
-	ROM_LOAD16_WORD_SWAP_BIOS(16, "aes-bios.bin", 0x00000, 0x020000, CRC(d27a71f1) SHA1(1b3b22092f30c4d1b2c15f04d1670eb1e9fbea07) ) /* AES Console (Asia?) Bios */ \
+	ROM_LOAD16_WORD_SWAP_BIOS( 8, "uni-bios.22",  0x00000, 0x020000, CRC(2d50996a) SHA1(5241a4fb0c63b1a23fd1da8efa9c9a9bd3b4279c) ) /* Universe Bios v2.2 (hack) */ \
+	ROM_LOAD16_WORD_SWAP_BIOS( 9, "neodebug.rom", 0x00000, 0x020000, CRC(698ebb7d) SHA1(081c49aa8cc7dad5939833dc1b18338321ea0a07) ) /* Debug (Development) Bios */ \
+	ROM_LOAD16_WORD_SWAP_BIOS(10, "aes-bios.bin", 0x00000, 0x020000, CRC(d27a71f1) SHA1(1b3b22092f30c4d1b2c15f04d1670eb1e9fbea07) ) /* AES Console (Asia?) Bios */ \
 
 /* note you'll have to modify the last for lines of each block to use the extra bios roms,
    they're hacks / homebrew / console bios roms so Mame doesn't list them by default */
