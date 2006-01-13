@@ -4478,13 +4478,15 @@ matrimd	新豪血寺一族 闘婚 -Matrimelee (decrypted C)	しんごうけつじいちぞくとうこ
 matrimbl	新豪血寺一族 闘婚 -Matrimelee (海賊版)	しんごうけつじいちぞくとうこん	bootleg
 pnyaa	ポチッとにゃ～	ぽちっとにゃー	Aiky / Taito
 mslug5	メタルスラッグ5	めたるすらっぐ_5	SNK Playmore
-svcchaos	SNK VS. CAPCOM -SVC CHAOS (set 1)	えすえぬけいばーさすかぷこん	Playmore
-svchaosa	SNK VS. CAPCOM -SVC CHAOS (set 2)	えすえぬけいばーさすかぷこん	Playmore
+svcpcb	SNK VS. CAPCOM -SVC CHAOS (日本版 JAMMA PCB)	えすえぬけいばーさすかぷこん	Playmore
+svc	SNK VS. CAPCOM -SVC CHAOS (MVS)	えすえぬけいばーさすかぷこん	Playmore
 samsho5	サムライスピリッツ零 (set 1)	さむらいすぴりっつ_6_1ぜろ	Yuki Enterprise / SNK Playmore
 samsho5h	サムライスピリッツ零 (set 2)	さむらいすぴりっつ_6_1ぜろ	Yuki Enterprise / SNK Playmore
-kof2003	ザ・キング・オブ・ファイターズ 2003 (日本版 JAMMA PCB)	ざきんぐおぶふぁいたーず_10_2003	SNK Playmore
-kof2003a	ザ・キング・オブ・ファイターズ 2003 (海外 / USA版 MVS)	ざきんぐおぶふぁいたーず_10_2003	SNK Playmore
-samsh5sp	サムライスピリッツ零スペシャル	さむらいすぴりっつ_6_2ぜろすぺしゃる	Yuki Enterprise / SNK Playmore
+kf2k3pcb	ザ・キング・オブ・ファイターズ 2003 (日本版 JAMMA PCB)	ざきんぐおぶふぁいたーず_10_2003	SNK Playmore
+kof2003	ザ・キング・オブ・ファイターズ 2003 (海外 / USA版 MVS)	ざきんぐおぶふぁいたーず_10_2003	SNK Playmore
+samsh5sp	サムライスピリッツ零スペシャル (set 1 uncensored)	さむらいすぴりっつ_6_2ぜろすぺしゃる	Yuki Enterprise / SNK Playmore
+samsh5sh	サムライスピリッツ零スペシャル (set 2, censored)	さむらいすぴりっつ_6_2ぜろすぺしゃる	Yuki Enterprise / SNK Playmore
+samsh5sn	サムライスピリッツ零スペシャル (set 3 less censored)	さむらいすぴりっつ_6_2ぜろすぺしゃる	Yuki Enterprise / SNK Playmore
 jockeygp	ジョッキーグランプリ	じょっきーぐらんぷり	Sun Amusement / BrezzaSoft
 vliner	V-ライナー (set 1)	ぶいらいなー	Dyna / BreezaSoft
 vlinero	V-ライナー (set 2)	ぶいらいなー	Dyna / BreezaSoft
