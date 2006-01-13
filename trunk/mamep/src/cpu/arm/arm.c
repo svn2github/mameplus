@@ -1321,6 +1321,18 @@ static void HandleCoPro( UINT32 insn)
 				if (ARM_DEBUG_COPRO)
 					logerror("Cmd:  Add 0 + 1, result in 5 (%08x + %08x == %08x)\n", v0, v1, arm.coproRegister[5]);
 			}
+			else if (arm.coproRegister[crn]==1)
+			{
+				/* Unpack BCD */
+				int v0=BCDToDecimal(arm.coproRegister[0]);
+				int v1=BCDToDecimal(arm.coproRegister[1]);
+
+				/* Repack vcd */
+				arm.coproRegister[5]=DecimalToBCD(v0*v1);
+
+				if (ARM_DEBUG_COPRO)
+					logerror("Cmd:  Multiply 0 * 1, result in 5 (%08x * %08x == %08x)\n", v0, v1, arm.coproRegister[5]);
+			}
 			else if (arm.coproRegister[crn]==3)
 			{
 				/* Unpack BCD */
@@ -1335,7 +1347,7 @@ static void HandleCoPro( UINT32 insn)
 			}
 			else 
 			{
-				logerror("Unknown bcd copro command %08x\n", arm.coproRegister[crn]);
+				ui_popup("Unknown bcd copro command %08x\n", arm.coproRegister[crn]);
 			}
 		}
 

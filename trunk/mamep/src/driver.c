@@ -5164,13 +5164,15 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( matrimbl )	/* 0266 (c) 2002 bootleg */
 	DRIVER( pnyaa )		/* 0267 (c) 2003 Aiky / Taito */
 	DRIVER( mslug5 )	/* 0268 (c) 2003 Playmore */
-	DRIVER( svcchaos )	/* 0269 (c) 2003 Playmore / Capcom */
-	DRIVER( svchaosa )	/* 0269 (c) 2003 Playmore / Capcom */
+	DRIVER( svcpcb )	/* 0269 (c) 2003 Playmore / Capcom */
+	DRIVER( svc )		/* 0269 (c) 2003 Playmore / Capcom */
 	DRIVER( samsho5 )	/* 0270 (c) 2003 Playmore */
 	DRIVER( samsho5h )	/* 0270 (c) 2003 Playmore */
+	DRIVER( kf2k3pcb )	/* 0271 (c) 2003 Playmore */
 	DRIVER( kof2003 )	/* 0271 (c) 2003 Playmore */
-	DRIVER( kof2003a )	/* 0271 (c) 2003 Playmore */
 	DRIVER( samsh5sp )	/* 0272 (c) 2003 Playmore */
+	DRIVER( samsh5sh )	/* 0272 (c) 2003 Playmore */
+	DRIVER( samsh5sn )	/* 0272 (c) 2003 Playmore */
 
 
 	/* The BreezaSoft games don't have proper ID codes */

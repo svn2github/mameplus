@@ -2051,6 +2051,7 @@ static MACHINE_DRIVER_START( tattass )
 	MDRV_SOUND_ROUTE(1, "right", 1.0)
 MACHINE_DRIVER_END
 
+/* frequencies /dividers are unconfirmed */
 static MACHINE_DRIVER_START( nslasher )
 
 	/* basic machine hardware */
@@ -2058,7 +2059,7 @@ static MACHINE_DRIVER_START( nslasher )
 	MDRV_CPU_PROGRAM_MAP(nslasher_readmem,nslasher_writemem)
 	MDRV_CPU_VBLANK_INT(deco32_vbl_interrupt,1)
 
-	MDRV_CPU_ADD(Z80, 4000000)
+	MDRV_CPU_ADD(Z80, 28000000/4)
 	MDRV_CPU_PROGRAM_MAP(nslasher_sound,0)
 	MDRV_CPU_IO_MAP(nslasher_io_sound,0)
 
@@ -2079,20 +2080,20 @@ static MACHINE_DRIVER_START( nslasher )
 	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
 
-	MDRV_SOUND_ADD(YM2151, 32220000/9)
+	MDRV_SOUND_ADD(YM2151, 32220000/16)
 	MDRV_SOUND_CONFIG(ym2151_interface_nslasher)
-	MDRV_SOUND_ROUTE(0, "left", 0.42)
-	MDRV_SOUND_ROUTE(1, "right", 0.42)
+	MDRV_SOUND_ROUTE(0, "left", 0.40)
+	MDRV_SOUND_ROUTE(1, "right", 0.40)
 
 	MDRV_SOUND_ADD(OKIM6295, 32220000/32/132)
 	MDRV_SOUND_CONFIG(okim6295_interface_region_1)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 1.0)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 1.0)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.80)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.80)
 
 	MDRV_SOUND_ADD(OKIM6295, 32220000/16/132)
 	MDRV_SOUND_CONFIG(okim6295_interface_region_2)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.35)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.35)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.10)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.10)
 MACHINE_DRIVER_END
 
 /**********************************************************************************/
