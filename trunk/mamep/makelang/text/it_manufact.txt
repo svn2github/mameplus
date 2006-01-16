@@ -46,6 +46,10 @@ Sconosciuto
 hack
 modificato
 
+# Chewing Gum
+unknown
+sconosciuto
+
 # Sea Bass Fishing (JUET 971110 V0.001)
 A wave inc.
 
@@ -354,10 +358,6 @@ Craul Denshi
 Cream
 
 
-# Mirax
-Current Technologies
-
-
 # Hexa
 D. R. Korea
 
@@ -422,7 +422,7 @@ Digitrex Techstar
 Dong Bang Electron
 
 
-# Got-cha Mini Game Festival
+# Got-cha
 Dongsung
 
 
@@ -492,10 +492,6 @@ East Coast Coin Company
 
 # Gigandes
 East Technology
-
-
-# Gekisou (Japan)
-Eastern
 
 
 # Hoccer (set 1)
@@ -568,14 +564,6 @@ Enerdyne Technologies, Inc.
 
 # Act Raiser (Nintendo Super System)
 Enix
-
-
-# Noah's Ark
-Enter-Tech
-
-
-# Mini Vegas 4in1
-Entertainment Enterprises
 
 
 # Turbo Sub
@@ -654,10 +642,6 @@ Fuuki
 G.E.I.
 
 
-# Flame Gunner
-GAPS Inc.
-
-
 # Dambusters (set 2)
 GAT
 
@@ -668,10 +652,6 @@ GL
 
 # Super Cross 2 (Japan set 1)
 GM Shoji
-
-
-# Real Battle Mahjong King
-GMS
 
 
 # Abunai Houkago - Mou Matenai (Japan 890325)
@@ -842,10 +822,6 @@ Irem America
 Island Design
 
 
-# Quiz (Revision 2)
-Italian bootleg
-
-
 # Poker Night
 JMK
 
@@ -970,7 +946,7 @@ Leland Corp.
 Leprechaun
 
 
-# Star Wars Trilogy (ver A)
+# Star Wars Trilogy
 LucasArts
 
 
@@ -1210,7 +1186,7 @@ Omega System
 Omni
 
 
-# Shuttle Invader
+# Space Guerilla
 Omori
 
 
@@ -1356,10 +1332,6 @@ Romar
 
 # Attack Ufo
 Ryoto Electric Co.
-
-
-# Go 2000
-SA
 
 
 # Safari Rally (Japan)
@@ -1802,10 +1774,6 @@ Valadon Automation
 Vectorbeam
 
 
-# Card Line
-Veltmeijer
-
-
 # Pinball Champ '95 (bootleg?)
 Veltmeijer Automaten
 
@@ -1918,7 +1886,7 @@ Yang Cheng
 Yanyaka
 
 
-# Spectrum 2000 (Euro)
+# Spectrum 2000
 Yonatech
 
 
@@ -1988,9 +1956,5 @@ bootleg?
 
 # X-Files
 dgPIX Entertainment Inc.
-
-
-# Chewing Gum
-unknown
 
 

@@ -110,6 +110,10 @@ Combattimenti / Verticali
 Maze
 Labirinti
 
+# 1465
+Maze *Mature*
+Labirinti *Adulti*
+
 # 1468
 Maze / Digging
 Labirinti / Scavatore
@@ -129,6 +133,10 @@ Labirinti / Combattimenti
 # 1553
 Maze / Outline
 Labirinti / Contorni
+
+# 1568
+Maze / Outline *Mature*
+Labirinti / Contorni *Adulti*
 
 # 1571
 Maze / Shooter Large
@@ -158,6 +166,14 @@ Varie
 Misc. *Mature*
 Varie *Adulti*
 
+# 1833
+Misc. Betting
+Varie Azzardi
+
+# 1854
+Misc. Betting *Mature*
+Varie Azzardi *Adulti*
+
 # 1862
 Multiplay
 Multipartita
@@ -173,6 +189,10 @@ Flipper
 # 1919
 Pinball *Mature*
 Flipper *Adulti*
+
+# 1925
+Pinball / Pachinko *Mature*
+Flipper / Pachinko *Adulti*
 
 # 1931
 Platform / Fighter
@@ -210,6 +230,14 @@ Rompicapo
 Puzzle *Mature*
 Rompicapo *Adulti*
 
+# 2662
+Puzzle / Cards
+Rompicapo / Carte
+
+# 2665
+Puzzle / Cards *Mature*
+Rompicapo / Carte *Adulti*
+
 # 2677
 Puzzle / Drop
 Rompicapo / Caduta
@@ -241,6 +269,10 @@ Rompicapo / Contorni *Adulti*
 # 2890
 Puzzle / Sliding
 Rompicapo / Scorrimenti
+
+# 2900
+Puzzle / Sliding *Mature*
+Rompicapo / Scorrimenti *Adulti*
 
 # 2904
 Puzzle / Toss
@@ -396,7 +428,7 @@ Spari / Camminando
 
 # 4734
 Sports
-Sport
+Sports
 
 # 4758
 Sports / Armwrestling
@@ -521,38 +553,6 @@ Da Tavolo / Shougi
 # 5693
 Unplayable
 Ingiocabili
-
-# 1465
-Maze *Mature*
-
-
-# 1568
-Maze / Outline *Mature*
-
-
-# 1833
-Misc. Betting
-
-
-# 1854
-Misc. Betting *Mature*
-
-
-# 1925
-Pinball / Pachinko *Mature*
-
-
-# 2662
-Puzzle / Cards
-
-
-# 2665
-Puzzle / Cards *Mature*
-
-
-# 2900
-Puzzle / Sliding *Mature*
-
 
 # 3008
 Quiz / French

@@ -50,7 +50,7 @@
   Axis %d (%s)%s\n
   Asse %d (%s)%s\n
 
-# windows/config.c: 533
+# windows/config.c: 538
  %s running parameters
  %s parametri funzionanti
 
@@ -126,6 +126,10 @@ Opzioni configurazione
 ERROR     %s\n
 ERRORE    %s\n
 
+# windows/video.c: 537
+Enumerating video device %s\n
+Enumerazione periferica video %s\n
+
 # windows/wind3d.c: 718
 Error creating Direct3D7 device: %08x\n
 Errore creando device Direct3D7: %08x\n 
@@ -193,6 +197,10 @@ Errore creando la superficie x lineescansione[%d]: %08x\n
 # windows/wind3d.c: 1495
 Error creating texture surface: %08x\n
 Errore creando la superfice trame: %08x\n
+
+# windows/video.c: 613
+Error enumerating DirectDraw: %08x\n
+Errore enumerando DirectDraw: %08x\n
 
 # windows/wind3d.c: 1000 windows/winddraw.c: 572
 Error enumerating modes: %08x\n
@@ -438,7 +446,7 @@ Memoria Esaurita!\n
 PARTKNOWN %s\n
 PARTECONOSCIUTA %s\n
 
-# windows/config.c: 581
+# windows/config.c: 586
 Playing back previously recorded game %s (%s) [press return]\n
 Riproduci un gioco precedentemente registrato %s (%s) [premi invio]\n
 
@@ -497,6 +505,10 @@ Superfice scal. creata: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 # windows/wind3d.c: 1288
 Scanline surface[%i] created: %s\n
 Superficie interlinea[%i] creata: %s\n
+
+# windows/video.c: 625
+Screen %s not found\n
+Scehermo %s non trovato\n
 
 # windows/sound.c: 238, 242
 Sound buffer: overflows=%d underflows=%d\n
@@ -582,7 +594,7 @@ Incapace tracciare a mappa preprocesso: %08x\n
 Usage:  MAME gamename [options]\n\n
 Uso: MAME nomegioco: [opzioni]\n\n
 
-# windows/config.c: 540
+# windows/config.c: 545
 Usage: %s [game] [options]\nOptions:\n
 Uso: %s [gioco] [opzioni]\nOpzioni:\n
 
@@ -646,6 +658,10 @@ Attenzione: sto usando il metodo precedente per il blending delle lineescansione
 Windows Direct3D 2D video options
 Windows Direct3D 2D opzioni video
 
+# windows/video.c: 242
+Windows misc options
+Varie opzioni Windows
+
 # windows/fileio.c: 115
 Windows path and directory options
 Opzioni percoso Windows e cartelle
@@ -670,7 +686,7 @@ Opzioni video Windows
 \"%s\" controller support enabled\n
 \"%s\" supporto controllo abilitato\n
 
-# windows/config.c: 634
+# windows/config.c: 639
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" approssivativamente corrispondoni ai seguenti\ngiochi supportati (prima le migliori corrispondenze):\n\n
 
@@ -818,6 +834,14 @@ cartella per Fondali (Overlays etc.)
 directory for hard drive image difference files
 cartella per gli archivi delle differenze immagini dischi fissi
 
+# windows/fileio.c: 140
+directory for ips files
+cartella per archivi ips
+
+# windows/fileio.c: 142
+directory for localized language files
+cartella per archivi linguaggi localizzati
+
 # windows/fileio.c: 136
 directory for screenshots (.png format)
 cartella per le copieschermo (formato .png)
@@ -910,6 +934,10 @@ abilita (tastiera|mouse|leva|pistola) se è presente un controllo a sfera
 enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is present
 abilita (tastiera|mouse|leva|pistola) se è presente un controllo a leva analogica
 
+# windows/config.c: 258
+enable automatic restore at startup and save at exit
+abilita recupero automatico avvio e salvataggio uscita
+
 # windows/input.c: 225
 enable dual lightgun input
 abilita entrata doppia pistola
@@ -929,6 +957,10 @@ abilita l'entrata pistola
 # windows/input.c: 222
 enable mouse input
 abilita l'entrata mouse
+
+# windows/input.c: 234
+enable pointing stick input
+abilita entrata leva puntamento
 
 # windows/wind3dfx.c: 190
 enable rotation of effects for rotated games
@@ -950,9 +982,17 @@ abilita/disbilita debugger (solo se disponibile)
 enable/disable loading of configfiles
 abilita/disabilita la lettura degli archivi configurazione
 
+# windows/config.c: 290
+enable/disable local language game list
+abilita/disabilita lista linguaggi giochi locale
+
 # windows/config.c: 234
 enable/disable sound and sound CPUs
 abilita/disabilita suoni e CPU sonore
+
+# windows/config.c: 237
+enable/disable volume auto adjust
+abilita/disabilita autoregolazione volume
 
 # windows/video.c: 228
 enforce aspect ratio
@@ -962,11 +1002,11 @@ forza rapporto proporzioni
 error invalid value for %s: %s\n
 errore valore non valido per %s: %s\n
 
-# windows/config.c: 483
+# windows/config.c: 488
 error on rc creation\n
 errore nella creazione rc\n
 
-# windows/config.c: 490
+# windows/config.c: 495
 error while parsing cmdline\n
 errore durante l'analisi della linea comandi\n
 
@@ -982,7 +1022,7 @@ errore: %s richiede un argomento\n
 error: couldn't open file: %s\n
 errore: non posso aprire l'archivio: %s\n
 
-# windows/config.c: 872
+# windows/config.c: 870
 error: duplicate gamename: %s\n
 errore: nomegioco dupplicato: %s\n
 
@@ -998,6 +1038,10 @@ errore: valore non valido per %s: %s\n
 error: invalid value for aspect ratio: %s\n
 errore: valore non valido per rapporto proporzioni: %s\n
 
+# windows/video.c: 315
+error: invalid value for cleanstretch: %s\n
+errore: valore invalido x cleanstretch: %s\n
+
 # windows/wind3dfx.c: 287
 error: invalid value for d3dprescale: %s\n
 errore: val scorretto per d3dprescale: %s\n
@@ -1009,6 +1053,10 @@ errore: valore non valido per digitale: %s -- i valori validi sono:\n
 # windows/video.c: 397
 error: invalid value for effect: %s\n
 errore: valore non valido per l'effetto: %s\n
+
+# windows/video.c: 372
+error: invalid value for frames_to_run: %s\n
+errore: valore invalido per frames_to_run: %s\n
 
 # windows/config.c: 175
 error: invalid value for language: %s\nUse %s\n
@@ -1026,7 +1074,31 @@ errore: valore non valido per la tavolozza: %s\n
 error: invalid value for resolution: %s\n
 errore: valore non valido per la risoluzione: %s\n
 
-# windows/config.c: 888
+# windows/rc.c: 806
+error: malloc failed for %s\n
+errore: malloc fallita per %s\n
+
+# windows/rc.c: 161
+error: malloc failed for: struct rc_struct\n
+errore: malloc fallita per: struct rc_struct\n
+
+# windows/rc.c: 604
+error: malloc failed in rc_parse_commadline\n
+errore: malloc fallita in rc_parse_commadline\n
+
+# windows/rc.c: 201
+error: malloc failed in rc_register_option\n
+errore: malloc fallita in rc_register_option\n
+
+# windows/config.c: 998
+error: malloc failed in win_dirname\n
+errore: malloc fallita in win_dirname\n
+
+# windows/config.c: 1038
+error: malloc failed in win_strip_extension\n
+errore: malloc fallita in win_strip_extension\n
+
+# windows/config.c: 886
 error: no gamename given in %s\n
 errore: non è stato dato il nomegioco in %s\n
 
@@ -1042,11 +1114,15 @@ errore: opzione sconosciuta %s, alla linea %d dell'archivio: %s\n
 error: unknown option %s\n
 erore: opzione sconosciuta %s\n
 
-# windows/config.c: 556
+# windows/rc.c: 861
+error: unknown option type: %d, this should not happen!\n
+errore: tipo opzione sconosciuto: %d, questo non dovrebbe accadere!\n
+
+# windows/config.c: 561
 failed to open %s for playback\n
 fallita apertura di %s per riproduzione\n
 
-# windows/config.c: 689
+# windows/config.c: 687
 failed to open %s for recording\n
 fallita apertura di %s per registrazione\n
 
@@ -1102,6 +1178,10 @@ metodo interpolazione
 invalid
 invalido
 
+# windows/config.c: 260
+ips datfile name
+nome archivio dati ips
+
 # windows/fronthlp.c: 730
 is bad\n
 è sbagliato\n
@@ -1113,6 +1193,10 @@ is best available\n
 # windows/fronthlp.c: 735
 is good\n
 è corretto\n
+
+# windows/fronthlp.c: 745
+is missing optional files\n
+è mancante degli archivi opzionali\n
 
 # windows/input.c: 224, 815, 1198
 lightgun
@@ -1154,6 +1238,10 @@ invio il tracciato errori al debugger
 paddle
 manopola
 
+# windows/config.c: 424
+parsing %s...
+analizzo %s...
+
 # windows/fileio.c: 125, 127
 path to ini files
 percorso per archivi ini
@@ -1185,6 +1273,10 @@ preferisci RDTSC a QueryPerformanceCounter per le temporizzazioni
 # windows/wind3dfx.c: 191
 prescale effect
 effetto prescalatura
+
+# windows/config.c: 432
+problem parsing %s\n
+problema analizzando %s\n
 
 # windows/config.c: 252
 record an input file
@@ -1222,7 +1314,7 @@ ruoto lo schermo in senso orario
 run in a window/run on full screen
 esegui in una finestra/esegui a schermo pieno
 
-# windows/config.c: 625
+# windows/config.c: 630
 running %s (%s) [press return]
 sto avviando %s (%s) [premi invio]
 
@@ -1249,6 +1341,10 @@ effetti scalatura superfice creati: %s\n
 # windows/wind3dfx.c: 189
 scanline intensity
 intensità interlinee
+
+# windows/config.c: 250
+script for debugger (only if available)
+script per debugger (solo se disponibile)
 
 # windows/config.c: 289
 select translation language
@@ -1366,6 +1462,10 @@ specifica l'effetto blitting
 specify the blitting effects
 specifica gli effetti blitting
 
+# windows/video.c: 220
+specify which screen to use
+specifica che schermo usare
+
 # windows/video.c: 227
 start out maximized
 parti massimizzato
@@ -1482,14 +1582,6 @@ anno, produttore e nome completo
 CRC-32s
 
 
-# windows/video.c: 537
-Enumerating video device %s\n
-
-
-# windows/video.c: 613
-Error enumerating DirectDraw: %08x\n
-
-
 # windows/input.c: 1960
 J%d %s D
 
@@ -1524,101 +1616,5 @@ Mouse %d Z
 
 # windows/input.c: 1852, 1862
 Mouse %s
-
-
-# windows/config.c: 429
-Parsing %s : ERROR\n
-
-
-# windows/config.c: 439
-Parsing %s : N/A\n
-
-
-# windows/config.c: 434
-Parsing %s : OK\n
-
-
-# windows/video.c: 625
-Screen %s not found\n
-
-
-# windows/video.c: 242
-Windows misc options
-
-
-# windows/fileio.c: 140
-directory for ips files
-
-
-# windows/fileio.c: 142
-directory for localized language files
-
-
-# windows/config.c: 258
-enable automatic restore at startup and save at exit
-
-
-# windows/input.c: 234
-enable pointing stick input
-
-
-# windows/config.c: 290
-enable/disable local language game list
-
-
-# windows/config.c: 237
-enable/disable volume auto adjust
-
-
-# windows/video.c: 315
-error: invalid value for cleanstretch: %s\n
-
-
-# windows/video.c: 372
-error: invalid value for frames_to_run: %s\n
-
-
-# windows/rc.c: 806
-error: malloc failed for %s\n
-
-
-# windows/rc.c: 161
-error: malloc failed for: struct rc_struct\n
-
-
-# windows/rc.c: 604
-error: malloc failed in rc_parse_commadline\n
-
-
-# windows/rc.c: 201
-error: malloc failed in rc_register_option\n
-
-
-# windows/config.c: 1000
-error: malloc failed in win_dirname\n
-
-
-# windows/config.c: 1040
-error: malloc failed in win_strip_extension\n
-
-
-# windows/rc.c: 861
-error: unknown option type: %d, this should not happen!\n
-
-
-# windows/config.c: 260
-ips datfile name
-
-
-# windows/fronthlp.c: 745
-is missing optional files\n
-
-
-# windows/config.c: 250
-script for debugger (only if available)
-
-
-# windows/video.c: 220
-specify which screen to use
 
 
