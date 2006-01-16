@@ -171,6 +171,13 @@ const ICONDATA g_iconData[] =
 	{ 0 }
 };
 
+EXTFOLDER_TEMPLATE extFavorite =
+{
+	"Favorites",
+	"golden",
+	"cust2"
+};
+
 /*
 const char g_szPlayGameString[] = "&Play %s";
 const char g_szGameCountString[] = "%d games";

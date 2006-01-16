@@ -137,6 +137,7 @@ static LRESULT CALLBACK TreeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 
 static int InitExtraFolders(void);
 static void FreeExtraFolders(void);
+static BOOL RegistExtraFolder(const char *name, LPEXFOLDERDATA *fExData, int msgcat, int icon, int subicon);
 static void SetExtraIcons(char *name, int *id);
 static BOOL TryAddExtraFolderAndChildren(int parent_index);
 
@@ -1816,9 +1817,10 @@ static void DeleteFolder(LPTREEFOLDER lpFolder)
 /* Can be called to re-initialize the array of treeFolders */
 BOOL InitFolders(void)
 {
-	int 			i = 0;
-	DWORD			dwFolderFlags;
-	LPFOLDERDATA	fData = 0;
+	int             i = 0;
+	DWORD           dwFolderFlags;
+	LPFOLDERDATA    fData = 0;
+	BOOL            doCreateFavorite;
 
 	if (treeFolders != NULL)
 	{
@@ -1854,19 +1856,58 @@ BOOL InitFolders(void)
 		AddFolder(NewFolder(fData->m_lpTitle, 0, TRUE, fData->m_nFolderId, -1,
 		                    fData->m_nIconId, dwFolderFlags));
 	}
-	
+
 	numExtraFolders = InitExtraFolders();
+	doCreateFavorite = TRUE;
 
 	for (i = 0; i < numExtraFolders; i++)
 	{
-		LPEXFOLDERDATA  fExData = ExtraFolderData[i];
+		if (mame_stricmp(ExtraFolderData[i]->m_szTitle, extFavorite.title) == 0)
+			doCreateFavorite = FALSE;
+	}
+
+	dprintf("I %shave %s", doCreateFavorite ? "don't " : "", extFavorite.title);
+	if (doCreateFavorite)
+	{
+		int rooticon, subicon;
+		char *filename;
+		char *rootname = strdup(extFavorite.root_icon);
+		char *subname = strdup(extFavorite.sub_icon);
+
+		filename = malloc(strlen(extFavorite.title) + sizeof (".ini"));
+		sprintf(filename, "%s.ini", extFavorite.title);
+
+		SetExtraIcons(rootname, &rooticon);
+		SetExtraIcons(subname, &subicon);
+
+		if (RegistExtraFolder(filename, &ExtraFolderData[numExtraFolders], UI_MSG_EXTRA + numExtraFolders, rooticon, subicon))
+			numExtraFolders++;
+		else
+			doCreateFavorite = FALSE;
+
+		free(filename);
+		free(rootname);
+		free(subname);
+	}
+
+	for (i = 0; i < numExtraFolders; i++)
+	{
+		LPEXFOLDERDATA fExData = ExtraFolderData[i];
+		LPTREEFOLDER   lpFolder;
 
 		// OR in the saved folder flags
 		dwFolderFlags = fExData->m_dwFlags | GetFolderFlags(fExData->m_szTitle);
 		// create the folder
 		//dprintf("creating top level custom folder with icon %i",fExData->m_nIconId);
-		AddFolder(NewFolder(fExData->m_szTitle,UI_MSG_EXTRA + (fExData->m_nFolderId - MAX_FOLDERS),TRUE,fExData->m_nFolderId,fExData->m_nParent,
-		                    fExData->m_nIconId,dwFolderFlags));
+		lpFolder = NewFolder(fExData->m_szTitle,UI_MSG_EXTRA + (fExData->m_nFolderId - MAX_FOLDERS),TRUE,fExData->m_nFolderId,fExData->m_nParent,
+		                    fExData->m_nIconId,dwFolderFlags);
+		AddFolder(lpFolder);
+
+		if (doCreateFavorite && i == numExtraFolders - 1)
+		{
+			if (TrySaveExtraFolder(lpFolder))
+				dprintf("created: %s.ini", fExData->m_szTitle);
+		}
 	}
 
 	CreateAllChildFolders();
@@ -2154,16 +2195,48 @@ LPFOLDERDATA FindFilter(DWORD folderID)
 
 /**************************************************************************/
 
+static BOOL RegistExtraFolder(const char *name, LPEXFOLDERDATA *fExData, int msgcat, int icon, int subicon)
+{
+	char *title = strdup(name);
+	char *ext = strrchr(title, '.');
+
+	if (ext && *(ext + 1) && !mame_stricmp(ext + 1, "ini"))
+	{
+		*fExData = malloc(sizeof(EXFOLDERDATA));
+		if (*fExData) 
+		{
+			*ext = '\0';
+
+			assign_msg_catategory(msgcat, title);
+
+			memset(*fExData, 0, sizeof(EXFOLDERDATA));
+
+			strncpy((*fExData)->m_szTitle, title, 63);
+			free(title);
+
+			(*fExData)->m_nFolderId   = next_folder_id++;
+			(*fExData)->m_nParent	  = -1;
+			(*fExData)->m_dwFlags	  = F_CUSTOM;
+			(*fExData)->m_nIconId	  = icon ? -icon : IDI_FOLDER;
+			(*fExData)->m_nSubIconId  = subicon ? -subicon : IDI_FOLDER;
+
+			return TRUE;
+		}
+	}
+
+	free(title);
+
+	return FALSE;
+}
+
 static int InitExtraFolders(void)
 {
-	struct stat     stat_buffer;
+	struct stat        stat_buffer;
 	struct _finddata_t files;
-	int             i, count = 0;
-	long            hLong;
-	char*           ext;
-	char            buf[256];
-	char            curdir[MAX_PATH];
-	const char*     dir = GetFolderDir();
+	int                count = 0;
+	long               hLong;
+	char               curdir[MAX_PATH];
+	const char        *dir = GetFolderDir();
 
 	memset(ExtraFolderData, 0, MAX_EXTRA_FOLDERS * sizeof(LPEXFOLDERDATA));
 
@@ -2184,90 +2257,65 @@ static int InitExtraFolders(void)
 
 	hLong = _findfirst("*", &files);
 
-	for (i = 0; i < MAX_EXTRA_FOLDERS; i++)
-	{
-		ExtraFolderIcons[i] = NULL;
-	}
-
+	memset(ExtraFolderIcons, 0, sizeof ExtraFolderIcons);
 	numExtraIcons = 0;
 
 	while (!_findnext(hLong, &files))
 	{
-		if ((files.attrib & _A_SUBDIR) == 0)
+		int rooticon, subicon;
+		FILE *fp;
+		char buf[256];
+
+		if ((files.attrib & _A_SUBDIR) != 0)
+			continue;
+
+		if ((fp = fopen(files.name, "r")) == NULL)
+			continue;
+
+		rooticon = 0;
+		subicon = 0;
+
+		while (fgets(buf, 256, fp))
 		{
-			FILE *fp;
+			char *p;
 
-			fp = fopen(files.name, "r");
-			if (fp != NULL)
+			if (buf[0] != '[')
+				continue;
+
+			p = strchr(buf, ']');
+			if (p == NULL)
+				continue;
+
+			*p = '\0';
+			if (!strcmp(&buf[1], "FOLDER_SETTINGS"))
 			{
-				int icon[2] = { 0, 0 };
-				char *p, *name;
-
 				while (fgets(buf, 256, fp))
 				{
-					if (buf[0] == '[')
+					char *name = strtok(buf, " =\r\n");
+					if (name == NULL)
+						break;
+
+					if (!strcmp(name, "RootFolderIcon"))
 					{
-						p = strchr(buf, ']');
-						if (p == NULL)
-							continue;
+						name = strtok(NULL, " =\r\n");
+						if (name != NULL)
+							SetExtraIcons(name, &rooticon);
+					}
 
-						*p = '\0';
-						name = &buf[1];
-						if (!strcmp(name, "FOLDER_SETTINGS"))
-						{
-							while (fgets(buf, 256, fp))
-							{
-								name = strtok(buf, " =\r\n");
-								if (name == NULL)
-									break;
-
-								if (!strcmp(name, "RootFolderIcon"))
-								{
-									name = strtok(NULL, " =\r\n");
-									if (name != NULL)
-										SetExtraIcons(name, &icon[0]);
-								}
-								if (!strcmp(name, "SubFolderIcon"))
-								{
-									name = strtok(NULL, " =\r\n");
-									if (name != NULL)
-										SetExtraIcons(name, &icon[1]);
-								}
-							}
-							break;
-						}
+					if (!strcmp(name, "SubFolderIcon"))
+					{
+						name = strtok(NULL, " =\r\n");
+						if (name != NULL)
+							SetExtraIcons(name, &subicon);
 					}
 				}
-				fclose(fp);
-
-				strcpy(buf, files.name);
-				ext = strrchr(buf, '.');
-
-				if (ext && *(ext + 1) && !mame_stricmp(ext + 1, "ini"))
-				{
-					ExtraFolderData[count] = malloc(sizeof(EXFOLDERDATA));
-					if (ExtraFolderData[count]) 
-					{
-						*ext = '\0';
-
-						assign_msg_catategory(UI_MSG_EXTRA + count, buf);
-
-						memset(ExtraFolderData[count], 0, sizeof(EXFOLDERDATA));
-
-						strncpy(ExtraFolderData[count]->m_szTitle, buf, 63);
-						ExtraFolderData[count]->m_nFolderId   = next_folder_id++;
-						ExtraFolderData[count]->m_nParent	  = -1;
-						ExtraFolderData[count]->m_dwFlags	  = F_CUSTOM;
-						ExtraFolderData[count]->m_nIconId	  = icon[0] ? -icon[0] : IDI_FOLDER;
-						ExtraFolderData[count]->m_nSubIconId  = icon[1] ? -icon[1] : IDI_FOLDER;
-						//dprintf("extra folder with icon %i, subicon %i",
-						//ExtraFolderData[count]->m_nIconId,
-						//ExtraFolderData[count]->m_nSubIconId);
-						count++;
-					}
-				}
+				break;
 			}
 		}
+		fclose(fp);
+
+		if (RegistExtraFolder(files.name, &ExtraFolderData[count], UI_MSG_EXTRA + count, rooticon, subicon))
+			count++;
 	}
 
 	_chdir(curdir);

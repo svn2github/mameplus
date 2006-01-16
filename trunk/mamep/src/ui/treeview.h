@@ -65,9 +65,17 @@ typedef struct
 	BOOL m_bExpectedResult;				/* Expected query result */
 } FILTER_ITEM, *LPFILTER_ITEM;
 
+typedef struct
+{
+	const char *title;
+	const char *root_icon;
+	const char *sub_icon;
+} EXTFOLDER_TEMPLATE;
+
 /* in layout.c */
 extern FOLDERDATA g_folderData[];
 extern FILTER_ITEM g_filterList[];
+extern EXTFOLDER_TEMPLATE extFavorite;
 
 
 /***************************************************************************
