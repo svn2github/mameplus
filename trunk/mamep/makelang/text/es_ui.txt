@@ -1,6 +1,6 @@
 # ui/mame32.rc: 384
                                 
-Traducido por Juanen <juanenrak@gmail.com> 02-12-2005
+Traducido por Juanen <juanenrak@gmail.com> 05-01-2006
 
 # ui/properties.c: 966
 %d colors 
@@ -462,6 +462,10 @@ EjesId
 BIOS
 BIOS
 
+# ui/properties.c: 1040
+BIOS missing
+BIOS no disponible
+
 # ui/mame32.rc: 826 ui/½Æ»s 
 Backdrops
 Fondos
@@ -541,6 +545,10 @@ Botón (P o 6)
 # ui/paletteedit.c: 122
 Button (S or 7)
 Botón (S o 7)
+
+# ui/treeview.c: 1358
+Button 1
+Botón 1
 
 # ui/treeview.c: 1367
 Buttons 10
@@ -850,6 +858,10 @@ Visualizar los objetos usando íconos grandes.
 Display items by using small icons.
 Visualizar los objetos usando íconos pequeños.
 
+# ui/mame32.rc: 1447 ui/½Æ»s 
+Display the driver properties of the selected game
+Pantalla de propiedades de drivers del juego seleccionado
+
 # ui/mame32.rc: 1510 ui/½Æ»s 
 Display the properties of the currently selected folder
 Mostrar propiedades de la carpeta seleccionada
@@ -909,6 +921,14 @@ Dibujar cada imagen
 # ui/mame32.rc: 868 ui/½Æ»s 
 Draw translucent vectors
 Dibujar vectores translúcidos
+
+# ui/layout.c: 57 ui/win32ui.c: 800
+Driver
+Driver
+
+# ui/mame32.rc: 501 ui/½Æ»s 
+Driver:
+Driver:
 
 # ui/mame32.rc: 759 ui/½Æ»s 
 Dual lightgun
@@ -1122,9 +1142,17 @@ Corrección Gamma
 General
 General
 
+# ui/properties.c: 1070
+Global driver options\nCustom options used by all games in the %s
+Opciones globales de driver\nOpciones personalizadas usados por todos los juegos en el %s
+
 # ui/properties.c: 1064
 Global game options\nDefault options used by all games
 Opciones globales del juego\nOpciones por defecto utilizados por todos los juegos
+
+# ui/properties.c: 1068
+Global vector options\nCustom options used by all games in the Vector
+Opciones globales de vector\nOpciones personalizadas usados por todos los juegos vectoriales
 
 # ui/mame32.rc: 393 ui/½Æ»s 
 Go to Microsoft's DirectX Web Page
@@ -1510,6 +1538,10 @@ Pasado
 Pause Brightness
 Brillo de Pausa
 
+# ui/treeview.c: 1381
+Pedal
+Pedal
+
 # ui/mame32.rc: 1071 ui/½Æ»s 
 Pedal device
 Dispositivo - Pedal
@@ -1541,6 +1573,10 @@ Reproducir un juego grabado
 # ui/win32ui.c: 796
 Playcount
 Partidas Jugadas
+
+# ui/treeview.c: 1350
+Player 1
+Jugador 1
 
 # ui/treeview.c: 1351
 Players 2
@@ -1581,6 +1617,10 @@ Prescala
 # ui/win32ui.c: 3748, 6665, 6690
 Proper&ties of %s
 Prop&iedades de %s
+
+# ui/mame32.rc: 65, 180 ui/win32ui.c: 3710 ui/½Æ»s 
+Proper&ties of Driver
+Propie&dades del Driver
 
 # ui/properties.c: 713, 804
 Propery Sheet Error %d %X
@@ -2557,44 +2597,4 @@ configuración cuando cierre.\n\n
 # ui/dialogs.c: 117
 the next time MAME32 is run.\n\n
 la próxima vez MAME32 Plus! se ejecutara.\n\n
-
-# ui/properties.c: 1040
-BIOS missing
-
-
-# ui/treeview.c: 1358
-Button 1
-
-
-# ui/mame32.rc: 1447 ui/½Æ»s 
-Display the driver properties of the selected game
-
-
-# ui/layout.c: 57 ui/win32ui.c: 800
-Driver
-
-
-# ui/mame32.rc: 501 ui/½Æ»s 
-Driver:
-
-
-# ui/properties.c: 1070
-Global driver options\nCustom options used by all games in the %s
-
-
-# ui/properties.c: 1068
-Global vector options\nCustom options used by all games in the Vector
-
-
-# ui/treeview.c: 1381
-Pedal
-
-
-# ui/treeview.c: 1350
-Player 1
-
-
-# ui/mame32.rc: 65, 180 ui/win32ui.c: 3710 ui/½Æ»s 
-Proper&ties of Driver
-
 

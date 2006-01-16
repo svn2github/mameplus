@@ -322,6 +322,10 @@ Craul Denshi
 Cream
 Cream
 
+# Mirax
+Current Technologies
+Current Technologies
+
 # Hexa
 D. R. Korea
 D. R. Korea
@@ -458,6 +462,10 @@ East Coast Coin Company
 East Technology
 East Technology
 
+# Gekisou (Japan)
+Eastern
+Eastern
+
 # Hoccer (set 1)
 Eastern Micro Electronics, Inc.
 Eastern Micro Electronics, Inc.
@@ -529,6 +537,14 @@ Enerdyne Technologies, Inc.
 # Act Raiser (Nintendo Super System)
 Enix
 Enix
+
+# Noah's Ark
+Enter-Tech
+Enter-Tech
+
+# Mini Vegas 4in1
+Entertainment Enterprises
+Entertainment Enterprises
 
 # Turbo Sub
 Entertainment Sciences
@@ -606,6 +622,10 @@ Fuuki
 G.E.I.
 G.E.I.
 
+# Flame Gunner
+GAPS Inc.
+GAPS Inc.
+
 # Dambusters (set 2)
 GAT
 GAT
@@ -617,6 +637,10 @@ GL
 # Super Cross 2 (Japan set 1)
 GM Shoji
 GM Shoji
+
+# Real Battle Mahjong King
+GMS
+GMS
 
 # Abunai Houkago - Mou Matenai (Japan 890325)
 GREEN SOFT
@@ -785,6 +809,10 @@ Irem America
 # Tut's Tomb
 Island Design
 Island Design
+
+# Quiz (Revision 2)
+Italian bootleg
+Italian bootleg
 
 # Poker Night
 JMK
@@ -1314,6 +1342,10 @@ Romar
 Ryoto Electric Co.
 Ryoto Electric Co.
 
+# Go 2000
+SA
+SA
+
 # Safari Rally (Japan)
 SNK
 SNK
@@ -1766,6 +1798,10 @@ Valadon Automation
 Vectorbeam
 Vectorbeam
 
+# Card Line
+Veltmeijer
+Veltmeijer
+
 # Pinball Champ '95 (bootleg?)
 Veltmeijer Automaten
 Veltmeijer Automaten
@@ -1957,40 +1993,4 @@ hackeado
 # Chewing Gum
 unknown
 desconocido
-
-# Mirax
-Current Technologies
-
-
-# Gekisou (Japan)
-Eastern
-
-
-# Noah's Ark
-Enter-Tech
-
-
-# Mini Vegas 4in1
-Entertainment Enterprises
-
-
-# Flame Gunner
-GAPS Inc.
-
-
-# Real Battle Mahjong King
-GMS
-
-
-# Quiz (Revision 2)
-Italian bootleg
-
-
-# Go 2000
-SA
-
-
-# Card Line
-Veltmeijer
-
 

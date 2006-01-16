@@ -486,6 +486,18 @@ Fuera de memoria!\n
 PARTKNOWN %s\n
 PARTE CONOCIDA %s\n
 
+# windows/config.c: 429
+Parsing %s : ERROR\n
+Analizando %s : ERROR\n
+
+# windows/config.c: 439
+Parsing %s : N/A\n
+Analizando %s : N/A\n
+
+# windows/config.c: 434
+Parsing %s : OK\n
+Analizando %s : OK\n
+
 # windows/config.c: 581
 Playing back previously recorded game %s (%s) [press return]\n
 Reproduciendo grabacción previa del juego %s (%s) [pulsa esc]\n
@@ -1609,16 +1621,4 @@ color marco de ventana (medio)
 # windows/fronthlp.c: 66
 year, manufacturer and full name
 Año, creador y nombre completo
-
-# windows/config.c: 429
-Parsing %s : ERROR\n
-
-
-# windows/config.c: 439
-Parsing %s : N/A\n
-
-
-# windows/config.c: 434
-Parsing %s : OK\n
-
 
