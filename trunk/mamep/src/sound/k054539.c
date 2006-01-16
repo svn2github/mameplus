@@ -449,6 +449,7 @@ static void K054539_irq(void *param)
 
 static void K054539_init_chip(struct k054539_info *info, int sndindex)
 {
+	int revb_margin;
 	int i;
 
 	memset(info->regs, 0, sizeof(info->regs));
@@ -456,10 +457,11 @@ static void K054539_init_chip(struct k054539_info *info, int sndindex)
 	info->K054539_flags |= K054539_UPDATE_AT_KEYON; //* make it default until proven otherwise
 
 	// Real size of 0x4000, the addon is to simplify the reverb buffer computations
-	info->ram = auto_malloc(0x4000*2+48000/55*2);
+	revb_margin = (int)(Machine->sample_rate / Machine->refresh_rate + 1.0) * 2;
+	info->ram = auto_malloc(0x4000*2 + revb_margin);
 	info->reverb_pos = 0;
 	info->cur_ptr = 0;
-	memset(info->ram, 0, 0x4000*2+48000/55*2);
+	memset(info->ram, 0, 0x4000*2 + revb_margin);
 
 	info->rom = memory_region(info->intf->region);
 	info->rom_size = memory_region_length(info->intf->region);
