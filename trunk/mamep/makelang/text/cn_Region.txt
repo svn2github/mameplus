@@ -8,7 +8,7 @@
 
 # 7
 * Prototype
-* 原型
+* 工程版
 
 # 1282
 Asia

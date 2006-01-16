@@ -290,12 +290,16 @@ Acclaim
 Acom
 
 
-# Stagger I (Japan)
+# Twin Action
 Afega
 
 
 # Jyanshin Densetsu - Quest of Jongmaster
 Aicom
+
+
+# Pochi and Nyaa
+Aiky
 
 
 # Real Mahjong Haihai (Japan)
@@ -390,6 +394,10 @@ Athena
 Atlus
 
 
+# Quintoon (UK, Game Card 95-750-203)
+BFM
+
+
 # BMC Bowling
 BMC
 
@@ -408,6 +416,10 @@ Bandai
 
 # Pretty Soldier Sailor Moon (95/03/22B)
 Banpresto
+
+
+# The Crystal Maze: Team Challenge (SWP)
+Barcrest
 
 
 # One + Two
@@ -612,6 +624,10 @@ E.G. Felaco
 
 # Miyasu Nonki no Quiz 18-Kin
 EIM
+
+
+# Quintoon (Dutch, Game Card 95-750-136)
+ELAM
 
 
 # Behind Enemy Lines
@@ -1354,6 +1370,10 @@ Philko
 Playmark
 
 
+# SvC Chaos - SNK vs Capcom (set 1)
+Playmore
+
+
 # Truco-Tron
 Playtronic SRL
 
@@ -1444,6 +1464,10 @@ SA
 
 # Safari Rally (Japan)
 SNK
+
+
+# Metal Slug 5
+SNK Playmore
 
 
 # Bishoujo Janshi Pretty Sailor 18-kin (Japan)
@@ -1944,6 +1968,10 @@ Yubis
 
 # Mahjong Gakuen
 Yuga
+
+
+# Samurai Shodown V / Samurai Spirits Zero (set 1)
+Yuki Enterprise
 
 
 # Paradise
