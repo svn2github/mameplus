@@ -2292,6 +2292,7 @@ V-V                           TP-027
 	DRIVER( knightsu )	/* 27/11/1991 (c) 1991 (US)    */
 	DRIVER( knightsj )	/* 27/11/1991 (c) 1991 (Japan) */
 	DRIVER( knightsh )	/* hack */
+	DRIVER( knightsb )	/* bootleg */
 	DRIVER( sf2ce )		/* 13/03/1992 (c) 1992 (World) */
 	DRIVER( sf2ceua )	/* 13/03/1992 (c) 1992 (US)    */
 	DRIVER( sf2ceub )	/* 13/05/1992 (c) 1992 (US)    */
@@ -2325,9 +2326,14 @@ V-V                           TP-027
 	DRIVER( wofa )		/* 05/10/1992 (c) 1992 (Asia)  (CPS1 + QSound) */
 	DRIVER( wofu )		/* 31/10/1992 (c) 1992 (US) (CPS1 + QSound) */
 	DRIVER( wofj )		/* 31/10/1992 (c) 1992 (Japan) (CPS1 + QSound) */
-	DRIVER( wofh ) 		/* 1999  Sanguo Yingxiong Zhuan */
-	DRIVER( wof3js )	/* 1997  San Jian Sheng */
-	DRIVER( wof3sj )	/* 1997  San Sheng Jian */
+	DRIVER( wofsj )		/* 1995  Holy Sword Three Kingdoms / Sheng Jian San Guo */
+	DRIVER( wofsja )	/* 1995  Holy Sword Three Kingdoms / Sheng Jian San Guo */
+	DRIVER( wofsjb )	/* 1995  Holy Sword Three Kingdoms / Sheng Jian San Guo */
+	DRIVER( wof3js )	/* 1997  Three Sword Masters / San Jian Sheng */
+	DRIVER( wof3sj )	/* 1997  Three Holy Swords / San Sheng Jian */
+	DRIVER( wof3sja )	/* 1997  Three Holy Swords / San Sheng Jian */
+	DRIVER( wofh ) 		/* 1999  Legend of Three Kingdoms' Heroes / Sanguo Yingxiong Zhuan */
+	DRIVER( wofha ) 	/* 1999  Legend of Three Kingdoms' Heroes / Sanguo Yingxiong Zhuan */
 	DRIVER( sf2hf )		/* 09/12/1992 (c) 1992 (World) */
 	DRIVER( sf2t )		/* 09/12/1992 (c) 1992 (US)    */
 	DRIVER( sf2tj )		/* 09/12/1992 (c) 1992 (Japan) */
