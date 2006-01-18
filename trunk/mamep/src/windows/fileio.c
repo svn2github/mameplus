@@ -64,6 +64,9 @@ extern char *cheatfile;
 // from hiscore.c
 extern const char *db_filename;
 
+// from mame.c
+extern void *record;	/* for -record */
+extern void *playback; /* for -playback */
 
 
 //============================================================
@@ -374,7 +377,7 @@ out_of_memory:
 
 
 //============================================================
-//  get_path_for_filetype
+//  free_pathlists
 //============================================================
 
 void free_pathlists(void)
@@ -431,6 +434,14 @@ static const char *get_path_for_filetype(int filetype, int pathindex, DWORD *cou
 			list = &pathlist[FILETYPE_INPUTLOG];
 			break;
 #endif /* INP_CAPTION */
+
+		/* load vnram file from input_directory when record/playback is on */
+		case FILETYPE_NVRAM:
+			if (record || playback)
+			{
+				list = &pathlist[FILETYPE_INPUTLOG];
+				break;
+			}
 
 		default:
 			list = &pathlist[filetype];

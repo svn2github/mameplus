@@ -597,15 +597,10 @@ void run_machine_core(void)
 				/* load the NVRAM now */
 				if (Machine->drv->nvram_handler)
 				{
-					if (record || playback)
-						(*Machine->drv->nvram_handler)(0,0);
-					else
-					{
 					mame_file *nvram_file = mame_fopen(Machine->gamedrv->name, 0, FILETYPE_NVRAM, 0);
 					(*Machine->drv->nvram_handler)(nvram_file, 0);
 					if (nvram_file)
 						mame_fclose(nvram_file);
-					}
 				}
 
 				/* run the emulation! */
