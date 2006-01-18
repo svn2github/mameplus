@@ -75,6 +75,20 @@ struct _backup
 	options_type  global;
 };
 
+// per-game data we store, not to pass to mame, but for our own use.
+typedef struct
+{
+	int play_count;
+	int play_time;
+	int rom_audit_results;
+	int samples_audit_results;
+
+	BOOL options_loaded; // whether or not we've loaded the game options yet
+	BOOL use_default; // whether or not we should just use default options
+	int alt_index; // index for alt_option if driver is unified
+
+} game_variables_type;
+
 typedef struct
 {
 	const char *name;
@@ -109,7 +123,9 @@ struct _joycodes
 
 static int   regist_alt_option(const char *name);
 static int   bsearch_alt_option(const char *name);
+static void  build_default_bios(void);
 static void  build_alt_options(void);
+static void  unify_alt_options(void);
 
 static int   initialize_rc_winui_config(void);
 static int   rc_load_winui_config(void);
@@ -815,6 +831,7 @@ void OptionsInit()
 	default_variables.samples_audit_results = UNKNOWN;
 	default_variables.options_loaded = FALSE;
 	default_variables.use_default = TRUE;
+	default_variables.alt_index = -1;
 
 	/* This allocation should be checked */
 	game_options = (options_type *)malloc(num_games * sizeof(options_type));
@@ -825,35 +842,7 @@ void OptionsInit()
 		game_variables[i] = default_variables;
 
 	build_alt_options();
-
-	for (i = 0; i < num_games; i++)
-	{
-		if (drivers[i]->bios)
-		{
-			const game_driver *drv = drivers[i];
-			int n;
-
-			while (!(drv->flags & NOT_A_DRIVER) && drv->clone_of)
-				drv = drv->clone_of;
-
-			for (n = 0; n < MAX_SYSTEM_BIOS; n++)
-			{
-				if (default_bios[n].drv == NULL)
-				{
-					int alt_index = bsearch_alt_option(GetFilename(drv->source_file));
-
-					assert(0 <= alt_index && alt_index < num_alt_options);
-
-					default_bios[n].drv = drv;
-					default_bios[n].alt_option = &alt_options[alt_index];
-					default_bios[n].alt_option->has_bios = TRUE;
-					break;
-				}
-				else if (default_bios[n].drv == drv)
-					break;
-			}
-		}
-	}
+	build_default_bios();
 
 	initialize_rc_winui_config();
 
@@ -862,6 +851,9 @@ void OptionsInit()
 	CopyGameOptions(&global, &backup.global);
 
 	LoadOptions();
+
+	unify_alt_options();
+
 	// have our mame core (file code) know about our rom path
 	// this leaks a little, but the win32 file core writes to this string
 	SetCorePathList(FILETYPE_ROM, settings.romdirs);
@@ -1053,6 +1045,16 @@ void SetFolderUsesDefaults(const char *name, BOOL use_defaults)
 	assert (0 <= alt_index && alt_index < num_alt_options);
 
 	alt_options[alt_index].variable->use_default = use_defaults;
+}
+
+const char *GetUnifiedFolder(int driver_index)
+{
+	assert (0 <= driver_index && driver_index < num_games);
+
+	if (game_variables[driver_index].alt_index == -1)
+		return NULL;
+
+	return alt_options[game_variables[driver_index].alt_index].name;
 }
 
 static options_type * GetAltOptions(alt_options_type *alt_option)
@@ -2801,6 +2803,41 @@ static int bsearch_alt_option(const char *name)
 	return -1;
 }
 
+static void build_default_bios(void)
+{
+	int i;
+
+	for (i = 0; i < num_games; i++)
+	{
+		if (drivers[i]->bios)
+		{
+			const game_driver *drv = drivers[i];
+			int n;
+
+			while (!(drv->flags & NOT_A_DRIVER) && drv->clone_of)
+				drv = drv->clone_of;
+
+			for (n = 0; n < MAX_SYSTEM_BIOS; n++)
+			{
+				if (default_bios[n].drv == NULL)
+				{
+					int alt_index = bsearch_alt_option(GetFilename(drv->source_file));
+
+					assert(0 <= alt_index && alt_index < num_alt_options);
+
+					default_bios[n].drv = drv;
+					default_bios[n].alt_option = &alt_options[alt_index];
+					default_bios[n].alt_option->has_bios = TRUE;
+					break;
+				}
+				else if (default_bios[n].drv == drv)
+					break;
+			}
+		}
+	}
+
+}
+
 static void build_alt_options(void)
 {
 	options_type *pOpts;
@@ -2844,6 +2881,28 @@ static void build_alt_options(void)
 
 		if (!alt_options[n].need_vector_config && DriverIsVector(i))
 			alt_options[n].need_vector_config = TRUE;
+	}
+}
+
+static void  unify_alt_options(void)
+{
+	int i;
+
+	for (i = 0; i < num_games; i++)
+	{
+		char buf[16];
+		int n;
+
+		sprintf(buf, "%s.c", drivers[i]->name);
+		n = bsearch_alt_option(buf);
+		if (n == -1)
+			continue;
+
+		dprintf("Unify %s", drivers[i]->name);
+
+		game_variables[i].alt_index = n;
+		alt_options[n].option = &game_options[i];
+		alt_options[n].variable = &game_variables[i];
 	}
 }
 
@@ -3121,6 +3180,11 @@ static int rc_load_config(int driver_index)
 
 	if (driver_index != -1)
 	{
+		int alt_index = game_variables[driver_index].alt_index;
+
+		if (alt_index != -1)
+			return rc_load_alt_config(&alt_options[alt_index]);
+
 		game_variables[driver_index].use_default = TRUE;
 		SetCorePathList(FILETYPE_INI, settings.inidirs);
 		sprintf(filename, "%s.ini", drivers[driver_index]->name);
@@ -3240,7 +3304,13 @@ static int rc_save_config(int driver_index)
 
 	if (driver_index != -1)
 	{
-		options_type *parent = GetParentOptions(driver_index);
+		int alt_index = game_variables[driver_index].alt_index;
+		options_type *parent;
+
+		if (alt_index != -1)
+			return rc_save_alt_config(&alt_options[alt_index]);
+
+		parent = GetParentOptions(driver_index);
 		validate_game_option(parent);
 
 		gOpts = *GetGameOptions(driver_index);
@@ -3318,6 +3388,29 @@ static int rc_load_alt_config(alt_options_type *alt_option)
 	retval = osd_rc_read(rc_game, file, filename, 1, 1);
 	*alt_option->option = gOpts;
 
+#ifdef USE_IPS
+	// HACK: DO NOT INHERIT IPS CONFIGURATION
+	if (alt_option->option->patchname)
+	{
+		char *patchname = alt_option->option->patchname;
+		options_type *opt = &global;
+
+		// try vector.ini
+		if (alt_option->need_vector_config)
+			opt = GetVectorOptions();
+
+		alt_option->option->patchname = NULL;
+
+		if (IsOptionEqual(alt_option->option, opt))
+		{
+			dprintf("%s: use_default with ips", alt_option->name);
+			alt_option->variable->use_default = TRUE;
+		}
+
+		alt_option->option->patchname = patchname;
+	}
+#endif /* USE_IPS */
+
 	mame_fclose(file);
 
 	return retval;
@@ -3346,7 +3439,12 @@ static int rc_save_alt_config(alt_options_type *alt_option)
 	if (len > 2 && filename[len - 2] == '.' && filename[len - 1] == 'c')
 		filename[len - 2] = '\0';
 
+#ifdef USE_IPS
+	// HACK: DO NOT INHERIT IPS CONFIGURATION
+	if (alt_option->variable->use_default && !alt_option->has_bios && !alt_option->option->patchname)
+#else /* USE_IPS */
 	if (alt_option->variable->use_default && !alt_option->has_bios)
+#endif /* USE_IPS */
 	{
 		char buf[_MAX_PATH];
 

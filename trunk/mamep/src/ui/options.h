@@ -206,19 +206,6 @@ typedef struct
 
 } options_type;
 
-// per-game data we store, not to pass to mame, but for our own use.
-typedef struct
-{
-	int play_count;
-	int play_time;
-	int rom_audit_results;
-	int samples_audit_results;
-
-	BOOL options_loaded; // whether or not we've loaded the game options yet
-	BOOL use_default; // whether or not we should just use default options
-
-} game_variables_type;
-
 // List of artwork types to display in the screen shot area
 enum
 {
@@ -421,6 +408,8 @@ BOOL GetGameUsesDefaults(int driver_index);
 BOOL GetFolderUsesDefaults(const char *name);
 void SetGameUsesDefaults(int driver_index, BOOL use_defaults);
 void SetFolderUsesDefaults(const char *name, BOOL use_defaults);
+
+const char *GetUnifiedFolder(int driver_index);
 
 const game_driver *GetSystemBiosInfo(int bios_index);
 const char *GetDefaultBios(int bios_index);

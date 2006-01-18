@@ -736,6 +736,9 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIco
 	g_hIcon = CopyIcon(hIcon);
 	InitGameAudit(game_num);
 
+	if (!folder)
+		folder = GetUnifiedFolder(game_num);
+
 	if (folder)
 	{
 		g_nGame = FOLDER_OPTIONS;
