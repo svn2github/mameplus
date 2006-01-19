@@ -53,7 +53,7 @@ write:
 #include "vidhrdw/generic.h"
 #include "sound/sn76477.h"
 #include "sound/custom.h"
-#include "sound/samples.h"
+#include "crbaloon.h"
 
 
 extern WRITE8_HANDLER( crbaloon_videoram_w );
@@ -68,21 +68,6 @@ extern VIDEO_UPDATE( crbaloon );
 
 int val06,val08,val0a;
 
-static int val06kp,xr=4,xr2=3,lg=0;
-static sound_stream *crbaloon_tone_stream;
-static UINT32 crbaloon_tone_step;
-static UINT32 crbaloon_tone_pos;
-static sound_stream *crbaloon_tone_stream2;
-static UINT32 crbaloon_tone_pos2;
-
-static const char *crbaloon_sample_names[] =
-{
-	"*crbaloon",
-	"pang.wav",
-	"appear.wav",
-	"laugh.wav",
-	0
-};
 
 static MACHINE_INIT( crbaloon )
 {
@@ -91,69 +76,33 @@ static MACHINE_INIT( crbaloon )
 	SN76477_mixer_c_w(0, 1);
 	/* ENVELOPE is constant: pin1 = hi, pin 28 = lo */
 	SN76477_envelope_w(0, 1);
-	/* fake: pulse the enable line to get rid of the constant noise */
-	SN76477_enable_w(0, 1);
-	SN76477_enable_w(0, 0);
+    /* fake: pulse the enable line to get rid of the constant noise */
+    SN76477_enable_w(0, 1);
+    SN76477_enable_w(0, 0);
 }
 
 WRITE8_HANDLER( crbaloon_06_w )
 {
-	static UINT8 last;
 	val06 = data;
-	val06kp = data;
 
 	interrupt_enable_w(offset,data & 1);
 
-	/* SOUND STOP high? */
-	if( data & 0x02 )
-	{
+	/* SOUND STOP is really sound enable */
+	sound_global_enable(data & 0x02);
 
-		if( data & 0x08 && ~last & 0x08 )
-		{
-			/* enable is connected to EXPLOSION */
-//			SN76477_enable_w(0, 1);
-			sample_start(0, 0, 0);
-			lg=0;
-		}
-		else
-		{
-			SN76477_enable_w(0, 0);
-		}
+	/* enable is connected to EXPLOSION */
+	SN76477_enable_w(0, (data & 0x08) ? 1 : 0);
 
-		if( data & 0x10 && ~last & 0x10 )
-		{
-			/* BREATH changes slf_res to 10k (middle of two 10k resistors) */
-			SN76477_set_slf_res(0, RES_K(10));
-			/* it also puts a tantal capacitor agains GND on the output,
-               but this section of the schematics is not readable. */
-		}
-		else
-		{
-			SN76477_set_slf_res(0, RES_K(20));
-		}
+	/* BREATH changes slf_res to 10k (middle of two 10k resistors) */
+	/* it also puts a tantal capacitor agains GND on the output,
+       but this section of the schematics is not readable. */
+	SN76477_set_slf_res(0, (data & 0x10) ? RES_K(10) : RES_K(20) );
 
-		if( data & 0x20 && ~last & 0x20 )
-		{
-			/* APPEAR is connected to MIXER B */
-//			SN76477_mixer_b_w(0, 1);
-			sample_start(0, 1, 0);
-		}
-		else
-		{
-			SN76477_mixer_b_w(0, 4);
-		}
+	/* APPEAR is connected to MIXER B */
+	SN76477_mixer_b_w(0, (data & 0x20) ? 1 : 4);
 
-		if( data & 0x40 && ~last & 0x40 && lg==0)
-		{
-			sample_start(1, 2, 0);
-			lg=1;
-		}
-
-		/* constant: pin1 = hi, pin 28 = lo */
-		SN76477_envelope_w(0, 1);
-
-		last = data;
-	}
+	discrete_sound_w(CRBALOON_MUSIC_EN, data & 0x04);
+	discrete_sound_w(CRBALOON_LAUGH_EN, data & 0x40);
 }
 
 WRITE8_HANDLER( crbaloon_08_w )
@@ -175,7 +124,7 @@ READ8_HANDLER( crbaloon_IN2_r )
 	if (crbaloon_collision != 0)
 	{
 		return (input_port_2_r(0) & 0xf0) | 0x08;
-	}
+    }
 
 	/* the following is needed for the game to boot up */
 	if (val06 & 0x80)
@@ -232,17 +181,7 @@ READ8_HANDLER( crbaloon_IN_r )
 
 WRITE8_HANDLER( crbaloon_tone_w )
 {
-	/* update the streams */
-	stream_update(crbaloon_tone_stream, 0);
-
-	crbaloon_tone_step = 0;
-
-	if (data && data != 0xff)
-	{
-		double freq = (13630.0 / (256 - data) + (data>=0xea ? 13 : 0))*0.7;
-
-		crbaloon_tone_step = (UINT32)(freq * 65536.0 * 65536.0 / (double)Machine->sample_rate);
-	}
+	discrete_sound_w(CRBALOON_MUSIC_DATA, data);
 }
 
 
@@ -278,7 +217,7 @@ ADDRESS_MAP_END
 
 
 INPUT_PORTS_START( crbaloon )
-	PORT_START_TAG("DSW0")
+	PORT_START_TAG("DSW0") // 0
 	PORT_DIPNAME( 0x01, 0x01, "Test?" )
 	PORT_DIPSETTING(    0x01, "I/O Check?" )
 	PORT_DIPSETTING(    0x00, "RAM Check?" )
@@ -303,7 +242,7 @@ INPUT_PORTS_START( crbaloon )
 	PORT_DIPSETTING(    0xe0, DEF_STR( 1C_4C ) )
 	PORT_DIPSETTING(    0x00, "Disable" )
 
-	PORT_START_TAG("IN0")
+	PORT_START_TAG("IN0") // 1
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY
@@ -313,7 +252,7 @@ INPUT_PORTS_START( crbaloon )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_COCKTAIL
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_COCKTAIL
 
-	PORT_START_TAG("DSW1")
+	PORT_START_TAG("DSW1") // 2
 	PORT_BIT( 0x0f, IP_ACTIVE_HIGH, IPT_UNKNOWN )	/* from chip PC3259 */
 	PORT_DIPNAME( 0x10, 0x10, "Invulnerability (Cheat)")
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
@@ -328,7 +267,7 @@ INPUT_PORTS_START( crbaloon )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START_TAG("IN1")
+	PORT_START_TAG("IN1") // 3
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -340,6 +279,13 @@ INPUT_PORTS_START( crbaloon )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_COIN1 )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+
+	PORT_START // 4
+	PORT_ADJUSTER(50, "VR2 - Beep")
+
+	PORT_START // 5
+	PORT_ADJUSTER(50, "VR3 - Music")
+
 INPUT_PORTS_END
 
 
@@ -401,80 +347,6 @@ static struct SN76477interface sn76477_interface =
 };
 
 
-static void crbaloon_tone_update(void *param, stream_sample_t **inputs, stream_sample_t **outputs, int len)
-{
-	stream_sample_t *buffer = outputs[0];
-	
-	memset(buffer, 0, len * sizeof(stream_sample_t));
-
-	if (val06kp&0x04) xr = 4;
-	else if (xr) xr--;
-	if (crbaloon_tone_step && xr)
-	{
-		while (len-- > 0)
-		{
-			*buffer++ = crbaloon_tone_pos & 0x80000000 ? 32767 : -32768;
-			crbaloon_tone_pos += crbaloon_tone_step;
-		}
-	}
-	if (val06kp&0x04) xr = 6;
-}
-
-static void crbaloon_tone_update2(void *param, stream_sample_t **inputs, stream_sample_t **outputs, int len)
-{
-	stream_sample_t *buffer = outputs[0];
-	
-	memset(buffer, 0, len * sizeof(stream_sample_t));
-
-	if (val06kp&0x04) xr2 = 3;
-	else if (xr2) xr2--;
-	if (crbaloon_tone_step && xr2)
-	{
-		while (len-- > 0)
-		{
-			*buffer++ = crbaloon_tone_pos2 & 0x80000000 ? 32767 : -32768;
-			crbaloon_tone_pos2 += crbaloon_tone_step*2;
-		}
-	}
-	if (val06kp&0x04) xr2 = 5;
-}
-
-static void *crbaloon_sh_start(int clock, const struct CustomSound_interface *config)
-{
-	crbaloon_tone_step = 0;
-	crbaloon_tone_pos = 0;
-
-	crbaloon_tone_stream = stream_create(0, 1, Machine->sample_rate, NULL, crbaloon_tone_update);
-
-	return auto_malloc(1);
-}
-
-static void *crbaloon_sh_start2(int clock, const struct CustomSound_interface *config)
-{
-	crbaloon_tone_pos2 = 0;
-
-	crbaloon_tone_stream2 = stream_create(0, 1, Machine->sample_rate, NULL, crbaloon_tone_update2);
-
-	return auto_malloc(1);
-}
-
-struct Samplesinterface crbaloon_samples_interface =
-{
-	2,
-	crbaloon_sample_names
-};
-
-struct CustomSound_interface crbaloon_custom_interface =
-{
-	crbaloon_sh_start
-};
-
-struct CustomSound_interface crbaloon_custom_interface2 =
-{
-	crbaloon_sh_start2
-};
-
-
 static MACHINE_DRIVER_START( crbaloon )
 
 	/* basic machine hardware */
@@ -505,19 +377,11 @@ static MACHINE_DRIVER_START( crbaloon )
 
 	MDRV_SOUND_ADD(SN76477, 0)
 	MDRV_SOUND_CONFIG(sn76477_interface)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 2.0)
+
+	MDRV_SOUND_ADD_TAG("discrete", DISCRETE, 0)
+	MDRV_SOUND_CONFIG(crbaloon_discrete_interface)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
-
-	MDRV_SOUND_ADD(CUSTOM, 0)
-	MDRV_SOUND_CONFIG(crbaloon_custom_interface)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.07)	// (xr+3 / 100.0)
-
-	MDRV_SOUND_ADD(CUSTOM, 0)
-	MDRV_SOUND_CONFIG(crbaloon_custom_interface2)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.06)	// (xr2+3 / 100.0)
-
-	MDRV_SOUND_ADD(SAMPLES, 0)
-	MDRV_SOUND_CONFIG(crbaloon_samples_interface)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 MACHINE_DRIVER_END
 
 
