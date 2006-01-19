@@ -1135,6 +1135,47 @@ void CreateYearFolders(int parent_index)
 }
 
 #ifdef MISC_FOLDER
+void CreateBIOSFolders(int parent_index)
+{
+	int i,jj;
+	int nGames = GetNumGames();
+	int start_folder = numFolders;
+	game_driver *drv;
+	LPTREEFOLDER lpFolder = treeFolders[parent_index];
+
+	// no games in top level folder
+	SetAllBits(lpFolder->m_lpGameBits,FALSE);
+
+	for (jj = 0; jj < nGames; jj++)
+	{
+		if ( DriverIsClone(jj) )
+			drv = (struct game_driver *)drivers[jj]->clone_of;
+		else
+			drv = (struct game_driver *)drivers[jj];
+
+		if (drv->clone_of->description == NULL)
+			continue;
+
+		for (i = numFolders-1; i >= start_folder; i--)
+		{
+			if (strcmp(treeFolders[i]->m_lpTitle, drv->clone_of->description) == 0)
+			{
+				AddGame(treeFolders[i],jj);
+				break;
+			}
+		}
+
+		if (i == start_folder-1)
+		{
+			LPTREEFOLDER lpTemp;
+			lpTemp = NewFolder(drv->clone_of->description, 0, FALSE, next_folder_id++, parent_index, IDI_CPU,
+							   GetFolderFlags(numFolders));
+			AddFolder(lpTemp);
+			AddGame(lpTemp,jj);
+		}
+	}
+}
+
 void CreateResolutionFolders(int parent_index)
 {
 	int i,jj;
@@ -1144,7 +1185,7 @@ void CreateResolutionFolders(int parent_index)
 	char Resolution[20];
 	LPTREEFOLDER lpFolder = treeFolders[parent_index];
 
-	// create our two subfolders - Vector (V) & Vector (H)
+	// create our two subfolders
 	LPTREEFOLDER lpVectorV, lpVectorH;
 	lpVectorV = NewFolder("Vector (V)", 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER,
  					   GetFolderFlags("Vector (V)"));

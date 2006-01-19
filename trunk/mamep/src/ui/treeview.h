@@ -91,6 +91,7 @@ void CreateOrientationFolders(int parent_index);
 void CreateDeficiencyFolders(int parent_index);
 void CreateDumpingFolders(int parent_index);
 #ifdef MISC_FOLDER
+void CreateBIOSFolders(int parent_index);
 void CreateFPSFolders(int parent_index);
 void CreateAspectFolders(int parent_index);
 void CreateResolutionFolders(int parent_index);
@@ -127,6 +128,7 @@ enum
 	FOLDER_SAMPLES,
 	FOLDER_DUMPING,
 #ifdef MISC_FOLDER
+	FOLDER_BIOS,
 	FOLDER_RESOLUTION,
 	FOLDER_ASPECT,
 	FOLDER_FPS,
@@ -134,7 +136,7 @@ enum
 #else /* MISC_FOLDER */
 	FOLDER_TRACKBALL,
 	FOLDER_LIGHTGUN,
-#endif /* MISC_FOLDER */
+#endif /* !MISC_FOLDER */
 	FOLDER_SAVESTATE,
  	FOLDER_MULTIMON,
 	FOLDER_ORIENTATION,

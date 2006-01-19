@@ -133,17 +133,17 @@ BEGIN
         POPUP "&Language"
         BEGIN
             MENUITEM "English (US)",                ID_LANGUAGE_ENGLISH_US
-            MENUITEM "Japanese",                    ID_LANGUAGE_JAPANESE
             MENUITEM "Chinese (Simp)",              ID_LANGUAGE_SMPL_CHINESE
             MENUITEM "Chinese (Trad)",              ID_LANGUAGE_TRAD_CHINESE
-            MENUITEM "Korean",                      ID_LANGUAGE_KOREAN
             MENUITEM "French",                      ID_LANGUAGE_FRENCH
-            MENUITEM "Spanish",                     ID_LANGUAGE_SPANISH
-            MENUITEM "Italian",                     ID_LANGUAGE_ITALIAN
             MENUITEM "German",                      ID_LANGUAGE_GERMAN
-            MENUITEM "Portuguese (BRA)",            ID_LANGUAGE_PORTUGUESE_BRA
-            MENUITEM "Polish",                      ID_LANGUAGE_POLISH
             MENUITEM "Hungarian",                   ID_LANGUAGE_HUNGARIAN
+            MENUITEM "Italian",                     ID_LANGUAGE_ITALIAN
+            MENUITEM "Japanese",                    ID_LANGUAGE_JAPANESE
+            MENUITEM "Korean",                      ID_LANGUAGE_KOREAN
+            MENUITEM "Polish",                      ID_LANGUAGE_POLISH
+            MENUITEM "Portuguese (BRA)",            ID_LANGUAGE_PORTUGUESE_BRA
+            MENUITEM "Spanish",                     ID_LANGUAGE_SPANISH
         END
     END
     POPUP "&Help"
@@ -648,11 +648,11 @@ BEGIN
     GROUPBOX        "Volume attenuation",IDC_VOLUMETEXT,68,120,124,30
     CONTROL         "Slider1",IDC_VOLUME,"msctls_trackbar32",TBS_BOTH | 
                     TBS_NOTICKS | WS_TABSTOP,74,134,74,10,0,HIDC_VOLUME
-    CTEXT           "0dB",IDC_VOLUMEDISP,152,134,36,10
+    CTEXT           "0dB",IDC_VOLUMEDISP,150,134,38,10
     GROUPBOX        "Audio latency",IDC_AUDIO_LATENCY_TEXT,68,153,124,30
     CONTROL         "Slider1",IDC_AUDIO_LATENCY,"msctls_trackbar32",TBS_BOTH | 
                     TBS_NOTICKS | WS_TABSTOP,74,166,74,10,0,HIDC_AUDIO_LATENCY
-    CTEXT           "1/5 ~ 2/5",IDC_AUDIO_LATENCY_DISP,152,166,36,10
+    CTEXT           "1/5 ~ 2/5",IDC_AUDIO_LATENCY_DISP,150,166,38,10
     PUSHBUTTON      "Reset",IDC_PROP_RESET,4,225,117,14,0,0,HIDC_PROP_RESET
     PUSHBUTTON      "Restore Default Settings",IDC_USE_DEFAULT,138,225,117,14,
                     0,0,HIDC_USE_DEFAULT
@@ -870,17 +870,17 @@ BEGIN
     GROUPBOX        "Beam width",IDC_BEAMTEXT,75,75,110,28
     CONTROL         "BeamSlider",IDC_BEAM,"msctls_trackbar32",TBS_BOTH | 
                     TBS_NOTICKS | WS_TABSTOP,81,86,74,10,0,HIDC_BEAM
-    RTEXT           "16.00",IDC_BEAMDISP,154,86,24,10,SS_CENTERIMAGE
+    RTEXT           "16.00",IDC_BEAMDISP,155,86,25,10,SS_CENTERIMAGE
     GROUPBOX        "Flicker",IDC_FLICKERTEXT,75,106,110,28
     CONTROL         "FlickerSlider",IDC_FLICKER,"msctls_trackbar32",TBS_BOTH | 
                     TBS_NOTICKS | WS_TABSTOP,81,117,74,10,0,HIDC_FLICKER
-    RTEXT           "100.00",IDC_FLICKERDISP,154,117,24,10,SS_CENTERIMAGE | 
+    RTEXT           "100.00",IDC_FLICKERDISP,155,117,25,10,SS_CENTERIMAGE | 
                     NOT WS_GROUP
     GROUPBOX        "Intensity",IDC_INTENSITYTEXT,75,137,110,28
     CONTROL         "IntensitySlider",IDC_INTENSITY,"msctls_trackbar32",
                     TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,81,148,74,10,0,
                     HIDC_INTENSITY
-    RTEXT           "1.5",IDC_INTENSITYDISP,154,148,24,10,SS_CENTERIMAGE | 
+    RTEXT           "1.5",IDC_INTENSITYDISP,155,148,25,10,SS_CENTERIMAGE | 
                     NOT WS_GROUP
     PUSHBUTTON      "Reset",IDC_PROP_RESET,4,225,117,14,0,0,HIDC_PROP_RESET
     PUSHBUTTON      "Restore Default Settings",IDC_USE_DEFAULT,138,225,117,14,
@@ -1000,7 +1000,7 @@ EXSTYLE WS_EX_CONTEXTHELP
 CAPTION "Interface Options"
 FONT 8, "MS Sans Serif"
 BEGIN
-    GROUPBOX        "Game Selection",IDC_STATIC,5,7,230,214
+    GROUPBOX        "Game Selection",IDC_STATIC,5,7,230,141
     CONTROL         "&Search for new games on start",IDC_START_GAME_CHECK,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,20,215,10,0,
                     HIDC_START_GAME_CHECK
@@ -1025,12 +1025,12 @@ BEGIN
     CONTROL         "Display splash screen on start",IDC_DISPLAY_SPLASH_SCREEN,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,14,132,215,10
 #endif /* USE_SHOW_SPLASH_SCREEN */
-    CONTROL         "Use Driver Icon for Not Working Game",IDC_BROKEN_ICON,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,14,146,215,10
-    PUSHBUTTON      "Edit Not Working Game Color",IDC_EDIT_BROKEN_COLOR,14,162,212,14
-
-    GROUPBOX        "Show History on Tab",IDC_STATIC,14,182,212,32
-    COMBOBOX        IDC_HISTORY_TAB,70,194,100,60,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "",IDC_STATIC,5,151,230,35,WS_DISABLED
+    CONTROL         "Use various icon for Not Working game",IDC_BROKEN_ICON,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,14,151,205,10
+    PUSHBUTTON      "Set Game List Not Working Color",IDC_EDIT_BROKEN_COLOR,14,165,212,14
+    GROUPBOX        "Show History on Tab",IDC_STATIC,5,189,230,32
+    COMBOBOX        IDC_HISTORY_TAB,65,201,110,100,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     GROUPBOX        "Emulation",IDC_STATIC,240,7,194,28
     CONTROL         "Show Game Ca&ption",IDC_GAME_CAPTION,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,249,20,180,10,0,
@@ -1040,7 +1040,7 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_TABSTOP,249,50,180,10
     CONTROL         "Reset all Play Times",IDC_RESET_PLAYTIME,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,249,65,180,10
-    GROUPBOX        "Screenshot Area",IDC_STATIC,240,84,194,123
+    GROUPBOX        "Screenshot Area",IDC_STATIC,240,84,194,137
     CONTROL         "S&tretch screenshot larger than natural size",
                     IDC_STRETCH_SCREENSHOT_LARGER,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,249,96,180,10,0,HIDC_STRETCH_SCREENSHOT_LARGER

@@ -9,7 +9,6 @@
 
 #include <windows.h>
 #include "driver.h"
-#include "artwork.h"
 #include "ui_pal.h"
 #include "ui_lang.h"
 
@@ -21,9 +20,6 @@ static gfx_element *uirotfont_sb;
 static gfx_element *uirotfont_db;
 static UINT16 _uifonttable[65536];
 static int need_font_warning;
-
-/* artwork */
-static int gamescale;
 
 /*************************************
  *
@@ -813,8 +809,7 @@ void uifont_buildfont(int *rotcharwidth, int *rotcharheight)
 
 	ui_get_bounds(&uirotwidth, &uirotheight);
 
-	gamescale = options.artwork_res;
-	if (gamescale == 2)
+	if (options.artwork_res == 2)
 	{
 		/* pixel double horizontally */
 		if (uirotwidth >= 420)
