@@ -622,7 +622,8 @@ static void AY8910_init(struct AY8910 *PSG, int streams,
 		read8_handler portAread,read8_handler portBread,
 		write8_handler portAwrite,write8_handler portBwrite)
 {
-    sample_rate = clock/8;
+// causes crashes with YM2610 games - overflow?
+//	sample_rate = clock/8;
 
 	PSG->SampleRate = sample_rate;
 	PSG->PortAread = portAread;
