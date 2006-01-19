@@ -39,6 +39,9 @@
 #define MAX_CUSTOM_BUTTONS	4
 #endif /* USE_CUSTOM_BUTTON */
 
+#ifdef USE_SHOW_INPUT_LOG
+#define COMMAND_LOG_BUFSIZE	128
+#endif /* USE_SHOW_INPUT_LOG */
 
 #define IP_ACTIVE_HIGH		0x00000000
 #define IP_ACTIVE_LOW		0xffffffff
@@ -244,6 +247,12 @@ enum
 #ifdef CMD_LIST
 	IPT_UI_COMMAND,
 #endif /* CMD_LIST */
+#ifdef USE_SHOW_TIME
+	IPT_UI_TIME,
+#endif /* USE_SHOW_TIME */
+#ifdef USE_SHOW_INPUT_LOG
+	IPT_UI_SHOW_INPUT_LOG,
+#endif /* USE_SHOW_INPUT_LOG */
 	IPT_UI_UP,
 	IPT_UI_DOWN,
 	IPT_UI_LEFT,

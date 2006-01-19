@@ -15,6 +15,9 @@ To do:
 #include "vidhrdw/vector.h"
 #include <stdarg.h>
 #include <math.h>
+#ifdef USE_SHOW_TIME
+#include <time.h>
+#endif /* USE_SHOW_TIME */
 #include "ui_text.h"
 #include "datafile.h"
 #include "state.h"
@@ -101,6 +104,12 @@ memcard_interface memcard_intf;
 extern void *playback;
 #endif /* AUTO_PAUSE_PLAYBACK */
 
+#ifdef USE_SHOW_INPUT_LOG
+extern int show_input_log;
+extern UINT8 command_buffer[COMMAND_LOG_BUFSIZE];
+extern int command_counter;
+#endif /* USE_SHOW_INPUT_LOG */
+
 
 
 /*************************************
@@ -185,6 +194,12 @@ typedef struct _render_element render_element;
 static render_element elemlist[MAX_RENDER_ELEMENTS];
 static int elemindex;
 /* -- end this stuff will go away with the new rendering system */
+
+#ifdef USE_SHOW_TIME
+static int show_time = 0;
+static int Show_Time_Position;
+static void display_time(mame_bitmap *bitmap);
+#endif /* USE_SHOW_TIME */
 
 
 
@@ -300,6 +315,10 @@ int ui_init(void)
 	scroll_reset = TRUE;
 	load_save_state = LOADSAVE_NONE;
 	confirm_quit_state = FALSE;
+#ifdef USE_SHOW_TIME
+	show_time = 0;
+	Show_Time_Position = 0;
+#endif /* USE_SHOW_TIME */
 	return 0;
 }
 
@@ -1402,6 +1421,49 @@ static int ui_window_scroll_keys(void)
 	return 0;
 }
 
+#ifdef USE_SHOW_TIME
+static void display_time(mame_bitmap *bitmap)
+{
+	char buf[20];
+	char am_pm[] = "am";
+	int width;
+	time_t ltime;
+	struct tm *today;
+
+	time(&ltime);
+	today = localtime(&ltime);
+
+	if( today->tm_hour > 12 )
+	{
+		strcpy( am_pm, "pm" );
+		today->tm_hour -= 12;
+	}
+	if( today->tm_hour == 0 ) /* Adjust if midnight hour. */
+		today->tm_hour = 12;
+
+	sprintf(buf, "%02d:%02d:%02d %s", today->tm_hour, today->tm_min, today->tm_sec, am_pm);
+	width = strlen(buf) * uirotcharwidth;
+	switch(Show_Time_Position)
+	{
+		case 0:
+			ui_draw_text(buf, uirotwidth - width, uirotheight - uirotcharheight);
+			break;
+
+		case 1:
+			ui_draw_text(buf, uirotwidth - width, 0);
+			break;
+
+		case 2:
+			ui_draw_text(buf, 0, 0);
+			break;
+
+		case 3:
+			ui_draw_text(buf, 0, uirotheight - uirotcharheight);
+			break;
+	}
+}
+#endif /* USE_SHOW_TIME */
+
 
 
 /*************************************
@@ -1648,6 +1710,53 @@ static int handle_keys(mame_bitmap *bitmap)
 		else
 			mame_pause(!mame_is_paused());
 	}
+
+#ifdef USE_SHOW_TIME
+	if (menu_handler == NULL && input_ui_pressed(IPT_UI_TIME))
+	{
+		if (show_time)
+		{
+			Show_Time_Position++;
+
+			if (Show_Time_Position > 3)
+			{
+				Show_Time_Position = 0;
+				show_time = 0;
+			}
+		}
+		else
+		{
+			Show_Time_Position = 0;
+			show_time = 1;
+		}
+	}
+
+	if (show_time)
+		display_time(bitmap);
+#endif /* USE_SHOW_TIME */
+
+#ifdef USE_SHOW_INPUT_LOG
+	if (menu_handler == NULL && input_ui_pressed(IPT_UI_SHOW_INPUT_LOG))
+	{
+		show_input_log ^= 1;
+
+		schedule_full_refresh();
+		memset(command_buffer, 0, COMMAND_LOG_BUFSIZE);
+	}
+
+	/* show popup message if input exist any log */
+	if (show_input_log && command_counter && menu_handler == NULL)
+	{
+		add_filled_box_noedge(0, uirotheight - uirotcharheight, uirotwidth - 1, uirotheight - 1);
+
+		ui_draw_text(command_buffer, 0, uirotheight - uirotcharheight);
+
+		if (--command_counter == 0) {
+			schedule_full_refresh();
+			memset(command_buffer, 0, COMMAND_LOG_BUFSIZE);
+		}
+	}
+#endif /* USE_SHOW_INPUT_LOG */
 
 	/* toggle movie recording */
 	if (input_ui_pressed(IPT_UI_RECORD_MOVIE))
@@ -5013,6 +5122,18 @@ static void add_filled_box_black(int x1, int y1, int x2, int y2)
 {
 	add_filled_box_color(x1, y1, x2, y2, RGB_BLACK);
 }
+
+
+#ifdef USE_SHOW_INPUT_LOG
+void add_filled_box_noedge(int x1, int y1, int x2, int y2)
+{
+#ifdef UI_COLOR_DISPLAY
+	add_fill(x1, y1, x2, y2, ui_bgcolor);
+#else /* UI_COLOR_DISPLAY */
+	add_fill(x1, y1, x2, y2, RGB_BLACK);
+#endif /* UI_COLOR_DISPLAY */
+}
+#endif
 
 
 static void render_ui(mame_bitmap *dest)

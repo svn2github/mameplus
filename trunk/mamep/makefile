@@ -315,6 +315,14 @@ ifneq ($(USE_SHOW_SPLASH_SCREEN),)
     DEFS += -DUSE_SHOW_SPLASH_SCREEN
 endif
 
+ifneq ($(USE_SHOW_TIME),)
+    DEFS += -DUSE_SHOW_TIME
+endif
+
+ifneq ($(USE_SHOW_INPUT_LOG),)
+    DEFS += -DUSE_SHOW_INPUT_LOG
+endif
+
 ifdef USE_GCC
     CFLAGS = -std=gnu89 -Isrc -Isrc/includes -Isrc/zlib -Iextra/include -Isrc/debug -Isrc/$(MAMEOS) -I$(OBJ)/cpu/m68000 -Isrc/cpu/m68000
 
