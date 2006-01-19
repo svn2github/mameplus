@@ -162,6 +162,10 @@ ifneq ($(USE_JOYSTICK_ID),)
 RCDEFS += -DJOYSTICK_ID
 endif
 
+ifneq ($(USE_SHOW_SPLASH_SCREEN),)
+RCDEFS += -DUSE_SHOW_SPLASH_SCREEN
+endif
+
 # Support Stick-type Pointing Device by miko2u@hotmail.com
 ifneq ($(USE_JOY_MOUSE_MOVE),)
 RCDEFS += -DUSE_JOY_MOUSE_MOVE
