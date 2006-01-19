@@ -104,6 +104,7 @@
 #define IDB_TOOLBAR_BR                  202
 #define IDB_TOOLBAR_PL                  203
 #define IDB_TOOLBAR_HU                  204
+#define IDB_SPLASH                      210
 #define IDC_LIST                        1000
 #define IDC_PLAY                        1001
 #define IDC_DISPLAYS                    1002
@@ -329,6 +330,7 @@
 #define IDC_LIGHTGUNDEVICE              1239
 #define IDC_ANALOG_AXES_TEXT            1240
 #define IDC_ANALOG_AXES                 1241
+#define IDC_DISPLAY_SPLASH_SCREEN       1242
 #define ID_CONTEXT_SHOW_FOLDER_START    39000
 #define ID_CONTEXT_SHOW_FOLDER_END      39200
 

@@ -311,6 +311,10 @@ ifdef X86_M68K_DRC
     DEFS += -DX86_M68K_DRC
 endif
 
+ifneq ($(USE_SHOW_SPLASH_SCREEN),)
+    DEFS += -DUSE_SHOW_SPLASH_SCREEN
+endif
+
 ifdef USE_GCC
     CFLAGS = -std=gnu89 -Isrc -Isrc/includes -Isrc/zlib -Iextra/include -Isrc/debug -Isrc/$(MAMEOS) -I$(OBJ)/cpu/m68000 -Isrc/cpu/m68000
 

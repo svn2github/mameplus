@@ -680,6 +680,9 @@ static struct rc_option rc_winui_opts[] =
 	{ "inherit_filter", NULL, rc_bool, &settings.inherit_filter, "0", 0, 0, NULL, "inheritable filters" },
 	{ "offset_clones", NULL, rc_bool, &settings.offset_clones, "1", 0, 0, NULL, "no offset for clones missing parent in view" },
 	{ "game_caption", NULL, rc_bool, &settings.game_caption, "1", 0, 0, NULL, "show game caption" },
+#ifdef USE_SHOW_SPLASH_SCREEN
+	{ "display_splash_screen", NULL, rc_bool, &settings.display_splash_screen, "1", 0, 0, NULL, "display splash screen on start" },
+#endif /* USE_SHOW_SPLASH_SCREEN */
 
 	{ "Windows UI specific general options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
 #ifdef MESS
@@ -1749,6 +1752,18 @@ BOOL GetSortReverse(void)
 {
 	return settings.sort_reverse;
 }
+
+#ifdef USE_SHOW_SPLASH_SCREEN
+void SetDisplaySplashScreen (BOOL val)
+{
+	settings.display_splash_screen = val;
+}
+
+BOOL GetDisplaySplashScreen (void)
+{
+	return settings.display_splash_screen;
+}
+#endif /* USE_SHOW_SPLASH_SCREEN */
 
 const char* GetRomDirs(void)
 {

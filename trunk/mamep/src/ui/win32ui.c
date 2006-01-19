@@ -378,6 +378,12 @@ void CalculateBestScreenShotRect(HWND hWnd, RECT *pRect, BOOL restrict_height);
 BOOL MouseHasBeenMoved(void);
 void SwitchFullScreenMode(void);
 
+#ifdef USE_SHOW_SPLASH_SCREEN
+static LRESULT CALLBACK BackMainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+static void  CreateBackgroundMain(HINSTANCE hInstance);
+static void  DestroyBackgroundMain(void);
+#endif /* USE_SHOW_SPLASH_SCREEN */
+
 // Game Window Communication Functions
 #if MULTISESSION
 BOOL SendMessageToEmulationWindow(UINT Msg, WPARAM wParam, LPARAM lParam);
@@ -783,6 +789,12 @@ static struct
 static HPALETTE         hPALbg   = 0;
 static HBITMAP          hBackground  = 0;
 static MYBITMAPINFO     bmDesc;
+
+#ifdef USE_SHOW_SPLASH_SCREEN
+static HWND             hBackMain = NULL;
+static HBITMAP          hSplashBmp = 0;
+static HDC              hMemoryDC;
+#endif /* USE_SHOW_SPLASH_SCREEN */
 
 /* List view Column text */
 const char* column_names[COLUMN_MAX] =
@@ -2234,6 +2246,12 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	OptionsInit();
 	dprintf("options loaded");
 
+#ifdef USE_SHOW_SPLASH_SCREEN
+	// Display splash screen window
+	if (GetDisplaySplashScreen() != FALSE)
+		CreateBackgroundMain(hInstance);
+#endif /* USE_SHOW_SPLASH_SCREEN */
+
 	/* USE LANGUAGE LIST */
 	build_game_readings();
 
@@ -2480,6 +2498,12 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 
 		nCmdShow = SW_MAXIMIZE;
 	}
+
+#ifdef USE_SHOW_SPLASH_SCREEN
+	// Destroy splash screen window
+	if (GetDisplaySplashScreen() != FALSE)
+		DestroyBackgroundMain();
+#endif /* USE_SHOW_SPLASH_SCREEN */
 
 	ShowWindow(hMain, nCmdShow);
 
@@ -7861,5 +7885,91 @@ HWND GetGameWindow(LPPROCESS_INFORMATION lpProcessInformation)
 }
 
 #endif
+
+#ifdef USE_SHOW_SPLASH_SCREEN
+static LRESULT CALLBACK BackMainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch (uMsg)
+	{
+		case WM_ERASEBKGND:
+		{
+			BITMAP Bitmap;
+			GetObject(hSplashBmp, sizeof(BITMAP), &Bitmap);
+			BitBlt((HDC)wParam, 0, 0, Bitmap.bmWidth, Bitmap.bmHeight, hMemoryDC, 0, 0, SRCCOPY);
+			break;
+		}
+
+		default:
+			return (DefWindowProc(hWnd, uMsg, wParam, lParam));
+	}
+
+	return FALSE;
+}
+
+static void CreateBackgroundMain(HINSTANCE hInstance)
+{
+	static HDC hSplashDC = 0;
+
+	WNDCLASSEX BackMainClass;
+
+	BackMainClass.cbSize        = sizeof(WNDCLASSEX);
+	BackMainClass.style         = 0;
+	BackMainClass.lpfnWndProc   = (WNDPROC)BackMainWndProc;
+	BackMainClass.cbClsExtra    = 0;
+	BackMainClass.cbWndExtra    = 0;
+	BackMainClass.hInstance     = hInstance;
+	BackMainClass.hIcon         = NULL;
+	BackMainClass.hIconSm       = NULL;
+	BackMainClass.hCursor       = NULL;
+	BackMainClass.hbrBackground = NULL;
+	BackMainClass.lpszMenuName  = NULL;
+	BackMainClass.lpszClassName = TEXT("BackMainWindowClass");
+
+	if ( RegisterClassEx(&BackMainClass) )
+	{
+		BITMAP Bitmap;
+		RECT DesktopRect;
+
+		GetWindowRect(GetDesktopWindow(), &DesktopRect);
+		hSplashBmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_SPLASH));
+		GetObject(hSplashBmp, sizeof(BITMAP), &Bitmap);
+
+		hBackMain = CreateWindowEx(WS_EX_TOOLWINDOW,
+					TEXT("BackMainWindowClass"),
+					TEXT("Main Backgound windows"),
+					WS_POPUP,
+					(DesktopRect.right - Bitmap.bmWidth) / 2,
+					(DesktopRect.bottom - Bitmap.bmHeight) / 2,
+					Bitmap.bmWidth,
+					Bitmap.bmHeight,
+					NULL,
+					NULL,
+					hInstance,
+					NULL);
+
+		hSplashDC = GetDC(hBackMain);
+		hMemoryDC = CreateCompatibleDC(hSplashDC);
+		SelectObject(hMemoryDC, (HGDIOBJ)hSplashBmp);
+
+		if (GetDisplaySplashScreen() != FALSE)
+			ShowWindow(hBackMain, SW_SHOW);
+
+		UpdateWindow(hBackMain);
+	}
+}
+
+static void DestroyBackgroundMain(void)
+{
+	static HDC hSplashDC = 0;
+
+	if ( hBackMain )
+	{
+		DeleteObject(hSplashBmp);
+		ReleaseDC(hBackMain, hSplashDC);
+		ReleaseDC(hBackMain, hMemoryDC);
+		DestroyWindow(hBackMain);
+	}
+}
+#endif /* USE_SHOW_SPLASH_SCREEN */
 
 /* End of source file */

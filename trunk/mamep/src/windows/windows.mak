@@ -199,6 +199,10 @@ else
     RCFLAGS += -Isrc
 endif
 
+ifneq ($(USE_SHOW_SPLASH_SCREEN),)
+    RCDEFS += -DUSE_SHOW_SPLASH_SCREEN
+endif
+
 $(OBJ)/%.res: src/%.rc
 	@echo Compiling resources $<...
 ifdef USE_GCC

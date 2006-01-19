@@ -381,6 +381,10 @@ typedef struct
 	char*    ui_palette[MAX_COLORTABLE];
 #endif /* UI_COLOR_DISPLAY */
 
+#ifdef USE_SHOW_SPLASH_SCREEN
+    BOOL     display_splash_screen;
+#endif /* USE_SHOW_SPLASH_SCREEN */
+
 	int      langcode;
 	BOOL     use_lang_list;
 
@@ -558,6 +562,11 @@ int  GetSortColumn(void);
 
 void SetSortReverse(BOOL reverse);
 BOOL GetSortReverse(void);
+
+#ifdef USE_SHOW_SPLASH_SCREEN
+void SetDisplaySplashScreen(BOOL val);
+BOOL GetDisplaySplashScreen(void);
+#endif /* USE_SHOW_SPLASH_SCREEN */
 
 const char* GetRomDirs(void);
 void SetRomDirs(const char* paths);

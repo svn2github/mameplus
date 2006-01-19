@@ -994,13 +994,13 @@ BEGIN
     PUSHBUTTON      "&Cancel",IDCANCEL,145,175,50,14
 END
 
-IDD_INTERFACE_OPTIONS DIALOGEX 0, 0, 440, 235
+IDD_INTERFACE_OPTIONS DIALOGEX 0, 0, 440, 249
 STYLE DS_MODALFRAME | DS_3DLOOK | WS_POPUP | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_CONTEXTHELP
 CAPTION "Interface Options"
 FONT 8, "MS Sans Serif"
 BEGIN
-    GROUPBOX        "Game Selection",IDC_STATIC,5,7,230,200
+    GROUPBOX        "Game Selection",IDC_STATIC,5,7,230,214
     CONTROL         "&Search for new games on start",IDC_START_GAME_CHECK,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,20,215,10,0,
                     HIDC_START_GAME_CHECK
@@ -1021,12 +1021,16 @@ BEGIN
     CONTROL         "No offset for clones missing parent in view",
                     IDC_NOOFFSET_CLONES,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,14,118,215,10
-    CONTROL         "Use Driver Icon for Not Working Game",IDC_BROKEN_ICON,"Button",
+#ifdef USE_SHOW_SPLASH_SCREEN
+    CONTROL         "Display splash screen on start",IDC_DISPLAY_SPLASH_SCREEN,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,14,132,215,10
-    PUSHBUTTON      "Edit Not Working Game Color",IDC_EDIT_BROKEN_COLOR,14,148,212,14
+#endif /* USE_SHOW_SPLASH_SCREEN */
+    CONTROL         "Use Driver Icon for Not Working Game",IDC_BROKEN_ICON,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,14,146,215,10
+    PUSHBUTTON      "Edit Not Working Game Color",IDC_EDIT_BROKEN_COLOR,14,162,212,14
 
-    GROUPBOX        "Show History on Tab",IDC_STATIC,14,168,212,32
-    COMBOBOX        IDC_HISTORY_TAB,70,180,100,60,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Show History on Tab",IDC_STATIC,14,182,212,32
+    COMBOBOX        IDC_HISTORY_TAB,70,194,100,60,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     GROUPBOX        "Emulation",IDC_STATIC,240,7,194,28
     CONTROL         "Show Game Ca&ption",IDC_GAME_CAPTION,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,249,20,180,10,0,
@@ -1049,8 +1053,8 @@ BEGIN
                     TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,258,155,135,10
     CTEXT           "100",IDC_SCREENSHOT_BORDERSIZETXT,402,155,14,10,SS_CENTERIMAGE
     PUSHBUTTON      "Set Screenshot Border Color",IDC_SCREENSHOT_BORDERCOLOR,249,178,176,14
-    DEFPUSHBUTTON   "&OK",IDOK,156,213,60,14
-    PUSHBUTTON      "&Cancel",IDCANCEL,224,213,60,14
+    DEFPUSHBUTTON   "&OK",IDOK,156,227,60,14
+    PUSHBUTTON      "&Cancel",IDCANCEL,224,227,60,14
 END
 
 IDD_PROP_CONTROLLER DIALOGEX 0, 0, 260, 245
@@ -1393,6 +1397,7 @@ BEGIN
         BOTTOMMARGIN, 226
         HORZGUIDE, 208
     END
+END
 #endif    // APSTUDIO_INVOKED
 
 
@@ -1414,6 +1419,9 @@ IDB_TOOLBAR_DE          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
 IDB_TOOLBAR_BR          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
 IDB_TOOLBAR_PL          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
 IDB_TOOLBAR_HU          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
+#ifdef USE_SHOW_SPLASH_SCREEN
+IDB_SPLASH              BITMAP  DISCARDABLE     "res\\splash.bmp"
+#endif /* USE_SHOW_SPLASH_SCREEN */
 
 /////////////////////////////////////////////////////////////////////////////
 //

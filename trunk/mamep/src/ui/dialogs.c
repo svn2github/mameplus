@@ -168,6 +168,9 @@ INT_PTR CALLBACK InterfaceDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 		Button_SetCheck(GetDlgItem(hDlg,IDC_BROADCAST),GetBroadcast());
 		Button_SetCheck(GetDlgItem(hDlg,IDC_RANDOM_BG),GetRandomBackground());
 		Button_SetCheck(GetDlgItem(hDlg,IDC_GAME_CAPTION),GetGameCaption());
+#ifdef USE_SHOW_SPLASH_SCREEN
+		Button_SetCheck(GetDlgItem(hDlg,IDC_DISPLAY_SPLASH_SCREEN),GetDisplaySplashScreen());
+#endif /* USE_SHOW_SPLASH_SCREEN */
 
 		Button_SetCheck(GetDlgItem(hDlg,IDC_HIDE_MOUSE),GetHideMouseOnStartup());
 
@@ -288,6 +291,9 @@ INT_PTR CALLBACK InterfaceDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 			SetBroadcast(Button_GetCheck(GetDlgItem(hDlg, IDC_BROADCAST)));
 			SetRandomBackground(Button_GetCheck(GetDlgItem(hDlg, IDC_RANDOM_BG)));
 			SetGameCaption(Button_GetCheck(GetDlgItem(hDlg, IDC_GAME_CAPTION)));
+#ifdef USE_SHOW_SPLASH_SCREEN
+			SetDisplaySplashScreen(Button_GetCheck(GetDlgItem(hDlg, IDC_DISPLAY_SPLASH_SCREEN)));
+#endif /* USE_SHOW_SPLASH_SCREEN */
 			
 			SetHideMouseOnStartup(Button_GetCheck(GetDlgItem(hDlg,IDC_HIDE_MOUSE)));
 
