@@ -1140,7 +1140,7 @@ void CreateBIOSFolders(int parent_index)
 	int i,jj;
 	int nGames = GetNumGames();
 	int start_folder = numFolders;
-	game_driver *drv;
+	const game_driver *drv;
 	LPTREEFOLDER lpFolder = treeFolders[parent_index];
 
 	// no games in top level folder
@@ -1149,9 +1149,9 @@ void CreateBIOSFolders(int parent_index)
 	for (jj = 0; jj < nGames; jj++)
 	{
 		if ( DriverIsClone(jj) )
-			drv = (struct game_driver *)drivers[jj]->clone_of;
+			drv = drivers[jj]->clone_of;
 		else
-			drv = (struct game_driver *)drivers[jj];
+			drv = drivers[jj];
 
 		if (drv->clone_of->description == NULL)
 			continue;
@@ -1169,7 +1169,7 @@ void CreateBIOSFolders(int parent_index)
 		{
 			LPTREEFOLDER lpTemp;
 			lpTemp = NewFolder(drv->clone_of->description, 0, FALSE, next_folder_id++, parent_index, IDI_CPU,
-							   GetFolderFlags(numFolders));
+			                   GetFolderFlags(drv->clone_of->description));
 			AddFolder(lpTemp);
 			AddGame(lpTemp,jj);
 		}
