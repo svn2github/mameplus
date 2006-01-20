@@ -18,6 +18,11 @@ crush	¹x¥Ö°­ (Kural Samno)	¹x¥Ö°­ (Kural Samno)	Kural Samno Electric
 crush2	¹x¥Ö°­ (Kural Esco - µsª©?)	¹x¥Ö°­ (Kural Esco - µsª©?)	Kural Esco Electric
 crush3	¹x¥Ö°­ (Kural - µsª©?)	¹x¥Ö°­ (Kural - µsª©?)	Kural Electric
 crush4	¹x¥Ö°­ (Kural TWT)	¹x¥Ö°­ (Kural TWT)	Kural TWT
+maketrax	¹x¥Ö°­ / Make Trax (set 1)	¹x¥Ö°­ / Make Trax (set 1)	[Kural] (Williams license)
+maketrxb	¹x¥Ö°­ / Make Trax (set 2)	¹x¥Ö°­ / Make Trax (set 2)	[Kural] (Williams license)
+korosuke	¹x¥Ö°­ / Korosuke Roller	¹x¥Ö°­ / Korosuke Roller	Kural Electric
+mbrush	¹x¥Ö°­ / Magic Brush	¹x¥Ö°­ / Magic Brush	bootleg
+paintrlr	¹x¥Ö°­ / Paint Roller	¹x¥Ö°­ / Paint Roller	bootleg
 pacplus	¤pºëÆF Plus	¤pºëÆF Plus	[Namco] (Midway license)
 joyman	¤pºëÆF / Joyman	¤pºëÆF / Joyman	hack
 ctrpllrp	¤pºëÆF / Caterpillar Pacman Hack	¤pºëÆF / Caterpillar Pacman Hack	hack
@@ -30,14 +35,21 @@ mspacmab	Ms. ¤pºëÆF (µsª©)	Ms. ¤pºëÆF (µsª©)	bootleg
 pacgal	Ms. ¤pºëÆF / Pac-Gal	Ms. ¤pºëÆF / Pac-Gal	hack
 mspacpls	Ms. ¤pºëÆF Plus	Ms. ¤pºëÆF Plus	hack
 alibaba	ªü¨½¤Ú¤Ú»P 40 ¤jµs	ªü¨½¤Ú¤Ú»P 40 ¤jµs	Sega
-mschamp	Ms. ¤pºëÆF«a­xª© / Super Zola Pac Gal	Ms. ¤pºëÆF«a­xª© / Super Zola Pac Gal	hack
+mschamp	Ms. ¤pºëÆF «a­xª© / Super Zola Pac Gal	Ms. ¤pºëÆF «a­xª© / Super Zola Pac Gal	hack
+pengo	¥øÃZ±À¦B (set 1 rev c)	¥øÃZ±À¦B (set 1 rev c)	Sega
+pengo2	¥øÃZ±À¦B (set 2)	¥øÃZ±À¦B (set 2)	Sega
+pengo2u	¥øÃZ±À¦B (set 2 ¥¼¥[±K)	¥øÃZ±À¦B (set 2 ¥¼¥[±K)	Sega
+pengo3u	¥øÃZ±À¦B (set 3 ¥¼¥[±K)	¥øÃZ±À¦B (set 3 ¥¼¥[±K)	Sega
+pengo4	¥øÃZ±À¦B (set 4)	¥øÃZ±À¦B (set 4)	Sega
+pengob	¥øÃZ±À¦B (µsª©)	¥øÃZ±À¦B (µsª©)	bootleg
+penta	¥øÃZ±À¦B / Penta	¥øÃZ±À¦B / Penta	bootleg
 galaxian	¤p»e¸Á (Namco set 1)	¤p»e¸Á (Namco set 1)	Namco
 galaxiaj	¤p»e¸Á (Namco set 2)	¤p»e¸Á (Namco set 2)	Namco
 galmidw	¤p»e¸Á (Midway)	¤p»e¸Á (Midway)	[Namco] (Midway license)
 galmidwo	¤p»e¸Á (Midway, ÂÂª©)	¤p»e¸Á (Midway, ÂÂª©)	[Namco] (Midway license)
 superg	¤p»e¸Á / ¶W¯Å¤p»e¸Á	¤p»e¸Á / ¶W¯Å¤p»e¸Á	hack
 galapx	¤p»e¸Á Part X	¤p»e¸Á Part X	hack
-moonaln	¤p»e¸Á / Moon Alien	¤p»e¸Á / Moon Alien	[Nichibutsu] (Karateco license)
+moonaln	¤p»e¸Á / ¤ë²y²§§Î	¤p»e¸Á / ¤ë²y²§§Î	[Nichibutsu] (Karateco license)
 galap1	¤p»e¸Á / Space Invaders Galactica	¤p»e¸Á / Space Invaders Galactica	hack
 galap4	¤p»e¸Á / Galaxian Part 4	¤p»e¸Á / Galaxian Part 4	hack
 galturbo	¤p»e¸Á / Galaxian Turbo	¤p»e¸Á / Galaxian Turbo	hack
@@ -55,11 +67,13 @@ pacmanbl	¤pºëÆF (Galaxian hardware)	¤pºëÆF (Galaxian hardware)	bootleg
 devilfsg	Å]³½ (Galaxian hardware, µsª©?)	Å]³½ (Galaxian hardware, µsª©?)	Vision / Artic
 zigzag	¥´ªÅ®ð / Zig Zag (Galaxian hardware, set 1)	¥´ªÅ®ð / Zig Zag (Galaxian hardware, set 1)	LAX
 zigzag2	¥´ªÅ®ð / Zig Zag (Galaxian hardware, set 2)	¥´ªÅ®ð / Zig Zag (Galaxian hardware, set 2)	LAX
-moonal2	¤ë²y²§§Î Part 2	¤ë²y²§§Î Part 2	Nichibutsu
-moonal2b	¤ë²y²§§Î Part 2 (ÂÂª©)	¤ë²y²§§Î Part 2 (ÂÂª©)	Nichibutsu
-supergx	¤ë²y²§§Î Part 2 / Super GX	¤ë²y²§§Î Part 2 / Super GX	Nichibutsu
+jumpbug	¸õ¸õ¨®	¸õ¸õ¨®	Rock-ola
+jumpbugb	¸õ¸õ¨® (µsª©)	¸õ¸õ¨® (µsª©)	bootleg
+moonal2	¤p»e¸Á Part 2 / ¤ë²y²§§Î Part 2	¤p»e¸Á Part 2 / ¤ë²y²§§Î Part 2	Nichibutsu
+moonal2b	¤p»e¸Á Part 2 / ¤ë²y²§§Î Part 2 (ÂÂª©)	¤p»e¸Á Part 2 / ¤ë²y²§§Î Part 2 (ÂÂª©)	Nichibutsu
+supergx	¤p»e¸Á Part 2 / Super GX	¤p»e¸Á Part 2 / Super GX	Nichibutsu
 4in1	½ì¨ý¥|¦X¤@	½ì¨ý¥|¦X¤@	Armenia / Food and Fun
-dkongjrm	¤jª÷­è Jr. (Moon Cresta hardware)	¤jª÷­è Jr. (Moon Cresta hardware)	bootleg
+dkongjrm	¤pª÷­è (Moon Cresta hardware)	¤pª÷­è (Moon Cresta hardware)	bootleg
 atlantis	¨M¾Ô¨È¯SÄõ´£´µ (set 1)	¨M¾Ô¨È¯SÄõ´£´µ (set 1)	Comsoft
 atlants2	¨M¾Ô¨È¯SÄõ´£´µ (set 2)	¨M¾Ô¨È¯SÄõ´£´µ (set 2)	Comsoft
 ckongs	ºÆ¨g¤jª÷­è (Scramble hardware)	ºÆ¨g¤jª÷­è (Scramble hardware)	bootleg
@@ -73,10 +87,10 @@ armorca2	¸Ë¥Ò¨® (set 2)	¸Ë¥Ò¨® (set 2)	Stern
 moonwar	¤ë²y¾Ôª§	¤ë²y¾Ôª§	Stern
 moonwara	¤ë²y¾Ôª§ (ÂÂ)	¤ë²y¾Ôª§ (ÂÂ)	Stern
 darkplnt	¶Â·t¬P²y	¶Â·t¬P²y	Stern
-cclimber	ºÆ¨g¤j¼Ó (¬ü°êª©)	ºÆ¨g¤j¼Ó (¬ü°êª©)	Nichibutsu
-cclimbrj	ºÆ¨g¤j¼Ó (¤é¥»ª©)	ºÆ¨g¤j¼Ó (¤é¥»ª©)	Nichibutsu
-ccboot	ºÆ¨g¤j¼Ó (µsª© set 1)	ºÆ¨g¤j¼Ó (µsª© set 1)	bootleg
-ccboot2	ºÆ¨g¤j¼Ó (µsª© set 2)	ºÆ¨g¤j¼Ó (µsª© set 2)	bootleg
+cclimber	ºÆ¨gÃkµnªÌ (¬ü°êª©)	ºÆ¨gÃkµnªÌ (¬ü°êª©)	Nichibutsu
+cclimbrj	ºÆ¨gÃkµnªÌ (¤é¥»ª©)	ºÆ¨gÃkµnªÌ (¤é¥»ª©)	Nichibutsu
+ccboot	ºÆ¨gÃkµnªÌ (µsª© set 1)	ºÆ¨gÃkµnªÌ (µsª© set 1)	bootleg
+ccboot2	ºÆ¨gÃkµnªÌ (µsª© set 2)	ºÆ¨gÃkµnªÌ (µsª© set 2)	bootleg
 ckong	ºÆ¨g¤jª÷­è (set 1)	ºÆ¨g¤jª÷­è (set 1)	Falcon
 ckonga	ºÆ¨g¤jª÷­è (set 2)	ºÆ¨g¤jª÷­è (set 2)	Falcon
 ckongjeu	ºÆ¨g¤jª÷­è (Jeutel µsª©)	ºÆ¨g¤jª÷­è (Jeutel µsª©)	bootleg
@@ -91,9 +105,10 @@ swimmera	´åªa°ª¤â  (set 2)	´åªa°ª¤â  (set 2)	Tehkan
 swimmerb	´åªa°ª¤â  (set 3)	´åªa°ª¤â  (set 3)	Tehkan
 ckongb	ºÆ¨g¤jª÷­è (Alternative levels)	ºÆ¨g¤jª÷­è (Alternative levels)	bootleg
 gomoku	¤­¥Ø³s¯]	¤­¥Ø³s¯]	Nichibutsu
-terracre	¤õ»ñ°Ä / ¯«ÆN¤@¸¹ (YM3526 set 1)	¤õ»ñ°Ä / ¯«ÆN¤@¸¹ (YM3526 set 1)	Nichibutsu
-terracrb	¤õ»ñ°Ä / ¯«ÆN¤@¸¹ (YM3526 set 2)	¤õ»ñ°Ä / ¯«ÆN¤@¸¹ (YM3526 set 2)	Nichibutsu
-terracra	¤õ»ñ°Ä / ¯«ÆN¤@¸¹ (YM2203)	¤õ»ñ°Ä / ¯«ÆN¤@¸¹ (YM2203)	Nichibutsu
+magmax	ª÷¿û¦XÅé	ª÷¿û¦XÅé	Nichibutsu
+terracre	¤õ³¾¾Ô¾÷ (YM3526 set 1)	¤õ³¾¾Ô¾÷ (YM3526 set 1)	Nichibutsu
+terracrb	¤õ³¾¾Ô¾÷ (YM3526 set 2)	¤õ³¾¾Ô¾÷ (YM3526 set 2)	Nichibutsu
+terracra	¤õ³¾¾Ô¾÷ (YM2203)	¤õ³¾¾Ô¾÷ (YM2203)	Nichibutsu
 amazon	¸t¾Ô¤h / Soldier Girl Amazon	¸t¾Ô¤h / Soldier Girl Amazon	Nichibutsu
 amatelas	¸t¾Ô¤h	¸t¾Ô¤h	Nichibutsu
 dangar	UFO ÅÜ§Îª÷­è (12/1/1986)	UFO ÅÜ§Îª÷­è (12/1/1986)	Nichibutsu
@@ -107,6 +122,7 @@ kodure	±a¤l¯T (¤é¥»ª©)	±a¤l¯T (¤é¥»ª©)	Nichibutsu
 armedf	ªZ¸Ë½s¶¤	ªZ¸Ë½s¶¤	Nichibutsu
 hyhoo	¹ï¾Ô°Ýµª HYHOO (¤é¥»ª©)	¹ï¾Ô°Ýµª HYHOO (¤é¥»ª©)	Nichibutsu
 hyhoo2	¹ï¾Ô°Ýµª HYHOO 2 (¤é¥»ª©)	¹ï¾Ô°Ýµª HYHOO 2 (¤é¥»ª©)	Nichibutsu
+pastelg	±À­Ë­J - ¯»±m¤k­¦ (¤é¥»ª© 851224)	±À­Ë­J - ¯»±m¤k­¦ (¤é¥»ª© 851224)	Nichibutsu
 crystalg	¤ô´¹¤k«Ä (¤é¥»ª© 860512)	¤ô´¹¤k«Ä (¤é¥»ª© 860512)	Nichibutsu
 crystal2	¤ô´¹¤k«Ä 2 (¤é¥»ª© 860620)	¤ô´¹¤k«Ä 2 (¤é¥»ª© 860620)	Nichibutsu
 citylove	«°¥«¤§ÅÊ (¤é¥»ª© 860908)	«°¥«¤§ÅÊ (¤é¥»ª© 860908)	Nichibutsu
@@ -124,11 +140,11 @@ bijokkog	«C¬K³Â³¶ - ¬ü¤k¾Ç¶é (¤é¥»ª© 880116)	«C¬K³Â³¶ - ¬ü¤k¾Ç¶é (¤é¥»ª© 880116)
 orangec	¾í¦â­Ñ¼Ö³¡ - (¯µ) ½Ò¥~±Â·~ (¤é¥»ª© 880213)	¾í¦â­Ñ¼Ö³¡ - (¯µ) ½Ò¥~±Â·~ (¤é¥»ª© 880213)	Daiichi Denshi
 orangeci	¾í¦â­Ñ¼Ö³¡ - (¯µ) ¤@µo¶}©ñ [BET] (¤é¥»ª© 880221)	¾í¦â­Ñ¼Ö³¡ - (¯µ) ¤@µo¶}©ñ [BET] (¤é¥»ª© 880221)	Daiichi Denshi
 vipclub	VIP ­Ñ¼Ö³¡ - (¯µ) ¤@µo¶}©ñ [BET] (¤é¥»ª© 880310)	VIP ­Ñ¼Ö³¡ - (¯µ) ¤@µo¶}©ñ [BET] (¤é¥»ª© 880310)	Daiichi Denshi
-korinai	³Â³¶·Rª±µL¸o (¤é¥»ª© 880425)	³Â³¶·Rª±µL¸o (¤é¥»ª© 880425)	Nichibutsu
-korinaim	³Â³¶·Rª±µL¸o [BET] (¤é¥»ª© 880920)	³Â³¶·Rª±µL¸o [BET] (¤é¥»ª© 880920)	Nichibutsu
-kaguya	³Â³¶³Ã­Ñ«Î¤½¥D [BET] (¤é¥»ª© 880521)	³Â³¶³Ã­Ñ«Î¤½¥D [BET] (¤é¥»ª© 880521)	MIKI SYOUJI
-kaguya2	³Â³¶³Ã­Ñ«Î¤½¥D ¨ä¤§¶L [BET] (¤é¥»ª© 890829)	³Â³¶³Ã­Ñ«Î¤½¥D ¨ä¤§¶L [BET] (¤é¥»ª© 890829)	MIKI SYOUJI
-kaguya2f	³Â³¶³Ã­Ñ«Î¤½¥D ¨ä¤§¶L  ´_¨èª© [BET] (¤é¥»ª© 010808)	³Â³¶³Ã­Ñ«Î¤½¥D ¨ä¤§¶L  ´_¨èª© [BET] (¤é¥»ª© 010808)	MIKI SYOUJI
+korinai	³Â³¶ ·Rª±µL¸o (¤é¥»ª© 880425)	³Â³¶ ·Rª±µL¸o (¤é¥»ª© 880425)	Nichibutsu
+korinaim	³Â³¶ ·Rª±µL¸o [BET] (¤é¥»ª© 880920)	³Â³¶ ·Rª±µL¸o [BET] (¤é¥»ª© 880920)	Nichibutsu
+kaguya	®V³Â³¶ [BET] (¤é¥»ª© 880521)	®V³Â³¶ [BET] (¤é¥»ª© 880521)	MIKI SYOUJI
+kaguya2	®V³Â³¶ ¨ä¤§¶L [BET] (¤é¥»ª© 890829)	®V³Â³¶ ¨ä¤§¶L [BET] (¤é¥»ª© 890829)	MIKI SYOUJI
+kaguya2f	®V³Â³¶ ¨ä¤§¶L ´_¨èª© [BET] (¤é¥»ª© 010808)	®V³Â³¶ ¨ä¤§¶L ´_¨èª© [BET] (¤é¥»ª© 010808)	MIKI SYOUJI
 otonano	¤j¤H³Â³¶ (¤é¥»ª© 880628)	¤j¤H³Â³¶ (¤é¥»ª© 880628)	Apple
 kanatuen	ª÷¬z¶é [BET] (¤é¥»ª© 880905)	ª÷¬z¶é [BET] (¤é¥»ª© 880905)	Panac
 kyuhito	¨s·¥¤§¤k [BET] (¤é¥»ª© 880824)	¨s·¥¤§¤k [BET] (¤é¥»ª© 880824)	ROLLER TRON
@@ -155,52 +171,54 @@ pairsnb	¹q¸£¯«¸g°I®z (Nichibutsu) (¤é¥»ª© 890822)	¹q¸£¯«¸g°I®z (Nichibutsu) (¤é¥
 pairsten	¹q¸£¯«¸g°I®z (System Ten) (¤é¥»ª© 890826)	¹q¸£¯«¸g°I®z (System Ten) (¤é¥»ª© 890826)	System Ten
 bananadr	³Â³¶­»¿¼¤§¹Ú [BET] (¤é¥»ª© 891124)	³Â³¶­»¿¼¤§¹Ú [BET] (¤é¥»ª© 891124)	Digital Soft
 mladyhtr	³Â³¶¤p©jÂy¤â - ©Çµs¶Â¿ßÁp·ù½g (¤é¥»ª© 900509)	³Â³¶¤p©jÂy¤â - ©Çµs¶Â¿ßÁp·ù½g (¤é¥»ª© 900509)	Nichibutsu
-chinmoku	³Â³¶¨IÀqªº½s¶¤ (¤é¥»ª© 900511)	³Â³¶¨IÀqªº½s¶¤ (¤é¥»ª© 900511)	Nichibutsu
+chinmoku	³Â³¶ ¨IÀqªº½s¶¤ (¤é¥»ª© 900511)	³Â³¶ ¨IÀqªº½s¶¤ (¤é¥»ª© 900511)	Nichibutsu
 maiko	»R§²ªá (¤é¥»ª© 900802)	»R§²ªá (¤é¥»ª© 900802)	Nichibutsu
 mmaiko	»R§²ªá [BET] (¤é¥»ª© 900911)	»R§²ªá [BET] (¤é¥»ª© 900911)	Nichibutsu
 club90s	³Â³¶­Ñ¼Ö³¡ 90' (set 1) (¤é¥»ª© 900919)	³Â³¶­Ñ¼Ö³¡ 90' (set 1) (¤é¥»ª© 900919)	Nichibutsu
 club90sa	³Â³¶­Ñ¼Ö³¡ 90' (set 2) (¤é¥»ª© 900919)	³Â³¶­Ñ¼Ö³¡ 90' (set 2) (¤é¥»ª© 900919)	Nichibutsu
-lovehous	³Â³¶­Ñ¼Ö³¡ 90' / Mahjong Love House [BET] (¤é¥»ª© 901024)	³Â³¶­Ñ¼Ö³¡ 90' / Mahjong Love House [BET] (¤é¥»ª© 901024)	Nichibutsu
+lovehous	³Â³¶­Ñ¼Ö³¡ 90' / ³Â³¶·R¤§«Î [BET] (¤é¥»ª© 901024)	³Â³¶­Ñ¼Ö³¡ 90' / ³Â³¶·R¤§«Î [BET] (¤é¥»ª© 901024)	Nichibutsu
 hanaoji	ªá»P¼Ú¦N®á [BET] (¤é¥»ª© 911209)	ªá»P¼Ú¦N®á [BET] (¤é¥»ª© 911209)	Nichibutsu
-pstadium	³Â³¶Åå®£Äv§Þ³õ (¤é¥»ª©)	³Â³¶Åå®£Äv§Þ³õ (¤é¥»ª©)	Nichibutsu
-triplew1	³Â³¶¤T­¿¾Ôª§ (¤é¥»ª©)	³Â³¶¤T­¿¾Ôª§ (¤é¥»ª©)	Nichibutsu
-triplew2	³Â³¶¤T­¿¾Ôª§ 2 (¤é¥»ª©)	³Â³¶¤T­¿¾Ôª§ 2 (¤é¥»ª©)	Nichibutsu
-ntopstar	ÃÀ¯à¬É³Â³¶ (¤é¥»ª©)	ÃÀ¯à¬É³Â³¶ (¤é¥»ª©)	Nichibutsu
+pstadium	³Â³¶ Åå®£Äv§Þ³õ (¤é¥»ª©)	³Â³¶ Åå®£Äv§Þ³õ (¤é¥»ª©)	Nichibutsu
+triplew1	³Â³¶ ¤T­¿¾Ôª§ (¤é¥»ª©)	³Â³¶ ¤T­¿¾Ôª§ (¤é¥»ª©)	Nichibutsu
+triplew2	³Â³¶ ¤T­¿¾Ôª§ 2 (¤é¥»ª©)	³Â³¶ ¤T­¿¾Ôª§ 2 (¤é¥»ª©)	Nichibutsu
+ntopstar	ºË·Ç! ³»¦y¥¨¬P - ÃÀ¯à¬É¥Í¦s³Â³¶ (¤é¥»ª©)	ºË·Ç! ³»¦y¥¨¬P - ÃÀ¯à¬É¥Í¦s³Â³¶ (¤é¥»ª©)	Nichibutsu
 mjlstory	³Â³¶¹êÅç·R±¡¬G¨Æ (¤é¥»ª©)	³Â³¶¹êÅç·R±¡¬G¨Æ (¤é¥»ª©)	Nichibutsu
 vanilla	³Â³¶­»¯óºî¦X¯g (¤é¥»ª©)	³Â³¶­»¯óºî¦X¯g (¤é¥»ª©)	Nichibutsu
-finalbny	³Â³¶³Ì«áªº¨ß¤k­¦ [BET] (¤é¥»ª©)	³Â³¶³Ì«áªº¨ß¤k­¦ [BET] (¤é¥»ª©)	Nichibutsu
+finalbny	³Â³¶ ³Ì«áªº¨ß¤k­¦ [BET] (¤é¥»ª©)	³Â³¶ ³Ì«áªº¨ß¤k­¦ [BET] (¤é¥»ª©)	Nichibutsu
 qmhayaku	°Ýµª³Â³¶ ¦­¦w! (¤é¥»ª©)	°Ýµª³Â³¶ ¦­¦w! (¤é¥»ª©)	Nichibutsu
-galkoku	³Â³¶¤k«Äªº§i¥Õ (¤é¥»ª©)	³Â³¶¤k«Äªº§i¥Õ (¤é¥»ª©)	Nichibutsu/T.R.TEC
+galkoku	³Â³¶ ¤k«Äªº§i¥Õ (¤é¥»ª©)	³Â³¶ ¤k«Äªº§i¥Õ (¤é¥»ª©)	Nichibutsu/T.R.TEC
 hyouban	³Â³¶µû§P®Q [BET] (¤é¥»ª©)	³Â³¶µû§P®Q [BET] (¤é¥»ª©)	Nichibutsu/T.R.TEC
-galkaika	³Â³¶¦pªá¤Ö¤k (¤é¥»ª©)	³Â³¶¦pªá¤Ö¤k (¤é¥»ª©)	Nichibutsu/T.R.TEC
-tokyogal	ªF¨Ê¤k¤l¹ÏÅ³ (¤é¥»ª©)	ªF¨Ê¤k¤l¹ÏÅ³ (¤é¥»ª©)	Nichibutsu
+galkaika	³Â³¶ ¦pªá¤Ö¤k (¤é¥»ª©)	³Â³¶ ¦pªá¤Ö¤k (¤é¥»ª©)	Nichibutsu/T.R.TEC
+tokyogal	ªF¨Ê¤k­¦¹ÏÅ³ (¤é¥»ª©)	ªF¨Ê¤k­¦¹ÏÅ³ (¤é¥»ª©)	Nichibutsu
 tokimbsj	¯ÝÄÌ¬ü¤Ö¤k [BET] (¤é¥»ª©)	¯ÝÄÌ¬ü¤Ö¤k [BET] (¤é¥»ª©)	Nichibutsu
-uchuuai	¨Ó¦Û¦t©zªº·R (¤é¥»ª©)	¨Ó¦Û¦t©zªº·R (¤é¥»ª©)	Nichibutsu
-av2mj1bb	AV2 ³Â³¶ No.1 ®üÆW¤j¾ô¸t¤k (¤é¥»ª©)	AV2 ³Â³¶ No.1 ®üÆW¤j¾ô¸t¤k (¤é¥»ª©)	MIKI SYOUJI/AV JAPAN
+uchuuai	³Â³¶ ¨Ó¦Û¦t©zªº·R (¤é¥»ª©)	³Â³¶ ¨Ó¦Û¦t©zªº·R (¤é¥»ª©)	Nichibutsu
+av2mj1bb	AV2 ³Â³¶ No.1 ®üÆW¤j¾ôªº¸t¤k (¤é¥»ª©)	AV2 ³Â³¶ No.1 ®üÆW¤j¾ôªº¸t¤k (¤é¥»ª©)	MIKI SYOUJI/AV JAPAN
 av2mj2rg	AV2 ³Â³¶ No.2 ¬õ¯»¨Î¤H (¤é¥»ª©)	AV2 ³Â³¶ No.2 ¬õ¯»¨Î¤H (¤é¥»ª©)	MIKI SYOUJI/AV JAPAN
 mjuraden	³Â³¶ ¥e¤R¶Ç»¡ (¤é¥»ª©)	³Â³¶ ¥e¤R¶Ç»¡ (¤é¥»ª©)	Nichibutsu/Yubis
-koinomp	³Â³¶ÅÊ·RªºÅ]¤O (¤é¥»ª©)	³Â³¶ÅÊ·RªºÅ]¤O (¤é¥»ª©)	Nichibutsu
-patimono	³Â³¶¬f«C­ôª«»y (¤é¥»ª©)	³Â³¶¬f«C­ôª«»y (¤é¥»ª©)	Nichibutsu
-mjanbari	¼ú³¹³Â³¶ - »{¯uÎ¤¨½®q [BET] (¤é¥»ª©)	¼ú³¹³Â³¶ - »{¯uÎ¤¨½®q [BET] (¤é¥»ª©)	Nichibutsu/Yubis/AV JAPAN
-gal10ren	³Â±N¤Q³s²ø (¤é¥»ª©)	³Â±N¤Q³s²ø (¤é¥»ª©)	FUJIC
-renaiclb	³Â³¶ÅÊ·R­Ñ¼Ö³¡ (¤é¥»ª©)	³Â³¶ÅÊ·R­Ñ¼Ö³¡ (¤é¥»ª©)	FUJIC
+koinomp	³Â³¶ ÅÊ·RªºÅ]¤O (¤é¥»ª©)	³Â³¶ ÅÊ·RªºÅ]¤O (¤é¥»ª©)	Nichibutsu
+patimono	³Â³¶ ¬f«C­ôª«»y (¤é¥»ª©)	³Â³¶ ¬f«C­ôª«»y (¤é¥»ª©)	Nichibutsu
+janbari	³Â³¶ »{¯uÎ¤¨½®q (¤é¥»ª©)	³Â³¶ »{¯uÎ¤¨½®q (¤é¥»ª©)	Nichibutsu/Yubis/AV JAPAN
+mjanbari	¼ú³¹³Â³¶ »{¯uÎ¤¨½®q [BET] (¤é¥»ª©)	¼ú³¹³Â³¶ »{¯uÎ¤¨½®q [BET] (¤é¥»ª©)	Nichibutsu/Yubis/AV JAPAN
+gal10ren	³Â³¶¤k­¦ 10 ³sµo (¤é¥»ª©)	³Â³¶¤k­¦ 10 ³sµo (¤é¥»ª©)	FUJIC
+renaiclb	³Â³¶ ÅÊ·R­Ñ¼Ö³¡ (¤é¥»ª©)	³Â³¶ ÅÊ·R­Ñ¼Ö³¡ (¤é¥»ª©)	FUJIC
 mjlaman	³Â³¶±¡½t (¤é¥»ª©)	³Â³¶±¡½t (¤é¥»ª©)	Nichibutsu/AV JAPAN
-mkeibaou	³Â³¶Äv°¨¤ý (¤é¥»ª©)	³Â³¶Äv°¨¤ý (¤é¥»ª©)	Nichibutsu
+mkeibaou	³Â³¶ Äv°¨¤ý (¤é¥»ª©)	³Â³¶ Äv°¨¤ý (¤é¥»ª©)	Nichibutsu
 pachiten	¼ú³¹³Â³¶ ¤ôªG½L¤Ñ°ê [BET]  (¤é¥»ª©)	¼ú³¹³Â³¶ ¤ôªG½L¤Ñ°ê [BET]  (¤é¥»ª©)	Nichibutsu/MIKI SYOUJI/AV JAPAN
-sailorws	³Â³¶¤ô¤â¤§¾Ô (¤é¥»ª©)	³Â³¶¤ô¤â¤§¾Ô (¤é¥»ª©)	Nichibutsu
-sailorwa	³Â³¶¤ô¤â¤§¾Ô (¤é¥»ª©) (set 2)	³Â³¶¤ô¤â¤§¾Ô (¤é¥»ª©) (set 2)	Nichibutsu
-sailorwr	³Â³¶¤ô¤â¤§¾Ô-R [BET] (¤é¥»ª©)	³Â³¶¤ô¤â¤§¾Ô-R [BET] (¤é¥»ª©)	Nichibutsu
-yosimoto	³Â³¶¦N¥»¼@³õ (¤é¥»ª©)	³Â³¶¦N¥»¼@³õ (¤é¥»ª©)	Nichibutsu/Yoshimoto Kougyou
+sailorws	³Â³¶ ¤ô¤â¤§¾Ô (¤é¥»ª©)	³Â³¶ ¤ô¤â¤§¾Ô (¤é¥»ª©)	Nichibutsu
+sailorwa	³Â³¶ ¤ô¤â¤§¾Ô (¤é¥»ª©) (set 2)	³Â³¶ ¤ô¤â¤§¾Ô (¤é¥»ª©) (set 2)	Nichibutsu
+sailorwr	³Â³¶ ¤ô¤â¤§¾Ô-R [BET] (¤é¥»ª©)	³Â³¶ ¤ô¤â¤§¾Ô-R [BET] (¤é¥»ª©)	Nichibutsu
+jituroku	¹ê¿ý (®¢ )³Â³¶ - ¥¨¤j H §i¥Õ½g (¤é¥»ª©)	¹ê¿ý (®¢ )³Â³¶ - ¥¨¤j H §i¥Õ½g (¤é¥»ª©)	Windom
+yosimoto	³Â³¶ ¦N¥»¼@³õ (¤é¥»ª©)	³Â³¶ ¦N¥»¼@³õ (¤é¥»ª©)	Nichibutsu/Yoshimoto Kougyou
 psailor1	¬ü¤Ö¤k³¶¤h º}«G¤ô¤â 18 ¸T (¤é¥»ª©)	¬ü¤Ö¤k³¶¤h º}«G¤ô¤â 18 ¸T (¤é¥»ª©)	SPHINX
 psailor2	¬ü¤Ö¤k³¶¤h º}«G¤ô¤â 2 (¤é¥»ª©)	¬ü¤Ö¤k³¶¤h º}«G¤ô¤â 2 (¤é¥»ª©)	SPHINX
 otatidai	­}´µ¥i³Â³¶ (¤é¥»ª©)	­}´µ¥i³Â³¶ (¤é¥»ª©)	SPHINX
-ngpgal	¼ö¦å¤k«Ä (¤é¥»ª©)	¼ö¦å¤k«Ä (¤é¥»ª©)	Nichibutsu
-mjgottsu	³Â³¶¨­¾ú¨ä¹Ò! (¤é¥»ª©)	³Â³¶¨­¾ú¨ä¹Ò! (¤é¥»ª©)	Nichibutsu
-bakuhatu	³Â³¶Ãzµo¯Â±¡¶Ç (¤é¥»ª©)	³Â³¶Ãzµo¯Â±¡¶Ç (¤é¥»ª©)	Nichibutsu
+ngpgal	¼ö¦åÁÉ¨®¤k­¦ (¤é¥»ª©)	¼ö¦åÁÉ¨®¤k­¦ (¤é¥»ª©)	Nichibutsu
+mjgottsu	³Â³¶ ¨­¾ú¨ä¹Ò! (¤é¥»ª©)	³Â³¶ ¨­¾ú¨ä¹Ò! (¤é¥»ª©)	Nichibutsu
+bakuhatu	³Â³¶ Ãzµo¯Â±¡¶Ç (¤é¥»ª©)	³Â³¶ Ãzµo¯Â±¡¶Ç (¤é¥»ª©)	Nichibutsu
 cmehyou	³Â³¶¨µ¦^¤k°\ (¤é¥»ª©)	³Â³¶¨µ¦^¤k°\ (¤é¥»ª©)	Nichibutsu/Kawakusu
 mmehyou	¼ú³¹³Â³¶ ¨µ¦^¤k°\ [BET]  (¤é¥»ª©)	¼ú³¹³Â³¶ ¨µ¦^¤k°\ [BET]  (¤é¥»ª©)	Nichibutsu/Kawakusu
-mjkoiura	³Â³¶ÅÊ·R¥e¤R (¤é¥»ª©)	³Â³¶ÅÊ·R¥e¤R (¤é¥»ª©)	Nichibutsu
-mkoiuraa	³Â³¶ÅÊ·R¥e¤R (set 2) (¤é¥»ª©)	³Â³¶ÅÊ·R¥e¤R (set 2) (¤é¥»ª©)	Nichibutsu
+mjkoiura	³Â³¶ ÅÊ·R¥e¤R (¤é¥»ª©)	³Â³¶ ÅÊ·R¥e¤R (¤é¥»ª©)	Nichibutsu
+mkoiuraa	³Â³¶ ÅÊ·R¥e¤R (set 2) (¤é¥»ª©)	³Â³¶ ÅÊ·R¥e¤R (set 2) (¤é¥»ª©)	Nichibutsu
 imekura	ºÆ¨g³Â³¶ (¤é¥»ª©)	ºÆ¨g³Â³¶ (¤é¥»ª©)	SPHINX/AV JAPAN
 mscoutm	³Â³¶°»¹î­û - ¼ç¤J!! AV Äá¼v²{³õ (¤é¥»ª©)	³Â³¶°»¹î­û - ¼ç¤J!! AV Äá¼v²{³õ (¤é¥»ª©)	SPHINX/AV JAPAN
 mjegolf	³Â³¶¬ü¤k°ªº¸¤Ò (¤é¥»ª©)	³Â³¶¬ü¤k°ªº¸¤Ò (¤é¥»ª©)	FUJIC/AV JAPAN
@@ -220,15 +238,15 @@ griffon	¤£¦º³¾ / Griffon	¤£¦º³¾ / Griffon	Videotron
 falcona	¤£¦º³¾ / Falcon (µsª© set 2)	¤£¦º³¾ / Falcon (µsª© set 2)	bootleg
 kaitei	®ü©³±´Ä_	®ü©³±´Ä_	Namco
 kaiteik	®ü©³±´Ä_ (K'K-Tokki)	®ü©³±´Ä_ (K'K-Tokki)	K.K. Tokki
-tankbatt	¶W¯Å©Z§J	¶W¯Å©Z§J	Namco
-rallyx	©Ô¤OÁÉ X	©Ô¤OÁÉ X	Namco
-rallyxm	©Ô¤OÁÉ X (Midway)	©Ô¤OÁÉ X (Midway)	[Namco] (Midway license)
-nrallyx	·s©Ô¤OÁÉ X	·s©Ô¤OÁÉ X	Namco
+tankbatt	©Z§J³¡¶¤	©Z§J³¡¶¤	Namco
+rallyx	°g»î¨® X	°g»î¨® X	Namco
+rallyxm	°g»î¨® X (Midway)	°g»î¨® X (Midway)	[Namco] (Midway license)
+nrallyx	·s°g»î¨® X	·s°g»î¨® X	Namco
 galaga	¤j»e¸Á (Namco rev. B)	¤j»e¸Á (Namco rev. B)	Namco
 galagao	¤j»e¸Á (Namco)	¤j»e¸Á (Namco)	Namco
 galagamw	¤j»e¸Á (Midway set 1)	¤j»e¸Á (Midway set 1)	[Namco] (Midway license)
 galagamk	¤j»e¸Á (Midway set 2)	¤j»e¸Á (Midway set 2)	[Namco] (Midway license)
-gallag	¤j»e¸Á	¤j»e¸Á	bootleg
+gallag	¤j»e¸Á / Gallag	¤j»e¸Á / Gallag	bootleg
 gatsbee	¤j»e¸Á / Gatsbee	¤j»e¸Á / Gatsbee	hack
 digdug	¥´ªÅ®ð (rev 2)	¥´ªÅ®ð (rev 2)	Namco
 digdugb	¥´ªÅ®ð (rev 1)	¥´ªÅ®ð (rev 1)	Namco
@@ -251,6 +269,8 @@ mappy	¿ß®»¦Ñ¹« (¬ü°êª©)	¿ß®»¦Ñ¹« (¬ü°êª©)	Namco
 mappyj	¿ß®»¦Ñ¹« (¤é¥»ª©)	¿ß®»¦Ñ¹« (¤é¥»ª©)	Namco
 digdug2	¥´ªÅ®ð II (·sª©)	¥´ªÅ®ð II (·sª©)	Namco
 digdug2o	¥´ªÅ®ð II (ÂÂª©)	¥´ªÅ®ð II (ÂÂª©)	Namco
+todruaga	°g®c¶ð (·sª©)	°g®c¶ð (·sª©)	Namco
+todruago	°g®c¶ð (ÂÂª©)	°g®c¶ð (ÂÂª©)	Namco
 grobda	©Z§J¨® (·sª©)	©Z§J¨® (·sª©)	Namco
 grobda2	©Z§J¨® (ÂÂª© set 1)	©Z§J¨® (ÂÂª© set 1)	Namco
 grobda3	©Z§J¨® (ÂÂª© set 2)	©Z§J¨® (ÂÂª© set 2)	Namco
@@ -278,13 +298,13 @@ skykido	¤ÑªÅ¤p¤l (ÂÂª©)	¤ÑªÅ¤p¤l (ÂÂª©)	Namco
 skykidd	¤ÑªÅ¤p¤l (60A1 Ver.)	¤ÑªÅ¤p¤l (60A1 Ver.)	Namco
 metrocrs	»ÙÃªÁÉ¶] (set 1)	»ÙÃªÁÉ¶] (set 1)	Namco
 metrocra	»ÙÃªÁÉ¶] (set 2)	»ÙÃªÁÉ¶] (set 2)	Namco
-skykiddx	¤ÑªÅ¤p¤l Deluxe (set 1)	¤ÑªÅ¤p¤l Deluxe (set 1)	Namco
-skykiddo	¤ÑªÅ¤p¤l Deluxe (set 2)	¤ÑªÅ¤p¤l Deluxe (set 2)	Namco
+skykiddx	¤ÑªÅ¤p¤l DELUXE (set 1)	¤ÑªÅ¤p¤l DELUXE (set 1)	Namco
+skykiddo	¤ÑªÅ¤p¤l DELUXE (set 2)	¤ÑªÅ¤p¤l DELUXE (set 2)	Namco
 genpeitd	·½¥­°QÅ]¶Ç	·½¥­°QÅ]¶Ç	Namco
 rthunder	ºu¹p (·sª©)	ºu¹p (·sª©)	Namco
 rthundro	ºu¹p (ÂÂª©)	ºu¹p (ÂÂª©)	Namco
 wndrmomo	¯«©_¤k«Ä	¯«©_¤k«Ä	Namco
-shadowld	§¯©Ç¹D¤¤°O	§¯©Ç¹D¤¤°O	Namco
+shadowld	§¯©Ç¹D¤¤°O / Shadowland	§¯©Ç¹D¤¤°O / Shadowland	Namco
 youkaidk	§¯©Ç¹D¤¤°O (¤é¥»ª© ·sª©)	§¯©Ç¹D¤¤°O (¤é¥»ª© ·sª©)	Namco
 yokaidko	§¯©Ç¹D¤¤°O (¤é¥»ª© ÂÂª©)	§¯©Ç¹D¤¤°O (¤é¥»ª© ÂÂª©)	Namco
 dspirit	Às»î (·sª©)	Às»î (·sª©)	Namco
@@ -319,9 +339,12 @@ rthun2j	ºu¹p 2 (¤é¥»ª©)	ºu¹p 2 (¤é¥»ª©)	Namco
 sws	¶W¯Å¥@¬É´Î²y (¤é¥»ª©)	¶W¯Å¥@¬É´Î²y (¤é¥»ª©)	Namco
 sws92	¶W¯Å¥@¬É´Î²y '92 (¤é¥»ª©)	¶W¯Å¥@¬É´Î²y '92 (¤é¥»ª©)	Namco
 sws92g	¶W¯Å¥@¬É´Î²y '92 ¿E°«ª© (¤é¥»ª©)	¶W¯Å¥@¬É´Î²y '92 ¿E°«ª© (¤é¥»ª©)	Namco
-sws93	¶W¯Å¥@¬É´Î²y '93 (¤é¥»ª©)	¶W¯Å¥@¬É´Î²y '93 (¤é¥»ª©)	Namco
-bkrtmaq	Ãzµõ°Ýµª - Å]Q¤j«_ÀI (¤é¥»ª©)	Ãzµõ°Ýµª - Å]Q¤j«_ÀI (¤é¥»ª©)	Namco
+sws93	¶W¯Å¥@¬É´Î²y '93 ¿E°«ª© (¤é¥»ª©)	¶W¯Å¥@¬É´Î²y '93 ¿E°«ª© (¤é¥»ª©)	Namco
+bkrtmaq	Ãzµõ°Ýµª Å]Q¤j«_ÀI (¤é¥»ª©)	Ãzµõ°Ýµª Å]Q¤j«_ÀI (¤é¥»ª©)	Namco
+fghtatck	F/A / Fighter & Attacker (¬ü°êª©)	F/A / Fighter & Attacker (¬ü°êª©)	Namco
+fa	F/A (¤é¥»ª©)	F/A (¤é¥»ª©)	Namco
 quiztou	¼ö°«! ¿E°«! °ÝÃD®q!! (¤é¥»ª©)	¼ö°«! ¿E°«! °ÝÃD®q!! (¤é¥»ª©)	Namco
+xday2	X-Day 2 (¤é¥»ª©)	X-Day 2 (¤é¥»ª©)	Namco
 ptblank	ºjªL¼u«B / Point Blank	ºjªL¼u«B / Point Blank	Namco
 gunbulet	ºjªL¼u«B (¤é¥»ª©)	ºjªL¼u«B (¤é¥»ª©)	Namco
 gslugrsj	¶W¯Å±j¥´ (¤é¥»ª©)	¶W¯Å±j¥´ (¤é¥»ª©)	Namco
@@ -351,13 +374,20 @@ redclsha	¨ª¦â½ÄÀ» (set 2)	¨ª¦â½ÄÀ» (set 2)	Tehkan
 redclask	¨ª¦â½ÄÀ» (Kaneko)	¨ª¦â½ÄÀ» (Kaneko)	Kaneko
 devzone	Å]°­¦a±a	Å]°­¦a±a	Universal
 devzone2	Å]°­¦a±a (easier)	Å]°­¦a±a (easier)	Universal
-nomnlnd	¾Ô°ê¦Û½Ã¶¤	¾Ô°ê¦Û½Ã¶¤	Universal
-nomnlndg	¾Ô°ê¦Û½Ã¶¤ (Gottlieb)	¾Ô°ê¦Û½Ã¶¤ (Gottlieb)	Universal (Gottlieb license)
-docastle	Mr. Do vs. ¿W¨¤Ã~ / Mr. Do's Castle (set 1)	Mr. Do vs. ¿W¨¤Ã~ / Mr. Do's Castle (set 1)	Universal
-docastl2	Mr. Do vs. ¿W¨¤Ã~ / Mr. Do's Castle (set 2)	Mr. Do vs. ¿W¨¤Ã~ / Mr. Do's Castle (set 2)	Universal
-docastlo	Mr. Do vs. ¿W¨¤Ã~ / Mr. Do's Castle (ÂÂ)	Mr. Do vs. ¿W¨¤Ã~ / Mr. Do's Castle (ÂÂ)	Universal
-douni	Mr. Do vs. ¿W¨¤Ã~	Mr. Do vs. ¿W¨¤Ã~	Universal
-dowild	Mr. Do ªº¼É¨«	Mr. Do ªº¼É¨«	Universal
+nomnlnd	¾Ô°ê¦Û½Ã¶¤ / No Man's Land	¾Ô°ê¦Û½Ã¶¤ / No Man's Land	Universal
+nomnlndg	¾Ô°ê¦Û½Ã¶¤ / No Man's Land (Gottlieb)	¾Ô°ê¦Û½Ã¶¤ / No Man's Land (Gottlieb)	Universal (Gottlieb license)
+mrdo	§ù¥ý¥Í!	§ù¥ý¥Í!	Universal
+mrdoy	§ù¥ý¥Í! (¶}µoª©)	§ù¥ý¥Í! (¶}µoª©)	Universal
+mrdot	§ù¥ý¥Í! (Taito)	§ù¥ý¥Í! (Taito)	Universal (Taito license)
+mrdofix	§ù¥ý¥Í! (bugfixed)	§ù¥ý¥Í! (bugfixed)	Universal (Taito license)
+mrlo	§ù¥ý¥Í! / Mr. Lo!	§ù¥ý¥Í! / Mr. Lo!	bootleg
+mrdu	§ù¥ý¥Í! / Mr. Du!	§ù¥ý¥Í! / Mr. Du!	bootleg
+yankeedo	§ù¥ý¥Í! / Yankee DO!	§ù¥ý¥Í! / Yankee DO!	hack
+docastle	§ù¥ý¥Í vs. ¿W¨¤Ã~ / Mr. Do's Castle (set 1)	§ù¥ý¥Í vs. ¿W¨¤Ã~ / Mr. Do's Castle (set 1)	Universal
+docastl2	§ù¥ý¥Í vs. ¿W¨¤Ã~ / Mr. Do's Castle (set 2)	§ù¥ý¥Í vs. ¿W¨¤Ã~ / Mr. Do's Castle (set 2)	Universal
+docastlo	§ù¥ý¥Í vs. ¿W¨¤Ã~ / Mr. Do's Castle (ÂÂ)	§ù¥ý¥Í vs. ¿W¨¤Ã~ / Mr. Do's Castle (ÂÂ)	Universal
+douni	§ù¥ý¥Í vs. ¿W¨¤Ã~	§ù¥ý¥Í vs. ¿W¨¤Ã~	Universal
+dowild	§ù¥ý¥Íªº¼É¨«	§ù¥ý¥Íªº¼É¨«	Universal
 helifire	¤Ó¶§¤õ (set 1)	¤Ó¶§¤õ (set 1)	Nintendo
 helifira	¤Ó¶§¤õ (set 2)	¤Ó¶§¤õ (set 2)	Nintendo
 dkong	¤jª÷­è (¬ü°êª© set 1)	¤jª÷­è (¬ü°êª© set 1)	Nintendo of America
@@ -365,11 +395,11 @@ dkongo	¤jª÷­è (¬ü°êª© set 2)	¤jª÷­è (¬ü°êª© set 2)	Nintendo
 dkongjp	¤jª÷­è (¤é¥»ª© set 1)	¤jª÷­è (¤é¥»ª© set 1)	Nintendo
 dkongjo	¤jª÷­è (¤é¥»ª© set 2)	¤jª÷­è (¤é¥»ª© set 2)	Nintendo
 dkongjo1	¤jª÷­è (¤é¥»ª© set 3) (bad dump?)	¤jª÷­è (¤é¥»ª© set 3) (bad dump?)	Nintendo
-dkongjr	¤jª÷­è Junior (¬ü°êª©)	¤jª÷­è Junior (¬ü°êª©)	Nintendo of America
-dkongjrj	¤jª÷­è Jr. (¤é¥»ª©)	¤jª÷­è Jr. (¤é¥»ª©)	Nintendo
-dkngjnrj	¤jª÷­è Junior (¤é¥»ª©?)	¤jª÷­è Junior (¤é¥»ª©?)	Nintendo
-dkongjrb	¤jª÷­è Jr. (µsª©)	¤jª÷­è Jr. (µsª©)	bootleg
-dkngjnrb	¤jª÷­è Junior (µsª©?)	¤jª÷­è Junior (µsª©?)	Nintendo of America
+dkongjr	¤pª÷­è / Donkey Kong Junior (¬ü°êª©)	¤pª÷­è / Donkey Kong Junior (¬ü°êª©)	Nintendo of America
+dkongjrj	¤pª÷­è (¤é¥»ª©)	¤pª÷­è (¤é¥»ª©)	Nintendo
+dkngjnrj	¤pª÷­è / Donkey Kong Junior (¤é¥»ª©?)	¤pª÷­è / Donkey Kong Junior (¤é¥»ª©?)	Nintendo
+dkongjrb	¤pª÷­è (µsª©)	¤pª÷­è (µsª©)	bootleg
+dkngjnrb	¤pª÷­è / Donkey Kong Junior (µsª©?)	¤pª÷­è / Donkey Kong Junior (µsª©?)	Nintendo of America
 dkong3	¤jª÷­è 3 (¬ü°êª©)	¤jª÷­è 3 (¬ü°êª©)	Nintendo of America
 dkong3j	¤jª÷­è 3 (¤é¥»ª©)	¤jª÷­è 3 (¤é¥»ª©)	Nintendo
 dkong3b	¤jª÷­è 3 (µsª© Donkey Kong Jr. hardware)	¤jª÷­è 3 (µsª© Donkey Kong Jr. hardware)	bootleg
@@ -382,39 +412,41 @@ popeyeu	¤j¤O¤ô¤â (revision D not protected)	¤j¤O¤ô¤â (revision D not protected)	
 popeyef	¤j¤O¤ô¤â (revision F)	¤j¤O¤ô¤â (revision F)	Nintendo
 popeyebl	¤j¤O¤ô¤â (µsª©)	¤j¤O¤ô¤â (µsª©)	bootleg
 pc_tenis	ºô²y (PlayChoice-10)	ºô²y (PlayChoice-10)	Nintendo
-pc_mario	°¨§Q¼Ú¥S§Ì / ¤ôºÞ°¨§Q¼Ú (PlayChoice-10)	°¨§Q¼Ú¥S§Ì / ¤ôºÞ°¨§Q¼Ú (PlayChoice-10)	Nintendo
+pc_mario	°¨§Q¼Ú¥S§Ì (PlayChoice-10)	°¨§Q¼Ú¥S§Ì (PlayChoice-10)	Nintendo
 pc_bball	´Î²y (PlayChoice-10)	´Î²y (PlayChoice-10)	Nintendo of America
 pc_golf	°ªº¸¤Ò (PlayChoice-10)	°ªº¸¤Ò (PlayChoice-10)	Nintendo
-pc_kngfu	¥\¤Ò (PlayChoice-10)	¥\¤Ò (PlayChoice-10)	Irem (Nintendo license)
+pc_kngfu	¦¨Às½ðÀ] / ¥\¤Ò (PlayChoice-10)	¦¨Às½ðÀ] / ¥\¤Ò (PlayChoice-10)	Irem (Nintendo license)
 pc_smb	¶W¯Å°¨§Q¼Ú¥S§Ì (PlayChoice-10)	¶W¯Å°¨§Q¼Ú¥S§Ì (PlayChoice-10)	Nintendo
 pc_vball	±Æ²y (PlayChoice-10)	±Æ²y (PlayChoice-10)	Nintendo
-pc_trjan	°«ªÌ»µºq (PlayChoice-10)	°«ªÌ»µºq (PlayChoice-10)	Capcom USA (Nintendo of America license)
-pc_cvnia	´cÅ]«° (PlayChoice-10)	´cÅ]«° (PlayChoice-10)	Konami (Nintendo of America license)
-pc_cntra	»î¤æÃ¹ (PlayChoice-10)	»î¤æÃ¹ (PlayChoice-10)	Konami (Nintendo of America license)
-pc_ngaid	§ÔªÌÀs¼C¶Ç (PlayChoice-10)	§ÔªÌÀs¼C¶Ç (PlayChoice-10)	Tecmo (Nintendo of America license)
-pc_tmnt	§ÔªÌÀt (PlayChoice-10)	§ÔªÌÀt (PlayChoice-10)	Konami (Nintendo of America license)
+pc_trjan	°«ªÌ»µºq / Trojan (PlayChoice-10)	°«ªÌ»µºq / Trojan (PlayChoice-10)	Capcom USA (Nintendo of America license)
+pc_cvnia	´cÅ]«° / Castlevania (PlayChoice-10)	´cÅ]«° / Castlevania (PlayChoice-10)	Konami (Nintendo of America license)
+pc_rnatk	ºñ¦â§L¹Î / Rush'n Attack (PlayChoice-10)	ºñ¦â§L¹Î / Rush'n Attack (PlayChoice-10)	Konami (Nintendo of America license)
+pc_rygar	¥¼¨Ó¾Ô¤h / Rygar (PlayChoice-10)	¥¼¨Ó¾Ô¤h / Rygar (PlayChoice-10)	Tecmo (Nintendo of America license)
+pc_cntra	»î¤æÃ¹ / Contra (PlayChoice-10)	»î¤æÃ¹ / Contra (PlayChoice-10)	Konami (Nintendo of America license)
+pc_ngaid	§ÔªÌÀs¼C¶Ç / Ninja Gaiden (PlayChoice-10)	§ÔªÌÀs¼C¶Ç / Ninja Gaiden (PlayChoice-10)	Tecmo (Nintendo of America license)
+pc_tmnt	§ÔªÌÀt / Teenage Mutant Ninja Turtles (PlayChoice-10)	§ÔªÌÀt / Teenage Mutant Ninja Turtles (PlayChoice-10)	Konami (Nintendo of America license)
 pc_bstar	´Î²y¤§¬P (PlayChoice-10)	´Î²y¤§¬P (PlayChoice-10)	SNK (Nintendo of America license)
 pc_drmro	°¨§Q¼ÚÂå¥Í (PlayChoice-10)	°¨§Q¼ÚÂå¥Í (PlayChoice-10)	Nintendo
-pc_ynoid	°²­±§ÔªÌªá¤Y (PlayChoice-10)	°²­±§ÔªÌªá¤Y (PlayChoice-10)	Capcom USA (Nintendo of America license)
+pc_ynoid	°²­±§ÔªÌªá¤Y / Yo! Noid (PlayChoice-10)	°²­±§ÔªÌªá¤Y / Yo! Noid (PlayChoice-10)	Capcom USA (Nintendo of America license)
 pc_ddrgn	ÂùºIÀs (PlayChoice-10)	ÂùºIÀs (PlayChoice-10)	Technos
 pc_gntlt	¸tñZ¶Ç»¡ (PlayChoice-10)	¸tñZ¶Ç»¡ (PlayChoice-10)	Atari/Tengen (Nintendo of America license)
 pc_smb2	¶W¯Å°¨§Q¼Ú¥S§Ì 2 (PlayChoice-10)	¶W¯Å°¨§Q¼Ú¥S§Ì 2 (PlayChoice-10)	Nintendo
 pc_smb3	¶W¯Å°¨§Q¼Ú¥S§Ì 3 (PlayChoice-10)	¶W¯Å°¨§Q¼Ú¥S§Ì 3 (PlayChoice-10)	Nintendo
-pc_mman3	¬¥§J¤H III (PlayChoice-10)	¬¥§J¤H III (PlayChoice-10)	Capcom USA (Nintendo of America license)
-pc_suprc	¶W¯Å»î¤æÃ¹ (PlayChoice-10)	¶W¯Å»î¤æÃ¹ (PlayChoice-10)	Konami (Nintendo of America license)
-pc_tmnt2	§ÔªÌÀt II (PlayChoice-10)	§ÔªÌÀt II (PlayChoice-10)	Konami (Nintendo of America license)
-pc_wcup	¼ö¦å°ª®Õ¸úÁ×²y (PlayChoice-10)	¼ö¦å°ª®Õ¸úÁ×²y (PlayChoice-10)	Technos (Nintendo license)
-pc_ngai2	§ÔªÌÀs¼C¶Ç II - ·t¶Â¨¸¯«¼C (PlayChoice-10)	§ÔªÌÀs¼C¶Ç II - ·t¶Â¨¸¯«¼C (PlayChoice-10)	Tecmo (Nintendo of America license)
-pc_ngai3	§ÔªÌÀs¼C¶Ç III - ¶À¬u¤è²î (PlayChoice-10)	§ÔªÌÀs¼C¶Ç III - ¶À¬u¤è²î (PlayChoice-10)	Tecmo (Nintendo of America license)
+pc_mman3	¬¥§J¤H III / Mega Man III (PlayChoice-10)	¬¥§J¤H III / Mega Man III (PlayChoice-10)	Capcom USA (Nintendo of America license)
+pc_suprc	¶W¯Å»î¤æÃ¹ / Super C (PlayChoice-10)	¶W¯Å»î¤æÃ¹ / Super C (PlayChoice-10)	Konami (Nintendo of America license)
+pc_tmnt2	§ÔªÌÀt II / Teenage Mutant Ninja Turtles II: The Arcade Game (PlayChoice-10)	§ÔªÌÀt II / Teenage Mutant Ninja Turtles II: The Arcade Game (PlayChoice-10)	Konami (Nintendo of America license)
+pc_wcup	¼ö¦å°ª®Õ¸úÁ×²y / Nintendo World Cup (PlayChoice-10)	¼ö¦å°ª®Õ¸úÁ×²y / Nintendo World Cup (PlayChoice-10)	Technos (Nintendo license)
+pc_ngai2	§ÔªÌÀs¼C¶Ç II - ·t¶Âªº¨¸¯«¼C / Ninja Gaiden Episode II: The Dark Sword of Chaos (PlayChoice-10)	§ÔªÌÀs¼C¶Ç II - ·t¶Âªº¨¸¯«¼C / Ninja Gaiden Episode II: The Dark Sword of Chaos (PlayChoice-10)	Tecmo (Nintendo of America license)
+pc_ngai3	§ÔªÌÀs¼C¶Ç III - ¶À¬uªº¤è²î / Ninja Gaiden Episode III: The Ancient Ship of Doom (PlayChoice-10)	§ÔªÌÀs¼C¶Ç III - ¶À¬uªº¤è²î / Ninja Gaiden Episode III: The Ancient Ship of Doom (PlayChoice-10)	Tecmo (Nintendo of America license)
 pc_moglf	°¨§Q¼Úªº¤á¥~°ªº¸¤Ò (PlayChoice-10)	°¨§Q¼Úªº¤á¥~°ªº¸¤Ò (PlayChoice-10)	Nintendo
-cstlevna	Vs. ´cÅ]«°	Vs. ´cÅ]«°	Konami
+cstlevna	Vs. ´cÅ]«° / Vs. Castlevania	Vs. ´cÅ]«° / Vs. Castlevania	Konami
 drmario	Vs. °¨§Q¼ÚÂå¥Í	Vs. °¨§Q¼ÚÂå¥Í	Nintendo
 rbibb	Vs. Atari R.B.I. ´Î²y (set 1)	Vs. Atari R.B.I. ´Î²y (set 1)	Namco
 rbibba	Vs. Atari R.B.I. ´Î²y (set 2)	Vs. Atari R.B.I. ´Î²y (set 2)	Namco
 suprmrio	Vs. ¶W¯Å°¨§Q¼Ú¥S§Ì	Vs. ¶W¯Å°¨§Q¼Ú¥S§Ì	Nintendo
-vsskykid	Vs. ¤ÑªÅ¤p¤l	Vs. ¤ÑªÅ¤p¤l	Namco
-vspinbal	Vs. ¼u¯]¥x	Vs. ¼u¯]¥x	Nintendo
-vspinblj	Vs. ¼u¯]¥x (¤é¥»ª©)	Vs. ¼u¯]¥x (¤é¥»ª©)	Nintendo
+vsskykid	Vs. ¤ÑªÅ¤p¤l / Vs. Super SkyKid	Vs. ¤ÑªÅ¤p¤l / Vs. Super SkyKid	Namco
+vspinbal	Vs. ¼u¯]Âi	Vs. ¼u¯]Âi	Nintendo
+vspinblj	Vs. ¼u¯]Âi (¤é¥»ª©)	Vs. ¼u¯]Âi (¤é¥»ª©)	Nintendo
 vsslalom	Vs. »ÙÃª·Æ³·ÁÉ	Vs. »ÙÃª·Æ³·ÁÉ	Rare LTD.
 vssoccer	Vs. ¨¬²y	Vs. ¨¬²y	Nintendo
 vstetris	Vs. «XÃ¹´µ¤è¶ô	Vs. «XÃ¹´µ¤è¶ô	Academysoft-Elory
@@ -427,10 +459,10 @@ vsbballj	Vs. ´Î²y (¤é¥»ª© set 1)	Vs. ´Î²y (¤é¥»ª© set 1)	Nintendo of America
 vsbbalja	Vs. ´Î²y (¤é¥»ª© set 2)	Vs. ´Î²y (¤é¥»ª© set 2)	Nintendo of America
 supxevs	Vs. ¶W¯ÅÅKªO°}	Vs. ¶W¯ÅÅKªO°}	Namco
 vsbbaljb	Vs. ´Î²y (¤é¥»ª© set 3)	Vs. ´Î²y (¤é¥»ª© set 3)	Nintendo of America
-nss_ssoc	¶W¯Å¨¬²y (Nintendo Super System)	¶W¯Å¨¬²y (Nintendo Super System)	Human Inc.
-nss_con3	»î¤æÃ¹ 3: ²§§Î¾Ôª§ (Nintendo Super System)	»î¤æÃ¹ 3: ²§§Î¾Ôª§ (Nintendo Super System)	Konami
+nss_ssoc	¶W¯Å¨¬²y / Super Soccer (Nintendo Super System)	¶W¯Å¨¬²y / Super Soccer (Nintendo Super System)	Human Inc.
+nss_con3	»î¤æÃ¹ 3: ²§§Î¾Ôª§ / Contra 3: The Alien Wars (Nintendo Super System)	»î¤æÃ¹ 3: ²§§Î¾Ôª§ / Contra 3: The Alien Wars (Nintendo Super System)	Konami
 nss_smw	¶W¯Å°¨§Q¼Ú¥@¬É (Nintendo Super System)	¶W¯Å°¨§Q¼Ú¥@¬É (Nintendo Super System)	Nintendo
-nss_sten	¶W¯Åºô²y (Nintendo Super System)	¶W¯Åºô²y (Nintendo Super System)	Nintendo
+nss_sten	¶W¯Åºô²y / Super Tennis (Nintendo Super System)	¶W¯Åºô²y / Super Tennis (Nintendo Super System)	Nintendo
 seawolf	®ü¯T	®ü¯T	Midway
 maze	©_²§°g®c	©_²§°g®c	Midway
 desertgu	¨Fºzºj¤â	¨Fºzºj¤â	Midway
@@ -439,14 +471,14 @@ bowler	4 ¤H«OÄÖ²y	4 ¤H«OÄÖ²y	Midway
 invaders	¤ÓªÅ¤J«IªÌ	¤ÓªÅ¤J«IªÌ	Midway
 invad2ct	¤ÓªÅ¤J«IªÌ II (Midway, Âi­±«¬)	¤ÓªÅ¤J«IªÌ II (Midway, Âi­±«¬)	Midway
 invadpt2	¤ÓªÅ¤J«IªÌ Part II (Taito)	¤ÓªÅ¤J«IªÌ Part II (Taito)	Taito
-invaddlx	¤ÓªÅ¤J«IªÌ Part II / Space Invaders Deluxe	¤ÓªÅ¤J«IªÌ Part II / Space Invaders Deluxe	Midway
+invaddlx	¤ÓªÅ¤J«IªÌ Part II / ¤ÓªÅ¤J«IªÌ Deluxe	¤ÓªÅ¤J«IªÌ Part II / ¤ÓªÅ¤J«IªÌ Deluxe	Midway
 moonbase	¤ÓªÅ¤J«IªÌ Part II / Moon Base	¤ÓªÅ¤J«IªÌ Part II / Moon Base	Nichibutsu
 searthin	¤ÓªÅ¤J«IªÌ / Super Earth Invasion (set 1)	¤ÓªÅ¤J«IªÌ / Super Earth Invasion (set 1)	bootleg
 searthia	¤ÓªÅ¤J«IªÌ / Super Earth Invasion (set 2)	¤ÓªÅ¤J«IªÌ / Super Earth Invasion (set 2)	bootleg
 invadrmr	¤ÓªÅ¤J«IªÌ (Model Racing)	¤ÓªÅ¤J«IªÌ (Model Racing)	Model Racing
 spaceatt	¤ÓªÅ¤J«IªÌ / ¤ÓªÅ§ðÀ»	¤ÓªÅ¤J«IªÌ / ¤ÓªÅ§ðÀ»	Video Games GMBH
 spaceat2	¤ÓªÅ¤J«IªÌ / ¤ÓªÅ§ðÀ» II	¤ÓªÅ¤J«IªÌ / ¤ÓªÅ§ðÀ» II	Zenitone-Microsec Ltd
-sinvzen	¤ÓªÅ¤J«IªÌ (Zenitone-Microsec)	¤ÓªÅ¤J«IªÌ (Zenitone-Microsec)	Zenitone-Microsec Ltd
+sinvzen	¤ÓªÅ¤J«IªÌ / Super Invaders (Zenitone-Microsec)	¤ÓªÅ¤J«IªÌ / Super Invaders (Zenitone-Microsec)	Zenitone-Microsec Ltd
 superinv	¤ÓªÅ¤J«IªÌ / Super Invaders	¤ÓªÅ¤J«IªÌ / Super Invaders	bootleg
 invasion	¤ÓªÅ¤J«IªÌ / Invasion	¤ÓªÅ¤J«IªÌ / Invasion	Sidam
 sstrangr	¤ÓªÅ¥Íª«	¤ÓªÅ¥Íª«	Yachiyo Electronics, Ltd.
@@ -454,6 +486,8 @@ sstrngr2	¤ÓªÅ¥Íª« 2	¤ÓªÅ¥Íª« 2	Yachiyo Electronics, Ltd.
 sinvemag	¤ÓªÅ¤J«IªÌ / Super Invaders (EMAG)	¤ÓªÅ¤J«IªÌ / Super Invaders (EMAG)	bootleg
 jspecter	¤ÓªÅ¤J«IªÌ / Jatre Specter (set 1)	¤ÓªÅ¤J«IªÌ / Jatre Specter (set 1)	Jatre
 jspectr2	¤ÓªÅ¤J«IªÌ / Jatre Specter (set 2)	¤ÓªÅ¤J«IªÌ / Jatre Specter (set 2)	Jatre
+invrvnge	¤J«IªÌ´_¤³	¤J«IªÌ´_¤³	Zenitone-Microsec Ltd.
+invrvnga	¤J«IªÌ´_¤³ (Dutchford)	¤J«IªÌ´_¤³ (Dutchford)	Zenitone-Microsec Ltd. (Dutchford license)
 galxwars	»Èªe¾Ôª§ (Universal set 1)	»Èªe¾Ôª§ (Universal set 1)	Universal
 galxwar2	»Èªe¾Ôª§ (Universal set 2)	»Èªe¾Ôª§ (Universal set 2)	Universal
 galxwart	»Èªe¾Ôª§ (Taito?)	»Èªe¾Ôª§ (Taito?)	Taito?
@@ -483,7 +517,7 @@ invaderl	¤ÓªÅ¤J«IªÌ (Logitec)	¤ÓªÅ¤J«IªÌ (Logitec)	bootleg
 invader4	¤ÓªÅ¤J«IªÌ Part 4	¤ÓªÅ¤J«IªÌ Part 4	bootleg
 yosakdon	»P§@©MªF¥­ (set 1)	»P§@©MªF¥­ (set 1)	Wing
 yosakdoa	»P§@©MªF¥­ (set 2)	»P§@©MªF¥­ (set 2)	Wing
-spceking	¤ÓªÅ¤J«IªÌ / Space King	¤ÓªÅ¤J«IªÌ / Space King	Leijac (Konami)
+spceking	¤ÓªÅ¤J«IªÌ / ¤ÓªÅ¤§¤ý	¤ÓªÅ¤J«IªÌ / ¤ÓªÅ¤§¤ý	Leijac (Konami)
 spcewars	¤ÓªÅ¤J«IªÌ / Space War (Sanritsu)	¤ÓªÅ¤J«IªÌ / Space War (Sanritsu)	Sanritsu
 seawolf2	®ü¯T II	®ü¯T II	Midway
 twotiger	Âùªê (dedicated)	Âùªê (dedicated)	Bally Midway
@@ -497,14 +531,14 @@ snakjack	¹x¥Ö³Ç§J	¹x¥Ö³Ç§J	Bally/Sente
 minigolf	°g§A°ªº¸¤Ò (set 1)	°g§A°ªº¸¤Ò (set 1)	Bally/Sente
 minigol2	°g§A°ªº¸¤Ò (set 2)	°g§A°ªº¸¤Ò (set 2)	Bally/Sente
 redalert	¬õ¦âÄµ§Ù	¬õ¦âÄµ§Ù	Irem + GDI
-mpatrol	¤ë²y¨µÄµ	¤ë²y¨µÄµ	Irem
-mpatrolw	¤ë²y¨µÄµ (Williams)	¤ë²y¨µÄµ (Williams)	Irem (Williams license)
+mpatrol	¯¥¼u­¸¨®	¯¥¼u­¸¨®	Irem
+mpatrolw	¯¥¼u­¸¨® (Williams)	¯¥¼u­¸¨® (Williams)	Irem (Williams license)
 troangel	®L¤é¤Ñ¨Ï	®L¤é¤Ñ¨Ï	Irem
-kungfum	¦¨Às½ðÀ]	¦¨Às½ðÀ]	Irem
-kungfud	¦¨Às½ðÀ] (Data East)	¦¨Às½ðÀ] (Data East)	Irem (Data East license)
-spartanx	¦¨Às½ðÀ] / Spartan X (¤é¥»ª©)	¦¨Às½ðÀ] / Spartan X (¤é¥»ª©)	Irem
-kungfub	¦¨Às½ðÀ] (µsª© set 1)	¦¨Às½ðÀ] (µsª© set 1)	bootleg
-kungfub2	¦¨Às½ðÀ] (µsª© set 2)	¦¨Às½ðÀ] (µsª© set 2)	bootleg
+kungfum	¦¨Às½ðÀ] / ¥\¤Ò¤j®v	¦¨Às½ðÀ] / ¥\¤Ò¤j®v	Irem
+kungfud	¦¨Às½ðÀ] / ¥\¤Ò¤j®v (Data East)	¦¨Às½ðÀ] / ¥\¤Ò¤j®v (Data East)	Irem (Data East license)
+spartanx	¦¨Às½ðÀ] (¤é¥»ª©)	¦¨Às½ðÀ] (¤é¥»ª©)	Irem
+kungfub	¦¨Às½ðÀ] / ¥\¤Ò¤j®v (µsª© set 1)	¦¨Às½ðÀ] / ¥\¤Ò¤j®v (µsª© set 1)	bootleg
+kungfub2	¦¨Às½ðÀ] / ¥\¤Ò¤j®v (µsª© set 2)	¦¨Às½ðÀ] / ¥\¤Ò¤j®v (µsª© set 2)	bootleg
 kidniki	§Ö³Ç Yancha ¤Y / Kid Niki - Radical Ninja (¥@¬Éª©)	§Ö³Ç Yancha ¤Y / Kid Niki - Radical Ninja (¥@¬Éª©)	Irem
 kidnikiu	§Ö³Ç Yancha ¤Y / Kid Niki - Radical Ninja (¬ü°êª©)	§Ö³Ç Yancha ¤Y / Kid Niki - Radical Ninja (¬ü°êª©)	Irem (Data East USA license)
 yanchamr	§Ö³Ç Yancha ¤Y (¤é¥»ª©)	§Ö³Ç Yancha ¤Y (¤é¥»ª©)	Irem
@@ -513,9 +547,9 @@ spelunkr	¬}¥Þ±´ÀI	¬}¥Þ±´ÀI	Irem (licensed from Broderbund)
 spelnkrj	¬}¥Þ±´ÀI (¤é¥»ª©)	¬}¥Þ±´ÀI (¤é¥»ª©)	Irem (licensed from Broderbund)
 spelunk2	¬}¥Þ±´ÀI II	¬}¥Þ±´ÀI II	Irem (licensed from Broderbund)
 youjyudn	§¯Ã~¶Ç (¤é¥»ª©)	§¯Ã~¶Ç (¤é¥»ª©)	Irem
-vigilant	¦¨Às½ðÀ] II (¥@¬Éª©)	¦¨Às½ðÀ] II (¥@¬Éª©)	Irem
-vigilntu	¦¨Às½ðÀ] II (¬ü°êª©)	¦¨Às½ðÀ] II (¬ü°êª©)	Irem (Data East USA license)
-vigilntj	¦¨Às½ðÀ] II (¤é¥»ª©)	¦¨Às½ðÀ] II (¤é¥»ª©)	Irem
+vigilant	¥\¤Ò¤p¤l (¥@¬Éª©)	¥\¤Ò¤p¤l (¥@¬Éª©)	Irem
+vigilntu	¥\¤Ò¤p¤l (¬ü°êª©)	¥\¤Ò¤p¤l (¬ü°êª©)	Irem (Data East USA license)
+vigilntj	¥\¤Ò¤p¤l (¤é¥»ª©)	¥\¤Ò¤p¤l (¤é¥»ª©)	Irem
 kikcubic	°g®c®q (¤é¥»ª©)	°g®c®q (¤é¥»ª©)	Irem
 kikcubib	°g®c®q / Kickle Cubele	°g®c®q / Kickle Cubele	bootleg
 rtype	²§§Î¾Ô¾÷ / R-Type (¤é¥»ª©)	²§§Î¾Ô¾÷ / R-Type (¤é¥»ª©)	Irem
@@ -526,13 +560,14 @@ mrheli	Mr. HELI ¤j«_ÀI	Mr. HELI ¤j«_ÀI	Irem
 nspirit	³Ì«á§Ô¹D / Ninja Spirit	³Ì«á§Ô¹D / Ninja Spirit	Irem
 nspiritj	³Ì«á§Ô¹D (¤é¥»ª©)	³Ì«á§Ô¹D (¤é¥»ª©)	Irem
 xmultipl	X ¾Ô¾÷ (¤é¥»ª©)	X ¾Ô¾÷ (¤é¥»ª©)	Irem
+dbreed	¯«Às¤Ó¤l	¯«Às¤Ó¤l	Irem
 rtype2	²§§Î¾Ô¾÷ II / R-Type II	²§§Î¾Ô¾÷ II / R-Type II	Irem
 rtype2j	²§§Î¾Ô¾÷ II / R-Type II (¤é¥»ª©)	²§§Î¾Ô¾÷ II / R-Type II (¤é¥»ª©)	Irem
-hharry	¤j¤u¤§·½ / Hammerin' Harry (¥@¬Éª©)	¤j¤u¤§·½ / Hammerin' Harry (¥@¬Éª©)	Irem
-hharryu	¤j¤u¤§·½ / Hammerin' Harry (¬ü°êª©)	¤j¤u¤§·½ / Hammerin' Harry (¬ü°êª©)	Irem America
-dkgensan	¤j¤u¤§·½ (¤é¥»ª©)	¤j¤u¤§·½ (¤é¥»ª©)	Irem
-dkgenm72	¤j¤u¤§·½ (¤é¥»ª©, M72)	¤j¤u¤§·½ (¤é¥»ª©, M72)	Irem
-airduel	ªÅ¤¤¨M¾Ô (¤é¥»ª©)	ªÅ¤¤¨M¾Ô (¤é¥»ª©)	Irem
+hharry	¤j¤O¤uÀY / Hammerin' Harry (¥@¬Éª©)	¤j¤O¤uÀY / Hammerin' Harry (¥@¬Éª©)	Irem
+hharryu	¤j¤O¤uÀY / Hammerin' Harry (¬ü°êª©)	¤j¤O¤uÀY / Hammerin' Harry (¬ü°êª©)	Irem America
+dkgensan	¤j¤O¤uÀY (¤é¥»ª©)	¤j¤O¤uÀY (¤é¥»ª©)	Irem
+dkgenm72	¤j¤O¤uÀY (¤é¥»ª©, M72)	¤j¤O¤uÀY (¤é¥»ª©, M72)	Irem
+airduel	¥¼¨Ó¾Ô¾÷ (¤é¥»ª©)	¥¼¨Ó¾Ô¾÷ (¤é¥»ª©)	Irem
 cosmccop	¹p¹£ - ªZ¸ËÄµ¹î / Cosmic Cop (¥@¬Éª©)	¹p¹£ - ªZ¸ËÄµ¹î / Cosmic Cop (¥@¬Éª©)	Irem
 gallop	¹p¹£ - ªZ¸ËÄµ¹î (¤é¥»ª©)	¹p¹£ - ªZ¸ËÄµ¹î (¤é¥»ª©)	Irem
 kengo	¼C»¨	¼C»¨	Irem
@@ -541,6 +576,10 @@ sichuana	¥|¤t¬Ù - ¤k¤l¼d½g / Sichuan II (hack?) (set 2)	¥|¤t¬Ù - ¤k¤l¼d½g / Sich
 shisen	¥|¤t¬Ù - ¤k¤l¼d½g (¤é¥»ª©)	¥|¤t¬Ù - ¤k¤l¼d½g (¤é¥»ª©)	Tamtex
 matchit	¥|¤t¬Ù - ¤k¤l¼d½g / Match It	¥|¤t¬Ù - ¤k¤l¼d½g / Match It	Tamtex
 hasamu	ÅQ¨F¹Ú (¤é¥»ª©)	ÅQ¨F¹Ú (¤é¥»ª©)	Irem
+bbmanw	¬µ¼u¶W¤H / New Dyna Blaster - Global Quest	¬µ¼u¶W¤H / New Dyna Blaster - Global Quest	Irem
+bbmanwj	¬µ¼u¶W¤H (¤é¥»ª©)	¬µ¼u¶W¤H (¤é¥»ª©)	Irem
+bomblord	¬µ¼u¶W¤H / Bomber Lord (µsª©)	¬µ¼u¶W¤H / Bomber Lord (µsª©)	bootleg
+newapunk	¬µ¼u¶W¤H / New Atomic Punk - Global Quest (¬ü°êª©)	¬µ¼u¶W¤H / New Atomic Punk - Global Quest (¬ü°êª©)	Irem America
 matchit2	¥|¤t¬Ù II / Match It II	¥|¤t¬Ù II / Match It II	Tamtex
 shisen2	¥|¤t¬Ù II	¥|¤t¬Ù II	Tamtex
 gunforce	¾Ô¤õÅå»î (¥@¬Éª©)	¾Ô¤õÅå»î (¥@¬Éª©)	Irem
@@ -566,8 +605,8 @@ leaguemn	´Î²y±þ¤â (¤é¥»ª©)	´Î²y±þ¤â (¤é¥»ª©)	Irem
 ssoldier	§¹¬ü¾Ô¤h / Superior Soldiers (¬ü°êª©)	§¹¬ü¾Ô¤h / Superior Soldiers (¬ü°êª©)	Irem America
 psoldier	§¹¬ü¾Ô¤h (¤é¥»ª©)	§¹¬ü¾Ô¤h (¤é¥»ª©)	Irem
 dsccr94j	¹Ú¤Û¨¬²y '94 (¤é¥»ª©)	¹Ú¤Û¨¬²y '94 (¤é¥»ª©)	Irem
-gunforc2	¾Ô¤õÅå»î 2 / Gunforce 2 (¬ü°êª©)	¾Ô¤õÅå»î 2 / Gunforce 2 (¬ü°êª©)	Irem
-geostorm	¾Ô¤õÅå»î 2 (¤é¥»ª©)	¾Ô¤õÅå»î 2 (¤é¥»ª©)	Irem
+gunforc2	¾Ô¤õÅå»î 2 (¬ü°êª©)	¾Ô¤õÅå»î 2 (¬ü°êª©)	Irem
+geostorm	¾Ô¤õÅå»î 2 / Geostorm (¤é¥»ª©)	¾Ô¤õÅå»î 2 / Geostorm (¤é¥»ª©)	Irem
 firebarr	¤õÃz¾Ô¾÷ (¤é¥»ª©)	¤õÃz¾Ô¾÷ (¤é¥»ª©)	Irem
 dsoccr94	¹Ú¤Û¨¬²y '94	¹Ú¤Û¨¬²y '94	Irem (Data East Corporation license)
 wpksoc	¥@¬É PK ¨¬²y	¥@¬É PK ¨¬²y	Jaleco
@@ -592,8 +631,8 @@ bioatack	¥Í¤Æ§ðÀ»	¥Í¤Æ§ðÀ»	Taito Corporation (Fox Video Games license)
 sfposeid	®ü¯«¾Ô¤h	®ü¯«¾Ô¤h	Taito Corporation
 crbaloon	ºÆ¨g®ð²y (set 1)	ºÆ¨g®ð²y (set 1)	Taito Corporation
 crbalon2	ºÆ¨g®ð²y (set 2)	ºÆ¨g®ð²y (set 2)	Taito Corporation
-gsword	À»¼C¤h (¥@¬Éª©?)	À»¼C¤h (¥@¬Éª©?)	Taito Corporation
-gsword2	À»¼C¤h (¤é¥»ª©?)	À»¼C¤h (¤é¥»ª©?)	Taito Corporation
+gsword	¦è¬v¼C (¥@¬Éª©?)	¦è¬v¼C (¥@¬Éª©?)	Taito Corporation
+gsword2	¦è¬v¼C (¤é¥»ª©?)	¦è¬v¼C (¤é¥»ª©?)	Taito Corporation
 lkage	¼v¤l¶Ç»¡	¼v¤l¶Ç»¡	Taito Corporation
 lkageb	¼v¤l¶Ç»¡ (µsª© set 1)	¼v¤l¶Ç»¡ (µsª© set 1)	bootleg
 lkageb2	¼v¤l¶Ç»¡ (µsª© set 2)	¼v¤l¶Ç»¡ (µsª© set 2)	bootleg
@@ -604,8 +643,8 @@ retofin2	«I²¤ªÌ¦^Âk (µsª© set 2)	«I²¤ªÌ¦^Âk (µsª© set 2)	bootleg
 fightrol	ºu¶b¤ýµP / Fighting Roller	ºu¶b¤ýµP / Fighting Roller	[Kaneko] (Taito license)
 rollace	ºu¶b¤ýµP / Roller Aces (set 1)	ºu¶b¤ýµP / Roller Aces (set 1)	[Kaneko] (Williams license)
 rollace2	ºu¶b¤ýµP / Roller Aces (set 2)	ºu¶b¤ýµP / Roller Aces (set 2)	[Kaneko] (Williams license)
-tsamurai	¨Í¤é¥»¤@ (set 1)	¨Í¤é¥»¤@ (set 1)	Taito
-tsamura2	¨Í¤é¥»¤@ (set 2)	¨Í¤é¥»¤@ (set 2)	Taito
+tsamurai	¨Í ¤é¥»¤@ (set 1)	¨Í ¤é¥»¤@ (set 1)	Taito
+tsamura2	¨Í ¤é¥»¤@ (set 2)	¨Í ¤é¥»¤@ (set 2)	Taito
 nunchaku	¥\¤Ò¤Ö¤k	¥\¤Ò¤Ö¤k	Taito
 yamagchi	¨M¦ºªº±´ÀI! ¤s¤f§g	¨M¦ºªº±´ÀI! ¤s¤f§g	Taito
 m660	660 ¥ô°È (¬ü°êª©)	660 ¥ô°È (¬ü°êª©)	[Woodplace Inc.] Taito America Corporation
@@ -633,28 +672,40 @@ sboblbob	ªwªwÀs / Super Bobble Bobble	ªwªwÀs / Super Bobble Bobble	bootleg
 missb2	ªwªwÀs / Miss Bubble 2	ªwªwÀs / Miss Bubble 2	Alpha Co
 kikikai	©_©_©Ç¬É	©_©_©Ç¬É	Taito Corporation
 knightb	©_©_©Ç¬É / Knight Boy	©_©_©Ç¬É / Knight Boy	bootleg
-darius	¤ÓªÅ¾Ô¾÷ (¥@¬Éª©)	¤ÓªÅ¾Ô¾÷ (¥@¬Éª©)	Taito Corporation Japan
-dariusj	¤ÓªÅ¾Ô¾÷ (¤é¥»ª©)	¤ÓªÅ¾Ô¾÷ (¤é¥»ª©)	Taito Corporation
-dariuso	¤ÓªÅ¾Ô¾÷ (¤é¥»ª© ÂÂª©)	¤ÓªÅ¾Ô¾÷ (¤é¥»ª© ÂÂª©)	Taito Corporation
-dariuse	¤ÓªÅ¾Ô¾÷ (Extra) (¤é¥»ª©)	¤ÓªÅ¾Ô¾÷ (Extra) (¤é¥»ª©)	Taito Corporation
+darius	¤ÓªÅ¾Ô°«¾÷ (¥@¬Éª©)	¤ÓªÅ¾Ô°«¾÷ (¥@¬Éª©)	Taito Corporation Japan
+dariusj	¤ÓªÅ¾Ô°«¾÷ (¤é¥»ª©)	¤ÓªÅ¾Ô°«¾÷ (¤é¥»ª©)	Taito Corporation
+dariuso	¤ÓªÅ¾Ô°«¾÷ (¤é¥»ª© ÂÂª©)	¤ÓªÅ¾Ô°«¾÷ (¤é¥»ª© ÂÂª©)	Taito Corporation
+dariuse	¤ÓªÅ¾Ô°«¾÷ (Extra) (¤é¥»ª©)	¤ÓªÅ¾Ô°«¾÷ (Extra) (¤é¥»ª©)	Taito Corporation
 topspeed	¥þ³t¶i§ð / Top Speed (¥@¬Éª©)	¥þ³t¶i§ð / Top Speed (¥@¬Éª©)	Taito Corporation Japan
 topspedu	¥þ³t¶i§ð / Top Speed (¬ü°êª©)	¥þ³t¶i§ð / Top Speed (¬ü°êª©)	Taito America Corporation (Romstar license)
 fullthrl	¥þ³t¶i§ð (¤é¥»ª©)	¥þ³t¶i§ð (¤é¥»ª©)	Taito Corporation
 opwolf	¯Q¯÷½Ä¾Wºj (¥@¬Éª©)	¯Q¯÷½Ä¾Wºj (¥@¬Éª©)	Taito Corporation Japan
 opwolfu	¯Q¯÷½Ä¾Wºj (¬ü°êª©)	¯Q¯÷½Ä¾Wºj (¬ü°êª©)	Taito America Corporation
 opwolfb	¯Q¯÷½Ä¾Wºj / Operation Bear	¯Q¯÷½Ä¾Wºj / Operation Bear	bootleg
-othunder	ÅRÆE¦æ°Ê (¥@¬Éª©)	ÅRÆE¦æ°Ê (¥@¬Éª©)	Taito Corporation Japan
-othundu	ÅRÆE¦æ°Ê (¬ü°êª©)	ÅRÆE¦æ°Ê (¬ü°êª©)	Taito America Corporation
-othunduo	ÅRÆE¦æ°Ê (¬ü°êª©, ÂÂª©)	ÅRÆE¦æ°Ê (¬ü°êª©, ÂÂª©)	Taito America Corporation
-othundrj	ÅRÆE¦æ°Ê (¤é¥»ª©)	ÅRÆE¦æ°Ê (¤é¥»ª©)	Taito Corporation
+othunder	¯Q¯÷½Ä¾Wºj¤G (¥@¬Éª©)	¯Q¯÷½Ä¾Wºj¤G (¥@¬Éª©)	Taito Corporation Japan
+othundu	¯Q¯÷½Ä¾Wºj¤G (¬ü°êª©)	¯Q¯÷½Ä¾Wºj¤G (¬ü°êª©)	Taito America Corporation
+othunduo	¯Q¯÷½Ä¾Wºj¤G (¬ü°êª©, ÂÂª©)	¯Q¯÷½Ä¾Wºj¤G (¬ü°êª©, ÂÂª©)	Taito America Corporation
+othundrj	¯Q¯÷½Ä¾Wºj¤G (¤é¥»ª©)	¯Q¯÷½Ä¾Wºj¤G (¤é¥»ª©)	Taito Corporation
 rainbow	±m­i®q (·sª©)	±m­i®q (·sª©)	Taito Corporation
 rainbowo	±m­i®q (ÂÂª©)	±m­i®q (ÂÂª©)	Taito Corporation
 rainbowe	±m­i®q (Extra)	±m­i®q (Extra)	Taito Corporation
 jumping	±m­i®q / Jumping	±m­i®q / Jumping	bootleg
+arkanoid	¥´¿j¶ô (¥@¬Éª©)	¥´¿j¶ô (¥@¬Éª©)	Taito Corporation Japan
+arknoidu	¥´¿j¶ô (¬ü°êª©)	¥´¿j¶ô (¬ü°êª©)	Taito America Corporation (Romstar license)
+arknoiuo	¥´¿j¶ô (¬ü°êª©, ÂÂª©)	¥´¿j¶ô (¬ü°êª©, ÂÂª©)	Taito America Corporation (Romstar license)
+arknoidj	¥´¿j¶ô (¤é¥»ª©)	¥´¿j¶ô (¤é¥»ª©)	Taito Corporation
+arkbl2	¥´¿j¶ô (¤é¤å µsª© Set 2)	¥´¿j¶ô (¤é¤å µsª© Set 2)	bootleg
+arkbl3	¥´¿j¶ô (¤é¤å µsª© Set 3)	¥´¿j¶ô (¤é¤å µsª© Set 3)	bootleg
+paddle2	¥´¿j¶ô / Paddle 2	¥´¿j¶ô / Paddle 2	bootleg
+arkatayt	¥´¿j¶ô (Tayto µsª©, ¤é¤å)	¥´¿j¶ô (Tayto µsª©, ¤é¤å)	bootleg
+arkblock	¥´¿j¶ô / Block (µsª©, ¤é¤å)	¥´¿j¶ô / Block (µsª©, ¤é¤å)	bootleg
+arkbloc2	¥´¿j¶ô / Block (Game Corporation µsª©)	¥´¿j¶ô / Block (Game Corporation µsª©)	bootleg
+arkangc	¥´¿j¶ô (Game Corporation µsª©)	¥´¿j¶ô (Game Corporation µsª©)	bootleg
+arkatour	¥´¿j¶ô / Tournament Arkanoid (¬ü°êª©)	¥´¿j¶ô / Tournament Arkanoid (¬ü°êª©)	Taito America Corporation (Romstar license)
 minivadr	°g§A¤p»e¸Á	°g§A¤p»e¸Á	Taito Corporation
-bonzeadv	¦aº»¤p©M©| / Bonze Adventure (¥@¬Éª©)	¦aº»¤p©M©| / Bonze Adventure (¥@¬Éª©)	Taito Corporation Japan
-bonzeadu	¦aº»¤p©M©| / Bonze Adventure (¬ü°êª©)	¦aº»¤p©M©| / Bonze Adventure (¬ü°êª©)	Taito America Corporation
-jigkmgri	¦aº»¤p©M©| (¤é¥»ª©)	¦aº»¤p©M©| (¤é¥»ª©)	Taito Corporation
+bonzeadv	¦aº»«_ÀI / Bonze Adventure (¥@¬Éª©)	¦aº»«_ÀI / Bonze Adventure (¥@¬Éª©)	Taito Corporation Japan
+bonzeadu	¦aº»«_ÀI / Bonze Adventure (¬ü°êª©)	¦aº»«_ÀI / Bonze Adventure (¬ü°êª©)	Taito America Corporation
+jigkmgri	¦aº»«_ÀI (¤é¥»ª©)	¦aº»«_ÀI (¤é¥»ª©)	Taito Corporation
 asuka	­¸³¾ & ­¸³¾ (¤é¥»ª©)	­¸³¾ & ­¸³¾ (¤é¥»ª©)	Taito Corporation
 earthjkr	°êÁp¨¾½Ã­x: ¦a²y¤ýµP (¤é¥»ª©)	°êÁp¨¾½Ã­x: ¦a²y¤ýµP (¤é¥»ª©)	Visco
 eto	¥j¤µªF¦è¤z¤äª«»y (¤é¥»ª©)	¥j¤µªF¦è¤z¤äª«»y (¤é¥»ª©)	Visco
@@ -663,17 +714,22 @@ wgpj	°ê»Ú¾÷¨®¤j¼úÁÉ (¤é¥»ª©)	°ê»Ú¾÷¨®¤j¼úÁÉ (¤é¥»ª©)	Taito Corporation
 wgpjoy	°ê»Ú¾÷¨®¤j¼úÁÉ (·n±ìª© set 1) (¤é¥»ª©)	°ê»Ú¾÷¨®¤j¼úÁÉ (·n±ìª© set 1) (¤é¥»ª©)	Taito Corporation
 wgpjoya	°ê»Ú¾÷¨®¤j¼úÁÉ (·n±ìª© set 2) (¤é¥»ª©)	°ê»Ú¾÷¨®¤j¼úÁÉ (·n±ìª© set 2) (¤é¥»ª©)	Taito Corporation
 wgp2	°ê»Ú¾÷¨®¤j¼úÁÉ 2 (¤é¥»ª©)	°ê»Ú¾÷¨®¤j¼úÁÉ 2 (¤é¥»ª©)	Taito Corporation
+opwolf3	¯Q¯÷½Ä¾Wºj 3 (¥@¬Éª©)	¯Q¯÷½Ä¾Wºj 3 (¥@¬Éª©)	Taito Corporation Japan
+opwolf3u	¯Q¯÷½Ä¾Wºj 3 (¬ü°êª©)	¯Q¯÷½Ä¾Wºj 3 (¬ü°êª©)	Taito America Corporation
 ninjaw	§ÔªÌªZ¤h (¥@¬Éª©)	§ÔªÌªZ¤h (¥@¬Éª©)	Taito Corporation Japan
 ninjawj	§ÔªÌªZ¤h (¤é¥»ª©)	§ÔªÌªZ¤h (¤é¥»ª©)	Taito Corporation
-darius2	¤ÓªÅ¾Ô¾÷ II (¤é¥»ª©)	¤ÓªÅ¾Ô¾÷ II (¤é¥»ª©)	Taito Corporation
-darius2d	¤ÓªÅ¾Ô¾÷ II (Âù¿Ã¹õ) (¤é¥»ª©)	¤ÓªÅ¾Ô¾÷ II (Âù¿Ã¹õ) (¤é¥»ª©)	Taito Corporation
-drius2do	¤ÓªÅ¾Ô¾÷ II (Âù¿Ã¹õ) (¤é¥»ª© ÂÂª©)	¤ÓªÅ¾Ô¾÷ II (Âù¿Ã¹õ) (¤é¥»ª© ÂÂª©)	Taito Corporation
+darius2	¤ÓªÅ¾Ô°«¾÷ II (¤é¥»ª©)	¤ÓªÅ¾Ô°«¾÷ II (¤é¥»ª©)	Taito Corporation
+darius2d	¤ÓªÅ¾Ô°«¾÷ II (Âù¿Ã¹õ) (¤é¥»ª©)	¤ÓªÅ¾Ô°«¾÷ II (Âù¿Ã¹õ) (¤é¥»ª©)	Taito Corporation
+drius2do	¤ÓªÅ¾Ô°«¾÷ II (Âù¿Ã¹õ) (¤é¥»ª© ÂÂª©)	¤ÓªÅ¾Ô°«¾÷ II (Âù¿Ã¹õ) (¤é¥»ª© ÂÂª©)	Taito Corporation
 warriorb	ªZ¤h¤§¤b (¤é¥»ª©)	ªZ¤h¤§¤b (¤é¥»ª©)	Taito Corporation
 superman	¶W¤H	¶W¤H	Taito Corporation
 suprmanj	¶W¤H (¤é¥»ª©)	¶W¤H (¤é¥»ª©)	Taito Corporation
 twinhawk	¤j±Û­· / Twin Hawk (¥@¬Éª©)	¤j±Û­· / Twin Hawk (¥@¬Éª©)	Taito Corporation Japan
 twinhwku	¤j±Û­· / Twin Hawk (¬ü°êª©)	¤j±Û­· / Twin Hawk (¬ü°êª©)	Taito America Corporation
 daisenpu	¤j±Û­· (¤é¥»ª©)	¤j±Û­· (¤é¥»ª©)	Taito Corporation
+arknoid2	¥´¿j¶ô¤G / ¥´¿j¶ô - DOH ªº´_¤³ (¥@¬Éª©)	¥´¿j¶ô¤G / ¥´¿j¶ô - DOH ªº´_¤³ (¥@¬Éª©)	Taito Corporation Japan
+arknid2u	¥´¿j¶ô¤G / ¥´¿j¶ô - DOH ªº´_¤³ (¬ü°êª©)	¥´¿j¶ô¤G / ¥´¿j¶ô - DOH ªº´_¤³ (¬ü°êª©)	Taito America Corporation (Romstar license)
+arknid2j	¥´¿j¶ô¤G / ¥´¿j¶ô - DOH ªº´_¤³ (¤é¥»ª©)	¥´¿j¶ô¤G / ¥´¿j¶ô - DOH ªº´_¤³ (¤é¥»ª©)	Taito Corporation
 drtoppel	Toppel ³Õ¤h±´ÀI¶¤ / Dr. Toppel's Adventure (¥@¬Éª©)	Toppel ³Õ¤h±´ÀI¶¤ / Dr. Toppel's Adventure (¥@¬Éª©)	Taito Corporation Japan
 drtopplu	Toppel ³Õ¤h±´ÀI¶¤ / Dr. Toppel's Adventure (¬ü°êª©)	Toppel ³Õ¤h±´ÀI¶¤ / Dr. Toppel's Adventure (¬ü°êª©)	Taito America Corporation
 drtopplj	Toppel ³Õ¤h±´ÀI¶¤ (¤é¥»ª©)	Toppel ³Õ¤h±´ÀI¶¤ (¤é¥»ª©)	Taito Corporation
@@ -707,6 +763,7 @@ viofight	¼É¤O®æ°« (¥@¬Éª©)	¼É¤O®æ°« (¥@¬Éª©)	Taito Corporation Japan
 viofighu	¼É¤O®æ°« (¬ü°êª©)	¼É¤O®æ°« (¬ü°êª©)	Taito America Corporation
 ashura	ªü­×Ã¹­·¼É (¤é¥»ª©)	ªü­×Ã¹­·¼É (¤é¥»ª©)	Taito Corporation
 ashurau	ªü­×Ã¹­·¼É (¬ü°êª©)	ªü­×Ã¹­·¼É (¬ü°êª©)	Taito America Corporation
+sbm	¶W¯Å®±¤ý (¤é¥»ª©)	¶W¯Å®±¤ý (¤é¥»ª©)	Taito Corporation
 silentd	¨IÀq¤§Às (¥@¬Éª©)	¨IÀq¤§Às (¥@¬Éª©)	Taito Corporation Japan
 silentdj	¨IÀq¤§Às (¤é¥»ª©)	¨IÀq¤§Às (¤é¥»ª©)	Taito Corporation
 ryujin	Às¯« (¤é¥»ª©)	Às¯« (¤é¥»ª©)	Taito Corporation
@@ -715,6 +772,8 @@ pbobble	ªwªwÀs¸ÑÁ¼ (¤é¥»ª©, B-System)	ªwªwÀs¸ÑÁ¼ (¤é¥»ª©, B-System)	Taito Corpor
 spacedx	¤ÓªÅ¤J«IªÌ DX (¬ü°êª©) v2.1	¤ÓªÅ¤J«IªÌ DX (¬ü°êª©) v2.1	Taito Corporation
 spacedxj	¤ÓªÅ¤J«IªÌ DX (¤é¥»ª©) v2.1	¤ÓªÅ¤J«IªÌ DX (¤é¥»ª©) v2.1	Taito Corporation
 spacedxo	¤ÓªÅ¤J«IªÌ DX (¤é¥»ª©) v2.0	¤ÓªÅ¤J«IªÌ DX (¤é¥»ª©) v2.0	Taito Corporation
+chasehq	°lÂÜ H.Q. (¥@¬Éª©)	°lÂÜ H.Q. (¥@¬Éª©)	Taito Corporation Japan
+chasehqj	°lÂÜ H.Q. (¤é¥»ª©)	°lÂÜ H.Q. (¤é¥»ª©)	Taito Corporation
 nightstr	¤È©]¥XÀ» (¬ü°êª©)	¤È©]¥XÀ» (¬ü°êª©)	Taito America Corporation
 sci	S.C.I. ¯S§O¦D¨Æ½Õ¬d²Õ (¥@¬Éª© set 1)	S.C.I. ¯S§O¦D¨Æ½Õ¬d²Õ (¥@¬Éª© set 1)	Taito Corporation Japan
 scia	S.C.I. ¯S§O¦D¨Æ½Õ¬d²Õ (¥@¬Éª© set 2)	S.C.I. ¯S§O¦D¨Æ½Õ¬d²Õ (¥@¬Éª© set 2)	Taito Corporation Japan
@@ -723,7 +782,7 @@ bshark	ÂyÃT¦æ°Ê (¬ü°êª©)	ÂyÃT¦æ°Ê (¬ü°êª©)	Taito America Corporation
 bsharkj	ÂyÃT¦æ°Ê (¤é¥»ª©)	ÂyÃT¦æ°Ê (¤é¥»ª©)	Taito Corporation
 dblaxle	¥|ÅXÁÉ¨® / Double Axle (¬ü°êª©)	¥|ÅXÁÉ¨® / Double Axle (¬ü°êª©)	Taito America Corporation
 pwheelsj	¥|ÅXÁÉ¨® (¤é¥»ª©)	¥|ÅXÁÉ¨® (¤é¥»ª©)	Taito Corporation
-superchs	¤j°l®· - ¸o´c²×µ²ªÌ (¬ü°êª©)	¤j°l®· - ¸o´c²×µ²ªÌ (¬ü°êª©)	Taito America Corporation
+superchs	¶W¯Å°lÂÜ - ¸o´c²×µ²ªÌ (¬ü°êª©)	¶W¯Å°lÂÜ - ¸o´c²×µ²ªÌ (¬ü°êª©)	Taito America Corporation
 finalb	³Ì²×¥´À» (¥@¬Éª©)	³Ì²×¥´À» (¥@¬Éª©)	Taito Corporation Japan
 finalbj	³Ì²×¥´À» (¤é¥»ª©)	³Ì²×¥´À» (¤é¥»ª©)	Taito Corporation
 finalbu	³Ì²×¥´À» (¬ü°êª©)	³Ì²×¥´À» (¬ü°êª©)	Taito America Corporation
@@ -735,9 +794,9 @@ liquidk	ªwªw¤p¤l (¥@¬Éª©)	ªwªw¤p¤l (¥@¬Éª©)	Taito Corporation Japan
 liquidku	ªwªw¤p¤l (¬ü°êª©)	ªwªw¤p¤l (¬ü°êª©)	Taito America Corporation
 mizubaku	ªwªw¤p¤l / Mizubaku Daibouken (¤é¥»ª©)	ªwªw¤p¤l / Mizubaku Daibouken (¤é¥»ª©)	Taito Corporation
 quizhq	°Ýµª¤j¥»Àç (¤é¥»ª©)	°Ýµª¤j¥»Àç (¤é¥»ª©)	Taito Corporation
-ssi	¶W¯Å¤ÓªÅ¤J«IªÌ '91 / Super Space Invaders '91 (¥@¬Éª©)	¶W¯Å¤ÓªÅ¤J«IªÌ '91 / Super Space Invaders '91 (¥@¬Éª©)	Taito Corporation Japan
-majest12	¶W¯Å¤ÓªÅ¤J«IªÌ '91 (¤é¥»ª©)	¶W¯Å¤ÓªÅ¤J«IªÌ '91 (¤é¥»ª©)	Taito Corporation
-gunfront	ºj¤§°ê«× (¥@¬Éª©)	ºj¤§°ê«× (¥@¬Éª©)	Taito Corporation Japan
+ssi	¤ÓªÅ¤J«IªÌ Part IV / ¶W¯Å¤ÓªÅ¤J«IªÌ '91 (¥@¬Éª©)	¤ÓªÅ¤J«IªÌ Part IV / ¶W¯Å¤ÓªÅ¤J«IªÌ '91 (¥@¬Éª©)	Taito Corporation Japan
+majest12	¤ÓªÅ¤J«IªÌ Part IV (¤é¥»ª©)	¤ÓªÅ¤J«IªÌ Part IV (¤é¥»ª©)	Taito Corporation
+gunfront	ºj¤§°ê«× / Gun & Frontier (¥@¬Éª©)	ºj¤§°ê«× / Gun & Frontier (¥@¬Éª©)	Taito Corporation Japan
 gunfronj	ºj¤§°ê«× (¤é¥»ª©)	ºj¤§°ê«× (¤é¥»ª©)	Taito Corporation
 growl	´ËªL¦uÅ@¯« / Growl (¥@¬Éª©)	´ËªL¦uÅ@¯« / Growl (¥@¬Éª©)	Taito Corporation Japan
 growlu	´ËªL¦uÅ@¯« / Growl (¬ü°êª©)	´ËªL¦uÅ@¯« / Growl (¬ü°êª©)	Taito America Corporation
@@ -745,9 +804,9 @@ runark	´ËªL¦uÅ@¯« / Runark (¤é¥»ª©)	´ËªL¦uÅ@¯« / Runark (¤é¥»ª©)	Taito Corporati
 mjnquest	³Â³¶±´ÀI (¤é¥»ª©)	³Â³¶±´ÀI (¤é¥»ª©)	Taito Corporation
 mjnquesb	³Â³¶±´ÀI (No Nudity)	³Â³¶±´ÀI (No Nudity)	Taito Corporation
 koshien	¶ã©Iºa¥ú¥Ò¤l¶é (¤é¥»ª©)	¶ã©Iºa¥ú¥Ò¤l¶é (¤é¥»ª©)	Taito Corporation
-ninjak	§ÔªÌ§g (¥@¬Éª©)	§ÔªÌ§g (¥@¬Éª©)	Taito Corporation Japan
-ninjakj	§ÔªÌ§g (¤é¥»ª©)	§ÔªÌ§g (¤é¥»ª©)	Taito Corporation
-ninjaku	§ÔªÌ§g (¬ü°êª©)	§ÔªÌ§g (¬ü°êª©)	Taito America Corporation
+ninjak	§ÔªÌ¤p¤l (¥@¬Éª©)	§ÔªÌ¤p¤l (¥@¬Éª©)	Taito Corporation Japan
+ninjakj	§ÔªÌ¤p¤l (¤é¥»ª©)	§ÔªÌ¤p¤l (¤é¥»ª©)	Taito Corporation
+ninjaku	§ÔªÌ¤p¤l (¬ü°êª©)	§ÔªÌ¤p¤l (¬ü°êª©)	Taito America Corporation
 qzquest	°Ýµª·j¬d - ¤½¥D»P«iªÌª«»y (¤é¥»ª©)	°Ýµª·j¬d - ¤½¥D»P«iªÌª«»y (¤é¥»ª©)	Taito Corporation
 qzchikyu	°Ýµª¦a²y¨¾½Ã­x (¤é¥»ª©)	°Ýµª¦a²y¨¾½Ã­x (¤é¥»ª©)	Taito Corporation
 deadconx	¦º¤`Ãä½t (¥@¬Éª©)	¦º¤`Ãä½t (¥@¬Éª©)	Taito Corporation Japan
@@ -765,10 +824,10 @@ kaiserkn	¤ýªÌÅK®± (¥@¬Éª©)	¤ýªÌÅK®± (¥@¬Éª©)	Taito Corporation Japan
 kaiserkj	¤ýªÌÅK®± (¤é¥»ª©)	¤ýªÌÅK®± (¤é¥»ª©)	Taito Corporation
 gblchmp	¤ýªÌÅK®± / Global Champion (¬ü°êª©)	¤ýªÌÅK®± / Global Champion (¬ü°êª©)	Taito America Corporation
 dankuga	Â_¤³¤ú (¶}µoª©)	Â_¤³¤ú (¶}µoª©)	Taito Corporation
-dariusg	¤ÓªÅ¾Ô¾÷¥~¶Ç - »ÈÆN (¥@¬Éª©)	¤ÓªÅ¾Ô¾÷¥~¶Ç - »ÈÆN (¥@¬Éª©)	Taito Corporation Japan
-dariusgj	¤ÓªÅ¾Ô¾÷¥~¶Ç - »ÈÆN (¤é¥»ª©)	¤ÓªÅ¾Ô¾÷¥~¶Ç - »ÈÆN (¤é¥»ª©)	Taito Corporation
-dariusgu	¤ÓªÅ¾Ô¾÷¥~¶Ç - »ÈÆN (¬ü°êª©)	¤ÓªÅ¾Ô¾÷¥~¶Ç - »ÈÆN (¬ü°êª©)	Taito America Corporation
-dariusgx	¤ÓªÅ¾Ô¾÷¥~¶Ç - »ÈÆN (Extra Version) [Official Hack]	¤ÓªÅ¾Ô¾÷¥~¶Ç - »ÈÆN (Extra Version) [Official Hack]	Taito Corporation
+dariusg	¤ÓªÅ¾Ô°«¾÷¥~¶Ç - »ÈÆN (¥@¬Éª©)	¤ÓªÅ¾Ô°«¾÷¥~¶Ç - »ÈÆN (¥@¬Éª©)	Taito Corporation Japan
+dariusgj	¤ÓªÅ¾Ô°«¾÷¥~¶Ç - »ÈÆN (¤é¥»ª©)	¤ÓªÅ¾Ô°«¾÷¥~¶Ç - »ÈÆN (¤é¥»ª©)	Taito Corporation
+dariusgu	¤ÓªÅ¾Ô°«¾÷¥~¶Ç - »ÈÆN (¬ü°êª©)	¤ÓªÅ¾Ô°«¾÷¥~¶Ç - »ÈÆN (¬ü°êª©)	Taito America Corporation
+dariusgx	¤ÓªÅ¾Ô°«¾÷¥~¶Ç - »ÈÆN (Extra Version) [Official Hack]	¤ÓªÅ¾Ô°«¾÷¥~¶Ç - »ÈÆN (Extra Version) [Official Hack]	Taito Corporation
 bublbob2	ªwªwÀs 2 (¥@¬Éª©)	ªwªwÀs 2 (¥@¬Éª©)	Taito Corporation Japan
 bubsympe	ªwªwÀs 2 (¼Ú¬wª©)	ªwªwÀs 2 (¼Ú¬wª©)	Taito Corporation Japan
 bubsympu	ªwªwÀs 2 (¬ü°êª©)	ªwªwÀs 2 (¬ü°êª©)	Taito America Corporation
@@ -795,10 +854,16 @@ bubblemj	ªwªwÀs 3 (¤é¥»ª©)	ªwªwÀs 3 (¤é¥»ª©)	Taito Corporation
 pbobble3	ªwªwÀs¸ÑÁ¼ 3 (¥@¬Éª©)	ªwªwÀs¸ÑÁ¼ 3 (¥@¬Éª©)	Taito Corporation
 pbobbl3u	ªwªwÀs¸ÑÁ¼ 3 (¬ü°êª©)	ªwªwÀs¸ÑÁ¼ 3 (¬ü°êª©)	Taito Corporation
 pbobbl3j	ªwªwÀs¸ÑÁ¼ 3 (¤é¥»ª©)	ªwªwÀs¸ÑÁ¼ 3 (¤é¥»ª©)	Taito Corporation
+arkretrn	¥´¿j¶ô¤T / ¥´¿j¶ô¦^Âk (¤é¥»ª©)	¥´¿j¶ô¤T / ¥´¿j¶ô¦^Âk (¤é¥»ª©)	Taito Corporation
 pbobble4	ªwªwÀs¸ÑÁ¼ 4 (¥@¬Éª©)	ªwªwÀs¸ÑÁ¼ 4 (¥@¬Éª©)	Taito Corporation
 pbobbl4j	ªwªwÀs¸ÑÁ¼ 4 (¤é¥»ª©)	ªwªwÀs¸ÑÁ¼ 4 (¤é¥»ª©)	Taito Corporation
 pbobbl4u	ªwªwÀs¸ÑÁ¼ 4 (¬ü°êª©)	ªwªwÀs¸ÑÁ¼ 4 (¬ü°êª©)	Taito Corporation
+dendeg	¹q¨® GO!	¹q¨® GO!	Taito
+dendegx	¹q¨® GO! EX	¹q¨® GO! EX	Taito
+dendeg2	¹q¨® GO! 2 - °ª³t½g	¹q¨® GO! 2 - °ª³t½g	Taito
+dendeg2x	¹q¨® GO! 2 EX - °ª³t½g 3000 µf¥x	¹q¨® GO! 2 EX - °ª³t½g 3000 µf¥x	Taito
 pf2012	¶W¯à¤O¤j¾Ô 2012	¶W¯à¤O¤j¾Ô 2012	Taito
+mjsister	³Â³¶©n©f (¤é¥»ª©)	³Â³¶©n©f (¤é¥»ª©)	Toaplan
 fshark	­¸µ¾ÂB / Flying Shark (¥@¬Éª©)	­¸µ¾ÂB / Flying Shark (¥@¬Éª©)	[Toaplan] Taito Corporation
 skyshark	­¸µ¾ÂB / Sky Shark (¬ü°êª©)	­¸µ¾ÂB / Sky Shark (¬ü°êª©)	[Toaplan] Taito America Corporation (Romstar license)
 hishouza	­¸µ¾ÂB (¤é¥»ª©)	­¸µ¾ÂB (¤é¥»ª©)	[Toaplan] Taito Corporation
@@ -807,7 +872,7 @@ twincobr	¨s·¥ªê / Twin Cobra (¥@¬Éª©)	¨s·¥ªê / Twin Cobra (¥@¬Éª©)	[Toaplan] Tai
 twincobu	¨s·¥ªê / Twin Cobra (¬ü°êª©)	¨s·¥ªê / Twin Cobra (¬ü°êª©)	[Toaplan] Taito America Corporation (Romstar license)
 ktiger	¨s·¥ªê (¤é¥»ª©)	¨s·¥ªê (¤é¥»ª©)	[Toaplan] Taito Corporation
 rallybik	½Ä¨ë³¥­¦	½Ä¨ë³¥­¦	[Toaplan] Taito Corporation
-truxton	¹F¤H	¹F¤H	[Toaplan] Taito Corporation
+truxton	¦t©z·s¹F¤H	¦t©z·s¹F¤H	[Toaplan] Taito Corporation
 hellfire	¦aº»¤õ	¦aº»¤õ	Toaplan (Taito license)
 hellfir1	¦aº»¤õ (1P Ver.)	¦aº»¤õ (1P Ver.)	Toaplan (Taito license)
 zerowing	¹s¦¡¾Ô¾÷	¹s¦¡¾Ô¾÷	Toaplan
@@ -815,7 +880,8 @@ fireshrk	ÂB! ÂB! ÂB! / Fire Shark	ÂB! ÂB! ÂB! / Fire Shark	Toaplan
 samesame	ÂB! ÂB! ÂB!	ÂB! ÂB! ÂB!	Toaplan
 samesam2	ÂB! ÂB! ÂB! (2P Ver.)	ÂB! ÂB! ÂB! (2P Ver.)	Toaplan
 outzone	²§°ì¾Ô±N (set 1)	²§°ì¾Ô±N (set 1)	Toaplan
-outzonea	²§°ì¾Ô±N (set 2)	²§°ì¾Ô±N (set 2)	Toaplan
+outzonea	²§°ì¾Ô±N (set 2, ¶}µoª©?)	²§°ì¾Ô±N (set 2, ¶}µoª©?)	Toaplan
+outzoneb	²§°ì¾Ô±N (set 3)	²§°ì¾Ô±N (set 3)	Toaplan
 vimana	»Èªe¾Ô¾÷	»Èªe¾Ô¾÷	Toaplan
 vimana1	»Èªe¾Ô¾÷ (ÂÂ set)	»Èªe¾Ô¾÷ (ÂÂ set)	Toaplan
 vimanan	»Èªe¾Ô¾÷ (Nova Apparate GMBH & Co)	»Èªe¾Ô¾÷ (Nova Apparate GMBH & Co)	Toaplan (Nova Apparate GMBH & Co license)
@@ -830,9 +896,14 @@ hyperpac	Hyper ¤pºëÆF	Hyper ¤pºëÆF	SemiCom
 hyperpcb	Hyper ¤pºëÆF (µsª©)	Hyper ¤pºëÆF (µsª©)	bootleg
 snowbro3	³·¤H¥S§Ì 3 - Å]ªk«_ÀI	³·¤H¥S§Ì 3 - Å]ªk«_ÀI	bootleg
 truxton2	¹F¤H¤ý (¤é¥»ª©)	¹F¤H¤ý (¤é¥»ª©)	Toaplan
-pipibibs	¥Ö¥Ö»P¤ñ¤ñ / Pipi &amp; Bibis	¥Ö¥Ö»P¤ñ¤ñ / Pipi &amp; Bibis	Toaplan
+pipibibs	¥Ö¥Ö»P¤ñ¤ñ / Pipi & Bibis	¥Ö¥Ö»P¤ñ¤ñ / Pipi & Bibis	Toaplan
 whoopee	¥Ö¥Ö»P¤ñ¤ñ / Whoopee!!	¥Ö¥Ö»P¤ñ¤ñ / Whoopee!!	Toaplan
-pipibibi	¥Ö¥Ö»P¤ñ¤ñ / Pipi &amp; Bibis (µsª© ?)	¥Ö¥Ö»P¤ñ¤ñ / Pipi &amp; Bibis (µsª© ?)	[Toaplan] Ryouta Kikaku
+pipibibi	¥Ö¥Ö»P¤ñ¤ñ / Pipi & Bibis (µsª© ?)	¥Ö¥Ö»P¤ñ¤ñ / Pipi & Bibis (µsª© ?)	[Toaplan] Ryouta Kikaku
+fixeight	¦aº»ªº­^¶¯¶Ç»¡	¦aº»ªº­^¶¯¶Ç»¡	Toaplan
+fixeighb	¦aº»ªº­^¶¯¶Ç»¡ (µsª©)	¦aº»ªº­^¶¯¶Ç»¡ (µsª©)	bootleg
+batsugun	ÅRÆE¹p¹q (set 1)	ÅRÆE¹p¹q (set 1)	Toaplan
+batsugna	ÅRÆE¹p¹q (set 2)	ÅRÆE¹p¹q (set 2)	Toaplan
+batugnsp	ÅRÆE¹p¹q (Special Ver.)	ÅRÆE¹p¹q (Special Ver.)	Toaplan
 snowbro2	³·¤H¥S§Ì 2 / Otenki Paradise	³·¤H¥S§Ì 2 / Otenki Paradise	[Toaplan] Hanafram
 sstriker	Å]ªk¤j§@¾Ô / Sorcer Striker (¥@¬Éª©)	Å]ªk¤j§@¾Ô / Sorcer Striker (¥@¬Éª©)	Raizing
 sstrikra	Å]ªk¤j§@¾Ô / Sorcer Striker (¥@¬Éª©, alt)	Å]ªk¤j§@¾Ô / Sorcer Striker (¥@¬Éª©, alt)	Raizing
@@ -841,6 +912,8 @@ shippumd	¯e­·Å]ªk¤j§@¾Ô (¤é¥»ª©)	¯e­·Å]ªk¤j§@¾Ô (¤é¥»ª©)	Raizing / Eighting
 kingdmgp	¯e­·Å]ªk¤j§@¾Ô / Kingdom Grandprix (¥@¬Éª©)	¯e­·Å]ªk¤j§@¾Ô / Kingdom Grandprix (¥@¬Éª©)	Raizing / Eighting
 pwrinst2	»¨¦å¦x¤@±Ú 2 / Power Instinct 2 (¬ü°êª©)	»¨¦å¦x¤@±Ú 2 / Power Instinct 2 (¬ü°êª©)	Atlus/Cave
 pwrins2j	»¨¦å¦x¤@±Ú 2 (¤é¥»ª©)	»¨¦å¦x¤@±Ú 2 (¤é¥»ª©)	Atlus/Cave
+plegends	»¨¦å¦x¥~¶Ç ³Ì±j¶Ç»¡ / Power Instinct Legends (¬ü°êª©)	»¨¦å¦x¥~¶Ç ³Ì±j¶Ç»¡ / Power Instinct Legends (¬ü°êª©)	Atlus/Cave
+plegendj	»¨¦å¦x¥~¶Ç ³Ì±j¶Ç»¡ (¤é¥»ª©)	»¨¦å¦x¥~¶Ç ³Ì±j¶Ç»¡ (¤é¥»ª©)	Atlus/Cave
 mazinger	µL¼ÄÅKª÷­è Z	µL¼ÄÅKª÷­è Z	Banpresto/Dynamic Pl. Toei Animation
 donpachi	­º»â¸Á (¬ü°êª©)	­º»â¸Á (¬ü°êª©)	Atlus/Cave
 donpachj	­º»â¸Á (¤é¥»ª©)	­º»â¸Á (¤é¥»ª©)	Atlus/Cave
@@ -865,8 +938,8 @@ repulse	»ñ°Ä¤§¤l / Repulse	»ñ°Ä¤§¤l / Repulse	Sega
 srdmissn	S.R.D. ¥ô°È	S.R.D. ¥ô°È	Taito Corporation
 fx	S.R.D. ¥ô°È / F-X	S.R.D. ¥ô°È / F-X	bootleg
 airwolf	¤Ñ¯T	¤Ñ¯T	Kyugo
-skywolf	¤Ñ¯T / ªÅ¯T (set 1)	¤Ñ¯T / ªÅ¯T (set 1)	bootleg
-skywolf2	¤Ñ¯T / ªÅ¯T (set 2)	¤Ñ¯T / ªÅ¯T (set 2)	bootleg
+skywolf	¤Ñ¯T / Sky Wolf (set 1)	¤Ñ¯T / Sky Wolf (set 1)	bootleg
+skywolf2	¤Ñ¯T / Sky Wolf (set 2)	¤Ñ¯T / Sky Wolf (set 2)	bootleg
 defender	¨¾½ÃªÌ (Red label)	¨¾½ÃªÌ (Red label)	Williams
 defendg	¨¾½ÃªÌ (Green label)	¨¾½ÃªÌ (Green label)	Williams
 defendw	¨¾½ÃªÌ (White label)	¨¾½ÃªÌ (White label)	Williams
@@ -890,16 +963,19 @@ gngt	Å]¬É§ø / Ghosts'n Goblins (¬ü°êª©)	Å]¬É§ø / Ghosts'n Goblins (¬ü°êª©)	Capco
 makaimur	Å]¬É§ø (¤é¥»ª©)	Å]¬É§ø (¤é¥»ª©)	Capcom
 makaimuc	Å]¬É§ø (¤é¥»ª© Revision C)	Å]¬É§ø (¤é¥»ª© Revision C)	Capcom
 makaimug	Å]¬É§ø (¤é¥»ª© Revision G)	Å]¬É§ø (¤é¥»ª© Revision G)	Capcom
-gunsmoke	¯î³¥¤jÃð«È (¥@¬Éª©)	¯î³¥¤jÃð«È (¥@¬Éª©)	Capcom
-gunsmoku	¯î³¥¤jÃð«È (¬ü°êª© set 1)	¯î³¥¤jÃð«È (¬ü°êª© set 1)	Capcom (Romstar license)
-gunsmoka	¯î³¥¤jÃð«È (¬ü°êª© set 2)	¯î³¥¤jÃð«È (¬ü°êª© set 2)	Capcom (Romstar license)
-gunsmokj	¯î³¥¤jÃð«È (¤é¥»ª©)	¯î³¥¤jÃð«È (¤é¥»ª©)	Capcom
+gunsmoke	¦è³¡¯«ºj¤â (¥@¬Éª©)	¦è³¡¯«ºj¤â (¥@¬Éª©)	Capcom
+gunsmoku	¦è³¡¯«ºj¤â (¬ü°êª© set 1)	¦è³¡¯«ºj¤â (¬ü°êª© set 1)	Capcom (Romstar license)
+gunsmoka	¦è³¡¯«ºj¤â (¬ü°êª© set 2)	¦è³¡¯«ºj¤â (¬ü°êª© set 2)	Capcom (Romstar license)
+gunsmokj	¦è³¡¯«ºj¤â (¤é¥»ª©)	¦è³¡¯«ºj¤â (¤é¥»ª©)	Capcom
 trojan	°«ªÌ»µºq / Trojan (¬ü°êª©)	°«ªÌ»µºq / Trojan (¬ü°êª©)	Capcom
 trojanr	°«ªÌ»µºq / Trojan (Romstar)	°«ªÌ»µºq / Trojan (Romstar)	Capcom (Romstar license)
 trojanj	°«ªÌ»µºq (¤é¥»ª©)	°«ªÌ»µºq (¤é¥»ª©)	Capcom
 lwings	Ál¤H / Legendary Wings (¬ü°êª© set 1)	Ál¤H / Legendary Wings (¬ü°êª© set 1)	Capcom
 lwings2	Ál¤H / Legendary Wings (¬ü°êª© set 2)	Ál¤H / Legendary Wings (¬ü°êª© set 2)	Capcom
 lwingsjp	Ál¤H (¤é¥»ª©)	Ál¤H (¤é¥»ª©)	Capcom
+sidearms	µ´¹ï¦XÅé (¥@¬Éª©)	µ´¹ï¦XÅé (¥@¬Éª©)	Capcom
+sidearmr	µ´¹ï¦XÅé (¬ü°êª©)	µ´¹ï¦XÅé (¬ü°êª©)	Capcom (Romstar license)
+sidearjp	µ´¹ï¦XÅé (¤é¥»ª©)	µ´¹ï¦XÅé (¤é¥»ª©)	Capcom
 avengers	¥²±þ µL¿à®± / Avengers (¬ü°êª© set 1)	¥²±þ µL¿à®± / Avengers (¬ü°êª© set 1)	Capcom
 avenger2	¥²±þ µL¿à®± / Avengers (¬ü°êª© set 2)	¥²±þ µL¿à®± / Avengers (¬ü°êª© set 2)	Capcom
 buraiken	¥²±þ µL¿à®± (¤é¥»ª©)	¥²±þ µL¿à®± (¤é¥»ª©)	Capcom
@@ -928,8 +1004,8 @@ lstduelb	¨M¾Ô (µsª©)	¨M¾Ô (µsª©)	bootleg
 madgear	ºÆ¨g¾÷¨® (¬ü°êª©)	ºÆ¨g¾÷¨® (¬ü°êª©)	Capcom
 madgearj	ºÆ¨g¾÷¨® (¤é¥»ª©)	ºÆ¨g¾÷¨® (¤é¥»ª©)	Capcom
 ledstorm	ºÆ¨g¾÷¨® / Led Storm (¬ü°êª©)	ºÆ¨g¾÷¨® / Led Storm (¬ü°êª©)	Capcom
-forgottn	¥@¬É¥½¤é (¬ü°êª©)	¥@¬É¥½¤é (¬ü°êª©)	Capcom
-lostwrld	¥@¬É¥½¤é / ¥¢¸¨ªº¥@¬É (¤é¥»ª©)	¥@¬É¥½¤é / ¥¢¸¨ªº¥@¬É (¤é¥»ª©)	Capcom
+forgottn	¥@¬É¥½¤é / Forgotten Worlds (¬ü°êª©)	¥@¬É¥½¤é / Forgotten Worlds (¬ü°êª©)	Capcom
+lostwrld	¥@¬É¥½¤é (¤é¥»ª©)	¥@¬É¥½¤é (¤é¥»ª©)	Capcom
 ghouls	¤jÅ]¬É§ø / Ghouls'n Ghosts (¥@¬Éª©)	¤jÅ]¬É§ø / Ghouls'n Ghosts (¥@¬Éª©)	Capcom
 ghoulsu	¤jÅ]¬É§ø / Ghouls'n Ghosts (¬ü°êª©)	¤jÅ]¬É§ø / Ghouls'n Ghosts (¬ü°êª©)	Capcom
 daimakai	¤jÅ]¬É§ø (¤é¥»ª©)	¤jÅ]¬É§ø (¤é¥»ª©)	Capcom
@@ -1019,15 +1095,20 @@ varthu	¹p¹q­·¼É / «Âªê¾Ô¾÷ (¬ü°êª© 920612)	¹p¹q­·¼É / «Âªê¾Ô¾÷ (¬ü°êª© 920612)	C
 varthj	¹p¹q­·¼É / «Âªê¾Ô¾÷ (¤é¥»ª© 920714)	¹p¹q­·¼É / «Âªê¾Ô¾÷ (¤é¥»ª© 920714)	Capcom
 cworld2j	¥d´¶ªÅ°Ýµª 2 (¤é¥»ª© 920611)	¥d´¶ªÅ°Ýµª 2 (¤é¥»ª© 920611)	Capcom
 wof	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / Warriors of Fate (¥@¬Éª© 921002)	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / Warriors of Fate (¥@¬Éª© 921002)	Capcom
-wofa	§]­¹¤Ñ¦a II / ¤T°ê»x II (¨È¬wª© 921005)	§]­¹¤Ñ¦a II / ¤T°ê»x II (¨È¬wª© 921005)	Capcom
+wofa	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / ¤T°ê»x II (¨È¬wª© 921005)	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / ¤T°ê»x II (¨È¬wª© 921005)	Capcom
 wofu	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / Warriors of Fate (¬ü°êª© 921031)	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / Warriors of Fate (¬ü°êª© 921031)	Capcom
 wofj	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô (¤é¥»ª© 921031)	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô (¤é¥»ª© 921031)	Capcom
-wofh	§]­¹¤Ñ¦a II / ¤T°ê­^¶¯¶Ç	§]­¹¤Ñ¦a II / ¤T°ê­^¶¯¶Ç	hack
-wof3js	§]­¹¤Ñ¦a II / ¤T¼C¸t	§]­¹¤Ñ¦a II / ¤T¼C¸t	hack
-wof3sj	§]­¹¤Ñ¦a II / ¤T¸t¼C	§]­¹¤Ñ¦a II / ¤T¸t¼C	hack
+wofsj	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / ¸t¼C¤T°ê (set 1)	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / ¸t¼C¤T°ê (set 1)	hack
+wofsja	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / ¸t¼C¤T°ê (set 2)	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / ¸t¼C¤T°ê (set 2)	hack
+wofsjb	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / ¸t¼C¤T°ê (set 3)	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / ¸t¼C¤T°ê (set 3)	hack
+wof3js	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / ¤T¼C¸t	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / ¤T¼C¸t	hack
+wof3sj	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / ¤T¸t¼C (set 1)	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / ¤T¸t¼C (set 1)	hack
+wof3sja	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / ¤T¸t¼C (set 2)	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / ¤T¸t¼C (set 2)	hack
+wofh	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / ¤T°ê­^¶¯¶Ç (set 1)	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / ¤T°ê­^¶¯¶Ç (set 1)	hack
+wofha	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / ¤T°ê­^¶¯¶Ç (set 2)	§]­¹¤Ñ¦a II - ¨ª¾À¤§¾Ô / ¤T°ê­^¶¯¶Ç (set 2)	hack
 sf2hf	§Ö¥´±Û­· II' - ¿E¾Ô (¥@¬Éª© 921209)	§Ö¥´±Û­· II' - ¿E¾Ô (¥@¬Éª© 921209)	Capcom
 sf2t	§Ö¥´±Û­· II' - ¿E¾Ô (¬ü°êª© 921209)	§Ö¥´±Û­· II' - ¿E¾Ô (¬ü°êª© 921209)	Capcom
-sf2tj	§Ö¥´±Û­· II' Turbo - ¿E¾Ô (¤é¥»ª© 921209)	§Ö¥´±Û­· II' Turbo - ¿E¾Ô (¤é¥»ª© 921209)	Capcom
+sf2tj	§Ö¥´±Û­· II' TURBO - ¿E¾Ô (¤é¥»ª© 921209)	§Ö¥´±Û­· II' TURBO - ¿E¾Ô (¤é¥»ª© 921209)	Capcom
 dino	®£Às·s¥@¬ö / Cadillacs and Dinosaurs (¥@¬Éª© 930201)	®£Às·s¥@¬ö / Cadillacs and Dinosaurs (¥@¬Éª© 930201)	Capcom
 dinou	®£Às·s¥@¬ö / Cadillacs and Dinosaurs (¬ü°êª© 930201)	®£Às·s¥@¬ö / Cadillacs and Dinosaurs (¬ü°êª© 930201)	Capcom
 dinoj	®£Às·s¥@¬ö (¤é¥»ª© 930201)	®£Às·s¥@¬ö (¤é¥»ª© 930201)	Capcom
@@ -1045,12 +1126,12 @@ pnicku	´¼¼z¤k¯«Å]ªkÄ_¥Û (¬ü°êª© 940608)	´¼¼z¤k¯«Å]ªkÄ_¥Û (¬ü°êª© 940608)	Compile
 qad	Às¤§Á¼ÃD (¬ü°êª© 920701)	Às¤§Á¼ÃD (¬ü°êª© 920701)	Capcom
 qadj	Às¤§Á¼ÃD (¤é¥»ª© 940921)	Às¤§Á¼ÃD (¤é¥»ª© 940921)	Capcom
 qtono2	°Ýµª·µ¼Ë¤§³¥±æ 2 ¥þ°êª© (¤é¥»ª© 950123)	°Ýµª·µ¼Ë¤§³¥±æ 2 ¥þ°êª© (¤é¥»ª© 950123)	Capcom
-pang3	Å]ªk®ðªw! 3 - ©ÇµsªºµØÄR¤È«á (¼Ú¬wª© 950511)	Å]ªk®ðªw! 3 - ©ÇµsªºµØÄR¤È«á (¼Ú¬wª© 950511)	Mitchell
-pang3j	Å]ªk®ðªw! 3 - ©ÇµsªºµØÄR¤È«á (¤é¥»ª© 950511)	Å]ªk®ðªw! 3 - ©ÇµsªºµØÄR¤È«á (¤é¥»ª© 950511)	Mitchell
+pang3	Å]°­®ð²y! 3 - ©ÇµsªºµØÄR¤È«á (¼Ú¬wª© 950511)	Å]°­®ð²y! 3 - ©ÇµsªºµØÄR¤È«á (¼Ú¬wª© 950511)	Mitchell
+pang3j	Å]°­®ð²y! 3 - ©ÇµsªºµØÄR¤È«á (¤é¥»ª© 950511)	Å]°­®ð²y! 3 - ©ÇµsªºµØÄR¤È«á (¤é¥»ª© 950511)	Mitchell
 megaman	¬¥§J¤H - ¤O¶q¹ï¨M / Mega Man - The Power Battle (CPS1 ¨È¬wª© 951006)	¬¥§J¤H - ¤O¶q¹ï¨M / Mega Man - The Power Battle (CPS1 ¨È¬wª© 951006)	Capcom
 rockmanj	¬¥§J¤H - ¤O¶q¹ï¨M (CPS1 ¤é¥»ª© 950922)	¬¥§J¤H - ¤O¶q¹ï¨M (CPS1 ¤é¥»ª© 950922)	Capcom
-sfzch	¤Ö¦~§Ö¥´ Zero (CPS Changer ¤é¥»ª© 951020)	¤Ö¦~§Ö¥´ Zero (CPS Changer ¤é¥»ª© 951020)	Capcom
-sfach	¤Ö¦~§Ö¥´ Zero / Street Fighter Alpha (Publicity ¬ü°êª© 950727)	¤Ö¦~§Ö¥´ Zero / Street Fighter Alpha (Publicity ¬ü°êª© 950727)	Capcom
+sfzch	¤Ö¦~§Ö¥´ ZERO (CPS Changer ¤é¥»ª© 951020)	¤Ö¦~§Ö¥´ ZERO (CPS Changer ¤é¥»ª© 951020)	Capcom
+sfach	¤Ö¦~§Ö¥´ ZERO / Street Fighter Alpha (Publicity ¬ü°êª© 950727)	¤Ö¦~§Ö¥´ ZERO / Street Fighter Alpha (Publicity ¬ü°êª© 950727)	Capcom
 fcrash	µóÀY§Ö¥´ / Final Crash (¥@¬Éª©, µsª©)	µóÀY§Ö¥´ / Final Crash (¥@¬Éª©, µsª©)	Playmark, bootleg [Capcom]
 ssf2	¶W¯Å§Ö¥´±Û­· II: ·s¬D¾ÔªÌ (¥@¬Éª© 930911)	¶W¯Å§Ö¥´±Û­· II: ·s¬D¾ÔªÌ (¥@¬Éª© 930911)	Capcom
 ssf2u	¶W¯Å§Ö¥´±Û­· II: ·s¬D¾ÔªÌ (¬ü°êª© 930911)	¶W¯Å§Ö¥´±Û­· II: ·s¬D¾ÔªÌ (¬ü°êª© 930911)	Capcom
@@ -1073,10 +1154,10 @@ ddtodj	¦aº»¯«Às / Às»P¦a¤U«°: ·´·À¤§¶ð (¤é¥»ª© 940125)	¦aº»¯«Às / Às»P¦a¤U«°: ·´
 ddtodjr1	¦aº»¯«Às / Às»P¦a¤U«°: ·´·À¤§¶ð (¤é¥»ª© 940113)	¦aº»¯«Às / Às»P¦a¤U«°: ·´·À¤§¶ð (¤é¥»ª© 940113)	Capcom
 ddtoda	¦aº»¯«Às / Às»P¦a¤U«°: ·´·À¤§¶ð (¨È¬wª© 940113)	¦aº»¯«Às / Às»P¦a¤U«°: ·´·À¤§¶ð (¨È¬wª© 940113)	Capcom
 ddtodh	¦aº»¯«Às / Às»P¦a¤U«°: ·´·À¤§¶ð (¦è¯Z¤úª© 940125)	¦aº»¯«Às / Às»P¦a¤U«°: ·´·À¤§¶ð (¦è¯Z¤úª© 940125)	Capcom
-ssf2t	¶W¯Å§Ö¥´±Û­· II Turbo (¥@¬Éª© 940223)	¶W¯Å§Ö¥´±Û­· II Turbo (¥@¬Éª© 940223)	Capcom
-ssf2tu	¶W¯Å§Ö¥´±Û­· II Turbo (¬ü°êª© 940323)	¶W¯Å§Ö¥´±Û­· II Turbo (¬ü°êª© 940323)	Capcom
-ssf2tur1	¶W¯Å§Ö¥´±Û­· II Turbo (¬ü°êª© 940223)	¶W¯Å§Ö¥´±Û­· II Turbo (¬ü°êª© 940223)	Capcom
-ssf2ta	¶W¯Å§Ö¥´±Û­· II Turbo (¨È¬wª© 940223)	¶W¯Å§Ö¥´±Û­· II Turbo (¨È¬wª© 940223)	Capcom
+ssf2t	¶W¯Å§Ö¥´±Û­· II TURBO (¥@¬Éª© 940223)	¶W¯Å§Ö¥´±Û­· II TURBO (¥@¬Éª© 940223)	Capcom
+ssf2tu	¶W¯Å§Ö¥´±Û­· II TURBO (¬ü°êª© 940323)	¶W¯Å§Ö¥´±Û­· II TURBO (¬ü°êª© 940323)	Capcom
+ssf2tur1	¶W¯Å§Ö¥´±Û­· II TURBO (¬ü°êª© 940223)	¶W¯Å§Ö¥´±Û­· II TURBO (¬ü°êª© 940223)	Capcom
+ssf2ta	¶W¯Å§Ö¥´±Û­· II TURBO (¨È¬wª© 940223)	¶W¯Å§Ö¥´±Û­· II TURBO (¨È¬wª© 940223)	Capcom
 ssf2xj	¶W¯Å§Ö¥´±Û­· II X (¤é¥»ª© 940223)	¶W¯Å§Ö¥´±Û­· II X (¤é¥»ª© 940223)	Capcom
 avsp	²§§Î Vs. ²×·¥¾Ô¤h (¼Ú¬wª© 940520)	²§§Î Vs. ²×·¥¾Ô¤h (¼Ú¬wª© 940520)	Capcom
 avspu	²§§Î Vs. ²×·¥¾Ô¤h (¬ü°êª© 940520)	²§§Î Vs. ²×·¥¾Ô¤h (¬ü°êª© 940520)	Capcom
@@ -1115,18 +1196,18 @@ vhuntjr2	Å]°ì«ÕÆF: ´cÅ]ªº´_¤³ (¤é¥»ª© 950302)	Å]°ì«ÕÆF: ´cÅ]ªº´_¤³ (¤é¥»ª© 95030
 cybots	¾÷¥Ò®æ°« (¼Ú¬wª© 950424)	¾÷¥Ò®æ°« (¼Ú¬wª© 950424)	Capcom
 cybotsu	¾÷¥Ò®æ°« (¬ü°êª© 950424)	¾÷¥Ò®æ°« (¬ü°êª© 950424)	Capcom
 cybotsj	¾÷¥Ò®æ°« (¤é¥»ª© 950420)	¾÷¥Ò®æ°« (¤é¥»ª© 950420)	Capcom
-sfa	¤Ö¦~§Ö¥´ Zero / Street Fighter Alpha: Warriors' Dreams (¼Ú¬wª© 950727)	¤Ö¦~§Ö¥´ Zero / Street Fighter Alpha: Warriors' Dreams (¼Ú¬wª© 950727)	Capcom
-sfar1	¤Ö¦~§Ö¥´ Zero / Street Fighter Alpha: Warriors' Dreams (¼Ú¬wª© 950718)	¤Ö¦~§Ö¥´ Zero / Street Fighter Alpha: Warriors' Dreams (¼Ú¬wª© 950718)	Capcom
-sfar2	¤Ö¦~§Ö¥´ Zero / Street Fighter Alpha: Warriors' Dreams (¼Ú¬wª© 950627)	¤Ö¦~§Ö¥´ Zero / Street Fighter Alpha: Warriors' Dreams (¼Ú¬wª© 950627)	Capcom
-sfar3	¤Ö¦~§Ö¥´ Zero / Street Fighter Alpha: Warriors' Dreams (¼Ú¬wª© 950605)	¤Ö¦~§Ö¥´ Zero / Street Fighter Alpha: Warriors' Dreams (¼Ú¬wª© 950605)	Capcom
-sfau	¤Ö¦~§Ö¥´ Zero / Street Fighter Alpha: Warriors' Dreams (¬ü°êª© 950627)	¤Ö¦~§Ö¥´ Zero / Street Fighter Alpha: Warriors' Dreams (¬ü°êª© 950627)	Capcom
-sfza	¤Ö¦~§Ö¥´ Zero (¨È¬wª© 950627)	¤Ö¦~§Ö¥´ Zero (¨È¬wª© 950627)	Capcom
-sfzj	¤Ö¦~§Ö¥´ Zero (¤é¥»ª© 950727)	¤Ö¦~§Ö¥´ Zero (¤é¥»ª© 950727)	Capcom
-sfzjr1	¤Ö¦~§Ö¥´ Zero (¤é¥»ª© 950627)	¤Ö¦~§Ö¥´ Zero (¤é¥»ª© 950627)	Capcom
-sfzjr2	¤Ö¦~§Ö¥´ Zero (¤é¥»ª© 950605)	¤Ö¦~§Ö¥´ Zero (¤é¥»ª© 950605)	Capcom
-sfzh	¤Ö¦~§Ö¥´ Zero (¦è¯Z¤úª© 950627)	¤Ö¦~§Ö¥´ Zero (¦è¯Z¤úª© 950627)	Capcom
-sfzb	¤Ö¦~§Ö¥´ Zero (¤Ú¦èª© 951109)	¤Ö¦~§Ö¥´ Zero (¤Ú¦èª© 951109)	Capcom
-sfzbr1	¤Ö¦~§Ö¥´ Zero (¤Ú¦èª© 950727)	¤Ö¦~§Ö¥´ Zero (¤Ú¦èª© 950727)	Capcom
+sfa	¤Ö¦~§Ö¥´ ZERO / Street Fighter Alpha: Warriors' Dreams (¼Ú¬wª© 950727)	¤Ö¦~§Ö¥´ ZERO / Street Fighter Alpha: Warriors' Dreams (¼Ú¬wª© 950727)	Capcom
+sfar1	¤Ö¦~§Ö¥´ ZERO / Street Fighter Alpha: Warriors' Dreams (¼Ú¬wª© 950718)	¤Ö¦~§Ö¥´ ZERO / Street Fighter Alpha: Warriors' Dreams (¼Ú¬wª© 950718)	Capcom
+sfar2	¤Ö¦~§Ö¥´ ZERO / Street Fighter Alpha: Warriors' Dreams (¼Ú¬wª© 950627)	¤Ö¦~§Ö¥´ ZERO / Street Fighter Alpha: Warriors' Dreams (¼Ú¬wª© 950627)	Capcom
+sfar3	¤Ö¦~§Ö¥´ ZERO / Street Fighter Alpha: Warriors' Dreams (¼Ú¬wª© 950605)	¤Ö¦~§Ö¥´ ZERO / Street Fighter Alpha: Warriors' Dreams (¼Ú¬wª© 950605)	Capcom
+sfau	¤Ö¦~§Ö¥´ ZERO / Street Fighter Alpha: Warriors' Dreams (¬ü°êª© 950627)	¤Ö¦~§Ö¥´ ZERO / Street Fighter Alpha: Warriors' Dreams (¬ü°êª© 950627)	Capcom
+sfza	¤Ö¦~§Ö¥´ ZERO (¨È¬wª© 950627)	¤Ö¦~§Ö¥´ ZERO (¨È¬wª© 950627)	Capcom
+sfzj	¤Ö¦~§Ö¥´ ZERO (¤é¥»ª© 950727)	¤Ö¦~§Ö¥´ ZERO (¤é¥»ª© 950727)	Capcom
+sfzjr1	¤Ö¦~§Ö¥´ ZERO (¤é¥»ª© 950627)	¤Ö¦~§Ö¥´ ZERO (¤é¥»ª© 950627)	Capcom
+sfzjr2	¤Ö¦~§Ö¥´ ZERO (¤é¥»ª© 950605)	¤Ö¦~§Ö¥´ ZERO (¤é¥»ª© 950605)	Capcom
+sfzh	¤Ö¦~§Ö¥´ ZERO (¦è¯Z¤úª© 950627)	¤Ö¦~§Ö¥´ ZERO (¦è¯Z¤úª© 950627)	Capcom
+sfzb	¤Ö¦~§Ö¥´ ZERO (¤Ú¦èª© 951109)	¤Ö¦~§Ö¥´ ZERO (¤Ú¦èª© 951109)	Capcom
+sfzbr1	¤Ö¦~§Ö¥´ ZERO (¤Ú¦èª© 950727)	¤Ö¦~§Ö¥´ ZERO (¤Ú¦èª© 950727)	Capcom
 rckmanj	¬¥§J¤H: ¤O¶q¹ï¨M (¤é¥»ª© 950922)	¬¥§J¤H: ¤O¶q¹ï¨M (¤é¥»ª© 950922)	Capcom
 msh	¬ü°êº©µe­^¶¯ (¼Ú¬wª© 951024)	¬ü°êº©µe­^¶¯ (¼Ú¬wª© 951024)	Capcom
 mshu	¬ü°êº©µe­^¶¯ (¬ü°êª© 951024)	¬ü°êº©µe­^¶¯ (¬ü°êª© 951024)	Capcom
@@ -1148,24 +1229,24 @@ ddsomur1	¦aº»¯«Às¤G / Às»P¦a¤U«°: ·t¶Â¯µ¼v (¬ü°êª© 960209)	¦aº»¯«Às¤G / Às»P¦a¤U
 ddsomjr1	¦aº»¯«Às¤G / Às»P¦a¤U«°: ·t¶Â¯µ¼v (¤é¥»ª© 960206)	¦aº»¯«Às¤G / Às»P¦a¤U«°: ·t¶Â¯µ¼v (¤é¥»ª© 960206)	Capcom
 ddsomj	¦aº»¯«Às¤G / Às»P¦a¤U«°: ·t¶Â¯µ¼v (¤é¥»ª© 960619)	¦aº»¯«Às¤G / Às»P¦a¤U«°: ·t¶Â¯µ¼v (¤é¥»ª© 960619)	Capcom
 ddsoma	¦aº»¯«Às¤G / Às»P¦a¤U«°: ·t¶Â¯µ¼v (¨È¬wª© 960619)	¦aº»¯«Às¤G / Às»P¦a¤U«°: ·t¶Â¯µ¼v (¨È¬wª© 960619)	Capcom
-sfa2	¤Ö¦~§Ö¥´ Zero 2 / Street Fighter Alpha 2 (¬ü°êª© 960306)	¤Ö¦~§Ö¥´ Zero 2 / Street Fighter Alpha 2 (¬ü°êª© 960306)	Capcom
-sfz2j	¤Ö¦~§Ö¥´ Zero 2 (¤é¥»ª© 960227)	¤Ö¦~§Ö¥´ Zero 2 (¤é¥»ª© 960227)	Capcom
-sfz2a	¤Ö¦~§Ö¥´ Zero 2 (¨È¬wª© 960227)	¤Ö¦~§Ö¥´ Zero 2 (¨È¬wª© 960227)	Capcom
-sfz2b	¤Ö¦~§Ö¥´ Zero 2 (¤Ú¦èª© 960531)	¤Ö¦~§Ö¥´ Zero 2 (¤Ú¦èª© 960531)	Capcom
-sfz2br1	¤Ö¦~§Ö¥´ Zero 2 (¤Ú¦èª© 960304)	¤Ö¦~§Ö¥´ Zero 2 (¤Ú¦èª© 960304)	Capcom
-sfz2h	¤Ö¦~§Ö¥´ Zero 2 (¦è¯Z¤úª© 960304)	¤Ö¦~§Ö¥´ Zero 2 (¦è¯Z¤úª© 960304)	Capcom
-sfz2n	¤Ö¦~§Ö¥´ Zero 2 (¤j¬v¬wª© 960229)	¤Ö¦~§Ö¥´ Zero 2 (¤j¬v¬wª© 960229)	Capcom
-spf2t	¶W¯Å§Ö¥´¤è¶ô II Turbo (¬ü°êª© 960620)	¶W¯Å§Ö¥´¤è¶ô II Turbo (¬ü°êª© 960620)	Capcom
+sfa2	¤Ö¦~§Ö¥´ ZERO 2 / Street Fighter Alpha 2 (¬ü°êª© 960306)	¤Ö¦~§Ö¥´ ZERO 2 / Street Fighter Alpha 2 (¬ü°êª© 960306)	Capcom
+sfz2j	¤Ö¦~§Ö¥´ ZERO 2 (¤é¥»ª© 960227)	¤Ö¦~§Ö¥´ ZERO 2 (¤é¥»ª© 960227)	Capcom
+sfz2a	¤Ö¦~§Ö¥´ ZERO 2 (¨È¬wª© 960227)	¤Ö¦~§Ö¥´ ZERO 2 (¨È¬wª© 960227)	Capcom
+sfz2b	¤Ö¦~§Ö¥´ ZERO 2 (¤Ú¦èª© 960531)	¤Ö¦~§Ö¥´ ZERO 2 (¤Ú¦èª© 960531)	Capcom
+sfz2br1	¤Ö¦~§Ö¥´ ZERO 2 (¤Ú¦èª© 960304)	¤Ö¦~§Ö¥´ ZERO 2 (¤Ú¦èª© 960304)	Capcom
+sfz2h	¤Ö¦~§Ö¥´ ZERO 2 (¦è¯Z¤úª© 960304)	¤Ö¦~§Ö¥´ ZERO 2 (¦è¯Z¤úª© 960304)	Capcom
+sfz2n	¤Ö¦~§Ö¥´ ZERO 2 (¤j¬v¬wª© 960229)	¤Ö¦~§Ö¥´ ZERO 2 (¤j¬v¬wª© 960229)	Capcom
+spf2t	¶W¯Å§Ö¥´¤è¶ô II TURBO (¬ü°êª© 960620)	¶W¯Å§Ö¥´¤è¶ô II TURBO (¬ü°êª© 960620)	Capcom
 spf2xj	¶W¯Å§Ö¥´¤è¶ô II X (¤é¥»ª© 960531)	¶W¯Å§Ö¥´¤è¶ô II X (¤é¥»ª© 960531)	Capcom
-spf2ta	¶W¯Å§Ö¥´¤è¶ô II Turbo (¨È¬wª© 960529)	¶W¯Å§Ö¥´¤è¶ô II Turbo (¨È¬wª© 960529)	Capcom
+spf2ta	¶W¯Å§Ö¥´¤è¶ô II TURBO (¨È¬wª© 960529)	¶W¯Å§Ö¥´¤è¶ô II TURBO (¨È¬wª© 960529)	Capcom
 qndream	°Ýµª¤C±m¹Ú: ­i¦âËmªº©_¸ñ (¤é¥»ª© 960826)	°Ýµª¤C±m¹Ú: ­i¦âËmªº©_¸ñ (¤é¥»ª© 960826)	Capcom
 megaman2	¬¥§J¤H 2: ¤O¶q¹ï¨M / Mega Man 2: The Power Fighters (¬ü°êª© 960708)	¬¥§J¤H 2: ¤O¶q¹ï¨M / Mega Man 2: The Power Fighters (¬ü°êª© 960708)	Capcom
 megamn2a	¬¥§J¤H 2: ¤O¶q¹ï¨M / Mega Man 2: The Power Fighters (¨È¬wª© 960708)	¬¥§J¤H 2: ¤O¶q¹ï¨M / Mega Man 2: The Power Fighters (¨È¬wª© 960708)	Capcom
 rckman2j	¬¥§J¤H 2: ¤O¶q¹ï¨M (¤é¥»ª© 960708)	¬¥§J¤H 2: ¤O¶q¹ï¨M (¤é¥»ª© 960708)	Capcom
-sfz2aj	¤Ö¦~§Ö¥´ Zero 2 Alpha (¤é¥»ª© 960805)	¤Ö¦~§Ö¥´ Zero 2 Alpha (¤é¥»ª© 960805)	Capcom
-sfz2ah	¤Ö¦~§Ö¥´ Zero 2 Alpha (¦è¯Z¤úª© 960813)	¤Ö¦~§Ö¥´ Zero 2 Alpha (¦è¯Z¤úª© 960813)	Capcom
-sfz2ab	¤Ö¦~§Ö¥´ Zero 2 Alpha (¤Ú¦èª© 960813)	¤Ö¦~§Ö¥´ Zero 2 Alpha (¤Ú¦èª© 960813)	Capcom
-sfz2aa	¤Ö¦~§Ö¥´ Zero 2 Alpha (¨È¬wª© 960826)	¤Ö¦~§Ö¥´ Zero 2 Alpha (¨È¬wª© 960826)	Capcom
+sfz2aj	¤Ö¦~§Ö¥´ ZERO 2 ALPHA (¤é¥»ª© 960805)	¤Ö¦~§Ö¥´ ZERO 2 ALPHA (¤é¥»ª© 960805)	Capcom
+sfz2ah	¤Ö¦~§Ö¥´ ZERO 2 ALPHA (¦è¯Z¤úª© 960813)	¤Ö¦~§Ö¥´ ZERO 2 ALPHA (¦è¯Z¤úª© 960813)	Capcom
+sfz2ab	¤Ö¦~§Ö¥´ ZERO 2 ALPHA (¤Ú¦èª© 960813)	¤Ö¦~§Ö¥´ ZERO 2 ALPHA (¤Ú¦èª© 960813)	Capcom
+sfz2aa	¤Ö¦~§Ö¥´ ZERO 2 ALPHA (¨È¬wª© 960826)	¤Ö¦~§Ö¥´ ZERO 2 ALPHA (¨È¬wª© 960826)	Capcom
 xmvsf	¯S²§¥\¯à²Õ Vs. §Ö¥´±Û­· (¼Ú¬wª© 961004)	¯S²§¥\¯à²Õ Vs. §Ö¥´±Û­· (¼Ú¬wª© 961004)	Capcom
 xmvsfr1	¯S²§¥\¯à²Õ Vs. §Ö¥´±Û­· (¼Ú¬wª© 960910)	¯S²§¥\¯à²Õ Vs. §Ö¥´±Û­· (¼Ú¬wª© 960910)	Capcom
 xmvsfu	¯S²§¥\¯à²Õ Vs. §Ö¥´±Û­· (¬ü°êª© 961023)	¯S²§¥\¯à²Õ Vs. §Ö¥´±Û­· (¬ü°êª© 961023)	Capcom
@@ -1215,14 +1296,14 @@ mvsca	¬ü°êº©µe­^¶¯ Vs. ¥d´¶ªÅ­^¶¯ (¨È¬wª© 980123)	¬ü°êº©µe­^¶¯ Vs. ¥d´¶ªÅ­^¶¯ (¨
 mvscar1	¬ü°êº©µe­^¶¯ Vs. ¥d´¶ªÅ­^¶¯ (¨È¬wª© 980112)	¬ü°êº©µe­^¶¯ Vs. ¥d´¶ªÅ­^¶¯ (¨È¬wª© 980112)	Capcom
 mvsch	¬ü°êº©µe­^¶¯ Vs. ¥d´¶ªÅ­^¶¯ (¦è¯Z¤úª© 980123)	¬ü°êº©µe­^¶¯ Vs. ¥d´¶ªÅ­^¶¯ (¦è¯Z¤úª© 980123)	Capcom
 mvscb	¬ü°êº©µe­^¶¯ Vs. ¥d´¶ªÅ­^¶¯ (¤Ú¦èª© 980123)	¬ü°êº©µe­^¶¯ Vs. ¥d´¶ªÅ­^¶¯ (¤Ú¦èª© 980123)	Capcom
-sfa3	¤Ö¦~§Ö¥´ Zero 3 / Street Fighter Alpha 3 (¬ü°êª© 980904)	¤Ö¦~§Ö¥´ Zero 3 / Street Fighter Alpha 3 (¬ü°êª© 980904)	Capcom
-sfa3r1	¤Ö¦~§Ö¥´ Zero 3 / Street Fighter Alpha 3 (¬ü°êª© 980629)	¤Ö¦~§Ö¥´ Zero 3 / Street Fighter Alpha 3 (¬ü°êª© 980629)	Capcom
-sfa3b	¤Ö¦~§Ö¥´ Zero 3 / Street Fighter Alpha 3 (¤Ú¦èª© 980629)	¤Ö¦~§Ö¥´ Zero 3 / Street Fighter Alpha 3 (¤Ú¦èª© 980629)	Capcom
-sfz3j	¤Ö¦~§Ö¥´ Zero 3 (¤é¥»ª© 980904)	¤Ö¦~§Ö¥´ Zero 3 (¤é¥»ª© 980904)	Capcom
-sfz3jr1	¤Ö¦~§Ö¥´ Zero 3 (¤é¥»ª© 980727)	¤Ö¦~§Ö¥´ Zero 3 (¤é¥»ª© 980727)	Capcom
-sfz3jr2	¤Ö¦~§Ö¥´ Zero 3 (¤é¥»ª© 980629)	¤Ö¦~§Ö¥´ Zero 3 (¤é¥»ª© 980629)	Capcom
-sfz3a	¤Ö¦~§Ö¥´ Zero 3 (¨È¬wª© 980904)	¤Ö¦~§Ö¥´ Zero 3 (¨È¬wª© 980904)	Capcom
-sfz3ar1	¤Ö¦~§Ö¥´ Zero 3 (¨È¬wª© 980701)	¤Ö¦~§Ö¥´ Zero 3 (¨È¬wª© 980701)	Capcom
+sfa3	¤Ö¦~§Ö¥´ ZERO 3 / Street Fighter Alpha 3 (¬ü°êª© 980904)	¤Ö¦~§Ö¥´ ZERO 3 / Street Fighter Alpha 3 (¬ü°êª© 980904)	Capcom
+sfa3r1	¤Ö¦~§Ö¥´ ZERO 3 / Street Fighter Alpha 3 (¬ü°êª© 980629)	¤Ö¦~§Ö¥´ ZERO 3 / Street Fighter Alpha 3 (¬ü°êª© 980629)	Capcom
+sfa3b	¤Ö¦~§Ö¥´ ZERO 3 / Street Fighter Alpha 3 (¤Ú¦èª© 980629)	¤Ö¦~§Ö¥´ ZERO 3 / Street Fighter Alpha 3 (¤Ú¦èª© 980629)	Capcom
+sfz3j	¤Ö¦~§Ö¥´ ZERO 3 (¤é¥»ª© 980904)	¤Ö¦~§Ö¥´ ZERO 3 (¤é¥»ª© 980904)	Capcom
+sfz3jr1	¤Ö¦~§Ö¥´ ZERO 3 (¤é¥»ª© 980727)	¤Ö¦~§Ö¥´ ZERO 3 (¤é¥»ª© 980727)	Capcom
+sfz3jr2	¤Ö¦~§Ö¥´ ZERO 3 (¤é¥»ª© 980629)	¤Ö¦~§Ö¥´ ZERO 3 (¤é¥»ª© 980629)	Capcom
+sfz3a	¤Ö¦~§Ö¥´ ZERO 3 (¨È¬wª© 980904)	¤Ö¦~§Ö¥´ ZERO 3 (¨È¬wª© 980904)	Capcom
+sfz3ar1	¤Ö¦~§Ö¥´ ZERO 3 (¨È¬wª© 980701)	¤Ö¦~§Ö¥´ ZERO 3 (¨È¬wª© 980701)	Capcom
 gigawing	¿E¿û¤§Ál (¬ü°êª© 990222)	¿E¿û¤§Ál (¬ü°êª© 990222)	Capcom, supported by Takumi
 gwingj	¿E¿û¤§Ál (¤é¥»ª© 990223)	¿E¿û¤§Ál (¤é¥»ª© 990223)	Capcom, supported by Takumi
 gwinga	¿E¿û¤§Ál (¨È¬wª© 990222)	¿E¿û¤§Ál (¨È¬wª© 990222)	Capcom, supported by Takumi
@@ -1232,7 +1313,7 @@ mmatrix	¤õ¬P¥ô°È: ¼u¤Y¦aº» (¬ü°êª© 000412)	¤õ¬P¥ô°È: ¼u¤Y¦aº» (¬ü°êª© 000412)	Ca
 mmatrixj	¤õ¬P¥ô°È: ¼u¤Y¦aº» (¤é¥»ª© 000412)	¤õ¬P¥ô°È: ¼u¤Y¦aº» (¤é¥»ª© 000412)	Capcom, supported by Takumi
 1944	1944: ¯S§Þ¤j®v (¬ü°êª© 000620)	1944: ¯S§Þ¤j®v (¬ü°êª© 000620)	Capcom, supported by Eighting/Raizing
 1944j	1944: ¯S§Þ¤j®v (¤é¥»ª© 000620)	1944: ¯S§Þ¤j®v (¤é¥»ª© 000620)	Capcom, supported by Eighting/Raizing
-mpangj	±j¤O! Å]ªk®ðªw (¤é¥»ª© 001011)	±j¤O! Å]ªk®ðªw (¤é¥»ª© 001011)	Mitchell, distributed by Capcom
+mpangj	±j¤O! Å]°­®ð²y (¤é¥»ª© 001011)	±j¤O! Å]°­®ð²y (¤é¥»ª© 001011)	Mitchell, distributed by Capcom
 progear	¯à·½¤§´P / Progear (¬ü°êª© 010117)	¯à·½¤§´P / Progear (¬ü°êª© 010117)	Capcom, supported by Cave
 progearj	¯à·½¤§´P (¤é¥»ª© 010117)	¯à·½¤§´P (¤é¥»ª© 010117)	Capcom, supported by Cave
 progeara	¯à·½¤§´P / Progear (¨È¬wª© 010117)	¯à·½¤§´P / Progear (¨È¬wª© 010117)	Capcom, supported by Cave
@@ -1252,9 +1333,9 @@ sfex	§Ö¥´±Û­· EX (¬ü°êª© 961219)	§Ö¥´±Û­· EX (¬ü°êª© 961219)	Capcom/Arika
 sfexa	§Ö¥´±Û­· EX (¨È¬wª© 961219)	§Ö¥´±Û­· EX (¨È¬wª© 961219)	Capcom/Arika
 sfexj	§Ö¥´±Û­· EX (¤é¥»ª© 961130)	§Ö¥´±Û­· EX (¤é¥»ª© 961130)	Capcom/Arika
 glpracr	¯e­·§Ö°¨ (¤é¥»ª© Ver 9.01.12)	¯e­·§Ö°¨ (¤é¥»ª© Ver 9.01.12)	Tecmo
-sfexp	§Ö¥´±Û­· EX Plus (¬ü°êª© 970407)	§Ö¥´±Û­· EX Plus (¬ü°êª© 970407)	Capcom/Arika
-sfexpu1	§Ö¥´±Û­· EX Plus (¬ü°êª© 970311)	§Ö¥´±Û­· EX Plus (¬ü°êª© 970311)	Capcom/Arika
-sfexpj	§Ö¥´±Û­· EX Plus (¤é¥»ª© 970311)	§Ö¥´±Û­· EX Plus (¤é¥»ª© 970311)	Capcom/Arika
+sfexp	§Ö¥´±Û­· EX PLUS (¬ü°êª© 970407)	§Ö¥´±Û­· EX PLUS (¬ü°êª© 970407)	Capcom/Arika
+sfexpu1	§Ö¥´±Û­· EX PLUS (¬ü°êª© 970311)	§Ö¥´±Û­· EX PLUS (¬ü°êª© 970311)	Capcom/Arika
+sfexpj	§Ö¥´±Û­· EX PLUS (¤é¥»ª© 970311)	§Ö¥´±Û­· EX PLUS (¤é¥»ª© 970311)	Capcom/Arika
 rvschool	¨p¥ß¥¿¸q¾Ç¶é / Rival Schools (¬ü°êª© 971117)	¨p¥ß¥¿¸q¾Ç¶é / Rival Schools (¬ü°êª© 971117)	Capcom
 rvschola	¨p¥ß¥¿¸q¾Ç¶é / Rival Schools (¨È¬wª© 971117)	¨p¥ß¥¿¸q¾Ç¶é / Rival Schools (¨È¬wª© 971117)	Capcom
 jgakuen	¨p¥ß¥¿¸q¾Ç¶é (¤é¥»ª© 971117)	¨p¥ß¥¿¸q¾Ç¶é (¤é¥»ª© 971117)	Capcom
@@ -1267,9 +1348,9 @@ tgmj	«XÃ¹´µ¤è¶ô¤j®v (¤é¥»ª© 980710)	«XÃ¹´µ¤è¶ô¤j®v (¤é¥»ª© 980710)	Capcom/Arika
 techromn	¶W¿û¾Ô°O / Tech Romancer (¼Ú¬wª© 980914)	¶W¿û¾Ô°O / Tech Romancer (¼Ú¬wª© 980914)	Capcom
 techromu	¶W¿û¾Ô°O / Tech Romancer (¬ü°êª© 980914)	¶W¿û¾Ô°O / Tech Romancer (¬ü°êª© 980914)	Capcom
 kikaioh	¶W¿û¾Ô°O (¤é¥»ª© 980914)	¶W¿û¾Ô°O (¤é¥»ª© 980914)	Capcom
-sfex2p	§Ö¥´±Û­· EX 2 Plus (¬ü°êª© 990611)	§Ö¥´±Û­· EX 2 Plus (¬ü°êª© 990611)	Capcom/Arika
-sfex2pa	§Ö¥´±Û­· EX 2 Plus (¨È¬wª© 990611)	§Ö¥´±Û­· EX 2 Plus (¨È¬wª© 990611)	Capcom/Arika
-sfex2pj	§Ö¥´±Û­· EX 2 Plus (¤é¥»ª© 990611)	§Ö¥´±Û­· EX 2 Plus (¤é¥»ª© 990611)	Capcom/Arika
+sfex2p	§Ö¥´±Û­· EX 2 PLUS (¬ü°êª© 990611)	§Ö¥´±Û­· EX 2 PLUS (¬ü°êª© 990611)	Capcom/Arika
+sfex2pa	§Ö¥´±Û­· EX 2 PLUS (¨È¬wª© 990611)	§Ö¥´±Û­· EX 2 PLUS (¨È¬wª© 990611)	Capcom/Arika
+sfex2pj	§Ö¥´±Û­· EX 2 PLUS (¤é¥»ª© 990611)	§Ö¥´±Û­· EX 2 PLUS (¤é¥»ª© 990611)	Capcom/Arika
 strider2	¥XÀ»­¸Às 2 / Strider 2 (¬ü°êª© 991213)	¥XÀ»­¸Às 2 / Strider 2 (¬ü°êª© 991213)	Capcom
 stridr2a	¥XÀ»­¸Às 2 / Strider 2 (¨È¬wª© 991213)	¥XÀ»­¸Às 2 / Strider 2 (¨È¬wª© 991213)	Capcom
 shiryu2	¥XÀ»­¸Às 2 (¤é¥»ª© 991213)	¥XÀ»­¸Às 2 (¤é¥»ª© 991213)	Capcom
@@ -1318,6 +1399,8 @@ souledge	¤M»î Ver. II (SO4/VER.C)	¤M»î Ver. II (SO4/VER.C)	Namco
 souledga	¤M»î Ver. II (SO3/VER.C)	¤M»î Ver. II (SO3/VER.C)	Namco
 souledgb	¤M»î (SO3/VER.A)	¤M»î (SO3/VER.A)	Namco
 souledgc	¤M»î (SO1/VER.A)	¤M»î (SO1/VER.A)	Namco
+xevi3dg	ÅKªO°} 3D (XV31/VER.A)	ÅKªO°} 3D (XV31/VER.A)	Namco
+danceyes	ÄR»R¤§²´ (DC1/VER.A)	ÄR»R¤§²´ (DC1/VER.A)	Namco
 tekken3	ÅK®± 3 (TET1/VER.E1)	ÅK®± 3 (TET1/VER.E1)	Namco
 tekken3a	ÅK®± 3 (TET2/VER.A)	ÅK®± 3 (TET2/VER.A)	Namco
 soulclbr	¼C»î (SOC14/VER.C)	¼C»î (SOC14/VER.C)	Namco
@@ -1327,25 +1410,26 @@ tektagt	ÅK®± TT (TEG3/VER.C1)	ÅK®± TT (TEG3/VER.C1)	Namco
 tektagta	ÅK®± TT (TEG3/VER.B)	ÅK®± TT (TEG3/VER.B)	Namco
 cryptklr	±þ¼®¼X³õ (GQ420 UAA)	±þ¼®¼X³õ (GQ420 UAA)	Konami
 pbball96	¹êªp³¥²y '96 (GV017 ¤é¥»ª© 1.03)	¹êªp³¥²y '96 (GV017 ¤é¥»ª© 1.03)	Konami
+simpbowl	¨¯´¶´Ë®a®x«OÄÖ²y (GQ829 UAA)	¨¯´¶´Ë®a®x«OÄÖ²y (GQ829 UAA)	Konami
 mgakuen	³Â³¶¾Ç¶é - ¨ò·~½s	³Â³¶¾Ç¶é - ¨ò·~½s	Yuga
 7toitsu	³Â³¶¾Ç¶é / ¤C¹ï¤l	³Â³¶¾Ç¶é / ¤C¹ï¤l	Yuga
 mgakuen2	³Â³¶¾Ç¶é 2 - ¾Ç¶éªøªº´_¤³	³Â³¶¾Ç¶é 2 - ¾Ç¶éªøªº´_¤³	Face
 pkladies	¦Pªá¶¶	¦Pªá¶¶	Mitchell
 pkladiel	¦Pªá¶¶ (Leprechaun ver. 510)	¦Pªá¶¶ (Leprechaun ver. 510)	Leprechaun
 pkladila	¦Pªá¶¶ (Leprechaun ver. 401)	¦Pªá¶¶ (Leprechaun ver. 401)	Leprechaun
-pang	Å]ªk®ðªw (¥@¬Éª©)	Å]ªk®ðªw (¥@¬Éª©)	Mitchell
-pangb	Å]ªk®ðªw (µsª©)	Å]ªk®ðªw (µsª©)	bootleg
-bbros	Å]ªk®ðªw / Buster Bros. (¬ü°êª©)	Å]ªk®ðªw / Buster Bros. (¬ü°êª©)	Capcom
-pompingw	Å]ªk®ðªw (¤é¥»ª©)	Å]ªk®ðªw (¤é¥»ª©)	Mitchell
+pang	Å]°­®ð²y / Pang (¥@¬Éª©)	Å]°­®ð²y / Pang (¥@¬Éª©)	Mitchell
+pangb	Å]°­®ð²y / Pang (µsª©)	Å]°­®ð²y / Pang (µsª©)	bootleg
+bbros	Å]°­®ð²y / Buster Bros. (¬ü°êª©)	Å]°­®ð²y / Buster Bros. (¬ü°êª©)	Capcom
+pompingw	Å]°­®ð²y (¤é¥»ª©)	Å]°­®ð²y (¤é¥»ª©)	Mitchell
 cbasebal	¥d´¶ªÅ´Î²y (¤é¥»ª©)	¥d´¶ªÅ´Î²y (¤é¥»ª©)	Capcom
 cworld	¥d´¶ªÅ°Ýµª (¤é¥»ª©)	¥d´¶ªÅ°Ýµª (¤é¥»ª©)	Capcom
 hatena	«_ÀI°Ýµª 2 Hatena ¤j«_ÀI (¤é¥»ª© 900228)	«_ÀI°Ýµª 2 Hatena ¤j«_ÀI (¤é¥»ª© 900228)	Capcom
-spang	¶W¯ÅÅ]ªk®ðªw (¥@¬Éª© 900914)	¶W¯ÅÅ]ªk®ðªw (¥@¬Éª© 900914)	Mitchell
-spangj	¶W¯ÅÅ]ªk®ðªw (¤é¥»ª© 901023)	¶W¯ÅÅ]ªk®ðªw (¤é¥»ª© 901023)	Mitchell
-sbbros	¶W¯ÅÅ]ªk®ðªw / Super Buster Bros. (¬ü°êª© 901001)	¶W¯ÅÅ]ªk®ðªw / Super Buster Bros. (¬ü°êª© 901001)	Mitchell + Capcom
-marukin	¶W¯Å³Â±N (¤é¥»ª© 901017)	¶W¯Å³Â±N (¤é¥»ª© 901017)	Yuga
+spang	¶W¯ÅÅ]°­®ð²y (¥@¬Éª© 900914)	¶W¯ÅÅ]°­®ð²y (¥@¬Éª© 900914)	Mitchell
+spangj	¶W¯ÅÅ]°­®ð²y (¤é¥»ª© 901023)	¶W¯ÅÅ]°­®ð²y (¤é¥»ª© 901023)	Mitchell
+sbbros	¶W¯ÅÅ]°­®ð²y / Super Buster Bros. (¬ü°êª© 901001)	¶W¯ÅÅ]°­®ð²y / Super Buster Bros. (¬ü°êª© 901001)	Mitchell + Capcom
+marukin	¶W¯Å³Â³¶ (¸T) ª© (¤é¥»ª© 901017)	¶W¯Å³Â³¶ (¸T) ª© (¤é¥»ª© 901017)	Yuga
 qtono1	°Ýµª·µ¼Ë¤§³¥±æ (¤é¥»ª©)	°Ýµª·µ¼Ë¤§³¥±æ (¤é¥»ª©)	Capcom
-qsangoku	°Ýµª¤T°ê»x - ª¾²¤ÅQªÌ (¤é¥»ª©)	°Ýµª¤T°ê»x - ª¾²¤ÅQªÌ (¤é¥»ª©)	Capcom
+qsangoku	°Ýµª¤T°ê»x - ª¾²¤ªºÅQªÌ (¤é¥»ª©)	°Ýµª¤T°ê»x - ª¾²¤ªºÅQªÌ (¤é¥»ª©)	Capcom
 block	ºV¿j¶ô (¥@¬Éª© 911106 ·n±ì)	ºV¿j¶ô (¥@¬Éª© 911106 ·n±ì)	Capcom
 blocka	ºV¿j¶ô (¥@¬Éª© 910910)	ºV¿j¶ô (¥@¬Éª© 910910)	Capcom
 blockj	ºV¿j¶ô (¤é¥»ª© 910910)	ºV¿j¶ô (¤é¥»ª© 910910)	Capcom
@@ -1399,7 +1483,7 @@ gtsuprem	ª÷Àï°ªº¸¤Ò ¦Ü´Lª© ÀA¼ÐÁÉ (v5.10)	ª÷Àï°ªº¸¤Ò ¦Ü´Lª© ÀA¼ÐÁÉ (v5.10)	Incre
 gtclassc	ª÷Àï°ªº¸¤Ò ¸g¨åÁÉ (v1.00)	ª÷Àï°ªº¸¤Ò ¸g¨åÁÉ (v1.00)	Incredible Technologies
 gtclassp	ª÷Àï°ªº¸¤Ò ¸g¨åÁÉ (v1.00) Alt	ª÷Àï°ªº¸¤Ò ¸g¨åÁÉ (v1.00) Alt	Incredible Technologies
 gtcls100	ª÷Àï°ªº¸¤Ò ¸g¨åÁÉ (v1.00S)	ª÷Àï°ªº¸¤Ò ¸g¨åÁÉ (v1.00S)	Incredible Technologies
-wseries	¥@¬ÉÂ¾·~´Î²y¤jÁÉ	¥@¬ÉÂ¾·~´Î²y¤jÁÉ	Cinematronics
+wseries	¥@¬É¤jÁÉ: Â¾´Î²y©u	¥@¬É¤jÁÉ: Â¾´Î²y©u	Cinematronics
 dangerz	¦MÀI¦a±a	¦MÀI¦a±a	Cinematronics
 basebal2	´Î²y©u¸` II	´Î²y©u¸` II	Cinematronics
 aafb	¬ü¦¡¨¬²y (rev E)	¬ü¦¡¨¬²y (rev E)	Leland Corp.
@@ -1427,9 +1511,9 @@ nprinces	§ÔªÌ¤ý¤l (64k Ver. µsª©?)	§ÔªÌ¤ý¤l (64k Ver. µsª©?)	bootleg?
 nprincso	§ÔªÌ¤ý¤l (128k Ver.)	§ÔªÌ¤ý¤l (128k Ver.)	Sega
 nprincsu	§ÔªÌ¤ý¤l (64k Ver. ¥¼¥[±K)	§ÔªÌ¤ý¤l (64k Ver. ¥¼¥[±K)	Sega
 nprincsb	§ÔªÌ¤ý¤l (128k Ver. µsª©?)	§ÔªÌ¤ý¤l (128k Ver. µsª©?)	bootleg?
-myhero	§Úªº­^¶¯ (¬ü°êª©)	§Úªº­^¶¯ (¬ü°êª©)	Sega
-sscandal	§Úªº­^¶¯ / Seishun Scandal (¤é¥»ª©)	§Úªº­^¶¯ / Seishun Scandal (¤é¥»ª©)	Coreland / Sega
-myherok	§Úªº­^¶¯ (Áú°êª©)	§Úªº­^¶¯ (Áú°êª©)	Coreland / Sega
+myhero	«C¬Kª«»y / §Úªº­^¶¯ (¬ü°êª©)	«C¬Kª«»y / §Úªº­^¶¯ (¬ü°êª©)	Sega
+sscandal	«C¬Kª«»y (¤é¥»ª©)	«C¬Kª«»y (¤é¥»ª©)	Coreland / Sega
+myherok	«C¬Kª«»y / §Úªº­^¶¯ (Áú°êª©)	«C¬Kª«»y / §Úªº­^¶¯ (Áú°êª©)	Coreland / Sega
 4dwarrio	4-D ¾Ô¤h	4-D ¾Ô¤h	Coreland / Sega
 wboy	¯«©_¨k«Ä (set 1, ·s¥[±K)	¯«©_¨k«Ä (set 1, ·s¥[±K)	Sega (Escape license)
 wboyo	¯«©_¨k«Ä (set 1, ÂÂ¥[±K)	¯«©_¨k«Ä (set 1, ÂÂ¥[±K)	Sega (Escape license)
@@ -1437,7 +1521,7 @@ wboy2	¯«©_¨k«Ä (set 2)	¯«©_¨k«Ä (set 2)	Sega (Escape license)
 wboy2u	¯«©_¨k«Ä (set 2 ¥¼¥[±K)	¯«©_¨k«Ä (set 2 ¥¼¥[±K)	Sega (Escape license)
 wboy3	¯«©_¨k«Ä (set 3)	¯«©_¨k«Ä (set 3)	Sega (Escape license)
 wboyu	¯«©_¨k«Ä (¥¼¥[±K)	¯«©_¨k«Ä (¥¼¥[±K)	Sega (Escape license)
-wbdeluxe	¯«©_¨k«Ä Deluxe	¯«©_¨k«Ä Deluxe	Sega (Escape license)
+wbdeluxe	¯«©_¨k«Ä / Wonder Boy Deluxe	¯«©_¨k«Ä / Wonder Boy Deluxe	Sega (Escape license)
 wboysys2	¯«©_¨k«Ä (system 2)	¯«©_¨k«Ä (system 2)	Sega (Escape license)
 tokisens	®É¶¡¾Ô¤h	®É¶¡¾Ô¤h	Sega
 wbml	¯«©_¨k«Ä¦bÅ]¬É (¤é¥»ª© ·sª©)	¯«©_¨k«Ä¦bÅ]¬É (¤é¥»ª© ·sª©)	Sega / Westone
@@ -1449,9 +1533,10 @@ ufosensb	UFO ¾Ô¤h (¥¼¥[±K)	UFO ¾Ô¤h (¥¼¥[±K)	bootleg
 transfrm	ÅÜ§Îª÷­è / Transformer	ÅÜ§Îª÷­è / Transformer	Sega
 astrofl	ÅÜ§Îª÷­è (¤é¥»ª©)	ÅÜ§Îª÷­è (¤é¥»ª©)	Sega
 tetrisse	«XÃ¹´µ¤è¶ô (¤é¥»ª©, System E)	«XÃ¹´µ¤è¶ô (¤é¥»ª©, System E)	Sega
+sharrier	®ÉªÅ¾Ô¤h	®ÉªÅ¾Ô¤h	Sega
 bodyslam	Dump ªQ¥» / Body Slam (8751 317-unknown)	Dump ªQ¥» / Body Slam (8751 317-unknown)	Sega
 dumpmtmt	Dump ªQ¥» (¤é¥»ª©, 8751 317-unknown)	Dump ªQ¥» (¤é¥»ª©, 8751 317-unknown)	Sega
-mjleague	´Î²y¤jÁp·ù	´Î²y¤jÁp·ù	Sega
+mjleague	¤jÁp·ù	¤jÁp·ù	Sega
 fantzone	¯«©_¦a±a (set 2, unprotected)	¯«©_¦a±a (set 2, unprotected)	Sega
 fantzon1	¯«©_¦a±a (set 1, unprotected)	¯«©_¦a±a (set 1, unprotected)	Sega
 sdi	SDI - ¾Ô²¤¨¾½Ãºc·Q (¼Ú¬wª©, System 16A, FD1089B 317-0027)	SDI - ¾Ô²¤¨¾½Ãºc·Q (¼Ú¬wª©, System 16A, FD1089B 317-0027)	Sega
@@ -1504,21 +1589,30 @@ astorm	²§§Î­·¼É (set 4, 2 Players, FD1094 317-?)	²§§Î­·¼É (set 4, 2 Players, FD1
 astorm3	²§§Î­·¼É (set 3, ¥@¬Éª©, 3 Players, FD1094 317-0148)	²§§Î­·¼É (set 3, ¥@¬Éª©, 3 Players, FD1094 317-0148)	Sega
 astormu	²§§Î­·¼É (set 2, ¬ü°êª©, 3 Players, FD1094 317-0147)	²§§Î­·¼É (set 2, ¬ü°êª©, 3 Players, FD1094 317-0147)	Sega
 astormj	²§§Î­·¼É (set 1, ¤é¥»ª©, 2 Players, FD1094 317-0146)	²§§Î­·¼É (set 1, ¤é¥»ª©, 2 Players, FD1094 317-0146)	Sega
-shdancer	¼v¤§»R (set 3, ¬ü°êª©)	¼v¤§»R (set 3, ¬ü°êª©)	Sega
-shdancej	¼v¤§»R (set 2, ¤é¥»ª©)	¼v¤§»R (set 2, ¤é¥»ª©)	Sega
-shdance1	¼v¤§»R (set 1)	¼v¤§»R (set 1)	Sega
+shdancer	¼v»RªÌ (set 3, ¬ü°êª©)	¼v»RªÌ (set 3, ¬ü°êª©)	Sega
+shdancej	¼v»RªÌ (set 2, ¤é¥»ª©)	¼v»RªÌ (set 2, ¤é¥»ª©)	Sega
+shdance1	¼v»RªÌ (set 1)	¼v»RªÌ (set 1)	Sega
+cltchitr	¤é¥»Â¾´Î (set 2, ¬ü°êª©, FD1094 317-0176)	¤é¥»Â¾´Î (set 2, ¬ü°êª©, FD1094 317-0176)	Sega
+cltchtrj	¤é¥»Â¾´Î (set 1, ¤é¥»ª©, FD1094 317-0175)	¤é¥»Â¾´Î (set 1, ¤é¥»ª©, FD1094 317-0175)	Sega
+mwalk	¥~¬P¾Ô±N (set 3, ¥@¬Éª©, FD1094/8751 317-0159)	¥~¬P¾Ô±N (set 3, ¥@¬Éª©, FD1094/8751 317-0159)	Sega
+mwalku	¥~¬P¾Ô±N (set 2, ¬ü°êª©, FD1094/8751 317-0158)	¥~¬P¾Ô±N (set 2, ¬ü°êª©, FD1094/8751 317-0158)	Sega
+mwalkj	¥~¬P¾Ô±N (set 1, ¤é¥»ª©, FD1094/8751 317-0157)	¥~¬P¾Ô±N (set 1, ¤é¥»ª©, FD1094/8751 317-0157)	Sega
 astormbl	²§§Î­·¼É (µsª©)	²§§Î­·¼É (µsª©)	bootleg
-shdancbl	¼vªZªÌ (µsª©)	¼vªZªÌ (µsª©)	bootleg
+shdancbl	¼v¤§»R (µsª©)	¼v¤§»R (µsª©)	bootleg
+mwalkbl	¥~¬P¾Ô±N (µsª©)	¥~¬P¾Ô±N (µsª©)	bootleg
 aburner	½Ä¯}¤õºô (¤é¥»ª©)	½Ä¯}¤õºô (¤é¥»ª©)	Sega
 aburner2	½Ä¯}¤õºô II	½Ä¯}¤õºô II	Sega
 loffire	Ãz¼u³¥¯T (¥@¬Éª©, FD1094 317-0136)	Ãz¼u³¥¯T (¥@¬Éª©, FD1094 317-0136)	Sega
 loffireu	Ãz¼u³¥¯T (¬ü°êª©, FD1094 317-0135)	Ãz¼u³¥¯T (¬ü°êª©, FD1094 317-0135)	Sega
 loffirej	Ãz¼u³¥¯T (¤é¥»ª©, FD1094 317-0134)	Ãz¼u³¥¯T (¤é¥»ª©, FD1094 317-0134)	Sega
+alien3	²§§Î 3: The Gun (¥@¬Éª©)	²§§Î 3: The Gun (¥@¬Éª©)	Sega
+alien3u	²§§Î 3: The Gun (¬ü°êª©)	²§§Î 3: The Gun (¬ü°êª©)	Sega
 sonic	­µ³t¤p¤l (¤é¥»ª©, rev. C)	­µ³t¤p¤l (¤é¥»ª©, rev. C)	Sega
 sonicp	­µ³t¤p¤l (¤é¥»ª©, ¶}µoª©)	­µ³t¤p¤l (¤é¥»ª©, ¶}µoª©)	Sega
-ga2	¾Ô©ò¤G / ¾Ô©ò - «Ò¤ýªº´_¤³ (¥@¬Éª©)	¾Ô©ò¤G / ¾Ô©ò - «Ò¤ýªº´_¤³ (¥@¬Éª©)	Sega
-ga2u	¾Ô©ò¤G / ¾Ô©ò - «Ò¤ýªº´_¤³ (¬ü°êª©)	¾Ô©ò¤G / ¾Ô©ò - «Ò¤ýªº´_¤³ (¬ü°êª©)	Sega
-ga2j	¾Ô©ò¤G / ¾Ô©ò - «Ò¤ýªº´_¤³ (¤é¥»ª©)	¾Ô©ò¤G / ¾Ô©ò - «Ò¤ýªº´_¤³ (¤é¥»ª©)	Sega
+jpark	¨ÜÄØ¬ö¤½¶é	¨ÜÄØ¬ö¤½¶é	Sega
+ga2	¾Ô©ò¤G / ¾Ô©ò: «Ò¤ýªº´_¤³ (¥@¬Éª©)	¾Ô©ò¤G / ¾Ô©ò: «Ò¤ýªº´_¤³ (¥@¬Éª©)	Sega
+ga2u	¾Ô©ò¤G / ¾Ô©ò: «Ò¤ýªº´_¤³ (¬ü°êª©)	¾Ô©ò¤G / ¾Ô©ò: «Ò¤ýªº´_¤³ (¬ü°êª©)	Sega
+ga2j	¾Ô©ò¤G / ¾Ô©ò: «Ò¤ýªº´_¤³ (¤é¥»ª©)	¾Ô©ò¤G / ¾Ô©ò: «Ò¤ýªº´_¤³ (¤é¥»ª©)	Sega
 spidman	»jµï¤H (¥@¬Éª©)	»jµï¤H (¥@¬Éª©)	Sega
 spidmanu	»jµï¤H (¬ü°êª©)	»jµï¤H (¬ü°êª©)	Sega
 dbzvrvs	¤CÀs¯] Z V.R.V.S.	¤CÀs¯] Z V.R.V.S.	Sega / Banpresto
@@ -1538,20 +1632,29 @@ dnmtdeka	¤õÃz¦D¨Æ (J 960515 V1.000)	¤õÃz¦D¨Æ (J 960515 V1.000)	Sega
 ejihon	°»±´¨Æ°È©Ò (J 950613 V1.000)	°»±´¨Æ°È©Ò (J 950613 V1.000)	Sega
 elandore	°«Às¶Ç»¡ (JUET 980922 V1.006)	°«Às¶Ç»¡ (JUET 980922 V1.006)	Sai-Mate
 ffreveng	µóÀY§Ö¥´®æ°«ª© (JUET 990714 V1.000)	µóÀY§Ö¥´®æ°«ª© (JUET 990714 V1.000)	Capcom
-findlove	¥þ°ê¨îªA¬ü¤Ö¤k (J 971212 V1.000)	¥þ°ê¨îªA¬ü¤Ö¤k (J 971212 V1.000)	Daiki / FCF
+findlove	¥þ°ê¨îªA¬ü¤Ö¤k Find Love (J 971212 V1.000)	¥þ°ê¨îªA¬ü¤Ö¤k Find Love (J 971212 V1.000)	Daiki / FCF
 finlarch	¶W¯Å¤jÁp·ù / Final Arch (J 950714 V1.001)	¶W¯Å¤jÁp·ù / Final Arch (J 950714 V1.001)	Sega
 gaxeduel	¾Ô©ò®æ°«ª© (JUETL 950117 V1.000)	¾Ô©ò®æ°«ª© (JUETL 950117 V1.000)	Sega
 grdforce	©Z§J­·¼É (JUET 980318 V0.105)	©Z§J­·¼É (JUET 980318 V0.105)	Success
 groovef	»¨¦å¦x¤@±Ú 3 (J 970416 V1.001)	»¨¦å¦x¤@±Ú 3 (J 970416 V1.001)	Atlus
 hanagumi	Äåªá¤j¾Ô - Ä_¥Û¤è¶ô (J 971007 V1.010)	Äåªá¤j¾Ô - Ä_¥Û¤è¶ô (J 971007 V1.010)	Sega
 kiwames	Â¾·~³Â³¶ ·¥ S (J 951020 V1.208) 	Â¾·~³Â³¶ ·¥ S (J 951020 V1.208) 	Athena
+myfairld	VR ³Â³¶ 2 - ¯·²À²Q¤k (J 980608 V1.000)	VR ³Â³¶ 2 - ¯·²À²Q¤k (J 980608 V1.000)	Micronet
+othellos	¶øÁÉÃ¹¶Â¥Õ´Ñ (J 980423 V1.002)	¶øÁÉÃ¹¶Â¥Õ´Ñ (J 980423 V1.002)	Success
+rsgun	°{«G»Èºj (JUET 980523 V1.000)	°{«G»Èºj (JUET 980523 V1.000)	Treasure
+seabass	³¨³½±M®a (JUET 971110 V0.001)	³¨³½±M®a (JUET 971110 V0.001)	A wave inc. (Able license)
 shanhigw	¤W®ü - ¸U¨½ªø«° (JUE 950623 V1.005)	¤W®ü - ¸U¨½ªø«° (JUE 950623 V1.005)	Sunsoft / Activision
 shienryu	µµª¢Às (JUET 961226 V1.000)	µµª¢Às (JUET 961226 V1.000)	Warashi
 smleague	¶W¯Å¤jÁp·ù (U 960108 V1.000)	¶W¯Å¤jÁp·ù (U 960108 V1.000)	Sega
 sokyugrt	»aªÆ¬õ½¬¶¤ (JUET 960821 V1.000)	»aªÆ¬õ½¬¶¤ (JUET 960821 V1.000)	Raizing / 8ing
 suikoenb	¤ôâqºtªZ (J 950314 V2.001)	¤ôâqºtªZ (J 950314 V2.001)	Data East
 twcup98	Tecmo ¥@¬É¬×¨¬²y '98 (JUET 980410 V1.000)	Tecmo ¥@¬É¬×¨¬²y '98 (JUET 980410 V1.000)	Tecmo
+vfkids	VR ¤Ö¦~§Ö¥´ (JUET 960319 V0.000)	VR ¤Ö¦~§Ö¥´ (JUET 960319 V0.000)	Sega
+vfremix	VR §Ö¥´ Remix (JUETBKAL 950428 V1.000)	VR §Ö¥´ Remix (JUETBKAL 950428 V1.000)	Sega
+vmahjong	VR ³Â³¶ (J 961214 V1.000)	VR ³Â³¶ (J 961214 V1.000)	Micronet
 batmanfr	¥Ã»·ªº½¿½»«L (JUE 960507 V1.000)	¥Ã»·ªº½¿½»«L (JUE 960507 V1.000)	Acclaim
+sfish2	³¨³½¾÷ 2 (UET 951106 V1.10e)	³¨³½¾÷ 2 (UET 951106 V1.10e)	Sega
+sfish2j	³¨³½¾÷ 2 (J 951201 V1.100)	³¨³½¾÷ 2 (J 951201 V1.100)	Sega
 daytona	¹p¯S®RÁÉ¨® (¤é¥»ª©)	¹p¯S®RÁÉ¨® (¤é¥»ª©)	Sega
 daytonat	¹p¯S®RÁÉ¨® (¤é¥»ª©, Turbo hack)	¹p¯S®RÁÉ¨® (¤é¥»ª©, Turbo hack)	Sega
 daytonam	¹p¯S®RÁÉ¨® (¤é¥»ª©, To The MAXX)	¹p¯S®RÁÉ¨® (¤é¥»ª©, To The MAXX)	Sega
@@ -1578,7 +1681,7 @@ schamp	­µ³t¤p¤l®æ°«	­µ³t¤p¤l®æ°«	Sega
 lastbrnx	ªF¨Êµf¥~¦a (Export, Rev A)	ªF¨Êµf¥~¦a (Export, Rev A)	Sega
 lastbrnj	ªF¨Êµf¥~¦a (¤é¥»ª©, Rev A)	ªF¨Êµf¥~¦a (¤é¥»ª©, Rev A)	Sega
 doa	¥Í¦º®æ°« (Model 2B)	¥Í¦º®æ°« (Model 2B)	Sega
-sgt24h	Super GT 24h ÁÉ¨®	Super GT 24h ÁÉ¨®	Jaleco
+sgt24h	¶W¯Å GT 24h	¶W¯Å GT 24h	Jaleco
 von	¹q¸£¾Ô¾÷ (¤é¥»ª©)	¹q¸£¾Ô¾÷ (¤é¥»ª©)	Sega
 vonusa	¹q¸£¾Ô¾÷ / Virtual On Cyber Troopers (¬ü°êª©)	¹q¸£¾Ô¾÷ / Virtual On Cyber Troopers (¬ü°êª©)	Sega
 dynabb	¤õÃzÂ¾´Î '97	¤õÃzÂ¾´Î '97	Sega
@@ -1589,13 +1692,13 @@ hotd	¦º¤`°­«Î	¦º¤`°­«Î	Sega
 topskatr	·ÆªO¾÷	·ÆªO¾÷	Sega
 bel	½Ä¥X«ÊÂê½u	½Ä¥X«ÊÂê½u	Sega/EPL Productions
 vf3	VR §Ö¥´ 3	VR §Ö¥´ 3	Sega
-vf3tb	VR §Ö¥´ 3 ²Õ¶¤®æ°«	VR §Ö¥´ 3 ²Õ¶¤®æ°«	Sega
+vf3tb	VR §Ö¥´ 3 TB	VR §Ö¥´ 3 TB	Sega
 bass	Sega ³¨³½¤jÁÉ	Sega ³¨³½¤jÁÉ	Sega
 getbass	Sega ³¨³½¤jÁÉ / Get Bass	Sega ³¨³½¤jÁÉ / Get Bass	Sega
 scud	¶W¯ÅÁÉ¨® (¿D¬wª©)	¶W¯ÅÁÉ¨® (¿D¬wª©)	Sega
 scuda	¶W¯ÅÁÉ¨® (Export)	¶W¯ÅÁÉ¨® (Export)	Sega
 scudp	¶W¯ÅÁÉ¨® Plus	¶W¯ÅÁÉ¨® Plus	Sega
-lostwsga	¥¢¸¨ªº¥@¬É	¥¢¸¨ªº¥@¬É	Sega
+lostwsga	¥¢¸¨ªº¥@¬É - ¨ÜÄØ¬ö¤½¶é	¥¢¸¨ªº¥@¬É - ¨ÜÄØ¬ö¤½¶é	Sega
 vs215	VR ¨¬²y 2 (Step 1.5)	VR ¨¬²y 2 (Step 1.5)	Sega
 lemans24	§Q°Ò 24 ¤p®É­@¤[ÁÉ	§Q°Ò 24 ¤p®É­@¤[ÁÉ	Sega
 vs29815	VR ¨¬²y 2 '98 (Step 1.5)	VR ¨¬²y 2 '98 (Step 1.5)	Sega
@@ -1609,13 +1712,13 @@ vs298	VR ¨¬²y 2 '98 (Step 2.0)	VR ¨¬²y 2 '98 (Step 2.0)	Sega
 vs2v991	VR ¨¬²y 2 '99.1	VR ¨¬²y 2 '99.1	Sega
 vs299	VR ¨¬²y 2 '99	VR ¨¬²y 2 '99	Sega
 daytona2	¹p¯S®RÁÉ¨® 2	¹p¯S®RÁÉ¨® 2	Sega
-dayto2pe	¹p¯S®RÁÉ¨® 2 Power Edition	¹p¯S®RÁÉ¨® 2 Power Edition	Sega
+dayto2pe	¹p¯S®RÁÉ¨® 2 POWER EDITION	¹p¯S®RÁÉ¨® 2 POWER EDITION	Sega
 dirtdvls	¶V³¥»ÙÃªÁÉ	¶V³¥»ÙÃªÁÉ	Sega
 dirtdvla	¶V³¥»ÙÃªÁÉ (alt)	¶V³¥»ÙÃªÁÉ (alt)	Sega
 swtrilgy	¬P»Ú¤j¾Ô¤T³¡¦± (ver A)	¬P»Ú¤j¾Ô¤T³¡¦± (ver A)	Sega/LucasArts
 swtrilga	¬P»Ú¤j¾Ô¤T³¡¦±	¬P»Ú¤j¾Ô¤T³¡¦±	Sega/LucasArts
 spikeout	­P©R¤@À»	­P©R¤@À»	Sega
-spikeofe	­P©R¤@À» Final Edition	­P©R¤@À» Final Edition	Sega
+spikeofe	­P©R¤@À» FINAL EDITION	­P©R¤@À» FINAL EDITION	Sega
 eca	±Ï«æ¨®	±Ï«æ¨®	Sega
 karianx	Å]ªkÄ_¥Û / Karian Cross (Rev. 1.0)	Å]ªkÄ_¥Û / Karian Cross (Rev. 1.0)	Deniam
 columns	Ä_¥Û¤è¶ô (¥@¬Éª©)	Ä_¥Û¤è¶ô (¥@¬Éª©)	Sega
@@ -1626,7 +1729,7 @@ column2j	Ä_¥Û¤è¶ô II: The Voyage Through Time (¤é¥»ª©)	Ä_¥Û¤è¶ô II: The Voyage T
 tfrceac	¹p¾^¤O¶q AC	¹p¾^¤O¶q AC	Sega / Technosoft
 tfrceacj	¹p¾^¤O¶q AC (¤é¥»ª©)	¹p¾^¤O¶q AC (¤é¥»ª©)	Sega / Technosoft
 tfrceacb	¹p¾^¤O¶q AC (µsª©)	¹p¾^¤O¶q AC (µsª©)	bootleg
-ribbit	½¼¹Ó¤§¶é	½¼¹Ó¤§¶é	Sega
+ribbit	½¼¹Ó¤§¶é / Ribbit!	½¼¹Ó¤§¶é / Ribbit!	Sega
 puckpkmn	¤pºëÆF»P¥Ö¥d¥C	¤pºëÆF»P¥Ö¥d¥C	Genie
 mt_beast	Ã~¤ý°O (Mega-Tech)	Ã~¤ý°O (Mega-Tech)	Sega
 mt_aftrb	½Ä¯}¤õºô (Mega-Tech)	½Ä¯}¤õºô (Mega-Tech)	Sega
@@ -1636,6 +1739,7 @@ mt_gng	¤jÅ]¬É§ø (Mega-Tech)	¤jÅ]¬É§ø (Mega-Tech)	Capcom / Sega
 mt_gaxe	¾Ô©ò (Mega-Tech)	¾Ô©ò (Mega-Tech)	Sega
 mt_mystd	¤Õ³¶¤ý 2 - ¤Û¼v«° / Mystic Defender (Mega-Tech)	¤Õ³¶¤ý 2 - ¤Û¼v«° / Mystic Defender (Mega-Tech)	Sega
 mt_cols	Ä_¥Û¤è¶ô (Mega-Tech)	Ä_¥Û¤è¶ô (Mega-Tech)	Sega
+mt_mwalk	¥~¬P¾Ô±N (Mega-Tech)	¥~¬P¾Ô±N (Mega-Tech)	Sega
 mt_fshrk	ÂB! ÂB! ÂB! (Mega-Tech)	ÂB! ÂB! ÂB! (Mega-Tech)	Toaplan / Sega
 mt_gaxe2	¾Ô©ò II (Mega-Tech)	¾Ô©ò II (Mega-Tech)	Sega
 mp_gaxe2	¾Ô©ò II (Mega Play)	¾Ô©ò II (Mega Play)	Sega
@@ -1645,6 +1749,7 @@ zoar	X ¥ô°È / Á×Ãø©Ò	X ¥ô°È / Á×Ãø©Ò	Data East USA
 btime	º~³ù¤ý (Data East set 1)	º~³ù¤ý (Data East set 1)	Data East Corporation
 btime2	º~³ù¤ý (Data East set 2)	º~³ù¤ý (Data East set 2)	Data East Corporation
 btimem	º~³ù¤ý (Midway)	º~³ù¤ý (Midway)	Data East (Bally Midway license)
+cookrace	º~³ù¤ý / Cook Race	º~³ù¤ý / Cook Race	bootleg
 wtennis	¥@¬Éºô²y	¥@¬Éºô²y	bootleg
 astrof	¦t©z­¸¦æ¤h (set 1)	¦t©z­¸¦æ¤h (set 1)	Data East
 astrof2	¦t©z­¸¦æ¤h (set 2)	¦t©z­¸¦æ¤h (set 2)	Data East
@@ -1653,6 +1758,7 @@ abattle	¦t©z­¸¦æ¤h / Astro Battle (set 1)	¦t©z­¸¦æ¤h / Astro Battle (set 1)	Sida
 abattle2	¦t©z­¸¦æ¤h / Astro Battle (set 2)	¦t©z­¸¦æ¤h / Astro Battle (set 2)	Sidam
 afire	¦t©z­¸¦æ¤h / Astro Fire	¦t©z­¸¦æ¤h / Astro Fire	Rene Pierre
 acombat	¦t©z­¸¦æ¤h / Astro Combat	¦t©z­¸¦æ¤h / Astro Combat	bootleg
+sstarbtl	¦t©z­¸¦æ¤h / Super Star Battle	¦t©z­¸¦æ¤h / Super Star Battle	bootleg
 kchamp	ªÅ¤â¹D / Karate Champ (¬ü°êª©)	ªÅ¤â¹D / Karate Champ (¬ü°êª©)	Data East USA
 karatedo	ªÅ¤â¹D (¤é¥»ª©)	ªÅ¤â¹D (¤é¥»ª©)	Data East Corporation
 kchampvs	¹ï¾ÔªÅ¤â¹D - «C¬K¬ü¤Ö¤k½g / Karate Champ (¬ü°êª© VS version)	¹ï¾ÔªÅ¤â¹D - «C¬K¬ü¤Ö¤k½g / Karate Champ (¬ü°êª© VS version)	Data East USA
@@ -1664,17 +1770,20 @@ firetpbl	¯PµK³´¨À (¤é¥»ª© µsª©)	¯PµK³´¨À (¤é¥»ª© µsª©)	bootleg
 brkthru	±j¦æ¬ð¯} / Break Thru (¬ü°êª©)	±j¦æ¬ð¯} / Break Thru (¬ü°êª©)	Data East USA
 brkthruj	±j¦æ¬ð¯} (¤é¥»ª©)	±j¦æ¬ð¯} (¤é¥»ª©)	Data East Corporation
 forcebrk	±j¦æ¬ð¯} / Force Break (µsª©)	±j¦æ¬ð¯} / Force Break (µsª©)	bootleg
-darwin	¶Â·t¤§­· 4078 (¤é¥»ª©)	¶Â·t¤§­· 4078 (¤é¥»ª©)	Data East Corporation
+darwin	¹Fº¸¤å¾Ô¾÷ 4078 (¤é¥»ª©)	¹Fº¸¤å¾Ô¾÷ 4078 (¤é¥»ª©)	Data East Corporation
+shootout	¯«ºj¤â (¬ü°êª©)	¯«ºj¤â (¬ü°êª©)	Data East USA
+shootouj	¯«ºj¤â (¤é¥»ª©)	¯«ºj¤â (¤é¥»ª©)	Data East USA
+shootoub	¯«ºj¤â (Áú¤å µsª©)	¯«ºj¤â (Áú¤å µsª©)	bootleg
 exprraid	¤õ¨®¤jµs / Express Raider (¬ü°êª©)	¤õ¨®¤jµs / Express Raider (¬ü°êª©)	Data East USA
 exprrada	¤õ¨®¤jµs / Express Raider (¬ü°êª© set 2)	¤õ¨®¤jµs / Express Raider (¬ü°êª© set 2)	Data East USA
 wexpress	¤õ¨®¤jµs (¥@¬Éª©?)	¤õ¨®¤jµs (¥@¬Éª©?)	Data East Corporation
 wexpresb	¤õ¨®¤jµs (µsª© set 1)	¤õ¨®¤jµs (µsª© set 1)	bootleg
 wexpresc	¤õ¨®¤jµs (µsª© set 2)	¤õ¨®¤jµs (µsª© set 2)	bootleg
-pcktgal	ªá¦¡¼²²y (¤é¥»ª©)	ªá¦¡¼²²y (¤é¥»ª©)	Data East Corporation
-pcktgalb	ªá¦¡¼²²y (µsª©)	ªá¦¡¼²²y (µsª©)	bootleg
-pcktgal2	ªá¦¡¼²²y 2 (¥@¬Éª©?)	ªá¦¡¼²²y 2 (¥@¬Éª©?)	Data East Corporation
-spool3	ªá¦¡¼²²y / Super Pool III (¥@¬Éª©?)	ªá¦¡¼²²y / Super Pool III (¥@¬Éª©?)	Data East Corporation
-spool3i	ªá¦¡¼²²y / Super Pool III (I-Vics)	ªá¦¡¼²²y / Super Pool III (I-Vics)	Data East Corporation (I-Vics license)
+pcktgal	¼²²y (¤é¥»ª©)	¼²²y (¤é¥»ª©)	Data East Corporation
+pcktgalb	¼²²y (µsª©)	¼²²y (µsª©)	bootleg
+pcktgal2	¼²²y 2 (¥@¬Éª©?)	¼²²y 2 (¥@¬Éª©?)	Data East Corporation
+spool3	¼²²y / Super Pool III (¥@¬Éª©?)	¼²²y / Super Pool III (¥@¬Éª©?)	Data East Corporation
+spool3i	¼²²y / Super Pool III (I-Vics)	¼²²y / Super Pool III (I-Vics)	Data East Corporation (I-Vics license)
 battlera	´c¤H¾Ô°«³¡¶¤ ¶Ý¦å³¥¯T / Battle Rangers (¥@¬Éª©)	´c¤H¾Ô°«³¡¶¤ ¶Ý¦å³¥¯T / Battle Rangers (¥@¬Éª©)	Data East Corporation
 bldwolf	´c¤H¾Ô°«³¡¶¤ ¶Ý¦å³¥¯T / Bloody Wolf (¬ü°êª©)	´c¤H¾Ô°«³¡¶¤ ¶Ý¦å³¥¯T / Bloody Wolf (¬ü°êª©)	Data East USA
 lastmisn	³Ì²×¥ô°È (¬ü°êª© revision 6)	³Ì²×¥ô°È (¬ü°êª© revision 6)	Data East USA
@@ -1683,8 +1792,8 @@ lastmsnj	³Ì²×¥ô°È (¤é¥»ª©)	³Ì²×¥ô°È (¤é¥»ª©)	Data East Corporation
 ghostb	°g®cÂy¤H G / The Real Ghostbusters (¬ü°êª© 2 Players)	°g®cÂy¤H G / The Real Ghostbusters (¬ü°êª© 2 Players)	Data East USA
 ghostb3	°g®cÂy¤H G / The Real Ghostbusters (¬ü°êª© 3 Players)	°g®cÂy¤H G / The Real Ghostbusters (¬ü°êª© 3 Players)	Data East USA
 meikyuh	°g®cÂy¤H G (¤é¥»ª©)	°g®cÂy¤H G (¤é¥»ª©)	Data East Corporation
-srdarwin	¶Â·t¤§­· 2 (¥@¬Éª©)	¶Â·t¤§­· 2 (¥@¬Éª©)	Data East Corporation
-srdarwnj	¶Â·t¤§­· 2 (¤é¥»ª©)	¶Â·t¤§­· 2 (¤é¥»ª©)	Data East Corporation
+srdarwin	SRD ¶W¯Å¹Fº¸¤å¾Ô¾÷ (¥@¬Éª©)	SRD ¶W¯Å¹Fº¸¤å¾Ô¾÷ (¥@¬Éª©)	Data East Corporation
+srdarwnj	SRD ¶W¯Å¹Fº¸¤å¾Ô¾÷ (¤é¥»ª©)	SRD ¶W¯Å¹Fº¸¤å¾Ô¾÷ (¤é¥»ª©)	Data East Corporation
 gondo	Å]¹Ò¾Ô¤h / Gondomania (¬ü°êª©)	Å]¹Ò¾Ô¤h / Gondomania (¬ü°êª©)	Data East USA
 makyosen	Å]¹Ò¾Ô¤h (¤é¥»ª©)	Å]¹Ò¾Ô¤h (¤é¥»ª©)	Data East Corporation
 garyoret	ª×Às¦C¶Ç (¤é¥»ª©)	ª×Às¦C¶Ç (¤é¥»ª©)	Data East Corporation
@@ -1692,7 +1801,7 @@ cobracom	²´·ú³D«ü¥O (¥@¬Éª© revision 5)	²´·ú³D«ü¥O (¥@¬Éª© revision 5)	Data East
 cobracmj	²´·ú³D«ü¥O (¤é¥»ª©)	²´·ú³D«ü¥O (¤é¥»ª©)	Data East Corporation
 karnov	®æ°«¦C¶Ç (¬ü°êª©)	®æ°«¦C¶Ç (¬ü°êª©)	Data East USA
 karnovj	®æ°«¦C¶Ç (¤é¥»ª©)	®æ°«¦C¶Ç (¤é¥»ª©)	Data East Corporation
-wndrplnt	¤£«äÄ³ªº¬P²y (¤é¥»ª©)	¤£«äÄ³ªº¬P²y (¤é¥»ª©)	Data East Corporation
+wndrplnt	¯«©_¬P²y (¤é¥»ª©)	¯«©_¬P²y (¤é¥»ª©)	Data East Corporation
 chelnov	­ì¤l¶W¤H (¥@¬Éª©)	­ì¤l¶W¤H (¥@¬Éª©)	Data East Corporation
 chelnovu	­ì¤l¶W¤H (¬ü°êª©)	­ì¤l¶W¤H (¬ü°êª©)	Data East USA
 chelnovj	­ì¤l¶W¤H (¤é¥»ª©)	­ì¤l¶W¤H (¤é¥»ª©)	Data East Corporation
@@ -1704,9 +1813,9 @@ robocopj	¾÷¾¹¾ÔÄµ (¤é¥»ª©)	¾÷¾¹¾ÔÄµ (¤é¥»ª©)	Data East Corporation
 robocopu	¾÷¾¹¾ÔÄµ (¬ü°êª© revision 1)	¾÷¾¹¾ÔÄµ (¬ü°êª© revision 1)	Data East USA
 robocpu0	¾÷¾¹¾ÔÄµ (¬ü°êª© revision 0)	¾÷¾¹¾ÔÄµ (¬ü°êª© revision 0)	Data East USA
 robocopb	¾÷¾¹¾ÔÄµ (¥@¬Éª© µsª©)	¾÷¾¹¾ÔÄµ (¥@¬Éª© µsª©)	bootleg
-hippodrm	¿E°«¤Û·Q / Hippodrome (¬ü°êª©)	¿E°«¤Û·Q / Hippodrome (¬ü°êª©)	Data East USA
-ffantasy	¿E°«¤Û·Q (¤é¥»ª© revision 2)	¿E°«¤Û·Q (¤é¥»ª© revision 2)	Data East Corporation
-ffantasa	¿E°«¤Û·Q (¤é¥»ª©)	¿E°«¤Û·Q (¤é¥»ª©)	Data East Corporation
+hippodrm	Äv§Þ³õ - ¿E°«¤Û·Q / Hippodrome (¬ü°êª©)	Äv§Þ³õ - ¿E°«¤Û·Q / Hippodrome (¬ü°êª©)	Data East USA
+ffantasy	Äv§Þ³õ - ¿E°«¤Û·Q (¤é¥»ª© revision 2)	Äv§Þ³õ - ¿E°«¤Û·Q (¤é¥»ª© revision 2)	Data East Corporation
+ffantasa	Äv§Þ³õ - ¿E°«¤Û·Q (¤é¥»ª©)	Äv§Þ³õ - ¿E°«¤Û·Q (¤é¥»ª©)	Data East Corporation
 madmotor	ºÆ¨g¼¯¦«¨®	ºÆ¨g¼¯¦«¨®	Mitchell
 vaportra	ªÅ¤ú / Vapor Trail - Hyper Offence Formation (¥@¬Éª© revision 1)	ªÅ¤ú / Vapor Trail - Hyper Offence Formation (¥@¬Éª© revision 1)	Data East Corporation
 vaportru	ªÅ¤ú / Vapor Trail - Hyper Offence Formation (¬ü°êª©)	ªÅ¤ú / Vapor Trail - Hyper Offence Formation (¬ü°êª©)	Data East USA
@@ -1715,11 +1824,11 @@ cbuster	¼É¤O«g¬P (¥@¬Éª© FX version)	¼É¤O«g¬P (¥@¬Éª© FX version)	Data East Corp
 cbusterw	¼É¤O«g¬P (¥@¬Éª© FU version)	¼É¤O«g¬P (¥@¬Éª© FU version)	Data East Corporation
 cbusterj	¼É¤O«g¬P (¤é¥»ª©)	¼É¤O«g¬P (¤é¥»ª©)	Data East Corporation
 twocrude	¼É¤O«g¬P / Two Crude (¬ü°êª©)	¼É¤O«g¬P / Two Crude (¬ü°êª©)	Data East USA
-darkseal	·t¶Â«Ê¦L (¥@¬Éª© revision 3)	·t¶Â«Ê¦L (¥@¬Éª© revision 3)	Data East Corporation
-darksea1	·t¶Â«Ê¦L (¥@¬Éª© revision 1)	·t¶Â«Ê¦L (¥@¬Éª© revision 1)	Data East Corporation
-darkseaj	·t¶Â«Ê¦L (¤é¥»ª©)	·t¶Â«Ê¦L (¤é¥»ª©)	Data East Corporation
-gatedoom	·t¶Â«Ê¦L / ·´·À¤§ªù (¬ü°êª© revision 4)	·t¶Â«Ê¦L / ·´·À¤§ªù (¬ü°êª© revision 4)	Data East Corporation
-gatedom1	·t¶Â«Ê¦L / ·´·À¤§ªù (¬ü°êª© revision 1)	·t¶Â«Ê¦L / ·´·À¤§ªù (¬ü°êª© revision 1)	Data East Corporation
+darkseal	¶Â·t«Ê¦L (¥@¬Éª© revision 3)	¶Â·t«Ê¦L (¥@¬Éª© revision 3)	Data East Corporation
+darksea1	¶Â·t«Ê¦L (¥@¬Éª© revision 1)	¶Â·t«Ê¦L (¥@¬Éª© revision 1)	Data East Corporation
+darkseaj	¶Â·t«Ê¦L (¤é¥»ª©)	¶Â·t«Ê¦L (¤é¥»ª©)	Data East Corporation
+gatedoom	¶Â·t«Ê¦L / ·´·À¤§ªù (¬ü°êª© revision 4)	¶Â·t«Ê¦L / ·´·À¤§ªù (¬ü°êª© revision 4)	Data East Corporation
+gatedom1	¶Â·t«Ê¦L / ·´·À¤§ªù (¬ü°êª© revision 1)	¶Â·t«Ê¦L / ·´·À¤§ªù (¬ü°êª© revision 1)	Data East Corporation
 cninja	¾Ô°«­ì©l¤H / Caveman Ninja (¥@¬Éª© revision 3)	¾Ô°«­ì©l¤H / Caveman Ninja (¥@¬Éª© revision 3)	Data East Corporation
 cninja0	¾Ô°«­ì©l¤H / Caveman Ninja (¥@¬Éª© revision 0)	¾Ô°«­ì©l¤H / Caveman Ninja (¥@¬Éª© revision 0)	Data East Corporation
 cninjau	¾Ô°«­ì©l¤H / Caveman Ninja (¬ü°êª©)	¾Ô°«­ì©l¤H / Caveman Ninja (¬ü°êª©)	Data East Corporation
@@ -1746,9 +1855,12 @@ tumbleb	®»°­¤j®v (µsª© set 1)	®»°­¤j®v (µsª© set 1)	bootleg
 tumbleb2	®»°­¤j®v (µsª© set 2)	®»°­¤j®v (µsª© set 2)	bootleg
 semibase	µL­­³Ó­t (SemiCom Baseball)	µL­­³Ó­t (SemiCom Baseball)	SemiCom
 dblewing	ÂùÁl	ÂùÁl	Mitchell
+nslasher	¤È©]±þ¥Í (Áú°êª© Rev 1.3)	¤È©]±þ¥Í (Áú°êª© Rev 1.3)	Data East Corporation
+nslashej	¤È©]±þ¥Í (¤é¥»ª© Rev 1.2)	¤È©]±þ¥Í (¤é¥»ª© Rev 1.2)	Data East Corporation
 sotsugyo	¨ò·~ÃÒ®Ñ	¨ò·~ÃÒ®Ñ	Mitchell (Atlus license)
 sshangha	¶W¯Å¤W®ü (¤é¥»ª©)	¶W¯Å¤W®ü (¤é¥»ª©)	Hot-B.
 sshanghb	¶W¯Å¤W®ü (¥@¬Éª©, µsª©)	¶W¯Å¤W®ü (¥@¬Éª©, µsª©)	bootleg
+skullfng	ªÅ¤ú¥~¶Ç (¤é¥»ª©)	ªÅ¤ú¥~¶Ç (¤é¥»ª©)	Data East Corporation
 starforc	¬P»ÚªZ¤O	¬P»ÚªZ¤O	Tehkan
 starfore	¬P»ÚªZ¤O (¥[±K)	¬P»ÚªZ¤O (¥[±K)	Tehkan
 megaforc	¬P»ÚªZ¤O	¬P»ÚªZ¤O	Tehkan (Video Ware license)
@@ -1758,9 +1870,9 @@ solomon	©ÒÃ¹ªù¤§Æ_ (¤é¥»ª©)	©ÒÃ¹ªù¤§Æ_ (¤é¥»ª©)	Tecmo
 rygar	¥¼¨Ó¾Ô¤h / Rygar (¬ü°êª© set 1)	¥¼¨Ó¾Ô¤h / Rygar (¬ü°êª© set 1)	Tecmo
 rygar2	¥¼¨Ó¾Ô¤h / Rygar (¬ü°êª© set 2)	¥¼¨Ó¾Ô¤h / Rygar (¬ü°êª© set 2)	Tecmo
 rygarj	¥¼¨Ó¾Ô¤h (¤é¥»ª©)	¥¼¨Ó¾Ô¤h (¤é¥»ª©)	Tecmo
-gemini	®»ÂÎ´±¦º¶¤	®»ÂÎ´±¦º¶¤	Tecmo
-silkworm	Áp¦X¤j§@¾Ô (set 1)	Áp¦X¤j§@¾Ô (set 1)	Tecmo
-silkwrm2	Áp¦X¤j§@¾Ô (set 2)	Áp¦X¤j§@¾Ô (set 2)	Tecmo
+gemini	Âù¤l¬P	Âù¤l¬P	Tecmo
+silkworm	Áp¦X§@¾Ô (set 1)	Áp¦X§@¾Ô (set 1)	Tecmo
+silkwrm2	Áp¦X§@¾Ô (set 2)	Áp¦X§@¾Ô (set 2)	Tecmo
 shadoww	§ÔªÌÀs¼C¶Ç / Shadow Warriors (¥@¬Éª© set 1)	§ÔªÌÀs¼C¶Ç / Shadow Warriors (¥@¬Éª© set 1)	Tecmo
 shadowwa	§ÔªÌÀs¼C¶Ç / Shadow Warriors (¥@¬Éª© set 2)	§ÔªÌÀs¼C¶Ç / Shadow Warriors (¥@¬Éª© set 2)	Tecmo
 gaiden	§ÔªÌÀs¼C¶Ç / Ninja Gaiden (¬ü°êª©)	§ÔªÌÀs¼C¶Ç / Ninja Gaiden (¬ü°êª©)	Tecmo
@@ -1775,9 +1887,13 @@ fstarfrc	³Ì²×¬P»ÚªZ¤O (¬ü°êª©)	³Ì²×¬P»ÚªZ¤O (¬ü°êª©)	Tecmo
 tkdensho	°«®V¶Ç©Ó	°«®V¶Ç©Ó	Tecmo
 psurge	¹q¸ô¤pºëÆF	¹q¸ô¤pºëÆF	<unknown>
 pandoras	¼ï¦·©Ô¤§·µ	¼ï¦·©Ô¤§·µ	Konami/Interlogic
+hyperspt	¬ì®³¦Ì¹B°Ê·| '84 / Hyper Sports	¬ì®³¦Ì¹B°Ê·| '84 / Hyper Sports	Konami (Centuri license)
+hpolym84	¬ì®³¦Ì¹B°Ê·| '84	¬ì®³¦Ì¹B°Ê·| '84	Konami
 mikie	·s¤JªÀ­û Tooru §g / Mikie	·s¤JªÀ­û Tooru §g / Mikie	Konami
 mikiej	·s¤JªÀ­û Tooru §g	·s¤JªÀ­û Tooru §g	Konami
 mikiehs	·s¤JªÀ­û Tooru §g / Mikie (High School Graffiti)	·s¤JªÀ­û Tooru §g / Mikie (High School Graffiti)	Konami
+yiear	¥\¤Ò (set 1)	¥\¤Ò (set 1)	Konami
+yiear2	¥\¤Ò (set 2)	¥\¤Ò (set 2)	Konami
 kicker	¤ÖªL¦x¤§¹D / Kicker	¤ÖªL¦x¤§¹D / Kicker	Konami
 shaolins	¤ÖªL¦x¤§¹D / Shao-Lin's Road	¤ÖªL¦x¤§¹D / Shao-Lin's Road	Konami
 pingpong	¥â¥ã²y	¥â¥ã²y	Konami
@@ -1821,11 +1937,11 @@ konami88	¶W¯Å¶ø¹B·| / Konami '88	¶W¯Å¶ø¹B·| / Konami '88	Konami
 hypsptsp	¶W¯Å¶ø¹B·| (¤é¥»ª©)	¶W¯Å¶ø¹B·| (¤é¥»ª©)	Konami
 gbusters	ºÆ¨gÄµ¹î / Gang Busters	ºÆ¨gÄµ¹î / Gang Busters	Konami
 crazycop	ºÆ¨gÄµ¹î (¤é¥»ª©)	ºÆ¨gÄµ¹î (¤é¥»ª©)	Konami
-crimfght	¸o´c¾Ô¤h (¬ü°êª© 4 players)	¸o´c¾Ô¤h (¬ü°êª© 4 players)	Konami
-crimfgt2	¸o´c¾Ô¤h (¥@¬Éª© 2 Players)	¸o´c¾Ô¤h (¥@¬Éª© 2 Players)	Konami
-crimfgtj	¸o´c¾Ô¤h (¤é¥»ª© 2 Players)	¸o´c¾Ô¤h (¤é¥»ª© 2 Players)	Konami
-spy	S.P.Y. ¯S§O­p¹º Y (¥@¬Éª© ver. N)	S.P.Y. ¯S§O­p¹º Y (¥@¬Éª© ver. N)	Konami
-spyu	S.P.Y. ¯S§O­p¹º Y (¬ü°êª© ver. M)	S.P.Y. ¯S§O­p¹º Y (¬ü°êª© ver. M)	Konami
+crimfght	µóÀY°«¤h (¬ü°êª© 4 players)	µóÀY°«¤h (¬ü°êª© 4 players)	Konami
+crimfgt2	µóÀY°«¤h (¥@¬Éª© 2 Players)	µóÀY°«¤h (¥@¬Éª© 2 Players)	Konami
+crimfgtj	µóÀY°«¤h (¤é¥»ª© 2 Players)	µóÀY°«¤h (¤é¥»ª© 2 Players)	Konami
+spy	S.P.Y. - ¯S§O­p¹º Y (¥@¬Éª© ver. N)	S.P.Y. - ¯S§O­p¹º Y (¥@¬Éª© ver. N)	Konami
+spyu	S.P.Y. - ¯S§O­p¹º Y (¬ü°êª© ver. M)	S.P.Y. - ¯S§O­p¹º Y (¬ü°êª© ver. M)	Konami
 aliens	²§§Î (¥@¬Éª© set 1)	²§§Î (¥@¬Éª© set 1)	Konami
 aliens2	²§§Î (¥@¬Éª© set 2)	²§§Î (¥@¬Éª© set 2)	Konami
 aliens3	²§§Î (¥@¬Éª© set 3)	²§§Î (¥@¬Éª© set 3)	Konami
@@ -1834,6 +1950,13 @@ aliensj	²§§Î (¤é¥»ª© set 1)	²§§Î (¤é¥»ª© set 1)	Konami
 aliensj2	²§§Î (¤é¥»ª© set 2)	²§§Î (¤é¥»ª© set 2)	Konami
 parodius	ºÆ¨g¤j®gÀ» DA! (¥@¬Éª©)	ºÆ¨g¤j®gÀ» DA! (¥@¬Éª©)	Konami
 parodisj	ºÆ¨g¤j®gÀ» DA! (¤é¥»ª©)	ºÆ¨g¤j®gÀ» DA! (¤é¥»ª©)	Konami
+simpsons	¨¯´¶´Ë®a®x (4 Players)	¨¯´¶´Ë®a®x (4 Players)	Konami
+simps4pa	¨¯´¶´Ë®a®x (4 Players alt)	¨¯´¶´Ë®a®x (4 Players alt)	Konami
+simpsn2p	¨¯´¶´Ë®a®x (2 Players)	¨¯´¶´Ë®a®x (2 Players)	Konami
+simps2pa	¨¯´¶´Ë®a®x (2 Players alt)	¨¯´¶´Ë®a®x (2 Players alt)	Konami
+simps2pj	¨¯´¶´Ë®a®x (2 Players ¤é¥»ª©)	¨¯´¶´Ë®a®x (2 Players ¤é¥»ª©)	Konami
+esckids	²æ½u¦æ¤j¹B (¨È¬wª©, 4 Players)	²æ½u¦æ¤j¹B (¨È¬wª©, 4 Players)	Konami
+esckidsj	²æ½u¦æ¤j¹B (¤é¥»ª©, 2 Players)	²æ½u¦æ¤j¹B (¤é¥»ª©, 2 Players)	Konami
 vendetta	´_¤³ 2 / Vendetta (¥@¬Éª© 4 Players ver. T)	´_¤³ 2 / Vendetta (¥@¬Éª© 4 Players ver. T)	Konami
 vendetao	´_¤³ 2 / Vendetta (¥@¬Éª© 4 Players ver. R)	´_¤³ 2 / Vendetta (¥@¬Éª© 4 Players ver. R)	Konami
 vendet2p	´_¤³ 2 / Vendetta (¥@¬Éª© 2 Players ver. W)	´_¤³ 2 / Vendetta (¥@¬Éª© 2 Players ver. W)	Konami
@@ -1841,24 +1964,24 @@ vendetas	´_¤³ 2 / Vendetta (¨È¬wª© 2 Players ver. U)	´_¤³ 2 / Vendetta (¨È¬wª© 2
 vendtaso	´_¤³ 2 / Vendetta (¨È¬wª© 2 Players ver. D)	´_¤³ 2 / Vendetta (¨È¬wª© 2 Players ver. D)	Konami
 vendettj	´_¤³ 2 (¤é¥»ª© 2 Players ver. P)	´_¤³ 2 (¤é¥»ª© 2 Players ver. P)	Konami
 wecleman	WEC §Q°Ò 24 ¤p®É­@¤[ÁÉ	WEC §Q°Ò 24 ¤p®É­@¤[ÁÉ	Konami
-hotchase	¤½¸ô¼öÀ»	¤½¸ô¼öÀ»	Konami
+hotchase	°lÂÜ¼öÀ»	°lÂÜ¼öÀ»	Konami
 ultraman	ÄÐ³J¶W¤H (¤é¥»ª©)	ÄÐ³J¶W¤H (¤é¥»ª©)	Banpresto/Bandai
-nemesis	¦t©z¨µ¯è¾÷ / ´_¤³¤k¯«	¦t©z¨µ¯è¾÷ / ´_¤³¤k¯«	Konami
-nemesuk	¦t©z¨µ¯è¾÷ / ´_¤³¤k¯« (¥@¬Éª©?)	¦t©z¨µ¯è¾÷ / ´_¤³¤k¯« (¥@¬Éª©?)	Konami
+nemesis	¦t©z¨µ¯èÄ¥ / ´_¤³¤k¯«	¦t©z¨µ¯èÄ¥ / ´_¤³¤k¯«	Konami
+nemesuk	¦t©z¨µ¯èÄ¥ / ´_¤³¤k¯« (¥@¬Éª©?)	¦t©z¨µ¯èÄ¥ / ´_¤³¤k¯« (¥@¬Éª©?)	Konami
 salamand	¨FÃ¹°Ò³D (version D)	¨FÃ¹°Ò³D (version D)	Konami
 salamanj	¨FÃ¹°Ò³D (version J)	¨FÃ¹°Ò³D (version J)	Konami
 lifefrce	¨FÃ¹°Ò³D / Lifeforce (¬ü°êª©)	¨FÃ¹°Ò³D / Lifeforce (¬ü°êª©)	Konami
 lifefrcj	¨FÃ¹°Ò³D / Lifeforce (¤é¥»ª©)	¨FÃ¹°Ò³D / Lifeforce (¤é¥»ª©)	Konami
 twinbee	§L¸Á	§L¸Á	Konami
-gradius	¦t©z¨µ¯è¾÷	¦t©z¨µ¯è¾÷	Konami
+gradius	¦t©z¨µ¯èÄ¥	¦t©z¨µ¯èÄ¥	Konami
 gwarrior	»Èªe¾Ô¤h	»Èªe¾Ô¤h	Konami
 devilw	Å]Ã~¤ý°ê / Devil World	Å]Ã~¤ý°ê / Devil World	Konami
 darkadv	Å]Ã~¤ý°ê / Dark Adventure	Å]Ã~¤ý°ê / Dark Adventure	Konami
 majuu	Å]Ã~¤ý°ê	Å]Ã~¤ý°ê	Konami
-vulcan	¦t©z¨µ¯è¾÷ II / Vulcan Venture	¦t©z¨µ¯è¾÷ II / Vulcan Venture	Konami
-gradius2	¦t©z¨µ¯è¾÷ II (¤é¥»ª© ·sª©)	¦t©z¨µ¯è¾÷ II (¤é¥»ª© ·sª©)	Konami
-grdius2a	¦t©z¨µ¯è¾÷ II (¤é¥»ª© ÂÂª©)	¦t©z¨µ¯è¾÷ II (¤é¥»ª© ÂÂª©)	Konami
-grdius2b	¦t©z¨µ¯è¾÷ II (¤é¥»ª© §óÂÂª©)	¦t©z¨µ¯è¾÷ II (¤é¥»ª© §óÂÂª©)	Konami
+vulcan	¦t©z¨µ¯èÄ¥ II / Vulcan Venture	¦t©z¨µ¯èÄ¥ II / Vulcan Venture	Konami
+gradius2	¦t©z¨µ¯èÄ¥ II (¤é¥»ª© ·sª©)	¦t©z¨µ¯èÄ¥ II (¤é¥»ª© ·sª©)	Konami
+grdius2a	¦t©z¨µ¯èÄ¥ II (¤é¥»ª© ÂÂª©)	¦t©z¨µ¯èÄ¥ II (¤é¥»ª© ÂÂª©)	Konami
+grdius2b	¦t©z¨µ¯èÄ¥ II (¤é¥»ª© §óÂÂª©)	¦t©z¨µ¯èÄ¥ II (¤é¥»ª© §óÂÂª©)	Konami
 miaj	ºñ¦â§L¹Î 2 (¤é¥»ª©)	ºñ¦â§L¹Î 2 (¤é¥»ª©)	Konami
 mia	ºñ¦â§L¹Î 2 (version T)	ºñ¦â§L¹Î 2 (version T)	Konami
 mia2	ºñ¦â§L¹Î 2 (version S)	ºñ¦â§L¹Î 2 (version S)	Konami
@@ -1878,17 +2001,17 @@ detatwin	¥Xµo!! §L¸Á (¤é¥»ª© ver. J)	¥Xµo!! §L¸Á (¤é¥»ª© ver. J)	Konami
 tmnt2	§ÔªÌÀt 2 - Turtles in Time (4 Players ver UAA)	§ÔªÌÀt 2 - Turtles in Time (4 Players ver UAA)	Konami
 tmnt22p	§ÔªÌÀt 2 - Turtles in Time (2 Players ver UDA)	§ÔªÌÀt 2 - Turtles in Time (2 Players ver UDA)	Konami
 tmnt2a	§ÔªÌÀt 2 - Turtles in Time (4 Players ver ADA)	§ÔªÌÀt 2 - Turtles in Time (4 Players ver ADA)	Konami
-ssriders	¸¨¤éÃM¤h / ¦è³¡¤û¥J (4 Players ver EAC)	¸¨¤éÃM¤h / ¦è³¡¤û¥J (4 Players ver EAC)	Konami
-ssrdrebd	¸¨¤éÃM¤h / ¦è³¡¤û¥J (2 Players ver EBD)	¸¨¤éÃM¤h / ¦è³¡¤û¥J (2 Players ver EBD)	Konami
-ssrdrebc	¸¨¤éÃM¤h / ¦è³¡¤û¥J (2 Players ver EBC)	¸¨¤éÃM¤h / ¦è³¡¤û¥J (2 Players ver EBC)	Konami
-ssrdruda	¸¨¤éÃM¤h / ¦è³¡¤û¥J (4 Players ver UDA)	¸¨¤éÃM¤h / ¦è³¡¤û¥J (4 Players ver UDA)	Konami
-ssrdreaa	¸¨¤éÃM¤h / ¦è³¡¤û¥J (4 Players ver EAA)	¸¨¤éÃM¤h / ¦è³¡¤û¥J (4 Players ver EAA)	Konami
-ssrdruac	¸¨¤éÃM¤h / ¦è³¡¤û¥J (4 Players ver UAC)	¸¨¤éÃM¤h / ¦è³¡¤û¥J (4 Players ver UAC)	Konami
-ssrdrubc	¸¨¤éÃM¤h / ¦è³¡¤û¥J (2 Players ver UBC)	¸¨¤éÃM¤h / ¦è³¡¤û¥J (2 Players ver UBC)	Konami
-ssrdrabd	¸¨¤éÃM¤h / ¦è³¡¤û¥J (2 Players ver ABD)	¸¨¤éÃM¤h / ¦è³¡¤û¥J (2 Players ver ABD)	Konami
-ssrdradd	¸¨¤éÃM¤h / ¦è³¡¤û¥J (4 Players ver ADD)	¸¨¤éÃM¤h / ¦è³¡¤û¥J (4 Players ver ADD)	Konami
-ssrdrjbd	¸¨¤éÃM¤h / ¦è³¡¤û¥J (2 Players ver JBD)	¸¨¤éÃM¤h / ¦è³¡¤û¥J (2 Players ver JBD)	Konami
-sunsetbl	¸¨¤éÃM¤h / ¦è³¡¤û¥J (µsª© 4 Players ver ADD)	¸¨¤éÃM¤h / ¦è³¡¤û¥J (µsª© 4 Players ver ADD)	Konami
+ssriders	¯î³¥¤jÃð«È (4 Players ver EAC)	¯î³¥¤jÃð«È (4 Players ver EAC)	Konami
+ssrdrebd	¯î³¥¤jÃð«È (2 Players ver EBD)	¯î³¥¤jÃð«È (2 Players ver EBD)	Konami
+ssrdrebc	¯î³¥¤jÃð«È (2 Players ver EBC)	¯î³¥¤jÃð«È (2 Players ver EBC)	Konami
+ssrdruda	¯î³¥¤jÃð«È (4 Players ver UDA)	¯î³¥¤jÃð«È (4 Players ver UDA)	Konami
+ssrdreaa	¯î³¥¤jÃð«È (4 Players ver EAA)	¯î³¥¤jÃð«È (4 Players ver EAA)	Konami
+ssrdruac	¯î³¥¤jÃð«È (4 Players ver UAC)	¯î³¥¤jÃð«È (4 Players ver UAC)	Konami
+ssrdrubc	¯î³¥¤jÃð«È (2 Players ver UBC)	¯î³¥¤jÃð«È (2 Players ver UBC)	Konami
+ssrdrabd	¯î³¥¤jÃð«È (2 Players ver ABD)	¯î³¥¤jÃð«È (2 Players ver ABD)	Konami
+ssrdradd	¯î³¥¤jÃð«È (4 Players ver ADD)	¯î³¥¤jÃð«È (4 Players ver ADD)	Konami
+ssrdrjbd	¯î³¥¤jÃð«È (2 Players ver JBD)	¯î³¥¤jÃð«È (2 Players ver JBD)	Konami
+sunsetbl	¯î³¥¤jÃð«È (µsª© 4 Players ver ADD)	¯î³¥¤jÃð«È (µsª© 4 Players ver ADD)	Konami
 xmen	¯S²§¥\¯à²Õ (4 Players ver UBB)	¯S²§¥\¯à²Õ (4 Players ver UBB)	Konami
 xmen2p	¯S²§¥\¯à²Õ (2 Players ver AAA)	¯S²§¥\¯à²Õ (2 Players ver AAA)	Konami
 xmen2pj	¯S²§¥\¯à²Õ (2 Players ver JAA)	¯S²§¥\¯à²Õ (2 Players ver JAA)	Konami
@@ -1908,13 +2031,25 @@ mmaulers	¨s·¥¾Ô¶¤ (ver EAA)	¨s·¥¾Ô¶¤ (ver EAA)	Konami
 dadandrn	¨s·¥¾Ô¶¤ (ver JAA)	¨s·¥¾Ô¶¤ (ver JAA)	Konami
 dbz	¤CÀs¯] Z	¤CÀs¯] Z	Banpresto
 dbz2	¤CÀs¯] Z 2 - ¶WªZ°«¤j·|	¤CÀs¯] Z 2 - ¶WªZ°«¤j·|	Banpresto
-gradius3	¦t©z¨µ¯è¾÷ III (¤é¥»ª©)	¦t©z¨µ¯è¾÷ III (¤é¥»ª©)	Konami
-grdius3a	¦t©z¨µ¯è¾÷ III (¨È¬wª©)	¦t©z¨µ¯è¾÷ III (¨È¬wª©)	Konami
-grdius3e	¦t©z¨µ¯è¾÷ III (¥@¬Éª© ?)	¦t©z¨µ¯è¾÷ III (¥@¬Éª© ?)	Konami
+gradius3	¦t©z¨µ¯èÄ¥ III (¤é¥»ª©)	¦t©z¨µ¯èÄ¥ III (¤é¥»ª©)	Konami
+grdius3a	¦t©z¨µ¯èÄ¥ III (¨È¬wª©)	¦t©z¨µ¯èÄ¥ III (¨È¬wª©)	Konami
+grdius3e	¦t©z¨µ¯èÄ¥ III (¥@¬Éª© ?)	¦t©z¨µ¯èÄ¥ III (¥@¬Éª© ?)	Konami
 gokuparo	·¥¤WºÆ¨g¤j®gÀ» (ver JAD)	·¥¤WºÆ¨g¤j®gÀ» (ver JAD)	Konami
 fantjour	·¥¤WºÆ¨g¤j®gÀ» / Fantastic Journey	·¥¤WºÆ¨g¤j®gÀ» / Fantastic Journey	Konami
 salmndr2	¨FÃ¹°Ò³D 2 (ver JAA)	¨FÃ¹°Ò³D 2 (ver JAA)	Konami
 sexyparo	©Ê·PºÆ¨g¤j®gÀ» (ver JAA)	©Ê·PºÆ¨g¤j®gÀ» (ver JAA)	Konami
+bm1stmix	¸`«µ DJ: ¨g¼ö¸`©ç (ver JA-B)	¸`«µ DJ: ¨g¼ö¸`©ç (ver JA-B)	Konami
+bm2ndmix	¸`«µ DJ: ¨g¼ö¸`©ç 2nd MIX (ver JA-B)	¸`«µ DJ: ¨g¼ö¸`©ç 2nd MIX (ver JA-B)	Konami
+bm2ndmxa	¸`«µ DJ: ¨g¼ö¸`©ç 2nd MIX (ver JA-A)	¸`«µ DJ: ¨g¼ö¸`©ç 2nd MIX (ver JA-A)	Konami
+bmcompmx	¸`«µ DJ: ¨g¼ö¸`©ç complete MIX (ver JA-B)	¸`«µ DJ: ¨g¼ö¸`©ç complete MIX (ver JA-B)	Konami
+hmcompmx	¸`«µ DJ: ¨g¼ö¸`©ç complete MIX / hiphopmania complete MIX (ver UA-B)	¸`«µ DJ: ¨g¼ö¸`©ç complete MIX / hiphopmania complete MIX (ver UA-B)	Konami
+bm4thmix	¸`«µ DJ: ¨g¼ö¸`©ç 4th MIX - The beat goes on (ver JA-A)	¸`«µ DJ: ¨g¼ö¸`©ç 4th MIX - The beat goes on (ver JA-A)	Konami
+bm5thmix	¸`«µ DJ: ¨g¼ö¸`©ç 5th MIX - Time to get down (ver JA-A)	¸`«µ DJ: ¨g¼ö¸`©ç 5th MIX - Time to get down (ver JA-A)	Konami
+bmcorerm	¸`«µ DJ: ¨g¼ö¸`©ç CORE REMIX (ver JA-A)	¸`«µ DJ: ¨g¼ö¸`©ç CORE REMIX (ver JA-A)	Konami
+bmdct	¸`«µ DJ: ¨g¼ö¸`©ç featuring - Dreams Come True (ver JA-A)	¸`«µ DJ: ¨g¼ö¸`©ç featuring - Dreams Come True (ver JA-A)	Konami
+bmcompm2	¸`«µ DJ: ¨g¼ö¸`©ç complete MIX 2 (ver JA-A)	¸`«µ DJ: ¨g¼ö¸`©ç complete MIX 2 (ver JA-A)	Konami
+hmcompm2	¸`«µ DJ: ¨g¼ö¸`©ç complete MIX 2 / hiphopmania complete MIX 2 (ver UA-A)	¸`«µ DJ: ¨g¼ö¸`©ç complete MIX 2 / hiphopmania complete MIX 2 (ver UA-A)	Konami
+bm6thmix	¸`«µ DJ: ¨g¼ö¸`©ç 6th MIX - The UK underground music (ver JA-A)	¸`«µ DJ: ¨g¼ö¸`©ç 6th MIX - The UK underground music (ver JA-A)	Konami
 gradius4	¦t©z¨µ¯èÄ¥ 4: ´_¬¡	¦t©z¨µ¯èÄ¥ 4: ´_¬¡	Konami
 topsecex	³Ì°ª¾÷±K (Exidy) (version 1.0)	³Ì°ª¾÷±K (Exidy) (version 1.0)	Exidy
 dominos	¦h¦Ì¿Õ°©µP	¦h¦Ì¿Õ°©µP	Atari
@@ -1930,6 +2065,13 @@ missile	¾É¼u«ü¥O (set 1)	¾É¼u«ü¥O (set 1)	Atari
 missile2	¾É¼u«ü¥O (set 2)	¾É¼u«ü¥O (set 2)	Atari
 suprmatk	¾É¼u«ü¥O / Super Missile Attack (for set 2)	¾É¼u«ü¥O / Super Missile Attack (for set 2)	Atari + Gencomp
 sprmatkd	¾É¼u«ü¥O / Super Missile Attack (¥¼¥[±K)	¾É¼u«ü¥O / Super Missile Attack (¥¼¥[±K)	Atari + Gencomp
+asteroid	¹k¥Û¤j¾Ô (rev 2)	¹k¥Û¤j¾Ô (rev 2)	Atari
+asteroi1	¹k¥Û¤j¾Ô (rev 1)	¹k¥Û¤j¾Ô (rev 1)	Atari
+asteroib	¹k¥Û¤j¾Ô (µsª© Lunar Lander hardware)	¹k¥Û¤j¾Ô (µsª© Lunar Lander hardware)	bootleg
+asterock	¹k¥Û¤j¾Ô / Asterock	¹k¥Û¤j¾Ô / Asterock	Sidam
+meteorts	¹k¥Û¤j¾Ô / Meteorites	¹k¥Û¤j¾Ô / Meteorites	VGG
+astdelux	¹k¥Û¤j¾Ô Deluxe (rev 2)	¹k¥Û¤j¾Ô Deluxe (rev 2)	Atari
+astdelu1	¹k¥Û¤j¾Ô Deluxe (rev 1)	¹k¥Û¤j¾Ô Deluxe (rev 1)	Atari
 tempest	¼É­·«B (rev 3)	¼É­·«B (rev 3)	Atari
 tempest1	¼É­·«B (rev 1)	¼É­·«B (rev 1)	Atari
 tempest2	¼É­·«B (rev 2)	¼É­·«B (rev 2)	Atari
@@ -2015,9 +2157,6 @@ a51mxr3k	51 °Ï¯SÄµ / Maximum Force Duo (R3000)	51 °Ï¯SÄµ / Maximum Force Duo (R3
 maxforce	51 °Ï¯SÄµ / Maximum Force v1.05	51 °Ï¯SÄµ / Maximum Force v1.05	Atari Games
 maxf_102	51 °Ï¯SÄµ / Maximum Force v1.02	51 °Ï¯SÄµ / Maximum Force v1.02	Atari Games
 a51site4	51 °Ï¯SÄµ: Site 4	51 °Ï¯SÄµ: Site 4	Atari Games
-fantasy	¤Û·Q (¥@¬Éª©)	¤Û·Q (¥@¬Éª©)	SNK
-fantasyu	¤Û·Q (¬ü°êª©)	¤Û·Q (¬ü°êª©)	[SNK] (Rock-Ola license)
-fantasyj	¤Û·Q (¤é¥»ª©)	¤Û·Q (¤é¥»ª©)	SNK
 sgladiat	¼C°«¤h 1984	¼C°«¤h 1984	SNK
 aso	ASO - ²Õ¦X¾Ô¾÷	ASO - ²Õ¦X¾Ô¾÷	SNK
 alphamis	ASO - ²Õ¦X¾Ô¾÷ / Alpha Mission	ASO - ²Õ¦X¾Ô¾÷ / Alpha Mission	SNK
@@ -2044,16 +2183,17 @@ choppera	¯èªÅÃM§Lª«»y (¬ü°êª© set 2)	¯èªÅÃM§Lª«»y (¬ü°êª© set 2)	SNK
 chopperb	¯èªÅÃM§Lª«»y (¬ü°êª© set 3)	¯èªÅÃM§Lª«»y (¬ü°êª© set 3)	SNK
 legofair	¯èªÅÃM§Lª«»y / Koukuu Kihei Monogatari - The Legend of Air Cavalry (¤é¥»ª©)	¯èªÅÃM§Lª«»y / Koukuu Kihei Monogatari - The Legend of Air Cavalry (¤é¥»ª©)	SNK
 ikari3	«ã III	«ã III	SNK
-pow	²æº» - ¾Ô«R / P.O.W. - Prisoners of War (¬ü°êª©)	²æº» - ¾Ô«R / P.O.W. - Prisoners of War (¬ü°êª©)	SNK
-powj	²æº» - ¾Ô«R (¤é¥»ª©)	²æº» - ¾Ô«R (¤é¥»ª©)	SNK
+pow	²æº» - Prisoners of War / P.O.W. - Prisoners of War (¬ü°êª©)	²æº» - Prisoners of War / P.O.W. - Prisoners of War (¬ü°êª©)	SNK
+powj	²æº» - Prisoners of War (¤é¥»ª©)	²æº» - Prisoners of War (¤é¥»ª©)	SNK
 searchar	²§§Î¤j§@¾Ô / SAR - ·j±Ï (¥@¬Éª©)	²§§Î¤j§@¾Ô / SAR - ·j±Ï (¥@¬Éª©)	SNK
 sercharu	²§§Î¤j§@¾Ô / SAR - ·j±Ï (¬ü°êª©)	²§§Î¤j§@¾Ô / SAR - ·j±Ï (¬ü°êª©)	SNK
 sercharj	²§§Î¤j§@¾Ô / SAR - ·j±Ï (¤é¥»ª©)	²§§Î¤j§@¾Ô / SAR - ·j±Ï (¤é¥»ª©)	SNK
 prehisle	­ì©l®q 1930 (¥@¬Éª©)	­ì©l®q 1930 (¥@¬Éª©)	SNK
 prehislu	­ì©l®q 1930 (¬ü°êª©)	­ì©l®q 1930 (¬ü°êª©)	SNK of America
 gensitou	­ì©l®q 1930	­ì©l®q 1930	SNK
+bbusters	³¥Ã~«g¬P (¥@¬Éª© ?)	³¥Ã~«g¬P (¥@¬Éª© ?)	SNK
 nam1975	¶V¾Ô-1975	¶V¾Ô-1975	SNK
-bstars	´Î²y¤§¬P	´Î²y¤§¬P	SNK
+bstars	´Î²y¤§¬P - Â¾´Î	´Î²y¤§¬P - Â¾´Î	SNK
 tpgolf	³»¦y°ªº¸¤Ò	³»¦y°ªº¸¤Ò	SNK
 mahretsu	³Â³¶¨g¦C¶Ç - ¦è¤é¥»½g	³Â³¶¨g¦C¶Ç - ¦è¤é¥»½g	SNK
 maglord	¤ÛÅ]¤j¾Ô (set 1)	¤ÛÅ]¤j¾Ô (set 1)	Alpha Denshi Co.
@@ -2066,8 +2206,8 @@ ncombata	§ÔªÌ¤j¾Ô (set 2)	§ÔªÌ¤j¾Ô (set 2)	Alpha Denshi Co.
 cyberlip	¾Ô°«Ãä½t	¾Ô°«Ãä½t	SNK
 superspy	¿Ò³ø­¸Às	¿Ò³ø­¸Às	SNK
 mutnat	¥~¬P¹CÀs	¥~¬P¹CÀs	SNK
-kotm	Å]Ã~¤§¤ý (set 1)	Å]Ã~¤§¤ý (set 1)	SNK
-kotmh	Å]Ã~¤§¤ý (set 2)	Å]Ã~¤§¤ý (set 2)	SNK
+kotm	©ÇÃ~¤§¤ý (set 1)	©ÇÃ~¤§¤ý (set 1)	SNK
+kotmh	©ÇÃ~¤§¤ý (set 2)	©ÇÃ~¤§¤ý (set 2)	SNK
 sengoku	¾Ô°ê¶Ç©Ó (set 1)	¾Ô°ê¶Ç©Ó (set 1)	SNK
 sengokh	¾Ô°ê¶Ç©Ó (set 2)	¾Ô°ê¶Ç©Ó (set 2)	SNK
 burningf	¼ö¦å§Ö¥´ (set 1)	¼ö¦å§Ö¥´ (set 1)	SNK
@@ -2092,7 +2232,7 @@ fbfrenzy	ºÆ¨g¬ü¦¡¨¬²y	ºÆ¨g¬ü¦¡¨¬²y	SNK
 bakatono	¶Ì¥Ê·µ¤U³Â³¶º©¹C°O	¶Ì¥Ê·µ¤U³Â³¶º©¹C°O	Monolith Corp.
 crsword	¸t¤Q¦r¼C	¸t¤Q¦r¼C	Alpha Denshi Co.
 trally	·¥³t­^»¨	·¥³t­^»¨	Alpha Denshi Co.
-kotm2	Å]Ã~¤§¤ý 2	Å]Ã~¤§¤ý 2	SNK
+kotm2	©ÇÃ~¤§¤ý 2	©ÇÃ~¤§¤ý 2	SNK
 sengoku2	¾Ô°ê¶Ç©Ó 2	¾Ô°ê¶Ç©Ó 2	SNK
 bstars2	´Î²y¤§¬P 2	´Î²y¤§¬P 2	SNK
 quizdai2	¸ÑÁ¼°»¬d½u Part 2	¸ÑÁ¼°»¬d½u Part 2	SNK
@@ -2121,7 +2261,7 @@ fightfva	¨g¼ö¾Ô°« (set 2)	¨g¼ö¾Ô°« (set 2)	Viccom
 ssideki2	±oÂI¤ý 2 / Super Sidekicks 2	±oÂI¤ý 2 / Super Sidekicks 2	SNK
 spinmast	±j¥§¤j«_ÀI	±j¥§¤j«_ÀI	Data East Corporation
 samsho2	¨Í»î II / ¯u¨Í»î - ÅQ¤ý¤Y¦aº»ÅÜ	¨Í»î II / ¯u¨Í»î - ÅQ¤ý¤Y¦aº»ÅÜ	SNK
-wh2j	­^¶¯º] 2 Jet	­^¶¯º] 2 Jet	ADK / SNK
+wh2j	­^¶¯º] 2 JET	­^¶¯º] 2 JET	ADK / SNK
 wjammers	¶W¯Å­¸ºÐ²y	¶W¯Å­¸ºÐ²y	Data East Corporation
 karnovr	®æ°«¦C¶Ç	®æ°«¦C¶Ç	Data East Corporation
 gururin	±ÛÂà¤è¶ô	±ÛÂà¤è¶ô	Face
@@ -2129,9 +2269,9 @@ pspikes2	¶W¯Å±Æ²y II	¶W¯Å±Æ²y II	Video System Co.
 fatfury3	¾j¯T¶Ç»¡ 3	¾j¯T¶Ç»¡ 3	SNK
 zupapa	¬P¬P¤j§@¾Ô!	¬P¬P¤j§@¾Ô!	SNK
 zupapad	¬P¬P¤j§@¾Ô! (©w»s¸Ñ±K C)	¬P¬P¤j§@¾Ô! (©w»s¸Ñ±K C)	SNK
-panicbom	ÅF¬µ¶W¤H¤è¶ô	ÅF¬µ¶W¤H¤è¶ô	Eighting / Hudson
+panicbom	¬µ¼u¶W¤H¤è¶ô	¬µ¼u¶W¤H¤è¶ô	Eighting / Hudson
 aodk	¼ö¦å¶i¦æ¦± / µh§Ö GANGAN ¶i¦æ¦±	¼ö¦å¶i¦æ¦± / µh§Ö GANGAN ¶i¦æ¦±	ADK / SNK
-sonicwi2	­µ³t¾Ô¾÷ 2	­µ³t¾Ô¾÷ 2	Video System Co.
+sonicwi2	­µ³t¾Ô¾÷ 2 / Aero Fighters 2	­µ³t¾Ô¾÷ 2 / Aero Fighters 2	Video System Co.
 zedblade	¥½¤é¤§¾Ô	¥½¤é¤§¾Ô	NMK
 galaxyfg	»Èªe§Ö¥´	»Èªe§Ö¥´	Sunsoft
 strhoop	¹Ú¤ÛÄx²yÁÉ	¹Ú¤ÛÄx²yÁÉ	Data East Corporation
@@ -2143,8 +2283,8 @@ pbobblna	ªwªwÀs¸ÑÁ¼ (Neo-Geo) (set 2)	ªwªwÀs¸ÑÁ¼ (Neo-Geo) (set 2)	Taito
 kof95	®±¬Ó '95 (set 1)	®±¬Ó '95 (set 1)	SNK
 kof95a	®±¬Ó '95 (set 2)	®±¬Ó '95 (set 2)	SNK
 tws96	Tecmo ¥@¬É¬×¨¬²y '96	Tecmo ¥@¬É¬×¨¬²y '96	Tecmo
-samsho3	¨Í»î III - ±Ù¬õ­¦µLÂù¼C (set 1)	¨Í»î III - ±Ù¬õ­¦µLÂù¼C (set 1)	SNK
-samsho3a	¨Í»î III - ±Ù¬õ­¦µLÂù¼C (set 2)	¨Í»î III - ±Ù¬õ­¦µLÂù¼C (set 2)	SNK
+samsho3	¨Í»î III / ¨Í»î - ±Ù¬õ­¦µLÂù¼C (set 1)	¨Í»î III / ¨Í»î - ±Ù¬õ­¦µLÂù¼C (set 1)	SNK
+samsho3a	¨Í»î III / ¨Í»î - ±Ù¬õ­¦µLÂù¼C (set 2)	¨Í»î III / ¨Í»î - ±Ù¬õ­¦µLÂù¼C (set 2)	SNK
 stakwin	ÃM¤â¤§¸ô	ÃM¤â¤§¸ô	Saurus
 pulstar	¦º¤`¤§¬P	¦º¤`¤§¬P	Aicom
 whp	­^¶¯º] §¹¬üª©	­^¶¯º] §¹¬üª©	ADK / SNK
@@ -2153,9 +2293,9 @@ neobombe	Neo ÅF¬µ¶W¤H	Neo ÅF¬µ¶W¤H	Hudson
 gowcaizr	¶W¤H¾Ç¶é	¶W¤H¾Ç¶é	Technos
 rbff1	Real Bout ¾j¯T¶Ç»¡	Real Bout ¾j¯T¶Ç»¡	SNK
 aof3	Àsªê®± 3	Àsªê®± 3	SNK
-sonicwi3	­µ³t¾Ô¾÷ 3	­µ³t¾Ô¾÷ 3	Video System Co.
-turfmast	¤jÁp·ù°ªº¸¤Ò	¤jÁp·ù°ªº¸¤Ò	Nazca
-mslug	¦Xª÷¼uÀY / ¶V«n¤j¾Ô	¦Xª÷¼uÀY / ¶V«n¤j¾Ô	Nazca
+sonicwi3	­µ³t¾Ô¾÷ 3 / Aero Fighters 3	­µ³t¾Ô¾÷ 3 / Aero Fighters 3	Video System Co.
+turfmast	Neo °ªº¸¤Ò¤j®v / °ªº¸¤Ò¤jÁÉ	Neo °ªº¸¤Ò¤j®v / °ªº¸¤Ò¤jÁÉ	Nazca
+mslug	¶V«n¤j¾Ô: ¦Xª÷¼uÀY	¶V«n¤j¾Ô: ¦Xª÷¼uÀY	Nazca
 puzzledp	¸ÑÁ¼®ðªw!	¸ÑÁ¼®ðªw!	Taito (Visco license)
 mosyougi	±N´Ñ¹F¤H	±N´Ñ¹F¤H	ADK / SNK
 marukodq	¤p¤Y¤l°Ýµª	¤p¤Y¤l°Ýµª	Takara
@@ -2175,7 +2315,7 @@ ninjamas	ÅQ¤ý§Ôªk©«	ÅQ¤ý§Ôªk©«	ADK / SNK
 ragnagrd	¯«°Ä®±	¯«°Ä®±	Saurus
 pgoal	­^¦¡¨¬²y	­^¦¡¨¬²y	Saurus
 magdrop2	Å]ªk®ðªw II	Å]ªk®ðªw II	Data East Corporation
-samsho4	¨Í»î IV - ¤Ñ¯ó­°Á{	¨Í»î IV - ¤Ñ¯ó­°Á{	SNK
+samsho4	¨Í»î IV / ¨Í»î - ¤Ñ¯ó­°Á{	¨Í»î IV / ¨Í»î - ¤Ñ¯ó­°Á{	SNK
 rbffspec	Real Bout ¾j¯T¶Ç»¡ ¯S§Oª©	Real Bout ¾j¯T¶Ç»¡ ¯S§Oª©	SNK
 twinspri	¹Ú¤Û¤p§¯ºë	¹Ú¤Û¤p§¯ºë	ADK
 wakuwak7	7 ¾Ô¤h	7 ¾Ô¤h	Sunsoft
@@ -2185,8 +2325,8 @@ breakers	Ãz¯P¤H	Ãz¯P¤H	Visco
 miexchng	ª÷¿ú¤è¶ô	ª÷¿ú¤è¶ô	Face
 kof97	®±¬Ó '97 (set 1)	®±¬Ó '97 (set 1)	SNK
 kof97a	®±¬Ó '97 (set 2)	®±¬Ó '97 (set 2)	SNK
-kof97pls	®±¬Ó '97 Plus (µsª©)	®±¬Ó '97 Plus (µsª©)	bootleg
-kog	King of Gladiator (®±¬Ó '97 µsª©)	King of Gladiator (®±¬Ó '97 µsª©)	bootleg
+kof97pls	®±¬Ó '97 ­·¶³¦A°_ PLUS (µsª©)	®±¬Ó '97 ­·¶³¦A°_ PLUS (µsª©)	bootleg
+kog	®±¬Ó '97 / King of Gladiator (µsª©)	®±¬Ó '97 / King of Gladiator (µsª©)	bootleg
 magdrop3	Å]ªk®ðªw III	Å]ªk®ðªw III	Data East Corporation
 lastblad	¹õ¥½®öº© - ¤ëµØ¼C¤h (set 1)	¹õ¥½®öº© - ¤ëµØ¼C¤h (set 1)	SNK
 lastblda	¹õ¥½®öº© - ¤ëµØ¼C¤h (set 2)	¹õ¥½®öº© - ¤ëµØ¼C¤h (set 2)	SNK
@@ -2198,7 +2338,7 @@ shocktra	¬ðÀ»ÃM§L (set 2)	¬ðÀ»ÃM§L (set 2)	Saurus
 blazstar	¿U¿N¤§¬P	¿U¿N¤§¬P	Yumekobo
 rbff2	Real Bout ¾j¯T¶Ç»¡ 2 - ·s¬D¾ÔªÌ (set 1)	Real Bout ¾j¯T¶Ç»¡ 2 - ·s¬D¾ÔªÌ (set 1)	SNK
 rbff2a	Real Bout ¾j¯T¶Ç»¡ 2 - ·s¬D¾ÔªÌ (set 2)	Real Bout ¾j¯T¶Ç»¡ 2 - ·s¬D¾ÔªÌ (set 2)	SNK
-mslug2	¦Xª÷¼uÀY 2 / ¶V«n¤j¾Ô 2	¦Xª÷¼uÀY 2 / ¶V«n¤j¾Ô 2	SNK
+mslug2	¶V«n¤j¾Ô: ¦Xª÷¼uÀY 2	¶V«n¤j¾Ô: ¦Xª÷¼uÀY 2	SNK
 kof98	®±¬Ó '98 - ¹Ú¤Û¾Ô§Ð	®±¬Ó '98 - ¹Ú¤Û¾Ô§Ð	SNK
 kof98k	®±¬Ó '98 - ¹Ú¤Û¾Ô§Ð (Áú¤å¾÷ªO)	®±¬Ó '98 - ¹Ú¤Û¾Ô§Ð (Áú¤å¾÷ªO)	SNK
 kof98n	®±¬Ó '98 - ¹Ú¤Û¾Ô§Ð (¥¼¥[±K)	®±¬Ó '98 - ¹Ú¤Û¾Ô§Ð (¥¼¥[±K)	SNK
@@ -2206,11 +2346,11 @@ lastbld2	¹õ¥½®öº© - ¤ëµØ¼C¤h 2	¹õ¥½®öº© - ¤ëµØ¼C¤h 2	SNK
 neocup98	Neo-Geo ¬×¨¬²yÁÉ '98 - ³Ó§Q¤§¸ô	Neo-Geo ¬×¨¬²yÁÉ '98 - ³Ó§Q¤§¸ô	SNK
 breakrev	Ãz¯P¤H ´_¤³	Ãz¯P¤H ´_¤³	Visco
 shocktr2	¬ðÀ»ÃM§L 2 - ²Ä¤GÁa¶¤	¬ðÀ»ÃM§L 2 - ²Ä¤GÁa¶¤	Saurus
-lans2004	Lansquenet 2004 (¬ðÀ»ÃM§L 2 - ²Ä¤GÁa¶¤ µsª©)	Lansquenet 2004 (¬ðÀ»ÃM§L 2 - ²Ä¤GÁa¶¤ µsª©)	bootleg
+lans2004	¬ðÀ»ÃM§L 2 - ²Ä¤GÁa¶¤ / Lansquenet 2004 (µsª©)	¬ðÀ»ÃM§L 2 - ²Ä¤GÁa¶¤ / Lansquenet 2004 (µsª©)	bootleg
 flipshot	¬ÞµP¤j¾Ô	¬ÞµP¤j¾Ô	Visco
 pbobbl2n	ªwªwÀs¸ÑÁ¼ 2 (Neo-Geo)	ªwªwÀs¸ÑÁ¼ 2 (Neo-Geo)	Taito (SNK license)
 ctomaday	¿»­X¤j§@¾Ô	¿»­X¤j§@¾Ô	Visco
-mslugx	¦Xª÷¼uÀY X / ¶V«n¤j¾Ô X	¦Xª÷¼uÀY X / ¶V«n¤j¾Ô X	SNK
+mslugx	¶V«n¤j¾Ô: ¦Xª÷¼uÀY X	¶V«n¤j¾Ô: ¦Xª÷¼uÀY X	SNK
 kof99	®±¬Ó '99 - ¤dÁH¦~¤§¾Ô (set 1)	®±¬Ó '99 - ¤dÁH¦~¤§¾Ô (set 1)	SNK
 kof99a	®±¬Ó '99 - ¤dÁH¦~¤§¾Ô (set 2)	®±¬Ó '99 - ¤dÁH¦~¤§¾Ô (set 2)	SNK
 kof99e	®±¬Ó '99 - ¤dÁH¦~¤§¾Ô (¦­´Áª©)	®±¬Ó '99 - ¤dÁH¦~¤§¾Ô (¦­´Áª©)	SNK
@@ -2223,15 +2363,16 @@ garou	¾j¯T - ¸s¯T¤§ÃÒ (set 1)	¾j¯T - ¸s¯T¤§ÃÒ (set 1)	SNK
 garouo	¾j¯T - ¸s¯T¤§ÃÒ (set 2)	¾j¯T - ¸s¯T¤§ÃÒ (set 2)	SNK
 garoup	¾j¯T - ¸s¯T¤§ÃÒ (¶}µoª©)	¾j¯T - ¸s¯T¤§ÃÒ (¶}µoª©)	SNK
 garoud	¾j¯T - ¸s¯T¤§ÃÒ (¸Ñ±K C)	¾j¯T - ¸s¯T¤§ÃÒ (¸Ñ±K C)	SNK
-s1945p	¥´À»ªÌ 1945 Plus	¥´À»ªÌ 1945 Plus	Psikyo
-s1945pd	¥´À»ªÌ 1945 Plus (¸Ñ±K C)	¥´À»ªÌ 1945 Plus (¸Ñ±K C)	Psikyo
+s1945p	¥´À»ªÌ 1945 PLUS	¥´À»ªÌ 1945 PLUS	Psikyo
+s1945pd	¥´À»ªÌ 1945 PLUS (¸Ñ±K C)	¥´À»ªÌ 1945 PLUS (¸Ñ±K C)	Psikyo
 preisle2	­ì©l®q 2	­ì©l®q 2	Yumekobo
 preisl2d	­ì©l®q 2 (¸Ñ±K C)	­ì©l®q 2 (¸Ñ±K C)	Yumekobo
-mslug3	¦Xª÷¼uÀY 3 / ¶V«n¤j¾Ô 3	¦Xª÷¼uÀY 3 / ¶V«n¤j¾Ô 3	SNK
-mslug3n	¦Xª÷¼uÀY 3 / ¶V«n¤j¾Ô 3 (¥¼¥[±K)	¦Xª÷¼uÀY 3 / ¶V«n¤j¾Ô 3 (¥¼¥[±K)	SNK
-mslug3d	¦Xª÷¼uÀY 3 / ¶V«n¤j¾Ô 3 (¸Ñ±K C)	¦Xª÷¼uÀY 3 / ¶V«n¤j¾Ô 3 (¸Ñ±K C)	SNK
+mslug3	¶V«n¤j¾Ô: ¦Xª÷¼uÀY 3	¶V«n¤j¾Ô: ¦Xª÷¼uÀY 3	SNK
+mslug3n	¶V«n¤j¾Ô: ¦Xª÷¼uÀY 3 (¥¼¥[±K)	¶V«n¤j¾Ô: ¦Xª÷¼uÀY 3 (¥¼¥[±K)	SNK
+mslug3d	¶V«n¤j¾Ô: ¦Xª÷¼uÀY 3 (¸Ñ±K C)	¶V«n¤j¾Ô: ¦Xª÷¼uÀY 3 (¸Ñ±K C)	SNK
 kof2000	®±¬Ó 2000	®±¬Ó 2000	SNK
 kof2000n	®±¬Ó 2000 (¥¼¥[±K)	®±¬Ó 2000 (¥¼¥[±K)	SNK
+kof2000d	®±¬Ó 2000 (¸Ñ±K C)	®±¬Ó 2000 (¸Ñ±K C)	SNK
 bangbead	½ÄÀ»¼u¯]	½ÄÀ»¼u¯]	Visco
 nitd	¶Â·t¦u¹ÓªÌ	¶Â·t¦u¹ÓªÌ	Eleven / Gavaking
 nitdd	¶Â·t¦u¹ÓªÌ (¸Ñ±K C)	¶Â·t¦u¹ÓªÌ (¸Ñ±K C)	Eleven / Gavaking
@@ -2240,45 +2381,57 @@ sengok3d	¾Ô°ê¶Ç©Ó 3 (¸Ñ±K C)	¾Ô°ê¶Ç©Ó 3 (¸Ñ±K C)	SNK
 kof2001	®±¬Ó 2001 (set 1)	®±¬Ó 2001 (set 1)	Eolith / SNK
 kof2001h	®±¬Ó 2001 (set 2)	®±¬Ó 2001 (set 2)	Eolith / SNK
 kof2001d	®±¬Ó 2001 (¸Ñ±K C)	®±¬Ó 2001 (¸Ñ±K C)	Eolith / SNK
-cthd2003	ª×ªêÂÃÀs 2003 (®±¬Ó 2001 µsª©)	ª×ªêÂÃÀs 2003 (®±¬Ó 2001 µsª©)	bootleg
-ct2k3sp	ª×ªêÂÃÀs 2003 Super Plus (®±¬Ó 2001 µsª©)	ª×ªêÂÃÀs 2003 Super Plus (®±¬Ó 2001 µsª©)	bootleg
-kf2k1pls	®±¬Ó 2001 Plus (set 1, µsª©)	®±¬Ó 2001 Plus (set 1, µsª©)	bootleg
-kf2k1pa	®±¬Ó 2001 Plus (set 2, µsª©)	®±¬Ó 2001 Plus (set 2, µsª©)	bootleg
-mslug4	¦Xª÷¼uÀY 4 / ¶V«n¤j¾Ô 4	¦Xª÷¼uÀY 4 / ¶V«n¤j¾Ô 4	Mega
-mslug4d	¦Xª÷¼uÀY 4 / ¶V«n¤j¾Ô 4 (¸Ñ±K C)	¦Xª÷¼uÀY 4 / ¶V«n¤j¾Ô 4 (¸Ñ±K C)	Mega
-ms4plus	¦Xª÷¼uÀY 4 Plus / ¶V«n¤j¾Ô 4 Plus (µsª©)	¦Xª÷¼uÀY 4 Plus / ¶V«n¤j¾Ô 4 Plus (µsª©)	bootleg
+cthd2003	®±¬Ó 2001 / ª×ªêÂÃÀs 2003 (µsª©)	®±¬Ó 2001 / ª×ªêÂÃÀs 2003 (µsª©)	bootleg
+ct2k3sp	®±¬Ó 2001 / ª×ªêÂÃÀs 2003 ­·¶³ SUPER PLUS (µsª©)	®±¬Ó 2001 / ª×ªêÂÃÀs 2003 ­·¶³ SUPER PLUS (µsª©)	bootleg
+kf2k1pls	®±¬Ó 2001 ¼W±j«¬ PLUS (set 1, µsª©)	®±¬Ó 2001 ¼W±j«¬ PLUS (set 1, µsª©)	bootleg
+kf2k1pa	®±¬Ó 2001 ­·¶³¦A°_ PLUS (set 2, µsª©)	®±¬Ó 2001 ­·¶³¦A°_ PLUS (set 2, µsª©)	bootleg
+mslug4	¶V«n¤j¾Ô: ¦Xª÷¼uÀY 4	¶V«n¤j¾Ô: ¦Xª÷¼uÀY 4	Mega
+mslug4d	¶V«n¤j¾Ô: ¦Xª÷¼uÀY 4 (¸Ñ±K C)	¶V«n¤j¾Ô: ¦Xª÷¼uÀY 4 (¸Ñ±K C)	Mega
+ms4plus	¶V«n¤j¾Ô: ¦Xª÷¼uÀY 4 ¼W±j«¬ PLUS (µsª©)	¶V«n¤j¾Ô: ¦Xª÷¼uÀY 4 ¼W±j«¬ PLUS (µsª©)	bootleg
 rotd	Às®±	Às®±	Evoga / Playmore
 rotdd	Às®± (¸Ñ±K C)	Às®± (¸Ñ±K C)	Evoga / Playmore
 kof2002	®±¬Ó 2002	®±¬Ó 2002	Eolith / Playmore
 kof2002d	®±¬Ó 2002 (¸Ñ±K C)	®±¬Ó 2002 (¸Ñ±K C)	Eolith / Playmore
 kof2002b	®±¬Ó 2002 (µsª©)	®±¬Ó 2002 (µsª©)	bootleg
-kf2k2pls	®±¬Ó 2002 Plus (set 1, µsª©)	®±¬Ó 2002 Plus (set 1, µsª©)	bootleg
-kf2k2pa	®±¬Ó 2002 Plus (set 2, µsª©)	®±¬Ó 2002 Plus (set 2, µsª©)	bootleg
-kf2k2pb	®±¬Ó 2002 Plus (set 3, µsª©)	®±¬Ó 2002 Plus (set 3, µsª©)	bootleg
-kf2k2mp2	®±¬Ó 2002 Magic Plus II (µsª©)	®±¬Ó 2002 Magic Plus II (µsª©)	bootleg
-kof10th	®±¬Ó 10th Anniversary (®±¬Ó 2002 µsª©)	®±¬Ó 10th Anniversary (®±¬Ó 2002 µsª©)	bootleg
-kf2k5uni	®±¬Ó 10th Anniversary 2005 Unique (®±¬Ó 2002 µsª©)	®±¬Ó 10th Anniversary 2005 Unique (®±¬Ó 2002 µsª©)	bootleg
-kf10thep	®±¬Ó 10th Anniversary Extra Plus (®±¬Ó 2002 µsª©)	®±¬Ó 10th Anniversary Extra Plus (®±¬Ó 2002 µsª©)	bootleg
-kof2k4se	®±¬Ó Special Edition 2004 (®±¬Ó 2002 µsª©)	®±¬Ó Special Edition 2004 (®±¬Ó 2002 µsª©)	bootleg
+kf2k2pls	®±¬Ó 2002 ­·¶³¦A°_ (set 1, µsª©)	®±¬Ó 2002 ­·¶³¦A°_ (set 1, µsª©)	bootleg
+kf2k2pla	®±¬Ó 2002 ­·¶³¦A°_ PLUS (set 2, µsª©)	®±¬Ó 2002 ­·¶³¦A°_ PLUS (set 2, µsª©)	bootleg
+kf2k2plb	®±¬Ó 2002 PLUS (set 3, µsª©)	®±¬Ó 2002 PLUS (set 3, µsª©)	bootleg
+kf2k2mp	®±¬Ó 2002 MAGIC PLUS (µsª©)	®±¬Ó 2002 MAGIC PLUS (µsª©)	bootleg
+kf2k2mp2	®±¬Ó 2002 MAGIC PLUS II (µsª©)	®±¬Ó 2002 MAGIC PLUS II (µsª©)	bootleg
+kof10th	®±¬Ó 2002 / ®±¬Ó 10 ¶g¦~¬ö©À (µsª©)	®±¬Ó 2002 / ®±¬Ó 10 ¶g¦~¬ö©À (µsª©)	bootleg
+kf2k5uni	®±¬Ó 2002 / ®±¬Ó 10 ¶g¦~¬ö©À 2005 UNIQUE (µsª©)	®±¬Ó 2002 / ®±¬Ó 10 ¶g¦~¬ö©À 2005 UNIQUE (µsª©)	bootleg
+kf10thep	®±¬Ó 2002 / ®±¬Ó 10 ¶g¦~¬ö©À EXTRA PLUS (µsª©)	®±¬Ó 2002 / ®±¬Ó 10 ¶g¦~¬ö©À EXTRA PLUS (µsª©)	bootleg
+kof2k4se	®±¬Ó 2002 / ®±¬Ó SPECIAL EDITION 2004 (µsª©)	®±¬Ó 2002 / ®±¬Ó SPECIAL EDITION 2004 (µsª©)	bootleg
 matrim	·s»¨¦å¦x¤@±Ú - °«±B	·s»¨¦å¦x¤@±Ú - °«±B	Noise Factory / Atlus
 matrimd	·s»¨¦å¦x¤@±Ú - °«±B (¸Ñ±K C)	·s»¨¦å¦x¤@±Ú - °«±B (¸Ñ±K C)	Noise Factory / Atlus
 matrimbl	·s»¨¦å¦x¤@±Ú - °«±B (µsª©)	·s»¨¦å¦x¤@±Ú - °«±B (µsª©)	bootleg
+pnyaa	Ãdª«¤è¶ô	Ãdª«¤è¶ô	Aiky / Taito
+mslug5	¶V«n¤j¾Ô: ¦Xª÷¼uÀY 5	¶V«n¤j¾Ô: ¦Xª÷¼uÀY 5	SNK Playmore
+svcpcb	SvC ´ý¨P - SNK vs ¥d´¶ªÅ (¤é¥»ª©, JAMMA PCB)	SvC ´ý¨P - SNK vs ¥d´¶ªÅ (¤é¥»ª©, JAMMA PCB)	Playmore
+svc	SvC ´ý¨P - SNK vs ¥d´¶ªÅ (MVS)	SvC ´ý¨P - SNK vs ¥d´¶ªÅ (MVS)	Playmore
+samsho5	¨Í»î V / ¨Í»î¹s (set 1)	¨Í»î V / ¨Í»î¹s (set 1)	Yuki Enterprise / SNK Playmore
+samsho5h	¨Í»î V / ¨Í»î¹s (set 2)	¨Í»î V / ¨Í»î¹s (set 2)	Yuki Enterprise / SNK Playmore
+kf2k3pcb	®±¬Ó 2003 (¤é¥»ª©, JAMMA PCB)	®±¬Ó 2003 (¤é¥»ª©, JAMMA PCB)	SNK Playmore
+kof2003	®±¬Ó 2003 (¥@¬Éª© / ¬ü°êª©, MVS)	®±¬Ó 2003 (¥@¬Éª© / ¬ü°êª©, MVS)	SNK Playmore
+samsh5sp	¨Í»î V ¯S§Oª© / ¨Í»î¹s ¯S§Oª© (set 1, uncensored)	¨Í»î V ¯S§Oª© / ¨Í»î¹s ¯S§Oª© (set 1, uncensored)	Yuki Enterprise / SNK Playmore
+samsh5sh	¨Í»î V ¯S§Oª© / ¨Í»î¹s ¯S§Oª© (set 2, censored)	¨Í»î V ¯S§Oª© / ¨Í»î¹s ¯S§Oª© (set 2, censored)	Yuki Enterprise / SNK Playmore
+samsh5sn	¨Í»î V ¯S§Oª© / ¨Í»î¹s ¯S§Oª© (set 3, less censored)	¨Í»î V ¯S§Oª© / ¨Í»î¹s ¯S§Oª© (set 3, less censored)	Yuki Enterprise / SNK Playmore
 jockeygp	½ä°¨	½ä°¨	Sun Amusement / BrezzaSoft
 vliner	¤ôªG³æ¾÷ (set 1)	¤ôªG³æ¾÷ (set 1)	Dyna / BreezaSoft
 vlinero	¤ôªG³æ¾÷ (set 2)	¤ôªG³æ¾÷ (set 2)	Dyna / BreezaSoft
 beast	³¥Ã~¤§Àû (Neo Demo)	³¥Ã~¤§Àû (Neo Demo)	Psygnosis
 columnsn	Ä_¥Û¤è¶ô (Neo-Geo)	Ä_¥Û¤è¶ô (Neo-Geo)	Sega
 poknight	¼³§J¤§©]	¼³§J¤§©]	JMK
-diggerma	«õ±¸¤H	«õ±¸¤H	Unknown
+diggerma	«õ¦a¥ý¥Í	«õ¦a¥ý¥Í	Unknown
 neonopon	Neo ´¼¤O¤è¶ô (beta)	Neo ´¼¤O¤è¶ô (beta)	Blastar
 neopong	Neo ¼u²y (v1.1)	Neo ¼u²y (v1.1)	Neodev
 npong10	Neo ¼u²y (v1.0)	Neo ¼u²y (v1.0)	Neodev
 syscheck	Neo ¨t²ÎÀË¬d (ver 1.0b)	Neo ¨t²ÎÀË¬d (ver 1.0b)	Blastar
 frogfest	«Cµì²±®b	«Cµì²±®b	Rastersoft
 roadedge	¥ð®ÈÁÉ¨® (rev.B)	¥ð®ÈÁÉ¨® (rev.B)	SNK
-sams64_2	¨Í»î¤§ÅQ¤ý¶Ç»¡	¨Í»î¤§ÅQ¤ý¶Ç»¡	SNK
+sams64_2	¨Í»î¤§ÅQ¤ý¶Ç»¡ / ¨Í»î 2: ªü­×Ã¹±ÙÅ]¶Ç	¨Í»î¤§ÅQ¤ý¶Ç»¡ / ¨Í»î 2: ªü­×Ã¹±ÙÅ]¶Ç	SNK
 fatfurwa	¾j¯T¶Ç»¡: Wild Ambition (rev.A)	¾j¯T¶Ç»¡: Wild Ambition (rev.A)	SNK
-buriki	ªZ¤O One (rev.B)	ªZ¤O One (rev.B)	SNK
+buriki	ªZ¤O ONE (rev.B)	ªZ¤O ONE (rev.B)	SNK
 shougi	±N´Ñ	±N´Ñ	Alpha Denshi
 shougi2	±N´Ñ 2	±N´Ñ 2	Alpha Denshi
 champbas	«a­x´Î²y	«a­x´Î²y	Sega
@@ -2298,12 +2451,12 @@ skyadvnu	¤ÑªÅ¤j«_ÀI (¬ü°êª©)	¤ÑªÅ¤j«_ÀI (¬ü°êª©)	Alpha Denshi Co. (SNK of Americ
 skyadvnj	¤ÑªÅ¤j«_ÀI (¤é¥»ª©)	¤ÑªÅ¤j«_ÀI (¤é¥»ª©)	Alpha Denshi Co.
 gangwars	¸s¼Þ (¬ü°êª©)	¸s¼Þ (¬ü°êª©)	Alpha Denshi Co.
 gangwarb	¸s¼Þ (µsª©)	¸s¼Þ (µsª©)	bootleg
-meijinsn	¦W¤H¾Ô	¦W¤H¾Ô	SNK / Alpha Denshi
+meijinsn	¦W¤H¾Ô	¦W¤H¾Ô	SNK Electronics corp.
 ssozumo	¥X¥@¤j¬Û¼³ (¤é¥»ª©)	¥X¥@¤j¬Û¼³ (¤é¥»ª©)	Technos
 mystston	¯µ¥Û / Mysterious Stones - Dr. John's Adventure	¯µ¥Û / Mysterious Stones - Dr. John's Adventure	Technos
 myststno	¯µ¥Û	¯µ¥Û	Technos
-matmania	¾Ä°«®É¨è / Mat Mania	¾Ä°«®É¨è / Mat Mania	Technos (Taito America license)
-excthour	¾Ä°«®É¨è	¾Ä°«®É¨è	Technos (Taito license)
+matmania	ºÆ¨gºL¨¤ / Mat Mania	ºÆ¨gºL¨¤ / Mat Mania	Technos (Taito America license)
+excthour	ºÆ¨gºL¨¤	ºÆ¨gºL¨¤	Technos (Taito license)
 renegade	¼ö¦åµw¬£ / Renegade (¬ü°êª©)	¼ö¦åµw¬£ / Renegade (¬ü°êª©)	Technos (Taito America license)
 kuniokun	¼ö¦åµw¬£ (¤é¥»ª©)	¼ö¦åµw¬£ (¤é¥»ª©)	Technos
 kuniokub	¼ö¦åµw¬£ (¤é¥»ª© µsª©)	¼ö¦åµw¬£ (¤é¥»ª© µsª©)	bootleg
@@ -2327,6 +2480,9 @@ ddragon2	ÂùºIÀs II - ´_¤³ (¥@¬Éª©)	ÂùºIÀs II - ´_¤³ (¥@¬Éª©)	Technos
 ddragn2u	ÂùºIÀs II - ´_¤³ (¬ü°êª©)	ÂùºIÀs II - ´_¤³ (¬ü°êª©)	Technos
 ctribe	¾Ô°«³¡¸¨ (¬ü°êª©)	¾Ô°«³¡¸¨ (¬ü°êª©)	Technos
 ctribeb	¾Ô°«³¡¸¨ (µsª©)	¾Ô°«³¡¸¨ (µsª©)	bootleg
+blockout	¥ßÅé«XÃ¹´µ¤è¶ô (set 1)	¥ßÅé«XÃ¹´µ¤è¶ô (set 1)	Technos + California Dreams
+blckout2	¥ßÅé«XÃ¹´µ¤è¶ô (set 2)	¥ßÅé«XÃ¹´µ¤è¶ô (set 2)	Technos + California Dreams
+blckoutj	¥ßÅé«XÃ¹´µ¤è¶ô (¤é¥»ª©)	¥ßÅé«XÃ¹´µ¤è¶ô (¤é¥»ª©)	Technos + California Dreams
 agress	­¸¼u¤j¾Ô²¤	­¸¼u¤j¾Ô²¤	Palco
 ddragon3	ÂùºIÀs 3 - Ã¹¶ë¶ð¤§¥Û (¬ü°êª©)	ÂùºIÀs 3 - Ã¹¶ë¶ð¤§¥Û (¬ü°êª©)	Technos
 ddrago3b	ÂùºIÀs 3 - Ã¹¶ë¶ð¤§¥Û (µsª©)	ÂùºIÀs 3 - Ã¹¶ë¶ð¤§¥Û (µsª©)	bootleg
@@ -2335,13 +2491,11 @@ wwfwfsta	WWF ¨g¼öºL¨¤ (¬ü°êª© Tecmo)	WWF ¨g¼öºL¨¤ (¬ü°êª© Tecmo)	Technos Japan (
 wwfwfstb	WWF ¨g¼öºL¨¤ (¬ü°êª© µsª©)	WWF ¨g¼öºL¨¤ (¬ü°êª© µsª©)	bootleg
 wwfwfstj	WWF ¨g¼öºL¨¤ (¤é¥»ª©)	WWF ¨g¼öºL¨¤ (¤é¥»ª©)	Technos Japan
 shadfrce	ÅÜ¨­§ÔªÌ (¬ü°êª© Version 2)	ÅÜ¨­§ÔªÌ (¬ü°êª© Version 2)	Technos Japan
-sia2650	¶W¯Å¤J«IªÌ	¶W¯Å¤J«IªÌ	Zaccaria/Zelco
+sia2650	¶W¯Å¤J«IªÌ / Super Invader Attack	¶W¯Å¤J«IªÌ / Super Invader Attack	Zaccaria/Zelco
 tinv2650	¶W¯Å¤J«IªÌ / The Invaders	¶W¯Å¤J«IªÌ / The Invaders	Zaccaria/Zelco
 nova2001	Nova 2001 (¤é¥»ª©)	Nova 2001 (¤é¥»ª©)	UPL
 nov2001u	Nova 2001 (¬ü°êª©)	Nova 2001 (¬ü°êª©)	UPL (Universal license)
-ninjakun	§ÔªÌ§g - Å]«°«_ÀI	§ÔªÌ§g - Å]«°«_ÀI	[UPL] (Taito license)
-raiders5	Å§À»ªÌ 5	Å§À»ªÌ 5	UPL
-raidrs5t	Å§À»ªÌ 5 (¤é¥»ª©)	Å§À»ªÌ 5 (¤é¥»ª©)	UPL (Taito license)
+ninjakun	§ÔªÌ§g - Å]«°¤§«_ÀI	§ÔªÌ§g - Å]«°¤§«_ÀI	[UPL] (Taito license)
 xxmissio	XX ¥ô°È	XX ¥ô°È	UPL
 ninjakd2	§ÔªÌ§g II ªü­×Ã¹¤§³¹ (set 1)	§ÔªÌ§g II ªü­×Ã¹¤§³¹ (set 1)	UPL
 ninjak2a	§ÔªÌ§g II ªü­×Ã¹¤§³¹ (set 2)	§ÔªÌ§g II ªü­×Ã¹¤§³¹ (set 2)	UPL
@@ -2355,19 +2509,21 @@ omegafs	Omega ¾Ô¾÷ ¯S§Oª©	Omega ¾Ô¾÷ ¯S§Oª©	UPL
 bioship	¦t©z¾ÔÄ¥ / Bio-ship Paladin	¦t©z¾ÔÄ¥ / Bio-ship Paladin	UPL (American Sammy license)
 strahl	¿ûÅK­n¶ë (¤é¥»ª© set 1)	¿ûÅK­n¶ë (¤é¥»ª© set 1)	UPL
 strahla	¿ûÅK­n¶ë (¤é¥»ª© set 2)	¿ûÅK­n¶ë (¤é¥»ª© set 2)	UPL
+bjtwin	¬µ¼u³Ç§J Âù­M­L	¬µ¼u³Ç§J Âù­M­L	NMK
 tdragon2	¹pÀs 2	¹pÀs 2	NMK
 bigbang	¹pÀs  2 / Big Bang	¹pÀs  2 / Big Bang	NMK
 tdragon	¹pÀs	¹pÀs	NMK (Tecmo license)
 tdragonb	¹pÀs (µsª©)	¹pÀs (µsª©)	NMK / Tecmo
-macross	¶W®ÉªÅ­n¶ë	¶W®ÉªÅ­n¶ë	Banpresto
+macross	¶W®ÉªÅ­n¶ë MACROSS	¶W®ÉªÅ­n¶ë MACROSS	Banpresto
 riot	¹pªî¤æ	¹pªî¤æ	NMK
-macross2	¶W®ÉªÅ­n¶ë II	¶W®ÉªÅ­n¶ë II	Banpresto
+macross2	¶W®ÉªÅ­n¶ë MACROSS II	¶W®ÉªÅ­n¶ë MACROSS II	Banpresto
 nouryoku	¸£¤O¦V¤W©e­û·|	¸£¤O¦V¤W©e­û·|	Tecmo
 ssmissin	S.S. ¯S©R	S.S. ¯S©R	Comad
+airattck	ªÅÅ§ - Air Attack	ªÅÅ§ - Air Attack	Comad
 daireika	³Â³¶¤jÆF¬É	³Â³¶¤jÆF¬É	Jaleco / NMK
 kakumei	³Â³¶­²©R	³Â³¶­²©R	Jaleco
 kakumei2	³Â³¶­²©R II	³Â³¶­²©R II	Jaleco
-macrossp	¶W®ÉªÅ­n¶ë Plus	¶W®ÉªÅ­n¶ë Plus	Banpresto
+macrossp	¶W®ÉªÅ­n¶ë MACROSS PLUS	¶W®ÉªÅ­n¶ë MACROSS PLUS	Banpresto
 quizmoon	¬ü¤Ö¤k¾Ô¤h°Ýµª	¬ü¤Ö¤k¾Ô¤h°Ýµª	Banpresto
 narc	¬r«~·j¬d©x (rev 7.00)	¬r«~·j¬d©x (rev 7.00)	Williams
 narc3	¬r«~·j¬d©x (rev 3.20)	¬r«~·j¬d©x (rev 3.20)	Williams
@@ -2415,10 +2571,10 @@ calspeed	¥[¦{öt¨® (Version 2.1a, 4/17/98)	¥[¦{öt¨® (Version 2.1a, 4/17/98)	Atari
 calspeda	¥[¦{öt¨® (Version 1.0r7a 3/4/98)	¥[¦{öt¨® (Version 1.0r7a 3/4/98)	Atari Games
 vaportrx	·¥³t¬ï¶V	·¥³t¬ï¶V	Atari Games
 vaportrp	·¥³t¬ï¶V (¶}µoª©)	·¥³t¬ï¶V (¶}µoª©)	Atari Games
-blitz	NFL ¬ü¦¡¨¬²y (boot ROM 1.2)	NFL ¬ü¦¡¨¬²y (boot ROM 1.2)	Midway Games
-blitz11	NFL ¬ü¦¡¨¬²y (boot ROM 1.1)	NFL ¬ü¦¡¨¬²y (boot ROM 1.1)	Midway Games
-blitz99	NFL ¬ü¦¡¨¬²y '99	NFL ¬ü¦¡¨¬²y '99	Midway Games
-blitz2k	NFL ¬ü¦¡¨¬²y 2000 Gold Edition	NFL ¬ü¦¡¨¬²y 2000 Gold Edition	Midway Games
+blitz	NFL ¨³¹p¬ü¦¡¨¬²y (boot ROM 1.2)	NFL ¨³¹p¬ü¦¡¨¬²y (boot ROM 1.2)	Midway Games
+blitz11	NFL ¨³¹p¬ü¦¡¨¬²y (boot ROM 1.1)	NFL ¨³¹p¬ü¦¡¨¬²y (boot ROM 1.1)	Midway Games
+blitz99	NFL ¨³¹p¬ü¦¡¨¬²y '99	NFL ¨³¹p¬ü¦¡¨¬²y '99	Midway Games
+blitz2k	NFL ¨³¹p¬ü¦¡¨¬²y 2000 GOLD EDITION	NFL ¨³¹p¬ü¦¡¨¬²y 2000 GOLD EDITION	Midway Games
 gauntleg	¸tñZ¶Ç»¡ ªZ¤h¦C¶Ç (version 1.6)	¸tñZ¶Ç»¡ ªZ¤h¦C¶Ç (version 1.6)	Atari Games
 gauntl12	¸tñZ¶Ç»¡ ªZ¤h¦C¶Ç (version 1.2)	¸tñZ¶Ç»¡ ªZ¤h¦C¶Ç (version 1.2)	Atari Games
 gauntdl	¸tñZ¶Ç»¡ ·t¶Â¿ò²£ (version DL 2.52)	¸tñZ¶Ç»¡ ·t¶Â¿ò²£ (version DL 2.52)	Midway Games
@@ -2431,8 +2587,12 @@ cchasm	¦t©z®l¨¦ (set 1)	¦t©z®l¨¦ (set 1)	Cinematronics / GCE
 cchasm1	¦t©z®l¨¦ (set 2)	¦t©z®l¨¦ (set 2)	Cinematronics / GCE
 sbagman	¶W¯Å³U¤l¤H	¶W¯Å³U¤l¤H	Valadon Automation
 sbagmans	¶W¯Å³U¤l¤H (Stern)	¶W¯Å³U¤l¤H (Stern)	Valadon Automation (Stern license)
+tankbust	©Z§J¯}ÃaªÌ	©Z§J¯}ÃaªÌ	Valadon Automation
 kungfut	¥\¤Ò¤j§g	¥\¤Ò¤j§g	Seibu Kaihatsu Inc.
 kungfuta	¥\¤Ò¤j§g (alt)	¥\¤Ò¤j§g (alt)	Seibu Kaihatsu Inc.
+kncljoe	¥_¤æ¯«®± (°°) (set 1)	¥_¤æ¯«®± (°°) (set 1)	[Seibu Kaihatsu] (Taito license)
+kncljoea	¥_¤æ¯«®± (°°) (set 2)	¥_¤æ¯«®± (°°) (set 2)	[Seibu Kaihatsu] (Taito license)
+bcrusher	¥_¤æ¯«®± (°°) / Bone Crusher	¥_¤æ¯«®± (°°) / Bone Crusher	bootleg
 empcity	«Ò³£: 1931 (µsª©?)	«Ò³£: 1931 (µsª©?)	Seibu Kaihatsu
 empcityu	«Ò³£: 1931 (¬ü°êª©)	«Ò³£: 1931 (¬ü°êª©)	[Seibu Kaihatsu] (Taito / Romstar license)
 empcityj	«Ò³£: 1931 (¤é¥»ª©)	«Ò³£: 1931 (¤é¥»ª©)	[Seibu Kaihatsu] (Taito license)
@@ -2462,7 +2622,7 @@ senkyu	¾Ô²y (¤é¥»ª©)	¾Ô²y (¤é¥»ª©)	Seibu Kaihatsu
 senkyua	¾Ô²y (¤é¥»ª©, set 2)	¾Ô²y (¤é¥»ª©, set 2)	Seibu Kaihatsu
 batlball	¾Ô²y / Battle Balls (¼w°êª©)	¾Ô²y / Battle Balls (¼w°êª©)	Seibu Kaihatsu (Tuning License)
 batlbala	¾Ô²y / Battle Balls (¨È¬wª©)	¾Ô²y / Battle Balls (¨È¬wª©)	Seibu Kaihatsu (Metrotainment License)
-ejanhs	E-³¶°ª®Õ (¤é¥»ª©)	E-³¶°ª®Õ (¤é¥»ª©)	Seibu Kaihatsu
+ejanhs	E ³¶°ª®Õ (¤é¥»ª©)	E ³¶°ª®Õ (¤é¥»ª©)	Seibu Kaihatsu
 rdft	¹p¹q¾Ô¾÷ (¤é¥»ª© set 1)	¹p¹q¾Ô¾÷ (¤é¥»ª© set 1)	Seibu Kaihatsu
 rdftu	¹p¹q¾Ô¾÷ (¬ü°êª©)	¹p¹q¾Ô¾÷ (¬ü°êª©)	Seibu Kaihatsu (Fabtek license)
 rdftau	¹p¹q¾Ô¾÷ (¿D¬wª©)	¹p¹q¾Ô¾÷ (¿D¬wª©)	Seibu Kaihatsu
@@ -2474,11 +2634,14 @@ rdft2a2	¹p¹q¾Ô¾÷ 2 (¨È¬wª©, Dream Island license, SPI)	¹p¹q¾Ô¾÷ 2 (¨È¬wª©, Dream
 rdft2j	¹p¹q¾Ô¾÷ 2 (¤é¥»ª©, SPI)	¹p¹q¾Ô¾÷ 2 (¤é¥»ª©, SPI)	Seibu Kaihatsu
 rdft2us	¹p¹q¾Ô¾÷ 2.1 (¬ü°êª©, Single Board)	¹p¹q¾Ô¾÷ 2.1 (¬ü°êª©, Single Board)	Seibu Kaihatsu (Fabtek license)
 rdft22kc	¹p¹q¾Ô¾÷ 2 - 2000 (¤¤°êª©)	¹p¹q¾Ô¾÷ 2 - 2000 (¤¤°êª©)	Seibu Kaihatsu
-rfjet	¹p¹q¾Ô¾÷ Jet	¹p¹q¾Ô¾÷ Jet	Seibu Kaihatsu (Tuning license)
-rfjetu	¹p¹q¾Ô¾÷ Jet (¬ü°êª©)	¹p¹q¾Ô¾÷ Jet (¬ü°êª©)	Seibu Kaihatsu (Fabtek license)
-rfjeta	¹p¹q¾Ô¾÷ Jet (¨È¬wª©)	¹p¹q¾Ô¾÷ Jet (¨È¬wª©)	Seibu Kaihatsu (Dream Island license)
-rfjetj	¹p¹q¾Ô¾÷ Jet (¤é¥»ª©)	¹p¹q¾Ô¾÷ Jet (¤é¥»ª©)	Seibu Kaihatsu
-rfjetus	¹p¹q¾Ô¾÷ Jet (¬ü°êª©, Single Board)	¹p¹q¾Ô¾÷ Jet (¬ü°êª©, Single Board)	Seibu Kaihatsu (Fabtek license)
+rfjet	¹p¹q¾Ô¾÷ JET	¹p¹q¾Ô¾÷ JET	Seibu Kaihatsu (Tuning license)
+rfjetu	¹p¹q¾Ô¾÷ JET (¬ü°êª©)	¹p¹q¾Ô¾÷ JET (¬ü°êª©)	Seibu Kaihatsu (Fabtek license)
+rfjeta	¹p¹q¾Ô¾÷ JET (¨È¬wª©)	¹p¹q¾Ô¾÷ JET (¨È¬wª©)	Seibu Kaihatsu (Dream Island license)
+rfjetj	¹p¹q¾Ô¾÷ JET (¤é¥»ª©)	¹p¹q¾Ô¾÷ JET (¤é¥»ª©)	Seibu Kaihatsu
+rfjetus	¹p¹q¾Ô¾÷ JET (¬ü°êª©, Single Board)	¹p¹q¾Ô¾÷ JET (¬ü°êª©, Single Board)	Seibu Kaihatsu (Fabtek license)
+cabal	«i¤h­Ì (¬ü°êª© set 1)	«i¤h­Ì (¬ü°êª© set 1)	Tad (Fabtek license)
+cabal2	«i¤h­Ì (¬ü°êª© set 2)	«i¤h­Ì (¬ü°êª© set 2)	Tad (Fabtek license)
+cabalbl	«i¤h­Ì (µsª©)	«i¤h­Ì (µsª©)	bootleg
 toki	¤H·á¶Ç»¡ / Toki (¥@¬Éª© set 1)	¤H·á¶Ç»¡ / Toki (¥@¬Éª© set 1)	Tad
 tokia	¤H·á¶Ç»¡ / Toki (¥@¬Éª© set 2)	¤H·á¶Ç»¡ / Toki (¥@¬Éª© set 2)	Tad
 tokij	¤H·á¶Ç»¡ (¤é¥»ª©)	¤H·á¶Ç»¡ (¤é¥»ª©)	Tad
@@ -2492,15 +2655,22 @@ exerion	¤õ»ñ°Ä	¤õ»ñ°Ä	Jaleco
 exeriont	¤õ»ñ°Ä (Taito)	¤õ»ñ°Ä (Taito)	Jaleco (Taito America license)
 exerionb	¤õ»ñ°Ä (µsª©)	¤õ»ñ°Ä (µsª©)	Jaleco
 momoko	®ç¤l 120%	®ç¤l 120%	Jaleco
+psychic5	¶W¯à¤O 5	¶W¯à¤O 5	Jaleco
 ginganin	»Èªe¥ô«L¶Ç (set 1)	»Èªe¥ô«L¶Ç (set 1)	Jaleco
 gingania	»Èªe¥ô«L¶Ç (set 2)	»Èªe¥ô«L¶Ç (set 2)	Jaleco
 f1gpstar	F1 ©ú¬P¨T¨®¤j¼úÁÉ / Grand Prix Star	F1 ©ú¬P¨T¨®¤j¼úÁÉ / Grand Prix Star	Jaleco
 f1gpstr2	F1 ©ú¬P¨T¨®¤j¼úÁÉ II	F1 ©ú¬P¨T¨®¤j¼úÁÉ II	Jaleco
-tetrisp2	«XÃ¹´µ¤è¶ô Plus 2 (¥@¬Éª©?)	«XÃ¹´µ¤è¶ô Plus 2 (¥@¬Éª©?)	Jaleco / The Tetris Company
-teplus2j	«XÃ¹´µ¤è¶ô Plus 2 (¤é¥»ª©)	«XÃ¹´µ¤è¶ô Plus 2 (¤é¥»ª©)	Jaleco / The Tetris Company
+tetrisp2	«XÃ¹´µ¤è¶ô PLUS 2 (¥@¬Éª©?)	«XÃ¹´µ¤è¶ô PLUS 2 (¥@¬Éª©?)	Jaleco / The Tetris Company
+teplus2j	«XÃ¹´µ¤è¶ô PLUS 2 (¤é¥»ª©)	«XÃ¹´µ¤è¶ô PLUS 2 (¤é¥»ª©)	Jaleco / The Tetris Company
+rockn	·nºu­µ¼Ö¾÷ (¤é¥»ª©)	·nºu­µ¼Ö¾÷ (¤é¥»ª©)	Jaleco
+rocknb	·nºu­µ¼Ö¾÷ 1 (¤é¥»ª©, µsª©)	·nºu­µ¼Ö¾÷ 1 (¤é¥»ª©, µsª©)	Jaleco
+rockn2b	·nºu­µ¼Ö¾÷ 2 (¤é¥»ª©, µsª©)	·nºu­µ¼Ö¾÷ 2 (¤é¥»ª©, µsª©)	Jaleco
+rocknmsb	·nºu­µ¼Ö¾÷ MegaSession (¤é¥»ª©, µsª©)	·nºu­µ¼Ö¾÷ MegaSession (¤é¥»ª©, µsª©)	bootleg
+rockn3b	·nºu­µ¼Ö¾÷ 3 (¤é¥»ª©, µsª©)	·nºu­µ¼Ö¾÷ 3 (¤é¥»ª©, µsª©)	bootleg
+rockn4b	·nºu­µ¼Ö¾÷ 4 (¤é¥»ª©, ¶}µoª©, µsª©)	·nºu­µ¼Ö¾÷ 4 (¤é¥»ª©, ¶}µoª©, µsª©)	bootleg
 lomakai	Å]»í¶Ç»¡ / Legend of Makai (¥@¬Éª©)	Å]»í¶Ç»¡ / Legend of Makai (¥@¬Éª©)	Jaleco
 makaiden	Å]»í¶Ç»¡ (¤é¥»ª©)	Å]»í¶Ç»¡ (¤é¥»ª©)	Jaleco
-p47	P-47 - ¤Û¼v¾Ô¤h (¥@¬Éª©)	P-47 - ¤Û¼v¾Ô¤h (¥@¬Éª©)	Jaleco
+p47	P-47 - ¦Û¥Ñ¾Ô¤h / P-47 - The Phantom Fighter (¥@¬Éª©)	P-47 - ¦Û¥Ñ¾Ô¤h / P-47 - The Phantom Fighter (¥@¬Éª©)	Jaleco
 p47j	P-47 - ¦Û¥Ñ¾Ô¤h (¤é¥»ª©)	P-47 - ¦Û¥Ñ¾Ô¤h (¤é¥»ª©)	Jaleco
 tshingen	ªZ¥Ð«H¥È (¤é¥»ª©, ¤é¤å)	ªZ¥Ð«H¥È (¤é¥»ª©, ¤é¤å)	Jaleco
 tshingna	ªZ¥Ð«H¥È / Shingen Samurai-Fighter (¤é¥»ª©, ­^¤å)	ªZ¥Ð«H¥È / Shingen Samurai-Fighter (¤é¥»ª©, ­^¤å)	Jaleco
@@ -2519,9 +2689,9 @@ edfu	¦a²y«O½Ã¾Ô (North America)	¦a²y«O½Ã¾Ô (North America)	Jaleco
 64streej	64 µó (¤é¥»ª©)	64 µó (¤é¥»ª©)	Jaleco
 chimerab	­ì¥ÍÃ~ (¶}µoª©)	­ì¥ÍÃ~ (¶}µoª©)	Jaleco
 desertwr	®üÆW¾Ôª§	®üÆW¾Ôª§	Jaleco
-tetrisp	«XÃ¹´µ¤è¶ô Plus	«XÃ¹´µ¤è¶ô Plus	Jaleco / BPS
+tetrisp	«XÃ¹´µ¤è¶ô PLUS	«XÃ¹´µ¤è¶ô PLUS	Jaleco / BPS
 kirarast	¬y¬P³¶¤h	¬y¬P³¶¤h	Jaleco
-tp2m32	«XÃ¹´µ¤è¶ô Plus 2 (MegaSystem 32 Version)	«XÃ¹´µ¤è¶ô Plus 2 (MegaSystem 32 Version)	Jaleco
+tp2m32	«XÃ¹´µ¤è¶ô PLUS 2 (MegaSystem 32 Version)	«XÃ¹´µ¤è¶ô PLUS 2 (MegaSystem 32 Version)	Jaleco
 f1superb	F1 ¶W¯Å¾Ô°«	F1 ¶W¯Å¾Ô°«	Jaleco
 rabiolep	¨ß¾Ô¤h (¤é¥»ª©)	¨ß¾Ô¤h (¤é¥»ª©)	V-System Co.
 rpunch	¨ß¾Ô¤h / Rabbit Punch (¬ü°êª©)	¨ß¾Ô¤h / Rabbit Punch (¬ü°êª©)	V-System Co. (Bally/Midway/Sente license)
@@ -2573,9 +2743,13 @@ s1945jn	¥´À»ªÌ 1945 (¤é¥»ª©, unprotected)	¥´À»ªÌ 1945 (¤é¥»ª©, unprotected)	Psik
 tengai	¾Ô°ê­·¶³ / ¾Ô°ê¤§¤b: ¾Ô°ê Ace ³¹¸` II	¾Ô°ê­·¶³ / ¾Ô°ê¤§¤b: ¾Ô°ê Ace ³¹¸` II	Psikyo
 s1945ii	¥´À»ªÌ 1945 II	¥´À»ªÌ 1945 II	Psikyo
 soldivid	¤Ó¶§ªí¨M	¤Ó¶§ªí¨M	Psikyo
+sbomberb	¤ÓªÅÅF¬µ¾÷ (ver. B)	¤ÓªÅÅF¬µ¾÷ (ver. B)	Psikyo
 daraku	¼Z¸¨¤Ñ¨Ï	¼Z¸¨¤Ñ¨Ï	Psikyo
 gunbird2	ªZ¸Ë­¸³¾ 2	ªZ¸Ë­¸³¾ 2	Psikyo
 s1945iii	¥´À»ªÌ 1945 III (¥@¬Éª©) / ¥´À»ªÌ 1999 (¤é¥»ª©)	¥´À»ªÌ 1945 III (¥@¬Éª©) / ¥´À»ªÌ 1999 (¤é¥»ª©)	Psikyo
+hotgmck	¹ï¾Ô³Â³¶ ¼ö±¡ªá©Û (¤é¥»ª©)	¹ï¾Ô³Â³¶ ¼ö±¡ªá©Û (¤é¥»ª©)	Psikyo
+hgkairak	¹ï¾Ô³Â³¶ ¼ö±¡ªá©Û - §Ö¼Ö¤Ñ (¤é¥»ª©)	¹ï¾Ô³Â³¶ ¼ö±¡ªá©Û - §Ö¼Ö¤Ñ (¤é¥»ª©)	Psikyo
+hotgmck3	¹ï¾Ô³Â³¶ ¼ö±¡ªá©Û 3 - ¼Æ¦ì½Ä®ö (¤é¥»ª©)	¹ï¾Ô³Â³¶ ¼ö±¡ªá©Û 3 - ¼Æ¦ì½Ä®ö (¤é¥»ª©)	Psikyo
 biomtoy	¥Í¤Æª±¨ã§L (unprotected)	¥Í¤Æª±¨ã§L (unprotected)	Gaelco
 airbustr	ªÅ¤¤³ùÂS (¥@¬Éª©)	ªÅ¤¤³ùÂS (¥@¬Éª©)	Kaneko (Namco license)
 airbustj	ªÅ¤¤³ùÂS (¤é¥»ª©)	ªÅ¤¤³ùÂS (¤é¥»ª©)	Kaneko (Namco license)
@@ -2583,18 +2757,21 @@ galpanic	¤ÑÅúÅÜ (set 1)	¤ÑÅúÅÜ (set 1)	Kaneko
 galpanib	¤ÑÅúÅÜ (set 2)	¤ÑÅúÅÜ (set 2)	Kaneko
 galpania	¤ÑÅúÅÜ (set 3)	¤ÑÅúÅÜ (set 3)	Kaneko
 galpani2	¤ÑÅúÅÜ II (¤é¥»ª©?)	¤ÑÅúÅÜ II (¤é¥»ª©?)	Kaneko
-gpan2qiz	¤ÑÅúÅÜ II - ¦ÒÅçª© (¤é¥»ª©)	¤ÑÅúÅÜ II - ¦ÒÅçª© (¤é¥»ª©)	Kaneko
+gpan2qiz	¤ÑÅúÅÜ II - °Ýµªª© (¤é¥»ª©)	¤ÑÅúÅÜ II - °Ýµªª© (¤é¥»ª©)	Kaneko
 galpani3	¤ÑÅúÅÜ 3	¤ÑÅúÅÜ 3	Kaneko
 berlwall	¬fªL³òÀð	¬fªL³òÀð	Kaneko
 berlwalt	¬fªL³òÀð (µsª© ?)	¬fªL³òÀð (µsª© ?)	Kaneko
-mgcrystl	Å]ªk¤ô´¹ (¥@¬Éª©)	Å]ªk¤ô´¹ (¥@¬Éª©)	Kaneko
-mgcrystj	Å]ªk¤ô´¹ (¤é¥»ª©)	Å]ªk¤ô´¹ (¤é¥»ª©)	Kaneko (Atlus license)
+mgcrystl	Å]ªk¤ô´¹ (¥@¬Éª©, 92/01/10)	Å]ªk¤ô´¹ (¥@¬Éª©, 92/01/10)	Kaneko
+mgcrysto	Å]ªk¤ô´¹ (¥@¬Éª©, 91/12/10)	Å]ªk¤ô´¹ (¥@¬Éª©, 91/12/10)	Kaneko
+mgcrystj	Å]ªk¤ô´¹ (¤é¥»ª©, 92/01/13)	Å]ªk¤ô´¹ (¤é¥»ª©, 92/01/13)	Kaneko (Atlus license)
 blazeon	»î¤§¥ú½÷ (¤é¥»ª©)	»î¤§¥ú½÷ (¤é¥»ª©)	Atlus
 explbrkr	Ãzµõ¾Ô¾÷ / Explosive Breaker	Ãzµõ¾Ô¾÷ / Explosive Breaker	Kaneko
 bakubrkr	Ãzµõ¾Ô¾÷	Ãzµõ¾Ô¾÷	Kaneko
 bonkadv	¨s·¥!! PC ­ì¤H	¨s·¥!! PC ­ì¤H	Kaneko
-galpani4	¤ÑÅúÅÜ 4 (¤é¥»ª©)	¤ÑÅúÅÜ 4 (¤é¥»ª©)	Kaneko
-galpanis	¤ÑÅúÅÜ S - Extra Edition (¤é¥»ª©)	¤ÑÅúÅÜ S - Extra Edition (¤é¥»ª©)	Kaneko
+galpani4	¤ÑÅúÅÜ 4 ¹C (¤é¥»ª©)	¤ÑÅúÅÜ 4 ¹C (¤é¥»ª©)	Kaneko
+galpanis	¤ÑÅúÅÜ S - EXTRA EDITION - (¤é¥»ª©)	¤ÑÅúÅÜ S - EXTRA EDITION - (¤é¥»ª©)	Kaneko
+sengekis	°{¿E¾Ô¾÷ (¨È¬wª©)	°{¿E¾Ô¾÷ (¨È¬wª©)	Kaneko / Warashi
+sengekij	°{¿E¾Ô¾÷ (¤é¥»ª©)	°{¿E¾Ô¾÷ (¤é¥»ª©)	Kaneko / Warashi
 galpans2	¤ÑÅúÅÜ S2 (¤é¥»ª©)	¤ÑÅúÅÜ S2 (¤é¥»ª©)	Kaneko
 senknow	½u¸£ (¤é¥»ª©)	½u¸£ (¤é¥»ª©)	Kaneko / Kouyousha
 puzzloop	´õ½üªwªw (¼Ú¬wª©)	´õ½üªwªw (¼Ú¬wª©)	Mitchell
@@ -2602,13 +2779,13 @@ puzloopj	´õ½üªwªw (¤é¥»ª©)	´õ½üªwªw (¤é¥»ª©)	Mitchell
 puzloopk	´õ½üªwªw (Áú°êª©)	´õ½üªwªw (Áú°êª©)	Mitchell
 puzloopu	´õ½üªwªw (¬ü°êª©)	´õ½üªwªw (¬ü°êª©)	Mitchell
 ryouran	VS ³Â³¶ - ¤A¤kÂ·¶Ã	VS ³Â³¶ - ¤A¤kÂ·¶Ã	Electro Design
-teljan	Tel ³¶	Tel ³¶	Electro Design
+teljan	TEL ³¶	TEL ³¶	Electro Design
 hanaawas	ªá¥¾ (Flower Matching)	ªá¥¾ (Flower Matching)	Seta
 srmp2	¶W¯u¹ê³Â³¶ Part 2 (¤é¥»ª©)	¶W¯u¹ê³Â³¶ Part 2 (¤é¥»ª©)	Seta
 srmp3	¶W¯u¹ê³Â³¶ Part 3 (¤é¥»ª©)	¶W¯u¹ê³Â³¶ Part 3 (¤é¥»ª©)	Seta
 mjyuugi	³Â³¶¹C§Þ (¤é¥»ª© set 1)	³Â³¶¹C§Þ (¤é¥»ª© set 1)	Visco
 mjyuugia	³Â³¶¹C§Þ (¤é¥»ª© set 2)	³Â³¶¹C§Þ (¤é¥»ª© set 2)	Visco
-tndrcade	¯S®í³¡¶¤ U.A.G. / Twin Formation	¯S®í³¡¶¤ U.A.G. / Twin Formation	[Seta] (Taito license)
+tndrcade	¯S®í³¡¶¤ U.A.G. / Thundercade / Twin Formation	¯S®í³¡¶¤ U.A.G. / Thundercade / Twin Formation	[Seta] (Taito license)
 tndrcadj	¯S®í³¡¶¤ U.A.G. (¤é¥»ª©)	¯S®í³¡¶¤ U.A.G. (¤é¥»ª©)	[Seta] (Taito license)
 twineagl	ÂùÆN	ÂùÆN	Seta (Taito license)
 downtown	¥ØÀ» (Set 1)	¥ØÀ» (Set 1)	Seta
@@ -2616,11 +2793,14 @@ downtow2	¥ØÀ» (Set 2)	¥ØÀ» (Set 2)	Seta
 downtowp	¥ØÀ» (¶}µoª©)	¥ØÀ» (¶}µoª©)	Seta
 calibr50	¤f®| 50	¤f®| 50	Athena / Seta
 metafox	¨Fºz¤§ª°	¨Fºz¤§ª°	Seta
+neobattl	SD ¿û¼u¤j¾Ô (¤é¥»ª©)	SD ¿û¼u¤j¾Ô (¤é¥»ª©)	Banpresto / Sotsu Agency. Sunrise
 umanclub	ÄÐ³J¶W¤H­Ñ¼Ö³¡	ÄÐ³J¶W¤H­Ñ¼Ö³¡	Tsuburaya Prod. / Banpresto
 zingzip	¯u¯u«æ¬¶	¯u¯u«æ¬¶	Allumer + Tecmo
+kamenrid	°²­±ÃM¤h­Ñ¼Ö³¡	°²­±ÃM¤h­Ñ¼Ö³¡	Toei / Banpresto
 msgundam	¾÷°Ê¾Ô¤h	¾÷°Ê¾Ô¤h	Banpresto
 msgunda1	¾÷°Ê¾Ô¤h (¤é¥»ª©)	¾÷°Ê¾Ô¤h (¤é¥»ª©)	Banpresto
 daioh	¤j¤ý	¤j¤ý	Athena
+utoukond	ÄÐ³J¶W¤H °«»î¶Ç»¡ (¤é¥»ª©)	ÄÐ³J¶W¤H °«»î¶Ç»¡ (¤é¥»ª©)	Banpresto + Tsuburaya Prod.
 wrofaero	ªÅ¾Ô - MEIOU ­p¹º	ªÅ¾Ô - MEIOU ­p¹º	Yang Cheng
 kiwame	Â¾·~³Â³¶ ·¥	Â¾·~³Â³¶ ·¥	Athena
 extdwnhl	·¥­­·Æ­° (v1.5)	·¥­­·Æ­° (v1.5)	Sammy Industries Japan
@@ -2640,12 +2820,21 @@ vasara2a	±C¸ÆÃ¹ 2 (set 2)	±C¸ÆÃ¹ 2 (set 2)	Visco
 gdfs	¾÷°Ê¾Ô¤h ³Ì²×®gÀ» (¤é¥»ª©)	¾÷°Ê¾Ô¤h ³Ì²×®gÀ» (¤é¥»ª©)	Banpresto
 renju	¤­¤l´Ñ - ³s¯]¶Q±Ú	¤­¤l´Ñ - ³s¯]¶Q±Ú	Visco
 srmp5	¶W¯u¹ê³Â³¶ P5	¶W¯u¹ê³Â³¶ P5	Seta
+mayjinsn	¦­«ü±N´Ñ ¤­¤ë°}¾Ô	¦­«ü±N´Ñ ¤­¤ë°}¾Ô	Seta
+mayjisn2	¦­«ü±N´Ñ ¤­¤ë°}¾Ô 2	¦­«ü±N´Ñ ¤­¤ë°}¾Ô 2	Seta
 srmp6	¶W¯u¹ê³Â³¶ P6 (¤é¥»ª©)	¶W¯u¹ê³Â³¶ P6 (¤é¥»ª©)	Seta
 powerins	»¨¦å¦x¤@±Ú (¤é¥»ª©)	»¨¦å¦x¤@±Ú (¤é¥»ª©)	Atlus
 powerina	»¨¦å¦x¤@±Ú / Power Instinct (¬ü°êª©, µsª© set 1)	»¨¦å¦x¤@±Ú / Power Instinct (¬ü°êª©, µsª© set 1)	Atlus
 powerinb	»¨¦å¦x¤@±Ú / Power Instinct (¬ü°êª©, µsª© set 2)	»¨¦å¦x¤@±Ú / Power Instinct (¬ü°êª©, µsª© set 2)	Atlus
 powernjb	»¨¦å¦x¤@±Ú (¤é¥»ª©, µsª©)	»¨¦å¦x¤@±Ú (¤é¥»ª©, µsª©)	Atlus
-ttmahjng	³Â³¶	³Â³¶	Taito
+route16	¹D¸ô°lÀ» 16	¹D¸ô°lÀ» 16	Tehkan/Sun (Centuri license)
+route16a	¹D¸ô°lÀ» 16 (set 2)	¹D¸ô°lÀ» 16 (set 2)	Tehkan/Sun (Centuri license)
+route16b	¹D¸ô°lÀ» 16 (µsª©)	¹D¸ô°lÀ» 16 (µsª©)	bootleg
+routex	¹D¸ô°lÀ» 16 / Route X (µsª©)	¹D¸ô°lÀ» 16 / Route X (µsª©)	bootleg
+ttmahjng	T.T ³Â³¶	T.T ³Â³¶	Taito
+kangaroo	³U¹«	³U¹«	Sun Electronics
+kangaroa	³U¹« (Atari)	³U¹« (Atari)	[Sun Electronics] (Atari license)
+kangarob	³U¹« (µsª©)	³U¹« (µsª©)	bootleg
 arabian	ªü©Ô§B«_ÀI	ªü©Ô§B«_ÀI	Sun Electronics
 arabiana	ªü©Ô§B«_ÀI (Atari)	ªü©Ô§B«_ÀI (Atari)	[Sun Electronics] (Atari license)
 strnskil	¿÷¤ì¤ý / Strength & Skill	¿÷¤ì¤ý / Strength & Skill	Sun Electronics
@@ -2664,27 +2853,26 @@ gulfstrm	®üÆW­·¼É	®üÆW­·¼É	Dooyong
 gulfstr2	®üÆW­·¼É (Media Shoji)	®üÆW­·¼É (Media Shoji)	Dooyong (Media Shoji license)
 pollux	Âù¤l®y¤§¬P (set 1)	Âù¤l®y¤§¬P (set 1)	Dooyong
 polluxa	Âù¤l®y¤§¬P (set 2)	Âù¤l®y¤§¬P (set 2)	Dooyong
-bluehawk	ÆNÀ»ÂÅªÅ	ÆNÀ»ÂÅªÅ	Dooyong
-bluehawn	ÆNÀ»ÂÅªÅ (NTC)	ÆNÀ»ÂÅªÅ (NTC)	[Dooyong] (NTC license)
-galspnbl	¤Ö¤k¼u¯]¥x	¤Ö¤k¼u¯]¥x	Comad
+bluehawk	ÂÅóç	ÂÅóç	Dooyong
+bluehawn	ÂÅóç (NTC)	ÂÅóç (NTC)	[Dooyong] (NTC license)
+hotpinbl	¼ö¦å¼u¯]Âi	¼ö¦å¼u¯]Âi	Comad & New Japan System
+galspnbl	¤Ö¤k¼u¯]Âi	¤Ö¤k¼u¯]Âi	Comad
 fantasia	¤ÑÅúÅÜ¤Û·Q¦±	¤ÑÅúÅÜ¤Û·Q¦±	Comad & New Japan System
 newfant	·s¤ÑÅúÅÜ¤Û·Q¦±	·s¤ÑÅúÅÜ¤Û·Q¦±	Comad & New Japan System
-fantsy95	¤ÑÅúÅÜ¤Û·Q¦± '95	¤ÑÅúÅÜ¤Û·Q¦± '95	Hi-max Technology Inc.
-missw96	¤ÑÅúÅÜ '96	¤ÑÅúÅÜ '96	Comad
-missmw96	¤ÑÅúÅÜ '96 / Miss Mister World '96 Nude	¤ÑÅúÅÜ '96 / Miss Mister World '96 Nude	Comad
+fantsy95	¤ÑÅúÅÜ¤Û·Q '95	¤ÑÅúÅÜ¤Û·Q '95	Hi-max Technology Inc.
+missw96	¤ÑÅúÅÜ¤Ö¤k¥@¬É '96 NUDE	¤ÑÅúÅÜ¤Ö¤k¥@¬É '96 NUDE	Comad
+missmw96	¤ÑÅúÅÜ¤Ö¤k¥@¬É '96 NUDE / Miss Mister World '96 Nude	¤ÑÅúÅÜ¤Ö¤k¥@¬É '96 NUDE / Miss Mister World '96 Nude	Comad
 fantsia2	¤ÑÅúÅÜ¤Û·Q¦± II	¤ÑÅúÅÜ¤Û·Q¦± II	Comad
 wbeachvl	¥@¬É¨FÅy±Æ²y (set 1)	¥@¬É¨FÅy±Æ²y (set 1)	Playmark
 wbeachv2	¥@¬É¨FÅy±Æ²y (set 2)	¥@¬É¨FÅy±Æ²y (set 2)	Playmark
 natodef	¥_¬ù¨¾½u	¥_¬ù¨¾½u	Pacific Novelty
 natodefa	¥_¬ù¨¾½u (alternate mazes)	¥_¬ù¨¾½u (alternate mazes)	Pacific Novelty
-crzrally	ºÆ¨g©Ô¤O (set 1)	ºÆ¨g©Ô¤O (set 1)	Tecfri
-crzralla	ºÆ¨g©Ô¤O (set 2)	ºÆ¨g©Ô¤O (set 2)	Tecfri
-crzrallg	ºÆ¨g©Ô¤O (Gecas license)	ºÆ¨g©Ô¤O (Gecas license)	Tecfri (Gecas license)
+crzrally	ºÆ¨g©Ô¤OÁÉ¨® (set 1)	ºÆ¨g©Ô¤OÁÉ¨® (set 1)	Tecfri
+crzralla	ºÆ¨g©Ô¤OÁÉ¨® (set 2)	ºÆ¨g©Ô¤OÁÉ¨® (set 2)	Tecfri
+crzrallg	ºÆ¨g©Ô¤OÁÉ¨® (Gecas license)	ºÆ¨g©Ô¤OÁÉ¨® (Gecas license)	Tecfri (Gecas license)
 karatour	ªÅ¤â¹D¤jÁÉ	ªÅ¤â¹D¤jÁÉ	Mitchell
 ladykill	¿U¿N§a Gonta!! / Lady Killer	¿U¿N§a Gonta!! / Lady Killer	Yanyaka (Mitchell license)
 moegonta	¿U¿N§a Gonta!! (¤é¥»ª©)	¿U¿N§a Gonta!! (¤é¥»ª©)	Yanyaka
-pangpoms	Å]ªk®ðªw Poms	Å]ªk®ðªw Poms	Metro
-pangpomm	Å]ªk®ðªw Poms (Mitchell)	Å]ªk®ðªw Poms (Mitchell)	Metro (Mitchell license)
 poitto	Å]ªk¤è¶ô	Å]ªk¤è¶ô	Metro / Able Corp.
 dharma	¹F¼¯¹D³õ	¹F¼¯¹D³õ	Metro
 lastfort	µPÖ¹	µPÖ¹	Metro
@@ -2700,6 +2888,7 @@ gakusai2	³Â³¶¾Ç¶é²½ 2 (¤é¥»ª©)	³Â³¶¾Ç¶é²½ 2 (¤é¥»ª©)	MakeSoft
 spcforce	¤ÓªÅªZ¤O	¤ÓªÅªZ¤O	Venture Line
 spcforc2	¤ÓªÅªZ¤O (set 2)	¤ÓªÅªZ¤O (set 2)	Elcon (bootleg?)
 meteor	¤ÓªÅªZ¤O / Meteoroids	¤ÓªÅªZ¤O / Meteoroids	Venture Line
+paradise	¤ÑÅúÅÜ¼Ö¶é	¤ÑÅúÅÜ¼Ö¶é	Yun Sung
 pbancho	°fÂà!! ¸ÑÁ¼µfªø (¤é¥»ª©)	°fÂà!! ¸ÑÁ¼µfªø (¤é¥»ª©)	Fuuki
 burglarx	©]µs X	©]µs X	Unico
 silkroad	µ·¸ô¶Ç»¡	µ·¸ô¶Ç»¡	Unico
@@ -2711,17 +2900,20 @@ hanamai	µØ¤§»R (¤é¥»ª©)	µØ¤§»R (¤é¥»ª©)	Dynax
 hnkochou	µØ­J½º [BET] (¤é¥»ª©)	µØ­J½º [BET] (¤é¥»ª©)	Dynax
 hnoridur	µØ§éÅb (¤é¥»ª©)	µØ§éÅb (¤é¥»ª©)	Dynax
 jantouki	³¶°«°O (¤é¥»ª©)	³¶°«°O (¤é¥»ª©)	Dynax
+mjifb	³Â³¶ IF [BET] (¤é¥»ª©)	³Â³¶ IF [BET] (¤é¥»ª©)	Dynax
 7jigen	7 ¦¸¤¸¤§§¯ºë¹F (¤é¥»ª©)	7 ¦¸¤¸¤§§¯ºë¹F (¤é¥»ª©)	Dynax
 quizchq	¥Á°ê±Ð¨|©e­û·| (Ver 1.00) (¤é¥»ª©)	¥Á°ê±Ð¨|©e­û·| (Ver 1.00) (¤é¥»ª©)	Nakanihon
 quizchql	¥Á°ê±Ð¨|©e­û·| (Ver 1.23) (¥xÆWª©?)	¥Á°ê±Ð¨|©e­û·| (Ver 1.23) (¥xÆWª©?)	Nakanihon (Laxan license)
-quiz365	°Ýµª 365 (¤é¥»ª©)	°Ýµª 365 (¤é¥»ª©)	Nakanihon
-quiz365t	°Ýµª 365 (­»´äª© & ¥xÆWª©)	°Ýµª 365 (­»´äª© & ¥xÆWª©)	Nakanihon + Taito
+mjmyster	³Â³¶ ¥@¬Éªº¯«¯µ	³Â³¶ ¥@¬Éªº¯«¯µ	Dynax
+quiz365	¨C¤é°Ýµª 365 (¤é¥»ª©)	¨C¤é°Ýµª 365 (¤é¥»ª©)	Nakanihon
+quiz365t	¨C¤é°Ýµª 365 (­»´äª© & ¥xÆWª©)	¨C¤é°Ýµª 365 (­»´äª© & ¥xÆWª©)	Nakanihon + Taito
 rongrong	ÀsÀs (¼Ú¬wª©)	ÀsÀs (¼Ú¬wª©)	Nakanihon
 rongrngg	ÀsÀs (¼w°êª©)	ÀsÀs (¼w°êª©)	Nakanihon
+mjdchuka	³Â³¶ ¤j¤¤µØ°é (¤¤°êª©, v. D111)	³Â³¶ ¤j¤¤µØ°é (¤¤°êª©, v. D111)	Dynax
 ddenlovr	¶Â¥Õ´Ñ Vol. 1 (­»´äª©)	¶Â¥Õ´Ñ Vol. 1 (­»´äª©)	Dynax
 hkagerou	µØ¶§ª¢ [BET] (¤é¥»ª©)	µØ¶§ª¢ [BET] (¤é¥»ª©)	Nakanihon + Dynax
 mjchuuka	³Â³¶¤¤µØ¨à¤k (¤¤°êª©)	³Â³¶¤¤µØ¨à¤k (¤¤°êª©)	Dynax
-mjreach1	³Â³¶¥ßª½¤@µo (¤é¥»ª©)	³Â³¶¥ßª½¤@µo (¤é¥»ª©)	Nihon System
+mjreach1	³Â³¶ ¥ßª½¤@µo (¤é¥»ª©)	³Â³¶ ¥ßª½¤@µo (¤é¥»ª©)	Nihon System
 mjelctrn	¹q¤l°ò½L (parts 2 & 4, ¤é¥»ª©)	¹q¤l°ò½L (parts 2 & 4, ¤é¥»ª©)	Dynax
 mjelct3	¹q¤l°ò½L (parts 2 & 3, ¤é¥»ª©)	¹q¤l°ò½L (parts 2 & 3, ¤é¥»ª©)	Dynax
 mjelct3a	¹q¤l°ò½L (parts 2 & 3, alt., ¤é¥»ª©)	¹q¤l°ò½L (parts 2 & 3, alt., ¤é¥»ª©)	Dynax
@@ -2753,24 +2945,26 @@ drgw2j	¤¤°êÀs II / Chuugokuryuu II (ver. 100J, ¤é¥»ª©)	¤¤°êÀs II / Chuugokuryuu 
 drgw3	¤¤°êÀs 3 / Dragon World 3	¤¤°êÀs 3 / Dragon World 3	IGS
 drgw3k	¤¤°êÀs 3 / Dragon World 3 (Áú¤å¾÷ªO)	¤¤°êÀs 3 / Dragon World 3 (Áú¤å¾÷ªO)	IGS
 kov	¤T°ê¾Ô°O (ver. 117)	¤T°ê¾Ô°O (ver. 117)	IGS
-kovplus	¤T°ê¾Ô°O Plus (ver. 119)	¤T°ê¾Ô°O Plus (ver. 119)	IGS
-kovplusa	¤T°ê¾Ô°O Plus (alt ver. 119)	¤T°ê¾Ô°O Plus (alt ver. 119)	IGS
+kovplus	¤T°ê¾Ô°O ¥¿©v PLUS (ver. 119)	¤T°ê¾Ô°O ¥¿©v PLUS (ver. 119)	IGS
+kovplusa	¤T°ê¾Ô°O ¥¿©v PLUS (alt ver. 119)	¤T°ê¾Ô°O ¥¿©v PLUS (alt ver. 119)	IGS
 kov115	¤T°ê¾Ô°O (ver. 115)	¤T°ê¾Ô°O (ver. 115)	IGS
-kovj	¤T°ê¾Ô°O Plus (ver. 100, ¤é¤å¾÷ªO)	¤T°ê¾Ô°O Plus (ver. 100, ¤é¤å¾÷ªO)	IGS
+kovj	¤T°ê¾Ô°O (ver. 100, ¤é¤å¾÷ªO)	¤T°ê¾Ô°O (ver. 100, ¤é¤å¾÷ªO)	IGS
 kovsh	¤T°ê¾Ô°O - ­·¶³¦A°_ (ver. 322)	¤T°ê¾Ô°O - ­·¶³¦A°_ (ver. 322)	IGS
 photoy2k	¤j®a¨Ó§äâí	¤j®a¨Ó§äâí	IGS
 raf102j	¤j®a¨Ó§äâí (ver. 102, ¤é¥»¾÷ªO)	¤j®a¨Ó§äâí (ver. 102, ¤é¥»¾÷ªO)	IGS
 killbld	¶Æ¼C¨g¤M	¶Æ¼C¨g¤M	IGS
-olds	¦è¹CÄÀ¤Ì¶Ç Super ª© (Áú°êª© 101)	¦è¹CÄÀ¤Ì¶Ç Super ª© (Áú°êª© 101)	IGS
-olds100	¦è¹CÄÀ¤Ì¶Ç Super ª© (100)	¦è¹CÄÀ¤Ì¶Ç Super ª© (100)	IGS
-olds100a	¦è¹CÄÀ¤Ì¶Ç Super ª© (100 alt)	¦è¹CÄÀ¤Ì¶Ç Super ª© (100 alt)	IGS
+olds	¦è¹CÄÀ¤Ì¶Ç SUPER (Áú°êª© 101)	¦è¹CÄÀ¤Ì¶Ç SUPER (Áú°êª© 101)	IGS
+olds100	¦è¹CÄÀ¤Ì¶Ç SUPER (100)	¦è¹CÄÀ¤Ì¶Ç SUPER (100)	IGS
+olds100a	¦è¹CÄÀ¤Ì¶Ç SUPER (100 alt)	¦è¹CÄÀ¤Ì¶Ç SUPER (100 alt)	IGS
 kov2	¤T°ê¾Ô°O 2	¤T°ê¾Ô°O 2	IGS
 kov2106	¤T°ê¾Ô°O 2 (106)	¤T°ê¾Ô°O 2 (106)	IGS
 kov2p	¤T°ê¾Ô°O 2 - ­¸Às¦b¤Ñ	¤T°ê¾Ô°O 2 - ­¸Às¦b¤Ñ	IGS
 ddp2	¸Á¼É - «ã­º»â¸Á II	¸Á¼É - «ã­º»â¸Á II	IGS
 puzzli2	¯y¯y³¨³½®q / Puzzli 2 Super	¯y¯y³¨³½®q / Puzzli 2 Super	IGS
 martmast	§Î·N®±	§Î·N®±	IGS
-dmnfrnt	Å]°ì¾Ô½u	Å]°ì¾Ô½u	IGS
+dmnfrnt	Å]°ì¾Ô½u (V102)	Å]°ì¾Ô½u (V102)	IGS
+dmnfrnta	Å]°ì¾Ô½u (V105)	Å]°ì¾Ô½u (V105)	IGS
+bankp	»È¦æ¤jµs	»È¦æ¤jµs	[Sanritsu] Sega
 mjkjidai	³Â³¶¨g®É¥N (¤é¥»ª©)	³Â³¶¨g®É¥N (¤é¥»ª©)	Sanritsu
 mayumi	¦M¾÷¤@¾v¯u¥Ñ¬ü (¤é¥»ª©)	¦M¾÷¤@¾v¯u¥Ñ¬ü (¤é¥»ª©)	[Sanritsu] Victory L.L.C.
 kinst	±þ¤â¾Ç°ó (v1.5d)	±þ¤â¾Ç°ó (v1.5d)	Rare
@@ -2782,20 +2976,35 @@ kinst2k	±þ¤â¾Ç°ó 2 (v1.4k, upgrade kit)	±þ¤â¾Ç°ó 2 (v1.4k, upgrade kit)	Rare
 kinst213	±þ¤â¾Ç°ó 2 (v1.3)	±þ¤â¾Ç°ó 2 (v1.3)	Rare
 kinst211	±þ¤â¾Ç°ó 2 (v1.1)	±þ¤â¾Ç°ó 2 (v1.1)	Rare
 kinst210	±þ¤â¾Ç°ó 2 (v1.0)	±þ¤â¾Ç°ó 2 (v1.0)	Rare
-themj	³Â³¶ / The Mah-jong (¤é¥»ª©)	³Â³¶ / The Mah-jong (¤é¥»ª©)	Visco
+rmhaihai	¯u¹ê³Â³¶µPµP (¤é¥»ª©)	¯u¹ê³Â³¶µPµP (¤é¥»ª©)	Alba
+rmhaihib	¯u¹ê³Â³¶µPµP [BET] (¤é¥»ª©)	¯u¹ê³Â³¶µPµP [BET] (¤é¥»ª©)	Alba
+rmhaijin	¯u¹ê³Â³¶µPµP - ¤H¨Æ²§°Ê½g (¤é¥»ª©)	¯u¹ê³Â³¶µPµP - ¤H¨Æ²§°Ê½g (¤é¥»ª©)	Alba
+rmhaisei	¯u¹ê³Â³¶µPµP - ¦¨ªø½g (¤é¥»ª©)	¯u¹ê³Â³¶µPµP - ¦¨ªø½g (¤é¥»ª©)	Visco
+themj	³Â³¶ (¤é¥»ª©)	³Â³¶ (¤é¥»ª©)	Visco
 hanaroku	ªá¤»	ªá¤»	Alba
 yumefuda	¹Ú¥¾ [BET]	¹Ú¥¾ [BET]	Alba
 hourouki	³Â³¶©ñ®ö°O Part 1 - «C¬K½g (¤é¥»ª©)	³Â³¶©ñ®ö°O Part 1 - «C¬K½g (¤é¥»ª©)	Home Data
 mhgaiden	³Â³¶©ñ®ö°O ¥~¶Ç (¤é¥»ª©)	³Â³¶©ñ®ö°O ¥~¶Ç (¤é¥»ª©)	Home Data
 mjhokite	³Â³¶©ñ®ö°O Õ~ (¤é¥»ª©)	³Â³¶©ñ®ö°O Õ~ (¤é¥»ª©)	Home Data
+mrokumei	³Â³¶ ³À»ïÀ] (¤é¥»ª©)	³Â³¶ ³À»ïÀ] (¤é¥»ª©)	Home Data
 reikaids	ÆF¬É¾É¤h (¤é¥»ª©)	ÆF¬É¾É¤h (¤é¥»ª©)	Home Data
+mjkojink	­Ó¤H±Ð±Â (Private Teacher) (¤é¥»¨Á)	­Ó¤H±Ð±Â (Private Teacher) (¤é¥»¨Á)	Home Data
 mjyougo	³Â³¶¥Î»y¤§°òÂ¦Åé¤O (¤é¥»ª©)	³Â³¶¥Î»y¤§°òÂ¦Åé¤O (¤é¥»ª©)	Home Data
 jogakuen	³Â³¶¤k¾Ç¶é - ¨­ÅéÀË¬d½g (¤é¥»ª©)	³Â³¶¤k¾Ç¶é - ¨­ÅéÀË¬d½g (¤é¥»ª©)	Windom
 shangkid	¥_¬£¤ÖªL ­¸Às¤§®± / Shanghai Kid	¥_¬£¤ÖªL ­¸Às¤§®± / Shanghai Kid	Taiyo (Data East license)
 hiryuken	¥_¬£¤ÖªL ­¸Às¤§®±	¥_¬£¤ÖªL ­¸Às¤§®±	[Nihon Game] (Taito license)
+spcking2	¤ÓªÅ¤§¤ý-2	¤ÓªÅ¤§¤ý-2	Konami
+spaceint	¤ÓªÅ«I²¤ªÌ	¤ÓªÅ«I²¤ªÌ	Shoei
+spacefb	¤ÓªÅ¤õ³¾ (Nintendo)	¤ÓªÅ¤õ³¾ (Nintendo)	Nintendo
+spacefbg	¤ÓªÅ¤õ³¾ (Gremlin)	¤ÓªÅ¤õ³¾ (Gremlin)	Gremlin
+spacefbb	¤ÓªÅ¤õ³¾ (µsª©)	¤ÓªÅ¤õ³¾ (µsª©)	bootleg
+spacebrd	¤ÓªÅ¤õ³¾ / Space Bird (µsª©)	¤ÓªÅ¤õ³¾ / Space Bird (µsª©)	bootleg
+spacedem	¤ÓªÅ¤õ³¾ / Space Demon	¤ÓªÅ¤õ³¾ / Space Demon	Nintendo (Fortrek license)
 fitfight	Àsªê®± / Fit of Fighting	Àsªê®± / Fit of Fighting	bootleg
+dblpoint	©]¤W®ü - Double Point	©]¤W®ü - Double Point	Dong Bang Electron
 rabbit	Ã¹´A¤æ	Ã¹´A¤æ	Electronic Arts / Aorn
+cultname	©m¦WÅ²©w©R¦W¾÷	©m¦WÅ²©w©R¦W¾÷	I'Max
 yuka	¹CµØ	¹CµØ	Yubis / T.System
 yujan	¹C³¶	¹C³¶	Yubis / T.System
 bmcbowl	ºu²y¤§¬P	ºu²y¤§¬P	BMC
-rbmk	¹ê¾Ô³Â³¶¤ý	¹ê¾Ô³Â³¶¤ý	GMS
+rbmk	¹ê¾Ô³Â±N¤ý ¥[±jª©	¹ê¾Ô³Â±N¤ý ¥[±jª©	GMS

@@ -5,8 +5,13 @@ sf2ceh
 sf2tlona
 sf2tlonb
 wofh
+wofha
 wof3js
 wof3sj
+wof3sja
+wofsj
+wofsja
+wofsjb
 dinoh
 pnicku
 sfzch

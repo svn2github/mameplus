@@ -94,7 +94,7 @@ Autoenabling mice due to presence of a %s\n
 Average FPS: %f (%d frames)\n
 平均 FPS: %f (%d 個畫面)\n
 
-# windows/wind3d.c: 2668 windows/winddraw.c: 1466, 1765
+# windows/wind3d.c: 2669 windows/winddraw.c: 1467, 1766
 Avg Flip = %d
 平均翻轉 = %d
 
@@ -478,7 +478,7 @@ OSD bar color (light)
 OSD bar color (medium)
 參數調整列色彩 (中間)
 
-# windows/fileio.c: 371
+# windows/fileio.c: 374
 Out of memory!\n
 記憶體不足!\n
 
@@ -526,7 +526,7 @@ RGB effects surface created: %s\n
 RGB pattern has a wrong filesize (expected %i bytes, found %i)\n
 RGB 樣式有錯誤的檔案大小 (需要 %i 位元組，找到 %i)\n
 
-# windows/winddraw.c: 1389, 1474, 1773
+# windows/winddraw.c: 1389, 1475, 1774
 Recreating surfaces\n
 正在重建介面\n
 
@@ -534,7 +534,7 @@ Recreating surfaces\n
 Rendering to an off-screen surface and using blt()\n
 正在演算描繪到畫面外介面並使用 blt()\n
 
-# windows/wind3d.c: 2319, 2690
+# windows/wind3d.c: 2319, 2691
 Restoring surfaces\n
 正在還原介面\n
 
@@ -594,11 +594,11 @@ Toggle fullscreen
 UNKNOWN   %s\n
 未知的    %s\n
 
-# windows/wind3d.c: 2681
+# windows/wind3d.c: 2682
 Unable to blt RGB effect to back_surface: %08x\n
 無法以位元區塊傳送 RGB 效果到 back_surface: %08x\n
 
-# windows/wind3d.c: 2648
+# windows/wind3d.c: 2649
 Unable to blt back_surface to primary_surface: %08x\n
 無法以位元區塊傳送 back_surface 到 primary_surface: %08x\n
 
@@ -610,7 +610,7 @@ Unable to blt blit_surface to texture_surface: %08x\n
 Unable to blt scale_surface to texture_surface: %08x\n
 無法以位元區塊傳送 scale_surface 到 texture_surface: %08x\n
 
-# windows/winddraw.c: 1438
+# windows/winddraw.c: 1439
 Unable to blt target_surface: %08x\n
 無法以位元區塊傳送 target_surface: %08x\n
 
@@ -626,7 +626,7 @@ Unable to find RGB effects pattern\n
 Unable to lock blit_surface: %08x\n
 無法鎖定 blit_surface: %08x\n
 
-# windows/winddraw.c: 1608, 1708
+# windows/winddraw.c: 1609, 1709
 Unable to lock target_surface: %08x\n
 無法鎖定 target_surface: %08x\n
 
@@ -714,7 +714,7 @@ Windows Direct3D 2D 視訊選項
 Windows misc options
 Windows 雜項選項
 
-# windows/fileio.c: 115
+# windows/fileio.c: 118
 Windows path and directory options
 Windows 版本路徑和目錄選項
 
@@ -838,7 +838,7 @@ change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 change system bios
 變更系統 BIOS
 
-# windows/fileio.c: 143
+# windows/fileio.c: 146
 cheat filename
 作弊碼檔案名稱
 
@@ -878,51 +878,51 @@ dial
 digital
 數位
 
-# windows/fileio.c: 135
+# windows/fileio.c: 138
 directory for Artwork (Overlays etc.)
 Artwork 圖片的目錄 (例如覆疊圖)
 
-# windows/fileio.c: 137
+# windows/fileio.c: 140
 directory for hard drive image difference files
 硬碟映像檔之差異檔案的目錄
 
-# windows/fileio.c: 140
+# windows/fileio.c: 143
 directory for ips files
 IPS 檔案的目錄
 
-# windows/fileio.c: 142
+# windows/fileio.c: 145
 directory for localized language files
 當地化語言檔案的目錄
 
-# windows/fileio.c: 136
+# windows/fileio.c: 139
 directory for screenshots (.png format)
 儲存圖像檔的目錄 (.png 格式)
 
-# windows/fileio.c: 129
+# windows/fileio.c: 132
 directory to save configurations
 儲存組態檔的目錄
 
-# windows/fileio.c: 138
+# windows/fileio.c: 141
 directory to save controller definitions
 存放控制器定義檔的目錄
 
-# windows/fileio.c: 133
+# windows/fileio.c: 136
 directory to save hiscores
 儲存高分檔的目錄
 
-# windows/fileio.c: 132
+# windows/fileio.c: 135
 directory to save input device logs
 儲存輸入裝置記錄的目錄
 
-# windows/fileio.c: 131
+# windows/fileio.c: 134
 directory to save memory card contents
 儲存記憶卡內容的目錄
 
-# windows/fileio.c: 130
+# windows/fileio.c: 133
 directory to save nvram contents
 儲存 nvram 內容的目錄
 
-# windows/fileio.c: 134
+# windows/fileio.c: 137
 directory to save states
 儲存狀態檔的目錄
 
@@ -1280,7 +1280,7 @@ no help available
 
 # windows/input.c: 226
 offscreen shots reload
-射擊畫面外區域重新載入子彈
+射擊畫面外區域即重新載入
 
 # windows/config.c: 254
 output error log to debugger
@@ -1290,15 +1290,15 @@ output error log to debugger
 paddle
 操縱桿
 
-# windows/fileio.c: 125, 127
+# windows/fileio.c: 128, 130
 path to ini files
 ini 檔路徑
 
-# windows/fileio.c: 117
+# windows/fileio.c: 120
 path to romsets
 ROM 集合的路徑
 
-# windows/fileio.c: 123
+# windows/fileio.c: 126
 path to samplesets
 樣本檔集合的路徑
 

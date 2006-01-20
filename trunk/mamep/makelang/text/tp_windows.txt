@@ -478,7 +478,7 @@ OSD bar color (light)
 OSD bar color (medium)
 
 
-# windows/fileio.c: 371
+# windows/fileio.c: 374
 Out of memory!\n
 
 
@@ -714,7 +714,7 @@ Windows Direct3D 2D video options
 Windows misc options
 
 
-# windows/fileio.c: 115
+# windows/fileio.c: 118
 Windows path and directory options
 
 
@@ -838,7 +838,7 @@ change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 change system bios
 
 
-# windows/fileio.c: 143
+# windows/fileio.c: 146
 cheat filename
 
 
@@ -878,51 +878,51 @@ dial
 digital
 
 
-# windows/fileio.c: 135
+# windows/fileio.c: 138
 directory for Artwork (Overlays etc.)
 
 
-# windows/fileio.c: 137
+# windows/fileio.c: 140
 directory for hard drive image difference files
 
 
-# windows/fileio.c: 140
+# windows/fileio.c: 143
 directory for ips files
 
 
-# windows/fileio.c: 142
+# windows/fileio.c: 145
 directory for localized language files
 
 
-# windows/fileio.c: 136
+# windows/fileio.c: 139
 directory for screenshots (.png format)
 
 
-# windows/fileio.c: 129
+# windows/fileio.c: 132
 directory to save configurations
 
 
-# windows/fileio.c: 138
+# windows/fileio.c: 141
 directory to save controller definitions
 
 
-# windows/fileio.c: 133
+# windows/fileio.c: 136
 directory to save hiscores
 
 
-# windows/fileio.c: 132
+# windows/fileio.c: 135
 directory to save input device logs
 
 
-# windows/fileio.c: 131
+# windows/fileio.c: 134
 directory to save memory card contents
 
 
-# windows/fileio.c: 130
+# windows/fileio.c: 133
 directory to save nvram contents
 
 
-# windows/fileio.c: 134
+# windows/fileio.c: 137
 directory to save states
 
 
@@ -1290,15 +1290,15 @@ output error log to debugger
 paddle
 
 
-# windows/fileio.c: 125, 127
+# windows/fileio.c: 128, 130
 path to ini files
 
 
-# windows/fileio.c: 117
+# windows/fileio.c: 120
 path to romsets
 
 
-# windows/fileio.c: 123
+# windows/fileio.c: 126
 path to samplesets
 
 
