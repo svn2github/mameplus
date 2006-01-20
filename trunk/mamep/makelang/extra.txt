@@ -1,6 +1,7 @@
 pong
 monaco
 knightsh
+knightsb
 sf2ceh
 sf2tlona
 sf2tlonb
