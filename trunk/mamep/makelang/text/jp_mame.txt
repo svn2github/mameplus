@@ -1,16 +1,16 @@
-# datafile.c: 3138
+# datafile.c: 3140
           DIAL:  %4d\n
                 ダイアル:  %4d\n
 
-# datafile.c: 3144
+# datafile.c: 3146
          OTHER:  %4d\n
                   その他:  %4d\n
 
-# datafile.c: 3142
+# datafile.c: 3144
          PEDAL:  %4d\n
                   ペダル:  %4d\n
 
-# datafile.c: 3137
+# datafile.c: 3139
         PADDLE:  %4d\n
                   パドル:  %4d\n
 
@@ -18,35 +18,35 @@
        FOUND: %s\n
 見つかった物: %s\n
 
-# datafile.c: 3131
+# datafile.c: 3133
        JOY2WAY:  %4d\n
         ２方向スティック:  %4d\n
 
-# datafile.c: 3132
+# datafile.c: 3134
        JOY4WAY:  %4d\n
         ４方向スティック:  %4d\n
 
-# datafile.c: 3133
+# datafile.c: 3135
        JOY8WAY:  %4d\n
         ８方向スティック:  %4d\n
 
-# datafile.c: 3140
+# datafile.c: 3142
       AD STICK:  %4d\n
       アナログスティック:  %4d\n
 
-# datafile.c: 3141
+# datafile.c: 3143
       LIGHTGUN:  %4d\n
                   光線銃:  %4d\n
 
-# datafile.c: 3125
+# datafile.c: 3127
      PLAYERS %d:  %4d\n
             %d プレイヤー:  %4d\n
 
-# datafile.c: 3139
+# datafile.c: 3141
      TRACKBALL:  %4d\n
                 トラック:  %4d\n
 
-# datafile.c: 3153
+# datafile.c: 3155
     BUTTONS%3d:  %4d\n
                ボタン%3d:  %4d\n
 
@@ -54,7 +54,7 @@
     EXPECTED: %s\n
     正常な物: %s\n
 
-# datafile.c: 3159
+# datafile.c: 3161
     NO BUTTONS:  %4d\n
             ボタン未使用:  %4d\n
 
@@ -62,43 +62,43 @@
    FOUND: 
 見つかった物: 
 
-# datafile.c: 2963
+# datafile.c: 2965
  %4d HARDDISK\n
  %4d ハードディスク\n
 
-# datafile.c: 2959
+# datafile.c: 2961
  %4d HORIZONTAL + %4d\n %4d VERTICAL   + %4d\n
  %4d 横型       + %4d\n %4d 縦型       + %4d\n
 
-# datafile.c: 2955
+# datafile.c: 2957
  %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
  %4d PLAYCHOICE + %4d\n %4d デコカセ   + %4d\n %4d CVS        + %4d\n
 
-# datafile.c: 2957
+# datafile.c: 2959
  %4d RASTER     + %4d\n %4d VECTOR     + %4d\n
  %4d ラスタ     + %4d\n %4d ベクタ     + %4d\n
 
-# datafile.c: 2961
+# datafile.c: 2963
  %4d STEREO     + %4d\n
  %4d ステレオ   + %4d\n
 
-# datafile.c: 3134
+# datafile.c: 3136
  DOUBLEJOY2WAY:  %4d\n
 ２方向デュアルスティック:  %4d\n
 
-# datafile.c: 3135
+# datafile.c: 3137
  DOUBLEJOY4WAY:  %4d\n
 ４方向デュアルスティック:  %4d\n
 
-# datafile.c: 3136
+# datafile.c: 3138
  DOUBLEJOY8WAY:  %4d\n
 ８方向デュアルスティック:  %4d\n
 
-# datafile.c: 3064
+# datafile.c: 3066
  GAMES WITH  %d CPUs: %4d\n
  %d個のCPU使用ゲーム: %4d\n
 
-# datafile.c: 3095
+# datafile.c: 3097
  GAMES WITH  %d SNDINTRF: %4d\n
  %d個の音源使用ゲーム: %4d\n
 
@@ -214,15 +214,15 @@
 %d results found
 %d個の結果が見つかりました
 
-# usrintrf.c: 1949, 2094
+# usrintrf.c: 2058, 2203
 %s Analog
 %s アナログ
 
-# usrintrf.c: 1956, 2098
+# usrintrf.c: 2065, 2207
 %s Dec
 %s 増加
 
-# usrintrf.c: 1963, 2102
+# usrintrf.c: 2072, 2211
 %s Inc
 %s 減少
 
@@ -250,11 +250,11 @@
 (Card may already exist)
 (カードを既に作成済みかも知れません)
 
-# usrintrf.c: 3334
+# usrintrf.c: 3443
 (H)
 (横)
 
-# usrintrf.c: 3334
+# usrintrf.c: 3443
 (V)
 (縦)
 
@@ -270,43 +270,43 @@
 ---> <ENTER> To Edit <---
 ---> <選択キー> で修正 <---
 
-# inptport.c: 352
+# inptport.c: 365
 1 Coin/1 Credit
 1 コイン/1 クレジット
 
-# inptport.c: 358
+# inptport.c: 371
 1 Coin/2 Credits
 1 コイン/2 クレジット
 
-# inptport.c: 361
+# inptport.c: 374
 1 Coin/3 Credits
 1 コイン/3 クレジット
 
-# inptport.c: 364
+# inptport.c: 377
 1 Coin/4 Credits
 1 コイン/4 クレジット
 
-# inptport.c: 365
+# inptport.c: 378
 1 Coin/5 Credits
 1 コイン/5 クレジット
 
-# inptport.c: 366
+# inptport.c: 379
 1 Coin/6 Credits
 1 コイン/6 クレジット
 
-# inptport.c: 367
+# inptport.c: 380
 1 Coin/7 Credits
 1 コイン/7 クレジット
 
-# inptport.c: 368
+# inptport.c: 381
 1 Coin/8 Credits
 1 コイン/8 クレジット
 
-# inptport.c: 369
+# inptport.c: 382
 1 Coin/9 Credits
 1 コイン/9 クレジット
 
-# inptport.c: 782
+# inptport.c: 795
 1 Player Start
 1プレイヤー スタート
 
@@ -322,39 +322,39 @@
 1st Bonus Life
 初回ボーナスライフ
 
-# inptport.c: 345
+# inptport.c: 358
 2 Coins/1 Credit
 2 コイン/1 クレジット
 
-# inptport.c: 351
+# inptport.c: 364
 2 Coins/2 Credits
 2 コイン/2 クレジット
 
-# inptport.c: 355
+# inptport.c: 368
 2 Coins/3 Credits
 2 コイン/3 クレジット
 
-# inptport.c: 357
+# inptport.c: 370
 2 Coins/4 Credits
 2 コイン/4 クレジット
 
-# inptport.c: 359
+# inptport.c: 372
 2 Coins/5 Credits
 2 コイン/5 クレジット
 
-# inptport.c: 360
+# inptport.c: 373
 2 Coins/6 Credits
 2 コイン/6 クレジット
 
-# inptport.c: 362
+# inptport.c: 375
 2 Coins/7 Credits
 2 コイン/7 クレジット
 
-# inptport.c: 363
+# inptport.c: 376
 2 Coins/8 Credits
 2 コイン/8 クレジット
 
-# inptport.c: 783
+# inptport.c: 796
 2 Players Start
 2プレイヤー スタート
 
@@ -362,7 +362,7 @@
 24 Bit
 24ビット
 
-# datafile.c: 3215
+# datafile.c: 3217
 24-BIT DISPLAY : %3d  + %3d\n
 24ビット表\示   : %3d  + %3d\n
 
@@ -370,23 +370,23 @@
 2nd Bonus Life
 2回目ボーナスライフ
 
-# inptport.c: 342
+# inptport.c: 355
 3 Coins/1 Credit
 3 コイン/1 クレジット
 
-# inptport.c: 347
+# inptport.c: 360
 3 Coins/2 Credits
 3 コイン/2 クレジット
 
-# inptport.c: 350
+# inptport.c: 363
 3 Coins/3 Credits
 3 コイン/3 クレジット
 
-# inptport.c: 354
+# inptport.c: 367
 3 Coins/4 Credits
 3 コイン/4 クレジット
 
-# inptport.c: 784
+# inptport.c: 797
 3 Players Start
 3プレイヤー スタート
 
@@ -394,59 +394,59 @@
 32 Bit
 32ビット
 
-# inptport.c: 341
+# inptport.c: 354
 4 Coins/1 Credit
 4 コイン/1 クレジット
 
-# inptport.c: 344
+# inptport.c: 357
 4 Coins/2 Credits
 4 コイン/2 クレジット
 
-# inptport.c: 348
+# inptport.c: 361
 4 Coins/3 Credits
 4 コイン/3 クレジット
 
-# inptport.c: 349
+# inptport.c: 362
 4 Coins/4 Credits
 4 コイン/4 クレジット
 
-# inptport.c: 353
+# inptport.c: 366
 4 Coins/5 Credits
 4 コイン/5 クレジット
 
-# inptport.c: 356
+# inptport.c: 369
 4 Coins/7 Credits
 4 コイン/7 クレジット
 
-# inptport.c: 785
+# inptport.c: 798
 4 Players Start
 4プレイヤー スタート
 
-# inptport.c: 340
+# inptport.c: 353
 5 Coins/1 Credit
 5 コイン/1 クレジット
 
-# inptport.c: 346
+# inptport.c: 359
 5 Coins/3 Credits
 5 コイン/3 クレジット
 
-# inptport.c: 786
+# inptport.c: 799
 5 Players Start
 5プレイヤー スタート
 
-# inptport.c: 339
+# inptport.c: 352
 6 Coins/1 Credit
 6 コイン/1 クレジット
 
-# inptport.c: 787
+# inptport.c: 800
 6 Players Start
 6プレイヤー スタート
 
-# inptport.c: 338
+# inptport.c: 351
 7 Coins/1 Credit
 7 コイン/1 クレジット
 
-# inptport.c: 788
+# inptport.c: 801
 7 Players Start
 7プレイヤー スタート
 
@@ -454,115 +454,115 @@
 8 Bit
 8ビット
 
-# inptport.c: 337
+# inptport.c: 350
 8 Coins/1 Credit
 8 コイン/1 クレジット
 
-# inptport.c: 343
+# inptport.c: 356
 8 Coins/3 Credits
 8 コイン/3 クレジット
 
-# inptport.c: 789
+# inptport.c: 802
 8 Players Start
 8プレイヤー スタート
 
-# inptport.c: 336
+# inptport.c: 349
 9 Coins/1 Credit
 9 コイン/1 クレジット
 
-# inptport.c: 893
+# inptport.c: 906
 AD Stick X
 AD スティック X
 
-# inptport.c: 894
+# inptport.c: 907
 AD Stick X 2
 AD スティック X 2
 
-# inptport.c: 895
+# inptport.c: 908
 AD Stick X 3
 AD スティック X 3
 
-# inptport.c: 896
+# inptport.c: 909
 AD Stick X 4
 AD スティック X 4
 
-# inptport.c: 897
+# inptport.c: 910
 AD Stick X 5
 AD スティック X 5
 
-# inptport.c: 898
+# inptport.c: 911
 AD Stick X 6
 AD スティック X 6
 
-# inptport.c: 899
+# inptport.c: 912
 AD Stick X 7
 AD スティック X 7
 
-# inptport.c: 900
+# inptport.c: 913
 AD Stick X 8
 AD スティック X 8
 
-# inptport.c: 902
+# inptport.c: 915
 AD Stick Y
 AD スティック Y
 
-# inptport.c: 903
+# inptport.c: 916
 AD Stick Y 2
 AD スティック Y 2
 
-# inptport.c: 904
+# inptport.c: 917
 AD Stick Y 3
 AD スティック Y 3
 
-# inptport.c: 905
+# inptport.c: 918
 AD Stick Y 4
 AD スティック Y 4
 
-# inptport.c: 906
+# inptport.c: 919
 AD Stick Y 5
 AD スティック Y 5
 
-# inptport.c: 907
+# inptport.c: 920
 AD Stick Y 6
 AD スティック Y 6
 
-# inptport.c: 908
+# inptport.c: 921
 AD Stick Y 7
 AD スティック Y 7
 
-# inptport.c: 909
+# inptport.c: 922
 AD Stick Y 8
 AD スティック Y 8
 
-# inptport.c: 911
+# inptport.c: 924
 AD Stick Z
 AD スティック Z
 
-# inptport.c: 912
+# inptport.c: 925
 AD Stick Z 2
 AD スティック Z 2
 
-# inptport.c: 913
+# inptport.c: 926
 AD Stick Z 3
 AD スティック Z 3
 
-# inptport.c: 914
+# inptport.c: 927
 AD Stick Z 4
 AD スティック Z 4
 
-# inptport.c: 915
+# inptport.c: 928
 AD Stick Z 5
 AD スティック Z 5
 
-# inptport.c: 916
+# inptport.c: 929
 AD Stick Z 6
 AD スティック Z 6
 
-# inptport.c: 917
+# inptport.c: 930
 AD Stick Z 7
 AD スティック Z 7
 
-# inptport.c: 918
+# inptport.c: 931
 AD Stick Z 8
 AD スティック Z 8
 
@@ -582,7 +582,7 @@ Activation Key
 Add
 加算
 
-# inptport.c: 995
+# inptport.c: 1015
 Add Cheat
 チートを追加
 
@@ -626,11 +626,11 @@ All Memory
 All values saved
 すべての値を保存しました
 
-# inptport.c: 422
+# inptport.c: 435
 Allow Continue
 コンティニューあり
 
-# inptport.c: 431 sound/ay8910.c: 673
+# inptport.c: 444 sound/ay8910.c: 674
 Alternate
 別版
 
@@ -646,7 +646,7 @@ Analog Controls
 Any
 指定なし
 
-# drivers/epos.c: 168 drivers/lethal.c: 542 drivers/neogeo.c: 1150, 1199, 1276, 1325
+# drivers/epos.c: 168 drivers/lethal.c: 542 drivers/neogeo.c: 1121, 1170, 1247, 1296
 Arcade
 アーケード
 
@@ -654,7 +654,7 @@ Arcade
 Artwork
 アートワーク
 
-# inptport.c: 385
+# inptport.c: 398
 Asia
 アジア
 
@@ -670,7 +670,7 @@ Auto Save Cheats
 Autocenter Speed
 自動センタリング速度
 
-# drivers/neogeo.c: 1088
+# drivers/neogeo.c: 1059
 Autofire (in some games)
 連射 (対応ゲームのみ)
 
@@ -706,7 +706,7 @@ Beginner
 Bet
 賭ける
 
-# inptport.c: 799
+# inptport.c: 812
 Bill 1
 紙幣の確認 1
 
@@ -722,13 +722,17 @@ Bit
 Black
 黒
 
-# inptport.c: 330
+# inptport.c: 343
 Bonus Life
 ボーナスライフ
 
 # drivers/polyplay.c: 209 ui_text.c: 99
 Bookkeeping Info
 インカム情報
+
+# inptport.c: 972
+Break in Debugger
+デバッガで停止
 
 # drivers/namcos1.c: 646 ui_text.c: 52
 Brightness
@@ -742,7 +746,7 @@ Button 1
 Byte Length
 バイト長
 
-# drivers/neogeo.c: 1088, 1176
+# drivers/neogeo.c: 1059, 1147
 COMM Setting
 COMMセッティング
 
@@ -754,7 +758,7 @@ CPU
 CPU%.2d 
 CPU%.2d 
 
-# inptport.c: 371 
+# inptport.c: 384 
 Cabinet
 筐体
 
@@ -766,7 +770,7 @@ Cabinet Type
 Calibrate Joysticks
 ジョイスティックの調整
 
-# drivers/bfm_sc2.c: 2783 drivers/getrivia.c: 264 drivers/segac2.c: 1194 
+# drivers/getrivia.c: 264 drivers/segac2.c: 1194 
 Cancel
 キャンセル
 
@@ -774,7 +778,7 @@ Cancel
 Card Number:
 カード番号:
 
-# drivers/cischeat.c: 1586 drivers/namcos22.c: 4228, 4302 ui_text.c: 231
+# drivers/cischeat.c: 1586 drivers/namcos22.c: 3843, 3917 ui_text.c: 231
 Center
 センタリング
 
@@ -806,7 +810,7 @@ Classic
 Clear
 クリア
 
-# inptport.c: 373
+# inptport.c: 386
 Cocktail
 カクテル
 
@@ -818,43 +822,43 @@ Code
 Coin
 コイン
 
-# drivers/mexico86.c: 281 drivers/midyunit.c: 416 inptport.c: 791
+# drivers/mexico86.c: 281 drivers/midyunit.c: 416 inptport.c: 804
 Coin 1
 コイン 1
 
-# drivers/mexico86.c: 286 drivers/midyunit.c: 407 inptport.c: 792
+# drivers/mexico86.c: 286 drivers/midyunit.c: 407 inptport.c: 805
 Coin 2
 コイン 2
 
-# inptport.c: 793
+# inptport.c: 806
 Coin 3
 コイン 3
 
-# inptport.c: 794
+# inptport.c: 807
 Coin 4
 コイン 4
 
-# inptport.c: 795
+# inptport.c: 808
 Coin 5
 コイン 5
 
-# inptport.c: 796
+# inptport.c: 809
 Coin 6
 コイン 6
 
-# inptport.c: 797
+# inptport.c: 810
 Coin 7
 コイン 7
 
-# inptport.c: 798
+# inptport.c: 811
 Coin 8
 コイン 8
 
-# inptport.c: 334
+# inptport.c: 347
 Coin A
 コイン A
 
-# inptport.c: 335
+# inptport.c: 348
 Coin B
 コイン B
 
@@ -862,7 +866,7 @@ Coin B
 Coin Chutes
 コイン投入数
 
-# drivers/neogeo.c: 1088, 1170
+# drivers/neogeo.c: 1059, 1141
 Coin Chutes?
 コイン投入数?
 
@@ -874,11 +878,11 @@ Coin Mode
 Coin Slot
 コインスロット
 
-# drivers/alpha68k.c: 1635 drivers/armedf.c: 556 drivers/bbusters.c: 456, 527 drivers/boogwing.c: 179 drivers/buggychl.c: 330 drivers/cps1.c: 1422, 2140, 2243, 2497, 2606, 3173 drivers/cshooter.c: 277 drivers/deco32.c: 1222 drivers/flstory.c: 425 drivers/freekick.c: 677, 791 drivers/galaxian.c: 2813 drivers/itech8.c: 1598 drivers/lkage.c: 248 drivers/m92.h: 77, 93, 109, 125 drivers/nycaptor.c: 742 drivers/sslam.c: 545 drivers/suprslam.c: 231
+# drivers/alpha68k.c: 1635 drivers/armedf.c: 556 drivers/bbusters.c: 456, 527 drivers/boogwing.c: 179 drivers/buggychl.c: 330 drivers/cps1.c: 1422, 2140, 2243, 2497, 2606, 3173 drivers/cshooter.c: 277 drivers/deco32.c: 1338 drivers/flstory.c: 425 drivers/freekick.c: 677, 791 drivers/galaxian.c: 2813 drivers/itech8.c: 1598 drivers/lkage.c: 248 drivers/m92.h: 77, 93, 109, 125 drivers/nycaptor.c: 742 drivers/sslam.c: 545 drivers/suprslam.c: 231
 Coin Slots
 コインスロット
 
-# inptport.c: 333
+# inptport.c: 346
 Coinage
 コイン投入数
 
@@ -886,7 +890,7 @@ Coinage
 Coinout Sensor
 コイン出力センサ
 
-# drivers/bfm_sc2.c: 1871, 1962, 2074, 2495 drivers/itech8.c: 1431 drivers/magic10.c: 154, 222 drivers/sderby.c: 145
+# drivers/bfm_sc2.c: 1731, 1822, 1934, 2355 drivers/itech8.c: 1431 drivers/magic10.c: 154, 222 drivers/sderby.c: 145
 Collect
 回収
 
@@ -898,7 +902,7 @@ Command List not available
 Comment
 コメント
 
-# drivers/alpha68k.c: 1636 drivers/armedf.c: 557 drivers/bbusters.c: 457, 528 drivers/boogwing.c: 180 drivers/deco32.c: 1223 drivers/gaelco2.c: 715, 1185 drivers/gijoe.c: 307 drivers/itech8.c: 1599 drivers/konamigq.c: 525 drivers/konamigx.c: 1730 drivers/lethal.c: 544 drivers/m92.h: 77, 93, 109, 125 drivers/marinedt.c: 365 drivers/mcr68.c: 741 drivers/moo.c: 514, 583 drivers/mystwarr.c: 1082, 1150, 1223 drivers/segac2.c: 1060 drivers/segas18.c: 914, 970, 1026, 1075, 1141, 1158, 1202 drivers/snk.c: 2912, 2968, 3025, 3082 drivers/sslam.c: 546 drivers/suprslam.c: 232 drivers/system18.c: 1327 drivers/system24.c: 1267, 1343, 1414, 1484, 1544
+# drivers/alpha68k.c: 1636 drivers/armedf.c: 557 drivers/bbusters.c: 457, 528 drivers/boogwing.c: 180 drivers/deco32.c: 1339 drivers/gaelco2.c: 715, 1185 drivers/gijoe.c: 307 drivers/itech8.c: 1599 drivers/konamigq.c: 525 drivers/konamigx.c: 1730 drivers/lethal.c: 544 drivers/m92.h: 77, 93, 109, 125 drivers/marinedt.c: 365 drivers/mcr68.c: 741 drivers/moo.c: 514, 583 drivers/mystwarr.c: 1082, 1150, 1223 drivers/segac2.c: 1060 drivers/segas18.c: 914, 970, 1026, 1075, 1141, 1158, 1202 drivers/snk.c: 2912, 2968, 3025, 3082 drivers/sslam.c: 546 drivers/suprslam.c: 232 drivers/system18.c: 1327 drivers/system24.c: 1267, 1343, 1414, 1484, 1544
 Common
 共通
 
@@ -906,7 +910,7 @@ Common
 Comparison
 比較
 
-# inptport.c: 959
+# inptport.c: 973
 Config Menu
 設定メニュー
 
@@ -922,7 +926,7 @@ Continue
 Continue Mode
 コンティニューモード
 
-# inptport.c: 416
+# inptport.c: 429
 Continue Price
 コンティニュー額
 
@@ -930,7 +934,7 @@ Continue Price
 Continue Search
 検索を継続する
 
-# inptport.c: 421
+# inptport.c: 434
 Continues
 コンティニュー
 
@@ -942,15 +946,15 @@ Control
 Control Panel
 コンパネ
 
-# drivers/changela.c: 962 drivers/nbmj8891.c: 1072, 1168 drivers/taitosj.c: 1746 drivers/tumbleb.c: 1258 
+# drivers/changela.c: 962 drivers/nbmj8891.c: 1072, 1168 drivers/taitosj.c: 1748 drivers/tumbleb.c: 1258 
 Control Type
 コントロールの種類
 
-# inptport.c: 417
+# inptport.c: 430
 Controller
 コントローラー
 
-# drivers/fantland.c: 584 inptport.c: 412 vidhrdw/fantland.c: 136
+# drivers/fantland.c: 584 inptport.c: 425 vidhrdw/fantland.c: 136
 Controls
 コントロール
 
@@ -966,7 +970,7 @@ Could not load controller file %s.cfg\n
 Could not read MAME save file header
 MAME保存ファイルのヘッダが読み込めません
 
-# drivers/aerofgt.c: 1024, 1111 drivers/bbusters.c: 581 drivers/bwing.c: 297 drivers/cischeat.c: 1187, 1243 drivers/crshrace.c: 382, 538 drivers/ddenlovr.c: 4452 drivers/f1gp.c: 307, 412 drivers/fuukifg2.c: 221, 305 drivers/kaneko16.c: 1203, 1299 drivers/midtunit.c: 347, 450, 553 drivers/midwunit.c: 324, 503 drivers/midxunit.c: 112 drivers/midyunit.c: 239, 702 drivers/psikyo.c: 645, 765, 1003, 1207, 1305, 1494 drivers/seta.c: 3458, 3783, 3890, 4104, 4273 drivers/ssv.c: 2951 drivers/st0016.c: 526 drivers/stv.c: 2472 drivers/suprslam.c: 274 drivers/tail2nos.c: 208 drivers/taotaido.c: 306
+# drivers/aerofgt.c: 1024, 1111 drivers/bbusters.c: 581 drivers/bwing.c: 297 drivers/cischeat.c: 1187, 1243 drivers/crshrace.c: 382, 538 drivers/ddenlovr.c: 4452 drivers/f1gp.c: 307, 412 drivers/fuukifg2.c: 221, 305 drivers/kaneko16.c: 1203, 1299 drivers/midtunit.c: 347, 450, 553 drivers/midwunit.c: 388, 567 drivers/midxunit.c: 112 drivers/midyunit.c: 239, 702 drivers/psikyo.c: 645, 765, 1003, 1207, 1305, 1494 drivers/seta.c: 3458, 3783, 3890, 4104, 4273 drivers/ssv.c: 2951 drivers/st0016.c: 526 drivers/stv.c: 2472 drivers/suprslam.c: 274 drivers/tail2nos.c: 208 drivers/taotaido.c: 306
 Country
 地域
 
@@ -990,7 +994,7 @@ Custom Buttons
 DIAL
 ダイアル
 
-# datafile.c: 3213
+# datafile.c: 3215
 DUAL MONITOR   : %3d  + %3d\n
 デュアルモニタ : %3d  + %3d\n
 
@@ -1018,11 +1022,11 @@ Default Search Speed
 Delay
 ディレイ
 
-# inptport.c: 996
+# inptport.c: 1016
 Delete Cheat
 チート削除
 
-# inptport.c: 332
+# inptport.c: 345
 Demo Sounds
 デモサウンド
 
@@ -1030,71 +1034,71 @@ Demo Sounds
 Description
 説明
 
-# drivers/ssv.c: 2773 inptport.c: 857 
+# drivers/ssv.c: 2773 inptport.c: 870 
 Dial
 ダイアル
 
-# inptport.c: 858
+# inptport.c: 871
 Dial 2
 ダイアル 2
 
-# inptport.c: 859
+# inptport.c: 872
 Dial 3
 ダイアル 3
 
-# inptport.c: 860
+# inptport.c: 873
 Dial 4
 ダイアル 4
 
-# inptport.c: 861
+# inptport.c: 874
 Dial 5
 ダイアル 5
 
-# inptport.c: 862
+# inptport.c: 875
 Dial 6
 ダイアル 6
 
-# inptport.c: 863
+# inptport.c: 876
 Dial 7
 ダイアル 7
 
-# inptport.c: 864
+# inptport.c: 877
 Dial 8
 ダイアル 8
 
-# inptport.c: 866
+# inptport.c: 879
 Dial V
 ダイアル V
 
-# inptport.c: 867
+# inptport.c: 880
 Dial V 2
 ダイアル V 2
 
-# inptport.c: 868
+# inptport.c: 881
 Dial V 3
 ダイアル V 3
 
-# inptport.c: 869
+# inptport.c: 882
 Dial V 4
 ダイアル V 4
 
-# inptport.c: 870
+# inptport.c: 883
 Dial V 5
 ダイアル V 5
 
-# inptport.c: 871
+# inptport.c: 884
 Dial V 6
 ダイアル V 6
 
-# inptport.c: 872
+# inptport.c: 885
 Dial V 7
 ダイアル V 7
 
-# inptport.c: 873
+# inptport.c: 886
 Dial V 8
 ダイアル V 8
 
-# drivers/pktgaldx.c: 252 inptport.c: 331
+# drivers/pktgaldx.c: 252 inptport.c: 344
 Difficulty
 難易度
 
@@ -1134,7 +1138,7 @@ Do Search
 Domestic
 国内
 
-# inptport.c: 808
+# inptport.c: 821
 Door Interlock
 ドア連動
 
@@ -1154,7 +1158,7 @@ Drain all Energy Now! PL2
 Driverinfo not available
 ドライバ情報が見つかりません
 
-# inptport.c: 413
+# inptport.c: 426
 Dual
 デュアル
 
@@ -1170,19 +1174,19 @@ ERROR: required files are missing, the game cannot be run.\n
 EXPECTED: 
     正常な物:     
 
-# inptport.c: 397
+# inptport.c: 410
 Easier
 より簡単
 
-# inptport.c: 396
+# inptport.c: 409
 Easiest
 最も簡単
 
-# inptport.c: 398
+# inptport.c: 411
 Easy
 簡単
 
-# inptport.c: 999
+# inptport.c: 1019
 Edit Cheat
 チート編集
 
@@ -1206,7 +1210,7 @@ Elements Per Line
 Enable/Disable a Cheat
 チートを有効/無効にする
 
-# inptport.c: 2453
+# inptport.c: 2476
 End of playback
 再生終了
 
@@ -1222,7 +1226,7 @@ Energy (greater or less)
 England
 イギリス
 
-# drivers/snowbros.c: 800 inptport.c: 389
+# drivers/snowbros.c: 800 inptport.c: 402
 English
 英語
 
@@ -1262,11 +1266,11 @@ Error: Failed to save state
 Error: Unable to save state due to illegal registrations. See error.log for details.
 エラー: 不正な登録のためステートを保存することが出来ません。詳細はerror.logをご覧下さい。
 
-# usrintrf.c: 1463
+# usrintrf.c: 1525
 Error: illegal caption file
 エラー: 不正なキャプションファイルです
 
-# inptport.c: 384
+# inptport.c: 397
 Europe
 ヨーロッパ
 
@@ -1274,7 +1278,7 @@ Europe
 Expert
 エキスパート
 
-# cheat.c: 6568 debug/mamedbg.c: 788 drivers/4enraya.c: 120 drivers/8080bw.c: 698, 790 drivers/alpha68k.c: 1570, 1624 drivers/amidar.c: 186 drivers/angelkds.c: 481 drivers/bestleag.c: 279 drivers/bigstrkb.c: 160 drivers/brkthru.c: 234, 237, 279, 282 drivers/cninja.c: 728 drivers/cps1.c: 1070, 1340 drivers/darius.c: 680, 718, 756 drivers/ddragon3.c: 425 drivers/deniam.c: 278 drivers/epos.c: 152, 155, 161 drivers/fuukifg3.c: 355 drivers/gameplan.c: 400, 851 drivers/karnov.c: 462 drivers/m62.c: 612, 663, 714, 764, 816, 868, 922, 1022, 1073 drivers/mcr.c: 1012 drivers/megaplay.c: 226 drivers/metro.c: 3081 drivers/ninjaw.c: 543 drivers/nmg5.c: 240 drivers/nmk16.c: 2663 drivers/phoenix.c: 345 drivers/quizdna.c: 154, 242, 344 drivers/rohga.c: 444, 512 drivers/safarir.c: 189 drivers/segas16a.c: 1272 drivers/segas16b.c: 2510 drivers/sidepckt.c: 232 drivers/slapfght.c: 519 drivers/ssv.c: 2574 drivers/suprridr.c: 252 drivers/system1.c: 888, 1724 drivers/system16.c: 1796 drivers/taito_f2.c: 3124 drivers/taito_l.c: 1841, 1994 drivers/taito_z.c: 2364, 2433 drivers/tecmo16.c: 208 drivers/thepit.c: 218, 273, 314 drivers/trackfld.c: 540, 551 drivers/vigilant.c: 241 drivers/vsnes.c: 1066, 1468, 1692, 1750, 1776 drivers/wallc.c: 188 drivers/warriorb.c: 345 drivers/wc90.c: 251 drivers/wc90b.c: 268 drivers/xain.c: 400 drivers/yamato.c: 357 drivers/zac2650.c: 84, 134 drivers/zerozone.c: 149 ui_text.c: 206
+# cheat.c: 6568 debug/mamedbg.c: 788 drivers/4enraya.c: 120 drivers/8080bw.c: 698, 790 drivers/alpha68k.c: 1570, 1624 drivers/amidar.c: 186 drivers/angelkds.c: 481 drivers/bestleag.c: 279 drivers/bigstrkb.c: 160 drivers/brkthru.c: 234, 237, 279, 282 drivers/cninja.c: 728 drivers/cps1.c: 1070, 1340 drivers/darius.c: 680, 718, 756 drivers/ddragon3.c: 425 drivers/deniam.c: 278 drivers/epos.c: 152, 155, 161 drivers/fuukifg3.c: 355 drivers/gameplan.c: 400, 851 drivers/karnov.c: 462 drivers/m62.c: 612, 663, 714, 764, 816, 868, 922, 1022, 1073 drivers/mcr.c: 1012 drivers/megaplay.c: 226 drivers/metro.c: 3081 drivers/ninjaw.c: 543 drivers/nmg5.c: 239 drivers/nmk16.c: 2663 drivers/phoenix.c: 345 drivers/quizdna.c: 154, 242, 344 drivers/rohga.c: 444, 512 drivers/safarir.c: 189 drivers/segas16a.c: 1272 drivers/segas16b.c: 2510 drivers/sidepckt.c: 232 drivers/slapfght.c: 519 drivers/ssv.c: 2574 drivers/suprridr.c: 252 drivers/system1.c: 888, 1724 drivers/system16.c: 1796 drivers/taito_f2.c: 3124 drivers/taito_l.c: 1841, 1994 drivers/taito_z.c: 2364, 2433 drivers/tecmo16.c: 208 drivers/thepit.c: 218, 273, 314 drivers/trackfld.c: 540, 551 drivers/vigilant.c: 241 drivers/vsnes.c: 1066, 1468, 1692, 1750, 1776 drivers/wallc.c: 188 drivers/warriorb.c: 345 drivers/wc90.c: 251 drivers/wc90b.c: 268 drivers/xain.c: 400 drivers/yamato.c: 357 drivers/zac2650.c: 84, 134 drivers/zerozone.c: 149 ui_text.c: 206
 Fast
 速い
 
@@ -1290,7 +1294,7 @@ First Bonus
 First Data
 最初のデータ
 
-# inptport.c: 374
+# inptport.c: 387
 Flip Screen
 フリップスクリーン
 
@@ -1302,11 +1306,11 @@ Force Range
 Foreign
 海外
 
-# inptport.c: 963
+# inptport.c: 977
 Frameskip Dec
 フレームスキップ数減少
 
-# inptport.c: 964
+# inptport.c: 978
 Frameskip Inc
 フレームスキップ数増加
 
@@ -1314,15 +1318,15 @@ Frameskip Inc
 Free
 フリー
 
-# inptport.c: 370
+# inptport.c: 383
 Free Play
 フリープレイ
 
-# drivers/1942.c: 200 drivers/1943.c: 148 drivers/40love.c: 1082 drivers/aerofgt.c: 743 drivers/airbustr.c: 496 drivers/alpha68k.c: 1164, 1490, 1543, 1595, 1650, 1676, 1776 drivers/atetris.c: 228, 254 drivers/baraduke.c: 257, 330 drivers/battlex.c: 116 drivers/bbusters.c: 470, 557 drivers/bionicc.c: 227 drivers/blktiger.c: 214 drivers/bwing.c: 294 drivers/compgolf.c: 136 drivers/cps1.c: 492, 661, 742, 835, 919, 998, 1185, 1275, 1356, 1448, 1552, 1647, 1737, 1819, 1902, 1996, 2058, 2183, 2286, 2394, 2513, 2622, 2714, 2807, 2861, 2913, 2966, 3018, 3072, 3115, 3216, 3316, 3417, 3510, 3564 drivers/dec8.c: 1244, 1675 drivers/docastle.c: 360 drivers/exedexes.c: 138 drivers/fcrash.c: 260 drivers/flstory.c: 525 drivers/funkybee.c: 114, 164, 214 drivers/funkyjet.c: 222, 300 drivers/galaga.c: 1007, 1083, 1154, 1228, 1358, 1597, 1656 drivers/gunsmoke.c: 192 drivers/hal21.c: 418 drivers/higemaru.c: 81 drivers/ikki.c: 120 drivers/jcross.c: 197 drivers/karnov.c: 594 drivers/kingobox.c: 290, 376 drivers/kyugo.c: 235, 266, 303, 334, 364, 394, 424 drivers/ladybug.c: 165, 438 drivers/legionna.c: 829, 917 drivers/lsasquad.c: 195 drivers/mainsnk.c: 195 drivers/mappy.c: 982, 1115, 1246, 1307, 1375 drivers/markham.c: 152 drivers/marvins.c: 270, 359, 450 drivers/midtunit.c: 339 drivers/midvunit.c: 580 drivers/mitchell.c: 604 drivers/ms32.c: 776, 846, 913 drivers/mugsmash.c: 297, 379 drivers/munchmo.c: 201 drivers/mwarr.c: 209 drivers/namcond1.c: 111 drivers/namcos1.c: 603, 643, 665, 702, 764, 786, 800, 873, 883, 905, 915 drivers/namcos12.c: 1257, 1307 drivers/namcos86.c: 571, 661, 731, 809, 888, 967 drivers/neogeo.c: 1088, 1185 drivers/nycaptor.c: 722 drivers/ohmygod.c: 323 drivers/onetwo.c: 143 drivers/pacland.c: 334 drivers/pandoras.c: 288 drivers/prehisle.c: 157 drivers/rollrace.c: 151 drivers/rungun.c: 386 drivers/sauro.c: 248 drivers/scobra.c: 643 drivers/seta2.c: 554 drivers/sf.c: 339, 517, 655 drivers/sgladiat.c: 285 drivers/shootout.c: 168 drivers/sidearms.c: 249 drivers/skykid.c: 170, 249 drivers/snk.c: 2930, 2986, 3043, 3100, 3157, 3228, 3315, 3369, 3427, 3455, 3515, 3586, 3642, 3719, 3784, 3889, 4013, 4154 drivers/snk68.c: 260, 407, 444, 595 drivers/sonson.c: 196 drivers/ssrj.c: 134 drivers/starwars.c: 258, 335 drivers/statriv2.c: 438 drivers/strnskil.c: 178, 266 drivers/superqix.c: 606, 744 drivers/suprnova.c: 558, 633 drivers/tceptor.c: 368, 424 drivers/tmnt.c: 1862, 1948, 2148 drivers/toypop.c: 402, 487 drivers/tsamurai.c: 471, 664 drivers/tumbleb.c: 663 drivers/vastar.c: 234 drivers/zaccaria.c: 408, 517 drivers/zn.c: 3110 drivers/zodiack.c: 221
+# drivers/1942.c: 200 drivers/1943.c: 148 drivers/40love.c: 1082 drivers/aerofgt.c: 743 drivers/airbustr.c: 496 drivers/alpha68k.c: 1164, 1490, 1543, 1595, 1650, 1676, 1776 drivers/atetris.c: 228, 254 drivers/baraduke.c: 257, 330 drivers/battlex.c: 116 drivers/bbusters.c: 470, 557 drivers/bionicc.c: 227 drivers/blktiger.c: 214 drivers/bwing.c: 294 drivers/compgolf.c: 136 drivers/cps1.c: 492, 661, 742, 835, 919, 998, 1185, 1275, 1356, 1448, 1552, 1647, 1737, 1819, 1902, 1996, 2058, 2183, 2286, 2394, 2513, 2622, 2714, 2807, 2861, 2913, 2966, 3018, 3072, 3115, 3216, 3316, 3417, 3510, 3564 drivers/dec8.c: 1244, 1675 drivers/docastle.c: 360 drivers/exedexes.c: 138 drivers/fcrash.c: 260 drivers/flstory.c: 525 drivers/funkybee.c: 114, 164, 214 drivers/funkyjet.c: 222, 300 drivers/galaga.c: 1007, 1083, 1154, 1228, 1358, 1597, 1656 drivers/gunsmoke.c: 192 drivers/hal21.c: 418 drivers/higemaru.c: 81 drivers/ikki.c: 120 drivers/jcross.c: 197 drivers/karnov.c: 594 drivers/kingobox.c: 290, 376 drivers/kyugo.c: 235, 266, 303, 334, 364, 394, 424 drivers/ladybug.c: 165, 438 drivers/legionna.c: 829, 917 drivers/lsasquad.c: 195 drivers/mainsnk.c: 195 drivers/mappy.c: 982, 1115, 1246, 1307, 1375 drivers/markham.c: 152 drivers/marvins.c: 270, 359, 450 drivers/midtunit.c: 339 drivers/midvunit.c: 580 drivers/mitchell.c: 604 drivers/ms32.c: 776, 846, 913 drivers/mugsmash.c: 297, 379 drivers/munchmo.c: 201 drivers/mwarr.c: 209 drivers/namcond1.c: 111 drivers/namcos1.c: 603, 643, 665, 702, 764, 786, 800, 873, 883, 905, 915 drivers/namcos12.c: 1257, 1307 drivers/namcos86.c: 571, 661, 731, 809, 888, 967 drivers/neogeo.c: 1059, 1156 drivers/nycaptor.c: 722 drivers/ohmygod.c: 323 drivers/onetwo.c: 143 drivers/pacland.c: 334 drivers/pandoras.c: 288 drivers/prehisle.c: 157 drivers/rollrace.c: 151 drivers/rungun.c: 386 drivers/sauro.c: 248 drivers/scobra.c: 643 drivers/seta2.c: 554 drivers/sf.c: 339, 517, 655 drivers/sgladiat.c: 285 drivers/shootout.c: 168 drivers/sidearms.c: 249 drivers/skykid.c: 170, 249 drivers/snk.c: 2930, 2986, 3043, 3100, 3157, 3228, 3315, 3369, 3427, 3455, 3515, 3586, 3642, 3719, 3784, 3889, 4013, 4154 drivers/snk68.c: 260, 407, 444, 595 drivers/sonson.c: 196 drivers/ssrj.c: 134 drivers/starwars.c: 258, 335 drivers/statriv2.c: 438 drivers/strnskil.c: 178, 266 drivers/superqix.c: 606, 744 drivers/suprnova.c: 558, 633 drivers/tceptor.c: 368, 424 drivers/tmnt.c: 1862, 1948, 2148 drivers/toypop.c: 402, 487 drivers/tsamurai.c: 471, 664 drivers/tumbleb.c: 663 drivers/vastar.c: 234 drivers/zaccaria.c: 408, 517 drivers/zn.c: 3110 drivers/zodiack.c: 221
 Freeze
 動きを止める
 
-# inptport.c: 392 ui_lang.c: 14
+# inptport.c: 405 ui_lang.c: 14
 French
 フランス語
 
@@ -1330,11 +1334,11 @@ French
 Full
 フル
 
-# datafile.c: 2162
+# datafile.c: 2164
 GAME: 
 ゲーム: 
 
-# drivers/bublbobl.c: 578 drivers/cps1.c: 605, 687, 768, 851, 935, 1020, 1113, 1198, 1288, 1369, 1565, 1660, 1750, 1832, 1915, 2009, 2105, 2196, 2299, 2407, 2526, 2635, 2727, 2820, 3229, 3329, 3430, 3523, 3677, 3790 drivers/dec0.c: 778 drivers/fcrash.c: 273 drivers/macs.c: 336 drivers/missile.c: 474 drivers/pacman.c: 1370 drivers/turbo.c: 417
+# drivers/bublbobl.c: 578 drivers/cps1.c: 605, 687, 768, 851, 935, 1020, 1113, 1198, 1288, 1369, 1565, 1660, 1750, 1832, 1915, 2009, 2105, 2196, 2299, 2407, 2526, 2635, 2727, 2820, 3229, 3329, 3430, 3523, 3677, 3790 drivers/dec0.c: 778 drivers/fcrash.c: 273 drivers/macs.c: 336 drivers/missile.c: 474 drivers/pacman.c: 1370 drivers/turbo.c: 417 drivers/vegas.c: 2039
 Game
 ゲーム名
 
@@ -1362,7 +1366,7 @@ Game Mameinfo
 Game Selection
 ゲーム選択
 
-# drivers/neogeo.c: 1151, 1200, 1326 inptport.c: 2008
+# drivers/neogeo.c: 1122, 1171, 1297 inptport.c: 2031
 Game Slots
 ゲームスロット
 
@@ -1370,7 +1374,7 @@ Game Slots
 Game Story
 ゲームのストーリー
 
-# inptport.c: 415
+# inptport.c: 428
 Game Time
 ゲームタイプ
 
@@ -1386,7 +1390,7 @@ General
 General Help
 全般のヘルプ
 
-# inptport.c: 391 ui_lang.c: 17
+# inptport.c: 404 ui_lang.c: 17
 German
 ドイツ語
 
@@ -1410,23 +1414,23 @@ Greater Or Equal
 Greater or Equal
 以上
 
-# datafile.c: 3217
+# datafile.c: 3219
 HI/TRUE BITMAP : %3d  + %3d\n
 RGBダイレクト  : %3d  + %3d\n
 
-# datafile.c: 3221
+# datafile.c: 3223
 HIGHLIGHTS     : %3d  + %3d\n
 ハイライト使用 : %3d  + %3d\n
 
-# inptport.c: 401
+# inptport.c: 414
 Hard
 困難
 
-# inptport.c: 402
+# inptport.c: 415
 Harder
 より困難
 
-# inptport.c: 403
+# inptport.c: 416
 Hardest
 最も困難
 
@@ -1442,7 +1446,7 @@ Help not available yet
 Hex
 16進
 
-# inptport.c: 407 
+# inptport.c: 420 
 High
 高い
 
@@ -1450,15 +1454,15 @@ High
 High Scores
 ハイスコア
 
-# inptport.c: 408
+# inptport.c: 421
 Higher
 より高い
 
-# inptport.c: 409
+# inptport.c: 422
 Highest
 最も高い
 
-# inptport.c: 387
+# inptport.c: 400
 Hispanic
 ラテン
 
@@ -1470,15 +1474,15 @@ History not available
 Hit
 ヒット
 
-# drivers/bfm_sc2.c: 2784 drivers/funworld.c: 466, 524 drivers/ltcasino.c: 103, 475 drivers/lvcards.c: 209, 293
+# drivers/funworld.c: 466, 524 drivers/ltcasino.c: 103, 475 drivers/lvcards.c: 209, 293
 Hold 1
 ホールド 1
 
-# drivers/bfm_sc2.c: 2785 drivers/ltcasino.c: 104, 476 drivers/lvcards.c: 210, 294
+# drivers/ltcasino.c: 104, 476 drivers/lvcards.c: 210, 294
 Hold 2
 ホールド 2
 
-# drivers/bfm_sc2.c: 2786 drivers/funworld.c: 476, 534 drivers/ltcasino.c: 105, 477 drivers/lvcards.c: 211, 295
+# drivers/funworld.c: 476, 534 drivers/ltcasino.c: 105, 477 drivers/lvcards.c: 211, 295
 Hold 3
 ホールド 3
 
@@ -1490,7 +1494,7 @@ Hold 4
 Hold 5
 ホールド 5
 
-# drivers/neogeo.c: 1149, 1198, 1275, 1324
+# drivers/neogeo.c: 1120, 1169, 1246, 1295
 Home
 家庭用
 
@@ -1514,15 +1518,15 @@ Horizontally
 IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
 「%s」を合法的に遊ぶ権利がなければESCを押してください。
 
-# datafile.c: 2976
+# datafile.c: 2978
 IMPERFECT COLORS   : %3d  %3d\n
 色の再現が不完全   : %3d  %3d\n
 
-# datafile.c: 2972
+# datafile.c: 2974
 IMPERFECT GRAPHICS : %3d  %3d\n
 画像の再現が不完全 : %3d  %3d\n
 
-# datafile.c: 2980
+# datafile.c: 2982
 IMPERFECT SOUND    : %3d  %3d\n
 音の再現が不完全   : %3d  %3d\n
 
@@ -1542,11 +1546,11 @@ Ignore Decrement By
 Increased By Value
 値によって増加
 
-# drivers/aerofgt.c: 731, 832, 910, 980, 1065 drivers/alpha68k.c: 1637 drivers/armedf.c: 558 drivers/bbusters.c: 458, 529 drivers/boogwing.c: 181 drivers/cinemat.c: 737 drivers/crshrace.c: 284, 462 drivers/deco32.c: 1224 drivers/itech8.c: 1600 drivers/marinedt.c: 366 drivers/mcr68.c: 740 drivers/segac2.c: 1061 drivers/segas18.c: 915, 971, 1027, 1076, 1142, 1159, 1203 drivers/sslam.c: 547 drivers/system18.c: 1328 drivers/system24.c: 1415 drivers/taotaido.c: 233
+# drivers/aerofgt.c: 731, 832, 910, 980, 1065 drivers/alpha68k.c: 1637 drivers/armedf.c: 558 drivers/bbusters.c: 458, 529 drivers/boogwing.c: 181 drivers/cinemat.c: 737 drivers/crshrace.c: 284, 462 drivers/deco32.c: 1340 drivers/itech8.c: 1600 drivers/marinedt.c: 366 drivers/mcr68.c: 740 drivers/segac2.c: 1061 drivers/segas18.c: 915, 971, 1027, 1076, 1142, 1159, 1203 drivers/sslam.c: 547 drivers/system18.c: 1328 drivers/system24.c: 1415 drivers/taotaido.c: 233
 Individual
 個別
 
-# cheat.c: 926 inptport.c: 424
+# cheat.c: 926 inptport.c: 437
 Infinite
 無制限
 
@@ -1634,7 +1638,7 @@ Input (this game)
 Insert
 挿入
 
-# inptport.c: 381
+# inptport.c: 394
 International
 インターナショナル
 
@@ -1658,7 +1662,7 @@ Invincibility PL2
 Invulnerability
 耐久力
 
-# inptport.c: 393 ui_lang.c: 16
+# inptport.c: 406 ui_lang.c: 16
 Italian
 イタリア語
 
@@ -1666,15 +1670,15 @@ Italian
 Italy
 イタリア
 
-# inptport.c: 382
+# inptport.c: 395
 Japan
 日本
 
-# inptport.c: 390 ui_lang.c: 10
+# inptport.c: 403 ui_lang.c: 10
 Japanese
 日本語
 
-# inptport.c: 419 
+# inptport.c: 432 
 Joystick
 ジョイスティック
 
@@ -1682,7 +1686,7 @@ Joystick
 Kan
 カン
 
-# drivers/ddenlovr.c: 3630, 3857 drivers/ltcasino.c: 566 drivers/rbmk.c: 133 drivers/ssv.c: 1471, 1587, 1869 inptport.c: 956 
+# drivers/ddenlovr.c: 3630, 3857 drivers/ltcasino.c: 566 drivers/rbmk.c: 133 drivers/ssv.c: 1471, 1587, 1869 inptport.c: 969 
 Keyboard
 キーボード
 
@@ -1702,7 +1706,7 @@ Label
 Label Type
 ラベルタイプ
 
-# drivers/snowbros.c: 876 inptport.c: 388 ui_text.c: 322
+# drivers/snowbros.c: 876 inptport.c: 401 ui_text.c: 322
 Language
 言語
 
@@ -1722,11 +1726,11 @@ Less Or Equal
 Less or Equal
 以下
 
-# inptport.c: 423
+# inptport.c: 436
 Level Select
 難易度選択
 
-# inptport.c: 418
+# inptport.c: 431
 Light Gun
 光線銃
 
@@ -1734,71 +1738,71 @@ Light Gun
 Lightgun
 光線銃
 
-# inptport.c: 920
+# inptport.c: 933
 Lightgun X
 光線銃 X
 
-# inptport.c: 921
+# inptport.c: 934
 Lightgun X 2
 光線銃 X 2
 
-# inptport.c: 922
+# inptport.c: 935
 Lightgun X 3
 光線銃 X 3
 
-# inptport.c: 923
+# inptport.c: 936
 Lightgun X 4
 光線銃 X 4
 
-# inptport.c: 924
+# inptport.c: 937
 Lightgun X 5
 光線銃 X 5
 
-# inptport.c: 925
+# inptport.c: 938
 Lightgun X 6
 光線銃 X 6
 
-# inptport.c: 926
+# inptport.c: 939
 Lightgun X 7
 光線銃 X 7
 
-# inptport.c: 927
+# inptport.c: 940
 Lightgun X 8
 光線銃 X 8
 
-# inptport.c: 929
+# inptport.c: 942
 Lightgun Y
 光線銃 Y
 
-# inptport.c: 930
+# inptport.c: 943
 Lightgun Y 2
 光線銃 Y 2
 
-# inptport.c: 931
+# inptport.c: 944
 Lightgun Y 3
 光線銃 Y 3
 
-# inptport.c: 932
+# inptport.c: 945
 Lightgun Y 4
 光線銃 Y 4
 
-# inptport.c: 933
+# inptport.c: 946
 Lightgun Y 5
 光線銃 Y 5
 
-# inptport.c: 934
+# inptport.c: 947
 Lightgun Y 6
 光線銃 Y 6
 
-# inptport.c: 935
+# inptport.c: 948
 Lightgun Y 7
 光線銃 Y 7
 
-# inptport.c: 936
+# inptport.c: 949
 Lightgun Y 8
 光線銃 Y 8
 
-# inptport.c: 329
+# inptport.c: 342
 Lives
 ライフ
 
@@ -1810,15 +1814,15 @@ Lives (or another value)
 Load Selected Card
 選択したカードの読み込み
 
-# inptport.c: 994
+# inptport.c: 1014
 Load State
 プレイ状態の復帰
 
-# usrintrf.c: 4754
+# usrintrf.c: 4863
 Load cancelled
 読み込みを中止しました
 
-# usrintrf.c: 4781
+# usrintrf.c: 4890
 Load from position %c
 %c から読み込みました
 
@@ -1830,7 +1834,7 @@ Location
 Lose
 負け
 
-# inptport.c: 406
+# inptport.c: 419
 Low
 低い
 
@@ -1842,11 +1846,11 @@ MAMEの統計データ
 MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n\n
 MAMEはエミュレータです: いくつかのアーケードマシンをほぼ忠実に再現します。しか\nし、ハードウェアが要求するROMイメージと呼ばれるソ\フトウェアがなければ動作しま\nせん。ROMは他の商用ソ\フトウェアと同様に著作物であるため、あなたが所持していな\nいアーケードマシンのROMを使用することは違法になります。言うまでもなくMAMEと一\n緒に配布してはいけません。ROMと一緒にMAMEを配布することは著作権の侵害であり、\n直ちにゲームメーカーに報告され、然るべき法的措置がとられるでしょう。\n
 
-# datafile.c: 2153
+# datafile.c: 2155
 MAMEInfo:\n
 MAME情報:\n
 
-# drivers/neogeo.c: 1148, 1197, 1274, 1323 inptport.c: 2007
+# drivers/neogeo.c: 1119, 1168, 1245, 1294 inptport.c: 2030
 Machine Mode
 マシンモード
 
@@ -1886,7 +1890,7 @@ Max Players
 Maximum Boundary
 最大境界
 
-# cheat.c: 6569 inptport.c: 400 ui_text.c: 207
+# cheat.c: 6569 inptport.c: 413 ui_text.c: 207
 Medium
 普通
 
@@ -1926,7 +1930,7 @@ Minimum Value
 Monitor
 モニタ
 
-# drivers/tx1.c: 942, 946 inptport.c: 426
+# drivers/tx1.c: 942, 946 inptport.c: 439
 Mono
 モノラル
 
@@ -1938,67 +1942,67 @@ More Info
 More Info for
 補足説明:
 
-# inptport.c: 938
+# inptport.c: 951
 Mouse X
 マウス X
 
-# inptport.c: 939
+# inptport.c: 952
 Mouse X 2
 マウス X 2
 
-# inptport.c: 940
+# inptport.c: 953
 Mouse X 3
 マウス X 3
 
-# inptport.c: 941
+# inptport.c: 954
 Mouse X 4
 マウス X 4
 
-# inptport.c: 942
+# inptport.c: 955
 Mouse X 5
 マウス X 5
 
-# inptport.c: 943
+# inptport.c: 956
 Mouse X 6
 マウス X 6
 
-# inptport.c: 944
+# inptport.c: 957
 Mouse X 7
 マウス X 7
 
-# inptport.c: 945
+# inptport.c: 958
 Mouse X 8
 マウス X 8
 
-# inptport.c: 947
+# inptport.c: 960
 Mouse Y
 マウス Y
 
-# inptport.c: 948
+# inptport.c: 961
 Mouse Y 2
 マウス Y 2
 
-# inptport.c: 949
+# inptport.c: 962
 Mouse Y 3
 マウス Y 3
 
-# inptport.c: 950
+# inptport.c: 963
 Mouse Y 4
 マウス Y 4
 
-# inptport.c: 951
+# inptport.c: 964
 Mouse Y 5
 マウス Y 5
 
-# inptport.c: 952
+# inptport.c: 965
 Mouse Y 6
 マウス Y 6
 
-# inptport.c: 953
+# inptport.c: 966
 Mouse Y 7
 マウス Y 7
 
-# inptport.c: 954
+# inptport.c: 967
 Mouse Y 8
 マウス Y 8
 
@@ -2006,11 +2010,11 @@ Mouse Y 8
 NA
 なし
 
-# datafile.c: 2982
+# datafile.c: 2984
 NO COCKTAIL        : %3d  %3d\n
 カクテル未サポート : %3d  %3d\n
 
-# datafile.c: 2984
+# datafile.c: 2986
 NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 正常なダンプが不明 : %3d  %3d\n(%3d ROM、全%dゲーム)\n
 
@@ -2018,11 +2022,11 @@ NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 NO MATCH\n
 マッチしません\n
 
-# datafile.c: 2978
+# datafile.c: 2980
 NO SOUND           : %3d  %3d\n
 サウンド無し       : %3d  %3d\n
 
-# datafile.c: 2968
+# datafile.c: 2970
 NON-WORKING        : %3d  %3d\n
 動作不可           : %3d  %3d\n
 
@@ -2034,7 +2038,7 @@ Name
 Near To
 近い
 
-# drivers/neogeo.c: 1078, 1387
+# drivers/neogeo.c: 1049, 1358
 Next Game
 次のゲーム
 
@@ -2050,7 +2054,7 @@ Nintendo
 Nintendo of America
 任天堂アメリカ
 
-# inptport.c: 327 
+# inptport.c: 340 
 No
 いいえ
 
@@ -2058,11 +2062,11 @@ No
 No previous values saved
 前回の値が保存されていません
 
-# cheat.c: 1104, 2911 inptport.c: 432 sound/custom.c: 77 
+# cheat.c: 1104, 2911 inptport.c: 445 sound/custom.c: 77 
 None
 なし
 
-# cheat.c: 2919, 2934 inptport.c: 399
+# cheat.c: 2919, 2934 inptport.c: 412
 Normal
 標準
 
@@ -2074,7 +2078,7 @@ Normal/Delay
 Not Equal
 異なる
 
-# debug/mamedbg.c: 4429 
+# debug/mamedbg.c: 4384 
 Not found
 見つかりません
 
@@ -2094,15 +2098,15 @@ OK
 OPTIONAL %-12s NOT FOUND\n
 オプションの%-12s 見つかりません\n
 
-# inptport.c: 325 ui_text.c: 35, 225
+# inptport.c: 338 ui_text.c: 35, 225
 Off
 OFF
 
-# inptport.c: 326 ui_text.c: 34, 226
+# inptport.c: 339 ui_text.c: 34, 226
 On
 ON
 
-# inptport.c: 958
+# inptport.c: 971
 On Screen Display
 オンスクリーンディスプレイ
 
@@ -2150,1355 +2154,1355 @@ Overclock
 Overseas
 海外
 
-# drivers/cherrym.c: 178 drivers/neogeo.c: 1348
+# drivers/cherrym.c: 178 drivers/neogeo.c: 1319
 P1 Big
 P1 ビッグ
 
-# inptport.c: 473
+# inptport.c: 486
 P1 Button 1
 P1 ボタン 1
 
-# inptport.c: 482
+# inptport.c: 495
 P1 Button 10
 P1 ボタン 10
 
-# inptport.c: 474
+# inptport.c: 487
 P1 Button 2
 P1 ボタン 2
 
-# inptport.c: 475
+# inptport.c: 488
 P1 Button 3
 P1 ボタン 3
 
-# inptport.c: 476
+# inptport.c: 489
 P1 Button 4
 P1 ボタン 4
 
-# inptport.c: 477
+# inptport.c: 490
 P1 Button 5
 P1 ボタン 5
 
-# inptport.c: 478
+# inptport.c: 491
 P1 Button 6
 P1 ボタン 6
 
-# inptport.c: 479
+# inptport.c: 492
 P1 Button 7
 P1 ボタン 7
 
-# inptport.c: 480
+# inptport.c: 493
 P1 Button 8
 P1 ボタン 8
 
-# inptport.c: 481
+# inptport.c: 494
 P1 Button 9
 P1 ボタン 9
 
-# inptport.c: 515
+# inptport.c: 528
 P1 Custom 1
 P1 カスタム 1
 
-# inptport.c: 516
+# inptport.c: 529
 P1 Custom 2
 P1 カスタム 2
 
-# inptport.c: 517
+# inptport.c: 530
 P1 Custom 3
 P1 カスタム 3
 
-# inptport.c: 518
+# inptport.c: 531
 P1 Custom 4
 P1 カスタム 4
 
-# drivers/4enraya.c: 135 inptport.c: 454, 460
+# drivers/4enraya.c: 135 inptport.c: 467, 473
 P1 Down
 P1 下
 
-# inptport.c: 455, 461
+# inptport.c: 468, 474
 P1 Left
 P1 左
 
-# inptport.c: 470
+# inptport.c: 483
 P1 Left/Down
 P1 左/下
 
-# inptport.c: 471
+# inptport.c: 484
 P1 Left/Left
 P1 左/左
 
-# inptport.c: 472
+# inptport.c: 485
 P1 Left/Right
 P1 左/右
 
-# inptport.c: 469
+# inptport.c: 482
 P1 Left/Up
 P1 左/上
 
-# inptport.c: 485
+# inptport.c: 498
 P1 Mahjong A
 P1 麻雀 A
 
-# inptport.c: 486
+# inptport.c: 499
 P1 Mahjong B
 P1 麻雀 B
 
-# inptport.c: 507
+# inptport.c: 520
 P1 Mahjong Bet
 P1 麻雀 ベット
 
-# includes/nb1413m3.h: 163 inptport.c: 512
+# includes/nb1413m3.h: 163 inptport.c: 525
 P1 Mahjong Big
 P1 麻雀 ビッグ
 
-# inptport.c: 487
+# inptport.c: 500
 P1 Mahjong C
 P1 麻雀 C
 
-# inptport.c: 504
+# inptport.c: 517
 P1 Mahjong Chi
 P1 麻雀 チー
 
-# inptport.c: 488
+# inptport.c: 501
 P1 Mahjong D
 P1 麻雀 D
 
-# inptport.c: 510
+# inptport.c: 523
 P1 Mahjong Double Up
 P1 麻雀 ダブルアップ
 
-# inptport.c: 489
+# inptport.c: 502
 P1 Mahjong E
 P1 麻雀 E
 
-# inptport.c: 490
+# inptport.c: 503
 P1 Mahjong F
 P1 麻雀 F
 
-# inptport.c: 511
+# inptport.c: 524
 P1 Mahjong Flip Flop
 P1 麻雀 フリップフロップ
 
-# inptport.c: 491
+# inptport.c: 504
 P1 Mahjong G
 P1 麻雀 G
 
-# inptport.c: 492
+# inptport.c: 505
 P1 Mahjong H
 P1 麻雀 H
 
-# inptport.c: 493
+# inptport.c: 506
 P1 Mahjong I
 P1 麻雀 I
 
-# inptport.c: 494
+# inptport.c: 507
 P1 Mahjong J
 P1 麻雀 J
 
-# inptport.c: 495
+# inptport.c: 508
 P1 Mahjong K
 P1 麻雀 K
 
-# inptport.c: 502
+# inptport.c: 515
 P1 Mahjong Kan
 P1 麻雀 カン
 
-# inptport.c: 496
+# inptport.c: 509
 P1 Mahjong L
 P1 麻雀 L
 
-# inptport.c: 508
+# inptport.c: 521
 P1 Mahjong Last Chance
 P1 麻雀 ラストチャンス
 
-# inptport.c: 497
+# inptport.c: 510
 P1 Mahjong M
 P1 麻雀 M
 
-# inptport.c: 498
+# inptport.c: 511
 P1 Mahjong N
 P1 麻雀 N
 
-# inptport.c: 499
+# inptport.c: 512
 P1 Mahjong O
 P1 麻雀 O
 
-# inptport.c: 500
+# inptport.c: 513
 P1 Mahjong P
 P1 麻雀 P
 
-# inptport.c: 503
+# inptport.c: 516
 P1 Mahjong Pon
 P1 麻雀 ポン
 
-# inptport.c: 501
+# inptport.c: 514
 P1 Mahjong Q
 P1 麻雀 Q
 
-# inptport.c: 505
+# inptport.c: 518
 P1 Mahjong Reach
 P1 麻雀 リーチ
 
-# inptport.c: 506
+# inptport.c: 519
 P1 Mahjong Ron
 P1 麻雀 ロン
 
-# inptport.c: 509
+# inptport.c: 522
 P1 Mahjong Score
 P1 麻雀 スコア
 
-# includes/nb1413m3.h: 163 inptport.c: 513
+# includes/nb1413m3.h: 163 inptport.c: 526
 P1 Mahjong Small
 P1 麻雀 スモール
 
-# inptport.c: 812
+# inptport.c: 825
 P1 Pedal 1
 P1 ペダル 1
 
-# inptport.c: 821
+# inptport.c: 834
 P1 Pedal 2
 P1 ペダル 2
 
-# inptport.c: 830
+# inptport.c: 843
 P1 Pedal 3
 P1 ペダル 3
 
-# inptport.c: 456, 462
+# inptport.c: 469, 475
 P1 Right
 P1 右
 
-# inptport.c: 466
+# inptport.c: 479
 P1 Right/Down
 P1 右/下
 
-# inptport.c: 467
+# inptport.c: 480
 P1 Right/Left
 P1 右/左
 
-# inptport.c: 468
+# inptport.c: 481
 P1 Right/Right
 P1 右/右
 
-# inptport.c: 465
+# inptport.c: 478
 P1 Right/Up
 P1 右/上
 
-# drivers/lemmings.c: 140 drivers/nss.c: 339 inptport.c: 484
+# drivers/lemmings.c: 140 drivers/nss.c: 339 inptport.c: 497
 P1 Select
 P1 選択
 
-# drivers/cherrym.c: 182 drivers/neogeo.c: 1349
+# drivers/cherrym.c: 182 drivers/neogeo.c: 1320
 P1 Small
 P1 スモール
 
-# drivers/nss.c: 340 inptport.c: 483
+# drivers/nss.c: 340 inptport.c: 496
 P1 Start
 P1 スタート
 
-# inptport.c: 520
+# inptport.c: 533
 P1 Toggle Autofire
 P1 連射切り替え
 
-# inptport.c: 453, 459
+# inptport.c: 466, 472
 P1 Up
 P1 上
 
-# inptport.c: 535
+# inptport.c: 548
 P2 Button 1
 P2 ボタン 1
 
-# inptport.c: 544
+# inptport.c: 557
 P2 Button 10
 P2 ボタン 10
 
-# inptport.c: 536
+# inptport.c: 549
 P2 Button 2
 P2 ボタン 2
 
-# inptport.c: 537
+# inptport.c: 550
 P2 Button 3
 P2 ボタン 3
 
-# inptport.c: 538
+# inptport.c: 551
 P2 Button 4
 P2 ボタン 4
 
-# inptport.c: 539
+# inptport.c: 552
 P2 Button 5
 P2 ボタン 5
 
-# inptport.c: 540
+# inptport.c: 553
 P2 Button 6
 P2 ボタン 6
 
-# inptport.c: 541
+# inptport.c: 554
 P2 Button 7
 P2 ボタン 7
 
-# inptport.c: 542
+# inptport.c: 555
 P2 Button 8
 P2 ボタン 8
 
-# inptport.c: 543
+# inptport.c: 556
 P2 Button 9
 P2 ボタン 9
 
-# inptport.c: 577
+# inptport.c: 590
 P2 Custom 1
 P2 カスタム 1
 
-# inptport.c: 578
+# inptport.c: 591
 P2 Custom 2
 P2 カスタム 2
 
-# inptport.c: 579
+# inptport.c: 592
 P2 Custom 3
 P2 カスタム 3
 
-# inptport.c: 580
+# inptport.c: 593
 P2 Custom 4
 P2 カスタム 4
 
-# drivers/4enraya.c: 137 inptport.c: 524
+# drivers/4enraya.c: 137 inptport.c: 537
 P2 Down
 P2 下
 
-# inptport.c: 525
+# inptport.c: 538
 P2 Left
 P2 左
 
-# inptport.c: 532
+# inptport.c: 545
 P2 Left/Down
 P2 左/下
 
-# inptport.c: 533
+# inptport.c: 546
 P2 Left/Left
 P2 左/左
 
-# inptport.c: 534
+# inptport.c: 547
 P2 Left/Right
 P2 左/右
 
-# inptport.c: 531
+# inptport.c: 544
 P2 Left/Up
 P2 左/上
 
-# inptport.c: 547
+# inptport.c: 560
 P2 Mahjong A
 P2 麻雀 A
 
-# inptport.c: 548
+# inptport.c: 561
 P2 Mahjong B
 P2 麻雀 B
 
-# inptport.c: 569
+# inptport.c: 582
 P2 Mahjong Bet
 P2 麻雀 ベット
 
-# includes/nb1413m3.h: 218 inptport.c: 574
+# includes/nb1413m3.h: 218 inptport.c: 587
 P2 Mahjong Big
 P2 麻雀 ビッグ
 
-# inptport.c: 549
+# inptport.c: 562
 P2 Mahjong C
 P2 麻雀 C
 
-# inptport.c: 566
+# inptport.c: 579
 P2 Mahjong Chi
 P2 麻雀 チー
 
-# inptport.c: 550
+# inptport.c: 563
 P2 Mahjong D
 P2 麻雀 D
 
-# inptport.c: 572
+# inptport.c: 585
 P2 Mahjong Double Up
 P2 麻雀 ダブルアップ
 
-# inptport.c: 551
+# inptport.c: 564
 P2 Mahjong E
 P2 麻雀 E
 
-# inptport.c: 552
+# inptport.c: 565
 P2 Mahjong F
 P2 麻雀 F
 
-# inptport.c: 573
+# inptport.c: 586
 P2 Mahjong Flip Flop
 P2 麻雀 フリップフロップ
 
-# inptport.c: 553
+# inptport.c: 566
 P2 Mahjong G
 P2 麻雀 G
 
-# inptport.c: 554
+# inptport.c: 567
 P2 Mahjong H
 P2 麻雀 H
 
-# inptport.c: 555
+# inptport.c: 568
 P2 Mahjong I
 P2 麻雀 I
 
-# inptport.c: 556
+# inptport.c: 569
 P2 Mahjong J
 P2 麻雀 J
 
-# inptport.c: 557
+# inptport.c: 570
 P2 Mahjong K
 P2 麻雀 K
 
-# inptport.c: 564
+# inptport.c: 577
 P2 Mahjong Kan
 P2 麻雀 カン
 
-# inptport.c: 558
+# inptport.c: 571
 P2 Mahjong L
 P2 麻雀 L
 
-# inptport.c: 570
+# inptport.c: 583
 P2 Mahjong Last Chance
 P2 麻雀 ラストチャンス
 
-# inptport.c: 559
+# inptport.c: 572
 P2 Mahjong M
 P2 麻雀 M
 
-# inptport.c: 560
+# inptport.c: 573
 P2 Mahjong N
 P2 麻雀 N
 
-# inptport.c: 561
+# inptport.c: 574
 P2 Mahjong O
 P2 麻雀 O
 
-# inptport.c: 562
+# inptport.c: 575
 P2 Mahjong P
 P2 麻雀 P
 
-# inptport.c: 565
+# inptport.c: 578
 P2 Mahjong Pon
 P2 麻雀 ポン
 
-# inptport.c: 563
+# inptport.c: 576
 P2 Mahjong Q
 P2 麻雀 Q
 
-# inptport.c: 567
+# inptport.c: 580
 P2 Mahjong Reach
 P2 麻雀 リーチ
 
-# inptport.c: 568
+# inptport.c: 581
 P2 Mahjong Ron
 P2 麻雀 ロン
 
-# inptport.c: 571
+# inptport.c: 584
 P2 Mahjong Score
 P2 麻雀 スコア
 
-# includes/nb1413m3.h: 218 inptport.c: 575
+# includes/nb1413m3.h: 218 inptport.c: 588
 P2 Mahjong Small
 P2 麻雀 スモール
 
-# inptport.c: 813
+# inptport.c: 826
 P2 Pedal 1
 P2 ペダル 1
 
-# inptport.c: 822
+# inptport.c: 835
 P2 Pedal 2
 P2 ペダル 2
 
-# inptport.c: 831
+# inptport.c: 844
 P2 Pedal 3
 P2 ペダル 3
 
-# inptport.c: 526
+# inptport.c: 539
 P2 Right
 P2 右
 
-# inptport.c: 528
+# inptport.c: 541
 P2 Right/Down
 P2 右/下
 
-# inptport.c: 529
+# inptport.c: 542
 P2 Right/Left
 P2 右/左
 
-# inptport.c: 530
+# inptport.c: 543
 P2 Right/Right
 P2 右/右
 
-# inptport.c: 527
+# inptport.c: 540
 P2 Right/Up
 P2 右/上
 
-# drivers/lemmings.c: 143 drivers/nss.c: 354 inptport.c: 546
+# drivers/lemmings.c: 143 drivers/nss.c: 354 inptport.c: 559
 P2 Select
 P2 選択
 
-# drivers/nss.c: 355 inptport.c: 545
+# drivers/nss.c: 355 inptport.c: 558
 P2 Start
 P2 スタート
 
-# inptport.c: 582
+# inptport.c: 595
 P2 Toggle Autofire
 P2 連射切り替え
 
-# inptport.c: 523
+# inptport.c: 536
 P2 Up
 P2 上
 
-# inptport.c: 596
+# inptport.c: 609
 P3 Button 1
 P3 ボタン 1
 
-# inptport.c: 605
+# inptport.c: 618
 P3 Button 10
 P3 ボタン 10
 
-# inptport.c: 597
+# inptport.c: 610
 P3 Button 2
 P3 ボタン 2
 
-# inptport.c: 598
+# inptport.c: 611
 P3 Button 3
 P3 ボタン 3
 
-# inptport.c: 599
+# inptport.c: 612
 P3 Button 4
 P3 ボタン 4
 
-# inptport.c: 600
+# inptport.c: 613
 P3 Button 5
 P3 ボタン 5
 
-# inptport.c: 601
+# inptport.c: 614
 P3 Button 6
 P3 ボタン 6
 
-# inptport.c: 602
+# inptport.c: 615
 P3 Button 7
 P3 ボタン 7
 
-# inptport.c: 603
+# inptport.c: 616
 P3 Button 8
 P3 ボタン 8
 
-# inptport.c: 604
+# inptport.c: 617
 P3 Button 9
 P3 ボタン 9
 
-# inptport.c: 609
+# inptport.c: 622
 P3 Custom 1
 P3 カスタム 1
 
-# inptport.c: 610
+# inptport.c: 623
 P3 Custom 2
 P3 カスタム 2
 
-# inptport.c: 611
+# inptport.c: 624
 P3 Custom 3
 P3 カスタム 3
 
-# inptport.c: 612
+# inptport.c: 625
 P3 Custom 4
 P3 カスタム 4
 
-# inptport.c: 585
+# inptport.c: 598
 P3 Down
 P3 下
 
-# inptport.c: 586
+# inptport.c: 599
 P3 Left
 P3 左
 
-# inptport.c: 593
+# inptport.c: 606
 P3 Left/Down
 P3 左/下
 
-# inptport.c: 594
+# inptport.c: 607
 P3 Left/Left
 P3 左/左
 
-# inptport.c: 595
+# inptport.c: 608
 P3 Left/Right
 P3 左/右
 
-# inptport.c: 592
+# inptport.c: 605
 P3 Left/Up
 P3 左/上
 
-# inptport.c: 814
+# inptport.c: 827
 P3 Pedal 1
 P3 ペダル 1
 
-# inptport.c: 823
+# inptport.c: 836
 P3 Pedal 2
 P3 ペダル 2
 
-# inptport.c: 832
+# inptport.c: 845
 P3 Pedal 3
 P3 ペダル 3
 
-# inptport.c: 587
+# inptport.c: 600
 P3 Right
 P3 右
 
-# inptport.c: 589
+# inptport.c: 602
 P3 Right/Down
 P3 右/下
 
-# inptport.c: 590
+# inptport.c: 603
 P3 Right/Left
 P3 右/左
 
-# inptport.c: 591
+# inptport.c: 604
 P3 Right/Right
 P3 右/右
 
-# inptport.c: 588
+# inptport.c: 601
 P3 Right/Up
 P3 右/上
 
-# drivers/nss.c: 369 inptport.c: 607
+# drivers/nss.c: 369 inptport.c: 620
 P3 Select
 P3 選択
 
-# drivers/nss.c: 370 inptport.c: 606
+# drivers/nss.c: 370 inptport.c: 619
 P3 Start
 P3 スタート
 
-# inptport.c: 614
+# inptport.c: 627
 P3 Toggle Autofire
 P3 連射切り替え
 
-# inptport.c: 584
+# inptport.c: 597
 P3 Up
 P3 上
 
-# inptport.c: 629
+# inptport.c: 642
 P4 Button 1
 P4 ボタン 1
 
-# inptport.c: 638
+# inptport.c: 651
 P4 Button 10
 P4 ボタン 10
 
-# inptport.c: 630
+# inptport.c: 643
 P4 Button 2
 P4 ボタン 2
 
-# inptport.c: 631
+# inptport.c: 644
 P4 Button 3
 P4 ボタン 3
 
-# inptport.c: 632
+# inptport.c: 645
 P4 Button 4
 P4 ボタン 4
 
-# inptport.c: 633
+# inptport.c: 646
 P4 Button 5
 P4 ボタン 5
 
-# inptport.c: 634
+# inptport.c: 647
 P4 Button 6
 P4 ボタン 6
 
-# inptport.c: 635
+# inptport.c: 648
 P4 Button 7
 P4 ボタン 7
 
-# inptport.c: 636
+# inptport.c: 649
 P4 Button 8
 P4 ボタン 8
 
-# inptport.c: 637
+# inptport.c: 650
 P4 Button 9
 P4 ボタン 9
 
-# inptport.c: 642
+# inptport.c: 655
 P4 Custom 1
 P4 カスタム 1
 
-# inptport.c: 643
+# inptport.c: 656
 P4 Custom 2
 P4 カスタム 2
 
-# inptport.c: 644
+# inptport.c: 657
 P4 Custom 3
 P4 カスタム 3
 
-# inptport.c: 645
+# inptport.c: 658
 P4 Custom 4
 P4 カスタム 4
 
-# inptport.c: 618
+# inptport.c: 631
 P4 Down
 P4 下
 
-# inptport.c: 619
+# inptport.c: 632
 P4 Left
 P4 左
 
-# inptport.c: 626
+# inptport.c: 639
 P4 Left/Down
 P4 左/下
 
-# inptport.c: 627
+# inptport.c: 640
 P4 Left/Left
 P4 左/左
 
-# inptport.c: 628
+# inptport.c: 641
 P4 Left/Right
 P4 左/右
 
-# inptport.c: 625
+# inptport.c: 638
 P4 Left/Up
 P4 左/上
 
-# inptport.c: 815
+# inptport.c: 828
 P4 Pedal 1
 P4 ペダル 1
 
-# inptport.c: 824
+# inptport.c: 837
 P4 Pedal 2
 P4 ペダル 2
 
-# inptport.c: 833
+# inptport.c: 846
 P4 Pedal 3
 P4 ペダル 3
 
-# inptport.c: 620
+# inptport.c: 633
 P4 Right
 P4 右
 
-# inptport.c: 622
+# inptport.c: 635
 P4 Right/Down
 P4 右/下
 
-# inptport.c: 623
+# inptport.c: 636
 P4 Right/Left
 P4 右/左
 
-# inptport.c: 624
+# inptport.c: 637
 P4 Right/Right
 P4 右/右
 
-# inptport.c: 621
+# inptport.c: 634
 P4 Right/Up
 P4 右/上
 
-# drivers/nss.c: 384 inptport.c: 640
+# drivers/nss.c: 384 inptport.c: 653
 P4 Select
 P4 選択
 
-# drivers/nss.c: 385 inptport.c: 639
+# drivers/nss.c: 385 inptport.c: 652
 P4 Start
 P4 スタート
 
-# inptport.c: 647
+# inptport.c: 660
 P4 Toggle Autofire
 P4 連射切り替え
 
-# inptport.c: 617
+# inptport.c: 630
 P4 Up
 P4 上
 
-# inptport.c: 662
+# inptport.c: 675
 P5 Button 1
 P5 ボタン 1
 
-# inptport.c: 671
+# inptport.c: 684
 P5 Button 10
 P5 ボタン 10
 
-# inptport.c: 663
+# inptport.c: 676
 P5 Button 2
 P5 ボタン 2
 
-# inptport.c: 664
+# inptport.c: 677
 P5 Button 3
 P5 ボタン 3
 
-# inptport.c: 665
+# inptport.c: 678
 P5 Button 4
 P5 ボタン 4
 
-# inptport.c: 666
+# inptport.c: 679
 P5 Button 5
 P5 ボタン 5
 
-# inptport.c: 667
+# inptport.c: 680
 P5 Button 6
 P5 ボタン 6
 
-# inptport.c: 668
+# inptport.c: 681
 P5 Button 7
 P5 ボタン 7
 
-# inptport.c: 669
+# inptport.c: 682
 P5 Button 8
 P5 ボタン 8
 
-# inptport.c: 670
+# inptport.c: 683
 P5 Button 9
 P5 ボタン 9
 
-# inptport.c: 675
+# inptport.c: 688
 P5 Custom 1
 P5 カスタム 1
 
-# inptport.c: 676
+# inptport.c: 689
 P5 Custom 2
 P5 カスタム 2
 
-# inptport.c: 677
+# inptport.c: 690
 P5 Custom 3
 P5 カスタム 3
 
-# inptport.c: 678
+# inptport.c: 691
 P5 Custom 4
 P5 カスタム 4
 
-# inptport.c: 651
+# inptport.c: 664
 P5 Down
 P5 下
 
-# inptport.c: 652
+# inptport.c: 665
 P5 Left
 P5 左
 
-# inptport.c: 659
+# inptport.c: 672
 P5 Left/Down
 P5 左/下
 
-# inptport.c: 660
+# inptport.c: 673
 P5 Left/Left
 P5 左/左
 
-# inptport.c: 661
+# inptport.c: 674
 P5 Left/Right
 P5 左/右
 
-# inptport.c: 658
+# inptport.c: 671
 P5 Left/Up
 P5 左/上
 
-# inptport.c: 816
+# inptport.c: 829
 P5 Pedal 1
 P5 ペダル 1
 
-# inptport.c: 825
+# inptport.c: 838
 P5 Pedal 2
 P5 ペダル 2
 
-# inptport.c: 834
+# inptport.c: 847
 P5 Pedal 3
 P5 ペダル 3
 
-# inptport.c: 653
+# inptport.c: 666
 P5 Right
 P5 右
 
-# inptport.c: 655
+# inptport.c: 668
 P5 Right/Down
 P5 右/下
 
-# inptport.c: 656
+# inptport.c: 669
 P5 Right/Left
 P5 右/左
 
-# inptport.c: 657
+# inptport.c: 670
 P5 Right/Right
 P5 右/右
 
-# inptport.c: 654
+# inptport.c: 667
 P5 Right/Up
 P5 右/上
 
-# inptport.c: 673
+# inptport.c: 686
 P5 Select
 P5 選択
 
-# inptport.c: 672
+# inptport.c: 685
 P5 Start
 P5 スタート
 
-# inptport.c: 680
+# inptport.c: 693
 P5 Toggle Autofire
 P5 連射切り替え
 
-# inptport.c: 650
+# inptport.c: 663
 P5 Up
 P5 上
 
-# inptport.c: 695
+# inptport.c: 708
 P6 Button 1
 P6 ボタン 1
 
-# inptport.c: 704
+# inptport.c: 717
 P6 Button 10
 P6 ボタン 10
 
-# inptport.c: 696
+# inptport.c: 709
 P6 Button 2
 P6 ボタン 2
 
-# inptport.c: 697
+# inptport.c: 710
 P6 Button 3
 P6 ボタン 3
 
-# inptport.c: 698
+# inptport.c: 711
 P6 Button 4
 P6 ボタン 4
 
-# inptport.c: 699
+# inptport.c: 712
 P6 Button 5
 P6 ボタン 5
 
-# inptport.c: 700
+# inptport.c: 713
 P6 Button 6
 P6 ボタン 6
 
-# inptport.c: 701
+# inptport.c: 714
 P6 Button 7
 P6 ボタン 7
 
-# inptport.c: 702
+# inptport.c: 715
 P6 Button 8
 P6 ボタン 8
 
-# inptport.c: 703
+# inptport.c: 716
 P6 Button 9
 P6 ボタン 9
 
-# inptport.c: 708
+# inptport.c: 721
 P6 Custom 1
 P6 カスタム 1
 
-# inptport.c: 709
+# inptport.c: 722
 P6 Custom 2
 P6 カスタム 2
 
-# inptport.c: 710
+# inptport.c: 723
 P6 Custom 3
 P6 カスタム 3
 
-# inptport.c: 711
+# inptport.c: 724
 P6 Custom 4
 P6 カスタム 4
 
-# inptport.c: 684
+# inptport.c: 697
 P6 Down
 P6 下
 
-# inptport.c: 685
+# inptport.c: 698
 P6 Left
 P6 左
 
-# inptport.c: 692
+# inptport.c: 705
 P6 Left/Down
 P6 左/下
 
-# inptport.c: 693
+# inptport.c: 706
 P6 Left/Left
 P6 左/左
 
-# inptport.c: 694
+# inptport.c: 707
 P6 Left/Right
 P6 左/右
 
-# inptport.c: 691
+# inptport.c: 704
 P6 Left/Up
 P6 左/上
 
-# inptport.c: 817
+# inptport.c: 830
 P6 Pedal 1
 P6 ペダル 1
 
-# inptport.c: 826
+# inptport.c: 839
 P6 Pedal 2
 P6 ペダル 2
 
-# inptport.c: 835
+# inptport.c: 848
 P6 Pedal 3
 P6 ペダル 3
 
-# inptport.c: 686
+# inptport.c: 699
 P6 Right
 P6 右
 
-# inptport.c: 688
+# inptport.c: 701
 P6 Right/Down
 P6 右/下
 
-# inptport.c: 689
+# inptport.c: 702
 P6 Right/Left
 P6 右/左
 
-# inptport.c: 690
+# inptport.c: 703
 P6 Right/Right
 P6 右/右
 
-# inptport.c: 687
+# inptport.c: 700
 P6 Right/Up
 P6 右/上
 
-# inptport.c: 706
+# inptport.c: 719
 P6 Select
 P6 選択
 
-# inptport.c: 705
+# inptport.c: 718
 P6 Start
 P6 スタート
 
-# inptport.c: 713
+# inptport.c: 726
 P6 Toggle Autofire
 P6 連射切り替え
 
-# inptport.c: 683
+# inptport.c: 696
 P6 Up
 P6 上
 
-# inptport.c: 728
+# inptport.c: 741
 P7 Button 1
 P7 ボタン 1
 
-# inptport.c: 737
+# inptport.c: 750
 P7 Button 10
 P7 ボタン 10
 
-# inptport.c: 729
+# inptport.c: 742
 P7 Button 2
 P7 ボタン 2
 
-# inptport.c: 730
+# inptport.c: 743
 P7 Button 3
 P7 ボタン 3
 
-# inptport.c: 731
+# inptport.c: 744
 P7 Button 4
 P7 ボタン 4
 
-# inptport.c: 732
+# inptport.c: 745
 P7 Button 5
 P7 ボタン 5
 
-# inptport.c: 733
+# inptport.c: 746
 P7 Button 6
 P7 ボタン 6
 
-# inptport.c: 734
+# inptport.c: 747
 P7 Button 7
 P7 ボタン 7
 
-# inptport.c: 735
+# inptport.c: 748
 P7 Button 8
 P7 ボタン 8
 
-# inptport.c: 736
+# inptport.c: 749
 P7 Button 9
 P7 ボタン 9
 
-# inptport.c: 741
+# inptport.c: 754
 P7 Custom 1
 P7 カスタム 1
 
-# inptport.c: 742
+# inptport.c: 755
 P7 Custom 2
 P7 カスタム 2
 
-# inptport.c: 743
+# inptport.c: 756
 P7 Custom 3
 P7 カスタム 3
 
-# inptport.c: 744
+# inptport.c: 757
 P7 Custom 4
 P7 カスタム 4
 
-# inptport.c: 717
+# inptport.c: 730
 P7 Down
 P7 下
 
-# inptport.c: 718
+# inptport.c: 731
 P7 Left
 P7 左
 
-# inptport.c: 725
+# inptport.c: 738
 P7 Left/Down
 P7 左/下
 
-# inptport.c: 726
+# inptport.c: 739
 P7 Left/Left
 P7 左/左
 
-# inptport.c: 727
+# inptport.c: 740
 P7 Left/Right
 P7 左/右
 
-# inptport.c: 724
+# inptport.c: 737
 P7 Left/Up
 P7 左/上
 
-# inptport.c: 818
+# inptport.c: 831
 P7 Pedal 1
 P7 ペダル 2
 
-# inptport.c: 827
+# inptport.c: 840
 P7 Pedal 2
 P7 ペダル 2
 
-# inptport.c: 836
+# inptport.c: 849
 P7 Pedal 3
 P7 ペダル 3
 
-# inptport.c: 719
+# inptport.c: 732
 P7 Right
 P7 右
 
-# inptport.c: 721
+# inptport.c: 734
 P7 Right/Down
 P7 右/下
 
-# inptport.c: 722
+# inptport.c: 735
 P7 Right/Left
 P7 右/左
 
-# inptport.c: 723
+# inptport.c: 736
 P7 Right/Right
 P7 右/右
 
-# inptport.c: 720
+# inptport.c: 733
 P7 Right/Up
 P7 右/上
 
-# inptport.c: 739
+# inptport.c: 752
 P7 Select
 P7 選択
 
-# inptport.c: 738
+# inptport.c: 751
 P7 Start
 P7 スタート
 
-# inptport.c: 746
+# inptport.c: 759
 P7 Toggle Autofire
 P7 連射切り替え
 
-# inptport.c: 716
+# inptport.c: 729
 P7 Up
 P7 上
 
-# inptport.c: 761
+# inptport.c: 774
 P8 Button 1
 P8 ボタン 1
 
-# inptport.c: 770
+# inptport.c: 783
 P8 Button 10
 P8 ボタン 10
 
-# inptport.c: 762
+# inptport.c: 775
 P8 Button 2
 P8 ボタン 2
 
-# inptport.c: 763
+# inptport.c: 776
 P8 Button 3
 P8 ボタン 3
 
-# inptport.c: 764
+# inptport.c: 777
 P8 Button 4
 P8 ボタン 4
 
-# inptport.c: 765
+# inptport.c: 778
 P8 Button 5
 P8 ボタン 5
 
-# inptport.c: 766
+# inptport.c: 779
 P8 Button 6
 P8 ボタン 6
 
-# inptport.c: 767
+# inptport.c: 780
 P8 Button 7
 P8 ボタン 7
 
-# inptport.c: 768
+# inptport.c: 781
 P8 Button 8
 P8 ボタン 8
 
-# inptport.c: 769
+# inptport.c: 782
 P8 Button 9
 P8 ボタン 9
 
-# inptport.c: 774
+# inptport.c: 787
 P8 Custom 1
 P8 カスタム 1
 
-# inptport.c: 775
+# inptport.c: 788
 P8 Custom 2
 P8 カスタム 2
 
-# inptport.c: 776
+# inptport.c: 789
 P8 Custom 3
 P8 カスタム 3
 
-# inptport.c: 777
+# inptport.c: 790
 P8 Custom 4
 P8 カスタム 4
 
-# inptport.c: 750
+# inptport.c: 763
 P8 Down
 P8 下
 
-# inptport.c: 751
+# inptport.c: 764
 P8 Left
 P8 左
 
-# inptport.c: 758
+# inptport.c: 771
 P8 Left/Down
 P8 左/下
 
-# inptport.c: 759
+# inptport.c: 772
 P8 Left/Left
 P8 左/左
 
-# inptport.c: 760
+# inptport.c: 773
 P8 Left/Right
 P8 左/右
 
-# inptport.c: 757
+# inptport.c: 770
 P8 Left/Up
 P8 左/上
 
-# inptport.c: 819
+# inptport.c: 832
 P8 Pedal 1
 P8 ペダル 1
 
-# inptport.c: 828
+# inptport.c: 841
 P8 Pedal 2
 P8 ペダル 2
 
-# inptport.c: 837
+# inptport.c: 850
 P8 Pedal 3
 P8 ペダル 3
 
-# inptport.c: 752
+# inptport.c: 765
 P8 Right
 P8 右
 
-# inptport.c: 754
+# inptport.c: 767
 P8 Right/Down
 P8 右/下
 
-# inptport.c: 755
+# inptport.c: 768
 P8 Right/Left
 P8 右/左
 
-# inptport.c: 756
+# inptport.c: 769
 P8 Right/Right
 P8 右/右
 
-# inptport.c: 753
+# inptport.c: 766
 P8 Right/Up
 P8 右/上
 
-# inptport.c: 772
+# inptport.c: 785
 P8 Select
 P8 選択
 
-# inptport.c: 771
+# inptport.c: 784
 P8 Start
 P8 スタート
 
-# inptport.c: 779
+# inptport.c: 792
 P8 Toggle Autofire
 P8 連射切り替え
 
-# inptport.c: 749
+# inptport.c: 762
 P8 Up
 P8 上
 
-# drivers/taito_f2.c: 2872 inptport.c: 839 
+# drivers/taito_f2.c: 2872 inptport.c: 852 
 Paddle
 パドル
 
-# inptport.c: 840
+# inptport.c: 853
 Paddle 2
 パドル 2
 
-# inptport.c: 841
+# inptport.c: 854
 Paddle 3
 パドル 3
 
-# inptport.c: 842
+# inptport.c: 855
 Paddle 4
 パドル 4
 
-# inptport.c: 843
+# inptport.c: 856
 Paddle 5
 パドル 5
 
-# inptport.c: 844
+# inptport.c: 857
 Paddle 6
 パドル 6
 
-# inptport.c: 845
+# inptport.c: 858
 Paddle 7
 パドル 7
 
-# inptport.c: 846
+# inptport.c: 859
 Paddle 8
 パドル 8
 
-# inptport.c: 848
+# inptport.c: 861
 Paddle V
 パドル V
 
-# inptport.c: 849
+# inptport.c: 862
 Paddle V 2
 パドル V 2
 
-# inptport.c: 850
+# inptport.c: 863
 Paddle V 3
 パドル V 3
 
-# inptport.c: 851
+# inptport.c: 864
 Paddle V 4
 パドル V 4
 
-# inptport.c: 852
+# inptport.c: 865
 Paddle V 5
 パドル V 5
 
-# inptport.c: 853
+# inptport.c: 866
 Paddle V 6
 パドル V 6
 
-# inptport.c: 854
+# inptport.c: 867
 Paddle V 7
 パドル V 7
 
-# inptport.c: 855
+# inptport.c: 868
 Paddle V 8
 パドル V 8
 
-# inptport.c: 985
+# inptport.c: 1005
 Pan Down
 画面を下に移動
 
-# inptport.c: 986
+# inptport.c: 1006
 Pan Left
 画面を左に移動
 
-# inptport.c: 987
+# inptport.c: 1007
 Pan Right
 画面を右に移動
 
-# inptport.c: 984
+# inptport.c: 1004
 Pan Up
 画面を上に移動
 
-# inptport.c: 376, 960
+# inptport.c: 389, 974
 Pause
 一時停止
 
-# drivers/cherrym.c: 200 drivers/csk.c: 283, 368, 443, 513 drivers/ddenlovr.c: 4034, 4585 drivers/funworld.c: 482, 516, 540, 574 drivers/neogeo.c: 1356 drivers/rcasino.c: 215 drivers/royalmah.c: 604, 779, 954 drivers/vroulet.c: 146
+# drivers/cherrym.c: 200 drivers/csk.c: 283, 368, 443, 513 drivers/ddenlovr.c: 4034, 4585 drivers/funworld.c: 482, 516, 540, 574 drivers/neogeo.c: 1327 drivers/rcasino.c: 215 drivers/royalmah.c: 604, 779, 954 drivers/vroulet.c: 146
 Payout
 払い出し
 
@@ -3542,7 +3546,7 @@ Player 7 Controls
 Player 8 Controls
 プレイヤー8 コントロール
 
-# inptport.c: 411
+# inptport.c: 424
 Players
 プレイヤー
 
@@ -3566,7 +3570,7 @@ Press Select Key/Button
 Previous Data
 前回のデータ
 
-# drivers/neogeo.c: 1078, 1389
+# drivers/neogeo.c: 1049, 1360
 Previous Game
 前のゲーム
 
@@ -3574,7 +3578,7 @@ Previous Game
 Previous values already restored
 前回の値は既に復帰済みです
 
-# usrintrf.c: 4794
+# usrintrf.c: 4903
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 このゲームを終了しますか？\n\n終了する場合は決定キー/ボタンを、\n続ける場合はキャンセルキー/ボタンを押して下さい。
 
@@ -3590,7 +3594,7 @@ REC STOP (%d frames)
 RHS
 RHS
 
-# datafile.c: 2986
+# datafile.c: 2988
 ROM NEEDS REDUMP   : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 再ダンプが必要     : %3d  %3d\n(%3d ROM、全%dゲーム)\n
 
@@ -3606,11 +3610,11 @@ Range Minimum
 Reach
 リーチ
 
-# inptport.c: 968
+# inptport.c: 982
 Record Movie
 録画
 
-# drivers/drgnmst.c: 292 drivers/exidy440.c: 1067 drivers/fuukifg3.c: 344 drivers/itech8.c: 1247 drivers/kinst.c: 370 drivers/lvcards.c: 205, 289 drivers/powerins.c: 240 drivers/relief.c: 261 drivers/stfight.c: 367 drivers/taito_z.c: 2915, 2983
+# drivers/drgnmst.c: 292 drivers/exidy440.c: 1067 drivers/fuukifg3.c: 344 drivers/itech8.c: 1247 drivers/kinst.c: 482 drivers/lvcards.c: 205, 289 drivers/powerins.c: 240 drivers/relief.c: 261 drivers/stfight.c: 367 drivers/taito_z.c: 2915, 2983
 Red
 赤
 
@@ -3618,7 +3622,7 @@ Red
 Refresh rate
 リフレッシュレート
 
-# cheat.c: 2935, 3643 drivers/pgm.c: 585, 596 inptport.c: 380
+# cheat.c: 2935, 3643 drivers/pgm.c: 585, 596 inptport.c: 393
 Region
 領域
 
@@ -3638,11 +3642,11 @@ Reload Database
 Reset
 リセット
 
-# inptport.c: 961 ui_text.c: 105
+# inptport.c: 975 ui_text.c: 105
 Reset Game
 ゲームをリセットする
 
-# drivers/seattle.c: 1940, 2333, 2431 drivers/vegas.c: 1849, 1881, 1895, 1925, 1969 
+# drivers/seattle.c: 1940, 2333, 2431 drivers/vegas.c: 1863, 1895, 1909, 1939, 1983, 2079 
 Resolution
 解像度
 
@@ -3674,7 +3678,7 @@ Return to Main Menu
 Return to Prior Menu
 一つ前のメニューに戻る
 
-# inptport.c: 430 ui_text.c: 126
+# inptport.c: 443 ui_text.c: 126
 Reverse
 反転
 
@@ -3686,7 +3690,7 @@ Ron
 Rotation
 回転
 
-# datafile.c: 3219
+# datafile.c: 3221
 SHADOWS        : %3d  + %3d\n
 影使用         : %3d  + %3d\n
 
@@ -3698,7 +3702,7 @@ Same
 Samples
 サンプル
 
-# inptport.c: 997
+# inptport.c: 1017
 Save Cheat
 チート保存
 
@@ -3706,19 +3710,19 @@ Save Cheat
 Save Memory
 メモリに保存
 
-# inptport.c: 967
+# inptport.c: 981
 Save Snapshot
 スナップショットの保存
 
-# inptport.c: 993 
+# inptport.c: 1013 
 Save State
 プレイ状態の保存
 
-# usrintrf.c: 4752
+# usrintrf.c: 4861
 Save cancelled
 保存を中止しました
 
-# usrintrf.c: 4779
+# usrintrf.c: 4888
 Save to position %c
 %c に保存しました
 
@@ -3738,7 +3742,7 @@ Screen Resolution
 Screen flipping in cocktail mode is not supported.
 カクテルモードの画面反転に対応していません。
 
-# datafile.c: 2190
+# datafile.c: 2192
 Screen flipping in cocktail mode is not supported.\n
 カクテルモードの画面反転に対応していません。\n
 
@@ -3758,7 +3762,7 @@ Search not initialized
 Second Bonus
 ボーナス2回目
 
-# cheat.c: 2874, 2948 drivers/bwidow.c: 629 drivers/maxaflex.c: 303 drivers/megaplay.c: 75 drivers/megatech.c: 84 drivers/nbmj8688.c: 2758 drivers/trackfld.c: 617
+# cheat.c: 2874, 2948 drivers/bfm_sc2.c: 2139, 2233, 2348 drivers/bwidow.c: 629 drivers/maxaflex.c: 303 drivers/megaplay.c: 75 drivers/megatech.c: 84 drivers/nbmj8688.c: 2758 drivers/trackfld.c: 617
 Select
 選択
 
@@ -3790,11 +3794,11 @@ Select current level
 Select next level
 次のレベルを選択
 
-# usrintrf.c: 4745
+# usrintrf.c: 4854
 Select position to load from
 読み込むファイル(0-9,A-Z)を押してください
 
-# usrintrf.c: 4743
+# usrintrf.c: 4852
 Select position to save to
 保存するファイル(0-9,A-Z)を押してください
 
@@ -3802,27 +3806,27 @@ Select position to save to
 Sensitivity
 感度
 
-# drivers/djmain.c: 500 drivers/pgm.c: 541 drivers/wallc.c: 190 inptport.c: 806
+# drivers/djmain.c: 500 drivers/pgm.c: 541 drivers/wallc.c: 190 inptport.c: 819
 Service
 サービス
 
-# inptport.c: 801
+# inptport.c: 814
 Service 1
 サービス1
 
-# inptport.c: 802
+# inptport.c: 815
 Service 2
 サービス2
 
-# inptport.c: 803
+# inptport.c: 816
 Service 3
 サービス3
 
-# inptport.c: 804
+# inptport.c: 817
 Service 4
 サービス4
 
-# inptport.c: 375
+# inptport.c: 388
 Service Mode
 サービスモード
 
@@ -3842,11 +3846,11 @@ Set/Clear
 Set/Clear Bits
 ビットのセット/クリア
 
-# inptport.c: 970
+# inptport.c: 984
 Show Cheat List
 チートリストを表\示
 
-# inptport.c: 972
+# inptport.c: 986
 Show Command
 コマンドの表\示
 
@@ -3854,15 +3858,23 @@ Show Command
 Show Command List
 コマンドリストを表\示
 
-# inptport.c: 966
+# inptport.c: 989
+Show Current Time
+現在の時刻を表\示
+
+# inptport.c: 980
 Show FPS
 FPSの表\示
 
-# inptport.c: 962
+# inptport.c: 976
 Show Gfx
 グラフィックデータ表\示
 
-# inptport.c: 988
+# inptport.c: 992
+Show Input Log
+入力履歴を表\示
+
+# inptport.c: 1008
 Show Profiler
 プロファイラ表\示
 
@@ -3874,7 +3886,7 @@ Show Search Labels
 Signed
 符号あり
 
-# inptport.c: 414
+# inptport.c: 427
 Single
 シングル
 
@@ -3886,7 +3898,7 @@ Size
 Skip Bytes
 読み飛ばすバイト数
 
-# cheat.c: 6570 drivers/4enraya.c: 119 drivers/8080bw.c: 697, 789 drivers/amidar.c: 185 drivers/angelkds.c: 479 drivers/bestleag.c: 277 drivers/bigstrkb.c: 158 drivers/brkthru.c: 233, 236, 278, 281 drivers/btime.c: 793 drivers/cninja.c: 726 drivers/cps1.c: 1068, 1339 drivers/deniam.c: 276 drivers/epos.c: 151, 154, 160 drivers/fuukifg3.c: 353 drivers/gameplan.c: 399, 850 drivers/m62.c: 611, 661, 712, 763, 815, 867, 921, 1020, 1071 drivers/mcr.c: 1013 drivers/megaplay.c: 224 drivers/metro.c: 3079 drivers/nmg5.c: 241 drivers/nmk16.c: 2661 drivers/phoenix.c: 342 drivers/portrait.c: 202 drivers/quizdna.c: 152, 240, 342 drivers/rohga.c: 442, 510 drivers/safarir.c: 188 drivers/segas16a.c: 1271 drivers/segas16b.c: 2509 drivers/sf.c: 334, 512, 650 drivers/sidepckt.c: 230 drivers/solomon.c: 168 drivers/suprridr.c: 250 drivers/system1.c: 1723 drivers/system16.c: 1795 drivers/taito_z.c: 2362, 2431 drivers/tecmo16.c: 210 drivers/thepit.c: 217, 272, 313 drivers/trackfld.c: 550 drivers/vigilant.c: 240 drivers/vsnes.c: 1064, 1775 drivers/wallc.c: 186 drivers/wilytowr.c: 461 drivers/xain.c: 398 drivers/yamato.c: 356 drivers/zac2650.c: 83, 133 ui_text.c: 208
+# cheat.c: 6570 drivers/4enraya.c: 119 drivers/8080bw.c: 697, 789 drivers/amidar.c: 185 drivers/angelkds.c: 479 drivers/bestleag.c: 277 drivers/bigstrkb.c: 158 drivers/brkthru.c: 233, 236, 278, 281 drivers/btime.c: 793 drivers/cninja.c: 726 drivers/cps1.c: 1068, 1339 drivers/deniam.c: 276 drivers/epos.c: 151, 154, 160 drivers/fuukifg3.c: 353 drivers/gameplan.c: 399, 850 drivers/m62.c: 611, 661, 712, 763, 815, 867, 921, 1020, 1071 drivers/mcr.c: 1013 drivers/megaplay.c: 224 drivers/metro.c: 3079 drivers/nmg5.c: 240 drivers/nmk16.c: 2661 drivers/phoenix.c: 342 drivers/portrait.c: 202 drivers/quizdna.c: 152, 240, 342 drivers/rohga.c: 442, 510 drivers/safarir.c: 188 drivers/segas16a.c: 1271 drivers/segas16b.c: 2509 drivers/sf.c: 334, 512, 650 drivers/sidepckt.c: 230 drivers/solomon.c: 168 drivers/suprridr.c: 250 drivers/system1.c: 1723 drivers/system16.c: 1795 drivers/taito_z.c: 2362, 2431 drivers/tecmo16.c: 210 drivers/thepit.c: 217, 272, 313 drivers/trackfld.c: 550 drivers/vigilant.c: 240 drivers/vsnes.c: 1064, 1775 drivers/wallc.c: 186 drivers/wilytowr.c: 461 drivers/xain.c: 398 drivers/yamato.c: 356 drivers/zac2650.c: 83, 133 ui_text.c: 208
 Slow
 遅い
 
@@ -3894,11 +3906,11 @@ Slow
 Slow But Sure (changed or not)
 遅いけど確実 (変化したかしないか)
 
-# drivers/balsente.c: 749 drivers/contra.c: 222 drivers/couple.c: 210 drivers/gijoe.c: 296 drivers/mosaic.c: 207 drivers/tmnt.c: 2037, 2119, 2365 drivers/zaxxon.c: 883 ui_text.c: 43
+# drivers/balsente.c: 749 drivers/contra.c: 222 drivers/couple.c: 212 drivers/gijoe.c: 296 drivers/mosaic.c: 207 drivers/tmnt.c: 2037, 2119, 2365 drivers/zaxxon.c: 883 ui_text.c: 43
 Sound
 音源
 
-# inptport.c: 394 ui_lang.c: 15
+# inptport.c: 407 ui_lang.c: 15
 Spanish
 スペイン語
 
@@ -3906,7 +3918,7 @@ Spanish
 Stand
 そのまま
 
-# inptport.c: 429 
+# inptport.c: 442 
 Standard
 標準
 
@@ -3934,11 +3946,11 @@ Statistics not available
 Status (bits or flags)
 状態 (ビットかフラグ)
 
-# inptport.c: 425 
+# inptport.c: 438 
 Stereo
 ステレオ
 
-# drivers/bfm_sc2.c: 2787 drivers/bmcbowl.c: 372 drivers/holeland.c: 146, 214 drivers/pgm.c: 572, 669, 760 drivers/popper.c: 277 drivers/toaplan2.c: 2347 drivers/turbo.c: 412
+# drivers/bmcbowl.c: 372 drivers/holeland.c: 146, 214 drivers/pgm.c: 572, 669, 760 drivers/popper.c: 277 drivers/toaplan2.c: 2347 drivers/turbo.c: 412
 Stop
 停止
 
@@ -3962,7 +3974,7 @@ Swap
 THIS GAME DOESN'T WORK PROPERLY
 ※このゲームは全く動作しません※
 
-# datafile.c: 2169
+# datafile.c: 2171
 THIS GAME DOESN'T WORK PROPERLY\n
 ※このゲームは全く動作しません※ \n
 
@@ -3974,19 +3986,19 @@ Taiwan
 Take
 取得
 
-# drivers/neogeo.c: 1144, 1193, 1270, 1319 drivers/toaplan1.c: 595, 664, 733, 1119, 1184, 1259, 1329, 1404, 1493 drivers/toaplan2.c: 2353, 2400, 2470, 2542, 2604, 2647, 2693, 2752, 2834, 2957, 3070, 3148, 3207, 3316, 3461, 3552, 3642 inptport.c: 2006
+# drivers/neogeo.c: 1115, 1164, 1241, 1290 drivers/toaplan1.c: 595, 664, 733, 1119, 1184, 1259, 1329, 1404, 1493 drivers/toaplan2.c: 2353, 2400, 2470, 2542, 2604, 2647, 2693, 2752, 2834, 2957, 3070, 3148, 3207, 3316, 3461, 3552, 3642 inptport.c: 2029
 Territory
 地域
 
-# drivers/dbz2.c: 280, 373 inptport.c: 377
+# drivers/dbz2.c: 280, 373 inptport.c: 390
 Test
 テスト
 
-# drivers/8080bw.c: 1309, 1955, 2506, 2586 drivers/btime.c: 773 drivers/ddenlovr.c: 3146 drivers/eolith.c: 141 drivers/ertictac.c: 226 drivers/galpani3.c: 146 drivers/halleys.c: 1702 drivers/homedata.c: 954 drivers/hornet.c: 798 drivers/jchan.c: 733 drivers/laserbas.c: 118 drivers/macs.c: 348 drivers/nwk-tr.c: 438 drivers/nycaptor.c: 613 drivers/ohmygod.c: 223 drivers/panicr.c: 210 drivers/quasar.c: 321 drivers/raiden2.c: 426, 502, 551 drivers/segas16a.c: 1462 drivers/segas16b.c: 2790 drivers/seicross.c: 226 drivers/snk.c: 3729, 3794 drivers/ssfindo.c: 556 drivers/st0016.c: 529 drivers/suprnova.c: 624 drivers/system1.c: 1798, 1987
+# drivers/8080bw.c: 1309, 1960, 2515, 2595 drivers/btime.c: 773 drivers/ddenlovr.c: 3146 drivers/eolith.c: 141 drivers/ertictac.c: 229 drivers/galpani3.c: 146 drivers/halleys.c: 1702 drivers/homedata.c: 954 drivers/hornet.c: 798 drivers/jchan.c: 733 drivers/laserbas.c: 118 drivers/macs.c: 348 drivers/nwk-tr.c: 438 drivers/nycaptor.c: 613 drivers/ohmygod.c: 223 drivers/panicr.c: 210 drivers/quasar.c: 321 drivers/raiden2.c: 426, 502, 551 drivers/segas16a.c: 1462 drivers/segas16b.c: 2790 drivers/seicross.c: 226 drivers/snk.c: 3729, 3794 drivers/ssfindo.c: 556 drivers/st0016.c: 529 drivers/suprnova.c: 624 drivers/system1.c: 1798, 1987 drivers/vegas.c: 2071
 Test Mode
 テストモード
 
-# drivers/bfm_sc2.c: 1795, 1896, 1997, 2109, 2203, 2313, 2409, 2522, 2617, 2724, 2826 drivers/dbz2.c: 280, 373 drivers/kinst.c: 405, 509 drivers/konamigq.c: 470 drivers/konamigv.c: 385, 569, 718, 890 drivers/mcr68.c: 736 drivers/midtunit.c: 108, 215, 318, 421, 524 drivers/midvunit.c: 931 drivers/midwunit.c: 92, 245, 307, 431, 484 drivers/midxunit.c: 132 drivers/midyunit.c: 222, 433, 499, 594, 684 drivers/midzeus.c: 1027, 1108, 1234 drivers/namcos10.c: 93 drivers/namcos11.c: 902, 968, 1034, 1100, 1166 drivers/namcos12.c: 1297, 1347 drivers/namcos21.c: 1967, 2044, 2121 drivers/neogeo.c: 1088, 1124, 1167, 1287 drivers/seattle.c: 2224, 2349, 2447 drivers/vegas.c: 2047 drivers/zn.c: 3082
+# drivers/bfm_sc2.c: 1756, 1857, 1969, 2063, 2173, 2269, 2382, 2477, 2584 drivers/dbz2.c: 280, 373 drivers/kinst.c: 517, 621 drivers/konamigq.c: 470 drivers/konamigv.c: 385, 569, 718, 890 drivers/mcr68.c: 736 drivers/midtunit.c: 108, 215, 318, 421, 524 drivers/midvunit.c: 931 drivers/midwunit.c: 156, 309, 371, 495, 548 drivers/midxunit.c: 132 drivers/midyunit.c: 222, 433, 499, 594, 684 drivers/midzeus.c: 1027, 1108, 1234 drivers/namcos10.c: 93 drivers/namcos11.c: 902, 968, 1034, 1100, 1166 drivers/namcos12.c: 1297, 1347 drivers/namcos21.c: 1967, 2044, 2121 drivers/neogeo.c: 1059, 1095, 1138, 1258 drivers/seattle.c: 2224, 2349, 2447 drivers/vegas.c: 2061 drivers/zn.c: 3082
 Test Switch
 テストスイッチ
 
@@ -4002,7 +4014,7 @@ Text Label
 The colors are completely wrong.
 色が再現されません。
 
-# datafile.c: 2178
+# datafile.c: 2180
 The colors are completely wrong.\n
 色が再現されません。\n
 
@@ -4010,7 +4022,7 @@ The colors are completely wrong.\n
 The colors aren't 100% accurate.
 色の再現が不完全です。
 
-# datafile.c: 2181
+# datafile.c: 2183
 The colors aren't 100% accurate.\n
 色の再現が不完全です。\n
 
@@ -4022,7 +4034,7 @@ The format of this zipfile is not supported, please recompress it
 The game has protection which isn't fully emulated.
 このゲームはプロテクトのためエミュレーションが不完全です。
 
-# datafile.c: 2172
+# datafile.c: 2174
 The game has protection which isn't fully emulated.\n
 このゲームはプロテクトのためエミュレーションが不完全です。\n
 
@@ -4030,11 +4042,11 @@ The game has protection which isn't fully emulated.\n
 The game lacks sound.
 サウンドが再生されません。
 
-# datafile.c: 2184
+# datafile.c: 2186
 The game lacks sound.\n
 サウンドが再生されません。\n
 
-# datafile.c: 2193
+# datafile.c: 2195
 The game uses two or more monitors.\n
 このゲームは２つ以上のモニタを使用します。\n
 
@@ -4042,7 +4054,7 @@ The game uses two or more monitors.\n
 The sound emulation isn't 100% accurate.
 サウンドエミュレーションが不完全です。
 
-# datafile.c: 2187
+# datafile.c: 2189
 The sound emulation isn't 100% accurate.\n
 サウンドエミュレーションが不完全です。\n
 
@@ -4050,7 +4062,7 @@ The sound emulation isn't 100% accurate.\n
 The video emulation isn't 100% accurate.
 ビデオエミュレーションが不完全です。
 
-# datafile.c: 2175
+# datafile.c: 2177
 The video emulation isn't 100% accurate.\n
 ビデオエミュレーションが不完全です。\n
 
@@ -4066,7 +4078,7 @@ There are known problems with this game:
 There are working clones of this game. They are:
 このゲームには以下の動作可能\なクローンが存在します:
 
-# inptport.c: 965 
+# inptport.c: 979 
 Throttle
 スピード制限 有効/無効
 
@@ -4078,11 +4090,11 @@ Throttle Lever
 Tickets dispensed
 チケット発券数
 
-# inptport.c: 378, 807
+# inptport.c: 391, 820
 Tilt
 ティルト
 
-# drivers/8080bw.c: 1310, 1366, 1389, 1449, 1499, 1913, 1951, 2204, 2260, 2483, 2572 drivers/amspdwy.c: 182 drivers/cinemat.c: 388, 547 drivers/cps1.c: 3636, 3749 drivers/drtomy.c: 211 drivers/fitfight.c: 315, 453, 595 drivers/gomoku.c: 117 drivers/homedata.c: 874, 951 drivers/lazercmd.c: 570 drivers/m107.c: 276 drivers/m92.c: 1000 drivers/megaplay.c: 246 drivers/megasys1.c: 1409, 2174 drivers/metlclsh.c: 226 drivers/metro.c: 2524, 2619 drivers/nbmj8688.c: 2166, 2240 drivers/pacman.c: 2137, 2238 drivers/paradise.c: 186, 254 drivers/pcktgal.c: 160 drivers/pktgaldx.c: 252 drivers/punchout.c: 506, 577 drivers/realbrk.c: 279 drivers/segaorun.c: 622, 654, 737 drivers/segas16b.c: 2110 drivers/segaxbd.c: 759, 863, 944 drivers/snowbros.c: 1069 drivers/starfire.c: 219, 268 drivers/supbtime.c: 306 drivers/system1.c: 886, 1048, 1100 drivers/system16.c: 1034 drivers/taito_f2.c: 3319, 3416 drivers/taito_l.c: 1299, 1828, 1984, 1984 drivers/taitosj.c: 896, 981, 1423 drivers/tattack.c: 100 drivers/troangel.c: 74 drivers/tubep.c: 619 drivers/tumbleb.c: 876, 1006 drivers/vicdual.c: 311 drivers/vsnes.c: 854, 1374 drivers/wwfsstar.c: 289 drivers/zac2650.c: 182
+# drivers/8080bw.c: 1310, 1366, 1389, 1449, 1499, 1918, 1956, 2209, 2265, 2492, 2581 drivers/amspdwy.c: 182 drivers/cinemat.c: 388, 547 drivers/cps1.c: 3636, 3749 drivers/drtomy.c: 211 drivers/fitfight.c: 315, 453, 595 drivers/gomoku.c: 117 drivers/homedata.c: 874, 951 drivers/lazercmd.c: 570 drivers/m107.c: 276 drivers/m92.c: 1000 drivers/megaplay.c: 246 drivers/megasys1.c: 1409, 2174 drivers/metlclsh.c: 226 drivers/metro.c: 2524, 2619 drivers/nbmj8688.c: 2166, 2240 drivers/pacman.c: 2137, 2238 drivers/paradise.c: 186, 254 drivers/pcktgal.c: 160 drivers/pktgaldx.c: 252 drivers/punchout.c: 506, 577 drivers/realbrk.c: 279 drivers/segaorun.c: 622, 654, 737 drivers/segas16b.c: 2110 drivers/segaxbd.c: 759, 863, 944 drivers/snowbros.c: 1069 drivers/starfire.c: 219, 268 drivers/supbtime.c: 296 drivers/system1.c: 886, 1048, 1100 drivers/system16.c: 1034 drivers/taito_f2.c: 3319, 3416 drivers/taito_l.c: 1299, 1828, 1984, 1984 drivers/taitosj.c: 898, 983, 1425 drivers/tattack.c: 100 drivers/troangel.c: 74 drivers/tubep.c: 619 drivers/tumbleb.c: 876, 1006 drivers/vicdual.c: 311 drivers/vsnes.c: 854, 1374 drivers/wwfsstar.c: 289 drivers/zac2650.c: 182
 Time
 時間
 
@@ -4106,83 +4118,83 @@ Toaplan
 Toggle
 切り替え
 
-# inptport.c: 969
+# inptport.c: 983
 Toggle Cheat
 チート 有効/無効
 
-# inptport.c: 1000
+# inptport.c: 1020
 Toggle Crosshair
 十\字線のトグル
 
-# inptport.c: 992
+# inptport.c: 1012
 Toggle Debugger
 デバッガ表\示切り替え
 
-# inptport.c: 875
+# inptport.c: 888
 Track X
 トラック X
 
-# inptport.c: 876
+# inptport.c: 889
 Track X 2
 トラック X 2
 
-# inptport.c: 877
+# inptport.c: 890
 Track X 3
 トラック X 3
 
-# inptport.c: 878
+# inptport.c: 891
 Track X 4
 トラック X 4
 
-# inptport.c: 879
+# inptport.c: 892
 Track X 5
 トラック X 5
 
-# inptport.c: 880
+# inptport.c: 893
 Track X 6
 トラック X 6
 
-# inptport.c: 881
+# inptport.c: 894
 Track X 7
 トラック X 7
 
-# inptport.c: 882
+# inptport.c: 895
 Track X 8
 トラック X 8
 
-# inptport.c: 884
+# inptport.c: 897
 Track Y
 トラック Y
 
-# inptport.c: 885
+# inptport.c: 898
 Track Y 2
 トラック Y 2
 
-# inptport.c: 886
+# inptport.c: 899
 Track Y 3
 トラック Y 3
 
-# inptport.c: 887
+# inptport.c: 900
 Track Y 4
 トラック Y 4
 
-# inptport.c: 888
+# inptport.c: 901
 Track Y 5
 トラック Y 5
 
-# inptport.c: 889
+# inptport.c: 902
 Track Y 6
 トラック Y 6
 
-# inptport.c: 890
+# inptport.c: 903
 Track Y 7
 トラック Y 7
 
-# inptport.c: 891
+# inptport.c: 904
 Track Y 8
 トラック Y 8
 
-# inptport.c: 420 
+# inptport.c: 433 
 Trackball
 トラックボール
 
@@ -4194,51 +4206,51 @@ Type
 Type OK or move the joystick left then right to continue
 続けるためにOKとタイプするか、ジョイスティックを左、右と入力して下さい
 
-# inptport.c: 982
+# inptport.c: 1002
 UI Cancel
 UI キャンセル
 
-# inptport.c: 983
+# inptport.c: 1003
 UI Clear
 UI クリア
 
-# inptport.c: 976
+# inptport.c: 996
 UI Down
 UI 下
 
-# inptport.c: 980
+# inptport.c: 1000
 UI End
 UI エンド
 
-# inptport.c: 979
+# inptport.c: 999
 UI Home
 UI ホーム
 
-# inptport.c: 977
+# inptport.c: 997
 UI Left
 UI 左
 
-# inptport.c: 978
+# inptport.c: 998
 UI Right
 UI 右
 
-# inptport.c: 981
+# inptport.c: 1001
 UI Select
 UI 決定
 
-# inptport.c: 990
+# inptport.c: 1010
 UI Toggle
 UI 表\示切り替え
 
-# inptport.c: 1001
+# inptport.c: 1021
 UI Toggle Lock Scroll
 UI スクロールロック切り替え
 
-# inptport.c: 975
+# inptport.c: 995
 UI Up
 UI 上
 
-# datafile.c: 2970
+# datafile.c: 2972
 UNEMULATED PROTEC. : %3d  %3d\n
 プロテクト未対応   : %3d  %3d\n
 
@@ -4250,7 +4262,7 @@ UNKNOWN
 US
 米国
 
-# inptport.c: 383
+# inptport.c: 396
 USA
 アメリカ
 
@@ -4258,7 +4270,7 @@ USA
 Unable to save due to pending anonymous timers. See error.log for details.
 何かのタイマーが保留中のためステートを保存することが出来ません。詳細はerror.logをご覧下さい。
 
-# inptport.c: 428 
+# inptport.c: 441 
 Unknown
 不明
 
@@ -4266,7 +4278,7 @@ Unknown
 Unlimited
 無制限
 
-# inptport.c: 427
+# inptport.c: 440
 Unused
 未使用
 
@@ -4382,7 +4394,7 @@ Unused (8)
 Unused (9)
 未使用 (9)
 
-# inptport.c: 372
+# inptport.c: 385
 Upright
 アップライト
 
@@ -4422,7 +4434,7 @@ Vector Game
 Vector Intensity
 ベクタ明度
 
-# inptport.c: 379 ui_text.c: 317
+# inptport.c: 392 ui_text.c: 317
 Version
 バージョン
 
@@ -4434,19 +4446,19 @@ Vertical
 Vertically
 垂直
 
-# inptport.c: 395
+# inptport.c: 408
 Very Easy
 ベリーイージー
 
-# inptport.c: 404
+# inptport.c: 417
 Very Hard
 ベリーハード
 
-# inptport.c: 410
+# inptport.c: 423
 Very High
 とても高い
 
-# inptport.c: 405
+# inptport.c: 418
 Very Low
 ベリーロー
 
@@ -4466,11 +4478,11 @@ Voice
 Volume
 音量
 
-# inptport.c: 809
+# inptport.c: 822
 Volume Down
 音量を下げる
 
-# inptport.c: 810
+# inptport.c: 823
 Volume Up
 音量を上げる
 
@@ -4478,7 +4490,7 @@ Volume Up
 WARNING: the game might not run correctly.\n
 警告: ゲームは正しく実行できません。\n
 
-# datafile.c: 2974
+# datafile.c: 2976
 WRONG COLORS       : %3d  %3d\n
 色が違う           : %3d  %3d\n
 
@@ -4518,7 +4530,7 @@ Watch Size
 Watch Skip
 ウォッチスキップ
 
-# inptport.c: 998
+# inptport.c: 1018
 Watch Value
 ウォッチの値表\示
 
@@ -4534,7 +4546,7 @@ Watchpoint
 Watchpoints
 ウォッチポイント
 
-# inptport.c: 386
+# inptport.c: 399
 World
 世界共通
 
@@ -4554,7 +4566,7 @@ XOR値
 Y Position
 Y座標
 
-# inptport.c: 328 
+# inptport.c: 341 
 Yes
 はい
 
@@ -4566,103 +4578,103 @@ Your filesystem seems to be corrupt, please check it
 Zoom
 ズーム
 
-# datafile.c: 3102
+# datafile.c: 3104
 \n    SNDINTRF:  (1)  (2)  (3)  (4)\n\n
 \n        音源:  (1)  (2)  (3)  (4)\n\n
 
-# datafile.c: 3114
+# datafile.c: 3116
 \n    TOTAL: %4d\n
 \n     合計: %4d\n
 
-# datafile.c: 3085
+# datafile.c: 3087
 \n   TOTAL: %4d\n
 \n    合計: %4d\n
 
-# datafile.c: 2273, 2291
+# datafile.c: 2275, 2293
 \nORIGINAL:\n
 \n原作:\n
 
-# datafile.c: 2214
+# datafile.c: 2216
 \nROM REGION:\n
 \nROMリージョン:\n
 
-# datafile.c: 3029
+# datafile.c: 3031
 \nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d MB (UNCOMPRESSED)\n%d MB + %d MB MERGED\n
 \nROMファイル: %d\n%d + %d マージされたROM\n\nファイルサイズ: %d KB (非圧縮)\n%d KB + %d KB マージ\n
 
-# datafile.c: 2319
+# datafile.c: 2321
 \nSOURCE: %s\n
 \nソ\ースファイル: %s\n
 
-# datafile.c: 2126
+# datafile.c: 2128
 \nStory:\n
 \nストーリー:\n
 
-# datafile.c: 3250
+# datafile.c: 3252
 \nWARNING: FPS number too high!\n
 \n警告: FPSの値が大きすぎます！\n
 
-# datafile.c: 2953
+# datafile.c: 2955
 \n\n %4d GAMES (ALL)\n %4d ORIGINALS  + %4d CLNS\n %4d NEOGEO     + %4d\n
 \n\n %4d ゲーム (全て)\n %4d 原作       + %4d クローン\n %4d ネオジオ   + %4d\n
 
-# datafile.c: 3119
+# datafile.c: 3121
 \n\nCABINET INPUT CONTROL: (ALL)\n\n
 \n\n筐体入力パネル: (全て)\n\n
 
-# datafile.c: 2277, 2295
+# datafile.c: 2279, 2297
 \n\nCLONES:\n
 \n\nクローン:\n
 
-# datafile.c: 3059
+# datafile.c: 3061
 \n\nCPU HARDWARE (ORIGINAL GAMES)\n\n
 \n\nCPUハードウェア (原作)\n\n
 
-# datafile.c: 3226
+# datafile.c: 3228
 \n\nFRAMES PER SECOND (%d): (ALL)\n\n
 \n\n秒あたりのフレーム数 (%d): (全て)\n\n
 
-# datafile.c: 2967
+# datafile.c: 2969
 \n\nGAME INFO FLAGS   : ORIG CLNS\n\n
 \n\nゲーム情報フラグ   : 原作 クローン\n\n
 
-# datafile.c: 3349
+# datafile.c: 3351
 \n\nMAME VERSIONS (%3d)\n\n
 \n\nMAME バージョン (%3d)\n\n
 
-# datafile.c: 3310
+# datafile.c: 3312
 \n\nRESOLUTION & PALETTESIZE: (ALL)\n    (%d)          (%d)\n\n
 \n\n解像度 & パレット数: (全て)\n    (%d)          (%d)\n\n
 
-# datafile.c: 3031
+# datafile.c: 3033
 \n\nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d KB (UNCOMPRESSED)\n%d KB + %d KB MERGED\n
 \n\nROMファイル: %d\n%d + %d マージされたROM\n\nファイルサイズ: %d KB (非圧縮)\n%d KB + %d KB マージ\n
 
-# datafile.c: 3090
+# datafile.c: 3092
 \n\nSOUND SYSTEM (ORIGINAL GAMES)\n\n
 \n\nサウンド システム (原作)\n\n
 
-# datafile.c: 3037
+# datafile.c: 3039
 \n\nTYPICAL ROMSET SIZE (ALL)\n
 \n\n標準的なROMセットサイズ (全て)\n
 
-# datafile.c: 3339
+# datafile.c: 3341
 \n\nVERSION - DRIVERS - SUPPORT:\n\n
 \n\nバージョン ドライバ サポート:\n\n
 
-# datafile.c: 3198
+# datafile.c: 3200
 \n\nVIDEO ASPECT RATIO X:Y (ALL)\n\n
 \n\n画面表\示比率 X:Y (全て)\n\n
 
-# datafile.c: 3212
+# datafile.c: 3214
 \n\nVIDEO NEEDS... : ORIG   CLNS\n\n
 \n\n表\示に必要     : 原作   クローン\n\n
 
-# datafile.c: 3049
+# datafile.c: 3051
 \n\nYEAR    NEW GAMES\n\n
 \n\n年      新しいゲーム\n\n
 
-# datafile.c: 2993
+# datafile.c: 2995
 \n\nYEAR: ORIG  CLNS NEOGEO  ALL\n\n
 \n\n年: 原作 クローン ネオジオ 全て\n\n
 
@@ -4682,19 +4694,19 @@ cheat database reloaded
 dial
 ダイアル
 
-# debug/debugcmd.c: 853, 1037 drivers/neogeo.c: 452
+# debug/debugcmd.c: 863, 1047 drivers/neogeo.c: 421
 disabled
 無効
 
-# debug/debugcmd.c: 853, 1037 drivers/neogeo.c: 452 timer.c: 463
+# debug/debugcmd.c: 863, 1047 drivers/neogeo.c: 421 timer.c: 463
 enabled
 有効
 
-# ui_font.c: 80
+# ui_font.c: 76
 font\\fontname.fnt
 font\\sjis_gothic.fnt
 
-# memory.c: 3043 
+# memory.c: 3098 
 invalid
 不正
 
@@ -4730,7 +4742,7 @@ or
 paddle
 パドル
 
-# drivers/neogeo.c: 452
+# drivers/neogeo.c: 421
 raster effects %s
 ラスタエフェクト %s
 

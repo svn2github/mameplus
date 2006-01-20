@@ -478,7 +478,7 @@ OSD バー (明)
 OSD bar color (medium)
 OSD バー
 
-# windows/fileio.c: 371
+# windows/fileio.c: 374
 Out of memory!\n
 メモリ不足です!\n
 
@@ -714,7 +714,7 @@ Windows版：Direct3Dの2Dビデオ設定
 Windows misc options
 Windows版：その他の設定
 
-# windows/fileio.c: 115
+# windows/fileio.c: 118
 Windows path and directory options
 Windows版：パスとディレクトリの設定
 
@@ -838,7 +838,7 @@ M68Kコアを変更 (0:C、1:DRC、2:ASM+DRC)
 change system bios
 システムのBIOSを変更する
 
-# windows/fileio.c: 143
+# windows/fileio.c: 146
 cheat filename
 チートファイルの名前
 
@@ -878,51 +878,51 @@ dial
 digital
 デジタル
 
-# windows/fileio.c: 135
+# windows/fileio.c: 138
 directory for Artwork (Overlays etc.)
 背景アートワークのパスを指定
 
-# windows/fileio.c: 137
+# windows/fileio.c: 140
 directory for hard drive image difference files
 ハードディスクイメージの差分ファイルのパス指定
 
-# windows/fileio.c: 140
+# windows/fileio.c: 143
 directory for ips files
 IPSファイルのディレクトリ
 
-# windows/fileio.c: 142
+# windows/fileio.c: 145
 directory for localized language files
 ローカライズされた言語ファイルを保存するパスを指定
 
-# windows/fileio.c: 136
+# windows/fileio.c: 139
 directory for screenshots (.png format)
 スクリーンショットを保存するパスを指定 (PNGフォーマット)
 
-# windows/fileio.c: 129
+# windows/fileio.c: 132
 directory to save configurations
 ゲームの設定を保存するパスを指定
 
-# windows/fileio.c: 138
+# windows/fileio.c: 141
 directory to save controller definitions
 コントローラ定義を保存するパスを指定
 
-# windows/fileio.c: 133
+# windows/fileio.c: 136
 directory to save hiscores
 ゲームのハイスコアを保存するパスを指定
 
-# windows/fileio.c: 132
+# windows/fileio.c: 135
 directory to save input device logs
 キー入力記録を保存するパスを指定
 
-# windows/fileio.c: 131
+# windows/fileio.c: 134
 directory to save memory card contents
 メモリーカードの内容を保存するパスを指定
 
-# windows/fileio.c: 130
+# windows/fileio.c: 133
 directory to save nvram contents
 NVRAMの内容を保存するパスを指定
 
-# windows/fileio.c: 134
+# windows/fileio.c: 137
 directory to save states
 ステートサーブデータを保存するパスを指定
 
@@ -1290,15 +1290,15 @@ output error log to debugger
 paddle
 パドル
 
-# windows/fileio.c: 125, 127
+# windows/fileio.c: 128, 130
 path to ini files
 iniファイルへのパスを指定
 
-# windows/fileio.c: 117
+# windows/fileio.c: 120
 path to romsets
 ROMファイルへのパスを指定
 
-# windows/fileio.c: 123
+# windows/fileio.c: 126
 path to samplesets
 サンプルファイルへのパスを指定
 

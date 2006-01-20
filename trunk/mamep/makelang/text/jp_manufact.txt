@@ -990,6 +990,10 @@ ESD
 ETM
 
 
+# King of Dynast Gear (version 1.8)
+EZ Graphics
+
+
 # Dangerous Dungeons
 East Coast Coin Company
 
@@ -1542,7 +1546,7 @@ Philko
 Playmark
 
 
-# SvC Chaos - SNK vs Capcom (set 1)
+# SvC Chaos - SNK vs Capcom (Asia, JAMMA PCB)
 Playmore
 
 
@@ -1620,6 +1624,10 @@ SA
 
 # Safari Rally (Japan)
 SNK
+
+
+# Meijinsen
+SNK Electronics corp.
 
 
 # Metal Slug 5
@@ -1812,10 +1820,6 @@ Telko
 
 # Galaxian Test ROM
 Test ROM
-
-
-# The Couples (Set 1)
-The Couples
 
 
 # Lethal Justice
