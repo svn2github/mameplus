@@ -1,16 +1,16 @@
-# datafile.c: 3140
+# datafile.c: 3142
           DIAL:  %4d\n
 
 
-# datafile.c: 3146
+# datafile.c: 3148
          OTHER:  %4d\n
 
 
-# datafile.c: 3144
+# datafile.c: 3146
          PEDAL:  %4d\n
 
 
-# datafile.c: 3139
+# datafile.c: 3141
         PADDLE:  %4d\n
 
 
@@ -18,35 +18,35 @@
        FOUND: %s\n
 
 
-# datafile.c: 3133
+# datafile.c: 3135
        JOY2WAY:  %4d\n
 
 
-# datafile.c: 3134
+# datafile.c: 3136
        JOY4WAY:  %4d\n
 
 
-# datafile.c: 3135
+# datafile.c: 3137
        JOY8WAY:  %4d\n
 
 
-# datafile.c: 3142
+# datafile.c: 3144
       AD STICK:  %4d\n
 
 
-# datafile.c: 3143
+# datafile.c: 3145
       LIGHTGUN:  %4d\n
 
 
-# datafile.c: 3127
+# datafile.c: 3129
      PLAYERS %d:  %4d\n
 
 
-# datafile.c: 3141
+# datafile.c: 3143
      TRACKBALL:  %4d\n
 
 
-# datafile.c: 3155
+# datafile.c: 3157
     BUTTONS%3d:  %4d\n
 
 
@@ -54,7 +54,7 @@
     EXPECTED: %s\n
 
 
-# datafile.c: 3161
+# datafile.c: 3163
     NO BUTTONS:  %4d\n
 
 
@@ -62,43 +62,43 @@
    FOUND: 
 
 
-# datafile.c: 2965
+# datafile.c: 2967
  %4d HARDDISK\n
 
 
-# datafile.c: 2961
+# datafile.c: 2963
  %4d HORIZONTAL + %4d\n %4d VERTICAL   + %4d\n
 
 
-# datafile.c: 2957
+# datafile.c: 2959
  %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
 
 
-# datafile.c: 2959
+# datafile.c: 2961
  %4d RASTER     + %4d\n %4d VECTOR     + %4d\n
 
 
-# datafile.c: 2963
+# datafile.c: 2965
  %4d STEREO     + %4d\n
 
 
-# datafile.c: 3136
+# datafile.c: 3138
  DOUBLEJOY2WAY:  %4d\n
 
 
-# datafile.c: 3137
+# datafile.c: 3139
  DOUBLEJOY4WAY:  %4d\n
 
 
-# datafile.c: 3138
+# datafile.c: 3140
  DOUBLEJOY8WAY:  %4d\n
 
 
-# datafile.c: 3066
+# datafile.c: 3068
  GAMES WITH  %d CPUs: %4d\n
 
 
-# datafile.c: 3097
+# datafile.c: 3099
  GAMES WITH  %d SNDINTRF: %4d\n
 
 
@@ -362,7 +362,7 @@
 24 Bit
 
 
-# datafile.c: 3217
+# datafile.c: 3219
 24-BIT DISPLAY : %3d  + %3d\n
 
 
@@ -994,7 +994,7 @@ Custom Buttons
 DIAL
 
 
-# datafile.c: 3215
+# datafile.c: 3217
 DUAL MONITOR   : %3d  + %3d\n
 
 
@@ -1334,7 +1334,7 @@ French
 Full
 
 
-# datafile.c: 2164
+# datafile.c: 2166
 GAME: 
 
 
@@ -1414,11 +1414,11 @@ Greater Or Equal
 Greater or Equal
 
 
-# datafile.c: 3219
+# datafile.c: 3221
 HI/TRUE BITMAP : %3d  + %3d\n
 
 
-# datafile.c: 3223
+# datafile.c: 3225
 HIGHLIGHTS     : %3d  + %3d\n
 
 
@@ -1518,15 +1518,15 @@ Horizontally
 IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
 
 
-# datafile.c: 2978
+# datafile.c: 2980
 IMPERFECT COLORS   : %3d  %3d\n
 
 
-# datafile.c: 2974
+# datafile.c: 2976
 IMPERFECT GRAPHICS : %3d  %3d\n
 
 
-# datafile.c: 2982
+# datafile.c: 2984
 IMPERFECT SOUND    : %3d  %3d\n
 
 
@@ -1846,7 +1846,7 @@ MAME Statistics
 MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n\n
 
 
-# datafile.c: 2155
+# datafile.c: 2157
 MAMEInfo:\n
 
 
@@ -2010,11 +2010,11 @@ Mouse Y 8
 NA
 
 
-# datafile.c: 2984
+# datafile.c: 2986
 NO COCKTAIL        : %3d  %3d\n
 
 
-# datafile.c: 2986
+# datafile.c: 2988
 NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 
 
@@ -2022,11 +2022,11 @@ NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 NO MATCH\n
 
 
-# datafile.c: 2980
+# datafile.c: 2982
 NO SOUND           : %3d  %3d\n
 
 
-# datafile.c: 2970
+# datafile.c: 2972
 NON-WORKING        : %3d  %3d\n
 
 
@@ -3594,7 +3594,7 @@ REC STOP (%d frames)
 RHS
 
 
-# datafile.c: 2988
+# datafile.c: 2990
 ROM NEEDS REDUMP   : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 
 
@@ -3690,7 +3690,7 @@ Ron
 Rotation
 
 
-# datafile.c: 3221
+# datafile.c: 3223
 SHADOWS        : %3d  + %3d\n
 
 
@@ -3742,7 +3742,7 @@ Screen Resolution
 Screen flipping in cocktail mode is not supported.
 
 
-# datafile.c: 2192
+# datafile.c: 2194
 Screen flipping in cocktail mode is not supported.\n
 
 
@@ -3974,7 +3974,7 @@ Swap
 THIS GAME DOESN'T WORK PROPERLY
 
 
-# datafile.c: 2171
+# datafile.c: 2173
 THIS GAME DOESN'T WORK PROPERLY\n
 
 
@@ -4014,7 +4014,7 @@ Text Label
 The colors are completely wrong.
 
 
-# datafile.c: 2180
+# datafile.c: 2182
 The colors are completely wrong.\n
 
 
@@ -4022,7 +4022,7 @@ The colors are completely wrong.\n
 The colors aren't 100% accurate.
 
 
-# datafile.c: 2183
+# datafile.c: 2185
 The colors aren't 100% accurate.\n
 
 
@@ -4034,7 +4034,7 @@ The format of this zipfile is not supported, please recompress it
 The game has protection which isn't fully emulated.
 
 
-# datafile.c: 2174
+# datafile.c: 2176
 The game has protection which isn't fully emulated.\n
 
 
@@ -4042,11 +4042,11 @@ The game has protection which isn't fully emulated.\n
 The game lacks sound.
 
 
-# datafile.c: 2186
+# datafile.c: 2188
 The game lacks sound.\n
 
 
-# datafile.c: 2195
+# datafile.c: 2197
 The game uses two or more monitors.\n
 
 
@@ -4054,7 +4054,7 @@ The game uses two or more monitors.\n
 The sound emulation isn't 100% accurate.
 
 
-# datafile.c: 2189
+# datafile.c: 2191
 The sound emulation isn't 100% accurate.\n
 
 
@@ -4062,7 +4062,7 @@ The sound emulation isn't 100% accurate.\n
 The video emulation isn't 100% accurate.
 
 
-# datafile.c: 2177
+# datafile.c: 2179
 The video emulation isn't 100% accurate.\n
 
 
@@ -4250,7 +4250,7 @@ UI Toggle Lock Scroll
 UI Up
 
 
-# datafile.c: 2972
+# datafile.c: 2974
 UNEMULATED PROTEC. : %3d  %3d\n
 
 
@@ -4490,7 +4490,7 @@ Volume Up
 WARNING: the game might not run correctly.\n
 
 
-# datafile.c: 2976
+# datafile.c: 2978
 WRONG COLORS       : %3d  %3d\n
 
 
@@ -4578,103 +4578,103 @@ Your filesystem seems to be corrupt, please check it
 Zoom
 
 
-# datafile.c: 3104
+# datafile.c: 3106
 \n    SNDINTRF:  (1)  (2)  (3)  (4)\n\n
 
 
-# datafile.c: 3116
+# datafile.c: 3118
 \n    TOTAL: %4d\n
 
 
-# datafile.c: 3087
+# datafile.c: 3089
 \n   TOTAL: %4d\n
 
 
-# datafile.c: 2275, 2293
+# datafile.c: 2277, 2295
 \nORIGINAL:\n
 
 
-# datafile.c: 2216
+# datafile.c: 2218
 \nROM REGION:\n
 
 
-# datafile.c: 3031
+# datafile.c: 3033
 \nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d MB (UNCOMPRESSED)\n%d MB + %d MB MERGED\n
 
 
-# datafile.c: 2321
+# datafile.c: 2323
 \nSOURCE: %s\n
 
 
-# datafile.c: 2128
+# datafile.c: 2130
 \nStory:\n
 
 
-# datafile.c: 3252
+# datafile.c: 3254
 \nWARNING: FPS number too high!\n
 
 
-# datafile.c: 2955
+# datafile.c: 2957
 \n\n %4d GAMES (ALL)\n %4d ORIGINALS  + %4d CLNS\n %4d NEOGEO     + %4d\n
 
 
-# datafile.c: 3121
+# datafile.c: 3123
 \n\nCABINET INPUT CONTROL: (ALL)\n\n
 
 
-# datafile.c: 2279, 2297
+# datafile.c: 2281, 2299
 \n\nCLONES:\n
 
 
-# datafile.c: 3061
+# datafile.c: 3063
 \n\nCPU HARDWARE (ORIGINAL GAMES)\n\n
 
 
-# datafile.c: 3228
+# datafile.c: 3230
 \n\nFRAMES PER SECOND (%d): (ALL)\n\n
 
 
-# datafile.c: 2969
+# datafile.c: 2971
 \n\nGAME INFO FLAGS   : ORIG CLNS\n\n
 
 
-# datafile.c: 3351
+# datafile.c: 3353
 \n\nMAME VERSIONS (%3d)\n\n
 
 
-# datafile.c: 3312
+# datafile.c: 3314
 \n\nRESOLUTION & PALETTESIZE: (ALL)\n    (%d)          (%d)\n\n
 
 
-# datafile.c: 3033
+# datafile.c: 3035
 \n\nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d KB (UNCOMPRESSED)\n%d KB + %d KB MERGED\n
 
 
-# datafile.c: 3092
+# datafile.c: 3094
 \n\nSOUND SYSTEM (ORIGINAL GAMES)\n\n
 
 
-# datafile.c: 3039
+# datafile.c: 3041
 \n\nTYPICAL ROMSET SIZE (ALL)\n
 
 
-# datafile.c: 3341
+# datafile.c: 3343
 \n\nVERSION - DRIVERS - SUPPORT:\n\n
 
 
-# datafile.c: 3200
+# datafile.c: 3202
 \n\nVIDEO ASPECT RATIO X:Y (ALL)\n\n
 
 
-# datafile.c: 3214
+# datafile.c: 3216
 \n\nVIDEO NEEDS... : ORIG   CLNS\n\n
 
 
-# datafile.c: 3051
+# datafile.c: 3053
 \n\nYEAR    NEW GAMES\n\n
 
 
-# datafile.c: 2995
+# datafile.c: 2997
 \n\nYEAR: ORIG  CLNS NEOGEO  ALL\n\n
 
 

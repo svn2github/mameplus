@@ -610,25 +610,18 @@ static PROPSHEETPAGE *CreatePropSheetPages(HINSTANCE hInst, BOOL bOnlyDefault,
 	int possiblePropSheets;
 	int i;
 
-	if (g_pFolder)
-	{
+	if (IS_FOLDER)
 		i = 2;
-	}
 	else
-	{
 		i = 0;
-	}
+
 	for (; g_propSheets[i].pfnDlgProc; i++)
 		;
 
-	if (g_pFolder)
-	{
+	if (IS_FOLDER)
 		possiblePropSheets = i - 1;
-	}
 	else
-	{
 		possiblePropSheets = i + 1;
-	}
 
 	pspages = malloc(sizeof(PROPSHEETPAGE) * possiblePropSheets);
 	if (!pspages)
@@ -636,14 +629,11 @@ static PROPSHEETPAGE *CreatePropSheetPages(HINSTANCE hInst, BOOL bOnlyDefault,
 	memset(pspages, 0, sizeof(PROPSHEETPAGE) * possiblePropSheets);
 
 	maxPropSheets = 0;
-	if (g_pFolder)
-	{
+	if (IS_FOLDER)
 		i = 2;
-	}
 	else
-	{
 		i = 0;
-	}
+
 	for (; g_propSheets[i].pfnDlgProc; i++)
 	{
 		if (!bOnlyDefault || g_propSheets[i].bOnDefaultPage)
@@ -734,21 +724,25 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIco
 		background_brush = CreateSolidBrush(GetSysColor(COLOR_3DFACE));
 
 	g_hIcon = CopyIcon(hIcon);
-	InitGameAudit(game_num);
 
-	if (!folder)
-		folder = GetUnifiedFolder(game_num);
-
+	g_pFolder = folder;
+#if 0
 	if (folder)
 	{
-		g_nGame = FOLDER_OPTIONS;
-		g_pFolder = folder;
+		game_num = GetUnifiedDriver(folder);
+		if (game_num != -1)
+			g_pFolder = NULL;
 	}
 	else
-	{
+		folder = GetUnifiedFolder(game_num);
+#endif
+
+	InitGameAudit(game_num);
+
+	if (IS_FOLDER)
+		g_nGame = FOLDER_OPTIONS;
+	else
 		g_nGame = game_num;
-		g_pFolder = NULL;
-	}
 
 	if (IS_GAME)
 	{
@@ -761,9 +755,9 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIco
 	}
 	else
 	{
-		pGameOpts = GetFolderOptions(folder);
-		g_bUseDefaults = GetFolderUsesDefaults(folder);
-		if (!strcmp(folder, "Vector"))
+		pGameOpts = GetFolderOptions(g_pFolder);
+		g_bUseDefaults = GetFolderUsesDefaults(g_pFolder);
+		if (!strcmp(g_pFolder, "Vector"))
 			g_nPropertyMode = SOURCE_VECTOR;
 		else
 			g_nPropertyMode = SOURCE_FOLDER;
@@ -787,14 +781,11 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIco
 	pshead.dwFlags                    = PSH_PROPSHEETPAGE | PSH_USEICONID | PSH_PROPTITLE | PSH_USECALLBACK;
 	pshead.pfnCallback                = PropSheetCallbackProc;
 	pshead.hInstance                  = hInst;
-	if (!g_pFolder)
-	{
-		pshead.pszCaption             = _Unicode(_UI(drivers[g_nGame]->name));
-	}
+	if (folder)
+	//if (IS_FOLDER)
+		pshead.pszCaption             = _Unicode(_UI(folder));
 	else
-	{
-		pshead.pszCaption             = _Unicode(_UI(g_pFolder));
-	}
+		pshead.pszCaption             = _Unicode(drivers[g_nGame]->name);
 	pshead.DUMMYUNIONNAME2.nStartPage = start_page;
 	pshead.DUMMYUNIONNAME.pszIcon     = MAKEINTRESOURCE(IDI_MAME32_ICON);
 	pshead.DUMMYUNIONNAME3.ppsp       = pspage;
@@ -816,7 +807,7 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIco
  *********************************************************************/
 
 /* Build CPU info string */
-static LPWSTR GameInfoCPU(UINT nIndex)
+static LPWSTR GameInfoCPU(int nIndex)
 {
 	int i;
 	char buf[1024];
@@ -847,7 +838,7 @@ static LPWSTR GameInfoCPU(UINT nIndex)
 }
 
 /* Build Sound system info string */
-static LPWSTR GameInfoSound(UINT nIndex)
+static LPWSTR GameInfoSound(int nIndex)
 {
 	int i;
 	static char buf[1024];
@@ -899,7 +890,7 @@ static LPWSTR GameInfoSound(UINT nIndex)
 }
 
 /* Build Display info string */
-static LPWSTR GameInfoScreen(UINT nIndex)
+static LPWSTR GameInfoScreen(int nIndex)
 {
 	char buf[1024];
 	machine_config drv;
@@ -959,7 +950,7 @@ static LPWSTR GameInfoScreen(UINT nIndex)
 }
 
 /* Build color information string */
-static LPWSTR GameInfoColors(UINT nIndex)
+static LPWSTR GameInfoColors(int nIndex)
 {
 	char buf[1024];
 	machine_config drv;
@@ -1050,7 +1041,7 @@ LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus)
 }
 
 /* Build game manufacturer string */
-static LPWSTR GameInfoManufactured(UINT nIndex)
+static LPWSTR GameInfoManufactured(int nIndex)
 {
 	char buffer[1024];
 
@@ -1059,28 +1050,40 @@ static LPWSTR GameInfoManufactured(UINT nIndex)
 }
 
 /* Build Game title string */
-LPWSTR GameInfoTitle(UINT nIndex)
+LPWSTR GameInfoTitle(int nIndex)
 {
-	char buf[1024];
+	const char *folder = g_pFolder;
+	char desc[1024];
+	char info[1024];
 
 	if (nIndex == GLOBAL_OPTIONS)
-		strcpy(buf, _UI("Global game options\nDefault options used by all games"));
-	else if (nIndex == FOLDER_OPTIONS)
-		{
-		if (g_nPropertyMode == SOURCE_VECTOR)
-			sprintf(buf, _UI("Global vector options\nCustom options used by all games in the Vector"));
-		else
-			sprintf(buf, _UI("Global driver options\nCustom options used by all games in the %s"), IS_FOLDER);
-		}
+		return _Unicode(_UI("Global game options\nDefault options used by all games"));
+
+	if (g_nPropertyMode == SOURCE_VECTOR)
+		return _Unicode(_UI("Global vector options\nCustom options used by all games in the Vector"));
+
+	if (nIndex != FOLDER_OPTIONS)
+	{
+		sprintf(desc, "%s [%s]",
+		        UseLangList() ? _LST(drivers[nIndex]->description) :
+		                        ModifyThe(drivers[nIndex]->description),
+			drivers[nIndex]->name);
+
+		folder = GetUnifiedFolder(nIndex);
+		if (!folder)
+			return _Unicode(desc);
+	}
+
+	if (nIndex != FOLDER_OPTIONS)
+		sprintf(info, _UI("%s\nThis is also global driver options in the %s"), desc, folder);
 	else
-		UseLangList()?
-			sprintf(buf, "%s [%s]", _LST(drivers[nIndex]->description), drivers[nIndex]->name):
-			sprintf(buf, "%s [%s]", ModifyThe(drivers[nIndex]->description), drivers[nIndex]->name);
-	return _Unicode(buf);
+		sprintf(info, _UI("Global driver options\nCustom options used by all games in the %s"), folder);
+
+	return _Unicode(info);
 }
 
 /* Build game clone infromation string */
-static LPWSTR GameInfoCloneOf(UINT nIndex)
+static LPWSTR GameInfoCloneOf(int nIndex)
 {
 	char buf[1024];
 
@@ -1112,7 +1115,7 @@ static LPWSTR GameInfoSaveState(int driver_index)
 	return _Unicode(buf);
 }
 
-static LPWSTR GameInfoSource(UINT nIndex)
+static LPWSTR GameInfoSource(int nIndex)
 {
 	return _Unicode(GetDriverFilename(nIndex));
 }
@@ -1174,7 +1177,6 @@ INT_PTR CALLBACK GamePropertiesDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LP
 		UpdateBackgroundBrush(hWnd);
 		ShowWindow(hDlg, SW_SHOW);
 		return 1;
-
 	}
 	return 0;
 }

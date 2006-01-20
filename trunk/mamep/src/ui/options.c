@@ -96,6 +96,7 @@ typedef struct
 	game_variables_type *variable;
 	BOOL has_bios;
 	BOOL need_vector_config;
+	int driver_index; // index for driver if driver is unified
 } alt_options_type;
 
 struct _default_bios
@@ -1058,6 +1059,15 @@ const char *GetUnifiedFolder(int driver_index)
 		return NULL;
 
 	return alt_options[game_variables[driver_index].alt_index].name;
+}
+
+int GetUnifiedDriver(const char *name)
+{
+	int alt_index = bsearch_alt_option(name);
+
+	assert (0 <= alt_index && alt_index < num_alt_options);
+
+	return alt_options[alt_index].driver_index;
 }
 
 static options_type * GetAltOptions(alt_options_type *alt_option)
@@ -2887,6 +2897,7 @@ static void build_alt_options(void)
 		alt_options[i].variable->use_default = TRUE;
 		alt_options[i].has_bios = FALSE;
 		alt_options[i].need_vector_config = FALSE;
+		alt_options[i].driver_index = -1;
 	}
 
 	for (i = 0; i < num_games; i++)
@@ -2918,6 +2929,7 @@ static void  unify_alt_options(void)
 		game_variables[i].alt_index = n;
 		alt_options[n].option = &game_options[i];
 		alt_options[n].variable = &game_variables[i];
+		alt_options[n].driver_index = i;
 	}
 }
 

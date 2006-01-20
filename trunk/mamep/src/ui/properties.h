@@ -16,7 +16,7 @@
 /* Get title string to display in the top of the property page,
  * Called also in Audit32.c
  */
-LPWSTR GameInfoTitle(UINT nIndex);
+LPWSTR GameInfoTitle(int nIndex);
 
 enum
 {

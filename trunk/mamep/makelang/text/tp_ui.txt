@@ -2,7 +2,7 @@
                                 
 
 
-# ui/properties.c: 969
+# ui/properties.c: 960
 %d colors 
 
 
@@ -10,11 +10,11 @@
 %d games
 
 
-# ui/properties.c: 952
+# ui/properties.c: 943
 %d x %d (H) (%d:%d) %f Hz
 
 
-# ui/properties.c: 940
+# ui/properties.c: 931
 %d x %d (V) (%d:%d) %f Hz
 
 
@@ -26,8 +26,12 @@
 %dx%d (V)
 
 
-# ui/properties.c: 3884
+# ui/properties.c: 3886
 %li bit
+
+
+# ui/properties.c: 1078
+%s\nThis is also global driver options in the %s
 
 
 # ui/mame32.rc: 157
@@ -374,7 +378,7 @@ Analog deadzone
 Anisotropic
 
 
-# ui/properties.c: 3850
+# ui/properties.c: 3852
 Anti-clockwise
 
 
@@ -422,15 +426,15 @@ Audit ROM and samples sets
 Audit complete.\n
 
 
-# ui/properties.c: 390, 403, 435, 3769, 3871, 3927, 4081
+# ui/properties.c: 390, 403, 435, 3771, 3873, 3929, 4083
 Auto
 
 
-# ui/properties.c: 3853
+# ui/properties.c: 3855
 Auto anti-clockwise
 
 
-# ui/properties.c: 3852
+# ui/properties.c: 3854
 Auto clockwise
 
 
@@ -450,11 +454,11 @@ Available
 Available fields:
 
 
-# ui/properties.c: 3970
+# ui/properties.c: 3972
 Axis
 
 
-# ui/properties.c: 3980
+# ui/properties.c: 3982
 AxisId
 
 
@@ -462,7 +466,7 @@ AxisId
 BIOS
 
 
-# ui/properties.c: 1043
+# ui/properties.c: 1034
 BIOS missing
 
 
@@ -594,7 +598,7 @@ C&lones
 CPU
 
 
-# ui/dialogs.c: 198 ui/options.c: 262
+# ui/dialogs.c: 198 ui/options.c: 263
 Cabinet
 
 
@@ -634,7 +638,7 @@ Christopher Kirmse and Michael Soderstrom
 Clean stretch
 
 
-# ui/properties.c: 3849
+# ui/properties.c: 3851
 Clockwise
 
 
@@ -650,11 +654,11 @@ Clone of:
 Clones
 
 
-# ui/properties.c: 1007
+# ui/properties.c: 998
 Colors are completely wrong
 
 
-# ui/properties.c: 1013
+# ui/properties.c: 1004
 Colors aren't 100% accurate
 
 
@@ -694,7 +698,7 @@ Contains commands for working with the selected items
 Control &Panel
 
 
-# ui/dialogs.c: 204 ui/options.c: 265
+# ui/dialogs.c: 204 ui/options.c: 266
 Control Panel
 
 
@@ -774,11 +778,11 @@ Customize interface options.
 Customize which columns are used in the game list
 
 
-# ui/properties.c: 3848
+# ui/properties.c: 3850
 Default
 
 
-# ui/properties.c: 702
+# ui/properties.c: 692
 Default Game
 
 
@@ -802,7 +806,7 @@ Depth:
 Description
 
 
-# ui/mame32.rc: 424, 520 ui/options.c: 296 ui/win32ui.c: 665
+# ui/mame32.rc: 424, 520 ui/options.c: 297 ui/win32ui.c: 665
 Details
 
 
@@ -838,7 +842,7 @@ Directory does not exist, continue anyway?
 Directory name:
 
 
-# ui/properties.c: 3700, 3717 
+# ui/properties.c: 3702, 3719 
 Disabled
 
 
@@ -918,7 +922,7 @@ Double Joy 8-Way
 Draw antialiased vectors
 
 
-# ui/properties.c: 3826
+# ui/properties.c: 3828
 Draw every frame
 
 
@@ -998,7 +1002,7 @@ Enable steadykey support
 Enforce aspect ratio
 
 
-# ui/audit32.c: 102 ui/properties.c: 714, 808
+# ui/audit32.c: 102 ui/properties.c: 704, 799
 Error
 
 
@@ -1058,7 +1062,7 @@ Flip screen left-right
 Flip screen upside-down
 
 
-# ui/dialogs.c: 196 ui/options.c: 261
+# ui/dialogs.c: 196 ui/options.c: 262
 Flyer
 
 
@@ -1122,11 +1126,11 @@ Game filters
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 
 
-# ui/properties.c: 1025
+# ui/properties.c: 1016
 Game lacks sound
 
 
-# ui/properties.c: 1001
+# ui/properties.c: 992
 Game protection isn't fully emulated
 
 
@@ -1142,15 +1146,15 @@ Gamma correction
 General
 
 
-# ui/properties.c: 1073
+# ui/properties.c: 1080
 Global driver options\nCustom options used by all games in the %s
 
 
-# ui/properties.c: 1067
+# ui/properties.c: 1060
 Global game options\nDefault options used by all games
 
 
-# ui/properties.c: 1071
+# ui/properties.c: 1063
 Global vector options\nCustom options used by all games in the Vector
 
 
@@ -1158,7 +1162,7 @@ Global vector options\nCustom options used by all games in the Vector
 Go to Microsoft's DirectX Web Page
 
 
-# ui/options.c: 297, 720 ui/win32ui.c: 666
+# ui/options.c: 298, 721 ui/win32ui.c: 666
 Grouped
 
 
@@ -1174,7 +1178,7 @@ Help
 Hide &mouse cursor (requires restart)
 
 
-# ui/properties.c: 4083
+# ui/properties.c: 4085
 High
 
 
@@ -1186,7 +1190,7 @@ High Scores
 High thread priority
 
 
-# ui/options.c: 267, 270
+# ui/options.c: 268, 271
 History
 
 
@@ -1274,11 +1278,11 @@ Joy 4-Way
 Joy 8-Way
 
 
-# ui/properties.c: 573, 3965
+# ui/properties.c: 573, 3967
 Joystick
 
 
-# ui/properties.c: 3975
+# ui/properties.c: 3977
 JoystickId
 
 
@@ -1290,7 +1294,7 @@ Keyboard
 L&arge Icons
 
 
-# ui/options.c: 293 ui/win32ui.c: 662
+# ui/options.c: 294 ui/win32ui.c: 662
 Large Icons
 
 
@@ -1306,7 +1310,7 @@ Lightgun device
 Line &Up Icons
 
 
-# ui/options.c: 295 ui/win32ui.c: 664
+# ui/options.c: 296 ui/win32ui.c: 664
 List
 
 
@@ -1338,11 +1342,11 @@ MAME release notes
 MAME savestate files (*.sta)
 
 
-# ui/options.c: 317
+# ui/options.c: 318
 MAME32 has changed *.ini file directory.\n\nWould you like to migrate old configurations to the new directory?
 
 
-# ui/options.c: 4342
+# ui/options.c: 4354
 MAME32 has detected outdated configuration data.\n\nThe detected configuration data is from Version %s of MAME32.\nThe current version is %s. It is recommended that the\nconfiguration is set to the new defaults.\n\nWould you like to use the new configuration?
 
 
@@ -1354,7 +1358,7 @@ MAME32 version by
 MAME32 will now reset the selected\n
 
 
-# ui/mame32.rc: 366, 390, 401, 433, 453, 475, 509, 528, 581, 627, 663, 737, 799, 859, 894, 921, 958, 983, 1000, 1062, 1100, 1128, 1143 ui/options.c: 732 ui/translate.c: 102
+# ui/mame32.rc: 366, 390, 401, 433, 453, 475, 509, 528, 581, 627, 663, 737, 799, 859, 894, 921, 958, 983, 1000, 1062, 1100, 1128, 1143 ui/options.c: 733 ui/translate.c: 102
 MS Sans Serif
 
 
@@ -1366,7 +1370,7 @@ Manufactured:
 Manufacturer
 
 
-# ui/dialogs.c: 200 ui/options.c: 263
+# ui/dialogs.c: 200 ui/options.c: 264
 Marquee
 
 
@@ -1450,7 +1454,7 @@ No offset for clones missing parent in view
 Non-Wor&king
 
 
-# ui/dialogs.c: 208 ui/properties.c: 389, 401, 416, 434, 487, 499, 3851
+# ui/dialogs.c: 208 ui/properties.c: 389, 401, 416, 434, 487, 499, 3853
 None
 
 
@@ -1466,7 +1470,7 @@ Not Working
 Not found
 
 
-# ui/properties.c: 989
+# ui/properties.c: 980
 Not working
 
 
@@ -1546,7 +1550,7 @@ Pedal
 Pedal device
 
 
-# ui/options.c: 2930 ui/win32ui.c: 813
+# ui/options.c: 2942 ui/win32ui.c: 813
 Play Time
 
 
@@ -1622,7 +1626,7 @@ Proper&ties of %s
 Proper&ties of Driver
 
 
-# ui/properties.c: 713, 807
+# ui/properties.c: 703, 798
 Propery Sheet Error %d %X
 
 
@@ -1702,7 +1706,7 @@ ROM check:
 ROMs
 
 
-# ui/properties.c: 1045
+# ui/properties.c: 1036
 ROMs missing
 
 
@@ -1734,7 +1738,7 @@ Refresh game list
 Refresh:
 
 
-# ui/options.c: 1821
+# ui/options.c: 1831
 Reload configurations
 
 
@@ -1858,7 +1862,7 @@ Screen
 Screen flip support is missing
 
 
-# ui/properties.c: 1037
+# ui/properties.c: 1028
 Screen flipping is not supported
 
 
@@ -2070,47 +2074,47 @@ Show these fields in this order:
 Size:
 
 
-# ui/properties.c: 3827
+# ui/properties.c: 3829
 Skip 1 of 12 frames
 
 
-# ui/properties.c: 3836
+# ui/properties.c: 3838
 Skip 10 of 12 frames
 
 
-# ui/properties.c: 3837
+# ui/properties.c: 3839
 Skip 11 of 12 frames
 
 
-# ui/properties.c: 3828
+# ui/properties.c: 3830
 Skip 2 of 12 frames
 
 
-# ui/properties.c: 3829
+# ui/properties.c: 3831
 Skip 3 of 12 frames
 
 
-# ui/properties.c: 3830
+# ui/properties.c: 3832
 Skip 4 of 12 frames
 
 
-# ui/properties.c: 3831
+# ui/properties.c: 3833
 Skip 5 of 12 frames
 
 
-# ui/properties.c: 3832
+# ui/properties.c: 3834
 Skip 6 of 12 frames
 
 
-# ui/properties.c: 3833
+# ui/properties.c: 3835
 Skip 7 of 12 frames
 
 
-# ui/properties.c: 3834
+# ui/properties.c: 3836
 Skip 8 of 12 frames
 
 
-# ui/properties.c: 3835
+# ui/properties.c: 3837
 Skip 9 of 12 frames
 
 
@@ -2122,11 +2126,11 @@ Skip game info
 Sleep when possible
 
 
-# ui/options.c: 294 ui/win32ui.c: 663
+# ui/options.c: 295 ui/win32ui.c: 663
 Small Icons
 
 
-# ui/dialogs.c: 194 ui/options.c: 260
+# ui/dialogs.c: 194 ui/options.c: 261
 Snapshot
 
 
@@ -2178,7 +2182,7 @@ Sort items by year
 Sound
 
 
-# ui/properties.c: 1031
+# ui/properties.c: 1022
 Sound emulation isn't 100% accurate
 
 
@@ -2194,7 +2198,7 @@ Sounds (*.wav)
 St&ory
 
 
-# ui/options.c: 492 ui/properties.c: 2587, 2592, 2595, 2842, 2845, 4021, 4044, 4082 
+# ui/options.c: 493 ui/properties.c: 2589, 2594, 2597, 2844, 2847, 4023, 4046, 4084 
 Standard
 
 
@@ -2214,7 +2218,7 @@ Status:
 Stereo
 
 
-# ui/options.c: 268
+# ui/options.c: 269
 Story
 
 
@@ -2222,7 +2226,7 @@ Story
 Stretch using hardware
 
 
-# ui/properties.c: 1108 ui/treeview.c: 1353, 1354
+# ui/properties.c: 1111 ui/treeview.c: 1353, 1354
 Supported
 
 
@@ -2266,7 +2270,7 @@ There was not enough memory to complete the operation.
 Throttle
 
 
-# ui/dialogs.c: 202 ui/options.c: 264
+# ui/dialogs.c: 202 ui/options.c: 265
 Title
 
 
@@ -2378,7 +2382,7 @@ Unavailable
 Unemulated Protection
 
 
-# ui/audit32.c: 440 ui/properties.c: 983
+# ui/audit32.c: 440 ui/properties.c: 974
 Unknown
 
 
@@ -2386,7 +2390,7 @@ Unknown
 Unknown error.
 
 
-# ui/properties.c: 1110 ui/treeview.c: 1356, 1357
+# ui/properties.c: 1113 ui/treeview.c: 1356, 1357
 Unsupported
 
 
@@ -2434,7 +2438,7 @@ Use various icon for Not Working game
 Use volume auto adjust
 
 
-# ui/layout.c: 71 ui/mame32.rc: 859 ui/options.c: 1125, 2868 ui/properties.c: 766 ui/treeview.c: 301 ui/win32ui.c: 5365
+# ui/layout.c: 71 ui/mame32.rc: 859 ui/options.c: 1135, 2878 ui/properties.c: 760 ui/treeview.c: 301 ui/win32ui.c: 5365
 Vector
 
 
@@ -2442,7 +2446,7 @@ Vector
 Vector (H)
 
 
-# ui/properties.c: 927
+# ui/properties.c: 918
 Vector (H) (%d:%d) %f Hz
 
 
@@ -2450,11 +2454,11 @@ Vector (H) (%d:%d) %f Hz
 Vector (V)
 
 
-# ui/properties.c: 917
+# ui/properties.c: 908
 Vector (V) (%d:%d) %f Hz
 
 
-# ui/options.c: 4356
+# ui/options.c: 4368
 Version Mismatch
 
 
@@ -2462,7 +2466,7 @@ Version Mismatch
 Vertical
 
 
-# ui/properties.c: 1019
+# ui/properties.c: 1010
 Video emulation isn't 100% accurate
 
 
@@ -2498,51 +2502,51 @@ Window frame (dark)
 Window frame (light)
 
 
-# ui/options.c: 739
+# ui/options.c: 740
 Windows UI specific GUI joystick options
 
 
-# ui/options.c: 754
+# ui/options.c: 755
 Windows UI specific GUI keyboard options
 
 
-# ui/options.c: 658
+# ui/options.c: 659
 Windows UI specific directory options
 
 
-# ui/options.c: 3172
+# ui/options.c: 3184
 Windows UI specific folder list filters options
 
 
-# ui/options.c: 793
+# ui/options.c: 794
 Windows UI specific folder list hide options
 
 
-# ui/options.c: 687
+# ui/options.c: 688
 Windows UI specific general options
 
 
-# ui/options.c: 730
+# ui/options.c: 731
 Windows UI specific list font options
 
 
-# ui/options.c: 719
+# ui/options.c: 720
 Windows UI specific list options
 
 
-# ui/options.c: 668
+# ui/options.c: 669
 Windows UI specific startup options
 
 
-# ui/options.c: 712
+# ui/options.c: 713
 Windows UI specific window position options
 
 
-# ui/options.c: 473 
+# ui/options.c: 474 
 Windows misc options
 
 
-# ui/layout.c: 66 ui/properties.c: 991
+# ui/layout.c: 66 ui/properties.c: 982
 Working
 
 
@@ -2586,7 +2590,7 @@ by &Type
 by &Year
 
 
-# ui/options.c: 3802, 3843, 3930, 3983, 4125 
+# ui/options.c: 3814, 3855, 3942, 3995, 4137 
 error invalid value for %s: %s\n
 
 

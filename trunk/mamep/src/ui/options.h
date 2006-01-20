@@ -414,6 +414,7 @@ void SetGameUsesDefaults(int driver_index, BOOL use_defaults);
 void SetFolderUsesDefaults(const char *name, BOOL use_defaults);
 
 const char *GetUnifiedFolder(int driver_index);
+int GetUnifiedDriver(const char *name);
 
 const game_driver *GetSystemBiosInfo(int bios_index);
 const char *GetDefaultBios(int bios_index);
