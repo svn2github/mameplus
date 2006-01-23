@@ -266,8 +266,7 @@ void neogeo_set_lower_resolution( void )
 		!strcmp(Machine->gamedrv->name,"neopong") ||	// added
 		!strcmp(Machine->gamedrv->name,"npong10") ||	// added
 		!strcmp(Machine->gamedrv->name,"syscheck") ||	// added
-		!strcmp(Machine->gamedrv->name,"frogfest") ||	// added
-	)
+		!strcmp(Machine->gamedrv->name,"frogfest"))	// added
 				set_visible_area(1*8,39*8-1,Machine->visible_area.min_y,Machine->visible_area.max_y);
 }
 
