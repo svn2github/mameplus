@@ -94,7 +94,7 @@ Autoenabling mice due to presence of a %s\n
 Average FPS: %f (%d frames)\n
 平均 FPS: %f (%d 個畫面)\n
 
-# windows/wind3d.c: 2669 windows/winddraw.c: 1467, 1766
+# windows/wind3d.c: 2661 windows/winddraw.c: 1459, 1758
 Avg Flip = %d
 平均翻轉 = %d
 
@@ -318,7 +318,7 @@ For usage instructions, please consult the file windows.txt\n
 Frontend Related
 Frontend 相關
 
-# windows/window.c: 722
+# windows/window.c: 729
 Full Screen\tAlt+Enter
 全螢幕\tAlt+Enter
 
@@ -526,7 +526,7 @@ RGB effects surface created: %s\n
 RGB pattern has a wrong filesize (expected %i bytes, found %i)\n
 RGB 樣式有錯誤的檔案大小 (需要 %i 位元組，找到 %i)\n
 
-# windows/winddraw.c: 1389, 1475, 1774
+# windows/winddraw.c: 1389, 1467, 1766
 Recreating surfaces\n
 正在重建介面\n
 
@@ -534,7 +534,7 @@ Recreating surfaces\n
 Rendering to an off-screen surface and using blt()\n
 正在演算描繪到畫面外介面並使用 blt()\n
 
-# windows/wind3d.c: 2319, 2691
+# windows/wind3d.c: 2319, 2683
 Restoring surfaces\n
 正在還原介面\n
 
@@ -594,11 +594,11 @@ Toggle fullscreen
 UNKNOWN   %s\n
 未知的    %s\n
 
-# windows/wind3d.c: 2682
+# windows/wind3d.c: 2674
 Unable to blt RGB effect to back_surface: %08x\n
 無法以位元區塊傳送 RGB 效果到 back_surface: %08x\n
 
-# windows/wind3d.c: 2649
+# windows/wind3d.c: 2641
 Unable to blt back_surface to primary_surface: %08x\n
 無法以位元區塊傳送 back_surface 到 primary_surface: %08x\n
 
@@ -610,7 +610,7 @@ Unable to blt blit_surface to texture_surface: %08x\n
 Unable to blt scale_surface to texture_surface: %08x\n
 無法以位元區塊傳送 scale_surface 到 texture_surface: %08x\n
 
-# windows/winddraw.c: 1439
+# windows/winddraw.c: 1431
 Unable to blt target_surface: %08x\n
 無法以位元區塊傳送 target_surface: %08x\n
 
@@ -626,7 +626,7 @@ Unable to find RGB effects pattern\n
 Unable to lock blit_surface: %08x\n
 無法鎖定 blit_surface: %08x\n
 
-# windows/winddraw.c: 1609, 1709
+# windows/winddraw.c: 1601, 1701
 Unable to lock target_surface: %08x\n
 無法鎖定 target_surface: %08x\n
 

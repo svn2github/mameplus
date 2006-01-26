@@ -522,7 +522,7 @@ spcewars	太空入侵者 / Space War (Sanritsu)	太空入侵者 / Space War (Sanritsu)	San
 seawolf2	海狼 II	海狼 II	Midway
 twotiger	雙虎 (dedicated)	雙虎 (dedicated)	Bally Midway
 twotigrc	雙虎 (Tron conversion)	雙虎 (Tron conversion)	Bally Midway
-nflfoot	NFL 橄欖球	NFL 橄欖球	Bally Midway
+nflfoot	NFL 美式足球	NFL 美式足球	Bally Midway
 spyhunt	間諜獵人	間諜獵人	Bally Midway
 spyhunt2	間諜獵人 2 (rev 2)	間諜獵人 2 (rev 2)	Bally Midway
 spyhnt2a	間諜獵人 2 (rev 1)	間諜獵人 2 (rev 1)	Bally Midway
@@ -1504,8 +1504,8 @@ carnvckt	嘉年華會 (檯面型)	嘉年華會 (檯面型)	Sega
 heiankyo	平安京異形	平安京異形	Denki Onkyo
 bullfgt	鬥牛 / Bullfight	鬥牛 / Bullfight	Coreland / Sega
 thetogyu	鬥牛 (日本版)	鬥牛 (日本版)	Coreland / Sega
-seganinj	忍者王子 / Sega 忍者	忍者王子 / Sega 忍者	Sega
-seganinu	忍者王子 / Sega 忍者 (未加密)	忍者王子 / Sega 忍者 (未加密)	Sega
+seganinj	忍者王子 / SEGA 忍者	忍者王子 / SEGA 忍者	Sega
+seganinu	忍者王子 / SEGA 忍者 (未加密)	忍者王子 / SEGA 忍者 (未加密)	Sega
 ninja	忍者王子	忍者王子	Sega
 nprinces	忍者王子 (64k Ver. 盜版?)	忍者王子 (64k Ver. 盜版?)	bootleg?
 nprincso	忍者王子 (128k Ver.)	忍者王子 (128k Ver.)	Sega
@@ -1515,8 +1515,8 @@ myhero	青春物語 / 我的英雄 (美國版)	青春物語 / 我的英雄 (美國版)	Sega
 sscandal	青春物語 (日本版)	青春物語 (日本版)	Coreland / Sega
 myherok	青春物語 / 我的英雄 (韓國版)	青春物語 / 我的英雄 (韓國版)	Coreland / Sega
 4dwarrio	4-D 戰士	4-D 戰士	Coreland / Sega
-wboy	神奇男孩 (set 1, 新加密)	神奇男孩 (set 1, 新加密)	Sega (Escape license)
-wboyo	神奇男孩 (set 1, 舊加密)	神奇男孩 (set 1, 舊加密)	Sega (Escape license)
+wboy	神奇男孩 (set 1, 新加密版)	神奇男孩 (set 1, 新加密版)	Sega (Escape license)
+wboyo	神奇男孩 (set 1, 舊加密版)	神奇男孩 (set 1, 舊加密版)	Sega (Escape license)
 wboy2	神奇男孩 (set 2)	神奇男孩 (set 2)	Sega (Escape license)
 wboy2u	神奇男孩 (set 2 未加密)	神奇男孩 (set 2 未加密)	Sega (Escape license)
 wboy3	神奇男孩 (set 3)	神奇男孩 (set 3)	Sega (Escape license)
@@ -1607,8 +1607,8 @@ loffireu	爆彈野狼 (美國版, FD1094 317-0135)	爆彈野狼 (美國版, FD1094 317-0135)	S
 loffirej	爆彈野狼 (日本版, FD1094 317-0134)	爆彈野狼 (日本版, FD1094 317-0134)	Sega
 alien3	異形 3: The Gun (世界版)	異形 3: The Gun (世界版)	Sega
 alien3u	異形 3: The Gun (美國版)	異形 3: The Gun (美國版)	Sega
-sonic	音速小子 (日本版, rev. C)	音速小子 (日本版, rev. C)	Sega
-sonicp	音速小子 (日本版, 開發版)	音速小子 (日本版, 開發版)	Sega
+sonic	SEGA 音速小子 (日本版, rev. C)	SEGA 音速小子 (日本版, rev. C)	Sega
+sonicp	SEGA 音速小子 (日本版, 開發版)	SEGA 音速小子 (日本版, 開發版)	Sega
 jpark	侏儸紀公園	侏儸紀公園	Sega
 ga2	戰斧二 / 戰斧: 帝王的復仇 (世界版)	戰斧二 / 戰斧: 帝王的復仇 (世界版)	Sega
 ga2u	戰斧二 / 戰斧: 帝王的復仇 (美國版)	戰斧二 / 戰斧: 帝王的復仇 (美國版)	Sega
@@ -1661,7 +1661,7 @@ daytonam	雷特娜賽車 (日本版, To The MAXX)	雷特娜賽車 (日本版, To The MAXX)	Sega
 desert	沙漠坦克	沙漠坦克	Sega/Martin Marietta
 vcop	VR 戰警	VR 戰警	Sega
 manxtt	曼島 TT 超級機車賽	曼島 TT 超級機車賽	Sega
-srallyc	Sega 越野賽車冠軍盃	Sega 越野賽車冠軍盃	Sega
+srallyc	SEGA 越野賽車冠軍盃	SEGA 越野賽車冠軍盃	Sega
 vf2	VR 快打 2 (ver 2.1)	VR 快打 2 (ver 2.1)	Sega
 vf2b	VR 快打 2 (ver B)	VR 快打 2 (ver B)	Sega
 vf2o	VR 快打 2 (original)	VR 快打 2 (original)	Sega
@@ -1687,14 +1687,14 @@ vonusa	電腦戰機 / Virtual On Cyber Troopers (美國版)	電腦戰機 / Virtual On Cyber
 dynabb	火爆職棒 '97	火爆職棒 '97	Sega
 zerogun	零式戰機 (Model 2B)	零式戰機 (Model 2B)	Psikyo
 zerogunj	零式戰機 (日本版 Model 2B)	零式戰機 (日本版 Model 2B)	Psikyo
-stcc	Sega 房車錦標賽	Sega 房車錦標賽	Sega
+stcc	SEGA 房車錦標賽	SEGA 房車錦標賽	Sega
 hotd	死亡鬼屋	死亡鬼屋	Sega
 topskatr	滑板機	滑板機	Sega
 bel	衝出封鎖線	衝出封鎖線	Sega/EPL Productions
 vf3	VR 快打 3	VR 快打 3	Sega
 vf3tb	VR 快打 3 TB	VR 快打 3 TB	Sega
-bass	Sega 釣魚大賽	Sega 釣魚大賽	Sega
-getbass	Sega 釣魚大賽 / Get Bass	Sega 釣魚大賽 / Get Bass	Sega
+bass	SEGA 釣魚大賽	SEGA 釣魚大賽	Sega
+getbass	SEGA 釣魚大賽 / Get Bass	SEGA 釣魚大賽 / Get Bass	Sega
 scud	超級賽車 (澳洲版)	超級賽車 (澳洲版)	Sega
 scuda	超級賽車 (Export)	超級賽車 (Export)	Sega
 scudp	超級賽車 Plus	超級賽車 Plus	Sega
@@ -1704,7 +1704,7 @@ lemans24	利曼 24 小時耐久賽	利曼 24 小時耐久賽	Sega
 vs29815	VR 足球 2 '98 (Step 1.5)	VR 足球 2 '98 (Step 1.5)	Sega
 vs2	VR 足球 2 (Step 2.0)	VR 足球 2 (Step 2.0)	Sega
 harley	哈雷騎士	哈雷騎士	Sega
-srally2	Sega 越野賽車 2	Sega 越野賽車 2	Sega
+srally2	SEGA 越野賽車 2	SEGA 越野賽車 2	Sega
 von2	電腦戰機 2	電腦戰機 2	Sega
 von254g	電腦戰機 2 (ver 5.4g)	電腦戰機 2 (ver 5.4g)	Sega
 fvipers2	毒蛇格鬥 2	毒蛇格鬥 2	Sega
@@ -1740,10 +1740,15 @@ mt_gaxe	戰斧 (Mega-Tech)	戰斧 (Mega-Tech)	Sega
 mt_mystd	孔雀王 2 - 幻影城 / Mystic Defender (Mega-Tech)	孔雀王 2 - 幻影城 / Mystic Defender (Mega-Tech)	Sega
 mt_cols	寶石方塊 (Mega-Tech)	寶石方塊 (Mega-Tech)	Sega
 mt_mwalk	外星戰將 (Mega-Tech)	外星戰將 (Mega-Tech)	Sega
+mt_sonic	音速小子 (Mega-Tech, set 1)	音速小子 (Mega-Tech, set 1)	Sega
+mt_sonia	音速小子 (Mega-Tech, set 2)	音速小子 (Mega-Tech, set 2)	Sega
 mt_fshrk	鮫! 鮫! 鮫! (Mega-Tech)	鮫! 鮫! 鮫! (Mega-Tech)	Toaplan / Sega
 mt_gaxe2	戰斧 II (Mega-Tech)	戰斧 II (Mega-Tech)	Sega
+mt_soni2	音速小子 2 (Mega-Tech)	音速小子 2 (Mega-Tech)	Sega
+mp_sonic	音速小子 (Mega Play)	音速小子 (Mega Play)	Sega
 mp_gaxe2	戰斧 II (Mega Play)	戰斧 II (Mega Play)	Sega
 mp_twc	Tecmo 世界盃足球 (Mega Play)	Tecmo 世界盃足球 (Mega Play)	Sega
+mp_soni2	音速小子 2 (Mega Play)	音速小子 2 (Mega Play)	Sega
 mp_col3	寶石方塊 III (Mega Play)	寶石方塊 III (Mega Play)	Sega
 zoar	X 任務 / 避難所	X 任務 / 避難所	Data East USA
 btime	漢堡王 (Data East set 1)	漢堡王 (Data East set 1)	Data East Corporation
@@ -1889,6 +1894,9 @@ psurge	電路小精靈	電路小精靈	<unknown>
 pandoras	潘朵拉之殿	潘朵拉之殿	Konami/Interlogic
 hyperspt	科拿米運動會 '84 / Hyper Sports	科拿米運動會 '84 / Hyper Sports	Konami (Centuri license)
 hpolym84	科拿米運動會 '84	科拿米運動會 '84	Konami
+sbasketb	超級籃球 (version G)	超級籃球 (version G)	Konami
+sbasketo	超級籃球 (version E)	超級籃球 (version E)	Konami
+sbasketu	超級籃球 (未加密)	超級籃球 (未加密)	Konami
 mikie	新入社員 Tooru 君 / Mikie	新入社員 Tooru 君 / Mikie	Konami
 mikiej	新入社員 Tooru 君	新入社員 Tooru 君	Konami
 mikiehs	新入社員 Tooru 君 / Mikie (High School Graffiti)	新入社員 Tooru 君 / Mikie (High School Graffiti)	Konami
@@ -2159,7 +2167,7 @@ maxf_102	51 區特警 / Maximum Force v1.02	51 區特警 / Maximum Force v1.02	Atari G
 a51site4	51 區特警: Site 4	51 區特警: Site 4	Atari Games
 sgladiat	劍鬥士 1984	劍鬥士 1984	SNK
 aso	ASO - 組合戰機	ASO - 組合戰機	SNK
-alphamis	ASO - 組合戰機 / Alpha Mission	ASO - 組合戰機 / Alpha Mission	SNK
+alphamis	ASO - 組合戰機 / ALPHA 任務	ASO - 組合戰機 / ALPHA 任務	SNK
 tnk3	大坦克 / T.N.K. III (美國版)	大坦克 / T.N.K. III (美國版)	SNK
 tnk3j	大坦克 (日本版)	大坦克 (日本版)	SNK
 ikari	怒 / Ikari Warriors (美國版)	怒 / Ikari Warriors (美國版)	SNK
@@ -2193,14 +2201,14 @@ prehislu	原始島 1930 (美國版)	原始島 1930 (美國版)	SNK of America
 gensitou	原始島 1930	原始島 1930	SNK
 bbusters	野獸剋星 (世界版 ?)	野獸剋星 (世界版 ?)	SNK
 nam1975	越戰-1975	越戰-1975	SNK
-bstars	棒球之星 - 職棒	棒球之星 - 職棒	SNK
+bstars	棒球之星 Professional	棒球之星 Professional	SNK
 tpgolf	頂尖高爾夫	頂尖高爾夫	SNK
 mahretsu	麻雀狂列傳 - 西日本篇	麻雀狂列傳 - 西日本篇	SNK
 maglord	幻魔大戰 (set 1)	幻魔大戰 (set 1)	Alpha Denshi Co.
 maglordh	幻魔大戰 (set 2)	幻魔大戰 (set 2)	Alpha Denshi Co.
 ridhero	風速英雄 (set 1)	風速英雄 (set 1)	SNK
 ridheroh	風速英雄 (set 2)	風速英雄 (set 2)	SNK
-alpham2	Alpha 任務 II / ASO II - 最後的守護神	Alpha 任務 II / ASO II - 最後的守護神	SNK
+alpham2	ASO II - 最後的守護神 / ALPHA 任務 II	ASO II - 最後的守護神 / ALPHA 任務 II	SNK
 ncombat	忍者大戰 (set 1)	忍者大戰 (set 1)	Alpha Denshi Co.
 ncombata	忍者大戰 (set 2)	忍者大戰 (set 2)	Alpha Denshi Co.
 cyberlip	戰鬥邊緣	戰鬥邊緣	SNK
@@ -2407,7 +2415,8 @@ matrimd	新豪血寺一族 - 鬥婚 (解密 C)	新豪血寺一族 - 鬥婚 (解密 C)	Noise Factory 
 matrimbl	新豪血寺一族 - 鬥婚 (盜版)	新豪血寺一族 - 鬥婚 (盜版)	bootleg
 pnyaa	寵物方塊	寵物方塊	Aiky / Taito
 mslug5	越南大戰: 合金彈頭 5	越南大戰: 合金彈頭 5	SNK Playmore
-svcpcb	SvC 渾沌 - SNK vs 卡普空 (日本版, JAMMA PCB)	SvC 渾沌 - SNK vs 卡普空 (日本版, JAMMA PCB)	Playmore
+svcpcb	SvC 渾沌 - SNK vs 卡普空 (亞洲版, JAMMA PCB)	SvC 渾沌 - SNK vs 卡普空 (亞洲版, JAMMA PCB)	Playmore
+svcpcbj	SvC 渾沌 - SNK vs 卡普空 (日本版, JAMMA PCB)	SvC 渾沌 - SNK vs 卡普空 (日本版, JAMMA PCB)	Playmore
 svc	SvC 渾沌 - SNK vs 卡普空 (MVS)	SvC 渾沌 - SNK vs 卡普空 (MVS)	Playmore
 samsho5	侍魂 V / 侍魂零 (set 1)	侍魂 V / 侍魂零 (set 1)	Yuki Enterprise / SNK Playmore
 samsho5h	侍魂 V / 侍魂零 (set 2)	侍魂 V / 侍魂零 (set 2)	Yuki Enterprise / SNK Playmore
@@ -2933,6 +2942,7 @@ grtwall	萬里長城 (V638C)	萬里長城 (V638C)	IGS
 vbowl	世界杯保齡球 (世界版, V101XCM)	世界杯保齡球 (世界版, V101XCM)	Alta / IGS
 vbowlj	世界杯保齡球 (日本版, V100JCM)	世界杯保齡球 (日本版, V100JCM)	Alta / IGS
 drgnwrld	中國龍 / Dragon World (世界版, V0400)	中國龍 / Dragon World (世界版, V0400)	IGS
+drgwrld3	中國龍 / Dragon World (世界版, V0300)	中國龍 / Dragon World (世界版, V0300)	IGS
 tarzan	泰山	泰山	IGS
 orlegend	西遊釋厄傳 (ver. 126)	西遊釋厄傳 (ver. 126)	IGS
 orlegnde	西遊釋厄傳 (ver. 112)	西遊釋厄傳 (ver. 112)	IGS
@@ -2995,6 +3005,7 @@ shangkid	北派少林 飛龍之拳 / Shanghai Kid	北派少林 飛龍之拳 / Shanghai Kid	Taiyo
 hiryuken	北派少林 飛龍之拳	北派少林 飛龍之拳	[Nihon Game] (Taito license)
 spcking2	太空之王-2	太空之王-2	Konami
 spaceint	太空侵略者	太空侵略者	Shoei
+spaceinj	太空侵略者 (日本版)	太空侵略者 (日本版)	Shoei
 spacefb	太空火鳥 (Nintendo)	太空火鳥 (Nintendo)	Nintendo
 spacefbg	太空火鳥 (Gremlin)	太空火鳥 (Gremlin)	Gremlin
 spacefbb	太空火鳥 (盜版)	太空火鳥 (盜版)	bootleg
