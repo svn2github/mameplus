@@ -259,430 +259,430 @@ usage: chdman -info input.chd\n
 # chdman.c: 238
    or: chdman -setchs inout.chd cylinders heads sectors\n
 
-# chdman.c: 290
+# chdman.c: 308
 WARNING: expected input MD5 = %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x\n
 
-# chdman.c: 295
+# chdman.c: 313
                  actual MD5 = %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x\n
 
-# chdman.c: 302
+# chdman.c: 320
 Input MD5 verified\n
 
-# chdman.c: 310
+# chdman.c: 328
 WARNING: expected input SHA1 = %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x\n
 
-# chdman.c: 316
+# chdman.c: 334
                  actual SHA1 = %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x\n
 
-# chdman.c: 324
+# chdman.c: 342
 Input SHA1 verified\n
 
-# chdman.c: 328
+# chdman.c: 346
 WARNING: found %d errors in the input file, checksums not verified\n
 
-# chdman.c: 330
+# chdman.c: 348
 WARNING: entire input file not read, checksums not verified\n
 
-# chdman.c: 346
+# chdman.c: 364
 \\\\.\\physicaldrive
 
-# chdman.c: 395
+# chdman.c: 413
 Invalid file '%s'\n
 
-# chdman.c: 402
+# chdman.c: 420
 Can't guess CHS values because data size is not divisible by the sector size\n
 
-# chdman.c: 424
+# chdman.c: 442
 Can't guess CHS values because no logical combination works!\n
 
-# chdman.c: 480, 857, 978, 1082, 1240, 1357, 1573, 1685, 1770
+# chdman.c: 498, 875, 996, 1100, 1258, 1375, 1591, 1703, 1788
 Input file:   %s\n
 
-# chdman.c: 481, 730, 858, 979, 1574
+# chdman.c: 499, 748, 876, 997, 1592
 Output file:  %s\n
 
-# chdman.c: 482
+# chdman.c: 500
 Input offset: %d\n
 
-# chdman.c: 483, 731, 1771
+# chdman.c: 501, 749, 1789
 Cylinders:    %d\n
 
-# chdman.c: 484, 732, 1772
+# chdman.c: 502, 750, 1790
 Heads:        %d\n
 
-# chdman.c: 485, 733, 1773
+# chdman.c: 503, 751, 1791
 Sectors:      %d\n
 
-# chdman.c: 486, 734
+# chdman.c: 504, 752
 Bytes/sector: %d\n
 
-# chdman.c: 487, 735
+# chdman.c: 505, 753
 Sectors/hunk: %d\n
 
-# chdman.c: 488, 736
+# chdman.c: 506, 754
 Logical size: %s\n
 
-# chdman.c: 494, 610, 742, 1609, 1708
+# chdman.c: 512, 628, 760, 1627, 1726
 Error creating CHD file: %s\n
 
-# chdman.c: 502, 618, 750, 1617, 1716
+# chdman.c: 520, 636, 768, 1635, 1734
 Error opening new CHD file: %s\n
 
-# chdman.c: 512, 760
+# chdman.c: 530, 778
 Error adding hard disk metadata: %s\n
 
-# chdman.c: 522, 669, 1641, 1724
+# chdman.c: 540, 687, 1659, 1742
 Error during compression: %s\n
 
-# chdman.c: 563
+# chdman.c: 581
 Error reading input file: %s\n
 
-# chdman.c: 573
+# chdman.c: 591
 \nCD-ROM %s has %d tracks and %d total frames\n
 
-# chdman.c: 647
+# chdman.c: 665
 Error adding CD-ROM metadata: %s\n
 
-# chdman.c: 662
+# chdman.c: 680
 Compressing track %d / %d (file %s:%d, %d frames, %d hunks)\n
 
-# chdman.c: 680
+# chdman.c: 698
 Error during compression finalization: %s\n
 
-# chdman.c: 770, 884
+# chdman.c: 788, 902
 Error allocating memory buffer\n
 
-# chdman.c: 789
+# chdman.c: 807
 Zeroing hunk %d/%d...  \r
 
-# chdman.c: 796, 933
+# chdman.c: 814, 951
 Error writing CHD file: %s\n
 
-# chdman.c: 802
+# chdman.c: 820
 Creation complete!                    \n
 
-# chdman.c: 864
+# chdman.c: 882
 Error opening src CHD file: %s\n
 
-# chdman.c: 874
+# chdman.c: 892
 Error opening dest CHD file: %s\n
 
-# chdman.c: 902
+# chdman.c: 920
 Copying hunk %d/%d...  \r
 
-# chdman.c: 913
+# chdman.c: 931
 Error reading CHD file: %s\n
 
-# chdman.c: 944
+# chdman.c: 962
 Copy complete!                    \n
 
-# chdman.c: 985, 1089, 1363, 1584, 1593, 1692, 1700
+# chdman.c: 1003, 1107, 1381, 1602, 1611, 1710, 1718
 Error opening CHD file '%s': %s\n
 
-# chdman.c: 994
+# chdman.c: 1012
 Out of memory allocating hunk buffer!\n
 
-# chdman.c: 999, 1112, 1933
+# chdman.c: 1017, 1130, 1951
 wb
 
-# chdman.c: 1002, 1108, 1115
+# chdman.c: 1020, 1126, 1133
 Error opening output file '%s'\n
 
-# chdman.c: 1016
+# chdman.c: 1034
 Extracting hunk %d/%d...  \r
 
-# chdman.c: 1023
+# chdman.c: 1041
 Error reading hunk %d from CHD file: %s\n
 
-# chdman.c: 1031
+# chdman.c: 1049
 Error writing hunk %d to output file: %s\n
 
-# chdman.c: 1035
+# chdman.c: 1053
 Extraction complete!                    \n
 
-# chdman.c: 1068
+# chdman.c: 1086
 AUDIO
 
-# chdman.c: 1068
+# chdman.c: 1086
 MODE1
 
-# chdman.c: 1068
+# chdman.c: 1086
 MODE1_RAW
 
-# chdman.c: 1068
+# chdman.c: 1086
 MODE2
 
-# chdman.c: 1068
+# chdman.c: 1086
 MODE2_FORM1
 
-# chdman.c: 1068
+# chdman.c: 1086
 MODE2_FORM2
 
-# chdman.c: 1068
+# chdman.c: 1086
 MODE2_FORM_MIX
 
-# chdman.c: 1068
+# chdman.c: 1086
 MODE2_RAW
 
-# chdman.c: 1069
+# chdman.c: 1087
 RW
 
-# chdman.c: 1069
+# chdman.c: 1087
 RW_RAW
 
-# chdman.c: 1083
+# chdman.c: 1101
 Output files:  %s (toc) and %s (bin)\n
 
-# chdman.c: 1097
+# chdman.c: 1115
 Error opening CHD-CD '%s'\n
 
-# chdman.c: 1105
+# chdman.c: 1123
 w
 
-# chdman.c: 1120
+# chdman.c: 1138
 CD_ROM\n\n\n
 
-# chdman.c: 1125
+# chdman.c: 1143
 Extracting track %d\n
 
-# chdman.c: 1127
+# chdman.c: 1145
 // Track %d\n
 
-# chdman.c: 1132
+# chdman.c: 1150
 TRACK %s %s\n
 
-# chdman.c: 1136
+# chdman.c: 1154
 TRACK %s\n
 
-# chdman.c: 1140
+# chdman.c: 1158
 NO COPY\n
 
-# chdman.c: 1143
+# chdman.c: 1161
 NO PRE_EMPHASIS\n
 
-# chdman.c: 1144
+# chdman.c: 1162
 TWO_CHANNEL_AUDIO\n
 
-# chdman.c: 1151
+# chdman.c: 1169
 ZERO AUDIO %s 00:02:00\n
 
-# chdman.c: 1155
+# chdman.c: 1173
 ZERO AUDIO 00:02:00\n
 
-# chdman.c: 1172
+# chdman.c: 1190
 DATAFILE \"%s\" #%ld %02d:%02d:%02d // length in bytes: %ld\n
 
-# chdman.c: 1176
+# chdman.c: 1194
 DATAFILE \"%s\" %02d:%02d:%02d // length in bytes: %ld\n
 
-# chdman.c: 1181
+# chdman.c: 1199
 START 00:02:00\n
 
-# chdman.c: 1198
+# chdman.c: 1216
 Completed!\n
 
-# chdman.c: 1246
+# chdman.c: 1264
 Error opening CHD file: %s\n
 
-# chdman.c: 1256
+# chdman.c: 1274
 Can't verify this type of image (probably writeable)\n
 
-# chdman.c: 1258
+# chdman.c: 1276
 \nError during verify: %s\n
 
-# chdman.c: 1265
+# chdman.c: 1283
 MD5 verification successful!\n
 
-# chdman.c: 1268
+# chdman.c: 1286
 Error: MD5 in header = %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x\n
 
-# chdman.c: 1273
+# chdman.c: 1291
           actual MD5 = %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x\n
 
-# chdman.c: 1291
+# chdman.c: 1309
 SHA1 verification successful!\n
 
-# chdman.c: 1294
+# chdman.c: 1312
 Error: SHA1 in header = %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x\n
 
-# chdman.c: 1300
+# chdman.c: 1318
           actual SHA1 = %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x\n
 
-# chdman.c: 1324
+# chdman.c: 1342
 Error writing new header: %s\n
 
-# chdman.c: 1326
+# chdman.c: 1344
 Updated header successfully\n
 
-# chdman.c: 1341
+# chdman.c: 1359
 none
 
-# chdman.c: 1342
+# chdman.c: 1360
 zlib
 
-# chdman.c: 1343
+# chdman.c: 1361
 zlib+
 
-# chdman.c: 1369
+# chdman.c: 1387
 Header Size:  %d bytes\n
 
-# chdman.c: 1370
+# chdman.c: 1388
 File Version: %d\n
 
-# chdman.c: 1371
+# chdman.c: 1389
 Flags:        %s, %s\n
 
-# chdman.c: 1372
+# chdman.c: 1390
 HAS_PARENT
 
-# chdman.c: 1372
+# chdman.c: 1390
 NO_PARENT
 
-# chdman.c: 1373
+# chdman.c: 1391
 READ_ONLY
 
-# chdman.c: 1373
+# chdman.c: 1391
 WRITEABLE
 
-# chdman.c: 1375
+# chdman.c: 1393
 Compression:  %s\n
 
-# chdman.c: 1377
+# chdman.c: 1395
 Compression:  Unknown type %d\n
 
-# chdman.c: 1378
+# chdman.c: 1396
 Hunk Size:    %d bytes\n
 
-# chdman.c: 1379
+# chdman.c: 1397
 Total Hunks:  %d\n
 
-# chdman.c: 1380
+# chdman.c: 1398
 Logical size: %s bytes\n
 
-# chdman.c: 1382
+# chdman.c: 1400
 MD5:          %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x\n
 
-# chdman.c: 1388
+# chdman.c: 1406
 SHA1:         %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x\n
 
-# chdman.c: 1396
+# chdman.c: 1414
 Parent MD5:   %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x\n
 
-# chdman.c: 1402
+# chdman.c: 1420
 Parent SHA1:  %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x\n
 
-# chdman.c: 1422
+# chdman.c: 1440
 Metadata:     Tag=%08x  Length=%d\n
 
-# chdman.c: 1452
+# chdman.c: 1470
 midway
 
-# chdman.c: 1463
+# chdman.c: 1481
 %d partitions\n
 
-# chdman.c: 1474, 1503, 1576
+# chdman.c: 1492, 1521, 1594
 Maximum hunk: %d\n
 
-# chdman.c: 1477, 1506
+# chdman.c: 1495, 1524
 Warning: chomp will have no effect\n
 
-# chdman.c: 1483
+# chdman.c: 1501
 atari
 
-# chdman.c: 1515
+# chdman.c: 1533
 Error: unable to identify file or compute chomping size.\n
 
-# chdman.c: 1569, 1684
+# chdman.c: 1587, 1702
 Parent file:  %s\n
 
-# chdman.c: 1570, 1686
+# chdman.c: 1588, 1704
 Diff file:    %s\n
 
-# chdman.c: 1632
+# chdman.c: 1650
 Error cloning metadata: %s\n
 
-# chdman.c: 1779
+# chdman.c: 1797
 Error opening CHD file '%s' read-only: %s\n
 
-# chdman.c: 1795
+# chdman.c: 1813
 Error making CHD file writeable: %s\n
 
-# chdman.c: 1804
+# chdman.c: 1822
 Error opening CHD file '%s' read/write: %s\n
 
-# chdman.c: 1813
+# chdman.c: 1831
 CHD file '%s' is not a hard disk!\n
 
-# chdman.c: 1822
+# chdman.c: 1840
 Error writing new metadata to CHD file: %s\n
 
-# chdman.c: 1843
+# chdman.c: 1861
 Error writing new header to CHD file: %s\n
 
-# chdman.c: 1848
+# chdman.c: 1866
 WARNING: new size is smaller; run chdman -update to reclaim empty space\n
 
-# chdman.c: 1850
+# chdman.c: 1868
 WARNING: new size is larger; run chdman -update to account for new empty space\n
 
-# chdman.c: 1896, 1929
+# chdman.c: 1914, 1947
 rb
 
-# chdman.c: 1931
+# chdman.c: 1949
 rb+
 
-# chdman.c: 2022
+# chdman.c: 2040
 Error: chdman read from non-aligned offset %08X%08X\n
 
-# chdman.c: 2027
+# chdman.c: 2045
 Error: chdman read non-aligned amount %08X\n
 
-# chdman.c: 2104
+# chdman.c: 2122
 Error: chdman write to CHD image = bad!\n
 
-# chdman.c: 2179
+# chdman.c: 2197
 chdman - MAME Compressed Hunks of Data (CHD) manager %s\n
 
-# chdman.c: 2189
+# chdman.c: 2207
 -createhd
 
-# chdman.c: 2191
+# chdman.c: 2209
 -createblankhd
 
-# chdman.c: 2193
+# chdman.c: 2211
 -copydata
 
-# chdman.c: 2195
+# chdman.c: 2213
 -createcd
 
-# chdman.c: 2197
+# chdman.c: 2215
 -extract
 
-# chdman.c: 2199
+# chdman.c: 2217
 -extractcd
 
-# chdman.c: 2201
+# chdman.c: 2219
 -verify
 
-# chdman.c: 2203
+# chdman.c: 2221
 -verifyfix
 
-# chdman.c: 2205
+# chdman.c: 2223
 -update
 
-# chdman.c: 2207
+# chdman.c: 2225
 -chomp
 
-# chdman.c: 2209
+# chdman.c: 2227
 -info
 
-# chdman.c: 2211
+# chdman.c: 2229
 -merge
 
-# chdman.c: 2213
+# chdman.c: 2231
 -diff
 
-# chdman.c: 2215
+# chdman.c: 2233
 -setchs
 
 # cheat.c: 1114
@@ -1357,7 +1357,7 @@ localtime.sec
 # cpuexec.c: 313
 localtime.sub
 
-# cpuexec.c: 314, 2248, 2248, 2279
+# cpuexec.c: 314, 2245, 2245, 2275
 clock
 
 # cpuexec.c: 315
@@ -1381,64 +1381,64 @@ watchdog_counter
 # cpuexec.c: 345
 vblank_countdown
 
-# cpuexec.c: 367
-s1945p
-
-# cpuexec.c: 367
-s1945pd
-
-# cpuexec.c: 675
+# cpuexec.c: 652
 Unable to load due to pending anonymous timers. See error.log for details.
 
-# cpuexec.c: 1040
+# cpuexec.c: 1017
 cpu_timeslice: target = %.9f\n
 
-# cpuexec.c: 1046, 1111
+# cpuexec.c: 1023, 1088
 --> updated CPU%d suspend from %X to %X\n
 
-# cpuexec.c: 1059
+# cpuexec.c: 1036
   cpu %d: %d cycles\n
 
-# cpuexec.c: 1070
+# cpuexec.c: 1047
 Negative CPU cycle count!
 
-# cpuexec.c: 1079
+# cpuexec.c: 1056
          %d ran, %d total, time = %.9f\n
 
-# cpuexec.c: 1088
+# cpuexec.c: 1065
          (new target)\n
 
-# cpuexec.c: 1102
+# cpuexec.c: 1079
   cpu %d: %d cycles (suspended)\n
 
-# cpuexec.c: 1106
+# cpuexec.c: 1083
          %d skipped, %d total, time = %.9f\n
 
-# cpuexec.c: 1142
+# cpuexec.c: 1119
 activecpu_abort_timeslice (CPU=%d, cycles_left=%d)\n
 
-# cpuexec.c: 1189
+# cpuexec.c: 1166
 cpunum_suspend (CPU=%d, r=%X, eat=%d)\n
 
-# cpuexec.c: 1210
+# cpuexec.c: 1187
 cpunum_resume (CPU=%d, r=%X)\n
 
-# cpuexec.c: 1325
+# cpuexec.c: 1302
 cpu_boost_interleave(%.9f, %.9f)\n
 
-# cpuexec.c: 1536
+# cpuexec.c: 1513
 cpu_compute_scanline_timing: refresh=%.9f vblank=%.9f scanline=%.9f\n
 
-# cpuexec.c: 2076
+# cpuexec.c: 2053
 end_interleave_boost\n
 
-# cpuexec.c: 2112
+# cpuexec.c: 2089
 Perfect interleave = %.9f, smallest = %.9f\n
 
-# cpuexec.c: 2250, 2282
+# cpuexec.c: 2219
+s1945p
+
+# cpuexec.c: 2219
+s1945pd
+
+# cpuexec.c: 2247, 2278
 index
 
-# cpuexec.c: 2254, 2283
+# cpuexec.c: 2251, 2279
 value
 
 # cpuint.c: 140, 141, 142, 143
@@ -1496,1680 +1496,1686 @@ no CPU
 The MAME team
 
 # datafile.c: 11
-0.103u3    January   19th 2006
+0.103u4    January   27th 2006
 
 # datafile.c: 12
-0.103u2fix January   12th 2006
+0.103u3    January   19th 2006
 
 # datafile.c: 13
-0.103u2    January   10th 2006
+0.103u2fix January   12th 2006
 
 # datafile.c: 14
-0.103u1    January    4th 2006
+0.103u2    January   10th 2006
 
 # datafile.c: 15
-0.103      December  30th 2005
+0.103u1    January    4th 2006
 
 # datafile.c: 16
-0.102u5    December  22th 2005
+0.103      December  30th 2005
 
 # datafile.c: 17
-0.102u4    December  15th 2005
+0.102u5    December  22th 2005
 
 # datafile.c: 18
-0.102u3    December   9th 2005
+0.102u4    December  15th 2005
 
 # datafile.c: 19
-0.102u2    December   1st 2005
+0.102u3    December   9th 2005
 
 # datafile.c: 20
-0.102u1    November  21st 2005
+0.102u2    December   1st 2005
 
 # datafile.c: 21
-0.102      November  13th 2005
+0.102u1    November  21st 2005
 
 # datafile.c: 22
-0.101u5    November   4th 2005
+0.102      November  13th 2005
 
 # datafile.c: 23
-0.101u4    October   30th 2005
+0.101u5    November   4th 2005
 
 # datafile.c: 24
-0.101u3    October   24th 2005
+0.101u4    October   30th 2005
 
 # datafile.c: 25
-0.101u2    October   17th 2005
+0.101u3    October   24th 2005
 
 # datafile.c: 26
-0.101u1    October   13th 2005
+0.101u2    October   17th 2005
 
 # datafile.c: 27
-0.101      October    8th 2005
+0.101u1    October   13th 2005
 
 # datafile.c: 28
-0.100u4    October    6th 2005
+0.101      October    8th 2005
 
 # datafile.c: 29
-0.100u3    September 29th 2005
+0.100u4    October    6th 2005
 
 # datafile.c: 30
-0.100u2    September 22nd 2005
+0.100u3    September 29th 2005
 
 # datafile.c: 31
-0.100u1    September 16th 2005
+0.100u2    September 22nd 2005
 
 # datafile.c: 32
-0.100      September 14th 2005
+0.100u1    September 16th 2005
 
 # datafile.c: 33
-0.99u10    September 12th 2005
+0.100      September 14th 2005
 
 # datafile.c: 34
-0.99u9     September 10th 2005
+0.99u10    September 12th 2005
 
 # datafile.c: 35
-0.99u8     September  9th 2005
+0.99u9     September 10th 2005
 
 # datafile.c: 36
-0.99u7     September  5th 2005
+0.99u8     September  9th 2005
 
 # datafile.c: 37
-0.99u6     August    29th 2005
+0.99u7     September  5th 2005
 
 # datafile.c: 38
-0.99u5     August    29th 2005
+0.99u6     August    29th 2005
 
 # datafile.c: 39
-0.99u4     August    24th 2005
+0.99u5     August    29th 2005
 
 # datafile.c: 40
-0.99u3     August    22nd 2005
+0.99u4     August    24th 2005
 
 # datafile.c: 41
-0.99u2     August    14th 2005
+0.99u3     August    22nd 2005
 
 # datafile.c: 42
-0.99u1     August    10th 2005
+0.99u2     August    14th 2005
 
 # datafile.c: 43
-0.99       August     6th 2005
+0.99u1     August    10th 2005
 
 # datafile.c: 44
-0.98u4     August     4th 2005
+0.99       August     6th 2005
 
 # datafile.c: 45
-0.98u3     July      31st 2005
+0.98u4     August     4th 2005
 
 # datafile.c: 46
-0.98u2     July      21st 2005
+0.98u3     July      31st 2005
 
 # datafile.c: 47
-0.98u1     July      16th 2005
+0.98u2     July      21st 2005
 
 # datafile.c: 48
-0.98       July      10th 2005
+0.98u1     July      16th 2005
 
 # datafile.c: 49
-0.97u7     July       7th 2005
+0.98       July      10th 2005
 
 # datafile.c: 50
-0.97u4     July       2nd 2005
+0.97u7     July       7th 2005
 
 # datafile.c: 51
-0.97u3     June      26th 2005
+0.97u4     July       2nd 2005
 
 # datafile.c: 52
-0.97u2     June      19th 2005
+0.97u3     June      26th 2005
 
 # datafile.c: 53
-0.97u1     June       9th 2005
+0.97u2     June      19th 2005
 
 # datafile.c: 54
-0.97       June       2nd 2005
+0.97u1     June       9th 2005
 
 # datafile.c: 55
-0.96u4     May       30th 2005
+0.97       June       2nd 2005
 
 # datafile.c: 56
-0.96u3     May       24th 2005
+0.96u4     May       30th 2005
 
 # datafile.c: 57
-0.96u2     May       16th 2005
+0.96u3     May       24th 2005
 
 # datafile.c: 58
-0.96u1     May        5th 2005
+0.96u2     May       16th 2005
 
 # datafile.c: 59
-0.96       May        3rd 2005
+0.96u1     May        5th 2005
 
 # datafile.c: 60
-0.95u6     April     25th 2005
+0.96       May        3rd 2005
 
 # datafile.c: 61
-0.95u5     April     21st 2005
+0.95u6     April     25th 2005
 
 # datafile.c: 62
-0.95u4     April     21st 2005
+0.95u5     April     21st 2005
 
 # datafile.c: 63
-0.95u3     April     18th 2005
+0.95u4     April     21st 2005
 
 # datafile.c: 64
-0.95u2     April      5th 2005
+0.95u3     April     18th 2005
 
 # datafile.c: 65
-0.95u1     April      1st 2005
+0.95u2     April      5th 2005
 
 # datafile.c: 66
-0.95       March     27th 2005
+0.95u1     April      1st 2005
 
 # datafile.c: 67
-0.94u5     March     22nd 2005
+0.95       March     27th 2005
 
 # datafile.c: 68
-0.94u4     March     18th 2005
+0.94u5     March     22nd 2005
 
 # datafile.c: 69
-0.94u3     March     15th 2005
+0.94u4     March     18th 2005
 
 # datafile.c: 70
-0.94u2     March     14th 2005
+0.94u3     March     15th 2005
 
 # datafile.c: 71
-0.94u1     March      7th 2005
+0.94u2     March     14th 2005
 
 # datafile.c: 72
-0.94       March      6th 2005
+0.94u1     March      7th 2005
 
 # datafile.c: 73
-0.93u3     March      4th 2005
+0.94       March      6th 2005
 
 # datafile.c: 74
-0.93u2     March      3rd 2005
+0.93u3     March      4th 2005
 
 # datafile.c: 75
-0.93u1     March      1st 2005
+0.93u2     March      3rd 2005
 
 # datafile.c: 76
-0.93       February  27th 2005
+0.93u1     March      1st 2005
 
 # datafile.c: 77
-0.92u2000  February  15th 2005
+0.93       February  27th 2005
 
 # datafile.c: 78
-0.92       February  13th 2005
+0.92u2000  February  15th 2005
 
 # datafile.c: 79
-0.91u2     February   3rd 2005
+0.92       February  13th 2005
 
 # datafile.c: 80
-0.91u1     January   30th 2005
+0.91u2     February   3rd 2005
 
 # datafile.c: 81
-0.91       January   29th 2005
+0.91u1     January   30th 2005
 
 # datafile.c: 82
-0.90u4     January   23rd 2005
+0.91       January   29th 2005
 
 # datafile.c: 83
-0.90u3     January   17th 2005
+0.90u4     January   23rd 2005
 
 # datafile.c: 84
-0.90u2     January   12th 2005
+0.90u3     January   17th 2005
 
 # datafile.c: 85
-0.90u1     January    8th 2005
+0.90u2     January   12th 2005
 
 # datafile.c: 86
-0.90       January    4th 2005
+0.90u1     January    8th 2005
 
 # datafile.c: 87
-0.89u6     December  17th 2004
+0.90       January    4th 2005
 
 # datafile.c: 88
-0.89u5     December  15th 2004
+0.89u6     December  17th 2004
 
 # datafile.c: 89
-0.89u4     December  11th 2004
+0.89u5     December  15th 2004
 
 # datafile.c: 90
-0.89u3     December   7th 2004
+0.89u4     December  11th 2004
 
 # datafile.c: 91
-0.89u2     December   3rd 2004
+0.89u3     December   7th 2004
 
 # datafile.c: 92
-0.89u1     November  28th 2004
+0.89u2     December   3rd 2004
 
 # datafile.c: 93
-0.89       November  24th 2004
+0.89u1     November  28th 2004
 
 # datafile.c: 94
-0.88u7     November  20th 2004
+0.89       November  24th 2004
 
 # datafile.c: 95
-0.88u6     November  17th 2004
+0.88u7     November  20th 2004
 
 # datafile.c: 96
-0.88u5     November  15th 2004
+0.88u6     November  17th 2004
 
 # datafile.c: 97
-0.88u4     November  11th 2004
+0.88u5     November  15th 2004
 
 # datafile.c: 98
-0.88u3     November   7th 2004
+0.88u4     November  11th 2004
 
 # datafile.c: 99
-0.88u2     October   31st 2004
+0.88u3     November   7th 2004
 
 # datafile.c: 100
-0.88u1     October   28th 2004
+0.88u2     October   31st 2004
 
 # datafile.c: 101
-0.88       October   25th 2004
+0.88u1     October   28th 2004
 
 # datafile.c: 102
-0.87u4     October   16th 2004
+0.88       October   25th 2004
 
 # datafile.c: 103
-0.87u3     October   12th 2004
+0.87u4     October   16th 2004
 
 # datafile.c: 104
-0.87u2     October   10th 2004
+0.87u3     October   12th 2004
 
 # datafile.c: 105
-0.87u1     September 29th 2004
+0.87u2     October   10th 2004
 
 # datafile.c: 106
-0.87       September 21st 2004
+0.87u1     September 29th 2004
 
 # datafile.c: 107
-0.86u5     September 15th 2004
+0.87       September 21st 2004
 
 # datafile.c: 108
-0.86u4     September  9th 2004
+0.86u5     September 15th 2004
 
 # datafile.c: 109
-0.86u3     September  3rd 2004
+0.86u4     September  9th 2004
 
 # datafile.c: 110
-0.86u2     August    31st 2004
+0.86u3     September  3rd 2004
 
 # datafile.c: 111
-0.86u1     August    27th 2004
+0.86u2     August    31st 2004
 
 # datafile.c: 112
-0.86       August    23rd 2004
+0.86u1     August    27th 2004
 
 # datafile.c: 113
-0.85u3     August    21st 2004
+0.86       August    23rd 2004
 
 # datafile.c: 114
-0.85u2     August    13th 2004
+0.85u3     August    21st 2004
 
 # datafile.c: 115
-0.85u1     August    10th 2004
+0.85u2     August    13th 2004
 
 # datafile.c: 116
-0.85       August     7th 2004
+0.85u1     August    10th 2004
 
 # datafile.c: 117
-0.84u6     August     3rd 2004
+0.85       August     7th 2004
 
 # datafile.c: 118
-0.84u5     July      27th 2004
+0.84u6     August     3rd 2004
 
 # datafile.c: 119
-0.84u4     July      25th 2004
+0.84u5     July      27th 2004
 
 # datafile.c: 120
-0.84u3     July      15th 2004
+0.84u4     July      25th 2004
 
 # datafile.c: 121
-0.84u2     July      11th 2004
+0.84u3     July      15th 2004
 
 # datafile.c: 122
-0.84u1     July       4th 2004
+0.84u2     July      11th 2004
 
 # datafile.c: 123
-0.84       July       2nd 2004
+0.84u1     July       4th 2004
 
 # datafile.c: 124
-0.83       June       5th 2004
+0.84       July       2nd 2004
 
 # datafile.c: 125
-0.82u3     May       27th 2004
+0.83       June       5th 2004
 
 # datafile.c: 126
-0.82u2     May       23rd 2004
+0.82u3     May       27th 2004
 
 # datafile.c: 127
-0.82u1     May       13th 2004
+0.82u2     May       23rd 2004
 
 # datafile.c: 128
-0.82       May        6th 2004
+0.82u1     May       13th 2004
 
 # datafile.c: 129
-0.81u9     April     28th 2004
+0.82       May        6th 2004
 
 # datafile.c: 130
-0.81u8     April     27th 2004
+0.81u9     April     28th 2004
 
 # datafile.c: 131
-0.81u7     April     22nd 2004
+0.81u8     April     27th 2004
 
 # datafile.c: 132
-0.81u6     April     17th 2004
+0.81u7     April     22nd 2004
 
 # datafile.c: 133
-0.81u5     April     14th 2004
+0.81u6     April     17th 2004
 
 # datafile.c: 134
-0.81u4     April      8th 2004
+0.81u5     April     14th 2004
 
 # datafile.c: 135
-0.81u3     April      4th 2004
+0.81u4     April      8th 2004
 
 # datafile.c: 136
-0.81       April      1st 2004
+0.81u3     April      4th 2004
 
 # datafile.c: 137
-0.80u3     March     28th 2004
+0.81       April      1st 2004
 
 # datafile.c: 138
-0.80u2     March     27th 2004
+0.80u3     March     28th 2004
 
 # datafile.c: 139
-0.80u1     March     11th 2004
+0.80u2     March     27th 2004
 
 # datafile.c: 140
-0.80       March      6th 2004
+0.80u1     March     11th 2004
 
 # datafile.c: 141
-0.79u4     February  28th 2004
+0.80       March      6th 2004
 
 # datafile.c: 142
-0.79u3     February  25th 2004
+0.79u4     February  28th 2004
 
 # datafile.c: 143
-0.79u2     February  21st 2004
+0.79u3     February  25th 2004
 
 # datafile.c: 144
-0.79u1     February   8th 2004
+0.79u2     February  21st 2004
 
 # datafile.c: 145
-0.79       January   28th 2004
+0.79u1     February   8th 2004
 
 # datafile.c: 146
-0.78u6     January   20th 2004
+0.79       January   28th 2004
 
 # datafile.c: 147
-0.78u5     January   18th 2004
+0.78u6     January   20th 2004
 
 # datafile.c: 148
-0.78u4     January   13th 2004
+0.78u5     January   18th 2004
 
 # datafile.c: 149
-0.78u3     January   11th 2004
+0.78u4     January   13th 2004
 
 # datafile.c: 150
-0.78u2     January    9th 2004
+0.78u3     January   11th 2004
 
 # datafile.c: 151
-0.78u1     January    4th 2004
+0.78u2     January    9th 2004
 
 # datafile.c: 152
-0.78       December  25th 2003
+0.78u1     January    4th 2004
 
 # datafile.c: 153
-0.77u3     December  13th 2003
+0.78       December  25th 2003
 
 # datafile.c: 154
-0.77u2     December   1st 2003
+0.77u3     December  13th 2003
 
 # datafile.c: 155
-0.77u1     November  21st 2003
+0.77u2     December   1st 2003
 
 # datafile.c: 156
-0.77       November  12th 2003
+0.77u1     November  21st 2003
 
 # datafile.c: 157
-0.76u2     November   1st 2003
+0.77       November  12th 2003
 
 # datafile.c: 158
-0.76u1     October   25th 2003
+0.76u2     November   1st 2003
 
 # datafile.c: 159
-0.76       October   19th 2003
+0.76u1     October   25th 2003
 
 # datafile.c: 160
-0.75u1     October   14th 2003
+0.76       October   19th 2003
 
 # datafile.c: 161
-0.75       October   13th 2003
+0.75u1     October   14th 2003
 
 # datafile.c: 162
-0.74u2     October    6th 2003
+0.75       October   13th 2003
 
 # datafile.c: 163
-0.74u1     September 23rd 2003
+0.74u2     October    6th 2003
 
 # datafile.c: 164
-0.74       September 14th 2003
+0.74u1     September 23rd 2003
 
 # datafile.c: 165
-0.73       September  4th 2003
+0.74       September 14th 2003
 
 # datafile.c: 166
-0.72u2     August    25th 2003
+0.73       September  4th 2003
 
 # datafile.c: 167
-0.72u1     August    15th 2003
+0.72u2     August    25th 2003
 
 # datafile.c: 168
-0.72       August     9th 2003
+0.72u1     August    15th 2003
 
 # datafile.c: 169
-0.71u2     July      12th 2003
+0.72       August     9th 2003
 
 # datafile.c: 170
-0.71u1     July       8th 2003
+0.71u2     July      12th 2003
 
 # datafile.c: 171
-0.71       July       5th 2003
+0.71u1     July       8th 2003
 
 # datafile.c: 172
-0.70u5     June      29th 2003
+0.71       July       5th 2003
 
 # datafile.c: 173
-0.70u4     June      21st 2003
+0.70u5     June      29th 2003
 
 # datafile.c: 174
-0.70u3     June      21st 2003
+0.70u4     June      21st 2003
 
 # datafile.c: 175
-0.70u2     June      19th 2003
+0.70u3     June      21st 2003
 
 # datafile.c: 176
-0.70u1     June      12th 2003
+0.70u2     June      19th 2003
 
 # datafile.c: 177
-0.70       June      11th 2003
+0.70u1     June      12th 2003
 
 # datafile.c: 178
-0.69u3     June       5th 2003
+0.70       June      11th 2003
 
 # datafile.c: 179
-0.69b      June       2nd 2003
+0.69u3     June       5th 2003
 
 # datafile.c: 180
-0.69a      May       31st 2003
+0.69b      June       2nd 2003
 
 # datafile.c: 181
-0.69       May       24th 2003
+0.69a      May       31st 2003
 
 # datafile.c: 182
-0.68       May       16th 2003
+0.69       May       24th 2003
 
 # datafile.c: 183
-0.67       April      6th 2003
+0.68       May       16th 2003
 
 # datafile.c: 184
-0.66       March     10th 2003
+0.67       April      6th 2003
 
 # datafile.c: 185
-0.65       February  10th 2003
+0.66       March     10th 2003
 
 # datafile.c: 186
-0.64       January   26th 2003
+0.65       February  10th 2003
 
 # datafile.c: 187
-0.63       January   12th 2003
+0.64       January   26th 2003
 
 # datafile.c: 188
-0.62       November  12th 2002
+0.63       January   12th 2003
 
 # datafile.c: 189
-0.61       July       4th 2002
+0.62       November  12th 2002
 
 # datafile.c: 190
-0.60       May        1st 2002
+0.61       July       4th 2002
 
 # datafile.c: 191
-0.59       March     22nd 2002
+0.60       May        1st 2002
 
 # datafile.c: 192
-0.58       February   6th 2002
+0.59       March     22nd 2002
 
 # datafile.c: 193
-0.57       January    1st 2002
+0.58       February   6th 2002
 
 # datafile.c: 194
-0.56       November   1st 2001
+0.57       January    1st 2002
 
 # datafile.c: 195
-0.55       September 17th 2001
+0.56       November   1st 2001
 
 # datafile.c: 196
-0.54       August    25th 2001
+0.55       September 17th 2001
 
 # datafile.c: 197
-0.53       August    12th 2001
+0.54       August    25th 2001
 
 # datafile.c: 198
-0.37b16    July       2nd 2001
+0.53       August    12th 2001
 
 # datafile.c: 199
-0.37b15    May       24th 2001
+0.37b16    July       2nd 2001
 
 # datafile.c: 200
-0.37b14    April      7th 2001
+0.37b15    May       24th 2001
 
 # datafile.c: 201
-0.37b13    March     10th 2001
+0.37b14    April      7th 2001
 
 # datafile.c: 202
-0.37b12    February  15th 2001
+0.37b13    March     10th 2001
 
 # datafile.c: 203
-0.37b11    January   16th 2001
+0.37b12    February  15th 2001
 
 # datafile.c: 204
-0.37b10    December   6th 2000
+0.37b11    January   16th 2001
 
 # datafile.c: 205
-0.37b9     November   6th 2000
+0.37b10    December   6th 2000
 
 # datafile.c: 206
-0.37b8     October    3rd 2000
+0.37b9     November   6th 2000
 
 # datafile.c: 207
-0.37b7     September  5th 2000
+0.37b8     October    3rd 2000
 
 # datafile.c: 208
-0.37b6     August    20th 2000
+0.37b7     September  5th 2000
 
 # datafile.c: 209
-0.37b5     July      28th 2000
+0.37b6     August    20th 2000
 
 # datafile.c: 210
-0.37b4     June      16th 2000
+0.37b5     July      28th 2000
 
 # datafile.c: 211
-0.37b3     May       27th 2000
+0.37b4     June      16th 2000
 
 # datafile.c: 212
-0.37b2     May        6th 2000
+0.37b3     May       27th 2000
 
 # datafile.c: 213
-0.37b1     April      6th 2000
+0.37b2     May        6th 2000
 
 # datafile.c: 214
-0.36       March     21st 2000
+0.37b1     April      6th 2000
 
 # datafile.c: 215
-0.36RC2    March     13th 2000
+0.36       March     21st 2000
 
 # datafile.c: 216
-0.36RC1    February  26th 2000
+0.36RC2    March     13th 2000
 
 # datafile.c: 217
-0.36b16    February   4th 2000
+0.36RC1    February  26th 2000
 
 # datafile.c: 218
-0.36b15    January   21st 2000
+0.36b16    February   4th 2000
 
 # datafile.c: 219
-0.36b14    January   11th 2000
+0.36b15    January   21st 2000
 
 # datafile.c: 220
-0.36b13    December  30th 1999
+0.36b14    January   11th 2000
 
 # datafile.c: 221
-0.36b12    December  18th 1999
+0.36b13    December  30th 1999
 
 # datafile.c: 222
-0.36b11    December   6th 1999
+0.36b12    December  18th 1999
 
 # datafile.c: 223
-0.36b10    November  20th 1999
+0.36b11    December   6th 1999
 
 # datafile.c: 224
-0.36b91    November  14th 1999
+0.36b10    November  20th 1999
 
 # datafile.c: 225
-0.36b9     November  13th 1999
+0.36b91    November  14th 1999
 
 # datafile.c: 226
-0.36b8     October   30th 1999
+0.36b9     November  13th 1999
 
 # datafile.c: 227
-0.36b7     October   17th 1999
+0.36b8     October   30th 1999
 
 # datafile.c: 228
-0.36b6     September 29th 1999
+0.36b7     October   17th 1999
 
 # datafile.c: 229
-0.36b5     September 18th 1999
+0.36b6     September 29th 1999
 
 # datafile.c: 230
-0.36b4     September  4th 1999
+0.36b5     September 18th 1999
 
 # datafile.c: 231
-0.36b3     August    22nd 1999
+0.36b4     September  4th 1999
 
 # datafile.c: 232
-0.36b2     August     8th 1999
+0.36b3     August    22nd 1999
 
 # datafile.c: 233
-0.36b1     July      19th 1999
+0.36b2     August     8th 1999
 
 # datafile.c: 234
-0.35fix    July       5th 1999
+0.36b1     July      19th 1999
 
 # datafile.c: 235
-0.35       July       4th 1999
+0.35fix    July       5th 1999
 
 # datafile.c: 236
-0.35RC2    June      24th 1999
+0.35       July       4th 1999
 
 # datafile.c: 237
-0.35RC1    June      13th 1999
+0.35RC2    June      24th 1999
 
 # datafile.c: 238
-0.35b13    May       24th 1999
+0.35RC1    June      13th 1999
 
 # datafile.c: 239
-0.35b12    May        1st 1999
+0.35b13    May       24th 1999
 
 # datafile.c: 240
-0.35b11    April     22nd 1999
+0.35b12    May        1st 1999
 
 # datafile.c: 241
-0.35b10    April      8th 1999
+0.35b11    April     22nd 1999
 
 # datafile.c: 242
-0.35b9     March     30th 1999
+0.35b10    April      8th 1999
 
 # datafile.c: 243
-0.35b8     March     24th 1999
+0.35b9     March     30th 1999
 
 # datafile.c: 244
-0.35b7     March     18th 1999
+0.35b8     March     24th 1999
 
 # datafile.c: 245
-0.35b6     March     15th 1999
+0.35b7     March     18th 1999
 
 # datafile.c: 246
-0.35b5     March      7th 1999
+0.35b6     March     15th 1999
 
 # datafile.c: 247
-0.35b4     March      1st 1999
+0.35b5     March      7th 1999
 
 # datafile.c: 248
-0.35b3     February  15th 1999
+0.35b4     March      1st 1999
 
 # datafile.c: 249
-0.35b2     January   24th 1999
+0.35b3     February  15th 1999
 
 # datafile.c: 250
-0.35b1     January    7th 1999
+0.35b2     January   24th 1999
 
 # datafile.c: 251
-0.34       December  31st 1998
+0.35b1     January    7th 1999
 
 # datafile.c: 252
-0.34RC2    December  21st 1998
+0.34       December  31st 1998
 
 # datafile.c: 253
-0.34RC1    December  14th 1998
+0.34RC2    December  21st 1998
 
 # datafile.c: 254
-0.34b8     November  29th 1998
+0.34RC1    December  14th 1998
 
 # datafile.c: 255
-0.34b7     November  10th 1998
+0.34b8     November  29th 1998
 
 # datafile.c: 256
-0.34b6     October   28th 1998
+0.34b7     November  10th 1998
 
 # datafile.c: 257
-0.34b5     October   16th 1998
+0.34b6     October   28th 1998
 
 # datafile.c: 258
-0.34b4     October    4th 1998
+0.34b5     October   16th 1998
 
 # datafile.c: 259
-0.34b3     September 17th 1998
+0.34b4     October    4th 1998
 
 # datafile.c: 260
-0.34b2     August    30th 1998
+0.34b3     September 17th 1998
 
 # datafile.c: 261
-0.34b1     August    16th 1998
+0.34b2     August    30th 1998
 
 # datafile.c: 262
-0.33       August    10th 1998
+0.34b1     August    16th 1998
 
 # datafile.c: 263
-0.33RC1    July      29th 1998
+0.33       August    10th 1998
 
 # datafile.c: 264
-0.33b7     July      21st 1998
+0.33RC1    July      29th 1998
 
 # datafile.c: 265
-0.33b6     June      16th 1998
+0.33b7     July      21st 1998
 
 # datafile.c: 266
-0.33b5     June      10th 1998
+0.33b6     June      16th 1998
 
 # datafile.c: 267
-0.33b4     May       31st 1998
+0.33b5     June      10th 1998
 
 # datafile.c: 268
-0.33b3     May       17th 1998
+0.33b4     May       31st 1998
 
 # datafile.c: 269
-0.33b2     May        8th 1998
+0.33b3     May       17th 1998
 
 # datafile.c: 270
-0.33b1     May        3rd 1998
+0.33b2     May        8th 1998
 
 # datafile.c: 271
-0.31       April     25th 1998
+0.33b1     May        3rd 1998
 
 # datafile.c: 272
-0.30       January    7th 1998
+0.31       April     25th 1998
 
 # datafile.c: 273
-0.29       October   20th 1997
+0.30       January    7th 1998
 
 # datafile.c: 274
-0.28       September  7th 1997
+0.29       October   20th 1997
 
 # datafile.c: 275
-0.27       August    10th 1997
+0.28       September  7th 1997
 
 # datafile.c: 276
-0.26a      July      18th 1997
+0.27       August    10th 1997
 
 # datafile.c: 277
-0.26       July      14th 1997
+0.26a      July      18th 1997
 
 # datafile.c: 278
-0.25       June      28th 1997
+0.26       July      14th 1997
 
 # datafile.c: 279
-0.24       June      13th 1997
+0.25       June      28th 1997
 
 # datafile.c: 280
-0.23a      June       3rd 1997
+0.24       June      13th 1997
 
 # datafile.c: 281
-0.23       June       2nd 1997
+0.23a      June       3rd 1997
 
 # datafile.c: 282
-0.22       May       25th 1997
+0.23       June       2nd 1997
 
 # datafile.c: 283
-0.21.5     May       16th 1997
+0.22       May       25th 1997
 
 # datafile.c: 284
-0.21       May       12th 1997
+0.21.5     May       16th 1997
 
 # datafile.c: 285
-0.20       May        5th 1997
+0.21       May       12th 1997
 
 # datafile.c: 286
-0.19       April     26th 1997
+0.20       May        5th 1997
 
 # datafile.c: 287
-0.18       April     20th 1997
+0.19       April     26th 1997
 
 # datafile.c: 288
-0.17       April     14th 1997
+0.18       April     20th 1997
 
 # datafile.c: 289
-0.16       April     13th 1997
+0.17       April     14th 1997
 
 # datafile.c: 290
-0.15       April      6th 1997
+0.16       April     13th 1997
 
 # datafile.c: 291
-0.14       April      2nd 1997
+0.15       April      6th 1997
 
 # datafile.c: 292
-0.13       March     30th 1997
+0.14       April      2nd 1997
 
 # datafile.c: 293
-0.12       March     23rd 1997
+0.13       March     30th 1997
 
 # datafile.c: 294
-0.11       March     16th 1997
+0.12       March     23rd 1997
 
 # datafile.c: 295
-0.10       March     13th 1997
+0.11       March     16th 1997
 
 # datafile.c: 296
-0.091      March      9th 1997
+0.10       March     13th 1997
 
 # datafile.c: 297
-0.09       March      9th 1997
+0.091      March      9th 1997
 
 # datafile.c: 298
-0.081      March      4th 1997
+0.09       March      9th 1997
 
 # datafile.c: 299
-0.08       March      4th 1997
+0.081      March      4th 1997
 
 # datafile.c: 300
-0.07       February  27th 1997
+0.08       March      4th 1997
 
 # datafile.c: 301
-0.06       February  23rd 1997
+0.07       February  27th 1997
 
 # datafile.c: 302
-0.05       February  20th 1997
+0.06       February  23rd 1997
 
 # datafile.c: 303
-0.04       February  16th 1997
+0.05       February  20th 1997
 
 # datafile.c: 304
-0.03       February  13th 1997
+0.04       February  16th 1997
 
 # datafile.c: 305
-0.02       February   9th 1997
+0.03       February  13th 1997
 
 # datafile.c: 306
+0.02       February   9th 1997
+
+# datafile.c: 307
 0.01       February   5th 1997
 
-# datafile.c: 312
-0.103u3    854    6000  +5
-
 # datafile.c: 313
-0.103u2fix 854    5995  +2
+0.103u4    856    6006  +6
 
 # datafile.c: 314
-0.103u2    854    5993  +41
+0.103u3    854    6000  +5
 
 # datafile.c: 315
-0.103u1    851    5952  +9
+0.103u2fix 854    5995  +2
+
+# datafile.c: 316
+0.103u2    854    5993  +41
 
 # datafile.c: 317
-0.102u5    849    5915  +22
-
-# datafile.c: 318
-0.102u4    846    5893  +11
+0.103u1    851    5952  +9
 
 # datafile.c: 319
-0.102u3    846    5882  +11
+0.102u5    849    5915  +22
 
 # datafile.c: 320
-0.102u2    845    5871  +13
+0.102u4    846    5893  +11
 
 # datafile.c: 321
-0.102u1    845    5858  +10
+0.102u3    846    5882  +11
+
+# datafile.c: 322
+0.102u2    845    5871  +13
 
 # datafile.c: 323
-0.101u5    844    5833  +5
-
-# datafile.c: 324
-0.101u4    844    5828  +7
+0.102u1    845    5858  +10
 
 # datafile.c: 325
-0.101u3    841    5821  +4
+0.101u5    844    5833  +5
 
 # datafile.c: 326
-0.101u2    841    5817  +4
+0.101u4    844    5828  +7
 
 # datafile.c: 327
-0.101u1    839    5813  +3
+0.101u3    841    5821  +4
+
+# datafile.c: 328
+0.101u2    841    5817  +4
 
 # datafile.c: 329
-0.100u4    839    5810  +7
-
-# datafile.c: 330
-0.100u3    838    5803  +12
+0.101u1    839    5813  +3
 
 # datafile.c: 331
-0.100u2    836    5791  +8
+0.100u4    839    5810  +7
 
 # datafile.c: 332
-0.100u1    831    5783  +5
+0.100u3    838    5803  +12
+
+# datafile.c: 333
+0.100u2    836    5791  +8
 
 # datafile.c: 334
-0.99u10    829    5776  +3
-
-# datafile.c: 335
-0.99u9     829    5773  +2
+0.100u1    831    5783  +5
 
 # datafile.c: 336
-0.99u8     829    5771  +8
+0.99u10    829    5776  +3
 
 # datafile.c: 337
-0.99u7     829    5763  +7
+0.99u9     829    5773  +2
 
 # datafile.c: 338
-0.99u6     830    5756  +2
+0.99u8     829    5771  +8
 
 # datafile.c: 339
-0.99u5     830    5754  +2
+0.99u7     829    5763  +7
 
 # datafile.c: 340
-0.99u4     829    5752  +3
+0.99u6     830    5756  +2
 
 # datafile.c: 341
-0.99u3     829    5749  +6
+0.99u5     830    5754  +2
 
 # datafile.c: 342
-0.99u2     827    5743  +33
+0.99u4     829    5752  +3
 
 # datafile.c: 343
-0.99u1     813    5710  +5
+0.99u3     829    5749  +6
+
+# datafile.c: 344
+0.99u2     827    5743  +33
 
 # datafile.c: 345
-0.98u4     812    5705  +4
-
-# datafile.c: 346
-0.98u3     813    5701  +3
+0.99u1     813    5710  +5
 
 # datafile.c: 347
-0.98u2     812    5698  +6
+0.98u4     812    5705  +4
 
 # datafile.c: 348
-0.98u1     811    5692  +5
+0.98u3     813    5701  +3
+
+# datafile.c: 349
+0.98u2     812    5698  +6
 
 # datafile.c: 350
-0.97u5     810    5687  +3
-
-# datafile.c: 351
-0.97u4     811    5684  +5
+0.98u1     811    5692  +5
 
 # datafile.c: 352
-0.97u3     811    5679  +5
+0.97u5     810    5687  +3
 
 # datafile.c: 353
-0.97u2     811    5674  +5
+0.97u4     811    5684  +5
 
 # datafile.c: 354
-0.97u1     811    5669  +8
+0.97u3     811    5679  +5
+
+# datafile.c: 355
+0.97u2     811    5674  +5
 
 # datafile.c: 356
-0.96u3     811    5660  +14
-
-# datafile.c: 357
-0.96u2     809    5646  +10
+0.97u1     811    5669  +8
 
 # datafile.c: 358
-0.96u1     809    5636  +4
+0.96u3     811    5660  +14
+
+# datafile.c: 359
+0.96u2     809    5646  +10
 
 # datafile.c: 360
-0.95u6     805    5613  +4
-
-# datafile.c: 361
-0.95u5     804    5609  +0
+0.96u1     809    5636  +4
 
 # datafile.c: 362
-0.95u4     804    5609  +4
+0.95u6     805    5613  +4
 
 # datafile.c: 363
-0.95u3     804    5605  +10
+0.95u5     804    5609  +0
 
 # datafile.c: 364
-0.95u2     804    5595  +11
+0.95u4     804    5609  +4
 
 # datafile.c: 365
-0.95u1     800    5584  +6
+0.95u3     804    5605  +10
+
+# datafile.c: 366
+0.95u2     804    5595  +11
 
 # datafile.c: 367
-0.94u5     800    5565  +6
-
-# datafile.c: 368
-0.94u4     799    5559  +6
+0.95u1     800    5584  +6
 
 # datafile.c: 369
-0.94u3     799    5553  +9
+0.94u5     800    5565  +6
 
 # datafile.c: 370
-0.94u1     799    5544  +6
+0.94u4     799    5559  +6
+
+# datafile.c: 371
+0.94u3     799    5553  +9
 
 # datafile.c: 372
-0.93u3     797    5537  +1
-
-# datafile.c: 373
-0.93u2     797    5536  +10
+0.94u1     799    5544  +6
 
 # datafile.c: 374
-0.93u1     797    5525  +1
+0.93u3     797    5537  +1
+
+# datafile.c: 375
+0.93u2     797    5536  +10
 
 # datafile.c: 376
-0.92u2000  796    5512  +4
+0.93u1     797    5525  +1
 
 # datafile.c: 378
+0.92u2000  796    5512  +4
+
+# datafile.c: 380
 0.91u2     790    5443  +4
 
-# datafile.c: 379
+# datafile.c: 381
 0.91u1     788    5439  +11
 
-# datafile.c: 381
+# datafile.c: 383
 0.90u4     782    5419  +10
 
-# datafile.c: 382
+# datafile.c: 384
 0.90u3     782    5409  +11
 
-# datafile.c: 383
+# datafile.c: 385
 0.90u2     782    5398  +3
 
-# datafile.c: 384
+# datafile.c: 386
 0.90u1     782    5395  +2
 
-# datafile.c: 386
+# datafile.c: 388
 0.89u6     781    5380  +17
 
-# datafile.c: 387
+# datafile.c: 389
 0.89u4     779    5363  +9
 
-# datafile.c: 388
+# datafile.c: 390
 0.89u3     779    5354  +13
 
-# datafile.c: 389
+# datafile.c: 391
 0.89u2     780    5341  +10
 
-# datafile.c: 390
+# datafile.c: 392
 0.89u1     780    5331  +18
 
-# datafile.c: 392
+# datafile.c: 394
 0.88u7     779    5312  +12
 
-# datafile.c: 393
+# datafile.c: 395
 0.88u6     777    5300  +14
 
-# datafile.c: 394
+# datafile.c: 396
 0.88u4     776    5286  +11
 
-# datafile.c: 395
+# datafile.c: 397
 0.88u3     775    5275  +15
 
-# datafile.c: 396
+# datafile.c: 398
 0.88u2     774    5260  +7
 
-# datafile.c: 397
+# datafile.c: 399
 0.88u1     774    5253  +5
 
-# datafile.c: 399
+# datafile.c: 401
 0.87u4     774    5227  +10
 
-# datafile.c: 400
+# datafile.c: 402
 0.87u3     770    5217  +18
 
-# datafile.c: 401
+# datafile.c: 403
 0.87u2     770    5199  +14
 
-# datafile.c: 402
+# datafile.c: 404
 0.87u1     770    5185  +40
 
-# datafile.c: 404
+# datafile.c: 406
 0.86u5     764    5141  +3
 
-# datafile.c: 405
+# datafile.c: 407
 0.86u4     763    5138  +5
 
-# datafile.c: 406
+# datafile.c: 408
 0.86u3     761    5133  +2
 
-# datafile.c: 407
+# datafile.c: 409
 0.86u2     761    5131  +37
 
-# datafile.c: 408
+# datafile.c: 410
 0.86u1     761    5094  +6
 
-# datafile.c: 410
+# datafile.c: 412
 0.85u3     753    5074  +3
 
-# datafile.c: 411
+# datafile.c: 413
 0.85u2     752    5071  +3
 
-# datafile.c: 412
+# datafile.c: 414
 0.85u1     752    5068  +7
 
-# datafile.c: 414
+# datafile.c: 416
 0.84u6     751    5060  +6
 
-# datafile.c: 415
+# datafile.c: 417
 0.84u5     751    5054  +20
 
-# datafile.c: 416
+# datafile.c: 418
 0.84u3     749    5034  +13
 
-# datafile.c: 417
+# datafile.c: 419
 0.84u2     747    5021  +1
 
-# datafile.c: 418
+# datafile.c: 420
 0.84u1     747    5020  +6
 
-# datafile.c: 421
+# datafile.c: 423
 0.82u3     739    4942  +7
 
-# datafile.c: 422
+# datafile.c: 424
 0.82u2     738    4935  +7
 
-# datafile.c: 423
+# datafile.c: 425
 0.82u1     737    4928  +7
 
-# datafile.c: 425
+# datafile.c: 427
 0.81u9     736    4906  +11
 
-# datafile.c: 426
+# datafile.c: 428
 0.81u7     732    4895  +4
 
-# datafile.c: 427
+# datafile.c: 429
 0.81u6     732    4891  +7
 
-# datafile.c: 428
+# datafile.c: 430
 0.81u5     731    4884  +7
 
-# datafile.c: 429
+# datafile.c: 431
 0.81u4     731    4877  +16
 
-# datafile.c: 430
+# datafile.c: 432
 0.81u3     728    4861  +20
 
-# datafile.c: 432
+# datafile.c: 434
 0.80u3     724    4830  +5
 
-# datafile.c: 433
+# datafile.c: 435
 0.80u2     723    4825  +24
 
-# datafile.c: 434
+# datafile.c: 436
 0.80u1     714    4801  +5
 
-# datafile.c: 436
+# datafile.c: 438
 0.79u4     712    4790  +22
 
-# datafile.c: 437
+# datafile.c: 439
 0.79u1     707    4768  +16
 
-# datafile.c: 439
+# datafile.c: 441
 0.78u6     708    4731  +0
 
-# datafile.c: 440
+# datafile.c: 442
 0.78u5     708    4731  +4
 
-# datafile.c: 441
+# datafile.c: 443
 0.78u4     708    4727  +2
 
-# datafile.c: 442
+# datafile.c: 444
 0.78u3     711    4725  +7
 
-# datafile.c: 443
+# datafile.c: 445
 0.78u2     711    4718  +0
 
-# datafile.c: 444
+# datafile.c: 446
 0.78u1     711    4718  +13
 
-# datafile.c: 446
+# datafile.c: 448
 0.77u3     707    4668  +8
 
-# datafile.c: 447
+# datafile.c: 449
 0.77u2     705    4660  +20
 
-# datafile.c: 449
+# datafile.c: 451
 0.76u2     699    4608  +2
 
-# datafile.c: 450
+# datafile.c: 452
 0.76u1     698    4606  +107
 
-# datafile.c: 452
+# datafile.c: 454
 0.75u1     696    4474  +1
 
-# datafile.c: 454
+# datafile.c: 456
 0.74u2     693    4447  +313
 
-# datafile.c: 455
+# datafile.c: 457
 0.74u1     690    4134  +11
 
-# datafile.c: 458
+# datafile.c: 460
 0.72u2     683    4107  +19
 
-# datafile.c: 459
+# datafile.c: 461
 0.72u1     680    4088  +5
 
-# datafile.c: 461
+# datafile.c: 463
 0.71u2     677    4052  +25
 
-# datafile.c: 462
+# datafile.c: 464
 0.71u1     669    4027  +3
 
-# datafile.c: 464
+# datafile.c: 466
 0.70u5     667    4014  +8
 
-# datafile.c: 465
+# datafile.c: 467
 0.70u4     667    4006  +11
 
-# datafile.c: 466
+# datafile.c: 468
 0.70u3     666    3995  +2
 
-# datafile.c: 467
+# datafile.c: 469
 0.70u2     666    3993  +2
 
-# datafile.c: 468
+# datafile.c: 470
 0.70u1     665    3991  +1
 
-# datafile.c: 470
+# datafile.c: 472
 0.69u3     664    3988  +10
 
-# datafile.c: 471
+# datafile.c: 473
 0.69b      664    3978  +7
 
-# datafile.c: 472
+# datafile.c: 474
 0.69a      663    3971  +7
 
-# datafile.c: 490
+# datafile.c: 492
 0.37b16    498    3008  +78
 
-# datafile.c: 491
+# datafile.c: 493
 0.37b15    478    2930  +47
 
-# datafile.c: 492
+# datafile.c: 494
 0.37b14    476    2883  +44
 
-# datafile.c: 493
+# datafile.c: 495
 0.37b13    471    2839  +66
 
-# datafile.c: 494
+# datafile.c: 496
 0.37b12    460    2773  +109
 
-# datafile.c: 495
+# datafile.c: 497
 0.37b11    448    2664  +125
 
-# datafile.c: 496
+# datafile.c: 498
 0.37b10    438    2539  +63
 
-# datafile.c: 497
+# datafile.c: 499
 0.37b9     421    2476  +65
 
-# datafile.c: 498
+# datafile.c: 500
 0.37b8     417    2411  +74
 
-# datafile.c: 499
+# datafile.c: 501
 0.37b7     407    2337  +54
 
-# datafile.c: 500
+# datafile.c: 502
 0.37b6     400    2283  +43
 
-# datafile.c: 501
+# datafile.c: 503
 0.37b5     393    2240  +83
 
-# datafile.c: 502
+# datafile.c: 504
 0.37b4     383    2157  +12
 
-# datafile.c: 503
+# datafile.c: 505
 0.37b3     382    2145  +42
 
-# datafile.c: 504
+# datafile.c: 506
 0.37b2     375    2103  +30
 
-# datafile.c: 505
+# datafile.c: 507
 0.37b1     369    2073  +25
 
-# datafile.c: 507
+# datafile.c: 509
 0.36RC2    366    2048  +27
 
-# datafile.c: 508
+# datafile.c: 510
 0.36RC1    364    2021  +21
 
-# datafile.c: 509
+# datafile.c: 511
 0.36b16    364    2000  +29
 
-# datafile.c: 510
+# datafile.c: 512
 0.36b15    366    1971  +20
 
-# datafile.c: 511
+# datafile.c: 513
 0.36b14    362    1951  +19
 
-# datafile.c: 512
+# datafile.c: 514
 0.36b13    361    1932  +20
 
-# datafile.c: 513
+# datafile.c: 515
 0.36b12    356    1912  +12
 
-# datafile.c: 514
+# datafile.c: 516
 0.36b11    353    1900  +23
 
-# datafile.c: 515
+# datafile.c: 517
 0.36b10    352    1877  +19
 
-# datafile.c: 516
+# datafile.c: 518
 0.36b91    345    1858  + 0
 
-# datafile.c: 517
+# datafile.c: 519
 0.36b9     345    1858  +27
 
-# datafile.c: 518
+# datafile.c: 520
 0.36b8     342    1831  +37
 
-# datafile.c: 519
+# datafile.c: 521
 0.36b7     339    1794  +29
 
-# datafile.c: 520
+# datafile.c: 522
 0.36b6     336    1765  +42
 
-# datafile.c: 521
+# datafile.c: 523
 0.36b5     330    1723  +39
 
-# datafile.c: 522
+# datafile.c: 524
 0.36b4     325    1684  +42
 
-# datafile.c: 523
+# datafile.c: 525
 0.36b3     320    1642  +41
 
-# datafile.c: 524
+# datafile.c: 526
 0.36b2     312    1601  +69
 
-# datafile.c: 525
+# datafile.c: 527
 0.36b1     297    1532  +58
 
-# datafile.c: 526
+# datafile.c: 528
 0.35fix    287    1474  + 0
 
-# datafile.c: 528
+# datafile.c: 530
 0.35RC2    287    1459  +22
 
-# datafile.c: 529
+# datafile.c: 531
 0.35RC1    286    1437  +37
 
-# datafile.c: 530
+# datafile.c: 532
 0.35b13    285    1400  +58
 
-# datafile.c: 531
+# datafile.c: 533
 0.35b12    273    1342  +25
 
-# datafile.c: 532
+# datafile.c: 534
 0.35b11    268    1317  +54
 
-# datafile.c: 533
+# datafile.c: 535
 0.35b10    262    1263  + 9
 
-# datafile.c: 534
+# datafile.c: 536
 0.35b9     261    1254  +13
 
-# datafile.c: 535
+# datafile.c: 537
 0.35b8     258    1241  +22
 
-# datafile.c: 536
+# datafile.c: 538
 0.35b7     256    1219  + 2
 
-# datafile.c: 537
+# datafile.c: 539
 0.35b6     257    1217  +31
 
-# datafile.c: 538
+# datafile.c: 540
 0.35b5     255    1186  + 8
 
-# datafile.c: 539
+# datafile.c: 541
 0.35b4     255    1178  +30
 
-# datafile.c: 540
+# datafile.c: 542
 0.35b3     252    1148  +41
 
-# datafile.c: 541
+# datafile.c: 543
 0.35b2     251    1107  +60
 
-# datafile.c: 542
+# datafile.c: 544
 0.35b1     247    1047  +23
 
-# datafile.c: 544
+# datafile.c: 546
 0.34RC2    243    1024  + 0
 
-# datafile.c: 545
+# datafile.c: 547
 0.34RC1    243    1024  + 1
 
-# datafile.c: 546
+# datafile.c: 548
 0.34b8     244    1023  +43
 
-# datafile.c: 547
+# datafile.c: 549
 0.34b7     236     980  +42
 
-# datafile.c: 548
+# datafile.c: 550
 0.34b6     234     938  +34
 
-# datafile.c: 549
+# datafile.c: 551
 0.34b5     231     904  +50
 
-# datafile.c: 550
+# datafile.c: 552
 0.34b4     230     854  +50
 
-# datafile.c: 551
+# datafile.c: 553
 0.34b3     226     804  +38
 
-# datafile.c: 552
+# datafile.c: 554
 0.34b2     226     766  +64
 
-# datafile.c: 553
+# datafile.c: 555
 0.34b1     218     702  +73
 
-# datafile.c: 555
+# datafile.c: 557
 0.33RC1    210     629  + 1
 
-# datafile.c: 556
+# datafile.c: 558
 0.33b7     210     628  +24
 
-# datafile.c: 557
+# datafile.c: 559
 0.33b6     200     604  +21
 
-# datafile.c: 558
+# datafile.c: 560
 0.33b5             583  +18
 
-# datafile.c: 559
+# datafile.c: 561
 0.33b4             565  +25
 
-# datafile.c: 560
+# datafile.c: 562
 0.33b3             540  +40
 
-# datafile.c: 561
+# datafile.c: 563
 0.33b2             500  + 7
 
-# datafile.c: 562
+# datafile.c: 564
 0.33b1             493  +15
 
-# datafile.c: 568
+# datafile.c: 570
 0.26a              168  + 1
 
-# datafile.c: 572
+# datafile.c: 574
 0.23a              124  + 0
 
-# datafile.c: 660
+# datafile.c: 662
 $info
 
-# datafile.c: 661
+# datafile.c: 663
 $bio
 
-# datafile.c: 663
+# datafile.c: 665
 $story
 
-# datafile.c: 665
+# datafile.c: 667
 $mame
 
-# datafile.c: 666
+# datafile.c: 668
 $drv
 
-# datafile.c: 669
+# datafile.c: 671
 $cmd
 
-# datafile.c: 670
+# datafile.c: 672
 $end
 
-# datafile.c: 1706
+# datafile.c: 1708
  ...[TRUNCATED]
 
-# datafile.c: 1940, 3403
+# datafile.c: 1942, 3405
 lang
 
-# datafile.c: 1987, 3464
+# datafile.c: 1989, 3466
 .dat
 
-# datafile.c: 2100, 2104
+# datafile.c: 2102, 2106
 history.dat
 
-# datafile.c: 2104, 2107
+# datafile.c: 2106, 2109
 history/
 
-# datafile.c: 2124, 2135
+# datafile.c: 2126, 2137
 story.dat
 
-# datafile.c: 2135, 2138
+# datafile.c: 2137, 2140
 story/
 
-# datafile.c: 2209, 2213, 2326
+# datafile.c: 2211, 2215, 2328
 mameinfo.dat
 
-# datafile.c: 2213, 2216
+# datafile.c: 2215, 2218
 mameinfo/
 
-# datafile.c: 2235
+# datafile.c: 2237
 cpu1
 
-# datafile.c: 2236
+# datafile.c: 2238
 cpu2
 
-# datafile.c: 2237
+# datafile.c: 2239
 cpu3
 
-# datafile.c: 2238
+# datafile.c: 2240
 cpu4
 
-# datafile.c: 2239
+# datafile.c: 2241
 cpu5
 
-# datafile.c: 2240
+# datafile.c: 2242
 cpu6
 
-# datafile.c: 2241
+# datafile.c: 2243
 cpu7
 
-# datafile.c: 2242
+# datafile.c: 2244
 cpu8
 
-# datafile.c: 2243
+# datafile.c: 2245
 gfx1
 
-# datafile.c: 2244
+# datafile.c: 2246
 gfx2
 
-# datafile.c: 2245
+# datafile.c: 2247
 gfx3
 
-# datafile.c: 2246
+# datafile.c: 2248
 gfx4
 
-# datafile.c: 2247
+# datafile.c: 2249
 gfx5
 
-# datafile.c: 2248
+# datafile.c: 2250
 gfx6
 
-# datafile.c: 2249
+# datafile.c: 2251
 gfx7
 
-# datafile.c: 2250
+# datafile.c: 2252
 gfx8
 
-# datafile.c: 2251
+# datafile.c: 2253
 prom
 
-# datafile.c: 2252
+# datafile.c: 2254
 snd1
 
-# datafile.c: 2253
+# datafile.c: 2255
 snd2
 
-# datafile.c: 2254
+# datafile.c: 2256
 snd3
 
-# datafile.c: 2255
+# datafile.c: 2257
 snd4
 
-# datafile.c: 2256
+# datafile.c: 2258
 snd5
 
-# datafile.c: 2257
+# datafile.c: 2259
 snd6
 
-# datafile.c: 2258
+# datafile.c: 2260
 snd7
 
-# datafile.c: 2259
+# datafile.c: 2261
 snd8
 
-# datafile.c: 2260
+# datafile.c: 2262
 usr1
 
-# datafile.c: 2261
+# datafile.c: 2263
 usr2
 
-# datafile.c: 2262
+# datafile.c: 2264
 usr3
 
-# datafile.c: 2263
+# datafile.c: 2265
 usr4
 
-# datafile.c: 2264
+# datafile.c: 2266
 usr5
 
-# datafile.c: 2265
+# datafile.c: 2267
 usr6
 
-# datafile.c: 2266
+# datafile.c: 2268
 usr7
 
-# datafile.c: 2267
+# datafile.c: 2269
 usr8
 
-# datafile.c: 2399
+# datafile.c: 2401
 MAME 
 
-# datafile.c: 2515, 2703, 3012
+# datafile.c: 2517, 2705, 3014
 neogeo.c
 
-# datafile.c: 2521
+# datafile.c: 2523
 playch10.c
 
-# datafile.c: 2527
+# datafile.c: 2529
 decocass.c
 
-# datafile.c: 2533
+# datafile.c: 2535
 cvs.c
 
-# datafile.c: 3043
+# datafile.c: 3045
 \n    0 -     5 KB:  %4d\n    5 -    10 KB:  %4d\n   10 -    50 KB:  %4d\n   50 -   100 KB:  %4d\n
 
-# datafile.c: 3045
+# datafile.c: 3047
   100 -   500 KB:  %4d\n  500 -  1000 KB:  %4d\n 1000 -  5000 KB:  %4d\n 5000 - 10000 KB:  %4d\n
 
-# datafile.c: 3047
+# datafile.c: 3049
 10000 - 50000 KB:  %4d\n      > 50000 KB:  %4d\n
 
-# datafile.c: 3076
+# datafile.c: 3078
 \n         CPU:  (1)  (2)  (3)  (4)\n\n
 
-# datafile.c: 3210
+# datafile.c: 3212
 \nWARNING: ASPECT RATIO number too high!\n
 
-# datafile.c: 3245
+# datafile.c: 3247
   FPS %f:  %4d\n
 
-# datafile.c: 3321
+# datafile.c: 3323
   %dx%d: %3d    
 
-# datafile.c: 3336
+# datafile.c: 3338
 \nWARNING: Resolution number too high!\n
 
-# datafile.c: 3339
+# datafile.c: 3341
 \nWARNING: Palettesize number too high!\n
 
-# datafile.c: 3400, 3433
+# datafile.c: 3402, 3435
 command.dat
 
-# datafile.c: 3462
+# datafile.c: 3464
 command\\
 
 # debug/debugcmd.c: 85
@@ -7960,6 +7966,9 @@ Balls
 # drivers/battlnts.c: 358, 361, 364
 mono
 
+# drivers/battlnts.c: 462
+shuffle() - not modulo 4\n
+
 # drivers/bbusters.c: 199, 218, 498, 580
 FAKE1
 
@@ -11797,25 +11806,25 @@ VR3 - Music
 # drivers/crbaloon.c: 376, 380, 384
 mono
 
-# drivers/crgolf.c: 261
+# drivers/crgolf.c: 312
 Half-Round Play
 
-# drivers/crgolf.c: 262
+# drivers/crgolf.c: 313
 4 Coins
 
-# drivers/crgolf.c: 263
+# drivers/crgolf.c: 314
 5 Coins
 
-# drivers/crgolf.c: 264
+# drivers/crgolf.c: 315
 6 Coins
 
-# drivers/crgolf.c: 265
+# drivers/crgolf.c: 316
 10 Coins
 
-# drivers/crgolf.c: 269
+# drivers/crgolf.c: 320
 Clear High Scores
 
-# drivers/crgolf.c: 327, 329
+# drivers/crgolf.c: 392, 394, 403
 mono
 
 # drivers/crimfght.c: 118
@@ -12445,13 +12454,13 @@ P2 Bet 7-8
 # drivers/darkhors.c: 627, 631
 mono
 
-# drivers/darkmist.c: 250
+# drivers/darkmist.c: 332
 user2.bin
 
-# drivers/darkmist.c: 250, 253
+# drivers/darkmist.c: 332, 335
 wb
 
-# drivers/darkmist.c: 253
+# drivers/darkmist.c: 335
 user1.bin
 
 # drivers/darkseal.c: 216
@@ -14442,6 +14451,18 @@ DSW1-7
 
 # drivers/eolith.c: 162
 DSW1-8
+
+# drivers/eolith16.c: 27
+*10000xxxxxx
+
+# drivers/eolith16.c: 28
+*10011xxxxxx
+
+# drivers/eolith16.c: 182, 186
+left
+
+# drivers/eolith16.c: 182, 187
+right
 
 # drivers/epos.c: 146, 194, 245, 294
 IN0
@@ -18826,13 +18847,16 @@ irq
 # drivers/hnayayoi.c: 647, 651, 652, 653, 654, 658
 mono
 
-# drivers/hng64.c: 613
+# drivers/hng64.c: 612
 commr %08x\n
 
-# drivers/hng64.c: 662
+# drivers/hng64.c: 661
 Performing DMA Start %08x Len %08x Dst %08x\n
 
-# drivers/hng64.c: 1167
+# drivers/hng64.c: 754
+WRITE32_HANDLER( hng64_3d_1_w )\n
+
+# drivers/hng64.c: 1166
 TST
 
 # drivers/holeland.c: 82, 151
@@ -20551,70 +20575,70 @@ sndtor3k
 # drivers/konamigq.c: 411
 sector buffer
 
-# drivers/konamigq.c: 449, 453, 458
+# drivers/konamigq.c: 448, 452, 457
 left
 
-# drivers/konamigq.c: 449, 454, 459
+# drivers/konamigq.c: 448, 453, 458
 right
 
-# drivers/konamigq.c: 512
+# drivers/konamigq.c: 511
 Stage Set
 
-# drivers/konamigq.c: 513
+# drivers/konamigq.c: 512
 Endless
 
-# drivers/konamigq.c: 514
+# drivers/konamigq.c: 513
 6st End
 
-# drivers/konamigq.c: 515
+# drivers/konamigq.c: 514
 Mirror
 
-# drivers/konamigq.c: 518
+# drivers/konamigq.c: 517
 Woofer
 
-# drivers/konamigq.c: 521
+# drivers/konamigq.c: 520
 Number of Players
 
-# drivers/konamigq.c: 524
+# drivers/konamigq.c: 523
 Coin Mechanism (2p only)
 
-# drivers/konamigq.c: 526
+# drivers/konamigq.c: 525
 Independent
 
-# drivers/konamigq.c: 566
+# drivers/konamigq.c: 565
 420uaa04
 
-# drivers/konamigv.c: 358, 362, 366
+# drivers/konamigv.c: 357, 361, 365
 left
 
-# drivers/konamigv.c: 358, 363, 367
+# drivers/konamigv.c: 357, 362, 366
 right
 
-# drivers/konamigv.c: 970
+# drivers/konamigv.c: 969
 999a01.7e
 
-# drivers/konamigv.c: 986
+# drivers/konamigv.c: 985
 susume
 
-# drivers/konamigv.c: 996
+# drivers/konamigv.c: 995
 hyperath
 
-# drivers/konamigv.c: 1006
+# drivers/konamigv.c: 1005
 pbball96
 
-# drivers/konamigv.c: 1016
+# drivers/konamigv.c: 1015
 weddingr
 
-# drivers/konamigv.c: 1026
+# drivers/konamigv.c: 1025
 simpbowl
 
-# drivers/konamigv.c: 1036
+# drivers/konamigv.c: 1035
 btchamp
 
-# drivers/konamigv.c: 1046
+# drivers/konamigv.c: 1045
 kdeadeye
 
-# drivers/konamigv.c: 1056
+# drivers/konamigv.c: 1055
 nagano98
 
 # drivers/konamigx.c: 1334, 1338, 1343
@@ -21004,13 +21028,25 @@ Clear 'doors' after life lost
 # drivers/ladyfrog.c: 314, 318, 322
 mono
 
-# drivers/laserbat.c: 208
+# drivers/laserbat.c: 210, 363
 Infinites
 
-# drivers/laserbat.c: 212
+# drivers/laserbat.c: 214, 292
 Collision Detection
 
-# drivers/laserbat.c: 409, 413, 417, 421, 452, 455, 458
+# drivers/laserbat.c: 289
+Calibration Display
+
+# drivers/laserbat.c: 300
+Firing
+
+# drivers/laserbat.c: 301
+Rapid
+
+# drivers/laserbat.c: 367
+Game Over Melody
+
+# drivers/laserbat.c: 645, 649, 653, 657, 689, 693, 696
 mono
 
 # drivers/lasso.c: 317
@@ -27538,10 +27574,10 @@ Freeze Screen
 # drivers/namconb1.c: 1293, 1345
 Alternate Test Switch
 
-# drivers/namcond1.c: 304, 309, 311
+# drivers/namcond1.c: 303, 308, 310
 left
 
-# drivers/namcond1.c: 304, 308, 310
+# drivers/namcond1.c: 303, 307, 309
 right
 
 # drivers/namcos1.c: 415, 562, 602, 615, 639, 664, 682, 698, 763, 776, 795, 809, 868, 882, 900, 914, 924
@@ -27616,10 +27652,10 @@ left
 # drivers/namcos1.c: 1032, 1037, 1042, 1046
 right
 
-# drivers/namcos10.c: 87
+# drivers/namcos10.c: 86
 left
 
-# drivers/namcos10.c: 87
+# drivers/namcos10.c: 86
 right
 
 # drivers/namcos11.c: 292
@@ -27742,10 +27778,10 @@ namcos11
 # drivers/namcos11.c: 796
 m_p_n_bankoffset
 
-# drivers/namcos11.c: 903, 969, 1035, 1101, 1167
+# drivers/namcos11.c: 902, 968, 1034, 1100, 1166
 DIP1 (Test)
 
-# drivers/namcos11.c: 906, 972, 1038, 1104, 1170
+# drivers/namcos11.c: 905, 971, 1037, 1103, 1169
 DIP2 (Freeze)
 
 # drivers/namcos12.c: 805
@@ -27811,25 +27847,25 @@ tenkomor
 # drivers/namcos12.c: 993
 ghlpanic
 
-# drivers/namcos12.c: 1147, 1351
+# drivers/namcos12.c: 1147, 1350
 IN3
 
-# drivers/namcos12.c: 1167, 1355
+# drivers/namcos12.c: 1167, 1354
 IN4
 
-# drivers/namcos12.c: 1235, 1240, 1242
+# drivers/namcos12.c: 1234, 1239, 1241
 left
 
-# drivers/namcos12.c: 1235, 1239, 1241
+# drivers/namcos12.c: 1234, 1238, 1240
 right
 
-# drivers/namcos12.c: 1253, 1303
+# drivers/namcos12.c: 1252, 1302
 IN0
 
-# drivers/namcos12.c: 1263, 1313
+# drivers/namcos12.c: 1262, 1312
 IN1
 
-# drivers/namcos12.c: 1282, 1332
+# drivers/namcos12.c: 1281, 1331
 IN2
 
 # drivers/namcos2.c: 476
@@ -36235,391 +36271,391 @@ tile bank/math
 # drivers/segas16b.c: 998
 Out of memory allocating RAM space\n
 
-# drivers/segas16b.c: 1502, 1586, 2071, 2474
+# drivers/segas16b.c: 1505, 1589, 2074, 2477
 ANALOGX1
 
-# drivers/segas16b.c: 1503, 1587, 2074, 2477
+# drivers/segas16b.c: 1506, 1590, 2077, 2480
 ANALOGY1
 
-# drivers/segas16b.c: 1504, 1588, 2077, 2480
+# drivers/segas16b.c: 1507, 1591, 2080, 2483
 ANALOGX2
 
-# drivers/segas16b.c: 1505, 1589, 2080, 2483
+# drivers/segas16b.c: 1508, 1592, 2083, 2486
 ANALOGY2
 
-# drivers/segas16b.c: 1506, 2083
+# drivers/segas16b.c: 1509, 2086
 ANALOGX3
 
-# drivers/segas16b.c: 1507, 2086
+# drivers/segas16b.c: 1510, 2089
 ANALOGY3
 
-# drivers/segas16b.c: 1508, 2089
+# drivers/segas16b.c: 1511, 2092
 ANALOGX4
 
-# drivers/segas16b.c: 1509, 2092
+# drivers/segas16b.c: 1512, 2095
 ANALOGY4
 
-# drivers/segas16b.c: 1546
+# drivers/segas16b.c: 1549
 DUMMY
 
-# drivers/segas16b.c: 1546, 2217
+# drivers/segas16b.c: 1549, 2220
 LEFT
 
-# drivers/segas16b.c: 1546, 2211
+# drivers/segas16b.c: 1549, 2214
 MONITOR
 
-# drivers/segas16b.c: 1546, 2214
+# drivers/segas16b.c: 1549, 2217
 RIGHT
 
-# drivers/segas16b.c: 1606, 2526
+# drivers/segas16b.c: 1609, 2529
 MJ0
 
-# drivers/segas16b.c: 1606, 2534
+# drivers/segas16b.c: 1609, 2537
 MJ1
 
-# drivers/segas16b.c: 1606, 2541
+# drivers/segas16b.c: 1609, 2544
 MJ2
 
-# drivers/segas16b.c: 1606, 2548
+# drivers/segas16b.c: 1609, 2551
 MJ3
 
-# drivers/segas16b.c: 1606, 2556
+# drivers/segas16b.c: 1609, 2559
 MJ4
 
-# drivers/segas16b.c: 1606, 2561
+# drivers/segas16b.c: 1609, 2564
 MJ5
 
-# drivers/segas16b.c: 1656, 1757, 1859, 1978, 2004, 2040, 2129, 2184, 2255, 2294, 2364, 2399, 2438, 2520, 2572, 2607, 2637, 2641, 2711, 2769, 2800
+# drivers/segas16b.c: 1659, 1760, 1862, 1981, 2007, 2043, 2132, 2187, 2258, 2297, 2367, 2402, 2441, 2523, 2575, 2610, 2640, 2644, 2714, 2772, 2803
 P1
 
-# drivers/segas16b.c: 1657, 1770, 1863, 1981, 2007, 2050, 2134, 2187, 2258, 2304, 2367, 2402, 2451, 2523, 2575, 2612, 2715, 2772, 2803
+# drivers/segas16b.c: 1660, 1773, 1866, 1984, 2010, 2053, 2137, 2190, 2261, 2307, 2370, 2405, 2454, 2526, 2578, 2615, 2718, 2775, 2806
 P2
 
-# drivers/segas16b.c: 1658, 2314
+# drivers/segas16b.c: 1661, 2317
 P3
 
-# drivers/segas16b.c: 1659, 2324
+# drivers/segas16b.c: 1662, 2327
 P4
 
-# drivers/segas16b.c: 1747, 2036, 2290, 2434
+# drivers/segas16b.c: 1750, 2039, 2293, 2437
 SERVICE
 
-# drivers/segas16b.c: 1767, 2441, 2645
+# drivers/segas16b.c: 1770, 2444, 2648
 UNUSED
 
-# drivers/segas16b.c: 1780, 1867, 1892, 1920, 1950, 1984, 2010, 2053, 2100, 2139, 2161, 2190, 2225, 2261, 2334, 2370, 2405, 2454, 2491, 2578, 2617, 2670, 2719, 2741, 2775, 2806
+# drivers/segas16b.c: 1783, 1870, 1895, 1923, 1953, 1987, 2013, 2056, 2103, 2142, 2164, 2193, 2228, 2264, 2337, 2373, 2408, 2457, 2494, 2581, 2620, 2673, 2722, 2744, 2778, 2809
 DSW
 
-# drivers/segas16b.c: 1806
+# drivers/segas16b.c: 1809
 COINAGE
 
-# drivers/segas16b.c: 1811, 1828
+# drivers/segas16b.c: 1814, 1831
 2 Coins/1 Credit 5/3 6/4
 
-# drivers/segas16b.c: 1812, 1829
+# drivers/segas16b.c: 1815, 1832
 2 Coins/1 Credit 4/3
 
-# drivers/segas16b.c: 1814, 1831
+# drivers/segas16b.c: 1817, 1834
 1 Coin/1 Credit 2/3
 
-# drivers/segas16b.c: 1815, 1832
+# drivers/segas16b.c: 1818, 1835
 1 Coin/1 Credit 4/5
 
-# drivers/segas16b.c: 1816, 1833
+# drivers/segas16b.c: 1819, 1836
 1 Coin/1 Credit 5/6
 
-# drivers/segas16b.c: 1823
+# drivers/segas16b.c: 1826
 Free Play (if Coin B too) or 1/1
 
-# drivers/segas16b.c: 1840
+# drivers/segas16b.c: 1843
 Free Play (if Coin A too) or 1/1
 
-# drivers/segas16b.c: 1893, 2162, 2226
+# drivers/segas16b.c: 1896, 2165, 2229
 Credits needed
 
-# drivers/segas16b.c: 1894, 2163, 2227
+# drivers/segas16b.c: 1897, 2166, 2230
 1 to start, 1 to continue
 
-# drivers/segas16b.c: 1895, 2164, 2228
+# drivers/segas16b.c: 1898, 2167, 2231
 2 to start, 1 to continue
 
-# drivers/segas16b.c: 1904, 2173
+# drivers/segas16b.c: 1907, 2176
 Energy Meter
 
-# drivers/segas16b.c: 1933
+# drivers/segas16b.c: 1936
 80K/200K/500K/1 Mil
 
-# drivers/segas16b.c: 1934
+# drivers/segas16b.c: 1937
 100K/300K/700K/1 Mil
 
-# drivers/segas16b.c: 1938
+# drivers/segas16b.c: 1941
 Controller select
 
-# drivers/segas16b.c: 1939
+# drivers/segas16b.c: 1942
 1 Player side
 
-# drivers/segas16b.c: 1940
+# drivers/segas16b.c: 1943
 2 Players side
 
-# drivers/segas16b.c: 1941
+# drivers/segas16b.c: 1944
 Special Function Mode
 
-# drivers/segas16b.c: 2057
+# drivers/segas16b.c: 2060
 VS Time
 
-# drivers/segas16b.c: 2058
+# drivers/segas16b.c: 2061
 2P 1:30/ 3P 2:00/ 4P 2:30
 
-# drivers/segas16b.c: 2059
+# drivers/segas16b.c: 2062
 2P 2:00/ 3P 2:30/ 4P 3:00
 
-# drivers/segas16b.c: 2060
+# drivers/segas16b.c: 2063
 2P 2:30/ 3P 3:00/ 4P 3:30
 
-# drivers/segas16b.c: 2061
+# drivers/segas16b.c: 2064
 2P 3:00/ 3P 3:30/ 4P 4:00
 
-# drivers/segas16b.c: 2067
+# drivers/segas16b.c: 2070
 CPU Starts With +6 Pts.
 
-# drivers/segas16b.c: 2101, 2371
+# drivers/segas16b.c: 2104, 2374
 2 Credits to Start
 
-# drivers/segas16b.c: 2148
+# drivers/segas16b.c: 2151
 Clear round allowed
 
-# drivers/segas16b.c: 2151
+# drivers/segas16b.c: 2154
 2 Cell Move
 
-# drivers/segas16b.c: 2194
+# drivers/segas16b.c: 2197
 Start Level Select
 
-# drivers/segas16b.c: 2205
+# drivers/segas16b.c: 2208
 Time Adjust
 
-# drivers/segas16b.c: 2232
+# drivers/segas16b.c: 2235
 Innings
 
-# drivers/segas16b.c: 2233
+# drivers/segas16b.c: 2236
 1 Credit 1 Inning Only
 
-# drivers/segas16b.c: 2234
+# drivers/segas16b.c: 2237
 +2 Credits 3 Innings
 
-# drivers/segas16b.c: 2235
+# drivers/segas16b.c: 2238
 Time Limits
 
-# drivers/segas16b.c: 2237, 2246
+# drivers/segas16b.c: 2240, 2249
 Easy 2
 
-# drivers/segas16b.c: 2238
+# drivers/segas16b.c: 2241
 Easy 3
 
-# drivers/segas16b.c: 2241, 2583
+# drivers/segas16b.c: 2244, 2586
 Hard 2
 
-# drivers/segas16b.c: 2242, 2584
+# drivers/segas16b.c: 2245, 2587
 Hard 3
 
-# drivers/segas16b.c: 2265, 2338
+# drivers/segas16b.c: 2268, 2341
 Initial Point
 
-# drivers/segas16b.c: 2274, 2347
+# drivers/segas16b.c: 2277, 2350
 Point Table
 
-# drivers/segas16b.c: 2390
+# drivers/segas16b.c: 2393
 Attack Button to Start
 
-# drivers/segas16b.c: 2409
+# drivers/segas16b.c: 2412
 Cancel per Credit
 
-# drivers/segas16b.c: 2412
+# drivers/segas16b.c: 2415
 Timer Speed
 
-# drivers/segas16b.c: 2413
+# drivers/segas16b.c: 2416
 20 seconds
 
-# drivers/segas16b.c: 2414
+# drivers/segas16b.c: 2417
 30 seconds
 
-# drivers/segas16b.c: 2415
+# drivers/segas16b.c: 2418
 PCM Voice
 
-# drivers/segas16b.c: 2418
+# drivers/segas16b.c: 2421
 Omikuji Difficulty
 
-# drivers/segas16b.c: 2469
+# drivers/segas16b.c: 2472
 Every 50000
 
-# drivers/segas16b.c: 2508
+# drivers/segas16b.c: 2511
 Enemy's Bullet Speed
 
-# drivers/segas16b.c: 2582
+# drivers/segas16b.c: 2585
 Hard 1
 
-# drivers/segas16b.c: 2585
+# drivers/segas16b.c: 2588
 Hard 4
 
-# drivers/segas16b.c: 2586
+# drivers/segas16b.c: 2589
 Hard 5
 
-# drivers/segas16b.c: 2622
+# drivers/segas16b.c: 2625
 A
 
-# drivers/segas16b.c: 2623
+# drivers/segas16b.c: 2626
 B
 
-# drivers/segas16b.c: 2624
+# drivers/segas16b.c: 2627
 C
 
-# drivers/segas16b.c: 2625
+# drivers/segas16b.c: 2628
 D
 
-# drivers/segas16b.c: 2649
+# drivers/segas16b.c: 2652
 Out Lane Pin
 
-# drivers/segas16b.c: 2650
+# drivers/segas16b.c: 2653
 Near
 
-# drivers/segas16b.c: 2651
+# drivers/segas16b.c: 2654
 Far
 
-# drivers/segas16b.c: 2652
+# drivers/segas16b.c: 2655
 Special
 
-# drivers/segas16b.c: 2653
+# drivers/segas16b.c: 2656
 7 Credits
 
-# drivers/segas16b.c: 2654
+# drivers/segas16b.c: 2657
 3 Credits
 
-# drivers/segas16b.c: 2655
+# drivers/segas16b.c: 2658
 1 Credit
 
-# drivers/segas16b.c: 2656
+# drivers/segas16b.c: 2659
 2000000 Points
 
-# drivers/segas16b.c: 2674
+# drivers/segas16b.c: 2677
 Bonus
 
-# drivers/segas16b.c: 2675
+# drivers/segas16b.c: 2678
 Replay 1000000/2000000
 
-# drivers/segas16b.c: 2676
+# drivers/segas16b.c: 2679
 Replay 1200000/2500000
 
-# drivers/segas16b.c: 2677
+# drivers/segas16b.c: 2680
 Replay 1500000/3000000
 
-# drivers/segas16b.c: 2678
+# drivers/segas16b.c: 2681
 Replay 2000000/4000000
 
-# drivers/segas16b.c: 2679
+# drivers/segas16b.c: 2682
 Replay 1000000
 
-# drivers/segas16b.c: 2680
+# drivers/segas16b.c: 2683
 Replay 1200000
 
-# drivers/segas16b.c: 2681
+# drivers/segas16b.c: 2684
 Replay 1500000
 
-# drivers/segas16b.c: 2682
+# drivers/segas16b.c: 2685
 Replay 1800000
 
-# drivers/segas16b.c: 2683
+# drivers/segas16b.c: 2686
 ExtraBall 100000
 
-# drivers/segas16b.c: 2684
+# drivers/segas16b.c: 2687
 ExtraBall 200000
 
-# drivers/segas16b.c: 2685
+# drivers/segas16b.c: 2688
 ExtraBall 300000
 
-# drivers/segas16b.c: 2686
+# drivers/segas16b.c: 2689
 ExtraBall 400000
 
-# drivers/segas16b.c: 2687
+# drivers/segas16b.c: 2690
 ExtraBall 500000
 
-# drivers/segas16b.c: 2688
+# drivers/segas16b.c: 2691
 ExtraBall 600000
 
-# drivers/segas16b.c: 2689
+# drivers/segas16b.c: 2692
 ExtraBall 700000
 
-# drivers/segas16b.c: 2691
+# drivers/segas16b.c: 2694
 Match
 
-# drivers/segas16b.c: 2694
+# drivers/segas16b.c: 2697
 Pin Rebound
 
-# drivers/segas16b.c: 2695
+# drivers/segas16b.c: 2698
 Well
 
-# drivers/segas16b.c: 2696
+# drivers/segas16b.c: 2699
 A Little
 
-# drivers/segas16b.c: 2723
+# drivers/segas16b.c: 2726
 VS-Mode Battle
 
-# drivers/segas16b.c: 2730
+# drivers/segas16b.c: 2733
 Hard+1
 
-# drivers/segas16b.c: 2731
+# drivers/segas16b.c: 2734
 Hard+2
 
-# drivers/segas16b.c: 2732
+# drivers/segas16b.c: 2735
 Hard+3
 
-# drivers/segas16b.c: 2733
+# drivers/segas16b.c: 2736
 Hard+4
 
-# drivers/segas16b.c: 2734
+# drivers/segas16b.c: 2737
 Hard+5
 
-# drivers/segas16b.c: 2752
+# drivers/segas16b.c: 2755
 Starting Energy
 
-# drivers/segas16b.c: 2760
+# drivers/segas16b.c: 2763
 Bonus Energy
 
-# drivers/segas16b.c: 2810
+# drivers/segas16b.c: 2813
 Round Time
 
-# drivers/segas16b.c: 2827, 2902
+# drivers/segas16b.c: 2830, 2905
 IN0
 
-# drivers/segas16b.c: 2837, 2912
+# drivers/segas16b.c: 2840, 2915
 IN1
 
-# drivers/segas16b.c: 2847, 2917
+# drivers/segas16b.c: 2850, 2920
 DSW0
 
-# drivers/segas16b.c: 2872, 2942
+# drivers/segas16b.c: 2875, 2945
 DSW1
 
-# drivers/segas16b.c: 2890
+# drivers/segas16b.c: 2893
 Game Mode
 
-# drivers/segas16b.c: 2891
+# drivers/segas16b.c: 2894
 Normal Tetris
 
-# drivers/segas16b.c: 2892
+# drivers/segas16b.c: 2895
 Atomic Point
 
-# drivers/segas16b.c: 2895, 2966
+# drivers/segas16b.c: 2898, 2969
 DUMMY1
 
-# drivers/segas16b.c: 2897, 2968
+# drivers/segas16b.c: 2900, 2971
 DUMMY2
 
-# drivers/segas16b.c: 3048, 3051, 3056, 3088
+# drivers/segas16b.c: 3051, 3054, 3059, 3091
 left
 
-# drivers/segas16b.c: 3048, 3052, 3057, 3089
+# drivers/segas16b.c: 3051, 3055, 3060, 3092
 right
 
-# drivers/segas16b.c: 3090, 3093
+# drivers/segas16b.c: 3093, 3096
 mono
 
 # drivers/segas18.c: 94, 108, 122
@@ -37003,10 +37039,10 @@ Wiper
 # drivers/segas32.c: 1710, 1779
 Gear Change
 
-# drivers/segas32.c: 2052, 2056, 2060, 2064, 2107, 2111, 2116
+# drivers/segas32.c: 2056, 2060, 2064, 2068, 2111, 2115, 2120
 left
 
-# drivers/segas32.c: 2052, 2057, 2061, 2065, 2107, 2112, 2117
+# drivers/segas32.c: 2056, 2061, 2065, 2069, 2111, 2116, 2121
 right
 
 # drivers/segasyse.c: 460, 478
@@ -37630,526 +37666,526 @@ Difficult
 # drivers/senjyo.c: 591, 594, 597, 600, 604
 mono
 
-# drivers/seta.c: 1613, 3425, 3508, 3672, 4233, 4677, 5864
+# drivers/seta.c: 1603, 3415, 3498, 3662, 4223, 4667, 5854
 IN4
 
-# drivers/seta.c: 1614, 3428, 3675, 3998, 4236, 4684, 5867
+# drivers/seta.c: 1604, 3418, 3665, 3988, 4226, 4674, 5857
 IN5
 
-# drivers/seta.c: 1618, 3073, 3140, 3223, 3294, 3363, 3437, 3524, 3599, 3686, 3757, 3851, 3920, 4005, 4015, 4083, 4169, 4252, 4330, 4399, 4467, 4541, 4610, 4725, 4805, 4884, 4969, 5045, 5117, 5186, 5276, 5343, 5411, 5477, 5552, 5643, 5720, 5797, 5877, 5951
+# drivers/seta.c: 1608, 3063, 3130, 3213, 3284, 3353, 3427, 3514, 3589, 3676, 3747, 3841, 3910, 3995, 4005, 4073, 4159, 4242, 4320, 4389, 4457, 4531, 4600, 4715, 4795, 4874, 4959, 5035, 5107, 5176, 5266, 5333, 5401, 5467, 5542, 5633, 5710, 5787, 5867, 5941
 IN0
 
-# drivers/seta.c: 1619, 3076, 3150, 3226, 3297, 3366, 3440, 3527, 3602, 3689, 3767, 3854, 3930, 4018, 4086, 4172, 4255, 4333, 4402, 4470, 4544, 4611, 4735, 4815, 4887, 4972, 5048, 5120, 5189, 5279, 5346, 5414, 5480, 5555, 5650, 5724, 5800, 5880, 5954
+# drivers/seta.c: 1609, 3066, 3140, 3216, 3287, 3356, 3430, 3517, 3592, 3679, 3757, 3844, 3920, 4008, 4076, 4162, 4245, 4323, 4392, 4460, 4534, 4601, 4725, 4805, 4877, 4962, 5038, 5110, 5179, 5269, 5336, 5404, 5470, 5545, 5640, 5714, 5790, 5870, 5944
 IN1
 
-# drivers/seta.c: 3079, 3160, 3229, 3300, 3369, 3443, 3530, 3605, 3692, 3777, 3857, 3940, 4021, 4089, 4175, 4258, 4336, 4405, 4547, 4613, 4745, 4825, 4890, 4956, 4975, 5051, 5123, 5192, 5282, 5349, 5417, 5483, 5558, 5657, 5727, 5803, 5883, 5957
+# drivers/seta.c: 3069, 3150, 3219, 3290, 3359, 3433, 3520, 3595, 3682, 3767, 3847, 3930, 4011, 4079, 4165, 4248, 4326, 4395, 4537, 4603, 4735, 4815, 4880, 4946, 4965, 5041, 5113, 5182, 5272, 5339, 5407, 5473, 5548, 5647, 5717, 5793, 5873, 5947
 IN2
 
-# drivers/seta.c: 3089, 3170, 3239, 3309, 3379, 3462, 3547, 3615, 3702, 3795, 3867, 3950, 4031, 4185, 4277, 4346, 4417, 4486, 4557, 4618, 4751, 4831, 4900, 4985, 5061, 5132, 5210, 5292, 5359, 5427, 5493, 5577, 5667, 5737, 5820, 5893
+# drivers/seta.c: 3079, 3160, 3229, 3299, 3369, 3452, 3537, 3605, 3692, 3785, 3857, 3940, 4021, 4175, 4267, 4336, 4407, 4476, 4547, 4608, 4741, 4821, 4890, 4975, 5051, 5122, 5200, 5282, 5349, 5417, 5483, 5567, 5657, 5727, 5810, 5883
 IN3
 
-# drivers/seta.c: 3090, 3380, 4347, 5311, 5706
+# drivers/seta.c: 3080, 3370, 4337, 5301, 5696
 Licensed To
 
-# drivers/seta.c: 3093, 3381, 3666, 4349, 5201, 5707, 5815
+# drivers/seta.c: 3083, 3371, 3656, 4339, 5191, 5697, 5805
 Romstar
 
-# drivers/seta.c: 3094, 4348
+# drivers/seta.c: 3084, 4338
 Jordan
 
-# drivers/seta.c: 3099, 5506
+# drivers/seta.c: 3089, 5496
 Unknown 2-4
 
-# drivers/seta.c: 3119, 3656, 5456
+# drivers/seta.c: 3109, 3646, 5446
 Never
 
-# drivers/seta.c: 3120
+# drivers/seta.c: 3110
 300k Only
 
-# drivers/seta.c: 3121
+# drivers/seta.c: 3111
 600k Only
 
-# drivers/seta.c: 3122
+# drivers/seta.c: 3112
 300k & 600k
 
-# drivers/seta.c: 3129, 3243, 3535, 3668, 4386, 5465
+# drivers/seta.c: 3119, 3233, 3525, 3658, 4376, 5455
 Coinage Type
 
-# drivers/seta.c: 3192, 3421, 4053, 4229, 4598, 5174
+# drivers/seta.c: 3182, 3411, 4043, 4219, 4588, 5164
 Unknown 2-7
 
-# drivers/seta.c: 3212
+# drivers/seta.c: 3202
 20K Only
 
-# drivers/seta.c: 3213
+# drivers/seta.c: 3203
 20K, Every 30K
 
-# drivers/seta.c: 3214
+# drivers/seta.c: 3204
 30K, Every 40K
 
-# drivers/seta.c: 3259
+# drivers/seta.c: 3249
 3 Coins/7 Credit
 
-# drivers/seta.c: 3275
+# drivers/seta.c: 3265
 2 Player Game
 
-# drivers/seta.c: 3276
+# drivers/seta.c: 3266
 2 Credits
 
-# drivers/seta.c: 3277, 3279
+# drivers/seta.c: 3267, 3269
 1 Credit
 
-# drivers/seta.c: 3280
+# drivers/seta.c: 3270
 1 Coin
 
-# drivers/seta.c: 3306
+# drivers/seta.c: 3296
 Thunder & Lightning 2
 
-# drivers/seta.c: 3307
+# drivers/seta.c: 3297
 Block Carnival
 
-# drivers/seta.c: 3316
+# drivers/seta.c: 3306
 20K, Every 50K
 
-# drivers/seta.c: 3317
+# drivers/seta.c: 3307
 20K, Every 70K
 
-# drivers/seta.c: 3318
+# drivers/seta.c: 3308
 30K, Every 60K
 
-# drivers/seta.c: 3319
+# drivers/seta.c: 3309
 30K, Every 90K
 
-# drivers/seta.c: 3325, 4436, 4505, 5512
+# drivers/seta.c: 3315, 4426, 4495, 5502
 Unknown 2-6
 
-# drivers/seta.c: 3332
+# drivers/seta.c: 3322
 Unknown 1-0
 
-# drivers/seta.c: 3341, 4451, 4520, 4566, 4760, 4840, 5141
+# drivers/seta.c: 3331, 4441, 4510, 4556, 4750, 4830, 5131
 Unknown 1-3
 
-# drivers/seta.c: 3382, 4351, 5431, 5710
+# drivers/seta.c: 3372, 4341, 5421, 5700
 Taito America
 
-# drivers/seta.c: 3384, 5708
+# drivers/seta.c: 3374, 5698
 None (Japan)
 
-# drivers/seta.c: 3408
+# drivers/seta.c: 3398
 Score Digits
 
-# drivers/seta.c: 3414
+# drivers/seta.c: 3404
 Display Score
 
-# drivers/seta.c: 3417
+# drivers/seta.c: 3407
 Erase Backup Ram
 
-# drivers/seta.c: 3421, 3563, 3566, 3570
+# drivers/seta.c: 3411, 3553, 3556, 3560
 Don't Touch
 
-# drivers/seta.c: 3459
+# drivers/seta.c: 3449
 USA (6 buttons)
 
-# drivers/seta.c: 3460
+# drivers/seta.c: 3450
 Japan (2 buttons)
 
-# drivers/seta.c: 3484
+# drivers/seta.c: 3474
 Auto Shot
 
-# drivers/seta.c: 3503
+# drivers/seta.c: 3493
 300k and every 800k
 
-# drivers/seta.c: 3504
+# drivers/seta.c: 3494
 500k and every 1000k
 
-# drivers/seta.c: 3505
+# drivers/seta.c: 3495
 800k and 2000k only
 
-# drivers/seta.c: 3506
+# drivers/seta.c: 3496
 1000k Only
 
-# drivers/seta.c: 3539
+# drivers/seta.c: 3529
 Dragon Unit
 
-# drivers/seta.c: 3540
+# drivers/seta.c: 3530
 Castle of Dragon
 
-# drivers/seta.c: 3541
+# drivers/seta.c: 3531
 (C) / License
 
-# drivers/seta.c: 3542
+# drivers/seta.c: 3532
 Athena (Japan)
 
-# drivers/seta.c: 3543
+# drivers/seta.c: 3533
 Athena / Taito (Japan)
 
-# drivers/seta.c: 3544
+# drivers/seta.c: 3534
 Seta USA / Taito America
 
-# drivers/seta.c: 3545
+# drivers/seta.c: 3535
 Seta USA / Romstar
 
-# drivers/seta.c: 3554
+# drivers/seta.c: 3544
 150K, Every 300K
 
-# drivers/seta.c: 3555
+# drivers/seta.c: 3545
 200K, Every 400K
 
-# drivers/seta.c: 3556
+# drivers/seta.c: 3546
 300K, Every 500K
 
-# drivers/seta.c: 3557
+# drivers/seta.c: 3547
 400K Only
 
-# drivers/seta.c: 3563, 4460, 4529, 4575, 5149, 5756
+# drivers/seta.c: 3553, 4450, 4519, 4565, 5139, 5746
 Unknown 1-6
 
-# drivers/seta.c: 3566, 5839
+# drivers/seta.c: 3556, 5829
 Unknown 1-7*
 
-# drivers/seta.c: 3570, 5156, 5843
+# drivers/seta.c: 3560, 5146, 5833
 Unknown 2-0
 
-# drivers/seta.c: 3577
+# drivers/seta.c: 3567
 1 of 4 Scenes
 
-# drivers/seta.c: 3578
+# drivers/seta.c: 3568
 1 of 8 Scenes
 
-# drivers/seta.c: 3616
+# drivers/seta.c: 3606
 Sales
 
-# drivers/seta.c: 3617
+# drivers/seta.c: 3607
 Japan Only
 
-# drivers/seta.c: 3650
+# drivers/seta.c: 3640
 Unknown 2-0&1
 
-# drivers/seta.c: 3657
+# drivers/seta.c: 3647
 50K Only
 
-# drivers/seta.c: 3658, 4075, 5302, 5369
+# drivers/seta.c: 3648, 4065, 5292, 5359
 100K Only
 
-# drivers/seta.c: 3659, 5300, 5367
+# drivers/seta.c: 3649, 5290, 5357
 50K, Every 150K
 
-# drivers/seta.c: 3665
+# drivers/seta.c: 3655
 World License
 
-# drivers/seta.c: 3721
+# drivers/seta.c: 3711
 Shared Credits
 
-# drivers/seta.c: 3724
+# drivers/seta.c: 3714
 Credits To Start
 
-# drivers/seta.c: 3836, 5102
+# drivers/seta.c: 3826, 5092
 Cheap Continue
 
-# drivers/seta.c: 3839
+# drivers/seta.c: 3829
 Game Mode
 
-# drivers/seta.c: 3840
+# drivers/seta.c: 3830
 Finals Only
 
-# drivers/seta.c: 3841
+# drivers/seta.c: 3831
 Semi-Finals & Finals
 
-# drivers/seta.c: 3905
+# drivers/seta.c: 3895
 200K
 
-# drivers/seta.c: 3906
+# drivers/seta.c: 3896
 200K, Every 200K
 
-# drivers/seta.c: 3907
+# drivers/seta.c: 3897
 400K
 
-# drivers/seta.c: 3925
+# drivers/seta.c: 3915
 P1 Trigger
 
-# drivers/seta.c: 3926
+# drivers/seta.c: 3916
 P1 Reload
 
-# drivers/seta.c: 3935
+# drivers/seta.c: 3925
 P2 Trigger
 
-# drivers/seta.c: 3936
+# drivers/seta.c: 3926
 P2 Reload
 
-# drivers/seta.c: 3954
+# drivers/seta.c: 3944
 Mirror
 
-# drivers/seta.c: 3991
+# drivers/seta.c: 3981
 2 Coins to Start, 1 to Continue
 
-# drivers/seta.c: 4000, 4239, 4693
+# drivers/seta.c: 3990, 4229, 4683
 IN6
 
-# drivers/seta.c: 4003, 4242, 4702
+# drivers/seta.c: 3993, 4232, 4692
 IN7
 
-# drivers/seta.c: 4066
+# drivers/seta.c: 4056
 Energy
 
-# drivers/seta.c: 4072
+# drivers/seta.c: 4062
 20K, Every 100K
 
-# drivers/seta.c: 4073
+# drivers/seta.c: 4063
 50K, Every 200K
 
-# drivers/seta.c: 4074
+# drivers/seta.c: 4064
 70K, 200K Only
 
-# drivers/seta.c: 4197
+# drivers/seta.c: 4187
 Frames
 
-# drivers/seta.c: 4226
+# drivers/seta.c: 4216
 Force Coinage
 
-# drivers/seta.c: 4288
+# drivers/seta.c: 4278
 1000k
 
-# drivers/seta.c: 4289
+# drivers/seta.c: 4279
 1000k 2000k
 
-# drivers/seta.c: 4290
+# drivers/seta.c: 4280
 1500k 3000k
 
-# drivers/seta.c: 4377
+# drivers/seta.c: 4367
 60K Only
 
-# drivers/seta.c: 4378
+# drivers/seta.c: 4368
 60k & 90k
 
-# drivers/seta.c: 4379
+# drivers/seta.c: 4369
 90K Only
 
-# drivers/seta.c: 4457, 4526
+# drivers/seta.c: 4447, 4516
 Memory Check
 
-# drivers/seta.c: 4569, 4763, 4843, 5750
+# drivers/seta.c: 4559, 4753, 4833, 5740
 Unknown 1-4
 
-# drivers/seta.c: 4572, 5753
+# drivers/seta.c: 4562, 5743
 Unknown 1-5
 
-# drivers/seta.c: 4640
+# drivers/seta.c: 4630
 Player's TSUMO
 
-# drivers/seta.c: 4641
+# drivers/seta.c: 4631
 Manual
 
-# drivers/seta.c: 4650
+# drivers/seta.c: 4640
 Prelim  1
 
-# drivers/seta.c: 4651
+# drivers/seta.c: 4641
 Prelim  2
 
-# drivers/seta.c: 4652
+# drivers/seta.c: 4642
 Final   1
 
-# drivers/seta.c: 4653
+# drivers/seta.c: 4643
 Final   2
 
-# drivers/seta.c: 4654
+# drivers/seta.c: 4644
 Final   3
 
-# drivers/seta.c: 4655
+# drivers/seta.c: 4645
 Qrt Final
 
-# drivers/seta.c: 4656
+# drivers/seta.c: 4646
 SemiFinal
 
-# drivers/seta.c: 4657
+# drivers/seta.c: 4647
 Points Gap
 
-# drivers/seta.c: 4710
+# drivers/seta.c: 4700
 IN8
 
-# drivers/seta.c: 4730
+# drivers/seta.c: 4720
 P1 Pause (Cheat)
 
-# drivers/seta.c: 4740
+# drivers/seta.c: 4730
 P2 Pause (Cheat)
 
-# drivers/seta.c: 4752, 4832
+# drivers/seta.c: 4742, 4822
 Unknown 1-0&1*
 
-# drivers/seta.c: 4757, 4837
+# drivers/seta.c: 4747, 4827
 Highlight Right Answer (Cheat)
 
-# drivers/seta.c: 4783, 5163
+# drivers/seta.c: 4773, 5153
 Unknown 2-3
 
-# drivers/seta.c: 4911
+# drivers/seta.c: 4901
 Upright 1 Controller
 
-# drivers/seta.c: 4912
+# drivers/seta.c: 4902
 Upright 2 Controllers
 
-# drivers/seta.c: 4995, 5503
+# drivers/seta.c: 4985, 5493
 Stage Select (Cheat)
 
-# drivers/seta.c: 5076
+# drivers/seta.c: 5066
 Unknown 1-5*
 
-# drivers/seta.c: 5138
+# drivers/seta.c: 5128
 Unknown 1-2
 
-# drivers/seta.c: 5152
+# drivers/seta.c: 5142
 Unknown 1-7
 
-# drivers/seta.c: 5197
+# drivers/seta.c: 5187
 Force 1 Life
 
-# drivers/seta.c: 5200, 5428
+# drivers/seta.c: 5190, 5418
 Copyright
 
-# drivers/seta.c: 5202
+# drivers/seta.c: 5192
 Seta (Romstar License)
 
-# drivers/seta.c: 5203
+# drivers/seta.c: 5193
 Seta (Visco License)
 
-# drivers/seta.c: 5299, 5366
+# drivers/seta.c: 5289, 5356
 50K  Only
 
-# drivers/seta.c: 5301, 5368
+# drivers/seta.c: 5291, 5358
 70K, Every 200K
 
-# drivers/seta.c: 5313
+# drivers/seta.c: 5303
 Taito Corp. Japan
 
-# drivers/seta.c: 5316
+# drivers/seta.c: 5306
 Thundercade
 
-# drivers/seta.c: 5317
+# drivers/seta.c: 5307
 Twin Formation
 
-# drivers/seta.c: 5382
+# drivers/seta.c: 5372
 Invulnerability (Cheat)
 
-# drivers/seta.c: 5429
+# drivers/seta.c: 5419
 Seta (Taito license)
 
-# drivers/seta.c: 5432
+# drivers/seta.c: 5422
 Taito America (Romstar license)
 
-# drivers/seta.c: 5457
+# drivers/seta.c: 5447
 500K Only
 
-# drivers/seta.c: 5458
+# drivers/seta.c: 5448
 1000K Only
 
-# drivers/seta.c: 5459
+# drivers/seta.c: 5449
 500K, Every 1500K
 
-# drivers/seta.c: 5500, 5849
+# drivers/seta.c: 5490, 5839
 Unknown 2-2*
 
-# drivers/seta.c: 5509
+# drivers/seta.c: 5499
 Unknown 2-5
 
-# drivers/seta.c: 5630
+# drivers/seta.c: 5620
 100k
 
-# drivers/seta.c: 5631
+# drivers/seta.c: 5621
 150k
 
-# drivers/seta.c: 5668
+# drivers/seta.c: 5658
 Credits For 9-Hole
 
-# drivers/seta.c: 5671
+# drivers/seta.c: 5661
 Game Type
 
-# drivers/seta.c: 5697
+# drivers/seta.c: 5687
 Flight Distance
 
-# drivers/seta.c: 5699
+# drivers/seta.c: 5689
 -30 Yards
 
-# drivers/seta.c: 5700
+# drivers/seta.c: 5690
 +10 Yards
 
-# drivers/seta.c: 5701
+# drivers/seta.c: 5691
 +20 Yards
 
-# drivers/seta.c: 5702
+# drivers/seta.c: 5692
 +30 Yards
 
-# drivers/seta.c: 5703
+# drivers/seta.c: 5693
 +40 Yards
 
-# drivers/seta.c: 5704
+# drivers/seta.c: 5694
 +50 Yards
 
-# drivers/seta.c: 5705
+# drivers/seta.c: 5695
 +60 Yards
 
-# drivers/seta.c: 5741
+# drivers/seta.c: 5731
 Unknown 1-1*
 
-# drivers/seta.c: 5744
+# drivers/seta.c: 5734
 Unknown 1-2*
 
-# drivers/seta.c: 5747
+# drivers/seta.c: 5737
 Stage & Weapon Select (Cheat)
 
-# drivers/seta.c: 5766
+# drivers/seta.c: 5756
 Unknown 2-2&3
 
-# drivers/seta.c: 5808
+# drivers/seta.c: 5798
 Unknown 3-4*
 
-# drivers/seta.c: 5811
+# drivers/seta.c: 5801
 Unknown 3-5*
 
-# drivers/seta.c: 5814
+# drivers/seta.c: 5804
 License
 
-# drivers/seta.c: 5816
+# drivers/seta.c: 5806
 Seta U.S.A
 
-# drivers/seta.c: 5817
+# drivers/seta.c: 5807
 Visco (Japan Only)
 
-# drivers/seta.c: 5818
+# drivers/seta.c: 5808
 Athena (Japan Only)
 
-# drivers/seta.c: 5827
+# drivers/seta.c: 5817
 150k, 350k
 
-# drivers/seta.c: 5828
+# drivers/seta.c: 5818
 200k, 500k
 
-# drivers/seta.c: 5829
+# drivers/seta.c: 5819
 300k, 600k
 
-# drivers/seta.c: 5830
+# drivers/seta.c: 5820
 400k
 
-# drivers/seta.c: 5836
+# drivers/seta.c: 5826
 Play Mode
 
-# drivers/seta.c: 5837
+# drivers/seta.c: 5827
 2 Players
 
-# drivers/seta.c: 5838
+# drivers/seta.c: 5828
 4 Players
 
-# drivers/seta.c: 5963
+# drivers/seta.c: 5953
 DSW
 
-# drivers/seta.c: 6327, 6331, 6335, 6376, 6380, 6417, 6421, 6478, 6482, 6521, 6525, 6561, 6565, 6599, 6603, 6643, 6647, 6675, 6679, 6709, 6713, 6743, 6747, 6783, 6787, 6816, 6820, 6850, 6854, 6891, 6895, 6954, 6958, 6994, 6998, 7033, 7037, 7067, 7071, 7111, 7115, 7156, 7160, 7191, 7195, 7226, 7230, 7259, 7263, 7296, 7300, 7333, 7337, 7395, 7399, 7430, 7434, 7470, 7474, 7479, 7518, 7522, 7561, 7565, 7594, 7598
+# drivers/seta.c: 6317, 6321, 6325, 6366, 6370, 6407, 6411, 6468, 6472, 6511, 6515, 6551, 6555, 6589, 6593, 6633, 6637, 6665, 6669, 6699, 6703, 6733, 6737, 6773, 6777, 6806, 6810, 6840, 6844, 6881, 6885, 6942, 6946, 6982, 6986, 7020, 7024, 7054, 7058, 7097, 7101, 7141, 7145, 7176, 7180, 7211, 7215, 7244, 7248, 7281, 7285, 7318, 7322, 7380, 7384, 7415, 7419, 7455, 7459, 7464, 7502, 7506, 7545, 7549, 7578, 7582
 left
 
-# drivers/seta.c: 6327, 6332, 6336, 6376, 6381, 6417, 6422, 6478, 6483, 6521, 6526, 6561, 6566, 6599, 6604, 6643, 6648, 6675, 6680, 6709, 6714, 6743, 6748, 6783, 6788, 6816, 6821, 6850, 6855, 6891, 6896, 6954, 6959, 6994, 6999, 7033, 7038, 7067, 7072, 7111, 7116, 7156, 7161, 7191, 7196, 7226, 7231, 7259, 7264, 7296, 7301, 7333, 7338, 7395, 7400, 7430, 7435, 7470, 7475, 7480, 7518, 7523, 7561, 7566, 7594, 7599
+# drivers/seta.c: 6317, 6322, 6326, 6366, 6371, 6407, 6412, 6468, 6473, 6511, 6516, 6551, 6556, 6589, 6594, 6633, 6638, 6665, 6670, 6699, 6704, 6733, 6738, 6773, 6778, 6806, 6811, 6840, 6845, 6881, 6886, 6942, 6947, 6982, 6987, 7020, 7025, 7054, 7059, 7097, 7102, 7141, 7146, 7176, 7181, 7211, 7216, 7244, 7249, 7281, 7286, 7318, 7323, 7380, 7385, 7415, 7420, 7455, 7460, 7465, 7502, 7507, 7545, 7550, 7578, 7583
 right
 
-# drivers/seta.c: 7366, 7370
+# drivers/seta.c: 7351, 7355
 mono
 
-# drivers/seta.c: 8677
+# drivers/seta.c: 8661
 WALTZ0
 
 # drivers/seta2.c: 538, 653, 757, 874, 975, 1076, 1177
@@ -38563,25 +38599,25 @@ AGCPY
 # drivers/shanghai.c: 77, 77, 77, 77
 RGCPY
 
-# drivers/shanghai.c: 610
+# drivers/shanghai.c: 606
 unsupported command %s (%04x)
 
-# drivers/shanghai.c: 919
+# drivers/shanghai.c: 910
 Confirmation
 
-# drivers/shanghai.c: 925, 980
+# drivers/shanghai.c: 916, 971
 2 Players Move Time
 
-# drivers/shanghai.c: 930, 983
+# drivers/shanghai.c: 921, 974
 Bonus Time for Making Pair
 
-# drivers/shanghai.c: 935, 988
+# drivers/shanghai.c: 926, 979
 Start Time
 
-# drivers/shanghai.c: 995
+# drivers/shanghai.c: 986
 Mystery Tiles
 
-# drivers/shanghai.c: 1052, 1056, 1057, 1058, 1059, 1084, 1088, 1089, 1090, 1091
+# drivers/shanghai.c: 1043, 1047, 1048, 1049, 1050, 1075, 1079, 1080, 1081, 1082
 mono
 
 # drivers/shangkid.c: 348, 351, 354, 414, 417
@@ -42871,16 +42907,16 @@ driveout_sound1
 # drivers/taito_f2.c: 5859
 driveout_sound2
 
-# drivers/taito_f3.c: 522, 526
+# drivers/taito_f3.c: 520, 524
 left
 
-# drivers/taito_f3.c: 522, 527
+# drivers/taito_f3.c: 520, 525
 right
 
-# drivers/taito_f3.c: 3102
+# drivers/taito_f3.c: 3100
 coinword
 
-# drivers/taito_f3.c: 3102
+# drivers/taito_f3.c: 3100
 f3
 
 # drivers/taito_h.c: 346
@@ -44755,6 +44791,9 @@ left
 # drivers/tmnt.c: 2602, 2606, 2611, 2642, 2648, 2654, 2703, 2708, 2751, 2756, 2790, 2794, 2801, 2831, 2835, 2842, 2868, 2873, 2902, 2906, 2913
 right
 
+# drivers/tmnt.c: 4144
+shuffle() - not modulo 4\n
+
 # drivers/tnzs.c: 313, 603, 699, 715, 731, 839, 855, 902, 919, 962, 987, 1025, 1073, 1137, 1190
 DSWA
 
@@ -45340,7 +45379,7 @@ P1 Throw
 # drivers/toobin.c: 166
 P2 Throw
 
-# drivers/topshoot.c: 263, 266, 267, 283
+# drivers/topshoot.c: 264, 267, 268, 284
 mono
 
 # drivers/topspeed.c: 521
@@ -45727,37 +45766,37 @@ km/h
 # drivers/travrusa.c: 263
 mph
 
-# drivers/triplhnt.c: 167
+# drivers/triplhnt.c: 174
 32 seconds / 16 raccoons
 
-# drivers/triplhnt.c: 168
+# drivers/triplhnt.c: 175
 64 seconds / 32 raccoons
 
-# drivers/triplhnt.c: 169
+# drivers/triplhnt.c: 176
 96 seconds / 48 raccoons
 
-# drivers/triplhnt.c: 170
+# drivers/triplhnt.c: 177
 128 seconds / 64 raccoons
 
-# drivers/triplhnt.c: 173
+# drivers/triplhnt.c: 180
 Game Select
 
-# drivers/triplhnt.c: 174
+# drivers/triplhnt.c: 181
 Hit the Bear
 
-# drivers/triplhnt.c: 175
+# drivers/triplhnt.c: 182
 Witch Hunt
 
-# drivers/triplhnt.c: 176
+# drivers/triplhnt.c: 183
 Raccoon Hunt
 
-# drivers/triplhnt.c: 185
+# drivers/triplhnt.c: 192
 Extended Play
 
-# drivers/triplhnt.c: 211
+# drivers/triplhnt.c: 218
 Bear Roar Frequency
 
-# drivers/triplhnt.c: 331, 335
+# drivers/triplhnt.c: 338, 342
 mono
 
 # drivers/troangel.c: 45
@@ -48268,7 +48307,7 @@ YY %.4x -
 # drivers/wheelfir.c: 497
 Test / Game?
 
-# drivers/williams.c: 664, 691, 718, 755, 818, 846, 880, 908, 959, 984, 1026, 1055, 1078, 1103, 1134, 1167, 1193, 1223, 1263
+# drivers/williams.c: 664, 691, 718, 755, 818, 846, 874, 908, 933, 975, 1004, 1027, 1058, 1091, 1142, 1175, 1200, 1226, 1256, 1296
 IN0
 
 # drivers/williams.c: 665, 692, 819
@@ -48283,19 +48322,19 @@ Smart Bomb
 # drivers/williams.c: 668, 822
 Hyperspace
 
-# drivers/williams.c: 674, 701, 728, 765, 828, 855, 890, 911, 968, 994, 1029, 1062, 1087, 1106, 1137, 1177, 1198, 1233, 1272
+# drivers/williams.c: 674, 701, 728, 765, 828, 856, 883, 917, 943, 978, 1011, 1030, 1061, 1094, 1152, 1184, 1210, 1231, 1266, 1305
 IN1
 
-# drivers/williams.c: 678, 705, 732, 737, 738, 739, 740, 791, 833, 858, 895, 914, 971, 999, 1036, 1065, 1090, 1115, 1141, 1180, 1205, 1240, 1275
+# drivers/williams.c: 678, 705, 732, 737, 738, 739, 740, 791, 833, 861, 886, 920, 948, 985, 1014, 1039, 1065, 1097, 1162, 1187, 1213, 1238, 1273, 1308
 IN2
 
-# drivers/williams.c: 679, 706, 834, 859, 896, 915, 972, 1000, 1037, 1066, 1116, 1142, 1181, 1206, 1241, 1276
+# drivers/williams.c: 679, 706, 834, 862, 887, 921, 949, 986, 1015, 1040, 1066, 1098, 1163, 1214, 1239, 1274, 1309
 Auto Up
 
-# drivers/williams.c: 680, 707, 835, 860, 897, 916, 973, 1001, 1038, 1067, 1092, 1117, 1143, 1182, 1207, 1242, 1277
+# drivers/williams.c: 680, 707, 835, 863, 888, 922, 950, 987, 1016, 1041, 1067, 1099, 1164, 1189, 1215, 1240, 1275, 1310
 Advance
 
-# drivers/williams.c: 682, 837, 862, 899, 918, 975, 1003, 1040, 1069, 1094, 1119, 1145, 1183, 1208, 1243, 1278
+# drivers/williams.c: 682, 837, 865, 890, 924, 952, 989, 1018, 1043, 1069, 1101, 1166, 1191, 1216, 1241, 1276, 1311
 High Score Reset
 
 # drivers/williams.c: 694
@@ -48319,34 +48358,34 @@ Bonus At
 # drivers/williams.c: 830
 Inviso
 
-# drivers/williams.c: 868, 924, 1008, 1157, 1215, 1250, 1285
+# drivers/williams.c: 896, 957, 1081, 1107, 1248, 1283, 1318
 IN3
 
-# drivers/williams.c: 934, 1018
+# drivers/williams.c: 967, 1117
 IN4
 
-# drivers/williams.c: 944
-AN0
-
-# drivers/williams.c: 947
-AN1
-
-# drivers/williams.c: 950
-AN2
-
-# drivers/williams.c: 953
-AN3
-
-# drivers/williams.c: 1046, 1125, 1151
+# drivers/williams.c: 995, 1049, 1075
 49WAYX
 
-# drivers/williams.c: 1049, 1128, 1154
+# drivers/williams.c: 998, 1052, 1078
 49WAYY
 
-# drivers/williams.c: 1091
+# drivers/williams.c: 1127
+AN0
+
+# drivers/williams.c: 1130
+AN1
+
+# drivers/williams.c: 1133
+AN2
+
+# drivers/williams.c: 1136
+AN3
+
+# drivers/williams.c: 1188
 Memory Protect
 
-# drivers/williams.c: 1359, 1362, 1397, 1456, 1459, 1467
+# drivers/williams.c: 1391, 1394, 1442, 1500, 1503, 1511
 mono
 
 # drivers/wilytowr.c: 348
@@ -48538,7 +48577,7 @@ IN2
 # drivers/wiz.c: 576
 255 (Cheat)
 
-# drivers/wiz.c: 738, 741, 744, 747, 762, 765, 771
+# drivers/wiz.c: 737, 740, 743, 746, 761, 764, 770
 mono
 
 # drivers/wldarrow.c: 120
@@ -49201,16 +49240,16 @@ Activate 'Score Line'? (Cheat)
 # drivers/zerozone.c: 231, 235
 mono
 
-# drivers/zn.c: 110, 2388
+# drivers/zn.c: 110, 2380
 nbajamex
 
-# drivers/zn.c: 111, 2401, 2419
+# drivers/zn.c: 111, 2393, 2411
 jdredd
 
-# drivers/zn.c: 112, 2402, 2420, 4437
+# drivers/zn.c: 112, 2394, 2412, 4423
 jdreddb
 
-# drivers/zn.c: 113, 4375
+# drivers/zn.c: 113, 4361
 primrag2
 
 # drivers/zn.c: 114
@@ -49354,22 +49393,22 @@ sfchamp
 # drivers/zn.c: 160
 sfchampj
 
-# drivers/zn.c: 161, 1260
+# drivers/zn.c: 161, 1257
 psyforce
 
-# drivers/zn.c: 162, 1261
+# drivers/zn.c: 162, 1258
 psyforcj
 
-# drivers/zn.c: 163, 1262
+# drivers/zn.c: 163, 1259
 psyfrcex
 
-# drivers/zn.c: 164, 1170
+# drivers/zn.c: 164, 1167
 raystorm
 
-# drivers/zn.c: 165, 1178
+# drivers/zn.c: 165, 1175
 raystorj
 
-# drivers/zn.c: 166, 1206
+# drivers/zn.c: 166, 1203
 ftimpcta
 
 # drivers/zn.c: 167
@@ -49378,19 +49417,19 @@ mgcldate
 # drivers/zn.c: 168
 mgcldtex
 
-# drivers/zn.c: 169, 1185
+# drivers/zn.c: 169, 1182
 gdarius
 
-# drivers/zn.c: 170, 1192
+# drivers/zn.c: 170, 1189
 gdariusb
 
-# drivers/zn.c: 171, 1199
+# drivers/zn.c: 171, 1196
 gdarius2
 
 # drivers/zn.c: 172
 taitogn
 
-# drivers/zn.c: 173, 2668
+# drivers/zn.c: 173, 2658
 sncwgltd
 
 # drivers/zn.c: 184
@@ -49414,79 +49453,79 @@ coin_w %08x\n
 # drivers/zn.c: 561
 capcom_kickharness_r( %08x, %08x )\n
 
-# drivers/zn.c: 672, 676, 681, 715, 719, 724, 924, 928, 933, 1356, 1360, 1365, 1367, 1459, 1463, 1649, 1653, 1863, 1867, 2109, 2113, 2118, 2450, 2454, 2621, 2625, 2706, 2710, 2975, 2979, 3012, 3016, 3021, 3052, 3056
+# drivers/zn.c: 671, 675, 680, 713, 717, 722, 921, 925, 930, 1352, 1356, 1361, 1363, 1454, 1458, 1643, 1647, 1856, 1860, 2101, 2105, 2110, 2441, 2445, 2611, 2615, 2695, 2699, 2963, 2967, 2999, 3003, 3008, 3038, 3042
 left
 
-# drivers/zn.c: 672, 677, 682, 715, 720, 725, 924, 929, 934, 1356, 1361, 1366, 1368, 1459, 1464, 1649, 1654, 1863, 1868, 2109, 2114, 2119, 2450, 2455, 2621, 2626, 2706, 2711, 2975, 2980, 3012, 3017, 3022, 3052, 3057
+# drivers/zn.c: 671, 676, 681, 713, 718, 723, 921, 926, 931, 1352, 1357, 1362, 1364, 1454, 1459, 1643, 1648, 1856, 1861, 2101, 2106, 2111, 2441, 2446, 2611, 2616, 2695, 2700, 2963, 2968, 2999, 3004, 3009, 3038, 3043
 right
 
-# drivers/zn.c: 1163
+# drivers/zn.c: 1160
 bank_coh1000t_w( %08x, %08x, %08x )\n
 
-# drivers/zn.c: 1373
+# drivers/zn.c: 1369
 taitofx1_volume_w( %08x, %08x, %08x )\n
 
-# drivers/zn.c: 1378
+# drivers/zn.c: 1374
 taitofx1_sound_w( %08x, %08x, %08x )\n
 
-# drivers/zn.c: 1384
+# drivers/zn.c: 1380
 taitofx1_sound_r( %08x, %08x, %08x )\n
 
-# drivers/zn.c: 2354
+# drivers/zn.c: 2346
 acpsx_00_w( %08x, %08x, %08x )\n
 
-# drivers/zn.c: 2359
+# drivers/zn.c: 2351
 acpsx_10_w( %08x, %08x, %08x )\n
 
-# drivers/zn.c: 2364
+# drivers/zn.c: 2356
 nbajamex_80_w( %08x, %08x, %08x )\n
 
-# drivers/zn.c: 2371
+# drivers/zn.c: 2363
 nbajamex_08_r( %08x, %08x, %08x )\n
 
-# drivers/zn.c: 2378
+# drivers/zn.c: 2370
 nbajamex_80_r( %08x, %08x, %08x )\n
 
-# drivers/zn.c: 2873
+# drivers/zn.c: 2862
 coh1002m_bank_w( %08x, %08x, %08x )\n
 
-# drivers/zn.c: 3127
+# drivers/zn.c: 3113
 coh-1000c.353
 
-# drivers/zn.c: 3362
+# drivers/zn.c: 3348
 coh-3002c.353
 
-# drivers/zn.c: 3782
+# drivers/zn.c: 3768
 coh-1002m.353
 
-# drivers/zn.c: 3991
+# drivers/zn.c: 3977
 coh-1002v.353
 
-# drivers/zn.c: 4017
+# drivers/zn.c: 4003
 coh-1000t.353
 
-# drivers/zn.c: 4255
+# drivers/zn.c: 4241
 coh-3002t.353
 
-# drivers/zn.c: 4255
+# drivers/zn.c: 4241
 flash.u27
 
-# drivers/zn.c: 4255
+# drivers/zn.c: 4241
 flash.u30
 
-# drivers/zn.c: 4271
+# drivers/zn.c: 4257
 coh-1002e.353
 
-# drivers/zn.c: 4357
+# drivers/zn.c: 4343
 coh-1000w.353
 
-# drivers/zn.c: 4380
+# drivers/zn.c: 4366
 coh-1000a.353
 
-# drivers/zn.c: 4426
+# drivers/zn.c: 4412
 jdreddc
 
-# drivers/zn.c: 4442
+# drivers/zn.c: 4428
 coh-1001l.353
 
 # drivers/zodiack.c: 124, 174, 247, 297, 366
@@ -49870,94 +49909,94 @@ C
 # expat/xmltok.h: 9
 C
 
-# fileio.c: 380, 386, 392
+# fileio.c: 426, 432, 438
 mame_faccess: trying %s\n
 
-# fileio.c: 385
+# fileio.c: 431
 %s.zip
 
-# fileio.c: 839
+# fileio.c: 960
 chd
 
-# fileio.c: 844
+# fileio.c: 965
 dif
 
-# fileio.c: 848
+# fileio.c: 969
 wav
 
-# fileio.c: 853
+# fileio.c: 974
 png
 
-# fileio.c: 857
+# fileio.c: 978
 mng
 
-# fileio.c: 861
+# fileio.c: 982
 nv
 
-# fileio.c: 865
+# fileio.c: 986
 hi
 
-# fileio.c: 869
+# fileio.c: 990
 lng
 
-# fileio.c: 874
+# fileio.c: 995
 cfg
 
-# fileio.c: 878
+# fileio.c: 999
 inp
 
-# fileio.c: 883
+# fileio.c: 1004
 cap
 
-# fileio.c: 888
+# fileio.c: 1009
 sta
 
-# fileio.c: 892
+# fileio.c: 1013
 mem
 
-# fileio.c: 896
+# fileio.c: 1017
 ini
 
-# fileio.c: 901
+# fileio.c: 1022
 hsi
 
-# fileio.c: 907
+# fileio.c: 1028
 dat
 
-# fileio.c: 927
+# fileio.c: 1049
 r+b
 
-# fileio.c: 927
+# fileio.c: 1049
 r+bg
 
-# fileio.c: 927, 927, 927, 927, 1203
+# fileio.c: 1049, 1049, 1049, 1049, 1340
 rb
 
-# fileio.c: 927
+# fileio.c: 1049
 wb
 
-# fileio.c: 927
+# fileio.c: 1049
 wbg
 
-# fileio.c: 944
+# fileio.c: 1071
 generic_fopen(%d, %s, %s, %s, %X)\n
 
-# fileio.c: 953
+# fileio.c: 1080
 Can't use HASH option with WRITE option in generic_fopen!\n
 
-# fileio.c: 978
+# fileio.c: 1105
 Trying %s\n
 
-# fileio.c: 1014
+# fileio.c: 1141
 w+b
 
-# fileio.c: 1062, 1155
+# fileio.c: 1194, 1287
 Using (mame_fopen) zip file for %s\n
 
-# fileio.c: 1084, 1086
+# fileio.c: 1216, 1218
 zip
 
-# fileio.c: 1087
+# fileio.c: 1219
 Trying %s file\n
 
 # hash.c: 168
@@ -52504,6 +52543,15 @@ pulstar
 # machine/nmk004.c: 272
 effects channel %d unsupported token %02x\n
 
+# machine/nmk004.c: 452
+fm channel %d unsupported token %02x\n
+
+# machine/nmk004.c: 803
+PSG channel %d invalid note %02x\n
+
+# machine/nmk004.c: 967
+too many effects channels\n
+
 # machine/opwolf.c: 666
 cc_bank
 
@@ -53752,6 +53800,12 @@ CD: Play Disk track mode, not yet implemented\n
 # machine/stvcd.c: 875
 CD: Unknown data buffer read @ mask = %08x\n
 
+# machine/stvcd.c: 970
+ERROR: root directory too big (%ld)\n
+
+# machine/stvcd.c: 981
+ERROR: new directory too big (%ld)!\n
+
 # machine/tatsumi.c: 24
 lastirq
 
@@ -53956,83 +54010,86 @@ CTC IRQReti ch%d\n
 # machine/z80fmly.c: 380
 CTC timer ch%d\n
 
-# mame.c: 347
+# mame.c: 320
 Unable to initialize system
 
-# mame.c: 356
+# mame.c: 329
 Unable to initialize machine emulation
 
-# mame.c: 362
+# mame.c: 335
 Unable to start machine emulation
 
-# mame.c: 497, 506
+# mame.c: 470, 479
 Unable to start video emulation
 
-# mame.c: 511
+# mame.c: 484
 Unable to start audio emulation
 
-# mame.c: 937
+# mame.c: 910
 ASM
 
-# mame.c: 937
+# mame.c: 910
 C
 
-# mame.c: 937
+# mame.c: 910
 DRC
 
-# mame.c: 1074
+# mame.c: 1061
 Out of memory decoding gfx\n
 
-# mame.c: 1135
+# mame.c: 1123
 buffered_spriteram
 
-# mame.c: 1135, 1146
+# mame.c: 1123, 1134
 generic_video
 
-# mame.c: 1146
+# mame.c: 1134
 buffered_spriteram_2
 
-# mame.h: 43
+# mame.h: 44
 HistoryHistory
 
-# mame.h: 43
+# mame.h: 44
 M.A.M.E.M.A.M.E.
 
-# mame.h: 43
+# mame.h: 44
 MAMEMAME
 
-# mame.h: 43
+# mame.h: 44
 gameGAME
 
-# mame.h: 43
+# mame.h: 44
 gameGame
 
-# mame.h: 43
+# mame.h: 44
 gamegame
 
-# mame.h: 43
+# mame.h: 44
 gamesgames
 
-# mame.h: 51
+# mame.h: 52
 HistorySystem Info
 
-# mame.h: 51
+# mame.h: 52
 M.A.M.E.M.E.S.S.
 
-# mame.h: 51
+# mame.h: 52
 MAMEMESS
 
-# mame.h: 51
+# mame.h: 52
 gameSYSTEM
 
-# mame.h: 51
+# mame.h: 52
 gameSystem
 
-# mame.h: 51
+# mame.h: 52
 gamessystems
 
-# mame.h: 51
+# mame.h: 52
 gamesystem
+
+# mamecore.h: 164
+assert: %s:%d: %s
 
 # memory.c: 398
 memdump.log
@@ -54751,49 +54808,49 @@ gunshot.wav
 # sndhrdw/8080bw.c: 343
 killed.wav
 
-# sndhrdw/8080bw.c: 875
+# sndhrdw/8080bw.c: 874
 *seawolf
 
-# sndhrdw/8080bw.c: 876
+# sndhrdw/8080bw.c: 875
 shiphit.wav
 
-# sndhrdw/8080bw.c: 877
+# sndhrdw/8080bw.c: 876
 torpedo.wav
 
-# sndhrdw/8080bw.c: 878
+# sndhrdw/8080bw.c: 877
 dive.wav
 
-# sndhrdw/8080bw.c: 879
+# sndhrdw/8080bw.c: 878
 sonar.wav
 
-# sndhrdw/8080bw.c: 880
+# sndhrdw/8080bw.c: 879
 minehit.wav
 
-# sndhrdw/8080bw.c: 1431
+# sndhrdw/8080bw.c: 1428
 *lupin3
 
-# sndhrdw/8080bw.c: 1432
+# sndhrdw/8080bw.c: 1429
 walk1.wav
 
-# sndhrdw/8080bw.c: 1433
+# sndhrdw/8080bw.c: 1430
 walk2.wav
 
-# sndhrdw/8080bw.c: 1434
+# sndhrdw/8080bw.c: 1431
 heli.wav
 
-# sndhrdw/8080bw.c: 1435
+# sndhrdw/8080bw.c: 1432
 warp.wav
 
-# sndhrdw/8080bw.c: 1436
+# sndhrdw/8080bw.c: 1433
 cap.wav
 
-# sndhrdw/8080bw.c: 1437
+# sndhrdw/8080bw.c: 1434
 extend.wav
 
-# sndhrdw/8080bw.c: 1438
+# sndhrdw/8080bw.c: 1435
 kick.wav
 
-# sndhrdw/8080bw.c: 1439
+# sndhrdw/8080bw.c: 1436
 bark.wav
 
 # sndhrdw/astinvad.c: 26
@@ -54988,10 +55045,10 @@ robot
 # sndhrdw/berzerk.c: 61
 34.wav
 
-# sndhrdw/blockade.c: 64
+# sndhrdw/blockade.c: 62
 *blockade
 
-# sndhrdw/blockade.c: 65
+# sndhrdw/blockade.c: 63
 boom.wav
 
 # sndhrdw/cage.c: 93
@@ -58153,22 +58210,22 @@ YM3526
 # sound/3812intf.c: 561
 Y8950
 
-# sound/5110intf.c: 300
+# sound/5110intf.c: 237
 TMS5110
 
-# sound/5110intf.c: 301
+# sound/5110intf.c: 238
 TI Speech
 
-# sound/5110intf.c: 304
+# sound/5110intf.c: 241
 Copyright (c) 2004, The MAME Team
 
-# sound/5220intf.c: 318
+# sound/5220intf.c: 256
 TMS5220
 
-# sound/5220intf.c: 319
+# sound/5220intf.c: 257
 TI Speech
 
-# sound/5220intf.c: 322
+# sound/5220intf.c: 260
 Copyright (c) 2004, The MAME Team
 
 # sound/astrocde.c: 349
@@ -58180,118 +58237,112 @@ Bally
 # sound/astrocde.c: 353
 Copyright (c) 2004, The MAME Team
 
-# sound/ay8910.c: 641, 642, 643, 644, 646, 647, 648, 649, 650, 652, 653, 654, 655, 656, 658, 659, 660, 661, 663, 664, 665, 667, 668, 669, 670, 672, 673, 674, 675, 676, 677, 844
+# sound/ay8910.c: 640, 641, 642, 644, 645, 646, 647, 648, 650, 651, 652, 653, 654, 656, 657, 658, 659, 661, 662, 663, 665, 666, 667, 668, 670, 671, 672, 673, 674, 675, 827
 AY8910
 
-# sound/ay8910.c: 641
+# sound/ay8910.c: 640
 register_latch
 
-# sound/ay8910.c: 642
+# sound/ay8910.c: 641
 Regs
 
-# sound/ay8910.c: 643
+# sound/ay8910.c: 642
 lastEnable
 
 # sound/ay8910.c: 644
-UpdateStep
-
-# sound/ay8910.c: 646
 PeriodA
 
-# sound/ay8910.c: 647
+# sound/ay8910.c: 645
 PeriodB
 
-# sound/ay8910.c: 648
+# sound/ay8910.c: 646
 PeriodC
 
-# sound/ay8910.c: 649
+# sound/ay8910.c: 647
 PeriodN
 
-# sound/ay8910.c: 650
+# sound/ay8910.c: 648
 PeriodE
 
-# sound/ay8910.c: 652
+# sound/ay8910.c: 650
 CountA
 
-# sound/ay8910.c: 653
+# sound/ay8910.c: 651
 CountB
 
-# sound/ay8910.c: 654
+# sound/ay8910.c: 652
 CountC
 
-# sound/ay8910.c: 655
+# sound/ay8910.c: 653
 CountN
 
-# sound/ay8910.c: 656
+# sound/ay8910.c: 654
 CountE
 
-# sound/ay8910.c: 658
+# sound/ay8910.c: 656
 VolA
 
-# sound/ay8910.c: 659
+# sound/ay8910.c: 657
 VolB
 
-# sound/ay8910.c: 660
+# sound/ay8910.c: 658
 VolC
 
-# sound/ay8910.c: 661
+# sound/ay8910.c: 659
 VolE
 
-# sound/ay8910.c: 663
+# sound/ay8910.c: 661
 EnvelopeA
 
-# sound/ay8910.c: 664
+# sound/ay8910.c: 662
 EnvelopeB
 
-# sound/ay8910.c: 665
+# sound/ay8910.c: 663
 EnvelopeC
 
-# sound/ay8910.c: 667
+# sound/ay8910.c: 665
 OutputA
 
-# sound/ay8910.c: 668
+# sound/ay8910.c: 666
 OutputB
 
-# sound/ay8910.c: 669
+# sound/ay8910.c: 667
 OutputC
 
-# sound/ay8910.c: 670
+# sound/ay8910.c: 668
 OutputN
 
-# sound/ay8910.c: 672
+# sound/ay8910.c: 670
 CountEnv
 
-# sound/ay8910.c: 673
+# sound/ay8910.c: 671
 Hold
 
-# sound/ay8910.c: 675
+# sound/ay8910.c: 673
 Attack
 
-# sound/ay8910.c: 676
+# sound/ay8910.c: 674
 Holding
 
-# sound/ay8910.c: 677
+# sound/ay8910.c: 675
 RNG
 
-# sound/ay8910.c: 845
+# sound/ay8910.c: 828
 PSG
 
-# sound/ay8910.c: 848
+# sound/ay8910.c: 831
 Copyright (c) 2004, The MAME Team
 
-# sound/bsmt2000.c: 245
+# sound/bsmt2000.c: 217
 raw.wav
 
-# sound/bsmt2000.c: 248
-resamp.wav
-
-# sound/bsmt2000.c: 522
+# sound/bsmt2000.c: 449
 BSMT2000
 
-# sound/bsmt2000.c: 523
+# sound/bsmt2000.c: 450
 Data East Wavetable
 
-# sound/bsmt2000.c: 526
+# sound/bsmt2000.c: 453
 Copyright (c) 2004, The MAME Team
 
 # sound/c140.c: 509
@@ -58450,583 +58501,595 @@ Invalid clock type passed in NODE_%d\n
 # sound/disc_wav.c: 347
 dss_lfsr_function - Invalid function type passed
 
-# sound/discrete.c: 150
+# sound/discrete.c: 154
 DSO_OUTPUT
 
-# sound/discrete.c: 153
-DSS_ADJUSTMENT
-
-# sound/discrete.c: 154
-DSS_CONSTANT
-
 # sound/discrete.c: 155
-DSS_INPUT_DATA
-
-# sound/discrete.c: 156
-DSS_INPUT_LOGIC
-
-# sound/discrete.c: 157
-DSS_INPUT_NOT
+DSO_WAVELOG
 
 # sound/discrete.c: 158
-DSS_INPUT_PULSE
+DSS_ADJUSTMENT
 
 # sound/discrete.c: 159
-DSS_INPUT_STREAM
+DSS_CONSTANT
+
+# sound/discrete.c: 160
+DSS_INPUT_DATA
+
+# sound/discrete.c: 161
+DSS_INPUT_LOGIC
+
+# sound/discrete.c: 162
+DSS_INPUT_NOT
 
 # sound/discrete.c: 163
-DSS_COUNTER
+DSS_INPUT_PULSE
 
 # sound/discrete.c: 164
-DSS_LFSR_NOISE
-
-# sound/discrete.c: 165
-DSS_NOISE
-
-# sound/discrete.c: 166
-DSS_NOTE
-
-# sound/discrete.c: 167
-DSS_SAWTOOTHWAVE
+DSS_INPUT_STREAM
 
 # sound/discrete.c: 168
-DSS_SINEWAVE
+DSS_COUNTER
 
 # sound/discrete.c: 169
-DSS_SQUAREWAVE
+DSS_LFSR_NOISE
 
 # sound/discrete.c: 170
-DSS_SQUAREWFIX
+DSS_NOISE
 
 # sound/discrete.c: 171
-DSS_SQUAREWAVE2
+DSS_NOTE
 
 # sound/discrete.c: 172
-DSS_TRIANGLEWAVE
+DSS_SAWTOOTHWAVE
+
+# sound/discrete.c: 173
+DSS_SINEWAVE
 
 # sound/discrete.c: 174
-DSS_OP_AMP_OSC
+DSS_SQUAREWAVE
 
 # sound/discrete.c: 175
-DSS_SCHMITT_OSC
+DSS_SQUAREWFIX
+
+# sound/discrete.c: 176
+DSS_SQUAREWAVE2
 
 # sound/discrete.c: 177
-DSS_ADSR
+DSS_TRIANGLEWAVE
 
-# sound/discrete.c: 181
-DST_ADDER
+# sound/discrete.c: 179
+DSS_OP_AMP_OSC
+
+# sound/discrete.c: 180
+DSS_SCHMITT_OSC
 
 # sound/discrete.c: 182
-DST_CLAMP
-
-# sound/discrete.c: 183
-DST_DIVIDE
-
-# sound/discrete.c: 184
-DST_GAIN
-
-# sound/discrete.c: 185
-DST_LOGIC_INV
+DSS_ADSR
 
 # sound/discrete.c: 186
-DST_LOGIC_AND
+DST_ADDER
 
 # sound/discrete.c: 187
-DST_LOGIC_NAND
+DST_CLAMP
 
 # sound/discrete.c: 188
-DST_LOGIC_OR
+DST_DIVIDE
 
 # sound/discrete.c: 189
-DST_LOGIC_NOR
+DST_GAIN
 
 # sound/discrete.c: 190
-DST_LOGIC_XOR
+DST_LOGIC_INV
 
 # sound/discrete.c: 191
-DST_LOGIC_NXOR
+DST_LOGIC_AND
 
 # sound/discrete.c: 192
-DST_LOGIC_DFF
+DST_LOGIC_NAND
 
 # sound/discrete.c: 193
-DST_MULTIPLEX
+DST_LOGIC_OR
 
 # sound/discrete.c: 194
-DST_ONESHOT
+DST_LOGIC_NOR
 
 # sound/discrete.c: 195
-DST_RAMP
+DST_LOGIC_XOR
 
 # sound/discrete.c: 196
-DST_SAMPHOLD
+DST_LOGIC_NXOR
 
 # sound/discrete.c: 197
-DST_SWITCH
+DST_LOGIC_DFF
 
 # sound/discrete.c: 198
-DST_ASWITCH
+DST_MULTIPLEX
 
 # sound/discrete.c: 199
-DST_TRANSFORM
+DST_ONESHOT
+
+# sound/discrete.c: 200
+DST_RAMP
 
 # sound/discrete.c: 201
-DST_COMP_ADDER
+DST_SAMPHOLD
 
 # sound/discrete.c: 202
-DST_DAC_R1
+DST_SWITCH
 
 # sound/discrete.c: 203
-DST_DIODE_MIX
+DST_ASWITCH
 
 # sound/discrete.c: 204
-DST_INTEGRATE
-
-# sound/discrete.c: 205
-DST_MIXER
+DST_TRANSFORM
 
 # sound/discrete.c: 206
-DST_TVCA_OP_AMP
+DST_COMP_ADDER
 
 # sound/discrete.c: 207
-DST_VCA
+DST_DAC_R1
+
+# sound/discrete.c: 208
+DST_DIODE_MIX
+
+# sound/discrete.c: 209
+DST_INTEGRATE
+
+# sound/discrete.c: 210
+DST_MIXER
 
 # sound/discrete.c: 211
-DST_FILTER1
+DST_TVCA_OP_AMP
 
 # sound/discrete.c: 212
-DST_FILTER2
-
-# sound/discrete.c: 214
-DST_CRFILTER
-
-# sound/discrete.c: 215
-DST_OP_AMP_FILT
+DST_VCA
 
 # sound/discrete.c: 216
-DST_RCDISC
+DST_FILTER1
 
 # sound/discrete.c: 217
-DST_RCDISC2
-
-# sound/discrete.c: 218
-DST_RCDISC3
+DST_FILTER2
 
 # sound/discrete.c: 219
-DST_RCDISC4
+DST_CRFILTER
 
 # sound/discrete.c: 220
-DST_RCDISC5
+DST_OP_AMP_FILT
 
 # sound/discrete.c: 221
-DST_RCFILTER
+DST_RCDISC
+
+# sound/discrete.c: 222
+DST_RCDISC2
 
 # sound/discrete.c: 223
-DST_RCFILTERN
+DST_RCDISC3
 
 # sound/discrete.c: 224
-DST_RCDISCN
+DST_RCDISC4
 
 # sound/discrete.c: 225
-DST_RCDISC2N
+DST_RCDISC5
+
+# sound/discrete.c: 226
+DST_RCFILTER
+
+# sound/discrete.c: 228
+DST_RCFILTERN
 
 # sound/discrete.c: 229
-DST_CUSTOM
+DST_RCDISCN
 
-# sound/discrete.c: 231
-DSD_555_ASTBL
-
-# sound/discrete.c: 232
-DSD_555_MSTBL
-
-# sound/discrete.c: 233
-DSD_555_CC
+# sound/discrete.c: 230
+DST_RCDISC2N
 
 # sound/discrete.c: 234
-DSD_566
+DST_CUSTOM
+
+# sound/discrete.c: 236
+DSD_555_ASTBL
 
 # sound/discrete.c: 237
+DSD_555_MSTBL
+
+# sound/discrete.c: 238
+DSD_555_CC
+
+# sound/discrete.c: 239
+DSD_566
+
+# sound/discrete.c: 242
 DSS_NULL
 
-# sound/discrete.c: 277
+# sound/discrete.c: 282
 discrete.log
 
-# sound/discrete.c: 277
+# sound/discrete.c: 282
 w
 
-# sound/discrete.c: 280
-discrete_sh_start() - Doing node list sanity check
-
 # sound/discrete.c: 285
-discrete_sh_start() - Upper limit of %d nodes exceeded, have you terminated the interface block.
+discrete_start() - Doing node list sanity check
 
-# sound/discrete.c: 289
-discrete_sh_start() - Invalid node number on node %02d descriptor\n
+# sound/discrete.c: 290
+discrete_start() - Upper limit of %d nodes exceeded, have you terminated the interface block.
 
-# sound/discrete.c: 293
-discrete_sh_start() - Invalid function type on NODE_%02d\n
+# sound/discrete.c: 294
+discrete_start() - Invalid node number on node %02d descriptor\n
 
-# sound/discrete.c: 296
-discrete_sh_start() - Sanity check counted %d nodes
+# sound/discrete.c: 298
+discrete_start() - Invalid function type on NODE_%02d\n
 
 # sound/discrete.c: 301
-discrete_sh_start() - Out of memory allocating info->node_list\n
+discrete_start() - Sanity check counted %d nodes
 
-# sound/discrete.c: 307
-discrete_sh_start() - Out of memory allocating info->running_order\n
+# sound/discrete.c: 306
+discrete_start() - Out of memory allocating info->node_list\n
 
-# sound/discrete.c: 313
-discrete_sh_start() - Out of memory allocating indexed_node\n
+# sound/discrete.c: 312
+discrete_start() - Out of memory allocating info->running_order\n
 
-# sound/discrete.c: 478
+# sound/discrete.c: 318
+discrete_start() - Out of memory allocating indexed_node\n
+
+# sound/discrete.c: 492
 init_nodes() - There can not be more then %d output nodes
 
-# sound/discrete.c: 486
+# sound/discrete.c: 499
+init_nodes() - There can not be more then %d discrete wave logs.
+
+# sound/discrete.c: 504
+init_nodes() - Failed, trying to create unknown special discrete node.
+
+# sound/discrete.c: 512
 init_nodes() - Duplicate entries for NODE_%02d\n
 
-# sound/discrete.c: 495
+# sound/discrete.c: 521
 init_nodes() - Unable to find discrete module type %d for NODE_%02d\n
 
-# sound/discrete.c: 517
+# sound/discrete.c: 543
 init_nodes() - Out of memory allocating memory for NODE_%02d\n
 
-# sound/discrete.c: 525
+# sound/discrete.c: 551
 init_nodes() - There can not be more then %d input stream nodes
 
-# sound/discrete.c: 532
+# sound/discrete.c: 558
 init_nodes() - Couldn't find an output node
 
-# sound/discrete.c: 563
-discrete_sh_start - Node NODE_%02d referenced a non existent node NODE_%02d\n
+# sound/discrete.c: 589
+discrete_start - Node NODE_%02d referenced a non existent node NODE_%02d\n
 
-# sound/discrete.c: 591
+# sound/discrete.c: 627
 discrete%d.wav
 
-# sound/discrete.c: 628
+# sound/discrete.c: 660
 Discrete
 
-# sound/discrete.c: 629
+# sound/discrete.c: 661
 Analog
 
-# sound/discrete.c: 632
+# sound/discrete.c: 664
 Copyright (c) 2004, The MAME Team
 
-# sound/discrete.h: 3081
+# sound/discrete.h: 3109
 End Marker
 
-# sound/discrete.h: 3084
+# sound/discrete.h: 3112
 DISCRETE_ADJUSTMENT
 
-# sound/discrete.h: 3085
+# sound/discrete.h: 3113
 DISCRETE_ADJUSTMENTX
 
-# sound/discrete.h: 3086
+# sound/discrete.h: 3114
 Constant
 
-# sound/discrete.h: 3087
+# sound/discrete.h: 3115
 Input Data
 
-# sound/discrete.h: 3088
+# sound/discrete.h: 3116
 InputX Data
 
-# sound/discrete.h: 3089
+# sound/discrete.h: 3117
 Input Logic
 
-# sound/discrete.h: 3090
+# sound/discrete.h: 3118
 InputX Logic
 
-# sound/discrete.h: 3091
+# sound/discrete.h: 3119
 Input Not
 
-# sound/discrete.h: 3092
+# sound/discrete.h: 3120
 InputX Not
 
-# sound/discrete.h: 3093
+# sound/discrete.h: 3121
 Input Pulse
 
-# sound/discrete.h: 3094
+# sound/discrete.h: 3122
 Input Stream
 
-# sound/discrete.h: 3095
+# sound/discrete.h: 3123
 InputX Stream
 
-# sound/discrete.h: 3099
+# sound/discrete.h: 3127
 DISCRETE_COUNTER
 
-# sound/discrete.h: 3100
+# sound/discrete.h: 3128
 DISCRETE_COUNTER_7492
 
-# sound/discrete.h: 3101
+# sound/discrete.h: 3129
 LFSR Noise Source
 
-# sound/discrete.h: 3102
+# sound/discrete.h: 3130
 Noise Source
 
-# sound/discrete.h: 3103
+# sound/discrete.h: 3131
 Note Generator
 
-# sound/discrete.h: 3104
+# sound/discrete.h: 3132
 Saw Tooth Wave
 
-# sound/discrete.h: 3105
+# sound/discrete.h: 3133
 Sine Wave
 
-# sound/discrete.h: 3106
+# sound/discrete.h: 3134
 Square Wave
 
-# sound/discrete.h: 3107
+# sound/discrete.h: 3135
 Square Wave Fixed
 
-# sound/discrete.h: 3108
+# sound/discrete.h: 3136
 Square Wave 2
 
-# sound/discrete.h: 3109
+# sound/discrete.h: 3137
 Triangle Wave
 
-# sound/discrete.h: 3111
+# sound/discrete.h: 3139
 Op Amp Oscillator
 
-# sound/discrete.h: 3112
+# sound/discrete.h: 3140
 Op Amp VCO 1-vMod
 
-# sound/discrete.h: 3113
+# sound/discrete.h: 3141
 Op Amp VCO 2-vMod
 
-# sound/discrete.h: 3114
+# sound/discrete.h: 3142
 Schmitt Feedback Oscillator
 
-# sound/discrete.h: 3116
+# sound/discrete.h: 3144
 ADSR Env Generator
 
-# sound/discrete.h: 3120
+# sound/discrete.h: 3148
 Adder 2 Node
 
-# sound/discrete.h: 3121
+# sound/discrete.h: 3149
 Adder 3 Node
 
-# sound/discrete.h: 3122
+# sound/discrete.h: 3150
 Adder 4 Node
 
-# sound/discrete.h: 3123
+# sound/discrete.h: 3151
 Signal Clamp
 
-# sound/discrete.h: 3124
+# sound/discrete.h: 3152
 Divider
 
-# sound/discrete.h: 3125
+# sound/discrete.h: 3153
 Gain
 
-# sound/discrete.h: 3126
+# sound/discrete.h: 3154
 Inverter
 
-# sound/discrete.h: 3127
+# sound/discrete.h: 3155
 Logic Invertor
 
-# sound/discrete.h: 3128
+# sound/discrete.h: 3156
 Logic AND (2inp)
 
-# sound/discrete.h: 3129
+# sound/discrete.h: 3157
 Logic AND (3inp)
 
-# sound/discrete.h: 3130
+# sound/discrete.h: 3158
 Logic AND (4inp)
 
-# sound/discrete.h: 3131
+# sound/discrete.h: 3159
 Logic NAND (2inp)
 
-# sound/discrete.h: 3132
+# sound/discrete.h: 3160
 Logic NAND (3inp)
 
-# sound/discrete.h: 3133
+# sound/discrete.h: 3161
 Logic NAND (4inp)
 
-# sound/discrete.h: 3134
+# sound/discrete.h: 3162
 Logic OR (2inp)
 
-# sound/discrete.h: 3135
+# sound/discrete.h: 3163
 Logic OR (3inp)
 
-# sound/discrete.h: 3136
+# sound/discrete.h: 3164
 Logic OR (4inp)
 
-# sound/discrete.h: 3137
+# sound/discrete.h: 3165
 Logic NOR (2inp)
 
-# sound/discrete.h: 3138
+# sound/discrete.h: 3166
 Logic NOR (3inp)
 
-# sound/discrete.h: 3139
+# sound/discrete.h: 3167
 Logic NOR (4inp)
 
-# sound/discrete.h: 3140
+# sound/discrete.h: 3168
 Logic XOR (2inp)
 
-# sound/discrete.h: 3141
+# sound/discrete.h: 3169
 Logic NXOR (2inp)
 
-# sound/discrete.h: 3142
+# sound/discrete.h: 3170
 Logic DFlipFlop
 
-# sound/discrete.h: 3143
+# sound/discrete.h: 3171
 1 of 2 Multiplexer
 
-# sound/discrete.h: 3144
+# sound/discrete.h: 3172
 1 of 4 Multiplexer
 
-# sound/discrete.h: 3145
+# sound/discrete.h: 3173
 1 of 8 Multiplexer
 
-# sound/discrete.h: 3146
+# sound/discrete.h: 3174
 Multiplier
 
-# sound/discrete.h: 3147
+# sound/discrete.h: 3175
 Multiply/Add
 
-# sound/discrete.h: 3149
+# sound/discrete.h: 3177
 One Shot Resetable
 
-# sound/discrete.h: 3150
+# sound/discrete.h: 3178
 OnOff Switch
 
-# sound/discrete.h: 3151
+# sound/discrete.h: 3179
 Ramp Up/Down
 
-# sound/discrete.h: 3152
+# sound/discrete.h: 3180
 Sample & Hold
 
-# sound/discrete.h: 3153
+# sound/discrete.h: 3181
 2 Pole Switch
 
-# sound/discrete.h: 3154
+# sound/discrete.h: 3182
 Analog Switch
 
-# sound/discrete.h: 3155
+# sound/discrete.h: 3183
 Transform 2 Nodes
 
-# sound/discrete.h: 3156
+# sound/discrete.h: 3184
 Transform 3 Nodes
 
-# sound/discrete.h: 3157
+# sound/discrete.h: 3185
 Transform 4 Nodes
 
-# sound/discrete.h: 3158
+# sound/discrete.h: 3186
 Transform 5 Nodes
 
-# sound/discrete.h: 3160
+# sound/discrete.h: 3188
 Selectable R or C component Adder
 
-# sound/discrete.h: 3161
+# sound/discrete.h: 3189
 DAC with R1 Ladder
 
-# sound/discrete.h: 3162
+# sound/discrete.h: 3190
 Diode Mixer 2 Stage
 
-# sound/discrete.h: 3163
+# sound/discrete.h: 3191
 Diode Mixer 3 Stage
 
-# sound/discrete.h: 3164
+# sound/discrete.h: 3192
 Diode Mixer 4 Stage
 
-# sound/discrete.h: 3165
+# sound/discrete.h: 3193
 Various Integraton Circuit
 
-# sound/discrete.h: 3166
+# sound/discrete.h: 3194
 Final Mixer 2 Stage
 
-# sound/discrete.h: 3167
+# sound/discrete.h: 3195
 Final Mixer 3 Stage
 
-# sound/discrete.h: 3168
+# sound/discrete.h: 3196
 Final Mixer 4 Stage
 
-# sound/discrete.h: 3169
+# sound/discrete.h: 3197
 Final Mixer 5 Stage
 
-# sound/discrete.h: 3170
+# sound/discrete.h: 3198
 Final Mixer 6 Stage
 
-# sound/discrete.h: 3171
+# sound/discrete.h: 3199
 Final Mixer 7 Stage
 
-# sound/discrete.h: 3172
+# sound/discrete.h: 3200
 Final Mixer 8 Stage
 
-# sound/discrete.h: 3173
+# sound/discrete.h: 3201
 Triggered VCA Op Amp Circuit
 
-# sound/discrete.h: 3174
+# sound/discrete.h: 3202
 VCA IC
 
-# sound/discrete.h: 3178
+# sound/discrete.h: 3206
 1st Order Filter
 
-# sound/discrete.h: 3179
+# sound/discrete.h: 3207
 2nd Order Filter
 
-# sound/discrete.h: 3181
+# sound/discrete.h: 3209
 CR Filter
 
-# sound/discrete.h: 3182
+# sound/discrete.h: 3210
 CR Filter to VREF
 
-# sound/discrete.h: 3183
+# sound/discrete.h: 3211
 Op Amp Filter
 
-# sound/discrete.h: 3184
+# sound/discrete.h: 3212
 RC Discharge
 
-# sound/discrete.h: 3185
+# sound/discrete.h: 3213
 RC Discharge 2
 
-# sound/discrete.h: 3186
+# sound/discrete.h: 3214
 RC Discharge 3
 
-# sound/discrete.h: 3187
+# sound/discrete.h: 3215
 RC Discharge 4
 
-# sound/discrete.h: 3188
+# sound/discrete.h: 3216
 RC Discharge 5
 
-# sound/discrete.h: 3189
+# sound/discrete.h: 3217
 RC Filter
 
-# sound/discrete.h: 3190
+# sound/discrete.h: 3218
 RC Filter to VREF
 
-# sound/discrete.h: 3192
+# sound/discrete.h: 3220
 RC Discharge (New Type)
 
-# sound/discrete.h: 3193
+# sound/discrete.h: 3221
 RC Discharge 2 (New Type)
 
-# sound/discrete.h: 3194
+# sound/discrete.h: 3222
 RC Filter (New Type)
 
-# sound/discrete.h: 3198
+# sound/discrete.h: 3226
 1 input custom module
 
-# sound/discrete.h: 3199
+# sound/discrete.h: 3227
 2 input custom module
 
-# sound/discrete.h: 3200
+# sound/discrete.h: 3228
 3 input custom module
 
-# sound/discrete.h: 3201
+# sound/discrete.h: 3229
 4 input custom module
 
-# sound/discrete.h: 3203
+# sound/discrete.h: 3231
 555 Astable
 
-# sound/discrete.h: 3204
+# sound/discrete.h: 3232
 555 Astable with CV
 
-# sound/discrete.h: 3205
+# sound/discrete.h: 3233
 555 Monostable
 
-# sound/discrete.h: 3206
+# sound/discrete.h: 3234
 555 Constant Current VCO
 
-# sound/discrete.h: 3209
+# sound/discrete.h: 3237
+Wave Log Node
+
+# sound/discrete.h: 3238
 Output Node
 
 # sound/dmadac.c: 145
@@ -59059,181 +59122,178 @@ DAC
 # sound/dmadac.c: 450
 Copyright (c) 2004, The MAME Team
 
-# sound/es5506.c: 813
+# sound/es5506.c: 782
 raw.wav
 
-# sound/es5506.c: 816
-resamp.wav
-
-# sound/es5506.c: 906
+# sound/es5506.c: 833
 es.log
 
-# sound/es5506.c: 906
+# sound/es5506.c: 833
 w
 
-# sound/es5506.c: 1002, 1100
+# sound/es5506.c: 927, 1024
 voice %d, control=%04x\n
 
-# sound/es5506.c: 1008
+# sound/es5506.c: 933
 voice %d, freq count=%08x\n
 
-# sound/es5506.c: 1014
+# sound/es5506.c: 939
 voice %d, left vol=%04x\n
 
-# sound/es5506.c: 1020
+# sound/es5506.c: 945
 voice %d, left vol ramp=%04x\n
 
-# sound/es5506.c: 1026
+# sound/es5506.c: 951
 voice %d, right vol=%04x\n
 
-# sound/es5506.c: 1032
+# sound/es5506.c: 957
 voice %d, right vol ramp=%04x\n
 
-# sound/es5506.c: 1039
+# sound/es5506.c: 964
 voice %d, envelope count=%04x\n
 
-# sound/es5506.c: 1045
+# sound/es5506.c: 970
 voice %d, K2=%04x\n
 
-# sound/es5506.c: 1051
+# sound/es5506.c: 976
 voice %d, K2 ramp=%04x\n
 
-# sound/es5506.c: 1057
+# sound/es5506.c: 982
 voice %d, K1=%04x\n
 
-# sound/es5506.c: 1063
+# sound/es5506.c: 988
 voice %d, K1 ramp=%04x\n
 
-# sound/es5506.c: 1074, 1756, 1863, 1908
-active voices=%d, sample_rate=%d, output_step=%08x\n
+# sound/es5506.c: 998, 1679, 1785, 1829
+active voices=%d, sample_rate=%d\n
 
-# sound/es5506.c: 1106
+# sound/es5506.c: 1030
 voice %d, loop start=%08x\n
 
-# sound/es5506.c: 1112
+# sound/es5506.c: 1036
 voice %d, loop end=%08x\n
 
-# sound/es5506.c: 1118
+# sound/es5506.c: 1042
 voice %d, accum=%08x\n
 
-# sound/es5506.c: 1124
+# sound/es5506.c: 1048
 voice %d, O4(n-1)=%05x\n
 
-# sound/es5506.c: 1130
+# sound/es5506.c: 1054
 voice %d, O3(n-1)=%05x\n
 
-# sound/es5506.c: 1136
+# sound/es5506.c: 1060
 voice %d, O3(n-2)=%05x\n
 
-# sound/es5506.c: 1142
+# sound/es5506.c: 1066
 voice %d, O2(n-1)=%05x\n
 
-# sound/es5506.c: 1148
+# sound/es5506.c: 1072
 voice %d, O2(n-2)=%05x\n
 
-# sound/es5506.c: 1154
+# sound/es5506.c: 1078
 voice %d, O1(n-1)=%05x\n
 
-# sound/es5506.c: 1185
+# sound/es5506.c: 1109
 Channel 0 left test write %08x\n
 
-# sound/es5506.c: 1190
+# sound/es5506.c: 1114
 Channel 0 right test write %08x\n
 
-# sound/es5506.c: 1195
+# sound/es5506.c: 1119
 Channel 1 left test write %08x\n
 
-# sound/es5506.c: 1200
+# sound/es5506.c: 1124
 Channel 1 right test write %08x\n
 
-# sound/es5506.c: 1205
+# sound/es5506.c: 1129
 Channel 2 left test write %08x\n
 
-# sound/es5506.c: 1210
+# sound/es5506.c: 1134
 Channel 2 right test write %08x\n
 
-# sound/es5506.c: 1215
+# sound/es5506.c: 1139
 Channel 3 left test write %08x\n
 
-# sound/es5506.c: 1220
+# sound/es5506.c: 1144
 Channel 3 right test write %08x\n
 
-# sound/es5506.c: 1225
+# sound/es5506.c: 1149
 Channel 4 left test write %08x\n
 
-# sound/es5506.c: 1230
+# sound/es5506.c: 1154
 Channel 4 right test write %08x\n
 
-# sound/es5506.c: 1235
+# sound/es5506.c: 1159
 Channel 5 left test write %08x\n
 
-# sound/es5506.c: 1240
+# sound/es5506.c: 1164
 Channel 5 right test write %08x\n
 
-# sound/es5506.c: 1245
+# sound/es5506.c: 1169
 Test write EMPTY %08x\n
 
-# sound/es5506.c: 1476, 2139
+# sound/es5506.c: 1400, 2060
 read from %02x/%02x -> 
 
-# sound/es5506.c: 1640, 1789
+# sound/es5506.c: 1564, 1712
 %06x:voice %d, control=%04x (raw=%04x & %04x)\n
 
-# sound/es5506.c: 1649
+# sound/es5506.c: 1573
 %06x:voice %d, freq count=%08x\n
 
-# sound/es5506.c: 1658, 1667
+# sound/es5506.c: 1582, 1591
 %06x:voice %d, loop start=%08x\n
 
-# sound/es5506.c: 1679, 1691
+# sound/es5506.c: 1603, 1615
 %06x:voice %d, loop end=%08x\n
 
-# sound/es5506.c: 1700
+# sound/es5506.c: 1624
 %06x:voice %d, K2=%04x\n
 
-# sound/es5506.c: 1709
+# sound/es5506.c: 1633
 %06x:voice %d, K1=%04x\n
 
-# sound/es5506.c: 1716
+# sound/es5506.c: 1640
 %06x:voice %d, left vol=%04x\n
 
-# sound/es5506.c: 1723
+# sound/es5506.c: 1647
 %06x:voice %d, right vol=%04x\n
 
-# sound/es5506.c: 1732, 1741
+# sound/es5506.c: 1656, 1665
 %06x:voice %d, accum=%08x\n
 
-# sound/es5506.c: 1798
+# sound/es5506.c: 1721
 %06x:voice %d, O4(n-1)=%05x\n
 
-# sound/es5506.c: 1807
+# sound/es5506.c: 1730
 %06x:voice %d, O3(n-1)=%05x\n
 
-# sound/es5506.c: 1816
+# sound/es5506.c: 1739
 %06x:voice %d, O3(n-2)=%05x\n
 
-# sound/es5506.c: 1825
+# sound/es5506.c: 1748
 %06x:voice %d, O2(n-1)=%05x\n
 
-# sound/es5506.c: 1834
+# sound/es5506.c: 1757
 %06x:voice %d, O2(n-2)=%05x\n
 
-# sound/es5506.c: 1843
+# sound/es5506.c: 1766
 %06x:voice %d, O1(n-1)=%05x (accum=%08x)\n
 
-# sound/es5506.c: 2153
+# sound/es5506.c: 2074
 %04x (accum=%08x)\n
 
-# sound/es5506.c: 2240
+# sound/es5506.c: 2161
 ES5505
 
-# sound/es5506.c: 2241, 2276
+# sound/es5506.c: 2162, 2197
 Ensoniq Wavetable
 
-# sound/es5506.c: 2244, 2279
+# sound/es5506.c: 2165, 2200
 Copyright (c) 2004, The MAME Team
 
-# sound/es5506.c: 2275
+# sound/es5506.c: 2196
 ES5506
 
 # sound/es8712.c: 265, 552
@@ -59521,34 +59581,37 @@ Konami custom
 # sound/k053260.c: 485
 Copyright (c) 2004, The MAME Team
 
-# sound/k054539.c: 385
+# sound/k054539.c: 372
 chip :                         
 
-# sound/k054539.c: 483, 484, 485, 742
+# sound/k054539.c: 467, 468, 469, 726
 K054539
 
-# sound/k054539.c: 483
+# sound/k054539.c: 467
 registers
 
-# sound/k054539.c: 484
+# sound/k054539.c: 468
 ram
 
-# sound/k054539.c: 485
+# sound/k054539.c: 469
 cur_ptr
 
-# sound/k054539.c: 743
+# sound/k054539.c: 727
 Konami custom
 
-# sound/k054539.c: 746
+# sound/k054539.c: 730
 Copyright (c) 2004, The MAME Team
 
-# sound/msm5205.c: 317
+# sound/msm5205.c: 199, 200, 201, 202, 203, 204, 205, 206
+msm5205
+
+# sound/msm5205.c: 329
 MSM5205
 
-# sound/msm5205.c: 318
+# sound/msm5205.c: 330
 ADPCM
 
-# sound/msm5205.c: 321
+# sound/msm5205.c: 333
 Copyright (c) 2004, The MAME Team
 
 # sound/msm5232.c: 222
@@ -59590,67 +59653,67 @@ ADPCM
 # sound/msm5232.c: 802
 Copyright (c) 2004, The MAME Team
 
-# sound/multipcm.c: 300
+# sound/multipcm.c: 297
 MultiPCM %d
 
-# sound/multipcm.c: 302
+# sound/multipcm.c: 299
 bankL
 
-# sound/multipcm.c: 303
+# sound/multipcm.c: 300
 bankR
 
-# sound/multipcm.c: 309
+# sound/multipcm.c: 306
 MultiPCM %d v %d
 
-# sound/multipcm.c: 315
+# sound/multipcm.c: 312
 rawreg %d
 
-# sound/multipcm.c: 319
+# sound/multipcm.c: 316
 active
 
-# sound/multipcm.c: 320
+# sound/multipcm.c: 317
 loop
 
-# sound/multipcm.c: 321
+# sound/multipcm.c: 318
 end
 
-# sound/multipcm.c: 322
+# sound/multipcm.c: 319
 lpstart
 
-# sound/multipcm.c: 323
+# sound/multipcm.c: 320
 pan
 
-# sound/multipcm.c: 324
+# sound/multipcm.c: 321
 vol
 
-# sound/multipcm.c: 325
+# sound/multipcm.c: 322
 ptdelta
 
-# sound/multipcm.c: 326
+# sound/multipcm.c: 323
 ptoffset
 
-# sound/multipcm.c: 327
+# sound/multipcm.c: 324
 ptsum
 
-# sound/multipcm.c: 328
+# sound/multipcm.c: 325
 relamt
 
-# sound/multipcm.c: 329
+# sound/multipcm.c: 326
 relstage
 
-# sound/multipcm.c: 332
+# sound/multipcm.c: 329
 curreg
 
-# sound/multipcm.c: 333
+# sound/multipcm.c: 330
 curvoice
 
-# sound/multipcm.c: 554
+# sound/multipcm.c: 553
 MultiPCM
 
-# sound/multipcm.c: 555
+# sound/multipcm.c: 554
 Sega custom
 
-# sound/multipcm.c: 558
+# sound/multipcm.c: 557
 Copyright (c) 2004, The MAME Team
 
 # sound/n63701x.c: 185
@@ -59773,241 +59836,229 @@ Nintendo custom
 # sound/nes_apu.c: 728
 Copyright (c) 2005, The MAME Team
 
-# sound/okim6295.c: 340
+# sound/okim6295.c: 288
 ADPCM
 
-# sound/okim6295.c: 342
+# sound/okim6295.c: 290
 playing
 
-# sound/okim6295.c: 343
+# sound/okim6295.c: 291
 sample
 
-# sound/okim6295.c: 344
+# sound/okim6295.c: 292
 count
 
-# sound/okim6295.c: 345
+# sound/okim6295.c: 293
 signal
 
-# sound/okim6295.c: 346
+# sound/okim6295.c: 294
 step
 
-# sound/okim6295.c: 347
+# sound/okim6295.c: 295
 volume
 
-# sound/okim6295.c: 349
-last_sample
-
-# sound/okim6295.c: 350
-curr_sample
-
-# sound/okim6295.c: 351
-source_step
-
-# sound/okim6295.c: 352
-source_pos
-
-# sound/okim6295.c: 353
+# sound/okim6295.c: 296
 base_offset
 
-# sound/okim6295.c: 361
+# sound/okim6295.c: 304
 OKIM6295
 
-# sound/okim6295.c: 363
+# sound/okim6295.c: 306
 command
 
-# sound/okim6295.c: 364
+# sound/okim6295.c: 307
 bank_offset
 
-# sound/okim6295.c: 733
+# sound/okim6295.c: 663
 OKI6295
 
-# sound/okim6295.c: 734
+# sound/okim6295.c: 664
 OKI ADPCM
 
-# sound/okim6295.c: 737
+# sound/okim6295.c: 667
 Copyright (c) 2004, The MAME Team
 
-# sound/pokey.c: 565
+# sound/pokey.c: 578
 poly %d\n
 
-# sound/pokey.c: 580
+# sound/pokey.c: 593
 rand %d\n
 
-# sound/pokey.c: 659
+# sound/pokey.c: 673
 POKEY #%p timer %d with IRQEN $%02x\n
 
-# sound/pokey.c: 697
+# sound/pokey.c: 711
 pure
 
-# sound/pokey.c: 700
+# sound/pokey.c: 714
 poly4
 
-# sound/pokey.c: 702
+# sound/pokey.c: 716
 poly9/17
 
-# sound/pokey.c: 707
+# sound/pokey.c: 721
 poly5
 
-# sound/pokey.c: 710
+# sound/pokey.c: 724
 poly4+poly5
 
-# sound/pokey.c: 712
+# sound/pokey.c: 726
 poly9/17+poly5
 
-# sound/pokey.c: 721
+# sound/pokey.c: 735
 poly9
 
-# sound/pokey.c: 723
+# sound/pokey.c: 737
 poly17
 
-# sound/pokey.c: 725
+# sound/pokey.c: 739
 +ch1hi
 
-# sound/pokey.c: 727
+# sound/pokey.c: 741
 +ch3hi
 
-# sound/pokey.c: 729
+# sound/pokey.c: 743
 +ch1/2
 
-# sound/pokey.c: 731
+# sound/pokey.c: 745
 +ch3/4
 
-# sound/pokey.c: 733
+# sound/pokey.c: 747
 +ch1filter
 
-# sound/pokey.c: 735
+# sound/pokey.c: 749
 +ch2filter
 
-# sound/pokey.c: 737
+# sound/pokey.c: 751
 +clk15
 
-# sound/pokey.c: 779
+# sound/pokey.c: 793
 POKEY #%p POT%d triggers after %dus\n
 
-# sound/pokey.c: 805
+# sound/pokey.c: 819
 POKEY #%d pokey_potgo\n
 
-# sound/pokey.c: 815
+# sound/pokey.c: 829
 POKEY #%d pot_r(%d) returned $%02x\n
 
-# sound/pokey.c: 857
+# sound/pokey.c: 871
 POKEY #%d read POT%d (interpolated) $%02x\n
 
-# sound/pokey.c: 862
+# sound/pokey.c: 876
 POKEY #%d read POT%d (final value)  $%02x\n
 
-# sound/pokey.c: 877
+# sound/pokey.c: 891
 POKEY #%d ALLPOT internal $%02x (reset)\n
 
-# sound/pokey.c: 882
+# sound/pokey.c: 896
 POKEY #%d ALLPOT callback $%02x\n
 
-# sound/pokey.c: 887
+# sound/pokey.c: 901
 POKEY #%d ALLPOT internal $%02x\n
 
-# sound/pokey.c: 915
+# sound/pokey.c: 929
 POKEY #%d rand17 freezed (SKCTL): $%02x\n
 
-# sound/pokey.c: 920
+# sound/pokey.c: 934
 POKEY #%d adjust %u rand9[$%05x]: $%02x\n
 
-# sound/pokey.c: 925
+# sound/pokey.c: 939
 POKEY #%d adjust %u rand17[$%05x]: $%02x\n
 
-# sound/pokey.c: 936
+# sound/pokey.c: 950
 POKEY #%d SERIN  $%02x\n
 
-# sound/pokey.c: 943
+# sound/pokey.c: 957
 POKEY #%d IRQST  $%02x\n
 
-# sound/pokey.c: 949
+# sound/pokey.c: 963
 POKEY #%d SKSTAT $%02x\n
 
-# sound/pokey.c: 953
+# sound/pokey.c: 967
 POKEY #%d register $%02x\n
 
-# sound/pokey.c: 1009
+# sound/pokey.c: 1023
 POKEY #%d AUDF1  $%02x\n
 
-# sound/pokey.c: 1019
+# sound/pokey.c: 1033
 POKEY #%d AUDC1  $%02x (%s)\n
 
-# sound/pokey.c: 1027
+# sound/pokey.c: 1041
 POKEY #%d AUDF2  $%02x\n
 
-# sound/pokey.c: 1035
+# sound/pokey.c: 1049
 POKEY #%d AUDC2  $%02x (%s)\n
 
-# sound/pokey.c: 1043
+# sound/pokey.c: 1057
 POKEY #%d AUDF3  $%02x\n
 
-# sound/pokey.c: 1054
+# sound/pokey.c: 1068
 POKEY #%d AUDC3  $%02x (%s)\n
 
-# sound/pokey.c: 1062
+# sound/pokey.c: 1076
 POKEY #%d AUDF4  $%02x\n
 
-# sound/pokey.c: 1070
+# sound/pokey.c: 1084
 POKEY #%d AUDC4  $%02x (%s)\n
 
-# sound/pokey.c: 1078
+# sound/pokey.c: 1092
 POKEY #%d AUDCTL $%02x (%s)\n
 
-# sound/pokey.c: 1087
+# sound/pokey.c: 1101
 POKEY #%d STIMER $%02x\n
 
-# sound/pokey.c: 1105
+# sound/pokey.c: 1119
 POKEY #%d timer1+2 after %d clocks\n
 
-# sound/pokey.c: 1116
+# sound/pokey.c: 1130
 POKEY #%d timer1 after %d clocks\n
 
-# sound/pokey.c: 1125
+# sound/pokey.c: 1139
 POKEY #%d timer2 after %d clocks\n
 
-# sound/pokey.c: 1142, 1154
+# sound/pokey.c: 1156, 1168
 POKEY #%d timer4 after %d clocks\n
 
-# sound/pokey.c: 1169
+# sound/pokey.c: 1183
 POKEY #%d SKREST $%02x\n
 
-# sound/pokey.c: 1174
+# sound/pokey.c: 1188
 POKEY #%d POTGO  $%02x\n
 
-# sound/pokey.c: 1179
+# sound/pokey.c: 1193
 POKEY #%d SEROUT $%02x\n
 
-# sound/pokey.c: 1194
+# sound/pokey.c: 1208
 POKEY #%d IRQEN  $%02x\n
 
-# sound/pokey.c: 1220
+# sound/pokey.c: 1234
 POKEY #%d SKCTL  $%02x\n
 
-# sound/pokey.c: 1248
+# sound/pokey.c: 1262
 POKEY #%d chan1 %d\n
 
-# sound/pokey.c: 1278
+# sound/pokey.c: 1292
 POKEY #%d chan1+2 %d\n
 
-# sound/pokey.c: 1283
+# sound/pokey.c: 1297
 POKEY #%d chan2 %d\n
 
-# sound/pokey.c: 1313
+# sound/pokey.c: 1327
 POKEY #%d chan3 %d\n
 
-# sound/pokey.c: 1343
+# sound/pokey.c: 1357
 POKEY #%d chan3+4 %d\n
 
-# sound/pokey.c: 1348
+# sound/pokey.c: 1362
 POKEY #%d chan4 %d\n
 
-# sound/pokey.c: 1541
+# sound/pokey.c: 1555
 POKEY
 
-# sound/pokey.c: 1542
+# sound/pokey.c: 1556
 Atari custom
 
-# sound/pokey.c: 1545
+# sound/pokey.c: 1559
 Copyright (c) 2004, The MAME Team
 
 # sound/psx.c: 217
@@ -60421,13 +60472,13 @@ Sega/Yamaha custom
 # sound/scsp.c: 1212
 Copyright (c) 2004, The MAME Team
 
-# sound/segapcm.c: 148
+# sound/segapcm.c: 153
 Sega PCM
 
-# sound/segapcm.c: 149
+# sound/segapcm.c: 154
 Sega custom
 
-# sound/segapcm.c: 152
+# sound/segapcm.c: 157
 Copyright (c) 2004, The MAME Team
 
 # sound/sn76477.c: 40
@@ -60538,13 +60589,13 @@ Analog
 # sound/sn76477.c: 1030
 Copyright (c) 2004, The MAME Team
 
-# sound/sn76496.c: 382
+# sound/sn76496.c: 384
 SN76496
 
-# sound/sn76496.c: 383
+# sound/sn76496.c: 385
 TI PSG
 
-# sound/sn76496.c: 386
+# sound/sn76496.c: 388
 Copyright (c) 2004, The MAME Team
 
 # sound/sp0250.c: 249
@@ -60565,76 +60616,76 @@ Seta custom
 # sound/st0016.c: 175
 Copyright (c) 2004, The MAME Team
 
-# sound/streams.c: 157
+# sound/streams.c: 158
 streams_frame_update\n
 
-# sound/streams.c: 170
+# sound/streams.c: 171
   Stream %p, input %d: resample_out_pos = %d\n
 
-# sound/streams.c: 175
+# sound/streams.c: 176
   Tossing resample buffer samples (%p, input %d) - %d samples\n
 
-# sound/streams.c: 192
+# sound/streams.c: 193
   Stream %p, output %d: cur_in_pos = %d, cur_out_pos = %d\n
 
-# sound/streams.c: 197
+# sound/streams.c: 198
   Tossing output buffer samples (%p, output %d) - %d samples\n
 
-# sound/streams.c: 220
+# sound/streams.c: 221
   Adjusting source_frac of stream %p, input %d from %08x to %08x\n
 
-# sound/streams.c: 255
+# sound/streams.c: 275
 stream_create(%d, %d, %d) => %p\n
 
-# sound/streams.c: 286
+# sound/streams.c: 306
 stream.%d
 
-# sound/streams.c: 330
+# sound/streams.c: 351
 stream_set_input(%p, %d, %p, %d, %f)\n
 
-# sound/streams.c: 334
+# sound/streams.c: 355
 Fatal error: stream_set_input attempted to configure non-existant input %d (%d max)\n
 
-# sound/streams.c: 338
+# sound/streams.c: 359
 Fatal error: stream_set_input attempted to use a non-existant output %d (%d max)\n
 
-# sound/streams.c: 353
+# sound/streams.c: 374
   step_frac = %08X\n
 
-# sound/streams.c: 375
+# sound/streams.c: 396
 stream_update(%p, %d)\n
 
-# sound/streams.c: 376
+# sound/streams.c: 397
   cur_in_pos = %d, cur_out_pos = %d, target_sample = %d\n
 
-# sound/streams.c: 475
+# sound/streams.c: 511
 stream_consume_output(%p, %d, %d)\n
 
-# sound/streams.c: 504
+# sound/streams.c: 540
 stream_generate_samples(%p, %d)\n
 
-# sound/streams.c: 513
+# sound/streams.c: 549
   input %d\n
 
-# sound/streams.c: 520
+# sound/streams.c: 556
     resample_samples_needed = %d\n
 
-# sound/streams.c: 535
+# sound/streams.c: 571
     source_samples_needed = %d\n
 
-# sound/streams.c: 542
+# sound/streams.c: 578
     resample_input_stream(%d)\n
 
-# sound/streams.c: 544
+# sound/streams.c: 580
     resample_input_stream done\n
 
-# sound/streams.c: 561
+# sound/streams.c: 597
   callback(%p, %d)\n
 
-# sound/streams.c: 563
+# sound/streams.c: 599
   callback done\n
 
-# sound/streams.c: 585
+# sound/streams.c: 621
     resample_input_stream -- step = %d\n
 
 # sound/tiaintf.c: 75
@@ -61318,112 +61369,109 @@ Yamaha FM
 # sound/ymf278b.c: 796
 Copyright (c) 2004, The MAME Team
 
-# sound/ymz280b.c: 766, 767, 768, 769, 770, 771, 772, 773, 1228
+# sound/ymz280b.c: 651, 652, 653, 654, 655, 656, 657, 1112
 YMZ280B
 
-# sound/ymz280b.c: 766
+# sound/ymz280b.c: 651
 current_register
 
-# sound/ymz280b.c: 767
+# sound/ymz280b.c: 652
 status_register
 
-# sound/ymz280b.c: 768
+# sound/ymz280b.c: 653
 irq_state
 
-# sound/ymz280b.c: 769
+# sound/ymz280b.c: 654
 irq_mask
 
-# sound/ymz280b.c: 770
+# sound/ymz280b.c: 655
 irq_enable
 
-# sound/ymz280b.c: 771
+# sound/ymz280b.c: 656
 keyon_enable
 
-# sound/ymz280b.c: 772
+# sound/ymz280b.c: 657
 rom_readback
 
-# sound/ymz280b.c: 773
-samples_left_over
-
-# sound/ymz280b.c: 776, 777, 778, 779, 780, 781, 782, 783, 784, 785, 786, 787, 788, 789, 790, 791, 792, 793, 794, 795, 796, 797, 798
+# sound/ymz280b.c: 660, 661, 662, 663, 664, 665, 666, 667, 668, 669, 670, 671, 672, 673, 674, 675, 676, 677, 678, 679, 680, 681, 682
 YMZ280B.voice
 
-# sound/ymz280b.c: 776
+# sound/ymz280b.c: 660
 playing
 
-# sound/ymz280b.c: 777
+# sound/ymz280b.c: 661
 keyon
 
-# sound/ymz280b.c: 778
+# sound/ymz280b.c: 662
 looping
 
-# sound/ymz280b.c: 779
+# sound/ymz280b.c: 663
 mode
 
-# sound/ymz280b.c: 780
+# sound/ymz280b.c: 664
 fnum
 
-# sound/ymz280b.c: 781
+# sound/ymz280b.c: 665
 level
 
-# sound/ymz280b.c: 782
+# sound/ymz280b.c: 666
 pan
 
-# sound/ymz280b.c: 783
+# sound/ymz280b.c: 667
 start
 
-# sound/ymz280b.c: 784
+# sound/ymz280b.c: 668
 stop
 
-# sound/ymz280b.c: 785
+# sound/ymz280b.c: 669
 loop_start
 
-# sound/ymz280b.c: 786
+# sound/ymz280b.c: 670
 loop_end
 
-# sound/ymz280b.c: 787
+# sound/ymz280b.c: 671
 position
 
-# sound/ymz280b.c: 788
+# sound/ymz280b.c: 672
 signal
 
-# sound/ymz280b.c: 789
+# sound/ymz280b.c: 673
 step
 
-# sound/ymz280b.c: 790
+# sound/ymz280b.c: 674
 loop_signal
 
-# sound/ymz280b.c: 791
+# sound/ymz280b.c: 675
 loop_step
 
-# sound/ymz280b.c: 792
+# sound/ymz280b.c: 676
 loop_count
 
-# sound/ymz280b.c: 793
+# sound/ymz280b.c: 677
 output_left
 
-# sound/ymz280b.c: 794
+# sound/ymz280b.c: 678
 output_right
 
-# sound/ymz280b.c: 795
+# sound/ymz280b.c: 679
 output_pos
 
-# sound/ymz280b.c: 796
+# sound/ymz280b.c: 680
 last_sample
 
-# sound/ymz280b.c: 797
+# sound/ymz280b.c: 681
 curr_sample
 
-# sound/ymz280b.c: 798
+# sound/ymz280b.c: 682
 irq_schedule
 
-# sound/ymz280b.c: 805
+# sound/ymz280b.c: 689
 resamp.wav
 
-# sound/ymz280b.c: 1229
+# sound/ymz280b.c: 1113
 Yamaha Wavetable
 
-# sound/ymz280b.c: 1232
+# sound/ymz280b.c: 1116
 Copyright (c) 2004, The MAME Team
 
 # state.c: 148
@@ -65725,76 +65773,76 @@ MAME
 # ui_text.c: 75
 \x1b
 
-# ui_text.c: 314
+# ui_text.c: 315
 LangInfo
 
-# ui_text.c: 327
+# ui_text.c: 328
 Author
 
-# ui_text.c: 332
+# ui_text.c: 333
 Font
 
-# ui_text.c: 340
+# ui_text.c: 341
 Strings
 
-# unzip.c: 190, 388
+# unzip.c: 192, 392
 rb
 
-# unzip.c: 192
+# unzip.c: 194
 Opening for reading
 
-# unzip.c: 199
+# unzip.c: 201
 Seeking to end
 
-# unzip.c: 208
+# unzip.c: 210
 Get file size
 
-# unzip.c: 214
+# unzip.c: 216
 Empty file
 
-# unzip.c: 222
+# unzip.c: 224
 Reading ECD (end of central directory)
 
-# unzip.c: 243, 586
+# unzip.c: 245, 590
 Cannot span disks
 
-# unzip.c: 251
+# unzip.c: 253
 Seeking to central directory
 
-# unzip.c: 268
+# unzip.c: 270
 Reading central directory
 
-# unzip.c: 336
+# unzip.c: 338
 Invalid filename length in directory
 
-# unzip.c: 422
+# unzip.c: 426
 Seeking to header
 
-# unzip.c: 427
+# unzip.c: 431
 Reading header
 
-# unzip.c: 439
+# unzip.c: 443
 Seeking to compressed data
 
-# unzip.c: 548
+# unzip.c: 552
 Reading compressed data
 
-# unzip.c: 568
+# unzip.c: 572
 Wrong uncompressed size in store compression
 
-# unzip.c: 576
+# unzip.c: 580
 Version too new
 
-# unzip.c: 581
+# unzip.c: 585
 OS not supported
 
-# unzip.c: 598
+# unzip.c: 602
 Inflating compressed data
 
-# unzip.c: 604
+# unzip.c: 608
 Compression method unsupported
 
-# unzip.c: 787
+# unzip.c: 791
 load_zipped_file(): Unable to allocate %d bytes of RAM\n
 
 # usrintrf.c: 1122
@@ -65845,7 +65893,7 @@ TILEMAP %d (%dx%d)  X:%d  Y:%d
 # usrintrf.c: 4083
 Local font file is not installed. You must install CJK font into font directory first.\n\nPlease download from:\nhttp://mameplus.emu-france.com/\n\nPress ESC to exit, type OK to continue.
 
-# usrintrf.c: 4492
+# usrintrf.c: 4510
 %s %3ddB
 
 # validity.c: 217
@@ -66029,7 +66077,7 @@ Sound:     %8dm\n
 MESS:      %8dm\n
 
 # version.c: 2
-0.103u3 (
+0.103u4 (
 
 # vidhrdw/actfancr.c: 85
 control_1
@@ -67066,6 +67114,18 @@ base %04x uk1 %04x uk2 %04x
 # vidhrdw/cps1.c: 1938
 order: %d (%d) %d (%d) %d (%d) %d (%d)
 
+# vidhrdw/crgolf.c: 208
+screena
+
+# vidhrdw/crgolf.c: 208, 209, 210
+video
+
+# vidhrdw/crgolf.c: 209
+screenb
+
+# vidhrdw/crgolf.c: 210
+highbit
+
 # vidhrdw/crshrace.c: 220
 gfxctrl = %02x
 
@@ -67497,6 +67557,9 @@ tokkae
 
 # vidhrdw/konamigx.c: 360
 salmndr2
+
+# vidhrdw/konamiic.c: 1169
+shuffle() - not modulo 4\n
 
 # vidhrdw/konamiic.c: 1302
 SPRITE0.DMP
@@ -68162,417 +68225,507 @@ quizdais
 lresort
 
 # vidhrdw/neogeo.c: 110
-legendos
+eightman
 
 # vidhrdw/neogeo.c: 111
-2020bb
+legendos
 
 # vidhrdw/neogeo.c: 112
-2020bba
+2020bb
 
 # vidhrdw/neogeo.c: 113
-2020bbh
+2020bba
 
 # vidhrdw/neogeo.c: 114
-socbrawl
+2020bbh
 
 # vidhrdw/neogeo.c: 115
-roboarmy
+socbrawl
 
 # vidhrdw/neogeo.c: 116
-roboarma
+roboarmy
 
 # vidhrdw/neogeo.c: 117
-fbfrenzy
+roboarma
 
 # vidhrdw/neogeo.c: 118
-kotm2
+fbfrenzy
 
 # vidhrdw/neogeo.c: 119
-sengoku2
+kotm2
 
 # vidhrdw/neogeo.c: 120
-bstars2
+sengoku2
 
 # vidhrdw/neogeo.c: 121
-aof
+bstars2
 
 # vidhrdw/neogeo.c: 122
-ssideki
+aof
 
 # vidhrdw/neogeo.c: 123
-kof94
+ssideki
 
 # vidhrdw/neogeo.c: 124
-aof2
+kof94
 
 # vidhrdw/neogeo.c: 125
-aof2a
+aof2
 
 # vidhrdw/neogeo.c: 126
-savagere
+aof2a
 
 # vidhrdw/neogeo.c: 127
-kof95
+savagere
 
 # vidhrdw/neogeo.c: 128
-kof95a
+kof95
 
 # vidhrdw/neogeo.c: 129
-samsho3
+kof95a
 
 # vidhrdw/neogeo.c: 130
-samsho3a
+samsho3
 
 # vidhrdw/neogeo.c: 131
-aof3
+samsho3a
 
 # vidhrdw/neogeo.c: 132
-kof96
+aof3
 
 # vidhrdw/neogeo.c: 133
-kof96h
+kof96
 
 # vidhrdw/neogeo.c: 134
-kizuna
+kof96h
 
 # vidhrdw/neogeo.c: 135
-kof97
+kof96ep
 
 # vidhrdw/neogeo.c: 136
-kof97a
+kizuna
 
 # vidhrdw/neogeo.c: 137
-kof97pls
+kof97
 
 # vidhrdw/neogeo.c: 138
-kog
+kof97a
 
 # vidhrdw/neogeo.c: 139
-irrmaze
+kof97pls
 
 # vidhrdw/neogeo.c: 140
-mslug2
+kog
 
 # vidhrdw/neogeo.c: 141
-kof98
+irrmaze
 
 # vidhrdw/neogeo.c: 142
-kof98k
+mslug2
 
 # vidhrdw/neogeo.c: 143
-kof98n
+kof98
 
 # vidhrdw/neogeo.c: 144
-mslugx
+kof98k
 
 # vidhrdw/neogeo.c: 145
-kof99
+kof98n
 
 # vidhrdw/neogeo.c: 146
-kof99a
+mslugx
 
 # vidhrdw/neogeo.c: 147
-kof99e
+kof99
 
 # vidhrdw/neogeo.c: 148
-kof99n
+kof99a
 
 # vidhrdw/neogeo.c: 149
-kof99p
+kof99e
 
 # vidhrdw/neogeo.c: 150
-mslug3
+kof99n
 
 # vidhrdw/neogeo.c: 151
-mslug3n
+kof99p
 
 # vidhrdw/neogeo.c: 152
-kof2000
+kof99d
 
 # vidhrdw/neogeo.c: 153
-kof2000n
+mslug3
 
 # vidhrdw/neogeo.c: 154
-zupapa
+mslug3n
 
 # vidhrdw/neogeo.c: 155
-kof2001
+mslug3d
 
 # vidhrdw/neogeo.c: 156
-kof2001h
+kof2000
 
 # vidhrdw/neogeo.c: 157
-cthd2003
+kof2000n
 
 # vidhrdw/neogeo.c: 158
-ct2k3sp
+kof2000d
 
 # vidhrdw/neogeo.c: 159
-kof2002
+zupapa
 
 # vidhrdw/neogeo.c: 160
-kf2k2pls
+zupapad
 
 # vidhrdw/neogeo.c: 161
-kf2k2pla
+kof2001
 
 # vidhrdw/neogeo.c: 162
-kf2k2mp
+kof2001h
 
 # vidhrdw/neogeo.c: 163
-kf2k2mp2
+kof2001d
 
 # vidhrdw/neogeo.c: 164
-kof10th
+cthd2003
 
 # vidhrdw/neogeo.c: 165
-kf2k5uni
+ct2k3sp
 
 # vidhrdw/neogeo.c: 166
-kf10thep
+kf2k1pls
 
 # vidhrdw/neogeo.c: 167
-kof2k4se
+kf2k1pa
 
 # vidhrdw/neogeo.c: 168
-mslug5
+kof2002
 
 # vidhrdw/neogeo.c: 169
-svcpcb
+kof2002d
 
 # vidhrdw/neogeo.c: 170
-svcpcbj
+kof2002b
 
 # vidhrdw/neogeo.c: 171
-svc
+kf2k2pls
 
 # vidhrdw/neogeo.c: 172
-samsho5
+kf2k2pla
 
 # vidhrdw/neogeo.c: 173
-samsho5h
+kf2k2plb
 
 # vidhrdw/neogeo.c: 174
-kf2k3pcb
+kf2k2mp
 
 # vidhrdw/neogeo.c: 175
-kof2003
+kf2k2mp2
 
 # vidhrdw/neogeo.c: 176
-samsh5sp
+kof10th
 
 # vidhrdw/neogeo.c: 177
-samsh5sh
+kf2k5uni
 
 # vidhrdw/neogeo.c: 178
-samsh5sn
+kf10thep
 
 # vidhrdw/neogeo.c: 179
-ncombat
+kof2k4se
 
 # vidhrdw/neogeo.c: 180
-ncombata
+mslug5
 
 # vidhrdw/neogeo.c: 181
-crsword
+svcpcb
 
 # vidhrdw/neogeo.c: 182
-ncommand
+svcpcbj
 
 # vidhrdw/neogeo.c: 183
-wh2
+svc
 
 # vidhrdw/neogeo.c: 184
-wh2j
+samsho5
 
 # vidhrdw/neogeo.c: 185
-aodk
+samsho5h
 
 # vidhrdw/neogeo.c: 186
-mosyougi
+kf2k3pcb
 
 # vidhrdw/neogeo.c: 187
-overtop
+kof2003
 
 # vidhrdw/neogeo.c: 188
-twinspri
+samsh5sp
 
 # vidhrdw/neogeo.c: 189
-zintrckb
+samsh5sh
 
 # vidhrdw/neogeo.c: 190
-spinmast
+samsh5sn
 
 # vidhrdw/neogeo.c: 191
-wjammers
+ncombat
 
 # vidhrdw/neogeo.c: 192
-karnovr
+ncombata
 
 # vidhrdw/neogeo.c: 193
-strhoop
+crsword
 
 # vidhrdw/neogeo.c: 194
-ghostlop
+ncommand
 
 # vidhrdw/neogeo.c: 195
-magdrop2
+wh2
 
 # vidhrdw/neogeo.c: 196
-magdrop3
+wh2j
 
 # vidhrdw/neogeo.c: 197
-gururin
+aodk
 
 # vidhrdw/neogeo.c: 198
-miexchng
+mosyougi
 
 # vidhrdw/neogeo.c: 199
-panicbom
+overtop
 
 # vidhrdw/neogeo.c: 200
-neobombe
+twinspri
 
 # vidhrdw/neogeo.c: 201
-minasan
+zintrckb
 
 # vidhrdw/neogeo.c: 202
-bakatono
+zintrkcd
 
 # vidhrdw/neogeo.c: 203
-turfmast
+pulstar
 
 # vidhrdw/neogeo.c: 204
-mslug
+spinmast
 
 # vidhrdw/neogeo.c: 205
-zedblade
+wjammers
 
 # vidhrdw/neogeo.c: 206
-viewpoin
+karnovr
 
 # vidhrdw/neogeo.c: 207
-quizkof
+strhoop
 
 # vidhrdw/neogeo.c: 208
-pgoal
+ghostlop
 
 # vidhrdw/neogeo.c: 209
-shocktro
+magdrop2
 
 # vidhrdw/neogeo.c: 210
-shocktra
+magdrop3
 
 # vidhrdw/neogeo.c: 211
-shocktr2
+gururin
 
 # vidhrdw/neogeo.c: 212
-lans2004
+miexchng
 
 # vidhrdw/neogeo.c: 213
-galaxyfg
+panicbom
 
 # vidhrdw/neogeo.c: 214
-wakuwak7
+neobombe
 
 # vidhrdw/neogeo.c: 215
-pbobbl2n
+minasan
 
 # vidhrdw/neogeo.c: 216
-pnyaa
+bakatono
 
 # vidhrdw/neogeo.c: 217
-marukodq
+turfmast
 
 # vidhrdw/neogeo.c: 218
-gowcaizr
+mslug
 
 # vidhrdw/neogeo.c: 219
-sdodgeb
+zedblade
 
 # vidhrdw/neogeo.c: 220
-tws96
+viewpoin
 
 # vidhrdw/neogeo.c: 221
-preisle2
+quizkof
 
 # vidhrdw/neogeo.c: 222
-fightfev
+pgoal
 
 # vidhrdw/neogeo.c: 223
-fightfva
+shocktro
 
 # vidhrdw/neogeo.c: 224
-popbounc
+shocktra
 
 # vidhrdw/neogeo.c: 225
-androdun
+shocktr2
 
 # vidhrdw/neogeo.c: 226
-puzzledp
+lans2004
 
 # vidhrdw/neogeo.c: 227
-neomrdo
+galaxyfg
 
 # vidhrdw/neogeo.c: 228
-goalx3
+wakuwak7
 
 # vidhrdw/neogeo.c: 229
-neodrift
+pbobbl2n
 
 # vidhrdw/neogeo.c: 230
-puzzldpr
+pnyaa
 
 # vidhrdw/neogeo.c: 231
-flipshot
+marukodq
 
 # vidhrdw/neogeo.c: 232
-ctomaday
+gowcaizr
 
 # vidhrdw/neogeo.c: 233
-ganryu
+sdodgeb
 
 # vidhrdw/neogeo.c: 234
-bangbead
+tws96
 
 # vidhrdw/neogeo.c: 235
-mslug4
+blazstar
 
 # vidhrdw/neogeo.c: 236
-ms4plus
+preisle2
 
 # vidhrdw/neogeo.c: 237
-jockeygp
+preisl2d
 
 # vidhrdw/neogeo.c: 238
-vliner
+fightfev
 
 # vidhrdw/neogeo.c: 239
+fightfva
+
+# vidhrdw/neogeo.c: 240
+sonicwi2
+
+# vidhrdw/neogeo.c: 241
+sonicwi3
+
+# vidhrdw/neogeo.c: 242
+popbounc
+
+# vidhrdw/neogeo.c: 243
+androdun
+
+# vidhrdw/neogeo.c: 244
+puzzledp
+
+# vidhrdw/neogeo.c: 245
+neomrdo
+
+# vidhrdw/neogeo.c: 246
+goalx3
+
+# vidhrdw/neogeo.c: 247
+neodrift
+
+# vidhrdw/neogeo.c: 248
+puzzldpr
+
+# vidhrdw/neogeo.c: 249
+flipshot
+
+# vidhrdw/neogeo.c: 250
+ctomaday
+
+# vidhrdw/neogeo.c: 251
+ganryu
+
+# vidhrdw/neogeo.c: 252
+ganryud
+
+# vidhrdw/neogeo.c: 253
+bangbead
+
+# vidhrdw/neogeo.c: 254
+bangbedp
+
+# vidhrdw/neogeo.c: 255
+mslug4
+
+# vidhrdw/neogeo.c: 256
+ms4plus
+
+# vidhrdw/neogeo.c: 257
+mslug4d
+
+# vidhrdw/neogeo.c: 258
+jockeygp
+
+# vidhrdw/neogeo.c: 259
+vliner
+
+# vidhrdw/neogeo.c: 260
 vlinero
 
-# vidhrdw/neogeo.c: 316
+# vidhrdw/neogeo.c: 261
+beast
+
+# vidhrdw/neogeo.c: 262
+columnsn
+
+# vidhrdw/neogeo.c: 263
+diggerma
+
+# vidhrdw/neogeo.c: 264
+poknight
+
+# vidhrdw/neogeo.c: 265
+neonopon
+
+# vidhrdw/neogeo.c: 266
+neopong
+
+# vidhrdw/neogeo.c: 267
+npong10
+
+# vidhrdw/neogeo.c: 268
+syscheck
+
+# vidhrdw/neogeo.c: 269
+frogfest
+
+# vidhrdw/neogeo.c: 346
 neogeo_palette_index
 
-# vidhrdw/neogeo.c: 316, 317, 318, 319, 320, 321, 322
+# vidhrdw/neogeo.c: 346, 347, 348, 349, 350, 351, 352
 video
 
-# vidhrdw/neogeo.c: 317
+# vidhrdw/neogeo.c: 347
 neogeo_palettebank[0]
 
-# vidhrdw/neogeo.c: 318
+# vidhrdw/neogeo.c: 348
 neogeo_palettebank[1]
 
-# vidhrdw/neogeo.c: 319
+# vidhrdw/neogeo.c: 349
 neogeo_vidram16
 
-# vidhrdw/neogeo.c: 320
+# vidhrdw/neogeo.c: 350
 neogeo_vidram16_modulo
 
-# vidhrdw/neogeo.c: 321
+# vidhrdw/neogeo.c: 351
 neogeo_vidram16_offset
 
-# vidhrdw/neogeo.c: 322
+# vidhrdw/neogeo.c: 352
 fix_bank
 
 # vidhrdw/ninjakd2.c: 45
@@ -68815,205 +68968,205 @@ n_iy
 # vidhrdw/psx.c: 787
 n_ti
 
-# vidhrdw/psx.c: 984, 1004
+# vidhrdw/psx.c: 980, 1000
 not handled: draw mode %08x\n
 
-# vidhrdw/psx.c: 988, 1008
+# vidhrdw/psx.c: 984, 1004
 not handled: tp == 3\n
 
-# vidhrdw/psx.c: 1012
+# vidhrdw/psx.c: 1008
 not handled: interleaved 15 bit texture\n
 
-# vidhrdw/psx.c: 1036
+# vidhrdw/psx.c: 1032
 Transparency Mode: 0.5*B + 0.5*F\n
 
-# vidhrdw/psx.c: 1036
+# vidhrdw/psx.c: 1032
 Transparency Mode: 1.0*B + 0.25*F\n
 
-# vidhrdw/psx.c: 1036
+# vidhrdw/psx.c: 1032
 Transparency Mode: 1.0*B + 1.0*F\n
 
-# vidhrdw/psx.c: 1036
+# vidhrdw/psx.c: 1032
 Transparency Mode: 1.0*B - 1.0*F\n
 
-# vidhrdw/psx.c: 3163
+# vidhrdw/psx.c: 3159
 PSX Packet #%u %08x\n
 
-# vidhrdw/psx.c: 3168
+# vidhrdw/psx.c: 3164
 not handled: GPU Command 0x00: (%08x)\n
 
-# vidhrdw/psx.c: 3171
+# vidhrdw/psx.c: 3167
 not handled: clear cache\n
 
-# vidhrdw/psx.c: 3180
+# vidhrdw/psx.c: 3176
 %02x: frame buffer rectangle %u,%u %u,%u\n
 
-# vidhrdw/psx.c: 3196
+# vidhrdw/psx.c: 3192
 %02x: monochrome 3 point polygon\n
 
-# vidhrdw/psx.c: 3211
+# vidhrdw/psx.c: 3207
 %02x: textured 3 point polygon\n
 
-# vidhrdw/psx.c: 3226
+# vidhrdw/psx.c: 3222
 %02x: monochrome 4 point polygon\n
 
-# vidhrdw/psx.c: 3241
+# vidhrdw/psx.c: 3237
 %02x: textured 4 point polygon\n
 
-# vidhrdw/psx.c: 3256
+# vidhrdw/psx.c: 3252
 %02x: gouraud 3 point polygon\n
 
-# vidhrdw/psx.c: 3271
+# vidhrdw/psx.c: 3267
 %02x: gouraud textured 3 point polygon\n
 
-# vidhrdw/psx.c: 3286
+# vidhrdw/psx.c: 3282
 %02x: gouraud 4 point polygon\n
 
-# vidhrdw/psx.c: 3301
+# vidhrdw/psx.c: 3297
 %02x: gouraud textured 4 point polygon\n
 
-# vidhrdw/psx.c: 3315
+# vidhrdw/psx.c: 3311
 %02x: monochrome line\n
 
-# vidhrdw/psx.c: 3329
+# vidhrdw/psx.c: 3325
 %02x: monochrome polyline\n
 
-# vidhrdw/psx.c: 3351
+# vidhrdw/psx.c: 3347
 %02x: gouraud line\n
 
-# vidhrdw/psx.c: 3366
+# vidhrdw/psx.c: 3362
 %02x: gouraud polyline\n
 
-# vidhrdw/psx.c: 3392
+# vidhrdw/psx.c: 3388
 %02x: rectangle %d,%d %d,%d\n
 
-# vidhrdw/psx.c: 3410
+# vidhrdw/psx.c: 3406
 %02x: sprite %d,%d %u,%u %08x, %08x\n
 
-# vidhrdw/psx.c: 3427
+# vidhrdw/psx.c: 3423
 %02x: dot %d,%d %08x\n
 
-# vidhrdw/psx.c: 3444, 3475
+# vidhrdw/psx.c: 3440, 3471
 %02x: 16x16 rectangle %08x %08x\n
 
-# vidhrdw/psx.c: 3460
+# vidhrdw/psx.c: 3456
 %02x: 8x8 sprite %08x %08x %08x\n
 
-# vidhrdw/psx.c: 3491
+# vidhrdw/psx.c: 3487
 %02x: 16x16 sprite %08x %08x %08x\n
 
-# vidhrdw/psx.c: 3504
+# vidhrdw/psx.c: 3500
 move image in frame buffer %08x %08x %08x %08x\n
 
-# vidhrdw/psx.c: 3521
+# vidhrdw/psx.c: 3517
 send image to framebuffer ( pixel %u,%u = %u )\n
 
-# vidhrdw/psx.c: 3535
+# vidhrdw/psx.c: 3531
 %02x: send image to framebuffer %u,%u %u,%u\n
 
-# vidhrdw/psx.c: 3555
+# vidhrdw/psx.c: 3551
 %02x: copy image from frame buffer\n
 
-# vidhrdw/psx.c: 3560
+# vidhrdw/psx.c: 3556
 %02x: draw mode %06x\n
 
-# vidhrdw/psx.c: 3569
+# vidhrdw/psx.c: 3565
 %02x: texture window %u,%u %u,%u\n
 
-# vidhrdw/psx.c: 3582
+# vidhrdw/psx.c: 3578
 %02x: drawing area top left %d,%d\n
 
-# vidhrdw/psx.c: 3595
+# vidhrdw/psx.c: 3591
 %02x: drawing area bottom right %d,%d\n
 
-# vidhrdw/psx.c: 3608
+# vidhrdw/psx.c: 3604
 %02x: drawing offset %d,%d\n
 
-# vidhrdw/psx.c: 3616
+# vidhrdw/psx.c: 3612
 not handled: mask setting %d\n
 
-# vidhrdw/psx.c: 3620
+# vidhrdw/psx.c: 3616
 mask setting %d\n
 
-# vidhrdw/psx.c: 3625
+# vidhrdw/psx.c: 3621
 unknown GPU packet %08x
 
-# vidhrdw/psx.c: 3627
+# vidhrdw/psx.c: 3623
 unknown GPU packet %08x (%08x)\n
 
-# vidhrdw/psx.c: 3649
+# vidhrdw/psx.c: 3645
 reset gpu\n
 
-# vidhrdw/psx.c: 3673
+# vidhrdw/psx.c: 3669
 not handled: reset command buffer\n
 
-# vidhrdw/psx.c: 3677
+# vidhrdw/psx.c: 3673
 not handled: reset irq\n
 
-# vidhrdw/psx.c: 3684
+# vidhrdw/psx.c: 3680
 dma setup %d\n
 
-# vidhrdw/psx.c: 3703
+# vidhrdw/psx.c: 3699
 start of display area %d %d\n
 
-# vidhrdw/psx.c: 3708
+# vidhrdw/psx.c: 3704
 horizontal display range %d %d\n
 
-# vidhrdw/psx.c: 3713
+# vidhrdw/psx.c: 3709
 vertical display range %d %d\n
 
-# vidhrdw/psx.c: 3716
+# vidhrdw/psx.c: 3712
 display mode %02x\n
 
-# vidhrdw/psx.c: 3727
+# vidhrdw/psx.c: 3723
 not handled: GPU Control 0x09: %08x\n
 
-# vidhrdw/psx.c: 3730
+# vidhrdw/psx.c: 3726
 reset lightgun coordinates %08x\n
 
-# vidhrdw/psx.c: 3746
+# vidhrdw/psx.c: 3742
 GPU Info - Draw area top left %08x\n
 
-# vidhrdw/psx.c: 3757
+# vidhrdw/psx.c: 3753
 GPU Info - Draw area bottom right %08x\n
 
-# vidhrdw/psx.c: 3768
+# vidhrdw/psx.c: 3764
 GPU Info - Draw offset %08x\n
 
-# vidhrdw/psx.c: 3772
+# vidhrdw/psx.c: 3768
 GPU Info - GPU Type %08x\n
 
-# vidhrdw/psx.c: 3776
+# vidhrdw/psx.c: 3772
 GPU Info - lightgun coordinates %08x\n
 
-# vidhrdw/psx.c: 3779
+# vidhrdw/psx.c: 3775
 GPU Info - unknown request (%08x)\n
 
-# vidhrdw/psx.c: 3785
+# vidhrdw/psx.c: 3781
 not handled: GPU Control 0x20: %08x\n
 
-# vidhrdw/psx.c: 3789
+# vidhrdw/psx.c: 3785
 unknown GPU command %08x
 
-# vidhrdw/psx.c: 3791
+# vidhrdw/psx.c: 3787
 gpu_w( %08x ) unknown GPU command\n
 
-# vidhrdw/psx.c: 3796
+# vidhrdw/psx.c: 3792
 gpu_w( %08x, %08x, %08x ) unknown register\n
 
-# vidhrdw/psx.c: 3811
+# vidhrdw/psx.c: 3807
 copy image from frame buffer ( %d, %d )\n
 
-# vidhrdw/psx.c: 3824
+# vidhrdw/psx.c: 3820
 copy image from frame buffer end\n
 
-# vidhrdw/psx.c: 3842
+# vidhrdw/psx.c: 3838
 read GPU info (%08x)\n
 
-# vidhrdw/psx.c: 3860
+# vidhrdw/psx.c: 3856
 read GPU status (%08x)\n
 
-# vidhrdw/psx.c: 3864
+# vidhrdw/psx.c: 3860
 gpu_r( %08x, %08x ) unknown register\n
 
 # vidhrdw/qix.c: 268
@@ -69769,13 +69922,13 @@ Pivt: %04x %04x %04x %04x\n
 # vidhrdw/taito_f3.c: 431
 Colm: %04x %04x %04x %04x\n
 
-# vidhrdw/taito_f3.c: 636, 637
+# vidhrdw/taito_f3.c: 632, 633
 f3
 
-# vidhrdw/taito_f3.c: 636
+# vidhrdw/taito_f3.c: 632
 vcontrol0
 
-# vidhrdw/taito_f3.c: 637
+# vidhrdw/taito_f3.c: 633
 vcontrol1
 
 # vidhrdw/taitoic.c: 844
@@ -71659,52 +71812,52 @@ flipy
 # vidhrdw/wiz.c: 49
 bgpen
 
-# vidhrdw/ygv608.c: 695
+# vidhrdw/ygv608.c: 692
 2PLANE_8BIT
 
-# vidhrdw/ygv608.c: 696
+# vidhrdw/ygv608.c: 693
 2PLANE_16BIT
 
-# vidhrdw/ygv608.c: 697
+# vidhrdw/ygv608.c: 694
 1PLANE_16COLORS
 
-# vidhrdw/ygv608.c: 698
+# vidhrdw/ygv608.c: 695
 1PLANE_256COLORS
 
-# vidhrdw/ygv608.c: 700
+# vidhrdw/ygv608.c: 697
 16x16
 
-# vidhrdw/ygv608.c: 700
+# vidhrdw/ygv608.c: 697
 32x32
 
-# vidhrdw/ygv608.c: 700
+# vidhrdw/ygv608.c: 697
 64x64
 
-# vidhrdw/ygv608.c: 700
+# vidhrdw/ygv608.c: 697
 8x8
 
-# vidhrdw/ygv608.c: 910
+# vidhrdw/ygv608.c: 907
 %02ux%02u
 
-# vidhrdw/ygv608.c: 913
+# vidhrdw/ygv608.c: 910
 A: SX:%d SY:%d
 
-# vidhrdw/ygv608.c: 919
+# vidhrdw/ygv608.c: 916
 B: SX:%d SY:%d
 
-# vidhrdw/ygv608.c: 1594
+# vidhrdw/ygv608.c: 1591
 ygv608_regs
 
-# vidhrdw/ygv608.c: 1597
+# vidhrdw/ygv608.c: 1594
 ygv608_pnt
 
-# vidhrdw/ygv608.c: 1600
+# vidhrdw/ygv608.c: 1597
 ygv608_sat
 
-# vidhrdw/ygv608.c: 1603
+# vidhrdw/ygv608.c: 1600
 ygv608_sdt
 
-# vidhrdw/ygv608.c: 1606
+# vidhrdw/ygv608.c: 1603
 ygv608_cp
 
 # windows/blit.c: 1496
@@ -72271,10 +72424,10 @@ Out of memory in variable expansion!\n
 # windows/fileio.c: 320
 Expanding: %s\n
 
-# windows/fileio.c: 593
+# windows/fileio.c: 633
 tmp
 
-# windows/fileio.c: 829
+# windows/fileio.c: 871
 loading %-32s\r
 
 # windows/fronthlp.c: 60
@@ -73171,25 +73324,25 @@ fskp
 # windows/winalloc.c: 84
 Out of allocation blocks!\n
 
-# windows/winalloc.c: 205
+# windows/winalloc.c: 221
 Error: realloc a non-existant block\n
 
-# windows/winalloc.c: 234
+# windows/winalloc.c: 250
 Error: free a non-existant block\n
 
-# windows/winalloc.c: 253
+# windows/winalloc.c: 269
 Error: msize a non-existant block\n
 
-# windows/winalloc.c: 270
+# windows/winalloc.c: 286
 --- memory leak warning ---\n
 
-# windows/winalloc.c: 273
+# windows/winalloc.c: 289
 allocation #%06d, %d bytes (%s:%d)\n
 
-# windows/winalloc.c: 275
+# windows/winalloc.c: 291
 allocation #%06d, %d bytes\n
 
-# windows/winalloc.c: 280
+# windows/winalloc.c: 296
 a total of %d bytes were not free()'d\n
 
 # windows/wind3d.c: 406
@@ -73441,10 +73594,10 @@ MAME
 # windows/window.c: 503
 MAME: %s [%s]
 
-# windows/window.c: 1835, 1885
+# windows/window.c: 1842, 1892
 MAMEDebug
 
-# windows/window.c: 1872
+# windows/window.c: 1879
 Debug: %s [%s]
 
 # windows/winmain.c: 72

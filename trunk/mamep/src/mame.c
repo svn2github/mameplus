@@ -694,6 +694,12 @@ static int vh_open(void)
 	if (palette_start())
 		goto cant_start_palette;
 
+	/* convert the gfx ROMs into character sets. This is done BEFORE calling the driver's */
+	/* palette_init() routine because it might need to check the Machine->gfx[] data */
+	if (Machine->drv->gfxdecodeinfo)
+		if (decode_graphics(Machine->drv->gfxdecodeinfo))
+			goto cant_decode_graphics;
+
 	/* if we're a vector game, override the screen width and height */
 	if (Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
 		scale_vectorgames(options.vector_width, options.vector_height, &bmwidth, &bmheight);
@@ -776,12 +782,6 @@ static int vh_open(void)
 
 	/* force the first update to be full */
 	set_vh_global_attribute(NULL, 0);
-
-	/* convert the gfx ROMs into character sets. This is done BEFORE calling the driver's */
-	/* palette_init() routine because it might need to check the Machine->gfx[] data */
-	if (Machine->drv->gfxdecodeinfo)
-		if (decode_graphics(Machine->drv->gfxdecodeinfo))
-			goto cant_decode_graphics;
 
 	/* reset performance data */
 	last_fps_time = osd_cycles();

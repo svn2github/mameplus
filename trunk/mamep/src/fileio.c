@@ -254,7 +254,7 @@ mame_file *mame_fopen_error(const char *gamename, const char *filename, int file
 #ifdef INP_CAPTION
 		/* inp caption files */
 		case FILETYPE_INPCAPTION:
-			return generic_fopen(filetype, NULL, gamename, 0, FILEFLAG_OPENREAD);
+			return generic_fopen(filetype, NULL, gamename, 0, FILEFLAG_OPENREAD, error);
 #endif /* INP_CAPTION */
 
 		/* save state files */
@@ -315,10 +315,10 @@ mame_file *mame_fopen_error(const char *gamename, const char *filename, int file
 
 #ifdef USE_IPS
 		case FILETYPE_PATCH:
-			return generic_fopen(filetype, gamename, filename, 0, FILEFLAG_OPENREAD);
+			return generic_fopen(filetype, gamename, filename, 0, FILEFLAG_OPENREAD, error);
 
 		case FILETYPE_IPS:
-			return generic_fopen(filetype, gamename, filename, 0, FILEFLAG_OPENREAD);
+			return generic_fopen(filetype, gamename, filename, 0, FILEFLAG_OPENREAD, error);
 #endif /* USE_IPS */
 
 		/* anything else */
