@@ -1856,6 +1856,7 @@ robotron	ロボトロン2084 (Solid Blue label)	ろぼとろん2084	Williams
 robotryo	ロボトロン2084 (Yellow/Orange label)	ろぼとろん2084	Williams
 joust	ジャウスト (White/Green label)	じゃうすと_1	Williams
 joustr	ジャウスト (Solid Red label)	じゃうすと_1	Williams
+joustg	ジャウスト (Solid Green label)	じゃうすと_1	Williams
 joustwr	ジャウスト (White/Red label)	じゃうすと_1	Williams
 bubbles	バブルズ	ばぶるず	Williams
 bubblesr	バブルズ (Solid Red label)	ばぶるず	Williams
@@ -1869,6 +1870,7 @@ blaster	ブラスター	ぶらすたー	Williams
 blast30	ブラスター (early 30 wave ver)	ぶらすたー	Williams
 blastkit	ブラスター (kit)	ぶらすたー	Williams
 spdball	スピードボール -Contest at Neonworld (prototype)	すぴーどぼーる	Williams
+alienar	エイリアンアリーナ	えいりあんありーな	Duncan Brown
 mysticm	ミスティックマラソン	みすてぃっくまらそん	Williams
 tshoot	ターキーシュート -The Day They Took Over	たーきーしゅーと	Williams
 inferno	インフェルノ	いんふぇるの	Williams
@@ -4628,10 +4630,11 @@ kaos	カオス	かおす	GamePlan
 sia2650	スペースインベーダー / Super Invader Attack	すぺーすいんべーだー_1_1	Zaccaria/Zelco
 tinv2650	スペースインベーダー / The Invaders	すぺーすいんべーだー_1_1	Zaccaria/Zelco
 dodgem	ダッジェム	だっじぇむ	Zaccaria
+galaxia	ギャラクシア	ぎゃらくしあ	Zaccaria
 laserbat	レーザーバトル	れーざーばとる	Zaccaria
 lazarian	レーザーバトル / Lazarian	れーざーばとる	Bally Midway (Zaccaria License)
-catnmous	キャットンマウス (set 1)	きゃっとんまうす	Zaccaria
-catmousa	キャットンマウス (set 2)	きゃっとんまうす	Zaccaria
+catnmous	キャットアンドマウス (set 1)	きゃっとあんどまうす	Zaccaria
+catmousa	キャットアンドマウス (set 2)	きゃっとあんどまうす	Zaccaria
 monymony	マネーマネー	まねーまねー	Zaccaria
 jackrabt	ジャックラビット (set 1)	じゃっくらびっと	Zaccaria
 jackrab2	ジャックラビット (set 2)	じゃっくらびっと	Zaccaria
@@ -5778,6 +5781,7 @@ kosmokil	カミカゼ / Kosmo Killer	かみかぜ	bootleg
 kamikaze	カミカゼ	かみかぜ	Leijac
 spcking2	スペースインベーダー / Space King 2	すぺーすいんべーだー_1_1	Konami
 spaceint	スペースイントルーダー	すぺーすいんとるーだー	Shoei
+spaceinj	スペースイントルーダー (日本版)	すぺーすいんとるーだー	Shoei
 spacefb	スペースファイアバード (Nintendo)	すぺーすふぁいあばーど	Nintendo
 spacefbg	スペースファイアバード (Gremlin)	すぺーすふぁいあばーど	Gremlin
 spacefbb	スペースファイアバード (海賊版)	すぺーすふぁいあばーど	bootleg
@@ -5900,10 +5904,11 @@ supertr3	スーパートリブIII	すーぱーとりぶ_3	Status Games
 tickee	ティッキーティカッツ	てぃっきーてぃかっつ	Raster Elite
 ghoshunt	ゴーストハンター	ごーすとはんたー	Hanaho Games
 tutstomb	タッツトゥーム	たっつとぅーむ	Island Design
-crgolf	クラウンズゴルフ (set 1)	くらうんずごるふ	Nasco Japan
-crgolfa	クラウンズゴルフ (set 2)	くらうんずごるふ	Nasco Japan
+crgolf	クラウンズゴルフ (set 1)	くらうんずごるふ_1	Nasco Japan
+crgolfa	クラウンズゴルフ (set 2)	くらうんずごるふ_1	Nasco Japan
 crgolfb	チャンピオンゴルフ (海賊版 set 1)	ちゃんぴおんごるふ	Nasco Japan
 crgolfc	チャンピオンゴルフ	ちゃんぴおんごるふ	Nasco Japan
+crgolfhi	クラウンズゴルフ イン ハワイ	くらうんずごるふ_2いんはわい	Nasco Japan
 truco	トゥルーコ・トロン	とぅるーことろん	Playtronic SRL
 thedeep	ザ・ディープ (日本版)	ざでぃーぷ	Woodplace Inc.
 rundeep	ザ・ディープ / Run Deep	ざでぃーぷ	Cream
@@ -5936,6 +5941,7 @@ landbrk	ランドブレイカー (海外版 ver 3.03)	らんどぶれいかー	Eolith
 landbrka	ランドブレイカー (海外版 ver 3.02)	らんどぶれいかー	Eolith
 raccoon	ラクーンワールド	らくーんわーるど	Eolith
 fort2b	フォートレス2 -Blue Arcade	ふぉーとれす2	Eolith
+klondkp	クロンダイクプラス	くろんだいくぷらす	Eolith
 xfiles	X-ファイル	えっくすふぁいる	dgPIX Entertainment Inc.
 kdynastg	キング・オブ・ダイナストギア (ver 1.8)	きんぐおぶだいなすとぎあ	EZ Graphics
 promutrv	プログレッシブミュージックトリビア (question set 1)	ぷろぐれっしぶみゅーじっくとりびあ	Enerdyne Technologies Inc.
