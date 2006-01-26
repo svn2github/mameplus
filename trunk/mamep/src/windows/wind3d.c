@@ -536,9 +536,9 @@ void win_d3d_wait_vsync(void)
 	BOOL is_vblank;
 
 	// if we're not already in VBLANK, wait for it
-	while (IDirectDraw7_GetVerticalBlankStatus(ddraw7, &is_vblank)==DD_OK && is_vblank)
+	while (IDirectDraw7_GetVerticalBlankStatus(ddraw7, &is_vblank) == DD_OK && is_vblank)
 		;
-	while (IDirectDraw7_GetVerticalBlankStatus(ddraw7, &is_vblank)==DD_OK && !is_vblank)
+	while (IDirectDraw7_GetVerticalBlankStatus(ddraw7, &is_vblank) == DD_OK && !is_vblank)
 		;
 }
 
@@ -2610,17 +2610,9 @@ tryagain:
 	// sync to VBLANK?
 	if ((win_wait_vsync || win_sync_refresh) && throttle && !(!win_window_mode && win_triple_buffer))
 	{
-		BOOL is_vblank;
-
 		// this counts as idle time
 		profiler_mark(PROFILER_IDLE);
-
-		while (IDirectDraw7_GetVerticalBlankStatus(ddraw7, &is_vblank)==DD_OK && is_vblank)
-			;
-		while (IDirectDraw7_GetVerticalBlankStatus(ddraw7, &is_vblank)==DD_OK && !is_vblank)
-			;
-
-		// idle time done
+		win_d3d_wait_vsync();
 		profiler_mark(PROFILER_END);
 	}
 

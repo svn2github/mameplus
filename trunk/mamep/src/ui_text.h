@@ -216,6 +216,7 @@ enum
 
 	/* refresh rate */
 	UI_refresh_rate,
+	UI_decoding_gfx,
 
 	/* autofire stuff */
 	UI_autofireoff,

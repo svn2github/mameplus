@@ -21,6 +21,7 @@
 #include "drawgfx.h"
 #include "palette.h"
 #include "ui_pal.h"
+#include "inptport.h"
 
 #ifdef MESS
 #include "device.h"
