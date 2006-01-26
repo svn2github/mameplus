@@ -164,6 +164,22 @@ void* CLIB_DECL malloc(size_t size)
 }
 
 
+char* CLIB_DECL strdup(const char *s)
+{
+	size_t size;
+	char *p;
+
+	if (s == NULL)
+		return NULL;
+
+	size = strlen(s) + 1;
+	p = malloc_file_line(size, NULL, 0);
+
+	strcpy(p, s);
+	return p;
+}
+
+
 void* calloc_file_line(size_t size, size_t count, const char *file, int line)
 {
 	// first allocate the memory
