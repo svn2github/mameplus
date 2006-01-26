@@ -4678,7 +4678,7 @@ static void onscrd_overclock(int increment,int arg)
 		overclock = cpunum_get_clockscale(arg);
 		overclock += 0.01 * increment;
 		if (overclock < 0.01) overclock = 0.01;
-		if (overclock > 3.0) overclock = 3.0;
+		if (overclock > 4.0) overclock = 4.0;
 		if( doallcpus )
 			for( cpu = 0; cpu < cpu_gettotalcpu(); cpu++ )
 				cpunum_set_clockscale(cpu, overclock);
@@ -4692,7 +4692,7 @@ static void onscrd_overclock(int increment,int arg)
 		sprintf(buf,"%s %s %3d%%", ui_getstring (UI_allcpus), ui_getstring (UI_overclock), oc);
 	else
 		sprintf(buf,"%s %s%d %3d%%", ui_getstring (UI_overclock), ui_getstring (UI_cpu), arg, oc);
-	displayosd(buf,oc/3,100/3);
+	displayosd(buf,oc/4,100/4);
 }
 
 static void onscrd_refresh(int increment,int arg)

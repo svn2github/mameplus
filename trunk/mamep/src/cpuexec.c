@@ -360,16 +360,6 @@ int cpu_init(void)
  *
  *************************************/
 
-short cpu_clocks[MAX_CPU];
-
-static int set_overclock(const char *name)
-{
-	if (!strcmp(name, "s1945p")   || !strcmp(name, "s1945pd"))
-		return 300;
-
-	return 100;
-}
-
 static void cpu_pre_run(void)
 {
 	int cpunum;
@@ -427,19 +417,6 @@ static void cpu_pre_run(void)
 	/* disallow save state registrations starting here */
 	state_save_allow_registration(FALSE);
 	state_save_dump_registry();
-
-	for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
-	{
-		if (cpu_clocks[cpunum] < 1 || cpu_clocks[cpunum] > 300)
-		{
-			if (cpunum == 0)
-				cpu_clocks[0]      = set_overclock(Machine->gamedrv->name);
-			else
-				cpu_clocks[cpunum] = 100;
-		}
-
-		cpunum_set_clockscale(cpunum, (double)(cpu_clocks[cpunum]) / 100.0);
-	}
 }
 
 
@@ -2233,9 +2210,29 @@ static void cpu_inittimers(void)
  *
  *************************************/
 
+static short default_clocks[MAX_CPU];
+
+static void set_overclock(void)
+{
+	const char *name = Machine->gamedrv->name;
+
+	if (!strcmp(name, "s1945p") || !strcmp(name, "s1945pd"))
+		cpunum_set_clockscale(0, 3.0);
+}
+
 void cpu_load(int config_type, xml_data_node *parentnode)
 {
 	xml_data_node *childnode;
+
+	if (default_clocks[0] == 0)
+	{
+		int i;
+
+		set_overclock();
+
+		for (i = 0; i < cpu_gettotalcpu(); i++)
+			default_clocks[i] = cpunum_get_clockscale(i) * 100.0 + 0.5;
+	}
 
 	/* we only care about game files */
 	if (config_type != CONFIG_TYPE_GAME)
@@ -2248,13 +2245,13 @@ void cpu_load(int config_type, xml_data_node *parentnode)
 	for (childnode = xml_get_sibling(parentnode->child, "clock"); childnode; childnode = xml_get_sibling(childnode->next, "clock"))
 	{
 		int i = xml_get_attribute_int(childnode, "index", 0);
-		int clock = 0;
 
-		if (i >= 0 && i < MAX_CPU)
-			clock = xml_get_attribute_int(childnode, "value", 100);
-
-		if (clock)
-			cpu_clocks[i] = clock;
+		if (i >= 0 && i < cpu_gettotalcpu())
+		{
+			int clock = xml_get_attribute_int(childnode, "value", 0);
+			if (clock && clock != default_clocks[i])
+				cpunum_set_clockscale(i, (double)clock / 100.0);
+		}
 	}
 }
 
@@ -2273,8 +2270,7 @@ void cpu_save(int config_type, xml_data_node *parentnode)
 	for (i = 0; i < cpu_gettotalcpu(); i++)
 	{
 		int clock = cpunum_get_clockscale(i) * 100.0 + 0.5;
-
-		if (clock && clock != 100)
+		if (clock && clock != default_clocks[i])
 		{
 			xml_data_node *childnode = xml_add_child(parentnode, "clock", NULL);
 			if (childnode)
