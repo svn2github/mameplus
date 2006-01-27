@@ -2,11 +2,11 @@
 
     Backfire!
 
-	inputs are incomplete (p2 side.., alt control modes etc.)
+    inputs are incomplete (p2 side.., alt control modes etc.)
 
-	there may still be some problems with the 156 co-processor, but it seems to be mostly correct
+    there may still be some problems with the 156 co-processor, but it seems to be mostly correct
 
-	set 2 defaults to wheel controls, so until they're mapped you must change back to joystick in test mode
+    set 2 defaults to wheel controls, so until they're mapped you must change back to joystick in test mode
 
 */
 
@@ -40,7 +40,7 @@ extern int deco16_pf1_colour_bank,deco16_pf2_colour_bank,deco16_pf3_colour_bank,
 
 static int backfire_bank_callback(int bank)
 {
-//	printf("bank callback %04x\n",bank); // bit 1 gets set too?
+//  printf("bank callback %04x\n",bank); // bit 1 gets set too?
 
 	bank = bank >> 4;
 
@@ -126,7 +126,7 @@ static void backfire_drawsprites(mame_bitmap *bitmap,const rectangle *cliprect, 
 
 		// pri 0 = ontop of everything//
 
-//		pri = 0;
+//      pri = 0;
 
 		fx = y & 0x2000;
 		fy = y & 0x4000;
@@ -359,8 +359,8 @@ static ADDRESS_MAP_START( backfire_map, ADDRESS_SPACE_PROGRAM, 32 )
 	AM_RANGE(0x160000, 0x161fff) AM_WRITE(wcvol95_nonbuffered_palette_w) AM_BASE(&paletteram32)
 	AM_RANGE(0x170000, 0x177fff) AM_RAM AM_BASE( &backfire_mainram )// main ram
 
-//	AM_RANGE(0x180010, 0x180013) AM_RAM AM_BASE(&backfire_180010) // always 180010 ?
-//	AM_RANGE(0x188010, 0x188013) AM_RAM AM_BASE(&backfire_188010) // always 188010 ?
+//  AM_RANGE(0x180010, 0x180013) AM_RAM AM_BASE(&backfire_180010) // always 180010 ?
+//  AM_RANGE(0x188010, 0x188013) AM_RAM AM_BASE(&backfire_188010) // always 188010 ?
 
 	AM_RANGE(0x184000, 0x185fff) AM_RAM AM_BASE( &backfire_spriteram32_1 )
 	AM_RANGE(0x18c000, 0x18dfff) AM_RAM AM_BASE( &backfire_spriteram32_2 )
@@ -370,12 +370,12 @@ static ADDRESS_MAP_START( backfire_map, ADDRESS_SPACE_PROGRAM, 32 )
 
 	AM_RANGE(0x1a8000, 0x1a8003) AM_RAM AM_BASE(&backfire_left_priority)
 	AM_RANGE(0x1ac000, 0x1ac003) AM_RAM AM_BASE(&backfire_right_priority)
-//	AM_RANGE(0x1b0000, 0x1b0003) AM_WRITE(MWA32_NOP) // always 1b0000
+//  AM_RANGE(0x1b0000, 0x1b0003) AM_WRITE(MWA32_NOP) // always 1b0000
 
 	/* when set to pentometer in test mode */
-//	AM_RANGE(0x1e4000, 0x1e4003) AM_READ(backfire_unknown_wheel_r)
-//	AM_RANGE(0x1e8000, 0x1e8003) AM_READ(backfire_wheel1_r)
-//	AM_RANGE(0x1e8004, 0x1e8007) AM_READ(backfire_wheel2_r)
+//  AM_RANGE(0x1e4000, 0x1e4003) AM_READ(backfire_unknown_wheel_r)
+//  AM_RANGE(0x1e8000, 0x1e8003) AM_READ(backfire_wheel1_r)
+//  AM_RANGE(0x1e8004, 0x1e8007) AM_READ(backfire_wheel2_r)
 
 	AM_RANGE(0x1c0000, 0x1c0007) AM_READ(deco156_snd_r) AM_WRITE(deco156_snd_w)
 ADDRESS_MAP_END
@@ -432,7 +432,7 @@ INPUT_PORTS_START( backfire )
 
 	PORT_START
 	PORT_BIT ( 0x00ff, 0x0080, IPT_PADDLE ) PORT_MINMAX(0x00,0xff) PORT_SENSITIVITY(30) PORT_KEYDELTA(1)
-	
+
 	PORT_START
 	PORT_BIT ( 0x00ff, 0x0080, IPT_PADDLE ) PORT_MINMAX(0x00,0xff) PORT_SENSITIVITY(30) PORT_KEYDELTA(1)
 
@@ -684,7 +684,7 @@ static void descramble_sound( void )
 
 static READ32_HANDLER( backfire_speedup_r )
 {
-//	printf( "%08x\n",activecpu_get_pc());
+//  printf( "%08x\n",activecpu_get_pc());
 
 	if (activecpu_get_pc()==0xce44)  cpu_spinuntil_time(TIME_IN_USEC(400)); // backfire
 	if (activecpu_get_pc()==0xcee4)  cpu_spinuntil_time(TIME_IN_USEC(400)); // backfira

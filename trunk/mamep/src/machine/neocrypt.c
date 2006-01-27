@@ -546,7 +546,7 @@ static void neogeo_gfx_decrypt(int extra_xor)
 		baser ^= address_16_23_xor2[(baser >> 8) & 0xff] << 16;
 		baser ^= address_0_7_xor[(baser >> 8) & 0xff];
 
-		
+
 		if (rom_size == 0x3000000) /* special handling for preisle2 */
 		{
 			if (rpos < 0x2000000/4)
@@ -559,7 +559,7 @@ static void neogeo_gfx_decrypt(int extra_xor)
 			if (rpos < 0x4000000/4)
 				baser &= (0x4000000/4)-1;
 			else
-				baser = 0x4000000/4 + (baser & ((0x1000000/4)-1));			
+				baser = 0x4000000/4 + (baser & ((0x1000000/4)-1));
 		}
 		else /* Clamp to the real rom size */
 			baser &= (rom_size/4)-1;
