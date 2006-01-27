@@ -8,7 +8,7 @@
 
 static const char *stat_versions[] =
 {
-	"0.103u4    January   27th 2006",
+	"0.103u4    January   26th 2006",
 	"0.103u3    January   19th 2006",
 	"0.103u2fix January   12th 2006",
 	"0.103u2    January   10th 2006",
