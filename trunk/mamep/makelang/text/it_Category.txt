@@ -294,6 +294,10 @@ Quiz / Inglese
 Quiz / English *Mature*
 Quiz / Inglese *Adulti*
 
+# 3008
+Quiz / French
+Quiz / Francese
+
 # 3012
 Quiz / Italian
 Quiz / Italiano
@@ -553,10 +557,6 @@ Da Tavolo / Shougi
 # 5693
 Unplayable
 Ingiocabili
-
-# 3008
-Quiz / French
-
 
 # 4761
 Sports / Baseball

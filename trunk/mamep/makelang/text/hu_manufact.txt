@@ -2,6 +2,14 @@
 <unknown>
 <Ismeretlen>
 
+# Digger Man
+Unknown
+Ismeretlen
+
+# Chewing Gum
+unknown
+ismeretlen
+
 # Sea Bass Fishing (JUET 971110 V0.001)
 A wave inc.
 
@@ -74,12 +82,16 @@ Acclaim
 Acom
 
 
-# Stagger I (Japan)
+# Twin Action
 Afega
 
 
 # Jyanshin Densetsu - Quest of Jongmaster
 Aicom
+
+
+# Pochi and Nyaa
+Aiky
 
 
 # Real Mahjong Haihai (Japan)
@@ -182,6 +194,10 @@ Athena
 Atlus
 
 
+# Quintoon (UK, Game Card 95-750-203)
+BFM
+
+
 # BMC Bowling
 BMC
 
@@ -200,6 +216,10 @@ Bandai
 
 # Pretty Soldier Sailor Moon (95/03/22B)
 Banpresto
+
+
+# The Crystal Maze: Team Challenge (SWP)
+Barcrest
 
 
 # One + Two
@@ -442,6 +462,10 @@ E.G. Felaco
 EIM
 
 
+# Quintoon (Dutch, Game Card 95-750-136)
+ELAM
+
+
 # Behind Enemy Lines
 EPL Productions
 
@@ -452,6 +476,10 @@ ESD
 
 # Tugboat
 ETM
+
+
+# King of Dynast Gear (version 1.8)
+EZ Graphics
 
 
 # Dangerous Dungeons
@@ -1254,6 +1282,10 @@ Philko
 Playmark
 
 
+# SvC Chaos - SNK vs Capcom (Asia, JAMMA PCB)
+Playmore
+
+
 # Truco-Tron
 Playtronic SRL
 
@@ -1348,6 +1380,14 @@ SA
 
 # Safari Rally (Japan)
 SNK
+
+
+# Meijinsen
+SNK Electronics corp.
+
+
+# Metal Slug 5
+SNK Playmore
 
 
 # Prehistoric Isle in 1930 (US)
@@ -1702,10 +1742,6 @@ Telko
 Test ROM
 
 
-# The Couples (Set 1)
-The Couples
-
-
 # Lethal Justice
 The Game Room
 
@@ -1772,10 +1808,6 @@ Universal Video Spiel
 
 # Taiwan Chess Legend
 Uniwang
-
-
-# Digger Man
-Unknown
 
 
 # Rabio Lepus (Japan)
@@ -1934,6 +1966,10 @@ Yubis/AV JAPAN
 Yuga
 
 
+# Samurai Shodown V / Samurai Spirits Zero (set 1)
+Yuki Enterprise
+
+
 # Blazing Star
 Yumekobo
 
@@ -1988,9 +2024,5 @@ dgPIX Entertainment Inc.
 
 # Puckman (Falcom?)
 hack
-
-
-# Chewing Gum
-unknown
 
 

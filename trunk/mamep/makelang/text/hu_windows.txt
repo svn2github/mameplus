@@ -94,7 +94,7 @@ Egerek autómatikusan elérhetõk a következõ végett %s\n
 Average FPS: %f (%d frames)\n
 Átlagos FPS: %f (%d képkocka)\n
 
-# windows/wind3d.c: 2668 windows/winddraw.c: 1466, 1765
+# windows/wind3d.c: 2669 windows/winddraw.c: 1467, 1766
 Avg Flip = %d
 Tükrözés átlag = %d
 
@@ -478,13 +478,25 @@ OSD kijelzõ szín (világos)
 OSD bar color (medium)
 OSD kijelzõ szín (közepes)
 
-# windows/fileio.c: 371
+# windows/fileio.c: 374
 Out of memory!\n
 Kevés a memória!\n
 
 # windows/fronthlp.c: 790
 PARTKNOWN %s\n
 RÉSZLEGESEN ISMERT %s\n
+
+# windows/config.c: 429
+Parsing %s : ERROR\n
+Elemzés %s : HIBA\n
+
+# windows/config.c: 439
+Parsing %s : N/A\n
+Elemzés %s : N/A\n
+
+# windows/config.c: 434
+Parsing %s : OK\n
+Parsing %s : RENDBEN\n
 
 # windows/config.c: 581
 Playing back previously recorded game %s (%s) [press return]\n
@@ -514,7 +526,7 @@ RGB effektek felület kialakítva: %s\n
 RGB pattern has a wrong filesize (expected %i bytes, found %i)\n
 RGB minta mérete nem megfelelõ (elvárt %i bájt, talált %i)\n
 
-# windows/winddraw.c: 1389, 1474, 1773
+# windows/winddraw.c: 1389, 1475, 1774
 Recreating surfaces\n
 Felületek újraalkotása\n
 
@@ -522,7 +534,7 @@ Felületek újraalkotása\n
 Rendering to an off-screen surface and using blt()\n
 Képernyõn kívüli felület létrehozása és használata  blt()\n
 
-# windows/wind3d.c: 2319, 2690
+# windows/wind3d.c: 2319, 2691
 Restoring surfaces\n
 Felületek visszaállítása\n
 
@@ -582,11 +594,11 @@ Teljes képernyõre váltás
 UNKNOWN   %s\n
 ISMERETLEN   %s\n
 
-# windows/wind3d.c: 2681
+# windows/wind3d.c: 2682
 Unable to blt RGB effect to back_surface: %08x\n
 Unable to blt RGB effect to back_surface: %08x\n
 
-# windows/wind3d.c: 2648
+# windows/wind3d.c: 2649
 Unable to blt back_surface to primary_surface: %08x\n
 Unable to blt back_surface to primary_surface: %08x\n
 
@@ -598,7 +610,7 @@ Unable to blt blit_surface to texture_surface: %08x\n
 Unable to blt scale_surface to texture_surface: %08x\n
 Unable to blt scale_surface to texture_surface: %08x\n
 
-# windows/winddraw.c: 1438
+# windows/winddraw.c: 1439
 Unable to blt target_surface: %08x\n
 Unable to blt target_surface: %08x\n
 
@@ -614,7 +626,7 @@ RGB effekt minta keresése sikertelen\n
 Unable to lock blit_surface: %08x\n
 blit_surface zárolása sikertelen: %08x\n
 
-# windows/winddraw.c: 1608, 1708
+# windows/winddraw.c: 1609, 1709
 Unable to lock target_surface: %08x\n
 target_surface zárolása sikertelen: %08x\n
 
@@ -702,7 +714,7 @@ Windows Direct3D 2D képi beállítások
 Windows misc options
 Egyéb Windows beállítások
 
-# windows/fileio.c: 115
+# windows/fileio.c: 118
 Windows path and directory options
 Windows helye és mappa beállítások
 
@@ -826,7 +838,7 @@ m68k mag (0:C, 1:DRC, 2:ASM+DRC) megváltoztatása
 change system bios
 rendszer bios változtatása
 
-# windows/fileio.c: 143
+# windows/fileio.c: 146
 cheat filename
 csalás fájlnév
 
@@ -866,47 +878,51 @@ dial
 digital
 digitális
 
-# windows/fileio.c: 135
+# windows/fileio.c: 138
 directory for Artwork (Overlays etc.)
 képalkotások könyvtár (Átlátszó stb.)
 
-# windows/fileio.c: 137
+# windows/fileio.c: 140
 directory for hard drive image difference files
 merevlemez kép eltérés fájlok mappája
 
-# windows/fileio.c: 142
+# windows/fileio.c: 143
+directory for ips files
+IPS fájlok könyvtára
+
+# windows/fileio.c: 145
 directory for localized language files
 nyelvi fájlok helyének könyvtára
 
-# windows/fileio.c: 136
+# windows/fileio.c: 139
 directory for screenshots (.png format)
 pillanatképek mappa (.png formátum)
 
-# windows/fileio.c: 129
+# windows/fileio.c: 132
 directory to save configurations
 beállítások mentése mappa
 
-# windows/fileio.c: 138
+# windows/fileio.c: 141
 directory to save controller definitions
 játékirányító leírások mentés mappa
 
-# windows/fileio.c: 133
+# windows/fileio.c: 136
 directory to save hiscores
 magas pontok mentése mappa
 
-# windows/fileio.c: 132
+# windows/fileio.c: 135
 directory to save input device logs
 bemeneti eszköz bejegyzések mentés mappa
 
-# windows/fileio.c: 131
+# windows/fileio.c: 134
 directory to save memory card contents
 memória kártya tartalmának mentése mappa
 
-# windows/fileio.c: 130
+# windows/fileio.c: 133
 directory to save nvram contents
 NVRAM tartalom mentése mappa
 
-# windows/fileio.c: 134
+# windows/fileio.c: 137
 directory to save states
 állások mentése mappa
 
@@ -970,6 +986,10 @@ mûködik a (billentyûzet|egér|joystick|fénypisztoly) ha van gázpedál irányító
 enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is present
 mûködik a (billentyûzet|egér|joystick|fénypisztoly) ha van analóg joystick irányító
 
+# windows/config.c: 258
+enable automatic restore at startup and save at exit
+automatikus betöltés induláskor és mentés kilépéskor bekapcsolva
+
 # windows/input.c: 225
 enable dual lightgun input
 kettõs fénypisztoly használat
@@ -990,6 +1010,10 @@ fénypisztoly használat
 enable mouse input
 egér használat
 
+# windows/input.c: 234
+enable pointing stick input
+pointing stick irányító bekapcsolva
+
 # windows/wind3dfx.c: 190
 enable rotation of effects for rotated games
 effektek forgatása bekapcsolva a forgatott játékoknál
@@ -1009,6 +1033,10 @@ hibakeresõ be/kikapcsolva (csak ha elérhetõ)
 # windows/config.c: 285
 enable/disable loading of configfiles
 be/kikapcsolva a beállítási fájl betöltése
+
+# windows/config.c: 290
+enable/disable local language game list
+helyi nyelvi játéklista bekapcsolva/kikapcsolva
 
 # windows/config.c: 234
 enable/disable sound and sound CPUs
@@ -1202,6 +1230,10 @@ beszúrásos eljárás
 invalid
 érvénytelen
 
+# windows/config.c: 260
+ips datfile name
+ips adatfájl név
+
 # windows/fronthlp.c: 730
 is bad\n
 rossz\n
@@ -1258,15 +1290,15 @@ kimeneti hiba bejegyzés a hibakeresõhöz
 paddle
 paddle
 
-# windows/fileio.c: 125, 127
+# windows/fileio.c: 128, 130
 path to ini files
 ini fájl elérése
 
-# windows/fileio.c: 117
+# windows/fileio.c: 120
 path to romsets
 ROM készletek elérése
 
-# windows/fileio.c: 123
+# windows/fileio.c: 126
 path to samplesets
 minta készletek elérése
 
@@ -1589,36 +1621,4 @@ ablak képkocka szín (közepes)
 # windows/fronthlp.c: 66
 year, manufacturer and full name
 év, gyártó és teljes név
-
-# windows/config.c: 429
-Parsing %s : ERROR\n
-
-
-# windows/config.c: 439
-Parsing %s : N/A\n
-
-
-# windows/config.c: 434
-Parsing %s : OK\n
-
-
-# windows/fileio.c: 140
-directory for ips files
-
-
-# windows/config.c: 258
-enable automatic restore at startup and save at exit
-
-
-# windows/input.c: 234
-enable pointing stick input
-
-
-# windows/config.c: 290
-enable/disable local language game list
-
-
-# windows/config.c: 260
-ips datfile name
-
 

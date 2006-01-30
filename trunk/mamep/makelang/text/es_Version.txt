@@ -90,6 +90,46 @@
 .102u1
 0.102 Actualización 1
 
+# 6447
+.102u2
+0.102 Actualización 2
+
+# 6463
+.102u3
+0.102 Actualización 3
+
+# 6476
+.102u4
+0.102 Actualización 4
+
+# 6493
+.102u5
+0.102 Actualización 5
+
+# 6519
+.103
+0.103
+
+# 6550
+.103u1
+0.103 Actualización 1
+
+# 6561
+.103u2
+0.103 Actualización 2
+
+# 6606
+.103u2fix
+0.103 Actualización 2 (Fix)
+
+# 6613
+.103u3
+0.103 Actualización 3
+
+# 6622
+.103u4
+0.103 Actualización 4
+
 # 91
 .11
 0.11
@@ -1078,7 +1118,7 @@
 .99u9
 0.99 Actualización 9
 
-# 6447
+# 6630
 Plus!
 Plus!
 

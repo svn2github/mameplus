@@ -74,13 +74,17 @@ Acclaim
 Acom
 Acom
 
-# Stagger I (Japan)
+# Twin Action
 Afega
 Afega
 
 # Jyanshin Densetsu - Quest of Jongmaster
 Aicom
 Aicom
+
+# Pochi and Nyaa
+Aiky
+Aiky
 
 # Real Mahjong Haihai (Japan)
 Alba
@@ -182,6 +186,10 @@ Athena
 Atlus
 Atlus
 
+# Quintoon (UK, Game Card 95-750-203)
+BFM
+BFM
+
 # BMC Bowling
 BMC
 BMC
@@ -201,6 +209,10 @@ Bandai
 # Pretty Soldier Sailor Moon (95/03/22B)
 Banpresto
 Banpresto
+
+# The Crystal Maze: Team Challenge (SWP)
+Barcrest
+Barcrest
 
 # One + Two
 Barko
@@ -410,6 +422,10 @@ Du Tech
 Duintronic
 Duintronic
 
+# Alien Arena
+Duncan Brown
+Duncan Brown
+
 # V-Liner (set 1)
 Dyna
 Dyna
@@ -442,6 +458,10 @@ E.G. Felaco
 EIM
 EIM
 
+# Quintoon (Dutch, Game Card 95-750-136)
+ELAM
+ELAM
+
 # Behind Enemy Lines
 EPL Productions
 EPL Productions
@@ -453,6 +473,10 @@ ESD
 # Tugboat
 ETM
 ETM
+
+# King of Dynast Gear (version 1.8)
+EZ Graphics
+EZ Graphics
 
 # Dangerous Dungeons
 East Coast Coin Company
@@ -1254,6 +1278,10 @@ Philko
 Playmark
 Playmark
 
+# SvC Chaos - SNK vs Capcom (Asia, JAMMA PCB)
+Playmore
+Playmore
+
 # Truco-Tron
 Playtronic SRL
 Playtronic SRL
@@ -1349,6 +1377,14 @@ SA
 # Safari Rally (Japan)
 SNK
 SNK
+
+# Meijinsen
+SNK Electronics corp.
+SNK Electronics corp.
+
+# Metal Slug 5
+SNK Playmore
+SNK Playmore
 
 # Prehistoric Isle in 1930 (US)
 SNK of America
@@ -1702,10 +1738,6 @@ Telko
 Test ROM
 Test ROM
 
-# The Couples (Set 1)
-The Couples
-The Couples
-
 # Lethal Justice
 The Game Room
 The Game Room
@@ -1933,6 +1965,10 @@ Yubis/AV JAPAN
 # Mahjong Gakuen
 Yuga
 Yuga
+
+# Samurai Shodown V / Samurai Spirits Zero (set 1)
+Yuki Enterprise
+Yuki Enterprise
 
 # Blazing Star
 Yumekobo

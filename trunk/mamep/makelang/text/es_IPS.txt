@@ -1,10 +1,10 @@
-# 22
+# 20
 CPS1
-Capcom System 1
+Capcom Power System 1
 
-# 31
+# 30
 CPS2
-Capcom System 2
+Capcom Power System 2
 
 # Title
 IPS
@@ -14,11 +14,11 @@ IPS
 Misc
 Varios
 
-# 36
+# 35
 Neo-Geo
 Neo-Geo
 
-# 89
+# 93
 PGM
 PolyGame Master
 

@@ -94,7 +94,7 @@ Auto habilitar ratón para la presencia de un %s\n
 Average FPS: %f (%d frames)\n
 Promedio FPS: %f (%d imagenes)\n
 
-# windows/wind3d.c: 2668 windows/winddraw.c: 1466, 1765
+# windows/wind3d.c: 2661 windows/winddraw.c: 1459, 1758
 Avg Flip = %d
 Promedio Flip = %d
 
@@ -318,7 +318,7 @@ Para utilizar instrucciones, por favor consultar el archivo windows.txt\n
 Frontend Related
 Interfaz relacionado
 
-# windows/window.c: 722
+# windows/window.c: 729
 Full Screen\tAlt+Enter
 Pantalla Completa\tAlt+Enter
 
@@ -478,7 +478,7 @@ Color barra OSD (luz)
 OSD bar color (medium)
 Color barra OSD (medio)
 
-# windows/fileio.c: 371
+# windows/fileio.c: 374
 Out of memory!\n
 Fuera de memoria!\n
 
@@ -526,7 +526,7 @@ Superficie de efectos RGB creado: %s\n
 RGB pattern has a wrong filesize (expected %i bytes, found %i)\n
 RGB paterno tiene un tamaño de archivo falso (Debe tener %i bytes, encontrado %i)\n
 
-# windows/winddraw.c: 1389, 1474, 1773
+# windows/winddraw.c: 1389, 1467, 1766
 Recreating surfaces\n
 Recreando superficies\n
 
@@ -534,7 +534,7 @@ Recreando superficies\n
 Rendering to an off-screen surface and using blt()\n
 Renderizando para una superficie off-screen y usando blt()\n
 
-# windows/wind3d.c: 2319, 2690
+# windows/wind3d.c: 2319, 2683
 Restoring surfaces\n
 Restaurando superficie\n
 
@@ -594,11 +594,11 @@ Cambiar a Pantalla Completa
 UNKNOWN   %s\n
 DESCONOCIDO   %s\n
 
-# windows/wind3d.c: 2681
+# windows/wind3d.c: 2674
 Unable to blt RGB effect to back_surface: %08x\n
 Deseleccionado para blt efecto RGB a back_surface: %08x\n
 
-# windows/wind3d.c: 2648
+# windows/wind3d.c: 2641
 Unable to blt back_surface to primary_surface: %08x\n
 Deseleccionado para blt back_surface a primary_surface: %08x\n
 
@@ -610,7 +610,7 @@ Deseleccionado para blt blit_surface a texture_surface: %08x\n
 Unable to blt scale_surface to texture_surface: %08x\n
 Deseleccionado para blt scale_surface a texture_surface: %08x\n
 
-# windows/winddraw.c: 1438
+# windows/winddraw.c: 1431
 Unable to blt target_surface: %08x\n
 Deseleccionado para blt target_surface: %08x\n
 
@@ -626,7 +626,7 @@ Deseleccionado para buscar efectos RGB paternos\n
 Unable to lock blit_surface: %08x\n
 Deseleccionado para cerrar blit_surface: %08x\n
 
-# windows/winddraw.c: 1608, 1708
+# windows/winddraw.c: 1601, 1701
 Unable to lock target_surface: %08x\n
 Deseleccionado para cerrar target_surface: %08x\n
 
@@ -714,7 +714,7 @@ Opciones de vídeo de Windows Direct3D 2D
 Windows misc options
 Opciones variadas de ventana
 
-# windows/fileio.c: 115
+# windows/fileio.c: 118
 Windows path and directory options
 Ruta de windows y directorio de opciones
 
@@ -838,7 +838,7 @@ cambiar núcleo m68k (0:C, 1:DRC, 2:ASM+DRC)
 change system bios
 cambiar sistema bios
 
-# windows/fileio.c: 143
+# windows/fileio.c: 146
 cheat filename
 archivo de trucos
 
@@ -878,51 +878,51 @@ volante
 digital
 digital
 
-# windows/fileio.c: 135
+# windows/fileio.c: 138
 directory for Artwork (Overlays etc.)
 directorio para Decorados (Overlays etc.)
 
-# windows/fileio.c: 137
+# windows/fileio.c: 140
 directory for hard drive image difference files
 directorio para archivos .diff
 
-# windows/fileio.c: 140
+# windows/fileio.c: 143
 directory for ips files
 directorio para archivos IPS
 
-# windows/fileio.c: 142
+# windows/fileio.c: 145
 directory for localized language files
 directorio para archivos de idiomas localizados
 
-# windows/fileio.c: 136
+# windows/fileio.c: 139
 directory for screenshots (.png format)
 directorio para capturas de pantalla (formato .png)
 
-# windows/fileio.c: 129
+# windows/fileio.c: 132
 directory to save configurations
 directorio para guardar configuraciones
 
-# windows/fileio.c: 138
+# windows/fileio.c: 141
 directory to save controller definitions
 directorio prar guardar definiciones del controlador
 
-# windows/fileio.c: 133
+# windows/fileio.c: 136
 directory to save hiscores
 directorio para guardar records
 
-# windows/fileio.c: 132
+# windows/fileio.c: 135
 directory to save input device logs
 directorio para guardar entrada de los del dispositivo
 
-# windows/fileio.c: 131
+# windows/fileio.c: 134
 directory to save memory card contents
 directorio para guardar contenidos de la tarjeta de memoria
 
-# windows/fileio.c: 130
+# windows/fileio.c: 133
 directory to save nvram contents
 directorio para guardar el contenido de la nvram
 
-# windows/fileio.c: 134
+# windows/fileio.c: 137
 directory to save states
 directorio para guardar estados
 
@@ -1290,15 +1290,15 @@ salida de log de errores a depurador
 paddle
 paleta
 
-# windows/fileio.c: 125, 127
+# windows/fileio.c: 128, 130
 path to ini files
 ruta para archivos ini
 
-# windows/fileio.c: 117
+# windows/fileio.c: 120
 path to romsets
 ruta para paquete de roms
 
-# windows/fileio.c: 123
+# windows/fileio.c: 126
 path to samplesets
 ruta para muestras de sonido
 

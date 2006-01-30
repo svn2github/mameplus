@@ -1,3 +1,11 @@
+# 22
+CPS1
+CPS1
+
+# 31
+CPS2
+CPS2
+
 # Title
 IPS
 IPS
@@ -10,19 +18,11 @@ Különféle
 Neo-Geo
 Neo-Geo
 
+# 89
+PGM
+PGM
+
 # 7
 Translation
 Fordítás
-
-# 22
-CPS1
-
-
-# 31
-CPS2
-
-
-# 89
-PGM
-
 
