@@ -132,8 +132,10 @@ static int   initialize_rc_winui_config(void);
 static int   rc_load_winui_config(void);
 static int   rc_save_winui_config(void);
 
-static int   rc_load_config(int driver_index);
-static int   rc_save_config(int driver_index);
+static int   rc_load_default_config(void);
+static int   rc_save_default_config(void);
+static int   rc_load_game_config(int driver_index);
+static int   rc_save_game_config(int driver_index);
 static int   rc_load_alt_config(alt_options_type *alt_option);
 static int   rc_save_alt_config(alt_options_type *alt_option);
 
@@ -1074,8 +1076,15 @@ static options_type * GetAltOptions(alt_options_type *alt_option)
 {
 	if (alt_option->variable->use_default)
 	{
-		options_type *opt = &global;
+		options_type *opt = GetDefaultOptions();
 		char *bios = NULL;
+
+#ifdef USE_IPS
+		// HACK: DO NOT INHERIT IPS CONFIGURATION
+		char *patchname = alt_option->option->patchname;
+
+		alt_option->option->patchname = NULL;
+#endif /* USE_IPS */
 
 		// if bios has been loaded, save it
 		if (alt_option->option->bios)
@@ -1096,13 +1105,14 @@ static options_type * GetAltOptions(alt_options_type *alt_option)
 			FreeIfAllocated(&alt_option->option->bios);
 			alt_option->option->bios = bios;
 		}
+
+#ifdef USE_IPS
+		alt_option->option->patchname = patchname;
+#endif /* USE_IPS */
 	}
 
 	if (alt_option->variable->options_loaded == FALSE)
-	{
 		LoadAltOptions(alt_option);
-		alt_option->variable->options_loaded = TRUE;
-	}
 
 	return alt_option->option;
 }
@@ -1181,10 +1191,7 @@ options_type * GetGameOptions(int driver_index)
 	}
 
 	if (game_variables[driver_index].options_loaded == FALSE)
-	{
 		LoadGameOptions(driver_index);
-		game_variables[driver_index].options_loaded = TRUE;
-	}
 
 	return &game_options[driver_index];
 }
@@ -2714,14 +2721,55 @@ DWORD GetFolderFlags(const char *folderName)
 
 void SaveGameOptions(int driver_index)
 {
+	int i;
+
 	assert (0 <= driver_index && driver_index < num_games);
 
-	rc_save_config(driver_index);
+	rc_save_game_config(driver_index);
+
+	for (i = 0; i < num_games; i++)
+		if (DriverParentIndex(i) == driver_index)
+		{
+			game_variables[i].use_default = TRUE;
+			game_variables[i].options_loaded = FALSE;
+		}
+}
+
+static void InvalidateGameOptionsInDriver(const char *name)
+{
+	int i;
+
+	for (i = 0; i < num_games; i++)
+	{
+		if (game_variables[i].alt_index != -1)
+			continue;
+
+		if (strcmp(GetDriverFilename(i), name) == 0)
+		{
+			game_variables[i].use_default = TRUE;
+			game_variables[i].options_loaded = FALSE;
+		}
+	}
 }
 
 static void SaveAltOptions(alt_options_type *alt_option)
 {
 	rc_save_alt_config(alt_option);
+
+	if (alt_option->option == GetVectorOptions())
+	{
+		int i;
+
+		for (i = 0; i < num_alt_options; i++)
+			if (alt_options[i].need_vector_config)
+			{
+				alt_options[i].variable->use_default = TRUE;
+				alt_options[i].variable->options_loaded = FALSE;
+				InvalidateGameOptionsInDriver(alt_options[i].name);
+			}
+	}
+
+	InvalidateGameOptionsInDriver(alt_option->name);
 }
 
 void SaveFolderOptions(const char *name)
@@ -2735,20 +2783,49 @@ void SaveFolderOptions(const char *name)
 
 void SaveDefaultOptions(void)
 {
-	rc_save_config(-1);
+	int i;
+
+	rc_save_default_config();
+
+	for (i = 0; i < num_alt_options; i++)
+	{
+		alt_options[i].variable->use_default = TRUE;
+		alt_options[i].variable->options_loaded = FALSE;
+	}
+
+	for (i = 0; i < num_games; i++)
+	{
+		game_variables[i].use_default = TRUE;
+		game_variables[i].options_loaded = FALSE;
+	}
+
+	/* default option has bios tab. so save default bios */
+	for (i = 0; i < num_alt_options; i++)
+		if (alt_options[i].option->bios)
+		{
+			char *bios = strdup(alt_options[i].option->bios);
+
+			GetAltOptions(&alt_options[i]);
+
+			FreeIfAllocated(&alt_options[i].option->bios);
+			alt_options[i].option->bios = bios;
+
+			rc_save_alt_config(&alt_options[i]);
+		}
 }
 
 void SaveOptions(void)
 {
 	int i;
 
-	SaveGlobalOptions();
+	rc_save_winui_config();
+	rc_save_default_config();
 
 	for (i = 0; i < num_games; i++)
-		SaveGameOptions(i);
+		rc_save_game_config(i);
 
 	for (i = 0; i < num_alt_options; i++)
-		SaveAltOptions(&alt_options[i]);
+		rc_save_alt_config(&alt_options[i]);
 }
 
 /***************************************************************************
@@ -3199,69 +3276,49 @@ static int rc_write_folder_flags(mame_file *file)
 	return 0;
 }
 
-static int rc_load_config(int driver_index)
+static int rc_load_default_config(void)
 {
 	char filename[_MAX_PATH];
 	mame_file *file;
 	int retval;
 
-	if (driver_index != -1)
-	{
-		int alt_index = game_variables[driver_index].alt_index;
-
-		if (alt_index != -1)
-			return rc_load_alt_config(&alt_options[alt_index]);
-
-		game_variables[driver_index].use_default = TRUE;
-		SetCorePathList(FILETYPE_INI, settings.inidirs);
-		sprintf(filename, "%s.ini", drivers[driver_index]->name);
-	}
-	else
-	{
-		SetCorePathList(FILETYPE_INI, get_base_config_directory());
-		strcpy(filename, MAME_INI);
-	}
+	SetCorePathList(FILETYPE_INI, get_base_config_directory());
+	strcpy(filename, MAME_INI);
 
 	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 0)))
 		return 0;
 
 	ResetD3DEffect();
 
-	if (driver_index != -1)
-	{
-		game_variables[driver_index].use_default = FALSE;
-		game_variables[driver_index].options_loaded = TRUE;
+	sprintf(filename, "%s", MAME_INI);
 
-		gOpts = game_options[driver_index];
-		retval = osd_rc_read(rc_game, file, filename, 1, 1);
-		game_options[driver_index] = gOpts;
+	gOpts = global;
+	retval = osd_rc_read(rc_core, file, filename, 1, 1);
+	global = gOpts;
 
-#ifdef USE_IPS
-		// HACK: DO NOT INHERIT IPS CONFIGURATION
-		if (game_options[driver_index].patchname)
-		{
-			char *patchname = game_options[driver_index].patchname;
+	mame_fclose(file);
 
-			game_options[driver_index].patchname = NULL;
+	return retval;
+}
 
-			if (IsOptionEqual(&game_options[driver_index], GetParentOptions(driver_index)))
-			{
-				dprintf("%s: use_default with ips", drivers[driver_index]->name);
-				game_variables[driver_index].use_default = TRUE;
-			}
+static int rc_save_default_config(void)
+{
+	char filename[_MAX_PATH];
+	mame_file *file;
+	int retval;
 
-			game_options[driver_index].patchname = patchname;
-		}
-#endif /* USE_IPS */
-	}
-	else
-	{
-		sprintf(filename, "%s", MAME_INI);
+	gOpts = global;
+	validate_game_option(&gOpts);
+	SortD3DEffectByOverrides();
+	LanguageEncodeString();
 
-		gOpts = global;
-		retval = osd_rc_read(rc_core, file, filename, 1, 1);
-		global = gOpts;
-	}
+	SetCorePathList(FILETYPE_INI, get_base_config_directory());
+	strcpy(filename, strlower(MAME_INI));
+
+	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 1)))
+		return -1;
+
+	retval = osd_rc_write(rc_core, file, filename);
 
 	mame_fclose(file);
 
@@ -3323,68 +3380,145 @@ static int rc_game_is_changed(struct rc_option *option, void *param)
 	return retval;
 }
 
-static int rc_save_config(int driver_index)
+static options_type *update_game_use_default(int driver_index)
+{
+	options_type *opt = GetParentOptions(driver_index);
+#ifdef USE_IPS
+	// HACK: DO NOT INHERIT IPS CONFIGURATION
+	char *patchname;
+#endif /* USE_IPS */
+
+	if (opt == &game_options[driver_index])
+		return NULL;
+
+#ifdef USE_IPS
+	patchname = game_options[driver_index].patchname;
+	game_options[driver_index].patchname = NULL;
+#endif /* USE_IPS */
+
+	game_variables[driver_index].use_default = IsOptionEqual(&game_options[driver_index], opt);
+
+#ifdef USE_IPS
+	if (game_variables[driver_index].use_default && patchname)
+		dprintf("%s: use_default with ips", drivers[driver_index]->name);
+
+	game_options[driver_index].patchname = patchname;
+#endif /* USE_IPS */
+
+	return opt;
+}
+
+static int rc_load_game_config(int driver_index)
 {
 	char filename[_MAX_PATH];
 	mame_file *file;
 	int retval;
+	int alt_index = game_variables[driver_index].alt_index;
 
-	if (driver_index != -1)
-	{
-		int alt_index = game_variables[driver_index].alt_index;
-		options_type *parent;
+	if (alt_index != -1)
+		return rc_load_alt_config(&alt_options[alt_index]);
 
-		if (alt_index != -1)
-			return rc_save_alt_config(&alt_options[alt_index]);
+	game_variables[driver_index].options_loaded = TRUE;
+	game_variables[driver_index].use_default = TRUE;
+	SetCorePathList(FILETYPE_INI, settings.inidirs);
+	sprintf(filename, "%s.ini", drivers[driver_index]->name);
 
-		parent = GetParentOptions(driver_index);
-		validate_game_option(parent);
+	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 0)))
+		return 0;
 
-		gOpts = *GetGameOptions(driver_index);
-		validate_game_option(&gOpts);
-		SortD3DEffectByOverrides();
+	ResetD3DEffect();
+
+	gOpts = game_options[driver_index];
+	retval = osd_rc_read(rc_game, file, filename, 1, 1);
+	game_options[driver_index] = gOpts;
+
+	update_game_use_default(driver_index);
+	mame_fclose(file);
+
+	return retval;
+}
+
+static int rc_save_game_config(int driver_index)
+{
+	char filename[_MAX_PATH];
+	mame_file *file;
+	int retval;
+	options_type *parent;
+	int alt_index = game_variables[driver_index].alt_index;
+
+	if (game_variables[driver_index].options_loaded == FALSE)
+		return 0;
+
+	if (alt_index != -1)
+		return rc_save_alt_config(&alt_options[alt_index]);
+
+	parent = update_game_use_default(driver_index);
+	if (parent == NULL)
+		return 0;
 
 #ifdef USE_IPS
-		// HACK: DO NOT INHERIT IPS CONFIGURATION
-		if (game_variables[driver_index].use_default && !gOpts.patchname)
+	// HACK: DO NOT INHERIT IPS CONFIGURATION
+	if (game_variables[driver_index].use_default && !game_options[driver_index].patchname)
 #else /* USE_IPS */
-		if (game_variables[driver_index].use_default)
+	if (game_variables[driver_index].use_default)
 #endif /* USE_IPS */
-		{
-			sprintf(filename, "%s\\%s.ini", settings.inidirs, drivers[driver_index]->name);
-			unlink(filename);
-			return 0;
-		}
-
-		SetCorePathList(FILETYPE_INI, settings.inidirs);
-		strcpy(filename, strlower(drivers[driver_index]->name));
-		strcat(filename, ".ini");
-
-		if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 1)))
-			return -1;
-
-		retval = osd_rc_write_changes(rc_game, file, drivers[driver_index]->description,
-		                              rc_game_is_changed, parent);
-	}
-	else
 	{
-		gOpts = global;
-		validate_game_option(&gOpts);
-		SortD3DEffectByOverrides();
-		LanguageEncodeString();
-
-		SetCorePathList(FILETYPE_INI, get_base_config_directory());
-		strcpy(filename, strlower(MAME_INI));
-
-		if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 1)))
-			return -1;
-
-		retval = osd_rc_write(rc_core, file, filename);
+		sprintf(filename, "%s\\%s.ini", settings.inidirs, drivers[driver_index]->name);
+		unlink(filename);
+		return 0;
 	}
+
+	SortD3DEffectByOverrides();
+
+	SetCorePathList(FILETYPE_INI, settings.inidirs);
+	strcpy(filename, strlower(drivers[driver_index]->name));
+	strcat(filename, ".ini");
+
+	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 1)))
+		return -1;
+
+	gOpts = game_options[driver_index];
+	retval = osd_rc_write_changes(rc_game, file, drivers[driver_index]->description,
+	                              rc_game_is_changed, parent);
 
 	mame_fclose(file);
 
 	return retval;
+}
+
+static options_type *update_alt_use_default(alt_options_type *alt_option)
+{
+	options_type *opt = GetDefaultOptions();
+	char *bios;
+#ifdef USE_IPS
+	// HACK: DO NOT INHERIT IPS CONFIGURATION
+	char *patchname;
+#endif /* USE_IPS */
+
+	// try vector.ini
+	if (alt_option->need_vector_config)
+		opt = GetVectorOptions();
+
+	bios = alt_option->option->bios;
+	alt_option->option->bios = global.bios;
+
+#ifdef USE_IPS
+	patchname = alt_option->option->patchname;
+	alt_option->option->patchname = NULL;
+#endif /* USE_IPS */
+
+	alt_option->variable->use_default = IsOptionEqual(alt_option->option, opt);
+
+#ifdef USE_IPS
+	if (alt_option->variable->use_default && patchname)
+		dprintf("%s: use_default with ips", alt_option->name);
+
+	alt_option->option->patchname = patchname;
+#endif /* USE_IPS */
+
+	alt_option->option->bios = bios;
+
+	return opt;
 }
 
 static int rc_load_alt_config(alt_options_type *alt_option)
@@ -3394,6 +3528,7 @@ static int rc_load_alt_config(alt_options_type *alt_option)
 	int len;
 	int retval;
 
+	alt_option->variable->options_loaded = TRUE;
 	alt_option->variable->use_default = TRUE;
 	SetCorePathList(FILETYPE_INI, settings.inidirs);
 	sprintf(filename, "%s", alt_option->name);
@@ -3408,35 +3543,11 @@ static int rc_load_alt_config(alt_options_type *alt_option)
 
 	ResetD3DEffect();
 
-	alt_option->variable->use_default = FALSE;
-	alt_option->variable->options_loaded = TRUE;
-
 	gOpts = *alt_option->option;
 	retval = osd_rc_read(rc_game, file, filename, 1, 1);
 	*alt_option->option = gOpts;
 
-#ifdef USE_IPS
-	// HACK: DO NOT INHERIT IPS CONFIGURATION
-	if (alt_option->option->patchname)
-	{
-		char *patchname = alt_option->option->patchname;
-		options_type *opt = &global;
-
-		// try vector.ini
-		if (alt_option->need_vector_config)
-			opt = GetVectorOptions();
-
-		alt_option->option->patchname = NULL;
-
-		if (IsOptionEqual(alt_option->option, opt))
-		{
-			dprintf("%s: use_default with ips", alt_option->name);
-			alt_option->variable->use_default = TRUE;
-		}
-
-		alt_option->option->patchname = patchname;
-	}
-#endif /* USE_IPS */
+	update_alt_use_default(alt_option);
 
 	mame_fclose(file);
 
@@ -3449,16 +3560,12 @@ static int rc_save_alt_config(alt_options_type *alt_option)
 	mame_file *file;
 	int len;
 	int retval;
-	options_type *parent = &global;
+	options_type *parent;
 
-	if (alt_option->need_vector_config)
-		parent = GetVectorOptions();
+	if (alt_option->variable->options_loaded == FALSE)
+		return 0;
 
-	validate_game_option(parent);
-
-	gOpts = *GetAltOptions(alt_option);
-	validate_game_option(&gOpts);
-	SortD3DEffectByOverrides();
+	parent = update_alt_use_default(alt_option);
 
 	sprintf(filename, "%s", strlower(alt_option->name));
 	len = strlen(filename);
@@ -3480,11 +3587,14 @@ static int rc_save_alt_config(alt_options_type *alt_option)
 		return 0;
 	}
 
+	SortD3DEffectByOverrides();
+
 	SetCorePathList(FILETYPE_INI, settings.inidirs);
 
 	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 1)))
 		return -1;
 
+	gOpts = *alt_option->option;
 	retval = osd_rc_write_changes(rc_game, file, alt_option->name,
 			rc_game_is_changed, parent);
 
@@ -4315,29 +4425,17 @@ static void LoadGameOptions(int driver_index)
 {
 	assert (0 <= driver_index && driver_index < num_games);
 
-	rc_load_config(driver_index);
+	rc_load_game_config(driver_index);
 }
 
 static void LoadAltOptions(alt_options_type *alt_option)
 {
 	rc_load_alt_config(alt_option);
-
-	if (alt_option->has_bios)
-	{
-		char *bios = alt_option->option->bios;
-
-		alt_option->option->bios = global.bios;
-
-		if (IsOptionEqual(alt_option->option, &global))
-			alt_option->variable->use_default = TRUE;
-
-		alt_option->option->bios = bios;
-	}
 }
 
 static void LoadDefaultOptions(void)
 {
-	rc_load_config(-1);
+	rc_load_default_config();
 }
 
 static void LoadOptions(void)
@@ -4384,12 +4482,6 @@ Would you like to use the new configuration?";
 		FreeSettings(&backup.settings);
 
 	bResetGUI = FALSE;
-}
-
-static void SaveGlobalOptions(void)
-{
-	rc_save_winui_config();
-	SaveDefaultOptions();
 }
 
 /* End of options.c */

@@ -4674,6 +4674,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 				pOpts->patchname = strdup(new_opt);
 
 			dprintf("%s / %s | %d", patch_name, pOpts->patchname, strlen(new_opt));
+			SaveGameOptions(nGame);
 		}
 		return TRUE;
 	}
