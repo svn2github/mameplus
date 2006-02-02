@@ -53,6 +53,7 @@ static INT_PTR CALLBACK AuditWindowProc(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 static void ProcessNextRom(void);
 static void ProcessNextSample(void);
 static void CLIB_DECL DetailsPrintf(const char *fmt, ...);
+static void CLIB_DECL DummyPrintf(const char *fmt, ...);
 static const char * StatusString(int iStatus);
 
 /***************************************************************************
@@ -156,8 +157,32 @@ BOOL IsAuditResultNo(int audit_result)
     Internal functions
  ***************************************************************************/
 
-// Verifies the ROM set while calling SetRomAuditResults	
+// Verifies the ROM set while calling SetRomAuditResults
 int Mame32VerifyRomSet(int game)
+{
+	int iStatus;
+	options_type *game_options;
+
+	// apply selecting BIOS
+	game_options = GetGameOptions(game);
+	options.bios = game_options->bios;
+
+	iStatus = audit_verify_roms(game, (verify_printf_proc)DummyPrintf);
+	SetRomAuditResults(game, iStatus);
+	return iStatus;
+}
+
+// Verifies the Sample set while calling SetSampleAuditResults
+int Mame32VerifySampleSet(int game)
+{
+	int iStatus;
+	iStatus = audit_verify_samples(game, (verify_printf_proc)DummyPrintf);
+	SetSampleAuditResults(game, iStatus);
+	return iStatus;
+}
+
+// Verifies the ROM set and reports details while calling SetRomAuditResults
+static int AuditDialogVerifyRomSet(int game)
 {
 	int iStatus;
 	options_type *game_options;
@@ -171,8 +196,8 @@ int Mame32VerifyRomSet(int game)
 	return iStatus;
 }
 
-// Verifies the Sample set while calling SetSampleAuditResults	
-int Mame32VerifySampleSet(int game)
+// Verifies the Sample set and reports details while calling SetSampleAuditResults
+static int AuditDialogVerifySampleSet(int game)
 {
 	int iStatus;
 	iStatus = audit_verify_samples(game, (verify_printf_proc)DetailsPrintf);
@@ -302,11 +327,11 @@ INT_PTR CALLBACK GameAuditDialogProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lPa
 			int iStatus;
 			LPCSTR lpStatus;
 
-			iStatus = Mame32VerifyRomSet(rom_index);
+			iStatus = AuditDialogVerifyRomSet(rom_index);
 			lpStatus = DriverUsesRoms(rom_index) ? StatusString(iStatus) : _UI("None required");
 			SetWindowText(GetDlgItem(hDlg, IDC_PROP_ROMS), _Unicode(lpStatus));
 
-			iStatus = Mame32VerifySampleSet(rom_index);
+			iStatus = AuditDialogVerifySampleSet(rom_index);
 			lpStatus = DriverUsesSamples(rom_index) ? StatusString(iStatus) : _UI("None required");
 			SetWindowText(GetDlgItem(hDlg, IDC_PROP_SAMPLES), _Unicode(lpStatus));
 		}
@@ -316,12 +341,12 @@ INT_PTR CALLBACK GameAuditDialogProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lPa
 	return 0;
 }
 
-static void ProcessNextRom()
+static void ProcessNextRom(void)
 {
 	int retval;
 	char buffer[200];
 
-	retval = Mame32VerifyRomSet(rom_index);
+	retval = AuditDialogVerifyRomSet(rom_index);
 	switch (retval)
 	{
 	case BEST_AVAILABLE: /* correct, incorrect or separate count? */
@@ -361,7 +386,7 @@ static void ProcessNextSample()
 	int  retval;
 	char buffer[200];
 	
-	retval = Mame32VerifySampleSet(sample_index);
+	retval = AuditDialogVerifySampleSet(sample_index);
 	
 	switch (retval)
 	{
@@ -398,6 +423,10 @@ static void ProcessNextSample()
 		SetDlgItemText(hAudit, IDCANCEL, _Unicode(_UI("&Close")));
 		sample_index = -1;
 	}
+}
+
+static void CLIB_DECL DummyPrintf(const char *fmt, ...)
+{
 }
 
 static void CLIB_DECL DetailsPrintf(const char *fmt, ...)
