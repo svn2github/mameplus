@@ -634,11 +634,16 @@ OBJDIRS += $(OBJ)/cpu/m68000
 #//ks hcmame switch m68k core
 CPUOBJS += $(OBJ)/cpu/m68000/asmintf.o $(OBJ)/cpu/m68000/68000.o
 ASMDEFS += -DA68K0
+CPUOBJS += $(OBJ)/cpu/m68000/asmintf.o $(OBJ)/cpu/m68000/68010.o
+ASMDEFS += -DA68K1
+CPUOBJS += $(OBJ)/cpu/m68000/asmintf.o $(OBJ)/cpu/m68000/68020.o
+ASMDEFS += -DA68K2
+ASMDEFS += -DA68KEM
 $(OBJ)/cpu/m68000/68kem.o: $(OBJ)/cpu/m68000/68kem.asm make68k.c
 M68000DRC_GENERATED_OBJS = \
 	$(OBJ)/cpu/m68000/d68kops.o $(OBJ)/cpu/m68000/d68kopac.o \
 	$(OBJ)/cpu/m68000/d68kopdm.o $(OBJ)/cpu/m68000/d68kopnz.o
-CPUOBJS += $(M68000DRC_GENERATED_OBJS)
+CPUOBJS += $(M68000DRC_GENERATED_OBJS) $(OBJ)/cpu/m68000/d68kcpu.o $(OBJ)/cpu/m68000/d68kmame.o
 M68000_GENERATED_OBJS = \
 	$(OBJ)/cpu/m68000/m68kops.o $(OBJ)/cpu/m68000/m68kopac.o \
 	$(OBJ)/cpu/m68000/m68kopdm.o $(OBJ)/cpu/m68000/m68kopnz.o

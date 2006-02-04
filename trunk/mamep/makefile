@@ -468,7 +468,7 @@ ifdef USE_GCC
     LDFLAGS = -Lextra/lib
 
     ifeq ($(SYMBOLS),)
-        LDFLAGS += -s  -WO
+        LDFLAGS += -s
     endif
 
     ifneq ($(MAP),)
@@ -567,7 +567,7 @@ ifdef BUILD_EXPAT
 CFLAGS += -Isrc/expat
 OBJDIRS += $(OBJ)/expat
 EXPAT = $(OBJ)/libexpat.a
-COREOBJS += $(EXPAT)
+#COREOBJS += $(EXPAT)
 else
 LIBS += -lexpat
 EXPAT =
@@ -578,7 +578,7 @@ ifdef BUILD_ZLIB
 CFLAGS += -Isrc/zlib
 OBJDIRS += $(OBJ)/zlib
 ZLIB = $(OBJ)/libz.a
-COREOBJS += $(ZLIB)
+#COREOBJS += $(ZLIB)
 else
 LIBS += -lz
 ZLIB =
@@ -608,6 +608,26 @@ include src/$(MAMEOS)/$(MAMEOS).mak
 # combine the various definitions to one
 CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS)
 
+ifdef BUILD_EXPAT
+COREOBJS += $(EXPAT)
+endif
+
+ifdef BUILD_ZLIB
+COREOBJS += $(ZLIB)
+endif
+
+ifneq ($(NO_DLL),)
+# do not use dllimport
+    CDEFS += -DDONT_USE_DLL
+
+    ifneq ($(WINUI),)
+        OSOBJS += $(GUIOBJS)
+        LIBS += $(GUILIBS)
+    else
+        OSOBJS += $(CLIOBJS)
+        LIBS += $(CLILIBS)
+    endif
+endif
 
 
 #-------------------------------------------------
@@ -649,22 +669,9 @@ $(sort $(OBJDIRS)):
 #-------------------------------------------------
 
 ifneq ($(NO_DLL),)
-# do not use dllimport
-    CDEFS += -DDONT_USE_DLL
-
-    ifneq ($(WINUI),)
-        OSOBJS += $(GUIOBJS)
-        LIBS += $(GUILIBS)
-    else
-        OSOBJS += $(CLIOBJS)
-        LIBS += $(CLILIBS)
-    endif
-endif
-
-ifneq ($(NO_DLL),)
-    $(EMULATOR): $(OBJS) $(COREOBJS) $(OSOBJS) $(DRVLIBS) $(OSDBGOBJS)
+    $(EMULATOR): $(OBJS) $(COREOBJS) $(OSOBJS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS)
 else
-    $(EMULATORDLL): $(OBJS) $(COREOBJS) $(OSOBJS) $(DRVLIBS) $(OSDBGOBJS)
+    $(EMULATORDLL): $(OBJS) $(COREOBJS) $(OSOBJS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS)
 endif
 
 # always recompile the version string
@@ -680,15 +687,15 @@ ifneq ($(NO_DLL),)
 
     ifdef USE_GCC
         ifneq ($(WINUI),)
-			$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(WINDOWS_PROGRAM) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVLIBS) $(OSDBGOBJS) -o $@ $(MAPFLAGS)
+			$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(WINDOWS_PROGRAM) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) -o $@ $(MAPFLAGS)
         else
-			$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVLIBS) $(OSDBGOBJS) -o $@ $(MAPFLAGS)
+			$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) -o $@ $(MAPFLAGS)
         endif
     else
         ifneq ($(WINUI),)
-			$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(WINDOWS_PROGRAM) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVLIBS) $(OSDBGOBJS) -out:$(EMULATOR) $(MAPFLAGS)
+			$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(WINDOWS_PROGRAM) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) -out:$(EMULATOR) $(MAPFLAGS)
         else
-			$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVLIBS) $(OSDBGOBJS) -out:$(EMULATOR) $(MAPFLAGS)
+			$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) -out:$(EMULATOR) $(MAPFLAGS)
         endif
     endif
 
@@ -697,11 +704,10 @@ ifneq ($(NO_DLL),)
     endif
 
 else
-
 	$(RM) $@
     ifdef USE_GCC
 		$(DLLWRAP) --dllname=$@ --driver-name=gcc \
-			$(LDFLAGS) $(OSDBGLDFLAGS) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVLIBS) $(OSDBGOBJS) $(MAPDLLFLAGS)
+			$(LDFLAGS) $(OSDBGLDFLAGS) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(MAPDLLFLAGS)
     else
 		$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) -dll -out:$@ $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVLIBS) $(OSDBGOBJS) $(MAPDLLFLAGS)
     endif
