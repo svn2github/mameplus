@@ -1,13 +1,40 @@
+###########################################################################
+#
+#   makefile
+#
+#   Core makefile for building MAME and derivatives
+#
+#   Copyright (c) 1996-2006, Nicola Salmoria and the MAME Team.
+#   Visit http://mamedev.org for licensing and usage restrictions.
+#
+###########################################################################
+
+
+###########################################################################
+#################   BEGIN USER-CONFIGURABLE OPTIONS   #####################
+###########################################################################
+
+
 include config.def
 
-# set this to mame, mess or the destination you want to build
-# TARGET = mame
-# TARGET = mess
-# example for a tiny compile
-# TARGET = tiny
-ifeq ($(TARGET),)
+
+#-------------------------------------------------
+# specify core target: mame, mess, tiny, etc.
+# build rules will be included from $(TARGET).mak
+#-------------------------------------------------
+
 TARGET = mame
-endif
+
+
+
+#-------------------------------------------------
+# specify operating system: windows, msdos, etc.
+# build rules will be includes from $(MAMEOS)/$(MAMEOS).mak
+#-------------------------------------------------
+
+MAMEOS = windows
+
+
 
 # select compiler
 # USE_GCC = 1
@@ -33,30 +60,26 @@ else
     WINUI=1
 endif
 
+
+
+#-------------------------------------------------
+# specify program options; see each option below 
+# for details
+#-------------------------------------------------
+
 ifdef USE_VC
 # uncomment one of the next lines to use Whole Program Optimization
 # USE_IPO = 1
 endif
-
-# uncomment one of the next lines to build a target-optimized build
-# ATHLON = 1
-# ATHLONXP = 1
-# I686 = 1
-# P4 = 1
-# PM = 1
-# AMD64 = 1
-
-# uncomment next line to include the symbols for symify
-# SYMBOLS = 1
-
-# uncomment next line to generate a link map for exception handling in windows
-# MAP = 1
 
 # uncomment next line to include the debugger
 # DEBUG = 1
 
 # uncomment next line to use the new multiwindow debugger
 NEW_DEBUGGER = 1
+
+# uncomment next line to use the new rendering system
+# NEW_RENDER = 1
 
 # uncomment next line to use Assembler 68000 engine
 # X86_ASM_68000 = 1
@@ -76,6 +99,21 @@ X86_PPC_DRC = 1
 # uncomment next line to use DRC Voodoo rasterizers
 # X86_VOODOO_DRC = 1
 
+
+
+#-------------------------------------------------
+# specify build options; see each option below 
+# for details
+#-------------------------------------------------
+
+# uncomment one of the next lines to build a target-optimized build
+# ATHLON = 1
+# I686 = 1
+# P4 = 1
+# PM = 1
+# AMD64 = 1
+
+
 # uncomment next line to use cygwin compiler
 # COMPILESYSTEM_CYGWIN	= 1
 
@@ -85,13 +123,21 @@ BUILD_EXPAT = 1
 # uncomment next line to build zlib as part of MAME build
 BUILD_ZLIB = 1
 
+# uncomment next line to include the symbols
+# SYMBOLS = 1
 
-# set this the operating system you're building for
-# MAMEOS = msdos
-# MAMEOS = windows
-ifeq ($(MAMEOS),)
-MAMEOS = windows
-endif
+# uncomment next line to generate a link map for exception handling in windows
+# MAP = 1
+
+
+###########################################################################
+##################   END USER-CONFIGURABLE OPTIONS   ######################
+###########################################################################
+
+
+#-------------------------------------------------
+# platform-specific definitions
+#-------------------------------------------------
 
 # extension for executables
 EXE = .exe
@@ -144,6 +190,12 @@ ifdef I686
 else
     P6OPT = notppro
 endif
+
+
+
+#-------------------------------------------------
+# form the name of the executable
+#-------------------------------------------------
 
 ifeq ($(MAMEOS),msdos)
     PREFIX = d
@@ -251,14 +303,28 @@ else
     EMULATOR    = $(EMULATORDLL) $(EMULATORCLI) $(EMULATORGUI)
 endif
 
+
+
+#-------------------------------------------------
+# compile-time definitions
+#-------------------------------------------------
+
 ifdef USE_GCC
     DEFS = -DX86_ASM -DLSB_FIRST -DINLINE="static __inline__" -Dasm=__asm__ -DCRLF=3 -DXML_STATIC
 else
     DEFS = -DLSB_FIRST=1 -DINLINE='static __forceinline' -Dinline=__inline -D__inline__=__inline -DCRLF=3 -DXML_STATIC
 endif
 
+ifdef DEBUG
+DEFS += -DMAME_DEBUG
+endif
+
 ifdef NEW_DEBUGGER
 DEFS += -DNEW_DEBUGGER
+endif
+
+ifdef NEW_RENDER
+DEFS += -DNEW_RENDER
 endif
 
 ifneq ($(USE_STORY_DATAFILE),)
@@ -322,6 +388,12 @@ endif
 ifneq ($(USE_SHOW_INPUT_LOG),)
     DEFS += -DUSE_SHOW_INPUT_LOG
 endif
+
+
+
+#-------------------------------------------------
+# compile and linking flags
+#-------------------------------------------------
 
 ifdef USE_GCC
     CFLAGS = -std=gnu89 -Isrc -Isrc/includes -Isrc/zlib -Iextra/include -Isrc/debug -Isrc/$(MAMEOS) -I$(OBJ)/cpu/m68000 -Isrc/cpu/m68000
@@ -396,8 +468,7 @@ ifdef USE_GCC
     LDFLAGS = -Lextra/lib
 
     ifeq ($(SYMBOLS),)
-        #LDFLAGS = -s -Wl,--warn-common
-        LDFLAGS += -s
+        LDFLAGS += -s  -WO
     endif
 
     ifneq ($(MAP),)
@@ -410,6 +481,11 @@ ifdef USE_GCC
         MAPDLLFLAGS =
         MAPCLIFLAGS =
         MAPGUIFLAGS =
+    endif
+
+    ifdef COMPILESYSTEM_CYGWIN
+        CFLAGS += -mno-cygwin
+        LDFLAGS += -mno-cygwin
     endif
 else
     ARFLAGS = -nologo
@@ -442,24 +518,51 @@ else
     endif
 endif
 
+
+
+#-------------------------------------------------
+# define the dependency search paths
+#-------------------------------------------------
+
+VPATH = src $(wildcard src/cpu/*)
+
+
+
+#-------------------------------------------------
+# define the standard object directories
+#-------------------------------------------------
+
+
 OBJDIRS = obj $(OBJ) $(OBJ)/cpu $(OBJ)/sound $(OBJ)/$(MAMEOS) \
 	$(OBJ)/drivers $(OBJ)/machine $(OBJ)/vidhrdw $(OBJ)/sndhrdw $(OBJ)/debug
+
 ifdef MESS
 OBJDIRS += $(OBJ)/mess $(OBJ)/mess/systems $(OBJ)/mess/machine \
 	$(OBJ)/mess/vidhrdw $(OBJ)/mess/sndhrdw $(OBJ)/mess/tools
 endif
 
+
+
+#-------------------------------------------------
+# define standard libarires for CPU and sounds
+#-------------------------------------------------
+
+CPULIB = $(OBJ)/libcpu.a
+
+SOUNDLIB = $(OBJ)/libsound.a
+
+
+
+#-------------------------------------------------
+# either build or link against the included 
+# libraries
+#-------------------------------------------------
+
+
 # start with an empty set of libs
 LIBS = 
 
-all:	maketree emulator extrafiles
-
-# include the various .mak files
-include src/core.mak
-include src/$(TARGET).mak
-include src/rules.mak
-include src/$(MAMEOS)/$(MAMEOS).mak
-
+# add expat XML library
 ifdef BUILD_EXPAT
 CFLAGS += -Isrc/expat
 OBJDIRS += $(OBJ)/expat
@@ -470,6 +573,7 @@ LIBS += -lexpat
 EXPAT =
 endif
 
+# add ZLIB compression library
 ifdef BUILD_ZLIB
 CFLAGS += -Isrc/zlib
 OBJDIRS += $(OBJ)/zlib
@@ -491,12 +595,69 @@ CFLAGS	+= -mno-cygwin
 LDFLAGS	+= -mno-cygwin
 endif
 
+
+
+#-------------------------------------------------
+# 'all' target needs to go here, before the 
+# include files which define additional targets
+#-------------------------------------------------
+
+all:	maketree emulator extrafiles
+
+
+
+#-------------------------------------------------
+# include the various .mak files
+#-------------------------------------------------
+
+include src/core.mak
+include src/$(TARGET).mak
+include src/cpu/cpu.mak
+include src/sound/sound.mak
+include src/$(MAMEOS)/$(MAMEOS).mak
+
+# combine the various definitions to one
+CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS)
+
+
+
+#-------------------------------------------------
+# primary targets
+#-------------------------------------------------
+
 emulator:	maketree $(EMULATOR)
 
 extrafiles:	$(TOOLS)
 
-# combine the various definitions to one
-CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS)
+maketree: $(sort $(OBJDIRS))
+
+clean:
+	@echo Deleting object tree $(OBJ)...
+	$(RM) -r $(OBJ)
+	@echo Deleting $(EMULATOR)...
+	$(RM) $(EMULATOR)
+	@echo Deleting $(TOOLS)...
+	$(RM) $(TOOLS)
+
+check: $(EMULATOR) xml2info$(EXE)
+	./$(EMULATOR) -listxml > $(NAME).xml
+	./xml2info < $(NAME).xml > $(NAME).lst
+	./xmllint --valid --noout $(NAME).xml
+
+
+
+#-------------------------------------------------
+# directory targets
+#-------------------------------------------------
+
+$(sort $(OBJDIRS)):
+	$(MD) $@
+
+
+
+#-------------------------------------------------
+# executable targets and dependencies
+#-------------------------------------------------
 
 ifneq ($(NO_DLL),)
 # do not use dllimport
@@ -511,7 +672,6 @@ ifneq ($(NO_DLL),)
     endif
 endif
 
-# primary target
 ifneq ($(NO_DLL),)
     $(EMULATOR): $(OBJS) $(COREOBJS) $(OSOBJS) $(DRVLIBS) $(OSDBGOBJS)
 else
@@ -610,34 +770,32 @@ xml2info$(EXE): $(OBJ)/xml2info.o $(EXPAT) $(ZLIB) $(OSDBGOBJS)
 	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ $(LIBS) -out:$@
     endif
 
-# secondary libraries
+
+
+
+#-------------------------------------------------
+# library targets and dependencies
+#-------------------------------------------------
+
+$(CPULIB): $(CPUOBJS)
+
+ifdef DEBUG
+$(CPULIB): $(DBGOBJS)
+endif
+
+$(SOUNDLIB): $(SOUNDOBJS)
+
 $(OBJ)/libexpat.a: $(OBJ)/expat/xmlparse.o $(OBJ)/expat/xmlrole.o $(OBJ)/expat/xmltok.o
 
 $(OBJ)/libz.a: $(OBJ)/zlib/adler32.o $(OBJ)/zlib/compress.o $(OBJ)/zlib/crc32.o $(OBJ)/zlib/deflate.o \
 				$(OBJ)/zlib/gzio.o $(OBJ)/zlib/inffast.o $(OBJ)/zlib/inflate.o $(OBJ)/zlib/infback.o \
 				$(OBJ)/zlib/inftrees.o $(OBJ)/zlib/trees.o $(OBJ)/zlib/uncompr.o $(OBJ)/zlib/zutil.o
 
-$(OBJ)/$(MAMEOS)/%.o: src/$(MAMEOS)/%.c
-ifdef USE_GCC
-	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -c $< -o $@
-else
-	@echo -n Compiling\040
-	$(CC) $(CDEFS) $(CFLAGS) -Fo$@ -c $<
-endif
 
-$(OBJ)/%.o: src/%.c
-ifdef USE_GCC
-	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
-else
-	@echo -n Compiling\040
-	$(CC) $(CDEFS) $(CFLAGS) -Fo$@ -c $<
-endif
 
-$(OBJ)/%.pp: src/%.c
-	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGS) -E $< -o $@
+#-------------------------------------------------
+# special rules
+#-------------------------------------------------
 
 # compile generated C files for the 68000 emulator
 $(M68000_GENERATED_OBJS): $(OBJ)/cpu/m68000/m68kmake$(EXE)
@@ -729,6 +887,34 @@ $(OBJ)/cpu/m68000/68020.o:  $(OBJ)/cpu/m68000/68020.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
 
+
+
+#-------------------------------------------------
+# generic rules
+#-------------------------------------------------
+
+$(OBJ)/$(MAMEOS)/%.o: src/$(MAMEOS)/%.c
+ifdef USE_GCC
+	@echo Compiling $<...
+	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -c $< -o $@
+else
+	@echo -n Compiling\040
+	$(CC) $(CDEFS) $(CFLAGS) -Fo$@ -c $<
+endif
+
+$(OBJ)/%.o: src/%.c
+ifdef USE_GCC
+	@echo Compiling $<...
+	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
+else
+	@echo -n Compiling\040
+	$(CC) $(CDEFS) $(CFLAGS) -Fo$@ -c $<
+endif
+
+$(OBJ)/%.pp: src/%.c
+	@echo Compiling $<...
+	$(CC) $(CDEFS) $(CFLAGS) -E $< -o $@
+
 $(OBJ)/%.a:
 	@echo Archiving $@...
 	$(RM) $@
@@ -737,21 +923,3 @@ ifdef USE_GCC
 else
 	$(AR) $(ARFLAGS) -out:$@ $^
 endif
-
-$(sort $(OBJDIRS)):
-	$(MD) $@
-
-maketree: $(sort $(OBJDIRS))
-
-clean:
-	@echo Deleting object tree $(OBJ)...
-	$(RM) -r $(OBJ)
-	@echo Deleting $(EMULATOR)...
-	$(RM) $(EMULATOR)
-	@echo Deleting $(TOOLS)...
-	$(RM) $(TOOLS)
-
-check: $(EMULATOR) xml2info$(EXE)
-	./$(EMULATOR) -listxml > $(NAME).xml
-	./xml2info < $(NAME).xml > $(NAME).lst
-	./xmllint --valid --noout $(NAME).xml

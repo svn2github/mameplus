@@ -1,7 +1,57 @@
-# nasm for Windows (but not cygwin) has a "w" at the end
+###########################################################################
+#
+#   windows.mak
+#
+#   Windows-specific makefile
+#
+#   Copyright (c) 1996-2006, Nicola Salmoria and the MAME Team.
+#   Visit http://mamedev.org for licensing and usage restrictions.
+#
+###########################################################################
+
+
+#-------------------------------------------------
+# nasm for Windows (but not cygwin) has a "w"
+# at the end
+#-------------------------------------------------
+
 ifndef COMPILESYSTEM_CYGWIN
 ASM = @nasmw
 endif
+
+
+
+#-------------------------------------------------
+# due to quirks of using /bin/sh, we need to
+# explicitly specify the current path
+#-------------------------------------------------
+
+CURPATH = ./
+
+
+
+#-------------------------------------------------
+# Windows-specific flags and libararies
+#-------------------------------------------------
+
+# add our prefix files to the mix
+ifdef USE_GCC
+  CFLAGS += -mwindows -include src/$(MAMEOS)/winprefix.h
+  CFLAGSOSDEPEND += -Wno-strict-aliasing
+  CFLAGS += -include src/$(MAMEOS)/winprefix.h
+else
+  CFLAGS += /FI"windows/winprefix.h"
+endif
+
+# add the windows libaries
+ifdef USE_GCC
+LIBS += -lunicows -luser32 -lgdi32 -lddraw -ldsound -ldinput -ldxguid -lwinmm
+else
+LIBS += unicows.lib user32.lib gdi32.lib ddraw.lib dsound.lib dinput.lib dxguid.lib winmm.lib advapi32.lib
+endif
+CLILIBS =
+
+
 
 DEFS += -DMAMENAME=APPNAME
 
@@ -37,55 +87,55 @@ endif
 # enable the Scale2x, Eagle and 2xSaI scale effects
 # USE_SCALE_EFFECTS = 1
 
-# only Windows specific output files and rules
-# the first two targets generate the prefix.h header
-# note this requires that OSOBJS be the first target
-#
+#-------------------------------------------------
+# Windows-specific objects
+#-------------------------------------------------
+
 OSOBJS = \
-	$(OBJ)/windows/asmblit.o \
-	$(OBJ)/windows/asmtile.o \
-	$(OBJ)/windows/blit.o \
-	$(OBJ)/windows/config.o \
-	$(OBJ)/windows/fileio.o \
-	$(OBJ)/windows/fronthlp.o \
-	$(OBJ)/windows/input.o \
-	$(OBJ)/windows/misc.o \
-	$(OBJ)/windows/rc.o \
-	$(OBJ)/windows/sound.o \
-	$(OBJ)/windows/ticker.o \
-	$(OBJ)/windows/video.o \
-	$(OBJ)/windows/window.o \
-	$(OBJ)/windows/wind3d.o \
-	$(OBJ)/windows/wind3dfx.o \
-	$(OBJ)/windows/winddraw.o \
-	$(OBJ)/windows/winmain.o
+	$(OBJ)/$(MAMEOS)/asmblit.o \
+	$(OBJ)/$(MAMEOS)/asmtile.o \
+	$(OBJ)/$(MAMEOS)/blit.o \
+	$(OBJ)/$(MAMEOS)/config.o \
+	$(OBJ)/$(MAMEOS)/fileio.o \
+	$(OBJ)/$(MAMEOS)/fronthlp.o \
+	$(OBJ)/$(MAMEOS)/input.o \
+	$(OBJ)/$(MAMEOS)/misc.o \
+	$(OBJ)/$(MAMEOS)/rc.o \
+	$(OBJ)/$(MAMEOS)/sound.o \
+	$(OBJ)/$(MAMEOS)/ticker.o \
+	$(OBJ)/$(MAMEOS)/video.o \
+	$(OBJ)/$(MAMEOS)/window.o \
+	$(OBJ)/$(MAMEOS)/wind3d.o \
+	$(OBJ)/$(MAMEOS)/wind3dfx.o \
+	$(OBJ)/$(MAMEOS)/winddraw.o \
+	$(OBJ)/$(MAMEOS)/winmain.o \
 
 # extra targets and rules for the scale effects
 ifneq ($(USE_SCALE_EFFECTS),)
 CFLAGS += -DUSE_SCALE_EFFECTS
-OSOBJS += $(OBJ)/windows/scale.o
+OSOBJS += $(OBJ)/$(MAMEOS)/scale.o
 
-OBJDIRS += $(OBJ)/windows/scale
-OSOBJS += $(OBJ)/windows/scale/superscale.o $(OBJ)/windows/scale/eagle_fm.o $(OBJ)/windows/scale/2xsaimmx.o
+OBJDIRS += $(OBJ)/$(MAMEOS)/scale
+OSOBJS += $(OBJ)/$(MAMEOS)/scale/superscale.o $(OBJ)/$(MAMEOS)/scale/eagle_fm.o $(OBJ)/$(MAMEOS)/scale/2xsaimmx.o
 
 ifneq ($(USE_MMX_INTERP_SCALE),)
 DEFS += -DUSE_MMX_INTERP_SCALE
-OSOBJS += $(OBJ)/windows/scale/hlq_mmx.o
+OSOBJS += $(OBJ)/$(MAMEOS)/scale/hlq_mmx.o
 else
-OSOBJS += $(OBJ)/windows/scale/hlq.o
+OSOBJS += $(OBJ)/$(MAMEOS)/scale/hlq.o
 endif
 
-$(OBJ)/windows/scale/superscale.o: src/windows/scale/superscale.asm
+$(OBJ)/$(MAMEOS)/scale/superscale.o: src/$(MAMEOS)/scale/superscale.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
-$(OBJ)/windows/scale/eagle_fm.o: src/windows/scale/eagle_fm.asm
+$(OBJ)/$(MAMEOS)/scale/eagle_fm.o: src/$(MAMEOS)/scale/eagle_fm.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
-$(OBJ)/windows/scale/2xsaimmx.o: src/windows/scale/2xsaimmx.asm
+$(OBJ)/$(MAMEOS)/scale/2xsaimmx.o: src/$(MAMEOS)/scale/2xsaimmx.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
 
-$(OBJ)/windows/scale/hlq.o: src/windows/scale/hlq.c
+$(OBJ)/$(MAMEOS)/scale/hlq.o: src/$(MAMEOS)/scale/hlq.c
     ifdef USE_GCC
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -Wno-unused-variable -mno-mmx -UINTERP_MMX -c $< -o $@
@@ -94,7 +144,7 @@ $(OBJ)/windows/scale/hlq.o: src/windows/scale/hlq.c
 	$(CC) $(CDEFS) $(CFLAGS) -Fo$@ -c $<
     endif
 
-$(OBJ)/windows/scale/hlq_mmx.o: src/windows/scale/hlq.c
+$(OBJ)/$(MAMEOS)/scale/hlq_mmx.o: src/$(MAMEOS)/scale/hlq.c
     ifdef USE_GCC
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -Wno-unused-variable -mmmx -DINTERP_MMX -c $< -o $@
@@ -113,68 +163,67 @@ VCOBJS = $(OBJ)/vc/dirent.o
 endif
 
 OSOBJS += $(VCOBJS)
-CLIOBJS = $(OBJ)/windows/climain.o
+CLIOBJS = $(OBJ)/$(MAMEOS)/climain.o
+
+# add debug-specific files
+ifdef DEBUG
+OSOBJS += \
+	$(OBJ)/$(MAMEOS)/debugwin.o
+endif
 
 # add resource file for dll
 ifeq ($DONT_USE_DLL,)
-# add resource file if no UI
+# non-UI builds need a stub resource file
 ifeq ($(WINUI),)
-OSOBJS  += $(OBJ)/windows/mame.res
+OSOBJS += $(OBJ)/$(MAMEOS)/mame.res
 endif
 endif
 
 # add resource file
-CLIOBJS += $(OBJ)/windows/mame.res
+CLIOBJS += $(OBJ)/$(MAMEOS)/mame.res
 
-# add debugging info
-ifdef DEBUG
-ifdef NEW_DEBUGGER
-OSOBJS += $(OBJ)/windows/debugwin.o
-endif
 
-# enable guard pages on all memory allocations in the debug build
-#DEFS += -DMALLOC_DEBUG
-#
-#OSDBGOBJS = $(OBJ)/windows/winalloc.o
-#OSDBGLDFLAGS = -Wl,--allow-multiple-definition
-else
+
+#-------------------------------------------------
+# Windows-specific debug objects and flags
+#-------------------------------------------------
+
 OSDBGOBJS =
 OSDBGLDFLAGS =
+
+# debug build: enable guard pages on all memory allocations
+ifdef DEBUG
+DEFS += -DMALLOC_DEBUG
+OSDBGOBJS += $(OBJ)/$(MAMEOS)/winalloc.o
+OSDBGLDFLAGS += -Wl,--allow-multiple-definition
 endif
 
+
+
+#-------------------------------------------------
+# rules for assembly targets
+#-------------------------------------------------
+
 # video blitting functions
-$(OBJ)/windows/asmblit.o: src/windows/asmblit.asm
+$(OBJ)/$(MAMEOS)/asmblit.o: src/$(MAMEOS)/asmblit.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
 
 # tilemap blitting functions
-$(OBJ)/windows/asmtile.o: src/windows/asmtile.asm
+$(OBJ)/$(MAMEOS)/asmtile.o: src/$(MAMEOS)/asmtile.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
 
-# add our prefix files to the mix (we need -Wno-strict-aliasing for DirectX)
-ifdef USE_GCC
-  CFLAGS += -mwindows -include src/$(MAMEOS)/winprefix.h
-  CFLAGSOSDEPEND += -Wno-strict-aliasing
-  CFLAGS += -include src/$(MAMEOS)/winprefix.h
-else
-  CFLAGS += /FI"windows/winprefix.h"
-endif
 
-# add the windows libaries
-ifdef USE_GCC
-LIBS += -lunicows -luser32 -lgdi32 -lddraw -ldsound -ldinput -ldxguid -lwinmm
-else
-LIBS += unicows.lib user32.lib gdi32.lib ddraw.lib dsound.lib dinput.lib dxguid.lib winmm.lib advapi32.lib
-endif
-CLILIBS =
 
-# due to quirks of using /bin/sh, we need to explicitly specify the current path
-CURPATH = ./
 
-# if building with a UI, set the C flags and include the ui.mak
+#-------------------------------------------------
+# if building with a UI, set the C flags and
+# include the ui.mak
+#-------------------------------------------------
+
 ifneq ($(WINUI),)
-CFLAGS+= -DWINUI=1
+CFLAGS += -DWINUI=1
 include src/ui/ui.mak
 endif
 
@@ -183,8 +232,12 @@ ifndef X86_MIPS3_DRC
 COREOBJS += $(OBJ)/x86drc.o
 endif
 
-#####################################################################
-# Resources
+
+
+#-------------------------------------------------
+# generic rule for the resource compiler
+#-------------------------------------------------
+
 ifdef USE_GCC
     ifndef USE_XGCC
         RC = @windres --use-temp-file
