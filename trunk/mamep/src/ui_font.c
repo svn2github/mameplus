@@ -885,10 +885,12 @@ void uifont_buildfont(int *rotcharwidth, int *rotcharheight)
 	}
 
 	/* decode rotated font */
-	uirotfont_sb = decodegfx(fontdata_sb, &layout1);
-	uirotfont_db = decodegfx(fontdata_db, &layout2);
+	uirotfont_sb = allocgfx(&layout1);
+	uirotfont_db = allocgfx(&layout2);
 	if (!uirotfont_sb || !uirotfont_db)
 		osd_die("Fatal error: could not allocate memory for UI font!");
+	decodegfx(uirotfont_sb, fontdata_sb, 0, uirotfont_sb->total_elements);
+	decodegfx(uirotfont_db, fontdata_db, 0, uirotfont_db->total_elements);
 
 	/* set the raw and rotated character width/height */
 	*rotcharwidth = (Machine->ui_orientation & ORIENTATION_SWAP_XY) ? layout1.height : layout1.width;

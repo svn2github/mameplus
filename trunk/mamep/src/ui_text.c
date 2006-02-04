@@ -277,8 +277,6 @@ int uistring_init (mame_file *langfile)
 
 	/* allocate the translated text array, and set defaults */
 	trans_text = auto_malloc(sizeof(const char *) * string_count);
-	if (!trans_text)
-		return 1;
 
 	/* copy in references to all of the strings */
 	str = 0;
@@ -389,8 +387,6 @@ int uistring_init (void)
 
 	/* allocate the translated text array, and set defaults */
 	trans_text = auto_malloc(sizeof(const char *) * string_count);
-	if (!trans_text)
-		return 1;
 
 	/* copy in references to all of the strings */
 	str = 0;

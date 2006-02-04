@@ -174,38 +174,28 @@ static int toaplan1_tile_buffers_alloc(void)
 {
 	int i;
 
-	if ( (toaplan1_tileram16 = (UINT16 *)auto_malloc(TOAPLAN1_TILEVRAM_SIZE * 4)) == 0){
-		return 1;
-	}
+	toaplan1_tileram16 = auto_malloc(TOAPLAN1_TILEVRAM_SIZE * 4);
 	memset(toaplan1_tileram16,0,TOAPLAN1_TILEVRAM_SIZE * 4);
 
 	logerror("colorram_size: %08x\n", toaplan1_colorram1_size + toaplan1_colorram2_size);
-	if ( (paletteram16 = (UINT16 *)auto_malloc(toaplan1_colorram1_size + toaplan1_colorram2_size)) == 0){
-		return 1;
-	}
+	paletteram16 = auto_malloc(toaplan1_colorram1_size + toaplan1_colorram2_size);
 	memset(paletteram16,0,toaplan1_colorram1_size + toaplan1_colorram2_size);
 
 	for (i=0; i<4; i++)
 	{
-		if ((bg_list[i]=(tile_struct *)auto_malloc( 33 * 44 * sizeof(tile_struct))) == 0){
-			return 1;
-		}
+		bg_list[i]=(tile_struct *)auto_malloc( 33 * 44 * sizeof(tile_struct));
 		memset(bg_list[i], 0, 33 * 44 * sizeof(tile_struct));
 	}
 
 	for (i=0; i<16; i++)
 	{
 		max_list_size[i] = 8192;
-		if ((tile_list[i]=(tile_struct *)auto_malloc(max_list_size[i]*sizeof(tile_struct))) == 0){
-			return 1;
-		}
+		tile_list[i]=(tile_struct *)auto_malloc(max_list_size[i]*sizeof(tile_struct));
 		memset(tile_list[i],0,max_list_size[i]*sizeof(tile_struct));
 	}
 
 	max_list_size[16] = 65536;
-	if ((tile_list[16]=(tile_struct *)auto_malloc(max_list_size[16]*sizeof(tile_struct))) == 0){
-		return 1;
-	}
+	tile_list[16]=(tile_struct *)auto_malloc(max_list_size[16]*sizeof(tile_struct));
 	memset(tile_list[16],0,max_list_size[16]*sizeof(tile_struct));
 
 	return 0;
@@ -243,24 +233,16 @@ VIDEO_START( toaplan1 )
 	tmpbitmap2 = auto_bitmap_alloc(Machine->drv->screen_width,Machine->drv->screen_height);
 	tmpbitmap3 = auto_bitmap_alloc(Machine->drv->screen_width,Machine->drv->screen_height);
 
-	if ( (spriteram16 = (UINT16 *)auto_malloc(TOAPLAN1_SPRITERAM_SIZE)) == 0){
-		return 1;
-	}
+	spriteram16 = auto_malloc(TOAPLAN1_SPRITERAM_SIZE);
 	memset(spriteram16,0,TOAPLAN1_SPRITERAM_SIZE);
 
-	if ( (buffered_spriteram16 = (UINT16 *)auto_malloc(TOAPLAN1_SPRITERAM_SIZE)) == 0){
-		return 1;
-	}
+	buffered_spriteram16 = auto_malloc(TOAPLAN1_SPRITERAM_SIZE);
 	memset(buffered_spriteram16,0,TOAPLAN1_SPRITERAM_SIZE);
 
-	if ( (toaplan1_spritesizeram16 = (UINT16 *)auto_malloc(TOAPLAN1_SPRITESIZERAM_SIZE)) == 0){
-		return 1;
-	}
+	toaplan1_spritesizeram16 = auto_malloc(TOAPLAN1_SPRITESIZERAM_SIZE);
 	memset(toaplan1_spritesizeram16,0,TOAPLAN1_SPRITESIZERAM_SIZE);
 
-	if ( (toaplan1_buffered_spritesizeram16 = (UINT16 *)auto_malloc(TOAPLAN1_SPRITESIZERAM_SIZE)) == 0){
-		return 1;
-	}
+	toaplan1_buffered_spritesizeram16 = auto_malloc(TOAPLAN1_SPRITESIZERAM_SIZE);
 	memset(toaplan1_buffered_spritesizeram16,0,TOAPLAN1_SPRITESIZERAM_SIZE);
 
 	if( toaplan1_tile_buffers_alloc() ){

@@ -20,161 +20,8 @@
 #include "driver.h"
 #include "neogeo.h"
 
-/************************ SRAM protection***********************
-  very basic check which is used on many games
-***************************************************************/
-
 int neogeo_sram_locked;
-offs_t neogeo_sram_protection_hack;
 int neogeo_prot_data;
-
-void install_sram_protection(void)
-{
-	neogeo_sram_locked          = 0;
-	neogeo_sram_protection_hack = 0;
-	neogeo_prot_data            = 0;
-
-	if (!strcmp(Machine->gamedrv->name,"mslug3")  ||
-		!strcmp(Machine->gamedrv->name,"mslug3n") ||
-		!strcmp(Machine->gamedrv->name,"mslug3d"))
-	{
-		/* the game hangs after a while without this patch */
-		UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
-		mem16[0x0288e >> 1] = 0x4e71;
-		mem16[0x02896 >> 1] = 0x4e71;
-	}
-
-	if (!strcmp(Machine->gamedrv->name,"kof2000") ||
-		!strcmp(Machine->gamedrv->name,"kof2000n") ||
-		!strcmp(Machine->gamedrv->name,"kof2000d"))
-	{
-		/* Patch out loop to disable console mode */
-		UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
-		mem16[0xa226e >> 1] = 0x4e75;
-	}
-
-	if (!strcmp(Machine->gamedrv->name,"nitd") ||
-		!strcmp(Machine->gamedrv->name,"nitdd"))
-	{
-		/* Patch out loop to disable console mode */
-		UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
-		mem16[0x19978 >> 1] = 0x4e75;
-	}
-
-	if (!strcmp(Machine->gamedrv->name,"sengoku3") ||
-		!strcmp(Machine->gamedrv->name,"sengok3d"))
-	{
-		/* Patch out loop to disable console mode */
-		UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
-		mem16[0x00d04 >> 1] = 0x4e71;
-	}
-
-	if (!strcmp(Machine->gamedrv->name,"zupapa") ||
-		!strcmp(Machine->gamedrv->name,"zupapad"))
-	{
-		/* Patch out loop to disable console mode */
-		UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
-		mem16[0x80290 >> 1] = 0x4e71;
-	}
-
-	if (!strcmp(Machine->gamedrv->name,"mslug4")  ||
-		!strcmp(Machine->gamedrv->name,"mslug4d") ||
-		!strcmp(Machine->gamedrv->name,"ms4plus"))
-	{
-		/* the game hangs after a while without this patch */
-		UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
-		mem16[0x966 >> 1] = 0x4e71;
-		mem16[0x96e >> 1] = 0x4e71;
-
-		/* Patch out loop to disable console mode */
-		mem16[0xad8c >> 1] = 0x4e75;
-	}
-
-	if (!strcmp(Machine->gamedrv->name,"rotd") ||
-		!strcmp(Machine->gamedrv->name,"rotdd"))
-	{
-		/* Patch out loop to disable console mode */
-		UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
-		mem16[0x1020 >> 1] = 0x4e71;
-		mem16[0x2400 >> 1] = 0x4e71;
-	}
-
-	if (!strcmp(Machine->gamedrv->name,"matrim")  ||
-		!strcmp(Machine->gamedrv->name,"matrimd") ||
-		!strcmp(Machine->gamedrv->name,"matrimbl"))
-	{
-		/* the game hangs after a while without this patch */
-		UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
-		mem16[0x310 >> 1] = 0x4e71;
-		mem16[0x318 >> 1] = 0x4e71;
-
-		/* Patch out loop to disable console mode */
-		mem16[0x1050 >> 1] = 0x4e75;
-	}
-
-	if (!strcmp(Machine->gamedrv->name,"mslug5") ||
-		!strcmp(Machine->gamedrv->name,"mslug5d"))
-	{
-		/* Patch out loop to disable console mode */
-		UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
-		mem16[0x0122a >> 1] = 0x4e71;
-		mem16[0x0122c >> 1] = 0x4e71;
-	}
-
-	/* hacks to make the games which do protection checks run in arcade mode */
-	/* we write protect a SRAM location so it cannot be set to 1 */
-	neogeo_sram_protection_hack = ~0;
-	if (	!strcmp(Machine->gamedrv->name,"fatfury3") ||
-			!strcmp(Machine->gamedrv->name,"samsho3") ||
-			!strcmp(Machine->gamedrv->name,"samsho3a") ||
-			!strcmp(Machine->gamedrv->name,"samsho4") ||
-			!strcmp(Machine->gamedrv->name,"aof3") ||
-			!strcmp(Machine->gamedrv->name,"rbff1") ||
-			!strcmp(Machine->gamedrv->name,"rbffspec") ||
-			!strcmp(Machine->gamedrv->name,"kof95") ||
-			!strcmp(Machine->gamedrv->name,"kof96") ||
-			!strcmp(Machine->gamedrv->name,"kof96h") ||
-			!strcmp(Machine->gamedrv->name,"kof96ep") ||
-			!strcmp(Machine->gamedrv->name,"kof97") ||
-			!strcmp(Machine->gamedrv->name,"kof97a") ||
-			!strcmp(Machine->gamedrv->name,"kof97pls") ||
-			!strcmp(Machine->gamedrv->name,"kog") ||
-			!strcmp(Machine->gamedrv->name,"kof98") ||
-			!strcmp(Machine->gamedrv->name,"kof98k") ||
-			!strcmp(Machine->gamedrv->name,"kof98n") ||
-			!strcmp(Machine->gamedrv->name,"kof99") ||
-			!strcmp(Machine->gamedrv->name,"kof99a") ||
-			!strcmp(Machine->gamedrv->name,"kof99e") ||
-			!strcmp(Machine->gamedrv->name,"kof99n") ||
-			!strcmp(Machine->gamedrv->name,"kof99p") ||
-			!strcmp(Machine->gamedrv->name,"kof99d") ||
-			!strcmp(Machine->gamedrv->name,"kof2000") ||
-			!strcmp(Machine->gamedrv->name,"kof2000n") ||
-			!strcmp(Machine->gamedrv->name,"kof2000d") ||
-			!strcmp(Machine->gamedrv->name,"kizuna") ||
-			!strcmp(Machine->gamedrv->name,"lastblad") ||
-			!strcmp(Machine->gamedrv->name,"lastblda") ||
-			!strcmp(Machine->gamedrv->name,"lastbld2") ||
-			!strcmp(Machine->gamedrv->name,"rbff2") ||
-			!strcmp(Machine->gamedrv->name,"rbff2a") ||
-			!strcmp(Machine->gamedrv->name,"mslug2") ||
-			!strcmp(Machine->gamedrv->name,"mslug3") ||
-			!strcmp(Machine->gamedrv->name,"mslug3n") ||
-			!strcmp(Machine->gamedrv->name,"mslug3d") ||
-			!strcmp(Machine->gamedrv->name,"garou") ||
-			!strcmp(Machine->gamedrv->name,"garoud") ||
-			!strcmp(Machine->gamedrv->name,"garouo") ||
-			!strcmp(Machine->gamedrv->name,"garoup") ||
-			!strcmp(Machine->gamedrv->name,"samsho5") ||
-			!strcmp(Machine->gamedrv->name,"samsho5h") ||
-			!strcmp(Machine->gamedrv->name,"samsh5sp") ||
-			!strcmp(Machine->gamedrv->name,"samsh5sh") ||
-			!strcmp(Machine->gamedrv->name,"samsh5sn"))
-			neogeo_sram_protection_hack = 0x100/2;
-
-	if (!strcmp(Machine->gamedrv->name,"pulstar"))
-		neogeo_sram_protection_hack = 0x35a/2;
-}
 
 WRITE16_HANDLER( neogeo_sram16_lock_w )
 {
@@ -195,36 +42,16 @@ WRITE16_HANDLER( neogeo_sram16_w )
 {
 	if (neogeo_sram_locked)
 	{
-logerror("PC %06x: warning: write %02x to SRAM %04x while it was protected\n",activecpu_get_pc(),data,offset<<1);
+		logerror("PC %06x: warning: write %02x to SRAM %04x while it was protected\n",activecpu_get_pc(),data,offset<<1);
 	}
 	else
 	{
-		if (offset == neogeo_sram_protection_hack)
-		{
-			if (ACCESSING_LSB && (data & 0xff) == 0x01)
-				return; /* fake protection pass */
-		}
-
 		COMBINE_DATA(&neogeo_sram16[offset]);
 	}
 }
 
 
-/************************ Super Sidekicks***********************
-  todo: emulate, not patch!
-***************************************************************/
-
-void ssideki_install_protection(void)
-{
-		/* patch out protection check */
-		/* the protection routines are at 0x25dcc and involve reading and writing */
-		/* addresses in the 0x2xxxxx range */
-		UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
-		mem16[0x2240/2] = 0x4e71;
-}
-
 /************************ Fatal Fury 2 *************************
-  todo: emulate, not patch!
 ***************************************************************/
 
 static READ16_HANDLER( fatfury2_protection_16_r )
@@ -300,18 +127,6 @@ void fatfury2_install_protection(void)
 	/* 0x2xxxxx range. There are several checks all around the code. */
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x200000, 0x2fffff, 0, 0, fatfury2_protection_16_r);
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x200000, 0x2fffff, 0, 0, fatfury2_protection_16_w);
-}
-
-/************************ Fatal Fury 3 *************************
-  is this still needed? -- some people report other lockups
-  in this.
-***************************************************************/
-
-void fatfury3_install_protection(void)
-{
-	/* patch the first word, it must be 0x0010 not 0x0000 (initial stack pointer) */
-	UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
-	mem16[0x0000/2] = 0x0010;
 }
 
 /************************ King of Fighters 98*******************

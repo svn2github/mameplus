@@ -482,11 +482,6 @@ ifdef USE_GCC
         MAPCLIFLAGS =
         MAPGUIFLAGS =
     endif
-
-    ifdef COMPILESYSTEM_CYGWIN
-        CFLAGS += -mno-cygwin
-        LDFLAGS += -mno-cygwin
-    endif
 else
     ARFLAGS = -nologo
 
@@ -516,6 +511,11 @@ else
         MAPCLIFLAGS =
         MAPGUIFLAGS =
     endif
+endif
+
+ifdef COMPILESYSTEM_CYGWIN
+CFLAGS	+= -mno-cygwin
+LDFLAGS	+= -mno-cygwin
 endif
 
 
@@ -582,17 +582,6 @@ COREOBJS += $(ZLIB)
 else
 LIBS += -lz
 ZLIB =
-endif
-
-ifdef DEBUG
-DBGDEFS = -DMAME_DEBUG
-else
-DBGDEFS =
-endif
-
-ifdef COMPILESYSTEM_CYGWIN
-CFLAGS	+= -mno-cygwin
-LDFLAGS	+= -mno-cygwin
 endif
 
 

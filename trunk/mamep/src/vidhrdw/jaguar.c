@@ -748,8 +748,6 @@ VIDEO_START( cojag )
 		return 1;
 
 	pen_table = auto_malloc(65536 * sizeof(pen_t));
-	if (!pen_table)
-		return 1;
 
 #ifdef TRANS_UI
 	{
