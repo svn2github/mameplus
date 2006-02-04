@@ -709,7 +709,7 @@ else
 		$(DLLWRAP) --dllname=$@ --driver-name=gcc \
 			$(LDFLAGS) $(OSDBGLDFLAGS) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(MAPDLLFLAGS)
     else
-		$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) -dll -out:$@ $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVLIBS) $(OSDBGOBJS) $(MAPDLLFLAGS)
+		$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) -dll -out:$@ $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(MAPDLLFLAGS)
     endif
     ifneq ($(UPX),)
 		upx -9 $@
@@ -719,7 +719,7 @@ else
     $(EMULATORGUI): $(EMULATORDLL) $(GUIOBJS)
 		@echo Linking $@...
     ifdef USE_GCC
-		$(LD) $(LDFLAGS) $(WINDOWS_PROGRAM) $^ -o $@ $(GUILIBS) $(MAPGUIFLAGS)
+		$(LD) $(LDFLAGS) $(WINDOWS_PROGRAM) $(EMULATORDLL) $^ -o $@ $(GUILIBS) $(MAPGUIFLAGS)
     else
 		$(LD) $(LDFLAGS) $(WINDOWS_PROGRAM) $(EMULATORLIB).lib $(GUIOBJS) -out:$@ $(GUILIBS) $(LIBS) $(MAPGUIFLAGS)
     endif
@@ -731,7 +731,7 @@ else
     $(EMULATORCLI):	$(EMULATORDLL) $(CLIOBJS)
 		@echo Linking $@...
     ifdef USE_GCC
-		$(LD) $(LDFLAGS) $(CONSOLE_PROGRAM) $^ -o $@ $(CLILIBS) $(MAPCLIFLAGS)
+		$(LD) $(LDFLAGS) $(CONSOLE_PROGRAM) $(EMULATORDLL) $^ -o $@ $(CLILIBS) $(MAPCLIFLAGS)
     else
 		$(LD) $(LDFLAGS) $(CONSOLE_PROGRAM) $(EMULATORLIB).lib $(CLIOBJS) -out:$@ $(CLILIBS) $(MAPCLIFLAGS)
     endif

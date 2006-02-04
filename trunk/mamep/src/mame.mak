@@ -312,7 +312,6 @@ DRVLIBS = \
 	$(OBJ)/suna.a \
 	$(OBJ)/tad.a \
 	$(OBJ)/taito.a \
-	$(OBJ)/taiyo.a \
 	$(OBJ)/tatsumi.a \
 	$(OBJ)/tch.a \
 	$(OBJ)/tecfri.a \

@@ -696,10 +696,6 @@ static int vh_open(void)
 	if (palette_start())
 		goto cant_start_palette;
 
-	/* actually decode the graphics */
-	if (Machine->drv->gfxdecodeinfo)
-		decode_graphics(Machine->drv->gfxdecodeinfo);
-
 	/* if we're a vector game, override the screen width and height */
 	if (Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
 		scale_vectorgames(options.vector_width, options.vector_height, &bmwidth, &bmheight);
@@ -788,6 +784,10 @@ static int vh_open(void)
 
 	/* force the first update to be full */
 	set_vh_global_attribute(NULL, 0);
+
+	/* actually decode the graphics */
+	if (Machine->drv->gfxdecodeinfo)
+		decode_graphics(Machine->drv->gfxdecodeinfo);
 
 	/* reset performance data */
 	last_fps_time = osd_cycles();
