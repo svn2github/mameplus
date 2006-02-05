@@ -1856,7 +1856,6 @@ robotron	ロボトロン2084 (Solid Blue label)	ろぼとろん2084	Williams
 robotryo	ロボトロン2084 (Yellow/Orange label)	ろぼとろん2084	Williams
 joust	ジャウスト (White/Green label)	じゃうすと_1	Williams
 joustr	ジャウスト (Solid Red label)	じゃうすと_1	Williams
-joustg	ジャウスト (Solid Green label)	じゃうすと_1	Williams
 joustwr	ジャウスト (White/Red label)	じゃうすと_1	Williams
 bubbles	バブルズ	ばぶるず	Williams
 bubblesr	バブルズ (Solid Red label)	ばぶるず	Williams
@@ -2869,7 +2868,8 @@ gground	ゲイングランド (FD1094 317-0058-03?)	げいんぐらんど	Sega
 crkdown	クラックダウン (USA版 FD1094 317-0058-04d)	くらっくだうん	Sega
 crkdownj	クラックダウン (日本版 FD1094 317-0058-04b)	くらっくだうん	Sega
 sgmast	ジャンボ尾崎のスーパーマスターズ / Super Masters Golf (FD1094 317-0058-05d?)	じゃんぼおざきのすーぱーますたーず	Sega
-sgmastc	ジャンボ尾崎のスーパーマスターズ (FD1094 317-0058-05c)	じゃんぼおざきのすーぱーますたーず	Sega
+sgmastc	ジャンボ尾崎のスーパーマスターズ (海外版 FD1094 317-0058-05c)	じゃんぼおざきのすーぱーますたーず	Sega
+sgmastj	ジャンボ尾崎のスーパーマスターズ (日本版 FD1094 317-0058-05b)	じゃんぼおざきのすーぱーますたーず	Sega
 roughrac	ラフレーサー (日本版 FD1094 317-0058-06b)	らふれーさー	Sega
 bnzabros	ボナンザブラザーズ (USA版 Floppy DS3-5000-07d?)	ぼなんざぶらざーず	Sega
 bnzabrsj	ボナンザブラザーズ (日本版 Floppy DS3-5000-07b)	ぼなんざぶらざーず	Sega
@@ -4487,13 +4487,22 @@ matrimd	新豪血寺一族 闘婚 -Matrimelee (decrypted C)	しんごうけつじいちぞくとうこ
 matrimbl	新豪血寺一族 闘婚 -Matrimelee (海賊版)	しんごうけつじいちぞくとうこん	bootleg
 pnyaa	ポチッとにゃ～	ぽちっとにゃー	Aiky / Taito
 mslug5	メタルスラッグ5	めたるすらっぐ_5	SNK Playmore
-svcpcb	SNK VS. CAPCOM -SVC CHAOS (アジア版 JAMMA PCB)	えすえぬけいばーさすかぷこん	Playmore
-svcpcbj	SNK VS. CAPCOM -SVC CHAOS (日本版 JAMMA PCB)	えすえぬけいばーさすかぷこん	Playmore
+ms5plus	メタルスラッグ5 / Metal Slug 5 Plus (海賊版)	めたるすらっぐ_5	bootleg
+svcpcb	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB)	えすえぬけいばーさすかぷこん	Playmore
 svc	SNK VS. CAPCOM -SVC CHAOS (MVS)	えすえぬけいばーさすかぷこん	Playmore
+svcboot	SNK VS. CAPCOM -SVC CHAOS (MVS) (海賊版)	えすえぬけいばーさすかぷこん	booleg
+svcplus	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Plus (海賊版 set1)	えすえぬけいばーさすかぷこん	booleg
+svcplusa	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Plus (海賊版 set 2)	えすえぬけいばーさすかぷこん	booleg
+svcsplus	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Super Plus (海賊版)	えすえぬけいばーさすかぷこん	booleg
 samsho5	サムライスピリッツ零 (set 1)	さむらいすぴりっつ_6_1ぜろ	Yuki Enterprise / SNK Playmore
 samsho5h	サムライスピリッツ零 (set 2)	さむらいすぴりっつ_6_1ぜろ	Yuki Enterprise / SNK Playmore
+samsho5b	サムライスピリッツ零 (海賊版?)	さむらいすぴりっつ_6_1ぜろ	bootleg
 kf2k3pcb	ザ・キング・オブ・ファイターズ 2003 (日本版 JAMMA PCB)	ざきんぐおぶふぁいたーず_10_2003	SNK Playmore
 kof2003	ザ・キング・オブ・ファイターズ 2003 (海外 / USA版 MVS)	ざきんぐおぶふぁいたーず_10_2003	SNK Playmore
+kf2k3bl	ザ・キング・オブ・ファイターズ 2003 (海賊版 set 1)	ざきんぐおぶふぁいたーず_10_2003	bootleg
+kf2k3bla	ザ・キング・オブ・ファイターズ 2003 (海賊版 set 2)	ざきんぐおぶふぁいたーず_10_2003	bootleg
+kf2k3pl	ザ・キング・オブ・ファイターズ 2003 / The King of Fighters 2004 Plus (海賊版)	ざきんぐおぶふぁいたーず_10_2003	bootleg
+kf2k3upl	ザ・キング・オブ・ファイターズ 2003 / The King of Fighters 2004 Ultra Plus (海賊版)	ざきんぐおぶふぁいたーず_10_2003	bootleg
 samsh5sp	サムライスピリッツ零スペシャル (set 1 uncensored)	さむらいすぴりっつ_6_2ぜろすぺしゃる	Yuki Enterprise / SNK Playmore
 samsh5sh	サムライスピリッツ零スペシャル (set 2, censored)	さむらいすぴりっつ_6_2ぜろすぺしゃる	Yuki Enterprise / SNK Playmore
 samsh5sn	サムライスピリッツ零スペシャル (set 3 less censored)	さむらいすぴりっつ_6_2ぜろすぺしゃる	Yuki Enterprise / SNK Playmore
@@ -4996,11 +5005,11 @@ scudhamm	スカッドハンマー	すかっどはんまー	Jaleco
 tetrisp2	テトリスプラス2 (海外版?)	てとりす_2ぷらす_2	Jaleco / The Tetris Company
 teplus2j	テトリスプラス2 (日本版)	てとりす_2ぷらす_2	Jaleco / The Tetris Company
 rockn	ロックントレッド (日本版)	ろっくん_1とれっど	Jaleco
-rocknb	ロックントレッド (日本版) (海賊版)	ろっくん_1とれっど	Jaleco
-rockn2b	ロックントレッド2 (日本版) (海賊版)	ろっくん_2どれっど2	Jaleco
-rocknmsb	ロックンメガセッション (日本版) (海賊版)	ろっくんめがせっしょん	bootleg
-rockn3b	ロックンスリー (日本版) (海賊版)	ろっくん_3すりー	bootleg
-rockn4b	ロックンフォー (日本版 prototype) (海賊版)	ろっくん_4ふぉー	bootleg
+rockna	ロックントレッド (日本版 alt)	ろっくん_1とれっど	Jaleco
+rockn2	ロックントレッド2 (日本版)	ろっくん_2とれっど	Jaleco
+rocknms	ロックンメガセッション (Japan)	ろっくんめがせっしょん	Jaleco
+rockn3	ロックン3 (日本版)	ろっくん_3	Jaleco
+rockn4	ロックン4 (日本版 prototype)	ろっくん_4	Jaleco (PCCWJ)
 lomakai	魔魁伝説 / Legend of Makai (海外版)	まかいでんせつ	Jaleco
 makaiden	魔魁伝説 (日本版)	まかいでんせつ	Jaleco
 p47	P-47 -ザ・フリーダムファイター / P-47 -The Phantom Fighter (海外版)	ぴー47_1	Jaleco
@@ -5892,6 +5901,7 @@ coolpool	クールプール	くーるぷーる	Catalina
 9ballsh3	9ボールシュートアウト (set 3)	ないんぼーるしゅーとあうと	E-Scape EnterMedia (Bundra license)
 gumbo	ガンボー	がんぼー	Min Corp.
 mspuzzle	ミスパズル	みすぱずる	Min Corp.
+mspuzzln	ミスパズル (Nudes)	みすぱずる	Min Corp.
 msbingo	ミスビンゴ	みすびんご	Min Corp.
 dblpoint	ダブルポイント -夜上海	だぶるぽいんと	Dong Bang Electron
 hangman	ハングマン -The Video Game	はんぐまん	Status Games
@@ -5936,11 +5946,11 @@ puzlbang	ラップラップパズル (ver 2.8 / 990106)	らっぷらっぷぱずる	Omega System
 suplup	スーパーラップラップパズル (ver 4.0 / 990518)	すーぱーらっぷらっぷぱずる	Omega System
 vamphalf	ヴァンプ×1／2 (韓国版)	ばんぷはーふ	Danbi &amp; F2 System
 misncrft	ミッションクラフト (ver 2.4)	みっしょんくらふと	Sun
-hidnctch	ヒドゥンキャッチ (海外版)	ひどぅんきゃっち	Eolith
-landbrk	ランドブレイカー (海外版 ver 3.03)	らんどぶれいかー	Eolith
-landbrka	ランドブレイカー (海外版 ver 3.02)	らんどぶれいかー	Eolith
+hidnctch	ヒドゥンキャッチ (海外版 pcb ver 3.03)	ひどぅんきゃっち	Eolith
+landbrk	ランドブレイカー (海外版 pcb ver 3.02)	らんどぶれいかー	Eolith
+landbrka	ランドブレイカー (海外版 pcb ver 3.03)	らんどぶれいかー	Eolith
 raccoon	ラクーンワールド	らくーんわーるど	Eolith
-fort2b	フォートレス2 -Blue Arcade	ふぉーとれす2	Eolith
+fort2b	フォートレス2 ブルーアーケード (ver 1.00 / pcb ver 3.05)	ふぉーとれす2	Eolith
 klondkp	クロンダイクプラス	くろんだいくぷらす	Eolith
 xfiles	X-ファイル	えっくすふぁいる	dgPIX Entertainment Inc.
 kdynastg	キング・オブ・ダイナストギア (ver 1.8)	きんぐおぶだいなすとぎあ	EZ Graphics
