@@ -598,6 +598,10 @@ Eolith
 Epos Corporation
 
 
+# Poizone
+Eterna
+
+
 # Mouja (Japan)
 Etona
 
@@ -1254,6 +1258,10 @@ Oriental
 Outer Limits
 
 
+# Police Trainer (Rev 1.3)
+P & P Marketing
+
+
 # Bowl-O-Rama
 P&P Marketing
 
@@ -1294,7 +1302,7 @@ Philko
 Playmark
 
 
-# SvC Chaos - SNK vs Capcom (Asia, JAMMA PCB)
+# SvC Chaos - SNK vs Capcom (JAMMA PCB)
 Playmore
 
 
@@ -2020,6 +2028,10 @@ Zilec Games
 
 # Check Man
 Zilec-Zenitone
+
+
+# SvC Chaos - SNK vs Capcom (MVS) (bootleg)
+booleg
 
 
 # X-Files

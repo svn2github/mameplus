@@ -2408,9 +2408,9 @@ sbbros	スーパーパン / Super Buster Bros. (USA版 901001)	すーぱーぱん	Mitchell + 
 marukin	スーパーMAHJONG(禁)版 (日本版 901017)	すーぱーまーじゃんまるきんばん	Yuga
 qtono1	クイズ殿様の野望 (日本版)	くいずとのさまのやぼう_1	Capcom
 qsangoku	クイズ三國志 -知略の覇者 (日本版)	くいずさんごくし	Capcom
-block	ブロックブロック (海外版 911106 joystick)	ぶろっくぶろっく	Capcom
-blocka	ブロックブロック (海外版 910910)	ぶろっくぶろっく	Capcom
+block	ブロックブロック (海外版 910910)	ぶろっくぶろっく	Capcom
 blockj	ブロックブロック (日本版 910910)	ぶろっくぶろっく	Capcom
+blockjoy	ブロックブロック (海外版 911106 Joystick Bad Dump?)	ぶろっくぶろっく	Capcom
 blockbl	ブロックブロック (海賊版)	ぶろっくぶろっく	bootleg
 capbowl	カプコンボウリング (set 1)	かぷこんぼうりんぐ	Incredible Technologies
 capbowl2	カプコンボウリング (set 2)	かぷこんぼうりんぐ	Incredible Technologies
@@ -4496,15 +4496,15 @@ svcplusa	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Plus (海賊版 set 
 svcsplus	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Super Plus (海賊版)	えすえぬけいばーさすかぷこん	booleg
 samsho5	サムライスピリッツ零 (set 1)	さむらいすぴりっつ_6_1ぜろ	Yuki Enterprise / SNK Playmore
 samsho5h	サムライスピリッツ零 (set 2)	さむらいすぴりっつ_6_1ぜろ	Yuki Enterprise / SNK Playmore
-samsho5b	サムライスピリッツ零 (海賊版?)	さむらいすぴりっつ_6_1ぜろ	bootleg
+samsho5b	サムライスピリッツ零 (海賊版)	さむらいすぴりっつ_6_1ぜろ	bootleg
 kf2k3pcb	ザ・キング・オブ・ファイターズ 2003 (日本版 JAMMA PCB)	ざきんぐおぶふぁいたーず_10_2003	SNK Playmore
 kof2003	ザ・キング・オブ・ファイターズ 2003 (海外 / USA版 MVS)	ざきんぐおぶふぁいたーず_10_2003	SNK Playmore
 kf2k3bl	ザ・キング・オブ・ファイターズ 2003 (海賊版 set 1)	ざきんぐおぶふぁいたーず_10_2003	bootleg
 kf2k3bla	ザ・キング・オブ・ファイターズ 2003 (海賊版 set 2)	ざきんぐおぶふぁいたーず_10_2003	bootleg
-kf2k3pl	ザ・キング・オブ・ファイターズ 2003 / The King of Fighters 2004 Plus (海賊版)	ざきんぐおぶふぁいたーず_10_2003	bootleg
+kf2k3pl	ザ・キング・オブ・ファイターズ 2003 / The King of Fighters 2004 Plus / Hero (海賊版)	ざきんぐおぶふぁいたーず_10_2003	bootleg
 kf2k3upl	ザ・キング・オブ・ファイターズ 2003 / The King of Fighters 2004 Ultra Plus (海賊版)	ざきんぐおぶふぁいたーず_10_2003	bootleg
 samsh5sp	サムライスピリッツ零スペシャル (set 1 uncensored)	さむらいすぴりっつ_6_2ぜろすぺしゃる	Yuki Enterprise / SNK Playmore
-samsh5sh	サムライスピリッツ零スペシャル (set 2, censored)	さむらいすぴりっつ_6_2ぜろすぺしゃる	Yuki Enterprise / SNK Playmore
+samsh5sh	サムライスピリッツ零スペシャル (set 2 censored)	さむらいすぴりっつ_6_2ぜろすぺしゃる	Yuki Enterprise / SNK Playmore
 samsh5sn	サムライスピリッツ零スペシャル (set 3 less censored)	さむらいすぴりっつ_6_2ぜろすぺしゃる	Yuki Enterprise / SNK Playmore
 jockeygp	ジョッキーグランプリ	じょっきーぐらんぷり	Sun Amusement / BrezzaSoft
 vliner	V-ライナー (set 1)	ぶいらいなー	Dyna / BreezaSoft
@@ -4852,7 +4852,8 @@ cchasm	コズミックカズム (set 1)	こずみっくかずむ	Cinematronics / GCE
 cchasm1	コズミックカズム (set 2)	こずみっくかずむ	Cinematronics / GCE
 roundup	フィッター / Round-Up	ふぃったー	Amenip/Centuri
 fitter	フィッター	ふぃったー	Taito Corporation
-thepit	ザ・ピット	ざぴっと	Centuri
+thepit	ザ・ピット	ざぴっと	Taito
+thepitc	ザ・ピット (Centuri)	ざぴっと	Centuri
 dockman	ドックマン	どっくまん	Taito Corporation
 portman	ポートマン	ぽーとまん	Nova Games Ltd.
 funnymou	ファニーマウス	ふぁにーまうす	Chuo Co. Ltd
@@ -5622,7 +5623,8 @@ vbowl	バーチャボウリング (海外版 V101XCM)	ばーちゃぼうりんぐ	Alta / IGS
 vbowlj	バーチャボウリング (日本版 V100JCM)	ばーちゃぼうりんぐ	Alta / IGS
 drgnwrld	中國龍 / Dragon World (海外版 V0400)	ちゅうごくりゅう_1	IGS
 drgwrld3	中國龍 / Dragon World (海外版 V0300)	ちゅうごくりゅう_1	IGS
-lordgun	ロード・オブ・ガン	ろーどおぶがん	IGS
+lordgun	ロード・オブ・ガン (USA版)	ろーどおぶがん	IGS
+hfh	黄飛鴻	ふぁんふぇいほん	IGS
 tarzan	ターザン	たーざん	IGS
 orlegend	オリエンタルレジェンド (ver 126)	おりえんたるれじぇんど_1	IGS
 orlegnde	オリエンタルレジェンド (ver 112)	おりえんたるれじぇんど_1	IGS
@@ -5836,12 +5838,13 @@ gcpinbal	グランドクロス	ぐらんどくろす	Excellent System
 vmetal	ヴァリアメタル	ばりあめたる	Excellent Systems
 vmetaln	ヴァリアメタル (New Ways Trading Co.)	ばりあめたる	[Excellent Systems] New Ways Trading Co.
 aquarium	アクアリウム (日本版)	あくありうむ	Excellent System
-policetr	ポリストレーナー -Property of Metro Police Academy (rev 1.3)	ぽりすとれーなー	P&amp;P Marketing
-polict11	ポリストレーナー -Property of Metro Police Academy (rev 1.1)	ぽりすとれーなー	P&amp;P Marketing
-plctr13b	ポリストレーナー -Property of Metro Police Academy (rev 1.3B)	ぽりすとれーなー	P&amp;P Marketing
-sshooter	シャープシューター (rev 1.7)	しゃーぷしゅーたー	P&amp;P Marketing
-sshoot12	シャープシューター (rev 1.2)	しゃーぷしゅーたー	P&amp;P Marketing
-sshoot11	シャープシューター (rev 1.1)	しゃーぷしゅーたー	P&amp;P Marketing
+policetr	ポリストレーナー -Property of Metro Police Academy (rev 1.3)	ぽりすとれーなー	P &amp; P Marketing
+polict11	ポリストレーナー -Property of Metro Police Academy (rev 1.1)	ぽりすとれーなー	P &amp; P Marketing
+polict10	ポリストレーナー -Property of Metro Police Academy (Rev 1.0)	ぽりすとれーなー	P &amp; P Marketing
+plctr13b	ポリストレーナー -Property of Metro Police Academy (rev 1.3B)	ぽりすとれーなー	P &amp; P Marketing
+sshooter	シャープシューター (rev 1.7)	しゃーぷしゅーたー	P &amp; P Marketing
+sshoot12	シャープシューター (rev 1.2)	しゃーぷしゅーたー	P &amp; P Marketing
+sshoot11	シャープシューター (rev 1.1)	しゃーぷしゅーたー	P &amp; P Marketing
 pass	パス	ぱす	Oksan
 news	ニューズ	にゅーず	Poby / Virus
 taxidrvr	タクシードライバー	たくしーどらいばー	Graphic Techno
@@ -5988,11 +5991,15 @@ pbchmp95	ウィッチ / Pinball Champ '95 (海賊版?)	うぃっち	Veltmeijer Automaten
 cardline	カードライン	かーどらいん	Veltmeijer
 bmcbowl	滾球の星	こんきゅうのほし	BMC
 pitboss	ピットボス	ぴっとぼす	Merit
-trvwhiz	トリビア? ウィズ (question set 1)	とりびあ_2_うぃず	Merit
-trvwhza	トリビア? ウィズ (question set 2)	とりびあ_2_うぃず	Merit
+trvwhzho	トリビア? ウィズ (Horizontal - Question set 1)	とりびあうぃず	Merit
+trvwhzha	トリビア? ウィズ (Horizontal - Question set 2)	とりびあうぃず	Merit
+trvwhzve	トリビア? ウィズ (Vertical - Question set 1)	とりびあうぃず	Merit
+trvwhzva	トリビア? ウィズ (Vertical - Question set 2)	とりびあうぃず	Merit
 trvwhzii	トリビア? ウィズ (edition 2)	とりびあ_2_うぃず	Merit
+trvwhziv	トリビア? ウィズ (Edition 4)	とりびあうぃず	Merit
 tictac	チクタクトリビア	ちくたくとりびあ	Merit
 phrcraze	フレーズクレーズ	ふれーずくれーず	Merit
+phrcrazs	フレーズクレーズ (Sex Kit)	ふれーずくれーず	Merit
 couple	ザ・カップルズ (set 1)	ざかっぷるず	Merit
 couplep	ザ・カップルズ (set 2)	ざかっぷるず	Merit
 couplei	ザ・カップルズ (set 3)	ざかっぷるず	Merit
@@ -6001,6 +6008,7 @@ hotblock	ホットブロックス -テトリックスII	ほっとぶろっくす	Nics? / Nix?
 pntnpuzl	ペイント&パズル	ぺいんとあんどぱずる	Century?
 trucocl	トゥルーコクレメンテ	とぅるーこくれめんて	Miky SRL
 ertictac	エロティックタック	えろてぃっくたっく	Sisteme
+poizone	ポイゾーン	ぽいぞーん	Eterna
 ssfindo	シーシーファインドアウト	しーしーふぁいんどあうと	Icarus
 ppcar	パンパンカー	ぱんぱんかー	Icarus
 monzagp	モンツァGP	もんつぁじーぴー	Leante Games (Olympia?)
