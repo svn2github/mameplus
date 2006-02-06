@@ -121,24 +121,21 @@ void kof96ep_px_decrypt(void);
 void kf2k1pa_sx_decrypt(void);
 void kf2k2mp_px_decrypt(void);
 void kof2002b_gfx_decrypt(UINT8 *src, int size);
-void decrypt_ms5plus_s1(void);
 void install_ms5plus_protection(void);
 void svcboot_px_decrypt( void );
 void svcboot_cx_decrypt( void );
 void svcplus_px_decrypt( void );
 void svcplus_px_hack( void );
-void svcplus_sx_decrypt( void );
 void svcplusa_px_decrypt( void );
 void svcsplus_px_decrypt( void );
 void svcsplus_px_hack( void );
-void svcsplus_sx_decrypt( void );
 void kof2003b_px_decrypt( void );
-void kof2003b_sx_decrypt( void );
 void kof2003b_install_protection(void);
 void kof2k3pl_px_decrypt( void );
 void kof2k3up_px_decrypt( void );
-void kof2k3up_sx_decrypt( void );
 void kof2k3up_install_protection(void);
+void kf2k3pl_install_protection(void);
+void samsh5bl_px_decrypt( void );
 
 /* vidhrdw/neogeo.c */
 

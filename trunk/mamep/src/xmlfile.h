@@ -4,6 +4,9 @@
 
     XML file parsing code.
 
+    Copyright (c) 1996-2006, Nicola Salmoria and the MAME Team.
+    Visit http://mamedev.org for licensing and usage restrictions.
+
 ***************************************************************************/
 
 #pragma once
@@ -33,7 +36,7 @@ typedef struct _xml_attribute_node xml_attribute_node;
 
 struct _xml_data_node
 {
-	struct _xml_data_node *next;			/* pointer to next sibling node */
+	struct _xml_data_node *next;				/* pointer to next sibling node */
 	struct _xml_data_node *parent;			/* pointer to parent node */
 	struct _xml_data_node *child;			/* pointer to first child node */
 	const char *name;						/* pointer to copy of tag name */
