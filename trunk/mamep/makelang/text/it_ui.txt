@@ -1,6 +1,6 @@
 # ui/mame32.rc: 384
                                 
-Tradotto da Claudio Parmigiani <v0.103u4> <il 29/Gennaio/2006>
+Tradotto da Claudio Parmigiani <v0.104> <il 8/Febbraio/2006>
 
 # ui/properties.c: 966
 %d colors 
