@@ -632,13 +632,19 @@ CPUDEFS += -DHAS_M68040=$(if $(filter M68040,$(CPUS)),1,0)
 ifneq ($(filter M68000 M68008 M68010 M68EC020 M68020 M68040,$(CPUS)),)
 OBJDIRS += $(OBJ)/cpu/m68000
 #//ks hcmame switch m68k core
+ifneq ($(filter M68000 M68008,$(CPUS)),)
 CPUOBJS += $(OBJ)/cpu/m68000/asmintf.o $(OBJ)/cpu/m68000/68000.o
 ASMDEFS += -DA68K0
+endif
+ifneq ($(filter M68010,$(CPUS)),)
 CPUOBJS += $(OBJ)/cpu/m68000/asmintf.o $(OBJ)/cpu/m68000/68010.o
 ASMDEFS += -DA68K1
+endif
+ifneq ($(filter M68EC020 M68020,$(CPUS)),)
 CPUOBJS += $(OBJ)/cpu/m68000/asmintf.o $(OBJ)/cpu/m68000/68020.o
 ASMDEFS += -DA68K2
 ASMDEFS += -DA68KEM
+endif
 $(OBJ)/cpu/m68000/68kem.o: $(OBJ)/cpu/m68000/68kem.asm make68k.c
 M68000DRC_GENERATED_OBJS = \
 	$(OBJ)/cpu/m68000/d68kops.o $(OBJ)/cpu/m68000/d68kopac.o \
