@@ -5991,15 +5991,15 @@ pbchmp95	ウィッチ / Pinball Champ '95 (海賊版?)	うぃっち	Veltmeijer Automaten
 cardline	カードライン	かーどらいん	Veltmeijer
 bmcbowl	滾球の星	こんきゅうのほし	BMC
 pitboss	ピットボス	ぴっとぼす	Merit
-trvwhzho	トリビア? ウィズ (Horizontal - Question set 1)	とりびあうぃず	Merit
-trvwhzha	トリビア? ウィズ (Horizontal - Question set 2)	とりびあうぃず	Merit
-trvwhzve	トリビア? ウィズ (Vertical - Question set 1)	とりびあうぃず	Merit
-trvwhzva	トリビア? ウィズ (Vertical - Question set 2)	とりびあうぃず	Merit
-trvwhzii	トリビア? ウィズ (edition 2)	とりびあ_2_うぃず	Merit
-trvwhziv	トリビア? ウィズ (Edition 4)	とりびあうぃず	Merit
+trvwhzho	トリビア? ウィズ (horizontal question set 1)	とりびあ_2_うぃず_hq1	Merit
+trvwhzha	トリビア? ウィズ (horizontal question set 2)	とりびあ_2_うぃず_hq2	Merit
+trvwhzve	トリビア? ウィズ (vertical question set 1)	とりびあ_2_うぃず_vq1	Merit
+trvwhzva	トリビア? ウィズ (vertical question set 2)	とりびあ_2_うぃず_vq2	Merit
+trvwhzii	トリビア? ウィズ (edition 2)	とりびあ_2_うぃず_ed2	Merit
+trvwhziv	トリビア? ウィズ (edition 4)	とりびあ_2_うぃず_ed4	Merit
 tictac	チクタクトリビア	ちくたくとりびあ	Merit
 phrcraze	フレーズクレーズ	ふれーずくれーず	Merit
-phrcrazs	フレーズクレーズ (Sex Kit)	ふれーずくれーず	Merit
+phrcrazs	フレーズクレーズ (sex kit)	ふれーずくれーず	Merit
 couple	ザ・カップルズ (set 1)	ざかっぷるず	Merit
 couplep	ザ・カップルズ (set 2)	ざかっぷるず	Merit
 couplei	ザ・カップルズ (set 3)	ざかっぷるず	Merit
