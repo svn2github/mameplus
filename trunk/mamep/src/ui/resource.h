@@ -242,7 +242,7 @@
 #define IDC_KEEPASPECT                  1139
 #define IDC_MATCHREFRESH                1140
 #define IDC_SYNCREFRESH                 1141
-#define IDC_USE_STICKPOINT              1142	// USE_STICKPOINT (miko2u@hotmail.com)
+#define IDC_USE_STICKPOINT              1142	// USE_JOY_MOUSE_MOVE (Support Stick-type Pointing Device by miko2u@hotmail.com)
 #define IDC_USE_MOUSE                   1143
 #define IDC_THROTTLE                    1144
 #define IDC_RESDEPTH                    1145
@@ -335,7 +335,7 @@
 #define ID_CONTEXT_SHOW_FOLDER_END      39200
 
 #define IDC_EFFECTOVERRIDES             1301
-#define IDC_CONFIRM_QUIT                1302
+#define IDC_AUTO_PAUSE_PLAYBACK         1302 // USE_AUTO_PAUSE_PLAYBACK
 #define IDC_M68K_CORE                   1303 // ks hcmame s switch m68k core
 #define IDC_M68K_CORETEXT               1304 // ks hcmame s switch m68k core
 #define IDC_VOLUME_ADJUST               1305 // USE_VOLUME_AUTO_ADJUST

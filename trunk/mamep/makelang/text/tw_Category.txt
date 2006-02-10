@@ -386,235 +386,235 @@ Shooter / Flying
 Shooter / Flying (chase view)
 射擊 / 飛行 (追逐視角)
 
-# 3737
+# 3738
 Shooter / Flying 1st Person
 射擊 / 飛行 第一人稱
 
-# 3769
+# 3770
 Shooter / Flying Diagonal
 射擊 / 飛行 斜向
 
-# 3777
+# 3778
 Shooter / Flying Horizontal
 射擊 / 飛行 橫向
 
-# 3978
+# 3980
 Shooter / Flying Horizontal *Mature*
 射擊 / 飛行 橫向 *成人*
 
-# 3981
+# 3983
 Shooter / Flying Vertical
 射擊 / 飛行 縱向
 
-# 4371
+# 4373
 Shooter / Flying Vertical *Mature*
 射擊 / 飛行 縱向 *成人*
 
-# 4374
+# 4376
 Shooter / Gallery
 射擊 / 固定靶場
 
-# 4719
+# 4722
 Shooter / Gallery *Mature*
 射擊 / 固定靶場 *成人*
 
-# 4722
+# 4725
 Shooter / Gun
 射擊 / 槍
 
-# 4826
+# 4829
 Shooter / Misc.
 射擊 / 其它
 
-# 4842
+# 4845
 Shooter / Misc. Horizontal
 射擊 / 其它 橫向
 
-# 4864
+# 4867
 Shooter / Misc. Vertical
 射擊 / 其它 縱向
 
-# 4883
+# 4886
 Shooter / Versus
 射擊 / 對戰
 
-# 4892
+# 4895
 Shooter / Walking
 射擊 / 步行
 
-# 4993
-Sport / Ping pong
-運動 / 乒乓球
-
-# 4996
+# 4997
 Sports
 運動
 
-# 5020
+# 5021
 Sports / Armwrestling
 運動 / 腕力
 
-# 5024
+# 5025
 Sports / Baseball
 運動 / 棒球
 
-# 5101
+# 5102
 Sports / Basketball
 運動 / 籃球
 
-# 5152
+# 5153
 Sports / Bowling
 運動 / 保齡球
 
-# 5184
+# 5185
 Sports / Boxing
 運動 / 拳擊
 
-# 5220
+# 5221
 Sports / Bull Fighting
 運動 / 鬥牛
 
-# 5224
+# 5225
 Sports / Darts
 運動 / 箭
 
-# 5231
+# 5232
 Sports / Dodgeball
 運動 / 躲避球
 
-# 5236
+# 5237
 Sports / Fishing
 運動 / 釣魚
 
-# 5241
+# 5242
 Sports / Football Amer.
 運動 / 美式橄欖球
 
-# 5287
+# 5288
 Sports / Football Rugby
 運動 / 英式橄欖球
 
-# 5292
+# 5293
 Sports / Golf
 運動 / 高爾夫
 
-# 5383
+# 5384
 Sports / Handball
 運動 / 手球
 
-# 5386
+# 5387
 Sports / Hang Gliding
 運動 / 懸掛滑翔
 
-# 5391
+# 5392
 Sports / Hockey
 運動 / 曲棍球
 
-# 5406
+# 5407
 Sports / Horse Racing
 運動 / 賽馬
 
-# 5418
+# 5419
 Sports / Horseshoes
 運動 / 蹄鐵
 
-# 5423
+# 5424
 Sports / Multiplay
 運動 / 多人
 
-# 5430
+# 5431
+Sports / Ping pong
+運動 / 乒乓球
+
+# 5434
 Sports / Pool
 運動 / 撞球
 
-# 5466
+# 5470
 Sports / Pool *Mature*
 運動 / 撞球 *成人*
 
-# 5478
+# 5482
 Sports / Shuffleboard
 運動 / 推圓盤
 
-# 5484
+# 5488
 Sports / Skateboarding
 運動 / 滑板
 
-# 5492
+# 5496
 Sports / Skiing
 運動 / 滑雪
 
-# 5511
+# 5515
 Sports / SkyDiving
 運動 / 跳傘
 
-# 5515
+# 5519
 Sports / Soccer
 運動 / 足球
 
-# 5603
+# 5607
 Sports / Sumo
 運動 / 相撲
 
-# 5606
+# 5610
 Sports / Swimming
 運動 / 游泳
 
-# 5617
+# 5621
 Sports / Tennis
 運動 / 網球
 
-# 5647
+# 5651
 Sports / Track & Field
 運動 / 賽道 & 競技場
 
-# 5684
+# 5688
 Sports / VolleyBall
 運動 / 排球
 
-# 5708
+# 5712
 Tabletop
 桌上
 
-# 5714
+# 5718
 Tabletop *Mature*
 桌上 *成人*
 
-# 5717
+# 5721
 Tabletop / Hanafuda
 桌上 / 花札
 
-# 5721
+# 5725
 Tabletop / Hanafuda *Mature*
 桌上 / 花札 *成人*
 
-# 5740
+# 5744
 Tabletop / Mahjong
 桌上 / 麻雀
 
-# 5758
+# 5762
 Tabletop / Mahjong *Mature*
 桌上 / 麻雀 *成人*
 
-# 5970
+# 5974
 Tabletop / Othello
 桌上 / 黑白棋
 
-# 5976
+# 5980
 Tabletop / Othello *Mature*
 桌上 / 黑白棋 *成人*
 
-# 5979
+# 5983
 Tabletop / Renju
 桌上 / 連珠
 
-# 5983
+# 5987
 Tabletop / Shougi
 桌上 / 將棋
 
-# 5991
+# 5995
 Unplayable
 無法執行
 
-# 6289
+# 6294
 Wrestling
 摔角
 

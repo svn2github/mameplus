@@ -146,6 +146,10 @@ ifneq ($(USE_IPS),)
 RCDEFS += -DUSE_IPS
 endif
 
+ifneq ($(USE_AUTO_PAUSE_PLAYBACK),)
+RCDEFS += -DAUTO_PAUSE_PLAYBACK
+endif
+
 ifneq ($(USE_SCALE_EFFECTS),0)
 RCDEFS += -DUSE_SCALE_EFFECTS
 endif

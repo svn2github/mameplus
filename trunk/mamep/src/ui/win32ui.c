@@ -1003,7 +1003,7 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	if (pOpts->offscreen_reload)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sreload",        pOpts->offscreen_reload ? "" : "no");
 
-#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
+#ifdef USE_JOY_MOUSE_MOVE
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sstickpoint",              pOpts->use_stickpoint  ? "" : "no");
 #endif /* USE_JOY_MOUSE_MOVE */
 #ifdef JOYSTICK_ID
@@ -1114,18 +1114,18 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	if (DriverHasOptionalBIOS(nGameIndex))
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -bios %s",pOpts->bios);		
 
-	/* confirm quit */
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sconfirm_quit",            pOpts->confirm_quit    ? "" : "no");
 #ifdef USE_IPS
 	if (pOpts->patchname != NULL)
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -ips %s",            pOpts->patchname);
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -ips %s",                  pOpts->patchname);
 #endif /* USE_IPS */
+#ifdef AUTO_PAUSE_PLAYBACK
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sauto_pause_playback",     pOpts->auto_pause_playback    ? "" : "no");
+#endif /* AUTO_PAUSE_PLAYBACK */
 #ifdef TRANS_UI
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%suse_trans_ui",            pOpts->use_transui     ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -ui_transparency %d",        pOpts->ui_transparency);
 #endif /* TRANS_UI */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-	/* ks hcmame s switch m68k core */
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -m68k_core %d",              pOpts->m68k_core);
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 

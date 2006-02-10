@@ -4928,7 +4928,7 @@ static int update_confirm_quit(void)
 	if (!confirm_quit_state)
 		return 0;
 
-	if (!options.confirm_quit)
+	if (options.confirm_quit)
 		return 1;
 
 	ui_draw_message_window(_(quit_message));

@@ -124,7 +124,7 @@ typedef struct
 	float  f_a2d;
 	char*  ctrlr;
 #ifdef USE_JOY_MOUSE_MOVE
-	BOOL   use_stickpoint;	// Support Stick-type Pointing Device (miko2u@hotmail.com)
+	BOOL   use_stickpoint;
 #endif /* USE_JOY_MOUSE_MOVE */
 #ifdef JOYSTICK_ID
 	int    joyid[8];
@@ -191,12 +191,10 @@ typedef struct
 #ifdef USE_IPS
 	char*  patchname;
 #endif /* USE_IPS */
-	BOOL   confirm_quit;
 #ifdef AUTO_PAUSE_PLAYBACK
 	BOOL   auto_pause_playback;
 #endif /* AUTO_PAUSE_PLAYBACK */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-	/* ks hcmame e switch m68k core */
 	int    m68k_core;
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 #ifdef TRANS_UI

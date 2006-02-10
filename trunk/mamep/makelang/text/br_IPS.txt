@@ -2,7 +2,7 @@
 Misc
 Misto
 
-# 36
+# 35
 Neo-Geo
 Neo-Geo
 
@@ -10,11 +10,11 @@ Neo-Geo
 Translation
 Tradução
 
-# 22
+# 20
 CPS1
 
 
-# 31
+# 30
 CPS2
 
 
@@ -22,7 +22,7 @@ CPS2
 IPS
 
 
-# 89
+# 93
 PGM
 
 

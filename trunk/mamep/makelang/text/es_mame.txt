@@ -1,1268 +1,684 @@
-# datafile.c: 3144
+# datafile.c: 3150
           DIAL:  %4d\n
        VOLANTE:  %4d\n
 
-# datafile.c: 3150
+# datafile.c: 3156
          OTHER:  %4d\n
          OTROS:  %4d\n
 
-# datafile.c: 3148
+# datafile.c: 3154
          PEDAL:  %4d\n
          PEDAL:  %4d\n
 
-# datafile.c: 3143
+# datafile.c: 3149
         PADDLE:  %4d\n
          MANDO:  %4d\n
 
-# common.c: 1147
+# common.c: 1166
        FOUND: %s\n
        ENCONTRADOS: %s\n
 
-# datafile.c: 3137
+# datafile.c: 3143
        JOY2WAY:  %4d\n
   JOYS. 2 DIR.:  %4d\n
 
-# datafile.c: 3138
+# datafile.c: 3144
        JOY4WAY:  %4d\n
   JOYS. 4 DIR.:  %4d\n
 
-# datafile.c: 3139
+# datafile.c: 3145
        JOY8WAY:  %4d\n
   JOYS. 8 DIR.:  %4d\n
 
-# datafile.c: 3146
+# datafile.c: 3152
       AD STICK:  %4d\n
       AD STICK:  %4d\n
 
-# datafile.c: 3147
+# datafile.c: 3153
       LIGHTGUN:  %4d\n
        PISTOLA:  %4d\n
 
-# datafile.c: 3131
+# datafile.c: 3137
      PLAYERS %d:  %4d\n
    JUGADORES %d:  %4d\n
 
-# datafile.c: 3145
+# datafile.c: 3151
      TRACKBALL:  %4d\n
      TRACKBALL:  %4d\n
 
-# datafile.c: 3159
+# datafile.c: 3165
     BUTTONS%3d:  %4d\n
     BOTONES%3d:  %4d\n
 
-# common.c: 1141
+# common.c: 1160
     EXPECTED: %s\n
     ESPERADO: %s\n
 
-# datafile.c: 3165
+# datafile.c: 3171
     NO BUTTONS:  %4d\n
     NO BOTONES:  %4d\n
 
-# audit.c: 485, 522
+# audit.c: 488, 525
    FOUND: 
 ENCONTRADO:
 
+# datafile.c: 2975
+ %4d HARDDISK\n
+ %4d HARDDISK\n
+
+# datafile.c: 2971
+ %4d HORIZONTAL + %4d\n %4d VERTICAL   + %4d\n
+ %4d HORIZONTAL + %4d\n %4d VERTICAL   + %4d\n
+
+# datafile.c: 2967
+ %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
+ %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
+
 # datafile.c: 2969
- %4d HARDDISK\n
- %4d HARDDISK\n
-
-# datafile.c: 2965
- %4d HORIZONTAL + %4d\n %4d VERTICAL   + %4d\n
- %4d HORIZONTAL + %4d\n %4d VERTICAL   + %4d\n
-
-# datafile.c: 2961
- %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
- %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
-
-# datafile.c: 2963
  %4d RASTER     + %4d\n %4d VECTOR     + %4d\n
  %4d BARRIDO    + %4d\n %4d VECTOR     + %4d\n
 
-# datafile.c: 2967
+# datafile.c: 2973
  %4d STEREO     + %4d\n
  %4d ESTÉREO    + %4d\n
 
-# datafile.c: 3140
+# datafile.c: 3146
  DOUBLEJOY2WAY:  %4d\n
 2 JOYS. 2 DIR.:  %4d\n
 
-# datafile.c: 3141
+# datafile.c: 3147
  DOUBLEJOY4WAY:  %4d\n
 2 JOYS. 4 DIR.:  %4d\n
 
-# datafile.c: 3142
+# datafile.c: 3148
  DOUBLEJOY8WAY:  %4d\n
 2 JOYS. 8 DIR.:  %4d\n
 
-# datafile.c: 3070
+# datafile.c: 3076
  GAMES WITH  %d CPUs: %4d\n
  JUEGOS CON %d CPUs: %4d\n
 
-# datafile.c: 3101
+# datafile.c: 3107
  GAMES WITH  %d SNDINTRF: %4d\n
  JUEGO CON  %d SONIDO INTERNO: %4d\n
 
-# common.c: 1202
+# common.c: 1221
 %-12s NO GOOD DUMP KNOWN\n
 %-12s NO ESTÁ BIEN DUMPEADO\n
 
-# common.c: 1110
+# common.c: 1129
 %-12s NOT FOUND (NO GOOD DUMP KNOWN)\n
 %-12s NO ENCONTRADO (NO ESTÁ BIEN DUMPEADO)\n
 
-# common.c: 1117, 1728
+# common.c: 1136, 1747
 %-12s NOT FOUND\n
 %-12s NO ENCONTRADO\n
 
-# common.c: 1211
+# common.c: 1230
 %-12s ROM NEEDS REDUMP\n
 %-12s EL ROM NECESITA REDUMPEO\n
 
-# common.c: 1726, 1765, 1779
+# common.c: 1745, 1784, 1798
 %-12s UNSUPPORTED CHD VERSION\n
 %-12s VERSION CHD NO SOPORTADA\n
 
-# common.c: 1743
+# common.c: 1762
 %-12s WRONG CHECKSUMS:\n
 %-12s CHECKSUMS ERRONEOS:\n
 
-# common.c: 1195
+# common.c: 1214
 %-12s WRONG LENGTH (expected: %08x found: %08x)\n
 %-12s EL TAMAÑO ES ERRONEO (expedido: %08x no encuentro: %08x)\n
 
-# common.c: 1767
+# common.c: 1786
 %-12s: CAN'T CREATE DIFF FILE\n
 %-12s: NO PUEDES CREAR EL ARCHIVO DIFF\n
 
-# common.c: 1781
+# common.c: 1800
 %-12s: CAN'T OPEN DIFF FILE\n
 %-12s: NO PUEDES ABRIR EL ARCHIVO DIFF\n
 
-# audit.c: 478
+# audit.c: 481
 %-8s: %-12s %7d bytes FOUND BUT NO GOOD DUMP KNOWN\n
 %-8s: %-12s %7d bytes ENCONTRADO PERO NO ESTA BIEN DUMPEADO\n
 
-# audit.c: 482
+# audit.c: 485
 %-8s: %-12s %7d bytes INCORRECT CHECKSUM:\n
 %-8s: %-12s %7d bytes CHECKSUM INCORRECTO:\n
 
-# audit.c: 495
+# audit.c: 498
 %-8s: %-12s %7d bytes INCORRECT LENGTH: %8d\n
 %-8s: %-12s %7d bytes LONGITUD INCORRECTA: %8d\n
 
-# audit.c: 464
+# audit.c: 467
 %-8s: %-12s %7d bytes NOT FOUND (BIOS)\n
 %-8s: %-12s %7d bytes NO ENCONTRADO (BIOS)\n
 
-# audit.c: 459
+# audit.c: 462
 %-8s: %-12s %7d bytes NOT FOUND (shared with parent)\n
 %-8s: %-12s %7d bytes NO ENCONTRADO (compartidos con parientes)\n
 
-# audit.c: 474
+# audit.c: 477
 %-8s: %-12s %7d bytes NOT FOUND - NO GOOD DUMP KNOWN\n
 %-8s: %-12s %7d bytes NO ENCONTRADO - NO ESTA BIEN DUMPEADO\n
 
-# audit.c: 469
+# audit.c: 472
 %-8s: %-12s %7d bytes NOT FOUND BUT OPTIONAL\n
 %-8s: %-12s %7d bytes NO ENCONTRADO PERO OPCIONAL\n
 
-# audit.c: 454
+# audit.c: 457
 %-8s: %-12s %7d bytes NOT FOUND\n
 %-8s: %-12s %7d bytes NO ENCONTRADO\n
 
-# audit.c: 501
+# audit.c: 504
 %-8s: %-12s %7d bytes ROM GOOD\n
 %-8s: %-12s %7d bytes ROM BUENO\n
 
-# audit.c: 488
+# audit.c: 491
 %-8s: %-12s %7d bytes ROM NEEDS REDUMP\n
 %-8s: %-12s %7d bytes EL ROM NECESITA REDUMPEO\n
 
-# audit.c: 529
+# audit.c: 532
 %-8s: %-12s FOUND BUT NO GOOD DUMP KNOWN\n
 %-8s: %-12s ENCONTRADO PERO NO ES UN BUEN DUMPEO CONOCIDO\n
 
-# audit.c: 508
+# audit.c: 511
 %-8s: %-12s GOOD\n
 %-8s: %-12s BUENO\n
 
-# audit.c: 519
+# audit.c: 522
 %-8s: %-12s INCORRECT CHECKSUM:\n
 %-8s: %-12s CHECKSUM INCORRECTO:\n
 
-# audit.c: 525
+# audit.c: 528
 %-8s: %-12s NO GOOD DUMP KNOWN\n
 %-8s: %-12s NO BUEN DUMPEO CONOCIDO\n
 
-# audit.c: 514
+# audit.c: 517
 %-8s: %-12s NOT FOUND\n
 %-8s: %-12s NO ENCONTRADO\n
 
-# audit.c: 653
+# audit.c: 656
 %-8s: %s NOT FOUND\n
 %-8s: %s NO ENCONTRADO\n
 
-# cheat.c: 8081
+# cheat.c: 8084
 %.8X-%.8X MEMORY
 %.8X-%.8X MEMORIA
 
-# drivers/toratora.c: 95
-%04x: read DIP\n
-%04x: leer conmutador\n
-
-# drivers/cps1.c: 85
-%04x: write %02x to f004\n
-%04x: escritura %02x para f004\n
-
-# drivers/neogeo.c: 6989
-%06x kof98 - protection 0x0090 old %04x %04x\n
-%06x kof98 - protección 0x0090 antiguo %04x %04x\n
-
-# drivers/neogeo.c: 6990
-%06x kof98 - protection 0x00f0 old %04x %04x\n
-%06x kof98 - protección 0x00f0 antiguo %04x %04x\n
-
-# drivers/neogeo.c: 6991
-%06x kof98 - unknown protection write %04x\n
-%06x kof98 - protección de escritura desconocida %04x\n
-
-# drivers/neogeo.c: 721
-%06x: neo_irq2pos_16_w offset %d %04x\n
-%06x: neo_irq2pos_16_w compensación %d %04x\n
-
-# drivers/cps1.c: 179
-%06x: read sound ROM byte %04x
-%06x: leer sonido de byte ROM %04x
-
-# cheat.c: 2818, 5465
+# cheat.c: 2821, 5468
 %d cheats saved
 %d trucos guardados
 
-# cheat.c: 4934, 5314
+# cheat.c: 4937, 5317
 %d results found
 %d resultados encontrados
 
-# usrintrf.c: 2058, 2203
+# usrintrf.c: 2061, 2206
 %s Analog
 %s Analógico
 
-# usrintrf.c: 2065, 2207
+# usrintrf.c: 2068, 2210
 %s Dec
 %s Disminuido
 
-# usrintrf.c: 2072, 2211
+# usrintrf.c: 2075, 2214
 %s Inc
 %s Aumentado
 
-# cheat.c: 2784, 2800
+# cheat.c: 2787, 2803
 %s activated
 %s activado
 
-# state.c: 336
+# state.c: 339
 %s'%s' is not a valid savestate file for game '%s'.
 %s'%s' no es un archivo de estado guardado válido para el juego '%s'.
 
-# state.c: 348
+# state.c: 351
 %sIncompatible save file (signature %08x, expected %08x)
 %sIncompatible archivo guardado (firmar %08x, esperar %08x)
 
-# state.c: 320
+# state.c: 323
 %sThis is not a MAME save file
 %sEsto no es un archivo guardado MAME
 
-# state.c: 328
+# state.c: 331
 %sWrong version in save file (%d, 1 expected)
 %sVersión falsa de archivo guardado (%d, 1 esperado)
 
-# ui_text.c: 158
+# ui_text.c: 161
 (Card may already exist)
 (La tarjeta debería existir)
 
-# usrintrf.c: 3443
+# usrintrf.c: 3446
 (H)
 (Horizontal)
 
-# usrintrf.c: 3443
+# usrintrf.c: 3446
 (V)
 (Vertical)
 
-# ui_text.c: 146
+# ui_text.c: 149
 (locked)
 (cerrado)
 
-# cheat.c: 2385, 3140, 3157, 3172, 3190, 5091, 5404, 6136 ui_text.c: 39
+# cheat.c: 2388, 3143, 3160, 3175, 3193, 5094, 5407, 6139 ui_text.c: 42
 (none)
 (nada)
 
-# cheat.c: 931
+# cheat.c: 934
 ---> <ENTER> To Edit <---
 ---> <ENTER> Para Editar <---
 
-# drivers/cps1.c: 441
-1 (Easiest)
-1 (Más fácil)
-
-# drivers/cball.c: 137
-1 Coin 1 Game
-1 Moneda / 1 Juego
-
-# drivers/cball.c: 138
-1 Coin 2 Games
-1 Moneda / 2 Juegos
-
-# drivers/cball.c: 136
-1 Coin each
-1 Moneda cada uno
-
-# inptport.c: 365
+# inptport.c: 368
 1 Coin/1 Credit
 1 Moneda/1 Crédito
 
-# drivers/8080bw.c: 2642
-1 Coin/1 Inning (1 or 2 Pls)
-1 Moneda/1 Entrada (1 o 2 Jugadores)
-
-# drivers/8080bw.c: 2747
-1 Coin/1 Inning 8/9
-1 Moneda/1 Entrada 8/9
-
-# drivers/8080bw.c: 2431
-1 Coin/1 Player  2 Coins/2 Players
-1 Moneda/1 Jugador  2 Monedas/2 Jugadores
-
-# drivers/8080bw.c: 2798
-1 Coin/1 or 2 Players
-1 Moneda/ 1 o 2 Jugadores
-
-# drivers/8080bw.c: 2799
-1 Coin/1 to 4 Players
-1 Moneda/1 a 4 Jugadores
-
-# drivers/vroulet.c: 179
-1 Coin/10 Credits
-1 Moneda/10 Créditos
-
-# inptport.c: 371
+# inptport.c: 374
 1 Coin/2 Credits
 1 Moneda/2 Créditos
 
-# drivers/8080bw.c: 2751
-1 Coin/2 Innings 4/9
-1 Moneda/2 Entradas 4/9
-
-# inptport.c: 374
+# inptport.c: 377
 1 Coin/3 Credits
 1 Moneda/3 Créditos
 
-# inptport.c: 377
+# inptport.c: 380
 1 Coin/4 Credits
 1 Moneda/4 Créditos
 
-# drivers/8080bw.c: 2752
-1 Coin/4 Innings 2/9
-1 Moneda/ 4 Entradas 2/9
-
-# inptport.c: 378
+# inptport.c: 381
 1 Coin/5 Credits
 1 Moneda/5 Créditos
 
-# inptport.c: 379
+# inptport.c: 382
 1 Coin/6 Credits
 1 Moneda/6 Créditos
 
-# inptport.c: 380
+# inptport.c: 383
 1 Coin/7 Credits
 1 Moneda/7 Créditos
 
-# inptport.c: 381
+# inptport.c: 384
 1 Coin/8 Credits
 1 Moneda/8 Créditos
 
-# inptport.c: 382
+# inptport.c: 385
 1 Coin/9 Credits
 1 Monedas/9 Créditos
 
-# drivers/8080bw.c: 2756
-1 Coin/9 Innings
-1 Moneda/9 Entradas
-
-# drivers/cps1.c: 1973
-1 Credit/No Continue
-1 Crédito/Sin Continuar
-
-# drivers/cps1.c: 3209
-1 Game Match
-1 Juego Combate
-
-# inptport.c: 795
+# inptport.c: 798
 1 Player Start
 Jugador 1 - Comenzar
 
-# drivers/cps1.c: 2382
-1 Players
-1 Jugador
-
-# cheat.c: 4942, 5320
+# cheat.c: 4945, 5323
 1 result found, added to list
 1 resultado encontrado, añadido a la lista
 
-# drivers/cps1.c: 3632
-1, Common
-1, Común
-
-# drivers/cps1.c: 3631
-1, Individual
-1, Individual
-
-# drivers/cps1.c: 2697
-1.200k 3.500k
-1.200K 3.500K
-
-# drivers/cclimber.c: 1439
-10 Letters
-10 Letras
-
-# drivers/funworld.c: 477
-10 Points/Coin
-10 Puntos/Moneda
-
-# drivers/funworld.c: 473
-10 Points/Pulse
-10 Puntos/Pulso
-
-# drivers/funworld.c: 474
-100 Points/Pulse
-100 Puntos/Pulso
-
-# drivers/snk.c: 2690
-100k 200k
-100K 200K
-
-# drivers/cps1.c: 1262
-100k and every 200k
-100K y cada 200K
-
-# drivers/cps1.c: 2171
-100k and every 450k
-100K y cada 450K
-
-# drivers/cps1.c: 574
-10K, 30K and every 30K
-10K, 30K y cada 30K
-
-# drivers/tourtabl.c: 137
-11 points (3 balls)
-11 puntos (3 bolas)
-
-# drivers/tourtabl.c: 138
-15 points (5 balls)
-15 puntos (5 bolas)
-
-# drivers/8080bw.c: 2325
-150 Pts
-150 Puntos
-
-# cheat.c: 2960, 6078
+# cheat.c: 2963, 6081
 16 Bit
 16 Bits
-
-# drivers/cps1.c: 2172
-160k and every 450k
-160K y cada 450K
-
-# drivers/8080bw.c: 2326
-175 Pts
-175 Puntos
-
-# drivers/8080bw.c: 2643
-1C/1 In 2C/3 In (1 or 2 Pls)
-1 Moneda/1 Entrada 2 Monedas/3 Entradas (1 o 2 Jugadores)
-
-# drivers/8080bw.c: 437
-1C/1C 50p/5C
-1 Moneda/1 Moneda 50 Puntos/5 Monedas
-
-# drivers/8080bw.c: 2644
-1C/1Pl 2C/2Pl 4C/3Inn
-1 Moneda/1 Jugador 2 Monedas/2 Jugadores 4 Monedas/3 Entradas
-
-# drivers/thepit.c: 212
-1Cr/2Cr
-1 Crédito/ 2 Créditos
-
-# drivers/snk.c: 2670
-1st & 2nd only
-1º y 2º solamente
-
-# drivers/snk.c: 2669
-1st & every 2nd
-1º y cada 2º
 
 # drivers/cop01.c: 264 drivers/gottlieb.c: 745 drivers/marineb.c: 191, 387 drivers/marvins.c: 275 drivers/nova2001.c: 109 drivers/omegrace.c: 429
 1st Bonus Life
 1ª Vida Extra
 
-# drivers/snk.c: 3742
-1st Down Bonus Time
-Primer Derribo Bonus de Tiempo
-
-# drivers/cball.c: 135
-2 Coins each
-2 Monedas cada uno
-
-# drivers/tumbleb.c: 531
-2 Coins to Start, 1 to Continue
-2 Monedas para Comenzar, 1 para Continuar
-
-# drivers/m92.h: 52
-2 Coins to Start/1 to Continue
-2 Monedas para Empezar/1 para Continuar
-
-# inptport.c: 358
+# inptport.c: 361
 2 Coins/1 Credit
 2 Monedas/1 Crédito
 
-# drivers/cps1.c: 424
-2 Coins/1 Credit (1 to continue)
-2 Monedas/1 Crédito (1 para continuar)
-
-# drivers/8080bw.c: 2744
-2 Coins/1 Inning 16/9
-2 Monedas/1 Entrada 16/9
-
-# drivers/8080bw.c: 2429
-2 Coins/1 Player  4 Coins/2 Players
-2 Monedas/1 Jugador  4 Monedas/2 Jugadores
-
-# drivers/8080bw.c: 2430
-2 Coins/1 or 2 Players
-2 Monedas/1 o 2 Jugadores
-
-# inptport.c: 364
+# inptport.c: 367
 2 Coins/2 Credits
 2 Monedas/2 Créditos
 
-# drivers/8080bw.c: 2746
-2 Coins/2 Innings 8/9
-2 Monedas/2 Entradas 8/9
-
-# inptport.c: 368
+# inptport.c: 371
 2 Coins/3 Credits
 2 Monedas/3 Créditos
 
-# inptport.c: 370
+# inptport.c: 373
 2 Coins/4 Credits
 2 Monedas/4 Créditos
 
-# drivers/8080bw.c: 2750
-2 Coins/4 Innings 4/9
-2 Monedas/ 4 Entradas 4/9
-
-# inptport.c: 372
+# inptport.c: 375
 2 Coins/5 Credits
 2 Monedas/5 Créditos
 
-# inptport.c: 373
+# inptport.c: 376
 2 Coins/6 Credits
 2 Monedas/6 Créditos
 
-# inptport.c: 375
+# inptport.c: 378
 2 Coins/7 Credits
 2 Monedas/7 Créditos
 
-# inptport.c: 376
+# inptport.c: 379
 2 Coins/8 Credits
 2 Monedas/8 Créditos
 
-# drivers/8080bw.c: 2755
-2 Coins/9 Innings
-2 Monedas/9 Entradas
-
-# drivers/cps1.c: 1974
-2 Credits/Winner Continue
-2 Créditos/Continuar Ganador
-
-# drivers/snk.c: 3740
-2 Player Upright
-2 Jugador Vertical Derecho
-
-# drivers/cps1.c: 1428
-2 Players
-2 Jugadores
-
-# drivers/cps1.c: 1972
-2 Players Game
-2 Juego Jugadores
-
-# inptport.c: 796
+# inptport.c: 799
 2 Players Start
 Jugador 2 - Comenzar
 
-# drivers/cps1.c: 3633
-2, Common
-2, Común
-
-# drivers/tourtabl.c: 142
-200 points
-200 puntos
-
-# drivers/cps1.c: 2698
-2000k only
-Solo 2000K
-
-# drivers/cps1.c: 2274
-200k and every 450k
-200K y cada 450K
-
-# drivers/cps1.c: 823
-20K & 60K only
-Solo 20K y 60K
-
-# drivers/cps1.c: 821
-20K, 40K then every 60K
-20K, 40K cuando cada 60K
-
-# drivers/cps1.c: 575
-20K, 50K and every 70K
-20K, 50K y cada 70K
-
-# drivers/cclimber.c: 1417
-20K, every 50K
-20K, cada 50K
-
-# drivers/snk.c: 3053
-20k 60k
-20K 60K
-
-# drivers/8080bw.c: 2327
-225 Pts
-225 Puntos
-
-# cheat.c: 2961, 6079
+# cheat.c: 2964, 6082
 24 Bit
 24 Bits
 
-# datafile.c: 3221
+# datafile.c: 3227
 24-BIT DISPLAY : %3d  + %3d\n
 24-BIT EN PANTALLA          : %3d  + %3d\n
-
-# drivers/tourtabl.c: 143
-250 points
-250 puntos
-
-# drivers/snk.c: 3185
-25k 50k
-25K 50K
-
-# drivers/8080bw.c: 2328
-275 Pts
-275 Puntos
-
-# drivers/beaminv.c: 90
-29 Enemies
-29 Enemigos
-
-# drivers/8080bw.c: 2640
-2C/1 In (1 or 2 Players)
-2 Monedas/1 Entrada (1 o 2 Jugadores)
-
-# drivers/8080bw.c: 2641
-2C/1 In 4C/3 In (1 or 2 Pls)
-2 Monedas/1 Entrada 4 Monedas/3 Entradas (1 o 2 Jugadores)
-
-# drivers/8080bw.c: 436
-2C/1C 50p/3C (+ Bonus Life)
-2 Moneda/1 Moneda 50 Puntos/3 Monedas (+ Vida Extra)
-
-# drivers/8080bw.c: 2645
-2C/1Pl 4C/2Pl 8C/3Inn
-2 Monedas/1 Jugador 4 Monedas/2 Jugadores 8 Monedas/3 Entradas
-
-# drivers/thepit.c: 213
-2Cr/3Cr
-2 Crédito/ 3 Créditos
-
-# drivers/thepit.c: 214
-2Cr/4Cr
-2 Crédito/ 4 Créditos
 
 # drivers/cop01.c: 267 drivers/marineb.c: 194, 382 drivers/marvins.c: 284
 2nd Bonus Life
 2ª Vida Extra
 
-# drivers/cps1.c: 1644
-3 (2 when continue)
-3 (2 cuando continue)
-
-# drivers/snk.c: 3470
-3 (Par 0,Birdie 1,Eagle 2)
-3 (Par 0,Pajarito 1,Águila 2)
-
-# drivers/cps1.c: 1345
-3 Bars
-3 Barras
-
-# inptport.c: 355
+# inptport.c: 358
 3 Coins/1 Credit
 3 Monedas/1 Crédito
 
-# drivers/8080bw.c: 2742
-3 Coins/1 Inning 24/9
-3 Monedas/1 Entrada 24/9
-
-# inptport.c: 360
+# inptport.c: 363
 3 Coins/2 Credits
 3 Monedas/2 Créditos
 
-# drivers/8080bw.c: 2745
-3 Coins/2 Innings 12/9
-3 Monedas/2 Entradas 12/9
-
-# inptport.c: 363
+# inptport.c: 366
 3 Coins/3 Credits
 3 Monedas/3 Créditos
 
-# inptport.c: 367
+# inptport.c: 370
 3 Coins/4 Credits
 3 Monedas/4 Créditos
 
-# drivers/8080bw.c: 2749
-3 Coins/4 Innings 6/9
-3 Monedas/4 Entradas 6/9
-
-# drivers/8080bw.c: 2754
-3 Coins/9 Innings
-3 Monedas/9 Entradas
-
-# drivers/cps1.c: 3210
-3 Games Match
-3 Juegos Combates
-
-# drivers/cclimber.c: 1438
-3 Letters
-3 Letras
-
-# drivers/cps1.c: 1429
-3 Players
-3 Jugadores
-
-# inptport.c: 797
+# inptport.c: 800
 3 Players Start
 Jugador 3 - Comenzar
 
-# drivers/8080bw.c: 2321
-3 extra cans
-3 extra latas
-
-# drivers/tumbleb.c: 998
-30 Seconds
-30 Segundos
-
-# drivers/tourtabl.c: 144
-300 points
-300 puntos
-
-# drivers/cps1.c: 824
-30K & 60K only
-Solo 30K y 60K
-
-# drivers/cclimber.c: 1419
-30K only
-Solo 30K
-
-# drivers/cps1.c: 822
-30K, 50K then every 70K
-30K, 50K cuando cada 70K
-
-# drivers/cps1.c: 576
-30K, 60K and every 70K
-30K, 60K y cada 70K
-
-# drivers/cclimber.c: 1418
-30K, every 100K
-30K, cada 100K
-
-# drivers/snk.c: 2916
-30k 60k
-30K 60K
-
-# cheat.c: 2962, 6080
+# cheat.c: 2965, 6083
 32 Bit
 32 Bits
 
-# drivers/snk.c: 3186
-35k 70k
-35K 70K
-
-# drivers/beaminv.c: 89
-39 Enemies
-39 Enemigos
-
-# drivers/cps1.c: 1645
-4 (3 when continue)
-4 (3 cuando continue)
-
-# drivers/cps1.c: 444
-4 (Normal)
-4 (Normal)
-
-# drivers/cps1.c: 1346
-4 Bars
-4 Barras
-
-# inptport.c: 354
+# inptport.c: 357
 4 Coins/1 Credit
 4 Monedas/1 Crédito
 
-# drivers/8080bw.c: 2741
-4 Coins/1 Inning 32/9
-4 Monedas/1 Entrada 32/9
-
-# inptport.c: 357
+# inptport.c: 360
 4 Coins/2 Credits
 4 Monedas/2 Créditos
 
-# drivers/8080bw.c: 2743
-4 Coins/2 Innings 16/9
-4 Monedas/2 Entradas 16/9
-
-# inptport.c: 361
+# inptport.c: 364
 4 Coins/3 Credits
 4 Monedas/3 Créditos
 
-# inptport.c: 362
+# inptport.c: 365
 4 Coins/4 Credits
 4 Monedas/4 Créditos
 
-# drivers/8080bw.c: 2748
-4 Coins/4 Innings 8/9
-4 Monedas/4 Entradas 8/9
-
-# inptport.c: 366
+# inptport.c: 369
 4 Coins/5 Credits
 4 Monedas/5 Créditos
 
-# inptport.c: 369
+# inptport.c: 372
 4 Coins/7 Credits
 4 Monedas/7 Créditos
 
-# drivers/8080bw.c: 2753
-4 Coins/9 Innings
-4 Monedas/9 Entradas
-
-# drivers/snk.c: 3741
-4 Player Cocktail
-4 Jugador Cóctel
-
-# drivers/cps1.c: 2385
-4 Players
-4 Jugadores
-
-# inptport.c: 798
+# inptport.c: 801
 4 Players Start
 Jugador 4 - Comenzar
 
-# drivers/tumbleb.c: 999
-40 Seconds
-40 Segundos
-
-# drivers/tourtabl.c: 145
-400 points
-400 puntos
-
-# drivers/cps1.c: 577
-40K, 70K and every 80K
-40K, 70K y cada 80K
-
-# drivers/snk.c: 2917
-40k 80k
-40K 80K
-
-# drivers/snk.c: 3054
-40k 90k
-40K 90K
-
-# drivers/tourtabl.c: 146
-450 points
-450 puntos
-
-# drivers/8080bw.c: 2261
-45sec 20sec 20
-45seg 20seg 20
-
-# drivers/beaminv.c: 88
-49 Enemies
-49 Enemigos
-
-# drivers/snk.c: 3469
-5 (Par 1,Birdie 2,Eagle 3)
-5 (Par 1,Pajarito 2,Águila 3)
-
-# inptport.c: 353
+# inptport.c: 356
 5 Coins/1 Credit
 5 Monedas/1 Crédito
 
-# inptport.c: 359
+# inptport.c: 362
 5 Coins/3 Credits
 5 Monedas/3 Créditos
 
-# drivers/cps1.c: 3211
-5 Games Match
-5 Juegos Combates
-
-# inptport.c: 799
+# inptport.c: 802
 5 Players Start
 Jugador 5 - Comenzar
 
-# drivers/funworld.c: 476
-5 Points/Coin
-5 Puntos/Moneda
-
-# drivers/8080bw.c: 2322
-5 extra cans
-5 extra latas
-
-# drivers/snk.c: 3187
-50K 100k
-50K 100K
-
-# drivers/snk.c: 2918
-50k 100k
-50K 100K
-
-# drivers/snk.c: 3055
-50k 120k
-50K 120K
-
-# inptport.c: 352
+# inptport.c: 355
 6 Coins/1 Credit
 6 Monedas/1 Crédito
 
-# inptport.c: 800
+# inptport.c: 803
 6 Players Start
 Jugador 6 - Comenzar
 
-# drivers/tumbleb.c: 1000
-60 Seconds
-60 Segundos
-
-# drivers/cps1.c: 2696
-600k 2.000k and 4500k
-600K 2.000K y 4500K
-
-# drivers/cps1.c: 2695
-600k and every 1.400k
-600K y cada 1.400K
-
-# drivers/snk.c: 2689
-60k 120k
-60K 120K
-
-# drivers/8080bw.c: 2262
-60sec 25sec 25
-60seg 25seg 25
-
-# inptport.c: 351
+# inptport.c: 354
 7 Coins/1 Credit
 7 Monedas/1 Crédito
 
-# drivers/cps1.c: 3212
-7 Games Match
-7 Juegos Combates
-
-# inptport.c: 801
+# inptport.c: 804
 7 Players Start
 Jugador 7 - Comenzar
 
-# drivers/8080bw.c: 2263
-75sec 30sec 30
-75seg 30seg 30
-
-# drivers/toratora.c: 101
-76477 #0 VCO SEL = %d\n
-76477 #0 VCO SEL = %d\n
-
-# drivers/cps1.c: 448
-8 (Hardest)
-8 (Más díficil)
-
-# cheat.c: 2959, 6077
+# cheat.c: 2962, 6080
 8 Bit
 8 Bits
 
-# inptport.c: 350
+# inptport.c: 353
 8 Coins/1 Credit
 8 Monedas/1 Crédito
 
-# inptport.c: 356
+# inptport.c: 359
 8 Coins/3 Credits
 8 Monedas/3 Créditos
 
-# inptport.c: 802
+# inptport.c: 805
 8 Players Start
 Jugador 8 - Comenzar
 
-# drivers/tumbleb.c: 1001
-80 Seconds
-80 Segundos
-
-# drivers/cps1.c: 2170
-80k and every 400k
-80K y cada 400K
-
-# inptport.c: 349
+# inptport.c: 352
 9 Coins/1 Credit
 9 Monedas/1 Crédito
 
-# drivers/tumbleb.c: 869
-90 Seconds
-90 Segundos
-
-# drivers/8080bw.c: 2264
-90sec 35sec 35
-90seg 35seg 35
-
-# inptport.c: 906
+# inptport.c: 909
 AD Stick X
 Palanca de vuelo X
 
-# inptport.c: 907
+# inptport.c: 910
 AD Stick X 2
 Palanca de vuelo X 2
 
-# inptport.c: 908
+# inptport.c: 911
 AD Stick X 3
 Palanca de vuelo X 3
 
-# inptport.c: 909
+# inptport.c: 912
 AD Stick X 4
 Palanca de vuelo X 4
 
-# inptport.c: 910
+# inptport.c: 913
 AD Stick X 5
 Palanca de vuelo X 5
 
-# inptport.c: 911
+# inptport.c: 914
 AD Stick X 6
 Palanca de vuelo X 6
 
-# inptport.c: 912
+# inptport.c: 915
 AD Stick X 7
 Palanca de vuelo X 7
 
-# inptport.c: 913
+# inptport.c: 916
 AD Stick X 8
 Palanca de vuelo X 8
 
-# inptport.c: 915
+# inptport.c: 918
 AD Stick Y
 Palanca de vuelo Y
 
-# inptport.c: 916
+# inptport.c: 919
 AD Stick Y 2
 Palanca de vuelo Y 2
 
-# inptport.c: 917
+# inptport.c: 920
 AD Stick Y 3
 Palanca de vuelo Y 3
 
-# inptport.c: 918
+# inptport.c: 921
 AD Stick Y 4
 Palanca de vuelo Y 4
 
-# inptport.c: 919
+# inptport.c: 922
 AD Stick Y 5
 Palanca de vuelo Y 5
 
-# inptport.c: 920
+# inptport.c: 923
 AD Stick Y 6
 Palanca de vuelo Y 6
 
-# inptport.c: 921
+# inptport.c: 924
 AD Stick Y 7
 Palanca de vuelo Y 7
 
-# inptport.c: 922
+# inptport.c: 925
 AD Stick Y 8
 Palanca de vuelo Y 8
 
-# inptport.c: 924
+# inptport.c: 927
 AD Stick Z
 Palanca de vuelo Z
 
-# inptport.c: 925
+# inptport.c: 928
 AD Stick Z 2
 Palanca de vuelo Z 2
 
-# inptport.c: 926
+# inptport.c: 929
 AD Stick Z 3
 Palanca de vuelo Z 3
 
-# inptport.c: 927
+# inptport.c: 930
 AD Stick Z 4
 Palanca de vuelo Z 4
 
-# inptport.c: 928
+# inptport.c: 931
 AD Stick Z 5
 Palanca de vuelo Z 5
 
-# inptport.c: 929
+# inptport.c: 932
 AD Stick Z 6
 Palanca de vuelo Z 6
 
-# inptport.c: 930
+# inptport.c: 933
 AD Stick Z 7
 Palanca de vuelo Z 7
 
-# inptport.c: 931
+# inptport.c: 934
 AD Stick Z 8
 Palanca de vuelo Z 8
 
-# ui_text.c: 51
+# ui_text.c: 54
 ALL CHANNELS
 TODOS LOS CANALES
 
-# ui_text.c: 57
+# ui_text.c: 60
 ALL CPUS
 TODOS LOS CPUs
 
-# drivers/sspeedr.c: 193
-Accelerator Adjustment
-Ajuste de Aceleración
-
-# cheat.c: 3182 ui_text.c: 179
+# cheat.c: 3185 ui_text.c: 182
 Activation Key
 Activación de Tecla
 
-# cheat.c: 2899
+# cheat.c: 2902
 Add
 Añadir
 
-# inptport.c: 1015
+# inptport.c: 1018
 Add Cheat
 Añadir Truco
 
-# cheat.c: 6170
+# cheat.c: 6173
 Add Value
 Añadir Valor
 
-# ui_text.c: 162
+# ui_text.c: 165
 Add/Edit a Cheat
 Añadir/Editar los Trucos
 
-# cheat.c: 2888, 3417
+# cheat.c: 2891, 3420
 Add/Subtract
 Añadir/Quitar
 
-# cheat.c: 1105, 3733, 6107 ui_text.c: 41
+# cheat.c: 1108, 3736, 6110 ui_text.c: 44
 Address
 Dirección
 
-# cheat.c: 3692
+# cheat.c: 3695
 Address Index
 Dirección de Lista
 
-# cheat.c: 6176
+# cheat.c: 6179
 Address Shift
 Dirección de Cambio
 
-# cheat.c: 3667
+# cheat.c: 3670
 Address Size
 Dirección de Tamaño
 
-# cheat.c: 6966 drivers/mcr68.c: 797 
+# cheat.c: 6969 drivers/mcr68.c: 797 
 Advanced
 Avanzado
 
-# cheat.c: 6572 ui_text.c: 210
+# cheat.c: 6575 ui_text.c: 213
 All Memory
 Toda la Memoria
 
-# drivers/8080bw.c: 1810
-All rows
-Todas las filas
-
-# ui_text.c: 218
+# ui_text.c: 221
 All values saved
 Todos los valores guardados
 
-# inptport.c: 435
+# inptport.c: 438
 Allow Continue
 Continuar Activado
 
-# drivers/snk.c: 2718
-Allow killing each other
-Perminitir matar cada uno
-
-# drivers/truco.c: 66
-Alt. Graphics
-Gráficos Alternativos
-
-# inptport.c: 444 sound/ay8910.c: 672
+# inptport.c: 447 sound/ay8910.c: 672
 Alternate
 Alternativo
 
-# cheat.c: 927
+# cheat.c: 930
 Always have
 Siempre tiene
 
-# ui_text.c: 94
+# ui_text.c: 97
 Analog Controls
 Controles Analógicos
-
-# drivers/cherrym.c: 203
-Analyzer
-Analizador
 
 # drivers/aerofgt.c: 1112
 Any
 Alguno
 
-# drivers/neogeo.c: 1177
+# drivers/epos.c: 168 drivers/lethal.c: 542 drivers/lordgun.c: 338 drivers/neogeo.c: 1004, 1048, 1104, 1181, 1230
 Arcade
 Arcade
 
-# profiler.c: 122 
+# profiler.c: 133 
 Artwork
 Ilustración
 
-# inptport.c: 398
+# inptport.c: 401
 Asia
 Asia
-
-# drivers/neogeo.c: 1584
-Asia AES
-Asia AES
-
-# drivers/neogeo.c: 1572
-Asia MVS (Ver. 3)
-Asia MVS (Ver. 3)
 
 # drivers/bottom9.c: 273, 370 drivers/btime.c: 727 drivers/csk.c: 285, 445 drivers/galaga.c: 1000, 1076 drivers/pacman.c: 2752 drivers/seta.c: 4632 
 Auto
 Auto
 
-# drivers/funworld.c: 488
-Auto Hold
-Auto Detener
-
-# cheat.c: 6973
+# cheat.c: 6976
 Auto Save Cheats
 Auto Guardar Trucos
 
-# ui_text.c: 125
+# ui_text.c: 128
 Autocenter Speed
 Auto centrar Velocidad
 
-# drivers/neogeo.c: 1123
+# drivers/neogeo.c: 942
 Autofire (in some games)
 Disparo automático (en algunos juegos)
 
-# ui_text.c: 229
+# ui_text.c: 232
 Autofire Delay
 Retraso del Disparo Automático
 
-# ui_text.c: 104
+# ui_text.c: 107
 Autofire Setting
 Configuración del Disparo Automático
 
@@ -1270,195 +686,79 @@ Configuración del Disparo Automático
 Automatic
 Automático
 
-# cheat.c: 8053
+# cheat.c: 8056
 BANK%.2d
 BANKO%.2d
 
-# cheat.c: 3556
+# cheat.c: 3559
 BCD
 BCD
-
-# drivers/witch.c: 716
-BET10
-BET10
-
-# drivers/tumbleb.c: 1109
-BG Type
-Tipo BG
 
 # drivers/playch10.c: 468 
 BIOS
 BIOS
 
-# drivers/8080bw.c: 2015
-Bags to Collect
-Bolsas para Coleccioanr
-
-# drivers/8080bw.c: 1808
-Balloon Resets
-Resetear Globos
-
 # drivers/metro.c: 2203 drivers/nbmj8891.c: 2411 drivers/pacman.c: 2736
 Beginner
 Principiante
 
-# drivers/cherrym.c: 181
+# drivers/bmcbowl.c: 376 drivers/cherrym.c: 181 drivers/lvcards.c: 215, 299 drivers/magic10.c: 221 drivers/sderby.c: 144
 Bet
 Bet
 
-# drivers/cherrym.c: 224
-Bet Max
-Apuesta Máxima
-
-# drivers/cherrym.c: 298
-Bet Over
-Apuesta a otro
-
-# drivers/cps1.c: 1165
-Big
-Grande
-
-# drivers/cps1.c: 1166
-Biggest
-Más grande
-
-# inptport.c: 812
+# inptport.c: 815
 Bill 1
 Bill 1
 
-# cheat.c: 1113 ui_text.c: 197
+# cheat.c: 1116 ui_text.c: 200
 Binary
 Binario
 
-# cheat.c: 968
+# cheat.c: 971
 Bit
 Bits
-
-# drivers/cherrym.c: 176
-Bit 0
-Bit 0
-
-# drivers/cherrym.c: 177
-Bit 1
-Bit 1
-
-# drivers/cherrym2.c: 117
-Bit 2
-Bit 2
-
-# drivers/cherrym2.c: 118
-Bit 3
-Bit 3
-
-# drivers/cherrym2.c: 119
-Bit 4
-Bit 4
-
-# drivers/cherrym2.c: 120
-Bit 5
-Bit 5
-
-# drivers/cherrym2.c: 121
-Bit 6
-Bit 6
-
-# drivers/cherrym2.c: 122
-Bit 7
-Bit 7
 
 # drivers/lvcards.c: 206, 290 drivers/royalmah.c: 1092 drivers/vsnes.c: 1887, 1916
 Black
 Negro
 
-# drivers/8080bw.c: 2877
-Bonus Energy
-Bonus de Energia
-
-# drivers/snk.c: 3468
-Bonus Holes
-Bonus de Hoyos
-
-# inptport.c: 343
+# inptport.c: 346
 Bonus Life
 Vida Extra
 
-# drivers/snk.c: 2668
-Bonus Occurrence
-Bonus de Ocurrencia
-
-# drivers/8080bw.c: 1307
-Bonus Off
-Bonus Desactivado
-
-# drivers/8080bw.c: 1306
-Bonus On
-Bonus Activado
-
-# drivers/8080bw.c: 1305
-Bonus/Test Mode
-Bonus/ Modo Prueba
-
-# drivers/polyplay.c: 209 ui_text.c: 99
+# drivers/polyplay.c: 209 ui_text.c: 102
 Bookkeeping Info
 Información del Monedero
 
-# inptport.c: 972
+# inptport.c: 975
 Break in Debugger
 Break en Depurador
 
-# drivers/tourtabl.c: 131
-Breakout Replay
-Repetir Fuga
-
-# drivers/namcos1.c: 646 ui_text.c: 52
+# drivers/namcos1.c: 646 ui_text.c: 55
 Brightness
 Brillo
-
-# drivers/cps1.c: 1339
-Bullet's Speed
-Velocidad de las balas
 
 # drivers/m107.c: 297 drivers/m92.c: 1021 drivers/usgames.c: 139 
 Button 1
 Botón 1
 
-# drivers/tumbleb.c: 1251
-Buttons Only
-Solo Botones
-
-# cheat.c: 3592
+# cheat.c: 3595
 Byte Length
 Tamaño del Byte
 
-# drivers/witch.c: 647
-COIN IN1
-Entrada Moneda 1
-
-# drivers/witch.c: 653
-COIN IN2
-Entrada Moneda 2
-
-# drivers/neogeo.c: 1126
+# drivers/neogeo.c: 942, 1081
 COMM Setting
 Configuración del COMM
 
-# cheat.c: 3631, 3656, 5083, 6112 ui_text.c: 40
+# cheat.c: 3634, 3659, 5086, 6115 ui_text.c: 43
 CPU
 CPU
 
-# drivers/neogeo.c: 1030
-CPU #1 PC %04x: read unmapped port %02x\n
-CPU #1 PC %04x: leer puerto no mapeado %02x\n
-
-# drivers/neogeo.c: 1069
-CPU #1 PC %04x: write %02x to unmapped port %02x\n
-CPU #1 PC %04x: escribir %02x para puerto no mapeado %02x\n
-
-# cheat.c: 8068
+# cheat.c: 8071
 CPU%.2d 
 CPU%.2d 
 
-# inptport.c: 384 
+# inptport.c: 387 
 Cabinet
 Cabina
 
@@ -1466,7 +766,7 @@ Cabina
 Cabinet Type
 Tipo de Cabina
 
-# ui_text.c: 95
+# ui_text.c: 98
 Calibrate Joysticks
 Calibrar Joysticks
 
@@ -1474,33 +774,25 @@ Calibrar Joysticks
 Cancel
 Cancelar
 
-# drivers/8080bw.c: 2310
-Cans
-Latas
-
-# ui_text.c: 149
+# ui_text.c: 152
 Card Number:
 Numero de Tarjeta:
 
-# drivers/cischeat.c: 1586 drivers/namcos22.c: 3843, 3917 ui_text.c: 232
+# drivers/cischeat.c: 1586 drivers/namcos22.c: 3839, 3913 ui_text.c: 235
 Center
 Centro
 
-# ui_text.c: 108
+# ui_text.c: 111
 Cheat
 Trucos
 
-# ui_text.c: 183
+# ui_text.c: 186
 Cheat conflict found: disabling
 Conflicto de truco encontrado: desactivado
 
-# ui_text.c: 173
+# ui_text.c: 176
 Cheats
 Trucos
-
-# drivers/cherrym.c: 318
-Cherry/Bell Bonus
-Bonus Cereza/Campana
 
 # drivers/system24.c: 1811
 Chi
@@ -1510,95 +802,75 @@ Chi
 China
 China
 
-# cheat.c: 6966
+# cheat.c: 6969 drivers/st0016.c: 750
 Classic
 Clásico
 
-# cheat.c: 2906 drivers/gladiatr.c: 532
+# cheat.c: 2909 drivers/gladiatr.c: 532
 Clear
 Limpiar
 
-# drivers/funworld.c: 441
-Clear / Take
-Borrar / Coger
-
-# drivers/neogeo.c: 1399
-Clear Credit
-Limpiar Créditos
-
-# inptport.c: 386
+# inptport.c: 389
 Cocktail
 Mezcla
 
-# drivers/snk.c: 3625
-Cocktail (2 Players)
-Cóctel (2 Jugadores)
-
-# drivers/snk.c: 3626
-Cocktail (4 Players)
-Cóctel (4 Jugadores)
-
-# ui_text.c: 180
+# ui_text.c: 183
 Code
 Codigo
 
-# drivers/igs_blit.c: 1821 ui_text.c: 145
+# drivers/igs_blit.c: 1820 ui_text.c: 148
 Coin
 Crédito
 
-# drivers/mexico86.c: 281 drivers/midyunit.c: 416 inptport.c: 804
+# drivers/mexico86.c: 281 drivers/midyunit.c: 416 inptport.c: 807
 Coin 1
 Crédito 1
 
-# drivers/mexico86.c: 286 drivers/midyunit.c: 407 inptport.c: 805
+# drivers/mexico86.c: 286 drivers/midyunit.c: 407 inptport.c: 808
 Coin 2
 Crédito 2
 
-# inptport.c: 806
+# inptport.c: 809
 Coin 3
 Crédito 3
 
-# inptport.c: 807
+# inptport.c: 810
 Coin 4
 Crédito 4
 
-# inptport.c: 808
+# inptport.c: 811
 Coin 5
 Crédito 5
 
-# inptport.c: 809
+# inptport.c: 812
 Coin 6
 Crédito 6
 
-# inptport.c: 810
+# inptport.c: 813
 Coin 7
 Crédito 7
 
-# inptport.c: 811
+# inptport.c: 814
 Coin 8
 Crédito 8
 
-# inptport.c: 347
+# inptport.c: 350
 Coin A
 Crédito A
 
-# inptport.c: 348
+# inptport.c: 351
 Coin B
 Crédito B
 
-# drivers/arabian.c: 314 drivers/bking2.c: 325, 439 drivers/marinedt.c: 364 drivers/mcr68.c: 739 drivers/powerins.c: 217 drivers/segas18.c: 803, 835 drivers/system18.c: 1261
+# drivers/arabian.c: 314 drivers/bking2.c: 325, 439 drivers/marinedt.c: 364 drivers/mcr68.c: 739 drivers/powerins.c: 217 drivers/segas18.c: 801, 833 drivers/system18.c: 1261
 Coin Chutes
 Conteo de los Créditos
 
-# drivers/neogeo.c: 1120
+# drivers/neogeo.c: 942, 1075
 Coin Chutes?
 Conteo de los Créditos?
 
-# drivers/8080bw.c: 284
-Coin Info
-Información de Moneda
-
-# drivers/m92.h: 88
+# drivers/airbustr.c: 467 drivers/asteroid.c: 398 drivers/bloodbro.c: 164, 254, 345 drivers/cabal.c: 348 drivers/exidy.c: 369 drivers/galpanic.c: 583, 694, 763 drivers/holeland.c: 122, 189 drivers/m62.c: 628, 681, 731, 783, 835, 887, 939, 989, 1039, 1090, 1141, 1191 drivers/m72.c: 962, 1034, 1105, 1175, 1245, 1312, 1383, 1450, 1518, 1591, 1673, 1761, 1843, 1928 drivers/m90.c: 222, 267, 325, 370, 445, 515, 587, 632 drivers/m92.h: 77, 93, 109, 125 drivers/mcatadv.c: 342 drivers/midzeus.c: 1229 drivers/mpatrol.c: 154 drivers/playch10.c: 649 drivers/playmark.c: 423, 571, 668 drivers/powerbal.c: 265 drivers/raiden.c: 159 drivers/rallyx.c: 638 drivers/shisen.c: 159 drivers/sshangha.c: 246 drivers/system18.c: 1326 drivers/tagteam.c: 229 drivers/taito_l.c: 1960 drivers/travrusa.c: 158, 188 drivers/troangel.c: 109 drivers/vigilant.c: 269, 359 drivers/welltris.c: 566 drivers/wilytowr.c: 406 drivers/yard.c: 134
 Coin Mode
 Modo de Crédito
 
@@ -1606,51 +878,43 @@ Modo de Crédito
 Coin Slot
 Ranura de Moneda
 
-# drivers/cps1.c: 1424
+# drivers/alpha68k.c: 1635 drivers/armedf.c: 556 drivers/bbusters.c: 456, 527 drivers/boogwing.c: 179 drivers/buggychl.c: 330 drivers/cps1.c: 1422, 2140, 2243, 2497, 2606, 3173 drivers/cshooter.c: 277 drivers/deco32.c: 1338 drivers/flstory.c: 425 drivers/freekick.c: 677, 791 drivers/galaxian.c: 2813 drivers/itech8.c: 1598 drivers/lkage.c: 248 drivers/lordgun.c: 346 drivers/m92.h: 77, 93, 109, 125 drivers/nycaptor.c: 742 drivers/sslam.c: 545 drivers/suprslam.c: 231
 Coin Slots
 Ranura de Moneda
 
-# inptport.c: 346
+# inptport.c: 349
 Coinage
 Monedero
-
-# drivers/8080bw.c: 1763
-Coinage Display
-Pantalla de Monedero
-
-# drivers/thepit.c: 211
-Coinage P1/P2
-Sistema Monetario Jugador 1 / Jugador 2
 
 # drivers/lvcards.c: 392
 Coinout Sensor
 Sensor de Salida de Moneda
 
-# drivers/bfm_sc2.c: 1731, 1822, 1934, 2355 drivers/itech8.c: 1431 drivers/magic10.c: 154, 222 drivers/sderby.c: 145
+# drivers/bfm_sc2.c: 1731, 1822, 1934, 2356 drivers/itech8.c: 1431 drivers/magic10.c: 154, 222 drivers/sderby.c: 145
 Collect
 Coleccionar
 
-# ui_text.c: 66
+# ui_text.c: 69
 Command List not available
 Lista de Comandos no disponibles
 
-# cheat.c: 2873, 2946, 3167
+# cheat.c: 2876, 2949, 3170
 Comment
 Comentario
 
-# drivers/snk.c: 2667
+# drivers/alpha68k.c: 1636 drivers/armedf.c: 557 drivers/bbusters.c: 457, 528 drivers/boogwing.c: 180 drivers/deco32.c: 1339 drivers/gaelco2.c: 715, 1185 drivers/gijoe.c: 307 drivers/itech8.c: 1599 drivers/konamigq.c: 524 drivers/konamigx.c: 1730 drivers/lethal.c: 544 drivers/lordgun.c: 348 drivers/m92.h: 77, 93, 109, 125 drivers/marinedt.c: 365 drivers/mcr68.c: 741 drivers/moo.c: 514, 583 drivers/mystwarr.c: 1082, 1150, 1223 drivers/segac2.c: 1060 drivers/segas18.c: 912, 968, 1024, 1073, 1139, 1156, 1200 drivers/snk.c: 2912, 2968, 3025, 3082 drivers/sslam.c: 546 drivers/suprslam.c: 232 drivers/system18.c: 1327 drivers/system24.c: 1267, 1343, 1414, 1484, 1544
 Common
 Común
 
-# cheat.c: 5053
+# cheat.c: 5056
 Comparison
 Comparación
 
-# inptport.c: 973
+# inptport.c: 976
 Config Menu
 Menú de Configuración
 
-# ui_text.c: 167
+# ui_text.c: 170
 Configure Watchpoints
 Configurar los puntos de vista
 
@@ -1662,15 +926,15 @@ Continuar
 Continue Mode
 Modo Continuar
 
-# inptport.c: 429
+# inptport.c: 432
 Continue Price
 Continuar Precio
 
-# ui_text.c: 164
+# ui_text.c: 167
 Continue Search
 Continuar la Búsqueda
 
-# inptport.c: 434
+# inptport.c: 437
 Continues
 Continuar
 
@@ -1682,31 +946,27 @@ Control
 Control Panel
 Panel de Control
 
-# drivers/tumbleb.c: 1249
+# drivers/changela.c: 962 drivers/nbmj8891.c: 1072, 1168 drivers/taitosj.c: 1748 drivers/tumbleb.c: 1258 
 Control Type
 Tipo de Control
 
-# inptport.c: 430
+# inptport.c: 433
 Controller
 Controlador
 
-# drivers/fantland.c: 584 inptport.c: 425 vidhrdw/fantland.c: 136
+# drivers/fantland.c: 584 inptport.c: 428 vidhrdw/fantland.c: 136
 Controls
 Controles
 
-# cheat.c: 3580
+# cheat.c: 3583
 Copy Previous Value
 Copiar valores previos
 
-# drivers/news.c: 60
-Copyright
-Copyright
-
-# config.c: 134, 138
+# config.c: 141, 145
 Could not load controller file %s.cfg\n
 No se ha podido cargar el archivo del mando %s.cfg\n
 
-# state.c: 1087
+# state.c: 1090
 Could not read MAME save file header
 No se ha podido leer la cabecera del archivo guardado de MAME
 
@@ -1714,235 +974,151 @@ No se ha podido leer la cabecera del archivo guardado de MAME
 Country
 Pais
 
-# ui_text.c: 152
+# ui_text.c: 155
 Create New Card
 Crear Nueva Tarjeta
 
-# drivers/8080bw.c: 1308
-Cross Hatch
-Escotilla Cruzada
-
-# cheat.c: 1034
+# cheat.c: 1037
 Current Data
 Datos en Curso
 
-# cheat.c: 2937 drivers/tickee.c: 205 sound/custom.c: 76 
+# cheat.c: 2940 drivers/tickee.c: 205 sound/custom.c: 76 
 Custom
 Personalizar
 
-# ui_text.c: 97
+# ui_text.c: 100
 Custom Buttons
 Personalizar Botones
 
-# drivers/cinemat.c: 254, 849 drivers/mcr.c: 376, 845
+# drivers/cinemat.c: 253, 848 drivers/mcr.c: 393, 969
 DIAL
 VOLANTE
 
-# drivers/toratora.c: 106
-DIP tristate %sactive\n
-Conmutador triestado %sactivado\n
-
-# drivers/dynadice.c: 126
-DSW 1-0
-Conmutador 1-0
-
-# drivers/dynadice.c: 129
-DSW 1-1
-Conmutador 1-1
-
-# drivers/dynadice.c: 132
-DSW 1-5
-Conmutador 1-5
-
-# drivers/dynadice.c: 135
-DSW 1-6
-Conmutador 1-6
-
-# drivers/dynadice.c: 138
-DSW 1-7
-Conmutador 1-7
-
-# datafile.c: 3219
+# datafile.c: 3225
 DUAL MONITOR   : %3d  + %3d\n
 DOBLE MONITOR               : %3d  + %3d\n
 
-# drivers/cps1.c: 1162
-Damage
-Daño
-
-# cheat.c: 3510
+# cheat.c: 3513
 Data
 Datos
 
-# cheat.c: 6181
+# cheat.c: 6184
 Data Shift
 Cambio de Datos
 
-# drivers/funworld.c: 482
-Dattl Insert
-Insertar Dattl
-
-# drivers/neogeo.c: 1583
-Debug MVS (Hack?)
-Depurador MVS (Hack?)
-
-# cheat.c: 1112 ui_text.c: 196
+# cheat.c: 1115 ui_text.c: 199
 Decimal
 Decimal
 
-# ui_text.c: 223
+# ui_text.c: 226
 Decoding Graphics
 Decodificando Gráficos
 
-# drivers/cps1.c: 829
+# drivers/asuka.c: 714, 756, 798 drivers/bwing.c: 342 drivers/cps1.c: 827, 911 drivers/fgoal.c: 313 drivers/mcr68.c: 671 drivers/ms32.c: 1129, 1134 drivers/taito_b.c: 1309 drivers/wwfsstar.c: 291 
 Default
 Por defecto
 
-# ui_text.c: 205
+# ui_text.c: 208
 Default Search Speed
 Búsqueda Rápida por Defecto
 
-# cheat.c: 3270
+# cheat.c: 3273
 Delay
 Retardo
 
-# inptport.c: 1016
+# inptport.c: 1019
 Delete Cheat
 Borrar Truco
 
-# inptport.c: 345
+# inptport.c: 348
 Demo Sounds
 Sonidos en la Demostración
 
-# drivers/snk.c: 2683
-Demo Sounds Off
-Sonido Demo Apagado
-
-# drivers/snk.c: 2684
-Demo Sounds On
-Sonido Demo Encendido
-
-# ui_text.c: 178
+# ui_text.c: 181
 Description
 Descripción
 
-# drivers/ssv.c: 2773 inptport.c: 870 
+# drivers/ssv.c: 2773 inptport.c: 873 
 Dial
 Volante
 
-# inptport.c: 871
+# inptport.c: 874
 Dial 2
 Volante 2
 
-# inptport.c: 872
+# inptport.c: 875
 Dial 3
 Volante 3
 
-# inptport.c: 873
+# inptport.c: 876
 Dial 4
 Volante 4
 
-# inptport.c: 874
+# inptport.c: 877
 Dial 5
 Volante 5
 
-# inptport.c: 875
+# inptport.c: 878
 Dial 6
 Volante 6
 
-# inptport.c: 876
+# inptport.c: 879
 Dial 7
 Volante 7
 
-# inptport.c: 877
+# inptport.c: 880
 Dial 8
 Volante 8
 
-# inptport.c: 879
+# inptport.c: 882
 Dial V
 Volante V
 
-# inptport.c: 880
+# inptport.c: 883
 Dial V 2
 Volante V
 
-# inptport.c: 881
+# inptport.c: 884
 Dial V 3
 Volante V 3
 
-# inptport.c: 882
+# inptport.c: 885
 Dial V 4
 Volante V 4
 
-# inptport.c: 883
+# inptport.c: 886
 Dial V 5
 Volante V 5
 
-# inptport.c: 884
+# inptport.c: 887
 Dial V 6
 Volante V 6
 
-# inptport.c: 885
+# inptport.c: 888
 Dial V 7
 Volante V 7
 
-# inptport.c: 886
+# inptport.c: 889
 Dial V 8
 Volante V 8
 
-# drivers/ssrj.c: 113
-Difficult
-Díficil
-
-# drivers/pktgaldx.c: 252 inptport.c: 344
+# drivers/pktgaldx.c: 252 inptport.c: 347
 Difficulty
 Dificultad
 
-# drivers/cps1.c: 2080
-Difficulty (Chariot)
-Dificultad (Chariot)
-
-# drivers/cps1.c: 2092
-Difficulty (Don't Pull)
-Dificultad (Don't Pull)
-
-# drivers/cps1.c: 2070
-Difficulty (Midnight Wanderers)
-Dificultad (Midnight Wanderers)
-
-# drivers/cps1.c: 2364
+# drivers/cps1.c: 2362 drivers/pipedrm.c: 440 drivers/speedbal.c: 126
 Difficulty 1
 Dificultad 1
 
-# drivers/cps1.c: 2373
+# drivers/cps1.c: 2371 drivers/hcastle.c: 166 drivers/pipedrm.c: 445 drivers/speedbal.c: 131
 Difficulty 2
 Dificultad 2
 
-# drivers/cps1.c: 1705
-Difficulty Level (Enemy's Strength)
-Nivel de Dificultad (Fuerza de los Enemigos)
-
-# drivers/cps1.c: 1714
-Difficulty Level (Player's Strength)
-Nivel de Dificultad (Fuerza de los Jugadores)
-
-# drivers/cps1.c: 1245
-Difficulty Level 1
-Nivel de Dificultad 1
-
-# drivers/cps1.c: 1254
-Difficulty Level 2
-Nivel de Dificultad 2
-
-# drivers/hexa.c: 90
-Difficulty?
-Díficultad?
-
-# ui_text.c: 124
+# ui_text.c: 127
 Digital Speed
 Velocidad Digital
 
-# ui_text.c: 93
+# ui_text.c: 96
 Dip Switches
 Interruptores
 
@@ -1950,15 +1126,15 @@ Interruptores
 Disable All Coins
 Desactivar Todos los Créditos
 
-# drivers/blockade.c: 312 drivers/hyperspt.c: 261, 362 drivers/junofrst.c: 335 drivers/lvcards.c: 334, 412 drivers/metro.c: 2229 drivers/midvunit.c: 829 drivers/nemesis.c: 841, 1442, 1536, 1553, 1650, 1747, 1835 drivers/pacman.c: 1200, 1262 drivers/rallyx.c: 585 drivers/rocnrope.c: 130 drivers/seattle.c: 2443 drivers/trackfld.c: 388, 483 drivers/tutankhm.c: 338 drivers/twin16.c: 379 ui_text.c: 172
+# drivers/blockade.c: 312 drivers/hyperspt.c: 261, 362 drivers/junofrst.c: 335 drivers/lvcards.c: 334, 412 drivers/metro.c: 2229 drivers/midvunit.c: 829 drivers/nemesis.c: 841, 1442, 1536, 1553, 1650, 1747, 1835 drivers/pacman.c: 1200, 1262 drivers/rallyx.c: 585 drivers/rocnrope.c: 130 drivers/seattle.c: 2443 drivers/trackfld.c: 388, 483 drivers/tutankhm.c: 338 drivers/twin16.c: 379 ui_text.c: 175
 Disabled
 Desactivado
 
-# cheat.c: 6140 ui_text.c: 188
+# cheat.c: 6143 ui_text.c: 191
 Display Type
 Tipo de visualización
 
-# cheat.c: 5098
+# cheat.c: 5101
 Do Search
 Realizar Búsqueda
 
@@ -1966,127 +1142,87 @@ Realizar Búsqueda
 Domestic
 Domestico
 
-# inptport.c: 821
+# inptport.c: 824
 Door Interlock
 Cerrar Puerta
 
-# drivers/cherrym.c: 179
+# drivers/cherrym.c: 179 drivers/nbmj8891.c: 1426
 Double Up
 Doble Salto
 
-# drivers/cherrym.c: 218
-Double Up %
-Doblar %
-
-# cheat.c: 923
+# cheat.c: 926
 Drain all Energy Now! PL1
 Gastar todas las Energías Ahora! Jugador 1
 
-# cheat.c: 924
+# cheat.c: 927
 Drain all Energy Now! PL2
 Gastar todas las Energías Ahora! Jugador 2
 
-# ui_text.c: 63
+# ui_text.c: 66
 Driverinfo not available
 Información de Driver no disponible
 
-# inptport.c: 426
+# inptport.c: 429
 Dual
 Dual
 
-# cheat.c: 2947
+# cheat.c: 2950
 EEPROM
 EEPROM
 
-# common.c: 1237
+# common.c: 1256
 ERROR: required files are missing, the game cannot be run.\n
 Error: los archivos requeridos están perdidos, el juego no podrá ejecutarse.\n
 
-# audit.c: 484, 521
+# audit.c: 487, 524
 EXPECTED: 
 ESPERAR:
 
-# drivers/8080bw.c: 1809
-Each row
-Cada fila
-
-# inptport.c: 410
+# inptport.c: 413
 Easier
 Facilísimo
 
-# inptport.c: 409
+# inptport.c: 412
 Easiest
 Más fácil
 
-# inptport.c: 411
+# inptport.c: 414
 Easy
 Fácil
 
-# drivers/hexa.c: 91
-Easy?
-Fácil?
-
-# inptport.c: 1019
+# inptport.c: 1022
 Edit Cheat
 Editar Trucos
-
-# drivers/tumbleb.c: 554
-Edit Levels
-Editar Niveles
 
 # drivers/djmain.c: 500 
 Effect
 Efectos
 
-# ui_text.c: 151
+# ui_text.c: 154
 Eject Current Card
 Ejecutar Tarjeta
 
-# cheat.c: 6121
+# cheat.c: 6124
 Element Size
 Tamaño del Elemento
 
-# cheat.c: 6160
+# cheat.c: 6163
 Elements Per Line
 Elementos por Línea
 
-# ui_text.c: 161
+# ui_text.c: 164
 Enable/Disable a Cheat
 Activar/Desactivar los Trucos
 
-# inptport.c: 2476
+# inptport.c: 2477
 End of playback
 Fin de reproducción
 
-# cheat.c: 3604
+# cheat.c: 3607
 Endianness
 Finalizado
 
-# drivers/pong.c: 17
-Ending Score
-Finalizar Marcador
-
-# drivers/snk.c: 3472
-Endless Game (Cheat)
-Fin corto del Juego (Truco)
-
-# drivers/cps1.c: 2481
-Enemy's attack frequency
-Frecuencia de ataque de enemigos
-
-# drivers/cps1.c: 2490
-Enemy's attack power
-Potencia de ataque de enemigos
-
-# drivers/cps1.c: 1624
-Enemy's vitality and attacking power
-Vitalidad de enemigos y potencia de ataques
-
-# drivers/8080bw.c: 2869
-Energy
-Energia
-
-# ui_text.c: 202
+# ui_text.c: 205
 Energy (greater or less)
 Energía (más o menos)
 
@@ -2094,11 +1230,11 @@ Energía (más o menos)
 England
 Inglaterra
 
-# drivers/snowbros.c: 800 inptport.c: 402
+# drivers/snowbros.c: 800 inptport.c: 405
 English
 Inglés
 
-# cheat.c: 1044, 4623, 4633
+# cheat.c: 1047, 4626, 4636
 Equal
 Igual
 
@@ -2106,107 +1242,51 @@ Igual
 Error
 Error
 
-# ui_text.c: 157
+# ui_text.c: 160
 Error creating memory card
 Error creando tarjeta de memoria
 
-# unzip.c: 27
+# unzip.c: 38
 Error in zipfile %s\n%s\n
 Error en el archivo zip %s\n%s\n
 
-# ui_text.c: 153
+# ui_text.c: 156
 Error loading memory card
 Error cargando tarjeta de memoria
 
-# state.c: 985
+# state.c: 988
 Error: 
 Error:
 
-# cpuexec.c: 697
+# cpuexec.c: 700
 Error: Failed to load state
 Error: Fallo al cargar estado
 
-# cpuexec.c: 626
+# cpuexec.c: 629
 Error: Failed to save state
 Error: Fallo al guardar estado
 
-# cpuexec.c: 590
+# cpuexec.c: 593
 Error: Unable to save state due to illegal registrations. See error.log for details.
 Error: No disponible para guardar estados para registraciones ilegales. Ver error.log para más detalles.
 
-# usrintrf.c: 1525
+# usrintrf.c: 1528
 Error: illegal caption file
 Error: archivo subtistuto ilegal
 
-# inptport.c: 397
+# inptport.c: 400
 Europe
 Europa
-
-# drivers/neogeo.c: 1569
-Europe MVS (Ver. 1)
-Europa MVS (Ver. 1)
-
-# drivers/neogeo.c: 1568
-Europe MVS (Ver. 2)
-Europa MVS (Ver. 2)
-
-# drivers/tumbleb.c: 1246
-Event Free (Allow Event Selection)
-Evento Gratis (Admitir Selección de Evento)
-
-# drivers/snk.c: 3743
-Every 1st Down
-Cada primer Derribo
-
-# drivers/snk.c: 3744
-Every 4 1st Downs
-Cada 4 - 1º Derribo
-
-# drivers/snk.c: 3745
-Every 6 1st Downs
-Cada 6 - 1º Derribo
-
-# drivers/snk.c: 3746
-Every 8 1st Downs
-Cada 8 - 1º Derribo
 
 # drivers/metro.c: 2209 drivers/nbmj8891.c: 2412
 Expert
 Experto
 
-# drivers/cps1.c: 2790
-Extend
-Extendido
-
-# drivers/poolshrk.c: 131
-Extended Play
-Juego Extendido
-
-# drivers/cps1.c: 2779
-Extended Test Mode
-Modo de Prueba Extendido
-
-# drivers/8080bw.c: 2209
-Extended Time
-Tiempo Extendido
-
-# drivers/vroulet.c: 193
-Extra Payout Control
-Control Extra de Pago
-
-# drivers/8080bw.c: 673
-Extra Play
-Partida Extra
-
-# drivers/cps1.c: 1342
+# cheat.c: 6571 debug/mamedbg.c: 795 drivers/4enraya.c: 120 drivers/8080bw.c: 698, 790 drivers/alpha68k.c: 1570, 1624 drivers/amidar.c: 186 drivers/angelkds.c: 481 drivers/bestleag.c: 279 drivers/bigstrkb.c: 160 drivers/brkthru.c: 234, 237, 279, 282 drivers/cninja.c: 728 drivers/cps1.c: 1070, 1340 drivers/darius.c: 680, 718, 756 drivers/ddragon3.c: 425 drivers/deniam.c: 278 drivers/epos.c: 152, 155, 161 drivers/fuukifg3.c: 355 drivers/gameplan.c: 400, 851 drivers/karnov.c: 462 drivers/m62.c: 612, 663, 714, 764, 816, 868, 922, 1022, 1073 drivers/mcr.c: 1136 drivers/megaplay.c: 226 drivers/metro.c: 3081 drivers/ninjaw.c: 543 drivers/nmg5.c: 239 drivers/nmk16.c: 2663 drivers/phoenix.c: 345 drivers/quizdna.c: 154, 242, 344 drivers/rohga.c: 444, 512 drivers/safarir.c: 189 drivers/segas16a.c: 1272 drivers/segas16b.c: 2511 drivers/sidepckt.c: 232 drivers/slapfght.c: 519 drivers/ssv.c: 2574 drivers/suprridr.c: 252 drivers/system1.c: 888, 1724 drivers/system16.c: 1796 drivers/taito_f2.c: 3124 drivers/taito_l.c: 1841, 1994 drivers/taito_z.c: 2364, 2433 drivers/tecmo16.c: 208 drivers/thepit.c: 277, 332, 373 drivers/trackfld.c: 540, 551 drivers/vigilant.c: 241 drivers/vsnes.c: 1066, 1468, 1692, 1750, 1776 drivers/wallc.c: 188 drivers/warriorb.c: 345 drivers/wc90.c: 251 drivers/wc90b.c: 268 drivers/xain.c: 400 drivers/yamato.c: 357 drivers/zac2650.c: 84, 134 drivers/zerozone.c: 149 ui_text.c: 209
 Fast
 Rápido
 
-# drivers/beaminv.c: 87
-Faster Bombs At
-Bombas Rápidas
-
-# cheat.c: 930
+# cheat.c: 933
 Finish this
 Finalizar esto
 
@@ -2214,15 +1294,15 @@ Finalizar esto
 First Bonus
 Primer Bonus
 
-# cheat.c: 1036
+# cheat.c: 1039
 First Data
 Primer Dato
 
-# inptport.c: 387
+# inptport.c: 390
 Flip Screen
 Invertir Pantalla
 
-# cheat.c: 2889
+# cheat.c: 2892
 Force Range
 Forzar Rango
 
@@ -2230,27 +1310,27 @@ Forzar Rango
 Foreign
 Extranjero
 
-# inptport.c: 977
+# inptport.c: 980
 Frameskip Dec
 Disminuir Imágenes por segundo
 
-# inptport.c: 978
+# inptport.c: 981
 Frameskip Inc
 Aumentar Imágenes por segundo
 
-# drivers/lockon.c: 258 drivers/lvcards.c: 323 drivers/pgm.c: 569, 666, 757 drivers/segas16a.c: 1224 drivers/segas16b.c: 2465 drivers/taito_z.c: 1961, 2032 drivers/turbo.c: 409
+# drivers/lockon.c: 258 drivers/lvcards.c: 323 drivers/pgm.c: 569, 666, 757 drivers/segas16a.c: 1224 drivers/segas16b.c: 2463 drivers/taito_z.c: 1961, 2032 drivers/turbo.c: 409
 Free
 Libre
 
-# inptport.c: 383
+# inptport.c: 386
 Free Play
 Juego Libre
 
-# drivers/ssrj.c: 134
+# drivers/1942.c: 200 drivers/1943.c: 148 drivers/40love.c: 1082 drivers/aerofgt.c: 743 drivers/airbustr.c: 496 drivers/alpha68k.c: 1164, 1490, 1543, 1595, 1650, 1676, 1776 drivers/atetris.c: 228, 254 drivers/baraduke.c: 257, 330 drivers/battlex.c: 116 drivers/bbusters.c: 470, 557 drivers/bionicc.c: 227 drivers/blktiger.c: 214 drivers/bwing.c: 294 drivers/compgolf.c: 136 drivers/cps1.c: 492, 661, 742, 835, 919, 998, 1185, 1275, 1356, 1448, 1552, 1647, 1737, 1819, 1902, 1996, 2058, 2183, 2286, 2394, 2513, 2622, 2714, 2807, 2861, 2913, 2966, 3018, 3072, 3115, 3216, 3316, 3417, 3510, 3564 drivers/dec8.c: 1244, 1675 drivers/docastle.c: 360 drivers/exedexes.c: 138 drivers/fcrash.c: 260 drivers/flstory.c: 525 drivers/funkybee.c: 114, 164, 214 drivers/funkyjet.c: 222, 300 drivers/galaga.c: 1007, 1083, 1154, 1228, 1358, 1597, 1656 drivers/gunsmoke.c: 192 drivers/hal21.c: 418 drivers/higemaru.c: 81 drivers/ikki.c: 120 drivers/jcross.c: 197 drivers/karnov.c: 594 drivers/kingobox.c: 290, 376 drivers/kyugo.c: 235, 266, 303, 334, 364, 394, 424 drivers/ladybug.c: 165, 438 drivers/laserbat.c: 303 drivers/legionna.c: 829, 917 drivers/lsasquad.c: 195 drivers/mainsnk.c: 195 drivers/mappy.c: 982, 1115, 1246, 1307, 1375 drivers/markham.c: 152 drivers/marvins.c: 270, 359, 450 drivers/midtunit.c: 339 drivers/midvunit.c: 580 drivers/mitchell.c: 608 drivers/ms32.c: 776, 846, 913 drivers/mugsmash.c: 297, 379 drivers/munchmo.c: 201 drivers/mwarr.c: 209 drivers/namcond1.c: 111 drivers/namcos1.c: 603, 643, 665, 702, 764, 786, 800, 873, 883, 905, 915 drivers/namcos12.c: 1256, 1306 drivers/namcos86.c: 571, 661, 731, 809, 888, 967 drivers/neogeo.c: 942, 1090 drivers/nycaptor.c: 722 drivers/ohmygod.c: 323 drivers/onetwo.c: 143 drivers/pacland.c: 334 drivers/pandoras.c: 288 drivers/prehisle.c: 157 drivers/rollrace.c: 151 drivers/rungun.c: 386 drivers/sauro.c: 248 drivers/scobra.c: 643 drivers/seta2.c: 554 drivers/sf.c: 339, 517, 655 drivers/sgladiat.c: 285 drivers/shootout.c: 168 drivers/sidearms.c: 249 drivers/skykid.c: 170, 249 drivers/snk.c: 2930, 2986, 3043, 3100, 3157, 3228, 3315, 3369, 3427, 3455, 3515, 3586, 3642, 3719, 3784, 3889, 4013, 4154 drivers/snk68.c: 260, 407, 444, 595 drivers/sonson.c: 196 drivers/ssrj.c: 134 drivers/starwars.c: 257, 334 drivers/statriv2.c: 438 drivers/strnskil.c: 178, 266 drivers/superqix.c: 606, 744 drivers/suprnova.c: 558, 633 drivers/tceptor.c: 368, 424 drivers/tmnt.c: 1862, 1948, 2148 drivers/toypop.c: 402, 487 drivers/tsamurai.c: 471, 664 drivers/tumbleb.c: 663 drivers/vastar.c: 234 drivers/zaccaria.c: 408, 517 drivers/zn.c: 3096 drivers/zodiack.c: 221
 Freeze
 Congelar
 
-# inptport.c: 405 ui_lang.c: 14
+# inptport.c: 408 ui_lang.c: 14
 French
 Francés
 
@@ -2258,75 +1338,51 @@ Francés
 Full
 Completo
 
-# datafile.c: 2168
+# datafile.c: 2174
 GAME: 
 JUEGO: 
 
-# drivers/cps1.c: 770
+# drivers/bublbobl.c: 578 drivers/cps1.c: 605, 687, 768, 851, 935, 1020, 1113, 1198, 1288, 1369, 1565, 1660, 1750, 1832, 1915, 2009, 2105, 2196, 2299, 2407, 2526, 2635, 2727, 2820, 3229, 3329, 3430, 3523, 3677, 3790 drivers/dec0.c: 778 drivers/fcrash.c: 273 drivers/macs.c: 336 drivers/missile.c: 474 drivers/pacman.c: 1370 drivers/turbo.c: 417 drivers/vegas.c: 2039
 Game
 Juego
 
-# ui_text.c: 103
+# ui_text.c: 106
 Game Documents
 Documentación del Juego
 
-# ui_text.c: 117
+# ui_text.c: 120
 Game Driverinfo
 Información del Driver del Juego
 
-# ui_text.c: 112
+# ui_text.c: 115
 Game History
 Historia del Juego
 
-# ui_text.c: 102
+# ui_text.c: 105
 Game Information
 Información del Juego
 
-# drivers/tourtabl.c: 136
-Game Length
-Duración del Juego
-
-# ui_text.c: 116
+# ui_text.c: 119
 Game Mameinfo
 MameInfo del Juego
-
-# drivers/snk.c: 2682
-Game Mode
-Modo de Juego
 
 # drivers/gotcha.c: 210 
 Game Selection
 Juego selección
 
-# drivers/neogeo.c: 1178
+# drivers/neogeo.c: 1005, 1049, 1105, 1231 inptport.c: 2032
 Game Slots
 Ranura de Juego
 
-# drivers/thepit.c: 216
-Game Speed
-Velocidad de Juego
-
-# ui_text.c: 114
+# ui_text.c: 117
 Game Story
 Relato del Juego
 
-# drivers/snk.c: 3131
-Game Style
-Estilo de Juego
-
-# inptport.c: 428
+# inptport.c: 431
 Game Time
 Tiempo de Juego
 
-# drivers/thepit.c: 493
-Gaming Option
-Opción de Juego
-
-# drivers/thepit.c: 496
-Gaming Option Number
-Número de Opción de Juego
-
-# ui_text.c: 53
+# ui_text.c: 56
 Gamma
 Gama
 
@@ -2334,11 +1390,11 @@ Gama
 General
 General
 
-# ui_text.c: 168
+# ui_text.c: 171
 General Help
 Ayuda General
 
-# inptport.c: 404 ui_lang.c: 17
+# inptport.c: 407 ui_lang.c: 17
 German
 Alemán
 
@@ -2346,103 +1402,75 @@ Alemán
 Germany
 Alemania
 
-# cheat.c: 928
+# cheat.c: 931
 Get
 Obtener
 
-# drivers/thepit.c: 271
-Gly Boys Wake Up
-Gly Chicos Despiertos
-
-# cheat.c: 1043, 4625
+# cheat.c: 1046, 4628
 Greater
 Superior
 
-# cheat.c: 1046
+# cheat.c: 1049
 Greater Or Equal
 Superior o Igual
 
-# cheat.c: 4627
+# cheat.c: 4630
 Greater or Equal
 Superior o Igual
 
-# datafile.c: 3223
+# datafile.c: 3229
 HI/TRUE BITMAP : %3d  + %3d\n
 HI/MAPA DE BIT VERDADERO    : %3d  + %3d\n
 
-# datafile.c: 3227
+# datafile.c: 3233
 HIGHLIGHTS     : %3d  + %3d\n
 LUCES FUERTES               : %3d  + %3d\n
 
-# inptport.c: 414
+# inptport.c: 417
 Hard
 Difícil
 
-# drivers/hexa.c: 93
-Hard?
-Díficil?
-
-# inptport.c: 415
+# inptport.c: 418
 Harder
 Más difícil
 
-# inptport.c: 416
+# inptport.c: 419
 Hardest
 Muy difícil
-
-# drivers/hexa.c: 94
-Hardest?
-Más díficil?
-
-# drivers/wwfsstar.c: 257
-Health For Winning
-Salud para Ganar
 
 # drivers/ddenlovr.c: 3106 drivers/shanghai.c: 913 
 Help
 Ayuda
 
-# ui_text.c: 184
+# ui_text.c: 187
 Help not available yet
 Ayuda no disponible aún
 
-# drivers/news.c: 57
-Helps
-Ayudas
-
-# cheat.c: 1111 ui_text.c: 195
+# cheat.c: 1114 ui_text.c: 198
 Hex
 Hex
 
-# inptport.c: 420 
+# inptport.c: 423 
 High
 Alto
-
-# drivers/cclimber.c: 1437
-High Score Names
-Nombre de los Records
-
-# drivers/8080bw.c: 278
-High Score Preset Mode
-Programar Modo de Records
 
 # drivers/balsente.c: 359, 413, 596, 650, 755, 843, 1022 drivers/zaccaria.c: 426, 536 
 High Scores
 Record
 
-# inptport.c: 421
+# inptport.c: 424
 Higher
 Más alto
 
-# inptport.c: 422
+# inptport.c: 425
 Highest
 Altísimo
 
-# inptport.c: 400
+# inptport.c: 403
 Hispanic
 Español
 
-# ui_text.c: 58
+# ui_text.c: 61
 History not available
 Historia no disponible
 
@@ -2450,11 +1478,7 @@ Historia no disponible
 Hit
 Golpe
 
-# drivers/funworld.c: 487
-Hold
-Detener
-
-# drivers/funworld.c: 440
+# drivers/funworld.c: 466, 524 drivers/ltcasino.c: 103, 475 drivers/lvcards.c: 209, 293
 Hold 1
 Control 1
 
@@ -2462,11 +1486,7 @@ Control 1
 Hold 2
 Control 2
 
-# drivers/funworld.c: 449
-Hold 2 / Low
-Detener 2 / Bajo
-
-# drivers/funworld.c: 450
+# drivers/funworld.c: 476, 534 drivers/ltcasino.c: 105, 477 drivers/lvcards.c: 211, 295
 Hold 3
 Control 3
 
@@ -2474,19 +1494,11 @@ Control 3
 Hold 4
 Control 4
 
-# drivers/funworld.c: 446
-Hold 4 / High
-Detener 4 / Alto
-
 # drivers/ltcasino.c: 107, 479 drivers/lvcards.c: 213, 297
 Hold 5
 Control 5
 
-# drivers/funworld.c: 443
-Hold 5 / Stake
-Detener 5 / Apuesta
-
-# drivers/neogeo.c: 1176
+# drivers/neogeo.c: 1003, 1047, 1103, 1180, 1229
 Home
 Consola
 
@@ -2494,19 +1506,11 @@ Consola
 Hong Kong
 Hong Kong
 
-# drivers/funworld.c: 491
-Hopper
-Saltador
-
-# drivers/neogeo.c: 1401
-Hopper Out
-Saltador
-
 # drivers/lvcards.c: 288, 371
 Hopper Reset
 Reiniciar Recipiente
 
-# drivers/findout.c: 216 drivers/gameplan.c: 566, 711 drivers/jack.c: 685 drivers/thepit.c: 492 
+# drivers/findout.c: 216 drivers/gameplan.c: 566, 711 drivers/jack.c: 685 drivers/thepit.c: 551 
 Horizontal
 Horizontal
 
@@ -2514,199 +1518,155 @@ Horizontal
 Horizontally
 Horizontalmente
 
-# ui_text.c: 26
+# ui_text.c: 29
 IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
 SI NO ESTAS LEGALMENTE AUTORIZADO A JUGAR \"%s\" EN ESTE EMULADOR, PULSE ESC. 
 
-# datafile.c: 2982
+# datafile.c: 2988
 IMPERFECT COLORS   : %3d  %3d\n
 COLORES IMPERFECTOS         : %3d  %3d\n
 
-# datafile.c: 2978
+# datafile.c: 2984
 IMPERFECT GRAPHICS : %3d  %3d\n
 GRÁFICOS IMPERFECTOS        : %3d  %3d\n
 
-# datafile.c: 2986
+# datafile.c: 2992
 IMPERFECT SOUND    : %3d  %3d\n
 SONIDO IMPERFECTO           : %3d  %3d\n
 
-# drivers/travrusa.c: 91, 91 ui_text.c: 38
+# drivers/travrusa.c: 91, 91 ui_text.c: 41
 INVALID
 INVÁLIDO
 
-# drivers/neogeo.c: 393
-IRQ2 enabled, need raster driver
-IRQ2 activado, necesita driver de barrido
-
-# cheat.c: 2871
+# cheat.c: 2874
 Ignore Decrement
 Ignorar la Disminución
 
-# cheat.c: 3282
+# cheat.c: 3285
 Ignore Decrement By
 Ignorar la Disminución Por
 
-# cheat.c: 1048
+# cheat.c: 1051
 Increased By Value
 Aumento de los Valores
 
-# drivers/aerofgt.c: 731, 832, 910, 980, 1065 drivers/alpha68k.c: 1637 drivers/armedf.c: 558 drivers/bbusters.c: 458, 529 drivers/boogwing.c: 181 drivers/cinemat.c: 737 drivers/crshrace.c: 284, 462 drivers/deco32.c: 1340 drivers/itech8.c: 1600 drivers/marinedt.c: 366 drivers/mcr68.c: 740 drivers/segac2.c: 1061 drivers/segas18.c: 915, 971, 1027, 1076, 1142, 1159, 1203 drivers/sslam.c: 547 drivers/system18.c: 1328 drivers/system24.c: 1415 drivers/taotaido.c: 233
+# drivers/aerofgt.c: 731, 832, 910, 980, 1065 drivers/alpha68k.c: 1637 drivers/armedf.c: 558 drivers/bbusters.c: 458, 529 drivers/boogwing.c: 181 drivers/cinemat.c: 736 drivers/crshrace.c: 284, 462 drivers/deco32.c: 1340 drivers/itech8.c: 1600 drivers/marinedt.c: 366 drivers/mcr68.c: 740 drivers/segac2.c: 1061 drivers/segas18.c: 913, 969, 1025, 1074, 1140, 1157, 1201 drivers/sslam.c: 547 drivers/system18.c: 1328 drivers/system24.c: 1415 drivers/taotaido.c: 233
 Individual
 Individual
 
-# cheat.c: 926 inptport.c: 437
+# cheat.c: 929 inptport.c: 440
 Infinite
 Infinito
 
-# drivers/cclimber.c: 1415
-Infinite (Cheat)
-Infinito (Truco)
-
-# cheat.c: 912
+# cheat.c: 915
 Infinite Ammo
 Munición Infinita
 
-# cheat.c: 913
+# cheat.c: 916
 Infinite Ammo PL1
 Munición Infinita PL1
 
-# cheat.c: 914
+# cheat.c: 917
 Infinite Ammo PL2
 Munición Infinita PL2
 
-# cheat.c: 915
+# cheat.c: 918
 Infinite Bombs
 Bombas Infinitas
 
-# cheat.c: 916
+# cheat.c: 919
 Infinite Bombs PL1
 Bombas Infinitas PL1
 
-# cheat.c: 917
+# cheat.c: 920
 Infinite Bombs PL2
 Bombas Infinitas PL2
 
-# cheat.c: 907
+# cheat.c: 910
 Infinite Energy
 Energía Infinita
 
-# cheat.c: 908
+# cheat.c: 911
 Infinite Energy PL1
 Energía Infinita PL1
 
-# cheat.c: 909
+# cheat.c: 912
 Infinite Energy PL2
 Energía Infinita PL2
 
-# cheat.c: 898 drivers/cinemat.c: 951 drivers/clshroad.c: 219 drivers/galaxian.c: 3150 drivers/ginganin.c: 232 drivers/hal21.c: 417 drivers/jack.c: 653 drivers/prehisle.c: 158 drivers/vicdual.c: 540, 917
+# cheat.c: 901 drivers/cinemat.c: 950 drivers/clshroad.c: 219 drivers/galaxian.c: 3150 drivers/ginganin.c: 232 drivers/hal21.c: 417 drivers/jack.c: 653 drivers/prehisle.c: 158 drivers/vicdual.c: 540, 917
 Infinite Lives
 Vidas Infinitas
 
-# drivers/cps1.c: 3512
-Infinite Lives (Cheat)
-Vidas Infinitas (Truco)
-
-# cheat.c: 899
+# cheat.c: 902
 Infinite Lives PL1
 Vidas Infinitas PL1
 
-# cheat.c: 900
+# cheat.c: 903
 Infinite Lives PL2
 Vidas Infinitas PL2
 
-# cheat.c: 918
+# cheat.c: 921
 Infinite Smart Bombs
 Infinitas Bombas Inteligentes
 
-# cheat.c: 919
+# cheat.c: 922
 Infinite Smart Bombs PL1
 Infinitas Bombas Inteligentes PL1
 
-# cheat.c: 920
+# cheat.c: 923
 Infinite Smart Bombs PL2
 Infinitas Bombas Inteligentes PL2
 
-# cheat.c: 901 drivers/vsnes.c: 851
+# cheat.c: 904 drivers/vsnes.c: 851
 Infinite Time
 Tiempo Infinito
 
-# cheat.c: 902
+# cheat.c: 905
 Infinite Time PL1
 Tiempo Infinito PL1
 
-# cheat.c: 903
+# cheat.c: 906
 Infinite Time PL2
 Tiempo Infinito PL2
 
-# drivers/cps1.c: 1344
-Initial Vitality
-Vitalidad Inicial
-
-# drivers/dynadice.c: 104
-Initialize NVRAM
-Inicializar NVRAM
-
-# ui_text.c: 92
+# ui_text.c: 95
 Input (general)
 Configuración General
 
-# ui_text.c: 101
+# ui_text.c: 104
 Input (this game)
 Configuración para este Juego
-
-# drivers/8080bw.c: 1852
-Input Test
-Prueba de Entrada
 
 # drivers/funworld.c: 507 
 Insert
 Insertar
 
-# drivers/cps1.c: 825
-Internal Diff. on Life Loss
-Diferencia Interna en Vidas Perdidas
-
-# inptport.c: 394
+# inptport.c: 397
 International
 Internacional
-
-# drivers/murogem.c: 128
-Invalid
-Inválido
-
-# drivers/cabal.c: 381
-Invert Buttons
-Invertir Botones
 
 # drivers/ajax.c: 171 drivers/taito_z.c: 2902, 2919, 2970, 2987
 Inverted
 Invertido
 
-# cheat.c: 904 drivers/bwing.c: 269 drivers/cop01.c: 346 drivers/liberate.c: 260 drivers/runaway.c: 236
+# cheat.c: 907 drivers/bwing.c: 269 drivers/cop01.c: 346 drivers/liberate.c: 260 drivers/runaway.c: 236
 Invincibility
 Invencibilidad
 
-# cheat.c: 905
+# cheat.c: 908
 Invincibility PL1
 Invencivilidad PL1
 
-# cheat.c: 906
+# cheat.c: 909
 Invincibility PL2
 Invencivilidad PL2
-
-# drivers/8080bw.c: 2122
-Invincible Test
-Prueba de Invencible
 
 # drivers/equites.c: 564 drivers/fantland.c: 381, 455, 570 drivers/m72.c: 975, 1047, 1118, 1188, 1324 drivers/namcos1.c: 699 drivers/namcos86.c: 806, 885 drivers/oneshot.c: 273 drivers/seicross.c: 389 drivers/snowbros.c: 527, 601 drivers/system1.c: 2127 drivers/toaplan1.c: 585, 654, 723, 792, 862, 945, 1029, 1106, 1174, 1249, 1319, 1394, 1483 drivers/toaplan2.c: 2392, 2462, 2533, 2596, 2639, 2685, 2744, 2826, 2902, 2949, 3014, 3062, 3139, 3198, 3255, 3306, 3366, 3693, 3809 drivers/yard.c: 146
 Invulnerability
 Invulnerabilidad
 
-# drivers/thepit.c: 315
-Invulnerability (Cheat)
-Invulnerabilidad (truco)
-
-# inptport.c: 406 ui_lang.c: 16
+# inptport.c: 409 ui_lang.c: 16
 Italian
 Italiano
 
@@ -2714,119 +1674,67 @@ Italiano
 Italy
 Italia
 
-# inptport.c: 395
+# inptport.c: 398
 Japan
 Japón
 
-# drivers/neogeo.c: 1575
-Japan MVS (Ver. 1)
-Japón MVS (Ver. 1)
-
-# drivers/neogeo.c: 1574
-Japan MVS (Ver. 2)
-Japón MVS (Ver. 2)
-
-# drivers/neogeo.c: 1573
-Japan MVS (Ver. 3)
-Japón MVS (Ver. 3)
-
-# inptport.c: 403 ui_lang.c: 10
+# inptport.c: 406 ui_lang.c: 10
 Japanese
 Japonés
 
-# drivers/funworld.c: 484
-Joker
-Joker
-
-# inptport.c: 432 
+# inptport.c: 435 
 Joystick
 Joystick
-
-# drivers/witch.c: 644
-KEY IN
-ENTRADA DE TECLADO
 
 # drivers/system24.c: 1820
 Kan
 Kan
 
-# drivers/ddenlovr.c: 3630, 3857 drivers/ltcasino.c: 566 drivers/rbmk.c: 133 drivers/ssv.c: 1471, 1587, 1869 inptport.c: 969 
+# drivers/ddenlovr.c: 3630, 3857 drivers/ltcasino.c: 566 drivers/rbmk.c: 133 drivers/ssv.c: 1471, 1587, 1869 inptport.c: 972 
 Keyboard
 Teclado
-
-# drivers/funworld.c: 470
-Keyboard Test
-Prueba de Teclado
-
-# drivers/snk.c: 2775
-Kill friend & walk everywhere (Cheat)
-Matar amigo y caminar a todos lados (Truco)
 
 # drivers/aerofgt.c: 1114 drivers/cave.c: 1685 drivers/crshrace.c: 386, 542 drivers/f1gp.c: 311 drivers/fuukifg2.c: 224, 308 drivers/nmk16.c: 2588 drivers/pgm.c: 589, 687, 879 drivers/psikyo.c: 648, 768, 1006, 1210 drivers/stv.c: 2477 drivers/taotaido.c: 311 drivers/toaplan1.c: 1189, 1264, 1334, 1409, 1498 drivers/toaplan2.c: 2360, 2404, 2546, 2611, 2841, 2960, 3075, 3152, 3213, 3322
 Korea
 Korea
 
-# cheat.c: 5049
+# cheat.c: 5052
 LHS
 LHS
 
-# ui_text.c: 190
+# ui_text.c: 193
 Label
 Etiqueta
 
-# cheat.c: 6125 ui_text.c: 189
+# cheat.c: 6128 ui_text.c: 192
 Label Type
 Tipo de Etiqueta
 
-# drivers/snowbros.c: 876 inptport.c: 401 ui_text.c: 323
+# drivers/snowbros.c: 876 inptport.c: 404 ui_text.c: 324
 Language
 Idioma
 
-# drivers/8080bw.c: 2811
-Language?
-Idioma?
-
-# drivers/cabal.c: 389
-Large
-Grande
-
-# drivers/8080bw.c: 1173
-Laser Bonus Info
-Información de Bonus Laser
-
-# cheat.c: 6117
+# cheat.c: 6120
 Length
 Tamaño
 
-# cheat.c: 1042, 4624 drivers/cninja.c: 738 drivers/dec0.c: 547 drivers/drtomy.c: 212, 215 drivers/warriorb.c: 386
+# cheat.c: 1045, 4627 drivers/cninja.c: 738 drivers/dec0.c: 547 drivers/drtomy.c: 212, 215 drivers/warriorb.c: 386
 Less
 Menor
 
-# cheat.c: 1045
+# cheat.c: 1048
 Less Or Equal
 Menor o Igual
 
-# cheat.c: 4626
+# cheat.c: 4629
 Less or Equal
 Menos o Igual
 
-# inptport.c: 436
+# inptport.c: 439
 Level Select
 Seleccionar Nivel
 
-# drivers/cps1.c: 1334
-Level Up Timer
-Contador de subida de Nivel
-
-# drivers/cps1.c: 1797
-Life Bar
-Barra de Vida
-
-# drivers/tumbleb.c: 992
-Life Meter
-Medidor de Vida
-
-# inptport.c: 431
+# inptport.c: 434
 Light Gun
 Pistola
 
@@ -2834,167 +1742,135 @@ Pistola
 Lightgun
 Pistola
 
-# inptport.c: 933
+# inptport.c: 936
 Lightgun X
 Pistola X
 
-# inptport.c: 934
+# inptport.c: 937
 Lightgun X 2
 Pistola X 2
 
-# inptport.c: 935
+# inptport.c: 938
 Lightgun X 3
 Pistola X 3
 
-# inptport.c: 936
+# inptport.c: 939
 Lightgun X 4
 Pistola X 4
 
-# inptport.c: 937
+# inptport.c: 940
 Lightgun X 5
 Pistola X 5
 
-# inptport.c: 938
+# inptport.c: 941
 Lightgun X 6
 Pistola X 6
 
-# inptport.c: 939
+# inptport.c: 942
 Lightgun X 7
 Pistola X 7
 
-# inptport.c: 940
+# inptport.c: 943
 Lightgun X 8
 Pistola X 8
 
-# inptport.c: 942
+# inptport.c: 945
 Lightgun Y
 Pistola Y
 
-# inptport.c: 943
+# inptport.c: 946
 Lightgun Y 2
 Pistola Y 2
 
-# inptport.c: 944
+# inptport.c: 947
 Lightgun Y 3
 Pistola Y 3
 
-# inptport.c: 945
+# inptport.c: 948
 Lightgun Y 4
 Pistola Y 4
 
-# inptport.c: 946
+# inptport.c: 949
 Lightgun Y 5
 Pistola Y 5
 
-# inptport.c: 947
+# inptport.c: 950
 Lightgun Y 6
 Pistola Y 6
 
-# inptport.c: 948
+# inptport.c: 951
 Lightgun Y 7
 Pistola Y 7
 
-# inptport.c: 949
+# inptport.c: 952
 Lightgun Y 8
 Pistola Y 8
 
-# drivers/cherrym.c: 201
-Limit Over
-Límite Terminado
-
-# inptport.c: 342
+# inptport.c: 345
 Lives
 Vidas
 
-# drivers/cps1.c: 2075
-Lives (Chariot)
-Vidas (Chariot)
-
-# drivers/cps1.c: 2087
-Lives (Don't Pull)
-Vidas (Don't Pull)
-
-# drivers/cps1.c: 2065
-Lives (Midnight Wanderers)
-Vidas (Midnight Wanderers)
-
-# ui_text.c: 200
+# ui_text.c: 203
 Lives (or another value)
 Vidas (u otros valores)
 
-# ui_text.c: 150
+# ui_text.c: 153
 Load Selected Card
 Cargar Tarjeta Seleccionada
 
-# inptport.c: 1014
+# inptport.c: 1017
 Load State
 Cargar Estado
 
-# usrintrf.c: 4881
+# usrintrf.c: 4884
 Load cancelled
 Carga cancelada
 
-# usrintrf.c: 4908
+# usrintrf.c: 4911
 Load from position %c
 Cargando desde posición de %c
 
-# cheat.c: 3615
+# cheat.c: 3618
 Location
 Ubicación
 
-# drivers/snk.c: 3467
-Long (12 sec)
-Largo (12 segundos)
-
-# cheat.c: 929
+# cheat.c: 932
 Lose
 Perder
 
-# inptport.c: 419
+# inptport.c: 422
 Low
 Bajo
 
-# ui_text.c: 118
+# ui_text.c: 121
 MAME Statistics
 Estadísticas del MAME
 
-# common.c: 101
+# common.c: 89
 MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n\n
 MAME es un emulador: reproduce, mas o menos fielmente, el comportamiento de\nvarias de las maquinas arcade. Pero el hardware es inutil sin el software, asi \nque una imagen de ROMS que corran el hardware es requerida. Tales ROMs, como \nalgun otro software comercial, estan registrados y por lo tanto es ilegal \nusarlos si no eres dueño de una maquina de arcade original. No es necesario \ndecir que, las ROMs no deben distribuirse junto con MAME. La distribucion de \nMAME junto con las imagenes de ROM es una violacion de la ley de derechos de \nautor y deberia ser rapidamente reportada a los autores de manera que una \naccion legal pueda ser iniciada.\n\n
 
-# datafile.c: 2159
+# datafile.c: 2165
 MAMEInfo:\n
 MAMEInfo:\n
 
-# drivers/neogeo.c: 1175
+# drivers/neogeo.c: 1002, 1046, 1102, 1179, 1228 inptport.c: 2031
 Machine Mode
 Modo de Máquina
 
-# drivers/neogeo.c: 1200
-Mahjong Control Panel
-Panel de Control Mahjong
-
-# drivers/cherrym.c: 231
-Main Game %
-Juego Principal %
-
-# ui_text.c: 62
+# ui_text.c: 65
 Mameinfo not available
 Mameinfo no disponible
-
-# drivers/funworld.c: 492
-Manual Payout SW
-SW Manual de Pago
 
 # drivers/alpha68k.c: 1361 drivers/freekick.c: 656 drivers/liberate.c: 237, 319, 409 
 Manufacturer
 Fabricante
 
-# cheat.c: 2936
+# cheat.c: 2939
 Mapped Memory
 Memoria Mapeada
 
-# cheat.c: 3404
+# cheat.c: 3407
 Mask
 Máscara
 
@@ -3002,39 +1878,27 @@ Máscara
 Master
 Maestro
 
-# ui_text.c: 212
+# ui_text.c: 215
 Matches found
 Juegos encontrados
 
-# drivers/bwing.c: 346 drivers/holeland.c: 144 drivers/megaplay.c: 227 drivers/travrusa.c: 91 ui_text.c: 181
+# drivers/bwing.c: 346 drivers/holeland.c: 144 drivers/megaplay.c: 227 drivers/travrusa.c: 91 ui_text.c: 184
 Max
 Max
-
-# drivers/vroulet.c: 190
-Max Payout Adjust
-Ajustar Pago Máximo
 
 # drivers/dassault.c: 361, 432
 Max Players
 Jugadores Max
 
-# drivers/cps1.c: 1801
-Maximum
-Máximo
-
-# cheat.c: 3446
+# cheat.c: 3449
 Maximum Boundary
 Límite Máximo
 
-# cheat.c: 6569 inptport.c: 413 ui_text.c: 207
+# cheat.c: 6572 inptport.c: 416 ui_text.c: 210
 Medium
 Medio
 
-# drivers/hexa.c: 92
-Medium?
-Medio?
-
-# ui_text.c: 109
+# ui_text.c: 112
 Memory Card
 Tarjeta de Memoria
 
@@ -3042,247 +1906,143 @@ Tarjeta de Memoria
 Memory Reset
 Reiniciar Memoria
 
-# drivers/cclimber.c: 549
-Memory Test
-Prueba de Memoria
-
-# ui_text.c: 156
+# ui_text.c: 159
 Memory card created
 Tarjeta de memoria creada
 
-# ui_text.c: 155
+# ui_text.c: 158
 Memory card ejected
 Tarjeta de memoria ejecutada
 
-# ui_text.c: 154
+# ui_text.c: 157
 Memory card loaded
 Tarjeta de memoria cargada
 
-# cheat.c: 3433
+# cheat.c: 3436
 Minimum Boundary
 Límite Mínimo
 
-# cheat.c: 3534
+# cheat.c: 3537
 Minimum Displayed Value
 Desplegar Valor Mínimo
 
-# cheat.c: 3545
+# cheat.c: 3548
 Minimum Value
 Valor Mínimo
 
-# drivers/cps1.c: 1798
-Minimun
-Mínimo
-
-# drivers/cabal.c: 379
-Mode 1
-Modo 1
-
-# drivers/cabal.c: 380
-Mode 2
-Modo 2
-
-# drivers/tourtabl.c: 159
-Mode A
-Modo A
-
-# drivers/tourtabl.c: 160
-Mode B
-Modo B
-
-# drivers/tourtabl.c: 161
-Mode C
-Modo C
-
-# drivers/tourtabl.c: 162
-Mode D
-Modo D
-
-# drivers/tourtabl.c: 163
-Mode E
-Modo E
-
-# drivers/tourtabl.c: 164
-Mode F
-Modo F
-
-# drivers/tourtabl.c: 165
-Mode G
-Modo G
-
-# drivers/tourtabl.c: 166
-Mode H
-Modo H
-
-# drivers/tourtabl.c: 167
-Mode I
-Modo I
-
-# drivers/tourtabl.c: 168
-Mode J
-Modo J
-
-# drivers/tourtabl.c: 169
-Mode K
-Modo K
-
-# drivers/tourtabl.c: 170
-Mode L
-Modo L
-
-# drivers/tourtabl.c: 171
-Mode M
-Modo M
-
-# drivers/tourtabl.c: 172
-Mode N
-Modo N
-
-# drivers/tourtabl.c: 173
-Mode O
-Modo O
-
-# drivers/tourtabl.c: 174
-Mode P
-Modo P
-
-# drivers/astrocde.c: 309, 388 drivers/jack.c: 684 drivers/thepit.c: 490
+# drivers/astrocde.c: 309, 388 drivers/jack.c: 684 drivers/thepit.c: 549
 Monitor
 Pantalla
 
-# drivers/tx1.c: 942, 946 inptport.c: 439
+# drivers/tx1.c: 942, 946 inptport.c: 442
 Mono
 Mono
 
-# ui_text.c: 175
+# ui_text.c: 178
 More Info
 Más Información
 
-# ui_text.c: 176
+# ui_text.c: 179
 More Info for
 Más Información por
 
-# drivers/cps1.c: 1338
-More Quickly
-Más Rápidamente
-
-# drivers/cps1.c: 1335
-More Slowly
-Más Lentamente
-
-# inptport.c: 951
+# inptport.c: 954
 Mouse X
 Ratón X
 
-# inptport.c: 952
+# inptport.c: 955
 Mouse X 2
 Ratón X 2
 
-# inptport.c: 953
+# inptport.c: 956
 Mouse X 3
 Ratón X 3
 
-# inptport.c: 954
+# inptport.c: 957
 Mouse X 4
 Ratón X 4
 
-# inptport.c: 955
+# inptport.c: 958
 Mouse X 5
 Ratón X 5
 
-# inptport.c: 956
+# inptport.c: 959
 Mouse X 6
 Ratón X 6
 
-# inptport.c: 957
+# inptport.c: 960
 Mouse X 7
 Ratón X 7
 
-# inptport.c: 958
+# inptport.c: 961
 Mouse X 8
 Ratón X 8
 
-# inptport.c: 960
+# inptport.c: 963
 Mouse Y
 Ratón Y
 
-# inptport.c: 961
+# inptport.c: 964
 Mouse Y 2
 Ratón Y 2
 
-# inptport.c: 962
+# inptport.c: 965
 Mouse Y 3
 Ratón Y 3
 
-# inptport.c: 963
+# inptport.c: 966
 Mouse Y 4
 Ratón Y 4
 
-# inptport.c: 964
+# inptport.c: 967
 Mouse Y 5
 Ratón Y 5
 
-# inptport.c: 965
+# inptport.c: 968
 Mouse Y 6
 Ratón Y 6
 
-# inptport.c: 966
+# inptport.c: 969
 Mouse Y 7
 Ratón Y 7
 
-# inptport.c: 967
+# inptport.c: 970
 Mouse Y 8
 Ratón Y 8
 
-# ui_text.c: 36
+# ui_text.c: 39
 NA
 NADA
 
-# datafile.c: 2988
+# datafile.c: 2994
 NO COCKTAIL        : %3d  %3d\n
 SIN COCTEL                  : %3d  %3d\n
 
-# datafile.c: 2990
+# datafile.c: 2996
 NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 NO ESTAN BIEN DUMPEADOS     : %3d  %3d\n(%3d ROMS EN %d JUEGOS)\n
 
-# romcmp.c: 488 
+# romcmp.c: 499 
 NO MATCH\n
 NO COINCIDE\n
 
-# datafile.c: 2984
+# datafile.c: 2990
 NO SOUND           : %3d  %3d\n
 SIN SONIDO                  : %3d  %3d\n
 
-# datafile.c: 2974
+# datafile.c: 2980
 NON-WORKING        : %3d  %3d\n
 NO FUNCIONAN                : %3d  %3d\n
 
-# cheat.c: 3135, 3152, 5087 ui_text.c: 177
+# cheat.c: 3138, 3155, 5090 ui_text.c: 180
 Name
 Nombre
 
-# drivers/cps1.c: 1069
-Nando Speed
-Velocidad Nando
-
-# drivers/hexa.c: 84
-Naughty Pics
-Imagén Indecente
-
-# cheat.c: 1049
+# cheat.c: 1052
 Near To
 Cerca De
 
-# drivers/beaminv.c: 91
-Never
-Nunca
-
-# drivers/snk.c: 3769
-Never Finish (Cheat)
-Nunca Finalizar (Truco)
-
-# drivers/neogeo.c: 1108
+# drivers/neogeo.c: 932, 1292
 Next Game
 Juego Próximo
 
@@ -3298,127 +2058,79 @@ Nintendo
 Nintendo of America
 Nintendo de America
 
-# inptport.c: 340 
+# inptport.c: 343 
 No
 No
 
-# drivers/funworld.c: 489
-No Auto Hold
-Sin Auto Detener
-
-# drivers/8080bw.c: 2218
-No Extended Play
-Sin Juego Extendido
-
-# drivers/ssrj.c: 120
-No Hit
-Sin Golpe
-
-# ui_text.c: 214
+# ui_text.c: 217
 No previous values saved
 No hay valores previos guardados
 
-# cheat.c: 1104, 2911 inptport.c: 445 sound/custom.c: 77 
+# cheat.c: 1107, 2914 inptport.c: 448 sound/custom.c: 77 
 None
 Ninguno
 
-# cheat.c: 2919, 2934 inptport.c: 412
+# cheat.c: 2922, 2937 inptport.c: 415
 Normal
 Normal
 
-# drivers/snk.c: 3133
-Normal with continue
-Normal con continuar
-
-# drivers/snk.c: 3132
-Normal without continue
-Normal sin continuar
-
-# cheat.c: 2869
+# cheat.c: 2872
 Normal/Delay
 Normal/Retardo
 
-# drivers/8080bw.c: 2581
-Norwegian?
-Noruego?
-
-# cheat.c: 1047, 4628, 4634
+# cheat.c: 1050, 4631, 4637
 Not Equal
 No Igual
 
-# debug/mamedbg.c: 4384 
+# debug/mamedbg.c: 4403 
 Not found
 No encontrado
 
-# cheat.c: 2894
+# cheat.c: 2897
 Null
 Nulo
 
-# drivers/8080bw.c: 3275
-Number of Catch Animals
-Numero de animales Pescados
-
-# drivers/8080bw.c: 1591
-Number of Controllers
-Número de Controladores
-
-# drivers/thepit.c: 495
-Number of Good Answer for Bonus Question
-Número de Respuestas Buenas para Pregunta de Bonus
-
-# drivers/thepit.c: 494
-Number of Wrong Answer
-Número de Respuestas Falsas
-
-# ui_text.c: 187
+# ui_text.c: 190
 Number of bytes
 Número de bytes
 
-# ui_text.c: 37
+# ui_text.c: 40
 OK
 OK
 
-# common.c: 1103
+# common.c: 1122
 OPTIONAL %-12s NOT FOUND\n
 %-12s OPCIONAL NO ENCONTRADO\n
 
-# inptport.c: 338 ui_text.c: 35, 226
+# inptport.c: 341 ui_text.c: 38, 229
 Off
 Desactivado
 
-# inptport.c: 339 ui_text.c: 34, 227
+# inptport.c: 342 ui_text.c: 37, 230
 On
 Activado
 
-# inptport.c: 971
+# inptport.c: 974
 On Screen Display
 Menú en Pantalla
 
-# cheat.c: 3246 sound/discrete.h: 3176
+# cheat.c: 3249 sound/discrete.h: 3266
 One Shot
 Un Tiro
 
-# ui_text.c: 219
+# ui_text.c: 222
 One match found - added to list
 Un juego encontrado - añadido a la lista
 
-# ui_text.c: 88
+# ui_text.c: 91
 One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.
 Uno o más ROMs/CHDs para este juego son incorrectos. El juego no debería ejecutarse correctamente.
 
-# drivers/tarzan.c: 24
-Open %s
-Abrir %s
-
-# cheat.c: 3377
+# cheat.c: 3380
 Operation
 Operación
 
-# drivers/neogeo.c: 1398
-Operator Menu
-Menu de Administración
-
-# drivers/fgoal.c: 309 ui_text.c: 169 
+# drivers/fgoal.c: 309 ui_text.c: 172 
 Options
 Opciones
 
@@ -3426,19 +2138,19 @@ Opciones
 Orientation
 Orientación
 
-# ui_text.c: 139
+# ui_text.c: 142
 Other Controls
 Otros Controles
 
-# ui_text.c: 27
+# ui_text.c: 30
 Otherwise, type OK or move the joystick left then right to continue
 De otra manera, pulsa ENTER o mueve el joystick de izquierda a derecha para continuar.
 
-# audit.c: 492
+# audit.c: 495
 Out of memory reading ROM %s\n
 Fuera de memoria la lectura del ROM %s\n
 
-# ui_text.c: 56
+# ui_text.c: 59
 Overclock
 Forzar Reloj
 
@@ -3446,1491 +2158,1355 @@ Forzar Reloj
 Overseas
 Extranjero
 
-# drivers/snk.c: 2721
-P1 & P2 Fire Buttons
-Botones de Fuego para Jugador 1 y Jugador 2
-
-# drivers/8080bw.c: 2629
-P1 (Visitor) Bat
-Jugador 1 (Visitante) - Batear
-
-# drivers/8080bw.c: 2630
-P1 (Visitor) Fielders Left
-Jugador 1 (Visitante) - Servidor Izquierdo
-
-# drivers/8080bw.c: 2631
-P1 (Visitor) Fielders Right
-Jugador 1 (Visitante) - Servidor Derecho
-
-# drivers/8080bw.c: 2635
-P1 (Visitor) Pitch Fast
-Jugador 1 (Visitante) - Inclinación Rápida
-
-# drivers/8080bw.c: 2632
-P1 (Visitor) Pitch Left
-Jugador 1 (Visitante) - Inclinación Izquierda
-
-# drivers/8080bw.c: 2633
-P1 (Visitor) Pitch Right
-Jugador 1 (Visitante) - Inclinación Derecha
-
-# drivers/8080bw.c: 2634
-P1 (Visitor) Pitch Slow
-Jugador 1 (Visitante) - Inclinación Lenta
-
-# drivers/clayshoo.c: 104
-P1 Amateur Difficulty
-Jugador 1 - Díficultad Aficionado
-
-# drivers/cherrym.c: 178
+# drivers/cherrym.c: 178 drivers/neogeo.c: 1253
 P1 Big
 Jugador 1 - Grande
 
-# inptport.c: 486
+# inptport.c: 489
 P1 Button 1
 Jugador 1 - Botón 1
 
-# inptport.c: 495
+# inptport.c: 498
 P1 Button 10
 Jugador 1 - Botón 10
 
-# inptport.c: 487
+# inptport.c: 490
 P1 Button 2
 Jugador 1 - Botón 2
 
-# inptport.c: 488
+# inptport.c: 491
 P1 Button 3
 Jugador 1 - Botón 3
 
-# drivers/cps1.c: 1300
-P1 Button 3 (Cheat)
-Jugador 1 - Botón 3 (Truco)
-
-# inptport.c: 489
+# inptport.c: 492
 P1 Button 4
 Jugador 1 - Botón 4
 
-# inptport.c: 490
+# inptport.c: 493
 P1 Button 5
 Jugador 1 - Botón 5
 
-# inptport.c: 491
+# inptport.c: 494
 P1 Button 6
 Jugador 1 - Botón 6
 
-# inptport.c: 492
+# inptport.c: 495
 P1 Button 7
 Jugador 1 - Botón 7
 
-# inptport.c: 493
+# inptport.c: 496
 P1 Button 8
 Jugador 1 - Botón 8
 
-# inptport.c: 494
+# inptport.c: 497
 P1 Button 9
 Jugador 1 - Botón 9
 
-# inptport.c: 528
+# inptport.c: 531
 P1 Custom 1
 Jugador 1 - Personalizado 1
 
-# inptport.c: 529
+# inptport.c: 532
 P1 Custom 2
 Jugador 1 - Personalizado 2
 
-# inptport.c: 530
+# inptport.c: 533
 P1 Custom 3
 Jugador 1 - Personalizado 3
 
-# inptport.c: 531
+# inptport.c: 534
 P1 Custom 4
 Jugador 1 - Personalizado 4
 
-# drivers/4enraya.c: 135 inptport.c: 467, 473
+# drivers/4enraya.c: 135 inptport.c: 470, 476
 P1 Down
 Jugador 1 - Abajo
 
-# drivers/clayshoo.c: 105
-P1 Expert Difficulty
-Jugador 1 - Díficultad Experto
-
-# drivers/8080bw.c: 1491
-P1 Fire
-Jugador 1 - Fuego
-
-# inptport.c: 468, 474
+# inptport.c: 471, 477
 P1 Left
 Jugador 1 - Izquierda
 
-# inptport.c: 483
+# inptport.c: 486
 P1 Left/Down
 Jugador 1 - Izquierda/Abajo
 
-# inptport.c: 484
+# inptport.c: 487
 P1 Left/Left
 Jugador 1 - Izquierda/Izquierda
 
-# inptport.c: 485
+# inptport.c: 488
 P1 Left/Right
 Jugador 1 - Izquierda/Derecha
 
-# inptport.c: 482
+# inptport.c: 485
 P1 Left/Up
 Jugador 1 - Izquierda/Arriba
 
-# inptport.c: 498
+# inptport.c: 501
 P1 Mahjong A
 Jugador 1 - Mahjong A
 
-# inptport.c: 499
+# inptport.c: 502
 P1 Mahjong B
 Jugador 1 - Mahjong B
 
-# inptport.c: 520
+# inptport.c: 523
 P1 Mahjong Bet
 Jugador 1 - Mahjong Bet
 
-# includes/nb1413m3.h: 163 inptport.c: 525
+# includes/nb1413m3.h: 163 inptport.c: 528
 P1 Mahjong Big
 Jugador 1 - Mahjong Grande
 
-# inptport.c: 500
+# inptport.c: 503
 P1 Mahjong C
 Jugador 1 - Mahjong C
 
-# inptport.c: 517
+# inptport.c: 520
 P1 Mahjong Chi
 Jugador 1 - Mahjong Chi
 
-# inptport.c: 501
+# inptport.c: 504
 P1 Mahjong D
 Jugador 1 - Mahjong D
 
-# inptport.c: 523
+# inptport.c: 526
 P1 Mahjong Double Up
 Jugador 1 - Mahjong Doble Arriba
 
-# inptport.c: 502
+# inptport.c: 505
 P1 Mahjong E
 Jugador 1 - Mahjong E
 
-# inptport.c: 503
+# inptport.c: 506
 P1 Mahjong F
 Jugador 1 - Mahjong F
 
-# inptport.c: 524
+# inptport.c: 527
 P1 Mahjong Flip Flop
 Jugador 1 - Mahjong Flip Flop
 
-# inptport.c: 504
+# inptport.c: 507
 P1 Mahjong G
 Jugador 1 - Mahjong G
 
-# inptport.c: 505
+# inptport.c: 508
 P1 Mahjong H
 Jugador 1 - Mahjong H
 
-# inptport.c: 506
+# inptport.c: 509
 P1 Mahjong I
 Jugador 1 - Mahjong I
 
-# inptport.c: 507
+# inptport.c: 510
 P1 Mahjong J
 Jugador 1 - Mahjong J
 
-# inptport.c: 508
+# inptport.c: 511
 P1 Mahjong K
 Jugador 1 - Mahjong K
 
-# inptport.c: 515
+# inptport.c: 518
 P1 Mahjong Kan
 Jugador 1 - Mahjong Kan
 
-# inptport.c: 509
+# inptport.c: 512
 P1 Mahjong L
 Jugador 1 - Mahjong L
 
-# inptport.c: 521
+# inptport.c: 524
 P1 Mahjong Last Chance
 Jugador 1 - Mahjong Siguiente Posibilidad
 
-# inptport.c: 510
+# inptport.c: 513
 P1 Mahjong M
 Jugador 1 - Mahjong M
 
-# inptport.c: 511
+# inptport.c: 514
 P1 Mahjong N
 Jugador 1 - Mahjong N
 
-# inptport.c: 512
+# inptport.c: 515
 P1 Mahjong O
 Jugador 1 - Mahjong O
 
-# inptport.c: 513
+# inptport.c: 516
 P1 Mahjong P
 Jugador 1 - Mahjong P
 
-# inptport.c: 516
+# inptport.c: 519
 P1 Mahjong Pon
 Jugador 1 - Mahjong Pon
 
-# inptport.c: 514
+# inptport.c: 517
 P1 Mahjong Q
 Jugador 1 - Mahjong Q
 
-# inptport.c: 518
+# inptport.c: 521
 P1 Mahjong Reach
 Jugador 1 - Mahjong Alcance
 
-# inptport.c: 519
+# inptport.c: 522
 P1 Mahjong Ron
 Jugador 1 - Mahjong Ron
 
-# inptport.c: 522
+# inptport.c: 525
 P1 Mahjong Score
 Jugador 1 - Mahjong Marcador
 
-# includes/nb1413m3.h: 163 inptport.c: 526
+# includes/nb1413m3.h: 163 inptport.c: 529
 P1 Mahjong Small
 Jugador 1 - Mahjong Pequeño
 
-# inptport.c: 825
+# inptport.c: 828
 P1 Pedal 1
 Jugador 1 - Pedal 1
 
-# inptport.c: 834
+# inptport.c: 837
 P1 Pedal 2
 Jugador 1 - Pedal 2
 
-# inptport.c: 843
+# inptport.c: 846
 P1 Pedal 3
 Jugador 1 - Pedal 3
 
-# drivers/8080bw.c: 1439
-P1 Reload
-Jugador 1 - Recargar
-
-# inptport.c: 469, 475
+# inptport.c: 472, 478
 P1 Right
 Jugador 1 - Derecha
 
-# inptport.c: 479
+# inptport.c: 482
 P1 Right/Down
 Jugador 1 - Derecha/Abajo
 
-# inptport.c: 480
+# inptport.c: 483
 P1 Right/Left
 Jugador 1 - Derecha/Izquierda
 
-# inptport.c: 481
+# inptport.c: 484
 P1 Right/Right
 Jugador 1 - Derecha/Derecha
 
-# inptport.c: 478
+# inptport.c: 481
 P1 Right/Up
 Jugador 1 - Derecha/Arriba
 
-# drivers/lemmings.c: 140 drivers/nss.c: 339 inptport.c: 497
+# drivers/lemmings.c: 140 drivers/nss.c: 339 inptport.c: 500
 P1 Select
 Jugador 1 - Seleccionar
 
-# drivers/4enraya.c: 139
-P1 Shot
-Jugador 1 - disparo
-
-# drivers/cherrym.c: 182
+# drivers/cherrym.c: 182 drivers/neogeo.c: 1254
 P1 Small
 Jugador 1 - Pequeño
 
-# drivers/nss.c: 340 inptport.c: 496
+# drivers/nss.c: 340 inptport.c: 499
 P1 Start
 Jugador 1 - Empezar
 
-# drivers/neogeo.c: 1378
-P1 Start/Collect
-Jugador 1 - Empezar/Acumular
-
-# inptport.c: 533
+# inptport.c: 536
 P1 Toggle Autofire
 Jugador 1 - Cambiar Disparo Automático
 
-# drivers/8080bw.c: 1438
-P1 Trigger
-Jugador 1 - Gatillo
-
-# inptport.c: 466, 472
+# inptport.c: 469, 475
 P1 Up
 Jugador 1 - Arriba
 
-# drivers/8080bw.c: 2619
-P2 (Home) Bat
-Jugador 2 (Casa) - Batear
-
-# drivers/8080bw.c: 2620
-P2 (Home) Fielders Left
-Jugador 2 (Casa) - Servidor Izquierdo
-
-# drivers/8080bw.c: 2621
-P2 (Home) Fielders Right
-Jugador 2 (Casa) - Servidor Derecho
-
-# drivers/8080bw.c: 2625
-P2 (Home) Pitch Fast
-Jugador 2 (Casa) - Inclinación Rápida
-
-# drivers/8080bw.c: 2622
-P2 (Home) Pitch Left
-Jugador 2 (Casa) - Inclinación Izquierda
-
-# drivers/8080bw.c: 2623
-P2 (Home) Pitch Right
-Jugador 2 (Casa) - Inclinación Derecha
-
-# drivers/8080bw.c: 2624
-P2 (Home) Pitch Slow
-Jugador 2 (Casa) - Inclinación Lenta
-
-# drivers/clayshoo.c: 101
-P2 Amateur Difficulty
-Jugador 2 - Díficultad Aficionado
-
-# inptport.c: 548
+# inptport.c: 551
 P2 Button 1
 Jugador 2 - Botón 1
 
-# inptport.c: 557
+# inptport.c: 560
 P2 Button 10
 Jugador 2 - Botón 10
 
-# inptport.c: 549
+# inptport.c: 552
 P2 Button 2
 Jugador 2 - Botón 2
 
-# inptport.c: 550
+# inptport.c: 553
 P2 Button 3
 Jugador 2 - Botón 3
 
-# drivers/cps1.c: 1308
-P2 Button 3 (Cheat)
-Jugador 2 - Botón 3 (Truco)
-
-# inptport.c: 551
+# inptport.c: 554
 P2 Button 4
 Jugador 2 - Botón 4
 
-# inptport.c: 552
+# inptport.c: 555
 P2 Button 5
 Jugador 2 - Botón 5
 
-# inptport.c: 553
+# inptport.c: 556
 P2 Button 6
 Jugador 2 - Botón 6
 
-# inptport.c: 554
+# inptport.c: 557
 P2 Button 7
 Jugador 2 - Botón 7
 
-# inptport.c: 555
+# inptport.c: 558
 P2 Button 8
 Jugador 2 - Botón 8
 
-# inptport.c: 556
+# inptport.c: 559
 P2 Button 9
 Jugador 2 - Botón 9
 
-# inptport.c: 590
+# inptport.c: 593
 P2 Custom 1
 Jugador 2 - Personalizado 1
 
-# inptport.c: 591
+# inptport.c: 594
 P2 Custom 2
 Jugador 2 - Personalizado 2
 
-# inptport.c: 592
+# inptport.c: 595
 P2 Custom 3
 Jugador 2 - Personalizado 3
 
-# inptport.c: 593
+# inptport.c: 596
 P2 Custom 4
 Jugador 2 - Personalizado 4
 
-# drivers/4enraya.c: 137 inptport.c: 537
+# drivers/4enraya.c: 137 inptport.c: 540
 P2 Down
 Jugador 2 - Abajo
 
-# drivers/clayshoo.c: 102
-P2 Expert Difficulty
-Jugador 2 - Díficultad Experto
-
-# drivers/8080bw.c: 1484
-P2 Fire
-Jugador 2 - Fuego
-
-# inptport.c: 538
+# inptport.c: 541
 P2 Left
 Jugador 2 - Izquierda
 
-# inptport.c: 545
+# inptport.c: 548
 P2 Left/Down
 Jugador 2 - Izquierda/Abajo
 
-# inptport.c: 546
+# inptport.c: 549
 P2 Left/Left
 Jugador 2 - Izquierda/Izquierda
 
-# inptport.c: 547
+# inptport.c: 550
 P2 Left/Right
 Jugador 2 - Izquierda/Derecha
 
-# inptport.c: 544
+# inptport.c: 547
 P2 Left/Up
 Jugador 2 - Izquierda/Arriba
 
-# inptport.c: 560
+# inptport.c: 563
 P2 Mahjong A
 Jugador 2 - Mahjong A
 
-# inptport.c: 561
+# inptport.c: 564
 P2 Mahjong B
 Jugador 2 - Mahjong B
 
-# inptport.c: 582
+# inptport.c: 585
 P2 Mahjong Bet
 Jugador 2 - Mahjong Bet
 
-# includes/nb1413m3.h: 218 inptport.c: 587
+# includes/nb1413m3.h: 218 inptport.c: 590
 P2 Mahjong Big
 Jugador 2 - Mahjong Grande
 
-# inptport.c: 562
+# inptport.c: 565
 P2 Mahjong C
 Jugador 2 - Mahjong C
 
-# inptport.c: 579
+# inptport.c: 582
 P2 Mahjong Chi
 Jugador 2 - Mahjong Chi
 
-# inptport.c: 563
+# inptport.c: 566
 P2 Mahjong D
 Jugador 2 - Mahjong D
 
-# inptport.c: 585
+# inptport.c: 588
 P2 Mahjong Double Up
 Jugador 2 - Mahjong Doble Arriba
 
-# inptport.c: 564
+# inptport.c: 567
 P2 Mahjong E
 Jugador 2 - Mahjong E
 
-# inptport.c: 565
+# inptport.c: 568
 P2 Mahjong F
 Jugador 2 - Mahjong F
 
-# inptport.c: 586
+# inptport.c: 589
 P2 Mahjong Flip Flop
 Jugador 2 - Mahjong Flip Flop
 
-# inptport.c: 566
+# inptport.c: 569
 P2 Mahjong G
 Jugador 2 - Mahjong G
 
-# inptport.c: 567
+# inptport.c: 570
 P2 Mahjong H
 Jugador 2 - Mahjong H
 
-# inptport.c: 568
+# inptport.c: 571
 P2 Mahjong I
 Jugador 2 - Mahjong I
 
-# inptport.c: 569
+# inptport.c: 572
 P2 Mahjong J
 Jugador 2 - Mahjong J
 
-# inptport.c: 570
+# inptport.c: 573
 P2 Mahjong K
 Jugador 2 - Mahjong K
 
-# inptport.c: 577
+# inptport.c: 580
 P2 Mahjong Kan
 Jugador 2 - Mahjong Kan
 
-# inptport.c: 571
+# inptport.c: 574
 P2 Mahjong L
 Jugador 2 - Mahjong L
 
-# inptport.c: 583
+# inptport.c: 586
 P2 Mahjong Last Chance
 Jugador 2 - Mahjong Siguiente Posibilidad
 
-# inptport.c: 572
+# inptport.c: 575
 P2 Mahjong M
 Jugador 2 - Mahjong M
 
-# inptport.c: 573
+# inptport.c: 576
 P2 Mahjong N
 Jugador 2 - Mahjong N
 
-# inptport.c: 574
+# inptport.c: 577
 P2 Mahjong O
 Jugador 2 - Mahjong O
 
-# inptport.c: 575
+# inptport.c: 578
 P2 Mahjong P
 Jugador 2 - Mahjong P
 
-# inptport.c: 578
+# inptport.c: 581
 P2 Mahjong Pon
 Jugador 2 - Mahjong Pon
 
-# inptport.c: 576
+# inptport.c: 579
 P2 Mahjong Q
 Jugador 2 - Mahjong Q
 
-# inptport.c: 580
+# inptport.c: 583
 P2 Mahjong Reach
 Jugador 2 - Mahjong Alcance
 
-# inptport.c: 581
+# inptport.c: 584
 P2 Mahjong Ron
 Jugador 2 - Mahjong Ron
 
-# inptport.c: 584
+# inptport.c: 587
 P2 Mahjong Score
 Jugador 2 - Mahjong Marcador
 
-# includes/nb1413m3.h: 218 inptport.c: 588
+# includes/nb1413m3.h: 218 inptport.c: 591
 P2 Mahjong Small
 Jugador 2 - Mahjong Pequeño
 
-# inptport.c: 826
+# inptport.c: 829
 P2 Pedal 1
 Jugador 2 - Pedal 1
 
-# inptport.c: 835
+# inptport.c: 838
 P2 Pedal 2
 Jugador 2 - Pedal 2
 
-# inptport.c: 844
+# inptport.c: 847
 P2 Pedal 3
 Jugador 2 - Pedal 3
 
-# drivers/clayshoo.c: 106
-P2 Pro Difficulty
-Jugador 2 - Díficultad Profesional
-
-# drivers/8080bw.c: 1429
-P2 Reload
-Jugador 2 - Recargar
-
-# inptport.c: 539
+# inptport.c: 542
 P2 Right
 Jugador 2 - Derecha
 
-# inptport.c: 541
+# inptport.c: 544
 P2 Right/Down
 Jugador 2 - Derecha/Abajo
 
-# inptport.c: 542
+# inptport.c: 545
 P2 Right/Left
 Jugador 2 - Derecha/Izquierda
 
-# inptport.c: 543
+# inptport.c: 546
 P2 Right/Right
 Jugador 2 - Derecha/Derecha
 
-# inptport.c: 540
+# inptport.c: 543
 P2 Right/Up
 Jugador 2 - Derecha/Arriba
 
-# drivers/lemmings.c: 143 drivers/nss.c: 354 inptport.c: 559
+# drivers/lemmings.c: 143 drivers/nss.c: 354 inptport.c: 562
 P2 Select
 Jugador 2 - Seleccionar
 
-# drivers/4enraya.c: 140
-P2 Shot
-Jugador 2 - Disparo
-
-# drivers/nss.c: 355 inptport.c: 558
+# drivers/nss.c: 355 inptport.c: 561
 P2 Start
 Jugador 2 - Empezar
 
-# inptport.c: 595
+# inptport.c: 598
 P2 Toggle Autofire
 Jugador 2 - Cambiar Disparo Automático
 
-# drivers/8080bw.c: 1428
-P2 Trigger
-Jugador 2 - Gatillo
-
-# inptport.c: 536
+# inptport.c: 539
 P2 Up
 Jugador 2 - Arriba
 
-# inptport.c: 609
+# inptport.c: 612
 P3 Button 1
 Jugador 3 - Botón 1
 
-# inptport.c: 618
+# inptport.c: 621
 P3 Button 10
 P3 Botón 10
 
-# inptport.c: 610
+# inptport.c: 613
 P3 Button 2
 Jugador 3 - Botón 2
 
-# inptport.c: 611
+# inptport.c: 614
 P3 Button 3
 Jugador 3 - Botón 3
 
-# inptport.c: 612
+# inptport.c: 615
 P3 Button 4
 Jugador 3 - Botón 4
 
-# inptport.c: 613
+# inptport.c: 616
 P3 Button 5
 Jugador 3 - Botón 5
 
-# inptport.c: 614
+# inptport.c: 617
 P3 Button 6
 Jugador 3 - Botón 6
 
-# inptport.c: 615
+# inptport.c: 618
 P3 Button 7
 Jugador 3 - Botón 7
 
-# inptport.c: 616
+# inptport.c: 619
 P3 Button 8
 Jugador 3 - Botón 8
 
-# inptport.c: 617
+# inptport.c: 620
 P3 Button 9
 Jugador 3 - Botón 9
 
-# inptport.c: 622
+# inptport.c: 625
 P3 Custom 1
 Jugador 3 - Personalizado 1
 
-# inptport.c: 623
+# inptport.c: 626
 P3 Custom 2
 Jugador 3 - Personalizado 2
 
-# inptport.c: 624
+# inptport.c: 627
 P3 Custom 3
 Jugador 3 - Personalizado 3
 
-# inptport.c: 625
+# inptport.c: 628
 P3 Custom 4
 Jugador 3 - Personalizado 4
 
-# inptport.c: 598
+# inptport.c: 601
 P3 Down
 Jugador 3 - Abajo
 
-# inptport.c: 599
+# inptport.c: 602
 P3 Left
 Jugador 3 - Izquierda
 
-# inptport.c: 606
+# inptport.c: 609
 P3 Left/Down
 Jugador 3 - Izquierda/Abajo
 
-# inptport.c: 607
+# inptport.c: 610
 P3 Left/Left
 Jugador 3 - Izquierda/Izquierda
 
-# inptport.c: 608
+# inptport.c: 611
 P3 Left/Right
 Jugador 3 - Izquierda/Derecha
 
-# inptport.c: 605
+# inptport.c: 608
 P3 Left/Up
 Jugador 3 - Izquierda/Arriba
 
-# inptport.c: 827
+# inptport.c: 830
 P3 Pedal 1
 Jugador 3 - Pedal 1
 
-# inptport.c: 836
+# inptport.c: 839
 P3 Pedal 2
 Jugador 3 - Pedal 2
 
-# inptport.c: 845
+# inptport.c: 848
 P3 Pedal 3
 Jugador 3 - Pedal 3
 
-# inptport.c: 600
+# inptport.c: 603
 P3 Right
 Jugador 3 - Derecha
 
-# inptport.c: 602
+# inptport.c: 605
 P3 Right/Down
 Jugador 3 - Derecha/Abajo
 
-# inptport.c: 603
+# inptport.c: 606
 P3 Right/Left
 Jugador 3 - Derecha/Izquierda
 
-# inptport.c: 604
+# inptport.c: 607
 P3 Right/Right
 Jugador 3 - Derecha/Derecha
 
-# inptport.c: 601
+# inptport.c: 604
 P3 Right/Up
 Jugador 3 - Derecha/Arriba
 
-# drivers/nss.c: 369 inptport.c: 620
+# drivers/nss.c: 369 inptport.c: 623
 P3 Select
 Jugador 3 - Seleccionar
 
-# drivers/nss.c: 370 inptport.c: 619
+# drivers/nss.c: 370 inptport.c: 622
 P3 Start
 Jugador 3 - Empezar
 
-# inptport.c: 627
+# inptport.c: 630
 P3 Toggle Autofire
 Jugador 3 - Cambiar Disparo Automático
 
-# inptport.c: 597
+# inptport.c: 600
 P3 Up
 Jugador 3 - Arriba
 
-# inptport.c: 642
+# inptport.c: 645
 P4 Button 1
 Jugador 4 - Botón 1
 
-# inptport.c: 651
+# inptport.c: 654
 P4 Button 10
 Jugador 4 - Botón 10
 
-# inptport.c: 643
+# inptport.c: 646
 P4 Button 2
 Jugador 4 - Botón 2
 
-# inptport.c: 644
+# inptport.c: 647
 P4 Button 3
 Jugador 4 - Botón 3
 
-# inptport.c: 645
+# inptport.c: 648
 P4 Button 4
 Jugador 4 - Botón 4
 
-# inptport.c: 646
+# inptport.c: 649
 P4 Button 5
 Jugador 4 - Botón 5
 
-# inptport.c: 647
+# inptport.c: 650
 P4 Button 6
 Jugador 4 - Botón 6
 
-# inptport.c: 648
+# inptport.c: 651
 P4 Button 7
 Jugador 4 - Botón 7
 
-# inptport.c: 649
+# inptport.c: 652
 P4 Button 8
 Jugador 4 - Botón 8
 
-# inptport.c: 650
+# inptport.c: 653
 P4 Button 9
 Jugador 4 - Botón 9
 
-# inptport.c: 655
+# inptport.c: 658
 P4 Custom 1
 Jugador 4 - Personalizado 1
 
-# inptport.c: 656
+# inptport.c: 659
 P4 Custom 2
 Jugador 4 - Personalizado 2
 
-# inptport.c: 657
+# inptport.c: 660
 P4 Custom 3
 Jugador 4 - Personalizado 3
 
-# inptport.c: 658
+# inptport.c: 661
 P4 Custom 4
 Jugador 4 - Personalizado 4
 
-# inptport.c: 631
+# inptport.c: 634
 P4 Down
 Jugador 4 - Abajo
 
-# inptport.c: 632
+# inptport.c: 635
 P4 Left
 Jugador 4 - Izquierda
 
-# inptport.c: 639
+# inptport.c: 642
 P4 Left/Down
 Jugador 4 - Izquierda/Abajo
 
-# inptport.c: 640
+# inptport.c: 643
 P4 Left/Left
 Jugador 4 - Izquierda/Izquierda
 
-# inptport.c: 641
+# inptport.c: 644
 P4 Left/Right
 Jugador 4 - Izquierda/Derecha
 
-# inptport.c: 638
+# inptport.c: 641
 P4 Left/Up
 Jugador 4 - Izquierda/Arriba
 
-# inptport.c: 828
+# inptport.c: 831
 P4 Pedal 1
 Jugador 4 - Pedal 1
 
-# inptport.c: 837
+# inptport.c: 840
 P4 Pedal 2
 Jugador 4 - Pedal 2
 
-# inptport.c: 846
+# inptport.c: 849
 P4 Pedal 3
 Jugador 4 - Pedal 3
 
-# inptport.c: 633
+# inptport.c: 636
 P4 Right
 Jugador 4 - Derecha
 
-# inptport.c: 635
+# inptport.c: 638
 P4 Right/Down
 Jugador 4 - Derecha/Abajo
 
-# inptport.c: 636
+# inptport.c: 639
 P4 Right/Left
 Jugador 4 - Derecha/Izquierda
 
-# inptport.c: 637
+# inptport.c: 640
 P4 Right/Right
 Jugador 4 - Derecha/Derecha
 
-# inptport.c: 634
+# inptport.c: 637
 P4 Right/Up
 Jugador 4 - Derecha/Arriba
 
-# drivers/nss.c: 384 inptport.c: 653
+# drivers/nss.c: 384 inptport.c: 656
 P4 Select
 Jugador 4 - Seleccionar
 
-# drivers/nss.c: 385 inptport.c: 652
+# drivers/nss.c: 385 inptport.c: 655
 P4 Start
 Jugador 4 - Empezar
 
-# inptport.c: 660
+# inptport.c: 663
 P4 Toggle Autofire
 Jugador 4 - Cambiar Disparo Automático
 
-# inptport.c: 630
+# inptport.c: 633
 P4 Up
 Jugador 4 - Arriba
 
-# inptport.c: 675
+# inptport.c: 678
 P5 Button 1
 Jugador 5 - Botón 1
 
-# inptport.c: 684
+# inptport.c: 687
 P5 Button 10
 Jugador 5 - Botón 10
 
-# inptport.c: 676
+# inptport.c: 679
 P5 Button 2
 Jugador 5 - Botón 2
 
-# inptport.c: 677
+# inptport.c: 680
 P5 Button 3
 Jugador 5 - Botón 3
 
-# inptport.c: 678
+# inptport.c: 681
 P5 Button 4
 Jugador 5 - Botón 4
 
-# inptport.c: 679
+# inptport.c: 682
 P5 Button 5
 Jugador 5 - Botón 5
 
-# inptport.c: 680
+# inptport.c: 683
 P5 Button 6
 Jugador 5 - Botón 6
 
-# inptport.c: 681
+# inptport.c: 684
 P5 Button 7
 Jugador 5 - Botón 7
 
-# inptport.c: 682
+# inptport.c: 685
 P5 Button 8
 Jugador 5 - Botón 8
 
-# inptport.c: 683
+# inptport.c: 686
 P5 Button 9
 Jugador 5 - Botón 9
 
-# inptport.c: 688
+# inptport.c: 691
 P5 Custom 1
 Jugador 5 - Personalizado 1
 
-# inptport.c: 689
+# inptport.c: 692
 P5 Custom 2
 Jugador 5 - Personalizado 2
 
-# inptport.c: 690
+# inptport.c: 693
 P5 Custom 3
 Jugador 5 - Personalizado 3
 
-# inptport.c: 691
+# inptport.c: 694
 P5 Custom 4
 Jugador 5 - Personalizado 4
 
-# inptport.c: 664
+# inptport.c: 667
 P5 Down
 Jugador 5 - Abajo
 
-# inptport.c: 665
+# inptport.c: 668
 P5 Left
 Jugador 5 - Izquierda
 
-# inptport.c: 672
+# inptport.c: 675
 P5 Left/Down
 Jugador 5 - Izquierda/Abajo
 
-# inptport.c: 673
+# inptport.c: 676
 P5 Left/Left
 Jugador 5 - Izquierda/Izquierda
 
-# inptport.c: 674
+# inptport.c: 677
 P5 Left/Right
 Jugador 5 - Izquierda/Derecha
 
-# inptport.c: 671
+# inptport.c: 674
 P5 Left/Up
 Jugador 5 - Izquierda/Arriba
 
-# inptport.c: 829
+# inptport.c: 832
 P5 Pedal 1
 Jugador 5 - Pedal 1
 
-# inptport.c: 838
+# inptport.c: 841
 P5 Pedal 2
 Jugador 5 - Pedal 2
 
-# inptport.c: 847
+# inptport.c: 850
 P5 Pedal 3
 Jugador 5 - Pedal 3
 
-# inptport.c: 666
+# inptport.c: 669
 P5 Right
 Jugador 5 - Derecha
 
-# inptport.c: 668
+# inptport.c: 671
 P5 Right/Down
 Jugador 5 - Derecha/Abajo
 
-# inptport.c: 669
+# inptport.c: 672
 P5 Right/Left
 Jugador 5 - Derecha/Izquierda
 
-# inptport.c: 670
+# inptport.c: 673
 P5 Right/Right
 Jugador 5 - Derecha/Derecha
 
-# inptport.c: 667
+# inptport.c: 670
 P5 Right/Up
 Jugador 5 - Derecha/Arriba
 
-# inptport.c: 686
+# inptport.c: 689
 P5 Select
 Jugador 5 - Seleccionar
 
-# inptport.c: 685
+# inptport.c: 688
 P5 Start
 Jugador 5 - Empezar
 
-# inptport.c: 693
+# inptport.c: 696
 P5 Toggle Autofire
 Jugador 5 - Cambiar Disparo Automático
 
-# inptport.c: 663
+# inptport.c: 666
 P5 Up
 Jugador 5 - Arriba
 
-# inptport.c: 708
+# inptport.c: 711
 P6 Button 1
 Jugador 6 - Botón 1
 
-# inptport.c: 717
+# inptport.c: 720
 P6 Button 10
 Jugador 6 - Botón 10
 
-# inptport.c: 709
+# inptport.c: 712
 P6 Button 2
 Jugador 6 - Botón 2
 
-# inptport.c: 710
+# inptport.c: 713
 P6 Button 3
 Jugador 6 - Botón 3
 
-# inptport.c: 711
+# inptport.c: 714
 P6 Button 4
 Jugador 6 - Botón 4
 
-# inptport.c: 712
+# inptport.c: 715
 P6 Button 5
 Jugador 6 - Botón 5
 
-# inptport.c: 713
+# inptport.c: 716
 P6 Button 6
 Jugador 6 - Botón 6
 
-# inptport.c: 714
+# inptport.c: 717
 P6 Button 7
 Jugador 6 - Botón 7
 
-# inptport.c: 715
+# inptport.c: 718
 P6 Button 8
 Jugador 6 - Botón 8
 
-# inptport.c: 716
+# inptport.c: 719
 P6 Button 9
 Jugador 6 - Botón 9
 
-# inptport.c: 721
+# inptport.c: 724
 P6 Custom 1
 Jugador 6 - Personalizado 1
 
-# inptport.c: 722
+# inptport.c: 725
 P6 Custom 2
 Jugador 6 - Personalizado 2
 
-# inptport.c: 723
+# inptport.c: 726
 P6 Custom 3
 Jugador 6 - Personalizado 3
 
-# inptport.c: 724
+# inptport.c: 727
 P6 Custom 4
 Jugador 6 - Personalizado 4
 
-# inptport.c: 697
+# inptport.c: 700
 P6 Down
 Jugador 6 - Abajo
 
-# inptport.c: 698
+# inptport.c: 701
 P6 Left
 Jugador 6 - Izquierda
 
-# inptport.c: 705
+# inptport.c: 708
 P6 Left/Down
 Jugador 6 - Izquierda/Abajo
 
-# inptport.c: 706
+# inptport.c: 709
 P6 Left/Left
 Jugador 6 - Izquierda/Izquierda
 
-# inptport.c: 707
+# inptport.c: 710
 P6 Left/Right
 Jugador 6 - Izquierda/Derecha
 
-# inptport.c: 704
+# inptport.c: 707
 P6 Left/Up
 Jugador 6 - Izquierda/Arriba
 
-# inptport.c: 830
+# inptport.c: 833
 P6 Pedal 1
 Jugador 6 - Pedal 1
 
-# inptport.c: 839
+# inptport.c: 842
 P6 Pedal 2
 Jugador 6 - Pedal 2
 
-# inptport.c: 848
+# inptport.c: 851
 P6 Pedal 3
 Jugador 6 - Pedal 3
 
-# inptport.c: 699
+# inptport.c: 702
 P6 Right
 Jugador 6 - Derecha
 
-# inptport.c: 701
+# inptport.c: 704
 P6 Right/Down
 Jugador 6 - Derecha/Abajo
 
-# inptport.c: 702
+# inptport.c: 705
 P6 Right/Left
 Jugador 6 - Derecha/Izquierda
 
-# inptport.c: 703
+# inptport.c: 706
 P6 Right/Right
 Jugador 6 - Derecha/Derecha
 
-# inptport.c: 700
+# inptport.c: 703
 P6 Right/Up
 Jugador 6 - Derecha/Arriba
 
-# inptport.c: 719
+# inptport.c: 722
 P6 Select
 Jugador 6 - Seleccionar
 
-# inptport.c: 718
+# inptport.c: 721
 P6 Start
 Jugador 6 - Empezar
 
-# inptport.c: 726
+# inptport.c: 729
 P6 Toggle Autofire
 Jugador 6 - Cambiar Disparo Automático
 
-# inptport.c: 696
+# inptport.c: 699
 P6 Up
 Jugador 6 - Arriba
 
-# inptport.c: 741
+# inptport.c: 744
 P7 Button 1
 Jugador 7 - Botón 1
 
-# inptport.c: 750
+# inptport.c: 753
 P7 Button 10
 Jugador 7 - Botón 10
 
-# inptport.c: 742
+# inptport.c: 745
 P7 Button 2
 Jugador 7 - Botón 2
 
-# inptport.c: 743
+# inptport.c: 746
 P7 Button 3
 Jugador 7 - Botón 4
 
-# inptport.c: 744
+# inptport.c: 747
 P7 Button 4
 Jugador 7 - Botón 4
 
-# inptport.c: 745
+# inptport.c: 748
 P7 Button 5
 Jugador 7 - Botón 5
 
-# inptport.c: 746
+# inptport.c: 749
 P7 Button 6
 Jugador 7 - Botón 6
 
-# inptport.c: 747
+# inptport.c: 750
 P7 Button 7
 Jugador 7 - Botón 7
 
-# inptport.c: 748
+# inptport.c: 751
 P7 Button 8
 Jugador 7 - Botón 8
 
-# inptport.c: 749
+# inptport.c: 752
 P7 Button 9
 Jugador 7 - Botón 9
 
-# inptport.c: 754
+# inptport.c: 757
 P7 Custom 1
 Jugador 7 - Personalizado 1
 
-# inptport.c: 755
+# inptport.c: 758
 P7 Custom 2
 Jugador 7 - Personalizado 2
 
-# inptport.c: 756
+# inptport.c: 759
 P7 Custom 3
 Jugador 7 - Personalizado 3
 
-# inptport.c: 757
+# inptport.c: 760
 P7 Custom 4
 Jugador 7 - Personalizado 4
 
-# inptport.c: 730
+# inptport.c: 733
 P7 Down
 Jugador 7 - Abajo
 
-# inptport.c: 731
+# inptport.c: 734
 P7 Left
 Jugador 7 - Izquierda
 
-# inptport.c: 738
+# inptport.c: 741
 P7 Left/Down
 Jugador 7 - Izquierda/Abajo
 
-# inptport.c: 739
+# inptport.c: 742
 P7 Left/Left
 Jugador 7 - Izquierda/Izquierda
 
-# inptport.c: 740
+# inptport.c: 743
 P7 Left/Right
 Jugador 7 - Izquierda/Derecha
 
-# inptport.c: 737
+# inptport.c: 740
 P7 Left/Up
 Jugador 7 - Izquierda/Arriba
 
-# inptport.c: 831
+# inptport.c: 834
 P7 Pedal 1
 Jugador 7 - Pedal 1
 
-# inptport.c: 840
+# inptport.c: 843
 P7 Pedal 2
 Jugador 7 - Pedal 2
 
-# inptport.c: 849
+# inptport.c: 852
 P7 Pedal 3
 Jugador 7 - Pedal 3
 
-# inptport.c: 732
+# inptport.c: 735
 P7 Right
 Jugador 7 - Derecha
 
-# inptport.c: 734
+# inptport.c: 737
 P7 Right/Down
 Jugador 7 - Derecha/Abajo
 
-# inptport.c: 735
+# inptport.c: 738
 P7 Right/Left
 Jugador 7 - Derecha/Izquierda
 
-# inptport.c: 736
+# inptport.c: 739
 P7 Right/Right
 Jugador 7 - Derecha/Derecha
 
-# inptport.c: 733
+# inptport.c: 736
 P7 Right/Up
 Jugador 7 - Derecha/Arriba
 
-# inptport.c: 752
+# inptport.c: 755
 P7 Select
 Jugador 7 - Seleccionar
 
-# inptport.c: 751
+# inptport.c: 754
 P7 Start
 Jugador 7 - Empezar
 
-# inptport.c: 759
+# inptport.c: 762
 P7 Toggle Autofire
 Jugador 7 - Cambiar Disparo Automático
 
-# inptport.c: 729
+# inptport.c: 732
 P7 Up
 Jugador 7 - Arriba
 
-# inptport.c: 774
+# inptport.c: 777
 P8 Button 1
 Jugador 8 - Botón 1
 
-# inptport.c: 783
+# inptport.c: 786
 P8 Button 10
 Jugador 8 - Botón 10
 
-# inptport.c: 775
+# inptport.c: 778
 P8 Button 2
 Jugador 8 - Botón 2
 
-# inptport.c: 776
+# inptport.c: 779
 P8 Button 3
 Jugador 8 - Botón 3
 
-# inptport.c: 777
+# inptport.c: 780
 P8 Button 4
 Jugador 8 - Botón 4
 
-# inptport.c: 778
+# inptport.c: 781
 P8 Button 5
 Jugador 8 - Botón 5
 
-# inptport.c: 779
+# inptport.c: 782
 P8 Button 6
 Jugador 8 - Botón 6
 
-# inptport.c: 780
+# inptport.c: 783
 P8 Button 7
 Jugador 8 - Botón 7
 
-# inptport.c: 781
+# inptport.c: 784
 P8 Button 8
 Jugador 8 - Botón 8
 
-# inptport.c: 782
+# inptport.c: 785
 P8 Button 9
 Jugador 8 - Botón 9
 
-# inptport.c: 787
+# inptport.c: 790
 P8 Custom 1
 Jugador 8 - Personalizado 1
 
-# inptport.c: 788
+# inptport.c: 791
 P8 Custom 2
 Jugador 8 - Personalizado 2
 
-# inptport.c: 789
+# inptport.c: 792
 P8 Custom 3
 Jugador 8 - Personalizado 3
 
-# inptport.c: 790
+# inptport.c: 793
 P8 Custom 4
 Jugador 8 - Personalizado 4
 
-# inptport.c: 763
+# inptport.c: 766
 P8 Down
 Jugador 8 - Abajo
 
-# inptport.c: 764
+# inptport.c: 767
 P8 Left
 Jugador 8 - Izquierda
 
-# inptport.c: 771
+# inptport.c: 774
 P8 Left/Down
 Jugador 8 - Izquierda/Abajo
 
-# inptport.c: 772
+# inptport.c: 775
 P8 Left/Left
 Jugador 8 - Izquierda/Izquierda
 
-# inptport.c: 773
+# inptport.c: 776
 P8 Left/Right
 Jugador 8 - Izquierda/Derecha
 
-# inptport.c: 770
+# inptport.c: 773
 P8 Left/Up
 Jugador 8 - Izquierda/Arriba
 
-# inptport.c: 832
+# inptport.c: 835
 P8 Pedal 1
 Jugador 8 - Pedal 1
 
-# inptport.c: 841
+# inptport.c: 844
 P8 Pedal 2
 Jugador 8 - Pedal 2
 
-# inptport.c: 850
+# inptport.c: 853
 P8 Pedal 3
 Jugador 8 - Pedal 3
 
-# inptport.c: 765
+# inptport.c: 768
 P8 Right
 Jugador 8 - Derecha
 
-# inptport.c: 767
+# inptport.c: 770
 P8 Right/Down
 Jugador 8 - Derecha/Abajo
 
-# inptport.c: 768
+# inptport.c: 771
 P8 Right/Left
 Jugador 8 - Derecha/Izquierda
 
-# inptport.c: 769
+# inptport.c: 772
 P8 Right/Right
 Jugador 8 - Derecha/Derecha
 
-# inptport.c: 766
+# inptport.c: 769
 P8 Right/Up
 Jugador 8 - Derecha/Arriba
 
-# inptport.c: 785
+# inptport.c: 788
 P8 Select
 Jugador 8 - Seleccionar
 
-# inptport.c: 784
+# inptport.c: 787
 P8 Start
 Jugador 8 - Empezar
 
-# inptport.c: 792
+# inptport.c: 795
 P8 Toggle Autofire
 Jugador 8 - Cambiar Disparo Automático
 
-# inptport.c: 762
+# inptport.c: 765
 P8 Up
 Jugador 8 - Arriba
 
-# drivers/dlair.c: 165
-PC %04x: read I/O port %02x\n
-PC %04x: leer puerto I/O %02x\n
-
-# drivers/dlair.c: 170
-PC %04x: write %02x to I/O port %02x\n
-PC %04x: escribir %02x para puerto I/O %02x\n
-
-# drivers/neogeo.c: 661
-PC %06x: warning: bankswitch to empty bank %02x\n
-PC %06x: peligro: conmutador para banco vacio %02x\n
-
-# drivers/taito_f2.c: 2872 inptport.c: 852 
+# drivers/taito_f2.c: 2872 inptport.c: 855 
 Paddle
 Mando
 
-# inptport.c: 853
+# inptport.c: 856
 Paddle 2
 Mando 2
 
-# inptport.c: 854
+# inptport.c: 857
 Paddle 3
 Mando 3
 
-# inptport.c: 855
+# inptport.c: 858
 Paddle 4
 Mando 4
 
-# inptport.c: 856
+# inptport.c: 859
 Paddle 5
 Mando 5
 
-# inptport.c: 857
+# inptport.c: 860
 Paddle 6
 Mando 6
 
-# inptport.c: 858
+# inptport.c: 861
 Paddle 7
 Mando 7
 
-# inptport.c: 859
+# inptport.c: 862
 Paddle 8
 Mando 8
 
-# inptport.c: 861
+# inptport.c: 864
 Paddle V
 Mando V
 
-# inptport.c: 862
+# inptport.c: 865
 Paddle V 2
 Mando V 2
 
-# inptport.c: 863
+# inptport.c: 866
 Paddle V 3
 Mando V 3
 
-# inptport.c: 864
+# inptport.c: 867
 Paddle V 4
 Mando V 4
 
-# inptport.c: 865
+# inptport.c: 868
 Paddle V 5
 Mando V 5
 
-# inptport.c: 866
+# inptport.c: 869
 Paddle V 6
 Mando V 6
 
-# inptport.c: 867
+# inptport.c: 870
 Paddle V 7
 Mando V 7
 
-# inptport.c: 868
+# inptport.c: 871
 Paddle V 8
 Mando V 8
 
-# inptport.c: 1005
+# inptport.c: 1008
 Pan Down
 Pantalla Abajo
 
-# inptport.c: 1006
+# inptport.c: 1009
 Pan Left
 Pantalla Izquierda
 
-# inptport.c: 1007
+# inptport.c: 1010
 Pan Right
 Pantalla Derecha
 
-# inptport.c: 1004
+# inptport.c: 1007
 Pan Up
 Pantalla Arriba
 
-# inptport.c: 389, 974
+# inptport.c: 392, 977
 Pause
 Pausa
 
-# drivers/vroulet.c: 146
+# drivers/cherrym.c: 200 drivers/csk.c: 283, 368, 443, 513 drivers/ddenlovr.c: 4034, 4585 drivers/funworld.c: 482, 516, 540, 574 drivers/neogeo.c: 1261 drivers/rcasino.c: 215 drivers/royalmah.c: 604, 779, 954 drivers/vroulet.c: 146
 Payout
 Pago
 
@@ -4938,175 +3514,99 @@ Pago
 Pedal
 Pedal
 
-# drivers/8080bw.c: 425
-Pence Coinage
-Sistema Monetario Peniques
-
-# drivers/tumbleb.c: 1106
-Picture Viewer
-Visor de Imágenes
-
-# drivers/4enraya.c: 115
-Pieces
-Piezas
-
-# drivers/snk.c: 3476
-Play Holes
-Jugar Hoyos
-
-# drivers/8080bw.c: 2215
-Play Mode
-Modo Juego
-
 # drivers/astrocde.c: 296 drivers/bottom9.c: 236 drivers/deniam.c: 275 drivers/destroyr.c: 209 drivers/firetrk.c: 595, 663, 746 drivers/galpanic.c: 835 drivers/skyraid.c: 143 drivers/snk.c: 4015, 4156 drivers/sprint2.c: 346, 418 drivers/sprint4.c: 340 drivers/sprint8.c: 330, 465 drivers/sspeedr.c: 182 drivers/starshp1.c: 282 drivers/suprslam.c: 262 drivers/tank8.c: 285 drivers/triplhnt.c: 173 drivers/wolfpack.c: 226 
 Play Time
 Tiempo de Juego
 
-# ui_text.c: 131
+# ui_text.c: 134
 Player 1 Controls
 Controles Jugador 1
 
-# ui_text.c: 132
+# ui_text.c: 135
 Player 2 Controls
 Controles Jugador 2
 
-# ui_text.c: 133
+# ui_text.c: 136
 Player 3 Controls
 Controles Jugador 3
 
-# ui_text.c: 134
+# ui_text.c: 137
 Player 4 Controls
 Controles Jugador 4
 
-# ui_text.c: 135
+# ui_text.c: 138
 Player 5 Controls
 Controles Jugador 5
 
-# ui_text.c: 136
+# ui_text.c: 139
 Player 6 Controls
 Controles Jugador 6
 
-# ui_text.c: 137
+# ui_text.c: 140
 Player 7 Controls
 Controles Jugador 7
 
-# ui_text.c: 138
+# ui_text.c: 141
 Player 8 Controls
 Controles Jugador 8
 
-# drivers/cclimber.c: 426
-Player title
-Título de Jugador
-
-# drivers/8080bw.c: 696
-Player's Bullet Speed (Cheat)
-Velocidad de Bala para Jugadores (Truco)
-
-# drivers/cps1.c: 1615
-Player's vitality consumption
-Consumo de vitalidad de los jugadores
-
-# inptport.c: 424
+# inptport.c: 427
 Players
 Jugadores
-
-# drivers/news.c: 61
-Poby
-Poby
-
-# drivers/hexa.c: 95
-Pobys
-Pobys
-
-# drivers/8080bw.c: 2423
-Points to Win
-Puntos para Ganar
 
 # drivers/system24.c: 1812
 Pon
 Pon
 
-# cheat.c: 3567
+# cheat.c: 3570
 Prefill
 Llenar
 
-# ui_text.c: 32
+# ui_text.c: 35
 Press Any Key
 Pulsar Una Tecla
 
-# ui_text.c: 33
+# ui_text.c: 36
 Press Select Key/Button
 Pulsar una Tecla o Botón para Continuar
 
-# cheat.c: 1035
+# cheat.c: 1038
 Previous Data
 Datos Anteriores
 
-# drivers/neogeo.c: 1110
+# drivers/neogeo.c: 932, 1294
 Previous Game
 Juego Previo
 
-# ui_text.c: 215
+# ui_text.c: 218
 Previous values already restored
 Valores anteriores ya restaurados
 
-# drivers/cps1.c: 1337
-Quickly
-Rápidamente
-
-# usrintrf.c: 4921
+# usrintrf.c: 4924
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 ¿Salir del juego?\n\nPulse la tecla ENTER para salir,\nPulse la tecla ESC para Continuar.
 
-# drivers/gunpey.c: 91
-R %x @%x\n
-R %x @%x\n
-
-# drivers/8080bw.c: 2216
-RAM/ROM
-RAM/ROM
-
-# drivers/sspeedr.c: 192
-RAM/ROM Test
-Probar RAM/ROM
-
-# common.c: 863
+# common.c: 882
 REC START
 REC START
 
-# common.c: 870
+# common.c: 889
 REC STOP (%d frames)
 REC STOP (%d imágenes)
 
-# drivers/witch.c: 650
-RESET (ONLY IN GAME)
-RESETEAR (SOLO EN JUEGO)
-
-# drivers/witch.c: 627
-RESET NVRAM
-RESETEAR NVRAM
-
-# cheat.c: 5057
+# cheat.c: 5060
 RHS
 RHS
 
-# datafile.c: 2992
+# datafile.c: 2998
 ROM NEEDS REDUMP   : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 ROMS QUE NECESITAN REDUMPEO : %3d  %3d\n(%3d ROMS EN %d JUEGOS)\n
 
-# drivers/cclimber.c: 331
-Rack Test (Cheat)
-Probar Rejilla (Truco)
-
-# drivers/poolshrk.c: 136
-Racks Per Game
-Cajas Por Juego
-
-# cheat.c: 3476
+# cheat.c: 3479
 Range Maximum
 Rango Máximo
 
-# cheat.c: 3463
+# cheat.c: 3466
 Range Minimum
 Rango Mínimo
 
@@ -5114,7 +3614,7 @@ Rango Mínimo
 Reach
 Alcanzar
 
-# inptport.c: 982
+# inptport.c: 985
 Record Movie
 Grabar Película
 
@@ -5122,101 +3622,69 @@ Grabar Película
 Red
 Rojo
 
-# drivers/vroulet.c: 199
-Red & Blue Select
-Seleccionar Rojo y Azul
-
-# drivers/cherrym.c: 301
-Reel Speed
-Velocidad de Vuelta
-
-# ui_text.c: 222
+# ui_text.c: 225
 Refresh rate
 Refrescar ratio
 
-# cheat.c: 2935, 3643 drivers/pgm.c: 585, 596 inptport.c: 393
+# cheat.c: 2938, 3646 drivers/pgm.c: 585, 596 inptport.c: 396
 Region
 Región
 
-# ui_text.c: 50
+# ui_text.c: 53
 Relative
 Relativo
 
-# cheat.c: 2938
+# cheat.c: 2941
 Relative Address
 Dirección Relativa
 
-# ui_text.c: 170
+# ui_text.c: 173
 Reload Database
 Recargar Base de Datos
-
-# drivers/tumbleb.c: 547
-Remove Monsters
-Quitar Monstruos
-
-# drivers/8080bw.c: 2542
-Replay
-Reiniciar
-
-# drivers/tourtabl.c: 141
-Replay Level
-Repetir Nivel
 
 # drivers/arcadia.c: 171 drivers/djmain.c: 500 drivers/hanaroku.c: 158 drivers/laserbat.c: 192, 271, 345 drivers/murogem.c: 111 drivers/playch10.c: 471 drivers/sengokmj.c: 238 
 Reset
 Reiniciar
 
-# inptport.c: 975 ui_text.c: 105
+# inptport.c: 978 ui_text.c: 108
 Reset Game
 Reiniciar Juego
-
-# drivers/vroulet.c: 142
-Reset Machine
-Resetear Maquina
 
 # drivers/seattle.c: 1940, 2333, 2431 drivers/vegas.c: 1863, 1895, 1909, 1939, 1983, 2079 
 Resolution
 Resolución
 
-# ui_text.c: 216
+# ui_text.c: 219
 Restoration successful
 Recuperación satisfactoria
 
-# ui_text.c: 166
+# ui_text.c: 169
 Restore Previous Results
 Recuperar los Resultados Anteriores
 
-# cheat.c: 3257
+# cheat.c: 3260
 Restore Previous Value
 Recuperar Valores Anteriores
 
-# drivers/cclimber.c: 550
-Retry on Error
-Volver a procesar Error
-
-# ui_text.c: 106
+# ui_text.c: 109
 Return to Game
 Volver al Juego
 
-# ui_text.c: 140
+# ui_text.c: 143
 Return to Groups
 Volver Atrás
 
-# ui_text.c: 30
+# ui_text.c: 33
 Return to Main Menu
 Volver al Menú Principal
 
-# ui_text.c: 31
+# ui_text.c: 34
 Return to Prior Menu
 Volver al Menú Anterior
 
-# inptport.c: 443 ui_text.c: 126
+# inptport.c: 446 ui_text.c: 129
 Reverse
 Inverso
-
-# drivers/vroulet.c: 180
-Revolutions
-Revoluciones
 
 # drivers/system24.c: 1822
 Ron
@@ -5226,21 +3694,9 @@ Ron
 Rotation
 Rotación
 
-# drivers/embargo.c: 142
-Rounds
-Rondas
-
-# datafile.c: 3225
+# datafile.c: 3231
 SHADOWS        : %3d  + %3d\n
 SOMBRAS                     : %3d  + %3d\n
-
-# drivers/witch.c: 713
-START
-EMPEZAR
-
-# drivers/witch.c: 633
-STATS
-ESTADO
 
 # drivers/aerofgt.c: 730, 831, 909, 979, 1064 drivers/crshrace.c: 283, 461 drivers/taotaido.c: 232
 Same
@@ -5250,71 +3706,59 @@ Idéntico
 Samples
 Muestras de sonido
 
-# inptport.c: 1017
+# inptport.c: 1020
 Save Cheat
 Guardar Truco
 
-# cheat.c: 5102
+# cheat.c: 5105
 Save Memory
 Memoria Guardada
 
-# inptport.c: 981
+# inptport.c: 984
 Save Snapshot
 Guardar Captura de Pantalla
 
-# inptport.c: 1013 
+# inptport.c: 1016 
 Save State
 Guardar Estado
 
-# usrintrf.c: 4879
+# usrintrf.c: 4882
 Save cancelled
 Guardar cancelado
 
-# usrintrf.c: 4906
+# usrintrf.c: 4909
 Save to position %c
 Guardar la posición %c
 
-# cpuexec.c: 718
+# cpuexec.c: 721
 Save/load capability not implemented for this game. See error.log for details.
 Capacidad de Guardar/Cargar no está implementado para este juego. Ver error.log para más detalles.
 
-# drivers/8080bw.c: 1958
-Score >= 2
-Marcador >= 2
-
-# drivers/8080bw.c: 1957
-Score >= 2.5
-Marcador >= 2.5
-
-# drivers/murogem.c: 124
-Scoring
-Puntación
-
-# drivers/turbo.c: 414 png.c: 428 
+# drivers/turbo.c: 414 png.c: 431 
 Screen
 Pantalla
 
-# ui_text.c: 47
+# ui_text.c: 50
 Screen Resolution
 Resolución de Pantalla
 
-# ui_text.c: 84
+# ui_text.c: 87
 Screen flipping in cocktail mode is not supported.
 Volver al modo anterior no está admitido.
 
-# datafile.c: 2196
+# datafile.c: 2202
 Screen flipping in cocktail mode is not supported.\n
 Volver al modo anterior no está admitido.\n
 
-# cheat.c: 6965
+# cheat.c: 6968
 Search Dialog Style
 Buscar Estilo de Diálogo
 
-# cheat.c: 6601
+# cheat.c: 6604
 Search Speed
 Búsqueda Rápida
 
-# ui_text.c: 213
+# ui_text.c: 216
 Search not initialized
 Búsqueda no iniciada
 
@@ -5322,75 +3766,71 @@ Búsqueda no iniciada
 Second Bonus
 Segundo Bonus
 
-# cheat.c: 2874, 2948 drivers/bfm_sc2.c: 2139, 2233, 2348 drivers/bwidow.c: 629 drivers/maxaflex.c: 303 drivers/megaplay.c: 75 drivers/megatech.c: 84 drivers/nbmj8688.c: 2758 drivers/trackfld.c: 617
+# cheat.c: 2877, 2951 drivers/bfm_sc2.c: 2140, 2234, 2349 drivers/bwidow.c: 629 drivers/maxaflex.c: 303 drivers/megaplay.c: 75 drivers/megatech.c: 84 drivers/nbmj8688.c: 2758 drivers/trackfld.c: 617
 Select
 Seleccionar
 
-# ui_text.c: 211
+# ui_text.c: 214
 Select Memory Areas
 Elegir Áreas de Memoria
 
-# cheat.c: 921
+# cheat.c: 924
 Select Score PL1
 Seleccionar Calificación PL1
 
-# cheat.c: 922
+# cheat.c: 925
 Select Score PL2
 Seleccionar Calificación PL2
 
-# cheat.c: 6957
+# cheat.c: 6960
 Select Search
 Elegir Búsqueda
 
-# ui_text.c: 217
+# ui_text.c: 220
 Select a value
 Elegir valor
 
-# cheat.c: 911
+# cheat.c: 914
 Select current level
 Seleccionar nivel actual
 
-# cheat.c: 910
+# cheat.c: 913
 Select next level
 Seleccionar siguiente nivel
 
-# usrintrf.c: 4872
+# usrintrf.c: 4875
 Select position to load from
 Elegir posición para cargar desde
 
-# usrintrf.c: 4870
+# usrintrf.c: 4873
 Select position to save to
 Elegir posición para guardar a
 
-# ui_text.c: 127
+# ui_text.c: 130
 Sensitivity
 Sensibilidad
 
-# drivers/snk.c: 2666
-Separate
-Separado
-
-# drivers/djmain.c: 500 drivers/pgm.c: 541 drivers/wallc.c: 190 inptport.c: 819
+# drivers/djmain.c: 500 drivers/pgm.c: 541 drivers/wallc.c: 190 inptport.c: 822
 Service
 Servicio
 
-# inptport.c: 814
+# inptport.c: 817
 Service 1
 Servicio 1
 
-# inptport.c: 815
+# inptport.c: 818
 Service 2
 Servicio 2
 
-# inptport.c: 816
+# inptport.c: 819
 Service 3
 Servicio 3
 
-# inptport.c: 817
+# inptport.c: 820
 Service 4
 Servicio 4
 
-# inptport.c: 388
+# inptport.c: 391
 Service Mode
 Modo de Servicio
 
@@ -5398,171 +3838,103 @@ Modo de Servicio
 Service Mode/Free Play
 Modo de servicio/Juego Gratuito
 
-# cheat.c: 2905 drivers/arcadia.c: 172 drivers/trackfld.c: 607 ui_text.c: 182
+# cheat.c: 2908 drivers/arcadia.c: 172 drivers/trackfld.c: 607 ui_text.c: 185
 Set
 Establecer
 
-# drivers/vp906iii.c: 226
-Set max bet to 10
-Seleccionar máxima apuesta para 10
-
-# drivers/vp906iii.c: 223
-Set max bet to 40
-Seleccionar máxima apuesta para 40
-
-# cheat.c: 3489
+# cheat.c: 3492
 Set/Clear
 Establecer/Limpiar
 
-# cheat.c: 2890
+# cheat.c: 2893
 Set/Clear Bits
 Establecer/Limpiar Bits
 
-# drivers/snk.c: 3466
-Short (10 sec)
-Corto (10 segundos)
-
-# drivers/snk.c: 3465
-Shot Time
-Anotar Tiempo
-
-# inptport.c: 984
+# inptport.c: 987
 Show Cheat List
 Mostrar Listado de Trucos
 
-# inptport.c: 986
+# inptport.c: 989
 Show Command
 Mostrar Comandos
 
-# ui_text.c: 120
+# ui_text.c: 123
 Show Command List
 Mostrar Lista de Comandos
 
-# drivers/thepit.c: 484
-Show Correct Answer
-Mostrar Respuesta Correcta
-
-# inptport.c: 989
+# inptport.c: 992
 Show Current Time
 Mostrar Tiempo Actual
 
-# inptport.c: 980
+# inptport.c: 983
 Show FPS
 Mostrar FPS
 
-# inptport.c: 976
+# inptport.c: 979
 Show Gfx
 Mostrar Gfx
 
-# inptport.c: 992
+# inptport.c: 995
 Show Input Log
 Mostrar Entrada de Log
 
-# inptport.c: 1008
+# inptport.c: 1011
 Show Profiler
 Mostrar Perfil
 
-# cheat.c: 6969
+# cheat.c: 6972
 Show Search Labels
 Mostrar Etiquetas de Búsqueda
 
-# cheat.c: 5078
+# cheat.c: 5081
 Signed
 Señalado
 
-# inptport.c: 427
+# inptport.c: 430
 Single
 Individual
 
-# cheat.c: 5070
+# cheat.c: 5073
 Size
 Tamaño
 
-# cheat.c: 6155
+# cheat.c: 6158
 Skip Bytes
 Pasar Bytes
 
-# drivers/cps1.c: 1341
+# cheat.c: 6573 drivers/4enraya.c: 119 drivers/8080bw.c: 697, 789 drivers/amidar.c: 185 drivers/angelkds.c: 479 drivers/bestleag.c: 277 drivers/bigstrkb.c: 158 drivers/brkthru.c: 233, 236, 278, 281 drivers/btime.c: 793 drivers/cninja.c: 726 drivers/cps1.c: 1068, 1339 drivers/deniam.c: 276 drivers/epos.c: 151, 154, 160 drivers/fuukifg3.c: 353 drivers/gameplan.c: 399, 850 drivers/m62.c: 611, 661, 712, 763, 815, 867, 921, 1020, 1071 drivers/mcr.c: 1137 drivers/megaplay.c: 224 drivers/metro.c: 3079 drivers/nmg5.c: 240 drivers/nmk16.c: 2661 drivers/phoenix.c: 342 drivers/portrait.c: 202 drivers/quizdna.c: 152, 240, 342 drivers/rohga.c: 442, 510 drivers/safarir.c: 188 drivers/segas16a.c: 1271 drivers/segas16b.c: 2510 drivers/sf.c: 334, 512, 650 drivers/sidepckt.c: 230 drivers/solomon.c: 168 drivers/suprridr.c: 250 drivers/system1.c: 1723 drivers/system16.c: 1795 drivers/taito_z.c: 2362, 2431 drivers/tecmo16.c: 210 drivers/thepit.c: 276, 331, 372 drivers/trackfld.c: 550 drivers/vigilant.c: 240 drivers/vsnes.c: 1064, 1775 drivers/wallc.c: 186 drivers/wilytowr.c: 461 drivers/xain.c: 398 drivers/yamato.c: 356 drivers/zac2650.c: 83, 133 ui_text.c: 211
 Slow
 Lento
 
-# ui_text.c: 204
+# ui_text.c: 207
 Slow But Sure (changed or not)
 Lento Pero Seguro (cambiado o no)
 
-# drivers/cps1.c: 1336
-Slowly
-Lentamente
-
-# drivers/cps1.c: 1163
-Small
-Pequeño
-
-# drivers/balsente.c: 749 drivers/contra.c: 222 drivers/couple.c: 212 drivers/gijoe.c: 296 drivers/mosaic.c: 207 drivers/tmnt.c: 2037, 2119, 2365 drivers/zaxxon.c: 883 ui_text.c: 43
+# drivers/balsente.c: 749 drivers/contra.c: 222 drivers/couple.c: 212 drivers/gijoe.c: 296 drivers/mosaic.c: 207 drivers/tmnt.c: 2037, 2119, 2365 drivers/zaxxon.c: 883 ui_text.c: 46
 Sound
 Sonido
 
-# inptport.c: 407 ui_lang.c: 15
+# inptport.c: 410 ui_lang.c: 15
 Spanish
 Español
-
-# drivers/4enraya.c: 118
-Speed
-Velocidad
-
-# drivers/cps1.c: 1080
-Stage Magic Continue
-Continuar Fase de Magia
-
-# drivers/cps1.c: 1633
-Stage Select
-Seleccionar Fase
-
-# drivers/tumbleb.c: 732
-Stage Skip
-Saltar Escenario
 
 # drivers/getrivia.c: 265 drivers/lvcards.c: 380
 Stand
 Stand
 
-# inptport.c: 442 
+# inptport.c: 445 
 Standard
 Estándar
 
-# drivers/snk.c: 3562
-Start Game A
-Iniciar Juego A
-
-# drivers/snk.c: 3563
-Start Game B
-Iniciar Juego B
-
-# drivers/snk.c: 3664
-Start Game C
-Iniciar Juego C
-
-# drivers/snk.c: 3665
-Start Game D
-Iniciar Juego D
-
-# drivers/snk.c: 3589
-Start Game E
-Iniciar Juego E
-
-# ui_text.c: 163
+# ui_text.c: 166
 Start a New Cheat Search
 Empezar Nueva Búsqueda de Trucos
-
-# drivers/tumbleb.c: 870
-Starting Balls
-Iniciar Bolas
 
 # drivers/funworld.c: 495, 553 
 State
 Estado
 
-# cpuexec.c: 623
+# cpuexec.c: 626
 State successfully saved.\nWarning: Save states are not officially supported for this game.
 Estado guardado satisfactoriamente.\nAtencion!: Los estados guardados no está oficialmente soportado para este juego.
 
@@ -5570,19 +3942,15 @@ Estado guardado satisfactoriamente.\nAtencion!: Los estados guardados no está of
 Statistics
 Estadísticas
 
-# ui_text.c: 64
+# ui_text.c: 67
 Statistics not available
 Estadísticas no disponibles
 
-# ui_text.c: 203
+# ui_text.c: 206
 Status (bits or flags)
 Estado (bits o banderas)
 
-# drivers/8080bw.c: 2217
-Steering
-Seguir
-
-# inptport.c: 438 
+# inptport.c: 441 
 Stereo
 Estéreo
 
@@ -5590,55 +3958,27 @@ Estéreo
 Stop
 Parar
 
-# drivers/cherrym.c: 180
-Stop / Take Score
-Parar / tomar Marcador
-
-# drivers/cclimber.c: 551
-Stop on Error
-Parar en Error
-
-# ui_text.c: 60
+# ui_text.c: 63
 Story not available
 Relato del Juego no disponible
 
-# cheat.c: 1106
+# cheat.c: 1109
 String
 Serie
 
-# drivers/8080bw.c: 2146
-Sub Volume VR1
-Sub Volumen VR1
-
-# drivers/8080bw.c: 2149
-Sub Volume VR2
-Sub Volumen VR2
-
-# drivers/8080bw.c: 2152
-Sub Volume VR3
-Sub Volumen VR3
-
-# cheat.c: 2900
+# cheat.c: 2903
 Subtract
 Quitar
 
-# drivers/wwfsstar.c: 246
-Super Techniques
-Super Tecnicas
-
-# cheat.c: 2920, 5074
+# cheat.c: 2923, 5077
 Swap
 Cambiar
 
-# drivers/funworld.c: 483
-TAB Insert
-Insertar TAB
-
-# ui_text.c: 85
+# ui_text.c: 88
 THIS GAME DOESN'T WORK PROPERLY
 ESTE JUEGO NO FUNCIONA CORRECTAMENTE
 
-# datafile.c: 2175
+# datafile.c: 2181
 THIS GAME DOESN'T WORK PROPERLY\n
 ESTE JUEGO NO FUNCIONA CORRECTAMENTE\n
 
@@ -5650,151 +3990,123 @@ Taiwán
 Take
 Caja
 
-# drivers/neogeo.c: 1171
+# drivers/neogeo.c: 998, 1042, 1098, 1175, 1224 drivers/toaplan1.c: 595, 664, 733, 1119, 1184, 1259, 1329, 1404, 1493 drivers/toaplan2.c: 2353, 2400, 2470, 2542, 2604, 2647, 2693, 2752, 2834, 2957, 3070, 3148, 3207, 3316, 3461, 3552, 3642 inptport.c: 2030
 Territory
 Territorio
 
-# drivers/dbz2.c: 280, 373 inptport.c: 390
+# drivers/dbz2.c: 280, 373 inptport.c: 393
 Test
 Prueba
 
-# drivers/8080bw.c: 1309, 1960, 2515, 2595 drivers/btime.c: 773 drivers/ddenlovr.c: 3146 drivers/eolith.c: 141 drivers/ertictac.c: 229 drivers/galpani3.c: 146 drivers/halleys.c: 1702 drivers/homedata.c: 954 drivers/hornet.c: 798 drivers/jchan.c: 733 drivers/laserbas.c: 118 drivers/macs.c: 348 drivers/nwk-tr.c: 438 drivers/nycaptor.c: 613 drivers/ohmygod.c: 223 drivers/panicr.c: 210 drivers/quasar.c: 321 drivers/raiden2.c: 426, 502, 551 drivers/segas16a.c: 1462 drivers/segas16b.c: 2793 drivers/seicross.c: 226 drivers/snk.c: 3729, 3794 drivers/ssfindo.c: 556 drivers/st0016.c: 529 drivers/suprnova.c: 624 drivers/system1.c: 1798, 1987 drivers/vegas.c: 2071
+# drivers/8080bw.c: 1309, 1960, 2515, 2595 drivers/btime.c: 773 drivers/ddenlovr.c: 3146 drivers/ertictac.c: 229 drivers/galpani3.c: 146 drivers/halleys.c: 1702 drivers/homedata.c: 954 drivers/hornet.c: 837 drivers/jchan.c: 733 drivers/laserbas.c: 117 drivers/macs.c: 348 drivers/nwk-tr.c: 559 drivers/nycaptor.c: 613 drivers/ohmygod.c: 223 drivers/panicr.c: 210 drivers/quasar.c: 321 drivers/raiden2.c: 426, 502, 551 drivers/segas16a.c: 1462 drivers/segas16b.c: 2791 drivers/seicross.c: 226 drivers/snk.c: 3729, 3794 drivers/ssfindo.c: 556 drivers/st0016.c: 266, 529 drivers/suprnova.c: 624 drivers/system1.c: 1798, 1987 drivers/vegas.c: 2071
 Test Mode
 Modo Prueba
 
-# drivers/tumbleb.c: 1252
-Test Mode (Easy Event Select)
-Modo Prueba (Seleccionar Evento fácil)
-
-# drivers/8080bw.c: 2214
-Test Modes
-Modos de Prueba
-
-# drivers/neogeo.c: 1117
+# drivers/bfm_sc2.c: 1756, 1857, 1969, 2063, 2174, 2270, 2383, 2478, 2585 drivers/dbz2.c: 280, 373 drivers/kinst.c: 517, 621 drivers/konamigq.c: 469 drivers/konamigv.c: 384, 568, 717, 889 drivers/mcr68.c: 736 drivers/midtunit.c: 108, 215, 318, 421, 524 drivers/midvunit.c: 931 drivers/midwunit.c: 156, 309, 371, 495, 548 drivers/midxunit.c: 132 drivers/midyunit.c: 222, 433, 499, 594, 684 drivers/midzeus.c: 1027, 1108, 1234 drivers/namcos10.c: 92 drivers/namcos11.c: 901, 967, 1033, 1099, 1165 drivers/namcos12.c: 1296, 1346 drivers/namcos21.c: 1963, 2040, 2117 drivers/neogeo.c: 942, 978, 1072, 1192 drivers/seattle.c: 2224, 2349, 2447 drivers/vegas.c: 2061 drivers/zn.c: 3068
 Test Switch
 Probar Interruptores
 
-# drivers/megasys1.c: 2169 ui_text.c: 48
+# drivers/megasys1.c: 2169 ui_text.c: 51
 Text
 Texto
 
-# cheat.c: 6129
+# cheat.c: 6132
 Text Label
 Calificación de Texto
 
-# ui_text.c: 80
+# ui_text.c: 83
 The colors are completely wrong.
 Los colores están completamente mal.
 
-# datafile.c: 2184
+# datafile.c: 2190
 The colors are completely wrong.\n
 Los colores están completamente mal.\n
 
-# ui_text.c: 79
+# ui_text.c: 82
 The colors aren't 100% accurate.
 Los colores no son 100% exactos.
 
-# datafile.c: 2187
+# datafile.c: 2193
 The colors aren't 100% accurate.\n
 Los colores no están 100% exactos.\n
 
-# unzip.c: 16
+# unzip.c: 27
 The format of this zipfile is not supported, please recompress it
 El formato de este archivo zip no es soportado, por favor volver a zipear
 
-# ui_text.c: 86
+# ui_text.c: 89
 The game has protection which isn't fully emulated.
 El juego tiene protección la cual no está completamente emulada.
 
-# datafile.c: 2178
+# datafile.c: 2184
 The game has protection which isn't fully emulated.\n
 El juego tiene protección la cual no está completamente emulada.\n
 
-# ui_text.c: 83
+# ui_text.c: 86
 The game lacks sound.
 El juego no tiene sonido.
 
-# datafile.c: 2190
+# datafile.c: 2196
 The game lacks sound.\n
 El juego no tiene sonido.\n
 
-# datafile.c: 2199
+# datafile.c: 2205
 The game uses two or more monitors.\n
 El juego utiliza 2 o más monitores.\n
 
-# ui_text.c: 82
+# ui_text.c: 85
 The sound emulation isn't 100% accurate.
 La emulación de sonido no es 100% exacta.
 
-# datafile.c: 2193
+# datafile.c: 2199
 The sound emulation isn't 100% accurate.\n
 La emulación de sonido no es 100% exacta.\n
 
-# ui_text.c: 81
+# ui_text.c: 84
 The video emulation isn't 100% accurate.
 La emulación del vídeo no es 100% exacta.
 
-# datafile.c: 2181
+# datafile.c: 2187
 The video emulation isn't 100% accurate.\n
 La emulación del vídeo no es 100% exacta.\n
 
-# unzip.c: 14
+# unzip.c: 25
 The zipfile seems to be corrupt, please check it
 El archivo zip parece estar corrupto, por favor chequéalo
 
-# ui_text.c: 78
+# ui_text.c: 81
 There are known problems with this game:
 Hay problemas conocidos con este juego:
 
-# ui_text.c: 87
+# ui_text.c: 90
 There are working clones of this game. They are:
 Hay clones funcionando en este juego. Son:
 
-# inptport.c: 979 
+# inptport.c: 982 
 Throttle
 Acelerar
-
-# drivers/cps1.c: 1349
-Throttle Game Speed
-Velocidad de Juego Silenciado
 
 # drivers/segaxbd.c: 740
 Throttle Lever
 Palanca para Acelerar
 
-# ui_text.c: 144
+# ui_text.c: 147
 Tickets dispensed
 Tickets repartidos
 
-# inptport.c: 391, 820
+# inptport.c: 394, 823
 Tilt
 Falta
 
-# drivers/8080bw.c: 1310, 1366, 1389, 1449, 1499, 1918, 1956, 2209, 2265, 2492, 2581 drivers/amspdwy.c: 182 drivers/cinemat.c: 388, 547 drivers/cps1.c: 3636, 3749 drivers/drtomy.c: 211 drivers/fitfight.c: 315, 453, 595 drivers/gomoku.c: 117 drivers/homedata.c: 874, 951 drivers/lazercmd.c: 570 drivers/m107.c: 276 drivers/m92.c: 1000 drivers/megaplay.c: 246 drivers/megasys1.c: 1409, 2174 drivers/metlclsh.c: 226 drivers/metro.c: 2524, 2619 drivers/nbmj8688.c: 2166, 2240 drivers/pacman.c: 2137, 2238 drivers/paradise.c: 186, 254 drivers/pcktgal.c: 160 drivers/pktgaldx.c: 252 drivers/punchout.c: 506, 577 drivers/realbrk.c: 279 drivers/segaorun.c: 622, 654, 737 drivers/segas16b.c: 2113 drivers/segaxbd.c: 759, 863, 944 drivers/snowbros.c: 1069 drivers/starfire.c: 219, 268 drivers/supbtime.c: 296 drivers/system1.c: 886, 1048, 1100 drivers/system16.c: 1034 drivers/taito_f2.c: 3319, 3416 drivers/taito_l.c: 1299, 1828, 1984, 1984 drivers/taitosj.c: 898, 983, 1425 drivers/tattack.c: 100 drivers/troangel.c: 74 drivers/tubep.c: 619 drivers/tumbleb.c: 876, 1006 drivers/vicdual.c: 311 drivers/vsnes.c: 854, 1374 drivers/wwfsstar.c: 289 drivers/zac2650.c: 182
+# drivers/8080bw.c: 1310, 1366, 1389, 1449, 1499, 1918, 1956, 2209, 2265, 2492, 2581 drivers/amspdwy.c: 182 drivers/cinemat.c: 387, 546 drivers/cps1.c: 3636, 3749 drivers/drtomy.c: 211 drivers/fitfight.c: 315, 453, 595 drivers/gomoku.c: 117 drivers/homedata.c: 874, 951 drivers/lazercmd.c: 570 drivers/m107.c: 276 drivers/m92.c: 1000 drivers/megaplay.c: 246 drivers/megasys1.c: 1409, 2174 drivers/metlclsh.c: 226 drivers/metro.c: 2524, 2619 drivers/nbmj8688.c: 2166, 2240 drivers/pacman.c: 2137, 2238 drivers/paradise.c: 186, 254 drivers/pcktgal.c: 160 drivers/pktgaldx.c: 252 drivers/punchout.c: 506, 577 drivers/realbrk.c: 279 drivers/segaorun.c: 620, 652, 735 drivers/segas16b.c: 2111 drivers/segaxbd.c: 759, 863, 944 drivers/snowbros.c: 1069 drivers/starfire.c: 219, 268 drivers/supbtime.c: 296 drivers/system1.c: 886, 1048, 1100 drivers/system16.c: 1034 drivers/taito_f2.c: 3319, 3416 drivers/taito_l.c: 1299, 1828, 1984, 1984 drivers/taitosj.c: 898, 983, 1425 drivers/tattack.c: 100 drivers/troangel.c: 74 drivers/tubep.c: 619 drivers/tumbleb.c: 876, 1006 drivers/vicdual.c: 311 drivers/vsnes.c: 854, 1374 drivers/wwfsstar.c: 289 drivers/zac2650.c: 182
 Time
 Tiempo
 
-# drivers/thepit.c: 219
-Time Limit
-Límite de Tiempo
-
-# drivers/snk.c: 3134
-Time attack 3 minutes
-3 minutos de tiempo de ataque
-
-# drivers/snk.c: 3135
-Time attack 5 minutes
-5 minutos de tiempo de ataque
-
-# drivers/clayshoo.c: 69
-Time/Bonus 1P-2P
-Tiempo/Bonus 1 Jugador-2 Jugadores
-
-# drivers/chinagat.c: 439 drivers/ddragon.c: 793 drivers/fuukifg3.c: 352 drivers/jollyjgr.c: 177 drivers/m62.c: 711, 762, 814, 866 drivers/megaplay.c: 194 drivers/quizdna.c: 151, 239, 341 drivers/segas16a.c: 968 drivers/segas16b.c: 1879 drivers/shisen.c: 140 drivers/system16.c: 646 drivers/taito_f2.c: 2026, 3230 drivers/toaplan2.c: 3750, 3865 drivers/vsnes.c: 1466, 1774
+# drivers/chinagat.c: 439 drivers/ddragon.c: 793 drivers/fuukifg3.c: 352 drivers/jollyjgr.c: 177 drivers/m62.c: 711, 762, 814, 866 drivers/megaplay.c: 194 drivers/quizdna.c: 151, 239, 341 drivers/segas16a.c: 968 drivers/segas16b.c: 1877 drivers/shisen.c: 140 drivers/st0016.c: 721 drivers/system16.c: 646 drivers/taito_f2.c: 2026, 3230 drivers/toaplan2.c: 3750, 3865 drivers/vsnes.c: 1466, 1774
 Timer
 Temporalizador
 
-# ui_text.c: 201
+# ui_text.c: 204
 Timers (+/- some value)
 Tiempos (+/- algún valor)
 
@@ -5806,163 +4118,147 @@ Título
 Toaplan
 Toaplan
 
-# ui_text.c: 228
+# ui_text.c: 231
 Toggle
 Botón
 
-# inptport.c: 983
+# inptport.c: 986
 Toggle Cheat
 Botón de Trucos
 
-# inptport.c: 1020
+# inptport.c: 1023
 Toggle Crosshair
 Cambiar Punto de Mira
 
-# inptport.c: 1012
+# inptport.c: 1015
 Toggle Debugger
 Botón de Depuración
 
-# inptport.c: 888
-Track X
-Track X
-
-# inptport.c: 889
-Track X 2
-Track X 2
-
-# inptport.c: 890
-Track X 3
-Track X 3
-
 # inptport.c: 891
-Track X 4
-Track X 4
+Track X
+Track X
 
 # inptport.c: 892
-Track X 5
-Track X 5
+Track X 2
+Track X 2
 
 # inptport.c: 893
-Track X 6
-Track X 6
+Track X 3
+Track X 3
 
 # inptport.c: 894
-Track X 7
-Track X 7
+Track X 4
+Track X 4
 
 # inptport.c: 895
-Track X 8
-Track X 8
+Track X 5
+Track X 5
+
+# inptport.c: 896
+Track X 6
+Track X 6
 
 # inptport.c: 897
-Track Y
-Track Y
+Track X 7
+Track X 7
 
 # inptport.c: 898
-Track Y 2
-Track Y 2
-
-# inptport.c: 899
-Track Y 3
-Track Y 3
+Track X 8
+Track X 8
 
 # inptport.c: 900
-Track Y 4
-Track Y 4
+Track Y
+Track Y
 
 # inptport.c: 901
-Track Y 5
-Track Y 5
+Track Y 2
+Track Y 2
 
 # inptport.c: 902
-Track Y 6
-Track Y 6
+Track Y 3
+Track Y 3
 
 # inptport.c: 903
-Track Y 7
-Track Y 7
+Track Y 4
+Track Y 4
 
 # inptport.c: 904
+Track Y 5
+Track Y 5
+
+# inptport.c: 905
+Track Y 6
+Track Y 6
+
+# inptport.c: 906
+Track Y 7
+Track Y 7
+
+# inptport.c: 907
 Track Y 8
 Track Y 8
 
-# inptport.c: 433 
+# inptport.c: 436 
 Trackball
 Trackball
 
-# cheat.c: 3208 drivers/lastduel.c: 421 
+# cheat.c: 3211 drivers/lastduel.c: 421 
 Type
 Tipo
 
-# drivers/ssrj.c: 139
-Type 1
-Tipo 1
-
-# drivers/ssrj.c: 140
-Type 2
-Tipo 2
-
-# drivers/ssrj.c: 141
-Type 3
-Tipo 3
-
-# drivers/ssrj.c: 142
-Type 4
-Tipo 4
-
-# ui_text.c: 89
+# ui_text.c: 92
 Type OK or move the joystick left then right to continue
 Pulsa OK o mueve el joystick de izquierda a derecha para continuar
 
-# inptport.c: 1002
+# inptport.c: 1005
 UI Cancel
 Cancelar Interfaz
 
-# inptport.c: 1003
+# inptport.c: 1006
 UI Clear
 Limpiar Interfaz
 
-# inptport.c: 996
+# inptport.c: 999
 UI Down
 Interfaz Abajo
 
-# inptport.c: 1000
+# inptport.c: 1003
 UI End
 Fin Interfaz Gráfica
 
-# inptport.c: 999
+# inptport.c: 1002
 UI Home
 Inicio Interfaz Gráfica
 
-# inptport.c: 997
+# inptport.c: 1000
 UI Left
 Interfaz Izquierda
 
-# inptport.c: 998
+# inptport.c: 1001
 UI Right
 Interfaz Derecha
 
-# inptport.c: 1001
+# inptport.c: 1004
 UI Select
 Seleccionar Interfaz
 
-# inptport.c: 1010
+# inptport.c: 1013
 UI Toggle
 Botón de la Interfaz
 
-# inptport.c: 1021
+# inptport.c: 1024
 UI Toggle Lock Scroll
 Alternar Cerradura de Desplazamiento en Interfaz
 
-# inptport.c: 995
+# inptport.c: 998
 UI Up
 Interfaz Arriba
 
-# datafile.c: 2976
+# datafile.c: 2982
 UNEMULATED PROTEC. : %3d  %3d\n
 PROTECCIÓN NO EMULADA       : %3d  %3d\n
 
-# cheat.c: 8085 common.c: 1138 drivers/ms32.c: 434 drivers/segahang.c: 495 drivers/segaorun.c: 533, 723
+# cheat.c: 8088 common.c: 1157 drivers/ms32.c: 434 drivers/segahang.c: 495 drivers/segaorun.c: 531, 721
 UNKNOWN
 DESCONOCIDO
 
@@ -5970,267 +4266,183 @@ DESCONOCIDO
 US
 US
 
-# drivers/neogeo.c: 1571
-US MVS (Ver. 1)
-USA MVS (Ver. 1)
-
-# drivers/neogeo.c: 1570
-US MVS (Ver. 2?)
-USA MVS (Ver. 2?)
-
-# inptport.c: 396
+# inptport.c: 399
 USA
 USA
 
-# cpuexec.c: 577
+# cpuexec.c: 580
 Unable to save due to pending anonymous timers. See error.log for details.
 No disponible para guardar temporizadores anónimos para registraciones ilegales. Ver error.log para más detalles.
 
-# drivers/neogeo.c: 1577
-Unibios MVS (Hack, Ver. 1.0)
-Unibios MVS (Hack, Ver. 1.0)
-
-# drivers/neogeo.c: 1578
-Unibios MVS (Hack, Ver. 1.1)
-Unibios MVS (Hack, Ver. 1.1)
-
-# drivers/neogeo.c: 1579
-Unibios MVS (Hack, Ver. 1.2)
-Unibios MVS (Hack, Ver. 1.2)
-
-# drivers/neogeo.c: 1580
-Unibios MVS (Hack, Ver. 1.3)
-Unibios MVS (Hack, Ver. 1.3)
-
-# drivers/neogeo.c: 1581
-Unibios MVS (Hack, Ver. 2.0)
-Unibios MVS (Hack, Ver. 2.0)
-
-# drivers/neogeo.c: 1582
-Unibios MVS (Hack, Ver. 2.1)
-Unibios MVS (Hack, Ver. 2.1)
-
-# inptport.c: 441 
+# inptport.c: 444 
 Unknown
 Desconocido
 
-# drivers/cclimber.c: 443
-Unknown 1
-Desconocido 1
-
-# drivers/cclimber.c: 546
-Unknown 2
-Desconocido 2
-
-# drivers/aerofgt.c: 853 drivers/csk.c: 261 drivers/goldstar.c: 165, 173, 197 drivers/segas16a.c: 926 drivers/segas16b.c: 1964, 2748, 2749 drivers/spy.c: 493 drivers/system16.c: 2041, 2042
+# drivers/aerofgt.c: 853 drivers/csk.c: 261 drivers/goldstar.c: 165, 173, 197 drivers/segas16a.c: 926 drivers/segas16b.c: 1962, 2746, 2747 drivers/spy.c: 493 drivers/system16.c: 2041, 2042
 Unlimited
 Ilimitado
 
-# inptport.c: 440
+# inptport.c: 443
 Unused
 No Utilizado
 
-# cheat.c: 2950
+# cheat.c: 2953
 Unused (10)
 No Utilizado (10)
 
-# cheat.c: 2950
+# cheat.c: 2953
 Unused (11)
 No Utilizado (11)
 
-# cheat.c: 2950
+# cheat.c: 2953
 Unused (12)
 No Utilizado (12)
 
-# cheat.c: 2951
+# cheat.c: 2954
 Unused (13)
 No Utilizado (13)
 
-# cheat.c: 2951
+# cheat.c: 2954
 Unused (14)
 No Utilizado (14)
 
-# cheat.c: 2951
+# cheat.c: 2954
 Unused (15)
 No Utilizado (15)
 
-# cheat.c: 2951
+# cheat.c: 2954
 Unused (16)
 No Utilizado (16)
 
-# cheat.c: 2951
+# cheat.c: 2954
 Unused (17)
 No Utilizado (17)
 
-# cheat.c: 2952
+# cheat.c: 2955
 Unused (18)
 No Utilizado (18)
 
-# cheat.c: 2952
+# cheat.c: 2955
 Unused (19)
 No Utilizado (19)
 
-# cheat.c: 2952
+# cheat.c: 2955
 Unused (20)
 No Utilizado (20)
 
-# cheat.c: 2952
+# cheat.c: 2955
 Unused (21)
 No Utilizado (21)
 
-# cheat.c: 2952
+# cheat.c: 2955
 Unused (22)
 No Utilizado (22)
 
-# cheat.c: 2953
+# cheat.c: 2956
 Unused (23)
 No Utilizado (23)
 
-# cheat.c: 2953
+# cheat.c: 2956
 Unused (24)
 No Utilizado (24)
 
-# cheat.c: 2953
+# cheat.c: 2956
 Unused (25)
 No Utilizado (25)
 
-# cheat.c: 2953
+# cheat.c: 2956
 Unused (26)
 No Utilizado (26)
 
-# cheat.c: 2953
+# cheat.c: 2956
 Unused (27)
 No Utilizado (27)
 
-# cheat.c: 2954
+# cheat.c: 2957
 Unused (28)
 No Utilizado (28)
 
-# cheat.c: 2954
+# cheat.c: 2957
 Unused (29)
 No Utilizado (29)
 
-# cheat.c: 2954
+# cheat.c: 2957
 Unused (30)
 No Utilizado (30)
 
-# cheat.c: 2954
+# cheat.c: 2957
 Unused (31)
 No Utilizado (31)
 
-# cheat.c: 2891, 2949
+# cheat.c: 2894, 2952
 Unused (4)
 No Utilizado (4)
 
-# cheat.c: 2892, 2939, 2949
+# cheat.c: 2895, 2942, 2952
 Unused (5)
 No Utilizado (5)
 
-# cheat.c: 2893, 2940, 2949
+# cheat.c: 2896, 2943, 2952
 Unused (6)
 No Utilizado (6)
 
-# cheat.c: 2941, 2949
+# cheat.c: 2944, 2952
 Unused (7)
 No Utilizado (7)
 
-# cheat.c: 2950
+# cheat.c: 2953
 Unused (8)
 No Utilizado (8)
 
-# cheat.c: 2950
+# cheat.c: 2953
 Unused (9)
 No Utilizado (9)
 
-# drivers/wwfsstar.c: 230
-Unused SW 0-6
-Sin utilizar SW 0-6
-
-# drivers/wwfsstar.c: 254
-Unused SW 1-6
-Sin utilizar SW 1-6
-
-# inptport.c: 385
+# inptport.c: 388
 Upright
 Derecha vertical
-
-# drivers/snk.c: 3623
-Upright (With VS)
-Vertical Derecho (Con Versus)
-
-# drivers/snk.c: 3624
-Upright (Without VS)
-Vertical Derecho (Sin Versus)
 
 # drivers/segaxbd.c: 697
 Upright 1
 Derecha vertical 1
 
-# drivers/cps1.c: 563
-Upright 1 Player
-1 Jugador - Vertical Derecho
-
-# drivers/cps1.c: 564
-Upright 2 Players
-2 Jugadores - Vertical Derecho
-
-# ui_text.c: 143
+# ui_text.c: 146
 Uptime
 Aumentar tiempo
 
-# ui_text.c: 25
+# ui_text.c: 28
 Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.
 Usar emuladores con ROMS que no te pertenecen está prohibido por las leyes de derechos de autor.
 
-# drivers/tarzan.c: 20
-Usage:\n%s <file1.bin> <result.bin>\n
-Usar:\n%s <file1.bin> <result.bin>\n
-
-# ui_text.c: 130
+# ui_text.c: 133
 User Interface
 Interfaz de Usuario
 
-# cheat.c: 3521
+# cheat.c: 3524
 User Select
 Usar Selección
 
-# drivers/8080bw.c: 1603
-VR1 - Music Volume
-VR1 - volumen de Música
-
-# drivers/8080bw.c: 1606
-VR2 - Explosion/Effect Volume
-VR2 - Volumén Explosión/Efectos
-
-# drivers/8080bw.c: 1609
-VR3 - Dot Volume
-VR3 - Volumén Punto
-
-# drivers/tumbleb.c: 813
-VS Round
-Versus Ronda
-
-# cheat.c: 1037, 5061 ui_text.c: 42
+# cheat.c: 1040, 5064 ui_text.c: 45
 Value
 Valor
 
-# ui_text.c: 54
+# ui_text.c: 57
 Vector Flicker
 Vector de Luz
 
-# ui_text.c: 46
+# ui_text.c: 49
 Vector Game
 Vector de Juego
 
-# ui_text.c: 55
+# ui_text.c: 58
 Vector Intensity
 Vector de Intensidad
 
-# inptport.c: 392 ui_text.c: 318
+# inptport.c: 395 ui_text.c: 319
 Version
 Versión
 
-# drivers/findout.c: 217 drivers/gameplan.c: 567, 712 drivers/jack.c: 686 drivers/thepit.c: 491 
+# drivers/findout.c: 217 drivers/gameplan.c: 567, 712 drivers/jack.c: 686 drivers/thepit.c: 550 
 Vertical
 Vertical
 
@@ -6238,183 +4450,131 @@ Vertical
 Vertically
 Verticalmente
 
-# drivers/ssrj.c: 114
-Very Difficult
-Muy Díficil
-
-# inptport.c: 408
+# inptport.c: 411
 Very Easy
 Muy fácil
 
-# drivers/cps1.c: 1343
-Very Fast
-Muy Rápido
-
-# inptport.c: 417
+# inptport.c: 420
 Very Hard
 Muy Difícil
 
-# inptport.c: 423
+# inptport.c: 426
 Very High
 Muy Alto
 
-# inptport.c: 418
+# inptport.c: 421
 Very Low
 Muy Bajo
 
-# drivers/cps1.c: 1340
+# cheat.c: 6574 drivers/cps1.c: 1338 drivers/m62.c: 920 drivers/rohga.c: 509 ui_text.c: 212
 Very Slow
 Muy Lento
 
-# ui_text.c: 165
+# ui_text.c: 168
 View Last Results
 Ver Últimos Resultados
 
-# drivers/news.c: 62
-Virus
-Virus
-
-# drivers/cps1.c: 1100
-Vitality
-Vitalidad
-
-# drivers/cps1.c: 1641
-Vitality Packs
-Paquetes de Vitalidad
-
-# drivers/cps1.c: 3655
+# drivers/cps1.c: 3647 drivers/ms32.c: 761, 834, 899 drivers/pgm.c: 566, 663, 754 drivers/ssv.c: 1679, 1864 drivers/tetrisp2.c: 674, 736
 Voice
 Voz
 
-# ui_text.c: 49
+# ui_text.c: 52
 Volume
 Volumen
 
-# inptport.c: 822
+# inptport.c: 825
 Volume Down
 Bajar Volumen
 
-# inptport.c: 823
+# inptport.c: 826
 Volume Up
 Subir Volumen
 
-# drivers/cps1.c: 3208
-Vs Play Mode
-Modo de Juego Uno Contra Otro
-
-# drivers/cps1.c: 224
-WARNING: Q sound bank overflow (%02x)\n
-PELIGRO: banco de sonido Q desbordado (%02x)\n
-
-# common.c: 1241
+# common.c: 1260
 WARNING: the game might not run correctly.\n
 ADVERTENCIA: el juego podría no correr correctamente.\n
 
-# datafile.c: 2980
+# datafile.c: 2986
 WRONG COLORS       : %3d  %3d\n
 COLORES ERRÓNEOS            : %3d  %3d\n
 
-# cheat.c: 2870
+# cheat.c: 2873
 Wait
 Esperar
 
-# drivers/snk.c: 3035
-Walk everywhere (Cheat)
-Caminar por todos lados (Truco)
-
-# cheat.c: 2872 ui_text.c: 193
+# cheat.c: 2875 ui_text.c: 196
 Watch
 Mostrar
 
-# cheat.c: 7694
+# cheat.c: 7697
 Watch %.8X (%d)
 Mostrar %.8X (%d)
 
-# cheat.c: 3343
+# cheat.c: 3346
 Watch Add Value
 Mostrar Valor Agregado
 
-# cheat.c: 3354
+# cheat.c: 3357
 Watch Format
 Mostrar Formato
 
-# cheat.c: 3365
+# cheat.c: 3368
 Watch Label
 Mostrar Nombre
 
-# cheat.c: 3323
+# cheat.c: 3326
 Watch Per Line
 Mostrar por Línea
 
-# cheat.c: 3297
+# cheat.c: 3300
 Watch Size
 Mostrar Tamaño
 
-# cheat.c: 3310
+# cheat.c: 3313
 Watch Skip
 Mostrar Siguiente
 
-# inptport.c: 1018
+# inptport.c: 1021
 Watch Value
 Mostrar Valor
 
-# cheat.c: 925
+# cheat.c: 928
 Watch me for good answer
 Míreme para una buena respuesta
 
-# ui_text.c: 171
+# ui_text.c: 174
 Watchpoint
 Punto de Vista
 
-# ui_text.c: 174
+# ui_text.c: 177
 Watchpoints
 Puntos de Vista
 
-# drivers/snk.c: 3645
-Win Match Against CPU (Cheat)
-Ganar Combate contra CPU (Truco)
-
-# drivers/vroulet.c: 202
-Winning %
-Ganar %
-
-# drivers/cps1.c: 3299
-Wisdom
-Sabiduria
-
-# drivers/funworld.c: 485
-With Joker
-Con Joker
-
-# drivers/funworld.c: 486
-Without Joker
-Sin Joker
-
-# inptport.c: 399
+# inptport.c: 402
 World
 Mundo
 
-# cheat.c: 2887
+# cheat.c: 2890
 Write
 Escribir
 
-# ui_text.c: 191
+# ui_text.c: 194
 X Position
 Posición X
 
-# cheat.c: 6186 machine/scudsp.c: 882
+# cheat.c: 6189 machine/scudsp.c: 882
 XOR
 XOR
 
-# ui_text.c: 192
+# ui_text.c: 195
 Y Position
 Posición Y
 
-# inptport.c: 341 
+# inptport.c: 344 
 Yes
 Si
 
-# unzip.c: 15
+# unzip.c: 26
 Your filesystem seems to be corrupt, please check it
 Tus archivos de sistema parecen estar corruptos, por favor chequearlos
 
@@ -6422,127 +4582,127 @@ Tus archivos de sistema parecen estar corruptos, por favor chequearlos
 Zoom
 Zoom
 
-# datafile.c: 3108
+# datafile.c: 3114
 \n    SNDINTRF:  (1)  (2)  (3)  (4)\n\n
 \n    SNDINTRF:  (1)  (2)  (3)  (4)\n\n
 
-# datafile.c: 3120
+# datafile.c: 3126
 \n    TOTAL: %4d\n
 \n    TOTAL: %4d\n
 
-# datafile.c: 3091
+# datafile.c: 3097
 \n   TOTAL: %4d\n
 \n   TOTAL: %4d\n
 
-# datafile.c: 2279, 2297
+# datafile.c: 2285, 2303
 \nORIGINAL:\n
 \nORIGINAL:\n
 
-# datafile.c: 2220
+# datafile.c: 2226
 \nROM REGION:\n
 \nREGIÓN DE ROM:\n
 
-# datafile.c: 3035
+# datafile.c: 3041
 \nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d MB (UNCOMPRESSED)\n%d MB + %d MB MERGED\n
 \nARCHIVOS ROM: %d\n%d + %d ROMS AGRUPADAS\n\nTAMAÑO DE ARCHIVO: %d MB (DESCOMPRIMIDO)\n%d MB + %d MB AGRUPADOS\n
 
-# datafile.c: 2325
+# datafile.c: 2331
 \nSOURCE: %s\n
 \nFUENTE: %s\n
 
-# datafile.c: 2132
+# datafile.c: 2138
 \nStory:\n
 \nRelato:\n
 
-# datafile.c: 3256
+# datafile.c: 3262
 \nWARNING: FPS number too high!\n
 \nADVERTENCIA: ¡El número de FPS es demasiado alto!\n
 
-# datafile.c: 2959
+# datafile.c: 2965
 \n\n %4d GAMES (ALL)\n %4d ORIGINALS  + %4d CLNS\n %4d NEOGEO     + %4d\n
 \n\n %4d JUEGOS (TODOS)\n %4d ORIGINALES + %4d CLONES\n %4d NEOGEO     + %4d\n
 
-# datafile.c: 3125
+# datafile.c: 3131
 \n\nCABINET INPUT CONTROL: (ALL)\n\n
 \n\nCONTROLES DE ENTRADA DE LA MÁQUINA: (TODOS)\n\n
 
-# datafile.c: 2283, 2301
+# datafile.c: 2289, 2307
 \n\nCLONES:\n
 \n\nCLONES:\n
 
-# datafile.c: 3065
+# datafile.c: 3071
 \n\nCPU HARDWARE (ORIGINAL GAMES)\n\n
 \n\nCPU HARDWARE (JUEGOS ORIGINALES)\n\n
 
-# datafile.c: 3232
+# datafile.c: 3238
 \n\nFRAMES PER SECOND (%d): (ALL)\n\n
 \n\nIMÁGENES POR SEGUNDO (%d): (TODO)\n\n
 
-# datafile.c: 2973
+# datafile.c: 2979
 \n\nGAME INFO FLAGS   : ORIG CLNS\n\n
 \n\nINFORMACIÓN DEL JUEGO    : ORIG CLNS\n\n
 
-# datafile.c: 3355
+# datafile.c: 3361
 \n\nMAME VERSIONS (%3d)\n\n
 \n\nVERSIONES MAME (%3d)\n\n
 
-# datafile.c: 3316
+# datafile.c: 3322
 \n\nRESOLUTION & PALETTESIZE: (ALL)\n    (%d)          (%d)\n\n
 \n\nRESOLUCIÓN & TAMAÑO DE PALETA: (TODO)\n    (%d)          (%d)\n\n
 
-# datafile.c: 3037
+# datafile.c: 3043
 \n\nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d KB (UNCOMPRESSED)\n%d KB + %d KB MERGED\n
 \n\nARCHIVOS ROM: %d\n%d + %d ROMS AGRUPADAS\n\nTAMAÑO DE ARCHIVO: %d KB (DESCOMPRIMIDO)\n%d KB + %d KB AGRUPADOS\n
 
-# datafile.c: 3096
+# datafile.c: 3102
 \n\nSOUND SYSTEM (ORIGINAL GAMES)\n\n
 \n\nSISTEMA DE SONIDO (JUEGOS ORIGINALES)\n\n
 
-# datafile.c: 3043
+# datafile.c: 3049
 \n\nTYPICAL ROMSET SIZE (ALL)\n
 \n\nTAMAÑO TIPICO DE ROMSET (TODOS)\n
 
-# datafile.c: 3345
+# datafile.c: 3351
 \n\nVERSION - DRIVERS - SUPPORT:\n\n
 \n\nVERSIÓN - DRIVERS - SOPORTE:\n\n
 
-# datafile.c: 3204
+# datafile.c: 3210
 \n\nVIDEO ASPECT RATIO X:Y (ALL)\n\n
 \n\nASPECTO DE VÍDEO X:Y (TODO)\n\n
 
-# datafile.c: 3218
+# datafile.c: 3224
 \n\nVIDEO NEEDS... : ORIG   CLNS\n\n
 \n\nVÍDEO NECESITA... : ORIG   CLNS\n\n
 
-# datafile.c: 3055
+# datafile.c: 3061
 \n\nYEAR    NEW GAMES\n\n
 \n\nAÑO    JUEGOS NUEVOS\n\n
 
-# datafile.c: 2999
+# datafile.c: 3005
 \n\nYEAR: ORIG  CLNS NEOGEO  ALL\n\n
 \n\nAÑO: ORIG  CLNS NEOGEO  ALL\n\n
 
-# cheat.c: 6876
+# cheat.c: 6879
 \tPlease Go To\n\thttp://cheat.retrogames.com/faq.htm\n\tFor Documentation\n
 \tPor Favor Ir a\n\thttp://cheat.retrogames.com/faq.htm\n\tPara Documentación\n
 
-# cheat.c: 2540
+# cheat.c: 2543
 cheat database not found
 base de datos de trucos no encontrado
 
-# cheat.c: 7051
+# cheat.c: 7054
 cheat database reloaded
 base de datos de trucos recargada
 
-# info.c: 260 
+# info.c: 263 
 dial
 volante
 
-# drivers/neogeo.c: 457
+# debug/debugcmd.c: 864, 1048
 disabled
 desactivado
 
-# drivers/neogeo.c: 457
+# debug/debugcmd.c: 864, 1048 timer.c: 466
 enabled
 activado
 
@@ -6550,123 +4710,75 @@ activado
 font\\fontname.fnt
 font\\fontname.fnt
 
-# memory.c: 3098 
+# memory.c: 3101 
 invalid
 inválido
 
-# drivers/neogeo.c: 735
-irq2start = %d, current_rasterline = %d, current_rastercounter = %d\n
-irq2start = %d, current_rasterline = %d, current_rastercounter = %d\n
-
-# drivers/genesis.c: 677
-latch set, value %x\n
-determinar cerrojo, valor %x\n
-
-# info.c: 272 
+# info.c: 275 
 lightgun
 pistola
 
-# input.c: 969, 1269
+# input.c: 972, 1272
 n/a
 nada
 
-# cheat.c: 5665
+# cheat.c: 5668
 no results for this region
 sin resultados para esta región
 
-# cheat.c: 5667
+# cheat.c: 5670
 no results found
 resultados no encontrados
 
-# input.c: 964
+# input.c: 967
 not
 no
 
-# cheat.c: 2477
+# cheat.c: 2480
 null name
 nombre inválido
 
-# input.c: 965
+# input.c: 968
 or
 o
 
-# info.c: 257 
+# info.c: 260 
 paddle
 paleta
 
-# drivers/neogeo.c: 457
-raster effects %s
-efectos de barrido %s
-
-# drivers/snk.c: 360
-read from unmapped input port:%d\n
-leer desde puerto de entrada sin mapear:%d\n
-
-# drivers/genesis.c: 763
-reading whilst latch being set!\n
-leer mientras es determinado el cerrojo!\n
-
-# cheat.c: 5837, 6706
+# cheat.c: 5840, 6709
 region invalidated - %d results remain
 región invalidada - %d resultados restantes
 
-# cheat.c: 4936, 5332
+# cheat.c: 4939, 5335
 saved all memory regions
 guardadas todas las regiones de memoria
 
-# drivers/harddriv.c: 3451 drivers/rainbow.c: 796 drivers/segas16b.c: 941, 1014 drivers/taito_f2.c: 5858 sndhrdw/m72.c: 112, 113 sound/iremga20.c: 252 ui_text.c: 44 xml2info.c: 577, 578, 594
+# drivers/harddriv.c: 3451 drivers/rainbow.c: 796 drivers/segas16b.c: 941, 1012 drivers/taito_f2.c: 5858 sndhrdw/m72.c: 112, 113 sound/iremga20.c: 252 ui_text.c: 47 xml2info.c: 580, 581, 597
 sound
 sonido
 
-# ui_text.c: 45
+# ui_text.c: 48
 stereo
 estéreo
 
-# cheat.c: 2533
+# cheat.c: 2536
 there are no cheats for this game
 no hay trucos para este juego
 
-# cheat.c: 1999
+# cheat.c: 2002
 there are no old values
 no hay valores anteriores
 
-# info.c: 264 
+# info.c: 267 
 trackball
 trackball
 
-# drivers/genesis.c: 761
-undead Z80->68000 read!\n
-no muerto Z80->68000 lee!\n
-
-# drivers/dorachan.c: 27
-unhandled $2400 read @ %x\n
-no tocar $2400 al leer @ %x\n
-
-# drivers/8080bw.c: 3322
-unknown port 0 read @ %x\n
-desconocido puerto 0 leer @ %x\n
-
-# cheat.c: 2545
+# cheat.c: 2548
 unzip it and place it in the MAME directory
 deszipearlo y situarlo en el directorio de MAME
 
-# drivers/genesis.c: 672
-value %x written to latch\n
-valor %x escrito a cerrojo\n
-
-# cheat.c: 1995
+# cheat.c: 1998
 values restored
 valores restaurados
-
-# drivers/neogeo.c: 653
-warning: bankswitch to %02x but no banks available\n
-peligro: conmutador a %02x pero no hay disponible bancos\n
-
-# drivers/toratora.c: 147
-watchdog!
-Perro Guardian!
-
-# drivers/genesis.c: 765
-z80 read from address %x\n
-z80 lectura desde dirección %x\n
 

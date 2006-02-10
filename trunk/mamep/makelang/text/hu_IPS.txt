@@ -1,8 +1,8 @@
-# 22
+# 20
 CPS1
 CPS1
 
-# 31
+# 30
 CPS2
 CPS2
 
@@ -14,11 +14,11 @@ IPS
 Misc
 Különféle
 
-# 36
+# 35
 Neo-Geo
 Neo-Geo
 
-# 89
+# 93
 PGM
 PGM
 

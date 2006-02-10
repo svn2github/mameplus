@@ -269,9 +269,8 @@ static struct rc_option opts[] = {
 #ifdef USE_IPS
 	{ "ips", NULL, rc_string, &options.patchname, NULL, 0, 0, init_ips, "ips datfile name"},
 #endif /* USE_IPS */
-	{ "confirm_quit", NULL, rc_bool, &options.confirm_quit, "1", 0, 0, NULL, "confirm quit" },
 #ifdef AUTO_PAUSE_PLAYBACK
-	{ "auto_pause_playback", NULL, rc_bool, &options.auto_pause_playback, "0", 0, 0, NULL, "automatic pause when playback is started and finished" },
+	{ "auto_pause_playback", NULL, rc_bool, &options.auto_pause_playback, "0", 0, 0, NULL, "automatic pause when playback is finished" },
 #endif /* AUTO_PAUSE_PLAYBACK */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 	/* ks hcmame s switch m68k core */
@@ -875,21 +874,21 @@ static int config_handle_arg(char *arg)
 	}
 	else
   	{
-		rompath_extra = win_dirname(arg);
+	rompath_extra = win_dirname(arg);
 
-		if (rompath_extra && !strlen(rompath_extra))
-		{
-			free (rompath_extra);
-			rompath_extra = NULL;
-		}
+	if (rompath_extra && !strlen(rompath_extra))
+	{
+		free (rompath_extra);
+		rompath_extra = NULL;
+	}
 
-		gamename = arg;
+	gamename = arg;
 		gamename = win_basename(gamename);
 		gamename = win_strip_extension(gamename);
 
 		/* do we have a driver for this? */
 		for (i = 0; drivers[i]; i++)
-		{
+	{
 			if (mame_stricmp(gamename, drivers[i]->name) == 0)
 			{
 				game_index = i;

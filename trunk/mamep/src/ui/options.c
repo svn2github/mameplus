@@ -494,7 +494,6 @@ static struct rc_option rc_game_opts[] =
 	{ "a2d_deadzone", "a2d", rc_float, &gOpts.f_a2d, "0.3", 0.0, 1.0, NULL, "minimal analog value for digital input" },
 	{ "ctrlr", NULL, rc_string, &gOpts.ctrlr, "Standard", 0, 0, NULL, "preconfigure for specified controller" },
 #ifdef USE_JOY_MOUSE_MOVE
-	// Support Stick-type Pointing Device (miko2u@hotmail.com)
 	{ "stickpoint", NULL, rc_bool, &gOpts.use_stickpoint, "0", 0, 0, NULL, "enable pointing stick input" },
 #endif /* USE_JOY_MOUSE_MOVE */
 #ifdef JOYSTICK_ID
@@ -569,12 +568,10 @@ static struct rc_option rc_game_opts[] =
 #ifdef USE_IPS
 	{ "ips", NULL, rc_string, &gOpts.patchname, NULL, 0, 0, NULL, "ips datfile name"},
 #endif /* USE_IPS */
-	{ "confirm_quit", NULL, rc_bool, &gOpts.confirm_quit, "1", 0, 0, NULL, "enable confirm quit" },
 #ifdef AUTO_PAUSE_PLAYBACK
-	{ "auto_pause_playback", NULL, rc_bool, &gOpts.auto_pause_playback, "0", 0, 0, NULL, "automatic pause when playback is started and finished" },
+	{ "auto_pause_playback", NULL, rc_bool, &gOpts.auto_pause_playback, "0", 0, 0, NULL, "automatic pause when playback is finished" },
 #endif /* AUTO_PAUSE_PLAYBACK */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-	/* ks hcmame s switch m68k core */
 	{ "m68k_core", NULL, rc_int, &gOpts.m68k_core, "0", 0, 2, NULL, "change m68k core (0:C, 1:DRC, 2:ASM+DRC)" },
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 #ifdef TRANS_UI
@@ -684,7 +681,7 @@ static struct rc_option rc_winui_opts[] =
 	{ "offset_clones", NULL, rc_bool, &settings.offset_clones, "1", 0, 0, NULL, "no offset for clones missing parent in view" },
 	{ "game_caption", NULL, rc_bool, &settings.game_caption, "1", 0, 0, NULL, "show game caption" },
 #ifdef USE_SHOW_SPLASH_SCREEN
-	{ "display_splash_screen", NULL, rc_bool, &settings.display_splash_screen, "1", 0, 0, NULL, "display splash screen on start" },
+	{ "display_splash_screen", NULL, rc_bool, &settings.display_splash_screen, "0", 0, 0, NULL, "display splash screen on start" },
 #endif /* USE_SHOW_SPLASH_SCREEN */
 
 	{ "Windows UI specific general options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },

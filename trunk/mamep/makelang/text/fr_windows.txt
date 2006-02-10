@@ -1,12 +1,12 @@
-# windows/fronthlp.c: 460
+# windows/fronthlp.c: 458
         MAME -createconfig to create a mame.ini\n\n
         MAME -createconfig pour créer mame.ini\n\n
 
-# windows/fronthlp.c: 459
+# windows/fronthlp.c: 457
         MAME -showconfig   for a list of configuration options\n
         MAME -showconfig   Pour la liste des options de configuration\n
 
-# windows/fronthlp.c: 458
+# windows/fronthlp.c: 456
         MAME -showusage    for a brief list of options\n
         MAME -showusage    Pour une bréve liste des options\n
 
@@ -14,7 +14,7 @@
    ignoring line\n
    ligne ignorée\n
 
-# windows/config.c: 541
+# windows/config.c: 543
  %s running parameters
  %s Paramètres en cours
 
@@ -22,7 +22,7 @@
  (%.2lfMB video memory available)
  (%.2lfMB de mémoire vidéo disponible)
 
-# windows/fronthlp.c: 776
+# windows/fronthlp.c: 757
 %d %s found, %d were OK.\n
 %d %s trouvé, %d étaient OK.\n
 
@@ -30,7 +30,7 @@
 %s surface created: %s (%s)\n
 %s surface crée : %s (%s)\n
 
-# windows/fronthlp.c: 196
+# windows/fronthlp.c: 194
 (BAD) 
 (MAUVAIS)
 
@@ -66,11 +66,11 @@ Surface Blit crée : %s\n
 Blitter initialisation complete (%.2lfMB video memory free)\n
 Initialisation du blitter terminé (%.2lfMB de mémoire vidéo libre)\n
 
-# windows/config.c: 289
+# windows/config.c: 290
 Configuration options
 Options de configuration
 
-# windows/fronthlp.c: 796
+# windows/fronthlp.c: 777
 ERROR     %s\n
 ERREUR    %s\n
 
@@ -178,7 +178,7 @@ Relatif au frontend
 Full Screen\tAlt+Enter
 Plein écran\tAlt+Enter
 
-# windows/fronthlp.c: 534
+# windows/fronthlp.c: 515
 Game \"%s\" not supported!\n
 Jeu \"%s\" non supporté!\n
 
@@ -194,7 +194,7 @@ Initialisation du blitter DirectDraw & Direct3D 7
 Input device options
 option du périph. d'entrée
 
-# windows/fronthlp.c: 797
+# windows/fronthlp.c: 778
 KNOWN     %s\n
 CONNU     %s\n
 
@@ -206,7 +206,7 @@ Claviers=%d  Souris=%d  Joysticks=%d  Lightguns=%d\n
 LED mode (ps/2|usb)
 Mode LED (ps/2|usb)
 
-# windows/config.c: 296
+# windows/config.c: 297
 Language options
 Options de langue
 
@@ -214,7 +214,7 @@ Options de langue
 Lightgun not supported in windowed mode
 Pistolet non supporté en mode fenêtré
 
-# windows/fronthlp.c: 454
+# windows/fronthlp.c: 452
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2005 by Nicola Salmoria and the MAME Team\n\n
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2005 par Nicola Salmoria et l'équipe MAME\n\n
 
@@ -226,7 +226,7 @@ MMX non supporté\n
 MMX supported\n
 MMX supporté\n
 
-# windows/config.c: 249
+# windows/config.c: 251
 Mame CORE misc options
 Options diverses du noyau MAME
 
@@ -234,15 +234,15 @@ Options diverses du noyau MAME
 Mame CORE palette options
 Options de la palette du noyau MAME
 
-# windows/config.c: 239
+# windows/config.c: 241
 Mame CORE sound options
 Options du son du noyau MAME
 
-# windows/config.c: 231
+# windows/config.c: 233
 Mame CORE vector game options
 Options vertorielles du noyau MAME
 
-# windows/config.c: 218
+# windows/config.c: 220
 Mame CORE video options
 Options vidéos du noyau MAME
 
@@ -266,19 +266,19 @@ Souris %d Y
 Mouse %s
 Souris %s
 
-# windows/fronthlp.c: 237
+# windows/fronthlp.c: 235
 NO MATCH\n
 PAS DE CORRESPONDANCE\n
 
-# windows/fronthlp.c: 232
+# windows/fronthlp.c: 230
 NOT A ROM\n
 PAS UNE ROM\n
 
-# windows/fronthlp.c: 504
+# windows/fronthlp.c: 485
 Name:     Description:\n
 Nom :     Description:\n
 
-# windows/fronthlp.c: 637
+# windows/fronthlp.c: 618
 Name:    Clone of:\n
 Nom :   Clone de :\n
 
@@ -302,7 +302,7 @@ Couleur barre OSD (moyenne)
 Out of memory!\n
 Plus de mémoire!\n
 
-# windows/config.c: 589
+# windows/config.c: 591
 Playing back previously recorded game %s (%s) [press return]\n
 Relecture de la sauvegarde du jeu %s (%s) [presser return]\n
 
@@ -338,7 +338,7 @@ Tampon Son: overflows=%d underflows=%d\n
 Toggle fullscreen
 Basculer en Plein écran
 
-# windows/fronthlp.c: 798
+# windows/fronthlp.c: 779
 UNKNOWN   %s\n
 INCONNU   %s\n
 
@@ -350,11 +350,11 @@ Ne peut pas fermer le périphérique Clavier (erreur %d)\n
 Unable to open the keyboard device. (error %d)\n
 Ouverture de l'interface clavier impossible (erreur %d)\n
 
-# windows/fronthlp.c: 457
+# windows/fronthlp.c: 455
 Usage:  MAME gamename [options]\n\n
 Usage:  MAME nom_du_jeu [options]\n\n
 
-# windows/config.c: 548
+# windows/config.c: 550
 Usage: %s [game] [options]\nOptions:\n
 Usage: %s [jeu] [options]\nOptions:\n
 
@@ -382,11 +382,11 @@ options sonores
 Windows video options
 Options vidéo
 
-# windows/fronthlp.c: 769
+# windows/fronthlp.c: 750
 \"%8s\" not found!\n
 \"%8s\" non trouvé!\n
 
-# windows/fronthlp.c: 771
+# windows/fronthlp.c: 752
 \"%8s\" not supported!\n
 \"%8s\" non supporté!\n
 
@@ -394,7 +394,7 @@ Options vidéo
 \"%s\" controller support enabled\n
 \"%s\" support contrôleur activé\n
 
-# windows/config.c: 642
+# windows/config.c: 609
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" correspond approximativement aux jeux\nles jeux supportés (plus proches d'abords):\n\n
 
@@ -402,7 +402,7 @@ Options vidéo
 additional customised settings (undocumented)
 paramètres personnalisés supplé. (pas de doc)
 
-# windows/config.c: 228
+# windows/config.c: 230
 additional pause brightness
 luminosité en pause
 
@@ -414,7 +414,7 @@ Autoriser MAME a rendre du temps machine quand c'est possible
 analog joystick
 Joystick Analog.
 
-# windows/config.c: 255
+# windows/config.c: 257
 artwork resolution (0 for auto)
 Résolution de l'artwork (0 = auto)
 
@@ -422,7 +422,7 @@ Résolution de l'artwork (0 = auto)
 attempt to match the game's refresh rate
 tentative pour correspondre à la fréq. du jeu
 
-# windows/config.c: 227
+# windows/config.c: 229
 brightness correction
 correction de la luminosité
 
@@ -466,7 +466,7 @@ Bouton de couleur (argent)
 button color (yellow)
 Bouton de couleur (jaune)
 
-# windows/config.c: 264
+# windows/config.c: 266
 change system bios
 Changer le bios système
 
@@ -474,23 +474,19 @@ Changer le bios système
 cheat filename
 fichier de cheat
 
-# windows/fronthlp.c: 88
+# windows/fronthlp.c: 86
 compare files with known MAME roms
 comparer les fichiers avec des roms MAME connus
 
-# windows/fronthlp.c: 89
+# windows/fronthlp.c: 87
 compare files with known MAME roms (brief)
 comparer les fichiers avec des roms MAME connus (en bref)
 
-# windows/config.c: 270
-confirm quit
-Confirmer la sortie
-
-# windows/config.c: 290
+# windows/config.c: 291
 create the default configuration file
 créer le fichier de config. par défaut
 
-# windows/config.c: 254
+# windows/config.c: 256
 crop artwork to game screen only
 couper la déco à la taille de l'écran
 
@@ -538,23 +534,23 @@ répertoire de sauvegarde des NVRAMS
 directory to save states
 répertoire des états
 
-# windows/config.c: 294
+# windows/config.c: 295
 display additional diagnostic information
 afficher les infos de diagnostique suppl.
 
-# windows/config.c: 291
+# windows/config.c: 292
 display running parameters in rc style
 Affiche les paramètres dans le style rc
 
-# windows/config.c: 219
+# windows/config.c: 221
 do not apply rotation
 ne pas appliquer la rotation
 
-# windows/config.c: 232
+# windows/config.c: 234
 draw antialiased vectors
 Dessiner les verteurs antialiasés
 
-# windows/config.c: 233
+# windows/config.c: 235
 draw translucent vectors
 dessiner les vecteurs translucents
 
@@ -626,23 +622,23 @@ Activer la rotation des effets pour les jeux qui les supportent
 enable steadykey support
 activer le steadykey
 
-# windows/config.c: 256
+# windows/config.c: 258
 enable/disable cheat subsystem
 (dés-)activer le système de cheat
 
-# windows/config.c: 257
+# windows/config.c: 259
 enable/disable debugger (only if available)
 (dés-)activer le debuggueur (si dispo.)
 
-# windows/config.c: 293
+# windows/config.c: 294
 enable/disable loading of configfiles
 (dés-)activer le chargement des fichiers de config
 
-# windows/config.c: 242
+# windows/config.c: 244
 enable/disable sound and sound CPUs
 (dés-)activer le son et les CPUs sonores
 
-# windows/config.c: 245
+# windows/config.c: 247
 enable/disable volume auto adjust
 Activer/Désactiver l'ajustement Auto du volume
 
@@ -658,7 +654,7 @@ erreur valeur invalide pour %s: %s\n
 error on rc creation\n
 erreur à la création de rc\n
 
-# windows/config.c: 498
+# windows/config.c: 500
 error while parsing cmdline\n
 erreur lors de la lecture de la ligne de commande\n
 
@@ -674,7 +670,7 @@ erreur: %s requiere un argument\n
 error: couldn't open file: %s\n
 erreur: ne peux ouvrir le fichier: %s\n
 
-# windows/config.c: 880
+# windows/config.c: 855
 error: duplicate gamename: %s\n
 erreur: nom de jeu dupliqué: %s\n
 
@@ -710,7 +706,7 @@ erreur: valeur invalide pour effet: %s\n
 error: invalid value for frames_to_run: %s\n
 erreur: valeur invalide pour frames_to_run: %s\n
 
-# windows/config.c: 183
+# windows/config.c: 185
 error: invalid value for language: %s\nUse %s\n
 erreur: valeur invalide pour la langue: %s\nUser %s\n
 
@@ -726,10 +722,6 @@ erreur: valeur invalide pour la palette: %s\n
 error: invalid value for resolution: %s\n
 erreur: valeur invalide pour la résolution: %s\n
 
-# windows/config.c: 896
-error: no gamename given in %s\n
-erreur: pas de nom donné dans %s\n
-
 # windows/rc.c: 321, 388
 error: trailing garbage: \"%s\" on line: %d of file: %s\n
 erreur: reste un déchet: \"%s\" en ligne: %d du fichier: %s\n
@@ -742,11 +734,11 @@ erreur: option inconnue %s, en ligne %d du fichier: %s\n
 error: unknown option %s\n
 erreur: option inconnue %s\n
 
-# windows/config.c: 564
+# windows/config.c: 566
 failed to open %s for playback\n
 imposible d'ouvrir %s pour relecture\n
 
-# windows/config.c: 697
+# windows/config.c: 671
 failed to open %s for recording\n
 impossible d'ouvrir %s pour enregistrement\n
 
@@ -754,11 +746,11 @@ impossible d'ouvrir %s pour enregistrement\n
 feedback strength
 Force du feedback
 
-# windows/config.c: 225
+# windows/config.c: 227
 flip screen left-right
 inverser l'écran G/D
 
-# windows/config.c: 224
+# windows/config.c: 226
 flip screen upside-down
 inverser l'écran H/B
 
@@ -778,11 +770,11 @@ couleur de la fonte spéciale
 force specific zoom level
 Forcer un niveau de zoom en particulier
 
-# windows/config.c: 226
+# windows/config.c: 228
 gamma correction
 correction gamma
 
-# windows/config.c: 261
+# windows/config.c: 263
 generate error.log
 génération de error.log
 
@@ -802,23 +794,23 @@ méthode d'interpolation
 invalid
 invalide
 
-# windows/fronthlp.c: 739
+# windows/fronthlp.c: 720
 is bad\n
 est mauvais\n
 
-# windows/fronthlp.c: 749
+# windows/fronthlp.c: 730
 is best available\n
 est le meilleur disponible\n
 
-# windows/fronthlp.c: 744
+# windows/fronthlp.c: 725
 is good\n
 est bon\n
 
-# windows/fronthlp.c: 85
+# windows/fronthlp.c: 83
 list optional samples for a driver
 liste des morceaux optionnels pour un driver
 
-# windows/fronthlp.c: 84
+# windows/fronthlp.c: 82
 list required roms for a driver
 liste des roms nécessaires pour un driver
 
@@ -838,7 +830,7 @@ valeur analogique min. pour l'entrée num.
 no help available
 pas d'aide disponible
 
-# windows/config.c: 262
+# windows/config.c: 264
 output error log to debugger
 log d'erreur pour le debugger
 
@@ -858,7 +850,7 @@ chemin des romsets
 path to samplesets
 chemin des morceaux
 
-# windows/config.c: 259
+# windows/config.c: 261
 playback an input file
 relecture d'un fichier input
 
@@ -874,23 +866,23 @@ préfère RDTSC sur QueryPerformanceCounter pour le timing
 prescale effect
 Effet Prescale
 
-# windows/config.c: 260
+# windows/config.c: 262
 record an input file
 enregistrement d'un fichier input
 
-# windows/fronthlp.c: 86
+# windows/fronthlp.c: 84
 report romsets that have problems
 reporter les romsets qui posent problème
 
-# windows/fronthlp.c: 87
+# windows/fronthlp.c: 85
 report samplesets that have problems
 reporter les morceaux qui posent problème
 
-# windows/config.c: 221
+# windows/config.c: 223
 rotate screen anti-clockwise
 retourner l'écran (anti-clockwise)
 
-# windows/config.c: 220
+# windows/config.c: 222
 rotate screen clockwise
 retourner l'écran (clockwise)
 
@@ -898,7 +890,7 @@ retourner l'écran (clockwise)
 run in a window/run on full screen
 lancer dans une fenêtre/lancer en plein écran
 
-# windows/config.c: 633
+# windows/config.c: 618
 running %s (%s) [press return]
 jouer %s (%s) [presser return]
 
@@ -914,11 +906,11 @@ effets d'escalier créés : %s\n
 scanline intensity
 Intensité du scanline
 
-# windows/config.c: 258
+# windows/config.c: 260
 script for debugger (only if available)
 Script pour le débugger (si disponible)
 
-# windows/config.c: 297
+# windows/config.c: 298
 select translation language
 choix de la langue de trad.
 
@@ -926,11 +918,11 @@ choix de la langue de trad.
 set audio latency (increase to reduce glitches)
 Choix de la latence audio (augmenter pour réduire les soucis)
 
-# windows/config.c: 234
+# windows/config.c: 236
 set beam width in vector games
 Choix de la largeur des vecteurs
 
-# windows/config.c: 235
+# windows/config.c: 237
 set flickering in vector games
 choix du flicker vectoriel
 
@@ -938,7 +930,7 @@ choix du flicker vectoriel
 set frameskip explicitly (autoframeskip needs to be off)
 spécifier le frameskip (autoframeskip doit etre désacriver)
 
-# windows/config.c: 236
+# windows/config.c: 238
 set intensity in vector games
 Choix de l'intensité des vecteurs
 
@@ -978,7 +970,7 @@ Choix de l'ID du joystick (Joueur8)
 set resolution
 choix de la résolution
 
-# windows/config.c: 240
+# windows/config.c: 242
 set samplerate
 choix du samplerate
 
@@ -1006,11 +998,11 @@ Afficher les clônes
 show help message
 Afficher le message d'aide
 
-# windows/config.c: 292
+# windows/config.c: 293
 show this help
 Afficher l'aide
 
-# windows/config.c: 263
+# windows/config.c: 265
 skip displaying the game info screen
 sauter l'affichage des infos du jeu
 
@@ -1018,7 +1010,7 @@ sauter l'affichage des infos du jeu
 skip frames to speed up emulation
 sauter des images pour accélérer l'émulation
 
-# windows/config.c: 242 
+# windows/config.c: 244 
 sound
 son
 
@@ -1042,7 +1034,7 @@ Spécifier l'écran à utiliser
 start out maximized
 démarrer maximisé
 
-# windows/config.c: 265
+# windows/config.c: 267
 state to load
 Etat au chargement
 
@@ -1066,7 +1058,7 @@ Sycnhroniser au rafraichissement de l'écran
 throttle speed to the game's framerate
 Accélérer la vitesse du taux d'image du jeu
 
-# windows/config.c: 280
+# windows/config.c: 281
 transparency of UI background [0 - 255]
 Transparence du fond de l'UI [0-255]
 
@@ -1074,7 +1066,7 @@ Transparence du fond de l'UI [0-255]
 triple buffering (only if fullscreen)
 triple buffering (si en plein écran)
 
-# windows/config.c: 163
+# windows/config.c: 165
 unable to open log file\n
 Ne peux ouvrir le fichier Log\n
 
@@ -1090,31 +1082,31 @@ Utiliser DirectDraw pour le rendement
 use DirectX texture management
 Utiliser le gestionnaire de texture de DirectX
 
-# windows/config.c: 250
+# windows/config.c: 252
 use additional game artwork (sets default for specific options below)
 utiliser les déco. additionnelles (active les options ci-dessous)
 
-# windows/config.c: 251
+# windows/config.c: 253
 use backdrop artwork
 utiliser les déco. Backdrop
 
-# windows/config.c: 253
+# windows/config.c: 255
 use bezel artwork
 utiliser les déco. Bezel
 
-# windows/config.c: 252
+# windows/config.c: 254
 use overlay artwork
 utiliser les déco. Overlay
 
-# windows/config.c: 241
+# windows/config.c: 243
 use samples
 utiliser les samples
 
-# windows/config.c: 279
+# windows/config.c: 280
 use transparent background for UI text
 Utiliser un fond transparent pour le UI
 
-# windows/config.c: 243
+# windows/config.c: 245
 volume (range [-32,0])
 Volume (plage [-32,0])
 
@@ -1282,7 +1274,7 @@ Error: RGB effects (multiply mode) not supported\n
 Error: required texture size too large (max: %ix%i, need %ix%i)\n
 
 
-# windows/fronthlp.c: 461
+# windows/fronthlp.c: 459
 For usage instructions, please consult the file windows.txt\n
 
 
@@ -1322,19 +1314,19 @@ Lightgun %d Y
 Mouse %d Z
 
 
-# windows/fronthlp.c: 799
+# windows/fronthlp.c: 780
 PARTKNOWN %s\n
 
 
-# windows/config.c: 437
+# windows/config.c: 438
 Parsing %s : ERROR\n
 
 
-# windows/config.c: 447
+# windows/config.c: 448
 Parsing %s : N/A\n
 
 
-# windows/config.c: 442
+# windows/config.c: 443
 Parsing %s : OK\n
 
 
@@ -1494,19 +1486,19 @@ all available info on driver in XML format
 analog
 
 
-# windows/config.c: 272
-automatic pause when playback is started and finished
+# windows/config.c: 273
+automatic pause when playback is finished
 
 
-# windows/config.c: 223
+# windows/config.c: 225
 automatically rotate screen anti-clockwise for vertical games
 
 
-# windows/config.c: 222
+# windows/config.c: 224
 automatically rotate screen clockwise for vertical games
 
 
-# windows/config.c: 276
+# windows/config.c: 277
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 
 
@@ -1534,11 +1526,11 @@ directory for localized language files
 double
 
 
-# windows/config.c: 266
+# windows/config.c: 268
 enable automatic restore at startup and save at exit
 
 
-# windows/config.c: 298
+# windows/config.c: 299
 enable/disable local language game list
 
 
@@ -1558,11 +1550,11 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 
 
-# windows/config.c: 1008
+# windows/config.c: 1013
 error: malloc failed in win_dirname\n
 
 
-# windows/config.c: 1048
+# windows/config.c: 1053
 error: malloc failed in win_strip_extension\n
 
 
@@ -1570,11 +1562,11 @@ error: malloc failed in win_strip_extension\n
 error: unknown option type: %d, this should not happen!\n
 
 
-# windows/config.c: 268
+# windows/config.c: 270
 ips datfile name
 
 
-# windows/fronthlp.c: 754
+# windows/fronthlp.c: 735
 is missing optional files\n
 
 
@@ -1590,27 +1582,27 @@ offscreen shots reload
 pedal
 
 
-# windows/fronthlp.c: 767
+# windows/fronthlp.c: 748
 romset
 
 
-# windows/fronthlp.c: 707
+# windows/fronthlp.c: 688
 romset %s 
 
 
-# windows/fronthlp.c: 777
+# windows/fronthlp.c: 758
 romsets
 
 
-# windows/fronthlp.c: 767
+# windows/fronthlp.c: 748
 sampleset
 
 
-# windows/fronthlp.c: 730
+# windows/fronthlp.c: 711
 sampleset %s 
 
 
-# windows/fronthlp.c: 777
+# windows/fronthlp.c: 758
 samplesets
 
 

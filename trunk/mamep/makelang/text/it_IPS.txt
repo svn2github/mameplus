@@ -6,11 +6,11 @@ Varie
 Translation
 Traduzioni
 
-# 22
+# 20
 CPS1
 
 
-# 31
+# 30
 CPS2
 
 
@@ -18,11 +18,11 @@ CPS2
 IPS
 
 
-# 36
+# 35
 Neo-Geo
 
 
-# 89
+# 93
 PGM
 
 

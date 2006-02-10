@@ -10,19 +10,19 @@ Misc
 Translation
 З­вы
 
-# 22
+# 20
 CPS1
 
 
-# 31
+# 30
 CPS2
 
 
-# 36
+# 35
 Neo-Geo
 
 
-# 89
+# 93
 PGM
 
 

@@ -1,12 +1,12 @@
-# datafile.c: 3151
+# datafile.c: 3150
           DIAL:  %4d\n
  CL. NUMERIQUE:  %4d\n
 
-# datafile.c: 3157
+# datafile.c: 3156
          OTHER:  %4d\n
         AUTRE :  %4d\n
 
-# datafile.c: 3150
+# datafile.c: 3149
         PADDLE:  %4d\n
        MANETTE:  %4d\n
 
@@ -14,31 +14,31 @@
        FOUND: %s\n
       TROUVE: %s\n
 
-# datafile.c: 3144
+# datafile.c: 3143
        JOY2WAY:  %4d\n
   JOYS. 2 dir.:  %4d\n
 
-# datafile.c: 3145
+# datafile.c: 3144
        JOY4WAY:  %4d\n
   JOYS. 4 Dir.:  %4d\n
 
-# datafile.c: 3146
+# datafile.c: 3145
        JOY8WAY:  %4d\n
   JOYS. 8 Dir.:  %4d\n
 
-# datafile.c: 3154
+# datafile.c: 3153
       LIGHTGUN:  %4d\n
      PISTOLET :  %4d\n
 
-# datafile.c: 3138
+# datafile.c: 3137
      PLAYERS %d:  %4d\n
      JOUEURS %d:  %4d\n
 
-# datafile.c: 3152
+# datafile.c: 3151
      TRACKBALL:  %4d\n
     TRACKBALL :  %4d\n
 
-# datafile.c: 3166
+# datafile.c: 3165
     BUTTONS%3d:  %4d\n
     BOUTONS%3d:  %4d\n
 
@@ -46,7 +46,7 @@
     EXPECTED: %s\n
      PREVU  : %s\n
 
-# datafile.c: 3172
+# datafile.c: 3171
     NO BUTTONS:  %4d\n
 AUCUN BOUTONS :  %4d\n
 
@@ -54,31 +54,31 @@ AUCUN BOUTONS :  %4d\n
    FOUND: 
   TROUVE:
 
-# datafile.c: 2976
+# datafile.c: 2975
  %4d HARDDISK\n
  %4d DISQUE DUR\n
 
-# datafile.c: 2970
+# datafile.c: 2969
  %4d RASTER     + %4d\n %4d VECTOR     + %4d\n
  %4d RASTER     + %4d\n %4d VECTEUR     + %4d\n
 
-# datafile.c: 3147
+# datafile.c: 3146
  DOUBLEJOY2WAY:  %4d\n
 2 JOYS. 2 dir.:  %4d\n
 
-# datafile.c: 3148
+# datafile.c: 3147
  DOUBLEJOY4WAY:  %4d\n
 2 JOYS. 4 dir.:  %4d\n
 
-# datafile.c: 3149
+# datafile.c: 3148
  DOUBLEJOY8WAY:  %4d\n
 2 JOYS. 8 dir.:  %4d\n
 
-# datafile.c: 3077
+# datafile.c: 3076
  GAMES WITH  %d CPUs: %4d\n
  JEUX AVEC %d CPUs: %4d\n
 
-# datafile.c: 3108
+# datafile.c: 3107
  GAMES WITH  %d SNDINTRF: %4d\n
  JEUX AVEC  %d INTER. SON: %4d\n
 
@@ -250,7 +250,7 @@ Lancement 2 joueurs
 24 Bit
 24 Bits
 
-# datafile.c: 3228
+# datafile.c: 3227
 24-BIT DISPLAY : %3d  + %3d\n
 AFFICHAGE 24-BITs : %3d  + %3d\n
 
@@ -338,7 +338,7 @@ Déplacement d'adresse
 Address Size
 Taille d'adresse
 
-# cheat.c: 6969 drivers/mcr68.c: 797 ui_old/mame32.rc: 663
+# cheat.c: 6969 drivers/mcr68.c: 797 
 Advanced
 Avancée
 
@@ -374,7 +374,7 @@ Tout
 Asia
 Asie
 
-# drivers/bottom9.c: 273, 370 drivers/btime.c: 727 drivers/csk.c: 285, 445 drivers/galaga.c: 1000, 1076 drivers/pacman.c: 2752 drivers/seta.c: 4632 ui_old/properties.c: 390, 403, 435, 3771, 3873, 3929, 4083
+# drivers/bottom9.c: 273, 370 drivers/btime.c: 727 drivers/csk.c: 285, 445 drivers/galaga.c: 1000, 1076 drivers/pacman.c: 2752 drivers/seta.c: 4632 
 Auto
 Automatique
 
@@ -398,7 +398,7 @@ Retard du Tir Auto
 Autofire Setting
 Réglage du Tir Auto
 
-# drivers/dynax.c: 2243, 2376 drivers/speedspn.c: 249 ui_old/mame32.rc: 570
+# drivers/dynax.c: 2243, 2376 drivers/speedspn.c: 249 
 Automatic
 Automatique
 
@@ -430,7 +430,7 @@ Info mémorisées
 Brightness
 Luminosité
 
-# drivers/m107.c: 297 drivers/m92.c: 1021 drivers/usgames.c: 139 ui_old/treeview.c: 1400
+# drivers/m107.c: 297 drivers/m92.c: 1021 drivers/usgames.c: 139 
 Button 1
 Bouton 1
 
@@ -442,7 +442,7 @@ Longueur d'octet
 COMM Setting
 Paramètre COMM
 
-# inptport.c: 387 ui_old/dialogs.c: 198 ui_old/options.c: 263
+# inptport.c: 387 
 Cabinet
 Classeur
 
@@ -454,7 +454,7 @@ Type de Classeur
 Calibrate Joysticks
 Calibrer les Joysticks
 
-# drivers/getrivia.c: 264 drivers/segac2.c: 1194 ui_old/mame32.rc: 445, 470, 1138
+# drivers/getrivia.c: 264 drivers/segac2.c: 1194 
 Cancel
 Annuler
 
@@ -598,11 +598,11 @@ Continuer la Recherche
 Control
 Contrôle
 
-# drivers/brkthru.c: 238, 283 drivers/metro.c: 2220 drivers/st0016.c: 523 drivers/tail2nos.c: 205 ui_old/dialogs.c: 204 ui_old/options.c: 266
+# drivers/brkthru.c: 238, 283 drivers/metro.c: 2220 drivers/st0016.c: 523 drivers/tail2nos.c: 205 
 Control Panel
 Panneau de Contrôle
 
-# drivers/changela.c: 962 drivers/nbmj8891.c: 1072, 1168 drivers/taitosj.c: 1748 drivers/tumbleb.c: 1258 ui_old/layout.c: 77
+# drivers/changela.c: 962 drivers/nbmj8891.c: 1072, 1168 drivers/taitosj.c: 1748 drivers/tumbleb.c: 1258 
 Control Type
 Type de contrôle
 
@@ -618,7 +618,7 @@ Contrôles
 Copy Previous Value
 Copier la valeur précédente
 
-# config.c: 137, 141
+# config.c: 141, 145
 Could not load controller file %s.cfg\n
 Ne peut pas charger le fichier contrôleur %s.cfg\n
 
@@ -638,7 +638,7 @@ Créer Nouvelle Carte
 Current Data
 Donnée en cours
 
-# cheat.c: 2940 drivers/tickee.c: 205 sound/custom.c: 76 ui_old/win32ui.c: 4489, 4517
+# cheat.c: 2940 drivers/tickee.c: 205 sound/custom.c: 76 
 Custom
 Personnaliser
 
@@ -646,7 +646,7 @@ Personnaliser
 Custom Buttons
 Boutons personnalisés
 
-# datafile.c: 3226
+# datafile.c: 3225
 DUAL MONITOR   : %3d  + %3d\n
 DOUBLE ECRAN   : %3d  + %3d\n
 
@@ -662,7 +662,7 @@ Déplacement de Donnée
 Decimal
 Décimal
 
-# drivers/asuka.c: 714, 756, 798 drivers/bwing.c: 342 drivers/cps1.c: 827, 911 drivers/fgoal.c: 313 drivers/mcr68.c: 671 drivers/ms32.c: 1129, 1134 drivers/taito_b.c: 1309 drivers/wwfsstar.c: 291 ui_old/properties.c: 3850
+# drivers/asuka.c: 714, 756, 798 drivers/bwing.c: 342 drivers/cps1.c: 827, 911 drivers/fgoal.c: 313 drivers/mcr68.c: 671 drivers/ms32.c: 1129, 1134 drivers/taito_b.c: 1309 drivers/wwfsstar.c: 291 
 Default
 Défaut
 
@@ -682,7 +682,7 @@ Effacer le Cheat
 Demo Sounds
 Sons de démo
 
-# drivers/ssv.c: 2773 inptport.c: 873 ui_old/treeview.c: 1420
+# drivers/ssv.c: 2773 inptport.c: 873 
 Dial
 Clavier num.
 
@@ -738,7 +738,7 @@ Interrupteurs
 Disable All Coins
 Désactiver toutes les pièces
 
-# drivers/blockade.c: 312 drivers/hyperspt.c: 261, 362 drivers/junofrst.c: 335 drivers/lvcards.c: 334, 412 drivers/metro.c: 2229 drivers/midvunit.c: 829 drivers/nemesis.c: 841, 1442, 1536, 1553, 1650, 1747, 1835 drivers/pacman.c: 1200, 1262 drivers/rallyx.c: 585 drivers/rocnrope.c: 130 drivers/seattle.c: 2443 drivers/trackfld.c: 388, 483 drivers/tutankhm.c: 338 drivers/twin16.c: 379 ui_old/properties.c: 3702, 3719 ui_text.c: 175
+# drivers/blockade.c: 312 drivers/hyperspt.c: 261, 362 drivers/junofrst.c: 335 drivers/lvcards.c: 334, 412 drivers/metro.c: 2229 drivers/midvunit.c: 829 drivers/nemesis.c: 841, 1442, 1536, 1553, 1650, 1747, 1835 drivers/pacman.c: 1200, 1262 drivers/rallyx.c: 585 drivers/rocnrope.c: 130 drivers/seattle.c: 2443 drivers/trackfld.c: 388, 483 drivers/tutankhm.c: 338 drivers/twin16.c: 379 ui_text.c: 175
 Disabled
 Désactivé
 
@@ -782,7 +782,7 @@ Facile
 Edit Cheat
 Editer un Cheat
 
-# drivers/djmain.c: 500 ui_old/mame32.rc: 600
+# drivers/djmain.c: 500 
 Effect
 Effet
 
@@ -826,7 +826,7 @@ Anglais
 Equal
 Egal
 
-# drivers/segaybd.c: 795 ui_old/audit32.c: 102 ui_old/properties.c: 704, 799
+# drivers/segaybd.c: 795 
 Error
 Erreur
 
@@ -862,7 +862,7 @@ Erreur : ne peut pas sauvegarder l'état à cause d'enregistrement non valide. Con
 Error: illegal caption file
 Erreur : Fichier de caption illégal
 
-# cheat.c: 6571 debug/mamedbg.c: 795 drivers/4enraya.c: 120 drivers/8080bw.c: 698, 790 drivers/alpha68k.c: 1570, 1624 drivers/amidar.c: 186 drivers/angelkds.c: 481 drivers/bestleag.c: 279 drivers/bigstrkb.c: 160 drivers/brkthru.c: 234, 237, 279, 282 drivers/cninja.c: 728 drivers/cps1.c: 1070, 1340 drivers/darius.c: 680, 718, 756 drivers/ddragon3.c: 425 drivers/deniam.c: 278 drivers/epos.c: 152, 155, 161 drivers/fuukifg3.c: 355 drivers/gameplan.c: 400, 851 drivers/karnov.c: 462 drivers/m62.c: 612, 663, 714, 764, 816, 868, 922, 1022, 1073 drivers/mcr.c: 1117 drivers/megaplay.c: 226 drivers/metro.c: 3081 drivers/ninjaw.c: 543 drivers/nmg5.c: 239 drivers/nmk16.c: 2663 drivers/phoenix.c: 345 drivers/quizdna.c: 154, 242, 344 drivers/rohga.c: 444, 512 drivers/safarir.c: 189 drivers/segas16a.c: 1272 drivers/segas16b.c: 2511 drivers/sidepckt.c: 232 drivers/slapfght.c: 519 drivers/ssv.c: 2574 drivers/suprridr.c: 252 drivers/system1.c: 888, 1724 drivers/system16.c: 1796 drivers/taito_f2.c: 3124 drivers/taito_l.c: 1841, 1994 drivers/taito_z.c: 2364, 2433 drivers/tecmo16.c: 208 drivers/thepit.c: 277, 332, 373 drivers/trackfld.c: 540, 551 drivers/vigilant.c: 241 drivers/vsnes.c: 1066, 1468, 1692, 1750, 1776 drivers/wallc.c: 188 drivers/warriorb.c: 345 drivers/wc90.c: 251 drivers/wc90b.c: 268 drivers/xain.c: 400 drivers/yamato.c: 357 drivers/zac2650.c: 84, 134 drivers/zerozone.c: 149 ui_text.c: 209
+# cheat.c: 6571 debug/mamedbg.c: 795 drivers/4enraya.c: 120 drivers/8080bw.c: 698, 790 drivers/alpha68k.c: 1570, 1624 drivers/amidar.c: 186 drivers/angelkds.c: 481 drivers/bestleag.c: 279 drivers/bigstrkb.c: 160 drivers/brkthru.c: 234, 237, 279, 282 drivers/cninja.c: 728 drivers/cps1.c: 1070, 1340 drivers/darius.c: 680, 718, 756 drivers/ddragon3.c: 425 drivers/deniam.c: 278 drivers/epos.c: 152, 155, 161 drivers/fuukifg3.c: 355 drivers/gameplan.c: 400, 851 drivers/karnov.c: 462 drivers/m62.c: 612, 663, 714, 764, 816, 868, 922, 1022, 1073 drivers/mcr.c: 1136 drivers/megaplay.c: 226 drivers/metro.c: 3081 drivers/ninjaw.c: 543 drivers/nmg5.c: 239 drivers/nmk16.c: 2663 drivers/phoenix.c: 345 drivers/quizdna.c: 154, 242, 344 drivers/rohga.c: 444, 512 drivers/safarir.c: 189 drivers/segas16a.c: 1272 drivers/segas16b.c: 2511 drivers/sidepckt.c: 232 drivers/slapfght.c: 519 drivers/ssv.c: 2574 drivers/suprridr.c: 252 drivers/system1.c: 888, 1724 drivers/system16.c: 1796 drivers/taito_f2.c: 3124 drivers/taito_l.c: 1841, 1994 drivers/taito_z.c: 2364, 2433 drivers/tecmo16.c: 208 drivers/thepit.c: 277, 332, 373 drivers/trackfld.c: 540, 551 drivers/vigilant.c: 241 drivers/vsnes.c: 1066, 1468, 1692, 1750, 1776 drivers/wallc.c: 188 drivers/warriorb.c: 345 drivers/wc90.c: 251 drivers/wc90b.c: 268 drivers/xain.c: 400 drivers/yamato.c: 357 drivers/zac2650.c: 84, 134 drivers/zerozone.c: 149 ui_text.c: 209
 Fast
 rapide
 
@@ -910,15 +910,15 @@ Jeu gratuit
 Freeze
 Gelé
 
-# inptport.c: 408 ui_lang.c: 14 ui_old/mame32.rc: 138
+# inptport.c: 408 ui_lang.c: 14
 French
 Français
 
-# drivers/funybubl.c: 171 drivers/metro.c: 2339, 2715 drivers/skykid.c: 276 drivers/warriorb.c: 406 ui_old/properties.c: 391, 402
+# drivers/funybubl.c: 171 drivers/metro.c: 2339, 2715 drivers/skykid.c: 276 drivers/warriorb.c: 406 
 Full
 Total
 
-# datafile.c: 2175
+# datafile.c: 2174
 GAME: 
 JEU :
 
@@ -946,7 +946,7 @@ Information du jeu
 Game Mameinfo
 MameInfo du jeu
 
-# drivers/gotcha.c: 210 ui_old/mame32.rc: 1003
+# drivers/gotcha.c: 210 
 Game Selection
 Sélection du jeu
 
@@ -962,7 +962,7 @@ Historique du jeu
 Game Time
 Temps de jeu
 
-# drivers/midzeus.c: 1228 ui_old/mame32.rc: 475
+# drivers/midzeus.c: 1228 
 General
 Général
 
@@ -970,7 +970,7 @@ Général
 General Help
 Aide générale
 
-# inptport.c: 407 ui_lang.c: 17 ui_old/mame32.rc: 139
+# inptport.c: 407 ui_lang.c: 17
 German
 Allemand
 
@@ -1002,7 +1002,7 @@ Plus dur
 Hardest
 Plus dur
 
-# drivers/ddenlovr.c: 3106 drivers/shanghai.c: 913 ui_old/win32ui.c: 668
+# drivers/ddenlovr.c: 3106 drivers/shanghai.c: 913 
 Help
 Aide
 
@@ -1010,11 +1010,11 @@ Aide
 Help not available yet
 Aide non disponible
 
-# inptport.c: 423 ui_old/properties.c: 4085
+# inptport.c: 423 
 High
 Haut
 
-# drivers/balsente.c: 359, 413, 596, 650, 755, 843, 1022 drivers/zaccaria.c: 426, 536 ui_old/layout.c: 115
+# drivers/balsente.c: 359, 413, 596, 650, 755, 843, 1022 drivers/zaccaria.c: 426, 536 
 High Scores
 Meilleurs scores
 
@@ -1046,15 +1046,15 @@ Horizontal
 IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
 SI VOUS N'ETES PAS LEGALEMENT AUTORISE A JOUER A \"%s\" SUR CET EMULATEUR, PRESSEZ ESC.
 
-# datafile.c: 2989
+# datafile.c: 2988
 IMPERFECT COLORS   : %3d  %3d\n
 COULEUR IMPARFAITES: %3d  %3d\n
 
-# datafile.c: 2985
+# datafile.c: 2984
 IMPERFECT GRAPHICS : %3d  %3d\n
 GRAPHIQUES IMPARFAITS: %3d  %3d\n
 
-# datafile.c: 2993
+# datafile.c: 2992
 IMPERFECT SOUND    : %3d  %3d\n
 SON IMPARFAIT    : %3d  %3d\n
 
@@ -1074,7 +1074,7 @@ Ignorer la baisse par
 Increased By Value
 Augmenter la valeur
 
-# drivers/aerofgt.c: 731, 832, 910, 980, 1065 drivers/alpha68k.c: 1637 drivers/armedf.c: 558 drivers/bbusters.c: 458, 529 drivers/boogwing.c: 181 drivers/cinemat.c: 737 drivers/crshrace.c: 284, 462 drivers/deco32.c: 1340 drivers/itech8.c: 1600 drivers/marinedt.c: 366 drivers/mcr68.c: 740 drivers/segac2.c: 1061 drivers/segas18.c: 913, 969, 1025, 1074, 1140, 1157, 1201 drivers/sslam.c: 547 drivers/system18.c: 1328 drivers/system24.c: 1415 drivers/taotaido.c: 233
+# drivers/aerofgt.c: 731, 832, 910, 980, 1065 drivers/alpha68k.c: 1637 drivers/armedf.c: 558 drivers/bbusters.c: 458, 529 drivers/boogwing.c: 181 drivers/cinemat.c: 736 drivers/crshrace.c: 284, 462 drivers/deco32.c: 1340 drivers/itech8.c: 1600 drivers/marinedt.c: 366 drivers/mcr68.c: 740 drivers/segac2.c: 1061 drivers/segas18.c: 913, 969, 1025, 1074, 1140, 1157, 1201 drivers/sslam.c: 547 drivers/system18.c: 1328 drivers/system24.c: 1415 drivers/taotaido.c: 233
 Individual
 Individuel
 
@@ -1090,7 +1090,7 @@ Entrées (général)
 Input (this game)
 Entrées (ce jeu)
 
-# drivers/funworld.c: 507 ui_old/mame32.rc: 447
+# drivers/funworld.c: 507 
 Insert
 Insérer
 
@@ -1106,7 +1106,7 @@ Invincible
 Invulnerability
 Invulnérable
 
-# inptport.c: 409 ui_lang.c: 16 ui_old/mame32.rc: 141
+# inptport.c: 409 ui_lang.c: 16
 Italian
 Italien
 
@@ -1118,11 +1118,11 @@ Italie
 Japan
 Japon
 
-# inptport.c: 406 ui_lang.c: 10 ui_old/mame32.rc: 142
+# inptport.c: 406 ui_lang.c: 10
 Japanese
 Japonais
 
-# drivers/ddenlovr.c: 3630, 3857 drivers/ltcasino.c: 566 drivers/rbmk.c: 133 drivers/ssv.c: 1471, 1587, 1869 inptport.c: 972 ui_old/properties.c: 571
+# drivers/ddenlovr.c: 3630, 3857 drivers/ltcasino.c: 566 drivers/rbmk.c: 133 drivers/ssv.c: 1471, 1587, 1869 inptport.c: 972 
 Keyboard
 Clavier
 
@@ -1238,7 +1238,7 @@ Mode Machine
 Mameinfo not available
 Mameinfo non disponible
 
-# drivers/alpha68k.c: 1361 drivers/freekick.c: 656 drivers/liberate.c: 237, 319, 409 ui_old/layout.c: 55 ui_old/win32ui.c: 809
+# drivers/alpha68k.c: 1361 drivers/freekick.c: 656 drivers/liberate.c: 237, 319, 409 
 Manufacturer
 Développeur
 
@@ -1270,7 +1270,7 @@ Correspondance maximale
 Medium
 Moyen
 
-# ui_old/layout.c: 120 ui_text.c: 112
+# ui_text.c: 112
 Memory Card
 Carte mémoire
 
@@ -1314,11 +1314,11 @@ Plus d'info
 More Info for
 Plus d'info sur
 
-# datafile.c: 2995
+# datafile.c: 2994
 NO COCKTAIL        : %3d  %3d\n
 PAS DE COCKTAIL    : %3d  %3d\n
 
-# datafile.c: 2997
+# datafile.c: 2996
 NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 AUCUN BON DUMP CONNU : %3d  %3d\n(%3d ROMS DANS %d JEUX)\n
 
@@ -1326,15 +1326,15 @@ AUCUN BON DUMP CONNU : %3d  %3d\n(%3d ROMS DANS %d JEUX)\n
 NO MATCH\n
 PAS DE CORRESPONDANCE
 
-# datafile.c: 2991
+# datafile.c: 2990
 NO SOUND           : %3d  %3d\n
 PAS DE SON         : %3d  %3d\n
 
-# datafile.c: 2981
+# datafile.c: 2980
 NON-WORKING        : %3d  %3d\n
 NE FONCTIONNE PAS  : %3d  %3d\n
 
-# cheat.c: 3138, 3155, 5090 ui_old/win32ui.c: 805 ui_text.c: 180
+# cheat.c: 3138, 3155, 5090 ui_text.c: 180
 Name
 Nom
 
@@ -1346,7 +1346,7 @@ Proche de
 Next Game
 Jeu suivant
 
-# inptport.c: 343 ui_old/audit32.c: 125 ui_old/win32ui.c: 5375
+# inptport.c: 343 
 No
 Non
 
@@ -1354,7 +1354,7 @@ Non
 No previous values saved
 Pas de valeur précédente sauvegardé
 
-# cheat.c: 1107, 2914 inptport.c: 448 sound/custom.c: 77 ui_old/dialogs.c: 208 ui_old/properties.c: 389, 401, 416, 434, 487, 499, 3853
+# cheat.c: 1107, 2914 inptport.c: 448 sound/custom.c: 77 
 None
 Aucun
 
@@ -1366,7 +1366,7 @@ Normal/Retard
 Not Equal
 Non égal
 
-# debug/mamedbg.c: 4391 ui_old/audit32.c: 454
+# debug/mamedbg.c: 4403 
 Not found
 Pas trouvé
 
@@ -2190,7 +2190,7 @@ P8 Droite/Haut
 P8 Up
 P8 Haut
 
-# drivers/taito_f2.c: 2872 inptport.c: 855 ui_old/treeview.c: 1419
+# drivers/taito_f2.c: 2872 inptport.c: 855 
 Paddle
 Manette
 
@@ -2270,11 +2270,11 @@ Pan : Droite
 Pan Up
 Pan : Haut
 
-# drivers/turbo.c: 468 ui_old/treeview.c: 1423
+# drivers/turbo.c: 468 
 Pedal
 Pédale
 
-# drivers/astrocde.c: 296 drivers/bottom9.c: 236 drivers/deniam.c: 275 drivers/destroyr.c: 209 drivers/firetrk.c: 595, 663, 746 drivers/galpanic.c: 835 drivers/skyraid.c: 143 drivers/snk.c: 4015, 4156 drivers/sprint2.c: 346, 418 drivers/sprint4.c: 340 drivers/sprint8.c: 330, 465 drivers/sspeedr.c: 182 drivers/starshp1.c: 282 drivers/suprslam.c: 262 drivers/tank8.c: 285 drivers/triplhnt.c: 173 drivers/wolfpack.c: 226 ui_old/options.c: 2942 ui_old/win32ui.c: 813
+# drivers/astrocde.c: 296 drivers/bottom9.c: 236 drivers/deniam.c: 275 drivers/destroyr.c: 209 drivers/firetrk.c: 595, 663, 746 drivers/galpanic.c: 835 drivers/skyraid.c: 143 drivers/snk.c: 4015, 4156 drivers/sprint2.c: 346, 418 drivers/sprint4.c: 340 drivers/sprint8.c: 330, 465 drivers/sspeedr.c: 182 drivers/starshp1.c: 282 drivers/suprslam.c: 262 drivers/tank8.c: 285 drivers/triplhnt.c: 173 drivers/wolfpack.c: 226 
 Play Time
 Durée de jeu
 
@@ -2342,7 +2342,7 @@ valeurs précédentes déjà restorées
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 Quitter le jeu ?\n\nAppuyer sur Select pour Quitter,\nou sur Cancel pour continuer.
 
-# datafile.c: 2999
+# datafile.c: 2998
 ROM NEEDS REDUMP   : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 BESOIN DE REDUMPER LA ROM : %3d  %3d\n(%3d ROMS DANS %d JEUX)\n
 
@@ -2386,7 +2386,7 @@ Adresse relative
 Reload Database
 Recharger la base de donnée
 
-# drivers/arcadia.c: 171 drivers/djmain.c: 500 drivers/hanaroku.c: 158 drivers/laserbat.c: 192, 271, 345 drivers/murogem.c: 111 drivers/playch10.c: 471 drivers/sengokmj.c: 238 ui_old/mame32.rc: 574, 620, 656, 730, 792, 852, 885, 1092, 1174
+# drivers/arcadia.c: 171 drivers/djmain.c: 500 drivers/hanaroku.c: 158 drivers/laserbat.c: 192, 271, 345 drivers/murogem.c: 111 drivers/playch10.c: 471 drivers/sengokmj.c: 238 
 Reset
 Redémarrage
 
@@ -2394,7 +2394,7 @@ Redémarrage
 Reset Game
 Redémarrer
 
-# drivers/seattle.c: 1940, 2333, 2431 drivers/vegas.c: 1863, 1895, 1909, 1939, 1983, 2079 ui_old/layout.c: 73 ui_old/mame32.rc: 708
+# drivers/seattle.c: 1940, 2333, 2431 drivers/vegas.c: 1863, 1895, 1909, 1939, 1983, 2079 
 Resolution
 Résolution
 
@@ -2430,7 +2430,7 @@ Retour au Menu Précédent
 Reverse
 Inverser
 
-# datafile.c: 3232
+# datafile.c: 3231
 SHADOWS        : %3d  + %3d\n
 OMBRES         : %3d  + %3d\n
 
@@ -2450,7 +2450,7 @@ Sauvegarder la mémoire
 Save Snapshot
 Sauvegarder la copie d'écran
 
-# inptport.c: 1016 ui_old/layout.c: 76, 87
+# inptport.c: 1016 
 Save State
 Sauvegarder l'état
 
@@ -2466,7 +2466,7 @@ Sauvegarder vers la position %c
 Save/load capability not implemented for this game. See error.log for details.
 La possibilité de sauvegarder/charger pour ce jeu n'est pas implanté. Consultez error.log pour plus de
 
-# drivers/turbo.c: 414 png.c: 431 ui_old/mame32.rc: 551
+# drivers/turbo.c: 414 png.c: 431 
 Screen
 Ecran
 
@@ -2478,7 +2478,7 @@ Résolution de l'écran
 Screen flipping in cocktail mode is not supported.
 Retournement de l'écran en mode cocktail non supporté.
 
-# datafile.c: 2203
+# datafile.c: 2202
 Screen flipping in cocktail mode is not supported.\n
 Retournement de l'écran en mode cocktail non supporté.\n
 
@@ -2598,7 +2598,7 @@ Taille
 Skip Bytes
 Passer octets
 
-# cheat.c: 6573 drivers/4enraya.c: 119 drivers/8080bw.c: 697, 789 drivers/amidar.c: 185 drivers/angelkds.c: 479 drivers/bestleag.c: 277 drivers/bigstrkb.c: 158 drivers/brkthru.c: 233, 236, 278, 281 drivers/btime.c: 793 drivers/cninja.c: 726 drivers/cps1.c: 1068, 1339 drivers/deniam.c: 276 drivers/epos.c: 151, 154, 160 drivers/fuukifg3.c: 353 drivers/gameplan.c: 399, 850 drivers/m62.c: 611, 661, 712, 763, 815, 867, 921, 1020, 1071 drivers/mcr.c: 1118 drivers/megaplay.c: 224 drivers/metro.c: 3079 drivers/nmg5.c: 240 drivers/nmk16.c: 2661 drivers/phoenix.c: 342 drivers/portrait.c: 202 drivers/quizdna.c: 152, 240, 342 drivers/rohga.c: 442, 510 drivers/safarir.c: 188 drivers/segas16a.c: 1271 drivers/segas16b.c: 2510 drivers/sf.c: 334, 512, 650 drivers/sidepckt.c: 230 drivers/solomon.c: 168 drivers/suprridr.c: 250 drivers/system1.c: 1723 drivers/system16.c: 1795 drivers/taito_z.c: 2362, 2431 drivers/tecmo16.c: 210 drivers/thepit.c: 276, 331, 372 drivers/trackfld.c: 550 drivers/vigilant.c: 240 drivers/vsnes.c: 1064, 1775 drivers/wallc.c: 186 drivers/wilytowr.c: 461 drivers/xain.c: 398 drivers/yamato.c: 356 drivers/zac2650.c: 83, 133 ui_text.c: 211
+# cheat.c: 6573 drivers/4enraya.c: 119 drivers/8080bw.c: 697, 789 drivers/amidar.c: 185 drivers/angelkds.c: 479 drivers/bestleag.c: 277 drivers/bigstrkb.c: 158 drivers/brkthru.c: 233, 236, 278, 281 drivers/btime.c: 793 drivers/cninja.c: 726 drivers/cps1.c: 1068, 1339 drivers/deniam.c: 276 drivers/epos.c: 151, 154, 160 drivers/fuukifg3.c: 353 drivers/gameplan.c: 399, 850 drivers/m62.c: 611, 661, 712, 763, 815, 867, 921, 1020, 1071 drivers/mcr.c: 1137 drivers/megaplay.c: 224 drivers/metro.c: 3079 drivers/nmg5.c: 240 drivers/nmk16.c: 2661 drivers/phoenix.c: 342 drivers/portrait.c: 202 drivers/quizdna.c: 152, 240, 342 drivers/rohga.c: 442, 510 drivers/safarir.c: 188 drivers/segas16a.c: 1271 drivers/segas16b.c: 2510 drivers/sf.c: 334, 512, 650 drivers/sidepckt.c: 230 drivers/solomon.c: 168 drivers/suprridr.c: 250 drivers/system1.c: 1723 drivers/system16.c: 1795 drivers/taito_z.c: 2362, 2431 drivers/tecmo16.c: 210 drivers/thepit.c: 276, 331, 372 drivers/trackfld.c: 550 drivers/vigilant.c: 240 drivers/vsnes.c: 1064, 1775 drivers/wallc.c: 186 drivers/wilytowr.c: 461 drivers/xain.c: 398 drivers/yamato.c: 356 drivers/zac2650.c: 83, 133 ui_text.c: 211
 Slow
 Lent
 
@@ -2606,11 +2606,11 @@ Lent
 Slow But Sure (changed or not)
 Lent, mais sûr (changé ou pas)
 
-# drivers/balsente.c: 749 drivers/contra.c: 222 drivers/couple.c: 212 drivers/gijoe.c: 296 drivers/mosaic.c: 207 drivers/tmnt.c: 2037, 2119, 2365 drivers/zaxxon.c: 883 ui_old/layout.c: 62 ui_old/mame32.rc: 627 ui_text.c: 46
+# drivers/balsente.c: 749 drivers/contra.c: 222 drivers/couple.c: 212 drivers/gijoe.c: 296 drivers/mosaic.c: 207 drivers/tmnt.c: 2037, 2119, 2365 drivers/zaxxon.c: 883 ui_text.c: 46
 Sound
 Son
 
-# inptport.c: 410 ui_lang.c: 15 ui_old/mame32.rc: 146
+# inptport.c: 410 ui_lang.c: 15
 Spanish
 Espagnol
 
@@ -2618,7 +2618,7 @@ Espagnol
 Start a New Cheat Search
 Débuter une nouvelle recherche de Cheat
 
-# drivers/funworld.c: 495, 553 ui_old/layout.c: 118
+# drivers/funworld.c: 495, 553 
 State
 Etat
 
@@ -2638,7 +2638,7 @@ Statistiques non disponibles
 Status (bits or flags)
 Statut (bits ou flags)
 
-# inptport.c: 441 ui_old/layout.c: 82
+# inptport.c: 441 
 Stereo
 Stéréo
 
@@ -2666,7 +2666,7 @@ Inverser
 THIS GAME DOESN'T WORK PROPERLY
 CE JEU NE FONCTIONNE PAS CORRECTEMENT
 
-# datafile.c: 2182
+# datafile.c: 2181
 THIS GAME DOESN'T WORK PROPERLY\n
 CE JEU NE FONCTIONNE PAS CORRECTEMENT\n
 
@@ -2678,7 +2678,7 @@ Prendre
 Territory
 Territoire
 
-# drivers/8080bw.c: 1309, 1960, 2515, 2595 drivers/btime.c: 773 drivers/ddenlovr.c: 3146 drivers/ertictac.c: 229 drivers/galpani3.c: 146 drivers/halleys.c: 1702 drivers/homedata.c: 954 drivers/hornet.c: 786 drivers/jchan.c: 733 drivers/laserbas.c: 117 drivers/macs.c: 348 drivers/nwk-tr.c: 426 drivers/nycaptor.c: 613 drivers/ohmygod.c: 223 drivers/panicr.c: 210 drivers/quasar.c: 321 drivers/raiden2.c: 426, 502, 551 drivers/segas16a.c: 1462 drivers/segas16b.c: 2791 drivers/seicross.c: 226 drivers/snk.c: 3729, 3794 drivers/ssfindo.c: 556 drivers/st0016.c: 266, 529 drivers/suprnova.c: 624 drivers/system1.c: 1798, 1987 drivers/vegas.c: 2071
+# drivers/8080bw.c: 1309, 1960, 2515, 2595 drivers/btime.c: 773 drivers/ddenlovr.c: 3146 drivers/ertictac.c: 229 drivers/galpani3.c: 146 drivers/halleys.c: 1702 drivers/homedata.c: 954 drivers/hornet.c: 837 drivers/jchan.c: 733 drivers/laserbas.c: 117 drivers/macs.c: 348 drivers/nwk-tr.c: 559 drivers/nycaptor.c: 613 drivers/ohmygod.c: 223 drivers/panicr.c: 210 drivers/quasar.c: 321 drivers/raiden2.c: 426, 502, 551 drivers/segas16a.c: 1462 drivers/segas16b.c: 2791 drivers/seicross.c: 226 drivers/snk.c: 3729, 3794 drivers/ssfindo.c: 556 drivers/st0016.c: 266, 529 drivers/suprnova.c: 624 drivers/system1.c: 1798, 1987 drivers/vegas.c: 2071
 Test Mode
 Mode de test
 
@@ -2698,7 +2698,7 @@ Titre du texte
 The colors are completely wrong.
 Les couleurs sont complètements fausses.
 
-# datafile.c: 2191
+# datafile.c: 2190
 The colors are completely wrong.\n
 Les couleurs sont complètements fausses.\n
 
@@ -2706,7 +2706,7 @@ Les couleurs sont complètements fausses.\n
 The colors aren't 100% accurate.
 Les couleurs ne sont pas à 100% précises.
 
-# datafile.c: 2194
+# datafile.c: 2193
 The colors aren't 100% accurate.\n
 Les couleurs ne sont pas à 100% précises.\n
 
@@ -2718,7 +2718,7 @@ Le format de ce fichier ZIP n'est pas supporté, veuillez le recompresser
 The game has protection which isn't fully emulated.
 Ce jeu a une protection qui n'est pas émulée.
 
-# datafile.c: 2185
+# datafile.c: 2184
 The game has protection which isn't fully emulated.\n
 Ce jeu a une protection qui n'est pas émulée.\n
 
@@ -2726,11 +2726,11 @@ Ce jeu a une protection qui n'est pas émulée.\n
 The game lacks sound.
 Ce jeu a un problème de son.
 
-# datafile.c: 2197
+# datafile.c: 2196
 The game lacks sound.\n
 Ce jeu a un problème de son.\n
 
-# datafile.c: 2206
+# datafile.c: 2205
 The game uses two or more monitors.\n
 Le jeu utilises 2 moniteurs ou plus.\n
 
@@ -2738,7 +2738,7 @@ Le jeu utilises 2 moniteurs ou plus.\n
 The sound emulation isn't 100% accurate.
 L'émulation sonore n'est pas à 100% précise.
 
-# datafile.c: 2200
+# datafile.c: 2199
 The sound emulation isn't 100% accurate.\n
 L'émulation sonore n'est pas à 100% précise.\n
 
@@ -2746,7 +2746,7 @@ L'émulation sonore n'est pas à 100% précise.\n
 The video emulation isn't 100% accurate.
 L'émulation video n'est pas à 100% précise.
 
-# datafile.c: 2188
+# datafile.c: 2187
 The video emulation isn't 100% accurate.\n
 L'émulation video n'est pas à 100% précise.\n
 
@@ -2762,7 +2762,7 @@ Il y a des problèmes connus avec ce jeu :
 There are working clones of this game. They are:
 Il y a des clones fonctionnant de ce jeu. Les voici :
 
-# inptport.c: 982 ui_old/mame32.rc: 542
+# inptport.c: 982 
 Throttle
 Accélérer
 
@@ -2774,7 +2774,7 @@ Manette des gaz
 Tickets dispensed
 Tickets distribués
 
-# drivers/8080bw.c: 1310, 1366, 1389, 1449, 1499, 1918, 1956, 2209, 2265, 2492, 2581 drivers/amspdwy.c: 182 drivers/cinemat.c: 388, 547 drivers/cps1.c: 3636, 3749 drivers/drtomy.c: 211 drivers/fitfight.c: 315, 453, 595 drivers/gomoku.c: 117 drivers/homedata.c: 874, 951 drivers/lazercmd.c: 570 drivers/m107.c: 276 drivers/m92.c: 1000 drivers/megaplay.c: 246 drivers/megasys1.c: 1409, 2174 drivers/metlclsh.c: 226 drivers/metro.c: 2524, 2619 drivers/nbmj8688.c: 2166, 2240 drivers/pacman.c: 2137, 2238 drivers/paradise.c: 186, 254 drivers/pcktgal.c: 160 drivers/pktgaldx.c: 252 drivers/punchout.c: 506, 577 drivers/realbrk.c: 279 drivers/segaorun.c: 620, 652, 735 drivers/segas16b.c: 2111 drivers/segaxbd.c: 759, 863, 944 drivers/snowbros.c: 1069 drivers/starfire.c: 219, 268 drivers/supbtime.c: 296 drivers/system1.c: 886, 1048, 1100 drivers/system16.c: 1034 drivers/taito_f2.c: 3319, 3416 drivers/taito_l.c: 1299, 1828, 1984, 1984 drivers/taitosj.c: 898, 983, 1425 drivers/tattack.c: 100 drivers/troangel.c: 74 drivers/tubep.c: 619 drivers/tumbleb.c: 876, 1006 drivers/vicdual.c: 311 drivers/vsnes.c: 854, 1374 drivers/wwfsstar.c: 289 drivers/zac2650.c: 182
+# drivers/8080bw.c: 1310, 1366, 1389, 1449, 1499, 1918, 1956, 2209, 2265, 2492, 2581 drivers/amspdwy.c: 182 drivers/cinemat.c: 387, 546 drivers/cps1.c: 3636, 3749 drivers/drtomy.c: 211 drivers/fitfight.c: 315, 453, 595 drivers/gomoku.c: 117 drivers/homedata.c: 874, 951 drivers/lazercmd.c: 570 drivers/m107.c: 276 drivers/m92.c: 1000 drivers/megaplay.c: 246 drivers/megasys1.c: 1409, 2174 drivers/metlclsh.c: 226 drivers/metro.c: 2524, 2619 drivers/nbmj8688.c: 2166, 2240 drivers/pacman.c: 2137, 2238 drivers/paradise.c: 186, 254 drivers/pcktgal.c: 160 drivers/pktgaldx.c: 252 drivers/punchout.c: 506, 577 drivers/realbrk.c: 279 drivers/segaorun.c: 620, 652, 735 drivers/segas16b.c: 2111 drivers/segaxbd.c: 759, 863, 944 drivers/snowbros.c: 1069 drivers/starfire.c: 219, 268 drivers/supbtime.c: 296 drivers/system1.c: 886, 1048, 1100 drivers/system16.c: 1034 drivers/taito_f2.c: 3319, 3416 drivers/taito_l.c: 1299, 1828, 1984, 1984 drivers/taitosj.c: 898, 983, 1425 drivers/tattack.c: 100 drivers/troangel.c: 74 drivers/tubep.c: 619 drivers/tumbleb.c: 876, 1006 drivers/vicdual.c: 311 drivers/vsnes.c: 854, 1374 drivers/wwfsstar.c: 289 drivers/zac2650.c: 182
 Time
 Temps
 
@@ -2786,7 +2786,7 @@ Compteur
 Timers (+/- some value)
 Timers (+/- qq valeur)
 
-# drivers/bigevglf.c: 272 drivers/chqflag.c: 307 drivers/gaiden.c: 624 drivers/seta.c: 3295, 3528, 5305 drivers/seta2.c: 662 drivers/travrusa.c: 168 drivers/yunsung8.c: 256 ui_old/dialogs.c: 202 ui_old/options.c: 265
+# drivers/bigevglf.c: 272 drivers/chqflag.c: 307 drivers/gaiden.c: 624 drivers/seta.c: 3295, 3528, 5305 drivers/seta2.c: 662 drivers/travrusa.c: 168 drivers/yunsung8.c: 256 
 Title
 Titre
 
@@ -2870,7 +2870,7 @@ Interface: On/Off
 UI Up
 Interface: Haut
 
-# datafile.c: 2983
+# datafile.c: 2982
 UNEMULATED PROTEC. : %3d  %3d\n
 PROTEC. NON EMULEE : %3d  %3d\n
 
@@ -2878,7 +2878,7 @@ PROTEC. NON EMULEE : %3d  %3d\n
 UNKNOWN
 INCONNU
 
-# inptport.c: 444 ui_old/audit32.c: 440 ui_old/properties.c: 974
+# inptport.c: 444 
 Unknown
 Inconnu
 
@@ -3082,7 +3082,7 @@ Volume +
 WARNING: the game might not run correctly.\n
 ATTENTION : ce jeu peut ne pas fonctionner correctement.\n
 
-# datafile.c: 2987
+# datafile.c: 2986
 WRONG COLORS       : %3d  %3d\n
 MAUVAISES COULEURS : %3d  %3d\n
 
@@ -3154,7 +3154,7 @@ Position X
 Y Position
 Position Y
 
-# inptport.c: 344 ui_old/audit32.c: 120 ui_old/win32ui.c: 5373
+# inptport.c: 344 
 Yes
 Oui
 
@@ -3162,71 +3162,71 @@ Oui
 Your filesystem seems to be corrupt, please check it
 Votre fichier système semble corrompu, veuillez le vérifier
 
-# datafile.c: 2227
+# datafile.c: 2226
 \nROM REGION:\n
 \nREGION ROM:\n
 
-# datafile.c: 3042
+# datafile.c: 3041
 \nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d MB (UNCOMPRESSED)\n%d MB + %d MB MERGED\n
 \nFICHIERS ROM: %d\n%d + %d ROMS GROUPES\n\nTAILLE DU FICHIER: %d MB (NON COMPRESSE)\n%d MB + %d MB GROUPES\n
 
-# datafile.c: 3263
+# datafile.c: 3262
 \nWARNING: FPS number too high!\n
 \nATTENTION: FPS trop élevé !\n
 
-# datafile.c: 2966
+# datafile.c: 2965
 \n\n %4d GAMES (ALL)\n %4d ORIGINALS  + %4d CLNS\n %4d NEOGEO     + %4d\n
 \n\n %4d JEUX (TOUS)\n %4d ORIGINAUX  + %4d CLNS\n %4d NEOGEO     + %4d\n
 
-# datafile.c: 3132
+# datafile.c: 3131
 \n\nCABINET INPUT CONTROL: (ALL)\n\n
 \n\nCONTROLES D'ENTREES DU CLASSEUR: (TOUS)\n\n
 
-# datafile.c: 3072
+# datafile.c: 3071
 \n\nCPU HARDWARE (ORIGINAL GAMES)\n\n
 \n\nCPU DU MATERIEL (JEUX ORIGINAUX)\n\n
 
-# datafile.c: 3239
+# datafile.c: 3238
 \n\nFRAMES PER SECOND (%d): (ALL)\n\n
 \n\nIMAGES PAR SECONDE (%d): (TOUS)\n\n
 
-# datafile.c: 2980
+# datafile.c: 2979
 \n\nGAME INFO FLAGS   : ORIG CLNS\n\n
 \n\nDRAPEAUX D'INFOS DU JEU: ORIG CLNS\n\n
 
-# datafile.c: 3362
+# datafile.c: 3361
 \n\nMAME VERSIONS (%3d)\n\n
 \n\nVERSIONS MAME (%3d)\n\n
 
-# datafile.c: 3323
+# datafile.c: 3322
 \n\nRESOLUTION & PALETTESIZE: (ALL)\n    (%d)          (%d)\n\n
 \n\nRESOLUTION & PALETTE: (TOUS)\n    (%d)          (%d)\n\n
 
-# datafile.c: 3044
+# datafile.c: 3043
 \n\nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d KB (UNCOMPRESSED)\n%d KB + %d KB MERGED\n
 \n\nFICHIERS ROM: %d\n%d + %d ROMS GROUPES\n\nTAILLE DU FICHIER: %d KB (NON COMPRESSE)\n%d KB + %d KB GROUPES\n
 
-# datafile.c: 3103
+# datafile.c: 3102
 \n\nSOUND SYSTEM (ORIGINAL GAMES)\n\n
 \n\nSYSTEME SONORE (JEUX ORIGINAUX)\n\n
 
-# datafile.c: 3050
+# datafile.c: 3049
 \n\nTYPICAL ROMSET SIZE (ALL)\n
 \n\nTAILLE TYPIQUE DU ROMSET (TOUS)\n
 
-# datafile.c: 3211
+# datafile.c: 3210
 \n\nVIDEO ASPECT RATIO X:Y (ALL)\n\n
 \n\nASPECT RATIO VIDEO X:Y (ALL)\n\n
 
-# datafile.c: 3225
+# datafile.c: 3224
 \n\nVIDEO NEEDS... : ORIG   CLNS\n\n
 \n\nBESOIN VIDEO... : ORIG   CLNS\n\n
 
-# datafile.c: 3062
+# datafile.c: 3061
 \n\nYEAR    NEW GAMES\n\n
 \n\nANNEE    NOUVEAUX JEUX\n\n
 
-# datafile.c: 3006
+# datafile.c: 3005
 \n\nYEAR: ORIG  CLNS NEOGEO  ALL\n\n
 \n\nANNEE: ORIG  CLNS NEOGEO  ALL\n\n
 
@@ -3254,7 +3254,7 @@ Activé
 invalid
 invalide
 
-# info.c: 275 ui_old/layout.c: 80 ui_old/options.c: 486 ui_old/properties.c: 574 
+# info.c: 275 
 lightgun
 pistolet
 
@@ -3278,7 +3278,7 @@ Nom nul
 or
 ou
 
-# info.c: 260 ui_old/options.c: 508 
+# info.c: 260 
 paddle
 manette
 
@@ -3290,11 +3290,11 @@ Région invalide - %d résultats restants
 saved all memory regions
 Toutes les régions mémoires sauvegardées
 
-# drivers/harddriv.c: 3451 drivers/rainbow.c: 796 drivers/segas16b.c: 941, 1012 drivers/taito_f2.c: 5858 sndhrdw/m72.c: 112, 113 sound/iremga20.c: 252 ui_old/layout.c: 62 ui_old/options.c: 542 ui_old/treeview.c: 88 ui_text.c: 47 xml2info.c: 580, 581, 597
+# drivers/harddriv.c: 3451 drivers/rainbow.c: 796 drivers/segas16b.c: 941, 1012 drivers/taito_f2.c: 5858 sndhrdw/m72.c: 112, 113 sound/iremga20.c: 252 ui_text.c: 47 xml2info.c: 580, 581, 597
 sound
 Son
 
-# ui_old/layout.c: 82 ui_text.c: 48
+# ui_text.c: 48
 stereo
 Stéréo
 
@@ -3314,56 +3314,24 @@ Dézipper et placer dans le répertoire MAME
 values restored
 Valeurs restorées
 
-# datafile.c: 3155
+# datafile.c: 3154
          PEDAL:  %4d\n
 
 
-# datafile.c: 3153
+# datafile.c: 3152
       AD STICK:  %4d\n
 
 
-# ui_old/options.c: 3124 
-   ignoring line\n
-
-
-# datafile.c: 2972
+# datafile.c: 2971
  %4d HORIZONTAL + %4d\n %4d VERTICAL   + %4d\n
 
 
-# datafile.c: 2968
+# datafile.c: 2967
  %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
 
 
-# datafile.c: 2974
+# datafile.c: 2973
  %4d STEREO     + %4d\n
-
-
-# ui_old/properties.c: 960
-%d colors 
-
-
-# ui_old/win32ui.c: 252, 3614
-%d games
-
-
-# ui_old/properties.c: 943
-%d x %d (H) (%d:%d) %f Hz
-
-
-# ui_old/properties.c: 931
-%d x %d (V) (%d:%d) %f Hz
-
-
-# ui_old/treeview.c: 1224
-%dx%d (H)
-
-
-# ui_old/treeview.c: 1218
-%dx%d (V)
-
-
-# ui_old/properties.c: 3886
-%li bit
 
 
 # usrintrf.c: 2061, 2206
@@ -3376,250 +3344,6 @@ Valeurs restorées
 
 # usrintrf.c: 2075, 2214
 %s Inc
-
-
-# ui_old/properties.c: 1078
-%s\nThis is also global driver options in the %s
-
-
-# ui_old/mame32.rc: 157
-&About
-
-
-# ui_old/mame32.rc: 44
-&About MAME32
-
-
-# ui_old/mame32.rc: 63, 169
-&Add to Custom Folder...
-
-
-# ui_old/mame32.rc: 968
-&All games to use default options
-
-
-# ui_old/mame32.rc: 209
-&Audit
-
-
-# ui_old/mame32.rc: 68
-&Audit all games
-
-
-# ui_old/mame32.rc: 131
-&Background Image...
-
-
-# ui_old/mame32.rc: 1013
-&Broadcast selected game to all windows
-
-
-# ui_old/mame32.rc: 86, 225, 238
-&Cabinet
-
-
-# ui_old/mame32.rc: 405, 950, 977, 994, 1057, 1108
-&Cancel
-
-
-# ui_old/audit32.c: 398
-&Close
-
-
-# ui_old/mame32.rc: 151
-&Contents\tF1
-
-
-# ui_old/audit32.c: 275
-&Continue
-
-
-# ui_old/mame32.rc: 171, 201
-&Custom Filters...
-
-
-# ui_old/mame32.rc: 115
-&Custom Filters...\tCtrl+F
-
-
-# ui_old/mame32.rc: 965
-&Default game options
-
-
-# ui_old/mame32.rc: 946
-&Description filter
-
-
-# ui_old/mame32.rc: 100
-&Details
-
-
-# ui_old/mame32.rc: 123
-&Directories...
-
-
-# ui_old/mame32.rc: 40
-&Exit
-
-
-# ui_old/mame32.rc: 38, 50
-&File
-
-
-# ui_old/mame32.rc: 85, 224, 237
-&Flyer
-
-
-# ui_old/mame32.rc: 971
-&Folder 'filters'
-
-
-# ui_old/mame32.rc: 80
-&Fullscreen\tF11
-
-
-# ui_old/mame32.rc: 101
-&Grouped
-
-
-# ui_old/mame32.rc: 42, 149
-&Help
-
-
-# ui_old/mame32.rc: 91, 230, 242
-&History
-
-
-# ui_old/mame32.rc: 130
-&Interface Options...
-
-
-# ui_old/mame32.rc: 133
-&Language
-
-
-# ui_old/mame32.rc: 99
-&List
-
-
-# ui_old/mame32.rc: 155
-&Mame Release Notes
-
-
-# ui_old/mame32.rc: 87, 226, 239
-&Marquee
-
-
-# ui_old/mame32.rc: 154
-&New Game Changes
-
-
-# ui_old/mame32.rc: 369, 949, 976, 993, 1056, 1107
-&OK
-
-
-# ui_old/mame32.rc: 118
-&Options
-
-
-# ui_old/mame32.rc: 126
-&Palette Setting...
-
-
-# ui_old/audit32.c: 270 ui_old/mame32.rc: 404
-&Pause
-
-
-# ui_old/mame32.rc: 77
-&Picture Area\tAlt+P
-
-
-# ui_old/mame32.rc: 52, 165 ui_old/win32ui.c: 3753
-&Play
-
-
-# ui_old/win32ui.c: 251, 3787, 6711, 6739
-&Play %s
-
-
-# ui_old/mame32.rc: 211
-&Properties
-
-
-# ui_old/mame32.rc: 938
-&Raster Graphics
-
-
-# ui_old/mame32.rc: 114
-&Refresh\tF5
-
-
-# ui_old/mame32.rc: 200
-&Rename
-
-
-# ui_old/mame32.rc: 129
-&Reset to Default...
-
-
-# ui_old/mame32.rc: 1004
-&Search for new games on start
-
-
-# ui_old/mame32.rc: 61, 173
-&Select Random Game
-
-
-# ui_old/mame32.rc: 203
-&Show Folders
-
-
-# ui_old/mame32.rc: 84, 223, 236
-&Snapshot
-
-
-# ui_old/mame32.rc: 75
-&Status bar\tAlt+S
-
-
-# ui_old/mame32.rc: 88, 227, 240
-&Title
-
-
-# ui_old/mame32.rc: 74
-&Toolbar\tAlt+T
-
-
-# ui_old/mame32.rc: 152
-&Troubleshooting
-
-
-# ui_old/mame32.rc: 935
-&Unavailable
-
-
-# ui_old/mame32.rc: 962
-&User Interface (Fonts, Colors, Sizes)
-
-
-# ui_old/mame32.rc: 927
-&Vector Graphics
-
-
-# ui_old/mame32.rc: 72
-&View
-
-
-# ui_old/mame32.rc: 944
-&Working
-
-
-# ui_old/win32ui.c: 6262
-'%s' is not a valid savestate file for game '%s'.
-
-
-# ui_old/mame32.rc: 951
-(*) = inherited from parent folder
 
 
 # usrintrf.c: 3446
@@ -3702,10 +3426,6 @@ Valeurs restorées
 2 Coins/8 Credits
 
 
-# ui_old/properties.c: 417
-25% scanlines
-
-
 # inptport.c: 358
 3 Coins/1 Credit
 
@@ -3754,24 +3474,12 @@ Valeurs restorées
 5 Coins/3 Credits
 
 
-# ui_old/properties.c: 418
-50% scanlines
-
-
 # inptport.c: 355
 6 Coins/1 Credit
 
 
 # inptport.c: 354
 7 Coins/1 Credit
-
-
-# ui_old/properties.c: 419
-75% scanlines
-
-
-# ui_old/properties.c: 420
-75% vertical scanlines
 
 
 # inptport.c: 353
@@ -3784,26 +3492,6 @@ Valeurs restorées
 
 # inptport.c: 352
 9 Coins/1 Credit
-
-
-# ui_old/mame32.rc: 461
-<- Remove
-
-
-# ui_old/treeview.c: 518, 539, 1129
-<unknown>
-
-
-# ui_old/m32util.c: 256
-A sharing violation occurred.
-
-
-# ui_old/mame32.rc: 178
-A&udit
-
-
-# ui_old/treeview.c: 1418
-AD Stick
 
 
 # inptport.c: 909
@@ -3902,148 +3590,12 @@ AD Stick Z 7
 AD Stick Z 8
 
 
-# ui_old/mame32.rc: 1072
-ADStick device
-
-
-# ui_old/win32ui.c: 667
-About
-
-
-# ui_old/mame32.rc: 366
-About MAME32
-
-
-# ui_old/mame32.rc: 460
-Add ->
-
-
-# ui_old/mame32.rc: 1128
-Add Game To Custom Folder
-
-
-# ui_old/mame32.rc: 1518
-Add currently selected game to a custom folder
-
-
-# ui_old/mame32.rc: 378
-Additional MAME32 code by
-
-
-# ui_old/dialogs.c: 206
-All
-
-
-# ui_old/layout.c: 50
-All Games
-
-
-# ui_old/win32ui.c: 754, 761, 768
-All files (*.*)
-
-
-# ui_old/mame32.rc: 1007
-Allow game selection by a &joystick (requires restart)
-
-
-# ui_old/mame32.rc: 1009
-Allow game selection by custom &key sequences
-
-
-# ui_old/mame32.rc: 1493
-Allow restoring options to 'sane' values.
-
-
-# ui_old/mame32.rc: 1518
-Allows filtering out games from a folder
-
-
-# ui_old/mame32.rc: 761
-Analog deadzone
-
-
-# ui_old/properties.c: 491
-Anisotropic
-
-
-# ui_old/properties.c: 3852
-Anti-clockwise
-
-
-# ui_old/properties.c: 436
-Aperture grille
-
-
 # drivers/epos.c: 168 drivers/lethal.c: 542 drivers/lordgun.c: 338 drivers/neogeo.c: 1004, 1048, 1104, 1181, 1230
 Arcade
 
 
-# ui_old/mame32.rc: 103
-Arrange &Icons
-
-
-# ui_old/mame32.rc: 1539
-Arranges icons in a grid
-
-
-# profiler.c: 133 ui_old/layout.c: 119
+# profiler.c: 133 
 Artwork
-
-
-# ui_old/mame32.rc: 834
-Artwork resolution
-
-
-# ui_old/layout.c: 74
-Aspect Ratio
-
-
-# ui_old/mame32.rc: 691
-Aspect ratio
-
-
-# ui_old/mame32.rc: 652
-Audio latency
-
-
-# ui_old/mame32.rc: 509
-Audit
-
-
-# ui_old/mame32.rc: 1455, 1518, 1518
-Audit ROM and samples sets
-
-
-# ui_old/audit32.c: 397
-Audit complete.\n
-
-
-# ui_old/properties.c: 3855
-Auto anti-clockwise
-
-
-# ui_old/properties.c: 3854
-Auto clockwise
-
-
-# ui_old/mame32.rc: 819
-Auto restore and save (only if available)
-
-
-# ui_old/layout.c: 51
-Available
-
-
-# ui_old/mame32.rc: 456
-Available fields:
-
-
-# ui_old/properties.c: 3972
-Axis
-
-
-# ui_old/properties.c: 3982
-AxisId
 
 
 # cheat.c: 8056
@@ -4054,40 +3606,8 @@ BANK%.2d
 BCD
 
 
-# drivers/playch10.c: 468 ui_old/layout.c: 59 ui_old/mame32.rc: 849, 1143
+# drivers/playch10.c: 468 
 BIOS
-
-
-# ui_old/properties.c: 1034
-BIOS missing
-
-
-# ui_old/mame32.rc: 826
-Backdrops
-
-
-# ui_old/layout.c: 130
-Background Images
-
-
-# ui_old/treeview.c: 1049, 1050
-Bad Dump
-
-
-# ui_old/mame32.rc: 870
-Beam width
-
-
-# ui_old/audit32.c: 449
-Best available
-
-
-# ui_old/mame32.rc: 828
-Bezels
-
-
-# ui_old/properties.c: 488
-Bilinear
 
 
 # inptport.c: 815
@@ -4098,124 +3618,16 @@ Bill 1
 Bit
 
 
-# ui_old/mame32.rc: 1038
-Bookkeeping
-
-
 # inptport.c: 975
 Break in Debugger
 
 
-# ui_old/mame32.rc: 559
-Brightness correction
-
-
-# ui_old/mame32.rc: 446
-Browse...
-
-
-# ui_old/paletteedit.c: 125
-Button (10)
-
-
-# ui_old/paletteedit.c: 123
-Button (8)
-
-
-# ui_old/paletteedit.c: 124
-Button (9)
-
-
-# ui_old/paletteedit.c: 116
-Button (A or 1)
-
-
-# ui_old/paletteedit.c: 117
-Button (B or 2)
-
-
-# ui_old/paletteedit.c: 118
-Button (C or 3)
-
-
-# ui_old/paletteedit.c: 119
-Button (D or 4)
-
-
-# ui_old/paletteedit.c: 120
-Button (K or 5)
-
-
-# ui_old/paletteedit.c: 121
-Button (P or 6)
-
-
-# ui_old/paletteedit.c: 122
-Button (S or 7)
-
-
-# ui_old/treeview.c: 1409
-Buttons 10
-
-
-# ui_old/treeview.c: 1401
-Buttons 2
-
-
-# ui_old/treeview.c: 1402
-Buttons 3
-
-
-# ui_old/treeview.c: 1403
-Buttons 4
-
-
-# ui_old/treeview.c: 1404
-Buttons 5
-
-
-# ui_old/treeview.c: 1405
-Buttons 6
-
-
-# ui_old/treeview.c: 1406
-Buttons 7
-
-
-# ui_old/treeview.c: 1407
-Buttons 8
-
-
-# ui_old/treeview.c: 1408
-Buttons 9
-
-
-# ui_old/mame32.rc: 930
-C&lones
-
-
-# cheat.c: 3634, 3659, 5086, 6115 ui_old/layout.c: 61 ui_text.c: 43
+# cheat.c: 3634, 3659, 5086, 6115 ui_text.c: 43
 CPU
 
 
 # cheat.c: 8071
 CPU%.2d 
-
-
-# ui_old/layout.c: 122
-Cabinets
-
-
-# ui_old/columnedit.c: 50
-Cannot Move Selected Item
-
-
-# ui_old/mame32.rc: 961
-Categories
-
-
-# ui_old/columnedit.c: 257
-Changing this item is not permitted
 
 
 # ui_text.c: 111
@@ -4226,40 +3638,8 @@ Cheat
 Cheats
 
 
-# ui_old/audit32.c: 193, 202
-Checking Game %s - %s
-
-
-# ui_old/mame32.rc: 517, 519
-Checking...
-
-
 # drivers/system24.c: 1811
 Chi
-
-
-# ui_old/mame32.rc: 301, 379
-Christopher Kirmse and Michael Soderstrom
-
-
-# ui_old/mame32.rc: 699
-Clean stretch
-
-
-# ui_old/properties.c: 3851
-Clockwise
-
-
-# ui_old/win32ui.c: 811
-Clone Of
-
-
-# ui_old/mame32.rc: 503
-Clone of:
-
-
-# ui_old/layout.c: 69
-Clones
 
 
 # inptport.c: 389
@@ -4270,50 +3650,6 @@ Cocktail
 Code
 
 
-# ui_old/properties.c: 998
-Colors are completely wrong
-
-
-# ui_old/properties.c: 1004
-Colors aren't 100% accurate
-
-
-# ui_old/mame32.rc: 497
-Colors:
-
-
-# ui_old/layout.c: 114
-Config
-
-
-# ui_old/options.c: 646 
-Configuration options
-
-
-# ui_old/mame32.rc: 821
-Confirm on exit game
-
-
-# ui_old/mame32.rc: 1447
-Contains commands for displaying help
-
-
-# ui_old/mame32.rc: 1447
-Contains commands for manupulating the view
-
-
-# ui_old/mame32.rc: 1511
-Contains commands for sorting by various columns
-
-
-# ui_old/mame32.rc: 1447
-Contains commands for user interface options
-
-
-# ui_old/mame32.rc: 1447
-Contains commands for working with the selected items
-
-
 # inptport.c: 432
 Continue Price
 
@@ -4322,79 +3658,7 @@ Continue Price
 Continues
 
 
-# ui_old/mame32.rc: 89, 228, 241
-Control &Panel
-
-
-# ui_old/layout.c: 125
-Control Panels
-
-
-# ui_old/layout.c: 127
-Controller Files
-
-
-# ui_old/mame32.rc: 774
-Controller ID layout
-
-
-# ui_old/mame32.rc: 1062
-Controller Mapping
-
-
-# ui_old/mame32.rc: 737
-Controllers
-
-
-# ui_old/mame32.rc: 373
-Copyright (C) 1997-2006 The MAME Team
-
-
-# ui_old/mame32.rc: 408, 418
-Correct:
-
-
-# ui_old/win32ui.c: 6173
-Could not open '%s' as a valid input file.
-
-
-# ui_old/win32ui.c: 6273
-Could not open '%s' as a valid savestate file.
-
-
-# ui_old/mame32.rc: 832
-Crop Artwork
-
-
-# ui_old/properties.c: 489
-Cubic (flat kernel)
-
-
-# ui_old/properties.c: 490
-Cubic (gaussian kernel)
-
-
-# ui_old/paletteedit.c: 126
-Cursor
-
-
-# ui_old/mame32.rc: 116, 192
-Customi&ze Fields...
-
-
-# ui_old/mame32.rc: 453
-Customize Fields
-
-
-# ui_old/mame32.rc: 1493
-Customize interface options.
-
-
-# ui_old/mame32.rc: 1468
-Customize which columns are used in the game list
-
-
-# drivers/cinemat.c: 254, 849 drivers/mcr.c: 383, 950
+# drivers/cinemat.c: 253, 848 drivers/mcr.c: 393, 969
 DIAL
 
 
@@ -4402,32 +3666,8 @@ DIAL
 Decoding Graphics
 
 
-# ui_old/properties.c: 692
-Default Game
-
-
-# ui_old/mame32.rc: 124
-Default Game &Options...
-
-
-# ui_old/mame32.rc: 765
-Default input layout
-
-
-# ui_old/mame32.rc: 448
-Delete
-
-
-# ui_old/mame32.rc: 712
-Depth:
-
-
-# ui_old/win32ui.c: 802 ui_text.c: 181
+# ui_text.c: 181
 Description
-
-
-# ui_old/mame32.rc: 424, 520 ui_old/options.c: 297 ui_old/win32ui.c: 665
-Details
 
 
 # inptport.c: 877
@@ -4462,108 +3702,8 @@ Dial V 7
 Dial V 8
 
 
-# ui_old/mame32.rc: 1078
-Dial device
-
-
-# ui_old/mame32.rc: 1087
-Digital joystick axes
-
-
-# ui_old/mame32.rc: 581
-Direct3D
-
-
-# ui_old/mame32.rc: 433
-Directories
-
-
-# ui_old/mame32.rc: 439
-Directories:
-
-
-# ui_old/directories.c: 602, 697
-Directory does not exist, continue anyway?
-
-
-# ui_old/directories.c: 845, 887
-Directory name:
-
-
-# ui_old/mame32.rc: 528
-Display
-
-
-# ui_old/mame32.rc: 1500
-Display help contents
-
-
-# ui_old/mame32.rc: 1468
-Display items by using large icons.
-
-
-# ui_old/mame32.rc: 1468
-Display items by using small icons.
-
-
-# ui_old/mame32.rc: 1025
-Display splash screen on start
-
-
-# ui_old/mame32.rc: 1455
-Display the driver properties of the selected game
-
-
-# ui_old/mame32.rc: 1518
-Display the properties of the currently selected folder
-
-
-# ui_old/mame32.rc: 1455
-Display the properties of the selected items
-
-
-# ui_old/mame32.rc: 1468
-Displays detailed information about each item in the window.
-
-
-# ui_old/mame32.rc: 1468
-Displays items in a list.
-
-
-# ui_old/mame32.rc: 1500
-Displays program and copyright information
-
-
-# ui_old/mame32.rc: 1468
-Displays using `Detail View', but grouped by parent games.
-
-
-# ui_old/dialogs.c: 118
-Do you wish to continue?
-
-
 # inptport.c: 824
 Door Interlock
-
-
-# ui_old/properties.c: 438
-Dot medium bright
-
-
-# ui_old/properties.c: 437
-Dot medium mask
-
-
-# ui_old/treeview.c: 1414
-Double Joy 2-Way
-
-
-# ui_old/treeview.c: 1415
-Double Joy 4-Way
-
-
-# ui_old/treeview.c: 1416
-Double Joy 8-Way
 
 
 # drivers/cherrym.c: 179 drivers/nbmj8891.c: 1426
@@ -4578,288 +3718,40 @@ Drain all Energy Now! PL1
 Drain all Energy Now! PL2
 
 
-# ui_old/mame32.rc: 866
-Draw antialiased vectors
-
-
-# ui_old/properties.c: 3828
-Draw every frame
-
-
-# ui_old/mame32.rc: 868
-Draw translucent vectors
-
-
-# ui_old/layout.c: 57 ui_old/win32ui.c: 812
-Driver
-
-
-# ui_old/mame32.rc: 501
-Driver:
-
-
 # inptport.c: 429
 Dual
-
-
-# ui_old/mame32.rc: 759
-Dual lightgun
-
-
-# ui_old/layout.c: 65
-Dumping Status
-
-
-# ui_old/mame32.rc: 70
-E&xit
 
 
 # cheat.c: 2950
 EEPROM
 
 
-# ui_old/win32ui.c: 7210
-ERROR: required files are missing, the game cannot be run.
-
-
-# ui_old/mame32.rc: 720
-Effects
-
-
-# ui_old/mame32.rc: 1034
-Emulation
-
-
-# ui_old/mame32.rc: 806
-Enable game cheats
-
-
-# ui_old/mame32.rc: 744
-Enable joystick input
-
-
-# ui_old/mame32.rc: 769
-Enable keyboard LED
-
-
-# ui_old/mame32.rc: 755
-Enable lightgun input
-
-
-# ui_old/mame32.rc: 746
-Enable mouse input
-
-
-# ui_old/mame32.rc: 751
-Enable pointing stick input
-
-
-# ui_old/mame32.rc: 635
-Enable sound and sound CPUs
-
-
-# ui_old/mame32.rc: 748
-Enable steadykey support
-
-
-# ui_old/mame32.rc: 539
-Enforce aspect ratio
-
-
-# ui_old/treeview.c: 2668
-Error finding custom file name to save
-
-
-# ui_old/mame32.rc: 808
-Error log (for developers)
-
-
-# ui_old/win32ui.c: 7302
-Error searching for custom folder
-
-
-# ui_old/treeview.c: 2597
-Error while renaming custom file %s to %s
-
-
-# ui_old/treeview.c: 2739
-Error while saving custom file %s
-
-
 # inptport.c: 400
 Europe
-
-
-# ui_old/mame32.rc: 1455
-Exit the application
 
 
 # drivers/metro.c: 2209 drivers/nbmj8891.c: 2412
 Expert
 
 
-# ui_old/layout.c: 75
-FPS
-
-
-# ui_old/audit32.c: 458
-Failed
-
-
-# ui_old/mame32.rc: 611
-Feedback strength
-
-
-# ui_old/audit32.c: 209 ui_old/mame32.rc: 401
-File Audit
-
-
-# ui_old/dialogs.c: 401
-Filters for %s Folder
-
-
-# ui_old/mame32.rc: 874
-Flicker
-
-
-# ui_old/mame32.rc: 549
-Flip screen left-right
-
-
-# ui_old/mame32.rc: 547
-Flip screen upside-down
-
-
-# ui_old/dialogs.c: 196 ui_old/options.c: 262
-Flyer
-
-
-# ui_old/layout.c: 121
-Flyers
-
-
-# ui_old/mame32.rc: 76
-Fold&er List\tAlt+D
-
-
-# ui_old/paletteedit.c: 105
-Font (blank)
-
-
-# ui_old/paletteedit.c: 106
-Font (normal)
-
-
-# ui_old/paletteedit.c: 107
-Font (special)
-
-
-# ui_old/mame32.rc: 616
-Force zoom level
-
-
-# ui_old/mame32.rc: 569
-Frame skipping
-
-
-# ui_old/options.c: 589 
-Frontend Related
-
-
-# ui_old/mame32.rc: 702
-Full screen brightness
-
-
-# ui_old/mame32.rc: 921
-Game Filters
-
-
-# ui_old/mame32.rc: 121
-Game List &Clone Color...
-
-
-# ui_old/mame32.rc: 120
-Game List &Font...
-
-
-# ui_old/mame32.rc: 926
-Game filters
-
-
-# ui_old/mame32.rc: 924
-Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
-
-
-# ui_old/properties.c: 1016
-Game lacks sound
-
-
-# ui_old/properties.c: 992
-Game protection isn't fully emulated
-
-
-# ui_old/win32ui.c: 3383
-Game search %d%% complete
-
-
 # ui_text.c: 56
 Gamma
-
-
-# ui_old/mame32.rc: 554
-Gamma correction
 
 
 # cheat.c: 931
 Get
 
 
-# ui_old/properties.c: 1080
-Global driver options\nCustom options used by all games in the %s
-
-
-# ui_old/properties.c: 1060
-Global game options\nDefault options used by all games
-
-
-# ui_old/properties.c: 1063
-Global vector options\nCustom options used by all games in the Vector
-
-
-# ui_old/mame32.rc: 393
-Go to Microsoft's DirectX Web Page
-
-
-# ui_old/options.c: 298, 721 ui_old/win32ui.c: 666
-Grouped
-
-
-# datafile.c: 3230
+# datafile.c: 3229
 HI/TRUE BITMAP : %3d  + %3d\n
 
 
-# datafile.c: 3234
+# datafile.c: 3233
 HIGHLIGHTS     : %3d  + %3d\n
-
-
-# ui_old/layout.c: 128
-Hard Drive Difference
 
 
 # cheat.c: 1114 ui_text.c: 198
 Hex
-
-
-# ui_old/mame32.rc: 1016
-Hide &mouse cursor (requires restart)
-
-
-# ui_old/mame32.rc: 814
-High thread priority
-
-
-# ui_old/options.c: 268, 271
-History
 
 
 # drivers/funworld.c: 466, 524 drivers/ltcasino.c: 103, 475 drivers/lvcards.c: 209, 293
@@ -4894,48 +3786,8 @@ Hong Kong
 Hopper Reset
 
 
-# drivers/findout.c: 216 drivers/gameplan.c: 566, 711 drivers/jack.c: 685 drivers/thepit.c: 551 ui_old/properties.c: 404 ui_old/treeview.c: 961, 962
+# drivers/findout.c: 216 drivers/gameplan.c: 566, 711 drivers/jack.c: 685 drivers/thepit.c: 551 
 Horizontal
-
-
-# ui_old/mame32.rc: 1500
-How cheats work
-
-
-# ui_old/layout.c: 112
-IPS Files
-
-
-# ui_old/layout.c: 129
-Icons
-
-
-# ui_old/mame32.rc: 726
-Image Enhancement
-
-
-# ui_old/win32ui.c: 775
-Image Files (*.png,*.bmp)
-
-
-# ui_old/layout.c: 64
-Imperfect
-
-
-# ui_old/treeview.c: 1000
-Imperfect Colors
-
-
-# ui_old/treeview.c: 1001
-Imperfect Graphics
-
-
-# ui_old/treeview.c: 1003
-Imperfect Sound
-
-
-# ui_old/mame32.rc: 410, 419
-Incorrect:
 
 
 # cheat.c: 915
@@ -4974,7 +3826,7 @@ Infinite Energy PL1
 Infinite Energy PL2
 
 
-# cheat.c: 901 drivers/cinemat.c: 951 drivers/clshroad.c: 219 drivers/galaxian.c: 3150 drivers/ginganin.c: 232 drivers/hal21.c: 417 drivers/jack.c: 653 drivers/prehisle.c: 158 drivers/vicdual.c: 540, 917
+# cheat.c: 901 drivers/cinemat.c: 950 drivers/clshroad.c: 219 drivers/galaxian.c: 3150 drivers/ginganin.c: 232 drivers/hal21.c: 417 drivers/jack.c: 653 drivers/prehisle.c: 158 drivers/vicdual.c: 540, 917
 Infinite Lives
 
 
@@ -5010,36 +3862,8 @@ Infinite Time PL1
 Infinite Time PL2
 
 
-# ui_old/mame32.rc: 1019
-Inheritable Filters
-
-
-# ui_old/layout.c: 110
-Ini Files
-
-
-# ui_old/options.c: 483 
-Input device options
-
-
-# ui_old/layout.c: 117
-Input files (*.inp)
-
-
-# ui_old/mame32.rc: 879
-Intensity
-
-
-# ui_old/mame32.rc: 1000
-Interface Options
-
-
 # inptport.c: 397
 International
-
-
-# ui_old/mame32.rc: 597
-Interpolation method
 
 
 # cheat.c: 908
@@ -5050,36 +3874,12 @@ Invincibility PL1
 Invincibility PL2
 
 
-# ui_old/treeview.c: 1410
-Joy 2-Way
-
-
-# ui_old/treeview.c: 1411
-Joy 4-Way
-
-
-# ui_old/treeview.c: 1412
-Joy 8-Way
-
-
-# inptport.c: 435 ui_old/properties.c: 573, 3967
+# inptport.c: 435 
 Joystick
-
-
-# ui_old/properties.c: 3977
-JoystickId
 
 
 # drivers/system24.c: 1820
 Kan
-
-
-# ui_old/mame32.rc: 97
-L&arge Icons
-
-
-# ui_old/options.c: 491 
-LED mode (ps/2|usb)
 
 
 # cheat.c: 5052
@@ -5090,14 +3890,6 @@ LHS
 Label
 
 
-# ui_old/options.c: 650 
-Language options
-
-
-# ui_old/options.c: 294 ui_old/win32ui.c: 662
-Large Icons
-
-
 # inptport.c: 439
 Level Select
 
@@ -5106,7 +3898,7 @@ Level Select
 Light Gun
 
 
-# drivers/fantland.c: 587 ui_old/layout.c: 80 ui_old/properties.c: 574 ui_old/treeview.c: 1422
+# drivers/fantland.c: 587 
 Lightgun
 
 
@@ -5142,128 +3934,16 @@ Lightgun Y 7
 Lightgun Y 8
 
 
-# ui_old/mame32.rc: 1084
-Lightgun device
-
-
-# ui_old/mame32.rc: 112
-Line &Up Icons
-
-
-# ui_old/options.c: 296 ui_old/win32ui.c: 664
-List
-
-
-# ui_old/mame32.rc: 59
-Loa&d Savestate...
-
-
-# ui_old/win32ui.c: 7127
-Loading %s
-
-
-# ui_old/mame32.rc: 1511
-Localize GUI and MAME core.
-
-
-# ui_old/mame32.rc: 846
-M68000 CPU Core
-
-
-# ui_old/win32ui.c: 754
-MAME input files (*.inp,*.zip)
-
-
-# ui_old/mame32.rc: 1500
-MAME release notes
-
-
-# ui_old/win32ui.c: 761
-MAME savestate files (*.sta)
-
-
-# ui_old/options.c: 318
-MAME32 has changed *.ini file directory.\n\nWould you like to migrate old configurations to the new directory?
-
-
-# ui_old/options.c: 4354
-MAME32 has detected outdated configuration data.\n\nThe detected configuration data is from Version %s of MAME32.\nThe current version is %s. It is recommended that the\nconfiguration is set to the new defaults.\n\nWould you like to use the new configuration?
-
-
-# ui_old/mame32.rc: 375
-MAME32 version by
-
-
-# ui_old/dialogs.c: 113
-MAME32 will now reset the selected\n
-
-
-# datafile.c: 2166
+# datafile.c: 2165
 MAMEInfo:\n
-
-
-# ui_old/mame32.rc: 366, 390, 401, 433, 453, 475, 509, 528, 581, 627, 663, 737, 799, 859, 894, 921, 958, 983, 1000, 1062, 1100, 1128, 1143 ui_old/options.c: 733 ui_old/translate.c: 102
-MS Sans Serif
-
-
-# ui_old/options.c: 549 
-Mame CORE misc options
-
-
-# ui_old/options.c: 621 
-Mame CORE palette options
-
-
-# ui_old/options.c: 539 
-Mame CORE sound options
-
-
-# ui_old/options.c: 531 
-Mame CORE vector game options
-
-
-# ui_old/options.c: 518 
-Mame CORE video options
-
-
-# ui_old/mame32.rc: 482
-Manufactured:
-
-
-# ui_old/dialogs.c: 200 ui_old/options.c: 264
-Marquee
-
-
-# ui_old/layout.c: 123
-Marquees
-
-
-# ui_old/mame32.rc: 675
-Match game refresh rate
 
 
 # drivers/bwing.c: 346 drivers/holeland.c: 144 drivers/megaplay.c: 227 drivers/travrusa.c: 91 ui_text.c: 184
 Max
 
 
-# ui_old/mame32.rc: 799
-Miscellaneous
-
-
-# ui_old/treeview.c: 1002
-Missing Sound
-
-
-# ui_old/audit32.c: 462
-Missing optional
-
-
 # drivers/tx1.c: 942, 946 inptport.c: 442
 Mono
-
-
-# ui_old/properties.c: 572
-Mouse
 
 
 # inptport.c: 954
@@ -5330,32 +4010,8 @@ Mouse Y 7
 Mouse Y 8
 
 
-# ui_old/mame32.rc: 468
-Move Down
-
-
-# ui_old/columnedit.c: 50
-Move Item
-
-
-# ui_old/mame32.rc: 467
-Move Up
-
-
-# ui_old/layout.c: 83
-Multi-Monitor
-
-
 # ui_text.c: 39
 NA
-
-
-# ui_old/layout.c: 126
-NVRAM
-
-
-# ui_old/mame32.rc: 1500
-New game changes
 
 
 # drivers/holeland.c: 109
@@ -5370,108 +4026,24 @@ Nintendo
 Nintendo of America
 
 
-# ui_old/treeview.c: 1004
-No Cocktail
-
-
-# ui_old/treeview.c: 1052, 1053
-No Dump
-
-
-# ui_old/win32ui.c: 3769
-No Selection
-
-
-# ui_old/mame32.rc: 1021
-No offset for clones missing parent in view
-
-
-# ui_old/mame32.rc: 932
-Non-Wor&king
-
-
-# ui_old/audit32.c: 306, 310
-None required
-
-
 # cheat.c: 2922, 2937 inptport.c: 415
 Normal
 
 
-# ui_old/layout.c: 67
-Not Working
-
-
-# ui_old/properties.c: 980
-Not working
-
-
-# ui_old/mame32.rc: 444, 469, 1137 ui_text.c: 40
+# ui_text.c: 40
 OK
-
-
-# ui_old/paletteedit.c: 112
-OSD bar
-
-
-# ui_old/paletteedit.c: 114
-OSD bar (dark)
-
-
-# ui_old/paletteedit.c: 115
-OSD bar (default)
-
-
-# ui_old/paletteedit.c: 113
-OSD bar (light)
-
-
-# ui_old/options.c: 631 
-OSD bar color (dark)
-
-
-# ui_old/options.c: 632 
-OSD bar color (default)
-
-
-# ui_old/options.c: 630 
-OSD bar color (light)
-
-
-# ui_old/options.c: 629 
-OSD bar color (medium)
-
-
-# ui_old/mame32.rc: 757
-Offscreen shots reload
 
 
 # drivers/fgoal.c: 309 ui_text.c: 172 
 Options
 
 
-# ui_old/mame32.rc: 941
-Ori&ginals
-
-
-# drivers/findout.c: 215 ui_old/layout.c: 63
+# drivers/findout.c: 215 
 Orientation
-
-
-# ui_old/layout.c: 68
-Originals
 
 
 # ui_text.c: 59
 Overclock
-
-
-# ui_old/mame32.rc: 830
-Overlays
-
-
-# ui_old/mame32.rc: 55
-P&layback Input...
 
 
 # drivers/cherrym.c: 178 drivers/neogeo.c: 1253
@@ -5974,120 +4546,16 @@ P8 Start
 P8 Toggle Autofire
 
 
-# ui_old/properties.c: 558
-PS/2 Keyboard
-
-
-# ui_old/mame32.rc: 1069
-Paddle device
-
-
-# ui_old/mame32.rc: 1100
-Palette
-
-
-# ui_old/audit32.c: 445
-Passed
-
-
 # inptport.c: 392, 977
 Pause
-
-
-# ui_old/mame32.rc: 565
-Pause Brightness
 
 
 # drivers/cherrym.c: 200 drivers/csk.c: 283, 368, 443, 513 drivers/ddenlovr.c: 4034, 4585 drivers/funworld.c: 482, 516, 540, 574 drivers/neogeo.c: 1261 drivers/rcasino.c: 215 drivers/royalmah.c: 604, 779, 954 drivers/vroulet.c: 146
 Payout
 
 
-# ui_old/mame32.rc: 1075
-Pedal device
-
-
-# ui_old/mame32.rc: 1455
-Play a game starting with the given savestate
-
-
-# ui_old/mame32.rc: 54, 167
-Play and &Record Input...
-
-
-# ui_old/mame32.rc: 57
-Play and Record &Wave Output...
-
-
-# ui_old/mame32.rc: 1455
-Play currently selected game
-
-
-# ui_old/mame32.rc: 1455
-Playback a recorded game
-
-
-# ui_old/win32ui.c: 808
-Playcount
-
-
-# ui_old/treeview.c: 1392
-Player 1
-
-
-# ui_old/treeview.c: 1393
-Players 2
-
-
-# ui_old/treeview.c: 1394
-Players 3
-
-
-# ui_old/treeview.c: 1395
-Players 4
-
-
-# ui_old/treeview.c: 1396
-Players 5
-
-
-# ui_old/treeview.c: 1397
-Players 6
-
-
-# ui_old/treeview.c: 1398
-Players 7
-
-
-# ui_old/treeview.c: 1399
-Players 8
-
-
 # drivers/system24.c: 1812
 Pon
-
-
-# ui_old/mame32.rc: 66, 181
-Pr&operties
-
-
-# ui_old/mame32.rc: 603
-Prescale
-
-
-# ui_old/win32ui.c: 3798, 6724, 6749
-Proper&ties of %s
-
-
-# ui_old/mame32.rc: 65, 180 ui_old/win32ui.c: 3760
-Proper&ties of Driver
-
-
-# ui_old/properties.c: 703, 798
-Propery Sheet Error %d %X
-
-
-# ui_old/mame32.rc: 64, 170
-R&emove From This Folder
 
 
 # common.c: 882
@@ -6098,260 +4566,20 @@ REC START
 REC STOP (%d frames)
 
 
-# ui_old/properties.c: 451
-RGB 16 pixel triad
-
-
-# ui_old/properties.c: 446
-RGB 3 pixel triad
-
-
-# ui_old/properties.c: 447
-RGB 4 pixel triad
-
-
-# ui_old/properties.c: 450
-RGB 6 pixel triad
-
-
-# ui_old/properties.c: 441
-RGB maximum bright
-
-
-# ui_old/properties.c: 440
-RGB medium mask
-
-
-# ui_old/properties.c: 442
-RGB micro
-
-
-# ui_old/properties.c: 439
-RGB minimum mask
-
-
-# ui_old/mame32.rc: 1106
-RGB setting:
-
-
-# ui_old/properties.c: 427
-RGB sharp
-
-
-# ui_old/properties.c: 426, 443
-RGB tiny
-
-
-# ui_old/properties.c: 421
-RGB triad of 16 pixels
-
-
-# ui_old/properties.c: 425
-RGB triad of 3 pixels
-
-
-# ui_old/properties.c: 423
-RGB triad of 4 pixels
-
-
-# ui_old/properties.c: 424
-RGB triad of 4 vertical pixels
-
-
-# ui_old/properties.c: 422
-RGB triad of 6 pixels
-
-
 # cheat.c: 5060
 RHS
-
-
-# ui_old/mame32.rc: 516
-ROM check:
-
-
-# ui_old/layout.c: 108 ui_old/mame32.rc: 409 ui_old/win32ui.c: 803
-ROMs
-
-
-# ui_old/properties.c: 1036
-ROMs missing
-
-
-# ui_old/mame32.rc: 1518
-Randomly select a game.
-
-
-# ui_old/layout.c: 70 ui_old/win32ui.c: 5367
-Raster
-
-
-# ui_old/win32ui.c: 3547
-Ready
-
-
-# ui_old/mame32.rc: 1455
-Record a game for later playback
-
-
-# ui_old/mame32.rc: 1455
-Record the sound output of a game
-
-
-# ui_old/mame32.rc: 1468
-Refresh game list
-
-
-# ui_old/mame32.rc: 716
-Refresh:
-
-
-# ui_old/options.c: 1831
-Reload configurations
-
-
-# ui_old/mame32.rc: 1518
-Remove currently selected game from this folder
-
-
-# ui_old/mame32.rc: 1518
-Rename currently selected folder
-
-
-# ui_old/mame32.rc: 958
-Reset Options
-
-
-# ui_old/mame32.rc: 175
-Reset Pl&aycount
-
-
-# ui_old/mame32.rc: 176
-Reset Pla&y Time
-
-
-# ui_old/mame32.rc: 1041
-Reset all Play Times
-
-
-# ui_old/mame32.rc: 1039
-Reset all Playcounts
-
-
-# ui_old/mame32.rc: 1518
-Reset play time of currently selected game
-
-
-# ui_old/mame32.rc: 1518
-Reset playcount of currently selected game
-
-
-# ui_old/mame32.rc: 575, 621, 657, 731, 793, 853, 886, 1093, 1175
-Restore Default Settings
-
-
-# ui_old/dialogs.c: 120
-Restore Settings
 
 
 # drivers/system24.c: 1822
 Ron
 
 
-# drivers/epos.c: 153 ui_old/mame32.rc: 544
+# drivers/epos.c: 153 
 Rotation
 
 
-# ui_old/mame32.rc: 594
-Rotation of effects for rotated games
-
-
-# ui_old/mame32.rc: 535
-Run in a window
-
-
-# ui_old/mame32.rc: 82, 221
-S&how Pictures
-
-
-# ui_old/mame32.rc: 98
-S&mall Icons
-
-
-# ui_old/mame32.rc: 1044
-S&tretch screenshot larger than natural size
-
-
-# ui_old/options.c: 463 
-SaI scale effect
-
-
-# ui_old/mame32.rc: 518
-Sample check:
-
-
-# ui_old/mame32.rc: 644
-Sample rate
-
-
-# sound/samples.c: 545 ui_old/layout.c: 85, 109 ui_old/mame32.rc: 415 ui_old/win32ui.c: 804
+# sound/samples.c: 545 
 Samples
-
-
-# ui_old/mame32.rc: 499
-Save State:
-
-
-# ui_old/mame32.rc: 606
-Scanline intensity
-
-
-# ui_old/properties.c: 452
-Scanlines 25%
-
-
-# ui_old/properties.c: 453
-Scanlines 50%
-
-
-# ui_old/properties.c: 454, 454
-Scanlines 75%
-
-
-# ui_old/win32ui.c: 3342
-Screen flip support is missing
-
-
-# ui_old/properties.c: 1028
-Screen flipping is not supported
-
-
-# ui_old/mame32.rc: 495
-Screen:
-
-
-# ui_old/mame32.rc: 1043
-Screenshot Area
-
-
-# ui_old/mame32.rc: 1051
-Screenshot Bordersize
-
-
-# ui_old/mame32.rc: 1047
-Screenshot Cycletime in Seconds
-
-
-# ui_old/mame32.rc: 78
-Screenshot Ta&b\tAlt+B
-
-
-# ui_old/mame32.rc: 1011
-Select &random background image
-
-
-# ui_old/columnedit.c: 257
-Select Item
 
 
 # cheat.c: 924
@@ -6360,70 +4588,6 @@ Select Score PL1
 
 # cheat.c: 925
 Select Score PL2
-
-
-# ui_old/win32ui.c: 776
-Select a Background Image
-
-
-# ui_old/mame32.rc: 1493
-Select a background image file
-
-
-# ui_old/win32ui.c: 756
-Select a file to record
-
-
-# ui_old/win32ui.c: 755
-Select a recorded file
-
-
-# ui_old/win32ui.c: 762
-Select a savestate file
-
-
-# ui_old/win32ui.c: 770
-Select a sound file to record
-
-
-# ui_old/mame32.rc: 1468
-Select fullscreen or window mode in GUI
-
-
-# ui_old/mame32.rc: 1564
-Select the cabinet image
-
-
-# ui_old/mame32.rc: 1564
-Select the control panel image
-
-
-# ui_old/mame32.rc: 1564
-Select the flyer image
-
-
-# ui_old/mame32.rc: 1564
-Select the history information
-
-
-# ui_old/mame32.rc: 1564
-Select the marquee image
-
-
-# ui_old/mame32.rc: 974
-Select the options to be restored to the default settings.  The options will be restored when MAME32 is run next.
-
-
-# ui_old/mame32.rc: 1564
-Select the screen shot image
-
-
-# ui_old/mame32.rc: 1572
-Select the story information
-
-
-# ui_old/mame32.rc: 1564
-Select the title image
 
 
 # drivers/djmain.c: 500 drivers/pgm.c: 541 drivers/wallc.c: 190 inptport.c: 822
@@ -6446,288 +4610,20 @@ Service 3
 Service 4
 
 
-# ui_old/mame32.rc: 1031
-Set Game List Not Working Color
-
-
-# ui_old/mame32.rc: 1055
-Set Screenshot Border Color
-
-
-# ui_old/mame32.rc: 1486
-Set default game options
-
-
-# ui_old/mame32.rc: 1486
-Set directory configuration
-
-
-# ui_old/mame32.rc: 1486
-Set game list and folder list font
-
-
-# ui_old/mame32.rc: 1491
-Set in-game UI color palette
-
-
-# ui_old/mame32.rc: 1486
-Set list font color for clone games
-
-
 # inptport.c: 992
 Show Current Time
-
-
-# ui_old/mame32.rc: 1035
-Show Game Ca&ption
-
-
-# ui_old/mame32.rc: 1032
-Show History on Tab
 
 
 # inptport.c: 995
 Show Input Log
 
 
-# ui_old/mame32.rc: 219
-Show Tab &Control
-
-
-# ui_old/mame32.rc: 436
-Show directories for:
-
-
-# ui_old/mame32.rc: 1518
-Show or hide folder
-
-
-# ui_old/mame32.rc: 1550
-Show or hide the cabinet image
-
-
-# ui_old/mame32.rc: 1550
-Show or hide the control panel image
-
-
-# ui_old/mame32.rc: 1550
-Show or hide the flyer image
-
-
-# ui_old/mame32.rc: 1468
-Show or hide the folder list
-
-
-# ui_old/mame32.rc: 1550
-Show or hide the history information
-
-
-# ui_old/mame32.rc: 1550
-Show or hide the marquee image
-
-
-# ui_old/mame32.rc: 1468
-Show or hide the picture area
-
-
-# ui_old/mame32.rc: 1468, 1511
-Show or hide the pictures
-
-
-# ui_old/mame32.rc: 1550
-Show or hide the screen shot image
-
-
-# ui_old/mame32.rc: 1468
-Show or hide the screen shot tab
-
-
-# ui_old/mame32.rc: 1468
-Show or hide the status bar
-
-
-# ui_old/mame32.rc: 1558
-Show or hide the story information
-
-
-# ui_old/mame32.rc: 1550
-Show or hide the title image
-
-
-# ui_old/mame32.rc: 1468
-Show or hide the toolbar
-
-
-# ui_old/mame32.rc: 1103
-Show palette for:
-
-
-# ui_old/mame32.rc: 462
-Show these fields in this order:
-
-
-# ui_old/mame32.rc: 709
-Size:
-
-
-# ui_old/properties.c: 3829
-Skip 1 of 12 frames
-
-
-# ui_old/properties.c: 3838
-Skip 10 of 12 frames
-
-
-# ui_old/properties.c: 3839
-Skip 11 of 12 frames
-
-
-# ui_old/properties.c: 3830
-Skip 2 of 12 frames
-
-
-# ui_old/properties.c: 3831
-Skip 3 of 12 frames
-
-
-# ui_old/properties.c: 3832
-Skip 4 of 12 frames
-
-
-# ui_old/properties.c: 3833
-Skip 5 of 12 frames
-
-
-# ui_old/properties.c: 3834
-Skip 6 of 12 frames
-
-
-# ui_old/properties.c: 3835
-Skip 7 of 12 frames
-
-
-# ui_old/properties.c: 3836
-Skip 8 of 12 frames
-
-
-# ui_old/properties.c: 3837
-Skip 9 of 12 frames
-
-
-# ui_old/mame32.rc: 816
-Skip game info
-
-
-# ui_old/mame32.rc: 810
-Sleep when possible
-
-
-# ui_old/options.c: 295 ui_old/win32ui.c: 663
-Small Icons
-
-
-# ui_old/dialogs.c: 194 ui_old/options.c: 261
-Snapshot
-
-
-# ui_old/layout.c: 116
-Snapshots
-
-
-# ui_old/mame32.rc: 189
-Sort &Ascending
-
-
-# ui_old/mame32.rc: 190
-Sort &Descending
-
-
-# ui_old/mame32.rc: 1533
-Sort column in ascending (A-Z) order
-
-
-# ui_old/mame32.rc: 1533
-Sort column in descending (Z-A) order
-
-
-# ui_old/mame32.rc: 1539
-Sort items by game description
-
-
-# ui_old/mame32.rc: 1539
-Sort items by manufacturer
-
-
-# ui_old/mame32.rc: 1539
-Sort items by name
-
-
-# ui_old/mame32.rc: 1539
-Sort items by playcount
-
-
-# ui_old/mame32.rc: 1539
-Sort items by type
-
-
-# ui_old/mame32.rc: 1539
-Sort items by year
-
-
-# ui_old/properties.c: 1022
-Sound emulation isn't 100% accurate
-
-
-# ui_old/mame32.rc: 491
-Sound:
-
-
-# ui_old/win32ui.c: 768
-Sounds (*.wav)
-
-
-# ui_old/mame32.rc: 93, 232, 244
-St&ory
-
-
 # drivers/getrivia.c: 265 drivers/lvcards.c: 380
 Stand
 
 
-# inptport.c: 445 ui_old/options.c: 493 ui_old/properties.c: 2589, 2594, 2597, 2844, 2847, 4023, 4046, 4084 
+# inptport.c: 445 
 Standard
-
-
-# ui_old/mame32.rc: 537
-Start out maximized
-
-
-# ui_old/mame32.rc: 484
-Status:
-
-
-# ui_old/options.c: 269
-Story
-
-
-# ui_old/mame32.rc: 689
-Stretch using hardware
-
-
-# ui_old/properties.c: 1111 ui_old/treeview.c: 1353, 1354
-Supported
-
-
-# ui_old/mame32.rc: 686
-Switch color depths to fit
-
-
-# ui_old/mame32.rc: 683
-Switch resolutions to fit
-
-
-# ui_old/mame32.rc: 678
-Sync to monitor refresh
 
 
 # drivers/aerofgt.c: 1026, 1116 drivers/cave.c: 1684 drivers/f1gp.c: 313 drivers/midzeus.c: 1219 drivers/pgm.c: 685, 877 drivers/psikyo.c: 650, 770, 1008, 1212 drivers/toaplan1.c: 1190, 1265, 1335, 1410, 1499 drivers/toaplan2.c: 2359, 2406, 2476, 2548, 2609, 2652, 2698, 2845, 2962, 3077, 3154, 3215, 3324
@@ -6738,52 +4634,12 @@ Taiwan
 Test
 
 
-# ui_old/dialogs.c: 116
-The new settings will take effect\n
-
-
-# ui_old/m32util.c: 236
-The operating system is out of memory or resources.
-
-
-# ui_old/m32util.c: 240
-The specified file was not found.
-
-
-# ui_old/m32util.c: 252
-The specified path was not found.
-
-
-# ui_old/m32util.c: 244
-There is no application associated with the given filename extension.
-
-
-# ui_old/m32util.c: 248
-There was not enough memory to complete the operation.
-
-
 # inptport.c: 394, 823
 Tilt
 
 
-# ui_old/layout.c: 124
-Titles
-
-
 # drivers/toaplan1.c: 803
 Toaplan
-
-
-# ui_old/win32ui.c: 660
-Toggle Folder List
-
-
-# ui_old/win32ui.c: 661
-Toggle Screen Shot
-
-
-# ui_old/mame32.rc: 411, 420
-Total:
 
 
 # inptport.c: 895
@@ -6818,71 +4674,11 @@ Track Y 7
 Track Y 8
 
 
-# inptport.c: 436 ui_old/layout.c: 79 ui_old/treeview.c: 1421 ui_old/win32ui.c: 807
+# inptport.c: 436 
 Trackball
 
 
-# ui_old/mame32.rc: 1081
-Trackball device
-
-
-# ui_old/mame32.rc: 1578
-Translate into English (US)
-
-
-# ui_old/mame32.rc: 1578
-Translate into French
-
-
-# ui_old/mame32.rc: 1578
-Translate into German
-
-
-# ui_old/mame32.rc: 1578
-Translate into Hungarian
-
-
-# ui_old/mame32.rc: 1578
-Translate into Italian
-
-
-# ui_old/mame32.rc: 1578
-Translate into Japanese
-
-
-# ui_old/mame32.rc: 1578
-Translate into Korean
-
-
-# ui_old/mame32.rc: 1578
-Translate into Polish
-
-
-# ui_old/mame32.rc: 1578
-Translate into Portuguese (BRA)
-
-
-# ui_old/mame32.rc: 1578
-Translate into Simplified Chinese
-
-
-# ui_old/mame32.rc: 1578
-Translate into Spanish
-
-
-# ui_old/mame32.rc: 1578
-Translate into Traditional Chinese
-
-
-# ui_old/mame32.rc: 672
-Triple buffering
-
-
-# ui_old/mame32.rc: 1500
-Troubleshooting Documentation
-
-
-# cheat.c: 3211 drivers/lastduel.c: 421 ui_old/win32ui.c: 806
+# cheat.c: 3211 drivers/lastduel.c: 421 
 Type
 
 
@@ -6910,915 +4706,79 @@ US
 USA
 
 
-# ui_old/properties.c: 559
-USB Keyboard
-
-
-# ui_old/audit32.c: 102
-Unable to Load Riched32.dll
-
-
-# ui_old/treeview.c: 2608
-Unable to add game to non-custom folder
-
-
-# ui_old/treeview.c: 2625
-Unable to remove game from non-custom folder
-
-
 # cpuexec.c: 580
 Unable to save due to pending anonymous timers. See error.log for details.
-
-
-# ui_old/layout.c: 53
-Unavailable
-
-
-# ui_old/treeview.c: 998
-Unemulated Protection
-
-
-# ui_old/m32util.c: 260
-Unknown error.
-
-
-# ui_old/properties.c: 1113 ui_old/treeview.c: 1356, 1357
-Unsupported
 
 
 # ui_text.c: 146
 Uptime
 
 
-# ui_old/mame32.rc: 589
-Use Direct3D
-
-
-# ui_old/mame32.rc: 670
-Use DirectDraw
-
-
-# ui_old/win32ui.c: 669
-Use Local Language Game List
-
-
-# ui_old/mame32.rc: 812
-Use RDTSC timing system
-
-
-# ui_old/mame32.rc: 824
-Use additional Artwork
-
-
-# ui_old/mame32.rc: 721
-Use classic scanlines
-
-
-# ui_old/mame32.rc: 638
-Use samples
-
-
-# ui_old/mame32.rc: 591
-Use texture management
-
-
-# ui_old/mame32.rc: 839
-Use transparent in-game menu
-
-
-# ui_old/mame32.rc: 1029
-Use various icon for Not Working game
-
-
-# ui_old/mame32.rc: 641
-Use volume auto adjust
-
-
-# ui_old/layout.c: 71 ui_old/mame32.rc: 859 ui_old/options.c: 1135, 2878 ui_old/properties.c: 760 ui_old/treeview.c: 301 ui_old/win32ui.c: 5365
-Vector
-
-
-# ui_old/treeview.c: 1193, 1194
-Vector (H)
-
-
-# ui_old/properties.c: 918
-Vector (H) (%d:%d) %f Hz
-
-
-# ui_old/treeview.c: 1190, 1191
-Vector (V)
-
-
-# ui_old/properties.c: 908
-Vector (V) (%d:%d) %f Hz
-
-
 # inptport.c: 395 ui_text.c: 319
 Version
 
 
-# ui_old/options.c: 4368
-Version Mismatch
-
-
-# drivers/findout.c: 217 drivers/gameplan.c: 567, 712 drivers/jack.c: 686 drivers/thepit.c: 550 ui_old/properties.c: 405 ui_old/treeview.c: 957, 958
+# drivers/findout.c: 217 drivers/gameplan.c: 567, 712 drivers/jack.c: 686 drivers/thepit.c: 550 
 Vertical
-
-
-# ui_old/properties.c: 1010
-Video emulation isn't 100% accurate
 
 
 # ui_text.c: 52
 Volume
 
 
-# ui_old/mame32.rc: 648
-Volume attenuation
-
-
-# ui_old/win32ui.c: 7213
-WARNING: the game might not run correctly.
-
-
-# ui_old/mame32.rc: 681
-Wait for vertical sync
-
-
-# ui_old/mame32.rc: 1500
-What's new in MAME
-
-
-# ui_old/paletteedit.c: 108
-Window background
-
-
-# ui_old/paletteedit.c: 109
-Window frame
-
-
-# ui_old/paletteedit.c: 111
-Window frame (dark)
-
-
-# ui_old/paletteedit.c: 110
-Window frame (light)
-
-
-# ui_old/options.c: 466 
-Windows Direct3D 2D video options
-
-
-# ui_old/options.c: 740
-Windows UI specific GUI joystick options
-
-
-# ui_old/options.c: 755
-Windows UI specific GUI keyboard options
-
-
-# ui_old/options.c: 659
-Windows UI specific directory options
-
-
-# ui_old/options.c: 3184
-Windows UI specific folder list filters options
-
-
-# ui_old/options.c: 794
-Windows UI specific folder list hide options
-
-
-# ui_old/options.c: 688
-Windows UI specific general options
-
-
-# ui_old/options.c: 731
-Windows UI specific list font options
-
-
-# ui_old/options.c: 720
-Windows UI specific list options
-
-
-# ui_old/options.c: 669
-Windows UI specific startup options
-
-
-# ui_old/options.c: 713
-Windows UI specific window position options
-
-
-# ui_old/options.c: 474 
-Windows misc options
-
-
-# ui_old/options.c: 592 
-Windows path and directory options
-
-
-# ui_old/options.c: 479 
-Windows sound options
-
-
-# ui_old/options.c: 437 
-Windows video options
-
-
-# ui_old/layout.c: 66 ui_old/properties.c: 982
-Working
-
-
-# ui_old/treeview.c: 999
-Wrong Colors
-
-
 # cheat.c: 6189 machine/scudsp.c: 882
 XOR
-
-
-# ui_old/layout.c: 56 ui_old/win32ui.c: 810
-Year
 
 
 # drivers/harddriv.c: 750
 Zoom
 
 
-# datafile.c: 3115
+# datafile.c: 3114
 \n    SNDINTRF:  (1)  (2)  (3)  (4)\n\n
 
 
-# datafile.c: 3127
+# datafile.c: 3126
 \n    TOTAL: %4d\n
 
 
-# datafile.c: 3098
+# datafile.c: 3097
 \n   TOTAL: %4d\n
 
 
-# datafile.c: 2286, 2304
+# datafile.c: 2285, 2303
 \nORIGINAL:\n
 
 
-# datafile.c: 2332
+# datafile.c: 2331
 \nSOURCE: %s\n
 
 
-# datafile.c: 2139
+# datafile.c: 2138
 \nStory:\n
 
 
-# datafile.c: 2290, 2308
+# datafile.c: 2289, 2307
 \n\nCLONES:\n
 
 
-# datafile.c: 3352
+# datafile.c: 3351
 \n\nVERSION - DRIVERS - SUPPORT:\n\n
 
 
-# ui_old/options.c: 472 
-additional customised settings (undocumented)
-
-
-# ui_old/options.c: 528 
-additional pause brightness
-
-
-# ui_old/options.c: 475 
-allow MAME to give back time to the system when it's not needed
-
-
-# ui_old/mame32.rc: 383
-and John Hardy IV
-
-
-# ui_old/options.c: 555 
-artwork resolution (0 for auto)
-
-
-# ui_old/options.c: 455 
-attempt to match the game's refresh rate
-
-
-# ui_old/options.c: 572 
-automatic pause when playback is started and finished
-
-
-# ui_old/options.c: 523 
-automatically rotate screen anti-clockwise for vertical games
-
-
-# ui_old/options.c: 522 
-automatically rotate screen clockwise for vertical games
-
-
-# ui_old/options.c: 527 
-brightness correction
-
-
-# ui_old/options.c: 639 
-button color (aqua)
-
-
-# ui_old/options.c: 636 
-button color (blue)
-
-
-# ui_old/options.c: 635 
-button color (green)
-
-
-# ui_old/options.c: 642 
-button color (lime)
-
-
-# ui_old/options.c: 641 
-button color (navy)
-
-
-# ui_old/options.c: 638 
-button color (pink)
-
-
-# ui_old/options.c: 637 
-button color (purple)
-
-
-# ui_old/options.c: 633 
-button color (red)
-
-
-# ui_old/options.c: 640 
-button color (silver)
-
-
-# ui_old/options.c: 634 
-button color (yellow)
-
-
-# ui_old/mame32.rc: 105
-by &Description
-
-
-# ui_old/mame32.rc: 107
-by &Manufacturer
-
-
-# ui_old/mame32.rc: 106
-by &Name
-
-
-# ui_old/mame32.rc: 108
-by &Playcount
-
-
-# ui_old/mame32.rc: 109
-by &Type
-
-
-# ui_old/mame32.rc: 110
-by &Year
-
-
-# ui_old/options.c: 576 
-change m68k core (0:C, 1:DRC, 2:ASM+DRC)
-
-
-# ui_old/options.c: 564 
-change system bios
-
-
-# ui_old/options.c: 610 
-cheat filename
-
-
-# ui_old/options.c: 554 
-crop artwork to game screen only
-
-
-# ui_old/options.c: 643 
-cursor color
-
-
-# ui_old/options.c: 471 
-customised blitting effects preset
-
-
-# info.c: 263 ui_old/options.c: 511 
+# info.c: 263 
 dial
-
-
-# ui_old/options.c: 514 
-digital
-
-
-# ui_old/options.c: 602 
-directory for Artwork (Overlays etc.)
-
-
-# ui_old/options.c: 604 
-directory for hard drive image difference files
-
-
-# ui_old/options.c: 607 
-directory for ips files
-
-
-# ui_old/options.c: 609 
-directory for localized language files
-
-
-# ui_old/options.c: 603 
-directory for screenshots (.png format)
-
-
-# ui_old/options.c: 596 
-directory to save configurations
-
-
-# ui_old/options.c: 605 
-directory to save controller definitions
-
-
-# ui_old/options.c: 600 
-directory to save hiscores
-
-
-# ui_old/options.c: 599 
-directory to save input device logs
-
-
-# ui_old/options.c: 598 
-directory to save memory card contents
-
-
-# ui_old/options.c: 597 
-directory to save nvram contents
-
-
-# ui_old/options.c: 601 
-directory to save states
-
-
-# ui_old/options.c: 648 
-display additional diagnostic information
-
-
-# ui_old/options.c: 519 
-do not apply rotation
-
-
-# ui_old/options.c: 532 
-draw antialiased vectors
-
-
-# ui_old/options.c: 533 
-draw translucent vectors
-
-
-# ui_old/options.c: 450 
-emulate win_old_scanlines
-
-
-# ui_old/options.c: 508 
-enable (keyboard|mouse|joystick) if a paddle control is present
-
-
-# ui_old/options.c: 511 
-enable (keyboard|mouse|joystick|lightgun) if a dial control is present
-
-
-# ui_old/options.c: 513 
-enable (keyboard|mouse|joystick|lightgun) if a lightgun control is present
-
-
-# ui_old/options.c: 510 
-enable (keyboard|mouse|joystick|lightgun) if a pedal control is present
-
-
-# ui_old/options.c: 512 
-enable (keyboard|mouse|joystick|lightgun) if a trackball control is present
-
-
-# ui_old/options.c: 509 
-enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is present
-
-
-# ui_old/options.c: 566 
-enable automatic restore at startup and save at exit
-
-
-# ui_old/options.c: 487 
-enable dual lightgun input
-
-
-# ui_old/options.c: 485 
-enable joystick input
-
-
-# ui_old/options.c: 490 
-enable keyboard LED emulation
-
-
-# ui_old/options.c: 486 
-enable lightgun input
-
-
-# ui_old/options.c: 484 
-enable mouse input
-
-
-# ui_old/options.c: 496 
-enable pointing stick input
-
-
-# ui_old/options.c: 420 
-enable rotation of effects for rotated games
-
-
-# ui_old/options.c: 489 
-enable steadykey support
-
-
-# ui_old/options.c: 556 
-enable/disable cheat subsystem
-
-
-# ui_old/options.c: 557 
-enable/disable debugger (only if available)
-
-
-# ui_old/options.c: 647 
-enable/disable loading of configfiles
-
-
-# ui_old/options.c: 652 
-enable/disable local language game list
-
-
-# ui_old/options.c: 542 
-enable/disable sound and sound CPUs
-
-
-# ui_old/options.c: 545 
-enable/disable volume auto adjust
-
-
-# ui_old/options.c: 454 
-enforce aspect ratio
-
-
-# ui_old/options.c: 3814, 3855, 3942, 3995, 4137 
-error invalid value for %s: %s\n
-
-
-# ui_old/options.c: 3093 
-error: %s requires an argument, on line %d of file: %s\n
-
-
-# ui_old/options.c: 3628 
-error: invalid value for led_mode: %s\n
-
-
-# ui_old/options.c: 4240 
-error: invalid value for palette: %s\n
-
-
-# ui_old/options.c: 3118 
-error: trailing garbage: \"%s\" on line: %d of file: %s\n
-
-
-# ui_old/options.c: 3110 
-error: unknown option %s, on line %d of file: %s\n
-
-
-# ui_old/options.c: 417 
-feedback strength
-
-
-# ui_old/options.c: 525 
-flip screen left-right
-
-
-# ui_old/options.c: 524 
-flip screen upside-down
-
-
-# ui_old/options.c: 622 
-font blank color
-
-
-# ui_old/options.c: 623 
-font normal color
-
-
-# ui_old/options.c: 624 
-font special color
 
 
 # ui_font.c: 76
 font\\fontname.fnt
 
 
-# ui_old/options.c: 467 
-force specific zoom level
-
-
-# ui_old/options.c: 526 
-gamma correction
-
-
-# ui_old/options.c: 561 
-generate error.log
-
-
-# ui_old/options.c: 477 
-increase thread priority
-
-
-# ui_old/options.c: 469 
-interpolation method
-
-
-# ui_old/options.c: 568 
-ips datfile name
-
-
-# ui_old/dialogs.c: 114
-items to the original, installation\n
-
-
-# ui_old/win32ui.c: 7108 
-loading %-12s\r
-
-
-# ui_old/options.c: 514 
-mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
-
-
-# ui_old/options.c: 492 
-minimal analog value for digital input
-
-
 # input.c: 972, 1272
 n/a
 
 
-# ui_old/options.c: 488 
-offscreen shots reload
-
-
-# ui_old/options.c: 562 
-output error log to debugger
-
-
-# ui_old/options.c: 593 
-path to romsets
-
-
-# ui_old/options.c: 594 
-path to samplesets
-
-
-# ui_old/options.c: 510 
-pedal
-
-
-# ui_old/options.c: 559 
-playback an input file
-
-
-# ui_old/options.c: 493 
-preconfigure for specified controller
-
-
-# ui_old/options.c: 476 
-prefer RDTSC over QueryPerformanceCounter for timing
-
-
-# ui_old/options.c: 560 
-record an input file
-
-
-# ui_old/options.c: 521 
-rotate screen anti-clockwise
-
-
-# ui_old/options.c: 520 
-rotate screen clockwise
-
-
-# ui_old/options.c: 442 
-run in a window/run on full screen
-
-
-# ui_old/options.c: 481 
-save sound in wav file
-
-
-# ui_old/options.c: 418 
-scanline intensity
-
-
-# ui_old/options.c: 558 
-script for debugger (only if available)
-
-
-# ui_old/options.c: 651 
-select translation language
-
-
-# ui_old/options.c: 480 
-set audio latency (increase to reduce glitches)
-
-
-# ui_old/options.c: 534 
-set beam width in vector games
-
-
-# ui_old/options.c: 535 
-set flickering in vector games
-
-
-# ui_old/options.c: 439 
-set frameskip explicitly (autoframeskip needs to be off)
-
-
-# ui_old/options.c: 536 
-set intensity in vector games
-
-
-# ui_old/options.c: 499 
-set joystick ID (Player1)
-
-
-# ui_old/options.c: 500 
-set joystick ID (Player2)
-
-
-# ui_old/options.c: 501 
-set joystick ID (Player3)
-
-
-# ui_old/options.c: 502 
-set joystick ID (Player4)
-
-
-# ui_old/options.c: 503 
-set joystick ID (Player5)
-
-
-# ui_old/options.c: 504 
-set joystick ID (Player6)
-
-
-# ui_old/options.c: 505 
-set joystick ID (Player7)
-
-
-# ui_old/options.c: 506 
-set joystick ID (Player8)
-
-
-# ui_old/options.c: 448 
-set resolution
-
-
-# ui_old/options.c: 540 
-set samplerate
-
-
-# ui_old/options.c: 449 
-set specific monitor refresh rate
-
-
-# ui_old/options.c: 458 
-sets the brightness in full screen mode
-
-
-# ui_old/options.c: 459 
-sets the number of frames to run within the game
-
-
-# ui_old/dialogs.c: 115
-settings then exit.\n\n
-
-
-# ui_old/options.c: 563 
-skip displaying the game info screen
-
-
-# ui_old/options.c: 438 
-skip frames to speed up emulation
-
-
-# ui_old/options.c: 461 
-specify an alternate monitor aspect ratio
-
-
-# ui_old/options.c: 460 
-specify the blitting effect
-
-
-# ui_old/options.c: 424 
-specify the blitting effects
-
-
-# ui_old/options.c: 446 
-specify which screen to use
-
-
-# ui_old/options.c: 453 
-start out maximized
-
-
-# ui_old/options.c: 565 
-state to load
-
-
-# ui_old/options.c: 447 
-stretch to integer ratios
-
-
-# ui_old/options.c: 452 
-switch color depths to best fit
-
-
-# ui_old/options.c: 451 
-switch resolutions to best fit
-
-
-# ui_old/options.c: 456 
-syncronize only to the monitor refresh
-
-
-# ui_old/dialogs.c: 117
-the next time MAME32 is run.\n\n
-
-
-# ui_old/options.c: 457 
-throttle speed to the game's framerate
-
-
-# info.c: 267 ui_old/layout.c: 79 ui_old/options.c: 512 
+# info.c: 267 
 trackball
-
-
-# ui_old/options.c: 441 
-triple buffering (only if fullscreen)
-
-
-# ui_old/options.c: 444 
-use Direct3D for rendering
-
-
-# ui_old/options.c: 443 
-use DirectDraw for rendering
-
-
-# ui_old/options.c: 550 
-use additional game artwork (sets default for specific options below)
-
-
-# ui_old/options.c: 551 
-use backdrop artwork
-
-
-# ui_old/options.c: 553 
-use bezel artwork
-
-
-# ui_old/options.c: 552 
-use overlay artwork
-
-
-# ui_old/options.c: 541 
-use samples
-
-
-# ui_old/options.c: 543 
-volume (range [-32,0])
-
-
-# ui_old/options.c: 440 
-wait for vertical sync (reduces tearing)
-
-
-# ui_old/options.c: 625 
-window background color
-
-
-# ui_old/options.c: 628 
-window frame color (dark)
-
-
-# ui_old/options.c: 627 
-window frame color (light)
-
-
-# ui_old/options.c: 626 
-window frame color (medium)
 
 

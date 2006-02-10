@@ -354,167 +354,167 @@ Tir / Vol
 Shooter / Flying (chase view)
 Tir / Vol (poursuite)
 
-# 3737
+# 3738
 Shooter / Flying 1st Person
 Tir / Vol en vue subjective
 
-# 3769
+# 3770
 Shooter / Flying Diagonal
 Tir / Vol en diagonal
 
-# 3777
+# 3778
 Shooter / Flying Horizontal
 Tir / Vol horizontal
 
-# 3978
+# 3980
 Shooter / Flying Horizontal *Mature*
 Tir / Vol horizontal *Adulte*
 
-# 3981
+# 3983
 Shooter / Flying Vertical
 Tir / Vol vertical
 
-# 4371
+# 4373
 Shooter / Flying Vertical *Mature*
 Tir / Vol vertical *Adulte*
 
-# 4374
+# 4376
 Shooter / Gallery
 Tir / Gallerie
 
-# 4719
+# 4722
 Shooter / Gallery *Mature*
 Tir / Gallerie *Adulte*
 
-# 4722
+# 4725
 Shooter / Gun
 Tir / Pistolet
 
-# 4826
+# 4829
 Shooter / Misc.
 Tir / Divers
 
-# 4842
+# 4845
 Shooter / Misc. Horizontal
 Tir / Divers horizontal
 
-# 4864
+# 4867
 Shooter / Misc. Vertical
 Tir / Divers vertical
 
-# 4883
+# 4886
 Shooter / Versus
 Tir / Versus
 
-# 4892
+# 4895
 Shooter / Walking
 Tir / En marchant
 
-# 5020
+# 5021
 Sports / Armwrestling
 Sports / Bras de Fer
 
-# 5184
+# 5185
 Sports / Boxing
 Sports / Boxe
 
-# 5220
+# 5221
 Sports / Bull Fighting
 Sports / Combat de Taureau
 
-# 5224
+# 5225
 Sports / Darts
 Sports / Fléchettes
 
-# 5231
+# 5232
 Sports / Dodgeball
 Sports / Balle au prisonnier
 
-# 5236
+# 5237
 Sports / Fishing
 Sports / Pêche
 
-# 5406
+# 5407
 Sports / Horse Racing
 Sports / course de chevaux
 
-# 5418
+# 5419
 Sports / Horseshoes
 Sports / Course à pied
 
-# 5423
+# 5424
 Sports / Multiplay
 Sports / Multi jeu
 
-# 5430
+# 5434
 Sports / Pool
 Sports / Billard
 
-# 5466
+# 5470
 Sports / Pool *Mature*
 Sports / Piscine *Adulte*
 
-# 5478
+# 5482
 Sports / Shuffleboard
 Sports / Palet
 
-# 5492
+# 5496
 Sports / Skiing
 Sports / Ski
 
-# 5515
+# 5519
 Sports / Soccer
 Sports / Football
 
-# 5606
+# 5610
 Sports / Swimming
 Sports / Natation
 
-# 5708
+# 5712
 Tabletop
 Jeu de plateau
 
-# 5714
+# 5718
 Tabletop *Mature*
 Jeu de plateau *Adulte*
 
-# 5717
+# 5721
 Tabletop / Hanafuda
 Jeu de plateau / Hanafuda
 
-# 5721
+# 5725
 Tabletop / Hanafuda *Mature*
 Jeu de plateau / Hanafuda *Adulte*
 
-# 5740
+# 5744
 Tabletop / Mahjong
 Jeu de plateau / Majhong
 
-# 5758
+# 5762
 Tabletop / Mahjong *Mature*
 Jeu de plateau * Majhong *Adulte*
 
-# 5970
+# 5974
 Tabletop / Othello
 Jeu de plateau / Othello
 
-# 5976
+# 5980
 Tabletop / Othello *Mature*
 Jeu de plateau / Othello *Adulte*
 
-# 5979
+# 5983
 Tabletop / Renju
 Jeu de plateau / Renju
 
-# 5983
+# 5987
 Tabletop / Shougi
 Jeu de plateau / Shougi
 
-# 5991
+# 5995
 Unplayable
 Non Jouable
 
-# 6289
+# 6294
 Wrestling
 Catch / Lutte
 
@@ -550,71 +550,71 @@ Quiz / Corean
 Quiz / German
 
 
-# 4993
-Sport / Ping pong
-
-
-# 4996
+# 4997
 Sports
 
 
-# 5024
+# 5025
 Sports / Baseball
 
 
-# 5101
+# 5102
 Sports / Basketball
 
 
-# 5152
+# 5153
 Sports / Bowling
 
 
-# 5241
+# 5242
 Sports / Football Amer.
 
 
-# 5287
+# 5288
 Sports / Football Rugby
 
 
-# 5292
+# 5293
 Sports / Golf
 
 
-# 5383
+# 5384
 Sports / Handball
 
 
-# 5386
+# 5387
 Sports / Hang Gliding
 
 
-# 5391
+# 5392
 Sports / Hockey
 
 
-# 5484
+# 5431
+Sports / Ping pong
+
+
+# 5488
 Sports / Skateboarding
 
 
-# 5511
+# 5515
 Sports / SkyDiving
 
 
-# 5603
+# 5607
 Sports / Sumo
 
 
-# 5617
+# 5621
 Sports / Tennis
 
 
-# 5647
+# 5651
 Sports / Track & Field
 
 
-# 5684
+# 5688
 Sports / VolleyBall
 
 

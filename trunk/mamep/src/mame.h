@@ -228,13 +228,6 @@ struct _global_options
 	int		vector_width;	/* requested width for vector games; 0 means default (640) */
 	int		vector_height;	/* requested height for vector games; 0 means default (480) */
 	int		ui_orientation;	/* orientation of the UI relative to the video */
-#ifdef TRANS_UI
-	int		use_transui;		/* use transparent background for UI text */
-	int		ui_transparency;	/* transparency of UI background */
-#endif /* TRANS_UI */
-#ifdef UI_COLOR_DISPLAY
-	UINT8           uicolortable[MAX_COLORTABLE][3];
-#endif /* UI_COLOR_DISPLAY */
 
 	int		beam;			/* vector beam width */
 	float	vector_flicker;	/* vector beam flicker effect control */
@@ -253,11 +246,22 @@ struct _global_options
 #ifdef USE_IPS
 	char*	patchname;			/* International Patching System */
 #endif /* USE_IPS */
+#ifdef AUTO_PAUSE_PLAYBACK
+	int		auto_pause_playback;	/* automatic pause when playback is finished */
+#endif /* AUTO_PAUSE_PLAYBACK */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020)
 	int m68k_core;			/* ks hcmame s switch m68k core */
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020) */
+#ifdef TRANS_UI
+	int		use_transui;		/* use transparent for UI background */
+	int		ui_transparency;	/* transparency of UI background */
+#endif /* TRANS_UI */
+#ifdef UI_COLOR_DISPLAY
+	UINT8           uicolortable[MAX_COLORTABLE][3];	/* palette options for UI */
+#endif /* UI_COLOR_DISPLAY */
 
-	int		autofiredelay[MAX_PLAYERS];
+	int		confirm_quit;	/* confirm on exiting game */
+	int		autofiredelay[MAX_PLAYERS];	/* autofire delay */
 
 	int		debug_width;	/* requested width of debugger bitmap */
 	int		debug_height;	/* requested height of debugger bitmap */
@@ -273,12 +277,7 @@ struct _global_options
 
 	int		min_width;		/* minimum width for the display */
 	int		min_height;		/* minimum height for the display */
-	#endif /* MESS */
-
-	int		confirm_quit;	/* enable confirming quit */
-#ifdef AUTO_PAUSE_PLAYBACK
-	int		auto_pause_playback;	/* automatic pause after playback is finished */
-#endif /* AUTO_PAUSE_PLAYBACK */
+#endif /* MESS */
 };
 typedef struct _global_options global_options;
 

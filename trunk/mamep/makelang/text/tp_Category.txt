@@ -386,235 +386,235 @@ Shooter / Flying
 Shooter / Flying (chase view)
 
 
-# 3737
+# 3738
 Shooter / Flying 1st Person
 
 
-# 3769
+# 3770
 Shooter / Flying Diagonal
 
 
-# 3777
+# 3778
 Shooter / Flying Horizontal
 
 
-# 3978
+# 3980
 Shooter / Flying Horizontal *Mature*
 
 
-# 3981
+# 3983
 Shooter / Flying Vertical
 
 
-# 4371
+# 4373
 Shooter / Flying Vertical *Mature*
 
 
-# 4374
+# 4376
 Shooter / Gallery
 
 
-# 4719
+# 4722
 Shooter / Gallery *Mature*
 
 
-# 4722
+# 4725
 Shooter / Gun
 
 
-# 4826
+# 4829
 Shooter / Misc.
 
 
-# 4842
+# 4845
 Shooter / Misc. Horizontal
 
 
-# 4864
+# 4867
 Shooter / Misc. Vertical
 
 
-# 4883
+# 4886
 Shooter / Versus
 
 
-# 4892
+# 4895
 Shooter / Walking
 
 
-# 4993
-Sport / Ping pong
-
-
-# 4996
+# 4997
 Sports
 
 
-# 5020
+# 5021
 Sports / Armwrestling
 
 
-# 5024
+# 5025
 Sports / Baseball
 
 
-# 5101
+# 5102
 Sports / Basketball
 
 
-# 5152
+# 5153
 Sports / Bowling
 
 
-# 5184
+# 5185
 Sports / Boxing
 
 
-# 5220
+# 5221
 Sports / Bull Fighting
 
 
-# 5224
+# 5225
 Sports / Darts
 
 
-# 5231
+# 5232
 Sports / Dodgeball
 
 
-# 5236
+# 5237
 Sports / Fishing
 
 
-# 5241
+# 5242
 Sports / Football Amer.
 
 
-# 5287
+# 5288
 Sports / Football Rugby
 
 
-# 5292
+# 5293
 Sports / Golf
 
 
-# 5383
+# 5384
 Sports / Handball
 
 
-# 5386
+# 5387
 Sports / Hang Gliding
 
 
-# 5391
+# 5392
 Sports / Hockey
 
 
-# 5406
+# 5407
 Sports / Horse Racing
 
 
-# 5418
+# 5419
 Sports / Horseshoes
 
 
-# 5423
+# 5424
 Sports / Multiplay
 
 
-# 5430
+# 5431
+Sports / Ping pong
+
+
+# 5434
 Sports / Pool
 
 
-# 5466
+# 5470
 Sports / Pool *Mature*
 
 
-# 5478
+# 5482
 Sports / Shuffleboard
 
 
-# 5484
+# 5488
 Sports / Skateboarding
 
 
-# 5492
+# 5496
 Sports / Skiing
 
 
-# 5511
+# 5515
 Sports / SkyDiving
 
 
-# 5515
+# 5519
 Sports / Soccer
 
 
-# 5603
+# 5607
 Sports / Sumo
 
 
-# 5606
+# 5610
 Sports / Swimming
 
 
-# 5617
+# 5621
 Sports / Tennis
 
 
-# 5647
+# 5651
 Sports / Track & Field
 
 
-# 5684
+# 5688
 Sports / VolleyBall
 
 
-# 5708
+# 5712
 Tabletop
 
 
-# 5714
+# 5718
 Tabletop *Mature*
 
 
-# 5717
+# 5721
 Tabletop / Hanafuda
 
 
-# 5721
+# 5725
 Tabletop / Hanafuda *Mature*
 
 
-# 5740
+# 5744
 Tabletop / Mahjong
 
 
-# 5758
+# 5762
 Tabletop / Mahjong *Mature*
 
 
-# 5970
+# 5974
 Tabletop / Othello
 
 
-# 5976
+# 5980
 Tabletop / Othello *Mature*
 
 
-# 5979
+# 5983
 Tabletop / Renju
 
 
-# 5983
+# 5987
 Tabletop / Shougi
 
 
-# 5991
+# 5995
 Unplayable
 
 
-# 6289
+# 6294
 Wrestling
 
 

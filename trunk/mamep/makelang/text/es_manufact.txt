@@ -1278,7 +1278,7 @@ Philko
 Playmark
 Playmark
 
-# SvC Chaos - SNK vs Capcom (Asia, JAMMA PCB)
+# SvC Chaos - SNK vs Capcom (JAMMA PCB)
 Playmore
 Playmore
 
@@ -2029,4 +2029,16 @@ hackeado
 # Chewing Gum
 unknown
 desconocido
+
+# Poizone
+Eterna
+
+
+# Police Trainer (Rev 1.3)
+P & P Marketing
+
+
+# SvC Chaos - SNK vs Capcom (MVS) (bootleg)
+booleg
+
 

@@ -2367,14 +2367,14 @@ static void SetPropEnabledControls(HWND hWnd)
 	if (nIndex <= -1 || DriverUsesTrackball(nIndex) || DriverUsesLightGun(nIndex))
 	{
 		Button_Enable(GetDlgItem(hWnd,IDC_USE_MOUSE),TRUE);
-#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
+#ifdef USE_JOY_MOUSE_MOVE
 		Button_Enable(GetDlgItem(hWnd,IDC_USE_STICKPOINT),TRUE);
 #endif /* USE_JOY_MOUSE_MOVE */
 	}
 	else
 	{
 		Button_Enable(GetDlgItem(hWnd,IDC_USE_MOUSE),FALSE);
-#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
+#ifdef USE_JOY_MOUSE_MOVE
 		Button_Enable(GetDlgItem(hWnd,IDC_USE_STICKPOINT),FALSE);
 #endif /* USE_JOY_MOUSE_MOVE */
 	}
@@ -2441,7 +2441,6 @@ static void SetPropEnabledControls(HWND hWnd)
 	}
 
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-	/* ks hcmame s switch m68k core */
 	if (nIndex != GLOBAL_OPTIONS && nIndex != FOLDER_OPTIONS)
 	{
 		BOOL has_m68k = DriverHasM68K(nIndex);
@@ -2449,7 +2448,7 @@ static void SetPropEnabledControls(HWND hWnd)
 		ShowWindow(GetDlgItem(hWnd, IDC_M68K_CORE), has_m68k ? SW_SHOW : SW_HIDE);
 		ShowWindow(GetDlgItem(hWnd, IDC_M68K_CORETEXT), has_m68k ? SW_SHOW : SW_HIDE);
 	}
-#else
+#else /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 	ShowWindow(GetDlgItem(hWnd, IDC_M68K_CORE), SW_HIDE);
 	ShowWindow(GetDlgItem(hWnd, IDC_M68K_CORETEXT), SW_HIDE);
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
@@ -3066,7 +3065,6 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_DUAL_LIGHTGUN, DM_BOOL, CT_BUTTON,   &pGameOpts->dual_lightgun, DM_BOOL,   &pGameOpts->dual_lightgun, 0, 0, 0);
 	DataMapAdd(IDC_RELOAD,DM_BOOL, CT_BUTTON,  &pGameOpts->offscreen_reload,DM_BOOL, &pGameOpts->offscreen_reload, 0, 0, 0);
 #ifdef USE_JOY_MOUSE_MOVE
-	// Support Stick-type Pointing Device (miko2u@hotmail.com)
 	DataMapAdd(IDC_USE_STICKPOINT,DM_BOOL, CT_BUTTON,   &pGameOpts->use_stickpoint,DM_BOOL,   &pGameOpts->use_stickpoint, 0, 0, 0);
 #endif /* USE_JOY_MOUSE_MOVE */
 #ifdef JOYSTICK_ID
@@ -3144,14 +3142,15 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_SKIP_GAME_INFO,  DM_BOOL,CT_BUTTON,  &pGameOpts->skip_gameinfo, DM_BOOL, &pGameOpts->skip_gameinfo, 0, 0, 0);
 	DataMapAdd(IDC_BIOS,          DM_INT,  CT_COMBOBOX, &g_nBiosIndex,             DM_STRING, &pGameOpts->bios,        0, 0, AssignBios);
 	DataMapAdd(IDC_ENABLE_AUTOSAVE, DM_BOOL, CT_BUTTON, &pGameOpts->autosave,      DM_BOOL, &pGameOpts->autosave,     0, 0, 0);
-	DataMapAdd(IDC_CONFIRM_QUIT,  DM_BOOL, CT_BUTTON,   &pGameOpts->confirm_quit,  DM_BOOL, &pGameOpts->confirm_quit,  0, 0, 0);
+#ifdef AUTO_PAUSE_PLAYBACK
+	DataMapAdd(IDC_AUTO_PAUSE_PLAYBACK,  DM_BOOL, CT_BUTTON,   &pGameOpts->auto_pause_playback,  DM_BOOL, &pGameOpts->auto_pause_playback,  0, 0, 0);
+#endif /* AUTO_PAUSE_PLAYBACK */
 #ifdef TRANS_UI
 	DataMapAdd(IDC_TRANSUI,       DM_BOOL, CT_BUTTON,   &pGameOpts->use_transui,   DM_BOOL, &pGameOpts->use_transui,   0, 0, 0);
 	DataMapAdd(IDC_TRANSPARENCY,  DM_INT,  CT_SLIDER,   &g_nUITransparencyIndex,   DM_INT,  &pGameOpts->ui_transparency, 0, 0, AssignUI_TRANSPARENCY);
 	DataMapAdd(IDC_TRANSPARENCYDISP, DM_NONE,  CT_NONE,   NULL, DM_INT,  &pGameOpts->ui_transparency, 0, 0, 0);
 #endif /* TRANS_UI */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-	/* ks hcmame s switch m68k core */
 	DataMapAdd(IDC_M68K_CORE,     DM_INT,  CT_COMBOBOX, &pGameOpts->m68k_core,     DM_INT,  &pGameOpts->m68k_core,     0, 0, 0);
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 
