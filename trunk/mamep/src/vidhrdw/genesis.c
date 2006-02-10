@@ -75,7 +75,7 @@ static void drawline_sprite(int line, UINT16 *bmap, int priority, UINT8 *spriteb
        UINT16		genesis_bg_pal_lookup[4];	/* lookup table for background tiles */
        UINT16		genesis_sp_pal_lookup[4];	/* lookup table for sprites */
        UINT8		genesis_vdp_regs[32];		/* VDP registers */
-       UINT16		scanbase;
+static UINT16		scanbase;
 
 /* LOCAL */
 static UINT8 *		vdp_vram;					/* VDP video RAM */
