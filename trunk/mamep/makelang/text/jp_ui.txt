@@ -74,7 +74,7 @@ MAME32について(&A)
 &Cancel
 キャンセル(&C)
 
-# ui/audit32.c: 398
+# ui/audit32.c: 423
 &Close
 閉じる(&C)
 
@@ -82,7 +82,7 @@ MAME32について(&A)
 &Contents\tF1
 ヘルプコンテンツ(&H)\tF1
 
-# ui/audit32.c: 275
+# ui/audit32.c: 300
 &Continue
 継続(&P)
 
@@ -178,7 +178,7 @@ MAME32について(&A)
 &Palette Setting...
 パレット設定(&P)...
 
-# ui/audit32.c: 270 ui/mame32.rc: 404
+# ui/audit32.c: 295 ui/mame32.rc: 404
 &Pause
 一時停止(&P)
 
@@ -190,7 +190,7 @@ MAME32について(&A)
 &Play
 プレイ(&P)
 
-# ui/win32ui.c: 251, 3787, 6711, 6739
+# ui/win32ui.c: 251, 3787, 6712, 6740
 &Play %s
 プレイ(&P) %s
 
@@ -266,7 +266,7 @@ MAME32について(&A)
 &Working
 動作可(&W)
 
-# ui/win32ui.c: 6262
+# ui/win32ui.c: 6263
 '%s' is not a valid savestate file for game '%s'.
 '%s'はゲーム'%s'に適切なステートではありません。
 
@@ -422,7 +422,7 @@ Audit
 Audit ROM and samples sets
 ロムファイルとサンプルファイルを監査します
 
-# ui/audit32.c: 397
+# ui/audit32.c: 422
 Audit complete.\n
 チェック終了\n
 
@@ -486,7 +486,7 @@ Bad Dump
 Beam width
 ビーム
 
-# ui/audit32.c: 449
+# ui/audit32.c: 478
 Best available
 最良の状態です
 
@@ -598,7 +598,7 @@ C&lones
 CPU
 CPU
 
-# ui/dialogs.c: 198 ui/options.c: 263
+# ui/dialogs.c: 198 ui/options.c: 265
 Cabinet
 筐体
 
@@ -622,7 +622,7 @@ Categories
 Changing this item is not permitted
 このアイテムの変更は許可されていません
 
-# ui/audit32.c: 193, 202
+# ui/audit32.c: 218, 227
 Checking Game %s - %s
 チェック中 ゲーム %s - %s
 
@@ -698,7 +698,7 @@ Contains commands for working with the selected items
 Control &Panel
 コンパネ(&P)
 
-# ui/dialogs.c: 204 ui/options.c: 266
+# ui/dialogs.c: 204 ui/options.c: 268
 Control Panel
 コンパネ
 
@@ -734,11 +734,11 @@ Copyright (C) 1997-2006 The MAME Team
 Correct:
 正常:
 
-# ui/win32ui.c: 6173
+# ui/win32ui.c: 6174
 Could not open '%s' as a valid input file.
 「%s」を有効な再生ファイルとしてオープンできません
 
-# ui/win32ui.c: 6273
+# ui/win32ui.c: 6274
 Could not open '%s' as a valid savestate file.
 '%s'は正常はステートとして開けません。
 
@@ -806,7 +806,7 @@ Depth:
 Description
 ゲーム
 
-# ui/mame32.rc: 424, 520 ui/options.c: 297 ui/win32ui.c: 665
+# ui/mame32.rc: 424, 520 ui/options.c: 299 ui/win32ui.c: 665
 Details
 詳細
 
@@ -950,7 +950,7 @@ Dumping Status
 E&xit
 終了(&X)
 
-# ui/win32ui.c: 7210
+# ui/win32ui.c: 7211
 ERROR: required files are missing, the game cannot be run.
 エラー: 必要なファイルが不足しています。 このゲームは実行出来ません。
 
@@ -1002,7 +1002,7 @@ Enable steadykey support
 Enforce aspect ratio
 表\示比率を固定
 
-# ui/audit32.c: 102 ui/properties.c: 704, 799
+# ui/audit32.c: 103 ui/properties.c: 704, 799
 Error
 エラー
 
@@ -1014,7 +1014,7 @@ Error finding custom file name to save
 Error log (for developers)
 エラーログを出力(開発者向け)
 
-# ui/win32ui.c: 7302
+# ui/win32ui.c: 7303
 Error searching for custom folder
 カスタムフォルダが見つかりません
 
@@ -1034,7 +1034,7 @@ Exit the application
 FPS
 FPS
 
-# ui/audit32.c: 458
+# ui/audit32.c: 487
 Failed
 異常です
 
@@ -1042,7 +1042,7 @@ Failed
 Feedback strength
 フィードバックの強さ
 
-# ui/audit32.c: 209 ui/mame32.rc: 401
+# ui/audit32.c: 234 ui/mame32.rc: 401
 File Audit
 ファイル監査
 
@@ -1062,7 +1062,7 @@ Flip screen left-right
 Flip screen upside-down
 上下反転
 
-# ui/dialogs.c: 196 ui/options.c: 262
+# ui/dialogs.c: 196 ui/options.c: 264
 Flyer
 広告ポスター
 
@@ -1162,7 +1162,7 @@ Global vector options\nCustom options used by all games in the Vector
 Go to Microsoft's DirectX Web Page
 Microsoft's DirectX Webページを表\示
 
-# ui/options.c: 298, 721 ui/win32ui.c: 666
+# ui/options.c: 300, 723 ui/win32ui.c: 666
 Grouped
 グループ化
 
@@ -1190,7 +1190,7 @@ High Scores
 High thread priority
 スレッド優先度を高くする
 
-# ui/options.c: 268, 271
+# ui/options.c: 270, 273
 History
 ゲームの歴史
 
@@ -1294,7 +1294,7 @@ Keyboard
 L&arge Icons
 大きなアイコン(&A)
 
-# ui/options.c: 294 ui/win32ui.c: 662
+# ui/options.c: 296 ui/win32ui.c: 662
 Large Icons
 大きなアイコン
 
@@ -1310,7 +1310,7 @@ Lightgun device
 Line &Up Icons
 アイコンの整列(&U)
 
-# ui/options.c: 296 ui/win32ui.c: 664
+# ui/options.c: 298 ui/win32ui.c: 664
 List
 リスト
 
@@ -1318,7 +1318,7 @@ List
 Loa&d Savestate...
 ステートを読み込む(&D)...
 
-# ui/win32ui.c: 7127
+# ui/win32ui.c: 7128
 Loading %s
 ロード中 %s
 
@@ -1342,11 +1342,11 @@ MAMEリリースノートを表\示します
 MAME savestate files (*.sta)
 MAME ステートファイル (*.sta)
 
-# ui/options.c: 318
+# ui/options.c: 320
 MAME32 has changed *.ini file directory.\n\nWould you like to migrate old configurations to the new directory?
 MAME32は *.iniファイルディレクトリを変更しました。\n\n古い設定を新しいディレクトリに移動しますか？
 
-# ui/options.c: 4354
+# ui/options.c: 4452
 MAME32 has detected outdated configuration data.\n\nThe detected configuration data is from Version %s of MAME32.\nThe current version is %s. It is recommended that the\nconfiguration is set to the new defaults.\n\nWould you like to use the new configuration?
 MAME32 は、古い設定情報を検出しました。\n\n検出した情報は、MAME32 バージョン %s のものです。\n現在のバージョンは %s です。\n現在のバージョンによる新しいデフォルト設定を使用することを推奨します。\n\n新しい設定を使用しますか？
 
@@ -1358,7 +1358,7 @@ MAME32 version by
 MAME32 will now reset the selected\n
 MAME32 は選択された項目をリセットし\n
 
-# ui/mame32.rc: 366, 390, 401, 433, 453, 475, 509, 528, 581, 627, 663, 737, 799, 859, 894, 921, 958, 983, 1000, 1062, 1100, 1128, 1143 ui/options.c: 733 ui/translate.c: 102
+# ui/mame32.rc: 366, 390, 401, 433, 453, 475, 509, 528, 581, 627, 663, 737, 799, 859, 894, 921, 958, 983, 1000, 1062, 1100, 1128, 1143 ui/options.c: 735 ui/translate.c: 102
 MS Sans Serif
 ＭＳ Ｐゴシック
 
@@ -1370,7 +1370,7 @@ Manufactured:
 Manufacturer
 製造元
 
-# ui/dialogs.c: 200 ui/options.c: 264
+# ui/dialogs.c: 200 ui/options.c: 266
 Marquee
 マーキー
 
@@ -1394,7 +1394,7 @@ Miscellaneous
 Missing Sound
 サウンド無し
 
-# ui/audit32.c: 462
+# ui/audit32.c: 491
 Missing optional
 追加のROMがありません
 
@@ -1430,7 +1430,7 @@ Name
 New game changes
 新しいゲームの変更点を表\示します
 
-# ui/audit32.c: 125 ui/win32ui.c: 5375
+# ui/audit32.c: 126 ui/win32ui.c: 5376
 No
 いいえ
 
@@ -1458,7 +1458,7 @@ Non-Wor&king
 None
 なし
 
-# ui/audit32.c: 306, 310
+# ui/audit32.c: 331, 335
 None required
 必要ありません
 
@@ -1466,7 +1466,7 @@ None required
 Not Working
 動作不可
 
-# ui/audit32.c: 454
+# ui/audit32.c: 483
 Not found
 見つかりません
 
@@ -1534,7 +1534,7 @@ Paddle device
 Palette
 パレット設定
 
-# ui/audit32.c: 445
+# ui/audit32.c: 474
 Passed
 正常です
 
@@ -1550,7 +1550,7 @@ Pedal
 Pedal device
 ペダルディバイス
 
-# ui/options.c: 2942 ui/win32ui.c: 813
+# ui/options.c: 3019 ui/win32ui.c: 813
 Play Time
 プレイ時間
 
@@ -1618,7 +1618,7 @@ Pr&operties
 Prescale
 プリスケール
 
-# ui/win32ui.c: 3798, 6724, 6749
+# ui/win32ui.c: 3798, 6725, 6750
 Proper&ties of %s
 %sのプロパティ(&T)
 
@@ -1714,7 +1714,7 @@ ROMが見つかりません
 Randomly select a game.
 ゲームをランダムに選択します
 
-# ui/layout.c: 70 ui/win32ui.c: 5367
+# ui/layout.c: 70 ui/win32ui.c: 5368
 Raster
 ラスタ
 
@@ -1738,7 +1738,7 @@ Refresh game list
 Refresh:
 リフレッシュ:
 
-# ui/options.c: 1831
+# ui/options.c: 1838
 Reload configurations
 設定の再読み込み
 
@@ -2126,11 +2126,11 @@ Skip game info
 Sleep when possible
 アイドル時にCPUを開放
 
-# ui/options.c: 295 ui/win32ui.c: 663
+# ui/options.c: 297 ui/win32ui.c: 663
 Small Icons
 小さなアイコン
 
-# ui/dialogs.c: 194 ui/options.c: 261
+# ui/dialogs.c: 194 ui/options.c: 263
 Snapshot
 スクリーンショット
 
@@ -2198,7 +2198,7 @@ Sounds (*.wav)
 St&ory
 ストーリー(&O)
 
-# ui/options.c: 493 ui/properties.c: 2589, 2594, 2597, 2844, 2847, 4023, 4046, 4084 
+# ui/options.c: 495 ui/properties.c: 2589, 2594, 2597, 2844, 2847, 4023, 4046, 4084 
 Standard
 標準
 
@@ -2218,7 +2218,7 @@ Status:
 Stereo
 ステレオ
 
-# ui/options.c: 269
+# ui/options.c: 271
 Story
 ストーリー
 
@@ -2270,7 +2270,7 @@ There was not enough memory to complete the operation.
 Throttle
 速度制限を有効
 
-# ui/dialogs.c: 202 ui/options.c: 265
+# ui/dialogs.c: 202 ui/options.c: 267
 Title
 タイトル画面
 
@@ -2362,7 +2362,7 @@ Type
 USB Keyboard
 USB キーボード
 
-# ui/audit32.c: 102
+# ui/audit32.c: 103
 Unable to Load Riched32.dll
 Riched32.dllが読み込めません
 
@@ -2382,7 +2382,7 @@ Unavailable
 Unemulated Protection
 プロテクトの再現が不完全
 
-# ui/audit32.c: 440 ui/properties.c: 974
+# ui/audit32.c: 469 ui/properties.c: 974
 Unknown
 不明
 
@@ -2438,7 +2438,7 @@ Use various icon for Not Working game
 Use volume auto adjust
 自動音量調整機能\を使用
 
-# ui/layout.c: 71 ui/mame32.rc: 859 ui/options.c: 1135, 2878 ui/properties.c: 760 ui/treeview.c: 301 ui/win32ui.c: 5365
+# ui/layout.c: 71 ui/mame32.rc: 859 ui/options.c: 1145, 2955 ui/properties.c: 760 ui/treeview.c: 301 ui/win32ui.c: 5366
 Vector
 ベクタ
 
@@ -2458,7 +2458,7 @@ Vector (V)
 Vector (V) (%d:%d) %f Hz
 ベクタ (縦) (%d:%d) %f Hz
 
-# ui/options.c: 4368
+# ui/options.c: 4466
 Version Mismatch
 バージョンの相違
 
@@ -2474,7 +2474,7 @@ Video emulation isn't 100% accurate
 Volume attenuation
 ボリューム
 
-# ui/win32ui.c: 7213
+# ui/win32ui.c: 7214
 WARNING: the game might not run correctly.
 警告: このゲームは正常に実行出来ません。
 
@@ -2502,47 +2502,47 @@ Window frame (dark)
 Window frame (light)
 ウィンドウ フレーム (明)
 
-# ui/options.c: 740
+# ui/options.c: 742
 Windows UI specific GUI joystick options
 Windows UI版GUIのジョイスティック設定
 
-# ui/options.c: 755
+# ui/options.c: 757
 Windows UI specific GUI keyboard options
 Windows UI版GUIのキーボードオプション
 
-# ui/options.c: 659
+# ui/options.c: 661
 Windows UI specific directory options
 Windows UI版ディレクトリ設定
 
-# ui/options.c: 3184
+# ui/options.c: 3261
 Windows UI specific folder list filters options
 Windows UI版フォルダリストフラグ設定
 
-# ui/options.c: 794
+# ui/options.c: 796
 Windows UI specific folder list hide options
 Windows UI版フォルダリストの非表\示設定
 
-# ui/options.c: 688
+# ui/options.c: 690
 Windows UI specific general options
 Windows UI版一般設定
 
-# ui/options.c: 731
+# ui/options.c: 733
 Windows UI specific list font options
 Windows UI版リストフォント設定
 
-# ui/options.c: 720
+# ui/options.c: 722
 Windows UI specific list options
 Windows UI版リスト設定
 
-# ui/options.c: 669
+# ui/options.c: 671
 Windows UI specific startup options
 Windows UI版スタートアップ設定
 
-# ui/options.c: 713
+# ui/options.c: 715
 Windows UI specific window position options
 Windows UI版ウィンドウ位置設定
 
-# ui/options.c: 474 
+# ui/options.c: 476 
 Windows misc options
 Windows版：その他の設定
 
@@ -2558,7 +2558,7 @@ Wrong Colors
 Year
 製造年
 
-# ui/audit32.c: 120 ui/win32ui.c: 5373
+# ui/audit32.c: 121 ui/win32ui.c: 5374
 Yes
 はい
 
@@ -2590,7 +2590,7 @@ by &Type
 by &Year
 製造年(&Y)
 
-# ui/options.c: 3814, 3855, 3942, 3995, 4137 
+# ui/options.c: 3924, 3965, 4052, 4105, 4247 
 error invalid value for %s: %s\n
 エラー %s に不正な値を指定しました: %s\n
 
