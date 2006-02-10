@@ -616,7 +616,7 @@ int cli_frontend_init (int argc, char **argv)
 	/* ok, got a gamename */
 	if (prompt_driver_name)
 	{
-		fprintf(stderr, "running %s (%s) [press return]",drivers[game_index]->name,drivers[game_index]->description);
+		fprintf(stderr, _WINDOWS("running %s (%s) [press return]"),drivers[game_index]->name,drivers[game_index]->description);
 		getchar();
 	}
 
