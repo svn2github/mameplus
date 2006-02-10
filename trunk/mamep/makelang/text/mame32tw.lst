@@ -1539,7 +1539,8 @@ ufosensb	UFO 戰士 (未加密)	UFO 戰士 (未加密)	bootleg
 transfrm	變形金剛 / Transformer	變形金剛 / Transformer	Sega
 astrofl	變形金剛 (日本版)	變形金剛 (日本版)	Sega
 tetrisse	俄羅斯方塊 (日本版, System E)	俄羅斯方塊 (日本版, System E)	Sega
-sharrier	時空戰士	時空戰士	Sega
+sharrier	時空戰士 (Rev A, 8751 317-0063A?)	時空戰士 (Rev A, 8751 317-0063A?)	Sega
+sharrirb	時空戰士 (8751 317-0063?)	時空戰士 (8751 317-0063?)	Sega
 bodyslam	Dump 松本 / Body Slam (8751 317-unknown)	Dump 松本 / Body Slam (8751 317-unknown)	Sega
 dumpmtmt	Dump 松本 (日本版, 8751 317-unknown)	Dump 松本 (日本版, 8751 317-unknown)	Sega
 mjleague	大聯盟	大聯盟	Sega
@@ -1942,6 +1943,7 @@ scontra	超級魂斗羅	超級魂斗羅	Konami
 scontraj	超級魂斗羅 (日本版)	超級魂斗羅 (日本版)	Konami
 thunderx	雷霆戰機	雷霆戰機	Konami
 thnderxa	雷霆戰機 (Set 2)	雷霆戰機 (Set 2)	Konami
+thnderxb	雷霆戰機 (Set 3)	雷霆戰機 (Set 3)	Konami
 thnderxj	雷霆戰機 (日本版)	雷霆戰機 (日本版)	Konami
 devstors	餓流禍 / Devastators (ver. Z)	餓流禍 / Devastators (ver. Z)	Konami
 devstor2	餓流禍 / Devastators (ver. X)	餓流禍 / Devastators (ver. X)	Konami
@@ -2197,7 +2199,8 @@ chopper	航空騎兵物語 (美國版 set 1)	航空騎兵物語 (美國版 set 1)	SNK
 choppera	航空騎兵物語 (美國版 set 2)	航空騎兵物語 (美國版 set 2)	SNK
 chopperb	航空騎兵物語 (美國版 set 3)	航空騎兵物語 (美國版 set 3)	SNK
 legofair	航空騎兵物語 / Koukuu Kihei Monogatari - The Legend of Air Cavalry (日本版)	航空騎兵物語 / Koukuu Kihei Monogatari - The Legend of Air Cavalry (日本版)	SNK
-ikari3	怒 III	怒 III	SNK
+ikari3	怒 III (Rotary Joystick)	怒 III (Rotary Joystick)	SNK
+ikari3nr	怒 III (Normal Joystick)	怒 III (Normal Joystick)	SNK
 pow	脫獄 - Prisoners of War / P.O.W. - Prisoners of War (美國版)	脫獄 - Prisoners of War / P.O.W. - Prisoners of War (美國版)	SNK
 powj	脫獄 - Prisoners of War (日本版)	脫獄 - Prisoners of War (日本版)	SNK
 searchar	異形大作戰 / SAR - 搜救 (世界版)	異形大作戰 / SAR - 搜救 (世界版)	SNK
@@ -3041,7 +3044,7 @@ luplup	漩渦泡泡 (version 3.0 / 990128)	漩渦泡泡 (version 3.0 / 990128)	Omega Sys
 luplup29	漩渦泡泡 (version 2.9 / 990108)	漩渦泡泡 (version 2.9 / 990108)	Omega System
 puzlbang	漩渦泡泡 / Puzzle Bang Bang (version 2.8 / 990106)	漩渦泡泡 / Puzzle Bang Bang (version 2.8 / 990106)	Omega System
 suplup	超級漩渦泡泡 (version 4.0 / 990518)	超級漩渦泡泡 (version 4.0 / 990518)	Omega System
-xfiles	X-檔案	X-檔案	dgPIX Entertainment Inc.
+xfiles	X 檔案	X 檔案	dgPIX Entertainment Inc.
 rabbit	羅媚斗	羅媚斗	Electronic Arts / Aorn
 cultname	姓名鑑定命名機	姓名鑑定命名機	I'Max
 yuka	遊華	遊華	Yubis / T.System

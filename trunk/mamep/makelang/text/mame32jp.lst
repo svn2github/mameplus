@@ -527,8 +527,8 @@ todruaga	ドルアーガの塔 (new ver)	どるあーがのとう	Namco
 todruago	ドルアーガの塔 (old ver)	どるあーがのとう	Namco
 motos	モトス	もとす	Namco
 grobda	グロブダー (new ver)	ぐろぶだー	Namco
-grobda2	グロブダー (set 1 old ver)	ぐろぶだー	Namco
-grobda3	グロブダー (set 2 old ver)	ぐろぶだー	Namco
+grobda2	グロブダー (old ver set 1)	ぐろぶだー	Namco
+grobda3	グロブダー (old ver set 2)	ぐろぶだー	Namco
 gaplus	ギャプラス (rev D)	ぎゃぷらす	Namco
 gaplusa	ギャプラス (alt hardware)	ぎゃぷらす	Namco
 gapluso	ギャプラス (rev B)	ぎゃぷらす	Namco
@@ -2689,7 +2689,8 @@ enduror1	エンデューロレーサー (YM2203 FD1089B 317-0013A)	えんでゅーろれーさー	Se
 endurob2	エンデューロレーサー (海賊版 set 2)	えんでゅーろれーさー	bootleg
 endurobl	エンデューロレーサー (海賊版 set 1)	えんでゅーろれーさー	bootleg
 hangon	ハングオン	はんぐおん_1	Sega
-sharrier	スペースハリアー	すぺーすはりあー_1	Sega
+sharrier	スペースハリアー (rev A 8751 317-0063A?)	すぺーすはりあー_1	Sega
+sharrirb	スペースハリアー (8751 317-0063?)	すぺーすはりあー_1	Sega
 shangupb	スーパーハングオン (Hang-On upgrade) (海賊版)	すーぱーはんぐおん	bootleg
 aliensy1	エイリアンシンドローム (set 1 System16A FD1089A 317-0033)	えいりあんしんどろーむ	Sega
 aliensy2	エイリアンシンドローム (set 2 System16A FD1089A 317-0033)	えいりあんしんどろーむ	Sega
@@ -3554,6 +3555,7 @@ scontra	スーパー魂斗羅 -エイリアンの逆襲 / Super Contra	すーぱーこんとら	Konami
 scontraj	スーパー魂斗羅 -エイリアンの逆襲 (日本版)	すーぱーこんとら	Konami
 thunderx	サンダークロス	さんだーくろす_1	Konami
 thnderxa	サンダークロス (set 2)	さんだーくろす_1	Konami
+thnderxb	サンダークロス (set 3)	さんだーくろす_1	Konami
 thnderxj	サンダークロス (日本版)	さんだーくろす_1	Konami
 mainevt	リングの王者 / The Main Event (4 players ver Y)	りんぐのおうじゃ	Konami
 mainevto	リングの王者 / The Main Event (4 players ver F)	りんぐのおうじゃ	Konami
@@ -3779,6 +3781,7 @@ bm6thmix	ビートマニア 6th MIX -The UK underground music (ver JA-A)	びーとまにあ_
 thunderh	オペレーションサンダーハリケーン (ver UAA)	おぺれーしょんさんだーはりけーん	Konami
 gticlub	GTIクラブ -Rally Cote D'azur (ver AAA)	じーてぃーあいくらぶ	Konami
 gticlubj	GTIクラブ -Rally Cote D'azur (ver JAA)	じーてぃーあいくらぶ	Konami
+hangplt	ハングパイロット	はんぐぱいろっと	Konami
 nbapbp	NBAプレイバイプレイ	えぬびーえーぷれいばいぷれい	Konami
 gradius4	グラディウスIV -復活	ぐらでぃうす_4	Konami
 sscope	サイレントスコープ	さいれんとすこーぷ_1	Konami
@@ -4254,7 +4257,8 @@ ftsoccer	ファイティングサッカー	ふぁいてぃんぐさっかー	SNK
 tdfever	タッチダウンフィーバー	たっちだうんふぃーばー_1	SNK
 tdfeverj	タッチダウンフィーバー (日本版)	たっちだうんふぃーばー_1	SNK
 tdfever2	タッチダウンフィーバーII	たっちだうんふぃーばー_2	SNK
-ikari3	怒III -The Rescue	いかり_3	SNK
+ikari3	怒III -The Rescue (rotary joystick)	いかり_3	SNK
+ikari3nr	怒III -The Rescue (normal joystick)	いかり_3	SNK
 pow	脱獄 -Prisoners of War / P.O.W. -Prisoners of War (USA版)	だつごく	SNK
 powj	脱獄 -Prisoners of War (日本版)	だつごく	SNK
 searchar	SAR <サーチアンドレスキュー> (海外版)	えすえーあーる	SNK
@@ -5953,7 +5957,8 @@ hidnctch	ヒドゥンキャッチ (海外版 pcb ver 3.03)	ひどぅんきゃっち	Eolith
 landbrk	ランドブレイカー (海外版 pcb ver 3.02)	らんどぶれいかー	Eolith
 landbrka	ランドブレイカー (海外版 pcb ver 3.03)	らんどぶれいかー	Eolith
 raccoon	ラクーンワールド	らくーんわーるど	Eolith
-fort2b	フォートレス2 ブルーアーケード (ver 1.00 / pcb ver 3.05)	ふぉーとれす2	Eolith
+fort2b	フォートレス2 ブルーアーケード (ver 1.01 / pcb ver 3.05)	ふぉーとれす2	Eolith
+fort2ba	フォートレス2 ブルーアーケード (ver 1.00 / pcb ver 3.05)	ふぉーとれす2	Eolith
 klondkp	クロンダイクプラス	くろんだいくぷらす	Eolith
 xfiles	X-ファイル	えっくすふぁいる	dgPIX Entertainment Inc.
 kdynastg	キング・オブ・ダイナストギア (ver 1.8)	きんぐおぶだいなすとぎあ	EZ Graphics
