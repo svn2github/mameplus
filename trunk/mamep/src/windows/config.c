@@ -616,7 +616,9 @@ int cli_frontend_init (int argc, char **argv)
 	/* ok, got a gamename */
 	if (prompt_driver_name)
 	{
-		fprintf(stderr, _WINDOWS("running %s (%s) [press return]"),drivers[game_index]->name,drivers[game_index]->description);
+		fprintf(stderr, _WINDOWS("running %s (%s) [press return]"),drivers[game_index]->name,
+		        options.use_lang_list ? _LST(drivers[game_index]->description) :
+		                                drivers[game_index]->description);
 		getchar();
 	}
 
@@ -866,6 +868,7 @@ static int config_handle_arg(char *arg)
 		/* call rand() once to get away from the seed */
 		rand();
 		game_index = rand() % i;
+		gamename = strdup(drivers[game_index]->name);
 
 		/* make sure that we prompt the driver name */
 		prompt_driver_name = TRUE;
