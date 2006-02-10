@@ -82,6 +82,10 @@ void config_init(void)
 	config_register("counters", counters_load, counters_save);
 	config_register("mixer", sndintrf_load, sndintrf_save);
 	config_register("cpu", cpu_load, cpu_save);
+
+#ifdef MESS
+	mess_config_init();
+#endif
 }
 
 

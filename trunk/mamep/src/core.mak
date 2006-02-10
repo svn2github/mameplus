@@ -52,7 +52,6 @@ COREOBJS = \
 	$(OBJ)/usrintrf.o \
 	$(OBJ)/validity.o \
 	$(OBJ)/version.o \
-	$(OBJ)/x86drc.o \
 	$(OBJ)/xmlfile.o \
 	$(OBJ)/sound/filter.o \
 	$(OBJ)/sound/flt_vol.o \
@@ -91,6 +90,13 @@ ifneq ($(USE_IPS),)
 COREOBJS += $(OBJ)/patch.o
 endif
 
+ifdef X86_MIPS3_DRC
+COREOBJS += $(OBJ)/x86drc.o
+else
+ifdef X86_PPC_DRC
+COREOBJS += $(OBJ)/x86drc.o
+endif
+endif
 
 
 #-------------------------------------------------
