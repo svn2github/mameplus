@@ -232,20 +232,32 @@ VIDEO_UPDATE(backfire)
 		UINT16* line_src = (UINT16 *)(backfire_left->line[y]);
 		UINT16* line_src2 = (UINT16 *)(backfire_right->line[y]);
 
-		if (readinputport(6) & 1)
+		if (options.disable_2nd_monitor)
+		{
+			if (readinputport(6) & 1)
+			{
+				/* left screen */
+				for (x=0*8;x<40*8;x++)
+					line_dest[x] = line_src[x];
+			}
+			else
+			{
+				/* right screen */
+				for (x=0*8;x<40*8;x++)
+					line_dest[x] = line_src2[x];
+			}
+		}
+		else
 		{
 			/* left screen */
 			for (x=0*8;x<40*8;x++)
 			{
 				line_dest[x] = line_src[x];
 			}
-		}
-		else
-		{
 			/* right screen */
 			for (x=0*8;x<40*8;x++)
 			{
-				line_dest[x] = line_src2[x];
+				line_dest[x+40*8] = line_src2[x];
 			}
 		}
 	}
@@ -529,10 +541,18 @@ static MACHINE_DRIVER_START( backfire )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN )
 	MDRV_SCREEN_SIZE(80*8, 32*8)
-	MDRV_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
+	if (options.disable_2nd_monitor)
+	{
+		MDRV_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
+		MDRV_ASPECT_RATIO(4,3)
+	}
+	else
+	{
+		MDRV_VISIBLE_AREA(0*8, 80*8-1, 1*8, 31*8-1)
+		MDRV_ASPECT_RATIO(8,3)
+	}
 	MDRV_GFXDECODE(gfxdecodeinfo_backfire)
 	MDRV_PALETTE_LENGTH(2048)
-	//MDRV_ASPECT_RATIO(8,3)
 
 	MDRV_VIDEO_START(backfire)
 	MDRV_VIDEO_UPDATE(backfire)

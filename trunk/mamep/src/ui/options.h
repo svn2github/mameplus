@@ -191,6 +191,8 @@ typedef struct
 #ifdef USE_IPS
 	char*  patchname;
 #endif /* USE_IPS */
+	BOOL   disable_2nd_monitor;
+	BOOL   confirm_quit;
 #ifdef AUTO_PAUSE_PLAYBACK
 	BOOL   auto_pause_playback;
 #endif /* AUTO_PAUSE_PLAYBACK */

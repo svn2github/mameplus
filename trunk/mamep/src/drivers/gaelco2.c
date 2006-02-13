@@ -823,14 +823,21 @@ static MACHINE_DRIVER_START( touchgo )
 
 	/* video hardware */
 	MDRV_SCREEN_SIZE(64*16, 32*16)
-#ifdef ONE_MONITOR
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_BUFFERS_SPRITERAM)
-	MDRV_VISIBLE_AREA(0, 480-1, 16, 256-1)
-#else
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_BUFFERS_SPRITERAM | VIDEO_DUAL_MONITOR)
-	MDRV_VISIBLE_AREA(0, 2*480-1, 16, 256-1)
-	MDRV_ASPECT_RATIO(8,3)
-#endif
+//#ifdef ONE_MONITOR
+	if (options.disable_2nd_monitor)
+	{
+		MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_BUFFERS_SPRITERAM)
+		MDRV_VISIBLE_AREA(0, 480-1, 16, 256-1)
+		MDRV_ASPECT_RATIO(4,3)
+	}
+//#else
+	else
+	{
+		MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_BUFFERS_SPRITERAM | VIDEO_DUAL_MONITOR)
+		MDRV_VISIBLE_AREA(0, 2*480-1, 16, 256-1)
+		MDRV_ASPECT_RATIO(8,3)
+//#endif
+	}
 	MDRV_GFXDECODE(gfxdecodeinfo_0x0400000)
 	MDRV_PALETTE_LENGTH(4096*16 - 16)	/* game's palette is 4096 but we allocate 15 more for shadows & highlights */
 
@@ -841,17 +848,26 @@ static MACHINE_DRIVER_START( touchgo )
 	/* sound hardware */
 	/* the chip is stereo, but the game sound is mono because the right channel
        output is for cabinet 1 and the left channel output is for cabinet 2 */
-#ifndef ONE_MONITOR
-	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
-#else
-	MDRV_SPEAKER_STANDARD_MONO("left")
-#endif
+//#ifndef ONE_MONITOR
+	if (!options.disable_2nd_monitor)
+	{
+		MDRV_SPEAKER_STANDARD_STEREO("left", "right")
+	}
+//#else
+	else
+	{
+		MDRV_SPEAKER_STANDARD_MONO("left")
+	}
+//#endif
 	MDRV_SOUND_ADD(GAELCO_GAE1, 0)
 	MDRV_SOUND_CONFIG(touchgo_snd_interface)
 	MDRV_SOUND_ROUTE(0, "left", 1.0)
-#ifndef ONE_MONITOR
-	MDRV_SOUND_ROUTE(1, "right", 1.0)
-#endif
+//#ifndef ONE_MONITOR
+	if (!options.disable_2nd_monitor)
+	{
+		MDRV_SOUND_ROUTE(1, "right", 1.0)
+	}
+//#endif
 MACHINE_DRIVER_END
 
 /*
@@ -1278,14 +1294,21 @@ static MACHINE_DRIVER_START( wrally2 )
 
 	/* video hardware */
 	MDRV_SCREEN_SIZE(64*16, 32*16)
-#ifdef ONE_MONITOR
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_BUFFERS_SPRITERAM)
-	MDRV_VISIBLE_AREA(0, 384-1, 16, 256-1)
-#else
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_BUFFERS_SPRITERAM | VIDEO_DUAL_MONITOR)
-	MDRV_VISIBLE_AREA(0, 2*384-1, 16, 256-1)
-	MDRV_ASPECT_RATIO(8,3)
-#endif
+//#ifdef ONE_MONITOR
+	if (options.disable_2nd_monitor)
+	{
+		MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_BUFFERS_SPRITERAM)
+		MDRV_VISIBLE_AREA(0, 384-1, 16, 256-1)
+		MDRV_ASPECT_RATIO(4,3)
+	}
+//#else
+	else
+	{
+		MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_BUFFERS_SPRITERAM | VIDEO_DUAL_MONITOR)
+		MDRV_VISIBLE_AREA(0, 2*384-1, 16, 256-1)
+		MDRV_ASPECT_RATIO(8,3)
+	}
+//#endif
 	MDRV_GFXDECODE(gfxdecodeinfo_0x0200000)
 	MDRV_PALETTE_LENGTH(4096*16 - 16)	/* game's palette is 4096 but we allocate 15 more for shadows & highlights */
 
@@ -1296,17 +1319,26 @@ static MACHINE_DRIVER_START( wrally2 )
 	/* sound hardware */
 	/* the chip is stereo, but the game sound is mono because the right channel
        output is for cabinet 1 and the left channel output is for cabinet 2 */
-#ifndef ONE_MONITOR
-	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
-#else
-	MDRV_SPEAKER_STANDARD_MONO("left")
-#endif
+//#ifndef ONE_MONITOR
+	if (!options.disable_2nd_monitor)
+	{
+		MDRV_SPEAKER_STANDARD_STEREO("left", "right")
+	}
+//#else
+	else
+	{
+		MDRV_SPEAKER_STANDARD_MONO("left")
+	}
+//#endif
 	MDRV_SOUND_ADD(GAELCO_GAE1, 0)
 	MDRV_SOUND_CONFIG(wrally2_snd_interface)
 	MDRV_SOUND_ROUTE(0, "left", 1.0)
-#ifndef ONE_MONITOR
-	MDRV_SOUND_ROUTE(1, "right", 1.0)
-#endif
+//#ifndef ONE_MONITOR
+	if (!options.disable_2nd_monitor)
+	{
+		MDRV_SOUND_ROUTE(1, "right", 1.0)
+	}
+//#endif
 MACHINE_DRIVER_END
 
 /*

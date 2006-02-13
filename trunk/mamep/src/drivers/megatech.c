@@ -426,14 +426,30 @@ static MACHINE_DRIVER_START( megatech )
 
 	MDRV_MACHINE_INIT(genesis)
 
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_HAS_SHADOWS | VIDEO_HAS_HIGHLIGHTS /*| VIDEO_DUAL_MONITOR*/)
+	if (options.disable_2nd_monitor)
+	{
+		MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_HAS_SHADOWS | VIDEO_HAS_HIGHLIGHTS)
+	}
+	else
+	{
+		MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_HAS_SHADOWS | VIDEO_HAS_HIGHLIGHTS | VIDEO_DUAL_MONITOR)
+	}
 
 	MDRV_VIDEO_START(megatech)
 	MDRV_VIDEO_UPDATE(megatech)
 
-//	MDRV_ASPECT_RATIO(4,6)
-	MDRV_SCREEN_SIZE(320,224/*+192*/) /* removed megatech BIOS screen/menu */
-	MDRV_VISIBLE_AREA(0, 319, 0, 223/*+192*/) /* removed megatech BIOS screen/menu */
+	if (options.disable_2nd_monitor)
+	{
+		MDRV_ASPECT_RATIO(4,3)
+		MDRV_SCREEN_SIZE(320,224)
+		MDRV_VISIBLE_AREA(0, 319, 0, 223)
+	}
+	else
+	{
+		MDRV_ASPECT_RATIO(4,6)
+		MDRV_SCREEN_SIZE(320,224+192) /* +192 for megatech BIOS screen/menu */
+		MDRV_VISIBLE_AREA(0, 319, 0, 223+192)
+	}
 	MDRV_PALETTE_LENGTH(64+32) /* +32 for megatech bios vdp part */
 
 	/* sound hardware */

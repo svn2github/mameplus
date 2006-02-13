@@ -260,6 +260,7 @@ struct _global_options
 	UINT8           uicolortable[MAX_COLORTABLE][3];	/* palette options for UI */
 #endif /* UI_COLOR_DISPLAY */
 
+	int		disable_2nd_monitor;	/* 0 to show second monitor */
 	int		confirm_quit;	/* confirm on exiting game */
 	int		autofiredelay[MAX_PLAYERS];	/* autofire delay */
 

@@ -2633,19 +2633,39 @@ VIDEO_UPDATE( multi32 )
 	/* update the visible area */
 	if (system32_videoram[0x1ff00/2] & 0x8000)
 	{
-		set_visible_area(0, 52*8-1, 0, 28*8-1);
+		if (options.disable_2nd_monitor)
+		{
+			set_visible_area(0, 52*8-1, 0, 28*8-1);
+			clipright.min_x = 0;
+			clipright.max_x = 52*8-1;
+		}
+		else
+		{
+			set_visible_area(0, 52*2*8-1, 0, 28*8-1);
+			clipright.min_x = 52*8;
+			clipright.max_x = 52*2*8-1;
+		}
+
 		clipleft.min_x = 0;
 		clipleft.max_x = 52*8-1;
-		clipright.min_x = 0;
-		clipright.max_x = 52*8-1;
 	}
 	else
 	{
-		set_visible_area(0, 40*8-1, 0, 28*8-1);
+		if (options.disable_2nd_monitor)
+		{
+			set_visible_area(0, 40*8-1, 0, 28*8-1);
+			clipright.min_x = 0;
+			clipright.max_x = 40*8-1;
+		}
+		else
+		{
+			set_visible_area(0, 40*2*8-1, 0, 28*8-1);
+			clipright.min_x = 40*8;
+			clipright.max_x = 40*2*8-1;
+		}
+
 		clipleft.min_x = 0;
 		clipleft.max_x = 40*8-1;
-		clipright.min_x = 0;
-		clipright.max_x = 40*8-1;
 	}
 	clipleft.min_y = clipright.min_y = cliprect->min_y;
 	clipleft.max_y = clipright.max_y = cliprect->max_y;
@@ -2674,15 +2694,29 @@ VIDEO_UPDATE( multi32 )
 
 	/* do the mixing */
 	profiler_mark(PROFILER_USER3);
-	if (readinputport(16) & 1)	/* left screen */
+	if (options.disable_2nd_monitor)
+	{
+		if (readinputport(16) & 1)	/* left screen */
+		{
+			if (system32_displayenable[0])
+				mix_all_layers(0, 0, bitmap, &clipleft, enablemask);
+			else
+				fillbitmap(bitmap, get_black_pen(), &clipleft);
+		}
+		else	/* right screen */
+		{
+			if (system32_displayenable[1])
+				mix_all_layers(1, clipright.min_x, bitmap, &clipleft, enablemask);
+			else
+				fillbitmap(bitmap, get_black_pen(), &clipright);
+		}
+	}
+	else
 	{
 		if (system32_displayenable[0])
 			mix_all_layers(0, 0, bitmap, &clipleft, enablemask);
 		else
 			fillbitmap(bitmap, get_black_pen(), &clipleft);
-	}
-	else	/* right screen */
-	{
 		if (system32_displayenable[1])
 			mix_all_layers(1, clipright.min_x, bitmap, &clipleft, enablemask);
 		else
