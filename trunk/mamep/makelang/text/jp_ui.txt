@@ -438,6 +438,10 @@ Auto anti-clockwise
 Auto clockwise
 自動的に時計回り
 
+# ui/mame32.rc: 822
+Auto pause when playback is finished
+再生終了時に自動停止
+
 # ui/mame32.rc: 819
 Auto restore and save (only if available)
 自動の起動時読みと終了時保存         
@@ -2601,8 +2605,4 @@ settings then exit.\n\n
 # ui/dialogs.c: 117
 the next time MAME32 is run.\n\n
 反映されます。\n\n
-
-# ui/mame32.rc: 822
-Auto pause when playback is finished
-
 

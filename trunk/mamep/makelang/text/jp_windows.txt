@@ -774,6 +774,10 @@ artwork resolution (0 for auto)
 attempt to match the game's refresh rate
 リフレッシュレートマッチを有効
 
+# windows/config.c: 273
+automatic pause when playback is finished
+再生終了時に自動停止
+
 # windows/config.c: 225
 automatically rotate screen anti-clockwise for vertical games
 縦型ゲームを自動的に反時計回りに回転
@@ -1609,8 +1613,4 @@ window frame color (medium)
 # windows/fronthlp.c: 75
 year, manufacturer and full name
 サポートゲーム、製造年、メーカーのリストを表\示
-
-# windows/config.c: 273
-automatic pause when playback is finished
-
 
