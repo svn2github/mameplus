@@ -50,7 +50,7 @@
   Axis %d (%s)%s\n
 
 
-# windows/config.c: 543
+# windows/config.c: 545
  %s running parameters
 
 
@@ -122,7 +122,7 @@ Blitter initialisation complete (%.2lfMB video memory free)\n
 CRC-32s
 
 
-# windows/config.c: 290
+# windows/config.c: 292
 Configuration options
 
 
@@ -374,7 +374,7 @@ Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 LED mode (ps/2|usb)
 
 
-# windows/config.c: 297
+# windows/config.c: 299
 Language options
 
 
@@ -486,19 +486,19 @@ Out of memory!\n
 PARTKNOWN %s\n
 
 
-# windows/config.c: 438
+# windows/config.c: 440
 Parsing %s : ERROR\n
 
 
-# windows/config.c: 448
+# windows/config.c: 450
 Parsing %s : N/A\n
 
 
-# windows/config.c: 443
+# windows/config.c: 445
 Parsing %s : OK\n
 
 
-# windows/config.c: 591
+# windows/config.c: 593
 Playing back previously recorded game %s (%s) [press return]\n
 
 
@@ -646,7 +646,7 @@ Unable to render to preprocess texture: %08x\n
 Usage:  MAME gamename [options]\n\n
 
 
-# windows/config.c: 550
+# windows/config.c: 552
 Usage: %s [game] [options]\nOptions:\n
 
 
@@ -738,7 +738,7 @@ Windows video options
 \"%s\" controller support enabled\n
 
 
-# windows/config.c: 609
+# windows/config.c: 611
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 
 
@@ -774,7 +774,7 @@ artwork resolution (0 for auto)
 attempt to match the game's refresh rate
 
 
-# windows/config.c: 273
+# windows/config.c: 275
 automatic pause when playback is finished
 
 
@@ -830,7 +830,7 @@ button color (silver)
 button color (yellow)
 
 
-# windows/config.c: 277
+# windows/config.c: 279
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 
 
@@ -850,7 +850,11 @@ compare files with known MAME roms
 compare files with known MAME roms (brief)
 
 
-# windows/config.c: 291
+# windows/config.c: 273
+confirm before exiting game
+
+
+# windows/config.c: 293
 create the default configuration file
 
 
@@ -922,11 +926,15 @@ directory to save nvram contents
 directory to save states
 
 
-# windows/config.c: 295
+# windows/config.c: 272
+disable second monitor emulation
+
+
+# windows/config.c: 297
 display additional diagnostic information
 
 
-# windows/config.c: 292
+# windows/config.c: 294
 display running parameters in rc style
 
 
@@ -1026,11 +1034,11 @@ enable/disable cheat subsystem
 enable/disable debugger (only if available)
 
 
-# windows/config.c: 294
+# windows/config.c: 296
 enable/disable loading of configfiles
 
 
-# windows/config.c: 299
+# windows/config.c: 301
 enable/disable local language game list
 
 
@@ -1050,11 +1058,11 @@ enforce aspect ratio
 error invalid value for %s: %s\n
 
 
-# windows/config.c: 491
+# windows/config.c: 493
 error on rc creation\n
 
 
-# windows/config.c: 500
+# windows/config.c: 502
 error while parsing cmdline\n
 
 
@@ -1070,7 +1078,7 @@ error: %s requires an argument\n
 error: couldn't open file: %s\n
 
 
-# windows/config.c: 855
+# windows/config.c: 857
 error: duplicate gamename: %s\n
 
 
@@ -1138,11 +1146,11 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 
 
-# windows/config.c: 1013
+# windows/config.c: 1015
 error: malloc failed in win_dirname\n
 
 
-# windows/config.c: 1053
+# windows/config.c: 1055
 error: malloc failed in win_strip_extension\n
 
 
@@ -1162,11 +1170,11 @@ error: unknown option %s\n
 error: unknown option type: %d, this should not happen!\n
 
 
-# windows/config.c: 566
+# windows/config.c: 568
 failed to open %s for playback\n
 
 
-# windows/config.c: 671
+# windows/config.c: 673
 failed to open %s for recording\n
 
 
@@ -1350,7 +1358,7 @@ rotate screen clockwise
 run in a window/run on full screen
 
 
-# windows/config.c: 618
+# windows/config.c: 620
 running %s (%s) [press return]
 
 
@@ -1382,7 +1390,7 @@ scanline intensity
 script for debugger (only if available)
 
 
-# windows/config.c: 298
+# windows/config.c: 300
 select translation language
 
 
@@ -1470,7 +1478,7 @@ show clones
 show help message
 
 
-# windows/config.c: 293
+# windows/config.c: 295
 show this help
 
 
@@ -1534,7 +1542,7 @@ throttle speed to the game's framerate
 trackball
 
 
-# windows/config.c: 281
+# windows/config.c: 283
 transparency of UI background [0 - 255]
 
 
@@ -1582,7 +1590,7 @@ use overlay artwork
 use samples
 
 
-# windows/config.c: 280
+# windows/config.c: 282
 use transparent background for UI text
 
 
