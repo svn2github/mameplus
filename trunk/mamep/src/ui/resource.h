@@ -336,70 +336,72 @@
 
 #define IDC_EFFECTOVERRIDES             1301
 #define IDC_AUTO_PAUSE_PLAYBACK         1302 // USE_AUTO_PAUSE_PLAYBACK
-#define IDC_M68K_CORE                   1303 // ks hcmame s switch m68k core
-#define IDC_M68K_CORETEXT               1304 // ks hcmame s switch m68k core
-#define IDC_VOLUME_ADJUST               1305 // USE_VOLUME_AUTO_ADJUST
-#define IDC_BROKEN_ICON                 1306
-#define IDC_EDIT_BROKEN_COLOR           1307
+#define IDC_DISABLE_2ND_MONITOR         1303 // disable_2nd_monitor
+#define IDC_CONFIRM_QUIT                1304 // confirm_quit
+#define IDC_M68K_CORE                   1305 // ks hcmame s switch m68k core
+#define IDC_M68K_CORETEXT               1306 // ks hcmame s switch m68k core
+#define IDC_VOLUME_ADJUST               1307 // USE_VOLUME_AUTO_ADJUST
+#define IDC_BROKEN_ICON                 1308
+#define IDC_EDIT_BROKEN_COLOR           1309
 
-#define IDC_JOYID1                      1308 // JOYSTICK_ID
-#define IDC_JOYID2                      1309 // JOYSTICK_ID
-#define IDC_JOYID3                      1310 // JOYSTICK_ID
-#define IDC_JOYID4                      1311 // JOYSTICK_ID
-#define IDC_JOYID5                      1312 // JOYSTICK_ID
-#define IDC_JOYID6                      1313 // JOYSTICK_ID
-#define IDC_JOYID7                      1314 // JOYSTICK_ID
-#define IDC_JOYID8                      1315 // JOYSTICK_ID
-#define IDC_JOYIDTEXT                   1316 // JOYSTICK_ID
-#define IDC_JOYID1TEXT                  1317 // JOYSTICK_ID
-#define IDC_JOYID2TEXT                  1318 // JOYSTICK_ID
-#define IDC_JOYID3TEXT                  1319 // JOYSTICK_ID
-#define IDC_JOYID4TEXT                  1320 // JOYSTICK_ID
-#define IDC_JOYID5TEXT                  1321 // JOYSTICK_ID
-#define IDC_JOYID6TEXT                  1322 // JOYSTICK_ID
-#define IDC_JOYID7TEXT                  1323 // JOYSTICK_ID
-#define IDC_JOYID8TEXT                  1324 // JOYSTICK_ID
+#define IDC_JOYID1                      1310 // JOYSTICK_ID
+#define IDC_JOYID2                      1311 // JOYSTICK_ID
+#define IDC_JOYID3                      1312 // JOYSTICK_ID
+#define IDC_JOYID4                      1313 // JOYSTICK_ID
+#define IDC_JOYID5                      1314 // JOYSTICK_ID
+#define IDC_JOYID6                      1315 // JOYSTICK_ID
+#define IDC_JOYID7                      1316 // JOYSTICK_ID
+#define IDC_JOYID8                      1317 // JOYSTICK_ID
+#define IDC_JOYIDTEXT                   1318 // JOYSTICK_ID
+#define IDC_JOYID1TEXT                  1319 // JOYSTICK_ID
+#define IDC_JOYID2TEXT                  1320 // JOYSTICK_ID
+#define IDC_JOYID3TEXT                  1321 // JOYSTICK_ID
+#define IDC_JOYID4TEXT                  1322 // JOYSTICK_ID
+#define IDC_JOYID5TEXT                  1323 // JOYSTICK_ID
+#define IDC_JOYID6TEXT                  1324 // JOYSTICK_ID
+#define IDC_JOYID7TEXT                  1325 // JOYSTICK_ID
+#define IDC_JOYID8TEXT                  1326 // JOYSTICK_ID
 
-#define IDC_BIOS1                       1325
-#define IDC_BIOS2                       1326
-#define IDC_BIOS3                       1327
-#define IDC_BIOS4                       1328
-#define IDC_BIOS5                       1329
-#define IDC_BIOS6                       1330
-#define IDC_BIOS7                       1331
-#define IDC_BIOS8                       1332
-#define IDC_BIOSTEXT                    1333
-#define IDC_BIOSTEXT1                   1334
-#define IDC_BIOSTEXT2                   1335
-#define IDC_BIOSTEXT3                   1336
-#define IDC_BIOSTEXT4                   1337
-#define IDC_BIOSTEXT5                   1338
-#define IDC_BIOSTEXT6                   1339
-#define IDC_BIOSTEXT7                   1340
-#define IDC_BIOSTEXT8                   1341
-#define IDC_ZOOMTEXT                    1342
-#define IDC_CLEAN_STRETCHTEXT           1343
-#define IDC_SCREENTEXT                  1344
-#define IDC_D3D_FILTERTEXT              1345
-#define IDC_D3D_EFFECTTEXT              1346
-#define IDC_D3D_PRESCALETEXT            1347
-#define IDC_USE_LIST                    1348
+#define IDC_BIOS1                       1327
+#define IDC_BIOS2                       1328
+#define IDC_BIOS3                       1329
+#define IDC_BIOS4                       1330
+#define IDC_BIOS5                       1331
+#define IDC_BIOS6                       1332
+#define IDC_BIOS7                       1333
+#define IDC_BIOS8                       1334
+#define IDC_BIOSTEXT                    1335
+#define IDC_BIOSTEXT1                   1336
+#define IDC_BIOSTEXT2                   1337
+#define IDC_BIOSTEXT3                   1338
+#define IDC_BIOSTEXT4                   1339
+#define IDC_BIOSTEXT5                   1340
+#define IDC_BIOSTEXT6                   1341
+#define IDC_BIOSTEXT7                   1342
+#define IDC_BIOSTEXT8                   1343
+#define IDC_ZOOMTEXT                    1344
+#define IDC_CLEAN_STRETCHTEXT           1345
+#define IDC_SCREENTEXT                  1346
+#define IDC_D3D_FILTERTEXT              1347
+#define IDC_D3D_EFFECTTEXT              1348
+#define IDC_D3D_PRESCALETEXT            1349
+#define IDC_USE_LIST                    1350
 
-#define IDC_SCALEEFFECT                 1349 // USE_SCALE_EFFECTS
-#define IDC_SCALEEFFECTTEXT             1350 // USE_SCALE_EFFECTS
+#define IDC_SCALEEFFECT                 1351 // USE_SCALE_EFFECTS
+#define IDC_SCALEEFFECTTEXT             1352 // USE_SCALE_EFFECTS
 
-#define IDC_PALETTE_COMBO               1351 // UI_COLOR_DISPLAY
-#define IDC_PALETTE_R                   1352 // UI_COLOR_DISPLAY
-#define IDC_PALETTE_G                   1353 // UI_COLOR_DISPLAY
-#define IDC_PALETTE_B                   1354 // UI_COLOR_DISPLAY
-#define IDC_PALETTE_VIEW                1355 // UI_COLOR_DISPLAY
-#define IDC_PALETTE_TEXTR               1356 // UI_COLOR_DISPLAY
-#define IDC_PALETTE_TEXTG               1357 // UI_COLOR_DISPLAY
-#define IDC_PALETTE_TEXTB               1358 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_COMBO               1353 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_R                   1354 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_G                   1355 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_B                   1356 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_VIEW                1357 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_TEXTR               1358 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_TEXTG               1359 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_TEXTB               1360 // UI_COLOR_DISPLAY
 
-#define IDC_TRANSUI                     1359 // TRANS_UI
-#define IDC_TRANSPARENCY                1360 // TRANS_UI
-#define IDC_TRANSPARENCYDISP            1361 // TRANS_UI
+#define IDC_TRANSUI                     1361 // TRANS_UI
+#define IDC_TRANSPARENCY                1362 // TRANS_UI
+#define IDC_TRANSPARENCYDISP            1363 // TRANS_UI
 
 #define ID_FILE_EXIT                    40001
 #define ID_ABOUT                        40002

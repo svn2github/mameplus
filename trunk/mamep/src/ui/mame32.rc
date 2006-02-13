@@ -282,8 +282,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,104,0,0
- PRODUCTVERSION 0,104,0,0
+ FILEVERSION 0,105,0,0
+ PRODUCTVERSION 0,105,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -302,13 +302,13 @@ BEGIN
             VALUE "Comments", "Multiple Arcade Machine Emulator for Win32\0"
             VALUE "CompanyName", "MAME Team\0"
             VALUE "FileDescription", "Multiple Arcade Machine Emulator for Win32\0"
-            VALUE "FileVersion", "0, 104, 0, 0\0"
+            VALUE "FileVersion", "0, 105, 0, 0\0"
             VALUE "InternalName", "MAME32\0"
             VALUE "LegalCopyright", "Copyright 1997-2006 Nicola Salmoria and the MAME team\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "MAME32.exe\0"
             VALUE "ProductName", "MAME32\0"
-            VALUE "ProductVersion", "0, 104, 0, 0\0"
+            VALUE "ProductVersion", "0, 105, 0, 0\0"
         END
     END
     BLOCK "VarFileInfo"
@@ -554,18 +554,18 @@ BEGIN
     GROUPBOX        "Gamma correction",IDC_STATIC,134,101,121,32
     CONTROL         "GammaSlider",IDC_GAMMA,"msctls_trackbar32",TBS_BOTH | 
                     TBS_NOTICKS | WS_TABSTOP,140,115,90,10,0,HIDC_GAMMA
-    LTEXT           "2.00",IDC_GAMMADISP,233,115,17,10,SS_CENTERIMAGE | NOT 
+    CTEXT           "2.00",IDC_GAMMADISP,233,115,17,10,SS_CENTERIMAGE | NOT 
                     WS_GROUP
     GROUPBOX        "Brightness correction",IDC_STATIC,134,137,121,32
     CONTROL         "GammaSlider",IDC_BRIGHTCORRECT,"msctls_trackbar32",
                     TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,140,151,90,10,0,
                     HIDC_BRIGHTCORRECT
-    LTEXT           "1.00",IDC_BRIGHTCORRECTDISP,233,151,17,10,
+    CTEXT           "1.00",IDC_BRIGHTCORRECTDISP,233,151,17,10,
                     SS_CENTERIMAGE | NOT WS_GROUP
     GROUPBOX        "Pause Brightness",IDC_STATIC,134,173,121,32
     CONTROL         "Slider1",IDC_PAUSEBRIGHT,"msctls_trackbar32",TBS_BOTH | 
                     TBS_NOTICKS | WS_TABSTOP,140,187,90,10,0,HIDC_PAUSEBRIGHT
-    LTEXT           "0.65",IDC_PAUSEBRIGHTDISP,233,187,17,10
+    CTEXT           "0.65",IDC_PAUSEBRIGHTDISP,233,187,17,10
     GROUPBOX        "Frame skipping",IDC_STATIC,134,45,121,52
     CONTROL         "Automatic",IDC_AUTOFRAMESKIP,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,140,59,106,10,0,HIDC_AUTOFRAMESKIP
@@ -703,7 +703,7 @@ BEGIN
                     NOT WS_GROUP
     CONTROL         "Slider1",IDC_BRIGHTNESS,"msctls_trackbar32",TBS_BOTH | 
                     TBS_NOTICKS | WS_TABSTOP,142,123,87,10,0,HIDC_BRIGHTNESS
-    LTEXT           "2.00",IDC_BRIGHTNESSDISP,233,123,17,10,SS_CENTERIMAGE | 
+    CTEXT           "2.00",IDC_BRIGHTNESSDISP,233,123,17,10,SS_CENTERIMAGE | 
                     NOT WS_GROUP
     GROUPBOX        "Resolution",IDC_STATIC,4,142,126,78,WS_GROUP
     LTEXT           "Size:",IDC_STATIC,10,158,58,10,SS_CENTERIMAGE | NOT WS_GROUP
@@ -818,11 +818,23 @@ BEGIN
                     HIDC_SKIP_GAME_INFO
     CONTROL         "Auto restore and save (only if available)",IDC_ENABLE_AUTOSAVE,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,129,135,10,0,HIDC_ENABLE_AUTOSAVE
+    CONTROL         "Disable second monitor emulation",IDC_DISABLE_2ND_MONITOR,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,143,135,10
+    CONTROL         "Confirm when exiting game",IDC_CONFIRM_QUIT,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,157,135,10
 #ifdef AUTO_PAUSE_PLAYBACK
     CONTROL         "Auto pause when playback is finished",IDC_AUTO_PAUSE_PLAYBACK,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,143,135,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,171,135,10
 #endif /* AUTO_PAUSE_PLAYBACK */
-    GROUPBOX        "",IDC_STATIC,147,45,108,110,WS_DISABLED
+#ifdef TRANS_UI
+    GROUPBOX        "",IDC_STATIC,4,185,140,30,WS_DISABLED
+    CONTROL         "Transparent in-game UI",IDC_TRANSUI,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,185,120,10
+    CONTROL         "IntensitySlider",IDC_TRANSPARENCY,"msctls_trackbar32",
+                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,10,200,105,10
+    RTEXT           "128",IDC_TRANSPARENCYDISP,116,200,17,10,NOT WS_GROUP
+#endif /* TRANS_UI */
+    GROUPBOX        "",IDC_STATIC,147,45,108,105,WS_DISABLED
     CONTROL         "Use additional Artwork",IDC_ARTWORK,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,153,45,98,10,0,HIDC_ARTWORK
     CONTROL         "Backdrops",IDC_BACKDROPS,"Button",BS_AUTOCHECKBOX | 
@@ -833,23 +845,15 @@ BEGIN
                     WS_TABSTOP,153,87,100,10,0,HIDC_OVERLAYS
     CONTROL         "Crop Artwork",IDC_ARTWORK_CROP,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,153,101,100,10,0,HIDC_ARTWORK_CROP
-    GROUPBOX        "Artwork resolution",IDC_ARTRESTEXT,153,115,96,35,WS_DISABLED
-    COMBOBOX        IDC_ARTRES,159,130,84,38,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    GROUPBOX        "Artwork resolution",IDC_ARTRESTEXT,153,115,96,30,WS_DISABLED
+    COMBOBOX        IDC_ARTRES,159,126,84,40,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP,0,HIDC_ARTRES
-#ifdef TRANS_UI
-    GROUPBOX        "",IDC_STATIC,4,157,251,30,WS_DISABLED
-    CONTROL         "Use transparent in-game menu",IDC_TRANSUI,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,157,135,10
-    CONTROL         "IntensitySlider",IDC_TRANSPARENCY,"msctls_trackbar32",
-                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,14,171,206,11
-    CTEXT           "128",IDC_TRANSPARENCYDISP,225,171,22,9,NOT WS_GROUP
-#endif /* TRANS_UI */
-#if 1 //ks hcmame s switch m68k core
-    GROUPBOX        "M68000 CPU Core",IDC_M68K_CORETEXT,4,190,123,30
-    COMBOBOX        IDC_M68K_CORE,10,201,112,60,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-#endif //ks hcmame s switch m68k core
-    GROUPBOX        "BIOS",IDC_BIOSTEXT,132,190,123,30
-    COMBOBOX        IDC_BIOS,138,201,112,120,CBS_DROPDOWNLIST | WS_VSCROLL | 
+#if 1 // ks hcmame s switch m68k core
+    GROUPBOX        "M68000 CPU Core",IDC_M68K_CORETEXT,147,153,108,30
+    COMBOBOX        IDC_M68K_CORE,153,165,97,40,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+#endif // ks hcmame s switch m68k core
+    GROUPBOX        "BIOS",IDC_BIOSTEXT,147,185,108,30
+    COMBOBOX        IDC_BIOS,153,195,97,120,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP,0,HIDC_BIOS
     PUSHBUTTON      "Reset",IDC_PROP_RESET,4,225,117,14,0,0,HIDC_PROP_RESET
     PUSHBUTTON      "Restore Default Settings",IDC_USE_DEFAULT,138,225,117,14,
@@ -871,18 +875,18 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,59,200,10,0,HIDC_TRANSLUCENCY
     GROUPBOX        "Beam width",IDC_BEAMTEXT,75,75,110,28
     CONTROL         "BeamSlider",IDC_BEAM,"msctls_trackbar32",TBS_BOTH | 
-                    TBS_NOTICKS | WS_TABSTOP,81,86,74,10,0,HIDC_BEAM
-    RTEXT           "16.00",IDC_BEAMDISP,155,86,25,10,SS_CENTERIMAGE
+                    TBS_NOTICKS | WS_TABSTOP,81,87,74,10,0,HIDC_BEAM
+    RTEXT           "16.00",IDC_BEAMDISP,155,87,25,10,SS_CENTERIMAGE
     GROUPBOX        "Flicker",IDC_FLICKERTEXT,75,106,110,28
     CONTROL         "FlickerSlider",IDC_FLICKER,"msctls_trackbar32",TBS_BOTH | 
-                    TBS_NOTICKS | WS_TABSTOP,81,117,74,10,0,HIDC_FLICKER
-    RTEXT           "100.00",IDC_FLICKERDISP,155,117,25,10,SS_CENTERIMAGE | 
+                    TBS_NOTICKS | WS_TABSTOP,81,118,74,10,0,HIDC_FLICKER
+    RTEXT           "100.00",IDC_FLICKERDISP,155,118,25,10,SS_CENTERIMAGE | 
                     NOT WS_GROUP
     GROUPBOX        "Intensity",IDC_INTENSITYTEXT,75,137,110,28
     CONTROL         "IntensitySlider",IDC_INTENSITY,"msctls_trackbar32",
-                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,81,148,74,10,0,
+                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,81,149,74,10,0,
                     HIDC_INTENSITY
-    RTEXT           "1.5",IDC_INTENSITYDISP,155,148,25,10,SS_CENTERIMAGE | 
+    RTEXT           "1.5",IDC_INTENSITYDISP,155,149,25,10,SS_CENTERIMAGE | 
                     NOT WS_GROUP
     PUSHBUTTON      "Reset",IDC_PROP_RESET,4,225,117,14,0,0,HIDC_PROP_RESET
     PUSHBUTTON      "Restore Default Settings",IDC_USE_DEFAULT,138,225,117,14,

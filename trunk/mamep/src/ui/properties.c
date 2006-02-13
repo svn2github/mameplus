@@ -3139,9 +3139,11 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_LEDS,          DM_BOOL, CT_BUTTON,   &pGameOpts->leds,          DM_BOOL, &pGameOpts->leds,          0, 0, 0);
 	DataMapAdd(IDC_LEDMODE,       DM_INT,  CT_COMBOBOX, &g_nLedmodeIndex,          DM_STRING, &pGameOpts->ledmode,     0, 0, AssignLedmode);
 	DataMapAdd(IDC_HIGH_PRIORITY, DM_BOOL, CT_BUTTON,   &pGameOpts->high_priority, DM_BOOL, &pGameOpts->high_priority, 0, 0, 0);
-	DataMapAdd(IDC_SKIP_GAME_INFO,  DM_BOOL,CT_BUTTON,  &pGameOpts->skip_gameinfo, DM_BOOL, &pGameOpts->skip_gameinfo, 0, 0, 0);
+	DataMapAdd(IDC_SKIP_GAME_INFO,DM_BOOL,CT_BUTTON,    &pGameOpts->skip_gameinfo, DM_BOOL, &pGameOpts->skip_gameinfo, 0, 0, 0);
 	DataMapAdd(IDC_BIOS,          DM_INT,  CT_COMBOBOX, &g_nBiosIndex,             DM_STRING, &pGameOpts->bios,        0, 0, AssignBios);
 	DataMapAdd(IDC_ENABLE_AUTOSAVE, DM_BOOL, CT_BUTTON, &pGameOpts->autosave,      DM_BOOL, &pGameOpts->autosave,     0, 0, 0);
+	DataMapAdd(IDC_DISABLE_2ND_MONITOR,  DM_BOOL, CT_BUTTON,   &pGameOpts->disable_2nd_monitor,  DM_BOOL, &pGameOpts->disable_2nd_monitor,  0, 0, 0);
+	DataMapAdd(IDC_CONFIRM_QUIT,  DM_BOOL, CT_BUTTON,   &pGameOpts->confirm_quit,  DM_BOOL, &pGameOpts->confirm_quit,  0, 0, 0);
 #ifdef AUTO_PAUSE_PLAYBACK
 	DataMapAdd(IDC_AUTO_PAUSE_PLAYBACK,  DM_BOOL, CT_BUTTON,   &pGameOpts->auto_pause_playback,  DM_BOOL, &pGameOpts->auto_pause_playback,  0, 0, 0);
 #endif /* AUTO_PAUSE_PLAYBACK */

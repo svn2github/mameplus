@@ -568,8 +568,8 @@ static struct rc_option rc_game_opts[] =
 #ifdef USE_IPS
 	{ "ips", NULL, rc_string, &gOpts.patchname, NULL, 0, 0, NULL, "ips datfile name"},
 #endif /* USE_IPS */
-	{ "disable_2nd_monitor", NULL, rc_bool, &gOpts.disable_2nd_monitor, "1", 0, 0, NULL, "disable second monitor" },
-	{ "confirm_quit", NULL, rc_bool, &gOpts.confirm_quit, "1", 0, 0, NULL, "confirm quit" },
+	{ "disable_second_monitor", NULL, rc_bool, &gOpts.disable_2nd_monitor, "1", 0, 0, NULL, "disable second monitor emulation" },
+	{ "confirm_quit", NULL, rc_bool, &gOpts.confirm_quit, "1", 0, 0, NULL, "confirm before exiting game" },
 #ifdef AUTO_PAUSE_PLAYBACK
 	{ "auto_pause_playback", NULL, rc_bool, &gOpts.auto_pause_playback, "0", 0, 0, NULL, "automatic pause when playback is finished" },
 #endif /* AUTO_PAUSE_PLAYBACK */
@@ -577,8 +577,8 @@ static struct rc_option rc_game_opts[] =
 	{ "m68k_core", NULL, rc_int, &gOpts.m68k_core, "0", 0, 2, NULL, "change m68k core (0:C, 1:DRC, 2:ASM+DRC)" },
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 #ifdef TRANS_UI
-	{ "use_trans_ui", NULL, rc_bool, &gOpts.use_transui, "1", 0, 0, NULL, "use transparent background for in-game menu text" },
-	{ "ui_transparency", NULL, rc_int, &gOpts.ui_transparency, "160", 0, 255, NULL, "transparency of in-game menu background [0 - 255]" },
+	{ "use_trans_ui", NULL, rc_bool, &gOpts.use_transui, "1", 0, 0, NULL, "use transparent background for UI text" },
+	{ "ui_transparency", NULL, rc_int, &gOpts.ui_transparency, "160", 0, 255, NULL, "transparency of UI background [0 - 255]" },
 #endif /* TRANS_UI */
 
 	{ NULL,	NULL, rc_end, NULL, NULL, 0, 0,	NULL, NULL }

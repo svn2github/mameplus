@@ -246,22 +246,21 @@ struct _global_options
 #ifdef USE_IPS
 	char*	patchname;			/* International Patching System */
 #endif /* USE_IPS */
+	int		disable_2nd_monitor;	/* 1 to disable second monitor emulation */
+	int		confirm_quit;	/* 1 for confirm before exiting game */
 #ifdef AUTO_PAUSE_PLAYBACK
-	int		auto_pause_playback;	/* automatic pause when playback is finished */
+	int		auto_pause_playback;	/* 1 for automatic pause when playback is finished */
 #endif /* AUTO_PAUSE_PLAYBACK */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020)
 	int m68k_core;			/* ks hcmame s switch m68k core */
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020) */
 #ifdef TRANS_UI
-	int		use_transui;		/* use transparent for UI background */
+	int		use_transui;		/* 1 to use transparent background for UI text */
 	int		ui_transparency;	/* transparency of UI background */
 #endif /* TRANS_UI */
 #ifdef UI_COLOR_DISPLAY
 	UINT8           uicolortable[MAX_COLORTABLE][3];	/* palette options for UI */
 #endif /* UI_COLOR_DISPLAY */
-
-	int		disable_2nd_monitor;	/* 0 to show second monitor */
-	int		confirm_quit;	/* confirm on exiting game */
 	int		autofiredelay[MAX_PLAYERS];	/* autofire delay */
 
 	int		debug_width;	/* requested width of debugger bitmap */
