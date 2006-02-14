@@ -50,7 +50,7 @@
   Axis %d (%s)%s\n
   軸%d (%s)%s\n
 
-# windows/config.c: 543
+# windows/config.c: 545
  %s running parameters
  %sの現在の設定です
 
@@ -122,7 +122,7 @@ Blitter initialisation complete (%.2lfMB video memory free)\n
 CRC-32s
 CRC-32
 
-# windows/config.c: 290
+# windows/config.c: 292
 Configuration options
 設定オプション
 
@@ -374,7 +374,7 @@ Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 LED mode (ps/2|usb)
 LEDモード (ps/2|usb)
 
-# windows/config.c: 297
+# windows/config.c: 299
 Language options
 言語設定
 
@@ -486,19 +486,19 @@ Out of memory!\n
 PARTKNOWN %s\n
 一部判明  %s\n
 
-# windows/config.c: 438
+# windows/config.c: 440
 Parsing %s : ERROR\n
 %sを読み込み : エラー\n
 
-# windows/config.c: 448
+# windows/config.c: 450
 Parsing %s : N/A\n
 %sを読み込み : なし\n
 
-# windows/config.c: 443
+# windows/config.c: 445
 Parsing %s : OK\n
 %sを読み込み : OK\n
 
-# windows/config.c: 591
+# windows/config.c: 593
 Playing back previously recorded game %s (%s) [press return]\n
 リターンキーを押すと、記録されたゲーム%s (%s)の再生を開始します\n
 
@@ -646,7 +646,7 @@ Unable to render to preprocess texture: %08x\n
 Usage:  MAME gamename [options]\n\n
 使用法:  MAME ゲーム名 [オプション]\n\n
 
-# windows/config.c: 550
+# windows/config.c: 552
 Usage: %s [game] [options]\nOptions:\n
 使用法: %s [ゲーム] [オプション]\nオプション:\n
 
@@ -738,7 +738,7 @@ Windows版：表\示設定
 \"%s\" controller support enabled\n
 コントローラ「%s」のサポートが有効です\n
 
-# windows/config.c: 609
+# windows/config.c: 611
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n「%s」に似たゲームは下記の通りです\nサポートされているゲーム (似ているもの順):\n\n
 
@@ -774,7 +774,7 @@ artwork resolution (0 for auto)
 attempt to match the game's refresh rate
 リフレッシュレートマッチを有効
 
-# windows/config.c: 273
+# windows/config.c: 275
 automatic pause when playback is finished
 再生終了時に自動停止
 
@@ -830,7 +830,7 @@ button color (silver)
 button color (yellow)
 ボタン (B or 2)
 
-# windows/config.c: 277
+# windows/config.c: 279
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 M68Kコアを変更 (0:C、1:DRC、2:ASM+DRC)
 
@@ -850,7 +850,11 @@ compare files with known MAME roms
 compare files with known MAME roms (brief)
 ファイルを既知のMAME romと比較する (大まかに)
 
-# windows/config.c: 291
+# windows/config.c: 273
+confirm before exiting game
+ゲーム終了前に確認する
+
+# windows/config.c: 293
 create the default configuration file
 デフォルト設定ファイルを作成
 
@@ -922,11 +926,15 @@ NVRAMの内容を保存するパスを指定
 directory to save states
 ステートサーブデータを保存するパスを指定
 
-# windows/config.c: 295
+# windows/config.c: 272
+disable second monitor emulation
+２画面表\示を無効にする
+
+# windows/config.c: 297
 display additional diagnostic information
 起動時に診断用の情報を表\示
 
-# windows/config.c: 292
+# windows/config.c: 294
 display running parameters in rc style
 現在の設定を表\示
 
@@ -1026,11 +1034,11 @@ enable/disable cheat subsystem
 enable/disable debugger (only if available)
 デバッガを有効 (デバッグビルドのみ)
 
-# windows/config.c: 294
+# windows/config.c: 296
 enable/disable loading of configfiles
 設定ファイルの有効化
 
-# windows/config.c: 299
+# windows/config.c: 301
 enable/disable local language game list
 ローカライズされたゲームリストを有効
 
@@ -1050,11 +1058,11 @@ enforce aspect ratio
 error invalid value for %s: %s\n
 エラー %s に不正な値を指定しました: %s\n
 
-# windows/config.c: 491
+# windows/config.c: 493
 error on rc creation\n
 設定の初期化が出来ません\n
 
-# windows/config.c: 500
+# windows/config.c: 502
 error while parsing cmdline\n
 コマンドライン引数が不正です\n
 
@@ -1070,7 +1078,7 @@ error: %s requires an argument\n
 error: couldn't open file: %s\n
 エラー: ファイルが開けません: %s\n
 
-# windows/config.c: 855
+# windows/config.c: 857
 error: duplicate gamename: %s\n
 エラー: ゲーム名%sが重複しています\n
 
@@ -1138,11 +1146,11 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 エラー: 関数rc_register_optionでmallocで失敗しました\n
 
-# windows/config.c: 1013
+# windows/config.c: 1015
 error: malloc failed in win_dirname\n
 エラー: 関数win_dirnameでmallocで失敗しました\n
 
-# windows/config.c: 1053
+# windows/config.c: 1055
 error: malloc failed in win_strip_extension\n
 エラー: 関数win_strip_extensionでmallocで失敗しました\n
 
@@ -1162,11 +1170,11 @@ error: unknown option %s\n
 error: unknown option type: %d, this should not happen!\n
 エラー: 不明なオプションタイプ: %d、これは起こりえません!\n
 
-# windows/config.c: 566
+# windows/config.c: 568
 failed to open %s for playback\n
 再生ファイル%sが読み込めません\n
 
-# windows/config.c: 671
+# windows/config.c: 673
 failed to open %s for recording\n
 入力を保存するファイル%sが作成できません\n
 
@@ -1350,7 +1358,7 @@ rotate screen clockwise
 run in a window/run on full screen
 ウインドウ表\示
 
-# windows/config.c: 618
+# windows/config.c: 620
 running %s (%s) [press return]
 リターンキーを押すと、ゲーム%s (%s)の実行を開始します
 
@@ -1382,7 +1390,7 @@ scanline intensity
 script for debugger (only if available)
 デバッガ用のスクリプト (もし有効な場合)
 
-# windows/config.c: 298
+# windows/config.c: 300
 select translation language
 使用する言語を選択
 
@@ -1470,7 +1478,7 @@ show clones
 show help message
 ヘルプの表\示
 
-# windows/config.c: 293
+# windows/config.c: 295
 show this help
 このヘルプを表\示
 
@@ -1534,7 +1542,7 @@ throttle speed to the game's framerate
 trackball
 トラックボール
 
-# windows/config.c: 281
+# windows/config.c: 283
 transparency of UI background [0 - 255]
 UIの背景の透明度 [0 - 255]
 
@@ -1582,7 +1590,7 @@ use overlay artwork
 use samples
 サンプルを使用
 
-# windows/config.c: 280
+# windows/config.c: 282
 use transparent background for UI text
 UIテキストの背景を半透明にする
 
