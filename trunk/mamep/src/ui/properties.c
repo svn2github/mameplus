@@ -2249,8 +2249,8 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_WAITVSYNC),       ddraw || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_TRIPLE_BUFFER),   ddraw || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_HWSTRETCH),       ddraw && DirectDraw_HasHWStretch());
-	EnableWindow(GetDlgItem(hWnd, IDC_SWITCHRES),       ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_SWITCHBPP),       ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_SWITCHRES),       !in_window && (ddraw || d3d));
+	EnableWindow(GetDlgItem(hWnd, IDC_SWITCHBPP),       !in_window && (ddraw || d3d));
 	EnableWindow(GetDlgItem(hWnd, IDC_MATCHREFRESH),    ddraw || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_SYNCREFRESH),     ddraw || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_REFRESH),         !in_window && ((ddraw && DirectDraw_HasRefresh()) || d3d));
@@ -2438,6 +2438,24 @@ static void SetPropEnabledControls(HWND hWnd)
 	{
 		ShowWindow(GetDlgItem(hWnd,IDC_BIOSTEXT), SW_HIDE);
 		ShowWindow(GetDlgItem(hWnd,IDC_BIOS), SW_HIDE);
+	}
+
+	if (nIndex <= -1 || DriverSupportsSaveState(nIndex))
+	{
+		Button_Enable(GetDlgItem(hWnd,IDC_ENABLE_AUTOSAVE),TRUE);
+	}
+	else
+	{
+		Button_Enable(GetDlgItem(hWnd,IDC_ENABLE_AUTOSAVE),FALSE);
+	}
+
+	if (nIndex <= -1 || DriverIsMultiMon(nIndex))
+	{
+		Button_Enable(GetDlgItem(hWnd,IDC_DISABLE_2ND_MONITOR),TRUE);
+	}
+	else
+	{
+		Button_Enable(GetDlgItem(hWnd,IDC_DISABLE_2ND_MONITOR),FALSE);
 	}
 
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)

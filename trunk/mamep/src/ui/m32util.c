@@ -64,9 +64,7 @@ static struct DriversInfo
 	BOOL usesYM3812;
 	BOOL usesTrackball;
 	BOOL usesLightGun;
-#ifndef MISC_FOLDER
 	BOOL supportsSaveState;
-#endif /* !MISC_FOLDER */
 	BOOL hasM68K;
 	int parentIndex;
 } *drivers_info = NULL;
@@ -346,9 +344,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			int speakernum, num_speakers;
 			gameinfo->isClone = (gamedrv->clone_of && (gamedrv->clone_of->flags & NOT_A_DRIVER) == 0);
 			gameinfo->isBroken = ((gamedrv->flags & GAME_NOT_WORKING) != 0);
-#ifndef MISC_FOLDER
 			gameinfo->supportsSaveState = ((gamedrv->flags & GAME_SUPPORTS_SAVE) != 0);
-#endif /* !MISC_FOLDER */
 			gameinfo->isHarddisk = FALSE;
 			for (region = rom_first_region(gamedrv); region; region = rom_next_region(region))
 				if (ROMREGION_ISDISKDATA(region))
@@ -524,12 +520,10 @@ BOOL DriverUsesLightGun(int driver_index)
 	return GetDriversInfo(driver_index)->usesLightGun;
 }
 
-#ifndef MISC_FOLDER
 BOOL DriverSupportsSaveState(int driver_index)
 {
 	return GetDriversInfo(driver_index)->supportsSaveState;
 }
-#endif /* !MISC_FOLDER */
 
 BOOL DriverHasM68K(int driver_index)
 {
