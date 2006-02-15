@@ -50,7 +50,7 @@
   Axis %d (%s)%s\n
   軸 %d (%s)%s\n
 
-# windows/config.c: 543
+# windows/config.c: 545
  %s running parameters
  %s 執行參數
 
@@ -122,7 +122,7 @@ Blitter initialisation complete (%.2lfMB video memory free)\n
 CRC-32s
 CRC-32
 
-# windows/config.c: 290
+# windows/config.c: 292
 Configuration options
 設定選項
 
@@ -374,7 +374,7 @@ Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 LED mode (ps/2|usb)
 LED 模式 (ps/2|usb)
 
-# windows/config.c: 297
+# windows/config.c: 299
 Language options
 語言選項
 
@@ -486,21 +486,21 @@ Out of memory!\n
 PARTKNOWN %s\n
 部分已知  %s\n
 
-# windows/config.c: 438
+# windows/config.c: 440
 Parsing %s : ERROR\n
 正在分析 %s : 錯誤\n
 
-# windows/config.c: 448
+# windows/config.c: 450
 Parsing %s : N/A\n
 正在分析 %s : N/A\n
 
-# windows/config.c: 443
+# windows/config.c: 445
 Parsing %s : OK\n
 正在分析 %s : OK\n
 
-# windows/config.c: 591
+# windows/config.c: 593
 Playing back previously recorded game %s (%s) [press return]\n
-按一下 [Enter] 播放先前錄製的遊戲 %s (%s)\n
+按一下 [Enter] 播放先前已記錄的遊戲 %s (%s)\n
 
 # windows/wind3d.c: 1648
 Pre-process texture surface created: %s\n
@@ -646,7 +646,7 @@ Unable to render to preprocess texture: %08x\n
 Usage:  MAME gamename [options]\n\n
 用法:   MAME 遊戲名稱 [選項]\n\n
 
-# windows/config.c: 550
+# windows/config.c: 552
 Usage: %s [game] [options]\nOptions:\n
 用法: %s [遊戲] [選項]\n選項:\n
 
@@ -738,7 +738,7 @@ Windows 版本視訊選項
 \"%s\" controller support enabled\n
 \"%s\" 控制器支援 啟用\n
 
-# windows/config.c: 609
+# windows/config.c: 611
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" 約略相似下列支援的遊戲\n(依相似度排序):\n\n
 
@@ -774,9 +774,9 @@ Artwork 解析度 (0 為自動)
 attempt to match the game's refresh rate
 嘗試符合遊戲的更新頻率
 
-# windows/config.c: 273
+# windows/config.c: 275
 automatic pause when playback is finished
-在播放輸入檔結束時自動暫停
+輸入檔播放結束時自動暫停
 
 # windows/config.c: 225
 automatically rotate screen anti-clockwise for vertical games
@@ -830,7 +830,7 @@ button color (silver)
 button color (yellow)
 按鈕色彩 (B 或 2)
 
-# windows/config.c: 277
+# windows/config.c: 279
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 變更 M68000 CPU 核心 (0:C, 1:DRC, 2:ASM+DRC)
 
@@ -850,7 +850,11 @@ compare files with known MAME roms
 compare files with known MAME roms (brief)
 與已知的 MAME ROM 檔比較 (簡短)
 
-# windows/config.c: 291
+# windows/config.c: 273
+confirm before exiting game
+離開遊戲之前要先確認
+
+# windows/config.c: 293
 create the default configuration file
 建立預設設定檔
 
@@ -922,11 +926,15 @@ directory to save nvram contents
 directory to save states
 儲存狀態檔的目錄
 
-# windows/config.c: 295
+# windows/config.c: 272
+disable second monitor emulation
+停用雙顯示器模擬
+
+# windows/config.c: 297
 display additional diagnostic information
 顯示附加的診斷資訊
 
-# windows/config.c: 292
+# windows/config.c: 294
 display running parameters in rc style
 以設定檔樣式顯示執行參數
 
@@ -1026,11 +1034,11 @@ enable/disable cheat subsystem
 enable/disable debugger (only if available)
 啟用/停用 除錯程式 (如果可用)
 
-# windows/config.c: 294
+# windows/config.c: 296
 enable/disable loading of configfiles
 啟用/停用 載入設定檔
 
-# windows/config.c: 299
+# windows/config.c: 301
 enable/disable local language game list
 啟用/停用 當地語言遊戲清單
 
@@ -1050,11 +1058,11 @@ enforce aspect ratio
 error invalid value for %s: %s\n
 錯誤: 無效的 %s 值: %s\n
 
-# windows/config.c: 491
+# windows/config.c: 493
 error on rc creation\n
 建立 rc 發生錯誤\n
 
-# windows/config.c: 500
+# windows/config.c: 502
 error while parsing cmdline\n
 分析指令時發生錯誤\n
 
@@ -1070,7 +1078,7 @@ error: %s requires an argument\n
 error: couldn't open file: %s\n
 錯誤: 無法開啟檔案: %s\n
 
-# windows/config.c: 855
+# windows/config.c: 857
 error: duplicate gamename: %s\n
 錯誤: 重複的遊戲名稱: %s\n
 
@@ -1138,11 +1146,11 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 錯誤: rc_register_option 記憶體分配失敗\n
 
-# windows/config.c: 1013
+# windows/config.c: 1015
 error: malloc failed in win_dirname\n
 錯誤: win_dirname 記憶體分配失敗\n
 
-# windows/config.c: 1053
+# windows/config.c: 1055
 error: malloc failed in win_strip_extension\n
 錯誤: win_strip_extension 記憶體分配失敗\n
 
@@ -1162,13 +1170,13 @@ error: unknown option %s\n
 error: unknown option type: %d, this should not happen!\n
 錯誤: 未知的選項類型: %d, 這個選項不應該出現!\n
 
-# windows/config.c: 566
+# windows/config.c: 568
 failed to open %s for playback\n
-開啟 %s 播放失敗\n
+無法開啟 %s 來播放\n
 
-# windows/config.c: 671
+# windows/config.c: 673
 failed to open %s for recording\n
-開啟 %s 錄製失敗\n
+無法開啟 %s 來記錄\n
 
 # windows/wind3dfx.c: 191
 feedback strength
@@ -1316,7 +1324,7 @@ prescale effect
 
 # windows/config.c: 262
 record an input file
-錄製輸入檔
+記錄輸入檔
 
 # windows/fronthlp.c: 84
 report romsets that have problems
@@ -1350,7 +1358,7 @@ rotate screen clockwise
 run in a window/run on full screen
 以視窗模式執行/以全螢幕執行
 
-# windows/config.c: 618
+# windows/config.c: 620
 running %s (%s) [press return]
 按一下 [Enter] 執行 %s (%s)
 
@@ -1382,7 +1390,7 @@ scanline intensity
 script for debugger (only if available)
 除錯程式指令檔 (如果可用)
 
-# windows/config.c: 298
+# windows/config.c: 300
 select translation language
 選擇翻譯語言
 
@@ -1470,7 +1478,7 @@ show clones
 show help message
 顯示說明訊息
 
-# windows/config.c: 293
+# windows/config.c: 295
 show this help
 顯示說明
 
@@ -1534,7 +1542,7 @@ throttle speed to the game's framerate
 trackball
 軌跡球
 
-# windows/config.c: 281
+# windows/config.c: 283
 transparency of UI background [0 - 255]
 設定選單的背景半透明值 [0 - 255]
 
@@ -1582,7 +1590,7 @@ use overlay artwork
 use samples
 使用樣本檔
 
-# windows/config.c: 280
+# windows/config.c: 282
 use transparent background for UI text
 在設定選單中使用半透明背景
 

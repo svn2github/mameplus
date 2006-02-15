@@ -14,7 +14,7 @@
    ignoring line\n
    忽略此行\n
 
-# windows/config.c: 543
+# windows/config.c: 545
  %s running parameters
  %s 运行参数
 
@@ -66,7 +66,7 @@ Blit surface created: %s\n
 Blitter initialisation complete (%.2lfMB video memory free)\n
 映像初始化完成 (%.2lfMB 剩余显存)\n
 
-# windows/config.c: 290
+# windows/config.c: 292
 Configuration options
 配置选项
 
@@ -294,7 +294,7 @@ KNOWN     %s\n
 LED mode (ps/2|usb)
 LED 模式 (ps/2|usb)
 
-# windows/config.c: 297
+# windows/config.c: 299
 Language options
 语言选项
 
@@ -382,7 +382,7 @@ Out of memory!\n
 PARTKNOWN %s\n
 部分已知 %s\n
 
-# windows/config.c: 591
+# windows/config.c: 593
 Playing back previously recorded game %s (%s) [press return]\n
 播放以前录制的游戏 %s (%s) [按回车键]\n
 
@@ -494,7 +494,7 @@ Unable to open the keyboard device. (error %d)\n
 Usage:  MAME gamename [options]\n\n
 使用方法:  MAME 游戏名 [选项]\n\n
 
-# windows/config.c: 550
+# windows/config.c: 552
 Usage: %s [game] [options]\nOptions:\n
 使用用法: %s [游戏] [选项]\n选项:\n
 
@@ -546,7 +546,7 @@ Windows 版视频选项
 \"%s\" controller support enabled\n
 \"%s\" 控制器支持已启用\n
 
-# windows/config.c: 609
+# windows/config.c: 611
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" 可能匹配以下支持的游戏 (精确优先):\n\n
 
@@ -626,7 +626,7 @@ button color (silver)
 button color (yellow)
 按钮色 (黄)
 
-# windows/config.c: 277
+# windows/config.c: 279
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 更改 m68k 核心 (0:C，1:动态重编译，2:汇编+动态重编译)
 
@@ -646,7 +646,7 @@ compare files with known MAME roms
 compare files with known MAME roms (brief)
 与已知的 MAME ROM 比较 (简明)
 
-# windows/config.c: 291
+# windows/config.c: 293
 create the default configuration file
 创建默认配置文件
 
@@ -702,11 +702,11 @@ directory to save nvram contents
 directory to save states
 保存游戏进度的目录
 
-# windows/config.c: 295
+# windows/config.c: 297
 display additional diagnostic information
 显示附加的诊断信息
 
-# windows/config.c: 292
+# windows/config.c: 294
 display running parameters in rc style
 以 rc 风格显示运行参数
 
@@ -770,7 +770,7 @@ enable/disable cheat subsystem
 enable/disable debugger (only if available)
 启用/禁用调试工具 (如果可用)
 
-# windows/config.c: 294
+# windows/config.c: 296
 enable/disable loading of configfiles
 启用/禁用配置文件
 
@@ -786,11 +786,11 @@ enforce aspect ratio
 error invalid value for %s: %s\n
 错误 无效的值 %s: %s\n
 
-# windows/config.c: 491
+# windows/config.c: 493
 error on rc creation\n
 创建 rc 时发生错误\n
 
-# windows/config.c: 500
+# windows/config.c: 502
 error while parsing cmdline\n
 分析命令行时发生错误\n
 
@@ -806,7 +806,7 @@ error: %s requires an argument\n
 error: couldn't open file: %s\n
 错误: 不能打开文件: %s\n
 
-# windows/config.c: 855
+# windows/config.c: 857
 error: duplicate gamename: %s\n
 错误: 重复的游戏名: %s\n
 
@@ -850,11 +850,11 @@ error: unknown option %s, on line %d of file: %s\n
 error: unknown option %s\n
 错误: 未知选项 %s\n
 
-# windows/config.c: 566
+# windows/config.c: 568
 failed to open %s for playback\n
 无法打开 %s 播放\n
 
-# windows/config.c: 671
+# windows/config.c: 673
 failed to open %s for recording\n
 无法打开 %s 录制\n
 
@@ -1010,7 +1010,7 @@ rotate screen clockwise
 run in a window/run on full screen
 窗口或全屏幕运行
 
-# windows/config.c: 618
+# windows/config.c: 620
 running %s (%s) [press return]
 运行 %s (%s) [按回车键]
 
@@ -1034,7 +1034,7 @@ scale effects surface created: %s\n
 scanline intensity
 扫描线饱和度
 
-# windows/config.c: 298
+# windows/config.c: 300
 select translation language
 选择翻译语言
 
@@ -1122,7 +1122,7 @@ show clones
 show help message
 显示帮助信息
 
-# windows/config.c: 293
+# windows/config.c: 295
 show this help
 显示本帮助文档
 
@@ -1178,7 +1178,7 @@ syncronize only to the monitor refresh
 throttle speed to the game's framerate
 限制游戏帧速
 
-# windows/config.c: 281
+# windows/config.c: 283
 transparency of UI background [0 - 255]
 菜单背景透明度 [0 - 255]
 
@@ -1226,7 +1226,7 @@ use overlay artwork
 use samples
 使用采样文件
 
-# windows/config.c: 280
+# windows/config.c: 282
 use transparent background for UI text
 菜单文字使用透明背景
 
@@ -1362,15 +1362,15 @@ Mouse %d Y
 Mouse %d Z
 
 
-# windows/config.c: 438
+# windows/config.c: 440
 Parsing %s : ERROR\n
 
 
-# windows/config.c: 448
+# windows/config.c: 450
 Parsing %s : N/A\n
 
 
-# windows/config.c: 443
+# windows/config.c: 445
 Parsing %s : OK\n
 
 
@@ -1458,8 +1458,12 @@ analog
 analog joystick
 
 
-# windows/config.c: 273
+# windows/config.c: 275
 automatic pause when playback is finished
+
+
+# windows/config.c: 273
+confirm before exiting game
 
 
 # windows/input.c: 252, 1203
@@ -1476,6 +1480,10 @@ directory for ips files
 
 # windows/fileio.c: 148
 directory for localized language files
+
+
+# windows/config.c: 272
+disable second monitor emulation
 
 
 # windows/input.c: 249
@@ -1514,7 +1522,7 @@ enable automatic restore at startup and save at exit
 enable pointing stick input
 
 
-# windows/config.c: 299
+# windows/config.c: 301
 enable/disable local language game list
 
 
@@ -1558,11 +1566,11 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 
 
-# windows/config.c: 1013
+# windows/config.c: 1015
 error: malloc failed in win_dirname\n
 
 
-# windows/config.c: 1053
+# windows/config.c: 1055
 error: malloc failed in win_strip_extension\n
 
 

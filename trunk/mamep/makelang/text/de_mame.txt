@@ -466,7 +466,7 @@ Kommando-Liste nicht verfügbar
 Comment
 Kommentar
 
-# drivers/alpha68k.c: 1636 drivers/armedf.c: 557 drivers/bbusters.c: 457, 528 drivers/boogwing.c: 180 drivers/deco32.c: 1339 drivers/gaelco2.c: 715, 1185 drivers/gijoe.c: 307 drivers/itech8.c: 1599 drivers/konamigq.c: 524 drivers/konamigx.c: 1730 drivers/lethal.c: 544 drivers/lordgun.c: 348 drivers/m92.h: 77, 93, 109, 125 drivers/marinedt.c: 365 drivers/mcr68.c: 741 drivers/moo.c: 514, 583 drivers/mystwarr.c: 1082, 1150, 1223 drivers/segac2.c: 1060 drivers/segas18.c: 912, 968, 1024, 1073, 1139, 1156, 1200 drivers/snk.c: 2912, 2968, 3025, 3082 drivers/sslam.c: 546 drivers/suprslam.c: 232 drivers/system18.c: 1327 drivers/system24.c: 1267, 1343, 1414, 1484, 1544
+# drivers/alpha68k.c: 1636 drivers/armedf.c: 557 drivers/bbusters.c: 457, 528 drivers/boogwing.c: 180 drivers/deco32.c: 1339 drivers/gaelco2.c: 715, 1201 drivers/gijoe.c: 307 drivers/itech8.c: 1599 drivers/konamigq.c: 524 drivers/konamigx.c: 1730 drivers/lethal.c: 544 drivers/lordgun.c: 348 drivers/m92.h: 77, 93, 109, 125 drivers/marinedt.c: 365 drivers/mcr68.c: 741 drivers/moo.c: 514, 583 drivers/mystwarr.c: 1082, 1150, 1223 drivers/segac2.c: 1060 drivers/segas18.c: 912, 968, 1024, 1073, 1139, 1156, 1200 drivers/snk.c: 2912, 2968, 3025, 3082 drivers/sslam.c: 546 drivers/suprslam.c: 232 drivers/system18.c: 1327 drivers/system24.c: 1267, 1343, 1414, 1484, 1544
 Common
 Standard
 

@@ -7642,13 +7642,13 @@ unknown left priority %08x
 # drivers/backfire.c: 225
 unknown right priority %08x
 
-# drivers/backfire.c: 447
+# drivers/backfire.c: 459
 Monitor Switch
 
-# drivers/backfire.c: 541, 545
+# drivers/backfire.c: 561, 565
 left
 
-# drivers/backfire.c: 541, 546
+# drivers/backfire.c: 561, 566
 right
 
 # drivers/badlands.c: 467, 470, 471
@@ -15922,10 +15922,10 @@ Disabled or Free Play (if Coin A too)
 # drivers/gaelco2.c: 175
 1P Continue
 
-# drivers/gaelco2.c: 217, 221, 369, 373, 569, 573, 845, 847, 851, 1043, 1047, 1300, 1302, 1306
+# drivers/gaelco2.c: 217, 221, 369, 373, 569, 573, 854, 859, 864, 1059, 1063, 1325, 1330, 1335
 left
 
-# drivers/gaelco2.c: 217, 222, 369, 374, 569, 574, 845, 853, 1043, 1048, 1300, 1308
+# drivers/gaelco2.c: 217, 222, 369, 374, 569, 574, 854, 868, 1059, 1064, 1325, 1339
 right
 
 # drivers/gaelco2.c: 521
@@ -15934,7 +15934,7 @@ Sound Type
 # drivers/gaelco2.c: 528
 Analog
 
-# drivers/gaelco2.c: 710, 1216
+# drivers/gaelco2.c: 710, 1232
 Credit configuration
 
 # drivers/gaelco2.c: 711
@@ -15943,7 +15943,7 @@ Credit configuration
 # drivers/gaelco2.c: 712
 2 Credits Start/1 Credit Continue
 
-# drivers/gaelco2.c: 714, 1186
+# drivers/gaelco2.c: 714, 1202
 Independent
 
 # drivers/gaelco2.c: 717, 722
@@ -15958,34 +15958,34 @@ Single monitor, 4 players
 # drivers/gaelco2.c: 720, 725
 Single monitor, 2 players
 
-# drivers/gaelco2.c: 806, 1259
+# drivers/gaelco2.c: 806, 1275
 Monitor Switch
 
-# drivers/gaelco2.c: 1184
+# drivers/gaelco2.c: 1200
 Coin mechanism
 
-# drivers/gaelco2.c: 1190
+# drivers/gaelco2.c: 1206
 Cabinet 1 Control Configuration
 
-# drivers/gaelco2.c: 1191, 1194
+# drivers/gaelco2.c: 1207, 1210
 Pot Wheel
 
-# drivers/gaelco2.c: 1193
+# drivers/gaelco2.c: 1209
 Cabinet 2 Control Configuration
 
-# drivers/gaelco2.c: 1197, 1201
+# drivers/gaelco2.c: 1213, 1217
 Monitors
 
-# drivers/gaelco2.c: 1198, 1202
+# drivers/gaelco2.c: 1214, 1218
 One
 
-# drivers/gaelco2.c: 1199, 1203
+# drivers/gaelco2.c: 1215, 1219
 Two
 
-# drivers/gaelco2.c: 1217
+# drivers/gaelco2.c: 1233
 Start 2C/Continue 1C
 
-# drivers/gaelco2.c: 1218
+# drivers/gaelco2.c: 1234
 Start 1C/Continue 1C
 
 # drivers/gaelco3d.c: 261
@@ -24277,127 +24277,127 @@ Coin Slot 1 value
 # drivers/megatech.c: 167
 Time per credit
 
-# drivers/megatech.c: 409, 412, 413, 441, 444
+# drivers/megatech.c: 409, 412, 413, 457, 460
 mono
 
-# drivers/megatech.c: 929
+# drivers/megatech.c: 945
 Mega-Tech BIOS
 
-# drivers/megatech.c: 930
+# drivers/megatech.c: 946
 Altered Beast (Mega-Tech)
 
-# drivers/megatech.c: 931
+# drivers/megatech.c: 947
 Space Harrier II (Mega-Tech)
 
-# drivers/megatech.c: 932
+# drivers/megatech.c: 948
 Super Thunder Blade (Mega-Tech)
 
-# drivers/megatech.c: 933
+# drivers/megatech.c: 949
 Great Golf (Mega-Tech)
 
-# drivers/megatech.c: 934
+# drivers/megatech.c: 950
 Great Soccer (Mega-Tech)
 
-# drivers/megatech.c: 936
+# drivers/megatech.c: 952
 Alien Syndrome (Mega-Tech)
 
-# drivers/megatech.c: 937
+# drivers/megatech.c: 953
 Shinobi (Mega-Tech)
 
-# drivers/megatech.c: 939
+# drivers/megatech.c: 955
 After Burner (Mega-Tech)
 
-# drivers/megatech.c: 940
+# drivers/megatech.c: 956
 Tecno Soft / Sega
 
-# drivers/megatech.c: 940
+# drivers/megatech.c: 956
 Thunder Force II MD (Mega-Tech)
 
-# drivers/megatech.c: 942
+# drivers/megatech.c: 958
 Astro Warrior (Mega-Tech)
 
-# drivers/megatech.c: 949
+# drivers/megatech.c: 965
 Last Battle (Mega-Tech)
 
-# drivers/megatech.c: 950
+# drivers/megatech.c: 966
 World Championship Soccer (Mega-Tech)
 
-# drivers/megatech.c: 951
+# drivers/megatech.c: 967
 Tetris (Mega-Tech)
 
-# drivers/megatech.c: 952
+# drivers/megatech.c: 968
 Capcom / Sega
 
-# drivers/megatech.c: 952
+# drivers/megatech.c: 968
 Ghouls'n Ghosts (Mega-Tech)
 
-# drivers/megatech.c: 953
+# drivers/megatech.c: 969
 Super Hang-On (Mega-Tech)
 
-# drivers/megatech.c: 954
+# drivers/megatech.c: 970
 Golden Axe (Mega-Tech)
 
-# drivers/megatech.c: 956
+# drivers/megatech.c: 972
 Mystic Defender (Mega-Tech)
 
-# drivers/megatech.c: 957
+# drivers/megatech.c: 973
 The Revenge of Shinobi (Mega-Tech)
 
-# drivers/megatech.c: 958
+# drivers/megatech.c: 974
 Parlour Games (Mega-Tech)
 
-# drivers/megatech.c: 960
+# drivers/megatech.c: 976
 Arnold Palmer Tournament Golf (Mega-Tech)
 
-# drivers/megatech.c: 964
+# drivers/megatech.c: 980
 Tommy Lasorda Baseball (Mega-Tech)
 
-# drivers/megatech.c: 965
+# drivers/megatech.c: 981
 Columns (Mega-Tech)
 
-# drivers/megatech.c: 967
+# drivers/megatech.c: 983
 Cyber Police ESWAT: Enhanced Special Weapons and Tactics (Mega-Tech)
 
-# drivers/megatech.c: 968
+# drivers/megatech.c: 984
 Super Monaco GP (Mega-Tech)
 
-# drivers/megatech.c: 969
+# drivers/megatech.c: 985
 Moonwalker (Mega-Tech)
 
-# drivers/megatech.c: 970
+# drivers/megatech.c: 986
 Crack Down (Mega-Tech)
 
-# drivers/megatech.c: 973
+# drivers/megatech.c: 989
 Arrow Flash (Mega-Tech)
 
-# drivers/megatech.c: 976
+# drivers/megatech.c: 992
 Alien Storm (Mega-Tech
 
-# drivers/megatech.c: 978
+# drivers/megatech.c: 994
 Bonanza Bros. (Mega-Tech)
 
-# drivers/megatech.c: 981
+# drivers/megatech.c: 997
 Sonic The Hedgehog (Mega-Tech, set 1)
 
-# drivers/megatech.c: 982
+# drivers/megatech.c: 998
 Sonic The Hedgehog (Mega-Tech, set 2)
 
-# drivers/megatech.c: 983
+# drivers/megatech.c: 999
 Fire Shark (Mega-Tech)
 
-# drivers/megatech.c: 983
+# drivers/megatech.c: 999
 Toaplan / Sega
 
-# drivers/megatech.c: 987
+# drivers/megatech.c: 1003
 Golden Axe II (Mega-Tech)
 
-# drivers/megatech.c: 988
+# drivers/megatech.c: 1004
 Joe Montana II: Sports Talk Football (Mega-Tech)
 
-# drivers/megatech.c: 990
+# drivers/megatech.c: 1006
 Kid Chameleon (Mega-Tech)
 
-# drivers/megatech.c: 992
+# drivers/megatech.c: 1008
 Sonic The Hedgehog 2 (Mega-Tech)
 
 # drivers/megazone.c: 196
@@ -33352,55 +33352,55 @@ sngkace
 # drivers/psikyo4.c: 113
 *10011xxxxxxx
 
-# drivers/psikyo4.c: 464, 468
+# drivers/psikyo4.c: 470, 474
 left
 
-# drivers/psikyo4.c: 464, 469
+# drivers/psikyo4.c: 470, 475
 right
 
-# drivers/psikyo4.c: 497, 602, 679
+# drivers/psikyo4.c: 509, 614, 691
 IN0
 
-# drivers/psikyo4.c: 507, 612, 689
+# drivers/psikyo4.c: 519, 624, 701
 IN1
 
-# drivers/psikyo4.c: 517, 622, 699
+# drivers/psikyo4.c: 529, 634, 711
 IN2
 
-# drivers/psikyo4.c: 527, 625, 702
+# drivers/psikyo4.c: 539, 637, 714
 IN3
 
-# drivers/psikyo4.c: 537, 641, 718
+# drivers/psikyo4.c: 549, 653, 730
 IN4
 
-# drivers/psikyo4.c: 547, 651, 728
+# drivers/psikyo4.c: 559, 663, 740
 IN5
 
-# drivers/psikyo4.c: 557, 661, 738
+# drivers/psikyo4.c: 569, 673, 750
 IN6
 
-# drivers/psikyo4.c: 567, 664, 741
+# drivers/psikyo4.c: 579, 676, 753
 IN7
 
-# drivers/psikyo4.c: 577, 668, 745
+# drivers/psikyo4.c: 589, 680, 757
 IN8
 
-# drivers/psikyo4.c: 585, 633, 710
+# drivers/psikyo4.c: 597, 645, 722
 Debug
 
-# drivers/psikyo4.c: 594, 670, 747
+# drivers/psikyo4.c: 606, 682, 759
 FAKE
 
-# drivers/psikyo4.c: 595
+# drivers/psikyo4.c: 607
 Select PL1 Screen
 
-# drivers/psikyo4.c: 596
+# drivers/psikyo4.c: 608
 Select PL2 Screen
 
-# drivers/psikyo4.c: 671, 748
+# drivers/psikyo4.c: 683, 760
 Select PL1+PL2 Screen
 
-# drivers/psikyo4.c: 672, 749
+# drivers/psikyo4.c: 684, 761
 Select PL3+PL4 Screen
 
 # drivers/psikyosh.c: 327
@@ -37192,10 +37192,10 @@ Wiper
 # drivers/segas32.c: 1713, 1782
 Gear Change
 
-# drivers/segas32.c: 2059, 2063, 2067, 2071, 2114, 2118, 2123
+# drivers/segas32.c: 2059, 2063, 2067, 2071, 2122, 2126, 2131
 left
 
-# drivers/segas32.c: 2059, 2064, 2068, 2072, 2114, 2119, 2124
+# drivers/segas32.c: 2059, 2064, 2068, 2072, 2122, 2127, 2132
 right
 
 # drivers/segasyse.c: 460, 478
@@ -62590,28 +62590,28 @@ Multiple Arcade Machine Emulator
 # ui/mame32.rc: 372
 Version 0
 
-# ui/mame32.rc: 377, 385, 481, 483, 486, 490, 494, 496, 498, 500, 502, 504, 515, 534, 587, 633, 669, 743, 805, 867, 900, 910, 913, 1070, 1120, 1151
+# ui/mame32.rc: 377, 385, 481, 483, 486, 490, 494, 496, 498, 500, 502, 504, 515, 534, 587, 633, 669, 743, 805, 871, 904, 914, 917, 1074, 1124, 1155
 Static
 
 # ui/mame32.rc: 381
 Mike Haaland, Andrew Kirmse, Jeff Miller
 
-# ui/mame32.rc: 406, 416, 987
+# ui/mame32.rc: 406, 416, 991
 Progress1
 
-# ui/mame32.rc: 406, 416, 987
+# ui/mame32.rc: 406, 416, 991
 msctls_progress32
 
 # ui/mame32.rc: 426
 RichEdit20W
 
-# ui/mame32.rc: 440, 457, 464, 905, 1090
+# ui/mame32.rc: 440, 457, 464, 909, 1094
 List1
 
-# ui/mame32.rc: 440, 457, 464, 905, 1090
+# ui/mame32.rc: 440, 457, 464, 909, 1094
 SysListView32
 
-# ui/mame32.rc: 479, 513, 532, 585, 631, 667, 741, 803, 865, 1068, 1149
+# ui/mame32.rc: 479, 513, 532, 585, 631, 667, 741, 803, 869, 1072, 1153
 Title\nDirectory\nExtra
 
 # ui/mame32.rc: 485
@@ -62626,16 +62626,16 @@ Static\nStatic\nStatic\nStatic\nStatic\nStatic
 # ui/mame32.rc: 492
 Static\nStatic\nStatic\nStatic\nStatic
 
-# ui/mame32.rc: 535, 537, 539, 542, 547, 549, 570, 589, 591, 594, 635, 638, 642, 670, 672, 675, 678, 681, 683, 686, 689, 721, 744, 746, 748, 751, 755, 757, 759, 769, 806, 808, 810, 812, 814, 816, 819, 822, 826, 828, 830, 832, 834, 841, 868, 870, 929, 932, 934, 937, 940, 943, 946, 965, 967, 971, 973, 1007, 1010, 1012, 1013, 1016, 1019, 1021, 1024, 1027, 1031, 1037, 1041, 1043, 1047
+# ui/mame32.rc: 535, 537, 539, 542, 547, 549, 570, 589, 591, 594, 635, 638, 642, 670, 672, 675, 678, 681, 683, 686, 689, 721, 744, 746, 748, 751, 755, 757, 759, 769, 806, 808, 810, 812, 814, 816, 819, 821, 823, 826, 831, 838, 840, 842, 844, 846, 872, 874, 933, 936, 938, 941, 944, 947, 950, 969, 971, 975, 977, 1011, 1014, 1016, 1017, 1020, 1023, 1025, 1028, 1031, 1035, 1041, 1045, 1047, 1051
 Button
 
 # ui/mame32.rc: 555, 560
 GammaSlider
 
-# ui/mame32.rc: 555, 560, 566, 607, 612, 617, 649, 653, 704, 762, 843, 873, 877, 882, 1050, 1054, 1111, 1113, 1115
+# ui/mame32.rc: 555, 560, 566, 607, 612, 617, 649, 653, 704, 762, 833, 877, 881, 886, 1054, 1058, 1115, 1117, 1119
 msctls_trackbar32
 
-# ui/mame32.rc: 566, 607, 649, 653, 704, 1050, 1054
+# ui/mame32.rc: 566, 607, 649, 653, 704, 1054, 1058
 Slider1
 
 # ui/mame32.rc: 612
@@ -62644,7 +62644,7 @@ Slider3
 # ui/mame32.rc: 651
 0dB
 
-# ui/mame32.rc: 762, 843, 882
+# ui/mame32.rc: 762, 833, 886
 IntensitySlider
 
 # ui/mame32.rc: 775
@@ -62671,106 +62671,106 @@ P7
 # ui/mame32.rc: 789
 P8
 
-# ui/mame32.rc: 873
+# ui/mame32.rc: 877
 BeamSlider
 
-# ui/mame32.rc: 877
+# ui/mame32.rc: 881
 FlickerSlider
 
-# ui/mame32.rc: 896
+# ui/mame32.rc: 900
 MAME32 - overwritten at runtime
 
-# ui/mame32.rc: 896
+# ui/mame32.rc: 900
 MainClass
 
-# ui/mame32.rc: 901, 1135
+# ui/mame32.rc: 905, 1139
 SysTreeView32
 
-# ui/mame32.rc: 901
+# ui/mame32.rc: 905
 Tree1
 
-# ui/mame32.rc: 912
+# ui/mame32.rc: 916
 SysTabControl32
 
-# ui/mame32.rc: 1111, 1117, 1205
+# ui/mame32.rc: 1115, 1121, 1209
 R
 
-# ui/mame32.rc: 1113, 1118
+# ui/mame32.rc: 1117, 1122
 G
 
-# ui/mame32.rc: 1115, 1119, 1200
+# ui/mame32.rc: 1119, 1123, 1204
 B
 
-# ui/mame32.rc: 1135
+# ui/mame32.rc: 1139
 CustomTree
 
-# ui/mame32.rc: 1152
+# ui/mame32.rc: 1156
 BIOS1:
 
-# ui/mame32.rc: 1155
+# ui/mame32.rc: 1159
 BIOS2:
 
-# ui/mame32.rc: 1158
+# ui/mame32.rc: 1162
 BIOS3:
 
-# ui/mame32.rc: 1161
+# ui/mame32.rc: 1165
 BIOS4:
 
-# ui/mame32.rc: 1164
+# ui/mame32.rc: 1168
 BIOS5:
 
-# ui/mame32.rc: 1167
+# ui/mame32.rc: 1171
 BIOS6:
 
-# ui/mame32.rc: 1170
+# ui/mame32.rc: 1174
 BIOS7:
 
-# ui/mame32.rc: 1173
+# ui/mame32.rc: 1177
 BIOS8:
 
-# ui/mame32.rc: 1199
+# ui/mame32.rc: 1203
 A
 
-# ui/mame32.rc: 1201
+# ui/mame32.rc: 1205
 D
 
-# ui/mame32.rc: 1202
+# ui/mame32.rc: 1206
 F
 
-# ui/mame32.rc: 1203
+# ui/mame32.rc: 1207
 U
 
-# ui/mame32.rc: 1204
+# ui/mame32.rc: 1208
 P
 
-# ui/mame32.rc: 1206
+# ui/mame32.rc: 1210
 S
 
-# ui/mame32.rc: 1207
+# ui/mame32.rc: 1211
 T
 
-# ui/mame32.rc: 1411
+# ui/mame32.rc: 1415
 res\\about.bmp
 
-# ui/mame32.rc: 1411, 1411, 1411, 1411, 1411, 1411, 1411, 1411
+# ui/mame32.rc: 1415, 1415, 1415, 1415, 1415, 1415, 1415, 1415
 res\\toolbar.bmp
 
-# ui/mame32.rc: 1411, 1411
+# ui/mame32.rc: 1415, 1415
 res\\toolbarc.bmp
 
-# ui/mame32.rc: 1411
+# ui/mame32.rc: 1415
 res\\toolbarj.bmp
 
-# ui/mame32.rc: 1411
+# ui/mame32.rc: 1415
 res\\toolbark.bmp
 
-# ui/mame32.rc: 1425
+# ui/mame32.rc: 1429
 res\\splash.bmp
 
-# ui/mame32.rc: 1433
+# ui/mame32.rc: 1437
 res\\Splith.cur
 
-# ui/mame32.rc: 1440
+# ui/mame32.rc: 1444
 res\\mame32.manifest
 
 # ui/options.c: 222
@@ -62782,7 +62782,7 @@ MAME.ini
 # ui/options.c: 226
 MAME32ui.ini
 
-# ui/options.c: 280, 699
+# ui/options.c: 280, 701
 snapshot
 
 # ui/options.c: 281
@@ -62797,7 +62797,7 @@ marquee
 # ui/options.c: 284
 title
 
-# ui/options.c: 285, 663
+# ui/options.c: 285, 665
 cpanel
 
 # ui/options.c: 287, 290
@@ -62833,7 +62833,7 @@ d3dscan
 # ui/options.c: 422
 d3deffectrotate
 
-# ui/options.c: 424, 449, 450, 650, 3330, 3696, 3718, 4363, 4377
+# ui/options.c: 424, 449, 450, 652, 3332, 3698, 3720, 4365, 4379
 auto
 
 # ui/options.c: 424
@@ -63049,7 +63049,7 @@ leds
 # ui/options.c: 493
 led_mode
 
-# ui/options.c: 493, 3732
+# ui/options.c: 493, 3734
 ps/2
 
 # ui/options.c: 494
@@ -63058,7 +63058,7 @@ a2d
 # ui/options.c: 494
 a2d_deadzone
 
-# ui/options.c: 495, 604
+# ui/options.c: 495, 606
 ctrlr
 
 # ui/options.c: 497
@@ -63175,7 +63175,7 @@ samplerate
 # ui/options.c: 541
 sr
 
-# ui/options.c: 542, 593
+# ui/options.c: 542, 595
 samples
 
 # ui/options.c: 543
@@ -63193,7 +63193,7 @@ volume_adjust
 # ui/options.c: 551
 art
 
-# ui/options.c: 551, 601
+# ui/options.c: 551, 603
 artwork
 
 # ui/options.c: 552
@@ -63274,1084 +63274,1084 @@ state
 # ui/options.c: 567
 autosave
 
-# ui/options.c: 569, 606
+# ui/options.c: 569, 608
 ips
 
+# ui/options.c: 571
+disable_second_monitor
+
 # ui/options.c: 572
+confirm_quit
+
+# ui/options.c: 574
 auto_pause_playback
 
-# ui/options.c: 575
+# ui/options.c: 577
 m68k_core
 
-# ui/options.c: 578
-use transparent background for in-game menu text
-
-# ui/options.c: 578
+# ui/options.c: 580
 use_trans_ui
 
-# ui/options.c: 579
-transparency of in-game menu background [0 - 255]
-
-# ui/options.c: 579
+# ui/options.c: 581
 ui_transparency
 
-# ui/options.c: 592
+# ui/options.c: 594
 rompath
 
-# ui/options.c: 592
+# ui/options.c: 594
 roms
 
-# ui/options.c: 592
+# ui/options.c: 594
 rp
 
-# ui/options.c: 593
+# ui/options.c: 595
 samplepath
 
-# ui/options.c: 593
+# ui/options.c: 595
 sp
 
-# ui/options.c: 594
+# ui/options.c: 596
 directory for ini files
 
-# ui/options.c: 594
+# ui/options.c: 596
 ini
 
-# ui/options.c: 594
+# ui/options.c: 596
 inipath
 
-# ui/options.c: 595
+# ui/options.c: 597
 cfg
 
-# ui/options.c: 595
+# ui/options.c: 597
 cfg_directory
 
-# ui/options.c: 596
+# ui/options.c: 598
 nvram
 
-# ui/options.c: 596
+# ui/options.c: 598
 nvram_directory
 
-# ui/options.c: 597
+# ui/options.c: 599
 memcard
 
-# ui/options.c: 597
+# ui/options.c: 599
 memcard_directory
 
-# ui/options.c: 598
+# ui/options.c: 600
 inp
 
-# ui/options.c: 598
+# ui/options.c: 600
 input_directory
 
-# ui/options.c: 599
+# ui/options.c: 601
 hi
 
-# ui/options.c: 599
+# ui/options.c: 601
 hiscore_directory
 
-# ui/options.c: 600
+# ui/options.c: 602
 sta
 
-# ui/options.c: 600
+# ui/options.c: 602
 state_directory
 
-# ui/options.c: 601
+# ui/options.c: 603
 artwork_directory
 
-# ui/options.c: 602
+# ui/options.c: 604
 snap
 
-# ui/options.c: 602
+# ui/options.c: 604
 snapshot_directory
 
-# ui/options.c: 603
+# ui/options.c: 605
 diff
 
-# ui/options.c: 603
+# ui/options.c: 605
 diff_directory
 
-# ui/options.c: 604
+# ui/options.c: 606
 ctrlr_directory
 
-# ui/options.c: 606
+# ui/options.c: 608
 ips_directory
 
-# ui/options.c: 608, 650
+# ui/options.c: 610, 652
 lang
 
-# ui/options.c: 608
+# ui/options.c: 610
 lang_directory
 
-# ui/options.c: 609
+# ui/options.c: 611
 cheat.dat
 
-# ui/options.c: 609
+# ui/options.c: 611
 cheat_file
 
-# ui/options.c: 610
+# ui/options.c: 612
 history.dat
 
-# ui/options.c: 610
+# ui/options.c: 612
 history_file
 
-# ui/options.c: 612
+# ui/options.c: 614
 story.dat
 
-# ui/options.c: 612
+# ui/options.c: 614
 story_file
 
-# ui/options.c: 614
+# ui/options.c: 616
 mameinfo.dat
 
-# ui/options.c: 614
+# ui/options.c: 616
 mameinfo_file
 
-# ui/options.c: 615
+# ui/options.c: 617
 hiscore.dat
 
-# ui/options.c: 615
+# ui/options.c: 617
 hiscore_file
 
-# ui/options.c: 621
+# ui/options.c: 623
 font_blank
 
-# ui/options.c: 622
+# ui/options.c: 624
 font_normal
 
-# ui/options.c: 623
+# ui/options.c: 625
 font_special
 
-# ui/options.c: 624
+# ui/options.c: 626
 system_background
 
-# ui/options.c: 625
+# ui/options.c: 627
 system_framemedium
 
-# ui/options.c: 626
+# ui/options.c: 628
 system_framelight
 
-# ui/options.c: 627
+# ui/options.c: 629
 system_framedark
 
-# ui/options.c: 628
+# ui/options.c: 630
 osdbar_framemedium
 
-# ui/options.c: 629
+# ui/options.c: 631
 osdbar_framelight
 
-# ui/options.c: 630
+# ui/options.c: 632
 osdbar_framedark
 
-# ui/options.c: 631
+# ui/options.c: 633
 osdbar_defaultbar
 
-# ui/options.c: 632
+# ui/options.c: 634
 button_red
 
-# ui/options.c: 633
+# ui/options.c: 635
 button_yellow
 
-# ui/options.c: 634
+# ui/options.c: 636
 button_green
 
-# ui/options.c: 635
+# ui/options.c: 637
 button_blue
 
-# ui/options.c: 636
+# ui/options.c: 638
 button_purple
 
-# ui/options.c: 637
+# ui/options.c: 639
 button_pink
 
-# ui/options.c: 638
+# ui/options.c: 640
 button_aqua
 
-# ui/options.c: 639
+# ui/options.c: 641
 button_silver
 
-# ui/options.c: 640
+# ui/options.c: 642
 button_navy
 
-# ui/options.c: 641
+# ui/options.c: 643
 button_lime
 
-# ui/options.c: 642
+# ui/options.c: 644
 cursor
 
-# ui/options.c: 646
+# ui/options.c: 648
 rc
 
-# ui/options.c: 646
+# ui/options.c: 648
 readconfig
 
-# ui/options.c: 647
+# ui/options.c: 649
 v
 
-# ui/options.c: 647
+# ui/options.c: 649
 verbose
 
-# ui/options.c: 650
+# ui/options.c: 652
 language
 
-# ui/options.c: 651
+# ui/options.c: 653
 use_lang_list
 
-# ui/options.c: 659
+# ui/options.c: 661
 directory for flyers
 
-# ui/options.c: 659
+# ui/options.c: 661
 flyer_directory
 
-# ui/options.c: 659
+# ui/options.c: 661
 flyers
 
-# ui/options.c: 660
+# ui/options.c: 662
 cabinet_directory
 
-# ui/options.c: 660
+# ui/options.c: 662
 cabinets
 
-# ui/options.c: 660
+# ui/options.c: 662
 directory for cabinets
 
-# ui/options.c: 661
+# ui/options.c: 663
 directory for marquees
 
-# ui/options.c: 661
+# ui/options.c: 663
 marquee_directory
 
-# ui/options.c: 661
+# ui/options.c: 663
 marquees
 
-# ui/options.c: 662
+# ui/options.c: 664
 directory for titles
 
-# ui/options.c: 662
+# ui/options.c: 664
 title_directory
 
-# ui/options.c: 662
+# ui/options.c: 664
 titles
 
-# ui/options.c: 663
+# ui/options.c: 665
 cpanel_directory
 
-# ui/options.c: 663
+# ui/options.c: 665
 directory for control panel
 
-# ui/options.c: 664
+# ui/options.c: 666
 directory for icons
 
-# ui/options.c: 664
+# ui/options.c: 666
 icon_directory
 
-# ui/options.c: 664
+# ui/options.c: 666
 icons
 
-# ui/options.c: 665
+# ui/options.c: 667
 bkground
 
-# ui/options.c: 665
+# ui/options.c: 667
 bkground_directory
 
-# ui/options.c: 665
+# ui/options.c: 667
 directory for bkground
 
-# ui/options.c: 666
+# ui/options.c: 668
 directory for folders-ini
 
-# ui/options.c: 666
+# ui/options.c: 668
 folder_directory
 
-# ui/options.c: 666
+# ui/options.c: 668
 folders
 
-# ui/options.c: 669
+# ui/options.c: 671
 save version
 
-# ui/options.c: 669
+# ui/options.c: 671
 save_version
 
-# ui/options.c: 670
+# ui/options.c: 672
 enable version mismatch warning
 
-# ui/options.c: 670
+# ui/options.c: 672
 reset_gui
 
-# ui/options.c: 671
+# ui/options.c: 673
 game_check
 
-# ui/options.c: 671
+# ui/options.c: 673
 search for new games
 
-# ui/options.c: 672
+# ui/options.c: 674
 allow game selection by a joystick
 
-# ui/options.c: 672
+# ui/options.c: 674
 joygui
 
-# ui/options.c: 673
+# ui/options.c: 675
 allow game selection by a keyboard
 
-# ui/options.c: 673
+# ui/options.c: 675
 keygui
 
-# ui/options.c: 674
+# ui/options.c: 676
 broadcast
 
-# ui/options.c: 674
+# ui/options.c: 676
 broadcast selected game to all windows
 
-# ui/options.c: 675
+# ui/options.c: 677
 random select background image
 
-# ui/options.c: 675
+# ui/options.c: 677
 random_bg
 
-# ui/options.c: 676
+# ui/options.c: 678
 cycle screen shot image
 
-# ui/options.c: 676
+# ui/options.c: 678
 cycle_screenshot
 
-# ui/options.c: 677
+# ui/options.c: 679
 stretch screenshot larger
 
-# ui/options.c: 677
+# ui/options.c: 679
 stretch_screenshot_larger
 
-# ui/options.c: 678
+# ui/options.c: 680
 screen shot border size
 
-# ui/options.c: 678
+# ui/options.c: 680
 screenshot_bordersize
 
-# ui/options.c: 679
+# ui/options.c: 681
 screen shot border color
 
-# ui/options.c: 679
+# ui/options.c: 681
 screenshot_bordercolor
 
-# ui/options.c: 680
+# ui/options.c: 682
 inherit_filter
 
-# ui/options.c: 680
+# ui/options.c: 682
 inheritable filters
 
-# ui/options.c: 681
+# ui/options.c: 683
 no offset for clones missing parent in view
 
-# ui/options.c: 681
+# ui/options.c: 683
 offset_clones
 
-# ui/options.c: 682
+# ui/options.c: 684
 game_caption
 
-# ui/options.c: 682
+# ui/options.c: 684
 show game caption
 
-# ui/options.c: 684
+# ui/options.c: 686
 display splash screen on start
 
-# ui/options.c: 684
+# ui/options.c: 686
 display_splash_screen
 
-# ui/options.c: 689
+# ui/options.c: 691
 default_system
 
-# ui/options.c: 689
+# ui/options.c: 691
 last selected system name
 
-# ui/options.c: 689
+# ui/options.c: 691
 nes
 
-# ui/options.c: 691
+# ui/options.c: 693
 default_game
 
-# ui/options.c: 691
+# ui/options.c: 693
 last selected game name
 
-# ui/options.c: 691
+# ui/options.c: 693
 puckman
 
-# ui/options.c: 693
+# ui/options.c: 695
 show tool bar
 
-# ui/options.c: 693
+# ui/options.c: 695
 show_toolbar
 
-# ui/options.c: 694
+# ui/options.c: 696
 show status bar
 
-# ui/options.c: 694
+# ui/options.c: 696
 show_statusbar
 
-# ui/options.c: 695
+# ui/options.c: 697
 show folder list
 
-# ui/options.c: 695
+# ui/options.c: 697
 show_folderlist
 
-# ui/options.c: 696
+# ui/options.c: 698
 show image picture
 
-# ui/options.c: 696
+# ui/options.c: 698
 show_screenshot
 
-# ui/options.c: 697
+# ui/options.c: 699
 show tab control
 
-# ui/options.c: 697
+# ui/options.c: 699
 show_screenshottab
 
-# ui/options.c: 698
+# ui/options.c: 700
 show tab control flags
 
-# ui/options.c: 698
+# ui/options.c: 700
 show_tab_flags
 
-# ui/options.c: 699
+# ui/options.c: 701
 current image picture
 
-# ui/options.c: 699
+# ui/options.c: 701
 current_tab
 
-# ui/options.c: 702
+# ui/options.c: 704
 datafile_tab
 
-# ui/options.c: 702, 705
+# ui/options.c: 704, 707
 where to show history on tab
 
-# ui/options.c: 705
+# ui/options.c: 707
 history_tab
 
-# ui/options.c: 707
+# ui/options.c: 709
 exec_command
 
-# ui/options.c: 707
+# ui/options.c: 709
 execute command line
 
-# ui/options.c: 708
+# ui/options.c: 710
 exec_wait
 
-# ui/options.c: 708
+# ui/options.c: 710
 execute wait
 
-# ui/options.c: 709
+# ui/options.c: 711
 hide mouse
 
-# ui/options.c: 709
+# ui/options.c: 711
 hide_mouse
 
-# ui/options.c: 710
+# ui/options.c: 712
 full screen
 
-# ui/options.c: 710
+# ui/options.c: 712
 full_screen
 
-# ui/options.c: 713
+# ui/options.c: 715
 window left position
 
-# ui/options.c: 713
+# ui/options.c: 715
 window_x
 
-# ui/options.c: 714
+# ui/options.c: 716
 window top position
 
-# ui/options.c: 714
+# ui/options.c: 716
 window_y
 
-# ui/options.c: 715
+# ui/options.c: 717
 window width
 
-# ui/options.c: 715
+# ui/options.c: 717
 window_width
 
-# ui/options.c: 716
+# ui/options.c: 718
 window height
 
-# ui/options.c: 716
+# ui/options.c: 718
 window_height
 
-# ui/options.c: 717
+# ui/options.c: 719
 window state
 
-# ui/options.c: 717
+# ui/options.c: 719
 window_state
 
-# ui/options.c: 720
+# ui/options.c: 722
 list_mode
 
-# ui/options.c: 720
+# ui/options.c: 722
 view mode
 
-# ui/options.c: 721
+# ui/options.c: 723
 splitter position
 
-# ui/options.c: 721
+# ui/options.c: 723
 splitters
 
-# ui/options.c: 723
+# ui/options.c: 725
 column width settings
 
-# ui/options.c: 723
+# ui/options.c: 725
 column_widths
 
-# ui/options.c: 724
+# ui/options.c: 726
 column order settings
 
-# ui/options.c: 724
+# ui/options.c: 726
 column_order
 
-# ui/options.c: 725
+# ui/options.c: 727
 column_shown
 
-# ui/options.c: 725
+# ui/options.c: 727
 show or hide column settings
 
-# ui/options.c: 726
+# ui/options.c: 728
 sort column
 
-# ui/options.c: 726
+# ui/options.c: 728
 sort_column
 
-# ui/options.c: 727
+# ui/options.c: 729
 sort descending
 
-# ui/options.c: 727
+# ui/options.c: 729
 sort_reverse
 
-# ui/options.c: 728
+# ui/options.c: 730
 folder_id
 
-# ui/options.c: 728
+# ui/options.c: 730
 last selected folder id
 
-# ui/options.c: 731
+# ui/options.c: 733
 game list font size
 
-# ui/options.c: 731
+# ui/options.c: 733
 list_font
 
-# ui/options.c: 732
+# ui/options.c: 734
 game list font face
 
-# ui/options.c: 732
+# ui/options.c: 734
 list_fontface
 
-# ui/options.c: 733
+# ui/options.c: 735
 use broken icon for not working games
 
-# ui/options.c: 733
+# ui/options.c: 735
 use_broken_icon
 
-# ui/options.c: 734
+# ui/options.c: 736
 font_color
 
-# ui/options.c: 734
+# ui/options.c: 736
 game list font color
 
-# ui/options.c: 735
+# ui/options.c: 737
 clone game list font color
 
-# ui/options.c: 735
+# ui/options.c: 737
 clone_color
 
-# ui/options.c: 736
+# ui/options.c: 738
 broken game list font color
 
-# ui/options.c: 736
+# ui/options.c: 738
 broken_color
 
-# ui/options.c: 737
+# ui/options.c: 739
 custom colors
 
-# ui/options.c: 737
+# ui/options.c: 739
 custom_color
 
-# ui/options.c: 740
+# ui/options.c: 742
 1,JOYCODE_STICK_AXIS,2,JOYCODE_DIR_NEG
 
-# ui/options.c: 740
+# ui/options.c: 742
 joystick to up
 
-# ui/options.c: 740
+# ui/options.c: 742
 ui_joy_up
 
-# ui/options.c: 741
+# ui/options.c: 743
 1,JOYCODE_STICK_AXIS,2,JOYCODE_DIR_POS
 
-# ui/options.c: 741
+# ui/options.c: 743
 joystick to down
 
-# ui/options.c: 741
+# ui/options.c: 743
 ui_joy_down
 
-# ui/options.c: 742
+# ui/options.c: 744
 1,JOYCODE_STICK_AXIS,1,JOYCODE_DIR_NEG
 
-# ui/options.c: 742
+# ui/options.c: 744
 joystick to left
 
-# ui/options.c: 742
+# ui/options.c: 744
 ui_joy_left
 
-# ui/options.c: 743
+# ui/options.c: 745
 1,JOYCODE_STICK_AXIS,1,JOYCODE_DIR_POS
 
-# ui/options.c: 743
+# ui/options.c: 745
 joystick to right
 
-# ui/options.c: 743
+# ui/options.c: 745
 ui_joy_right
 
-# ui/options.c: 744
+# ui/options.c: 746
 1,JOYCODE_STICK_BTN,1,JOYCODE_DIR_BTN
 
-# ui/options.c: 744
+# ui/options.c: 746
 joystick to start game
 
-# ui/options.c: 744
+# ui/options.c: 746
 ui_joy_start
 
-# ui/options.c: 745
+# ui/options.c: 747
 2,JOYCODE_STICK_AXIS,2,JOYCODE_DIR_NEG
 
-# ui/options.c: 745
+# ui/options.c: 747
 joystick to page-up
 
-# ui/options.c: 745
+# ui/options.c: 747
 ui_joy_pgup
 
-# ui/options.c: 746
+# ui/options.c: 748
 2,JOYCODE_STICK_AXIS,2,JOYCODE_DIR_POS
 
-# ui/options.c: 746
+# ui/options.c: 748
 joystick to page-down
 
-# ui/options.c: 746
+# ui/options.c: 748
 ui_joy_pgdwn
 
-# ui/options.c: 747
+# ui/options.c: 749
 joystick to home
 
-# ui/options.c: 747
+# ui/options.c: 749
 ui_joy_home
 
-# ui/options.c: 748
+# ui/options.c: 750
 joystick to end
 
-# ui/options.c: 748
+# ui/options.c: 750
 ui_joy_end
 
-# ui/options.c: 749
+# ui/options.c: 751
 2,JOYCODE_STICK_BTN,3,JOYCODE_DIR_BTN
 
-# ui/options.c: 749
+# ui/options.c: 751
 joystick to change picture
 
-# ui/options.c: 749
+# ui/options.c: 751
 ui_joy_ss_change
 
-# ui/options.c: 750
+# ui/options.c: 752
 2,JOYCODE_STICK_BTN,4,JOYCODE_DIR_BTN
 
-# ui/options.c: 750
+# ui/options.c: 752
 joystick to scroll history up
 
-# ui/options.c: 750
+# ui/options.c: 752
 ui_joy_history_up
 
-# ui/options.c: 751
+# ui/options.c: 753
 2,JOYCODE_STICK_BTN,1,JOYCODE_DIR_BTN
 
-# ui/options.c: 751
+# ui/options.c: 753
 joystick to scroll history down
 
-# ui/options.c: 751
+# ui/options.c: 753
 ui_joy_history_down
 
-# ui/options.c: 752
+# ui/options.c: 754
 joystick execute commandline
 
-# ui/options.c: 752
+# ui/options.c: 754
 ui_joy_exec
 
-# ui/options.c: 755
+# ui/options.c: 757
 KEYCODE_UP
 
-# ui/options.c: 755
+# ui/options.c: 757
 keyboard to up
 
-# ui/options.c: 755
+# ui/options.c: 757
 ui_key_up
 
-# ui/options.c: 756
+# ui/options.c: 758
 KEYCODE_DOWN
 
-# ui/options.c: 756
+# ui/options.c: 758
 keyboard to down
 
-# ui/options.c: 756
+# ui/options.c: 758
 ui_key_down
 
-# ui/options.c: 757
+# ui/options.c: 759
 KEYCODE_LEFT
 
-# ui/options.c: 757
+# ui/options.c: 759
 keyboard to left
 
-# ui/options.c: 757
+# ui/options.c: 759
 ui_key_left
 
-# ui/options.c: 758
+# ui/options.c: 760
 KEYCODE_RIGHT
 
-# ui/options.c: 758
+# ui/options.c: 760
 keyboard to right
 
-# ui/options.c: 758
+# ui/options.c: 760
 ui_key_right
 
-# ui/options.c: 759
+# ui/options.c: 761
 KEYCODE_ENTER NOT KEYCODE_LALT
 
-# ui/options.c: 759
+# ui/options.c: 761
 keyboard to start game
 
-# ui/options.c: 759
+# ui/options.c: 761
 ui_key_start
 
-# ui/options.c: 760
+# ui/options.c: 762
 KEYCODE_PGUP
 
-# ui/options.c: 760
+# ui/options.c: 762
 keyboard to page-up
 
-# ui/options.c: 760
+# ui/options.c: 762
 ui_key_pgup
 
-# ui/options.c: 761
+# ui/options.c: 763
 KEYCODE_PGDN
 
-# ui/options.c: 761
+# ui/options.c: 763
 keyboard to page-down
 
-# ui/options.c: 761
+# ui/options.c: 763
 ui_key_pgdwn
 
-# ui/options.c: 762
+# ui/options.c: 764
 KEYCODE_HOME
 
-# ui/options.c: 762
+# ui/options.c: 764
 keyboard to home
 
-# ui/options.c: 762
+# ui/options.c: 764
 ui_key_home
 
-# ui/options.c: 763
+# ui/options.c: 765
 KEYCODE_END
 
-# ui/options.c: 763
+# ui/options.c: 765
 keyboard to end
 
-# ui/options.c: 763
+# ui/options.c: 765
 ui_key_end
 
-# ui/options.c: 764
+# ui/options.c: 766
 KEYCODE_LALT KEYCODE_0
 
-# ui/options.c: 764
+# ui/options.c: 766
 keyboard to change picture
 
-# ui/options.c: 764
+# ui/options.c: 766
 ui_key_ss_change
 
-# ui/options.c: 765
+# ui/options.c: 767
 KEYCODE_INSERT
 
-# ui/options.c: 765
+# ui/options.c: 767
 keyboard to history up
 
-# ui/options.c: 765
+# ui/options.c: 767
 ui_key_history_up
 
-# ui/options.c: 766
+# ui/options.c: 768
 KEYCODE_DEL
 
-# ui/options.c: 766
+# ui/options.c: 768
 keyboard to history down
 
-# ui/options.c: 766
+# ui/options.c: 768
 ui_key_history_down
 
-# ui/options.c: 768
+# ui/options.c: 770
 KEYCODE_LCONTROL KEYCODE_F
 
-# ui/options.c: 768
+# ui/options.c: 770
 keyboard to context filters
 
-# ui/options.c: 768
+# ui/options.c: 770
 ui_key_context_filters
 
-# ui/options.c: 769
+# ui/options.c: 771
 KEYCODE_LCONTROL KEYCODE_R
 
-# ui/options.c: 769
+# ui/options.c: 771
 keyboard to select random
 
-# ui/options.c: 769
+# ui/options.c: 771
 ui_key_select_random
 
-# ui/options.c: 770
+# ui/options.c: 772
 KEYCODE_LALT KEYCODE_A
 
-# ui/options.c: 770
+# ui/options.c: 772
 keyboard to game audit
 
-# ui/options.c: 770
+# ui/options.c: 772
 ui_key_game_audit
 
-# ui/options.c: 771
+# ui/options.c: 773
 KEYCODE_LALT KEYCODE_ENTER
 
-# ui/options.c: 771
+# ui/options.c: 773
 keyboard to game properties
 
-# ui/options.c: 771
+# ui/options.c: 773
 ui_key_game_properties
 
-# ui/options.c: 772
+# ui/options.c: 774
 KEYCODE_F1
 
-# ui/options.c: 772
+# ui/options.c: 774
 keyboard to help contents
 
-# ui/options.c: 772
+# ui/options.c: 774
 ui_key_help_contents
 
-# ui/options.c: 773
+# ui/options.c: 775
 KEYCODE_F5
 
-# ui/options.c: 773
+# ui/options.c: 775
 keyboard to update game list
 
-# ui/options.c: 773
+# ui/options.c: 775
 ui_key_update_gamelist
 
-# ui/options.c: 774
+# ui/options.c: 776
 KEYCODE_LALT KEYCODE_D
 
-# ui/options.c: 774
+# ui/options.c: 776
 keyboard to view folders
 
-# ui/options.c: 774
+# ui/options.c: 776
 ui_key_view_folders
 
-# ui/options.c: 775
+# ui/options.c: 777
 KEYCODE_F11
 
-# ui/options.c: 775
+# ui/options.c: 777
 keyboard to full screen
 
-# ui/options.c: 775
+# ui/options.c: 777
 ui_key_view_fullscreen
 
-# ui/options.c: 776
+# ui/options.c: 778
 KEYCODE_LALT KEYCODE_B
 
-# ui/options.c: 776
+# ui/options.c: 778
 keyboard to view page tab
 
-# ui/options.c: 776
+# ui/options.c: 778
 ui_key_view_pagetab
 
-# ui/options.c: 777
+# ui/options.c: 779
 KEYCODE_LALT KEYCODE_P
 
-# ui/options.c: 777
+# ui/options.c: 779
 keyboard to view picture area
 
-# ui/options.c: 777
+# ui/options.c: 779
 ui_key_view_picture_area
 
-# ui/options.c: 778
+# ui/options.c: 780
 KEYCODE_LALT KEYCODE_S
 
-# ui/options.c: 778
+# ui/options.c: 780
 keyboard to view status
 
-# ui/options.c: 778
+# ui/options.c: 780
 ui_key_view_status
 
-# ui/options.c: 779
+# ui/options.c: 781
 KEYCODE_LALT KEYCODE_T
 
-# ui/options.c: 779
+# ui/options.c: 781
 keyboard to view toolbars
 
-# ui/options.c: 779
+# ui/options.c: 781
 ui_key_view_toolbars
 
-# ui/options.c: 781
+# ui/options.c: 783
 KEYCODE_LALT KEYCODE_3
 
-# ui/options.c: 781
+# ui/options.c: 783
 keyboard to view tab cabinet
 
-# ui/options.c: 781
+# ui/options.c: 783
 ui_key_view_tab_cabinet
 
-# ui/options.c: 782
+# ui/options.c: 784
 KEYCODE_LALT KEYCODE_6
 
-# ui/options.c: 782
+# ui/options.c: 784
 keyboard to view tab control panel
 
-# ui/options.c: 782
+# ui/options.c: 784
 ui_key_view_tab_cpanel
 
-# ui/options.c: 783
+# ui/options.c: 785
 KEYCODE_LALT KEYCODE_2
 
-# ui/options.c: 783
+# ui/options.c: 785
 keyboard to view tab flyer
 
-# ui/options.c: 783
+# ui/options.c: 785
 ui_key_view_tab_flyer
 
-# ui/options.c: 784
+# ui/options.c: 786
 KEYCODE_LALT KEYCODE_7
 
-# ui/options.c: 784
+# ui/options.c: 786
 keyboard to view tab history
 
-# ui/options.c: 784
+# ui/options.c: 786
 ui_key_view_tab_history
 
-# ui/options.c: 786
+# ui/options.c: 788
 KEYCODE_LALT KEYCODE_8
 
-# ui/options.c: 786
+# ui/options.c: 788
 keyboard to view tab story
 
-# ui/options.c: 786
+# ui/options.c: 788
 ui_key_view_tab_story
 
-# ui/options.c: 788
+# ui/options.c: 790
 KEYCODE_LALT KEYCODE_4
 
-# ui/options.c: 788
+# ui/options.c: 790
 keyboard to view tab marquee
 
-# ui/options.c: 788
+# ui/options.c: 790
 ui_key_view_tab_marquee
 
-# ui/options.c: 789
+# ui/options.c: 791
 KEYCODE_LALT KEYCODE_1
 
-# ui/options.c: 789
+# ui/options.c: 791
 keyboard to view tab screen shot
 
-# ui/options.c: 789
+# ui/options.c: 791
 ui_key_view_tab_screenshot
 
-# ui/options.c: 790
+# ui/options.c: 792
 KEYCODE_LALT KEYCODE_5
 
-# ui/options.c: 790
+# ui/options.c: 792
 keyboard to view tab title
 
-# ui/options.c: 790
+# ui/options.c: 792
 ui_key_view_tab_title
 
-# ui/options.c: 791
+# ui/options.c: 793
 KEYCODE_LALT KEYCODE_Q
 
-# ui/options.c: 791
+# ui/options.c: 793
 keyboard to quit application
 
-# ui/options.c: 791
+# ui/options.c: 793
 ui_key_quit
 
-# ui/options.c: 794
+# ui/options.c: 796
 folder_hide
 
-# ui/options.c: 794
+# ui/options.c: 796
 hide selected item in folder list
 
-# ui/options.c: 796
+# ui/options.c: 798
 folder list filters settings
 
-# ui/options.c: 1258, 1264
+# ui/options.c: 1260, 1266
 codepage %d is not supported\n
 
-# ui/options.c: 2996
+# ui/options.c: 2998
 %s.c
 
-# ui/options.c: 3001
+# ui/options.c: 3003
 Unify %s
 
-# ui/options.c: 3015
+# ui/options.c: 3017
 %s_playcount
 
-# ui/options.c: 3015
+# ui/options.c: 3017
 Play Counts
 
-# ui/options.c: 3016
+# ui/options.c: 3018
 %s_play_time
 
-# ui/options.c: 3017
+# ui/options.c: 3019
 %s_rom_audit
 
-# ui/options.c: 3017
+# ui/options.c: 3019
 Has Roms
 
-# ui/options.c: 3018
+# ui/options.c: 3020
 %s_samples_audit
 
-# ui/options.c: 3018
+# ui/options.c: 3020
 Has Samples
 
-# ui/options.c: 3133
+# ui/options.c: 3135
 (unknown)
 
-# ui/options.c: 3265
+# ui/options.c: 3267
 \"%s,%ld\"\r\n
 
-# ui/options.c: 3269
+# ui/options.c: 3271
 # %-19s   <NULL> (not set)\r\n
 
-# ui/options.c: 3327
+# ui/options.c: 3329
 0x0x0
 
-# ui/options.c: 3400, 3511
+# ui/options.c: 3402, 3513
 %s: use_default with ips
 
-# ui/options.c: 3421
+# ui/options.c: 3423
 %s.ini
 
-# ui/options.c: 3463, 3582
+# ui/options.c: 3465, 3584
 %s\\%s.ini
 
-# ui/options.c: 3472, 3536
+# ui/options.c: 3474, 3538
 .ini
 
-# ui/options.c: 3702, 3724
+# ui/options.c: 3704, 3726
 full
 
-# ui/options.c: 3733
+# ui/options.c: 3735
 usb
 
-# ui/options.c: 4066
+# ui/options.c: 4068
 %lu
 
-# ui/options.c: 4069
+# ui/options.c: 4071
 ,%lu
 
-# ui/options.c: 4169, 4196
+# ui/options.c: 4171, 4198
 %li,%li,%li,%li,%li,%i,%i,%i,%i,%i,%i,%i,%i
 
-# ui/options.c: 4408
+# ui/options.c: 4410
 error: realloc failed in SaveFolderFlags\n
 
 # ui/properties.c: 416, 461, 525, 2671
@@ -64393,7 +64393,7 @@ sharp
 # ui/properties.c: 454
 Scanlines vertical 75%
 
-# ui/properties.c: 462, 1742, 1851, 3213, 3216, 3225, 3228
+# ui/properties.c: 462, 1742, 1851, 3215, 3218, 3227, 3230
 auto
 
 # ui/properties.c: 463
@@ -64555,7 +64555,7 @@ IsAppThemed
 # ui/properties.c: 1706, 1714, 1718
 %dx%d
 
-# ui/properties.c: 1712, 1889, 3214, 3217
+# ui/properties.c: 1712, 1889, 3216, 3219
 %d x %d
 
 # ui/properties.c: 1735
@@ -64591,7 +64591,7 @@ j%s
 # ui/properties.c: 2085
 a%s
 
-# ui/properties.c: 2153, 3674
+# ui/properties.c: 2153, 3676
 %ddB
 
 # ui/properties.c: 2587
@@ -64606,28 +64606,28 @@ a%d
 # ui/properties.c: 2665
 all
 
-# ui/properties.c: 3226, 3229
+# ui/properties.c: 3228, 3231
 %d x %d x %d
 
-# ui/properties.c: 3760, 3779
+# ui/properties.c: 3762, 3781
 %lu x %lu
 
-# ui/properties.c: 3939
+# ui/properties.c: 3941
 %li Hz
 
-# ui/properties.c: 4040
+# ui/properties.c: 4042
 .cfg
 
-# ui/properties.c: 4311
+# ui/properties.c: 4313
 C
 
-# ui/properties.c: 4312
+# ui/properties.c: 4314
 DRC
 
-# ui/properties.c: 4313
+# ui/properties.c: 4315
 ASM
 
-# ui/properties.c: 4341
+# ui/properties.c: 4343
 ID:%d
 
 # ui/screenshot.c: 79
@@ -65068,7 +65068,7 @@ png
 # ui/win32ui.c: 923
  -%safs
 
-# ui/win32ui.c: 923, 925, 927, 928, 929, 930, 933, 934, 935, 936, 937, 938, 939, 940, 957, 960, 993, 994, 997, 1000, 1002, 1004, 1007, 1044, 1046, 1048, 1054, 1056, 1064, 1065, 1072, 1073, 1076, 1080, 1084, 1085, 1086, 1087, 1093, 1095, 1104, 1105, 1108, 1109, 1110, 1122, 1125, 1134
+# ui/win32ui.c: 923, 925, 927, 928, 929, 930, 933, 934, 935, 936, 937, 938, 939, 940, 957, 960, 993, 994, 997, 1000, 1002, 1004, 1007, 1044, 1046, 1048, 1054, 1056, 1064, 1065, 1072, 1073, 1076, 1080, 1084, 1085, 1086, 1087, 1093, 1095, 1104, 1105, 1108, 1109, 1110, 1121, 1122, 1124, 1127, 1136
 no
 
 # ui/win32ui.c: 924
@@ -65431,211 +65431,217 @@ no
 # ui/win32ui.c: 1119
  -ips %s
 
+# ui/win32ui.c: 1121
+ -%sdsm
+
 # ui/win32ui.c: 1122
+ -%sconfirm_quit
+
+# ui/win32ui.c: 1124
  -%sauto_pause_playback
 
-# ui/win32ui.c: 1125
+# ui/win32ui.c: 1127
  -%suse_trans_ui
 
-# ui/win32ui.c: 1126
+# ui/win32ui.c: 1128
  -ui_transparency %d
 
-# ui/win32ui.c: 1129
+# ui/win32ui.c: 1131
  -m68k_core %d
 
-# ui/win32ui.c: 1133
+# ui/win32ui.c: 1135
  -language %s
 
-# ui/win32ui.c: 1134
+# ui/win32ui.c: 1136
  -%suse_lang_list
 
-# ui/win32ui.c: 1192
+# ui/win32ui.c: 1194
 -input_directory
 
-# ui/win32ui.c: 1197
+# ui/win32ui.c: 1199
 -pb
 
-# ui/win32ui.c: 1202
+# ui/win32ui.c: 1204
 -rec
 
-# ui/win32ui.c: 1207
+# ui/win32ui.c: 1209
 -wavwrite
 
-# ui/win32ui.c: 1212
+# ui/win32ui.c: 1214
 -state
 
-# ui/win32ui.c: 1220, 1315
+# ui/win32ui.c: 1222, 1317
 Out of memory.
 
-# ui/win32ui.c: 1336
+# ui/win32ui.c: 1338
 CreateProcess failed.
 
-# ui/win32ui.c: 1399
+# ui/win32ui.c: 1401
 MAME32 starting
 
-# ui/win32ui.c: 1405
+# ui/win32ui.c: 1407
 windows
 
-# ui/win32ui.c: 1406
+# ui/win32ui.c: 1408
 ui
 
-# ui/win32ui.c: 1598, 1602
+# ui/win32ui.c: 1600, 1604
 %s/%s.ico
 
-# ui/win32ui.c: 1606
+# ui/win32ui.c: 1608
 %s/icons.zip
 
-# ui/win32ui.c: 1607
+# ui/win32ui.c: 1609
 %s.ico
 
-# ui/win32ui.c: 1611
+# ui/win32ui.c: 1613
 icons.zip
 
-# ui/win32ui.c: 1904
+# ui/win32ui.c: 1906
 The 
 
-# ui/win32ui.c: 1909
+# ui/win32ui.c: 1911
 , The
 
-# ui/win32ui.c: 2098, 5492
+# ui/win32ui.c: 2100, 5494
 %s\\bkground.png
 
-# ui/win32ui.c: 2115
+# ui/win32ui.c: 2117
 %s\\*.bmp
 
-# ui/win32ui.c: 2128
+# ui/win32ui.c: 2130
 %s\\*.png
 
-# ui/win32ui.c: 2158
+# ui/win32ui.c: 2160
 %s Plus! %s
 
-# ui/win32ui.c: 2158, 2258, 6128, 7303
+# ui/win32ui.c: 2160, 2260, 6130, 7305
 MAME32
 
-# ui/win32ui.c: 2220
+# ui/win32ui.c: 2222
 MainClass
 
-# ui/win32ui.c: 2227
+# ui/win32ui.c: 2229
 common control version %i.%i
 
-# ui/win32ui.c: 2234
+# ui/win32ui.c: 2236
 MAME32 has detected an old version of comctl32.dll\n\nGame Properties, many configuration options and\nfeatures are not available without an updated DLL\n\nPlease install the common control update found at:\n\nhttp://www.microsoft.com/msdownload/ieplatform/ie/comctrlx86.asp\n\nWould you like to continue without using the new features?\n
 
-# ui/win32ui.c: 2241
+# ui/win32ui.c: 2243
 MAME32 Outdated comctl32.dll Warning
 
-# ui/win32ui.c: 2245
+# ui/win32ui.c: 2247
 about to init options
 
-# ui/win32ui.c: 2247
+# ui/win32ui.c: 2249
 options loaded
 
-# ui/win32ui.c: 2267
+# ui/win32ui.c: 2269
 error creating main dialog, aborting
 
-# ui/win32ui.c: 2408
+# ui/win32ui.c: 2410
 about to init tree
 
-# ui/win32ui.c: 2410
+# ui/win32ui.c: 2412
 did init tree
 
-# ui/win32ui.c: 2479
+# ui/win32ui.c: 2481
 about to show window
 
-# ui/win32ui.c: 2539, 7786, 7786, 7866, 7866
+# ui/win32ui.c: 2541, 7788, 7788, 7868, 7868
 MAME
 
-# ui/win32ui.c: 2539
+# ui/win32ui.c: 2541
 MAME has failed its validity checks.  The GUI will still work, but emulations will fail to execute
 
-# ui/win32ui.c: 2682
+# ui/win32ui.c: 2684
 menusele: clear
 
-# ui/win32ui.c: 2691
+# ui/win32ui.c: 2693
 menusele: %d %s, updateSS
 
-# ui/win32ui.c: 2697
+# ui/win32ui.c: 2699
 menusele:none, updateSS
 
-# ui/win32ui.c: 2904, 2916, 4568, 6459
+# ui/win32ui.c: 2906, 2918, 4570, 6461
 SysListView32
 
-# ui/win32ui.c: 2906
+# ui/win32ui.c: 2908
 SysTabControl32
 
-# ui/win32ui.c: 3337
+# ui/win32ui.c: 3339
 MMX
 
-# ui/win32ui.c: 3339
+# ui/win32ui.c: 3341
 MMMM games
 
-# ui/win32ui.c: 3405
+# ui/win32ui.c: 3407
 Progress Bar
 
-# ui/win32ui.c: 3440, 3459, 3488, 3507
+# ui/win32ui.c: 3442, 3461, 3490, 3509
 Invalid Button Index
 
-# ui/win32ui.c: 3445, 3493
+# ui/win32ui.c: 3447, 3495
 Modify 'The'
 
-# ui/win32ui.c: 4065
+# ui/win32ui.c: 4067
 seq =%s pressed\n
 
-# ui/win32ui.c: 4089
+# ui/win32ui.c: 4091
 keyboard gui state cleared.\n
 
-# ui/win32ui.c: 4154
+# ui/win32ui.c: 4156
 VK_code pressed not found =  %i\n
 
-# ui/win32ui.c: 4158
+# ui/win32ui.c: 4160
 VK_code pressed found =  %i, sys=%i, mame_keycode=%i special=%08x\n
 
-# ui/win32ui.c: 4224
+# ui/win32ui.c: 4226
 VK_code released not found =  %i
 
-# ui/win32ui.c: 4229
+# ui/win32ui.c: 4231
 VK_code released found=  %i, sys=%i, mame_keycode=%i special=%08x\n
 
-# ui/win32ui.c: 4572, 6464
+# ui/win32ui.c: 4574, 6466
 SysTreeView32
 
-# ui/win32ui.c: 4649
+# ui/win32ui.c: 4651
 dup!
 
-# ui/win32ui.c: 5274
+# ui/win32ui.c: 5276
 bkgnd16
 
-# ui/win32ui.c: 5279
+# ui/win32ui.c: 5281
 bkground
 
-# ui/win32ui.c: 5595
+# ui/win32ui.c: 5597
 Control Panel\\desktop\\WindowMetrics
 
-# ui/win32ui.c: 5597
+# ui/win32ui.c: 5599
 Shell Icon Size
 
-# ui/win32ui.c: 5692
+# ui/win32ui.c: 5694
 comparing 1941, 1942
 
-# ui/win32ui.c: 5697
+# ui/win32ui.c: 5699
 comparing 1942, 1941
 
-# ui/win32ui.c: 5867
+# ui/win32ui.c: 5869
 result: %i
 
-# ui/win32ui.c: 6842
+# ui/win32ui.c: 6844
 can't find show folders context menu
 
-# ui/win32ui.c: 6848
+# ui/win32ui.c: 6850
 can't find submenu for show folders context menu
 
-# ui/win32ui.c: 7109
+# ui/win32ui.c: 7111
 loading %-12s\r
 
-# ui/win32ui.c: 7927, 7939
+# ui/win32ui.c: 7929, 7941
 BackMainWindowClass
 
-# ui/win32ui.c: 7940
+# ui/win32ui.c: 7942
 Main Backgound windows
 
 # ui_font.c: 76
@@ -67396,7 +67402,7 @@ Window Horz
 # vidhrdw/genesis.c: 201
 Window Vert
 
-# vidhrdw/genesis.c: 664
+# vidhrdw/genesis.c: 682
 Video height = 240!
 
 # vidhrdw/ginganin.c: 272
@@ -68806,7 +68812,7 @@ video
 # vidhrdw/popper.c: 192
 gfx_bank
 
-# vidhrdw/psikyo4.c: 171
+# vidhrdw/psikyo4.c: 176
 Regs %08x %08x %08x
 
 # vidhrdw/psikyosh.c: 343
@@ -69286,10 +69292,10 @@ OP: %04X\n
 # vidhrdw/segas32.c: 2385
 SC: %04X %04X %04X %04X - %04X %04X %04X %04X\n
 
-# vidhrdw/segas32.c: 2491, 2699
+# vidhrdw/segas32.c: 2491, 2733
 sprite.txt
 
-# vidhrdw/segas32.c: 2491, 2503, 2513, 2523, 2533, 2699
+# vidhrdw/segas32.c: 2491, 2503, 2513, 2523, 2533, 2733
 w
 
 # vidhrdw/segas32.c: 2503
@@ -71905,7 +71911,7 @@ error.log
 # windows/config.c: 161
 w
 
-# windows/config.c: 177, 184, 298
+# windows/config.c: 177, 184, 300
 auto
 
 # windows/config.c: 221
@@ -72067,82 +72073,91 @@ autosave
 # windows/config.c: 270
 ips
 
+# windows/config.c: 272
+disable_second_monitor
+
+# windows/config.c: 272
+dsm
+
 # windows/config.c: 273
+confirm_quit
+
+# windows/config.c: 275
 auto_pause_playback
 
-# windows/config.c: 277
+# windows/config.c: 279
 m68k_core
 
-# windows/config.c: 280
+# windows/config.c: 282
 use_trans_ui
 
-# windows/config.c: 281
+# windows/config.c: 283
 ui_transparency
 
-# windows/config.c: 291
+# windows/config.c: 293
 cc
 
-# windows/config.c: 291
+# windows/config.c: 293
 createconfig
 
-# windows/config.c: 292
+# windows/config.c: 294
 sc
 
-# windows/config.c: 292
+# windows/config.c: 294
 showconfig
 
-# windows/config.c: 293
+# windows/config.c: 295
 showusage
 
-# windows/config.c: 293
+# windows/config.c: 295
 su
 
-# windows/config.c: 294
+# windows/config.c: 296
 rc
 
-# windows/config.c: 294
+# windows/config.c: 296
 readconfig
 
-# windows/config.c: 295
+# windows/config.c: 297
 v
 
-# windows/config.c: 295
+# windows/config.c: 297
 verbose
 
-# windows/config.c: 298
+# windows/config.c: 300
 lang
 
-# windows/config.c: 298
+# windows/config.c: 300
 language
 
-# windows/config.c: 299
+# windows/config.c: 301
 use_lang_list
 
-# windows/config.c: 417, 516
+# windows/config.c: 419, 518
 %s.ini
 
-# windows/config.c: 504, 504, 507, 519
+# windows/config.c: 506, 506, 509, 521
 MAME
 
-# windows/config.c: 504
+# windows/config.c: 506
 mame
 
-# windows/config.c: 513
+# windows/config.c: 515
 who am I? cannot determine the name I was called with\n
 
-# windows/config.c: 521
+# windows/config.c: 523
 MAME.ini
 
-# windows/config.c: 530
+# windows/config.c: 532
 debug.ini
 
-# windows/config.c: 627
+# windows/config.c: 629
 vector.ini
 
-# windows/config.c: 654
+# windows/config.c: 656
 .ini
 
-# windows/config.c: 859
+# windows/config.c: 861
 random
 
 # windows/debugwin.c: 159

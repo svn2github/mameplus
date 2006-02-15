@@ -14,7 +14,7 @@
    ignoring line\n
    ignorier zeile\n
 
-# windows/config.c: 543
+# windows/config.c: 545
  %s running parameters
  %s start parameter
 
@@ -38,7 +38,7 @@ Bester Modus = %dx%dx%d @ standard Hz\n
 Blit surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 Blit Oberfläche erzeugt: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 
-# windows/config.c: 290
+# windows/config.c: 292
 Configuration options
 Konfigurations-Optionen
 
@@ -190,7 +190,7 @@ J%d %s U
 KNOWN     %s\n
 BEKANNT   %s\n
 
-# windows/config.c: 297
+# windows/config.c: 299
 Language options
 Sprach Optionen
 
@@ -274,7 +274,7 @@ Nicht genug Speicher!\n
 PARTKNOWN %s\n
 PARTKNOWN %s\n
 
-# windows/config.c: 591
+# windows/config.c: 593
 Playing back previously recorded game %s (%s) [press return]\n
 Abspielen des vorher aufgezeichneten Spiels %s (%s) [Drücke Enter]\n
 
@@ -326,7 +326,7 @@ Nicht möglich das Tastatur-Gerät zu öffnen. (Error %d)\n
 Usage:  MAME gamename [options]\n\n
 Nutzung:  MAME Spielname [Optionen]\n\n
 
-# windows/config.c: 550
+# windows/config.c: 552
 Usage: %s [game] [options]\nOptions:\n
 Nutzung: %s [Spiel] [Optionen]\nOptionen:\n
 
@@ -358,7 +358,7 @@ Windows Video Optionen
 \"%s\" controller support enabled\n
 \"%s\" Steuerungs-Unterstützung eingeschaltet\n
 
-# windows/config.c: 609
+# windows/config.c: 611
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" beinhaltet vermutlich die folgenden\nunterstützten Spiele (Bester Treffer zuerst):\n\n
 
@@ -434,7 +434,7 @@ Vergleiche Dateien mit bekannten MAME-ROMs
 compare files with known MAME roms (brief)
 Vergleiche Dateien mit bekannten MAM-ROMs (kurz)
 
-# windows/config.c: 291
+# windows/config.c: 293
 create the default configuration file
 Erzeuge die Standard-Konfigurations-Datei
 
@@ -486,11 +486,11 @@ Verzeichnis für das Abspeichern der NVRAM-Inhalte
 directory to save states
 Verzeichnis für das Abspeichern der Save states
 
-# windows/config.c: 295
+# windows/config.c: 297
 display additional diagnostic information
 Zeige zusätzliche Diagnostik-Informationen
 
-# windows/config.c: 292
+# windows/config.c: 294
 display running parameters in rc style
 Zeige laufende Parameter im rc Stil
 
@@ -542,7 +542,7 @@ Cheat-Subsystem ein-/ausschalten
 enable/disable debugger (only if available)
 Debugger ein-/ausschalten (nur wenn verfügbar)
 
-# windows/config.c: 294
+# windows/config.c: 296
 enable/disable loading of configfiles
 Laden von Konfigurations-Dateien ein-/ausschalten
 
@@ -558,11 +558,11 @@ Anzeige-Aspekt beibehalten
 error invalid value for %s: %s\n
 Fehlerhafter Wert für %s: %s\n
 
-# windows/config.c: 491
+# windows/config.c: 493
 error on rc creation\n
 Fehler bei rc creation\n
 
-# windows/config.c: 500
+# windows/config.c: 502
 error while parsing cmdline\n
 Fehler beim Abarbeiten der Kommandozeile\n
 
@@ -578,7 +578,7 @@ Fehler: %s benötgit ein Argument\n
 error: couldn't open file: %s\n
 Fehler: Kann Datei: %s nicht öffnen\n
 
-# windows/config.c: 855
+# windows/config.c: 857
 error: duplicate gamename: %s\n
 Fehler: Doppelter Spielename: %s\n
 
@@ -618,11 +618,11 @@ Fehler: Unbekannte Option %s, in Zeile %d von Datei: %s\n
 error: unknown option %s\n
 Fehler: Unbekannte Option %s\n
 
-# windows/config.c: 566
+# windows/config.c: 568
 failed to open %s for playback\n
 Fehler beim öffnen von %s für Wiedergabe\n
 
-# windows/config.c: 671
+# windows/config.c: 673
 failed to open %s for recording\n
 Fehler beim öffnen von %s für Aufnahme\n
 
@@ -754,7 +754,7 @@ Rotiere Bild im Uhrzeigersinn
 run in a window/run on full screen
 Laufe in einem Fenster/laufe Vollbild
 
-# windows/config.c: 618
+# windows/config.c: 620
 running %s (%s) [press return]
 starte %s (%s) [Drücke ENTER]
 
@@ -770,7 +770,7 @@ sampleset %s
 samplesets
 samplesets
 
-# windows/config.c: 298
+# windows/config.c: 300
 select translation language
 Wähle šbersetzungs-Sprache
 
@@ -834,7 +834,7 @@ Zeige Klone
 show help message
 Zeige Hilfe-Nachrichten
 
-# windows/config.c: 293
+# windows/config.c: 295
 show this help
 Zeige diese Hilfe
 
@@ -878,7 +878,7 @@ Syncronisiere nur zur Monitor-Wiederholrate
 throttle speed to the game's framerate
 Passe Geschwindigkeit an die Spiel-Bildrate an
 
-# windows/config.c: 281
+# windows/config.c: 283
 transparency of UI background [0 - 255]
 Transparenz des Benutzer-Oberflächen-Hintergrundes [0 - 255]
 
@@ -914,7 +914,7 @@ Benutze Overlay Artwork
 use samples
 Benutze Samples
 
-# windows/config.c: 280
+# windows/config.c: 282
 use transparent background for UI text
 Benutze transparenten Hintergrund für Benutzer-Oberflächen-Text
 
@@ -1158,15 +1158,15 @@ Mouse %d Y
 Mouse %d Z
 
 
-# windows/config.c: 438
+# windows/config.c: 440
 Parsing %s : ERROR\n
 
 
-# windows/config.c: 448
+# windows/config.c: 450
 Parsing %s : N/A\n
 
 
-# windows/config.c: 443
+# windows/config.c: 445
 Parsing %s : OK\n
 
 
@@ -1342,7 +1342,7 @@ analog
 analog joystick
 
 
-# windows/config.c: 273
+# windows/config.c: 275
 automatic pause when playback is finished
 
 
@@ -1354,12 +1354,16 @@ automatically rotate screen anti-clockwise for vertical games
 automatically rotate screen clockwise for vertical games
 
 
-# windows/config.c: 277
+# windows/config.c: 279
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 
 
 # windows/config.c: 266
 change system bios
+
+
+# windows/config.c: 273
+confirm before exiting game
 
 
 # windows/wind3dfx.c: 196
@@ -1380,6 +1384,10 @@ directory for ips files
 
 # windows/fileio.c: 148
 directory for localized language files
+
+
+# windows/config.c: 272
+disable second monitor emulation
 
 
 # windows/wind3d.c: 1144
@@ -1430,7 +1438,7 @@ enable pointing stick input
 enable rotation of effects for rotated games
 
 
-# windows/config.c: 299
+# windows/config.c: 301
 enable/disable local language game list
 
 
@@ -1478,11 +1486,11 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 
 
-# windows/config.c: 1013
+# windows/config.c: 1015
 error: malloc failed in win_dirname\n
 
 
-# windows/config.c: 1053
+# windows/config.c: 1055
 error: malloc failed in win_strip_extension\n
 
 

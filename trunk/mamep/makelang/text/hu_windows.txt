@@ -50,7 +50,7 @@
   Axis %d (%s)%s\n
   Tengely %d (%s)%s\n
 
-# windows/config.c: 543
+# windows/config.c: 545
  %s running parameters
  %s paraméterek futtatása
 
@@ -122,7 +122,7 @@ Blitter elõkészítése kész (%.2lfMB videó memória szabad)\n
 CRC-32s
 CRC-32s
 
-# windows/config.c: 290
+# windows/config.c: 292
 Configuration options
 Beállítási opciók
 
@@ -374,7 +374,7 @@ Billentyûzetek=%d  Egerek=%d  Joystick-ek=%d  Fénypisztolyok=%d\n
 LED mode (ps/2|usb)
 LED mód (ps/2|usb)
 
-# windows/config.c: 297
+# windows/config.c: 299
 Language options
 Nyelv válsztás
 
@@ -486,19 +486,19 @@ Kevés a memória!\n
 PARTKNOWN %s\n
 RÉSZLEGESEN ISMERT %s\n
 
-# windows/config.c: 438
+# windows/config.c: 440
 Parsing %s : ERROR\n
 Elemzés %s : HIBA\n
 
-# windows/config.c: 448
+# windows/config.c: 450
 Parsing %s : N/A\n
 Elemzés %s : N/A\n
 
-# windows/config.c: 443
+# windows/config.c: 445
 Parsing %s : OK\n
 Parsing %s : RENDBEN\n
 
-# windows/config.c: 591
+# windows/config.c: 593
 Playing back previously recorded game %s (%s) [press return]\n
 Az elõzõleg rögzített játék visszajátszásához %s (%s) [nyomjon Enter-t]\n
 
@@ -646,7 +646,7 @@ Unable to render to preprocess texture: %08x\n
 Usage:  MAME gamename [options]\n\n
 Használat:  MAME játéknév [beállítások]\n\n
 
-# windows/config.c: 550
+# windows/config.c: 552
 Usage: %s [game] [options]\nOptions:\n
 Használat: %s [játék] [beállítások]\nbeállítások:\n
 
@@ -738,7 +738,7 @@ windows képi beállítások
 \"%s\" controller support enabled\n
 \"%s\" játékirányító alkalmazása bekapcsolva\n
 
-# windows/config.c: 609
+# windows/config.c: 611
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" hozzávetõlegesen megegyezik a\ntámogatott játékokkal (leginkább hasonlót elõször):\n\n
 
@@ -826,7 +826,7 @@ gomb szín (ezüst)
 button color (yellow)
 gomb szín (sárga)
 
-# windows/config.c: 277
+# windows/config.c: 279
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 m68k mag (0:C, 1:DRC, 2:ASM+DRC) megváltoztatása
 
@@ -846,7 +846,7 @@ fájlok összehasonlítása az ismert MAME ROM-okkal
 compare files with known MAME roms (brief)
 fájlok összehasonlítása az ismert MAME ROM-okkal (röviden)
 
-# windows/config.c: 291
+# windows/config.c: 293
 create the default configuration file
 az alapbeállítási fájl létrehozása
 
@@ -918,11 +918,11 @@ NVRAM tartalom mentése mappa
 directory to save states
 állások mentése mappa
 
-# windows/config.c: 295
+# windows/config.c: 297
 display additional diagnostic information
 kisegítõ diagnosztikai információk megjelenítése
 
-# windows/config.c: 292
+# windows/config.c: 294
 display running parameters in rc style
 futó paraméterek megjelenítése rc stílusban
 
@@ -1022,11 +1022,11 @@ csalás kisegítõrendszer be/kikapcsolva
 enable/disable debugger (only if available)
 hibakeresõ be/kikapcsolva (csak ha elérhetõ)
 
-# windows/config.c: 294
+# windows/config.c: 296
 enable/disable loading of configfiles
 be/kikapcsolva a beállítási fájl betöltése
 
-# windows/config.c: 299
+# windows/config.c: 301
 enable/disable local language game list
 helyi nyelvi játéklista bekapcsolva/kikapcsolva
 
@@ -1046,11 +1046,11 @@ képarány kényszerítése
 error invalid value for %s: %s\n
 hiba - érvénytelen érték %s: %s\n
 
-# windows/config.c: 491
+# windows/config.c: 493
 error on rc creation\n
 hiba az rc létrehozásánál\n
 
-# windows/config.c: 500
+# windows/config.c: 502
 error while parsing cmdline\n
 hiba végrehajtáskor cmdline\n
 
@@ -1066,7 +1066,7 @@ hiba: %s szükséges egy bizonyítás\n
 error: couldn't open file: %s\n
 hiba: a fájl nem nyitható meg: %s\n
 
-# windows/config.c: 855
+# windows/config.c: 857
 error: duplicate gamename: %s\n
 hiba: játéknév kétszer szerepel: %s\n
 
@@ -1134,11 +1134,11 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 error: malloc failed in rc_register_option\n
 
-# windows/config.c: 1013
+# windows/config.c: 1015
 error: malloc failed in win_dirname\n
 error: malloc failed in win_dirname\n
 
-# windows/config.c: 1053
+# windows/config.c: 1055
 error: malloc failed in win_strip_extension\n
 error: malloc failed in win_strip_extension\n
 
@@ -1158,11 +1158,11 @@ hiba: ismeretlen beállítás %s\n
 error: unknown option type: %d, this should not happen!\n
 hiba: ismeretlen beállítási típus: %d, ez nem történhet meg!\n
 
-# windows/config.c: 566
+# windows/config.c: 568
 failed to open %s for playback\n
 sikertelen a megnyitás %s a lejátszáshoz\n
 
-# windows/config.c: 671
+# windows/config.c: 673
 failed to open %s for recording\n
 sikertelen a megnyitás %s a rögzítéshez\n
 
@@ -1346,7 +1346,7 @@ kép forgatása óramutató járásával megfelelõen
 run in a window/run on full screen
 ablakban futtatás/teljes képernyõn futtatás
 
-# windows/config.c: 618
+# windows/config.c: 620
 running %s (%s) [press return]
 futtatás %s (%s) [nyomjon ENTER-t]
 
@@ -1378,7 +1378,7 @@ képsor megjelenítés erõssége
 script for debugger (only if available)
 szkript a hibakeresõhöz (csak ha rendelkezésre áll)
 
-# windows/config.c: 298
+# windows/config.c: 300
 select translation language
 fordított nyelv kiválasztása
 
@@ -1466,7 +1466,7 @@ klnónok megjelenítése
 show help message
 súgó üzenetek megjelenítése
 
-# windows/config.c: 293
+# windows/config.c: 295
 show this help
 súgó megjelenítése
 
@@ -1530,7 +1530,7 @@ sebesség igazítása a játék képfrekvenciájához
 trackball
 hanyattegér
 
-# windows/config.c: 281
+# windows/config.c: 283
 transparency of UI background [0 - 255]
 áttlátszó háttér használata [0 - 255]
 
@@ -1578,7 +1578,7 @@ use overlay artwork
 use samples
 minták használata
 
-# windows/config.c: 280
+# windows/config.c: 282
 use transparent background for UI text
 átlátszó háttér használata a feliratokban
 
@@ -1610,7 +1610,15 @@ ablak képkocka szín (közepes)
 year, manufacturer and full name
 év, gyártó és teljes név
 
-# windows/config.c: 273
+# windows/config.c: 275
 automatic pause when playback is finished
+
+
+# windows/config.c: 273
+confirm before exiting game
+
+
+# windows/config.c: 272
+disable second monitor emulation
 
 

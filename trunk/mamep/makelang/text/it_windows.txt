@@ -50,7 +50,7 @@
   Axis %d (%s)%s\n
   Asse %d (%s)%s\n
 
-# windows/config.c: 543
+# windows/config.c: 545
  %s running parameters
  %s parametri funzionanti
 
@@ -118,7 +118,7 @@ Superficie blit creata: %s\n
 Blitter initialisation complete (%.2lfMB video memory free)\n
 Inizializzazione blitter completa (%.2lfMB meoria video liberi)\n
 
-# windows/config.c: 290
+# windows/config.c: 292
 Configuration options
 Opzioni configurazione
 
@@ -354,7 +354,7 @@ Tastiera=%d  Mice=%d  Leve=%d  Pistole=%d\n
 LED mode (ps/2|usb)
 Modo LED (ps/2|usb)
 
-# windows/config.c: 297
+# windows/config.c: 299
 Language options
 Opzioni linguaggio
 
@@ -446,19 +446,19 @@ Memoria Esaurita!\n
 PARTKNOWN %s\n
 PARTECONOSCIUTA %s\n
 
-# windows/config.c: 438
+# windows/config.c: 440
 Parsing %s : ERROR\n
 Analizzato %s : ERRORE\n
 
-# windows/config.c: 448
+# windows/config.c: 450
 Parsing %s : N/A\n
 Analizzato %s : N/A\n
 
-# windows/config.c: 443
+# windows/config.c: 445
 Parsing %s : OK\n
 Analizzato %s : OK\n
 
-# windows/config.c: 591
+# windows/config.c: 593
 Playing back previously recorded game %s (%s) [press return]\n
 Riproduci un gioco precedentemente registrato %s (%s) [premi invio]\n
 
@@ -606,7 +606,7 @@ Incapace tracciare a mappa preprocesso: %08x\n
 Usage:  MAME gamename [options]\n\n
 Uso: MAME nomegioco: [opzioni]\n\n
 
-# windows/config.c: 550
+# windows/config.c: 552
 Usage: %s [game] [options]\nOptions:\n
 Uso: %s [gioco] [opzioni]\nOpzioni:\n
 
@@ -698,7 +698,7 @@ Opzioni video Windows
 \"%s\" controller support enabled\n
 \"%s\" supporto controllo abilitato\n
 
-# windows/config.c: 609
+# windows/config.c: 611
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" approssivativamente corrispondoni ai seguenti\ngiochi supportati (prima le migliori corrispondenze):\n\n
 
@@ -786,7 +786,7 @@ colore pulsante (argento)
 button color (yellow)
 colore pulsante (giallo)
 
-# windows/config.c: 277
+# windows/config.c: 279
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 cambia nucleo m68k (0:C, 1:DRC, 2:ASM+DRC)
 
@@ -806,7 +806,7 @@ confronta archivi con ROM conosciute MAME
 compare files with known MAME roms (brief)
 confronta archivi con ROM conosciute MAME (breve)
 
-# windows/config.c: 291
+# windows/config.c: 293
 create the default configuration file
 crea un archivio configurazione predefinito
 
@@ -878,11 +878,11 @@ cartella per salvare i contenuti nvram (ram non volatile)
 directory to save states
 cartella per salvare stati
 
-# windows/config.c: 295
+# windows/config.c: 297
 display additional diagnostic information
 mostra informazioni diagnostiche addizionali
 
-# windows/config.c: 292
+# windows/config.c: 294
 display running parameters in rc style
 mostra i parametri di funzionamento in stile rc
 
@@ -982,11 +982,11 @@ abilita/disabilita il sottosistema trucchi
 enable/disable debugger (only if available)
 abilita/disbilita debugger (solo se disponibile)
 
-# windows/config.c: 294
+# windows/config.c: 296
 enable/disable loading of configfiles
 abilita/disabilita la lettura degli archivi configurazione
 
-# windows/config.c: 299
+# windows/config.c: 301
 enable/disable local language game list
 abilita/disabilita lista linguaggi giochi locale
 
@@ -1006,11 +1006,11 @@ forza rapporto proporzioni
 error invalid value for %s: %s\n
 errore valore non valido per %s: %s\n
 
-# windows/config.c: 491
+# windows/config.c: 493
 error on rc creation\n
 errore nella creazione rc\n
 
-# windows/config.c: 500
+# windows/config.c: 502
 error while parsing cmdline\n
 errore durante l'analisi della linea comandi\n
 
@@ -1026,7 +1026,7 @@ errore: %s richiede un argomento\n
 error: couldn't open file: %s\n
 errore: non posso aprire l'archivio: %s\n
 
-# windows/config.c: 855
+# windows/config.c: 857
 error: duplicate gamename: %s\n
 errore: nomegioco dupplicato: %s\n
 
@@ -1094,11 +1094,11 @@ errore: malloc fallita in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 errore: malloc fallita in rc_register_option\n
 
-# windows/config.c: 1013
+# windows/config.c: 1015
 error: malloc failed in win_dirname\n
 errore: malloc fallita in win_dirname\n
 
-# windows/config.c: 1053
+# windows/config.c: 1055
 error: malloc failed in win_strip_extension\n
 errore: malloc fallita in win_strip_extension\n
 
@@ -1118,11 +1118,11 @@ erore: opzione sconosciuta %s\n
 error: unknown option type: %d, this should not happen!\n
 errore: tipo opzione sconosciuto: %d, questo non dovrebbe accadere!\n
 
-# windows/config.c: 566
+# windows/config.c: 568
 failed to open %s for playback\n
 fallita apertura di %s per riproduzione\n
 
-# windows/config.c: 671
+# windows/config.c: 673
 failed to open %s for recording\n
 fallita apertura di %s per registrazione\n
 
@@ -1306,7 +1306,7 @@ ruoto lo schermo in senso orario
 run in a window/run on full screen
 esegui in una finestra/esegui a schermo pieno
 
-# windows/config.c: 618
+# windows/config.c: 620
 running %s (%s) [press return]
 sto avviando %s (%s) [premi invio]
 
@@ -1338,7 +1338,7 @@ intensità interlinee
 script for debugger (only if available)
 script per debugger (solo se disponibile)
 
-# windows/config.c: 298
+# windows/config.c: 300
 select translation language
 scegli il linguaggio di traduzione
 
@@ -1426,7 +1426,7 @@ mostra cloni
 show help message
 mostra messaggio aiuto
 
-# windows/config.c: 293
+# windows/config.c: 295
 show this help
 mostra quest'aiuto
 
@@ -1490,7 +1490,7 @@ accelera velocità alla velocità schermo del gioco
 trackball
 sfera
 
-# windows/config.c: 281
+# windows/config.c: 283
 transparency of UI background [0 - 255]
 trasparenza dell'Interf.Graf [0 - 255]
 
@@ -1538,7 +1538,7 @@ usa fondali sovrapposti
 use samples
 usa campioni audio
 
-# windows/config.c: 280
+# windows/config.c: 282
 use transparent background for UI text
 usa sfondo trasparente per testo Interf Graf
 
@@ -1610,7 +1610,15 @@ Mouse %d Z
 Mouse %s
 
 
-# windows/config.c: 273
+# windows/config.c: 275
 automatic pause when playback is finished
+
+
+# windows/config.c: 273
+confirm before exiting game
+
+
+# windows/config.c: 272
+disable second monitor emulation
 
 

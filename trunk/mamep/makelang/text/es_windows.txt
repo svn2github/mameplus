@@ -50,7 +50,7 @@
   Axis %d (%s)%s\n
   Ejes %d (%s)%s\n
 
-# windows/config.c: 543
+# windows/config.c: 545
  %s running parameters
  %s ejecutando parametros
 
@@ -122,7 +122,7 @@ Blitter inicializacion completada (%.2lfMB memoria de vídeo libre)\n
 CRC-32s
 CRC-32s
 
-# windows/config.c: 290
+# windows/config.c: 292
 Configuration options
 Opciones de configuracion
 
@@ -374,7 +374,7 @@ Teclados=%d  Ratón=%d  Joysticks=%d  Pistolas%d\n
 LED mode (ps/2|usb)
 Modo LED (PS/2|USB)
 
-# windows/config.c: 297
+# windows/config.c: 299
 Language options
 Opciones de idioma
 
@@ -486,19 +486,19 @@ Fuera de memoria!\n
 PARTKNOWN %s\n
 PARTE CONOCIDA %s\n
 
-# windows/config.c: 438
+# windows/config.c: 440
 Parsing %s : ERROR\n
 Analizando %s : ERROR\n
 
-# windows/config.c: 448
+# windows/config.c: 450
 Parsing %s : N/A\n
 Analizando %s : N/A\n
 
-# windows/config.c: 443
+# windows/config.c: 445
 Parsing %s : OK\n
 Analizando %s : OK\n
 
-# windows/config.c: 591
+# windows/config.c: 593
 Playing back previously recorded game %s (%s) [press return]\n
 Reproduciendo grabacción previa del juego %s (%s) [pulsa esc]\n
 
@@ -646,7 +646,7 @@ Deseleccionado para renderizar textura de preproceso: %08x\n
 Usage:  MAME gamename [options]\n\n
 Usar: MAME nombredejuego [opciones]\n\n
 
-# windows/config.c: 550
+# windows/config.c: 552
 Usage: %s [game] [options]\nOptions:\n
 Usar: %s [juego] [opciones]\nOpciones:\n
 
@@ -738,7 +738,7 @@ Opciones de vídeo de Windows
 \"%s\" controller support enabled\n
 \"%s\" activar soporte de controlador\n
 
-# windows/config.c: 609
+# windows/config.c: 611
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 
@@ -826,7 +826,7 @@ color boton (plateado)
 button color (yellow)
 color boton (amarillo)
 
-# windows/config.c: 277
+# windows/config.c: 279
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 cambiar núcleo m68k (0:C, 1:DRC, 2:ASM+DRC)
 
@@ -846,7 +846,7 @@ comparar archivos con MAME roms conocidas
 compare files with known MAME roms (brief)
 comparar archivos con MAME roms conocidas (brief)
 
-# windows/config.c: 291
+# windows/config.c: 293
 create the default configuration file
 crear el archivo de configuracion por defecto
 
@@ -918,11 +918,11 @@ directorio para guardar el contenido de la nvram
 directory to save states
 directorio para guardar estados
 
-# windows/config.c: 295
+# windows/config.c: 297
 display additional diagnostic information
 visualizar adiccional informacion de diagnostico
 
-# windows/config.c: 292
+# windows/config.c: 294
 display running parameters in rc style
 visualizar cargando parametros en estilo rc
 
@@ -1022,11 +1022,11 @@ activar/desactivar sunsistema de trucos
 enable/disable debugger (only if available)
 activar/desactivar depurador (solo si está disponible
 
-# windows/config.c: 294
+# windows/config.c: 296
 enable/disable loading of configfiles
 activar/desactivar carga de archivos de configuracion
 
-# windows/config.c: 299
+# windows/config.c: 301
 enable/disable local language game list
 activar/desactivar lista de juegos de idioma local
 
@@ -1046,11 +1046,11 @@ imponer ratio de aspecto
 error invalid value for %s: %s\n
 error valor inválido para %s: %s\n
 
-# windows/config.c: 491
+# windows/config.c: 493
 error on rc creation\n
 error en creación rc\n
 
-# windows/config.c: 500
+# windows/config.c: 502
 error while parsing cmdline\n
 error mienstras analiza cmdline\n
 
@@ -1066,7 +1066,7 @@ error: %s requiere un argumento\n
 error: couldn't open file: %s\n
 error: no se puede abrir archivo: %s\n
 
-# windows/config.c: 855
+# windows/config.c: 857
 error: duplicate gamename: %s\n
 error: nombre de juego duplicado: %s\n
 
@@ -1134,11 +1134,11 @@ error: fallo reservando memoria en rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 error: fallo reservando memoria en rc_register_option\n
 
-# windows/config.c: 1013
+# windows/config.c: 1015
 error: malloc failed in win_dirname\n
 error: fallo reservando memoria en win_dirname\n
 
-# windows/config.c: 1053
+# windows/config.c: 1055
 error: malloc failed in win_strip_extension\n
 error: fallo reservando memoria en win_strip_extension\n
 
@@ -1158,11 +1158,11 @@ error: opción desconocida %s\n
 error: unknown option type: %d, this should not happen!\n
 error: tipo de opción desconocida: %d, esto no deberia suceder!\n
 
-# windows/config.c: 566
+# windows/config.c: 568
 failed to open %s for playback\n
 fallo para abrir %s para reproducción\n
 
-# windows/config.c: 671
+# windows/config.c: 673
 failed to open %s for recording\n
 fallo para abrir %s para grabación\n
 
@@ -1346,7 +1346,7 @@ rotar pantalla en el sentido de la agujas del reloj
 run in a window/run on full screen
 ejecutar en una ventana/ejecutar en pantalla completa
 
-# windows/config.c: 618
+# windows/config.c: 620
 running %s (%s) [press return]
 ejecutando %s (%s) [pulsa esc]
 
@@ -1378,7 +1378,7 @@ intensidad de linea de escaneo
 script for debugger (only if available)
 script para depurador (solo si está disponible)
 
-# windows/config.c: 298
+# windows/config.c: 300
 select translation language
 seleccionar idioma de traduccion
 
@@ -1466,7 +1466,7 @@ mostrar clones
 show help message
 mostrar mensaje de ayuda
 
-# windows/config.c: 293
+# windows/config.c: 295
 show this help
 mostrar esta ayuda
 
@@ -1530,7 +1530,7 @@ frenar la velocidad al framerate del juego
 trackball
 trackball
 
-# windows/config.c: 281
+# windows/config.c: 283
 transparency of UI background [0 - 255]
 transparencia de fondo de interfaz gráfica [0 - 255]
 
@@ -1578,7 +1578,7 @@ usar decorados overlay
 use samples
 usar muestras de sonido
 
-# windows/config.c: 280
+# windows/config.c: 282
 use transparent background for UI text
 usar transparencias para el fondo de las opciones
 
@@ -1610,7 +1610,15 @@ color marco de ventana (medio)
 year, manufacturer and full name
 Año, creador y nombre completo
 
-# windows/config.c: 273
+# windows/config.c: 275
 automatic pause when playback is finished
+
+
+# windows/config.c: 273
+confirm before exiting game
+
+
+# windows/config.c: 272
+disable second monitor emulation
 
 

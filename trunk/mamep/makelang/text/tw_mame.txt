@@ -854,7 +854,7 @@ Command List not available
 Comment
 註解
 
-# drivers/alpha68k.c: 1636 drivers/armedf.c: 557 drivers/bbusters.c: 457, 528 drivers/boogwing.c: 180 drivers/deco32.c: 1339 drivers/gaelco2.c: 715, 1185 drivers/gijoe.c: 307 drivers/itech8.c: 1599 drivers/konamigq.c: 524 drivers/konamigx.c: 1730 drivers/lethal.c: 544 drivers/lordgun.c: 348 drivers/m92.h: 77, 93, 109, 125 drivers/marinedt.c: 365 drivers/mcr68.c: 741 drivers/moo.c: 514, 583 drivers/mystwarr.c: 1082, 1150, 1223 drivers/segac2.c: 1060 drivers/segas18.c: 912, 968, 1024, 1073, 1139, 1156, 1200 drivers/snk.c: 2912, 2968, 3025, 3082 drivers/sslam.c: 546 drivers/suprslam.c: 232 drivers/system18.c: 1327 drivers/system24.c: 1267, 1343, 1414, 1484, 1544
+# drivers/alpha68k.c: 1636 drivers/armedf.c: 557 drivers/bbusters.c: 457, 528 drivers/boogwing.c: 180 drivers/deco32.c: 1339 drivers/gaelco2.c: 715, 1201 drivers/gijoe.c: 307 drivers/itech8.c: 1599 drivers/konamigq.c: 524 drivers/konamigx.c: 1730 drivers/lethal.c: 544 drivers/lordgun.c: 348 drivers/m92.h: 77, 93, 109, 125 drivers/marinedt.c: 365 drivers/mcr68.c: 741 drivers/moo.c: 514, 583 drivers/mystwarr.c: 1082, 1150, 1223 drivers/segac2.c: 1060 drivers/segas18.c: 912, 968, 1024, 1073, 1139, 1156, 1200 drivers/snk.c: 2912, 2968, 3025, 3082 drivers/sslam.c: 546 drivers/suprslam.c: 232 drivers/system18.c: 1327 drivers/system24.c: 1267, 1343, 1414, 1484, 1544
 Common
 普通
 
@@ -1196,11 +1196,11 @@ Error:
 
 # cpuexec.c: 700
 Error: Failed to load state
-錯誤: 載入狀態失敗
+錯誤: 無法載入狀態
 
 # cpuexec.c: 629
 Error: Failed to save state
-錯誤: 儲存狀態失敗
+錯誤: 無法儲存狀態
 
 # cpuexec.c: 593
 Error: Unable to save state due to illegal registrations. See error.log for details.
@@ -4484,7 +4484,7 @@ Your filesystem seems to be corrupt, please check it
 
 # datafile.c: 3224
 \n\nVIDEO NEEDS... : ORIG   CLNS\n\n
-\n\n視訊顯示需求   : 原作   仿製\n\n
+\n\n視訊需求...    : 原作   仿製\n\n
 
 # datafile.c: 3061
 \n\nYEAR    NEW GAMES\n\n

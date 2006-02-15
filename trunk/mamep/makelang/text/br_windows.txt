@@ -14,7 +14,7 @@
    ignoring line\n
    ignorando linha\n
 
-# windows/config.c: 543
+# windows/config.c: 545
  %s running parameters
  %s rodando parâmetros
 
@@ -70,7 +70,7 @@ Inicialização do Blitter completada (%.2lfMB de memória de vídeo livre)\n
 CRC-32s
 CRC-32s
 
-# windows/config.c: 290
+# windows/config.c: 292
 Configuration options
 Opções de configuração
 
@@ -298,7 +298,7 @@ CONHECIDO %s\n
 LED mode (ps/2|usb)
 Modo do LED (ps/2|usb)
 
-# windows/config.c: 297
+# windows/config.c: 299
 Language options
 Opções de Idioma
 
@@ -390,7 +390,7 @@ Falta de memória!\n
 PARTKNOWN %s\n
 PARTKNOWN %s\n
 
-# windows/config.c: 591
+# windows/config.c: 593
 Playing back previously recorded game %s (%s) [press return]\n
 Tocando jogo gravado previamente %s (%s) [tecle return]\n
 
@@ -534,7 +534,7 @@ Impossível renderizar no pre-processo de textura: %08x\n
 Usage:  MAME gamename [options]\n\n
 Uso:  MAME nomejogo [opções]\n\n
 
-# windows/config.c: 550
+# windows/config.c: 552
 Usage: %s [game] [options]\nOptions:\n
 Uso: %s [jogo] [opções]\nOpções:\n
 
@@ -622,7 +622,7 @@ Windows video options
 \"%s\" controller support enabled\n
 \"%s\" suporte de controle habilitado\n
 
-# windows/config.c: 609
+# windows/config.c: 611
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" se iguala aproximadamente ao seguintes\njogos suportados (mais corretos primeiro):\n\n
 
@@ -702,7 +702,7 @@ color do botão (prata)
 button color (yellow)
 color do botão (amarelo)
 
-# windows/config.c: 277
+# windows/config.c: 279
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 muda núcleo m68k (0:C, 1:DRC, 2:ASM+DRC)
 
@@ -722,7 +722,7 @@ compara arquivos com roms conhecidos do MAME
 compare files with known MAME roms (brief)
 compara arquivos com roms cohnecidos do MAME (breve)
 
-# windows/config.c: 291
+# windows/config.c: 293
 create the default configuration file
 cria um arquivo de configiração padrão
 
@@ -778,11 +778,11 @@ diretório para conteúdo de nvram salvos
 directory to save states
 diretório para save states
 
-# windows/config.c: 295
+# windows/config.c: 297
 display additional diagnostic information
 mostra informação de diagnóstico adicional
 
-# windows/config.c: 292
+# windows/config.c: 294
 display running parameters in rc style
 mostra parâmetros de execução em estilo rc
 
@@ -846,7 +846,7 @@ habilita/desabilita sistema de trapaças
 enable/disable debugger (only if available)
 habilita/desabilita debugador (somente se disponível)
 
-# windows/config.c: 294
+# windows/config.c: 296
 enable/disable loading of configfiles
 habilita/desabilita carregamente de arquivos de config
 
@@ -862,11 +862,11 @@ forca aspecto de tela
 error invalid value for %s: %s\n
 erro valor inválido para %s: %s\n
 
-# windows/config.c: 491
+# windows/config.c: 493
 error on rc creation\n
 erro na criação do rc\n
 
-# windows/config.c: 500
+# windows/config.c: 502
 error while parsing cmdline\n
 erro ao analizar cmdline\n
 
@@ -882,7 +882,7 @@ erro: %s requer uma argumento\n
 error: couldn't open file: %s\n
 erro: impossível abrir arquivo: %s\n
 
-# windows/config.c: 855
+# windows/config.c: 857
 error: duplicate gamename: %s\n
 erro: nomejogo duplicado: %s\n
 
@@ -926,11 +926,11 @@ erro: opção desconhecida %s, na linha %d do arquivo: %s\n
 error: unknown option %s\n
 erro: opção desconhecida %s\n
 
-# windows/config.c: 566
+# windows/config.c: 568
 failed to open %s for playback\n
 falha ao abrir %s para playback\n
 
-# windows/config.c: 671
+# windows/config.c: 673
 failed to open %s for recording\n
 falha ao abrir %s para gravação\n
 
@@ -1086,7 +1086,7 @@ rotaciona tela horário
 run in a window/run on full screen
 roda em janela/roda em tela cheia
 
-# windows/config.c: 618
+# windows/config.c: 620
 running %s (%s) [press return]
 rodando %s (%s) [tecle return]
 
@@ -1110,7 +1110,7 @@ superficie de efeitos de escala criada: %s\n
 scanline intensity
 intensidade do scanline
 
-# windows/config.c: 298
+# windows/config.c: 300
 select translation language
 selecione um idioma para tradução
 
@@ -1198,7 +1198,7 @@ mostra clones
 show help message
 mostra mensagem de ajuda
 
-# windows/config.c: 293
+# windows/config.c: 295
 show this help
 mostra essa ajuda
 
@@ -1254,7 +1254,7 @@ sincroniza somente para o refresh do monitor
 throttle speed to the game's framerate
 aumenta velocicade para a taxa de quadros do jogo
 
-# windows/config.c: 281
+# windows/config.c: 283
 transparency of UI background [0 - 255]
 transparência do fundo da Interface do Usuário [0 - 255]
 
@@ -1302,7 +1302,7 @@ usar overlay artwork
 use samples
 usar samples
 
-# windows/config.c: 280
+# windows/config.c: 282
 use transparent background for UI text
 usar fundo transparente para texto da Interface de Usuário
 
@@ -1430,15 +1430,15 @@ Mouse %d Y
 Mouse %d Z
 
 
-# windows/config.c: 438
+# windows/config.c: 440
 Parsing %s : ERROR\n
 
 
-# windows/config.c: 448
+# windows/config.c: 450
 Parsing %s : N/A\n
 
 
-# windows/config.c: 443
+# windows/config.c: 445
 Parsing %s : OK\n
 
 
@@ -1458,8 +1458,12 @@ analog
 analog joystick
 
 
-# windows/config.c: 273
+# windows/config.c: 275
 automatic pause when playback is finished
+
+
+# windows/config.c: 273
+confirm before exiting game
 
 
 # windows/input.c: 252, 1203
@@ -1476,6 +1480,10 @@ directory for ips files
 
 # windows/fileio.c: 148
 directory for localized language files
+
+
+# windows/config.c: 272
+disable second monitor emulation
 
 
 # windows/input.c: 249
@@ -1514,7 +1522,7 @@ enable automatic restore at startup and save at exit
 enable pointing stick input
 
 
-# windows/config.c: 299
+# windows/config.c: 301
 enable/disable local language game list
 
 
@@ -1558,11 +1566,11 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 
 
-# windows/config.c: 1013
+# windows/config.c: 1015
 error: malloc failed in win_dirname\n
 
 
-# windows/config.c: 1053
+# windows/config.c: 1055
 error: malloc failed in win_strip_extension\n
 
 

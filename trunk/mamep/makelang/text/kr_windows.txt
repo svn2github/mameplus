@@ -14,7 +14,7 @@
    ignoring line\n
    줄 무시\n
 
-# windows/config.c: 543
+# windows/config.c: 545
  %s running parameters
  %s 를 매개변수로 실행
 
@@ -46,7 +46,7 @@ Best mode = %dx%dx%d @ default Hz\n
 Blit surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 Blit 표면 생성됨: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 
-# windows/config.c: 290
+# windows/config.c: 292
 Configuration options
 설정 옵션
 
@@ -202,7 +202,7 @@ J%d %s 상
 KNOWN     %s\n
 알려짐     %s\n
 
-# windows/config.c: 297
+# windows/config.c: 299
 Language options
 언어 옵션
 
@@ -286,7 +286,7 @@ Out of memory!\n
 PARTKNOWN %s\n
 부분 알려짐 %s\n
 
-# windows/config.c: 591
+# windows/config.c: 593
 Playing back previously recorded game %s (%s) [press return]\n
 리플레이 파일 재생 %s (%s) [엔터를 누르세요]\n
 
@@ -338,7 +338,7 @@ Unable to open the keyboard device. (error %d)\n
 Usage:  MAME gamename [options]\n\n
 사용:  MAME 게임명 [옵션]\n\n
 
-# windows/config.c: 550
+# windows/config.c: 552
 Usage: %s [game] [options]\nOptions:\n
 사용: %s [게임] [옵션]\n옵션:\n
 
@@ -370,7 +370,7 @@ Windows video options
 \"%s\" controller support enabled\n
 \"%s\" 입력기 지원이 활성화됨\n
 
-# windows/config.c: 609
+# windows/config.c: 611
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" 는 대체로 다음과 같은 지원 게임과\n일치합니다. (최적맞춤 우선):\n\n
 
@@ -434,7 +434,7 @@ compare files with known MAME roms
 compare files with known MAME roms (brief)
 알려진 MAME 롬과 비교 (간단하게)
 
-# windows/config.c: 291
+# windows/config.c: 293
 create the default configuration file
 기본 설정 파일을 생성
 
@@ -486,11 +486,11 @@ nvram 목차 저장 디렉토리
 directory to save states
 상태 저장 디렉토리
 
-# windows/config.c: 295
+# windows/config.c: 297
 display additional diagnostic information
 추가 진단 정보 표시
 
-# windows/config.c: 292
+# windows/config.c: 294
 display running parameters in rc style
 rc 형 매개변수 표시
 
@@ -542,7 +542,7 @@ enable/disable cheat subsystem
 enable/disable debugger (only if available)
 디버거 활성화/비활성화 (가능한 경우만)
 
-# windows/config.c: 294
+# windows/config.c: 296
 enable/disable loading of configfiles
 설정파일 로드 활성화/비활성화
 
@@ -558,11 +558,11 @@ enforce aspect ratio
 error invalid value for %s: %s\n
 잘못된 값  %s: %s\n
 
-# windows/config.c: 491
+# windows/config.c: 493
 error on rc creation\n
 rc 생성 오류\n
 
-# windows/config.c: 500
+# windows/config.c: 502
 error while parsing cmdline\n
 커맨드라인 붙여넣기 오류\n
 
@@ -578,7 +578,7 @@ error: %s requires an argument\n
 error: couldn't open file: %s\n
 오류: 파일 열기 실패: %s\n
 
-# windows/config.c: 855
+# windows/config.c: 857
 error: duplicate gamename: %s\n
 오류: 게임이름 복사: %s\n
 
@@ -618,11 +618,11 @@ error: unknown option %s, on line %d of file: %s\n
 error: unknown option %s\n
 오류: 알려지지 않은 옵션 %s\n
 
-# windows/config.c: 566
+# windows/config.c: 568
 failed to open %s for playback\n
 %s 열기 실패 (재생용)\n
 
-# windows/config.c: 671
+# windows/config.c: 673
 failed to open %s for recording\n
 %s 열기 실패 (녹화용)\n
 
@@ -754,7 +754,7 @@ rotate screen clockwise
 run in a window/run on full screen
 창에서 실행/전체화면에서 실행
 
-# windows/config.c: 618
+# windows/config.c: 620
 running %s (%s) [press return]
 실행중 %s (%s) [엔터를 누르세요]
 
@@ -770,7 +770,7 @@ sampleset %s
 samplesets
 샘플세트
 
-# windows/config.c: 298
+# windows/config.c: 300
 select translation language
 번역 언어 선택
 
@@ -838,7 +838,7 @@ show clones
 show help message
 도움말 표시
 
-# windows/config.c: 293
+# windows/config.c: 295
 show this help
 이 도움말을 보임
 
@@ -882,7 +882,7 @@ syncronize only to the monitor refresh
 throttle speed to the game's framerate
 게임의 원래 프레임비율로 마메 프레임 비율을 맞춤
 
-# windows/config.c: 281
+# windows/config.c: 283
 transparency of UI background [0 - 255]
 UI 배경의 투명도 지정 [0 - 255]
 
@@ -918,7 +918,7 @@ use overlay artwork
 use samples
 샘플 사용
 
-# windows/config.c: 280
+# windows/config.c: 282
 use transparent background for UI text
 UI 의 텍스트를 투명하게 사용함
 
@@ -1150,15 +1150,15 @@ Mouse %d Y
 Mouse %d Z
 
 
-# windows/config.c: 438
+# windows/config.c: 440
 Parsing %s : ERROR\n
 
 
-# windows/config.c: 448
+# windows/config.c: 450
 Parsing %s : N/A\n
 
 
-# windows/config.c: 443
+# windows/config.c: 445
 Parsing %s : OK\n
 
 
@@ -1334,7 +1334,7 @@ analog
 analog joystick
 
 
-# windows/config.c: 273
+# windows/config.c: 275
 automatic pause when playback is finished
 
 
@@ -1358,12 +1358,16 @@ button color (navy)
 button color (silver)
 
 
-# windows/config.c: 277
+# windows/config.c: 279
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 
 
 # windows/config.c: 266
 change system bios
+
+
+# windows/config.c: 273
+confirm before exiting game
 
 
 # windows/wind3dfx.c: 196
@@ -1384,6 +1388,10 @@ directory for ips files
 
 # windows/fileio.c: 148
 directory for localized language files
+
+
+# windows/config.c: 272
+disable second monitor emulation
 
 
 # windows/wind3d.c: 1144
@@ -1434,7 +1442,7 @@ enable pointing stick input
 enable rotation of effects for rotated games
 
 
-# windows/config.c: 299
+# windows/config.c: 301
 enable/disable local language game list
 
 
@@ -1482,11 +1490,11 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 
 
-# windows/config.c: 1013
+# windows/config.c: 1015
 error: malloc failed in win_dirname\n
 
 
-# windows/config.c: 1053
+# windows/config.c: 1055
 error: malloc failed in win_strip_extension\n
 
 
