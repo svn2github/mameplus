@@ -76,6 +76,7 @@ VIDEO_START( rallybik );
 VIDEO_START( toaplan1 );
 VIDEO_UPDATE( rallybik );
 VIDEO_UPDATE( toaplan1 );
+VIDEO_UPDATE( zerowing );
 VIDEO_UPDATE( demonwld );
 
 

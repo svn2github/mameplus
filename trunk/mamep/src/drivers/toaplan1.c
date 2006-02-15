@@ -1724,7 +1724,7 @@ static MACHINE_DRIVER_START( zerowing )
 
 	MDRV_VIDEO_START(toaplan1)
 	MDRV_VIDEO_EOF(toaplan1)
-	MDRV_VIDEO_UPDATE(toaplan1)
+	MDRV_VIDEO_UPDATE(zerowing)
 
 	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_MONO("mono")
