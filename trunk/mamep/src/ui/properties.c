@@ -2449,7 +2449,7 @@ static void SetPropEnabledControls(HWND hWnd)
 		Button_Enable(GetDlgItem(hWnd,IDC_ENABLE_AUTOSAVE),FALSE);
 	}
 
-	if (nIndex <= -1 || DriverIsMultiMon(nIndex))
+	if (nIndex <= -1 || DriverSupportsDisable2ndMon(nIndex))
 	{
 		Button_Enable(GetDlgItem(hWnd,IDC_DISABLE_2ND_MONITOR),TRUE);
 	}
