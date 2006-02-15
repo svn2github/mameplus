@@ -706,7 +706,7 @@ ifneq ($(NO_DLL),)
 else
 	$(RM) $@
     ifdef USE_GCC
-		$(DLLWRAP) --dllname=$@ --driver-name=gcc \
+		$(DLLWRAP) --image-base=0x10080000 --dllname=$@ --driver-name=gcc \
 			$(LDFLAGS) $(OSDBGLDFLAGS) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(MAPDLLFLAGS)
     else
 		$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) -dll -out:$@ $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(MAPDLLFLAGS)

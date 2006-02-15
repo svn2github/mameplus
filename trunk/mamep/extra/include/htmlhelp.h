@@ -62,6 +62,7 @@ extern "C" {
 #define HH_SET_QUERYSERVICE     0x001E  // Set the Host IQueryService interface
 #define HH_PRETRANSLATEMESSAGE  0x00fd  // Pumps messages. (NULL, NULL, MSG*). 
 #define HH_SET_GLOBAL_PROPERTY  0x00fc  // Set a global property. (NULL, NULL, HH_GPROP)
+#define HH_SAFE_DISPLAY_TOPIC   0x0020  // private addition to the interface for InternetExplorer.
 
 #define HHWIN_PROP_TAB_AUTOHIDESHOW (1 << 0)    // Automatically hide/show tri-pane window
 #define HHWIN_PROP_ONTOP            (1 << 1)    // Top-most window
@@ -216,7 +217,7 @@ enum {
 enum {
     IT_INCLUSIVE,
     IT_EXCLUSIVE,
-    IT_HIDDEN
+    IT_HIDDEN,
 };
 
 typedef struct tagHH_ENUM_IT
@@ -248,7 +249,7 @@ typedef HH_INFOTYPE* PHH_INFOTYPE;
 enum {
     HHWIN_NAVTAB_TOP,
     HHWIN_NAVTAB_LEFT,
-    HHWIN_NAVTAB_BOTTOM
+    HHWIN_NAVTAB_BOTTOM,
 };
 
 #define HH_MAX_TABS 19  // maximum number of tabs
@@ -357,7 +358,7 @@ enum {
     HHACT_TOC_PREV,
     HHACT_NOTES,
 
-    HHACT_LAST_ENUM
+    HHACT_LAST_ENUM,
 };
 
 typedef struct tagHHNTRACK
