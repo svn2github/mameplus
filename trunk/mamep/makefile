@@ -49,7 +49,7 @@ endif
 
 ifneq ($(NO_DLL),)
     ifneq ($(WINUI),)
-        SUFFIX = 32nodll
+        SUFFIX = guinodll
     else
         SUFFIX = nodll
     endif
@@ -207,6 +207,7 @@ DEFS += -DVOODOO_DRC
 endif
 
 ifdef USE_GCC
+    COMPILER_SUFFIX =
     XEXTRA_SUFFIX = $(EXTRA_SUFFIX)
 
     # by default, compile for Pentium target and add no suffix
@@ -243,7 +244,13 @@ ifdef USE_GCC
         ARCH = -march=pentium3 -msse2
     endif
 else
-    XEXTRA_SUFFIX = i$(EXTRA_SUFFIX)
+    ifdef INTEL
+        COMPILER_SUFFIX = -icc
+    else
+        COMPILER_SUFFIX = -vc
+    endif
+
+    XEXTRA_SUFFIX = $(EXTRA_SUFFIX)
 
     # by default, compile for Pentium target and add no suffix
     ARCHSUFFIX =
@@ -275,16 +282,18 @@ else
     endif
 endif
 
-NAME = $(PREFIX)$(TARGET)$(SUFFIX)$(ARCHSUFFIX)$(XEXTRA_SUFFIX)
+NAME = $(PREFIX)$(TARGET)$(SUFFIX)$(ARCHSUFFIX)$(XEXTRA_SUFFIX)$(COMPILER_SUFFIX)
 ifeq ($(NO_DLL),)
-    GUINAME = $(PREFIX)$(TARGET)32$(SUFFIX)$(ARCHSUFFIX)$(XEXTRA_SUFFIX)
+    LIBNAME = $(PREFIX)$(TARGET)$(SUFFIX)$(ARCHSUFFIX)$(XEXTRA_SUFFIX)lib$(COMPILER_SUFFIX)
+    GUINAME = $(PREFIX)$(TARGET)$(SUFFIX)$(ARCHSUFFIX)$(XEXTRA_SUFFIX)gui$(COMPILER_SUFFIX)
 endif
 
 # debug builds just get the 'd' suffix and nothing more
 ifdef DEBUG
     NAME = $(PREFIX)$(TARGET)$(SUFFIX)$(XEXTRA_SUFFIX)d
     ifeq ($(NO_DLL),)
-        GUINAME = $(PREFIX)$(TARGET)32$(SUFFIX)$(XEXTRA_SUFFIX)d
+        LIBNAME = $(PREFIX)$(TARGET)$(SUFFIX)$(XEXTRA_SUFFIX)libd
+        GUINAME = $(PREFIX)$(TARGET)$(SUFFIX)$(XEXTRA_SUFFIX)guid
     endif
 endif
 
@@ -296,8 +305,8 @@ OBJ = obj/$(NAME)
 ifneq ($(NO_DLL),)
     EMULATOR = $(NAME)$(EXE)
 else
-    EMULATORLIB = $(NAME)lib
-    EMULATORDLL = $(EMULATORLIB).dll
+    EMULATORLIB = $(LIBNAME).lib
+    EMULATORDLL = $(LIBNAME).dll
     EMULATORCLI = $(NAME)$(EXE)
     EMULATORGUI = $(GUINAME)$(EXE)
     EMULATOR    = $(EMULATORDLL) $(EMULATORCLI) $(EMULATORGUI)
@@ -473,7 +482,7 @@ ifdef USE_GCC
 
     ifneq ($(MAP),)
         MAPFLAGS = -Wl,-Map,$(NAME).map
-        MAPDLLFLAGS = -Wl,-Map,$(EMULATORLIB).map
+        MAPDLLFLAGS = -Wl,-Map,$(LIBNAME).map
         MAPCLIFLAGS = -Wl,-Map,$(NAME).map
         MAPGUIFLAGS = -Wl,-Map,$(GUINAME).map
     else
@@ -721,7 +730,7 @@ else
     ifdef USE_GCC
 		$(LD) $(LDFLAGS) $(WINDOWS_PROGRAM) $(EMULATORDLL) $^ -o $@ $(GUILIBS) $(MAPGUIFLAGS)
     else
-		$(LD) $(LDFLAGS) $(WINDOWS_PROGRAM) $(EMULATORLIB).lib $(GUIOBJS) -out:$@ $(GUILIBS) $(LIBS) $(MAPGUIFLAGS)
+		$(LD) $(LDFLAGS) $(WINDOWS_PROGRAM) $(EMULATORLIB) $(GUIOBJS) -out:$@ $(GUILIBS) $(LIBS) $(MAPGUIFLAGS)
     endif
     ifneq ($(UPX),)
 		upx -9 $@
@@ -733,7 +742,7 @@ else
     ifdef USE_GCC
 		$(LD) $(LDFLAGS) $(CONSOLE_PROGRAM) $(EMULATORDLL) $^ -o $@ $(CLILIBS) $(MAPCLIFLAGS)
     else
-		$(LD) $(LDFLAGS) $(CONSOLE_PROGRAM) $(EMULATORLIB).lib $(CLIOBJS) -out:$@ $(CLILIBS) $(MAPCLIFLAGS)
+		$(LD) $(LDFLAGS) $(CONSOLE_PROGRAM) $(EMULATORLIB) $(CLIOBJS) -out:$@ $(CLILIBS) $(MAPCLIFLAGS)
     endif
     ifneq ($(UPX),)
 		upx -9 $@
