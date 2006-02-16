@@ -404,6 +404,7 @@ static void fillbitmap_ts_y(mame_bitmap *dest, int sx, int ex, int sy, int ey, i
 
 void fillbitmap_ts(mame_bitmap *dest,pen_t pen,const rectangle *clip)
 {
+	extern mame_bitmap *scrbitmap[];
 	mame_bitmap *bitmap = artwork_get_ui_bitmap();
 	int w = bitmap->width;
 	int h = bitmap->height;
@@ -416,7 +417,7 @@ void fillbitmap_ts(mame_bitmap *dest,pen_t pen,const rectangle *clip)
 	}
 
 	/* artwork */
-	if (dest != Machine->scrbitmap)
+	if (dest != scrbitmap[0])
 	{
 		artwork_fillbitmap_ts(dest, clip);
 		return;

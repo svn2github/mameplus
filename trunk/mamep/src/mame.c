@@ -725,7 +725,7 @@ static int vh_open(void)
 
 	/* now allocate the screen bitmap */
 	scrbitmap[0] = auto_bitmap_alloc_depth(bmwidth, bmheight, Machine->color_depth);
-	if (!scrbitmap)
+	if (!scrbitmap[0])
 		goto cant_create_scrbitmap;
 
 	/* set the default refresh rate */

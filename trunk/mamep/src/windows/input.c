@@ -16,7 +16,6 @@
 
 // undef WINNT for dinput.h to prevent duplicate definition
 #undef WINNT
-#define DIRECTINPUT_VERSION 0x0500
 #include <dinput.h>
 
 // MAME headers
