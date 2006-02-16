@@ -136,6 +136,7 @@ endif
 
 ifneq ($(USE_MISC_FOLDER),)
 DEFS += -DMISC_FOLDER
+RCDEFS += -DMISC_FOLDER
 endif
 
 ifneq ($(USE_UI_COLOR_DISPLAY),)

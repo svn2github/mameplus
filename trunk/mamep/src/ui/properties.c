@@ -905,8 +905,8 @@ static LPWSTR GameInfoScreen(int nIndex)
 				drv.aspect_y = 3;
 				drv.aspect_x = 4;
 			}
-			sprintf(buf,_UI("Vector (V) (%d:%d) %f Hz"),
-					drv.aspect_y, drv.aspect_x, drv.frames_per_second);
+			sprintf(buf,_UI("Vector (V) %f Hz (%d:%d) (%d colors)"),
+					drv.frames_per_second, drv.aspect_y, drv.aspect_x, drv.total_colors);
 		}
 		else
 		{
@@ -915,8 +915,8 @@ static LPWSTR GameInfoScreen(int nIndex)
 				drv.aspect_x = 4;
 				drv.aspect_y = 3;
 			}
-			sprintf(buf,_UI("Vector (H) (%d:%d) %f Hz"),
-					drv.aspect_x, drv.aspect_y, drv.frames_per_second);
+			sprintf(buf,_UI("Vector (H) %f Hz (%d:%d) (%d colors)"),
+					drv.frames_per_second, drv.aspect_x, drv.aspect_y, drv.total_colors);
 		}
 	}
 	else
@@ -928,10 +928,10 @@ static LPWSTR GameInfoScreen(int nIndex)
 				drv.aspect_y = 3;
 				drv.aspect_x = 4;
 			}
-			sprintf(buf,_UI("%d x %d (V) (%d:%d) %f Hz"),
+			sprintf(buf,_UI("%d x %d (V) %f Hz (%d:%d) (%d colors)"),
 					drv.default_visible_area.max_y - drv.default_visible_area.min_y + 1,
 					drv.default_visible_area.max_x - drv.default_visible_area.min_x + 1,
-					drv.aspect_y, drv.aspect_x, drv.frames_per_second);
+					drv.frames_per_second, drv.aspect_y, drv.aspect_x, drv.total_colors);
 		}
 		else
 		{
@@ -940,15 +940,229 @@ static LPWSTR GameInfoScreen(int nIndex)
 				drv.aspect_x = 4;
 				drv.aspect_y = 3;
 			}
-			sprintf(buf,_UI("%d x %d (H) (%d:%d) %f Hz"),
+			sprintf(buf,_UI("%d x %d (H) %f Hz (%d:%d) (%d colors)"),
 					drv.default_visible_area.max_x - drv.default_visible_area.min_x + 1,
 					drv.default_visible_area.max_y - drv.default_visible_area.min_y + 1,
-					drv.aspect_x, drv.aspect_y, drv.frames_per_second);
+					drv.frames_per_second, drv.aspect_x, drv.aspect_y, drv.total_colors);
 		}
 	}
 	return _Unicode(buf);
 }
 
+#ifdef MISC_FOLDER
+/* Build input information string */
+static LPWSTR GameInfoInput(int nIndex)
+{
+	char buf[1024];
+	const input_port_entry* input;
+	int nplayer = 0;
+	const char* control = 0;
+	int nbutton = 0;
+#if 0
+	int ncoin = 0;
+	const char* service = 0;
+	const char* tilt = 0;
+#endif
+
+	begin_resource_tracking();
+
+	input = input_port_allocate(drivers[nIndex]->construct_ipt, NULL);
+
+	while (input->type != IPT_END)
+	{
+		if (nplayer < input->player+1)
+			nplayer = input->player+1;
+
+		switch (input->type)
+		{
+			case IPT_JOYSTICK_LEFT:
+			case IPT_JOYSTICK_RIGHT:
+
+				/* if control not defined, start it off as horizontal 2-way */
+				if (!control)
+					control = _UI("Joystick 2-Way");
+				else if (strcmp(control, _UI("Joystick 2-Way")) == 0)
+					;
+				/* if already defined as vertical, make it 4 or 8 way */
+				else if (strcmp(control, _UI("Joystick 2-Way Vertical")) == 0)
+				{
+					if (input->four_way)
+						control = _UI("Joystick 4-Way");
+					else
+						control = _UI("Joystick 8-Way");
+				}
+				break;
+
+			case IPT_JOYSTICK_UP:
+			case IPT_JOYSTICK_DOWN:
+
+				/* if control not defined, start it off as vertical 2-way */
+				if (!control)
+					control = _UI("Joystick 2-Way Vertical");
+				else if (strcmp(control, _UI("Joystick 2-Way Vertical")) == 0)
+					;
+				/* if already defined as horiz, make it 4 or 8way */
+				else if (strcmp(control, _UI("Joystick 2-Way"))==0)
+				{
+					if (input->four_way)
+						control = _UI("Joystick 4-Way");
+					else
+						control = _UI("Joystick 8-Way");
+				}
+				break;
+
+			case IPT_JOYSTICKRIGHT_UP:
+			case IPT_JOYSTICKRIGHT_DOWN:
+			case IPT_JOYSTICKLEFT_UP:
+			case IPT_JOYSTICKLEFT_DOWN:
+
+				/* if control not defined, start it off as vertical 2way */
+				if (!control)
+					control = _UI("Double Joystick 2-Way Vertical");
+				else if (strcmp(control, _UI("Double Joystick 2-Way Vertical")) == 0)
+					;
+				/* if already defined as horiz, make it 4 or 8 way */
+				else if (strcmp(control, _UI("Double Joystick 2-Way")) == 0)
+				{
+					if (input->four_way)
+						control = _UI("Double Joystick 4-Way");
+					else
+						control = _UI("Double Joystick 8-Way");
+				}
+				break;
+
+			case IPT_JOYSTICKRIGHT_LEFT:
+			case IPT_JOYSTICKRIGHT_RIGHT:
+			case IPT_JOYSTICKLEFT_LEFT:
+			case IPT_JOYSTICKLEFT_RIGHT:
+
+				/* if control not defined, start it off as horiz 2-way */
+				if (!control)
+					control = _UI("Double Joystick 2-Way");
+				else if (strcmp(control, _UI("Double Joystick 2-Way")) == 0)
+					;
+				/* if already defined as vertical, make it 4 or 8 way */
+				else if (strcmp(control, _UI("Double Joystick 2-Way Vertical")) == 0)
+				{
+					if (input->four_way)
+						control = _UI("Double Joystick 4-Way");
+					else
+						control = _UI("Double Joystick 8-Way");
+				}
+				break;
+
+			case IPT_BUTTON1:
+				if (nbutton<1) nbutton = 1;
+				break;
+			case IPT_BUTTON2:
+				if (nbutton<2) nbutton = 2;
+				break;
+			case IPT_BUTTON3:
+				if (nbutton<3) nbutton = 3;
+				break;
+			case IPT_BUTTON4:
+				if (nbutton<4) nbutton = 4;
+				break;
+			case IPT_BUTTON5:
+				if (nbutton<5) nbutton = 5;
+				break;
+			case IPT_BUTTON6:
+				if (nbutton<6) nbutton = 6;
+				break;
+			case IPT_BUTTON7:
+				if (nbutton<7) nbutton = 7;
+				break;
+			case IPT_BUTTON8:
+				if (nbutton<8) nbutton = 8;
+				break;
+			case IPT_BUTTON9:
+				if (nbutton<9) nbutton = 9;
+				break;
+			case IPT_BUTTON10:
+				if (nbutton<10) nbutton = 10;
+				break;
+
+			case IPT_PADDLE:
+				control = _UI("Paddle");
+				break;
+			case IPT_DIAL:
+				control = _UI("Dial");
+				break;
+			case IPT_TRACKBALL_X:
+			case IPT_TRACKBALL_Y:
+				control = _UI("Trackball");
+				break;
+			case IPT_AD_STICK_X:
+			case IPT_AD_STICK_Y:
+				control = _UI("AD Stick");
+				break;
+			case IPT_LIGHTGUN_X:
+			case IPT_LIGHTGUN_Y:
+				control = _UI("Lightgun");
+				break;
+#if 0
+			case IPT_COIN1:
+				if (ncoin < 1) ncoin = 1;
+				break;
+			case IPT_COIN2:
+				if (ncoin < 2) ncoin = 2;
+				break;
+			case IPT_COIN3:
+				if (ncoin < 3) ncoin = 3;
+				break;
+			case IPT_COIN4:
+				if (ncoin < 4) ncoin = 4;
+				break;
+			case IPT_COIN5:
+				if (ncoin < 5) ncoin = 5;
+				break;
+			case IPT_COIN6:
+				if (ncoin < 6) ncoin = 6;
+				break;
+			case IPT_COIN7:
+				if (ncoin < 7) ncoin = 7;
+				break;
+			case IPT_COIN8:
+				if (ncoin < 8) ncoin = 8;
+				break;
+			case IPT_SERVICE :
+				service = "yes";
+				break;
+			case IPT_TILT :
+				tilt = "yes";
+				break;
+#endif
+		}
+		++input;
+	}
+
+	end_resource_tracking();
+
+	if (control == NULL) control = _UI("Unknown");
+
+	if (nplayer<1)
+		sprintf(buf, _UI("Unknown"));
+	else
+	if ((nbutton<1) && (nplayer>1))
+		sprintf(buf, _UI("%s (%d players)"), control, nplayer);
+	else
+	if (nbutton<1)
+		sprintf(buf, _UI("%s (%d player)"), control, nplayer);
+	else
+	if ((nplayer>1) && (nbutton>1))
+		sprintf(buf, _UI("%s (%d players, %d buttons)"), control, nplayer, nbutton);
+	else
+	if (nplayer>1)
+		sprintf(buf, _UI("%s (%d players, %d button)"), control, nplayer, nbutton);
+	else
+	if (nbutton>1)
+		sprintf(buf, _UI("%s (%d player, %d buttons)"), control, nplayer, nbutton);
+	else
+		sprintf(buf, _UI("%s (%d player, %d button)"), control, nplayer, nbutton);
+
+	return _Unicode(buf);
+}
+#else /* MISC_FOLDER */
 /* Build color information string */
 static LPWSTR GameInfoColors(int nIndex)
 {
@@ -961,6 +1175,7 @@ static LPWSTR GameInfoColors(int nIndex)
 
 	return _Unicode(buf);
 }
+#endif /* !MISC_FOLDER */
 
 /* Build game status string */
 LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus)
@@ -1159,7 +1374,11 @@ INT_PTR CALLBACK GamePropertiesDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LP
 			Static_SetText(GetDlgItem(hDlg, IDC_PROP_CPU),           GameInfoCPU(g_nGame));
 			Static_SetText(GetDlgItem(hDlg, IDC_PROP_SOUND),         GameInfoSound(g_nGame));
 			Static_SetText(GetDlgItem(hDlg, IDC_PROP_SCREEN),        GameInfoScreen(g_nGame));
+#ifdef MISC_FOLDER
+			Static_SetText(GetDlgItem(hDlg, IDC_PROP_INPUT),         GameInfoInput(g_nGame));
+#else /* MISC_FOLDER */
 			Static_SetText(GetDlgItem(hDlg, IDC_PROP_COLORS),        GameInfoColors(g_nGame));
+#endif /* !MISC_FOLDER */
 			Static_SetText(GetDlgItem(hDlg, IDC_PROP_CLONEOF),       GameInfoCloneOf(g_nGame));
 			Static_SetText(GetDlgItem(hDlg, IDC_PROP_SAVESTATE),     GameInfoSaveState(g_nGame));
 			Static_SetText(GetDlgItem(hDlg, IDC_PROP_SOURCE),        GameInfoSource(g_nGame));

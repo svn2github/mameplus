@@ -402,6 +402,7 @@
 #define IDC_TRANSUI                     1361 // TRANS_UI
 #define IDC_TRANSPARENCY                1362 // TRANS_UI
 #define IDC_TRANSPARENCYDISP            1363 // TRANS_UI
+#define IDC_PROP_INPUT                  1364
 
 #define ID_FILE_EXIT                    40001
 #define ID_ABOUT                        40002
