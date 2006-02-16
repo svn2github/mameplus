@@ -1138,7 +1138,7 @@ static LPWSTR GameInfoInput(int nIndex)
 
 	end_resource_tracking();
 
-	if (control == NULL) control = _UI("Unknown");
+	if (control == NULL) control = "";
 
 	if (nplayer<1)
 		sprintf(buf, _UI("Unknown"));
