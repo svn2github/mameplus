@@ -33,7 +33,7 @@ extern SHAREDOBJ_FUNC(int) audit_is_rom_used(const game_driver *gamedrv, const c
 extern SHAREDOBJ_FUNC(int) audit_has_missing_roms(int game);
 
 #include "palette.h"
-#include "common.h"
+#include "romload.h"
 extern SHAREDOBJ_FUNC(int)               determine_bios_rom(const bios_entry *bios);
 extern SHAREDOBJ_FUNC(const rom_entry *) rom_first_region(const game_driver *drv);
 extern SHAREDOBJ_FUNC(const rom_entry *) rom_next_region(const rom_entry *romp);
@@ -41,6 +41,8 @@ extern SHAREDOBJ_FUNC(const rom_entry *) rom_first_file(const rom_entry *romp);
 extern SHAREDOBJ_FUNC(const rom_entry *) rom_next_file(const rom_entry *romp);
 extern SHAREDOBJ_FUNC(const rom_entry *) rom_first_chunk(const rom_entry *romp);
 extern SHAREDOBJ_FUNC(const rom_entry *) rom_next_chunk(const rom_entry *romp);
+
+#include "common.h"
 extern SHAREDOBJ_FUNC(void)              begin_resource_tracking(void);
 extern SHAREDOBJ_FUNC(void)              end_resource_tracking(void);
 extern SHAREDOBJ_FUNC(void *)            auto_malloc(size_t size);

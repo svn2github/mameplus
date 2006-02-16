@@ -76,7 +76,9 @@ extern void *playback; /* for -playback */
 //  TYPE DEFINITIONS
 //============================================================
 
-struct pathdata
+typedef struct _pathdata pathdata;
+
+struct _pathdata
 {
 	const char *rawpath;
 	const char **path;
@@ -94,7 +96,7 @@ struct _osd_file
 	UINT8		buffer[FILE_BUFFER_SIZE];
 };
 
-static struct pathdata pathlist[FILETYPE_end];
+static pathdata pathlist[FILETYPE_end];
 static osd_file openfile[MAX_OPEN_FILES];
 
 
@@ -314,7 +316,7 @@ static int set_inipath(struct rc_option *option, const char *arg, int priority)
 //  expand_pathlist
 //============================================================
 
-static void expand_pathlist(struct pathdata *list)
+static void expand_pathlist(pathdata *list)
 {
 	const char *rawpath = (list->rawpath) ? list->rawpath : "";
 	const char *token;
@@ -389,7 +391,7 @@ void free_pathlists(void)
 
 	for (i = 0;i < FILETYPE_end;i++)
 	{
-		struct pathdata *list = &pathlist[i];
+		pathdata *list = &pathlist[i];
 
 		// free any existing paths
 		if (list->pathcount != 0)
@@ -415,7 +417,7 @@ void free_pathlists(void)
 
 static const char *get_path_for_filetype(int filetype, int pathindex, DWORD *count)
 {
-	struct pathdata *list;
+	pathdata *list;
 
 	// handle aliasing of some paths
 	switch (filetype)
@@ -906,7 +908,7 @@ int osd_display_loading_rom_message(const char *name, rom_load_data *romdata)
 
 void set_pathlist(int file_type, const char *new_rawpath)
 {
-	struct pathdata *list = &pathlist[file_type];
+	pathdata *list = &pathlist[file_type];
 
 	// free any existing paths
 	if (list->pathcount != 0)

@@ -46,7 +46,9 @@
 //  TYPEDEFS
 //============================================================
 
-typedef struct
+typedef struct _memory_entry memory_entry;
+
+struct _memory_entry
 {
 	UINT32			size;
 	void *			base;
@@ -54,7 +56,7 @@ typedef struct
 	int				id;
 	const char *	file;
 	int				line;
-} memory_entry;
+};
 
 
 
