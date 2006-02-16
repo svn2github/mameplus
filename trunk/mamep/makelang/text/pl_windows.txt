@@ -18,7 +18,7 @@
  %s running parameters
  parametry uruchomieniowe %s
 
-# windows/wind3d.c: 642
+# windows/wind3d.c: 636
  (%.2lfMB video memory available)
  (%.2lfMB dostêpnej pamiêci video)
 
@@ -26,7 +26,7 @@
 %d %s found, %d were OK.\n
 %d %s znalezionych, %d poprawnych.\n
 
-# windows/wind3d.c: 1639
+# windows/wind3d.c: 1633
 %s surface created: %s (%s)\n
 %s powierzchnia utworzona: %s (%s)\n
 
@@ -38,31 +38,31 @@
 (dd) stretch video using the hardware
 (dd) rozci¹ganie video - sprzêtowe
 
-# windows/video.c: 694
+# windows/video.c: 695
 Average FPS: %f (%d frames)\n
 Œrednie FPS: %f (%d ramek)\n
 
-# windows/wind3d.c: 2664 windows/winddraw.c: 1462, 1761
+# windows/wind3d.c: 2658 windows/winddraw.c: 1456, 1763
 Avg Flip = %d
 Œrednie przerzucanie = %d
 
-# windows/wind3d.c: 1010 windows/winddraw.c: 582
+# windows/wind3d.c: 1004 windows/winddraw.c: 576
 Best mode = %dx%dx%d @ %d Hz\n
 Najlepszy tryb = %dx%dx%d @ %d Hz\n
 
-# windows/wind3d.c: 1012 windows/winddraw.c: 584
+# windows/wind3d.c: 1006 windows/winddraw.c: 578
 Best mode = %dx%dx%d @ default Hz\n
 Najlepszy tryb = %dx%dx%d @ domyœlnie Hz\n
 
-# windows/winddraw.c: 891
+# windows/winddraw.c: 885
 Blit surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 Powierzchnia blitu (kopiowania) utworzona: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 
-# windows/wind3d.c: 1643
+# windows/wind3d.c: 1637
 Blit surface created: %s\n
 Powierzchnia blitu (kopiowania) utworzona: %s\n
 
-# windows/wind3d.c: 777
+# windows/wind3d.c: 771
 Blitter initialisation complete (%.2lfMB video memory free)\n
 Inicjalizacja Blitter'a ukoñczona (wolne %.2lfMB pamiêci video)\n
 
@@ -74,43 +74,43 @@ Opcje konfiguracyjne
 ERROR     %s\n
 B£¥D      %s\n
 
-# windows/wind3d.c: 721
+# windows/wind3d.c: 715
 Error creating Direct3D7 device: %08x\n
 B³¹d podczas tworzenia urz¹dzenia Direct3D7: %08x\n
 
-# windows/wind3d.c: 626
+# windows/wind3d.c: 620
 Error creating Direct3D7: %08x\n
 B³¹d podczas tworzenia Direct3D7: %08x\n
 
-# windows/wind3d.c: 619
+# windows/wind3d.c: 613
 Error creating DirectDraw7: %08x\n
 B³¹d podczas tworzenia DirectDraw7: %08x\n
 
-# windows/winddraw.c: 256
+# windows/winddraw.c: 250
 Error creating DirectDraw: %08x\n
 B³¹d podczas tworzenia DirectDraw: %08x\n
 
-# windows/sound.c: 640
+# windows/sound.c: 632
 Error creating DirectSound buffer: %08x\n
 B³¹d podczas tworzenia bufora DirectSound: %08x\n
 
-# windows/sound.c: 498
+# windows/sound.c: 490
 Error creating DirectSound: %08x\n
 B³¹d podczas tworzenia DirectSound: %08x\n
 
-# windows/wind3d.c: 1244
+# windows/wind3d.c: 1238
 Error creating RGB effects surface: %08x\n
 B³¹d podczas tworzenia powierzchni dla efektów RGB: %08x\n
 
-# windows/wind3d.c: 1174
+# windows/wind3d.c: 1168
 Error creating back surface: %08x\n
 B³¹d podczas tworzenia tylnej powierzchni: %08x\n
 
-# windows/wind3d.c: 1473 windows/winddraw.c: 874
+# windows/wind3d.c: 1467 windows/winddraw.c: 868
 Error creating blit surface: %08x\n
 B³¹d podczas tworzenia powierzchni do blitu: %08x\n
 
-# windows/wind3d.c: 1722 windows/winddraw.c: 965
+# windows/wind3d.c: 1716 windows/winddraw.c: 959
 Error creating clipper: %08x\n
 B³¹d podczas tworzenia clippera: %08x\n
 
@@ -118,79 +118,79 @@ B³¹d podczas tworzenia clippera: %08x\n
 Error creating dir %s
 B³¹d podczas tworzenia katalogu %s
 
-# windows/wind3d.c: 1582
+# windows/wind3d.c: 1576
 Error creating preprocess surface: %08x\n
 B³¹d podczas tworzenia powierzchni dla preprocesingu: %08x\n
 
-# windows/sound.c: 605
+# windows/sound.c: 597
 Error creating primary buffer: %08x\n
 B³¹d podczas tworzenia bufora podstawowego: %08x\n
 
-# windows/wind3d.c: 1123 windows/winddraw.c: 653
+# windows/wind3d.c: 1117 windows/winddraw.c: 647
 Error creating primary surface: %08x\n
 B³¹d podczas tworzenia powierzchni podstawowej: %08x\n
 
-# windows/wind3d.c: 1603 windows/winddraw.c: 745
+# windows/wind3d.c: 1597 windows/winddraw.c: 739
 Error creating scale surface: %08x\n
 B³¹d podczas tworzenia powierzchni dla skalowania: %08x\n
 
-# windows/wind3d.c: 1274, 1282
+# windows/wind3d.c: 1268, 1276
 Error creating scanline surface[%d]: %08x\n
 B³¹d podczas tworzenia powierzchni[%d] dla przeplotu linii (scanlines): %08x\n
 
-# windows/wind3d.c: 1498
+# windows/wind3d.c: 1492
 Error creating texture surface: %08x\n
 B³¹d podczas tworzenia powierzchni dla tekstur: %08x\n
 
-# windows/wind3d.c: 1003 windows/winddraw.c: 575
+# windows/wind3d.c: 997 windows/winddraw.c: 569
 Error enumerating modes: %08x\n
 B³¹d podczas enumeracji trybów: %08x\n
 
-# windows/winddraw.c: 271
+# windows/winddraw.c: 265
 Error getting DirectDraw capabilities: %08x\n
 B³¹d podczas pobierania cech karty graficznej (DirectDraw capabilities): %08x\n
 
-# windows/sound.c: 507
+# windows/sound.c: 499
 Error getting DirectSound capabilities: %08x\n
 B³¹d podczas pobierania cech karty muzycznej (DirectSound capabilities): %08x\n
 
-# windows/wind3d.c: 1185 windows/winddraw.c: 690
+# windows/wind3d.c: 1179 windows/winddraw.c: 684
 Error getting attached back surface: %08x\n
 B³¹d podczas przy³¹czenia tylnej powierzchni: %08x\n
 
-# windows/wind3d.c: 1615, 1624 windows/winddraw.c: 882
+# windows/wind3d.c: 1609, 1618 windows/winddraw.c: 876
 Error getting blit surface desc: %08x\n
 B³¹d podczas pobrania powierzchni przeznaczenia dla blitu: %08x\n
 
-# windows/wind3d.c: 984, 1033 windows/winddraw.c: 553, 608
+# windows/wind3d.c: 978, 1027 windows/winddraw.c: 547, 602
 Error getting display mode: %08x\n
 B³¹d podczas pobierania trybu wyœwietlania: %08x\n
 
-# windows/sound.c: 621
+# windows/sound.c: 613
 Error getting primary format: %08x\n
 B³¹d podczas pobierania formatu podstawowego: %08x\n
 
-# windows/wind3d.c: 1131 windows/winddraw.c: 661
+# windows/wind3d.c: 1125 windows/winddraw.c: 655
 Error getting primary surface desc: %08x\n
 B³¹d podczas pobierania przeznaczenia powierzchni podstawowej: %08x\n
 
-# windows/winddraw.c: 753
+# windows/winddraw.c: 747
 Error getting scale surface desc: %08x\n
 B³¹d podczas pobierania przeznaczenia powierzchni dla skalowania: %08x\n
 
-# windows/wind3d.c: 612
+# windows/wind3d.c: 606
 Error importing DirectDrawCreateEx() function\n
 B³¹d podczas importowania funkcji DirectDrawCreateEx()\n
 
-# windows/wind3d.c: 605
+# windows/wind3d.c: 599
 Error importing ddraw.dll\n
 B³¹d podczas importowania ddraw.dll\n
 
-# windows/wind3d.c: 683 windows/winddraw.c: 247
+# windows/wind3d.c: 677 windows/winddraw.c: 241
 Error initialising software scale effects\n
 B³¹d podczas inicjalizowania programowych efektów skalowania\n
 
-# windows/sound.c: 648
+# windows/sound.c: 640
 Error locking stream buffer: %08x\n
 B³¹d podczas blokowania strumienia bufora: %08x\n
 
@@ -198,35 +198,35 @@ B³¹d podczas blokowania strumienia bufora: %08x\n
 Error opening %s
 B³¹d podczas otwierania %s
 
-# windows/sound.c: 552
+# windows/sound.c: 544
 Error playing: %08x\n
 B³¹d podczas odtwarzania: %08x\n
 
-# windows/sound.c: 515
+# windows/sound.c: 507
 Error setting DirectSound cooperative level: %08x\n
 B³¹d podczas ustawiania poziomu kooperacji DirectSound: %08x\n
 
-# windows/wind3d.c: 1730 windows/winddraw.c: 973
+# windows/wind3d.c: 1724 windows/winddraw.c: 967
 Error setting clipper hwnd: %08x\n
 B³¹d podczas ustawiania hwnd clipper'a: %08x\n
 
-# windows/wind3d.c: 1738 windows/winddraw.c: 981
+# windows/wind3d.c: 1732 windows/winddraw.c: 975
 Error setting clipper on primary surface: %08x\n
 B³¹d podczas ustawiania clipper'a na powierzchni podstawowej: %08x\n
 
-# windows/wind3d.c: 698 windows/winddraw.c: 286
+# windows/wind3d.c: 692 windows/winddraw.c: 280
 Error setting cooperative level: %08x\n
 B³¹d podczas ustawiania poziomu kooperacji: %08x\n
 
-# windows/wind3d.c: 1704 windows/winddraw.c: 947
+# windows/wind3d.c: 1698 windows/winddraw.c: 941
 Error setting gamma ramp: %08x\n
 B³¹d podczas korekcji nasycenia (gamma): %08x\n
 
-# windows/wind3d.c: 1022 windows/winddraw.c: 597
+# windows/wind3d.c: 1016 windows/winddraw.c: 591
 Error setting mode: %08x\n
 B³¹d podczas ustawiania trybu: %08x\n
 
-# windows/sound.c: 613
+# windows/sound.c: 605
 Error setting primary format: %08x\n
 B³¹d podczas ustawiania g³ównego formatu: %08x\n
 
@@ -242,7 +242,7 @@ B³¹d: efekty RGB (wielokrotny i nak³adaj¹cy tryb) nie s¹ obs³ugiwane\n
 Error: RGB effects (multiply mode) not supported\n
 B³¹d: efekty RGB (wielokrotny tryb) nie s¹ obs³ugiwane\n
 
-# windows/wind3d.c: 1422
+# windows/wind3d.c: 1416
 Error: required texture size too large (max: %ix%i, need %ix%i)\n
 B³¹d: wymagany rozmiar tekstury jest zbyt du¿y (maks: %ix%i, potrzebny %ix%i)\n
 
@@ -250,7 +250,7 @@ B³¹d: wymagany rozmiar tekstury jest zbyt du¿y (maks: %ix%i, potrzebny %ix%i)\n
 Frontend Related
 Opcje dotycz¹ce frontendów
 
-# windows/window.c: 732
+# windows/window.c: 734
 Full Screen\tAlt+Enter
 Pe³ny ekran\tAlt+Enter
 
@@ -258,31 +258,31 @@ Pe³ny ekran\tAlt+Enter
 Game \"%s\" not supported!\n
 Gra \"%s\" nie jest obs³ugiwana!\n
 
-# windows/winddraw.c: 279
+# windows/winddraw.c: 273
 Hardware stretching supported\n
 Rozci¹ganie sprzêtowe\n
 
-# windows/wind3d.c: 639
+# windows/wind3d.c: 633
 Initialising DirectDraw & Direct3D 7 blitter
 Inicjalizacja blittera Direct3D 7 & DirectDraw
 
-# windows/input.c: 224
+# windows/input.c: 226
 Input device options
 Opcje urz¹dzeñ steruj¹cych
 
-# windows/input.c: 1963
+# windows/input.c: 1965
 J%d %s D
 J%d %s D
 
-# windows/input.c: 1967
+# windows/input.c: 1969
 J%d %s L
 J%d %s L
 
-# windows/input.c: 1971
+# windows/input.c: 1973
 J%d %s R
 J%d %s P
 
-# windows/input.c: 1959
+# windows/input.c: 1961
 J%d %s U
 J%d %s G
 
@@ -290,7 +290,7 @@ J%d %s G
 KNOWN     %s\n
 ZNANY     %s\n
 
-# windows/input.c: 232
+# windows/input.c: 234
 LED mode (ps/2|usb)
 Tryb LED (ps/2|usb)
 
@@ -298,7 +298,7 @@ Tryb LED (ps/2|usb)
 Language options
 Opcje jêzykowe
 
-# windows/input.c: 2233
+# windows/input.c: 2235
 Lightgun not supported in windowed mode
 Pistolet nie jest obs³ugiwany w oknie
 
@@ -334,15 +334,15 @@ Mame CORE - opcje gier wektorowych
 Mame CORE video options
 Mame CORE - opcje video
 
-# windows/wind3d.c: 1639
+# windows/wind3d.c: 1633
 Managed texture
 Zarz¹dzanie teksturami
 
-# windows/input.c: 1853, 1863
+# windows/input.c: 1855, 1865
 Mouse %d %s
 Mysz %d %s
 
-# windows/input.c: 1855, 1865
+# windows/input.c: 1857, 1867
 Mouse %s
 Mysz %s
 
@@ -378,7 +378,7 @@ Kolor paska OSD (jasny)
 OSD bar color (medium)
 Kolor paska OSD (œredni)
 
-# windows/fileio.c: 377
+# windows/fileio.c: 379
 Out of memory!\n
 Brak pamiêci!\n
 
@@ -390,39 +390,39 @@ CZÊŒÆZNANA %s\n
 Playing back previously recorded game %s (%s) [press return]\n
 Odtwarzanie wczeœniej nagranej gry (dema) %s (%s) [wciœnij return]\n
 
-# windows/wind3d.c: 1648
+# windows/wind3d.c: 1642
 Pre-process texture surface created: %s\n
 Powierzchnia dla per-procesingu tekstur stworzona: %s\n
 
-# windows/sound.c: 625
+# windows/sound.c: 617
 Primary buffer: %d Hz, %d bits, %d channels\n
 Bufor podstawowy: %d Hz, %d bitów, %d kana³ów\n
 
-# windows/winddraw.c: 674
+# windows/winddraw.c: 668
 Primary surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 Powierzchnia podstawowa stworzona: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 
-# windows/wind3d.c: 1149
+# windows/wind3d.c: 1143
 Primary surface created: %s (%s)\n
 Powierzchnia podstawowa stworzona: %s (%s)\n
 
-# windows/wind3d.c: 1253
+# windows/wind3d.c: 1247
 RGB effects surface created: %s\n
 Powierzchnia dla efektów RGB utworzona: %s\n
 
-# windows/wind3dfx.c: 805
+# windows/wind3dfx.c: 815
 RGB pattern has a wrong filesize (expected %i bytes, found %i)\n
 Wzór RGB (pattern) ma z³¹ wielkoœæ (oczekiwano %i bajtów, znaleziono %i)\n
 
-# windows/winddraw.c: 1392, 1470, 1769
+# windows/winddraw.c: 1386, 1464, 1771
 Recreating surfaces\n
 Odtwarzenie powierzchni\n
 
-# windows/wind3d.c: 1142
+# windows/wind3d.c: 1136
 Rendering to an off-screen surface and using blt()\n
 Renderowanie na powierzchni niewyœwietlanej i u¿ycie blt()\n
 
-# windows/wind3d.c: 2322, 2686
+# windows/wind3d.c: 2316, 2680
 Restoring surfaces\n
 Przywracanie powierzchni\n
 
@@ -438,39 +438,39 @@ SSE2 obs³ugiwane\n
 SaI scale effect
 Efekt skalowania SaI
 
-# windows/winddraw.c: 759
+# windows/winddraw.c: 753
 Scale surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 Powierzchnia dla skalowania utworzona: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 
-# windows/wind3d.c: 1291
+# windows/wind3d.c: 1285
 Scanline surface[%i] created: %s\n
 Powierzchnia[%i] dla przeplotu linii (scanlines) utworzona: %s\n
 
-# windows/sound.c: 241, 245
+# windows/sound.c: 233, 237
 Sound buffer: overflows=%d underflows=%d\n
 Bufor dŸwiêku: przepe³nienie=%d niedope³nienie=%d\n
 
-# windows/input.c: 1820
+# windows/input.c: 1822
 Stick %d %s +
 Dr¹¿ek %d %s +
 
-# windows/input.c: 1813
+# windows/input.c: 1815
 Stick %d %s -
 Dr¹¿ek %d %s -
 
-# windows/input.c: 1822
+# windows/input.c: 1824
 Stick %s +
 Dr¹¿ek %s +
 
-# windows/input.c: 1815
+# windows/input.c: 1817
 Stick %s -
 Dr¹¿ek %s -
 
-# windows/wind3d.c: 1639
+# windows/wind3d.c: 1633
 Texture
 Tekstura
 
-# windows/input.c: 2384
+# windows/input.c: 2386
 Toggle fullscreen
 Prze³¹cznik pe³nego ekranu
 
@@ -478,51 +478,51 @@ Prze³¹cznik pe³nego ekranu
 UNKNOWN   %s\n
 NIEZNANY  %s\n
 
-# windows/wind3d.c: 2677
+# windows/wind3d.c: 2671
 Unable to blt RGB effect to back_surface: %08x\n
 Nie mo¿na skopiowaæ efektów RGB na tyln¹ powierzchniê: %08x\n
 
-# windows/wind3d.c: 2644
+# windows/wind3d.c: 2638
 Unable to blt back_surface to primary_surface: %08x\n
 Nie mo¿na skopiowaæ tylnej powierzchni na powierzchniê podstawow¹: %08x\n
 
-# windows/wind3d.c: 2270
+# windows/wind3d.c: 2264
 Unable to blt blit_surface to texture_surface: %08x\n
 Nie mo¿na skopiowaæ powierzchni blitu na powierzchniê tekstur: %08x\n
 
-# windows/wind3d.c: 2247
+# windows/wind3d.c: 2241
 Unable to blt scale_surface to texture_surface: %08x\n
 Nie mo¿na skopiowaæ powierzchni skalowania na powierzchniê tekstur: %08x\n
 
-# windows/winddraw.c: 1434
+# windows/winddraw.c: 1428
 Unable to blt target_surface: %08x\n
 Nie mo¿na skopiowaæ powierzchni docelowej: %08x\n
 
-# windows/input.c: 2652, 2659
+# windows/input.c: 2654, 2661
 Unable to close the keyboard device. (error %d)\n
 Nie mo¿na zamkn¹æ urz¹dzenia klawiatury. (b³¹d %d)\n
 
-# windows/wind3dfx.c: 796
+# windows/wind3dfx.c: 806
 Unable to find RGB effects pattern\n
 Nie znaleziono wzoru efektów RGB\n
 
-# windows/wind3d.c: 2104, 2195, 2217 windows/winddraw.c: 1234, 1307
+# windows/wind3d.c: 2098, 2189, 2211 windows/winddraw.c: 1228, 1301
 Unable to lock blit_surface: %08x\n
 Nie mo¿na zablokowaæ powierzchni blitu: %08x\n
 
-# windows/winddraw.c: 1604, 1704
+# windows/winddraw.c: 1598, 1706
 Unable to lock target_surface: %08x\n
 Nie mo¿na zablokowaæ powierzchni docelowej: %08x\n
 
-# windows/input.c: 2603, 2613
+# windows/input.c: 2605, 2615
 Unable to open the keyboard device. (error %d)\n
 Nie mo¿na otworzyæ urz¹dzenia klawiatury. (b³¹d %d)\n
 
-# windows/wind3d.c: 2604
+# windows/wind3d.c: 2598
 Unable to render to back_surface: %08x\n
 Nie mo¿na renderowaæ na tylnej powierzchni: %08x\n
 
-# windows/wind3d.c: 2491
+# windows/wind3d.c: 2485
 Unable to render to preprocess texture: %08x\n
 Nie mo¿na rednerowaæ tekstur preprocesingu: %08x\n
 
@@ -534,19 +534,19 @@ U¿ycie: MAME nazwa gry [opcje]\n\n
 Usage: %s [game] [options]\nOptions:\n
 U¿ycie: %s [gra] [opcje]\nOpcje:\n
 
-# windows/wind3d.c: 689
+# windows/wind3d.c: 683
 Using %s pre-scale effect\n
 U¿ycie %s efektu pre-skalowania\n
 
-# windows/winddraw.c: 301
+# windows/winddraw.c: 295
 Using %s scale effect\n
 U¿ycie %s efektu skalowania\n
 
-# windows/input.c: 1192
+# windows/input.c: 1194
 Using DirectInput %d\n
 U¿ycie DirectInput %d\n
 
-# windows/wind3d.c: 1144
+# windows/wind3d.c: 1138
 Using a %s buffer and pageflipping\n
 U¿ycie %s bufora i prze³¹czania stron\n
 
@@ -558,7 +558,7 @@ Uwaga: filtrowanie anizotropiczne (mag) nie obs³ugiwane, powrót do bi-linearnego
 Warning: anisotropic (min) filtering not supported, falling back to bi-linear\n
 Uwaga: filtrowanie anizotropiczne (min) nie obs³ugiwane, powrót do bi-linearnego\n
 
-# windows/wind3d.c: 1682 windows/winddraw.c: 925
+# windows/wind3d.c: 1676 windows/winddraw.c: 919
 Warning: could not create gamma control to change brightness: %08x\n
 Uwaga: nie mo¿na utworzyæ kontroli nasycenia (gamma) aby zmieniæ jasnoœæ: %08x\n
 
@@ -570,19 +570,19 @@ Uwaga: p³askie filtrowanie bi-cubic nie obs³ugiwane, powrót do bi-linearnego\n
 Warning: gaussian bi-cubic filtering not supported, falling back to bi-linear\n
 Uwaga: filtrowanie gausa bi-cubic nie obs³ugiwane, powrót do bi-linearnego\n
 
-# windows/window.c: 652
+# windows/window.c: 654
 Warning: hardware-accelerated blitting-effects selected, but currently disabled\n         use the -direct3d option to enable hardware acceleration\n
 Uwaga: Wybrano akceleracjê sprzêtow¹ efektów kopiowania, ale zosta³a ona wy³¹czona\n         u¿yj opcji '-direct3d' aby w³¹czyæ akceleracjê sprzêtow¹\n
 
-# windows/window.c: 646
+# windows/window.c: 648
 Warning: non-hardware-accelerated blitting-effects engine enabled\n         use the -d3deffect option to enable hardware acceleration\n
 Uwaga: w³¹czony silnik efektów kopiowania bez akceleracji sprzêtowej\n         u¿yj opcji '-direct3d' aby w³¹czyæ akceleracjê sprzêtow¹\n
 
-# windows/wind3d.c: 1533
+# windows/wind3d.c: 1527
 Warning: required texture size too large for prescale, disabling prescale\n
 Uwaga: wymagany rozmiar tekstury jest zbyt du¿y dla przeskalowania, przeskalowanie wy³¹czone\n
 
-# windows/winddraw.c: 704
+# windows/winddraw.c: 698
 Warning: scale effect %s is disabled.\n
 Uwaga: efekt skalowania %s jest wy³¹czony.\n
 
@@ -590,11 +590,11 @@ Uwaga: efekt skalowania %s jest wy³¹czony.\n
 Warning: using fall-back method for scanline blending.\n
 Uwaga: u¿ywana metoda cofniêcia dla mieszania przeplotu linii.\n
 
-# windows/wind3dfx.c: 186
+# windows/wind3dfx.c: 196
 Windows Direct3D 2D video options
 Opcje video Direct3D 2D
 
-# windows/fileio.c: 121
+# windows/fileio.c: 123
 Windows path and directory options
 Opcje œcie¿ek i katalogów 
 
@@ -614,7 +614,7 @@ Opcje video
 \"%8s\" not supported!\n
 \"%8s\" nie obs³ugiwane!\n
 
-# windows/input.c: 1260
+# windows/input.c: 1262
 \"%s\" controller support enabled\n
 obs³uga kontrolera \"%s\" w³¹czona\n
 
@@ -622,7 +622,7 @@ obs³uga kontrolera \"%s\" w³¹czona\n
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" w przybli¿eniu pasuje do nastêpuj¹cych\nobs³ugiwanych gier (pierwsze najbardziej pasuj¹ce):\n\n
 
-# windows/wind3dfx.c: 197
+# windows/wind3dfx.c: 207
 additional customised settings (undocumented)
 dodatkowe w³asne ustawienia (nieudokumentowane)
 
@@ -706,7 +706,7 @@ zmiana m68k core (0:C, 1:DRC, 2:ASM+DRC)
 change system bios
 zmiana biosu systemu
 
-# windows/fileio.c: 149
+# windows/fileio.c: 151
 cheat filename
 nazwa pliku z oszustwami do gier
 
@@ -730,47 +730,47 @@ przytnij artwork'i (grafiki ozdobne) do ekranu gry
 cursor color
 kolor kursora
 
-# windows/wind3dfx.c: 196
+# windows/wind3dfx.c: 206
 customised blitting effects preset
 W³asne ustawienia efektów kopiowania
 
-# windows/fileio.c: 141
+# windows/fileio.c: 143
 directory for Artwork (Overlays etc.)
 katalog z dodatkowymi grafikami ozdobnymi (Nakrycia itp.)
 
-# windows/fileio.c: 143
+# windows/fileio.c: 145
 directory for hard drive image difference files
 katalog dla plików ró¿nicowych obrazów dysków twardych
 
-# windows/fileio.c: 142
+# windows/fileio.c: 144
 directory for screenshots (.png format)
 katalog ze zdjêciami z gier (.png format)
 
-# windows/fileio.c: 135
+# windows/fileio.c: 137
 directory to save configurations
 katalog do zapisu konfiguracji
 
-# windows/fileio.c: 144
+# windows/fileio.c: 146
 directory to save controller definitions
 katalog do zapisu ustawieñ kontrolerów
 
-# windows/fileio.c: 139
+# windows/fileio.c: 141
 directory to save hiscores
 katalog do zapisu wyników z gier
 
-# windows/fileio.c: 138
+# windows/fileio.c: 140
 directory to save input device logs
 katalog do zapisu log'ów urz¹dzeñ wejœcia (kontrolerów)
 
-# windows/fileio.c: 137
+# windows/fileio.c: 139
 directory to save memory card contents
 katalog do zapisu kontekstu kart pamiêci
 
-# windows/fileio.c: 136
+# windows/fileio.c: 138
 directory to save nvram contents
 katalog do zapisu kontekstów nvram
 
-# windows/fileio.c: 140
+# windows/fileio.c: 142
 directory to save states
 katalog do zapisu stanów gier
 
@@ -786,7 +786,7 @@ wyœwietl parametry uruchomieniowe w stylu rc
 do not apply rotation
 nie stosuj rotacji
 
-# windows/wind3d.c: 1144
+# windows/wind3d.c: 1138
 double
 podwójnego
 
@@ -806,31 +806,31 @@ plik Ÿród³owy sterownika
 emulate win_old_scanlines
 emulacja win_old_scanlines
 
-# windows/input.c: 228
+# windows/input.c: 230
 enable dual lightgun input
 w³¹cz podwójny pistolet
 
-# windows/input.c: 226
+# windows/input.c: 228
 enable joystick input
 w³¹cz obs³ugê joysticka
 
-# windows/input.c: 231
+# windows/input.c: 233
 enable keyboard LED emulation
 w³¹cz emulacje LED klawiatury
 
-# windows/input.c: 227
+# windows/input.c: 229
 enable lightgun input
 w³¹cz obs³ugê pistoletu
 
-# windows/input.c: 225
+# windows/input.c: 227
 enable mouse input
 w³¹cz obs³ugê myszy
 
-# windows/wind3dfx.c: 193
+# windows/wind3dfx.c: 203
 enable rotation of effects for rotated games
 w³¹cz efekty obrotu dla obróconych gier
 
-# windows/input.c: 230
+# windows/input.c: 232
 enable steadykey support
 w³¹cz stabilizacjê klawiszy
 
@@ -890,7 +890,7 @@ b³¹d: œmieci \"%s\" w linii %d pliku: %s\n
 error: invalid value for aspect ratio: %s\n
  b³¹d: niepoprawna wartoœæ dla proporcji: %s\n
 
-# windows/wind3dfx.c: 290
+# windows/wind3dfx.c: 300
 error: invalid value for d3dprescale: %s\n
 b³¹d: niepoprawna wartoœæ dla d3dprescale: %s\n
 
@@ -930,7 +930,7 @@ b³¹d otwarcia %s do odtwarzania\n
 failed to open %s for recording\n
 b³¹d otwarcia %s do nagrywania\n
 
-# windows/wind3dfx.c: 191
+# windows/wind3dfx.c: 201
 feedback strength
 si³a sprzê¿. zwrotnego
 
@@ -954,7 +954,7 @@ kolor czcionki normalnej
 font special color
 kolor czcionki specjalnej
 
-# windows/wind3dfx.c: 187
+# windows/wind3dfx.c: 197
 force specific zoom level
 wymuœ okreœlone powiêkszenie
 
@@ -974,7 +974,7 @@ zwiêksz priorytet w¹tku (programu)
 info: trying to parse: %s\n
 info: próba analizy: %s\n
 
-# windows/wind3dfx.c: 189
+# windows/wind3dfx.c: 199
 interpolation method
 metoda interpolacji
 
@@ -1002,7 +1002,7 @@ lista wymaganych przez sterownik ROM'ów
 loading %-12s\r
 ³adowanie %-12s\r
 
-# windows/input.c: 233
+# windows/input.c: 235
 minimal analog value for digital input
 minimalna analogowa wartoœæ dla cyfrowego wejœcia (kontrolera)
 
@@ -1010,7 +1010,7 @@ minimalna analogowa wartoœæ dla cyfrowego wejœcia (kontrolera)
 no help available
 pomoc niedostêpna
 
-# windows/input.c: 229
+# windows/input.c: 231
 offscreen shots reload
 strza³ poza ekran prze³adowuje
 
@@ -1018,15 +1018,15 @@ strza³ poza ekran prze³adowuje
 output error log to debugger
 wyjœcie log'u b³êdów dla debugger'a
 
-# windows/fileio.c: 131, 133
+# windows/fileio.c: 133, 135
 path to ini files
 œcie¿ka dla plików ini
 
-# windows/fileio.c: 123
+# windows/fileio.c: 125
 path to romsets
 œcie¿ka do ROM'ów
 
-# windows/fileio.c: 129
+# windows/fileio.c: 131
 path to samplesets
 œcie¿ka do sampli
 
@@ -1034,7 +1034,7 @@ path to samplesets
 playback an input file
 odtwarzanie pliku z demem (*.inp)
 
-# windows/input.c: 234
+# windows/input.c: 236
 preconfigure for specified controller
 pre-konfiguracja wyszczególnionego kontrolera
 
@@ -1042,7 +1042,7 @@ pre-konfiguracja wyszczególnionego kontrolera
 prefer RDTSC over QueryPerformanceCounter for timing
 preferowany zegar RDTSC nad QueryPerformanceCounter
 
-# windows/wind3dfx.c: 194
+# windows/wind3dfx.c: 204
 prescale effect
 efekt pre-skalowania
 
@@ -1102,11 +1102,11 @@ sety sampli
 save sound in wav file
 zapisz dŸwiêk do pliku wav
 
-# windows/wind3d.c: 1654
+# windows/wind3d.c: 1648
 scale effects surface created: %s\n
 powierzchnia dla efektów skalowania utworzona: %s\n
 
-# windows/wind3dfx.c: 192
+# windows/wind3dfx.c: 202
 scanline intensity
 intensywnoœæ przeplotu
 
@@ -1134,35 +1134,35 @@ ustaw jawnie pomijanie klatek (automatyczne pomijanie klatek musi byæ wy³¹czone)
 set intensity in vector games
 ustaw intensywnoœæ w grach wektorowych
 
-# windows/input.c: 240
+# windows/input.c: 242
 set joystick ID (Player1)
 ustaw ID joystick'a (gracz 1)
 
-# windows/input.c: 241
+# windows/input.c: 243
 set joystick ID (Player2)
 ustaw ID joystick'a (gracz 2)
 
-# windows/input.c: 242
+# windows/input.c: 244
 set joystick ID (Player3)
 ustaw ID joystick'a (gracz 3)
 
-# windows/input.c: 243
+# windows/input.c: 245
 set joystick ID (Player4)
 ustaw ID joystick'a (gracz 4)
 
-# windows/input.c: 244
+# windows/input.c: 246
 set joystick ID (Player5)
 ustaw ID joystick'a (gracz 5)
 
-# windows/input.c: 245
+# windows/input.c: 247
 set joystick ID (Player6)
 ustaw ID joystick'a (gracz 6)
 
-# windows/input.c: 246
+# windows/input.c: 248
 set joystick ID (Player7)
 ustaw ID joystick'a (gracz 7)
 
-# windows/input.c: 247
+# windows/input.c: 249
 set joystick ID (Player8)
 ustaw ID joystick'a (gracz 8)
 
@@ -1222,7 +1222,7 @@ wyszczególnij zastêpcze proporcje monitora
 specify the blitting effect
 wyszczególnij efekt kopiowania (blitting'u)
 
-# windows/wind3dfx.c: 195
+# windows/wind3dfx.c: 205
 specify the blitting effects
 wyszczególnij efekty kopiowania (blitting'u)
 
@@ -1258,7 +1258,7 @@ szybkoœæ gry zgodna z jej odœwie¿aniem ekranu
 transparency of UI background [0 - 255]
 przezroczystoœæ t³a dla UI [0 - 255]
 
-# windows/wind3d.c: 1144
+# windows/wind3d.c: 1138
 triple
 potrójnego
 
@@ -1278,7 +1278,7 @@ u¿yj Direct3D przy renderingu
 use DirectDraw for rendering
 u¿yj DirectDraw przy renderingu
 
-# windows/wind3dfx.c: 188
+# windows/wind3dfx.c: 198
 use DirectX texture management
 u¿yj DirectX do zarz¹dzania teksturami
 
@@ -1334,55 +1334,55 @@ kolor ramki okna (œredni)
 year, manufacturer and full name
 rok, producent i pe³na nazwa
 
-# windows/input.c: 904
+# windows/input.c: 906
          all -- all axes on all joysticks are digital\n
 
 
-# windows/input.c: 910
+# windows/input.c: 912
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
 
 
-# windows/input.c: 908
+# windows/input.c: 910
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
 
 
-# windows/input.c: 905
+# windows/input.c: 907
          j<N> -- all axes on joystick <N> are digital\n
 
 
-# windows/input.c: 906
+# windows/input.c: 908
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
 
 
-# windows/input.c: 903
+# windows/input.c: 905
          none -- no axes on any joysticks are digital\n
 
 
-# windows/input.c: 907
+# windows/input.c: 909
     Multiple axes can be specified for one joystick:\n
 
 
-# windows/input.c: 909
+# windows/input.c: 911
     Multiple joysticks can be specified separated by commas:\n
 
 
-# windows/input.c: 1904
+# windows/input.c: 1906
   Axis %d (%s)%s\n
 
 
-# windows/input.c: 1904
+# windows/input.c: 1906
  - digital
 
 
-# windows/input.c: 943
+# windows/input.c: 945
 Autoenabling joysticks due to presence of a %s\n
 
 
-# windows/input.c: 951
+# windows/input.c: 953
 Autoenabling lightguns due to presence of a %s\n
 
 
-# windows/input.c: 935
+# windows/input.c: 937
 Autoenabling mice due to presence of a %s\n
 
 
@@ -1390,11 +1390,11 @@ Autoenabling mice due to presence of a %s\n
 CRC-32s
 
 
-# windows/video.c: 540
+# windows/video.c: 541
 Enumerating video device %s\n
 
 
-# windows/video.c: 616
+# windows/video.c: 617
 Error enumerating DirectDraw: %08x\n
 
 
@@ -1402,35 +1402,35 @@ Error enumerating DirectDraw: %08x\n
 For usage instructions, please consult the file windows.txt\n
 
 
-# windows/input.c: 1742
+# windows/input.c: 1744
 Joystick %d axis %d is now %s\n
 
 
-# windows/input.c: 1887
+# windows/input.c: 1889
 Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 
 
-# windows/input.c: 1258
+# windows/input.c: 1260
 Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 
 
-# windows/input.c: 1876
+# windows/input.c: 1878
 Lightgun %d X
 
 
-# windows/input.c: 1878
+# windows/input.c: 1880
 Lightgun %d Y
 
 
-# windows/input.c: 1791
+# windows/input.c: 1793
 Mouse %d X
 
 
-# windows/input.c: 1793
+# windows/input.c: 1795
 Mouse %d Y
 
 
-# windows/input.c: 1795
+# windows/input.c: 1797
 Mouse %d Z
 
 
@@ -1446,7 +1446,7 @@ Parsing %s : N/A\n
 Parsing %s : OK\n
 
 
-# windows/video.c: 628
+# windows/video.c: 629
 Screen %s not found\n
 
 
@@ -1454,11 +1454,11 @@ Screen %s not found\n
 Windows misc options
 
 
-# windows/input.c: 1739
+# windows/input.c: 1741
 analog
 
 
-# windows/input.c: 1200
+# windows/input.c: 1202
 analog joystick
 
 
@@ -1470,19 +1470,19 @@ automatic pause when playback is finished
 confirm before exiting game
 
 
-# windows/input.c: 252, 1203
+# windows/input.c: 254, 1205
 dial
 
 
-# windows/input.c: 258, 1739
+# windows/input.c: 260, 1741
 digital
 
 
-# windows/fileio.c: 146
+# windows/fileio.c: 148
 directory for ips files
 
 
-# windows/fileio.c: 148
+# windows/fileio.c: 150
 directory for localized language files
 
 
@@ -1490,31 +1490,31 @@ directory for localized language files
 disable second monitor emulation
 
 
-# windows/input.c: 249
+# windows/input.c: 251
 enable (keyboard|mouse|joystick) if a paddle control is present
 
 
-# windows/input.c: 252
+# windows/input.c: 254
 enable (keyboard|mouse|joystick|lightgun) if a dial control is present
 
 
-# windows/input.c: 254
+# windows/input.c: 256
 enable (keyboard|mouse|joystick|lightgun) if a lightgun control is present
 
 
-# windows/input.c: 256
+# windows/input.c: 258
 enable (keyboard|mouse|joystick|lightgun) if a mouse control is present
 
 
-# windows/input.c: 251
+# windows/input.c: 253
 enable (keyboard|mouse|joystick|lightgun) if a pedal control is present
 
 
-# windows/input.c: 253
+# windows/input.c: 255
 enable (keyboard|mouse|joystick|lightgun) if a trackball control is present
 
 
-# windows/input.c: 250
+# windows/input.c: 252
 enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is present
 
 
@@ -1522,7 +1522,7 @@ enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is prese
 enable automatic restore at startup and save at exit
 
 
-# windows/input.c: 237
+# windows/input.c: 239
 enable pointing stick input
 
 
@@ -1534,7 +1534,7 @@ enable/disable local language game list
 enable/disable volume auto adjust
 
 
-# windows/input.c: 822
+# windows/input.c: 824
 error: invalid value for %s: %s\n
 
 
@@ -1542,7 +1542,7 @@ error: invalid value for %s: %s\n
 error: invalid value for cleanstretch: %s\n
 
 
-# windows/input.c: 902
+# windows/input.c: 904
 error: invalid value for digital: %s -- valid values are:\n
 
 
@@ -1550,7 +1550,7 @@ error: invalid value for digital: %s -- valid values are:\n
 error: invalid value for frames_to_run: %s\n
 
 
-# windows/input.c: 797
+# windows/input.c: 799
 error: invalid value for led_mode: %s\n
 
 
@@ -1582,7 +1582,7 @@ error: malloc failed in win_strip_extension\n
 error: unknown option type: %d, this should not happen!\n
 
 
-# windows/input.c: 1739
+# windows/input.c: 1741
 invalid
 
 
@@ -1594,19 +1594,19 @@ ips datfile name
 is missing optional files\n
 
 
-# windows/input.c: 227, 818, 1201
+# windows/input.c: 229, 820, 1203
 lightgun
 
 
-# windows/input.c: 258
+# windows/input.c: 260
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 
 
-# windows/input.c: 249, 1199
+# windows/input.c: 251, 1201
 paddle
 
 
-# windows/input.c: 251, 1202
+# windows/input.c: 253, 1204
 pedal
 
 
@@ -1618,7 +1618,7 @@ script for debugger (only if available)
 specify which screen to use
 
 
-# windows/input.c: 253, 1204
+# windows/input.c: 255, 1206
 trackball
 
 

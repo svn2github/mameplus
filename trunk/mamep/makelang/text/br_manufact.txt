@@ -238,6 +238,10 @@ Bee-Oh
 Blastar
 
 
+# Super Glob (Pac-Man hardware) German
+Bootleg
+
+
 # The Crystal of Kings
 Brezzasoft
 
@@ -2020,10 +2024,6 @@ Zilec Games
 
 # Check Man
 Zilec-Zenitone
-
-
-# SvC Chaos - SNK vs Capcom (MVS) (bootleg)
-booleg
 
 
 # Magic Brush

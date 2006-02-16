@@ -2030,15 +2030,15 @@ hackeado
 unknown
 desconocido
 
+# Super Glob (Pac-Man hardware) German
+Bootleg
+
+
 # Poizone
 Eterna
 
 
 # Police Trainer (Rev 1.3)
 P & P Marketing
-
-
-# SvC Chaos - SNK vs Capcom (MVS) (bootleg)
-booleg
 
 
