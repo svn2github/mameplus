@@ -206,6 +206,15 @@ extern SHAREDOBJ_DATA struct rc_option input_opts[];
 extern SHAREDOBJ_DATA struct rc_option sound_opts[];
 extern SHAREDOBJ_DATA struct rc_option video_opts[];
 
+#ifdef MALLOC_DEBUG
+// in windows/winalloc.c
+extern SHAREDOBJ_FUNC(void*) malloc_file_line(size_t size, const char *file, int line);
+extern SHAREDOBJ_FUNC(char*) strdup_file_line(const char *s, const char *file, int line);
+extern SHAREDOBJ_FUNC(void*) calloc_file_line(size_t size, size_t count, const char *FILE, int line);
+extern SHAREDOBJ_FUNC(void*) realloc_file_line(void *memory, size_t size, const char *file, int line);
+extern SHAREDOBJ_FUNC(void)  CLIB_DECL free(void *memory);
+#endif /* MALLOC_DEBUG */
+
 #else /* _MSC_VER */
 #include "mamecore.h"
 

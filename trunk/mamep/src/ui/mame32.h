@@ -21,6 +21,20 @@
 
 #include "osd_so.h"
 
+#undef assert
+#ifdef MAME_DEBUG
+#define assert(x)	do { if (!(x)) { printf("assert: %s:%d: %s", __FILE__, __LINE__, #x); dprintf("assert: %s:%d: %s", __FILE__, __LINE__, #x); exit(-1); } } while (0)
+#else
+#define assert(x)
+#endif
+
+#ifdef MALLOC_DEBUG
+#undef malloc
+#undef strdup
+#undef calloc
+#undef realloc
+#endif /* MALLOC_DEBUG */
+
 #include "screenshot.h"
 #include "win32ui.h"
 
