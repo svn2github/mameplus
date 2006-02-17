@@ -728,6 +728,13 @@ static void install_draw_handlers( tilemap *tmap )
 
 INLINE tilemap_draw_func pick_draw_func( mame_bitmap *dest )
 {
+	if (!dest)
+	{
+		extern mame_bitmap *scrbitmap[];
+
+		dest = scrbitmap[0];
+	}
+
 	switch (dest->depth)
 	{
 		case 32:
