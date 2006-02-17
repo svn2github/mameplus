@@ -60,6 +60,7 @@ bwcasino	ボードウォークカジノ	ぼーどうぉーくかじの	Epos Corporation
 acitya	アトランティックシティアクション	あとらんてぃっくしてぃあくしょん	Epos Corporation
 theglobp	スーパーグロッブ / The Glob (Pac-Man hardware)	すーぱーぐろっぶ	Epos Corporation
 sprglobp	スーパーグロッブ (Pac-Man hardware)	すーぱーぐろっぶ	Epos Corporation
+sprglbpg	スーパーグロッブ (Pac-Man hardware) (ドイツ版)	すーぱーぐろっぶ	Bootleg
 beastf	グロッブ / Beastie Feastie	ぐろっぶ	Epos Corporation
 rocktrv2	MTV ロックンロールトリビア (part 2)	えむてぃーぶいろっくんろーるとりびあ	Triumph Software Inc.
 bigbucks	ビッグバックス -Trivia Quest	びっぐばっくす	Dynasoft Inc.
@@ -618,7 +619,8 @@ dirtfoxj	ダートフォックス (日本版)	だーとふぉっくす	Namco
 fourtrax	フォートラックス	ふぉーとらっくす	Namco
 valkyrie	ワルキューレの伝説 (日本版)	わるきゅーれのでんせつ	Namco
 finehour	ファイネストアワー (日本版)	ふぁいねすとあわー	Namco
-burnforc	バーニングフォース (日本版)	ばーにんぐふぉーす	Namco
+burnforc	バーニングフォース (日本版 new ver)	ばーにんぐふぉーす	Namco
+burnfrco	バーニングフォース (日本版 old ver)	ばーにんぐふぉーす	Namco
 marvland	マーベルランド (USA版)	まーべるらんど	Namco
 marvlanj	マーベルランド (日本版)	まーべるらんど	Namco
 kyukaidk	球界道中記 (日本版 new ver)	きゅうかいどうちゅうき	Namco
@@ -2689,8 +2691,8 @@ enduror1	エンデューロレーサー (YM2203 FD1089B 317-0013A)	えんでゅーろれーさー	Se
 endurob2	エンデューロレーサー (海賊版 set 2)	えんでゅーろれーさー	bootleg
 endurobl	エンデューロレーサー (海賊版 set 1)	えんでゅーろれーさー	bootleg
 hangon	ハングオン	はんぐおん_1	Sega
-sharrier	スペースハリアー (rev A 8751 317-0063A?)	すぺーすはりあー_1	Sega
-sharrirb	スペースハリアー (8751 317-0063?)	すぺーすはりあー_1	Sega
+sharrier	スペースハリアー (rev A 8751 317-5163A)	すぺーすはりあー_1	Sega
+sharrirb	スペースハリアー (8751 317-5163)	すぺーすはりあー_1	Sega
 shangupb	スーパーハングオン (Hang-On upgrade) (海賊版)	すーぱーはんぐおん	bootleg
 aliensy1	エイリアンシンドローム (set 1 System16A FD1089A 317-0033)	えいりあんしんどろーむ	Sega
 aliensy2	エイリアンシンドローム (set 2 System16A FD1089A 317-0033)	えいりあんしんどろーむ	Sega
@@ -4494,10 +4496,10 @@ mslug5	メタルスラッグ5	めたるすらっぐ_5	SNK Playmore
 ms5plus	メタルスラッグ5 / Metal Slug 5 Plus (海賊版)	めたるすらっぐ_5	bootleg
 svcpcb	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB)	えすえぬけいばーさすかぷこん	Playmore
 svc	SNK VS. CAPCOM -SVC CHAOS (MVS)	えすえぬけいばーさすかぷこん	Playmore
-svcboot	SNK VS. CAPCOM -SVC CHAOS (MVS) (海賊版)	えすえぬけいばーさすかぷこん	booleg
-svcplus	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Plus (海賊版 set1)	えすえぬけいばーさすかぷこん	booleg
-svcplusa	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Plus (海賊版 set 2)	えすえぬけいばーさすかぷこん	booleg
-svcsplus	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Super Plus (海賊版)	えすえぬけいばーさすかぷこん	booleg
+svcboot	SNK VS. CAPCOM -SVC CHAOS (MVS) (海賊版)	えすえぬけいばーさすかぷこん	bootleg
+svcplus	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Plus (海賊版 set1)	えすえぬけいばーさすかぷこん	bootleg
+svcplusa	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Plus (海賊版 set 2)	えすえぬけいばーさすかぷこん	bootleg
+svcsplus	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Super Plus (海賊版)	えすえぬけいばーさすかぷこん	bootleg
 samsho5	サムライスピリッツ零 (set 1)	さむらいすぴりっつ_6_1ぜろ	Yuki Enterprise / SNK Playmore
 samsho5h	サムライスピリッツ零 (set 2)	さむらいすぴりっつ_6_1ぜろ	Yuki Enterprise / SNK Playmore
 samsho5b	サムライスピリッツ零 (海賊版)	さむらいすぴりっつ_6_1ぜろ	bootleg
@@ -4903,10 +4905,10 @@ airraid	クロスシューター / Air Raid (encrypted)	くろすしゅーたー	Seibu Kaihatsu
 panicr	パニックロード	ぱにっくろーど	Seibu
 deadang	リードアングル / Dead Angle	りーどあんぐる	Seibu Kaihatsu
 ghunter	リードアングル / Gang Hunter (スペイン版)	りーどあんぐる	Seibu Kaihatsu (Segasa/Sonic license)
-dynduke	ダイナマイトデューク (USA版)	だいなまいとでゅーく	Seibu Kaihatsu (Fabtek license)
-dyndukj	ダイナマイトデューク (日本版)	だいなまいとでゅーく	Seibu Kaihatsu
-dbldyn	ダブルデューク / The Double Dynamites (USA版)	だぶるでゅーく	Seibu Kaihatsu (Fabtek license)
-dbldynj	ダブルデューク (日本版)	だぶるでゅーく	Seibu Kaihatsu
+dynduke	ダイナマイトデューク (日本版)	だいなまいとでゅーく	Seibu Kaihatsu
+dyndukf	ダイナマイトデューク (USA版)	だいなまいとでゅーく	Seibu Kaihatsu (Fabtek license)
+dbldyn	ダブルデューク (日本版)	だぶるでゅーく	Seibu Kaihatsu
+dbldynf	ダブルデューク / The Double Dynamites (USA版)	だぶるでゅーく	Seibu Kaihatsu (Fabtek license)
 raiden	雷電	らいでん_1	Seibu Kaihatsu
 raidena	雷電 (alt hardware)	らいでん_1	Seibu Kaihatsu
 raidenk	雷電 (韓国版)	らいでん_1	Seibu Kaihatsu (IBL Corporation license)

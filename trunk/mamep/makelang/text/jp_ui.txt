@@ -10,6 +10,14 @@ Japanese game list by 俺、ぶろん
 %d games
 %d ゲーム
 
+# ui/properties.c: 943
+%d x %d (H) %f Hz (%d:%d) (%d colors)
+%d x %d (H) %f Hz (%d:%d) (%d 色)
+
+# ui/properties.c: 931
+%d x %d (V) %f Hz (%d:%d) (%d colors)
+%d x %d (V) %f Hz (%d:%d) (%d 色)
+
 # ui/treeview.c: 1224
 %dx%d (H)
 %dx%d (H)
@@ -21,6 +29,26 @@ Japanese game list by 俺、ぶろん
 # ui/properties.c: 4124
 %li bit
 %li ビット
+
+# ui/properties.c: 1161
+%s (%d player, %d button)
+%s (%d プレイヤー、%d ボタン)
+
+# ui/properties.c: 1159
+%s (%d player, %d buttons)
+%s (%d プレイヤー、%d ボタン)
+
+# ui/properties.c: 1147
+%s (%d players)
+%s (%d プレイヤー)
+
+# ui/properties.c: 1156
+%s (%d players, %d button)
+%s (%d プレイヤー、%d ボタン)
+
+# ui/properties.c: 1153
+%s (%d players, %d buttons)
+%s (%d プレイヤー、%d ボタン)
 
 # ui/properties.c: 1293
 %s\nThis is also global driver options in the %s
@@ -922,6 +950,22 @@ Double Joy 4-Way
 Double Joy 8-Way
 8方向デュアルスティック
 
+# ui/properties.c: 1025, 1041, 1042
+Double Joystick 2-Way
+２方向デュアルスティック
+
+# ui/properties.c: 1021, 1022, 1045
+Double Joystick 2-Way Vertical
+２方向デュアルスティック 縦
+
+# ui/properties.c: 1028, 1048
+Double Joystick 4-Way
+４方向デュアルスティック
+
+# ui/properties.c: 1030, 1050
+Double Joystick 8-Way
+８方向デュアルスティック
+
 # ui/mame32.rc: 877
 Draw antialiased vectors
 アンチエイリアス
@@ -1285,6 +1329,22 @@ Joy 8-Way
 # ui/properties.c: 573, 4205
 Joystick
 ジョイスティック
+
+# ui/properties.c: 983, 984, 1005
+Joystick 2-Way
+２方向スティック
+
+# ui/properties.c: 987, 1001, 1002
+Joystick 2-Way Vertical
+２方向スティック 縦
+
+# ui/properties.c: 990, 1008
+Joystick 4-Way
+４方向スティック
+
+# ui/properties.c: 992, 1010
+Joystick 8-Way
+８方向スティック
 
 # ui/properties.c: 4215
 JoystickId
@@ -2450,9 +2510,17 @@ Vector
 Vector (H)
 ベクタ (H)
 
+# ui/properties.c: 918
+Vector (H) %f Hz (%d:%d) (%d colors)
+ベクタ (H) %f Hz (%d:%d) (%d 色)
+
 # ui/treeview.c: 1190, 1191
 Vector (V)
 ベクタ (V)
+
+# ui/properties.c: 908
+Vector (V) %f Hz (%d:%d) (%d colors)
+ベクタ (V) %f Hz (%d:%d) (%d 色)
 
 # ui/options.c: 4465
 Version Mismatch
@@ -2602,75 +2670,7 @@ settings then exit.\n\n
 the next time MAME32 is run.\n\n
 反映されます。\n\n
 
-# ui/properties.c: 943
-%d x %d (H) %f Hz (%d:%d) (%d colors)
-
-
-# ui/properties.c: 931
-%d x %d (V) %f Hz (%d:%d) (%d colors)
-
-
 # ui/properties.c: 1150
 %s (%d player)
-
-
-# ui/properties.c: 1161
-%s (%d player, %d button)
-
-
-# ui/properties.c: 1159
-%s (%d player, %d buttons)
-
-
-# ui/properties.c: 1147
-%s (%d players)
-
-
-# ui/properties.c: 1156
-%s (%d players, %d button)
-
-
-# ui/properties.c: 1153
-%s (%d players, %d buttons)
-
-
-# ui/properties.c: 1025, 1041, 1042
-Double Joystick 2-Way
-
-
-# ui/properties.c: 1021, 1022, 1045
-Double Joystick 2-Way Vertical
-
-
-# ui/properties.c: 1028, 1048
-Double Joystick 4-Way
-
-
-# ui/properties.c: 1030, 1050
-Double Joystick 8-Way
-
-
-# ui/properties.c: 983, 984, 1005
-Joystick 2-Way
-
-
-# ui/properties.c: 987, 1001, 1002
-Joystick 2-Way Vertical
-
-
-# ui/properties.c: 990, 1008
-Joystick 4-Way
-
-
-# ui/properties.c: 992, 1010
-Joystick 8-Way
-
-
-# ui/properties.c: 918
-Vector (H) %f Hz (%d:%d) (%d colors)
-
-
-# ui/properties.c: 908
-Vector (V) %f Hz (%d:%d) (%d colors)
 
 
