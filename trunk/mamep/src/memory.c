@@ -1218,7 +1218,12 @@ static int init_addrspace(UINT8 cpunum, UINT8 spacenum)
 		/* convert region-relative entries to their memory pointers */
 		for (map = space->map; !IS_AMENTRY_END(map); map++)
 			if (map->region)
-				map->memory = memory_region(map->region) + map->region_offs;
+			{
+				offs_t length = memory_region_length(map->region);
+
+				if (map->region_offs + (map->end - map->start + 1) <= length)
+					map->memory = memory_region(map->region) + map->region_offs;
+			}
 
 		/* make the adjusted map */
 		memcpy(space->adjmap, space->map, sizeof(space->map[0]) * MAX_ADDRESS_MAP_SIZE * 2);

@@ -341,6 +341,7 @@ Notes:
 #include "debug/debugcpu.h"
 #include "sound/dac.h"
 #include "sound/2151intf.h"
+#include "state.h"
 
 UINT16* s24_mainram1;
 
@@ -357,6 +358,7 @@ static int fdc_status, fdc_track, fdc_sector, fdc_data;
 static int fdc_phys_track, fdc_irq, fdc_drq, fdc_span, fdc_index_count;
 static unsigned char *fdc_pt;
 static int track_size;
+static int fdc_pt_off;
 
 static void fdc_init(void)
 {
@@ -368,6 +370,18 @@ static void fdc_init(void)
 	fdc_irq = 0;
 	fdc_drq = 0;
 	fdc_index_count = 0;
+	fdc_pt = memory_region(REGION_USER2);
+	fdc_pt_off = 0;
+
+	state_save_register_int("fdc", 0, "status",      &fdc_status);
+	state_save_register_int("fdc", 0, "track",       &fdc_track);
+	state_save_register_int("fdc", 0, "sector",      &fdc_sector);
+	state_save_register_int("fdc", 0, "data",        &fdc_data);
+	state_save_register_int("fdc", 0, "phys_track",  &fdc_phys_track);
+	state_save_register_int("fdc", 0, "irq",         &fdc_irq);
+	state_save_register_int("fdc", 0, "drq",         &fdc_drq);
+	state_save_register_int("fdc", 0, "index_count", &fdc_index_count);
+	state_save_register_int("fdc", 0, "pt_off",      &fdc_pt_off);
 }
 
 static READ16_HANDLER( fdc_r )
@@ -390,8 +404,7 @@ static READ16_HANDLER( fdc_r )
 			fdc_span--;
 			//          logerror("Read %02x (%d)\n", res, fdc_span);
 			if(fdc_span) {
-				fdc_pt++;
-				fdc_data = *fdc_pt;
+				fdc_data = fdc_pt[++fdc_pt_off];
 			} else {
 				logerror("FDC: transfert complete\n");
 				fdc_drq = 0;
@@ -430,15 +443,15 @@ static WRITE16_HANDLER( fdc_w )
 				break;
 			case 0x9:
 				logerror("Read multiple [%02x] %d..%d side %d track %d\n", data, fdc_sector, fdc_sector+fdc_data-1, data & 8 ? 1 : 0, fdc_phys_track);
-				fdc_pt = memory_region(REGION_USER2) + track_size*(2*fdc_phys_track+(data & 8 ? 1 : 0));
+				fdc_pt_off = track_size*(2*fdc_phys_track+(data & 8 ? 1 : 0));
 				fdc_span = track_size;
 				fdc_status = 3;
 				fdc_drq = 1;
-				fdc_data = *fdc_pt;
+				fdc_data = fdc_pt[fdc_pt_off];
 				break;
 			case 0xb:
 				logerror("Write multiple [%02x] %d..%d side %d track %d\n", data, fdc_sector, fdc_sector+fdc_data-1, data & 8 ? 1 : 0, fdc_phys_track);
-				fdc_pt = memory_region(REGION_USER2) + track_size*(2*fdc_phys_track+(data & 8 ? 1 : 0));
+				fdc_pt_off = track_size*(2*fdc_phys_track+(data & 8 ? 1 : 0));
 				fdc_span = track_size;
 				fdc_status = 3;
 				fdc_drq = 1;
@@ -474,7 +487,7 @@ static WRITE16_HANDLER( fdc_w )
 		case 3:
 			if(fdc_drq) {
 				//              logerror("Write %02x (%d)\n", data, fdc_span);
-				*fdc_pt++ = data;
+				fdc_pt[fdc_pt_off++] = data;
 				fdc_span--;
 				if(!fdc_span) {
 					logerror("FDC: transfert complete\n");
@@ -687,7 +700,7 @@ static WRITE16_HANDLER( iod_w )
 
 // Cpu #1 reset control
 
-static unsigned char resetcontrol, prev_resetcontrol;
+static UINT8 resetcontrol, prev_resetcontrol;
 
 static void reset_reset(void)
 {
@@ -718,7 +731,7 @@ static void resetcontrol_w(UINT8 data)
 
 // Rom board bank access
 
-static unsigned char curbank;
+static UINT8 curbank;
 
 static void reset_bank(void)
 {
@@ -837,6 +850,14 @@ static void irq_init(void)
 	irq_timer_pend0 = 0;
 	irq_timer_pend1 = 0;
 	irq_timer = timer_alloc(irq_timer_cb);
+
+	state_save_register_UINT16("irq", 0, "timera",      &irq_timera,      1);
+	state_save_register_UINT8 ("irq", 0, "timerb",      &irq_timerb,      1);
+	state_save_register_UINT8 ("irq", 0, "allow0",      &irq_allow0,      1);
+	state_save_register_UINT8 ("irq", 0, "allow1",      &irq_allow1,      1);
+	state_save_register_int   ("irq", 0, "timer_pend0", &irq_timer_pend0);
+	state_save_register_int   ("irq", 0, "timer_pend1", &irq_timer_pend1);
+	state_save_register_int   ("irq", 0, "yms",         &irq_yms);
 }
 
 static void irq_timer_reset(void)
@@ -1178,6 +1199,8 @@ static DRIVER_INIT(gground)
 	mlatch_table = 0;
 	track_size = 0x2d00;
 	s24_fd1094_driver_init();
+
+	state_save_register_int("gground", 0, "kludge", &ggground_kludge);
 }
 
 static DRIVER_INIT(crkdown)
@@ -1216,6 +1239,15 @@ static MACHINE_INIT(system24)
 	reset_bank();
 	irq_init();
 	mlatch = 0x00;
+	hotrod_ctrl_cur = 0;
+
+	state_save_register_int  ("system24", 0, "cur_input_line",    &cur_input_line);
+	state_save_register_UINT8("system24", 0, "resetcontrol",      &resetcontrol,      1);
+	state_save_register_UINT8("system24", 0, "prev_resetcontrol", &prev_resetcontrol, 1);
+	state_save_register_UINT8("system24", 0, "curbank",           &curbank,           1);
+	state_save_register_UINT8("system24", 0, "mlatch",            &mlatch,            1);
+	state_save_register_UINT8("system24", 0, "hotrod_ctrl_cur",   &hotrod_ctrl_cur,   1);
+	state_save_register_func_postload(reset_bank);
 }
 
 INPUT_PORTS_START( hotrod )
@@ -2271,28 +2303,28 @@ MACHINE_DRIVER_END
 */
 
 /* Disk Based Games */
-/* 01 */GAME( 1988, hotrod,   0,        system24, hotrod,   hotrod,   ROT0,   "Sega", "Hot Rod (World, 3 Players, Turbo set 1)", 0 )
-/* 01 */GAME( 1988, hotroda,  hotrod,   system24, hotrod,   hotrod,   ROT0,   "Sega", "Hot Rod (World, 3 Players, Turbo set 2)", GAME_NO_SOUND )
-/* 01 */GAME( 1988, hotrodj,  hotrod,   system24, hotrodj,  hotrod,   ROT0,   "Sega", "Hot Rod (Japan, 4 Players)", GAME_NO_SOUND )
-/* 02 */GAME( 1988, sspirits, 0,        system24, sspirits, sspirits, ROT270, "Sega", "Scramble Spirits", 0 )
-/* 02 */GAME( 1988, sspiritj, sspirits, system24, sspirits, sspiritj, ROT270, "Sega", "Scramble Spirits (Japan, Floppy DS3-5000-02-REV-A)", 0 )
-/* 02 */GAME( 1988, sspirtfc, sspirits, system24, sspirits, sspirits, ROT270, "Sega", "Scramble Spirits (FD1094 317-0058-02c)",GAME_NOT_WORKING ) /* MISSING disk image */
-/* 03 */GAME( 1988, gground,  0,        system24, gground,  gground,  ROT270, "Sega", "Gain Ground (FD1094 317-0058-03?)", 0 )
-/* 04 */GAME( 1989, crkdown,  0,        system24, crkdown,  crkdown,  ROT0,   "Sega", "Crack Down (US, FD1094 317-0058-04d)", GAME_IMPERFECT_GRAPHICS ) // clipping probs / solid layer probs? (radar display)
-/* 04 */GAME( 1989, crkdownj, crkdown,  system24, crkdown,  crkdown,  ROT0,   "Sega", "Crack Down (Japan, FD1094 317-0058-04b)", GAME_IMPERFECT_GRAPHICS ) // clipping probs / solid layer probs? (radar display)
-/* 05 */GAME( 1989, sgmast,   0,        system24, bnzabros, sgmast,   ROT0,	  "Sega", "Super Masters Golf (FD1094 317-0058-05d?)", GAME_NOT_WORKING|GAME_UNEMULATED_PROTECTION ) // NOT decrypted
-/* 05 */GAME( 1989, sgmastc,  sgmast,   system24, bnzabros, sgmast,   ROT0,   "Sega", "Jumbo Ozaki Super Masters Golf (World, FD1094 317-0058-05c)", GAME_NOT_WORKING ) // controls, some gfx offset / colour probs?
-/* 05 */GAME( 1989, sgmastj,  sgmast,   system24, bnzabros, sgmast,   ROT0,   "Sega", "Jumbo Ozaki Super Masters Golf (Japan, FD1094 317-0058-05b)", GAME_NOT_WORKING ) // controls, some gfx offset / colour probs?
-/* 06 */GAME( 1990, roughrac, 0,        system24, roughrac, roughrac, ROT0,   "Sega", "Rough Racer (Japan, FD1094 317-0058-06b)", 0 )
-/* 07 */GAME( 1990, bnzabros, 0,        system24, bnzabros, bnzabros, ROT0,   "Sega", "Bonanza Bros (US, Floppy DS3-5000-07d?)", 0 )
-/* 07 */GAME( 1990, bnzabrsj, bnzabros, system24, bnzabros, bnzabros, ROT0,   "Sega", "Bonanza Bros (Japan, Floppy DS3-5000-07b)", 0 )
-/* 08 */GAME( 1991, qsww,     0,        system24, bnzabros, qsww,     ROT0,   "Sega", "Quiz Syukudai wo Wasuremashita", GAME_IMPERFECT_GRAPHICS ) // wrong bg colour on title
-/* 09 */GAME( 1991, dcclubfd, 0,        system24, dcclub,   dcclubfd, ROT0,   "Sega", "Dynamic Country Club (Floppy DS3-5000-09d, FD1094 317-0058-09d)", 0 )
+/* 01 */GAME( 1988, hotrod,   0,        system24, hotrod,   hotrod,   ROT0,   "Sega", "Hot Rod (World, 3 Players, Turbo set 1)", GAME_SUPPORTS_SAVE )
+/* 01 */GAME( 1988, hotroda,  hotrod,   system24, hotrod,   hotrod,   ROT0,   "Sega", "Hot Rod (World, 3 Players, Turbo set 2)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+/* 01 */GAME( 1988, hotrodj,  hotrod,   system24, hotrodj,  hotrod,   ROT0,   "Sega", "Hot Rod (Japan, 4 Players)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+/* 02 */GAME( 1988, sspirits, 0,        system24, sspirits, sspirits, ROT270, "Sega", "Scramble Spirits", GAME_SUPPORTS_SAVE )
+/* 02 */GAME( 1988, sspiritj, sspirits, system24, sspirits, sspiritj, ROT270, "Sega", "Scramble Spirits (Japan, Floppy DS3-5000-02-REV-A)", GAME_SUPPORTS_SAVE )
+/* 02 */GAME( 1988, sspirtfc, sspirits, system24, sspirits, sspirits, ROT270, "Sega", "Scramble Spirits (FD1094 317-0058-02c)",GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) /* MISSING disk image */
+/* 03 */GAME( 1988, gground,  0,        system24, gground,  gground,  ROT270, "Sega", "Gain Ground (FD1094 317-0058-03?)", GAME_SUPPORTS_SAVE )
+/* 04 */GAME( 1989, crkdown,  0,        system24, crkdown,  crkdown,  ROT0,   "Sega", "Crack Down (US, FD1094 317-0058-04d)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // clipping probs / solid layer probs? (radar display)
+/* 04 */GAME( 1989, crkdownj, crkdown,  system24, crkdown,  crkdown,  ROT0,   "Sega", "Crack Down (Japan, FD1094 317-0058-04b)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // clipping probs / solid layer probs? (radar display)
+/* 05 */GAME( 1989, sgmast,   0,        system24, bnzabros, sgmast,   ROT0,	  "Sega", "Super Masters Golf (FD1094 317-0058-05d?)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_SUPPORTS_SAVE ) // NOT decrypted
+/* 05 */GAME( 1989, sgmastc,  sgmast,   system24, bnzabros, sgmast,   ROT0,   "Sega", "Jumbo Ozaki Super Masters Golf (World, FD1094 317-0058-05c)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // controls, some gfx offset / colour probs?
+/* 05 */GAME( 1989, sgmastj,  sgmast,   system24, bnzabros, sgmast,   ROT0,   "Sega", "Jumbo Ozaki Super Masters Golf (Japan, FD1094 317-0058-05b)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // controls, some gfx offset / colour probs?
+/* 06 */GAME( 1990, roughrac, 0,        system24, roughrac, roughrac, ROT0,   "Sega", "Rough Racer (Japan, FD1094 317-0058-06b)", GAME_SUPPORTS_SAVE )
+/* 07 */GAME( 1990, bnzabros, 0,        system24, bnzabros, bnzabros, ROT0,   "Sega", "Bonanza Bros (US, Floppy DS3-5000-07d?)", GAME_SUPPORTS_SAVE )
+/* 07 */GAME( 1990, bnzabrsj, bnzabros, system24, bnzabros, bnzabros, ROT0,   "Sega", "Bonanza Bros (Japan, Floppy DS3-5000-07b)", GAME_SUPPORTS_SAVE )
+/* 08 */GAME( 1991, qsww,     0,        system24, bnzabros, qsww,     ROT0,   "Sega", "Quiz Syukudai wo Wasuremashita", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // wrong bg colour on title
+/* 09 */GAME( 1991, dcclubfd, 0,        system24, dcclub,   dcclubfd, ROT0,   "Sega", "Dynamic Country Club (Floppy DS3-5000-09d, FD1094 317-0058-09d)", GAME_SUPPORTS_SAVE )
 
 /* ROM Based */
-GAME( 1991, dcclub,   0,        system24, dcclub,   dcclub,   ROT0,   "Sega", "Dynamic Country Club", 0 )
-GAME( 1992, mahmajn,  0,        system24, mahmajn,  mahmajn,  ROT0,   "Sega", "Tokoro San no MahMahjan", 0 )
-GAME( 1994, qgh,      0,        system24, qgh,      qgh,      ROT0,   "Sega", "Quiz Ghost Hunter", 0 )
-GAME( 1994, quizmeku, 0,        system24, quizmeku, quizmeku, ROT0,   "Sega", "Quiz Mekurumeku Story", 0 )
-GAME( 1994, qrouka,   0,        system24, qgh,      qrouka,   ROT0,   "Sega", "Quiz Rouka Ni Tattenasai", 0 )
-GAME( 1994, mahmajn2, 0,        system24, mahmajn,  mahmajn2, ROT0,   "Sega", "Tokoro San no MahMahjan 2", 0 )
+GAME( 1991, dcclub,   0,        system24, dcclub,   dcclub,   ROT0,   "Sega", "Dynamic Country Club", GAME_SUPPORTS_SAVE )
+GAME( 1992, mahmajn,  0,        system24, mahmajn,  mahmajn,  ROT0,   "Sega", "Tokoro San no MahMahjan", GAME_SUPPORTS_SAVE )
+GAME( 1994, qgh,      0,        system24, qgh,      qgh,      ROT0,   "Sega", "Quiz Ghost Hunter", GAME_SUPPORTS_SAVE )
+GAME( 1994, quizmeku, 0,        system24, quizmeku, quizmeku, ROT0,   "Sega", "Quiz Mekurumeku Story", GAME_SUPPORTS_SAVE )
+GAME( 1994, qrouka,   0,        system24, qgh,      qrouka,   ROT0,   "Sega", "Quiz Rouka Ni Tattenasai", GAME_SUPPORTS_SAVE )
+GAME( 1994, mahmajn2, 0,        system24, mahmajn,  mahmajn2, ROT0,   "Sega", "Tokoro San no MahMahjan 2", GAME_SUPPORTS_SAVE )

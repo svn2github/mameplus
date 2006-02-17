@@ -11,6 +11,7 @@ make more configurable (select caches per game?)
 #include "driver.h"
 #include "cpu/m68000/m68000.h"
 #include "machine/fd1094.h"
+#include "state.h"
 
 
 #define S16_NUMCACHE 8
@@ -23,6 +24,9 @@ static UINT16* fd1094_userregion; // a user region where the current decrypted s
 static UINT16* fd1094_cacheregion[S16_NUMCACHE]; // a cache region where S16_NUMCACHE states are stored to improve performance
 static int fd1094_cached_states[S16_NUMCACHE]; // array of cached state numbers
 static int fd1094_current_cacheposition; // current position in cache array
+
+static int fd1094_state;
+static int fd1094_selected_state;
 
 void *fd1094_get_decrypted_base(void)
 {
@@ -39,6 +43,16 @@ void fd1094_setstate_and_decrypt(int state)
 {
 	int i;
 	UINT32 addr;
+
+	switch (state & 0x300)
+	{
+	case 0x000:
+	case FD1094_STATE_RESET:
+		fd1094_selected_state = state & 0xff;
+		break;
+	}
+
+	fd1094_state = state;
 
 	cpunum_set_info_int(0, CPUINFO_INT_REGISTER + M68K_PREF_ADDR, 0x0010);	// force a flush of the prefetch cache
 
@@ -132,6 +146,20 @@ void fd1094_machine_init(void)
 	cpu_set_irq_callback(0, fd1094_int_callback);
 }
 
+static void fd1094_postload(void)
+{
+	if (fd1094_state != -1)
+	{
+		int selected_state = fd1094_selected_state;
+		int state = fd1094_state;
+
+		fd1094_machine_init();
+
+		fd1094_setstate_and_decrypt(selected_state);
+		fd1094_setstate_and_decrypt(state);
+	}
+}
+
 /* startup function, to be called from DRIVER_INIT (once on startup) */
 void fd1094_driver_init(void)
 {
@@ -146,13 +174,17 @@ void fd1094_driver_init(void)
 		return;
 
 	for (i=0;i<S16_NUMCACHE;i++)
-	{
 		fd1094_cacheregion[i]=auto_malloc(fd1094_cpuregionsize);
-	}
 
 	/* flush the cached state array */
 	for (i=0;i<S16_NUMCACHE;i++)
 		fd1094_cached_states[i] = -1;
 
 	fd1094_current_cacheposition = 0;
+
+	fd1094_state = -1;
+
+	state_save_register_int("fd1094", 0, "selected_state", &fd1094_selected_state);
+	state_save_register_int("fd1094", 0, "state",          &fd1094_state);
+	state_save_register_func_postload(fd1094_postload);
 }
