@@ -3004,6 +3004,13 @@ int K053245_vh_start(int chip, int gfx_memory_region,int plane0,int plane1,int p
 	memset(K053245_ram[chip],0,K053245_ramsize[chip]);
 	memset(K053245_buffer[chip],0,K053245_ramsize[chip]);
 
+	state_save_register_UINT16("K053245", chip, "ram",     K053245_ram[chip], K053245_ramsize[chip]);
+	state_save_register_UINT16("K053245", chip, "buffer",  K053245_buffer[chip], K053245_ramsize[chip]);
+	state_save_register_int   ("K053245", chip, "rombank", &K053244_rombank[chip]);
+	state_save_register_int   ("K053245", chip, "dx",      &K053245_dx[chip]);
+	state_save_register_int   ("K053245", chip, "dy",      &K053245_dy[chip]);
+	state_save_register_UINT8 ("K053245", chip, "regs",    K053244_regs[chip], 0x10);
+
 	return 0;
 }
 
