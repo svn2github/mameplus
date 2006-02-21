@@ -8,9 +8,13 @@
 
 #ifndef _D3D_H_
 #define _D3D_H_
-#if __GNUC__ >=3
-#pragma GCC system_header
+
+#ifndef DIRECT3D_VERSION
+#define DIRECT3D_VERSION         0x0700
 #endif
+
+// include this file content only if compiling for <=DX7 interfaces
+#if(DIRECT3D_VERSION < 0x0800)
 
 
 #include <stdlib.h>
@@ -19,10 +23,6 @@
 #include <objbase.h>
 
 #define D3DAPI WINAPI
-
-#ifndef DIRECT3D_VERSION
-#define DIRECT3D_VERSION         0x0700
-#endif
 
 /*
  * Interface IID's
@@ -215,7 +215,7 @@ DECLARE_INTERFACE_(IDirect3D, IUnknown)
     STDMETHOD(FindDevice)(THIS_ LPD3DFINDDEVICESEARCH,LPD3DFINDDEVICERESULT) PURE;
 };
 
-typedef struct IDirect3D *LPDIRECT3D;
+//typedef struct IDirect3D *LPDIRECT3D;
 
 #if !defined(__cplusplus) || defined(CINTERFACE)
 #define IDirect3D_QueryInterface(p,a,b) (p)->lpVtbl->QueryInterface(p,a,b)
@@ -259,7 +259,7 @@ DECLARE_INTERFACE_(IDirect3D2, IUnknown)
     STDMETHOD(CreateDevice)(THIS_ REFCLSID,LPDIRECTDRAWSURFACE,LPDIRECT3DDEVICE2*) PURE;
 };
 
-typedef struct IDirect3D2 *LPDIRECT3D2;
+//typedef struct IDirect3D2 *LPDIRECT3D2;
 
 #if !defined(__cplusplus) || defined(CINTERFACE)
 #define IDirect3D2_QueryInterface(p,a,b) (p)->lpVtbl->QueryInterface(p,a,b)
@@ -307,7 +307,7 @@ DECLARE_INTERFACE_(IDirect3D3, IUnknown)
     STDMETHOD(EvictManagedTextures)(THIS) PURE;
 };
 
-typedef struct IDirect3D3 *LPDIRECT3D3;
+//typedef struct IDirect3D3 *LPDIRECT3D3;
 
 #if !defined(__cplusplus) || defined(CINTERFACE)
 #define IDirect3D3_QueryInterface(p,a,b) (p)->lpVtbl->QueryInterface(p,a,b)
@@ -357,7 +357,7 @@ DECLARE_INTERFACE_(IDirect3D7, IUnknown)
     STDMETHOD(EvictManagedTextures)(THIS) PURE;
 };
 
-typedef struct IDirect3D7 *LPDIRECT3D7;
+//typedef struct IDirect3D7 *LPDIRECT3D7;
 
 #if !defined(__cplusplus) || defined(CINTERFACE)
 #define IDirect3D7_QueryInterface(p,a,b) (p)->lpVtbl->QueryInterface(p,a,b)
@@ -414,7 +414,7 @@ DECLARE_INTERFACE_(IDirect3DDevice, IUnknown)
     STDMETHOD(GetDirect3D)(THIS_ LPDIRECT3D*) PURE;
 };
 
-typedef struct IDirect3DDevice *LPDIRECT3DDEVICE;
+//typedef struct IDirect3DDevice *LPDIRECT3DDEVICE;
 
 #if !defined(__cplusplus) || defined(CINTERFACE)
 #define IDirect3DDevice_QueryInterface(p,a,b) (p)->lpVtbl->QueryInterface(p,a,b)
@@ -508,7 +508,7 @@ DECLARE_INTERFACE_(IDirect3DDevice2, IUnknown)
     STDMETHOD(GetClipStatus)(THIS_ LPD3DCLIPSTATUS) PURE;
 };
 
-typedef struct IDirect3DDevice2 *LPDIRECT3DDEVICE2;
+//typedef struct IDirect3DDevice2 *LPDIRECT3DDEVICE2;
 
 #if !defined(__cplusplus) || defined(CINTERFACE)
 #define IDirect3DDevice2_QueryInterface(p,a,b) (p)->lpVtbl->QueryInterface(p,a,b)
@@ -634,7 +634,7 @@ DECLARE_INTERFACE_(IDirect3DDevice3, IUnknown)
     STDMETHOD(ValidateDevice)(THIS_ LPDWORD) PURE;
 };
 
-typedef struct IDirect3DDevice3 *LPDIRECT3DDEVICE3;
+//typedef struct IDirect3DDevice3 *LPDIRECT3DDEVICE3;
 
 #if !defined(__cplusplus) || defined(CINTERFACE)
 #define IDirect3DDevice3_QueryInterface(p,a,b) (p)->lpVtbl->QueryInterface(p,a,b)
@@ -785,7 +785,7 @@ DECLARE_INTERFACE_(IDirect3DDevice7, IUnknown)
     STDMETHOD(GetInfo)(THIS_ DWORD,LPVOID,DWORD) PURE;
 };
 
-typedef struct IDirect3DDevice7 *LPDIRECT3DDEVICE7;
+//typedef struct IDirect3DDevice7 *LPDIRECT3DDEVICE7;
 
 #if !defined(__cplusplus) || defined(CINTERFACE)
 #define IDirect3DDevice7_QueryInterface(p,a,b) (p)->lpVtbl->QueryInterface(p,a,b)
@@ -913,7 +913,7 @@ DECLARE_INTERFACE_(IDirect3DExecuteBuffer, IUnknown)
     STDMETHOD(Optimize)(THIS_ DWORD) PURE;
 };
 
-typedef struct IDirect3DExecuteBuffer *LPDIRECT3DEXECUTEBUFFER;
+//typedef struct IDirect3DExecuteBuffer *LPDIRECT3DEXECUTEBUFFER;
 
 #if !defined(__cplusplus) || defined(CINTERFACE)
 #define IDirect3DExecuteBuffer_QueryInterface(p,a,b) (p)->lpVtbl->QueryInterface(p,a,b)
@@ -958,7 +958,7 @@ DECLARE_INTERFACE_(IDirect3DLight, IUnknown)
     STDMETHOD(GetLight)(THIS_ LPD3DLIGHT) PURE;
 };
 
-typedef struct IDirect3DLight *LPDIRECT3DLIGHT;
+//typedef struct IDirect3DLight *LPDIRECT3DLIGHT;
 
 #if !defined(__cplusplus) || defined(CINTERFACE)
 #define IDirect3DLight_QueryInterface(p,a,b) (p)->lpVtbl->QueryInterface(p,a,b)
@@ -998,7 +998,7 @@ DECLARE_INTERFACE_(IDirect3DMaterial, IUnknown)
     STDMETHOD(Unreserve)(THIS) PURE;
 };
 
-typedef struct IDirect3DMaterial *LPDIRECT3DMATERIAL;
+//typedef struct IDirect3DMaterial *LPDIRECT3DMATERIAL;
 
 #if !defined(__cplusplus) || defined(CINTERFACE)
 #define IDirect3DMaterial_QueryInterface(p,a,b) (p)->lpVtbl->QueryInterface(p,a,b)
@@ -1039,7 +1039,7 @@ DECLARE_INTERFACE_(IDirect3DMaterial2, IUnknown)
     STDMETHOD(GetHandle)(THIS_ LPDIRECT3DDEVICE2,LPD3DMATERIALHANDLE) PURE;
 };
 
-typedef struct IDirect3DMaterial2 *LPDIRECT3DMATERIAL2;
+//typedef struct IDirect3DMaterial2 *LPDIRECT3DMATERIAL2;
 
 #if !defined(__cplusplus) || defined(CINTERFACE)
 #define IDirect3DMaterial2_QueryInterface(p,a,b) (p)->lpVtbl->QueryInterface(p,a,b)
@@ -1075,7 +1075,7 @@ DECLARE_INTERFACE_(IDirect3DMaterial3, IUnknown)
     STDMETHOD(GetHandle)(THIS_ LPDIRECT3DDEVICE3,LPD3DMATERIALHANDLE) PURE;
 };
 
-typedef struct IDirect3DMaterial3 *LPDIRECT3DMATERIAL3;
+//typedef struct IDirect3DMaterial3 *LPDIRECT3DMATERIAL3;
 
 #if !defined(__cplusplus) || defined(CINTERFACE)
 #define IDirect3DMaterial3_QueryInterface(p,a,b) (p)->lpVtbl->QueryInterface(p,a,b)
@@ -1115,7 +1115,7 @@ DECLARE_INTERFACE_(IDirect3DTexture, IUnknown)
     STDMETHOD(Unload)(THIS) PURE;
 };
 
-typedef struct IDirect3DTexture *LPDIRECT3DTEXTURE;
+//typedef struct IDirect3DTexture *LPDIRECT3DTEXTURE;
 
 #if !defined(__cplusplus) || defined(CINTERFACE)
 #define IDirect3DTexture_QueryInterface(p,a,b) (p)->lpVtbl->QueryInterface(p,a,b)
@@ -1154,7 +1154,7 @@ DECLARE_INTERFACE_(IDirect3DTexture2, IUnknown)
     STDMETHOD(Load)(THIS_ LPDIRECT3DTEXTURE2) PURE;
 };
 
-typedef struct IDirect3DTexture2 *LPDIRECT3DTEXTURE2;
+//typedef struct IDirect3DTexture2 *LPDIRECT3DTEXTURE2;
 
 #if !defined(__cplusplus) || defined(CINTERFACE)
 #define IDirect3DTexture2_QueryInterface(p,a,b) (p)->lpVtbl->QueryInterface(p,a,b)
@@ -1202,7 +1202,7 @@ DECLARE_INTERFACE_(IDirect3DViewport, IUnknown)
     STDMETHOD(NextLight)(THIS_ LPDIRECT3DLIGHT,LPDIRECT3DLIGHT*,DWORD) PURE;
 };
 
-typedef struct IDirect3DViewport *LPDIRECT3DVIEWPORT;
+//typedef struct IDirect3DViewport *LPDIRECT3DVIEWPORT;
 
 #if !defined(__cplusplus) || defined(CINTERFACE)
 #define IDirect3DViewport_QueryInterface(p,a,b) (p)->lpVtbl->QueryInterface(p,a,b)
@@ -1269,7 +1269,7 @@ DECLARE_INTERFACE_(IDirect3DViewport2, IDirect3DViewport)
     STDMETHOD(SetViewport2)(THIS_ LPD3DVIEWPORT2) PURE;
 };
 
-typedef struct IDirect3DViewport2 *LPDIRECT3DVIEWPORT2;
+//typedef struct IDirect3DViewport2 *LPDIRECT3DVIEWPORT2;
 
 #if !defined(__cplusplus) || defined(CINTERFACE)
 #define IDirect3DViewport2_QueryInterface(p,a,b) (p)->lpVtbl->QueryInterface(p,a,b)
@@ -1345,7 +1345,7 @@ DECLARE_INTERFACE_(IDirect3DViewport3, IDirect3DViewport2)
     STDMETHOD(Clear2)(THIS_ DWORD,LPD3DRECT,DWORD,D3DCOLOR,D3DVALUE,DWORD) PURE;
 };
 
-typedef struct IDirect3DViewport3 *LPDIRECT3DVIEWPORT3;
+//typedef struct IDirect3DViewport3 *LPDIRECT3DVIEWPORT3;
 
 #if !defined(__cplusplus) || defined(CINTERFACE)
 #define IDirect3DViewport3_QueryInterface(p,a,b) (p)->lpVtbl->QueryInterface(p,a,b)
@@ -1413,7 +1413,7 @@ DECLARE_INTERFACE_(IDirect3DVertexBuffer, IUnknown)
     STDMETHOD(Optimize)(THIS_ LPDIRECT3DDEVICE3,DWORD) PURE;
 };
 
-typedef struct IDirect3DVertexBuffer *LPDIRECT3DVERTEXBUFFER;
+//typedef struct IDirect3DVertexBuffer *LPDIRECT3DVERTEXBUFFER;
 
 #if !defined(__cplusplus) || defined(CINTERFACE)
 #define IDirect3DVertexBuffer_QueryInterface(p,a,b) (p)->lpVtbl->QueryInterface(p,a,b)
@@ -1456,7 +1456,7 @@ DECLARE_INTERFACE_(IDirect3DVertexBuffer7, IUnknown)
     STDMETHOD(ProcessVerticesStrided)(THIS_ DWORD,DWORD,DWORD,LPD3DDRAWPRIMITIVESTRIDEDDATA,DWORD,LPDIRECT3DDEVICE7,DWORD) PURE;
 };
 
-typedef struct IDirect3DVertexBuffer7 *LPDIRECT3DVERTEXBUFFER7;
+//typedef struct IDirect3DVertexBuffer7 *LPDIRECT3DVERTEXBUFFER7;
 
 #if !defined(__cplusplus) || defined(CINTERFACE)
 #define IDirect3DVertexBuffer7_QueryInterface(p,a,b) (p)->lpVtbl->QueryInterface(p,a,b)
@@ -1682,5 +1682,6 @@ typedef struct IDirect3DVertexBuffer7 *LPDIRECT3DVERTEXBUFFER7;
 };
 #endif
 
+#endif /* (DIRECT3D_VERSION < 0x0800) */
 #endif /* _D3D_H_ */
 
