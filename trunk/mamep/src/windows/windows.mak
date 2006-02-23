@@ -136,6 +136,9 @@ OSOBJS = \
 	$(OBJ)/$(MAMEOS)/winddraw.o \
 	$(OBJ)/$(MAMEOS)/winmain.o \
 
+OSTOOLOBJS = \
+	$(OBJ)/$(MAMEOS)/osd_tool.o
+
 # extra targets and rules for the scale effects
 ifneq ($(USE_SCALE_EFFECTS),)
 CFLAGS += -DUSE_SCALE_EFFECTS

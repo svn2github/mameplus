@@ -307,6 +307,7 @@
 #include "driver.h"
 #include "png.h"
 #include "artwork.h"
+#include "profiler.h"
 #include "vidhrdw/vector.h"
 #include <ctype.h>
 #include <math.h>
@@ -3321,7 +3322,7 @@ static int compute_rgb_components(int depth, UINT32 rgb_components[3], UINT32 rg
 
 		case 32:
 			/* copy original components */
-			memcpy(rgb_components, rgb32_components, sizeof(rgb_components[0])*3);
+			memcpy(rgb_components, rgb32_components, sizeof(rgb_components[0]) * 3);
 			break;
 
 		case 15:

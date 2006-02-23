@@ -17,7 +17,7 @@ After you get into Check Mode (F2), press the Deal key to switch pages.
 
 Memory Mapped:
 
-0000-5fff   R   ROM
+0000-5fff   R	ROM
 6000-67ff   RW  Battery Backed RAM
 9000-93ff   RW  Video RAM
 9400-97ff   RW  Color RAM
@@ -25,14 +25,14 @@ Memory Mapped:
                 Bits 4-5 - character bank
                 Bit  6   - flip x
                 Bit  7   - Is it used?
-a000        R   Input Port 0
-a001        R   Input Port 1
-a002        R   Input Port 2
+a000        R	Input Port 0
+a001        R	Input Port 1
+a002        R	Input Port 2
 a001        W  Control Port 0
 a002        W  Control Port 1
 
 I/O Ports:
-00         RW  YM2149 Data  Port
+00         RW  YM2149 Data	Port
                Port A - DSW #1
                Port B - DSW #2
 01          W  YM2149 Control Port
@@ -81,7 +81,6 @@ TODO:
 #include "driver.h"
 #include "vidhrdw/generic.h"
 #include "sound/ay8910.h"
-#include "state.h"
 
 extern WRITE8_HANDLER( lvcards_videoram_w );
 extern WRITE8_HANDLER( lvcards_colorram_w );
@@ -95,14 +94,19 @@ static UINT8 payout;
 static UINT8 pulse;
 static UINT8 result;
 
-static MACHINE_INIT( lvpoker )
+static MACHINE_START( lvpoker )
+{
+	state_save_register_global(payout);
+	state_save_register_global(pulse);
+	state_save_register_global(result);
+	return 0;
+}
+
+static MACHINE_RESET( lvpoker )
 {
 payout = 0;
 pulse = 0;
 result = 0;
-state_save_register_global(payout);
-state_save_register_global(pulse);
-state_save_register_global(result);
 }
 
 static WRITE8_HANDLER(control_port_2_w)
@@ -111,7 +115,7 @@ static WRITE8_HANDLER(control_port_2_w)
 	{
 	case 0x60:
 	payout = 1;
-	break;
+	break;	
 	case 0xc0:
 	payout = 1;
 	break;
@@ -127,10 +131,10 @@ static WRITE8_HANDLER(control_port_2a_w)
 	{
 	case 0x60:
 	payout = 1;
-	break;
+	break;	
 	case 0x80:
 	payout = 1;
-	break;
+	break;	
 	default:
 	payout = 0;
 	break;
@@ -140,10 +144,10 @@ static WRITE8_HANDLER(control_port_2a_w)
 static READ8_HANDLER( payout_r )
 {
 	result = readinputport(2);
-
+	
 	if (payout)
 	{
-    	if ( pulse < 3 )
+    	if ( pulse < 3 ) 
 		{
 		result = result | 0x40;
         pulse++;
@@ -475,10 +479,10 @@ static MACHINE_DRIVER_START( lvcards )
 	MDRV_CPU_PROGRAM_MAP(lvcards_map, 0)
 	MDRV_CPU_IO_MAP(lvcards_io_map, 0)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold, 1)
-
+	
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
-
+	
 	// video hardware
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(32*8, 32*8)
@@ -506,7 +510,8 @@ static MACHINE_DRIVER_START( lvpoker )
 	MDRV_NVRAM_HANDLER(generic_1fill)
  	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_PROGRAM_MAP(lvpoker_map,0)
-	MDRV_MACHINE_INIT(lvpoker)
+	MDRV_MACHINE_START(lvpoker)
+	MDRV_MACHINE_RESET(lvpoker)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( ponttehk )
@@ -516,7 +521,7 @@ static MACHINE_DRIVER_START( ponttehk )
 	MDRV_NVRAM_HANDLER(generic_1fill)
  	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_PROGRAM_MAP(ponttehk_map,0)
-	MDRV_MACHINE_INIT(lvpoker)
+	MDRV_MACHINE_RESET(lvpoker)
 
 	// video hardware
 	MDRV_PALETTE_INIT(ponttehk)

@@ -44,7 +44,6 @@
 #include "wind3d.h"
 #include "video.h"
 #include "blit.h"
-#include "mamedbg.h"
 #include "input.h"
 #include "ui_lang.h"
 #include "../debug/window.h"

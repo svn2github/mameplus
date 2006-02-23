@@ -32,7 +32,8 @@ extern UINT16 *neogeo_sram16;
 
 extern UINT8 *neogeo_game_vectors;
 
-MACHINE_INIT( neogeo );
+MACHINE_START( neogeo );
+MACHINE_RESET( neogeo );
 DRIVER_INIT( neogeo );
 
 WRITE16_HANDLER( neogeo_sram16_lock_w );
@@ -87,7 +88,7 @@ void neo_pcm2_swap(int value);
 
 /* machine/neoprot.c */
 
-extern int neogeo_rng;
+extern INT32 neogeo_rng;
 
 void install_sram_protection(void);
 void fatfury2_install_protection(void);

@@ -319,7 +319,8 @@ chd_file *get_disk_handle(int diskindex);
 int determine_bios_rom(const bios_entry *bios);
 
 /* ROM processing */
-int rom_load(const rom_entry *romp);
+int rom_init(const rom_entry *romp);
+void rom_exit(void);
 int rom_load_warnings(void);
 const rom_entry *rom_first_region(const game_driver *drv);
 const rom_entry *rom_next_region(const rom_entry *romp);

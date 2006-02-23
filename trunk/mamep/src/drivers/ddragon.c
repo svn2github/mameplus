@@ -8,14 +8,14 @@ Toffy / Super Toffy added by David Haywood
 Thanks to Bryan McPhail for spotting the Toffy program rom encryption
 Toffy / Super Toffy sound hooked up by R. Belmont.
 
-BM, 8/1/2006:
+BM, 8/1/2006: 
 
 Double Dragon has a crash which sometimes occurs at the very end of the game
-(right before the final animation sequence).  It occurs because of a jump look up
+(right before the final animation sequence).  It occurs because of a jump look up 
 table:
 
-    BAD3: LDY   #$BADD
-    BAD7: JSR   [A,Y]
+	BAD3: LDY   #$BADD
+	BAD7: JSR   [A,Y]
 
 At the point of the crash A is 0x3e which causes a jump to 0x3401 (background tile
 ram) which obviously doesn't contain proper code and causes a crash.  The jump
@@ -28,7 +28,7 @@ So..  it's not clear where the error is - the 0x1f value is actually written to
 shared RAM by the main CPU - perhaps the MCU should modify it before the main CPU
 reads it back?  Perhaps 0x1f should never be written at all?  If you want to trace
 this further please submit a proper fix!  In the meantime I have patched the error
-by making sure the invalid jump is never taken - this fixes the crash (see
+by making sure the invalid jump is never taken - this fixes the crash (see 
 ddragon_spriteram_r).
 
 
@@ -65,7 +65,6 @@ conversion kit which could be applied to a bootleg double dragon :-p?
 ***************************************************************************/
 
 #include "driver.h"
-#include "state.h"
 #include "cpu/m6800/m6800.h"
 #include "cpu/m6809/m6809.h"
 #include "cpu/z80/z80.h"
@@ -87,16 +86,19 @@ extern unsigned char *ddragon_spriteram;
 extern int technos_video_hw;
 /* end of extern code & data */
 
+static MACHINE_START( ddragon );
+
 /* private globals */
 static int dd_sub_cpu_busy;
 static int sprite_irq, sound_irq, ym_irq, snd_cpu;
 static int adpcm_pos[2],adpcm_end[2],adpcm_idle[2];
 static UINT8* darktowr_mcu_ports, *darktowr_ram;
 static int VBLK;
-static int bank_data;
+static UINT8 bank_data;
 /* end of private globals */
 
-static MACHINE_INIT( ddragon )
+
+static MACHINE_RESET( ddragon )
 {
 	sprite_irq = INPUT_LINE_NMI;
 	sound_irq = M6809_IRQ_LINE;
@@ -107,7 +109,7 @@ static MACHINE_INIT( ddragon )
 	snd_cpu = 2;
 }
 
-static MACHINE_INIT( toffy )
+static MACHINE_RESET( toffy )
 {
 	sound_irq = M6809_IRQ_LINE;
 	ym_irq = M6809_FIRQ_LINE;
@@ -117,7 +119,7 @@ static MACHINE_INIT( toffy )
 	snd_cpu = 1;
 }
 
-static MACHINE_INIT( ddragonb )
+static MACHINE_RESET( ddragonb )
 {
 	sprite_irq = INPUT_LINE_NMI;
 	sound_irq = M6809_IRQ_LINE;
@@ -128,7 +130,7 @@ static MACHINE_INIT( ddragonb )
 	snd_cpu = 2;
 }
 
-static MACHINE_INIT( ddragon2 )
+static MACHINE_RESET( ddragon2 )
 {
 	sprite_irq = INPUT_LINE_NMI;
 	sound_irq = INPUT_LINE_NMI;
@@ -208,9 +210,9 @@ static READ8_HANDLER( darktowr_bank_r )
 		// logerror("BankRead %05x %08x\n",activecpu_get_pc(),offset);
 
 		/* Horrible hack - the alternate TStrike set is mismatched against the MCU,
-        so just hack around the protection here.  (The hacks are 'right' as I have
-        the original source code & notes to this version of TStrike to examine).
-        */
+		so just hack around the protection here.  (The hacks are 'right' as I have
+		the original source code & notes to this version of TStrike to examine).
+		*/
 		if(!strcmp(Machine->gamedrv->name, "tstrike"))
 		{
 			/* Static protection checks at boot-up */
@@ -222,7 +224,7 @@ static READ8_HANDLER( darktowr_bank_r )
 			/* Just return whatever the code is expecting */
 			return darktowr_ram[0xbe1];
 		}
-
+		
 		if (offset==0x1401 || offset==1) {
 			return darktowr_mcu_ports[0];
 		}
@@ -994,7 +996,8 @@ static MACHINE_DRIVER_START( ddragon )
 	MDRV_VBLANK_DURATION(0)
 	MDRV_INTERLEAVE(1000) /* heavy interleaving to sync up sprite<->main cpu's */
 
-	MDRV_MACHINE_INIT(ddragon)
+	MDRV_MACHINE_START(ddragon)
+	MDRV_MACHINE_RESET(ddragon)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -1044,7 +1047,7 @@ static MACHINE_DRIVER_START( darktowr )
 	MDRV_VBLANK_DURATION(0)
 	MDRV_INTERLEAVE(1000) /* heavy interleaving to sync up sprite<->main cpu's */
 
-	MDRV_MACHINE_INIT(ddragon)
+	MDRV_MACHINE_RESET(ddragon)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -1091,7 +1094,8 @@ static MACHINE_DRIVER_START( ddragonb )
 	MDRV_VBLANK_DURATION(0)
 	MDRV_INTERLEAVE(100) /* heavy interleaving to sync up sprite<->main cpu's */
 
-	MDRV_MACHINE_INIT(ddragonb)
+	MDRV_MACHINE_START(ddragon)
+	MDRV_MACHINE_RESET(ddragonb)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -1138,7 +1142,7 @@ static MACHINE_DRIVER_START( ddragon2 )
 	MDRV_VBLANK_DURATION(0)
 	MDRV_INTERLEAVE(100) /* heavy interleaving to sync up sprite<->main cpu's */
 
-	MDRV_MACHINE_INIT(ddragon2)
+	MDRV_MACHINE_RESET(ddragon2)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -1187,7 +1191,7 @@ static MACHINE_DRIVER_START( toffy )
 	MDRV_VIDEO_START(ddragon)
 	MDRV_VIDEO_UPDATE(ddragon)
 
-	MDRV_MACHINE_INIT(toffy)
+	MDRV_MACHINE_RESET(toffy)
 
 	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
@@ -1658,10 +1662,11 @@ static void ddragon_restore_state(int dummy)
 	ddragon_bankswitch_w(0, bank_data);
 }
 
-static DRIVER_INIT( ddragon )
+static MACHINE_START( ddragon )
 {
-	state_save_register_int("ddragon", 0, "bank", &bank_data);
+	state_save_register_global(bank_data);
 	state_save_register_func_postload_int(ddragon_restore_state, 0);
+	return 0;
 }
 
 static DRIVER_INIT( toffy )
@@ -1698,10 +1703,10 @@ static DRIVER_INIT( toffy )
 
 }
 
-GAME( 1987, ddragon,  0,        ddragon,  ddragon,  ddragon, ROT0, "Technos", "Double Dragon (Japan)", 0 )
-GAME( 1987, ddragonw, ddragon,  ddragon,  ddragon,  ddragon, ROT0, "[Technos] (Taito license)", "Double Dragon (World)", 0 )
-GAME( 1987, ddragonu, ddragon,  ddragon,  ddragon,  ddragon, ROT0, "[Technos] (Taito America license)", "Double Dragon (US)", 0 )
-GAME( 1987, ddragonb, ddragon,  ddragonb, ddragon,  ddragon, ROT0, "bootleg", "Double Dragon (bootleg)", 0 )
+GAME( 1987, ddragon,  0,        ddragon,  ddragon,  0, ROT0, "Technos", "Double Dragon (Japan)", 0 )
+GAME( 1987, ddragonw, ddragon,  ddragon,  ddragon,  0, ROT0, "[Technos] (Taito license)", "Double Dragon (World)", 0 )
+GAME( 1987, ddragonu, ddragon,  ddragon,  ddragon,  0, ROT0, "[Technos] (Taito America license)", "Double Dragon (US)", 0 )
+GAME( 1987, ddragonb, ddragon,  ddragonb, ddragon,  0, ROT0, "bootleg", "Double Dragon (bootleg)", 0 )
 GAME( 1988, ddragon2, 0,        ddragon2, ddragon2, 0, ROT0, "Technos", "Double Dragon II - The Revenge (World)", 0 )
 GAME( 1988, ddragn2u, ddragon2, ddragon2, ddragon2, 0, ROT0, "Technos", "Double Dragon II - The Revenge (US)", 0 )
 

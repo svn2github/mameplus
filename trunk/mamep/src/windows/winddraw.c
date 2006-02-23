@@ -23,6 +23,7 @@
 
 // MAME headers
 #include "driver.h"
+#include "profiler.h"
 #include "window.h"
 #include "rc.h"
 #include "video.h"

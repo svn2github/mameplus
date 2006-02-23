@@ -127,7 +127,7 @@
 #include "osd_cpu.h"
 #include "osd_so.h"
 #include "mame.h"
-#include "common.h"
+#include "romload.h"
 
 #define ASSERT(x)
 
