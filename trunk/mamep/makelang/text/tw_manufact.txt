@@ -18,6 +18,10 @@ bootleg?
 hack
 Hack
 
+# Chewing Gum
+unknown
+¥¼ª¾ªº
+
 # Sea Bass Fishing (JUET 971110 V0.001)
 A wave inc.
 
@@ -312,6 +316,10 @@ Chuo Co. Ltd
 
 # Cerberus
 Cinematronics
+
+
+# Fred Flintstones' Memory Match
+Coastal Amusements
 
 
 # Quizmaster
@@ -2036,9 +2044,5 @@ Zilec-Zenitone
 
 # X-Files
 dgPIX Entertainment Inc.
-
-
-# Chewing Gum
-unknown
 
 

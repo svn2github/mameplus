@@ -1540,8 +1540,8 @@ ufosensb	UFO 戰士 (未加密)	UFO 戰士 (未加密)	bootleg
 transfrm	變形金剛 / Transformer	變形金剛 / Transformer	Sega
 astrofl	變形金剛 (日本版)	變形金剛 (日本版)	Sega
 tetrisse	俄羅斯方塊 (日本版, System E)	俄羅斯方塊 (日本版, System E)	Sega
-sharrier	時空戰士 (Rev A, 8751 317-0063A?)	時空戰士 (Rev A, 8751 317-0063A?)	Sega
-sharrirb	時空戰士 (8751 317-0063?)	時空戰士 (8751 317-0063?)	Sega
+sharrier	時空戰士 (Rev A, 8751 315-5163A)	時空戰士 (Rev A, 8751 315-5163A)	Sega
+sharrirb	時空戰士 (8751 315-5163)	時空戰士 (8751 315-5163)	Sega
 bodyslam	Dump 松本 / Body Slam (8751 317-unknown)	Dump 松本 / Body Slam (8751 317-unknown)	Sega
 dumpmtmt	Dump 松本 (日本版, 8751 317-unknown)	Dump 松本 (日本版, 8751 317-unknown)	Sega
 mjleague	大聯盟	大聯盟	Sega
@@ -2433,10 +2433,10 @@ mslug5	越南大戰: 合金彈頭 5	越南大戰: 合金彈頭 5	SNK Playmore
 ms5plus	越南大戰: 合金彈頭 5 PLUS (盜版)	越南大戰: 合金彈頭 5 PLUS (盜版)	bootleg
 svcpcb	SNK VS. 卡普空 - SVC 渾沌 (JAMMA PCB)	SNK VS. 卡普空 - SVC 渾沌 (JAMMA PCB)	Playmore
 svc	SNK VS. 卡普空 - SVC 渾沌 (MVS)	SNK VS. 卡普空 - SVC 渾沌 (MVS)	Playmore
-svcboot	SNK VS. 卡普空 - SVC 渾沌 (MVS) (盜版)	SNK VS. 卡普空 - SVC 渾沌 (MVS) (盜版)	booleg
-svcplus	SNK VS. 卡普空 - SVC 渾沌 PLUS (set 1, 盜版)	SNK VS. 卡普空 - SVC 渾沌 PLUS (set 1, 盜版)	booleg
-svcplusa	SNK VS. 卡普空 - SVC 渾沌 PLUS (set 2, 盜版)	SNK VS. 卡普空 - SVC 渾沌 PLUS (set 2, 盜版)	booleg
-svcsplus	SNK VS. 卡普空 - SVC 渾沌 SUPER PLUS (盜版)	SNK VS. 卡普空 - SVC 渾沌 SUPER PLUS (盜版)	booleg
+svcboot	SNK VS. 卡普空 - SVC 渾沌 (MVS) (盜版)	SNK VS. 卡普空 - SVC 渾沌 (MVS) (盜版)	bootleg
+svcplus	SNK VS. 卡普空 - SVC 渾沌 PLUS (set 1, 盜版)	SNK VS. 卡普空 - SVC 渾沌 PLUS (set 1, 盜版)	bootleg
+svcplusa	SNK VS. 卡普空 - SVC 渾沌 PLUS (set 2, 盜版)	SNK VS. 卡普空 - SVC 渾沌 PLUS (set 2, 盜版)	bootleg
+svcsplus	SNK VS. 卡普空 - SVC 渾沌 SUPER PLUS (盜版)	SNK VS. 卡普空 - SVC 渾沌 SUPER PLUS (盜版)	bootleg
 samsho5	侍魂 V / 侍魂零 (set 1)	侍魂 V / 侍魂零 (set 1)	Yuki Enterprise / SNK Playmore
 samsho5h	侍魂 V / 侍魂零 (set 2)	侍魂 V / 侍魂零 (set 2)	Yuki Enterprise / SNK Playmore
 samsho5b	侍魂 V / 侍魂零 (盜版?)	侍魂 V / 侍魂零 (盜版?)	bootleg
@@ -2633,10 +2633,10 @@ empcityu	帝都: 1931 (美國版)	帝都: 1931 (美國版)	[Seibu Kaihatsu] (Taito / Romst
 empcityj	帝都: 1931 (日本版)	帝都: 1931 (日本版)	[Seibu Kaihatsu] (Taito license)
 stfight	帝都: 1931 / Street Fight (德國版)	帝都: 1931 / Street Fight (德國版)	Seibu Kaihatsu
 stfighta	帝都: 1931 / Street Fight	帝都: 1931 / Street Fight	Seibu Kaihatsu
-dynduke	毀滅公爵 (美國版)	毀滅公爵 (美國版)	Seibu Kaihatsu (Fabtek license)
-dyndukj	毀滅公爵 (日本版)	毀滅公爵 (日本版)	Seibu Kaihatsu
-dbldyn	毀滅公爵 / The Double Dynamites (美國版)	毀滅公爵 / The Double Dynamites (美國版)	Seibu Kaihatsu (Fabtek license)
-dbldynj	毀滅公爵 / The Double Dynamites (日本版)	毀滅公爵 / The Double Dynamites (日本版)	Seibu Kaihatsu
+dynduke	毀滅公爵 (日本版)	毀滅公爵 (日本版)	Seibu Kaihatsu
+dyndukf	毀滅公爵 (美國版)	毀滅公爵 (美國版)	Seibu Kaihatsu (Fabtek license)
+dbldyn	毀滅公爵 / The Double Dynamites (日本版)	毀滅公爵 / The Double Dynamites (日本版)	Seibu Kaihatsu
+dbldynf	毀滅公爵 / The Double Dynamites (美國版)	毀滅公爵 / The Double Dynamites (美國版)	Seibu Kaihatsu (Fabtek license)
 raiden	雷電	雷電	Seibu Kaihatsu
 raidena	雷電 (Alternate Hardware)	雷電 (Alternate Hardware)	Seibu Kaihatsu
 raidenk	雷電 (韓國版)	雷電 (韓國版)	Seibu Kaihatsu (IBL Corporation license)

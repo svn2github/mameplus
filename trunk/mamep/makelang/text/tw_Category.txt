@@ -188,15 +188,15 @@ Multiplay *Mature*
 
 # 2034
 Pinball
-彈子檯
+彈珠檯
 
 # 2050
 Pinball *Mature*
-彈子檯 *成人*
+彈珠檯 *成人*
 
 # 2056
 Pinball / Pachinko *Mature*
-彈子檯 / 柏青哥 *成人*
+彈珠檯 / 柏青哥 *成人*
 
 # 2062
 Platform / Fighter
