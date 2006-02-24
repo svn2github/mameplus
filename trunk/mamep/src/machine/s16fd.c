@@ -11,7 +11,6 @@ make more configurable (select caches per game?)
 #include "driver.h"
 #include "cpu/m68000/m68000.h"
 #include "machine/fd1094.h"
-#include "state.h"
 
 
 #define S16_NUMCACHE 8
@@ -184,7 +183,7 @@ void fd1094_driver_init(void)
 
 	fd1094_state = -1;
 
-	state_save_register_int("fd1094", 0, "selected_state", &fd1094_selected_state);
-	state_save_register_int("fd1094", 0, "state",          &fd1094_state);
+	state_save_register_global(fd1094_selected_state);
+	state_save_register_global(fd1094_state);
 	state_save_register_func_postload(fd1094_postload);
 }

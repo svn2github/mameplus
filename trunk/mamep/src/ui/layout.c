@@ -80,7 +80,6 @@ FOLDERDATA g_folderData[] =
 	{"Lightgun",        "lightgun",          FOLDER_LIGHTGUN,     IDI_FOLDER,               0,             0,            NULL,                       DriverUsesLightGun,TRUE },
 #endif /* !MISC_FOLDER */
 	{"Stereo",          "stereo",            FOLDER_STEREO,       IDI_SOUND,                0,             0,            NULL,                       DriverIsStereo,    TRUE },
- 	{"Multi-Monitor",   "multimon",          FOLDER_MULTIMON,     IDI_FOLDER,               0,             0,            NULL,                       DriverIsMultiMon,  TRUE },
 	{"CHD",             "harddisk",          FOLDER_HARDDISK,     IDI_HARDDISK,             0,             0,            NULL,                       DriverIsHarddisk,  TRUE },
 	{"Samples",    	    "samples",           FOLDER_SAMPLES,      IDI_FOLDER,               0,             0,            NULL,                       DriverUsesSamples,  TRUE },
 #ifndef MISC_FOLDER

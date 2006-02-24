@@ -1521,13 +1521,13 @@ int K007342_vh_start(int gfx_index, void (*callback)(int tmap, int bank, int *co
 	tilemap_set_transparent_pen(K007342_tilemap[0],0);
 	tilemap_set_transparent_pen(K007342_tilemap[1],0);
 
-	state_save_register_UINT8 ("K007342", 0, "ram",         K007342_ram,        0x2000);
-	state_save_register_UINT8 ("K007342", 0, "scroll_ram",  K007342_scroll_ram, 0x0200);
-	state_save_register_int   ("K007342", 0, "int_enabled", &K007342_int_enabled);
-	state_save_register_int   ("K007342", 0, "flipscreen",  &K007342_flipscreen);
-	state_save_register_UINT16("K007342", 0, "scrollx",     K007342_scrollx,    2);
-	state_save_register_UINT8 ("K007342", 0, "scrolly",     K007342_scrolly,    2);
-	state_save_register_UINT8 ("K007342", 0, "regs",        K007342_regs,       8);
+	state_save_register_global_pointer(K007342_ram, 0x2000);
+	state_save_register_global_pointer(K007342_scroll_ram, 0x0200);
+	state_save_register_global(K007342_int_enabled);
+	state_save_register_global(K007342_flipscreen);
+	state_save_register_global_array(K007342_scrollx);
+	state_save_register_global_array(K007342_scrolly);
+	state_save_register_global_array(K007342_regs);
 
 	return 0;
 }
@@ -1698,8 +1698,8 @@ int K007420_vh_start(int gfxnum, void (*callback)(int *code,int *color))
 
 	K007420_banklimit = -1;
 
-	state_save_register_UINT8("K007420", 0, "ram",       K007420_ram,       0x020);
-	state_save_register_int  ("K007420", 0, "banklimit", &K007420_banklimit);
+	state_save_register_global_pointer(K007420_ram, 0x020);
+	state_save_register_global(K007420_banklimit);
 
 	return 0;
 }
@@ -2511,13 +2511,13 @@ int K051960_vh_start(int gfx_memory_region,int plane0,int plane1,int plane2,int 
 	K051960_ram = auto_malloc(0x400);
 	memset(K051960_ram,0,0x400);
 
-	state_save_register_int   ("K051960", 0, "romoffset",     &K051960_romoffset);
-	state_save_register_int   ("K051960", 0, "spriteflip",    &K051960_spriteflip);
-	state_save_register_int   ("K051960", 0, "readroms",      &K051960_readroms);
-	state_save_register_UINT8 ("K051960", 0, "spriterombank", K051960_spriterombank, 3);
-	state_save_register_UINT8 ("K051960", 0, "ram",           K051960_ram,           0x400);
-	state_save_register_int   ("K051960", 0, "irq_enabled",   &K051960_irq_enabled);
-	state_save_register_int   ("K051960", 0, "nmi_enabled",   &K051960_nmi_enabled);
+	state_save_register_global(K051960_romoffset);
+	state_save_register_global(K051960_spriteflip);
+	state_save_register_global(K051960_readroms);
+	state_save_register_global_array(K051960_spriterombank);
+	state_save_register_global_pointer(K051960_ram, 0x400);
+	state_save_register_global(K051960_irq_enabled);
+	state_save_register_global(K051960_nmi_enabled);
 
 	return 0;
 }
@@ -3022,12 +3022,12 @@ int K053245_vh_start(int chip, int gfx_memory_region,int plane0,int plane1,int p
 	memset(K053245_ram[chip],0,K053245_ramsize[chip]);
 	memset(K053245_buffer[chip],0,K053245_ramsize[chip]);
 
-	state_save_register_UINT16("K053245", chip, "ram",     K053245_ram[chip], K053245_ramsize[chip]);
-	state_save_register_UINT16("K053245", chip, "buffer",  K053245_buffer[chip], K053245_ramsize[chip]);
-	state_save_register_int   ("K053245", chip, "rombank", &K053244_rombank[chip]);
-	state_save_register_int   ("K053245", chip, "dx",      &K053245_dx[chip]);
-	state_save_register_int   ("K053245", chip, "dy",      &K053245_dy[chip]);
-	state_save_register_UINT8 ("K053245", chip, "regs",    K053244_regs[chip], 0x10);
+	state_save_register_item_pointer("K053245", chip, K053245_ram[chip], K053245_ramsize[chip] / 2);
+	state_save_register_item_pointer("K053245", chip, K053245_buffer[chip], K053245_ramsize[chip] / 2);
+	state_save_register_item("K053245", chip, K053244_rombank[chip]);
+	state_save_register_item("K053245", chip, K053245_dx[chip]);
+	state_save_register_item("K053245", chip, K053245_dy[chip]);
+	state_save_register_item_array("K053245", chip, K053244_regs[chip]);
 
 	return 0;
 }
@@ -4710,11 +4710,11 @@ int K051316_vh_start(int chip, int gfx_memory_region,int bpp,
 	K051316_wraparound[chip] = 0;	/* default = no wraparound */
 	K051316_offset[chip][0] = K051316_offset[chip][1] = 0;
 
-	state_save_register_UINT8 ("K051316", chip, "ram",               K051316_ram[chip],        0x800);
-	state_save_register_UINT8 ("K051316", chip, "ctrlram",           K051316_ctrlram[chip],    16);
-	state_save_register_int   ("K051316", chip, "wraparound",        &K051316_wraparound[chip]);
-	state_save_register_int   ("K051316", chip, "K051316_offset[0]", &K051316_offset[chip][0]);
-	state_save_register_int   ("K051316", chip, "K051316_offset[1]", &K051316_offset[chip][1]);
+	state_save_register_item_pointer("K051316", chip, K051316_ram[chip], 0x800);
+	state_save_register_item_array("K051316", chip, K051316_ctrlram[chip]);
+	state_save_register_item("K051316", chip, K051316_wraparound[chip]);
+	state_save_register_item("K051316", chip, K051316_offset[chip][0]);
+	state_save_register_item("K051316", chip, K051316_offset[chip][1]);
 
 	return 0;
 }

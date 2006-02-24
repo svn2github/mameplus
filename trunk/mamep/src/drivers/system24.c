@@ -341,7 +341,6 @@ Notes:
 #include "debug/debugcpu.h"
 #include "sound/dac.h"
 #include "sound/2151intf.h"
-#include "state.h"
 
 UINT16* s24_mainram1;
 
@@ -373,15 +372,15 @@ static void fdc_init(void)
 	fdc_pt = memory_region(REGION_USER2);
 	fdc_pt_off = 0;
 
-	state_save_register_int("fdc", 0, "status",      &fdc_status);
-	state_save_register_int("fdc", 0, "track",       &fdc_track);
-	state_save_register_int("fdc", 0, "sector",      &fdc_sector);
-	state_save_register_int("fdc", 0, "data",        &fdc_data);
-	state_save_register_int("fdc", 0, "phys_track",  &fdc_phys_track);
-	state_save_register_int("fdc", 0, "irq",         &fdc_irq);
-	state_save_register_int("fdc", 0, "drq",         &fdc_drq);
-	state_save_register_int("fdc", 0, "index_count", &fdc_index_count);
-	state_save_register_int("fdc", 0, "pt_off",      &fdc_pt_off);
+	state_save_register_global(fdc_status);
+	state_save_register_global(fdc_track);
+	state_save_register_global(fdc_sector);
+	state_save_register_global(fdc_data);
+	state_save_register_global(fdc_phys_track);
+	state_save_register_global(fdc_irq);
+	state_save_register_global(fdc_drq);
+	state_save_register_global(fdc_index_count);
+	state_save_register_global(fdc_pt_off);
 }
 
 static READ16_HANDLER( fdc_r )
@@ -851,13 +850,13 @@ static void irq_init(void)
 	irq_timer_pend1 = 0;
 	irq_timer = timer_alloc(irq_timer_cb);
 
-	state_save_register_UINT16("irq", 0, "timera",      &irq_timera,      1);
-	state_save_register_UINT8 ("irq", 0, "timerb",      &irq_timerb,      1);
-	state_save_register_UINT8 ("irq", 0, "allow0",      &irq_allow0,      1);
-	state_save_register_UINT8 ("irq", 0, "allow1",      &irq_allow1,      1);
-	state_save_register_int   ("irq", 0, "timer_pend0", &irq_timer_pend0);
-	state_save_register_int   ("irq", 0, "timer_pend1", &irq_timer_pend1);
-	state_save_register_int   ("irq", 0, "yms",         &irq_yms);
+	state_save_register_global(irq_timera);
+	state_save_register_global(irq_timerb);
+	state_save_register_global(irq_allow0);
+	state_save_register_global(irq_allow1);
+	state_save_register_global(irq_timer_pend0);
+	state_save_register_global(irq_timer_pend1);
+	state_save_register_global(irq_yms);
 }
 
 static void irq_timer_reset(void)
@@ -1200,7 +1199,7 @@ static DRIVER_INIT(gground)
 	track_size = 0x2d00;
 	s24_fd1094_driver_init();
 
-	state_save_register_int("gground", 0, "kludge", &ggground_kludge);
+	state_save_register_global(ggground_kludge);
 }
 
 static DRIVER_INIT(crkdown)
@@ -1241,12 +1240,12 @@ static MACHINE_RESET(system24)
 	mlatch = 0x00;
 	hotrod_ctrl_cur = 0;
 
-	state_save_register_int  ("system24", 0, "cur_input_line",    &cur_input_line);
-	state_save_register_UINT8("system24", 0, "resetcontrol",      &resetcontrol,      1);
-	state_save_register_UINT8("system24", 0, "prev_resetcontrol", &prev_resetcontrol, 1);
-	state_save_register_UINT8("system24", 0, "curbank",           &curbank,           1);
-	state_save_register_UINT8("system24", 0, "mlatch",            &mlatch,            1);
-	state_save_register_UINT8("system24", 0, "hotrod_ctrl_cur",   &hotrod_ctrl_cur,   1);
+	state_save_register_global(cur_input_line);
+	state_save_register_global(resetcontrol);
+	state_save_register_global(prev_resetcontrol);
+	state_save_register_global(curbank);
+	state_save_register_global(mlatch);
+	state_save_register_global(hotrod_ctrl_cur);
 	state_save_register_func_postload(reset_bank);
 }
 

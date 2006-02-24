@@ -8,7 +8,6 @@ this could get messy if games change their own code after initial loading as we'
 #include "driver.h"
 #include "cpu/m68000/m68000.h"
 #include "machine/fd1094.h"
-#include "state.h"
 
 extern UINT16 *s24_mainram1;
 
@@ -175,7 +174,7 @@ void s24_fd1094_driver_init(void)
 
 	fd1094_state = -1;
 
-	state_save_register_int("fd1094", 0, "selected_state", &fd1094_selected_state);
-	state_save_register_int("fd1094", 0, "state",          &fd1094_state);
+	state_save_register_global(fd1094_selected_state);
+	state_save_register_global(fd1094_state);
 	state_save_register_func_postload(s24_fd1094_postload);
 }

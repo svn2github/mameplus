@@ -42,17 +42,12 @@ extern SHAREDOBJ_FUNC(const rom_entry *) rom_next_file(const rom_entry *romp);
 extern SHAREDOBJ_FUNC(const rom_entry *) rom_first_chunk(const rom_entry *romp);
 extern SHAREDOBJ_FUNC(const rom_entry *) rom_next_chunk(const rom_entry *romp);
 
-#include "common.h"
-extern SHAREDOBJ_FUNC(void)              begin_resource_tracking(void);
-extern SHAREDOBJ_FUNC(void)              end_resource_tracking(void);
-extern SHAREDOBJ_FUNC(void *)            auto_malloc(size_t size);
-
 #include "hash.h"
 extern SHAREDOBJ_FUNC(int) hash_data_has_info(const char* d, unsigned int info);
 extern SHAREDOBJ_FUNC(int) hash_data_is_equal(const char* d1, const char* d2, unsigned int functions);
 
 #include "cpuintrf.h"
-extern SHAREDOBJ_FUNC(int) cpuintrf_init(void);
+extern SHAREDOBJ_FUNC(void)        cpuintrf_init(void);
 extern SHAREDOBJ_FUNC(const char *)cputype_get_info_string(int cpunum, UINT32 state);
 extern SHAREDOBJ_FUNC(const char *)cputype_shortname(int cputype);
 
@@ -66,11 +61,14 @@ extern SHAREDOBJ_FUNC(int) load_driver_drivinfo (const game_driver *drv, char *b
 extern SHAREDOBJ_FUNC(int) load_driver_statistics (char *buffer, int bufsize);
 
 #include "mame.h"
-extern SHAREDOBJ_DATA char   build_version[];
-extern SHAREDOBJ_DATA global_options options;
+extern SHAREDOBJ_DATA char            build_version[];
+extern SHAREDOBJ_DATA global_options  options;
 extern SHAREDOBJ_DATA running_machine *Machine;
-extern SHAREDOBJ_FUNC(void)  expand_machine_driver(void (*constructor)(machine_config *), machine_config *output);
-extern SHAREDOBJ_FUNC(int)   mame_validitychecks(void);
+extern SHAREDOBJ_FUNC(void)   expand_machine_driver(void (*constructor)(machine_config *), machine_config *output);
+extern SHAREDOBJ_FUNC(int)    mame_validitychecks(void);
+extern SHAREDOBJ_FUNC(void)   begin_resource_tracking(void);
+extern SHAREDOBJ_FUNC(void)   end_resource_tracking(void);
+extern SHAREDOBJ_FUNC(void *) auto_malloc(size_t size);
 
 #include "osdepend.h"
 extern SHAREDOBJ_FUNC(void) logerror(const char *text,...);

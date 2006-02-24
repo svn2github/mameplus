@@ -97,6 +97,7 @@
 #include "profiler.h"
 #include "machine/generic.h"
 #include <math.h>
+#include "ui_font.h"
 
 #ifdef MESS
 #include "inputx.h"
@@ -2673,7 +2674,7 @@ profiler_mark(PROFILER_INPUT);
 
 #ifdef USE_SHOW_INPUT_LOG
 	/* show input log */
-	if (show_input_log && (!playback))
+	if (show_input_log && (!Machine->playback_file))
 		make_input_log();
 #endif /* USE_SHOW_INPUT_LOG */
 

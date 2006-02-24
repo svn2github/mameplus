@@ -57,7 +57,6 @@ static struct DriversInfo
 	BOOL isHarddisk;
 	BOOL hasOptionalBIOS;
 	BOOL isStereo;
-	BOOL isMultiMon;
 	BOOL supportsDisable2ndMon;
 	BOOL isVector;
 	BOOL usesRoms;
@@ -363,7 +362,6 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 					num_speakers++;
 
 			gameinfo->isStereo = (num_speakers > 1);
-			gameinfo->isMultiMon = ((drv.video_attributes & VIDEO_DUAL_MONITOR) != 0);
 			gameinfo->isVector = ((drv.video_attributes & VIDEO_TYPE_VECTOR) != 0);
 			gameinfo->usesRoms = FALSE;
 			for (region = rom_first_region(gamedrv); region; region = rom_next_region(region))
@@ -459,11 +457,16 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			}
 
 			gameinfo->supportsDisable2ndMon = FALSE;
-			if ((drv.video_attributes & VIDEO_DUAL_MONITOR) != 0)
 			{
+				int aspect_x = drv.aspect_x;											\
+				int aspect_y = drv.aspect_y;											\
+
 				options.disable_2nd_monitor = 1;
 				expand_machine_driver(gamedrv->drv, &drv);
-				gameinfo->supportsDisable2ndMon = ((drv.video_attributes & VIDEO_DUAL_MONITOR) == 0);
+				options.disable_2nd_monitor = 0;
+
+				if (aspect_x != drv.aspect_x || aspect_y != drv.aspect_y)
+					gameinfo->supportsDisable2ndMon = TRUE;
 			}
 		}
 	}
@@ -493,11 +496,6 @@ BOOL DriverHasOptionalBIOS(int driver_index)
 BOOL DriverIsStereo(int driver_index)
 {
 	return GetDriversInfo(driver_index)->isStereo;
-}
-
-BOOL DriverIsMultiMon(int driver_index)
-{
-	return GetDriversInfo(driver_index)->isMultiMon;
 }
 
 BOOL DriverSupportsDisable2ndMon(int driver_index)

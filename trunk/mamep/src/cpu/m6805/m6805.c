@@ -852,7 +852,7 @@ void hd63705_init(void)
 {
 	int cpu = cpu_getactivecpu();
 	state_register("hd63705");
-	state_save_register_item("hd63705", cpu, m6805.irq_state[0]);
+	//state_save_register_item("hd63705", cpu, m6805.irq_state[0]);
 	state_save_register_item("hd63705", cpu, m6805.irq_state[1]);
 	state_save_register_item("hd63705", cpu, m6805.irq_state[2]);
 	state_save_register_item("hd63705", cpu, m6805.irq_state[3]);

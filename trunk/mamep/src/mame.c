@@ -227,6 +227,7 @@ int run_game(int game)
 
 			/* save the NVRAM and configuration */
 			nvram_save();
+			if (!Machine->playback_file)
 			config_save_settings();
 		}
 
@@ -483,6 +484,75 @@ static void create_machine(int game)
 
 	/* get orientation right */
 	Machine->ui_orientation = options.ui_orientation;
+
+#if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
+  /* ks hcmame s switch m68k core */
+	{
+		static const char *names[] = { "C", "DRC", "ASM" };
+		int cpunum, type;
+		for (cpunum = 0; cpunum < MAX_CPU; cpunum++)
+		{
+			type = internal_drv.cpu[cpunum].cpu_type;
+#if (HAS_M68000)
+			if(type == CPU_M68000)
+			{
+				internal_drv.cpu[cpunum].cpu_type += options.m68k_core;
+				logerror("cpu[%d]: M68000 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68000]);
+				//printf  ("cpu[%d]: M68000 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68000]);
+			}
+#endif
+#if (HAS_M68008)
+			if(type == CPU_M68008)
+			{
+				internal_drv.cpu[cpunum].cpu_type += options.m68k_core;
+				logerror("cpu[%d]: M68008 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68008]);
+				//printf  ("cpu[%d]: M68008 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68008]);
+			}
+#endif
+#if (HAS_M68010)
+			if(type == CPU_M68010)
+			{
+				internal_drv.cpu[cpunum].cpu_type += options.m68k_core;
+				logerror("cpu[%d]: M68010 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68010]);
+				//printf  ("cpu[%d]: M68010 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68010]);
+			}
+#endif
+#if (HAS_M68EC020)
+			if(type == CPU_M68EC020)
+			{
+				if (options.m68k_core)
+					// ASM core is disabled
+					internal_drv.cpu[cpunum].cpu_type = CPU_M68EC020DRC;
+
+				logerror("cpu[%d]: M68EC020 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68EC020]);
+				//printf  ("cpu[%d]: M68EC020 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68EC020]);
+			}
+#endif
+#if (HAS_M68020)
+			if(type == CPU_M68020)
+			{
+				if (options.m68k_core)
+					// ASM core is disabled
+					internal_drv.cpu[cpunum].cpu_type = CPU_M68020DRC;
+
+				logerror("cpu[%d]: M68020 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68020]);
+				//printf  ("cpu[%d]: M68020 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68020]);
+			}
+#endif
+#if (HAS_M68040)
+			if(type == CPU_M68040)
+			{
+				if (options.m68k_core)
+					// ASM core is disabled
+					internal_drv.cpu[cpunum].cpu_type = CPU_M68040DRC;
+
+				logerror("cpu[%d]: M68040 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68040]);
+				//printf  ("cpu[%d]: M68040 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68040]);
+			}
+#endif
+		}
+	}
+#endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 
 	/* if we're coming in with a savegame request, process it now */
 	if (options.savegame)

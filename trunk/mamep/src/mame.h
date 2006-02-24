@@ -15,6 +15,7 @@
 #include "drawgfx.h"
 #include "fileio.h"
 #include "video.h"
+#include "ui_pal.h"
 
 #ifdef MESS
 #include "device.h"

@@ -67,10 +67,6 @@ extern char *cheatfile;
 // from hiscore.c
 extern const char *db_filename;
 
-// from mame.c
-extern void *record;	/* for -record */
-extern void *playback; /* for -playback */
-
 
 //============================================================
 //  TYPE DEFINITIONS
@@ -442,7 +438,7 @@ static const char *get_path_for_filetype(int filetype, int pathindex, DWORD *cou
 
 		/* load vnram file from input_directory when record/playback is on */
 		case FILETYPE_NVRAM:
-			if (record || playback)
+			if (Machine->record_file || Machine->playback_file)
 			{
 				list = &pathlist[FILETYPE_INPUTLOG];
 				break;

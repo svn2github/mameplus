@@ -135,8 +135,8 @@ VIDEO_START( mario )
 	if ( !bg_tilemap )
 		return 1;
 
-	state_save_register_int("video", 0, "gfx_banko",    &gfx_bank);
-	state_save_register_int("video", 0, "palette_bank", &palette_bank);
+	state_save_register_global(gfx_bank);
+	state_save_register_global(palette_bank);
 
 	return 0;
 }

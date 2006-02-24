@@ -13,6 +13,7 @@
 #include "ui_pal.h"
 #include <math.h>
 #include "mamedbg.h"
+#include "ui_font.h"
 
 #define VERBOSE 0
 

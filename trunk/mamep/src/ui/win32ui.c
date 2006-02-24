@@ -76,7 +76,6 @@
 #include "history.h"
 #include "options.h"
 #include "dialogs.h"
-#include "state.h"
 #include "windows/input.h"
 #include "windows/config.h"
 #include "windows/window.h"

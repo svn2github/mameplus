@@ -102,10 +102,6 @@ void cpu_loadsave_schedule_file(int type, const char *name);
 void cpu_loadsave_reset(void);
 void cpu_loadsave_warn(const char *msg);
 
-/* CPU clock setting load/save */
-void cpu_load(int config_type, xml_data_node *parentnode);
-void cpu_save(int config_type, xml_data_node *parentnode);
-
 
 
 /*************************************

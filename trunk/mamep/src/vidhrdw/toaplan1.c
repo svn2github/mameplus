@@ -84,57 +84,27 @@ sprite.
 
 
 Abnormalities:
- The equations for flipscreen, don't suite the horizontal games. So a minor
- hack is implemented for them, though it still isn't 100% right - see below.
-
  How/when do priority 0 Tile layers really get displayed ?
 
  What are the video PROMs for ? Priority maybe ?
-
-
- ***** Notes on the horizontal game scroll Y probs (Eg, Zero Wing) *****
-
- Scrolls    PF1-X  PF1-Y    PF2-X  PF2-Y    PF3-X  PF3-Y    PF4-X  PF4-Y
- ------>    #4180  #f880    #1240  #f880    #4380  #f880    #e380  #f880
- -flip->    #1500  #7f00    #e8c0  #7f00    #1300  #7f00    #bb00  #7f00
-
- ------>    #4100  #f880    #1200  #7880    #4300  #f880    #e380  #f880
- -flip->    #1500  #7f00    #e8c0  #8580??  #1300  #7f00    #bb00  #7f00
-                                      |
-                                      |
-                                    f880 = 1111 1000 1000 = 1f1 scroll
-                                    7f00 - 0111 1111 0000 = 0fe scroll
-                                    7880 = 0111 1000 1000 = 0f1 scroll
-                                    8580 = 1000 0101 1000 = 10b scroll
-
- So a snapshot of the scroll equations become (from the functions below):
-    1f1 - (102 - 10f) == 1fe   star background
-    0Fe - (00d - 10f) == 200   star background (flipscreen)
-    0f1 - (102 - 10f) == 0fe   red  background
-    10B - (00d - 10f) == 20d   red  background (flipscreen) wrong!
-    10B - (00d - 002) == 100   red  background (flipscreen) should equate to this (100)
-
 
 ***************************************************************************/
 
 
 #include "driver.h"
 #include "toaplan1.h"
-#include "tilemap.h"
 #include "palette.h"
 #include "vidhrdw/generic.h"
 #include "cpu/m68000/m68000.h"
 
+#define TOAPLAN1_TILEVRAM_SIZE       0x4000	/* each tile layer ram (word size) */
+#define TOAPLAN1_SPRITERAM_SIZE      0x800	/* sprite ram (word size) */
+#define TOAPLAN1_SPRITESIZERAM_SIZE  0x80	/* sprite size ram (word size) */
 
-#define TOAPLAN1_TILEVRAM_SIZE       0x4000	/* 4 tile layers each this RAM size */
-#define TOAPLAN1_SPRITERAM_SIZE      0x800	/* sprite ram */
-#define TOAPLAN1_SPRITESIZERAM_SIZE  0x80	/* sprite size ram */
+#define TOAPLAN1_RENDER_TYPE_ZEROWING	0
+#define TOAPLAN1_RENDER_TYPE_DEMONWLD	1
 
-static UINT16 *pf4_tilevram16;	/*  ||  Drawn in this order */
-static UINT16 *pf3_tilevram16;	/*  ||  */
-static UINT16 *pf2_tilevram16;	/* \||/ */
-static UINT16 *pf1_tilevram16;	/*  \/  */
-
+static UINT16 *toaplan1_tileram16;
 static UINT16 *toaplan1_spritesizeram16;
 static UINT16 *toaplan1_buffered_spritesizeram16;
 
@@ -143,163 +113,126 @@ size_t toaplan1_colorram2_size;
 UINT16 *toaplan1_colorram1;
 UINT16 *toaplan1_colorram2;
 
-static INT32 bcu_flipscreen;		/* Tile   controller flip flag */
-static INT32 fcu_flipscreen;		/* Sprite controller flip flag */
+static int bcu_flipscreen;		/* Tile   controller flip flag */
+static int fcu_flipscreen;		/* Sprite controller flip flag */
 
-static INT32 pf_voffs;
-static INT32 spriteram_offs;
+static unsigned int tileram_offs;
+static unsigned int spriteram_offs;
 
-static INT32 pf1_scrollx;
-static INT32 pf1_scrolly;
-static INT32 pf2_scrollx;
-static INT32 pf2_scrolly;
-static INT32 pf3_scrollx;
-static INT32 pf3_scrolly;
-static INT32 pf4_scrollx;
-static INT32 pf4_scrolly;
-static INT32 scrollx_offs1;
-static INT32 scrollx_offs2;
-static INT32 scrollx_offs3;
-static INT32 scrollx_offs4;
-static INT32 scrolly_offs;
+static unsigned int scrollregs[8];
+static unsigned int num_tiles;
 
+static int layer_scrollx[4];
+static int layer_scrolly[4];
+static int layer_offsetx[4];
+static int layer_offsety[4];
 
-#ifdef MAME_DEBUG
-static int display_pf1 = 1;
-static int display_pf2 = 1;
-static int display_pf3 = 1;
-static int display_pf4 = 1;
-static int displog = 0;
-#endif
+static int scrollx_offs1;
+static int scrollx_offs2;
+static int scrollx_offs3;
+static int scrollx_offs4;
+static int scrolly_offs;
 
-static INT32 tiles_offsetx;
-static INT32 tiles_offsety;
+static int flip_y_offs;
+
+static int tiles_offsetx;
+static int tiles_offsety;
 
 static int toaplan1_reset;		/* Hack! See toaplan1_bcu_control below */
 
-static tilemap *pf1_tilemap, *pf2_tilemap, *pf3_tilemap, *pf4_tilemap;
 
-
-/***************************************************************************
-
-  Callbacks for the TileMap code
-
-***************************************************************************/
-
-static void get_pf1_tile_info(int tile_index)
+typedef struct
 {
-	int color, tile_number, attrib;
+	UINT16 tile_num;
+	UINT16 color;
+	char priority;
+	int xpos;
+	int ypos;
+} tile_struct;
 
-	tile_number = pf1_tilevram16[2*tile_index+1] & 0x7fff;
-	attrib = pf1_tilevram16[2*tile_index];
-	color = attrib & 0x3f;
-	SET_TILE_INFO(
-			0,
-			tile_number,
-			color,
-			0)
-	if (pf1_tilevram16[2*tile_index+1] & 0x8000) tile_info.priority = 0;
-	else tile_info.priority = (attrib & 0xf000) >> 12;
-}
+tile_struct *bg_list[4];
 
-static void get_pf2_tile_info(int tile_index)
+tile_struct *tile_list[32];
+tile_struct *temp_list;
+static int max_list_size[32];
+static int tile_count[32];
+
+	mame_bitmap *tmpbitmap1;
+static	mame_bitmap *tmpbitmap2;
+static	mame_bitmap *tmpbitmap3;
+
+
+#undef BGDBG
+
+#ifdef BGDBG
+int	toaplan_dbg_sprite_only = 0;
+int	toaplan_dbg_priority = 0;
+int	toaplan_dbg_layer[4] = {1,1,1,1};
+#endif
+
+static int toaplan1_tile_buffers_alloc(void)
 {
-	int color, tile_number, attrib;
+	int i;
 
-	tile_number = pf2_tilevram16[2*tile_index+1] & 0x7fff;
-	attrib = pf2_tilevram16[2*tile_index];
-	color = attrib & 0x3f;
-	SET_TILE_INFO(
-			0,
-			tile_number,
-			color,
-			0)
-	if (pf2_tilevram16[2*tile_index+1] & 0x8000) tile_info.priority = 0;
-	else tile_info.priority = (attrib & 0xf000) >> 12;
-}
+	toaplan1_tileram16 = auto_malloc(TOAPLAN1_TILEVRAM_SIZE * 4);
+	memset(toaplan1_tileram16,0,TOAPLAN1_TILEVRAM_SIZE * 4);
 
-static void get_pf3_tile_info(int tile_index)
-{
-	int color, tile_number, attrib;
-
-	tile_number = pf3_tilevram16[2*tile_index+1] & 0x7fff;
-	attrib = pf3_tilevram16[2*tile_index];
-	color = attrib & 0x3f;
-	SET_TILE_INFO(
-			0,
-			tile_number,
-			color,
-			0)
-	if (pf3_tilevram16[2*tile_index+1] & 0x8000) tile_info.priority = 0;
-	else tile_info.priority = (attrib & 0xf000) >> 12;
-}
-
-static void get_pf4_tile_info(int tile_index)
-{
-	int color, tile_number, attrib;
-
-	tile_number = pf4_tilevram16[2*tile_index+1] & 0x7fff;
-	attrib = pf4_tilevram16[2*tile_index];
-	color = attrib & 0x3f;
-	SET_TILE_INFO(
-			0,
-			tile_number,
-			color,
-			0)
-	if (pf4_tilevram16[2*tile_index+1] & 0x8000) tile_info.priority = 0;
-	else tile_info.priority = (attrib & 0xf000) >> 12;
-}
-
-/***************************************************************************
-
-  Start the video hardware emulation.
-
-***************************************************************************/
-
-static int toaplan1_create_tilemaps(void)
-{
-	pf1_tilemap = tilemap_create(get_pf1_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT,8,8,64,64);
-	pf2_tilemap = tilemap_create(get_pf2_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT,8,8,64,64);
-	pf3_tilemap = tilemap_create(get_pf3_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT,8,8,64,64);
-	pf4_tilemap = tilemap_create(get_pf4_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT,8,8,64,64);
-
-	if (!pf1_tilemap || !pf2_tilemap || !pf3_tilemap || !pf4_tilemap)
-		return 1;
-
-	tilemap_set_transparent_pen(pf1_tilemap,0);
-	tilemap_set_transparent_pen(pf2_tilemap,0);
-	tilemap_set_transparent_pen(pf3_tilemap,0);
-	tilemap_set_transparent_pen(pf4_tilemap,0);
-
-	return 0;
-}
-
-
-static int toaplan1_paletteram_alloc(void)
-{
+	logerror("colorram_size: %08x\n", toaplan1_colorram1_size + toaplan1_colorram2_size);
 	paletteram16 = auto_malloc(toaplan1_colorram1_size + toaplan1_colorram2_size);
+	memset(paletteram16,0,toaplan1_colorram1_size + toaplan1_colorram2_size);
+
+	for (i=0; i<4; i++)
+	{
+		bg_list[i]=(tile_struct *)auto_malloc( 33 * 44 * sizeof(tile_struct));
+		memset(bg_list[i], 0, 33 * 44 * sizeof(tile_struct));
+	}
+
+	for (i=0; i<16; i++)
+	{
+		max_list_size[i] = 8192;
+		tile_list[i]=(tile_struct *)auto_malloc(max_list_size[i]*sizeof(tile_struct));
+		memset(tile_list[i],0,max_list_size[i]*sizeof(tile_struct));
+	}
+
+	max_list_size[16] = 65536;
+	tile_list[16]=(tile_struct *)auto_malloc(max_list_size[16]*sizeof(tile_struct));
+	memset(tile_list[16],0,max_list_size[16]*sizeof(tile_struct));
+
 	return 0;
 }
 
-static int toaplan1_vram_alloc(void)
+
+
+VIDEO_START( rallybik )
 {
-	pf1_tilevram16 = auto_malloc(TOAPLAN1_TILEVRAM_SIZE);
-	memset(pf1_tilevram16,0,TOAPLAN1_TILEVRAM_SIZE);
 
-	pf2_tilevram16 = auto_malloc(TOAPLAN1_TILEVRAM_SIZE);
-	memset(pf2_tilevram16,0,TOAPLAN1_TILEVRAM_SIZE);
+	if( toaplan1_tile_buffers_alloc() ){
+		return 1;
+	}
 
-	pf3_tilevram16 = auto_malloc(TOAPLAN1_TILEVRAM_SIZE);
-	memset(pf3_tilevram16,0,TOAPLAN1_TILEVRAM_SIZE);
+	num_tiles = (Machine->drv->screen_width/8+1)*(Machine->drv->screen_height/8);
 
-	pf4_tilevram16 = auto_malloc(TOAPLAN1_TILEVRAM_SIZE);
-	memset(pf4_tilevram16,0,TOAPLAN1_TILEVRAM_SIZE);
+	spriteram_offs = tileram_offs = 0;
+
+	scrollx_offs1 = 0x0d + 6;
+	scrollx_offs2 = 0x0d + 4;
+	scrollx_offs3 = 0x0d + 2;
+	scrollx_offs4 = 0x0d + 0;
+	scrolly_offs  = 0x111;
+
+	bcu_flipscreen = 0;
+	toaplan1_reset = 0;
 
 	return 0;
+
 }
 
-static int toaplan1_spritevram_alloc(void)
+VIDEO_START( toaplan1 )
 {
+	tmpbitmap1 = auto_bitmap_alloc(Machine->drv->screen_width,Machine->drv->screen_height);
+	tmpbitmap2 = auto_bitmap_alloc(Machine->drv->screen_width,Machine->drv->screen_height);
+	tmpbitmap3 = auto_bitmap_alloc(Machine->drv->screen_width,Machine->drv->screen_height);
+
 	spriteram16 = auto_malloc(TOAPLAN1_SPRITERAM_SIZE);
 	memset(spriteram16,0,TOAPLAN1_SPRITERAM_SIZE);
 
@@ -312,84 +245,13 @@ static int toaplan1_spritevram_alloc(void)
 	toaplan1_buffered_spritesizeram16 = auto_malloc(TOAPLAN1_SPRITESIZERAM_SIZE);
 	memset(toaplan1_buffered_spritesizeram16,0,TOAPLAN1_SPRITESIZERAM_SIZE);
 
-	spriteram_size = TOAPLAN1_SPRITERAM_SIZE;
-	return 0;
-}
+	if( toaplan1_tile_buffers_alloc() ){
+		return 1;
+	}
 
-void toaplan1_set_scrolls(void)
-{
-	tilemap_set_scrollx(pf1_tilemap,0,(pf1_scrollx >> 7) - (tiles_offsetx - scrollx_offs1));
-	tilemap_set_scrollx(pf2_tilemap,0,(pf2_scrollx >> 7) - (tiles_offsetx - scrollx_offs2));
-	tilemap_set_scrollx(pf3_tilemap,0,(pf3_scrollx >> 7) - (tiles_offsetx - scrollx_offs3));
-	tilemap_set_scrollx(pf4_tilemap,0,(pf4_scrollx >> 7) - (tiles_offsetx - scrollx_offs4));
-	tilemap_set_scrolly(pf1_tilemap,0,(pf1_scrolly >> 7) - (tiles_offsety - scrolly_offs));
-	tilemap_set_scrolly(pf2_tilemap,0,(pf2_scrolly >> 7) - (tiles_offsety - scrolly_offs));
-	tilemap_set_scrolly(pf3_tilemap,0,(pf3_scrolly >> 7) - (tiles_offsety - scrolly_offs));
-	tilemap_set_scrolly(pf4_tilemap,0,(pf4_scrolly >> 7) - (tiles_offsety - scrolly_offs));
-}
+	num_tiles = (Machine->drv->screen_width/8+1)*(Machine->drv->screen_height/8);
 
-void rallybik_flipscreen(void)
-{
-	rallybik_bcu_flipscreen_w(0, bcu_flipscreen, 0);
-}
-
-void toaplan1_flipscreen(void)
-{
-	toaplan1_bcu_flipscreen_w(0, bcu_flipscreen, 0);
-}
-
-
-VIDEO_START( rallybik )
-{
-	if (toaplan1_create_tilemaps())  return 1;
-	if (toaplan1_paletteram_alloc()) return 1;
-	if (toaplan1_vram_alloc())       return 1;
-
-	scrollx_offs1 = 0x0d + 6;
-	scrollx_offs2 = 0x0d + 4;
-	scrollx_offs3 = 0x0d + 2;
-	scrollx_offs4 = 0x0d + 0;
-	scrolly_offs  = 0x111;
-
-	bcu_flipscreen = -1;
-	toaplan1_reset = 0;
-
-	state_save_register_global_pointer(paletteram16, (toaplan1_colorram1_size + toaplan1_colorram2_size)/2);
-	state_save_register_global_pointer(pf1_tilevram16, TOAPLAN1_TILEVRAM_SIZE/2);
-	state_save_register_global_pointer(pf2_tilevram16, TOAPLAN1_TILEVRAM_SIZE/2);
-	state_save_register_global_pointer(pf3_tilevram16, TOAPLAN1_TILEVRAM_SIZE/2);
-	state_save_register_global_pointer(pf4_tilevram16, TOAPLAN1_TILEVRAM_SIZE/2);
-
-	state_save_register_global(scrollx_offs1);
-	state_save_register_global(scrollx_offs2);
-	state_save_register_global(scrollx_offs3);
-	state_save_register_global(scrollx_offs4);
-	state_save_register_global(scrolly_offs);
-	state_save_register_global(bcu_flipscreen);
-	state_save_register_global(pf1_scrollx);
-	state_save_register_global(pf1_scrolly);
-	state_save_register_global(pf2_scrollx);
-	state_save_register_global(pf2_scrolly);
-	state_save_register_global(pf3_scrollx);
-	state_save_register_global(pf3_scrolly);
-	state_save_register_global(pf4_scrollx);
-	state_save_register_global(pf4_scrolly);
-	state_save_register_global(tiles_offsetx);
-	state_save_register_global(tiles_offsety);
-	state_save_register_global(pf_voffs);
-	state_save_register_global(spriteram_offs);
-
-	state_save_register_func_postload(rallybik_flipscreen);
-
-	return 0;
-}
-
-VIDEO_START( toaplan1 )
-{
-	if (toaplan1_create_tilemaps())  return 1;
-	if (toaplan1_paletteram_alloc()) return 1;
-	if (toaplan1_vram_alloc())       return 1;
-	if (toaplan1_spritevram_alloc()) return 1;
+	spriteram_offs = tileram_offs = 0;
 
 	scrollx_offs1 = 0x1ef + 6;
 	scrollx_offs2 = 0x1ef + 4;
@@ -397,45 +259,29 @@ VIDEO_START( toaplan1 )
 	scrollx_offs4 = 0x1ef + 0;
 	scrolly_offs  = 0x101;
 
-	bcu_flipscreen = -1;
+	bcu_flipscreen = 0;
 	fcu_flipscreen = 0;
 	toaplan1_reset = 1;
-
-	state_save_register_global_pointer(paletteram16, (toaplan1_colorram1_size + toaplan1_colorram2_size)/2);
-	state_save_register_global_pointer(pf1_tilevram16, TOAPLAN1_TILEVRAM_SIZE/2);
-	state_save_register_global_pointer(pf2_tilevram16, TOAPLAN1_TILEVRAM_SIZE/2);
-	state_save_register_global_pointer(pf3_tilevram16, TOAPLAN1_TILEVRAM_SIZE/2);
-	state_save_register_global_pointer(pf4_tilevram16, TOAPLAN1_TILEVRAM_SIZE/2);
-	state_save_register_global_pointer(spriteram16, TOAPLAN1_SPRITERAM_SIZE/2);
-	state_save_register_global_pointer(buffered_spriteram16, TOAPLAN1_SPRITERAM_SIZE/2);
-	state_save_register_global_pointer(toaplan1_spritesizeram16, TOAPLAN1_SPRITESIZERAM_SIZE/2);
-	state_save_register_global_pointer(toaplan1_buffered_spritesizeram16, TOAPLAN1_SPRITESIZERAM_SIZE/2);
-
-	state_save_register_global(scrollx_offs1);
-	state_save_register_global(scrollx_offs2);
-	state_save_register_global(scrollx_offs3);
-	state_save_register_global(scrollx_offs4);
-	state_save_register_global(scrolly_offs);
-	state_save_register_global(bcu_flipscreen);
-	state_save_register_global(fcu_flipscreen);
-	state_save_register_global(pf1_scrollx);
-	state_save_register_global(pf1_scrolly);
-	state_save_register_global(pf2_scrolly);
-	state_save_register_global(pf2_scrollx);
-	state_save_register_global(pf3_scrollx);
-	state_save_register_global(pf3_scrolly);
-	state_save_register_global(pf4_scrollx);
-	state_save_register_global(pf4_scrolly);
-	state_save_register_global(tiles_offsetx);
-	state_save_register_global(tiles_offsety);
-	state_save_register_global(pf_voffs);
-	state_save_register_global(spriteram_offs);
-
-	state_save_register_func_postload(toaplan1_flipscreen);
 
 	return 0;
 }
 
+
+
+void toaplan1_set_scrolls(void)
+{
+
+	layer_scrollx[0] = (((scrollregs[0]) >> 7) + (scrollx_offs1 - tiles_offsetx)) & 0x1ff;
+	layer_scrollx[1] = (((scrollregs[2]) >> 7) + (scrollx_offs2 - tiles_offsetx)) & 0x1ff;
+	layer_scrollx[2] = (((scrollregs[4]) >> 7) + (scrollx_offs3 - tiles_offsetx)) & 0x1ff;
+	layer_scrollx[3] = (((scrollregs[6]) >> 7) + (scrollx_offs4 - tiles_offsetx)) & 0x1ff;
+
+	layer_scrolly[0] = (((scrollregs[1]) >> 7) + scrolly_offs - tiles_offsety) & 0x1ff;
+	layer_scrolly[1] = (((scrollregs[3]) >> 7) + scrolly_offs - tiles_offsety) & 0x1ff;
+	layer_scrolly[2] = (((scrollregs[5]) >> 7) + scrolly_offs - tiles_offsety) & 0x1ff;
+	layer_scrolly[3] = (((scrollregs[7]) >> 7) + scrolly_offs - tiles_offsety) & 0x1ff;
+
+}
 
 /***************************************************************************
 

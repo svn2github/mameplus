@@ -1,6 +1,5 @@
 #include "driver.h"
 #include "vidhrdw/generic.h"
-#include "state.h"
 
 #define COLORTABLE_START(gfxn,color)	Machine->drv->gfxdecodeinfo[gfxn].color_codes_start + \
 					color * Machine->gfx[gfxn]->color_granularity
@@ -41,8 +40,8 @@ VIDEO_START( ninjakd2 )
 
 	memset(bg_dirtybuffer,1,1024);
 
-	state_save_register_int("video", 0, "bg_enable", &bg_enable);
-	state_save_register_int("video", 0, "sp_overdraw", &sp_overdraw);
+	state_save_register_global(bg_enable);
+	state_save_register_global(sp_overdraw);
 	state_save_register_func_postload(ninjak2_postload);
 
 	return 0;

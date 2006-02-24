@@ -252,7 +252,7 @@ void nvram_load(void)
 
 void nvram_save(void)
 {
-	if (Machine->drv->nvram_handler)
+	if (Machine->drv->nvram_handler && !Machine->record_file && !Machine->playback_file)
 	{
 		mame_file *nvram_file = mame_fopen(Machine->gamedrv->name, 0, FILETYPE_NVRAM, 1);
 		if (nvram_file != NULL)

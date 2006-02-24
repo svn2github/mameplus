@@ -257,7 +257,7 @@ DRIVER_INIT( neogeo )
 	neogeo_memcard_is_loaded = 0;
 	memcard_number = 0;
 
-	init_memcard();
+	memcard_init();
 	memcard_intf.create = neogeo_memcard_create;
 	memcard_intf.load = neogeo_memcard_load;
 	memcard_intf.save = neogeo_memcard_save;
@@ -500,7 +500,7 @@ static void neogeo_register_sub_savestate(void)
 	state_save_register_global_pointer(neogeo_ram16, 0x10000/2);
 	state_save_register_global_pointer(neogeo_memcard, 0x800);
 	state_save_register_global_pointer(gamevector, 0x80);
-	state_save_register_global(memcard_is_loaded);
+	state_save_register_global(neogeo_memcard_is_loaded);
 	state_save_register_global(memcard_number);
 	state_save_register_global(neogeo_prot_data);
 }

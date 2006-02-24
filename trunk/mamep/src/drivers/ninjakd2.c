@@ -222,7 +222,6 @@ The first sprite data is located at fa0b,then fa1b and so on.
 #include "vidhrdw/generic.h"
 #include "sound/2203intf.h"
 #include "sound/samples.h"
-#include "state.h"
 
 WRITE8_HANDLER( ninjakd2_bgvideoram_w );
 WRITE8_HANDLER( ninjakd2_fgvideoram_w );
@@ -724,8 +723,8 @@ static DRIVER_INIT( bootleg )
 {
 	memory_set_decrypted_region(1, 0x0000, 0x7fff, memory_region(REGION_CPU2) + 0x10000);
 
-	state_save_register_int("main", 0, "ninjakd2_bank_latch", &ninjakd2_bank_latch);
-	state_save_register_int("main", 0, "bankaddress", &bankaddress);
+	state_save_register_global(ninjakd2_bank_latch);
+	state_save_register_global(bankaddress);
 	state_save_register_func_postload(set_ninjakd2_bank);
 }
 

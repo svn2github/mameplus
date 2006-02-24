@@ -240,6 +240,10 @@ static void watchdog_setup(int alloc_new);
 
 static void handle_loadsave(void);
 
+/* CPU clock setting load/save */
+static void cpu_load(int config_type, xml_data_node *parentnode);
+static void cpu_save(int config_type, xml_data_node *parentnode);
+
 
 
 /*************************************
@@ -344,6 +348,8 @@ int cpu_init(void)
 	state_save_register_item("cpu", 0, watchdog_counter);
 	state_save_register_item("cpu", 0, vblank_countdown);
 	state_save_pop_tag();
+
+	config_register("cpu", cpu_load, cpu_save);
 
 	/* reset the IRQ lines and save those */
 	if (cpuint_init())
@@ -2181,7 +2187,7 @@ static void set_overclock(void)
 		cpunum_set_clockscale(0, 3.0);
 }
 
-void cpu_load(int config_type, xml_data_node *parentnode)
+static void cpu_load(int config_type, xml_data_node *parentnode)
 {
 	xml_data_node *childnode;
 
@@ -2216,7 +2222,7 @@ void cpu_load(int config_type, xml_data_node *parentnode)
 	}
 }
 
-void cpu_save(int config_type, xml_data_node *parentnode)
+static void cpu_save(int config_type, xml_data_node *parentnode)
 {
 	int i;
 

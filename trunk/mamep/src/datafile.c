@@ -2172,8 +2172,7 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 	/* List the game info 'flags' */
 	if (drv->flags &
 	    ( GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS |
-	      GAME_IMPERFECT_COLORS | GAME_NO_SOUND | GAME_IMPERFECT_SOUND | GAME_NO_COCKTAIL) ||
-		 game.video_attributes & VIDEO_DUAL_MONITOR)
+	      GAME_IMPERFECT_COLORS | GAME_NO_SOUND | GAME_IMPERFECT_SOUND | GAME_NO_COCKTAIL))
 	{
 		strcat(buffer, _("GAME: "));
 		strcat(buffer, options.use_lang_list?
@@ -2204,9 +2203,6 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 
 		if (drv->flags & GAME_NO_COCKTAIL)
 			strcat(buffer, _("Screen flipping in cocktail mode is not supported.\n"));
-
-		if (game.video_attributes & VIDEO_DUAL_MONITOR)
-			strcat(buffer, _("The game uses two or more monitors.\n"));
 
 		strcat(buffer, "\n");
 	}	
@@ -2754,12 +2750,6 @@ int load_driver_statistics (char *buffer, int bufsize)
 			{
 	 			flags[8]++;
 				if (clone) flags[18]++;
-			}
-
-			if (drv.video_attributes & VIDEO_DUAL_MONITOR)
-			{
-	 			dual++;
-				if (clone) dualc++;
 			}
 
 			if (drv.video_attributes & VIDEO_NEEDS_6BITS_PER_GUN)

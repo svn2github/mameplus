@@ -20,7 +20,7 @@
 #ifndef DRIVER_RECURSIVE
 
 /* The "root" driver, defined so we can have &driver_##NAME in macros. */
-game_driver driver_0 =
+const game_driver driver_0 =
 {
 	__FILE__,
 	0,
@@ -56,6 +56,9 @@ const game_driver *drivers[] =
 };
 
 #else	/* DRIVER_RECURSIVE */
+
+	DRIVER( pong )		/* (c) 1972 Atari */
+	DRIVER( monaco )	/* (c) 1979 SEGA */
 
 	/* "Pacman hardware" games */
 	DRIVER( puckman )	/* (c) 1980 Namco */
@@ -2295,6 +2298,8 @@ V-V                           TP-027
 	DRIVER( knights )	/* 27/11/1991 (c) 1991 (World) */
 	DRIVER( knightsu )	/* 27/11/1991 (c) 1991 (US)    */
 	DRIVER( knightsj )	/* 27/11/1991 (c) 1991 (Japan) */
+	DRIVER( knightsh )	/* hack */
+	DRIVER( knightsb )	/* bootleg */
 	DRIVER( sf2ce )		/* 13/03/1992 (c) 1992 (World) */
 	DRIVER( sf2ceua )	/* 13/03/1992 (c) 1992 (US)    */
 	DRIVER( sf2ceub )	/* 13/05/1992 (c) 1992 (US)    */
@@ -2312,6 +2317,11 @@ V-V                           TP-027
 	DRIVER( sf2m5 )		/* hack */
 	DRIVER( sf2m6 )		/* hack */
 	DRIVER( sf2m7 )		/* hack */
+//	DRIVER( sf2m8 )		/* hack */
+//	DRIVER( sf2m13 )	/* hack */
+	DRIVER( sf2ceh )	/* hack, Hispanic 990804 */
+	DRIVER( sf2tlona )	/* hack, Tu Long set 1 */
+	DRIVER( sf2tlonb )	/* hack, Tu Long set 2 */
 	DRIVER( sf2yyc )	/* hack */
 	DRIVER( sf2koryu )	/* hack */
 	DRIVER( varth )		/* 14/07/1992 (c) 1992 (World) */
@@ -2323,12 +2333,21 @@ V-V                           TP-027
 	DRIVER( wofa )		/* 05/10/1992 (c) 1992 (Asia)  (CPS1 + QSound) */
 	DRIVER( wofu )		/* 31/10/1992 (c) 1992 (US) (CPS1 + QSound) */
 	DRIVER( wofj )		/* 31/10/1992 (c) 1992 (Japan) (CPS1 + QSound) */
+	DRIVER( wofsj )		/* 1995  Holy Sword Three Kingdoms / Sheng Jian San Guo */
+	DRIVER( wofsja )	/* 1995  Holy Sword Three Kingdoms / Sheng Jian San Guo */
+	DRIVER( wofsjb )	/* 1995  Holy Sword Three Kingdoms / Sheng Jian San Guo */
+	DRIVER( wof3js )	/* 1997  Three Sword Masters / San Jian Sheng */
+	DRIVER( wof3sj )	/* 1997  Three Holy Swords / San Sheng Jian */
+	DRIVER( wof3sja )	/* 1997  Three Holy Swords / San Sheng Jian */
+	DRIVER( wofh ) 		/* 1999  Legend of Three Kingdoms' Heroes / Sanguo Yingxiong Zhuan */
+	DRIVER( wofha ) 	/* 1999  Legend of Three Kingdoms' Heroes / Sanguo Yingxiong Zhuan */
 	DRIVER( sf2hf )		/* 09/12/1992 (c) 1992 (World) */
 	DRIVER( sf2t )		/* 09/12/1992 (c) 1992 (US)    */
 	DRIVER( sf2tj )		/* 09/12/1992 (c) 1992 (Japan) */
 	DRIVER( dino )		/* 01/02/1993 (c) 1993 (World) (CPS1 + QSound) */
 	DRIVER( dinou )		/* 01/02/1993 (c) 1993 (US)    (CPS1 + QSound) */
 	DRIVER( dinoj )		/* 01/02/1993 (c) 1993 (Japan) (CPS1 + QSound) */
+	DRIVER( dinoh )		/* hack */
 	DRIVER( punisher )	/* 22/04/1993 (c) 1993 (World) (CPS1 + QSound) */
 	DRIVER( punishru )	/* 22/04/1993 (c) 1993 (US)    (CPS1 + QSound) */
 	DRIVER( punishrj )	/* 22/04/1993 (c) 1993 (Japan) (CPS1 + QSound) */
@@ -2338,6 +2357,7 @@ V-V                           TP-027
 	DRIVER( mbombrd )	/* 06/12/1993 (c) 1993 (World) (CPS1 + QSound) */
 	DRIVER( mbombrdj )	/* 06/12/1993 (c) 1993 (Japan) (CPS1 + QSound) */
 	DRIVER( pnickj )	/* 08/06/1994 (c) 1994 Compile + Capcom license (Japan) not listed on Capcom's site */
+	DRIVER( pnicku )
 	DRIVER( qad )		/* 01/07/1992 (c) 1992 (US)    */
 	DRIVER( qadj )		/* 21/09/1994 (c) 1994 (Japan) */
 	DRIVER( qtono2 )	/* 23/01/1995 (c) 1995 (Japan) */
@@ -2345,6 +2365,8 @@ V-V                           TP-027
 	DRIVER( pang3j )	/* 11/05/1995 (c) 1995 Mitchell (Japan) not listed on Capcom's site */
 	DRIVER( megaman )	/* 06/10/1995 (c) 1995 (Asia)  */
 	DRIVER( rockmanj )	/* 22/09/1995 (c) 1995 (Japan) */
+	DRIVER( sfzch )		/* 1995  Street Fighter Zero (CPS Changer) */
+	DRIVER( sfach )		/* 1995  Street Fighter Alpha (Publicity CPS Changer) */
 
 	DRIVER( fcrash )	/* bootleg of Final Fight */
 
@@ -4842,6 +4864,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( nibblera )	/* (c) 1982 Rock-ola */
 	DRIVER( nibblerb )	/* (c) 1982 Rock-ola */
 	DRIVER( nibblero )	/* (c) 1982 Olympia */
+	DRIVER( vantris )	/* (c) 1998 Norbert Kehrer */
 
 	/* later SNK games, each game can be identified by PCB code and ROM
     code, the ROM code is the same between versions, and usually based
@@ -5004,6 +5027,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( pspikes2 )	/* 0068 (c) 1994 Video System Co. */
 	DRIVER( fatfury3 )	/* 0069 (c) 1995 SNK */
 	DRIVER( zupapa )	/* 0070 Zupapa - released in 2001, 1994 prototype probably exists */
+	DRIVER( zupapad )	/* 0070 Zupapa - released in 2001, 1994 prototype probably exists */
 				/* 0071 Bang Bang Busters (prototype) 1994 Visco */
 				/* 0072 Last Odyssey Pinball Fantasia (prototype) 1995 Monolith */
 	DRIVER( panicbom )	/* 0073 (c) 1994 Eighting / Hudson */
@@ -5049,10 +5073,12 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 				/* 0210 Karate Ninja Sho (prototype) 1995 Yumekobo */
 				/* 0211 Oshidashi Zintrick (CD only? not confirmed, MVS might exist) 1996 SNK/ADK */
 	DRIVER( zintrckb )	/* 0211 hack - this is not a genuine MVS proto, its a bootleg made from the CD version */
+	DRIVER( zintrkcd )	/* 0211 hack - CD to MVS Conversion by Razoola */
 	DRIVER( overtop )	/* 0212 (c) 1996 ADK */
 	DRIVER( neodrift )	/* 0213 (c) 1996 Visco */
 	DRIVER( kof96 )		/* 0214 (c) 1996 SNK */
 	DRIVER( kof96h )	/* 0214 (c) 1996 SNK */
+	DRIVER( kof96ep )	/* 0214 bootleg */
 	DRIVER( ssideki4 )	/* 0215 (c) 1996 SNK */
 	DRIVER( kizuna )	/* 0216 (c) 1996 SNK */
 	DRIVER( ninjamas )	/* 0217 (c) 1996 ADK / SNK */
@@ -5103,30 +5129,48 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( kof99e )	/* 0251 (c) 1999 SNK */
 	DRIVER( kof99n )	/* 0251 (c) 1999 SNK */
 	DRIVER( kof99p )	/* 0251 (c) 1999 SNK */
+	DRIVER( kof99d )	/* 0251 (c) 1999 SNK */
 	DRIVER( ganryu )	/* 0252 (c) 1999 Visco */
+	DRIVER( ganryud )	/* 0252 (c) 1999 Visco */
 	DRIVER( garou )		/* 0253 (c) 1999 SNK */
 	DRIVER( garouo )	/* 0253 (c) 1999 SNK */
 	DRIVER( garoup )	/* 0253 (c) 1999 SNK */
+	DRIVER( garoud )	/* 0253 (c) 1999 SNK */
 	DRIVER( s1945p )	/* 0254 (c) 1999 Psikyo */
+	DRIVER( s1945pd )	/* 0254 (c) 1999 Psikyo */
 	DRIVER( preisle2 )	/* 0255 (c) 1999 Yumekobo */
+	DRIVER( preisl2d )	/* 0255 (c) 1999 Yumekobo */
 	DRIVER( mslug3 )	/* 0256 (c) 2000 SNK */
 	DRIVER( mslug3n )	/* 0256 (c) 2000 SNK */
+	DRIVER( mslug3d )	/* 0256 (c) 2000 SNK */
 	DRIVER( kof2000 )	/* 0257 (c) 2000 SNK */
 	DRIVER( kof2000n )	/* 0257 (c) 2000 SNK */
+	DRIVER( kof2000d )	/* 0257 (c) 2000 SNK */
 				/* 0258 SNK vs. Capcom? */
 	DRIVER( bangbead )	/* 0259 (c) 2000 Visco */
+//	DRIVER( bangbedp )	/* 0259 (c) 2000 Visco */
 	DRIVER( nitd )		/* 0260 (c) 2000 Eleven / Gavaking */
+	DRIVER( nitdd )		/* 0260 (c) 2000 Eleven / Gavaking */
 	DRIVER( sengoku3 )	/* 0261 (c) 2001 SNK */
+	DRIVER( sengok3d )	/* 0261 (c) 2001 SNK */
 	DRIVER( kof2001 )	/* 0262 (c) 2001 Eolith / SNK */
 	DRIVER( kof2001h )	/* 0262 (c) 2001 Eolith / SNK */
+	DRIVER( kof2001d )	/* 0262 (c) 2001 Eolith / SNK */
+	DRIVER( kf2k1pls )	/* 0262 (c) 2001 bootleg */
+	DRIVER( kf2k1pa )	/* 0262 (c) 2001 bootleg */
 	DRIVER( cthd2003 )	/* bootleg of kof2001*/
 	DRIVER( ct2k3sp )	/* bootleg of kof2001 */
 	DRIVER( mslug4 )	/* 0263 (c) 2002 Mega Enterprise */
+	DRIVER( mslug4d )	/* 0263 (c) 2002 Mega Enterprise */
 	DRIVER( ms4plus )	/* 0263 bootleg */
 	DRIVER( rotd )		/* 0264 (c) 2002 Evoga */
+	DRIVER( rotdd )		/* 0264 (c) 2002 Evoga */
 	DRIVER( kof2002 )	/* 0265 (c) 2002 Eolith / Playmore */
+	DRIVER( kof2002d )	/* 0265 (c) 2002 Eolith / Playmore */
+	DRIVER( kof2002b )	/* 0265 (c) 2002 bootleg */
 	DRIVER( kf2k2pls )	/* bootleg */
 	DRIVER( kf2k2pla )	/* bootleg */
+	DRIVER( kf2k2plb )	/* bootleg */
 	DRIVER( kf2k2mp )	/* bootleg */
 	DRIVER( kf2k2mp2 )	/* bootleg */
 	DRIVER( kof10th )	/* bootleg of kof2002 */
@@ -5134,6 +5178,8 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( kf10thep )	/* bootleg of kof2002 */
 	DRIVER( kof2k4se )	/* bootleg of kof2002 */
 	DRIVER( matrim )	/* 0266 (c) 2002 Atlus */
+	DRIVER( matrimd )	/* 0266 (c) 2002 Atlus */
+	DRIVER( matrimbl )	/* 0266 (c) 2002 bootleg */
 	DRIVER( pnyaa )		/* 0267 (c) 2003 Aiky / Taito */
 	DRIVER( mslug5 )	/* 0268 (c) 2003 Playmore */
 	DRIVER( ms5plus )	/* bootleg */
@@ -5161,6 +5207,16 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( jockeygp )
 	DRIVER( vliner )
 	DRIVER( vlinero )
+
+	DRIVER( beast )
+	DRIVER( columnsn )
+	DRIVER( poknight )
+	DRIVER( diggerma )	/* xxxx (c) 1994 Unknown */
+	DRIVER( neonopon )	/* xxxx (c) 2002 Blastar */
+	DRIVER( neopong )	/* xxxx (c) 2002 Neodev */
+	DRIVER( npong10 )	/* xxxx (c) 2002 Neodev */
+	DRIVER( syscheck )	/* FFFF (c) 2004 Blastar */
+	DRIVER( frogfest )	/* 0202 (c) 2005 Rastersoft */
 
 	/* Hyper NeoGeo 64 uses a 3 digit rom code? */
 
