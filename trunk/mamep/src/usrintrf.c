@@ -20,8 +20,6 @@ To do:
 #include "profiler.h"
 #include "cheat.h"
 #include "datafile.h"
-#include "ui_lang.h"
-#include "ui_font.h"
 #include <stdarg.h>
 #include <math.h>
 #ifdef USE_SHOW_TIME

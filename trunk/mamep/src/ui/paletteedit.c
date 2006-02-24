@@ -24,7 +24,6 @@
 
 #include "MAME32.h"
 #include "driver.h"
-#include "ui_pal.h"
 #include "bitmask.h"
 #include "options.h"
 #include "resource.h"

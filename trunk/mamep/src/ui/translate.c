@@ -21,7 +21,6 @@
 #include <stdlib.h>
 
 #include "MAME32.h"
-#include "ui_lang.h"
 #include "resource.h"
 #include "bitmask.h"
 #include "TreeView.h"

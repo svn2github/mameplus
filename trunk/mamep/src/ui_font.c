@@ -9,9 +9,6 @@
 
 #include <windows.h>
 #include "driver.h"
-#include "ui_pal.h"
-#include "ui_lang.h"
-#include "ui_font.h"
 
 #define COLOR_BUTTONS	(90)
 #define MAX_GLYPH_FONT	(150)

@@ -1,4 +1,3 @@
-#include "ui_lang.h"
 #include "osd_so.h"
 #include <stdio.h>
 #include <stdlib.h>

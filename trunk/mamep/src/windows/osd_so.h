@@ -139,7 +139,6 @@ extern SHAREDOBJ_FUNC(int)  load_zipped_file (int pathtype, int pathindex, const
 extern SHAREDOBJ_FUNC(int)  checksum_zipped_file (int pathtype, int pathindex, const char *zipfile, const char *filename, unsigned int *length, unsigned int *sum);
 extern SHAREDOBJ_FUNC(void) unzip_cache_clear(void);
 
-#include "ui_lang.h"
 extern SHAREDOBJ_DATA         struct ui_lang_info_t ui_lang_info[UI_LANG_MAX];
 extern SHAREDOBJ_FUNC(int)    lang_find_langname(const char *name);
 extern SHAREDOBJ_FUNC(int)    lang_find_codepage(int cp);
@@ -261,7 +260,6 @@ extern const int win_key_trans_table[][4];
 
 #endif /* !DONT_USE_DLL */
 
-#include "ui_lang.h"
 #ifndef _WINDOWS
 #define _WINDOWS(str)	lang_message(UI_MSG_OSD0, str)
 #endif

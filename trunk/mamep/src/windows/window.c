@@ -45,7 +45,6 @@
 #include "video.h"
 #include "blit.h"
 #include "input.h"
-#include "ui_lang.h"
 #include "../debug/window.h"
 
 #ifdef NEW_DEBUGGER

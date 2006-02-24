@@ -18,7 +18,6 @@
 // MAME headers
 #include "driver.h"
 #include "artwork.h"
-#include "ui_pal.h"
 #include "vidhrdw/vector.h"
 #include "blit.h"
 #include "video.h"

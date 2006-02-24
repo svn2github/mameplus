@@ -3,7 +3,6 @@
 #include "driver.h"
 #include "vidhrdw/generic.h"
 #include "monaco.h"
-#include "ui_font.h"	// FIXME
 
 struct monaco_gfx monaco_gfx;
 

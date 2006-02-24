@@ -53,8 +53,6 @@
 #include <osdepend.h>
 #include <unzip.h>
 
-#include "ui_pal.h"
-#include "ui_lang.h"
 #include "misc.h"
 
 #include "resource.h"
@@ -235,6 +233,7 @@ enum
 	FILETYPE_INPUT_FILES = 0,
 	FILETYPE_SAVESTATE_FILES,
 	FILETYPE_WAVE_FILES,
+	FILETYPE_MNG_FILES,
 	FILETYPE_IMAGE_FILES,
 	FILETYPE_MAX
 };
@@ -310,6 +309,7 @@ static void             ChangeLanguage(int id);
 static void             MamePlayRecordGame(void);
 static void             MamePlayBackGame(const char* fname_playback);
 static void             MamePlayRecordWave(void);
+static void             MamePlayRecordMng(void);
 static void             MameLoadState(void);
 static BOOL             CommonFileDialogW(BOOL open_for_write, char *filename, int filetype);
 static BOOL             CommonFileDialogA(BOOL open_for_write, char *filename, int filetype);
@@ -737,6 +737,7 @@ static char * g_pRecordName = NULL;
 static char * g_pPlayBkName = NULL;
 static char * g_pSaveStateName = NULL;
 static char * g_pRecordWaveName = NULL;
+static char * g_pRecordMngName = NULL;
 static char * override_playback_directory = NULL;
 static char * override_savestate_directory = NULL;
 
@@ -769,6 +770,13 @@ static struct
 		"Select a sound file to record",
 		GetLastDir,
 		"wav"
+	},
+	{
+		"MNG files (*.mng)\0*.mng;\0All files (*.*)\0*.*\0",
+		NULL,
+		"Select a mng file to record",
+		GetLastDir,
+		"mng"
 	},
 	{
 		"Image Files (*.png,*.bmp)\0*.png;*.bmp\0",
@@ -941,7 +949,8 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 //	sprintf(&pCmdLine[strlen(pCmdLine)], " -ftr %d",                    pOpts->frames_to_display);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -effect %s",                 pOpts->effect);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -screen_aspect %s",          pOpts->aspect);
-
+	if (g_pRecordMngName != NULL)
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -mngwrite \"%s\"",           g_pRecordMngName);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -cs %s",           pOpts->clean_stretch);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -zoom %i", pOpts->zoom);
 #ifdef USE_SCALE_EFFECTS
@@ -1207,6 +1216,11 @@ static int RunMAME(int nGameIndex)
 	{
 		argv[argc++] = "-wavwrite";
 		argv[argc++] = g_pRecordWaveName;
+	}
+	if (g_pRecordMngName != NULL)
+	{
+		argv[argc++] = "-mngwrite";
+		argv[argc++] = g_pRecordMngName;
 	}
 	if (g_pSaveStateName != NULL)
 	{
@@ -2786,6 +2800,7 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 					ShowWindow(hWnd, SW_RESTORE);
 				}
 			}
+			ShowWindow(hWnd, SW_RESTORE);
 			for (i = 0; i < GetSplitterCount(); i++)
 				SetSplitterPos(i, nSplitterOffset[i]);
 			SetWindowState(state);
@@ -4704,6 +4719,10 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		MamePlayRecordWave();
 		return TRUE;
 
+	case ID_FILE_PLAY_RECORD_MNG:
+		MamePlayRecordMng();
+		return TRUE;
+
 	case ID_FILE_LOADSTATE :
 		MameLoadState();
 		return TRUE;
@@ -6363,6 +6382,23 @@ static void MamePlayRecordWave()
 	}	
 }
 
+static void MamePlayRecordMng()
+{
+	int  nGame;
+	char filename[MAX_PATH];
+	*filename = 0;
+
+	nGame = Picker_GetSelectedItem(hwndList);
+	strcpy(filename, drivers[nGame]->name);
+
+	if (CommonFileDialog(TRUE, filename, FILETYPE_MNG_FILES))
+	{
+		g_pRecordMngName = filename;
+		MamePlayGameWithOptions(nGame);
+		g_pRecordMngName = NULL;
+	}	
+}
+
 static void MamePlayGameWithOptions(int nGame)
 {
 	memcpy(&playing_game_options, GetGameOptions(nGame), sizeof(options_type));
@@ -7655,11 +7691,13 @@ void SwitchFullScreenMode(void)
 
 		// Show the window maximized
 		if( GetWindowState() == SW_MAXIMIZE )
+/*
 		{
 			ShowWindow(hMain, SW_NORMAL);
 			ShowWindow(hMain, SW_MAXIMIZE);
 		}
 		else
+*/
 			ShowWindow(hMain, SW_RESTORE);
 
 		SetRunFullScreen(FALSE);

@@ -46,7 +46,6 @@
 #include "options.h"
 #include "picker.h"
 #include "io.h"
-#include "ui_lang.h"
 #include "translate.h"
 #include "rc.h"
 
@@ -461,6 +460,7 @@ static struct rc_option rc_game_opts[] =
 	{ "frames_to_run", "ftr", rc_int, &gOpts.frames_to_display, "0", 0, 0, NULL, "sets the number of frames to run within the game" },
 	{ "effect", NULL, rc_string, &gOpts.effect, "none", 0, 0, NULL, "specify the blitting effect" },
 	{ "screen_aspect", NULL, rc_string, &gOpts.aspect, "4:3", 0, 0, NULL, "specify an alternate monitor aspect ratio" },
+	{ "mngwrite", NULL, rc_string, &gOpts.mngwrite, NULL, 0, 0, NULL, "save video in specified mng file" },
 #ifdef USE_SCALE_EFFECTS
 	{ "scale_effect", NULL, rc_string, &gOpts.scale_effect, "none", 0, 0, NULL, "SaI scale effect" },
 #endif /* USE_SCALE_EFFECTS */

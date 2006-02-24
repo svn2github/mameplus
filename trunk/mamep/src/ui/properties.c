@@ -166,6 +166,7 @@ static void InitializeJoyidUI(HWND hWnd);
 #ifdef TRANS_UI
 static void TransparencySelectionChange(HWND hwnd);
 #endif /* TRANS_UI */
+static void PrioritySelectionChange(HWND hwnd);
 static void PropToOptions(HWND hWnd, options_type *o);
 static void OptionsToProp(HWND hWnd, options_type *o);
 static void SetPropEnabledControls(HWND hWnd);
@@ -227,6 +228,7 @@ static int  g_nScaleEffectIndex= 0;
 #ifdef TRANS_UI
 static int  g_nUITransparencyIndex  = 0;
 #endif /* TRANS_UI */
+static int  g_nPriorityIndex     = 0;
 
 static HICON g_hIcon = NULL;
 
@@ -357,7 +359,6 @@ static DWORD dwHelpIDs[] =
 	IDC_JOY_GUI,            HIDC_JOY_GUI,
 	IDC_RANDOM_BG,          HIDC_RANDOM_BG,
 	IDC_SKIP_GAME_INFO,     HIDC_SKIP_GAME_INFO,
-	//FIXME: IDC_HIGH_PRIORITY,      HIDC_HIGH_PRIORITY,
 	IDC_D3D,                HIDC_D3D,
 	IDC_D3D_FILTER,         HIDC_D3D_FILTER,
 	IDC_D3D_EFFECT,         HIDC_D3D_EFFECT,
@@ -2263,6 +2264,14 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 	}
 #endif /* TRANS_UI */
 
+	/* thread priority */
+	hCtrl = GetDlgItem(hWnd, IDC_PRIORITYDISP);
+	if (hCtrl)
+	{
+		sprintf(buf, "%d", o->priority);
+		Static_SetTextA(hCtrl, buf);
+	}
+
 	hCtrl = GetDlgItem(hWnd, IDC_ANALOG_AXES);	
 	if (hCtrl)
 	{
@@ -3052,6 +3061,11 @@ static void AssignUI_TRANSPARENCY(HWND hWnd)
 }
 #endif /* TRANS_UI */
 
+static void AssignPriority(HWND hWnd)
+{
+	pGameOpts->priority = g_nPriorityIndex - 15;
+}
+
 
 /************************************************************
  * DataMap initializers
@@ -3075,6 +3089,7 @@ static void ResetDataMap(void)
 #ifdef TRANS_UI
 	g_nUITransparencyIndex  = (int)(pGameOpts->ui_transparency);
 #endif /* TRANS_UI */
+	g_nPriorityIndex        = pGameOpts->priority + 15;
 
 	// if no controller type was specified or it was standard
 	if (pGameOpts->ctrlr == NULL || mame_stricmp(pGameOpts->ctrlr,"Standard") == 0)
@@ -3375,7 +3390,6 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_OLD_TIMING,    DM_BOOL, CT_BUTTON,   &pGameOpts->old_timing,    DM_BOOL, &pGameOpts->old_timing,    0, 0, 0);
 	DataMapAdd(IDC_LEDS,          DM_BOOL, CT_BUTTON,   &pGameOpts->leds,          DM_BOOL, &pGameOpts->leds,          0, 0, 0);
 	DataMapAdd(IDC_LEDMODE,       DM_INT,  CT_COMBOBOX, &g_nLedmodeIndex,          DM_STRING, &pGameOpts->ledmode,     0, 0, AssignLedmode);
-	//FIXME: DataMapAdd(IDC_HIGH_PRIORITY, DM_BOOL, CT_BUTTON,   &pGameOpts->high_priority, DM_BOOL, &pGameOpts->high_priority, 0, 0, 0);
 	DataMapAdd(IDC_SKIP_GAME_INFO,DM_BOOL,CT_BUTTON,    &pGameOpts->skip_gameinfo, DM_BOOL, &pGameOpts->skip_gameinfo, 0, 0, 0);
 	DataMapAdd(IDC_BIOS,          DM_INT,  CT_COMBOBOX, &g_nBiosIndex,             DM_STRING, &pGameOpts->bios,        0, 0, AssignBios);
 	DataMapAdd(IDC_ENABLE_AUTOSAVE, DM_BOOL, CT_BUTTON, &pGameOpts->autosave,      DM_BOOL, &pGameOpts->autosave,     0, 0, 0);
@@ -3392,6 +3406,8 @@ static void BuildDataMap(void)
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 	DataMapAdd(IDC_M68K_CORE,     DM_INT,  CT_COMBOBOX, &pGameOpts->m68k_core,     DM_INT,  &pGameOpts->m68k_core,     0, 0, 0);
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
+	DataMapAdd(IDC_PRIORITY,      DM_INT,  CT_SLIDER,   &g_nPriorityIndex,         DM_INT,  &pGameOpts->priority,      0, 0, AssignPriority);
+	DataMapAdd(IDC_PRIORITYDISP,  DM_NONE, CT_NONE,     NULL,                      DM_INT,  &pGameOpts->priority,      0, 0, 0);
 
 	/* BIOS */
 	if (IS_GLOBAL)
@@ -3631,6 +3647,9 @@ static void InitializeMisc(HWND hDlg)
 				(WPARAM)FALSE,
 				(LPARAM)MAKELONG(0, 255)); /* [0, 255] in 1.0 increments */
 #endif /* TRANS_UI */
+	SendDlgItemMessage(hDlg, IDC_PRIORITY, TBM_SETRANGE,
+				(WPARAM)FALSE,
+				(LPARAM)MAKELONG(0, 16)); /* [-15, 1] */
 }
 
 static void OptOnHScroll(HWND hwnd, HWND hwndCtl, UINT code, int pos)
@@ -3710,6 +3729,11 @@ static void OptOnHScroll(HWND hwnd, HWND hwndCtl, UINT code, int pos)
 		TransparencySelectionChange(hwnd);
 	}
 #endif /* TRANS_UI */
+	else
+	if (hwndCtl == GetDlgItem(hwnd, IDC_PRIORITY))
+	{
+		PrioritySelectionChange(hwnd);
+	}
 
 }
 
@@ -4615,6 +4639,20 @@ static void TransparencySelectionChange(HWND hwnd)
 	Static_SetTextA(GetDlgItem(hwnd, IDC_TRANSPARENCYDISP), buf);
 }
 #endif /* TRANS_UI */
+
+/* Handle changes to the Volume slider */
+static void PrioritySelectionChange(HWND hwnd)
+{
+	char buf[100];
+	int  nValue;
+
+	/* Get the current value of the control */
+	nValue = SendDlgItemMessage(hwnd, IDC_PRIORITY, TBM_GETPOS, 0, 0);
+
+	/* Set the static display to the new value */
+	snprintf(buf,sizeof(buf), "%d", nValue - 15);
+	Static_SetTextA(GetDlgItem(hwnd, IDC_PRIORITYDISP), buf);
+}
 
 
 /* End of source file */

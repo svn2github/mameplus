@@ -97,7 +97,6 @@
 #include "profiler.h"
 #include "machine/generic.h"
 #include <math.h>
-#include "ui_font.h"
 
 #ifdef MESS
 #include "inputx.h"

@@ -54,7 +54,8 @@ BEGIN
         MENUITEM "Play and &Record Input...",   ID_FILE_PLAY_RECORD
         MENUITEM "P&layback Input...",          ID_FILE_PLAY_BACK
         MENUITEM SEPARATOR
-        MENUITEM "Play and Record &Wave Output...", ID_FILE_PLAY_RECORD_WAVE
+        MENUITEM "Play and Record &Wav Output...", ID_FILE_PLAY_RECORD_WAVE
+        MENUITEM "Play and Record &MNG Video...",  ID_FILE_PLAY_RECORD_MNG
         MENUITEM SEPARATOR
         MENUITEM "Loa&d Savestate...",          ID_FILE_LOADSTATE
         MENUITEM SEPARATOR
@@ -810,36 +811,40 @@ BEGIN
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
     CONTROL         "Enable game cheats",IDC_CHEAT,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,10,45,135,10,0,HIDC_CHEAT
+#if 0 // no space temporary remove
     CONTROL         "Error log (for developers)",IDC_LOG,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,59,135,10,0,HIDC_LOG
+#endif // no space temporary remove
     CONTROL         "Sleep when possible",IDC_SLEEP,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,73,135,10,0,HIDC_SLEEP
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,59,135,10,0,HIDC_SLEEP
     CONTROL         "Use RDTSC timing system",IDC_OLD_TIMING,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,87,135,10,0,HIDC_OLD_TIMING
-    //FIXME: CONTROL         "High thread priority",IDC_HIGH_PRIORITY,"Button",
-    //                BS_AUTOCHECKBOX | WS_TABSTOP,10,101,135,10,0,HIDC_HIGH_PRIORITY
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,73,135,10,0,HIDC_OLD_TIMING
     CONTROL         "Skip game info",IDC_SKIP_GAME_INFO,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,115,135,10,0,
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,87,135,10,0,
                     HIDC_SKIP_GAME_INFO
     CONTROL         "Auto restore and save (only if available)",IDC_ENABLE_AUTOSAVE,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,129,135,10,0,HIDC_ENABLE_AUTOSAVE
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,101,135,10,0,HIDC_ENABLE_AUTOSAVE
     CONTROL         "Disable second monitor emulation",IDC_DISABLE_2ND_MONITOR,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,143,135,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,115,135,10
     CONTROL         "Confirm before exiting game",IDC_CONFIRM_QUIT,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,157,135,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,129,135,10
 #ifdef AUTO_PAUSE_PLAYBACK
     CONTROL         "Auto pause when playback is finished",IDC_AUTO_PAUSE_PLAYBACK,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,171,135,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,143,135,10
 #endif /* AUTO_PAUSE_PLAYBACK */
+    GROUPBOX        "Thread priority",IDC_STATIC,4,157,140,30
+    CONTROL         "IntensityPriority",IDC_PRIORITY,"msctls_trackbar32",
+                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,10,172,105,10
+    CTEXT           "-15",IDC_PRIORITYDISP,120,172,20,10,NOT WS_GROUP
 #ifdef TRANS_UI
-    GROUPBOX        "",IDC_STATIC,4,185,140,30,WS_DISABLED
+    GROUPBOX        "",IDC_STATIC,4,190,140,30,WS_DISABLED
     CONTROL         "Transparent in-game UI",IDC_TRANSUI,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,185,120,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,190,120,10
     CONTROL         "IntensitySlider",IDC_TRANSPARENCY,"msctls_trackbar32",
-                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,10,200,105,10
-    RTEXT           "128",IDC_TRANSPARENCYDISP,116,200,17,10,NOT WS_GROUP
+                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,10,205,105,10
+    CTEXT           "128",IDC_TRANSPARENCYDISP,120,205,20,10,NOT WS_GROUP
 #endif /* TRANS_UI */
-    GROUPBOX        "",IDC_STATIC,147,45,108,105,WS_DISABLED
+    GROUPBOX        "",IDC_STATIC,147,45,108,109,WS_DISABLED
     CONTROL         "Use additional Artwork",IDC_ARTWORK,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,153,45,98,10,0,HIDC_ARTWORK
     CONTROL         "Backdrops",IDC_BACKDROPS,"Button",BS_AUTOCHECKBOX | 
@@ -850,15 +855,15 @@ BEGIN
                     WS_TABSTOP,153,87,100,10,0,HIDC_OVERLAYS
     CONTROL         "Crop Artwork",IDC_ARTWORK_CROP,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,153,101,100,10,0,HIDC_ARTWORK_CROP
-    GROUPBOX        "Artwork resolution",IDC_ARTRESTEXT,153,115,96,30,WS_DISABLED
-    COMBOBOX        IDC_ARTRES,159,126,84,40,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    GROUPBOX        "Artwork resolution",IDC_ARTRESTEXT,153,115,96,32,WS_DISABLED
+    COMBOBOX        IDC_ARTRES,159,127,84,40,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP,0,HIDC_ARTRES
 #if 1 // ks hcmame s switch m68k core
-    GROUPBOX        "M68000 CPU Core",IDC_M68K_CORETEXT,147,153,108,30
-    COMBOBOX        IDC_M68K_CORE,153,165,97,40,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "M68000 CPU Core",IDC_M68K_CORETEXT,147,157,108,30
+    COMBOBOX        IDC_M68K_CORE,153,169,97,40,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
 #endif // ks hcmame s switch m68k core
-    GROUPBOX        "BIOS",IDC_BIOSTEXT,147,185,108,30
-    COMBOBOX        IDC_BIOS,153,195,97,120,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    GROUPBOX        "BIOS",IDC_BIOSTEXT,147,190,108,30
+    COMBOBOX        IDC_BIOS,153,200,97,120,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP,0,HIDC_BIOS
     PUSHBUTTON      "Reset",IDC_PROP_RESET,4,225,117,14,0,0,HIDC_PROP_RESET
     PUSHBUTTON      "Restore Default Settings",IDC_USE_DEFAULT,138,225,117,14,
@@ -1466,7 +1471,8 @@ BEGIN
     ID_FILE_PLAY            "Play currently selected game"
     ID_FILE_PLAY_RECORD     "Record a game for later playback"
     ID_FILE_PLAY_BACK       "Playback a recorded game"
-    ID_FILE_PLAY_RECORD_WAVE "Record the sound output of a game"
+    ID_FILE_PLAY_RECORD_WAVE "Save sound in wav file"
+    ID_FILE_PLAY_RECORD_MNG  "Save video in specified mng file"
     ID_FILE_LOADSTATE       "Play a game starting with the given savestate"
     ID_SOURCE_PROPERTIES    "Display the driver properties of the selected game"
     ID_GAME_PROPERTIES      "Display the properties of the selected items"

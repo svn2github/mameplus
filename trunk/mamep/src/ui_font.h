@@ -11,7 +11,6 @@
 #define UI_FONT_H
 
 #include "palette.h"
-#include "ui_pal.h"
 
 void uifont_buildfont(int *rotcharwidth, int *rotcharheight);
 void uifont_freefont(void);

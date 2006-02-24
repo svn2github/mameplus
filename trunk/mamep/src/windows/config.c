@@ -42,7 +42,6 @@
 #include "misc.h"
 #include "video.h"
 #include "fileio.h"
-#include "ui_lang.h"
 
 #ifdef NEW_DEBUGGER
 #include "debug/debugcpu.h"

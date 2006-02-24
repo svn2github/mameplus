@@ -15,7 +15,6 @@
 
 #include "osd_cpu.h"
 #include "input.h" /* for input_seq definition */
-#include "ui_pal.h"
 
 #define MAX_SYSTEM_BIOS		8
 #define MAX_GAMEDESC 256
@@ -90,6 +89,7 @@ typedef struct
 	char*  aspect;
 	char*  screen;
 	char*  clean_stretch;
+	char*  mngwrite;
 #ifdef USE_SCALE_EFFECTS
 	char*  scale_effect;
 #endif /* USE_SCALE_EFFECTS */

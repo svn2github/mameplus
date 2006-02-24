@@ -16,6 +16,8 @@
 #include "fileio.h"
 #include "video.h"
 #include "ui_pal.h"
+#include "ui_lang.h"
+#include "ui_font.h"
 
 #ifdef MESS
 #include "device.h"
