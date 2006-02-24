@@ -476,7 +476,7 @@ static struct rc_option rc_game_opts[] =
 	{ "Windows misc options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
 	{ "sleep", NULL, rc_bool, &gOpts.sleep, "1", 0, 0, NULL, "allow MAME to give back time to the system when it's not needed" },
 	{ "rdtsc", NULL, rc_bool, &gOpts.old_timing, "0", 0, 0, NULL, "prefer RDTSC over QueryPerformanceCounter for timing" },
-	{ "high_priority", NULL, rc_bool, &gOpts.high_priority, "0", 0, 0, NULL, "increase thread priority" },
+	{ "priority", NULL, rc_int, &gOpts.priority, "-15", -15, 1, NULL, "thread priority" },
 
 	{ "Windows sound options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
 	{ "audio_latency", NULL, rc_int, &gOpts.audio_latency, "1", 1, 4, NULL, "set audio latency (increase to reduce glitches)" },

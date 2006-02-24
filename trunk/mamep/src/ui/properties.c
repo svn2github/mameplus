@@ -357,7 +357,7 @@ static DWORD dwHelpIDs[] =
 	IDC_JOY_GUI,            HIDC_JOY_GUI,
 	IDC_RANDOM_BG,          HIDC_RANDOM_BG,
 	IDC_SKIP_GAME_INFO,     HIDC_SKIP_GAME_INFO,
-	IDC_HIGH_PRIORITY,      HIDC_HIGH_PRIORITY,
+	//FIXME: IDC_HIGH_PRIORITY,      HIDC_HIGH_PRIORITY,
 	IDC_D3D,                HIDC_D3D,
 	IDC_D3D_FILTER,         HIDC_D3D_FILTER,
 	IDC_D3D_EFFECT,         HIDC_D3D_EFFECT,
@@ -3375,7 +3375,7 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_OLD_TIMING,    DM_BOOL, CT_BUTTON,   &pGameOpts->old_timing,    DM_BOOL, &pGameOpts->old_timing,    0, 0, 0);
 	DataMapAdd(IDC_LEDS,          DM_BOOL, CT_BUTTON,   &pGameOpts->leds,          DM_BOOL, &pGameOpts->leds,          0, 0, 0);
 	DataMapAdd(IDC_LEDMODE,       DM_INT,  CT_COMBOBOX, &g_nLedmodeIndex,          DM_STRING, &pGameOpts->ledmode,     0, 0, AssignLedmode);
-	DataMapAdd(IDC_HIGH_PRIORITY, DM_BOOL, CT_BUTTON,   &pGameOpts->high_priority, DM_BOOL, &pGameOpts->high_priority, 0, 0, 0);
+	//FIXME: DataMapAdd(IDC_HIGH_PRIORITY, DM_BOOL, CT_BUTTON,   &pGameOpts->high_priority, DM_BOOL, &pGameOpts->high_priority, 0, 0, 0);
 	DataMapAdd(IDC_SKIP_GAME_INFO,DM_BOOL,CT_BUTTON,    &pGameOpts->skip_gameinfo, DM_BOOL, &pGameOpts->skip_gameinfo, 0, 0, 0);
 	DataMapAdd(IDC_BIOS,          DM_INT,  CT_COMBOBOX, &g_nBiosIndex,             DM_STRING, &pGameOpts->bios,        0, 0, AssignBios);
 	DataMapAdd(IDC_ENABLE_AUTOSAVE, DM_BOOL, CT_BUTTON, &pGameOpts->autosave,      DM_BOOL, &pGameOpts->autosave,     0, 0, 0);

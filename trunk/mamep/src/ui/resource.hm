@@ -53,7 +53,7 @@
 #define HIDC_GAME_CAPTION               0x80ad04c8    // IDD_INTERFACE_OPTIONS [Englisch (USA)]
 #define HIDC_GAMMA                      0x809a03ff    // IDD_PROP_DISPLAY [Englisch (USA)]
 #define HIDC_HIDE_MOUSE                 0x80ad04b5    // IDD_INTERFACE_OPTIONS [Englisch (USA)]
-#define HIDC_HIGH_PRIORITY              0x809e049e    // IDD_PROP_MISC [Englisch (USA)]
+//FIXME: #define HIDC_HIGH_PRIORITY              0x809e049e    // IDD_PROP_MISC [Englisch (USA)]
 #define HIDC_HISTORY                    0x806504cb    // IDD_MAIN [Englisch (USA)]
 #define HIDC_HWSTRETCH                  0x809c04dc    // IDD_PROP_ADVANCED [Englisch (USA)]
 #define HIDC_INTENSITY                  0x809f0428    // IDD_PROP_VECTOR [Englisch (USA)]

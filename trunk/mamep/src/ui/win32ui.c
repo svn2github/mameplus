@@ -1106,7 +1106,7 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -rdtsc");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sleds",                    pOpts->leds            ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sskip_gameinfo",           pOpts->skip_gameinfo   ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%shigh_priority",           pOpts->high_priority   ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -priority %d",               pOpts->priority);
 	if (pOpts->autosave)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -autosave");
 

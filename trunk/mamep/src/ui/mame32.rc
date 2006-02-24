@@ -816,8 +816,8 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,73,135,10,0,HIDC_SLEEP
     CONTROL         "Use RDTSC timing system",IDC_OLD_TIMING,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,87,135,10,0,HIDC_OLD_TIMING
-    CONTROL         "High thread priority",IDC_HIGH_PRIORITY,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,101,135,10,0,HIDC_HIGH_PRIORITY
+    //FIXME: CONTROL         "High thread priority",IDC_HIGH_PRIORITY,"Button",
+    //                BS_AUTOCHECKBOX | WS_TABSTOP,10,101,135,10,0,HIDC_HIGH_PRIORITY
     CONTROL         "Skip game info",IDC_SKIP_GAME_INFO,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,115,135,10,0,
                     HIDC_SKIP_GAME_INFO

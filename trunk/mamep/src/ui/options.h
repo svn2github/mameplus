@@ -180,7 +180,7 @@ typedef struct
 	char*  playbackname;
 	char*  recordname;
 	BOOL   sleep;
-	BOOL   high_priority;
+	int    priority;
 	BOOL   errorlog;
 	BOOL   erroroslog;
 	BOOL   old_timing;

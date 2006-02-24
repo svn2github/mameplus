@@ -282,7 +282,7 @@
 #define IDC_OLD_TIMING                  1179
 #define IDC_PAUSEBRIGHT                 1180
 #define IDC_PAUSEBRIGHTDISP             1181
-#define IDC_HIGH_PRIORITY               1182
+//FIXME: #define IDC_HIGH_PRIORITY               1182
 #define IDC_D3D                         1183
 #define IDC_D3D_FILTER                  1184
 #define IDC_D3D_TEXTURE_MANAGEMENT      1185
