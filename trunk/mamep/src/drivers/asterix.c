@@ -34,7 +34,6 @@ WRITE16_HANDLER( asterix_spritebank_w );
 
 static unsigned char cur_control2;
 static int init_eeprom_count;
-static int nosound_kludge_step;
 
 static struct EEPROM_interface eeprom_interface =
 {
@@ -125,44 +124,8 @@ static INTERRUPT_GEN( asterix_interrupt )
                                               mask used is 0 or 7 */
 }
 
-static MACHINE_INIT( asterix )
-{
-	nosound_kludge_step = 0;
-}
-
 static READ16_HANDLER( asterix_sound_r )
 {
-	if ((Machine->sample_rate == 0) && (offset == 0) && (ACCESSING_LSB))		// 380201.b
-	{
-		/* fake reads to bypass the ROM RAM check when no sound :
-			- asterix  (EAD version) : routine starts at 0x004ec8
-			- astrxeac (EAC version) : routine starts at 0x004edc
-			- astrxeaa (EAA version) : routine starts at 0x004e76	*/
-
-		int	data;
-
-		switch (nosound_kludge_step)
-		{
-			case 0:	// btst    #$7, $380201.l
-				data = 0x00;
-				break;
-			case 1:	// btst    #$0, $380201.l
-				data = 0x01;
-				break;
-			case 2:	// btst    #$1, $380201.l
-				data = 0x02;
-				break;
-			default:
-				data = 0x00;
-				break;
-		}
-
-		if (nosound_kludge_step < 3)
-			nosound_kludge_step++;
-
-		return data;
-	}
-
 	return K053260_0_r(2 + offset);
 }
 
@@ -331,8 +294,6 @@ static MACHINE_DRIVER_START( asterix )
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
-
-	MDRV_MACHINE_INIT(asterix)
 
 	MDRV_NVRAM_HANDLER(asterix)
 
