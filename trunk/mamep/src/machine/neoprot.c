@@ -21,7 +21,6 @@
 #include "neogeo.h"
 
 int neogeo_sram_locked;
-int neogeo_prot_data;
 
 WRITE16_HANDLER( neogeo_sram16_lock_w )
 {
@@ -53,6 +52,7 @@ WRITE16_HANDLER( neogeo_sram16_w )
 
 /************************ Fatal Fury 2 *************************
 ***************************************************************/
+int neogeo_prot_data;
 
 static READ16_HANDLER( fatfury2_protection_16_r )
 {
@@ -431,6 +431,8 @@ void mslug3_install_protection(void)
 {
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2fffe4, 0x2fffe5, 0, 0, mslug3_bankswitch_w);
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2fe446, 0x2fe447, 0, 0, prot_9a37_r);
+//  memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2ffff8, 0x2ffff9, 0, 0, sma_random_r);
+//  memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2ffffa, 0x2ffffb, 0, 0, sma_random_r);
 }
 
 void kof2000_install_protection(void)
