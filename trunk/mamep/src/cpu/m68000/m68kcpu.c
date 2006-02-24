@@ -989,8 +989,7 @@ void m68k_state_register(const char *type)
 {
 	int cpu = cpu_getactivecpu();
 
-	state_save_register_item_array(type, cpu, REG_D);
-	state_save_register_item_array(type, cpu, REG_A);
+	state_save_register_item_array(type, cpu, REG_DA);
 	state_save_register_item(type, cpu, REG_PPC);
 	state_save_register_item(type, cpu, REG_PC);
 	state_save_register_item(type, cpu, REG_USP);

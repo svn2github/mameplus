@@ -5,6 +5,7 @@
 #include "driver.h"
 #include "mamedbg.h"
 #include "m68000.h"
+#include "state.h"
 
 struct m68k_memory_interface a68k_memory_intf;
 
@@ -169,6 +170,13 @@ extern void CONVENTION M68020_RESET(void);
 /* Save State stuff                                                        */
 /***************************************************************************/
 
+#define state_save_register_UINT32(_mod,_inst,_name,_val,_count) \
+	state_save_register_generic(_mod, _inst, _name, _val, UINT32, _count)
+#define state_save_register_UINT16(_mod,_inst,_name,_val,_count) \
+	state_save_register_generic(_mod, _inst, _name, _val, UINT16, _count)
+#define state_save_register_UINT8(_mod,_inst,_name,_val,_count) \
+	state_save_register_generic(_mod, _inst, _name, _val, UINT8, _count)
+
 static int IntelFlag[32] = {
 	0x0000,0x0001,0x0800,0x0801,0x0040,0x0041,0x0840,0x0841,
 	0x0080,0x0081,0x0880,0x0881,0x00C0,0x00C1,0x08C0,0x08C1,
@@ -179,13 +187,25 @@ static int IntelFlag[32] = {
 
 // The assembler engine only keeps flags in intel format, so ...
 
+static UINT32 dar[16];
 static UINT32 zero = 0;
-static int stopped = 0;
+static UINT8 stopped = 0;
+static UINT8 halted = 0;
 
 #ifdef A68K0
 static void m68000_prepare_substate(void)
 {
+	int i;
+
+	for (i = 0; i < 8; i++)
+	{
+		dar[i] = M68000_regs.d[i];
+		dar[i + 8] = M68000_regs.a[i];
+	}
+
 	stopped = ((M68000_regs.IRQ_level & 0x80) != 0);
+	halted = 0;
+	zero = 0;
 
 	M68000_regs.sr = ((M68000_regs.ccr >> 4) & 0x1C)
 	               | (M68000_regs.ccr & 0x01)
@@ -196,6 +216,13 @@ static void m68000_prepare_substate(void)
 static void m68000_post_load(void)
 {
 	int intel = M68000_regs.sr & 0x1f;
+	int i;
+
+	for (i = 0; i < 8; i++)
+	{
+		M68000_regs.d[i] = dar[i];
+		M68000_regs.a[i] = dar[i + 8];
+	}
 
 	M68000_regs.sr_high = M68000_regs.sr >> 8;
 	M68000_regs.x_carry = (IntelFlag[intel] >> 8) & 0x01;
@@ -206,34 +233,43 @@ void m68000_state_register(const char *type)
 {
 	int cpu = cpu_getactivecpu();
 
-	state_save_register_item_array(type, cpu, M68000_regs.d);		// REG_D
-	state_save_register_item_array(type, cpu, M68000_regs.a);		// REG_A
-	state_save_register_item      (type, cpu, M68000_regs.previous_pc);	// REG_PPC
-	state_save_register_item      (type, cpu, M68000_regs.pc);		// REG_PC
-	state_save_register_item      (type, cpu, M68000_regs.usp);		// REG_USP
-	state_save_register_item      (type, cpu, M68000_regs.isp);		// REG_ISP
-	state_save_register_item      (type, cpu, zero);			// REG_MSP
-	state_save_register_item      (type, cpu, M68000_regs.vbr);		// REG_VBR
-	state_save_register_item      (type, cpu, M68000_regs.sfc);		// REG_SFC
-	state_save_register_item      (type, cpu, M68000_regs.dfc);		// REG_DFC
-	state_save_register_item      (type, cpu, zero);			// REG_CACR
-	state_save_register_item      (type, cpu, zero);			// REG_CAAR
-	state_save_register_item      (type, cpu, M68000_regs.sr);		// m68k_substate.sr
-	state_save_register_item      (type, cpu, M68000_regs.IRQ_level);	// CPU_INT_LEVEL
-	state_save_register_item      (type, cpu, M68000_regs.IRQ_cycles);	// CPU_INT_CYCLES
-	state_save_register_item      (type, cpu, stopped);			// m68k_substate.stopped
-	state_save_register_item      (type, cpu, zero);			// m68k_substate.halted
-	state_save_register_item      (type, cpu, zero);			// CPU_PREF_ADDR
-	state_save_register_item      (type, cpu, zero);			// CPU_PREF_DATA
-  	state_save_register_func_presave(m68000_prepare_substate);
-  	state_save_register_func_postload(m68000_post_load);
+	state_save_register_UINT32(type, cpu, "m68ki_cpu.dar",         &dar, 16);
+	state_save_register_UINT32(type, cpu, "REG_PPC",               &M68000_regs.previous_pc, 1);
+	state_save_register_UINT32(type, cpu, "REG_PC",                &M68000_regs.pc, 1);
+	state_save_register_UINT32(type, cpu, "REG_USP",               &M68000_regs.usp, 1);
+	state_save_register_UINT32(type, cpu, "REG_ISP",               &M68000_regs.isp, 1);
+	state_save_register_UINT32(type, cpu, "REG_MSP",               &zero, 1);
+	state_save_register_UINT32(type, cpu, "REG_VBR",               &M68000_regs.vbr, 1);
+	state_save_register_UINT32(type, cpu, "REG_SFC",               &M68000_regs.sfc, 1);
+	state_save_register_UINT32(type, cpu, "REG_DFC",               &M68000_regs.dfc, 1);
+	state_save_register_UINT32(type, cpu, "REG_CACR",              &zero, 1);
+	state_save_register_UINT32(type, cpu, "REG_CAAR",              &zero, 1);
+	state_save_register_UINT16(type, cpu, "m68k_substate.sr",      &M68000_regs.sr, 1);
+	state_save_register_UINT32(type, cpu, "CPU_INT_LEVEL",         &M68000_regs.IRQ_level, 1);
+	state_save_register_UINT32(type, cpu, "CPU_INT_CYCLES",        &M68000_regs.IRQ_cycles, 1);
+	state_save_register_UINT8 (type, cpu, "m68k_substate.stopped", &stopped, 1);
+	state_save_register_UINT8 (type, cpu, "m68k_substate.halted",  &halted, 1);
+	state_save_register_UINT32(type, cpu, "CPU_PREF_ADDR",         &zero, 1);
+	state_save_register_UINT32(type, cpu, "CPU_PREF_DATA",         &zero, 1);
+	state_save_register_func_presave(m68000_prepare_substate);
+	state_save_register_func_postload(m68000_post_load);
 }
 #endif
 
 #ifdef A68K1
 static void m68010_prepare_substate(void)
 {
+	int i;
+
+	for (i = 0; i < 8; i++)
+	{
+		dar[i] = M68010_regs.d[i];
+		dar[i + 8] = M68010_regs.a[i];
+	}
+
 	stopped = ((M68010_regs.IRQ_level & 0x80) != 0);
+	halted = 0;
+	zero = 0;
 
 	M68010_regs.sr = ((M68010_regs.ccr >> 4) & 0x1C)
 	               | (M68010_regs.ccr & 0x01)
@@ -244,6 +280,13 @@ static void m68010_prepare_substate(void)
 static void m68010_post_load(void)
 {
 	int intel = M68010_regs.sr & 0x1f;
+	int i;
+
+	for (i = 0; i < 8; i++)
+	{
+		M68010_regs.d[i] = dar[i];
+		M68010_regs.a[i] = dar[i + 8];
+	}
 
 	M68010_regs.sr_high = M68010_regs.sr >> 8;
 	M68010_regs.x_carry = (IntelFlag[intel] >> 8) & 0x01;
@@ -254,34 +297,43 @@ void m68010_state_register(const char *type)
 {
 	int cpu = cpu_getactivecpu();
 
-	state_save_register_item_array(type, cpu, M68010_regs.d);		// REG_D
-	state_save_register_item_array(type, cpu, M68010_regs.a);		// REG_A
-	state_save_register_item      (type, cpu, M68010_regs.previous_pc);	// REG_PPC
-	state_save_register_item      (type, cpu, M68010_regs.pc);		// REG_PC
-	state_save_register_item      (type, cpu, M68010_regs.usp);		// REG_USP
-	state_save_register_item      (type, cpu, M68010_regs.isp);		// REG_ISP
-	state_save_register_item      (type, cpu, zero);			// REG_MSP
-	state_save_register_item      (type, cpu, M68010_regs.vbr);		// REG_VBR
-	state_save_register_item      (type, cpu, M68010_regs.sfc);		// REG_SFC
-	state_save_register_item      (type, cpu, M68010_regs.dfc);		// REG_DFC
-	state_save_register_item      (type, cpu, zero);			// REG_CACR
-	state_save_register_item      (type, cpu, zero);			// REG_CAAR
-	state_save_register_item      (type, cpu, M68010_regs.sr);		// m68k_substate.sr
-	state_save_register_item      (type, cpu, M68010_regs.IRQ_level);	// CPU_INT_LEVEL
-	state_save_register_item      (type, cpu, M68010_regs.IRQ_cycles);	// CPU_INT_CYCLES
-	state_save_register_item      (type, cpu, stopped);			// m68k_substate.stopped
-	state_save_register_item      (type, cpu, zero);			// m68k_substate.halted
-	state_save_register_item      (type, cpu, zero);			// CPU_PREF_ADDR
-	state_save_register_item      (type, cpu, zero);			// CPU_PREF_DATA
-  	state_save_register_func_presave(m68010_prepare_substate);
-  	state_save_register_func_postload(m68010_post_load);
+	state_save_register_UINT32(type, cpu, "m68ki_cpu.dar",         &dar, 16);
+	state_save_register_UINT32(type, cpu, "REG_PPC",               &M68010_regs.previous_pc, 1);
+	state_save_register_UINT32(type, cpu, "REG_PC",                &M68010_regs.pc, 1);
+	state_save_register_UINT32(type, cpu, "REG_USP",               &M68010_regs.usp, 1);
+	state_save_register_UINT32(type, cpu, "REG_ISP",               &M68010_regs.isp, 1);
+	state_save_register_UINT32(type, cpu, "REG_MSP",               &zero, 1);
+	state_save_register_UINT32(type, cpu, "REG_VBR",               &M68010_regs.vbr, 1);
+	state_save_register_UINT32(type, cpu, "REG_SFC",               &M68010_regs.sfc, 1);
+	state_save_register_UINT32(type, cpu, "REG_DFC",               &M68010_regs.dfc, 1);
+	state_save_register_UINT32(type, cpu, "REG_CACR",              &zero, 1);
+	state_save_register_UINT32(type, cpu, "REG_CAAR",              &zero, 1);
+	state_save_register_UINT16(type, cpu, "m68k_substate.sr",      &M68010_regs.sr, 1);
+	state_save_register_UINT32(type, cpu, "CPU_INT_LEVEL",         &M68010_regs.IRQ_level, 1);
+	state_save_register_UINT32(type, cpu, "CPU_INT_CYCLES",        &M68010_regs.IRQ_cycles, 1);
+	state_save_register_UINT8 (type, cpu, "m68k_substate.stopped", &stopped, 1);
+	state_save_register_UINT8 (type, cpu, "m68k_substate.halted",  &halted, 1);
+	state_save_register_UINT32(type, cpu, "CPU_PREF_ADDR",         &zero, 1);
+	state_save_register_UINT32(type, cpu, "CPU_PREF_DATA",         &zero, 1);
+	state_save_register_func_presave(m68010_prepare_substate);
+	state_save_register_func_postload(m68010_post_load);
 }
 #endif
 
 #ifdef A68K2
 static void m68020_prepare_substate(void)
 {
+	int i;
+
+	for (i = 0; i < 8; i++)
+	{
+		dar[i] = M68020_regs.d[i];
+		dar[i + 8] = M68020_regs.a[i];
+	}
+
 	stopped = ((M68020_regs.IRQ_level & 0x80) != 0);
+	halted = 0;
+	zero = 0;
 
 	M68020_regs.sr = ((M68020_regs.ccr >> 4) & 0x1C)
 	               | (M68020_regs.ccr & 0x01)
@@ -292,6 +344,13 @@ static void m68020_prepare_substate(void)
 static void m68020_post_load(void)
 {
 	int intel = M68020_regs.sr & 0x1f;
+	int i;
+
+	for (i = 0; i < 8; i++)
+	{
+		M68020_regs.d[i] = dar[i];
+		M68020_regs.a[i] = dar[i + 8];
+	}
 
 	M68020_regs.sr_high = M68020_regs.sr >> 8;
 	M68020_regs.x_carry = (IntelFlag[intel] >> 8) & 0x01;
@@ -302,27 +361,26 @@ void m68020_state_register(const char *type)
 {
 	int cpu = cpu_getactivecpu();
 
-	state_save_register_item_array(type, cpu, M68020_regs.d);		// REG_D
-	state_save_register_item_array(type, cpu, M68020_regs.a);		// REG_A
-	state_save_register_item      (type, cpu, M68020_regs.previous_pc);	// REG_PPC
-	state_save_register_item      (type, cpu, M68020_regs.pc);		// REG_PC
-	state_save_register_item      (type, cpu, M68020_regs.usp);		// REG_USP
-	state_save_register_item      (type, cpu, M68020_regs.isp);		// REG_ISP
-	state_save_register_item      (type, cpu, zero);			// REG_MSP
-	state_save_register_item      (type, cpu, M68020_regs.vbr);		// REG_VBR
-	state_save_register_item      (type, cpu, M68020_regs.sfc);		// REG_SFC
-	state_save_register_item      (type, cpu, M68020_regs.dfc);		// REG_DFC
-	state_save_register_item      (type, cpu, zero);			// REG_CACR
-	state_save_register_item      (type, cpu, zero);			// REG_CAAR
-	state_save_register_item      (type, cpu, M68020_regs.sr);		// m68k_substate.sr
-	state_save_register_item      (type, cpu, M68020_regs.IRQ_level);	// CPU_INT_LEVEL
-	state_save_register_item      (type, cpu, M68020_regs.IRQ_cycles);	// CPU_INT_CYCLES
-	state_save_register_item      (type, cpu, stopped);			// m68k_substate.stopped
-	state_save_register_item      (type, cpu, zero);			// m68k_substate.halted
-	state_save_register_item      (type, cpu, zero);			// CPU_PREF_ADDR
-	state_save_register_item      (type, cpu, zero);			// CPU_PREF_DATA
-  	state_save_register_func_presave(m68020_prepare_substate);
-  	state_save_register_func_postload(m68020_post_load);
+	state_save_register_UINT32(type, cpu, "m68ki_cpu.dar",         &dar, 16);
+	state_save_register_UINT32(type, cpu, "REG_PPC",               &M68020_regs.previous_pc, 1);
+	state_save_register_UINT32(type, cpu, "REG_PC",                &M68020_regs.pc, 1);
+	state_save_register_UINT32(type, cpu, "REG_USP",               &M68020_regs.usp, 1);
+	state_save_register_UINT32(type, cpu, "REG_ISP",               &M68020_regs.isp, 1);
+	state_save_register_UINT32(type, cpu, "REG_MSP",               &zero, 1);
+	state_save_register_UINT32(type, cpu, "REG_VBR",               &M68020_regs.vbr, 1);
+	state_save_register_UINT32(type, cpu, "REG_SFC",               &M68020_regs.sfc, 1);
+	state_save_register_UINT32(type, cpu, "REG_DFC",               &M68020_regs.dfc, 1);
+	state_save_register_UINT32(type, cpu, "REG_CACR",              &zero, 1);
+	state_save_register_UINT32(type, cpu, "REG_CAAR",              &zero, 1);
+	state_save_register_UINT16(type, cpu, "m68k_substate.sr",      &M68020_regs.sr, 1);
+	state_save_register_UINT32(type, cpu, "CPU_INT_LEVEL",         &M68020_regs.IRQ_level, 1);
+	state_save_register_UINT32(type, cpu, "CPU_INT_CYCLES",        &M68020_regs.IRQ_cycles, 1);
+	state_save_register_UINT8 (type, cpu, "m68k_substate.stopped", &stopped, 1);
+	state_save_register_UINT8 (type, cpu, "m68k_substate.halted",  &halted, 1);
+	state_save_register_UINT32(type, cpu, "CPU_PREF_ADDR",         &zero, 1);
+	state_save_register_UINT32(type, cpu, "CPU_PREF_DATA",         &zero, 1);
+	state_save_register_func_presave(m68020_prepare_substate);
+	state_save_register_func_postload(m68020_post_load);
 }
 #endif
 
