@@ -987,12 +987,12 @@ void record_movie_toggle(void)
 	{
 		record_movie_start(NULL);
 		if (movie_file)
-			ui_popup("REC START");
+			ui_popup(_("REC START"));
 	}
 	else
 	{
 		record_movie_stop();
-		ui_popup("REC STOP (%d frames)", movie_frame);
+		ui_popup(_("REC STOP (%d frames)"), movie_frame);
 	}
 }
 

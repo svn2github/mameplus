@@ -255,7 +255,7 @@ static struct rc_option opts[] = {
 	{ "use_bezels", "bezel", rc_bool, &use_bezels, "1", 0, 0, NULL, "use bezel artwork" },
 	{ "artwork_crop", "artcrop", rc_bool, &options.artwork_crop, "0", 0, 0, NULL, "crop artwork to " GAMENOUN " screen only" },
 	{ "artwork_resolution", "artres", rc_int, &options.artwork_res, "0", 0, 0, NULL, "artwork resolution (0 for auto)" },
-	{ "cheat", "c", rc_bool, &options.cheat, "1", 0, 0, NULL, "enable/disable cheat subsystem" },
+	{ "cheat", "c", rc_bool, &options.cheat, "0", 0, 0, NULL, "enable/disable cheat subsystem" },
 	{ "debug", "d", rc_bool, &options.mame_debug, "0", 0, 0, NULL, "enable/disable debugger (only if available)" },
 	{ "debugscript", NULL, rc_string, &debugscript, NULL, 0, 0, NULL, "script for debugger (only if available)" },
 	{ "playback", "pb", rc_string, &playbackname, NULL, 0, 0, NULL, "playback an input file" },
@@ -518,7 +518,7 @@ int cli_frontend_init (int argc, char **argv)
 #endif
 	if (!cmd_name)
 	{
-		osd_die (_WINDOWS("who am I? cannot determine the name I was called with\n"));
+		osd_die ("who am I? cannot determine the name I was called with\n");
 	}
 
 	sprintf (buffer, "%s.ini", cmd_name);

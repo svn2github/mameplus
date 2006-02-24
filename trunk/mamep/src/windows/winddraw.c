@@ -890,7 +890,6 @@ static int create_blit_surface(void)
 				(UINT32)blit_desc.ddpfPixelFormat.DUMMYUNIONNAMEN(2).dwRBitMask,
 				(UINT32)blit_desc.ddpfPixelFormat.DUMMYUNIONNAMEN(3).dwGBitMask,
 				(UINT32)blit_desc.ddpfPixelFormat.DUMMYUNIONNAMEN(4).dwBBitMask);
-
 	return 0;
 
 	// error handling

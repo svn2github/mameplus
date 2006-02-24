@@ -928,7 +928,7 @@ char *rc_get_home_dir(void)
    }
    if (!(s=malloc(strlen(pw->pw_dir)+1)))
    {
-      fprintf(stderr, "error: malloc faild for homedir string\n");
+      fprintf(stderr, _WINDOWS("error: malloc faild for homedir string\n"));
       return NULL;
    }
    strcpy(s, pw->pw_dir);
@@ -976,7 +976,7 @@ int rc_check_and_create_dir(const char *name)
       if(!S_ISDIR(stat_buffer.st_mode))
 #endif
       {
-         fprintf(stderr,"Error %s exists but isn't a dir\n", name);
+         fprintf(stderr,_WINDOWS("Error %s exists but isn't a dir\n"), name);
          return -1;
       }
    }

@@ -438,11 +438,11 @@ int mame_is_paused(void)
 static void run_start_callbacks(void)
 {
 	if (Machine->drv->machine_start != NULL && (*Machine->drv->machine_start)() != 0)
-		fatalerror("Unable to start machine emulation");
+		fatalerror(_("Unable to start machine emulation"));
 	if (Machine->drv->sound_start != NULL && (*Machine->drv->sound_start)() != 0)
-		fatalerror("Unable to start sound emulation");
+		fatalerror(_("Unable to start sound emulation"));
 	if (Machine->drv->video_start != NULL && (*Machine->drv->video_start)() != 0)
-		fatalerror("Unable to start video emulation");
+		fatalerror(_("Unable to start video emulation"));
 }
 
 

@@ -132,11 +132,11 @@ int config_load_settings(void)
 		/* open the config file */
 		file = mame_fopen(NULL, options.controller, FILETYPE_CTRLR, 0);
 		if (!file)
-			osd_die("Could not load controller file %s.cfg\n", options.controller);
+			osd_die(_("Could not load controller file %s.cfg\n"), options.controller);
 
 		/* load the XML */
 		if (!config_load_xml(file, CONFIG_TYPE_CONTROLLER))
-			osd_die("Could not load controller file %s.cfg\n", options.controller);
+			osd_die(_("Could not load controller file %s.cfg\n"), options.controller);
 		mame_fclose(file);
 	}
 

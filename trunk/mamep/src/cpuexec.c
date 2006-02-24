@@ -623,7 +623,7 @@ static void handle_load(void)
 		/* if more than a second has passed, we're probably screwed */
 		if (sub_mame_times(mame_timer_get_time(), loadsave_schedule_time).seconds > 0)
 		{
-			ui_popup("Unable to load due to pending anonymous timers. See error.log for details.");
+			ui_popup(_("Unable to load due to pending anonymous timers. See error.log for details."));
 			cpu_loadsave_reset();
 		}
 		return;

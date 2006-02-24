@@ -294,7 +294,6 @@ static int win_d3d_decode_prescale(struct rc_option *option, const char *arg, in
 
 			use_prescale = (prescale << 4) | prescale;
 		}
-
 		else
 		{
 			fprintf(stderr, _WINDOWS("error: invalid value for d3dprescale: %s\n"), arg);

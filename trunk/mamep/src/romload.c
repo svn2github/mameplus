@@ -350,6 +350,13 @@ static void verify_length_and_hash(rom_load_data *romdata, const char *name, UIN
 	if (hash_data_has_info(hash, HASH_INFO_NO_DUMP))
 	{
 			sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)], _("%-12s NO GOOD DUMP KNOWN\n"), name);
+		romdata->warnings++;
+	}
+	/* verify checksums */
+	else if (!hash_data_is_equal(hash, acthash, 0))
+	{
+		/* otherwise, it's just bad */
+		sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)], _("%-12s WRONG CHECKSUMS:\n"), name);
 
 		dump_wrong_and_correct_checksums(romdata, hash, acthash);
 

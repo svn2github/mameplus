@@ -54,8 +54,8 @@ BEGIN
         MENUITEM "Play and &Record Input...",   ID_FILE_PLAY_RECORD
         MENUITEM "P&layback Input...",          ID_FILE_PLAY_BACK
         MENUITEM SEPARATOR
-        MENUITEM "Play and Record &Wav Output...", ID_FILE_PLAY_RECORD_WAVE
-        MENUITEM "Play and Record &MNG Video...",  ID_FILE_PLAY_RECORD_MNG
+        MENUITEM "Play and Record &Wav Sound...", ID_FILE_PLAY_RECORD_WAVE
+        MENUITEM "Play and Record &MNG Video...", ID_FILE_PLAY_RECORD_MNG
         MENUITEM SEPARATOR
         MENUITEM "Loa&d Savestate...",          ID_FILE_LOADSTATE
         MENUITEM SEPARATOR
@@ -834,7 +834,7 @@ BEGIN
 #endif /* AUTO_PAUSE_PLAYBACK */
     GROUPBOX        "Thread priority",IDC_STATIC,4,157,140,30
     CONTROL         "IntensityPriority",IDC_PRIORITY,"msctls_trackbar32",
-                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,10,172,105,10
+                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,10,172,105,10,0,HIDC_HIGH_PRIORITY
     CTEXT           "-15",IDC_PRIORITYDISP,120,172,20,10,NOT WS_GROUP
 #ifdef TRANS_UI
     GROUPBOX        "",IDC_STATIC,4,190,140,30,WS_DISABLED
@@ -1493,7 +1493,7 @@ BEGIN
     ID_VIEW_SMALL_ICON      "Display items by using small icons."
     ID_VIEW_LIST_MENU       "Displays items in a list."
     ID_VIEW_DETAIL          "Displays detailed information about each item in the window."
-    ID_VIEW_GROUPED         "Displays using `Detail View', but grouped by parent games."
+    ID_VIEW_GROUPED         "Displays detailed information and group items in the window by parent."
     ID_UPDATE_GAMELIST      "Refresh game list"
     ID_CUSTOMIZE_FIELDS     "Customize which columns are used in the game list"
 END
