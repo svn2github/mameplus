@@ -418,7 +418,7 @@ Arrange &Icons
 Arranges icons in a grid
 
 
-# ui/layout.c: 118
+# ui/layout.c: 119
 Artwork
 
 
@@ -502,7 +502,7 @@ BIOS missing
 Backdrops
 
 
-# ui/layout.c: 129
+# ui/layout.c: 130
 Background Images
 
 
@@ -630,7 +630,7 @@ CPU
 Cabinet
 
 
-# ui/layout.c: 121
+# ui/layout.c: 122
 Cabinets
 
 
@@ -694,7 +694,7 @@ Colors aren't 100% accurate
 Colors:
 
 
-# ui/layout.c: 113
+# ui/layout.c: 114
 Config
 
 
@@ -730,7 +730,7 @@ Control &Panel
 Control Panel
 
 
-# ui/layout.c: 124
+# ui/layout.c: 125
 Control Panels
 
 
@@ -742,7 +742,7 @@ Control Type
 Control Type:
 
 
-# ui/layout.c: 126
+# ui/layout.c: 127
 Controller Files
 
 
@@ -994,6 +994,10 @@ Driver:
 Dual lightgun
 
 
+# ui/layout.c: 78
+Dual-Monitor
+
+
 # ui/layout.c: 65
 Dumping Status
 
@@ -1118,7 +1122,7 @@ Flip screen upside-down
 Flyer
 
 
-# ui/layout.c: 120
+# ui/layout.c: 121
 Flyers
 
 
@@ -1218,7 +1222,7 @@ Go to Microsoft's DirectX Web Page
 Grouped
 
 
-# ui/layout.c: 127
+# ui/layout.c: 128
 Hard Drive Difference
 
 
@@ -1234,7 +1238,7 @@ Hide &mouse cursor (requires restart)
 High
 
 
-# ui/layout.c: 114
+# ui/layout.c: 115
 High Scores
 
 
@@ -1250,11 +1254,11 @@ Horizontal
 How cheats work
 
 
-# ui/layout.c: 111
+# ui/layout.c: 112
 IPS Files
 
 
-# ui/layout.c: 128
+# ui/layout.c: 129
 Icons
 
 
@@ -1290,11 +1294,11 @@ Incorrect:
 Inheritable Filters
 
 
-# ui/layout.c: 109
+# ui/layout.c: 110
 Ini Files
 
 
-# ui/layout.c: 116
+# ui/layout.c: 117
 Input files (*.inp)
 
 
@@ -1362,7 +1366,7 @@ L&arge Icons
 Large Icons
 
 
-# ui/layout.c: 80 ui/properties.c: 576, 1103 ui/treeview.c: 1422
+# ui/layout.c: 81 ui/properties.c: 576, 1103 ui/treeview.c: 1422
 Lightgun
 
 
@@ -1442,7 +1446,7 @@ Manufacturer
 Marquee
 
 
-# ui/layout.c: 122
+# ui/layout.c: 123
 Marquees
 
 
@@ -1450,7 +1454,7 @@ Marquees
 Match game refresh rate
 
 
-# ui/layout.c: 119 
+# ui/layout.c: 120 
 Memory Card
 
 
@@ -1482,7 +1486,7 @@ Move Item
 Move Up
 
 
-# ui/layout.c: 125
+# ui/layout.c: 126
 NVRAM
 
 
@@ -1770,7 +1774,7 @@ RGB triad of 6 pixels
 ROM check:
 
 
-# ui/layout.c: 107 ui/mame32.rc: 410 ui/win32ui.c: 810
+# ui/layout.c: 108 ui/mame32.rc: 410 ui/win32ui.c: 810
 ROMs
 
 
@@ -1890,11 +1894,11 @@ Sample check:
 Sample rate
 
 
-# ui/layout.c: 84, 108 ui/mame32.rc: 416 ui/win32ui.c: 811
+# ui/layout.c: 85, 109 ui/mame32.rc: 416 ui/win32ui.c: 811
 Samples
 
 
-# ui/layout.c: 76, 86
+# ui/layout.c: 76, 87
 Save State
 
 
@@ -2210,7 +2214,7 @@ Small Icons
 Snapshot
 
 
-# ui/layout.c: 115
+# ui/layout.c: 116
 Snapshots
 
 
@@ -2282,7 +2286,7 @@ Standard
 Start out maximized
 
 
-# ui/layout.c: 117
+# ui/layout.c: 118
 State
 
 
@@ -2290,7 +2294,7 @@ State
 Status:
 
 
-# ui/layout.c: 82
+# ui/layout.c: 83
 Stereo
 
 
@@ -2354,7 +2358,7 @@ Throttle
 Title
 
 
-# ui/layout.c: 123
+# ui/layout.c: 124
 Titles
 
 
@@ -2370,7 +2374,7 @@ Toggle Screen Shot
 Total:
 
 
-# ui/layout.c: 79 ui/properties.c: 1095 ui/treeview.c: 1421 ui/win32ui.c: 814
+# ui/layout.c: 80 ui/properties.c: 1095 ui/treeview.c: 1421 ui/win32ui.c: 814
 Trackball
 
 

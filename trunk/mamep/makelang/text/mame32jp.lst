@@ -1363,7 +1363,8 @@ halleysc	ハレーズコメット (日本版 set 1)	はれーずこめっと	Taito Corporation
 halleycj	ハレーズコメット (日本版 set 2)	はれーずこめっと	Taito Corporation
 lsasquad	陸海空 -最前線 (set 1)	りくかいくうさいぜんせん	Taito
 storming	陸海空 -最前線 (set 2)	りくかいくうさいぜんせん	Taito
-tokio	スクランブルフォーメーション (USA版)	すくらんぶるふぉーめーしょん	Taito America Corporation (Romstar license)
+tokio	スクランブルフォーメーション	すくらんぶるふぉーめーしょん	Taito Corporation
+tokiou	スクランブルフォーメーション (USA版)	すくらんぶるふぉーめーしょん	Taito America Corporation (Romstar license)
 tokiob	スクランブルフォーメーション (海賊版)	すくらんぶるふぉーめーしょん	bootleg
 bublbobl	バブルボブル	ばぶるぼぶる	Taito Corporation
 bublbob1	バブルボブル (older)	ばぶるぼぶる	Taito Corporation
@@ -4467,10 +4468,10 @@ sengok3d	戦国伝承2001 (decrypted C)	せんごくでんしょう_32001	SNK
 kof2001	ザ・キング・オブ・ファイターズ 2001 (set 1)	ざきんぐおぶふぁいたーず_08_1_2001	Eolith / SNK
 kof2001h	ザ・キング・オブ・ファイターズ 2001 (set 2)	ざきんぐおぶふぁいたーず_08_1_2001	Eolith / SNK
 kof2001d	ザ・キング・オブ・ファイターズ 2001 (decrypted C)	ざきんぐおぶふぁいたーず_08_1_2001	Eolith / SNK
-cthd2003	ザ・キング・オブ・ファイターズ 2001 / Crouching Tiger Hidden Dragon 2003 (海賊版)	ざきんぐおぶふぁいたーず_08_3_2001	bootleg
-ct2k3sp	ザ・キング・オブ・ファイターズ 2001 / Crouching Tiger Hidden Dragon 2003 Super Plus (海賊版)	ざきんぐおぶふぁいたーず_08_3_2001	bootleg
 kf2k1pls	ザ・キング・オブ・ファイターズ 2001 / The King of Fighters 2001 Plus (海賊版 set 1)	ざきんぐおぶふぁいたーず_08_2_2001	bootleg
 kf2k1pa	ザ・キング・オブ・ファイターズ 2001 / The King of Fighters 2001 Plus (海賊版 set 2)	ざきんぐおぶふぁいたーず_08_2_2001	bootleg
+cthd2003	ザ・キング・オブ・ファイターズ 2001 / Crouching Tiger Hidden Dragon 2003 (海賊版)	ざきんぐおぶふぁいたーず_08_3_2001	bootleg
+ct2k3sp	ザ・キング・オブ・ファイターズ 2001 / Crouching Tiger Hidden Dragon 2003 Super Plus (海賊版)	ざきんぐおぶふぁいたーず_08_3_2001	bootleg
 mslug4	メタルスラッグ4	めたるすらっぐ_4_1	Mega
 mslug4d	メタルスラッグ4 (decrypted C)	めたるすらっぐ_4_1	Mega
 ms4plus	メタルスラッグ4 Plus (海賊版)	めたるすらっぐ_4_2ぷらす	bootleg
@@ -4623,6 +4624,7 @@ blockout	ブロックアウト (set 1)	ぶろっくあうと	Technos + California Dreams
 blckout2	ブロックアウト (set 2)	ぶろっくあうと	Technos + California Dreams
 blckoutj	ブロックアウト (日本版)	ぶろっくあうと	Technos + California Dreams
 agress	アグレス -ミサイル大戦略	あぐれす	Palco
+agressb	アグレス -ミサイル大戦略 (英語版) (海賊版)	あぐれす	Palco
 ddragon3	双截龍3 <ダブルドラゴン3> -ザ・ロゼッタストーン (USA版)	だぶるどらごん_3	Technos
 ddrago3b	双截龍3 <ダブルドラゴン3> -ザ・ロゼッタストーン (海賊版)	だぶるどらごん_3	bootleg
 wwfwfest	WWFレッスルフェスト (USA版 set 1)	だぶるだぶるえふれっするふぇすと	Technos Japan
@@ -5519,6 +5521,7 @@ magix	マジックス	まじっくす_1	Yun Sung
 magicbub	マジックバブル	まじっくばぶる	Yun Sung
 magicbua	マジックバブル (adult ver)	まじっくばぶる	Yun Sung
 shocking	ショッキング	しょっきんぐ	Yun Sung
+bombkick	ボムキック	ぼむきっく	Yun Sung
 nmg5	マルチ5	まるちふぁいぶ	Yun Sung
 searchey	サーチアイ	さーちあい	Yun Sung
 pclubys	パズルクラブ (Yun Sung set 1)	ぱずるくらぶ	Yun Sung
@@ -5979,7 +5982,7 @@ crospang	クロスパン	くろすぱん	F2 System
 funybubl	ファニーバブル	ふぁにーばぶる	Comad
 dcheese	ダブルチーズ	だぶるちーず	HAR
 lottof2	ロットファン2	ろっとふぁん_2	HAR
-fredmem	フレッドフリントストーンズ メモリーマッチ	ふれっどふりんとすとーんずめもりーまっち	HAR
+fredmem	フレッドフリントストーンズ メモリーマッチ	ふれっどふりんとすとーんずめもりーまっち	Coastal Amusements
 f15se	F-15 ストライクイーグル (rev 2.1)	えふ15すとらいくいーぐる	Microprose
 botss	バトル・オブ・ザ・ソーラーシステム (rev 1.1)	ばとるおぶざそーらーしすてむ	Microprose
 stankatk	スーパータンクアタック (prototype rev 4/21/92)	すーぱーたんくあたっく	Microprose

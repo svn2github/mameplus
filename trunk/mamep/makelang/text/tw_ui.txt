@@ -406,7 +406,7 @@ Arrange &Icons
 Arranges icons in a grid
 在格線上排列圖示
 
-# ui/layout.c: 118
+# ui/layout.c: 119
 Artwork
 Artwork
 
@@ -486,7 +486,7 @@ BIOS 遺失
 Backdrops
 背景圖
 
-# ui/layout.c: 129
+# ui/layout.c: 130
 Background Images
 背景圖象
 
@@ -610,7 +610,7 @@ C&lones
 Cabinet
 筐體圖
 
-# ui/layout.c: 121
+# ui/layout.c: 122
 Cabinets
 筐體圖 (cabinets)
 
@@ -674,7 +674,7 @@ Colors aren't 100% accurate
 Colors:
 色彩:
 
-# ui/layout.c: 113
+# ui/layout.c: 114
 Config
 組態檔
 
@@ -710,7 +710,7 @@ Control &Panel
 Control Panel
 控制器
 
-# ui/layout.c: 124
+# ui/layout.c: 125
 Control Panels
 控制器圖 (cpanel)
 
@@ -722,7 +722,7 @@ Control Type
 Control Type:
 控制類型:
 
-# ui/layout.c: 126
+# ui/layout.c: 127
 Controller Files
 控制器設定檔
 
@@ -856,7 +856,7 @@ Directory name:
 
 # ui/mame32.rc: 827
 Disable second monitor emulation
-停用雙顯示器模擬
+停用雙螢幕模擬
 
 # ui/properties.c: 3965, 3982 
 Disabled
@@ -872,11 +872,11 @@ Display help contents
 
 # ui/mame32.rc: 1485
 Display items by using large icons.
-使用大型圖示顯示項目。
+使用大圖示顯示項目。
 
 # ui/mame32.rc: 1485
 Display items by using small icons.
-使用小型圖示顯示項目。
+使用小圖示顯示項目。
 
 # ui/mame32.rc: 1041
 Display splash screen on start
@@ -973,6 +973,10 @@ Driver:
 # ui/mame32.rc: 765
 Dual lightgun
 雙光線槍
+
+# ui/layout.c: 78
+Dual-Monitor
+雙螢幕
 
 # ui/layout.c: 65
 Dumping Status
@@ -1094,7 +1098,7 @@ Flip screen upside-down
 Flyer
 廣告圖
 
-# ui/layout.c: 120
+# ui/layout.c: 121
 Flyers
 廣告圖 (flyers)
 
@@ -1194,7 +1198,7 @@ Go to Microsoft's DirectX Web Page
 Grouped
 群組
 
-# ui/layout.c: 127
+# ui/layout.c: 128
 Hard Drive Difference
 硬碟差異檔
 
@@ -1210,7 +1214,7 @@ Hide &mouse cursor (requires restart)
 High
 高
 
-# ui/layout.c: 114
+# ui/layout.c: 115
 High Scores
 高分記錄
 
@@ -1226,11 +1230,11 @@ Horizontal
 How cheats work
 如何使用作弊引擎
 
-# ui/layout.c: 111
+# ui/layout.c: 112
 IPS Files
 IPS 檔案
 
-# ui/layout.c: 128
+# ui/layout.c: 129
 Icons
 圖示
 
@@ -1266,11 +1270,11 @@ Incorrect:
 Inheritable Filters
 繼承篩選程式的設定值
 
-# ui/layout.c: 109
+# ui/layout.c: 110
 Ini Files
 INI 檔案
 
-# ui/layout.c: 116
+# ui/layout.c: 117
 Input files (*.inp)
 輸入檔 (*.inp)
 
@@ -1332,13 +1336,13 @@ Keyboard
 
 # ui/mame32.rc: 98
 L&arge Icons
-大型圖示(&A)
+大圖示(&A)
 
 # ui/options.c: 295 ui/win32ui.c: 661
 Large Icons
-大型圖示
+大圖示
 
-# ui/layout.c: 80 ui/properties.c: 576, 1103 ui/treeview.c: 1422
+# ui/layout.c: 81 ui/properties.c: 576, 1103 ui/treeview.c: 1422
 Lightgun
 光線槍
 
@@ -1418,7 +1422,7 @@ Manufacturer
 Marquee
 標籤圖
 
-# ui/layout.c: 122
+# ui/layout.c: 123
 Marquees
 標籤圖 (marquees)
 
@@ -1426,7 +1430,7 @@ Marquees
 Match game refresh rate
 符合遊戲的更新頻率
 
-# ui/layout.c: 119 
+# ui/layout.c: 120 
 Memory Card
 記憶卡
 
@@ -1458,7 +1462,7 @@ Move Item
 Move Up
 上移
 
-# ui/layout.c: 125
+# ui/layout.c: 126
 NVRAM
 NVRAM 檔
 
@@ -1604,11 +1608,11 @@ Play and &Record Input...
 
 # ui/mame32.rc: 58
 Play and Record &MNG Video...
-播放並錄製 MNG 視訊(&M)...
+執行並錄製 MNG 視訊(&M)...
 
 # ui/mame32.rc: 57
 Play and Record &Wav Sound...
-播放並錄製 Wav 音訊(&M)...
+執行並錄製 Wav 音訊(&M)...
 
 # ui/mame32.rc: 1471
 Play currently selected game
@@ -1734,7 +1738,7 @@ RGB triad 6 像素
 ROM check:
 ROM 檢查:
 
-# ui/layout.c: 107 ui/mame32.rc: 410 ui/win32ui.c: 810
+# ui/layout.c: 108 ui/mame32.rc: 410 ui/win32ui.c: 810
 ROMs
 ROM
 
@@ -1840,7 +1844,7 @@ S&how Pictures
 
 # ui/mame32.rc: 99
 S&mall Icons
-小型圖示(&M)
+小圖示(&M)
 
 # ui/mame32.rc: 1060
 S&tretch screenshot larger than natural size
@@ -1854,11 +1858,11 @@ Sample check:
 Sample rate
 取樣頻率
 
-# ui/layout.c: 84, 108 ui/mame32.rc: 416 ui/win32ui.c: 811
+# ui/layout.c: 85, 109 ui/mame32.rc: 416 ui/win32ui.c: 811
 Samples
 樣本檔
 
-# ui/layout.c: 76, 86
+# ui/layout.c: 76, 87
 Save State
 儲存狀態
 
@@ -2168,13 +2172,13 @@ Sleep when possible
 
 # ui/options.c: 296 ui/win32ui.c: 662
 Small Icons
-小型圖示
+小圖示
 
 # ui/dialogs.c: 194 ui/options.c: 262
 Snapshot
 遊戲圖
 
-# ui/layout.c: 115
+# ui/layout.c: 116
 Snapshots
 遊戲圖 (snap)
 
@@ -2246,7 +2250,7 @@ Standard
 Start out maximized
 啟動時最大化
 
-# ui/layout.c: 117
+# ui/layout.c: 118
 State
 狀態檔
 
@@ -2254,7 +2258,7 @@ State
 Status:
 狀況:
 
-# ui/layout.c: 82
+# ui/layout.c: 83
 Stereo
 立體聲
 
@@ -2318,7 +2322,7 @@ Throttle
 Title
 標題圖
 
-# ui/layout.c: 123
+# ui/layout.c: 124
 Titles
 標題圖 (titles)
 
@@ -2334,7 +2338,7 @@ Toggle Screen Shot
 Total:
 總數:
 
-# ui/layout.c: 79 ui/properties.c: 1095 ui/treeview.c: 1421 ui/win32ui.c: 814
+# ui/layout.c: 80 ui/properties.c: 1095 ui/treeview.c: 1421 ui/win32ui.c: 814
 Trackball
 軌跡球
 
