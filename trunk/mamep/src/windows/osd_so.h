@@ -216,6 +216,7 @@ extern SHAREDOBJ_FUNC(void)  CLIB_DECL free(void *memory);
 
 #else /* _MSC_VER */
 #include "mamecore.h"
+#include "mame.h"
 
 // in windows/winmain.c
 extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
