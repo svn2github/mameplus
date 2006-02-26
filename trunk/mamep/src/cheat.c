@@ -1804,7 +1804,7 @@ void cheat_init(void)
 	InitStringTable();
 
 	periodic_timer = timer_alloc(cheat_periodic);
-	timer_adjust(periodic_timer, Machine->refresh_rate, 0, Machine->refresh_rate);
+	timer_adjust(periodic_timer, TIME_IN_HZ(Machine->refresh_rate), 0, TIME_IN_HZ(Machine->refresh_rate));
 
 	add_exit_callback(cheat_exit);
 }
