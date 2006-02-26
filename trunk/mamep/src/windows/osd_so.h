@@ -239,6 +239,7 @@ extern const int win_key_trans_table[][4];
 
 #else /* !DONT_USE_DLL */
 #include "mamecore.h"
+#include "mame.h"
 
 // in windows/winmain.c
 extern int main_(int argc, char **argv);

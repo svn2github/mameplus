@@ -7815,7 +7815,9 @@ void CodeSegmentBegin(void)
 
 	fprintf(fp, "; Vars Mame declares / needs access to\n\n");
 
+#ifdef MAME_DEBUG
 	fprintf(fp, "\t\t EXTERN %smame_debug\n", PREF);
+#endif
 	fprintf(fp, "\t\t EXTERN %sillegal_op\n", PREF);
 	fprintf(fp, "\t\t EXTERN %sillegal_pc\n", PREF);
 
