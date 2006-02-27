@@ -8205,6 +8205,12 @@ static void BuildSearchRegions(SearchInfo * info)
 				int									count = 0;
 
 				map = memory_get_map(info->targetIdx, ADDRESS_SPACE_PROGRAM);
+				if (!map)
+				{
+					info->regionList = NULL;
+					info->regionListLength = 0;
+					break;
+				}
 
 				while(!IS_AMENTRY_END(map))
 				{
