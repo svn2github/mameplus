@@ -678,9 +678,9 @@ $(sort $(OBJDIRS)):
 #-------------------------------------------------
 
 ifneq ($(NO_DLL),)
-    $(EMULATOR): $(OBJS) $(COREOBJS) $(OSOBJS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS)
+    $(EMULATOR): $(COREOBJS) $(OSOBJS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS)
 else
-    $(EMULATORDLL): $(OBJS) $(COREOBJS) $(OSOBJS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS)
+    $(EMULATORDLL): $(COREOBJS) $(OSOBJS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS)
 endif
 
 # always recompile the version string
