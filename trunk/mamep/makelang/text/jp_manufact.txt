@@ -866,6 +866,10 @@ Century?
 Cinematronics
 
 
+# Fred Flintstones' Memory Match
+Coastal Amusements
+
+
 # Quizmaster
 Coinmaster
 
