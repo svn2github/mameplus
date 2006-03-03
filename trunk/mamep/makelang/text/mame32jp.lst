@@ -716,6 +716,8 @@ alpinesa	アルペンサーファー (rev AF2 ver A)	あるぺんさーふぁー	Namco
 propcycl	プロップサイクル (rev PR2 ver A)	ぷろっぷさいくる	Namco
 timecrs2	タイムクライシス2	たいむくらいしす_2	Namco
 gp500	500GP -FIMワールドチャンピオンシップ	ふぁいぶはんどれっどじーぴー	Namco
+finfurl2	ファイナルハロン2 (海外版)	ふぁいなるはろん_2	Namco
+finfrl2j	ファイナルハロン2 (日本版)	ふぁいなるはろん_2	Namco
 cosmicg	コスミックゲリラ	こすみっくげりら	Universal
 cosmica	コスミックエイリアン	こすみっくえいりあん	Universal
 cosmica2	コスミックエイリアン (older)	こすみっくえいりあん	Universal
@@ -1173,7 +1175,8 @@ nspiritj	最後の忍道 (日本版)	さいごのにんどう	Irem
 imgfight	イメージファイト (日本版)	いめーじふぁいと	Irem
 loht	レジェンドオブヒーロー トンマ	れじぇんどおぶひーろーとんま	Irem
 xmultipl	Xマルチプライ (日本版)	えっくすまるちぷらい	Irem
-dbreed	ドラゴンブリード	どらごんぶりーど	Irem
+dbreed	ドラゴンブリード (M81 pcb ver)	どらごんぶりーど	Irem
+dbreed72	ドラゴンブリード (M72 pcb ver)	どらごんぶりーど	Irem
 rtype2	R-タイプII	あーるたいぷ_2	Irem
 rtype2j	R-タイプII (日本版)	あーるたいぷ_2	Irem
 majtitle	メジャータイトル (日本版)	めじゃーたいとる_1	Irem
@@ -2381,7 +2384,11 @@ mrdrillr	ミスタードリラー (DRI1/VER.A2)	みすたーどりらー_1	Namco
 aquarush	アクアラッシュ (AQ1/VER.A1)	あくあらっしゅ	Namco
 pacappsp	パカパカパッション スペシャル (PSP1/VER.A)	ぱかぱかぱっしょん_2_2すぺしゃる	Produce/Namco
 golgo13	ゴルゴ13 (GLG1/VER.A)	ごるご13	Raizing/Namco
-mrdrilr2	ミスタードリラー2	みすたーどりらー_2	Namco
+mrdrilr2	ミスタードリラー2 (DR21 verA)	みすたーどりらー_2	Namco
+gjspace	撃牌砦 (10011 verA)	げきとりで	Namco/Metro
+mrdrilrg	ミスタードリラーグレート (DRG1 verA)	みすたーどりらー_3ぐれーと	Namco
+knpuzzle	ことばのパズル もじぴったん (KPM1 verA)	ことばのぱずるもじぴったん	Namco
+startrgn	スタートリゴン (STT1 verA)	すたーとりごん	Namco
 cryptklr	ヘンリーエクスプローラーズ / Crypt Killer (GQ420 UAA)	へんりーえくすぷろーらーず	Konami
 kdeadeye	デッドアイ (GV054 UA01)	でっどあい	Konami
 pbball96	実況パワフルプロ野球'96 (GV017 JAPAN 1.03)	じっきょうぱわふるぷろやきゅう96	Konami
@@ -5308,6 +5315,7 @@ extdwnhl	エクストリームダウンヒル (ver 1.5)	えくすとりーむだうんひる	Sammy Indus
 gundhara	銃弾嵐	がんだーら	Banpresto
 sokonuke	そこぬけ対戦ゲーム (日本版)	そこぬけたいせんげーむ	Sammy Industries
 zombraid	ゾンビレイド (USA版)	ぞんびれいど	American Sammy
+crazyfgt	クレイジーファイト	くれいじーふぁいと	Subsino
 gundamex	機動戦士ガンダム EXレビュー	きどうせんしがんだむ_2いーえっくすれびゅー	Banpresto
 grdians	電神魔傀II / ガーディアンズ	でんじんまかい_2	Banpresto
 mj4simai	若草物語 -麻雀四姉妹 (日本版)	わかくさものがたり	Maboroshi Ware
@@ -5504,6 +5512,7 @@ blzntrnd	ブレイジングトルネード	ぶれいじんぐとるねーど	Human Amusement
 gstrik2	グランドストライカー2 (日本版)	ぐらんどすとらいかー2	Human Amusement
 hyprduel	ハイパーデュエル (日本版 set 1)	はいぱーでゅえる	Technosoft
 hyprdelj	ハイパーデュエル (日本版 set 2)	はいぱーでゅえる	Technosoft
+magerror	マジカルエラーをさがせ！	まじかるえらーをさがせ	Technosoft / Jaleco
 spcforce	スペースフォース	すぺーすふぉーす	Venture Line
 spcforc2	スペースフォース (set 2)	すぺーすふぉーす	Elcon (bootleg?)
 meteor	スペースフォース / Meteoroids	すぺーすふぉーす	Venture Line

@@ -1,16 +1,16 @@
-# datafile.c: 3146
+# datafile.c: 3147
           DIAL:  %4d\n
 
 
-# datafile.c: 3152
+# datafile.c: 3153
          OTHER:  %4d\n
 
 
-# datafile.c: 3150
+# datafile.c: 3151
          PEDAL:  %4d\n
 
 
-# datafile.c: 3145
+# datafile.c: 3146
         PADDLE:  %4d\n
 
 
@@ -18,35 +18,35 @@
        FOUND: %s\n
 
 
-# datafile.c: 3139
+# datafile.c: 3140
        JOY2WAY:  %4d\n
 
 
-# datafile.c: 3140
+# datafile.c: 3141
        JOY4WAY:  %4d\n
 
 
-# datafile.c: 3141
+# datafile.c: 3142
        JOY8WAY:  %4d\n
 
 
-# datafile.c: 3148
+# datafile.c: 3149
       AD STICK:  %4d\n
 
 
-# datafile.c: 3149
+# datafile.c: 3150
       LIGHTGUN:  %4d\n
 
 
-# datafile.c: 3133
+# datafile.c: 3134
      PLAYERS %d:  %4d\n
 
 
-# datafile.c: 3147
+# datafile.c: 3148
      TRACKBALL:  %4d\n
 
 
-# datafile.c: 3161
+# datafile.c: 3162
     BUTTONS%3d:  %4d\n
 
 
@@ -54,7 +54,7 @@
     EXPECTED: %s\n
 
 
-# datafile.c: 3167
+# datafile.c: 3168
     NO BUTTONS:  %4d\n
 
 
@@ -62,43 +62,43 @@
    FOUND: 
 
 
-# datafile.c: 2971
+# datafile.c: 2972
  %4d HARDDISK\n
 
 
-# datafile.c: 2967
+# datafile.c: 2968
  %4d HORIZONTAL + %4d\n %4d VERTICAL   + %4d\n
 
 
-# datafile.c: 2963
+# datafile.c: 2964
  %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
 
 
-# datafile.c: 2965
+# datafile.c: 2966
  %4d RASTER     + %4d\n %4d VECTOR     + %4d\n
 
 
-# datafile.c: 2969
+# datafile.c: 2970
  %4d STEREO     + %4d\n
 
 
-# datafile.c: 3142
+# datafile.c: 3143
  DOUBLEJOY2WAY:  %4d\n
 
 
-# datafile.c: 3143
+# datafile.c: 3144
  DOUBLEJOY4WAY:  %4d\n
 
 
-# datafile.c: 3144
+# datafile.c: 3145
  DOUBLEJOY8WAY:  %4d\n
 
 
-# datafile.c: 3072
+# datafile.c: 3073
  GAMES WITH  %d CPUs: %4d\n
 
 
-# datafile.c: 3103
+# datafile.c: 3104
  GAMES WITH  %d SNDINTRF: %4d\n
 
 
@@ -362,7 +362,7 @@
 24 Bit
 
 
-# datafile.c: 3223
+# datafile.c: 3224
 24-BIT DISPLAY : %3d  + %3d\n
 
 
@@ -658,6 +658,10 @@ Artwork
 Asia
 
 
+# mame.c: 779
+Attempted to malloc zero bytes (%s:%d)
+
+
 # drivers/bottom9.c: 272, 369 drivers/btime.c: 726 drivers/csk.c: 285, 445 drivers/galaga.c: 999, 1075 drivers/pacman.c: 2751 drivers/seta.c: 4664 
 Auto
 
@@ -898,7 +902,7 @@ Collect
 Command List not available
 
 
-# cheat.c: 2886, 2959, 3180 
+# cheat.c: 2886, 2959, 3180
 Comment
 
 
@@ -994,7 +998,7 @@ Custom Buttons
 DIAL
 
 
-# datafile.c: 3221
+# datafile.c: 3222
 DUAL MONITOR   : %3d  + %3d\n
 
 
@@ -1258,15 +1262,15 @@ Error loading memory card
 Error: 
 
 
-# mame.c: 1317, 1321
+# mame.c: 1318, 1322
 Error: Failed to load state
 
 
-# mame.c: 1243
+# mame.c: 1244
 Error: Failed to save state
 
 
-# mame.c: 1206
+# mame.c: 1207
 Error: Unable to save state due to illegal registrations. See error.log for details.
 
 
@@ -1280,6 +1284,10 @@ Europe
 
 # drivers/metro.c: 2208 drivers/nbmj8891.c: 2411
 Expert
+
+
+# mame.c: 787
+Failed to allocate %d bytes (%s:%d)
 
 
 # cheat.c: 6583 debug/mamedbg.c: 796 drivers/4enraya.c: 119 drivers/8080bw.c: 697, 789 drivers/alpha68k.c: 1570, 1624 drivers/amidar.c: 186 drivers/angelkds.c: 480 drivers/bestleag.c: 278 drivers/bigstrkb.c: 160 drivers/brkthru.c: 233, 236, 278, 281 drivers/cninja.c: 727 drivers/cps1.c: 1069, 1339 drivers/darius.c: 679, 717, 755 drivers/ddragon3.c: 424 drivers/deniam.c: 277 drivers/epos.c: 151, 154, 160 drivers/fuukifg3.c: 354 drivers/gameplan.c: 399, 850 drivers/karnov.c: 461 drivers/m62.c: 610, 661, 712, 762, 814, 866, 920, 1020, 1071 drivers/mcr.c: 1134 drivers/megaplay.c: 224 drivers/metro.c: 3080 drivers/ninjaw.c: 542 drivers/nmg5.c: 237 drivers/nmk16.c: 2662 drivers/phoenix.c: 345 drivers/quizdna.c: 153, 241, 343 drivers/rohga.c: 445, 513 drivers/safarir.c: 188 drivers/segas16a.c: 1272 drivers/segas16b.c: 2511 drivers/sidepckt.c: 231 drivers/slapfght.c: 518 drivers/ssv.c: 2573 drivers/suprridr.c: 251 drivers/system1.c: 888, 1724 drivers/system16.c: 1795 drivers/taito_f2.c: 3122 drivers/taito_l.c: 1841, 1994 drivers/taito_z.c: 2384, 2453 drivers/tecmo16.c: 207 drivers/thepit.c: 276, 331, 372 drivers/trackfld.c: 539, 550 drivers/vigilant.c: 240 drivers/vsnes.c: 1065, 1467, 1691, 1749, 1775 drivers/wallc.c: 187 drivers/warriorb.c: 344 drivers/wc90.c: 250 drivers/wc90b.c: 267 drivers/xain.c: 399 drivers/yamato.c: 356 drivers/zac2650.c: 83, 133 drivers/zerozone.c: 148 ui_text.c: 209
@@ -1338,7 +1346,7 @@ French
 Full
 
 
-# datafile.c: 2179
+# datafile.c: 2180
 GAME: 
 
 
@@ -1418,11 +1426,11 @@ Greater Or Equal
 Greater or Equal
 
 
-# datafile.c: 3225
+# datafile.c: 3226
 HI/TRUE BITMAP : %3d  + %3d\n
 
 
-# datafile.c: 3229
+# datafile.c: 3230
 HIGHLIGHTS     : %3d  + %3d\n
 
 
@@ -1522,15 +1530,15 @@ Horizontally
 IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
 
 
-# datafile.c: 2984
+# datafile.c: 2985
 IMPERFECT COLORS   : %3d  %3d\n
 
 
-# datafile.c: 2980
+# datafile.c: 2981
 IMPERFECT GRAPHICS : %3d  %3d\n
 
 
-# datafile.c: 2988
+# datafile.c: 2989
 IMPERFECT SOUND    : %3d  %3d\n
 
 
@@ -1822,11 +1830,11 @@ Load Selected Card
 Load State
 
 
-# usrintrf.c: 4930
+# usrintrf.c: 4938
 Load cancelled
 
 
-# usrintrf.c: 4962
+# usrintrf.c: 4970
 Load from position %c
 
 
@@ -1846,11 +1854,11 @@ Low
 MAME Statistics
 
 
-# mame.c: 174
+# mame.c: 175
 MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n
 
 
-# datafile.c: 2171
+# datafile.c: 2172
 MAMEInfo:\n
 
 
@@ -2014,11 +2022,11 @@ Mouse Y 8
 NA
 
 
-# datafile.c: 2990
+# datafile.c: 2991
 NO COCKTAIL        : %3d  %3d\n
 
 
-# datafile.c: 2992
+# datafile.c: 2993
 NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 
 
@@ -2026,11 +2034,11 @@ NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 NO MATCH\n
 
 
-# datafile.c: 2986
+# datafile.c: 2987
 NO SOUND           : %3d  %3d\n
 
 
-# datafile.c: 2976
+# datafile.c: 2977
 NON-WORKING        : %3d  %3d\n
 
 
@@ -3582,7 +3590,7 @@ Previous Game
 Previous values already restored
 
 
-# usrintrf.c: 4976
+# usrintrf.c: 4984
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 
 
@@ -3598,7 +3606,7 @@ REC STOP (%d frames)
 RHS
 
 
-# datafile.c: 2994
+# datafile.c: 2995
 ROM NEEDS REDUMP   : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 
 
@@ -3694,7 +3702,7 @@ Ron
 Rotation
 
 
-# datafile.c: 3227
+# datafile.c: 3228
 SHADOWS        : %3d  + %3d\n
 
 
@@ -3722,11 +3730,11 @@ Save Snapshot
 Save State
 
 
-# usrintrf.c: 4928
+# usrintrf.c: 4936
 Save cancelled
 
 
-# usrintrf.c: 4957
+# usrintrf.c: 4965
 Save to position %c
 
 
@@ -3742,7 +3750,7 @@ Screen Resolution
 Screen flipping in cocktail mode is not supported.
 
 
-# datafile.c: 2207
+# datafile.c: 2208
 Screen flipping in cocktail mode is not supported.\n
 
 
@@ -3794,11 +3802,11 @@ Select current level
 Select next level
 
 
-# usrintrf.c: 4921
+# usrintrf.c: 4929
 Select position to load from
 
 
-# usrintrf.c: 4919
+# usrintrf.c: 4927
 Select position to save to
 
 
@@ -3930,7 +3938,15 @@ Start a New Cheat Search
 State
 
 
-# mame.c: 1238
+# mame.c: 1315
+State successfully loaded.
+
+
+# mame.c: 1241
+State successfully saved.
+
+
+# mame.c: 1239
 State successfully saved.\nWarning: Save states are not officially supported for this game.
 
 
@@ -3974,7 +3990,7 @@ Swap
 THIS GAME DOESN'T WORK PROPERLY
 
 
-# datafile.c: 2186
+# datafile.c: 2187
 THIS GAME DOESN'T WORK PROPERLY\n
 
 
@@ -4014,7 +4030,7 @@ Text Label
 The colors are completely wrong.
 
 
-# datafile.c: 2195
+# datafile.c: 2196
 The colors are completely wrong.\n
 
 
@@ -4022,7 +4038,7 @@ The colors are completely wrong.\n
 The colors aren't 100% accurate.
 
 
-# datafile.c: 2198
+# datafile.c: 2199
 The colors aren't 100% accurate.\n
 
 
@@ -4034,7 +4050,7 @@ The format of this zipfile is not supported, please recompress it
 The game has protection which isn't fully emulated.
 
 
-# datafile.c: 2189
+# datafile.c: 2190
 The game has protection which isn't fully emulated.\n
 
 
@@ -4042,7 +4058,7 @@ The game has protection which isn't fully emulated.\n
 The game lacks sound.
 
 
-# datafile.c: 2201
+# datafile.c: 2202
 The game lacks sound.\n
 
 
@@ -4050,7 +4066,7 @@ The game lacks sound.\n
 The sound emulation isn't 100% accurate.
 
 
-# datafile.c: 2204
+# datafile.c: 2205
 The sound emulation isn't 100% accurate.\n
 
 
@@ -4058,7 +4074,7 @@ The sound emulation isn't 100% accurate.\n
 The video emulation isn't 100% accurate.
 
 
-# datafile.c: 2192
+# datafile.c: 2193
 The video emulation isn't 100% accurate.\n
 
 
@@ -4246,7 +4262,7 @@ UI Toggle Lock Scroll
 UI Up
 
 
-# datafile.c: 2978
+# datafile.c: 2979
 UNEMULATED PROTEC. : %3d  %3d\n
 
 
@@ -4262,23 +4278,27 @@ US
 USA
 
 
-# mame.c: 1273
+# mame.c: 630
+Unable to extend malloc tracking array to %d slots
+
+
+# mame.c: 1274
 Unable to load due to pending anonymous timers. See error.log for details.
 
 
-# mame.c: 1191
+# mame.c: 1192
 Unable to save due to pending anonymous timers. See error.log for details.
 
 
-# mame.c: 974
+# mame.c: 975
 Unable to start machine emulation
 
 
-# mame.c: 976
+# mame.c: 977
 Unable to start sound emulation
 
 
-# mame.c: 978
+# mame.c: 979
 Unable to start video emulation
 
 
@@ -4430,7 +4450,7 @@ User Interface
 User Select
 
 
-# mame.c: 247
+# mame.c: 248
 User cancelled
 
 
@@ -4506,7 +4526,7 @@ Volume Up
 WARNING: the game might not run correctly.
 
 
-# datafile.c: 2982
+# datafile.c: 2983
 WRONG COLORS       : %3d  %3d\n
 
 
@@ -4594,103 +4614,103 @@ Your filesystem seems to be corrupt, please check it
 Zoom
 
 
-# datafile.c: 3110
+# datafile.c: 3111
 \n    SNDINTRF:  (1)  (2)  (3)  (4)\n\n
 
 
-# datafile.c: 3122
+# datafile.c: 3123
 \n    TOTAL: %4d\n
 
 
-# datafile.c: 3093
+# datafile.c: 3094
 \n   TOTAL: %4d\n
 
 
-# datafile.c: 2287, 2305
+# datafile.c: 2288, 2306
 \nORIGINAL:\n
 
 
-# datafile.c: 2228
+# datafile.c: 2229
 \nROM REGION:\n
 
 
-# datafile.c: 3037
+# datafile.c: 3038
 \nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d MB (UNCOMPRESSED)\n%d MB + %d MB MERGED\n
 
 
-# datafile.c: 2333
+# datafile.c: 2334
 \nSOURCE: %s\n
 
 
-# datafile.c: 2144
+# datafile.c: 2145
 \nStory:\n
 
 
-# datafile.c: 3258
+# datafile.c: 3259
 \nWARNING: FPS number too high!\n
 
 
-# datafile.c: 2961
+# datafile.c: 2962
 \n\n %4d GAMES (ALL)\n %4d ORIGINALS  + %4d CLNS\n %4d NEOGEO     + %4d\n
 
 
-# datafile.c: 3127
+# datafile.c: 3128
 \n\nCABINET INPUT CONTROL: (ALL)\n\n
 
 
-# datafile.c: 2291, 2309
+# datafile.c: 2292, 2310
 \n\nCLONES:\n
 
 
-# datafile.c: 3067
+# datafile.c: 3068
 \n\nCPU HARDWARE (ORIGINAL GAMES)\n\n
 
 
-# datafile.c: 3234
+# datafile.c: 3235
 \n\nFRAMES PER SECOND (%d): (ALL)\n\n
 
 
-# datafile.c: 2975
+# datafile.c: 2976
 \n\nGAME INFO FLAGS   : ORIG CLNS\n\n
 
 
-# datafile.c: 3357
+# datafile.c: 3358
 \n\nMAME VERSIONS (%3d)\n\n
 
 
-# datafile.c: 3318
+# datafile.c: 3319
 \n\nRESOLUTION & PALETTESIZE: (ALL)\n    (%d)          (%d)\n\n
 
 
-# datafile.c: 3039
+# datafile.c: 3040
 \n\nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d KB (UNCOMPRESSED)\n%d KB + %d KB MERGED\n
 
 
-# datafile.c: 3098
+# datafile.c: 3099
 \n\nSOUND SYSTEM (ORIGINAL GAMES)\n\n
 
 
-# datafile.c: 3045
+# datafile.c: 3046
 \n\nTYPICAL ROMSET SIZE (ALL)\n
 
 
-# datafile.c: 3347
+# datafile.c: 3348
 \n\nVERSION - DRIVERS - SUPPORT:\n\n
 
 
-# datafile.c: 3206
+# datafile.c: 3207
 \n\nVIDEO ASPECT RATIO X:Y (ALL)\n\n
 
 
-# datafile.c: 3220
+# datafile.c: 3221
 \n\nVIDEO NEEDS... : ORIG   CLNS\n\n
 
 
-# datafile.c: 3057
+# datafile.c: 3058
 \n\nYEAR    NEW GAMES\n\n
 
 
-# datafile.c: 3001
+# datafile.c: 3002
 \n\nYEAR: ORIG  CLNS NEOGEO  ALL\n\n
 
 

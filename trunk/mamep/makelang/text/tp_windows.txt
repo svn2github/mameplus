@@ -494,6 +494,14 @@ OSD bar color (light)
 OSD bar color (medium)
 
 
+# windows/fileio.c: 277
+Out of memory in variable expansion!
+
+
+# windows/fileio.c: 346
+Out of memory!
+
+
 # windows/fronthlp.c: 782
 PARTKNOWN %s\n
 
@@ -908,6 +916,10 @@ directory for localized language files
 
 # windows/fileio.c: 141
 directory for screenshots (.png format)
+
+
+# windows/fileio.c: 144
+directory to save comment files
 
 
 # windows/fileio.c: 134

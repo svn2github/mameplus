@@ -2770,199 +2770,199 @@ The MAME team
 # datafile.c: 586
 0.23a              124  + 0
 
-# datafile.c: 674
+# datafile.c: 675
 $info
 
-# datafile.c: 675
+# datafile.c: 676
 $bio
 
-# datafile.c: 677
+# datafile.c: 678
 $story
 
-# datafile.c: 679
+# datafile.c: 680
 $mame
 
-# datafile.c: 680
+# datafile.c: 681
 $drv
 
-# datafile.c: 683
+# datafile.c: 684
 $cmd
 
-# datafile.c: 684
+# datafile.c: 685
 $end
 
-# datafile.c: 1720
+# datafile.c: 1721
  ...[TRUNCATED]
 
-# datafile.c: 1954, 3407
+# datafile.c: 1955, 3408
 lang
 
-# datafile.c: 2001, 3468
+# datafile.c: 2002, 3469
 .dat
 
-# datafile.c: 2114, 2118
+# datafile.c: 2115, 2119
 history.dat
 
-# datafile.c: 2118, 2121
+# datafile.c: 2119, 2122
 history/
 
-# datafile.c: 2138, 2149
+# datafile.c: 2139, 2150
 story.dat
 
-# datafile.c: 2149, 2152
+# datafile.c: 2150, 2153
 story/
 
-# datafile.c: 2219, 2223, 2336
+# datafile.c: 2220, 2224, 2337
 mameinfo.dat
 
-# datafile.c: 2223, 2226
+# datafile.c: 2224, 2227
 mameinfo/
 
-# datafile.c: 2245
+# datafile.c: 2246
 cpu1
 
-# datafile.c: 2246
+# datafile.c: 2247
 cpu2
 
-# datafile.c: 2247
+# datafile.c: 2248
 cpu3
 
-# datafile.c: 2248
+# datafile.c: 2249
 cpu4
 
-# datafile.c: 2249
+# datafile.c: 2250
 cpu5
 
-# datafile.c: 2250
+# datafile.c: 2251
 cpu6
 
-# datafile.c: 2251
+# datafile.c: 2252
 cpu7
 
-# datafile.c: 2252
+# datafile.c: 2253
 cpu8
 
-# datafile.c: 2253
+# datafile.c: 2254
 gfx1
 
-# datafile.c: 2254
+# datafile.c: 2255
 gfx2
 
-# datafile.c: 2255
+# datafile.c: 2256
 gfx3
 
-# datafile.c: 2256
+# datafile.c: 2257
 gfx4
 
-# datafile.c: 2257
+# datafile.c: 2258
 gfx5
 
-# datafile.c: 2258
+# datafile.c: 2259
 gfx6
 
-# datafile.c: 2259
+# datafile.c: 2260
 gfx7
 
-# datafile.c: 2260
+# datafile.c: 2261
 gfx8
 
-# datafile.c: 2261
+# datafile.c: 2262
 prom
 
-# datafile.c: 2262
+# datafile.c: 2263
 snd1
 
-# datafile.c: 2263
+# datafile.c: 2264
 snd2
 
-# datafile.c: 2264
+# datafile.c: 2265
 snd3
 
-# datafile.c: 2265
+# datafile.c: 2266
 snd4
 
-# datafile.c: 2266
+# datafile.c: 2267
 snd5
 
-# datafile.c: 2267
+# datafile.c: 2268
 snd6
 
-# datafile.c: 2268
+# datafile.c: 2269
 snd7
 
-# datafile.c: 2269
+# datafile.c: 2270
 snd8
 
-# datafile.c: 2270
+# datafile.c: 2271
 usr1
 
-# datafile.c: 2271
+# datafile.c: 2272
 usr2
 
-# datafile.c: 2272
+# datafile.c: 2273
 usr3
 
-# datafile.c: 2273
+# datafile.c: 2274
 usr4
 
-# datafile.c: 2274
+# datafile.c: 2275
 usr5
 
-# datafile.c: 2275
+# datafile.c: 2276
 usr6
 
-# datafile.c: 2276
+# datafile.c: 2277
 usr7
 
-# datafile.c: 2277
+# datafile.c: 2278
 usr8
 
-# datafile.c: 2409
+# datafile.c: 2410
 MAME 
 
-# datafile.c: 2525, 2713, 3016
+# datafile.c: 2526, 2714, 3017
 neogeo.c
 
-# datafile.c: 2531
+# datafile.c: 2532
 playch10.c
 
-# datafile.c: 2537
+# datafile.c: 2538
 decocass.c
 
-# datafile.c: 2543
+# datafile.c: 2544
 cvs.c
 
-# datafile.c: 3047
+# datafile.c: 3048
 \n    0 -     5 KB:  %4d\n    5 -    10 KB:  %4d\n   10 -    50 KB:  %4d\n   50 -   100 KB:  %4d\n
 
-# datafile.c: 3049
+# datafile.c: 3050
   100 -   500 KB:  %4d\n  500 -  1000 KB:  %4d\n 1000 -  5000 KB:  %4d\n 5000 - 10000 KB:  %4d\n
 
-# datafile.c: 3051
+# datafile.c: 3052
 10000 - 50000 KB:  %4d\n      > 50000 KB:  %4d\n
 
-# datafile.c: 3080
+# datafile.c: 3081
 \n         CPU:  (1)  (2)  (3)  (4)\n\n
 
-# datafile.c: 3214
+# datafile.c: 3215
 \nWARNING: ASPECT RATIO number too high!\n
 
-# datafile.c: 3249
+# datafile.c: 3250
   FPS %f:  %4d\n
 
-# datafile.c: 3325
+# datafile.c: 3326
   %dx%d: %3d    
 
-# datafile.c: 3340
+# datafile.c: 3341
 \nWARNING: Resolution number too high!\n
 
-# datafile.c: 3343
+# datafile.c: 3344
 \nWARNING: Palettesize number too high!\n
 
-# datafile.c: 3404, 3437
+# datafile.c: 3405, 3438
 command.dat
 
-# datafile.c: 3466
+# datafile.c: 3467
 command\\
 
 # debug/debugcmd.c: 95
@@ -52471,56 +52471,41 @@ sio IRQAck %d\n
 # machine/z80sio.c: 705
 sio IRQReti %d\n
 
-# mame.c: 629
-Unable to extend malloc tracking array to %d slots
-
-# mame.c: 778
-Attempted to malloc zero bytes (%s:%d)
-
-# mame.c: 786
-Failed to allocate %d bytes (%s:%d)
-
-# mame.c: 908
+# mame.c: 909
 osd_init failed
 
-# mame.c: 913
+# mame.c: 914
 code_init failed
 
-# mame.c: 919
+# mame.c: 920
 input_port_init failed
 
-# mame.c: 924
+# mame.c: 925
 rom_init failed
 
-# mame.c: 936
+# mame.c: 937
 memory_init failed
 
-# mame.c: 940
+# mame.c: 941
 cpu_init failed
 
-# mame.c: 945
+# mame.c: 946
 devices_init failed
 
-# mame.c: 962
+# mame.c: 963
 sound_init failed
 
-# mame.c: 966
+# mame.c: 967
 video_init failed
 
-# mame.c: 1067
+# mame.c: 1068
 ASM
 
-# mame.c: 1067
+# mame.c: 1068
 C
 
-# mame.c: 1067
+# mame.c: 1068
 DRC
-
-# mame.c: 1240
-State successfully saved.
-
-# mame.c: 1314
-State successfully loaded.
 
 # mame.h: 38
 HistoryHistory
@@ -52948,52 +52933,52 @@ palette_get_color() out of range
 # palette.c: 2328, 2354, 2383, 2406
 driver should use VIDEO_NEEDS_6BITS_PER_GUN flag
 
-# patch.c: 5
+# patch.c: 6
 .ips
 
-# patch.c: 5
+# patch.c: 6
 CRC(
 
-# patch.c: 5
+# patch.c: 6
 EOF
 
-# patch.c: 5
+# patch.c: 6
 PATCH
 
-# patch.c: 5
+# patch.c: 6
 \xef\xbb\xbf
 
-# patch.c: 89
+# patch.c: 90
 ERROR: %s/%s: open fail\n
 
-# patch.c: 99
+# patch.c: 100
 ERROR: %s/%s: incorrent IPS header\n
 
-# patch.c: 136, 304
+# patch.c: 137, 305
 ERROR: IPS: not enough memory\n
 
-# patch.c: 151
+# patch.c: 152
 ERROR: %s/%s: %06x: wrong offset (ROM size: %06x)\n
 
-# patch.c: 171
+# patch.c: 172
 ERROR: %s/%s: unexpected EOF\n
 
-# patch.c: 224, 367
+# patch.c: 225, 368
 ERROR: %s: IPS file is not found\n
 
-# patch.c: 261
+# patch.c: 262
 ERROR: ROM entry \"%s\" is not found for IPS file \"%s\"\n
 
-# patch.c: 269
+# patch.c: 270
 ERROR: IPS file is not defined for ROM entry \"%s\"\n
 
-# patch.c: 279
+# patch.c: 280
 ERROR: wrong CRC for ROM entry \"%s\"\n
 
-# patch.c: 316
+# patch.c: 317
 ERROR: %s/%s: IPS data is empty\n
 
-# patch.c: 388
+# patch.c: 389
 ERROR: %s: ips is not applied correctly to ROM entry \"%s\"\n
 
 # png.c: 880, 906
@@ -56626,79 +56611,67 @@ Dummy
 # sndintrf.c: 1019
 Copyright (c) 2004, The MAME Team
 
-# sound.c: 215
+# sound.c: 196
 total speakers = %d\n
 
-# sound.c: 218
+# sound.c: 199
 osd_start_audio_stream\n
 
-# sound.c: 232
+# sound.c: 213
 streams_init\n
 
-# sound.c: 236
+# sound.c: 217
 start_sound_chips\n
 
-# sound.c: 241
+# sound.c: 222
 start_speakers\n
 
-# sound.c: 246
+# sound.c: 227
 route_sound\n
 
-# sound.c: 251
+# sound.c: 232
 finalmix.wav
 
-# sound.c: 257, 639, 686
+# sound.c: 238
 mixer
 
-# sound.c: 287
+# sound.c: 268
 Speaker \"%s\" - max = %d (gain *= %f) - %d%% samples clipped\n
 
-# sound.c: 351
+# sound.c: 332
 sndnum = %d -- sound_type = %d\n
 
-# sound.c: 363
+# sound.c: 344
 Sound chip #%d (%s) did not register any state to save!
 
-# sound.c: 367
+# sound.c: 348
 Counting outputs\n
 
-# sound.c: 374
+# sound.c: 355
   stream %p, %d outputs\n
 
-# sound.c: 382
+# sound.c: 363
   %d outputs total\n
 
-# sound.c: 470
+# sound.c: 451
 Sound route \"%s\" not found!\n
 
-# sound.c: 621, 621, 668
+# sound.c: 602, 602, 638
 channel
 
-# sound.c: 623, 671
+# sound.c: 604, 641
 index
 
-# sound.c: 626, 672
+# sound.c: 607, 642
 defvol
 
-# sound.c: 627, 673
+# sound.c: 608, 643
 newvol
 
-# sound.c: 634, 681
-volume_multiplier
-
-# sound.c: 637, 684
-final
-
-# sound.c: 638, 685
-final_max
-
-# sound.c: 640, 687
-mixer_max
-
-# sound.c: 710
+# sound.c: 666
 sound_frame_update\n
 
-# sound.c: 841
+# sound.c: 775
 Mixer_update(%d)\n
 
 # sound/2151intf.c: 234
@@ -59911,9 +59884,6 @@ harddisk
 # ui/layout.c: 85
 samples
 
-# ui/layout.c: 129
-Comment
-
 # ui/layout.c: 144
 ::/html/mame32_overview.htm
 
@@ -60993,9 +60963,6 @@ comment
 
 # ui/options.c: 607
 comment_directory
-
-# ui/options.c: 607
-directory to save comment files
 
 # ui/options.c: 609
 ips_directory
@@ -62323,187 +62290,187 @@ RichEdit20W
 # ui/translate.c: 435
 msctls_updown32
 
-# ui/treeview.c: 77
+# ui/treeview.c: 78
 foldopen
 
-# ui/treeview.c: 78
+# ui/treeview.c: 79
 folder
 
-# ui/treeview.c: 79
+# ui/treeview.c: 80
 foldavail
 
-# ui/treeview.c: 80
+# ui/treeview.c: 81
 foldmanu
 
-# ui/treeview.c: 81
+# ui/treeview.c: 82
 foldunav
 
-# ui/treeview.c: 82
+# ui/treeview.c: 83
 foldyear
 
-# ui/treeview.c: 83
+# ui/treeview.c: 84
 foldsrc
 
-# ui/treeview.c: 84
+# ui/treeview.c: 85
 manufact
 
-# ui/treeview.c: 85
+# ui/treeview.c: 86
 working
 
-# ui/treeview.c: 86
+# ui/treeview.c: 87
 nonwork
 
-# ui/treeview.c: 87
+# ui/treeview.c: 88
 year
 
-# ui/treeview.c: 88
+# ui/treeview.c: 89
 sound
 
-# ui/treeview.c: 89
+# ui/treeview.c: 90
 cpu
 
-# ui/treeview.c: 90
+# ui/treeview.c: 91
 harddisk
 
-# ui/treeview.c: 91
+# ui/treeview.c: 92
 source
 
-# ui/treeview.c: 600
+# ui/treeview.c: 601
  supported by
 
-# ui/treeview.c: 604
+# ui/treeview.c: 605
  distributed by
 
-# ui/treeview.c: 626
+# ui/treeview.c: 627
 licensed from 
 
-# ui/treeview.c: 631
+# ui/treeview.c: 632
 licenced from 
 
-# ui/treeview.c: 638
+# ui/treeview.c: 639
  license
 
-# ui/treeview.c: 642
+# ui/treeview.c: 643
  licence
 
-# ui/treeview.c: 679
+# ui/treeview.c: 680
 co
 
-# ui/treeview.c: 694
+# ui/treeview.c: 695
 co.
 
-# ui/treeview.c: 694
+# ui/treeview.c: 695
 inc
 
-# ui/treeview.c: 694
+# ui/treeview.c: 695
 ltd
 
-# ui/treeview.c: 709
+# ui/treeview.c: 710
 corp
 
-# ui/treeview.c: 709
+# ui/treeview.c: 710
 inc.
 
-# ui/treeview.c: 709
+# ui/treeview.c: 710
 ltd.
 
-# ui/treeview.c: 724
+# ui/treeview.c: 725
 corp.
 
-# ui/treeview.c: 739
+# ui/treeview.c: 740
 co-ltd
 
-# ui/treeview.c: 754
+# ui/treeview.c: 755
 co. ltd
 
-# ui/treeview.c: 769
+# ui/treeview.c: 770
 co., ltd.
 
-# ui/treeview.c: 769
+# ui/treeview.c: 770
 gmbh & co
 
-# ui/treeview.c: 784
+# ui/treeview.c: 785
 corp, ltd.
 
-# ui/treeview.c: 799
+# ui/treeview.c: 800
 corporation
 
-# ui/treeview.c: 1332
+# ui/treeview.c: 1333
 %f Hz
 
-# ui/treeview.c: 1627
+# ui/treeview.c: 1628
 Internal inconsistency with non-built-in folder, but not custom
 
-# ui/treeview.c: 1910
+# ui/treeview.c: 1911
 I %shave %s
 
-# ui/treeview.c: 1910
+# ui/treeview.c: 1911
 don't 
 
-# ui/treeview.c: 1918
+# ui/treeview.c: 1919
 .ini
 
-# ui/treeview.c: 1919
+# ui/treeview.c: 1920
 %s.ini
 
-# ui/treeview.c: 1950
+# ui/treeview.c: 1951
 created: %s.ini
 
-# ui/treeview.c: 1987
+# ui/treeview.c: 1988
 Error creating icon on regular folder, %i %i
 
-# ui/treeview.c: 2000
+# ui/treeview.c: 2001
 Error creating icon on extra folder, %i %i
 
-# ui/treeview.c: 2008
+# ui/treeview.c: 2009
 Error with icon list--too few images.  %i %i
 
-# ui/treeview.c: 2017
+# ui/treeview.c: 2018
 Error with icon list--too few images.  %i < %i
 
-# ui/treeview.c: 2244
+# ui/treeview.c: 2245
 ini
 
-# ui/treeview.c: 2313, 2428
+# ui/treeview.c: 2314, 2429
 r
 
-# ui/treeview.c: 2331, 2449
+# ui/treeview.c: 2332, 2450
 FOLDER_SETTINGS
 
-# ui/treeview.c: 2339
+# ui/treeview.c: 2340
 RootFolderIcon
 
-# ui/treeview.c: 2346
+# ui/treeview.c: 2347
 SubFolderIcon
 
-# ui/treeview.c: 2424, 2538, 2539, 2582, 2583, 2673
+# ui/treeview.c: 2425, 2539, 2540, 2583, 2584, 2674
 %s\\%s.ini
 
-# ui/treeview.c: 2458
+# ui/treeview.c: 2459
 ROOT_FOLDER
 
-# ui/treeview.c: 2495
+# ui/treeview.c: 2496
 Error parsing %s: missing [folder name] or [ROOT_FOLDER]
 
-# ui/treeview.c: 2530, 2531
+# ui/treeview.c: 2531, 2532
 %s\\%s\\%s.ini
 
-# ui/treeview.c: 2599, 2609, 2626, 2668, 2740
+# ui/treeview.c: 2600, 2610, 2627, 2669, 2741
 MAME32
 
-# ui/treeview.c: 2675
+# ui/treeview.c: 2676
 wt
 
-# ui/treeview.c: 2683
+# ui/treeview.c: 2684
 [FOLDER_SETTINGS]\n
 
-# ui/treeview.c: 2687
+# ui/treeview.c: 2688
 RootFolderIcon %s\n
 
-# ui/treeview.c: 2692
+# ui/treeview.c: 2693
 SubFolderIcon %s\n
 
-# ui/treeview.c: 2701
+# ui/treeview.c: 2702
 \n[ROOT_FOLDER]\n
 
 # ui/win32ui.c: 560
@@ -62680,607 +62647,610 @@ png
 # ui/win32ui.c: 917
  -ctrlr_directory \"%s\"
 
-# ui/win32ui.c: 919
+# ui/win32ui.c: 918
+ -comment_directory \"%s\"
+
+# ui/win32ui.c: 920
  -ips_directory \"%s\"
 
-# ui/win32ui.c: 921
+# ui/win32ui.c: 922
  -lang_directory \"%s\"
 
-# ui/win32ui.c: 922
+# ui/win32ui.c: 923
  -history_file \"%s\"
 
-# ui/win32ui.c: 924
+# ui/win32ui.c: 925
  -story_file \"%s\"
 
-# ui/win32ui.c: 926
+# ui/win32ui.c: 927
  -mameinfo_file \"%s\"
 
-# ui/win32ui.c: 927
+# ui/win32ui.c: 928
  -hiscore_file \"%s\"
 
-# ui/win32ui.c: 930
+# ui/win32ui.c: 931
  -%safs
 
-# ui/win32ui.c: 930, 932, 934, 935, 936, 937, 940, 941, 942, 943, 944, 945, 946, 947, 965, 968, 1001, 1002, 1005, 1008, 1010, 1012, 1015, 1052, 1054, 1056, 1062, 1064, 1072, 1073, 1080, 1081, 1084, 1088, 1092, 1093, 1094, 1095, 1101, 1103, 1112, 1113, 1116, 1117, 1129, 1130, 1132, 1135, 1144
+# ui/win32ui.c: 931, 933, 935, 936, 937, 938, 941, 942, 943, 944, 945, 946, 947, 948, 966, 969, 1002, 1003, 1006, 1009, 1011, 1013, 1016, 1053, 1055, 1057, 1063, 1065, 1073, 1074, 1081, 1082, 1085, 1089, 1093, 1094, 1095, 1096, 1102, 1104, 1113, 1114, 1117, 1118, 1130, 1131, 1133, 1136, 1145
 no
 
-# ui/win32ui.c: 931
+# ui/win32ui.c: 932
  -fs %d
 
-# ui/win32ui.c: 932
+# ui/win32ui.c: 933
  -%swaitvsync
 
-# ui/win32ui.c: 934
+# ui/win32ui.c: 935
  -%stb
 
-# ui/win32ui.c: 935
+# ui/win32ui.c: 936
  -%sw
 
-# ui/win32ui.c: 936
+# ui/win32ui.c: 937
  -%sdd
 
-# ui/win32ui.c: 937
+# ui/win32ui.c: 938
  -%shws
 
-# ui/win32ui.c: 938
+# ui/win32ui.c: 939
  -r %s
 
-# ui/win32ui.c: 939
+# ui/win32ui.c: 940
  -refresh %d
 
-# ui/win32ui.c: 940
+# ui/win32ui.c: 941
  -%ssl
 
-# ui/win32ui.c: 941
+# ui/win32ui.c: 942
  -%sswitchres
 
-# ui/win32ui.c: 942
+# ui/win32ui.c: 943
  -%sswitchbpp
 
-# ui/win32ui.c: 943
+# ui/win32ui.c: 944
  -%smax
 
-# ui/win32ui.c: 944
+# ui/win32ui.c: 945
  -%ska
 
-# ui/win32ui.c: 945
+# ui/win32ui.c: 946
  -%smatchrefresh
 
-# ui/win32ui.c: 946
+# ui/win32ui.c: 947
  -%ssyncrefresh
 
-# ui/win32ui.c: 947
+# ui/win32ui.c: 948
  -%sthrottle
 
-# ui/win32ui.c: 948
+# ui/win32ui.c: 949
  -fsb %f
 
-# ui/win32ui.c: 950
+# ui/win32ui.c: 951
  -effect %s
 
-# ui/win32ui.c: 951
+# ui/win32ui.c: 952
  -screen_aspect %s
 
-# ui/win32ui.c: 953
+# ui/win32ui.c: 954
  -mngwrite \"%s\"
 
-# ui/win32ui.c: 954
+# ui/win32ui.c: 955
  -cs %s
 
-# ui/win32ui.c: 955
+# ui/win32ui.c: 956
  -zoom %i
 
-# ui/win32ui.c: 957
+# ui/win32ui.c: 958
  -scale_effect %s
 
-# ui/win32ui.c: 963
+# ui/win32ui.c: 964
  -d3d
 
-# ui/win32ui.c: 964
+# ui/win32ui.c: 965
  -flt %i
 
-# ui/win32ui.c: 965
+# ui/win32ui.c: 966
  -%sd3dtexmanage
 
-# ui/win32ui.c: 966
+# ui/win32ui.c: 967
  -d3deffect %s
 
-# ui/win32ui.c: 967
+# ui/win32ui.c: 968
  -d3dprescale %s
 
-# ui/win32ui.c: 968
+# ui/win32ui.c: 969
  -%sd3deffectrotate
 
-# ui/win32ui.c: 969
+# ui/win32ui.c: 970
  -d3dscan %i
 
-# ui/win32ui.c: 970
+# ui/win32ui.c: 971
  -d3dfeedback %i
 
-# ui/win32ui.c: 973
+# ui/win32ui.c: 974
  -nod3d
 
-# ui/win32ui.c: 976
+# ui/win32ui.c: 977
  -font_blank \"%s\"
 
-# ui/win32ui.c: 977
+# ui/win32ui.c: 978
  -font_normal \"%s\"
 
-# ui/win32ui.c: 978
+# ui/win32ui.c: 979
  -font_special \"%s\"
 
-# ui/win32ui.c: 979
+# ui/win32ui.c: 980
  -system_background \"%s\"
 
-# ui/win32ui.c: 980
+# ui/win32ui.c: 981
  -system_framemedium \"%s\"
 
-# ui/win32ui.c: 981
+# ui/win32ui.c: 982
  -system_framelight \"%s\"
 
-# ui/win32ui.c: 982
+# ui/win32ui.c: 983
  -system_framedark \"%s\"
 
-# ui/win32ui.c: 983
+# ui/win32ui.c: 984
  -osdbar_framemedium \"%s\"
 
-# ui/win32ui.c: 984
+# ui/win32ui.c: 985
  -osdbar_framelight \"%s\"
 
-# ui/win32ui.c: 985
+# ui/win32ui.c: 986
  -osdbar_framedark \"%s\"
 
-# ui/win32ui.c: 986
+# ui/win32ui.c: 987
  -osdbar_defaultbar \"%s\"
 
-# ui/win32ui.c: 987
+# ui/win32ui.c: 988
  -button_red \"%s\"
 
-# ui/win32ui.c: 988
+# ui/win32ui.c: 989
  -button_yellow \"%s\"
 
-# ui/win32ui.c: 989
+# ui/win32ui.c: 990
  -button_green \"%s\"
 
-# ui/win32ui.c: 990
+# ui/win32ui.c: 991
  -button_blue \"%s\"
 
-# ui/win32ui.c: 991
+# ui/win32ui.c: 992
  -button_purple \"%s\"
 
-# ui/win32ui.c: 992
+# ui/win32ui.c: 993
  -button_pink \"%s\"
 
-# ui/win32ui.c: 993
+# ui/win32ui.c: 994
  -button_aqua \"%s\"
 
-# ui/win32ui.c: 994
+# ui/win32ui.c: 995
  -button_silver \"%s\"
 
-# ui/win32ui.c: 995
+# ui/win32ui.c: 996
  -button_navy \"%s\"
 
-# ui/win32ui.c: 996
+# ui/win32ui.c: 997
  -button_lime \"%s\"
 
-# ui/win32ui.c: 997
+# ui/win32ui.c: 998
  -cursor \"%s\"
 
-# ui/win32ui.c: 1001
+# ui/win32ui.c: 1002
  -%smouse
 
-# ui/win32ui.c: 1002
+# ui/win32ui.c: 1003
  -%sjoy
 
-# ui/win32ui.c: 1004
+# ui/win32ui.c: 1005
  -a2d %f
 
-# ui/win32ui.c: 1005
+# ui/win32ui.c: 1006
  -%ssteady
 
-# ui/win32ui.c: 1008
+# ui/win32ui.c: 1009
  -%sgun
 
-# ui/win32ui.c: 1010
+# ui/win32ui.c: 1011
  -%sdual
 
-# ui/win32ui.c: 1012
+# ui/win32ui.c: 1013
  -%sreload
 
-# ui/win32ui.c: 1015
+# ui/win32ui.c: 1016
  -%sstickpoint
 
-# ui/win32ui.c: 1018
+# ui/win32ui.c: 1019
  -joyid1 %d
 
-# ui/win32ui.c: 1019
+# ui/win32ui.c: 1020
  -joyid2 %d
 
-# ui/win32ui.c: 1020
+# ui/win32ui.c: 1021
  -joyid3 %d
 
-# ui/win32ui.c: 1021
+# ui/win32ui.c: 1022
  -joyid4 %d
 
-# ui/win32ui.c: 1022
+# ui/win32ui.c: 1023
  -joyid5 %d
 
-# ui/win32ui.c: 1023
+# ui/win32ui.c: 1024
  -joyid6 %d
 
-# ui/win32ui.c: 1024
+# ui/win32ui.c: 1025
  -joyid7 %d
 
-# ui/win32ui.c: 1025
+# ui/win32ui.c: 1026
  -joyid8 %d
 
-# ui/win32ui.c: 1029
+# ui/win32ui.c: 1030
  -ctrlr \"%s\"
 
-# ui/win32ui.c: 1031
+# ui/win32ui.c: 1032
  -digital \"%s\"
 
-# ui/win32ui.c: 1034
+# ui/win32ui.c: 1035
  -paddle \"%s\"
 
-# ui/win32ui.c: 1036
+# ui/win32ui.c: 1037
  -adstick \"%s\"
 
-# ui/win32ui.c: 1038
+# ui/win32ui.c: 1039
  -pedal \"%s\"
 
-# ui/win32ui.c: 1040
+# ui/win32ui.c: 1041
  -dial \"%s\"
 
-# ui/win32ui.c: 1042
+# ui/win32ui.c: 1043
  -trackball \"%s\"
 
-# ui/win32ui.c: 1044
+# ui/win32ui.c: 1045
  -lightgun_device \"%s\"
 
-# ui/win32ui.c: 1048
+# ui/win32ui.c: 1049
  -bright %f
 
-# ui/win32ui.c: 1049
+# ui/win32ui.c: 1050
  -pause_brightness %f
 
-# ui/win32ui.c: 1052
+# ui/win32ui.c: 1053
  -%snorotate
 
-# ui/win32ui.c: 1054
+# ui/win32ui.c: 1055
  -%sror
 
-# ui/win32ui.c: 1056
+# ui/win32ui.c: 1057
  -%srol
 
-# ui/win32ui.c: 1058
+# ui/win32ui.c: 1059
  -autoror
 
-# ui/win32ui.c: 1060
+# ui/win32ui.c: 1061
  -autorol
 
-# ui/win32ui.c: 1062
+# ui/win32ui.c: 1063
  -%sflipx
 
-# ui/win32ui.c: 1064
+# ui/win32ui.c: 1065
  -%sflipy
 
-# ui/win32ui.c: 1065
+# ui/win32ui.c: 1066
  -gamma %f
 
-# ui/win32ui.c: 1067
+# ui/win32ui.c: 1068
  -screen %s
 
-# ui/win32ui.c: 1072
+# ui/win32ui.c: 1073
  -%saa
 
-# ui/win32ui.c: 1073
+# ui/win32ui.c: 1074
  -%stl
 
-# ui/win32ui.c: 1074
+# ui/win32ui.c: 1075
  -beam %f
 
-# ui/win32ui.c: 1075
+# ui/win32ui.c: 1076
  -flicker %f
 
-# ui/win32ui.c: 1076
+# ui/win32ui.c: 1077
  -intensity %f
 
-# ui/win32ui.c: 1079
+# ui/win32ui.c: 1080
  -sr %d
 
-# ui/win32ui.c: 1080
+# ui/win32ui.c: 1081
  -%ssamples
 
-# ui/win32ui.c: 1081
+# ui/win32ui.c: 1082
  -%ssound
 
-# ui/win32ui.c: 1082
+# ui/win32ui.c: 1083
  -vol %d
 
-# ui/win32ui.c: 1084
+# ui/win32ui.c: 1085
  -%svolume_adjust
 
-# ui/win32ui.c: 1086
+# ui/win32ui.c: 1087
  -audio_latency %i
 
-# ui/win32ui.c: 1088
+# ui/win32ui.c: 1089
  -%sart
 
-# ui/win32ui.c: 1092
+# ui/win32ui.c: 1093
  -%sbackdrop
 
-# ui/win32ui.c: 1093
+# ui/win32ui.c: 1094
  -%soverlay
 
-# ui/win32ui.c: 1094
+# ui/win32ui.c: 1095
  -%sbezel
 
-# ui/win32ui.c: 1095
+# ui/win32ui.c: 1096
  -%sartcrop
 
-# ui/win32ui.c: 1096
+# ui/win32ui.c: 1097
  -artres %d
 
-# ui/win32ui.c: 1101
+# ui/win32ui.c: 1102
  -%sc
 
-# ui/win32ui.c: 1103
+# ui/win32ui.c: 1104
  -%sd
 
-# ui/win32ui.c: 1105
+# ui/win32ui.c: 1106
  -pb \"%s\"
 
-# ui/win32ui.c: 1107
+# ui/win32ui.c: 1108
  -rec \"%s\"
 
-# ui/win32ui.c: 1109
+# ui/win32ui.c: 1110
  -wavwrite \"%s\"
 
-# ui/win32ui.c: 1111
+# ui/win32ui.c: 1112
  -state \"%s\"
 
-# ui/win32ui.c: 1112
+# ui/win32ui.c: 1113
  -%slog
 
-# ui/win32ui.c: 1113
+# ui/win32ui.c: 1114
  -%ssleep
 
-# ui/win32ui.c: 1115
+# ui/win32ui.c: 1116
  -rdtsc
 
-# ui/win32ui.c: 1116
+# ui/win32ui.c: 1117
  -%sleds
 
-# ui/win32ui.c: 1117
+# ui/win32ui.c: 1118
  -%sskip_gameinfo
 
-# ui/win32ui.c: 1118
+# ui/win32ui.c: 1119
  -priority %d
 
-# ui/win32ui.c: 1120
+# ui/win32ui.c: 1121
  -autosave
 
-# ui/win32ui.c: 1123
+# ui/win32ui.c: 1124
  -bios %s
 
-# ui/win32ui.c: 1127
+# ui/win32ui.c: 1128
  -ips %s
 
-# ui/win32ui.c: 1129
+# ui/win32ui.c: 1130
  -%sdsm
 
-# ui/win32ui.c: 1130
+# ui/win32ui.c: 1131
  -%sconfirm_quit
 
-# ui/win32ui.c: 1132
+# ui/win32ui.c: 1133
  -%sauto_pause_playback
 
-# ui/win32ui.c: 1135
+# ui/win32ui.c: 1136
  -%suse_trans_ui
 
-# ui/win32ui.c: 1136
+# ui/win32ui.c: 1137
  -ui_transparency %d
 
-# ui/win32ui.c: 1139
+# ui/win32ui.c: 1140
  -m68k_core %d
 
-# ui/win32ui.c: 1143
+# ui/win32ui.c: 1144
  -language %s
 
-# ui/win32ui.c: 1144
+# ui/win32ui.c: 1145
  -%suse_lang_list
 
-# ui/win32ui.c: 1202
+# ui/win32ui.c: 1203
 -input_directory
 
-# ui/win32ui.c: 1207
+# ui/win32ui.c: 1208
 -pb
 
-# ui/win32ui.c: 1212
+# ui/win32ui.c: 1213
 -rec
 
-# ui/win32ui.c: 1217
+# ui/win32ui.c: 1218
 -wavwrite
 
-# ui/win32ui.c: 1222
+# ui/win32ui.c: 1223
 -mngwrite
 
-# ui/win32ui.c: 1227
+# ui/win32ui.c: 1228
 -state
 
-# ui/win32ui.c: 1235, 1330
+# ui/win32ui.c: 1236, 1331
 Out of memory.
 
-# ui/win32ui.c: 1351
+# ui/win32ui.c: 1352
 CreateProcess failed.
 
-# ui/win32ui.c: 1414
+# ui/win32ui.c: 1415
 MAME32 starting
 
-# ui/win32ui.c: 1420
+# ui/win32ui.c: 1421
 windows
 
-# ui/win32ui.c: 1421
+# ui/win32ui.c: 1422
 ui
 
-# ui/win32ui.c: 1613, 1617
+# ui/win32ui.c: 1614, 1618
 %s/%s.ico
 
-# ui/win32ui.c: 1621
+# ui/win32ui.c: 1622
 %s/icons.zip
 
-# ui/win32ui.c: 1622
+# ui/win32ui.c: 1623
 %s.ico
 
-# ui/win32ui.c: 1626
+# ui/win32ui.c: 1627
 icons.zip
 
-# ui/win32ui.c: 1919
+# ui/win32ui.c: 1920
 The 
 
-# ui/win32ui.c: 1924
+# ui/win32ui.c: 1925
 , The
 
-# ui/win32ui.c: 2113, 5512
+# ui/win32ui.c: 2114, 5513
 %s\\bkground.png
 
-# ui/win32ui.c: 2130
+# ui/win32ui.c: 2131
 %s\\*.bmp
 
-# ui/win32ui.c: 2143
+# ui/win32ui.c: 2144
 %s\\*.png
 
-# ui/win32ui.c: 2173
+# ui/win32ui.c: 2174
 %s Plus! %s
 
-# ui/win32ui.c: 2173, 2273, 6148, 7340
+# ui/win32ui.c: 2174, 2274, 6149, 7341
 MAME32
 
-# ui/win32ui.c: 2235
+# ui/win32ui.c: 2236
 MainClass
 
-# ui/win32ui.c: 2242
+# ui/win32ui.c: 2243
 common control version %i.%i
 
-# ui/win32ui.c: 2249
+# ui/win32ui.c: 2250
 MAME32 has detected an old version of comctl32.dll\n\nGame Properties, many configuration options and\nfeatures are not available without an updated DLL\n\nPlease install the common control update found at:\n\nhttp://www.microsoft.com/msdownload/ieplatform/ie/comctrlx86.asp\n\nWould you like to continue without using the new features?\n
 
-# ui/win32ui.c: 2256
+# ui/win32ui.c: 2257
 MAME32 Outdated comctl32.dll Warning
 
-# ui/win32ui.c: 2260
+# ui/win32ui.c: 2261
 about to init options
 
-# ui/win32ui.c: 2262
+# ui/win32ui.c: 2263
 options loaded
 
-# ui/win32ui.c: 2282
+# ui/win32ui.c: 2283
 error creating main dialog, aborting
 
-# ui/win32ui.c: 2423
+# ui/win32ui.c: 2424
 about to init tree
 
-# ui/win32ui.c: 2425
+# ui/win32ui.c: 2426
 did init tree
 
-# ui/win32ui.c: 2494
+# ui/win32ui.c: 2495
 about to show window
 
-# ui/win32ui.c: 2554, 7825, 7825, 7905, 7905
+# ui/win32ui.c: 2555, 7826, 7826, 7906, 7906
 MAME
 
-# ui/win32ui.c: 2554
+# ui/win32ui.c: 2555
 MAME has failed its validity checks.  The GUI will still work, but emulations will fail to execute
 
-# ui/win32ui.c: 2697
+# ui/win32ui.c: 2698
 menusele: clear
 
-# ui/win32ui.c: 2706
+# ui/win32ui.c: 2707
 menusele: %d %s, updateSS
 
-# ui/win32ui.c: 2712
+# ui/win32ui.c: 2713
 menusele:none, updateSS
 
-# ui/win32ui.c: 2920, 2932, 4584, 6496
+# ui/win32ui.c: 2921, 2933, 4585, 6497
 SysListView32
 
-# ui/win32ui.c: 2922
+# ui/win32ui.c: 2923
 SysTabControl32
 
-# ui/win32ui.c: 3353
+# ui/win32ui.c: 3354
 MMX
 
-# ui/win32ui.c: 3355
+# ui/win32ui.c: 3356
 MMMM games
 
-# ui/win32ui.c: 3421
+# ui/win32ui.c: 3422
 Progress Bar
 
-# ui/win32ui.c: 3456, 3475, 3504, 3523
+# ui/win32ui.c: 3457, 3476, 3505, 3524
 Invalid Button Index
 
-# ui/win32ui.c: 3461, 3509
+# ui/win32ui.c: 3462, 3510
 Modify 'The'
 
-# ui/win32ui.c: 4081
+# ui/win32ui.c: 4082
 seq =%s pressed\n
 
-# ui/win32ui.c: 4105
+# ui/win32ui.c: 4106
 keyboard gui state cleared.\n
 
-# ui/win32ui.c: 4170
+# ui/win32ui.c: 4171
 VK_code pressed not found =  %i\n
 
-# ui/win32ui.c: 4174
+# ui/win32ui.c: 4175
 VK_code pressed found =  %i, sys=%i, mame_keycode=%i special=%08x\n
 
-# ui/win32ui.c: 4240
+# ui/win32ui.c: 4241
 VK_code released not found =  %i
 
-# ui/win32ui.c: 4245
+# ui/win32ui.c: 4246
 VK_code released found=  %i, sys=%i, mame_keycode=%i special=%08x\n
 
-# ui/win32ui.c: 4588, 6501
+# ui/win32ui.c: 4589, 6502
 SysTreeView32
 
-# ui/win32ui.c: 4665
+# ui/win32ui.c: 4666
 dup!
 
-# ui/win32ui.c: 5294
+# ui/win32ui.c: 5295
 bkgnd16
 
-# ui/win32ui.c: 5299
+# ui/win32ui.c: 5300
 bkground
 
-# ui/win32ui.c: 5615
+# ui/win32ui.c: 5616
 Control Panel\\desktop\\WindowMetrics
 
-# ui/win32ui.c: 5617
+# ui/win32ui.c: 5618
 Shell Icon Size
 
-# ui/win32ui.c: 5712
+# ui/win32ui.c: 5713
 comparing 1941, 1942
 
-# ui/win32ui.c: 5717
+# ui/win32ui.c: 5718
 comparing 1942, 1941
 
-# ui/win32ui.c: 5887
+# ui/win32ui.c: 5888
 result: %i
 
-# ui/win32ui.c: 6879
+# ui/win32ui.c: 6880
 can't find show folders context menu
 
-# ui/win32ui.c: 6885
+# ui/win32ui.c: 6886
 can't find submenu for show folders context menu
 
-# ui/win32ui.c: 7146
+# ui/win32ui.c: 7147
 loading %-12s\r
 
-# ui/win32ui.c: 7966, 7978
+# ui/win32ui.c: 7967, 7979
 BackMainWindowClass
 
-# ui/win32ui.c: 7979
+# ui/win32ui.c: 7980
 Main Backgound windows
 
 # ui_font.c: 74
@@ -63529,7 +63499,7 @@ TILEMAP %d (%dx%d)  X:%d  Y:%d
 # usrintrf.c: 4132
 Local font file is not installed. You must install CJK font into font directory first.\n\nPlease download from:\nhttp://mameplus.emu-france.com/\n\nPress ESC to exit, type OK to continue.
 
-# usrintrf.c: 4559
+# usrintrf.c: 4567
 %s %3ddB
 
 # validity.c: 222
@@ -69028,9 +68998,6 @@ comment
 # windows/fileio.c: 144
 comment_directory
 
-# windows/fileio.c: 144
-directory to save comment files
-
 # windows/fileio.c: 146
 ips
 
@@ -69073,14 +69040,8 @@ hiscore.dat
 # windows/fileio.c: 155
 hiscore_file
 
-# windows/fileio.c: 277
-Out of memory in variable expansion!
-
 # windows/fileio.c: 319
 Expanding: %s\n
-
-# windows/fileio.c: 346
-Out of memory!
 
 # windows/fileio.c: 631
 tmp
@@ -69979,28 +69940,28 @@ fskp
 # windows/video.c: 749
 \n %d partial updates
 
-# windows/winalloc.c: 89
+# windows/winalloc.c: 90
 Out of allocation blocks!\n
 
-# windows/winalloc.c: 212
+# windows/winalloc.c: 235
 Error: realloc a non-existant block\n
 
-# windows/winalloc.c: 242
+# windows/winalloc.c: 265
 Error: free a non-existant block\n
 
-# windows/winalloc.c: 262
+# windows/winalloc.c: 285
 Error: msize a non-existant block\n
 
-# windows/winalloc.c: 279
+# windows/winalloc.c: 302
 --- memory leak warning ---\n
 
-# windows/winalloc.c: 282
+# windows/winalloc.c: 305
 allocation #%06d, %d bytes (%s:%d)\n
 
-# windows/winalloc.c: 284
+# windows/winalloc.c: 307
 allocation #%06d, %d bytes\n
 
-# windows/winalloc.c: 289
+# windows/winalloc.c: 312
 a total of %d bytes were not free()'d\n
 
 # windows/wind3d.c: 410

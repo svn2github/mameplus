@@ -562,7 +562,8 @@ mrheli	Mr. HELI 大冒險	Mr. HELI 大冒險	Irem
 nspirit	最後忍道 / Ninja Spirit	最後忍道 / Ninja Spirit	Irem
 nspiritj	最後忍道 (日本版)	最後忍道 (日本版)	Irem
 xmultipl	X 戰機 (日本版)	X 戰機 (日本版)	Irem
-dbreed	神龍太子	神龍太子	Irem
+dbreed	神龍太子 (M81 pcb version)	神龍太子 (M81 pcb version)	Irem
+dbreed72	神龍太子 (M72 pcb version)	神龍太子 (M72 pcb version)	Irem
 rtype2	異形戰機 II / R-Type II	異形戰機 II / R-Type II	Irem
 rtype2j	異形戰機 II / R-Type II (日本版)	異形戰機 II / R-Type II (日本版)	Irem
 hharry	大力工頭 / Hammerin' Harry (世界版)	大力工頭 / Hammerin' Harry (世界版)	Irem
@@ -1416,7 +1417,9 @@ ghlpanic	魔鬼剋星 (OB2/VER.A)	魔鬼剋星 (OB2/VER.A)	Namco
 mrdrillr	電鑽先生 (DRI1/VER.A2)	電鑽先生 (DRI1/VER.A2)	Namco
 aquarush	水世界方塊 (AQ1/VER.A1)	水世界方塊 (AQ1/VER.A1)	Namco
 golgo13	神秘狙擊手 13 (GLG1/VER.A)	神秘狙擊手 13 (GLG1/VER.A)	Raizing/Namco
-mrdrilr2	電鑽先生 2	電鑽先生 2	Namco
+mrdrilr2	電鑽先生 2 (DR21 Ver.A)	電鑽先生 2 (DR21 Ver.A)	Namco
+gjspace	擊牌砦 (10011 Ver.A)	擊牌砦 (10011 Ver.A)	Namco/Metro
+mrdrilrg	電鑽先生 G (DRG1 Ver.A)	電鑽先生 G (DRG1 Ver.A)	Namco
 cryptklr	殺戮墳場 (GQ420 UAA)	殺戮墳場 (GQ420 UAA)	Konami
 pbball96	實況野球 '96 (GV017 日本版 1.03)	實況野球 '96 (GV017 日本版 1.03)	Konami
 simpbowl	辛普森家庭保齡球 (GQ829 UAA)	辛普森家庭保齡球 (GQ829 UAA)	Konami
@@ -2768,8 +2771,8 @@ suprslam	灌籃高手	灌籃高手	Banpresto / Toei Animation
 fromanc2	對戰偶像麻雀 最終羅曼史 2 (日本版)	對戰偶像麻雀 最終羅曼史 2 (日本版)	Video System Co.
 fromancr	對戰麻雀 最終羅曼史 R (日本版)	對戰麻雀 最終羅曼史 R (日本版)	Video System Co.
 fromanc4	對戰麻雀 最終羅曼史 4 (日本版)	對戰麻雀 最終羅曼史 4 (日本版)	Video System Co.
-samuraia	戰國 Ace / Samurai Aces (世界版)	戰國 Ace / Samurai Aces (世界版)	Psikyo
-sngkace	戰國 Ace (日本版)	戰國 Ace (日本版)	Psikyo
+samuraia	戰國 ACE / Samurai Aces (世界版)	戰國 ACE / Samurai Aces (世界版)	Psikyo
+sngkace	戰國 ACE (日本版)	戰國 ACE (日本版)	Psikyo
 gunbird	武裝飛鳥 (世界版)	武裝飛鳥 (世界版)	Psikyo
 gunbirdk	武裝飛鳥 (韓國版)	武裝飛鳥 (韓國版)	Psikyo
 gunbirdj	武裝飛鳥 (日本版)	武裝飛鳥 (日本版)	Psikyo
@@ -2777,7 +2780,7 @@ s1945	打擊者 1945	打擊者 1945	Psikyo
 s1945a	打擊者 1945 (Alt)	打擊者 1945 (Alt)	Psikyo
 s1945j	打擊者 1945 (日本版)	打擊者 1945 (日本版)	Psikyo
 s1945jn	打擊者 1945 (日本版, unprotected)	打擊者 1945 (日本版, unprotected)	Psikyo
-tengai	戰國風雲 / 戰國之刃: 戰國 Ace 章節 II	戰國風雲 / 戰國之刃: 戰國 Ace 章節 II	Psikyo
+tengai	戰國之刃: 戰國 ACE 章節 II	戰國之刃: 戰國 ACE 章節 II	Psikyo
 s1945ii	打擊者 1945 II	打擊者 1945 II	Psikyo
 soldivid	太陽表決	太陽表決	Psikyo
 sbomberb	太空轟炸機 (ver. B)	太空轟炸機 (ver. B)	Psikyo
@@ -2919,8 +2922,8 @@ lastfero	牌砦 (Erotic)	牌砦 (Erotic)	Metro
 lastforg	牌砦 (德文)	牌砦 (德文)	Metro
 toride2g	牌砦 II - 復仇外傳 / 戰國智慧牌	牌砦 II - 復仇外傳 / 戰國智慧牌	Metro
 daitorid	大牌砦	大牌砦	Metro
-dokyusei	同級生麻雀	同級生麻雀	Make Software / Elf / Media Trading
-dokyusp	同級生麻雀 特別版	同級生麻雀 特別版	Make Software / Elf / Media Trading
+dokyusei	麻雀同級生	麻雀同級生	Make Software / Elf / Media Trading
+dokyusp	麻雀同級生特別版	麻雀同級生特別版	Make Software / Elf / Media Trading
 3kokushi	三刻志 (日本版)	三刻志 (日本版)	Mitchell
 gakusai	麻雀學園祭 (日本版)	麻雀學園祭 (日本版)	MakeSoft
 gakusai2	麻雀學園祭 2 (日本版)	麻雀學園祭 2 (日本版)	MakeSoft
@@ -2956,6 +2959,8 @@ ddenlovr	黑白棋 Vol. 1 (香港版)	黑白棋 Vol. 1 (香港版)	Dynax
 hkagerou	華陽炎 [BET] (日本版)	華陽炎 [BET] (日本版)	Nakanihon + Dynax
 mjchuuka	麻雀中華兒女 (中國版)	麻雀中華兒女 (中國版)	Dynax
 mjreach1	麻雀 立直一發 (日本版)	麻雀 立直一發 (日本版)	Nihon System
+pkgnsh	銀玉勝負 (日本版)	銀玉勝負 (日本版)	Nakanihon / Dynax
+pkgnshdx	銀玉勝負 DX (日本版)	銀玉勝負 DX (日本版)	Nakanihon / Dynax
 mjelctrn	電子基盤 (parts 2 & 4, 日本版)	電子基盤 (parts 2 & 4, 日本版)	Dynax
 mjelct3	電子基盤 (parts 2 & 3, 日本版)	電子基盤 (parts 2 & 3, 日本版)	Dynax
 mjelct3a	電子基盤 (parts 2 & 3, alt., 日本版)	電子基盤 (parts 2 & 3, alt., 日本版)	Dynax
