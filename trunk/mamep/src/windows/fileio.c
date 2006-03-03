@@ -14,6 +14,7 @@
 #include <tchar.h>
 
 // MAME headers
+#include "osdepend.h"
 #include "driver.h"
 #include "unzip.h"
 #include "rc.h"
@@ -272,8 +273,7 @@ static char *copy_and_expand_variables(const char *path, int len)
 
 	/* allocate a string of the appropriate length */
 	result = malloc(length + 1);
-	if (!result)
-		goto out_of_memory;
+	assert_always(result != NULL, "Out of memory in variable expansion!");
 
 	/* now actually generate the string */
 	for (src = path, dst = result; src < path + len; )
@@ -345,8 +345,7 @@ static void expand_pathlist(pathdata *list)
 	{
 		// allocate space for the new pointer
 		list->path = realloc((void *)list->path, (list->pathcount + 1) * sizeof(char *));
-		if (!list->path)
-			goto out_of_memory;
+		assert_always(list->path != NULL, "Out of memory!");
 
 		// copy the path in
 		list->path[list->pathcount++] = copy_and_expand_variables(rawpath, token - rawpath);

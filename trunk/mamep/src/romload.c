@@ -9,7 +9,9 @@
 
 *********************************************************************/
 
+#include "osdepend.h"
 #include "driver.h"
+#include "hash.h"
 #include "png.h"
 #include "harddisk.h"
 #include "artwork.h"

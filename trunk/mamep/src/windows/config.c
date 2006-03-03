@@ -45,6 +45,7 @@
 
 #ifdef NEW_DEBUGGER
 #include "debug/debugcpu.h"
+#include "debug/debugcon.h"
 #endif
 
 extern struct rc_option frontend_opts[];
@@ -901,7 +902,7 @@ static int config_handle_arg(char *arg)
 		gamename = arg;
 		gamename = win_basename(gamename);
 		gamename = win_strip_extension(gamename);
-		gamepath = strdup(arg);
+		gamepath = mame_strdup(arg);
 
 		/* do we have a driver for this? */
 		for (i = 0; drivers[i]; i++)
@@ -925,54 +926,16 @@ static int config_handle_arg(char *arg)
 
 
 //============================================================
-//  vlogerror
+//  osd_logerror
 //============================================================
 
-static void vlogerror(const char *text, va_list arg)
+void osd_logerror(const char *text)
 {
 	if (errorlog && logfile)
-		curlogsize += vfprintf(logfile, text, arg);
+		curlogsize += fprintf(logfile, "%s", text);
 
 	if (erroroslog)
-	{
-		//extern int vsnprintf(char *s, size_t maxlen, const char *fmt, va_list _arg);
-		char buffer[2048];
-		_vsnprintf(buffer, sizeof(buffer) / sizeof(buffer[0]), text, arg);
-		OutputDebugString(buffer);
-	}
-}
-
-
-//============================================================
-//  logerror
-//============================================================
-
-void CLIB_DECL logerror(const char *text,...)
-{
-	va_list arg;
-
-	/* standard vfprintf stuff here */
-	va_start(arg, text);
-	vlogerror(text, arg);
-	va_end(arg);
-}
-
-
-//============================================================
-//  osd_die
-//============================================================
-
-void CLIB_DECL osd_die(const char *text,...)
-{
-	va_list arg;
-
-	/* standard vfprintf stuff here */
-	va_start(arg, text);
-	vlogerror(text, arg);
-	vprintf(text, arg);
-	va_end(arg);
-
-	exit(-1);
+		OutputDebugString(text);
 }
 
 

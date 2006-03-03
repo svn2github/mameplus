@@ -448,7 +448,7 @@ static void state_register(const char *type)
 	state_save_register_item(type, cpu, X);
 	state_save_register_item(type, cpu, CC);
 	state_save_register_item(type, cpu, m6805.pending_interrupts);
-	state_save_register_item(type, cpu, m6805.irq_state[0]);
+	state_save_register_item_array(type, cpu, m6805.irq_state);
 }
 
 static void m6805_init(void)

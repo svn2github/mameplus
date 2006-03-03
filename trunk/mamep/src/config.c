@@ -11,7 +11,6 @@
 
 #include "driver.h"
 #include "config.h"
-#include "machine/generic.h"
 #include "xmlfile.h"
 
 

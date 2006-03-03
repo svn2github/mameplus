@@ -65,6 +65,13 @@ enum
 #define UI_TRANSPARENT_COLOR	0xfffffffe
 #endif /* TRANS_UI */
 
+enum
+{
+	LOADSAVE_NONE,
+	LOADSAVE_LOAD,
+	LOADSAVE_SAVE
+};
+
 
 
 /*************************************
@@ -219,7 +226,7 @@ static void draw_multiline_text_box(const char *text, int offset, int justify, f
 static void create_font(void);
 static void onscrd_init(void);
 
-static int handle_keys(mame_bitmap *bitmap);
+static void handle_keys(mame_bitmap *bitmap);
 static void ui_display_profiler(void);
 static void ui_display_popup(void);
 static int setup_menu(int selected);
@@ -415,7 +422,7 @@ void ui_set_visible_area(int xmin, int ymin, int xmax, int ymax)
  *
  *************************************/
 
-int ui_update_and_render(mame_bitmap *bitmap)
+void ui_update_and_render(mame_bitmap *bitmap)
 {
 	/* if we're single-stepping, pause now */
 	if (single_step)
@@ -479,8 +486,6 @@ int ui_update_and_render(mame_bitmap *bitmap)
 	/* decrement the dirty count */
 	if (ui_dirty)
 		ui_dirty--;
-
-	return 0;
 }
 
 
@@ -1161,7 +1166,7 @@ void ui_menu_stack_reset(void)
 UINT32 ui_menu_stack_push(ui_menu_handler new_handler, UINT32 new_state)
 {
 	if (menu_stack_index >= MENU_STACK_DEPTH)
-		osd_die("Menu stack overflow!");
+		fatalerror("Menu stack overflow!");
 
 	/* save the old state/handler */
 	menu_stack_handler[menu_stack_index] = menu_handler;
@@ -1181,7 +1186,7 @@ UINT32 ui_menu_stack_push(ui_menu_handler new_handler, UINT32 new_state)
 UINT32 ui_menu_stack_pop(void)
 {
 	if (menu_stack_index <= 0)
-		osd_die("Menu stack underflow!");
+		fatalerror("Menu stack underflow!");
 
 	/* restore the old state/handler */
 	menu_stack_index--;
@@ -1709,7 +1714,9 @@ static int handle_keys(mame_bitmap *bitmap)
 
 	/* handle a reset request */
 	if (input_ui_pressed(IPT_UI_RESET_MACHINE))
-		machine_reset();
+		mame_schedule_hard_reset();
+	if (input_ui_pressed(IPT_UI_SOFT_RESET))
+		mame_schedule_soft_reset();
 
 	/* handle a request to display graphics/palette (note that this loops internally) */
 	if (input_ui_pressed(IPT_UI_SHOW_GFX))
@@ -1815,8 +1822,6 @@ static int handle_keys(mame_bitmap *bitmap)
 	/* toggle crosshair display */
 	if (input_ui_pressed(IPT_UI_TOGGLE_CROSSHAIR))
 		drawgfx_toggle_crosshair();
-
-	return 0;
 }
 
 
@@ -3365,7 +3370,7 @@ static UINT32 menu_memory_card(UINT32 state)
 static UINT32 menu_reset_game(UINT32 state)
 {
 	/* request a reset */
-	machine_reset();
+	mame_schedule_soft_reset();
 
 	/* reset the menu stack */
 	ui_menu_stack_reset();
@@ -4108,7 +4113,8 @@ static void showcharset(mame_bitmap *bitmap)
 		draw_caption();
 #endif /* INP_CAPTION */
 	} while (!input_ui_pressed(IPT_UI_SHOW_GFX) &&
-			!input_ui_pressed(IPT_UI_CANCEL));
+			!input_ui_pressed(IPT_UI_CANCEL) &&
+			!mame_is_scheduled_event_pending());
 
 	schedule_full_refresh();
 
@@ -4148,7 +4154,7 @@ int ui_display_font_warning(mame_bitmap *bitmap)
 			done = 1;
 		if (done == 1 && (code_pressed_memory(KEYCODE_K) || input_ui_pressed(IPT_UI_RIGHT)))
 			done = 2;
-	} while (done < 2);
+	} while (done < 2 && !mame_is_scheduled_event_pending());
 
 	scroll_reset = TRUE;
 
@@ -4899,6 +4905,7 @@ static void initiate_load_save(int type)
 
 static int update_load_save(void)
 {
+	char filename[20];
 	input_code code;
 	char file = 0;
 

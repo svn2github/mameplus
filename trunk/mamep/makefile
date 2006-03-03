@@ -405,7 +405,7 @@ endif
 #-------------------------------------------------
 
 ifdef USE_GCC
-    CFLAGS = -std=gnu89 -Isrc -Isrc/includes -Isrc/zlib -Iextra/include -Isrc/debug -Isrc/$(MAMEOS) -I$(OBJ)/cpu/m68000 -Isrc/cpu/m68000
+    CFLAGS = -std=gnu89 -Isrc -Isrc/includes -Isrc/zlib -Iextra/include -Isrc/debug -Isrc/$(MAMEOS)
 
     ifneq ($(W_ERROR),)
         CFLAGS += -Werror 
@@ -440,7 +440,7 @@ ifdef USE_GCC
     CFLAGSOSDEPEND = $(CFLAGS)
 
 else
-    CFLAGS = -Isrc -Isrc/includes -Isrc/zlib -Isrc/debug -Isrc/$(MAMEOS) -I$(OBJ)/cpu/m68000 -Isrc/cpu/m68000 \
+    CFLAGS = -Isrc -Isrc/includes -Isrc/zlib -Isrc/debug -Isrc/$(MAMEOS) \
              -W3 -nologo
 
     ifdef INTEL
@@ -608,11 +608,14 @@ all:	maketree emulator extrafiles
 # include the various .mak files
 #-------------------------------------------------
 
+# include OS-specific rules first
+include src/$(MAMEOS)/$(MAMEOS).mak
+
+# then the various core pieces
 include src/core.mak
 include src/$(TARGET).mak
 include src/cpu/cpu.mak
 include src/sound/sound.mak
-include src/$(MAMEOS)/$(MAMEOS).mak
 
 # combine the various definitions to one
 CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS)
@@ -794,102 +797,6 @@ $(OBJ)/libexpat.a: $(OBJ)/expat/xmlparse.o $(OBJ)/expat/xmlrole.o $(OBJ)/expat/x
 $(OBJ)/libz.a: $(OBJ)/zlib/adler32.o $(OBJ)/zlib/compress.o $(OBJ)/zlib/crc32.o $(OBJ)/zlib/deflate.o \
 				$(OBJ)/zlib/gzio.o $(OBJ)/zlib/inffast.o $(OBJ)/zlib/inflate.o $(OBJ)/zlib/infback.o \
 				$(OBJ)/zlib/inftrees.o $(OBJ)/zlib/trees.o $(OBJ)/zlib/uncompr.o $(OBJ)/zlib/zutil.o
-
-
-
-#-------------------------------------------------
-# special rules
-#-------------------------------------------------
-
-# compile generated C files for the 68000 emulator
-$(M68000_GENERATED_OBJS): $(OBJ)/cpu/m68000/m68kmake$(EXE)
-	@echo Compiling $(subst .o,.c,$@)...
-ifdef USE_GCC
-	$(CC) $(CDEFS) $(CFLAGS) -c $*.c -o $@
-else
-	$(CC) $(CDEFS) $(CFLAGS) -Fo$@ -c $*.c
-endif
-
-# additional rule, because m68kcpu.c includes the generated m68kops.h :-/
-$(OBJ)/cpu/m68000/m68kcpu.o: $(OBJ)/cpu/m68000/m68kmake$(EXE)
-
-# generate C source files for the 68000 emulator
-$(OBJ)/cpu/m68000/m68kmake$(EXE): $(OBJ)/cpu/m68000/m68kmake.o $(OSDBGOBJS)
-	@echo M68K make $<...
-ifdef USE_GCC
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ -o $@
-else
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ -out:$@
-endif
-	@echo Generating M68K source files...
-	$(OBJ)/cpu/m68000/m68kmake$(EXE) $(OBJ)/cpu/m68000 src/cpu/m68000/m68k_in.c
-
-# compile generated C files for the 68000 emulator
-$(M68000DRC_GENERATED_OBJS): $(OBJ)/cpu/m68000/d68kmake$(EXE)
-	@echo Compiling $(subst .o,.c,$@)...
-ifdef USE_GCC
-	$(CC) $(CDEFS) $(CFLAGS) -c $*.c -o $@
-else
-	$(CC) $(CDEFS) $(CFLAGS) -Fo$@ -c $*.c
-endif
-
-# additional rule, because d68kcpu.c includes the generated m68kops.h :-/
-$(OBJ)/cpu/m68000/d68kcpu.o: $(OBJ)/cpu/m68000/d68kmake$(EXE)
-
-# generate C source files for the 68000 emulator
-$(OBJ)/cpu/m68000/d68kmake$(EXE): $(OBJ)/cpu/m68000/d68kmake.o $(OSDBGOBJS)
-	@echo M68K make $<...
-ifdef USE_GCC
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ -o $@
-else
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ -out:$@
-endif
-	@echo Generating M68K source files...
-	$(OBJ)/cpu/m68000/d68kmake$(EXE) $(OBJ)/cpu/m68000 src/cpu/m68000/d68k_in.c
-
-# generate asm source files for the 68000/68020 emulators
-$(OBJ)/cpu/m68000/68000.asm:  src/cpu/m68000/make68k.c $(OSDBGOBJS)
-	@echo Compiling $<...
-ifdef USE_GCC
-	$(XCC) $(CDEFS) $(CFLAGS) $(CONSOLE_PROGRAM) -O0 -DDOS -o $(OBJ)/cpu/m68000/make68k$(EXE) $< $(OSDBGOBJS)
-else
-	$(CC) $(CDEFS) $(CFLAGS) -Fe$(OBJ)/cpu/m68000/make68k$(EXE) -Fo$(OBJ)/cpu/m68000 $< $(OSDBGOBJS) -link $(CONSOLE_PROGRAM)
-endif
-	@echo Generating $@...
-	@$(OBJ)/cpu/m68000/make68k$(EXE) $@ $(OBJ)/cpu/m68000/68000tab.asm 00 $(P6OPT)
-
-$(OBJ)/cpu/m68000/68010.asm:  src/cpu/m68000/make68k.c $(OSDBGOBJS)
-	@echo Compiling $<...
-ifdef USE_GCC
-	$(XCC) $(CDEFS) $(CFLAGS) $(CONSOLE_PROGRAM) -O0 -DDOS -o $(OBJ)/cpu/m68000/make68k$(EXE) $< $(OSDBGOBJS)
-else
-	$(CC) $(CDEFS) $(CFLAGS) -Fe$(OBJ)/cpu/m68000/make68k$(EXE) -Fo$(OBJ)/cpu/m68000 $< $(OSDBGOBJS) -link $(CONSOLE_PROGRAM)
-endif
-	@echo Generating $@...
-	@$(OBJ)/cpu/m68000/make68k$(EXE) $@ $(OBJ)/cpu/m68000/68010tab.asm 10 $(P6OPT)
-
-$(OBJ)/cpu/m68000/68020.asm:  src/cpu/m68000/make68k.c $(OSDBGOBJS)
-	@echo Compiling $<...
-ifdef USE_GCC
-	$(XCC) $(CDEFS) $(CFLAGS) $(CONSOLE_PROGRAM) -O0 -DDOS -o $(OBJ)/cpu/m68000/make68k$(EXE) $< $(OSDBGOBJS)
-else
-	$(CC) $(CDEFS) $(CFLAGS) -Fe$(OBJ)/cpu/m68000/make68k$(EXE) -Fo$(OBJ)/cpu/m68000 $<  $(OSDBGOBJS)-link $(CONSOLE_PROGRAM)
-endif
-	@echo Generating $@...
-	@$(OBJ)/cpu/m68000/make68k$(EXE) $@ $(OBJ)/cpu/m68000/68020tab.asm 20 $(P6OPT)
-
-# generated asm files for the 68000 emulator
-$(OBJ)/cpu/m68000/68000.o:  $(OBJ)/cpu/m68000/68000.asm
-	@echo Assembling $<...
-	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
-
-$(OBJ)/cpu/m68000/68010.o:  $(OBJ)/cpu/m68000/68010.asm
-	@echo Assembling $<...
-	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
-
-$(OBJ)/cpu/m68000/68020.o:  $(OBJ)/cpu/m68000/68020.asm
-	@echo Assembling $<...
-	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
 
 
 

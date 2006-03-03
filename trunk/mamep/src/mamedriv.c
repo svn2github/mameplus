@@ -836,6 +836,8 @@ const game_driver *drivers[] =
 	/* Namco System 23 */
 	DRIVER( timecrs2 )	/* (c) 1997 */
 	DRIVER( gp500 )		/* (c) 1999 */
+	DRIVER( finfurl2 )	/* (c) 1999 */
+	DRIVER( finfrl2j )	/* (c) 1999 */
 
 
 	/* Universal games */
@@ -1337,6 +1339,7 @@ const game_driver *drivers[] =
 	DRIVER( loht )		/* (c) 1989 */
 	DRIVER( xmultipl )	/* (c) 1989 (Japan) */
 	DRIVER( dbreed )	/* (c) 1989 */
+	DRIVER( dbreed72 )	/* (c) 1989 */
 	DRIVER( rtype2 )	/* (c) 1989 */
 	DRIVER( rtype2j )	/* (c) 1989 (Japan) */
 	DRIVER( majtitle )	/* (c) 1990 (Japan) */
@@ -2705,7 +2708,11 @@ V-V                           TP-027
 	DRIVER( golgo13 )	/* Golgo 13 (GLG1/VER.A) */
 
 	/* Namco System 10 */
-	DRIVER( mrdrilr2 )	/* Mr Driller 2 */
+	DRIVER( mrdrilr2 )	/* Mr Driller 2 (DR21 Ver.A) */
+	DRIVER( gjspace )	/* Gekitoride-Jong Space (10011 Ver.A) */
+	DRIVER( mrdrilrg )	/* Mr. Driller G (DRG1 Ver.A) */
+	DRIVER( knpuzzle )	/* Kotoba no Puzzle Mojipittan (KPM1 Ver.A) */
+	DRIVER( startrgn )	/* Star Trigon (STT1 Ver.A) */
 
 	/* Konami GQ */
 	DRIVER( cryptklr )	/* Crypt Killer (GQ420 UAA) */
@@ -6112,6 +6119,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( gundhara )	/* (c) 1995 Banpresto */
 	DRIVER( sokonuke )	/* (c) 1995 Sammy Industries */
 	DRIVER( zombraid )	/* (c) 1995 American Sammy */
+	DRIVER( crazyfgt )	/* (c) 1998 Subsino */
 
 	DRIVER( gundamex )	/* (c) 1994 Banpresto */
 	DRIVER( grdians )	/* (c) 1995 Banpresto */
@@ -6359,6 +6367,7 @@ Other Sun games
 	DRIVER( gstrik2 )	/* (c) 1996 Human Amusement */
 	DRIVER( hyprduel )	/* (c) 1993 Technosoft (World) */
 	DRIVER( hyprdelj )	/* (c) 1993 Technosoft (Japan) */
+	DRIVER( magerror )	/* (c) 199? Technosoft (Japan) */
 
 	/* Venture Line games */
 	DRIVER( spcforce )	/* (c) 1980 Venture Line */

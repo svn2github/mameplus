@@ -167,10 +167,6 @@ typedef struct _cpuexec_data cpuexec_data;
 
 static cpuexec_data cpu[MAX_CPU];
 
-static int time_to_reset;
-static int time_to_quit;
-static int is_paused;
-
 static UINT8 vblank;
 static UINT32 current_frame;
 static INT32 watchdog_counter;
@@ -211,25 +207,13 @@ static mame_timer *watchdog_timer;
 
 /*************************************
  *
- *  Save/load variables
- *
- *************************************/
-
-static UINT8 loadsave_allowed;
-static int loadsave_schedule;
-static mame_time loadsave_schedule_time;
-static char *loadsave_schedule_name;
-
-
-
-/*************************************
- *
  *  Static prototypes
  *
  *************************************/
 
+static void cpu_exit(void);
+static void cpu_reset(void);
 static void cpu_init_refresh_timer(void);
-static void cpu_timeslice(void);
 static void cpu_inittimers(void);
 static void cpu_vblankreset(void);
 static void cpu_vblankcallback(int param);
@@ -276,9 +260,6 @@ int cpu_init(void)
 
 	/* initialize the refresh timer */
 	cpu_init_refresh_timer();
-
-	/* by default, saves/loads are allowed */
-	loadsave_allowed = TRUE;
 
 	/* loop over all our CPUs */
 	for (cpunum = 0; cpunum < MAX_CPU; cpunum++)
@@ -333,9 +314,10 @@ int cpu_init(void)
 		{
 			logerror("CPU #%d (%s) did not register any state to save!\n", cpunum, cputype_name(cputype));
 			if (Machine->gamedrv->flags & GAME_SUPPORTS_SAVE)
-				osd_die("CPU #%d (%s) did not register any state to save!\n", cpunum, cputype_name(cputype));
+				fatalerror("CPU #%d (%s) did not register any state to save!", cpunum, cputype_name(cputype));
 		}
 	}
+	add_reset_callback(cpu_reset);
 	add_exit_callback(cpu_exit);
 
 	/* compute the perfect interleave factor */
@@ -366,22 +348,14 @@ int cpu_init(void)
  *
  *************************************/
 
-static void cpu_pre_run(void)
+static void cpu_reset(void)
 {
 	int cpunum;
-
-	logerror("Machine reset\n");
-
-	/* allow save state registrations starting here */
-	state_save_allow_registration(TRUE);
 
 	/* initialize the various timers (suspends all CPUs at startup) */
 	cpu_inittimers();
 	watchdog_counter = WATCHDOG_IS_INVALID;
 	watchdog_setup(TRUE);
-
-	/* reset sound chips */
-	sound_reset();
 
 	/* first pass over CPUs */
 	for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
@@ -397,86 +371,15 @@ static void cpu_pre_run(void)
 
 		/* reset the total number of cycles */
 		cpu[cpunum].totalcycles = 0;
-	}
 
-	vblank = 0;
-
-	/* call the driver's _RESET callbacks */
-	/* do this AFTER the above so machine_reset() can use cpu_halt() to hold the */
-	/* execution of some CPUs, or disable interrupts */
-	if (Machine->drv->machine_reset != NULL)
-		(*Machine->drv->machine_reset)();
-	if (Machine->drv->sound_reset != NULL)
-		(*Machine->drv->sound_reset)();
-	if (Machine->drv->video_reset != NULL)
-		(*Machine->drv->video_reset)();
-
-	/* now reset each CPU */
-	for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
+		/* then reset the CPU directly */
 		cpunum_reset(cpunum, Machine->drv->cpu[cpunum].reset_param, cpu_irq_callbacks[cpunum]);
+	}
 
 	/* reset the globals */
 	cpu_vblankreset();
+	vblank = 0;
 	current_frame = 0;
-
-	/* disallow save state registrations starting here */
-	state_save_allow_registration(FALSE);
-	state_save_dump_registry();
-}
-
-
-
-/*************************************
- *
- *  Execute until done
- *
- *************************************/
-
-void cpu_run(void)
-{
-	/* loop over multiple resets, until the user quits */
-	time_to_quit = FALSE;
-	while (!time_to_quit)
-	{
-		/* prepare everything to run */
-		begin_resource_tracking();
-		cpu_pre_run();
-
-		/* loop until the user quits or resets */
-		time_to_reset = FALSE;
-		is_paused = FALSE;
-		while (!time_to_quit && !time_to_reset)
-		{
-			profiler_mark(PROFILER_EXTRA);
-
-			/* if we have a load/save scheduled, handle it */
-			if (loadsave_schedule != LOADSAVE_NONE)
-				handle_loadsave();
-
-			/* execute CPUs if not paused */
-			if (!is_paused)
-				cpu_timeslice();
-
-			/* otherwise, just pump video updates through */
-			else
-			{
-				time_to_quit |= updatescreen();
-				reset_partial_updates();
-			}
-
-			/* if we're autosaving on exit, and it's time to quit, schedule the save */
-			if (time_to_quit && options.auto_save && (Machine->gamedrv->flags & GAME_SUPPORTS_SAVE))
-			{
-				cpu_loadsave_schedule_file(LOADSAVE_SAVE_AND_EXIT, Machine->gamedrv->name);
-				time_to_quit = FALSE;
-			}
-
-			profiler_mark(PROFILER_END);
-		}
-
-		/* finish up this iteration */
-		end_resource_tracking();
-	}
 }
 
 
@@ -487,7 +390,7 @@ void cpu_run(void)
  *
  *************************************/
 
-void cpu_exit(void)
+static void cpu_exit(void)
 {
 	int cpunum;
 
@@ -818,7 +721,7 @@ void cpu_loadsave_disallow(void)
 static void watchdog_callback(int param)
 {
 	logerror("reset caused by the (time) watchdog\n");
-	machine_reset();
+	mame_schedule_soft_reset();
 }
 
 
@@ -981,7 +884,7 @@ READ32_HANDLER( watchdog_reset32_r )
  *
  *************************************/
 
-static void cpu_timeslice(void)
+void cpu_timeslice(void)
 {
 	mame_time target = mame_timer_next_fire_time();
 	mame_time base = mame_timer_get_time();
@@ -1018,7 +921,7 @@ static void cpu_timeslice(void)
 
 #ifdef MAME_DEBUG
 				if (ran < cycles_stolen)
-					osd_die("Negative CPU cycle count!");
+					fatalerror("Negative CPU cycle count!");
 #endif /* MAME_DEBUG */
 
 				ran -= cycles_stolen;
@@ -1840,7 +1743,7 @@ static void cpu_vblankreset(void)
 		if (--watchdog_counter == 0)
 		{
 			logerror("reset caused by the (vblank) watchdog\n");
-			machine_reset();
+			mame_schedule_soft_reset();
 		}
 	}
 
@@ -1926,7 +1829,7 @@ static void cpu_vblankcallback(int param)
 	{
 		/* do we update the screen now? */
 		if (!(Machine->drv->video_attributes & VIDEO_UPDATE_AFTER_VBLANK))
-			time_to_quit |= updatescreen();
+			updatescreen();
 
 		/* Set the timer to update the screen */
 		mame_timer_adjust(update_timer, double_to_mame_time(TIME_IN_USEC(Machine->drv->vblank_duration)), 0, time_zero);
@@ -1956,7 +1859,7 @@ static void cpu_updatecallback(int param)
 {
 	/* update the screen if we didn't before */
 	if (Machine->drv->video_attributes & VIDEO_UPDATE_AFTER_VBLANK)
-		time_to_quit |= updatescreen();
+		updatescreen();
 	vblank = 0;
 
 	/* update IPT_VBLANK input ports */

@@ -11,8 +11,10 @@
 
 #include <zlib.h>
 
-#include <assert.h>
+#include "osdepend.h"
 #include "driver.h"
+#include "chd.h"
+#include "hash.h"
 #include "unzip.h"
 
 #ifdef MESS
@@ -254,8 +256,6 @@ mame_file *mame_fopen_error(const char *gamename, const char *filename, int file
 
 		/* high score files */
 		case FILETYPE_HIGHSCORE:
-			if (!mame_highscore_enabled())
-				return NULL;
 			return generic_fopen(filetype, NULL, gamename, 0, openforwrite ? FILEFLAG_OPENWRITE : FILEFLAG_OPENREAD, error);
 
 		/* highscore database */
@@ -325,6 +325,9 @@ mame_file *mame_fopen_error(const char *gamename, const char *filename, int file
 #else
 			return generic_fopen(filetype, NULL, gamename, 0, openforwrite ? FILEFLAG_OPENWRITE : FILEFLAG_OPENREAD, error);
 #endif
+
+		case FILETYPE_COMMENT:
+			return generic_fopen(filetype, NULL, gamename, 0, openforwrite ? FILEFLAG_OPENWRITE : FILEFLAG_OPENREAD, error);
 
 #ifdef MESS
 		/* CRC files */
@@ -884,7 +887,7 @@ int mame_fputs(mame_file *f, const char *s)
     mame_vfprintf - vfprintf to a text file
 -------------------------------------------------*/
 
-int mame_vfprintf(mame_file *f, const char *fmt, va_list va)
+static int mame_vfprintf(mame_file *f, const char *fmt, va_list va)
 {
 	char buf[1024];
 	vsnprintf(buf, sizeof(buf), fmt, va);
@@ -1036,6 +1039,10 @@ static const char *get_extension_for_filetype(int filetype)
 			extension = "ini";
 			break;
 
+		case FILETYPE_COMMENT:
+			extension = "cmt";
+			break;
+
 #ifdef MESS
 		case FILETYPE_HASH:
 			extension = "hsi";
@@ -1185,7 +1192,10 @@ static mame_file *generic_fopen(int pathtype, const char *gamename, const char *
 
 					/* if we are at a "blocking point", break out now */
 					if (newname && !strcmp(oldname, newname))
+					{
+						free(newname);
 						newname = NULL;
+					}
 
 					if (oldnewname)
 						free(oldnewname);
@@ -1214,6 +1224,7 @@ static mame_file *generic_fopen(int pathtype, const char *gamename, const char *
 							file.length = ziplength;
 							file.type = ZIPPED_FILE;
 							hash_compute(file.hash, file.data, file.length, functions);
+							free(newname);
 							break;
 						}
 					}

@@ -2103,7 +2103,7 @@ static void RebuildStringTables(void)
 		(!menuStrings.subStrings && menuStrings.numStrings) ||
 		(!menuStrings.buf && storageNeeded))
 	{
-		osd_die(	"cheat: memory allocation error\n"
+		fatalerror(	"cheat: memory allocation error\n"
 					"	length =			%.8X\n"
 					"	numStrings =		%.8X\n"
 					"	mainStringLength =	%.8X\n"
@@ -5599,6 +5599,8 @@ static int ViewSearchResults(int selection, int firstTime)
 
 	if(resultsPerPage <= 0)
 		resultsPerPage = 1;
+	else if(resultsPerPage > kMaxResultsPerPage)
+		resultsPerPage = kMaxResultsPerPage;
 
 	if(region->flags & kRegionFlag_Enabled)
 		numPages = (region->numResults / kSearchByteStep[search->bytes] + resultsPerPage - 1) / resultsPerPage;

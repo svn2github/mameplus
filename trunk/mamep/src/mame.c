@@ -42,11 +42,12 @@
                 - calls timer_init() [timer.c] to reset the timer system
                 - calls memory_init() [memory.c] to process the game's memory maps
                 - calls cpu_init() [cpuexec.c] to initialize the CPUs
-                - calls cheat_init() [cheat.c] to initialize the cheat system
                 - calls hiscore_init() [hiscore.c] to initialize the hiscores
+                - calls saveload_init() [mame.c] to set up for save/load
                 - calls the driver's DRIVER_INIT callback
-                - calls sound_init() [sndintrf.c] to start the audio system
+                - calls sound_init() [sound.c] to start the audio system
                 - calls video_init() [video.c] to start the video system
+                - calls cheat_init() [cheat.c] to initialize the cheat system
                 - calls the driver's MACHINE_START, SOUND_START, and VIDEO_START callbacks
                 - disposes of regions marked as disposable
                 - calls mame_debug_init() [debugcpu.c] to set up the debugger
@@ -54,41 +55,33 @@
             - calls config_load_settings() [config.c] to load the configuration file
             - calls nvram_load [machine/generic.c] to load NVRAM
             - calls ui_init() [usrintrf.c] to initialize the user interface
-            - calls cpu_run() [cpuexec.c]
+            - begins resource tracking (level 2)
+            - calls soft_reset() [mame.c] to reset all systems
 
-            cpu_run() [cpuexec.c]
-                - calls cpu_pre_run() [cpuexec.c]
+                -------------------( at this point, we're up and running )----------------------
 
-                cpu_pre_run() [cpuexec.c]
-                    - begins resource tracking (level 2)
-                    - calls cpu_inittimers() [cpuexec.c] to set up basic system timers
-                    - calls watchdog_setup() [cpuexec.c] to set up watchdog timers
-                    - calls sound_reset() [sndintrf.c] to reset all the sound chips
-                    - loops over each CPU and initializes its internal state
-                    - calls the driver's MACHINE_RESET callback
-                    - loops over each CPU and calls cpunum_reset() [cpuintrf.c] to reset it
-                    - calls cpu_vblankreset() [cpuexec.c] to set up the first VBLANK callback
-
-                --------------( at this point, we're up and running )---------------------------
-
-                - ends resource tracking (level 2), freeing all auto_mallocs and timers
-                - if the machine is just being reset, loops back to the cpu_pre_run() step above
-
+            - calls cpu_timeslice() [cpuexec.c] over and over until we exit
+            - ends resource tracking (level 2), freeing all auto_mallocs and timers
             - calls the nvram_save() [machine/generic.c] to save NVRAM
             - calls config_save_settings() [config.c] to save the game's configuration
-            - calls call_and_free_exit_callbacks() [mame.c] to call all registered exit routines
+            - calls all registered exit routines [mame.c]
             - ends resource tracking (level 1), freeing all auto_mallocs and timers
 
         - exits the program
 
 ***************************************************************************/
 
+#include "osdepend.h"
 #include "driver.h"
 #include "config.h"
 #include "cheat.h"
 #include "hiscore.h"
 #include "debugger.h"
-#include "vidhrdw/generic.h"
+#include "profiler.h"
+
+#if defined(MAME_DEBUG) && defined(NEW_DEBUGGER)
+#include "debug/debugcon.h"
+#endif
 
 #include <ctype.h>
 #include <stdarg.h>
@@ -118,11 +111,16 @@ struct _region_info
 };
 
 
-typedef struct _exit_callback exit_callback;
-struct _exit_callback
+typedef struct _callback_item callback_item;
+struct _callback_item
 {
-	exit_callback *	next;
-	void 			(*callback)(void);
+	callback_item *	next;
+	union
+	{
+		void		(*exit)(void);
+		void		(*reset)(void);
+		void		(*pause)(int);
+	} func;
 };
 
 
@@ -143,13 +141,22 @@ global_options options;
 
 /* misc other statics */
 static UINT8 mame_paused;
+static UINT8 hard_reset_pending;
+static UINT8 exit_pending;
+static char *saveload_pending_file;
+
+/* load/save statics */
+static mame_timer *saveload_timer;
+static mame_time saveload_schedule_time;
 
 /* error recovery and exiting */
-static exit_callback *exit_callback_list;
+static callback_item *reset_callback_list;
+static callback_item *pause_callback_list;
+static callback_item *exit_callback_list;
 static jmp_buf fatal_error_jmpbuf;
 
 /* malloc tracking */
-static void** malloc_list = NULL;
+static void **malloc_list = NULL;
 static int malloc_list_index = 0;
 static int malloc_list_size = 0;
 
@@ -159,6 +166,10 @@ int resource_tracking_tag = 0;
 /* array of memory regions */
 static region_info mem_region[MAX_MEMORY_REGIONS];
 
+/* a giant string buffer for temporary strings */
+char giant_string_buffer[65536];
+
+/* the "disclaimer" that should be printed when run with no parameters */
 const char *mame_disclaimer =
 	"MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\n"
 	"several arcade machines. But hardware is useless without software, so an image\n"
@@ -175,14 +186,17 @@ const char *mame_disclaimer =
     PROTOTYPES
 ***************************************************************************/
 
-static void call_and_free_exit_callbacks(void);
-static void init_machine(void);
-
-static void recompute_fps(int skipped_it);
-static void run_start_callbacks(void);
-static void create_machine(int game);
-
 extern int mame_validitychecks(void);
+
+static void create_machine(int game);
+static void init_machine(void);
+static void soft_reset(int param);
+static void free_callback_list(callback_item **cb);
+
+static void saveload_init(void);
+static void saveload_attempt(int is_save);
+static int handle_save(void);
+static int handle_load(void);
 
 
 
@@ -696,7 +710,7 @@ INLINE void auto_malloc_add(void *result)
 		/* realloc the list */
 		list = realloc(malloc_list, malloc_list_size * sizeof(list[0]));
 		if (list == NULL)
-			osd_die("Unable to extend malloc tracking array to %d slots", malloc_list_size);
+			fatalerror("Unable to extend malloc tracking array to %d slots", malloc_list_size);
 		malloc_list = list;
 	}
 	malloc_list[malloc_list_index++] = result;
@@ -759,17 +773,12 @@ void end_resource_tracking(void)
     auto_malloc - allocate auto-freeing memory
 -------------------------------------------------*/
 
-void *auto_malloc(size_t size)
+void *_auto_malloc(size_t size, const char *file, int line)
 {
 	void *result;
 
-	/* malloc-ing zero bytes is inherently unportable; hence this check */
-	assert_always(size != 0, "Attempted to auto_malloc zero bytes");
-
 	/* fail horribly if it doesn't work */
-	result = malloc(size);
-	if (!result)
-		osd_die("Out of memory attempting to allocate %d bytes\n", (int)size);
+	result = _malloc_or_die(size, file, line);
 
 	/* track this item in our list */
 	auto_malloc_add(result);
@@ -795,23 +804,71 @@ char *auto_strdup(const char *str)
 ***************************************************************************/
 
 /*-------------------------------------------------
-    mame_highscore_enabled - return 1 if high
-    scores are enabled
+    fatalerror - print a message and escape back
+    to the OSD layer
 -------------------------------------------------*/
 
-int mame_highscore_enabled(void)
+void CLIB_DECL fatalerror(const char *text, ...)
 {
-	/* disable high score when record/playback is on */
-	if (Machine->record_file != NULL || Machine->playback_file != NULL)
-		return FALSE;
+	va_list arg;
 
-	/* disable high score when cheats are used */
-	if (he_did_cheat != 0)
-		return FALSE;
+	/* dump to the buffer; assume no one writes >2k lines this way */
+	va_start(arg, text);
+	vsnprintf(giant_string_buffer, sizeof(giant_string_buffer), text, arg);
+	va_end(arg);
 
-	return TRUE;
+	/* output and return */
+	printf("%s\n", giant_string_buffer);
+	longjmp(fatal_error_jmpbuf, 1);
 }
 
+
+/*-------------------------------------------------
+    logerror - log to the debugger and any other
+    OSD-defined output streams
+-------------------------------------------------*/
+
+void CLIB_DECL logerror(const char *text, ...)
+{
+	va_list arg;
+
+	/* dump to the buffer; assume no one writes >2k lines to error.log */
+	va_start(arg, text);
+	vsnprintf(giant_string_buffer, sizeof(giant_string_buffer), text, arg);
+	va_end(arg);
+
+#if defined(MAME_DEBUG) && defined(NEW_DEBUGGER)
+	/* output to the debugger if running */
+	if (Machine && Machine->debug_mode)
+		debug_errorlog_write_line(giant_string_buffer);
+#endif
+
+	/* let the OSD layer do its own logging if it wants */
+	osd_logerror(giant_string_buffer);
+}
+
+
+/*-------------------------------------------------
+    _malloc_or_die - allocate memory or die
+    trying
+-------------------------------------------------*/
+
+void *_malloc_or_die(size_t size, const char *file, int line)
+{
+	void *result;
+
+	/* fail on attempted allocations of 0 */
+	if (size == 0)
+		fatalerror("Attempted to malloc zero bytes (%s:%d)", file, line);
+
+	/* allocate and return if we succeeded */
+	result = malloc(size);
+	if (result != NULL)
+		return result;
+
+	/* otherwise, die horribly */
+	fatalerror("Failed to allocate %d bytes (%s:%d)", size, file, line);
+}
 
 
 /*-------------------------------------------------
@@ -828,4 +885,459 @@ int mame_find_cpu_index(const char *tag)
 			return cpunum;
 
 	return -1;
+}
+
+
+/*-------------------------------------------------
+    mame_stricmp - case-insensitive string compare
+-------------------------------------------------*/
+
+int mame_stricmp(const char *s1, const char *s2)
+{
+	for (;;)
+ 	{
+		int c1 = tolower(*s1++);
+		int c2 = tolower(*s2++);
+		if (c1 == 0 || c1 != c2)
+			return c1 - c2;
+ 	}
+}
+
+
+/*-------------------------------------------------
+    mame_strdup - string duplication via malloc
+-------------------------------------------------*/
+
+char *mame_strdup(const char *str)
+{
+	char *cpy = NULL;
+	if (str != NULL)
+	{
+		cpy = malloc(strlen(str) + 1);
+		if (cpy != NULL)
+			strcpy(cpy, str);
+	}
+	return cpy;
+}
+
+
+
+/***************************************************************************
+
+    Internal initialization logic
+
+***************************************************************************/
+
+/*-------------------------------------------------
+    create_machine - create the running machine
+    object and initialize it based on options
+-------------------------------------------------*/
+
+static void create_machine(int game)
+{
+	/* first give the machine a good cleaning */
+	memset(Machine, 0, sizeof(*Machine));
+
+	/* initialize the driver-related variables in the Machine */
+	Machine->gamedrv = drivers[game];
+	Machine->drv = &internal_drv;
+	expand_machine_driver(Machine->gamedrv->drv, &internal_drv);
+	Machine->refresh_rate = Machine->drv->frames_per_second;
+
+	/* copy some settings into easier-to-handle variables */
+	Machine->record_file = options.record;
+	Machine->playback_file = options.playback;
+	Machine->debug_mode = options.mame_debug;
+
+	/* determine the color depth */
+	Machine->color_depth = 16;
+	if (Machine->drv->video_attributes & VIDEO_RGB_DIRECT)
+		Machine->color_depth = (Machine->drv->video_attributes & VIDEO_NEEDS_6BITS_PER_GUN) ? 32 : 15;
+
+	/* update the vector width/height with defaults */
+	if (options.vector_width == 0)
+		options.vector_width = 640;
+	if (options.vector_height == 0)
+		options.vector_height = 480;
+
+	/* initialize the samplerate */
+	Machine->sample_rate = options.samplerate;
+
+	/* get orientation right */
+	Machine->ui_orientation = options.ui_orientation;
+}
+
+
+/*-------------------------------------------------
+    init_machine - initialize the emulated machine
+-------------------------------------------------*/
+
+static void init_machine(void)
+{
+	int num;
+
+	/* initialize basic can't-fail systems here */
+	cpuintrf_init();
+	sndintrf_init();
+	fileio_init();
+	config_init();
+	state_init();
+	drawgfx_init();
+	generic_machine_init();
+	generic_video_init();
+	memcard_init();
+
+	/* init the osd layer */
+	if (osd_init() != 0)
+		fatalerror("osd_init failed");
+
+	/* initialize the input system */
+	/* this must be done before the input ports are initialized */
+	if (code_init() != 0)
+		fatalerror("code_init failed");
+
+	/* initialize the input ports for the game */
+	/* this must be done before memory_init in order to allow specifying */
+	/* callbacks based on input port tags */
+	if (input_port_init(Machine->gamedrv->construct_ipt) != 0)
+		fatalerror("input_port_init failed");
+
+	/* load the ROMs if we have some */
+	/* this must be done before memory_init in order to allocate memory regions */
+	if (rom_init(Machine->gamedrv->rom) != 0)
+		fatalerror("rom_init failed");
+
+	/* allow save state registrations starting here */
+	state_save_allow_registration(TRUE);
+
+	/* initialize the timers */
+	/* this must be done before cpu_init so that CPU's can allocate timers */
+	timer_init();
+
+	/* initialize the memory system for this game */
+	/* this must be done before cpu_init so that set_context can look up the opcode base */
+	if (memory_init() != 0)
+		fatalerror("memory_init failed");
+
+	/* now set up all the CPUs */
+	if (cpu_init() != 0)
+		fatalerror("cpu_init failed");
+
+#ifdef MESS
+	/* initialize the devices */
+	if (devices_init(Machine->gamedrv))
+		fatalerror("devices_init failed");
+#endif
+
+	/* start the hiscore system -- remove me */
+	hiscore_init(Machine->gamedrv->name);
+
+	/* start the save/load system */
+	saveload_init();
+
+	/* call the game driver's init function */
+	/* this is where decryption is done and memory maps are altered */
+	/* so this location in the init order is important */
+	if (Machine->gamedrv->driver_init != NULL)
+		(*Machine->gamedrv->driver_init)();
+
+	/* start the audio system */
+	if (sound_init() != 0)
+		fatalerror("sound_init failed");
+
+	/* start the video hardware */
+	if (video_init() != 0)
+		fatalerror("video_init failed");
+
+	/* start the cheat engine */
+	if (options.cheat)
+		cheat_init();
+
+	/* call the driver's _START callbacks */
+	if (Machine->drv->machine_start != NULL && (*Machine->drv->machine_start)() != 0)
+		fatalerror("Unable to start machine emulation");
+	if (Machine->drv->sound_start != NULL && (*Machine->drv->sound_start)() != 0)
+		fatalerror("Unable to start sound emulation");
+	if (Machine->drv->video_start != NULL && (*Machine->drv->video_start)() != 0)
+		fatalerror("Unable to start video emulation");
+
+	/* free memory regions allocated with REGIONFLAG_DISPOSE (typically gfx roms) */
+	for (num = 0; num < MAX_MEMORY_REGIONS; num++)
+		if (mem_region[num].flags & ROMREGION_DISPOSE)
+			free_memory_region(num);
+
+#ifdef MAME_DEBUG
+	/* initialize the debugger */
+	if (Machine->debug_mode)
+		mame_debug_init();
+#endif
+}
+
+
+/*-------------------------------------------------
+    soft_reset - actually perform a soft-reset
+    of the system
+-------------------------------------------------*/
+
+static void soft_reset(int param)
+{
+	callback_item *cb;
+
+	logerror("Soft reset\n");
+
+	/* a bit gross -- back off of the resource tracking, and put it back at the end */
+	assert(resource_tracking_tag == 2);
+	end_resource_tracking();
+	begin_resource_tracking();
+
+	/* allow save state registrations during the reset */
+	state_save_allow_registration(TRUE);
+
+	/* call all registered reset callbacks */
+	for (cb = reset_callback_list; cb; cb = cb->next)
+		(*cb->func.reset)();
+
+	/* run the driver's reset callbacks */
+	if (Machine->drv->machine_reset != NULL)
+		(*Machine->drv->machine_reset)();
+	if (Machine->drv->sound_reset != NULL)
+		(*Machine->drv->sound_reset)();
+	if (Machine->drv->video_reset != NULL)
+		(*Machine->drv->video_reset)();
+
+	/* disallow save state registrations starting here */
+	state_save_allow_registration(FALSE);
+
+	/* set the global time to the current time */
+	/* this allows 0-time queued callbacks to run before any CPUs execute */
+	mame_timer_set_global_time(mame_timer_get_time());
+}
+
+
+/*-------------------------------------------------
+    free_callback_list - free a list of callbacks
+-------------------------------------------------*/
+
+static void free_callback_list(callback_item **cb)
+{
+	while (*cb)
+	{
+		callback_item *temp = *cb;
+		*cb = (*cb)->next;
+		free(temp);
+	}
+}
+
+
+
+/***************************************************************************
+
+    Save/restore
+
+***************************************************************************/
+
+/*-------------------------------------------------
+    saveload_init - initialize the save/load logic
+-------------------------------------------------*/
+
+static void saveload_init(void)
+{
+	/* allocate a timer */
+	saveload_timer = timer_alloc(saveload_attempt);
+
+	/* if we're coming in with a savegame request, process it now */
+	if (options.savegame)
+	{
+		char name[20];
+
+		if (strlen(options.savegame) == 1)
+		{
+			sprintf(name, "%s-%c", Machine->gamedrv->name, options.savegame[0]);
+			mame_schedule_load(name);
+		}
+		else
+			mame_schedule_load(options.savegame);
+	}
+
+	/* if we're in autosave mode, schedule a load */
+	else if (options.auto_save && (Machine->gamedrv->flags & GAME_SUPPORTS_SAVE))
+		mame_schedule_load(Machine->gamedrv->name);
+}
+
+
+/*-------------------------------------------------
+    handle_save - attempt to perform a save
+-------------------------------------------------*/
+
+static void saveload_attempt(int is_save)
+{
+	int try_again;
+
+	/* handle either save or load */
+	if (is_save)
+		try_again = handle_save();
+	else
+		try_again = handle_load();
+
+	/* try again after the next timer fires */
+	if (try_again)
+		mame_timer_adjust(saveload_timer, make_mame_time(0, MAX_SUBSECONDS / 1000), is_save, time_zero);
+}
+
+
+/*-------------------------------------------------
+    handle_save - attempt to perform a save
+-------------------------------------------------*/
+
+static int handle_save(void)
+{
+	mame_file *file;
+
+	/* if no name, bail */
+	if (saveload_pending_file == NULL)
+		return FALSE;
+
+	/* if there are anonymous timers, we can't save just yet */
+	if (timer_count_anonymous() > 0)
+	{
+		/* if more than a second has passed, we're probably screwed */
+		if (sub_mame_times(mame_timer_get_time(), saveload_schedule_time).seconds > 0)
+		{
+			ui_popup("Unable to save due to pending anonymous timers. See error.log for details.");
+			goto cancel;
+		}
+		return TRUE;
+	}
+
+	/* open the file */
+	file = mame_fopen(Machine->gamedrv->name, saveload_pending_file, FILETYPE_STATE, 1);
+	if (file)
+	{
+		int cpunum;
+
+		/* write the save state */
+		if (state_save_save_begin(file) != 0)
+		{
+			ui_popup("Error: Unable to save state due to illegal registrations. See error.log for details.");
+			mame_fclose(file);
+			goto cancel;
+		}
+
+		/* write the default tag */
+		state_save_push_tag(0);
+		state_save_save_continue();
+		state_save_pop_tag();
+
+		/* loop over CPUs */
+		for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
+		{
+			cpuintrf_push_context(cpunum);
+
+			/* make sure banking is set */
+			activecpu_reset_banking();
+
+			/* save the CPU data */
+			state_save_push_tag(cpunum + 1);
+			state_save_save_continue();
+			state_save_pop_tag();
+
+			cpuintrf_pop_context();
+		}
+
+		/* finish and close */
+		state_save_save_finish();
+		mame_fclose(file);
+
+		/* pop a warning if the game doesn't support saves */
+		if (!(Machine->gamedrv->flags & GAME_SUPPORTS_SAVE))
+			ui_popup("State successfully saved.\nWarning: Save states are not officially supported for this game.");
+		else
+			ui_popup("State successfully saved.");
+	}
+	else
+		ui_popup("Error: Failed to save state");
+
+cancel:
+	/* unschedule the save */
+	free(saveload_pending_file);
+	saveload_pending_file = NULL;
+	return FALSE;
+}
+
+
+
+/*-------------------------------------------------
+    handle_load - attempt to perform a load
+-------------------------------------------------*/
+
+static int handle_load(void)
+{
+	mame_file *file;
+
+	/* if no name, bail */
+	if (saveload_pending_file == NULL)
+		return FALSE;
+
+	/* if there are anonymous timers, we can't load just yet because the timers might */
+	/* overwrite data we have loaded */
+	if (timer_count_anonymous() > 0)
+	{
+		/* if more than a second has passed, we're probably screwed */
+		if (sub_mame_times(mame_timer_get_time(), saveload_schedule_time).seconds > 0)
+		{
+			ui_popup("Unable to load due to pending anonymous timers. See error.log for details.");
+			goto cancel;
+		}
+		return TRUE;
+	}
+
+	/* open the file */
+	file = mame_fopen(Machine->gamedrv->name, saveload_pending_file, FILETYPE_STATE, 0);
+	if (file)
+	{
+		/* start loading */
+		if (state_save_load_begin(file) == 0)
+		{
+			int cpunum;
+
+			/* read tag 0 */
+			state_save_push_tag(0);
+			state_save_load_continue();
+			state_save_pop_tag();
+
+			/* loop over CPUs */
+			for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
+			{
+				cpuintrf_push_context(cpunum);
+
+				/* make sure banking is set */
+				activecpu_reset_banking();
+
+				/* load the CPU data */
+				state_save_push_tag(cpunum + 1);
+				state_save_load_continue();
+				state_save_pop_tag();
+
+				/* make sure banking is set */
+				activecpu_reset_banking();
+
+				cpuintrf_pop_context();
+			}
+
+			/* finish and close */
+			state_save_load_finish();
+			ui_popup("State successfully loaded.");
+		}
+		else
+			ui_popup("Error: Failed to load state");
+		mame_fclose(file);
+	}
+	else
+		ui_popup("Error: Failed to load state");
+
+cancel:
+	/* unschedule the load */
+	free(saveload_pending_file);
+	saveload_pending_file = NULL;
+	return FALSE;
 }

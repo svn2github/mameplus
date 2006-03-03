@@ -17,12 +17,16 @@
 ***************************************************************************/
 
 #include "driver.h"
-#include "sound/wavwrite.h"
-#include "config.h"
-#include "profiler.h"
+
+
+
+/***************************************************************************
+
+    Debugging
+
+***************************************************************************/
 
 #define VERBOSE			(0)
-#define MAKE_WAVS		(0)
 
 #if VERBOSE
 #define VPRINTF(x) printf x
@@ -453,11 +457,11 @@ const struct
 
 
 
-/*************************************
- *
- *  Macros to help verify sound number
- *
- *************************************/
+/***************************************************************************
+
+    Verification macros
+
+***************************************************************************/
 
 #define VERIFY_SNDNUM(retval, name)							\
 	if (sndnum < 0 || sndnum >= totalsnd)					\
@@ -473,13 +477,6 @@ const struct
 		return;												\
 	}
 
-
-
-/*************************************
- *
- *  Macros to help verify sound type+index
- *
- *************************************/
 
 #define VERIFY_SNDTI(retval, name)							\
 	if (sndtype < 0 || sndtype >= SOUND_COUNT)				\
@@ -505,13 +502,6 @@ const struct
 		return;												\
 	}
 
-
-
-/*************************************
- *
- *  Macros to help verify sound type
- *
- *************************************/
 
 #define VERIFY_SNDTYPE(retval, name)						\
 	if (sndtype < 0 || sndtype >= SOUND_COUNT)				\
@@ -1643,7 +1633,7 @@ INT64 sndnum_get_info_int(int sndnum, UINT32 state)
 
 void *sndnum_get_info_ptr(int sndnum, UINT32 state)
 {
-	union sndinfo info;
+	sndinfo info;
 
 	VERIFY_SNDNUM(0, sndnum_get_info_ptr);
 	info.p = NULL;
@@ -1653,7 +1643,7 @@ void *sndnum_get_info_ptr(int sndnum, UINT32 state)
 
 genf *sndnum_get_info_fct(int sndnum, UINT32 state)
 {
-	union sndinfo info;
+	sndinfo info;
 
 	VERIFY_SNDNUM(0, sndnum_get_info_fct);
 	info.f = NULL;
@@ -1663,7 +1653,7 @@ genf *sndnum_get_info_fct(int sndnum, UINT32 state)
 
 const char *sndnum_get_info_string(int sndnum, UINT32 state)
 {
-	union sndinfo info;
+	sndinfo info;
 
 	VERIFY_SNDNUM(0, sndnum_get_info_string);
 	info.s = NULL;
@@ -1672,13 +1662,13 @@ const char *sndnum_get_info_string(int sndnum, UINT32 state)
 }
 
 
-/*--------------------------
+/*-------------------------------------------------
     Set info accessors
---------------------------*/
+-------------------------------------------------*/
 
 void sndnum_set_info_int(int sndnum, UINT32 state, INT64 data)
 {
-	union sndinfo info;
+	sndinfo info;
 	VERIFY_SNDNUM_VOID(sndnum_set_info_int);
 	info.i = data;
 	(*sound[sndnum].intf.set_info)(sound[sndnum].token, state, &info);
@@ -1686,7 +1676,7 @@ void sndnum_set_info_int(int sndnum, UINT32 state, INT64 data)
 
 void sndnum_set_info_ptr(int sndnum, UINT32 state, void *data)
 {
-	union sndinfo info;
+	sndinfo info;
 	VERIFY_SNDNUM_VOID(sndnum_set_info_ptr);
 	info.p = data;
 	(*sound[sndnum].intf.set_info)(sound[sndnum].token, state, &info);
@@ -1694,21 +1684,28 @@ void sndnum_set_info_ptr(int sndnum, UINT32 state, void *data)
 
 void sndnum_set_info_fct(int sndnum, UINT32 state, genf *data)
 {
-	union sndinfo info;
+	sndinfo info;
 	VERIFY_SNDNUM_VOID(sndnum_set_info_ptr);
 	info.f = data;
 	(*sound[sndnum].intf.set_info)(sound[sndnum].token, state, &info);
 }
 
 
-/*--------------------------
+/*-------------------------------------------------
     Misc accessors
---------------------------*/
+-------------------------------------------------*/
+
+void sndnum_reset(int sndnum)
+{
+	VERIFY_SNDNUM_VOID(sndnum_reset);
+	if (sound[sndnum].intf.reset)
+		(*sound[sndnum].intf.reset)(sound[sndnum].token);
+}
 
 int sndnum_clock(int sndnum)
 {
 	VERIFY_SNDNUM(0, sndnum_clock);
-	return sound[sndnum].sound->clock;
+	return sound[sndnum].clock;
 }
 
 void *sndnum_token(int sndnum)
@@ -1719,19 +1716,19 @@ void *sndnum_token(int sndnum)
 
 
 
-/*************************************
- *
- *  Interfaces to a specific sound chip
- *
- *************************************/
+/***************************************************************************
 
-/*--------------------------
+    Sound chip interfaces by (type,index) pair
+
+***************************************************************************/
+
+/*-------------------------------------------------
     Get info accessors
---------------------------*/
+-------------------------------------------------*/
 
 INT64 sndti_get_info_int(int sndtype, int sndindex, UINT32 state)
 {
-	union sndinfo info;
+	sndinfo info;
 	int sndnum;
 
 	VERIFY_SNDTI(0, sndti_get_info_int);
@@ -1743,7 +1740,7 @@ INT64 sndti_get_info_int(int sndtype, int sndindex, UINT32 state)
 
 void *sndti_get_info_ptr(int sndtype, int sndindex, UINT32 state)
 {
-	union sndinfo info;
+	sndinfo info;
 	int sndnum;
 
 	VERIFY_SNDTI(0, sndti_get_info_ptr);
@@ -1755,7 +1752,7 @@ void *sndti_get_info_ptr(int sndtype, int sndindex, UINT32 state)
 
 genf *sndti_get_info_fct(int sndtype, int sndindex, UINT32 state)
 {
-	union sndinfo info;
+	sndinfo info;
 	int sndnum;
 
 	VERIFY_SNDTI(0, sndti_get_info_fct);
@@ -1767,7 +1764,7 @@ genf *sndti_get_info_fct(int sndtype, int sndindex, UINT32 state)
 
 const char *sndti_get_info_string(int sndtype, int sndindex, UINT32 state)
 {
-	union sndinfo info;
+	sndinfo info;
 	int sndnum;
 
 	VERIFY_SNDTI(0, sndti_get_info_string);
@@ -1778,13 +1775,13 @@ const char *sndti_get_info_string(int sndtype, int sndindex, UINT32 state)
 }
 
 
-/*--------------------------
+/*-------------------------------------------------
     Set info accessors
---------------------------*/
+-------------------------------------------------*/
 
 void sndti_set_info_int(int sndtype, int sndindex, UINT32 state, INT64 data)
 {
-	union sndinfo info;
+	sndinfo info;
 	int sndnum;
 
 	VERIFY_SNDTI_VOID(sndti_set_info_int);
@@ -1795,7 +1792,7 @@ void sndti_set_info_int(int sndtype, int sndindex, UINT32 state, INT64 data)
 
 void sndti_set_info_ptr(int sndtype, int sndindex, UINT32 state, void *data)
 {
-	union sndinfo info;
+	sndinfo info;
 	int sndnum;
 
 	VERIFY_SNDTI_VOID(sndti_set_info_ptr);
@@ -1806,7 +1803,7 @@ void sndti_set_info_ptr(int sndtype, int sndindex, UINT32 state, void *data)
 
 void sndti_set_info_fct(int sndtype, int sndindex, UINT32 state, genf *data)
 {
-	union sndinfo info;
+	sndinfo info;
 	int sndnum;
 
 	VERIFY_SNDTI_VOID(sndti_set_info_ptr);
@@ -1816,16 +1813,26 @@ void sndti_set_info_fct(int sndtype, int sndindex, UINT32 state, genf *data)
 }
 
 
-/*--------------------------
+/*-------------------------------------------------
     Misc accessors
---------------------------*/
+-------------------------------------------------*/
+
+void sndti_reset(int sndtype, int sndindex)
+{
+	int sndnum;
+
+	VERIFY_SNDTI_VOID(sndti_reset);
+	sndnum = sound_matrix[sndtype][sndindex] - 1;
+	if (sound[sndnum].intf.reset)
+		(*sound[sndnum].intf.reset)(sound[sndnum].token);
+}
 
 int sndti_clock(int sndtype, int sndindex)
 {
 	int sndnum;
 	VERIFY_SNDTI(0, sndti_clock);
 	sndnum = sound_matrix[sndtype][sndindex] - 1;
-	return sound[sndnum].sound->clock;
+	return sound[sndnum].clock;
 }
 
 void *sndti_token(int sndtype, int sndindex)
@@ -1838,19 +1845,19 @@ void *sndti_token(int sndtype, int sndindex)
 
 
 
-/*************************************
- *
- *  Interfaces to a specific sound type
- *
- *************************************/
+/***************************************************************************
 
-/*--------------------------
+    Sound chip interfaces by type
+
+***************************************************************************/
+
+/*-------------------------------------------------
     Get info accessors
---------------------------*/
+-------------------------------------------------*/
 
 INT64 sndtype_get_info_int(int sndtype, UINT32 state)
 {
-	union sndinfo info;
+	sndinfo info;
 
 	VERIFY_SNDTYPE(0, sndtype_get_info_int);
 	info.i = 0;
@@ -1860,7 +1867,7 @@ INT64 sndtype_get_info_int(int sndtype, UINT32 state)
 
 void *sndtype_get_info_ptr(int sndtype, UINT32 state)
 {
-	union sndinfo info;
+	sndinfo info;
 
 	VERIFY_SNDTYPE(0, sndtype_get_info_ptr);
 	info.p = NULL;
@@ -1870,7 +1877,7 @@ void *sndtype_get_info_ptr(int sndtype, UINT32 state)
 
 genf *sndtype_get_info_fct(int sndtype, UINT32 state)
 {
-	union sndinfo info;
+	sndinfo info;
 
 	VERIFY_SNDTYPE(0, sndtype_get_info_fct);
 	info.f = NULL;
@@ -1880,7 +1887,7 @@ genf *sndtype_get_info_fct(int sndtype, UINT32 state)
 
 const char *sndtype_get_info_string(int sndtype, UINT32 state)
 {
-	union sndinfo info;
+	sndinfo info;
 
 	VERIFY_SNDTYPE(0, sndtype_get_info_string);
 	info.s = NULL;
@@ -1910,11 +1917,11 @@ const char *sndtype_shortname(int sndtype)
 
 
 
-/*************************************
- *
- *  Dummy sound interfaces
- *
- *************************************/
+/***************************************************************************
+
+    Dummy sound interfaces
+
+***************************************************************************/
 
 static void *dummy_sound_start(int index, int clock, const void *config)
 {
@@ -1923,7 +1930,7 @@ static void *dummy_sound_start(int index, int clock, const void *config)
 }
 
 
-static void dummy_sound_set_info(void *token, UINT32 state, union sndinfo *info)
+static void dummy_sound_set_info(void *token, UINT32 state, sndinfo *info)
 {
 	switch (state)
 	{
@@ -1932,7 +1939,7 @@ static void dummy_sound_set_info(void *token, UINT32 state, union sndinfo *info)
 }
 
 
-void dummy_sound_get_info(void *token, UINT32 state, union sndinfo *info)
+void dummy_sound_get_info(void *token, UINT32 state, sndinfo *info)
 {
 	switch (state)
 	{
@@ -1951,78 +1958,4 @@ void dummy_sound_get_info(void *token, UINT32 state, union sndinfo *info)
 		case SNDINFO_STR_CORE_FILE:						info->s = __FILE__;						break;
 		case SNDINFO_STR_CORE_CREDITS:					info->s = "Copyright (c) 2004, The MAME Team"; break;
 	}
-}
-
-
-
-/***************************************************************************
-
-  Many games use a master-slave CPU setup. Typically, the main CPU writes
-  a command to some register, and then writes to another register to trigger
-  an interrupt on the slave CPU (the interrupt might also be triggered by
-  the first write). The slave CPU, notified by the interrupt, goes and reads
-  the command.
-
-***************************************************************************/
-
-static void latch_callback(int param)
-{
-	UINT16 value = param >> 8;
-	int which = param & 0xff;
-
-	/* if the latch hasn't been read and the value is changed, log a warning */
-	if (!latch_read[which] && latched_value[which] != value)
-		logerror("Warning: sound latch %d written before being read. Previous: %02x, new: %02x\n", which, latched_value[which], value);
-
-	/* store the new value and mark it not read */
-	latched_value[which] = value;
-	latch_read[which] = 0;
-}
-
-
-INLINE void latch_w(int which, UINT16 value)
-{
-	mame_timer_set(time_zero, which | (value << 8), latch_callback);
-}
-
-
-INLINE UINT16 latch_r(int which)
-{
-	latch_read[which] = 1;
-	return latched_value[which];
-}
-
-
-INLINE void latch_clear(int which)
-{
-	latched_value[which] = latch_clear_value;
-}
-
-
-WRITE8_HANDLER( soundlatch_w )        { latch_w(0, data); }
-WRITE16_HANDLER( soundlatch_word_w )  { latch_w(0, data); }
-WRITE8_HANDLER( soundlatch2_w )       { latch_w(1, data); }
-WRITE16_HANDLER( soundlatch2_word_w ) { latch_w(1, data); }
-WRITE8_HANDLER( soundlatch3_w )       { latch_w(2, data); }
-WRITE16_HANDLER( soundlatch3_word_w ) { latch_w(2, data); }
-WRITE8_HANDLER( soundlatch4_w )       { latch_w(3, data); }
-WRITE16_HANDLER( soundlatch4_word_w ) { latch_w(3, data); }
-
-READ8_HANDLER( soundlatch_r )         { return latch_r(0); }
-READ16_HANDLER( soundlatch_word_r )   { return latch_r(0); }
-READ8_HANDLER( soundlatch2_r )        { return latch_r(1); }
-READ16_HANDLER( soundlatch2_word_r )  { return latch_r(1); }
-READ8_HANDLER( soundlatch3_r )        { return latch_r(2); }
-READ16_HANDLER( soundlatch3_word_r )  { return latch_r(2); }
-READ8_HANDLER( soundlatch4_r )        { return latch_r(3); }
-READ16_HANDLER( soundlatch4_word_r )  { return latch_r(3); }
-
-WRITE8_HANDLER( soundlatch_clear_w )  { latch_clear(0); }
-WRITE8_HANDLER( soundlatch2_clear_w ) { latch_clear(1); }
-WRITE8_HANDLER( soundlatch3_clear_w ) { latch_clear(2); }
-WRITE8_HANDLER( soundlatch4_clear_w ) { latch_clear(3); }
-
-void soundlatch_setclearedvalue(int value)
-{
-	latch_clear_value = value;
 }

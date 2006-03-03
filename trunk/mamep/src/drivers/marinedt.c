@@ -94,7 +94,7 @@ p2 ink doesn't always light up in test mode
 	this is correct behavior if DSW set as Upright mode
 */
 
-#include "vidhrdw/generic.h"
+#include "driver.h"
 
 static mame_bitmap *tile, *obj1, *obj2;
 static tilemap *tx_tilemap;
