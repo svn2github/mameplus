@@ -53,6 +53,8 @@ extern void sound_update_refresh_rate(float newrate);
 // from wind3dfx.c
 extern struct rc_option win_d3d_opts[];
 
+// from mame.c
+extern UINT8 exit_pending;
 
 
 //============================================================
@@ -1152,7 +1154,7 @@ void osd_update_video_and_audio(mame_display *display)
 	check_inputs();
 
 	// don't confirm quit
-	if (win_trying_to_quit)
+	if (exit_pending)
 		options.confirm_quit = 0;
 
 	// poll the joystick values here

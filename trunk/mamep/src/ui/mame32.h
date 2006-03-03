@@ -30,10 +30,12 @@
 
 #ifdef MALLOC_DEBUG
 #undef malloc
-#undef strdup
 #undef calloc
 #undef realloc
 #endif /* MALLOC_DEBUG */
+
+#undef strdup
+#undef stricmp
 
 #include "screenshot.h"
 #include "win32ui.h"

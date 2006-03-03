@@ -297,7 +297,7 @@ static int parse_ips_patch(ips_entry **ips_p, const char *patch_name, rom_load_d
 			*ips_p = entry;
 			ips_p = &entry->next;
 
-			entry->rom_name = strdup(rom_name);
+			entry->rom_name = mame_strdup(rom_name);
 			entry->ips_name = malloc(strlen(ips_name) + sizeof (IPS_EXT));
 			if (!entry->rom_name || !entry->ips_name)
 			{
@@ -334,7 +334,7 @@ parse_ips_patch_fail:
 int open_ips_entry(const char *patch_name, rom_load_data *romdata, const rom_entry *romp)
 {
 	int result = 0;
-	char *s = strdup(patch_name);
+	char *s = mame_strdup(patch_name);
 	char *p, *q;
 	ips_entry **list;
 

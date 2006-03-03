@@ -13,6 +13,7 @@
 #define __MAME_H__
 
 #include "mamecore.h"
+#include "inptport.h"
 #include "ui_pal.h"
 #include "ui_lang.h"
 #include "ui_font.h"

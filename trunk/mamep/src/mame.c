@@ -142,7 +142,7 @@ global_options options;
 /* misc other statics */
 static UINT8 mame_paused;
 static UINT8 hard_reset_pending;
-static UINT8 exit_pending;
+UINT8 exit_pending;
 static char *saveload_pending_file;
 
 /* load/save statics */

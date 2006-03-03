@@ -14,6 +14,7 @@
 #ifndef __FILEIO_H__
 #define __FILEIO_H__
 
+#include <stdarg.h>
 #include "mamecore.h"
 
 
@@ -93,6 +94,7 @@ int mame_feof(mame_file *file);
 UINT64 mame_ftell(mame_file *file);
 
 int mame_fputs(mame_file *f, const char *s);
+int mame_vfprintf(mame_file *f, const char *fmt, va_list va);
 int CLIB_DECL mame_fprintf(mame_file *f, const char *fmt, ...) ATTR_PRINTF(2,3);
 
 #endif	/* __FILEIO_H__ */

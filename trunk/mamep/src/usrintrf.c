@@ -13,6 +13,7 @@ To do:
 
 *********************************************************************/
 
+#include "osdepend.h"
 #include "driver.h"
 #include "info.h"
 #include "vidhrdw/vector.h"
@@ -20,6 +21,7 @@ To do:
 #include "profiler.h"
 #include "cheat.h"
 #include "datafile.h"
+#include <ctype.h>
 #include <stdarg.h>
 #include <math.h>
 #ifdef USE_SHOW_TIME
@@ -441,7 +443,7 @@ void ui_update_and_render(mame_bitmap *bitmap)
 	if (confirm_quit_state)
 	{
 		if (update_confirm_quit())
-			return 1;
+			mame_schedule_exit();
 	}
 	else
 
@@ -465,8 +467,7 @@ void ui_update_and_render(mame_bitmap *bitmap)
 			therm_state = on_screen_display(therm_state);
 	}
 
-	if (handle_keys(bitmap))
-		return 1;
+	handle_keys(bitmap);
 
 	/* then let the cheat engine display its stuff */
 	if (options.cheat)
@@ -1644,13 +1645,13 @@ skip_comment:
  *
  *************************************/
 
-static int handle_keys(mame_bitmap *bitmap)
+static void handle_keys(mame_bitmap *bitmap)
 {
 #ifdef MESS
 	if (osd_trying_to_quit())
-		return 1;
+		mame_schedule_exit();
 	if (options.disable_normal_ui || ((Machine->gamedrv->flags & GAME_COMPUTER) && !mess_ui_active()))
-		return 0;
+		return;
 #endif
 
 	/* if the user pressed ESC, stop the emulation as long as menus aren't up */
@@ -1661,7 +1662,7 @@ static int handle_keys(mame_bitmap *bitmap)
 		/* kill the thermometer view */
 		therm_state = 0;
 
-		return 0;
+		return;
 	}
 
 	/* if menus aren't up and the user has toggled them, turn them on */
@@ -4212,7 +4213,7 @@ int ui_display_copyright(mame_bitmap *bitmap)
 			done = 1;
 		if (done == 1 && (code_pressed_memory(KEYCODE_K) || input_ui_pressed(IPT_UI_RIGHT)))
 			done = 2;
-	} while (done < 2);
+	} while (done < 2 && !mame_is_scheduled_event_pending());
 
 	scroll_reset = TRUE;
 
@@ -4332,7 +4333,7 @@ int ui_display_game_warnings(mame_bitmap *bitmap)
 				if (done == 1 && (code_pressed_memory(KEYCODE_K) || input_ui_pressed(IPT_UI_RIGHT)))
 					done = 2;
 			}
-		} while (done < 2);
+		} while (done < 2 && !mame_is_scheduled_event_pending());
 
 		scroll_reset = TRUE;
 	}
@@ -4374,7 +4375,7 @@ int ui_display_game_info(mame_bitmap *bitmap)
 		update_video_and_audio();
 
 		res = ui_window_scroll_keys();
-	} while (res <= 0);
+	} while (res <= 0 && !mame_is_scheduled_event_pending());
 
 	/* clear the input memory */
 	while (code_read_async() != CODE_NONE) ;
@@ -4408,7 +4409,7 @@ int ui_display_game_info(mame_bitmap *bitmap)
 		update_video_and_audio();
 
 		res = ui_window_scroll_keys();
-	} while (res <= 0);
+	} while (res <= 0 && !mame_is_scheduled_event_pending());
 #endif
 
 	/* clear the input memory */
@@ -4950,11 +4951,17 @@ static int update_load_save(void)
 		return 1;
 
 	/* display a popup indicating that the save will proceed */
+	sprintf(filename, "%s-%c", Machine->gamedrv->name, file);
 	if (load_save_state == LOADSAVE_SAVE)
+	{
 		ui_popup(_("Save to position %c"), file);
+		mame_schedule_save(filename);
+	}
 	else
+	{
 		ui_popup(_("Load from position %c"), file);
-	cpu_loadsave_schedule(load_save_state, file);
+		mame_schedule_load(filename);
+	}
 
 	/* remove the pause and reset the state */
 	load_save_state = LOADSAVE_NONE;

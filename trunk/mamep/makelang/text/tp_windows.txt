@@ -1,44 +1,44 @@
-# windows/input.c: 906
+# windows/input.c: 907
          all -- all axes on all joysticks are digital\n
 
 
-# windows/input.c: 912
+# windows/input.c: 913
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
 
 
-# windows/input.c: 910
+# windows/input.c: 911
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
 
 
-# windows/input.c: 907
+# windows/input.c: 908
          j<N> -- all axes on joystick <N> are digital\n
 
 
-# windows/input.c: 908
+# windows/input.c: 909
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
 
 
-# windows/input.c: 905
+# windows/input.c: 906
          none -- no axes on any joysticks are digital\n
 
 
-# windows/fronthlp.c: 458
+# windows/fronthlp.c: 460
         MAME -createconfig to create a mame.ini\n\n
 
 
-# windows/fronthlp.c: 457
+# windows/fronthlp.c: 459
         MAME -showconfig   for a list of configuration options\n
 
 
-# windows/fronthlp.c: 456
+# windows/fronthlp.c: 458
         MAME -showusage    for a brief list of options\n
 
 
-# windows/input.c: 909
+# windows/input.c: 910
     Multiple axes can be specified for one joystick:\n
 
 
-# windows/input.c: 911
+# windows/input.c: 912
     Multiple joysticks can be specified separated by commas:\n
 
 
@@ -46,11 +46,11 @@
    ignoring line\n
 
 
-# windows/input.c: 1906
+# windows/input.c: 1900
   Axis %d (%s)%s\n
 
 
-# windows/config.c: 551
+# windows/config.c: 545
  %s running parameters
 
 
@@ -58,11 +58,11 @@
  (%.2lfMB video memory available)
 
 
-# windows/input.c: 1906
+# windows/input.c: 1900
  - digital
 
 
-# windows/fronthlp.c: 757
+# windows/fronthlp.c: 759
 %d %s found, %d were OK.\n
 
 
@@ -70,27 +70,27 @@
 %s surface created: %s (%s)\n
 
 
-# windows/fronthlp.c: 194
+# windows/fronthlp.c: 196
 (BAD) 
 
 
-# windows/video.c: 222
+# windows/video.c: 224
 (dd) stretch video using the hardware
 
 
-# windows/input.c: 945
+# windows/input.c: 946
 Autoenabling joysticks due to presence of a %s\n
 
 
-# windows/input.c: 953
+# windows/input.c: 954
 Autoenabling lightguns due to presence of a %s\n
 
 
-# windows/input.c: 937
+# windows/input.c: 938
 Autoenabling mice due to presence of a %s\n
 
 
-# windows/video.c: 701
+# windows/video.c: 703
 Average FPS: %f (%d frames)\n
 
 
@@ -118,19 +118,19 @@ Blit surface created: %s\n
 Blitter initialisation complete (%.2lfMB video memory free)\n
 
 
-# windows/fronthlp.c: 78
+# windows/fronthlp.c: 80
 CRC-32s
 
 
-# windows/config.c: 292
+# windows/config.c: 294
 Configuration options
 
 
-# windows/fronthlp.c: 777
+# windows/fronthlp.c: 779
 ERROR     %s\n
 
 
-# windows/video.c: 542
+# windows/video.c: 544
 Enumerating video device %s\n
 
 
@@ -202,7 +202,7 @@ Error creating scanline surface[%d]: %08x\n
 Error creating texture surface: %08x\n
 
 
-# windows/video.c: 618
+# windows/video.c: 620
 Error enumerating DirectDraw: %08x\n
 
 
@@ -258,6 +258,10 @@ Error initialising software scale effects\n
 Error locking stream buffer: %08x\n
 
 
+# windows/config.c: 499
+Error on rc creation
+
+
 # windows/rc.c: 965
 Error opening %s
 
@@ -294,6 +298,10 @@ Error setting mode: %08x\n
 Error setting primary format: %08x\n
 
 
+# windows/config.c: 506
+Error while parsing cmdline
+
+
 # windows/wind3d.c: 261
 Error: 3D hardware can't render scanlines (no support for multi-texturing)\n
 
@@ -310,19 +318,27 @@ Error: RGB effects (multiply mode) not supported\n
 Error: required texture size too large (max: %ix%i, need %ix%i)\n
 
 
-# windows/fronthlp.c: 459
+# windows/config.c: 566
+Failed to open file for playback
+
+
+# windows/config.c: 668
+Failed to open file for recording
+
+
+# windows/fronthlp.c: 461
 For usage instructions, please consult the file windows.txt\n
 
 
-# windows/fronthlp.c: 67
+# windows/fronthlp.c: 69
 Frontend Related
 
 
-# windows/window.c: 732
+# windows/window.c: 736
 Full Screen\tAlt+Enter
 
 
-# windows/fronthlp.c: 515
+# windows/fronthlp.c: 517
 Game \"%s\" not supported!\n
 
 
@@ -334,63 +350,63 @@ Hardware stretching supported\n
 Initialising DirectDraw & Direct3D 7 blitter
 
 
-# windows/input.c: 226
+# windows/input.c: 227
 Input device options
 
 
-# windows/input.c: 1965
+# windows/input.c: 1959
 J%d %s D
 
 
-# windows/input.c: 1969
+# windows/input.c: 1963
 J%d %s L
 
 
-# windows/input.c: 1973
+# windows/input.c: 1967
 J%d %s R
 
 
-# windows/input.c: 1961
+# windows/input.c: 1955
 J%d %s U
 
 
-# windows/input.c: 1744
+# windows/input.c: 1738
 Joystick %d axis %d is now %s\n
 
 
-# windows/input.c: 1889
+# windows/input.c: 1883
 Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 
 
-# windows/fronthlp.c: 778
+# windows/fronthlp.c: 780
 KNOWN     %s\n
 
 
-# windows/input.c: 1260
+# windows/input.c: 1261
 Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 
 
-# windows/input.c: 234
+# windows/input.c: 235
 LED mode (ps/2|usb)
 
 
-# windows/config.c: 299
+# windows/config.c: 301
 Language options
 
 
-# windows/input.c: 1878
+# windows/input.c: 1872
 Lightgun %d X
 
 
-# windows/input.c: 1880
+# windows/input.c: 1874
 Lightgun %d Y
 
 
-# windows/input.c: 2235
+# windows/input.c: 2229
 Lightgun not supported in windowed mode
 
 
-# windows/fronthlp.c: 452
+# windows/fronthlp.c: 454
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 
 
@@ -402,23 +418,23 @@ MMX not supported\n
 MMX supported\n
 
 
-# windows/config.c: 251
+# windows/config.c: 253
 Mame CORE misc options
 
 
-# windows/video.c: 258
+# windows/video.c: 260
 Mame CORE palette options
 
 
-# windows/config.c: 241
+# windows/config.c: 243
 Mame CORE sound options
 
 
-# windows/config.c: 233
+# windows/config.c: 235
 Mame CORE vector game options
 
 
-# windows/config.c: 220
+# windows/config.c: 222
 Mame CORE video options
 
 
@@ -426,79 +442,75 @@ Mame CORE video options
 Managed texture
 
 
-# windows/input.c: 1855, 1865
+# windows/input.c: 1849, 1859
 Mouse %d %s
 
 
-# windows/input.c: 1793
+# windows/input.c: 1787
 Mouse %d X
 
 
-# windows/input.c: 1795
+# windows/input.c: 1789
 Mouse %d Y
 
 
-# windows/input.c: 1797
+# windows/input.c: 1791
 Mouse %d Z
 
 
-# windows/input.c: 1857, 1867
+# windows/input.c: 1851, 1861
 Mouse %s
 
 
-# windows/fronthlp.c: 235
+# windows/fronthlp.c: 237
 NO MATCH\n
 
 
-# windows/fronthlp.c: 230
+# windows/fronthlp.c: 232
 NOT A ROM\n
 
 
-# windows/fronthlp.c: 485
+# windows/fronthlp.c: 487
 Name:     Description:\n
 
 
-# windows/fronthlp.c: 618
+# windows/fronthlp.c: 620
 Name:    Clone of:\n
 
 
-# windows/video.c: 268
+# windows/video.c: 270
 OSD bar color (dark)
 
 
-# windows/video.c: 269
+# windows/video.c: 271
 OSD bar color (default)
 
 
-# windows/video.c: 267
+# windows/video.c: 269
 OSD bar color (light)
 
 
-# windows/video.c: 266
+# windows/video.c: 268
 OSD bar color (medium)
 
 
-# windows/fileio.c: 375
-Out of memory!\n
-
-
-# windows/fronthlp.c: 780
+# windows/fronthlp.c: 782
 PARTKNOWN %s\n
 
 
-# windows/config.c: 440
+# windows/config.c: 442
 Parsing %s : ERROR\n
 
 
-# windows/config.c: 450
+# windows/config.c: 452
 Parsing %s : N/A\n
 
 
-# windows/config.c: 445
+# windows/config.c: 447
 Parsing %s : OK\n
 
 
-# windows/config.c: 599
+# windows/config.c: 590
 Playing back previously recorded game %s (%s) [press return]\n
 
 
@@ -546,7 +558,7 @@ SSE supported\n
 SSE2 supported\n
 
 
-# windows/video.c: 241
+# windows/video.c: 243
 SaI scale effect
 
 
@@ -558,7 +570,7 @@ Scale surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 Scanline surface[%i] created: %s\n
 
 
-# windows/video.c: 630
+# windows/video.c: 632
 Screen %s not found\n
 
 
@@ -566,19 +578,19 @@ Screen %s not found\n
 Sound buffer: overflows=%d underflows=%d\n
 
 
-# windows/input.c: 1822
+# windows/input.c: 1816
 Stick %d %s +
 
 
-# windows/input.c: 1815
+# windows/input.c: 1809
 Stick %d %s -
 
 
-# windows/input.c: 1824
+# windows/input.c: 1818
 Stick %s +
 
 
-# windows/input.c: 1817
+# windows/input.c: 1811
 Stick %s -
 
 
@@ -586,11 +598,11 @@ Stick %s -
 Texture
 
 
-# windows/input.c: 2386
+# windows/input.c: 2380
 Toggle fullscreen
 
 
-# windows/fronthlp.c: 779
+# windows/fronthlp.c: 781
 UNKNOWN   %s\n
 
 
@@ -614,7 +626,7 @@ Unable to blt scale_surface to texture_surface: %08x\n
 Unable to blt target_surface: %08x\n
 
 
-# windows/input.c: 2654, 2661
+# windows/input.c: 2648, 2655
 Unable to close the keyboard device. (error %d)\n
 
 
@@ -630,7 +642,7 @@ Unable to lock blit_surface: %08x\n
 Unable to lock target_surface: %08x\n
 
 
-# windows/input.c: 2605, 2615
+# windows/input.c: 2599, 2609
 Unable to open the keyboard device. (error %d)\n
 
 
@@ -642,11 +654,11 @@ Unable to render to back_surface: %08x\n
 Unable to render to preprocess texture: %08x\n
 
 
-# windows/fronthlp.c: 455
+# windows/fronthlp.c: 457
 Usage:  MAME gamename [options]\n\n
 
 
-# windows/config.c: 558
+# windows/config.c: 552
 Usage: %s [game] [options]\nOptions:\n
 
 
@@ -658,7 +670,7 @@ Using %s pre-scale effect\n
 Using %s scale effect\n
 
 
-# windows/input.c: 1194
+# windows/input.c: 1195
 Using DirectInput %d\n
 
 
@@ -686,11 +698,11 @@ Warning: flat bi-cubic filtering not supported, falling back to bi-linear\n
 Warning: gaussian bi-cubic filtering not supported, falling back to bi-linear\n
 
 
-# windows/window.c: 652
+# windows/window.c: 656
 Warning: hardware-accelerated blitting-effects selected, but currently disabled\n         use the -direct3d option to enable hardware acceleration\n
 
 
-# windows/window.c: 646
+# windows/window.c: 650
 Warning: non-hardware-accelerated blitting-effects engine enabled\n         use the -d3deffect option to enable hardware acceleration\n
 
 
@@ -710,11 +722,11 @@ Warning: using fall-back method for scanline blending.\n
 Windows Direct3D 2D video options
 
 
-# windows/video.c: 246
+# windows/video.c: 248
 Windows misc options
 
 
-# windows/fileio.c: 119
+# windows/fileio.c: 120
 Windows path and directory options
 
 
@@ -722,23 +734,23 @@ Windows path and directory options
 Windows sound options
 
 
-# windows/video.c: 214
+# windows/video.c: 216
 Windows video options
 
 
-# windows/fronthlp.c: 750
+# windows/fronthlp.c: 752
 \"%8s\" not found!\n
 
 
-# windows/fronthlp.c: 752
+# windows/fronthlp.c: 754
 \"%8s\" not supported!\n
 
 
-# windows/input.c: 1262
+# windows/input.c: 1263
 \"%s\" controller support enabled\n
 
 
-# windows/config.c: 617
+# windows/config.c: 608
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 
 
@@ -746,123 +758,123 @@ Windows video options
 additional customised settings (undocumented)
 
 
-# windows/config.c: 230
+# windows/config.c: 232
 additional pause brightness
 
 
-# windows/fronthlp.c: 73
+# windows/fronthlp.c: 75
 all available info on driver in XML format
 
 
-# windows/video.c: 247
+# windows/video.c: 249
 allow MAME to give back time to the system when it's not needed
 
 
-# windows/input.c: 1741
+# windows/input.c: 1735
 analog
 
 
-# windows/input.c: 1202
+# windows/input.c: 1203
 analog joystick
 
 
-# windows/config.c: 257
+# windows/config.c: 259
 artwork resolution (0 for auto)
 
 
-# windows/video.c: 232
+# windows/video.c: 234
 attempt to match the game's refresh rate
 
 
-# windows/config.c: 275
+# windows/config.c: 277
 automatic pause when playback is finished
 
 
-# windows/config.c: 225
+# windows/config.c: 227
 automatically rotate screen anti-clockwise for vertical games
 
 
-# windows/config.c: 224
+# windows/config.c: 226
 automatically rotate screen clockwise for vertical games
 
 
-# windows/config.c: 229
+# windows/config.c: 231
 brightness correction
 
 
-# windows/video.c: 276
+# windows/video.c: 278
 button color (aqua)
 
 
-# windows/video.c: 273
+# windows/video.c: 275
 button color (blue)
 
 
-# windows/video.c: 272
+# windows/video.c: 274
 button color (green)
 
 
-# windows/video.c: 279
+# windows/video.c: 281
 button color (lime)
 
 
-# windows/video.c: 278
+# windows/video.c: 280
 button color (navy)
 
 
-# windows/video.c: 275
+# windows/video.c: 277
 button color (pink)
 
 
-# windows/video.c: 274
+# windows/video.c: 276
 button color (purple)
 
 
-# windows/video.c: 270
+# windows/video.c: 272
 button color (red)
 
 
-# windows/video.c: 277
+# windows/video.c: 279
 button color (silver)
 
 
-# windows/video.c: 271
+# windows/video.c: 273
 button color (yellow)
 
 
-# windows/config.c: 279
+# windows/config.c: 281
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 
 
-# windows/config.c: 266
+# windows/config.c: 268
 change system bios
 
 
-# windows/fileio.c: 147
+# windows/fileio.c: 149
 cheat filename
 
 
-# windows/fronthlp.c: 86
+# windows/fronthlp.c: 88
 compare files with known MAME roms
 
 
-# windows/fronthlp.c: 87
+# windows/fronthlp.c: 89
 compare files with known MAME roms (brief)
 
 
-# windows/config.c: 273
+# windows/config.c: 275
 confirm before exiting game
 
 
-# windows/config.c: 293
+# windows/config.c: 295
 create the default configuration file
 
 
-# windows/config.c: 256
+# windows/config.c: 258
 crop artwork to game screen only
 
 
-# windows/video.c: 280
+# windows/video.c: 282
 cursor color
 
 
@@ -870,75 +882,75 @@ cursor color
 customised blitting effects preset
 
 
-# windows/input.c: 254, 1205
+# windows/input.c: 255, 1206
 dial
 
 
-# windows/input.c: 260, 1741
+# windows/input.c: 261, 1735
 digital
 
 
-# windows/fileio.c: 139
+# windows/fileio.c: 140
 directory for Artwork (Overlays etc.)
 
 
-# windows/fileio.c: 141
+# windows/fileio.c: 142
 directory for hard drive image difference files
 
 
-# windows/fileio.c: 144
+# windows/fileio.c: 146
 directory for ips files
 
 
-# windows/fileio.c: 146
+# windows/fileio.c: 148
 directory for localized language files
 
 
-# windows/fileio.c: 140
+# windows/fileio.c: 141
 directory for screenshots (.png format)
 
 
-# windows/fileio.c: 133
+# windows/fileio.c: 134
 directory to save configurations
 
 
-# windows/fileio.c: 142
+# windows/fileio.c: 143
 directory to save controller definitions
 
 
-# windows/fileio.c: 137
+# windows/fileio.c: 138
 directory to save hiscores
 
 
-# windows/fileio.c: 136
+# windows/fileio.c: 137
 directory to save input device logs
 
 
-# windows/fileio.c: 135
+# windows/fileio.c: 136
 directory to save memory card contents
 
 
-# windows/fileio.c: 134
+# windows/fileio.c: 135
 directory to save nvram contents
 
 
-# windows/fileio.c: 138
+# windows/fileio.c: 139
 directory to save states
 
 
-# windows/config.c: 272
+# windows/config.c: 274
 disable second monitor emulation
 
 
-# windows/config.c: 297
+# windows/config.c: 299
 display additional diagnostic information
 
 
-# windows/config.c: 294
+# windows/config.c: 296
 display running parameters in rc style
 
 
-# windows/config.c: 221
+# windows/config.c: 223
 do not apply rotation
 
 
@@ -946,75 +958,75 @@ do not apply rotation
 double
 
 
-# windows/config.c: 234
+# windows/config.c: 236
 draw antialiased vectors
 
 
-# windows/config.c: 235
+# windows/config.c: 237
 draw translucent vectors
 
 
-# windows/fronthlp.c: 76
+# windows/fronthlp.c: 78
 driver sourcefile
 
 
-# windows/video.c: 227
+# windows/video.c: 229
 emulate win_old_scanlines
 
 
-# windows/input.c: 251
+# windows/input.c: 252
 enable (keyboard|mouse|joystick) if a paddle control is present
 
 
-# windows/input.c: 254
+# windows/input.c: 255
 enable (keyboard|mouse|joystick|lightgun) if a dial control is present
 
 
-# windows/input.c: 256
+# windows/input.c: 257
 enable (keyboard|mouse|joystick|lightgun) if a lightgun control is present
 
 
-# windows/input.c: 258
+# windows/input.c: 259
 enable (keyboard|mouse|joystick|lightgun) if a mouse control is present
 
 
-# windows/input.c: 253
+# windows/input.c: 254
 enable (keyboard|mouse|joystick|lightgun) if a pedal control is present
 
 
-# windows/input.c: 255
+# windows/input.c: 256
 enable (keyboard|mouse|joystick|lightgun) if a trackball control is present
 
 
-# windows/input.c: 252
+# windows/input.c: 253
 enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is present
 
 
-# windows/config.c: 268
+# windows/config.c: 270
 enable automatic restore at startup and save at exit
 
 
-# windows/input.c: 230
+# windows/input.c: 231
 enable dual lightgun input
 
 
-# windows/input.c: 228
+# windows/input.c: 229
 enable joystick input
 
 
-# windows/input.c: 233
+# windows/input.c: 234
 enable keyboard LED emulation
 
 
-# windows/input.c: 229
+# windows/input.c: 230
 enable lightgun input
 
 
-# windows/input.c: 227
+# windows/input.c: 228
 enable mouse input
 
 
-# windows/input.c: 239
+# windows/input.c: 240
 enable pointing stick input
 
 
@@ -1022,48 +1034,40 @@ enable pointing stick input
 enable rotation of effects for rotated games
 
 
-# windows/input.c: 232
+# windows/input.c: 233
 enable steadykey support
 
 
-# windows/config.c: 258
+# windows/config.c: 260
 enable/disable cheat subsystem
 
 
-# windows/config.c: 259
+# windows/config.c: 261
 enable/disable debugger (only if available)
 
 
-# windows/config.c: 296
+# windows/config.c: 298
 enable/disable loading of configfiles
 
 
-# windows/config.c: 301
+# windows/config.c: 303
 enable/disable local language game list
 
 
-# windows/config.c: 244
+# windows/config.c: 246
 enable/disable sound and sound CPUs
 
 
-# windows/config.c: 247
+# windows/config.c: 249
 enable/disable volume auto adjust
 
 
-# windows/video.c: 231
+# windows/video.c: 233
 enforce aspect ratio
 
 
 # windows/rc.c: 719, 822, 834
 error invalid value for %s: %s\n
-
-
-# windows/config.c: 499
-error on rc creation\n
-
-
-# windows/config.c: 508
-error while parsing cmdline\n
 
 
 # windows/rc.c: 315, 382
@@ -1078,7 +1082,7 @@ error: %s requires an argument\n
 error: couldn't open file: %s\n
 
 
-# windows/config.c: 871
+# windows/config.c: 859
 error: duplicate gamename: %s\n
 
 
@@ -1086,15 +1090,15 @@ error: duplicate gamename: %s\n
 error: garbage \"%s\" on line %d of file: %s\n
 
 
-# windows/input.c: 824
+# windows/input.c: 825
 error: invalid value for %s: %s\n
 
 
-# windows/video.c: 422
+# windows/video.c: 424
 error: invalid value for aspect ratio: %s\n
 
 
-# windows/video.c: 319
+# windows/video.c: 321
 error: invalid value for cleanstretch: %s\n
 
 
@@ -1102,31 +1106,31 @@ error: invalid value for cleanstretch: %s\n
 error: invalid value for d3dprescale: %s\n
 
 
-# windows/input.c: 904
+# windows/input.c: 905
 error: invalid value for digital: %s -- valid values are:\n
 
 
-# windows/video.c: 401
+# windows/video.c: 403
 error: invalid value for effect: %s\n
 
 
-# windows/video.c: 376
+# windows/video.c: 378
 error: invalid value for frames_to_run: %s\n
 
 
-# windows/config.c: 185
+# windows/config.c: 187
 error: invalid value for language: %s\nUse %s\n
 
 
-# windows/input.c: 799
+# windows/input.c: 800
 error: invalid value for led_mode: %s\n
 
 
-# windows/video.c: 450
+# windows/video.c: 452
 error: invalid value for palette: %s\n
 
 
-# windows/video.c: 344, 354
+# windows/video.c: 346, 356
 error: invalid value for resolution: %s\n
 
 
@@ -1146,11 +1150,11 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 
 
-# windows/config.c: 1030
+# windows/config.c: 980
 error: malloc failed in win_dirname\n
 
 
-# windows/config.c: 1070
+# windows/config.c: 1020
 error: malloc failed in win_strip_extension\n
 
 
@@ -1170,35 +1174,27 @@ error: unknown option %s\n
 error: unknown option type: %d, this should not happen!\n
 
 
-# windows/config.c: 574
-failed to open %s for playback\n
-
-
-# windows/config.c: 679
-failed to open %s for recording\n
-
-
 # windows/wind3dfx.c: 201
 feedback strength
 
 
-# windows/config.c: 227
+# windows/config.c: 229
 flip screen left-right
 
 
-# windows/config.c: 226
+# windows/config.c: 228
 flip screen upside-down
 
 
-# windows/video.c: 259
+# windows/video.c: 261
 font blank color
 
 
-# windows/video.c: 260
+# windows/video.c: 262
 font normal color
 
 
-# windows/video.c: 261
+# windows/video.c: 263
 font special color
 
 
@@ -1206,11 +1202,11 @@ font special color
 force specific zoom level
 
 
-# windows/config.c: 228
+# windows/config.c: 230
 gamma correction
 
 
-# windows/config.c: 263
+# windows/config.c: 265
 generate error.log
 
 
@@ -1222,39 +1218,39 @@ info: trying to parse: %s\n
 interpolation method
 
 
-# windows/input.c: 1741
+# windows/input.c: 1735
 invalid
 
 
-# windows/config.c: 270
+# windows/config.c: 272
 ips datfile name
 
 
-# windows/fronthlp.c: 720
+# windows/fronthlp.c: 722
 is bad\n
 
 
-# windows/fronthlp.c: 730
+# windows/fronthlp.c: 732
 is best available\n
 
 
-# windows/fronthlp.c: 725
+# windows/fronthlp.c: 727
 is good\n
 
 
-# windows/fronthlp.c: 735
+# windows/fronthlp.c: 737
 is missing optional files\n
 
 
-# windows/input.c: 229, 820, 1203
+# windows/input.c: 230, 821, 1204
 lightgun
 
 
-# windows/fronthlp.c: 83
+# windows/fronthlp.c: 85
 list optional samples for a driver
 
 
-# windows/fronthlp.c: 82
+# windows/fronthlp.c: 84
 list required roms for a driver
 
 
@@ -1262,11 +1258,11 @@ list required roms for a driver
 loading %-12s\r
 
 
-# windows/input.c: 260
+# windows/input.c: 261
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 
 
-# windows/input.c: 235
+# windows/input.c: 236
 minimal analog value for digital input
 
 
@@ -1274,43 +1270,43 @@ minimal analog value for digital input
 no help available
 
 
-# windows/input.c: 231
+# windows/input.c: 232
 offscreen shots reload
 
 
-# windows/config.c: 264
+# windows/config.c: 266
 output error log to debugger
 
 
-# windows/input.c: 251, 1201
+# windows/input.c: 252, 1202
 paddle
 
 
-# windows/fileio.c: 129, 131
+# windows/fileio.c: 130, 132
 path to ini files
 
 
-# windows/fileio.c: 121
+# windows/fileio.c: 122
 path to romsets
 
 
-# windows/fileio.c: 127
+# windows/fileio.c: 128
 path to samplesets
 
 
-# windows/input.c: 253, 1204
+# windows/input.c: 254, 1205
 pedal
 
 
-# windows/config.c: 261
+# windows/config.c: 263
 playback an input file
 
 
-# windows/input.c: 236
+# windows/input.c: 237
 preconfigure for specified controller
 
 
-# windows/video.c: 248
+# windows/video.c: 250
 prefer RDTSC over QueryPerformanceCounter for timing
 
 
@@ -1318,55 +1314,55 @@ prefer RDTSC over QueryPerformanceCounter for timing
 prescale effect
 
 
-# windows/config.c: 262
+# windows/config.c: 264
 record an input file
 
 
-# windows/fronthlp.c: 84
+# windows/fronthlp.c: 86
 report romsets that have problems
 
 
-# windows/fronthlp.c: 85
+# windows/fronthlp.c: 87
 report samplesets that have problems
 
 
-# windows/fronthlp.c: 748
+# windows/fronthlp.c: 750
 romset
 
 
-# windows/fronthlp.c: 688
+# windows/fronthlp.c: 690
 romset %s 
 
 
-# windows/fronthlp.c: 758
+# windows/fronthlp.c: 760
 romsets
 
 
-# windows/config.c: 223
+# windows/config.c: 225
 rotate screen anti-clockwise
 
 
-# windows/config.c: 222
+# windows/config.c: 224
 rotate screen clockwise
 
 
-# windows/video.c: 219
+# windows/video.c: 221
 run in a window/run on full screen
 
 
-# windows/config.c: 626
+# windows/config.c: 617
 running %s (%s) [press return]
 
 
-# windows/fronthlp.c: 748
+# windows/fronthlp.c: 750
 sampleset
 
 
-# windows/fronthlp.c: 711
+# windows/fronthlp.c: 713
 sampleset %s 
 
 
-# windows/fronthlp.c: 758
+# windows/fronthlp.c: 760
 samplesets
 
 
@@ -1374,7 +1370,7 @@ samplesets
 save sound in wav file
 
 
-# windows/video.c: 239
+# windows/video.c: 241
 save video in specified mng file
 
 
@@ -1386,11 +1382,11 @@ scale effects surface created: %s\n
 scanline intensity
 
 
-# windows/config.c: 260
+# windows/config.c: 262
 script for debugger (only if available)
 
 
-# windows/config.c: 300
+# windows/config.c: 302
 select translation language
 
 
@@ -1398,107 +1394,107 @@ select translation language
 set audio latency (increase to reduce glitches)
 
 
-# windows/config.c: 236
+# windows/config.c: 238
 set beam width in vector games
 
 
-# windows/config.c: 237
+# windows/config.c: 239
 set flickering in vector games
 
 
-# windows/video.c: 216
+# windows/video.c: 218
 set frameskip explicitly (autoframeskip needs to be off)
 
 
-# windows/config.c: 238
+# windows/config.c: 240
 set intensity in vector games
 
 
-# windows/input.c: 242
+# windows/input.c: 243
 set joystick ID (Player1)
 
 
-# windows/input.c: 243
+# windows/input.c: 244
 set joystick ID (Player2)
 
 
-# windows/input.c: 244
+# windows/input.c: 245
 set joystick ID (Player3)
 
 
-# windows/input.c: 245
+# windows/input.c: 246
 set joystick ID (Player4)
 
 
-# windows/input.c: 246
+# windows/input.c: 247
 set joystick ID (Player5)
 
 
-# windows/input.c: 247
+# windows/input.c: 248
 set joystick ID (Player6)
 
 
-# windows/input.c: 248
+# windows/input.c: 249
 set joystick ID (Player7)
 
 
-# windows/input.c: 249
+# windows/input.c: 250
 set joystick ID (Player8)
 
 
-# windows/video.c: 225
+# windows/video.c: 227
 set resolution
 
 
-# windows/config.c: 242
+# windows/config.c: 244
 set samplerate
 
 
-# windows/video.c: 226
+# windows/video.c: 228
 set specific monitor refresh rate
 
 
-# windows/video.c: 235
+# windows/video.c: 237
 sets the brightness in full screen mode
 
 
-# windows/video.c: 236
+# windows/video.c: 238
 sets the number of frames to run within the game
 
 
-# windows/fronthlp.c: 74
+# windows/fronthlp.c: 76
 short name, full name
 
 
-# windows/fronthlp.c: 77
+# windows/fronthlp.c: 79
 show clones
 
 
-# windows/fronthlp.c: 69, 70
+# windows/fronthlp.c: 71, 72
 show help message
 
 
-# windows/config.c: 295
+# windows/config.c: 297
 show this help
 
 
-# windows/config.c: 265
+# windows/config.c: 267
 skip displaying the game info screen
 
 
-# windows/video.c: 215
+# windows/video.c: 217
 skip frames to speed up emulation
 
 
-# windows/config.c: 244 
+# windows/config.c: 246 
 sound
 
 
-# windows/video.c: 238
+# windows/video.c: 240
 specify an alternate monitor aspect ratio
 
 
-# windows/video.c: 237
+# windows/video.c: 239
 specify the blitting effect
 
 
@@ -1506,47 +1502,47 @@ specify the blitting effect
 specify the blitting effects
 
 
-# windows/video.c: 223
+# windows/video.c: 225
 specify which screen to use
 
 
-# windows/video.c: 230
+# windows/video.c: 232
 start out maximized
 
 
-# windows/config.c: 267
+# windows/config.c: 269
 state to load
 
 
-# windows/video.c: 224
+# windows/video.c: 226
 stretch to integer ratios
 
 
-# windows/video.c: 229
+# windows/video.c: 231
 switch color depths to best fit
 
 
-# windows/video.c: 228
+# windows/video.c: 230
 switch resolutions to best fit
 
 
-# windows/video.c: 233
+# windows/video.c: 235
 syncronize only to the monitor refresh
 
 
-# windows/video.c: 249
+# windows/video.c: 251
 thread priority
 
 
-# windows/video.c: 234
+# windows/video.c: 236
 throttle speed to the game's framerate
 
 
-# windows/input.c: 255, 1206
+# windows/input.c: 256, 1207
 trackball
 
 
-# windows/config.c: 283
+# windows/config.c: 285
 transparency of UI background [0 - 255]
 
 
@@ -1554,19 +1550,19 @@ transparency of UI background [0 - 255]
 triple
 
 
-# windows/video.c: 218
+# windows/video.c: 220
 triple buffering (only if fullscreen)
 
 
-# windows/config.c: 165
+# windows/config.c: 167
 unable to open log file\n
 
 
-# windows/video.c: 221
+# windows/video.c: 223
 use Direct3D for rendering
 
 
-# windows/video.c: 220
+# windows/video.c: 222
 use DirectDraw for rendering
 
 
@@ -1574,55 +1570,55 @@ use DirectDraw for rendering
 use DirectX texture management
 
 
-# windows/config.c: 252
+# windows/config.c: 254
 use additional game artwork (sets default for specific options below)
 
 
-# windows/config.c: 253
+# windows/config.c: 255
 use backdrop artwork
 
 
-# windows/config.c: 255
+# windows/config.c: 257
 use bezel artwork
 
 
-# windows/config.c: 254
+# windows/config.c: 256
 use overlay artwork
 
 
-# windows/config.c: 243
+# windows/config.c: 245
 use samples
 
 
-# windows/config.c: 282
+# windows/config.c: 284
 use transparent background for UI text
 
 
-# windows/config.c: 245
+# windows/config.c: 247
 volume (range [-32,0])
 
 
-# windows/video.c: 217
+# windows/video.c: 219
 wait for vertical sync (reduces tearing)
 
 
-# windows/video.c: 262
+# windows/video.c: 264
 window background color
 
 
-# windows/video.c: 265
+# windows/video.c: 267
 window frame color (dark)
 
 
-# windows/video.c: 264
+# windows/video.c: 266
 window frame color (light)
 
 
-# windows/video.c: 263
+# windows/video.c: 265
 window frame color (medium)
 
 
-# windows/fronthlp.c: 75
+# windows/fronthlp.c: 77
 year, manufacturer and full name
 
 

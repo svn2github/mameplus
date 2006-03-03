@@ -29,6 +29,7 @@
  * bit 4=UFO 2                8.raw
  */
 #include "driver.h"
+#include "streams.h"
 #include "cpu/i8039/i8039.h"
 #include "machine/74123.h"
 #include "8080bw.h"

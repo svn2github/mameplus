@@ -886,7 +886,7 @@ void uifont_buildfont(int *rotcharwidth, int *rotcharheight)
 	uirotfont_sb = allocgfx(&layout1);
 	uirotfont_db = allocgfx(&layout2);
 	if (!uirotfont_sb || !uirotfont_db)
-		osd_die("Fatal error: could not allocate memory for UI font!");
+		fatalerror("Fatal error: could not allocate memory for UI font!");
 	decodegfx(uirotfont_sb, fontdata_sb, 0, uirotfont_sb->total_elements);
 	decodegfx(uirotfont_db, fontdata_db, 0, uirotfont_db->total_elements);
 

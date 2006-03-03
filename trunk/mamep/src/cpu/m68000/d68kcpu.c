@@ -816,7 +816,7 @@ static void check_stack(uint32 sp)
 	if (!old_sp)
 		old_sp = sp;
 	else if (old_sp != sp)
-		osd_die("%08x: wrong sp\n", REG68K_PC);
+		fatalerror("%08x: wrong sp", REG68K_PC);
 }
 
 void m68kdrc_flag_str_mark_dirty(char *str)
@@ -1079,7 +1079,7 @@ _resolve_link(&link_verify_ok);
 				_jmp_short_link(&link1);
 
 				if (drc->cache_top > m68kdrc_code_verify_end)
-					osd_die("%p: over flow\n", drc->cache_top);
+					fatalerror("%p: over flow", drc->cache_top);
 
 				drc->cache_top = m68kdrc_code_verify_end;
 				_resolve_link(&link1);
@@ -1089,7 +1089,7 @@ _resolve_link(&link_verify_ok);
 		}
 
 		if (drc->cache_top > m68kdrc_code_verify_end)
-			osd_die("%p: over flow\n", drc->cache_top);
+			fatalerror("%p: over flow", drc->cache_top);
 
 		drc->cache_top = save_top;
 	}
@@ -1131,7 +1131,7 @@ static uint32 recompile_instruction(drc_core *drc, uint32 pc)
 			pc += 2;
 		}
 
-		osd_die("\nExiting... %p\n", m68kdrc_instruction_compile_table[REG68K_IR]);
+		fatalerror("\nExiting... %p", m68kdrc_instruction_compile_table[REG68K_IR]);
 	}
 
 	if (m68kdrc_check_code_modify)
@@ -1178,7 +1178,7 @@ static uint32 compile_one(drc_core *drc, uint32 pc)
 
 	/* handle the results */		
 	if (!(result & RECOMPILE_SUCCESSFUL))
-		osd_die("Unimplemented op %08lx: %04x\n", pc, m68k_read_immediate_16(pc));
+		fatalerror("Unimplemented op %08lx: %04x", pc, m68k_read_immediate_16(pc));
 
 	pcdelta = (sint8)(result >> 24);
 	cycles = (uint8)(result >> 16);
@@ -1245,7 +1245,7 @@ static void m68kdrc_recompile(drc_core *drc)
 	drc_end_sequence(drc);
 
 	if (drc->cache_top >= drc->cache_end)
-		osd_die("M68K DRC: cache overflow!\n");
+		fatalerror("M68K DRC: cache overflow!");
 
 #ifdef LOG_COMPILE
 	printf("%06lx - %06x: %d bytes in %d instr (avg %d BPI), %d bytes available\n",

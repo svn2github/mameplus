@@ -1,6 +1,8 @@
 #include "osd_so.h"
 #include <stdio.h>
 #include <stdlib.h>
+#undef strdup
+#undef stricmp
 #include <string.h>
 
 struct ui_lang_info_t ui_lang_info[UI_LANG_MAX] =
@@ -54,9 +56,9 @@ int lang_find_langname(const char *name)
 
 	for (i = 0; i < UI_LANG_MAX; i++)
 	{
-		if (!mame_stricmp(ui_lang_info[i].name, name))
+		if (!stricmp(ui_lang_info[i].name, name))
 			return i;
-		if (!mame_stricmp(ui_lang_info[i].shortname, name))
+		if (!stricmp(ui_lang_info[i].shortname, name))
 			return i;
 	}
 

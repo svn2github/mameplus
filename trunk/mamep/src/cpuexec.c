@@ -222,6 +222,10 @@ static void end_interleave_boost(int param);
 static void compute_perfect_interleave(void);
 static void watchdog_setup(int alloc_new);
 
+/* CPU clock setting load/save */
+static void cpu_load(int config_type, xml_data_node *parentnode);
+static void cpu_save(int config_type, xml_data_node *parentnode);
+
 
 
 /*************************************
@@ -236,10 +240,6 @@ static void watchdog_setup(int alloc_new);
 #define WATCHDOG_IS_INVALID				-4
 #define WATCHDOG_IS_BEING_STARTED		-5
 
-
-/* CPU clock setting load/save */
-static void cpu_load(int config_type, xml_data_node *parentnode);
-static void cpu_save(int config_type, xml_data_node *parentnode);
 
 
 #if 0

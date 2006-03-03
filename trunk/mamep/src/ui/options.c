@@ -604,6 +604,7 @@ static struct rc_option rc_mamew_opts[] =
 	{ "snapshot_directory", NULL, rc_string, &settings.imgdir, "snap", 0, 0, NULL, "directory for screenshots (.png format)" },
 	{ "diff_directory", NULL, rc_string, &settings.diffdir, "diff", 0, 0, NULL, "directory for hard drive image difference files" },
 	{ "ctrlr_directory", NULL, rc_string, &settings.ctrlrdir, "ctrlr", 0, 0, NULL, "directory to save controller definitions" },
+	{ "comment_directory", NULL, rc_string, &settings.commentdir, "comment", 0, 0, NULL, "directory to save comment files" },
 #ifdef USE_IPS
 	{ "ips_directory", NULL, rc_string, &settings.patchdir, "ips", 0, 0, NULL, "directory for ips files" },
 #endif /* USE_IPS */
@@ -2037,6 +2038,19 @@ void SetDiffDir(const char* path)
 
 	if (path != NULL)
 		settings.diffdir = strdup(path);
+}
+
+const char* GetCommentDir(void)
+{
+	return settings.commentdir;
+}
+
+void SetCommentDir(const char* path)
+{
+	FreeIfAllocated(&settings.commentdir);
+
+	if (path != NULL)
+		settings.commentdir = strdup(path);
 }
 
 #ifdef USE_IPS
@@ -4362,7 +4376,7 @@ static int LanguageDecodeString(struct rc_option *option, const char *arg, int p
 	if (arg == NULL)
 		langcode = -1;
 	else
-		langcode = mame_stricmp(arg, "auto") ? lang_find_langname(arg) : -1;
+		langcode = stricmp(arg, "auto") ? lang_find_langname(arg) : -1;
 
 	SetLangcode(langcode);
 	FreeIfAllocated((char **)option->dest);

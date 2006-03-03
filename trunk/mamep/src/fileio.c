@@ -887,7 +887,7 @@ int mame_fputs(mame_file *f, const char *s)
     mame_vfprintf - vfprintf to a text file
 -------------------------------------------------*/
 
-static int mame_vfprintf(mame_file *f, const char *fmt, va_list va)
+int mame_vfprintf(mame_file *f, const char *fmt, va_list va)
 {
 	char buf[1024];
 	vsnprintf(buf, sizeof(buf), fmt, va);

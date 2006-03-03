@@ -502,7 +502,7 @@ BIOS missing
 Backdrops
 
 
-# ui/layout.c: 130
+# ui/layout.c: 131
 Background Images
 
 
@@ -1218,7 +1218,7 @@ Global vector options\nCustom options used by all games in the Vector
 Go to Microsoft's DirectX Web Page
 
 
-# ui/options.c: 299, 722 ui/win32ui.c: 665
+# ui/options.c: 299, 723 ui/win32ui.c: 665
 Grouped
 
 
@@ -1258,7 +1258,7 @@ How cheats work
 IPS Files
 
 
-# ui/layout.c: 129
+# ui/layout.c: 130
 Icons
 
 
@@ -1414,7 +1414,7 @@ MAME savestate files (*.sta)
 MAME32 has changed *.ini file directory.\n\nWould you like to migrate old configurations to the new directory?
 
 
-# ui/options.c: 4451
+# ui/options.c: 4465
 MAME32 has detected outdated configuration data.\n\nThe detected configuration data is from Version %s of MAME32.\nThe current version is %s. It is recommended that the\nconfiguration is set to the new defaults.\n\nWould you like to use the new configuration?
 
 
@@ -1430,7 +1430,7 @@ MAME32 will now reset the selected\n
 MNG files (*.mng)
 
 
-# ui/mame32.rc: 367, 391, 402, 434, 454, 476, 515, 534, 587, 633, 669, 743, 805, 875, 910, 937, 974, 999, 1016, 1078, 1116, 1144, 1159 ui/options.c: 734 ui/translate.c: 101
+# ui/mame32.rc: 367, 391, 402, 434, 454, 476, 515, 534, 587, 633, 669, 743, 805, 875, 910, 937, 974, 999, 1016, 1078, 1116, 1144, 1159 ui/options.c: 735 ui/translate.c: 101
 MS Sans Serif
 
 
@@ -1618,7 +1618,7 @@ Pedal
 Pedal device
 
 
-# ui/options.c: 3018 ui/win32ui.c: 820
+# ui/options.c: 3032 ui/win32ui.c: 820
 Play Time
 
 
@@ -1806,7 +1806,7 @@ Refresh game list
 Refresh:
 
 
-# ui/options.c: 1837
+# ui/options.c: 1838
 Reload configurations
 
 
@@ -2522,7 +2522,7 @@ Use various icon for Not Working game
 Use volume auto adjust
 
 
-# ui/layout.c: 71 ui/mame32.rc: 875 ui/options.c: 1144, 2954 ui/properties.c: 762 ui/treeview.c: 301 ui/win32ui.c: 5386
+# ui/layout.c: 71 ui/mame32.rc: 875 ui/options.c: 1145, 2968 ui/properties.c: 762 ui/treeview.c: 301 ui/win32ui.c: 5386
 Vector
 
 
@@ -2542,7 +2542,7 @@ Vector (V)
 Vector (V) %f Hz (%d:%d) (%d colors)
 
 
-# ui/options.c: 4465
+# ui/options.c: 4479
 Version Mismatch
 
 
@@ -2586,43 +2586,43 @@ Window frame (dark)
 Window frame (light)
 
 
-# ui/options.c: 741
+# ui/options.c: 742
 Windows UI specific GUI joystick options
 
 
-# ui/options.c: 756
+# ui/options.c: 757
 Windows UI specific GUI keyboard options
 
 
-# ui/options.c: 660
+# ui/options.c: 661
 Windows UI specific directory options
 
 
-# ui/options.c: 3260
+# ui/options.c: 3274
 Windows UI specific folder list filters options
 
 
-# ui/options.c: 795
+# ui/options.c: 796
 Windows UI specific folder list hide options
 
 
-# ui/options.c: 689
+# ui/options.c: 690
 Windows UI specific general options
 
 
-# ui/options.c: 732
+# ui/options.c: 733
 Windows UI specific list font options
 
 
-# ui/options.c: 721
+# ui/options.c: 722
 Windows UI specific list options
 
 
-# ui/options.c: 670
+# ui/options.c: 671
 Windows UI specific startup options
 
 
-# ui/options.c: 714
+# ui/options.c: 715
 Windows UI specific window position options
 
 
@@ -2674,7 +2674,7 @@ by &Type
 by &Year
 
 
-# ui/options.c: 3923, 3964, 4051, 4104, 4246 
+# ui/options.c: 3937, 3978, 4065, 4118, 4260 
 error invalid value for %s: %s\n
 
 

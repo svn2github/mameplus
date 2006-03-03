@@ -360,6 +360,7 @@ typedef struct
 	char*    artdir;
 	char*    imgdir;
 	char*    diffdir;
+	char*    commentdir;
 #ifdef USE_IPS
 	char*    patchdir;
 #endif /* USE_IPS */
@@ -628,6 +629,9 @@ void SetBgDir(const char *path);
 
 const char* GetCtrlrDir(void);
 void SetCtrlrDir(const char* path);
+
+const char* GetCommentDir(void);
+void SetCommentDir(const char* path);
 
 #ifdef USE_IPS
 const char *GetPatchDir(void);

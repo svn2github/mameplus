@@ -68,7 +68,7 @@ extern SHAREDOBJ_FUNC(void)   expand_machine_driver(void (*constructor)(machine_
 extern SHAREDOBJ_FUNC(int)    mame_validitychecks(void);
 extern SHAREDOBJ_FUNC(void)   begin_resource_tracking(void);
 extern SHAREDOBJ_FUNC(void)   end_resource_tracking(void);
-extern SHAREDOBJ_FUNC(void *) auto_malloc(size_t size);
+extern SHAREDOBJ_FUNC(void *) _auto_malloc(size_t size, const char *file, int line) ATTR_MALLOC;
 
 #include "osdepend.h"
 extern SHAREDOBJ_FUNC(void) logerror(const char *text,...);

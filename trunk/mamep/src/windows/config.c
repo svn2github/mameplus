@@ -509,11 +509,11 @@ int cli_frontend_init (int argc, char **argv)
 #ifdef MAMENAME
 	// if MAMENAME is defined as "mame", we can share settings between official and ours.
 	// so use MAMENAME, or we cannot use MAMENAME.ini.
-	cmd_name = strdup(MAMENAME);
+	cmd_name = mame_strdup(MAMENAME);
 #else
 	cmd_name = win_strip_extension(win_basename(argv[0]));
 #endif
-	assert_always(cmd_name != NULL, "Who am I? cannot determine the name I was called with");
+	assert_always(cmd_name != NULL, _WINDOWS("Who am I? cannot determine the name I was called with"));
 
 	sprintf (buffer, "%s.ini", cmd_name);
 
@@ -562,7 +562,7 @@ int cli_frontend_init (int argc, char **argv)
 	/* handle playback */
 	if (playbackname != NULL)
 	{
-        options.playback = mame_fopen(playbackname,0,FILETYPE_INPUTLOG,0);
+		options.playback = mame_fopen(playbackname,0,FILETYPE_INPUTLOG,0);
 		assert_always(options.playback != NULL, _WINDOWS("Failed to open file for playback"));
 #ifdef INP_CAPTION
 		options.caption = mame_fopen(playbackname,0,FILETYPE_INPCAPTION,0);
@@ -871,7 +871,7 @@ static int config_handle_arg(char *arg)
 		/* call rand() once to get away from the seed */
 		rand();
 		game_index = rand() % i;
-		gamename = strdup(drivers[game_index]->name);
+		gamename = mame_strdup(drivers[game_index]->name);
 
 		/* make sure that we prompt the driver name */
 		prompt_driver_name = TRUE;

@@ -5,7 +5,7 @@
 	J. Buchmueller, November '99
 ****************************************************************************/
 
-#include "vidhrdw/generic.h"
+#include "driver.h"
 #include "cpu/gensync/gensync.h"
 #include "vidhrdw/pong.h"
 
