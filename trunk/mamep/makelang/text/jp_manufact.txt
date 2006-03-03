@@ -306,7 +306,7 @@ Make Software
 Mega
 メガエンタープライズ
 
-# Pang Poms
+# Gekitoride-Jong Space (10011 Ver.A)
 Metro
 メトロ
 
@@ -1750,7 +1750,7 @@ Status Games
 Subelectro
 
 
-# Penguin Brothers (Japan)
+# Crazy Fight
 Subsino
 
 
