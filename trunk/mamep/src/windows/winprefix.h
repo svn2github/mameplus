@@ -30,3 +30,8 @@ void* realloc_file_line(void *memory, size_t size, const char *file, int line);
 // missing math constants
 #define PI				3.1415927
 #define M_PI			PI
+
+#ifdef _MSC_VER
+#define vsnprintf _vsnprintf
+#include <malloc.h>
+#endif /* _MSC_VER */

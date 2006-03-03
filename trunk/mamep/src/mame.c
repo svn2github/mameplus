@@ -83,6 +83,7 @@
 #include "debug/debugcon.h"
 #endif
 
+#include <stdio.h>
 #include <ctype.h>
 #include <stdarg.h>
 #include <setjmp.h>
@@ -244,7 +245,7 @@ int run_game(int game)
 
 			/* initialize the UI and display the startup screens */
 			if (ui_init(!settingsloaded && !options.skip_disclaimer, !options.skip_warnings, !options.skip_gameinfo) != 0)
-				fatalerror("User cancelled");
+				fatalerror(_("User cancelled"));
 
 			/* ensure we don't show the opening screens on a reset */
 			options.skip_disclaimer = options.skip_warnings = options.skip_gameinfo = TRUE;

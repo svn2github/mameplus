@@ -430,7 +430,7 @@ static void ptm6840_t3_timeout(int which)
 
   if ( p->intf )
   {
-	if ( p->intf->out3_func ) p->intf->out3_func(0, p->output[3]);
+	if ( p->intf->out3_func ) p->intf->out3_func(0, p->output[2]);
   }
 }
 

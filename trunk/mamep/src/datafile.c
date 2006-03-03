@@ -637,6 +637,7 @@ static const char *stat_newgames[] =
 #include "osd_cpu.h"
 #include "driver.h"
 #include "datafile.h"
+#include "hash.h"
 
 
 /****************************************************************************

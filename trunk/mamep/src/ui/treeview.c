@@ -37,6 +37,7 @@
 #include <io.h>
 #include "MAME32.h"	// include this first
 #include "driver.h"
+#include "hash.h"
 #include "M32Util.h"
 #include "bitmask.h"
 #include "screenshot.h"

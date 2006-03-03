@@ -1,5 +1,6 @@
 #include "driver.h"
 #include "patch.h"
+#include "hash.h"
 
 
 #define UTF8_SIGNATURE	"\xef\xbb\xbf"
