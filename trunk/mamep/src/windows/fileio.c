@@ -274,7 +274,7 @@ static char *copy_and_expand_variables(const char *path, int len)
 
 	/* allocate a string of the appropriate length */
 	result = malloc(length + 1);
-	assert_always(result != NULL, "Out of memory in variable expansion!");
+	assert_always(result != NULL, _WINDOWS("Out of memory in variable expansion!"));
 
 	/* now actually generate the string */
 	for (src = path, dst = result; src < path + len; )
@@ -343,7 +343,7 @@ static void expand_pathlist(pathdata *list)
 	{
 		// allocate space for the new pointer
 		list->path = realloc((void *)list->path, (list->pathcount + 1) * sizeof(char *));
-		assert_always(list->path != NULL, "Out of memory!");
+		assert_always(list->path != NULL, _WINDOWS("Out of memory!"));
 
 		// copy the path in
 		list->path[list->pathcount++] = copy_and_expand_variables(rawpath, token - rawpath);

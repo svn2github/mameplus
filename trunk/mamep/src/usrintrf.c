@@ -4374,6 +4374,10 @@ int ui_display_game_info(mame_bitmap *bitmap)
 		render_ui(bitmap);
 		update_video_and_audio();
 
+		/* allow cancelling */
+		if (input_ui_pressed(IPT_UI_CANCEL))
+			return 1;
+
 		res = ui_window_scroll_keys();
 	} while (res <= 0 && !mame_is_scheduled_event_pending());
 
@@ -4407,6 +4411,10 @@ int ui_display_game_info(mame_bitmap *bitmap)
 		/* render and update */
 		render_ui(bitmap);
 		update_video_and_audio();
+
+		/* allow cancelling */
+		if (input_ui_pressed(IPT_UI_CANCEL))
+			return 1;
 
 		res = ui_window_scroll_keys();
 	} while (res <= 0 && !mame_is_scheduled_event_pending());

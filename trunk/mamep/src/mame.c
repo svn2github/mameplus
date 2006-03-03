@@ -627,7 +627,7 @@ INLINE void auto_malloc_add(void *result)
 		/* realloc the list */
 		list = realloc(malloc_list, malloc_list_size * sizeof(list[0]));
 		if (list == NULL)
-			fatalerror("Unable to extend malloc tracking array to %d slots", malloc_list_size);
+			fatalerror(_("Unable to extend malloc tracking array to %d slots"), malloc_list_size);
 		malloc_list = list;
 	}
 	malloc_list[malloc_list_index++] = result;
@@ -776,7 +776,7 @@ void *_malloc_or_die(size_t size, const char *file, int line)
 
 	/* fail on attempted allocations of 0 */
 	if (size == 0)
-		fatalerror("Attempted to malloc zero bytes (%s:%d)", file, line);
+		fatalerror(_("Attempted to malloc zero bytes (%s:%d)"), file, line);
 
 	/* allocate and return if we succeeded */
 	result = malloc(size);
@@ -784,7 +784,7 @@ void *_malloc_or_die(size_t size, const char *file, int line)
 		return result;
 
 	/* otherwise, die horribly */
-	fatalerror("Failed to allocate %d bytes (%s:%d)", size, file, line);
+	fatalerror(_("Failed to allocate %d bytes (%s:%d)"), size, file, line);
 }
 
 
@@ -1189,7 +1189,7 @@ static int handle_save(void)
 		/* if more than a second has passed, we're probably screwed */
 		if (sub_mame_times(mame_timer_get_time(), saveload_schedule_time).seconds > 0)
 		{
-			ui_popup("Unable to save due to pending anonymous timers. See error.log for details.");
+			ui_popup(_("Unable to save due to pending anonymous timers. See error.log for details."));
 			goto cancel;
 		}
 		return TRUE;
@@ -1204,7 +1204,7 @@ static int handle_save(void)
 		/* write the save state */
 		if (state_save_save_begin(file) != 0)
 		{
-			ui_popup("Error: Unable to save state due to illegal registrations. See error.log for details.");
+			ui_popup(_("Error: Unable to save state due to illegal registrations. See error.log for details."));
 			mame_fclose(file);
 			goto cancel;
 		}
@@ -1236,12 +1236,12 @@ static int handle_save(void)
 
 		/* pop a warning if the game doesn't support saves */
 		if (!(Machine->gamedrv->flags & GAME_SUPPORTS_SAVE))
-			ui_popup("State successfully saved.\nWarning: Save states are not officially supported for this game.");
+			ui_popup(_("State successfully saved.\nWarning: Save states are not officially supported for this game."));
 		else
-			ui_popup("State successfully saved.");
+			ui_popup(_("State successfully saved."));
 	}
 	else
-		ui_popup("Error: Failed to save state");
+		ui_popup(_("Error: Failed to save state"));
 
 cancel:
 	/* unschedule the save */
@@ -1271,7 +1271,7 @@ static int handle_load(void)
 		/* if more than a second has passed, we're probably screwed */
 		if (sub_mame_times(mame_timer_get_time(), saveload_schedule_time).seconds > 0)
 		{
-			ui_popup("Unable to load due to pending anonymous timers. See error.log for details.");
+			ui_popup(_("Unable to load due to pending anonymous timers. See error.log for details."));
 			goto cancel;
 		}
 		return TRUE;
@@ -1312,14 +1312,14 @@ static int handle_load(void)
 
 			/* finish and close */
 			state_save_load_finish();
-			ui_popup("State successfully loaded.");
+			ui_popup(_("State successfully loaded."));
 		}
 		else
-			ui_popup("Error: Failed to load state");
+			ui_popup(_("Error: Failed to load state"));
 		mame_fclose(file);
 	}
 	else
-		ui_popup("Error: Failed to load state");
+		ui_popup(_("Error: Failed to load state"));
 
 cancel:
 	/* unschedule the load */
