@@ -75,14 +75,6 @@
 #ifndef __PALETTE_H__
 #define __PALETTE_H__
 
-#ifdef UI_COLOR_DISPLAY
-#define USE_PALETTE_MAP
-#else /* UI_COLOR_DISPLAY */
-#ifdef TRANS_UI
-#define USE_PALETTE_MAP
-#endif /* TRANS_UI */
-#endif /* UI_COLOR_DISPLAY */
-
 #include "memory.h"
 
 /*-------------------------------------------------
@@ -94,6 +86,14 @@
 
 #define PALETTE_DEFAULT_SHADOW_FACTOR32 (0.6)
 #define PALETTE_DEFAULT_HIGHLIGHT_FACTOR32 (1/PALETTE_DEFAULT_SHADOW_FACTOR32)
+
+#ifdef UI_COLOR_DISPLAY
+#define USE_PALETTE_MAP
+#else /* UI_COLOR_DISPLAY */
+#ifdef TRANS_UI
+#define USE_PALETTE_MAP
+#endif /* TRANS_UI */
+#endif /* UI_COLOR_DISPLAY */
 
 
 

@@ -388,14 +388,14 @@ static int display_rom_load_results(rom_load_data *romdata)
 	/* if we had errors, they are fatal */
 	if (romdata->errors)
 	{
-		strcat(romdata->errorbuf, _("ERROR: required files are missing, the game cannot be run.\n"));
-		fatalerror(romdata->errorbuf);
+		strcat(romdata->errorbuf, _("ERROR: required files are missing, the game cannot be run."));
+		fatalerror("%s", romdata->errorbuf);
 	}
 
 	/* if we had warnings, output them, but continue */
 	if (romdata->warnings)
 	{
-		strcat(romdata->errorbuf, _("WARNING: the game might not run correctly.\n"));
+		strcat(romdata->errorbuf, _("WARNING: the game might not run correctly."));
 		printf("%s\n", romdata->errorbuf);
 	}
 

@@ -122,7 +122,7 @@ struct _axis_history
 //  GLOBAL VARIABLES
 //============================================================
 
-UINT8						win_trying_to_quit;
+//int							win_use_mouse;
 
 
 

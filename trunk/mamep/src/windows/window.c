@@ -457,10 +457,14 @@ INLINE void get_work_area(RECT *maximum)
 
 int win_init_window(void)
 {
-	static int classes_created = 0;
+	static int classes_created = FALSE;
 	WCHAR title[256];
 	char buf[256];
 	HMENU menu = NULL;
+
+	// if we already have a window, just leave it alone
+	if (win_video_window)
+		return 0;
 
 #ifdef MAME_DEBUG
 	// if we are in debug mode, never go full screen

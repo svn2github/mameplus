@@ -212,32 +212,73 @@ static int handle_load(void);
 
 int run_game(int game)
 {
+	callback_item *cb;
+	int error = 0;
+
 	/* perform validity checks before anything else */
 	if (mame_validitychecks() != 0)
 		return 1;
 
-	/* use setjmp/longjmp for deep error recovery */
-	if (setjmp(fatal_error_jmpbuf) == 0)
+	/* loop across multiple hard resets */
+	exit_pending = FALSE;
+	while (error == 0 && !exit_pending)
 	{
-		int settingsloaded;
-
-		/* start tracking resources for real */
-		begin_resource_tracking();
-
-		/* create the Machine structure and driver */
-		create_machine(game);
-
-		/* then finish setting up our local machine */
-		init_machine();
-
-		/* load the configuration settings and NVRAM */
-		settingsloaded = config_load_settings();
-		nvram_load();
-
-		/* initialize the UI and display the startup screens */
-		if (ui_init(!settingsloaded && !options.skip_disclaimer, !options.skip_warnings, !options.skip_gameinfo) == 0)
+		/* use setjmp/longjmp for deep error recovery */
+		error = setjmp(fatal_error_jmpbuf);
+		if (error == 0)
 		{
-			cpu_run();
+			int settingsloaded;
+
+			/* start tracking resources for real */
+			begin_resource_tracking();
+
+			/* create the Machine structure and driver */
+			create_machine(game);
+
+			/* then finish setting up our local machine */
+			init_machine();
+
+			/* load the configuration settings and NVRAM */
+			settingsloaded = config_load_settings();
+			nvram_load();
+
+			/* initialize the UI and display the startup screens */
+			if (ui_init(!settingsloaded && !options.skip_disclaimer, !options.skip_warnings, !options.skip_gameinfo) != 0)
+				fatalerror("User cancelled");
+
+			/* ensure we don't show the opening screens on a reset */
+			options.skip_disclaimer = options.skip_warnings = options.skip_gameinfo = TRUE;
+
+			/* start resource tracking; note that soft_reset assumes it can */
+			/* call end_resource_tracking followed by begin_resource_tracking */
+			/* to clear out resources allocated between resets */
+			begin_resource_tracking();
+
+			/* perform a soft reset */
+			soft_reset(0);
+
+			/* run the CPUs until a reset or exit */
+			hard_reset_pending = FALSE;
+			while ((!hard_reset_pending && !exit_pending) || saveload_pending_file != NULL)
+			{
+				profiler_mark(PROFILER_EXTRA);
+
+				/* execute CPUs if not paused */
+				if (!mame_paused)
+					cpu_timeslice();
+
+				/* otherwise, just pump video updates through */
+				else
+				{
+					updatescreen();
+					reset_partial_updates();
+				}
+
+				profiler_mark(PROFILER_END);
+			}
+
+			/* stop tracking resources at this level */
+			end_resource_tracking();
 
 			/* save the NVRAM and configuration */
 			nvram_save();
@@ -245,38 +286,22 @@ int run_game(int game)
 			config_save_settings();
 		}
 
-		/* clean up and stop tracking resources */
-		call_and_free_exit_callbacks();
-		end_resource_tracking();
-
-		return 0;
-	}
-
-	/* error case: clean up */
-	else
-	{
 		/* call all exit callbacks registered */
-		call_and_free_exit_callbacks();
+		for (cb = exit_callback_list; cb; cb = cb->next)
+			(*cb->func.exit)();
 
 		/* close all inner resource tracking */
-		while (get_resource_tag() != 0)
+		while (resource_tracking_tag != 0)
 			end_resource_tracking();
 
-		/* return an error */
-		return 1;
+		/* free our callback lists */
+		free_callback_list(&exit_callback_list);
+		free_callback_list(&reset_callback_list);
+		free_callback_list(&pause_callback_list);
 	}
-}
 
-
-/*-------------------------------------------------
-    fatalerror - print a message and escape back
-    to the caller
--------------------------------------------------*/
-
-void fatalerror(const char *message)
-{
-	printf("%s\n", message);
-	longjmp(fatal_error_jmpbuf, 1);
+	/* return an error */
+	return error;
 }
 
 
@@ -287,138 +312,162 @@ void fatalerror(const char *message)
 
 void add_exit_callback(void (*callback)(void))
 {
-	exit_callback *cb;
+	callback_item *cb;
 
 	/* allocate memory */
-	cb = malloc(sizeof(*cb));
-	if (!cb)
-		fatalerror("Out of memory for callbacks");
+	cb = malloc_or_die(sizeof(*cb));
 
-	/* add us into the list */
-	cb->callback = callback;
+	/* add us to the head of the list */
+	cb->func.exit = callback;
 	cb->next = exit_callback_list;
 	exit_callback_list = cb;
 }
 
 
 /*-------------------------------------------------
-    call_and_free_exit_callbacks - call all the
-    exit callbacks and free them along the way
+    add_reset_callback - request a callback on
+    reset
 -------------------------------------------------*/
 
-static void call_and_free_exit_callbacks(void)
+void add_reset_callback(void (*callback)(void))
 {
-	while (exit_callback_list != NULL)
-	{
-		exit_callback *cb = exit_callback_list;
+	callback_item *cb, **cur;
 
-		/* remove us from the list */
-		exit_callback_list = exit_callback_list->next;
+	/* allocate memory */
+	cb = malloc_or_die(sizeof(*cb));
 
-		/* call the callback and free ourselves */
-		(*cb->callback)();
-		free(cb);
-	}
+	/* add us to the end of the list */
+	cb->func.reset = callback;
+	cb->next = NULL;
+	for (cur = &reset_callback_list; *cur; cur = &(*cur)->next) ;
+	*cur = cb;
 }
 
 
 /*-------------------------------------------------
-    init_machine - initialize the emulated machine
+    add_pause_callback - request a callback on
+    pause
 -------------------------------------------------*/
 
-static void init_machine(void)
+void add_pause_callback(void (*callback)(int))
 {
-	int num;
+	callback_item *cb, **cur;
 
-	/* initialize basic can't-fail systems here */
-	cpuintrf_init();
-	sndintrf_init();
-	fileio_init();
-	config_init();
-	state_init();
-	drawgfx_init();
-	generic_machine_init();
-	generic_video_init();
-	memcard_init();
+	/* allocate memory */
+	cb = malloc_or_die(sizeof(*cb));
 
-	/* init the osd layer */
-	if (osd_init() != 0)
-		fatalerror("osd_init failed");
-
-	/* initialize the input system */
-	/* this must be done before the input ports are initialized */
-	if (code_init() != 0)
-		fatalerror("code_init failed");
-
-	/* initialize the input ports for the game */
-	/* this must be done before memory_init in order to allow specifying */
-	/* callbacks based on input port tags */
-	if (input_port_init(Machine->gamedrv->construct_ipt) != 0)
-		fatalerror("input_port_init failed");
-
-	/* load the ROMs if we have some */
-	/* this must be done before memory_init in order to allocate memory regions */
-	if (rom_init(Machine->gamedrv->rom) != 0)
-		fatalerror("rom_init failed");
-
-	/* allow save state registrations starting here */
-	state_save_allow_registration(TRUE);
-
-	/* initialize the timers */
-	/* this must be done before cpu_init so that CPU's can allocate timers */
-	timer_init();
-
-	/* initialize the memory system for this game */
-	/* this must be done before cpu_init so that set_context can look up the opcode base */
-	if (memory_init() != 0)
-		fatalerror("memory_init failed");
-
-	/* now set up all the CPUs */
-	if (cpu_init() != 0)
-		fatalerror("cpu_init failed");
-
-#ifdef MESS
-	/* initialize the devices */
-	if (devices_init(Machine->gamedrv))
-		fatalerror("devices_init failed");
-#endif
-
-	/* start the cheat engine */
-	if (options.cheat)
-		cheat_init();
-
-	/* start the hiscore system -- remove me */
-	hiscore_init(Machine->gamedrv->name);
-
-	/* call the game driver's init function */
-	/* this is where decryption is done and memory maps are altered */
-	/* so this location in the init order is important */
-	if (Machine->gamedrv->driver_init != NULL)
-		(*Machine->gamedrv->driver_init)();
-
-	/* start the audio system */
-	if (sound_init() != 0)
-		fatalerror("sound_init failed");
-
-	/* start the video hardware */
-	if (video_init() != 0)
-		fatalerror("video_init failed");
-
-	/* call the driver's _START callbacks */
-	run_start_callbacks();
-
-	/* free memory regions allocated with REGIONFLAG_DISPOSE (typically gfx roms) */
-	for (num = 0; num < MAX_MEMORY_REGIONS; num++)
-		if (mem_region[num].flags & ROMREGION_DISPOSE)
-			free_memory_region(num);
-
-#ifdef MAME_DEBUG
-	/* initialize the debugger */
-	if (Machine->debug_mode)
-		mame_debug_init();
-#endif
+	/* add us to the end of the list */
+	cb->func.pause = callback;
+	cb->next = NULL;
+	for (cur = &pause_callback_list; *cur; cur = &(*cur)->next) ;
+	*cur = cb;
 }
 
+
+
+/***************************************************************************
+
+    Global System States
+
+***************************************************************************/
+
+/*-------------------------------------------------
+    mame_schedule_exit - schedule a clean exit
+-------------------------------------------------*/
+
+void mame_schedule_exit(void)
+{
+	exit_pending = TRUE;
+
+	/* if we're autosaving on exit, schedule a save as well */
+	if (options.auto_save && (Machine->gamedrv->flags & GAME_SUPPORTS_SAVE))
+		mame_schedule_save(Machine->gamedrv->name);
+}
+
+
+/*-------------------------------------------------
+    mame_schedule_hard_reset - schedule a hard-
+    reset of the system
+-------------------------------------------------*/
+
+void mame_schedule_hard_reset(void)
+{
+	hard_reset_pending = TRUE;
+}
+
+
+/*-------------------------------------------------
+    mame_schedule_soft_reset - schedule a soft-
+    reset of the system
+-------------------------------------------------*/
+
+void mame_schedule_soft_reset(void)
+{
+	mame_timer_set(time_zero, 0, soft_reset);
+}
+
+
+/*-------------------------------------------------
+    mame_schedule_save - schedule a save to
+    occur as soon as possible
+-------------------------------------------------*/
+
+void mame_schedule_save(const char *filename)
+{
+	/* can't do it if we don't yet have a timer */
+	if (saveload_timer == NULL)
+		return;
+
+	/* free any existing request and allocate a copy of the requested name */
+	if (saveload_pending_file != NULL)
+		free(saveload_pending_file);
+	saveload_pending_file = mame_strdup(filename);
+
+	/* note the start time and set a timer for the next timeslice to actually schedule it */
+	saveload_schedule_time = mame_timer_get_time();
+	mame_timer_adjust(saveload_timer, time_zero, TRUE, time_zero);
+
+	/* we can't be paused since we need to clear out anonymous timers */
+	mame_pause(FALSE);
+}
+
+
+/*-------------------------------------------------
+    mame_schedule_load - schedule a load to
+    occur as soon as possible
+-------------------------------------------------*/
+
+void mame_schedule_load(const char *filename)
+{
+	/* can't do it if we don't yet have a timer */
+	if (saveload_timer == NULL)
+		return;
+
+	/* free any existing request and allocate a copy of the requested name */
+	if (saveload_pending_file != NULL)
+		free(saveload_pending_file);
+	saveload_pending_file = mame_strdup(filename);
+
+	/* note the start time and set a timer for the next timeslice to actually schedule it */
+	saveload_schedule_time = mame_timer_get_time();
+	mame_timer_adjust(saveload_timer, time_zero, FALSE, time_zero);
+
+	/* we can't be paused since we need to clear out anonymous timers */
+	mame_pause(FALSE);
+}
+
+
+/*-------------------------------------------------
+    mame_is_scheduled_event_pending - is a
+    scheduled event pending?
+-------------------------------------------------*/
+
+int mame_is_scheduled_event_pending(void)
+{
+	/* we can't check for saveload_pending_file here because it will bypass */
+	/* required UI screens if a state is queued from the command line */
+	return exit_pending || hard_reset_pending;
+}
 
 
 /*-------------------------------------------------
@@ -427,159 +476,26 @@ static void init_machine(void)
 
 void mame_pause(int pause)
 {
+	callback_item *cb;
+
+	/* ignore if nothing has changed */
+	if (mame_paused == pause)
+		return;
 	mame_paused = pause;
-	cpu_pause(pause);
-	osd_pause(pause);
-	osd_sound_enable(!pause);
-	palette_set_global_brightness_adjust(pause ? options.pause_bright : 1.00);
-	schedule_full_refresh();
+
+	/* call all registered pause callbacks */
+	for (cb = pause_callback_list; cb; cb = cb->next)
+		(*cb->func.pause)(mame_paused);
 }
 
+
+/*-------------------------------------------------
+    mame_is_paused - the system paused?
+-------------------------------------------------*/
 
 int mame_is_paused(void)
 {
 	return mame_paused;
-}
-
-
-
-/*-------------------------------------------------
-    run_start_callbacks - execute the various
-    _START() callbacks, and register the stop
-    callbacks
--------------------------------------------------*/
-
-static void run_start_callbacks(void)
-{
-	if (Machine->drv->machine_start != NULL && (*Machine->drv->machine_start)() != 0)
-		fatalerror(_("Unable to start machine emulation"));
-	if (Machine->drv->sound_start != NULL && (*Machine->drv->sound_start)() != 0)
-		fatalerror(_("Unable to start sound emulation"));
-	if (Machine->drv->video_start != NULL && (*Machine->drv->video_start)() != 0)
-		fatalerror(_("Unable to start video emulation"));
-}
-
-
-
-/*-------------------------------------------------
-    create_machine - create the running machine
-    object and initialize it based on options
--------------------------------------------------*/
-
-static void create_machine(int game)
-{
-	/* first give the machine a good cleaning */
-	memset(Machine, 0, sizeof(*Machine));
-
-	/* initialize the driver-related variables in the Machine */
-	Machine->gamedrv = drivers[game];
-	Machine->drv = &internal_drv;
-	expand_machine_driver(Machine->gamedrv->drv, &internal_drv);
-	Machine->refresh_rate = Machine->drv->frames_per_second;
-
-	/* copy some settings into easier-to-handle variables */
-	Machine->record_file = options.record;
-	Machine->playback_file = options.playback;
-	Machine->debug_mode = options.mame_debug;
-
-	/* determine the color depth */
-	Machine->color_depth = 16;
-	if (Machine->drv->video_attributes & VIDEO_RGB_DIRECT)
-		Machine->color_depth = (Machine->drv->video_attributes & VIDEO_NEEDS_6BITS_PER_GUN) ? 32 : 15;
-
-	/* update the vector width/height with defaults */
-	if (options.vector_width == 0)
-		options.vector_width = 640;
-	if (options.vector_height == 0)
-		options.vector_height = 480;
-
-	/* initialize the samplerate */
-	Machine->sample_rate = options.samplerate;
-
-	/* get orientation right */
-	Machine->ui_orientation = options.ui_orientation;
-
-#if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-  /* ks hcmame s switch m68k core */
-	{
-		static const char *names[] = { "C", "DRC", "ASM" };
-		int cpunum, type;
-		for (cpunum = 0; cpunum < MAX_CPU; cpunum++)
-		{
-			type = internal_drv.cpu[cpunum].cpu_type;
-#if (HAS_M68000)
-			if(type == CPU_M68000)
-			{
-				internal_drv.cpu[cpunum].cpu_type += options.m68k_core;
-				logerror("cpu[%d]: M68000 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68000]);
-				//printf  ("cpu[%d]: M68000 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68000]);
-			}
-#endif
-#if (HAS_M68008)
-			if(type == CPU_M68008)
-			{
-				internal_drv.cpu[cpunum].cpu_type += options.m68k_core;
-				logerror("cpu[%d]: M68008 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68008]);
-				//printf  ("cpu[%d]: M68008 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68008]);
-			}
-#endif
-#if (HAS_M68010)
-			if(type == CPU_M68010)
-			{
-				internal_drv.cpu[cpunum].cpu_type += options.m68k_core;
-				logerror("cpu[%d]: M68010 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68010]);
-				//printf  ("cpu[%d]: M68010 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68010]);
-			}
-#endif
-#if (HAS_M68EC020)
-			if(type == CPU_M68EC020)
-			{
-				if (options.m68k_core)
-					// ASM core is disabled
-					internal_drv.cpu[cpunum].cpu_type = CPU_M68EC020DRC;
-
-				logerror("cpu[%d]: M68EC020 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68EC020]);
-				//printf  ("cpu[%d]: M68EC020 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68EC020]);
-			}
-#endif
-#if (HAS_M68020)
-			if(type == CPU_M68020)
-			{
-				if (options.m68k_core)
-					// ASM core is disabled
-					internal_drv.cpu[cpunum].cpu_type = CPU_M68020DRC;
-
-				logerror("cpu[%d]: M68020 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68020]);
-				//printf  ("cpu[%d]: M68020 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68020]);
-			}
-#endif
-#if (HAS_M68040)
-			if(type == CPU_M68040)
-			{
-				if (options.m68k_core)
-					// ASM core is disabled
-					internal_drv.cpu[cpunum].cpu_type = CPU_M68040DRC;
-
-				logerror("cpu[%d]: M68040 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68040]);
-				//printf  ("cpu[%d]: M68040 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68040]);
-			}
-#endif
-		}
-	}
-#endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
-
-	/* if we're coming in with a savegame request, process it now */
-	if (options.savegame)
-	{
-		if (strlen(options.savegame) == 1)
-			cpu_loadsave_schedule(LOADSAVE_LOAD, options.savegame[0]);
-		else
-			cpu_loadsave_schedule_file(LOADSAVE_LOAD, options.savegame);
-	}
-	else if (options.auto_save && (Machine->gamedrv->flags & GAME_SUPPORTS_SAVE))
-		cpu_loadsave_schedule_file(LOADSAVE_LOAD, Machine->gamedrv->name);
-	else
-		cpu_loadsave_reset();
 }
 
 
@@ -1055,11 +971,11 @@ static void init_machine(void)
 
 	/* call the driver's _START callbacks */
 	if (Machine->drv->machine_start != NULL && (*Machine->drv->machine_start)() != 0)
-		fatalerror("Unable to start machine emulation");
+		fatalerror(_("Unable to start machine emulation"));
 	if (Machine->drv->sound_start != NULL && (*Machine->drv->sound_start)() != 0)
-		fatalerror("Unable to start sound emulation");
+		fatalerror(_("Unable to start sound emulation"));
 	if (Machine->drv->video_start != NULL && (*Machine->drv->video_start)() != 0)
-		fatalerror("Unable to start video emulation");
+		fatalerror(_("Unable to start video emulation"));
 
 	/* free memory regions allocated with REGIONFLAG_DISPOSE (typically gfx roms) */
 	for (num = 0; num < MAX_MEMORY_REGIONS; num++)
@@ -1144,6 +1060,75 @@ static void saveload_init(void)
 {
 	/* allocate a timer */
 	saveload_timer = timer_alloc(saveload_attempt);
+
+#if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
+  /* ks hcmame s switch m68k core */
+	{
+		static const char *names[] = { "C", "DRC", "ASM" };
+		int cpunum, type;
+		for (cpunum = 0; cpunum < MAX_CPU; cpunum++)
+		{
+			type = internal_drv.cpu[cpunum].cpu_type;
+#if (HAS_M68000)
+			if(type == CPU_M68000)
+			{
+				internal_drv.cpu[cpunum].cpu_type += options.m68k_core;
+				logerror("cpu[%d]: M68000 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68000]);
+				//printf  ("cpu[%d]: M68000 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68000]);
+			}
+#endif
+#if (HAS_M68008)
+			if(type == CPU_M68008)
+			{
+				internal_drv.cpu[cpunum].cpu_type += options.m68k_core;
+				logerror("cpu[%d]: M68008 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68008]);
+				//printf  ("cpu[%d]: M68008 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68008]);
+			}
+#endif
+#if (HAS_M68010)
+			if(type == CPU_M68010)
+			{
+				internal_drv.cpu[cpunum].cpu_type += options.m68k_core;
+				logerror("cpu[%d]: M68010 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68010]);
+				//printf  ("cpu[%d]: M68010 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68010]);
+			}
+#endif
+#if (HAS_M68EC020)
+			if(type == CPU_M68EC020)
+			{
+				if (options.m68k_core)
+					// ASM core is disabled
+					internal_drv.cpu[cpunum].cpu_type = CPU_M68EC020DRC;
+
+				logerror("cpu[%d]: M68EC020 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68EC020]);
+				//printf  ("cpu[%d]: M68EC020 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68EC020]);
+			}
+#endif
+#if (HAS_M68020)
+			if(type == CPU_M68020)
+			{
+				if (options.m68k_core)
+					// ASM core is disabled
+					internal_drv.cpu[cpunum].cpu_type = CPU_M68020DRC;
+
+				logerror("cpu[%d]: M68020 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68020]);
+				//printf  ("cpu[%d]: M68020 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68020]);
+			}
+#endif
+#if (HAS_M68040)
+			if(type == CPU_M68040)
+			{
+				if (options.m68k_core)
+					// ASM core is disabled
+					internal_drv.cpu[cpunum].cpu_type = CPU_M68040DRC;
+
+				logerror("cpu[%d]: M68040 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68040]);
+				//printf  ("cpu[%d]: M68040 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68040]);
+			}
+#endif
+		}
+	}
+#endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 
 	/* if we're coming in with a savegame request, process it now */
 	if (options.savegame)

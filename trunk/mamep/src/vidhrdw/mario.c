@@ -7,10 +7,9 @@
 ***************************************************************************/
 
 #include "driver.h"
-#include "vidhrdw/generic.h"
 #include "state.h"
 
-static int gfx_bank, palette_bank;
+static UINT8 gfx_bank, palette_bank;
 
 static tilemap *bg_tilemap;
 

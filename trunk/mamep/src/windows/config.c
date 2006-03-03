@@ -37,6 +37,7 @@
 #include <windows.h>
 #include <winnt.h>
 #include <mmsystem.h>
+#include "osdepend.h"
 #include "driver.h"
 #include "rc.h"
 #include "misc.h"
@@ -484,30 +485,25 @@ int cli_frontend_init (int argc, char **argv)
 	machine_config drv;
 	char buffer[128];
 	char *cmd_name;
-	int i;
+	int i, result;
 
 	gamename = NULL;
 	gamepath = NULL;
 	game_index = -1;
 
 	/* clear all core options */
-	memset(&options,0,sizeof(options));
+	memset(&options, 0, sizeof(options));
 
 	/* create the rc object */
 	rc = cli_rc_create();
-	if (!rc)
-	{
-		osd_die (_WINDOWS("error on rc creation\n"));
-	}
+	assert_always(rc != NULL, _WINDOWS("Error on rc creation"));
 
 	/* parse the commandline */
 	got_gamename = FALSE;
 	prompt_driver_name = FALSE;
 
-	if (rc_parse_commandline(rc, argc, argv, 2, config_handle_arg))
-	{
-		osd_die (_WINDOWS("error while parsing cmdline\n"));
-	}
+	result = rc_parse_commandline(rc, argc, argv, 2, config_handle_arg);
+	assert_always(result == 0, _WINDOWS("Error while parsing cmdline"));
 
 	/* determine global configfile name */
 #ifdef MAMENAME
@@ -517,10 +513,7 @@ int cli_frontend_init (int argc, char **argv)
 #else
 	cmd_name = win_strip_extension(win_basename(argv[0]));
 #endif
-	if (!cmd_name)
-	{
-		osd_die ("who am I? cannot determine the name I was called with\n");
-	}
+	assert_always(cmd_name != NULL, "Who am I? cannot determine the name I was called with");
 
 	sprintf (buffer, "%s.ini", cmd_name);
 
@@ -569,11 +562,8 @@ int cli_frontend_init (int argc, char **argv)
 	/* handle playback */
 	if (playbackname != NULL)
 	{
-		options.playback = mame_fopen(playbackname,0,FILETYPE_INPUTLOG,0);
-		if (!options.playback)
-		{
-			osd_die(_WINDOWS("failed to open %s for playback\n"), playbackname);
-		}
+        options.playback = mame_fopen(playbackname,0,FILETYPE_INPUTLOG,0);
+		assert_always(options.playback != NULL, _WINDOWS("Failed to open file for playback"));
 #ifdef INP_CAPTION
 		options.caption = mame_fopen(playbackname,0,FILETYPE_INPCAPTION,0);
 #endif /* INP_CAPTION */
@@ -675,10 +665,7 @@ int cli_frontend_init (int argc, char **argv)
 	if (recordname)
 	{
 		options.record = mame_fopen(recordname,0,FILETYPE_INPUTLOG,1);
-		if (!options.record)
-		{
-			osd_die(_WINDOWS("failed to open %s for recording\n"), recordname);
-		}
+		assert_always(options.record != NULL, _WINDOWS("Failed to open file for recording"));
 	}
 
 	if (options.record)
