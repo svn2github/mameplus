@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include "driver.h"
+#include "debugger.h"
 #include "state.h"
 #include "mamedbg.h"
 #include "gensync.h"

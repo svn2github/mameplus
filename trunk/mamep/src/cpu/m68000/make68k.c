@@ -760,8 +760,8 @@ void Completed(void)
 
 	/* Check for Debug Active */
 
-	fprintf(fp, "\n\t\t test    byte [%smame_debug],byte 0xff\n", PREF);
-	fprintf(fp, "\t\t jnz   near MainExit\n\n");
+	//fprintf(fp, "\n\t\t test    byte [%smame_debug],byte 0xff\n", PREF);
+	//fprintf(fp, "\t\t jnz   near MainExit\n\n");
 
 #endif
 
@@ -7816,7 +7816,7 @@ void CodeSegmentBegin(void)
 	fprintf(fp, "; Vars Mame declares / needs access to\n\n");
 
 #ifdef MAME_DEBUG
-	fprintf(fp, "\t\t EXTERN %smame_debug\n", PREF);
+	//fprintf(fp, "\t\t EXTERN %smame_debug\n", PREF);
 #endif
 	fprintf(fp, "\t\t EXTERN %sillegal_op\n", PREF);
 	fprintf(fp, "\t\t EXTERN %sillegal_pc\n", PREF);

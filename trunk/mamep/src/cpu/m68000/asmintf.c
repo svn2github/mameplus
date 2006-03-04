@@ -651,7 +651,7 @@ static int m68000_execute(int cycles)
 #ifdef MAME_DEBUG
 	do
 	{
-		if (mame_debug)
+		if (Machine->debug_mode)
 		{
 			#ifdef TRACE68K
 
@@ -678,7 +678,7 @@ static int m68000_execute(int cycles)
 			m68k_ICount -= M68000_regs.IRQ_cycles;
 			M68000_regs.IRQ_cycles = 0;
 //			m68k_memory_intf = a68k_memory_intf;
-			MAME_Debug();
+			mame_debug_hook();
 			M68000_RUN();
 
 			#ifdef TRACE68K
@@ -918,7 +918,7 @@ static int m68010_execute(int cycles)
 #ifdef MAME_DEBUG
 	do
 	{
-		if (mame_debug)
+		if (Machine->debug_mode)
 		{
 			#ifdef TRACE68K
 
@@ -945,7 +945,7 @@ static int m68010_execute(int cycles)
 			m68k_ICount -= M68010_regs.IRQ_cycles;
 			M68010_regs.IRQ_cycles = 0;
 //			m68k_memory_intf = a68k_memory_intf;
-			MAME_Debug();
+			mame_debug_hook();
 			M68010_RUN();
 
 			#ifdef TRACE68K
@@ -1108,7 +1108,7 @@ static int m68020_execute(int cycles)
 #ifdef MAME_DEBUG
 	do
 	{
-		if (mame_debug)
+		if (Machine->debug_mode)
 		{
 			#ifdef TRACE68K
 
@@ -1135,7 +1135,7 @@ static int m68020_execute(int cycles)
 			m68k_ICount -= M68020_regs.IRQ_cycles;
 			M68020_regs.IRQ_cycles = 0;
 //			m68k_memory_intf = a68k_memory_intf;
-			MAME_Debug();
+			mame_debug_hook();
 			M68020_RUN();
 
 			#ifdef TRACE68K
