@@ -1470,10 +1470,15 @@ static int ui_window_scroll_keys(void)
 }
 
 #ifdef USE_SHOW_TIME
+
+#define DISPLAY_AMPM 0
+
 static void display_time(mame_bitmap *bitmap)
 {
 	char buf[20];
+#if DISPLAY_AMPM
 	char am_pm[] = "am";
+#endif /* DISPLAY_AMPM */
 	int width;
 	time_t ltime;
 	struct tm *today;
@@ -1481,6 +1486,7 @@ static void display_time(mame_bitmap *bitmap)
 	time(&ltime);
 	today = localtime(&ltime);
 
+#if DISPLAY_AMPM
 	if( today->tm_hour > 12 )
 	{
 		strcpy( am_pm, "pm" );
@@ -1488,8 +1494,13 @@ static void display_time(mame_bitmap *bitmap)
 	}
 	if( today->tm_hour == 0 ) /* Adjust if midnight hour. */
 		today->tm_hour = 12;
+#endif /* DISPLAY_AMPM */
 
+#if DISPLAY_AMPM
 	sprintf(buf, "%02d:%02d:%02d %s", today->tm_hour, today->tm_min, today->tm_sec, am_pm);
+#else
+	sprintf(buf, "%02d:%02d:%02d", today->tm_hour, today->tm_min, today->tm_sec);
+#endif /* DISPLAY_AMPM */
 	width = strlen(buf) * uirotcharwidth;
 	switch(Show_Time_Position)
 	{
