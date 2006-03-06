@@ -760,8 +760,8 @@ void Completed(void)
 
 	/* Check for Debug Active */
 
-	//fprintf(fp, "\n\t\t test    byte [%smame_debug],byte 0xff\n", PREF);
-	//fprintf(fp, "\t\t jnz   near MainExit\n\n");
+	fprintf(fp, "\n\t\t test    byte [asm68k_debug],byte 0xff\n");
+	fprintf(fp, "\t\t jnz   near MainExit\n\n");
 
 #endif
 
@@ -7815,9 +7815,6 @@ void CodeSegmentBegin(void)
 
 	fprintf(fp, "; Vars Mame declares / needs access to\n\n");
 
-#ifdef MAME_DEBUG
-	//fprintf(fp, "\t\t EXTERN %smame_debug\n", PREF);
-#endif
 	fprintf(fp, "\t\t EXTERN %sillegal_op\n", PREF);
 	fprintf(fp, "\t\t EXTERN %sillegal_pc\n", PREF);
 
@@ -8183,6 +8180,10 @@ void CodeSegmentEnd(void)
 	fprintf(fp, "asmbank\t DD 0\n\n");
 	fprintf(fp, "CPUversion\t DD 0\n\n");
 	fprintf(fp, "FullPC\t DD 0\n\n");
+
+#ifdef MAME_DEBUG
+	fprintf(fp, "asm68k_debug\t DD 0\n\n");
+#endif
 
 	/* Extra space for variables mame uses for debugger */
 

@@ -5,7 +5,6 @@
 #include "driver.h"
 #include "mamedbg.h"
 #include "m68000.h"
-#include "state.h"
 
 struct m68k_memory_interface a68k_memory_intf;
 
@@ -117,7 +116,9 @@ typedef struct
 	UINT32 BankID;			 /* Memory bank in use */
 	UINT32 CPUtype;		  	 /* CPU Type 0=68000,1=68010,2=68020 */
 	UINT32 FullPC;
-
+#ifdef MAME_DEBUG
+	UINT32 asm68k_debug;     /* single step flag for debugger */
+#endif
 	struct m68k_memory_interface Memory_Interface;
 
 } a68k_cpu_context;
@@ -165,6 +166,11 @@ extern a68k_cpu_context M68020_regs;
 extern void CONVENTION M68020_RUN(void);
 extern void CONVENTION M68020_RESET(void);
 #endif
+
+#ifdef MAME_DEBUG
+extern unsigned int m68k_disassemble_raw(char* str_buff, unsigned int pc, unsigned char* opdata, unsigned char* argdata, int length, unsigned int cpu_type);
+#endif
+
 
 /***************************************************************************/
 /* Save State stuff                                                        */
@@ -651,6 +657,8 @@ static int m68000_execute(int cycles)
 #ifdef MAME_DEBUG
 	do
 	{
+		M68000_regs.asm68k_debug = 0;
+
 		if (Machine->debug_mode)
 		{
 			#ifdef TRACE68K
@@ -679,6 +687,10 @@ static int m68000_execute(int cycles)
 			M68000_regs.IRQ_cycles = 0;
 //			m68k_memory_intf = a68k_memory_intf;
 			mame_debug_hook();
+
+			if (Machine->debug_mode)
+				M68000_regs.asm68k_debug = -1;
+
 			M68000_RUN();
 
 			#ifdef TRACE68K
@@ -758,13 +770,13 @@ static void m68000_set_irq_line(int irqline, int state)
 	}
 }
 
-static offs_t m68000_dasm(char *buffer, offs_t pc)
+static offs_t m68000_dasm(char *buffer, offs_t pc, UINT8 *oprom, UINT8 *opram, int bytes)
 {
 	A68K_SET_PC_CALLBACK(pc);
 
 #ifdef MAME_DEBUG
 	m68k_memory_intf = a68k_memory_intf;
-	return m68k_disassemble(buffer, pc, M68K_CPU_TYPE_68000);
+	return m68k_disassemble_raw(buffer, pc, oprom, opram, bytes, M68K_CPU_TYPE_68000);
 #else
 	sprintf(buffer, "$%04X", cpu_readop16(pc) );
 	return 2;
@@ -826,13 +838,13 @@ static void m68008_reset(void *param)
 	M68000_regs.Memory_Interface = a68k_memory_intf;
 }
 
-static offs_t m68008_dasm(char *buffer, offs_t pc)
+static offs_t m68008_dasm(char *buffer, offs_t pc, UINT8 *oprom, UINT8 *opram, int bytes)
 {
 	A68K_SET_PC_CALLBACK(pc);
 
 #ifdef MAME_DEBUG
 	m68k_memory_intf = a68k_memory_intf;
-	return m68k_disassemble(buffer, pc, M68K_CPU_TYPE_68008);
+	return m68k_disassemble_raw(buffer, pc, oprom, opram, bytes, M68K_CPU_TYPE_68008);
 #else
 	sprintf(buffer, "$%04X", cpu_readop16(pc) );
 	return 2;
@@ -918,6 +930,8 @@ static int m68010_execute(int cycles)
 #ifdef MAME_DEBUG
 	do
 	{
+		M68010_regs.asm68k_debug = 0;
+
 		if (Machine->debug_mode)
 		{
 			#ifdef TRACE68K
@@ -946,6 +960,10 @@ static int m68010_execute(int cycles)
 			M68010_regs.IRQ_cycles = 0;
 //			m68k_memory_intf = a68k_memory_intf;
 			mame_debug_hook();
+
+			if (Machine->debug_mode)
+				M68010_regs.asm68k_debug = -1;
+
 			M68010_RUN();
 
 			#ifdef TRACE68K
@@ -1022,13 +1040,13 @@ static void m68010_set_irq_line(int irqline, int state)
 	}
 }
 
-static offs_t m68010_dasm(char *buffer, offs_t pc)
+static offs_t m68010_dasm(char *buffer, offs_t pc, UINT8 *oprom, UINT8 *opram, int bytes)
 {
 	A68K_SET_PC_CALLBACK(pc);
 
 #ifdef MAME_DEBUG
 	m68k_memory_intf = a68k_memory_intf;
-	return m68k_disassemble(buffer, pc, M68K_CPU_TYPE_68010);
+	return m68k_disassemble_raw(buffer, pc, oprom, opram, bytes, M68K_CPU_TYPE_68010);
 #else
 	sprintf(buffer, "$%04X", cpu_readop16(pc) );
 	return 2;
@@ -1108,6 +1126,8 @@ static int m68020_execute(int cycles)
 #ifdef MAME_DEBUG
 	do
 	{
+		M68020_regs.asm68k_debug = 0;
+
 		if (Machine->debug_mode)
 		{
 			#ifdef TRACE68K
@@ -1136,6 +1156,11 @@ static int m68020_execute(int cycles)
 			M68020_regs.IRQ_cycles = 0;
 //			m68k_memory_intf = a68k_memory_intf;
 			mame_debug_hook();
+
+
+			if (Machine->debug_mode)
+				M68020_regs.asm68k_debug = -1;
+
 			M68020_RUN();
 
 			#ifdef TRACE68K
@@ -1212,13 +1237,13 @@ static void m68020_set_irq_line(int irqline, int state)
 	}
 }
 
-static offs_t m68020_dasm(char *buffer, offs_t pc)
+static offs_t m68020_dasm(char *buffer, offs_t pc, UINT8 *oprom, UINT8 *opram, int bytes)
 {
 	A68K_SET_PC_CALLBACK(pc);
 
 #ifdef MAME_DEBUG
 	m68k_memory_intf = a68k_memory_intf;
-	return m68k_disassemble(buffer, pc, M68K_CPU_TYPE_68020);
+	return m68k_disassemble_raw(buffer, pc, oprom, opram, bytes, M68K_CPU_TYPE_68020);
 #else
 	sprintf(buffer, "$%04X", cpu_readop16(pc) );
 	return 2;
@@ -1245,13 +1270,13 @@ static void m68ec020_reset(void *param)
 	M68020_regs.Memory_Interface = a68k_memory_intf;
 }
 
-static offs_t m68ec020_dasm(char *buffer, unsigned pc)
+static offs_t m68ec020_dasm(char *buffer, offs_t pc, UINT8 *oprom, UINT8 *opram, int bytes)
 {
 	A68K_SET_PC_CALLBACK(pc);
 
 #ifdef MAME_DEBUG
 	m68k_memory_intf = a68k_memory_intf;
-	return m68k_disassemble(buffer, pc, M68K_CPU_TYPE_68EC020);
+	return m68k_disassemble_raw(buffer, pc, oprom, opram, bytes, M68K_CPU_TYPE_68EC020);
 #else
 	sprintf(buffer, "$%04X", cpu_readop16(pc) );
 	return 2;
@@ -1395,7 +1420,7 @@ void m68000asm_get_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_PTR_EXIT:							info->exit = m68000_exit;				break;
 		case CPUINFO_PTR_EXECUTE:						info->execute = m68000_execute;			break;
 		case CPUINFO_PTR_BURN:							info->burn = NULL;						break;
-		case CPUINFO_PTR_DISASSEMBLE:					info->disassemble = m68000_dasm;		break;
+		case CPUINFO_PTR_DISASSEMBLE_NEW:				info->disassemble_new = m68000_dasm;	break;
 		case CPUINFO_PTR_IRQ_CALLBACK:					/* fix me */							break;
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &m68k_ICount;			break;
 		case CPUINFO_PTR_REGISTER_LAYOUT:				info->p = M68K_layout;					break;
@@ -1467,7 +1492,7 @@ void m68008asm_get_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_PROGRAM: info->i = 22;					break;
 		case CPUINFO_PTR_INIT:							info->init = m68008_init;				break;
 		case CPUINFO_PTR_RESET:							info->reset = m68008_reset;				break;
-		case CPUINFO_PTR_DISASSEMBLE:					info->disassemble = m68008_dasm;		break;
+		case CPUINFO_PTR_DISASSEMBLE_NEW:				info->disassemble_new = m68008_dasm;	break;
 		case CPUINFO_STR_NAME:							strcpy(info->s = cpuintrf_temp_str(), "68008"); break;
 		default:
 			m68000asm_get_info(state, info);
@@ -1605,7 +1630,7 @@ void m68010asm_get_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_PTR_EXIT:							info->exit = m68010_exit;				break;
 		case CPUINFO_PTR_EXECUTE:						info->execute = m68010_execute;			break;
 		case CPUINFO_PTR_BURN:							info->burn = NULL;						break;
-		case CPUINFO_PTR_DISASSEMBLE:					info->disassemble = m68010_dasm;		break;
+		case CPUINFO_PTR_DISASSEMBLE_NEW:				info->disassemble_new = m68010_dasm;	break;
 		case CPUINFO_PTR_IRQ_CALLBACK:					/* fix me */							break;
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &m68k_ICount;			break;
 		case CPUINFO_PTR_REGISTER_LAYOUT:				info->p = M68K_layout;					break;
@@ -1795,7 +1820,7 @@ void m68020asm_get_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_PTR_EXIT:							info->exit = m68020_exit;				break;
 		case CPUINFO_PTR_EXECUTE:						info->execute = m68020_execute;			break;
 		case CPUINFO_PTR_BURN:							info->burn = NULL;						break;
-		case CPUINFO_PTR_DISASSEMBLE:					info->disassemble = m68020_dasm;		break;
+		case CPUINFO_PTR_DISASSEMBLE_NEW:				info->disassemble_new = m68020_dasm;	break;
 		case CPUINFO_PTR_IRQ_CALLBACK:					/* fix me */							break;
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &m68k_ICount;			break;
 		case CPUINFO_PTR_REGISTER_LAYOUT:				info->p = M68K_layout;					break;
@@ -1871,7 +1896,7 @@ void m68ec020asm_get_info(UINT32 state, union cpuinfo *info)
 		/* --- the following bits of info are returned as pointers to data or functions --- */
 		case CPUINFO_PTR_INIT:							info->init = m68ec020_init;				break;
 		case CPUINFO_PTR_RESET:							info->reset = m68ec020_reset;			break;
-		case CPUINFO_PTR_DISASSEMBLE:					info->disassemble = m68ec020_dasm;		break;
+		case CPUINFO_PTR_DISASSEMBLE_NEW:				info->disassemble_new = m68ec020_dasm;	break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
 		case CPUINFO_STR_NAME:							strcpy(info->s = cpuintrf_temp_str(), "68EC020"); break;

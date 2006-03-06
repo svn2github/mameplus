@@ -19,7 +19,6 @@
 
 // undefine any redefines we have in the prefix
 #undef malloc
-#undef strdup
 #undef calloc
 #undef realloc
 
@@ -169,28 +168,6 @@ void* malloc_file_line(size_t size, const char *file, int line)
 void* CLIB_DECL malloc(size_t size)
 {
 	return malloc_file_line(size, NULL, 0);
-}
-
-
-char* strdup_file_line(const char *s, const char *file, int line)
-{
-	size_t size;
-	char *p;
-
-	if (s == NULL)
-		return NULL;
-
-	size = strlen(s) + 1;
-	p = malloc_file_line(size, file, line);
-
-	strcpy(p, s);
-	return p;
-}
-
-
-char* CLIB_DECL strdup(const char *s)
-{
-	return strdup_file_line(s, NULL, 0);
 }
 
 
