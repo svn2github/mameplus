@@ -398,6 +398,10 @@ void stream_update(sound_stream *stream, int min_interval)
 	UINT32 target_frac = (stream->output[0].cur_out_pos << FRAC_BITS) + sound_scalebufferpos(stream->samples_per_frame_frac);
 	UINT32 target_sample = ((target_frac + FRAC_ONE - 1) >> FRAC_BITS) + 1;
 
+	/* To avoid crash it doesn't update a stream when YM2610 state is loaded */
+	if (stream->new_sample_rate)
+		return;
+
 	VPRINTF(("stream_update(%p, %d)\n", stream, min_interval));
 	VPRINTF(("  cur_in_pos = %d, cur_out_pos = %d, target_sample = %d\n", stream->output[0].cur_in_pos, stream->output[0].cur_out_pos, target_sample));
 
