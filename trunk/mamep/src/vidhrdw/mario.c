@@ -136,9 +136,6 @@ VIDEO_START( mario )
 	state_save_register_global(gfx_bank);
 	state_save_register_global(palette_bank);
 
-	state_save_register_global(gfx_bank);
-	state_save_register_global(palette_bank);
-
 	return 0;
 }
 
