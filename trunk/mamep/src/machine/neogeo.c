@@ -326,6 +326,8 @@ DRIVER_INIT( neogeo )
 		neogeo_game_vectors = auto_malloc (0x80);
 		memcpy( neogeo_game_vectors, gamerom, 0x80 );
 	}
+
+	pd4990a_init();
 }
 
 MACHINE_START( neogeo )
