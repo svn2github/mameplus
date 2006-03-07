@@ -51295,7 +51295,7 @@ JUMPER
 # machine/neogeo.c: 269
 irrmaze
 
-# machine/neogeo.c: 432, 454, 477
+# machine/neogeo.c: 434, 456, 479
 MEMCARD.%03d
 
 # machine/nmk004.c: 272
@@ -51561,6 +51561,9 @@ pc_keyboard_%d
 
 # machine/pcshare.c: 365
 KB_scancode
+
+# machine/pd4990a.c: 329, 330, 331, 332, 333, 334, 335, 337, 338, 340, 341, 342, 343, 345, 346, 347, 348, 350, 351
+pd4990a
 
 # machine/pgmprot.c: 168
 protection ram r %04x
@@ -52471,41 +52474,41 @@ sio IRQAck %d\n
 # machine/z80sio.c: 705
 sio IRQReti %d\n
 
-# mame.c: 909
-osd_init failed
-
-# mame.c: 914
-code_init failed
-
-# mame.c: 920
-input_port_init failed
-
-# mame.c: 925
-rom_init failed
-
-# mame.c: 937
-memory_init failed
-
-# mame.c: 941
-cpu_init failed
-
-# mame.c: 946
-devices_init failed
-
-# mame.c: 963
-sound_init failed
-
-# mame.c: 967
-video_init failed
-
-# mame.c: 1068
+# mame.c: 889
 ASM
 
-# mame.c: 1068
+# mame.c: 889
 C
 
-# mame.c: 1068
+# mame.c: 889
 DRC
+
+# mame.c: 978
+osd_init failed
+
+# mame.c: 983
+code_init failed
+
+# mame.c: 989
+input_port_init failed
+
+# mame.c: 994
+rom_init failed
+
+# mame.c: 1006
+memory_init failed
+
+# mame.c: 1010
+cpu_init failed
+
+# mame.c: 1015
+devices_init failed
+
+# mame.c: 1032
+sound_init failed
+
+# mame.c: 1036
+video_init failed
 
 # mame.h: 38
 HistoryHistory
@@ -52548,15 +52551,6 @@ gamessystems
 
 # mame.h: 46
 gamesystem
-
-# mamecore.h: 182
-assert: %s:%d: %s
-
-# mamecore.h: 183
-Fatal error: %s\nCaused by assert: %s:%d: %s
-
-# mamecore.h: 186
-Fatal error: %s (%s:%d)
 
 # memory.c: 400
 memdump.log
@@ -59167,40 +59161,40 @@ Fatal error: stream_set_input attempted to use a non-existant output %d (%d max)
 # streams.c: 379
   step_frac = %08X\n
 
-# streams.c: 401
+# streams.c: 405
 stream_update(%p, %d)\n
 
-# streams.c: 402
+# streams.c: 406
   cur_in_pos = %d, cur_out_pos = %d, target_sample = %d\n
 
-# streams.c: 516
+# streams.c: 520
 stream_consume_output(%p, %d, %d)\n
 
-# streams.c: 545
+# streams.c: 549
 stream_generate_samples(%p, %d)\n
 
-# streams.c: 554
+# streams.c: 558
   input %d\n
 
-# streams.c: 561
+# streams.c: 565
     resample_samples_needed = %d\n
 
-# streams.c: 576
+# streams.c: 580
     source_samples_needed = %d\n
 
-# streams.c: 583
+# streams.c: 587
     resample_input_stream(%d)\n
 
-# streams.c: 585
+# streams.c: 589
     resample_input_stream done\n
 
-# streams.c: 602
+# streams.c: 606
   callback(%p, %d)\n
 
-# streams.c: 604
+# streams.c: 608
   callback done\n
 
-# streams.c: 626
+# streams.c: 630
     resample_input_stream -- step = %d\n
 
 # tilemap.c: 854, 855, 856, 857, 858, 859, 860, 861, 862, 863, 864, 865, 866, 867, 868, 869, 870, 871, 872, 873, 874
@@ -63457,49 +63451,49 @@ Menu stack overflow!
 # usrintrf.c: 1190
 Menu stack underflow!
 
-# usrintrf.c: 1476
+# usrintrf.c: 1480
 am
 
-# usrintrf.c: 1486
+# usrintrf.c: 1492
 pm
 
-# usrintrf.c: 2324
+# usrintrf.c: 2335
 neogeo.c
 
-# usrintrf.c: 2464
+# usrintrf.c: 2475
 P%d %s
 
-# usrintrf.c: 3442, 3469
+# usrintrf.c: 3453, 3480
 %dx
 
-# usrintrf.c: 3447, 3474
+# usrintrf.c: 3458, 3485
  %d.%06d MHz\n
 
-# usrintrf.c: 3449, 3476
+# usrintrf.c: 3460, 3487
  %d.%03d kHz\n
 
-# usrintrf.c: 3487
+# usrintrf.c: 3498
 \n%s:\n%d x %d %s %f Hz\n
 
-# usrintrf.c: 3595, 3740
+# usrintrf.c: 3606, 3751
 PALETTE
 
-# usrintrf.c: 3603, 3746
+# usrintrf.c: 3614, 3757
 CLUT
 
-# usrintrf.c: 3668, 3801
+# usrintrf.c: 3679, 3812
 N/A
 
-# usrintrf.c: 3852
+# usrintrf.c: 3863
 GFXSET %d COLOR %2X CODE %X-%X
 
-# usrintrf.c: 3875
+# usrintrf.c: 3886
 TILEMAP %d (%dx%d)  X:%d  Y:%d
 
-# usrintrf.c: 4132
+# usrintrf.c: 4143
 Local font file is not installed. You must install CJK font into font directory first.\n\nPlease download from:\nhttp://mameplus.emu-france.com/\n\nPress ESC to exit, type OK to continue.
 
-# usrintrf.c: 4567
+# usrintrf.c: 4578
 %s %3ddB
 
 # validity.c: 222
@@ -69940,28 +69934,28 @@ fskp
 # windows/video.c: 749
 \n %d partial updates
 
-# windows/winalloc.c: 90
+# windows/winalloc.c: 89
 Out of allocation blocks!\n
 
-# windows/winalloc.c: 235
+# windows/winalloc.c: 212
 Error: realloc a non-existant block\n
 
-# windows/winalloc.c: 265
+# windows/winalloc.c: 242
 Error: free a non-existant block\n
 
-# windows/winalloc.c: 285
+# windows/winalloc.c: 262
 Error: msize a non-existant block\n
 
-# windows/winalloc.c: 302
+# windows/winalloc.c: 279
 --- memory leak warning ---\n
 
-# windows/winalloc.c: 305
+# windows/winalloc.c: 282
 allocation #%06d, %d bytes (%s:%d)\n
 
-# windows/winalloc.c: 307
+# windows/winalloc.c: 284
 allocation #%06d, %d bytes\n
 
-# windows/winalloc.c: 312
+# windows/winalloc.c: 289
 a total of %d bytes were not free()'d\n
 
 # windows/wind3d.c: 410

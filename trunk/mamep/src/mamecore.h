@@ -179,11 +179,11 @@ typedef union
 #undef assert_always
 
 #ifdef MAME_DEBUG
-#define assert(x)	do { if (!(x)) fatalerror("assert: %s:%d: %s", __FILE__, __LINE__, #x); } while (0)
-#define assert_always(x, msg) do { if (!(x)) fatalerror("Fatal error: %s\nCaused by assert: %s:%d: %s", msg, __FILE__, __LINE__, #x); } while (0)
+#define assert(x)	do { if (!(x)) fatalerror(_("assert: %s:%d: %s"), __FILE__, __LINE__, #x); } while (0)
+#define assert_always(x, msg) do { if (!(x)) fatalerror(_("Fatal error: %s\nCaused by assert: %s:%d: %s"), msg, __FILE__, __LINE__, #x); } while (0)
 #else
 #define assert(x)
-#define assert_always(x, msg) do { if (!(x)) fatalerror("Fatal error: %s (%s:%d)", msg, __FILE__, __LINE__); } while (0)
+#define assert_always(x, msg) do { if (!(x)) fatalerror(_("Fatal error: %s (%s:%d)"), msg, __FILE__, __LINE__); } while (0)
 #endif
 
 

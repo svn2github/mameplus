@@ -214,15 +214,15 @@
 %d results found
 %d個の結果が見つかりました
 
-# usrintrf.c: 2106, 2251
+# usrintrf.c: 2117, 2262
 %s Analog
 %s アナログ
 
-# usrintrf.c: 2113, 2255
+# usrintrf.c: 2124, 2266
 %s Dec
 %s 増加
 
-# usrintrf.c: 2120, 2259
+# usrintrf.c: 2131, 2270
 %s Inc
 %s 減少
 
@@ -250,11 +250,11 @@
 (Card may already exist)
 (カードを既に作成済みかも知れません)
 
-# usrintrf.c: 3491
+# usrintrf.c: 3502
 (H)
 (横)
 
-# usrintrf.c: 3491
+# usrintrf.c: 3502
 (V)
 (縦)
 
@@ -1274,7 +1274,7 @@ Error: Failed to save state
 Error: Unable to save state due to illegal registrations. See error.log for details.
 エラー: 不正な登録のためステートを保存する事が出来ません。詳細はerror.logをご覧下さい。
 
-# usrintrf.c: 1573
+# usrintrf.c: 1584
 Error: illegal caption file
 エラー: 不正なキャプションファイルです
 
@@ -1293,6 +1293,14 @@ Failed to allocate %d bytes (%s:%d)
 # cheat.c: 6583 debug/mamedbg.c: 796 drivers/4enraya.c: 119 drivers/8080bw.c: 697, 789 drivers/alpha68k.c: 1570, 1624 drivers/amidar.c: 186 drivers/angelkds.c: 480 drivers/bestleag.c: 278 drivers/bigstrkb.c: 160 drivers/brkthru.c: 233, 236, 278, 281 drivers/cninja.c: 727 drivers/cps1.c: 1069, 1339 drivers/darius.c: 679, 717, 755 drivers/ddragon3.c: 424 drivers/deniam.c: 277 drivers/epos.c: 151, 154, 160 drivers/fuukifg3.c: 354 drivers/gameplan.c: 399, 850 drivers/karnov.c: 461 drivers/m62.c: 610, 661, 712, 762, 814, 866, 920, 1020, 1071 drivers/mcr.c: 1134 drivers/megaplay.c: 224 drivers/metro.c: 3080 drivers/ninjaw.c: 542 drivers/nmg5.c: 237 drivers/nmk16.c: 2662 drivers/phoenix.c: 345 drivers/quizdna.c: 153, 241, 343 drivers/rohga.c: 445, 513 drivers/safarir.c: 188 drivers/segas16a.c: 1272 drivers/segas16b.c: 2511 drivers/sidepckt.c: 231 drivers/slapfght.c: 518 drivers/ssv.c: 2573 drivers/suprridr.c: 251 drivers/system1.c: 888, 1724 drivers/system16.c: 1795 drivers/taito_f2.c: 3122 drivers/taito_l.c: 1841, 1994 drivers/taito_z.c: 2384, 2453 drivers/tecmo16.c: 207 drivers/thepit.c: 276, 331, 372 drivers/trackfld.c: 539, 550 drivers/vigilant.c: 240 drivers/vsnes.c: 1065, 1467, 1691, 1749, 1775 drivers/wallc.c: 187 drivers/warriorb.c: 344 drivers/wc90.c: 250 drivers/wc90b.c: 267 drivers/xain.c: 399 drivers/yamato.c: 356 drivers/zac2650.c: 83, 133 drivers/zerozone.c: 148 ui_text.c: 209
 Fast
 速い
+
+# mamecore.h: 186
+Fatal error: %s (%s:%d)
+致命的なエラー: %s (%s:%d)
+
+# mamecore.h: 183
+Fatal error: %s\nCaused by assert: %s:%d: %s
+致命的なエラー: %s\nアサートの結果: %s:%d: %s
 
 # cheat.c: 935
 Finish this
@@ -1830,11 +1838,11 @@ Load Selected Card
 Load State
 プレイ状態の復帰
 
-# usrintrf.c: 4938
+# usrintrf.c: 4949
 Load cancelled
 読み込みを中止しました
 
-# usrintrf.c: 4970
+# usrintrf.c: 4981
 Load from position %c
 %c から読み込みました
 
@@ -3590,7 +3598,7 @@ Previous Game
 Previous values already restored
 前回の値は既に復帰済みです
 
-# usrintrf.c: 4984
+# usrintrf.c: 4995
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 このゲームを終了しますか？\n\n終了する場合は決定キー/ボタンを、\n続ける場合はキャンセルキー/ボタンを押して下さい。
 
@@ -3730,11 +3738,11 @@ Save Snapshot
 Save State
 プレイ状態の保存
 
-# usrintrf.c: 4936
+# usrintrf.c: 4947
 Save cancelled
 保存を中止しました
 
-# usrintrf.c: 4965
+# usrintrf.c: 4976
 Save to position %c
 %c に保存しました
 
@@ -3802,11 +3810,11 @@ Select current level
 Select next level
 次のレベルを選択
 
-# usrintrf.c: 4929
+# usrintrf.c: 4940
 Select position to load from
 読み込むファイル(0-9,A-Z)を押してください
 
-# usrintrf.c: 4927
+# usrintrf.c: 4938
 Select position to save to
 保存するファイル(0-9,A-Z)を押してください
 
@@ -4290,15 +4298,15 @@ Unable to load due to pending anonymous timers. See error.log for details.
 Unable to save due to pending anonymous timers. See error.log for details.
 何かのタイマーが保留中のためステートを保存する事が出来ません。詳細はerror.logをご覧下さい。
 
-# mame.c: 975
+# mame.c: 1044
 Unable to start machine emulation
 マシンのエミュレーションを開始する事が出来ません
 
-# mame.c: 977
+# mame.c: 1046
 Unable to start sound emulation
 サウンドエミュレーションを開始する事が出来ません
 
-# mame.c: 979
+# mame.c: 1048
 Unable to start video emulation
 ビデオエミュレーションを開始する事が出来ません。
 
@@ -4717,6 +4725,10 @@ Zoom
 # cheat.c: 6891
 \tPlease Go To\n\thttp://cheat.retrogames.com/faq.htm\n\tFor Documentation\n
 \tヘルプについては\n\thttp://cheat.retrogames.com/faq.htm\n\tこちらを参照ください\n
+
+# mamecore.h: 182 
+assert: %s:%d: %s
+アサート: %s:%d: %s
 
 # cheat.c: 2553
 cheat database not found
