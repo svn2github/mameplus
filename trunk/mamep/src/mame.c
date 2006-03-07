@@ -1079,10 +1079,6 @@ static void soft_reset(int param)
 	/* allow save state registrations during the reset */
 	state_save_allow_registration(TRUE);
 
-	/* call all registered reset callbacks */
-	for (cb = reset_callback_list; cb; cb = cb->next)
-		(*cb->func.reset)();
-
 	/* run the driver's reset callbacks */
 	if (Machine->drv->machine_reset != NULL)
 		(*Machine->drv->machine_reset)();
@@ -1090,6 +1086,10 @@ static void soft_reset(int param)
 		(*Machine->drv->sound_reset)();
 	if (Machine->drv->video_reset != NULL)
 		(*Machine->drv->video_reset)();
+
+	/* call all registered reset callbacks */
+	for (cb = reset_callback_list; cb; cb = cb->next)
+		(*cb->func.reset)();
 
 	/* disallow save state registrations starting here */
 	state_save_allow_registration(FALSE);
