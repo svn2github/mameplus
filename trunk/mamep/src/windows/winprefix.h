@@ -34,4 +34,7 @@ void* realloc_file_line(void *memory, size_t size, const char *file, int line);
 #ifdef _MSC_VER
 #define vsnprintf _vsnprintf
 #include <malloc.h>
+
+#define logb _logb
+#include <float.h>
 #endif /* _MSC_VER */
