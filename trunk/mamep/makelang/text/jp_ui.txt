@@ -6,7 +6,7 @@ Japanese game list by 俺、ぶろん
 %d colors 
 %d 色 
 
-# ui/win32ui.c: 250, 3630
+# ui/win32ui.c: 250, 3631
 %d games
 %d ゲーム
 
@@ -18,11 +18,11 @@ Japanese game list by 俺、ぶろん
 %d x %d (V) %f Hz (%d:%d) (%d colors)
 %d x %d (V) %f Hz (%d:%d) (%d 色)
 
-# ui/treeview.c: 1224
+# ui/treeview.c: 1225
 %dx%d (H)
 %dx%d (H)
 
-# ui/treeview.c: 1218
+# ui/treeview.c: 1219
 %dx%d (V)
 %dx%d (V)
 
@@ -210,11 +210,11 @@ MAME32について(&A)
 &Picture Area\tAlt+P
 画像エリア(&P)\tAlt+P
 
-# ui/mame32.rc: 52, 166 ui/win32ui.c: 3769
+# ui/mame32.rc: 52, 166 ui/win32ui.c: 3770
 &Play
 プレイ(&P)
 
-# ui/win32ui.c: 249, 3803, 6749, 6777
+# ui/win32ui.c: 249, 3804, 6750, 6778
 &Play %s
 プレイ(&P) %s
 
@@ -290,7 +290,7 @@ MAME32について(&A)
 &Working
 動作可(&W)
 
-# ui/win32ui.c: 6283
+# ui/win32ui.c: 6284
 '%s' is not a valid savestate file for game '%s'.
 '%s'はゲーム'%s'に適切なステートではありません。
 
@@ -318,7 +318,7 @@ MAME32について(&A)
 <- Remove
 <- 削除
 
-# ui/treeview.c: 518, 539, 1129
+# ui/treeview.c: 519, 540, 1130
 <unknown>
 <不明>
 
@@ -330,7 +330,7 @@ A sharing violation occurred.
 A&udit
 監査(&U)
 
-# ui/properties.c: 1099 ui/treeview.c: 1418
+# ui/properties.c: 1099 ui/treeview.c: 1419
 AD Stick
 アナログスティック
 
@@ -506,7 +506,7 @@ Backdrops
 Background Images
 背景画像
 
-# ui/treeview.c: 1049, 1050
+# ui/treeview.c: 1050, 1051
 Bad Dump
 吸出し不良
 
@@ -578,43 +578,43 @@ Button (P or 6)
 Button (S or 7)
 ボタン (S or 7)
 
-# ui/treeview.c: 1400
+# ui/treeview.c: 1401
 Button 1
 ボタン 1
 
-# ui/treeview.c: 1409
+# ui/treeview.c: 1410
 Buttons 10
 ボタン 10
 
-# ui/treeview.c: 1401
+# ui/treeview.c: 1402
 Buttons 2
 ボタン 2
 
-# ui/treeview.c: 1402
+# ui/treeview.c: 1403
 Buttons 3
 ボタン 3
 
-# ui/treeview.c: 1403
+# ui/treeview.c: 1404
 Buttons 4
 ボタン 4
 
-# ui/treeview.c: 1404
+# ui/treeview.c: 1405
 Buttons 5
 ボタン 5
 
-# ui/treeview.c: 1405
+# ui/treeview.c: 1406
 Buttons 6
 ボタン 6
 
-# ui/treeview.c: 1406
+# ui/treeview.c: 1407
 Buttons 7
 ボタン 7
 
-# ui/treeview.c: 1407
+# ui/treeview.c: 1408
 Buttons 8
 ボタン 8
 
-# ui/treeview.c: 1408
+# ui/treeview.c: 1409
 Buttons 9
 ボタン 9
 
@@ -694,6 +694,10 @@ Colors aren't 100% accurate
 Colors:
 色数:
 
+# ui/layout.c: 129
+Comment Files
+コメントファイル
+
 # ui/layout.c: 114
 Config
 設定ファイル
@@ -766,11 +770,11 @@ Copyright (C) 1997-2006 The MAME Team
 Correct:
 正常:
 
-# ui/win32ui.c: 6194
+# ui/win32ui.c: 6195
 Could not open '%s' as a valid input file.
 「%s」を有効な再生ファイルとしてオープンできません
 
-# ui/win32ui.c: 6294
+# ui/win32ui.c: 6295
 Could not open '%s' as a valid savestate file.
 '%s'は正常はステートとして開けません。
 
@@ -790,7 +794,7 @@ Cubic (gaussian kernel)
 Cursor
 カーソ\ル
 
-# ui/win32ui.c: 4505, 4533
+# ui/win32ui.c: 4506, 4534
 Custom
 カスタム
 
@@ -842,7 +846,7 @@ Description
 Details
 詳細
 
-# ui/properties.c: 1091 ui/treeview.c: 1420
+# ui/properties.c: 1091 ui/treeview.c: 1421
 Dial
 ダイヤル
 
@@ -942,15 +946,15 @@ Dot medium bright
 Dot medium mask
 ドットマスク（中）
 
-# ui/treeview.c: 1414
+# ui/treeview.c: 1415
 Double Joy 2-Way
 2方向デュアルスティック
 
-# ui/treeview.c: 1415
+# ui/treeview.c: 1416
 Double Joy 4-Way
 4方向デュアルスティック
 
-# ui/treeview.c: 1416
+# ui/treeview.c: 1417
 Double Joy 8-Way
 8方向デュアルスティック
 
@@ -1006,7 +1010,7 @@ Dumping Status
 E&xit
 終了(&X)
 
-# ui/win32ui.c: 7248
+# ui/win32ui.c: 7249
 ERROR: required files are missing, the game cannot be run.
 エラー: 必要なファイルが不足しています。 このゲームは実行出来ません。
 
@@ -1062,7 +1066,7 @@ Enforce aspect ratio
 Error
 エラー
 
-# ui/treeview.c: 2668
+# ui/treeview.c: 2669
 Error finding custom file name to save
 保存するカスタムファイルが見つかりません
 
@@ -1070,15 +1074,15 @@ Error finding custom file name to save
 Error log (for developers)
 エラーログを出力(開発者向け)
 
-# ui/win32ui.c: 7340
+# ui/win32ui.c: 7341
 Error searching for custom folder
 カスタムフォルダが見つかりません
 
-# ui/treeview.c: 2597
+# ui/treeview.c: 2598
 Error while renaming custom file %s to %s
 カスタムファイルの名前を %s から %s への変更でエラーが発生しました
 
-# ui/treeview.c: 2739
+# ui/treeview.c: 2740
 Error while saving custom file %s
 カスタムファイル %s の保存でエラーが発生しました
 
@@ -1190,7 +1194,7 @@ Game lacks sound
 Game protection isn't fully emulated
 プロテクトのため動作が不完全
 
-# ui/win32ui.c: 3399
+# ui/win32ui.c: 3400
 Game search %d%% complete
 ゲームの検索 %d%% 完了
 
@@ -1246,7 +1250,7 @@ High Scores
 History
 ゲームの歴史
 
-# ui/properties.c: 406 ui/treeview.c: 961, 962
+# ui/properties.c: 406 ui/treeview.c: 962, 963
 Horizontal
 横型
 
@@ -1274,15 +1278,15 @@ Image Files (*.png,*.bmp)
 Imperfect
 不完全な動作
 
-# ui/treeview.c: 1000
+# ui/treeview.c: 1001
 Imperfect Colors
 色の再現が不完全
 
-# ui/treeview.c: 1001
+# ui/treeview.c: 1002
 Imperfect Graphics
 画像の再現が不完全
 
-# ui/treeview.c: 1003
+# ui/treeview.c: 1004
 Imperfect Sound
 音の再現が不完全
 
@@ -1318,15 +1322,15 @@ Interface Options
 Interpolation method
 補完手法
 
-# ui/treeview.c: 1410
+# ui/treeview.c: 1411
 Joy 2-Way
 2方向スティック
 
-# ui/treeview.c: 1411
+# ui/treeview.c: 1412
 Joy 4-Way
 4方向スティック
 
-# ui/treeview.c: 1412
+# ui/treeview.c: 1413
 Joy 8-Way
 8方向スティック
 
@@ -1366,7 +1370,7 @@ L&arge Icons
 Large Icons
 大きなアイコン
 
-# ui/layout.c: 81 ui/properties.c: 576, 1103 ui/treeview.c: 1422
+# ui/layout.c: 81 ui/properties.c: 576, 1103 ui/treeview.c: 1423
 Lightgun
 光線銃
 
@@ -1386,7 +1390,7 @@ List
 Loa&d Savestate...
 ステートを読み込む(&D)...
 
-# ui/win32ui.c: 7165
+# ui/win32ui.c: 7166
 Loading %s
 ロード中 %s
 
@@ -1462,7 +1466,7 @@ Memory Card
 Miscellaneous
 その他
 
-# ui/treeview.c: 1002
+# ui/treeview.c: 1003
 Missing Sound
 サウンド無し
 
@@ -1498,19 +1502,19 @@ Name
 New game changes
 新しいゲームの変更点を表\示します
 
-# ui/audit32.c: 126 ui/win32ui.c: 5396
+# ui/audit32.c: 126 ui/win32ui.c: 5397
 No
 いいえ
 
-# ui/treeview.c: 1004
+# ui/treeview.c: 1005
 No Cocktail
 カクテルモード未対応
 
-# ui/treeview.c: 1052, 1053
+# ui/treeview.c: 1053, 1054
 No Dump
 未ダンプ
 
-# ui/win32ui.c: 3785
+# ui/win32ui.c: 3786
 No Selection
 選択されていません
 
@@ -1590,7 +1594,7 @@ P&layback Input...
 PS/2 Keyboard
 PS/2 キーボード
 
-# ui/properties.c: 1088 ui/treeview.c: 1419
+# ui/properties.c: 1088 ui/treeview.c: 1420
 Paddle
 パドル
 
@@ -1610,7 +1614,7 @@ Passed
 Pause Brightness
 ポーズ中の明るさ
 
-# ui/treeview.c: 1423
+# ui/treeview.c: 1424
 Pedal
 ペダル
 
@@ -1650,35 +1654,35 @@ Playback a recorded game
 Playcount
 プレイ回数
 
-# ui/treeview.c: 1392
+# ui/treeview.c: 1393
 Player 1
 プレイヤー 1
 
-# ui/treeview.c: 1393
+# ui/treeview.c: 1394
 Players 2
 プレイヤー 2
 
-# ui/treeview.c: 1394
+# ui/treeview.c: 1395
 Players 3
 プレイヤー 3
 
-# ui/treeview.c: 1395
+# ui/treeview.c: 1396
 Players 4
 プレイヤー 4
 
-# ui/treeview.c: 1396
+# ui/treeview.c: 1397
 Players 5
 プレイヤー 5
 
-# ui/treeview.c: 1397
+# ui/treeview.c: 1398
 Players 6
 プレイヤー 6
 
-# ui/treeview.c: 1398
+# ui/treeview.c: 1399
 Players 7
 プレイヤー 7
 
-# ui/treeview.c: 1399
+# ui/treeview.c: 1400
 Players 8
 プレイヤー 8
 
@@ -1690,11 +1694,11 @@ Pr&operties
 Prescale
 プリスケール
 
-# ui/win32ui.c: 3814, 6762, 6787
+# ui/win32ui.c: 3815, 6763, 6788
 Proper&ties of %s
 %sのプロパティ(&T)
 
-# ui/mame32.rc: 66, 181 ui/win32ui.c: 3776
+# ui/mame32.rc: 66, 181 ui/win32ui.c: 3777
 Proper&ties of Driver
 ドライバのプロパティ(&t)
 
@@ -1786,11 +1790,11 @@ ROMが見つかりません
 Randomly select a game.
 ゲームをランダムに選択します
 
-# ui/layout.c: 70 ui/win32ui.c: 5388
+# ui/layout.c: 70 ui/win32ui.c: 5389
 Raster
 ラスタ
 
-# ui/win32ui.c: 3563
+# ui/win32ui.c: 3564
 Ready
 起動中
 
@@ -1934,7 +1938,7 @@ Scanlines 75%
 Screen
 画面
 
-# ui/win32ui.c: 3358
+# ui/win32ui.c: 3359
 Screen flip support is missing
 カクテルモードの画面反転に未対応
 
@@ -2306,7 +2310,7 @@ Story
 Stretch using hardware
 ハードウェア拡大表\示
 
-# ui/properties.c: 1328 ui/treeview.c: 1353, 1354
+# ui/properties.c: 1328 ui/treeview.c: 1354, 1355
 Supported
 対応
 
@@ -2374,7 +2378,7 @@ Toggle Screen Shot
 Total:
 合計:
 
-# ui/layout.c: 80 ui/properties.c: 1095 ui/treeview.c: 1421 ui/win32ui.c: 814
+# ui/layout.c: 80 ui/properties.c: 1095 ui/treeview.c: 1422 ui/win32ui.c: 814
 Trackball
 トラックボール
 
@@ -2454,11 +2458,11 @@ USB キーボード
 Unable to Load Riched32.dll
 Riched32.dllが読み込めません
 
-# ui/treeview.c: 2608
+# ui/treeview.c: 2609
 Unable to add game to non-custom folder
 カスタムフォルダ以外にはゲームを追加出来ません
 
-# ui/treeview.c: 2625
+# ui/treeview.c: 2626
 Unable to remove game from non-custom folder
 カスタムフォルダ以外からゲームを削除出来ません
 
@@ -2466,7 +2470,7 @@ Unable to remove game from non-custom folder
 Unavailable
 未所有のゲーム
 
-# ui/treeview.c: 998
+# ui/treeview.c: 999
 Unemulated Protection
 プロテクトの再現が不完全
 
@@ -2478,7 +2482,7 @@ Unknown
 Unknown error.
 原因不明のエラーが発生しました。
 
-# ui/properties.c: 1330 ui/treeview.c: 1356, 1357
+# ui/properties.c: 1330 ui/treeview.c: 1357, 1358
 Unsupported
 未対応
 
@@ -2522,11 +2526,11 @@ Use various icon for Not Working game
 Use volume auto adjust
 自動音量調整機能\を使用
 
-# ui/layout.c: 71 ui/mame32.rc: 875 ui/options.c: 1145, 2968 ui/properties.c: 762 ui/treeview.c: 301 ui/win32ui.c: 5386
+# ui/layout.c: 71 ui/mame32.rc: 875 ui/options.c: 1145, 2968 ui/properties.c: 762 ui/treeview.c: 302 ui/win32ui.c: 5387
 Vector
 ベクタ
 
-# ui/treeview.c: 1193, 1194
+# ui/treeview.c: 1194, 1195
 Vector (H)
 ベクタ (H)
 
@@ -2534,7 +2538,7 @@ Vector (H)
 Vector (H) %f Hz (%d:%d) (%d colors)
 ベクタ (H) %f Hz (%d:%d) (%d 色)
 
-# ui/treeview.c: 1190, 1191
+# ui/treeview.c: 1191, 1192
 Vector (V)
 ベクタ (V)
 
@@ -2546,7 +2550,7 @@ Vector (V) %f Hz (%d:%d) (%d colors)
 Version Mismatch
 バージョンの相違
 
-# ui/properties.c: 407 ui/treeview.c: 957, 958
+# ui/properties.c: 407 ui/treeview.c: 958, 959
 Vertical
 縦型
 
@@ -2558,7 +2562,7 @@ Video emulation isn't 100% accurate
 Volume attenuation
 ボリューム
 
-# ui/win32ui.c: 7251
+# ui/win32ui.c: 7252
 WARNING: the game might not run correctly.
 警告: このゲームは正常に実行出来ません。
 
@@ -2634,7 +2638,7 @@ Windows版：その他の設定
 Working
 動作可
 
-# ui/treeview.c: 999
+# ui/treeview.c: 1000
 Wrong Colors
 色が再現されない
 
@@ -2642,7 +2646,7 @@ Wrong Colors
 Year
 製造年
 
-# ui/audit32.c: 121 ui/win32ui.c: 5394
+# ui/audit32.c: 121 ui/win32ui.c: 5395
 Yes
 はい
 

@@ -494,6 +494,14 @@ OSD バー (明)
 OSD bar color (medium)
 OSD バー
 
+# windows/fileio.c: 277
+Out of memory in variable expansion!
+変数展開のメモリが足りません!
+
+# windows/fileio.c: 346
+Out of memory!
+メモリが足りません!
+
 # windows/fronthlp.c: 782
 PARTKNOWN %s\n
 一部判明  %s\n
@@ -909,6 +917,10 @@ directory for localized language files
 # windows/fileio.c: 141
 directory for screenshots (.png format)
 スクリーンショットを保存するパスを指定 (PNGフォーマット)
+
+# windows/fileio.c: 144
+directory to save comment files
+コメントファイルを保存するパスを指定
 
 # windows/fileio.c: 134
 directory to save configurations
