@@ -260,6 +260,10 @@ extern struct rc_option video_opts[];
 // in windows/input.c
 extern const int win_key_trans_table[][4];
 
+// in ui/m32util.c
+extern void __cdecl dprintf(const char* fmt, ...);
+
+
 #endif /* !DONT_USE_DLL */
 
 #ifndef _WINDOWS
