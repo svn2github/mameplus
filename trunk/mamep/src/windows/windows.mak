@@ -60,7 +60,6 @@ CURPATH = ./
 ifdef USE_GCC
   CFLAGS += -mwindows -include src/$(MAMEOS)/winprefix.h
   CFLAGSOSDEPEND += -Wno-strict-aliasing
-  CFLAGS += -include src/$(MAMEOS)/winprefix.h
 else
   CFLAGS += /FI"windows/winprefix.h"
 endif
