@@ -19,12 +19,14 @@
 #include "osdepend.h"
 #include "driver.h"
 #include "artwork.h"
+#include "profiler.h"
 #include "vidhrdw/vector.h"
+
+// MAMEOS headers
 #include "blit.h"
 #include "video.h"
 #include "window.h"
 #include "rc.h"
-#include "profiler.h"
 #ifdef USE_SCALE_EFFECTS
  #include "scale.h"
 #endif /* USE_SCALE_EFFECTS */

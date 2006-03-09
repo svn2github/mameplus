@@ -405,7 +405,7 @@ endif
 #-------------------------------------------------
 
 ifdef USE_GCC
-    CFLAGS = -std=gnu89 -Isrc -Isrc/includes -Isrc/zlib -Iextra/include -Isrc/debug -Isrc/$(MAMEOS)
+    CFLAGS = -std=gnu89 -Isrc -Isrc/includes -Isrc/zlib -Iextra/include -Isrc/$(MAMEOS)
 
     ifneq ($(W_ERROR),)
         CFLAGS += -Werror 
@@ -440,7 +440,7 @@ ifdef USE_GCC
     CFLAGSOSDEPEND = $(CFLAGS)
 
 else
-    CFLAGS = -Isrc -Isrc/includes -Isrc/zlib -Isrc/debug -Isrc/$(MAMEOS) \
+    CFLAGS = -Isrc -Isrc/includes -Isrc/zlib -Isrc/$(MAMEOS) \
              -W3 -nologo
 
     ifdef INTEL

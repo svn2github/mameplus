@@ -30,11 +30,12 @@
   * - get rid of #ifdef MESS's by providing appropriate hooks
  */
 
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
 #include <stdarg.h>
 #include <ctype.h>
 #include <time.h>
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
 #include <winnt.h>
 #include <mmsystem.h>
 #include "osdepend.h"
@@ -42,7 +43,6 @@
 #include "rc.h"
 #include "misc.h"
 #include "video.h"
-#include "fileio.h"
 
 #ifdef NEW_DEBUGGER
 #include "debug/debugcpu.h"
@@ -518,9 +518,9 @@ int cli_frontend_init (int argc, char **argv)
 	sprintf (buffer, "%s.ini", cmd_name);
 
 	/* parse mame.ini/mess.ini even if called with another name */
-	if (mame_stricmp(cmd_name, APPNAME) != 0)
+	if (mame_stricmp(cmd_name, CONFIGNAME) != 0)
 	{
-		if (parse_config (APPNAME".ini", NULL))
+		if (parse_config (CONFIGNAME".ini", NULL))
 			exit(1);
 	}
 

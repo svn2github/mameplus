@@ -7,21 +7,20 @@
 //
 //============================================================
 
+// standard windows headers
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <tchar.h>
+
+// MAME headers
 #include "driver.h"
 #include "hash.h"
 #include "info.h"
 #include "audit.h"
 #include "unzip.h"
-#include "rc.h"
-#include <stdio.h>
-#include <errno.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unzip.h>
-#include <zlib.h>
-#include <tchar.h>
 #include "sound/samples.h"
+
+#include "rc.h"
 
 /* Quick fix to allow compilation with win32api 2.4 */
 #undef INVALID_FILE_ATTRIBUTES

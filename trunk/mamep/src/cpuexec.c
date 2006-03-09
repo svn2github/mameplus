@@ -17,9 +17,13 @@
 #include "config.h"
 
 #if defined(MAME_DEBUG) && defined(NEW_DEBUGGER)
-#include "debugcpu.h"
+#include "debug/debugcpu.h"
 #endif
 
+
+
+// temporary
+#define OUT_OF_BOUNDS_IS_FATAL		1
 
 
 /*************************************
@@ -44,6 +48,15 @@
  *
  *************************************/
 
+#if OUT_OF_BOUNDS_IS_FATAL
+#define VERIFY_ACTIVECPU(retval, name)						\
+	int activecpu = cpu_getactivecpu();						\
+	assert_always(activecpu >= 0, #name "() called with no active cpu!")
+
+#define VERIFY_ACTIVECPU_VOID(name)							\
+	int activecpu = cpu_getactivecpu();						\
+	assert_always(activecpu >= 0, #name "() called with no active cpu!")
+#else
 #define VERIFY_ACTIVECPU(retval, name)						\
 	int activecpu = cpu_getactivecpu();						\
 	if (activecpu < 0)										\
@@ -59,6 +72,7 @@
 		logerror(#name "() called with no active cpu!\n");	\
 		return;												\
 	}
+#endif
 
 
 
@@ -68,6 +82,15 @@
  *
  *************************************/
 
+#if OUT_OF_BOUNDS_IS_FATAL
+#define VERIFY_EXECUTINGCPU(retval, name)						\
+	int activecpu = cpu_getexecutingcpu();					\
+	assert_always(activecpu >= 0, #name "() called with no executing cpu!")
+
+#define VERIFY_EXECUTINGCPU_VOID(name)							\
+	int activecpu = cpu_getexecutingcpu();					\
+	assert_always(activecpu >= 0, #name "() called with no executing cpu!")
+#else
 #define VERIFY_EXECUTINGCPU(retval, name)					\
 	int activecpu = cpu_getexecutingcpu();					\
 	if (activecpu < 0)										\
@@ -83,6 +106,7 @@
 		logerror(#name "() called with no executing cpu!\n");\
 		return;												\
 	}
+#endif
 
 
 
@@ -92,6 +116,13 @@
  *
  *************************************/
 
+#if OUT_OF_BOUNDS_IS_FATAL
+#define VERIFY_CPUNUM(retval, name)						\
+	assert_always(cpunum >= 0 && cpunum < cpu_gettotalcpu(), #name "() called for invalid cpu num!")
+
+#define VERIFY_CPUNUM_VOID(name)							\
+	assert_always(cpunum >= 0 && cpunum < cpu_gettotalcpu(), #name "() called for invalid cpu num!")
+#else
 #define VERIFY_CPUNUM(retval, name)							\
 	if (cpunum < 0 || cpunum >= cpu_gettotalcpu())			\
 	{														\
@@ -105,6 +136,7 @@
 		logerror(#name "() called for invalid cpu num!\n");	\
 		return;												\
 	}
+#endif
 
 
 
@@ -211,9 +243,9 @@ static mame_timer *watchdog_timer;
  *
  *************************************/
 
-static void cpu_exit(void);
-static void cpu_reset(void);
-static void cpu_init_refresh_timer(void);
+static void cpuexec_exit(void);
+static void cpuexec_reset(void);
+static void init_refresh_timer(void);
 static void cpu_inittimers(void);
 static void cpu_vblankreset(void);
 static void cpu_vblankcallback(int param);
@@ -252,12 +284,12 @@ static void cpu_save(int config_type, xml_data_node *parentnode);
  *
  *************************************/
 
-int cpu_init(void)
+int cpuexec_init(void)
 {
 	int cpunum;
 
 	/* initialize the refresh timer */
-	cpu_init_refresh_timer();
+	init_refresh_timer();
 
 	/* loop over all our CPUs */
 	for (cpunum = 0; cpunum < MAX_CPU; cpunum++)
@@ -302,7 +334,7 @@ int cpu_init(void)
 		/* initialize this CPU */
 		state_save_push_tag(cpunum + 1);
 		num_regs = state_save_get_reg_count();
-		if (cpuintrf_init_cpu(cpunum, cputype))
+		if (cpuintrf_init_cpu(cpunum, cputype, cpu[cpunum].clock, Machine->drv->cpu[cpunum].reset_param, cpu_irq_callbacks[cpunum]))
 			return 1;
 		num_regs = state_save_get_reg_count() - num_regs;
 		state_save_pop_tag();
@@ -315,8 +347,8 @@ int cpu_init(void)
 				fatalerror("CPU #%d (%s) did not register any state to save!", cpunum, cputype_name(cputype));
 		}
 	}
-	add_reset_callback(cpu_reset);
-	add_exit_callback(cpu_exit);
+	add_reset_callback(cpuexec_reset);
+	add_exit_callback(cpuexec_exit);
 
 	/* compute the perfect interleave factor */
 	compute_perfect_interleave();
@@ -331,10 +363,6 @@ int cpu_init(void)
 
 	config_register("cpu", cpu_load, cpu_save);
 
-	/* reset the IRQ lines and save those */
-	if (cpuint_init())
-		return 1;
-
 	return 0;
 }
 
@@ -346,7 +374,7 @@ int cpu_init(void)
  *
  *************************************/
 
-static void cpu_reset(void)
+static void cpuexec_reset(void)
 {
 	int cpunum;
 
@@ -364,14 +392,11 @@ static void cpu_reset(void)
 		else
 			cpunum_suspend(cpunum, SUSPEND_REASON_DISABLE, 1);
 
-		/* reset the interrupt state */
-		cpuint_reset_cpu(cpunum);
-
 		/* reset the total number of cycles */
 		cpu[cpunum].totalcycles = 0;
 
 		/* then reset the CPU directly */
-		cpunum_reset(cpunum, Machine->drv->cpu[cpunum].reset_param, cpu_irq_callbacks[cpunum]);
+		cpunum_reset(cpunum);
 	}
 
 	/* reset the globals */
@@ -388,7 +413,7 @@ static void cpu_reset(void)
  *
  *************************************/
 
-static void cpu_exit(void)
+static void cpuexec_exit(void)
 {
 	int cpunum;
 
@@ -577,7 +602,7 @@ READ32_HANDLER( watchdog_reset32_r )
  *
  *************************************/
 
-void cpu_timeslice(void)
+void cpuexec_timeslice(void)
 {
 	mame_time target = mame_timer_next_fire_time();
 	mame_time base = mame_timer_get_time();
@@ -937,8 +962,11 @@ int cycles_left_to_run(void)
 
 UINT32 activecpu_gettotalcycles(void)
 {
-	VERIFY_EXECUTINGCPU(0, activecpu_gettotalcycles);
-	return cpu[activecpu].totalcycles + cycles_currently_ran();
+	VERIFY_ACTIVECPU(0, activecpu_gettotalcycles);
+	if (activecpu == cpu_getexecutingcpu())
+		return cpu[activecpu].totalcycles + cycles_currently_ran();
+	else
+		return cpu[activecpu].totalcycles;
 }
 
 UINT32 cpunum_gettotalcycles(int cpunum)
@@ -953,8 +981,11 @@ UINT32 cpunum_gettotalcycles(int cpunum)
 
 UINT64 activecpu_gettotalcycles64(void)
 {
-	VERIFY_EXECUTINGCPU(0, activecpu_gettotalcycles64);
-	return cpu[activecpu].totalcycles + cycles_currently_ran();
+	VERIFY_ACTIVECPU(0, activecpu_gettotalcycles64);
+	if (activecpu == cpu_getexecutingcpu())
+		return cpu[activecpu].totalcycles + cycles_currently_ran();
+	else
+		return cpu[activecpu].totalcycles;
 }
 
 UINT64 cpunum_gettotalcycles64(int cpunum)
@@ -1040,7 +1071,7 @@ int cpu_scalebyfcount(int value)
  *
  *************************************/
 
-static void cpu_init_refresh_timer(void)
+static void init_refresh_timer(void)
 {
 	/* we rely on this being NULL for the time being */
 	vblank_timer = NULL;

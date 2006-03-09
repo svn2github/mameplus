@@ -30,6 +30,8 @@ void neogeo_register_main_savestate(void);
 extern UINT16 *neogeo_ram16;
 extern UINT16 *neogeo_sram16;
 
+extern UINT8 *neogeo_memcard;
+
 extern UINT8 *neogeo_game_vectors;
 
 MACHINE_START( neogeo );
@@ -45,24 +47,16 @@ NVRAM_HANDLER( neogeo );
 
 READ16_HANDLER( neogeo_memcard16_r );
 WRITE16_HANDLER( neogeo_memcard16_w );
-
-extern int neogeo_memcard_is_loaded;
-
-int neogeo_memcard_load(int);
-void neogeo_memcard_save(void);
-void neogeo_memcard_eject(void);
-int neogeo_memcard_create(int);
+MEMCARD_HANDLER( neogeo );
 
 
-/* defined in machine/neocrypt.c */
+/* defined in machine/neocrypt.c*/
 
 extern int neogeo_fix_bank_type;
 
 void kof99_neogeo_gfx_decrypt(int extra_xor);
 void kof2000_neogeo_gfx_decrypt(int extra_xor);
-void cmc42_neogeo_gfx_decrypt(int extra_xor);
 void cmc50_neogeo_gfx_decrypt(int extra_xor);
-void neogeo_sfix_decrypt(void);
 void kof99_decrypt_68k(void);
 void garou_decrypt_68k(void);
 void garouo_decrypt_68k(void);

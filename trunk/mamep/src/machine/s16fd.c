@@ -142,7 +142,7 @@ void fd1094_machine_init(void)
 
 	cpunum_set_info_fct(0, CPUINFO_PTR_M68K_CMPILD_CALLBACK, (genf *)fd1094_cmp_callback);
 	cpunum_set_info_fct(0, CPUINFO_PTR_M68K_RTE_CALLBACK, (genf *)fd1094_rte_callback);
-	cpu_set_irq_callback(0, fd1094_int_callback);
+	cpunum_set_irq_callback(0, fd1094_int_callback);
 }
 
 static void fd1094_postload(void)

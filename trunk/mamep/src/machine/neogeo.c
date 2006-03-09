@@ -20,12 +20,9 @@ UINT16 *neogeo_sram16;
 
 
 /***************** MEMCARD GLOBAL VARIABLES ******************/
-static UINT8 *neogeo_memcard;		/* Pointer to 2kb RAM zone */
+UINT8 *neogeo_memcard;		/* Pointer to 2kb RAM zone */
 
 UINT8 *neogeo_game_vectors;
-
-INT32 neogeo_memcard_is_loaded;
-static INT32 memcard_number;
 
 static void neogeo_custom_memory(void);
 static void neogeo_register_sub_savestate(void);
@@ -254,14 +251,6 @@ DRIVER_INIT( neogeo )
 	/* Allocate and point to the memcard - bank 5 */
 	neogeo_memcard = auto_malloc(0x800);
 	memset(neogeo_memcard, 0, 0x800);
-	neogeo_memcard_is_loaded = 0;
-	memcard_number = 0;
-
-	memcard_init();
-	memcard_intf.create = neogeo_memcard_create;
-	memcard_intf.load = neogeo_memcard_load;
-	memcard_intf.save = neogeo_memcard_save;
-	memcard_intf.eject = neogeo_memcard_eject;
 
 	mem16 = (UINT16 *)memory_region(REGION_USER1);
 
@@ -366,9 +355,6 @@ NVRAM_HANDLER( neogeo )
 	{
 		/* Save the SRAM settings */
 		mame_fwrite_msbfirst(file,neogeo_sram16,0x2000);
-
-		/* save the memory card */
-		neogeo_memcard_save();
 	}
 	else
 	{
@@ -377,9 +363,6 @@ NVRAM_HANDLER( neogeo )
 			mame_fread_msbfirst(file,neogeo_sram16,0x2000);
 		else
 			memset(neogeo_sram16,0,0x10000);
-
-		/* load the memory card */
-		neogeo_memcard_load(memcard_number);
 	}
 }
 
@@ -411,7 +394,7 @@ NVRAM_HANDLER( neogeo )
 /********************* MEMCARD ROUTINES **********************/
 READ16_HANDLER( neogeo_memcard16_r )
 {
-	if (neogeo_memcard_is_loaded)
+	if (memcard_present() != -1)
 		return neogeo_memcard[offset] | 0xff00;
 	else
 		return ~0;
@@ -421,75 +404,30 @@ WRITE16_HANDLER( neogeo_memcard16_w )
 {
 	if (ACCESSING_LSB)
 	{
-		if (neogeo_memcard_is_loaded)
+		if (memcard_present() != -1)
 			neogeo_memcard[offset] = data & 0xff;
 	}
 }
 
-int neogeo_memcard_load(int number)
-{
-	char name[16];
-	mame_file *f;
-
-	sprintf(name, "MEMCARD.%03d", memcard_number);
-	if ((f=mame_fopen(0, name, FILETYPE_MEMCARD, 0))!=0)
-	{
-		mame_fread(f, neogeo_memcard, 0x800);
-		mame_fclose(f);
-
-		neogeo_memcard_is_loaded = 1;
-		memcard_number = number;
-
-		return 1;
-	}
-
-	return 0;
-}
-
-void neogeo_memcard_save(void)
-{
-	char name[16];
-	mame_file *f;
-
-	if (neogeo_memcard_is_loaded)
-	{
-		sprintf(name, "MEMCARD.%03d", memcard_number);
-		if ((f=mame_fopen(0, name, FILETYPE_MEMCARD, 1))!=0)
-		{
-			mame_fwrite(f, neogeo_memcard, 0x800);
-			mame_fclose(f);
-		}
-	}
-}
-
-void neogeo_memcard_eject(void)
-{
-	neogeo_memcard_save();
-
-	memset(neogeo_memcard, 0, 0x800);
-	neogeo_memcard_is_loaded = 0;
-}
-
-int neogeo_memcard_create(int number)
+MEMCARD_HANDLER( neogeo )
 {
 	char buf[0x800];
-	char name[16];
-	mame_file *f1, *f2;
 
-	sprintf(name, "MEMCARD.%03d", number);
-	if ((f1=mame_fopen(0, name, FILETYPE_MEMCARD, 0))==0)
+	switch (action)
 	{
-		if ((f2=mame_fopen(0, name, FILETYPE_MEMCARD, 1))!=0)
-		{
-			mame_fwrite(f2, buf, 0x800);
-			mame_fclose(f2);
-			return 1;
-		}
-	}
-	else
-		mame_fclose(f1);
+		case MEMCARD_CREATE:
+			memset(buf, 0, sizeof(buf));
+			mame_fwrite(file, neogeo_memcard, 0x800);
+			break;
 
-	return 0;
+		case MEMCARD_INSERT:
+			mame_fread(file, neogeo_memcard, 0x800);
+			break;
+
+		case MEMCARD_EJECT:
+			mame_fwrite(file, neogeo_memcard, 0x800);
+			break;
+	}
 }
 
 /******************************************************************************/
@@ -502,7 +440,5 @@ static void neogeo_register_sub_savestate(void)
 	state_save_register_global_pointer(neogeo_ram16, 0x10000/2);
 	state_save_register_global_pointer(neogeo_memcard, 0x800);
 	state_save_register_global_pointer(gamevector, 0x80);
-	state_save_register_global(neogeo_memcard_is_loaded);
-	state_save_register_global(memcard_number);
 	state_save_register_global(neogeo_prot_data);
 }
