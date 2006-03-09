@@ -65,10 +65,10 @@ extern SHAREDOBJ_DATA char            build_version[];
 extern SHAREDOBJ_DATA global_options  options;
 extern SHAREDOBJ_DATA running_machine *Machine;
 extern SHAREDOBJ_FUNC(void)   expand_machine_driver(void (*constructor)(machine_config *), machine_config *output);
-extern SHAREDOBJ_FUNC(int)    mame_validitychecks(void);
 extern SHAREDOBJ_FUNC(void)   begin_resource_tracking(void);
 extern SHAREDOBJ_FUNC(void)   end_resource_tracking(void);
 extern SHAREDOBJ_FUNC(void *) _auto_malloc(size_t size, const char *file, int line) ATTR_MALLOC;
+extern SHAREDOBJ_FUNC(int)    mame_validitychecks(void);
 
 #include "osdepend.h"
 extern SHAREDOBJ_FUNC(void) logerror(const char *text,...);
@@ -218,6 +218,9 @@ extern SHAREDOBJ_FUNC(void)  CLIB_DECL free(void *memory);
 #include "mamecore.h"
 #include "mame.h"
 
+// in validity.c
+extern int mame_validitychecks(void);
+
 // in windows/winmain.c
 extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 
@@ -242,6 +245,9 @@ extern const int win_key_trans_table[][4];
 #include "mamecore.h"
 #include "mame.h"
 
+// in validity.c
+extern int mame_validitychecks(void);
+
 // in windows/winmain.c
 extern int main_(int argc, char **argv);
 
@@ -259,10 +265,6 @@ extern struct rc_option video_opts[];
 
 // in windows/input.c
 extern const int win_key_trans_table[][4];
-
-// in ui/m32util.c
-extern void __cdecl dprintf(const char* fmt, ...);
-
 
 #endif /* !DONT_USE_DLL */
 

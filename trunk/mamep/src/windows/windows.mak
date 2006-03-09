@@ -222,9 +222,11 @@ OSDBGLDFLAGS =
 
 # debug build: enable guard pages on all memory allocations
 ifdef DEBUG
+ifeq ($(WINUI),)
 DEFS += -DMALLOC_DEBUG
 OSDBGOBJS += $(OBJ)/$(MAMEOS)/winalloc.o
 OSDBGLDFLAGS += -Wl,--allow-multiple-definition
+endif
 endif
 
 

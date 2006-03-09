@@ -23,16 +23,11 @@
 
 #undef assert
 #ifdef MAME_DEBUG
+#include "M32Util.h"
 #define assert(x)	do { if (!(x)) { printf("assert: %s:%d: %s", __FILE__, __LINE__, #x); dprintf("assert: %s:%d: %s", __FILE__, __LINE__, #x); exit(-1); } } while (0)
 #else
 #define assert(x)
 #endif
-
-#ifdef MALLOC_DEBUG
-#undef malloc
-#undef calloc
-#undef realloc
-#endif /* MALLOC_DEBUG */
 
 #undef strdup
 #undef stricmp
