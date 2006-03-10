@@ -1747,8 +1747,9 @@ fireshrk	鮫！鮫！鮫！ / Fire Shark	さめさめさめ	Toaplan
 samesame	鮫！鮫！鮫！	さめさめさめ	Toaplan
 samesam2	鮫！鮫！鮫！ (2P ver)	さめさめさめ	Toaplan
 outzone	アウトゾーン (set 1)	あうとぞーん	Toaplan
-outzonea	アウトゾーン (set 2 prototype?)	あうとぞーん	Toaplan
-outzoneb	アウトゾーン (set 3)	あうとぞーん	Toaplan
+outzonea	アウトゾーン (set 2)	あうとぞーん	Toaplan
+outzoneb	アウトゾーン (set 3 prototype?)	あうとぞーん	Toaplan
+outzonec	アウトゾーン (set 4)	あうとぞーん	Toaplan
 vimana	ヴィマナ	びまな	Toaplan
 vimana1	ヴィマナ (old set)	びまな	Toaplan
 vimanan	ヴィマナ (Nova Apparate GMBH & Co)	びまな	Toaplan (Nova Apparate GMBH &amp; Co license)
@@ -1876,6 +1877,7 @@ blast30	ブラスター (early 30 wave ver)	ぶらすたー	Williams
 blastkit	ブラスター (kit)	ぶらすたー	Williams
 spdball	スピードボール -Contest at Neonworld (prototype)	すぴーどぼーる	Williams
 alienar	エイリアンアリーナ	えいりあんありーな	Duncan Brown
+alienaru	エイリアンアリーナ (Stargate Upgrade)	えいりあんありーな	Duncan Brown
 mysticm	ミスティックマラソン	みすてぃっくまらそん	Williams
 tshoot	ターキーシュート -The Day They Took Over	たーきーしゅーと	Williams
 inferno	インフェルノ	いんふぇるの	Williams
@@ -2361,13 +2363,15 @@ primglex	Jリーグサッカー プライムゴールEX (PG1/VER.A)	じぇいりーぐさっかー_2ぷら
 danceyes	ダンシングアイ (DC1/VER.A)	だんしんぐあい	Namco
 starswep	スタースイープ (STP1/VER.A)	すたーすいーぷ	Axela/Namco
 myangel3	子育てクイズ マイエンジェル3 -マイリトルペット (KQT1/VER.A)	こそだてくいずまいえんじぇる_3	Namco
-ptblank2	ガンバァール / Point Blank 2 (GNB3/VER.A)	がんばぁーる	Namco
+ptblnk2a	ガンバァール / Point Blank 2 (GNB3/VER.A)	がんばぁーる	Namco
 tekken3	鉄拳3 (TET1/VER.E1)	てっけん_3	Namco
-tekken3a	鉄拳3 (TET2/VER.A)	てっけん_3	Namco
+tekken3a	鉄拳3 (TET2/VER.B)	てっけん_3	Namco
+tekken3b	鉄拳3 (TET2/VER.A)	てっけん_3	Namco
 lbgrande	リベログランデ (LG2/VER.A)	りべろぐらんで	Namco
 soulclbr	ソウルキャリバー (SOC14/VER.C)	そうるきゃりばー	Namco
-soulclba	ソウルキャリバー (SOC11/VER.B)	そうるきゃりばー	Namco
-soulclbb	ソウルキャリバー (SOC11/VER.A2)	そうるきゃりばー	Namco
+soulclba	ソウルキャリバー (SOC11/VER.C)	そうるきゃりばー	Namco
+soulclbb	ソウルキャリバー (SOC11/VER.B)	そうるきゃりばー	Namco
+soulclbc	ソウルキャリバー (SOC11/VER.A2)	そうるきゃりばー	Namco
 ehrgeiz	エアガイツ -God Bless The Ring (EG3/VER.A)	えあがいつ	Square/Namco
 ehrgeiza	エアガイツ -God Bless The Ring (EG2/VER.A)	えあがいつ	Square/Namco
 mdhorse	ダービークイズ マイドリームホース (MDH1/VER.A2)	だーびーくいずまいどりーむほーす	Namco
@@ -2375,20 +2379,25 @@ tenkomor	てんこもりシューティング (TKM2/VER.A1)	てんこもりしゅーてぃんぐ	Namco
 tenkomoj	てんこもりシューティング (TKM1/VER.A1)	てんこもりしゅーてぃんぐ	Namco
 fgtlayer	ファイティングレイヤー (FTL0/VER.A)	ふぁいてぃんぐれいやー	Arika/Namco
 pacapp	パカパカパッション (PPP1/VER.A2)	ぱかぱかぱっしょん_1	Produce/Namco
+ptblank2	ガンバァール / Point Blank 2 (GNB5/VER.A)	がんばぁーる	Namco
 sws99	スーパーワールドスタジアム1999 (SS91/VER.A3)	すーぱーわーるどすたじあむ_799	Namco
 tektagt	鉄拳タッグトーナメント (TEG3/VER.C1)	てっけん_4たっぐとーなめんと	Namco
 tektagta	鉄拳タッグトーナメント (TEG3/VER.B)	てっけん_4たっぐとーなめんと	Namco
+tektagtb	鉄拳タッグトーナメント (TEG1/VER.B)	てっけん_4たっぐとーなめんと	Namco
+tektagtc	鉄拳タッグトーナメント (TEG1/VER.A3)	てっけん_4たっぐとーなめんと	Namco
 ghlpanic	オーバキューン / Ghoul Panic (OB2/VER.A)	おーばきゅーん	Namco
 pacapp2	パカパカパッション 2 (PKS1/VER.A)	ぱかぱかぱっしょん_2_1	Produce/Namco
 mrdrillr	ミスタードリラー (DRI1/VER.A2)	みすたーどりらー_1	Namco
 aquarush	アクアラッシュ (AQ1/VER.A1)	あくあらっしゅ	Namco
 pacappsp	パカパカパッション スペシャル (PSP1/VER.A)	ぱかぱかぱっしょん_2_2すぺしゃる	Produce/Namco
-golgo13	ゴルゴ13 (GLG1/VER.A)	ごるご13	Raizing/Namco
+golgo13	ゴルゴ13 (GLG1/VER.A)	ごるご13_1	Raizing/Namco
+g13knd	ゴルゴ13 奇跡の弾道 (GLS1/VER.A)	ごるごさーてぃーん_2きせきのだんどう	Raizing/Namco
 mrdrilr2	ミスタードリラー2 (DR21 verA)	みすたーどりらー_2	Namco
 gjspace	雀スペース／撃牌砦　2GAMES in ONE (10011 verA)	じゃんすぺーすげきとりでつーげーむずいんわん	Namco/Metro
 mrdrilrg	ミスタードリラーグレート (DRG1 verA)	みすたーどりらー_3ぐれーと	Namco
 knpuzzle	ことばのパズル もじぴったん (KPM1 verA)	ことばのぱずるもじぴったん	Namco
 startrgn	スタートリゴン (STT1 verA)	すたーとりごん	Namco
+gamshara	銃武者羅 (10021 ver A)	がむしゃら	Mitchell
 cryptklr	ヘンリーエクスプローラーズ / Crypt Killer (GQ420 UAA)	へんりーえくすぷろーらーず	Konami
 kdeadeye	デッドアイ (GV054 UA01)	でっどあい	Konami
 pbball96	実況パワフルプロ野球'96 (GV017 JAPAN 1.03)	じっきょうぱわふるぷろやきゅう96	Konami
@@ -4379,6 +4388,7 @@ kof95a	ザ・キング・オブ・ファイターズ '95 (set 2)	ざきんぐおぶふぁいたーず_02_19
 tws96	テクモワールドサッカー '96	てくもわーるどさっかー96	Tecmo
 samsho3	サムライスピリッツ -斬紅郎無双剣 (set 1)	さむらいすぴりっつ_3	SNK
 samsho3a	サムライスピリッツ -斬紅郎無双剣 (set 2)	さむらいすぴりっつ_3	SNK
+fswords	サムライスピリッツ -斬紅郎無双剣 / Fighters Swords (韓国版)	さむらいすぴりっつ_3	SNK
 stakwin	ステークスウィナー -GI完全制覇への道	すてーくすうぃなー_1	Saurus
 pulstar	パルスター	ぱるすたー	Aicom
 whp	ワールドヒーローズパーフェクト	わーるどひーろーず_3ぱーふぇくと	ADK / SNK
@@ -4387,6 +4397,7 @@ neobombe	ネオ・ボンバーマン	ねおぼんばーまん	Hudson
 gowcaizr	超人学園ゴウカイザー	ちょうじんがくえんごうかいざー	Technos
 rbff1	リアルバウト餓狼伝説	りあるばうとがろうでんせつ_1_1	SNK
 aof3	アート・オブ・ファイティング 龍虎の拳外伝	あーとおぶふぁいてぃんぐりゅうこのけんがいでん	SNK
+aof3k	アート・オブ・ファイティング 龍虎の拳外伝 / Art of Fighting 3 - The Path of the Warrior (韓国版)	あーとおぶふぁいてぃんぐりゅうこのけんがいでん	SNK
 sonicwi3	ソニックウィングス3	そにっくうぃんぐす_3	Video System Co.
 turfmast	ビッグトーナメントゴルフ	びっぐとーなめんとごるふ	Nazca
 mslug	メタルスラッグ -Super Vehicle-001	めたるすらっぐ_1	Nazca
@@ -4424,6 +4435,7 @@ kog	ザ・キング・オブ・ファイターズ '97 / King of Gladiator (海賊版)	ざきんぐおぶ
 magdrop3	マジカルドロップIII	まじかるどろっぷ_3	Data East Corporation
 lastblad	幕末浪漫 月華の剣士 (set 1)	ばくまつろまんげっかのけんし_1	SNK
 lastblda	幕末浪漫 月華の剣士 (set 2)	ばくまつろまんげっかのけんし_1	SNK
+lastsold	幕末浪漫 月華の剣士 / The Last Solider (韓国版)	ばくまつろまんげっかのけんし_1	SNK
 puzzldpr	パズルdeポン！R	ぱずるでぽん_2あーる	Taito (Visco license)
 irrmaze	ウッチャンナンチャンの炎のチャレンジャー ウルトラ電流イライラ棒	うっちゃんなんちゃんのほのおのちゃれんじゃーうるとらでんりゅういらいらぼう	SNK / Saurus
 popbounc	ガッポリン	がっぽりん	Video System Co.
@@ -4432,6 +4444,7 @@ shocktra	ショックトルーパーズ  (set 2)	しょっくとるーぱーず_1	Saurus
 blazstar	ブレイジングスター	ぶれいじんぐすたー	Yumekobo
 rbff2	リアルバウト餓狼伝説2 -ザ・ニューカマーズ (set 1)	りあるばうとがろうでんせつ_2	SNK
 rbff2a	リアルバウト餓狼伝説2 -ザ・ニューカマーズ (set 2)	りあるばうとがろうでんせつ_2	SNK
+rbff2k	リアルバウト餓狼伝説2 -ザ・ニューカマーズ / Real Bout Fatal Fury 2 - The Newcomers (韓国版)	りあるばうとがろうでんせつ_2	SNK
 mslug2	メタルスラッグ2 -Super Vehicle-001/II	めたるすらっぐ_2_1	SNK
 kof98	ザ・キング・オブ・ファイターズ '98 -ドリームマッチネバーエンズ	ざきんぐおぶふぁいたーず_05_1998	SNK
 kof98k	ザ・キング・オブ・ファイターズ '98 -ドリームマッチネバーエンズ (韓国基板)	ざきんぐおぶふぁいたーず_05_1998	SNK
@@ -5148,9 +5161,12 @@ gunbird2	ガンバード2	がんばーど_2	Psikyo
 s1945iii	ストライカーズ1999 (日本版)	すとらいかーず_21999	Psikyo
 dragnblz	ドラゴンブレイズ	どらごんぶれいず	Psikyo
 gnbarich	ガンバリッチ	がんばりっち	Psikyo
+mjgtaste	G-taste麻雀	じぃていすとまーじゃん	Psikyo
 hotgmck	対戦ホットギミック (日本版)	たいせんほっとぎみっく_1	Psikyo
 hgkairak	対戦ホットギミック 快楽天 (日本版)	たいせんほっとぎみっく_2かいらくてん	Psikyo
 hotgmck3	対戦ホットギミック3 デジタルサーフィン (日本版)	たいせんほっとぎみっく_3でじたるさーふぃん	Psikyo
+hotgm4ev	対戦ホットギミックフォーエバー (日本版)	たいせんほっとぎみっく_4ふぉーえばー	Psikyo
+hotgmcki	ホットギミックインテグラル (日本版)	ほっとぎみっくいんてぐらる	Psikyo
 loderndf	ロードランナー・ザ・ディグファイト (日本版 ver B)	ろーどらんなー_5ざでぃぐふぁいと	Psikyo
 loderdfa	ロードランナー・ザ・ディグファイト (日本版 ver A)	ろーどらんなー_5ざでぃぐふぁいと	Psikyo
 hotdebut	クイズでアイドル！ ホットデビュー (日本版)	くいずであいどるほっとでびゅー	Psikyo / Moss
@@ -5425,6 +5441,7 @@ gulfstrm	ガルフストーム	がるふすとーむ	Dooyong
 gulfstr2	ガルフストーム (Media Shoji)	がるふすとーむ	Dooyong (Media Shoji license)
 pollux	ポラックス (set 1)	ぽらっくす	Dooyong
 polluxa	ポラックス (set 2)	ぽらっくす	Dooyong
+polluxa2	ポラックス (set 3)	ぽらっくす	Dooyong
 flytiger	フライングタイガー	ふらいんぐたいがー	Dooyong
 bluehawk	ブルーホーク	ぶるーほーく	Dooyong
 bluehawn	ブルーホーク (NTC)	ぶるーほーく	[Dooyong] (NTC license)
