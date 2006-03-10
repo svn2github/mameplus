@@ -8,7 +8,9 @@
 //============================================================
 
 // Needed for RAW Input
+#ifndef _WIN32_WINNT
 #define _WIN32_WINNT 0x501
+#endif
 
 // standard windows headers
 #define WIN32_LEAN_AND_MEAN
@@ -20,7 +22,6 @@
 
 // undef WINNT for dinput.h to prevent duplicate definition
 #undef WINNT
-#define DIRECTINPUT_VERSION 0x0700
 #include <dinput.h>
 
 // MAME headers
@@ -127,7 +128,11 @@ struct _raw_mouse
 	HANDLE			device_handle;
 
 	// Current mouse axis and button info
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
+	DIMOUSESTATE2	mouse_state;
+#else /* USE_JOY_MOUSE_MOVE */
 	DIMOUSESTATE	mouse_state;
+#endif /* USE_JOY_MOUSE_MOVE */
 
 	// Used to determine if the HID is using absolute mode or relative mode
 	USHORT			flags;
@@ -1429,7 +1434,11 @@ void win_pause_input(int paused)
 		// acquire all our mice if active
 		if (!win_use_raw_mouse)
 			if (mouse_active && !win_has_menu())
-				for (i = 0; i < mouse_count && (win_use_mouse || use_lightgun); i++)
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
+				for (i = 0; i < mouse_count && (use_mouse || use_lightgun || use_stickpoint); i++)
+#else /* USE_JOY_MOUSE_MOVE */
+				for (i = 0; i < mouse_count && (use_mouse || use_lightgun); i++)
+#endif /* USE_JOY_MOUSE_MOVE */
 					IDirectInputDevice_Acquire(mouse_device[i]);
 	}
 
@@ -1556,7 +1565,11 @@ void win_poll_input(void)
 	else
 	{
 		if (mouse_active && !win_has_menu())
-			for (i = 0; i < mouse_count && (win_use_mouse||use_lightgun); i++)
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
+			for (i = 0; i < mouse_count && (use_mouse||use_lightgun||use_stickpoint); i++)
+#else /* USE_JOY_MOUSE_MOVE */
+			for (i = 0; i < mouse_count && (use_mouse||use_lightgun); i++)
+#endif /* USE_JOY_MOUSE_MOVE */
 			{
 				// first poll the device
 				if (mouse_device2[i])
@@ -1857,9 +1870,9 @@ static void init_joycodes(void)
 	for (mouse = 0; mouse < mouse_count; mouse++)
 	{
 		if (mouse_count > 1)
-			sprintf(mousename, "Mouse %d ", mouse + 1);
+			sprintf(mousename, _WINDOWS("Mouse %d "), mouse + 1);
 		else
-			sprintf(mousename, "Mouse ");
+			sprintf(mousename, _WINDOWS("Mouse "));
 		// add analog axes (fix me -- should enumerate these)
 		sprintf(tempname, "%sX", mousename);
 		add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSEAXIS, 0), CODE_OTHER_ANALOG_RELATIVE);
@@ -1868,12 +1881,52 @@ static void init_joycodes(void)
 		sprintf(tempname, "%sZ", mousename);
 		add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSEAXIS, 2), CODE_OTHER_ANALOG_RELATIVE);
 
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
+		if (!win_use_raw_mouse)
+		{
+			// add joy-mouse axes
+			// loop over all axes
+			for (axis = 0; axis < MAX_MOUSEAXES; axis++)
+			{
+				DIDEVICEOBJECTINSTANCE instance = { 0 };
+				HRESULT result;
+
+				// attempt to get the object info
+				instance.dwSize = STRUCTSIZE(DIDEVICEOBJECTINSTANCE);
+				result = IDirectInputDevice_GetObjectInfo(mouse_device[mouse], &instance, offsetof(DIMOUSESTATE2, lX) + axis * sizeof(LONG), DIPH_BYOFFSET);
+				if (result == DI_OK)
+				{
+					// add negative value
+					if (mouse_count > 1)
+						sprintf(tempname, _WINDOWS("Stick %d %s -"), mouse + 1, instance.tszName);
+					else
+						sprintf(tempname, _WINDOWS("Stick %s -"), instance.tszName);
+					add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSEAXIS_NEG, axis), CODE_OTHER_ANALOG_RELATIVE);
+
+					// add positive value
+					if (mouse_count > 1)
+						sprintf(tempname, _WINDOWS("Stick %d %s +"), mouse + 1, instance.tszName);
+					else
+						sprintf(tempname, _WINDOWS("Stick %s +"), instance.tszName);
+					add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSEAXIS_POS, axis), CODE_OTHER_ANALOG_RELATIVE);
+
+					// get the axis range while we're here
+					mouse_range[mouse][axis].diph.dwSize = sizeof(DIPROPRANGE);
+					mouse_range[mouse][axis].diph.dwHeaderSize = sizeof(mouse_range[mouse][axis].diph);
+					mouse_range[mouse][axis].diph.dwObj = offsetof(DIMOUSESTATE2, lX) + axis * sizeof(LONG);
+					mouse_range[mouse][axis].diph.dwHow = DIPH_BYOFFSET;
+					result = IDirectInputDevice_GetProperty(mouse_device[mouse], DIPROP_RANGE, &mouse_range[mouse][axis].diph);
+				}
+			}
+		}
+#endif /* USE_JOY_MOUSE_MOVE */
+
 		// add mouse buttons
 		for (button = 0; button < 4; button++)
 		{
 			if (win_use_raw_mouse)
 			{
-				sprintf(tempname, "Mouse %d Button %d", mouse + 1, button + 1);
+				sprintf(tempname, _WINDOWS("Mouse %d Button %d"), mouse + 1, button + 1);
 				add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSEBUTTON, button), CODE_OTHER_DIGITAL);
 			}
 			else
@@ -1883,16 +1936,32 @@ static void init_joycodes(void)
 
 				// attempt to get the object info
 				instance.dwSize = STRUCTSIZE(DIDEVICEOBJECTINSTANCE);
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
+				// for VAIO U101 Center Button Patch
+				result = IDirectInputDevice_GetObjectInfo(mouse_device[mouse], &instance, offsetof(DIMOUSESTATE2, rgbButtons[button]), DIPH_BYOFFSET);
+#else /* USE_JOY_MOUSE_MOVE */
 				result = IDirectInputDevice_GetObjectInfo(mouse_device[mouse], &instance, offsetof(DIMOUSESTATE, rgbButtons[button]), DIPH_BYOFFSET);
+#endif /* USE_JOY_MOUSE_MOVE */
 				if (result == DI_OK)
 				{
 					// add mouse number to the name
 					if (mouse_count > 1)
-						sprintf(tempname, "Mouse %d %s", mouse + 1, instance.tszName);
+						sprintf(tempname, _WINDOWS("Mouse %d %s"), mouse + 1, instance.tszName);
 					else
-						sprintf(tempname, "Mouse %s", instance.tszName);
+						sprintf(tempname, _WINDOWS("Mouse %s"), instance.tszName);
 					add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSEBUTTON, button), CODE_OTHER_DIGITAL);
 				}
+#ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
+				// for VAIO U101 Center Button Patch
+				else if (button == 2)
+				{
+					if (mouse_count > 1)
+						sprintf(tempname, _WINDOWS("Mouse %d %s"), mouse + 1, "B2");
+					else
+						sprintf(tempname, _WINDOWS("Mouse %s"), "B2");
+					add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSEBUTTON, button), CODE_OTHER_DIGITAL);
+				}
+#endif /* USE_JOY_MOUSE_MOVE */
 			}
 		}
 	}

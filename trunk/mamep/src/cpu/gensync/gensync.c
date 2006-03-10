@@ -20,7 +20,6 @@
 #include "driver.h"
 #include "debugger.h"
 #include "state.h"
-#include "mamedbg.h"
 #include "gensync.h"
 
 /* Layout of the registers in the debugger */
@@ -60,10 +59,15 @@ static int gensync_icount;
  *		int video[] = {454,262, 0,32,64,80, 0,4,8,16 };
  * for the reset_param to the CPU_GENSYNC entry.
  */
-static void gensync_reset(void *param)
+static void gensync_reset(void)
 {
-	int *video = param;
 	gensync.pc = 0;
+}
+
+static void gensync_init(int index, int clock, const void *config, int (*irqcallback)(int))
+{
+	const int *video = config;
+
 	gensync.h_max = video[0];
 	gensync.v_max = video[1];
 	gensync.size = gensync.h_max * gensync.v_max;
@@ -75,10 +79,6 @@ static void gensync_reset(void *param)
 	gensync.vsync_start = video[7];
 	gensync.vsync_end = video[8];
 	gensync.vblank_end = video[9];
-}
-
-static void gensync_init(void)
-{
 }
 
 static void gensync_exit(void)
@@ -176,7 +176,6 @@ static void gensync_set_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_INT_SP:							;												break;
 
 		/* --- the following bits of info are set as pointers to data or functions --- */
-		case CPUINFO_PTR_IRQ_CALLBACK:					;												break;
 	}
 
 	gensync.pc = v * gensync.h_max + h;
@@ -292,7 +291,6 @@ void gensync_get_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_PTR_EXECUTE:						info->execute = gensync_execute;		break;
 		case CPUINFO_PTR_BURN:							info->burn = NULL;						break;
 		case CPUINFO_PTR_DISASSEMBLE:					info->disassemble = gensync_dasm;		break;
-		case CPUINFO_PTR_IRQ_CALLBACK:					info->irqcallback = NULL;				break;
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &gensync_icount;			break;
 		case CPUINFO_PTR_REGISTER_LAYOUT:				info->p = gensync_reg_layout;			break;
 		case CPUINFO_PTR_WINDOW_LAYOUT:					info->p = gensync_win_layout;			break;

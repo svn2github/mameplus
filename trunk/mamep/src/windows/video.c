@@ -18,8 +18,8 @@
 // MAME headers
 #include "osdepend.h"
 #include "driver.h"
-#include "artwork.h"
 #include "profiler.h"
+#include "artwork.h"
 #include "vidhrdw/vector.h"
 
 // MAMEOS headers

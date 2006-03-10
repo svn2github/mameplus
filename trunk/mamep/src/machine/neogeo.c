@@ -20,7 +20,7 @@ UINT16 *neogeo_sram16;
 
 
 /***************** MEMCARD GLOBAL VARIABLES ******************/
-UINT8 *neogeo_memcard;		/* Pointer to 2kb RAM zone */
+static UINT8 *neogeo_memcard;		/* Pointer to 2kb RAM zone */
 
 UINT8 *neogeo_game_vectors;
 

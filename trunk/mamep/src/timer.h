@@ -97,6 +97,16 @@ typedef struct _mame_timer mame_timer;
 typedef INT64 subseconds_t;
 typedef INT32 seconds_t;
 
+#ifndef __GNUC__	/* Fix compiler bug (ICC) */
+#undef DOUBLE_TO_SUBSECONDS
+
+INLINE subseconds_t DOUBLE_TO_SUBSECONDS(double x)
+{
+	x *= (double)MAX_SUBSECONDS;
+	return (subseconds_t)x;
+}
+#endif
+
 typedef struct _mame_time mame_time;
 struct _mame_time
 {

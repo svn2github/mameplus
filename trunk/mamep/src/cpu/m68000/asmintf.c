@@ -3,7 +3,6 @@
 */
 
 #include "driver.h"
-#include "mamedbg.h"
 #include "m68000.h"
 
 struct m68k_memory_interface a68k_memory_intf;
@@ -235,28 +234,26 @@ static void m68000_post_load(void)
 	M68000_regs.ccr     = IntelFlag[intel] & 0x0EFF;
 }
 
-void m68000_state_register(const char *type)
+void m68000_state_register(const char *type, int index)
 {
-	int cpu = cpu_getactivecpu();
-
-	state_save_register_UINT32(type, cpu, "m68ki_cpu.dar",         &dar, 16);
-	state_save_register_UINT32(type, cpu, "REG_PPC",               &M68000_regs.previous_pc, 1);
-	state_save_register_UINT32(type, cpu, "REG_PC",                &M68000_regs.pc, 1);
-	state_save_register_UINT32(type, cpu, "REG_USP",               &M68000_regs.usp, 1);
-	state_save_register_UINT32(type, cpu, "REG_ISP",               &M68000_regs.isp, 1);
-	state_save_register_UINT32(type, cpu, "REG_MSP",               &zero, 1);
-	state_save_register_UINT32(type, cpu, "REG_VBR",               &M68000_regs.vbr, 1);
-	state_save_register_UINT32(type, cpu, "REG_SFC",               &M68000_regs.sfc, 1);
-	state_save_register_UINT32(type, cpu, "REG_DFC",               &M68000_regs.dfc, 1);
-	state_save_register_UINT32(type, cpu, "REG_CACR",              &zero, 1);
-	state_save_register_UINT32(type, cpu, "REG_CAAR",              &zero, 1);
-	state_save_register_UINT16(type, cpu, "m68k_substate.sr",      &M68000_regs.sr, 1);
-	state_save_register_UINT32(type, cpu, "CPU_INT_LEVEL",         &M68000_regs.IRQ_level, 1);
-	state_save_register_UINT32(type, cpu, "CPU_INT_CYCLES",        &M68000_regs.IRQ_cycles, 1);
-	state_save_register_UINT8 (type, cpu, "m68k_substate.stopped", &stopped, 1);
-	state_save_register_UINT8 (type, cpu, "m68k_substate.halted",  &halted, 1);
-	state_save_register_UINT32(type, cpu, "CPU_PREF_ADDR",         &zero, 1);
-	state_save_register_UINT32(type, cpu, "CPU_PREF_DATA",         &zero, 1);
+	state_save_register_UINT32(type, index, "m68ki_cpu.dar",         &dar, 16);
+	state_save_register_UINT32(type, index, "REG_PPC",               &M68000_regs.previous_pc, 1);
+	state_save_register_UINT32(type, index, "REG_PC",                &M68000_regs.pc, 1);
+	state_save_register_UINT32(type, index, "REG_USP",               &M68000_regs.usp, 1);
+	state_save_register_UINT32(type, index, "REG_ISP",               &M68000_regs.isp, 1);
+	state_save_register_UINT32(type, index, "REG_MSP",               &zero, 1);
+	state_save_register_UINT32(type, index, "REG_VBR",               &M68000_regs.vbr, 1);
+	state_save_register_UINT32(type, index, "REG_SFC",               &M68000_regs.sfc, 1);
+	state_save_register_UINT32(type, index, "REG_DFC",               &M68000_regs.dfc, 1);
+	state_save_register_UINT32(type, index, "REG_CACR",              &zero, 1);
+	state_save_register_UINT32(type, index, "REG_CAAR",              &zero, 1);
+	state_save_register_UINT16(type, index, "m68k_substate.sr",      &M68000_regs.sr, 1);
+	state_save_register_UINT32(type, index, "CPU_INT_LEVEL",         &M68000_regs.IRQ_level, 1);
+	state_save_register_UINT32(type, index, "CPU_INT_CYCLES",        &M68000_regs.IRQ_cycles, 1);
+	state_save_register_UINT8 (type, index, "m68k_substate.stopped", &stopped, 1);
+	state_save_register_UINT8 (type, index, "m68k_substate.halted",  &halted, 1);
+	state_save_register_UINT32(type, index, "CPU_PREF_ADDR",         &zero, 1);
+	state_save_register_UINT32(type, index, "CPU_PREF_DATA",         &zero, 1);
 	state_save_register_func_presave(m68000_prepare_substate);
 	state_save_register_func_postload(m68000_post_load);
 }
@@ -299,28 +296,26 @@ static void m68010_post_load(void)
 	M68010_regs.ccr     = IntelFlag[intel] & 0x0EFF;
 }
 
-void m68010_state_register(const char *type)
+void m68010_state_register(const char *type, int index)
 {
-	int cpu = cpu_getactivecpu();
-
-	state_save_register_UINT32(type, cpu, "m68ki_cpu.dar",         &dar, 16);
-	state_save_register_UINT32(type, cpu, "REG_PPC",               &M68010_regs.previous_pc, 1);
-	state_save_register_UINT32(type, cpu, "REG_PC",                &M68010_regs.pc, 1);
-	state_save_register_UINT32(type, cpu, "REG_USP",               &M68010_regs.usp, 1);
-	state_save_register_UINT32(type, cpu, "REG_ISP",               &M68010_regs.isp, 1);
-	state_save_register_UINT32(type, cpu, "REG_MSP",               &zero, 1);
-	state_save_register_UINT32(type, cpu, "REG_VBR",               &M68010_regs.vbr, 1);
-	state_save_register_UINT32(type, cpu, "REG_SFC",               &M68010_regs.sfc, 1);
-	state_save_register_UINT32(type, cpu, "REG_DFC",               &M68010_regs.dfc, 1);
-	state_save_register_UINT32(type, cpu, "REG_CACR",              &zero, 1);
-	state_save_register_UINT32(type, cpu, "REG_CAAR",              &zero, 1);
-	state_save_register_UINT16(type, cpu, "m68k_substate.sr",      &M68010_regs.sr, 1);
-	state_save_register_UINT32(type, cpu, "CPU_INT_LEVEL",         &M68010_regs.IRQ_level, 1);
-	state_save_register_UINT32(type, cpu, "CPU_INT_CYCLES",        &M68010_regs.IRQ_cycles, 1);
-	state_save_register_UINT8 (type, cpu, "m68k_substate.stopped", &stopped, 1);
-	state_save_register_UINT8 (type, cpu, "m68k_substate.halted",  &halted, 1);
-	state_save_register_UINT32(type, cpu, "CPU_PREF_ADDR",         &zero, 1);
-	state_save_register_UINT32(type, cpu, "CPU_PREF_DATA",         &zero, 1);
+	state_save_register_UINT32(type, index, "m68ki_cpu.dar",         &dar, 16);
+	state_save_register_UINT32(type, index, "REG_PPC",               &M68010_regs.previous_pc, 1);
+	state_save_register_UINT32(type, index, "REG_PC",                &M68010_regs.pc, 1);
+	state_save_register_UINT32(type, index, "REG_USP",               &M68010_regs.usp, 1);
+	state_save_register_UINT32(type, index, "REG_ISP",               &M68010_regs.isp, 1);
+	state_save_register_UINT32(type, index, "REG_MSP",               &zero, 1);
+	state_save_register_UINT32(type, index, "REG_VBR",               &M68010_regs.vbr, 1);
+	state_save_register_UINT32(type, index, "REG_SFC",               &M68010_regs.sfc, 1);
+	state_save_register_UINT32(type, index, "REG_DFC",               &M68010_regs.dfc, 1);
+	state_save_register_UINT32(type, index, "REG_CACR",              &zero, 1);
+	state_save_register_UINT32(type, index, "REG_CAAR",              &zero, 1);
+	state_save_register_UINT16(type, index, "m68k_substate.sr",      &M68010_regs.sr, 1);
+	state_save_register_UINT32(type, index, "CPU_INT_LEVEL",         &M68010_regs.IRQ_level, 1);
+	state_save_register_UINT32(type, index, "CPU_INT_CYCLES",        &M68010_regs.IRQ_cycles, 1);
+	state_save_register_UINT8 (type, index, "m68k_substate.stopped", &stopped, 1);
+	state_save_register_UINT8 (type, index, "m68k_substate.halted",  &halted, 1);
+	state_save_register_UINT32(type, index, "CPU_PREF_ADDR",         &zero, 1);
+	state_save_register_UINT32(type, index, "CPU_PREF_DATA",         &zero, 1);
 	state_save_register_func_presave(m68010_prepare_substate);
 	state_save_register_func_postload(m68010_post_load);
 }
@@ -363,28 +358,26 @@ static void m68020_post_load(void)
 	M68020_regs.ccr     = IntelFlag[intel] & 0x0EFF;
 }
 
-void m68020_state_register(const char *type)
+void m68020_state_register(const char *type, int index)
 {
-	int cpu = cpu_getactivecpu();
-
-	state_save_register_UINT32(type, cpu, "m68ki_cpu.dar",         &dar, 16);
-	state_save_register_UINT32(type, cpu, "REG_PPC",               &M68020_regs.previous_pc, 1);
-	state_save_register_UINT32(type, cpu, "REG_PC",                &M68020_regs.pc, 1);
-	state_save_register_UINT32(type, cpu, "REG_USP",               &M68020_regs.usp, 1);
-	state_save_register_UINT32(type, cpu, "REG_ISP",               &M68020_regs.isp, 1);
-	state_save_register_UINT32(type, cpu, "REG_MSP",               &zero, 1);
-	state_save_register_UINT32(type, cpu, "REG_VBR",               &M68020_regs.vbr, 1);
-	state_save_register_UINT32(type, cpu, "REG_SFC",               &M68020_regs.sfc, 1);
-	state_save_register_UINT32(type, cpu, "REG_DFC",               &M68020_regs.dfc, 1);
-	state_save_register_UINT32(type, cpu, "REG_CACR",              &zero, 1);
-	state_save_register_UINT32(type, cpu, "REG_CAAR",              &zero, 1);
-	state_save_register_UINT16(type, cpu, "m68k_substate.sr",      &M68020_regs.sr, 1);
-	state_save_register_UINT32(type, cpu, "CPU_INT_LEVEL",         &M68020_regs.IRQ_level, 1);
-	state_save_register_UINT32(type, cpu, "CPU_INT_CYCLES",        &M68020_regs.IRQ_cycles, 1);
-	state_save_register_UINT8 (type, cpu, "m68k_substate.stopped", &stopped, 1);
-	state_save_register_UINT8 (type, cpu, "m68k_substate.halted",  &halted, 1);
-	state_save_register_UINT32(type, cpu, "CPU_PREF_ADDR",         &zero, 1);
-	state_save_register_UINT32(type, cpu, "CPU_PREF_DATA",         &zero, 1);
+	state_save_register_UINT32(type, index, "m68ki_cpu.dar",         &dar, 16);
+	state_save_register_UINT32(type, index, "REG_PPC",               &M68020_regs.previous_pc, 1);
+	state_save_register_UINT32(type, index, "REG_PC",                &M68020_regs.pc, 1);
+	state_save_register_UINT32(type, index, "REG_USP",               &M68020_regs.usp, 1);
+	state_save_register_UINT32(type, index, "REG_ISP",               &M68020_regs.isp, 1);
+	state_save_register_UINT32(type, index, "REG_MSP",               &zero, 1);
+	state_save_register_UINT32(type, index, "REG_VBR",               &M68020_regs.vbr, 1);
+	state_save_register_UINT32(type, index, "REG_SFC",               &M68020_regs.sfc, 1);
+	state_save_register_UINT32(type, index, "REG_DFC",               &M68020_regs.dfc, 1);
+	state_save_register_UINT32(type, index, "REG_CACR",              &zero, 1);
+	state_save_register_UINT32(type, index, "REG_CAAR",              &zero, 1);
+	state_save_register_UINT16(type, index, "m68k_substate.sr",      &M68020_regs.sr, 1);
+	state_save_register_UINT32(type, index, "CPU_INT_LEVEL",         &M68020_regs.IRQ_level, 1);
+	state_save_register_UINT32(type, index, "CPU_INT_CYCLES",        &M68020_regs.IRQ_cycles, 1);
+	state_save_register_UINT8 (type, index, "m68k_substate.stopped", &stopped, 1);
+	state_save_register_UINT8 (type, index, "m68k_substate.halted",  &halted, 1);
+	state_save_register_UINT32(type, index, "CPU_PREF_ADDR",         &zero, 1);
+	state_save_register_UINT32(type, index, "CPU_PREF_DATA",         &zero, 1);
 	state_save_register_func_presave(m68020_prepare_substate);
 	state_save_register_func_postload(m68020_post_load);
 }
@@ -586,44 +579,48 @@ struct m68k_memory_interface m68k_memory_intf;
 
 #ifdef A68K0
 
-static void m68000_init(void)
+static void m68000_init(int index, int clock, const void *config, int (*irqcallback)(int))
 {
-	m68000_state_register("m68000");
+	m68000_state_register("m68000", index);
 	M68000_regs.reset_callback = 0;
 	M68000_regs.cmpild_instr_callback = 0;
 	M68000_regs.rte_instr_callback = 0;
+	M68000_regs.irq_callback = irqcallback;
 }
 
-static void m68000_reset(void *param)
+static void m68000_reset(void)
 {
-	struct m68k_encryption_interface *interface = param;
+	//struct m68k_encryption_interface *interface = param;
 	void (*resetc)(void);
 	void (*cmpic)(unsigned int, int);
 	void (*rtec)(void);
+	int (*irqc)(int irqline);
 
 	// Default Memory Routines
 	a68k_memory_intf = interface_d16;
 	mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].addrmask;
 
 	// Import encryption routines if present
-	if (param)
-	{
-		a68k_memory_intf.read8pc = interface->read8pc;
-		a68k_memory_intf.read16pc = interface->read16pc;
-		a68k_memory_intf.read32pc = interface->read32pc;
-		a68k_memory_intf.read16d = interface->read16d;
-		a68k_memory_intf.read32d = interface->read32d;
-	}
+	//if (param)
+	//{
+	//	a68k_memory_intf.read8pc = interface->read8pc;
+	//	a68k_memory_intf.read16pc = interface->read16pc;
+	//	a68k_memory_intf.read32pc = interface->read32pc;
+	//	a68k_memory_intf.read16d = interface->read16d;
+	//	a68k_memory_intf.read32d = interface->read32d;
+	//}
 
 	resetc = M68000_regs.reset_callback;
 	cmpic = M68000_regs.cmpild_instr_callback;
 	rtec = M68000_regs.rte_instr_callback;
+	irqc = M68000_regs.irq_callback;
 
 	memset(&M68000_regs,0,sizeof(M68000_regs));
 
 	M68000_regs.reset_callback = resetc;
 	M68000_regs.cmpild_instr_callback = cmpic;
 	M68000_regs.rte_instr_callback = rtec;
+	M68000_regs.irq_callback = irqc;
 
 	M68000_regs.a[7] = M68000_regs.isp = (( READOP(0) << 16 ) | READOP(2));
 	M68000_regs.pc   = (( READOP(4) << 16 ) | READOP(6)) & 0xffffff;
@@ -786,44 +783,48 @@ static offs_t m68000_dasm(char *buffer, offs_t pc, UINT8 *oprom, UINT8 *opram, i
 
 #if (HAS_M68008)
 
-static void m68008_init(void)
+static void m68008_init(int index, int clock, const void *config, int (*irqcallback)(int))
 {
-	m68000_state_register("m68008");
+	m68000_state_register("m68008", index);
 	M68000_regs.reset_callback = 0;
 	M68000_regs.cmpild_instr_callback = 0;
 	M68000_regs.rte_instr_callback = 0;
+	M68000_regs.irq_callback = irqcallback;
 }
 
-static void m68008_reset(void *param)
+static void m68008_reset(void)
 {
-	struct m68k_encryption_interface *interface = param;
+	//struct m68k_encryption_interface *interface = param;
 	void (*resetc)(void);
 	void (*cmpic)(unsigned int, int);
 	void (*rtec)(void);
+	int (*irqc)(int irqline);
 
 	// Default Memory Routines
 	a68k_memory_intf = interface_d8;
 	mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].addrmask;
 
 	// Import encryption routines if present
-	if (param)
-	{
-		a68k_memory_intf.read8pc = interface->read8pc;
-		a68k_memory_intf.read16pc = interface->read16pc;
-		a68k_memory_intf.read32pc = interface->read32pc;
-		a68k_memory_intf.read16d = interface->read16d;
-		a68k_memory_intf.read32d = interface->read32d;
-	}
+	//if (param)
+	//{
+	//	a68k_memory_intf.read8pc = interface->read8pc;
+	//	a68k_memory_intf.read16pc = interface->read16pc;
+	//	a68k_memory_intf.read32pc = interface->read32pc;
+	//	a68k_memory_intf.read16d = interface->read16d;
+	//	a68k_memory_intf.read32d = interface->read32d;
+	//}
 
 	resetc = M68000_regs.reset_callback;
 	cmpic = M68000_regs.cmpild_instr_callback;
 	rtec = M68000_regs.rte_instr_callback;
+	irqc = M68000_regs.irq_callback;
 
 	memset(&M68000_regs,0,sizeof(M68000_regs));
 
 	M68000_regs.reset_callback = resetc;
 	M68000_regs.cmpild_instr_callback = cmpic;
 	M68000_regs.rte_instr_callback = rtec;
+	M68000_regs.irq_callback = irqc;
 
 	M68000_regs.a[7] = M68000_regs.isp = (( READOP(0) << 16 ) | READOP(2));
 	M68000_regs.pc   = (( READOP(4) << 16 ) | READOP(6)) & 0xffffff;
@@ -864,44 +865,48 @@ static offs_t m68008_dasm(char *buffer, offs_t pc, UINT8 *oprom, UINT8 *opram, i
 
 #if (HAS_M68010)
 
-static void m68010_init(void)
+static void m68010_init(int index, int clock, const void *config, int (*irqcallback)(int))
 {
-	m68010_state_register("m68010");
+	m68010_state_register("m68010", index);
 	M68010_regs.reset_callback = 0;
 	M68010_regs.cmpild_instr_callback = 0;
 	M68010_regs.rte_instr_callback = 0;
+	M68010_regs.irq_callback = irqcallback;
 }
 
-static void m68010_reset(void *param)
+static void m68010_reset(void)
 {
-	struct m68k_encryption_interface *interface = param;
+	//struct m68k_encryption_interface *interface = param;
 	void (*resetc)(void);
 	void (*cmpic)(unsigned int, int);
 	void (*rtec)(void);
+	int (*irqc)(int irqline);
 
 	// Default Memory Routines
 	a68k_memory_intf = interface_d16;
 	mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].addrmask;
 
 	// Import encryption routines if present
-	if (param)
-	{
-		a68k_memory_intf.read8pc = interface->read8pc;
-		a68k_memory_intf.read16pc = interface->read16pc;
-		a68k_memory_intf.read32pc = interface->read32pc;
-		a68k_memory_intf.read16d = interface->read16d;
-		a68k_memory_intf.read32d = interface->read32d;
-	}
+	//if (param)
+	//{
+	//	a68k_memory_intf.read8pc = interface->read8pc;
+	//	a68k_memory_intf.read16pc = interface->read16pc;
+	//	a68k_memory_intf.read32pc = interface->read32pc;
+	//	a68k_memory_intf.read16d = interface->read16d;
+	//	a68k_memory_intf.read32d = interface->read32d;
+	//}
 
 	resetc = M68010_regs.reset_callback;
 	cmpic = M68010_regs.cmpild_instr_callback;
 	rtec = M68010_regs.rte_instr_callback;
+	irqc = M68010_regs.irq_callback;
 
 	memset(&M68010_regs,0,sizeof(M68010_regs));
 
 	M68010_regs.reset_callback = resetc;
 	M68010_regs.cmpild_instr_callback = cmpic;
 	M68010_regs.rte_instr_callback = rtec;
+	M68010_regs.irq_callback = irqc;
 
 	M68010_regs.a[7] = M68010_regs.isp = (( READOP(0) << 16 ) | READOP(2));
 	M68010_regs.pc   = (( READOP(4) << 16 ) | READOP(6)) & 0xffffff;
@@ -1066,12 +1071,13 @@ static offs_t m68010_dasm(char *buffer, offs_t pc, UINT8 *oprom, UINT8 *opram, i
 
 #if (HAS_M68020)
 
-static void m68020_init(void)
+static void m68020_init(int index, int clock, const void *config, int (*irqcallback)(int))
 {
-	m68020_state_register("m68020");
+	m68020_state_register("m68020", index);
 	M68020_regs.reset_callback = 0;
 	M68020_regs.cmpild_instr_callback = 0;
 	M68020_regs.rte_instr_callback = 0;
+	M68020_regs.irq_callback = irqcallback;
 }
 
 static void m68k32_reset_common(void)
@@ -1079,16 +1085,19 @@ static void m68k32_reset_common(void)
 	void (*resetc)(void);
 	void (*cmpic)(unsigned int, int);
 	void (*rtec)(void);
+	int (*irqc)(int irqline);
 
 	resetc = M68020_regs.reset_callback;
 	cmpic = M68020_regs.cmpild_instr_callback;
 	rtec = M68020_regs.rte_instr_callback;
+	irqc = M68020_regs.irq_callback;
 
 	memset(&M68020_regs,0,sizeof(M68020_regs));
 
 	M68020_regs.reset_callback = resetc;
 	M68020_regs.cmpild_instr_callback = cmpic;
 	M68020_regs.rte_instr_callback = rtec;
+	M68020_regs.irq_callback = irqc;
 
 	M68020_regs.a[7] = M68020_regs.isp = (( READOP(0) << 16 ) | READOP(2));
 	M68020_regs.pc   = (( READOP(4) << 16 ) | READOP(6)) & 0xffffff;
@@ -1101,7 +1110,7 @@ static void m68k32_reset_common(void)
 	M68020_RESET();
 }
 
-static void m68020_reset(void *param)
+static void m68020_reset(void)
 {
 	a68k_memory_intf = interface_d32;
 	mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].addrmask;
@@ -1253,13 +1262,16 @@ static offs_t m68020_dasm(char *buffer, offs_t pc, UINT8 *oprom, UINT8 *opram, i
 
 #if (HAS_M68EC020)
 
-static void m68ec020_init(void)
+static void m68ec020_init(int index, int clock, const void *config, int (*irqcallback)(int))
 {
-	m68020_state_register("m68ec020");
+	m68020_state_register("m68ec020", index);
 	M68020_regs.reset_callback = 0;
+	M68020_regs.cmpild_instr_callback = 0;
+	M68020_regs.rte_instr_callback = 0;
+	M68020_regs.irq_callback = irqcallback;
 }
 
-static void m68ec020_reset(void *param)
+static void m68ec020_reset(void)
 {
 	a68k_memory_intf = interface_d32;
 	mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].addrmask;
@@ -1336,7 +1348,6 @@ static void m68000_set_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_INT_REGISTER + M68K_A7:		M68000_regs.a[7] = info->i;					break;
 		
 		/* --- the following bits of info are set as pointers to data or functions --- */
-		case CPUINFO_PTR_IRQ_CALLBACK:				M68000_regs.irq_callback = info->irqcallback; break;
 		case CPUINFO_PTR_M68K_RESET_CALLBACK:		M68000_regs.reset_callback = info->f;		break;
 		case CPUINFO_PTR_M68K_CMPILD_CALLBACK:		M68000_regs.cmpild_instr_callback = (void (*)(unsigned int,int))info->f;		break;
 		case CPUINFO_PTR_M68K_RTE_CALLBACK:		M68000_regs.rte_instr_callback = info->f;		break;
@@ -1421,7 +1432,6 @@ void m68000asm_get_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_PTR_EXECUTE:						info->execute = m68000_execute;			break;
 		case CPUINFO_PTR_BURN:							info->burn = NULL;						break;
 		case CPUINFO_PTR_DISASSEMBLE_NEW:				info->disassemble_new = m68000_dasm;	break;
-		case CPUINFO_PTR_IRQ_CALLBACK:					/* fix me */							break;
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &m68k_ICount;			break;
 		case CPUINFO_PTR_REGISTER_LAYOUT:				info->p = M68K_layout;					break;
 		case CPUINFO_PTR_WINDOW_LAYOUT:					info->p = m68k_win_layout;				break;
@@ -1552,7 +1562,6 @@ static void m68010_set_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_INT_REGISTER + M68K_A7:		M68010_regs.a[7] = info->i;					break;
 		
 		/* --- the following bits of info are set as pointers to data or functions --- */
-		case CPUINFO_PTR_IRQ_CALLBACK:				M68010_regs.irq_callback = info->irqcallback; break;
 		case CPUINFO_PTR_M68K_RESET_CALLBACK:		M68010_regs.reset_callback = info->f;		break;
 		case CPUINFO_PTR_M68K_CMPILD_CALLBACK:		M68010_regs.cmpild_instr_callback = (void (*)(unsigned int,int))info->f;		break;
 		case CPUINFO_PTR_M68K_RTE_CALLBACK:		M68010_regs.rte_instr_callback = info->f;		break;
@@ -1631,7 +1640,6 @@ void m68010asm_get_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_PTR_EXECUTE:						info->execute = m68010_execute;			break;
 		case CPUINFO_PTR_BURN:							info->burn = NULL;						break;
 		case CPUINFO_PTR_DISASSEMBLE_NEW:				info->disassemble_new = m68010_dasm;	break;
-		case CPUINFO_PTR_IRQ_CALLBACK:					/* fix me */							break;
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &m68k_ICount;			break;
 		case CPUINFO_PTR_REGISTER_LAYOUT:				info->p = M68K_layout;					break;
 		case CPUINFO_PTR_WINDOW_LAYOUT:					info->p = m68k_win_layout;				break;
@@ -1742,7 +1750,6 @@ static void m68020_set_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_INT_REGISTER + M68K_A7:		M68020_regs.a[7] = info->i;					break;
 		
 		/* --- the following bits of info are set as pointers to data or functions --- */
-		case CPUINFO_PTR_IRQ_CALLBACK:				M68020_regs.irq_callback = info->irqcallback; break;
 		case CPUINFO_PTR_M68K_RESET_CALLBACK:		M68020_regs.reset_callback = info->f;		break;
 		case CPUINFO_PTR_M68K_CMPILD_CALLBACK:		M68020_regs.cmpild_instr_callback = (void (*)(unsigned int,int))info->f;		break;
 		case CPUINFO_PTR_M68K_RTE_CALLBACK:		M68020_regs.rte_instr_callback = info->f;		break;
@@ -1821,7 +1828,6 @@ void m68020asm_get_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_PTR_EXECUTE:						info->execute = m68020_execute;			break;
 		case CPUINFO_PTR_BURN:							info->burn = NULL;						break;
 		case CPUINFO_PTR_DISASSEMBLE_NEW:				info->disassemble_new = m68020_dasm;	break;
-		case CPUINFO_PTR_IRQ_CALLBACK:					/* fix me */							break;
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &m68k_ICount;			break;
 		case CPUINFO_PTR_REGISTER_LAYOUT:				info->p = M68K_layout;					break;
 		case CPUINFO_PTR_WINDOW_LAYOUT:					info->p = m68k_win_layout;				break;

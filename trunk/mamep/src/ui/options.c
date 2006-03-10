@@ -604,7 +604,7 @@ static struct rc_option rc_mamew_opts[] =
 	{ "snapshot_directory", NULL, rc_string, &settings.imgdir, "snap", 0, 0, NULL, "directory for screenshots (.png format)" },
 	{ "diff_directory", NULL, rc_string, &settings.diffdir, "diff", 0, 0, NULL, "directory for hard drive image difference files" },
 	{ "ctrlr_directory", NULL, rc_string, &settings.ctrlrdir, "ctrlr", 0, 0, NULL, "directory to save controller definitions" },
-	{ "comment_directory", NULL, rc_string, &settings.commentdir, "comment", 0, 0, NULL, "directory to save comment files" },
+	{ "comment_directory", NULL, rc_string, &settings.commentdir, "comments", 0, 0, NULL, "directory to save comment files" },
 #ifdef USE_IPS
 	{ "ips_directory", NULL, rc_string, &settings.patchdir, "ips", 0, 0, NULL, "directory for ips files" },
 #endif /* USE_IPS */

@@ -280,6 +280,7 @@ struct _rom_load_data
 #define ROM_LOAD16_WORD_SWAP_BIOS(bios,name,offset,length,hash) \
 		ROMBX_LOAD(name, offset, length, hash, ROM_GROUPWORD | ROM_REVERSE, bios+1) /* Note '+1' */
 
+
 /* ----- disk loading macros ----- */
 #define DISK_REGION(type)							ROM_REGION(1, type, ROMREGION_DATATYPEDISK)
 #define DISK_IMAGE(name,idx,hash)					ROMMD5_LOAD(name, idx, 0, hash, DISK_READWRITE)

@@ -17,8 +17,8 @@
 #include "hash.h"
 #include "info.h"
 #include "audit.h"
-#include "unzip.h"
 #include "sound/samples.h"
+#include "unzip.h"
 
 #include "rc.h"
 

@@ -40,6 +40,7 @@
 #include <mmsystem.h>
 #include "osdepend.h"
 #include "driver.h"
+
 #include "rc.h"
 #include "misc.h"
 #include "video.h"

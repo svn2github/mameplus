@@ -1274,49 +1274,244 @@ int ui_menu_generic_keys(int *selected, int num_items)
  *
  *************************************/
 
-static void draw_multiline_text_box(const char *text, int justify, float xpos, float ypos)
+static void draw_multiline_text_box(const char *text, int offset, int justify, float xpos, float ypos)
 {
 	int target_width, target_height;
 	int ui_width, ui_height;
 	int target_x, target_y;
+	int margin_x, margin_y;
 
 	/* start with the bounds */
 	ui_get_bounds(&ui_width, &ui_height);
 
 	/* compute the multi-line target width/height */
-	ui_draw_text_full(text, 0, 0, ui_width - 2 * UI_BOX_LR_BORDER,
-				justify, WRAP_WORD, DRAW_NONE, RGB_WHITE, RGB_BLACK, &target_width, &target_height);
-	if (target_height > ui_height - 2 * UI_BOX_TB_BORDER)
-		target_height = ((ui_height - 2 * UI_BOX_TB_BORDER) / ui_get_line_height()) * ui_get_line_height();
+	ui_draw_text_full(text, 0, 0, ui_width - 2 * UI_BOX_LR_BORDER - 2, 0, 0,
+				justify, WRAP_WORD, DRAW_NONE, text_color, RGB_BLACK, &target_width, &target_height);
+
+	multiline_text_box_target_lines = target_height / ui_get_line_height();
+
+#ifdef UI_COLOR_DISPLAY
+	margin_x = ui_get_char_width(' ') / 2 + UI_BOX_LR_BORDER;
+	if (target_width + 2 * margin_x > ui_width)
+		margin_x = (ui_width - target_width) / 2;
+
+	margin_y = ui_get_line_height() / 2 + UI_BOX_TB_BORDER;
+#else /* UI_COLOR_DISPLAY */
+	margin_x = UI_BOX_LR_BORDER;
+	margin_y = UI_BOX_TB_BORDER;
+#endif /* UI_COLOR_DISPLAY */
+
+	if (target_height > ui_height - 2 * margin_y)
+		target_height = ((ui_height - 2 * margin_y) / ui_get_line_height()) * ui_get_line_height();
+
+	multiline_text_box_visible_lines = target_height / ui_get_line_height();
 
 	/* determine the target location */
 	target_x = (int)(xpos * ui_width) - target_width / 2;
 	target_y = (int)(ypos * ui_height) - target_height / 2;
 
 	/* make sure we stay on-screen */
-	if (target_x < UI_BOX_LR_BORDER)
-		target_x = UI_BOX_LR_BORDER;
-	if (target_x + target_width + UI_BOX_LR_BORDER > ui_width)
-		target_x = ui_width - UI_BOX_LR_BORDER - target_width;
-	if (target_y < UI_BOX_TB_BORDER)
-		target_y = UI_BOX_TB_BORDER;
-	if (target_y + target_height + UI_BOX_TB_BORDER > ui_height)
-		target_y = ui_height - UI_BOX_TB_BORDER - target_height;
+	if (target_x < margin_x)
+		target_x = margin_x;
+	if (target_x + target_width + margin_x > ui_width)
+		target_x = ui_width - margin_x - target_width;
+	if (target_y < margin_y)
+		target_y = margin_y;
+	if (target_y + target_height + margin_y > ui_height)
+		target_y = ui_height - margin_y - target_height;
 
 	/* add a box around that */
-	add_filled_box(	target_x - UI_BOX_LR_BORDER,
-					target_y - UI_BOX_TB_BORDER,
-					target_x + target_width - 1 + UI_BOX_LR_BORDER,
-					target_y + target_height - 1 + UI_BOX_TB_BORDER);
-	ui_draw_text_full(text, target_x, target_y, target_width,
-				justify, WRAP_WORD, DRAW_NORMAL, RGB_WHITE, RGB_BLACK, NULL, NULL);
+	add_filled_box(target_x - margin_x,
+	               target_y - margin_y,
+	               target_x + target_width - 1 + margin_x,
+	               target_y + target_height - 1 + margin_y);
+
+	ui_draw_text_full(text, target_x, target_y, target_width, offset, multiline_text_box_visible_lines,
+				justify, WRAP_WORD, DRAW_NORMAL, text_color, RGB_BLACK, NULL, NULL);
 }
 
 
 void ui_draw_message_window(const char *text)
 {
-	draw_multiline_text_box(text, JUSTIFY_LEFT, 0.5, 0.5);
+	draw_multiline_text_box(text, 0, JUSTIFY_LEFT, 0.5, 0.5);
 }
+
+
+#ifdef INP_CAPTION
+static void ui_draw_message_window_under(const char *text)
+{
+	draw_multiline_text_box(text, 0, JUSTIFY_LEFT, 0.5, 1.0);
+}
+#endif /* INP_CAPTION */
+
+
+static void ui_draw_message_window_scroll(const char *text)
+{
+	text_color = UI_SCROLL_TEXT_COLOR;
+	draw_multiline_text_box(text, message_window_scroll, JUSTIFY_LEFT, 0.5, 0.5);
+	text_color = RGB_WHITE;
+}
+
+
+static int ui_window_scroll_keys(void)
+{
+	static int counter = 0;
+	static int fast = 6;
+	int pan_lines;
+	int max_scroll;
+
+	max_scroll = multiline_text_box_target_lines - multiline_text_box_visible_lines;
+	pan_lines = multiline_text_box_visible_lines - 1;
+
+	if (scroll_reset)
+	{
+		message_window_scroll = 0;
+		scroll_reset = 0;
+		ui_lock_scroll = FALSE;
+	}
+
+	if (!ui_lock_scroll)
+	{
+		int do_scroll = FALSE;
+
+		/* up backs up by one item */
+		if (input_ui_pressed_repeat(IPT_UI_UP, fast))
+		{
+			message_window_scroll--;
+			do_scroll = TRUE;
+		}
+
+		/* down advances by one item */
+		if (input_ui_pressed_repeat(IPT_UI_DOWN, fast))
+		{
+			message_window_scroll++;
+			do_scroll = TRUE;
+		}
+
+		/* pan-up goes to previous page */
+		if (input_ui_pressed_repeat(IPT_UI_PAN_UP,8))
+		{
+			message_window_scroll -= pan_lines;
+			do_scroll = TRUE;
+		}
+
+		/* pan-down goes to next page */
+		if (input_ui_pressed_repeat(IPT_UI_PAN_DOWN,8))
+		{
+			message_window_scroll += pan_lines;
+			do_scroll = TRUE;
+		}
+
+		/* home goes to the start */
+		if (input_ui_pressed(IPT_UI_HOME))
+		{
+			message_window_scroll = 0;
+			do_scroll = TRUE;
+		}
+
+		/* end goes to the last */
+		if (input_ui_pressed(IPT_UI_END))
+		{
+			message_window_scroll = max_scroll;
+			do_scroll = TRUE;
+		}
+
+		if (message_window_scroll < 0)
+			message_window_scroll = 0;
+		if (message_window_scroll > max_scroll)
+			message_window_scroll = max_scroll;
+
+		if (input_port_type_pressed(IPT_UI_UP,0) || input_port_type_pressed(IPT_UI_DOWN,0))
+		{
+			if (++counter == 25)
+			{
+				fast--;
+				if (fast < 1)
+					fast = 0;
+
+				counter = 0;
+			}
+		}
+		else
+		{
+			fast = 6;
+			counter = 0;
+		}
+
+		if (do_scroll)
+			return -1;
+	}
+
+	if (input_ui_pressed(IPT_UI_TOGGLE_LOCK_SCROLL))
+		ui_lock_scroll = !ui_lock_scroll;
+
+	if (input_ui_pressed(IPT_UI_SELECT))
+	{
+		message_window_scroll = 0;
+		return 1;
+	}
+	if (input_ui_pressed(IPT_UI_CANCEL))
+	{
+		message_window_scroll = 0;
+		return 2;
+	}
+
+	return 0;
+}
+
+#ifdef USE_SHOW_TIME
+
+#define DISPLAY_AMPM 0
+
+static void display_time(mame_bitmap *bitmap)
+{
+	char buf[20];
+#if DISPLAY_AMPM
+	char am_pm[] = "am";
+#endif /* DISPLAY_AMPM */
+	int width;
+	time_t ltime;
+	struct tm *today;
+
+	time(&ltime);
+	today = localtime(&ltime);
+
+#if DISPLAY_AMPM
+	if( today->tm_hour > 12 )
+	{
+		strcpy( am_pm, "pm" );
+		today->tm_hour -= 12;
+	}
+	if( today->tm_hour == 0 ) /* Adjust if midnight hour. */
+		today->tm_hour = 12;
+#endif /* DISPLAY_AMPM */
+
+#if DISPLAY_AMPM
+	sprintf(buf, "%02d:%02d:%02d %s", today->tm_hour, today->tm_min, today->tm_sec, am_pm);
+#else
+	sprintf(buf, "%02d:%02d:%02d", today->tm_hour, today->tm_min, today->tm_sec);
+#endif /* DISPLAY_AMPM */
+	width = strlen(buf) * uirotcharwidth;
+	switch(Show_Time_Position)
+	{
+		case 0:
+			ui_draw_text(buf, uirotwidth - width, uirotheight - uirotcharheight);
+			break;
+
+		case 1:
+			ui_draw_text(buf, uirotwidth - width, 0);
+			break;
+
+		case 2:
+			ui_draw_text(buf, 0, 0);
+			break;
+
+		case 3:
+			ui_draw_text(buf, 0, uirotheight - uirotcharheight);
+			break;
+	}
+}
+#endif /* USE_SHOW_TIME */
 
 
 
@@ -1328,73 +1523,121 @@ void ui_draw_message_window(const char *text)
 
 static void create_font(void)
 {
-	gfx_layout layout = uifontlayout;
-	int temp, i;
-
-	/* free any existing fonts */
-	if (uirotfont)
-		freegfx(uirotfont);
-
-	/* pixel double horizontally */
-	if (uirotwidth >= 420)
-	{
-		for (i = 0; i < layout.width; i++)
-			layout.xoffset[i*2+0] = layout.xoffset[i*2+1] = uifontlayout.xoffset[i];
-		layout.width *= 2;
-	}
-
-	/* pixel double vertically */
-	if (uirotheight >= 420)
-	{
-		for (i = 0; i < layout.height; i++)
-			layout.yoffset[i*2+0] = layout.yoffset[i*2+1] = uifontlayout.yoffset[i];
-		layout.height *= 2;
-	}
-
-	/* apply swappage */
-	if (Machine->ui_orientation & ORIENTATION_SWAP_XY)
-	{
-		for (i=0; i<2*MAX_UIFONT_SIZE; i++)
-			temp = layout.xoffset[i], layout.xoffset[i] = layout.yoffset[i], layout.yoffset[i] = temp;
-
-		temp = layout.width;
-		layout.width = layout.height;
-		layout.height = temp;
-	}
-
-	/* apply xflip */
-	if (Machine->ui_orientation & ORIENTATION_FLIP_X)
-	{
-		for (i = 0; i < layout.width/2; i++)
-			temp = layout.xoffset[i], layout.xoffset[i] = layout.xoffset[layout.width - 1 - i], layout.xoffset[layout.width - 1 - i] = temp;
-	}
-
-	/* apply yflip */
-	if (Machine->ui_orientation & ORIENTATION_FLIP_Y)
-	{
-		for (i = 0; i < layout.height/2; i++)
-			temp = layout.yoffset[i], layout.yoffset[i] = layout.yoffset[layout.height - 1 - i], layout.yoffset[layout.height - 1 - i] = temp;
-	}
-
-	/* decode rotated font */
-	uirotfont = allocgfx(&layout);
-	if (!uirotfont)
-		fatalerror("Fatal error: could not allocate memory for UI font!");
-	decodegfx(uirotfont, uifontdata, 0, uirotfont->total_elements);
-
-	/* set the raw and rotated character width/height */
-	uirotcharwidth = (Machine->ui_orientation & ORIENTATION_SWAP_XY) ? layout.height : layout.width;
-	uirotcharheight = (Machine->ui_orientation & ORIENTATION_SWAP_XY) ? layout.width : layout.height;
-
-	/* set up the bogus colortable */
-	if (uirotfont)
-	{
-		/* colortable will be set at run time */
-		uirotfont->colortable = uirotfont_colortable;
-		uirotfont->total_colors = 2;
-	}
+	uifont_buildfont(&uirotcharwidth, &uirotcharheight);
 }
 
+
+
+#ifdef INP_CAPTION
+//============================================================
+//	draw_caption
+//============================================================
+
+static void draw_caption(void)
+{
+	static char next_caption[512], caption_text[512];
+	static int next_caption_timer;
+
+	if (options.caption && next_caption_frame < 0)
+	{
+		char	read_buf[512];
+skip_comment:
+		if (mame_fgets(read_buf, 511, options.caption) == NULL)
+		{
+			mame_fclose(options.caption);
+			options.caption = NULL;
+		}
+		else
+		{
+			char	buf[16] = "";
+			int		i, j;
+
+			for (i = 0, j = 0; i < 16; i++)
+			{
+				if (read_buf[i] == '\t' || read_buf[i] == ' ')
+					continue;
+				if ((read_buf[i] == '#' || read_buf[i] == '\r' || read_buf[i] == '\n') && j == 0)
+					goto skip_comment;
+				if (read_buf[i] < '0' || read_buf[i] > '9')
+				{
+					buf[j++] ='\0';
+					break;
+				}
+				buf[j++] = read_buf[i];
+			}
+
+			next_caption_frame = strtol(buf, NULL, 10);
+			next_caption_timer = 0;
+			if (next_caption_frame == 0)
+			{
+				next_caption_frame = cpu_getcurrentframe();
+				strcpy(next_caption, _("Error: illegal caption file"));
+				mame_fclose(options.caption);
+				options.caption = NULL;
+			}
+
+			for (;;i++)
+			{
+				if (read_buf[i] == '(')
+				{
+					for (i++, j = 0;;i++)
+					{
+						if (read_buf[i] == '\t' || read_buf[i] == ' ')
+							continue;
+						if (read_buf[i] < '0' || read_buf[i] > '9')
+						{
+							buf[j++] ='\0';
+							break;
+						}
+						buf[j++] = read_buf[i];
+					}
+
+					next_caption_timer = strtol(buf, NULL, 10);
+
+					for (;;i++)
+					{
+						if (read_buf[i] == '\t' || read_buf[i] == ' ')
+							continue;
+						if (read_buf[i] == ':')
+							break;
+					}
+				}
+				if (read_buf[i] != '\t' && read_buf[i] != ' ' && read_buf[i] != ':')
+					break;
+			}
+			if (next_caption_timer == 0)
+			{
+				next_caption_timer = 5 * Machine->drv->frames_per_second;	// 5sec.
+			}
+
+			strcpy(next_caption, &read_buf[i]);
+
+			for (i = 0; next_caption[i] != '\0'; i++)
+			{
+				if (next_caption[i] == '\r' || next_caption[i] == '\n')
+				{
+					next_caption[i] = '\0';
+					break;
+				}
+			}
+		}
+	}
+
+	if (next_caption_timer && next_caption_frame <= cpu_getcurrentframe())
+	{
+		caption_timer = next_caption_timer;
+		strcpy(caption_text, next_caption);
+		next_caption_frame = -1;
+		next_caption_timer = 0;
+	}
+
+	if (caption_timer)
+	{
+		ui_draw_message_window_under(caption_text);
+		caption_timer--;
+	}
+}
+#endif /* INP_CAPTION */
 
 
 /*************************************
@@ -1412,7 +1655,14 @@ static void handle_keys(mame_bitmap *bitmap)
 
 	/* if the user pressed ESC, stop the emulation as long as menus aren't up */
 	if (menu_handler == NULL && input_ui_pressed(IPT_UI_CANCEL))
-		mame_schedule_exit();
+	{
+		confirm_quit_state = TRUE;
+
+		/* kill the thermometer view */
+		therm_state = 0;
+
+		return;
+	}
 
 	/* if menus aren't up and the user has toggled them, turn them on */
 	if (menu_handler == NULL && input_ui_pressed(IPT_UI_CONFIGURE))
@@ -1428,6 +1678,32 @@ static void handle_keys(mame_bitmap *bitmap)
 		/* kill the thermometer view */
 		therm_state = 0;
 	}
+
+	if (menu_handler == NULL && input_ui_pressed(IPT_UI_CHEAT))
+	{
+		/* initialize the menu state */
+		ui_menu_stack_reset();
+
+		/* start cheat menu by shortcut key */
+		ui_menu_stack_push(menu_cheat, (1 << 31) | (1 << 30) | (1 << 8) | 1);
+
+		/* kill the thermometer view */
+		therm_state = 0;
+	}
+
+#ifdef CMD_LIST
+	if (menu_handler == NULL && input_ui_pressed(IPT_UI_COMMAND))
+	{
+		/* initialize the menu state */
+		ui_menu_stack_reset();
+
+		/* start command menu by shortcut key */
+		ui_menu_stack_push(menu_command, 1 << 24);
+
+		/* kill the thermometer view */
+		therm_state = 0;
+	}
+#endif /* CMD_LIST */
 
 	/* if the on-screen display isn't up and the user has toggled it, turn it on */
 #ifdef MAME_DEBUG

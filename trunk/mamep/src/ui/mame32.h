@@ -31,6 +31,7 @@
 
 #undef strdup
 #undef stricmp
+#undef strnicmp
 
 #include "screenshot.h"
 #include "win32ui.h"

@@ -187,15 +187,16 @@ struct m68k_memory_interface m68k_memory_intf;
 
 //ks hcmame switch m68k core	#ifndef A68K0
 
-static void m68000_init(void)
+static void m68000_init(int index, int clock, const void *config, int (*irqcallback)(int))
 {
 	m68kdrc_init();
 	m68k_set_cpu_type(M68K_CPU_TYPE_68000);
 	m68k_memory_intf = interface_d16;
-	m68k_state_register("m68000");
+	m68k_state_register("m68000", index);
+	m68k_set_int_ack_callback(irqcallback);
 }
 
-static void m68000_reset(void* param)
+static void m68000_reset(void)
 {
 	m68kdrc_pulse_reset();
 }
@@ -216,12 +217,13 @@ static int m68000_execute(int cycles)
  ****************************************************************************/
 #if HAS_M68008
 
-static void m68008_init(void)
+static void m68008_init(int index, int clock, const void *config, int (*irqcallback)(int))
 {
 	m68kdrc_init();
 	m68k_set_cpu_type(M68K_CPU_TYPE_68008);
 	m68k_memory_intf = interface_d8;
-	m68k_state_register("m68008");
+	m68k_state_register("m68008", index);
+	m68k_set_int_ack_callback(irqcallback);
 }
 
 #endif /* HAS_M68008 */
@@ -232,12 +234,13 @@ static void m68008_init(void)
  ****************************************************************************/
 #if HAS_M68010
 
-static void m68010_init(void)
+static void m68010_init(int index, int clock, const void *config, int (*irqcallback)(int))
 {
 	m68kdrc_init();
 	m68k_set_cpu_type(M68K_CPU_TYPE_68010);
 	m68k_memory_intf = interface_d16;
-	m68k_state_register("m68010");
+	m68k_state_register("m68008", index);
+	m68k_set_int_ack_callback(irqcallback);
 }
 
 #endif /* HAS_M68010 */
@@ -252,12 +255,13 @@ static void m68010_init(void)
  * M68020 section
  ****************************************************************************/
 
-static void m68020_init(void)
+static void m68020_init(int index, int clock, const void *config, int (*irqcallback)(int))
 {
 	m68kdrc_init();
 	m68k_set_cpu_type(M68K_CPU_TYPE_68020);
 	m68k_memory_intf = interface_d32;
-	m68k_state_register("m68020");
+	m68k_state_register("m68020", index);
+	m68k_set_int_ack_callback(irqcallback);
 }
 
 
@@ -267,12 +271,13 @@ static void m68020_init(void)
 
 #if HAS_M68EC020
 
-static void m68ec020_init(void)
+static void m68ec020_init(int index, int clock, const void *config, int (*irqcallback)(int))
 {
 	m68kdrc_init();
 	m68k_set_cpu_type(M68K_CPU_TYPE_68EC020);
 	m68k_memory_intf = interface_d32;
-	m68k_state_register("m68ec020");
+	m68k_state_register("m68ec020", index);
+	m68k_set_int_ack_callback(irqcallback);
 }
 
 #endif /* HAS_M68EC020 */
@@ -285,12 +290,13 @@ static void m68ec020_init(void)
 
 #if HAS_M68040
 
-static void m68040_init(void)
+static void m68040_init(int index, int clock, const void *config, int (*irqcallback)(int))
 {
 	m68kdrc_init();
 	m68k_set_cpu_type(M68K_CPU_TYPE_68040);
 	m68k_memory_intf = interface_d32;
-	m68k_state_register("m68040");
+	m68k_state_register("m68040", index);
+	m68k_set_int_ack_callback(irqcallback);
 }
 #endif
 

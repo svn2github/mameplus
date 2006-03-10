@@ -1208,10 +1208,6 @@ static void soft_reset(int param)
 	for (cb = reset_callback_list; cb; cb = cb->next)
 		(*cb->func.reset)();
 
-	/* call all registered reset callbacks */
-	for (cb = reset_callback_list; cb; cb = cb->next)
-		(*cb->func.reset)();
-
 	/* disallow save state registrations starting here */
 	state_save_allow_registration(FALSE);
 

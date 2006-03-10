@@ -2550,10 +2550,11 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	}
 
 #ifdef MAME_DEBUG
-	if (mame_validitychecks())
+	for (i = 0; i < GetNumGames(); i++)
 	{
-		MessageBoxA(hMain, MAMENAME " has failed its validity checks.  The GUI will "
-			"still work, but emulations will fail to execute", MAMENAME, MB_OK);
+		if (mame_validitychecks(i))
+			MessageBoxA(hMain, MAMENAME " has failed its validity checks.  The GUI will "
+				"still work, but emulations will fail to execute", MAMENAME, MB_OK);
 	}
 #endif // MAME_DEBUG
 

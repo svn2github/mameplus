@@ -11,6 +11,7 @@
 #include "chdcd.h"
 #include "md5.h"
 #include "sha1.h"
+#include "osd_so.h"
 #include <stdarg.h>
 #include <stdio.h>
 #include <time.h>

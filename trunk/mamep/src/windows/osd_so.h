@@ -68,7 +68,7 @@ extern SHAREDOBJ_FUNC(void)   expand_machine_driver(void (*constructor)(machine_
 extern SHAREDOBJ_FUNC(void)   begin_resource_tracking(void);
 extern SHAREDOBJ_FUNC(void)   end_resource_tracking(void);
 extern SHAREDOBJ_FUNC(void *) _auto_malloc(size_t size, const char *file, int line) ATTR_MALLOC;
-extern SHAREDOBJ_FUNC(int)    mame_validitychecks(void);
+extern SHAREDOBJ_FUNC(int)    mame_validitychecks(int game);
 
 #include "osdepend.h"
 extern SHAREDOBJ_FUNC(void) logerror(const char *text,...);
@@ -219,7 +219,7 @@ extern SHAREDOBJ_FUNC(void)  CLIB_DECL free(void *memory);
 #include "mame.h"
 
 // in validity.c
-extern int mame_validitychecks(void);
+extern int mame_validitychecks(int game);
 
 // in windows/winmain.c
 extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
@@ -246,7 +246,7 @@ extern const int win_key_trans_table[][4];
 #include "mame.h"
 
 // in validity.c
-extern int mame_validitychecks(void);
+extern int mame_validitychecks(int game);
 
 // in windows/winmain.c
 extern int main_(int argc, char **argv);

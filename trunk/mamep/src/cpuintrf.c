@@ -13,7 +13,9 @@
 
 
 // temporary
-#define OUT_OF_BOUNDS_IS_FATAL		1
+//#define OUT_OF_BOUNDS_IS_FATAL		1
+// sometimes load state is failed while OUT_OF_BOUNDS_IS_FATAL is enabled.
+#define OUT_OF_BOUNDS_IS_FATAL		0
 
 
 /*************************************
