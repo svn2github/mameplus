@@ -1,44 +1,44 @@
-# windows/input.c: 907
+# windows/input.c: 950
          all -- all axes on all joysticks are digital\n
          all -- 全てのジョイスティックの全ての軸をデジタルにします\n
 
-# windows/input.c: 913
+# windows/input.c: 956
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
          j1,j2a2 -- 全てのジョイスティック1の軸とジョイスティック2の軸2をデジタルにします\n
 
-# windows/input.c: 911
+# windows/input.c: 954
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
          j1a5a6 -- ジョイスティック1の軸5と6をデジタルにします\n
 
-# windows/input.c: 908
+# windows/input.c: 951
          j<N> -- all axes on joystick <N> are digital\n
          j<N> -- ジョイスティック<N>の全ての軸をデジタルにします\n
 
-# windows/input.c: 909
+# windows/input.c: 952
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
          j<N>a<M> -- ジョイスティック<N>の軸<M>をデジタルにします\n
 
-# windows/input.c: 906
+# windows/input.c: 949
          none -- no axes on any joysticks are digital\n
          none -- 全てのジョイスティックの軸をデジタルにしません\n
 
-# windows/fronthlp.c: 460
+# windows/fronthlp.c: 459
         MAME -createconfig to create a mame.ini\n\n
         MAME -createconfig 設定ファイルmame.iniを作成します\n
 
-# windows/fronthlp.c: 459
+# windows/fronthlp.c: 458
         MAME -showconfig   for a list of configuration options\n
         MAME -showconfig   設定オプションの一覧を表\示します\n
 
-# windows/fronthlp.c: 458
+# windows/fronthlp.c: 457
         MAME -showusage    for a brief list of options\n
         MAME -showusage    対応しているオプションの一覧を表\示します\n
 
-# windows/input.c: 910
+# windows/input.c: 953
     Multiple axes can be specified for one joystick:\n
     一つのジョイスティックの複数の軸を指定する事が出来ます:\n
 
-# windows/input.c: 912
+# windows/input.c: 955
     Multiple joysticks can be specified separated by commas:\n
     コンマで区切る事で複数のジョイスティック指定する事が出来ます:\n
 
@@ -46,63 +46,63 @@
    ignoring line\n
    この行を無視します\n
 
-# windows/input.c: 1900
+# windows/input.c: 2001
   Axis %d (%s)%s\n
   軸%d (%s)%s\n
 
-# windows/config.c: 545
+# windows/config.c: 546
  %s running parameters
  %sの現在の設定です
 
-# windows/wind3d.c: 637
+# windows/wind3d.c: 638
  (%.2lfMB video memory available)
  (%.2lfMBのビデオメモリがあります)
 
-# windows/input.c: 1900
+# windows/input.c: 2001
  - digital
  - デジタル
 
-# windows/fronthlp.c: 759
+# windows/fronthlp.c: 758
 %d %s found, %d were OK.\n
 %d個の%sが見つかり、%d個は正常です。\n
 
-# windows/wind3d.c: 1634
+# windows/wind3d.c: 1635
 %s surface created: %s (%s)\n
 %s画面バッファが作成されました: %s (%s)\n
 
-# windows/fronthlp.c: 196
+# windows/fronthlp.c: 195
 (BAD) 
 (異常) 
 
-# windows/video.c: 224
+# windows/video.c: 226
 (dd) stretch video using the hardware
 (dd) ハードウェアを使用して画面を拡大
 
-# windows/input.c: 946
+# windows/input.c: 989
 Autoenabling joysticks due to presence of a %s\n
 %sが存在するためジョイスティックを自動的に有効にします\n
 
-# windows/input.c: 954
+# windows/input.c: 997
 Autoenabling lightguns due to presence of a %s\n
 %sが存在するため光線銃を自動的に有効にします\n
 
-# windows/input.c: 938
+# windows/input.c: 981
 Autoenabling mice due to presence of a %s\n
 %sが存在するためマウスを自動的に有効にします\n
 
-# windows/video.c: 703
+# windows/video.c: 705
 Average FPS: %f (%d frames)\n
 平均FPS: %f (%d フレーム)\n
 
-# windows/wind3d.c: 2659 windows/winddraw.c: 1456, 1763
+# windows/wind3d.c: 2660 windows/winddraw.c: 1456, 1763
 Avg Flip = %d
 平均 Flip = %d
 
-# windows/wind3d.c: 1005 windows/winddraw.c: 577
+# windows/wind3d.c: 1006 windows/winddraw.c: 577
 Best mode = %dx%dx%d @ %d Hz\n
 最適な画面モード = %dx%dx%d @ %d Hz\n
 
-# windows/wind3d.c: 1007 windows/winddraw.c: 579
+# windows/wind3d.c: 1008 windows/winddraw.c: 579
 Best mode = %dx%dx%d @ default Hz\n
 最適な画面モード= %dx%dx%d @ デフォルト周波数\n
 
@@ -110,39 +110,39 @@ Best mode = %dx%dx%d @ default Hz\n
 Blit surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 描画画面バッファ: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 
-# windows/wind3d.c: 1638
+# windows/wind3d.c: 1639
 Blit surface created: %s\n
 描画画面バッファが作成されました: %s\n
 
-# windows/wind3d.c: 772
+# windows/wind3d.c: 773
 Blitter initialisation complete (%.2lfMB video memory free)\n
 描画の初期化が完了 (%.2lfMBのビデオメモリが残っています)\n
 
-# windows/fronthlp.c: 80
+# windows/fronthlp.c: 79
 CRC-32s
 CRC-32
 
-# windows/config.c: 294
+# windows/config.c: 295
 Configuration options
 設定オプション
 
-# windows/fronthlp.c: 779
+# windows/fronthlp.c: 778
 ERROR     %s\n
 エラー    %s\n
 
-# windows/video.c: 544
+# windows/video.c: 546
 Enumerating video device %s\n
 ビデオデバイス%sを列挙しています\n
 
-# windows/wind3d.c: 716
+# windows/wind3d.c: 717
 Error creating Direct3D7 device: %08x\n
 Direct3D7デバイスの作成が出来ません: %08x\n
 
-# windows/wind3d.c: 621
+# windows/wind3d.c: 622
 Error creating Direct3D7: %08x\n
 Direct3D7の作成が出来ません: %08x\n
 
-# windows/wind3d.c: 614
+# windows/wind3d.c: 615
 Error creating DirectDraw7: %08x\n
 DirectDraw7の作成が出来ません: %08x\n
 
@@ -150,27 +150,27 @@ DirectDraw7の作成が出来ません: %08x\n
 Error creating DirectDraw: %08x\n
 DirectDrawの作成が出来ません: %08x\n
 
-# windows/sound.c: 632
+# windows/sound.c: 633
 Error creating DirectSound buffer: %08x\n
 DirectSoundバッファ作成が作成出来ません: %08x\n
 
-# windows/sound.c: 490
+# windows/sound.c: 491
 Error creating DirectSound: %08x\n
 DirectSoundの作成が出来ません: %08x\n
 
-# windows/wind3d.c: 1239
+# windows/wind3d.c: 1240
 Error creating RGB effects surface: %08x\n
 エラー RGBエフェクト用画面バッファの作成が出来ません: %08x\n
 
-# windows/wind3d.c: 1169
+# windows/wind3d.c: 1170
 Error creating back surface: %08x\n
 裏画面バッファの作成が出来ません: %08x\n
 
-# windows/wind3d.c: 1468 windows/winddraw.c: 869
+# windows/wind3d.c: 1469 windows/winddraw.c: 869
 Error creating blit surface: %08x\n
 描画画面バッファが作成出来ません: %08x\n
 
-# windows/wind3d.c: 1717 windows/winddraw.c: 959
+# windows/wind3d.c: 1718 windows/winddraw.c: 959
 Error creating clipper: %08x\n
 クリップ領域が作成出来ません: %08x\n
 
@@ -178,35 +178,35 @@ Error creating clipper: %08x\n
 Error creating dir %s
 ディレクトリ %s が作成出来ません
 
-# windows/wind3d.c: 1577
+# windows/wind3d.c: 1578
 Error creating preprocess surface: %08x\n
 エラー 前処理用画面バッファが作成出来ません: %08x\n
 
-# windows/sound.c: 597
+# windows/sound.c: 598
 Error creating primary buffer: %08x\n
 サウンドバッファが作成出来ません: %08x\n
 
-# windows/wind3d.c: 1118 windows/winddraw.c: 648
+# windows/wind3d.c: 1119 windows/winddraw.c: 648
 Error creating primary surface: %08x\n
 表\画面バッファが作成出来ません: %08x\n
 
-# windows/wind3d.c: 1598 windows/winddraw.c: 740
+# windows/wind3d.c: 1599 windows/winddraw.c: 740
 Error creating scale surface: %08x\n
 スケール描画バッファが作成出来ません: %08x\n
 
-# windows/wind3d.c: 1269, 1277
+# windows/wind3d.c: 1270, 1278
 Error creating scanline surface[%d]: %08x\n
 エラー スキャンライン画面バッファ[%d]が作成出来ません: %08x\n
 
-# windows/wind3d.c: 1493
+# windows/wind3d.c: 1494
 Error creating texture surface: %08x\n
 テクスチャ画面バッファが作成できません: %08x\n
 
-# windows/video.c: 620
+# windows/video.c: 622
 Error enumerating DirectDraw: %08x\n
 DirectDrawの列挙が失敗しました: %08x\n
 
-# windows/wind3d.c: 998 windows/winddraw.c: 570
+# windows/wind3d.c: 999 windows/winddraw.c: 570
 Error enumerating modes: %08x\n
 画面モードの列挙が失敗しました: %08x\n
 
@@ -214,27 +214,27 @@ Error enumerating modes: %08x\n
 Error getting DirectDraw capabilities: %08x\n
 DirectDrawの初期化に失敗しました: %08x\n
 
-# windows/sound.c: 499
+# windows/sound.c: 500
 Error getting DirectSound capabilities: %08x\n
 DirectSoundの情報が取得出来ません: %08x\n
 
-# windows/wind3d.c: 1180 windows/winddraw.c: 685
+# windows/wind3d.c: 1181 windows/winddraw.c: 685
 Error getting attached back surface: %08x\n
 裏画面バッファの取得が失敗しました: %08x\n
 
-# windows/wind3d.c: 1610, 1619 windows/winddraw.c: 877
+# windows/wind3d.c: 1611, 1620 windows/winddraw.c: 877
 Error getting blit surface desc: %08x\n
 描画画面バッファの情報が取得出来ません: %08x\n
 
-# windows/wind3d.c: 979, 1028 windows/winddraw.c: 548, 603
+# windows/wind3d.c: 980, 1029 windows/winddraw.c: 548, 603
 Error getting display mode: %08x\n
 画面モードの取得に失敗しました: %08x\n
 
-# windows/sound.c: 613
+# windows/sound.c: 614
 Error getting primary format: %08x\n
 サウンドバッファの設定が読み出せません: %08x\n
 
-# windows/wind3d.c: 1126 windows/winddraw.c: 656
+# windows/wind3d.c: 1127 windows/winddraw.c: 656
 Error getting primary surface desc: %08x\n
 表\画面バッファの情報が取得出来ません: %08x\n
 
@@ -242,23 +242,23 @@ Error getting primary surface desc: %08x\n
 Error getting scale surface desc: %08x\n
 スケール描画バッファの情報が取得出来ません: %08x\n
 
-# windows/wind3d.c: 607
+# windows/wind3d.c: 608
 Error importing DirectDrawCreateEx() function\n
 エラー DirectDrawCreateEx()関数の取り込みが出来ません\n
 
-# windows/wind3d.c: 600
+# windows/wind3d.c: 601
 Error importing ddraw.dll\n
 ddraw.dllの読み込みが出来ません\n
 
-# windows/wind3d.c: 678 windows/winddraw.c: 242
+# windows/wind3d.c: 679 windows/winddraw.c: 242
 Error initialising software scale effects\n
 ソ\フトウェアスケールエフェクトの初期化が出来ません\n
 
-# windows/sound.c: 640
+# windows/sound.c: 641
 Error locking stream buffer: %08x\n
 ストリームバッファのロックが出来ません: %08x\n
 
-# windows/config.c: 499
+# windows/config.c: 500
 Error on rc creation
 設定の初期化が出来ません
 
@@ -266,79 +266,79 @@ Error on rc creation
 Error opening %s
 %s が開けません
 
-# windows/sound.c: 544
+# windows/sound.c: 545
 Error playing: %08x\n
 サウンドが再生出来ません: %08x\n
 
-# windows/sound.c: 507
+# windows/sound.c: 508
 Error setting DirectSound cooperative level: %08x\n
 DirectSoundの初期化に失敗しました: %08x\n
 
-# windows/wind3d.c: 1725 windows/winddraw.c: 967
+# windows/wind3d.c: 1726 windows/winddraw.c: 967
 Error setting clipper hwnd: %08x\n
 クリップ領域を設定出来ません: %08x\n
 
-# windows/wind3d.c: 1733 windows/winddraw.c: 975
+# windows/wind3d.c: 1734 windows/winddraw.c: 975
 Error setting clipper on primary surface: %08x\n
 クリップ領域を表\画面バッファに設定出来ません: %08x\n
 
-# windows/wind3d.c: 693 windows/winddraw.c: 281
+# windows/wind3d.c: 694 windows/winddraw.c: 281
 Error setting cooperative level: %08x\n
 DirectDrawの初期化に失敗しました: %08x\n
 
-# windows/wind3d.c: 1699 windows/winddraw.c: 941
+# windows/wind3d.c: 1700 windows/winddraw.c: 941
 Error setting gamma ramp: %08x\n
 ガンマ補正ランプが設定出来ません: %08x\n
 
-# windows/wind3d.c: 1017 windows/winddraw.c: 592
+# windows/wind3d.c: 1018 windows/winddraw.c: 592
 Error setting mode: %08x\n
 画面モードの設定が失敗しました: %08x\n
 
-# windows/sound.c: 605
+# windows/sound.c: 606
 Error setting primary format: %08x\n
 サウンドバッファの設定が出来ません: %08x\n
 
-# windows/config.c: 506
+# windows/config.c: 507
 Error while parsing cmdline
 コマンドライン引数が不正です
 
-# windows/wind3d.c: 261
+# windows/wind3d.c: 262
 Error: 3D hardware can't render scanlines (no support for multi-texturing)\n
 エラー: 3Dハードウェアはスキャンラインの描画が出来ません (マルチテクスチャがサポートされていません)\n
 
-# windows/wind3d.c: 378
+# windows/wind3d.c: 379
 Error: RGB effects (multiply & add mode) not supported\n
 エラー: RGBエフェクト (多重化とモードの追加)がサポートされていません\n
 
-# windows/wind3d.c: 365
+# windows/wind3d.c: 366
 Error: RGB effects (multiply mode) not supported\n
 エラー: RGBエフェクト (多重化モード)がサポートされていません\n
 
-# windows/wind3d.c: 1417
+# windows/wind3d.c: 1418
 Error: required texture size too large (max: %ix%i, need %ix%i)\n
 エラー: 要求されたテクスチャが大きすぎます (最大: %ix%i、%ix%iが必要)\n
 
-# windows/config.c: 566
+# windows/config.c: 567
 Failed to open file for playback
 再生ファイルが読み込めません
 
-# windows/config.c: 668
+# windows/config.c: 669
 Failed to open file for recording
 入力を保存するファイルが作成できません
 
-# windows/fronthlp.c: 461
+# windows/fronthlp.c: 460
 For usage instructions, please consult the file windows.txt\n
 使い方の説明については、対応する windows.txt ファイルを参照して下さい\n
 
-# windows/fronthlp.c: 69
+# windows/fronthlp.c: 68
 Frontend Related
 その他のMAMEフロントエンドオプション
 
-# windows/window.c: 736
+# windows/window.c: 745
 Full Screen\tAlt+Enter
 フルスクリーン\tAlt+Enter
 
-# windows/fronthlp.c: 517
+# windows/fronthlp.c: 516
 Game \"%s\" not supported!\n
 「%s」というゲームには対応していません！\n
 
@@ -346,187 +346,187 @@ Game \"%s\" not supported!\n
 Hardware stretching supported\n
 ハードウェア拡大表\示がサポートされています\n
 
-# windows/wind3d.c: 634
+# windows/wind3d.c: 635
 Initialising DirectDraw & Direct3D 7 blitter
 DirectDrawとDirect3D描画の初期化中
 
-# windows/input.c: 227
+# windows/input.c: 249
 Input device options
 入力デバイス設定
 
-# windows/input.c: 1959
+# windows/input.c: 2060
 J%d %s D
 J%d %s 下
 
-# windows/input.c: 1963
+# windows/input.c: 2064
 J%d %s L
 J%d %s 左
 
-# windows/input.c: 1967
+# windows/input.c: 2068
 J%d %s R
 J%d %s 右
 
-# windows/input.c: 1955
+# windows/input.c: 2056
 J%d %s U
 J%d %s 上
 
-# windows/input.c: 1738
+# windows/input.c: 1823
 Joystick %d axis %d is now %s\n
 ジョイスティック%d 軸%d は%sです\n
 
-# windows/input.c: 1883
+# windows/input.c: 1984
 Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 ジョイスティック%d: %s (%d個の軸、%d個のボタン、%d個の視点)\n
 
-# windows/fronthlp.c: 780
+# windows/fronthlp.c: 779
 KNOWN     %s\n
 判明      %s\n
 
-# windows/input.c: 1261
+# windows/input.c: 1338
 Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 キーボード=%d  マウス=%d  ジョイスティック=%d  光線銃=%d\n
 
-# windows/input.c: 235
+# windows/input.c: 257
 LED mode (ps/2|usb)
 LEDモード (ps/2|usb)
 
-# windows/config.c: 301
+# windows/config.c: 302
 Language options
 言語設定
 
-# windows/input.c: 1872
+# windows/input.c: 1973
 Lightgun %d X
 光線銃%d X
 
-# windows/input.c: 1874
+# windows/input.c: 1975
 Lightgun %d Y
 光線銃%d Y
 
-# windows/input.c: 2229
+# windows/input.c: 2330
 Lightgun not supported in windowed mode
 ウインドウモードでは光線銃はサポートされません
 
-# windows/fronthlp.c: 454
+# windows/fronthlp.c: 453
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 
-# windows/blit.c: 1156
+# windows/blit.c: 1158
 MMX not supported\n
 MMXがサポートされていません\n
 
-# windows/blit.c: 1154
+# windows/blit.c: 1156
 MMX supported\n
 MMXがサポートされています\n
 
-# windows/config.c: 253
+# windows/config.c: 254
 Mame CORE misc options
 MAMEコア：その他の設定
 
-# windows/video.c: 260
+# windows/video.c: 262
 Mame CORE palette options
 MAMEコア：パレット設定
 
-# windows/config.c: 243
+# windows/config.c: 244
 Mame CORE sound options
 MAMEコア：サウンド設定
 
-# windows/config.c: 235
+# windows/config.c: 236
 Mame CORE vector game options
 MAMEコア：ベクター設定
 
-# windows/config.c: 222
+# windows/config.c: 223
 Mame CORE video options
 MAMEコア：表\示設定
 
-# windows/wind3d.c: 1634
+# windows/wind3d.c: 1635
 Managed texture
 テクスチャ管理
 
-# windows/input.c: 1849, 1859
+# windows/input.c: 1875
+Mouse 
+マウス
+
+# windows/input.c: 1873
+Mouse %d 
+マウス%d
+
+# windows/input.c: 1949, 1959
 Mouse %d %s
 マウス %d %s
 
-# windows/input.c: 1787
-Mouse %d X
-マウス%d X
+# windows/input.c: 1929
+Mouse %d Button %d
+マウス%d ボタン%d
 
-# windows/input.c: 1789
-Mouse %d Y
-マウス%d Y
-
-# windows/input.c: 1791
-Mouse %d Z
-マウス%d Z
-
-# windows/input.c: 1851, 1861
+# windows/input.c: 1951, 1961
 Mouse %s
 マウス %s
 
-# windows/fronthlp.c: 237
+# windows/fronthlp.c: 236
 NO MATCH\n
 マッチしません\n
 
-# windows/fronthlp.c: 232
+# windows/fronthlp.c: 231
 NOT A ROM\n
 ROMではありません\n
 
-# windows/fronthlp.c: 487
+# windows/fronthlp.c: 486
 Name:     Description:\n
 名前:     詳細:\n
 
-# windows/fronthlp.c: 620
+# windows/fronthlp.c: 619
 Name:    Clone of:\n
 名前:    クローン:\n
 
-# windows/video.c: 270
+# windows/video.c: 272
 OSD bar color (dark)
 OSD バー (暗)
 
-# windows/video.c: 271
+# windows/video.c: 273
 OSD bar color (default)
 OSD バー (デフォルト)
 
-# windows/video.c: 269
+# windows/video.c: 271
 OSD bar color (light)
 OSD バー (明)
 
-# windows/video.c: 268
+# windows/video.c: 270
 OSD bar color (medium)
 OSD バー
 
-# windows/fileio.c: 277
+# windows/fileio.c: 280
 Out of memory in variable expansion!
 変数展開のメモリが足りません!
 
-# windows/fileio.c: 346
+# windows/fileio.c: 349
 Out of memory!
 メモリが足りません!
 
-# windows/fronthlp.c: 782
+# windows/fronthlp.c: 781
 PARTKNOWN %s\n
 一部判明  %s\n
 
-# windows/config.c: 442
+# windows/config.c: 443
 Parsing %s : ERROR\n
 %sを読み込み : エラー\n
 
-# windows/config.c: 452
+# windows/config.c: 453
 Parsing %s : N/A\n
 %sを読み込み : なし\n
 
-# windows/config.c: 447
+# windows/config.c: 448
 Parsing %s : OK\n
 %sを読み込み : OK\n
 
-# windows/config.c: 590
+# windows/config.c: 591
 Playing back previously recorded game %s (%s) [press return]\n
 リターンキーを押すと、記録されたゲーム%s (%s)の再生を開始します\n
 
-# windows/wind3d.c: 1643
+# windows/wind3d.c: 1644
 Pre-process texture surface created: %s\n
 前処理用画面バッファが作成されました: %s\n
 
-# windows/sound.c: 617
+# windows/sound.c: 618
 Primary buffer: %d Hz, %d bits, %d channels\n
 サウンドバッファ: %d Hz, %d ビット, %d チャンネル\n
 
@@ -534,11 +534,11 @@ Primary buffer: %d Hz, %d bits, %d channels\n
 Primary surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 表\画面バッファ: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 
-# windows/wind3d.c: 1144
+# windows/wind3d.c: 1145
 Primary surface created: %s (%s)\n
 表\画面バッファが作成されました: %s (%s)\n
 
-# windows/wind3d.c: 1248
+# windows/wind3d.c: 1249
 RGB effects surface created: %s\n
 RGBエフェクト用画面バッファが作成されました: %s\n
 
@@ -550,23 +550,23 @@ RGBパターンのファイルサイズが異常です (正常値 %i バイト、見つかった物 %i)\n
 Recreating surfaces\n
 画面バッファを再生成中\n
 
-# windows/wind3d.c: 1137
+# windows/wind3d.c: 1138
 Rendering to an off-screen surface and using blt()\n
 オフスクリーンに描画し、blt()を使用します\n
 
-# windows/wind3d.c: 2317, 2681
+# windows/wind3d.c: 2318, 2682
 Restoring surfaces\n
 画面バッファを再作成中\n
 
-# windows/blit.c: 1152
+# windows/blit.c: 1154
 SSE supported\n
 SSEがサポートされています\n
 
-# windows/blit.c: 1150
+# windows/blit.c: 1152
 SSE2 supported\n
 SSE2がサポートされています\n
 
-# windows/video.c: 243
+# windows/video.c: 245
 SaI scale effect
 SaIスケールエフェクト
 
@@ -574,59 +574,59 @@ SaIスケールエフェクト
 Scale surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 スケール描画バッファ: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 
-# windows/wind3d.c: 1286
+# windows/wind3d.c: 1287
 Scanline surface[%i] created: %s\n
 スキャンライン画面バッファ[%i]が作成されました: %s\n
 
-# windows/video.c: 632
+# windows/video.c: 634
 Screen %s not found\n
 スクリーン%sは見つかりません\n
 
-# windows/sound.c: 233, 237
+# windows/sound.c: 234, 238
 Sound buffer: overflows=%d underflows=%d\n
 サウンドバッファ: オーバフロー=%d アンダーフロー=%d\n
 
-# windows/input.c: 1816
+# windows/input.c: 1908
 Stick %d %s +
 スティック %d %s +
 
-# windows/input.c: 1809
+# windows/input.c: 1901
 Stick %d %s -
 スティック %d %s -
 
-# windows/input.c: 1818
+# windows/input.c: 1910
 Stick %s +
 スティック %s +
 
-# windows/input.c: 1811
+# windows/input.c: 1903
 Stick %s -
 スティック %s -
 
-# windows/wind3d.c: 1634
+# windows/wind3d.c: 1635
 Texture
 テクスチャ
 
-# windows/input.c: 2380
+# windows/input.c: 2481
 Toggle fullscreen
 フルスクリーン切り替え
 
-# windows/fronthlp.c: 781
+# windows/fronthlp.c: 780
 UNKNOWN   %s\n
 不明      %s\n
 
-# windows/wind3d.c: 2672
+# windows/wind3d.c: 2673
 Unable to blt RGB effect to back_surface: %08x\n
 RGBエフェクトから裏画面バッファに描画出来ません: %08x\n
 
-# windows/wind3d.c: 2639
+# windows/wind3d.c: 2640
 Unable to blt back_surface to primary_surface: %08x\n
 back_surfaceからprimary_surfaceに描画出来ません: %08x\n
 
-# windows/wind3d.c: 2265
+# windows/wind3d.c: 2266
 Unable to blt blit_surface to texture_surface: %08x\n
 blit_surfaceからtexture_surfaceに描画出来ません: %08x\n
 
-# windows/wind3d.c: 2242
+# windows/wind3d.c: 2243
 Unable to blt scale_surface to texture_surface: %08x\n
 スケール描画バッファからテクスチャ画面バッファに描画出来ません: %08x\n
 
@@ -634,7 +634,7 @@ Unable to blt scale_surface to texture_surface: %08x\n
 Unable to blt target_surface: %08x\n
 画面バッファに描画出来ません: %08x\n
 
-# windows/input.c: 2648, 2655
+# windows/input.c: 2749, 2756
 Unable to close the keyboard device. (error %d)\n
 キーボードディバイスがクローズ出来ません。(エラー %d)\n
 
@@ -642,7 +642,7 @@ Unable to close the keyboard device. (error %d)\n
 Unable to find RGB effects pattern\n
 RGBエフェクトパターンが見つかりません\n
 
-# windows/wind3d.c: 2099, 2190, 2212 windows/winddraw.c: 1228, 1301
+# windows/wind3d.c: 2100, 2191, 2213 windows/winddraw.c: 1228, 1301
 Unable to lock blit_surface: %08x\n
 描画画面バッファをロック出来ません: %08x\n
 
@@ -650,27 +650,27 @@ Unable to lock blit_surface: %08x\n
 Unable to lock target_surface: %08x\n
 対象となる画面バッファがロック出来ません: %08x\n
 
-# windows/input.c: 2599, 2609
+# windows/input.c: 2700, 2710
 Unable to open the keyboard device. (error %d)\n
 キーボードディバイスがオープン出来ません。(エラー %d)\n
 
-# windows/wind3d.c: 2599
+# windows/wind3d.c: 2600
 Unable to render to back_surface: %08x\n
 back_surfaceに描画出来ません: %08x\n
 
-# windows/wind3d.c: 2486
+# windows/wind3d.c: 2487
 Unable to render to preprocess texture: %08x\n
 前処理用テクスチャに描画出来ません: %08x\n
 
-# windows/fronthlp.c: 457
+# windows/fronthlp.c: 456
 Usage:  MAME gamename [options]\n\n
 使用法:  MAME ゲーム名 [オプション]\n\n
 
-# windows/config.c: 552
+# windows/config.c: 553
 Usage: %s [game] [options]\nOptions:\n
 使用法: %s [ゲーム] [オプション]\nオプション:\n
 
-# windows/wind3d.c: 684
+# windows/wind3d.c: 685
 Using %s pre-scale effect\n
 プリスケールエフェクト %s を使用します\n
 
@@ -678,43 +678,43 @@ Using %s pre-scale effect\n
 Using %s scale effect\n
 スケールエフェクト %s を使用します\n
 
-# windows/input.c: 1195
+# windows/input.c: 1266
 Using DirectInput %d\n
 DirectInput %dを使用します\n
 
-# windows/wind3d.c: 1139
+# windows/wind3d.c: 1140
 Using a %s buffer and pageflipping\n
 ページフリップに%sバッファを使用します\n
 
-# windows/wind3d.c: 341
+# windows/wind3d.c: 342
 Warning: anisotropic (mag) filtering not supported, falling back to bi-linear\n
 警告: アニソ\トロピックフィルタ(mag)がサポートされません。 バイリニアフィルタを使用します\n
 
-# windows/wind3d.c: 350
+# windows/wind3d.c: 351
 Warning: anisotropic (min) filtering not supported, falling back to bi-linear\n
 警告: アニソ\トロピックフィルタ(min)がサポートされません。 バイリニアフィルタを使用します\n
 
-# windows/wind3d.c: 1677 windows/winddraw.c: 919
+# windows/wind3d.c: 1678 windows/winddraw.c: 919
 Warning: could not create gamma control to change brightness: %08x\n
 警告: 画面の明るさ補正が出来ません: %08x\n
 
-# windows/wind3d.c: 313
+# windows/wind3d.c: 314
 Warning: flat bi-cubic filtering not supported, falling back to bi-linear\n
 警告: フラットバイキュービックフィルタがサポートされません。 バイリニアフィルタを使用します\n
 
-# windows/wind3d.c: 327
+# windows/wind3d.c: 328
 Warning: gaussian bi-cubic filtering not supported, falling back to bi-linear\n
 警告: ガウスバイキュービックフィルタがサポートされません。 バイリニアフィルタを使用します\n
 
-# windows/window.c: 656
+# windows/window.c: 665
 Warning: hardware-accelerated blitting-effects selected, but currently disabled\n         use the -direct3d option to enable hardware acceleration\n
 警告: ハードウェアアクセラレータによる描画エフェクトが選択されましたが、現在は無効です。\n         -direct3dオプションを使用してハードウェアアクセラレータを有効にして下さい\n
 
-# windows/window.c: 650
+# windows/window.c: 659
 Warning: non-hardware-accelerated blitting-effects engine enabled\n         use the -d3deffect option to enable hardware acceleration\n
 警告: ハードウェアアクセラレータでない描画エフェクトエンジンが有効です\n         -direct3dオプションを使用してハードウェアアクセラレータを有効にして下さい\n
 
-# windows/wind3d.c: 1528
+# windows/wind3d.c: 1529
 Warning: required texture size too large for prescale, disabling prescale\n
 警告: プリスケールに必要なテクスチャのサイズが大きすぎます。プリスケールを無効にします\n
 
@@ -722,7 +722,7 @@ Warning: required texture size too large for prescale, disabling prescale\n
 Warning: scale effect %s is disabled.\n
 警告: スケールエフェクト %s が無効にされました。\n
 
-# windows/wind3d.c: 273
+# windows/wind3d.c: 274
 Warning: using fall-back method for scanline blending.\n
 警告: フォールバック手法を使用してスキャンラインをブレンドします。\n
 
@@ -730,7 +730,7 @@ Warning: using fall-back method for scanline blending.\n
 Windows Direct3D 2D video options
 Windows版：Direct3Dの2Dビデオ設定
 
-# windows/video.c: 248
+# windows/video.c: 250
 Windows misc options
 Windows版：その他の設定
 
@@ -738,27 +738,27 @@ Windows版：その他の設定
 Windows path and directory options
 Windows版：パスとディレクトリの設定
 
-# windows/sound.c: 126
+# windows/sound.c: 127
 Windows sound options
 Windows版：サウンド設定
 
-# windows/video.c: 216
+# windows/video.c: 218
 Windows video options
 Windows版：表\示設定
 
-# windows/fronthlp.c: 752
+# windows/fronthlp.c: 751
 \"%8s\" not found!\n
 「%8s」は見つかりません!\n
 
-# windows/fronthlp.c: 754
+# windows/fronthlp.c: 753
 \"%8s\" not supported!\n
 「%8s」には対応していません!\n
 
-# windows/input.c: 1263
+# windows/input.c: 1340
 \"%s\" controller support enabled\n
 コントローラ「%s」のサポートが有効です\n
 
-# windows/config.c: 608
+# windows/config.c: 609
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n「%s」に似たゲームは下記の通りです\nサポートされているゲーム (似ているもの順):\n\n
 
@@ -766,95 +766,95 @@ Windows版：表\示設定
 additional customised settings (undocumented)
 付加的なカスタマイズ設定 (ドキュメントなし)
 
-# windows/config.c: 232
+# windows/config.c: 233
 additional pause brightness
 ポーズ時の明るさ
 
-# windows/fronthlp.c: 75
+# windows/fronthlp.c: 74
 all available info on driver in XML format
 存在する全てのドライバ情報をXML形式で出力
 
-# windows/video.c: 249
+# windows/video.c: 251
 allow MAME to give back time to the system when it's not needed
 アイドル時にシステムへCPUの開放を許可
 
-# windows/input.c: 1735
+# windows/input.c: 1820
 analog
 アナログ
 
-# windows/input.c: 1203
+# windows/input.c: 1274
 analog joystick
 アナログジョイスティック
 
-# windows/config.c: 259
+# windows/config.c: 260
 artwork resolution (0 for auto)
 アートワーク解像度 (0: 自動)
 
-# windows/video.c: 234
+# windows/video.c: 236
 attempt to match the game's refresh rate
 リフレッシュレートマッチを有効
 
-# windows/config.c: 277
+# windows/config.c: 278
 automatic pause when playback is finished
 再生終了時に自動停止
 
-# windows/config.c: 227
+# windows/config.c: 228
 automatically rotate screen anti-clockwise for vertical games
 縦型ゲームを自動的に反時計回りに回転
 
-# windows/config.c: 226
+# windows/config.c: 227
 automatically rotate screen clockwise for vertical games
 縦型ゲームを自動的に時計回りに回転
 
-# windows/config.c: 231
+# windows/config.c: 232
 brightness correction
 明るさ
 
-# windows/video.c: 278
+# windows/video.c: 280
 button color (aqua)
 ボタン (S 0r 7)
 
-# windows/video.c: 275
+# windows/video.c: 277
 button color (blue)
 ボタン (D or 4)
 
-# windows/video.c: 274
+# windows/video.c: 276
 button color (green)
 ボタン (C or 3)
 
-# windows/video.c: 281
+# windows/video.c: 283
 button color (lime)
 ボタン (10)
 
-# windows/video.c: 280
+# windows/video.c: 282
 button color (navy)
 ボタン (9)
 
-# windows/video.c: 277
+# windows/video.c: 279
 button color (pink)
 ボタン (P or 6)
 
-# windows/video.c: 276
+# windows/video.c: 278
 button color (purple)
 ボタン (K or 5)
 
-# windows/video.c: 272
+# windows/video.c: 274
 button color (red)
 ボタン (A or 1)
 
-# windows/video.c: 279
+# windows/video.c: 281
 button color (silver)
 ボタン (8)
 
-# windows/video.c: 273
+# windows/video.c: 275
 button color (yellow)
 ボタン (B or 2)
 
-# windows/config.c: 281
+# windows/config.c: 282
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 M68Kコアを変更 (0:C、1:DRC、2:ASM+DRC)
 
-# windows/config.c: 268
+# windows/config.c: 269
 change system bios
 システムのBIOSを変更する
 
@@ -862,27 +862,27 @@ change system bios
 cheat filename
 チートファイルの名前
 
-# windows/fronthlp.c: 88
+# windows/fronthlp.c: 87
 compare files with known MAME roms
 ファイルを既知のMAME romと比較する
 
-# windows/fronthlp.c: 89
+# windows/fronthlp.c: 88
 compare files with known MAME roms (brief)
 ファイルを既知のMAME romと比較する (大まかに)
 
-# windows/config.c: 275
+# windows/config.c: 276
 confirm before exiting game
 ゲーム終了前に確認する
 
-# windows/config.c: 295
+# windows/config.c: 296
 create the default configuration file
 デフォルト設定ファイルを作成
 
-# windows/config.c: 258
+# windows/config.c: 259
 crop artwork to game screen only
 アートワークをゲーム画面にのみ刈り込み描画する
 
-# windows/video.c: 282
+# windows/video.c: 284
 cursor color
 カーソ\ル
 
@@ -890,11 +890,11 @@ cursor color
 customised blitting effects preset
 エフェクト描画のプリセットをカスタマイズ
 
-# windows/input.c: 255, 1206
+# windows/input.c: 277, 1277
 dial
 ダイアル
 
-# windows/input.c: 261, 1735
+# windows/input.c: 283, 1820
 digital
 デジタル
 
@@ -950,95 +950,95 @@ NVRAMの内容を保存するパスを指定
 directory to save states
 ステートサーブデータを保存するパスを指定
 
-# windows/config.c: 274
+# windows/config.c: 275
 disable second monitor emulation
 ２画面表\示を無効にする
 
-# windows/config.c: 299
+# windows/config.c: 300
 display additional diagnostic information
 起動時に診断用の情報を表\示
 
-# windows/config.c: 296
+# windows/config.c: 297
 display running parameters in rc style
 現在の設定を表\示
 
-# windows/config.c: 223
+# windows/config.c: 224
 do not apply rotation
 画面回転/反転オプションの無効化
 
-# windows/wind3d.c: 1139
+# windows/wind3d.c: 1140
 double
 ダブル
 
-# windows/config.c: 236
+# windows/config.c: 237
 draw antialiased vectors
 アンチエイリアス
 
-# windows/config.c: 237
+# windows/config.c: 238
 draw translucent vectors
 ベクターの透過表\示
 
-# windows/fronthlp.c: 78
+# windows/fronthlp.c: 77
 driver sourcefile
 ドライバのソ\ースファイル名を表\示
 
-# windows/video.c: 229
+# windows/video.c: 231
 emulate win_old_scanlines
 スキャンラインエフェクトを有効
 
-# windows/input.c: 252
+# windows/input.c: 274
 enable (keyboard|mouse|joystick) if a paddle control is present
 パドルが存在するときに有効 (keyboard|mouse|joystick)
 
-# windows/input.c: 255
+# windows/input.c: 277
 enable (keyboard|mouse|joystick|lightgun) if a dial control is present
 ダイアルが存在するときに有効 (keyboard|mouse|joystick)
 
-# windows/input.c: 257
+# windows/input.c: 279
 enable (keyboard|mouse|joystick|lightgun) if a lightgun control is present
 光線銃が存在するときに有効 (keyboard|mouse|joystick)
 
-# windows/input.c: 259
+# windows/input.c: 281
 enable (keyboard|mouse|joystick|lightgun) if a mouse control is present
 マウスが存在するときに有効 (keyboard|mouse|joystick)
 
-# windows/input.c: 254
+# windows/input.c: 276
 enable (keyboard|mouse|joystick|lightgun) if a pedal control is present
 ペダルが存在するときに有効 (keyboard|mouse|joystick)
 
-# windows/input.c: 256
+# windows/input.c: 278
 enable (keyboard|mouse|joystick|lightgun) if a trackball control is present
 トラックボールが存在するときに有効 (keyboard|mouse|joystick)
 
-# windows/input.c: 253
+# windows/input.c: 275
 enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is present
 アナログジョイスティックが存在するときに有効 (keyboard|mouse|joystick)
 
-# windows/config.c: 270
+# windows/config.c: 271
 enable automatic restore at startup and save at exit
 起動時の自動読み込みと終了時の自動保存を有効
 
-# windows/input.c: 231
+# windows/input.c: 253
 enable dual lightgun input
 デュアル光線銃を使用
 
-# windows/input.c: 229
+# windows/input.c: 251
 enable joystick input
 ジョイスティックを使用
 
-# windows/input.c: 234
+# windows/input.c: 256
 enable keyboard LED emulation
 キーボードLEDエミュレーションを有効
 
-# windows/input.c: 230
+# windows/input.c: 252
 enable lightgun input
 光線銃を使用
 
-# windows/input.c: 228
+# windows/input.c: 250
 enable mouse input
 マウスまたはトラックボールを使用
 
-# windows/input.c: 240
+# windows/input.c: 262
 enable pointing stick input
 スティック型マウスを使用
 
@@ -1046,35 +1046,35 @@ enable pointing stick input
 enable rotation of effects for rotated games
 回転したゲームに対してエフェクトの回転を有効
 
-# windows/input.c: 233
+# windows/input.c: 255
 enable steadykey support
 ボタンの同時押し認識を容易にする
 
-# windows/config.c: 260
+# windows/config.c: 261
 enable/disable cheat subsystem
 ゲームチートを有効化
 
-# windows/config.c: 261
+# windows/config.c: 262
 enable/disable debugger (only if available)
 デバッガを有効 (デバッグビルドのみ)
 
-# windows/config.c: 298
+# windows/config.c: 299
 enable/disable loading of configfiles
 設定ファイルの有効化
 
-# windows/config.c: 303
+# windows/config.c: 304
 enable/disable local language game list
 ローカライズされたゲームリストを有効
 
-# windows/config.c: 246
+# windows/config.c: 247
 enable/disable sound and sound CPUs
 サウンドとサウンドCPUを有効
 
-# windows/config.c: 249
+# windows/config.c: 250
 enable/disable volume auto adjust
 自動音量調整機能\を有効
 
-# windows/video.c: 233
+# windows/video.c: 235
 enforce aspect ratio
 表\示比率の固定を有効
 
@@ -1094,7 +1094,7 @@ error: %s requires an argument\n
 error: couldn't open file: %s\n
 エラー: ファイルが開けません: %s\n
 
-# windows/config.c: 859
+# windows/config.c: 860
 error: duplicate gamename: %s\n
 エラー: ゲーム名%sが重複しています\n
 
@@ -1102,15 +1102,15 @@ error: duplicate gamename: %s\n
 error: garbage \"%s\" on line %d of file: %s\n
 エラー: 不要な文字列の切り捨て: \"%s\" 行番号: %d ファイル名: %s\n
 
-# windows/input.c: 825
+# windows/input.c: 868
 error: invalid value for %s: %s\n
 エラー: %s に不正な値: %s\n
 
-# windows/video.c: 424
+# windows/video.c: 426
 error: invalid value for aspect ratio: %s\n
 エラー: 不正な表\示比率指定: %s\n
 
-# windows/video.c: 321
+# windows/video.c: 323
 error: invalid value for cleanstretch: %s\n
 エラー: 不正なcleanstretch指定: %s\n
 
@@ -1118,31 +1118,31 @@ error: invalid value for cleanstretch: %s\n
 error: invalid value for d3dprescale: %s\n
 エラー: 不正なd3dprescale指定: %s\n
 
-# windows/input.c: 905
+# windows/input.c: 948
 error: invalid value for digital: %s -- valid values are:\n
 エラー: 不正なデジタル指定: %s -- 有効な値:\n
 
-# windows/video.c: 403
+# windows/video.c: 405
 error: invalid value for effect: %s\n
 エラー: 不正なエフェクト表\示指定: %s\n
 
-# windows/video.c: 378
+# windows/video.c: 380
 error: invalid value for frames_to_run: %s\n
 エラー: 不正なframes_to_run指定: %s\n
 
-# windows/config.c: 187
+# windows/config.c: 188
 error: invalid value for language: %s\nUse %s\n
 エラー: 不正な言語指定: %s\n%sを使用します\n
 
-# windows/input.c: 800
+# windows/input.c: 843
 error: invalid value for led_mode: %s\n
 エラー: 不正なled_mode指定: %s\n
 
-# windows/video.c: 452
+# windows/video.c: 454
 error: invalid value for palette: %s\n
 エラー: 不正なパレット指定: %s\n
 
-# windows/video.c: 346, 356
+# windows/video.c: 348, 358
 error: invalid value for resolution: %s\n
 エラー: 不正な画面解像度指定: %s\n
 
@@ -1162,11 +1162,11 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 エラー: 関数rc_register_optionでmallocで失敗しました\n
 
-# windows/config.c: 980
+# windows/config.c: 981
 error: malloc failed in win_dirname\n
 エラー: 関数win_dirnameでmallocで失敗しました\n
 
-# windows/config.c: 1020
+# windows/config.c: 1021
 error: malloc failed in win_strip_extension\n
 エラー: 関数win_strip_extensionでmallocで失敗しました\n
 
@@ -1190,23 +1190,23 @@ error: unknown option type: %d, this should not happen!\n
 feedback strength
 フィードバックの強度
 
-# windows/config.c: 229
+# windows/config.c: 230
 flip screen left-right
 左右反転
 
-# windows/config.c: 228
+# windows/config.c: 229
 flip screen upside-down
 上下反転
 
-# windows/video.c: 261
+# windows/video.c: 263
 font blank color
 フォント (空白)
 
-# windows/video.c: 262
+# windows/video.c: 264
 font normal color
 フォント (通常)
 
-# windows/video.c: 263
+# windows/video.c: 265
 font special color
 フォント (特殊)
 
@@ -1214,11 +1214,11 @@ font special color
 force specific zoom level
 拡大レベルを強制的に指定
 
-# windows/config.c: 230
+# windows/config.c: 231
 gamma correction
 ガンマ値
 
-# windows/config.c: 265
+# windows/config.c: 266
 generate error.log
 エラーログを出力
 
@@ -1230,39 +1230,39 @@ info: trying to parse: %s\n
 interpolation method
 補完手法
 
-# windows/input.c: 1735
+# windows/input.c: 1820
 invalid
 不正
 
-# windows/config.c: 272
+# windows/config.c: 273
 ips datfile name
 IPSデータファイル名
 
-# windows/fronthlp.c: 722
+# windows/fronthlp.c: 721
 is bad\n
 は異常です\n
 
-# windows/fronthlp.c: 732
+# windows/fronthlp.c: 731
 is best available\n
 は現状では最良な状態です\n
 
-# windows/fronthlp.c: 727
+# windows/fronthlp.c: 726
 is good\n
 は正常です\n
 
-# windows/fronthlp.c: 737
+# windows/fronthlp.c: 736
 is missing optional files\n
 は不足しています(オプション)
 
-# windows/input.c: 230, 821, 1204
+# windows/input.c: 252, 864, 1275
 lightgun
 光線銃
 
-# windows/fronthlp.c: 85
+# windows/fronthlp.c: 84
 list optional samples for a driver
 ドライバの使用サンプルのリスト
 
-# windows/fronthlp.c: 84
+# windows/fronthlp.c: 83
 list required roms for a driver
 ドライバに必要なROMのリスト
 
@@ -1270,11 +1270,11 @@ list required roms for a driver
 loading %-12s\r
 %-12s 読み込み中\r
 
-# windows/input.c: 261
+# windows/input.c: 283
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 特定のジョイスティックや軸をデジタルに設定 (none|all|j<N>*|j<N>a<M>[,...])
 
-# windows/input.c: 236
+# windows/input.c: 258
 minimal analog value for digital input
 デジタル入力変換時のアナログ最小値
 
@@ -1282,15 +1282,15 @@ minimal analog value for digital input
 no help available
 ヘルプがありません
 
-# windows/input.c: 232
+# windows/input.c: 254
 offscreen shots reload
 画面外のショットを割り当てる
 
-# windows/config.c: 266
+# windows/config.c: 267
 output error log to debugger
 エラーログをデバッガに出力
 
-# windows/input.c: 252, 1202
+# windows/input.c: 274, 1273
 paddle
 パドル
 
@@ -1306,19 +1306,19 @@ ROMファイルへのパスを指定
 path to samplesets
 サンプルファイルへのパスを指定
 
-# windows/input.c: 254, 1205
+# windows/input.c: 276, 1276
 pedal
 ペダル
 
-# windows/config.c: 263
+# windows/config.c: 264
 playback an input file
 入力の再現するファイル名
 
-# windows/input.c: 237
+# windows/input.c: 259
 preconfigure for specified controller
 コントローラの指定
 
-# windows/video.c: 250
+# windows/video.c: 252
 prefer RDTSC over QueryPerformanceCounter for timing
 従来のRDTSCでタイミングを取る
 
@@ -1326,67 +1326,67 @@ prefer RDTSC over QueryPerformanceCounter for timing
 prescale effect
 プリスケールエフェクト
 
-# windows/config.c: 264
+# windows/config.c: 265
 record an input file
 入力を保存するファイル名
 
-# windows/fronthlp.c: 86
+# windows/fronthlp.c: 85
 report romsets that have problems
 問題のあるROMファイルを報告
 
-# windows/fronthlp.c: 87
+# windows/fronthlp.c: 86
 report samplesets that have problems
 問題のあるサンプルファイルを報告
 
-# windows/fronthlp.c: 750
+# windows/fronthlp.c: 749
 romset
 ROMセット
 
-# windows/fronthlp.c: 690
+# windows/fronthlp.c: 689
 romset %s 
 ROMセット%s
 
-# windows/fronthlp.c: 760
+# windows/fronthlp.c: 759
 romsets
 ROMセット
 
-# windows/config.c: 225
+# windows/config.c: 226
 rotate screen anti-clockwise
 反時計回りに回転
 
-# windows/config.c: 224
+# windows/config.c: 225
 rotate screen clockwise
 時計回りに回転
 
-# windows/video.c: 221
+# windows/video.c: 223
 run in a window/run on full screen
 ウインドウ表\示
 
-# windows/config.c: 617
+# windows/config.c: 618
 running %s (%s) [press return]
 リターンキーを押すと、ゲーム%s (%s)の実行を開始します
 
-# windows/fronthlp.c: 750
+# windows/fronthlp.c: 749
 sampleset
 サンプルセット
 
-# windows/fronthlp.c: 713
+# windows/fronthlp.c: 712
 sampleset %s 
 サンプルセット%s
 
-# windows/fronthlp.c: 760
+# windows/fronthlp.c: 759
 samplesets
 サンプルセット
 
-# windows/sound.c: 128
+# windows/sound.c: 129
 save sound in wav file
 サウンドをWAVファイルに保存
 
-# windows/video.c: 241
+# windows/video.c: 243
 save video in specified mng file
 動画を指定したMNGファイルに保存
 
-# windows/wind3d.c: 1649
+# windows/wind3d.c: 1650
 scale effects surface created: %s\n
 スケール描画バッファ: %s\n
 
@@ -1394,119 +1394,119 @@ scale effects surface created: %s\n
 scanline intensity
 スキャンラインの輝度
 
-# windows/config.c: 262
+# windows/config.c: 263
 script for debugger (only if available)
 デバッガ用のスクリプト (もし有効な場合)
 
-# windows/config.c: 302
+# windows/config.c: 303
 select translation language
 使用する言語を選択
 
-# windows/sound.c: 127
+# windows/sound.c: 128
 set audio latency (increase to reduce glitches)
 オーディオのレイテンシを指定
 
-# windows/config.c: 238
+# windows/config.c: 239
 set beam width in vector games
 ベクターの線幅
 
-# windows/config.c: 239
+# windows/config.c: 240
 set flickering in vector games
 ベクターのちらつき
 
-# windows/video.c: 218
+# windows/video.c: 220
 set frameskip explicitly (autoframeskip needs to be off)
 フレームスキップ数の指定 (autoframeskipオフ時のみ)
 
-# windows/config.c: 240
+# windows/config.c: 241
 set intensity in vector games
 ベクタゲームの輝度を指定
 
-# windows/input.c: 243
+# windows/input.c: 265
 set joystick ID (Player1)
 ジョイスティックIDを指定 (プレイヤー1)
 
-# windows/input.c: 244
+# windows/input.c: 266
 set joystick ID (Player2)
 ジョイスティックIDを指定 (プレイヤー2)
 
-# windows/input.c: 245
+# windows/input.c: 267
 set joystick ID (Player3)
 ジョイスティックIDを指定 (プレイヤー3)
 
-# windows/input.c: 246
+# windows/input.c: 268
 set joystick ID (Player4)
 ジョイスティックIDを指定 (プレイヤー4)
 
-# windows/input.c: 247
+# windows/input.c: 269
 set joystick ID (Player5)
 ジョイスティックIDを指定 (プレイヤー5)
 
-# windows/input.c: 248
+# windows/input.c: 270
 set joystick ID (Player6)
 ジョイスティックIDを指定 (プレイヤー6)
 
-# windows/input.c: 249
+# windows/input.c: 271
 set joystick ID (Player7)
 ジョイスティックIDを指定 (プレイヤー7)
 
-# windows/input.c: 250
+# windows/input.c: 272
 set joystick ID (Player8)
 ジョイスティックIDを指定 (プレイヤー8)
 
-# windows/video.c: 227
+# windows/video.c: 229
 set resolution
 画面解像度を指定
 
-# windows/config.c: 244
+# windows/config.c: 245
 set samplerate
 サンプルレート
 
-# windows/video.c: 228
+# windows/video.c: 230
 set specific monitor refresh rate
 リフレッシュレートを設定
 
-# windows/video.c: 237
+# windows/video.c: 239
 sets the brightness in full screen mode
 フルスクリーンの明るさ
 
-# windows/video.c: 238
+# windows/video.c: 240
 sets the number of frames to run within the game
 指定したフレーム数で終了
 
-# windows/fronthlp.c: 76
+# windows/fronthlp.c: 75
 short name, full name
 ゲームディレクトリ名＋ゲームのフルネームを表\示
 
-# windows/fronthlp.c: 79
+# windows/fronthlp.c: 78
 show clones
 ゲームのクローン版を表\示
 
-# windows/fronthlp.c: 71, 72
+# windows/fronthlp.c: 70, 71
 show help message
 ヘルプの表\示
 
-# windows/config.c: 297
+# windows/config.c: 298
 show this help
 このヘルプを表\示
 
-# windows/config.c: 267
+# windows/config.c: 268
 skip displaying the game info screen
 ゲーム情報の表\示をスキップする
 
-# windows/video.c: 217
+# windows/video.c: 219
 skip frames to speed up emulation
 フレームスキップ数を自動で調整
 
-# windows/config.c: 246 
+# windows/config.c: 247 
 sound
 音源
 
-# windows/video.c: 240
+# windows/video.c: 242
 specify an alternate monitor aspect ratio
 表\示比率を指定
 
-# windows/video.c: 239
+# windows/video.c: 241
 specify the blitting effect
 エフェクト表\示を指定
 
@@ -1514,67 +1514,67 @@ specify the blitting effect
 specify the blitting effects
 描画エフェクトを指定
 
-# windows/video.c: 225
+# windows/video.c: 227
 specify which screen to use
 使用するスクリーンを指定
 
-# windows/video.c: 232
+# windows/video.c: 234
 start out maximized
 ウィンドウを最大化
 
-# windows/config.c: 269
+# windows/config.c: 270
 state to load
 読み込むステート
 
-# windows/video.c: 226
+# windows/video.c: 228
 stretch to integer ratios
 整数倍に拡大
 
-# windows/video.c: 231
+# windows/video.c: 233
 switch color depths to best fit
 画面色数の変更を可能\にする
 
-# windows/video.c: 230
+# windows/video.c: 232
 switch resolutions to best fit
 解像度の変更を可能\にする
 
-# windows/video.c: 235
+# windows/video.c: 237
 syncronize only to the monitor refresh
 速度制限をモニタのリフレッシュレートと同期
 
-# windows/video.c: 251
+# windows/video.c: 253
 thread priority
 スレッドの優先度
 
-# windows/video.c: 236
+# windows/video.c: 238
 throttle speed to the game's framerate
 速度制限を有効
 
-# windows/input.c: 256, 1207
+# windows/input.c: 278, 1278
 trackball
 トラックボール
 
-# windows/config.c: 285
+# windows/config.c: 286
 transparency of UI background [0 - 255]
 UIの背景の透明度 [0 - 255]
 
-# windows/wind3d.c: 1139
+# windows/wind3d.c: 1140
 triple
 トリプル
 
-# windows/video.c: 220
+# windows/video.c: 222
 triple buffering (only if fullscreen)
 トリプルバッファ使用 (フルスクリーン時のみ)
 
-# windows/config.c: 167
+# windows/config.c: 168
 unable to open log file\n
 ログファイルが開けません\n
 
-# windows/video.c: 223
+# windows/video.c: 225
 use Direct3D for rendering
 描画にDirect3Dを使用
 
-# windows/video.c: 222
+# windows/video.c: 224
 use DirectDraw for rendering
 DirectDrawを使用
 
@@ -1582,55 +1582,55 @@ DirectDrawを使用
 use DirectX texture management
 DirectXのテクスチャ管理を使用
 
-# windows/config.c: 254
+# windows/config.c: 255
 use additional game artwork (sets default for specific options below)
 追加のゲームアートワークを使用 (特有のオプション指定は下記)
 
-# windows/config.c: 255
+# windows/config.c: 256
 use backdrop artwork
 背景アートワークを使用
 
-# windows/config.c: 257
+# windows/config.c: 258
 use bezel artwork
 前面枠アートワークを使用
 
-# windows/config.c: 256
+# windows/config.c: 257
 use overlay artwork
 オーバレイアートワークを使用
 
-# windows/config.c: 245
+# windows/config.c: 246
 use samples
 サンプルを使用
 
-# windows/config.c: 284
+# windows/config.c: 285
 use transparent background for UI text
 UIテキストの背景を半透明にする
 
-# windows/config.c: 247
+# windows/config.c: 248
 volume (range [-32,0])
 ボリューム (-32から0)
 
-# windows/video.c: 219
+# windows/video.c: 221
 wait for vertical sync (reduces tearing)
 モニタのVsyncを待つ
 
-# windows/video.c: 264
+# windows/video.c: 266
 window background color
 ウィンドウ 背景色
 
-# windows/video.c: 267
+# windows/video.c: 269
 window frame color (dark)
 ウィンドウ フレーム (暗)
 
-# windows/video.c: 266
+# windows/video.c: 268
 window frame color (light)
 ウィンドウ フレーム (明)
 
-# windows/video.c: 265
+# windows/video.c: 267
 window frame color (medium)
 ウィンドウ フレーム
 
-# windows/fronthlp.c: 77
+# windows/fronthlp.c: 76
 year, manufacturer and full name
 サポートゲーム、製造年、メーカーのリストを表\示
 

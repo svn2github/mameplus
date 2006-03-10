@@ -951,7 +951,7 @@ static void rc_duplicate_strings(struct rc_option *option)
 }
 
 // performs a "deep" copy--strings in source are allocated and copied in dest
-void CopyGameOptions(options_type *source, options_type *dest)
+void CopyGameOptions(const options_type *source, options_type *dest)
 {
 	gOpts = *source;
 	rc_duplicate_strings(rc_game->option);

@@ -360,7 +360,6 @@ typedef struct
 	char*    artdir;
 	char*    imgdir;
 	char*    diffdir;
-	char*    commentdir;
 #ifdef USE_IPS
 	char*    patchdir;
 #endif /* USE_IPS */
@@ -376,6 +375,7 @@ typedef struct
 	char*    langdir;
 	char*    ctrlrdir;
 	char*    folderdir;
+	char*    commentdir;
 
 #ifdef UI_COLOR_DISPLAY
 	/* ui palette */
@@ -399,7 +399,7 @@ void OptionsInit(void);
 void OptionsExit(void);
 
 void FreeGameOptions(options_type *o);
-void CopyGameOptions(options_type *source, options_type *dest);
+void CopyGameOptions(const options_type *source, options_type *dest);
 
 BOOL FolderHasVector(const char *name);
 options_type* GetFolderOptions(const char *name);

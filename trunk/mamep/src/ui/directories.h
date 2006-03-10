@@ -23,6 +23,7 @@
 #define DIRDLG_INP          0x0800
 #define DIRDLG_CTRLR        0x1000
 #define DIRDLG_SOFTWARE		0x2000
+#define DIRDLG_COMMENT      0x4000
 
 #define DIRLIST_NEWENTRYTEXT "<               >"
 

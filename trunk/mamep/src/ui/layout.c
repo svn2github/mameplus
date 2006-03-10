@@ -126,9 +126,9 @@ const DIRECTORYINFO g_directoryInfo[] =
 	{ "NVRAM",                 GetNvramDir,        SetNvramDir,        FALSE, 0 },
 	{ "Controller Files",      GetCtrlrDir,        SetCtrlrDir,        FALSE, DIRDLG_CTRLR },
 	{ "Hard Drive Difference", GetDiffDir,         SetDiffDir,         FALSE, 0 },
-	{ "Comment Files",         GetCommentDir,      SetCommentDir,      FALSE, 0 },
 	{ "Icons",                 GetIconsDir,        SetIconsDir,        FALSE, 0 },
 	{ "Background Images",     GetBgDir,           SetBgDir,           FALSE, 0 },
+	{ "Comment Files",         GetCommentDir,      SetCommentDir,      FALSE, DIRDLG_COMMENT },
 	{ NULL }
 };
 
