@@ -570,7 +570,7 @@ Activation Key
 Add
 加入
 
-# inptport.c: 1013
+# inptport.c: 1014
 Add Cheat
 加入作弊碼
 
@@ -978,7 +978,7 @@ Default Search Speed
 Delay
 延遲
 
-# inptport.c: 1014
+# inptport.c: 1015
 Delete Cheat
 刪除作弊碼
 
@@ -1138,7 +1138,7 @@ Easiest
 Easy
 簡單
 
-# inptport.c: 1017
+# inptport.c: 1018
 Edit Cheat
 編輯作弊碼
 
@@ -1722,7 +1722,7 @@ Lives (or another value)
 Load Selected Card
 載入選定的記憶卡
 
-# inptport.c: 1012
+# inptport.c: 1013
 Load State
 載入狀態
 
@@ -3366,19 +3366,19 @@ Paddle V 7
 Paddle V 8
 操縱桿 V 8
 
-# inptport.c: 1003
+# inptport.c: 1004
 Pan Down
 畫面下移
 
-# inptport.c: 1004
+# inptport.c: 1005
 Pan Left
 畫面左移
 
-# inptport.c: 1005
+# inptport.c: 1006
 Pan Right
 畫面右移
 
-# inptport.c: 1002
+# inptport.c: 1003
 Pan Up
 畫面上移
 
@@ -3566,7 +3566,7 @@ Same
 Samples
 樣本檔
 
-# inptport.c: 1015
+# inptport.c: 1016
 Save Cheat
 儲存作弊碼
 
@@ -3578,7 +3578,7 @@ Save Memory
 Save Snapshot
 儲存圖像
 
-# inptport.c: 1011 
+# inptport.c: 1012 
 Save State
 儲存狀態
 
@@ -3734,7 +3734,7 @@ Show Gfx
 Show Input Log
 顯示輸入記錄
 
-# inptport.c: 1006
+# inptport.c: 1007
 Show Profiler
 顯示數據
 
@@ -3765,6 +3765,10 @@ Slow
 # ui_text.c: 207
 Slow But Sure (changed or not)
 較慢但準確 (是否變更)
+
+# inptport.c: 973
+Soft Reset
+軟體重新啟動
 
 # drivers/balsente.c: 748 drivers/contra.c: 221 drivers/couple.c: 211 drivers/gijoe.c: 300 drivers/mosaic.c: 207 drivers/tmnt.c: 2021, 2103, 2349 drivers/zaxxon.c: 882 ui_text.c: 46
 Sound
@@ -3970,11 +3974,11 @@ Toggle
 Toggle Cheat
 切換作弊碼
 
-# inptport.c: 1018
+# inptport.c: 1019
 Toggle Crosshair
 切換十字游標
 
-# inptport.c: 1010
+# inptport.c: 1011
 Toggle Debugger
 切換除錯程式
 
@@ -4086,11 +4090,11 @@ UI Right
 UI Select
 選單 選定鍵
 
-# inptport.c: 1008
+# inptport.c: 1009
 UI Toggle
 選單 切換鍵
 
-# inptport.c: 1019
+# inptport.c: 1002
 UI Toggle Lock Scroll
 選單 切換鎖定捲動
 
@@ -4402,7 +4406,7 @@ Watch Size
 Watch Skip
 監視略過
 
-# inptport.c: 1016
+# inptport.c: 1017
 Watch Value
 監視值
 

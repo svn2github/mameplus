@@ -582,7 +582,7 @@ Activation Key
 Add
 
 
-# inptport.c: 1013
+# inptport.c: 1014
 Add Cheat
 
 
@@ -1030,7 +1030,7 @@ Default Search Speed
 Delay
 
 
-# inptport.c: 1014
+# inptport.c: 1015
 Delete Cheat
 
 
@@ -1194,7 +1194,7 @@ Easiest
 Easy
 
 
-# inptport.c: 1017
+# inptport.c: 1018
 Edit Cheat
 
 
@@ -1834,7 +1834,7 @@ Lives (or another value)
 Load Selected Card
 
 
-# inptport.c: 1012
+# inptport.c: 1013
 Load State
 
 
@@ -3502,19 +3502,19 @@ Paddle V 7
 Paddle V 8
 
 
-# inptport.c: 1003
+# inptport.c: 1004
 Pan Down
 
 
-# inptport.c: 1004
+# inptport.c: 1005
 Pan Left
 
 
-# inptport.c: 1005
+# inptport.c: 1006
 Pan Right
 
 
-# inptport.c: 1002
+# inptport.c: 1003
 Pan Up
 
 
@@ -3722,7 +3722,7 @@ Same
 Samples
 
 
-# inptport.c: 1015
+# inptport.c: 1016
 Save Cheat
 
 
@@ -3734,7 +3734,7 @@ Save Memory
 Save Snapshot
 
 
-# inptport.c: 1011 
+# inptport.c: 1012 
 Save State
 
 
@@ -3890,7 +3890,7 @@ Show Gfx
 Show Input Log
 
 
-# inptport.c: 1006
+# inptport.c: 1007
 Show Profiler
 
 
@@ -3920,6 +3920,10 @@ Slow
 
 # ui_text.c: 207
 Slow But Sure (changed or not)
+
+
+# inptport.c: 973
+Soft Reset
 
 
 # drivers/balsente.c: 748 drivers/contra.c: 221 drivers/couple.c: 211 drivers/gijoe.c: 300 drivers/mosaic.c: 207 drivers/tmnt.c: 2021, 2103, 2349 drivers/zaxxon.c: 882 ui_text.c: 46
@@ -4142,11 +4146,11 @@ Toggle
 Toggle Cheat
 
 
-# inptport.c: 1018
+# inptport.c: 1019
 Toggle Crosshair
 
 
-# inptport.c: 1010
+# inptport.c: 1011
 Toggle Debugger
 
 
@@ -4258,11 +4262,11 @@ UI Right
 UI Select
 
 
-# inptport.c: 1008
+# inptport.c: 1009
 UI Toggle
 
 
-# inptport.c: 1019
+# inptport.c: 1002
 UI Toggle Lock Scroll
 
 
@@ -4574,7 +4578,7 @@ Watch Size
 Watch Skip
 
 
-# inptport.c: 1016
+# inptport.c: 1017
 Watch Value
 
 
