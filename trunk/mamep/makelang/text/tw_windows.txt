@@ -1,44 +1,44 @@
-# windows/input.c: 907
+# windows/input.c: 950
          all -- all axes on all joysticks are digital\n
          all -- 所有搖桿上的軸均是數位裝置\n
 
-# windows/input.c: 913
+# windows/input.c: 956
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
          j1,j2a2 -- 搖桿 1 上的所有軸和搖桿 2 上的軸 2 是數位裝置\n
 
-# windows/input.c: 911
+# windows/input.c: 954
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
          j1a5a6 -- 搖桿 1 上的軸 5 和軸 6 是數位裝置\n
 
-# windows/input.c: 908
+# windows/input.c: 951
          j<N> -- all axes on joystick <N> are digital\n
          j<N> -- 搖桿 <N> 上的所有軸是數位裝置\n
 
-# windows/input.c: 909
+# windows/input.c: 952
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
          j<N>a<M> -- 搖桿 <N> 上的軸 <M> 是數位裝置\n
 
-# windows/input.c: 906
+# windows/input.c: 949
          none -- no axes on any joysticks are digital\n
          none -- 沒有任何搖桿上的軸是數位裝置\n
 
-# windows/fronthlp.c: 460
+# windows/fronthlp.c: 459
         MAME -createconfig to create a mame.ini\n\n
         MAME -createconfig 建立 mame.ini 檔案\n\n
 
-# windows/fronthlp.c: 459
+# windows/fronthlp.c: 458
         MAME -showconfig   for a list of configuration options\n
         MAME -showconfig   列出設定選項的清單\n
 
-# windows/fronthlp.c: 458
+# windows/fronthlp.c: 457
         MAME -showusage    for a brief list of options\n
         MAME -showusage    列出選項的簡短描述\n
 
-# windows/input.c: 910
+# windows/input.c: 953
     Multiple axes can be specified for one joystick:\n
     一個搖桿能夠指定多個軸:\n
 
-# windows/input.c: 912
+# windows/input.c: 955
     Multiple joysticks can be specified separated by commas:\n
     多個搖桿能夠以逗號分開指定:\n
 
@@ -46,63 +46,63 @@
    ignoring line\n
    忽略此行\n
 
-# windows/input.c: 1900
+# windows/input.c: 2001
   Axis %d (%s)%s\n
   軸 %d (%s)%s\n
 
-# windows/config.c: 545
+# windows/config.c: 546
  %s running parameters
  %s 執行參數
 
-# windows/wind3d.c: 637
+# windows/wind3d.c: 638
  (%.2lfMB video memory available)
  (可用的視訊記憶體 %.2lfMB)
 
-# windows/input.c: 1900
+# windows/input.c: 2001
  - digital
  - 數位
 
-# windows/fronthlp.c: 759
+# windows/fronthlp.c: 758
 %d %s found, %d were OK.\n
 %d %s 找到，%d 是正確的。\n
 
-# windows/wind3d.c: 1634
+# windows/wind3d.c: 1635
 %s surface created: %s (%s)\n
 已建立%s介面: %s (%s)\n
 
-# windows/fronthlp.c: 196
+# windows/fronthlp.c: 195
 (BAD) 
 (損壞) 
 
-# windows/video.c: 224
+# windows/video.c: 226
 (dd) stretch video using the hardware
 (dd) 使用硬體延展視訊
 
-# windows/input.c: 946
+# windows/input.c: 989
 Autoenabling joysticks due to presence of a %s\n
 自動啟用搖桿，因為存在一個%s\n
 
-# windows/input.c: 954
+# windows/input.c: 997
 Autoenabling lightguns due to presence of a %s\n
 自動啟用光線槍，因為存在一個%s\n
 
-# windows/input.c: 938
+# windows/input.c: 981
 Autoenabling mice due to presence of a %s\n
 自動啟用滑鼠，因為存在一個%s\n
 
-# windows/video.c: 703
+# windows/video.c: 705
 Average FPS: %f (%d frames)\n
 平均 FPS: %f (%d 個畫面)\n
 
-# windows/wind3d.c: 2659 windows/winddraw.c: 1456, 1763
+# windows/wind3d.c: 2660 windows/winddraw.c: 1456, 1763
 Avg Flip = %d
 平均翻轉 = %d
 
-# windows/wind3d.c: 1005 windows/winddraw.c: 577
+# windows/wind3d.c: 1006 windows/winddraw.c: 577
 Best mode = %dx%dx%d @ %d Hz\n
 最佳模式 = %dx%dx%d @ %d Hz\n
 
-# windows/wind3d.c: 1007 windows/winddraw.c: 579
+# windows/wind3d.c: 1008 windows/winddraw.c: 579
 Best mode = %dx%dx%d @ default Hz\n
 最佳模式 = %dx%dx%d @ 預設 Hz\n
 
@@ -110,39 +110,39 @@ Best mode = %dx%dx%d @ default Hz\n
 Blit surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 已建立 blit 介面: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 
-# windows/wind3d.c: 1638
+# windows/wind3d.c: 1639
 Blit surface created: %s\n
 已建立 blit 介面: %s\n
 
-# windows/wind3d.c: 772
+# windows/wind3d.c: 773
 Blitter initialisation complete (%.2lfMB video memory free)\n
 初始化 blitter 完成 (釋放視訊記憶體 %.2lfMB)\n
 
-# windows/fronthlp.c: 80
+# windows/fronthlp.c: 79
 CRC-32s
 CRC-32
 
-# windows/config.c: 294
+# windows/config.c: 295
 Configuration options
 設定選項
 
-# windows/fronthlp.c: 779
+# windows/fronthlp.c: 778
 ERROR     %s\n
 錯誤      %s\n
 
-# windows/video.c: 544
+# windows/video.c: 546
 Enumerating video device %s\n
 正在列舉視訊裝置 %s\n
 
-# windows/wind3d.c: 716
+# windows/wind3d.c: 717
 Error creating Direct3D7 device: %08x\n
 建立 Direct3D7 裝置時發生錯誤: %08x\n
 
-# windows/wind3d.c: 621
+# windows/wind3d.c: 622
 Error creating Direct3D7: %08x\n
 建立 Direct3D7 時發生錯誤: %08x\n
 
-# windows/wind3d.c: 614
+# windows/wind3d.c: 615
 Error creating DirectDraw7: %08x\n
 建立 DirectDraw7 時發生錯誤: %08x\n
 
@@ -150,27 +150,27 @@ Error creating DirectDraw7: %08x\n
 Error creating DirectDraw: %08x\n
 建立 DirectDraw 時發生錯誤: %08x\n
 
-# windows/sound.c: 632
+# windows/sound.c: 633
 Error creating DirectSound buffer: %08x\n
 建立 DirectSound 緩衝時發生錯誤: %08x\n
 
-# windows/sound.c: 490
+# windows/sound.c: 491
 Error creating DirectSound: %08x\n
 建立 DirectSound 時發生錯誤: %08x\n
 
-# windows/wind3d.c: 1239
+# windows/wind3d.c: 1240
 Error creating RGB effects surface: %08x\n
 建立 RGB 效果介面時發生錯誤: %08x\n
 
-# windows/wind3d.c: 1169
+# windows/wind3d.c: 1170
 Error creating back surface: %08x\n
 建立區塊介面時發生錯誤: %08x\n
 
-# windows/wind3d.c: 1468 windows/winddraw.c: 869
+# windows/wind3d.c: 1469 windows/winddraw.c: 869
 Error creating blit surface: %08x\n
 建立 blit 介面時發生錯誤: %08x\n
 
-# windows/wind3d.c: 1717 windows/winddraw.c: 959
+# windows/wind3d.c: 1718 windows/winddraw.c: 959
 Error creating clipper: %08x\n
 建立 clipper 時發生錯誤: %08x\n
 
@@ -178,35 +178,35 @@ Error creating clipper: %08x\n
 Error creating dir %s
 建立目錄 %s 時發生錯誤
 
-# windows/wind3d.c: 1577
+# windows/wind3d.c: 1578
 Error creating preprocess surface: %08x\n
 建立前置處理器介面時發生錯誤: %08x\n
 
-# windows/sound.c: 597
+# windows/sound.c: 598
 Error creating primary buffer: %08x\n
 建立主要緩衝時發生錯誤: %08x\n
 
-# windows/wind3d.c: 1118 windows/winddraw.c: 648
+# windows/wind3d.c: 1119 windows/winddraw.c: 648
 Error creating primary surface: %08x\n
 建立主要介面時發生錯誤: %08x\n
 
-# windows/wind3d.c: 1598 windows/winddraw.c: 740
+# windows/wind3d.c: 1599 windows/winddraw.c: 740
 Error creating scale surface: %08x\n
 建立縮放介面時發生錯誤: %08x\n
 
-# windows/wind3d.c: 1269, 1277
+# windows/wind3d.c: 1270, 1278
 Error creating scanline surface[%d]: %08x\n
 建立掃描線介面[%d]時發生錯誤: %08x\n
 
-# windows/wind3d.c: 1493
+# windows/wind3d.c: 1494
 Error creating texture surface: %08x\n
 建立材質介面時發生錯誤: %08x\n
 
-# windows/video.c: 620
+# windows/video.c: 622
 Error enumerating DirectDraw: %08x\n
 列舉 DirectDraw 時發生錯誤: %08x\n
 
-# windows/wind3d.c: 998 windows/winddraw.c: 570
+# windows/wind3d.c: 999 windows/winddraw.c: 570
 Error enumerating modes: %08x\n
 列舉模式時發生錯誤: %08x\n
 
@@ -214,27 +214,27 @@ Error enumerating modes: %08x\n
 Error getting DirectDraw capabilities: %08x\n
 取得 DirectDraw 功\能時發生錯誤: %08x\n
 
-# windows/sound.c: 499
+# windows/sound.c: 500
 Error getting DirectSound capabilities: %08x\n
 取得 DirectSound 功\能時發生錯誤: %08x\n
 
-# windows/wind3d.c: 1180 windows/winddraw.c: 685
+# windows/wind3d.c: 1181 windows/winddraw.c: 685
 Error getting attached back surface: %08x\n
 取得附加區塊介面時發生錯誤: %08x\n
 
-# windows/wind3d.c: 1610, 1619 windows/winddraw.c: 877
+# windows/wind3d.c: 1611, 1620 windows/winddraw.c: 877
 Error getting blit surface desc: %08x\n
 取得 blit 介面描述時發生錯誤: %08x\n
 
-# windows/wind3d.c: 979, 1028 windows/winddraw.c: 548, 603
+# windows/wind3d.c: 980, 1029 windows/winddraw.c: 548, 603
 Error getting display mode: %08x\n
 取得顯示模式時發生錯誤: %08x\n
 
-# windows/sound.c: 613
+# windows/sound.c: 614
 Error getting primary format: %08x\n
 取得主要格式時發生錯誤: %08x\n
 
-# windows/wind3d.c: 1126 windows/winddraw.c: 656
+# windows/wind3d.c: 1127 windows/winddraw.c: 656
 Error getting primary surface desc: %08x\n
 取得主要介面描述時發生錯誤: %08x\n
 
@@ -242,23 +242,23 @@ Error getting primary surface desc: %08x\n
 Error getting scale surface desc: %08x\n
 取得縮放介面描述時發生錯誤: %08x\n
 
-# windows/wind3d.c: 607
+# windows/wind3d.c: 608
 Error importing DirectDrawCreateEx() function\n
 匯入 DirectDrawCreateEx() 函式時發生錯誤\n
 
-# windows/wind3d.c: 600
+# windows/wind3d.c: 601
 Error importing ddraw.dll\n
 匯入 ddraw.dll 時發生錯誤\n
 
-# windows/wind3d.c: 678 windows/winddraw.c: 242
+# windows/wind3d.c: 679 windows/winddraw.c: 242
 Error initialising software scale effects\n
 正在初始化軟體縮放效果時發生錯誤\n
 
-# windows/sound.c: 640
+# windows/sound.c: 641
 Error locking stream buffer: %08x\n
 鎖定串流緩衝時發生錯誤: %08x\n
 
-# windows/config.c: 499
+# windows/config.c: 500
 Error on rc creation
 建立 rc 發生錯誤
 
@@ -266,79 +266,79 @@ Error on rc creation
 Error opening %s
 開啟 %s 時發生錯誤
 
-# windows/sound.c: 544
+# windows/sound.c: 545
 Error playing: %08x\n
 執行時發生錯誤: %08x\n
 
-# windows/sound.c: 507
+# windows/sound.c: 508
 Error setting DirectSound cooperative level: %08x\n
 設定 DirectSound cooperative level 時發生錯誤: %08x\n
 
-# windows/wind3d.c: 1725 windows/winddraw.c: 967
+# windows/wind3d.c: 1726 windows/winddraw.c: 967
 Error setting clipper hwnd: %08x\n
 設定 clipper hwnd 時發生錯誤: %08x\n
 
-# windows/wind3d.c: 1733 windows/winddraw.c: 975
+# windows/wind3d.c: 1734 windows/winddraw.c: 975
 Error setting clipper on primary surface: %08x\n
 設定主要介面的 clipper 時發生錯誤: %08x\n
 
-# windows/wind3d.c: 693 windows/winddraw.c: 281
+# windows/wind3d.c: 694 windows/winddraw.c: 281
 Error setting cooperative level: %08x\n
 設定 cooperative level 時發生錯誤: %08x\n
 
-# windows/wind3d.c: 1699 windows/winddraw.c: 941
+# windows/wind3d.c: 1700 windows/winddraw.c: 941
 Error setting gamma ramp: %08x\n
 設定 gamma 灰階時發生錯誤: %08x\n
 
-# windows/wind3d.c: 1017 windows/winddraw.c: 592
+# windows/wind3d.c: 1018 windows/winddraw.c: 592
 Error setting mode: %08x\n
 設定模式時發生錯誤: %08x\n
 
-# windows/sound.c: 605
+# windows/sound.c: 606
 Error setting primary format: %08x\n
 設定主要格式時發生錯誤: %08x\n
 
-# windows/config.c: 506
+# windows/config.c: 507
 Error while parsing cmdline
 分析指令時發生錯誤
 
-# windows/wind3d.c: 261
+# windows/wind3d.c: 262
 Error: 3D hardware can't render scanlines (no support for multi-texturing)\n
 錯誤: 3D 硬體無法演算描繪掃描線 (不支援多重材質)\n
 
-# windows/wind3d.c: 378
+# windows/wind3d.c: 379
 Error: RGB effects (multiply & add mode) not supported\n
 錯誤: RGB 效果 (多重 & 加入模式) 不支援\n
 
-# windows/wind3d.c: 365
+# windows/wind3d.c: 366
 Error: RGB effects (multiply mode) not supported\n
 錯誤: RGB 效果 (多重模式) 不支援\n
 
-# windows/wind3d.c: 1417
+# windows/wind3d.c: 1418
 Error: required texture size too large (max: %ix%i, need %ix%i)\n
 錯誤: 必要的材質大小太大 (最大: %ix%i, 需要 %ix%i)\n
 
-# windows/config.c: 566
+# windows/config.c: 567
 Failed to open file for playback
 無法開啟檔案來播放
 
-# windows/config.c: 668
+# windows/config.c: 669
 Failed to open file for recording
 無法開啟檔案來記錄
 
-# windows/fronthlp.c: 461
+# windows/fronthlp.c: 460
 For usage instructions, please consult the file windows.txt\n
 關於用法指令集，請參閱\ windows.txt 檔案\n
 
-# windows/fronthlp.c: 69
+# windows/fronthlp.c: 68
 Frontend Related
 Frontend 相關
 
-# windows/window.c: 736
+# windows/window.c: 745
 Full Screen\tAlt+Enter
 全螢幕\tAlt+Enter
 
-# windows/fronthlp.c: 517
+# windows/fronthlp.c: 516
 Game \"%s\" not supported!\n
 遊戲 \"%s\" 未支援!\n
 
@@ -346,187 +346,187 @@ Game \"%s\" not supported!\n
 Hardware stretching supported\n
 已支援硬體延展\n
 
-# windows/wind3d.c: 634
+# windows/wind3d.c: 635
 Initialising DirectDraw & Direct3D 7 blitter
 正在初始化 DirectDraw & Direct3D 7 blitter
 
-# windows/input.c: 227
+# windows/input.c: 249
 Input device options
 輸入裝置選項
 
-# windows/input.c: 1959
+# windows/input.c: 2060
 J%d %s D
 J%d %s 下
 
-# windows/input.c: 1963
+# windows/input.c: 2064
 J%d %s L
 J%d %s 左
 
-# windows/input.c: 1967
+# windows/input.c: 2068
 J%d %s R
 J%d %s 右
 
-# windows/input.c: 1955
+# windows/input.c: 2056
 J%d %s U
 J%d %s 上
 
-# windows/input.c: 1738
+# windows/input.c: 1823
 Joystick %d axis %d is now %s\n
 搖桿 %d 軸 %d 目前是%s\n
 
-# windows/input.c: 1883
+# windows/input.c: 1984
 Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 搖桿 %d: %s (%d 軸, %d 按鈕, %d POV)\n
 
-# windows/fronthlp.c: 780
+# windows/fronthlp.c: 779
 KNOWN     %s\n
 已知的    %s\n
 
-# windows/input.c: 1261
+# windows/input.c: 1338
 Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 鍵盤=%d  滑鼠=%d  搖桿=%d 光線槍=%d\n
 
-# windows/input.c: 235
+# windows/input.c: 257
 LED mode (ps/2|usb)
 LED 模式 (ps/2|usb)
 
-# windows/config.c: 301
+# windows/config.c: 302
 Language options
 語言選項
 
-# windows/input.c: 1872
+# windows/input.c: 1973
 Lightgun %d X
 光線槍 %d X
 
-# windows/input.c: 1874
+# windows/input.c: 1975
 Lightgun %d Y
 光線槍 %d Y
 
-# windows/input.c: 2229
+# windows/input.c: 2330
 Lightgun not supported in windowed mode
 在視窗模式中不支援光線槍
 
-# windows/fronthlp.c: 454
+# windows/fronthlp.c: 453
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\n著作權 (C) 1997-2006 隸屬於 Nicola Salmoria 與 MAME 團隊\n\n
 
-# windows/blit.c: 1156
+# windows/blit.c: 1158
 MMX not supported\n
 未支援 MMX\n
 
-# windows/blit.c: 1154
+# windows/blit.c: 1156
 MMX supported\n
 已支援 MMX\n
 
-# windows/config.c: 253
+# windows/config.c: 254
 Mame CORE misc options
 MAME 核心雜項選項
 
-# windows/video.c: 260
+# windows/video.c: 262
 Mame CORE palette options
 MAME 核心色盤選項
 
-# windows/config.c: 243
+# windows/config.c: 244
 Mame CORE sound options
 MAME 核心聲音選項
 
-# windows/config.c: 235
+# windows/config.c: 236
 Mame CORE vector game options
 MAME 核心向量遊戲選項
 
-# windows/config.c: 222
+# windows/config.c: 223
 Mame CORE video options
 MAME 核心視訊選項
 
-# windows/wind3d.c: 1634
+# windows/wind3d.c: 1635
 Managed texture
 managed texture
 
-# windows/input.c: 1849, 1859
+# windows/input.c: 1875
+Mouse 
+滑鼠 
+
+# windows/input.c: 1873
+Mouse %d 
+滑鼠 %d 
+
+# windows/input.c: 1949, 1959
 Mouse %d %s
 滑鼠 %d %s
 
-# windows/input.c: 1787
-Mouse %d X
-滑鼠 %d X
+# windows/input.c: 1929
+Mouse %d Button %d
+滑鼠 %d 按鈕 %d
 
-# windows/input.c: 1789
-Mouse %d Y
-滑鼠 %d Y
-
-# windows/input.c: 1791
-Mouse %d Z
-滑鼠 %d Z
-
-# windows/input.c: 1851, 1861
+# windows/input.c: 1951, 1961
 Mouse %s
 滑鼠 %s
 
-# windows/fronthlp.c: 237
+# windows/fronthlp.c: 236
 NO MATCH\n
 沒有符合的\n
 
-# windows/fronthlp.c: 232
+# windows/fronthlp.c: 231
 NOT A ROM\n
 不是 ROM 檔\n
 
-# windows/fronthlp.c: 487
+# windows/fronthlp.c: 486
 Name:     Description:\n
 名稱:     描述:\n
 
-# windows/fronthlp.c: 620
+# windows/fronthlp.c: 619
 Name:    Clone of:\n
 名稱:    原作:\n
 
-# windows/video.c: 270
+# windows/video.c: 272
 OSD bar color (dark)
 參數調整列色彩 (暗)
 
-# windows/video.c: 271
+# windows/video.c: 273
 OSD bar color (default)
 參數調整列色彩 (預設)
 
-# windows/video.c: 269
+# windows/video.c: 271
 OSD bar color (light)
 參數調整列色彩 (明)
 
-# windows/video.c: 268
+# windows/video.c: 270
 OSD bar color (medium)
 參數調整列色彩 (中間)
 
-# windows/fileio.c: 277
+# windows/fileio.c: 280
 Out of memory in variable expansion!
 變數擴充時記憶體不足!
 
-# windows/fileio.c: 346
+# windows/fileio.c: 349
 Out of memory!
 記憶體不足!
 
-# windows/fronthlp.c: 782
+# windows/fronthlp.c: 781
 PARTKNOWN %s\n
 部分已知  %s\n
 
-# windows/config.c: 442
+# windows/config.c: 443
 Parsing %s : ERROR\n
 正在分析 %s : 錯誤\n
 
-# windows/config.c: 452
+# windows/config.c: 453
 Parsing %s : N/A\n
 正在分析 %s : N/A\n
 
-# windows/config.c: 447
+# windows/config.c: 448
 Parsing %s : OK\n
 正在分析 %s : OK\n
 
-# windows/config.c: 590
+# windows/config.c: 591
 Playing back previously recorded game %s (%s) [press return]\n
 按一下 [Enter] 播放先前已記錄的遊戲 %s (%s)\n
 
-# windows/wind3d.c: 1643
+# windows/wind3d.c: 1644
 Pre-process texture surface created: %s\n
 已建立前置處理器材質介面: %s\n
 
-# windows/sound.c: 617
+# windows/sound.c: 618
 Primary buffer: %d Hz, %d bits, %d channels\n
 主要緩衝: %d Hz, %d 位元, %d 聲道\n
 
@@ -534,11 +534,11 @@ Primary buffer: %d Hz, %d bits, %d channels\n
 Primary surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 已建立主要介面: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 
-# windows/wind3d.c: 1144
+# windows/wind3d.c: 1145
 Primary surface created: %s (%s)\n
 已建立主要介面: %s (%s)\n
 
-# windows/wind3d.c: 1248
+# windows/wind3d.c: 1249
 RGB effects surface created: %s\n
 已建立 RGB 效果介面: %s\n
 
@@ -550,23 +550,23 @@ RGB 樣式有錯誤的檔案大小 (需要 %i 位元組，找到 %i)\n
 Recreating surfaces\n
 正在重建介面\n
 
-# windows/wind3d.c: 1137
+# windows/wind3d.c: 1138
 Rendering to an off-screen surface and using blt()\n
 正在演算描繪到畫面外介面並使用 blt()\n
 
-# windows/wind3d.c: 2317, 2681
+# windows/wind3d.c: 2318, 2682
 Restoring surfaces\n
 正在還原介面\n
 
-# windows/blit.c: 1152
+# windows/blit.c: 1154
 SSE supported\n
 已支援 SSE\n
 
-# windows/blit.c: 1150
+# windows/blit.c: 1152
 SSE2 supported\n
 已支援 SSE2\n
 
-# windows/video.c: 243
+# windows/video.c: 245
 SaI scale effect
 SaI 縮放效果
 
@@ -574,59 +574,59 @@ SaI 縮放效果
 Scale surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 已建立縮放介面: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 
-# windows/wind3d.c: 1286
+# windows/wind3d.c: 1287
 Scanline surface[%i] created: %s\n
 已建立掃描線介面[%i]: %s\n
 
-# windows/video.c: 632
+# windows/video.c: 634
 Screen %s not found\n
 螢幕 %s 找不到\n
 
-# windows/sound.c: 233, 237
+# windows/sound.c: 234, 238
 Sound buffer: overflows=%d underflows=%d\n
 聲音緩衝: overflows=%d underflows=%d\n
 
-# windows/input.c: 1816
+# windows/input.c: 1908
 Stick %d %s +
 控制桿 %d %s +
 
-# windows/input.c: 1809
+# windows/input.c: 1901
 Stick %d %s -
 控制桿 %d %s -
 
-# windows/input.c: 1818
+# windows/input.c: 1910
 Stick %s +
 控制桿 %s +
 
-# windows/input.c: 1811
+# windows/input.c: 1903
 Stick %s -
 控制桿 %s -
 
-# windows/wind3d.c: 1634
+# windows/wind3d.c: 1635
 Texture
 材質
 
-# windows/input.c: 2380
+# windows/input.c: 2481
 Toggle fullscreen
 切換全螢幕
 
-# windows/fronthlp.c: 781
+# windows/fronthlp.c: 780
 UNKNOWN   %s\n
 未知的    %s\n
 
-# windows/wind3d.c: 2672
+# windows/wind3d.c: 2673
 Unable to blt RGB effect to back_surface: %08x\n
 無法以位元區塊傳送 RGB 效果到 back_surface: %08x\n
 
-# windows/wind3d.c: 2639
+# windows/wind3d.c: 2640
 Unable to blt back_surface to primary_surface: %08x\n
 無法以位元區塊傳送 back_surface 到 primary_surface: %08x\n
 
-# windows/wind3d.c: 2265
+# windows/wind3d.c: 2266
 Unable to blt blit_surface to texture_surface: %08x\n
 無法以位元區塊傳送 blit_surface 到 texture_surface: %08x\n
 
-# windows/wind3d.c: 2242
+# windows/wind3d.c: 2243
 Unable to blt scale_surface to texture_surface: %08x\n
 無法以位元區塊傳送 scale_surface 到 texture_surface: %08x\n
 
@@ -634,7 +634,7 @@ Unable to blt scale_surface to texture_surface: %08x\n
 Unable to blt target_surface: %08x\n
 無法以位元區塊傳送 target_surface: %08x\n
 
-# windows/input.c: 2648, 2655
+# windows/input.c: 2749, 2756
 Unable to close the keyboard device. (error %d)\n
 無法關閉鍵盤裝置。(錯誤 %d)\n
 
@@ -642,7 +642,7 @@ Unable to close the keyboard device. (error %d)\n
 Unable to find RGB effects pattern\n
 無法找到 RGB 效果的樣式\n
 
-# windows/wind3d.c: 2099, 2190, 2212 windows/winddraw.c: 1228, 1301
+# windows/wind3d.c: 2100, 2191, 2213 windows/winddraw.c: 1228, 1301
 Unable to lock blit_surface: %08x\n
 無法鎖定 blit_surface: %08x\n
 
@@ -650,27 +650,27 @@ Unable to lock blit_surface: %08x\n
 Unable to lock target_surface: %08x\n
 無法鎖定 target_surface: %08x\n
 
-# windows/input.c: 2599, 2609
+# windows/input.c: 2700, 2710
 Unable to open the keyboard device. (error %d)\n
 無法開啟鍵盤裝置。(錯誤 %d)\n
 
-# windows/wind3d.c: 2599
+# windows/wind3d.c: 2600
 Unable to render to back_surface: %08x\n
 無法演算描繪 back_surface: %08x\n
 
-# windows/wind3d.c: 2486
+# windows/wind3d.c: 2487
 Unable to render to preprocess texture: %08x\n
 無法演算描繪前置處理器材質: %08x\n
 
-# windows/fronthlp.c: 457
+# windows/fronthlp.c: 456
 Usage:  MAME gamename [options]\n\n
 用法:   MAME 遊戲名稱 [選項]\n\n
 
-# windows/config.c: 552
+# windows/config.c: 553
 Usage: %s [game] [options]\nOptions:\n
 用法: %s [遊戲] [選項]\n選項:\n
 
-# windows/wind3d.c: 684
+# windows/wind3d.c: 685
 Using %s pre-scale effect\n
 正在使用 %s 預縮放效果\n
 
@@ -678,43 +678,43 @@ Using %s pre-scale effect\n
 Using %s scale effect\n
 正在使用 %s 縮放效果\n
 
-# windows/input.c: 1195
+# windows/input.c: 1266
 Using DirectInput %d\n
 使用 DirectInput %d\n
 
-# windows/wind3d.c: 1139
+# windows/wind3d.c: 1140
 Using a %s buffer and pageflipping\n
 使用%s緩衝和畫面翻轉\n
 
-# windows/wind3d.c: 341
+# windows/wind3d.c: 342
 Warning: anisotropic (mag) filtering not supported, falling back to bi-linear\n
 警告: 不支援 anisotropic (mag) 過濾，返回到雙線過濾\n
 
-# windows/wind3d.c: 350
+# windows/wind3d.c: 351
 Warning: anisotropic (min) filtering not supported, falling back to bi-linear\n
 警告: 不支援 anisotropic (min) 過濾，返回到雙線過濾\n
 
-# windows/wind3d.c: 1677 windows/winddraw.c: 919
+# windows/wind3d.c: 1678 windows/winddraw.c: 919
 Warning: could not create gamma control to change brightness: %08x\n
 警告: 無法建立 gamma 控制去變更亮度: %08x\n
 
-# windows/wind3d.c: 313
+# windows/wind3d.c: 314
 Warning: flat bi-cubic filtering not supported, falling back to bi-linear\n
 警告: 不支援平面雙立體過濾，返回到雙線過濾\n
 
-# windows/wind3d.c: 327
+# windows/wind3d.c: 328
 Warning: gaussian bi-cubic filtering not supported, falling back to bi-linear\n
 警告: 不支援高斯雙立體過濾，返回到雙線過濾\n
 
-# windows/window.c: 656
+# windows/window.c: 665
 Warning: hardware-accelerated blitting-effects selected, but currently disabled\n         use the -direct3d option to enable hardware acceleration\n
-警告: 已選取硬底加速的 blitting 效果，但目前已停用\n      可使用 -direct3d 選項啟用硬體加速\n
+警告: 已選取硬體加速的 blitting 效果，但目前已停用\n         可使用 -direct3d 選項啟用硬體加速\n
 
-# windows/window.c: 650
+# windows/window.c: 659
 Warning: non-hardware-accelerated blitting-effects engine enabled\n         use the -d3deffect option to enable hardware acceleration\n
-警告: 已啟用沒有硬體加速的 blitting 效果引擎\n      可使用 -d3deffect 選項啟用硬體加速\n
+警告: 已啟用沒有硬體加速的 blitting 效果引擎\n         可使用 -d3deffect 選項啟用硬體加速\n
 
-# windows/wind3d.c: 1528
+# windows/wind3d.c: 1529
 Warning: required texture size too large for prescale, disabling prescale\n
 警告: 預縮放的必要材質大小太大，正在停用預縮放\n
 
@@ -722,7 +722,7 @@ Warning: required texture size too large for prescale, disabling prescale\n
 Warning: scale effect %s is disabled.\n
 警告: 縮放效果 %s 是停用的。\n
 
-# windows/wind3d.c: 273
+# windows/wind3d.c: 274
 Warning: using fall-back method for scanline blending.\n
 警告: 掃描線混用正在使用返回的方式。\n
 
@@ -730,7 +730,7 @@ Warning: using fall-back method for scanline blending.\n
 Windows Direct3D 2D video options
 Windows Direct3D 2D 視訊選項
 
-# windows/video.c: 248
+# windows/video.c: 250
 Windows misc options
 Windows 雜項選項
 
@@ -738,27 +738,27 @@ Windows 雜項選項
 Windows path and directory options
 Windows 版本路徑和目錄選項
 
-# windows/sound.c: 126
+# windows/sound.c: 127
 Windows sound options
 Windows 聲音選項
 
-# windows/video.c: 216
+# windows/video.c: 218
 Windows video options
 Windows 版本視訊選項
 
-# windows/fronthlp.c: 752
+# windows/fronthlp.c: 751
 \"%8s\" not found!\n
 \"%8s\" 找不到!\n
 
-# windows/fronthlp.c: 754
+# windows/fronthlp.c: 753
 \"%8s\" not supported!\n
 \"%8s\" 未支援!\n
 
-# windows/input.c: 1263
+# windows/input.c: 1340
 \"%s\" controller support enabled\n
 已啟用 \"%s\" 控制器支援\n
 
-# windows/config.c: 608
+# windows/config.c: 609
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" 約略相似下列支援的遊戲\n(依相似度排序):\n\n
 
@@ -766,95 +766,95 @@ Windows 版本視訊選項
 additional customised settings (undocumented)
 附加的自訂設定 (無文件記載)
 
-# windows/config.c: 232
+# windows/config.c: 233
 additional pause brightness
 附加的暫停亮度
 
-# windows/fronthlp.c: 75
+# windows/fronthlp.c: 74
 all available info on driver in XML format
 驅動中的全部可用資訊 (XML 格式)
 
-# windows/video.c: 249
+# windows/video.c: 251
 allow MAME to give back time to the system when it's not needed
 允許\在 MAME 不需要時就釋放佔用中的系統資源
 
-# windows/input.c: 1735
+# windows/input.c: 1820
 analog
 類比
 
-# windows/input.c: 1203
+# windows/input.c: 1274
 analog joystick
 類比搖桿
 
-# windows/config.c: 259
+# windows/config.c: 260
 artwork resolution (0 for auto)
 Artwork 解析度 (0 為自動)
 
-# windows/video.c: 234
+# windows/video.c: 236
 attempt to match the game's refresh rate
 嘗試符合遊戲的更新頻率
 
-# windows/config.c: 277
+# windows/config.c: 278
 automatic pause when playback is finished
 輸入檔播放結束時自動暫停
 
-# windows/config.c: 227
+# windows/config.c: 228
 automatically rotate screen anti-clockwise for vertical games
 自動逆時針旋轉垂直畫面的遊戲
 
-# windows/config.c: 226
+# windows/config.c: 227
 automatically rotate screen clockwise for vertical games
 自動順時針旋轉垂直畫面的遊戲
 
-# windows/config.c: 231
+# windows/config.c: 232
 brightness correction
 亮度修正
 
-# windows/video.c: 278
+# windows/video.c: 280
 button color (aqua)
 按鈕色彩 (S 或 7)
 
-# windows/video.c: 275
+# windows/video.c: 277
 button color (blue)
 按鈕色彩 (D 或 4)
 
-# windows/video.c: 274
+# windows/video.c: 276
 button color (green)
 按鈕色彩 (C 或 3)
 
-# windows/video.c: 281
+# windows/video.c: 283
 button color (lime)
 按鈕色彩 (10)
 
-# windows/video.c: 280
+# windows/video.c: 282
 button color (navy)
 按鈕色彩 (9)
 
-# windows/video.c: 277
+# windows/video.c: 279
 button color (pink)
 按鈕色彩 (P 或 6)
 
-# windows/video.c: 276
+# windows/video.c: 278
 button color (purple)
 按鈕色彩 (K 或 5)
 
-# windows/video.c: 272
+# windows/video.c: 274
 button color (red)
 按鈕色彩 (A 或 1)
 
-# windows/video.c: 279
+# windows/video.c: 281
 button color (silver)
 按鈕色彩 (8)
 
-# windows/video.c: 273
+# windows/video.c: 275
 button color (yellow)
 按鈕色彩 (B 或 2)
 
-# windows/config.c: 281
+# windows/config.c: 282
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 變更 M68000 CPU 核心 (0:C, 1:DRC, 2:ASM+DRC)
 
-# windows/config.c: 268
+# windows/config.c: 269
 change system bios
 變更系統 BIOS
 
@@ -862,27 +862,27 @@ change system bios
 cheat filename
 作弊碼檔案名稱
 
-# windows/fronthlp.c: 88
+# windows/fronthlp.c: 87
 compare files with known MAME roms
 與已知的 MAME ROM 檔比較
 
-# windows/fronthlp.c: 89
+# windows/fronthlp.c: 88
 compare files with known MAME roms (brief)
 與已知的 MAME ROM 檔比較 (簡短)
 
-# windows/config.c: 275
+# windows/config.c: 276
 confirm before exiting game
 離開遊戲之前要先確認
 
-# windows/config.c: 295
+# windows/config.c: 296
 create the default configuration file
 建立預設設定檔
 
-# windows/config.c: 258
+# windows/config.c: 259
 crop artwork to game screen only
 裁切 Artwork 圖片超出遊戲畫面的部份
 
-# windows/video.c: 282
+# windows/video.c: 284
 cursor color
 游標色彩
 
@@ -890,11 +890,11 @@ cursor color
 customised blitting effects preset
 預先自訂 blitting 效果
 
-# windows/input.c: 255, 1206
+# windows/input.c: 277, 1277
 dial
 方向盤
 
-# windows/input.c: 261, 1735
+# windows/input.c: 283, 1820
 digital
 數位
 
@@ -950,95 +950,95 @@ directory to save nvram contents
 directory to save states
 儲存狀態檔的目錄
 
-# windows/config.c: 274
+# windows/config.c: 275
 disable second monitor emulation
 停用雙顯示器模擬
 
-# windows/config.c: 299
+# windows/config.c: 300
 display additional diagnostic information
 顯示附加的診斷資訊
 
-# windows/config.c: 296
+# windows/config.c: 297
 display running parameters in rc style
 以設定檔樣式顯示執行參數
 
-# windows/config.c: 223
+# windows/config.c: 224
 do not apply rotation
 不套用旋轉
 
-# windows/wind3d.c: 1139
+# windows/wind3d.c: 1140
 double
 雙重
 
-# windows/config.c: 236
+# windows/config.c: 237
 draw antialiased vectors
 描繪反鋸齒向量圖形
 
-# windows/config.c: 237
+# windows/config.c: 238
 draw translucent vectors
 描繪半透明向量圖形
 
-# windows/fronthlp.c: 78
+# windows/fronthlp.c: 77
 driver sourcefile
 驅動原始碼檔案
 
-# windows/video.c: 229
+# windows/video.c: 231
 emulate win_old_scanlines
 模擬視窗舊式掃描線
 
-# windows/input.c: 252
+# windows/input.c: 274
 enable (keyboard|mouse|joystick) if a paddle control is present
 啟用 (keyboard|mouse|joystick) 如果操縱桿控制存在
 
-# windows/input.c: 255
+# windows/input.c: 277
 enable (keyboard|mouse|joystick|lightgun) if a dial control is present
 啟用 (keyboard|mouse|joystick|lightgun) 如果方向盤控制存在
 
-# windows/input.c: 257
+# windows/input.c: 279
 enable (keyboard|mouse|joystick|lightgun) if a lightgun control is present
 啟用 (keyboard|mouse|joystick|lightgun) 如果光線槍控制存在
 
-# windows/input.c: 259
+# windows/input.c: 281
 enable (keyboard|mouse|joystick|lightgun) if a mouse control is present
 啟用 (keyboard|mouse|joystick|lightgun) 如果滑鼠控制存在
 
-# windows/input.c: 254
+# windows/input.c: 276
 enable (keyboard|mouse|joystick|lightgun) if a pedal control is present
 啟用 (keyboard|mouse|joystick|lightgun) 如果踏板控制存在
 
-# windows/input.c: 256
+# windows/input.c: 278
 enable (keyboard|mouse|joystick|lightgun) if a trackball control is present
 啟用 (keyboard|mouse|joystick|lightgun) 如果軌跡球控制存在
 
-# windows/input.c: 253
+# windows/input.c: 275
 enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is present
 啟用 (keyboard|mouse|joystick|lightgun) 如果類比搖桿控制存在
 
-# windows/config.c: 270
+# windows/config.c: 271
 enable automatic restore at startup and save at exit
 啟用自動在啟動時回存與結束時儲存
 
-# windows/input.c: 231
+# windows/input.c: 253
 enable dual lightgun input
 啟用雙光線槍輸入
 
-# windows/input.c: 229
+# windows/input.c: 251
 enable joystick input
 啟用搖桿輸入
 
-# windows/input.c: 234
+# windows/input.c: 256
 enable keyboard LED emulation
 啟用鍵盤 LED 模擬
 
-# windows/input.c: 230
+# windows/input.c: 252
 enable lightgun input
 啟用光線槍輸入
 
-# windows/input.c: 228
+# windows/input.c: 250
 enable mouse input
 啟用滑鼠輸入
 
-# windows/input.c: 240
+# windows/input.c: 262
 enable pointing stick input
 啟用指標控制桿輸入
 
@@ -1046,35 +1046,35 @@ enable pointing stick input
 enable rotation of effects for rotated games
 啟用旋轉遊戲畫面時也旋轉所有效果
 
-# windows/input.c: 233
+# windows/input.c: 255
 enable steadykey support
 啟用多鍵同時輸入支援
 
-# windows/config.c: 260
+# windows/config.c: 261
 enable/disable cheat subsystem
 啟用/停用 作弊引擎子系統
 
-# windows/config.c: 261
+# windows/config.c: 262
 enable/disable debugger (only if available)
 啟用/停用 除錯程式 (如果可用)
 
-# windows/config.c: 298
+# windows/config.c: 299
 enable/disable loading of configfiles
 啟用/停用 載入設定檔
 
-# windows/config.c: 303
+# windows/config.c: 304
 enable/disable local language game list
 啟用/停用 當地語言遊戲清單
 
-# windows/config.c: 246
+# windows/config.c: 247
 enable/disable sound and sound CPUs
 啟用/停用 聲音與聲音 CPU
 
-# windows/config.c: 249
+# windows/config.c: 250
 enable/disable volume auto adjust
 啟用/停用 音量自動調整
 
-# windows/video.c: 233
+# windows/video.c: 235
 enforce aspect ratio
 強制長寬比例
 
@@ -1094,7 +1094,7 @@ error: %s requires an argument\n
 error: couldn't open file: %s\n
 錯誤: 無法開啟檔案: %s\n
 
-# windows/config.c: 859
+# windows/config.c: 860
 error: duplicate gamename: %s\n
 錯誤: 重複的遊戲名稱: %s\n
 
@@ -1102,15 +1102,15 @@ error: duplicate gamename: %s\n
 error: garbage \"%s\" on line %d of file: %s\n
 錯誤: 無用語法 \"%s\" 在第 %d 行檔案: %s\n
 
-# windows/input.c: 825
+# windows/input.c: 868
 error: invalid value for %s: %s\n
 錯誤: 無效的 %s 值: %s\n
 
-# windows/video.c: 424
+# windows/video.c: 426
 error: invalid value for aspect ratio: %s\n
 錯誤: 無效的 screen_aspect 值: %s\n
 
-# windows/video.c: 321
+# windows/video.c: 323
 error: invalid value for cleanstretch: %s\n
 錯誤: 無效的 cleanstretch 值: %s\n
 
@@ -1118,31 +1118,31 @@ error: invalid value for cleanstretch: %s\n
 error: invalid value for d3dprescale: %s\n
 錯誤: 無效的 d3dprescale 值: %s\n
 
-# windows/input.c: 905
+# windows/input.c: 948
 error: invalid value for digital: %s -- valid values are:\n
 錯誤: 無效的 digital 值: %s -- 有效的值為:\n
 
-# windows/video.c: 403
+# windows/video.c: 405
 error: invalid value for effect: %s\n
 錯誤: 無效的 effect 值: %s\n
 
-# windows/video.c: 378
+# windows/video.c: 380
 error: invalid value for frames_to_run: %s\n
 錯誤: 無效的 frames_to_run 值: %s\n
 
-# windows/config.c: 187
+# windows/config.c: 188
 error: invalid value for language: %s\nUse %s\n
 錯誤: 無效的 language 值: %s\n使用 %s\n
 
-# windows/input.c: 800
+# windows/input.c: 843
 error: invalid value for led_mode: %s\n
 錯誤: 無效的 led_mode 值: %s\n
 
-# windows/video.c: 452
+# windows/video.c: 454
 error: invalid value for palette: %s\n
 錯誤: 無效的 palette 值: %s\n
 
-# windows/video.c: 346, 356
+# windows/video.c: 348, 358
 error: invalid value for resolution: %s\n
 錯誤: 無效的 resolution 值: %s\n
 
@@ -1162,11 +1162,11 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 錯誤: rc_register_option 記憶體分配失敗\n
 
-# windows/config.c: 980
+# windows/config.c: 981
 error: malloc failed in win_dirname\n
 錯誤: win_dirname 記憶體分配失敗\n
 
-# windows/config.c: 1020
+# windows/config.c: 1021
 error: malloc failed in win_strip_extension\n
 錯誤: win_strip_extension 記憶體分配失敗\n
 
@@ -1190,23 +1190,23 @@ error: unknown option type: %d, this should not happen!\n
 feedback strength
 反應強度
 
-# windows/config.c: 229
+# windows/config.c: 230
 flip screen left-right
 左右翻轉畫面
 
-# windows/config.c: 228
+# windows/config.c: 229
 flip screen upside-down
 上下翻轉畫面
 
-# windows/video.c: 261
+# windows/video.c: 263
 font blank color
 字型 (空白) 色彩
 
-# windows/video.c: 262
+# windows/video.c: 264
 font normal color
 字型 (標準) 色彩
 
-# windows/video.c: 263
+# windows/video.c: 265
 font special color
 字型 (特殊) 色彩
 
@@ -1214,11 +1214,11 @@ font special color
 force specific zoom level
 強制指定縮放倍數
 
-# windows/config.c: 230
+# windows/config.c: 231
 gamma correction
 Gamma 修正
 
-# windows/config.c: 265
+# windows/config.c: 266
 generate error.log
 產生 error.log 檔
 
@@ -1230,39 +1230,39 @@ info: trying to parse: %s\n
 interpolation method
 插補方式
 
-# windows/input.c: 1735
+# windows/input.c: 1820
 invalid
 無效的
 
-# windows/config.c: 272
+# windows/config.c: 273
 ips datfile name
 ips 資料檔名稱
 
-# windows/fronthlp.c: 722
+# windows/fronthlp.c: 721
 is bad\n
 損壞\n
 
-# windows/fronthlp.c: 732
+# windows/fronthlp.c: 731
 is best available\n
 是可用的最佳狀態\n
 
-# windows/fronthlp.c: 727
+# windows/fronthlp.c: 726
 is good\n
 正確\n
 
-# windows/fronthlp.c: 737
+# windows/fronthlp.c: 736
 is missing optional files\n
 是遺失的可省略檔案\n
 
-# windows/input.c: 230, 821, 1204
+# windows/input.c: 252, 864, 1275
 lightgun
 光線槍
 
-# windows/fronthlp.c: 85
+# windows/fronthlp.c: 84
 list optional samples for a driver
 列出指定驅動可省略的樣本檔
 
-# windows/fronthlp.c: 84
+# windows/fronthlp.c: 83
 list required roms for a driver
 列出指定驅動必要的 ROM 檔
 
@@ -1270,11 +1270,11 @@ list required roms for a driver
 loading %-12s\r
 正在載入 %-12s\r
 
-# windows/input.c: 261
+# windows/input.c: 283
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 標示某些搖桿或軸為數位裝置 (none|all|j<N>*|j<N>a<M>[,...])
 
-# windows/input.c: 236
+# windows/input.c: 258
 minimal analog value for digital input
 數位輸入的最小類比值
 
@@ -1282,15 +1282,15 @@ minimal analog value for digital input
 no help available
 沒有說明
 
-# windows/input.c: 232
+# windows/input.c: 254
 offscreen shots reload
 射擊畫面外區域即重新載入
 
-# windows/config.c: 266
+# windows/config.c: 267
 output error log to debugger
 輸出錯誤記錄到除錯程式
 
-# windows/input.c: 252, 1202
+# windows/input.c: 274, 1273
 paddle
 操縱桿
 
@@ -1306,19 +1306,19 @@ ROM 集合的路徑
 path to samplesets
 樣本檔集合的路徑
 
-# windows/input.c: 254, 1205
+# windows/input.c: 276, 1276
 pedal
 踏板
 
-# windows/config.c: 263
+# windows/config.c: 264
 playback an input file
 播放輸入檔
 
-# windows/input.c: 237
+# windows/input.c: 259
 preconfigure for specified controller
 特定控制器的預先設定
 
-# windows/video.c: 250
+# windows/video.c: 252
 prefer RDTSC over QueryPerformanceCounter for timing
 時序上使用 RDTSC 取代 QueryPerformanceCounter
 
@@ -1326,67 +1326,67 @@ prefer RDTSC over QueryPerformanceCounter for timing
 prescale effect
 預縮放效果
 
-# windows/config.c: 264
+# windows/config.c: 265
 record an input file
 記錄輸入檔
 
-# windows/fronthlp.c: 86
+# windows/fronthlp.c: 85
 report romsets that have problems
 報告有問題的 ROM 集合
 
-# windows/fronthlp.c: 87
+# windows/fronthlp.c: 86
 report samplesets that have problems
 報告有問題的樣本檔集合
 
-# windows/fronthlp.c: 750
+# windows/fronthlp.c: 749
 romset
 ROM 集合
 
-# windows/fronthlp.c: 690
+# windows/fronthlp.c: 689
 romset %s 
 ROM 集合 %s 
 
-# windows/fronthlp.c: 760
+# windows/fronthlp.c: 759
 romsets
 個 ROM 集合
 
-# windows/config.c: 225
+# windows/config.c: 226
 rotate screen anti-clockwise
 逆時針旋轉畫面
 
-# windows/config.c: 224
+# windows/config.c: 225
 rotate screen clockwise
 順時針旋轉畫面
 
-# windows/video.c: 221
+# windows/video.c: 223
 run in a window/run on full screen
 以視窗模式執行/以全螢幕執行
 
-# windows/config.c: 617
+# windows/config.c: 618
 running %s (%s) [press return]
 按一下 [Enter] 執行 %s (%s)
 
-# windows/fronthlp.c: 750
+# windows/fronthlp.c: 749
 sampleset
 樣本檔集合
 
-# windows/fronthlp.c: 713
+# windows/fronthlp.c: 712
 sampleset %s 
 樣本檔集合 %s 
 
-# windows/fronthlp.c: 760
+# windows/fronthlp.c: 759
 samplesets
 個樣本檔集合
 
-# windows/sound.c: 128
+# windows/sound.c: 129
 save sound in wav file
 儲存聲音到 wav 檔案
 
-# windows/video.c: 241
+# windows/video.c: 243
 save video in specified mng file
 儲存視訊到指定的 mng 檔案
 
-# windows/wind3d.c: 1649
+# windows/wind3d.c: 1650
 scale effects surface created: %s\n
 已建立縮放效果介面: %s\n
 
@@ -1394,119 +1394,119 @@ scale effects surface created: %s\n
 scanline intensity
 掃描線飽和度
 
-# windows/config.c: 262
+# windows/config.c: 263
 script for debugger (only if available)
 除錯程式指令檔 (如果可用)
 
-# windows/config.c: 302
+# windows/config.c: 303
 select translation language
 選擇翻譯語言
 
-# windows/sound.c: 127
+# windows/sound.c: 128
 set audio latency (increase to reduce glitches)
 設定音訊等待時間 (增加值可減少破損)
 
-# windows/config.c: 238
+# windows/config.c: 239
 set beam width in vector games
 設定向量遊戲光束寬度
 
-# windows/config.c: 239
+# windows/config.c: 240
 set flickering in vector games
 設定向量遊戲閃爍度
 
-# windows/video.c: 218
+# windows/video.c: 220
 set frameskip explicitly (autoframeskip needs to be off)
 明確設定畫面省略 (需關閉自動畫面省略)
 
-# windows/config.c: 240
+# windows/config.c: 241
 set intensity in vector games
 設定向量遊戲飽和度
 
-# windows/input.c: 243
+# windows/input.c: 265
 set joystick ID (Player1)
 設定搖桿 ID (玩家 1)
 
-# windows/input.c: 244
+# windows/input.c: 266
 set joystick ID (Player2)
 設定搖桿 ID (玩家 2)
 
-# windows/input.c: 245
+# windows/input.c: 267
 set joystick ID (Player3)
 設定搖桿 ID (玩家 3)
 
-# windows/input.c: 246
+# windows/input.c: 268
 set joystick ID (Player4)
 設定搖桿 ID (玩家 4)
 
-# windows/input.c: 247
+# windows/input.c: 269
 set joystick ID (Player5)
 設定搖桿 ID (玩家 5)
 
-# windows/input.c: 248
+# windows/input.c: 270
 set joystick ID (Player6)
 設定搖桿 ID (玩家 6)
 
-# windows/input.c: 249
+# windows/input.c: 271
 set joystick ID (Player7)
 設定搖桿 ID (玩家 7)
 
-# windows/input.c: 250
+# windows/input.c: 272
 set joystick ID (Player8)
 設定搖桿 ID (玩家 8)
 
-# windows/video.c: 227
+# windows/video.c: 229
 set resolution
 設定解析度
 
-# windows/config.c: 244
+# windows/config.c: 245
 set samplerate
 設定取樣頻率
 
-# windows/video.c: 228
+# windows/video.c: 230
 set specific monitor refresh rate
 設定特定的顯示器更新頻率
 
-# windows/video.c: 237
+# windows/video.c: 239
 sets the brightness in full screen mode
 設定全螢幕模式的亮度
 
-# windows/video.c: 238
+# windows/video.c: 240
 sets the number of frames to run within the game
 設定執行遊戲的畫面總數
 
-# windows/fronthlp.c: 76
+# windows/fronthlp.c: 75
 short name, full name
 簡短名稱，完整名稱
 
-# windows/fronthlp.c: 79
+# windows/fronthlp.c: 78
 show clones
 顯示仿製版
 
-# windows/fronthlp.c: 71, 72
+# windows/fronthlp.c: 70, 71
 show help message
 顯示說明訊息
 
-# windows/config.c: 297
+# windows/config.c: 298
 show this help
 顯示說明
 
-# windows/config.c: 267
+# windows/config.c: 268
 skip displaying the game info screen
 略過顯示遊戲資訊畫面
 
-# windows/video.c: 217
+# windows/video.c: 219
 skip frames to speed up emulation
 省略畫面加速模擬
 
-# windows/config.c: 246 
+# windows/config.c: 247 
 sound
 聲音
 
-# windows/video.c: 240
+# windows/video.c: 242
 specify an alternate monitor aspect ratio
 指定替代顯示器的長寬比例
 
-# windows/video.c: 239
+# windows/video.c: 241
 specify the blitting effect
 指定 blitting 效果
 
@@ -1514,67 +1514,67 @@ specify the blitting effect
 specify the blitting effects
 指定 blitting 效果
 
-# windows/video.c: 225
+# windows/video.c: 227
 specify which screen to use
 指定要使用的螢幕
 
-# windows/video.c: 232
+# windows/video.c: 234
 start out maximized
 啟動時最大化
 
-# windows/config.c: 269
+# windows/config.c: 270
 state to load
 載入狀態
 
-# windows/video.c: 226
+# windows/video.c: 228
 stretch to integer ratios
 延展至整數比例
 
-# windows/video.c: 231
+# windows/video.c: 233
 switch color depths to best fit
 切換至最符合的色彩深度
 
-# windows/video.c: 230
+# windows/video.c: 232
 switch resolutions to best fit
 切換至最符合的解析度
 
-# windows/video.c: 235
+# windows/video.c: 237
 syncronize only to the monitor refresh
 僅同步於顯示器的頻率
 
-# windows/video.c: 251
+# windows/video.c: 253
 thread priority
 執行緒優先權
 
-# windows/video.c: 236
+# windows/video.c: 238
 throttle speed to the game's framerate
 限制遊戲畫面更新率的速度
 
-# windows/input.c: 256, 1207
+# windows/input.c: 278, 1278
 trackball
 軌跡球
 
-# windows/config.c: 285
+# windows/config.c: 286
 transparency of UI background [0 - 255]
-設定選單的背景半透明值 [0 - 255]
+設定選單的半透明值 [0 - 255]
 
-# windows/wind3d.c: 1139
+# windows/wind3d.c: 1140
 triple
 三重
 
-# windows/video.c: 220
+# windows/video.c: 222
 triple buffering (only if fullscreen)
 三重緩衝 (僅適用全螢幕)
 
-# windows/config.c: 167
+# windows/config.c: 168
 unable to open log file\n
 無法開啟記錄檔\n
 
-# windows/video.c: 223
+# windows/video.c: 225
 use Direct3D for rendering
 使用 Direct3D 演算描繪
 
-# windows/video.c: 222
+# windows/video.c: 224
 use DirectDraw for rendering
 使用 DirectDraw 演算描繪
 
@@ -1582,55 +1582,55 @@ use DirectDraw for rendering
 use DirectX texture management
 使用 DirectX 材質管理
 
-# windows/config.c: 254
+# windows/config.c: 255
 use additional game artwork (sets default for specific options below)
 使用附加的遊戲 Artwork 圖片 \n(設定下列特定選項的預設值)
 
-# windows/config.c: 255
+# windows/config.c: 256
 use backdrop artwork
 使用背景 Artwork 圖片
 
-# windows/config.c: 257
+# windows/config.c: 258
 use bezel artwork
 使用外框 Artwork 圖片
 
-# windows/config.c: 256
+# windows/config.c: 257
 use overlay artwork
 使用覆疊 Artwork 圖片
 
-# windows/config.c: 245
+# windows/config.c: 246
 use samples
 使用樣本檔
 
-# windows/config.c: 284
+# windows/config.c: 285
 use transparent background for UI text
-在設定選單中使用半透明背景
+使用半透明的設定選單
 
-# windows/config.c: 247
+# windows/config.c: 248
 volume (range [-32,0])
 音量 (範圍 [-32,0])
 
-# windows/video.c: 219
+# windows/video.c: 221
 wait for vertical sync (reduces tearing)
 等待垂直同步 (減少畫面破碎)
 
-# windows/video.c: 264
+# windows/video.c: 266
 window background color
 視窗的背景色彩
 
-# windows/video.c: 267
+# windows/video.c: 269
 window frame color (dark)
 視窗的邊框色彩 (暗)
 
-# windows/video.c: 266
+# windows/video.c: 268
 window frame color (light)
 視窗的邊框色彩 (明)
 
-# windows/video.c: 265
+# windows/video.c: 267
 window frame color (medium)
 視窗的邊框色彩 (中間)
 
-# windows/fronthlp.c: 77
+# windows/fronthlp.c: 76
 year, manufacturer and full name
 年代，製造廠商和完整名稱
 

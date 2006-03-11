@@ -2,7 +2,7 @@
 %d colors 
 %d 色 
 
-# ui/win32ui.c: 250, 3631
+# ui/win32ui.c: 250, 3632
 %d games
 %d 個遊戲
 
@@ -198,11 +198,11 @@ MAME 版本資訊(&M)
 &Picture Area\tAlt+P
 預覽圖(&P)\tAlt+P
 
-# ui/mame32.rc: 52, 166 ui/win32ui.c: 3770
+# ui/mame32.rc: 52, 166 ui/win32ui.c: 3771
 &Play
 執行(&P)
 
-# ui/win32ui.c: 249, 3804, 6750, 6778
+# ui/win32ui.c: 249, 3805, 6751, 6779
 &Play %s
 執行 %s(&P)
 
@@ -278,7 +278,7 @@ MAME 版本資訊(&M)
 &Working
 可以執行(&W)
 
-# ui/win32ui.c: 6284
+# ui/win32ui.c: 6285
 '%s' is not a valid savestate file for game '%s'.
 '%s' 不是有效的儲存狀態檔於遊戲 '%s'。
 
@@ -750,11 +750,11 @@ Copyright (C) 1997-2006 The MAME Team
 Correct:
 正確:
 
-# ui/win32ui.c: 6195
+# ui/win32ui.c: 6196
 Could not open '%s' as a valid input file.
 無法開啟 '%s' 為有效的輸入檔。
 
-# ui/win32ui.c: 6295
+# ui/win32ui.c: 6296
 Could not open '%s' as a valid savestate file.
 無法開啟 '%s' 為有效的儲存狀態檔。
 
@@ -774,7 +774,7 @@ Cubic (gaussian kernel)
 Cursor
 游標
 
-# ui/win32ui.c: 4506, 4534
+# ui/win32ui.c: 4507, 4535
 Custom
 自訂
 
@@ -990,7 +990,7 @@ DUMP 狀況
 E&xit
 結束(&X)
 
-# ui/win32ui.c: 7249
+# ui/win32ui.c: 7250
 ERROR: required files are missing, the game cannot be run.
 錯誤: 必要的檔案遺失，遊戲無法執行。
 
@@ -1054,7 +1054,7 @@ Error finding custom file name to save
 Error log (for developers)
 錯誤記錄(程式開發用)
 
-# ui/win32ui.c: 7341
+# ui/win32ui.c: 7342
 Error searching for custom folder
 尋找自訂資料夾時發生錯誤
 
@@ -1170,7 +1170,7 @@ Game lacks sound
 Game protection isn't fully emulated
 遊戲的保護尚未完全模擬
 
-# ui/win32ui.c: 3400
+# ui/win32ui.c: 3401
 Game search %d%% complete
 完成 %d%% 遊戲搜尋
 
@@ -1366,7 +1366,7 @@ List
 Loa&d Savestate...
 載入儲存狀態(&D)...
 
-# ui/win32ui.c: 7166
+# ui/win32ui.c: 7167
 Loading %s
 正在載入 %s
 
@@ -1478,7 +1478,7 @@ Name
 New game changes
 遊戲的新增異動
 
-# ui/audit32.c: 126 ui/win32ui.c: 5397
+# ui/audit32.c: 126 ui/win32ui.c: 5398
 No
 否
 
@@ -1490,7 +1490,7 @@ No Cocktail
 No Dump
 尚未 DUMP
 
-# ui/win32ui.c: 3786
+# ui/win32ui.c: 3787
 No Selection
 未選取遊戲
 
@@ -1670,11 +1670,11 @@ Pr&operties
 Prescale
 預縮放
 
-# ui/win32ui.c: 3815, 6763, 6788
+# ui/win32ui.c: 3816, 6764, 6789
 Proper&ties of %s
 %s 內容(&T)
 
-# ui/mame32.rc: 66, 181 ui/win32ui.c: 3777
+# ui/mame32.rc: 66, 181 ui/win32ui.c: 3778
 Proper&ties of Driver
 驅動內容(&T)
 
@@ -1754,11 +1754,11 @@ ROM 檔遺失
 Randomly select a game.
 隨機選取一個遊戲。
 
-# ui/layout.c: 70 ui/win32ui.c: 5389
+# ui/layout.c: 70 ui/win32ui.c: 5390
 Raster
 點陣
 
-# ui/win32ui.c: 3564
+# ui/win32ui.c: 3565
 Ready
 準備完畢
 
@@ -1902,7 +1902,7 @@ Scanlines 75%
 Screen
 螢幕
 
-# ui/win32ui.c: 3359
+# ui/win32ui.c: 3360
 Screen flip support is missing
 尚未支援畫面翻轉
 
@@ -2490,7 +2490,7 @@ Use various icon for Not Working game
 Use volume auto adjust
 使用音量自動調整
 
-# ui/layout.c: 71 ui/mame32.rc: 875 ui/options.c: 1145, 2968 ui/properties.c: 762 ui/treeview.c: 302 ui/win32ui.c: 5387
+# ui/layout.c: 71 ui/mame32.rc: 875 ui/options.c: 1145, 2968 ui/properties.c: 762 ui/treeview.c: 302 ui/win32ui.c: 5388
 Vector
 向量
 
@@ -2526,7 +2526,7 @@ Video emulation isn't 100% accurate
 Volume attenuation
 音量衰減
 
-# ui/win32ui.c: 7252
+# ui/win32ui.c: 7253
 WARNING: the game might not run correctly.
 警告: 這個遊戲可能無法正確執行。
 
@@ -2610,7 +2610,7 @@ Wrong Colors
 Year
 年代
 
-# ui/audit32.c: 121 ui/win32ui.c: 5395
+# ui/audit32.c: 121 ui/win32ui.c: 5396
 Yes
 是
 

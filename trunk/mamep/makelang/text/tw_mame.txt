@@ -1,16 +1,16 @@
-# datafile.c: 3147
+# datafile.c: 3149
           DIAL:  %4d\n
         方向盤:  %4d\n
 
-# datafile.c: 3153
+# datafile.c: 3155
          OTHER:  %4d\n
           其它:  %4d\n
 
-# datafile.c: 3151
+# datafile.c: 3153
          PEDAL:  %4d\n
           踏板:  %4d\n
 
-# datafile.c: 3146
+# datafile.c: 3148
         PADDLE:  %4d\n
         操縱桿:  %4d\n
 
@@ -18,35 +18,35 @@
        FOUND: %s\n
         找到: %s\n
 
-# datafile.c: 3140
+# datafile.c: 3142
        JOY2WAY:  %4d\n
     2 方向搖桿:  %4d\n
 
-# datafile.c: 3141
+# datafile.c: 3143
        JOY4WAY:  %4d\n
     4 方向搖桿:  %4d\n
 
-# datafile.c: 3142
+# datafile.c: 3144
        JOY8WAY:  %4d\n
     8 方向搖桿:  %4d\n
 
-# datafile.c: 3149
+# datafile.c: 3151
       AD STICK:  %4d\n
        AD 搖桿:  %4d\n
 
-# datafile.c: 3150
+# datafile.c: 3152
       LIGHTGUN:  %4d\n
         光線槍:  %4d\n
 
-# datafile.c: 3134
+# datafile.c: 3136
      PLAYERS %d:  %4d\n
       %d 名玩家:  %4d\n
 
-# datafile.c: 3148
+# datafile.c: 3150
      TRACKBALL:  %4d\n
         軌跡球:  %4d\n
 
-# datafile.c: 3162
+# datafile.c: 3164
     BUTTONS%3d:  %4d\n
     %3d 個按鈕:  %4d\n
 
@@ -54,7 +54,7 @@
     EXPECTED: %s\n
         需要: %s\n
 
-# datafile.c: 3168
+# datafile.c: 3170
     NO BUTTONS:  %4d\n
       沒有按鈕:  %4d\n
 
@@ -62,39 +62,39 @@
    FOUND: 
 找到: 
 
-# datafile.c: 2972
+# datafile.c: 2974
  %4d HARDDISK\n
  %4d CHD\n
 
-# datafile.c: 2968
+# datafile.c: 2970
  %4d HORIZONTAL + %4d\n %4d VERTICAL   + %4d\n
  %4d 水平       + %4d\n %4d 垂直       + %4d\n
 
-# datafile.c: 2966
+# datafile.c: 2968
  %4d RASTER     + %4d\n %4d VECTOR     + %4d\n
  %4d 點陣圖形   + %4d\n %4d 向量圖形   + %4d\n
 
-# datafile.c: 2970
+# datafile.c: 2972
  %4d STEREO     + %4d\n
  %4d 立體聲     + %4d\n
 
-# datafile.c: 3143
+# datafile.c: 3145
  DOUBLEJOY2WAY:  %4d\n
   2 方向雙搖桿:  %4d\n
 
-# datafile.c: 3144
+# datafile.c: 3146
  DOUBLEJOY4WAY:  %4d\n
   4 方向雙搖桿:  %4d\n
 
-# datafile.c: 3145
+# datafile.c: 3147
  DOUBLEJOY8WAY:  %4d\n
   8 方向雙搖桿:  %4d\n
 
-# datafile.c: 3073
+# datafile.c: 3075
  GAMES WITH  %d CPUs: %4d\n
 使用 %d 種 CPU 的遊戲: %4d\n
 
-# datafile.c: 3104
+# datafile.c: 3106
  GAMES WITH  %d SNDINTRF: %4d\n
 使用 %d 種音效介面的遊戲: %4d\n
 
@@ -210,15 +210,15 @@
 %d results found
 %d 結果找到
 
-# usrintrf.c: 2106, 2251
+# usrintrf.c: 2105, 2250
 %s Analog
 %s 類比控制
 
-# usrintrf.c: 2113, 2255
+# usrintrf.c: 2112, 2254
 %s Dec
 %s 減少
 
-# usrintrf.c: 2120, 2259
+# usrintrf.c: 2119, 2258
 %s Inc
 %s 增加
 
@@ -350,7 +350,7 @@
 24 Bit
 24 位元
 
-# datafile.c: 3224
+# datafile.c: 3226
 24-BIT DISPLAY : %3d  + %3d\n
 24 位元色彩    : %3d  + %3d\n
 
@@ -646,7 +646,7 @@ Artwork
 Asia
 亞洲版
 
-# mame.c: 779
+# mame.c: 840
 Attempted to malloc zero bytes (%s:%d)
 嘗試記憶體分配零位元組 (%s:%d)
 
@@ -682,7 +682,7 @@ Automatic
 Beginner
 初學者
 
-# drivers/bmcbowl.c: 376 drivers/cherrym.c: 180 drivers/lvcards.c: 218, 302 drivers/magic10.c: 220 drivers/sderby.c: 143
+# drivers/bmcbowl.c: 374 drivers/cherrym.c: 180 drivers/lvcards.c: 218, 302 drivers/magic10.c: 220 drivers/sderby.c: 143
 Bet
 押注
 
@@ -702,7 +702,7 @@ Bit
 Bonus Life
 獎勵分數
 
-# drivers/polyplay.c: 208 ui_text.c: 102
+# drivers/polyplay.c: 207 ui_text.c: 102
 Bookkeeping Info
 收入資訊
 
@@ -734,7 +734,7 @@ Cabinet Type
 Calibrate Joysticks
 校準搖桿
 
-# drivers/getrivia.c: 263 drivers/segac2.c: 1203 
+# drivers/getrivia.c: 263 drivers/segac2.c: 1202 
 Cancel
 取消
 
@@ -742,7 +742,7 @@ Cancel
 Card Number:
 記憶卡編號:
 
-# drivers/cischeat.c: 1586 drivers/namcos22.c: 3888, 3962 ui_text.c: 235
+# drivers/cischeat.c: 1586 drivers/namcos22.c: 3883, 3957 ui_text.c: 235
 Center
 中心
 
@@ -758,11 +758,11 @@ Cheat conflict found: disabling
 Cheats
 作弊碼
 
-# drivers/system24.c: 1840
+# drivers/system24.c: 1839
 Chi
 吃
 
-# drivers/afega.c: 714 drivers/fuukifg2.c: 221, 305 drivers/nmk16.c: 2590 drivers/pgm.c: 590, 684, 876 drivers/ssv.c: 2951 drivers/toaplan2.c: 3211, 3320, 3465
+# drivers/afega.c: 714 drivers/fuukifg2.c: 221, 305 drivers/nmk16.c: 2590 drivers/pgm.c: 688, 782, 974 drivers/ssv.c: 2950 drivers/toaplan2.c: 3211, 3320, 3465
 China
 中國版
 
@@ -826,7 +826,7 @@ Coin A
 Coin B
 投幣 B
 
-# drivers/arabian.c: 313 drivers/bking2.c: 325, 439 drivers/marinedt.c: 364 drivers/mcr68.c: 737 drivers/powerins.c: 216 drivers/segas18.c: 801, 833 drivers/system18.c: 1260
+# drivers/arabian.c: 313 drivers/bking2.c: 325, 439 drivers/marinedt.c: 364 drivers/mcr68.c: 737 drivers/powerins.c: 216 drivers/segas18.c: 806, 838 drivers/system18.c: 1260
 Coin Chutes
 投幣裝置
 
@@ -834,7 +834,7 @@ Coin Chutes
 Coin Chutes?
 投幣裝置?
 
-# drivers/airbustr.c: 466 drivers/asteroid.c: 397 drivers/bloodbro.c: 163, 253, 344 drivers/cabal.c: 348 drivers/exidy.c: 368 drivers/galpanic.c: 582, 693, 762 drivers/holeland.c: 121, 188 drivers/m62.c: 626, 679, 729, 781, 833, 885, 937, 987, 1037, 1088, 1139, 1189 drivers/m72.c: 983, 1055, 1126, 1196, 1266, 1333, 1404, 1471, 1539, 1612, 1694, 1782, 1864, 1949 drivers/m90.c: 220, 265, 323, 368, 443, 513, 585, 630 drivers/m92.h: 77, 93, 109, 125 drivers/mcatadv.c: 341 drivers/midzeus.c: 1229 drivers/mpatrol.c: 153 drivers/playch10.c: 648 drivers/playmark.c: 422, 570, 667 drivers/powerbal.c: 264 drivers/raiden.c: 158 drivers/rallyx.c: 637 drivers/shisen.c: 158 drivers/sshangha.c: 245 drivers/system18.c: 1325 drivers/tagteam.c: 228 drivers/taito_l.c: 1960 drivers/travrusa.c: 157, 187 drivers/troangel.c: 108 drivers/vigilant.c: 268, 358 drivers/welltris.c: 566 drivers/wilytowr.c: 405 drivers/yard.c: 133
+# drivers/airbustr.c: 466 drivers/asteroid.c: 397 drivers/bloodbro.c: 163, 253, 344 drivers/cabal.c: 348 drivers/exidy.c: 368 drivers/galpanic.c: 581, 692, 761 drivers/holeland.c: 121, 188 drivers/m62.c: 626, 679, 729, 781, 833, 885, 937, 987, 1037, 1088, 1139, 1189 drivers/m72.c: 983, 1055, 1126, 1196, 1266, 1333, 1404, 1471, 1539, 1612, 1694, 1782, 1864, 1949 drivers/m90.c: 220, 265, 323, 368, 443, 513, 585, 630 drivers/m92.h: 77, 93, 109, 125 drivers/mcatadv.c: 341 drivers/midzeus.c: 1229 drivers/mpatrol.c: 153 drivers/playch10.c: 648 drivers/playmark.c: 422, 570, 667 drivers/powerbal.c: 264 drivers/raiden.c: 158 drivers/rallyx.c: 637 drivers/shisen.c: 158 drivers/sshangha.c: 245 drivers/system18.c: 1325 drivers/tagteam.c: 228 drivers/taito_l.c: 1960 drivers/travrusa.c: 157, 187 drivers/troangel.c: 108 drivers/vigilant.c: 268, 358 drivers/welltris.c: 566 drivers/wilytowr.c: 405 drivers/yard.c: 133
 Coin Mode
 投幣模式
 
@@ -858,7 +858,7 @@ Command List not available
 Comment
 註解
 
-# drivers/alpha68k.c: 1636 drivers/armedf.c: 556 drivers/bbusters.c: 456, 527 drivers/boogwing.c: 179 drivers/deco32.c: 1338 drivers/gaelco2.c: 714, 1199 drivers/gijoe.c: 311 drivers/itech8.c: 1598 drivers/konamigq.c: 528 drivers/konamigx.c: 1730 drivers/lethal.c: 542 drivers/lordgun.c: 347 drivers/m92.h: 77, 93, 109, 125 drivers/marinedt.c: 365 drivers/mcr68.c: 739 drivers/moo.c: 491, 560 drivers/mystwarr.c: 1096, 1164, 1237 drivers/segac2.c: 1069 drivers/segas18.c: 912, 968, 1024, 1073, 1139, 1156, 1200 drivers/snk.c: 2911, 2967, 3024, 3081 drivers/sslam.c: 546 drivers/suprslam.c: 232 drivers/system18.c: 1326 drivers/system24.c: 1296, 1372, 1443, 1513, 1573
+# drivers/alpha68k.c: 1636 drivers/armedf.c: 556 drivers/bbusters.c: 456, 527 drivers/boogwing.c: 179 drivers/deco32.c: 1338 drivers/gaelco2.c: 714, 1199 drivers/gijoe.c: 311 drivers/itech8.c: 1598 drivers/konamigq.c: 528 drivers/konamigx.c: 1730 drivers/lethal.c: 542 drivers/lordgun.c: 347 drivers/m92.h: 77, 93, 109, 125 drivers/marinedt.c: 365 drivers/mcr68.c: 739 drivers/moo.c: 491, 560 drivers/mystwarr.c: 1096, 1164, 1237 drivers/segac2.c: 1068 drivers/segas18.c: 917, 973, 1029, 1078, 1144, 1161, 1205 drivers/snk.c: 2911, 2967, 3024, 3081 drivers/sslam.c: 546 drivers/suprslam.c: 232 drivers/system18.c: 1326 drivers/system24.c: 1295, 1371, 1442, 1512, 1572
 Common
 普通
 
@@ -922,7 +922,7 @@ Could not load controller file %s.cfg
 Could not read MAME save file header
 無法讀取 MAME 存檔檔頭
 
-# drivers/aerofgt.c: 1023, 1110 drivers/bbusters.c: 580 drivers/bwing.c: 296 drivers/cischeat.c: 1187, 1243 drivers/crshrace.c: 381, 537 drivers/ddenlovr.c: 4450 drivers/f1gp.c: 307, 412 drivers/fuukifg2.c: 220, 304 drivers/kaneko16.c: 1202, 1298 drivers/midtunit.c: 347, 450, 553 drivers/midwunit.c: 388, 567 drivers/midxunit.c: 112 drivers/midyunit.c: 239, 702 drivers/psikyo.c: 644, 764, 1002, 1206, 1304, 1493 drivers/seta.c: 3480, 3805, 3912, 4126, 4295 drivers/ssv.c: 2950 drivers/st0016.c: 470 drivers/stv.c: 2472 drivers/suprslam.c: 274 drivers/tail2nos.c: 207 drivers/taotaido.c: 306
+# drivers/aerofgt.c: 1023, 1110 drivers/bbusters.c: 580 drivers/bwing.c: 296 drivers/cischeat.c: 1187, 1243 drivers/crshrace.c: 381, 537 drivers/ddenlovr.c: 4449 drivers/f1gp.c: 307, 412 drivers/fuukifg2.c: 220, 304 drivers/kaneko16.c: 1201, 1297 drivers/midtunit.c: 347, 450, 553 drivers/midwunit.c: 388, 567 drivers/midxunit.c: 112 drivers/midyunit.c: 239, 702 drivers/psikyo.c: 644, 764, 1002, 1206, 1304, 1493 drivers/seta.c: 3480, 3805, 3912, 4126, 4295 drivers/ssv.c: 2949 drivers/st0016.c: 470 drivers/stv.c: 2472 drivers/suprslam.c: 274 drivers/tail2nos.c: 207 drivers/taotaido.c: 306
 Country
 國別
 
@@ -946,7 +946,7 @@ Custom Buttons
 DIAL
 方向盤
 
-# datafile.c: 3222
+# datafile.c: 3224
 DUAL MONITOR   : %3d  + %3d\n
 雙顯示器       : %3d  + %3d\n
 
@@ -990,7 +990,7 @@ Demo Sounds
 Description
 描述
 
-# drivers/ssv.c: 2772 inptport.c: 867 
+# drivers/ssv.c: 2771 inptport.c: 867 
 Dial
 方向盤
 
@@ -1166,11 +1166,11 @@ End of playback
 Energy (greater or less)
 能量值 (變大或小)
 
-# drivers/kaneko16.c: 1203, 1299 drivers/nmk16.c: 2588
+# drivers/kaneko16.c: 1202, 1298 drivers/nmk16.c: 2588
 England
 英國版
 
-# drivers/snowbros.c: 786 inptport.c: 399
+# drivers/snowbros.c: 785 inptport.c: 399
 English
 英文
 
@@ -1198,19 +1198,19 @@ Error loading memory card
 Error: 
 錯誤:
 
-# mame.c: 1318, 1322
+# mame.c: 1438, 1442
 Error: Failed to load state
 錯誤: 無法載入狀態
 
-# mame.c: 1244
+# mame.c: 1364
 Error: Failed to save state
 錯誤: 無法儲存狀態
 
-# mame.c: 1207
+# mame.c: 1327
 Error: Unable to save state due to illegal registrations. See error.log for details.
 錯誤: 無法儲存狀態，因為非法記錄。請查閱\ error.log 以取得詳細資料。
 
-# usrintrf.c: 1573
+# usrintrf.c: 1574
 Error: illegal caption file
 錯誤: 非法字幕檔
 
@@ -1222,13 +1222,21 @@ Europe
 Expert
 高手
 
-# mame.c: 787
+# mame.c: 848
 Failed to allocate %d bytes (%s:%d)
 無法分配 %d 位元組 (%s:%d)
 
-# cheat.c: 6583 debug/mamedbg.c: 796 drivers/4enraya.c: 119 drivers/8080bw.c: 697, 789 drivers/alpha68k.c: 1570, 1624 drivers/amidar.c: 186 drivers/angelkds.c: 480 drivers/bestleag.c: 278 drivers/bigstrkb.c: 160 drivers/brkthru.c: 233, 236, 278, 281 drivers/cninja.c: 727 drivers/cps1.c: 1069, 1339 drivers/darius.c: 679, 717, 755 drivers/ddragon3.c: 424 drivers/deniam.c: 277 drivers/epos.c: 151, 154, 160 drivers/fuukifg3.c: 354 drivers/gameplan.c: 399, 850 drivers/karnov.c: 461 drivers/m62.c: 610, 661, 712, 762, 814, 866, 920, 1020, 1071 drivers/mcr.c: 1134 drivers/megaplay.c: 224 drivers/metro.c: 3080 drivers/ninjaw.c: 542 drivers/nmg5.c: 237 drivers/nmk16.c: 2662 drivers/phoenix.c: 345 drivers/quizdna.c: 153, 241, 343 drivers/rohga.c: 445, 513 drivers/safarir.c: 188 drivers/segas16a.c: 1272 drivers/segas16b.c: 2511 drivers/sidepckt.c: 231 drivers/slapfght.c: 518 drivers/ssv.c: 2573 drivers/suprridr.c: 251 drivers/system1.c: 888, 1724 drivers/system16.c: 1795 drivers/taito_f2.c: 3122 drivers/taito_l.c: 1841, 1994 drivers/taito_z.c: 2384, 2453 drivers/tecmo16.c: 207 drivers/thepit.c: 276, 331, 372 drivers/trackfld.c: 539, 550 drivers/vigilant.c: 240 drivers/vsnes.c: 1065, 1467, 1691, 1749, 1775 drivers/wallc.c: 187 drivers/warriorb.c: 344 drivers/wc90.c: 250 drivers/wc90b.c: 267 drivers/xain.c: 399 drivers/yamato.c: 356 drivers/zac2650.c: 83, 133 drivers/zerozone.c: 148 ui_text.c: 209
+# cheat.c: 6583 debug/mamedbg.c: 797 drivers/4enraya.c: 119 drivers/8080bw.c: 697, 789 drivers/alpha68k.c: 1570, 1624 drivers/amidar.c: 186 drivers/angelkds.c: 480 drivers/bestleag.c: 278 drivers/bigstrkb.c: 160 drivers/brkthru.c: 233, 236, 278, 281 drivers/cninja.c: 727 drivers/cps1.c: 1069, 1339 drivers/darius.c: 679, 717, 755 drivers/ddragon3.c: 424 drivers/deniam.c: 277 drivers/epos.c: 151, 154, 160 drivers/fuukifg3.c: 354 drivers/gameplan.c: 399, 850 drivers/karnov.c: 461 drivers/m62.c: 610, 661, 712, 762, 814, 866, 920, 1020, 1071 drivers/mcr.c: 1134 drivers/megaplay.c: 224 drivers/metro.c: 3080 drivers/ninjaw.c: 542 drivers/nmg5.c: 237 drivers/nmk16.c: 2662 drivers/phoenix.c: 345 drivers/quizdna.c: 153, 241, 343 drivers/rohga.c: 445, 513 drivers/safarir.c: 188 drivers/segas16a.c: 1272 drivers/segas16b.c: 2511 drivers/sidepckt.c: 231 drivers/slapfght.c: 518 drivers/ssv.c: 2572 drivers/suprridr.c: 251 drivers/system1.c: 888, 1724 drivers/system16.c: 1795 drivers/taito_f2.c: 3122 drivers/taito_l.c: 1841, 1994 drivers/taito_z.c: 2384, 2453 drivers/tecmo16.c: 207 drivers/thepit.c: 276, 331, 372 drivers/trackfld.c: 539, 550 drivers/vigilant.c: 240 drivers/vsnes.c: 1065, 1467, 1691, 1749, 1775 drivers/wallc.c: 187 drivers/warriorb.c: 344 drivers/wc90.c: 250 drivers/wc90b.c: 267 drivers/xain.c: 399 drivers/yamato.c: 356 drivers/zac2650.c: 83, 133 drivers/zerozone.c: 148 ui_text.c: 209
 Fast
 較快
+
+# mamecore.h: 186
+Fatal error: %s (%s:%d)
+嚴重錯誤: %s (%s:%d)
+
+# mamecore.h: 183
+Fatal error: %s\nCaused by assert: %s:%d: %s
+嚴重錯誤: %s\n判斷原因: %s:%d: %s
 
 # cheat.c: 935
 Finish this
@@ -1262,7 +1270,7 @@ Frameskip Dec
 Frameskip Inc
 增加畫面省略數
 
-# drivers/lockon.c: 258 drivers/lvcards.c: 326 drivers/pgm.c: 569, 666, 757 drivers/segas16a.c: 1224 drivers/segas16b.c: 2463 drivers/taito_z.c: 1981, 2052 drivers/turbo.c: 408
+# drivers/lockon.c: 258 drivers/lvcards.c: 326 drivers/pgm.c: 667, 764, 855 drivers/segas16a.c: 1224 drivers/segas16b.c: 2463 drivers/taito_z.c: 1981, 2052 drivers/turbo.c: 408
 Free
 免費執行
 
@@ -1270,7 +1278,7 @@ Free
 Free Play
 免費執行
 
-# drivers/1942.c: 199 drivers/1943.c: 147 drivers/40love.c: 1081 drivers/aerofgt.c: 742 drivers/airbustr.c: 495 drivers/alpha68k.c: 1164, 1490, 1543, 1595, 1650, 1676, 1776 drivers/atetris.c: 227, 253 drivers/baraduke.c: 256, 329 drivers/battlex.c: 115 drivers/bbusters.c: 469, 556 drivers/bionicc.c: 226 drivers/blktiger.c: 208 drivers/bwing.c: 293 drivers/compgolf.c: 135 drivers/cps1.c: 491, 660, 741, 834, 918, 997, 1184, 1274, 1355, 1447, 1551, 1646, 1736, 1818, 1901, 1995, 2057, 2182, 2285, 2393, 2512, 2621, 2713, 2806, 2860, 2912, 2965, 3017, 3071, 3114, 3215, 3315, 3416, 3509, 3563 drivers/dec8.c: 1243, 1674 drivers/docastle.c: 359 drivers/exedexes.c: 137 drivers/fcrash.c: 261 drivers/flstory.c: 524 drivers/funkybee.c: 113, 163, 213 drivers/funkyjet.c: 221, 299 drivers/galaga.c: 1006, 1082, 1153, 1227, 1357, 1596, 1655 drivers/gunsmoke.c: 191 drivers/hal21.c: 417 drivers/higemaru.c: 80 drivers/ikki.c: 119 drivers/jcross.c: 196 drivers/karnov.c: 593 drivers/kingobox.c: 289, 375 drivers/kyugo.c: 235, 266, 303, 334, 364, 394, 424 drivers/ladybug.c: 164, 437 drivers/laserbat.c: 302 drivers/legionna.c: 828, 916 drivers/lsasquad.c: 194 drivers/mainsnk.c: 194 drivers/mappy.c: 981, 1114, 1245, 1306, 1374 drivers/markham.c: 151 drivers/marvins.c: 269, 358, 449 drivers/midtunit.c: 339 drivers/midvunit.c: 580 drivers/mitchell.c: 607 drivers/ms32.c: 776, 846, 913 drivers/mugsmash.c: 297, 379 drivers/munchmo.c: 200 drivers/mwarr.c: 209 drivers/namcond1.c: 110 drivers/namcos1.c: 602, 642, 664, 701, 763, 785, 799, 872, 882, 904, 914 drivers/namcos12.c: 1261, 1311 drivers/namcos86.c: 570, 660, 730, 808, 887, 966 drivers/neogeo.c: 935, 1083 drivers/nycaptor.c: 721 drivers/ohmygod.c: 296 drivers/onetwo.c: 143 drivers/pacland.c: 333 drivers/pandoras.c: 287 drivers/prehisle.c: 156 drivers/rollrace.c: 150 drivers/rungun.c: 384 drivers/sauro.c: 247 drivers/scobra.c: 643 drivers/seta2.c: 553 drivers/sf.c: 338, 516, 654 drivers/sgladiat.c: 284 drivers/shootout.c: 167 drivers/sidearms.c: 248 drivers/skykid.c: 169, 248 drivers/snk.c: 2929, 2985, 3042, 3099, 3156, 3227, 3314, 3368, 3426, 3454, 3514, 3585, 3641, 3718, 3783, 3888, 4012, 4153 drivers/snk68.c: 259, 406, 443, 594 drivers/sonson.c: 195 drivers/ssrj.c: 134 drivers/starwars.c: 256, 333 drivers/statriv2.c: 438 drivers/strnskil.c: 177, 265 drivers/superqix.c: 605, 743 drivers/suprnova.c: 557, 632 drivers/tceptor.c: 367, 423 drivers/tmnt.c: 1846, 1932, 2132 drivers/toypop.c: 401, 486 drivers/tsamurai.c: 470, 663 drivers/tumbleb.c: 662 drivers/vastar.c: 233 drivers/zaccaria.c: 407, 516 drivers/zn.c: 3097 drivers/zodiack.c: 220
+# drivers/1942.c: 199 drivers/1943.c: 147 drivers/40love.c: 1081 drivers/aerofgt.c: 742 drivers/airbustr.c: 495 drivers/alpha68k.c: 1164, 1490, 1543, 1595, 1650, 1676, 1776 drivers/atetris.c: 227, 253 drivers/baraduke.c: 256, 329 drivers/battlex.c: 115 drivers/bbusters.c: 469, 556 drivers/bionicc.c: 226 drivers/blktiger.c: 208 drivers/bwing.c: 293 drivers/compgolf.c: 135 drivers/cps1.c: 491, 660, 741, 834, 918, 997, 1184, 1274, 1355, 1447, 1551, 1646, 1736, 1818, 1901, 1995, 2057, 2182, 2285, 2393, 2512, 2621, 2713, 2806, 2860, 2912, 2965, 3017, 3071, 3114, 3215, 3315, 3416, 3509, 3563 drivers/dec8.c: 1243, 1674 drivers/docastle.c: 359 drivers/exedexes.c: 137 drivers/fcrash.c: 261 drivers/flstory.c: 524 drivers/funkybee.c: 113, 163, 213 drivers/funkyjet.c: 221, 299 drivers/galaga.c: 1006, 1082, 1153, 1227, 1357, 1596, 1655 drivers/gunsmoke.c: 191 drivers/hal21.c: 417 drivers/higemaru.c: 80 drivers/ikki.c: 119 drivers/jcross.c: 196 drivers/karnov.c: 593 drivers/kingobox.c: 289, 375 drivers/kyugo.c: 235, 266, 303, 334, 364, 394, 424 drivers/ladybug.c: 164, 437 drivers/laserbat.c: 302 drivers/legionna.c: 828, 916 drivers/lsasquad.c: 194 drivers/mainsnk.c: 194 drivers/mappy.c: 981, 1114, 1245, 1306, 1374 drivers/markham.c: 151 drivers/marvins.c: 269, 358, 449 drivers/midtunit.c: 339 drivers/midvunit.c: 580 drivers/mitchell.c: 607 drivers/ms32.c: 776, 846, 913 drivers/mugsmash.c: 297, 379 drivers/munchmo.c: 200 drivers/mwarr.c: 209 drivers/namcond1.c: 110 drivers/namcos1.c: 602, 642, 664, 701, 763, 785, 799, 872, 882, 904, 914 drivers/namcos12.c: 1485 drivers/namcos86.c: 569, 659, 729, 807, 886, 965 drivers/neogeo.c: 935, 1083 drivers/nycaptor.c: 721 drivers/ohmygod.c: 296 drivers/onetwo.c: 143 drivers/pacland.c: 333 drivers/pandoras.c: 287 drivers/prehisle.c: 156 drivers/rollrace.c: 150 drivers/rungun.c: 384 drivers/sauro.c: 247 drivers/scobra.c: 643 drivers/seta2.c: 553 drivers/sf.c: 338, 516, 654 drivers/sgladiat.c: 284 drivers/shootout.c: 167 drivers/sidearms.c: 248 drivers/skykid.c: 169, 248 drivers/snk.c: 2929, 2985, 3042, 3099, 3156, 3227, 3314, 3368, 3426, 3454, 3514, 3585, 3641, 3718, 3783, 3888, 4012, 4153 drivers/snk68.c: 259, 406, 443, 594 drivers/sonson.c: 195 drivers/ssrj.c: 134 drivers/starwars.c: 256, 333 drivers/statriv2.c: 438 drivers/strnskil.c: 177, 265 drivers/superqix.c: 605, 743 drivers/suprnova.c: 556, 631 drivers/tceptor.c: 367, 423 drivers/tmnt.c: 1846, 1932, 2132 drivers/toypop.c: 401, 486 drivers/tsamurai.c: 470, 663 drivers/tumbleb.c: 661 drivers/vastar.c: 233 drivers/zaccaria.c: 407, 516 drivers/zn.c: 3097 drivers/zodiack.c: 220
 Freeze
 鎖住遊戲
 
@@ -1282,7 +1290,7 @@ French
 Full
 完全
 
-# datafile.c: 2180
+# datafile.c: 2182
 GAME: 
 遊戲: 
 
@@ -1334,7 +1342,7 @@ General Help
 German
 德文
 
-# drivers/kaneko16.c: 1205, 1301 drivers/midzeus.c: 1210 drivers/nmk16.c: 2583
+# drivers/kaneko16.c: 1204, 1300 drivers/midzeus.c: 1210 drivers/nmk16.c: 2583
 Germany
 德國版
 
@@ -1354,11 +1362,11 @@ Greater Or Equal
 Greater or Equal
 大於或相等
 
-# datafile.c: 3226
+# datafile.c: 3228
 HI/TRUE BITMAP : %3d  + %3d\n
 高彩 / 全彩    : %3d  + %3d\n
 
-# datafile.c: 3230
+# datafile.c: 3232
 HIGHLIGHTS     : %3d  + %3d\n
 光源           : %3d  + %3d\n
 
@@ -1374,7 +1382,7 @@ Harder
 Hardest
 極難
 
-# drivers/ddenlovr.c: 3104 drivers/shanghai.c: 913 
+# drivers/ddenlovr.c: 3103 drivers/shanghai.c: 913 
 Help
 說明
 
@@ -1414,7 +1422,7 @@ History not available
 Home
 家用機
 
-# drivers/aerofgt.c: 1114 drivers/cave.c: 1677 drivers/ddenlovr.c: 4622 drivers/f1gp.c: 312 drivers/nmk16.c: 2589 drivers/pgm.c: 688, 880 drivers/psikyo.c: 648, 768, 1006, 1210 drivers/toaplan1.c: 1187, 1262, 1332, 1407, 1496 drivers/toaplan2.c: 2357, 2546, 2607, 2842, 2960, 3075, 3152, 3213, 3322, 3646
+# drivers/aerofgt.c: 1114 drivers/cave.c: 1677 drivers/ddenlovr.c: 4621 drivers/f1gp.c: 312 drivers/nmk16.c: 2589 drivers/pgm.c: 786, 978 drivers/psikyo.c: 648, 768, 1006, 1210 drivers/toaplan1.c: 1187, 1262, 1332, 1407, 1496 drivers/toaplan2.c: 2357, 2546, 2607, 2842, 2960, 3075, 3152, 3213, 3322, 3646
 Hong Kong
 香港版
 
@@ -1430,15 +1438,15 @@ Horizontally
 IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
 如果您沒有合法權利在本模擬器上執行 \"%s\" 的話，請按 ESC 鍵。
 
-# datafile.c: 2985
+# datafile.c: 2987
 IMPERFECT COLORS   : %3d  %3d\n
 不完美的色彩       : %3d  %3d\n
 
-# datafile.c: 2981
+# datafile.c: 2983
 IMPERFECT GRAPHICS : %3d  %3d\n
 不完美的圖形       : %3d  %3d\n
 
-# datafile.c: 2989
+# datafile.c: 2991
 IMPERFECT SOUND    : %3d  %3d\n
 不完美的聲音       : %3d  %3d\n
 
@@ -1458,7 +1466,7 @@ Ignore Decrement By
 Increased By Value
 增加值
 
-# drivers/aerofgt.c: 730, 831, 909, 979, 1064 drivers/alpha68k.c: 1637 drivers/armedf.c: 557 drivers/bbusters.c: 457, 528 drivers/boogwing.c: 180 drivers/cinemat.c: 738 drivers/crshrace.c: 283, 461 drivers/deco32.c: 1339 drivers/itech8.c: 1599 drivers/marinedt.c: 366 drivers/mcr68.c: 738 drivers/segac2.c: 1070 drivers/segas18.c: 913, 969, 1025, 1074, 1140, 1157, 1201 drivers/sslam.c: 547 drivers/system18.c: 1327 drivers/system24.c: 1444 drivers/taotaido.c: 233
+# drivers/aerofgt.c: 730, 831, 909, 979, 1064 drivers/alpha68k.c: 1637 drivers/armedf.c: 557 drivers/bbusters.c: 457, 528 drivers/boogwing.c: 180 drivers/cinemat.c: 738 drivers/crshrace.c: 283, 461 drivers/deco32.c: 1339 drivers/itech8.c: 1599 drivers/marinedt.c: 366 drivers/mcr68.c: 738 drivers/segac2.c: 1069 drivers/segas18.c: 918, 974, 1030, 1079, 1145, 1162, 1206 drivers/sslam.c: 547 drivers/system18.c: 1327 drivers/system24.c: 1443 drivers/taotaido.c: 233
 Individual
 個別
 
@@ -1566,7 +1574,7 @@ Invincibility PL1
 Invincibility PL2
 無敵 PL2
 
-# drivers/equites.c: 563 drivers/fantland.c: 380, 454, 569 drivers/m72.c: 996, 1068, 1139, 1209, 1345 drivers/namcos1.c: 698 drivers/namcos86.c: 805, 884 drivers/oneshot.c: 273 drivers/seicross.c: 388 drivers/snowbros.c: 513, 587 drivers/system1.c: 2127 drivers/toaplan1.c: 584, 653, 722, 791, 861, 944, 1028, 1105, 1173, 1248, 1318, 1393, 1482 drivers/toaplan2.c: 2391, 2461, 2532, 2595, 2638, 2684, 2743, 2825, 2901, 2948, 3013, 3061, 3138, 3197, 3254, 3305, 3365, 3692, 3808 drivers/yard.c: 145
+# drivers/equites.c: 563 drivers/fantland.c: 380, 454, 569 drivers/m72.c: 996, 1068, 1139, 1209, 1345 drivers/namcos1.c: 698 drivers/namcos86.c: 804, 883 drivers/oneshot.c: 273 drivers/seicross.c: 388 drivers/snowbros.c: 512, 586 drivers/system1.c: 2127 drivers/toaplan1.c: 584, 653, 722, 791, 861, 944, 1028, 1105, 1173, 1248, 1318, 1393, 1482 drivers/toaplan2.c: 2391, 2461, 2532, 2595, 2638, 2684, 2743, 2825, 2901, 2948, 3013, 3061, 3138, 3197, 3254, 3305, 3365, 3692, 3808 drivers/yard.c: 145
 Invulnerability
 耐久力
 
@@ -1574,7 +1582,7 @@ Invulnerability
 Italian
 意大利文
 
-# drivers/kaneko16.c: 1204, 1300 drivers/midyunit.c: 774 drivers/midzeus.c: 1214
+# drivers/kaneko16.c: 1203, 1299 drivers/midyunit.c: 774 drivers/midzeus.c: 1214
 Italy
 意大利版
 
@@ -1590,15 +1598,15 @@ Japanese
 Joystick
 搖桿
 
-# drivers/system24.c: 1849
+# drivers/system24.c: 1848
 Kan
 槓
 
-# drivers/ddenlovr.c: 3628, 3855 drivers/ltcasino.c: 566 drivers/rbmk.c: 133 drivers/ssv.c: 1470, 1586, 1868 inptport.c: 966 
+# drivers/ddenlovr.c: 3627, 3854 drivers/ltcasino.c: 566 drivers/rbmk.c: 132 drivers/ssv.c: 1469, 1585, 1867 inptport.c: 966 
 Keyboard
 鍵盤
 
-# drivers/aerofgt.c: 1113 drivers/cave.c: 1679 drivers/crshrace.c: 385, 541 drivers/f1gp.c: 311 drivers/fuukifg2.c: 223, 307 drivers/nmk16.c: 2587 drivers/pgm.c: 589, 687, 879 drivers/psikyo.c: 647, 767, 1005, 1209 drivers/stv.c: 2477 drivers/taotaido.c: 311 drivers/toaplan1.c: 1188, 1263, 1333, 1408, 1497 drivers/toaplan2.c: 2359, 2403, 2545, 2610, 2840, 2959, 3074, 3151, 3212, 3321
+# drivers/aerofgt.c: 1113 drivers/cave.c: 1679 drivers/crshrace.c: 385, 541 drivers/f1gp.c: 311 drivers/fuukifg2.c: 223, 307 drivers/nmk16.c: 2587 drivers/pgm.c: 687, 785, 977 drivers/psikyo.c: 647, 767, 1005, 1209 drivers/stv.c: 2477 drivers/taotaido.c: 311 drivers/toaplan1.c: 1188, 1263, 1333, 1408, 1497 drivers/toaplan2.c: 2359, 2403, 2545, 2610, 2840, 2959, 3074, 3151, 3212, 3321
 Korea
 韓國版
 
@@ -1610,7 +1618,7 @@ Label
 Label Type
 標籤類型
 
-# drivers/snowbros.c: 862 inptport.c: 398 ui_text.c: 324
+# drivers/snowbros.c: 861 inptport.c: 398 ui_text.c: 324
 Language
 語系
 
@@ -1718,11 +1726,11 @@ Load Selected Card
 Load State
 載入狀態
 
-# usrintrf.c: 4938
+# usrintrf.c: 4940
 Load cancelled
 已取消載入
 
-# usrintrf.c: 4970
+# usrintrf.c: 4972
 Load from position %c
 載入位置 %c
 
@@ -1742,11 +1750,11 @@ Low
 MAME Statistics
 MAME 統計
 
-# mame.c: 175
+# mame.c: 180
 MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n
 MAME 是一套模擬器︰ 或多或少忠實的重現了幾部業務機台的性能，但是沒有軟體的硬體\n是毫無用處的，所以必需要有 ROM 映像檔配合執行，這種 ROM 檔跟其它任何一種商業軟\n體一樣都具有版權，因此如果您並不擁有原始機台而去使用它們，乃是違法的行為。不言\n而喻，這些 ROM 檔不能連同 MAME 一起散佈，將 MAME 和 ROM 映像檔一起散佈的行為已\n經違反了著作權法，應該盡速向這些作者回報，以便採取適當的法律措施。\n
 
-# datafile.c: 2172
+# datafile.c: 2174
 MAMEInfo:\n
 MAME 資訊:\n
 
@@ -1818,7 +1826,7 @@ Minimum Displayed Value
 Minimum Value
 最小值
 
-# drivers/tx1.c: 937, 941 inptport.c: 436
+# drivers/tx1.c: 936, 940 inptport.c: 436
 Mono
 單聲道
 
@@ -1898,11 +1906,11 @@ Mouse Y 8
 NA
 NA
 
-# datafile.c: 2991
+# datafile.c: 2993
 NO COCKTAIL        : %3d  %3d\n
 無檯面型           : %3d  %3d\n
 
-# datafile.c: 2993
+# datafile.c: 2995
 NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 已知尚無正確的 DUMP: %3d  %3d\n(%3d ROM 在 %d 個遊戲)\n
 
@@ -1910,11 +1918,11 @@ NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 NO MATCH\n
 不符合\n
 
-# datafile.c: 2987
+# datafile.c: 2989
 NO SOUND           : %3d  %3d\n
 沒有聲音           : %3d  %3d\n
 
-# datafile.c: 2977
+# datafile.c: 2979
 NON-WORKING        : %3d  %3d\n
 不可執行           : %3d  %3d\n
 
@@ -1958,7 +1966,7 @@ Normal/Delay
 Not Equal
 不相等
 
-# debug/mamedbg.c: 4283 
+# debug/mamedbg.c: 4284 
 Not found
 找不到
 
@@ -3378,7 +3386,7 @@ Pan Up
 Pause
 暫停
 
-# drivers/astrocde.c: 295 drivers/bottom9.c: 235 drivers/deniam.c: 274 drivers/destroyr.c: 209 drivers/firetrk.c: 595, 663, 746 drivers/galpanic.c: 834 drivers/skyraid.c: 143 drivers/snk.c: 4014, 4155 drivers/sprint2.c: 346, 418 drivers/sprint4.c: 340 drivers/sprint8.c: 330, 465 drivers/sspeedr.c: 182 drivers/starshp1.c: 282 drivers/suprslam.c: 262 drivers/tank8.c: 285 drivers/triplhnt.c: 173 drivers/wolfpack.c: 226 
+# drivers/astrocde.c: 298 drivers/bottom9.c: 235 drivers/deniam.c: 274 drivers/destroyr.c: 209 drivers/firetrk.c: 595, 663, 746 drivers/galpanic.c: 833 drivers/skyraid.c: 143 drivers/snk.c: 4014, 4155 drivers/sprint2.c: 346, 418 drivers/sprint4.c: 340 drivers/sprint8.c: 330, 465 drivers/sspeedr.c: 182 drivers/starshp1.c: 282 drivers/suprslam.c: 262 drivers/tank8.c: 285 drivers/triplhnt.c: 173 drivers/wolfpack.c: 226 
 Play Time
 遊戲時間
 
@@ -3418,7 +3426,7 @@ Player 8 Controls
 Players
 玩家數
 
-# drivers/system24.c: 1841
+# drivers/system24.c: 1840
 Pon
 碰
 
@@ -3442,7 +3450,7 @@ Previous Game
 Previous values already restored
 已經還原上一次的值
 
-# usrintrf.c: 4984
+# usrintrf.c: 4986
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 離開遊戲? \n\n按一下確定鍵離開遊戲， \n按一下取消鍵繼續執行。 
 
@@ -3454,7 +3462,7 @@ REC START
 REC STOP (%d frames)
 錄製停止 (%d 個畫面)
 
-# datafile.c: 2995
+# datafile.c: 2997
 ROM NEEDS REDUMP   : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 ROM 需要重新 DUMP  : %3d  %3d\n(%3d ROM 在 %d 個遊戲)\n
 
@@ -3466,7 +3474,7 @@ Range Maximum
 Range Minimum
 最小範圍
 
-# drivers/system24.c: 1850
+# drivers/system24.c: 1849
 Reach
 聽
 
@@ -3478,7 +3486,7 @@ Record Movie
 Refresh rate
 重新整理速率
 
-# cheat.c: 2948, 3656 drivers/pgm.c: 585, 596 inptport.c: 390
+# cheat.c: 2948, 3656 drivers/pgm.c: 683, 694 inptport.c: 390
 Region
 區域
 
@@ -3538,7 +3546,7 @@ Return to Prior Menu
 Reverse
 反轉
 
-# drivers/system24.c: 1851
+# drivers/system24.c: 1850
 Ron
 胡
 
@@ -3546,7 +3554,7 @@ Ron
 Rotation
 旋轉
 
-# datafile.c: 3228
+# datafile.c: 3230
 SHADOWS        : %3d  + %3d\n
 背投影         : %3d  + %3d\n
 
@@ -3574,11 +3582,11 @@ Save Snapshot
 Save State
 儲存狀態
 
-# usrintrf.c: 4936
+# usrintrf.c: 4938
 Save cancelled
 已取消儲存
 
-# usrintrf.c: 4965
+# usrintrf.c: 4967
 Save to position %c
 儲存位置 %c
 
@@ -3594,7 +3602,7 @@ Screen Resolution
 Screen flipping in cocktail mode is not supported.
 尚未支援檯面型筐體模式的畫面翻轉。
 
-# datafile.c: 2208
+# datafile.c: 2210
 Screen flipping in cocktail mode is not supported.\n
 尚未支援檯面型筐體模式的畫面翻轉。\n
 
@@ -3646,11 +3654,11 @@ Select current level
 Select next level
 選擇下次等級
 
-# usrintrf.c: 4929
+# usrintrf.c: 4931
 Select position to load from
 選擇要載入的位置
 
-# usrintrf.c: 4927
+# usrintrf.c: 4929
 Select position to save to
 選擇要儲存的位置
 
@@ -3658,7 +3666,7 @@ Select position to save to
 Sensitivity
 感應度
 
-# drivers/djmain.c: 500 drivers/pgm.c: 541 drivers/wallc.c: 189 inptport.c: 816
+# drivers/djmain.c: 500 drivers/pgm.c: 639 drivers/wallc.c: 189 inptport.c: 816
 Service
 業務模式
 
@@ -3774,15 +3782,15 @@ Standard
 Start a New Cheat Search
 開始搜尋新的作弊碼
 
-# mame.c: 1315
+# mame.c: 1435
 State successfully loaded.
 狀態順利載入。
 
-# mame.c: 1241
+# mame.c: 1361
 State successfully saved.
 狀態順利儲存。
 
-# mame.c: 1239
+# mame.c: 1359
 State successfully saved.\nWarning: Save states are not officially supported for this game.
 狀態順利儲存。\n警告: 這個遊戲的儲存狀態尚未正式支援。
 
@@ -3798,7 +3806,7 @@ Status (bits or flags)
 Stereo
 立體聲
 
-# drivers/bmcbowl.c: 372 drivers/holeland.c: 145, 213 drivers/pgm.c: 572, 669, 760 drivers/popper.c: 277 drivers/toaplan2.c: 2346 drivers/turbo.c: 411
+# drivers/bmcbowl.c: 370 drivers/holeland.c: 145, 213 drivers/pgm.c: 670, 767, 858 drivers/popper.c: 277 drivers/toaplan2.c: 2346 drivers/turbo.c: 411
 Stop
 停止
 
@@ -3822,15 +3830,15 @@ Swap
 THIS GAME DOESN'T WORK PROPERLY
 這個遊戲無法正確運作
 
-# datafile.c: 2187
+# datafile.c: 2189
 THIS GAME DOESN'T WORK PROPERLY\n
 這個遊戲無法正確運作\n
 
-# drivers/aerofgt.c: 1025, 1115 drivers/cave.c: 1678 drivers/f1gp.c: 313 drivers/midzeus.c: 1219 drivers/pgm.c: 685, 877 drivers/psikyo.c: 649, 769, 1007, 1211 drivers/toaplan1.c: 1189, 1264, 1334, 1409, 1498 drivers/toaplan2.c: 2358, 2405, 2475, 2547, 2608, 2651, 2697, 2844, 2961, 3076, 3153, 3214, 3323
+# drivers/aerofgt.c: 1025, 1115 drivers/cave.c: 1678 drivers/f1gp.c: 313 drivers/midzeus.c: 1219 drivers/pgm.c: 783, 975 drivers/psikyo.c: 649, 769, 1007, 1211 drivers/toaplan1.c: 1189, 1264, 1334, 1409, 1498 drivers/toaplan2.c: 2358, 2405, 2475, 2547, 2608, 2651, 2697, 2844, 2961, 3076, 3153, 3214, 3323
 Taiwan
 台灣版
 
-# drivers/bmcbowl.c: 382
+# drivers/bmcbowl.c: 380
 Take
 得分
 
@@ -3842,11 +3850,11 @@ Territory
 Test
 測試
 
-# drivers/8080bw.c: 1308, 1959, 2514, 2594 drivers/btime.c: 772 drivers/ddenlovr.c: 3144 drivers/ertictac.c: 228 drivers/galpani3.c: 145 drivers/halleys.c: 1701 drivers/homedata.c: 953 drivers/hornet.c: 837 drivers/jchan.c: 732 drivers/laserbas.c: 116 drivers/macs.c: 348 drivers/nwk-tr.c: 559 drivers/nycaptor.c: 612 drivers/ohmygod.c: 196 drivers/panicr.c: 244 drivers/quasar.c: 320 drivers/raiden2.c: 979, 1058, 1107 drivers/segas16a.c: 1462 drivers/segas16b.c: 2791 drivers/seicross.c: 225 drivers/snk.c: 3728, 3793 drivers/ssfindo.c: 555 drivers/st0016.c: 384, 473 drivers/suprnova.c: 623 drivers/system1.c: 1798, 1987 drivers/vegas.c: 2071
+# drivers/8080bw.c: 1308, 1959, 2514, 2594 drivers/btime.c: 772 drivers/ddenlovr.c: 3143 drivers/ertictac.c: 228 drivers/galpani3.c: 145 drivers/halleys.c: 1701 drivers/homedata.c: 953 drivers/hornet.c: 837 drivers/jchan.c: 732 drivers/laserbas.c: 116 drivers/macs.c: 348 drivers/nwk-tr.c: 559 drivers/nycaptor.c: 612 drivers/ohmygod.c: 196 drivers/panicr.c: 244 drivers/quasar.c: 320 drivers/raiden2.c: 979, 1058, 1107 drivers/segas16a.c: 1462 drivers/segas16b.c: 2791 drivers/seicross.c: 225 drivers/snk.c: 3728, 3793 drivers/ssfindo.c: 554 drivers/st0016.c: 384, 473 drivers/suprnova.c: 622 drivers/system1.c: 1798, 1987 drivers/vegas.c: 2071
 Test Mode
 測試模式
 
-# drivers/bfm_sc2.c: 1747, 1848, 1960, 2054, 2165, 2261, 2374, 2469, 2576 drivers/dbz2.c: 278, 371 drivers/kinst.c: 517, 621 drivers/konamigq.c: 473 drivers/konamigv.c: 383, 567, 716, 888 drivers/mcr68.c: 734 drivers/midtunit.c: 108, 215, 318, 421, 524 drivers/midvunit.c: 931 drivers/midwunit.c: 156, 309, 371, 495, 548 drivers/midxunit.c: 132 drivers/midyunit.c: 222, 433, 499, 594, 684 drivers/midzeus.c: 1027, 1108, 1234 drivers/namcos10.c: 400 drivers/namcos11.c: 901, 967, 1033, 1099, 1165 drivers/namcos12.c: 1301, 1351 drivers/namcos21.c: 1962, 2039, 2116 drivers/neogeo.c: 935, 971, 1065, 1185 drivers/seattle.c: 2223, 2348, 2446 drivers/vegas.c: 2061 drivers/zn.c: 3069
+# drivers/bfm_sc2.c: 1747, 1848, 1960, 2054, 2165, 2261, 2374, 2469, 2576 drivers/dbz2.c: 278, 371 drivers/kinst.c: 517, 621 drivers/konamigq.c: 473 drivers/konamigv.c: 383, 567, 716, 888 drivers/mcr68.c: 734 drivers/midtunit.c: 108, 215, 318, 421, 524 drivers/midvunit.c: 931 drivers/midwunit.c: 156, 309, 371, 495, 548 drivers/midxunit.c: 132 drivers/midyunit.c: 222, 433, 499, 594, 684 drivers/midzeus.c: 1027, 1108, 1234 drivers/namcos10.c: 406 drivers/namcos11.c: 901, 967, 1033, 1099, 1165 drivers/namcos12.c: 1523 drivers/namcos21.c: 1962, 2039, 2116 drivers/neogeo.c: 935, 971, 1065, 1185 drivers/seattle.c: 2223, 2348, 2446 drivers/vegas.c: 2061 drivers/zn.c: 3069
 Test Switch
 測試開關
 
@@ -3862,7 +3870,7 @@ Text Label
 The colors are completely wrong.
 色彩是完全錯誤的。
 
-# datafile.c: 2196
+# datafile.c: 2198
 The colors are completely wrong.\n
 色彩是完全錯誤的。\n
 
@@ -3870,7 +3878,7 @@ The colors are completely wrong.\n
 The colors aren't 100% accurate.
 色彩尚未達到 100% 精確。
 
-# datafile.c: 2199
+# datafile.c: 2201
 The colors aren't 100% accurate.\n
 色彩尚未達到 100% 精確。\n
 
@@ -3882,7 +3890,7 @@ The format of this zipfile is not supported, please recompress it
 The game has protection which isn't fully emulated.
 這個遊戲具有保護尚未完全模擬。
 
-# datafile.c: 2190
+# datafile.c: 2192
 The game has protection which isn't fully emulated.\n
 這個遊戲具有保護尚未完全模擬。\n
 
@@ -3890,7 +3898,7 @@ The game has protection which isn't fully emulated.\n
 The game lacks sound.
 這個遊戲缺少聲音。
 
-# datafile.c: 2202
+# datafile.c: 2204
 The game lacks sound.\n
 這個遊戲缺少聲音。\n
 
@@ -3898,7 +3906,7 @@ The game lacks sound.\n
 The sound emulation isn't 100% accurate.
 聲音模擬尚未達到 100% 精確。
 
-# datafile.c: 2205
+# datafile.c: 2207
 The sound emulation isn't 100% accurate.\n
 聲音模擬尚未達到 100% 精確。\n
 
@@ -3906,7 +3914,7 @@ The sound emulation isn't 100% accurate.\n
 The video emulation isn't 100% accurate.
 視訊模擬尚未達到 100% 精確。
 
-# datafile.c: 2193
+# datafile.c: 2195
 The video emulation isn't 100% accurate.\n
 視訊模擬尚未達到 100% 精確。\n
 
@@ -3938,7 +3946,7 @@ Tickets dispensed
 Tilt
 碰撞機台
 
-# drivers/8080bw.c: 1309, 1365, 1388, 1448, 1498, 1917, 1955, 2208, 2264, 2491, 2580 drivers/amspdwy.c: 181 drivers/cinemat.c: 389, 548 drivers/cps1.c: 3635, 3748 drivers/drtomy.c: 211 drivers/fitfight.c: 315, 453, 595 drivers/gomoku.c: 116 drivers/homedata.c: 873, 950 drivers/lazercmd.c: 569 drivers/m107.c: 275 drivers/m92.c: 1008 drivers/megaplay.c: 244 drivers/megasys1.c: 1408, 2173 drivers/metlclsh.c: 225 drivers/metro.c: 2523, 2618 drivers/nbmj8688.c: 2165, 2239 drivers/pacman.c: 2136, 2237 drivers/paradise.c: 185, 253 drivers/pcktgal.c: 159 drivers/pktgaldx.c: 251 drivers/punchout.c: 505, 576 drivers/realbrk.c: 278 drivers/segaorun.c: 620, 652, 735 drivers/segas16b.c: 2111 drivers/segaxbd.c: 759, 863, 944 drivers/snowbros.c: 1055 drivers/starfire.c: 218, 267 drivers/supbtime.c: 295 drivers/system1.c: 886, 1048, 1100 drivers/system16.c: 1033 drivers/taito_f2.c: 3317, 3414 drivers/taito_l.c: 1299, 1828, 1984, 1984 drivers/taitosj.c: 897, 982, 1424 drivers/tattack.c: 99 drivers/troangel.c: 73 drivers/tubep.c: 618 drivers/tumbleb.c: 875, 1005 drivers/vicdual.c: 310 drivers/vsnes.c: 853, 1373 drivers/wwfsstar.c: 288 drivers/zac2650.c: 181
+# drivers/8080bw.c: 1309, 1365, 1388, 1448, 1498, 1917, 1955, 2208, 2264, 2491, 2580 drivers/amspdwy.c: 181 drivers/cinemat.c: 389, 548 drivers/cps1.c: 3635, 3748 drivers/drtomy.c: 211 drivers/fitfight.c: 315, 453, 595 drivers/gomoku.c: 116 drivers/homedata.c: 873, 950 drivers/lazercmd.c: 569 drivers/m107.c: 275 drivers/m92.c: 1008 drivers/megaplay.c: 244 drivers/megasys1.c: 1408, 2173 drivers/metlclsh.c: 225 drivers/metro.c: 2523, 2618 drivers/nbmj8688.c: 2165, 2239 drivers/pacman.c: 2136, 2237 drivers/paradise.c: 185, 253 drivers/pcktgal.c: 159 drivers/pktgaldx.c: 251 drivers/punchout.c: 505, 576 drivers/realbrk.c: 278 drivers/segaorun.c: 620, 652, 735 drivers/segas16b.c: 2111 drivers/segaxbd.c: 759, 863, 944 drivers/snowbros.c: 1054 drivers/starfire.c: 218, 267 drivers/supbtime.c: 295 drivers/system1.c: 886, 1048, 1100 drivers/system16.c: 1033 drivers/taito_f2.c: 3317, 3414 drivers/taito_l.c: 1299, 1828, 1984, 1984 drivers/taitosj.c: 897, 982, 1424 drivers/tattack.c: 99 drivers/troangel.c: 73 drivers/tubep.c: 618 drivers/tumbleb.c: 874, 1004 drivers/vicdual.c: 310 drivers/vsnes.c: 853, 1373 drivers/wwfsstar.c: 288 drivers/zac2650.c: 181
 Time
 時間
 
@@ -4084,13 +4092,13 @@ UI Toggle
 
 # inptport.c: 1019
 UI Toggle Lock Scroll
-選單切換 Lock Scroll
+選單 切換鎖定捲動
 
 # inptport.c: 993
 UI Up
 選單 向上鍵
 
-# datafile.c: 2979
+# datafile.c: 2981
 UNEMULATED PROTEC. : %3d  %3d\n
 未模擬的保護       : %3d  %3d\n
 
@@ -4106,27 +4114,27 @@ US
 USA
 美版
 
-# mame.c: 630
+# mame.c: 691
 Unable to extend malloc tracking array to %d slots
 無法擴充記憶體分配追蹤陣列到 %d 位置
 
-# mame.c: 1274
+# mame.c: 1394
 Unable to load due to pending anonymous timers. See error.log for details.
 無法載入，因為暫止匿名計時器。請查閱\ error.log 以取得詳細資料。
 
-# mame.c: 1192
+# mame.c: 1312
 Unable to save due to pending anonymous timers. See error.log for details.
 無法儲存，因為暫止匿名計時器。請查閱\ error.log 以取得詳細資料。
 
-# mame.c: 975
+# mame.c: 1153
 Unable to start machine emulation
 無法啟動機器模擬
 
-# mame.c: 977
+# mame.c: 1155
 Unable to start sound emulation
 無法啟動音訊模擬
 
-# mame.c: 979
+# mame.c: 1157
 Unable to start video emulation
 無法啟動視訊模擬
 
@@ -4278,7 +4286,7 @@ User Interface
 User Select
 使用者選擇
 
-# mame.c: 248
+# mame.c: 260
 User cancelled
 使用者取消
 
@@ -4334,7 +4342,7 @@ Very Slow
 View Last Results
 檢視最近的結果
 
-# drivers/cps1.c: 3646 drivers/ms32.c: 761, 834, 899 drivers/pgm.c: 566, 663, 754 drivers/ssv.c: 1678, 1863 drivers/tetrisp2.c: 673, 735
+# drivers/cps1.c: 3646 drivers/ms32.c: 761, 834, 899 drivers/pgm.c: 664, 761, 852 drivers/ssv.c: 1677, 1862 drivers/tetrisp2.c: 673, 735
 Voice
 語音
 
@@ -4354,7 +4362,7 @@ Volume Up
 WARNING: the game might not run correctly.
 警告: 這個遊戲可能無法正確執行。
 
-# datafile.c: 2983
+# datafile.c: 2985
 WRONG COLORS       : %3d  %3d\n
 色彩錯誤           : %3d  %3d\n
 
@@ -4430,109 +4438,113 @@ Yes
 Your filesystem seems to be corrupt, please check it
 您的檔案系統似乎是損壞的，請檢查
 
-# datafile.c: 3111
+# datafile.c: 3113
 \n    SNDINTRF:  (1)  (2)  (3)  (4)\n\n
 \n    音效介面:  (1)  (2)  (3)  (4)\n\n
 
-# datafile.c: 3123
+# datafile.c: 3125
 \n    TOTAL: %4d\n
 \n     總計: %4d\n
 
-# datafile.c: 3094
+# datafile.c: 3096
 \n   TOTAL: %4d\n
 \n    總計: %4d\n
 
-# datafile.c: 2288, 2306
+# datafile.c: 2290, 2308
 \nORIGINAL:\n
 \n原作版:\n
 
-# datafile.c: 2229
+# datafile.c: 2231
 \nROM REGION:\n
 \nROM 區域:\n
 
-# datafile.c: 3038
+# datafile.c: 3040
 \nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d MB (UNCOMPRESSED)\n%d MB + %d MB MERGED\n
 \nROM 數目: %d\n%d + %d 合併 ROM\n\n檔案大小: %d MB (未壓縮)\n%d MB + %d MB 合併\n
 
-# datafile.c: 2334
+# datafile.c: 2336
 \nSOURCE: %s\n
 \n原始碼: %s\n
 
-# datafile.c: 2145
+# datafile.c: 2147
 \nStory:\n
 \n故事:\n
 
-# datafile.c: 3259
+# datafile.c: 3261
 \nWARNING: FPS number too high!\n
 \n警告: FPS 值太高!\n
 
-# datafile.c: 2962
+# datafile.c: 2964
 \n\n %4d GAMES (ALL)\n %4d ORIGINALS  + %4d CLNS\n %4d NEOGEO     + %4d\n
 \n\n %4d 個遊戲 (總計)\n %4d 原作版     + %4d 仿製版\n %4d NEOGEO     + %4d\n
 
-# datafile.c: 3128
+# datafile.c: 3130
 \n\nCABINET INPUT CONTROL: (ALL)\n\n
 \n\n筐體輸入控制  :  (總計)\n\n
 
-# datafile.c: 2292, 2310
+# datafile.c: 2294, 2312
 \n\nCLONES:\n
 \n\n仿製版:\n
 
-# datafile.c: 3068
+# datafile.c: 3070
 \n\nCPU HARDWARE (ORIGINAL GAMES)\n\n
 \n\nCPU 硬體 (原作版遊戲)\n\n
 
-# datafile.c: 3235
+# datafile.c: 3237
 \n\nFRAMES PER SECOND (%d): (ALL)\n\n
 \n\n每秒畫面格數 (%d) : (總計)\n\n
 
-# datafile.c: 2976
+# datafile.c: 2978
 \n\nGAME INFO FLAGS   : ORIG CLNS\n\n
 \n\n遊戲資訊標記       : 原作 仿製\n\n
 
-# datafile.c: 3358
+# datafile.c: 3360
 \n\nMAME VERSIONS (%3d)\n\n
 \n\nMAME 版本 (%3d)\n\n
 
-# datafile.c: 3319
+# datafile.c: 3321
 \n\nRESOLUTION & PALETTESIZE: (ALL)\n    (%d)          (%d)\n\n
 \n\n解析度和色盤大小       : (總計)\n    (%d)          (%d)\n\n
 
-# datafile.c: 3040
+# datafile.c: 3042
 \n\nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d KB (UNCOMPRESSED)\n%d KB + %d KB MERGED\n
 \n\nROM 數目: %d\n%d + %d 合併 ROM   \n\n檔案大小: %d KB (未壓縮)      \n%d KB + %d KB 合併\n
 
-# datafile.c: 3099
+# datafile.c: 3101
 \n\nSOUND SYSTEM (ORIGINAL GAMES)\n\n
 \n\n聲音系統硬體 (原作版遊戲)\n\n
 
-# datafile.c: 3046
+# datafile.c: 3048
 \n\nTYPICAL ROMSET SIZE (ALL)\n
 \n\n一般 ROM 集合大小 (總計)\n
 
-# datafile.c: 3348
+# datafile.c: 3350
 \n\nVERSION - DRIVERS - SUPPORT:\n\n
 \n\n版本   -   驅動   -   支援:\n\n
 
-# datafile.c: 3207
+# datafile.c: 3209
 \n\nVIDEO ASPECT RATIO X:Y (ALL)\n\n
 \n\n視訊長寬比例 X:Y (總計)\n\n
 
-# datafile.c: 3221
+# datafile.c: 3223
 \n\nVIDEO NEEDS... : ORIG   CLNS\n\n
 \n\n視訊需求...    : 原作   仿製\n\n
 
-# datafile.c: 3058
+# datafile.c: 3060
 \n\nYEAR    NEW GAMES\n\n
 \n\n年代    新遊戲\n\n
 
-# datafile.c: 3002
+# datafile.c: 3004
 \n\nYEAR: ORIG  CLNS NEOGEO  ALL\n\n
 \n\n年代: 原作  仿製 NEOGEO  全部\n\n
 
 # cheat.c: 6891
 \tPlease Go To\n\thttp://cheat.retrogames.com/faq.htm\n\tFor Documentation\n
 \t請前往\n\thttp://cheat.retrogames.com/faq.htm\n\t取得說明文件\n
+
+# mamecore.h: 182 
+assert: %s:%d: %s
+判斷: %s:%d: %s
 
 # cheat.c: 2553
 cheat database not found
@@ -4546,11 +4558,11 @@ cheat database reloaded
 dial
 方向盤
 
-# debug/debugcmd.c: 932, 1116
+# debug/debugcmd.c: 1059, 1243
 disabled
 停用
 
-# debug/debugcmd.c: 932, 1116
+# debug/debugcmd.c: 1059, 1243
 enabled
 啟用
 
@@ -4558,7 +4570,7 @@ enabled
 font\\fontname.fnt
 font\\big5_mingliu.fnt
 
-# memory.c: 3099 
+# memory.c: 3128 
 invalid
 無效的
 
@@ -4630,15 +4642,15 @@ unzip it and place it in the MAME directory
 values restored
 值已還原
 
-# datafile.c: 2964
+# datafile.c: 2966
  %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
 
 
-# usrintrf.c: 3491
+# usrintrf.c: 3493
 (H)
 
 
-# usrintrf.c: 3491
+# usrintrf.c: 3493
 (V)
 
 
@@ -4678,7 +4690,7 @@ Coinout Sensor
 Collect
 
 
-# drivers/changela.c: 961 drivers/nbmj8891.c: 1071, 1167 drivers/taitosj.c: 1747 drivers/tumbleb.c: 1257 
+# drivers/changela.c: 961 drivers/nbmj8891.c: 1071, 1167 drivers/taitosj.c: 1747 drivers/tumbleb.c: 1256 
 Control Type
 
 
@@ -4750,7 +4762,7 @@ Master
 Memory Reset
 
 
-# drivers/astrocde.c: 308, 387 drivers/jack.c: 683 drivers/thepit.c: 548
+# drivers/astrocde.c: 311, 390 drivers/jack.c: 683 drivers/thepit.c: 548
 Monitor
 
 
@@ -4766,7 +4778,7 @@ Nintendo of America
 Orientation
 
 
-# drivers/cherrym.c: 199 drivers/csk.c: 283, 368, 443, 513 drivers/ddenlovr.c: 4032, 4583 drivers/funworld.c: 481, 515, 539, 573 drivers/neogeo.c: 1254 drivers/rcasino.c: 214 drivers/royalmah.c: 603, 778, 953 drivers/vroulet.c: 145
+# drivers/cherrym.c: 199 drivers/csk.c: 283, 368, 443, 513 drivers/ddenlovr.c: 4031, 4582 drivers/funworld.c: 481, 515, 539, 573 drivers/neogeo.c: 1254 drivers/rcasino.c: 214 drivers/royalmah.c: 603, 778, 953 drivers/vroulet.c: 145
 Payout
 
 

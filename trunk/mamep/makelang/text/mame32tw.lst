@@ -344,7 +344,7 @@ bkrtmaq	爆裂問答 魔Q大冒險 (日本版)	爆裂問答 魔Q大冒險 (日本版)	Namco
 fghtatck	F/A / Fighter & Attacker (美國版)	F/A / Fighter & Attacker (美國版)	Namco
 fa	F/A (日本版)	F/A (日本版)	Namco
 quiztou	熱鬥! 激鬥! 問題島!! (日本版)	熱鬥! 激鬥! 問題島!! (日本版)	Namco
-xday2	X-Day 2 (日本版)	X-Day 2 (日本版)	Namco
+xday2	X-DAY 2 (日本版)	X-DAY 2 (日本版)	Namco
 ptblank	槍林彈雨 / Point Blank	槍林彈雨 / Point Blank	Namco
 gunbulet	槍林彈雨 (日本版)	槍林彈雨 (日本版)	Namco
 gslugrsj	超級強打 (日本版)	超級強打 (日本版)	Namco
@@ -884,8 +884,9 @@ fireshrk	鮫! 鮫! 鮫! / Fire Shark	鮫! 鮫! 鮫! / Fire Shark	Toaplan
 samesame	鮫! 鮫! 鮫!	鮫! 鮫! 鮫!	Toaplan
 samesam2	鮫! 鮫! 鮫! (2P Ver.)	鮫! 鮫! 鮫! (2P Ver.)	Toaplan
 outzone	異域戰將 (set 1)	異域戰將 (set 1)	Toaplan
-outzonea	異域戰將 (set 2, 開發版?)	異域戰將 (set 2, 開發版?)	Toaplan
-outzoneb	異域戰將 (set 3)	異域戰將 (set 3)	Toaplan
+outzonea	異域戰將 (set 2)	異域戰將 (set 2)	Toaplan
+outzoneb	異域戰將 (set 3, 開發版?)	異域戰將 (set 3, 開發版?)	Toaplan
+outzonec	異域戰將 (set 4)	異域戰將 (set 4)	Toaplan
 vimana	銀河戰機	銀河戰機	Toaplan
 vimana1	銀河戰機 (舊 set)	銀河戰機 (舊 set)	Toaplan
 vimanan	銀河戰機 (Nova Apparate GMBH & Co)	銀河戰機 (Nova Apparate GMBH & Co)	Toaplan (Nova Apparate GMBH & Co license)
@@ -1406,20 +1407,27 @@ souledgb	刀魂 (SO3/VER.A)	刀魂 (SO3/VER.A)	Namco
 souledgc	刀魂 (SO1/VER.A)	刀魂 (SO1/VER.A)	Namco
 xevi3dg	鐵板陣 3D (XV31/VER.A)	鐵板陣 3D (XV31/VER.A)	Namco
 danceyes	麗舞之眼 (DC1/VER.A)	麗舞之眼 (DC1/VER.A)	Namco
+myangel3	育嬰問答 親親小寶貝 3 (KQT1/VER.A)	育嬰問答 親親小寶貝 3 (KQT1/VER.A)	Namco
 tekken3	鐵拳 3 (TET1/VER.E1)	鐵拳 3 (TET1/VER.E1)	Namco
-tekken3a	鐵拳 3 (TET2/VER.A)	鐵拳 3 (TET2/VER.A)	Namco
+tekken3a	鐵拳 3 (TET2/VER.B)	鐵拳 3 (TET2/VER.B)	Namco
+tekken3b	鐵拳 3 (TET2/VER.A)	鐵拳 3 (TET2/VER.A)	Namco
 soulclbr	劍魂 (SOC14/VER.C)	劍魂 (SOC14/VER.C)	Namco
-soulclba	劍魂 (SOC11/VER.B)	劍魂 (SOC11/VER.B)	Namco
-soulclbb	劍魂 (SOC11/VER.A2)	劍魂 (SOC11/VER.A2)	Namco
+soulclba	劍魂 (SOC11/VER.C)	劍魂 (SOC11/VER.C)	Namco
+soulclbb	劍魂 (SOC11/VER.B)	劍魂 (SOC11/VER.B)	Namco
+soulclbc	劍魂 (SOC11/VER.A2)	劍魂 (SOC11/VER.A2)	Namco
 tektagt	鐵拳 TT (TEG3/VER.C1)	鐵拳 TT (TEG3/VER.C1)	Namco
 tektagta	鐵拳 TT (TEG3/VER.B)	鐵拳 TT (TEG3/VER.B)	Namco
+tektagtb	鐵拳 TT (TEG1/VER.B)	鐵拳 TT (TEG1/VER.B)	Namco
+tektagtc	鐵拳 TT (TEG1/VER.A3)	鐵拳 TT (TEG1/VER.A3)	Namco
 ghlpanic	魔鬼剋星 (OB2/VER.A)	魔鬼剋星 (OB2/VER.A)	Namco
 mrdrillr	電鑽先生 (DRI1/VER.A2)	電鑽先生 (DRI1/VER.A2)	Namco
 aquarush	水世界方塊 (AQ1/VER.A1)	水世界方塊 (AQ1/VER.A1)	Namco
 golgo13	神秘狙擊手 13 (GLG1/VER.A)	神秘狙擊手 13 (GLG1/VER.A)	Raizing/Namco
+g13knd	神秘狙擊手 13 奇跡的彈道 (GLS1/VER.A)	神秘狙擊手 13 奇跡的彈道 (GLS1/VER.A)	Raizing/Namco
 mrdrilr2	電鑽先生 2 (DR21 Ver.A)	電鑽先生 2 (DR21 Ver.A)	Namco
-gjspace	擊牌砦 (10011 Ver.A)	擊牌砦 (10011 Ver.A)	Namco/Metro
+gjspace	雀地帶 / 擊牌砦 (10011 Ver.A)	雀地帶 / 擊牌砦 (10011 Ver.A)	Namco/Metro
 mrdrilrg	電鑽先生 G (DRG1 Ver.A)	電鑽先生 G (DRG1 Ver.A)	Namco
+gamshara	銃武者羅 (10021 Ver.A)	銃武者羅 (10021 Ver.A)	Mitchell
 cryptklr	殺戮墳場 (GQ420 UAA)	殺戮墳場 (GQ420 UAA)	Konami
 pbball96	實況野球 '96 (GV017 日本版 1.03)	實況野球 '96 (GV017 日本版 1.03)	Konami
 simpbowl	辛普森家庭保齡球 (GQ829 UAA)	辛普森家庭保齡球 (GQ829 UAA)	Konami
@@ -1442,8 +1450,9 @@ sbbros	超級魔鬼氣球 / Super Buster Bros. (美國版 901001)	超級魔鬼氣球 / Super Bu
 marukin	超級麻雀 (禁) 版 (日本版 901017)	超級麻雀 (禁) 版 (日本版 901017)	Yuga
 qtono1	問答殿樣之野望 (日本版)	問答殿樣之野望 (日本版)	Capcom
 qsangoku	問答三國誌 - 知略的霸者 (日本版)	問答三國誌 - 知略的霸者 (日本版)	Capcom
-block	敲磚塊 (世界版 911106 搖桿)	敲磚塊 (世界版 911106 搖桿)	Capcom
+block	敲磚塊 (世界版 910910)	敲磚塊 (世界版 910910)	Capcom
 blockj	敲磚塊 (日本版 910910)	敲磚塊 (日本版 910910)	Capcom
+blockjoy	敲磚塊 (世界版 911106 搖桿, Bad Dump?)	敲磚塊 (世界版 911106 搖桿, Bad Dump?)	Capcom
 blockbl	敲磚塊 (盜版)	敲磚塊 (盜版)	bootleg
 capbowl	卡普空保齡球 (set 1)	卡普空保齡球 (set 1)	Incredible Technologies
 capbowl2	卡普空保齡球 (set 2)	卡普空保齡球 (set 2)	Incredible Technologies
@@ -1546,8 +1555,8 @@ astrofl	變形金剛 (日本版)	變形金剛 (日本版)	Sega
 tetrisse	俄羅斯方塊 (日本版, System E)	俄羅斯方塊 (日本版, System E)	Sega
 sharrier	時空戰士 (Rev A, 8751 315-5163A)	時空戰士 (Rev A, 8751 315-5163A)	Sega
 sharrirb	時空戰士 (8751 315-5163)	時空戰士 (8751 315-5163)	Sega
-bodyslam	Dump 松本 / Body Slam (8751 317-unknown)	Dump 松本 / Body Slam (8751 317-unknown)	Sega
-dumpmtmt	Dump 松本 (日本版, 8751 317-unknown)	Dump 松本 (日本版, 8751 317-unknown)	Sega
+bodyslam	DUMP 松本 / Body Slam (8751 317-unknown)	DUMP 松本 / Body Slam (8751 317-unknown)	Sega
+dumpmtmt	DUMP 松本 (日本版, 8751 317-unknown)	DUMP 松本 (日本版, 8751 317-unknown)	Sega
 mjleague	大聯盟	大聯盟	Sega
 fantzone	神奇地帶 (set 2, unprotected)	神奇地帶 (set 2, unprotected)	Sega
 fantzon1	神奇地帶 (set 1, unprotected)	神奇地帶 (set 1, unprotected)	Sega
@@ -1804,8 +1813,8 @@ pcktgalb	撞球 (盜版)	撞球 (盜版)	bootleg
 pcktgal2	撞球 2 (世界版?)	撞球 2 (世界版?)	Data East Corporation
 spool3	撞球 / Super Pool III (世界版?)	撞球 / Super Pool III (世界版?)	Data East Corporation
 spool3i	撞球 / Super Pool III (I-Vics)	撞球 / Super Pool III (I-Vics)	Data East Corporation (I-Vics license)
-battlera	惡人戰鬥部隊 嗜血野狼 / Battle Rangers (世界版)	惡人戰鬥部隊 嗜血野狼 / Battle Rangers (世界版)	Data East Corporation
-bldwolf	惡人戰鬥部隊 嗜血野狼 / Bloody Wolf (美國版)	惡人戰鬥部隊 嗜血野狼 / Bloody Wolf (美國版)	Data East USA
+battlera	流氓戰鬥部隊 嗜血野狼 / Battle Rangers (世界版)	流氓戰鬥部隊 嗜血野狼 / Battle Rangers (世界版)	Data East Corporation
+bldwolf	流氓戰鬥部隊 嗜血野狼 / Bloody Wolf (美國版)	流氓戰鬥部隊 嗜血野狼 / Bloody Wolf (美國版)	Data East USA
 lastmisn	最終任務 (美國版 revision 6)	最終任務 (美國版 revision 6)	Data East USA
 lastmsno	最終任務 (美國版 revision 5)	最終任務 (美國版 revision 5)	Data East USA
 lastmsnj	最終任務 (日本版)	最終任務 (日本版)	Data East Corporation
@@ -1912,9 +1921,9 @@ hpolym84	科拿米運動會 '84	科拿米運動會 '84	Konami
 sbasketb	超級籃球 (version G)	超級籃球 (version G)	Konami
 sbasketo	超級籃球 (version E)	超級籃球 (version E)	Konami
 sbasketu	超級籃球 (未加密)	超級籃球 (未加密)	Konami
-mikie	新入社員 Tooru 君 / Mikie	新入社員 Tooru 君 / Mikie	Konami
-mikiej	新入社員 Tooru 君	新入社員 Tooru 君	Konami
-mikiehs	新入社員 Tooru 君 / Mikie (High School Graffiti)	新入社員 Tooru 君 / Mikie (High School Graffiti)	Konami
+mikie	新入社員 / Mikie	新入社員 / Mikie	Konami
+mikiej	新入社員	新入社員	Konami
+mikiehs	新入社員 / Mikie (High School Graffiti)	新入社員 / Mikie (High School Graffiti)	Konami
 yiear	功夫 (set 1)	功夫 (set 1)	Konami
 yiear2	功夫 (set 2)	功夫 (set 2)	Konami
 kicker	少林寺之道 / Kicker	少林寺之道 / Kicker	Konami
@@ -2172,7 +2181,7 @@ pitfighb	死鬥戰士 (盜版)	死鬥戰士 (盜版)	Atari Games
 batman	蝙蝠俠	蝙蝠俠	Atari Games
 relief	後援投手 (set 1)	後援投手 (set 1)	Atari Games
 relief2	後援投手 (set 2)	後援投手 (set 2)	Atari Games
-arcadecl	大型機台經典名作 (開發版)	大型機台經典名作 (開發版)	Atari Games
+arcadecl	業務機台經典名作 (開發版)	業務機台經典名作 (開發版)	Atari Games
 primrage	恐龍格鬥 (version 2.3)	恐龍格鬥 (version 2.3)	Atari Games
 primraga	恐龍格鬥 (version 2.0)	恐龍格鬥 (version 2.0)	Atari Games
 area51	51 區特警 (R3000)	51 區特警 (R3000)	Atari Games
@@ -2312,6 +2321,7 @@ kof95a	拳皇 '95 (set 2)	拳皇 '95 (set 2)	SNK
 tws96	Tecmo 世界盃足球 '96	Tecmo 世界盃足球 '96	Tecmo
 samsho3	侍魂 III / 侍魂 - 斬紅郎無雙劍 (set 1)	侍魂 III / 侍魂 - 斬紅郎無雙劍 (set 1)	SNK
 samsho3a	侍魂 III / 侍魂 - 斬紅郎無雙劍 (set 2)	侍魂 III / 侍魂 - 斬紅郎無雙劍 (set 2)	SNK
+fswords	侍魂 III / 侍魂 - 斬紅郎無雙劍 / Fighters Swords (韓文版)	侍魂 III / 侍魂 - 斬紅郎無雙劍 / Fighters Swords (韓文版)	SNK
 stakwin	騎手之路	騎手之路	Saurus
 pulstar	死亡之星	死亡之星	Aicom
 whp	英雄榜 完美版	英雄榜 完美版	ADK / SNK
@@ -2319,7 +2329,8 @@ kabukikl	天外魔境真傳	天外魔境真傳	Hudson
 neobombe	Neo 炸彈超人	Neo 炸彈超人	Hudson
 gowcaizr	超人學園	超人學園	Technos
 rbff1	Real Bout 餓狼傳說	Real Bout 餓狼傳說	SNK
-aof3	龍虎拳 3	龍虎拳 3	SNK
+aof3	龍虎拳 3 / 龍虎拳外傳	龍虎拳 3 / 龍虎拳外傳	SNK
+aof3k	龍虎拳 3 / 龍虎拳外傳 (韓文版)	龍虎拳 3 / 龍虎拳外傳 (韓文版)	SNK
 sonicwi3	音速戰機 3 / Aero Fighters 3	音速戰機 3 / Aero Fighters 3	Video System Co.
 turfmast	Neo 高爾夫大師 / 高爾夫大賽	Neo 高爾夫大師 / 高爾夫大賽	Nazca
 mslug	越南大戰: 合金彈頭	越南大戰: 合金彈頭	Nazca
@@ -2355,8 +2366,9 @@ kof97a	拳皇 '97 (set 2)	拳皇 '97 (set 2)	SNK
 kof97pls	拳皇 '97 風雲再起 PLUS (盜版)	拳皇 '97 風雲再起 PLUS (盜版)	bootleg
 kog	拳皇 '97 / King of Gladiator (盜版)	拳皇 '97 / King of Gladiator (盜版)	bootleg
 magdrop3	魔法氣泡 III	魔法氣泡 III	Data East Corporation
-lastblad	幕末浪漫 - 月華劍士 (set 1)	幕末浪漫 - 月華劍士 (set 1)	SNK
-lastblda	幕末浪漫 - 月華劍士 (set 2)	幕末浪漫 - 月華劍士 (set 2)	SNK
+lastblad	幕末浪漫 月華劍士 (set 1)	幕末浪漫 月華劍士 (set 1)	SNK
+lastblda	幕末浪漫 月華劍士 (set 2)	幕末浪漫 月華劍士 (set 2)	SNK
+lastsold	幕末浪漫 月華劍士 / The Last Solider (韓文版)	幕末浪漫 月華劍士 / The Last Solider (韓文版)	SNK
 puzzldpr	解謎氣泡! R!	解謎氣泡! R!	Taito (Visco license)
 irrmaze	電流急急棒	電流急急棒	SNK / Saurus
 popbounc	動物方塊	動物方塊	Video System Co.
@@ -2365,11 +2377,12 @@ shocktra	突擊騎兵 (set 2)	突擊騎兵 (set 2)	Saurus
 blazstar	燃燒之星	燃燒之星	Yumekobo
 rbff2	Real Bout 餓狼傳說 2 - 新挑戰者 (set 1)	Real Bout 餓狼傳說 2 - 新挑戰者 (set 1)	SNK
 rbff2a	Real Bout 餓狼傳說 2 - 新挑戰者 (set 2)	Real Bout 餓狼傳說 2 - 新挑戰者 (set 2)	SNK
+rbff2k	Real Bout 餓狼傳說 2 - 新挑戰者 (韓文版)	Real Bout 餓狼傳說 2 - 新挑戰者 (韓文版)	SNK
 mslug2	越南大戰: 合金彈頭 2	越南大戰: 合金彈頭 2	SNK
 kof98	拳皇 '98 - 夢幻戰役	拳皇 '98 - 夢幻戰役	SNK
 kof98k	拳皇 '98 - 夢幻戰役 (韓文機板)	拳皇 '98 - 夢幻戰役 (韓文機板)	SNK
 kof98n	拳皇 '98 - 夢幻戰役 (未加密)	拳皇 '98 - 夢幻戰役 (未加密)	SNK
-lastbld2	幕末浪漫 - 月華劍士 2	幕末浪漫 - 月華劍士 2	SNK
+lastbld2	幕末浪漫 月華劍士 2	幕末浪漫 月華劍士 2	SNK
 neocup98	Neo-Geo 盃足球賽 '98 - 勝利之路	Neo-Geo 盃足球賽 '98 - 勝利之路	SNK
 breakrev	爆烈人 復仇	爆烈人 復仇	Visco
 shocktr2	突擊騎兵 2 - 第二縱隊	突擊騎兵 2 - 第二縱隊	Saurus
@@ -2788,9 +2801,12 @@ daraku	墮落天使	墮落天使	Psikyo
 gunbird2	武裝飛鳥 2	武裝飛鳥 2	Psikyo
 s1945iii	打擊者 1945 III (世界版) / 打擊者 1999 (日本版)	打擊者 1945 III (世界版) / 打擊者 1999 (日本版)	Psikyo
 dragnblz	火龍傳說	火龍傳說	Psikyo
-hotgmck	對戰麻雀 熱情花招 (日本版)	對戰麻雀 熱情花招 (日本版)	Psikyo
-hgkairak	對戰麻雀 熱情花招 - 快樂天 (日本版)	對戰麻雀 熱情花招 - 快樂天 (日本版)	Psikyo
-hotgmck3	對戰麻雀 熱情花招 3 - 數位衝浪 (日本版)	對戰麻雀 熱情花招 3 - 數位衝浪 (日本版)	Psikyo
+mjgtaste	G-Taste 麻雀	G-Taste 麻雀	Psikyo
+hotgmck	對戰麻雀熱情花招 (日本版)	對戰麻雀熱情花招 (日本版)	Psikyo
+hgkairak	對戰麻雀熱情花招 快樂天 (日本版)	對戰麻雀熱情花招 快樂天 (日本版)	Psikyo
+hotgmck3	對戰麻雀熱情花招 3 數位衝浪 (日本版)	對戰麻雀熱情花招 3 數位衝浪 (日本版)	Psikyo
+hotgm4ev	對戰麻雀熱情花招 4 Ever (日本版)	對戰麻雀熱情花招 4 Ever (日本版)	Psikyo
+hotgmcki	對戰麻雀熱情花招 Integral (日本版)	對戰麻雀熱情花招 Integral (日本版)	Psikyo
 biomtoy	生化玩具兵 (unprotected)	生化玩具兵 (unprotected)	Gaelco
 airbustr	空中堡壘 (世界版)	空中堡壘 (世界版)	Kaneko (Namco license)
 airbustj	空中堡壘 (日本版)	空中堡壘 (日本版)	Kaneko (Namco license)
@@ -2849,8 +2865,8 @@ gundhara	銃彈嵐	銃彈嵐	Banpresto
 gundamex	機動戰士 EX Revue	機動戰士 EX Revue	Banpresto
 grdians	電神魔傀 II / 電精	電神魔傀 II / 電精	Banpresto
 mj4simai	若草物語 - 麻雀四姊妹 (日本版)	若草物語 - 麻雀四姊妹 (日本版)	Maboroshi Ware
-myangel	育嬰問答 - 親親小寶貝 (日本版)	育嬰問答 - 親親小寶貝 (日本版)	Namco
-myangel2	育嬰問答 - 親親小寶貝 2 (日本版)	育嬰問答 - 親親小寶貝 2 (日本版)	Namco
+myangel	育嬰問答 親親小寶貝 (日本版)	育嬰問答 親親小寶貝 (日本版)	Namco
+myangel2	育嬰問答 親親小寶貝 2 (日本版)	育嬰問答 親親小寶貝 2 (日本版)	Namco
 penbros	企鵝兄弟 (日本版)	企鵝兄弟 (日本版)	Subsino
 srmp4	超真實麻雀 PIV (日本版)	超真實麻雀 PIV (日本版)	Seta
 srmp4o	超真實麻雀 PIV (日本版, 舊 set)	超真實麻雀 PIV (日本版, 舊 set)	Seta
@@ -2895,6 +2911,8 @@ gulfstrm	海灣風暴	海灣風暴	Dooyong
 gulfstr2	海灣風暴 (Media Shoji)	海灣風暴 (Media Shoji)	Dooyong (Media Shoji license)
 pollux	雙子座之星 (set 1)	雙子座之星 (set 1)	Dooyong
 polluxa	雙子座之星 (set 2)	雙子座之星 (set 2)	Dooyong
+polluxa2	雙子座之星 (set 3)	雙子座之星 (set 3)	Dooyong
+flytiger	飛虎	飛虎	Dooyong
 bluehawk	藍鵰	藍鵰	Dooyong
 bluehawn	藍鵰 (NTC)	藍鵰 (NTC)	[Dooyong] (NTC license)
 hotpinbl	熱血彈珠檯	熱血彈珠檯	Comad & New Japan System
