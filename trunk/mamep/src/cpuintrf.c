@@ -26,7 +26,6 @@
 
 void dummy_get_info(UINT32 state, union cpuinfo *info);
 void gensync_get_info(UINT32 state, union cpuinfo *info);
-void dummy_get_info(UINT32 state, union cpuinfo *info);
 void z80_get_info(UINT32 state, union cpuinfo *info);
 void z180_get_info(UINT32 state, union cpuinfo *info);
 void i8080_get_info(UINT32 state, union cpuinfo *info);
