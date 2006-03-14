@@ -498,6 +498,10 @@ Century?
 Cinematronics
 
 
+# Fred Flintstones' Memory Match
+Coastal Amusements
+
+
 # Quizmaster
 Coinmaster
 
@@ -1162,7 +1166,7 @@ Mega
 Merit
 
 
-# Pang Poms
+# Gekitoride-Jong Space (10011 Ver.A)
 Metro
 
 
@@ -1626,7 +1630,7 @@ Stern
 Subelectro
 
 
-# Penguin Brothers (Japan)
+# Crazy Fight
 Subsino
 
 
