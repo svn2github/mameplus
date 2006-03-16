@@ -582,7 +582,7 @@ Activation Key
 Add
 加算
 
-# inptport.c: 1013
+# inptport.c: 1014
 Add Cheat
 チートを追加
 
@@ -1030,7 +1030,7 @@ Default Search Speed
 Delay
 ディレイ
 
-# inptport.c: 1014
+# inptport.c: 1015
 Delete Cheat
 チート削除
 
@@ -1194,7 +1194,7 @@ Easiest
 Easy
 簡単
 
-# inptport.c: 1017
+# inptport.c: 1018
 Edit Cheat
 チート編集
 
@@ -1834,7 +1834,7 @@ Lives (or another value)
 Load Selected Card
 選択したカードの読み込み
 
-# inptport.c: 1012
+# inptport.c: 1013
 Load State
 プレイ状態の復帰
 
@@ -3502,19 +3502,19 @@ Paddle V 7
 Paddle V 8
 パドル V 8
 
-# inptport.c: 1003
+# inptport.c: 1004
 Pan Down
 画面を下に移動
 
-# inptport.c: 1004
+# inptport.c: 1005
 Pan Left
 画面を左に移動
 
-# inptport.c: 1005
+# inptport.c: 1006
 Pan Right
 画面を右に移動
 
-# inptport.c: 1002
+# inptport.c: 1003
 Pan Up
 画面を上に移動
 
@@ -3722,7 +3722,7 @@ Same
 Samples
 サンプル
 
-# inptport.c: 1015
+# inptport.c: 1016
 Save Cheat
 チート保存
 
@@ -3734,7 +3734,7 @@ Save Memory
 Save Snapshot
 スナップショットの保存
 
-# inptport.c: 1011 
+# inptport.c: 1012 
 Save State
 プレイ状態の保存
 
@@ -3890,7 +3890,7 @@ Show Gfx
 Show Input Log
 入力履歴を表\示
 
-# inptport.c: 1006
+# inptport.c: 1007
 Show Profiler
 プロファイラ表\示
 
@@ -3921,6 +3921,10 @@ Slow
 # ui_text.c: 207
 Slow But Sure (changed or not)
 遅いけど確実 (変化したかしないか)
+
+# inptport.c: 973
+Soft Reset
+ソ\フトリセット
 
 # drivers/balsente.c: 748 drivers/contra.c: 221 drivers/couple.c: 211 drivers/gijoe.c: 300 drivers/mosaic.c: 207 drivers/tmnt.c: 2021, 2103, 2349 drivers/zaxxon.c: 882 ui_text.c: 46
 Sound
@@ -4142,11 +4146,11 @@ Toggle
 Toggle Cheat
 チート 有効/無効
 
-# inptport.c: 1018
+# inptport.c: 1019
 Toggle Crosshair
 十\字線のトグル
 
-# inptport.c: 1010
+# inptport.c: 1011
 Toggle Debugger
 デバッガ表\示切り替え
 
@@ -4258,11 +4262,11 @@ UI 右
 UI Select
 UI 決定
 
-# inptport.c: 1008
+# inptport.c: 1009
 UI Toggle
 UI 表\示切り替え
 
-# inptport.c: 1019
+# inptport.c: 1002
 UI Toggle Lock Scroll
 UI スクロールロック切り替え
 
@@ -4574,7 +4578,7 @@ Watch Size
 Watch Skip
 ウォッチスキップ
 
-# inptport.c: 1016
+# inptport.c: 1017
 Watch Value
 ウォッチの値表\示
 
