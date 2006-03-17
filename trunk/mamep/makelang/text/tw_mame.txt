@@ -4096,7 +4096,7 @@ UI Toggle
 
 # inptport.c: 1002
 UI Toggle Lock Scroll
-選單 切換鎖定捲動
+選單 鎖定捲動
 
 # inptport.c: 993
 UI Up

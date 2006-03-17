@@ -1590,7 +1590,8 @@ mvp	MVP (set 2, 美國版, FD1094 317-0143)	MVP (set 2, 美國版, FD1094 317-0143)	Se
 mvpj	MVP (set 1, 日本版, FD1094 317-0142)	MVP (set 1, 日本版, FD1094 317-0142)	Sega
 riotcity	暴亂之城 (日本版)	暴亂之城 (日本版)	Sega / Westone
 ryukyu	琉球 (日本版, FD1094 317-5023)	琉球 (日本版, FD1094 317-5023)	Success / Sega
-sdib	SDI - 戰略防衛構想 (盜版)	SDI - 戰略防衛構想 (盜版)	bootleg
+sdib	SDI - 戰略防衛構想 (System 16B, FD1089A 317-0028)	SDI - 戰略防衛構想 (System 16B, FD1089A 317-0028)	Sega
+sdibl	SDI - 戰略防衛構想 (盜版)	SDI - 戰略防衛構想 (盜版)	bootleg
 defense	SDI - 戰略防衛構想 / Defense (System 16B, FD1089A 317-0028)	SDI - 戰略防衛構想 / Defense (System 16B, FD1089A 317-0028)	Sega
 shinobi4	忍 (set 4, System 16B, unprotected)	忍 (set 4, System 16B, unprotected)	Sega
 shinobi3	忍 (set 3, System 16B, unprotected) 	忍 (set 3, System 16B, unprotected) 	Sega
@@ -1638,6 +1639,9 @@ ga2u	戰斧二 / 戰斧: 帝王的復仇 (美國版)	戰斧二 / 戰斧: 帝王的復仇 (美國版)	Sega
 ga2j	戰斧二 / 戰斧: 帝王的復仇 (日本版)	戰斧二 / 戰斧: 帝王的復仇 (日本版)	Sega
 spidman	蜘蛛人 (世界版)	蜘蛛人 (世界版)	Sega
 spidmanu	蜘蛛人 (美國版)	蜘蛛人 (美國版)	Sega
+arabfgt	阿拉丁神燈 (世界版)	阿拉丁神燈 (世界版)	Sega
+arabfgtu	阿拉丁神燈 (美國版)	阿拉丁神燈 (美國版)	Sega
+arabfgtj	阿拉丁神燈 (日本版)	阿拉丁神燈 (日本版)	Sega
 dbzvrvs	七龍珠 Z V.R.V.S.	七龍珠 Z V.R.V.S.	Sega / Banpresto
 vf	VR 快打	VR 快打	Sega
 vr	VR 賽車	VR 賽車	Sega
@@ -2955,6 +2959,7 @@ silkroad	絲路傳說	絲路傳說	Unico
 grdnstrm	戰神 - 守護風暴 (韓國版)	戰神 - 守護風暴 (韓國版)	Afega
 firehawk	火狐傳說	火狐傳說	ESD
 mchampdx	六合一 (ver. 0106, 06/01/2000)	六合一 (ver. 0106, 06/01/2000)	ESD
+mchampda	六合一 (ver. 1126, 26/11/1999)	六合一 (ver. 1126, 26/11/1999)	ESD
 hedpanic	頭槌小子 (ver. 0315, 15/03/2000)	頭槌小子 (ver. 0315, 15/03/2000)	ESD / Fuuki
 hnayayoi	華彌生 (日本版)	華彌生 (日本版)	Dyna Electronics
 hnfubuki	華吹雪 [BET] (日本版)	華吹雪 [BET] (日本版)	Dynax

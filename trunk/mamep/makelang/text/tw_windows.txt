@@ -328,7 +328,7 @@ Failed to open file for recording
 
 # windows/fronthlp.c: 460
 For usage instructions, please consult the file windows.txt\n
-關於用法指令集，請參閱\ windows.txt 檔案\n
+關於使用方式指令集，請參閱\ windows.txt 檔案\n
 
 # windows/fronthlp.c: 68
 Frontend Related
@@ -760,7 +760,7 @@ Windows 版本視訊選項
 
 # windows/config.c: 609
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
-\n\"%s\" 約略相似下列支援的遊戲\n(依相似度排序):\n\n
+\n\"%s\" 約略符合下列支援的遊戲\n(按符合程度排序):\n\n
 
 # windows/wind3dfx.c: 207
 additional customised settings (undocumented)
@@ -1244,7 +1244,7 @@ is bad\n
 
 # windows/fronthlp.c: 731
 is best available\n
-是可用的最佳狀態\n
+是最佳的可用狀態\n
 
 # windows/fronthlp.c: 726
 is good\n

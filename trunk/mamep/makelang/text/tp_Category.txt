@@ -162,459 +162,463 @@ Maze / Surround
 Mini-Games
 
 
-# 1896
+# 1897
 Misc.
 
 
-# 1970
+# 1971
 Misc. *Mature*
 
 
-# 1979
+# 1980
 Misc. Betting
 
 
-# 2009
+# 2010
 Misc. Betting *Mature*
 
 
-# 2018
+# 2019
 Multiplay
 
 
-# 2051
+# 2052
 Multiplay *Mature*
 
 
-# 2060
+# 2061
 Pinball
 
 
-# 2079
+# 2080
 Pinball *Mature*
 
 
-# 2085
+# 2086
 Pinball / Pachinko *Mature*
 
 
-# 2091
+# 2092
 Platform / Fighter
 
 
-# 2112
+# 2113
 Platform / Fighter Scrolling
 
 
-# 2286
+# 2287
 Platform / Run Jump
 
 
-# 2511
+# 2512
 Platform / Run Jump *Mature*
 
 
-# 2517
+# 2518
 Platform / Run Jump Scrolling
 
 
-# 2589
+# 2590
 Platform / Shooter
 
 
-# 2606
+# 2607
 Platform / Shooter Scrolling
 
 
-# 2802
+# 2803
 Puzzle
 
 
-# 2841
+# 2842
 Puzzle *Mature*
 
 
-# 2847
+# 2848
 Puzzle / Cards
 
 
-# 2850
+# 2851
 Puzzle / Cards *Mature*
 
 
-# 2862
+# 2863
 Puzzle / Drop
 
 
-# 2979
+# 2980
 Puzzle / Drop *Mature*
 
 
-# 2995
+# 2996
 Puzzle / Match
 
 
-# 3022
+# 3023
 Puzzle / Match *Mature*
 
 
-# 3048
+# 3049
 Puzzle / Maze
 
 
-# 3062
+# 3063
 Puzzle / Outline
 
 
-# 3077
+# 3078
 Puzzle / Outline *Mature*
 
 
-# 3101
+# 3102
 Puzzle / Sliding
 
 
-# 3112
+# 3113
 Puzzle / Sliding *Mature*
 
 
-# 3117
+# 3118
 Puzzle / Toss
 
 
-# 3168
+# 3169
 Puzzle / Toss *Mature*
 
 
-# 3178
+# 3179
 Quiz / Chinese
 
 
-# 3182
+# 3183
 Quiz / Corean
 
 
-# 3185
+# 3186
 Quiz / English
 
 
-# 3230
+# 3231
 Quiz / English *Mature*
 
 
-# 3245
+# 3246
 Quiz / French
 
 
-# 3249
+# 3250
 Quiz / German
 
 
-# 3253
+# 3254
 Quiz / Italian
 
 
-# 3258
+# 3259
 Quiz / Japanese
 
 
-# 3316
+# 3317
 Quiz / Japanese *Mature*
 
 
-# 3321
+# 3322
 Quiz / Music English
 
 
-# 3325
+# 3326
 Quiz / Music Japanese
 
 
-# 3329
+# 3330
+Quiz / Spanish
+
+
+# 3333
 Rhythm
 
 
-# 3352
+# 3356
 Shooter / 1st Person
 
 
-# 3376
+# 3380
 Shooter / 3rd Person
 
 
-# 3415
+# 3419
 Shooter / Command
 
 
-# 3442
+# 3447
 Shooter / Driving
 
 
-# 3451
+# 3456
 Shooter / Driving (chase view)
 
 
-# 3492
+# 3497
 Shooter / Driving 1st Person
 
 
-# 3500
+# 3505
 Shooter / Driving Diagonal
 
 
-# 3505
+# 3510
 Shooter / Driving Horizontal
 
 
-# 3519
+# 3524
 Shooter / Driving Vertical
 
 
-# 3569
+# 3574
 Shooter / Field
 
 
-# 3699
+# 3704
 Shooter / Field *Mature*
 
 
-# 3707
+# 3712
 Shooter / Flying
 
 
-# 3759
+# 3764
 Shooter / Flying (chase view)
 
 
-# 3789
+# 3794
 Shooter / Flying 1st Person
 
 
-# 3824
+# 3829
 Shooter / Flying Diagonal
 
 
-# 3832
+# 3837
 Shooter / Flying Horizontal
 
 
-# 4035
+# 4040
 Shooter / Flying Horizontal *Mature*
 
 
-# 4038
+# 4043
 Shooter / Flying Vertical
 
 
-# 4434
+# 4439
 Shooter / Flying Vertical *Mature*
 
 
-# 4437
+# 4442
 Shooter / Gallery
 
 
-# 4786
+# 4791
 Shooter / Gallery *Mature*
 
 
-# 4789
+# 4794
 Shooter / Gun
 
 
-# 4894
+# 4899
 Shooter / Misc.
 
 
-# 4910
+# 4915
 Shooter / Misc. Horizontal
 
 
-# 4932
+# 4937
 Shooter / Misc. Vertical
 
 
-# 4952
+# 4957
 Shooter / Versus
 
 
-# 4961
+# 4966
 Shooter / Walking
 
 
-# 5064
+# 5069
 Sports
 
 
-# 5088
+# 5093
 Sports / Armwrestling
 
 
-# 5092
+# 5097
 Sports / Baseball
 
 
-# 5170
+# 5175
 Sports / Basketball
 
 
-# 5221
+# 5226
 Sports / Bowling
 
 
-# 5253
+# 5258
 Sports / Boxing
 
 
-# 5289
+# 5294
 Sports / Bull Fighting
 
 
-# 5293
+# 5298
 Sports / Darts
 
 
-# 5300
+# 5305
 Sports / Dodgeball
 
 
-# 5305
+# 5310
 Sports / Fishing
 
 
-# 5310
+# 5315
 Sports / Football Amer.
 
 
-# 5356
+# 5361
 Sports / Football Rugby
 
 
-# 5361
+# 5366
 Sports / Golf
 
 
-# 5452
+# 5457
 Sports / Handball
 
 
-# 5455
+# 5460
 Sports / Hang Gliding
 
 
-# 5460
+# 5465
 Sports / Hockey
 
 
-# 5475
+# 5480
 Sports / Horse Racing
 
 
-# 5487
+# 5492
 Sports / Horseshoes
 
 
-# 5492
+# 5497
 Sports / Multiplay
 
 
-# 5499
+# 5504
 Sports / Ping pong
 
 
-# 5502
+# 5507
 Sports / Pool
 
 
-# 5538
+# 5543
 Sports / Pool *Mature*
 
 
-# 5550
+# 5555
 Sports / Shuffleboard
 
 
-# 5556
+# 5561
 Sports / Skateboarding
 
 
-# 5565
+# 5570
 Sports / Skiing
 
 
-# 5584
+# 5590
 Sports / SkyDiving
 
 
-# 5588
+# 5594
 Sports / Soccer
 
 
-# 5676
+# 5682
 Sports / Sumo
 
 
-# 5679
+# 5685
 Sports / Swimming
 
 
-# 5690
+# 5696
 Sports / Tennis
 
 
-# 5720
+# 5726
 Sports / Track & Field
 
 
-# 5757
+# 5763
 Sports / VolleyBall
 
 
-# 5781
+# 5787
 Tabletop
 
 
-# 5787
+# 5793
 Tabletop *Mature*
 
 
-# 5790
+# 5796
 Tabletop / Hanafuda
 
 
-# 5797
+# 5804
 Tabletop / Hanafuda *Mature*
 
 
-# 5816
+# 5823
 Tabletop / Mahjong
 
 
-# 5841
+# 5848
 Tabletop / Mahjong *Mature*
 
 
-# 6056
+# 6063
 Tabletop / Othello
 
 
-# 6062
+# 6069
 Tabletop / Othello *Mature*
 
 
-# 6065
+# 6072
 Tabletop / Renju
 
 
-# 6069
+# 6076
 Tabletop / Shougi
 
 
-# 6077
+# 6084
 Unplayable
 
 
-# 6325
+# 6331
 Wrestling
 
 

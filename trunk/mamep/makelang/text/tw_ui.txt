@@ -500,7 +500,7 @@ Beam width
 
 # ui/audit32.c: 478
 Best available
-可用的最佳狀態
+最佳的可用狀態
 
 # ui/mame32.rc: 852
 Bezels
@@ -1240,7 +1240,7 @@ IPS 檔案
 
 # ui/layout.c: 130
 Icons
-圖示
+圖示 (icons)
 
 # ui/mame32.rc: 732
 Image Enhancement
@@ -1468,7 +1468,7 @@ Move Up
 
 # ui/layout.c: 126
 NVRAM
-NVRAM 檔
+NVRAM
 
 # ui/win32ui.c: 812 
 Name
