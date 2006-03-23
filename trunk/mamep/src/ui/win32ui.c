@@ -221,7 +221,7 @@ int MIN_HEIGHT = DBU_MIN_HEIGHT;
 #define MAX_BGFILES 100
 
 #ifdef USE_IPS
-#define MAX_PATCHES 32
+#define MAX_PATCHES 64
 #define MAX_PATCHNAME 64
 #endif /* USE_IPS */
 
