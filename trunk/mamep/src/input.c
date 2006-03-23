@@ -1458,7 +1458,8 @@ int seq_read_async(input_seq *seq, int first)
 		}
 	}
 
-	/* analog case: see if we have an analog change of sufficient amount (>5%) */
+	/* analog case: see if we have an analog change of sufficient amount */
+	/* Absolute > 25% --- Relative > 5% */
 	else
 	{
 		/* scan all the analog codes for change */
@@ -1471,7 +1472,7 @@ int seq_read_async(input_seq *seq, int first)
 					if (ANALOG_TYPE(newcode) == ANALOG_TYPE_ABSOLUTE)
 						diff = code_map[newcode].memory - diff;
 					if (diff < 0) diff = -diff;
-					if (diff > (ANALOG_VALUE_MAX - ANALOG_VALUE_MIN) / 20)
+					if (diff > (ANALOG_VALUE_MAX - ANALOG_VALUE_MIN) / ((ANALOG_TYPE(newcode) == ANALOG_TYPE_ABSOLUTE) ? 4 : 20))
 						break;
 				}
 			}

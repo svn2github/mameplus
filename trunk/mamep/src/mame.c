@@ -157,6 +157,7 @@ static callback_item *reset_callback_list;
 static callback_item *pause_callback_list;
 static callback_item *exit_callback_list;
 static jmp_buf fatal_error_jmpbuf;
+static int fatal_error_jmpbuf_valid;
 
 /* malloc tracking */
 static void **malloc_list = NULL;
@@ -234,6 +235,7 @@ int run_game(int game)
 	while (error == 0 && !exit_pending)
 	{
 		/* use setjmp/longjmp for deep error recovery */
+		fatal_error_jmpbuf_valid = TRUE;
 		error = setjmp(fatal_error_jmpbuf);
 		if (error == 0)
 		{
@@ -301,6 +303,7 @@ int run_game(int game)
 			if (!Machine->playback_file)
 			config_save_settings();
 		}
+		fatal_error_jmpbuf_valid = FALSE;
 
 		/* call all exit callbacks registered */
 		for (cb = exit_callback_list; cb; cb = cb->next)
@@ -797,7 +800,10 @@ void CLIB_DECL fatalerror(const char *text, ...)
 
 	/* output and return */
 	printf("%s\n", giant_string_buffer);
-	longjmp(fatal_error_jmpbuf, 1);
+	if (fatal_error_jmpbuf_valid)
+  		longjmp(fatal_error_jmpbuf, 1);
+	else
+		exit(-1);
 }
 
 
@@ -1369,7 +1375,6 @@ cancel:
 	saveload_pending_file = NULL;
 	return FALSE;
 }
-
 
 
 /*-------------------------------------------------

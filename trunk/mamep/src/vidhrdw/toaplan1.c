@@ -93,7 +93,6 @@ Abnormalities:
 
 #include "driver.h"
 #include "toaplan1.h"
-#include "palette.h"
 #include "cpu/m68000/m68000.h"
 
 #define TOAPLAN1_TILEVRAM_SIZE       0x4000	/* each tile layer ram (word size) */
