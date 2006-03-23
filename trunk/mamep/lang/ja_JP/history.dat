@@ -2,7 +2,7 @@
 #                                                          #
 #           AGDB-Japan HISTORY.DAT                         #
 # @@                         2ch EDITION TYPE2           #
-#                                            Ver. 0.104u1  #
+#                                            Ver. 0.104u6  #
 #                                                          #
 #  ƒA[ƒP[ƒhƒQ[ƒ€ƒf[ƒ^ƒx[ƒXiAGDBj•ÒŽ[ˆÏˆõ‰ï          #
 #      http://terrazi.com/agdb/ (Not Found)                #
@@ -16,7 +16,7 @@
 #  history.dati‰ß‹ŽƒƒO’u‚«êj                           #
 #      http://history1.client.jp/                          #
 #                                                          #
-#@@@@@@@@@@@ @@@@@@@        (06.02.16)   #
+#@@@@@@@@@@@ @@@@@@@        (06.03.21)   #
 #**********************************************************#
 
 #*************************************************************#
@@ -34,8 +34,8 @@
 #                                            399ŸTOMOElsqPg  #
 #                                                             #
 #      Ð‰î•¶EC³•ñA’Ç‹LEC³ˆÄ‚Í«‚Ü‚Å    @ @@@    #
-#   ymamezhistory.dat‚ð‚Ý‚ñ‚È‚ÅXV‚·‚éƒXƒŒ6y“¤z@@@@@#
-#  http://game10.2ch.net/test/read.cgi/gsaloon/1115645867/    #
+#   ymamezhistory.dat‚ð‚Ý‚ñ‚È‚ÅXV‚·‚éƒXƒŒ7y“¤z@@@@@#
+#  http://game10.2ch.net/test/read.cgi/gsaloon/1135920179/    #
 #                                                             #
 #*************************************************************#
 
@@ -1427,7 +1427,7 @@ $bio
 
 ŠJ”­^”­”„Œ³Fƒpƒ‹ƒRƒVƒXƒeƒ€
 
-ƒWƒƒƒ“ƒ‹FƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“
+ƒWƒƒƒ“ƒ‹FƒpƒYƒ‹
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+4ƒ{ƒ^ƒ“
 
@@ -2270,7 +2270,7 @@ $bio
 ƒAƒ‹ƒyƒ“ƒŒ[ƒT[
 
 
-”­”„”NF1995.07
+”­”„”NF1995.06
 
 ŠJ”­^”­”„Œ³Fƒiƒ€ƒR
 
@@ -5171,7 +5171,7 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFƒf[ƒ^ƒC[ƒXƒg ƒ}ƒU[ƒŒƒXƒJƒZƒbƒgiMLCj
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
 
 CPU\¬[ARM]
 
@@ -6803,7 +6803,7 @@ $end
 
 $info=bm2ndmix
 $bio
-ƒr[ƒgƒ}ƒjƒA ‚Q‚Ž‚„ ‚l‚h‚w
+ƒr[ƒgƒ}ƒjƒA ‚Q‚Ž‚„‚l‚h‚w
 
 
 ”­”„”NF1998.03
@@ -6839,7 +6839,7 @@ $end
 
 $info=bm4thmix
 $bio
-ƒr[ƒgƒ}ƒjƒA ‚S‚”‚ˆ ‚l‚h‚w -the beat goes on-
+ƒr[ƒgƒ}ƒjƒA ‚S‚”‚ˆ‚l‚h‚w -the beat goes on-
 
 
 ”­”„”NF1999.04
@@ -6868,7 +6868,7 @@ $end
 
 $info=bm5thmix
 $bio
-ƒr[ƒgƒ}ƒjƒA ‚T‚”‚ˆ ‚l‚h‚w -Time to get down-
+ƒr[ƒgƒ}ƒjƒA ‚T‚”‚ˆ‚l‚h‚w -Time to get down-
 
 
 ”­”„”NF1999.09
@@ -6898,7 +6898,7 @@ $end
 
 $info=bm6thmix
 $bio
-ƒr[ƒgƒ}ƒjƒA ‚U‚”‚ˆ ‚l‚h‚w -THE UK UNDERGROUND MUSIC-
+ƒr[ƒgƒ}ƒjƒA ‚U‚”‚ˆ‚l‚h‚w -THE UK UNDERGROUND MUSIC-
 
 
 ”­”„”NF2001.07
@@ -9255,6 +9255,30 @@ CPU\¬[Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910 (3)]
 
 $end
 
+$info=bombkick
+$bio
+Bomb Kick
+
+
+”­”„”NF1998
+
+ŠJ”­^”­”„Œ³FYun Sung
+
+ƒWƒƒƒ“ƒ‹FƒAƒNƒVƒ‡ƒ“
+
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+3ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[OKI6295]
+
+
+¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
 $info=bbmanw
 $bio
 ƒ{ƒ“ƒo[ƒ}ƒ“ƒ[ƒ‹ƒh
@@ -9322,7 +9346,7 @@ $bio
 
 ƒWƒƒƒ“ƒ‹FƒAƒNƒVƒ‡ƒ“
 
-ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
+ƒRƒ“ƒgƒ[ƒ‰F4•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
 ƒVƒXƒeƒ€ƒ{[ƒhFƒZƒK ƒVƒXƒeƒ€24
 
@@ -9330,8 +9354,10 @@ CPU\¬[68000 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2151 ,DAC]
 
 
 — “¹‰Æ‹Æ‚Ì“D–_ŒZ’íuMOBOv‚ÆuROBOv‚ªŒJ‚èL‚°‚éƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
-ƒQ[ƒ€“à—e‚ÍƒVƒ“ƒvƒ‹‚ÅAŒx”õ‚ÌƒXƒL‚ð‚Â‚«‹à‹âà•óŽc‚ç‚¸’T‚µo‚µA‘S‘¬—Í‚Å’Eo‚·‚é‚Ì‚ÝB
-‚Ü‚½A“Æ“Á‚ÌƒRƒ~ƒJƒ‹‚Èƒ^ƒbƒ`‚Åì‚ç‚ê‚é¢ŠEŠÏ‚ÍŒã‚É“¯ŽÐ‚ª”­”„‚·‚éuƒ^ƒ“ƒgƒA[ƒ‹v‚É‚àˆø‚«Œp‚ª‚ê‚é‚±‚Æ‚É‚È‚Á‚½B
+ƒQ[ƒ€“à—e‚ÍƒVƒ“ƒvƒ‹‚ÅAŒx”õ‚ÌƒXƒL‚ð‚Â‚«‹à‹âà•óŽc‚ç‚¸’T‚µo‚µA
+’Œ‚Ì‰e‚âƒhƒAAŠK’i‚Ì“r’†‚É‰B‚ê‚È‚ª‚çA‚»‚ÌƒXƒL‚ðŒ©Œv‚ç‚Á‚Ä§ŒÀŽžŠÔ“à‚É‘S‘¬—Í‚Å’Eo‚·‚é‚Ì‚Ý‚Æ‚¢‚¤‚à‚Ì‚Å‚ ‚éB
+Œš•¨‚Ì’†‚ð„‰ñ‚·‚éŒx”õˆõ‚É‚Í–ƒŒe‚ð•Ší‚ÉƒhƒA‚ð‚Ô‚Â‚¯‚½‚èAƒWƒƒƒ“ƒv‚µ‚ÄUŒ‚‚·‚é‚±‚Æ‚à‚Å‚«‚éB
+“Æ“Á‚ÌƒRƒ~ƒJƒ‹‚Èƒ^ƒbƒ`‚Åì‚ç‚ê‚é¢ŠEŠÏ‚ÍŒã‚É“¯ŽÐ‚ª”­”„‚·‚éuƒ^ƒ“ƒgƒA[ƒ‹v‚É‚àˆø‚«Œp‚ª‚ê‚é‚±‚Æ‚É‚È‚Á‚½B
 
 
 
@@ -9496,11 +9522,11 @@ CPU\¬[DECO_CPU16, M6502]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910 (2)]
 
 
 •ó“‡‚É’H‚è’…‚¢‚½Œ´Žnl‚ªƒu[ƒƒ‰ƒ“‚Å“G‚Æí‚¢‚È‚ª‚çA“‡‚É‰B‚³‚ê‚½8‚Â‚Ì•ó‚ð’T‚µo‚·‚Æ‚¢‚¤ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
-Œ´ŽnŽž‘ã‚ªƒ‚ƒ`[ƒt‚Æ‚È‚Á‚Ä‚¢‚ÄAo‚Ä‚­‚é“G‚Í‚Ù‚Æ‚ñ‚ÇŒ´Žnl‚â‹°—³‚Æ‚¢‚Á‚½—ÞB
-‹°—³‚Ìã‚ÌŒ´Žnl‚ð‚¤‚Ü‚­“|‚·‚Æ‹°—³‚ðæ‚è‰ñ‚·‚±‚Æ‚ª‰Â”\‚ÅA‚±‚Ìó‘Ô‚È‚ç1”­UŒ‚‚³‚ê‚Ä‚à‘åä•v‚¾‚Á‚½B
+Œ´ŽnŽž‘ã‚ªƒ‚ƒ`[ƒt‚Æ‚È‚Á‚Ä‚¢‚ÄAo‚Ä‚­‚é“G‚Í‚Ù‚Æ‚ñ‚ÇŒ´Žnl‚â‹°—³‚È‚ÇB
+‹°—³‚Ìã‚ÌŒ´Žnl‚ð‚¤‚Ü‚­“|‚·‚Æ‹°—³‚ðæ‚è‰ñ‚·‚±‚Æ‚ª‰Â”\‚ÅA‚±‚Ìó‘Ô‚È‚ç1”­UŒ‚‚³‚ê‚Ä‚à‘åä•vB
 •ó” ‚ð’Tõ‚µ‚Ä‚¢‚é‚ÆŽžXAŽl•û”ª•û‚©‚ç“G‚ª—§‚Ä‘±‚¯‚ÉP‚¢Š|‚©‚Á‚Ä‚­‚éƒ‰ƒbƒVƒ…‚É‘˜‚¤‚±‚Æ‚ª‚ ‚éB
-ƒXƒe[ƒW8‚Ì•ª—ô‚·‚é’¹‚Ìƒ‰ƒbƒVƒ…‚ÍAL‚¢êŠ‚Å‘˜‚Á‚Ä‚µ‚Ü‚¤‚ÆŽè‚ª•t‚¯‚ç‚ê‚È‚¢‚Ù‚Ç‘sâB
-‚µ‚©‚µ‚±‚Ìƒ‰ƒbƒVƒ…A“G‚ªˆø‚ÁØ‚è–³‚µ‚Éo‚é‚Ì‚ð‚¢‚¢‚±‚Æ‚ÉA‚¤‚Ü‚­‚â‚ê‚ÎŠÈ’P‚É‰i‹vƒpƒ^[ƒ“‚ªo—ˆ‚Ä‚µ‚Ü‚Á‚½B
+ƒXƒe[ƒW8‚Ì•ª—ô‚·‚é’¹‚Ìƒ‰ƒbƒVƒ…‚ÍAL‚¢êŠ‚Å‘˜‚Á‚Ä‚µ‚Ü‚¤‚ÆŽè‚ª•t‚¯‚ç‚ê‚È‚¢‚Ù‚Ç‘sâ‚¾‚ªA
+“G‚ªˆø‚ÁØ‚è–³‚µ‚Éo‚é‚Ì‚ð‚¢‚¢‚±‚Æ‚ÉA‚¤‚Ü‚­‚â‚ê‚ÎŠÈ’P‚É‰i‹vƒpƒ^[ƒ“‚ªo—ˆ‚Ä‚µ‚Ü‚¤B
 
 
 
@@ -12048,7 +12074,7 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰F2•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFƒf[ƒ^ƒC[ƒXƒg ƒ}ƒU[ƒŒƒXƒJƒZƒbƒgiMLCj
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
 
 CPU\¬[ARM]
 
@@ -12079,7 +12105,7 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFƒf[ƒ^ƒC[ƒXƒg ƒ}ƒU[ƒŒƒXƒJƒZƒbƒgiMLCj
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
 
 CPU\¬[ARM]
 
@@ -15233,6 +15259,30 @@ CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM3812, DAC (2)]
 
 $end
 
+$info=crazyfgt
+$bio
+Crazy Fight
+
+
+”­”„”NF1998
+
+ŠJ”­^”­”„Œ³FSubsino
+
+ƒWƒƒƒ“ƒ‹FƒVƒ…[ƒeƒBƒ“ƒO
+
+ƒRƒ“ƒgƒ[ƒ‰F6ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[OKI6295]
+
+
+¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
 $info=ckong
 $bio
 ƒNƒŒƒCƒW[ƒRƒ“ƒOƒp[ƒgII
@@ -15279,7 +15329,7 @@ CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910, Custom]
 Œã‚ÉƒLƒ‡ƒEƒGƒC‘¤‚Ì\‚µo‚É‚æ‚è‘ä”§ŒÀA—Ao‹ÖŽ~‚ððŒ‚É”C“V“°‚©‚ç‹–‘ø‚ð“¾‚½‚Ì‚ªA
 ƒLƒ‡ƒEƒGƒC”Å‚ÌuƒNƒŒƒCƒW[ƒRƒ“ƒOv‚Å‚ ‚éB
 Œ‹‹Ç‚±‚êˆÈã‚ÌƒRƒs[Šî”Â(ƒNƒŒƒCƒW[ƒRƒ“ƒO)‚Ì»‘¢‚Ì‹ÖŽ~‚ÆA
-‚»‚ê‚Ü‚Å‚É»‘¢‚³‚ê‚½ƒRƒs[Šî”Õ‚ÍŽ–Œã‹–‘ø‚Æ‚¢‚¤Œ`‚Æ‚È‚Á‚Ä‚¢‚éB
+‚»‚ê‚Ü‚Å‚É»‘¢‚³‚ê‚½ƒRƒs[Šî”Â‚ÍŽ–Œã‹–‘ø‚Æ‚¢‚¤Œ`‚Æ‚È‚Á‚Ä‚¢‚éB
 ƒ‹[ƒ‹‚ÍƒIƒŠƒWƒiƒ‹‚Æ‘S‚­“¯‚¶‚¾‚ªA
 Œø‰Ê‰¹‚Æ‘S‘Ì“I‚É—ÎF‚ð’†S‚É‚µ‚½ƒOƒ‰ƒtƒBƒbƒN‚ª•ÏX‚³‚ê‚Ä‚¢‚é‚±‚Æ‚ÆA
 ƒCƒ“ƒXƒg‚ÉKYOEI‚Æ‘‚©‚ê‚Ä‚¢‚é‚Ì‚ª“Á’¥‚Å‚ ‚éB
@@ -20594,7 +20644,7 @@ CPU\¬[ARM, HuC6280]@‰¹Œ¹ƒ`ƒbƒv[YM2151, OKI6295 (3)]
 
 
 ˆÙŽŸŒ³‹óŠÔ‚É‘¶Ý‚·‚éƒvƒŒƒ‹ƒgƒŠƒAB
-••ˆó‚µ‚½–‚b‚ª•œŠˆ‚µ‚Ä‰¤‘‚ªŠë‹@‚ÉŠ×‚èA‚»‚ê‚ð‹~‚¤‚½‚ß‚É“ñl‚Ì‘I‚Î‚ê‚µíŽm‚ª—³_‚É‚æ‚Á‚Ä¢Š«‚³‚êAˆÙ¢ŠE‚Öí‚¢‚Ì—·‚Ö‚Æ•‹‚­cBu
+••ˆó‚µ‚½–‚b‚ª•œŠˆ‚µ‚Ä‰¤‘‚ªŠë‹@‚ÉŠ×‚èA‚»‚ê‚ð‹~‚¤‚½‚ß‚É“ñl‚Ì‘I‚Î‚ê‚µíŽm‚ª—³_‚É‚æ‚Á‚Ä¢Š«‚³‚êAˆÙ¢ŠE‚Öí‚¢‚Ì—·‚Ö‚Æ•‹‚­cB
 ƒf[ƒ^ƒC[ƒXƒg»ìA’†¢ƒtƒ@ƒ“ƒ^ƒW[‚Ì¢ŠEŠÏˆì‚ê‚é32ƒrƒbƒgCPU“‹Ú‚ÌƒKƒ“ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€B
 —³_‚ª•ÏŒ`‚µ‚½‚Æ‚¢‚¤u—³_ev‚ð•Ší‚É–‚b‚ð“|‚µ‚Ä‚¢‚­B
 ƒQ[ƒ€’†‚Ü‚¸‹C‚ðˆø‚©‚ê‚é‚Ì‚Í—³_‚Ìº‚ªƒhƒ‰ƒSƒ“ƒ{[ƒ‹‚Ì‘·Œå‹ó‚ð‰‰‚¶‚½–ì‘ò‰ëŽq‚Å‚ ‚é‚Æ‚¢‚¤‚±‚Æ‚Å‚ ‚ë‚¤B
@@ -20705,9 +20755,11 @@ $bio
 CPU\¬[M6809 (3), HD63701]@‰¹Œ¹ƒ`ƒbƒv[YM2151, Namco, DAC]
 
 
-‚ ‚Ìuƒ[ƒrƒEƒXvˆÈ—ˆ‚Æ‚È‚éƒiƒ€ƒR‚Ì–{Ši“IƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€B
-8•ûŒüƒŒƒo[‚ÅˆÚ“®A‘Î‹óA‘Î’n‚É2‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚·‚éB
-“à—e‚à—Ç‚¢‚ªƒiƒ€ƒRƒQ[ƒ€‚Ì—ðŽj‚Ü‚ÅŒ©‚ç‚ê‚éŠ´“®‚ÌƒGƒ“ƒfƒBƒ“ƒO‚Í•KŒ©B
+‚ ‚Ìuƒ[ƒrƒEƒXvˆÈ—ˆ‚Æ‚È‚éƒiƒ€ƒR‚Ì–{Ši“IƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€BƒvƒŒƒCƒ„[‚Íƒuƒ‹[ƒhƒ‰ƒSƒ“‚Æ‚È‚èAƒUƒEƒGƒ‹‚Ìƒ‚ƒ“ƒXƒ^[ŒR’c‚Æí‚¤B
+ŽŸX‚É”—‚è—ˆ‚é“G‚ð‘Î‹ó—pE‘Î’n—pƒtƒ@ƒCƒ„[‚ÅŒ}Œ‚‚µ‚È‚ª‚çi‚ÝA˜A‚ê‹Ž‚ç‚ê‚½‰¤—ƒAƒŠ[ƒVƒƒ‚ð‹~‚¢‚¾‚»‚¤B
+ƒVƒ“ƒOƒ‹ƒwƒbƒhŽž‚É‚Í’nãE‹ó’†‚Æ“¯Žž‚É‚ÍŒ‚‚Ä‚È‚¢‚ªAƒfƒ…ƒAƒ‹EƒgƒŠƒvƒ‹ƒwƒbƒhƒhƒ‰ƒSƒ“‚É•Ïg‚·‚é‚Æ“¯Žž‚ÉUŒ‚‚·‚é‚±‚Æ‚ª‰Â”\‚Æ‚È‚éB
+•‘‘ä‚Æ‚È‚é‚Ì‚ÍuƒJƒ‹ƒXƒg(ÎŠD‘å’n)v¨u‰ÎŽRv¨u–§—Ñv¨u»”™v¨u“´ŒAv¨u•X‰Ív¨u[ŠCv¨uˆÃ•v¨u–‚‹{v‚Æ‚¢‚¤9‚Â‚Ì–‚‹«ƒGƒŠƒAB
+ŠeƒGƒŠƒA‚ÌÅŒã‚É‚Íƒ{ƒX“G‚ª“oê‚µA‚±‚ê‚ç‚ð“|‚³‚È‚¢‚ÆŽŸ‚ÌƒGƒŠƒA‚Ö‚Íi‚ß‚È‚¢Bƒiƒ€ƒRƒQ[ƒ€‚Ì—ðŽj‚Ü‚ÅŒ©‚ç‚ê‚éŠ´“®‚ÌƒGƒ“ƒfƒBƒ“ƒO‚Í•KŒ©B
 
 
 
@@ -21911,7 +21963,7 @@ $bio
 
 ƒWƒƒƒ“ƒ‹FƒVƒ…[ƒeƒBƒ“ƒO
 
-ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+ƒ[ƒŠƒ“ƒOƒXƒCƒbƒ`
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+3ƒ{ƒ^ƒ“
 
 ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒvƒRƒ“ ƒvƒŒƒCƒVƒXƒeƒ€2iCPS2j
 
@@ -22009,7 +22061,7 @@ $bio
 ƒGƒAƒKƒCƒc -GOD BLESS THE RING-
 
 
-”­”„”NF1998.05
+”­”„”NF1998.03
 
 ŠJ”­Œ³FƒXƒNƒEƒFƒA / ƒhƒŠ[ƒ€ƒtƒ@ƒNƒgƒŠ[@”­”„Œ³Fƒiƒ€ƒR
 
@@ -22023,9 +22075,10 @@ CPU\¬[PSX CPU, H8/3002]@‰¹Œ¹ƒ`ƒbƒv[C352]
 
 
 ƒiƒ€ƒR‚ÆƒXƒNƒEƒFƒA‚É‚æ‚éƒA[ƒP[ƒhƒvƒƒWƒFƒNƒg‘æ1’eB
-ƒQ[ƒ€»ì‚É‚ÍƒhƒŠ[ƒ€ƒtƒ@ƒNƒgƒŠ[‚ª’S“–‚µ‚Ä‚¢‚éB
+ƒQ[ƒ€»ì‚ÍƒXƒNƒEƒFƒA‚ÌPS—pƒ\ƒtƒguTOBAL No.1v‚ðŠJ”­‚µ‚½ƒhƒŠ[ƒ€ƒtƒ@ƒNƒgƒŠ[‚ª’S“–‚µ‚Ä‚¢‚éB
 ƒQ[ƒ€‚ÌƒL[ƒ[ƒh‚Íu‚È‚ñ‚Å‚à‚ ‚èv‚Æ‚ ‚é’Ê‚èA360“xŽ©—R‚É“®‚¯‚é§ŒÀ–³‚«s“®”ÍˆÍ‚âA’i·‚âáŠQ•¨A
 ‚»‚µ‚ÄŒÂX‚Ì•Ší‚â•KŽE‹Z‚ðŽg‚Á‚½—lX‚Èíp‚È‚ÇA‘¼‚ÌŠi“¬ƒQ[ƒ€‚Æ‚Íˆê–¡ˆá‚¤ì•i‚Æ‚È‚Á‚Ä‚¢‚éB
+‚Ü‚½ƒQƒXƒgƒLƒƒƒ‰ƒNƒ^[‚Æ‚µ‚ÄƒXƒNƒEƒFƒA‚Ìl‹CRPGuƒtƒ@ƒCƒiƒ‹ƒtƒ@ƒ“ƒ^ƒW[‡Zv‚ÌƒLƒƒƒ‰ƒNƒ^[‚ªo‰‰‚µ‚Ä‚¢‚éB
 ƒiƒ€ƒR‚ÆƒXƒNƒEƒFƒA‚Æ‚¢‚¤‘g‚Ý‡‚í‚¹‚Æ‚¢‚¤˜b‘è«‚ªÛ—§‚Á‚Ä‚µ‚Ü‚¢AƒQ[ƒ€‚Æ‚µ‚Ä‚Ì•]‰¿‚Í‚¢‚Ü‚¢‚¿‚Å‚ ‚Á‚½B
 
 
@@ -22134,9 +22187,13 @@ $bio
 CPU\¬[SH-2 (2), 68000]@‰¹Œ¹ƒ`ƒbƒv[SCSP]
 
 
-ŒŽŠ§Žuƒ|ƒbƒvƒeƒB[ƒ“v‚Å˜AÚ‚³‚ê‚Ä‚¢‚½ƒNƒCƒY‚ðƒQ[ƒ€‰»‚µ‚½ì•iB
-“à—e‚ÍŠG‚Ì’†‚ÉŽU‚è‚Î‚ß‚ç‚ê‚½Š¿Žš‚Ì’†‚©‚çA‚P‚Â‚¾‚¯ˆá‚¤Š¿Žš‚ð’T‚µo‚·‚Æ‚¢‚¤‚à‚ÌB
-‰‹‰‚Í‚P‚O–âAã‹‰‚Í‚Q‚O–âA‚»‚ê‚¼‚êƒCƒ‰ƒXƒgƒNƒCƒY‚ª—pˆÓ‚³‚ê‚Ä‚¢‚ÄAƒ{[ƒiƒXƒQ[ƒ€‚à‚ ‚éB
+ƒtƒ@ƒbƒVƒ‡ƒ“ŽGŽŒŽŠ§uƒ|ƒbƒvƒeƒB[ƒ“vv‚Å˜AÚ‚³‚êA”ò’¹VŽÐ‚©‚ço”Å‚³‚ê‚½uƒGƒWƒzƒ“v‚ðƒQ[ƒ€‰»‚µ‚½ƒNƒCƒYƒQ[ƒ€B
+“à—e‚Íƒeƒ‚ƒiŒNAƒƒ‹Žq‚¿‚á‚ñAƒ‰¥ƒtƒ‰ƒ“ƒ`ƒ‚ƒVƒ‡˜Y‚Ì3l‚ð’†S‚ÉA
+ŠG‚Ì’†‚ÉŽU‚è‚Î‚ß‚ç‚ê‚½•¶Žš‚Ì’†‚©‚ç1‚Â‚¾‚¯ˆá‚¤•¶Žš‚ð’T‚µo‚µA
+ƒŒƒo[‚Å’ŽƒƒKƒl‚ð“®‚©‚µ‚Ä³‰ð‚ð’ŽƒƒKƒl‚ÌƒŒƒ“ƒY‚Ì’†‚É“ü‚ê‚Ä‚¢‚­‚Æ‚¢‚¤ƒVƒ“ƒvƒ‹‚È‚à‚ÌB
+‰‹‰‚Í10–âAã‹‰‚Í20–âA‚»‚ê‚¼‚êƒCƒ‰ƒXƒgƒNƒCƒY‚ª—pˆÓ‚³‚ê‚Ä‚¢‚ÄAƒ{[ƒiƒXƒQ[ƒ€‚à‚ ‚éB
+ƒQ[ƒ€‚Í“–ŽžAƒZƒK‚Ì‘æˆêƒ\ƒtƒgŒ¤‹†ŠJ”­•”‚ÌVl‚ð’†S‚ÉŠJ”­‚³‚ê‚Ä‚à‚Ì‚ÅA
+BGM‚É‚ÍƒCƒ`ƒ_ƒ“ƒgƒA[ƒ‹‚âƒ^ƒ“ƒgƒA[ƒ‹‚Åƒ{ƒc‚Æ‚È‚Á‚½‹È‚ðŽg‚Á‚Ä‚¢‚éB
 
 
 
@@ -24624,6 +24681,38 @@ CPU\¬[SH-2 (2), 68000]@‰¹Œ¹ƒ`ƒbƒv[SCSP]
 
 $end
 
+$info=finfurl2
+$bio
+ƒtƒ@ƒCƒiƒ‹ƒnƒƒ“‚Q
+
+
+”­”„”NF1999.03
+
+ŠJ”­^”­”„Œ³Fƒiƒ€ƒR
+
+ƒWƒƒƒ“ƒ‹FƒXƒ|[ƒc
+
+ƒRƒ“ƒgƒ[ƒ‰F”nŒ^ƒ‰ƒCƒhƒRƒ“ƒgƒ[ƒ‰i2ƒ{ƒ^ƒ“•t‚«j
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒiƒ€ƒR ƒVƒXƒeƒ€ƒX[ƒp[23
+
+CPU\¬[IDT R4650 (big), H8/3002]@‰¹Œ¹ƒ`ƒbƒv[C352]
+
+
+”n‚ÌŒ`‚ð‚µ‚½âž‘Ì‚ÉŒ×‚Á‚ÄŽèj‚ðˆ¬‚è”n‚ð‘€ì‚·‚é‚Æ‚¢‚¤ƒvƒŒƒCƒXƒ^ƒCƒ‹‚Å˜b‘è‚ðŒÄ‚ñ‚¾
+uƒtƒ@ƒCƒiƒ‹ƒnƒƒ“v‚Ì‘±•Ò‚Æ‚È‚é‘ÌŠ´‹£”nƒQ[ƒ€uƒtƒ@ƒCƒiƒ‹ƒnƒƒ“2vB
+‘€ì‚Í‘Oì‚Æ‚Ù‚Æ‚ñ‚Çˆê‚Å‚ ‚é‚ªA
+V“oê‚µ‚½uáŠQƒŒ[ƒXv‚âuƒƒCƒ„ƒ‹ƒpƒŒƒX‘åáŠQv‚Å‚Í2‚Â‚Ìƒ€ƒ`ƒ{ƒ^ƒ“‚ð“¯Žž‚É‰Ÿ‚·‚±‚Æ‚Å”n‚ðƒWƒƒƒ“ƒv‚³‚¹‚é‚±‚Æ‚ª‚Å‚«‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
+ƒŒ[ƒX‚Í16“ª—§‚Ä‚Ås‚í‚ê‚é‚æ‚¤‚É‚È‚èAu‘å“¦‚°”nv‚ðV‚½‚É‰Á‚¦‚½‹rŽ¿‚ÌˆÙ‚È‚é6“ª‚Ì”n‚©‚ç‘I‘ð‚Å‚«A
+ŽÅAƒ_[ƒgAáŠQ‚Ì3Ží—Þ‚ÌƒR[ƒX‚ÆAƒŒ[ƒX‹——£‚ÌˆÙ‚È‚é“ïˆÕ“x‚ª—pˆÓ‚³‚ê‚½‘S9ƒŒ[ƒX‚Æ‚È‚Á‚Ä‚¢‚éB
+‚Ü‚½‹Ræ‚·‚é”n‚É‚ÍƒXƒ^ƒ~ƒi‚ªÝ’è‚³‚ê‚½‚±‚Æ‚Å”n‚Ì«Ž¿AƒR[ƒX‚Ì“VŒó‚È‚Ç‚Ìó‹µ‚©‚çƒy[ƒX”z•ª‚ªd—v‚Æ‚È‚Á‚½ã‚ÉA
+ƒXƒs[ƒhƒI[ƒo[‚âÚG‚É‚æ‚è‹}Œƒ‚ÉÁ–Õ‚µ‚Ä‚µ‚Ü‚¤‚Ì‚ÅƒR[ƒXŽæ‚è‚àd—v‚Æ‚È‚Á‚Ä‚¢‚éB
+ƒQ[ƒ€’†‚ÌŽÀ‹µ’†Œp‚àŒ’Ý‚ÅA’ÊM‘Îí‚Í‘Oì‚Ì”{‚Ì8l‚Ü‚Å‰Â”\‚Æ‚È‚Á‚½‚±‚Æ‚ÅA‚³‚ç‚ÉŠy‚µ‚ß‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
+
+
+
+$end
+
 $info=finallap
 $bio
 ƒtƒ@ƒCƒiƒ‹ƒ‰ƒbƒv
@@ -24749,9 +24838,12 @@ $bio
 CPU\¬[Z80, 68000 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2151, 007232, ƒÊPD7759]
 
 
-‘€ì•û–@‚ÍA8•ûŒüƒŒƒo[‚ÅˆÚ“®AŠç–Êƒpƒ“ƒ`Aƒ{ƒfƒBƒpƒ“ƒ`AƒK[ƒh—p‚É3‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚·‚éB
-ƒvƒŒƒC’†‚ÉŠÔ‡‚¢‚âƒ{ƒ^ƒ“‘€ì‚É‚æ‚è7Ží—Þ‚ÌƒX[ƒp[ƒpƒ“ƒ`‚ªŽg—p‚Å‚«‚é‚Ì‚ª‘å‚«‚È“Á’¥B
-‚Ü‚½AƒgƒŒ[ƒjƒ“ƒOƒXƒe[ƒW‚à‚ ‚éB
+ƒRƒiƒ~‚©‚ç“oê‚µ‚½ƒ{ƒNƒVƒ“ƒOƒQ[ƒ€B
+‘€ì•û–@‚ÍA8•ûŒüƒŒƒo[‚ÅuƒƒbƒL[EƒXƒ~ƒX(2P‚ÍƒWƒ‡[Eƒoƒ‹ƒJƒ“)v‚ÌˆÚ“®AŠç–Êƒpƒ“ƒ`Aƒ{ƒfƒBƒpƒ“ƒ`AƒK[ƒh—p‚É3‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚·‚éB
+ŽŽ‡ŠJŽn‘O‚Éƒ{ƒNƒT[‚Ìƒpƒ[Ý’è‚ª‚Å‚«‚é‚Ù‚©A2Ÿ‚·‚é‚²‚Æ‚ÉƒXƒeƒbƒvƒAƒbƒvƒgƒŒ[ƒjƒ“ƒO‚ª‚ ‚èA
+ƒXƒs[ƒhAƒpƒ[AƒXƒ^ƒ~ƒi‚ðŠeƒgƒŒ[ƒjƒ“ƒO‚É‚æ‚èŽã“_‚ðŽ•ž‚µ‚½‚èA’·Š‚ðL‚Î‚·‚±‚Æ‚ª‚Å‚«‚éB
+ƒvƒŒƒC’†‚É‚ÍŠÔ‡‚¢‚âƒ{ƒ^ƒ“‘€ì‚É‚æ‚èuƒAƒbƒp[ƒJƒbƒgv‚âuƒ}ƒbƒnEƒpƒ“ƒ`v‚Æ‚¢‚Á‚½7Ží—Þ‚ÌƒX[ƒp[ƒpƒ“ƒ`‚ªŽg—p‚Å‚«‚é‚Ì‚ª‘å‚«‚È“Á’¥‚Å‚ ‚éB
+2l‘Îí‚à‰Â”\B
 
 
 
@@ -24930,13 +25022,19 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFƒAƒCƒŒƒ€ M92ƒVƒXƒeƒ€
+ƒVƒXƒeƒ€ƒ{[ƒhFƒAƒCƒŒƒ€ M107ƒVƒXƒeƒ€
 
 CPU\¬[V33, V30]@‰¹Œ¹ƒ`ƒbƒv[YM2151, GA20]
 
 
-ƒI[ƒ\ƒhƒbƒNƒX‚ÈcƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒOB
-2P‘¤‚ðŽg—p‚·‚ê‚Î“ï“x‚ª’á‚­‚È‚éB‘S8–ÊA3ŽüƒGƒ“ƒh‚Æ‚¢‚¤’¿‚µ‚¢ì•iB
+ƒAƒCƒŒƒ€ŒãŠú‚É“oê‚µ‚½ƒI[ƒ\ƒhƒbƒNƒX‚ÈcƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒOB
+ŠJ”­‚Í“¯ŽÐ‚ÌuŽlìÈvƒVƒŠ[ƒY‚ðŠJ”­‚µ‚½ƒ^ƒ€ƒeƒbƒNƒX‚Å‚ ‚éB
+‘€ì‚à8•ûŒüƒŒƒo[‚ÅŽ©‹@‚ð‘€ì‚µAƒVƒ‡ƒbƒg¥ƒ~ƒTƒCƒ‹Aƒ{ƒ“ƒo[‚Ì2ƒ{ƒ^ƒ“‚ðŽg—p‚ÆƒVƒ“ƒvƒ‹B
+ƒAƒCƒeƒ€ƒLƒƒƒŠƒA‚Ì’†g‚É‚æ‚Á‚Ä˜AŽËŒ^‚Ìu–³ŒÀƒoƒ‹ƒJƒ“vAŠgŽUŒ^‚ÌuƒEƒCƒ“ƒOƒVƒ‡ƒbƒgvA
+‘O•ûW’†Œ^‚ÌuƒOƒ‰ƒrƒgƒ“ƒŒƒCƒU[vA‘S•ûŒüŒ^‚Ìuƒ}ƒ‹ƒ`ƒEƒFƒCƒOƒŒƒlƒCƒhv‚Æ4Ží—Þ‚ÌƒVƒ‡ƒbƒg‚Éƒpƒ[ƒAƒbƒv‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
+‚Ü‚½ƒIƒvƒVƒ‡ƒ“‚Æ‚µ‚Ä‘O•û‚É”­ŽË‚³‚ê‚éuƒXƒgƒŒƒCƒgƒ~ƒTƒCƒ‹vA“G‚ð’Ç”ö‚·‚éuƒzƒDƒ~ƒ“ƒOƒ~ƒTƒCƒ‹v‚È‚Ç‚à‚ ‚éB
+—]’k‚¾‚ª2P‘¤‚ðŽg—p‚·‚ê‚Î“ï“x‚ª’á‚­‚È‚éB‘S8–ÊA3ŽüƒGƒ“ƒh‚Æ‚¢‚¤’¿‚µ‚¢ì•i‚¾‚ªA
+“ïˆÕ“x‚à’á‚­A‰SŽÒŒü‚¯‚Ì“à—e‚Æ‚È‚Á‚Ä‚¢‚éB
 
 
 
@@ -25708,8 +25806,14 @@ $bio
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2151, OKI6295]
 
 
-ƒJƒvƒRƒ“CPƒVƒXƒeƒ€‘æ1’e‚Æ‚µ‚Ä“oê‚µ‚½—Íì‚ªA‚±‚ÌuƒƒXƒgƒ[ƒ‹ƒhvB
-‘€ì‚Í8•ûŒüƒŒƒo[‚ÅˆÚ“®Aƒ[ƒŠƒ“ƒOƒXƒCƒbƒ`‚ÅƒI[ƒg˜AŽË‚Æ‚È‚Á‚Ä‚¢‚éƒVƒ‡ƒbƒg‚Ì•ûŒü‚ðŒˆ‚ß‚é‚±‚Æ‚ª‚Å‚«‚éB
+CPƒVƒXƒeƒ€‘æ1’e‚Æ‚µ‚Ä“oê‚µ‚½‚Ì‚ª‚±‚ÌuƒƒXƒgƒ[ƒ‹ƒhvB
+‘€ì‚Í8•ûŒüƒŒƒo[‚Åu’´íŽmv‚ð“®‚©‚µAƒ[ƒŠƒ“ƒOƒXƒCƒbƒ`‚ÅƒI[ƒg˜AŽË‚Æ‚È‚Á‚Ä‚¢‚éƒVƒ‡ƒbƒg‚Ì•ûŒü‚ðŒˆ‚ß‚½‚èA
+’†‰›‚Ìƒ{ƒ^ƒ“‚ð˜A‘Å‚·‚é‚±‚Æ‚Åƒ‰ƒCƒt‚ðÁ”ï‚µ‚ÄUŒ‚‚·‚éƒƒKƒNƒ‰ƒbƒVƒ…‚ð•ú‚Â‚±‚Æ‚ª‚Å‚«‚é‚Ù‚©A
+ƒTƒeƒ‰ƒCƒg‚ÆŒÄ‚Î‚ê‚éƒIƒvƒVƒ‡ƒ“‚Å“ÁŽê’e‚ÌUŒ‚E–hŒä‚ðs‚¤‚±‚Æ‚à‚Å‚«‚éB
+ƒQ[ƒ€’†A“G‚ð“|‚·‚±‚Æ‚Å‚¨‹à‚ªŽè‚É“ü‚èA
+‚»‚ê‚ðW‚ß‚ÄuƒVƒ‹ƒtƒB[v‚ÌŠJ‚­•Ší‰®‚Å—lX‚È•Ší‚ðw“ü‚·‚é‚±‚Æ‚Åƒpƒ[ƒAƒbƒv‚·‚é‚±‚Æ‚ª‰Â”\‚Å‚ ‚éB
+ƒ_ƒCƒ„ƒ‹ƒRƒ“ƒgƒ[ƒ‰‚ð”­“W‚³‚¹‚½uƒ[ƒŠƒ“ƒOƒXƒCƒbƒ`v‚ÆŒÄ‚Î‚ê‚é‰æŠú“I‚ÈƒAƒCƒfƒA‚ð·‚èž‚ñ‚¾‚±‚Æ‚Å’–Ú‚ð—‚Ñ‚½‚ªA
+‚»‚ê‚ªƒQ[ƒ€“à—e‚Éƒ}ƒbƒ`‚µ‚½—ÍìB
 ‘S9ƒXƒe[ƒWB
 
 
@@ -25735,8 +25839,13 @@ CPU\¬[M6809 (2)]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910 (2)]
 
 
 ‰¡ƒXƒNƒ[ƒ‹ƒ^ƒCƒv‚ÌƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€B
-‘€ì‚Í8•ûŒüƒŒƒo[‚ÅˆÚ“®‚µ‚ÄAƒpƒ‹ƒXƒŒ[ƒU[‚ÆƒWƒƒƒ“ƒv‚É2‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚·‚éB
-Ž©‹@‚ÌƒCƒNƒXƒyƒ‹‚ÍAó‹µ‚É‰ž‚¶‚Äƒƒ{ƒbƒg‚Æí“¬‹@‚ÌŽp‚É•ÏŒ`‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
+‘€ì‚Í8•ûŒüƒŒƒo[‚ÅˆÚ“®‚µ‚ÄAƒpƒ‹ƒXƒŒ[ƒU[‚ÆƒWƒƒƒ“ƒv‚É2‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—pA
+ƒpƒ‹ƒXƒŒ[ƒU[‚ð—­‚ß‚é‚±‚Æ‚ÅuƒrƒbƒOƒoƒ“v‚ðŒ‚‚Â‚±‚Æ‚ª‚Å‚«‚é‚æ‚¤‚É‚È‚éB
+ƒQ[ƒ€‚Í‹ó’†E’nãŒ`‘Ô‚É•ÏŒ`‚·‚éŒ`‘Ô‰Â•Ïí“¬ƒƒJuƒCƒNƒXƒyƒ‹v‚ð‘€ì‚µAuƒWƒYƒBƒŠƒAƒ€v‚ð”j‰ó‚·‚é‚Ì‚ª–Ú“IB
+‹ó’†Œ`‘ÔŽž‚É‚ÍƒGƒlƒ‹ƒM[‚ª™X‚ÉŒ¸­‚·‚é‚½‚ßA’nã‚É‚ ‚éƒGƒlƒ‹ƒM[ƒRƒA‚ðŽæ‚é‚±‚Æ‚Å•â‹‹‚µ‚È‚ª‚çæ‚ð–ÚŽw‚·B
+“G‚àŒÂ«“I‚Åí“¬’n—‹uƒrƒOv‚Í’á‚“x‚Å”òs‚µ‚Ä‚¢‚é‚Æ”ò‚ñ‚Å‚«‚½‚èA
+uS.T.Yv‚ð”j‰ó‚·‚é‚Æ“oê‚·‚éuƒRƒXƒ‚ƒu[ƒXƒ^[v‚ÉŽžŠÔ“à‚ÉƒhƒbƒLƒ“ƒO‚·‚é‚Æ‚±‚Åƒ{[ƒiƒXƒXƒe[ƒW‚Éi‚Þ‚±‚Æ‚à‚Å‚«‚éB
+‚¿‚È‚Ý‚ÉÅIƒ{ƒXuƒWƒYƒBƒŠƒAƒ€v‚ÍƒOƒ‰ƒfƒBƒEƒX‚ÌƒrƒbƒOƒRƒA‚»‚Á‚­‚èB
 
 
 
@@ -25775,11 +25884,11 @@ Fortress 2 Blue Arcade
 
 ŠJ”­^”­”„Œ³FEolith
 
-ƒWƒƒƒ“ƒ‹FƒAƒNƒVƒ‡ƒ“
+ƒWƒƒƒ“ƒ‹FƒAƒNƒVƒ‡ƒ“ƒVƒ…[ƒeƒBƒ“ƒO
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+ƒVƒXƒeƒ€ƒ{[ƒhFEolith Gradation 2D System
 
 CPU\¬[E1-32N]
 
@@ -25833,11 +25942,10 @@ $bio
 CPU\¬[68000 (2), M6809, HD63705]@‰¹Œ¹ƒ`ƒbƒv[C140, YM2151]
 
 
-Žl—ÖƒoƒM[‚ÌATV‚ÅƒIƒtƒ[ƒhƒgƒ‰ƒbƒN‚ð‘–‚é3D‘ÌŠ´ƒŒ[ƒXƒQ[ƒ€B
-’ÊM‘Îí‚Å‚Í“¯ŽÐ‚Ìƒtƒ@ƒCƒiƒ‹ƒ‰ƒbƒv‚Æ“¯‚¶‚­4‘ä‚Ìâž‘Ì‚ÅAÅ‚8l‚Ü‚Å“¯ŽžƒvƒŒƒC‰Â”\B
-‚Ü‚½uƒtƒ@ƒCƒiƒ‹ƒ‰ƒbƒvŒø‰Êv‚àŽó‚¯Œp‚ª‚ê‚Ä‚¢‚éB
-âž‘Ì‚ÍATVŒ^ƒRƒ“ƒgƒ[ƒ‰[‚Æƒnƒ“ƒhƒ‹‚Ì‚Ý‚Ì2Ží—Þ‚ª‚ ‚èA
-ƒVƒtƒgƒ`ƒFƒ“ƒW‚Íƒnƒ“ƒhƒ‹¶‚É‚ ‚éƒVƒtƒgƒOƒŠƒbƒv‚Ås‚¤B
+ƒiƒ€ƒR‚©‚ç“oê‚µ‚½uƒtƒ@ƒCƒiƒ‹ƒ‰ƒbƒvvuƒXƒYƒJƒGƒCƒgƒAƒ[ƒYv‚É‘±‚­’ÊM‹@”\•t‚«ƒQ[ƒ€uƒtƒH[ƒgƒ‰ƒbƒNƒXvB
+“à—e‚ÍƒIƒtƒ[ƒhŽl—ÖƒoƒM[‚ÌATV‚ÅƒIƒtƒ[ƒhƒgƒ‰ƒbƒN‚ð§ŒÀŽžŠÔ“à‚É‘–‚è‡ˆÊ‚ð‹£‚¤3D‘ÌŠ´ƒŒ[ƒXƒQ[ƒ€‚Å‚ ‚éB
+’ÊM‘Îí‚Å‚Í“¯ŽÐ‚Ìƒtƒ@ƒCƒiƒ‹ƒ‰ƒbƒv‚Æ“¯‚¶‚­4‘ä‚Ìâž‘Ì‚ÅAÅ‚8l‚Ü‚Å“¯ŽžƒvƒŒƒC‰Â”\‚ÅAuƒtƒ@ƒCƒiƒ‹ƒ‰ƒbƒvŒø‰Êv‚àŽó‚¯Œp‚ª‚ê‚Ä‚¢‚éB
+âž‘Ì‚ÍATVŒ^ƒRƒ“ƒgƒ[ƒ‰[‚Æƒnƒ“ƒhƒ‹‚Ì‚Ý‚Ì2Ží—Þ‚ª‚ ‚èAƒVƒtƒgƒ`ƒFƒ“ƒW‚Íƒnƒ“ƒhƒ‹¶‚É‚ ‚éƒVƒtƒgƒOƒŠƒbƒv‚Ås‚¤B
 
 
 
@@ -25885,9 +25993,12 @@ $bio
 CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[SN76496 (4)]
 
 
-ƒTƒbƒJ[‚È‚Ì‚©HƒuƒƒbƒN•ö‚µ‚È‚Ì‚©H‚±‚ê‚ªƒjƒ…[ƒ^ƒCƒv‚ÌƒXƒ|[ƒcƒQ[ƒ€I
-ƒuƒƒbƒN‚Å‚ ‚éƒTƒbƒJ[‘IŽè‚ðƒ{[ƒ‹‚ÅRŽU‚ç‚µ‚ÄA‰æ–Êã•”‚ÌƒS[ƒ‹‚ÉƒVƒ…[ƒg‚·‚é‚Æ‚¢‚¤“à—eB
-‘S64–Ê‚ÅA4–ÊƒNƒŠƒA–ˆ‚ÉƒVƒ‡[ƒ^ƒCƒ€‚ª‚ ‚éB
+ƒTƒbƒJ[‚È‚Ì‚©HƒuƒƒbƒN•ö‚µ‚È‚Ì‚©H‚±‚ê‚ªƒjƒ…[ƒ^ƒCƒv‚ÌƒXƒ|[ƒcƒQ[ƒ€I‚ªƒLƒƒƒbƒ`ƒRƒs[‚ÌƒuƒƒbƒN•ö‚µƒQ[ƒ€B
+“à—e‚ÍƒuƒƒbƒN‚Å‚ ‚éƒTƒbƒJ[‘IŽè‚ðƒ{[ƒ‹‚ÅRŽU‚ç‚µ‚ÄA‰æ–Êã•”‚ÌƒS[ƒ‹‚ÉƒVƒ…[ƒg‚·‚é‚Æ‚¢‚¤‚à‚ÌB
+‘€ì‚ÍŽå‚Éƒpƒhƒ‹‚ðŽg‚¤‚ªAƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚È‚ª‚çƒpƒhƒ‹‚ð‰ñ‚·‚±‚Æ‚Å‰ñ‚µ‚½•ûŒü‚Éƒ{[ƒ‹‚ð‹È‚°‚é‚±‚Æ‚ª‚Å‚«‚éB
+“¾“_‚ª“G‚æ‚èã‰ñ‚é‚©A“GƒS[ƒ‹ƒL[ƒp[‚ÆƒtƒHƒ[ƒhˆÈŠO‚Ì“G‚ð“|‚·‚±‚Æ‚ÅƒXƒe[ƒWƒNƒŠƒA‚Æ‚È‚éB
+4ƒXƒe[ƒWƒNƒŠƒA–ˆ‚ÉƒVƒ‡[ƒ^ƒCƒ€‚ª‚ ‚é‚Ù‚©‚ÉAƒtƒŠ[ƒLƒbƒN‚É¬Œ÷‚·‚é‚±‚Æ‚Åƒ{[ƒiƒXƒ|ƒCƒ“ƒg‚ªŽè‚É“ü‚éB
+‘S64ƒXƒe[ƒWB
 
 
 
@@ -26220,7 +26331,7 @@ Funny Bubble
 CPU\¬[Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[OKI6295]
 
 
-uƒpƒYƒ‹[ƒvv‚Ì”wŒi‚ð‘‚«Š·‚¦‚½ì•iB
+¦uƒpƒYƒ‹[ƒvv‚ÌŠC‘¯”Å
 
 
 
@@ -26327,8 +26438,13 @@ $bio
 CPU\¬[PSX CPU]@‰¹Œ¹ƒ`ƒbƒv[SPU]
 
 
-
-
+uGenesisv‚ÌˆÓ–¡‚ðž‚ß‚ç‚ê‚½uGv‚Æ‚¢‚¤’PŒê‚ðŠ¥‚µ‚½ƒVƒŠ[ƒY’ÊŽZ4ì–Ú‚Ìuƒ_ƒ‰ƒCƒAƒXvB
+‘€ì‚Í‘Î‹óE‘Î’nƒVƒ‡ƒbƒg‚ÆV‚½‚ÉƒLƒƒƒvƒ`ƒƒ[ƒ{[ƒ‹”­ŽË‚Æ‚È‚èA
+•ß‚ç‚¦‚½“G‚ð’‡ŠÔ‚É‚·‚é‚±‚Æ‚ª‚Å‚«‚é‚Æ‚¢‚¤uƒLƒƒƒvƒ`ƒƒ[ƒVƒXƒeƒ€v‚ª·‚èž‚Ü‚ê‚Ä‚¢‚éB
+•ß‚ç‚¦‚½“G‹@‚Í’ÊíAUŒ‚‚â–hŒäAƒLƒƒƒvƒ`ƒƒ[ƒ{ƒ€‚Æ‚µ‚ÄŽg‚¤‚±‚Æ‚ª‚Å‚«‚é‚Ù‚©A
+ƒLƒƒƒvƒ`ƒƒ[‚µ‚½‚Ü‚ÜƒVƒ‡ƒbƒg‚ð—­‚ß‚é‚±‚Æ‚Åƒ{ƒX‚Ì•ú‚ÂuƒÀƒr[ƒ€v‚ÆƒGƒlƒ‹ƒM[Š±Â‚ð‹N‚±‚·‹­—Í‚Èuƒ¿ƒr[ƒ€v‚ð•ú‚Â‚±‚Æ‚ª‚Å‚«‚é‚æ‚¤‚É‚à‚È‚éB
+uŠO“`v“¯—lA‘½‰æ–Ê•ûŽ®‚Å‚Í‚È‚¢‚à‚Ì‚ÌAƒOƒ‰ƒtƒBƒbƒN‚ª3Dƒ|ƒŠƒSƒ“‚Éi‰»‚µ‚½‚±‚Æ‚Å”——Í‚ ‚éƒ{ƒXí‚ª‘ÌŒ±‚Å‚«‚éB
+ƒXƒe[ƒW\¬‚Í‘S15ƒ][ƒ“A30ƒGƒŠƒA‚Æ‚È‚Á‚Ä‚¢‚éB
 
 
 
@@ -26353,12 +26469,13 @@ CPU\¬[PSX CPU]@‰¹Œ¹ƒ`ƒbƒv[SPU]
 
 
 u‚fƒ_ƒ‰ƒCƒAƒXv‚Ìƒ}ƒCƒi[ƒ`ƒFƒ“ƒWƒo[ƒWƒ‡ƒ“B
-ƒ][ƒ“ƒZƒŒƒNƒg‚ª‰Â”\‚Æ‚È‚èAŒ‚’Ä‚³‚ê‚Ä‚àƒpƒ[‚t‚oƒQ[ƒW‚ª1‚µ‚©‰º‚ª‚ç‚È‚¢ãA
+ƒ][ƒ“ƒZƒŒƒNƒg‚ª‰Â”\‚Æ‚È‚èAŒ‚’Ä‚³‚ê‚Ä‚àƒpƒ[‚t‚oƒQ[ƒW‚ª1‚µ‚©‰º‚ª‚ç‚È‚¢‚Ù‚©‚ÉA
 “G‹@‚ðƒLƒƒƒvƒ`ƒƒ[‚µ‚½ó‘Ô‚Å•œŠˆ‚Å‚«‚é‰SŽÒƒ‚[ƒh‚âA
 ‚‘¬˜AŽËƒ{ƒ^ƒ“‚ð’Ç‰ÁAÅŒã‚ÌŽ©‹@‚ªŒ‚’Ä‚³‚ê‚½ÛAƒAƒCƒeƒ€‚ð‚Î‚ç‚Ü‚­‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
 ‚Ü‚½ˆê•”ƒVƒXƒeƒ€‚Ì•ÏX‚âƒoƒ‰ƒ“ƒX’²®‚É‚æ‚è“ïˆÕ“x‚ª‘å•‚Éã¸‚µA
-ƒA[ƒP[ƒhƒQ[ƒ€î•ñŽuƒQ[ƒƒXƒgv‚Æ‚Ìƒ^ƒCƒAƒbƒvŠé‰æ
-uƒnƒCƒXƒRƒAƒ‰ƒ“ƒLƒ“ƒOƒoƒbƒNƒAƒbƒvv‚ªV‚½‚É·‚èž‚Ü‚ê‚Ä‚¢‚éB
+ƒA[ƒP[ƒhƒQ[ƒ€î•ñŽuƒQ[ƒƒXƒgv‚Æ‚Ìƒ^ƒCƒAƒbƒvŠé‰æuƒnƒCƒXƒRƒAƒ‰ƒ“ƒLƒ“ƒOƒoƒbƒNƒAƒbƒvv‚ªV‚½‚É·‚èž‚Ü‚ê‚Ä‚¢‚éB
+Œ³XA“ïˆÕ“x‚ª”äŠr“I—}‚¦–Ú‚¾‚Á‚½uGƒ_ƒ‰ƒCƒAƒXv‚É‘Î‚µA
+‚±‚ÌuVer.2v‚Å‚Í‚»‚Ì“ïˆÕ“x‚ðã‚°‰ß‚¬‚Ä‚µ‚Ü‚Á‚½‚½‚ßƒvƒŒƒCƒ„[‚©‚ç‚Í•s•]‚¾‚Á‚½B
 
 
 
@@ -26435,7 +26552,7 @@ $bio
 
 ”­”„”NF1999
 
-ŠJ”­Œ³FƒmƒCƒYƒtƒ@ƒNƒgƒŠ[@”­”„Œ³F–Ÿ[“°
+ŠJ”­Œ³FƒmƒCƒYƒtƒ@ƒNƒgƒŠ[@”­”„Œ³FƒmƒCƒYƒtƒ@ƒNƒgƒŠ[i¦‘“à”Ì”„‚È‚µj
 
 ƒWƒƒƒ“ƒ‹FŠi“¬ƒAƒNƒVƒ‡ƒ“
 
@@ -26446,10 +26563,15 @@ $bio
 CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
 
 
-“ú–{‚Å‚Í³Ž®”­”„‚³‚ê‚¸AƒAƒWƒAŒ—‚ÅŽå‚É‰Ò“®‚µ‚Ä‚¢‚½uƒtƒ@ƒCƒiƒ‹ƒtƒ@ƒCƒgvƒ^ƒCƒv‚ÌƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
-“à—e‚Í‘ÎíŠi“¬ƒQ[ƒ€‚ðˆÓŽ¯‚µ‚½‚æ‚¤‚Èì‚è‚ÅA“G‚ð•‚‚©‚¹‚Ä‹Z‚ðŒq‚¬A”\ƒqƒbƒg‚Æ‚¢‚Á‚½‚æ‚¤‚Èr‹Z‚ª‚Å‚«‚éB
-‚»‚µ‚ÄA‚±‚ÌƒVƒXƒeƒ€‚ÍŒã‚É“oê‚·‚éƒlƒIƒWƒI‚Ìuí‘“`³2001v‚ÉŽó‚¯Œp‚ª‚ê‚é‚±‚Æ‚É‚È‚éB
-‚¿‚È‚Ý‚É‚±‚ÌƒQ[ƒ€‚Ì»ì‰ïŽÐEƒmƒCƒYƒtƒ@ƒNƒgƒŠ[‚ÍAŒ³ƒAƒgƒ‰ƒX‚Ìu‹ŒŒŽ›ˆê‘°v‚ÌƒXƒ^ƒbƒt‚ç‚ª‹N‚±‚µ‚½“ú–{‚Ì‰ïŽÐB
+‰Æ’ë—pƒQ[ƒ€‹@‚ð’†S‚É‘¼‚Ìƒ[ƒJ[‚Ìƒ\ƒtƒgŠJ”­‚ð¿•‰‚Á‚Ä‚¢‚½ƒmƒCƒYƒtƒ@ƒNƒgƒŠ[‰‚ÌƒIƒŠƒWƒiƒ‹ì•i‚Æ‚È‚éƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
+8•ûŒüƒŒƒo[‚Å‘€ì‚µAƒpƒ“ƒ`AƒLƒbƒNAƒWƒƒƒ“ƒvA‘®«ƒAƒCƒeƒ€‚ÌŽg—p‚Æ4‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚·‚éB
+“à—e‚ÍƒI[ƒ\ƒhƒbƒNƒX‚Èƒxƒ‹ƒgƒAƒNƒVƒ‡ƒ“ƒ^ƒCƒv‚ÌƒQ[ƒ€‚ÅA“G‚©‚ç‚ÌUŒ‚‚ð–hŒä‚µ‚½‚èA
+ƒ‰ƒCƒt‚ðÁ”ï‚·‚é‚±‚Æ‚Å‹Ù‹}‰ñ”ð‚Å‚«‚½‚è‚ÆA
+‘ÎíŠi“¬ƒQ[ƒ€‚ðˆÓŽ¯‚µ‚½‚æ‚¤‚Èì‚è‚Æ‚È‚Á‚Ä‚¨‚èA“G‚ð•‚‚©‚¹‚Ä‹Z‚ðŒq‚¬A”\ƒqƒbƒg‚Æ‚¢‚Á‚½‚æ‚¤‚ÈƒRƒ“ƒ{‹Z‚ðŒˆ‚ß‚é‚±‚Æ‚à‚Å‚«‚éB
+ƒAƒWƒAŒ—‚ð’†S‚É‰Ò“®‚µ‚Ä‚¢‚½ì•i‚Å“ú–{‚Å‚ÍŒöŽ®‚É”Ì”„‚³‚ê‚Ä‚¢‚È‚¢‚ªA
+uAOU1999 ƒAƒ~ƒ…[ƒYƒƒ“ƒgƒGƒLƒXƒ|v‚Å‚Í–Ÿ[“°‚Æ‚¢‚¤ƒ[ƒJ[‚©‚ço“W‚³‚êA
+“ú–{‘“à‚Å‚àƒƒPƒeƒXƒg‚ªs‚í‚ê‚¨‚è‹É­”‚È‚ª‚ço‰ñ‚Á‚Ä‚¢‚éB
+‚¿‚È‚Ý‚É‚±‚ÌƒQ[ƒ€‚Ì»ì‰ïŽÐEƒmƒCƒYƒtƒ@ƒNƒgƒŠ[‚ÍAŒ³ƒAƒgƒ‰ƒX‚Ìu‹ŒŒŽ›ˆê‘°v‚ÌƒXƒ^ƒbƒt‚ç‚ª‹N‚±‚µ‚½‰ïŽÐ‚Å‚ ‚éB
 
 
 
@@ -26473,9 +26595,15 @@ $bio
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[054539 (2)]
 
 
-“G‚ð“|‚·“x‚ÉŒoŒ±’l‚ª–á‚¦A‹­‚­‚È‚Á‚Ä‚¢‚­‚Æ‚¢‚¤RPG“I—v‘f‚Ì‚ ‚éŒ©‰º‚ë‚µŒ^ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
-ƒLƒƒƒ‰ƒNƒ^[‚ÍcŽq‚Æƒhƒ‰ƒSƒ“‚ÆƒtƒFƒAƒŠ[‚Ì3l‚©‚ç‘I‚Ô‚±‚Æ‚ª‚Å‚«‚éB
-Gˆí‚ÈƒOƒ‰ƒtƒBƒbƒN‚ÆBGM‚ª‘s‘å‚È¢ŠEŠÏ‚ð•\Œ»‚µ‚Ä‚¢‚é–¼ìB
+ƒRƒiƒ~‚©‚ç“oê‚µ‚½ƒAƒNƒVƒ‡ƒ“ƒ[ƒ‹ƒvƒŒƒCƒ“ƒOƒQ[ƒ€B
+ƒvƒŒƒCƒ„[‚Í‚»‚ê‚¼‚êUŒ‚•û–@‚Ì“Á’¥‚ªˆÙ‚È‚éƒvƒŠƒ“ƒXuƒnƒCƒ}ƒ‹ƒXvAƒtƒFƒAƒŠ[uƒGƒŒƒCƒ“EƒV[vA
+ƒhƒ‰ƒSƒ“uƒKƒ‰ƒnƒbƒhv‚Ì’†‚©‚ç‘I‘ð‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
+‚±‚Ìì•i‚ÌÅ‘å‚Ì“Á’¥‚Í“G‚ð“|‚·‚±‚Æ‚ÅŒoŒ±’l‚ª“ü‚èAƒvƒŒƒCƒ„[ƒLƒƒƒ‰‚ª‹­‚­‚È‚Á‚Ä‚¢‚­‚Æ‚¢‚¤‚Æ‚±‚ë‚Å‚ ‚éB
+‚Ü‚½ƒQ[ƒ€’†‚É‚Í•óÎ‚ðŽè‚É“ü‚ê‚ê‚Î–‚–@‚ðŽg‚¤‚±‚Æ‚ª‚Å‚«‚é‚Ù‚©A•ó” ‚©‚çŒ»‚ê‚½ƒ^ƒ}ƒS‚ðŽæ‚é‚Æu—bbv‚ðŽg‚¤‚±‚Æ‚ª‚Å‚«‚é‚æ‚¤‚É‚È‚èA
+“G‚ÉUŒ‚‚ðŽdŠ|‚¯‚½‚èAƒ_ƒ[ƒW‚ðŽó‚¯‚½‚Æ‚«‚É‚Í‘Þ‹Ž‚³‚¹‰ñ•œ‚³‚¹‚é‚±‚Æ‚à‚Å‚«‚éB
+‚Ù‚©‚É‚àƒpƒXƒ[ƒhƒRƒ“ƒeƒBƒjƒ…[‚É‚æ‚èA
+ƒQ[ƒ€ƒI[ƒo[Žž‚É•\Ž¦‚³‚ê‚½ƒpƒXƒ[ƒh‚ðŽŸ‰ñƒvƒŒƒCŽž‚É“ü—Í‚·‚ê‚Î‘±‚«‚©‚çŠy‚µ‚Þ‚±‚Æ‚ª‚Å‚«‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
+Gˆí‚ÈƒOƒ‰ƒtƒBƒbƒN‚ÆBGM‚ª‘s‘å‚È¢ŠEŠÏ‚ð•\Œ»‚µ‚Ä‚¢‚é–¼ì‚Å‚ ‚éB
 2l“¯ŽžƒvƒŒƒC‰Â”\B
 
 
@@ -26537,8 +26665,10 @@ CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910 (2), 005289, VLM5030]
 “–Žž‚Æ‚µ‚Ä‚Í‘å‚«‚ÈƒLƒƒƒ‰ƒNƒ^[‚Ìƒƒ{ƒbƒg“¯Žm‚ªA‰F’ˆ‚ð•‘‘ä‚É‘Îí‚·‚éŠi“¬ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
 ƒQ[ƒ€ŠJŽnŽž‚É3‘Ì‚Ìƒƒ{ƒbƒg‚©‚çƒvƒŒƒCƒ„[‚ð‘I‘ð‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
 ‘€ì•û–@‚ÍA8•ûŒüƒŒƒo[‚ÅˆÚ“®‚ÆƒWƒƒƒ“ƒvAUŒ‚A–hŒäA•Ší‚Ì‘I‘ð‚É3‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚·‚éB
-–³d—Í‚É‚È‚éƒXƒe[ƒW‚È‚Ç‚ðŠÜ‚ßA‘S6ƒXƒe[ƒWB
-ƒTƒEƒ“ƒh‚ªGˆí‚Å‚ ‚éB
+–³d—Í‚É‚È‚éƒXƒe[ƒW‚È‚Ç‚ðŠÜ‚ß‚½A‘S6ƒXƒe[ƒWBƒTƒEƒ“ƒh‚ªGˆí‚Å‚ ‚éB
+—]’k‚¾‚ªuƒOƒ‰ƒfƒBƒEƒXvuƒcƒCƒ“ƒr[v‚Æ‚¢‚Á‚½ì•i‚ð‚Í‚¶‚ßA
+Šî”Â‹N“®Žž‚É—¬‚ê‚éƒZƒbƒgƒAƒbƒvEƒ~ƒ…[ƒWƒbƒN‚Ü‚Å˜b‘è‚Æ‚È‚Á‚½uƒoƒuƒ‹ƒVƒXƒeƒ€v‚¾‚Á‚½‚ªA
+Žæ‚èˆµ‚¢‚Ì“ï‚µ‚³‚©‚ç‚±‚Ìì•i‚ðÅŒã‚É‚»‚Ì–ð–Ú‚ðI‚¦‚é‚±‚Æ‚É‚È‚éB
 
 
 
@@ -26646,7 +26776,7 @@ Galaxia
 CPU\¬[S2650]
 
 
-¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+¦uƒMƒƒƒ‰ƒNƒVƒAƒ“v‚Ì»‘¢‹–‘øì•i
 
 
 
@@ -26821,14 +26951,14 @@ $bio
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2610]
 
 
-ƒTƒ“ƒ\ƒtƒg‚©‚çMVSƒVƒXƒeƒ€—p‚Æ‚µ‚Ä“oê‚µ‚½AŠi“¬ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€uƒMƒƒƒ‰ƒNƒV[ƒtƒ@ƒCƒgvB
-‚±‚ÌƒQ[ƒ€‚ÍA
-uƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[IIv‚È‚Ç‚ÆˆÙ‚È‚èA
+ƒTƒ“ƒ\ƒtƒg‚©‚çMVS—p‚Æ‚µ‚Ä“oê‚µ‚½AŠi“¬ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€uƒMƒƒƒ‰ƒNƒV[ƒtƒ@ƒCƒgvB
+‚±‚ÌƒQ[ƒ€‚ÍuƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[IIv‚È‚Ç‚ÆˆÙ‚È‚èA
 ƒtƒB[ƒ‹ƒh‚ª‚Ç‚ñ‚Ç‚ñƒXƒNƒ[ƒ‹‚·‚é‚½‚ßA‰æ–Ê’[‚É’Ç‚¢‚Â‚ß‚ç‚ê‚é‚±‚Æ‚ª‚È‚¢‚Ì‚ª“Á’¥“I‚Å‚ ‚éB
-‘€ì‚ÍAƒŒƒo[‚Ì¶‰E‚Å‘OŒã‚ÉˆÚ“®Aã‚ÅƒWƒƒƒ“ƒvA‰º‚Å‚µ‚á‚ª‚ÞB
-ƒ{ƒ^ƒ“‚ÍŽãE’†E‹­‚Ì3‚Â‚Ìƒ{ƒ^ƒ“‚ÅUŒ‚‚·‚éB
-4‚Â–Ú‚Ìƒ{ƒ^ƒ“‚Í’§”­‚ÉŽg—p‚·‚éB
-‚Ü‚½Aƒpƒ“ƒ`‚ªo‚é‚©AƒLƒbƒN‚ªo‚é‚©‚ÍAƒLƒƒƒ‰ƒNƒ^[‚É‚æ‚Á‚ÄˆÙ‚È‚éB
+‘€ì‚ÍƒŒƒo[‚Ì¶‰E‚Å‘OŒã‚ÉˆÚ“®Aã‚ÅƒWƒƒƒ“ƒvA‰º‚Å‚µ‚á‚ª‚ÝA
+ƒ{ƒ^ƒ“‚ÍŽãE’†E‹­‚Ì3‚Â‚Ìƒ{ƒ^ƒ“‚ÅUŒ‚‚ÆA’§”­ƒ{ƒ^ƒ“‚Ì4‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚·‚éB
+‚Ü‚½ƒpƒ“ƒ`‚ªo‚é‚©AƒLƒbƒN‚ªo‚é‚©‚ÍAƒLƒƒƒ‰ƒNƒ^[‚É‚æ‚Á‚ÄˆÙ‚È‚éB
+ƒRƒ~ƒJƒ‹‚È“WŠJ‚ÆƒLƒƒƒ‰ƒNƒ^[‚Ål‹Cì‚Æ‚È‚Á‚½‚¾‚¯‚Å‚È‚­A
+ƒTƒ“ƒ\ƒtƒg‚ç‚µ‚¢ƒIƒŠƒWƒiƒ‹‚Ìì•—‚ðì‚èo‚·‚±‚Æ‚É¬Œ÷‚µ‚½ì•i‚Æ‚È‚Á‚½B
 
 
 
@@ -27099,7 +27229,7 @@ $bio
 CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[OKI6295]
 
 
-ƒJ[ƒ\ƒ‹‚ð“®‚©‚µ‚ÄƒtƒB[ƒ‹ƒh‚ðˆÍ‚ñ‚Å‚¢‚­A‚¢‚í‚ä‚éwŽæ‚èƒQ[ƒ€‚ÉA’Eˆß‚Ì—v‘f‚ð·‚èž‚ñ‚¾‚Ì‚ªA‚±‚ÌuƒMƒƒƒ‹ƒYƒpƒjƒbƒNvB
+ƒJ[ƒ\ƒ‹‚ð“®‚©‚µ‚ÄƒtƒB[ƒ‹ƒh‚ðˆÍ‚ñ‚Å‚¢‚­A‚¢‚í‚ä‚éwŽæ‚èƒQ[ƒ€‚É’Eˆß‚Ì—v‘f‚ð·‚èž‚ñ‚¾‚Ì‚ªA‚±‚ÌuƒMƒƒƒ‹ƒYƒpƒjƒbƒNvB
 uƒNƒCƒbƒNƒXvuƒX[ƒp[ƒNƒCƒbƒNƒXvuƒ”ƒHƒ‹ƒtƒB[ƒhv‚Æ‚«‚Ä¡“x‚ÍuƒMƒƒƒ‹ƒYƒpƒjƒbƒNv‚Å‚ ‚éB
 ‰æ–Ê‚É‰B‚³‚ê‚½—‚ÌŽq‚ÌŽp‚È‚ÇAƒrƒWƒ…ƒAƒ‹‚Í‚©‚È‚è“î”h‚ÈƒQ[ƒ€‚ÉŒ©‚¦‚é‚ªA‚È‚©‚È‚©ƒQ[ƒ€ƒoƒ‰ƒ“ƒX‚ª‚µ‚Á‚©‚è‚µ‚Ä‚¢‚ÄŠy‚µ‚¢B
 ƒXƒe[ƒWƒNƒŠƒA‚ÌŒã‚É‚Íƒ‹[ƒŒƒbƒg‚ª‚ ‚èAŽŸ‚ÌƒXƒe[ƒW‚Ìƒ^ƒCƒ€‚ª‘‚¦‚½‚èƒVƒ‡[‚ðŒ©‚é‚±‚Æ‚ª‚Å‚«‚éB
@@ -27151,7 +27281,7 @@ $bio
 CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
 
 
-ƒJƒlƒR‚ªŠJ”­‚µ‚½ƒVƒXƒeƒ€ƒ{[ƒhuƒX[ƒp[¥ƒJƒlƒR¥ƒmƒ”ƒ@¥ƒVƒXƒeƒ€v‚Ì‘æ‚P’eƒ\ƒtƒgB
+ƒJƒlƒR‚ªŠJ”­‚µ‚½ƒVƒXƒeƒ€ƒ{[ƒhuƒX[ƒp[¥ƒJƒlƒR¥ƒmƒ”ƒ@¥ƒVƒXƒeƒ€v‚Ì‘æ1’eƒ\ƒtƒgB
 ƒQ[ƒ€‚Ìƒ‹[ƒ‹‚ÍŠî–{“I‚É•ÏX–³‚­AƒVƒ‹ƒGƒbƒg‚ð‚W‚O“ˆÈãˆÍ‚ñ‚ÅÁ‚¹‚Îƒ‰ƒEƒ“ƒhƒNƒŠƒA‚Æ‚È‚éB
 ‚½‚¾‚µAƒVƒŠ[ƒY’Ê‚µ‚ÄŽn‚ß‚Ä‘S”N—îŒü‚¯‚Ìì•i‚Æ‚È‚Á‚Ä‚¢‚éB
 ˆê•ûAVƒVƒXƒeƒ€‚Æ‚µ‚Ä“G‚ðUŒ‚‚·‚é‚±‚Æ‚ªo—ˆ‚éuƒpƒjƒbƒNƒAƒ^ƒbƒNv‚ªŽæ‚èž‚Ü‚ê‚Ä‚¢‚éB
@@ -27231,7 +27361,7 @@ $bio
 CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
 
 
-ƒMƒƒƒ‹ƒYƒpƒjƒbƒNƒVƒŠ[ƒY’ÊŽZ5ì–ÚB
+ƒMƒƒƒ‹ƒYƒpƒjƒbƒNƒVƒŠ[ƒY‚Ì5ì–ÚB
 ƒNƒŠƒAŽž‚Ì’B¬“x‚É‚æ‚Á‚Ä’EˆßƒV[ƒ“‚ª‚R’iŠK‚É•Ï‰»AƒVƒŠ[ƒY‰‚ÌƒAƒjƒ[ƒVƒ‡ƒ“AƒQ[ƒ€’†A
 ƒGƒNƒXƒgƒ‰ƒRƒCƒ“‚ð‚T–‡W‚ß‚é‚Æ—‚ÌŽq‚ÌƒVƒ‹ƒGƒbƒg‚ª•Ï‰»‚·‚é“™AV—v‘f‚ª·‚èž‚Ü‚ê‚½ì•i‚Æ‚È‚Á‚Ä‚¢‚éB
 ‚Ü‚½‘Oì“¯—l‚Q‚o‘Îí‚ª‰Â”\‚ÅA“GUŒ‚•û–@‚ªƒAƒCƒeƒ€‚É•ÏX‚³‚ê‚Ä‚¢‚éB
@@ -27259,8 +27389,13 @@ $bio
 CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
 
 
-
-
+ƒJƒlƒR‚ð‘ã•\‚·‚él‹CìuƒMƒƒƒ‹ƒYƒpƒjƒbƒNvƒVƒŠ[ƒY‚Ì6ì–ÚB
+‘€ì•û–@‚Í‚±‚ê‚Ü‚Å‚Æ•Ï‚í‚è‚È‚­8•ûŒüƒŒƒo[‚Æƒ{ƒ^ƒ“1‚Â‚¾‚¯‚ÅA80“ˆÈãwŽæ‚é‚±‚Æ‚ª‚Å‚«‚ê‚ÎƒXƒe[ƒWƒNƒŠƒA‚Æ‚È‚èA
+‘S‚Ä‚ÌƒOƒ‰ƒtƒBƒbƒN‚ð•\Ž¦‚³‚¹‚é‚±‚Æ‚ª‚Å‚«‚ê‚ÎƒAƒjƒ[ƒVƒ‡ƒ“‚ðŒ©‚é‚±‚Æ‚ª‚Å‚«‚éB
+‘Oì“¯—lƒQ[ƒ€’†A11–‡‚ÌƒGƒNƒXƒgƒ‰ƒRƒCƒ“‚ðW‚ß‚é‚Æ—‚ÌŽq‚ÌƒOƒ‰ƒtƒBƒbƒN‚ª•Ï‰»‚·‚é‚Ù‚©‚É‚àA
+ƒ~ƒjƒQ[ƒ€‚ª’Ç‰Á‚³‚ê‚½‚èA“¯ŽžŠú‚É“oê‚µ‚½ƒJƒlƒR‚Ìì•i‚Æ“¯‚¶‚­A
+uƒX[ƒp[ƒJƒlƒRƒ_ƒCƒ„ƒ‹vƒVƒXƒeƒ€‚Å—‚ÌŽq‚Ì“d˜b”Ô†‚ÆˆÃØ”Ô†‚ðŽè‚É“ü‚ê‚é‚±‚Æ‚Å—‚ÌŽq‚Ìº‚ð’®‚­‚±‚Æ‚ª‚Å‚«‚éã‚ÉA
+ŠúŠÔŒÀ’è‚ÅƒvƒŒƒ[ƒ“ƒgŠé‰æ‚às‚í‚ê‚Ä‚¢‚½B
 
 
 
@@ -27310,10 +27445,13 @@ $bio
 CPU\¬[V70, Z80]@‰¹Œ¹ƒ`ƒbƒv[YMF271]
 
 
+uƒGƒNƒZƒŠƒIƒ“vuƒvƒ‰ƒXƒAƒ‹ƒtƒ@vu‚Ô‚½‚³‚ñvuƒ‚ƒ‚ƒR120%v‚Æ‚¢‚Á‚½A
 ‚È‚Â‚©‚µ‚ÌƒWƒƒƒŒƒRƒLƒƒƒ‰‚ªƒQ[ƒ€‚Ì¢ŠE‚ð”ò‚Ñ‚Ü‚í‚éVŠ´ŠoƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€B
-‘S6ƒXƒe[ƒW‚Ìƒm[ƒ}ƒ‹ƒ‚[ƒh‚Æ‚Í•Ê‚ÉAˆê’èŽžŠÔ‚Å“¾“_‚ð‹£‚¤ƒ^ƒCƒ€ƒAƒ^ƒbƒNƒ‚[ƒh‚ð“‹ÚB
-ƒ^ƒCƒ€ƒAƒ^ƒbƒN‚Å‚ÍAŽžŠÔ“à‚È‚çŽc‹@–³§ŒÀA‚³‚ç‚É2P“¯ŽžƒvƒŒƒC‚à1ƒRƒCƒ“‚Å‰Â”\‚Å‚ ‚éB
-5l‚Ìl‹Cº—D‚ª’‚Á‚½‚è‹©‚ñ‚¾‚è‚Æ‚¢‚¤‚Ì‚àƒtƒ@ƒ“‚É‚ÍŠð‚µ‚¢‰‰oB
+“à—e‚ÍƒI[ƒ\ƒhƒbƒNƒX‚ÈƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€‚ÅA“ïˆÕ“x‚à—}‚¦‚ßB
+‘S6ƒXƒe[ƒW‚Ìƒm[ƒ}ƒ‹ƒ‚[ƒh‚Æ‚Í•Ê‚ÉAˆê’èŽžŠÔ‚Å“¾“_‚ð‹£‚¤ƒ^ƒCƒ€ƒAƒ^ƒbƒNƒ‚[ƒh‚ª—pˆÓ‚³‚ê‚Ä‚¨‚èA
+§ŒÀŽžŠÔ“à‚È‚çŽc‹@–³§ŒÀA‚³‚ç‚É2P“¯ŽžƒvƒŒƒC‚à1ƒRƒCƒ“‚Å‰Â”\‚Å‚ ‚éB
+5l‚Ì—L–¼º—D‚ª’‚Á‚½‚è‹©‚ñ‚¾‚è‚Æ‚¢‚¤‚Ì‚àƒtƒ@ƒ“‚É‚ÍŠð‚µ‚¢‰‰oB
+‚¿‚È‚Ý‚ÉƒLƒƒƒ‰ƒNƒ^[ƒfƒUƒCƒ“‚Í–Ÿ‰æ‰Æ ‚»‚¤‚Ü—³–çŽ‚Å‚ ‚éB
 
 
 
@@ -27386,6 +27524,36 @@ CPU\¬[M6809]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
+$info=gamshara
+$bio
+e•ŽÒ—… ƒƒKƒ€ƒVƒƒƒ‰„
+
+
+”­”„”NF2002.08
+
+ŠJ”­Œ³Fƒ~ƒbƒ`ƒFƒ‹@”­”„Œ³FƒJƒvƒRƒ“
+
+ƒWƒƒƒ“ƒ‹FƒAƒNƒVƒ‡ƒ“ƒVƒ…[ƒeƒBƒ“ƒO
+
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+3ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒiƒ€ƒR ƒVƒXƒeƒ€10
+
+CPU\¬[PSX CPU]
+
+
+í‘Žž‘ã‚ð•‘‘ä‚Æ‚µ‚½‰œs‚«‚Ì‚ ‚éƒAƒNƒVƒ‡ƒ“ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€ue•ŽÒ—…vB
+ƒLƒƒƒ‰ƒNƒ^[‚Íƒpƒ[ƒ^ƒCƒv‚Åƒ^ƒŒ‚‚¿‰Â”\‚ÈuŽG‰ê‘·ˆêv‚ÆA2’iƒWƒƒƒ“ƒv‚ª‰Â”\‚ÈƒXƒs[ƒhƒ^ƒCƒv‚ÌuŒuv‚ª‘I‘ð‚Å‚«A
+8•ûŒüƒŒƒo[‚ÅƒLƒƒƒ‰ƒNƒ^[EƒJ[ƒ\ƒ‹ˆÚ“®AŽËŒ‚AƒWƒƒƒ“ƒv‰ñ”ðA‰œ‹`‚Ì3‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚·‚éB
+ƒQ[ƒ€ƒVƒXƒeƒ€‚ÍA
+ŽËŒ‚‚Íƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‘±‚¯‚é‚±‚Æ‚Å˜AŽË‚ª‰Â”\‚ÅAƒWƒƒƒ“ƒv’†‚É‚Í“–‚½‚è”»’è‚Í‚È‚¢‚ªÚ‹ßí‚Å‚ÌƒXƒL‚Í‘å‚«‚­‚È‚é‚Æ‚¢‚¤ƒfƒƒŠƒbƒg‚ª‚ ‚èA
+‚Ü‚½“G‚ð“|‚µuƒKƒ€ƒVƒƒƒ‰ƒQ[ƒWv‚ð—­‚ß‚Ä‚¢‚­‚±‚Æ‚Åˆê’èŽžŠÔ–³“Gó‘Ô‚Æ‚È‚éu‰œ‹`ƒKƒ€ƒVƒƒƒ‰v‚ªŽg—p‰Â”\‚Å‚ ‚éB
+’¿‚µ‚¢ƒ^ƒCƒv‚ÌƒAƒNƒVƒ‡ƒ“ƒVƒ…[ƒeƒBƒ“ƒO‚¾‚ªA‚Ç‚±‚©ƒ~ƒbƒ`ƒFƒ‹‚Ì‘Og‚Æ‚à‚¢‚¦‚éTAD‚ÌuƒJƒx[ƒ‹v‚âuƒuƒ‰ƒbƒhƒuƒ‰ƒU[ƒYv‚ðœfœi‚Æ‚³‚¹‚éì•iB
 
 
 
@@ -27579,10 +27747,12 @@ $bio
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2610]
 
 
-2D‘ÎíŠi“¬‚Ìl‹Cì•iu‰ì˜T“`àv‚ªÄ“x“oêB
-‰ì˜TƒVƒŠ[ƒYÅ‘å‚Ì“Á’¥‚Å‚ ‚Á‚½uƒ‰ƒCƒ“ƒoƒgƒ‹v‚ð”pŽ~‚µA
-uƒuƒŒ[ƒLƒ“ƒOv‚ð‚Í‚¶‚ß‚Æ‚µ‚½”X‚ÌVƒVƒXƒeƒ€‚ð“±“üA‚Ü‚Á‚½‚­V‚µ‚­¶‚Ü‚ê•Ï‚í‚Á‚½ì•i‚Æ‚È‚Á‚Ä‚¢‚éB
-ŽQíƒLƒƒƒ‰ƒNƒ^[‚à‰ß‹Ž‚Ì‰ì˜T“`àƒVƒŠ[ƒY‚©‚çˆø‚«‘±‚«ŽQí‚µ‚Ä‚¢‚é‚ÍƒeƒŠ[‚Ì‚Ý‚ÅA‘¼‚Í‘S‚ÄVƒLƒƒƒ‰ƒNƒ^[‚Æ‚È‚Á‚Ä‚¢‚éB
+SNK‚ð‘ã•\‚·‚é2D‘ÎíŠi“¬‚Ìl‹Cì•iu‰ì˜T“`àv‚ªÄ‚Ñ“oêB
+‰ì˜TƒVƒŠ[ƒYÅ‘å‚Ì“Á’¥‚Å‚ ‚Á‚½uƒ‰ƒCƒ“ƒoƒgƒ‹v‚ª”pŽ~‚³‚ê‚½ˆê•û‚ÅA
+Ý’è‚µ‚½ƒ|ƒCƒ“ƒg‚Åƒpƒ[ƒAƒbƒv‚·‚é‚±‚Æ‚ª‚Å‚«‚éuT.O.P.ƒVƒXƒeƒ€v‚âA
+‘ŠŽè‚ÌUŒ‚‚ð–hŒä‚µ‚Ä‚à‘Ì—Í‚ª‰ñ•œ‚µ‚½‚èAƒK[ƒhƒLƒƒƒ“ƒZƒ‹‚ª‰Â”\‚Æ‚È‚éuƒWƒƒƒXƒgƒfƒBƒtƒFƒ“ƒXvA
+•KŽE‹Z‚ð“r’†‚ÅƒLƒƒƒ“ƒZƒ‹‚Å‚«‚éuƒuƒŒ[ƒLƒ“ƒOv‚È‚ÇA”X‚ÌVƒVƒXƒeƒ€‚ð“±“ü‚µ‚½‚Ü‚Á‚½‚­V‚µ‚­¶‚Ü‚ê•Ï‚í‚Á‚½ì•i‚Æ‚È‚Á‚Ä‚¢‚éB
+‚Ü‚½ŽQíƒLƒƒƒ‰ƒNƒ^[‚à‰ß‹Ž‚Ì‰ì˜T“`àƒVƒŠ[ƒY‚©‚çˆø‚«‘±‚«ŽQí‚µ‚Ä‚¢‚é‚ÍƒeƒŠ[‚Ì‚Ý‚ÅA‘¼‚Í‘S‚ÄVƒLƒƒƒ‰ƒNƒ^[‚ÆˆêV‚³‚ê‚Ä‚¢‚éB
 
 
 
@@ -27694,8 +27864,13 @@ $bio
 CPU\¬[R5000 (little), ADSP2104]@‰¹Œ¹ƒ`ƒbƒv[DMA-driven DAC (2)]
 
 
-
-
+uƒKƒ“ƒgƒŒƒbƒgEƒŒƒWƒFƒ“ƒhv‚Ìƒo[ƒWƒ‡ƒ“ƒAƒbƒv”Å‚Æ‚È‚é‚Ì‚ª‚±‚Ìì•iB
+‘½l”“¯ŽžƒvƒŒƒC‚âƒpƒXƒ[ƒhƒRƒ“ƒeƒBƒjƒ…[‚È‚ÇA
+Šî–{“I‚È‚à‚Ì‚ÍuƒKƒ“ƒgƒŒƒbƒgEƒŒƒWƒFƒ“ƒhv‚Æ•Ï‚í‚è‚È‚¢‚à‚Ì‚ÌA
+uƒiƒCƒgvuƒoƒ‹ƒLƒŠ[vuƒA[ƒ`ƒƒ[v‚ð‚Í‚¶‚ß‚Æ‚·‚éV‚µ‚¢ƒLƒƒƒ‰ƒNƒ^[‚ª’Ç‰Á‚³‚ê‘S8Ží—Þ‚Æ‚È‚Á‚½‚Ù‚©A
+ƒXƒe[ƒWƒ}ƒbƒv‚à’Ç‰Á‚³‚ê‚Ä‚¢‚éB
+‚Ü‚½uƒ^[ƒ{ƒAƒ^ƒbƒNv‚Ì‰‰o‚ª”hŽè‚Æ‚È‚èA–¡•ûƒvƒŒƒCƒ„[‚ð—˜—p‚µ‚½u‹¦—Íƒ^[ƒ{ƒAƒ^ƒbƒNv‚ªŽg‚¦‚é‚æ‚¤‚É‚à‚È‚Á‚Ä‚¢‚éB
+‘¼‚Ì‰‰o–Ê‚Å‚àéx‚µŠG‚Å\¬‚³‚ê‚éƒXƒe[ƒW‚âƒXƒe[ƒW‚ÌêŒi‚É‚æ‚Á‚ÄBGM‚ª•Ï‰»‚·‚é‚È‚Ç‚Ì‰ü—Ç‚à‰Á‚¦‚ç‚ê‚Ä‚¢‚éB
 
 
 
@@ -27816,8 +27991,10 @@ CPU\¬[68EC020, 68000]@‰¹Œ¹ƒ`ƒbƒv[ES5505]
 
 
 ƒ^ƒCƒg[‚æ‚è“oê‚µ‚½AcƒXƒNƒ[ƒ‹ƒ^ƒCƒ€ƒgƒ‰ƒxƒ‹ƒVƒ…[ƒeƒBƒ“ƒOì•iB
-‘€ì‚Í8•ûŒüƒŒƒo[AƒVƒ‡ƒbƒg‚Æƒ{ƒ€‚É2‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—pB
-“ŒˆŸƒ^ƒCƒv‚Ì–Ê”’‚³‚ð‘_‚Á‚½‚æ‚¤‚¾‚ªA“à—e“I‚É‚ÍŽ—‚Ä‚àŽ—‚Â‚©‚Ê‚à‚Ì‚Å‚ ‚èA“ŒˆŸƒtƒ@ƒ“‚Ì‹t—Ø‚ÉG‚ê‚½‚±‚Æ‚¾‚ë‚¤B
+‘€ì‚Í8•ûŒüƒŒƒo[AƒVƒ‡ƒbƒg‚Æƒ{ƒ€‚É2‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚·‚éƒI[ƒ\ƒhƒbƒNƒX‚È“à—e‚Å‚ ‚éB
+ƒvƒŒƒCƒ„[‚Íí“¬‹@AƒwƒŠƒRƒvƒ^[A–¢—ˆŒ^í“¬‹@‚Ì3‚Â‚Ìƒ^ƒCƒv‚©‚ç‘I‘ð‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
+“ŒˆŸƒ^ƒCƒv‚Ì–Ê”’‚³‚ð‘_‚Á‚½‚æ‚¤‚¾‚ª“à—e“I‚É‚ÍŽ—‚Ä‚àŽ—‚Â‚©‚Ê‚à‚Ì‚Å‚ ‚èA
+ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€‚Æ‚µ‚Ä‚à‚»‚ê‚Ù‚Ç—Ç‚¢‚à‚Ì‚Å‚à‚È‚­A“ŒˆŸƒtƒ@ƒ“‚Ì‹t—Ø‚ÉG‚ê‚½‚±‚Æ‚¾‚ë‚¤B
 ‘S5ƒXƒe[ƒWB
 
 
@@ -27849,6 +28026,37 @@ CPU\¬[68000, 8085A]@‰¹Œ¹ƒ`ƒbƒv[MSM5232, AY8910, DAC (2)]
 
 $end
 
+$info=gjspace
+$bio
+ƒXƒy[ƒX ^ Œ‚”vÔ@2GAMES in ONE
+
+
+”­”„”NF2001.12
+
+ŠJ”­Œ³Fƒƒgƒ@”­”„Œ³Fƒiƒ€ƒR
+
+ƒWƒƒƒ“ƒ‹FƒpƒYƒ‹
+
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+3ƒ{ƒ^ƒ“iƒXƒy[ƒX‚Í2ƒ{ƒ^ƒ“j
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒiƒ€ƒR ƒVƒXƒeƒ€10
+
+CPU\¬[PSX CPU]
+
+
+u”vÔv‚Å’m‚ç‚ê‚éƒƒgƒ‚æ‚è“oê‚µ‚½2in1ƒ^ƒCƒv‚ÌƒpƒYƒ‹ƒQ[ƒ€B
+uŒ‚”vÔv‚Í–C‘ä‚ðˆÚ“®‚³‚¹‚È‚ª‚çAŽè”v‚ð”­ŽË‚µA
+§ŒÀŽžŠÔ“à‚É‡Žq‚ÆŽq‚Å”v‚ð‘µ‚¦‚ÄƒtƒB[ƒ‹ƒhã‚Ì”v‚ðÁ‚µ‚Ä‚¢‚­‚Æ‚¢‚¤‚à‚Ì‚ÅA
+Žè”v‚Ì“ü‚ê‘Ö‚¦‚âAƒAƒCƒeƒ€‚ðŽg‚¤‚±‚Æ‚à‚Å‚«‚éB
+ˆê•û‚ÅuƒXƒy[ƒXv‚ÍAu”vÔv‚Ì3Dƒ|ƒŠƒSƒ“ƒ^ƒCƒv‚Ì”vƒpƒYƒ‹ƒQ[ƒ€‚Æ‚¢‚¦‚é‚à‚Ì‚ÅA
+ƒJ[ƒ\ƒ‹‚ð“®‚©‚µ‚Äê‚©‚ç”v‚ðŽæ‚èA“¯‚¶•¿‚à‚µ‚­‚Í˜A”Ô‚Ì”v‚ð3‚ÂˆÈã‚ð‘µ‚¦‚ÄÁ‚µ‚Ä‚¢‚«A
+§ŒÀŽžŠÔ“à‚É3–Ê\¬‚ÌƒtƒB[ƒ‹ƒhƒLƒ…[ƒu‚Ì”v‚ð‘S‚ÄÁ‚·‚±‚Æ‚ÅƒXƒe[ƒWƒNƒŠƒA‚Æ‚È‚é‚ªA
+”v‚ðãŽè‚­‰ñ“]‚³‚¹‚Ä‘µ‚¦‚é‚±‚Æ‚Å˜A”Ô‚ðì‚èo‚µA˜A½‚ð‹N‚±‚·‚±‚Æ‚ª‚Å‚«‚éB
+
+
+
+$end
+
 $info=gemini
 $bio
 ƒWƒFƒ~ƒjƒEƒCƒ“ƒO
@@ -27867,12 +28075,12 @@ $bio
 CPU\¬[Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM3812, MSM5205]
 
 
-“¯ŽÐuƒXƒ^[ƒtƒH[ƒXvˆÈ—ˆ‚ÌcƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€B
+“¯ŽÐuƒXƒ^[ƒtƒH[ƒXvˆÈ—ˆ‚Æ‚È‚écƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€B
 ”ü‚µ‚¢ƒOƒ‰ƒtƒBƒbƒN‚ªA‚Æ‚Ä‚àˆóÛ“I‚Å‚ ‚éB
-’Ž‚É•¢‚í‚ê‚½¢ŠE‚ð‹~‚¤‚½‚ßAŽålŒö‚Í”ò‚Ñ—§‚Ì‚¾‚ªA‰½‚Æ‚¢‚Á‚Ä‚à‚±‚ÌƒQ[ƒ€‚Ì“Á’¥‚ÍAŽ©‹@‚ÌŒã‚ë‚É˜A‚È‚éƒKƒ“ƒ{[ƒ‹‚Ì‘¶Ý‚¾B
+’Ž‚É•¢‚í‚ê‚½¢ŠE‚ð‹~‚¤‚½‚ßAŽålŒö‚Í”ò‚Ñ—§‚Â‚Ì‚¾‚ªA‰½‚Æ‚¢‚Á‚Ä‚à‚±‚ÌƒQ[ƒ€‚Ì“Á’¥‚ÍAŽ©‹@‚ÌŒã‚ë‚É˜A‚È‚éƒKƒ“ƒ{[ƒ‹‚Ì‘¶Ý‚¾B
 ƒKƒ“ƒ{[ƒ‹1‚Â‚É‚Â‚«1‰ñ‚Ì“ÁŽêUŒ‚‚ª‰Â”\B
 ƒKƒ“ƒ{[ƒ‹‚ðŽ‚Â“G‚©‚ç’D‚Á‚½‚èA‹t‚É’D‚í‚ê‚½‚è‚ÆA‚È‚©‚È‚©l‚¦‚ç‚ê‚½ƒVƒXƒeƒ€‚Æ‚È‚Á‚Ä‚¢‚éB
-—]’k‚¾‚ªA“–‰‚±‚ÌƒQ[ƒ€‚ÍAƒX[ƒp[ƒXƒ^[ƒtƒH[ƒX‚Æ‚µ‚ÄŠJ”­‚³‚ê‚Ä‚¢‚½‚ç‚µ‚¢B
+—]’k‚¾‚ªA“–‰‚±‚ÌƒQ[ƒ€‚ÍƒX[ƒp[ƒXƒ^[ƒtƒH[ƒX‚Æ‚µ‚ÄŠJ”­‚³‚ê‚Ä‚¢‚½‚ç‚µ‚¢B
 
 
 
@@ -27920,11 +28128,14 @@ $bio
 CPU\¬[M6809 (2), HD63701]@‰¹Œ¹ƒ`ƒbƒv[YM2151, Namco]
 
 
-”ü‚µ‚¢ƒOƒ‰ƒtƒBƒbƒN‚ÆAƒŠƒAƒ‹‚È‰¹º‡¬‚Å“oê‚µ‚½uŒ¹•½“¢–‚“`vB
+˜a•—‚Ì”ü‚µ‚¢ƒOƒ‰ƒtƒBƒbƒN‚ÆAƒŠƒAƒ‹‚È‰¹º‡¬‚Å“oê‚µ‚½uŒ¹•½“¢–‚“`vB
 ŽO“r‚Ì“nŽç‚Å‚ ‚éˆÀ‘Ê”k‚ð—Š‚è‚ÉA
-8•ûŒüƒŒƒo[‚ÅŽålŒö‚ÌŒi´‚ð‘€ì‚µAŒ•‚ÆƒWƒƒƒ“ƒv‚É2‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚µ‚Ä‘X‚ð„‚è—Š’©‚Ì‘Ò‚ÂŠ™‘q‚ð–ÚŽw‚·B
-‚Ü‚½A—Š’©‚ð“|‚·‚É‚ÍAŽOŽí‚Ì_Ší‚ª•K—v‚Æ‚È‚é‚½‚ßA‚»‚ê‚ç‚ðW‚ß‚é–Ú“I‚à‚ ‚éB
-ƒXƒe[ƒW\¬‚ÍAƒgƒbƒvƒrƒ…[‚ÆƒTƒCƒhƒrƒ…[A‚³‚ç‚ÉƒLƒƒƒ‰ƒNƒ^[‚ª‘å‚«‚¢ƒTƒCƒhƒrƒ…[‚Ì3ƒpƒ^[ƒ“B
+8•ûŒüƒŒƒo[‚ÅŽålŒö‚ÌŒi´‚ð‘€ì‚µAŒ•‚ÆƒWƒƒƒ“ƒv‚É2‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚µ‚Ä‘X‚ð„‚è—Š’©‚Ì‘Ò‚ÂŠ™‘q‚ð–ÚŽw‚·ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
+‚Ü‚½—Š’©‚ð“|‚·‚É‚ÍAŽOŽí‚Ì_Ší‚ª•K—v‚Æ‚È‚é‚½‚ßA‚»‚ê‚ç‚ðW‚ß‚é‚Æ‚¢‚¤–Ú“I‚à‚ ‚éB
+ƒXƒe[ƒW\¬‚ÍŽ©‚ç‚Ìi‚Þ“¹‚ðŒˆ‚ß‚éƒgƒbƒvƒrƒ…[‚ÆƒTƒCƒhƒrƒ…[‚ÌƒXƒ‚[ƒ‹ƒ‚[ƒhA
+‚³‚ç‚ÉƒLƒƒƒ‰ƒNƒ^[‚ª‘å‚«‚¢ƒrƒbƒOƒ‚[ƒh‚Ì3ƒpƒ^[ƒ“‚ª‚ ‚èA‚»‚±‚ÅŒJ‚èL‚°‚ç‚ê‚é”——Í‚ ‚éƒ{ƒXí‚ÍA
+“–Žž‚Æ‚µ‚Ä‚Í‚ ‚Ü‚è‚É‚àˆÙF‚Å‚ ‚Á‚½B
+ƒQ[ƒ€‚Ì“à—e‚Í‚à‚¿‚ë‚ñ‚Ì‚±‚ÆAÅŒã‚É—¬‚ê‚éƒGƒ“ƒfƒBƒ“ƒO‚Í“Á‚ÉAŒ©‚½ƒvƒŒƒCƒ„[‘Sˆõ‚É‹­—ó‚ÈˆóÛ‚ðŽc‚µ‚½B
 
 
 
@@ -27972,8 +28183,13 @@ $bio
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2610]
 
 
-‰¡‰æ–Ê‚Å‚Í‚ ‚é‚ªA”ñí‚ÉƒI[ƒ\ƒhƒbƒNƒX‚ÈcƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€B
-‹ó’†íƒƒCƒ“‚ÌƒXƒe[ƒW‚ÆA’nãí‚ªƒƒCƒ“‚Ì2ƒpƒ^[ƒ“‚ÌƒXƒe[ƒW‚ª‚ ‚é‚Ì‚ª“Á’¥B
+‰¡‰æ–Êƒ^ƒCƒv‚ÌƒI[ƒ\ƒhƒbƒNƒX‚ÈcƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€B
+“ì•Ä‚ÌŽ©‘‚ð•‘‘ä‚É‹ŒŒ^‚Ì…ã—£’…—¤í“¬‹@‚ð‹ì‚Á‚ÄA‹ó’†í‚ð“¾ˆÓ‚Æ‚·‚éuI‘v‚ÆA
+‹­—Í‚ÈíŽÔ‚ðŽ‚ÂuD‘v‚ðŒ‚”j‚·‚é‚Ì‚ª–Ú“I‚Å‚ ‚éB
+—¼‘‚ÌU—ª‡‚ÍƒQ[ƒ€“r’†‚Ì‘I‘ð‰æ–Ê‚Å‘I‚Ô‚±‚Æ‚ª‚Å‚«A
+‹ó’†íƒƒCƒ“‚ÆA’nãí‚ªƒƒCƒ“‚Ì2ƒpƒ^[ƒ“‚ÌƒXƒe[ƒW‚ª‚ ‚é‚Ì‚ª“Á’¥‚Å‚ ‚éB
+Ž©‹@‚ÍƒVƒ‡ƒbƒg‚Æ“ÁŽê•ºŠí‚Ìƒ{ƒ“ƒo[‚Ì‚Ý‚È‚ª‚çAƒ{ƒ“ƒo[‚Í4Ží—Þ‚ ‚èƒXƒe[ƒW“r’†‚Å•ÏX‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
+‚Ü‚½ƒVƒ‡ƒbƒg‚àÅ‘å7’iŠK‚Ü‚Åƒpƒ[ƒAƒbƒv‚·‚é‚±‚Æ‚à‚Å‚«‚éB
 
 
 
@@ -28071,15 +28287,19 @@ $bio
 
 ƒWƒƒƒ“ƒ‹FƒVƒ…[ƒeƒBƒ“ƒO
 
-ƒRƒ“ƒgƒ[ƒ‰FƒKƒ“ƒRƒ“ƒgƒ[ƒ‰[
+ƒRƒ“ƒgƒ[ƒ‰Fƒuƒ[ƒoƒbƒN‹@\•t‚«ƒKƒ“ƒRƒ“ƒgƒ[ƒ‰[
 
 ƒVƒXƒeƒ€ƒ{[ƒhFƒiƒ€ƒR ƒVƒXƒeƒ€12
 
 CPU\¬[PSX CPU, H8/3002]@‰¹Œ¹ƒ`ƒbƒv[C352]
 
 
-
-
+ƒGƒCƒeƒBƒ“ƒO(ƒ‰ƒCƒWƒ“ƒO)‚ªŠJ”­‚µAƒiƒ€ƒR‚©‚ç”­”„‚³‚ê‚½ƒRƒ~ƒJƒ‹ƒKƒ“ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€uƒI[ƒoƒLƒ…[ƒ“vB
+ƒIƒoƒP‚ªo‚é‚ÆŒ¾‚¤uƒVƒ‹ƒoƒj‰®•~v‚ð•‘‘ä‚É–‚—‚ÉƒlƒR‚ÌŽp‚É•Ï‚¦‚ç‚ê‚½DŠïS‰ ·‚ÈŽålŒöuƒŠƒTv‚ÆuƒPƒrƒ“v‚ªA
+Œ³‚ÌŽp‚É–ß‚é‚½‚ß–‚–@‚Ìe‚ð•Ší‚É‰®•~‚Éæ‚èž‚ñ‚Å‚¢‚­‚Æ‚¢‚¤“à—e‚Å‚ ‚éB
+ƒQ[ƒ€‚ÍŠeƒGƒŠƒA‚É—pˆÓ‚³‚ê‚½4‚Â‚ÌƒQ[ƒ€‚©‚ç1‚Â‚ð‘I‘ð‚µ‚ÄU—ª‚µ‚Ä‚¢‚«A‘S‚Ä‚ÌƒQ[ƒ€‚ðƒNƒŠƒA‚·‚é‚Æƒ{ƒXí‚Æ‚È‚éB
+‘S50+ƒ¿‚ÌƒQ[ƒ€ƒXƒe[ƒW‚ª—pˆÓ‚³‚ê‚Ä‚¨‚èAƒ~ƒXƒ^[ƒQƒbƒg‚ðŒ‚‚Á‚½‚èAƒmƒ‹ƒ}’B¬‚ÉŽ¸”s‚µ‚Ä‚µ‚Ü‚¤‚Æƒ‰ƒCƒt‚ªŒ¸‚Á‚Ä‚µ‚Ü‚¤B
+2l“¯ŽžƒvƒŒƒC‚à‰Â”\‚ÅA‘I‘ð‚µ‚½“ïˆÕ“x‚É‚æ‚Á‚ÄƒNƒŠƒAðŒ‚âƒXƒe[ƒW”‚à•Ï‰»‚·‚éB
 
 
 
@@ -28107,6 +28327,7 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 ƒJƒvƒRƒ“‚Ì‹Æ–±—p‚©‚çˆÚA‚³‚ê‚½ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
 –Ú“I‚Í6Ží—Þ‚Ì•Ší‚ð‹ìŽg‚µ‚ÄA–‚‰¤ƒ‹ƒVƒtƒ@[‚©‚çƒvƒŠƒ“ƒZƒX‚ð•‚¯o‚·‚±‚ÆB
 5Ží—Þ‚ ‚éƒXƒe[ƒW‚Íc‰¡‚ÉƒXƒNƒ[ƒ‹‚µA“r’†‚ÉŒ»‚ê‚é•ó” ‚©‚ç‹à‚ÌŠZ‚ðŽè‚É“ü‚ê‚é‚Æ–‚–@‚ªŽg‚¦‚é‚æ‚¤‚É‚È‚éB
+‹Æ–±—p‚ÌƒIƒŠƒWƒiƒ‹‚©‚ç­‚µƒAƒŒƒ“ƒW‚ª‰Á‚¦‚ç‚ê‚Ä‚¢‚é‚ªAˆÚAì‚Æ‚µ‚Ä‚ÍŠ®¬“x‚Ì‚‚¢ì•i‚Å‚ ‚éB
 
 
 ¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
@@ -28136,10 +28357,10 @@ $bio
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2151, OKI6295]
 
 
-ƒJƒvƒRƒ“ƒvƒŒƒCƒVƒXƒeƒ€‚Ì‘æ2’e‚Æ‚µ‚ÄA–¼ì–‚ŠE‘º‚Ì‘±•Ò‚Æ‚È‚éu‘å–‚ŠE‘ºv‚ª“oê‚µ‚½B
+ƒJƒvƒRƒ“ƒvƒŒƒCƒVƒXƒeƒ€‚Ì‘æ2’e‚Æ‚µ‚ÄA–¼ìu–‚ŠE‘ºv‚Ì‘±•Ò‚Æ‚µ‚Ä“oê‚µ‚½u‘å–‚ŠE‘ºvB
 ‘Oì‚©‚ç‚Ì•ÏX“_‚Æ‚µ‚ÄA
 ƒA[ƒT[‚Í‘„‚ðã‰º‚É“Š‚°‚ç‚ê‚é‚æ‚¤‚É‚È‚Á‚½‚±‚Æ‚âAƒS[ƒ‹ƒh‚ÌƒA[ƒ}[‚ð‘•’…Žž‚É‚ÍA–‚–@‚ðŽg—p‚·‚é‚±‚Æ‚ª‚Å‚«‚é“_‚ª‚ ‚°‚ç‚ê‚éB
-ƒXƒe[ƒW\¬‚Í•Ï‰»‚É•x‚ñ‚Å‚¢‚é‚ªA‘Oì‚Æ”ä‚×‚Ä‚àX‚É“ï‚µ‚­‚È‚Á‚Ä‚¢‚éB
+ƒXƒe[ƒW\¬‚Í•Ï‰»‚É•x‚ñ‚Å‚¢‚é‚ªA‘Oì‚Æ”ä‚×‚Ä‚àX‚É“ï‚µ‚­‚È‚Á‚Ä‚¢‚é‚ªA‚»‚ê‚ª‚±‚ÌƒVƒŠ[ƒY‚ç‚µ‚¢‚Æ‚±‚ëB
 ‘S5ƒXƒe[ƒWA2ŽüƒGƒ“ƒhBÅIƒ{ƒXuƒ‹ƒVƒtƒ@[v‚ð“|‚·‚Ì‚¾B
 
 
@@ -28224,7 +28445,7 @@ $bio
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[QSound]
 
 
-ƒJƒvƒRƒ“‚ÆƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€‚ð’†S‚ÉŠJ”­‚·‚éƒ[ƒJ[‚É‚æ‚éƒJƒvƒRƒ“ƒp[ƒgƒi[ƒVƒbƒvƒvƒƒWƒFƒNƒg‘æ‚P’eB
+ƒJƒvƒRƒ“‚ÆƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€‚ð’†S‚ÉŠJ”­‚·‚éƒ[ƒJ[‚É‚æ‚éƒJƒvƒRƒ“ƒp[ƒgƒi[ƒVƒbƒvƒvƒƒWƒFƒNƒg‘æ‚P’e‚Ìì•iB
 ‚Â‚¢‚ÉƒXƒRƒA‚ª16Œ…u’›v‚ÌˆÊ‚Æ‚È‚Á‚½ƒMƒKƒXƒRƒA‚ÆA
 ƒLƒƒƒ‰ƒNƒ^[ƒfƒUƒCƒ“‚É“~–Ú Œi Ž‚ðÌ—p‚µ‚½‚±‚Æ‚Å˜b‘è‚ðŒÄ‚ñ‚¾ì•i‚Å‚ ‚éB
 ƒŠƒtƒŒƒNƒgƒQ[ƒW‚ð‚½‚ß‚ÄƒŠƒtƒŒƒNƒgƒtƒH[ƒX‚ð”­“®‚·‚é‚±‚Æ‚Å“G’e‚ð’e‚«•Ô‚µ‚Ä“G‚ðUŒ‚‚·‚é‚±‚Æ‚ª‚Å‚«A
@@ -28255,8 +28476,11 @@ CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2610]
 
 
 ƒƒfƒBƒA‚É‚æ‚é‚‚¢‘O•]”»‚Æ‚Æ‚à‚É“oê‚µ‚½‰¡ƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒOì•iB
-Ž©‹@‚Ì–C“ƒ‚ÌŠp“x‚ðƒ{ƒ^ƒ“‚Å’²ß‰Â”\‚È“_‚âA•ŠíƒAƒCƒeƒ€‚ðD‚Ý‚ÌˆÊ’u‚É‘•”õ‚Å‚«‚é‚È‚Ç“Æ“Á‚ÌƒVƒXƒeƒ€‚ðÌ—p‚µ‚Ä‚¢‚é“_‚Í•]‰¿‚Å‚«‚éB
-‚Ü‚½AŠeƒXƒe[ƒW‚ÌƒTƒuƒ^ƒCƒgƒ‹‚ª‚ ‚é‚Ì‚àA‚È‚©‚È‚©–Ê”’‚¢‰‰o‚Æ‚¢‚¦‚éB
+‘€ì‚Í8•ûŒüƒŒƒo[A2ƒ{ƒ^ƒ“‚ÆƒVƒ“ƒvƒ‹‚¾‚ªA
+‰ñ“]ƒ{ƒ^ƒ“‚ð‰Ÿ‚·‚±‚Æ‚Åeg‚ÌˆÊ’u‚ð’²®‚µ‚½‚èAƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‘±‚¯‚é‚±‚Æ‚Åã‰º¶‰E‚É“®‚©‚·‚±‚Æ‚ª‚Å‚«‚éB
+‚Ü‚½Ž©‹@‚Ìƒpƒ[ƒAƒbƒv‚É‚ÍƒEƒFƒ|ƒ“ƒAƒCƒeƒ€‚ðŽæ‚Á‚½ˆÊ’u‚Éeg‚ª‚Â‚­‚Æ‚¢‚¤“Æ“Á‚ÌƒVƒXƒeƒ€‚ðÌ—p‚µ‚Ä‚¢‚é‚Ì‚ª“Á’¥‚Å‚ ‚éB
+ŠeƒXƒe[ƒW‚Ì‚»‚ê‚¼‚êƒTƒuƒ^ƒCƒgƒ‹‚ÆƒAƒCƒLƒƒƒbƒ`‚ª—pˆÓ‚³‚ê‚Ä‚¢‚é‚È‚Ç‚Ì–Ê”’‚¢‰‰o‚à‚ ‚èA
+‚È‚©‚È‚©‚Ì—Çì‚Æ‚µ‚Ä‚Ü‚Æ‚Ü‚Á‚½ì•i‚Å‚ ‚éB
 ‘S8ƒXƒe[ƒWB
 
 
@@ -28281,10 +28505,14 @@ $bio
 CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[SN76496 (4)]
 
 
-Œõ‘ò‚Ì‚ ‚éƒNƒŠƒXƒ^ƒ‹‚Ì‚æ‚¤‚ÈƒuƒƒbƒN‚ªˆóÛ“I‚ÈƒuƒƒbƒN•ö‚µƒQ[ƒ€B
-ˆÙŽŸŒ³‚ÌŽx”zŽÒƒS[ƒ‹ƒhƒMƒKƒX‚ðAˆÚ“®–C‘äƒ_ƒuƒ‹ƒfƒbƒK[‚ªŒ‚”j‚·‚é‚Æ‚¢‚¤ƒXƒg[ƒŠ[B
-uƒAƒ‹ƒJƒmƒCƒhv‚Ìƒqƒbƒg‚É‚æ‚éƒuƒƒbƒN•ö‚µƒu[ƒ€‚ÌÄ”R‚ð‚¤‚¯‚Ä”­”„‚³‚ê‚½B
-ƒXƒs[ƒhƒ_ƒEƒ“AƒŒ[ƒU[‚È‚Ç‘½Ê‚Èƒpƒ[ƒAƒbƒvƒAƒCƒeƒ€‚ª‚ ‚èAoŒ»‚·‚é‰öb‚ÉG‚ê‚ç‚ê‚é‚Æƒ~ƒX‚Æ‚È‚éB
+ƒ^ƒCƒg[‚ÌuƒAƒ‹ƒJƒmƒCƒhv‚Ìƒqƒbƒg‚ð‚«‚Á‚©‚¯‚ÉÄ”R‚µ‚½ƒuƒƒbƒN•ö‚µƒu[ƒ€‚ð‚¤‚¯‚Ä”­”„‚³‚ê‚½A
+Œõ‘ò‚Ì‚ ‚éƒNƒŠƒXƒ^ƒ‹‚Ì‚æ‚¤‚ÈƒuƒƒbƒN‚ªˆóÛ“I‚ÈƒQ[ƒ€B
+ˆÙŽŸŒ³‚ÌŽx”zŽÒƒS[ƒ‹ƒhƒMƒKƒX‚ðAˆÚ“®–C‘äƒ_ƒuƒ‹ƒfƒbƒK[‚ªŒ‚”j‚·‚é‚Æ‚¢‚¤Ý’è‚Å‚ ‚éB
+‘€ì‚Íƒpƒhƒ‹‚ÆƒT[ƒu‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚·‚é‚ªAƒ{[ƒ‹‚Í•\Ž¦‚³‚ê‚Ä‚¢‚é–îˆó‚Ì•ûŒü‚É”ò‚Î‚·‚±‚Æ‚ª‚Å‚«‚é‚Æ‚¢‚¤“Á’¥‚ª‚ ‚éB
+””­“–‚Ä‚é‚±‚Æ‚Å”j‰ó‚Å‚«‚éƒNƒŠƒAƒEƒH[ƒ‹‚ðÁ‚·‚Æ“oê‚·‚éƒpƒ[ƒAƒbƒvƒGƒbƒO‚ðŽæ‚é‚±‚Æ‚Åƒ{[ƒ‹‚ÌƒXƒs[ƒhƒ_ƒEƒ“A
+ƒ{ƒ^ƒ“‚ð‰Ÿ‚·‚±‚Æ‚Å”­ŽË‚Å‚«‚éƒŒ[ƒU[‚È‚Ç‚Ìƒpƒ[ƒAƒbƒv‚ª‰Â”\‚È‚Ù‚©‚ÉA
+ƒ_ƒuƒ‹ƒfƒbƒJ[‚ÌŽü‚è‚É–¡•û‚ª‚Â‚¢‚½‚èA‘¼‚ÌƒXƒe[ƒW‚Éƒ[ƒv‚·‚é‚±‚Æ‚à‚Å‚«‚éB
+oŒ»‚·‚é‰öb‚ÉG‚ê‚ç‚ê‚é‚Æƒ~ƒX‚Æ‚È‚éB
 
 
 
@@ -28292,7 +28520,7 @@ $end
 
 $info=gigasm2b
 $bio
-ƒMƒKƒXMK-II
+ƒMƒKƒX MARKII
 
 
 ”­”„”NF1986.12
@@ -28439,10 +28667,14 @@ $bio
 CPU\¬[Z80 (2), M6809]@‰¹Œ¹ƒ`ƒbƒv[YM2203, MSM5205]
 
 
-ŽålŒö‚ÌƒKƒŠƒAƒmƒX‚ð8•ûŒüƒŒƒo[‚Å‘€ì‚µA
-ãA’†A‰º’i—p‚Ì3ƒ{ƒ^ƒ“‚ÅŒ•‚ð‹ìŽg‚µ‚ÄAé‚Ì’†‚ÅŽŸX‚Æ“oê‚·‚é17l‚Ì“GƒLƒƒƒ‰ƒNƒ^[’B‚ð“|‚·ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
-Œ•‚Æ“¯—l‚ÉãA’†A‰º’i‚É‚‚ð\‚¦‚Ä–hŒä‚·‚é‚±‚Æ‚à‚Å‚«‚éB
-“G‚âŽ©•ª‚ÉŒ•‚ª–½’†‚·‚é‚ÆA‚¾‚ñ‚¾‚ñ‚ÉŠZ‚ª”‚ª‚ê‚Ä‚¢‚­‚Ì‚ªƒŠƒAƒ‹B
+ƒ^ƒCƒg[‚©‚ç“oê‚µ‚½AƒZƒ^ŠJ”­‚ÌƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
+‹IŒ³‘O‚Ì¢ŠE‚ð•‘‘ä‚ÉˆÃ•‚ÌŽx”zŽÒ‚É‚Ð‚Æ‚è—§‚¿Œü‚©‚¤ƒKƒŠƒAƒmƒX‚Ì•¨Œê‚Å‚ ‚éB
+ŽålŒö‚ð8•ûŒüƒŒƒo[‚Å‘€ì‚µA
+ãA’†A‰º’i—p‚Ì3ƒ{ƒ^ƒ“‚ÅƒVƒ‹ƒo[¥ƒ\[ƒh‚ð‹ìŽg‚µ‚ÄAé‚Ì’†‚ÅŽŸX‚Æ“oê‚·‚é17l‚Ì“GƒLƒƒƒ‰ƒNƒ^[’B‚ð“|‚µ‚Ä‚¢‚­B
+Œ•‚Æ“¯—l‚ÉãA’†A‰º’i‚ÉƒVƒ‹ƒo[¥ƒV[ƒ‹ƒh‚ð\‚¦‚Ä–hŒä‚·‚é‚±‚Æ‚à‚Å‚«A“G‚âŽ©•ª‚ÉŒ•‚ª–½’†‚·‚é‚Æ‚¾‚ñ‚¾‚ñ‚ÉŠZ‚ª”‚ª‚ê‚Ä‚¢‚«A
+”‚ª‚ê‚½•”•ª‚ÉUŒ‚‚ðŽó‚¯‚Ä‚µ‚Ü‚¤‚Æ‚â‚ç‚ê‚Ä‚µ‚Ü‚¤‚ªAƒXƒe[ƒWƒNƒŠƒA‚âŽžXŒ»‚ê‚éƒ}ƒWƒbƒN¥ƒNƒŠƒXƒ^ƒ‹‚ð”j‰ó‚µ‚½‚èA
+ƒŒƒbƒh¥ƒ\[ƒh‚ðŽg‚¦‚ÎC•œ‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
+‚Ü‚½ƒV[ƒ‹ƒh‚ð‘f‘‚­ã‰º‚ÉU‚é‚±‚Æ‚ÅAˆê’èŽžŠÔƒoƒŠƒA‚à’£‚é‚±‚Æ‚à‰Â”\B
 ‘S4–Ê‚Åƒ‹[ƒvB
 
 
@@ -28467,6 +28699,12 @@ $bio
 CPU\¬[Z80 (3)]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910 (2)]
 
 
+“–Žž‚ÌV“ú–{Šé‰æ‚©‚ç“oê‚µ‚½ƒeƒ“ƒ|‚Ì‚æ‚¢ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€uƒOƒ‰ƒWƒGƒCƒ^[vB
+Ÿ—˜‚ÌŒŽŒjŠ¥‚ðŽè‚É“ü‚ê‚é‚×‚­A–¼”nuƒTƒ“ƒ_[ƒ{ƒ‹ƒgv‚ð‹ì‚Á‚Ä“G”n‚ðRŽU‚ç‚µ‚È‚ª‚çi‚ñ‚Å‚¢‚­B
+ƒŠƒYƒ€‚æ‚­ƒTƒ“ƒ_[ƒ{ƒ‹ƒg‚É‚Þ‚¿‚ð“ü‚ê‚Ä‰Á‘¬‚µAŠâ‚âŒŠ‚È‚Ç‚ÌáŠQ•¨‚ðƒWƒƒƒ“ƒv‚µ‚Ä”ð‚¯‚È‚ª‚çi‚ÞƒoƒU[ƒh‚Æƒ‰ƒCƒi[‚ÆA
+é•Ç‚ðãŽè‚­Žg‚¤‚±‚Æ‚Å“G‚Ìi˜H‚ð‚Â‚Ô‚·‚±‚Æ‚ª‚Å‚«‚éƒ`ƒFƒŠƒIƒbƒg‚Å‚ÍA
+ƒWƒƒƒ“ƒv‚ªŽg‚¦‚È‚¢‘ã‚í‚è‚Éƒnƒ“ƒ}[‚Å“G”n‚ð“|‚·‚±‚Æ‚ª‚Å‚«‚éB
+ƒ€ƒ`‚ð“ü‚ê‚·‚¬‚é‚ÆƒTƒ“ƒ_[ƒ{ƒ‹ƒg‚ª‘–‚é‚Ì‚ðŽ~‚ß‚Ä‚µ‚Ü‚¤‚Ì‚Å’ˆÓB
 
 
 
@@ -28586,7 +28824,7 @@ $bio
 
 ”­”„”NF1995.09
 
-ŠJ”­Œ³FƒrƒXƒR@”­”„Œ³FƒrƒXƒRi¦‘“à”Ì”„‚È‚µj
+ŠJ”­^”­”„Œ³FƒrƒXƒR
 
 ƒWƒƒƒ“ƒ‹FƒXƒ|[ƒc
 
@@ -28597,7 +28835,8 @@ $bio
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2610]
 
 
-¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
 
 
 
@@ -28670,12 +28909,12 @@ $bio
 CPU\¬[Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2203]
 
 
+ŠØ‘‚ÌƒQ[ƒ€ƒ[ƒJ[SunA‚©‚ç“oê‚µ‚½A
 ‹C–¡‚Ìˆ«‚¢ƒLƒƒƒ‰ƒNƒ^[‚ªˆóÛ“I‚ÈƒuƒƒbƒN•ö‚µƒ^ƒCƒv‚Ìì•iB
 uƒSƒCƒ“ƒhƒ‹v‚Æ‚Íu—LŽj‘O‚Éì‚ç‚ê‚½‹ÎŒš‘¢•¨v‚ðˆÓ–¡‚µA“ú–{Œê‚Å‚Ìuƒhƒ‹ƒƒ“v‚É‘Š“–‚·‚éB
 ƒhƒ‹ƒƒ“‚ðŽç‚éŒ´Žnl‚Æ‚»‚ê‚ð”j‰ó‚µ‚æ‚¤‚Æ‚·‚é•¶–¾l‚Æ‚Ìí‚¢‚ªƒe[ƒ}‚Å‚ ‚éB
 ƒQ[ƒ€“à—e‚Í‚Ù‚Æ‚ñ‚ÇuƒAƒ‹ƒJƒmƒCƒhv‚Ì^Ž—‚Å‚ ‚é‚ªAuƒW[ƒr[v‚Ì—l‚Èƒsƒ“ƒ{[ƒ‹“I‚È—v‘f‚ð‰Á‚¦‚é‚È‚Ç“ÆŽ©‚ÌH•v‚àŒ©‚ç‚ê‚éB
-‰æ–Ê•\Ž¦‚âƒCƒ“ƒXƒgƒ‰ƒNƒVƒ‡ƒ“ƒJ[ƒh‚Å‚Íƒnƒ“ƒOƒ‹•¶Žš‚ª“Ç‚Ý‚Æ‚ê‚é‚±‚Æ‚©‚çAŠØ‘‚Ìƒ[ƒJ[‚ªŠJ”­‚µ‚½‚Æl‚¦‚ç‚ê‚Ä‚¢‚éB
-‘S100ƒXƒe[ƒW{ƒ{[ƒiƒX16ƒXƒe[ƒWB
+‘S100ƒXƒe[ƒW{ƒ{[ƒiƒX16ƒXƒe[ƒWB“ú–{‚Å‚à‹É­”‚È‚ª‚ç—¬’Ê‚µ‚½‚æ‚¤‚Å‚ ‚éB
 
 
 
@@ -28699,12 +28938,13 @@ $bio
 CPU\¬[68EC020, 68000]@‰¹Œ¹ƒ`ƒbƒv[054539 (2)]
 
 
-‘OìuƒpƒƒfƒBƒEƒX‚¾Iv‚Å‚ÍAƒxƒ‹‚È‚Ç‘½­‚ÍƒRƒiƒ~‚Ì‘¼‚ÌƒVƒ…[ƒeƒBƒ“ƒO‚Ì—v‘f‚Í‚ ‚Á‚½‚à‚Ì‚ÌA
-Šî–{‚ÍƒOƒ‰ƒfƒBƒEƒXƒVƒŠ[ƒY‚ÌƒpƒƒfƒB”Å‚Å‚ ‚èAŽ©‹@‚Ìƒpƒ[ƒAƒbƒv‚âƒVƒXƒeƒ€‚È‚Ç‚Í‚Ù‚Æ‚ñ‚ÇƒOƒ‰ƒfƒBƒEƒX‚ÌƒVƒXƒeƒ€‚ð“¥P‚µ‚½‚à‚Ì‚Æ‚È‚Á‚Ä‚¢‚½B
-
-‚µ‚©‚µA‚±‚Ìu‹ÉãƒpƒƒfƒBƒEƒXv‚Å‚ÍAŠî–{‚±‚»uƒOƒ‰ƒfƒBƒEƒXv‚ªƒx[ƒX‚É‚È‚Á‚Ä‚Í‚¢‚é‚à‚Ì‚ÌA
-ƒIƒvƒVƒ‡ƒ“‚ª•t‚©‚È‚¢‘ã‚í‚è‚É‘•”õ‚»‚Ì‚à‚Ì‚ªƒpƒ[ƒAƒbƒv‚·‚éƒLƒƒƒ‰‚âA“Ë‘R—“ü‚µ‚Ä‚­‚éƒ‚ƒAƒC–Ê‚È‚ÇA
+‚½‚¾‚ÌƒpƒƒfƒBì‚Æ‚µ‚Ä‚Å‚Í‚È‚­A—§”h‚ÈƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€‚Ì‚Ð‚Æ‚Â‚Æ‚µ‚Äl‹C‚ðŒÄ‚ñ‚¾uƒpƒƒfƒBƒEƒX‚¾!v‚Ì‘±•ÒB
+‘Oì‚Å‚ÍŠî‚Æ‚È‚Á‚½uƒOƒ‰ƒfƒBƒEƒXv‚ð’†S‚É‘¼‚ÌƒRƒiƒ~‚Ìì•i‚ðƒAƒŒƒ“ƒW‚µ‚½“à—e‚Ì‚à‚Ì‚¾‚Á‚½‚ªA
+¡ì‚Å‚Í‚»‚ê‚ðƒx[ƒX‚É—lX‚ÈƒIƒŠƒWƒiƒ‹—v‘f‚ª·‚èž‚Ü‚ê‚½ì•i‚Æ‚È‚Á‚Ä‚¢‚éB
+ƒIƒvƒVƒ‡ƒ“‚Ì‘ã‚í‚è‚ÉƒVƒ‡ƒbƒg‚»‚Ì‚à‚Ì‚ªƒpƒ[ƒAƒbƒv‚·‚éƒLƒƒƒ‰ƒNƒ^[‚Ì“oê‚âA
+ˆê’è‚ÌðŒ‚ð‰Ê‚½‚·‚±‚Æ‚Å“oê‚·‚éƒ‚ƒAƒCƒXƒe[ƒW‚È‚ÇA
 ‚»‚ê‚Ü‚Å‚ÌƒOƒ‰ƒfƒBƒEƒXƒVƒŠ[ƒY‚ÌƒCƒ[ƒW‚©‚ç‚Í‚ ‚è“¾‚È‚©‚Á‚½ƒVƒXƒeƒ€‚ªÌ—p‚³‚ê‚Ä‚¢‚éB
+‚Ü‚½2l“¯ŽžƒvƒŒƒC‚à‰Â”\B
 
 
 
@@ -28849,7 +29089,7 @@ $bio
 CPU\¬[SH-2 (2), 68000]@‰¹Œ¹ƒ`ƒbƒv[SCSP]
 
 
-GìuƒS[ƒ‹ƒfƒ“ƒAƒbƒNƒXvƒVƒŠ[ƒY‚Ì¢ŠEŠÏ‚ð—p‚¢‚½ƒI[ƒ\ƒhƒbƒNƒX‚È2D‘ÎíŠi“¬ƒQ[ƒ€B
+GìuƒS[ƒ‹ƒfƒ“ƒAƒbƒNƒXvƒVƒŠ[ƒY‚Ì¢ŠEŠÏ‚ð—p‚¢‚½2D‘ÎíŠi“¬ƒQ[ƒ€B
 ‘Îí’†‚É“oê‚·‚éƒV[ƒt‚ðUŒ‚‚·‚é‚Æ–‚–@‚Ì’Ù‚ð—Ž‚Æ‚µA ‚±‚ê‚ð5‚ÂÁ”ï‚µ‚Äƒpƒ[ƒAƒbƒvó‘Ô‚ð”­“®‚³‚¹‚é‚±‚Æ‚ª‰Â”\B
 ƒpƒ[ƒAƒbƒvŽž‚Íê—p•KŽE‹Z‚ÌƒnƒCƒp[ƒ}ƒWƒbƒN‚ªŽg‚¦‚éB
 Žg—pƒLƒƒƒ‰ƒNƒ^[‚Í—ð‘ã‚Ì3l‚ÉV‚½‚É7l‚ª’Ç‰Á‚³‚ê‚½10l‚©‚ç‘I‘ð‚Å‚«‚éB
@@ -28880,9 +29120,11 @@ Golden Axe 2 iMEGA PLAY”Åj
 CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 
 
-‘OìuƒS[ƒ‹ƒfƒ“ƒAƒbƒNƒXv‚Æ“¯—lA“oêƒLƒƒƒ‰‚ÍƒAƒbƒNƒXAƒeƒBƒŠƒXAƒMƒŠƒEƒX‚Ì3lB
-Šî–{ƒVƒXƒeƒ€‚É•Ï‰»‚Í‚È‚¢BMEGA-TECH”Å‚Æˆá‚¢A–‚–@‚ÌˆÐ—Í‚ð’²®‚·‚é‚±‚Æ‚Í‚Å‚«‚È‚¢B
-‚Ü‚½Aƒˆ‚ÉƒA[ƒP[ƒhƒQ[ƒ€‚Æ‚µ‚Ä‚ÌŒ`‚ð‚Æ‚Á‚Ä‚¢‚é‚Ì‚ÅATHE DUELi‘Îíƒ‚[ƒhj‚Í–³‚¢B
+ƒƒKƒhƒ‰ƒCƒuƒIƒŠƒWƒiƒ‹‚Ìì•i‚Æ‚µ‚Ä“oê‚µ‚½uƒS[ƒ‹ƒfƒ“ƒAƒbƒNƒXvƒVƒŠ[ƒY‚Ì3ì–ÚB
+‘OìuƒS[ƒ‹ƒfƒ“ƒAƒbƒNƒXv‚Æ“¯—lA“oêƒLƒƒƒ‰‚ÍƒAƒbƒNƒXAƒeƒBƒŠƒXAƒMƒŠƒEƒX‚Ì3l‚Å‚ ‚éB
+ƒQ[ƒ€ƒVƒXƒeƒ€‚Í‘Oì‚©‚ç•Ï‰»‚Í‚È‚¢‚ªAMEGA-TECH”Å‚Æ‚ÍˆÙ‚È‚èA–‚–@‚ÌˆÐ—Í‚ð’²®‚·‚é‚±‚Æ‚Í‚Å‚«‚¸A
+Å‘å‚Ì“Á’¥‚Å‚ ‚é‘Îíƒ‚[ƒhuTHE DUELv‚à‚È‚­‚È‚Á‚Ä‚¢‚éB
+‚Ü‚½‰Šúƒ‰ƒCƒtÝ’è‚Ì•ÏX‚â8•ªŠÔ‚ÌƒvƒŒƒC§ŒÀŽžŠÔ‚ªÝ‚¯‚ç‚ê‚Ä‚¢‚é‚½‚ßAMEGA-TECH”Å‚Æ”ä‚×‚é‚Æ“ïˆÕ“x‚ªã‚ª‚Á‚Ä‚¢‚éB
 
 
 ¦uMEGA PLAYv‚Æ‚ÍA
@@ -28899,7 +29141,7 @@ $bio
 Golden Axe 2 iMEGA-TECH”Åj
 
 
-”­”„”NF1989
+”­”„”NF1991.12
 
 ŠJ”­Œ³FƒZƒK@”­”„Œ³FƒZƒKi¦‘“à”Ì”„‚È‚µj
 
@@ -28912,10 +29154,12 @@ Golden Axe 2 iMEGA-TECH”Åj
 CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 
 
-‘OìuƒS[ƒ‹ƒfƒ“ƒAƒbƒNƒXv‚Æ“¯—lA“oêƒLƒƒƒ‰‚ÍƒAƒbƒNƒXAƒeƒBƒŠƒXAƒMƒŠƒEƒX‚Ì3lB
-Šî–{ƒVƒXƒeƒ€‚É•Ï‰»‚Í‚È‚¢‚ªA¡ì‚Å‚Í–‚–@ƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‘±‚¯‚é‚±‚Æ‚ÅA–‚–@‚ÌˆÐ—Í‚ð’²®‚Å‚«‚é‚æ‚¤‚É‚È‚Á‚½B
-THE@DUELi‘Îíƒ‚[ƒhj‚ÍA1lƒvƒŒƒC‚ÌŽž‚Íƒ_[ƒNƒKƒ‹ƒhŒR•ºŽm’B‚Æ‚ÌŸ‚¿”²‚«íB
-2lƒvƒŒƒC‚ÌŽž‚ÍƒvƒŒƒCƒ„[“¯Žm‚Ìí‚¢‚Æ‚È‚éB
+ˆ«‚µ‚«‹luƒfƒXƒAƒ_[v‚ð‘Å‚¿“|‚µ‚Ä‚©‚ç3”NŒã‚Ì¢ŠE‚ð•‘‘ä‚ÉA
+ƒS[ƒ‹ƒfƒ“ƒAƒbƒNƒX‚ð’D‚Á‚½ˆÅ‚Ìc’éuƒ_[ƒNƒKƒ‹ƒhv‚ð“|‚·‚½‚ßAÄ‚ÑƒAƒbƒNƒXAƒeƒBƒŠƒXA
+ƒMƒŠƒEƒX‚Ì3l‚ª—§‚¿ã‚ª‚é‚Æ‚¢‚¤ƒVƒŠ[ƒY3ì–ÚB
+Šî–{ƒVƒXƒeƒ€‚É•Ï‰»‚Í‚È‚¢‚ªA¡ì‚Å‚Í–‚–@ƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‘±‚¯‚é‚±‚Æ‚Å–‚–@‚ÌˆÐ—Í‚ð’²®‚Å‚«‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
+uTHE DUELv‚Å‚ÍA1lƒvƒŒƒC‚ÌŽž‚Íƒ_[ƒNƒKƒ‹ƒhŒR•ºŽm’B‚Æ‚ÌŸ‚¿”²‚«í‚Æ‚È‚Á‚Ä‚¨‚èA
+2lƒvƒŒƒC‚ÌŽž‚É‚ÍƒvƒŒƒCƒ„[“¯Žm‚Ìí‚¢‚Æ‚È‚éB
 
 
 ¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
@@ -28945,10 +29189,12 @@ $bio
 CPU\¬[V60, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM3438 (2), RF5C68]
 
 
-uƒS[ƒ‹ƒfƒ“ƒAƒbƒNƒXv‚Ì‘±•Ò‚É‚ ‚½‚éA‰œs‚«‚Ì‚ ‚é‰¡ƒXƒNƒ[ƒ‹ƒAƒNƒVƒ‡ƒ“B
-ƒŒƒo[‚Æƒ{ƒ^ƒ“‚Ì‘g‚Ý‡‚í‚¹‚Åo‚¹‚é“ÁŽê‹Z‚ª‘‚¦A–‚–@‚ÌƒrƒWƒ…ƒAƒ‹‚à‘å•‚É‹­‰»‚³‚ê‚½B
-Å‘å4l‚Ü‚Å“¯ŽžƒvƒŒƒC‚ª‰Â”\‚ÅA2lˆÈã‚È‚ç‡‘ÌUŒ‚‚ÌƒTƒCƒNƒƒ“ƒAƒ^ƒbƒN‚ªo‚¹‚éB
-‘S5ƒXƒe[ƒW‚ÅA•ªŠò‚ðŠÜ‚ß‚é‚Æ‘Œv7ƒXƒe[ƒWB
+ƒA[ƒP[ƒh”Å‚Æ‚µ‚Ä‚Í2ì–Ú‚Æ‚È‚é‰¡ƒXƒNƒ[ƒ‹ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€uƒS[ƒ‹ƒfƒ“ƒAƒbƒNƒXv‚Ì‘±•ÒB
+‘O2ì‚©‚çƒLƒƒƒ‰ƒNƒ^[‚ªˆêV‚³‚êAƒŒƒo[‚Æƒ{ƒ^ƒ“‚Ì‘g‚Ý‡‚í‚¹‚Åo‚¹‚é•KŽE‹Z‚ªu‰ñ“]ƒAƒ^ƒbƒNv
+uƒ_ƒbƒVƒ…ƒAƒ^ƒbƒNv‚»‚µ‚Ä“¯ŽžƒvƒŒƒCŽž‚É‰Â”\‚Æ‚È‚éuƒTƒCƒNƒƒ“ƒAƒ^ƒbƒNv‚Æ‘‚¦A
+uƒVƒXƒeƒ€32v‚Ì«”\‚É‚æ‚è–‚–@‚ÌƒrƒWƒ…ƒAƒ‹‚à‘å•‚É‹­‰»‚³‚ê‚Ä‚¢‚éB
+‚Ü‚½Å‘å4l‚Ü‚Å‚Ì“¯ŽžƒvƒŒƒC‚ª‰Â”\‚Æ‚È‚èAƒXƒe[ƒW“r’†‚É‚ÍisƒR[ƒX‚É•ªŠò“_‚ª“oêB
+‘S5ƒXƒe[ƒW‚ÅA•ªŠò‚ðŠÜ‚ß‚é‚Æ‘Œv7ƒXƒe[ƒW‚Æ‚È‚éB
 
 
 
@@ -29379,7 +29625,7 @@ $bio
 ƒSƒ‹ƒS‚P‚R
 
 
-”­”„”NF1999
+”­”„”NF1999.03
 
 ŠJ”­Œ³Fƒ‰ƒCƒWƒ“ƒO / ƒGƒCƒeƒBƒ“ƒO@”­”„Œ³Fƒiƒ€ƒR
 
@@ -29398,8 +29644,37 @@ CPU\¬[PSX CPU, H8/3002]@‰¹Œ¹ƒ`ƒbƒv[C352]
 ‘_Œ‚ƒV[ƒ“‚Å‚Íƒ^[ƒQƒbƒg‚ªŽ~‚Ü‚Á‚Ä‚¢‚½‚è‘_Œ‚êŠ‚àˆÀ’è‚µ‚½êŠ‚Æ‚ÍŒÀ‚ç‚¸A
 ‚Ü‚½uƒXƒyƒVƒƒƒ‹ƒ|ƒCƒ“ƒgv‚ðŒ‚‚¿”²‚©‚È‚¯‚ê‚Î¬Œ÷‚Æ‚È‚ç‚È‚¢¸–§ŽËŒ‚‚ÌƒXƒe[ƒW‚à‚ ‚é‚½‚ßA
 ƒvƒŒƒCƒ„[‚Ì˜r‘O‚ª–â‚í‚ê‚éƒQ[ƒ€‚Å‚ ‚éB
-ƒKƒ“ƒRƒ“ƒgƒ[ƒ‰‚ÍƒSƒ‹ƒS13‚Ìˆ¤e‚ðƒ‚ƒfƒ‹‚ÉƒfƒUƒCƒ“A
-ƒXƒR[ƒv‚Í•Ä‘ƒ^ƒXƒRŽÐ»‚Ì–{•¨‚ÌƒXƒR[ƒv‚ðŽg—p‚µ‚Ä‚¢‚éB
+ƒKƒ“ƒRƒ“ƒgƒ[ƒ‰‚ÍƒSƒ‹ƒS13‚Ìˆ¤e‚ðƒ‚ƒfƒ‹‚ÉƒfƒUƒCƒ“AƒXƒR[ƒv‚Í•Ä‘ƒ^ƒXƒRŽÐ»‚Ì–{•¨‚ÌƒXƒR[ƒv‚ðŽg—p‚µ‚Ä‚¢‚éB
+
+
+
+$end
+
+$info=g13knd
+$bio
+ƒSƒ‹ƒS‚P‚R -ŠïÕ‚Ì’e“¹-
+
+
+”­”„”NF2000.10
+
+ŠJ”­Œ³Fƒ‰ƒCƒWƒ“ƒO / ƒGƒCƒeƒBƒ“ƒO@”­”„Œ³Fƒiƒ€ƒR
+
+ƒWƒƒƒ“ƒ‹FƒKƒ“ƒVƒ…[ƒeƒBƒ“ƒO
+
+ƒRƒ“ƒgƒ[ƒ‰FƒXƒR[ƒv•tƒ‰ƒCƒtƒ‹Œ^ƒRƒ“ƒgƒ[ƒ‰[
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒiƒ€ƒR ƒVƒXƒeƒ€12
+
+CPU\¬[PSX CPU, H8/3002]@‰¹Œ¹ƒ`ƒbƒv[C352]
+
+
+ƒXƒiƒCƒvƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€‚Æ‚µ‚Äl‹Cì‚Æ‚È‚Á‚½uƒSƒ‹ƒS13vƒVƒŠ[ƒY‚Ì2ì–ÚB
+ƒQ[ƒ€ƒXƒg[ƒŠ[‚É‚Í‘Oì‚Ì10˜b‚ÉAVƒXƒg[ƒŠ[‚Æ‚µ‚Ä10˜b‚ª‰Á‚¦‚ç‚ê‚½‘S20˜b‚Æ‚È‚èA
+9˜b•ª‚ðƒNƒŠƒA‚·‚é‚ÆƒXƒyƒVƒƒƒ‹ƒXƒe[ƒW‚ðƒvƒŒƒC‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
+V‚½‚ÉƒXƒiƒCƒp[ƒ‰ƒCƒtƒ‹‚É‚Í”{¸“x‰‰ŽZƒ‚ƒWƒ…[ƒ‹‚ð“‹Ú‚³‚ê‚½‚±‚Æ‚ÅA‘OìˆÈã‚É³Šm‚ÈƒXƒiƒCƒv‚ª‰Â”\‚Æ‚È‚èA
+‚Ü‚½‚Ç‚ê‚¾‚¯ƒ^[ƒQƒbƒg‚ðƒXƒyƒVƒƒƒ‹ƒ|ƒCƒ“ƒg‹ß‚­‚É–½’†‚µ‚½‚©‚ðŽ¦‚·¸“xƒ|ƒCƒ“ƒg‚àAÚ×‚É•\Ž¦‚³‚ê‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
+ƒXƒiƒCƒv‚ª¬Œ÷‚·‚é‚Æ¸“x‚É‰ž‚¶‚Ä•ñV‚ª—^‚¦‚ç‚ê‚é‚ªAŽ¸”s‚µ‚Ä‚µ‚Ü‚¤‚ÆM—Š“x‚ª‰º‚ª‚Á‚Ä‚µ‚Ü‚¢A
+0“‚É‚È‚Á‚Ä‚µ‚Ü‚¤‚ÆƒQ[ƒ€ƒI[ƒo[‚Æ‚È‚éB
 
 
 
@@ -29423,8 +29698,13 @@ $bio
 CPU\¬[68000 (2), M6809, HD63705]@‰¹Œ¹ƒ`ƒbƒv[C140, YM2151]
 
 
-
-
+ƒiƒ€ƒR‚Ì‚à‚¤‚Ð‚Æ‚Â‚ÌŠçAƒGƒŒƒƒJ‚Ì‹Zp‚ð‰ž—p‚µ‚½ƒrƒfƒIƒGƒŒƒƒJƒVƒ…[ƒeƒBƒ“ƒOB
+ƒVƒXƒeƒ€‡U‚É‚æ‚éƒS[ƒXƒg‚½‚¿‚Ì‰f‘œ‚Æƒn[ƒtƒ~ƒ‰[‚É‚æ‚é”wŒi‚Ì‡¬‹Zp‚É‚æ‚è“Æ“Á‚Ì•µˆÍ‹C‚ðì‚èo‚µ‚Ä‚¢‚é–¼‹@‚Å‚ ‚éB
+ƒvƒŒƒCƒ„[‚Í‚»‚ê‚¼‚êuZIPv(ÂƒR[ƒi[)‚ÆuZAPv(ÔƒR[ƒi[)‚É•ª‚©‚ê‚Ä‚¨‚èAD‚«‚È•û‚ð‘I‘ð‚µ‚Ä—V‚Ô‚±‚Æ‚ª‚Å‚«‚éB
+ƒQ[ƒ€‚Í§ŒÀŽžŠÔ“à‚É‚¢‚½‚¸‚çD‚«‚ÌƒS[ƒXƒg‚½‚¿‚ð‘ÞŽ¡‚µ‚Ä‚¢‚«Aƒ‰ƒXƒg‚É‘Ò‚¿Žó‚¯‚éƒ{ƒX‚ð“|‚µ‚ÄA
+‹K’è“¾“_‚ð‹“‚°‚é‚±‚Æ‚ÅƒNƒŠƒA‚Æ‚È‚éB
+ŽŽì’iŠK‚Å‚Í”wŒi‚ÉŽèì‚è‚ÌƒWƒIƒ‰ƒ}‚ª‘g‚Ü‚ê‚é‚È‚ÇA‚©‚È‚è‚±‚¾‚í‚Á‚½ì•i‚Æ‚È‚Á‚Ä‚¨‚èA
+”wŒi‰æ‚Æ‚È‚Á‚Ä‚µ‚Ü‚Á‚½»•i”Å‚Å‚àŠ®¬“x‚Ì‚‚¢ƒGƒŒƒƒJ‚Æ‚µ‚ÄŽdã‚ª‚Á‚Ä‚¢‚éB
 
 
 
@@ -29569,6 +29849,36 @@ CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2151, OKI6295]
 
 $end
 
+$info=powerins
+$bio
+‹ŒŒŽ›ˆê‘°
+
+
+”­”„”NF1993.11
+
+ŠJ”­^”­”„Œ³FƒAƒgƒ‰ƒX
+
+ƒWƒƒƒ“ƒ‹F‘ÎíŠi“¬ƒAƒNƒVƒ‡ƒ“
+
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+4ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2610]
+
+
+uƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[‡Uv‚©‚çŽn‚Ü‚Á‚½‘ÎíŠi“¬ƒQ[ƒ€ƒu[ƒ€‚É“oê‚µ‚½ì•i‚Ì’†‚Å‚àA
+ŒÂ«“I‚ÈƒLƒƒƒ‰ƒNƒ^[‚ÆíŽ¯‚ðˆí’E‚µ‚½”X‚Ì•KŽE‹Z‚©‚çl‹C‚ðŒÄ‚ñ‚¾ì•i‚Å‚ ‚éB
+‚Ù‚Æ‚ñ‚Ç‚Ì’Êí‹ZAƒ_ƒbƒVƒ…UŒ‚‚ÉƒLƒƒƒ“ƒZƒ‹‚ð‚©‚¯‚é‚±‚Æ‚ª‰Â”\‚Æ‚È‚Á‚Ä‚¢‚é‚Ù‚©‚ÉA
+2’iƒWƒƒƒ“ƒv‚ª‚Å‚«‚é‚æ‚¤‚É‚È‚Á‚½‚±‚Æ‚Å‹ó’†‚©‚ç•KŽE‹Z‚ð•ú‚Â‚±‚Æ‚à‚Å‚«‚éB
+‚Ü‚½‘SƒLƒƒƒ‰ƒNƒ^[‚ÌŒJ‚èo‚¹‚é“Š‚°‹Z‚ÍA‹¤’Ê‚ÌƒRƒ}ƒ“ƒh“ü—Í‚ÅUŒ‚‰Â”\‚Å‚ ‚éB
+‚»‚ê‚É‚µ‚Ä‚àA‹ŒŒŽ›‚ÌŒŒ‚ðˆø‚­‚à‚Ì’B‚ÍA‹°‚ë‚µ‚¢l‚Î‚©‚è‚Å‚ ‚éB
+ƒLƒƒƒ‰ƒNƒ^[ƒfƒUƒCƒ“‚Í“–ŽžƒAƒgƒ‰ƒX‚ÌƒAƒ‹ƒoƒCƒ^[‚¾‚Á‚½‘º“c˜@Ž¢ Ž‚Å‚ ‚éB
+
+
+
+$end
+
 $info=ryorioh
 $bio
 ƒOƒ‹ƒƒoƒgƒ‹ƒNƒCƒY —¿—‰¤ƒNƒbƒLƒ“ƒO
@@ -29649,10 +29959,12 @@ FIMƒ[ƒhƒŒ[ƒX¢ŠE‘IŽèŒ 500ccƒNƒ‰ƒX(Moto GPƒNƒ‰ƒX)‚ð‘èÞ‚Æ‚µ‚½3DƒoƒCƒNƒŒ[ƒVƒ“ƒ
 ƒvƒŒƒCƒ„[‚Íƒ„ƒ}ƒn(YZR)Aƒzƒ“ƒ_(NSR)AƒXƒYƒL(RGV-ƒ¡)‚Ì‚RŽÔŽíA“–ŽžŠˆ–ô‚µ‚Ä‚¢‚½—L–¼ƒ‰ƒCƒ_[‚ð‘I‚Ô‚±‚Æ‚Æ‚È‚éB
 ƒR[ƒX‚ÍŽÀÛ‚ÉŒ»’n‘ª’è‚³‚ê‚½—éŽ­Aƒ|[ƒ‹ƒŠƒJ[ƒ‹(•§)AƒwƒŒƒX(¼)‚Ì3ƒR[ƒXB
 
-‹†‹É‚Ìƒ‚[ƒ^[ƒTƒCƒNƒ‹ƒQ[ƒ€‚ðì‚é‚ÆŒ¾‚¤AƒRƒ“ƒZƒvƒg‚Ì‚à‚ÆŠJ”­A
-âž‘Ì‚Í‘«‚ðƒXƒeƒbƒv‚É‚Ì‚¹‚½‚Ü‚ÜA‘ÌdˆÚ“®‚Ì‚Ý‚Å‚Ì‘€ì‚ðŽÀŒ»‚µ‚½“Æ“Á‚Ìƒ‰ƒCƒfƒBƒ“ƒOƒXƒ^ƒCƒ‹A
-ƒZƒ“ƒT[‚É‚æ‚èA‘OŒXŽp¨‚É‚æ‚èƒgƒbƒvƒXƒs[ƒh‚ª‰Ò‚°‚é‚È‚ÇA‰æŠú“I‚È“ÆŽ©‹@\‚ðÌ—p‚µ‚Ä‚¢‚éB
-‚Ü‚½âž‘ÌƒfƒUƒCƒ“‚àŽÀÛ‚ÌƒŒ[ƒXƒJ[‚ðŒ³‚ÉƒfƒUƒCƒ“‚³‚ê‚Ä‚¢‚éB
+‹†‹É‚Ìƒ‚[ƒ^[ƒTƒCƒNƒ‹ƒQ[ƒ€‚ðì‚é‚ÆŒ¾‚¤AƒRƒ“ƒZƒvƒg‚Ì‚à‚ÆŠJ”­‚³‚ê‚Ä‚¨‚èA
+âž‘Ì‚ÍŽÀŽÔ“¯—l‚ÌƒTƒCƒY‚ÅƒfƒUƒCƒ“‚³‚êA
+‘€ì‚à‘«‚ðƒXƒeƒbƒv‚É‚Ì‚¹‚½‚Ü‚Ü‘ÌdˆÚ“®‚Ì‚Ý‚Å‚Ì‘€ì‚ðŽÀŒ»‚µ‚½“Æ“Á‚Ìƒ‰ƒCƒfƒBƒ“ƒOƒXƒ^ƒCƒ‹A
+ƒnƒ“ƒhƒ‹•”•ª‚Ì‹ßÚƒZƒ“ƒT[‚É‚æ‚èA
+‘OŒXŽp¨‚ðŽæ‚é‚±‚Æ‚ÅƒgƒbƒvƒXƒs[ƒh‚ª‰Ò‚°‚é‚È‚Ç‚Ì‰æŠú“I‚È“ÆŽ©‚Ì‹@\‚ð“±“ü‚µ‚½
+uNASS(Namco AdvancedSwing System)v‚ðÌ—p‚µ‚Ä‚¢‚éB
 
 
 
@@ -29880,8 +30192,12 @@ $bio
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2610]
 
 
-
-
+‰Æ’ë—pƒQ[ƒ€‹@‚Å”X‚ÌƒXƒ|[ƒcƒQ[ƒ€‚ð‘—‚èo‚µ‚Ä‚«‚½ƒqƒ…[ƒ}ƒ“‚æ‚è“oê‚µ‚½ƒTƒbƒJ[ƒQ[ƒ€B
+‚±‚ê‚Ü‚Å‚É‚È‚©‚Á‚½3DŽ‹“_‚É‚æ‚é‰æ–Ê\¬‚Æ‚¢‚¤AŽaV‚ÈƒQ[ƒ€ƒVƒXƒeƒ€‚ðì‚èo‚µ‚½ì•i‚Å‚ ‚éB
+ƒvƒŒƒCƒ„[‚Í¢ŠE9ƒJ‘‚æ‚è‘I‘ð‚Å‚«A‚»‚ê‚¼‚êUŒ‚—ÍAƒfƒBƒtƒFƒ“ƒX—ÍA‘–—Í‚ÆÝ’è‚³‚ê‚Ä‚¢‚éB
+‚Ü‚½3‚Â‚Ìƒ{ƒ^ƒ“‚ð‹ìŽg‚·‚é‚±‚Æ‚ÅƒI[ƒoƒwƒbƒhƒLƒbƒNAƒ_ƒCƒrƒ“ƒOƒwƒbƒh‚âƒtƒH[ƒ[ƒVƒ‡ƒ“ƒvƒŒƒC‚à‰Â”\B
+“¯ŽÐ‚ð‘ã•\‚·‚éì•iuƒtƒH[ƒ[ƒVƒ‡ƒ“ƒTƒbƒJ[v‚Å‚à‚¨“éõ‚Ý‚Æ‚È‚Á‚½‘½l”ƒvƒŒƒC‚à‰Â”\‚Æ‚È‚Á‚Ä‚¨‚èA
+1P‚Æ2P‚É‚æ‚é‹¦—ÍƒvƒŒƒC‚âA4l“¯ŽžƒvƒŒƒC‚É‚æ‚é2‘Î2‚Ì‘Îí‚à‰Â”\‚Æ‚È‚Á‚Ä‚¢‚éB
 
 
 
@@ -29905,8 +30221,12 @@ $bio
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2610]
 
 
-
-
+3D‰æ–Ê‚É‚æ‚é”——Í‚ ‚éƒTƒbƒJ[ƒQ[ƒ€‚Ìæ‹ì‚¯‚Æ‚È‚Á‚½uƒOƒ‰ƒ“ƒhƒXƒgƒ‰ƒCƒJ[v‚Ì2ì–ÚB
+‘€ì‚Í8•ûŒüƒŒƒo[‚Å‘IŽè‚ð“®‚©‚µAƒVƒ…[ƒg‚ÆƒpƒXA‚»‚µ‚ÄƒI[ƒgƒpƒX‚Ì3‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚·‚éB
+V‹@”\‚Æ‚µ‚Äƒ`[ƒ€ƒZƒŒƒNƒgŽž‚Éc3DƒtƒB[ƒ‹ƒh‚Æ‰¡3DƒtƒB[ƒ‹ƒh‚©‚ç‘I‘ð‚Å‚«‚é‚æ‚¤‚É‚È‚Á‚½‚Ù‚©‚ÉA
+ƒˆ[ƒƒbƒpAƒAƒWƒA‚È‚Ç‚Ì’nˆæ‚©‚ç‚»‚ê‚¼‚ê10ƒ`[ƒ€‚Ã‚Â‚ª“oê‚µA‘S50ƒ`[ƒ€‚©‚ç‘I‚×‚é‚±‚Æ‚ª‰Â”\‚Æ‚È‚Á‚Ä‚¢‚éB
+‘ÎíƒvƒŒƒCŽž‚Å‚ÍŽŽ‡I—¹Žž“_‚Å“¯“_‚¾‚Á‚½ê‡AVƒS[ƒ‹Ž®‚Ì‰„’·í‚ªÌ—p‚³‚ê‚Ä‚¨‚èA
+‚Ü‚½ŽŽ‡’†‚É‚ÍƒŠƒvƒŒƒC‹@”\‚ª·‚èž‚Ü‚ê‚½‚±‚Æ‚ÅƒQ[ƒ€‚ð·‚èã‚°‚Ä‚¢‚éB
 
 
 
@@ -29960,7 +30280,7 @@ CPU\¬[M6502 (2), I8X41]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910 (2)]
 ƒVƒtƒgƒAƒbƒv‚É‚Í‰ñ”§ŒÀ‚ª‚ ‚é‚Ì‚Å’ˆÓB
 ‚Ü‚½AŽ©‹@‚ÌŒã•û‚É‚Íƒ{[ƒ‹‚ª“–‚½‚é‚²‚Æ‚ÉŒ‡‚¯‚Ä‚¢‚­ƒuƒƒbƒN‚ª‚ ‚é‚Ì‚ÅA‚·‚®‚Éƒ{[ƒ‹‚ðŽó‚¯‘¹‚È‚¤‚±‚Æ‚Í‚È‚¢B
 ã‚©‚çP‚Á‚Ä‚­‚éƒNƒ‚‚âƒOƒ‰ƒbƒv‚É“–‚½‚é‚Æƒ~ƒXB
-ˆê’è”ƒOƒ‰ƒbƒv‚ð”j‰ó‚·‚é‚ÆƒXƒe[ƒWƒNƒŠƒAB
+ˆê’è”ƒOƒ‰ƒbƒv‚ð”j‰ó‚·‚é‚ÆƒXƒe[ƒWƒNƒŠƒA‚Æ‚È‚éB
 
 
 
@@ -30119,7 +30439,7 @@ $bio
 ƒOƒŒ[ƒgƒXƒ‰ƒbƒK[ƒY'‚X‚S -Featuring 1994 Team Rosters-
 
 
-”­”„”NF1994
+”­”„”NF1994.03
 
 ŠJ”­^”­”„Œ³Fƒiƒ€ƒR
 
@@ -30134,7 +30454,8 @@ CPU\¬[68EC020]
 
 1986”N‚Ìuƒtƒ@ƒ~ƒŠ[ƒXƒ^ƒWƒAƒ€v‚©‚çŽn‚Ü‚Á‚½ƒiƒ€ƒR‚Ì–ì‹…ƒQ[ƒ€ƒVƒŠ[ƒY‚Ì1994”N“x”ÅuƒOƒŒ[ƒgƒXƒ‰ƒbƒK[ƒY'94vB
 ‚±‚Ìì•i‚Í8“™g‚Æ‚È‚Á‚ÄƒŠƒAƒ‹‚É‚È‚Á‚½uƒOƒŒ[ƒgƒXƒ‰ƒbƒK[ƒYv‚Ìƒ}ƒCƒi[ƒAƒbƒvƒo[ƒWƒ‡ƒ“‚Å‚ ‚éB
-‘IŽè‚ÌÅVƒf[ƒ^‚Í‚à‚¿‚ë‚ñAƒNƒƒXƒvƒŒ[‚ÌƒV[ƒ“‚ªƒAƒbƒv‚É‚È‚é‰‰o‚âA‰æ–Ê‚É‘ÅŽÒ‚ÌŠç‚ª•\Ž¦‚³‚ê‚é‚È‚Ç‚Ì•ÏX‚ª‰Á‚¦‚ç‚ê‚Ä‚¢‚éB
+‘IŽè‚ÌÅVƒf[ƒ^‚Í‚à‚¿‚ë‚ñAƒNƒƒXƒvƒŒ[‚ÌƒV[ƒ“‚ªƒAƒbƒv‚É‚È‚é‰‰o‚âA‰æ–Ê‚É‘ÅŽÒ‚ÌŠç‚ª•\Ž¦‚³‚ê‚é‚È‚Ç‚Ì•ÏX‚ª‰Á‚¦‚ç‚ê‚½‚±‚Æ‚ÅA
+‚æ‚èƒŠƒAƒ‹Š´‚ð’Ç‹‚µ‚½‘¢‚è‚Æ‚È‚Á‚Ä‚¢‚éB
 
 
 
@@ -30145,7 +30466,7 @@ $bio
 ƒOƒŒ[ƒgƒXƒ‰ƒbƒK[ƒY -NEW WORLD STADIUM-
 
 
-”­”„”NF1993
+”­”„”NF1993.09
 
 ŠJ”­^”­”„Œ³Fƒiƒ€ƒR
 
@@ -30158,8 +30479,12 @@ $bio
 CPU\¬[68EC020]
 
 
-
-
+uƒX[ƒp[ƒ[ƒ‹ƒhƒXƒ^ƒWƒAƒ€vƒVƒŠ[ƒY‚Å–ì‹…ƒQ[ƒ€‚ðƒŠ[ƒh‚µ‚Ä‚«‚½ƒiƒ€ƒR‚©‚ç“oê‚µ‚½A
+‚à‚¤‚Ð‚Æ‚Â‚Ì–ì‹…ƒQ[ƒ€uƒOƒŒ[ƒgƒXƒ‰ƒbƒK[ƒYvB
+Šî–{“I‚É‚ÍƒX[ƒp[ƒ[ƒ‹ƒhƒXƒ^ƒWƒAƒ€ƒVƒŠ[ƒY‚ªƒx[ƒX‚Æ‚È‚Á‚Ä‚¨‚èAŽvlƒ‹[ƒ`ƒ“‚âƒAƒ‹ƒSƒŠƒYƒ€‚à“¯‚¶‚¾‚ªA
+ƒpƒ‰ƒ[ƒ^[‚Ì’²®‚ÆƒXƒ^ƒWƒAƒ€‚ªL‚­‚È‚Á‚½‚½‚ßŠO–ì‚ÌŽç”õ‚ðƒI[ƒg‘€ì‚ð‘I‘ð‚Å‚«‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
+‘¼‚É‚à“Š‹…ƒR[ƒX‚Ì‚‚³‚ð’²®‚Å‚«‚é‚æ‚¤‚É‚È‚èABGM‚É‚ÍŠe‹…’c‚ÌƒIƒtƒBƒVƒƒƒ‹‰ž‰‡‰Ì‚ðÌ—p‚·‚é‚È‚ÇA“Æ“Á‚Ì–¡‚àŽ‚Á‚Ä‚¢‚éB
+‚¿‚È‚Ý‚ÉŒ³X‚Í‘IŽè‚ð8“ªg‚É‚µ‚½ŠCŠOŒü‚¯‚Ì–ì‹…ƒQ[ƒ€‚Æ‚µ‚Äì•i‚Æ‚µ‚Äì‚ç‚ê‚Ä‚¢‚½B
 
 
 
@@ -30268,10 +30593,11 @@ CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[SN76496]
 ƒVƒxƒŠƒA‚ð•‘‘ä‚ÉA
 ƒQƒŠƒ‰í‚Ìƒvƒ‚Å‚ ‚éŽålŒö‚ð‘€ì‚µA
 “G‚ÌŒƒ‚µ‚¢UŒ‚‚ð‚©‚í‚µ‚È‚ª‚çA“G‚É•ß‚Ü‚Á‚Ä‚¢‚é–¡•û’B‚ð‹~o‚·‚é‚±‚Æ‚ð–Ú“I‚Æ‚µ‚½ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
-‘€ì‚Í8•ûŒüƒŒƒo[‚ÅˆÚ“®‚ÆƒWƒƒƒ“ƒvA2‚Â‚Ìƒ{ƒ^ƒ“‚ðƒiƒCƒtUŒ‚‚Æ“ÁŽêUŒ‚‚ÉŽg—p‚·‚éB
-‚½‚¾‚µA‰Î‰Š•úŽËŠí‚È‚Ç‚Ì“ÁŽêUŒ‚‚ÍAŒˆ‚Ü‚Á‚½“G‚ð“|‚µ‚½Žž‚ÉoŒ»‚·‚éƒAƒCƒeƒ€‚É‚æ‚èŽg—p‰Â”\‚Æ‚È‚éB
-“ï“x‚ªŒƒ‚µ‚­‚‚©‚Á‚½‚Ì‚ª‚Æ‚Ä‚àˆóÛ“IB
-‘S4ƒXƒe[ƒW‚Åƒ‹[ƒv‚·‚éB
+‘€ì‚Í8•ûŒüƒŒƒo[‚ÅˆÚ“®‚ÆƒWƒƒƒ“ƒvA2‚Â‚Ìƒ{ƒ^ƒ“‚ðƒiƒCƒtUŒ‚‚ÆƒVƒ‡ƒbƒg‚ÉŽg—p‚µA
+•š‚¹‚é‚±‚Æ‚Å“G‚©‚ç‚ÌUŒ‚‚ð‚©‚í‚·‚±‚Æ‚ª‚Å‚«‚éB
+‚Ü‚½‰Î‰Š•úŽËŠí‚È‚Ç‚ÌƒVƒ‡ƒbƒg‚ÍAŒˆ‚Ü‚Á‚½“G‚ð“|‚µ‚½Žž‚ÉoŒ»‚·‚éƒAƒCƒeƒ€‚É‚æ‚èŽg—p‰Â”\‚Æ‚È‚éB
+“G‚ÌŒRŽ–‹’“_‚ð‰z‚¦‚ê‚Î1ƒXƒe[ƒWƒNƒŠƒAB“ï“x‚ªŒƒ‚µ‚­‚‚©‚Á‚½‚Ì‚ª‚Æ‚Ä‚àˆóÛ“I‚Å‚ ‚éB
+‘S4ƒXƒe[ƒW‚Åƒ‹[ƒvB
 
 
 
@@ -30323,9 +30649,10 @@ CPU\¬[68EC020, 68000]@‰¹Œ¹ƒ`ƒbƒv[ES5505]
 
 ƒ^ƒCƒg[»‚ÌcƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒOì•iB
 ƒvƒŒƒCƒ„[‹@‚ÍˆÚ“®—ÍAUŒ‚—Í‚ÌˆÙ‚È‚éƒ{ƒ“ƒo[AƒAƒ^ƒbƒNƒwƒŠAƒtƒ@ƒCƒ^[‚Ì3Ží—Þ‚©‚ç‘I‘ð‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
-ƒOƒŠƒbƒh‚É“G’e‚ð‚ ‚ÄAƒpƒ[ƒQ[ƒW‚ð‚¢‚Á‚Ï‚¢‚É‚·‚é‚Æƒ{ƒ“ƒo[‚ð1ŒÂƒXƒgƒbƒN‚·‚é‚±‚Æ‚ª‚Å‚«A
+uƒOƒŠƒbƒhv‚ÆŒÄ‚Î‚ê‚éVŒ^•ºŠí‚É“G’e‚ð‚ ‚ÄAƒpƒ[ƒQ[ƒW‚ð‚¢‚Á‚Ï‚¢‚É‚·‚é‚Æƒ{ƒ“ƒo[‚ð1ŒÂƒXƒgƒbƒN‚·‚é‚±‚Æ‚ª‚Å‚«‚é‚Ì‚ª“Á’¥‚ÅA
 ƒAƒCƒeƒ€‚ðŽæ‚é‚±‚Æ‚ÅƒVƒ‡ƒbƒg‚Í7’iŠK‚Ü‚ÅAƒOƒŠƒbƒhƒAƒCƒeƒ€‚ðŽæ‚é‚±‚Æ‚ÅƒVƒ‡ƒbƒg‚Æƒ{ƒ“ƒo[‚Ì‘g‚Ý‡‚í‚¹‚ð•ÏX‚·‚é‚±‚Æ‚à‰Â”\B
 ƒwƒ‹ƒp[ƒAƒCƒeƒ€‚Å‚Í‘åŒ^—FŒRŽx‰‡‹@‚ªƒTƒ|[ƒg‚É‚Â‚¢‚Ä‚­‚ê‚éB
+2l“¯ŽžƒvƒŒƒC‰Â”\B
 
 
 
@@ -30360,7 +30687,7 @@ $bio
 ƒOƒŠƒ_ƒCƒAƒ“ƒtƒ@ƒCƒg
 
 
-”­”„”NF1986
+”­”„”NF1985
 
 ŠJ”­^”­”„Œ³Fƒe[ƒJƒ“iƒeƒNƒ‚j
 
@@ -30373,11 +30700,12 @@ $bio
 CPU\¬[Z80 (3)]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910 (2), MSM5205]
 
 
-ƒAƒƒŠƒJƒ“ƒtƒbƒgƒ{[ƒ‹‚ðƒe[ƒ}‚Æ‚µ‚½ƒXƒ|[ƒcƒQ[ƒ€B
-“–‰‚±‚ÌƒQ[ƒ€‚ÍAŠCŠO‚Ì‚Ý‚Å”Ì”„‚³‚ê‚Ä‚¢‚½‚ªAŒã‚É‘“à‚Å”Ì”„‚³‚ê‚Ä‚¢‚éB
-‚µ‚©‚µAŒ‹‹Ç‘“à‚Å‚Í‚Ù‚Æ‚ñ‚Ç—¬’Ê‚µ‚È‚©‚Á‚½‚æ‚¤‚Å‚ ‚éB
-‘€ì‚É‚Íƒgƒ‰ƒbƒNƒ{[ƒ‹‚ðÌ—p‚µ‚Ä‚¨‚èAƒtƒH[ƒ[ƒVƒ‡ƒ“‚ª”‘½‚­—pˆÓ‚³‚ê‚Ä‚¢‚éB
-ƒOƒ‰ƒtƒBƒbƒN‚Ì”ü‚³‚ªˆóÛ“IB
+ƒe[ƒJƒ“‚æ‚è“oê‚µ‚½ƒAƒƒŠƒJƒ“ƒtƒbƒgƒ{[ƒ‹‚ðƒe[ƒ}‚Æ‚µ‚½ƒXƒ|[ƒcƒQ[ƒ€B
+‘€ì‚Éƒgƒ‰ƒbƒNƒ{[ƒ‹‚ÆƒpƒXƒ{ƒ^ƒ“‚ðŽg—p‚·‚éB
+ŽŽ‡ŠJŽn‘O‚ÉŒÂlƒvƒŒƒC’†S‚ÌƒtƒH[ƒ[ƒVƒ‡ƒ“‚ÆƒpƒX’†S‚ÌƒtƒH[ƒ[ƒVƒ‡ƒ“‚Ì8Ží—Þ‚©‚ç‘I‘ð‚·‚é‚±‚Æ‚ª‚Å‚«‚é‚Ì‚ª“Á’¥‚ÅA
+“¯ŽžŠú‚É“oê‚·‚éuƒe[ƒJƒ“ƒ[ƒ‹ƒhƒJƒbƒvv‚æ‚è‚à”ü‚µ‚¢ƒOƒ‰ƒtƒBƒbƒN‚ªˆóÛ“I‚Å‚ ‚éB
+“–‰A85”N‚ÉŠCŠO‚Ì‚Ý‚Å”Ì”„‚³‚êA87”N‚É“ú–{‘“à‚Å”Ì”„‚³‚ê‚Ä‚¢‚é‚ªA
+Œ‹‹Çuƒe[ƒJƒ“ƒ[ƒ‹ƒhƒJƒbƒvv‚Ìƒqƒbƒg‚É‚æ‚èA‚Ù‚Æ‚ñ‚Ç—¬’Ê‚µ‚È‚©‚Á‚½B
 
 
 
@@ -30425,11 +30753,15 @@ $bio
 CPU\¬[M6809 (2)]@‰¹Œ¹ƒ`ƒbƒv[Namco, DAC]
 
 
-uƒ[ƒrƒEƒXv‚É‚à“oê‚µ‚Ä‚¢‚½íŽÔ‚ÌƒOƒƒuƒ_[‚ðƒŒƒo[‚Å‘€ì‚µA
-ƒGƒiƒW[EƒLƒƒƒmƒ“‚ÆƒV[ƒ‹ƒh‚ðãŽè‚ÉŽg‚¢A‰æ–Ê“à‚Ì“G‚ð‘S–Å‚·‚é‚±‚Æ‚ª–Ú“IB
-‘S99–ÊB
-˜rŽŸ‘æ‚Å1ƒNƒŒƒWƒbƒg‚Å99–Ê‚ðƒNƒŠƒA‚·‚é‚±‚Æ‚à‰Â”\B
+uƒ[ƒrƒEƒXv‚ÉUŒ‚‚µ‚Ä‚±‚È‚¢“G‚Æ‚µ‚Ä“oê‚µ‚½—Ll…—¤—¼—pŽÔuƒOƒƒuƒ_[v‚ªŽå–ð‚ÌƒAƒNƒVƒ‡ƒ“ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€B
+ƒOƒƒuƒ_[‚ðƒŒƒo[‚Å‘€ì‚µAƒGƒiƒW[EƒLƒƒƒmƒ“‚ÆƒV[ƒ‹ƒh‚ðãŽè‚ÉŽg‚Á‚Ä‰æ–Ê“à‚Ì“G‚ð‘S–Å‚·‚é‚±‚Æ‚ª–Ú“IB
+“|‚µ‚½“G‚Í‚»‚Ìê‚Å”š”­‚µA‚»‚Ì”š•—‚Å“G‹@‚ð—U”š‚³‚¹‚é‚±‚Æ‚à‚Å‚«A‚Ü‚Æ‚ß‚Ä“|‚¹‚Î‚“¾“_‚Æ‚È‚éB
+‚Ü‚½ƒGƒiƒW[EƒLƒƒƒmƒ“‚ðŒ‚‚Â‚ÆƒGƒlƒ‹ƒM[‚ðÁ”ï‚µ‚Ä‚µ‚Ü‚¤‚ªAƒV[ƒ‹ƒh‚ð’£‚é‚Æ‚»‚ÌÁ”ï‚ÍŒƒ‚µ‚­‚È‚é‚Ì‚Å’ˆÓ‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢B
+ƒXƒe[ƒW\¬‚Í‘S99ƒoƒgƒŠƒ“ƒO‚ÅD‚«‚È‚Æ‚±‚ë‚©‚çŽn‚ß‚é‚±‚Æ‚ª‚Å‚«A
+˜rŽŸ‘æ‚Å‚Í1ƒNƒŒƒWƒbƒg‚Å‘SƒXƒe[ƒW‚ðƒNƒŠƒA‚·‚é‚±‚Æ‚à‰Â”\B
+˜”Õ‚Å‚Í“ïˆÕ“x‚à‚»‚¤‚‚­‚È‚­‚·‚®‚ÉƒNƒŠƒA‚Å‚«‚Ä‚µ‚Ü‚¤‚ªAi‚Þ‚É‚Â‚ê‚ ‚Á‚Æ‚¢‚¤ŠÔ‚É‚â‚ç‚ê‚Ä‚µ‚Ü‚¤‚æ‚¤‚È‚“ïˆÕ“x‚ÌƒXƒe[ƒW‚à‚ ‚éB
 —]’k‚¾‚ªAƒ‰ƒEƒ“ƒh34‚Å‚µ‚Î‚ç‚­”S‚Á‚Ä‚¢‚é‚ÆA‰æ–Ê‰º•”‚ÉŠJ”­ŽÒ‚©‚ç‚ÌƒƒbƒZ[ƒW‚ªo‚éB
+‚¿‚È‚Ý‚ÉŠJ”­‚Í‰““¡‰ëL Ž‚ð‚Í‚¶‚ß‚Æ‚·‚éuƒ[ƒrƒEƒXvuƒhƒ‹ƒA[ƒK‚Ì“ƒv‚ÌŠJ”­ƒXƒ^ƒbƒtuƒGƒuƒ][ƒGEƒGƒ“ƒhv‚Å‚ ‚éB
 
 
 
@@ -32556,7 +32888,7 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰F4•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+ƒVƒXƒeƒ€ƒ{[ƒhFESD Fantasia AT-II
 
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM3812, OKI6295]
 
@@ -32594,7 +32926,7 @@ $end
 
 $info=heatbrl
 $bio
-‚g‚d‚`‚s‚d‚c ƒoƒŒƒ‹
+ƒq[ƒeƒbƒh ƒoƒŒƒ‹
 
 
 ”­”„”NF1993
@@ -32713,7 +33045,7 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+3ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Õ
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
 
 CPU\¬[ARM]
 
@@ -32741,13 +33073,14 @@ $bio
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2151, ƒÊPD7759]
 
 
-ƒZƒK‘ÌŠ´ƒQ[ƒ€ƒVƒŠ[ƒY‚Æ‚µ‚Ä“oê‚µ‚½ƒ{ƒNƒVƒ“ƒOƒQ[ƒ€B
-‘åŒ^âž‘Ì‚©‚ç“Ë‚«o‚µ‚½A2–{‚Ì‘å‚«‚ÈƒŒƒo[‚Å‘€ì‚·‚éB
-ƒŒƒo[‚Íã‰º‚ÆA‘OŒã‚É“®‚©‚·‚±‚Æ‚ª‚Å‚«A‚©‚È‚èŽÀÛ‚Ìƒ{ƒNƒVƒ“ƒO‚Ì“®‚«‚É‹ß‚¢“®‚«‚ª•K—v‚Æ‚È‚éB
-‚»‚µ‚ÄAƒŒƒo[‚ðŽg‚Á‚Äƒ‚ƒjƒ^[‚ð‰ñ“]‚³‚¹‚é‚±‚Æ‚ÅAƒvƒŒƒCƒ„[‚Ì¶‰E‚ÌˆÚ“®‚ÆƒtƒbƒNƒpƒ“ƒ`‚ðŒJ‚èo‚·‚±‚Æ‚ª‚Å‚«‚éB
+ƒZƒK‘ÌŠ´ƒQ[ƒ€‚È‚ç‚Êu‘ÌŠ¾ƒQ[ƒ€v‚Æ‚µ‚Ä“oê‚µ‚½ƒ{ƒNƒVƒ“ƒOƒQ[ƒ€B
+‘åŒ^âž‘Ì‚©‚ç“Ë‚«o‚µ‚½A2–{‚Ì‘å‚«‚Èƒnƒ“ƒhƒ‹‚Å‘€ì‚·‚éB
+ƒnƒ“ƒhƒ‹‚Íã‰º‚ÆA‘OŒã‚É“®‚©‚·‚±‚Æ‚ª‚Å‚«A‚©‚È‚èŽÀÛ‚Ìƒ{ƒNƒVƒ“ƒO‚Ì“®‚«‚É‹ß‚¢“®‚«‚ª•K—v‚Æ‚È‚éB
+‚»‚µ‚ÄAƒnƒ“ƒhƒ‹‚ðŽg‚Á‚Äƒ‚ƒjƒ^[‚ð‰ñ“]‚³‚¹‚é‚±‚Æ‚ÅAƒvƒŒƒCƒ„[‚Ì¶‰E‚ÌˆÚ“®‚ÆƒtƒbƒNƒpƒ“ƒ`‚ðŒJ‚èo‚·‚±‚Æ‚ª‚Å‚«‚éB
 ƒvƒŒƒC‚ðI‚¦‚é‚Æ‚©‚È‚è‘§‚ªØ‚ê‚é”M‚¢ƒQ[ƒ€‚Å‚ ‚éB
 ‘S10ƒXƒe[ƒWB
-‚Ü‚½A—]’k‚¾‚ª1976”N‚É“¯ŽÐ‚©‚ç‘S‚­“¯–¼‚ÌƒQ[ƒ€‚ª”­”„‚³‚ê‚Ä‚¢‚éB
+‚Ü‚½A—]’k‚¾‚ª1976”N‚É“¯ŽÐ‚©‚ç‘S‚­“¯–¼‚Ìì•i‚ª”­”„‚³‚ê‚Ä‚¨‚èA
+“¯‚¶‚æ‚¤‚ÉƒOƒ[ƒu‚ÌŒ`‚ð‚µ‚½ƒnƒ“ƒhƒ‹‚ð“®‚©‚·‚Æ‚¢‚¤A¡ì‚ÌŒ´Œ^‚Æ‚È‚é‚æ‚¤‚È“à—e‚Æ‚È‚Á‚Ä‚¢‚éB
 
 
 
@@ -32970,7 +33303,7 @@ Hidden Catch
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+ƒVƒXƒeƒ€ƒ{[ƒhFEolith Gradation 2D System
 
 CPU\¬[E1-32XS]
 
@@ -34038,9 +34371,15 @@ $bio
 CPU\¬[68000 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2151, OKI6295]
 
 
-‰Æ’ë—pƒQ[ƒ€‹@‚ÅŠˆ–ô‚µ‚Ä‚¢‚½ƒeƒNƒmƒ\ƒtƒg‚ª’¿‚µ‚­ƒA[ƒP[ƒh—p‚Éì‚Á‚½‰¡ƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒOB
+‰Æ’ë—pƒQ[ƒ€‹@‚ÅŠˆ–ô‚µ‚Ä‚¢‚½ƒeƒNƒmƒ\ƒtƒg‚ªA
+ƒA[ƒP[ƒhƒIƒŠƒWƒiƒ‹‚Ìì•i‚Æ‚µ‚Ä‚Í‰‚Ì‰¡ƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒOB
 ƒ{ƒ^ƒ“‚Ì‰Ÿ‚µ•ª‚¯‚Åí“¬‹@Œ`‘Ô‚Æƒƒ{ƒbƒgŒ`‘Ô‚ðØ‚è‘Ö‚¦‰Â”\‚ÈŽ©‹@‚ð‘€‚èA‘S8ƒXƒe[ƒW‚ðí‚¢”²‚­B
-Œ`‘Ô‚É‚æ‚Á‚ÄUŒ‚—Í‚âˆÚ“®‘¬“x‚ª‘å‚«‚­•Ï‰»‚·‚éˆ×A‚¤‚Ü‚­—¼•û‚ÌŒ`‘Ô‚ðŽg‚¢‚±‚È‚·Ž–‚ªU—ª‚Ìƒ|ƒCƒ“ƒgB
+ƒVƒ‡ƒbƒgƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‘±‚¯‚é‚±‚Æ‚ÅŠgŽU‚·‚éƒƒCƒhƒVƒ‡ƒbƒg‚âAƒA[ƒ}[(ƒƒ{ƒbƒg)Œ`‘Ô‚Å‚Í‹­—Í‚Èƒr[ƒ€ƒ‰ƒCƒtƒ‹‚ð˜AŽË‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
+Ž©‹@‚Íƒoƒ‰ƒ“ƒXŒ^‚ÌuƒVƒ…ƒcƒ‹ƒ€¥ƒtƒH[ƒQƒ‹vAƒXƒs[ƒhdŽ‹Œ^‚ÌuƒnƒC¥ƒ€ƒXƒ^ƒ“ƒOvA
+UŒ‚dŽ‹Œ^‚Ìuƒtƒ@ƒ‰ƒ“ƒNƒX¥ƒXƒ}ƒbƒVƒƒ[v‚Ì3‘Ì‚©‚ç‘I‘ð‚Å‚«‚éB
+Ž©‹@‚Íí“¬‹@Œ`‘Ô‚Å‚ÍˆÚ“®ƒXƒs[ƒh‚ª‘¬‚­A“–‚½‚è”»’è‚ª¬‚³‚­‚È‚èAƒA[ƒ}[Œ`‘Ô‚Å‚ÍUŒ‚—Í‚Ìã¸AáŠQ•¨‚É“–‚½‚Á‚Ä‚à‚â‚ç‚ê‚È‚¢‚È‚ÇA
+Œ`‘Ô‚É‚æ‚Á‚Ä‘å‚«‚­“Á«‚ª•Ï‰»‚·‚éˆ×A‚¤‚Ü‚­—¼•û‚ÌŒ`‘Ô‚ðŽg‚¢‚±‚È‚·Ž–‚ªU—ª‚Ìƒ|ƒCƒ“ƒgB
+‚Ü‚½AƒXƒe[ƒWƒNƒŠƒAŒã‚É‚ÍŽc‚Á‚Ä‚¢‚é‰‡Œì•º‚âƒ{ƒ}[ƒQ[ƒW‚ÌŽc—Ê‚É‚æ‚Á‚Äƒ{[ƒiƒXƒ|ƒCƒ“ƒg‚ð“¾‚é‚±‚Æ‚ª‚Å‚«‚éB
 
 
 
@@ -35734,7 +36073,7 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰F¦Ú×•s–¾
 
-ƒVƒXƒeƒ€ƒ{[ƒhFƒf[ƒ^ƒC[ƒXƒg ƒ}ƒU[ƒŒƒXƒJƒZƒbƒgiMLCj
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
 
 CPU\¬[ARM]
 
@@ -36644,7 +36983,8 @@ CPU\¬[Z80 (3)]@‰¹Œ¹ƒ`ƒbƒv[YM-2203]
 
 Ø• ƒV[ƒ“‚©‚çƒ^ƒCƒgƒ‹‰æ–Ê‚É‚È‚é‚Æ‚¢‚¤A‘¼‚É—Þ‚ðŒ©‚È‚¢ŽaV‚È‰‰o‚ª”ñí‚ÉˆóÛ“IB
 ‚±‚Ìƒ^ƒCƒgƒ‹ƒfƒ‚‚ªƒQ[ƒ€‚ð‘S‚Ä•¨Œê‚Á‚Ä‚¢‚éA‚Æ‚¢‚Á‚Ä‚à‰ßŒ¾‚Å‚Í‚È‚¢‚¾‚ë‚¤B
-\‚¦ƒ{ƒ^ƒ“‚Åã’iA’†’iA‰º’i‚Æ\‚¦‚ð•ÏX‚µ‚ÄAUŒ‚ƒ{ƒ^ƒ“‚ÅUŒ‚‚·‚éBƒ{ƒ^ƒ““¯Žž‰Ÿ‚µ‚ÅƒWƒƒƒ“ƒv‚à‰Â”\B
+–hŒäƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚È‚ª‚çƒŒƒo[‚ð“®‚©‚·‚±‚Æ‚Å‚»‚ê‚¼‚êã’iA’†’iA‰º’i‚Æ\‚¦‚ð•ÏX‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
+ƒ{ƒ^ƒ““¯Žž‰Ÿ‚µ‚ÅƒWƒƒƒ“ƒv‚à‰Â”\B
 ‚±‚ÌƒQ[ƒ€AŽsê‚É­—Ê‚µ‚©o‰ñ‚ç‚È‚©‚Á‚½‚ç‚µ‚­’m–¼“x‚Í‘Š“–’á‚©‚Á‚½‚ªA
 ˆê•”‚Å‚ÍƒJƒ‹ƒg“I‚Èl‹C‚ªo‚é‚±‚Æ‚Æ‚È‚Á‚½B
 
@@ -38918,6 +39258,36 @@ CPU\¬[PSX CPU, M37710]@‰¹Œ¹ƒ`ƒbƒv[C352]
 
 $end
 
+$info=knpuzzle
+$bio
+‚±‚Æ‚Î‚ÌƒpƒYƒ‹ ‚à‚¶‚Ò‚Á‚½‚ñ
+
+
+”­”„”NF2001.12
+
+ŠJ”­^”­”„Œ³Fƒiƒ€ƒR
+
+ƒWƒƒƒ“ƒ‹FƒpƒYƒ‹
+
+ƒRƒ“ƒgƒ[ƒ‰F4•ûŒüƒŒƒo[+3ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒiƒ€ƒR ƒVƒXƒeƒ€10
+
+CPU\¬[PSX CPU]
+
+
+u‚¦‚ç‚Ô‚­‚ñv‚Ì’†‚©‚ç‚à‚¶‚ð‘I‚ñ‚ÅAƒ}ƒX‚Ì’†‚É’u‚¢‚Ä‚±‚Æ‚Î‚ðŠ®¬‚³‚¹‚é‚Æ‚¢‚¤VŠ´ŠoƒpƒYƒ‹ƒQ[ƒ€B
+Žû˜^’PŒê7–œŒêˆÈã‚Ì‹­—Í‚ÈŽ«‘‹@”\‚ÅA‚Ç‚ñ‚Ç‚ñ‚±‚Æ‚Î‚ªì‚ê‚éƒeƒ“ƒ|‚Ì‚¢‚¢ƒQ[ƒ€“WŠJB
+‰SŽÒ—p‚Ìu‚©‚ñ‚½‚ñvƒR[ƒXi‘S5ƒXƒe[ƒWj‚ÆAu‚Ó‚Â‚¤vƒR[ƒXi‘S6ƒXƒe[ƒWj‚ª‚ ‚èA
+ƒXƒe[ƒW‚²‚Æ‚ÉŒˆ‚ß‚ç‚ê‚½ƒmƒ‹ƒ}‚ð–ž‚½‚¹‚ÎƒXƒe[ƒWƒNƒŠƒA‚Æ‚È‚éB
+100–ÊˆÈã‚ÌƒXƒe[ƒW”‚ª—pˆÓ‚³‚ê‚Ä‚¢‚é‚Ì‚ÅA‚P‰ñ‚ÌƒvƒŒƒC‚Å‚·‚×‚Ä‚É’§í‚·‚é‚±‚Æ‚Í•s‰Â”\B
+u‚Ó‚½‚è‚Å‘Îívƒ‚[ƒh‚ÍA‘ŠŽè‚æ‚è‘½‚­‚Ìƒ}ƒX‚ð–„‚ß‚é‚±‚Æ‚Å‘Îí‚µAæ‚É2Ÿ‚µ‚½‚Ù‚¤‚ªŸ—˜‚Æ‚È‚éB
+ƒQ[ƒ€‚ÌŒã‚ÍAì‚Á‚½‚±‚Æ‚Î‚ÌŒXŒü‚Å«Šif’f‚µ‚Ä‚­‚ê‚ÄAu‚Ó‚½‚è‚Å‘Îív‚Ìê‡‚ÍA‘Š«“x‚Ü‚Åf’f‚µ‚Ä‚­‚ê‚éB
+
+
+
+$end
+
 $info=kouyakyu
 $bio
 ƒUE‚Z–ì‹…
@@ -39409,7 +39779,7 @@ Land Breaker
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+ƒVƒXƒeƒ€ƒ{[ƒhFEolith Gradation 2D System
 
 CPU\¬[E1-32XS]
 
@@ -40144,7 +40514,7 @@ $bio
 
 ”­”„”NF1999
 
-ŠJ”­^”­”„Œ³Fƒ†ƒjƒR
+ŠJ”­^”­”„Œ³FUnico
 
 ƒWƒƒƒ“ƒ‹FŠi“¬ƒAƒNƒVƒ‡ƒ“
 
@@ -40588,7 +40958,7 @@ CPU\¬[DECO_CPU16, M6502]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910 (2)]
 
 c‰Â•ÏƒXƒNƒ[ƒ‹‚ÌƒwƒŠ–Ê‚Å•ß—¸Žû—eŠ‚ð”­Œ©‚µA
 Ž©—RƒXƒNƒ[ƒ‹‚ÌŠî’n–Ê‚ÅíŽÔ‚âƒW[ƒv‚ð‹ìŽg‚µ‚Ä’‡ŠÔ‚ð•‚¯o‚·ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€B
-ƒQ[ƒ€ƒXƒ^[ƒgŽž‚Éuƒƒ‹ƒLƒ…[ƒŒ‚Ì‹Rsv‚Ìƒtƒ@ƒ“ƒtƒ@[ƒŒ‚ª—¬‚ê‚½B
+ƒQ[ƒ€ƒXƒ^[ƒgŽž‚Éuƒƒ‹ƒLƒ…[ƒŒ‚Ì‹Rsv‚Ìƒtƒ@ƒ“ƒtƒ@[ƒŒ‚ª—¬‚ê‚éB
 ‚±‚ÌŽžŠúƒf[ƒ^ƒC[ƒXƒg‚ÍŠù‚ÉuB-WINGSv”­”„‚µ‚Ä‚¢‚½‚Ì‚ÅA
 ƒQ[ƒ€ƒZƒ“ƒ^[‚Å‚±‚ÌƒQ[ƒ€‚ðŒ©‚©‚¯‚é‚±‚Æ‚Í­‚È‚©‚Á‚½B
 
@@ -41916,8 +42286,12 @@ $bio
 CPU\¬[68EC020]
 
 
-
-
+1994”N‚Éƒiƒ€ƒR‚©‚ç“oê‚µ‚½’´lƒXƒ|[ƒcƒQ[ƒ€uƒjƒ…[ƒ}ƒ“ƒAƒXƒŒƒ`ƒbƒNv‚Ì‘±•Ò‚É“–‚½‚éì•iB
+ˆêV‚³‚ê‚½7l‚ÌƒLƒƒƒ‰ƒNƒ^[‚©‚ç1l‚ð‘I‘ð‚µA3‚Â‚Ìƒ{ƒ^ƒ“‚Ì‚Ý‚ÅƒLƒƒƒ‰ƒNƒ^[‚ÌˆÚ“®‚âƒVƒ‡ƒbƒgA˜A‘Å‚È‚Ç‚Ì‘€ì‚ðs‚¤B
+“à—e‚Í‘–E’µE“Š‹£‹Z‚È‚Ç—lX‚È‹£‹Z‚ðí‚¤‚Æ‚¢‚¤ƒIƒŠƒ“ƒsƒbƒNŒ`Ž®‚ÌƒQ[ƒ€‚ÅA
+5“úŠÔ‚É“n‚Á‚Äs‚í‚ê‚é‹£‹Z‚Ì¬Ñ‚É‚æ‚éƒ|ƒCƒ“ƒg‚ð‹£‚¤‚Æ‚¢‚¤‚à‚ÌB
+‚½‚¾‚µŠeŽí–Ú‚ÌQUALIFY(’Ê‰ßŠî€)‚ð‰z‚¦‚È‚¢‚ÆƒQ[ƒ€ƒI[ƒo[‚Æ‚È‚Á‚Ä‚µ‚Ü‚¤B‘Oì“¯—lAÅ‘å4l“¯Žž‘Îí‚ª‰Â”\B
+—]’k‚¾‚ªAƒQ[ƒ€ŽGŽ‚È‚Ç‚ÉƒMƒƒƒO–Ÿ‰æ‚Ì‚æ‚¤‚ÈL‚ðo‚µ‚Ä‚¢‚½‚Ì‚ªˆóÛ“I‚¾‚Á‚½B
 
 
 
@@ -42769,7 +43143,7 @@ $end
 
 $info=mjangels
 $bio
-Î‚¢‚Ìƒ}[ƒWƒƒƒ“ƒGƒ“ƒWƒFƒ‹ƒXiƒRƒ~ƒbƒNŒ€ê Vol.2j
+Î‚¢‚Ì–ƒ ƒGƒ“ƒWƒFƒ‹ƒX -Šâ’Jƒeƒ“ƒz[‚ÌƒRƒ~ƒbƒNŒ€ê VOL.2-
 
 
 ”­”„”NF1991.10
@@ -42786,9 +43160,11 @@ CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[AY-8910, YM-2413, MSM5205]
 
 
 uŠâ’Jƒeƒ“ƒz[‚Ì–ƒƒRƒ~ƒbƒNŒ€ê Vol.1v‚É‘±‚­‘æ2’eB
-ƒ_ƒCƒiƒbƒNƒX‚ªA‚»‚ê‚Ü‚Å‚Ì‰ßŒƒ‚È’Eˆß˜Hü‚ð‘å•‚É•ÏX‚µ‚ÄƒŠƒŠ[ƒX‚³‚ê‚½ˆÙFìB
-–ƒ‚ÉŸ‚Â‚½‚Ñ‚É4ƒRƒ}‚Ü‚ñ‚ª‚ðŒ©‚é‚±‚Æ‚ª‚Å‚«‚éB
-’Eˆß‚ª–³‚¢‚Æ‚¢‚¤A‚±‚ÌŽŽ‚Ý‚ª‚Ç‚¤‚¢‚¤Œ‹‰Ê‚ÉŽŠ‚Á‚½‚Ì‚©‚Í•ª‚©‚ç‚È‚¢B
+ƒ_ƒCƒiƒbƒNƒX‚ª‚»‚ê‚Ü‚Å‚Ì‰ßŒƒ‚È’Eˆß˜Hü‚ð‘å•‚É•ÏX‚µ‚ÄƒŠƒŠ[ƒX‚³‚ê‚½ˆÙFì‚Å‚ ‚éB
+ƒ‹[ƒ‹‚Í3Ÿ‚·‚é‚©“¾“_‚ª2–œ“_‚ð‰z‚¦‚ê‚Îˆê•”ƒNƒŠƒA‚Æ‚È‚éB
+Ÿ•‰‚ªI‚í‚é‚ÆuƒNƒCƒYƒAƒCƒeƒ€v‚Ìƒpƒ‰ƒ[ƒ^[‚ª•Ï‰»‚µAƒ|ƒCƒ“ƒg‚É‚æ‚Á‚ÄƒAƒCƒeƒ€‚ðŽè‚É“ü‚ê‚é‚±‚Æ‚ª‚Å‚«‚éB
+‚Ü‚½–ƒ‚ÉŸ‚Â‚½‚Ñ‚É4ƒRƒ}‚Ü‚ñ‚ª‚ðŒ©‚é‚±‚Æ‚ª‚Å‚«‚é‚ªA
+’Eˆß‚ª–³‚¢‚Æ‚¢‚¤AŽŽ‚Ý‚ª‚Ç‚¤‚¢‚¤Œ‹‰Ê‚ÉŽŠ‚Á‚½‚Ì‚©‚Í•ª‚©‚ç‚È‚¢B
 
 
 
@@ -43485,7 +43861,7 @@ $end
 
 $info=mgmen89
 $bio
-–ƒ Gƒƒ“'89 -ŽE‚³‚ê‚½OL-
+–ƒ ‚fƒƒ“'‚W‚X -ŽE‚³‚ê‚½OL-
 
 
 ”­”„”NF1989.05
@@ -43502,6 +43878,38 @@ CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[YM3812, DAC]
 
 
 
+
+
+
+
+$end
+
+$info=mjgtaste
+$bio
+‚f-taste –ƒ -‚¶‚¡E‚Ä‚¢‚·‚Æ ‚Ü‚ ‚¶‚á‚ñ-
+
+
+”­”„”NF2002.05
+
+ŠJ”­^”­”„Œ³FÊ‹ž
+
+ƒWƒƒƒ“ƒ‹Fƒ}[ƒWƒƒƒ“
+
+ƒRƒ“ƒgƒ[ƒ‰F4•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“iƒ}[ƒWƒƒƒ“ƒpƒlƒ‹j
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YM278B]
+
+
+u’kŽÐuƒ„ƒ“ƒOƒ}ƒKƒWƒ“ƒAƒbƒp[ƒYv‚É‚Ä˜AÚ‚³‚ê‚Ä‚¢‚½”ª_‚Ð‚ë‚«Œ´ì‚ÌƒRƒ~ƒbƒNuG-tastev‚ÌƒLƒƒƒ‰‚ª“oê‚·‚éA
+’Eˆßƒ}[ƒWƒƒƒ“‚È‚ç‚ÊuƒtƒFƒeƒBƒVƒYƒ€–ƒvƒQ[ƒ€B
+ƒQ[ƒ€–{•Ò‚ÍƒI[ƒ\ƒhƒbƒNƒX‚Èƒ}[ƒWƒƒƒ“ƒQ[ƒ€‚ÅAƒvƒŒƒCƒ„[‚ª3‰ñã‚ª‚é‚©‘ŠŽè‚ÌŽ‚¿“_‚ð0ˆÈ‰º‚É‚·‚é‚±‚Æ‚ÅƒNƒŠƒA‚Æ‚È‚éB
+‚Ü‚½Gƒpƒ[‚ð—­‚ß‚é‚±‚Æ‚ÅŠeƒXƒe[ƒW‚²‚Æ‚ÉƒAƒCƒeƒ€‚ðw“ü‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
+¡ì‚ÌÅ‘å‚Ì“Á’¥‚Í‘Î‹Ç‚É•‰‚¯‚½ƒLƒƒƒ‰ƒNƒ^[‚ª’E‚®‚Æ‚¢‚¤’Eˆß—v‘f‚Å‚Í‚È‚­A
+Œ´ìuG-tastev‚ð‚à‚Æ‚É‚µ‚½ƒfƒWƒ^ƒ‹ƒRƒ~ƒbƒN‚ÌƒXƒ‰ƒCƒhƒVƒ‡[‚ðŒ©‚é‚±‚Æ‚ª‚Å‚«‚é‚Æ‚±‚ë‚ÅA
+ƒAƒjƒ[ƒVƒ‡ƒ“‚âƒZƒŠƒt‚Ì‰¹º‚Í‚È‚¢‚ªAŠeŠ‚É“®‚«‚ª‰Á‚¦‚ç‚ê‚Ä‚¢‚éB
+‚¿‚È‚Ý‚ÉÊ‹ž‚Ìì•i‚Æ‚µ‚Ä‚ÍƒNƒƒXƒm[ƒc‚Æ‚Ì‡•¹‘OÅŒã‚ÌƒQ[ƒ€‚Æ‚È‚éB
 
 
 
@@ -45882,9 +46290,12 @@ $bio
 CPU\¬[M6809 (3), HD63701]@‰¹Œ¹ƒ`ƒbƒv[YM2151, Namco, DAC]
 
 
-ƒAƒŠƒX‚ð8•ûŒüƒŒƒo[‚Å‘€ì‚µ‚ÄAƒVƒƒƒ{ƒ“‹Ê‚ÆƒWƒƒƒ“ƒv‚ðãŽè‚ÉŽg‚Á‚Ä“G‚ð“|‚µ‚Ä‚¢‚­ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
-“G‚ÌUŒ‚‚ðŽó‚¯‚Ä‚àƒ~ƒX‚É‚È‚ç‚¸AƒtƒƒA‚©‚ç—Ž‚¿‚½ê‡‚Ì‚Ýƒ~ƒX‚Æ‚È‚éB
-‘S9ƒXƒe[ƒWB
+ŽålŒö‚ÌƒAƒŠƒX‚ªƒVƒƒƒ{ƒ“‹Ê‚ð•Ší‚Éu‚¨‚©‚µ‚Ì‘vu‚¨‚à‚¿‚á‚Ì‘vu‚Â‚Ý‚«‚Ì‘vu‚«‚©‚¢‚Ì‘vu‚»‚ç‚Ì‘v
+u‚Ñ‚Á‚­‚è‚Ì‘vu‚Þ‚µ‚Ì‘vu‚Ö‚¢‚½‚¢‚Ì‘vu—‰¤‚Ì‘v‚Ì9‚Â‚Ì‘‚ð‰ñ‚èA‹¾‚Ì’†‚Ì¢ŠE‚É•½˜a‚ðŽæ‚è–ß‚·‚Æ‚¢‚¤A
+“¶˜b‚Ì¢ŠE‚ð•‘‘ä‚Æ‚µ‚½ƒNƒH[ƒ^[ƒrƒ…[‚ÌƒAƒNƒVƒ‡ƒ“ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€B
+8•ûŒüƒŒƒo[‚ÅƒAƒŠƒX‚ð‘€ì‚µ‚ÄAƒVƒƒƒ{ƒ“‹Ê‚ÆƒWƒƒƒ“ƒv‚ðãŽè‚ÉŽg‚Á‚Ä“G‚ð“|‚µ‚Ä‚¢‚­B
+ƒVƒ‡ƒbƒgƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‘±‚¯‚Ä‚¢‚é‚ÆA‚Ç‚ñ‚Ç‚ñƒVƒƒƒ{ƒ“‹Ê‚ª‘å‚«‚­‚È‚èUŒ‚—Í‚ªƒAƒbƒv‚·‚éB
+‚Ü‚½A“G‚ÌUŒ‚‚ðŽó‚¯‚Ä‚àƒ~ƒX‚É‚È‚ç‚È‚¢‚ª“Ë‚«”ò‚Î‚³‚êAƒtƒƒA‚©‚ç—Ž‚¿‚½ê‡‚Ì‚Ýƒ~ƒX‚Æ‚È‚éB‘S9ƒXƒe[ƒWB
 
 
 
@@ -46283,8 +46694,12 @@ $bio
 CPU\¬[68000 (2), M6809, HD63705]@‰¹Œ¹ƒ`ƒbƒv[C140, YM2151]
 
 
-‚±‚Ìì•i‚Í—V‰€’n‚ð•‘‘ä‚Æ‚µ‚½ƒeƒ“ƒ|‚Ì—Ç‚¢ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
-‘€ì‚Í8•ûŒüƒŒƒo[‚ÅŽålŒö‚ÌƒpƒR‚ð“®‚©‚µAƒ{ƒ^ƒ“‚ÍƒWƒƒƒ“ƒv‚Ì‚Ý‚ðŽg—p‚·‚éB
+‚³‚ç‚í‚ê‚½3•C‚Ì—d¸‚Æ‰¤——l‚ð‹~o‚·‚é‚½‚ßAŽålŒö‚ÌƒpƒR‚ª–‚‰¤ƒ‚ƒEƒ‹‚ÉŽx”z‚³‚ê‚½ƒe[ƒ}ƒp[ƒNuƒ}[ƒxƒ‹ƒ‰ƒ“ƒhv‚ÅŒJ‚èL‚°‚éƒeƒ“ƒ|‚Ì—Ç‚¢ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
+uƒ}[ƒxƒ‹ƒ‰ƒ“ƒhv‚Í‘S4ƒ[ƒ‹ƒh‚É‚È‚Á‚Ä‚¢‚ÄA1ƒ[ƒ‹ƒh‚É‚Â‚«4ƒGƒŠƒA‚Å\¬‚³‚ê‚Ä‚¢‚éB
+ƒGƒŠƒA1‚Æ2‚ÍƒAƒXƒŒƒ`ƒbƒN–ÊAƒGƒŠƒA3‚Íƒ[ƒ‰[ƒR[ƒXƒ^[–ÊAƒGƒŠƒA4‚ÍŽº“à–Ê‚Å\¬‚³‚êAƒGƒŠƒA4‚Ìƒ‰ƒXƒg‚Éƒ{ƒXƒLƒƒƒ‰‚ª‘Ò‚¿\‚¦‚Ä‚¢‚éB
+ƒ{ƒXƒLƒƒƒ‰‚Æ‚Íjˆø‚«EƒWƒƒƒ“ƒPƒ“‚Åí‚¢AŸ—˜‚ðŽû‚ß‚é‚Æƒ{[ƒiƒXƒXƒe[ƒW‚É“Ë“ü‚·‚éB
+ƒ{[ƒiƒXƒXƒe[ƒW‚Å‚Í—ð‘ãƒiƒ€ƒRƒLƒƒƒ‰‚ª‘½”‚Å‚Ä‚­‚éƒGƒŒƒNƒgƒŠƒbƒNƒpƒŒ[ƒh‚ðƒoƒbƒN‚ÉA–é‹ó‚©‚ç~‚Á‚Ä‚­‚é¯‚ð‚½‚­‚³‚ñŽæ‚Á‚Ä‚“¾“_‚ð–ÚŽw‚·B
+‚²‚Ý” ‚ð‰Ÿ‚µ‚½‚è•ó” ‚ðŠJ‚¯‚½‚è‚·‚é‚ÆAƒpƒR‚ðƒpƒ[ƒAƒbƒv‚³‚¹‚é‚¢‚ë‚¢‚ë‚ÈƒAƒCƒeƒ€‚ªo‚Ä‚­‚éBƒiƒ€ƒRƒVƒXƒeƒ€‡UŠî”Â‚Ì‰ñ“]‹@”\‚ðŽg‚Á‚½‰‰o‚ªˆóÛ“IB
 
 
 
@@ -47822,12 +48237,15 @@ $bio
 CPU\¬[M6809, HD63701]@‰¹Œ¹ƒ`ƒbƒv[Namco]
 
 
-ŽålŒöu‚¾‚ç‚¯‚Ìƒ‰ƒ“ƒi[v‚ð‹ìŽg‚µA
-8•ûŒü‚Ì•ûŒüƒL[‚ÆƒWƒƒƒ“ƒvƒ{ƒ^ƒ“‚Å§ŒÀŽžŠÔ“à‚É–Ú‚Ì‘O‚É‘±‚­’n‰º’Ê˜H‚ð‚Ð‚½‘–‚èƒS[ƒ‹‚ð–ÚŽw‚·A
-‰¡ƒXƒNƒ[ƒ‹‚ÌáŠQ•¨‹£‘ˆƒQ[ƒ€B
-Œˆ‚ß‚ç‚ê‚½ŽžŠÔ“à‚ÉƒS[ƒ‹EƒQ[ƒg‚ð‚­‚®‚ç‚È‚¯‚ê‚Î‚È‚ç‚È‚¢B
-¢ŠEŠÏ‚â“Æ‘n“I‚ÈƒQ[ƒ€ƒVƒXƒeƒ€‚Í“–Žž‚Ìƒiƒ€ƒR‚È‚ç‚Å‚ÍB
-‘S32ƒXƒe[ƒWB
+ŽålŒöu‚¾‚ç‚¯‚Ìƒ‰ƒ“ƒi[v‚ð‹ìŽg‚µA8•ûŒü‚Ì•ûŒüƒL[‚ÆƒWƒƒƒ“ƒvƒ{ƒ^ƒ“‚Å§ŒÀŽžŠÔ“à‚É–Ú‚Ì‘O‚É‘±‚­’n‰º’Ê˜H‚ð‚Ð‚½‘–‚èƒS[ƒ‹‚ð–ÚŽw‚·A
+‰¡ƒXƒNƒ[ƒ‹‚ÌáŠQ•¨‹£‘ˆƒQ[ƒ€B§ŒÀŽžŠÔ“à‚ÉƒS[ƒ‹‚Ü‚Å’H‚è’…‚¯‚Î1ƒEƒ“ƒhƒNƒŠƒAB
+ƒR[ƒXã‚É‚ÍAã‚ð’Ê‚é‚ÆƒXƒs[ƒhƒ_ƒEƒ“‚µ‚Ä‚µ‚Ü‚¤uƒXƒŠƒbƒvƒ][ƒ“v‚âAu—Ž‚Æ‚µŒŠvuƒn[ƒhƒ‹v‚Æ‚¢‚Á‚½áŠQ•¨‚Ì‘¼A
+‘O•û‚©‚ç“]‚ª‚Á‚Ä‚­‚éuƒWƒƒƒ“ƒ{ŠÊvAƒXƒbƒ|ƒ“‚Ì—l‚ÉŠš‚Ý‚Â‚¢‚Ä—£‚ê‚È‚¢uƒlƒYƒ~vA
+‘Ì“–‚½‚è‚ð‚©‚Ü‚µ‚Ä‹Ž‚Á‚Ä‚ä‚­ƒ`ƒFƒX‚Ì‹î‚ÌuƒiƒCƒgandƒLƒ“ƒOv‚È‚ÇAƒCƒ„`‚ÈáŠQ•¨‚ª”z’u‚³‚ê‚Ä‚¢‚éB
+‚±‚ê‚çáŠQ•¨‚É‚Ð‚Á‚©‚©‚ç‚È‚¢—l‚ÉãŽè‚­‚©‚í‚µA
+ŽžÜƒR[ƒXã‚É“oê‚·‚éuƒXƒPƒ{[vuƒWƒƒƒ“ƒv‘ävuƒXƒyƒVƒƒƒ‹ƒhƒŠƒ“ƒNv‚Æ‚¢‚Á‚½‚¨•‚¯ƒAƒCƒeƒ€’B‚ð—˜—p‚µ‚ÄƒS[ƒ‹‚ð–ÚŽw‚µ“Ë‚Á‘–‚éA
+‘–‚Á‚ÄŠy‚µ‚¢AŒ©‚Ä‚Ü‚½Šy‚µ‚¢ƒQ[ƒ€B‰½‚Æ‚à–ù‰õ‚ÈŽålŒö‚ÌƒAƒNƒVƒ‡ƒ“‚Í•KŒ©B 
+¢ŠEŠÏ‚â“Æ‘n“I‚ÈƒQ[ƒ€ƒVƒXƒeƒ€‚Í“–Žž‚Ìƒiƒ€ƒR‚È‚ç‚Å‚ÍB‘S8ƒXƒe[ƒW32ƒ‰ƒEƒ“ƒhB
 
 
 
@@ -48150,7 +48568,7 @@ $bio
 
 ƒWƒƒƒ“ƒ‹FƒŒ[ƒVƒ“ƒO
 
-ƒRƒ“ƒgƒ[ƒ‰F¦Ú×•s–¾
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“iŽ©“®ŽÔƒnƒ“ƒhƒ‹Œ^ƒRƒ“ƒgƒ[ƒ‰+2ƒyƒ_ƒ‹j
 
 ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR AXiƒAƒNƒXjƒVƒXƒeƒ€
 
@@ -48416,21 +48834,11 @@ $bio
 CPU\¬[68000 (2), M6809, HD63705]@‰¹Œ¹ƒ`ƒbƒv[C140, YM2151]
 
 
-‚±‚Ì‘å’n‚ð–„‚ß‚éí‚¢‚ÍA‚¢‚ÂŽn‚Ü‚Á‚½‚Ì‚©A‚»‚µ‚Ä‚¢‚ÂI‚í‚é‚Ì‚©B
-X‚Ì’†A[‚¢—Î‚ÆA“S‚ÆA–û‚Ì‚µ‚Ý‚Â‚¢‚½–Ø‚Ì‚É‚¨‚¢B
-‚Í‚é‚©‚È‹ó‚É‚Í’nã”•SŠK‚Ìƒrƒ‹ƒfƒBƒ“ƒO‚ª‰½\–{‚à“Ë‚«‚³‚³‚Á‚Ä‚¢‚éB
-g‚ð‹N‚±‚µA‘Sg‚ð‘–¸‚·‚éB
-‰ñ˜H‚ª‚»‚ê‚É“š‚¦A‚´‚í‚ß‚«AÃ‚Ü‚éB
-‚±‚Ì‘Ì‚ÉŽc‚Á‚½A‚í‚¸‚©‚Èl‚Ì‚Ê‚­‚à‚èB
-Ž¸‚Á‚½‹L‰¯AŽv‚¢B
-‹ó‚ð—ô‚«A‚Ó‚è‚«‚é‚æ‚¤‚É‘–‚èo‚·B
-‘¦À‚ÉAŽ€‚ñ‚Å‚¢‚½‚Í‚¸‚Ì¢ŠE‚©‚ç“G‚Ì‰e‚ª‚í‚«o‚Ä‚­‚éB
-Œ•‚ª‹©‚ÔB
-Žç‚é‚×‚«‚à‚Ì‚Ì‚½‚ß‚ÉA‚»‚µ‚Ä‚©‚Â‚ÄŽ©•ª‚¾‚Á‚½‚à‚Ì‚Ì‚½‚ß‚ÉB
-”š‰Š‚ª‚·‚×‚Ä‚ð•ï‚ñ‚¾B
-‘S12ƒXƒe[ƒWB
-—]’k‚¾‚ª“¯ƒ^ƒCƒgƒ‹‚Ì‰f‰æ‚ªul‘¢lŠÔƒnƒJƒCƒ_[vuƒ^ƒI‚ÌŒŽv‚È‚Ç‚Å’m‚ç‚ê‚éSF“ÁŽBŠE‚ÌˆÙËE‰J‹{Œc‘¾‚Ì‰ŠÄ“Âì•i‚Æ‚µ‚Äì‚ç‚êA
-‚‚¢•]‰¿‚ðŽó‚¯‚½B
+ƒiƒ€ƒRƒVƒXƒeƒ€‡UŠî”Â‚Ì‘æ3’e‚Æ‚µ‚Ä“oê‚µ‚½A‹ß–¢—ˆ‚ð•‘‘ä‚Æ‚µ‚½”EŽÒƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
+ƒƒ{ƒbƒg”EŽÒE”’“{‰Îi‚µ‚ç‚Ê‚¢j‚ð‘€ì‚µAŒ•‚ÆŽè— Œ•‚ð•Ší‚ÉAXE“s‰ïEŽRE“´ŒA‚È‚Ç‚ð‰ñ‚è‚È‚ª‚ç‹@”EŒR’c‚Æí‚¢AƒTƒL•P‚ð‹~o‚·‚éB
+ƒQ[ƒ€‚Æ‚µ‚Ä‚Ìo—ˆ‚Í‚ ‚Ü‚è—Ç‚­‚È‚­Al‹C‚ª–³‚©‚Á‚½ì•i‚¾‚ªABGM‚¾‚¯‚Í‘f°‚ç‚µ‚¢‚Ì‚Å’®‚­‰¿’l‚ ‚èB‘S12ƒXƒe[ƒWB
+—]’k‚¾‚ªA“¯ƒ^ƒCƒgƒ‹‚Ì‰f‰æ‚ªul‘¢lŠÔƒnƒJƒCƒ_[vuƒ^ƒI‚ÌŒŽv‚È‚Ç‚Å’m‚ç‚ê‚éSF“ÁŽBŠE‚ÌˆÙËE‰J‹{Œc‘¾‚Ì‰ŠÄ“Âì•i‚Æ‚µ‚Ä§ìB
+ƒtƒ@ƒ“ƒ^ƒXƒeƒBƒbƒN‰f‰æÕ‚Éo•i‚³‚ê‚Ä‚‚¢•]‰¿‚ðŽó‚¯‚½B
 
 
 
@@ -49988,7 +50396,7 @@ $bio
 ƒ~ƒXƒ^[ƒhƒŠƒ‰[
 
 
-”­”„”NF1999
+”­”„”NF1999.11
 
 ŠJ”­^”­”„Œ³Fƒiƒ€ƒR
 
@@ -50001,8 +50409,16 @@ $bio
 CPU\¬[PSX CPU, H8/3002]@‰¹Œ¹ƒ`ƒbƒv[C352]
 
 
-
-
+ƒiƒ€ƒR‚©‚ç“oê‚µ‚½ŒŠŒ@‚èƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€uƒ~ƒXƒ^[ƒhƒŠƒ‰[vB
+“à—e‚ÍŽålŒö‚ÌuƒXƒXƒ€‚­‚ñv‚ð‘€ì‚µAƒhƒŠƒ‹‚ðŽg‚Á‚Äã‰º¶‰E‚É‚ ‚éƒuƒƒbƒN‚ð‰ó‚µ‚È‚ª‚çA
+ƒuƒƒbƒN‚Ì‰º•~‚«‚É‚È‚ç‚È‚¢‚¤‚¿‚É’n’†‚ðŒ@‚èi‚ñ‚Å‚¢‚­‚Æ‚¢‚¤‚à‚ÌB
+ƒuƒƒbƒN‚ð‰ó‚·‚Æ‚»‚Ìã‚É‚ ‚éƒuƒƒbƒN‚ª—Ž‰º‚µA
+“¯‚¶F‚ÌƒuƒƒbƒN‚ª4‚ÂˆÈã‚­‚Á‚Â‚­‚ÆƒuƒƒbƒN‚ªÁ–Å‚µ‚Ä‚¢‚­‚Æ‚¢‚¤u˜A½•ö‚êv‚ðŒJ‚è•Ô‚µ‚È‚ª‚çA
+AIRŽc—Ê‚ª–³‚­‚È‚ç‚È‚¢‚¤‚¿‚ÉƒGƒAƒJƒvƒZƒ‹‚ÅŽ_‘f‚ð•â‹‹‚µŽŸ‚ÌƒŒƒxƒ‹‚Ü‚Åi‚ñ‚Å‚¢‚­B
+ƒVƒ“ƒvƒ‹‚ÅƒRƒ~ƒJƒ‹‚È“à—e‚©‚çl‹C‚ðŒÄ‚ñ‚¾ì•i‚Å‚ ‚éB
+‚¿‚È‚Ý‚ÉŠé‰æ‘’iŠK‚Å‚Ì‰¼ƒ^ƒCƒgƒ‹‚ÍuƒfƒBƒOƒ_ƒO3v‚ÅA
+ƒQ[ƒ€‚àŽlŠpŒ`‚Å‚Í‚È‚­˜ZŠpŒ`‚ÌƒuƒƒbƒN‚¾‚Á‚½‚ª˜A½‚ÌŽd‘g‚Ý‚ª•¡ŽG‚·‚¬‚½‚½‚ßA
+ŽÐ“àƒeƒXƒg”ÅuƒfƒBƒOƒ_ƒOƒAƒ^ƒbƒNv‚Å‚ÍŠ®¬”Å‚ÌŒ´Œ^‚Æ‚È‚éŽlŠpŒ`‚É•ÏX‚³‚ê‚Ä‚¢‚éB
 
 
 
@@ -50026,8 +50442,14 @@ $bio
 CPU\¬[PSX CPU]
 
 
-
-
+l‹Cì‚Æ‚È‚Á‚½uƒ~ƒXƒ^[ƒhƒŠƒ‰[v‚Ì‘±•ÒB
+¡‰ñ‚à‚Ü‚½ƒuƒƒbƒN‚Ì‘å—Ê”­¶‚ÌŒ´ˆö‚ð‚Â‚«‚Æ‚ß‚é‚½‚ßAÄ‚ÑuƒzƒŠ¥ƒXƒXƒ€v‚ªŠˆ–ô‚·‚éB
+500mƒ‚[ƒh(ƒCƒ“ƒhƒXƒe[ƒW)A1000mƒ‚[ƒh(ƒAƒƒŠƒJƒXƒe[ƒW)‚É‰Á‚¦V‚½‚É2000mƒ‚[ƒh(ƒGƒWƒvƒgƒ‚[ƒh)‚ª’Ç‰Á‚³‚ê‚½‘¼A
+‰‹‰ŽÒƒ‚[ƒh‚Å‚Í“ïˆÕ“x‚ª‰º‚ª‚èV‚µ‚¢ƒvƒŒƒCƒ„[‚Å‚àŠy‚µ‚ß‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
+‚Ü‚½VƒLƒƒƒ‰ƒNƒ^[‚Åƒ‰ƒCƒoƒ‹uƒAƒ“ƒiEƒzƒbƒeƒ“ƒ}ƒCƒ„[v‚ª“oê‚µA
+ƒAƒCƒeƒ€‚ÅUŒ‚‚µ‚½‚èAƒGƒAØ‚ê‚©ƒuƒƒbƒN‚É’×‚³‚ê‚ÄŽc‹@‚ª‚È‚­‚È‚Á‚½•û‚ªŸ‚¿‚Æ‚È‚éu2l‚ÅƒhƒŠƒ‰[v(‘ÎíƒvƒŒƒC)‚ª‰Â”\‚Æ‚È‚Á‚Ä‚¢‚éB
+—]’k‚¾‚ªA“¯”N11ŒŽ‚É‚Í‘±ìuƒOƒŒ[ƒgv‚ÌŽQlŽ‘—¿‚Æ‚È‚é‘Îíƒ‚[ƒh‚É—“ü‚Å‚«‚é‚æ‚¤‚É‚È‚Á‚½ƒpƒ[ƒAƒbƒv”Åuƒ~ƒXƒ^[ƒhƒŠƒ‰[2
+ƒX[ƒp[ƒ_ƒbƒVƒ…ƒ^[ƒ{!!v‚ªƒeƒXƒgÝ’u‚³‚ê‚Ä‚¢‚éB
 
 
 
@@ -50169,6 +50591,36 @@ CPU\¬[Z80 (3)]@‰¹Œ¹ƒ`ƒbƒv[SN76496 (4)]
 ‘€ì•û–@‚Í4•ûŒüƒŒƒo[‚ÅƒWƒFƒbƒgƒR[ƒXƒ^[‚ÌƒŒ[ƒ‹ã‚ÌˆÚ“®‚ÆA
 ƒnƒVƒS‚Ìã‰º‚ÉŽg—pAƒ{ƒ^ƒ“‚ð‰Ÿ‚·‚±‚Æ‚Å‰Á‘¬‚·‚é‚±‚Æ‚ª‚Å‚«‚é‚ªA‚±‚ê‚É‚ÍŽg—p§ŒÀ‚ª‚ ‚éB
 ‚È‚¨A¡‰ñ‚à‚¨“éõ‚Ý‚ÌƒGƒLƒXƒgƒ‰ƒ‚ƒ“ƒXƒ^[‚É‚æ‚é1UPƒVƒXƒeƒ€‚ÍŒ’ÝB
+
+
+
+$end
+
+$info=mrdrilrg
+$bio
+ƒ~ƒXƒ^[ƒhƒŠƒ‰[ƒOƒŒ[ƒg
+
+
+”­”„”NF2001.03
+
+ŠJ”­^”­”„Œ³Fƒiƒ€ƒR
+
+ƒWƒƒƒ“ƒ‹FƒAƒNƒVƒ‡ƒ“
+
+ƒRƒ“ƒgƒ[ƒ‰F4•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒiƒ€ƒR ƒVƒXƒeƒ€10
+
+CPU\¬[PSX CPU]
+
+
+V—v‘f‚ð·‚èž‚ñ‚¾ƒVƒŠ[ƒY3ì–Ú‚Æ‚È‚éuƒ~ƒXƒ^[ƒhƒŠƒ‰[G(ƒOƒŒ[ƒg)vB
+‘Oì‚Å‚ÍŽg‚¦‚éƒLƒƒƒ‰ƒNƒ^[‚ªƒXƒXƒ€‚ÆƒAƒ“ƒi‚¾‚¯‚¾‚Á‚½‚ªAV‚½‚É4l‚ÌƒLƒƒƒ‰ƒNƒ^[‚ª’Ç‰Á‚³‚êA
+‚»‚ê‚¼‚ê‚ÌƒLƒƒƒ‰ƒNƒ^[‚ÉƒuƒƒbƒN‚ÌŒ@‚éƒXƒs[ƒh‚âƒGƒA‚ÌŒ¸‚è•û‚È‚Ç‚Ì“Á’¥‚ªÝ’è‚³‚ê‚Ä‚¢‚éB
+ƒQ[ƒ€ƒ‚[ƒh‚É‚àu1l‚ÅƒhƒŠƒ‰[v‚É‚Í’n’ê‚ÌƒS[ƒ‹‚ð–ÚŽw‚·uƒ~ƒbƒVƒ‡ƒ“ƒhƒŠƒ‰[v‚É–³ŒÀƒ‚[ƒh‚Ì‰F’ˆ–Ê‚ð‰Á‚¦‚½‘S5ƒXƒe[ƒW‚ÆA
+Å‘¬‚ð‹£‚¤uƒ^ƒCƒ€ƒAƒ^ƒbƒNƒhƒŠƒ‰[v‚ª‰Á‚¦‚ç‚ê‚Ä‚¢‚éB
+‚Ü‚½u2l‚ÅƒhƒŠƒ‰[v‚Å‚Í‘Oì“¯—l‚ÌuƒhƒŠƒ‰[ƒTƒoƒCƒoƒ‹v‚ÆA
+ƒS[ƒ‹‚Ü‚Å‚ÌƒXƒs[ƒh‹£‚¤uƒhƒŠƒ‰[ƒŒ[ƒXv‚Ì“oê‚É‚æ‚è‘ÎíƒvƒŒƒC‚Ì•‚àL‚ª‚Á‚Ä‚¢‚éB
 
 
 
@@ -50425,7 +50877,7 @@ Multi Champ
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+ƒVƒXƒeƒ€ƒ{[ƒhFESD Fantasia AT-II
 
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM3812, OKI6295]
 
@@ -50449,7 +50901,7 @@ Multi Champ Deluxe
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+ƒVƒXƒeƒ€ƒ{[ƒhFESD Fantasia AT-II
 
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM3812, OKI6295]
 
@@ -57214,8 +57666,12 @@ $bio
 CPU\¬[PSX CPU, M37710]@‰¹Œ¹ƒ`ƒbƒv[C352]
 
 
-
-
+‘OìuƒKƒ“ƒoƒŒƒbƒgv‚Ì“oê‚©‚ç5”N‚ÌŒŽ“ú‚ðŒo‚Ä‹A‚Á‚Ä‚«‚½‘±•Ò‚ª‚±‚Ìì•iB
+‰‚ß‚ÄƒvƒŒƒC‚·‚éƒvƒŒƒCƒ„[Œü‚¯‚Ìu—ûKvƒR[ƒX‚©‚çAã‹‰ŽÒŒü‚¯‚ÌuŒƒƒ€ƒYvƒR[ƒX‚Ü‚Å4‚Â‚ÌƒR[ƒX‚©‚ç‘I‚ñ‚Å—V‚×‚é‚Ì‚ÅA
+’N‚Å‚à‹CŒy‚ÉŠy‚µ‚ß‚éB‘OìuƒKƒ“ƒoƒŒƒbƒgv‚Æ“¯‚¶‚­¡‰ñ‚à‚â‚Á‚Ï‚è‘ÎíƒvƒŒƒC‚ª‚¨‚·‚·‚ßB
+ˆêl‚Å‚Ð‚½‚·‚çuƒKƒ“ƒoƒ@[ƒ‹“¹v‚ð’Ç‹‚·‚é‚Ì‚à‚¢‚¢‚ªAuƒKƒ“ƒoƒ@[ƒ‹v‚Í‚Ý‚ñ‚È‚ÅƒƒCƒƒC‚â‚é‚Ì‚ª³‰ðB
+ƒ‰ƒCƒoƒ‹S‚ª‚©‚«—§‚Ä‚ç‚ê‚éƒ~ƒjƒQ[ƒ€‚ªI‚í‚é‚½‚Ñ‚ÉŸ‚¿•‰‚¯‚ª•\Ž¦‚³‚ê‚é‰‰o‚Í¡‰ñ‚àŒ’ÝB
+ƒ~ƒjƒQ[ƒ€‚Í‘S72Ží—Þ—pˆÓ‚³‚ê‚Ä‚¢‚éB
 
 
 
@@ -58233,34 +58689,6 @@ CPU\¬[Z80, 68000]@‰¹Œ¹ƒ`ƒbƒv[DAC]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
-
-
-
-$end
-
-$info=powerins
-$bio
-‹ŒŒŽ›ˆê‘°
-
-
-”­”„”NF1993.11
-
-ŠJ”­^”­”„Œ³FƒAƒgƒ‰ƒX
-
-ƒWƒƒƒ“ƒ‹F‘ÎíŠi“¬ƒAƒNƒVƒ‡ƒ“
-
-ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+4ƒ{ƒ^ƒ“
-
-ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
-
-CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2610]
-
-
-uƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[‡Uv‚©‚çŽn‚Ü‚Á‚½‘ÎíŠi“¬ƒQ[ƒ€ƒu[ƒ€‚É“oê‚µ‚½ì•i‚Ì’†‚Å‚àA
-ŒÂ«“I‚ÈƒLƒƒƒ‰ƒNƒ^[‚ÆíŽ¯‚ðˆí’E‚µ‚½”X‚Ì•KŽE‹Z‚©‚çl‹C‚ðŒÄ‚ñ‚¾ì•i‚Å‚ ‚éB
-‚Ù‚Æ‚ñ‚Ç‚Ì’Êí‹ZAƒ_ƒbƒVƒ…UŒ‚‚ÉƒLƒƒƒ“ƒZƒ‹‚ð‚©‚¯‚é‚±‚Æ‚ª‰Â”\‚É‚È‚Á‚½‚Ù‚©‚ÉA
-2’iƒWƒƒƒ“ƒv‚ª‰Â”\‚É‚È‚Á‚½‚±‚Æ‚Å‹ó’†‚©‚ç•KŽE‹Z‚ð•ú‚Â‚±‚Æ‚ª‚Å‚«‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
-‚»‚ê‚É‚µ‚Ä‚àA‹ŒŒŽ›‚ÌŒŒ‚ðˆø‚­‚à‚Ì’B‚ÍA‹°‚ë‚µ‚¢l‚Î‚©‚è‚Å‚ ‚éB
 
 
 
@@ -62392,7 +62820,7 @@ Raccoon World
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+ƒVƒXƒeƒ€ƒ{[ƒhFEolith Gradation 2D System
 
 CPU\¬[E1-32XS]
 
@@ -63941,11 +64369,11 @@ $bio
 CPU\¬[M6502 (2), 8085A]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910]
 
 
-uWW-IIIv‚ÍA’©E—[E–é‚Ì3•”‚Å\¬‚³‚ê‚½AŒÅ’è‰æ–Êƒ^ƒCƒv‚ÌƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€B
+uWW-IIIv‚ÍA6ƒJ‘‚Ì“sŽs‚ð•‘‘ä‚É’©E—[E–é‚Ì3•”‚Å\¬‚³‚ê‚½AŒÅ’è‰æ–Êƒ^ƒCƒv‚ÌƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€B
 ‘€ì‚Í¶‰EˆÚ“®—p‚Ì2•ûŒüƒŒƒo[‚ÆAUŒ‚—p‚Ìƒ{ƒ^ƒ“‚Ås‚¤B
 ’©‚Ìê–Ê‚Å‚ÍA‰æ–Ê‚Ì¶‰E‚©‚çŽŸX‚ÆoŒ»‚·‚é•Ò‘à‚ðŒ‚’Ä‚µA—[•û‚Ìê–Ê‚Å‚ÍA—Ž‰ºŽP”š’e‚ð“Š‰º‚µ‚Ä‚­‚éƒwƒŠƒRƒvƒ^[‚ðŒ‚’Ä‚·‚éB
 ‚»‚µ‚ÄAÅŒã‚Ì–é‚Ìê–Ê‚Å‚ÍAƒT[ƒ`ƒ‰ƒCƒg‚ð—Š‚è‚ÉUŒ‚‚µ‚Ä‚­‚éí“¬‹@‚ðŒ‚’Ä‚·‚é‚Æ‚¢‚¤‚à‚ÌB
-’©E—[‚Ìê–Ê‚Å‚ÍAŽžŠÔ“à‚É“G‹@‚ð‘S–Å‚Å‚«‚È‚¢‚ÆA9‚Â‚É•ª—ô‚·‚éŠj”š’e‚ª“Š‰º‚³‚ê‚é‚Ì‚Å’ˆÓB
+’©E—[‚Ìê–Ê‚Å‚ÍAŽžŠÔ“à‚É“G‹@‚ð‘S–Å‚Å‚«‚È‚¢‚ÆA9‚Â‚É•ª—ô‚·‚éuƒƒKƒgƒ“ƒ~ƒTƒCƒ‹v‚ª“Š‰º‚³‚ê‚é‚Ì‚Å’ˆÓB
 ‚¿‚È‚Ý‚ÉuWW-IIIv‚Æ‚ÍuWorld War IIIv‚Ì—ª‚Å‚ ‚éB
 
 
@@ -65720,6 +66148,7 @@ CPU\¬[68000, HuC6280]@‰¹Œ¹ƒ`ƒbƒv[YM-2151, OKI6295 (2)]
 
 
 
+
 $end
 
 $info=rjammer
@@ -65830,10 +66259,10 @@ $bio
 CPU\¬[M6809 (2), HD63701]@‰¹Œ¹ƒ`ƒbƒv[YM2151, Namco (2)]
 
 
-ŽålŒö‚ÌƒAƒ‹ƒoƒgƒƒX‚ð‘€ì‚µ‚ÄAŒe‚ðŽg‚Á‚Äƒ}ƒu[‚ÌŽè‰º‚ð“|‚µƒXƒe[ƒWƒNƒŠƒA‚ð–ÚŽw‚·B
-Œe‚É‚Í’e”§ŒÀ‚ª‚ ‚é‚ªA“r’†‚É‚ ‚é“Á’è‚Ì”à‚ÅA•â‹‹‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
-‘€ì«‚Í‚ ‚Ü‚è—Ç‚­‚È‚¢‚Ì‚¾‚ªA‚»‚Ì‚±‚Æ‚ª‹t‚É‹Ù’£Š´‚Ì‚ ‚éƒQ[ƒ€‚Æ‚È‚Á‚Ä‚¢‚éB
-‘S10ƒGƒŠƒAB
+ŽålŒöƒAƒ‹ƒoƒgƒƒX‚ð‘€‚èA“ä‚Ì’jƒ}ƒu[—¦‚¢‚é”é–§‘gDuƒQƒ‹ƒhƒ‰v‚É•ß‚ç‚¦‚ç‚ê‚½î•ñˆõƒŒƒCƒ‰‚ð‹~‚¢o‚·‚Ì‚ª–Ú“I‚ÌƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
+Žè‚·‚è‚ðæ‚è‰z‚¦‚ÄƒtƒƒA[‚ðs‚«—ˆ‚µAe‚Å“G‚ðŒ‚‚¿‚Ü‚­‚éA‚Ü‚³‚ÉƒXƒpƒC‰f‰æ‚³‚È‚ª‚ç‚Ì‘u‰õ‚ÈƒAƒNƒVƒ‡ƒ“‚ªŠy‚µ‚ß‚éB
+Œe‚É‚Í’e”§ŒÀ‚ª‚ ‚é‚ªA“r’†‚É‚ ‚é“Á’è‚Ì”à‚É“ü‚é‚±‚Æ‚Å•â‹‹‚·‚é‚±‚Æ‚ª‰Â”\B
+‘€ì«‚Í‚ ‚Ü‚è—Ç‚­‚È‚¢‚Ì‚¾‚ªA‚»‚Ì‚±‚Æ‚ª‹t‚É‹Ù’£Š´‚Ì‚ ‚éƒQ[ƒ€‚Æ‚È‚Á‚Ä‚¢‚éB‘S10ƒGƒŠƒAB
 
 
 
@@ -65857,8 +66286,12 @@ $bio
 CPU\¬[68000 (2), M6809, HD63705]@‰¹Œ¹ƒ`ƒbƒv[C140, YM2151]
 
 
-¡‰ñ‚Í1P‚ªƒŒƒCƒ‰‚É‚È‚Á‚Ä‚¢‚éB
-ƒLƒƒƒ‰ƒNƒ^[‚Ì“®‚«‚È‚Ç‚ÌŠ®¬“x‚Í‘Oì‚Ù‚Ç‚‚­‚È‚¢B
+uƒ[ƒŠƒ“ƒOƒTƒ“ƒ_[v‚Ì‘±•Ò‚Æ‚È‚éuƒ[ƒŠƒ“ƒOƒTƒ“ƒ_[2vB
+–{ì‚Å‚ÍVƒLƒƒƒ‰ƒNƒ^[uƒŒƒCƒ‰v‚Ì“oê‚É‚æ‚è2l“¯ŽžƒvƒŒƒC‚ª‰Â”\‚Æ‚È‚Á‚Ä‚¢‚éB
+ƒƒCƒ“ƒXƒgƒŠ[ƒg‚©‚çŽn‚Ü‚èA‰®•~“à•”A’n‰ºŽºAƒlƒIƒQƒ‹ƒhƒ‰Ži—ß•”AƒGƒWƒvƒgAƒsƒ‰ƒ~ƒbƒh“à•”A
+ƒlƒIƒQƒ‹ƒhƒ‰í“¬‹@Ši”[ŒÉAƒlƒIƒQƒ‹ƒhƒ‰–{•”‚Æ‚¢‚¤‘S8ƒXƒe[ƒW\¬‚Æ‚È‚Á‚Ä‚¢‚éB
+‚Ü‚½‘Oì‚É–³‚©‚Á‚½ƒRƒ“ƒeƒBƒjƒ…[‚ª’Ç‰Á‚³‚êA¡‚Ü‚Åi‚ñ‚¾ƒ‰ƒEƒ“ƒh‚ð‘I‚ñ‚ÅƒvƒŒƒC‚Å‚«‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
+‚½‚¾ƒLƒƒƒ‰ƒNƒ^[‚Ì“®‚«‚È‚Ç‚ÌŠ®¬“x‚Í‘Oì‚Ù‚Ç‚‚­‚È‚¢‚Ì‚ªŽc”OB
 
 
 
@@ -67731,10 +68164,11 @@ CPU\¬[68000, HuC6280]@‰¹Œ¹ƒ`ƒbƒv[YM-2151, OKI6295 (2)]
 
 
 8Ží—Þ‚Ìƒƒ{ƒbƒg‚ªí‚¤2D‘ÎíŠi“¬ƒQ[ƒ€B
+8•ûŒüƒŒƒo[‚Æƒpƒ“ƒ`AƒLƒbƒNAƒK[ƒh‚Ì3‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚·‚éB
 Œ»Ý‚ÌŠi“¬ƒQ[ƒ€‚ÅíŽ¯‚Æ‚³‚ê‚Ä‚¢‚é‹ó’†ƒK[ƒhAƒK[ƒhƒŠƒo[ƒTƒ‹A
-¬ƒWƒƒƒ“ƒvAƒRƒ“ƒrƒl[ƒVƒ‡ƒ“‚ð·‚èž‚ñ‚¾‚Ì‚ÍA‚±‚ÌƒQ[ƒ€‚ª‰‚Å‚ ‚éB
+¬ƒWƒƒƒ“ƒvAƒRƒ“ƒrƒl[ƒVƒ‡ƒ“‚ð·‚èž‚ñ‚¾‚Ì‚Í‚±‚ÌƒQ[ƒ€‚ª‰‚ß‚Ä‚Å‚ ‚éB
 ‚µ‚©‚µ‹Z‚Ì“–‚½‚è”»’è‚ª‘åŽG”c‚ÅAUŒ‚—Í‚à”¼’[‚Å‚Í‚È‚­A‹C‚ð”²‚­‚Æ‚·‚®‚ÉŽŽ‡I—¹‚µ‚Ä‚µ‚Ü‚¤‚Ì‚Å—v’ˆÓB
-‚¿‚È‚Ý‚ÉA‚±‚ÌƒQ[ƒ€‚Ì§ì‚ðÅŒã‚ÉƒzƒbƒgƒrƒB‚Í1994”N‚Ì‰Ä‚É“|ŽY‚µ‚½B
+‚¿‚È‚Ý‚É‚±‚ÌƒQ[ƒ€‚Ì§ì‚ðÅŒã‚ÉƒzƒbƒgƒrƒB‚Í1994”N‚Ì‰Ä‚É“|ŽY‚µ‚½B
 
 
 
@@ -67871,9 +68305,12 @@ CPU\¬[68000 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM-2151, DAC]
 
 
 ‘S–ÊŠjí‘ˆŒã‚Ì¢ŠE‚ð•‘‘ä‚É‚µ‚½cƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒOB
+ƒVƒ‡ƒbƒgAƒXƒyƒVƒƒƒ‹ƒAƒ^ƒbƒNAƒtƒH[ƒ[ƒVƒ‡ƒ“ƒ`ƒFƒ“ƒW‚Æ3‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚·‚éB
+“G‚Ì•‘•ƒwƒŠ‚ð“|‚·‚±‚Æ‚ÅƒIƒvƒVƒ‡ƒ“‚ªoŒ»‚µAÅ‘å2‹@‚Ü‚Å‘•’…‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
+‚Ü‚½ƒXƒyƒVƒƒƒ‹ƒAƒ^ƒbƒN‚Í’Êí‚Ìƒ{ƒ€‚Æ‚Íˆá‚¢AƒIƒvƒVƒ‡ƒ“‚ª“ÁU‚µL”ÍˆÍ‚Ì“G‚Éƒ_ƒ[ƒW‚ð—^‚¦‚é‚Æ‚¢‚¤‚à‚Ì‚ÅA
+‰ñŽû‚·‚ê‚Î‰½“x‚Å‚àŽg‚¤‚±‚Æ‚ª‚Å‚«‚é‚ªA‰Š‚ªo‚Ä‚¢‚éŽž‚É‚Í‰ñŽû‚Å‚«‚È‚¢B
+ƒtƒH[ƒ[ƒVƒ‡ƒ“ƒ`ƒFƒ“ƒWƒ{ƒ^ƒ“‚ð‰Ÿ‚·‚±‚Æ‚ÅA‹ó’†UŒ‚‚Æ’nãUŒ‚‚ÉØ‚è‘Ö‚¦‚é‚±‚Æ‚à‚Å‚«‚éB
 ƒVƒXƒeƒ€24‚Ì‹@”\‚ðŠˆ—p‚µAƒ{[ƒiƒXƒXƒe[ƒW‚Å‚ÍƒY[ƒ€ƒAƒbƒv‰æ–Ê‚Æ‚È‚Á‚Äí‚¤B
-ƒtƒH[ƒ[ƒVƒ‡ƒ“ƒ{ƒ^ƒ“‚Å‘Î‹óE‘Î’n‚ÌƒtƒH[ƒ[ƒVƒ‡ƒ“ƒ`ƒFƒ“ƒW‚ðs‚¢A
-ƒXƒyƒVƒƒƒ‹ƒAƒ^ƒbƒNƒ{ƒ^ƒ“‚ÅƒIƒvƒVƒ‡ƒ“‚ð“ÁU‚³‚¹‚é‚±‚Æ‚à‚Å‚«‚éB
 ‘S6ƒXƒe[ƒW‚Ìƒ‹[ƒv§B
 
 
@@ -68260,6 +68697,31 @@ CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM3812, OKI6295]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
+$info=magerror
+$bio
+ƒ}ƒWƒJƒ‹ƒGƒ‰[‚ð‚³‚ª‚¹I
+
+
+”­”„”NF1994.03
+
+ŠJ”­Œ³FƒeƒNƒmƒ\ƒtƒg@”­”„Œ³FƒWƒƒƒŒƒR
+
+ƒWƒƒƒ“ƒ‹FƒpƒYƒ‹
+
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[68000 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2413, OKI6295]
+
+
+
+
 
 
 
@@ -68855,6 +69317,7 @@ CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2610]
 ƒvƒŒƒCƒ„[‚ÍA1l‚ÌƒLƒƒƒ‰‚ð‘I‘ð‚µA“G‚ð“|‚µ‚È‚ª‚çƒQ[ƒ€‚ði‚ß‚ÄAÅI“I‚Éƒ{ƒX‚ð“|‚·‚ÆƒXƒe[ƒWƒNƒŠƒA‚Æ‚È‚éB
 —pˆÓ‚³‚ê‚Ä‚¢‚éƒXƒe[ƒW‚ÍŒv6‚ÂB
 ‚Ü‚½AUŒ‚‚Í’Êí‚ÌUŒ‚‚É‰Á‚¦A˜A‘±UŒ‚A”Ep‚â‹†‹É”E–@‚ðŽg—p‚Å‚«‚éB
+ƒQ[ƒ€ƒVƒXƒeƒ€‚Í“¯ŽÐ‚ÌuƒKƒCƒA¥ƒNƒ‹ƒZƒCƒ_[ƒYv‚ðˆø‚«Œp‚¢‚Å‚¢‚éB
 
 
 
@@ -69146,11 +69609,14 @@ $bio
 CPU\¬[M6809 (3), HD63701]@‰¹Œ¹ƒ`ƒbƒv[YM2151, Namco, DAC]
 
 
-ƒiƒ€ƒR‚æ‚è“oê‚µ‚½ƒRƒ~ƒJƒ‹‚ÈƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
-‹C‡‚¢‚ð‚½‚ß‚ÄUŒ‚‚Å‚«‚é‚±‚Æ‚ª“Á’¥B
-‚Ü‚½AƒXƒRƒA‚ª‚È‚¢‚Æ‚¢‚¤“_‚à’¿‚µ‚¢B
-1ƒRƒCƒ“ƒNƒŠƒA‚ÍŽŠ“ï‚Ì‹Z‚¾‚ªA1ƒNƒŒƒWƒbƒg‚ÅƒNƒŠƒA‚·‚é‚±‚Æ‚à‰Â”\B
-‚Ü‚½Au—d‰ö“¹’†‹Lv‚ÍAƒvƒŒƒCŽŸ‘æ‚ÅƒGƒ“ƒfƒBƒ“ƒO‚ª•Ï‚í‚éƒ}ƒ‹ƒ`ƒGƒ“ƒfƒBƒ“ƒO‚ðÌ—p‚µ‚½ƒQ[ƒ€‚Å‚ ‚éB
+ƒiƒ€ƒRuƒVƒXƒeƒ€'87v‚Ì‹L”O‚·‚×‚«‘æ1ì–Ú‚Æ‚È‚éƒRƒ~ƒJƒ‹‚ÈƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
+‰æ–Ê‚Ì”¼•ª‚ðè‚ß‚éƒ[ƒ^[—Þ‚âA’n–„‚è‚Æ‚¢‚¤“Æ“Á‚ÌÝ’è‚ª‚à‚½‚ç‚·ŠGŠª•—‚Ì•µˆÍ‹C‚ª“Á’¥“IB
+‚¢‚ë‚¢‚ë‚È—d‰ö‚ð“|‚µ‚ÄMONEY‚ðW‚ß‚Äu‚æ‚ë‚¸‰®v‚Å”ƒ‚¢•¨‚ð‚·‚é‚±‚Æ‚Åƒpƒ[ƒAƒbƒv‚Å‚«‚éB
+‚Ü‚½AƒŒƒo[‚ð‰º‚É“ü‚ê‚é‚±‚Æ‚Å‹C‡‚¢‚ð—­‚ß‚ÄUŒ‚—Í‚ðã‚°‚é‚±‚Æ‚ª‰Â”\B
+“¹’†‚Ì—lX‚Ès“®‚É‚æ‚Á‚ÄƒGƒ“ƒfƒBƒ“ƒO‚ªˆÙ‚È‚é‚Æ‚¢‚¤Aƒ}ƒ‹ƒ`ƒGƒ“ƒfƒBƒ“ƒO‚ªÌ—p‚³‚ê‚Ä˜b‘è‚ðŒÄ‚ñ‚¾‚ªA
+ƒQ[ƒ€Œã”¼‚Ìis•û–@‚â“ïˆÕ“x‚ªˆê”ÊŒü‚¯‚Æ‚Í‚¢‚¦‚¸AŒ‹‹Çˆê•”‚Ìƒ}ƒjƒA‚É‚µ‚©Žó‚¯“ü‚ê‚ç‚ê‚È‚©‚Á‚½‚æ‚¤‚Å‚ ‚éB‘S5ƒXƒe[ƒWB
+—]’k‚¾‚ªAƒA[ƒP[ƒh”Å‚ª”­•\‚³‚ê‚½“–ŽžAƒeƒŒƒzƒ“ƒJ[ƒh‚È‚Ç‚Ìƒmƒxƒ‹ƒeƒBƒOƒbƒY‚ðƒeƒŒƒr”Ô‘g‚ÌƒvƒŒƒ[ƒ“ƒg¤•i‚Æ‚µ‚Ä’ñ‹Ÿ‚·‚é‚È‚ÇA
+Ï‹É“I‚Èé“`Šˆ“®‚ð‚µ‚Ä‚¢‚½B
 
 
 
@@ -69329,7 +69795,7 @@ $end
 
 $info=shangkid
 $bio
-–k”h­—Ñ ”ò—´‚ÌŒ
+–k”h­—Ñ ”ò—´‚ÌŒ -ˆÙŽíŠi“¬‹Z ¢ŠE‘IŽèŒ -
 
 
 ”­”„”NF1985
@@ -70577,7 +71043,7 @@ $end
 
 $info=skullfng
 $bio
-ƒXƒJƒ‹ƒtƒ@ƒ“ƒO<Š[‰å> -‹ó‰åŠO“`-
+ƒXƒJƒ‹ƒtƒ@ƒ“ƒO -‹ó‰åŠO“`-
 
 
 ”­”„”NF1996.02
@@ -70593,7 +71059,12 @@ $bio
 CPU\¬[ARM]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
 
 
-
+ƒf[ƒ^ƒC[ƒXƒg‚©‚ç3”N‚Ô‚è‚Éu‹ó‰åŠO“`v‚Æ‚µ‚Ä“oê‚µ‚½cƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒQ[ƒ€B
+‰æ–ÊƒXƒNƒ[ƒ‹‚ªŽ©“®‚Åi‚ÞuAUTO MODEv‚ÆA§ŒÀŽžŠÔ“à‚ÉƒXƒe[ƒW‚Ìƒ{ƒX‚ð’ÇŒ‚¥Œ‚”j‚·‚é‚±‚Æ‚ð–Ú“I‚Æ‚µ‚½uCHASE MODEv‚ª“oêB
+‘€ì‚Í8•ûŒüƒŒƒo[‚ÆƒoƒŒƒ‹ƒ[ƒ‹(ƒ{ƒ€)ƒ{ƒ^ƒ“AuCHASE MODEv‚Å‚Í2‚Â‚ ‚éƒVƒ‡ƒbƒgƒ{ƒ^ƒ“‚Ì1‚Â‚ÍƒXƒƒbƒgƒ‹‚Æ‚È‚éB
+Ž©‹@‚Í«”\‚ÌˆÙ‚È‚é4Ží—Þ‚©‚ç‘I‘ð‚Å‚«‚é‚Ù‚©‚ÉA‚³‚ç‚ÉFIGHTERŒ^‚ÆBOMBERŒ^‚Ì4l‚ÌƒpƒCƒƒbƒg‚©‚ç‘I‘ð‚·‚é‚±‚Æ‚ª‚Å‚«A
+‘g‚Ý‡‚í‚¹‚É‚æ‚Á‚ÄŽ©‹@‚Ì”\—Í‚ª‘å‚«‚­•Ï‚í‚Á‚Ä‚­‚éB
+‚Ü‚½“G‹@‚ðˆê•ûŒü‚©‚çUŒ‚‚·‚é‚¾‚¯‚Å‚È‚­Aˆê’è‚ÌƒRƒ}ƒ“ƒh“ü—Í‚ÅŽ©‹@‚Ì•ûŒü‚ð•ÏX‚µ‚ÄUŒ‚‚·‚é‚±‚Æ‚à‰Â”\‚Å‚ ‚éB
 
 
 
@@ -71598,6 +72069,38 @@ CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMF278B]
 
 $end
 
+$info=slrasslt
+$bio
+ƒ\[ƒ‰[ƒAƒTƒ‹ƒg
+
+
+”­”„”NF1997.07
+
+ŠJ”­^”­”„Œ³FƒRƒiƒ~
+
+ƒWƒƒƒ“ƒ‹FƒVƒ…[ƒeƒBƒ“ƒO
+
+ƒRƒ“ƒgƒ[ƒ‰F‘€cž…Œ^ƒRƒ“ƒgƒ[ƒ‰[iƒgƒŠƒK[+1ƒ{ƒ^ƒ“•tj
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[PPC403, 68000, ADSP21062]
+
+
+‚ ‚ÌuƒOƒ‰ƒfƒBƒEƒXv‚ª3Dƒ|ƒŠƒSƒ“ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€‚Æ‚µ‚Ä“oêB
+ƒvƒŒƒCƒ„[‚Íã‹‰ŽÒŒü‚¯‚ÌuƒrƒbƒNƒoƒCƒp[vAƒXƒs[ƒh‚Ì‘¬‚¢uƒ[ƒhƒuƒŠƒeƒBƒbƒVƒ…vA
+UŒ‚—Í‚Ì‚‚­‰SŽÒŒü‚¯‚ÌuƒAƒ‹ƒsƒjƒAv‚Ì3‹@‚©‚ç‹@‘Ì‚ð‘I‘ð‚Å‚«‚é‚æ‚¤‚É‚È‚èA‚±‚ê‚Ü‚Å‚É‚È‚¢ƒoƒŠƒG[ƒVƒ‡ƒ“‚É•x‚ñ‚¾ƒvƒŒƒC‚ª‰Â”\‚Æ‚È‚Á‚Ä‚¢‚éB
+‚Ü‚½‘€ì•û–@‚É‚àƒgƒŠƒK[‚ðˆø‚­ƒVƒ‡ƒbƒg‚Æƒ~ƒTƒCƒ‹ƒ{ƒ^ƒ“‚Æ‚È‚Á‚½‚Ì‚à‘å‚«‚È•Ï‰»‚Ì‚Ð‚Æ‚Â‚ÅA
+ƒgƒŠƒK[‚Íƒ~ƒTƒCƒ‹ƒ{ƒ^ƒ“‚Æ“¯Žž‚ÉŽg—p‚·‚é‚±‚Æ‚ÅA‚½‚ßŒ‚‚¿ƒŒ[ƒU[‚ðŒ‚‚Â‚±‚Æ‚ª‚Å‚«‚é‚æ‚¤‚É‚È‚Á‚½‚Ù‚©A
+VIEW SHIFTƒ{ƒ^ƒ“‚ð‰Ÿ‚·‚±‚Æ‚ÅƒvƒŒƒCŽ‹“_‚ðØ‚è‘Ö‚¦‚é‚±‚Æ‚ª‚Å‚«‚éB
+ƒQ[ƒ€ƒVƒXƒeƒ€‚É‚¨‚¢‚Ä‚Íƒpƒ[ƒAƒbƒv‚Í‚±‚ê‚Ü‚Å‚ÌƒOƒ‰ƒfƒBƒEƒXƒVƒŠ[ƒY‚ÌƒVƒXƒeƒ€‚ðˆø‚«Œp‚¢‚Å‚¢‚é‚ªA
+“G‚ð“|‚·‚Ì‚É§ŒÀŽžŠÔ‚ªÝ‚¯‚ç‚ê‚½‚±‚Æ‚ÅAí—ª“I‚ÈƒvƒŒƒC‚ª•K—v‚Æ‚È‚Á‚½B
+ƒX[ƒp[ƒE[ƒn[‚ðÌ—p‚µ‚½‘åŒ^‚Ìê—pâž‘Ì‚âƒeƒNƒmƒTƒEƒ“ƒh‚È‚ÇA‚±‚ê‚Ü‚Å‚ÌƒOƒ‰ƒfƒBƒEƒX‚Æ‚Íˆêü‚ðŠú‚·ì•i‚Å‚ ‚éB
+
+
+
+$end
+
 $info=solarfox
 $bio
 Solar Fox
@@ -72062,7 +72565,7 @@ $bio
 Sonic the Hedgehog 2 iMEGA-TECH”Åj
 
 
-”­”„”NF1989
+”­”„”NF1992
 
 ŠJ”­Œ³FƒZƒK@”­”„Œ³FƒZƒKi¦‘“à”Ì”„‚È‚µj
 
@@ -72224,9 +72727,12 @@ $bio
 CPU\¬[PSX CPU, H8/3002]@‰¹Œ¹ƒ`ƒbƒv[C352]
 
 
-
-
-
+uƒ\ƒEƒ‹ƒGƒbƒWv‚É‘±‚­ƒVƒŠ[ƒY2ì–Ú‚Æ‚µ‚Ä“oê‚µ‚½3D•ŠíŠi“¬ƒQ[ƒ€‚ÌÅ‚•ôì•iB 
+”ü‚µ‚¢ƒOƒ‰ƒtƒBƒbƒN‚Æƒ‚[ƒVƒ‡ƒ“•`‰æAl‘Ì‚ÌŠÖß‚ÌŠŠ‚ç‚©‚È•\Œ»A•—‚É—h‚ê‚éˆß•ž‚â—â‚½‚­‹P‚­•Ší‚ÌŽ¿Š´“™A
+¸ãk‚É•`ŽÊ‚³‚ê‚½ƒLƒƒƒ‰ƒNƒ^[’B‚ª•bŠÔ60ƒRƒ}‚Ì¸“x‚ÅƒCƒ“ƒ^ƒ‰ƒNƒeƒBƒu‚É–\‚ê‰ñ‚éB 
+”ä—Þ‚È‚«‘€ì«‚ÌŒüã‚ÆA‹Ù”—‚µ‚½‘ŠŽè‚Æ‚ÌŠÔ‡‚¢‚ÌŽæ‚è‡‚¢A
+‚»‚µ‚ÄŽ©‘R‚ÅŠŠ‚ç‚©‚ÈƒLƒƒƒ‰ƒNƒ^[‚Ì“®‚«‚ð‰Â”\‚É‚·‚ég8WAY-RUNƒVƒXƒeƒ€h‚ð“‹ÚB
+‚æ‚è—§‘Ì“I‚Å‘u‰õŠ´ˆì‚ê‚é•Ší‚Å‚ÌU–h‚ªŠy‚µ‚ß‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
 
 
 
@@ -74502,10 +75008,12 @@ $bio
 CPU\¬[M6809 (3), HD63701]@‰¹Œ¹ƒ`ƒbƒv[YM2151, Namco, DAC]
 
 
-‚±‚ÌƒQ[ƒ€‚ÍA
-8•ûŒüƒŒƒo[‚ÅŽålŒö‚ÌƒŠƒbƒN‚ð‘€ì‚µ‚ÄAUŒ‚‚ÆƒWƒƒƒ“ƒvƒ{ƒ^ƒ“‚ðŽg—p‚µ‚È‚ª‚çAŠï‰ö‚È“G‚ð“|‚µ‚Ä‚¢‚­ƒzƒ‰[ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
-ƒpƒ“ƒ`‚âƒLƒbƒNUŒ‚‚Ì‘¼A°‚É—Ž‚¿‚Ä‚¢‚éƒIƒmAŠpÞAƒ‰ƒCƒtƒ‹‚ð•Ší‚Æ‚µ‚ÄŽg—p‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
-‰‰o–Ê‚Æ“à—e‚Éƒ}ƒbƒ`‚µ‚½BGM‚à‚³‚é‚±‚Æ‚È‚ª‚çA“G‚ð“|‚µ‚½Žž‚ÌŒø‰Ê‰¹‚ª–{“–‚ÉƒŠƒAƒ‹B
+ƒzƒ‰[‚ð‘èÞ‚É‚µ‚½‰‰o‚ÆÕŒ‚“I‚ÈƒXƒg[ƒŠ[‚ª˜b‘è‚Æ‚È‚Á‚½A’N‚à‚ª–Y‚ê‚ç‚ê‚È‚¢ƒiƒ€ƒR‚ÌˆÙFƒzƒ‰[ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
+“`à‚Ì‰¼–Êuƒwƒ‹ƒ}ƒXƒNv‚Ì—Í‚ðŽØ‚è‚½ŽålŒöƒŠƒbƒN‚ð‘€ì‚µA‚³‚ç‚í‚ê‚½—ölƒWƒFƒjƒtƒ@[‚ð‹~‚¢o‚µ‚ÄA
+‰ö•¨‚½‚¿‚Ìœpœj‚·‚é‹°‚ë‚µ‚¢uƒXƒvƒ‰ƒbƒ^[ƒnƒEƒXv‚ð’Eo‚·‚é‚Ì‚ªƒQ[ƒ€‚Ì–Ú“IB
+ƒpƒ“ƒ`AƒLƒbƒNAƒiƒ^A•€AŠpÞAƒ‚ƒŠAŽU’ee‚È‚Ç‚Ì‘½Ê‚ÈUŒ‚•û–@‚ª“Á’¥“I‚ÅAƒzƒ‰[‰f‰æ‚Ì‚æ‚¤‚É•¨Œê‚â‰‰o‚ª“WŠJA
+ŠeƒXƒe[ƒW‚ÌÅŒã‚É‚Í‹°‚ë‚µ‚¢‰ö•¨‚ª‘Ò‚¿Žó‚¯‚Ä‚¢‚éB”——Í‚ ‚éƒOƒ‰ƒtƒBƒbƒNA“G‚ð“|‚µ‚½Žž‚ÌƒTƒEƒ“ƒh‚ª–{“–‚ÉƒŠƒAƒ‹‚¾‚Á‚½B
+—ölƒWƒFƒjƒtƒ@[‚Ìuƒwƒ‹ƒvEƒ~[Iv‚Æ‚¢‚¤Œ¾—t‚ÆAÅŒã‚ÌuƒTƒ“ƒLƒ…[cƒOƒbƒoƒCcv‚Æ‚¢‚¤Œ¾—t‚ª‹¹‚ð‘Å‚ÂcB
 
 
 
@@ -75398,6 +75906,37 @@ CPU\¬[Z80, I8035]@‰¹Œ¹ƒ`ƒbƒv[Samples, GI SP0250]
 
 $end
 
+$info=startrgn
+$bio
+ƒXƒ^[ƒgƒŠƒSƒ“
+
+
+”­”„”NF2002.07
+
+ŠJ”­^”­”„Œ³Fƒiƒ€ƒR
+
+ƒWƒƒƒ“ƒ‹FƒAƒNƒVƒ‡ƒ“
+
+ƒRƒ“ƒgƒ[ƒ‰F1ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒiƒ€ƒR ƒVƒXƒeƒ€10
+
+CPU\¬[PSX CPU]
+
+
+l‹CƒpƒYƒ‹ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€uƒ~ƒXƒ^[ƒhƒŠƒ‰[v‚ÌƒTƒCƒhƒXƒg[ƒŠ[“Iì•i‚ª‚±‚ÌuƒXƒ^[ƒgƒŠƒSƒ“vB
+•‘‘ä‚ð‰F’ˆ‚ÉˆÚ‚µAƒQ[ƒ€ƒVƒXƒeƒ€‚àƒ{ƒ^ƒ“‚Ð‚Æ‚Â‚ÆŽÀ‚ÉƒVƒ“ƒvƒ‹‚È‘€ì•û–@‚Æ‚È‚Á‚Ä‚¢‚éB
+ƒQ[ƒ€‚Í‰F’ˆ‘DŽ–ŒÌ‚É‚æ‚Á‚ÄŽæ‚èŽc‚³‚ê‚½æ‹qæˆõ‚Ì‰F’ˆl‚½‚¿‚ð‹~‚¢o‚·‚Æ‚¢‚¤‚à‚ÌB
+uƒzƒV¥ƒƒ^ƒ‹vuƒrƒbƒOƒoƒ“¥’ˆ‘¾vuƒzƒŠ¥ƒXƒXƒ€v‚Ì3l‚©‚ç‘I‚ñ‚ÅA
+¯‚©‚ç¯‚Ö‚Æƒ^ƒCƒ~ƒ“ƒO‚æ‚­ƒWƒƒƒ“ƒv‚µ‚ÄŽOŠpƒlƒbƒg‚ðŠ®¬‚³‚¹‚Ä‰F’ˆl‚½‚¿‚ð•‚¯‚Ä‚¢‚­B
+Šˆ“®ƒGƒŠƒA‚ð”ò‚Ño‚·‚Æƒ‰ƒCƒt‚ªŒ¸‚Á‚Ä‚µ‚Ü‚¤ã‚ÉAŽžŠÔ‚Æ‹¤‚ÉŽ_‘f‚Ì—Ê‚àŒ¸‚Á‚Ä‚¢‚­‚Ì‚Å’ˆÓB
+“–‰Aƒiƒ€ƒRŽÐ“à‚Ì•Êƒ`[ƒ€‚Åi‚ñ‚Å‚¢‚½ƒvƒƒWƒFƒNƒg‚Éƒ~ƒXƒ^[ƒhƒŠƒ‰[‚ÌŠJ”­ƒ`[ƒ€‚ª‹¦—Í‚µŠJ”­‚³‚ê‚½ì•i‚ÅA
+ƒƒPƒeƒXƒgŽž‚Íuƒfƒ‹ƒ^ƒŒƒ“ƒWƒƒ[v‚Æ‚¢‚¤ƒ^ƒCƒgƒ‹‚¾‚Á‚½B
+
+
+
+$end
+
 $info=starwars
 $bio
 ƒXƒ^[ƒEƒH[ƒY
@@ -75638,6 +76177,14 @@ $bio
 CPU\¬[68000 (2), M6809, HD63705]@‰¹Œ¹ƒ`ƒbƒv[C140, YM2151]
 
 
+Œ»Ý‚à–§‚©‚Éª‹­‚¢ƒtƒ@ƒ“‚ðŽ‚ÂA2l“¯ŽžƒvƒŒƒC‚ª‰Â”\‚ÈƒnƒCƒXƒs[ƒh3DƒVƒ…[ƒeƒBƒ“ƒOB
+ƒWƒƒƒ“ƒvˆÚ“®‚â”òsŽž‚È‚Ç‚Ìê–Ê‚ÉƒVƒXƒeƒ€‡U‚ÌƒXƒvƒ‰ƒCƒgŠg‘åk¬‹@”\‚É‚æ‚éƒJƒƒ‰ƒ[ƒN‚ðŽæ‚è“ü‚ê‚½ŽaV‚È—ÕêŠ´‚âA
+ŽŸ‚ÌƒXƒe[ƒW‚Éi‚ÞŠÔ‚É‚ ‚éƒiƒŒ[ƒVƒ‡ƒ“‚É‚æ‚é‘S4ƒXƒe[ƒW\¬‚ÌƒXƒg[ƒŠ[“WŠJA
+ƒKƒ“ƒRƒ“ƒgƒ[ƒ‰‚ÌU“®‹@”\‚È‚Ç‚Ì‰‰o‚É‚æ‚èˆê‘wƒQ[ƒ€‚ð·‚èã‚°‚Ä‚¢‚éB
+ƒQ[ƒ€ƒVƒXƒeƒ€‚Í‚»‚ê‚Ü‚Å‚É“oê‚µ‚½ƒKƒ“ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€‚Æ‘å‚«‚È·‚Í‚È‚¢‚ªA
+ƒVƒ‡ƒbƒg‚É’e”‚ªŒˆ‚ß‚ç‚ê‚Ä‚¨‚ç‚¸AƒgƒŠƒK[‚ðˆø‚«‚Á‚Ï‚È‚µ‚É‚·‚é‚±‚Æ‚Å˜AŽË‚·‚é‚±‚Æ‚ª‰Â”\B
+“–Žž‚Æ‚µ‚Ä‚Íˆ³“|“I‚ÈƒXƒs[ƒhŠ´‚ðŽ‚¿A‰æ–Êã‚É‚ ‚éƒIƒuƒWƒF‚ð”j‰ó‚Å‚«‚é‘u‰õŠ´‚â
+‹ß–¢—ˆ‚ð•‘‘ä‚Æ‚µ‚½¢ŠEŠÏ‚É‚æ‚è”ñí‚ÉŠ®¬“x‚Ì‚‚¢ì•i‚Ìˆê‚Â‚Æ‚È‚Á‚Ä‚¢‚éB
 
 
 
@@ -75661,8 +76208,12 @@ $bio
 CPU\¬[68000 (2), M6809, HD63705]@‰¹Œ¹ƒ`ƒbƒv[C140, YM2151]
 
 
-
-
+“oê“–ŽžAÅ‚Šî€‚ÌŠ®¬“x‚ðŒÖ‚Á‚½ƒKƒ“ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€uƒXƒeƒB[ƒ‹ƒKƒ“ƒi[v‚Ì‘±•ÒB
+¡‰ñ‚Í¢ŠEª•ž‚ðŠé‚Þˆ«‚ÌŒR’cuƒoƒ“ƒK[ƒhv‚Ì–ì–]‚ð‘jŽ~‚·‚×‚­AÅVŒ^ƒvƒƒeƒNƒgƒX[ƒcuƒK[ƒSƒCƒ‹ƒ}[ƒNƒc[v‚ð‹ì‚è“G‚ð“|‚µ‚Ä‚¢‚­B
+‹ß–¢—ˆ‚ð•‘‘ä‚Æ‚µ‚½¢ŠEŠÏ‚âƒQ[ƒ€ƒVƒXƒeƒ€‚Í‘Oì‚©‚çˆø‚«Œp‚ª‚ê‚Ä‚¢‚é‚à‚Ì‚ÌA‰‰o‚Í‚æ‚è”hŽè‚Æ‚È‚Á‚Ä‚¢‚éB
+‚Ü‚½“¯ŽžƒvƒŒƒCŽž‚É‚Í“G‚©‚ç‚ÌUŒ‚‚©‚ç”í’e‚·‚é”ÍˆÍ‚ªˆÙ‚È‚é‚½‚ßA‘I‘ð‚·‚é‘¤‚É‚æ‚èƒQ[ƒ€ƒvƒŒƒC‚É‰e‹¿‚ªo‚Ä‚­‚éB
+‘Oì‚ÌŠ®¬“x‚ð‚¤‚Ü‚­Žó‚¯Œp‚¢‚¾—Çì‚¾‚ªA˜b‘è‚Æ‚È‚éV—v‘f‚ª‚È‚©‚Á‚½‚½‚ßA‘Oì‚Ù‚Ç‚Ì’–Ú‚ð—‚Ñ‚é‚±‚Æ‚Í‚È‚©‚Á‚½B
+‘S6ƒXƒe[ƒWB‚¿‚È‚Ý‚Éâž‘Ì‚Í‘Oì‚©‚ç‚Ù‚Ú‚»‚Ì‚Ü‚Ü—¬—p‚³‚ê‚Ä‚¢‚éB
 
 
 
@@ -75697,7 +76248,7 @@ $end
 
 $info=sss
 $bio
-ƒXƒeƒB[ƒvƒXƒ[ƒvƒXƒ‰ƒCƒ_[ƒY
+ƒXƒeƒB[ƒvEƒXƒ[ƒvEƒXƒ‰ƒCƒ_[ƒY
 
 
 ”­”„”NF1998.11
@@ -75706,15 +76257,20 @@ $bio
 
 ƒWƒƒƒ“ƒ‹FƒXƒ|[ƒc
 
-ƒRƒ“ƒgƒ[ƒ‰F¦Ú×•s–¾
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
 ƒVƒXƒeƒ€ƒ{[ƒhFƒZƒK ƒ^ƒCƒ^ƒ“ ƒrƒfƒIƒQ[ƒ€ƒVƒXƒeƒ€iST-Vj
 
 CPU\¬[SH-2 (2), 68000]
 
 
-
-
+‰Æ’ë—pƒQ[ƒ€‹@ƒZƒKƒTƒ^[ƒ“‚ÅƒŠƒŠ[ƒX‚³‚ê‚½“¯ƒ^ƒCƒgƒ‹‚Ì‹tˆÚAìB
+‘€ì•û–@‚ª8•ûŒüƒŒƒo[‚Åƒ{[ƒ_[ƒRƒ“ƒgƒ[ƒ‹‚ÆƒWƒƒƒbƒvAƒhƒŠƒtƒg‚Æ•ÏX‚³‚êA‚»‚ê‚¼‚êŠŠ‚è‚É“Á’¥‚Ì‚ ‚é7l‚ÌƒLƒƒƒ‰ƒNƒ^[‚ª’Ç‰Á‚³‚ê‚Ä‚¢‚éB
+ƒR[ƒX‚Í“ú–{‚ð‘ã•\‚·‚éƒXƒL[êA•cêƒvƒŠƒ“ƒX‚Æ‚Ìƒ^ƒCƒAƒbƒv‚É‚æ‚è“¯ƒR[ƒX‚ð‚Í‚¶‚ßA¢ŠE5ƒJ‘‚Ì—L–¼ƒƒP[ƒVƒ‡ƒ“‚ðŠî‚ÉA
+ƒn[ƒtƒpƒCƒvEƒ{[ƒhƒp[ƒNEƒAƒ‹ƒyƒ“EƒGƒNƒXƒgƒŠ[ƒ€‚È‚ÇƒXƒe[ƒW‚ª—pˆÓ‚³‚ê‚Ä‚¢‚éB
+‚Ü‚½ƒWƒƒƒ“ƒvƒ|ƒCƒ“ƒg‚Å‚ÍƒWƒƒƒ“ƒv’†‚ÉƒRƒ}ƒ“ƒh‚ð“ü—Í‚·‚é‚±‚Æ‚ÅƒgƒŠƒbƒN‚ðŒˆ‚ß‚é‚±‚Æ‚ª‚Å‚«A
+ŠeƒXƒe[ƒW‚ÉÝ‚¯‚ç‚ê‚½§ŒÀŽžŠÔ“à‚Éƒmƒ‹ƒ}‚ð’B¬‚·‚ê‚ÎƒXƒe[ƒWƒNƒŠƒA‚Æ‚È‚éB
+ƒmƒŠ‚Ì‚¢‚¢BGM‚Æ‘u‰õŠ´‚Ì‚ ‚éŠŠ‚è‚ªŠy‚µ‚ß‚é—ÇìB
 
 
 
@@ -77289,16 +77845,19 @@ $bio
 
 ƒWƒƒƒ“ƒ‹FƒVƒ…[ƒeƒBƒ“ƒO
 
-ƒRƒ“ƒgƒ[ƒ‰F‘€cž…ƒ^ƒCƒvƒRƒ“ƒgƒ[ƒ‰[i—vŠm”Fj
+ƒRƒ“ƒgƒ[ƒ‰Fö–]‹¾ƒ^ƒCƒvƒRƒ“ƒgƒ[ƒ‰[i2•ûŒüƒŒƒo[(1ƒ{ƒ^ƒ“•t‚«)+ƒnƒ“ƒhƒ‹j
 
 ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
 
 CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[Samples]
 
 
-ƒZƒK‚Æ¼‰º“dŠí‚ª‹¤“¯ŠJ”­‚µ‚½AƒQ[ƒ€Žjã‰‚Ì—§‘Ì“I‰f‘œ‚É‚æ‚éƒrƒfƒIƒQ[ƒ€‚ª‚±‚ÌuƒTƒuƒƒbƒN3DvB
-ö–]‹¾‚ð‚Ì‚¼‚¢‚ÄA—§‘Ì‰f‘œ‚Ì“G…ãŠÍ‘à‚â‹ó’†•”‘à‚ðA‹›—‹‚âƒ~ƒTƒCƒ‹‚ÅŒ‚”j‚·‚éB
-”——Í‚ ‚é‰f‘œ‚Æo‰ñ‚è‚Ì­‚È‚³‚©‚çAƒJƒ‹ƒg“I‚È–¼ì‚Æ‚µ‚Ä—L–¼‚Èì•i‚Å‚à‚ ‚éB
+ƒZƒK‚Æ¼‰º“dŠí‚Ì‹¤“¯ŠJ”­‚É‚æ‚éƒQ[ƒ€Žjã‰‚Ì—§‘Ì“I‰f‘œ‚É‚æ‚éƒrƒfƒIƒQ[ƒ€‚ª‚±‚ÌuƒTƒuƒƒbƒN3DvB
+ö–]‹¾‚ð’Ê‚µ‚Äâž‘Ì–{‘Ì‚Ìƒ‚ƒjƒ^[‚ð”`‚«ž‚Ý‚È‚ª‚çA¶‘¤‚É‚ ‚éƒŒƒo[‚ð‘OŒã‚É“®‚©‚µ‚ÄŽ‹“_‚ð¶‰E‚ÉA
+‰E‘¤‚É‚ ‚éƒnƒ“ƒhƒ‹‚ð‰ñ‚·‚±‚Æ‚Åƒtƒ@ƒCƒ“ƒ_[‚É‚ ‚éÆ€‚Ì‚‚³‚ð’²®‚µA“GŠÍ‘à‚â‹ó’†•”‘à‚ð‹›—‹‚âƒ~ƒTƒCƒ‹‚ÅŒ‚”j‚µ‚Ä‚¢‚­B
+66”N‚É“ú–{‰‚Ì‹Æ–±—pƒQ[ƒ€‹@Ší‚Æ‚µ‚Ä“oê‚µ‚½ƒGƒŒƒƒJ‚Ì–¼ìuƒyƒŠƒXƒR[ƒvv‚ðœfœi‚Æ‚³‚¹‚éì‚è‚ÉƒƒJƒVƒƒƒbƒ^[‚ð“±“ü‚µA
+uƒ^[ƒ{vuƒUƒNƒ\ƒ“v‚È‚ÇA“–Žž‚ÌƒZƒK‚Ì“¾ˆÓ‚Æ‚·‚éƒp[ƒXƒyƒNƒeƒBƒuŒø‰Ê‚É‚æ‚é”——Í‚ ‚é‰f‘œ‚Æo‰ñ‚è‚Ì­‚È‚³‚©‚çA
+ƒJƒ‹ƒg“I‚È–¼ì‚Æ‚µ‚Ä—L–¼‚Èì•i‚Å‚à‚ ‚éB
 
 
 
@@ -79288,7 +79847,7 @@ $bio
 
 ƒWƒƒƒ“ƒ‹FƒXƒ|[ƒc
 
-ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+4ƒ{ƒ^ƒ“
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+3ƒ{ƒ^ƒ“
 
 ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
 
@@ -79297,6 +79856,8 @@ CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2610]
 
 ˆäã—Y•F‚Ìl‹Cƒ}ƒ“ƒKuƒXƒ‰ƒ€ƒ_ƒ“ƒNv‚ð‘èÞ‚É‚µ‚½ƒoƒXƒPƒbƒgƒ{[ƒ‹‚ÌƒQ[ƒ€B
 Ã–k‚ð‚Í‚¶‚ßA—Ë“ìEŠC“ìEãÄ—z‚Ì4Z‚ª“oê‚·‚éB
+ƒIƒtƒFƒ“ƒXŽž‚É‚ÍƒpƒXAƒVƒ…[ƒg(ƒVƒ…[ƒgƒtƒFƒCƒN)AƒeƒNƒjƒJƒ‹ƒpƒX¥ƒVƒ…[ƒg¥ƒhƒŠƒuƒ‹‚ðŽg‚¤‚±‚Æ‚ª‚Å‚«A
+ƒfƒBƒtƒFƒ“ƒXŽž‚É‚ÍƒXƒeƒB[ƒ‹AƒVƒ…[ƒgƒuƒƒbƒNAƒ_ƒuƒ‹ƒ`[ƒ€‚Æ‘€ì‚ÍƒI[ƒ\ƒhƒbƒNƒXB
 —]’k‚¾‚ªAƒ}ƒ“ƒKuƒXƒ‰ƒ€ƒ_ƒ“ƒNv‚ªŒ³ƒlƒ^‚È‚Ì‚¾‚ªAƒ^ƒCƒgƒ‹‚ªuƒX[ƒp[ƒXƒ‰ƒ€ƒYv‚Æ‚È‚Á‚Ä‚¢‚é‚Ì‚ÍA
 ¡ì‚Ì”­”„ˆÈ‘O‚ÉƒRƒiƒ~‚©‚ç‚·‚Å‚ÉuƒXƒ‰ƒ€ƒ_ƒ“ƒN(ŠCŠO–¼Run and Gun)v‚Æ‚¢‚¤“¯ƒWƒƒƒ“ƒ‹‚ÌƒQ[ƒ€‚ªƒŠƒŠ[ƒX‚³‚ê‚Ä‚¢‚½‚½‚ß‚Å‚ ‚éB
 
@@ -80142,7 +80703,7 @@ $bio
 ƒX[ƒp[ƒ[ƒ‹ƒhƒXƒ^ƒWƒAƒ€'‚X‚U -Œƒ“¬”Å-
 
 
-”­”„”NF1996
+”­”„”NF1996.06
 
 ŠJ”­^”­”„Œ³Fƒiƒ€ƒR
 
@@ -81016,17 +81577,12 @@ $bio
 CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMF278B]
 
 
-l‚ÍŠFA–Ú‚ÉŒ©‚¦‚´‚éS‚Ì”Y‚Ý‚ð•ø‚¦‚Ä‚¢‚éB‚»‚ñ‚ÈlX‚ð°‚æ‚è‹~Ï‚·‚é‚Ì‚ªŒN‚ÌŽg–½B
-‚»‚ÌŽè’i‚¾‚ªA‚·‚×‚Ä‚Ì–â‘è‚Í–ƒ‚Å‰ðŒˆ‚Å‚«‚é‚Á‚Ä‚ä‚¤‚©A–ƒ‚Å‰ðŒˆ‚µ‚ëB
-
-“–‚½‚Á‚ÄÓ‚¯‚ëA‚»‚ñ‚ÈŠ´‚¶‚Ì•¨Œê‚¾B
-
-‚PlƒvƒŒƒC‚ÍA”M‚­˜A‘Å‚É”R‚¦‚ëI@¶ˆÓ‹C‚È—‚ÍAƒ{ƒ^ƒ“˜A‘Å‚Å‚¨‚µ‚¨‚«‚¾I
-
-˜A‘Å‚·‚éƒ{ƒ^ƒ“‚Í‚``‚m‚Ì‚Ç‚ê‚Å‚à‚¢‚¢‚ªA‰´‚Í‚¢‚Â‚à‚gƒ{ƒ^ƒ“‚¾I
-–ƒ‚ð’m‚ç‚È‚¢l‚à‚±‚ê‚ð‹@‰ï‚ÉŠo‚¦‚æ‚¤I
-
-‚QlƒvƒŒƒC‚ÍAŠ¿iƒIƒgƒRj‚Ìí‚¢‚¾I@‚‚¢–ð‚ð‚ ‚ª‚Á‚ÄAƒvƒƒŒƒX‹Z‚ðày—ô‚³‚¹‚ëI
+uƒXƒgƒ‰ƒCƒJ[ƒYvƒVƒŠ[ƒY‚ðŽn‚ß‚Æ‚·‚éƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€’†S‚ÉƒŠƒŠ[ƒX‚µ‚Ä‚«‚½Ê‹ž‚Ì‰‚Æ‚È‚é–ƒƒQ[ƒ€u‘ÎíƒzƒbƒgƒMƒ~ƒbƒNvB
+ƒQ[ƒ€‚Íuƒpƒ[v‚ð‚½‚ß‚Ä‚¨•‚¯ƒLƒƒƒ‰ƒNƒ^[uŒ¢v‚Ì•‚¯‚ðŽØ‚è‚È‚ª‚çAS‚Ì”Y‚Ý‚ð•ø‚¦‚½lX‚ð–ƒ‚Å•‚¯‚Ä‚¢‚­‚Æ‚¢‚¤‚à‚ÌB
+‚Ü‚½’ÊM‘Îíƒ‚[ƒh‚É‚Í1PƒvƒŒƒCƒ‚[ƒh‚Ì’Eˆß–ƒ‚Æ‚Í‘S‚­•Ê“à—e‚Ì2l‚ÌŠi“¬Žm‚ÌŒŒ‚ÆŠ¾‚Æ—Ü‚Ì•¨Œê‚Æ‚È‚Á‚Ä‚¢‚éB
+1PƒvƒŒƒCƒ‚[ƒh‚É“oêƒLƒƒƒ‰ƒNƒ^[‚Él‹CƒCƒ‰ƒXƒgƒŒ[ƒ^[Ži ~ Ž‚Æ—L–¼º—Dw‚ðŒ}‚¦‚½‚±‚Æ‚âA
+•ž‚ð’E‚ª‚·‚Ì‚Éƒ{ƒ^ƒ“˜A‘Å‚Æ‚¢‚¤‰ù‚©‚µ‚¢—v‘f‚È‚Ç‚Ål‹C‚ðŒÄ‚ÑA’Eˆß–ƒƒQ[ƒ€‚Æ‚µ‚Ä‚Í‹vX‚Ìƒqƒbƒgì‚Æ‚È‚Á‚½B
+‚¿‚È‚Ý‚É1Šî”Â‚Å2âž‘Ì‚É‚æ‚é’ÊM‘Îí‚ª‰Â”\‚Å‚ ‚éB
 
 
 
@@ -81062,6 +81618,63 @@ CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMF278B]
 
 $end
 
+$info=hotgm4ev
+$bio
+‘ÎíƒzƒbƒgƒMƒ~ƒbƒNƒtƒH[ƒGƒo[ -HOT GIMMICK 4 EVER-
+
+
+”­”„”NF2000.05
+
+ŠJ”­^”­”„Œ³FÊ‹ž
+
+ƒWƒƒƒ“ƒ‹Fƒ}[ƒWƒƒƒ“
+
+ƒRƒ“ƒgƒ[ƒ‰Fƒ}[ƒWƒƒƒ“ƒpƒlƒ‹
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMF278B]
+
+
+Ê‹ž‚ð‘ã•\‚·‚él‹CƒVƒŠ[ƒYu‘ÎíƒzƒbƒgƒMƒ~ƒbƒNvƒVƒŠ[ƒY‚Ì‘æ4ì–ÚB
+¡‰ñ‚ÍƒLƒƒƒ‰ƒNƒ^[ƒfƒUƒCƒ“‚ÉÄ‚ÑŽi ~ Ž‚ðŒ}‚¦A
+1lƒvƒŒƒCƒ‚[ƒh‚ÉƒvƒŒƒCƒ„[‚ª‘ål‚ÌŽ–î‚É‚æ‚è20‘ã‚Ì—«‚Ì‚Ý‚ª’Ê‚¤—Žq‚‚Ì—ÕŽžuŽt‚Æ‚È‚Á‚½u‚¨Žd’u‚«•Òv‚ÆA
+‘S‘‚©‚ç‚Ìˆê”ÊŒö•å‚É‚æ‚è‘I‚Ñ”²‚©‚ê‚½ŒÂ«“I‚ÈƒLƒƒƒ‰ƒNƒ^[’B‚ª“oê‚µA
+–ƒ‚Å”X‚ÌŽ–Œ‚ð‰ðŒˆ‚µ‚Ä‚¢‚­Ž„—§’T’ãuH“¡—Dìv‚ªŽålŒö‚ÌƒXƒg[ƒŠ[ƒ‚[ƒhu–ƒ’T’ã•Òv‚ª·‚èž‚Ü‚ê‚Ä‚¢‚éB
+‚Ü‚½‚¨‚È‚¶‚Ý‚Ì’ÊM‘Îíƒ‚[ƒhuƒWƒƒƒ“ƒtƒ@ƒCƒgv‚Å‚Í_‚Æˆ«–‚A
+uƒWƒƒƒ“ƒSƒbƒhv‚ÆuƒWƒƒƒ“ƒfƒrƒ‹v‚É‚æ‚éƒoƒ`“–‚½‚è‚ÈÅIí‘ˆ¥ƒnƒ‹ƒ}ƒQƒhƒ“‚ªŒJ‚èL‚°‚ç‚ê‚éB
+
+
+
+$end
+
+$info=hotgmcki
+$bio
+–ƒƒzƒbƒgƒMƒ~ƒbƒNƒCƒ“ƒeƒOƒ‰ƒ‹
+
+
+”­”„”NF2001.07
+
+ŠJ”­^”­”„Œ³FÊ‹ž
+
+ƒWƒƒƒ“ƒ‹Fƒ}[ƒWƒƒƒ“
+
+ƒRƒ“ƒgƒ[ƒ‰Fƒ}[ƒWƒƒƒ“ƒpƒlƒ‹
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMF278B]
+
+
+uƒzƒbƒgƒMƒ~ƒbƒNvƒVƒŠ[ƒY5ì–Ú‚Æ‚È‚éuƒCƒ“ƒeƒOƒ‰ƒ‹v‚Í‰ß‹Ž4ì‚©‚ç“oê‚µ‚½ƒLƒƒƒ‰ƒNƒ^[‚½‚¿‚Ì’†‚©‚ç‘I‚Î‚ê‚½ƒƒ“ƒo[‚ª“oê‚·‚é‚Æ‚¢‚¤ƒŠƒ~ƒbƒNƒXì‚Å‚ ‚éB
+‚±‚ê‚Ü‚Å“¯—lAƒQ[ƒ€‚Íƒcƒ‚‚æ‚èƒƒ“‚Ì•û‚ª“¾‚Æ‚È‚Á‚Ä‚¨‚èA‘ŠŽèƒLƒƒƒ‰ƒNƒ^[‚ÌŽ‚¿“_‚ð0ˆÈ‰º‚É‚·‚é‚©A2‰ñã‚ª‚é‚ÆŸ‚¿‚Æ‚È‚éB
+‚Ü‚½uŒ¢v‚É‚Íƒpƒ[‚ð‚½‚ß‚ÄƒWƒƒƒ“ƒt[ƒh‚ðw“ü‚µA‚»‚ê‚ðŒ¢‚É—^‚¦‚é‚±‚Æ‚ÅƒvƒŒƒCƒ„[‚ðƒTƒ|[ƒg‚µ‚Ä‚­‚ê‚éB
+¡ì‚Í1PƒvƒŒƒC‚ðdŽ‹‚µ‚Äì‚ç‚ê‚Ä‚¢‚é‚½‚ßAŽc”O‚È‚ª‚çƒVƒŠ[ƒYP—á‚Æ‚È‚Á‚½uƒWƒƒƒ“ƒtƒ@ƒCƒgv‚â’ÊM‘Îíƒ‚[ƒh‚ÍŽû˜^‚³‚ê‚Ä‚¢‚È‚¢B
+
+
+
+$end
+
 $info=hgkairak
 $bio
 ‘ÎíƒzƒbƒgƒMƒ~ƒbƒN‰õŠy“V
@@ -81080,20 +81693,11 @@ $bio
 CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMF278B]
 
 
-‚¨Žq—l‚©‚ç‚¨”NŠñ‚è‚Ü‚ÅA‘S‘‚ÌŠ¿‚ÌŠF—lA‘å•Ï’·‚ç‚­‚¨‘Ò‚½‚¹‚¢‚½‚µ‚Ü‚µ‚½B
-
-‘ÎíƒzƒbƒgƒMƒ~ƒbƒN‚Ì‘æ“ñ’e
-‘ÎíƒzƒbƒgƒMƒ~ƒbƒN ‰õŠy“V‚Â‚¢‚É’a¶I
-
-‚È‚ñ‚Æ‚ ‚ÌAl‹CƒRƒ~ƒbƒNŽw‰õŠy“Vx‚ÆAƒzƒbƒgƒMƒ~ƒbƒN‚ª‡‘Ì‚¾‚ I
-
-‚Æ‚¢‚¤‚í‚¯‚ÅA‚±‚ê‚ðŒ©‚Ä—Ü‚µ‚È‚¢Š¿‚Í‚¢‚È‚¢I
-
-‚½‚¾‚¢‚ÜA‘åD•]‰Ò“­’†B‚µ‚©‚Æ‚»‚Ì–Ú‚ÉŒ©‚æI
-
-‘S‘‚æ‚è‘å”½‹¿‚Ì—’
-
-‘åD•]‚ÌÊ‹ž–ƒƒQ[ƒ€‘æ“ñ’e‚ÉAƒWƒƒƒ“ƒ‹•Ê”­s•””‘æˆêˆÊ‚ðŒÖ‚éƒRƒ~ƒbƒNŽw‰õŠy“Vx‚Ì¸‰s–Ÿ‰æ‰Æ’B‚ª‘å—“ü‚¾I
+ƒƒjƒ}ƒKƒWƒ“ŽÐ‚ÌƒRƒ~ƒbƒNŽu‰õŠy“Vv‚Æ‚Ìƒ^ƒCƒAƒbƒvŠé‰æ‚É‚æ‚èA
+“¯Ž‚ÅŠˆ–ô‚·‚é–Ÿ‰æ‰Æ‚½‚¿‚ðƒLƒƒƒ‰ƒNƒ^[ƒfƒUƒCƒ“‚ÉŒ}‚¦‚½l‹CƒVƒŠ[ƒY2ì–ÚB
+–Ÿ‰æ‰Æ‚ÌŒ´‰æ‚ð‚»‚Ì‚Ü‚Ü‚ÌƒNƒIƒŠƒeƒB‚ÅÄŒ»‚µA‹‰Øº—Dw‚ð‹N—p‚µ‚Ä‚¢‚éB
+‚³‚ç‚É‘Oì‚Ål‹C‚ðŒÄ‚ñ‚¾’ÊM‘Îíƒ‚[ƒh‚Å‚ÍVƒLƒƒƒ‰uƒWƒƒƒ“ƒWƒƒƒpƒ“vuƒWƒƒƒ“ƒAƒƒŠƒJv‚ªV‹Z‚ðˆø‚Á‚³‚°‚Ä“oêA
+Ä‚Ñ”M‚¢“¬‚¢‚ªŒJ‚èL‚°‚ç‚ê‚éBƒQ[ƒ€ƒVƒXƒeƒ€‚É‚Í•ÏX‚à–³‚­Aƒ{ƒ^ƒ“˜AŽË‚É‚æ‚éƒCƒ^ƒYƒ‰‚àŒ’ÝB
 
 
 
@@ -81543,7 +82147,7 @@ Tang Tang
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+ƒVƒXƒeƒ€ƒ{[ƒhFESD Fantasia AT-II
 
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM3812, OKI6295]
 
@@ -83754,7 +84358,7 @@ $bio
 ƒTƒ“ƒ_[ƒtƒH[ƒX‚`‚b
 
 
-”­”„”NF1990
+”­”„”NF1990.12
 
 ŠJ”­Œ³FƒeƒNƒmƒ\ƒtƒg@”­”„Œ³FƒZƒK
 
@@ -83767,9 +84371,10 @@ $bio
 CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496, ƒÊPD7759]
 
 
-‚±‚Ìì•i‚ÍAƒRƒ“ƒVƒ…[ƒ}‹@—p‚Ìl‹Cƒ\ƒtƒguƒTƒ“ƒ_[ƒtƒH[ƒXIIIv‚ÌƒA[ƒP[ƒhƒo[ƒWƒ‡ƒ“B
-Šî–{“I‚É“¯ˆê‚ÌƒQ[ƒ€“à—e‚Å‚ ‚éB
-ƒIƒŠƒWƒiƒ‹ƒXƒe[ƒW‚ðŠÜ‚Þ‘S9ƒXƒe[ƒWB
+“¯”N6ŒŽ‚É“oê‚µ‚½ƒƒKƒhƒ‰ƒCƒu—p‚Ìl‹Cƒ\ƒtƒguƒTƒ“ƒ_[ƒtƒH[ƒXIIIv‚Ì‹tˆÚA‚Æ‚È‚éƒA[ƒP[ƒhƒo[ƒWƒ‡ƒ“B
+ƒŒƒo[‚ÅŽ©‹@‚ð‘€ì‚µAƒVƒ‡ƒbƒgA•Ší‚Ì•ÏXAŽ©‹@‚ÌƒXƒs[ƒh•ÏX‚ÆŠî–{“I‚É“¯ˆê‚ÌƒQ[ƒ€“à—e‚Å‚ ‚é‚Å‚ ‚é‚ªA
+ƒIƒŠƒWƒiƒ‹ƒXƒe[ƒW‚ðŠÜ‚Þ‘S9ƒXƒe[ƒW‚Æ‚È‚Á‚Ä‚¢‚éB
+‚Ü‚½ƒƒKƒhƒ‰ƒCƒu”Å‚Å‚ÍƒXƒ^[ƒg’¼Œã‚É5‚Â‚Ì˜f¯‚©‚çƒXƒ^[ƒg‚µ‚½‚¢˜f¯‚ð‘I‘ð‚Å‚«‚é‚ªA‚±‚Ì¡ì‚Å‚Í‚Å‚«‚È‚¢B
 
 
 
@@ -83984,7 +84589,7 @@ $bio
 ƒ^ƒCƒ€ƒNƒ‰ƒCƒVƒX‡U
 
 
-”­”„”NF1995
+”­”„”NF1995.04
 
 ŠJ”­^”­”„Œ³Fƒiƒ€ƒR
 
@@ -86238,7 +86843,7 @@ $end
 
 $info=triviag1
 $bio
-Trivial Pursuit
+Trivial Pursuit iGenus‡Tj
 
 
 ”­”„”NF1984
@@ -86262,10 +86867,34 @@ $end
 
 $info=triviag2
 $bio
-Trivial Pursuit
+Trivial Pursuit iGenus‡T‡Tj
 
 
 ”­”„”NF1984
+
+ŠJ”­^”­”„Œ³FBally Sente
+
+ƒWƒƒƒ“ƒ‹FƒNƒCƒY
+
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFSente Arcarde ComputeriSACj
+
+CPU\¬[M6809, Z80]@‰¹Œ¹ƒ`ƒbƒv[CEM3394 (6)]
+
+
+¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
+$info=triviaes
+$bio
+Trivial Pursuit iSpanish Editionj
+
+
+”­”„”NF1987
 
 ŠJ”­^”­”„Œ³FBally Sente
 
@@ -87009,7 +87638,7 @@ CPU\¬[68EC020, 68000]@‰¹Œ¹ƒ`ƒbƒv[054539 (2)]
 ‰Æ’ë‹@ˆÚA‚ª‘O’ñ‚Ì‚½‚ß‚©A‰¡‰æ–Ê‚ÌcƒXƒNƒ[ƒ‹‚É•ÏX‚³‚ê‚Ä‚¢‚éB
 ƒVƒŠ[ƒY‚Ì“Á’¥‚Å‚ ‚éƒxƒ‹ƒVƒXƒeƒ€‚Í‚à‚¿‚ë‚ñAƒTƒuƒEƒGƒ|ƒ“‚ð—¼˜r‚É‘•”õ‚Å‚«A
 ƒTƒ|[ƒgƒLƒƒƒ‰‚à“oê‚µ2P“¯ŽžƒvƒŒƒCŽž‚Í‚É‚¬‚â‚©‚·‚¬‚é‚Ù‚ÇB
-ƒ‰ƒWƒIƒhƒ‰ƒ}Eƒhƒ‰ƒ}CD‚È‚Ç‚ÌƒƒfƒBƒAƒ~ƒbƒNƒXí—ª‚Ì‰e‹¿‚ðŽó‚¯A
+92”N‚©‚çŽn‚Ü‚Á‚½uƒEƒCƒ“ƒr[‘–¯ƒAƒCƒhƒ‹‰»Œv‰æv‚É‚æ‚éƒ‰ƒWƒIƒhƒ‰ƒ}Eƒhƒ‰ƒ}CD‚È‚Ç‚ÌƒƒfƒBƒAƒ~ƒbƒNƒXí—ª‚Ì‰e‹¿‚ðŽó‚¯A
 ƒI[ƒvƒjƒ“ƒOAƒQ[ƒ€’†‚Ìƒfƒ‚ƒV[ƒ“‚È‚ÇƒAƒjƒF‚Ì‹­‚¢ì•i‚Æ‚È‚Á‚Ä‚¢‚éB
 ‚»‚Ì‰e‹¿‚É‚æ‚èƒQ[ƒ€«‚ªŠó”–‚É‚È‚èAƒˆ‚ÉƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€‚ðŠy‚µ‚Ý‚½‚¢‚ÆŽv‚¤ƒvƒŒƒCƒ„[‚ð‰“‚´‚¯‚éŒ‹‰Ê‚Æ‚È‚Á‚Ä‚µ‚Ü‚Á‚½B
 
@@ -88284,9 +88913,11 @@ $bio
 CPU\¬[68000 (2), M6809, HD63705]@‰¹Œ¹ƒ`ƒbƒv[C140, YM2151]
 
 
-‘s‘å‚ÈƒXƒP[ƒ‹‚Å“WŠJ‚·‚éƒAƒNƒVƒ‡ƒ“ƒ[ƒ‹ƒvƒŒƒCƒ“ƒOƒQ[ƒ€B
-”ü‚µ‚¢ƒƒƒfƒBƒ‰ƒCƒ“‚ð‘t‚Å‚éBGM‚Í•K’®B
-ƒGƒ“ƒfƒBƒ“ƒO‚à•KŒ©B
+uƒƒ‹ƒLƒ…[ƒŒ‚Ì“`àv‚ÍAFC—pƒ\ƒtƒguƒƒ‹ƒLƒ…[ƒŒ‚Ì–`Œ¯ Žž‚ÌŒ®“`àv‚Å¶‚Ü‚ê‚½ˆ¤‚·‚×‚«ƒLƒƒƒ‰ƒNƒ^[uƒƒ‹ƒLƒ…[ƒŒv‚ÆA
+ƒtƒ@ƒ“ƒ^ƒWƒbƒN‚È“G‚â’‡ŠÔ‚½‚¿‚ªAuƒTƒ“ƒhƒ‰ƒ“ƒhv‚©‚çu’n‹…“à•”v‚Æ8‚Â‚ÌL‘å‚Èƒ}ƒbƒv‚É•‘‘ä‚ðˆÚ‚µ‚ÄŠˆ–ô‚·‚é‚³‚í‚â‚©‚Å’É‰õ‚È‚¨‚Æ‚¬˜bB
+2l‚ÌŽålŒöuƒƒ‹ƒLƒ…[ƒŒ(1P‘¤)vuƒTƒ“ƒhƒ‰(2P‘¤)v‚ð‘€ì‚µAƒWƒƒƒ“ƒvA—lX‚È•ŠíUŒ‚A–‚–@‚ð‹ìŽg‚µ‚È‚ª‚ç–k‚Ö–k‚Ö‚ÆŒü‚©‚¤A
+ƒAƒNƒVƒ‡ƒ“AƒVƒ…[ƒeƒBƒ“ƒOARPGAƒAƒhƒxƒ“ƒ`ƒƒ[‚»‚µ‚ÄƒpƒYƒ‹‚Ü‚ÅA‚ ‚ç‚ä‚é•ûŒü«‚ð–Ô—…‚µ‚½uƒAƒNƒVƒ‡ƒ“ƒAƒhƒxƒ“ƒ`ƒƒ[vƒQ[ƒ€‚Å‚ ‚éB
+ƒiƒ€ƒRƒVƒXƒeƒ€‡UŠî”Â‚Ì«”\‚ðŽg‚Á‚½‰‰o‚âA”ü‚µ‚¢ƒƒƒfƒBƒ‰ƒCƒ“‚ð‘t‚Å‚éBGM‚ª‘f°‚ç‚µ‚¢BƒGƒ“ƒfƒBƒ“ƒO‚Í•KŒ©B
 
 
 
@@ -93252,7 +93883,7 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰F¦Ú×•s–¾
 
-ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Õ
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
 
 CPU\¬[ARM]
 
@@ -94227,8 +94858,15 @@ $bio
 CPU\¬[PSX CPU, M37710]@‰¹Œ¹ƒ`ƒbƒv[C352]
 
 
-
-
+ƒeƒNƒXƒ`ƒƒ[ƒ|ƒŠƒSƒ“Aƒ‚ƒfƒ‹ƒAƒjƒ[ƒVƒ‡ƒ“A
+ƒ‚[ƒtƒBƒ“ƒO‚È‚Ç“–ŽžÅV‚Ì‹Zp‚ðŽ‚Á‚Ä»ì‚³‚ê‚½V‚µ‚¢uƒ[ƒrƒEƒXvB
+‘€ì‚Í‚±‚ê‚Ü‚Å‚Æ“¯‚¶8•ûŒüƒŒƒo[‚Æ’ÊíUŒ‚A‘Î’nUŒ‚‚Ì2ƒ{ƒ^ƒ“‚Å‚ ‚éB
+¡ì‚Å‚ÍƒƒCƒh‚È‹­‰»ƒUƒbƒp[‚ðŽg‚¦‚é‚æ‚¤‚É‚È‚éuƒfƒBƒIƒXvA‚–§“xƒŒ[ƒU[‚ÌuƒQƒ‹ƒ}ƒbƒNvA
+“G‚ð’Ç”ö‚·‚éESPUŒ‚‚Ìuƒh[ƒNƒgv‚È‚ÇA¬àuƒtƒ@[ƒhƒ‰ƒEƒgƒT[ƒKv‚É‚à–¼‘O‚ªo‚½ƒpƒ[ƒAƒbƒvƒAƒCƒeƒ€‚ª“oêB
+’nã‚É”z’u‚³‚ê‚Ä‚¢‚éuƒAƒ‹ƒ_ƒŒƒCv‚É‚ ‚éƒJƒvƒZƒ‹‚ðŽæ‚é‚±‚Æ‚Åƒpƒ[ƒAƒbƒv‚Å‚«‚é‚ªA
+“¯F‚ÌƒAƒCƒeƒ€‚ð˜A‘±‚ÅŽæ‚é‚±‚Æ‚ÅuƒŠEƒCƒ“ƒtƒH[ƒX(•‘•‹­‰»)v‚ª‰Â”\‚Å‚ ‚éB
+‚Ü‚½‘±X‚Æ“oê‚·‚é“GƒƒJŒQ‚Í”hŽè‚É‚È‚Á‚Ä‚¢‚é‚ªA‚»‚ÌƒLƒƒƒ‰ƒNƒ^[«‚ÍŒ³‚Ìuƒ[ƒrƒEƒXv‚Ì¸_‚ðŽó‚¯Œp‚¢‚Å‚¢‚éB
+2l“¯ŽžƒvƒŒƒC‰Â”\A‘S7ƒXƒe[ƒWB
 
 
 
