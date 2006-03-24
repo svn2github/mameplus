@@ -30,6 +30,10 @@
        JOY8WAY:  %4d\n
   8 方向游戏杆:  %4d\n
 
+# datafile.c: 3151
+      AD STICK:  %4d\n
+      AD 游戏杆: %4d\n
+
 # datafile.c: 3152
       LIGHTGUN:  %4d\n
           光枪:  %4d\n
@@ -245,6 +249,14 @@
 # ui_text.c: 161
 (Card may already exist)
 (记忆卡可能已存在)
+
+# usrintrf.c: 3493
+(H)
+(水平)
+
+# usrintrf.c: 3493
+(V)
+(垂直)
 
 # ui_text.c: 149
 (locked)
@@ -618,6 +630,10 @@ All values saved
 Allow Continue
 允许续币
 
+# inptport.c: 441
+Alternate
+替代
+
 # cheat.c: 932
 Always have
 锁定
@@ -705,6 +721,10 @@ Bookkeeping Info
 # drivers/namcos1.c: 645 ui_text.c: 55
 Brightness
 亮度
+
+# drivers/m107.c: 296 drivers/m92.c: 1029 drivers/usgames.c: 139 
+Button 1
+按钮 1
 
 # cheat.c: 3605
 Byte Length
@@ -966,6 +986,10 @@ Data Shift
 Decimal
 十进制
 
+# ui_text.c: 226
+Decoding Graphics
+图形解码
+
 # drivers/asuka.c: 713, 755, 797 drivers/bwing.c: 341 drivers/cps1.c: 826, 910 drivers/fgoal.c: 313 drivers/mcr68.c: 669 drivers/ms32.c: 1129, 1134 drivers/taito_b.c: 1304 drivers/wwfsstar.c: 290 
 Default
 默认
@@ -1138,6 +1162,10 @@ Easy
 Edit Cheat
 编辑作弊码
 
+# drivers/djmain.c: 500 
+Effect
+效果
+
 # ui_text.c: 154
 Eject Current Card
 退出当前记忆卡
@@ -1225,6 +1253,14 @@ Expert
 # cheat.c: 6583 debug/mamedbg.c: 797 drivers/4enraya.c: 119 drivers/8080bw.c: 697, 789 drivers/alpha68k.c: 1570, 1624 drivers/amidar.c: 186 drivers/angelkds.c: 480 drivers/bestleag.c: 278 drivers/bigstrkb.c: 160 drivers/brkthru.c: 233, 236, 278, 281 drivers/cninja.c: 727 drivers/cps1.c: 1069, 1339 drivers/darius.c: 679, 717, 755 drivers/ddragon3.c: 424 drivers/deniam.c: 277 drivers/epos.c: 151, 154, 160 drivers/fuukifg3.c: 354 drivers/gameplan.c: 399, 850 drivers/karnov.c: 461 drivers/m62.c: 610, 661, 712, 762, 814, 866, 920, 1020, 1071 drivers/mcr.c: 1134 drivers/megaplay.c: 224 drivers/metro.c: 3080 drivers/ninjaw.c: 542 drivers/nmg5.c: 237 drivers/nmk16.c: 2662 drivers/phoenix.c: 345 drivers/quizdna.c: 153, 241, 343 drivers/rohga.c: 445, 513 drivers/safarir.c: 188 drivers/segas16a.c: 1272 drivers/segas16b.c: 2511 drivers/sidepckt.c: 231 drivers/slapfght.c: 518 drivers/ssv.c: 2572 drivers/suprridr.c: 251 drivers/system1.c: 888, 1724 drivers/system16.c: 1795 drivers/taito_f2.c: 3122 drivers/taito_l.c: 1841, 1994 drivers/taito_z.c: 2384, 2453 drivers/tecmo16.c: 207 drivers/thepit.c: 276, 331, 372 drivers/trackfld.c: 539, 550 drivers/vigilant.c: 240 drivers/vsnes.c: 1065, 1467, 1691, 1749, 1775 drivers/wallc.c: 187 drivers/warriorb.c: 344 drivers/wc90.c: 250 drivers/wc90b.c: 267 drivers/xain.c: 399 drivers/yamato.c: 356 drivers/zac2650.c: 83, 133 drivers/zerozone.c: 148 ui_text.c: 209
 Fast
 快速
+
+# mamecore.h: 186
+Fatal error: %s (%s:%d)
+严重错误: %s (%s:%d)
+
+# mamecore.h: 183
+Fatal error: %s\nCaused by assert: %s:%d: %s
+严重错误: %s\n判定原因: %s:%d: %s
 
 # drivers/ninjakid.c: 292 drivers/rocnrope.c: 164 drivers/xxmissio.c: 253
 First Bonus
@@ -1333,6 +1369,10 @@ German
 # drivers/kaneko16.c: 1204, 1300 drivers/midzeus.c: 1210 drivers/nmk16.c: 2583
 Germany
 德国
+
+# cheat.c: 933
+Get
+取得
 
 # cheat.c: 1048, 4638
 Greater
@@ -3378,6 +3418,10 @@ Pause
 Payout
 付款
 
+# drivers/turbo.c: 467 
+Pedal
+踏板
+
 # drivers/astrocde.c: 298 drivers/bottom9.c: 235 drivers/deniam.c: 274 drivers/destroyr.c: 209 drivers/firetrk.c: 595, 663, 746 drivers/galpanic.c: 833 drivers/skyraid.c: 143 drivers/snk.c: 4014, 4155 drivers/sprint2.c: 346, 418 drivers/sprint4.c: 340 drivers/sprint8.c: 330, 465 drivers/sspeedr.c: 182 drivers/starshp1.c: 282 drivers/suprslam.c: 262 drivers/tank8.c: 285 drivers/triplhnt.c: 173 drivers/wolfpack.c: 226 
 Play Time
 游戏时间
@@ -3706,6 +3750,10 @@ Show Command
 Show Command List
 显示指令列表
 
+# inptport.c: 987
+Show Current Time
+显示当前时间
+
 # inptport.c: 978
 Show FPS
 显示帧速
@@ -3713,6 +3761,10 @@ Show FPS
 # inptport.c: 974
 Show Gfx
 显示图像信息
+
+# inptport.c: 990
+Show Input Log
+显示指令输入记录
 
 # inptport.c: 1007
 Show Profiler
@@ -3746,6 +3798,10 @@ Slow
 Slow But Sure (changed or not)
 缓慢但准确 (是否已更改)
 
+# inptport.c: 973
+Soft Reset
+软重启
+
 # drivers/balsente.c: 748 drivers/contra.c: 221 drivers/couple.c: 211 drivers/gijoe.c: 300 drivers/mosaic.c: 207 drivers/tmnt.c: 2021, 2103, 2349 drivers/zaxxon.c: 882 ui_text.c: 46
 Sound
 声音
@@ -3761,6 +3817,14 @@ Standard
 # ui_text.c: 166
 Start a New Cheat Search
 开始新的作弊码搜索
+
+# mame.c: 1435
+State successfully loaded.
+已载入游戏进度。
+
+# mame.c: 1361
+State successfully saved.
+已保存游戏进度。
 
 # mame.c: 1359
 State successfully saved.\nWarning: Save states are not officially supported for this game.
@@ -4066,6 +4130,10 @@ UI Select
 UI Toggle
 菜单 切换键
 
+# inptport.c: 1002
+UI Toggle Lock Scroll
+菜单 切换锁定滚动
+
 # inptport.c: 993
 UI Up
 菜单 向上键
@@ -4086,9 +4154,25 @@ US
 USA
 美国
 
+# mame.c: 1394
+Unable to load due to pending anonymous timers. See error.log for details.
+由于匿名计时器尚未停止，无法载入游戏进度。详见 error.log。
+
 # mame.c: 1312
 Unable to save due to pending anonymous timers. See error.log for details.
 由于匿名计时器尚未停止，无法保存游戏进度。详见 error.log。
+
+# mame.c: 1153
+Unable to start machine emulation
+无法启动虚拟机
+
+# mame.c: 1155
+Unable to start sound emulation
+无法启动音频模拟
+
+# mame.c: 1157
+Unable to start video emulation
+无法启动视频模拟
 
 # inptport.c: 438 
 Unknown
@@ -4238,6 +4322,10 @@ User Interface
 User Select
 用户选择
 
+# mame.c: 260
+User cancelled
+用户已取消
+
 # cheat.c: 1042, 5074 ui_text.c: 45
 Value
 值
@@ -4305,6 +4393,10 @@ Volume Down
 # inptport.c: 820
 Volume Up
 升高音量
+
+# romload.c: 398 
+WARNING: the game might not run correctly.
+警告: 游戏可能无法正确运行。
 
 # datafile.c: 2985
 WRONG COLORS       : %3d  %3d\n
@@ -4590,22 +4682,6 @@ unzip it and place it in the MAME directory
 values restored
 值已还原
 
-# datafile.c: 3151
-      AD STICK:  %4d\n
-
-
-# usrintrf.c: 3493
-(H)
-
-
-# usrintrf.c: 3493
-(V)
-
-
-# inptport.c: 441
-Alternate
-
-
 # mame.c: 840
 Attempted to malloc zero bytes (%s:%d)
 
@@ -4626,20 +4702,12 @@ Black
 Break in Debugger
 
 
-# drivers/m107.c: 296 drivers/m92.c: 1029 drivers/usgames.c: 139 
-Button 1
-
-
 # drivers/bfm_sc2.c: 1722, 1813, 1925, 2347 drivers/itech8.c: 1430 drivers/magic10.c: 153, 221 drivers/sderby.c: 144
 Collect
 
 
 # config.c: 134, 138
 Could not load controller file %s.cfg
-
-
-# ui_text.c: 226
-Decoding Graphics
 
 
 # cheat.c: 2960
@@ -4650,20 +4718,8 @@ EEPROM
 ERROR: required files are missing, the game cannot be run.
 
 
-# drivers/djmain.c: 500 
-Effect
-
-
 # mame.c: 848
 Failed to allocate %d bytes (%s:%d)
-
-
-# mamecore.h: 186
-Fatal error: %s (%s:%d)
-
-
-# mamecore.h: 183
-Fatal error: %s\nCaused by assert: %s:%d: %s
 
 
 # cheat.c: 935
@@ -4672,10 +4728,6 @@ Finish this
 
 # drivers/midzeus.c: 1228 
 General
-
-
-# cheat.c: 933
-Get
 
 
 # drivers/lvcards.c: 384
@@ -4738,10 +4790,6 @@ Lose
 MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n
 
 
-# drivers/turbo.c: 467 
-Pedal
-
-
 # cheat.c: 5070
 RHS
 
@@ -4758,18 +4806,6 @@ Select current level
 Select next level
 
 
-# inptport.c: 987
-Show Current Time
-
-
-# inptport.c: 990
-Show Input Log
-
-
-# inptport.c: 973
-Soft Reset
-
-
 # drivers/getrivia.c: 264 drivers/lvcards.c: 383
 Stand
 
@@ -4778,48 +4814,12 @@ Stand
 State
 
 
-# mame.c: 1435
-State successfully loaded.
-
-
-# mame.c: 1361
-State successfully saved.
-
-
 # drivers/bmcbowl.c: 380
 Take
 
 
-# inptport.c: 1002
-UI Toggle Lock Scroll
-
-
 # mame.c: 691
 Unable to extend malloc tracking array to %d slots
-
-
-# mame.c: 1394
-Unable to load due to pending anonymous timers. See error.log for details.
-
-
-# mame.c: 1153
-Unable to start machine emulation
-
-
-# mame.c: 1155
-Unable to start sound emulation
-
-
-# mame.c: 1157
-Unable to start video emulation
-
-
-# mame.c: 260
-User cancelled
-
-
-# romload.c: 398 
-WARNING: the game might not run correctly.
 
 
 # cheat.c: 930

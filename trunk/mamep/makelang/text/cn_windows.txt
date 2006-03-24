@@ -298,6 +298,14 @@ LED 模式 (ps/2|usb)
 Language options
 语言选项
 
+# windows/input.c: 1973
+Lightgun %d X
+光枪 %d X
+
+# windows/input.c: 1975
+Lightgun %d Y
+光枪 %d Y
+
 # windows/input.c: 2330
 Lightgun not supported in windowed mode
 窗口模式下不支持光枪
@@ -334,9 +342,21 @@ Mame 核心视频选项
 Managed texture
 纹理管理
 
+# windows/input.c: 1875
+Mouse 
+鼠标
+
+# windows/input.c: 1873
+Mouse %d 
+鼠标 %d 
+
 # windows/input.c: 1949, 1959
 Mouse %d %s
 鼠标  %d %s
+
+# windows/input.c: 1929
+Mouse %d Button %d
+鼠标 %d 按钮 %d
 
 # windows/input.c: 1951, 1961
 Mouse %s
@@ -562,6 +582,14 @@ all available info on driver in XML format
 allow MAME to give back time to the system when it's not needed
 允许 MAME 释放不必要的系统时间占用
 
+# windows/input.c: 1820
+analog
+模拟式
+
+# windows/input.c: 1274
+analog joystick
+模拟式游戏杆
+
 # windows/config.c: 260
 artwork resolution (0 for auto)
 装饰图分辨率 (0 为自动)
@@ -642,6 +670,10 @@ compare files with known MAME roms
 compare files with known MAME roms (brief)
 与已知的 MAME ROM 比较 (简明)
 
+# windows/config.c: 276
+confirm before exiting game
+退出游戏前确认
+
 # windows/config.c: 296
 create the default configuration file
 创建默认配置文件
@@ -657,6 +689,10 @@ cursor color
 # windows/wind3dfx.c: 206
 customised blitting effects preset
 自定义预置映像效果
+
+# windows/input.c: 283, 1820
+digital
+数字式
 
 # windows/fileio.c: 140
 directory for Artwork (Overlays etc.)
@@ -770,9 +806,17 @@ enable/disable debugger (only if available)
 enable/disable loading of configfiles
 启用/禁用配置文件
 
+# windows/config.c: 304
+enable/disable local language game list
+启用/禁用本地语言游戏列表
+
 # windows/config.c: 247
 enable/disable sound and sound CPUs
 启用/禁用声音及声音处理器
+
+# windows/config.c: 250
+enable/disable volume auto adjust
+启用/禁用音量自动调整
 
 # windows/video.c: 235
 enforce aspect ratio
@@ -881,6 +925,10 @@ info: trying to parse: %s\n
 # windows/wind3dfx.c: 199
 interpolation method
 插补方法
+
+# windows/input.c: 1820
+invalid
+无效
 
 # windows/fronthlp.c: 721
 is bad\n
@@ -1014,6 +1062,14 @@ sampleset %s
 samplesets
 采样文件集
 
+# windows/sound.c: 129
+save sound in wav file
+将音频保存到 Wav 文件
+
+# windows/video.c: 243
+save video in specified mng file
+将视频保存到指定的 mng 文件
+
 # windows/wind3d.c: 1650
 scale effects surface created: %s\n
 缩放效果界面已创建: %s\n
@@ -1021,6 +1077,10 @@ scale effects surface created: %s\n
 # windows/wind3dfx.c: 202
 scanline intensity
 扫描线饱和度
+
+# windows/config.c: 263
+script for debugger (only if available)
+调试工具脚本 (如果可用)
 
 # windows/config.c: 303
 select translation language
@@ -1138,6 +1198,10 @@ specify the blitting effect
 specify the blitting effects
 指定映像效果
 
+# windows/video.c: 227
+specify which screen to use
+指定要使用的屏幕
+
 # windows/video.c: 234
 start out maximized
 启动时最大化
@@ -1161,6 +1225,10 @@ switch resolutions to best fit
 # windows/video.c: 237
 syncronize only to the monitor refresh
 仅同步显示器刷新率
+
+# windows/video.c: 253
+thread priority
+线程优先级
 
 # windows/video.c: 238
 throttle speed to the game's framerate
@@ -1346,28 +1414,8 @@ Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 
 
-# windows/input.c: 1973
-Lightgun %d X
-
-
-# windows/input.c: 1975
-Lightgun %d Y
-
-
 # windows/fronthlp.c: 453
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
-
-
-# windows/input.c: 1875
-Mouse 
-
-
-# windows/input.c: 1873
-Mouse %d 
-
-
-# windows/input.c: 1929
-Mouse %d Button %d
 
 
 # windows/fileio.c: 280
@@ -1466,28 +1514,12 @@ Warning: using fall-back method for scanline blending.\n
 Windows misc options
 
 
-# windows/input.c: 1820
-analog
-
-
-# windows/input.c: 1274
-analog joystick
-
-
 # windows/config.c: 278
 automatic pause when playback is finished
 
 
-# windows/config.c: 276
-confirm before exiting game
-
-
 # windows/input.c: 277, 1277
 dial
-
-
-# windows/input.c: 283, 1820
-digital
 
 
 # windows/fileio.c: 146
@@ -1542,14 +1574,6 @@ enable automatic restore at startup and save at exit
 enable pointing stick input
 
 
-# windows/config.c: 304
-enable/disable local language game list
-
-
-# windows/config.c: 250
-enable/disable volume auto adjust
-
-
 # windows/input.c: 868
 error: invalid value for %s: %s\n
 
@@ -1598,10 +1622,6 @@ error: malloc failed in win_strip_extension\n
 error: unknown option type: %d, this should not happen!\n
 
 
-# windows/input.c: 1820
-invalid
-
-
 # windows/config.c: 273
 ips datfile name
 
@@ -1612,25 +1632,5 @@ is missing optional files\n
 
 # windows/input.c: 283
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
-
-
-# windows/sound.c: 129
-save sound in wav file
-
-
-# windows/video.c: 243
-save video in specified mng file
-
-
-# windows/config.c: 263
-script for debugger (only if available)
-
-
-# windows/video.c: 227
-specify which screen to use
-
-
-# windows/video.c: 253
-thread priority
 
 

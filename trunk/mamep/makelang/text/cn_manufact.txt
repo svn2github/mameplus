@@ -6,6 +6,10 @@
 AV JAPAN
 AV 日本
 
+# Shougi
+Alpha Denshi
+Alpha 电子工业
+
 # Magician Lord (set 1)
 Alpha Denshi Co.
 Alpha 电子工业
@@ -13,6 +17,14 @@ Alpha 电子工业
 # Otona no Mahjong (Japan 880628)
 Apple
 苹果
+
+# Ultraman (Japan)
+Bandai
+万代
+
+# Super Glob (Pac-Man hardware) German
+Bootleg
+盗版
 
 # Night Love (Japan 860705)
 Central Denshi
@@ -222,6 +234,10 @@ bootleg
 bootleg?
 盗版?
 
+# Chewing Gum
+unknown
+不明
+
 # Sea Bass Fishing (JUET 971110 V0.001)
 A wave inc.
 
@@ -318,10 +334,6 @@ Allumer
 Alpha Co
 
 
-# Shougi
-Alpha Denshi
-
-
 # Virtua Bowling (World, V101XCM)
 Alta
 
@@ -410,10 +422,6 @@ BROOKS
 Bally Midway
 
 
-# Ultraman (Japan)
-Bandai
-
-
 # Pretty Soldier Sailor Moon (95/03/22B)
 Banpresto
 
@@ -440,10 +448,6 @@ Bee-Oh
 
 # Neo No Panepon (beta)
 Blastar
-
-
-# Super Glob (Pac-Man hardware) German
-Bootleg
 
 
 # The Crystal of Kings
@@ -1754,6 +1758,10 @@ Tamtex
 Tatsumi
 
 
+# TX-1
+Tazmi
+
+
 # Hole Land
 Tecfri
 
@@ -2040,9 +2048,5 @@ dgPIX Entertainment Inc.
 
 # Puckman (Falcom?)
 hack
-
-
-# Chewing Gum
-unknown
 
 
