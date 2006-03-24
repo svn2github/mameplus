@@ -1710,6 +1710,10 @@ Tamtex
 Tatsumi
 
 
+# TX-1
+Tazmi
+
+
 # Hole Land
 Tecfri
 
