@@ -187,7 +187,8 @@ enum
 	CPU_ADSP21062,
 	CPU_DSP56156,
 	CPU_RSP,
-
+	CPU_ALPHA8201,
+	CPU_ALPHA8301,
 #ifdef MESS
 	CPU_APEXC,
 	CPU_CDP1802,
@@ -622,9 +623,9 @@ const char *cpunum_dump_state(int cpunum);
 
 #define cpunum_set_reg(cpunum, reg, val)		cpunum_set_info_int(cpunum, CPUINFO_INT_REGISTER + (reg), (val))
 
+
 /* shot name for statistics and GUI */
 const char *cputype_shortname(int cputype);
-
 
 
 /*************************************

@@ -158,7 +158,8 @@ CPUS += MC68HC11
 CPUS += ADSP21062
 CPUS += DSP56156
 CPUS += RSP
-
+CPUS += ALPHA8201
+CPUS += ALPHA8301
 
 
 #-------------------------------------------------

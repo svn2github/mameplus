@@ -196,6 +196,7 @@ struct _global_options
 	mame_file *	caption;		/* handle to file to playback caption from */
 #endif /* INP_CAPTION */
 	mame_file *	language_file;	/* handle to file for localization */
+	mame_file *	logfile;		/* handle to file for debug logging */
 
 	int		mame_debug;		/* 1 to enable debugging */
 	int		cheat;			/* 1 to enable cheating */

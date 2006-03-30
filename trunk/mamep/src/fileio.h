@@ -42,9 +42,8 @@ enum
 	FILETYPE_CTRLR,
 	FILETYPE_INI,
 	FILETYPE_COMMENT,
-#ifdef MESS
-	FILETYPE_HASH,
-#endif
+	FILETYPE_DEBUGLOG,
+	FILETYPE_HASH,	/* MESS-specific */
 #ifdef USE_IPS
 	FILETYPE_PATCH,
 	FILETYPE_IPS,
@@ -52,7 +51,7 @@ enum
 #ifdef INP_CAPTION
 	FILETYPE_INPCAPTION,
 #endif /* INP_CAPTION */
-	FILETYPE_end /* dummy last entry */
+	FILETYPE_end 	/* dummy last entry */
 };
 
 

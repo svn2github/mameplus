@@ -1906,7 +1906,7 @@ static void init_joycodes(void)
 {
 	int mouse, gun, stick, axis, button, pov;
 	char tempname[MAX_PATH];
-	char mousename[10];
+	char mousename[30];
 
 	// map mice first
 	for (mouse = 0; mouse < mouse_count; mouse++)
@@ -2009,10 +2009,14 @@ static void init_joycodes(void)
 	// map lightguns second
 	for (gun = 0; gun < lightgun_count; gun++)
 	{
+		if (win_use_raw_mouse)
+			sprintf(mousename, _WINDOWS("Lightgun on Mouse %d "), mouse + 1);
+		else
+			sprintf(mousename, _WINDOWS("Lightgun %d "), mouse + 1);
 		// add lightgun axes (fix me -- should enumerate these)
-		sprintf(tempname, _WINDOWS("Lightgun %d X"), gun + 1);
+		sprintf(tempname, _WINDOWS("%sX"), mousename);
 		add_joylist_entry(tempname, JOYCODE(gun, CODETYPE_GUNAXIS, 0), CODE_OTHER_ANALOG_ABSOLUTE);
-		sprintf(tempname, _WINDOWS("Lightgun %d Y"), gun + 1);
+		sprintf(tempname, _WINDOWS("%sY"), mousename);
 		add_joylist_entry(tempname, JOYCODE(gun, CODETYPE_GUNAXIS, 1), CODE_OTHER_ANALOG_ABSOLUTE);
 	}
 
