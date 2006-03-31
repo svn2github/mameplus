@@ -1921,11 +1921,11 @@ static void init_joycodes(void)
 			fprintf(stderr, "%s: %s\n", mousename, mouse_name[mouse]);
 
 		// add analog axes (fix me -- should enumerate these)
-		sprintf(tempname, "%s X", mousename);
+		sprintf(tempname, "%sX", mousename);
 		add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSEAXIS, 0), CODE_OTHER_ANALOG_RELATIVE);
-		sprintf(tempname, "%s Y", mousename);
+		sprintf(tempname, "%sY", mousename);
 		add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSEAXIS, 1), CODE_OTHER_ANALOG_RELATIVE);
-		sprintf(tempname, "%s Z", mousename);
+		sprintf(tempname, "%sZ", mousename);
 		add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSEAXIS, 2), CODE_OTHER_ANALOG_RELATIVE);
 
 #ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
@@ -2014,9 +2014,9 @@ static void init_joycodes(void)
 		else
 			sprintf(mousename, _WINDOWS("Lightgun %d "), mouse + 1);
 		// add lightgun axes (fix me -- should enumerate these)
-		sprintf(tempname, _WINDOWS("%sX"), mousename);
+		sprintf(tempname, "%sX", mousename);
 		add_joylist_entry(tempname, JOYCODE(gun, CODETYPE_GUNAXIS, 0), CODE_OTHER_ANALOG_ABSOLUTE);
-		sprintf(tempname, _WINDOWS("%sY"), mousename);
+		sprintf(tempname, "%sY", mousename);
 		add_joylist_entry(tempname, JOYCODE(gun, CODETYPE_GUNAXIS, 1), CODE_OTHER_ANALOG_ABSOLUTE);
 	}
 
@@ -2047,7 +2047,7 @@ static void init_joycodes(void)
 				// add analog axis
 				if (!joystick_digital[stick][axis])
 				{
-					sprintf(tempname, "J%d %s", stick + 1, instance.tszName);
+					sprintf(tempname, _WINDOWS("J%d %s"), stick + 1, instance.tszName);
 					add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_JOYAXIS, axis), CODE_OTHER_ANALOG_ABSOLUTE);
 				}
 
@@ -2056,7 +2056,7 @@ static void init_joycodes(void)
 				add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_AXIS_NEG, axis), CODE_OTHER_DIGITAL);
 
 				// add positive value
-				sprintf(tempname, "J%d %s +", stick + 1, instance.tszName);
+				sprintf(tempname, _WINDOWS("J%d %s +"), stick + 1, instance.tszName);
 				add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_AXIS_POS, axis), CODE_OTHER_DIGITAL);
 
 				// get the axis range while we're here
@@ -2080,7 +2080,7 @@ static void init_joycodes(void)
 			if (result == DI_OK)
 			{
 				// make the name for this item
-				sprintf(tempname, "J%d %s", stick + 1, instance.tszName);
+				sprintf(tempname, _WINDOWS("J%d %s"), stick + 1, instance.tszName);
 				add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_BUTTON, button), CODE_OTHER_DIGITAL);
 			}
 		}
