@@ -210,13 +210,15 @@ mame_file *mame_fopen_error(const char *gamename, const char *filename, int file
 		case FILETYPE_CONFIG:
 		case FILETYPE_INPUTLOG:
 		case FILETYPE_COMMENT:
-		case FILETYPE_LANGUAGE:
-		case FILETYPE_CTRLR:
-		case FILETYPE_HIGHSCORE_DB:
 		case FILETYPE_INI:
 		case FILETYPE_DEBUGLOG:
 		case FILETYPE_HASH:		/* MESS-specific */
 			return generic_fopen(filetype, NULL, gamename, 0, openforwrite ? FILEFLAG_OPENWRITE : FILEFLAG_OPENREAD, error);
+
+		case FILETYPE_LANGUAGE:
+		case FILETYPE_CTRLR:
+		case FILETYPE_HIGHSCORE_DB:
+			return generic_fopen(filetype, NULL, filename, 0, openforwrite ? FILEFLAG_OPENWRITE : FILEFLAG_OPENREAD, error);
 
 		/* generic multi-directory files */
 		case FILETYPE_SAMPLE:
