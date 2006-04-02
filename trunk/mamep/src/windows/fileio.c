@@ -192,8 +192,6 @@ static int create_path(TCHAR *path, int has_filename)
 	TCHAR *sep = find_reverse_path_sep(path);
 	DWORD attributes;
 
-printf("create_path(%s)\n", path);
-
 	/* if there's still a separator, and it's not the root, nuke it and recurse */
 	if (sep && sep > path && !is_pathsep(sep[-1]))
 	{
@@ -295,7 +293,6 @@ static char *copy_and_expand_variables(const char *path, int len)
 }
 
 
-
 //============================================================
 //	request_decompose_rompath
 //============================================================
@@ -374,7 +371,7 @@ static void expand_pathlist(pathdata *list)
 
 
 //============================================================
-//	get_path_for_filetype
+//  get_path_for_filetype
 //============================================================
 
 void free_pathlists(void)
