@@ -8,19 +8,19 @@
 
 # ui/properties.c: 945
 %d x %d (H) %f Hz (%d:%d) (%d colors)
-%d x %d (水平) %f Hz (%d:%d) (%d 色)
+%d x %d (H) %f Hz (%d:%d) (%d 色)
 
 # ui/properties.c: 933
 %d x %d (V) %f Hz (%d:%d) (%d colors)
-%d x %d (垂直) %f Hz (%d:%d) (%d 色)
+%d x %d (V) %f Hz (%d:%d) (%d 色)
 
 # ui/treeview.c: 1225
 %dx%d (H)
-%dx%d (水平)
+%dx%d (H)
 
 # ui/treeview.c: 1219
 %dx%d (V)
-%dx%d (垂直)
+%dx%d (V)
 
 # ui/properties.c: 4149
 %li bit
@@ -2520,19 +2520,19 @@ Vector
 
 # ui/treeview.c: 1194, 1195
 Vector (H)
-矢量 (水平)
+矢量 (H)
 
 # ui/properties.c: 920
 Vector (H) %f Hz (%d:%d) (%d colors)
-矢量 (水平) %f Hz (%d:%d) (%d 色)
+矢量 (H) %f Hz (%d:%d) (%d 色)
 
 # ui/treeview.c: 1191, 1192
 Vector (V)
-矢量 (垂直)
+矢量 (V)
 
 # ui/properties.c: 910
 Vector (V) %f Hz (%d:%d) (%d colors)
-矢量 (垂直) %f Hz (%d:%d) (%d 色)
+矢量 (V) %f Hz (%d:%d) (%d 色)
 
 # ui/options.c: 4479
 Version Mismatch

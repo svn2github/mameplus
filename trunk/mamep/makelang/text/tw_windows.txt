@@ -1,24 +1,24 @@
-# windows/input.c: 950
+# windows/input.c: 953
          all -- all axes on all joysticks are digital\n
          all -- 所有搖桿上的軸均是數位裝置\n
 
-# windows/input.c: 956
+# windows/input.c: 959
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
          j1,j2a2 -- 搖桿 1 上的所有軸和搖桿 2 上的軸 2 是數位裝置\n
 
-# windows/input.c: 954
+# windows/input.c: 957
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
          j1a5a6 -- 搖桿 1 上的軸 5 和軸 6 是數位裝置\n
 
-# windows/input.c: 951
+# windows/input.c: 954
          j<N> -- all axes on joystick <N> are digital\n
          j<N> -- 搖桿 <N> 上的所有軸是數位裝置\n
 
-# windows/input.c: 952
+# windows/input.c: 955
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
          j<N>a<M> -- 搖桿 <N> 上的軸 <M> 是數位裝置\n
 
-# windows/input.c: 949
+# windows/input.c: 952
          none -- no axes on any joysticks are digital\n
          none -- 沒有任何搖桿上的軸是數位裝置\n
 
@@ -34,23 +34,23 @@
         MAME -showusage    for a brief list of options\n
         MAME -showusage    列出選項的簡短描述\n
 
-# windows/input.c: 953
+# windows/input.c: 956
     Multiple axes can be specified for one joystick:\n
     一個搖桿能夠指定多個軸:\n
 
-# windows/input.c: 955
+# windows/input.c: 958
     Multiple joysticks can be specified separated by commas:\n
     多個搖桿能夠以逗號分開指定:\n
 
-# windows/rc.c: 328, 395
+# windows/rc.c: 326, 393
    ignoring line\n
    忽略此行\n
 
-# windows/input.c: 2001
+# windows/input.c: 2045
   Axis %d (%s)%s\n
   軸 %d (%s)%s\n
 
-# windows/config.c: 546
+# windows/config.c: 547
  %s running parameters
  %s 執行參數
 
@@ -58,13 +58,17 @@
  (%.2lfMB video memory available)
  (可用的視訊記憶體 %.2lfMB)
 
-# windows/input.c: 2001
+# windows/input.c: 2045
  - digital
  - 數位
 
 # windows/fronthlp.c: 758
 %d %s found, %d were OK.\n
 %d %s 找到，%d 是正確的。\n
+
+# windows/input.c: 1976
+%s Button %d
+%s 按鈕 %d
 
 # windows/wind3d.c: 1635
 %s surface created: %s (%s)\n
@@ -78,15 +82,15 @@
 (dd) stretch video using the hardware
 (dd) 使用硬體延展視訊
 
-# windows/input.c: 989
+# windows/input.c: 992
 Autoenabling joysticks due to presence of a %s\n
 自動啟用搖桿，因為存在一個%s\n
 
-# windows/input.c: 997
+# windows/input.c: 1000
 Autoenabling lightguns due to presence of a %s\n
 自動啟用光線槍，因為存在一個%s\n
 
-# windows/input.c: 981
+# windows/input.c: 984
 Autoenabling mice due to presence of a %s\n
 自動啟用滑鼠，因為存在一個%s\n
 
@@ -174,7 +178,7 @@ Error creating blit surface: %08x\n
 Error creating clipper: %08x\n
 建立 clipper 時發生錯誤: %08x\n
 
-# windows/rc.c: 957
+# windows/rc.c: 955
 Error creating dir %s
 建立目錄 %s 時發生錯誤
 
@@ -262,7 +266,7 @@ Error locking stream buffer: %08x\n
 Error on rc creation
 建立 rc 發生錯誤
 
-# windows/rc.c: 965
+# windows/rc.c: 963
 Error opening %s
 開啟 %s 時發生錯誤
 
@@ -298,10 +302,6 @@ Error setting mode: %08x\n
 Error setting primary format: %08x\n
 設定主要格式時發生錯誤: %08x\n
 
-# windows/config.c: 507
-Error while parsing cmdline
-分析指令時發生錯誤
-
 # windows/wind3d.c: 262
 Error: 3D hardware can't render scanlines (no support for multi-texturing)\n
 錯誤: 3D 硬體無法演算描繪掃描線 (不支援多重材質)\n
@@ -318,11 +318,11 @@ Error: RGB effects (multiply mode) not supported\n
 Error: required texture size too large (max: %ix%i, need %ix%i)\n
 錯誤: 必要的材質大小太大 (最大: %ix%i, 需要 %ix%i)\n
 
-# windows/config.c: 567
+# windows/config.c: 576
 Failed to open file for playback
 無法開啟檔案來播放
 
-# windows/config.c: 669
+# windows/config.c: 678
 Failed to open file for recording
 無法開啟檔案來記錄
 
@@ -334,7 +334,7 @@ For usage instructions, please consult the file windows.txt\n
 Frontend Related
 Frontend 相關
 
-# windows/window.c: 745
+# windows/window.c: 783
 Full Screen\tAlt+Enter
 全螢幕\tAlt+Enter
 
@@ -350,31 +350,31 @@ Hardware stretching supported\n
 Initialising DirectDraw & Direct3D 7 blitter
 正在初始化 DirectDraw & Direct3D 7 blitter
 
-# windows/input.c: 249
+# windows/input.c: 252
 Input device options
 輸入裝置選項
 
-# windows/input.c: 2060
+# windows/input.c: 2104
 J%d %s D
 J%d %s 下
 
-# windows/input.c: 2064
+# windows/input.c: 2108
 J%d %s L
 J%d %s 左
 
-# windows/input.c: 2068
+# windows/input.c: 2112
 J%d %s R
 J%d %s 右
 
-# windows/input.c: 2056
+# windows/input.c: 2100
 J%d %s U
 J%d %s 上
 
-# windows/input.c: 1823
+# windows/input.c: 1865
 Joystick %d axis %d is now %s\n
 搖桿 %d 軸 %d 目前是%s\n
 
-# windows/input.c: 1984
+# windows/input.c: 2028
 Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 搖桿 %d: %s (%d 軸, %d 按鈕, %d POV)\n
 
@@ -382,11 +382,11 @@ Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 KNOWN     %s\n
 已知的    %s\n
 
-# windows/input.c: 1338
+# windows/input.c: 1364
 Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 鍵盤=%d  滑鼠=%d  搖桿=%d 光線槍=%d\n
 
-# windows/input.c: 257
+# windows/input.c: 260
 LED mode (ps/2|usb)
 LED 模式 (ps/2|usb)
 
@@ -394,17 +394,17 @@ LED 模式 (ps/2|usb)
 Language options
 語言選項
 
-# windows/input.c: 1973
-Lightgun %d X
-光線槍 %d X
+# windows/input.c: 2015
+Lightgun %d 
+光線槍 %d 
 
-# windows/input.c: 1975
-Lightgun %d Y
-光線槍 %d Y
-
-# windows/input.c: 2330
+# windows/input.c: 2387
 Lightgun not supported in windowed mode
 在視窗模式中不支援光線槍
+
+# windows/input.c: 2013
+Lightgun on Mouse %d 
+光線槍在滑鼠 %d 
 
 # windows/fronthlp.c: 453
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
@@ -418,7 +418,7 @@ MMX not supported\n
 MMX supported\n
 已支援 MMX\n
 
-# windows/config.c: 254
+# windows/config.c: 253
 Mame CORE misc options
 MAME 核心雜項選項
 
@@ -426,15 +426,15 @@ MAME 核心雜項選項
 Mame CORE palette options
 MAME 核心色盤選項
 
-# windows/config.c: 244
+# windows/config.c: 243
 Mame CORE sound options
 MAME 核心聲音選項
 
-# windows/config.c: 236
+# windows/config.c: 235
 Mame CORE vector game options
 MAME 核心向量遊戲選項
 
-# windows/config.c: 223
+# windows/config.c: 222
 Mame CORE video options
 MAME 核心視訊選項
 
@@ -442,25 +442,13 @@ MAME 核心視訊選項
 Managed texture
 managed texture
 
-# windows/input.c: 1875
+# windows/input.c: 1917
 Mouse 
 滑鼠 
 
-# windows/input.c: 1873
+# windows/input.c: 1915
 Mouse %d 
 滑鼠 %d 
-
-# windows/input.c: 1949, 1959
-Mouse %d %s
-滑鼠 %d %s
-
-# windows/input.c: 1929
-Mouse %d Button %d
-滑鼠 %d 按鈕 %d
-
-# windows/input.c: 1951, 1961
-Mouse %s
-滑鼠 %s
 
 # windows/fronthlp.c: 236
 NO MATCH\n
@@ -518,7 +506,7 @@ Parsing %s : N/A\n
 Parsing %s : OK\n
 正在分析 %s : OK\n
 
-# windows/config.c: 591
+# windows/config.c: 600
 Playing back previously recorded game %s (%s) [press return]\n
 按一下 [Enter] 播放先前已記錄的遊戲 %s (%s)\n
 
@@ -586,19 +574,19 @@ Screen %s not found\n
 Sound buffer: overflows=%d underflows=%d\n
 聲音緩衝: overflows=%d underflows=%d\n
 
-# windows/input.c: 1908
+# windows/input.c: 1955
 Stick %d %s +
 控制桿 %d %s +
 
-# windows/input.c: 1901
+# windows/input.c: 1948
 Stick %d %s -
 控制桿 %d %s -
 
-# windows/input.c: 1910
+# windows/input.c: 1957
 Stick %s +
 控制桿 %s +
 
-# windows/input.c: 1903
+# windows/input.c: 1950
 Stick %s -
 控制桿 %s -
 
@@ -606,7 +594,7 @@ Stick %s -
 Texture
 材質
 
-# windows/input.c: 2481
+# windows/input.c: 2534
 Toggle fullscreen
 切換全螢幕
 
@@ -634,7 +622,7 @@ Unable to blt scale_surface to texture_surface: %08x\n
 Unable to blt target_surface: %08x\n
 無法以位元區塊傳送 target_surface: %08x\n
 
-# windows/input.c: 2749, 2756
+# windows/input.c: 2802, 2809
 Unable to close the keyboard device. (error %d)\n
 無法關閉鍵盤裝置。(錯誤 %d)\n
 
@@ -650,7 +638,7 @@ Unable to lock blit_surface: %08x\n
 Unable to lock target_surface: %08x\n
 無法鎖定 target_surface: %08x\n
 
-# windows/input.c: 2700, 2710
+# windows/input.c: 2753, 2763
 Unable to open the keyboard device. (error %d)\n
 無法開啟鍵盤裝置。(錯誤 %d)\n
 
@@ -666,7 +654,7 @@ Unable to render to preprocess texture: %08x\n
 Usage:  MAME gamename [options]\n\n
 用法:   MAME 遊戲名稱 [選項]\n\n
 
-# windows/config.c: 553
+# windows/config.c: 554
 Usage: %s [game] [options]\nOptions:\n
 用法: %s [遊戲] [選項]\n選項:\n
 
@@ -678,7 +666,7 @@ Using %s pre-scale effect\n
 Using %s scale effect\n
 正在使用 %s 縮放效果\n
 
-# windows/input.c: 1266
+# windows/input.c: 1292
 Using DirectInput %d\n
 使用 DirectInput %d\n
 
@@ -754,11 +742,11 @@ Windows 版本視訊選項
 \"%8s\" not supported!\n
 \"%8s\" 未支援!\n
 
-# windows/input.c: 1340
+# windows/input.c: 1366
 \"%s\" controller support enabled\n
 已啟用 \"%s\" 控制器支援\n
 
-# windows/config.c: 609
+# windows/config.c: 618
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" 約略符合下列支援的遊戲\n(按符合程度排序):\n\n
 
@@ -766,7 +754,7 @@ Windows 版本視訊選項
 additional customised settings (undocumented)
 附加的自訂設定 (無文件記載)
 
-# windows/config.c: 233
+# windows/config.c: 232
 additional pause brightness
 附加的暫停亮度
 
@@ -778,11 +766,11 @@ all available info on driver in XML format
 allow MAME to give back time to the system when it's not needed
 允許\在 MAME 不需要時就釋放佔用中的系統資源
 
-# windows/input.c: 1820
+# windows/input.c: 1862
 analog
 類比
 
-# windows/input.c: 1274
+# windows/input.c: 1300
 analog joystick
 類比搖桿
 
@@ -798,15 +786,15 @@ attempt to match the game's refresh rate
 automatic pause when playback is finished
 輸入檔播放結束時自動暫停
 
-# windows/config.c: 228
+# windows/config.c: 227
 automatically rotate screen anti-clockwise for vertical games
 自動逆時針旋轉垂直畫面的遊戲
 
-# windows/config.c: 227
+# windows/config.c: 226
 automatically rotate screen clockwise for vertical games
 自動順時針旋轉垂直畫面的遊戲
 
-# windows/config.c: 232
+# windows/config.c: 231
 brightness correction
 亮度修正
 
@@ -890,11 +878,11 @@ cursor color
 customised blitting effects preset
 預先自訂 blitting 效果
 
-# windows/input.c: 277, 1277
+# windows/input.c: 280, 1303
 dial
 方向盤
 
-# windows/input.c: 283, 1820
+# windows/input.c: 286, 1862
 digital
 數位
 
@@ -962,7 +950,7 @@ display additional diagnostic information
 display running parameters in rc style
 以設定檔樣式顯示執行參數
 
-# windows/config.c: 224
+# windows/config.c: 223
 do not apply rotation
 不套用旋轉
 
@@ -970,11 +958,11 @@ do not apply rotation
 double
 雙重
 
-# windows/config.c: 237
+# windows/config.c: 236
 draw antialiased vectors
 描繪反鋸齒向量圖形
 
-# windows/config.c: 238
+# windows/config.c: 237
 draw translucent vectors
 描繪半透明向量圖形
 
@@ -986,31 +974,31 @@ driver sourcefile
 emulate win_old_scanlines
 模擬視窗舊式掃描線
 
-# windows/input.c: 274
+# windows/input.c: 277
 enable (keyboard|mouse|joystick) if a paddle control is present
 啟用 (keyboard|mouse|joystick) 如果操縱桿控制存在
 
-# windows/input.c: 277
+# windows/input.c: 280
 enable (keyboard|mouse|joystick|lightgun) if a dial control is present
 啟用 (keyboard|mouse|joystick|lightgun) 如果方向盤控制存在
 
-# windows/input.c: 279
+# windows/input.c: 282
 enable (keyboard|mouse|joystick|lightgun) if a lightgun control is present
 啟用 (keyboard|mouse|joystick|lightgun) 如果光線槍控制存在
 
-# windows/input.c: 281
+# windows/input.c: 284
 enable (keyboard|mouse|joystick|lightgun) if a mouse control is present
 啟用 (keyboard|mouse|joystick|lightgun) 如果滑鼠控制存在
 
-# windows/input.c: 276
+# windows/input.c: 279
 enable (keyboard|mouse|joystick|lightgun) if a pedal control is present
 啟用 (keyboard|mouse|joystick|lightgun) 如果踏板控制存在
 
-# windows/input.c: 278
+# windows/input.c: 281
 enable (keyboard|mouse|joystick|lightgun) if a trackball control is present
 啟用 (keyboard|mouse|joystick|lightgun) 如果軌跡球控制存在
 
-# windows/input.c: 275
+# windows/input.c: 278
 enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is present
 啟用 (keyboard|mouse|joystick|lightgun) 如果類比搖桿控制存在
 
@@ -1018,27 +1006,27 @@ enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is prese
 enable automatic restore at startup and save at exit
 啟用自動在啟動時回存與結束時儲存
 
-# windows/input.c: 253
+# windows/input.c: 256
 enable dual lightgun input
 啟用雙光線槍輸入
 
-# windows/input.c: 251
+# windows/input.c: 254
 enable joystick input
 啟用搖桿輸入
 
-# windows/input.c: 256
+# windows/input.c: 259
 enable keyboard LED emulation
 啟用鍵盤 LED 模擬
 
-# windows/input.c: 252
+# windows/input.c: 255
 enable lightgun input
 啟用光線槍輸入
 
-# windows/input.c: 250
+# windows/input.c: 253
 enable mouse input
 啟用滑鼠輸入
 
-# windows/input.c: 262
+# windows/input.c: 265
 enable pointing stick input
 啟用指標控制桿輸入
 
@@ -1046,7 +1034,7 @@ enable pointing stick input
 enable rotation of effects for rotated games
 啟用旋轉遊戲畫面時也旋轉所有效果
 
-# windows/input.c: 255
+# windows/input.c: 258
 enable steadykey support
 啟用多鍵同時輸入支援
 
@@ -1066,11 +1054,11 @@ enable/disable loading of configfiles
 enable/disable local language game list
 啟用/停用 當地語言遊戲清單
 
-# windows/config.c: 247
+# windows/config.c: 246
 enable/disable sound and sound CPUs
 啟用/停用 聲音與聲音 CPU
 
-# windows/config.c: 250
+# windows/config.c: 249
 enable/disable volume auto adjust
 啟用/停用 音量自動調整
 
@@ -1078,31 +1066,31 @@ enable/disable volume auto adjust
 enforce aspect ratio
 強制長寬比例
 
-# windows/rc.c: 719, 822, 834
+# windows/rc.c: 717, 820, 832
 error invalid value for %s: %s\n
 錯誤: 無效的 %s 值: %s\n
 
-# windows/rc.c: 315, 382
+# windows/rc.c: 313, 380
 error: %s requires an argument, on line %d of file: %s\n
 錯誤: %s 需要引數，在第 %d 行檔案: %s\n
 
-# windows/rc.c: 571
+# windows/rc.c: 569
 error: %s requires an argument\n
 錯誤: %s 需要引數\n
 
-# windows/rc.c: 848
+# windows/rc.c: 846
 error: couldn't open file: %s\n
 錯誤: 無法開啟檔案: %s\n
 
-# windows/config.c: 860
+# windows/config.c: 869
 error: duplicate gamename: %s\n
 錯誤: 重複的遊戲名稱: %s\n
 
-# windows/rc.c: 358
+# windows/rc.c: 356
 error: garbage \"%s\" on line %d of file: %s\n
 錯誤: 無用語法 \"%s\" 在第 %d 行檔案: %s\n
 
-# windows/input.c: 868
+# windows/input.c: 871
 error: invalid value for %s: %s\n
 錯誤: 無效的 %s 值: %s\n
 
@@ -1118,7 +1106,7 @@ error: invalid value for cleanstretch: %s\n
 error: invalid value for d3dprescale: %s\n
 錯誤: 無效的 d3dprescale 值: %s\n
 
-# windows/input.c: 948
+# windows/input.c: 951
 error: invalid value for digital: %s -- valid values are:\n
 錯誤: 無效的 digital 值: %s -- 有效的值為:\n
 
@@ -1130,11 +1118,11 @@ error: invalid value for effect: %s\n
 error: invalid value for frames_to_run: %s\n
 錯誤: 無效的 frames_to_run 值: %s\n
 
-# windows/config.c: 188
+# windows/config.c: 187
 error: invalid value for language: %s\nUse %s\n
 錯誤: 無效的 language 值: %s\n使用 %s\n
 
-# windows/input.c: 843
+# windows/input.c: 846
 error: invalid value for led_mode: %s\n
 錯誤: 無效的 led_mode 值: %s\n
 
@@ -1146,43 +1134,43 @@ error: invalid value for palette: %s\n
 error: invalid value for resolution: %s\n
 錯誤: 無效的 resolution 值: %s\n
 
-# windows/rc.c: 806
+# windows/rc.c: 804
 error: malloc failed for %s\n
 錯誤: %s 記憶體分配失敗\n
 
-# windows/rc.c: 161
+# windows/rc.c: 159
 error: malloc failed for: struct rc_struct\n
 錯誤: 記憶體分配失敗: struct rc_struct\n
 
-# windows/rc.c: 604
+# windows/rc.c: 602
 error: malloc failed in rc_parse_commadline\n
 錯誤: rc_parse_commadline 記憶體分配失敗\n
 
-# windows/rc.c: 201
+# windows/rc.c: 199
 error: malloc failed in rc_register_option\n
 錯誤: rc_register_option 記憶體分配失敗\n
 
-# windows/config.c: 981
+# windows/config.c: 965
 error: malloc failed in win_dirname\n
 錯誤: win_dirname 記憶體分配失敗\n
 
-# windows/config.c: 1021
+# windows/config.c: 1005
 error: malloc failed in win_strip_extension\n
 錯誤: win_strip_extension 記憶體分配失敗\n
 
-# windows/rc.c: 321, 388
+# windows/rc.c: 319, 386
 error: trailing garbage: \"%s\" on line: %d of file: %s\n
 錯誤: 正在追蹤無用語法: \"%s\" 在第 %d 行檔案: %s\n
 
-# windows/rc.c: 309, 376
+# windows/rc.c: 307, 374
 error: unknown option %s, on line %d of file: %s\n
 錯誤: 未知的選項 %s，在第 %d 行檔案: %s\n
 
-# windows/rc.c: 587, 739, 761, 785
+# windows/rc.c: 585, 737, 759, 783
 error: unknown option %s\n
 錯誤: 未知的選項 %s\n
 
-# windows/rc.c: 861
+# windows/rc.c: 859
 error: unknown option type: %d, this should not happen!\n
 錯誤: 未知的選項類型: %d, 這個選項不應該出現!\n
 
@@ -1190,11 +1178,11 @@ error: unknown option type: %d, this should not happen!\n
 feedback strength
 反應強度
 
-# windows/config.c: 230
+# windows/config.c: 229
 flip screen left-right
 左右翻轉畫面
 
-# windows/config.c: 229
+# windows/config.c: 228
 flip screen upside-down
 上下翻轉畫面
 
@@ -1214,7 +1202,7 @@ font special color
 force specific zoom level
 強制指定縮放倍數
 
-# windows/config.c: 231
+# windows/config.c: 230
 gamma correction
 Gamma 修正
 
@@ -1222,7 +1210,7 @@ Gamma 修正
 generate error.log
 產生 error.log 檔
 
-# windows/rc.c: 253
+# windows/rc.c: 251
 info: trying to parse: %s\n
 資訊: 正在嘗試分析: %s\n
 
@@ -1230,7 +1218,7 @@ info: trying to parse: %s\n
 interpolation method
 插補方式
 
-# windows/input.c: 1820
+# windows/input.c: 1862
 invalid
 無效的
 
@@ -1254,7 +1242,7 @@ is good\n
 is missing optional files\n
 是遺失的可省略檔案\n
 
-# windows/input.c: 252, 864, 1275
+# windows/input.c: 255, 867, 1301
 lightgun
 光線槍
 
@@ -1270,19 +1258,19 @@ list required roms for a driver
 loading %-12s\r
 正在載入 %-12s\r
 
-# windows/input.c: 283
+# windows/input.c: 286
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 標示某些搖桿或軸為數位裝置 (none|all|j<N>*|j<N>a<M>[,...])
 
-# windows/input.c: 258
+# windows/input.c: 261
 minimal analog value for digital input
 數位輸入的最小類比值
 
-# windows/rc.c: 660, 697
+# windows/rc.c: 658, 695
 no help available
 沒有說明
 
-# windows/input.c: 254
+# windows/input.c: 257
 offscreen shots reload
 射擊畫面外區域即重新載入
 
@@ -1290,7 +1278,7 @@ offscreen shots reload
 output error log to debugger
 輸出錯誤記錄到除錯程式
 
-# windows/input.c: 274, 1273
+# windows/input.c: 277, 1299
 paddle
 操縱桿
 
@@ -1306,7 +1294,7 @@ ROM 集合的路徑
 path to samplesets
 樣本檔集合的路徑
 
-# windows/input.c: 276, 1276
+# windows/input.c: 279, 1302
 pedal
 踏板
 
@@ -1314,7 +1302,7 @@ pedal
 playback an input file
 播放輸入檔
 
-# windows/input.c: 259
+# windows/input.c: 262
 preconfigure for specified controller
 特定控制器的預先設定
 
@@ -1350,11 +1338,11 @@ ROM 集合 %s
 romsets
 個 ROM 集合
 
-# windows/config.c: 226
+# windows/config.c: 225
 rotate screen anti-clockwise
 逆時針旋轉畫面
 
-# windows/config.c: 225
+# windows/config.c: 224
 rotate screen clockwise
 順時針旋轉畫面
 
@@ -1362,7 +1350,7 @@ rotate screen clockwise
 run in a window/run on full screen
 以視窗模式執行/以全螢幕執行
 
-# windows/config.c: 618
+# windows/config.c: 627
 running %s (%s) [press return]
 按一下 [Enter] 執行 %s (%s)
 
@@ -1406,11 +1394,11 @@ select translation language
 set audio latency (increase to reduce glitches)
 設定音訊等待時間 (增加值可減少破損)
 
-# windows/config.c: 239
+# windows/config.c: 238
 set beam width in vector games
 設定向量遊戲光束寬度
 
-# windows/config.c: 240
+# windows/config.c: 239
 set flickering in vector games
 設定向量遊戲閃爍度
 
@@ -1418,39 +1406,39 @@ set flickering in vector games
 set frameskip explicitly (autoframeskip needs to be off)
 明確設定畫面省略 (需關閉自動畫面省略)
 
-# windows/config.c: 241
+# windows/config.c: 240
 set intensity in vector games
 設定向量遊戲飽和度
 
-# windows/input.c: 265
+# windows/input.c: 268
 set joystick ID (Player1)
 設定搖桿 ID (玩家 1)
 
-# windows/input.c: 266
+# windows/input.c: 269
 set joystick ID (Player2)
 設定搖桿 ID (玩家 2)
 
-# windows/input.c: 267
+# windows/input.c: 270
 set joystick ID (Player3)
 設定搖桿 ID (玩家 3)
 
-# windows/input.c: 268
+# windows/input.c: 271
 set joystick ID (Player4)
 設定搖桿 ID (玩家 4)
 
-# windows/input.c: 269
+# windows/input.c: 272
 set joystick ID (Player5)
 設定搖桿 ID (玩家 5)
 
-# windows/input.c: 270
+# windows/input.c: 273
 set joystick ID (Player6)
 設定搖桿 ID (玩家 6)
 
-# windows/input.c: 271
+# windows/input.c: 274
 set joystick ID (Player7)
 設定搖桿 ID (玩家 7)
 
-# windows/input.c: 272
+# windows/input.c: 275
 set joystick ID (Player8)
 設定搖桿 ID (玩家 8)
 
@@ -1458,7 +1446,7 @@ set joystick ID (Player8)
 set resolution
 設定解析度
 
-# windows/config.c: 245
+# windows/config.c: 244
 set samplerate
 設定取樣頻率
 
@@ -1498,7 +1486,7 @@ skip displaying the game info screen
 skip frames to speed up emulation
 省略畫面加速模擬
 
-# windows/config.c: 247 
+# windows/config.c: 246 
 sound
 聲音
 
@@ -1550,7 +1538,7 @@ thread priority
 throttle speed to the game's framerate
 限制遊戲畫面更新率的速度
 
-# windows/input.c: 278, 1278
+# windows/input.c: 281, 1304
 trackball
 軌跡球
 
@@ -1566,7 +1554,7 @@ triple
 triple buffering (only if fullscreen)
 三重緩衝 (僅適用全螢幕)
 
-# windows/config.c: 168
+# windows/config.c: 167
 unable to open log file\n
 無法開啟記錄檔\n
 
@@ -1598,7 +1586,7 @@ use bezel artwork
 use overlay artwork
 使用覆疊 Artwork 圖片
 
-# windows/config.c: 246
+# windows/config.c: 245
 use samples
 使用樣本檔
 
@@ -1606,7 +1594,7 @@ use samples
 use transparent background for UI text
 使用半透明的設定選單
 
-# windows/config.c: 248
+# windows/config.c: 247
 volume (range [-32,0])
 音量 (範圍 [-32,0])
 
@@ -1633,4 +1621,16 @@ window frame color (medium)
 # windows/fronthlp.c: 76
 year, manufacturer and full name
 年代，製造廠商和完整名稱
+
+# windows/input.c: 2050, 2083
+J%d %s
+
+
+# windows/input.c: 2059
+J%d %s +
+
+
+# windows/input.c: 2055
+J%d %s -
+
 

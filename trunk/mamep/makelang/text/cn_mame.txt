@@ -252,11 +252,11 @@
 
 # usrintrf.c: 3493
 (H)
-(Ë®Æ½)
+(H)
 
 # usrintrf.c: 3493
 (V)
-(´¹Ö±)
+(V)
 
 # ui_text.c: 149
 (locked)

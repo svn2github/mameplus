@@ -870,7 +870,7 @@ Jeil Computer System
 Jetsoft
 
 
-# Defender (bootleg)
+# Star Fighter
 Jeutel
 
 
@@ -1302,7 +1302,7 @@ Playmore
 Playtronic SRL
 
 
-# News
+# News (set 1)
 Poby
 
 
@@ -1908,6 +1908,10 @@ Volt Electronics
 
 # Ashita no Joe (Japan)
 WAVE
+
+
+# Sea Hunter Pengiun
+WSAC Systems?
 
 
 # Shienryu (JUET 961226 V1.000)
