@@ -3965,7 +3965,7 @@ static void D3DScanlinesSelectionChange(HWND hwnd)
 		snprintf(buffer,sizeof(buffer),_UI("Disabled"));
 	else
 		snprintf(buffer,sizeof(buffer),"%i",value);
-	Static_SetTextA(GetDlgItem(hwnd,IDC_D3D_SCANLINES_DISP),buffer);
+	Static_SetText(GetDlgItem(hwnd,IDC_D3D_SCANLINES_DISP), _Unicode(buffer));
 
 }
 
@@ -3982,7 +3982,7 @@ static void D3DFeedbackSelectionChange(HWND hwnd)
 		snprintf(buffer,sizeof(buffer),_UI("Disabled"));
 	else
 		snprintf(buffer,sizeof(buffer),"%i",value);
-	Static_SetTextA(GetDlgItem(hwnd,IDC_D3D_FEEDBACK_DISP),buffer);
+	Static_SetText(GetDlgItem(hwnd,IDC_D3D_FEEDBACK_DISP), _Unicode(buffer));
 
 }
 
