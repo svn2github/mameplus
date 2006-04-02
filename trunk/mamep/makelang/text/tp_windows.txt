@@ -1606,6 +1606,10 @@ use samples
 use transparent background for UI text
 
 
+# windows/config.c: 254
+validate all game drivers
+
+
 # windows/config.c: 247
 volume (range [-32,0])
 

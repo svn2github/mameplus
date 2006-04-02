@@ -1594,6 +1594,10 @@ use samples
 use transparent background for UI text
 使用半透明的設定選單
 
+# windows/config.c: 254
+validate all game drivers
+查驗全部遊戲驅動
+
 # windows/config.c: 247
 volume (range [-32,0])
 音量 (範圍 [-32,0])
