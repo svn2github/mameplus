@@ -1030,6 +1030,7 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -ctrlr \"%s\"",              pOpts->ctrlr);
 	if (strlen(pOpts->digital) > 0)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -digital \"%s\"",            pOpts->digital);
+
 	/* controller mapping*/
 	if (strlen(pOpts->paddle) > 0)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -paddle \"%s\"",             pOpts->paddle);
@@ -1076,6 +1077,7 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -flicker %f",                pOpts->f_flicker);
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -intensity %f",              pOpts->f_intensity);
 	}
+
 	/* sound */
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -sr %d",                     pOpts->samplerate);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%ssamples",                 pOpts->use_samples     ? "" : "no");
@@ -1085,9 +1087,9 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%svolume_adjust",           pOpts->use_volume_adjust ? "" : "no");
 #endif /* USE_VOLUME_AUTO_ADJUST */
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -audio_latency %i",          pOpts->audio_latency);
+
 	/* misc artwork options */
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sart",                     pOpts->use_artwork     ? "" : "no");
-
 	if (pOpts->use_artwork == TRUE)
 	{
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sbackdrop",                pOpts->backdrops       ? "" : "no");
@@ -1098,10 +1100,11 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	}
 
 	/* misc */
+//	sprintf(&pCmdLine[strlen(pCmdLine)], " -%svalidate",                  pOpts->validate      ? "" : "no");
 	if (pOpts->cheat)
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sc",                       pOpts->cheat ? "" : "no");
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sc",                       pOpts->cheat          ? "" : "no");
 	if (pOpts->mame_debug)
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sd",                       pOpts->mame_debug ? "" : "no");
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sd",                       pOpts->mame_debug     ? "" : "no");
 	if (g_pPlayBkName != NULL)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -pb \"%s\"",                 g_pPlayBkName);
 	if (g_pRecordName != NULL)
@@ -1128,12 +1131,12 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -ips %s",                  pOpts->patchname);
 #endif /* USE_IPS */
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sdsm",                     pOpts->disable_2nd_monitor    ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sconfirm_quit",            pOpts->confirm_quit    ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sconfirm_quit",            pOpts->confirm_quit           ? "" : "no");
 #ifdef AUTO_PAUSE_PLAYBACK
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sauto_pause_playback",     pOpts->auto_pause_playback    ? "" : "no");
 #endif /* AUTO_PAUSE_PLAYBACK */
 #ifdef TRANS_UI
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%suse_trans_ui",            pOpts->use_transui     ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%suse_trans_ui",            pOpts->use_transui            ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -ui_transparency %d",        pOpts->ui_transparency);
 #endif /* TRANS_UI */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
@@ -1142,7 +1145,7 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 
 	/* langcode */
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -language %s",               ui_lang_info[GetLangcode()].name);
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%suse_lang_list",           UseLangList()          ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%suse_lang_list",           UseLangList()                 ? "" : "no");
 
 //	dprintf("Launching MAME32:");
 //	dprintf("%s",pCmdLine);

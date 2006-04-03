@@ -174,16 +174,17 @@ typedef struct
 	int    artres;
 
 	/* misc */
+	BOOL   validate;
 	BOOL   cheat;
 	BOOL   mame_debug;
+	BOOL   errorlog;
+	BOOL   win_erroroslog;
 	char*  mame_debugscript;
 	char*  playbackname;
 	char*  recordname;
 	BOOL   sleep;
-	int    priority;
-	BOOL   errorlog;
-	BOOL   erroroslog;
 	BOOL   old_timing;
+	int    priority;
 	BOOL   skip_gameinfo;
 	char*  bios;
 	char*  statename;
