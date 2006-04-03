@@ -138,8 +138,8 @@ iemoto	家元 (日本版 871020)	家元 (日本版 871020)	Nichibutsu
 iemotom	家元 [BET] (日本版 871118)	家元 [BET] (日本版 871118)	Nichibutsu
 ryuuha	流派 [BET] (日本版 871027)	流派 [BET] (日本版 871027)	Central Denshi
 bijokkog	青春麻雀 - 美女學園 (日本版 880116)	青春麻雀 - 美女學園 (日本版 880116)	Nichibutsu
-orangec	橙色俱樂部 - (秘) 課外授業 (日本版 880213)	橙色俱樂部 - (秘) 課外授業 (日本版 880213)	Daiichi Denshi
-orangeci	橙色俱樂部 - (秘) 一發開放 [BET] (日本版 880221)	橙色俱樂部 - (秘) 一發開放 [BET] (日本版 880221)	Daiichi Denshi
+orangec	橙子俱樂部 - (秘) 課外授業 (日本版 880213)	橙子俱樂部 - (秘) 課外授業 (日本版 880213)	Daiichi Denshi
+orangeci	橙子俱樂部 - (秘) 一發開放 [BET] (日本版 880221)	橙子俱樂部 - (秘) 一發開放 [BET] (日本版 880221)	Daiichi Denshi
 vipclub	VIP 俱樂部 - (秘) 一發開放 [BET] (日本版 880310)	VIP 俱樂部 - (秘) 一發開放 [BET] (日本版 880310)	Daiichi Denshi
 korinai	麻雀 愛玩無罪 (日本版 880425)	麻雀 愛玩無罪 (日本版 880425)	Nichibutsu
 korinaim	麻雀 愛玩無罪 [BET] (日本版 880920)	麻雀 愛玩無罪 [BET] (日本版 880920)	Nichibutsu
@@ -560,8 +560,8 @@ kikcubib	迷宮島 / Kickle Cubele	迷宮島 / Kickle Cubele	bootleg
 rtype	異形戰機 / R-Type (日本版)	異形戰機 / R-Type (日本版)	Irem
 rtypepj	異形戰機 / R-Type (日本版 開發版)	異形戰機 / R-Type (日本版 開發版)	Irem
 rtypeu	異形戰機 / R-Type (美國版)	異形戰機 / R-Type (美國版)	Irem (Nintendo of America license)
-bchopper	Mr. HELI 大冒險 / Battle Chopper	Mr. HELI 大冒險 / Battle Chopper	Irem
-mrheli	Mr. HELI 大冒險	Mr. HELI 大冒險	Irem
+bchopper	Mr. HELI 的大冒險 / Battle Chopper	Mr. HELI 的大冒險 / Battle Chopper	Irem
+mrheli	Mr. HELI 的大冒險	Mr. HELI 的大冒險	Irem
 nspirit	最後忍道 / Ninja Spirit	最後忍道 / Ninja Spirit	Irem
 nspiritj	最後忍道 (日本版)	最後忍道 (日本版)	Irem
 xmultipl	X 戰機 (日本版)	X 戰機 (日本版)	Irem
@@ -601,8 +601,8 @@ gunhohki	魔法警備隊 (日本版)	魔法警備隊 (日本版)	Irem
 hook	虎克船長 (世界版)	虎克船長 (世界版)	Irem
 hooku	虎克船長 (美國版)	虎克船長 (美國版)	Irem America
 hookj	虎克船長 (日本版)	虎克船長 (日本版)	Irem
-rtypeleo	異形戰機 LEO / R-Type Leo (世界版 rev. C)	異形戰機 LEO / R-Type Leo (世界版 rev. C)	Irem
-rtypelej	異形戰機 LEO / R-Type Leo (日本版 rev. D)	異形戰機 LEO / R-Type Leo (日本版 rev. D)	Irem
+rtypeleo	異形戰機 LEO / R-Type Leo (世界版)	異形戰機 LEO / R-Type Leo (世界版)	Irem
+rtypelej	異形戰機 LEO / R-Type Leo (日本版)	異形戰機 LEO / R-Type Leo (日本版)	Irem
 inthunt	海底大戰爭 / In The Hunt (世界版) 	海底大戰爭 / In The Hunt (世界版) 	Irem
 inthuntu	海底大戰爭 / In The Hunt (美國版)	海底大戰爭 / In The Hunt (美國版)	Irem America
 kaiteids	海底大戰爭 (日本版)	海底大戰爭 (日本版)	Irem
@@ -935,7 +935,8 @@ ddonpach	怒首領蜂 (國際版)	怒首領蜂 (國際版)	Atlus/Cave
 ddonpchj	怒首領蜂 (日本版)	怒首領蜂 (日本版)	Atlus/Cave
 dfeveron	彈銃男爵 (日本版)	彈銃男爵 (日本版)	Cave (Nihon System license)
 feversos	彈銃男爵 / Fever SOS (國際版)	彈銃男爵 / Fever SOS (國際版)	Cave (Nihon System license)
-uopoko	小貓釣魚 (日本版)	小貓釣魚 (日本版)	Cave (Jaleco license)
+uopoko	小貓釣魚 (國際版)	小貓釣魚 (國際版)	Cave (Jaleco license)
+uopokoj	小貓釣魚 (日本版)	小貓釣魚 (日本版)	Cave (Jaleco license)
 guwange	獄門山物語 (日本版)	獄門山物語 (日本版)	Atlus/Cave
 gaia	征戰者	征戰者	Noise Factory
 sonofphx	鳳凰之子	鳳凰之子	Associated Overseas MFR, Inc
@@ -1030,6 +1031,7 @@ unsquad	戰區 88 / U.N. Squadron (美國版)	戰區 88 / U.N. Squadron (美國版)	Capcom
 area88	戰區 88 (日本版)	戰區 88 (日本版)	Capcom
 ffight	街頭快打 (世界版)	街頭快打 (世界版)	Capcom
 ffightu	街頭快打 (美國版 900112)	街頭快打 (美國版 900112)	Capcom
+ffightua	街頭快打 (美國版 900613)	街頭快打 (美國版 900613)	Capcom
 ffightj	街頭快打 (日本版)	街頭快打 (日本版)	Capcom
 ffightj1	街頭快打 (日本版 900305)	街頭快打 (日本版 900305)	Capcom
 1941	1941 - 反擊 (世界版)	1941 - 反擊 (世界版)	Capcom
@@ -1735,6 +1737,7 @@ vs29815	VR 足球 2 '98 (Step 1.5)	VR 足球 2 '98 (Step 1.5)	Sega
 vs2	VR 足球 2 (Step 2.0)	VR 足球 2 (Step 2.0)	Sega
 harley	哈雷騎士	哈雷騎士	Sega
 srally2	SEGA 越野賽車 2	SEGA 越野賽車 2	Sega
+sraly2dx	SEGA 越野賽車 2 DX	SEGA 越野賽車 2 DX	Sega
 von2	電腦戰機 2	電腦戰機 2	Sega
 von254g	電腦戰機 2 (ver 5.4g)	電腦戰機 2 (ver 5.4g)	Sega
 fvipers2	毒蛇格鬥 2	毒蛇格鬥 2	Sega
@@ -2333,24 +2336,24 @@ stakwin	騎手之路	騎手之路	Saurus
 pulstar	死亡之星	死亡之星	Aicom
 whp	英雄榜 完美版	英雄榜 完美版	ADK / SNK
 kabukikl	天外魔境真傳	天外魔境真傳	Hudson
-neobombe	Neo 炸彈超人	Neo 炸彈超人	Hudson
+neobombe	NEO 炸彈超人	NEO 炸彈超人	Hudson
 gowcaizr	超人學園	超人學園	Technos
 rbff1	Real Bout 餓狼傳說	Real Bout 餓狼傳說	SNK
 aof3	龍虎拳 3 / 龍虎拳外傳	龍虎拳 3 / 龍虎拳外傳	SNK
 aof3k	龍虎拳 3 / 龍虎拳外傳 (韓文版)	龍虎拳 3 / 龍虎拳外傳 (韓文版)	SNK
 sonicwi3	音速戰機 3 / Aero Fighters 3	音速戰機 3 / Aero Fighters 3	Video System Co.
-turfmast	Neo 高爾夫大師 / 高爾夫大賽	Neo 高爾夫大師 / 高爾夫大賽	Nazca
+turfmast	NEO 高爾夫大師 / 高爾夫大賽	NEO 高爾夫大師 / 高爾夫大賽	Nazca
 mslug	越南大戰: 合金彈頭	越南大戰: 合金彈頭	Nazca
 puzzledp	解謎氣泡!	解謎氣泡!	Taito (Visco license)
 mosyougi	將棋達人	將棋達人	ADK / SNK
 marukodq	小丸子問答	小丸子問答	Takara
-neomrdo	Neo 地鼠先生	Neo 地鼠先生	Visco
+neomrdo	NEO 杜先生	NEO 杜先生	Visco
 sdodgeb	超級躲避球	超級躲避球	Technos
 goalx3	射門! 射門! 射門!	射門! 射門! 射門!	Visco
 zintrckb	水滴方塊 (hack / 盜版)	水滴方塊 (hack / 盜版)	hack / bootleg
 zintrkcd	水滴方塊 (CD to MVS Conversion)	水滴方塊 (CD to MVS Conversion)	Razoola
 overtop	極速賽車	極速賽車	ADK
-neodrift	Neo 越野賽車	Neo 越野賽車	Visco
+neodrift	NEO 越野賽車	NEO 越野賽車	Visco
 kof96	拳皇 '96 (set 1)	拳皇 '96 (set 1)	SNK
 kof96h	拳皇 '96 (set 2)	拳皇 '96 (set 2)	SNK
 kof96ep	拳皇 '96 (盜版)	拳皇 '96 (盜版)	bootleg
@@ -2480,10 +2483,10 @@ beast	野獸之瞳 (Neo Demo)	野獸之瞳 (Neo Demo)	Psygnosis
 columnsn	寶石方塊 (Neo-Geo)	寶石方塊 (Neo-Geo)	Sega
 poknight	撲克之夜	撲克之夜	JMK
 diggerma	挖地先生	挖地先生	Unknown
-neonopon	Neo 智力方塊 (beta)	Neo 智力方塊 (beta)	Blastar
-neopong	Neo 彈球 (v1.1)	Neo 彈球 (v1.1)	Neodev
-npong10	Neo 彈球 (v1.0)	Neo 彈球 (v1.0)	Neodev
-syscheck	Neo 系統檢查 (ver 1.0b)	Neo 系統檢查 (ver 1.0b)	Blastar
+neonopon	NEO 智力方塊 (beta)	NEO 智力方塊 (beta)	Blastar
+neopong	NEO 彈球 (v1.1)	NEO 彈球 (v1.1)	Neodev
+npong10	NEO 彈球 (v1.0)	NEO 彈球 (v1.0)	Neodev
+syscheck	NEO 系統檢查 (ver 1.0b)	NEO 系統檢查 (ver 1.0b)	Blastar
 frogfest	青蛙盛宴	青蛙盛宴	Rastersoft
 roadedge	休旅賽車 (rev.B)	休旅賽車 (rev.B)	SNK
 sams64_2	侍魂之霸王傳說 / 侍魂 2: 阿修羅斬魔傳	侍魂之霸王傳說 / 侍魂 2: 阿修羅斬魔傳	SNK
@@ -2734,6 +2737,7 @@ p47	P-47 - 自由戰士 / P-47 - The Phantom Fighter (世界版)	P-47 - 自由戰士 / P-47
 p47j	P-47 - 自由戰士 (日本版)	P-47 - 自由戰士 (日本版)	Jaleco
 tshingen	武田信玄 (日本版, 日文)	武田信玄 (日本版, 日文)	Jaleco
 tshingna	武田信玄 / Shingen Samurai-Fighter (日本版, 英文)	武田信玄 / Shingen Samurai-Fighter (日本版, 英文)	Jaleco
+kazan	伊賀忍術傳 - 五神之書 (世界版)	伊賀忍術傳 - 五神之書 (世界版)	Jaleco
 iganinju	伊賀忍術傳 - 五神之書 (日本版)	伊賀忍術傳 - 五神之書 (日本版)	Jaleco
 hachoo	破兆!	破兆!	Jaleco
 jitsupro	實力!! 職業棒球 (日本版)	實力!! 職業棒球 (日本版)	Jaleco
@@ -2945,7 +2949,8 @@ dharma	達摩道場	達摩道場	Metro
 lastfort	牌砦	牌砦	Metro
 lastfero	牌砦 (Erotic)	牌砦 (Erotic)	Metro
 lastforg	牌砦 (德文)	牌砦 (德文)	Metro
-toride2g	牌砦 II - 復仇外傳 / 戰國智慧牌	牌砦 II - 復仇外傳 / 戰國智慧牌	Metro
+toride2g	牌砦 II - 仇討外傳	牌砦 II - 仇討外傳	Metro
+torid2gg	牌砦 II - 仇討外傳 (德文)	牌砦 II - 仇討外傳 (德文)	Metro
 daitorid	大牌砦	大牌砦	Metro
 dokyusei	麻雀同級生	麻雀同級生	Make Software / Elf / Media Trading
 dokyusp	麻雀同級生特別版	麻雀同級生特別版	Make Software / Elf / Media Trading
