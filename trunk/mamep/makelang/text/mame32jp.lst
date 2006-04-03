@@ -30,6 +30,7 @@ joyman	パックマン / Joyman	ぱっくまん	hack
 ctrpllrp	パックマン / Caterpillar Pacman Hack	ぱっくまん	hack
 eyes	アイズ (Digitrex Techstar)	あいず	Digitrex Techstar (Rock-ola license)
 eyes2	アイズ (Techstar)	あいず	Techstar (Rock-ola license)
+eyeszac	アイズ (Zaccaria)	あいず	Zaccaria / bootleg
 mrtnt	Mr.TNT	みすたーてぃーえぬてぃー	Telko
 gorkans	Mr.TNT / Gorkans	みすたーてぃーえぬてぃー	Techstar
 eggor	エッガー	えっがー	Telko
@@ -268,6 +269,7 @@ ckongalc	ドンキーコング / Crazy Kong (Alca 海賊版)	どんきーこんぐ_1	bootleg
 bigkong	ドンキーコング / Big Kong	どんきーこんぐ_1	bootleg
 monkeyd	ドンキーコング / Monkey Donkey	どんきーこんぐ_1	bootleg
 rpatrolb	リバーパトロール (海賊版)	りばーぱとろーる	bootleg
+rpatrolo	リバーパトロール (Orca)	りばーぱとろーる	Orca
 silvland	リバーパトロール / Silver Land	りばーぱとろーる	Falcon
 yamato	ヤマト (USA版)	やまと	Sega
 yamato2	ヤマト (海外版?)	やまと	Sega
@@ -1722,14 +1724,16 @@ tigerh2	タイガーヘリ (日本版 set 1)	たいがーへり	Taito Corp.
 tigerhj	タイガーヘリ (日本版 set 2)	たいがーへり	Taito Corp.
 tigerhb1	タイガーヘリ (海賊版 set 1)	たいがーへり	bootleg
 tigerhb2	タイガーヘリ (海賊版 set 2)	たいがーへり	bootleg
-slapfigh	スラップファイト	すらっぷふぁいと	Taito
+slapfigh	スラップファイト (set 1)	すらっぷふぁいと	Taito
+slapfiga	スラップファイト (set 2)	すらっぷふぁいと	Taito
 slapbtjp	スラップファイト (日本版) (海賊版)	すらっぷふぁいと	bootleg
 slapbtuk	スラップファイト (英語版) (海賊版)	すらっぷふぁいと	bootleg
 slapfgtr	スラップファイト (海賊版)	すらっぷふぁいと	bootleg
 alcon	スラップファイト / Alcon	すらっぷふぁいと	Taito America Corp.
 getstar	ゲットスター / Guardian	げっとすたー	Taito
 getstarj	ゲットスター (日本版)	げっとすたー	Taito
-getstarb	ゲットスター (海賊版)	げっとすたー	bootleg
+getstarb	ゲットスター (海賊版 set 1)	げっとすたー	bootleg
+gtstarba	ゲットスター (海賊版 set 2)	げっとすたー	bootleg
 mjsister	麻雀シスターズ (日本版)	まーじゃんしすたーず	Toaplan
 fshark	飛翔鮫 / Flying Shark (海外版)	ひしょうざめ	[Toaplan] Taito Corporation
 skyshark	飛翔鮫 / Sky Shark (USA版)	ひしょうざめ	[Toaplan] Taito America Corporation (Romstar license)
@@ -1770,7 +1774,7 @@ honeydol	ハニードールス	はにーどーるす	Barko Corp.
 hyperpac	ハイパーパックマン	はいぱーぱっくまん	SemiCom
 hyperpcb	ハイパーパックマン (海賊版)	はいぱーぱっくまん	bootleg
 twinkle	ツインクル	ついんくる	SemiCom
-tappyrap	タッピー&ラッピｰ	たっぴーあんどらっぴー	SemiCom
+toppyrap	トッピー&ラッピー	とっぴーあんどらっぴー	SemiCom
 cookbib2	クッキー&ビビ2	くっきーあんどびび_2	SemiCom
 cookbib3	クッキー&ビビ3	くっきーあんどびび_3	SemiCom
 3in1semi	ゼス -The New Revolution (SemiCom 3-in-1)	ぜす	SemiCom
@@ -1831,7 +1835,8 @@ feversos	弾銃フィーバロン / Fever SOS (海外版)	だんがんふぃーばろん	Cave (Nihon 
 esprade	エスプレイド (海外版 ver 1998 4/22)	えすぷれいど	Atlus/Cave
 espradej	エスプレイド (日本版 ver 1998 4/21)	えすぷれいど	Atlus/Cave
 espradeo	エスプレイド (日本版 ver 1998 4/14)	えすぷれいど	Atlus/Cave
-uopoko	魚ポコ (日本版)	うおぽこ	Cave (Jaleco license)
+uopoko	魚ポコ (海外版)	うおぽこ	Cave (Jaleco license)
+uopokoj	魚ポコ (日本版)	うおぽこ	Cave (Jaleco license)
 guwange	ぐわんげ (日本版)	ぐわんげ	Atlus/Cave
 gaia	ガイアクルセイダーズ	がいあくるせいだーず	Noise Factory
 korokoro	コロコロクエスト (日本版)	ころころくえすと	Takumi
@@ -1984,6 +1989,7 @@ unsquad	エリア88 / U.N. Squadron (USA版)	えりあえいてぃーえいと	Capcom
 area88	エリア88 (日本版)	えりあえいてぃーえいと	Capcom
 ffight	ファイナルファイト (海外版)	ふぁいなるふぁいと_1	Capcom
 ffightu	ファイナルファイト (USA版 900112)	ふぁいなるふぁいと_1	Capcom
+ffightua	ファイナルファイト (USA版 900613)	ふぁいなるふぁいと_1	Capcom
 ffightj	ファイナルファイト (日本版)	ふぁいなるふぁいと_1	Capcom
 ffightj1	ファイナルファイト (日本版 900305)	ふぁいなるふぁいと_1	Capcom
 1941	1941 -カウンターアタック (海外版)	いちきゅうよん_3いち	Capcom
@@ -2348,8 +2354,8 @@ mgcldate	まじかるで～と -ドキドキ告白大作戦 (ver 2.02J)	まじかるでーと_1どきどき
 mgcldtex	まじかるで～と -卒業告白大作戦 (ver 2.01J)	まじかるでーと_2そつぎょうこくはくだいさくせん	Taito
 raystorm	レイストーム (ver 2.06A)	れいすとーむ	Taito
 raystorj	レイストーム (ver 2.05J)	れいすとーむ	Taito
-ftimpact	ファイターズインパクトA (ver 2.02O)	ふぁいたーずいんぱくとえーす	Taito
-ftimpcta	ファイターズインパクトA (ver 2.00J)	ふぁいたーずいんぱくとえーす	Taito
+ftimpact	ファイターズインパクト (ver 2.02O)	ふぁいたーずいんぱくと	Taito
+ftimpcta	ファイターズインパクトエース (ver 2.00J)	ふぁいたーずいんぱくとえーす	Taito
 gdarius	Gダライアス (ver 2.01J)	じーだらいあす	Taito
 gdariusb	Gダライアス (ver 2.02A)	じーだらいあす	Taito
 gdarius2	Gダライアス Ver.2 (ver 2.03J)	じーだらいあす2	Taito
@@ -2885,7 +2891,8 @@ gforce2j	ギャラクシーフォースII (日本版)	ぎゃらくしーふぉーす2	Sega
 gloc	G-LOC -Air Battle (USA版)	じーろっく	Sega
 glocr360	G-LOC R360 -Air Battle	じーろっく	Sega
 strkfgtr	ストライクファイター (日本版)	すとらいくふぁいたー	Sega
-pdrift	パワードリフト	ぱわーどりふと	Sega
+pdrift	パワードリフト (海外版 Set 1)	ぱわーどりふと	Sega
+pdrifta	パワードリフト (海外版 Set 2)	ぱわーどりふと	Sega
 pdriftj	パワードリフト (日本版)	ぱわーどりふと	Sega
 rchase	レールチェイス (日本版)	れーるちぇいす	Sega
 hotrod	ホットロッド (海外版 3 players turbo set 1)	ほっとろっど	Sega
@@ -3056,6 +3063,7 @@ vs29815	バーチャストライカー2 バージョン98 (step 1.5)	ばーちゃすとらいかー_2_2ば
 vs2	バーチャストライカー2 (step 2.0)	ばーちゃすとらいかー_2_1	Sega
 harley	ハーレーダビッドソン&L.A.ライダーズ	はーれーだびっどそんあんどえるえーらいだーず	Sega
 srally2	セガラリー2	せがらりー_2	Sega
+sraly2dx	セガラリー2 デラックス	せがらりー_2でらっくす	Sega
 von2	電脳戦機バーチャロン オラトリオ・タングラム	でんのうせんきばーちゃろん_2おらとりおたんぐらむ	Sega
 von254g	電脳戦機バーチャロン オラトリオ・タングラム (ver 5.4g)	でんのうせんきばーちゃろん_2おらとりおたんぐらむ	Sega
 fvipers2	ファイティングバイパーズ2	ふぁいてぃんぐばいぱーず2	Sega
@@ -3825,6 +3833,10 @@ racingj2	レーシングジャム チャプターII	れーしんぐじゃむ_2ちゃぷたー2	Konami
 thrilld	スリルドライブ	すりるどらいぶ	Konami
 midnrun	ミッドナイトラン -ロードファイター2	みっどないとらん	Konami
 windheat	ワインディングヒート	わいんでぃんぐひーと	Konami
+polystar	とべ！ポリスターズ (ver JAA)	とべぽりすたーず	Konami
+btltryst	バトルトライスト (ver JAC)	ばとるとらいすと	Konami
+heatof11	ヒート オブ イレヴン '98 (ver EAA)	ひーとおぶいれぶん98	Konami
+evilngt	エビルナイト (ver EAA)	えびるないと	Konami
 carpolo	カーポロ	かーぽろ	Exidy
 sidetrac	サイドトラック	さいどとらっく	Exidy
 targ	ターグ	たーぐ	Exidy
@@ -5048,6 +5060,7 @@ f1gpstr2	F-1グランプリスターII	えふわんぐらんぷりすたー2	Jaleco
 scudhamm	スカッドハンマー	すかっどはんまー	Jaleco
 tetrisp2	テトリスプラス2 (海外版?)	てとりす_2ぷらす_2	Jaleco / The Tetris Company
 teplus2j	テトリスプラス2 (日本版)	てとりす_2ぷらす_2	Jaleco / The Tetris Company
+stepstag	ステッピングステージ	すてっぴんぐすてーじ	Jaleco
 rockn	ロックントレッド (日本版)	ろっくん_1とれっど	Jaleco
 rockna	ロックントレッド (日本版 alt)	ろっくん_1とれっど	Jaleco
 rockn2	ロックントレッド2 (日本版)	ろっくん_2とれっど	Jaleco
@@ -5061,6 +5074,7 @@ p47j	P-47 -ザ・フリーダムファイター (日本版)	ぴー47_1	Jaleco
 kickoff	キックオフ -Jaleco Cup (日本版)	きっくおふ	Jaleco
 tshingen	武田信玄 (日本版 日本語)	たけだしんげん	Jaleco
 tshingna	武田信玄 / Shingen Samurai-Fighter (日本版 英語)	たけだしんげん	Jaleco
+kazan	伊賀忍術伝 -五神の書 (海外版)	いがにんじゅつでん	Jaleco
 iganinju	伊賀忍術伝 -五神の書 (日本版)	いがにんじゅつでん	Jaleco
 astyanax	ザ・ロード・オブ・キング / The Astyanax	ざろーどおぶきんぐ	Jaleco
 lordofk	ザ・ロード・オブ・キング (日本版)	ざろーどおぶきんぐ	Jaleco
@@ -5528,6 +5542,7 @@ lastfort	牌砦	とりで	Metro
 lastfero	牌砦 (erotic)	とりで	Metro
 lastforg	牌砦 / Last Fortress (ドイツ版)	とりで	Metro
 toride2g	牌砦II -仇討外伝	とりで2	Metro
+torid2gg	牌砦II -仇討外伝 (ドイツ版)	とりで2	Metro
 gunmast	ガンマスター	がんますたー	Metro
 daitorid	大牌砦	だいとりで	Metro
 dokyusei	麻雀同級生	まーじゃんどうきゅうせい_1	Make Software / Elf / Media Trading
