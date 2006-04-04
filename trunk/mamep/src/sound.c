@@ -39,6 +39,12 @@
 
 #define MAX_MIXER_CHANNELS		100
 
+#ifdef USE_VOLUME_AUTO_ADJUST
+#define VOLUME_MULTIPLIER_FRAC_ONE	256
+#define DEFAULT_VOLUME_MULTIPLIER	VOLUME_MULTIPLIER_FRAC_ONE
+#define DEFAULT_VOLUME_MULTIPLIER_MAX	(10 * VOLUME_MULTIPLIER_FRAC_ONE)
+#endif /* USE_VOLUME_AUTO_ADJUST */
+
 
 
 /***************************************************************************
@@ -107,6 +113,14 @@ static int nosound_mode;
 
 static wav_file *wavfile;
 
+#ifdef USE_VOLUME_AUTO_ADJUST
+static INT32 volume_multiplier_final = DEFAULT_VOLUME_MULTIPLIER;
+static INT32 volume_multiplier_final_max = DEFAULT_VOLUME_MULTIPLIER_MAX;
+static INT32 volume_multiplier_mixer = DEFAULT_VOLUME_MULTIPLIER;
+static INT32 volume_multiplier_mixer_max = DEFAULT_VOLUME_MULTIPLIER_MAX;
+static int have_sample = 0;
+#endif /* USE_VOLUME_AUTO_ADJUST */
+
 
 
 /***************************************************************************
@@ -122,6 +136,11 @@ static int start_sound_chips(void);
 static int start_speakers(void);
 static int route_sound(void);
 static void mixer_update(void *param, stream_sample_t **inputs, stream_sample_t **buffer, int length);
+
+#ifdef USE_VOLUME_AUTO_ADJUST
+INLINE INT16 calc_volume_final(INT32 sample);
+INLINE INT16 calc_volume_mixer(INT32 sample);
+#endif /* USE_VOLUME_AUTO_ADJUST */
 
 
 
@@ -598,6 +617,17 @@ static void sound_load(int config_type, xml_data_node *parentnode)
 				sound_set_user_gain(mixernum, newvol);
 		}
 	}
+
+#ifdef USE_VOLUME_AUTO_ADJUST
+	channelnode = xml_get_sibling(parentnode->child, "volume_multiplier");
+	if (channelnode)
+	{
+		volume_multiplier_final = xml_get_attribute_int(channelnode, "final", DEFAULT_VOLUME_MULTIPLIER);
+		volume_multiplier_final_max = xml_get_attribute_int(channelnode, "final_max", DEFAULT_VOLUME_MULTIPLIER_MAX);
+		volume_multiplier_mixer = xml_get_attribute_int(channelnode, "mixer", DEFAULT_VOLUME_MULTIPLIER);
+		volume_multiplier_mixer_max = xml_get_attribute_int(channelnode, "mixer_max", DEFAULT_VOLUME_MULTIPLIER_MAX);
+	}
+#endif /* USE_VOLUME_AUTO_ADJUST */
 }
 
 
@@ -632,6 +662,20 @@ static void sound_save(int config_type, xml_data_node *parentnode)
 				}
 			}
 		}
+
+#ifdef USE_VOLUME_AUTO_ADJUST
+	if (parentnode)
+	{
+		xml_data_node *channelnode = xml_add_child(parentnode, "volume_multiplier", NULL);
+		if (channelnode)
+		{
+			xml_set_attribute_int(channelnode, "final", volume_multiplier_final);
+			xml_set_attribute_int(channelnode, "final_max", volume_multiplier_final_max);
+			xml_set_attribute_int(channelnode, "mixer", volume_multiplier_mixer);
+			xml_set_attribute_int(channelnode, "mixer_max", volume_multiplier_mixer_max);
+		}
+	}
+#endif /* USE_VOLUME_AUTO_ADJUST */
 }
 
 
@@ -713,6 +757,28 @@ void sound_frame_update(void)
 	}
 
 	/* now downmix the final result */
+#ifdef USE_VOLUME_AUTO_ADJUST
+	if (options.use_volume_adjust)
+	{
+		have_sample = 0;
+
+		for (sample = 0; sample < samples_this_frame; sample++)
+		{
+			/* clamp the left side */
+			finalmix[sample*2+0] = calc_volume_final(leftmix[sample]);
+	
+			/* clamp the right side */
+			finalmix[sample*2+1] = calc_volume_final(rightmix[sample]);
+		}
+
+		if (have_sample)
+		{
+			if (volume_multiplier_final_max > volume_multiplier_final)
+				volume_multiplier_final++;
+		}
+	}
+	else
+#endif /* USE_VOLUME_AUTO_ADJUST */
 	for (sample = 0; sample < samples_this_frame; sample++)
 	{
 		INT32 samp;
@@ -749,6 +815,64 @@ void sound_frame_update(void)
 	profiler_mark(PROFILER_END);
 }
 
+#ifdef USE_VOLUME_AUTO_ADJUST
+/*************************************
+ *
+ *	Adjust sample by volume multiplier
+ *
+ *************************************/
+
+INLINE INT16 calc_volume_final(INT32 sample)
+{
+	if (sample)
+	{
+		INT32 temp;
+
+		have_sample = 1;
+
+		if (sample > 0)
+			temp = (32767.0 * VOLUME_MULTIPLIER_FRAC_ONE) / (double)sample;
+		else
+			temp = (-32768.0 * VOLUME_MULTIPLIER_FRAC_ONE) / (double)sample;
+
+		if (volume_multiplier_final_max > temp)
+		{
+			volume_multiplier_final_max = temp;
+
+			if (volume_multiplier_final_max < volume_multiplier_final)
+				volume_multiplier_final = volume_multiplier_final_max;
+		}
+	}
+
+	return sample * volume_multiplier_final / VOLUME_MULTIPLIER_FRAC_ONE;
+}
+
+INLINE INT16 calc_volume_mixer(INT32 sample)
+{
+	if (sample)
+	{
+		INT32 temp;
+
+		have_sample = 1;
+
+		if (sample > 0)
+			temp = (32767.0 * VOLUME_MULTIPLIER_FRAC_ONE) / (double)sample;
+		else
+			temp = (-32768.0 * VOLUME_MULTIPLIER_FRAC_ONE) / (double)sample;
+
+		if (volume_multiplier_mixer_max > temp)
+		{
+			volume_multiplier_mixer_max = temp;
+
+			if (volume_multiplier_mixer_max < volume_multiplier_mixer)
+				volume_multiplier_mixer = volume_multiplier_mixer_max;
+		}
+	}
+
+	return sample * volume_multiplier_mixer / VOLUME_MULTIPLIER_FRAC_ONE;
+}
+#endif /* USE_VOLUME_AUTO_ADJUST */
+
 
 /*-------------------------------------------------
     mixer_update - mix all inputs to one output
@@ -763,6 +887,32 @@ static void mixer_update(void *param, stream_sample_t **inputs, stream_sample_t 
 	VPRINTF(("Mixer_update(%d)\n", length));
 
 	/* loop over samples */
+#ifdef USE_VOLUME_AUTO_ADJUST
+	if (options.use_volume_adjust)
+	{
+		have_sample = 0;
+
+		for (pos = 0; pos < length; pos++)
+		{
+			INT32 sample = inputs[0][pos];
+			int inp;
+
+			/* add up all the inputs */
+			for (inp = 1; inp < numinputs; inp++)
+				sample += inputs[inp][pos];
+
+			/* clamp and store */
+			buffer[0][pos] = calc_volume_mixer(sample);
+		}
+
+		if (have_sample)
+		{
+			if (volume_multiplier_mixer_max > volume_multiplier_mixer)
+				volume_multiplier_mixer++;
+		}
+	}
+	else
+#endif /* USE_VOLUME_AUTO_ADJUST */
 	for (pos = 0; pos < length; pos++)
 	{
 		INT32 sample = inputs[0][pos];
