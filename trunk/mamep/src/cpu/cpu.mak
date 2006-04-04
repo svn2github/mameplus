@@ -673,6 +673,15 @@ CPUOBJS += $(OBJ)/cpu/m68000/m68kcpu.o $(OBJ)/cpu/m68000/m68kmame.o $(subst .c,.
 CPUOBJS += $(OBJ)/cpu/m68000/d68kcpu.o $(OBJ)/cpu/m68000/d68kmame.o $(subst .c,.o,$(M68000DRC_GENERATED_FILES))
 DBGOBJS += $(OBJ)/cpu/m68000/m68kdasm.o
 
+M68000_GENERATED_STAMP = $(OBJ)/cpu/m68000/m68k_stamp
+M68000DRC_GENERATED_STAMP = $(OBJ)/cpu/m68000/m68kdrc_stamp
+
+$(M68000_GENERATED_FILES) $(M68000_GENERATED_HEADERS): $(M68000_GENERATED_STAMP)
+	@echo -n
+
+$(M68000DRC_GENERATED_FILES) $(M68000DRC_GENERATED_HEADERS): $(M68000DRC_GENERATED_STAMP)
+	@echo -n
+
 # when we compile source files we need to include generated files from the OBJ directory
 $(OBJ)/cpu/m68000/%.o: src/cpu/m68000/%.c
 	@echo Compiling $<...
@@ -700,13 +709,15 @@ else
 endif
 
 # rule to generate the C files
-$(M68000_GENERATED_FILES) $(M68000_GENERATED_HEADERS): $(OBJ)/cpu/m68000/m68kmake$(EXE) m68k_in.c
+$(M68000_GENERATED_STAMP): $(OBJ)/cpu/m68000/m68kmake$(EXE) m68k_in.c
 	@echo Generating M68K source files...
 	$(OBJ)/cpu/m68000/m68kmake$(EXE) $(OBJ)/cpu/m68000 src/cpu/m68000/m68k_in.c
+	@echo -n > $(M68000_GENERATED_STAMP)
 
-$(M68000DRC_GENERATED_FILES) $(M68000DRC_GENERATED_HEADERS): $(OBJ)/cpu/m68000/d68kmake$(EXE) d68k_in.c
+$(M68000DRC_GENERATED_STAMP): $(OBJ)/cpu/m68000/d68kmake$(EXE) d68k_in.c
 	@echo Generating M68K DRC source files...
 	$(OBJ)/cpu/m68000/d68kmake$(EXE) $(OBJ)/cpu/m68000 src/cpu/m68000/d68k_in.c
+	@echo -n > $(M68000DRC_GENERATED_STAMP)
 
 # rule to build the generator
 $(OBJ)/cpu/m68000/m68kmake$(EXE): $(OBJ)/cpu/m68000/m68kmake.o $(OSDBGOBJS)
