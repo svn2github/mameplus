@@ -490,7 +490,7 @@
 #define ID_UI_HISTORY_UP                40083
 #define ID_UI_HISTORY_DOWN              40084
 #define ID_FILE_LOADSTATE               40085
-#define ID_SOURCE_PROPERTIES            40086
+#define ID_FOLDER_SOURCEPROPERTIES      40086
 #define ID_OPTIONS_PALETTE              40087 // UI_COLOR_DISPLAY
 
 #define ID_LANGUAGE_ENGLISH_US          40101

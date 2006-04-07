@@ -25,17 +25,16 @@ TMPOBJS = \
 	$(OBJ)/ui/bitmask.o \
 	$(OBJ)/ui/datamap.o \
 	$(OBJ)/ui/dxdecode.o \
-	$(OBJ)/ui/win32ui.o \
 	$(OBJ)/ui/picker.o \
 	$(OBJ)/ui/properties.o \
-        $(OBJ)/ui/tabview.o \
-	$(OBJ)/ui/options.o \
+	$(OBJ)/ui/tabview.o \
 	$(OBJ)/ui/help.o \
-	$(OBJ)/ui/layout.o \
 	$(OBJ)/ui/history.o \
 	$(OBJ)/ui/dialogs.o \
+	$(OBJ)/ui/win32ui.o \
+	$(OBJ)/ui/options.o \
+	$(OBJ)/ui/layout.o \
 	$(OBJ)/ui/translate.o
-
 ifneq ($(USE_UI_COLOR_DISPLAY),)
     TMPOBJS += $(OBJ)/ui/paletteedit.o
 endif
@@ -43,8 +42,7 @@ endif
 $(OBJ)/ui/ui.a: $(TMPOBJS)
 
 ifdef USE_GCC
-    GUIOBJS += $(OBJ)/ui/m32main.o $(OBJ)/ui/ui.a
-
+    GUIOBJS += $(OBJ)/ui/ui.a $(OBJ)/ui/m32main.o
     # add resource file
     GUIOBJS += $(OBJ)/ui/mame32.res
 else
@@ -52,17 +50,14 @@ else
 
     ifeq ($(NO_DLL),)
         GUIOBJS += $(OBJ)/ui/m32main.o
-
         # add resource file
         GUIOBJS += $(OBJ)/ui/mame32.res
     else
         OSOBJS += $(OBJ)/ui/m32main.o
-
         # add resource file
         OSOBJS += $(OBJ)/ui/mame32.res
     endif
 endif
-
 
 #####################################################################
 # compiler
@@ -73,12 +68,9 @@ endif
 
 DEFS += \
 	-DWINUI=1 \
-	-DMAME32NAME=APPNAME\"32\" \
-	-DTEXT_MAME32NAME=TEXT\(APPNAME\)TEXT\(\"32\"\) \
 	-DWINVER=0x0500 \
 	-D_WIN32_IE=0x0500 \
 	-D_WIN32_WINNT=0x0501 \
-	-UWINNT \
 	-DPATH_SEPARATOR=\'/\'
 
 ifeq ($(USE_GCC),)
@@ -110,7 +102,6 @@ ifdef USE_GCC
 		-lddraw \
 		-ldinput \
 		-ldxguid \
-		-lhtmlhelp \
 		-lunicows
 else
     TMPLIBS = \
@@ -122,7 +113,6 @@ else
 		ddraw.lib \
 		dinput.lib \
 		dxguid.lib \
-		htmlhelp.lib \
 		unicows.lib
 
     ifneq ($(NO_DLL),)

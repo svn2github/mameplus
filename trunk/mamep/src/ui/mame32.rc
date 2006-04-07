@@ -20,7 +20,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// Englisch (USA) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 #ifdef _WIN32
@@ -63,7 +63,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Add to Custom Folder...",    ID_CONTEXT_ADD_CUSTOM
         MENUITEM "R&emove From This Folder",    ID_CONTEXT_REMOVE_CUSTOM
-        MENUITEM "Proper&ties of Driver",       ID_SOURCE_PROPERTIES
+        MENUITEM "Driver Proper&ties",          ID_FOLDER_SOURCEPROPERTIES
         MENUITEM "Pr&operties",                 ID_GAME_PROPERTIES
         MENUITEM SEPARATOR
         MENUITEM "&Audit all games",            ID_FILE_AUDIT
@@ -173,12 +173,12 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Select Random Game",         ID_CONTEXT_SELECT_RANDOM
         MENUITEM SEPARATOR
-        MENUITEM "Reset Pl&aycount",            ID_CONTEXT_RESET_PLAYCOUNT
+        MENUITEM "Rese&t Playcount",            ID_CONTEXT_RESET_PLAYCOUNT
         MENUITEM "Reset Pla&y Time",            ID_CONTEXT_RESET_PLAYTIME
         MENUITEM SEPARATOR
         MENUITEM "A&udit",                      ID_GAME_AUDIT
         MENUITEM SEPARATOR
-        MENUITEM "Proper&ties of Driver",       ID_SOURCE_PROPERTIES
+        MENUITEM "Driver propert&ies",          ID_FOLDER_SOURCEPROPERTIES
         MENUITEM "Pr&operties",                 ID_GAME_PROPERTIES
     END
 END
@@ -1471,7 +1471,7 @@ BEGIN
     ID_FILE_PLAY_RECORD_WAVE "Save sound in wav file"
     ID_FILE_PLAY_RECORD_MNG  "Save video in specified mng file"
     ID_FILE_LOADSTATE       "Play a game starting with the given savestate"
-    ID_SOURCE_PROPERTIES    "Display the driver properties of the selected game"
+    ID_FOLDER_SOURCEPROPERTIES "Display the driver properties of the selected game"
     ID_GAME_PROPERTIES      "Display the properties of the selected items"
     ID_FILE_AUDIT           "Audit ROM and samples sets"
     ID_FILE_EXIT            "Exit the application"

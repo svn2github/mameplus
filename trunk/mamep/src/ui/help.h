@@ -13,7 +13,16 @@
 #ifndef HELP_H
 #define HELP_H
 
+#if defined(__GNUC__)
+#define HH_DISPLAY_TOPIC		0
+#define HH_TP_HELP_CONTEXTMENU	16
+#define HH_TP_HELP_WM_HELP		17
+#define HH_CLOSE_ALL			18
+#define HH_INITIALIZE			28
+#define HH_UNINITIALIZE			29
+#else
 #include <htmlhelp.h>
+#endif
 
 typedef struct
 {

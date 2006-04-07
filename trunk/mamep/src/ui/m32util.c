@@ -33,7 +33,6 @@
 #include "translate.h"
 
 #ifdef USE_IPS
-#include <io.h>
 #include "bitmask.h"
 #include "options.h"
 #include "patch.h"
@@ -272,7 +271,7 @@ char* MyStrStrI(const char* pFirst, const char* pSrch)
 		s1 = cp;
 		s2 = (char*)pSrch;
 		
-		while (*s1 && *s2 && !strnicmp(s1, s2, 1))
+		while (*s1 && *s2 && !mame_strnicmp(s1, s2, 1))
 			s1++, s2++;
 		
 		if (!*s2)
@@ -664,7 +663,7 @@ static LPWSTR GetPatchDescByLangcode(FILE *fp, int langcode)
 				}
 				else
 				{
-					desc = strdup(s);
+					desc = mame_strdup(s);
 				}
 			}
 		}
@@ -713,7 +712,7 @@ void FlushFileCaches(void)
 void SetCorePathList(int file_type,const char *s)
 {
 	// we have to pass in a malloc()'d string; core will free it later
-	set_pathlist(file_type,strdup(s));
+	set_pathlist(file_type,mame_strdup(s));
 }
 
 void FreeIfAllocated(char **s)

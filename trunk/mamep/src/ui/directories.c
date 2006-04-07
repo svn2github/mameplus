@@ -171,7 +171,7 @@ static void DirInfo_SetDir(tDirInfo *pInfo, int nType, int nItem, const char* pT
 	}
 	else
 	{
-		s = strdup(pText);
+		s = mame_strdup(pText);
 		if (!s)
 			return;
 		pOldText = pInfo[nType].m_Directory;

@@ -39,6 +39,10 @@
 #if !defined(MAME32NAME)
 #define MAME32NAME "MAME32"
 #endif
+	
+#if !defined(TEXT_MAME32NAME)
+#define TEXT_MAME32NAME TEXT("MAME32")
+#endif
 
 #if !defined(MAMENAME)
 #define MAMENAME "MAME"

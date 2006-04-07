@@ -1904,7 +1904,7 @@ BOOL InitFolders(void)
 
 	for (i = 0; i < numExtraFolders; i++)
 	{
-		if (stricmp(ExtraFolderData[i]->m_szTitle, extFavorite.title) == 0)
+		if (mame_stricmp(ExtraFolderData[i]->m_szTitle, extFavorite.title) == 0)
 			doCreateFavorite = FALSE;
 	}
 
@@ -2242,7 +2242,7 @@ static BOOL RegistExtraFolder(const char *name, LPEXFOLDERDATA *fExData, int msg
 	char *title = strdup(name);
 	char *ext = strrchr(title, '.');
 
-	if (ext && *(ext + 1) && !stricmp(ext + 1, "ini"))
+	if (ext && *(ext + 1) && !mame_stricmp(ext + 1, "ini"))
 	{
 		*fExData = malloc(sizeof(EXFOLDERDATA));
 		if (*fExData) 

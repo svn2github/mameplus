@@ -70,6 +70,11 @@ extern SHAREDOBJ_FUNC(void)   end_resource_tracking(void);
 extern SHAREDOBJ_FUNC(void *) _auto_malloc(size_t size, const char *file, int line) ATTR_MALLOC;
 extern SHAREDOBJ_FUNC(int)    mame_validitychecks(int game);
 
+#include "mamecore.h"
+extern SHAREDOBJ_FUNC(int)		mame_stricmp(const char *s1, const char *s2);
+extern SHAREDOBJ_FUNC(int)		mame_strnicmp(const char *s1, const char *s2, size_t n);
+extern SHAREDOBJ_FUNC(char *)	mame_strdup(const char *str);
+
 #include "osdepend.h"
 extern SHAREDOBJ_FUNC(void) logerror(const char *text,...);
 

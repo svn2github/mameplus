@@ -19,14 +19,16 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+#include <assert.h>
+#include <stdio.h>
+#include <math.h>
+
+// undef WINNT for dinput.h to prevent duplicate definition
+#undef WINNT
 // have problem with DX7??
 #undef DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION	0x0500
 #include <dinput.h>
-
-#include <assert.h>
-#include <stdio.h>
-#include <math.h>
 
 #include "MAME32.h"	// include this first
 #include "screenshot.h"

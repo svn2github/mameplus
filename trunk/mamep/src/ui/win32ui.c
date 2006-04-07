@@ -47,11 +47,11 @@
 #include <sys/stat.h>
 #include <wingdi.h>
 #include <time.h>
-#include "mame32.h"
 
-#include <driver.h>
-#include <osdepend.h>
-#include <unzip.h>
+#include "mame32.h"
+#include "driver.h"
+#include "osdepend.h"
+#include "unzip.h"
 
 #include "misc.h"
 
@@ -2408,7 +2408,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	{
 		EnableMenuItem(GetMenu(hMain), ID_CUSTOMIZE_FIELDS,  MF_GRAYED);
 		EnableMenuItem(GetMenu(hMain), ID_GAME_PROPERTIES,   MF_GRAYED);
-		EnableMenuItem(GetMenu(hMain), ID_SOURCE_PROPERTIES, MF_GRAYED);
+		EnableMenuItem(GetMenu(hMain), ID_FOLDER_SOURCEPROPERTIES, MF_GRAYED);
 		EnableMenuItem(GetMenu(hMain), ID_OPTIONS_DEFAULTS,  MF_GRAYED);
 	}
 
@@ -3779,12 +3779,12 @@ static void DisableSelection()
 	mmi.fType          = MFT_STRING;
 	mmi.dwTypeData     = _Unicode(_UI("Proper&ties of Driver"));
 	mmi.cch            = lstrlen(mmi.dwTypeData);
-	SetMenuItemInfo(hMenu, ID_SOURCE_PROPERTIES, FALSE, &mmi);
+	SetMenuItemInfo(hMenu, ID_FOLDER_SOURCEPROPERTIES, FALSE, &mmi);
 
 	EnableMenuItem(hMenu, ID_FILE_PLAY, 		   MF_GRAYED);
 	EnableMenuItem(hMenu, ID_FILE_PLAY_RECORD,	   MF_GRAYED);
 	EnableMenuItem(hMenu, ID_GAME_PROPERTIES,	   MF_GRAYED);
-	EnableMenuItem(hMenu, ID_SOURCE_PROPERTIES,	   MF_GRAYED);
+	EnableMenuItem(hMenu, ID_FOLDER_SOURCEPROPERTIES,	   MF_GRAYED);
 
 	SetStatusBarText(0, _UI("No Selection"));
 	SetStatusBarText(1, "");
@@ -3822,7 +3822,7 @@ static void EnableSelection(int nGame)
 	mmi.fType          = MFT_STRING;
 	mmi.dwTypeData     = _Unicode(buf);
 	mmi.cch            = lstrlen(mmi.dwTypeData);
-	SetMenuItemInfo(hMenu, ID_SOURCE_PROPERTIES, FALSE, &mmi);
+	SetMenuItemInfo(hMenu, ID_FOLDER_SOURCEPROPERTIES, FALSE, &mmi);
 
 	pText = UseLangList() ?
 		_LST(drivers[nGame]->description) :
@@ -3840,7 +3840,7 @@ static void EnableSelection(int nGame)
 	if (!oldControl)
 	{
 		EnableMenuItem(hMenu, ID_GAME_PROPERTIES,          MF_ENABLED);
-		EnableMenuItem(hMenu, ID_SOURCE_PROPERTIES,	   MF_ENABLED);
+		EnableMenuItem(hMenu, ID_FOLDER_SOURCEPROPERTIES,	   MF_ENABLED);
 	}
 
 	if (bProgressShown && bListReady == TRUE)
@@ -5003,7 +5003,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		UpdateStatusBar();
 		break;
 
-	case ID_SOURCE_PROPERTIES:
+	case ID_FOLDER_SOURCEPROPERTIES:
 		if (!oldControl)
 		{
 			LPTREEFOLDER lpFolder = GetSourceFolder(Picker_GetSelectedItem(hwndList));
@@ -6772,7 +6772,7 @@ static void UpdateMenu(HMENU hMenu)
 		mItem.dwTypeData = _Unicode(buf);
 		mItem.cch        = lstrlen(mItem.dwTypeData);
 
-		SetMenuItemInfo(hMenu, ID_SOURCE_PROPERTIES, FALSE, &mItem);
+		SetMenuItemInfo(hMenu, ID_FOLDER_SOURCEPROPERTIES, FALSE, &mItem);
 
 		EnableMenuItem(hMenu, ID_CONTEXT_SELECT_RANDOM, MF_ENABLED);
 	}
@@ -6796,12 +6796,12 @@ static void UpdateMenu(HMENU hMenu)
 		mItem.dwTypeData = _Unicode(buf);
 		mItem.cch        = lstrlen(mItem.dwTypeData);
 
-		SetMenuItemInfo(hMenu, ID_SOURCE_PROPERTIES, FALSE, &mItem);
+		SetMenuItemInfo(hMenu, ID_FOLDER_SOURCEPROPERTIES, FALSE, &mItem);
 
 		EnableMenuItem(hMenu, ID_FILE_PLAY,             MF_GRAYED);
 		EnableMenuItem(hMenu, ID_FILE_PLAY_RECORD,      MF_GRAYED);
 		EnableMenuItem(hMenu, ID_GAME_PROPERTIES,       MF_GRAYED);
-		EnableMenuItem(hMenu, ID_SOURCE_PROPERTIES,     MF_GRAYED);
+		EnableMenuItem(hMenu, ID_FOLDER_SOURCEPROPERTIES,     MF_GRAYED);
 		EnableMenuItem(hMenu, ID_CONTEXT_SELECT_RANDOM, MF_GRAYED);
 	}
 
@@ -6809,7 +6809,7 @@ static void UpdateMenu(HMENU hMenu)
 	{
 		EnableMenuItem(hMenu, ID_CUSTOMIZE_FIELDS,  MF_GRAYED);
 		EnableMenuItem(hMenu, ID_GAME_PROPERTIES,   MF_GRAYED);
-		EnableMenuItem(hMenu, ID_SOURCE_PROPERTIES, MF_GRAYED);
+		EnableMenuItem(hMenu, ID_FOLDER_SOURCEPROPERTIES, MF_GRAYED);
 		EnableMenuItem(hMenu, ID_OPTIONS_DEFAULTS,  MF_GRAYED);
 	}
 

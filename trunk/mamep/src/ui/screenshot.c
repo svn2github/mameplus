@@ -203,6 +203,14 @@ void FreeScreenShot(void)
 	current_image_type = -1;
 }
 
+/* moved to m32util.c
+void SetCorePathList(int file_type,const char *s)
+{
+	// we have to pass in a malloc()'d string; core will free it later
+	set_pathlist(file_type,mame_strdup(s));
+}
+*/
+
 BOOL LoadDIB(LPCTSTR filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type)
 {
 	mame_file *mfile;

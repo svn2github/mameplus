@@ -1962,7 +1962,7 @@ static void PropToOptions(HWND hWnd, options_type *o)
 		if (strcmp(buffer,"0x0x0") == 0)
 			sprintf(buffer,"auto");
 		FreeIfAllocated(&o->resolution);
-		o->resolution = strdup(buffer);
+		o->resolution = mame_strdup(buffer);
 	}
 
 	/* refresh */
@@ -1997,7 +1997,7 @@ static void PropToOptions(HWND hWnd, options_type *o)
 
 		snprintf(buffer,sizeof(buffer),"%d:%d",n,d);
 		FreeIfAllocated(&o->aspect);
-		o->aspect = strdup(buffer);
+		o->aspect = mame_strdup(buffer);
 	}
 	/*analog axes*/
 	hCtrl = GetDlgItem(hWnd, IDC_ANALOG_AXES);	
@@ -2045,7 +2045,7 @@ static void PropToOptions(HWND hWnd, options_type *o)
 		{
 			// save the new setting
 			FreeIfAllocated(&o->digital);
-			o->digital = strdup(digital);
+			o->digital = mame_strdup(digital);
 		}
 	}
 #ifdef MESS
@@ -2818,7 +2818,7 @@ static void AssignScreen(HWND hWnd)
 
 	FreeIfAllocated(&pGameOpts->screen);
 	if (ptr != NULL)
-		pGameOpts->screen = strdup(ptr);
+		pGameOpts->screen = mame_strdup(ptr);
 }
 
 
@@ -2832,7 +2832,7 @@ static void AssignInput(HWND hWnd)
 	if (new_length == CB_ERR)
 	{
 		dprintf("error getting text len");
-		pGameOpts->ctrlr = strdup("Standard");
+		pGameOpts->ctrlr = mame_strdup("Standard");
 		return;
 	}
 	pGameOpts->ctrlr = (char *)malloc(new_length + 1);
@@ -2840,7 +2840,7 @@ static void AssignInput(HWND hWnd)
 	if (strcmp(pGameOpts->ctrlr, _UI("Standard")) == 0)
 	{
 		FreeIfAllocated(&pGameOpts->ctrlr);
-		pGameOpts->ctrlr = strdup("Standard");
+		pGameOpts->ctrlr = mame_strdup("Standard");
 	}
 
 }
@@ -2909,13 +2909,13 @@ static void AssignAnalogAxes(HWND hWnd)
 	{
 		//all axes on all joysticks are digital
 		FreeIfAllocated(&pGameOpts->digital);
-		pGameOpts->digital = strdup("all");
+		pGameOpts->digital = mame_strdup("all");
 	}
 	if( nCheckCounter == 0 )
 	{
 		// no axes are treated as digital, which is the default...
 		FreeIfAllocated(&pGameOpts->digital);
-		pGameOpts->digital = strdup("none");
+		pGameOpts->digital = mame_strdup("none");
 	}
 }
 
@@ -2925,7 +2925,7 @@ static void AssignEffect(HWND hWnd)
 
 	FreeIfAllocated(&pGameOpts->effect);
 	if (ptr != NULL)
-		pGameOpts->effect = strdup(ptr);
+		pGameOpts->effect = mame_strdup(ptr);
 }
 
 static void AssignLedmode(HWND hWnd)
@@ -2934,7 +2934,7 @@ static void AssignLedmode(HWND hWnd)
 
 	FreeIfAllocated(&pGameOpts->ledmode);
 	if (ptr != NULL)
-		pGameOpts->ledmode = strdup(ptr);
+		pGameOpts->ledmode = mame_strdup(ptr);
 }
 
 static void AssignPaddle(HWND hWnd)
@@ -2942,7 +2942,7 @@ static void AssignPaddle(HWND hWnd)
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nPaddleIndex);
 	FreeIfAllocated(&pGameOpts->paddle);
 	if (ptr != NULL)
-		pGameOpts->paddle = strdup(ptr);
+		pGameOpts->paddle = mame_strdup(ptr);
 }
 
 static void AssignADStick(HWND hWnd)
@@ -2950,7 +2950,7 @@ static void AssignADStick(HWND hWnd)
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nADStickIndex);
 	FreeIfAllocated(&pGameOpts->adstick);
 	if (ptr != NULL)
-		pGameOpts->adstick = strdup(ptr);
+		pGameOpts->adstick = mame_strdup(ptr);
 }
 
 static void AssignPedal(HWND hWnd)
@@ -2958,7 +2958,7 @@ static void AssignPedal(HWND hWnd)
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nPedalIndex);
 	FreeIfAllocated(&pGameOpts->pedal);
 	if (ptr != NULL)
-		pGameOpts->pedal = strdup(ptr);
+		pGameOpts->pedal = mame_strdup(ptr);
 }
 
 static void AssignDial(HWND hWnd)
@@ -2966,7 +2966,7 @@ static void AssignDial(HWND hWnd)
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nDialIndex);
 	FreeIfAllocated(&pGameOpts->dial);
 	if (ptr != NULL)
-		pGameOpts->dial = strdup(ptr);
+		pGameOpts->dial = mame_strdup(ptr);
 }
 
 static void AssignTrackball(HWND hWnd)
@@ -2974,7 +2974,7 @@ static void AssignTrackball(HWND hWnd)
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nTrackballIndex);
 	FreeIfAllocated(&pGameOpts->trackball);
 	if (ptr != NULL)
-		pGameOpts->trackball = strdup(ptr);
+		pGameOpts->trackball = mame_strdup(ptr);
 }
 
 static void AssignLightgun(HWND hWnd)
@@ -2982,7 +2982,7 @@ static void AssignLightgun(HWND hWnd)
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nLightgunIndex);
 	FreeIfAllocated(&pGameOpts->lightgun_device);
 	if (ptr != NULL)
-		pGameOpts->lightgun_device = strdup(ptr);
+		pGameOpts->lightgun_device = mame_strdup(ptr);
 }
 
 
@@ -2994,13 +2994,13 @@ static void AssignCleanStretch(HWND hWnd)
 	strcpy(buf, clean_stretch_name[g_nCleanStretchIndex]);
 	if (*buf >= 'A')
 		*buf -= 'A' - 'a';
-	pGameOpts->clean_stretch = strdup(buf);
+	pGameOpts->clean_stretch = mame_strdup(buf);
 }
 
 static void AssignD3DEffect(HWND hWnd)
 {
 	FreeIfAllocated(&pGameOpts->d3d_effect);
-	pGameOpts->d3d_effect = strdup(d3d_effects_short_name[g_nD3DEffectIndex]);
+	pGameOpts->d3d_effect = mame_strdup(d3d_effects_short_name[g_nD3DEffectIndex]);
 }
 
 static void AssignD3DPrescale(HWND hWnd)
@@ -3011,7 +3011,7 @@ static void AssignD3DPrescale(HWND hWnd)
 	strcpy(buf, d3d_prescale_name[g_nD3DPrescaleIndex]);
 	if (*buf >= 'A')
 		*buf -= 'A' - 'a';
-	pGameOpts->d3d_prescale = strdup(buf);
+	pGameOpts->d3d_prescale = mame_strdup(buf);
 }
 
 static void AssignBios(HWND hWnd)
@@ -3019,9 +3019,9 @@ static void AssignBios(HWND hWnd)
 	FreeIfAllocated(&pGameOpts->bios);
 
 	if (g_biosinfo && g_nBiosIndex)
-		pGameOpts->bios = strdup(g_biosinfo[g_nBiosIndex]._name);
+		pGameOpts->bios = mame_strdup(g_biosinfo[g_nBiosIndex]._name);
 	else
-		pGameOpts->bios = strdup(BIOS_DEFAULT);
+		pGameOpts->bios = mame_strdup(BIOS_DEFAULT);
 }
 
 #define AssignDefaultBios(i) \
@@ -3051,7 +3051,7 @@ AssignDefaultBios(7)
 static void AssignScaleEffect(HWND hWnd)
 {
 	FreeIfAllocated(&pGameOpts->scale_effect);
-	pGameOpts->scale_effect = strdup(scale_effects_short_name[g_nScaleEffectIndex]);
+	pGameOpts->scale_effect = mame_strdup(scale_effects_short_name[g_nScaleEffectIndex]);
 }
 #endif /* USE_SCALE_EFFECTS */
 
@@ -3096,7 +3096,7 @@ static void ResetDataMap(void)
 	if (pGameOpts->ctrlr == NULL || stricmp(pGameOpts->ctrlr,"Standard") == 0)
 	{
 		FreeIfAllocated(&pGameOpts->ctrlr);
-		pGameOpts->ctrlr = strdup("Standard");
+		pGameOpts->ctrlr = mame_strdup("Standard");
 	}
 
 	g_nScreenIndex = 0;
@@ -3199,7 +3199,7 @@ static void ResetDataMap(void)
 
 			if (drv)
 			{
-				options.bios = strdup(GetDefaultBios(i));
+				options.bios = mame_strdup(GetDefaultBios(i));
 				default_bios_index[i] = determine_bios_rom(drv->bios);
 				free(options.bios);
 				options.bios = NULL;
@@ -3391,6 +3391,8 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_OLD_TIMING,    DM_BOOL, CT_BUTTON,   &pGameOpts->old_timing,    DM_BOOL, &pGameOpts->old_timing,    0, 0, 0);
 	DataMapAdd(IDC_LEDS,          DM_BOOL, CT_BUTTON,   &pGameOpts->leds,          DM_BOOL, &pGameOpts->leds,          0, 0, 0);
 	DataMapAdd(IDC_LEDMODE,       DM_INT,  CT_COMBOBOX, &g_nLedmodeIndex,          DM_STRING, &pGameOpts->ledmode,     0, 0, AssignLedmode);
+	DataMapAdd(IDC_PRIORITY,      DM_INT,  CT_SLIDER,   &g_nPriorityIndex,         DM_INT,  &pGameOpts->priority,      0, 0, AssignPriority);
+	DataMapAdd(IDC_PRIORITYDISP,  DM_NONE, CT_NONE,     NULL,                      DM_INT,  &pGameOpts->priority,      0, 0, 0);
 	DataMapAdd(IDC_SKIP_GAME_INFO,DM_BOOL,CT_BUTTON,    &pGameOpts->skip_gameinfo, DM_BOOL, &pGameOpts->skip_gameinfo, 0, 0, 0);
 	DataMapAdd(IDC_BIOS,          DM_INT,  CT_COMBOBOX, &g_nBiosIndex,             DM_STRING, &pGameOpts->bios,        0, 0, AssignBios);
 	DataMapAdd(IDC_ENABLE_AUTOSAVE, DM_BOOL, CT_BUTTON, &pGameOpts->autosave,      DM_BOOL, &pGameOpts->autosave,     0, 0, 0);
@@ -3407,8 +3409,6 @@ static void BuildDataMap(void)
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 	DataMapAdd(IDC_M68K_CORE,     DM_INT,  CT_COMBOBOX, &pGameOpts->m68k_core,     DM_INT,  &pGameOpts->m68k_core,     0, 0, 0);
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
-	DataMapAdd(IDC_PRIORITY,      DM_INT,  CT_SLIDER,   &g_nPriorityIndex,         DM_INT,  &pGameOpts->priority,      0, 0, AssignPriority);
-	DataMapAdd(IDC_PRIORITYDISP,  DM_NONE, CT_NONE,     NULL,                      DM_INT,  &pGameOpts->priority,      0, 0, 0);
 
 	/* BIOS */
 	if (IS_GLOBAL)

@@ -318,6 +318,7 @@ INT_PTR CALLBACK InterfaceDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 				SetScreenshotBorderSize(value);
 				UpdateScreenShot();
 			}
+//			value = SendDlgItemMessageA(hDlg,IDC_HIGH_PRIORITY, TBM_GETPOS, 0, 0);
 			checked = Button_GetCheck(GetDlgItem(hDlg,IDC_STRETCH_SCREENSHOT_LARGER));
 			if (checked != GetStretchScreenShotLarger())
 			{
