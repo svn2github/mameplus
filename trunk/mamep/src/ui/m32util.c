@@ -303,6 +303,16 @@ char * ConvertToWindowsNewlines(const char *source)
 	return buf;
 }
 
+char * strlower(const char *s)
+{
+	static char buf[100 * 1024];
+
+	strcpy(buf, s);
+	_strlwr(buf);
+
+	return buf;
+}
+
 /* Lop off path and extention from a source file name
  * This assumes their is a pathname passed to the function
  * like src\drivers\blah.c

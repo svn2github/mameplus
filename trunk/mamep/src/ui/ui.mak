@@ -42,7 +42,8 @@ endif
 $(OBJ)/ui/ui.a: $(TMPOBJS)
 
 ifdef USE_GCC
-    GUIOBJS += $(OBJ)/ui/ui.a $(OBJ)/ui/m32main.o
+    GUIOBJS += $(OBJ)/ui/m32main.o $(OBJ)/ui/ui.a
+
     # add resource file
     GUIOBJS += $(OBJ)/ui/mame32.res
 else
@@ -113,6 +114,7 @@ else
 		ddraw.lib \
 		dinput.lib \
 		dxguid.lib \
+		htmlhelp.lib \
 		unicows.lib
 
     ifneq ($(NO_DLL),)

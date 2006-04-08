@@ -492,6 +492,7 @@
 #define ID_FILE_LOADSTATE               40085
 #define ID_FOLDER_SOURCEPROPERTIES      40086
 #define ID_OPTIONS_PALETTE              40087 // UI_COLOR_DISPLAY
+#define ID_OPTIONS_MMO2LST              40088
 
 #define ID_LANGUAGE_ENGLISH_US          40101
 #define ID_LANGUAGE_JAPANESE            40102

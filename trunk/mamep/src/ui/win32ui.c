@@ -235,6 +235,7 @@ enum
 	FILETYPE_WAVE_FILES,
 	FILETYPE_MNG_FILES,
 	FILETYPE_IMAGE_FILES,
+	FILETYPE_LST_FILES,
 	FILETYPE_MAX
 };
 
@@ -784,7 +785,14 @@ static struct
 		NULL,
 		GetBgDir,
 		"png"
-	}
+	},
+	{
+		MAME32NAME " game list files (*.lst)\0*.lst;\0All files (*.*)\0*.*\0",
+		NULL,
+		"Select a game list file",
+		GetLangDir,
+		"lst"
+	},
 };
 
 
@@ -4472,6 +4480,43 @@ static void ResetListView()
 
 }
 
+static int MMO2LST(void)
+{
+	int i;
+	FILE *file;
+	char filename[MAX_PATH];
+	*filename = 0;
+
+	sprintf(filename, MAME32NAME "%s", ui_lang_info[options.langcode].shortname);
+	strcpy(filename, strlower(filename));
+
+	if (CommonFileDialog(TRUE, filename, FILETYPE_LST_FILES))
+	{
+		file = fopen(filename, "wt");
+		if (file == NULL)
+		{
+			//fprintf(stderr, "error: create file %s\n", filename);
+			fclose(file);
+			return 2;
+		}
+
+	    for (i = 0; drivers[i]; i++)
+	    {
+		    const char *lst = _LST(drivers[i]->description);
+		    const char *readings = _READINGS(drivers[i]->description);
+    
+		    if (readings == drivers[i]->description)
+			    readings = lst;
+    
+		    fprintf(file, "%s\t%s\t%s\t%s\n",
+			    drivers[i]->name, lst, readings, drivers[i]->manufacturer);
+	    }
+    
+	    fclose(file);
+	}
+	return 0;
+}
+
 static void UpdateGameList()
 {
 	int i;
@@ -5049,6 +5094,10 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 
 	case ID_UPDATE_GAMELIST:
 		UpdateGameList();
+		break;
+
+	case ID_OPTIONS_MMO2LST:
+		MMO2LST();
 		break;
 
 	case ID_OPTIONS_FONT:

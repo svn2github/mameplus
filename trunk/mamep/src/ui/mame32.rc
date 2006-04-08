@@ -131,6 +131,7 @@ BEGIN
         MENUITEM "&Interface Options...",       ID_OPTIONS_INTERFACE
         MENUITEM "&Background Image...",        ID_OPTIONS_BG
         MENUITEM SEPARATOR
+        MENUITEM "&Export Game List",           ID_OPTIONS_MMO2LST
         POPUP "&Language"
         BEGIN
             MENUITEM "English (US)",                ID_LANGUAGE_ENGLISH_US

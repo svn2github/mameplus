@@ -30,6 +30,7 @@ extern LONG GetCommonControlVersion(void);
 
 extern char * MyStrStrI(const char* pFirst, const char* pSrch);
 extern char * ConvertToWindowsNewlines(const char *source);
+extern char * strlower(const char *s);
 
 extern const char * GetDriverFilename(int nIndex);
 extern const char * GetFilename(const char *filename);
@@ -61,4 +62,4 @@ void SetCorePathList(int file_type,const char *s);
 
 void FreeIfAllocated(char **s);
 
-#endif /* M32UTIL_H */
+#endif /* MAME32UTIL_H */

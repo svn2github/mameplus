@@ -3106,16 +3106,6 @@ static int initialize_rc_winui_config(void)
 	return 0;
 }
 
-static const char *strlower(const char *s)
-{
-	static char buf[1024];
-
-	strcpy(buf, s);
-	_strlwr(buf);
-
-	return buf;
-}
-
 static const char *get_base_config_directory(void)
 {
 	char full[_MAX_PATH];
