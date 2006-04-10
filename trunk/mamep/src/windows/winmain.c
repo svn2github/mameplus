@@ -86,7 +86,7 @@ static const char helpfile[] = "mess.chm";
 //  PROTOTYPES
 //============================================================
 
-static int check_for_double_click_start(int argc);
+//static int check_for_double_click_start(int argc);
 static void osd_exit(void);
 static LONG CALLBACK exception_filter(struct _EXCEPTION_POINTERS *info);
 static const char *lookup_symbol(UINT32 address);
@@ -286,7 +286,7 @@ int osd_is_bad_read_ptr(const void *ptr, size_t size)
 }
 
 
-
+#if 0 // moved to windows/climain.c
 //============================================================
 //  check_for_double_click_start
 //============================================================
@@ -352,7 +352,7 @@ static int check_for_double_click_start(int argc)
 	}
 	return 0;
 }
-
+#endif
 
 //============================================================
 //  exception_filter

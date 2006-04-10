@@ -14,6 +14,71 @@ static const char helpfile[] = "docs\\windows.txt";
 static const char helpfile[] = "mess.chm";
 #endif
 
+//============================================================
+//  check_for_double_click_start
+//============================================================
+
+int check_for_double_click_start(int argc)
+{
+	STARTUPINFO startup_info = { sizeof(STARTUPINFO) };
+
+	// determine our startup information
+	GetStartupInfo(&startup_info);
+
+	// try to determine if MAME was simply double-clicked
+	if (argc <= 1 && startup_info.dwFlags && !(startup_info.dwFlags & STARTF_USESTDHANDLES))
+	{
+		char message_text[1024] = "";
+		int button;
+
+#ifndef MESS
+		sprintf(message_text, APPLONGNAME " v%s - Multiple Arcade Machine Emulator\n"
+							  "Copyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n"
+							  "\n"
+							  APPLONGNAME " is a console application, you should launch it from a command prompt.\n"
+							  "\n"
+							  "Usage:\tMAME gamename [options]\n"
+							  "\n"
+							  "\tMAME -showusage\t\tfor a brief list of options\n"
+							  "\tMAME -showconfig\t\tfor a list of configuration options\n"
+							  "\tMAME -createconfig\tto create a mame.ini\n"
+							  "\n"
+							  "Please consult the documentation for more information.\n"
+							  "\n"
+							  "Would you like to open the documentation now?"
+							  , build_version);
+#else
+		sprintf(message_text, APPLONGNAME " is a console application, you should launch it from a command prompt.\n"
+							  "\n"
+							  "Please consult the documentation for more information.\n"
+							  "\n"
+							  "Would you like to open the documentation now?");
+#endif
+
+		// pop up a messagebox with some information
+		button = MessageBox(NULL, message_text, APPLONGNAME " usage information...", MB_YESNO | MB_ICONASTERISK);
+
+		if (button == IDYES)
+		{
+			// check if windows.txt exists
+			FILE *fp = fopen(helpfile, "r");
+			if (fp)
+			{
+				fclose(fp);
+
+				// if so, open it with the default application
+				ShellExecute(NULL, "open", helpfile, NULL, NULL, SW_SHOWNORMAL);
+			}
+			else
+			{
+				// if not, inform the user
+				MessageBox(NULL, "Couldn't find the documentation.", "Error...", MB_OK | MB_ICONERROR);
+			}
+		}
+		return 1;
+	}
+	return 0;
+}
 
 //============================================================
 //	osd_display_loading_rom_message
@@ -38,11 +103,9 @@ int osd_display_loading_rom_message(const char *name,rom_load_data *romdata)
 int main(int argc, char *argv[])
 {
 #if 1 // move from windows/winmain.c
-#ifndef WINUI
 	// check for double-clicky starts
 	if (check_for_double_click_start(argc) != 0)
 		return 1;
-#endif
 #endif
 
 	osd_display_loading_rom_message_ = osd_display_loading_rom_message;

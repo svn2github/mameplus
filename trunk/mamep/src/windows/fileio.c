@@ -886,7 +886,7 @@ int osd_display_loading_rom_message(const char *name, rom_load_data *romdata)
 #endif /* !_MSC_VER */
 #endif /* !DONT_USE_DLL */
 
-#endif
+#endif /* !WINUI */
 
 
 #ifdef WINUI
