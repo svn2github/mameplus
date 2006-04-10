@@ -1265,1743 +1265,1752 @@ no CPU
 The MAME team
 
 # datafile.c: 11
-0.104u8    March     30th 2006
+0.105      April      4th 2006
 
 # datafile.c: 12
-0.104u7    March     23th 2006
+0.104u9    April      2nd 2006
 
 # datafile.c: 13
-0.104u6    March     16th 2006
+0.104u8    March     30th 2006
 
 # datafile.c: 14
-0.104u5    March      9th 2006
+0.104u7    March     23th 2006
 
 # datafile.c: 15
-0.104u4    March      2nd 2006
+0.104u6    March     16th 2006
 
 # datafile.c: 16
-0.104u3    February  22nd 2006
+0.104u5    March      9th 2006
 
 # datafile.c: 17
-0.104u2    February  16th 2006
+0.104u4    March      2nd 2006
 
 # datafile.c: 18
-0.104u1    February   9th 2006
+0.104u3    February  22nd 2006
 
 # datafile.c: 19
-0.104      February   5th 2006
+0.104u2    February  16th 2006
 
 # datafile.c: 20
-0.103u5    February   2nd 2006
+0.104u1    February   9th 2006
 
 # datafile.c: 21
-0.103u4    January   26th 2006
+0.104      February   5th 2006
 
 # datafile.c: 22
-0.103u3    January   19th 2006
+0.103u5    February   2nd 2006
 
 # datafile.c: 23
-0.103u2fix January   12th 2006
+0.103u4    January   26th 2006
 
 # datafile.c: 24
-0.103u2    January   10th 2006
+0.103u3    January   19th 2006
 
 # datafile.c: 25
-0.103u1    January    4th 2006
+0.103u2fix January   12th 2006
 
 # datafile.c: 26
-0.103      December  30th 2005
+0.103u2    January   10th 2006
 
 # datafile.c: 27
-0.102u5    December  22th 2005
+0.103u1    January    4th 2006
 
 # datafile.c: 28
-0.102u4    December  15th 2005
+0.103      December  30th 2005
 
 # datafile.c: 29
-0.102u3    December   9th 2005
+0.102u5    December  22th 2005
 
 # datafile.c: 30
-0.102u2    December   1st 2005
+0.102u4    December  15th 2005
 
 # datafile.c: 31
-0.102u1    November  21st 2005
+0.102u3    December   9th 2005
 
 # datafile.c: 32
-0.102      November  13th 2005
+0.102u2    December   1st 2005
 
 # datafile.c: 33
-0.101u5    November   4th 2005
+0.102u1    November  21st 2005
 
 # datafile.c: 34
-0.101u4    October   30th 2005
+0.102      November  13th 2005
 
 # datafile.c: 35
-0.101u3    October   24th 2005
+0.101u5    November   4th 2005
 
 # datafile.c: 36
-0.101u2    October   17th 2005
+0.101u4    October   30th 2005
 
 # datafile.c: 37
-0.101u1    October   13th 2005
+0.101u3    October   24th 2005
 
 # datafile.c: 38
-0.101      October    8th 2005
+0.101u2    October   17th 2005
 
 # datafile.c: 39
-0.100u4    October    6th 2005
+0.101u1    October   13th 2005
 
 # datafile.c: 40
-0.100u3    September 29th 2005
+0.101      October    8th 2005
 
 # datafile.c: 41
-0.100u2    September 22nd 2005
+0.100u4    October    6th 2005
 
 # datafile.c: 42
-0.100u1    September 16th 2005
+0.100u3    September 29th 2005
 
 # datafile.c: 43
-0.100      September 14th 2005
+0.100u2    September 22nd 2005
 
 # datafile.c: 44
-0.99u10    September 12th 2005
+0.100u1    September 16th 2005
 
 # datafile.c: 45
-0.99u9     September 10th 2005
+0.100      September 14th 2005
 
 # datafile.c: 46
-0.99u8     September  9th 2005
+0.99u10    September 12th 2005
 
 # datafile.c: 47
-0.99u7     September  5th 2005
+0.99u9     September 10th 2005
 
 # datafile.c: 48
-0.99u6     August    29th 2005
+0.99u8     September  9th 2005
 
 # datafile.c: 49
-0.99u5     August    29th 2005
+0.99u7     September  5th 2005
 
 # datafile.c: 50
-0.99u4     August    24th 2005
+0.99u6     August    29th 2005
 
 # datafile.c: 51
-0.99u3     August    22nd 2005
+0.99u5     August    29th 2005
 
 # datafile.c: 52
-0.99u2     August    14th 2005
+0.99u4     August    24th 2005
 
 # datafile.c: 53
-0.99u1     August    10th 2005
+0.99u3     August    22nd 2005
 
 # datafile.c: 54
-0.99       August     6th 2005
+0.99u2     August    14th 2005
 
 # datafile.c: 55
-0.98u4     August     4th 2005
+0.99u1     August    10th 2005
 
 # datafile.c: 56
-0.98u3     July      31st 2005
+0.99       August     6th 2005
 
 # datafile.c: 57
-0.98u2     July      21st 2005
+0.98u4     August     4th 2005
 
 # datafile.c: 58
-0.98u1     July      16th 2005
+0.98u3     July      31st 2005
 
 # datafile.c: 59
-0.98       July      10th 2005
+0.98u2     July      21st 2005
 
 # datafile.c: 60
-0.97u7     July       7th 2005
+0.98u1     July      16th 2005
 
 # datafile.c: 61
-0.97u4     July       2nd 2005
+0.98       July      10th 2005
 
 # datafile.c: 62
-0.97u3     June      26th 2005
+0.97u7     July       7th 2005
 
 # datafile.c: 63
-0.97u2     June      19th 2005
+0.97u4     July       2nd 2005
 
 # datafile.c: 64
-0.97u1     June       9th 2005
+0.97u3     June      26th 2005
 
 # datafile.c: 65
-0.97       June       2nd 2005
+0.97u2     June      19th 2005
 
 # datafile.c: 66
-0.96u4     May       30th 2005
+0.97u1     June       9th 2005
 
 # datafile.c: 67
-0.96u3     May       24th 2005
+0.97       June       2nd 2005
 
 # datafile.c: 68
-0.96u2     May       16th 2005
+0.96u4     May       30th 2005
 
 # datafile.c: 69
-0.96u1     May        5th 2005
+0.96u3     May       24th 2005
 
 # datafile.c: 70
-0.96       May        3rd 2005
+0.96u2     May       16th 2005
 
 # datafile.c: 71
-0.95u6     April     25th 2005
+0.96u1     May        5th 2005
 
 # datafile.c: 72
-0.95u5     April     21st 2005
+0.96       May        3rd 2005
 
 # datafile.c: 73
-0.95u4     April     21st 2005
+0.95u6     April     25th 2005
 
 # datafile.c: 74
-0.95u3     April     18th 2005
+0.95u5     April     21st 2005
 
 # datafile.c: 75
-0.95u2     April      5th 2005
+0.95u4     April     21st 2005
 
 # datafile.c: 76
-0.95u1     April      1st 2005
+0.95u3     April     18th 2005
 
 # datafile.c: 77
-0.95       March     27th 2005
+0.95u2     April      5th 2005
 
 # datafile.c: 78
-0.94u5     March     22nd 2005
+0.95u1     April      1st 2005
 
 # datafile.c: 79
-0.94u4     March     18th 2005
+0.95       March     27th 2005
 
 # datafile.c: 80
-0.94u3     March     15th 2005
+0.94u5     March     22nd 2005
 
 # datafile.c: 81
-0.94u2     March     14th 2005
+0.94u4     March     18th 2005
 
 # datafile.c: 82
-0.94u1     March      7th 2005
+0.94u3     March     15th 2005
 
 # datafile.c: 83
-0.94       March      6th 2005
+0.94u2     March     14th 2005
 
 # datafile.c: 84
-0.93u3     March      4th 2005
+0.94u1     March      7th 2005
 
 # datafile.c: 85
-0.93u2     March      3rd 2005
+0.94       March      6th 2005
 
 # datafile.c: 86
-0.93u1     March      1st 2005
+0.93u3     March      4th 2005
 
 # datafile.c: 87
-0.93       February  27th 2005
+0.93u2     March      3rd 2005
 
 # datafile.c: 88
-0.92u2000  February  15th 2005
+0.93u1     March      1st 2005
 
 # datafile.c: 89
-0.92       February  13th 2005
+0.93       February  27th 2005
 
 # datafile.c: 90
-0.91u2     February   3rd 2005
+0.92u2000  February  15th 2005
 
 # datafile.c: 91
-0.91u1     January   30th 2005
+0.92       February  13th 2005
 
 # datafile.c: 92
-0.91       January   29th 2005
+0.91u2     February   3rd 2005
 
 # datafile.c: 93
-0.90u4     January   23rd 2005
+0.91u1     January   30th 2005
 
 # datafile.c: 94
-0.90u3     January   17th 2005
+0.91       January   29th 2005
 
 # datafile.c: 95
-0.90u2     January   12th 2005
+0.90u4     January   23rd 2005
 
 # datafile.c: 96
-0.90u1     January    8th 2005
+0.90u3     January   17th 2005
 
 # datafile.c: 97
-0.90       January    4th 2005
+0.90u2     January   12th 2005
 
 # datafile.c: 98
-0.89u6     December  17th 2004
+0.90u1     January    8th 2005
 
 # datafile.c: 99
-0.89u5     December  15th 2004
+0.90       January    4th 2005
 
 # datafile.c: 100
-0.89u4     December  11th 2004
+0.89u6     December  17th 2004
 
 # datafile.c: 101
-0.89u3     December   7th 2004
+0.89u5     December  15th 2004
 
 # datafile.c: 102
-0.89u2     December   3rd 2004
+0.89u4     December  11th 2004
 
 # datafile.c: 103
-0.89u1     November  28th 2004
+0.89u3     December   7th 2004
 
 # datafile.c: 104
-0.89       November  24th 2004
+0.89u2     December   3rd 2004
 
 # datafile.c: 105
-0.88u7     November  20th 2004
+0.89u1     November  28th 2004
 
 # datafile.c: 106
-0.88u6     November  17th 2004
+0.89       November  24th 2004
 
 # datafile.c: 107
-0.88u5     November  15th 2004
+0.88u7     November  20th 2004
 
 # datafile.c: 108
-0.88u4     November  11th 2004
+0.88u6     November  17th 2004
 
 # datafile.c: 109
-0.88u3     November   7th 2004
+0.88u5     November  15th 2004
 
 # datafile.c: 110
-0.88u2     October   31st 2004
+0.88u4     November  11th 2004
 
 # datafile.c: 111
-0.88u1     October   28th 2004
+0.88u3     November   7th 2004
 
 # datafile.c: 112
-0.88       October   25th 2004
+0.88u2     October   31st 2004
 
 # datafile.c: 113
-0.87u4     October   16th 2004
+0.88u1     October   28th 2004
 
 # datafile.c: 114
-0.87u3     October   12th 2004
+0.88       October   25th 2004
 
 # datafile.c: 115
-0.87u2     October   10th 2004
+0.87u4     October   16th 2004
 
 # datafile.c: 116
-0.87u1     September 29th 2004
+0.87u3     October   12th 2004
 
 # datafile.c: 117
-0.87       September 21st 2004
+0.87u2     October   10th 2004
 
 # datafile.c: 118
-0.86u5     September 15th 2004
+0.87u1     September 29th 2004
 
 # datafile.c: 119
-0.86u4     September  9th 2004
+0.87       September 21st 2004
 
 # datafile.c: 120
-0.86u3     September  3rd 2004
+0.86u5     September 15th 2004
 
 # datafile.c: 121
-0.86u2     August    31st 2004
+0.86u4     September  9th 2004
 
 # datafile.c: 122
-0.86u1     August    27th 2004
+0.86u3     September  3rd 2004
 
 # datafile.c: 123
-0.86       August    23rd 2004
+0.86u2     August    31st 2004
 
 # datafile.c: 124
-0.85u3     August    21st 2004
+0.86u1     August    27th 2004
 
 # datafile.c: 125
-0.85u2     August    13th 2004
+0.86       August    23rd 2004
 
 # datafile.c: 126
-0.85u1     August    10th 2004
+0.85u3     August    21st 2004
 
 # datafile.c: 127
-0.85       August     7th 2004
+0.85u2     August    13th 2004
 
 # datafile.c: 128
-0.84u6     August     3rd 2004
+0.85u1     August    10th 2004
 
 # datafile.c: 129
-0.84u5     July      27th 2004
+0.85       August     7th 2004
 
 # datafile.c: 130
-0.84u4     July      25th 2004
+0.84u6     August     3rd 2004
 
 # datafile.c: 131
-0.84u3     July      15th 2004
+0.84u5     July      27th 2004
 
 # datafile.c: 132
-0.84u2     July      11th 2004
+0.84u4     July      25th 2004
 
 # datafile.c: 133
-0.84u1     July       4th 2004
+0.84u3     July      15th 2004
 
 # datafile.c: 134
-0.84       July       2nd 2004
+0.84u2     July      11th 2004
 
 # datafile.c: 135
-0.83       June       5th 2004
+0.84u1     July       4th 2004
 
 # datafile.c: 136
-0.82u3     May       27th 2004
+0.84       July       2nd 2004
 
 # datafile.c: 137
-0.82u2     May       23rd 2004
+0.83       June       5th 2004
 
 # datafile.c: 138
-0.82u1     May       13th 2004
+0.82u3     May       27th 2004
 
 # datafile.c: 139
-0.82       May        6th 2004
+0.82u2     May       23rd 2004
 
 # datafile.c: 140
-0.81u9     April     28th 2004
+0.82u1     May       13th 2004
 
 # datafile.c: 141
-0.81u8     April     27th 2004
+0.82       May        6th 2004
 
 # datafile.c: 142
-0.81u7     April     22nd 2004
+0.81u9     April     28th 2004
 
 # datafile.c: 143
-0.81u6     April     17th 2004
+0.81u8     April     27th 2004
 
 # datafile.c: 144
-0.81u5     April     14th 2004
+0.81u7     April     22nd 2004
 
 # datafile.c: 145
-0.81u4     April      8th 2004
+0.81u6     April     17th 2004
 
 # datafile.c: 146
-0.81u3     April      4th 2004
+0.81u5     April     14th 2004
 
 # datafile.c: 147
-0.81       April      1st 2004
+0.81u4     April      8th 2004
 
 # datafile.c: 148
-0.80u3     March     28th 2004
+0.81u3     April      4th 2004
 
 # datafile.c: 149
-0.80u2     March     27th 2004
+0.81       April      1st 2004
 
 # datafile.c: 150
-0.80u1     March     11th 2004
+0.80u3     March     28th 2004
 
 # datafile.c: 151
-0.80       March      6th 2004
+0.80u2     March     27th 2004
 
 # datafile.c: 152
-0.79u4     February  28th 2004
+0.80u1     March     11th 2004
 
 # datafile.c: 153
-0.79u3     February  25th 2004
+0.80       March      6th 2004
 
 # datafile.c: 154
-0.79u2     February  21st 2004
+0.79u4     February  28th 2004
 
 # datafile.c: 155
-0.79u1     February   8th 2004
+0.79u3     February  25th 2004
 
 # datafile.c: 156
-0.79       January   28th 2004
+0.79u2     February  21st 2004
 
 # datafile.c: 157
-0.78u6     January   20th 2004
+0.79u1     February   8th 2004
 
 # datafile.c: 158
-0.78u5     January   18th 2004
+0.79       January   28th 2004
 
 # datafile.c: 159
-0.78u4     January   13th 2004
+0.78u6     January   20th 2004
 
 # datafile.c: 160
-0.78u3     January   11th 2004
+0.78u5     January   18th 2004
 
 # datafile.c: 161
-0.78u2     January    9th 2004
+0.78u4     January   13th 2004
 
 # datafile.c: 162
-0.78u1     January    4th 2004
+0.78u3     January   11th 2004
 
 # datafile.c: 163
-0.78       December  25th 2003
+0.78u2     January    9th 2004
 
 # datafile.c: 164
-0.77u3     December  13th 2003
+0.78u1     January    4th 2004
 
 # datafile.c: 165
-0.77u2     December   1st 2003
+0.78       December  25th 2003
 
 # datafile.c: 166
-0.77u1     November  21st 2003
+0.77u3     December  13th 2003
 
 # datafile.c: 167
-0.77       November  12th 2003
+0.77u2     December   1st 2003
 
 # datafile.c: 168
-0.76u2     November   1st 2003
+0.77u1     November  21st 2003
 
 # datafile.c: 169
-0.76u1     October   25th 2003
+0.77       November  12th 2003
 
 # datafile.c: 170
-0.76       October   19th 2003
+0.76u2     November   1st 2003
 
 # datafile.c: 171
-0.75u1     October   14th 2003
+0.76u1     October   25th 2003
 
 # datafile.c: 172
-0.75       October   13th 2003
+0.76       October   19th 2003
 
 # datafile.c: 173
-0.74u2     October    6th 2003
+0.75u1     October   14th 2003
 
 # datafile.c: 174
-0.74u1     September 23rd 2003
+0.75       October   13th 2003
 
 # datafile.c: 175
-0.74       September 14th 2003
+0.74u2     October    6th 2003
 
 # datafile.c: 176
-0.73       September  4th 2003
+0.74u1     September 23rd 2003
 
 # datafile.c: 177
-0.72u2     August    25th 2003
+0.74       September 14th 2003
 
 # datafile.c: 178
-0.72u1     August    15th 2003
+0.73       September  4th 2003
 
 # datafile.c: 179
-0.72       August     9th 2003
+0.72u2     August    25th 2003
 
 # datafile.c: 180
-0.71u2     July      12th 2003
+0.72u1     August    15th 2003
 
 # datafile.c: 181
-0.71u1     July       8th 2003
+0.72       August     9th 2003
 
 # datafile.c: 182
-0.71       July       5th 2003
+0.71u2     July      12th 2003
 
 # datafile.c: 183
-0.70u5     June      29th 2003
+0.71u1     July       8th 2003
 
 # datafile.c: 184
-0.70u4     June      21st 2003
+0.71       July       5th 2003
 
 # datafile.c: 185
-0.70u3     June      21st 2003
+0.70u5     June      29th 2003
 
 # datafile.c: 186
-0.70u2     June      19th 2003
+0.70u4     June      21st 2003
 
 # datafile.c: 187
-0.70u1     June      12th 2003
+0.70u3     June      21st 2003
 
 # datafile.c: 188
-0.70       June      11th 2003
+0.70u2     June      19th 2003
 
 # datafile.c: 189
-0.69u3     June       5th 2003
+0.70u1     June      12th 2003
 
 # datafile.c: 190
-0.69b      June       2nd 2003
+0.70       June      11th 2003
 
 # datafile.c: 191
-0.69a      May       31st 2003
+0.69u3     June       5th 2003
 
 # datafile.c: 192
-0.69       May       24th 2003
+0.69b      June       2nd 2003
 
 # datafile.c: 193
-0.68       May       16th 2003
+0.69a      May       31st 2003
 
 # datafile.c: 194
-0.67       April      6th 2003
+0.69       May       24th 2003
 
 # datafile.c: 195
-0.66       March     10th 2003
+0.68       May       16th 2003
 
 # datafile.c: 196
-0.65       February  10th 2003
+0.67       April      6th 2003
 
 # datafile.c: 197
-0.64       January   26th 2003
+0.66       March     10th 2003
 
 # datafile.c: 198
-0.63       January   12th 2003
+0.65       February  10th 2003
 
 # datafile.c: 199
-0.62       November  12th 2002
+0.64       January   26th 2003
 
 # datafile.c: 200
-0.61       July       4th 2002
+0.63       January   12th 2003
 
 # datafile.c: 201
-0.60       May        1st 2002
+0.62       November  12th 2002
 
 # datafile.c: 202
-0.59       March     22nd 2002
+0.61       July       4th 2002
 
 # datafile.c: 203
-0.58       February   6th 2002
+0.60       May        1st 2002
 
 # datafile.c: 204
-0.57       January    1st 2002
+0.59       March     22nd 2002
 
 # datafile.c: 205
-0.56       November   1st 2001
+0.58       February   6th 2002
 
 # datafile.c: 206
-0.55       September 17th 2001
+0.57       January    1st 2002
 
 # datafile.c: 207
-0.54       August    25th 2001
+0.56       November   1st 2001
 
 # datafile.c: 208
-0.53       August    12th 2001
+0.55       September 17th 2001
 
 # datafile.c: 209
-0.37b16    July       2nd 2001
+0.54       August    25th 2001
 
 # datafile.c: 210
-0.37b15    May       24th 2001
+0.53       August    12th 2001
 
 # datafile.c: 211
-0.37b14    April      7th 2001
+0.37b16    July       2nd 2001
 
 # datafile.c: 212
-0.37b13    March     10th 2001
+0.37b15    May       24th 2001
 
 # datafile.c: 213
-0.37b12    February  15th 2001
+0.37b14    April      7th 2001
 
 # datafile.c: 214
-0.37b11    January   16th 2001
+0.37b13    March     10th 2001
 
 # datafile.c: 215
-0.37b10    December   6th 2000
+0.37b12    February  15th 2001
 
 # datafile.c: 216
-0.37b9     November   6th 2000
+0.37b11    January   16th 2001
 
 # datafile.c: 217
-0.37b8     October    3rd 2000
+0.37b10    December   6th 2000
 
 # datafile.c: 218
-0.37b7     September  5th 2000
+0.37b9     November   6th 2000
 
 # datafile.c: 219
-0.37b6     August    20th 2000
+0.37b8     October    3rd 2000
 
 # datafile.c: 220
-0.37b5     July      28th 2000
+0.37b7     September  5th 2000
 
 # datafile.c: 221
-0.37b4     June      16th 2000
+0.37b6     August    20th 2000
 
 # datafile.c: 222
-0.37b3     May       27th 2000
+0.37b5     July      28th 2000
 
 # datafile.c: 223
-0.37b2     May        6th 2000
+0.37b4     June      16th 2000
 
 # datafile.c: 224
-0.37b1     April      6th 2000
+0.37b3     May       27th 2000
 
 # datafile.c: 225
-0.36       March     21st 2000
+0.37b2     May        6th 2000
 
 # datafile.c: 226
-0.36RC2    March     13th 2000
+0.37b1     April      6th 2000
 
 # datafile.c: 227
-0.36RC1    February  26th 2000
+0.36       March     21st 2000
 
 # datafile.c: 228
-0.36b16    February   4th 2000
+0.36RC2    March     13th 2000
 
 # datafile.c: 229
-0.36b15    January   21st 2000
+0.36RC1    February  26th 2000
 
 # datafile.c: 230
-0.36b14    January   11th 2000
+0.36b16    February   4th 2000
 
 # datafile.c: 231
-0.36b13    December  30th 1999
+0.36b15    January   21st 2000
 
 # datafile.c: 232
-0.36b12    December  18th 1999
+0.36b14    January   11th 2000
 
 # datafile.c: 233
-0.36b11    December   6th 1999
+0.36b13    December  30th 1999
 
 # datafile.c: 234
-0.36b10    November  20th 1999
+0.36b12    December  18th 1999
 
 # datafile.c: 235
-0.36b91    November  14th 1999
+0.36b11    December   6th 1999
 
 # datafile.c: 236
-0.36b9     November  13th 1999
+0.36b10    November  20th 1999
 
 # datafile.c: 237
-0.36b8     October   30th 1999
+0.36b91    November  14th 1999
 
 # datafile.c: 238
-0.36b7     October   17th 1999
+0.36b9     November  13th 1999
 
 # datafile.c: 239
-0.36b6     September 29th 1999
+0.36b8     October   30th 1999
 
 # datafile.c: 240
-0.36b5     September 18th 1999
+0.36b7     October   17th 1999
 
 # datafile.c: 241
-0.36b4     September  4th 1999
+0.36b6     September 29th 1999
 
 # datafile.c: 242
-0.36b3     August    22nd 1999
+0.36b5     September 18th 1999
 
 # datafile.c: 243
-0.36b2     August     8th 1999
+0.36b4     September  4th 1999
 
 # datafile.c: 244
-0.36b1     July      19th 1999
+0.36b3     August    22nd 1999
 
 # datafile.c: 245
-0.35fix    July       5th 1999
+0.36b2     August     8th 1999
 
 # datafile.c: 246
-0.35       July       4th 1999
+0.36b1     July      19th 1999
 
 # datafile.c: 247
-0.35RC2    June      24th 1999
+0.35fix    July       5th 1999
 
 # datafile.c: 248
-0.35RC1    June      13th 1999
+0.35       July       4th 1999
 
 # datafile.c: 249
-0.35b13    May       24th 1999
+0.35RC2    June      24th 1999
 
 # datafile.c: 250
-0.35b12    May        1st 1999
+0.35RC1    June      13th 1999
 
 # datafile.c: 251
-0.35b11    April     22nd 1999
+0.35b13    May       24th 1999
 
 # datafile.c: 252
-0.35b10    April      8th 1999
+0.35b12    May        1st 1999
 
 # datafile.c: 253
-0.35b9     March     30th 1999
+0.35b11    April     22nd 1999
 
 # datafile.c: 254
-0.35b8     March     24th 1999
+0.35b10    April      8th 1999
 
 # datafile.c: 255
-0.35b7     March     18th 1999
+0.35b9     March     30th 1999
 
 # datafile.c: 256
-0.35b6     March     15th 1999
+0.35b8     March     24th 1999
 
 # datafile.c: 257
-0.35b5     March      7th 1999
+0.35b7     March     18th 1999
 
 # datafile.c: 258
-0.35b4     March      1st 1999
+0.35b6     March     15th 1999
 
 # datafile.c: 259
-0.35b3     February  15th 1999
+0.35b5     March      7th 1999
 
 # datafile.c: 260
-0.35b2     January   24th 1999
+0.35b4     March      1st 1999
 
 # datafile.c: 261
-0.35b1     January    7th 1999
+0.35b3     February  15th 1999
 
 # datafile.c: 262
-0.34       December  31st 1998
+0.35b2     January   24th 1999
 
 # datafile.c: 263
-0.34RC2    December  21st 1998
+0.35b1     January    7th 1999
 
 # datafile.c: 264
-0.34RC1    December  14th 1998
+0.34       December  31st 1998
 
 # datafile.c: 265
-0.34b8     November  29th 1998
+0.34RC2    December  21st 1998
 
 # datafile.c: 266
-0.34b7     November  10th 1998
+0.34RC1    December  14th 1998
 
 # datafile.c: 267
-0.34b6     October   28th 1998
+0.34b8     November  29th 1998
 
 # datafile.c: 268
-0.34b5     October   16th 1998
+0.34b7     November  10th 1998
 
 # datafile.c: 269
-0.34b4     October    4th 1998
+0.34b6     October   28th 1998
 
 # datafile.c: 270
-0.34b3     September 17th 1998
+0.34b5     October   16th 1998
 
 # datafile.c: 271
-0.34b2     August    30th 1998
+0.34b4     October    4th 1998
 
 # datafile.c: 272
-0.34b1     August    16th 1998
+0.34b3     September 17th 1998
 
 # datafile.c: 273
-0.33       August    10th 1998
+0.34b2     August    30th 1998
 
 # datafile.c: 274
-0.33RC1    July      29th 1998
+0.34b1     August    16th 1998
 
 # datafile.c: 275
-0.33b7     July      21st 1998
+0.33       August    10th 1998
 
 # datafile.c: 276
-0.33b6     June      16th 1998
+0.33RC1    July      29th 1998
 
 # datafile.c: 277
-0.33b5     June      10th 1998
+0.33b7     July      21st 1998
 
 # datafile.c: 278
-0.33b4     May       31st 1998
+0.33b6     June      16th 1998
 
 # datafile.c: 279
-0.33b3     May       17th 1998
+0.33b5     June      10th 1998
 
 # datafile.c: 280
-0.33b2     May        8th 1998
+0.33b4     May       31st 1998
 
 # datafile.c: 281
-0.33b1     May        3rd 1998
+0.33b3     May       17th 1998
 
 # datafile.c: 282
-0.31       April     25th 1998
+0.33b2     May        8th 1998
 
 # datafile.c: 283
-0.30       January    7th 1998
+0.33b1     May        3rd 1998
 
 # datafile.c: 284
-0.29       October   20th 1997
+0.31       April     25th 1998
 
 # datafile.c: 285
-0.28       September  7th 1997
+0.30       January    7th 1998
 
 # datafile.c: 286
-0.27       August    10th 1997
+0.29       October   20th 1997
 
 # datafile.c: 287
-0.26a      July      18th 1997
+0.28       September  7th 1997
 
 # datafile.c: 288
-0.26       July      14th 1997
+0.27       August    10th 1997
 
 # datafile.c: 289
-0.25       June      28th 1997
+0.26a      July      18th 1997
 
 # datafile.c: 290
-0.24       June      13th 1997
+0.26       July      14th 1997
 
 # datafile.c: 291
-0.23a      June       3rd 1997
+0.25       June      28th 1997
 
 # datafile.c: 292
-0.23       June       2nd 1997
+0.24       June      13th 1997
 
 # datafile.c: 293
-0.22       May       25th 1997
+0.23a      June       3rd 1997
 
 # datafile.c: 294
-0.21.5     May       16th 1997
+0.23       June       2nd 1997
 
 # datafile.c: 295
-0.21       May       12th 1997
+0.22       May       25th 1997
 
 # datafile.c: 296
-0.20       May        5th 1997
+0.21.5     May       16th 1997
 
 # datafile.c: 297
-0.19       April     26th 1997
+0.21       May       12th 1997
 
 # datafile.c: 298
-0.18       April     20th 1997
+0.20       May        5th 1997
 
 # datafile.c: 299
-0.17       April     14th 1997
+0.19       April     26th 1997
 
 # datafile.c: 300
-0.16       April     13th 1997
+0.18       April     20th 1997
 
 # datafile.c: 301
-0.15       April      6th 1997
+0.17       April     14th 1997
 
 # datafile.c: 302
-0.14       April      2nd 1997
+0.16       April     13th 1997
 
 # datafile.c: 303
-0.13       March     30th 1997
+0.15       April      6th 1997
 
 # datafile.c: 304
-0.12       March     23rd 1997
+0.14       April      2nd 1997
 
 # datafile.c: 305
-0.11       March     16th 1997
+0.13       March     30th 1997
 
 # datafile.c: 306
-0.10       March     13th 1997
+0.12       March     23rd 1997
 
 # datafile.c: 307
-0.091      March      9th 1997
+0.11       March     16th 1997
 
 # datafile.c: 308
-0.09       March      9th 1997
+0.10       March     13th 1997
 
 # datafile.c: 309
-0.081      March      4th 1997
+0.091      March      9th 1997
 
 # datafile.c: 310
-0.08       March      4th 1997
+0.09       March      9th 1997
 
 # datafile.c: 311
-0.07       February  27th 1997
+0.081      March      4th 1997
 
 # datafile.c: 312
-0.06       February  23rd 1997
+0.08       March      4th 1997
 
 # datafile.c: 313
-0.05       February  20th 1997
+0.07       February  27th 1997
 
 # datafile.c: 314
-0.04       February  16th 1997
+0.06       February  23rd 1997
 
 # datafile.c: 315
-0.03       February  13th 1997
+0.05       February  20th 1997
 
 # datafile.c: 316
-0.02       February   9th 1997
+0.04       February  16th 1997
 
 # datafile.c: 317
+0.03       February  13th 1997
+
+# datafile.c: 318
+0.02       February   9th 1997
+
+# datafile.c: 319
 0.01       February   5th 1997
 
-# datafile.c: 323
-0.104u8    856    6081  +14
-
-# datafile.c: 324
-0.104u7    856    6067  +3
-
-# datafile.c: 325
-0.104u6    856    6064  +4
-
 # datafile.c: 326
-0.104u5    856    6060  +17
+0.104u9    858    6096  +15
 
 # datafile.c: 327
-0.104u4    856    6043  +9
+0.104u8    856    6081  +14
 
 # datafile.c: 328
-0.104u3    856    6034  +3
+0.104u7    856    6067  +3
 
 # datafile.c: 329
-0.104u2    856    6031  +2
+0.104u6    856    6064  +4
 
 # datafile.c: 330
-0.104u1    856    6029  +5
+0.104u5    856    6060  +17
+
+# datafile.c: 331
+0.104u4    856    6043  +9
 
 # datafile.c: 332
-0.103u5    856    6016  +10
+0.104u3    856    6034  +3
 
 # datafile.c: 333
-0.103u4    856    6006  +6
+0.104u2    856    6031  +2
 
 # datafile.c: 334
-0.103u3    854    6000  +5
-
-# datafile.c: 335
-0.103u2fix 854    5995  +2
+0.104u1    856    6029  +5
 
 # datafile.c: 336
-0.103u2    854    5993  +41
+0.103u5    856    6016  +10
 
 # datafile.c: 337
-0.103u1    851    5952  +9
+0.103u4    856    6006  +6
+
+# datafile.c: 338
+0.103u3    854    6000  +5
 
 # datafile.c: 339
-0.102u5    849    5915  +22
+0.103u2fix 854    5995  +2
 
 # datafile.c: 340
-0.102u4    846    5893  +11
+0.103u2    854    5993  +41
 
 # datafile.c: 341
-0.102u3    846    5882  +11
-
-# datafile.c: 342
-0.102u2    845    5871  +13
+0.103u1    851    5952  +9
 
 # datafile.c: 343
-0.102u1    845    5858  +10
+0.102u5    849    5915  +22
+
+# datafile.c: 344
+0.102u4    846    5893  +11
 
 # datafile.c: 345
-0.101u5    844    5833  +5
+0.102u3    846    5882  +11
 
 # datafile.c: 346
-0.101u4    844    5828  +7
+0.102u2    845    5871  +13
 
 # datafile.c: 347
-0.101u3    841    5821  +4
-
-# datafile.c: 348
-0.101u2    841    5817  +4
+0.102u1    845    5858  +10
 
 # datafile.c: 349
-0.101u1    839    5813  +3
+0.101u5    844    5833  +5
+
+# datafile.c: 350
+0.101u4    844    5828  +7
 
 # datafile.c: 351
-0.100u4    839    5810  +7
+0.101u3    841    5821  +4
 
 # datafile.c: 352
-0.100u3    838    5803  +12
+0.101u2    841    5817  +4
 
 # datafile.c: 353
-0.100u2    836    5791  +8
+0.101u1    839    5813  +3
 
-# datafile.c: 354
-0.100u1    831    5783  +5
+# datafile.c: 355
+0.100u4    839    5810  +7
 
 # datafile.c: 356
-0.99u10    829    5776  +3
+0.100u3    838    5803  +12
 
 # datafile.c: 357
-0.99u9     829    5773  +2
+0.100u2    836    5791  +8
 
 # datafile.c: 358
-0.99u8     829    5771  +8
-
-# datafile.c: 359
-0.99u7     829    5763  +7
+0.100u1    831    5783  +5
 
 # datafile.c: 360
-0.99u6     830    5756  +2
+0.99u10    829    5776  +3
 
 # datafile.c: 361
-0.99u5     830    5754  +2
+0.99u9     829    5773  +2
 
 # datafile.c: 362
-0.99u4     829    5752  +3
+0.99u8     829    5771  +8
 
 # datafile.c: 363
-0.99u3     829    5749  +6
+0.99u7     829    5763  +7
 
 # datafile.c: 364
-0.99u2     827    5743  +33
+0.99u6     830    5756  +2
 
 # datafile.c: 365
-0.99u1     813    5710  +5
+0.99u5     830    5754  +2
+
+# datafile.c: 366
+0.99u4     829    5752  +3
 
 # datafile.c: 367
-0.98u4     812    5705  +4
+0.99u3     829    5749  +6
 
 # datafile.c: 368
-0.98u3     813    5701  +3
+0.99u2     827    5743  +33
 
 # datafile.c: 369
-0.98u2     812    5698  +6
+0.99u1     813    5710  +5
 
-# datafile.c: 370
-0.98u1     811    5692  +5
+# datafile.c: 371
+0.98u4     812    5705  +4
 
 # datafile.c: 372
-0.97u5     810    5687  +3
+0.98u3     813    5701  +3
 
 # datafile.c: 373
-0.97u4     811    5684  +5
+0.98u2     812    5698  +6
 
 # datafile.c: 374
-0.97u3     811    5679  +5
-
-# datafile.c: 375
-0.97u2     811    5674  +5
+0.98u1     811    5692  +5
 
 # datafile.c: 376
-0.97u1     811    5669  +8
+0.97u5     810    5687  +3
+
+# datafile.c: 377
+0.97u4     811    5684  +5
 
 # datafile.c: 378
-0.96u3     811    5660  +14
+0.97u3     811    5679  +5
 
 # datafile.c: 379
-0.96u2     809    5646  +10
+0.97u2     811    5674  +5
 
 # datafile.c: 380
-0.96u1     809    5636  +4
+0.97u1     811    5669  +8
 
 # datafile.c: 382
-0.95u6     805    5613  +4
+0.96u3     811    5660  +14
 
 # datafile.c: 383
-0.95u5     804    5609  +0
+0.96u2     809    5646  +10
 
 # datafile.c: 384
-0.95u4     804    5609  +4
-
-# datafile.c: 385
-0.95u3     804    5605  +10
+0.96u1     809    5636  +4
 
 # datafile.c: 386
-0.95u2     804    5595  +11
+0.95u6     805    5613  +4
 
 # datafile.c: 387
-0.95u1     800    5584  +6
+0.95u5     804    5609  +0
+
+# datafile.c: 388
+0.95u4     804    5609  +4
 
 # datafile.c: 389
-0.94u5     800    5565  +6
+0.95u3     804    5605  +10
 
 # datafile.c: 390
-0.94u4     799    5559  +6
+0.95u2     804    5595  +11
 
 # datafile.c: 391
-0.94u3     799    5553  +9
+0.95u1     800    5584  +6
 
-# datafile.c: 392
-0.94u1     799    5544  +6
+# datafile.c: 393
+0.94u5     800    5565  +6
 
 # datafile.c: 394
-0.93u3     797    5537  +1
+0.94u4     799    5559  +6
 
 # datafile.c: 395
-0.93u2     797    5536  +10
+0.94u3     799    5553  +9
 
 # datafile.c: 396
-0.93u1     797    5525  +1
+0.94u1     799    5544  +6
 
 # datafile.c: 398
-0.92u2000  796    5512  +4
+0.93u3     797    5537  +1
+
+# datafile.c: 399
+0.93u2     797    5536  +10
 
 # datafile.c: 400
-0.91u2     790    5443  +4
+0.93u1     797    5525  +1
 
-# datafile.c: 401
-0.91u1     788    5439  +11
-
-# datafile.c: 403
-0.90u4     782    5419  +10
+# datafile.c: 402
+0.92u2000  796    5512  +4
 
 # datafile.c: 404
-0.90u3     782    5409  +11
+0.91u2     790    5443  +4
 
 # datafile.c: 405
-0.90u2     782    5398  +3
+0.91u1     788    5439  +11
 
-# datafile.c: 406
-0.90u1     782    5395  +2
+# datafile.c: 407
+0.90u4     782    5419  +10
 
 # datafile.c: 408
-0.89u6     781    5380  +17
+0.90u3     782    5409  +11
 
 # datafile.c: 409
-0.89u4     779    5363  +9
+0.90u2     782    5398  +3
 
 # datafile.c: 410
-0.89u3     779    5354  +13
-
-# datafile.c: 411
-0.89u2     780    5341  +10
+0.90u1     782    5395  +2
 
 # datafile.c: 412
-0.89u1     780    5331  +18
+0.89u6     781    5380  +17
+
+# datafile.c: 413
+0.89u4     779    5363  +9
 
 # datafile.c: 414
-0.88u7     779    5312  +12
+0.89u3     779    5354  +13
 
 # datafile.c: 415
-0.88u6     777    5300  +14
+0.89u2     780    5341  +10
 
 # datafile.c: 416
-0.88u4     776    5286  +11
-
-# datafile.c: 417
-0.88u3     775    5275  +15
+0.89u1     780    5331  +18
 
 # datafile.c: 418
-0.88u2     774    5260  +7
+0.88u7     779    5312  +12
 
 # datafile.c: 419
-0.88u1     774    5253  +5
+0.88u6     777    5300  +14
+
+# datafile.c: 420
+0.88u4     776    5286  +11
 
 # datafile.c: 421
-0.87u4     774    5227  +10
+0.88u3     775    5275  +15
 
 # datafile.c: 422
-0.87u3     770    5217  +18
+0.88u2     774    5260  +7
 
 # datafile.c: 423
-0.87u2     770    5199  +14
+0.88u1     774    5253  +5
 
-# datafile.c: 424
-0.87u1     770    5185  +40
+# datafile.c: 425
+0.87u4     774    5227  +10
 
 # datafile.c: 426
-0.86u5     764    5141  +3
+0.87u3     770    5217  +18
 
 # datafile.c: 427
-0.86u4     763    5138  +5
+0.87u2     770    5199  +14
 
 # datafile.c: 428
-0.86u3     761    5133  +2
-
-# datafile.c: 429
-0.86u2     761    5131  +37
+0.87u1     770    5185  +40
 
 # datafile.c: 430
-0.86u1     761    5094  +6
+0.86u5     764    5141  +3
+
+# datafile.c: 431
+0.86u4     763    5138  +5
 
 # datafile.c: 432
-0.85u3     753    5074  +3
+0.86u3     761    5133  +2
 
 # datafile.c: 433
-0.85u2     752    5071  +3
+0.86u2     761    5131  +37
 
 # datafile.c: 434
-0.85u1     752    5068  +7
+0.86u1     761    5094  +6
 
 # datafile.c: 436
-0.84u6     751    5060  +6
+0.85u3     753    5074  +3
 
 # datafile.c: 437
-0.84u5     751    5054  +20
+0.85u2     752    5071  +3
 
 # datafile.c: 438
-0.84u3     749    5034  +13
-
-# datafile.c: 439
-0.84u2     747    5021  +1
+0.85u1     752    5068  +7
 
 # datafile.c: 440
-0.84u1     747    5020  +6
+0.84u6     751    5060  +6
+
+# datafile.c: 441
+0.84u5     751    5054  +20
+
+# datafile.c: 442
+0.84u3     749    5034  +13
 
 # datafile.c: 443
-0.82u3     739    4942  +7
+0.84u2     747    5021  +1
 
 # datafile.c: 444
-0.82u2     738    4935  +7
-
-# datafile.c: 445
-0.82u1     737    4928  +7
+0.84u1     747    5020  +6
 
 # datafile.c: 447
-0.81u9     736    4906  +11
+0.82u3     739    4942  +7
 
 # datafile.c: 448
-0.81u7     732    4895  +4
+0.82u2     738    4935  +7
 
 # datafile.c: 449
-0.81u6     732    4891  +7
-
-# datafile.c: 450
-0.81u5     731    4884  +7
+0.82u1     737    4928  +7
 
 # datafile.c: 451
-0.81u4     731    4877  +16
+0.81u9     736    4906  +11
 
 # datafile.c: 452
-0.81u3     728    4861  +20
+0.81u7     732    4895  +4
+
+# datafile.c: 453
+0.81u6     732    4891  +7
 
 # datafile.c: 454
-0.80u3     724    4830  +5
+0.81u5     731    4884  +7
 
 # datafile.c: 455
-0.80u2     723    4825  +24
+0.81u4     731    4877  +16
 
 # datafile.c: 456
-0.80u1     714    4801  +5
+0.81u3     728    4861  +20
 
 # datafile.c: 458
-0.79u4     712    4790  +22
+0.80u3     724    4830  +5
 
 # datafile.c: 459
-0.79u1     707    4768  +16
+0.80u2     723    4825  +24
 
-# datafile.c: 461
-0.78u6     708    4731  +0
+# datafile.c: 460
+0.80u1     714    4801  +5
 
 # datafile.c: 462
-0.78u5     708    4731  +4
+0.79u4     712    4790  +22
 
 # datafile.c: 463
-0.78u4     708    4727  +2
-
-# datafile.c: 464
-0.78u3     711    4725  +7
+0.79u1     707    4768  +16
 
 # datafile.c: 465
-0.78u2     711    4718  +0
+0.78u6     708    4731  +0
 
 # datafile.c: 466
-0.78u1     711    4718  +13
+0.78u5     708    4731  +4
+
+# datafile.c: 467
+0.78u4     708    4727  +2
 
 # datafile.c: 468
-0.77u3     707    4668  +8
+0.78u3     711    4725  +7
 
 # datafile.c: 469
-0.77u2     705    4660  +20
+0.78u2     711    4718  +0
 
-# datafile.c: 471
-0.76u2     699    4608  +2
+# datafile.c: 470
+0.78u1     711    4718  +13
 
 # datafile.c: 472
-0.76u1     698    4606  +107
+0.77u3     707    4668  +8
 
-# datafile.c: 474
-0.75u1     696    4474  +1
+# datafile.c: 473
+0.77u2     705    4660  +20
+
+# datafile.c: 475
+0.76u2     699    4608  +2
 
 # datafile.c: 476
-0.74u2     693    4447  +313
+0.76u1     698    4606  +107
 
-# datafile.c: 477
-0.74u1     690    4134  +11
+# datafile.c: 478
+0.75u1     696    4474  +1
 
 # datafile.c: 480
-0.72u2     683    4107  +19
+0.74u2     693    4447  +313
 
 # datafile.c: 481
-0.72u1     680    4088  +5
-
-# datafile.c: 483
-0.71u2     677    4052  +25
+0.74u1     690    4134  +11
 
 # datafile.c: 484
-0.71u1     669    4027  +3
+0.72u2     683    4107  +19
 
-# datafile.c: 486
-0.70u5     667    4014  +8
+# datafile.c: 485
+0.72u1     680    4088  +5
 
 # datafile.c: 487
-0.70u4     667    4006  +11
+0.71u2     677    4052  +25
 
 # datafile.c: 488
-0.70u3     666    3995  +2
-
-# datafile.c: 489
-0.70u2     666    3993  +2
+0.71u1     669    4027  +3
 
 # datafile.c: 490
-0.70u1     665    3991  +1
+0.70u5     667    4014  +8
+
+# datafile.c: 491
+0.70u4     667    4006  +11
 
 # datafile.c: 492
-0.69u3     664    3988  +10
+0.70u3     666    3995  +2
 
 # datafile.c: 493
-0.69b      664    3978  +7
+0.70u2     666    3993  +2
 
 # datafile.c: 494
+0.70u1     665    3991  +1
+
+# datafile.c: 496
+0.69u3     664    3988  +10
+
+# datafile.c: 497
+0.69b      664    3978  +7
+
+# datafile.c: 498
 0.69a      663    3971  +7
 
-# datafile.c: 512
+# datafile.c: 516
 0.37b16    498    3008  +78
 
-# datafile.c: 513
+# datafile.c: 517
 0.37b15    478    2930  +47
 
-# datafile.c: 514
+# datafile.c: 518
 0.37b14    476    2883  +44
 
-# datafile.c: 515
+# datafile.c: 519
 0.37b13    471    2839  +66
 
-# datafile.c: 516
+# datafile.c: 520
 0.37b12    460    2773  +109
 
-# datafile.c: 517
+# datafile.c: 521
 0.37b11    448    2664  +125
 
-# datafile.c: 518
+# datafile.c: 522
 0.37b10    438    2539  +63
 
-# datafile.c: 519
+# datafile.c: 523
 0.37b9     421    2476  +65
 
-# datafile.c: 520
+# datafile.c: 524
 0.37b8     417    2411  +74
 
-# datafile.c: 521
+# datafile.c: 525
 0.37b7     407    2337  +54
 
-# datafile.c: 522
+# datafile.c: 526
 0.37b6     400    2283  +43
 
-# datafile.c: 523
+# datafile.c: 527
 0.37b5     393    2240  +83
 
-# datafile.c: 524
+# datafile.c: 528
 0.37b4     383    2157  +12
 
-# datafile.c: 525
+# datafile.c: 529
 0.37b3     382    2145  +42
 
-# datafile.c: 526
+# datafile.c: 530
 0.37b2     375    2103  +30
 
-# datafile.c: 527
+# datafile.c: 531
 0.37b1     369    2073  +25
 
-# datafile.c: 529
+# datafile.c: 533
 0.36RC2    366    2048  +27
 
-# datafile.c: 530
+# datafile.c: 534
 0.36RC1    364    2021  +21
 
-# datafile.c: 531
+# datafile.c: 535
 0.36b16    364    2000  +29
 
-# datafile.c: 532
+# datafile.c: 536
 0.36b15    366    1971  +20
 
-# datafile.c: 533
+# datafile.c: 537
 0.36b14    362    1951  +19
 
-# datafile.c: 534
+# datafile.c: 538
 0.36b13    361    1932  +20
 
-# datafile.c: 535
+# datafile.c: 539
 0.36b12    356    1912  +12
 
-# datafile.c: 536
+# datafile.c: 540
 0.36b11    353    1900  +23
 
-# datafile.c: 537
+# datafile.c: 541
 0.36b10    352    1877  +19
 
-# datafile.c: 538
+# datafile.c: 542
 0.36b91    345    1858  + 0
 
-# datafile.c: 539
+# datafile.c: 543
 0.36b9     345    1858  +27
 
-# datafile.c: 540
+# datafile.c: 544
 0.36b8     342    1831  +37
 
-# datafile.c: 541
+# datafile.c: 545
 0.36b7     339    1794  +29
 
-# datafile.c: 542
+# datafile.c: 546
 0.36b6     336    1765  +42
 
-# datafile.c: 543
+# datafile.c: 547
 0.36b5     330    1723  +39
 
-# datafile.c: 544
+# datafile.c: 548
 0.36b4     325    1684  +42
 
-# datafile.c: 545
+# datafile.c: 549
 0.36b3     320    1642  +41
 
-# datafile.c: 546
+# datafile.c: 550
 0.36b2     312    1601  +69
 
-# datafile.c: 547
+# datafile.c: 551
 0.36b1     297    1532  +58
 
-# datafile.c: 548
+# datafile.c: 552
 0.35fix    287    1474  + 0
 
-# datafile.c: 550
+# datafile.c: 554
 0.35RC2    287    1459  +22
 
-# datafile.c: 551
+# datafile.c: 555
 0.35RC1    286    1437  +37
 
-# datafile.c: 552
+# datafile.c: 556
 0.35b13    285    1400  +58
 
-# datafile.c: 553
+# datafile.c: 557
 0.35b12    273    1342  +25
 
-# datafile.c: 554
+# datafile.c: 558
 0.35b11    268    1317  +54
 
-# datafile.c: 555
+# datafile.c: 559
 0.35b10    262    1263  + 9
 
-# datafile.c: 556
+# datafile.c: 560
 0.35b9     261    1254  +13
 
-# datafile.c: 557
+# datafile.c: 561
 0.35b8     258    1241  +22
 
-# datafile.c: 558
+# datafile.c: 562
 0.35b7     256    1219  + 2
 
-# datafile.c: 559
+# datafile.c: 563
 0.35b6     257    1217  +31
 
-# datafile.c: 560
+# datafile.c: 564
 0.35b5     255    1186  + 8
 
-# datafile.c: 561
+# datafile.c: 565
 0.35b4     255    1178  +30
 
-# datafile.c: 562
+# datafile.c: 566
 0.35b3     252    1148  +41
 
-# datafile.c: 563
+# datafile.c: 567
 0.35b2     251    1107  +60
 
-# datafile.c: 564
+# datafile.c: 568
 0.35b1     247    1047  +23
 
-# datafile.c: 566
+# datafile.c: 570
 0.34RC2    243    1024  + 0
 
-# datafile.c: 567
+# datafile.c: 571
 0.34RC1    243    1024  + 1
 
-# datafile.c: 568
+# datafile.c: 572
 0.34b8     244    1023  +43
 
-# datafile.c: 569
+# datafile.c: 573
 0.34b7     236     980  +42
 
-# datafile.c: 570
+# datafile.c: 574
 0.34b6     234     938  +34
 
-# datafile.c: 571
+# datafile.c: 575
 0.34b5     231     904  +50
 
-# datafile.c: 572
+# datafile.c: 576
 0.34b4     230     854  +50
 
-# datafile.c: 573
+# datafile.c: 577
 0.34b3     226     804  +38
 
-# datafile.c: 574
+# datafile.c: 578
 0.34b2     226     766  +64
 
-# datafile.c: 575
+# datafile.c: 579
 0.34b1     218     702  +73
 
-# datafile.c: 577
+# datafile.c: 581
 0.33RC1    210     629  + 1
 
-# datafile.c: 578
+# datafile.c: 582
 0.33b7     210     628  +24
 
-# datafile.c: 579
+# datafile.c: 583
 0.33b6     200     604  +21
 
-# datafile.c: 580
+# datafile.c: 584
 0.33b5             583  +18
 
-# datafile.c: 581
+# datafile.c: 585
 0.33b4             565  +25
 
-# datafile.c: 582
+# datafile.c: 586
 0.33b3             540  +40
 
-# datafile.c: 583
+# datafile.c: 587
 0.33b2             500  + 7
 
-# datafile.c: 584
+# datafile.c: 588
 0.33b1             493  +15
 
-# datafile.c: 590
+# datafile.c: 594
 0.26a              168  + 1
 
-# datafile.c: 594
+# datafile.c: 598
 0.23a              124  + 0
 
-# datafile.c: 683
+# datafile.c: 687
 $info
 
-# datafile.c: 684
+# datafile.c: 688
 $bio
 
-# datafile.c: 686
+# datafile.c: 690
 $story
 
-# datafile.c: 688
+# datafile.c: 692
 $mame
 
-# datafile.c: 689
+# datafile.c: 693
 $drv
 
-# datafile.c: 692
+# datafile.c: 696
 $cmd
 
-# datafile.c: 693
+# datafile.c: 697
 $end
 
-# datafile.c: 1729
+# datafile.c: 1733
  ...[TRUNCATED]
 
-# datafile.c: 1963, 3416
+# datafile.c: 1967, 3420
 lang
 
-# datafile.c: 2010, 3477
+# datafile.c: 2014, 3481
 .dat
 
-# datafile.c: 2123, 2127
+# datafile.c: 2127, 2131
 history.dat
 
-# datafile.c: 2127, 2130
+# datafile.c: 2131, 2134
 history/
 
-# datafile.c: 2147, 2158
+# datafile.c: 2151, 2162
 story.dat
 
-# datafile.c: 2158, 2161
+# datafile.c: 2162, 2165
 story/
 
-# datafile.c: 2228, 2232, 2345
+# datafile.c: 2232, 2236, 2349
 mameinfo.dat
 
-# datafile.c: 2232, 2235
+# datafile.c: 2236, 2239
 mameinfo/
 
-# datafile.c: 2254
+# datafile.c: 2258
 cpu1
 
-# datafile.c: 2255
+# datafile.c: 2259
 cpu2
 
-# datafile.c: 2256
+# datafile.c: 2260
 cpu3
 
-# datafile.c: 2257
+# datafile.c: 2261
 cpu4
 
-# datafile.c: 2258
+# datafile.c: 2262
 cpu5
 
-# datafile.c: 2259
+# datafile.c: 2263
 cpu6
 
-# datafile.c: 2260
+# datafile.c: 2264
 cpu7
 
-# datafile.c: 2261
+# datafile.c: 2265
 cpu8
 
-# datafile.c: 2262
+# datafile.c: 2266
 gfx1
 
-# datafile.c: 2263
+# datafile.c: 2267
 gfx2
 
-# datafile.c: 2264
+# datafile.c: 2268
 gfx3
 
-# datafile.c: 2265
+# datafile.c: 2269
 gfx4
 
-# datafile.c: 2266
+# datafile.c: 2270
 gfx5
 
-# datafile.c: 2267
+# datafile.c: 2271
 gfx6
 
-# datafile.c: 2268
+# datafile.c: 2272
 gfx7
 
-# datafile.c: 2269
+# datafile.c: 2273
 gfx8
 
-# datafile.c: 2270
+# datafile.c: 2274
 prom
 
-# datafile.c: 2271
+# datafile.c: 2275
 snd1
 
-# datafile.c: 2272
+# datafile.c: 2276
 snd2
 
-# datafile.c: 2273
+# datafile.c: 2277
 snd3
 
-# datafile.c: 2274
+# datafile.c: 2278
 snd4
 
-# datafile.c: 2275
+# datafile.c: 2279
 snd5
 
-# datafile.c: 2276
+# datafile.c: 2280
 snd6
 
-# datafile.c: 2277
+# datafile.c: 2281
 snd7
 
-# datafile.c: 2278
+# datafile.c: 2282
 snd8
 
-# datafile.c: 2279
+# datafile.c: 2283
 usr1
 
-# datafile.c: 2280
+# datafile.c: 2284
 usr2
 
-# datafile.c: 2281
+# datafile.c: 2285
 usr3
 
-# datafile.c: 2282
+# datafile.c: 2286
 usr4
 
-# datafile.c: 2283
+# datafile.c: 2287
 usr5
 
-# datafile.c: 2284
+# datafile.c: 2288
 usr6
 
-# datafile.c: 2285
+# datafile.c: 2289
 usr7
 
-# datafile.c: 2286
+# datafile.c: 2290
 usr8
 
-# datafile.c: 2418
+# datafile.c: 2422
 MAME 
 
-# datafile.c: 2534, 2722, 3025
+# datafile.c: 2538, 2726, 3029
 neogeo.c
 
-# datafile.c: 2540
+# datafile.c: 2544
 playch10.c
 
-# datafile.c: 2546
+# datafile.c: 2550
 decocass.c
 
-# datafile.c: 2552
+# datafile.c: 2556
 cvs.c
 
-# datafile.c: 3056
+# datafile.c: 3060
 \n    0 -     5 KB:  %4d\n    5 -    10 KB:  %4d\n   10 -    50 KB:  %4d\n   50 -   100 KB:  %4d\n
 
-# datafile.c: 3058
+# datafile.c: 3062
   100 -   500 KB:  %4d\n  500 -  1000 KB:  %4d\n 1000 -  5000 KB:  %4d\n 5000 - 10000 KB:  %4d\n
 
-# datafile.c: 3060
+# datafile.c: 3064
 10000 - 50000 KB:  %4d\n      > 50000 KB:  %4d\n
 
-# datafile.c: 3089
+# datafile.c: 3093
 \n         CPU:  (1)  (2)  (3)  (4)\n\n
 
-# datafile.c: 3223
+# datafile.c: 3227
 \nWARNING: ASPECT RATIO number too high!\n
 
-# datafile.c: 3258
+# datafile.c: 3262
   FPS %f:  %4d\n
 
-# datafile.c: 3334
+# datafile.c: 3338
   %dx%d: %3d    
 
-# datafile.c: 3349
+# datafile.c: 3353
 \nWARNING: Resolution number too high!\n
 
-# datafile.c: 3352
+# datafile.c: 3356
 \nWARNING: Palettesize number too high!\n
 
-# datafile.c: 3413, 3446
+# datafile.c: 3417, 3450
 command.dat
 
-# datafile.c: 3475
+# datafile.c: 3479
 command\\
 
 # debug/debugcmd.c: 121
@@ -3496,31 +3505,31 @@ Currently targeting %s (%s)\n
 # debug/debugcon.c: 286
 ' && p[-1] != '\\
 
-# debug/debugcon.c: 397
+# debug/debugcon.c: 404
 Out of memory registering new command with the debugger!
 
-# debug/debugcon.c: 430
+# debug/debugcon.c: 437
 unknown command
 
-# debug/debugcon.c: 431
+# debug/debugcon.c: 438
 ambiguous command
 
-# debug/debugcon.c: 432
+# debug/debugcon.c: 439
 unbalanced parentheses
 
-# debug/debugcon.c: 433
+# debug/debugcon.c: 440
 unbalanced quotes
 
-# debug/debugcon.c: 434
+# debug/debugcon.c: 441
 not enough parameters for command
 
-# debug/debugcon.c: 435
+# debug/debugcon.c: 442
 too many parameters for command
 
-# debug/debugcon.c: 436
+# debug/debugcon.c: 443
 error in assignment expression
 
-# debug/debugcon.c: 437
+# debug/debugcon.c: 444
 unknown error
 
 # debug/debugcpu.c: 45
@@ -3532,112 +3541,112 @@ data
 # debug/debugcpu.c: 45
 program
 
-# debug/debugcpu.c: 161
+# debug/debugcpu.c: 162
 wpaddr
 
-# debug/debugcpu.c: 162
+# debug/debugcpu.c: 163
 wpdata
 
-# debug/debugcpu.c: 163
+# debug/debugcpu.c: 164
 cycles
 
-# debug/debugcpu.c: 164
+# debug/debugcpu.c: 165
 cpunum
 
-# debug/debugcpu.c: 165
+# debug/debugcpu.c: 166
 logunmap
 
-# debug/debugcpu.c: 166
+# debug/debugcpu.c: 167
 logunmapd
 
-# debug/debugcpu.c: 167
+# debug/debugcpu.c: 168
 logunmapi
 
-# debug/debugcpu.c: 168
+# debug/debugcpu.c: 169
 beamx
 
-# debug/debugcpu.c: 169
+# debug/debugcpu.c: 170
 beamy
 
-# debug/debugcpu.c: 175
+# debug/debugcpu.c: 176
 temp%d
 
-# debug/debugcpu.c: 710
+# debug/debugcpu.c: 711
 Stopped on interrupt (CPU %d, IRQ %d)\n
 
-# debug/debugcpu.c: 718
+# debug/debugcpu.c: 719
 Stopped at time interval %.1g\n
 
-# debug/debugcpu.c: 735
+# debug/debugcpu.c: 736
 Stopped at temporary breakpoint %X on CPU %d\n
 
-# debug/debugcpu.c: 771
+# debug/debugcpu.c: 772
 User-initiated break\n
 
-# debug/debugcpu.c: 882
+# debug/debugcpu.c: 883
 \n   (loops for %d instructions)\n\n
 
-# debug/debugcpu.c: 1014
+# debug/debugcpu.c: 1015
 Stopped at VBLANK\n
 
-# debug/debugcpu.c: 1120
+# debug/debugcpu.c: 1121
 Stopped at breakpoint %X\n
 
-# debug/debugcpu.c: 1165
+# debug/debugcpu.c: 1166
 debug_breakpoint_set() called with invalid cpunum!
 
-# debug/debugcpu.c: 1282
+# debug/debugcpu.c: 1283
 0bytes
 
-# debug/debugcpu.c: 1282
+# debug/debugcpu.c: 1283
 3bytes
 
-# debug/debugcpu.c: 1282
+# debug/debugcpu.c: 1283
 5bytes
 
-# debug/debugcpu.c: 1282
+# debug/debugcpu.c: 1283
 6bytes
 
-# debug/debugcpu.c: 1282
+# debug/debugcpu.c: 1283
 7bytes
 
-# debug/debugcpu.c: 1282
+# debug/debugcpu.c: 1283
 byte
 
-# debug/debugcpu.c: 1282
+# debug/debugcpu.c: 1283
 dword
 
-# debug/debugcpu.c: 1282
+# debug/debugcpu.c: 1283
 qword
 
-# debug/debugcpu.c: 1282
+# debug/debugcpu.c: 1283
 word
 
-# debug/debugcpu.c: 1298
+# debug/debugcpu.c: 1299
 Stopped at watchpoint %X writing %s to %08X
 
-# debug/debugcpu.c: 1300
+# debug/debugcpu.c: 1301
  (data=%X%08X)
 
-# debug/debugcpu.c: 1302
+# debug/debugcpu.c: 1303
  (data=%X)
 
-# debug/debugcpu.c: 1305
+# debug/debugcpu.c: 1306
 Stopped at watchpoint %X reading %s from %08X
 
-# debug/debugcpu.c: 1468
+# debug/debugcpu.c: 1469
 Out of memory allocating hotspot info
 
-# debug/debugcpu.c: 1502
+# debug/debugcpu.c: 1503
 Hotspot @ %s %08X (PC=%08X) hit %d times (fell off bottom)\n
 
-# debug/debugcpu.c: 1986
+# debug/debugcpu.c: 1987
 debug_read_opcode: unknown type = %d
 
-# debug/debugcpu.c: 2094
+# debug/debugcpu.c: 2095
 r
 
-# debug/debugcpu.c: 2096
+# debug/debugcpu.c: 2097
 Cannot open command file '%s'\n
 
 # debug/debughlp.c: 59
@@ -9793,34 +9802,34 @@ Game Sec/Real Sec
 # drivers/carpolo.c: 145
 15.00 (Shortest)
 
-# drivers/cave.c: 422
+# drivers/cave.c: 423
 *10000xxxx
 
-# drivers/cave.c: 423
+# drivers/cave.c: 424
 *10011xxxx
 
-# drivers/cave.c: 1553
+# drivers/cave.c: 1554
 2 Co./1 Cr./1 Cont.
 
-# drivers/cave.c: 1569
+# drivers/cave.c: 1570
 150k/350k
 
-# drivers/cave.c: 1570
+# drivers/cave.c: 1571
 Damage
 
-# drivers/cave.c: 1579
+# drivers/cave.c: 1580
 Medium Hard
 
-# drivers/cave.c: 1580
+# drivers/cave.c: 1581
 Hard 1
 
-# drivers/cave.c: 1581
+# drivers/cave.c: 1582
 Hard 2
 
-# drivers/cave.c: 2113, 2117, 2152, 2156, 2191, 2195, 2200, 2233, 2237, 2269, 2273, 2306, 2310, 2349, 2353, 2355, 2357, 2359, 2364, 2399, 2403, 2443, 2447, 2449, 2451, 2453, 2458, 2498, 2502, 2507, 2512, 2554, 2558, 2560, 2562, 2564, 2569, 2574, 2615, 2618, 2623, 2628, 2660, 2664
+# drivers/cave.c: 2114, 2118, 2153, 2157, 2192, 2196, 2201, 2234, 2238, 2270, 2274, 2307, 2311, 2350, 2354, 2356, 2358, 2360, 2365, 2400, 2404, 2444, 2448, 2450, 2452, 2454, 2459, 2499, 2503, 2508, 2513, 2555, 2559, 2561, 2563, 2565, 2570, 2575, 2616, 2619, 2624, 2629, 2661, 2665
 left
 
-# drivers/cave.c: 2113, 2118, 2152, 2157, 2191, 2196, 2201, 2233, 2238, 2269, 2274, 2306, 2311, 2349, 2354, 2356, 2358, 2360, 2365, 2399, 2404, 2443, 2448, 2450, 2452, 2454, 2459, 2498, 2503, 2508, 2513, 2554, 2559, 2561, 2563, 2565, 2570, 2575, 2615, 2619, 2624, 2629, 2660, 2665
+# drivers/cave.c: 2114, 2119, 2153, 2158, 2192, 2197, 2202, 2234, 2239, 2270, 2275, 2307, 2312, 2350, 2355, 2357, 2359, 2361, 2366, 2400, 2405, 2444, 2449, 2451, 2453, 2455, 2460, 2499, 2504, 2509, 2514, 2555, 2560, 2562, 2564, 2566, 2571, 2576, 2616, 2620, 2625, 2630, 2661, 2666
 right
 
 # drivers/cball.c: 135
@@ -9856,13 +9865,13 @@ Test 1
 # drivers/cchasm.c: 196, 199, 202, 206
 mono
 
-# drivers/cclimber.c: 292, 386, 413, 524, 1304, 1401
+# drivers/cclimber.c: 292, 386, 413, 524, 1361, 1458
 IN0
 
-# drivers/cclimber.c: 303, 395, 421, 530, 1313, 1409
+# drivers/cclimber.c: 303, 395, 421, 530, 1370, 1466
 IN1
 
-# drivers/cclimber.c: 314, 404, 560, 1453
+# drivers/cclimber.c: 314, 404, 560, 1510
 IN2
 
 # drivers/cclimber.c: 329, 360, 429, 462, 495, 536
@@ -9889,40 +9898,40 @@ Retry on Error
 # drivers/cclimber.c: 558
 Stop on Error
 
-# drivers/cclimber.c: 640, 644, 648, 678, 682, 686, 1527, 1529, 1532
+# drivers/cclimber.c: 640, 644, 648, 678, 682, 686, 1584, 1586, 1589
 mono
 
-# drivers/cclimber.c: 1322, 1439
+# drivers/cclimber.c: 1379, 1496
 DSW1
 
-# drivers/cclimber.c: 1322, 1422
+# drivers/cclimber.c: 1379, 1479
 Infinite (Cheat)
 
-# drivers/cclimber.c: 1345
+# drivers/cclimber.c: 1402
 IN4
 
-# drivers/cclimber.c: 1357, 1382
+# drivers/cclimber.c: 1414, 1439
 IN3
 
-# drivers/cclimber.c: 1417
+# drivers/cclimber.c: 1474
 DSW0
 
-# drivers/cclimber.c: 1424
+# drivers/cclimber.c: 1481
 20K, every 50K
 
-# drivers/cclimber.c: 1425
+# drivers/cclimber.c: 1482
 30K, every 100K
 
-# drivers/cclimber.c: 1426
+# drivers/cclimber.c: 1483
 30K only
 
-# drivers/cclimber.c: 1444
+# drivers/cclimber.c: 1501
 High Score Names
 
-# drivers/cclimber.c: 1445
+# drivers/cclimber.c: 1502
 3 Letters
 
-# drivers/cclimber.c: 1446
+# drivers/cclimber.c: 1503
 10 Letters
 
 # drivers/centiped.c: 636, 805, 881, 1007, 1075
@@ -11107,25 +11116,25 @@ NVRAM Reset
 # drivers/coinmstr.c: 544, 548
 mono
 
-# drivers/cojag.c: 829, 832, 877, 880
+# drivers/cojag.c: 819, 822, 867, 870
 left
 
-# drivers/cojag.c: 829, 835, 877, 883
+# drivers/cojag.c: 819, 825, 867, 873
 right
 
-# drivers/cojag.c: 908
+# drivers/cojag.c: 898
 area51t
 
-# drivers/cojag.c: 921, 934
+# drivers/cojag.c: 911, 924
 area51
 
-# drivers/cojag.c: 947, 961
+# drivers/cojag.c: 937, 951
 maxforce
 
-# drivers/cojag.c: 975, 989
+# drivers/cojag.c: 965, 979
 area51mx
 
-# drivers/cojag.c: 1003
+# drivers/cojag.c: 993
 vcircle
 
 # drivers/combatsc.c: 357
@@ -17944,31 +17953,55 @@ right
 # drivers/gstriker.c: 644
 Unknown MCU CMD %04x
 
-# drivers/gsword.c: 476
+# drivers/gsword.c: 510
 Fencing Difficulty
 
-# drivers/gsword.c: 481
+# drivers/gsword.c: 515
 Kendo Difficulty
 
-# drivers/gsword.c: 484
+# drivers/gsword.c: 518
 Roman Difficulty
 
-# drivers/gsword.c: 492
+# drivers/gsword.c: 526
 255 (Cheat)
 
-# drivers/gsword.c: 507
+# drivers/gsword.c: 541
 First Stage
 
-# drivers/gsword.c: 508
+# drivers/gsword.c: 542
 Fencing
 
-# drivers/gsword.c: 509
+# drivers/gsword.c: 543
 Kendo
 
-# drivers/gsword.c: 510
+# drivers/gsword.c: 544
 Roman
 
-# drivers/gsword.c: 618, 621, 625, 629, 668, 671, 675, 679
+# drivers/gsword.c: 586
+DIP1-0c(982E)
+
+# drivers/gsword.c: 591
+DIP1-30(982A)
+
+# drivers/gsword.c: 592
+96H
+
+# drivers/gsword.c: 593
+78H
+
+# drivers/gsword.c: 594
+5AH
+
+# drivers/gsword.c: 595
+3CH
+
+# drivers/gsword.c: 596
+TEST_MODE
+
+# drivers/gsword.c: 599
+DIP1-80(982C)
+
+# drivers/gsword.c: 730, 733, 737, 741, 777, 780, 784, 789
 mono
 
 # drivers/gticlub.c: 86
@@ -20833,6 +20866,15 @@ slamdnk2
 # drivers/konamigx.c: 3456
 rushhero
 
+# drivers/konamim2.c: 301
+623jaa02
+
+# drivers/konamim2.c: 309
+btltryst
+
+# drivers/konamim2.c: 317
+heatof11
+
 # drivers/ksayakyu.c: 172
 7th inning
 
@@ -21340,109 +21382,10 @@ Freeze Mode
 # drivers/liberatr.c: 403, 407, 411
 mono
 
-# drivers/littlerb.c: 127
-offset0 %06x, %04x\n
+# drivers/littlerb.c: 85
+write data %04x to %08x\n
 
-# drivers/littlerb.c: 181
-offset1 %06x, %04x\n
-
-# drivers/littlerb.c: 228
-log_0000.txt
-
-# drivers/littlerb.c: 228, 229, 230, 231, 232
-w+
-
-# drivers/littlerb.c: 229
-log_2000.txt
-
-# drivers/littlerb.c: 230
-log_3800.txt
-
-# drivers/littlerb.c: 231
-log_E000.txt
-
-# drivers/littlerb.c: 232
-log_F800.txt
-
-# drivers/littlerb.c: 267
-A
-
-# drivers/littlerb.c: 268
-B
-
-# drivers/littlerb.c: 269
-C
-
-# drivers/littlerb.c: 270
-D
-
-# drivers/littlerb.c: 271
-E
-
-# drivers/littlerb.c: 272
-F
-
-# drivers/littlerb.c: 273
-G
-
-# drivers/littlerb.c: 274
-H
-
-# drivers/littlerb.c: 275
-I
-
-# drivers/littlerb.c: 276
-J
-
-# drivers/littlerb.c: 277
-K
-
-# drivers/littlerb.c: 278
-L
-
-# drivers/littlerb.c: 279
-M
-
-# drivers/littlerb.c: 280
-N
-
-# drivers/littlerb.c: 281
-O
-
-# drivers/littlerb.c: 282
-P
-
-# drivers/littlerb.c: 283
-Q
-
-# drivers/littlerb.c: 284
-R
-
-# drivers/littlerb.c: 285
-S
-
-# drivers/littlerb.c: 286
-T
-
-# drivers/littlerb.c: 287
-U
-
-# drivers/littlerb.c: 288
-V
-
-# drivers/littlerb.c: 289
-W
-
-# drivers/littlerb.c: 290
-X
-
-# drivers/littlerb.c: 291
-Y
-
-# drivers/littlerb.c: 292
-Z
-
-# drivers/littlerb.c: 409
+# drivers/littlerb.c: 217
 GAME/TEST??
 
 # drivers/lkage.c: 166
@@ -23872,190 +23815,190 @@ Mazin Wars (Mega Play)
 # drivers/megaplay.c: 898
 Columns III (Mega Play)
 
-# drivers/megasys1.c: 679, 683, 688, 693, 705
+# drivers/megasys1.c: 680, 684, 689, 694, 706
 left
 
-# drivers/megasys1.c: 679, 684, 689, 694, 709
+# drivers/megasys1.c: 680, 685, 690, 695, 710
 right
 
-# drivers/megasys1.c: 787, 791, 849, 853
+# drivers/megasys1.c: 788, 792, 850, 854
 mono
 
-# drivers/megasys1.c: 973, 1109, 1269, 1356, 1472, 1574, 1722, 1815, 1916, 2021, 2139, 2252, 2435, 2612, 2749, 2929, 3025, 3117, 3255
+# drivers/megasys1.c: 974, 1110, 1270, 1357, 1473, 1575, 1723, 1816, 1957, 2062, 2180, 2293, 2476, 2653, 2790, 2970, 3066, 3158, 3296
 IN1
 
-# drivers/megasys1.c: 975, 1111, 1271, 1358, 1474, 1576, 1724, 1817, 1918, 2023, 2141, 2254, 2437, 2615, 2751, 2931, 3027, 3119, 3257
+# drivers/megasys1.c: 976, 1112, 1272, 1359, 1475, 1577, 1725, 1818, 1959, 2064, 2182, 2295, 2478, 2656, 2792, 2972, 3068, 3160, 3298
 IN2
 
-# drivers/megasys1.c: 977, 1113, 1273, 1360, 1476, 1578, 1726, 1819, 1920, 2025, 2143, 2256, 2439, 2617, 2753, 2933, 3029, 3121, 3259
+# drivers/megasys1.c: 978, 1114, 1274, 1361, 1477, 1579, 1727, 1820, 1961, 2066, 2184, 2297, 2480, 2658, 2794, 2974, 3070, 3162, 3300
 IN3
 
-# drivers/megasys1.c: 980, 1116, 1276, 1363, 1479, 1581, 1729, 1822, 1923, 2028, 2146, 2259, 2442, 2620, 2756, 2936, 3032, 3124, 3262
+# drivers/megasys1.c: 981, 1117, 1277, 1364, 1480, 1582, 1730, 1823, 1964, 2069, 2187, 2300, 2483, 2661, 2797, 2977, 3073, 3165, 3303
 DSW1
 
-# drivers/megasys1.c: 983, 1279, 1399, 1501, 1605, 1736, 1831, 1932, 2037, 2172, 2268, 2451, 2629, 2765, 2943, 3041, 3131, 3271
+# drivers/megasys1.c: 984, 1280, 1400, 1502, 1606, 1737, 1832, 1973, 2078, 2213, 2309, 2492, 2670, 2806, 2984, 3082, 3172, 3312
 DSW2
 
-# drivers/megasys1.c: 1142
+# drivers/megasys1.c: 1143
 IN5
 
-# drivers/megasys1.c: 1150
+# drivers/megasys1.c: 1151
 30k 70k 110k then every 30k
 
-# drivers/megasys1.c: 1151
+# drivers/megasys1.c: 1152
 50k 100k then every 40k
 
-# drivers/megasys1.c: 1160
+# drivers/megasys1.c: 1161
 Swap 1P/2P Controls
 
-# drivers/megasys1.c: 1409
+# drivers/megasys1.c: 1410
 Very Short
 
-# drivers/megasys1.c: 1410
+# drivers/megasys1.c: 1411
 Short
 
-# drivers/megasys1.c: 1412
+# drivers/megasys1.c: 1413
 Long
 
-# drivers/megasys1.c: 1416
+# drivers/megasys1.c: 1417
 1 Credit 2 Play
 
-# drivers/megasys1.c: 1606, 1832
+# drivers/megasys1.c: 1607, 1833
 Unknown 2-0
 
-# drivers/megasys1.c: 1609, 1835
+# drivers/megasys1.c: 1610, 1836
 Unknown 2-1
 
-# drivers/megasys1.c: 1612, 1838, 2178, 3047
+# drivers/megasys1.c: 1613, 1839, 2219, 3088
 Unknown 2-2
 
-# drivers/megasys1.c: 1618
+# drivers/megasys1.c: 1619
 Unknown 2-4
 
-# drivers/megasys1.c: 1624, 1849
+# drivers/megasys1.c: 1625, 1850
 Unknown 2-6
 
-# drivers/megasys1.c: 1737
+# drivers/megasys1.c: 1738
 DSW-B bits 2-0
 
-# drivers/megasys1.c: 1754
+# drivers/megasys1.c: 1755
 DSW-B bit 6
 
-# drivers/megasys1.c: 1827
+# drivers/megasys1.c: 1828
 Unknown 1-0
 
-# drivers/megasys1.c: 1841, 2181, 3050
+# drivers/megasys1.c: 1842, 2222, 3091
 Unknown 2-3
 
-# drivers/megasys1.c: 1844, 1944, 2184, 2280, 2777
+# drivers/megasys1.c: 1845, 1985, 2225, 2321, 2818
 ?Difficulty?
 
-# drivers/megasys1.c: 1928, 2162, 2761
+# drivers/megasys1.c: 1969, 2203, 2802
 Freeze Screen (Cheat)
 
-# drivers/megasys1.c: 1937, 2770, 2954, 3276
+# drivers/megasys1.c: 1978, 2811, 2995, 3317
 Infinite (Cheat)
 
-# drivers/megasys1.c: 1939, 3281
+# drivers/megasys1.c: 1980, 3322
 50k
 
-# drivers/megasys1.c: 1940
+# drivers/megasys1.c: 1981
 200k
 
-# drivers/megasys1.c: 2033, 3037
+# drivers/megasys1.c: 2074, 3078
 Unknown 1-7
 
-# drivers/megasys1.c: 2038
+# drivers/megasys1.c: 2079
 Unknown 2-0*
 
-# drivers/megasys1.c: 2041
+# drivers/megasys1.c: 2082
 Unknown 2-1*
 
-# drivers/megasys1.c: 2044
+# drivers/megasys1.c: 2085
 Unknown 2-2345*
 
-# drivers/megasys1.c: 2061
+# drivers/megasys1.c: 2102
 Unknown 2-6*
 
-# drivers/megasys1.c: 2156
+# drivers/megasys1.c: 2197
 Unknown 1-3
 
-# drivers/megasys1.c: 2159
+# drivers/megasys1.c: 2200
 Unknown 1-4
 
-# drivers/megasys1.c: 2264, 2447
+# drivers/megasys1.c: 2305, 2488
 Invulnerability (Cheat)
 
-# drivers/megasys1.c: 2591
+# drivers/megasys1.c: 2632
 IN0
 
-# drivers/megasys1.c: 2630
+# drivers/megasys1.c: 2671
 Unknown 2-0&1
 
-# drivers/megasys1.c: 2636
+# drivers/megasys1.c: 2677
 Movement?
 
-# drivers/megasys1.c: 2637
+# drivers/megasys1.c: 2678
 Paddles
 
-# drivers/megasys1.c: 2638
+# drivers/megasys1.c: 2679
 Buttons
 
-# drivers/megasys1.c: 2639
+# drivers/megasys1.c: 2680
 Nudity
 
-# drivers/megasys1.c: 2640
+# drivers/megasys1.c: 2681
 Female and Male (Full)
 
-# drivers/megasys1.c: 2641
+# drivers/megasys1.c: 2682
 Female (Full)
 
-# drivers/megasys1.c: 2642
+# drivers/megasys1.c: 2683
 Female (Partial)
 
-# drivers/megasys1.c: 2647
+# drivers/megasys1.c: 2688
 (controls?)Unknown 2-7
 
-# drivers/megasys1.c: 2771
+# drivers/megasys1.c: 2812
 Bombs
 
-# drivers/megasys1.c: 2775
+# drivers/megasys1.c: 2816
 70k and every 130k
 
-# drivers/megasys1.c: 2776
+# drivers/megasys1.c: 2817
 100k and every 200k
 
-# drivers/megasys1.c: 2955
+# drivers/megasys1.c: 2996
 Default episode
 
-# drivers/megasys1.c: 2959
+# drivers/megasys1.c: 3000
 Easy?
 
-# drivers/megasys1.c: 2961
+# drivers/megasys1.c: 3002
 Hard?
 
-# drivers/megasys1.c: 2962
+# drivers/megasys1.c: 3003
 Hardest?
 
-# drivers/megasys1.c: 3053
+# drivers/megasys1.c: 3094
 Difficulty?
 
-# drivers/megasys1.c: 3137
+# drivers/megasys1.c: 3178
 Games To Play (Vs)
 
-# drivers/megasys1.c: 3145
+# drivers/megasys1.c: 3186
 Credits To Start (Vs)
 
-# drivers/megasys1.c: 3148
+# drivers/megasys1.c: 3189
 Credits To Continue (Vs)
 
-# drivers/megasys1.c: 3278
+# drivers/megasys1.c: 3319
 20k
 
-# drivers/megasys1.c: 3279
+# drivers/megasys1.c: 3320
 30k
 
-# drivers/megasys1.c: 3280
+# drivers/megasys1.c: 3321
 40k
 
 # drivers/megatech.c: 79
@@ -28909,172 +28852,172 @@ DSW7
 # drivers/namcos21.c: 2015, 2092, 2173
 DSW8
 
-# drivers/namcos22.c: 1153
+# drivers/namcos22.c: 1158
 %08x: sys[0x%02x] := 0x%02x\n
 
-# drivers/namcos22.c: 1545, 1549, 1568, 3558, 3638, 3681, 3745, 3877
+# drivers/namcos22.c: 1550, 1554, 1573, 3563, 3643, 3686, 3750, 3882
 MCUP5A
 
-# drivers/namcos22.c: 1572, 3574, 3650, 3693, 3755, 3887
+# drivers/namcos22.c: 1577, 3579, 3655, 3698, 3760, 3892
 MCUP5B
 
-# drivers/namcos22.c: 1855, 1860, 1862, 2267, 2272, 2274
+# drivers/namcos22.c: 1860, 1865, 1867, 2272, 2277, 2279
 left
 
-# drivers/namcos22.c: 1855, 1859, 1861, 2267, 2271, 2273
+# drivers/namcos22.c: 1860, 1864, 1866, 2272, 2276, 2278
 right
 
-# drivers/namcos22.c: 3533, 3847
+# drivers/namcos22.c: 3538, 3852
 DIP4-1
 
-# drivers/namcos22.c: 3536, 3659, 3850
+# drivers/namcos22.c: 3541, 3664, 3855
 DIP4-2
 
-# drivers/namcos22.c: 3539, 3662, 3853
+# drivers/namcos22.c: 3544, 3667, 3858
 DIP4-3
 
-# drivers/namcos22.c: 3542, 3665, 3856
+# drivers/namcos22.c: 3547, 3670, 3861
 DIP4-4
 
-# drivers/namcos22.c: 3545, 3668, 3859
+# drivers/namcos22.c: 3550, 3673, 3864
 DIP4-5
 
-# drivers/namcos22.c: 3548, 3671, 3862
+# drivers/namcos22.c: 3553, 3676, 3867
 DIP4-6
 
-# drivers/namcos22.c: 3551, 3674, 3865
+# drivers/namcos22.c: 3556, 3679, 3870
 DIP4-7
 
-# drivers/namcos22.c: 3554, 3677, 3868
+# drivers/namcos22.c: 3559, 3682, 3873
 DIP4-8
 
-# drivers/namcos22.c: 3575
+# drivers/namcos22.c: 3580
 DIP5-1
 
-# drivers/namcos22.c: 3578
+# drivers/namcos22.c: 3583
 DIP5-2
 
-# drivers/namcos22.c: 3581
+# drivers/namcos22.c: 3586
 DIP5-3
 
-# drivers/namcos22.c: 3584
+# drivers/namcos22.c: 3589
 DIP5-4
 
-# drivers/namcos22.c: 3587
+# drivers/namcos22.c: 3592
 DIP5-5
 
-# drivers/namcos22.c: 3590
+# drivers/namcos22.c: 3595
 DIP5-6
 
-# drivers/namcos22.c: 3593
+# drivers/namcos22.c: 3598
 DIP5-7
 
-# drivers/namcos22.c: 3596
+# drivers/namcos22.c: 3601
 DIP5-8
 
-# drivers/namcos22.c: 3604, 3706
+# drivers/namcos22.c: 3609, 3711
 DIP1
 
-# drivers/namcos22.c: 3607, 3709
+# drivers/namcos22.c: 3612, 3714
 DIP2
 
-# drivers/namcos22.c: 3610, 3712
+# drivers/namcos22.c: 3615, 3717
 DIP3
 
-# drivers/namcos22.c: 3613, 3715
+# drivers/namcos22.c: 3618, 3720
 DIP4
 
-# drivers/namcos22.c: 3616, 3718
+# drivers/namcos22.c: 3621, 3723
 DIP5
 
-# drivers/namcos22.c: 3619, 3721
+# drivers/namcos22.c: 3624, 3726
 DIP6
 
-# drivers/namcos22.c: 3622, 3724
+# drivers/namcos22.c: 3627, 3729
 DIP7
 
-# drivers/namcos22.c: 3625, 3727
+# drivers/namcos22.c: 3630, 3732
 DIP8
 
-# drivers/namcos22.c: 3656
+# drivers/namcos22.c: 3661
 DIP4-1 (Test Mode)
 
-# drivers/namcos22.c: 3768, 3895, 3969
+# drivers/namcos22.c: 3773, 3900, 3974
 DIP2-1
 
-# drivers/namcos22.c: 3771, 3898, 3972, 4048, 4123
+# drivers/namcos22.c: 3776, 3903, 3977, 4053, 4128
 DIP2-2
 
-# drivers/namcos22.c: 3774, 3901, 3975, 4051, 4126
+# drivers/namcos22.c: 3779, 3906, 3980, 4056, 4131
 DIP2-3
 
-# drivers/namcos22.c: 3777, 3904, 3978, 4054, 4129
+# drivers/namcos22.c: 3782, 3909, 3983, 4059, 4134
 DIP2-4
 
-# drivers/namcos22.c: 3780, 3907, 3981, 4057, 4132
+# drivers/namcos22.c: 3785, 3912, 3986, 4062, 4137
 DIP2-5
 
-# drivers/namcos22.c: 3783, 3910, 3984, 4060, 4135
+# drivers/namcos22.c: 3788, 3915, 3989, 4065, 4140
 DIP2-6
 
-# drivers/namcos22.c: 3786, 3913, 3987, 4063, 4138
+# drivers/namcos22.c: 3791, 3918, 3992, 4068, 4143
 DIP2-7
 
-# drivers/namcos22.c: 3789, 3916, 3990, 4066, 4141
+# drivers/namcos22.c: 3794, 3921, 3995, 4071, 4146
 DIP2-8
 
-# drivers/namcos22.c: 3792, 3919, 3993, 4069, 4144
+# drivers/namcos22.c: 3797, 3924, 3998, 4074, 4149
 DIP3-1
 
-# drivers/namcos22.c: 3795, 3922, 3996, 4072, 4147
+# drivers/namcos22.c: 3800, 3927, 4001, 4077, 4152
 DIP3-2
 
-# drivers/namcos22.c: 3798, 3925, 3999, 4075, 4150
+# drivers/namcos22.c: 3803, 3930, 4004, 4080, 4155
 DIP3-3
 
-# drivers/namcos22.c: 3801, 3928, 4002, 4078, 4153
+# drivers/namcos22.c: 3806, 3933, 4007, 4083, 4158
 DIP3-4
 
-# drivers/namcos22.c: 3804, 3931, 4005, 4081, 4156
+# drivers/namcos22.c: 3809, 3936, 4010, 4086, 4161
 DIP3-5
 
-# drivers/namcos22.c: 3807, 3934, 4008, 4084, 4159
+# drivers/namcos22.c: 3812, 3939, 4013, 4089, 4164
 DIP3-6
 
-# drivers/namcos22.c: 3810, 4162
+# drivers/namcos22.c: 3815, 4167
 DIP3-7
 
-# drivers/namcos22.c: 3813, 4090, 4165
+# drivers/namcos22.c: 3818, 4095, 4170
 DIP3-8
 
-# drivers/namcos22.c: 3937, 4011
+# drivers/namcos22.c: 3942, 4016
 DIP3-7 (TEST MODE?)
 
-# drivers/namcos22.c: 3940, 4014
+# drivers/namcos22.c: 3945, 4019
 DIP3-8 (TEST MODE?)
 
-# drivers/namcos22.c: 3945, 4019
+# drivers/namcos22.c: 3950, 4024
 Shift
 
-# drivers/namcos22.c: 3946, 4020
+# drivers/namcos22.c: 3951, 4025
 Up
 
-# drivers/namcos22.c: 3948, 4022
+# drivers/namcos22.c: 3953, 4027
 Down
 
-# drivers/namcos22.c: 4036
+# drivers/namcos22.c: 4041
 Motion Stop
 
-# drivers/namcos22.c: 4045
+# drivers/namcos22.c: 4050
 DIP2-1 (test mode?)
 
-# drivers/namcos22.c: 4087
+# drivers/namcos22.c: 4092
 DIP3-7 (TEST MODE)
 
-# drivers/namcos22.c: 4095, 4170
+# drivers/namcos22.c: 4100, 4175
 Stick Shift
 
-# drivers/namcos22.c: 4120
+# drivers/namcos22.c: 4125
 DIP2-1 (test mode)
 
 # drivers/namcos23.c: 434
@@ -31774,40 +31717,40 @@ Balls
 # drivers/panicr.c: 283
 COIN
 
-# drivers/paradise.c: 177
+# drivers/paradise.c: 178
 Fill Area
 
-# drivers/paradise.c: 190
+# drivers/paradise.c: 191
 Sound Test
 
-# drivers/paradise.c: 215, 295, 379
+# drivers/paradise.c: 216, 296, 380
 Characters Test
 
-# drivers/paradise.c: 268
+# drivers/paradise.c: 269
 Balls Sequence Length
 
-# drivers/paradise.c: 271
+# drivers/paradise.c: 272
 Game Goal
 
-# drivers/paradise.c: 272
+# drivers/paradise.c: 273
 Target Score
 
-# drivers/paradise.c: 273
+# drivers/paradise.c: 274
 Balls Sequence
 
-# drivers/paradise.c: 286
+# drivers/paradise.c: 287
 Vs. Matches
 
-# drivers/paradise.c: 430
+# drivers/paradise.c: 431
 Control?
 
-# drivers/paradise.c: 431
+# drivers/paradise.c: 432
 Disable / Spinner?
 
-# drivers/paradise.c: 436
+# drivers/paradise.c: 437
 Slide Show
 
-# drivers/paradise.c: 601, 605, 609
+# drivers/paradise.c: 602, 606, 610
 mono
 
 # drivers/parodius.c: 258
@@ -38929,22 +38872,22 @@ Score for Extended Play
 # drivers/skyraid.c: 184
 Hiscore Reset
 
-# drivers/slapfght.c: 432, 613
+# drivers/slapfght.c: 432, 613, 684
 IN0
 
-# drivers/slapfght.c: 432, 622
+# drivers/slapfght.c: 432, 622, 693
 IN1
 
-# drivers/slapfght.c: 454, 510, 563, 632
+# drivers/slapfght.c: 454, 510, 563, 632, 703
 DSW1
 
-# drivers/slapfght.c: 458, 529, 591, 651
+# drivers/slapfght.c: 458, 529, 591, 651, 722
 Dipswitch Test
 
 # drivers/slapfght.c: 462, 577
 Screen Test
 
-# drivers/slapfght.c: 481, 536, 587, 658
+# drivers/slapfght.c: 481, 536, 587, 658, 729
 DSW2
 
 # drivers/slapfght.c: 483
@@ -38989,10 +38932,10 @@ Game Level
 # drivers/slapfght.c: 532
 Player Speed
 
-# drivers/slapfght.c: 663
+# drivers/slapfght.c: 663, 734
 240 (Cheat)
 
-# drivers/slapfght.c: 809, 813, 817, 852, 856, 860, 897, 901, 905, 939, 943, 947
+# drivers/slapfght.c: 880, 884, 888, 923, 927, 931, 968, 972, 976, 1010, 1014, 1018
 mono
 
 # drivers/slapshot.c: 257
@@ -39388,64 +39331,79 @@ America (Romstar license)
 # drivers/snowbros.c: 505, 579
 200k Only
 
-# drivers/snowbros.c: 614
-Port 0
+# drivers/snowbros.c: 619
+Show Girls
 
-# drivers/snowbros.c: 653
-Port 1
+# drivers/snowbros.c: 634
+Slide Show On Boot-up
 
-# drivers/snowbros.c: 785
-Korean
-
-# drivers/snowbros.c: 861
+# drivers/snowbros.c: 666, 853
 Max Vs Round
 
-# drivers/snowbros.c: 861
+# drivers/snowbros.c: 777
+Korean
+
+# drivers/snowbros.c: 853
 test mode
 
-# drivers/snowbros.c: 948
+# drivers/snowbros.c: 940, 1018
 Level 1
 
-# drivers/snowbros.c: 949
+# drivers/snowbros.c: 941, 1019
 Level 2
 
-# drivers/snowbros.c: 950
+# drivers/snowbros.c: 942, 1020
 Level 3
 
-# drivers/snowbros.c: 951
+# drivers/snowbros.c: 943, 1021
 Level 4
 
-# drivers/snowbros.c: 952
+# drivers/snowbros.c: 944, 1022
 Level 5
 
-# drivers/snowbros.c: 953
+# drivers/snowbros.c: 945, 1023
 Level 6
 
-# drivers/snowbros.c: 954
+# drivers/snowbros.c: 946, 1024
 Level 7
 
-# drivers/snowbros.c: 955
+# drivers/snowbros.c: 947, 1025
 Level 8
 
-# drivers/snowbros.c: 1055
+# drivers/snowbros.c: 1120
+40 Seconds
+
+# drivers/snowbros.c: 1121
+50 Seconds
+
+# drivers/snowbros.c: 1122, 1199
 60 Seconds
 
-# drivers/snowbros.c: 1056
+# drivers/snowbros.c: 1123
+70 Seconds
+
+# drivers/snowbros.c: 1127
+God Mode
+
+# drivers/snowbros.c: 1130
+Internal Test
+
+# drivers/snowbros.c: 1200
 90 Seconds
 
-# drivers/snowbros.c: 1057
+# drivers/snowbros.c: 1201
 120 Seconds
 
-# drivers/snowbros.c: 1058
+# drivers/snowbros.c: 1202
 150 Seconds
 
-# drivers/snowbros.c: 1259, 1263, 1294, 1295, 1299, 1352, 1358, 1363, 1396, 1397, 1401, 1431, 1435
+# drivers/snowbros.c: 1403, 1407, 1438, 1439, 1443, 1496, 1502, 1507, 1540, 1541, 1545, 1575, 1579
 mono
 
-# drivers/snowbros.c: 2197
+# drivers/snowbros.c: 2345
 cookie
 
-# drivers/snowbros.c: 2197
+# drivers/snowbros.c: 2345
 w+b
 
 # drivers/solomon.c: 46
@@ -41219,6 +41177,12 @@ right
 20091.bin
 
 # drivers/stv.c: 3076
+ST-V Ver 1.061 94/11/25
+
+# drivers/stv.c: 3076
+epr-17740.bin
+
+# drivers/stv.c: 3076
 epr19730.ic8
 
 # drivers/stv.c: 3076
@@ -41237,48 +41201,63 @@ mp17954a.s
 saturn.bin
 
 # drivers/stv.c: 3076
+stv1061.bin
+
+# drivers/stv.c: 3076
 stv110.bin
 
-# drivers/stv.c: 3097
+# drivers/stv.c: 3099
 Japan (bios epr19730)
 
-# drivers/stv.c: 3097
+# drivers/stv.c: 3099
 japan
 
-# drivers/stv.c: 3098
+# drivers/stv.c: 3100
 Japan (bios mp17951a)
 
-# drivers/stv.c: 3098
+# drivers/stv.c: 3100
 japana
 
-# drivers/stv.c: 3099
+# drivers/stv.c: 3101
 USA (bios mp17952a)
 
-# drivers/stv.c: 3099
+# drivers/stv.c: 3101
 us
 
-# drivers/stv.c: 3100
+# drivers/stv.c: 3102
 Japan (bios 20091)
 
-# drivers/stv.c: 3100
+# drivers/stv.c: 3102
 japanb
 
-# drivers/stv.c: 3101
+# drivers/stv.c: 3103
 Taiwan (bios mp17953a)
 
-# drivers/stv.c: 3101
+# drivers/stv.c: 3103
 taiwan
 
-# drivers/stv.c: 3102
+# drivers/stv.c: 3104
 Europe (bios mp17954a)
 
-# drivers/stv.c: 3102
+# drivers/stv.c: 3104
 europe
 
-# drivers/stv.c: 3103
-unknown (debug?)
+# drivers/stv.c: 3105
+Unknown (debug?)
 
-# drivers/stv.c: 3960, 3983
+# drivers/stv.c: 3106
+Development (bios 1.061)
+
+# drivers/stv.c: 3106
+dev1061
+
+# drivers/stv.c: 3107
+Japan (bios epr17740)
+
+# drivers/stv.c: 3107
+japanc
+
+# drivers/stv.c: 3964, 3987
 sfish2
 
 # drivers/subs.c: 97
@@ -45607,109 +45586,109 @@ mono
 # drivers/tugboat.c: 391, 394
 mono
 
-# drivers/tumbleb.c: 582, 672
+# drivers/tumbleb.c: 593, 683
 2 Coins to Start, 1 to Continue
 
-# drivers/tumbleb.c: 598, 689
+# drivers/tumbleb.c: 609, 700
 Remove Monsters
 
-# drivers/tumbleb.c: 605, 696
+# drivers/tumbleb.c: 616, 707
 Edit Levels
 
-# drivers/tumbleb.c: 668, 1042
+# drivers/tumbleb.c: 679, 1053
 Korean
 
-# drivers/tumbleb.c: 783, 844
+# drivers/tumbleb.c: 794, 855
 Stage Skip
 
-# drivers/tumbleb.c: 864, 904
+# drivers/tumbleb.c: 875, 915
 VS Round
 
-# drivers/tumbleb.c: 919, 1051
+# drivers/tumbleb.c: 930, 1062
 60 Seconds
 
-# drivers/tumbleb.c: 920
+# drivers/tumbleb.c: 931
 90 Seconds
 
-# drivers/tumbleb.c: 921
+# drivers/tumbleb.c: 932
 Starting Balls
 
-# drivers/tumbleb.c: 1043
+# drivers/tumbleb.c: 1054
 Life Meter
 
-# drivers/tumbleb.c: 1049
+# drivers/tumbleb.c: 1060
 30 Seconds
 
-# drivers/tumbleb.c: 1050
+# drivers/tumbleb.c: 1061
 40 Seconds
 
-# drivers/tumbleb.c: 1052
+# drivers/tumbleb.c: 1063
 80 Seconds
 
-# drivers/tumbleb.c: 1157
+# drivers/tumbleb.c: 1168
 Picture Viewer
 
-# drivers/tumbleb.c: 1160
+# drivers/tumbleb.c: 1171
 BG Type
 
-# drivers/tumbleb.c: 1260, 1342
+# drivers/tumbleb.c: 1271, 1353
 Level 1
 
-# drivers/tumbleb.c: 1261, 1343
+# drivers/tumbleb.c: 1272, 1354
 Level 2
 
-# drivers/tumbleb.c: 1262, 1344
+# drivers/tumbleb.c: 1273, 1355
 Level 3
 
-# drivers/tumbleb.c: 1263, 1345
+# drivers/tumbleb.c: 1274, 1356
 Level 4
 
-# drivers/tumbleb.c: 1264, 1346
+# drivers/tumbleb.c: 1275, 1357
 Level 5
 
-# drivers/tumbleb.c: 1265, 1347
+# drivers/tumbleb.c: 1276, 1358
 Level 6
 
-# drivers/tumbleb.c: 1266, 1348
+# drivers/tumbleb.c: 1277, 1359
 Level 7
 
-# drivers/tumbleb.c: 1267, 1349
+# drivers/tumbleb.c: 1278, 1360
 Level 8
 
-# drivers/tumbleb.c: 1297
+# drivers/tumbleb.c: 1308
 Event Free (Allow Event Selection)
 
-# drivers/tumbleb.c: 1301
+# drivers/tumbleb.c: 1312
 Joystick + Buttons
 
-# drivers/tumbleb.c: 1302
+# drivers/tumbleb.c: 1313
 Buttons Only
 
-# drivers/tumbleb.c: 1303
+# drivers/tumbleb.c: 1314
 Test Mode (Easy Event Select)
 
-# drivers/tumbleb.c: 1385
+# drivers/tumbleb.c: 1396
 Full Set Price
 
-# drivers/tumbleb.c: 1386
+# drivers/tumbleb.c: 1397
 4 Credits
 
-# drivers/tumbleb.c: 1387
+# drivers/tumbleb.c: 1398
 6 Credits
 
-# drivers/tumbleb.c: 1568, 1572, 1600, 1604
+# drivers/tumbleb.c: 1579, 1583, 1611, 1615
 mono
 
-# drivers/tumbleb.c: 1627, 1630, 1635, 1691, 1695, 1700, 1715, 1729, 1758, 1761, 1766, 1795, 1799
+# drivers/tumbleb.c: 1638, 1641, 1646, 1702, 1706, 1711, 1726, 1740, 1769, 1772, 1777, 1806, 1810
 left
 
-# drivers/tumbleb.c: 1627, 1631, 1636, 1691, 1696, 1701, 1716, 1730, 1758, 1762, 1767, 1795, 1800
+# drivers/tumbleb.c: 1638, 1642, 1647, 1702, 1707, 1712, 1727, 1741, 1769, 1773, 1778, 1806, 1811
 right
 
-# drivers/tumbleb.c: 2689
+# drivers/tumbleb.c: 2700
 hcatch
 
-# drivers/tumbleb.c: 2689
+# drivers/tumbleb.c: 2700
 w+b
 
 # drivers/tumblep.c: 223
@@ -49522,97 +49501,97 @@ C
 # expat/xmltok.h: 9
 C
 
-# fileio.c: 418, 424, 430
+# fileio.c: 419, 425, 431
 mame_faccess: trying %s\n
 
-# fileio.c: 423
+# fileio.c: 424
 %s.zip
 
-# fileio.c: 934
+# fileio.c: 935
 chd
 
-# fileio.c: 939
+# fileio.c: 940
 dif
 
-# fileio.c: 943
+# fileio.c: 944
 wav
 
-# fileio.c: 948
+# fileio.c: 949
 png
 
-# fileio.c: 952
+# fileio.c: 953
 mng
 
-# fileio.c: 956
+# fileio.c: 957
 nv
 
-# fileio.c: 960
+# fileio.c: 961
 hi
 
-# fileio.c: 964
+# fileio.c: 965
 lng
 
-# fileio.c: 969
+# fileio.c: 970
 cfg
 
-# fileio.c: 973
+# fileio.c: 974
 inp
 
-# fileio.c: 978
+# fileio.c: 979
 cap
 
-# fileio.c: 983
+# fileio.c: 984
 sta
 
-# fileio.c: 987
+# fileio.c: 988
 mem
 
-# fileio.c: 991
+# fileio.c: 992
 ini
 
-# fileio.c: 995
+# fileio.c: 996
 cmt
 
-# fileio.c: 1000
+# fileio.c: 1001
 hsi
 
-# fileio.c: 1006
+# fileio.c: 1007
 dat
 
-# fileio.c: 1026
+# fileio.c: 1027
 r+b
 
-# fileio.c: 1026
+# fileio.c: 1027
 r+bg
 
-# fileio.c: 1026, 1026, 1026, 1026, 1320
+# fileio.c: 1027, 1027, 1027, 1027, 1325
 rb
 
-# fileio.c: 1026
+# fileio.c: 1027
 wb
 
-# fileio.c: 1026
+# fileio.c: 1027
 wbg
 
-# fileio.c: 1048
+# fileio.c: 1053
 generic_fopen(%d, %s, %s, %s, %X)\n
 
-# fileio.c: 1057
+# fileio.c: 1062
 Can't use HASH option with WRITE option in generic_fopen!\n
 
-# fileio.c: 1082
+# fileio.c: 1087
 Trying %s\n
 
-# fileio.c: 1118
+# fileio.c: 1123
 w+b
 
-# fileio.c: 1174, 1268
+# fileio.c: 1179, 1273
 Using (mame_fopen) zip file for %s\n
 
-# fileio.c: 1197, 1199
+# fileio.c: 1202, 1204
 zip
 
-# fileio.c: 1200
+# fileio.c: 1205
 Trying %s file\n
 
 # hash.c: 168
@@ -52699,52 +52678,55 @@ sio IRQAck %d\n
 # machine/z80sio.c: 705
 sio IRQReti %d\n
 
-# mame.c: 346
+# mame.c: 360
 Can only call add_exit_callback at init time!
 
-# mame.c: 367
+# mame.c: 381
 Can only call add_reset_callback at init time!
 
-# mame.c: 389
+# mame.c: 403
 Can only call add_pause_callback at init time!
 
-# mame.c: 945
+# mame.c: 854
+Can only call add_logerror_callback at init time!
+
+# mame.c: 977
 ASM
 
-# mame.c: 945
+# mame.c: 977
 C
 
-# mame.c: 945
+# mame.c: 977
 DRC
 
-# mame.c: 1049
+# mame.c: 1081
 osd_init failed
 
-# mame.c: 1054
+# mame.c: 1086
 code_init failed
 
-# mame.c: 1060
+# mame.c: 1092
 input_port_init failed
 
-# mame.c: 1065
+# mame.c: 1097
 rom_init failed
 
-# mame.c: 1075
+# mame.c: 1107
 memory_init failed
 
-# mame.c: 1079
+# mame.c: 1111
 cpuexec_init failed
 
-# mame.c: 1081
+# mame.c: 1113
 cpuint_init failed
 
-# mame.c: 1086
+# mame.c: 1118
 devices_init failed
 
-# mame.c: 1103
+# mame.c: 1135
 sound_init failed
 
-# mame.c: 1107
+# mame.c: 1139
 video_init failed
 
 # mame.h: 46
@@ -53300,27 +53282,30 @@ Input
 Movie  
 
 # profiler.c: 143
-Extra  
+Logerr 
 
 # profiler.c: 144
-User1  
+Extra  
 
 # profiler.c: 145
-User2  
+User1  
 
 # profiler.c: 146
-User3  
+User2  
 
 # profiler.c: 147
-User4  
+User3  
 
 # profiler.c: 148
-Profilr
+User4  
 
 # profiler.c: 149
+Profilr
+
+# profiler.c: 150
 Idle   
 
-# profiler.c: 204
+# profiler.c: 205
 CPU switches%4d\n
 
 # romcmp.c: 106
@@ -53551,19 +53536,19 @@ fill
 # romload.h: 271
 default
 
-# romload.h: 291
+# romload.h: 290
 $BD$
 
-# romload.h: 291
+# romload.h: 290
 $ND$
 
-# romload.h: 291
+# romload.h: 290
 c:
 
-# romload.h: 291
+# romload.h: 290
 m:
 
-# romload.h: 291
+# romload.h: 290
 s:
 
 # sndhrdw/8080bw.c: 93, 155
@@ -56863,67 +56848,79 @@ Dummy
 # sndintrf.c: 975
 Copyright (c) 2004, The MAME Team
 
-# sound.c: 184
+# sound.c: 203
 total speakers = %d\n
 
-# sound.c: 187
+# sound.c: 206
 osd_start_audio_stream\n
 
-# sound.c: 201
+# sound.c: 220
 streams_init\n
 
-# sound.c: 205
+# sound.c: 224
 start_sound_chips\n
 
-# sound.c: 210
+# sound.c: 229
 start_speakers\n
 
-# sound.c: 215
+# sound.c: 234
 route_sound\n
 
-# sound.c: 220
+# sound.c: 239
 finalmix.wav
 
-# sound.c: 226
+# sound.c: 245, 627, 674
 mixer
 
-# sound.c: 256
+# sound.c: 275
 Speaker \"%s\" - max = %d (gain *= %f) - %d%% samples clipped\n
 
-# sound.c: 320
+# sound.c: 339
 sndnum = %d -- sound_type = %d\n
 
-# sound.c: 332
+# sound.c: 351
 Sound chip #%d (%s) did not register any state to save!
 
-# sound.c: 336
+# sound.c: 355
 Counting outputs\n
 
-# sound.c: 343
+# sound.c: 362
   stream %p, %d outputs\n
 
-# sound.c: 351
+# sound.c: 370
   %d outputs total\n
 
-# sound.c: 439
+# sound.c: 458
 Sound route \"%s\" not found!\n
 
-# sound.c: 590, 590, 626
+# sound.c: 609, 609, 656
 channel
 
-# sound.c: 592, 629
+# sound.c: 611, 659
 index
 
-# sound.c: 595, 630
+# sound.c: 614, 660
 defvol
 
-# sound.c: 596, 631
+# sound.c: 615, 661
 newvol
 
-# sound.c: 654
+# sound.c: 622, 669
+volume_multiplier
+
+# sound.c: 625, 672
+final
+
+# sound.c: 626, 673
+final_max
+
+# sound.c: 628, 675
+mixer_max
+
+# sound.c: 698
 sound_frame_update\n
 
-# sound.c: 763
+# sound.c: 887
 Mixer_update(%d)\n
 
 # sound/2151intf.c: 234
@@ -58738,13 +58735,13 @@ Ricoh PCM
 # sound/rf5c400.c: 334
 Copyright (c) 2004, The MAME Team
 
-# sound/rf5c68.c: 251
+# sound/rf5c68.c: 252
 RF5C68
 
-# sound/rf5c68.c: 252
+# sound/rf5c68.c: 253
 Ricoh PCM
 
-# sound/rf5c68.c: 255
+# sound/rf5c68.c: 256
 Copyright (c) 2004, The MAME Team
 
 # sound/saa1099.c: 512
@@ -59542,46 +59539,46 @@ ColumnShown: %d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d
 # ui/columnedit.c: 440
 Column Shown
 
-# ui/dialogs.c: 738
+# ui/dialogs.c: 739
 MAME32 requires DirectX version 3 or later, which is a set of operating\r\nsystem extensions by Microsoft for Windows 9x, NT and 2000.\r\n\r\nVisit Microsoft's DirectX web page at http://www.microsoft.com/directx\r\ndownload DirectX, install it, and then run MAME32 again.\r\n
 
-# ui/dialogs.c: 758
+# ui/dialogs.c: 759
 http://www.microsoft.com/directx
 
-# ui/dijoystick.c: 144
+# ui/dijoystick.c: 146
 DirectInput not initialized
 
-# ui/dijoystick.c: 155
+# ui/dijoystick.c: 157
 DirectInput EnumDevices() failed: %s
 
-# ui/dijoystick.c: 460
+# ui/dijoystick.c: 462
 DirectInput SetProperty() joystick axis %s failed - %s\n
 
-# ui/dijoystick.c: 473
+# ui/dijoystick.c: 475
 DirectInput SetProperty() joystick axis %s dead zone failed - %s\n
 
-# ui/dijoystick.c: 528
+# ui/dijoystick.c: 530
 ACT LABS GS (ACT LABS GS)
 
-# ui/dijoystick.c: 534
+# ui/dijoystick.c: 536
 DirectInput CreateDevice() joystick failed: %s\n
 
-# ui/dijoystick.c: 560
+# ui/dijoystick.c: 562
 DirectInput SetCooperativeLevel() joystick failed: %s\n
 
-# ui/dijoystick.c: 568
+# ui/dijoystick.c: 570
 DirectInput SetDataFormat() joystick failed: %s\n
 
-# ui/dijoystick.c: 595
+# ui/dijoystick.c: 597
 DirectInput EnumObjects() Axes failed: %s\n
 
-# ui/dijoystick.c: 607
+# ui/dijoystick.c: 609
 DirectInput EnumObjects() POVs failed: %s\n
 
-# ui/dijoystick.c: 621
+# ui/dijoystick.c: 623
 DirectInput EnumObjects() Buttons failed: %s\n
 
-# ui/dijoystick.c: 628
+# ui/dijoystick.c: 630
 DirectInputDevice Acquire joystick failed!\n
 
 # ui/directdraw.c: 109
@@ -59611,13 +59608,13 @@ Query Interface for DirectDraw 2 failed: %s
 # ui/directdraw.c: 189
 Error getting DirectDraw capabilities: %s
 
-# ui/directinput.c: 81
+# ui/directinput.c: 84
 dinput.dll
 
-# ui/directinput.c: 87
+# ui/directinput.c: 90
 DirectInputCreateA
 
-# ui/directinput.c: 99
+# ui/directinput.c: 102
 DirectInputCreate failed! error=%x\n
 
 # ui/directories.c: 602, 697
@@ -60043,10 +60040,10 @@ hhctrl.ocx
 # ui/help.c: 104
 HtmlHelpA
 
-# ui/help.h: 28
+# ui/help.h: 37
 mame32.chm
 
-# ui/help.h: 32
+# ui/help.h: 41
 mame32.chm::/cntx_help.txt
 
 # ui/history.c: 56
@@ -60184,436 +60181,445 @@ golden
 # ui/layout.c: 182
 cust2
 
-# ui/m32util.c: 104
+# ui/m32util.c: 103
 MAME32
 
-# ui/m32util.c: 106
+# ui/m32util.c: 105
 MAME32: 
 
-# ui/m32util.c: 113
+# ui/m32util.c: 112
 debug.txt
 
-# ui/m32util.c: 113
+# ui/m32util.c: 112
 wt
 
-# ui/m32util.c: 173
+# ui/m32util.c: 172
 comctl32
 
-# ui/m32util.c: 177
+# ui/m32util.c: 176
 InitCommonControlsEx
 
-# ui/m32util.c: 181
+# ui/m32util.c: 180
 DllInstall
 
-# ui/m32util.c: 190
+# ui/m32util.c: 189
 DllGetVersion
 
-# ui/m32util.c: 562, 689
+# ui/m32util.c: 571, 698
 %s\\%s\\%s.dat
 
-# ui/m32util.c: 585
+# ui/m32util.c: 594
 %s\\%s\\*.dat
 
-# ui/m32util.c: 691
+# ui/m32util.c: 700
 r
 
 # ui/mame32.h: 27, 27
 assert: %s:%d: %s
 
-# ui/mame32.h: 39
+# ui/mame32.h: 39, 43, 44, 44
 MAME32
 
-# ui/mame32.h: 43
+# ui/mame32.h: 47
 MAME
 
-# ui/mame32.rc: 136
-English (US)
+# ui/mame32.rc: 66
+Driver Proper&ties
+
+# ui/mame32.rc: 134
+&Export Game List
 
 # ui/mame32.rc: 137
-Chinese (Simp)
+English (US)
 
 # ui/mame32.rc: 138
-Chinese (Trad)
+Chinese (Simp)
 
 # ui/mame32.rc: 139
-French
+Chinese (Trad)
 
 # ui/mame32.rc: 140
-German
+French
 
 # ui/mame32.rc: 141
-Hungarian
+German
 
 # ui/mame32.rc: 142
-Italian
+Hungarian
 
 # ui/mame32.rc: 143
-Japanese
+Italian
 
 # ui/mame32.rc: 144
-Korean
+Japanese
 
 # ui/mame32.rc: 145
-Polish
+Korean
 
 # ui/mame32.rc: 146
-Portuguese (BRA)
+Polish
 
 # ui/mame32.rc: 147
+Portuguese (BRA)
+
+# ui/mame32.rc: 148
 Spanish
 
-# ui/mame32.rc: 164
+# ui/mame32.rc: 165
 Context Menu
 
-# ui/mame32.rc: 188
+# ui/mame32.rc: 182
+Driver propert&ies
+
+# ui/mame32.rc: 189
 Header Context Menu
 
-# ui/mame32.rc: 199
+# ui/mame32.rc: 200
 Context Menu Tree
 
-# ui/mame32.rc: 206
+# ui/mame32.rc: 207
 overridden by code
 
-# ui/mame32.rc: 218
+# ui/mame32.rc: 219
 Context Screen Shot
 
-# ui/mame32.rc: 259
+# ui/mame32.rc: 260
 resource.h
 
-# ui/mame32.rc: 264
+# ui/mame32.rc: 265
 #define NOWINRES\r\n#include windows.h\r\n#include commctrl.h\r\n
 
-# ui/mame32.rc: 298
+# ui/mame32.rc: 299
 StringFileInfo
 
-# ui/mame32.rc: 300
+# ui/mame32.rc: 301
 040904b0
 
-# ui/mame32.rc: 302
+# ui/mame32.rc: 303
 Author
 
-# ui/mame32.rc: 302
+# ui/mame32.rc: 303
 Comments
 
-# ui/mame32.rc: 302
+# ui/mame32.rc: 303
 CompanyName
 
-# ui/mame32.rc: 302
+# ui/mame32.rc: 303
 Copyright (C) 1997-2006 Nicola Salmoria and the MAME team
 
-# ui/mame32.rc: 302
+# ui/mame32.rc: 303
 FileDescription
 
-# ui/mame32.rc: 302
+# ui/mame32.rc: 303
 FileVersion
 
-# ui/mame32.rc: 302
+# ui/mame32.rc: 303
 InternalName
 
-# ui/mame32.rc: 302
+# ui/mame32.rc: 303
 LegalCopyright
 
-# ui/mame32.rc: 302
+# ui/mame32.rc: 303
 LegalTrademarks
 
-# ui/mame32.rc: 302
+# ui/mame32.rc: 303
 MAME Team
 
-# ui/mame32.rc: 302, 302, 391
+# ui/mame32.rc: 303, 303, 392
 MAME32
 
-# ui/mame32.rc: 302
+# ui/mame32.rc: 303
 MAME32.exe
 
-# ui/mame32.rc: 302, 302, 371
+# ui/mame32.rc: 303, 303, 372
 Multiple Arcade Machine Emulator
 
-# ui/mame32.rc: 302
+# ui/mame32.rc: 303
 OriginalFilename
 
-# ui/mame32.rc: 302
+# ui/mame32.rc: 303
 ProductName
 
-# ui/mame32.rc: 302
+# ui/mame32.rc: 303
 ProductVersion
 
-# ui/mame32.rc: 315
+# ui/mame32.rc: 316
 VarFileInfo
 
-# ui/mame32.rc: 317
+# ui/mame32.rc: 318
 Translation
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\checkmark.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\cpu.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\display.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\foldavail.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\folder.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\foldmanu.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\foldopen.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\foldsrc.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\foldunav.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\foldyear.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\harddisk.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\header_down.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\header_up.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\joystick.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\keyboard.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\mame32.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\manufact.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\nonwork.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\samples.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\sound.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\source.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\win_clone.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\win_noro.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\win_redx.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\win_roms.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\win_unkn.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\working.ico
 
-# ui/mame32.rc: 331
+# ui/mame32.rc: 332
 res\\year.ico
 
-# ui/mame32.rc: 373
+# ui/mame32.rc: 374
 Version 0
 
-# ui/mame32.rc: 378, 386, 482, 484, 487, 491, 495, 497, 500, 503, 506, 508, 510, 521, 540, 593, 639, 675, 749, 811, 878, 911, 921, 924, 1081, 1132, 1162
+# ui/mame32.rc: 379, 387, 483, 485, 488, 492, 496, 498, 501, 504, 507, 509, 511, 522, 541, 594, 640, 676, 750, 812, 879, 912, 922, 925, 1082, 1133, 1163
 Static
 
-# ui/mame32.rc: 382
+# ui/mame32.rc: 383
 Mike Haaland, Andrew Kirmse, Jeff Miller
 
-# ui/mame32.rc: 407, 417, 998
+# ui/mame32.rc: 408, 418, 999
 Progress1
 
-# ui/mame32.rc: 407, 417, 998
+# ui/mame32.rc: 408, 418, 999
 msctls_progress32
 
-# ui/mame32.rc: 427
+# ui/mame32.rc: 428
 RichEdit20W
 
-# ui/mame32.rc: 441, 458, 465, 916, 1101
+# ui/mame32.rc: 442, 459, 466, 917, 1102
 List1
 
-# ui/mame32.rc: 441, 458, 465, 916, 1101
+# ui/mame32.rc: 442, 459, 466, 917, 1102
 SysListView32
 
-# ui/mame32.rc: 480, 519, 538, 591, 637, 673, 747, 809, 876, 1079, 1160
+# ui/mame32.rc: 481, 520, 539, 592, 638, 674, 748, 810, 877, 1080, 1161
 Title\nDirectory\nExtra
 
-# ui/mame32.rc: 486
+# ui/mame32.rc: 487
 Static\nStatic\nStatic\nStatic
 
-# ui/mame32.rc: 488
+# ui/mame32.rc: 489
 CPU:
 
-# ui/mame32.rc: 489
+# ui/mame32.rc: 490
 Static\nStatic\nStatic\nStatic\nStatic\nStatic
 
-# ui/mame32.rc: 493
+# ui/mame32.rc: 494
 Static\nStatic\nStatic\nStatic\nStatic
 
-# ui/mame32.rc: 541, 543, 545, 548, 553, 555, 576, 595, 597, 600, 641, 644, 648, 676, 678, 681, 684, 687, 689, 692, 695, 727, 750, 752, 754, 757, 761, 763, 765, 775, 812, 814, 816, 818, 820, 822, 824, 826, 829, 838, 845, 847, 849, 851, 853, 879, 881, 940, 943, 945, 948, 951, 954, 957, 976, 978, 982, 984, 1018, 1021, 1023, 1024, 1027, 1030, 1032, 1035, 1038, 1042, 1048, 1052, 1054, 1058
+# ui/mame32.rc: 542, 544, 546, 549, 554, 556, 577, 596, 598, 601, 642, 645, 649, 677, 679, 682, 685, 688, 690, 693, 696, 728, 751, 753, 755, 758, 762, 764, 766, 776, 813, 815, 817, 819, 821, 823, 825, 827, 830, 839, 846, 848, 850, 852, 854, 880, 882, 941, 944, 946, 949, 952, 955, 958, 977, 979, 983, 985, 1019, 1022, 1024, 1025, 1028, 1031, 1033, 1036, 1039, 1043, 1049, 1053, 1055, 1059
 Button
 
-# ui/mame32.rc: 561, 566
+# ui/mame32.rc: 562, 567
 GammaSlider
 
-# ui/mame32.rc: 561, 566, 572, 613, 618, 623, 655, 659, 710, 768, 833, 840, 884, 888, 893, 1061, 1065, 1121, 1125, 1129
+# ui/mame32.rc: 562, 567, 573, 614, 619, 624, 656, 660, 711, 769, 834, 841, 885, 889, 894, 1062, 1066, 1122, 1126, 1130
 msctls_trackbar32
 
-# ui/mame32.rc: 572, 613, 655, 659, 710, 1061, 1065
+# ui/mame32.rc: 573, 614, 656, 660, 711, 1062, 1066
 Slider1
 
-# ui/mame32.rc: 618
+# ui/mame32.rc: 619
 Slider3
 
-# ui/mame32.rc: 657
+# ui/mame32.rc: 658
 0dB
 
-# ui/mame32.rc: 768, 840, 893
+# ui/mame32.rc: 769, 841, 894
 IntensitySlider
 
-# ui/mame32.rc: 781
+# ui/mame32.rc: 782
 P1
 
-# ui/mame32.rc: 783
+# ui/mame32.rc: 784
 P2
 
-# ui/mame32.rc: 785
+# ui/mame32.rc: 786
 P3
 
-# ui/mame32.rc: 787
+# ui/mame32.rc: 788
 P4
 
-# ui/mame32.rc: 789
+# ui/mame32.rc: 790
 P5
 
-# ui/mame32.rc: 791
+# ui/mame32.rc: 792
 P6
 
-# ui/mame32.rc: 793
+# ui/mame32.rc: 794
 P7
 
-# ui/mame32.rc: 795
+# ui/mame32.rc: 796
 P8
 
-# ui/mame32.rc: 833
+# ui/mame32.rc: 834
 IntensityPriority
 
-# ui/mame32.rc: 884
+# ui/mame32.rc: 885
 BeamSlider
 
-# ui/mame32.rc: 888
+# ui/mame32.rc: 889
 FlickerSlider
 
-# ui/mame32.rc: 907
+# ui/mame32.rc: 908
 MAME32 - overwritten at runtime
 
-# ui/mame32.rc: 907
+# ui/mame32.rc: 908
 MainClass
 
-# ui/mame32.rc: 912, 1146
+# ui/mame32.rc: 913, 1147
 SysTreeView32
 
-# ui/mame32.rc: 912
+# ui/mame32.rc: 913
 Tree1
 
-# ui/mame32.rc: 923
+# ui/mame32.rc: 924
 SysTabControl32
 
-# ui/mame32.rc: 1120, 1121, 1216
+# ui/mame32.rc: 1121, 1122, 1217
 R
 
-# ui/mame32.rc: 1124, 1125
+# ui/mame32.rc: 1125, 1126
 G
 
-# ui/mame32.rc: 1128, 1129, 1211
+# ui/mame32.rc: 1129, 1130, 1212
 B
 
-# ui/mame32.rc: 1146
+# ui/mame32.rc: 1147
 CustomTree
 
-# ui/mame32.rc: 1163
+# ui/mame32.rc: 1164
 BIOS1:
 
-# ui/mame32.rc: 1166
+# ui/mame32.rc: 1167
 BIOS2:
 
-# ui/mame32.rc: 1169
+# ui/mame32.rc: 1170
 BIOS3:
 
-# ui/mame32.rc: 1172
+# ui/mame32.rc: 1173
 BIOS4:
 
-# ui/mame32.rc: 1175
+# ui/mame32.rc: 1176
 BIOS5:
 
-# ui/mame32.rc: 1178
+# ui/mame32.rc: 1179
 BIOS6:
 
-# ui/mame32.rc: 1181
+# ui/mame32.rc: 1182
 BIOS7:
 
-# ui/mame32.rc: 1184
+# ui/mame32.rc: 1185
 BIOS8:
 
-# ui/mame32.rc: 1210
+# ui/mame32.rc: 1211
 A
 
-# ui/mame32.rc: 1212
+# ui/mame32.rc: 1213
 D
 
-# ui/mame32.rc: 1213
+# ui/mame32.rc: 1214
 F
 
-# ui/mame32.rc: 1214
+# ui/mame32.rc: 1215
 U
 
-# ui/mame32.rc: 1215
+# ui/mame32.rc: 1216
 P
 
-# ui/mame32.rc: 1217
+# ui/mame32.rc: 1218
 S
 
-# ui/mame32.rc: 1218
+# ui/mame32.rc: 1219
 T
 
-# ui/mame32.rc: 1422
+# ui/mame32.rc: 1423
 res\\about.bmp
 
-# ui/mame32.rc: 1422, 1422, 1422, 1422, 1422, 1422, 1422, 1422
+# ui/mame32.rc: 1423, 1423, 1423, 1423, 1423, 1423, 1423, 1423
 res\\toolbar.bmp
 
-# ui/mame32.rc: 1422, 1422
+# ui/mame32.rc: 1423, 1423
 res\\toolbarc.bmp
 
-# ui/mame32.rc: 1422
+# ui/mame32.rc: 1423
 res\\toolbarj.bmp
 
-# ui/mame32.rc: 1422
+# ui/mame32.rc: 1423
 res\\toolbark.bmp
 
-# ui/mame32.rc: 1436
+# ui/mame32.rc: 1437
 res\\splash.bmp
 
-# ui/mame32.rc: 1444
+# ui/mame32.rc: 1445
 res\\Splith.cur
 
-# ui/mame32.rc: 1451
+# ui/mame32.rc: 1452
 res\\mame32.manifest
 
 # ui/options.c: 221
@@ -60625,7 +60631,7 @@ MAME.ini
 # ui/options.c: 225
 MAME32ui.ini
 
-# ui/options.c: 279, 702
+# ui/options.c: 279, 703
 snapshot
 
 # ui/options.c: 280
@@ -60640,7 +60646,7 @@ marquee
 # ui/options.c: 283
 title
 
-# ui/options.c: 284, 666
+# ui/options.c: 284, 667
 cpanel
 
 # ui/options.c: 286, 289
@@ -60676,7 +60682,7 @@ d3dscan
 # ui/options.c: 421
 d3deffectrotate
 
-# ui/options.c: 423, 448, 449, 653, 3346, 3712, 3734, 4379, 4393
+# ui/options.c: 423, 448, 449, 654, 3337, 3703, 3725, 4370, 4384
 auto
 
 # ui/options.c: 423
@@ -60895,7 +60901,7 @@ leds
 # ui/options.c: 493
 led_mode
 
-# ui/options.c: 493, 3748
+# ui/options.c: 493, 3739
 ps/2
 
 # ui/options.c: 494
@@ -60904,7 +60910,7 @@ a2d
 # ui/options.c: 494
 a2d_deadzone
 
-# ui/options.c: 495, 606
+# ui/options.c: 495, 607
 ctrlr
 
 # ui/options.c: 497
@@ -61021,7 +61027,7 @@ samplerate
 # ui/options.c: 541
 sr
 
-# ui/options.c: 542, 595
+# ui/options.c: 542, 596
 samples
 
 # ui/options.c: 543
@@ -61037,1173 +61043,1179 @@ volume
 volume_adjust
 
 # ui/options.c: 551
+valid
+
+# ui/options.c: 551
+validate
+
+# ui/options.c: 552
 art
 
-# ui/options.c: 551, 603
+# ui/options.c: 552, 604
 artwork
 
-# ui/options.c: 552
+# ui/options.c: 553
 backdrop
 
-# ui/options.c: 552
+# ui/options.c: 553
 use_backdrops
 
-# ui/options.c: 553
+# ui/options.c: 554
 overlay
 
-# ui/options.c: 553
+# ui/options.c: 554
 use_overlays
 
-# ui/options.c: 554
+# ui/options.c: 555
 bezel
 
-# ui/options.c: 554
+# ui/options.c: 555
 use_bezels
 
-# ui/options.c: 555
+# ui/options.c: 556
 artcrop
 
-# ui/options.c: 555
+# ui/options.c: 556
 artwork_crop
 
-# ui/options.c: 556
+# ui/options.c: 557
 artres
 
-# ui/options.c: 556
+# ui/options.c: 557
 artwork_resolution
 
-# ui/options.c: 557
+# ui/options.c: 558
 c
 
-# ui/options.c: 557
+# ui/options.c: 558
 cheat
 
-# ui/options.c: 558
+# ui/options.c: 559
 d
 
-# ui/options.c: 558
+# ui/options.c: 559
 debug
 
-# ui/options.c: 559
+# ui/options.c: 560
 debugscript
 
-# ui/options.c: 560
+# ui/options.c: 561
 pb
 
-# ui/options.c: 560
+# ui/options.c: 561
 playback
 
-# ui/options.c: 561
+# ui/options.c: 562
 rec
 
-# ui/options.c: 561
+# ui/options.c: 562
 record
 
-# ui/options.c: 562
+# ui/options.c: 563
 log
 
-# ui/options.c: 563
+# ui/options.c: 564
 oslog
 
-# ui/options.c: 564
+# ui/options.c: 565
 skip_gameinfo
 
-# ui/options.c: 565
+# ui/options.c: 566
 bios
 
-# ui/options.c: 565
+# ui/options.c: 566
 default
 
-# ui/options.c: 566
+# ui/options.c: 567
 state
 
-# ui/options.c: 567
+# ui/options.c: 568
 autosave
 
-# ui/options.c: 569, 609
+# ui/options.c: 570, 610
 ips
 
-# ui/options.c: 571
+# ui/options.c: 572
 disable_second_monitor
 
-# ui/options.c: 572
+# ui/options.c: 573
 confirm_quit
 
-# ui/options.c: 574
+# ui/options.c: 575
 auto_pause_playback
 
-# ui/options.c: 577
+# ui/options.c: 578
 m68k_core
 
-# ui/options.c: 580
+# ui/options.c: 581
 use_trans_ui
 
-# ui/options.c: 581
+# ui/options.c: 582
 ui_transparency
 
-# ui/options.c: 594
+# ui/options.c: 595
 rompath
 
-# ui/options.c: 594
+# ui/options.c: 595
 roms
 
-# ui/options.c: 594
+# ui/options.c: 595
 rp
 
-# ui/options.c: 595
+# ui/options.c: 596
 samplepath
 
-# ui/options.c: 595
+# ui/options.c: 596
 sp
 
-# ui/options.c: 596
+# ui/options.c: 597
 directory for ini files
 
-# ui/options.c: 596
+# ui/options.c: 597
 ini
 
-# ui/options.c: 596
+# ui/options.c: 597
 inipath
 
-# ui/options.c: 597
+# ui/options.c: 598
 cfg
 
-# ui/options.c: 597
+# ui/options.c: 598
 cfg_directory
 
-# ui/options.c: 598
+# ui/options.c: 599
 nvram
 
-# ui/options.c: 598
+# ui/options.c: 599
 nvram_directory
 
-# ui/options.c: 599
+# ui/options.c: 600
 memcard
 
-# ui/options.c: 599
+# ui/options.c: 600
 memcard_directory
 
-# ui/options.c: 600
+# ui/options.c: 601
 inp
 
-# ui/options.c: 600
+# ui/options.c: 601
 input_directory
 
-# ui/options.c: 601
+# ui/options.c: 602
 hi
 
-# ui/options.c: 601
+# ui/options.c: 602
 hiscore_directory
 
-# ui/options.c: 602
+# ui/options.c: 603
 sta
 
-# ui/options.c: 602
+# ui/options.c: 603
 state_directory
 
-# ui/options.c: 603
+# ui/options.c: 604
 artwork_directory
 
-# ui/options.c: 604
+# ui/options.c: 605
 snap
 
-# ui/options.c: 604
+# ui/options.c: 605
 snapshot_directory
 
-# ui/options.c: 605
+# ui/options.c: 606
 diff
 
-# ui/options.c: 605
+# ui/options.c: 606
 diff_directory
 
-# ui/options.c: 606
+# ui/options.c: 607
 ctrlr_directory
 
-# ui/options.c: 607
+# ui/options.c: 608
 comment_directory
 
-# ui/options.c: 607
+# ui/options.c: 608
 comments
 
-# ui/options.c: 609
+# ui/options.c: 610
 ips_directory
 
-# ui/options.c: 611, 653
+# ui/options.c: 612, 654
 lang
 
-# ui/options.c: 611
+# ui/options.c: 612
 lang_directory
 
-# ui/options.c: 612
+# ui/options.c: 613
 cheat.dat
 
-# ui/options.c: 612
+# ui/options.c: 613
 cheat_file
 
-# ui/options.c: 613
+# ui/options.c: 614
 history.dat
 
-# ui/options.c: 613
+# ui/options.c: 614
 history_file
 
-# ui/options.c: 615
+# ui/options.c: 616
 story.dat
 
-# ui/options.c: 615
+# ui/options.c: 616
 story_file
 
-# ui/options.c: 617
+# ui/options.c: 618
 mameinfo.dat
 
-# ui/options.c: 617
+# ui/options.c: 618
 mameinfo_file
 
-# ui/options.c: 618
+# ui/options.c: 619
 hiscore.dat
 
-# ui/options.c: 618
+# ui/options.c: 619
 hiscore_file
 
-# ui/options.c: 624
+# ui/options.c: 625
 font_blank
 
-# ui/options.c: 625
+# ui/options.c: 626
 font_normal
 
-# ui/options.c: 626
+# ui/options.c: 627
 font_special
 
-# ui/options.c: 627
+# ui/options.c: 628
 system_background
 
-# ui/options.c: 628
+# ui/options.c: 629
 system_framemedium
 
-# ui/options.c: 629
+# ui/options.c: 630
 system_framelight
 
-# ui/options.c: 630
+# ui/options.c: 631
 system_framedark
 
-# ui/options.c: 631
+# ui/options.c: 632
 osdbar_framemedium
 
-# ui/options.c: 632
+# ui/options.c: 633
 osdbar_framelight
 
-# ui/options.c: 633
+# ui/options.c: 634
 osdbar_framedark
 
-# ui/options.c: 634
+# ui/options.c: 635
 osdbar_defaultbar
 
-# ui/options.c: 635
+# ui/options.c: 636
 button_red
 
-# ui/options.c: 636
+# ui/options.c: 637
 button_yellow
 
-# ui/options.c: 637
+# ui/options.c: 638
 button_green
 
-# ui/options.c: 638
+# ui/options.c: 639
 button_blue
 
-# ui/options.c: 639
+# ui/options.c: 640
 button_purple
 
-# ui/options.c: 640
+# ui/options.c: 641
 button_pink
 
-# ui/options.c: 641
+# ui/options.c: 642
 button_aqua
 
-# ui/options.c: 642
+# ui/options.c: 643
 button_silver
 
-# ui/options.c: 643
+# ui/options.c: 644
 button_navy
 
-# ui/options.c: 644
+# ui/options.c: 645
 button_lime
 
-# ui/options.c: 645
+# ui/options.c: 646
 cursor
 
-# ui/options.c: 649
+# ui/options.c: 650
 rc
 
-# ui/options.c: 649
+# ui/options.c: 650
 readconfig
 
-# ui/options.c: 650
+# ui/options.c: 651
 v
 
-# ui/options.c: 650
+# ui/options.c: 651
 verbose
 
-# ui/options.c: 653
+# ui/options.c: 654
 language
 
-# ui/options.c: 654
+# ui/options.c: 655
 use_lang_list
 
-# ui/options.c: 662
+# ui/options.c: 663
 directory for flyers
 
-# ui/options.c: 662
+# ui/options.c: 663
 flyer_directory
 
-# ui/options.c: 662
+# ui/options.c: 663
 flyers
 
-# ui/options.c: 663
+# ui/options.c: 664
 cabinet_directory
 
-# ui/options.c: 663
+# ui/options.c: 664
 cabinets
 
-# ui/options.c: 663
+# ui/options.c: 664
 directory for cabinets
 
-# ui/options.c: 664
+# ui/options.c: 665
 directory for marquees
 
-# ui/options.c: 664
+# ui/options.c: 665
 marquee_directory
 
-# ui/options.c: 664
+# ui/options.c: 665
 marquees
 
-# ui/options.c: 665
+# ui/options.c: 666
 directory for titles
 
-# ui/options.c: 665
+# ui/options.c: 666
 title_directory
 
-# ui/options.c: 665
+# ui/options.c: 666
 titles
 
-# ui/options.c: 666
+# ui/options.c: 667
 cpanel_directory
 
-# ui/options.c: 666
+# ui/options.c: 667
 directory for control panel
 
-# ui/options.c: 667
+# ui/options.c: 668
 directory for icons
 
-# ui/options.c: 667
+# ui/options.c: 668
 icon_directory
 
-# ui/options.c: 667
+# ui/options.c: 668
 icons
 
-# ui/options.c: 668
+# ui/options.c: 669
 bkground
 
-# ui/options.c: 668
+# ui/options.c: 669
 bkground_directory
 
-# ui/options.c: 668
+# ui/options.c: 669
 directory for bkground
 
-# ui/options.c: 669
+# ui/options.c: 670
 directory for folders-ini
 
-# ui/options.c: 669
+# ui/options.c: 670
 folder_directory
 
-# ui/options.c: 669
+# ui/options.c: 670
 folders
 
-# ui/options.c: 672
+# ui/options.c: 673
 save version
 
-# ui/options.c: 672
+# ui/options.c: 673
 save_version
 
-# ui/options.c: 673
+# ui/options.c: 674
 enable version mismatch warning
 
-# ui/options.c: 673
+# ui/options.c: 674
 reset_gui
 
-# ui/options.c: 674
+# ui/options.c: 675
 game_check
 
-# ui/options.c: 674
+# ui/options.c: 675
 search for new games
 
-# ui/options.c: 675
+# ui/options.c: 676
 allow game selection by a joystick
 
-# ui/options.c: 675
+# ui/options.c: 676
 joygui
 
-# ui/options.c: 676
+# ui/options.c: 677
 allow game selection by a keyboard
 
-# ui/options.c: 676
+# ui/options.c: 677
 keygui
 
-# ui/options.c: 677
+# ui/options.c: 678
 broadcast
 
-# ui/options.c: 677
+# ui/options.c: 678
 broadcast selected game to all windows
 
-# ui/options.c: 678
+# ui/options.c: 679
 random select background image
 
-# ui/options.c: 678
+# ui/options.c: 679
 random_bg
 
-# ui/options.c: 679
+# ui/options.c: 680
 cycle screen shot image
 
-# ui/options.c: 679
+# ui/options.c: 680
 cycle_screenshot
 
-# ui/options.c: 680
+# ui/options.c: 681
 stretch screenshot larger
 
-# ui/options.c: 680
+# ui/options.c: 681
 stretch_screenshot_larger
 
-# ui/options.c: 681
+# ui/options.c: 682
 screen shot border size
 
-# ui/options.c: 681
+# ui/options.c: 682
 screenshot_bordersize
 
-# ui/options.c: 682
+# ui/options.c: 683
 screen shot border color
 
-# ui/options.c: 682
+# ui/options.c: 683
 screenshot_bordercolor
 
-# ui/options.c: 683
+# ui/options.c: 684
 inherit_filter
 
-# ui/options.c: 683
+# ui/options.c: 684
 inheritable filters
 
-# ui/options.c: 684
+# ui/options.c: 685
 no offset for clones missing parent in view
 
-# ui/options.c: 684
+# ui/options.c: 685
 offset_clones
 
-# ui/options.c: 685
+# ui/options.c: 686
 game_caption
 
-# ui/options.c: 685
+# ui/options.c: 686
 show game caption
 
-# ui/options.c: 687
+# ui/options.c: 688
 display splash screen on start
 
-# ui/options.c: 687
+# ui/options.c: 688
 display_splash_screen
 
-# ui/options.c: 692
+# ui/options.c: 693
 default_system
 
-# ui/options.c: 692
+# ui/options.c: 693
 last selected system name
 
-# ui/options.c: 692
+# ui/options.c: 693
 nes
 
-# ui/options.c: 694
+# ui/options.c: 695
 default_game
 
-# ui/options.c: 694
+# ui/options.c: 695
 last selected game name
 
-# ui/options.c: 694
+# ui/options.c: 695
 puckman
 
-# ui/options.c: 696
+# ui/options.c: 697
 show tool bar
 
-# ui/options.c: 696
+# ui/options.c: 697
 show_toolbar
 
-# ui/options.c: 697
+# ui/options.c: 698
 show status bar
 
-# ui/options.c: 697
+# ui/options.c: 698
 show_statusbar
 
-# ui/options.c: 698
+# ui/options.c: 699
 show folder list
 
-# ui/options.c: 698
+# ui/options.c: 699
 show_folderlist
 
-# ui/options.c: 699
+# ui/options.c: 700
 show image picture
 
-# ui/options.c: 699
+# ui/options.c: 700
 show_screenshot
 
-# ui/options.c: 700
+# ui/options.c: 701
 show tab control
 
-# ui/options.c: 700
+# ui/options.c: 701
 show_screenshottab
 
-# ui/options.c: 701
+# ui/options.c: 702
 show tab control flags
 
-# ui/options.c: 701
+# ui/options.c: 702
 show_tab_flags
 
-# ui/options.c: 702
+# ui/options.c: 703
 current image picture
 
-# ui/options.c: 702
+# ui/options.c: 703
 current_tab
 
-# ui/options.c: 705
+# ui/options.c: 706
 datafile_tab
 
-# ui/options.c: 705, 708
+# ui/options.c: 706, 709
 where to show history on tab
 
-# ui/options.c: 708
+# ui/options.c: 709
 history_tab
 
-# ui/options.c: 710
+# ui/options.c: 711
 exec_command
 
-# ui/options.c: 710
+# ui/options.c: 711
 execute command line
 
-# ui/options.c: 711
+# ui/options.c: 712
 exec_wait
 
-# ui/options.c: 711
+# ui/options.c: 712
 execute wait
 
-# ui/options.c: 712
+# ui/options.c: 713
 hide mouse
 
-# ui/options.c: 712
+# ui/options.c: 713
 hide_mouse
 
-# ui/options.c: 713
+# ui/options.c: 714
 full screen
 
-# ui/options.c: 713
+# ui/options.c: 714
 full_screen
 
-# ui/options.c: 716
+# ui/options.c: 717
 window left position
 
-# ui/options.c: 716
+# ui/options.c: 717
 window_x
 
-# ui/options.c: 717
+# ui/options.c: 718
 window top position
 
-# ui/options.c: 717
+# ui/options.c: 718
 window_y
 
-# ui/options.c: 718
+# ui/options.c: 719
 window width
 
-# ui/options.c: 718
+# ui/options.c: 719
 window_width
 
-# ui/options.c: 719
+# ui/options.c: 720
 window height
 
-# ui/options.c: 719
+# ui/options.c: 720
 window_height
 
-# ui/options.c: 720
+# ui/options.c: 721
 window state
 
-# ui/options.c: 720
+# ui/options.c: 721
 window_state
 
-# ui/options.c: 723
+# ui/options.c: 724
 list_mode
 
-# ui/options.c: 723
+# ui/options.c: 724
 view mode
 
-# ui/options.c: 724
+# ui/options.c: 725
 splitter position
 
-# ui/options.c: 724
+# ui/options.c: 725
 splitters
 
-# ui/options.c: 726
+# ui/options.c: 727
 column width settings
 
-# ui/options.c: 726
+# ui/options.c: 727
 column_widths
 
-# ui/options.c: 727
+# ui/options.c: 728
 column order settings
 
-# ui/options.c: 727
+# ui/options.c: 728
 column_order
 
-# ui/options.c: 728
+# ui/options.c: 729
 column_shown
 
-# ui/options.c: 728
+# ui/options.c: 729
 show or hide column settings
 
-# ui/options.c: 729
+# ui/options.c: 730
 sort column
 
-# ui/options.c: 729
+# ui/options.c: 730
 sort_column
 
-# ui/options.c: 730
+# ui/options.c: 731
 sort descending
 
-# ui/options.c: 730
+# ui/options.c: 731
 sort_reverse
 
-# ui/options.c: 731
+# ui/options.c: 732
 folder_id
 
-# ui/options.c: 731
+# ui/options.c: 732
 last selected folder id
 
-# ui/options.c: 734
+# ui/options.c: 735
 game list font size
 
-# ui/options.c: 734
+# ui/options.c: 735
 list_font
 
-# ui/options.c: 735
+# ui/options.c: 736
 game list font face
 
-# ui/options.c: 735
+# ui/options.c: 736
 list_fontface
 
-# ui/options.c: 736
+# ui/options.c: 737
 use broken icon for not working games
 
-# ui/options.c: 736
+# ui/options.c: 737
 use_broken_icon
 
-# ui/options.c: 737
+# ui/options.c: 738
 font_color
 
-# ui/options.c: 737
+# ui/options.c: 738
 game list font color
 
-# ui/options.c: 738
+# ui/options.c: 739
 clone game list font color
 
-# ui/options.c: 738
+# ui/options.c: 739
 clone_color
 
-# ui/options.c: 739
+# ui/options.c: 740
 broken game list font color
 
-# ui/options.c: 739
+# ui/options.c: 740
 broken_color
 
-# ui/options.c: 740
+# ui/options.c: 741
 custom colors
 
-# ui/options.c: 740
+# ui/options.c: 741
 custom_color
 
-# ui/options.c: 743
+# ui/options.c: 744
 1,JOYCODE_STICK_AXIS,2,JOYCODE_DIR_NEG
 
-# ui/options.c: 743
+# ui/options.c: 744
 joystick to up
 
-# ui/options.c: 743
+# ui/options.c: 744
 ui_joy_up
 
-# ui/options.c: 744
+# ui/options.c: 745
 1,JOYCODE_STICK_AXIS,2,JOYCODE_DIR_POS
 
-# ui/options.c: 744
+# ui/options.c: 745
 joystick to down
 
-# ui/options.c: 744
+# ui/options.c: 745
 ui_joy_down
 
-# ui/options.c: 745
+# ui/options.c: 746
 1,JOYCODE_STICK_AXIS,1,JOYCODE_DIR_NEG
 
-# ui/options.c: 745
+# ui/options.c: 746
 joystick to left
 
-# ui/options.c: 745
+# ui/options.c: 746
 ui_joy_left
 
-# ui/options.c: 746
+# ui/options.c: 747
 1,JOYCODE_STICK_AXIS,1,JOYCODE_DIR_POS
 
-# ui/options.c: 746
+# ui/options.c: 747
 joystick to right
 
-# ui/options.c: 746
+# ui/options.c: 747
 ui_joy_right
 
-# ui/options.c: 747
+# ui/options.c: 748
 1,JOYCODE_STICK_BTN,1,JOYCODE_DIR_BTN
 
-# ui/options.c: 747
+# ui/options.c: 748
 joystick to start game
 
-# ui/options.c: 747
+# ui/options.c: 748
 ui_joy_start
 
-# ui/options.c: 748
+# ui/options.c: 749
 2,JOYCODE_STICK_AXIS,2,JOYCODE_DIR_NEG
 
-# ui/options.c: 748
+# ui/options.c: 749
 joystick to page-up
 
-# ui/options.c: 748
+# ui/options.c: 749
 ui_joy_pgup
 
-# ui/options.c: 749
+# ui/options.c: 750
 2,JOYCODE_STICK_AXIS,2,JOYCODE_DIR_POS
 
-# ui/options.c: 749
+# ui/options.c: 750
 joystick to page-down
 
-# ui/options.c: 749
+# ui/options.c: 750
 ui_joy_pgdwn
 
-# ui/options.c: 750
+# ui/options.c: 751
 joystick to home
 
-# ui/options.c: 750
+# ui/options.c: 751
 ui_joy_home
 
-# ui/options.c: 751
+# ui/options.c: 752
 joystick to end
 
-# ui/options.c: 751
+# ui/options.c: 752
 ui_joy_end
 
-# ui/options.c: 752
+# ui/options.c: 753
 2,JOYCODE_STICK_BTN,3,JOYCODE_DIR_BTN
 
-# ui/options.c: 752
+# ui/options.c: 753
 joystick to change picture
 
-# ui/options.c: 752
+# ui/options.c: 753
 ui_joy_ss_change
 
-# ui/options.c: 753
+# ui/options.c: 754
 2,JOYCODE_STICK_BTN,4,JOYCODE_DIR_BTN
 
-# ui/options.c: 753
+# ui/options.c: 754
 joystick to scroll history up
 
-# ui/options.c: 753
+# ui/options.c: 754
 ui_joy_history_up
 
-# ui/options.c: 754
+# ui/options.c: 755
 2,JOYCODE_STICK_BTN,1,JOYCODE_DIR_BTN
 
-# ui/options.c: 754
+# ui/options.c: 755
 joystick to scroll history down
 
-# ui/options.c: 754
+# ui/options.c: 755
 ui_joy_history_down
 
-# ui/options.c: 755
+# ui/options.c: 756
 joystick execute commandline
 
-# ui/options.c: 755
+# ui/options.c: 756
 ui_joy_exec
 
-# ui/options.c: 758
+# ui/options.c: 759
 KEYCODE_UP
 
-# ui/options.c: 758
+# ui/options.c: 759
 keyboard to up
 
-# ui/options.c: 758
+# ui/options.c: 759
 ui_key_up
 
-# ui/options.c: 759
+# ui/options.c: 760
 KEYCODE_DOWN
 
-# ui/options.c: 759
+# ui/options.c: 760
 keyboard to down
 
-# ui/options.c: 759
+# ui/options.c: 760
 ui_key_down
 
-# ui/options.c: 760
+# ui/options.c: 761
 KEYCODE_LEFT
 
-# ui/options.c: 760
+# ui/options.c: 761
 keyboard to left
 
-# ui/options.c: 760
+# ui/options.c: 761
 ui_key_left
 
-# ui/options.c: 761
+# ui/options.c: 762
 KEYCODE_RIGHT
 
-# ui/options.c: 761
+# ui/options.c: 762
 keyboard to right
 
-# ui/options.c: 761
+# ui/options.c: 762
 ui_key_right
 
-# ui/options.c: 762
+# ui/options.c: 763
 KEYCODE_ENTER NOT KEYCODE_LALT
 
-# ui/options.c: 762
+# ui/options.c: 763
 keyboard to start game
 
-# ui/options.c: 762
+# ui/options.c: 763
 ui_key_start
 
-# ui/options.c: 763
+# ui/options.c: 764
 KEYCODE_PGUP
 
-# ui/options.c: 763
+# ui/options.c: 764
 keyboard to page-up
 
-# ui/options.c: 763
+# ui/options.c: 764
 ui_key_pgup
 
-# ui/options.c: 764
+# ui/options.c: 765
 KEYCODE_PGDN
 
-# ui/options.c: 764
+# ui/options.c: 765
 keyboard to page-down
 
-# ui/options.c: 764
+# ui/options.c: 765
 ui_key_pgdwn
 
-# ui/options.c: 765
+# ui/options.c: 766
 KEYCODE_HOME
 
-# ui/options.c: 765
+# ui/options.c: 766
 keyboard to home
 
-# ui/options.c: 765
+# ui/options.c: 766
 ui_key_home
 
-# ui/options.c: 766
+# ui/options.c: 767
 KEYCODE_END
 
-# ui/options.c: 766
+# ui/options.c: 767
 keyboard to end
 
-# ui/options.c: 766
+# ui/options.c: 767
 ui_key_end
 
-# ui/options.c: 767
+# ui/options.c: 768
 KEYCODE_LALT KEYCODE_0
 
-# ui/options.c: 767
+# ui/options.c: 768
 keyboard to change picture
 
-# ui/options.c: 767
+# ui/options.c: 768
 ui_key_ss_change
 
-# ui/options.c: 768
+# ui/options.c: 769
 KEYCODE_INSERT
 
-# ui/options.c: 768
+# ui/options.c: 769
 keyboard to history up
 
-# ui/options.c: 768
+# ui/options.c: 769
 ui_key_history_up
 
-# ui/options.c: 769
+# ui/options.c: 770
 KEYCODE_DEL
 
-# ui/options.c: 769
+# ui/options.c: 770
 keyboard to history down
 
-# ui/options.c: 769
+# ui/options.c: 770
 ui_key_history_down
 
-# ui/options.c: 771
+# ui/options.c: 772
 KEYCODE_LCONTROL KEYCODE_F
 
-# ui/options.c: 771
+# ui/options.c: 772
 keyboard to context filters
 
-# ui/options.c: 771
+# ui/options.c: 772
 ui_key_context_filters
 
-# ui/options.c: 772
+# ui/options.c: 773
 KEYCODE_LCONTROL KEYCODE_R
 
-# ui/options.c: 772
+# ui/options.c: 773
 keyboard to select random
 
-# ui/options.c: 772
+# ui/options.c: 773
 ui_key_select_random
 
-# ui/options.c: 773
+# ui/options.c: 774
 KEYCODE_LALT KEYCODE_A
 
-# ui/options.c: 773
+# ui/options.c: 774
 keyboard to game audit
 
-# ui/options.c: 773
+# ui/options.c: 774
 ui_key_game_audit
 
-# ui/options.c: 774
+# ui/options.c: 775
 KEYCODE_LALT KEYCODE_ENTER
 
-# ui/options.c: 774
+# ui/options.c: 775
 keyboard to game properties
 
-# ui/options.c: 774
+# ui/options.c: 775
 ui_key_game_properties
 
-# ui/options.c: 775
+# ui/options.c: 776
 KEYCODE_F1
 
-# ui/options.c: 775
+# ui/options.c: 776
 keyboard to help contents
 
-# ui/options.c: 775
+# ui/options.c: 776
 ui_key_help_contents
 
-# ui/options.c: 776
+# ui/options.c: 777
 KEYCODE_F5
 
-# ui/options.c: 776
+# ui/options.c: 777
 keyboard to update game list
 
-# ui/options.c: 776
+# ui/options.c: 777
 ui_key_update_gamelist
 
-# ui/options.c: 777
+# ui/options.c: 778
 KEYCODE_LALT KEYCODE_D
 
-# ui/options.c: 777
+# ui/options.c: 778
 keyboard to view folders
 
-# ui/options.c: 777
+# ui/options.c: 778
 ui_key_view_folders
 
-# ui/options.c: 778
+# ui/options.c: 779
 KEYCODE_F11
 
-# ui/options.c: 778
+# ui/options.c: 779
 keyboard to full screen
 
-# ui/options.c: 778
+# ui/options.c: 779
 ui_key_view_fullscreen
 
-# ui/options.c: 779
+# ui/options.c: 780
 KEYCODE_LALT KEYCODE_B
 
-# ui/options.c: 779
+# ui/options.c: 780
 keyboard to view page tab
 
-# ui/options.c: 779
+# ui/options.c: 780
 ui_key_view_pagetab
 
-# ui/options.c: 780
+# ui/options.c: 781
 KEYCODE_LALT KEYCODE_P
 
-# ui/options.c: 780
+# ui/options.c: 781
 keyboard to view picture area
 
-# ui/options.c: 780
+# ui/options.c: 781
 ui_key_view_picture_area
 
-# ui/options.c: 781
+# ui/options.c: 782
 KEYCODE_LALT KEYCODE_S
 
-# ui/options.c: 781
+# ui/options.c: 782
 keyboard to view status
 
-# ui/options.c: 781
+# ui/options.c: 782
 ui_key_view_status
 
-# ui/options.c: 782
+# ui/options.c: 783
 KEYCODE_LALT KEYCODE_T
 
-# ui/options.c: 782
+# ui/options.c: 783
 keyboard to view toolbars
 
-# ui/options.c: 782
+# ui/options.c: 783
 ui_key_view_toolbars
 
-# ui/options.c: 784
+# ui/options.c: 785
 KEYCODE_LALT KEYCODE_3
 
-# ui/options.c: 784
+# ui/options.c: 785
 keyboard to view tab cabinet
 
-# ui/options.c: 784
+# ui/options.c: 785
 ui_key_view_tab_cabinet
 
-# ui/options.c: 785
+# ui/options.c: 786
 KEYCODE_LALT KEYCODE_6
 
-# ui/options.c: 785
+# ui/options.c: 786
 keyboard to view tab control panel
 
-# ui/options.c: 785
+# ui/options.c: 786
 ui_key_view_tab_cpanel
 
-# ui/options.c: 786
+# ui/options.c: 787
 KEYCODE_LALT KEYCODE_2
 
-# ui/options.c: 786
+# ui/options.c: 787
 keyboard to view tab flyer
 
-# ui/options.c: 786
+# ui/options.c: 787
 ui_key_view_tab_flyer
 
-# ui/options.c: 787
+# ui/options.c: 788
 KEYCODE_LALT KEYCODE_7
 
-# ui/options.c: 787
+# ui/options.c: 788
 keyboard to view tab history
 
-# ui/options.c: 787
+# ui/options.c: 788
 ui_key_view_tab_history
 
-# ui/options.c: 789
+# ui/options.c: 790
 KEYCODE_LALT KEYCODE_8
 
-# ui/options.c: 789
+# ui/options.c: 790
 keyboard to view tab story
 
-# ui/options.c: 789
+# ui/options.c: 790
 ui_key_view_tab_story
 
-# ui/options.c: 791
+# ui/options.c: 792
 KEYCODE_LALT KEYCODE_4
 
-# ui/options.c: 791
+# ui/options.c: 792
 keyboard to view tab marquee
 
-# ui/options.c: 791
+# ui/options.c: 792
 ui_key_view_tab_marquee
 
-# ui/options.c: 792
+# ui/options.c: 793
 KEYCODE_LALT KEYCODE_1
 
-# ui/options.c: 792
+# ui/options.c: 793
 keyboard to view tab screen shot
 
-# ui/options.c: 792
+# ui/options.c: 793
 ui_key_view_tab_screenshot
 
-# ui/options.c: 793
+# ui/options.c: 794
 KEYCODE_LALT KEYCODE_5
 
-# ui/options.c: 793
+# ui/options.c: 794
 keyboard to view tab title
 
-# ui/options.c: 793
+# ui/options.c: 794
 ui_key_view_tab_title
 
-# ui/options.c: 794
+# ui/options.c: 795
 KEYCODE_LALT KEYCODE_Q
 
-# ui/options.c: 794
+# ui/options.c: 795
 keyboard to quit application
 
-# ui/options.c: 794
+# ui/options.c: 795
 ui_key_quit
 
-# ui/options.c: 797
+# ui/options.c: 798
 folder_hide
 
-# ui/options.c: 797
+# ui/options.c: 798
 hide selected item in folder list
 
-# ui/options.c: 799
+# ui/options.c: 800
 folder list filters settings
 
-# ui/options.c: 1261, 1267
+# ui/options.c: 1262, 1268
 codepage %d is not supported\n
 
-# ui/options.c: 3012
+# ui/options.c: 3013
 %s.c
 
-# ui/options.c: 3017
+# ui/options.c: 3018
 Unify %s
 
-# ui/options.c: 3031
+# ui/options.c: 3032
 %s_playcount
 
-# ui/options.c: 3031
+# ui/options.c: 3032
 Play Counts
 
-# ui/options.c: 3032
+# ui/options.c: 3033
 %s_play_time
 
-# ui/options.c: 3033
+# ui/options.c: 3034
 %s_rom_audit
 
-# ui/options.c: 3033
+# ui/options.c: 3034
 Has Roms
 
-# ui/options.c: 3034
+# ui/options.c: 3035
 %s_samples_audit
 
-# ui/options.c: 3034
+# ui/options.c: 3035
 Has Samples
 
-# ui/options.c: 3149
+# ui/options.c: 3140
 (unknown)
 
-# ui/options.c: 3281
+# ui/options.c: 3272
 \"%s,%ld\"\r\n
 
-# ui/options.c: 3285
+# ui/options.c: 3276
 # %-19s   <NULL> (not set)\r\n
 
-# ui/options.c: 3343
+# ui/options.c: 3334
 0x0x0
 
-# ui/options.c: 3416, 3527
+# ui/options.c: 3407, 3518
 %s: use_default with ips
 
-# ui/options.c: 3437
+# ui/options.c: 3428
 %s.ini
 
-# ui/options.c: 3479, 3598
+# ui/options.c: 3470, 3589
 %s\\%s.ini
 
-# ui/options.c: 3488, 3552
+# ui/options.c: 3479, 3543
 .ini
 
-# ui/options.c: 3718, 3740
+# ui/options.c: 3709, 3731
 full
 
-# ui/options.c: 3749
+# ui/options.c: 3740
 usb
 
-# ui/options.c: 4082
+# ui/options.c: 4073
 %lu
 
-# ui/options.c: 4085
+# ui/options.c: 4076
 ,%lu
 
-# ui/options.c: 4185, 4212
+# ui/options.c: 4176, 4203
 %li,%li,%li,%li,%li,%i,%i,%i,%i,%i,%i,%i,%i
 
-# ui/options.c: 4424
+# ui/options.c: 4415
 error: realloc failed in SaveFolderFlags\n
 
 # ui/properties.c: 418, 463, 527, 2918
@@ -62497,31 +62509,31 @@ not found ipsname: %s
 # ui/screenshot.c: 140
 found clone ipsname: %s
 
-# ui/screenshot.c: 216
+# ui/screenshot.c: 224
 snap
 
-# ui/screenshot.c: 220
+# ui/screenshot.c: 228
 flyers
 
-# ui/screenshot.c: 224
+# ui/screenshot.c: 232
 cabinets
 
-# ui/screenshot.c: 228
+# ui/screenshot.c: 236
 marquees
 
-# ui/screenshot.c: 232
+# ui/screenshot.c: 240
 titles
 
-# ui/screenshot.c: 236
+# ui/screenshot.c: 244
 cpanel
 
-# ui/screenshot.c: 240
+# ui/screenshot.c: 248
 bkground
 
-# ui/screenshot.c: 245
+# ui/screenshot.c: 253
 ips
 
-# ui/screenshot.c: 254
+# ui/screenshot.c: 262
 LoadDIB %s
 
 # ui/tabview.c: 130
@@ -62734,784 +62746,802 @@ SubFolderIcon %s\n
 # ui/treeview.c: 2702
 \n[ROOT_FOLDER]\n
 
-# ui/win32ui.c: 560
+# ui/win32ui.c: 561
 gui_key_up
 
-# ui/win32ui.c: 561
+# ui/win32ui.c: 562
 gui_key_down
 
-# ui/win32ui.c: 562
+# ui/win32ui.c: 563
 gui_key_left
 
-# ui/win32ui.c: 563
+# ui/win32ui.c: 564
 gui_key_right
 
-# ui/win32ui.c: 564
+# ui/win32ui.c: 565
 gui_key_start
 
-# ui/win32ui.c: 565
+# ui/win32ui.c: 566
 gui_key_pgup
 
-# ui/win32ui.c: 566
+# ui/win32ui.c: 567
 gui_key_pgdwn
 
-# ui/win32ui.c: 567
+# ui/win32ui.c: 568
 gui_key_home
 
-# ui/win32ui.c: 568
+# ui/win32ui.c: 569
 gui_key_end
 
-# ui/win32ui.c: 569
+# ui/win32ui.c: 570
 gui_key_ss_change
 
-# ui/win32ui.c: 570
+# ui/win32ui.c: 571
 gui_key_history_up
 
-# ui/win32ui.c: 571
+# ui/win32ui.c: 572
 gui_key_history_down
 
-# ui/win32ui.c: 573
+# ui/win32ui.c: 574
 gui_key_context_filters
 
-# ui/win32ui.c: 574
+# ui/win32ui.c: 575
 gui_key_select_random
 
-# ui/win32ui.c: 575
+# ui/win32ui.c: 576
 gui_key_game_audit
 
-# ui/win32ui.c: 576
+# ui/win32ui.c: 577
 gui_key_game_properties
 
-# ui/win32ui.c: 577
+# ui/win32ui.c: 578
 gui_key_help_contents
 
-# ui/win32ui.c: 578
+# ui/win32ui.c: 579
 gui_key_update_gamelist
 
-# ui/win32ui.c: 579
+# ui/win32ui.c: 580
 gui_key_view_folders
 
-# ui/win32ui.c: 580
+# ui/win32ui.c: 581
 gui_key_view_fullscreen
 
-# ui/win32ui.c: 581
+# ui/win32ui.c: 582
 gui_key_view_pagetab
 
-# ui/win32ui.c: 582
+# ui/win32ui.c: 583
 gui_key_view_picture_area
 
-# ui/win32ui.c: 583
+# ui/win32ui.c: 584
 gui_key_view_status
 
-# ui/win32ui.c: 584
+# ui/win32ui.c: 585
 gui_key_view_toolbars
 
-# ui/win32ui.c: 586
+# ui/win32ui.c: 587
 gui_key_view_tab_cabinet
 
-# ui/win32ui.c: 587
+# ui/win32ui.c: 588
 gui_key_view_tab_cpanel
 
-# ui/win32ui.c: 588
+# ui/win32ui.c: 589
 gui_key_view_tab_flyer
 
-# ui/win32ui.c: 589
+# ui/win32ui.c: 590
 gui_key_view_tab_history
 
-# ui/win32ui.c: 591
+# ui/win32ui.c: 592
 gui_key_view_tab_story
 
-# ui/win32ui.c: 593
+# ui/win32ui.c: 594
 gui_key_view_tab_marquee
 
-# ui/win32ui.c: 594
+# ui/win32ui.c: 595
 gui_key_view_tab_screenshot
 
-# ui/win32ui.c: 595
+# ui/win32ui.c: 596
 gui_key_view_tab_title
 
-# ui/win32ui.c: 596
+# ui/win32ui.c: 597
 gui_key_quit
 
-# ui/win32ui.c: 754
+# ui/win32ui.c: 755
 *.inp;*.zip
 
-# ui/win32ui.c: 758
+# ui/win32ui.c: 759
 inp
 
-# ui/win32ui.c: 761
+# ui/win32ui.c: 762
 *.sta;
 
-# ui/win32ui.c: 765
+# ui/win32ui.c: 766
 sta
 
-# ui/win32ui.c: 768
+# ui/win32ui.c: 769
 *.wav;
 
-# ui/win32ui.c: 772
+# ui/win32ui.c: 773
 wav
 
-# ui/win32ui.c: 775
+# ui/win32ui.c: 776
 *.mng;
 
-# ui/win32ui.c: 779
+# ui/win32ui.c: 780
 mng
 
-# ui/win32ui.c: 782
+# ui/win32ui.c: 783
 *.png;*.bmp
 
-# ui/win32ui.c: 786
+# ui/win32ui.c: 787
 png
 
-# ui/win32ui.c: 895
+# ui/win32ui.c: 790
+*.lst;
+
+# ui/win32ui.c: 790
+MAME32 game list files (*.lst)
+
+# ui/win32ui.c: 792
+Select a game list file
+
+# ui/win32ui.c: 794
+lst
+
+# ui/win32ui.c: 903
 \"%s\" %s -norc
 
-# ui/win32ui.c: 897
+# ui/win32ui.c: 905
  -rp \"%s\"
 
-# ui/win32ui.c: 898
+# ui/win32ui.c: 906
  -sp \"%s\"
 
-# ui/win32ui.c: 899
+# ui/win32ui.c: 907
  -inipath \"%s\"
 
-# ui/win32ui.c: 900
+# ui/win32ui.c: 908
  -cfg_directory \"%s\"
 
-# ui/win32ui.c: 901
+# ui/win32ui.c: 909
  -nvram_directory \"%s\"
 
-# ui/win32ui.c: 902
+# ui/win32ui.c: 910
  -memcard_directory \"%s\"
 
-# ui/win32ui.c: 906, 909
+# ui/win32ui.c: 914, 917
  -input_directory \"%s\"
 
-# ui/win32ui.c: 911
+# ui/win32ui.c: 919
  -hiscore_directory \"%s\"
 
-# ui/win32ui.c: 912
+# ui/win32ui.c: 920
  -state_directory \"%s\"
 
-# ui/win32ui.c: 913
+# ui/win32ui.c: 921
  -artwork_directory \"%s\"
 
-# ui/win32ui.c: 914
+# ui/win32ui.c: 922
  -snapshot_directory \"%s\"
 
-# ui/win32ui.c: 915
+# ui/win32ui.c: 923
  -diff_directory \"%s\"
 
-# ui/win32ui.c: 916
+# ui/win32ui.c: 924
  -cheat_file \"%s\"
 
-# ui/win32ui.c: 917
+# ui/win32ui.c: 925
  -ctrlr_directory \"%s\"
 
-# ui/win32ui.c: 918
+# ui/win32ui.c: 926
  -comment_directory \"%s\"
 
-# ui/win32ui.c: 920
+# ui/win32ui.c: 928
  -ips_directory \"%s\"
 
-# ui/win32ui.c: 922
+# ui/win32ui.c: 930
  -lang_directory \"%s\"
 
-# ui/win32ui.c: 923
+# ui/win32ui.c: 931
  -history_file \"%s\"
 
-# ui/win32ui.c: 925
+# ui/win32ui.c: 933
  -story_file \"%s\"
 
-# ui/win32ui.c: 927
+# ui/win32ui.c: 935
  -mameinfo_file \"%s\"
 
-# ui/win32ui.c: 928
+# ui/win32ui.c: 936
  -hiscore_file \"%s\"
 
-# ui/win32ui.c: 931
+# ui/win32ui.c: 939
  -%safs
 
-# ui/win32ui.c: 931, 933, 935, 936, 937, 938, 941, 942, 943, 944, 945, 946, 947, 948, 966, 969, 1002, 1003, 1006, 1009, 1011, 1013, 1016, 1053, 1055, 1057, 1063, 1065, 1073, 1074, 1081, 1082, 1085, 1089, 1093, 1094, 1095, 1096, 1102, 1104, 1113, 1114, 1117, 1118, 1130, 1131, 1133, 1136, 1145
+# ui/win32ui.c: 939, 941, 943, 944, 945, 946, 949, 950, 951, 952, 953, 954, 955, 956, 974, 977, 1010, 1011, 1014, 1017, 1019, 1021, 1024, 1062, 1064, 1066, 1072, 1074, 1082, 1083, 1091, 1092, 1095, 1100, 1103, 1104, 1105, 1106, 1113, 1115, 1124, 1125, 1128, 1129, 1141, 1142, 1144, 1147, 1156
 no
 
-# ui/win32ui.c: 932
+# ui/win32ui.c: 940
  -fs %d
 
-# ui/win32ui.c: 933
+# ui/win32ui.c: 941
  -%swaitvsync
 
-# ui/win32ui.c: 935
+# ui/win32ui.c: 943
  -%stb
 
-# ui/win32ui.c: 936
+# ui/win32ui.c: 944
  -%sw
 
-# ui/win32ui.c: 937
+# ui/win32ui.c: 945
  -%sdd
 
-# ui/win32ui.c: 938
+# ui/win32ui.c: 946
  -%shws
 
-# ui/win32ui.c: 939
+# ui/win32ui.c: 947
  -r %s
 
-# ui/win32ui.c: 940
+# ui/win32ui.c: 948
  -refresh %d
 
-# ui/win32ui.c: 941
+# ui/win32ui.c: 949
  -%ssl
 
-# ui/win32ui.c: 942
+# ui/win32ui.c: 950
  -%sswitchres
 
-# ui/win32ui.c: 943
+# ui/win32ui.c: 951
  -%sswitchbpp
 
-# ui/win32ui.c: 944
+# ui/win32ui.c: 952
  -%smax
 
-# ui/win32ui.c: 945
+# ui/win32ui.c: 953
  -%ska
 
-# ui/win32ui.c: 946
+# ui/win32ui.c: 954
  -%smatchrefresh
 
-# ui/win32ui.c: 947
+# ui/win32ui.c: 955
  -%ssyncrefresh
 
-# ui/win32ui.c: 948
+# ui/win32ui.c: 956
  -%sthrottle
 
-# ui/win32ui.c: 949
+# ui/win32ui.c: 957
  -fsb %f
 
-# ui/win32ui.c: 951
+# ui/win32ui.c: 959
  -effect %s
 
-# ui/win32ui.c: 952
+# ui/win32ui.c: 960
  -screen_aspect %s
 
-# ui/win32ui.c: 954
+# ui/win32ui.c: 962
  -mngwrite \"%s\"
 
-# ui/win32ui.c: 955
+# ui/win32ui.c: 963
  -cs %s
 
-# ui/win32ui.c: 956
+# ui/win32ui.c: 964
  -zoom %i
 
-# ui/win32ui.c: 958
+# ui/win32ui.c: 966
  -scale_effect %s
 
-# ui/win32ui.c: 964
+# ui/win32ui.c: 972
  -d3d
 
-# ui/win32ui.c: 965
+# ui/win32ui.c: 973
  -flt %i
 
-# ui/win32ui.c: 966
+# ui/win32ui.c: 974
  -%sd3dtexmanage
 
-# ui/win32ui.c: 967
+# ui/win32ui.c: 975
  -d3deffect %s
 
-# ui/win32ui.c: 968
+# ui/win32ui.c: 976
  -d3dprescale %s
 
-# ui/win32ui.c: 969
+# ui/win32ui.c: 977
  -%sd3deffectrotate
 
-# ui/win32ui.c: 970
+# ui/win32ui.c: 978
  -d3dscan %i
 
-# ui/win32ui.c: 971
+# ui/win32ui.c: 979
  -d3dfeedback %i
 
-# ui/win32ui.c: 974
+# ui/win32ui.c: 982
  -nod3d
 
-# ui/win32ui.c: 977
+# ui/win32ui.c: 985
  -font_blank \"%s\"
 
-# ui/win32ui.c: 978
+# ui/win32ui.c: 986
  -font_normal \"%s\"
 
-# ui/win32ui.c: 979
+# ui/win32ui.c: 987
  -font_special \"%s\"
 
-# ui/win32ui.c: 980
+# ui/win32ui.c: 988
  -system_background \"%s\"
 
-# ui/win32ui.c: 981
+# ui/win32ui.c: 989
  -system_framemedium \"%s\"
 
-# ui/win32ui.c: 982
+# ui/win32ui.c: 990
  -system_framelight \"%s\"
 
-# ui/win32ui.c: 983
+# ui/win32ui.c: 991
  -system_framedark \"%s\"
 
-# ui/win32ui.c: 984
+# ui/win32ui.c: 992
  -osdbar_framemedium \"%s\"
 
-# ui/win32ui.c: 985
+# ui/win32ui.c: 993
  -osdbar_framelight \"%s\"
 
-# ui/win32ui.c: 986
+# ui/win32ui.c: 994
  -osdbar_framedark \"%s\"
 
-# ui/win32ui.c: 987
+# ui/win32ui.c: 995
  -osdbar_defaultbar \"%s\"
 
-# ui/win32ui.c: 988
+# ui/win32ui.c: 996
  -button_red \"%s\"
 
-# ui/win32ui.c: 989
+# ui/win32ui.c: 997
  -button_yellow \"%s\"
 
-# ui/win32ui.c: 990
+# ui/win32ui.c: 998
  -button_green \"%s\"
 
-# ui/win32ui.c: 991
+# ui/win32ui.c: 999
  -button_blue \"%s\"
 
-# ui/win32ui.c: 992
+# ui/win32ui.c: 1000
  -button_purple \"%s\"
 
-# ui/win32ui.c: 993
+# ui/win32ui.c: 1001
  -button_pink \"%s\"
 
-# ui/win32ui.c: 994
+# ui/win32ui.c: 1002
  -button_aqua \"%s\"
 
-# ui/win32ui.c: 995
+# ui/win32ui.c: 1003
  -button_silver \"%s\"
 
-# ui/win32ui.c: 996
+# ui/win32ui.c: 1004
  -button_navy \"%s\"
 
-# ui/win32ui.c: 997
+# ui/win32ui.c: 1005
  -button_lime \"%s\"
 
-# ui/win32ui.c: 998
+# ui/win32ui.c: 1006
  -cursor \"%s\"
 
-# ui/win32ui.c: 1002
+# ui/win32ui.c: 1010
  -%smouse
 
-# ui/win32ui.c: 1003
+# ui/win32ui.c: 1011
  -%sjoy
 
-# ui/win32ui.c: 1005
+# ui/win32ui.c: 1013
  -a2d %f
 
-# ui/win32ui.c: 1006
+# ui/win32ui.c: 1014
  -%ssteady
 
-# ui/win32ui.c: 1009
+# ui/win32ui.c: 1017
  -%sgun
 
-# ui/win32ui.c: 1011
+# ui/win32ui.c: 1019
  -%sdual
 
-# ui/win32ui.c: 1013
+# ui/win32ui.c: 1021
  -%sreload
 
-# ui/win32ui.c: 1016
+# ui/win32ui.c: 1024
  -%sstickpoint
 
-# ui/win32ui.c: 1019
+# ui/win32ui.c: 1027
  -joyid1 %d
 
-# ui/win32ui.c: 1020
+# ui/win32ui.c: 1028
  -joyid2 %d
 
-# ui/win32ui.c: 1021
+# ui/win32ui.c: 1029
  -joyid3 %d
 
-# ui/win32ui.c: 1022
+# ui/win32ui.c: 1030
  -joyid4 %d
 
-# ui/win32ui.c: 1023
+# ui/win32ui.c: 1031
  -joyid5 %d
 
-# ui/win32ui.c: 1024
+# ui/win32ui.c: 1032
  -joyid6 %d
 
-# ui/win32ui.c: 1025
+# ui/win32ui.c: 1033
  -joyid7 %d
 
-# ui/win32ui.c: 1026
+# ui/win32ui.c: 1034
  -joyid8 %d
 
-# ui/win32ui.c: 1030
+# ui/win32ui.c: 1038
  -ctrlr \"%s\"
 
-# ui/win32ui.c: 1032
+# ui/win32ui.c: 1040
  -digital \"%s\"
 
-# ui/win32ui.c: 1035
+# ui/win32ui.c: 1044
  -paddle \"%s\"
 
-# ui/win32ui.c: 1037
+# ui/win32ui.c: 1046
  -adstick \"%s\"
 
-# ui/win32ui.c: 1039
+# ui/win32ui.c: 1048
  -pedal \"%s\"
 
-# ui/win32ui.c: 1041
+# ui/win32ui.c: 1050
  -dial \"%s\"
 
-# ui/win32ui.c: 1043
+# ui/win32ui.c: 1052
  -trackball \"%s\"
 
-# ui/win32ui.c: 1045
+# ui/win32ui.c: 1054
  -lightgun_device \"%s\"
 
-# ui/win32ui.c: 1049
+# ui/win32ui.c: 1058
  -bright %f
 
-# ui/win32ui.c: 1050
+# ui/win32ui.c: 1059
  -pause_brightness %f
 
-# ui/win32ui.c: 1053
+# ui/win32ui.c: 1062
  -%snorotate
 
-# ui/win32ui.c: 1055
+# ui/win32ui.c: 1064
  -%sror
 
-# ui/win32ui.c: 1057
+# ui/win32ui.c: 1066
  -%srol
 
-# ui/win32ui.c: 1059
+# ui/win32ui.c: 1068
  -autoror
 
-# ui/win32ui.c: 1061
+# ui/win32ui.c: 1070
  -autorol
 
-# ui/win32ui.c: 1063
+# ui/win32ui.c: 1072
  -%sflipx
 
-# ui/win32ui.c: 1065
+# ui/win32ui.c: 1074
  -%sflipy
 
-# ui/win32ui.c: 1066
+# ui/win32ui.c: 1075
  -gamma %f
 
-# ui/win32ui.c: 1068
+# ui/win32ui.c: 1077
  -screen %s
 
-# ui/win32ui.c: 1073
+# ui/win32ui.c: 1082
  -%saa
 
-# ui/win32ui.c: 1074
+# ui/win32ui.c: 1083
  -%stl
 
-# ui/win32ui.c: 1075
+# ui/win32ui.c: 1084
  -beam %f
 
-# ui/win32ui.c: 1076
+# ui/win32ui.c: 1085
  -flicker %f
 
-# ui/win32ui.c: 1077
+# ui/win32ui.c: 1086
  -intensity %f
 
-# ui/win32ui.c: 1080
+# ui/win32ui.c: 1090
  -sr %d
 
-# ui/win32ui.c: 1081
+# ui/win32ui.c: 1091
  -%ssamples
 
-# ui/win32ui.c: 1082
+# ui/win32ui.c: 1092
  -%ssound
 
-# ui/win32ui.c: 1083
+# ui/win32ui.c: 1093
  -vol %d
 
-# ui/win32ui.c: 1085
+# ui/win32ui.c: 1095
  -%svolume_adjust
 
-# ui/win32ui.c: 1087
+# ui/win32ui.c: 1097
  -audio_latency %i
 
-# ui/win32ui.c: 1089
+# ui/win32ui.c: 1100
  -%sart
 
-# ui/win32ui.c: 1093
+# ui/win32ui.c: 1103
  -%sbackdrop
 
-# ui/win32ui.c: 1094
+# ui/win32ui.c: 1104
  -%soverlay
 
-# ui/win32ui.c: 1095
+# ui/win32ui.c: 1105
  -%sbezel
 
-# ui/win32ui.c: 1096
+# ui/win32ui.c: 1106
  -%sartcrop
 
-# ui/win32ui.c: 1097
+# ui/win32ui.c: 1107
  -artres %d
 
-# ui/win32ui.c: 1102
+# ui/win32ui.c: 1113
  -%sc
 
-# ui/win32ui.c: 1104
+# ui/win32ui.c: 1115
  -%sd
 
-# ui/win32ui.c: 1106
+# ui/win32ui.c: 1117
  -pb \"%s\"
 
-# ui/win32ui.c: 1108
+# ui/win32ui.c: 1119
  -rec \"%s\"
 
-# ui/win32ui.c: 1110
+# ui/win32ui.c: 1121
  -wavwrite \"%s\"
 
-# ui/win32ui.c: 1112
+# ui/win32ui.c: 1123
  -state \"%s\"
 
-# ui/win32ui.c: 1113
+# ui/win32ui.c: 1124
  -%slog
 
-# ui/win32ui.c: 1114
+# ui/win32ui.c: 1125
  -%ssleep
 
-# ui/win32ui.c: 1116
+# ui/win32ui.c: 1127
  -rdtsc
 
-# ui/win32ui.c: 1117
+# ui/win32ui.c: 1128
  -%sleds
 
-# ui/win32ui.c: 1118
+# ui/win32ui.c: 1129
  -%sskip_gameinfo
 
-# ui/win32ui.c: 1119
+# ui/win32ui.c: 1130
  -priority %d
 
-# ui/win32ui.c: 1121
+# ui/win32ui.c: 1132
  -autosave
 
-# ui/win32ui.c: 1124
+# ui/win32ui.c: 1135
  -bios %s
 
-# ui/win32ui.c: 1128
+# ui/win32ui.c: 1139
  -ips %s
 
-# ui/win32ui.c: 1130
+# ui/win32ui.c: 1141
  -%sdsm
 
-# ui/win32ui.c: 1131
+# ui/win32ui.c: 1142
  -%sconfirm_quit
 
-# ui/win32ui.c: 1133
+# ui/win32ui.c: 1144
  -%sauto_pause_playback
 
-# ui/win32ui.c: 1136
+# ui/win32ui.c: 1147
  -%suse_trans_ui
 
-# ui/win32ui.c: 1137
+# ui/win32ui.c: 1148
  -ui_transparency %d
 
-# ui/win32ui.c: 1140
+# ui/win32ui.c: 1151
  -m68k_core %d
 
-# ui/win32ui.c: 1144
+# ui/win32ui.c: 1155
  -language %s
 
-# ui/win32ui.c: 1145
+# ui/win32ui.c: 1156
  -%suse_lang_list
 
-# ui/win32ui.c: 1203
+# ui/win32ui.c: 1214
 -input_directory
 
-# ui/win32ui.c: 1208
+# ui/win32ui.c: 1219
 -pb
 
-# ui/win32ui.c: 1213
+# ui/win32ui.c: 1224
 -rec
 
-# ui/win32ui.c: 1218
+# ui/win32ui.c: 1229
 -wavwrite
 
-# ui/win32ui.c: 1223
+# ui/win32ui.c: 1234
 -mngwrite
 
-# ui/win32ui.c: 1228
+# ui/win32ui.c: 1239
 -state
 
-# ui/win32ui.c: 1236, 1331
+# ui/win32ui.c: 1247, 1342
 Out of memory.
 
-# ui/win32ui.c: 1352
+# ui/win32ui.c: 1363
 CreateProcess failed.
 
-# ui/win32ui.c: 1415
+# ui/win32ui.c: 1426
 MAME32 starting
 
-# ui/win32ui.c: 1421
+# ui/win32ui.c: 1432
 windows
 
-# ui/win32ui.c: 1422
+# ui/win32ui.c: 1433
 ui
 
-# ui/win32ui.c: 1614, 1618
+# ui/win32ui.c: 1625, 1629
 %s/%s.ico
 
-# ui/win32ui.c: 1622
+# ui/win32ui.c: 1633
 %s/icons.zip
 
-# ui/win32ui.c: 1623
+# ui/win32ui.c: 1634
 %s.ico
 
-# ui/win32ui.c: 1627
+# ui/win32ui.c: 1638
 icons.zip
 
-# ui/win32ui.c: 1920
+# ui/win32ui.c: 1931
 The 
 
-# ui/win32ui.c: 1925
+# ui/win32ui.c: 1936
 , The
 
-# ui/win32ui.c: 2114, 5513
+# ui/win32ui.c: 2125, 5565
 %s\\bkground.png
 
-# ui/win32ui.c: 2131
+# ui/win32ui.c: 2142
 %s\\*.bmp
 
-# ui/win32ui.c: 2144
+# ui/win32ui.c: 2155
 %s\\*.png
 
-# ui/win32ui.c: 2174
+# ui/win32ui.c: 2185
 %s Plus! %s
 
-# ui/win32ui.c: 2174, 2274, 6149, 7341
+# ui/win32ui.c: 2185, 2285, 6201, 7393
 MAME32
 
-# ui/win32ui.c: 2236
+# ui/win32ui.c: 2247
 MainClass
 
-# ui/win32ui.c: 2243
+# ui/win32ui.c: 2254
 common control version %i.%i
 
-# ui/win32ui.c: 2250
+# ui/win32ui.c: 2261
 MAME32 has detected an old version of comctl32.dll\n\nGame Properties, many configuration options and\nfeatures are not available without an updated DLL\n\nPlease install the common control update found at:\n\nhttp://www.microsoft.com/msdownload/ieplatform/ie/comctrlx86.asp\n\nWould you like to continue without using the new features?\n
 
-# ui/win32ui.c: 2257
+# ui/win32ui.c: 2268
 MAME32 Outdated comctl32.dll Warning
 
-# ui/win32ui.c: 2261
+# ui/win32ui.c: 2272
 about to init options
 
-# ui/win32ui.c: 2263
+# ui/win32ui.c: 2274
 options loaded
 
-# ui/win32ui.c: 2283
+# ui/win32ui.c: 2294
 error creating main dialog, aborting
 
-# ui/win32ui.c: 2424
+# ui/win32ui.c: 2435
 about to init tree
 
-# ui/win32ui.c: 2426
+# ui/win32ui.c: 2437
 did init tree
 
-# ui/win32ui.c: 2495
+# ui/win32ui.c: 2506
 about to show window
 
-# ui/win32ui.c: 2555, 7826, 7826, 7906, 7906
+# ui/win32ui.c: 2566, 7878, 7878, 7958, 7958
 MAME
 
-# ui/win32ui.c: 2555
+# ui/win32ui.c: 2566
 MAME has failed its validity checks.  The GUI will still work, but emulations will fail to execute
 
-# ui/win32ui.c: 2698
+# ui/win32ui.c: 2709
 menusele: clear
 
-# ui/win32ui.c: 2707
+# ui/win32ui.c: 2718
 menusele: %d %s, updateSS
 
-# ui/win32ui.c: 2713
+# ui/win32ui.c: 2724
 menusele:none, updateSS
 
-# ui/win32ui.c: 2921, 2933, 4585, 6497
+# ui/win32ui.c: 2932, 2944, 4633, 6549
 SysListView32
 
-# ui/win32ui.c: 2923
+# ui/win32ui.c: 2934
 SysTabControl32
 
-# ui/win32ui.c: 3354
+# ui/win32ui.c: 3365
 MMX
 
-# ui/win32ui.c: 3356
+# ui/win32ui.c: 3367
 MMMM games
 
-# ui/win32ui.c: 3422
+# ui/win32ui.c: 3433
 Progress Bar
 
-# ui/win32ui.c: 3457, 3476, 3505, 3524
+# ui/win32ui.c: 3468, 3487, 3516, 3535
 Invalid Button Index
 
-# ui/win32ui.c: 3462, 3510
+# ui/win32ui.c: 3473, 3521
 Modify 'The'
 
-# ui/win32ui.c: 4082
+# ui/win32ui.c: 4093
 seq =%s pressed\n
 
-# ui/win32ui.c: 4106
+# ui/win32ui.c: 4117
 keyboard gui state cleared.\n
 
-# ui/win32ui.c: 4171
+# ui/win32ui.c: 4182
 VK_code pressed not found =  %i\n
 
-# ui/win32ui.c: 4175
+# ui/win32ui.c: 4186
 VK_code pressed found =  %i, sys=%i, mame_keycode=%i special=%08x\n
 
-# ui/win32ui.c: 4241
+# ui/win32ui.c: 4252
 VK_code released not found =  %i
 
-# ui/win32ui.c: 4246
+# ui/win32ui.c: 4257
 VK_code released found=  %i, sys=%i, mame_keycode=%i special=%08x\n
 
-# ui/win32ui.c: 4589, 6502
+# ui/win32ui.c: 4490
+MAME32%s
+
+# ui/win32ui.c: 4495
+wt
+
+# ui/win32ui.c: 4637, 6554
 SysTreeView32
 
-# ui/win32ui.c: 4666
+# ui/win32ui.c: 4714
 dup!
 
-# ui/win32ui.c: 5295
+# ui/win32ui.c: 5347
 bkgnd16
 
-# ui/win32ui.c: 5300
+# ui/win32ui.c: 5352
 bkground
 
-# ui/win32ui.c: 5616
+# ui/win32ui.c: 5668
 Control Panel\\desktop\\WindowMetrics
 
-# ui/win32ui.c: 5618
+# ui/win32ui.c: 5670
 Shell Icon Size
 
-# ui/win32ui.c: 5713
+# ui/win32ui.c: 5765
 comparing 1941, 1942
 
-# ui/win32ui.c: 5718
+# ui/win32ui.c: 5770
 comparing 1942, 1941
 
-# ui/win32ui.c: 5888
+# ui/win32ui.c: 5940
 result: %i
 
-# ui/win32ui.c: 6880
+# ui/win32ui.c: 6932
 can't find show folders context menu
 
-# ui/win32ui.c: 6886
+# ui/win32ui.c: 6938
 can't find submenu for show folders context menu
 
-# ui/win32ui.c: 7147
+# ui/win32ui.c: 7199
 loading %-12s\r
 
-# ui/win32ui.c: 7967, 7979
+# ui/win32ui.c: 8019, 8031
 BackMainWindowClass
 
-# ui/win32ui.c: 7980
+# ui/win32ui.c: 8032
 Main Backgound windows
 
 # ui_font.c: 74
@@ -63957,9 +63987,6 @@ Sound:     %8dm\n
 
 # validity.c: 1017
 MESS:      %8dm\n
-
-# version.c: 13
-0.104u8 (
 
 # video.c: 234
 tilemap_init failed
@@ -64438,7 +64465,7 @@ forgottn
 # vidhrdw/cps1.c: 273
 lostwrld
 
-# vidhrdw/cps1.c: 274, 506
+# vidhrdw/cps1.c: 274, 507
 ghouls
 
 # vidhrdw/cps1.c: 275
@@ -64481,468 +64508,471 @@ ffight
 ffightu
 
 # vidhrdw/cps1.c: 288
-ffightj
+ffightua
 
 # vidhrdw/cps1.c: 289
+ffightj
+
+# vidhrdw/cps1.c: 290
 ffightj1
 
-# vidhrdw/cps1.c: 291
+# vidhrdw/cps1.c: 292
 1941j
 
-# vidhrdw/cps1.c: 292
+# vidhrdw/cps1.c: 293
 unsquad
 
-# vidhrdw/cps1.c: 293
+# vidhrdw/cps1.c: 294
 area88
 
-# vidhrdw/cps1.c: 294
+# vidhrdw/cps1.c: 295
 mercs
 
-# vidhrdw/cps1.c: 295
+# vidhrdw/cps1.c: 296
 mercsu
 
-# vidhrdw/cps1.c: 296
+# vidhrdw/cps1.c: 297
 mercsua
 
-# vidhrdw/cps1.c: 297
+# vidhrdw/cps1.c: 298
 mercsj
 
-# vidhrdw/cps1.c: 298
+# vidhrdw/cps1.c: 299
 msword
 
-# vidhrdw/cps1.c: 299
+# vidhrdw/cps1.c: 300
 mswordr1
 
-# vidhrdw/cps1.c: 300
+# vidhrdw/cps1.c: 301
 mswordu
 
-# vidhrdw/cps1.c: 301
+# vidhrdw/cps1.c: 302
 mswordj
 
-# vidhrdw/cps1.c: 302
+# vidhrdw/cps1.c: 303
 mtwins
 
-# vidhrdw/cps1.c: 303
+# vidhrdw/cps1.c: 304
 chikij
 
-# vidhrdw/cps1.c: 304
+# vidhrdw/cps1.c: 305
 nemo
 
-# vidhrdw/cps1.c: 305
+# vidhrdw/cps1.c: 306
 nemoj
 
-# vidhrdw/cps1.c: 306
+# vidhrdw/cps1.c: 307
 cawing
 
-# vidhrdw/cps1.c: 307
+# vidhrdw/cps1.c: 308
 cawingu
 
-# vidhrdw/cps1.c: 308
+# vidhrdw/cps1.c: 309
 cawingj
 
-# vidhrdw/cps1.c: 309
+# vidhrdw/cps1.c: 310
 sf2
 
-# vidhrdw/cps1.c: 310
+# vidhrdw/cps1.c: 311
 sf2eb
 
-# vidhrdw/cps1.c: 311
+# vidhrdw/cps1.c: 312
 sf2ua
 
-# vidhrdw/cps1.c: 312
+# vidhrdw/cps1.c: 313
 sf2ub
 
-# vidhrdw/cps1.c: 313
+# vidhrdw/cps1.c: 314
 sf2ud
 
-# vidhrdw/cps1.c: 314
+# vidhrdw/cps1.c: 315
 sf2ue
 
-# vidhrdw/cps1.c: 315
+# vidhrdw/cps1.c: 316
 sf2uf
 
-# vidhrdw/cps1.c: 316
+# vidhrdw/cps1.c: 317
 sf2ui
 
-# vidhrdw/cps1.c: 317
+# vidhrdw/cps1.c: 318
 sf2uk
 
-# vidhrdw/cps1.c: 318
+# vidhrdw/cps1.c: 319
 sf2j
 
-# vidhrdw/cps1.c: 319
+# vidhrdw/cps1.c: 320
 sf2ja
 
-# vidhrdw/cps1.c: 320
+# vidhrdw/cps1.c: 321
 sf2jc
 
-# vidhrdw/cps1.c: 322
+# vidhrdw/cps1.c: 323
 3wonders
 
-# vidhrdw/cps1.c: 323
+# vidhrdw/cps1.c: 324
 3wonderu
 
-# vidhrdw/cps1.c: 324
+# vidhrdw/cps1.c: 325
 wonder3
 
-# vidhrdw/cps1.c: 325
+# vidhrdw/cps1.c: 326
 kod
 
-# vidhrdw/cps1.c: 326
+# vidhrdw/cps1.c: 327
 kodu
 
-# vidhrdw/cps1.c: 327
+# vidhrdw/cps1.c: 328
 kodj
 
-# vidhrdw/cps1.c: 328
+# vidhrdw/cps1.c: 329
 kodb
 
-# vidhrdw/cps1.c: 329
+# vidhrdw/cps1.c: 330
 captcomm
 
-# vidhrdw/cps1.c: 330
+# vidhrdw/cps1.c: 331
 captcomu
 
-# vidhrdw/cps1.c: 331
+# vidhrdw/cps1.c: 332
 captcomj
 
-# vidhrdw/cps1.c: 332
+# vidhrdw/cps1.c: 333
 knights
 
-# vidhrdw/cps1.c: 333
+# vidhrdw/cps1.c: 334
 knightsu
 
-# vidhrdw/cps1.c: 334
+# vidhrdw/cps1.c: 335
 knightsj
 
-# vidhrdw/cps1.c: 335
+# vidhrdw/cps1.c: 336
 knightsh
 
-# vidhrdw/cps1.c: 336
+# vidhrdw/cps1.c: 337
 knightsb
 
-# vidhrdw/cps1.c: 337
+# vidhrdw/cps1.c: 338
 sf2ce
 
-# vidhrdw/cps1.c: 338
+# vidhrdw/cps1.c: 339
 sf2ceua
 
-# vidhrdw/cps1.c: 339
+# vidhrdw/cps1.c: 340
 sf2ceub
 
-# vidhrdw/cps1.c: 340
+# vidhrdw/cps1.c: 341
 sf2ceuc
 
-# vidhrdw/cps1.c: 341
+# vidhrdw/cps1.c: 342
 sf2cej
 
-# vidhrdw/cps1.c: 342, 476
+# vidhrdw/cps1.c: 343, 477
 sf2rb
 
-# vidhrdw/cps1.c: 343, 482
+# vidhrdw/cps1.c: 344, 483
 sf2rb2
 
-# vidhrdw/cps1.c: 344
+# vidhrdw/cps1.c: 345
 sf2red
 
-# vidhrdw/cps1.c: 345
+# vidhrdw/cps1.c: 346
 sf2v004
 
-# vidhrdw/cps1.c: 346, 497
+# vidhrdw/cps1.c: 347, 498
 sf2accp2
 
-# vidhrdw/cps1.c: 347
+# vidhrdw/cps1.c: 348
 sf2m1
 
-# vidhrdw/cps1.c: 348
+# vidhrdw/cps1.c: 349
 sf2m2
 
-# vidhrdw/cps1.c: 349
+# vidhrdw/cps1.c: 350
 sf2m3
 
-# vidhrdw/cps1.c: 350
+# vidhrdw/cps1.c: 351
 sf2m4
 
-# vidhrdw/cps1.c: 351
+# vidhrdw/cps1.c: 352
 sf2m5
 
-# vidhrdw/cps1.c: 352
+# vidhrdw/cps1.c: 353
 sf2m6
 
-# vidhrdw/cps1.c: 353
+# vidhrdw/cps1.c: 354
 sf2m7
 
-# vidhrdw/cps1.c: 354
+# vidhrdw/cps1.c: 355
 sf2m8
 
-# vidhrdw/cps1.c: 355
+# vidhrdw/cps1.c: 356
 sf2m13
 
-# vidhrdw/cps1.c: 356
+# vidhrdw/cps1.c: 357
 sf2ceh
 
-# vidhrdw/cps1.c: 357
+# vidhrdw/cps1.c: 358
 sf2tlona
 
-# vidhrdw/cps1.c: 358
+# vidhrdw/cps1.c: 359
 sf2tlonb
 
-# vidhrdw/cps1.c: 359
+# vidhrdw/cps1.c: 360
 sf2yyc
 
-# vidhrdw/cps1.c: 360
+# vidhrdw/cps1.c: 361
 sf2koryu
 
-# vidhrdw/cps1.c: 361
+# vidhrdw/cps1.c: 362
 varth
 
-# vidhrdw/cps1.c: 362
+# vidhrdw/cps1.c: 363
 varthr1
 
-# vidhrdw/cps1.c: 363
+# vidhrdw/cps1.c: 364
 varthu
 
-# vidhrdw/cps1.c: 364
+# vidhrdw/cps1.c: 365
 varthj
 
-# vidhrdw/cps1.c: 365
+# vidhrdw/cps1.c: 366
 cworld2j
 
-# vidhrdw/cps1.c: 366
+# vidhrdw/cps1.c: 367
 wof
 
-# vidhrdw/cps1.c: 367
+# vidhrdw/cps1.c: 368
 wofa
 
-# vidhrdw/cps1.c: 368
+# vidhrdw/cps1.c: 369
 wofu
 
-# vidhrdw/cps1.c: 369
+# vidhrdw/cps1.c: 370
 wofj
 
-# vidhrdw/cps1.c: 370
+# vidhrdw/cps1.c: 371
 wofh
 
-# vidhrdw/cps1.c: 371
+# vidhrdw/cps1.c: 372
 wofha
 
-# vidhrdw/cps1.c: 372
+# vidhrdw/cps1.c: 373
 wof3js
 
-# vidhrdw/cps1.c: 373
+# vidhrdw/cps1.c: 374
 wof3sj
 
-# vidhrdw/cps1.c: 374
+# vidhrdw/cps1.c: 375
 wof3sja
 
-# vidhrdw/cps1.c: 375
+# vidhrdw/cps1.c: 376
 wofsj
 
-# vidhrdw/cps1.c: 376
+# vidhrdw/cps1.c: 377
 wofsja
 
-# vidhrdw/cps1.c: 377
+# vidhrdw/cps1.c: 378
 wofsjb
 
-# vidhrdw/cps1.c: 378
+# vidhrdw/cps1.c: 379
 dino
 
-# vidhrdw/cps1.c: 379
+# vidhrdw/cps1.c: 380
 dinou
 
-# vidhrdw/cps1.c: 380
+# vidhrdw/cps1.c: 381
 dinoj
 
-# vidhrdw/cps1.c: 381, 489
+# vidhrdw/cps1.c: 382, 490
 dinoh
 
-# vidhrdw/cps1.c: 382
+# vidhrdw/cps1.c: 383
 punisher
 
-# vidhrdw/cps1.c: 383
+# vidhrdw/cps1.c: 384
 punishru
 
-# vidhrdw/cps1.c: 384
+# vidhrdw/cps1.c: 385
 punishrj
 
-# vidhrdw/cps1.c: 385
+# vidhrdw/cps1.c: 386
 slammast
 
-# vidhrdw/cps1.c: 386
+# vidhrdw/cps1.c: 387
 slammasu
 
-# vidhrdw/cps1.c: 387
+# vidhrdw/cps1.c: 388
 mbomberj
 
-# vidhrdw/cps1.c: 388
+# vidhrdw/cps1.c: 389
 mbombrd
 
-# vidhrdw/cps1.c: 389
+# vidhrdw/cps1.c: 390
 mbombrdj
 
-# vidhrdw/cps1.c: 390
+# vidhrdw/cps1.c: 391
 sf2hf
 
-# vidhrdw/cps1.c: 391
+# vidhrdw/cps1.c: 392
 sf2t
 
-# vidhrdw/cps1.c: 392
+# vidhrdw/cps1.c: 393
 sf2tj
 
-# vidhrdw/cps1.c: 393
+# vidhrdw/cps1.c: 394
 qad
 
-# vidhrdw/cps1.c: 394
+# vidhrdw/cps1.c: 395
 qadj
 
-# vidhrdw/cps1.c: 395
+# vidhrdw/cps1.c: 396
 qtono2
 
-# vidhrdw/cps1.c: 396
+# vidhrdw/cps1.c: 397
 megaman
 
-# vidhrdw/cps1.c: 397
+# vidhrdw/cps1.c: 398
 rockmanj
 
-# vidhrdw/cps1.c: 398
+# vidhrdw/cps1.c: 399
 pnickj
 
-# vidhrdw/cps1.c: 399
+# vidhrdw/cps1.c: 400
 pnicku
 
-# vidhrdw/cps1.c: 400
+# vidhrdw/cps1.c: 401
 pang3
 
-# vidhrdw/cps1.c: 401
+# vidhrdw/cps1.c: 402
 pang3j
 
-# vidhrdw/cps1.c: 402, 405
+# vidhrdw/cps1.c: 403, 406
 sfzch
 
-# vidhrdw/cps1.c: 403
+# vidhrdw/cps1.c: 404
 sfach
 
-# vidhrdw/cps1.c: 409, 463
+# vidhrdw/cps1.c: 410, 464
 cps2
 
-# vidhrdw/cps1.c: 410
+# vidhrdw/cps1.c: 411
 ssf2
 
-# vidhrdw/cps1.c: 411
+# vidhrdw/cps1.c: 412
 ssf2u
 
-# vidhrdw/cps1.c: 412
+# vidhrdw/cps1.c: 413
 ssf2a
 
-# vidhrdw/cps1.c: 413
+# vidhrdw/cps1.c: 414
 ssf2ar1
 
-# vidhrdw/cps1.c: 414
+# vidhrdw/cps1.c: 415
 ssf2j
 
-# vidhrdw/cps1.c: 415
+# vidhrdw/cps1.c: 416
 ssf2jr1
 
-# vidhrdw/cps1.c: 416
+# vidhrdw/cps1.c: 417
 ssf2jr2
 
-# vidhrdw/cps1.c: 417
+# vidhrdw/cps1.c: 418
 ssf2tb
 
-# vidhrdw/cps1.c: 418
+# vidhrdw/cps1.c: 419
 ssf2tbr1
 
-# vidhrdw/cps1.c: 419
+# vidhrdw/cps1.c: 420
 ssf2tbj
 
-# vidhrdw/cps1.c: 420
+# vidhrdw/cps1.c: 421
 ssf2t
 
-# vidhrdw/cps1.c: 421
+# vidhrdw/cps1.c: 422
 ssf2tu
 
-# vidhrdw/cps1.c: 422
+# vidhrdw/cps1.c: 423
 ssf2tur1
 
-# vidhrdw/cps1.c: 423
+# vidhrdw/cps1.c: 424
 ssf2ta
 
-# vidhrdw/cps1.c: 424
+# vidhrdw/cps1.c: 425
 ssf2xj
 
-# vidhrdw/cps1.c: 425
+# vidhrdw/cps1.c: 426
 xmcota
 
-# vidhrdw/cps1.c: 426
+# vidhrdw/cps1.c: 427
 xmcotau
 
-# vidhrdw/cps1.c: 427
+# vidhrdw/cps1.c: 428
 xmcotah
 
-# vidhrdw/cps1.c: 428
+# vidhrdw/cps1.c: 429
 xmcotaj
 
-# vidhrdw/cps1.c: 429
+# vidhrdw/cps1.c: 430
 xmcotaj1
 
-# vidhrdw/cps1.c: 430
+# vidhrdw/cps1.c: 431
 xmcotajr
 
-# vidhrdw/cps1.c: 431
+# vidhrdw/cps1.c: 432
 xmcotaa
 
-# vidhrdw/cps1.c: 609
+# vidhrdw/cps1.c: 610
 priority0 %04x
 
-# vidhrdw/cps1.c: 811
+# vidhrdw/cps1.c: 812
 SCROLL1.DMP
 
-# vidhrdw/cps1.c: 811, 817, 823, 830, 839, 846, 856, 863, 870, 876
+# vidhrdw/cps1.c: 812, 818, 824, 831, 840, 847, 857, 864, 871, 877
 w+b
 
-# vidhrdw/cps1.c: 817
+# vidhrdw/cps1.c: 818
 SCROLL2.DMP
 
-# vidhrdw/cps1.c: 823
+# vidhrdw/cps1.c: 824
 SCROLL3.DMP
 
-# vidhrdw/cps1.c: 830
+# vidhrdw/cps1.c: 831
 OBJ.DMP
 
-# vidhrdw/cps1.c: 839
+# vidhrdw/cps1.c: 840
 OBJCPS2.DMP
 
-# vidhrdw/cps1.c: 846
+# vidhrdw/cps1.c: 847
 CPS2OUTP.DMP
 
-# vidhrdw/cps1.c: 856
+# vidhrdw/cps1.c: 857
 OTHER.DMP
 
-# vidhrdw/cps1.c: 863
+# vidhrdw/cps1.c: 864
 PALETTE.DMP
 
-# vidhrdw/cps1.c: 870
+# vidhrdw/cps1.c: 871
 OUTPUT.DMP
 
-# vidhrdw/cps1.c: 876
+# vidhrdw/cps1.c: 877
 VIDEO.DMP
 
-# vidhrdw/cps1.c: 968
+# vidhrdw/cps1.c: 969
 %d %d %d %d layer %02x
 
-# vidhrdw/cps1.c: 990
+# vidhrdw/cps1.c: 991
 layer %02x
 
-# vidhrdw/cps1.c: 1001
+# vidhrdw/cps1.c: 1002
 layer %02x contact MAMEDEV
 
-# vidhrdw/cps1.c: 1744
+# vidhrdw/cps1.c: 1745
 stars enabled but no stars ROM
 
-# vidhrdw/cps1.c: 1924
+# vidhrdw/cps1.c: 1925
 base %04x uk1 %04x uk2 %04x
 
-# vidhrdw/cps1.c: 1930
+# vidhrdw/cps1.c: 1931
 order: %d (%d) %d (%d) %d (%d) %d (%d)
 
 # vidhrdw/crgolf.c: 207
@@ -66727,49 +66757,49 @@ sprite_ctrl: %04x
 # vidhrdw/redclash.c: 250
 unknown sprite size 0
 
-# vidhrdw/segaic16.c: 846, 1083
+# vidhrdw/segaic16.c: 845, 1082
 Column AND row scroll\n
 
-# vidhrdw/segaic16.c: 884
+# vidhrdw/segaic16.c: 883
 Column scroll\n
 
-# vidhrdw/segaic16.c: 912, 1127
+# vidhrdw/segaic16.c: 911, 1126
 Row scroll\n
 
-# vidhrdw/segaic16.c: 1222
+# vidhrdw/segaic16.c: 1221
 Invalid tilemap index specified in segaic16_tilemap_init
 
-# vidhrdw/segaic16.c: 1261
+# vidhrdw/segaic16.c: 1260
 Invalid tilemap type specified in segaic16_tilemap_init
 
-# vidhrdw/segaic16.c: 2674
+# vidhrdw/segaic16.c: 2673
 Invalid sprite index specified in segaic16_sprites_init
 
-# vidhrdw/segaic16.c: 2718
+# vidhrdw/segaic16.c: 2717
 Invalid sprite system specified in segaic16_sprites_init
 
-# vidhrdw/segaic16.c: 2725, 2726, 2727, 2728, 2729, 2731
+# vidhrdw/segaic16.c: 2724, 2725, 2726, 2727, 2728, 2730
 segaic16_sp
 
-# vidhrdw/segaic16.c: 2925
+# vidhrdw/segaic16.c: 2924
 X=%d Y=%d
 
-# vidhrdw/segaic16.c: 3434
+# vidhrdw/segaic16.c: 3433
 Invalid road index specified in segaic16_road_init
 
-# vidhrdw/segaic16.c: 3454
+# vidhrdw/segaic16.c: 3453
 Invalid road system specified in segaic16_road_init
 
-# vidhrdw/segaic16.c: 3510
+# vidhrdw/segaic16.c: 3509
 road_control = %02X\n
 
-# vidhrdw/segaic16.c: 3540
+# vidhrdw/segaic16.c: 3539
 Invalid rotate index specified in segaic16_rotate_init
 
-# vidhrdw/segaic16.c: 3551
+# vidhrdw/segaic16.c: 3550
 Invalid rotate system specified in segaic16_rotate_init
 
-# vidhrdw/segaic16.c: 3557, 3558
+# vidhrdw/segaic16.c: 3556, 3557
 segaic16_rot
 
 # vidhrdw/segaic24.c: 484
@@ -69013,259 +69043,280 @@ docs\\windows.txt
 # windows/climain.c: 14
 mess.chm
 
-# windows/config.c: 163
+# windows/climain.c: 35
+M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\nM.A.M.E. is a console application, you should launch it from a command prompt.\n\nUsage:\tMAME gamename [options]\n\n\tMAME -showusage\t\tfor a brief list of options\n\tMAME -showconfig\t\tfor a list of configuration options\n\tMAME -createconfig\tto create a mame.ini\n\nPlease consult the documentation for more information.\n\nWould you like to open the documentation now?
+
+# windows/climain.c: 51
+M.A.M.E. is a console application, you should launch it from a command prompt.\n\nPlease consult the documentation for more information.\n\nWould you like to open the documentation now?
+
+# windows/climain.c: 59
+M.A.M.E. usage information...
+
+# windows/climain.c: 64
+r
+
+# windows/climain.c: 70
+open
+
+# windows/climain.c: 75
+Couldn't find the documentation.
+
+# windows/climain.c: 75
+Error...
+
+# windows/config.c: 164
 error.log
 
-# windows/config.c: 179, 186, 303
+# windows/config.c: 180, 187, 304
 auto
 
-# windows/config.c: 223
+# windows/config.c: 224
 norotate
 
-# windows/config.c: 224
+# windows/config.c: 225
 ror
 
-# windows/config.c: 225
+# windows/config.c: 226
 rol
 
-# windows/config.c: 226
+# windows/config.c: 227
 autoror
 
-# windows/config.c: 227
+# windows/config.c: 228
 autorol
 
-# windows/config.c: 228
+# windows/config.c: 229
 flipx
 
-# windows/config.c: 229
+# windows/config.c: 230
 flipy
 
-# windows/config.c: 230
+# windows/config.c: 231
 gamma
 
-# windows/config.c: 231
+# windows/config.c: 232
 bright
 
-# windows/config.c: 231
+# windows/config.c: 232
 brightness
 
-# windows/config.c: 232
+# windows/config.c: 233
 pause_brightness
 
-# windows/config.c: 236
+# windows/config.c: 237
 aa
 
-# windows/config.c: 236
+# windows/config.c: 237
 antialias
 
-# windows/config.c: 237
+# windows/config.c: 238
 tl
 
-# windows/config.c: 237
+# windows/config.c: 238
 translucency
 
-# windows/config.c: 238
+# windows/config.c: 239
 beam
 
-# windows/config.c: 239
+# windows/config.c: 240
 flicker
 
-# windows/config.c: 240
+# windows/config.c: 241
 intensity
 
-# windows/config.c: 244
+# windows/config.c: 245
 samplerate
 
-# windows/config.c: 244
+# windows/config.c: 245
 sr
 
-# windows/config.c: 245
+# windows/config.c: 246
 samples
 
-# windows/config.c: 247
+# windows/config.c: 248
 vol
 
-# windows/config.c: 247
+# windows/config.c: 248
 volume
 
-# windows/config.c: 249
+# windows/config.c: 250
 volume_adjust
 
-# windows/config.c: 254
+# windows/config.c: 255
 valid
 
-# windows/config.c: 254
+# windows/config.c: 255
 validate
 
-# windows/config.c: 255
+# windows/config.c: 256
 art
 
-# windows/config.c: 255
+# windows/config.c: 256
 artwork
 
-# windows/config.c: 256
+# windows/config.c: 257
 backdrop
 
-# windows/config.c: 256
+# windows/config.c: 257
 use_backdrops
 
-# windows/config.c: 257
+# windows/config.c: 258
 overlay
 
-# windows/config.c: 257
+# windows/config.c: 258
 use_overlays
 
-# windows/config.c: 258
+# windows/config.c: 259
 bezel
 
-# windows/config.c: 258
+# windows/config.c: 259
 use_bezels
 
-# windows/config.c: 259
+# windows/config.c: 260
 artcrop
 
-# windows/config.c: 259
+# windows/config.c: 260
 artwork_crop
 
-# windows/config.c: 260
+# windows/config.c: 261
 artres
 
-# windows/config.c: 260
+# windows/config.c: 261
 artwork_resolution
 
-# windows/config.c: 261
+# windows/config.c: 262
 c
 
-# windows/config.c: 261
+# windows/config.c: 262
 cheat
 
-# windows/config.c: 262
+# windows/config.c: 263
 d
 
-# windows/config.c: 262
+# windows/config.c: 263
 debug
 
-# windows/config.c: 263
+# windows/config.c: 264
 debugscript
 
-# windows/config.c: 264
+# windows/config.c: 265
 pb
 
-# windows/config.c: 264
+# windows/config.c: 265
 playback
 
-# windows/config.c: 265
+# windows/config.c: 266
 rec
 
-# windows/config.c: 265
+# windows/config.c: 266
 record
 
-# windows/config.c: 266
+# windows/config.c: 267
 log
 
-# windows/config.c: 267
+# windows/config.c: 268
 oslog
 
-# windows/config.c: 268
+# windows/config.c: 269
 skip_gameinfo
 
-# windows/config.c: 269
+# windows/config.c: 270
 bios
 
-# windows/config.c: 269
+# windows/config.c: 270
 default
 
-# windows/config.c: 270
+# windows/config.c: 271
 state
 
-# windows/config.c: 271
+# windows/config.c: 272
 autosave
 
-# windows/config.c: 273
+# windows/config.c: 274
 ips
 
-# windows/config.c: 275
+# windows/config.c: 276
 disable_second_monitor
 
-# windows/config.c: 275
+# windows/config.c: 276
 dsm
 
-# windows/config.c: 276
+# windows/config.c: 277
 confirm_quit
 
-# windows/config.c: 278
+# windows/config.c: 279
 auto_pause_playback
 
-# windows/config.c: 282
+# windows/config.c: 283
 m68k_core
 
-# windows/config.c: 285
+# windows/config.c: 286
 use_trans_ui
 
-# windows/config.c: 286
+# windows/config.c: 287
 ui_transparency
 
-# windows/config.c: 296
+# windows/config.c: 297
 cc
 
-# windows/config.c: 296
+# windows/config.c: 297
 createconfig
 
-# windows/config.c: 297
+# windows/config.c: 298
 sc
 
-# windows/config.c: 297
+# windows/config.c: 298
 showconfig
 
-# windows/config.c: 298
+# windows/config.c: 299
 showusage
 
-# windows/config.c: 298
+# windows/config.c: 299
 su
 
-# windows/config.c: 299
+# windows/config.c: 300
 rc
 
-# windows/config.c: 299
+# windows/config.c: 300
 readconfig
 
-# windows/config.c: 300
+# windows/config.c: 301
 v
 
-# windows/config.c: 300
+# windows/config.c: 301
 verbose
 
-# windows/config.c: 303
+# windows/config.c: 304
 lang
 
-# windows/config.c: 303
+# windows/config.c: 304
 language
 
-# windows/config.c: 304
+# windows/config.c: 305
 use_lang_list
 
-# windows/config.c: 422, 520
+# windows/config.c: 423, 521
 %s.ini
 
-# windows/config.c: 511, 511, 514
+# windows/config.c: 512, 512, 515
 MAME
 
-# windows/config.c: 511
+# windows/config.c: 512
 mame
 
-# windows/config.c: 518
+# windows/config.c: 519
 Who am I? cannot determine the name I was called with
 
-# windows/config.c: 525, 663
+# windows/config.c: 526, 664
 .ini
 
-# windows/config.c: 534
+# windows/config.c: 535
 debug.ini
 
-# windows/config.c: 636
+# windows/config.c: 637
 vector.ini
 
-# windows/config.c: 873
+# windows/config.c: 874
 random
 
 # windows/debugwin.c: 190
@@ -69670,16 +69721,13 @@ hiscore.dat
 # windows/fileio.c: 155
 hiscore_file
 
-# windows/fileio.c: 195
-create_path(%s)\n
-
-# windows/fileio.c: 322
+# windows/fileio.c: 319
 Expanding: %s\n
 
-# windows/fileio.c: 634
+# windows/fileio.c: 631
 tmp
 
-# windows/fileio.c: 873
+# windows/fileio.c: 870
 loading %-32s\r
 
 # windows/fronthlp.c: 70
@@ -70666,7 +70714,7 @@ max
 # windows/wind3d.c: 1564
 Error: feedback or prescale effects not supported.\n
 
-# windows/wind3dfx.c: 124, 127, 132, 133, 146, 147, 148, 149, 155, 205, 273, 361, 768
+# windows/wind3dfx.c: 124, 127, 132, 133, 146, 147, 148, 149, 155, 205, 273, 362, 769
 none
 
 # windows/wind3dfx.c: 128
@@ -70789,7 +70837,7 @@ d3dscan
 # windows/wind3dfx.c: 203
 d3deffectrotate
 
-# windows/wind3dfx.c: 204, 278, 389
+# windows/wind3dfx.c: 204, 278, 390
 auto
 
 # windows/wind3dfx.c: 204
@@ -70810,34 +70858,34 @@ d3dexpert
 # windows/wind3dfx.c: 283
 full
 
-# windows/wind3dfx.c: 412
+# windows/wind3dfx.c: 413
 scan
 
-# windows/wind3dfx.c: 416
+# windows/wind3dfx.c: 417
 feedback
 
-# windows/wind3dfx.c: 422
+# windows/wind3dfx.c: 423
 disable
 
-# windows/wind3dfx.c: 450
+# windows/wind3dfx.c: 451
 prescale
 
-# windows/wind3dfx.c: 467
+# windows/wind3dfx.c: 468
 pixelcounter
 
-# windows/wind3dfx.c: 478
+# windows/wind3dfx.c: 479
 rotate
 
-# windows/wind3dfx.c: 497
+# windows/wind3dfx.c: 498
 nopixelcounter
 
-# windows/wind3dfx.c: 506
+# windows/wind3dfx.c: 507
 norotate
 
-# windows/wind3dfx.c: 782
+# windows/wind3dfx.c: 783
 %i x %i
 
-# windows/wind3dfx.c: 799
+# windows/wind3dfx.c: 800
 rb
 
 # windows/window.c: 219
@@ -70900,148 +70948,148 @@ mess.chm
 # windows/winmain.c: 144
 windows
 
-# windows/winmain.c: 290
+# windows/winmain.c: 308
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\nM.A.M.E. is a console application, you should launch it from a command prompt.\n\nUsage:\tMAME gamename [options]\n\n\tMAME -showusage\t\tfor a brief list of options\n\tMAME -showconfig\t\tfor a list of configuration options\n\tMAME -createconfig\tto create a mame.ini\n\nPlease consult the documentation for more information.\n\nWould you like to open the documentation now?
 
-# windows/winmain.c: 306
+# windows/winmain.c: 324
 M.A.M.E. is a console application, you should launch it from a command prompt.\n\nPlease consult the documentation for more information.\n\nWould you like to open the documentation now?
 
-# windows/winmain.c: 314
+# windows/winmain.c: 332
 M.A.M.E. usage information...
 
-# windows/winmain.c: 319, 484, 522, 570
+# windows/winmain.c: 337, 502, 540, 588
 r
 
-# windows/winmain.c: 325
+# windows/winmain.c: 343
 open
 
-# windows/winmain.c: 330
+# windows/winmain.c: 348
 Couldn't find the documentation.
 
-# windows/winmain.c: 330
+# windows/winmain.c: 348
 Error...
 
-# windows/winmain.c: 351
+# windows/winmain.c: 369
 ACCESS VIOLATION
 
-# windows/winmain.c: 352
+# windows/winmain.c: 370
 DATATYPE MISALIGNMENT
 
-# windows/winmain.c: 353
+# windows/winmain.c: 371
 BREAKPOINT
 
-# windows/winmain.c: 354
+# windows/winmain.c: 372
 SINGLE STEP
 
-# windows/winmain.c: 355
+# windows/winmain.c: 373
 ARRAY BOUNDS EXCEEDED
 
-# windows/winmain.c: 356
+# windows/winmain.c: 374
 FLOAT DENORMAL OPERAND
 
-# windows/winmain.c: 357
+# windows/winmain.c: 375
 FLOAT DIVIDE BY ZERO
 
-# windows/winmain.c: 358
+# windows/winmain.c: 376
 FLOAT INEXACT RESULT
 
-# windows/winmain.c: 359
+# windows/winmain.c: 377
 FLOAT INVALID OPERATION
 
-# windows/winmain.c: 360
+# windows/winmain.c: 378
 FLOAT OVERFLOW
 
-# windows/winmain.c: 361
+# windows/winmain.c: 379
 FLOAT STACK CHECK
 
-# windows/winmain.c: 362
+# windows/winmain.c: 380
 FLOAT UNDERFLOW
 
-# windows/winmain.c: 363
+# windows/winmain.c: 381
 INTEGER DIVIDE BY ZERO
 
-# windows/winmain.c: 364
+# windows/winmain.c: 382
 INTEGER OVERFLOW
 
-# windows/winmain.c: 365
+# windows/winmain.c: 383
 PRIVILEGED INSTRUCTION
 
-# windows/winmain.c: 366
+# windows/winmain.c: 384
 IN PAGE ERROR
 
-# windows/winmain.c: 367
+# windows/winmain.c: 385
 ILLEGAL INSTRUCTION
 
-# windows/winmain.c: 368
+# windows/winmain.c: 386
 NONCONTINUABLE EXCEPTION
 
-# windows/winmain.c: 369
+# windows/winmain.c: 387
 STACK OVERFLOW
 
-# windows/winmain.c: 370
+# windows/winmain.c: 388
 INVALID DISPOSITION
 
-# windows/winmain.c: 371
+# windows/winmain.c: 389
 GUARD PAGE VIOLATION
 
-# windows/winmain.c: 372
+# windows/winmain.c: 390
 INVALID HANDLE
 
-# windows/winmain.c: 373
+# windows/winmain.c: 391
 UNKNOWN EXCEPTION
 
-# windows/winmain.c: 391
+# windows/winmain.c: 409
 Exception at EIP=%08X%s: %s\n
 
-# windows/winmain.c: 396
+# windows/winmain.c: 414
 While attempting to %s memory at %08X\n
 
-# windows/winmain.c: 397
+# windows/winmain.c: 415
 read
 
-# windows/winmain.c: 397
+# windows/winmain.c: 415
 write
 
-# windows/winmain.c: 402
+# windows/winmain.c: 420
 EAX=%08X EBX=%08X ECX=%08X EDX=%08X\n
 
-# windows/winmain.c: 407
+# windows/winmain.c: 425
 ESI=%08X EDI=%08X EBP=%08X ESP=%08X\n
 
-# windows/winmain.c: 424
+# windows/winmain.c: 442
 Stack crawl:\n
 
-# windows/winmain.c: 425
+# windows/winmain.c: 443
 exception-> %08X%s\n
 
-# windows/winmain.c: 499, 595
+# windows/winmain.c: 517, 613
                 0x
 
-# windows/winmain.c: 500, 599
+# windows/winmain.c: 518, 617
                 0x%08x %s
 
-# windows/winmain.c: 510
+# windows/winmain.c: 528
  (%s+0x%04x)
 
-# windows/winmain.c: 531, 579
+# windows/winmain.c: 549, 597
 .text           0x
 
-# windows/winmain.c: 532, 582
+# windows/winmain.c: 550, 600
 .text           0x%08x 0x%x
 
-# windows/winmain.c: 585, 585
+# windows/winmain.c: 603, 603
 Code start
 
-# windows/winmain.c: 588, 588
+# windows/winmain.c: 606, 606
 Other
 
-# windows/winmain.c: 610, 610
+# windows/winmain.c: 628, 628
 <end>
 
-# windows/winmain.c: 720
+# windows/winmain.c: 738
 Failed to get thread handle for main thread
 
-# windows/winmain.c: 726
+# windows/winmain.c: 744
 Failed to create profiler thread\n
 
 # x86drc.c: 265

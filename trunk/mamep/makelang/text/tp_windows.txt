@@ -50,7 +50,7 @@
   Axis %d (%s)%s\n
 
 
-# windows/config.c: 547
+# windows/config.c: 548
  %s running parameters
 
 
@@ -98,7 +98,7 @@ Autoenabling mice due to presence of a %s\n
 Average FPS: %f (%d frames)\n
 
 
-# windows/wind3d.c: 2660 windows/winddraw.c: 1456, 1763
+# windows/wind3d.c: 2660 windows/winddraw.c: 1457, 1764
 Avg Flip = %d
 
 
@@ -126,7 +126,7 @@ Blitter initialisation complete (%.2lfMB video memory free)\n
 CRC-32s
 
 
-# windows/config.c: 295
+# windows/config.c: 296
 Configuration options
 
 
@@ -174,7 +174,7 @@ Error creating back surface: %08x\n
 Error creating blit surface: %08x\n
 
 
-# windows/wind3d.c: 1718 windows/winddraw.c: 959
+# windows/wind3d.c: 1718 windows/winddraw.c: 960
 Error creating clipper: %08x\n
 
 
@@ -262,7 +262,7 @@ Error initialising software scale effects\n
 Error locking stream buffer: %08x\n
 
 
-# windows/config.c: 500
+# windows/config.c: 501
 Error on rc creation
 
 
@@ -278,11 +278,11 @@ Error playing: %08x\n
 Error setting DirectSound cooperative level: %08x\n
 
 
-# windows/wind3d.c: 1726 windows/winddraw.c: 967
+# windows/wind3d.c: 1726 windows/winddraw.c: 968
 Error setting clipper hwnd: %08x\n
 
 
-# windows/wind3d.c: 1734 windows/winddraw.c: 975
+# windows/wind3d.c: 1734 windows/winddraw.c: 976
 Error setting clipper on primary surface: %08x\n
 
 
@@ -290,7 +290,7 @@ Error setting clipper on primary surface: %08x\n
 Error setting cooperative level: %08x\n
 
 
-# windows/wind3d.c: 1700 windows/winddraw.c: 941
+# windows/wind3d.c: 1700 windows/winddraw.c: 942
 Error setting gamma ramp: %08x\n
 
 
@@ -318,11 +318,11 @@ Error: RGB effects (multiply mode) not supported\n
 Error: required texture size too large (max: %ix%i, need %ix%i)\n
 
 
-# windows/config.c: 576
+# windows/config.c: 577
 Failed to open file for playback
 
 
-# windows/config.c: 678
+# windows/config.c: 679
 Failed to open file for recording
 
 
@@ -402,7 +402,7 @@ Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 LED mode (ps/2|usb)
 
 
-# windows/config.c: 302
+# windows/config.c: 303
 Language options
 
 
@@ -430,7 +430,7 @@ MMX not supported\n
 MMX supported\n
 
 
-# windows/config.c: 253
+# windows/config.c: 254
 Mame CORE misc options
 
 
@@ -438,15 +438,15 @@ Mame CORE misc options
 Mame CORE palette options
 
 
-# windows/config.c: 243
+# windows/config.c: 244
 Mame CORE sound options
 
 
-# windows/config.c: 235
+# windows/config.c: 236
 Mame CORE vector game options
 
 
-# windows/config.c: 222
+# windows/config.c: 223
 Mame CORE video options
 
 
@@ -494,11 +494,11 @@ OSD bar color (light)
 OSD bar color (medium)
 
 
-# windows/fileio.c: 280
+# windows/fileio.c: 278
 Out of memory in variable expansion!
 
 
-# windows/fileio.c: 349
+# windows/fileio.c: 346
 Out of memory!
 
 
@@ -506,19 +506,19 @@ Out of memory!
 PARTKNOWN %s\n
 
 
-# windows/config.c: 443
+# windows/config.c: 444
 Parsing %s : ERROR\n
 
 
-# windows/config.c: 453
+# windows/config.c: 454
 Parsing %s : N/A\n
 
 
-# windows/config.c: 448
+# windows/config.c: 449
 Parsing %s : OK\n
 
 
-# windows/config.c: 600
+# windows/config.c: 601
 Playing back previously recorded game %s (%s) [press return]\n
 
 
@@ -542,11 +542,11 @@ Primary surface created: %s (%s)\n
 RGB effects surface created: %s\n
 
 
-# windows/wind3dfx.c: 814
+# windows/wind3dfx.c: 815
 RGB pattern has a wrong filesize (expected %i bytes, found %i)\n
 
 
-# windows/winddraw.c: 1386, 1464, 1771
+# windows/winddraw.c: 1387, 1465, 1772
 Recreating surfaces\n
 
 
@@ -630,7 +630,7 @@ Unable to blt blit_surface to texture_surface: %08x\n
 Unable to blt scale_surface to texture_surface: %08x\n
 
 
-# windows/winddraw.c: 1428
+# windows/winddraw.c: 1429
 Unable to blt target_surface: %08x\n
 
 
@@ -638,15 +638,15 @@ Unable to blt target_surface: %08x\n
 Unable to close the keyboard device. (error %d)\n
 
 
-# windows/wind3dfx.c: 805
+# windows/wind3dfx.c: 806
 Unable to find RGB effects pattern\n
 
 
-# windows/wind3d.c: 2100, 2191, 2213 windows/winddraw.c: 1228, 1301
+# windows/wind3d.c: 2100, 2191, 2213 windows/winddraw.c: 1229, 1302
 Unable to lock blit_surface: %08x\n
 
 
-# windows/winddraw.c: 1598, 1706
+# windows/winddraw.c: 1599, 1707
 Unable to lock target_surface: %08x\n
 
 
@@ -666,7 +666,7 @@ Unable to render to preprocess texture: %08x\n
 Usage:  MAME gamename [options]\n\n
 
 
-# windows/config.c: 554
+# windows/config.c: 555
 Usage: %s [game] [options]\nOptions:\n
 
 
@@ -694,7 +694,7 @@ Warning: anisotropic (mag) filtering not supported, falling back to bi-linear\n
 Warning: anisotropic (min) filtering not supported, falling back to bi-linear\n
 
 
-# windows/wind3d.c: 1678 windows/winddraw.c: 919
+# windows/wind3d.c: 1678 windows/winddraw.c: 920
 Warning: could not create gamma control to change brightness: %08x\n
 
 
@@ -758,7 +758,7 @@ Windows video options
 \"%s\" controller support enabled\n
 
 
-# windows/config.c: 618
+# windows/config.c: 619
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 
 
@@ -766,7 +766,7 @@ Windows video options
 additional customised settings (undocumented)
 
 
-# windows/config.c: 232
+# windows/config.c: 233
 additional pause brightness
 
 
@@ -786,7 +786,7 @@ analog
 analog joystick
 
 
-# windows/config.c: 260
+# windows/config.c: 261
 artwork resolution (0 for auto)
 
 
@@ -794,19 +794,19 @@ artwork resolution (0 for auto)
 attempt to match the game's refresh rate
 
 
-# windows/config.c: 278
+# windows/config.c: 279
 automatic pause when playback is finished
 
 
-# windows/config.c: 227
+# windows/config.c: 228
 automatically rotate screen anti-clockwise for vertical games
 
 
-# windows/config.c: 226
+# windows/config.c: 227
 automatically rotate screen clockwise for vertical games
 
 
-# windows/config.c: 231
+# windows/config.c: 232
 brightness correction
 
 
@@ -850,11 +850,11 @@ button color (silver)
 button color (yellow)
 
 
-# windows/config.c: 282
+# windows/config.c: 283
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 
 
-# windows/config.c: 269
+# windows/config.c: 270
 change system bios
 
 
@@ -870,15 +870,15 @@ compare files with known MAME roms
 compare files with known MAME roms (brief)
 
 
-# windows/config.c: 276
+# windows/config.c: 277
 confirm before exiting game
 
 
-# windows/config.c: 296
+# windows/config.c: 297
 create the default configuration file
 
 
-# windows/config.c: 259
+# windows/config.c: 260
 crop artwork to game screen only
 
 
@@ -950,19 +950,19 @@ directory to save nvram contents
 directory to save states
 
 
-# windows/config.c: 275
+# windows/config.c: 276
 disable second monitor emulation
 
 
-# windows/config.c: 300
+# windows/config.c: 301
 display additional diagnostic information
 
 
-# windows/config.c: 297
+# windows/config.c: 298
 display running parameters in rc style
 
 
-# windows/config.c: 223
+# windows/config.c: 224
 do not apply rotation
 
 
@@ -970,11 +970,11 @@ do not apply rotation
 double
 
 
-# windows/config.c: 236
+# windows/config.c: 237
 draw antialiased vectors
 
 
-# windows/config.c: 237
+# windows/config.c: 238
 draw translucent vectors
 
 
@@ -1014,7 +1014,7 @@ enable (keyboard|mouse|joystick|lightgun) if a trackball control is present
 enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is present
 
 
-# windows/config.c: 271
+# windows/config.c: 272
 enable automatic restore at startup and save at exit
 
 
@@ -1050,27 +1050,27 @@ enable rotation of effects for rotated games
 enable steadykey support
 
 
-# windows/config.c: 261
+# windows/config.c: 262
 enable/disable cheat subsystem
 
 
-# windows/config.c: 262
+# windows/config.c: 263
 enable/disable debugger (only if available)
 
 
-# windows/config.c: 299
+# windows/config.c: 300
 enable/disable loading of configfiles
 
 
-# windows/config.c: 304
+# windows/config.c: 305
 enable/disable local language game list
 
 
-# windows/config.c: 246
+# windows/config.c: 247
 enable/disable sound and sound CPUs
 
 
-# windows/config.c: 249
+# windows/config.c: 250
 enable/disable volume auto adjust
 
 
@@ -1094,7 +1094,7 @@ error: %s requires an argument\n
 error: couldn't open file: %s\n
 
 
-# windows/config.c: 869
+# windows/config.c: 870
 error: duplicate gamename: %s\n
 
 
@@ -1114,7 +1114,7 @@ error: invalid value for aspect ratio: %s\n
 error: invalid value for cleanstretch: %s\n
 
 
-# windows/wind3dfx.c: 299
+# windows/wind3dfx.c: 300
 error: invalid value for d3dprescale: %s\n
 
 
@@ -1130,7 +1130,7 @@ error: invalid value for effect: %s\n
 error: invalid value for frames_to_run: %s\n
 
 
-# windows/config.c: 187
+# windows/config.c: 188
 error: invalid value for language: %s\nUse %s\n
 
 
@@ -1162,11 +1162,11 @@ error: malloc failed in rc_parse_commadline\n
 error: malloc failed in rc_register_option\n
 
 
-# windows/config.c: 965
+# windows/config.c: 966
 error: malloc failed in win_dirname\n
 
 
-# windows/config.c: 1005
+# windows/config.c: 1006
 error: malloc failed in win_strip_extension\n
 
 
@@ -1190,11 +1190,11 @@ error: unknown option type: %d, this should not happen!\n
 feedback strength
 
 
-# windows/config.c: 229
+# windows/config.c: 230
 flip screen left-right
 
 
-# windows/config.c: 228
+# windows/config.c: 229
 flip screen upside-down
 
 
@@ -1214,11 +1214,11 @@ font special color
 force specific zoom level
 
 
-# windows/config.c: 230
+# windows/config.c: 231
 gamma correction
 
 
-# windows/config.c: 266
+# windows/config.c: 267
 generate error.log
 
 
@@ -1234,7 +1234,7 @@ interpolation method
 invalid
 
 
-# windows/config.c: 273
+# windows/config.c: 274
 ips datfile name
 
 
@@ -1266,7 +1266,7 @@ list optional samples for a driver
 list required roms for a driver
 
 
-# windows/climain.c: 30
+# windows/climain.c: 95
 loading %-12s\r
 
 
@@ -1286,7 +1286,7 @@ no help available
 offscreen shots reload
 
 
-# windows/config.c: 267
+# windows/config.c: 268
 output error log to debugger
 
 
@@ -1310,7 +1310,7 @@ path to samplesets
 pedal
 
 
-# windows/config.c: 264
+# windows/config.c: 265
 playback an input file
 
 
@@ -1326,7 +1326,7 @@ prefer RDTSC over QueryPerformanceCounter for timing
 prescale effect
 
 
-# windows/config.c: 265
+# windows/config.c: 266
 record an input file
 
 
@@ -1350,11 +1350,11 @@ romset %s
 romsets
 
 
-# windows/config.c: 225
+# windows/config.c: 226
 rotate screen anti-clockwise
 
 
-# windows/config.c: 224
+# windows/config.c: 225
 rotate screen clockwise
 
 
@@ -1362,7 +1362,7 @@ rotate screen clockwise
 run in a window/run on full screen
 
 
-# windows/config.c: 627
+# windows/config.c: 628
 running %s (%s) [press return]
 
 
@@ -1394,11 +1394,11 @@ scale effects surface created: %s\n
 scanline intensity
 
 
-# windows/config.c: 263
+# windows/config.c: 264
 script for debugger (only if available)
 
 
-# windows/config.c: 303
+# windows/config.c: 304
 select translation language
 
 
@@ -1406,11 +1406,11 @@ select translation language
 set audio latency (increase to reduce glitches)
 
 
-# windows/config.c: 238
+# windows/config.c: 239
 set beam width in vector games
 
 
-# windows/config.c: 239
+# windows/config.c: 240
 set flickering in vector games
 
 
@@ -1418,7 +1418,7 @@ set flickering in vector games
 set frameskip explicitly (autoframeskip needs to be off)
 
 
-# windows/config.c: 240
+# windows/config.c: 241
 set intensity in vector games
 
 
@@ -1458,7 +1458,7 @@ set joystick ID (Player8)
 set resolution
 
 
-# windows/config.c: 244
+# windows/config.c: 245
 set samplerate
 
 
@@ -1486,11 +1486,11 @@ show clones
 show help message
 
 
-# windows/config.c: 298
+# windows/config.c: 299
 show this help
 
 
-# windows/config.c: 268
+# windows/config.c: 269
 skip displaying the game info screen
 
 
@@ -1498,7 +1498,7 @@ skip displaying the game info screen
 skip frames to speed up emulation
 
 
-# windows/config.c: 246 
+# windows/config.c: 247 
 sound
 
 
@@ -1522,7 +1522,7 @@ specify which screen to use
 start out maximized
 
 
-# windows/config.c: 270
+# windows/config.c: 271
 state to load
 
 
@@ -1554,7 +1554,7 @@ throttle speed to the game's framerate
 trackball
 
 
-# windows/config.c: 286
+# windows/config.c: 287
 transparency of UI background [0 - 255]
 
 
@@ -1566,7 +1566,7 @@ triple
 triple buffering (only if fullscreen)
 
 
-# windows/config.c: 167
+# windows/config.c: 168
 unable to open log file\n
 
 
@@ -1582,35 +1582,35 @@ use DirectDraw for rendering
 use DirectX texture management
 
 
-# windows/config.c: 255
+# windows/config.c: 256
 use additional game artwork (sets default for specific options below)
 
 
-# windows/config.c: 256
+# windows/config.c: 257
 use backdrop artwork
 
 
-# windows/config.c: 258
+# windows/config.c: 259
 use bezel artwork
 
 
-# windows/config.c: 257
+# windows/config.c: 258
 use overlay artwork
 
 
-# windows/config.c: 245
+# windows/config.c: 246
 use samples
 
 
-# windows/config.c: 285
+# windows/config.c: 286
 use transparent background for UI text
 
 
-# windows/config.c: 254
+# windows/config.c: 255
 validate all game drivers
 
 
-# windows/config.c: 247
+# windows/config.c: 248
 volume (range [-32,0])
 
 
