@@ -77,9 +77,6 @@ BEGIN
         MENUITEM "Fold&er List\tAlt+D",         ID_VIEW_FOLDERS
         MENUITEM "&Picture Area\tAlt+P",        ID_VIEW_PICTURE_AREA
         MENUITEM "Screenshot Ta&b\tAlt+B",      ID_VIEW_PAGETAB
-        MENUITEM SEPARATOR
-        MENUITEM "&Fullscreen\tF11",            ID_VIEW_FULLSCREEN
-        MENUITEM SEPARATOR
         POPUP "S&how Pictures"
         BEGIN
             MENUITEM "&Snapshot",                   ID_TOGGLE_TAB_SCREENSHOT
@@ -94,6 +91,8 @@ BEGIN
             MENUITEM "St&ory",                      ID_TOGGLE_TAB_STORY
 #endif /* STORY_DATAFILE */
         END
+        MENUITEM SEPARATOR
+        MENUITEM "&Fullscreen\tF11",            ID_VIEW_FULLSCREEN
         MENUITEM SEPARATOR
         MENUITEM "L&arge Icons",                ID_VIEW_LARGE_ICON
         MENUITEM "S&mall Icons",                ID_VIEW_SMALL_ICON

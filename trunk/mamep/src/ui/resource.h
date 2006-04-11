@@ -8,23 +8,23 @@
 #define IDS_UI_VIEW                     72
 #define IDS_UI_OPTIONS                  73
 #define IDS_UI_HELP                     74
-#define IDS_UI_FONT                     75
-#define IDS_UI_TOOLBAR                  76
-#define IDS_UI_STATUSBAR                77
-#define IDS_UI_SPACER1                  78
-#define IDS_UI_SPACER2                  79
-#define IDS_UI_FOLDERLIST               81
-#define IDS_UI_SCREENSHOT               82
-#define IDS_UI_SHOWPICTURES             84	// status bar (IDS_UI_TOOLBAR + 8)
-#define IDS_UI_LANGUAGE                 86	// status bar (IDS_UI_FONT + 11)
-#define IDS_UI_LIST                     87
-#define IDS_UI_LINEUPICONS              88
-#define IDS_UI_REFRESH                  89
-#define IDS_UI_CUSTOMIZE                90
-#define IDS_UI_DETAILS                  91
-#define IDS_UI_ARRANGE                  92	// status bar (IDS_UI_TOOLBAR + 16)
-#define IDS_UI_LARGEICONS               93
-#define IDS_UI_SMALLICONS               94
+#define IDS_UI_FONT                     76
+#define IDS_UI_TOOLBAR                  81
+#define IDS_UI_STATUSBAR                82
+#define IDS_UI_FOLDERLIST               83
+#define IDS_UI_SCREENSHOT               84
+#define IDS_UI_SHOWPICTURES             86	// status bar (IDS_UI_TOOLBAR + 5)
+#define IDS_UI_SPACER1                  85
+#define IDS_UI_LARGEICONS               91
+#define IDS_UI_SMALLICONS               87
+#define IDS_UI_LIST                     98
+#define IDS_UI_DETAILS                  89
+#define IDS_UI_SPACER2                  90
+#define IDS_UI_ARRANGE                  96	// status bar (IDS_UI_TOOLBAR + 15)
+#define IDS_UI_LINEUPICONS              92
+#define IDS_UI_REFRESH                  93
+#define IDS_UI_CUSTOMIZE                94
+#define IDS_UI_LANGUAGE                 88	// status bar (IDS_UI_FONT + 13)
 #define IDD_MAIN                        101
 #define IDA_TAB_KEYS                    106
 #define IDI_MAME32_ICON                 107
@@ -58,7 +58,6 @@
 #define IDI_CPU                         136
 #define IDI_HARDDISK                    137
 #define IDI_SOURCE                      138
-#define IDI_SOUNDTAB                    139
 #define IDR_CONTEXT_HEADER              151
 #define IDD_PROP_GAME                   152
 #define IDD_PROP_AUDIT                  153
@@ -89,9 +88,9 @@
 #define IDI_HEADER_DOWN                 183
 #define IDD_PROP_DIRECT3D               184
 #define IDD_PROP_CONTROLLER             185
+#define IDI_SOUNDTAB                    666
 #define IDD_PALETTE                     190 // UI_COLOR_DISPLAY
 #define IDD_PROP_BIOS                   191
-
 #define IDB_TOOLBAR_US                  193
 #define IDB_TOOLBAR_JP                  194
 #define IDB_TOOLBAR_CN                  195
@@ -283,12 +282,12 @@
 #define IDC_PAUSEBRIGHT                 1180
 #define IDC_PAUSEBRIGHTDISP             1181
 #define IDC_PRIORITY                    1182
-#define IDC_PRIORITYDISP                1183
-#define IDC_D3D                         1184
-#define IDC_D3D_FILTER                  1185
-#define IDC_D3D_TEXTURE_MANAGEMENT      1186
-#define IDC_AUDIO_LATENCY               1187
-#define IDC_D3D_EFFECT                  1188
+#define IDC_PRIORITYDISP                1188
+#define IDC_D3D                         1183
+#define IDC_D3D_FILTER                  1184
+#define IDC_D3D_TEXTURE_MANAGEMENT      1185
+#define IDC_AUDIO_LATENCY               1186
+#define IDC_D3D_EFFECT                  1187
 #define IDC_D3D_PRESCALE                1189
 #define IDC_D3D_ROTATE_EFFECTS          1190
 #define IDC_CLEAN_STRETCH               1191
@@ -406,93 +405,93 @@
 #define IDC_PROP_INPUT                  1364
 
 #define ID_FILE_EXIT                    40001
-#define ID_ABOUT                        40002
-#define ID_FILE_PLAY                    40003
-#define ID_HELP_ABOUT                   40004
-#define ID_VIEW_LARGE_ICON              40005
-#define ID_VIEW_SMALL_ICON              40006
-#define ID_VIEW_LIST_MENU               40007
-#define ID_VIEW_DETAIL                  40008
-#define ID_VIEW_GROUPED                 40009
-#define ID_OPTIONS_FONT                 40010
-#define ID_OPTIONS_CLONE_COLOR          40011
-#define ID_OPTIONS_DIR                  40012
-#define ID_OPTIONS_DEFAULTS             40013
-#define ID_OPTIONS_RESET_DEFAULTS       40014
-#define ID_OPTIONS_INTERFACE            40015
-#define ID_FILE_AUDIT                   40016
-#define ID_FILE_PLAY_RECORD             40017
-#define ID_FILE_PLAY_BACK               40018
-#define ID_FILE_PLAY_RECORD_WAVE        40019
-#define ID_FILE_PLAY_RECORD_MNG         40020
-#define ID_VIEW_PICTURE_AREA            40021
-#define ID_HELP_CONTENTS                40022
-#define ID_HELP_WHATS_NEW32             40023
-#define ID_HELP_TROUBLE                 40024
-#define ID_HELP_RELEASE                 40025
-#define ID_HELP_WHATS_NEW               40026
-#define ID_HELP_CHEATS                  40027
-#define ID_VIEW_BYGAME                  40028
-#define ID_VIEW_BYDIRECTORY             40029
-#define ID_VIEW_BYMANUFACTURER          40030
-#define ID_VIEW_BYYEAR                  40031
-#define ID_VIEW_BYTYPE                  40032
-#define ID_VIEW_BYTIMESPLAYED           40033
-#define ID_VIEW_LINEUPICONS             40034
-#define ID_UPDATE_GAMELIST              40035
-#define ID_SORT_ASCENDING               40036
-#define ID_SORT_DESCENDING              40037
-#define ID_CUSTOMIZE_FIELDS             40038
-#define ID_GAME_PROPERTIES              40039
-#define ID_GAME_AUDIT                   40040
-#define ID_VIEW_PAGETAB                 40041
-#define ID_VIEW_FOLDERS                 40042
-#define ID_VIEW_SHOWPICTURES            40043	// status bar (ID_VIEW_PAGETAB + 2)
-#define ID_VIEW_TOOLBARS                40044
-#define ID_VIEW_STATUS                  40045
-#define ID_CONTEXT_RENAME_CUSTOM        40046
-#define ID_CONTEXT_FILTERS              40047
-#define ID_CONTEXT_ADD_CUSTOM           40048
-#define ID_CONTEXT_SHOW_FOLDER          40049	// status bar (ID_CONTEXT_RENAME_CUSTOM + 3, ID_CONTEXT_FILTERS + 2)
-#define ID_CONTEXT_REMOVE_CUSTOM        40050
-#define ID_CONTEXT_SELECT_RANDOM        40051
-#define ID_VIEW_TAB_SCREENSHOT          40052
-#define ID_VIEW_TAB_FLYER               40053
-#define ID_VIEW_TAB_CABINET             40054
-#define ID_VIEW_TAB_MARQUEE             40055
-#define ID_VIEW_TAB_TITLE               40056
-#define ID_VIEW_TAB_CONTROL_PANEL       40057
-#define ID_VIEW_TAB_HISTORY             40058
-#define ID_VIEW_TAB_STORY               40059 // STORY_DATAFILE
-#define ID_OPTIONS_BG                   40060
-#define ID_TOGGLE_TAB_SCREENSHOT        40061
-#define ID_TOGGLE_TAB_FLYER             40062
-#define ID_TOGGLE_TAB_CABINET           40063
-#define ID_TOGGLE_TAB_MARQUEE           40064
-#define ID_TOGGLE_TAB_TITLE             40065
-#define ID_TOGGLE_TAB_CONTROL_PANEL     40066
-#define ID_TOGGLE_TAB_HISTORY           40067
-#define ID_TOGGLE_TAB_STORY             40068 // STORY_DATAFILE
-#define ID_VIEW_FULLSCREEN              40069
-#define ID_CONTEXT_RESET_PLAYTIME       40070
-#define ID_CONTEXT_RESET_PLAYCOUNT      40071
-#define ID_FOLDER_PROPERTIES            40072
-#define ID_FOLDER_AUDIT                 40073
-#define ID_UI_UP                        40074
-#define ID_UI_DOWN                      40075
-#define ID_UI_LEFT                      40076
-#define ID_UI_RIGHT                     40077
-#define ID_UI_START                     40078
-#define ID_UI_PGUP                      40079
-#define ID_UI_PGDOWN                    40080
-#define ID_UI_HOME                      40081
-#define ID_UI_END                       40082
-#define ID_UI_HISTORY_UP                40083
-#define ID_UI_HISTORY_DOWN              40084
-#define ID_FILE_LOADSTATE               40085
-#define ID_FOLDER_SOURCEPROPERTIES      40086
-#define ID_OPTIONS_PALETTE              40087 // UI_COLOR_DISPLAY
-#define ID_OPTIONS_MMO2LST              40088
+#define ID_ABOUT                        40003
+#define ID_FILE_PLAY                    40004
+#define ID_HELP_ABOUT                   40006
+#define ID_VIEW_LARGE_ICON              40007
+#define ID_VIEW_SMALL_ICON              40008
+#define ID_VIEW_LIST_MENU               40009
+#define ID_VIEW_DETAIL                  40010
+#define ID_VIEW_GROUPED                 40011
+#define ID_OPTIONS_FONT                 40012
+#define ID_OPTIONS_CLONE_COLOR          40013
+#define ID_OPTIONS_DIR                  40014
+#define ID_OPTIONS_DEFAULTS             40015
+#define ID_OPTIONS_RESET_DEFAULTS       40016
+#define ID_OPTIONS_INTERFACE            40017
+#define ID_FILE_AUDIT                   40018
+#define ID_FILE_PLAY_RECORD             40019
+#define ID_FILE_PLAY_BACK               40020
+#define ID_FILE_PLAY_RECORD_WAVE        40021
+#define ID_FILE_PLAY_RECORD_MNG         40022
+#define ID_VIEW_PICTURE_AREA            40023
+#define ID_HELP_CONTENTS                40025
+#define ID_HELP_WHATS_NEW32             40026
+#define ID_HELP_TROUBLE                 40027
+#define ID_HELP_RELEASE                 40028
+#define ID_HELP_WHATS_NEW               40029
+#define ID_HELP_CHEATS                  40030
+#define ID_VIEW_BYGAME                  40034
+#define ID_VIEW_BYDIRECTORY             40035
+#define ID_VIEW_BYMANUFACTURER          40036
+#define ID_VIEW_BYYEAR                  40037
+#define ID_VIEW_BYTYPE                  40038
+#define ID_VIEW_BYTIMESPLAYED           40039
+#define ID_VIEW_LINEUPICONS             40040
+#define ID_UPDATE_GAMELIST              40042
+#define ID_SORT_ASCENDING               40045
+#define ID_SORT_DESCENDING              40046
+#define ID_CUSTOMIZE_FIELDS             40048
+#define ID_GAME_PROPERTIES              40049
+#define ID_VIEW_PAGETAB                 40050
+#define ID_VIEW_FOLDERS                 40051
+#define ID_VIEW_SHOWPICTURES            40052	// status bar (ID_VIEW_PAGETAB + 2)
+#define ID_VIEW_TOOLBARS                40056
+#define ID_VIEW_STATUS                  40053
+#define ID_CONTEXT_RENAME_CUSTOM        40054
+#define ID_CONTEXT_FILTERS              40055
+#define ID_CONTEXT_ADD_CUSTOM           40061
+#define ID_CONTEXT_SHOW_FOLDER          40057	// status bar (ID_CONTEXT_RENAME_CUSTOM + 3, ID_CONTEXT_FILTERS + 2)
+#define ID_CONTEXT_REMOVE_CUSTOM        40058
+#define ID_GAME_AUDIT                   40059
+#define ID_CONTEXT_SELECT_RANDOM        40060
+#define ID_VIEW_TAB_SCREENSHOT          40062
+#define ID_VIEW_TAB_FLYER               40063
+#define ID_VIEW_TAB_CABINET             40064
+#define ID_VIEW_TAB_MARQUEE             40065
+#define ID_VIEW_TAB_TITLE               40066
+#define ID_VIEW_TAB_CONTROL_PANEL       40067
+#define ID_VIEW_TAB_HISTORY             40068
+#define ID_VIEW_TAB_STORY               40069 // STORY_DATAFILE
+#define ID_OPTIONS_BG                   40070
+#define ID_TOGGLE_TAB_SCREENSHOT        40071
+#define ID_TOGGLE_TAB_FLYER             40072
+#define ID_TOGGLE_TAB_CABINET           40073
+#define ID_TOGGLE_TAB_MARQUEE           40074
+#define ID_TOGGLE_TAB_TITLE             40075
+#define ID_TOGGLE_TAB_CONTROL_PANEL     40076
+#define ID_TOGGLE_TAB_HISTORY           40077
+#define ID_TOGGLE_TAB_STORY             40078 // STORY_DATAFILE
+#define ID_VIEW_FULLSCREEN              40079
+#define ID_CONTEXT_RESET_PLAYTIME       40080
+#define ID_CONTEXT_RESET_PLAYCOUNT      40081
+#define ID_FOLDER_PROPERTIES            40082
+#define ID_FOLDER_AUDIT                 40083
+#define ID_UI_UP                        40084
+#define ID_UI_DOWN                      40085
+#define ID_UI_LEFT                      40086
+#define ID_UI_RIGHT                     40087
+#define ID_UI_START                     40088
+#define ID_UI_PGUP                      40089
+#define ID_UI_PGDOWN                    40090
+#define ID_UI_HOME                      40091
+#define ID_UI_END                       40092
+#define ID_UI_HISTORY_UP                40093
+#define ID_UI_HISTORY_DOWN              40094
+#define ID_FILE_LOADSTATE               40095
+#define ID_FOLDER_SOURCEPROPERTIES      40096
+#define ID_OPTIONS_PALETTE              40098 // UI_COLOR_DISPLAY
+#define ID_OPTIONS_MMO2LST              40099
 
 #define ID_LANGUAGE_ENGLISH_US          40101
 #define ID_LANGUAGE_JAPANESE            40102
@@ -517,8 +516,8 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                1
-#define _APS_NEXT_RESOURCE_VALUE        210
-#define _APS_NEXT_COMMAND_VALUE         40120
+#define _APS_NEXT_RESOURCE_VALUE        250
+#define _APS_NEXT_COMMAND_VALUE         40300
 #define _APS_NEXT_CONTROL_VALUE         1370
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

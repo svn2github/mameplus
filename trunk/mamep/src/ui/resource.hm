@@ -37,7 +37,7 @@
 #define HIDC_DIAL                       0x806a04d4    // IDD_PROP_CONTROLLER [Englisch (USA)]
 #define HIDC_DUAL_LIGHTGUN              0x809d04c4    // IDD_PROP_INPUT [Englisch (USA)]
 #define HIDC_EFFECT                     0x809a047e    // IDD_PROP_DISPLAY [Englisch (USA)]
-#define HIDC_ENABLE_AUTOSAVE            0x809e049a    // IDD_PROP_MISC [Englisch (USA)]
+#define HIDC_ENABLE_AUTOSAVE            0x809e0498    // IDD_PROP_MISC [Englisch (USA)]
 #define HIDC_FILTER_CLONES              0x80a9049a    // IDD_FILTERS [Englisch (USA)]
 #define HIDC_FILTER_EDIT                0x80a904d5    // IDD_FILTERS [Englisch (USA)]
 #define HIDC_FILTER_NONWORKING          0x80a90499    // IDD_FILTERS [Englisch (USA)]
