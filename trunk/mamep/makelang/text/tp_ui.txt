@@ -2694,3 +2694,7 @@ the next time MAME32 is run.\n\n
 Rese&t Playcount
 
 
+# ui/mame32.rc: 134
+&Export Game List
+
+

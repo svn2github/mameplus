@@ -10,11 +10,11 @@
         MAME -showusage    for a brief list of options\n
         MAME -showusage    简要列出选项\n
 
-# windows/rc.c: 328, 395
+# windows/rc.c: 326, 393
    ignoring line\n
    忽略此行\n
 
-# windows/config.c: 546
+# windows/config.c: 548
  %s running parameters
  %s 运行参数
 
@@ -42,7 +42,7 @@
 Average FPS: %f (%d frames)\n
 平均 FPS: %f (%d 帧)\n
 
-# windows/wind3d.c: 2660 windows/winddraw.c: 1456, 1763
+# windows/wind3d.c: 2660 windows/winddraw.c: 1457, 1764
 Avg Flip = %d
 平均翻转 = %d
 
@@ -66,7 +66,7 @@ Blit surface created: %s\n
 Blitter initialisation complete (%.2lfMB video memory free)\n
 映像初始化完成 (%.2lfMB 剩余显存)\n
 
-# windows/config.c: 295
+# windows/config.c: 296
 Configuration options
 配置选项
 
@@ -110,11 +110,11 @@ Error creating back surface: %08x\n
 Error creating blit surface: %08x\n
 创建映像界面时发生错误: %08x\n
 
-# windows/wind3d.c: 1718 windows/winddraw.c: 959
+# windows/wind3d.c: 1718 windows/winddraw.c: 960
 Error creating clipper: %08x\n
 创建 clipper 时发生错误: %08x\n
 
-# windows/rc.c: 957
+# windows/rc.c: 955
 Error creating dir %s
 创建目录 %s 时发生错误
 
@@ -194,7 +194,7 @@ Error initialising software scale effects\n
 Error locking stream buffer: %08x\n
 锁定流缓冲时发生错误: %08x\n
 
-# windows/rc.c: 965
+# windows/rc.c: 963
 Error opening %s
 打开 %s 时发生错误
 
@@ -206,11 +206,11 @@ Error playing: %08x\n
 Error setting DirectSound cooperative level: %08x\n
 设置 DirectSound cooperative level 时发生错误: %08x\n
 
-# windows/wind3d.c: 1726 windows/winddraw.c: 967
+# windows/wind3d.c: 1726 windows/winddraw.c: 968
 Error setting clipper hwnd: %08x\n
 设置 clipper hwnd 时发生错误: %08x\n
 
-# windows/wind3d.c: 1734 windows/winddraw.c: 975
+# windows/wind3d.c: 1734 windows/winddraw.c: 976
 Error setting clipper on primary surface: %08x\n
 设置主界面的 clipper 时发生错误: %08x\n
 
@@ -218,7 +218,7 @@ Error setting clipper on primary surface: %08x\n
 Error setting cooperative level: %08x\n
 设置 cooperative level 时发生错误: %08x\n
 
-# windows/wind3d.c: 1700 windows/winddraw.c: 941
+# windows/wind3d.c: 1700 windows/winddraw.c: 942
 Error setting gamma ramp: %08x\n
 设置 gamma ramp 时发生错误: %08x\n
 
@@ -250,7 +250,7 @@ Error: required texture size too large (max: %ix%i, need %ix%i)\n
 Frontend Related
 前端相关
 
-# windows/window.c: 745
+# windows/window.c: 783
 Full Screen\tAlt+Enter
 全屏幕\tAlt+Enter
 
@@ -266,23 +266,23 @@ Hardware stretching supported\n
 Initialising DirectDraw & Direct3D 7 blitter
 正在初始化 DirectDraw 和 Direct3D 7 映像
 
-# windows/input.c: 249
+# windows/input.c: 252
 Input device options
 输入设备选项
 
-# windows/input.c: 2060
+# windows/input.c: 2104
 J%d %s D
 J%d %s 下
 
-# windows/input.c: 2064
+# windows/input.c: 2108
 J%d %s L
 J%d %s 左
 
-# windows/input.c: 2068
+# windows/input.c: 2112
 J%d %s R
 J%d %s 右
 
-# windows/input.c: 2056
+# windows/input.c: 2100
 J%d %s U
 J%d %s 上
 
@@ -290,23 +290,15 @@ J%d %s 上
 KNOWN     %s\n
 已知      %s\n
 
-# windows/input.c: 257
+# windows/input.c: 260
 LED mode (ps/2|usb)
 LED 模式 (ps/2|usb)
 
-# windows/config.c: 302
+# windows/config.c: 303
 Language options
 语言选项
 
-# windows/input.c: 1973
-Lightgun %d X
-光枪 %d X
-
-# windows/input.c: 1975
-Lightgun %d Y
-光枪 %d Y
-
-# windows/input.c: 2330
+# windows/input.c: 2387
 Lightgun not supported in windowed mode
 窗口模式下不支持光枪
 
@@ -342,25 +334,13 @@ Mame 核心视频选项
 Managed texture
 纹理管理
 
-# windows/input.c: 1875
+# windows/input.c: 1917
 Mouse 
 鼠标
 
-# windows/input.c: 1873
+# windows/input.c: 1915
 Mouse %d 
 鼠标 %d 
-
-# windows/input.c: 1949, 1959
-Mouse %d %s
-鼠标  %d %s
-
-# windows/input.c: 1929
-Mouse %d Button %d
-鼠标 %d 按钮 %d
-
-# windows/input.c: 1951, 1961
-Mouse %s
-鼠标  %s
 
 # windows/fronthlp.c: 236
 NO MATCH\n
@@ -398,7 +378,7 @@ OSD bar color (medium)
 PARTKNOWN %s\n
 部分已知 %s\n
 
-# windows/config.c: 591
+# windows/config.c: 601
 Playing back previously recorded game %s (%s) [press return]\n
 播放以前录制的游戏 %s (%s) [按回车键]\n
 
@@ -422,11 +402,11 @@ Primary surface created: %s (%s)\n
 RGB effects surface created: %s\n
 RGB 效果界面已创建: %s\n
 
-# windows/wind3dfx.c: 814
+# windows/wind3dfx.c: 815
 RGB pattern has a wrong filesize (expected %i bytes, found %i)\n
 RGB 模式的文件大小错误 (应为 %i 字节，找到 %i)\n
 
-# windows/winddraw.c: 1386, 1464, 1771
+# windows/winddraw.c: 1387, 1465, 1772
 Recreating surfaces\n
 重建界面\n
 
@@ -462,19 +442,19 @@ Scanline surface[%i] created: %s\n
 Sound buffer: overflows=%d underflows=%d\n
 声音缓冲: 上限溢位=%d 下限溢位=%d\n
 
-# windows/input.c: 1908
+# windows/input.c: 1955
 Stick %d %s +
 游戏杆 %d %s +
 
-# windows/input.c: 1901
+# windows/input.c: 1948
 Stick %d %s -
 游戏杆 %d %s -
 
-# windows/input.c: 1910
+# windows/input.c: 1957
 Stick %s +
 游戏杆 %s +
 
-# windows/input.c: 1903
+# windows/input.c: 1950
 Stick %s -
 游戏杆 %s +
 
@@ -482,7 +462,7 @@ Stick %s -
 Texture
 纹理
 
-# windows/input.c: 2481
+# windows/input.c: 2534
 Toggle fullscreen
 切换全屏幕
 
@@ -490,19 +470,19 @@ Toggle fullscreen
 UNKNOWN   %s\n
 未知      %s\n
 
-# windows/input.c: 2749, 2756
+# windows/input.c: 2802, 2809
 Unable to close the keyboard device. (error %d)\n
 无法关闭键盘设备。(错误 %d)\n
 
-# windows/wind3d.c: 2100, 2191, 2213 windows/winddraw.c: 1228, 1301
+# windows/wind3d.c: 2100, 2191, 2213 windows/winddraw.c: 1229, 1302
 Unable to lock blit_surface: %08x\n
 无法锁定 blit_surface: %08x\n
 
-# windows/winddraw.c: 1598, 1706
+# windows/winddraw.c: 1599, 1707
 Unable to lock target_surface: %08x\n
 无法锁定 target_surface: %08x\n
 
-# windows/input.c: 2700, 2710
+# windows/input.c: 2753, 2763
 Unable to open the keyboard device. (error %d)\n
 无法打开键盘设备 (错误 %d)\n
 
@@ -510,7 +490,7 @@ Unable to open the keyboard device. (error %d)\n
 Usage:  MAME gamename [options]\n\n
 使用方法:  MAME 游戏名 [选项]\n\n
 
-# windows/config.c: 553
+# windows/config.c: 555
 Usage: %s [game] [options]\nOptions:\n
 使用用法: %s [游戏] [选项]\n选项:\n
 
@@ -522,7 +502,7 @@ Using %s pre-scale effect\n
 Using %s scale effect\n
 正在使用缩放效果 %s\n
 
-# windows/input.c: 1266
+# windows/input.c: 1292
 Using DirectInput %d\n
 正在使用 DirectInput %d\n
 
@@ -530,7 +510,7 @@ Using DirectInput %d\n
 Using a %s buffer and pageflipping\n
 正在使用 %s 缓冲和换页\n
 
-# windows/wind3d.c: 1678 windows/winddraw.c: 919
+# windows/wind3d.c: 1678 windows/winddraw.c: 920
 Warning: could not create gamma control to change brightness: %08x\n
 警告: 不能创建 gamma 控件以更改画面亮度: %08x\n
 
@@ -558,11 +538,11 @@ Windows 版视频选项
 \"%8s\" not supported!\n
 \"%8s\" 未支持!\n
 
-# windows/input.c: 1340
+# windows/input.c: 1366
 \"%s\" controller support enabled\n
 \"%s\" 控制器支持已启用\n
 
-# windows/config.c: 609
+# windows/config.c: 619
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" 可能匹配以下支持的游戏 (精确优先):\n\n
 
@@ -582,15 +562,15 @@ all available info on driver in XML format
 allow MAME to give back time to the system when it's not needed
 允许 MAME 释放不必要的系统时间占用
 
-# windows/input.c: 1820
+# windows/input.c: 1862
 analog
 模拟式
 
-# windows/input.c: 1274
+# windows/input.c: 1300
 analog joystick
 模拟式游戏杆
 
-# windows/config.c: 260
+# windows/config.c: 261
 artwork resolution (0 for auto)
 装饰图分辨率 (0 为自动)
 
@@ -650,11 +630,11 @@ button color (silver)
 button color (yellow)
 按钮色 (黄)
 
-# windows/config.c: 282
+# windows/config.c: 283
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 更改 m68k 核心 (0:C，1:动态重编译，2:汇编+动态重编译)
 
-# windows/config.c: 269
+# windows/config.c: 270
 change system bios
 更改系统 bios
 
@@ -670,15 +650,15 @@ compare files with known MAME roms
 compare files with known MAME roms (brief)
 与已知的 MAME ROM 比较 (简明)
 
-# windows/config.c: 276
+# windows/config.c: 277
 confirm before exiting game
 退出游戏前确认
 
-# windows/config.c: 296
+# windows/config.c: 297
 create the default configuration file
 创建默认配置文件
 
-# windows/config.c: 259
+# windows/config.c: 260
 crop artwork to game screen only
 把装饰图裁切到游戏画面大小
 
@@ -690,7 +670,7 @@ cursor color
 customised blitting effects preset
 自定义预置映像效果
 
-# windows/input.c: 283, 1820
+# windows/input.c: 286, 1862
 digital
 数字式
 
@@ -734,11 +714,11 @@ directory to save nvram contents
 directory to save states
 保存游戏进度的目录
 
-# windows/config.c: 300
+# windows/config.c: 301
 display additional diagnostic information
 显示附加的诊断信息
 
-# windows/config.c: 297
+# windows/config.c: 298
 display running parameters in rc style
 以 rc 风格显示运行参数
 
@@ -766,23 +746,23 @@ driver sourcefile
 emulate win_old_scanlines
 模拟 win_old_scanlines
 
-# windows/input.c: 253
+# windows/input.c: 256
 enable dual lightgun input
 启用双光枪输入
 
-# windows/input.c: 251
+# windows/input.c: 254
 enable joystick input
 启用游戏杆输入
 
-# windows/input.c: 256
+# windows/input.c: 259
 enable keyboard LED emulation
 启用键盘 LED 模拟
 
-# windows/input.c: 252
+# windows/input.c: 255
 enable lightgun input
 启用光枪输入
 
-# windows/input.c: 250
+# windows/input.c: 253
 enable mouse input
 启用鼠标输入
 
@@ -790,23 +770,23 @@ enable mouse input
 enable rotation of effects for rotated games
 启用自动效果旋转
 
-# windows/input.c: 255
+# windows/input.c: 258
 enable steadykey support
 启用多键同时输入支持
 
-# windows/config.c: 261
+# windows/config.c: 262
 enable/disable cheat subsystem
 启用/禁用作弊系统
 
-# windows/config.c: 262
+# windows/config.c: 263
 enable/disable debugger (only if available)
 启用/禁用调试工具 (如果可用)
 
-# windows/config.c: 299
+# windows/config.c: 300
 enable/disable loading of configfiles
 启用/禁用配置文件
 
-# windows/config.c: 304
+# windows/config.c: 305
 enable/disable local language game list
 启用/禁用本地语言游戏列表
 
@@ -822,27 +802,27 @@ enable/disable volume auto adjust
 enforce aspect ratio
 强制外观比例
 
-# windows/rc.c: 719, 822, 834
+# windows/rc.c: 717, 820, 832
 error invalid value for %s: %s\n
 错误 无效的值 %s: %s\n
 
-# windows/rc.c: 315, 382
+# windows/rc.c: 313, 380
 error: %s requires an argument, on line %d of file: %s\n
 错误: %s 需要一个参数，行号: %d 文件: %s\n
 
-# windows/rc.c: 571
+# windows/rc.c: 569
 error: %s requires an argument\n
 错误: %s 需要一个参数\n
 
-# windows/rc.c: 848
+# windows/rc.c: 846
 error: couldn't open file: %s\n
 错误: 不能打开文件: %s\n
 
-# windows/config.c: 860
+# windows/config.c: 870
 error: duplicate gamename: %s\n
 错误: 重复的游戏名: %s\n
 
-# windows/rc.c: 358
+# windows/rc.c: 356
 error: garbage \"%s\" on line %d of file: %s\n
 错误: 无用的信息 \"%s\" 行号: %d 文件: %s\n
 
@@ -850,7 +830,7 @@ error: garbage \"%s\" on line %d of file: %s\n
 error: invalid value for aspect ratio: %s\n
 错误: 无效的外观比例: %s\n
 
-# windows/wind3dfx.c: 299
+# windows/wind3dfx.c: 300
 error: invalid value for d3dprescale: %s\n
 错误: 无效的 d3dprescale 值: %s\n
 
@@ -870,15 +850,15 @@ error: invalid value for palette: %s\n
 error: invalid value for resolution: %s\n
 错误: 无效的分辨率: %s\n
 
-# windows/rc.c: 321, 388
+# windows/rc.c: 319, 386
 error: trailing garbage: \"%s\" on line: %d of file: %s\n
 错误: 跟踪无用信息: \"%s\" 行号 %d 文件: %s\n
 
-# windows/rc.c: 309, 376
+# windows/rc.c: 307, 374
 error: unknown option %s, on line %d of file: %s\n
 错误: 未知选项 %s，行号: %d 文件: %s \n
 
-# windows/rc.c: 587, 739, 761, 785
+# windows/rc.c: 585, 737, 759, 783
 error: unknown option %s\n
 错误: 未知选项 %s\n
 
@@ -914,11 +894,11 @@ force specific zoom level
 gamma correction
 Gamma 修正
 
-# windows/config.c: 266
+# windows/config.c: 267
 generate error.log
 生成 error.log
 
-# windows/rc.c: 253
+# windows/rc.c: 251
 info: trying to parse: %s\n
 信息: 正在尝试分析: %s\n
 
@@ -926,7 +906,7 @@ info: trying to parse: %s\n
 interpolation method
 插补方法
 
-# windows/input.c: 1820
+# windows/input.c: 1862
 invalid
 无效
 
@@ -942,7 +922,7 @@ is best available\n
 is good\n
 正确\n
 
-# windows/input.c: 252, 864, 1275
+# windows/input.c: 255, 867, 1301
 lightgun
 光枪
 
@@ -954,27 +934,27 @@ list optional samples for a driver
 list required roms for a driver
 列出指定驱动必要的 ROM
 
-# windows/climain.c: 30
+# windows/climain.c: 95
 loading %-12s\r
 正在载入 %-12s\r
 
-# windows/input.c: 258
+# windows/input.c: 261
 minimal analog value for digital input
 数字式输入的最小感应值
 
-# windows/rc.c: 660, 697
+# windows/rc.c: 658, 695
 no help available
 没有可供查看的帮助文件
 
-# windows/input.c: 254
+# windows/input.c: 257
 offscreen shots reload
 画面外装弹
 
-# windows/config.c: 267
+# windows/config.c: 268
 output error log to debugger
 向调试器输出错误记录
 
-# windows/input.c: 274, 1273
+# windows/input.c: 277, 1299
 paddle
 操纵杆
 
@@ -990,15 +970,15 @@ ROM 组合的路径
 path to samplesets
 采样文件集的路径
 
-# windows/input.c: 276, 1276
+# windows/input.c: 279, 1302
 pedal
 踏板
 
-# windows/config.c: 264
+# windows/config.c: 265
 playback an input file
 播放输入指令文件
 
-# windows/input.c: 259
+# windows/input.c: 262
 preconfigure for specified controller
 指定的控制器预设值
 
@@ -1010,7 +990,7 @@ prefer RDTSC over QueryPerformanceCounter for timing
 prescale effect
 预缩放效果
 
-# windows/config.c: 265
+# windows/config.c: 266
 record an input file
 录制输入指令文件
 
@@ -1046,7 +1026,7 @@ rotate screen clockwise
 run in a window/run on full screen
 窗口或全屏幕运行
 
-# windows/config.c: 618
+# windows/config.c: 628
 running %s (%s) [press return]
 运行 %s (%s) [按回车键]
 
@@ -1078,11 +1058,11 @@ scale effects surface created: %s\n
 scanline intensity
 扫描线饱和度
 
-# windows/config.c: 263
+# windows/config.c: 264
 script for debugger (only if available)
 调试工具脚本 (如果可用)
 
-# windows/config.c: 303
+# windows/config.c: 304
 select translation language
 选择翻译语言
 
@@ -1106,35 +1086,35 @@ set frameskip explicitly (autoframeskip needs to be off)
 set intensity in vector games
 设置矢量游戏亮度
 
-# windows/input.c: 265
+# windows/input.c: 268
 set joystick ID (Player1)
 设置游戏杆 ID (P1)
 
-# windows/input.c: 266
+# windows/input.c: 269
 set joystick ID (Player2)
 设置游戏杆 ID (P2)
 
-# windows/input.c: 267
+# windows/input.c: 270
 set joystick ID (Player3)
 设置游戏杆 ID (P3)
 
-# windows/input.c: 268
+# windows/input.c: 271
 set joystick ID (Player4)
 设置游戏杆 ID (P4)
 
-# windows/input.c: 269
+# windows/input.c: 272
 set joystick ID (Player5)
 设置游戏杆 ID (P5)
 
-# windows/input.c: 270
+# windows/input.c: 273
 set joystick ID (Player6)
 设置游戏杆 ID (P6)
 
-# windows/input.c: 271
+# windows/input.c: 274
 set joystick ID (Player7)
 设置游戏杆 ID (P7)
 
-# windows/input.c: 272
+# windows/input.c: 275
 set joystick ID (Player8)
 设置游戏杆 ID (P8)
 
@@ -1170,11 +1150,11 @@ show clones
 show help message
 显示帮助信息
 
-# windows/config.c: 298
+# windows/config.c: 299
 show this help
 显示本帮助文档
 
-# windows/config.c: 268
+# windows/config.c: 269
 skip displaying the game info screen
 跳过游戏信息画面
 
@@ -1206,7 +1186,7 @@ specify which screen to use
 start out maximized
 启动时最大化
 
-# windows/config.c: 270
+# windows/config.c: 271
 state to load
 载入的游戏进度
 
@@ -1234,11 +1214,11 @@ thread priority
 throttle speed to the game's framerate
 限制游戏帧速
 
-# windows/input.c: 278, 1278
+# windows/input.c: 281, 1304
 trackball
 轨迹球
 
-# windows/config.c: 286
+# windows/config.c: 287
 transparency of UI background [0 - 255]
 菜单背景透明度 [0 - 255]
 
@@ -1266,19 +1246,19 @@ use DirectDraw for rendering
 use DirectX texture management
 使用 DirectX 纹理管理
 
-# windows/config.c: 255
+# windows/config.c: 256
 use additional game artwork (sets default for specific options below)
 使用额外的游戏装饰图 \n(设置下列指定选项的默认值)
 
-# windows/config.c: 256
+# windows/config.c: 257
 use backdrop artwork
 使用背景装饰图
 
-# windows/config.c: 258
+# windows/config.c: 259
 use bezel artwork
 使用外框装饰图
 
-# windows/config.c: 257
+# windows/config.c: 258
 use overlay artwork
 使用前景装饰图
 
@@ -1286,7 +1266,7 @@ use overlay artwork
 use samples
 使用采样文件
 
-# windows/config.c: 285
+# windows/config.c: 286
 use transparent background for UI text
 菜单文字使用透明背景
 
@@ -1318,55 +1298,59 @@ window frame color (medium)
 year, manufacturer and full name
 年代，制造商和游戏名
 
-# windows/input.c: 950
+# windows/input.c: 953
          all -- all axes on all joysticks are digital\n
 
 
-# windows/input.c: 956
+# windows/input.c: 959
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
 
 
-# windows/input.c: 954
+# windows/input.c: 957
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
 
 
-# windows/input.c: 951
+# windows/input.c: 954
          j<N> -- all axes on joystick <N> are digital\n
 
 
-# windows/input.c: 952
+# windows/input.c: 955
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
 
 
-# windows/input.c: 949
+# windows/input.c: 952
          none -- no axes on any joysticks are digital\n
 
 
-# windows/input.c: 953
+# windows/input.c: 956
     Multiple axes can be specified for one joystick:\n
 
 
-# windows/input.c: 955
+# windows/input.c: 958
     Multiple joysticks can be specified separated by commas:\n
 
 
-# windows/input.c: 2001
+# windows/input.c: 2045
   Axis %d (%s)%s\n
 
 
-# windows/input.c: 2001
+# windows/input.c: 2045
  - digital
 
 
-# windows/input.c: 989
+# windows/input.c: 1976
+%s Button %d
+
+
+# windows/input.c: 992
 Autoenabling joysticks due to presence of a %s\n
 
 
-# windows/input.c: 997
+# windows/input.c: 1000
 Autoenabling lightguns due to presence of a %s\n
 
 
-# windows/input.c: 981
+# windows/input.c: 984
 Autoenabling mice due to presence of a %s\n
 
 
@@ -1382,19 +1366,15 @@ Enumerating video device %s\n
 Error enumerating DirectDraw: %08x\n
 
 
-# windows/config.c: 500
+# windows/config.c: 501
 Error on rc creation
 
 
-# windows/config.c: 507
-Error while parsing cmdline
-
-
-# windows/config.c: 567
+# windows/config.c: 577
 Failed to open file for playback
 
 
-# windows/config.c: 669
+# windows/config.c: 679
 Failed to open file for recording
 
 
@@ -1402,39 +1382,59 @@ Failed to open file for recording
 For usage instructions, please consult the file windows.txt\n
 
 
-# windows/input.c: 1823
+# windows/input.c: 2050, 2083
+J%d %s
+
+
+# windows/input.c: 2059
+J%d %s +
+
+
+# windows/input.c: 2055
+J%d %s -
+
+
+# windows/input.c: 1865
 Joystick %d axis %d is now %s\n
 
 
-# windows/input.c: 1984
+# windows/input.c: 2028
 Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 
 
-# windows/input.c: 1338
+# windows/input.c: 1364
 Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
+
+
+# windows/input.c: 2015
+Lightgun %d 
+
+
+# windows/input.c: 2013
+Lightgun on Mouse %d 
 
 
 # windows/fronthlp.c: 453
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 
 
-# windows/fileio.c: 280
+# windows/fileio.c: 278
 Out of memory in variable expansion!
 
 
-# windows/fileio.c: 349
+# windows/fileio.c: 346
 Out of memory!
 
 
-# windows/config.c: 443
+# windows/config.c: 444
 Parsing %s : ERROR\n
 
 
-# windows/config.c: 453
+# windows/config.c: 454
 Parsing %s : N/A\n
 
 
-# windows/config.c: 448
+# windows/config.c: 449
 Parsing %s : OK\n
 
 
@@ -1458,11 +1458,11 @@ Unable to blt blit_surface to texture_surface: %08x\n
 Unable to blt scale_surface to texture_surface: %08x\n
 
 
-# windows/winddraw.c: 1428
+# windows/winddraw.c: 1429
 Unable to blt target_surface: %08x\n
 
 
-# windows/wind3dfx.c: 805
+# windows/wind3dfx.c: 806
 Unable to find RGB effects pattern\n
 
 
@@ -1514,11 +1514,11 @@ Warning: using fall-back method for scanline blending.\n
 Windows misc options
 
 
-# windows/config.c: 278
+# windows/config.c: 279
 automatic pause when playback is finished
 
 
-# windows/input.c: 277, 1277
+# windows/input.c: 280, 1303
 dial
 
 
@@ -1534,47 +1534,47 @@ directory for localized language files
 directory to save comment files
 
 
-# windows/config.c: 275
+# windows/config.c: 276
 disable second monitor emulation
 
 
-# windows/input.c: 274
+# windows/input.c: 277
 enable (keyboard|mouse|joystick) if a paddle control is present
 
 
-# windows/input.c: 277
+# windows/input.c: 280
 enable (keyboard|mouse|joystick|lightgun) if a dial control is present
 
 
-# windows/input.c: 279
+# windows/input.c: 282
 enable (keyboard|mouse|joystick|lightgun) if a lightgun control is present
 
 
-# windows/input.c: 281
+# windows/input.c: 284
 enable (keyboard|mouse|joystick|lightgun) if a mouse control is present
 
 
-# windows/input.c: 276
+# windows/input.c: 279
 enable (keyboard|mouse|joystick|lightgun) if a pedal control is present
 
 
-# windows/input.c: 278
+# windows/input.c: 281
 enable (keyboard|mouse|joystick|lightgun) if a trackball control is present
 
 
-# windows/input.c: 275
+# windows/input.c: 278
 enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is present
 
 
-# windows/config.c: 271
+# windows/config.c: 272
 enable automatic restore at startup and save at exit
 
 
-# windows/input.c: 262
+# windows/input.c: 265
 enable pointing stick input
 
 
-# windows/input.c: 868
+# windows/input.c: 871
 error: invalid value for %s: %s\n
 
 
@@ -1582,7 +1582,7 @@ error: invalid value for %s: %s\n
 error: invalid value for cleanstretch: %s\n
 
 
-# windows/input.c: 948
+# windows/input.c: 951
 error: invalid value for digital: %s -- valid values are:\n
 
 
@@ -1590,39 +1590,39 @@ error: invalid value for digital: %s -- valid values are:\n
 error: invalid value for frames_to_run: %s\n
 
 
-# windows/input.c: 843
+# windows/input.c: 846
 error: invalid value for led_mode: %s\n
 
 
-# windows/rc.c: 806
+# windows/rc.c: 804
 error: malloc failed for %s\n
 
 
-# windows/rc.c: 161
+# windows/rc.c: 159
 error: malloc failed for: struct rc_struct\n
 
 
-# windows/rc.c: 604
+# windows/rc.c: 602
 error: malloc failed in rc_parse_commadline\n
 
 
-# windows/rc.c: 201
+# windows/rc.c: 199
 error: malloc failed in rc_register_option\n
 
 
-# windows/config.c: 981
+# windows/config.c: 966
 error: malloc failed in win_dirname\n
 
 
-# windows/config.c: 1021
+# windows/config.c: 1006
 error: malloc failed in win_strip_extension\n
 
 
-# windows/rc.c: 861
+# windows/rc.c: 859
 error: unknown option type: %d, this should not happen!\n
 
 
-# windows/config.c: 273
+# windows/config.c: 274
 ips datfile name
 
 
@@ -1630,7 +1630,11 @@ ips datfile name
 is missing optional files\n
 
 
-# windows/input.c: 283
+# windows/input.c: 286
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
+
+
+# windows/config.c: 255
+validate all game drivers
 
 
