@@ -359,7 +359,7 @@ static DWORD dwHelpIDs[] =
 	IDC_JOY_GUI,            HIDC_JOY_GUI,
 	IDC_RANDOM_BG,          HIDC_RANDOM_BG,
 	IDC_SKIP_GAME_INFO,     HIDC_SKIP_GAME_INFO,
-	IDC_PRIORITY,           HIDC_HIGH_PRIORITY,
+	IDC_HIGH_PRIORITY,           HIDC_HIGH_PRIORITY,
 	IDC_D3D,                HIDC_D3D,
 	IDC_D3D_FILTER,         HIDC_D3D_FILTER,
 	IDC_D3D_EFFECT,         HIDC_D3D_EFFECT,
@@ -2266,7 +2266,7 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 #endif /* TRANS_UI */
 
 	/* thread priority */
-	hCtrl = GetDlgItem(hWnd, IDC_PRIORITYDISP);
+	hCtrl = GetDlgItem(hWnd, IDC_HIGH_PRIORITYTXT);
 	if (hCtrl)
 	{
 		sprintf(buf, "%d", o->priority);
@@ -3391,8 +3391,8 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_OLD_TIMING,    DM_BOOL, CT_BUTTON,   &pGameOpts->old_timing,    DM_BOOL, &pGameOpts->old_timing,    0, 0, 0);
 	DataMapAdd(IDC_LEDS,          DM_BOOL, CT_BUTTON,   &pGameOpts->leds,          DM_BOOL, &pGameOpts->leds,          0, 0, 0);
 	DataMapAdd(IDC_LEDMODE,       DM_INT,  CT_COMBOBOX, &g_nLedmodeIndex,          DM_STRING, &pGameOpts->ledmode,     0, 0, AssignLedmode);
-	DataMapAdd(IDC_PRIORITY,      DM_INT,  CT_SLIDER,   &g_nPriorityIndex,         DM_INT,  &pGameOpts->priority,      0, 0, AssignPriority);
-	DataMapAdd(IDC_PRIORITYDISP,  DM_NONE, CT_NONE,     NULL,                      DM_INT,  &pGameOpts->priority,      0, 0, 0);
+	DataMapAdd(IDC_HIGH_PRIORITY,      DM_INT,  CT_SLIDER,   &g_nPriorityIndex,         DM_INT,  &pGameOpts->priority,      0, 0, AssignPriority);
+	DataMapAdd(IDC_HIGH_PRIORITYTXT,  DM_NONE, CT_NONE,     NULL,                      DM_INT,  &pGameOpts->priority,      0, 0, 0);
 	DataMapAdd(IDC_SKIP_GAME_INFO,DM_BOOL,CT_BUTTON,    &pGameOpts->skip_gameinfo, DM_BOOL, &pGameOpts->skip_gameinfo, 0, 0, 0);
 	DataMapAdd(IDC_BIOS,          DM_INT,  CT_COMBOBOX, &g_nBiosIndex,             DM_STRING, &pGameOpts->bios,        0, 0, AssignBios);
 	DataMapAdd(IDC_ENABLE_AUTOSAVE, DM_BOOL, CT_BUTTON, &pGameOpts->autosave,      DM_BOOL, &pGameOpts->autosave,     0, 0, 0);
@@ -3648,7 +3648,7 @@ static void InitializeMisc(HWND hDlg)
 				(WPARAM)FALSE,
 				(LPARAM)MAKELONG(0, 255)); /* [0, 255] in 1.0 increments */
 #endif /* TRANS_UI */
-	SendDlgItemMessage(hDlg, IDC_PRIORITY, TBM_SETRANGE,
+	SendDlgItemMessage(hDlg, IDC_HIGH_PRIORITY, TBM_SETRANGE,
 				(WPARAM)FALSE,
 				(LPARAM)MAKELONG(0, 16)); /* [-15, 1] */
 }
@@ -3731,7 +3731,7 @@ static void OptOnHScroll(HWND hwnd, HWND hwndCtl, UINT code, int pos)
 	}
 #endif /* TRANS_UI */
 	else
-	if (hwndCtl == GetDlgItem(hwnd, IDC_PRIORITY))
+	if (hwndCtl == GetDlgItem(hwnd, IDC_HIGH_PRIORITY))
 	{
 		PrioritySelectionChange(hwnd);
 	}
@@ -4648,11 +4648,11 @@ static void PrioritySelectionChange(HWND hwnd)
 	int  nValue;
 
 	/* Get the current value of the control */
-	nValue = SendDlgItemMessage(hwnd, IDC_PRIORITY, TBM_GETPOS, 0, 0);
+	nValue = SendDlgItemMessage(hwnd, IDC_HIGH_PRIORITY, TBM_GETPOS, 0, 0);
 
 	/* Set the static display to the new value */
 	snprintf(buf,sizeof(buf), "%d", nValue - 15);
-	Static_SetTextA(GetDlgItem(hwnd, IDC_PRIORITYDISP), buf);
+	Static_SetTextA(GetDlgItem(hwnd, IDC_HIGH_PRIORITYTXT), buf);
 }
 
 

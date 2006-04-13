@@ -281,8 +281,7 @@
 #define IDC_OLD_TIMING                  1179
 #define IDC_PAUSEBRIGHT                 1180
 #define IDC_PAUSEBRIGHTDISP             1181
-#define IDC_PRIORITY                    1182
-#define IDC_PRIORITYDISP                1188
+#define IDC_HIGH_PRIORITY               1182
 #define IDC_D3D                         1183
 #define IDC_D3D_FILTER                  1184
 #define IDC_D3D_TEXTURE_MANAGEMENT      1185
@@ -330,7 +329,9 @@
 #define IDC_LIGHTGUNDEVICE              1239
 #define IDC_ANALOG_AXES_TEXT            1240
 #define IDC_ANALOG_AXES                 1241
-#define IDC_DISPLAY_SPLASH_SCREEN       1242
+#define IDC_HIGH_PRIORITY_TEXT          1242
+#define IDC_HIGH_PRIORITYTXT            1244
+#define IDC_DISPLAY_SPLASH_SCREEN       1245
 #define ID_CONTEXT_SHOW_FOLDER_START    39000
 #define ID_CONTEXT_SHOW_FOLDER_END      39200
 
