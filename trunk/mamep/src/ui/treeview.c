@@ -1150,16 +1150,16 @@ void CreateBIOSFolders(int parent_index)
 	for (jj = 0; jj < nGames; jj++)
 	{
 		if ( DriverIsClone(jj) )
-			drv = drivers[jj]->clone_of;
+			drv = driver_get_clone(drivers[jj]);
 		else
 			drv = drivers[jj];
 
-		if (drv->clone_of->description == NULL)
+		if (driver_get_clone(drv)->description == NULL)
 			continue;
 
 		for (i = numFolders-1; i >= start_folder; i--)
 		{
-			if (strcmp(treeFolders[i]->m_lpTitle, drv->clone_of->description) == 0)
+			if (strcmp(treeFolders[i]->m_lpTitle, driver_get_clone(drv)->description) == 0)
 			{
 				AddGame(treeFolders[i],jj);
 				break;
@@ -1169,8 +1169,8 @@ void CreateBIOSFolders(int parent_index)
 		if (i == start_folder-1)
 		{
 			LPTREEFOLDER lpTemp;
-			lpTemp = NewFolder(drv->clone_of->description, 0, FALSE, next_folder_id++, parent_index, IDI_CPU,
-			                   GetFolderFlags(drv->clone_of->description));
+			lpTemp = NewFolder(driver_get_clone(drv)->description, 0, FALSE, next_folder_id++, parent_index, IDI_CPU,
+			                   GetFolderFlags(driver_get_clone(drv)->description));
 			AddFolder(lpTemp);
 			AddGame(lpTemp,jj);
 		}

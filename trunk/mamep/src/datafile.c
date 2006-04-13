@@ -1511,7 +1511,7 @@ static int index_menuidx (const game_driver *drv, struct tDatafileIndex *d_idx, 
 			gd_idx++;
 		}
 
-		gdrv = gdrv->clone_of;
+		gdrv = driver_get_clone(gdrv);
 	} while (!gd_idx->driver && gdrv);
 
 	if (gdrv == 0) return 0;	/* driver not found in Data_file_index */
@@ -1973,7 +1973,7 @@ static int load_datafile (const game_driver *drv, char *buffer, int bufsize,
 
 	base = filename + strlen(filename);
 
-	for (gdrv = drv; gdrv && gdrv->name[0]; gdrv = gdrv->clone_of)
+	for (gdrv = drv; gdrv && gdrv->name[0]; gdrv = driver_get_clone(gdrv))
 	{
 		int i;
 
@@ -2036,7 +2036,7 @@ static int load_datafile (const game_driver *drv, char *buffer, int bufsize,
 					if (pdrv == gdrv)
 						break;
 
-					pdrv = pdrv->clone_of;
+					pdrv = driver_get_clone(pdrv);
 				} while (err && pdrv);
 
 				if (err) status = 0;
@@ -2295,16 +2295,16 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 
 		}
 
-	if (drv->clone_of && !(drv->clone_of->flags & NOT_A_DRIVER))
+	if (driver_get_clone(drv) && !(driver_get_clone(drv)->flags & NOT_A_DRIVER))
 	{
 		strcat(buffer, _("\nORIGINAL:\n"));
 		strcat(buffer, options.use_lang_list?
-			_LST(drv->clone_of->description):
-			drv->clone_of->description);
+			_LST(driver_get_clone(drv)->description):
+			driver_get_clone(drv)->description);
 		strcat(buffer, _("\n\nCLONES:\n"));
 		for (i = 0; drivers[i]; i++)
 		{
-			if (!ci_strcmp (drv->clone_of->name, drivers[i]->clone_of->name)) 
+			if (!ci_strcmp (driver_get_clone(drv)->name, driver_get_clone(drivers[i])->name)) 
 			{
 				strcat(buffer, options.use_lang_list?
 					_LST(drivers[i]->description):
@@ -2322,7 +2322,7 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 		strcat(buffer, _("\n\nCLONES:\n"));
 		for (i = 0; drivers[i]; i++)
 		{
-			if (!ci_strcmp (drv->name, drivers[i]->clone_of->name)) 
+			if (!ci_strcmp (drv->name, driver_get_clone(drivers[i])->name)) 
 			{
 				strcat(buffer, options.use_lang_list?
 					_LST(drivers[i]->description):
@@ -2430,7 +2430,7 @@ int load_driver_statistics (char *buffer, int bufsize)
  
 		all++;
 
-		if (drivers[i]->clone_of && !(drivers[i]->clone_of->flags & NOT_A_DRIVER))
+		if (driver_get_clone(drivers[i]) && !(driver_get_clone(drivers[i])->flags & NOT_A_DRIVER))
 		{
 			clone = 1;
 			cl++;
@@ -2880,10 +2880,10 @@ int load_driver_statistics (char *buffer, int bufsize)
 				for (chunk = rom_first_chunk(rom); chunk; chunk = rom_next_chunk(chunk))
 					length += ROM_GETLENGTH(chunk)/32;
 
-				if (drivers[i]->clone_of)
+				if (driver_get_clone(drivers[i]))
 				{
 					fprom=NULL;
-					for (pregion = rom_first_region(drivers[i]->clone_of); pregion; pregion = rom_next_region(pregion))
+					for (pregion = rom_first_region(driver_get_clone(drivers[i])); pregion; pregion = rom_next_region(pregion))
 						for (prom = rom_first_file(pregion); prom; prom = rom_next_file(prom))
 							if (hash_data_is_equal(ROM_GETHASHDATA(rom), ROM_GETHASHDATA(prom), 0))
 							{
@@ -3024,12 +3024,12 @@ int load_driver_statistics (char *buffer, int bufsize)
 			{ 
 				all++;
 
-				if (drivers[i]->clone_of && !(drivers[i]->clone_of->flags & NOT_A_DRIVER))
+				if (driver_get_clone(drivers[i]) && !(driver_get_clone(drivers[i])->flags & NOT_A_DRIVER))
 					cl++;
 				if (!ci_strcmp (drivers[i]->source_file+12, "neogeo.c"))
 				{
 					neo++;
-					if (drivers[i]->clone_of && !(drivers[i]->clone_of->flags & NOT_A_DRIVER))
+					if (driver_get_clone(drivers[i]) && !(driver_get_clone(drivers[i])->flags & NOT_A_DRIVER))
 						neoc++;
 				}
 			}
@@ -3474,7 +3474,7 @@ static int find_command (const game_driver *drv)
 			{
 				const game_driver *gdrv;
 
-				for (gdrv = drv; !status && gdrv && gdrv->name[0]; gdrv = gdrv->clone_of)
+				for (gdrv = drv; !status && gdrv && gdrv->name[0]; gdrv = driver_get_clone(gdrv))
 				{
 					strcpy(base, "command\\");
 					strcat(base, gdrv->name);

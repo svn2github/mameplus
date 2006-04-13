@@ -1310,11 +1310,11 @@ static LPWSTR GameInfoCloneOf(int nIndex)
 	{
 		UseLangList()?
 		sprintf(buf, "%s [%s]",
-				ConvertAmpersandString(_LST(drivers[nIndex]->clone_of->description)),
-				drivers[nIndex]->clone_of->name):
+				ConvertAmpersandString(_LST(driver_get_clone(drivers[nIndex])->description)),
+				driver_get_clone(drivers[nIndex])->name):
 		sprintf(buf, "%s [%s]",
-				ConvertAmpersandString(ModifyThe(drivers[nIndex]->clone_of->description)),
-				drivers[nIndex]->clone_of->name);
+				ConvertAmpersandString(ModifyThe(driver_get_clone(drivers[nIndex])->description)),
+				driver_get_clone(drivers[nIndex])->name);
 	}
 
 	return _Unicode(buf);

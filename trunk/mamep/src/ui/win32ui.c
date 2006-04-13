@@ -3922,9 +3922,9 @@ static LPCSTR GetCloneParentName(int nItem)
 	if (DriverIsClone(nItem) == TRUE)
 	{
 		if (UseLangList())
-			return _LST(drivers[nItem]->clone_of->description);
+			return _LST(driver_get_clone(drivers[nItem])->description);
 		else
-			return ModifyThe(drivers[nItem]->clone_of->description);
+			return ModifyThe(driver_get_clone(drivers[nItem])->description);
 	}
 	return "";
 }
@@ -5585,11 +5585,11 @@ static void AddDriverIcon(int nItem,int default_icon_index)
 		return;
 
 	hIcon = LoadIconFromFile((char *)drivers[nItem]->name);
-	if (hIcon == NULL && drivers[nItem]->clone_of != NULL)
+	if (hIcon == NULL && driver_get_clone(drivers[nItem]) != NULL)
 	{
-		hIcon = LoadIconFromFile((char *)drivers[nItem]->clone_of->name);
-		if (hIcon == NULL && drivers[nItem]->clone_of->clone_of != NULL)
-			hIcon = LoadIconFromFile((char *)drivers[nItem]->clone_of->clone_of->name);
+		hIcon = LoadIconFromFile((char *)driver_get_clone(drivers[nItem])->name);
+		if (hIcon == NULL && driver_get_clone(driver_get_clone(drivers[nItem])) != NULL)
+			hIcon = LoadIconFromFile((char *)driver_get_clone(driver_get_clone(drivers[nItem]))->name);
 	}
 
 	if (hIcon != NULL)
@@ -7823,7 +7823,7 @@ BOOL SendIconToEmulationWindow(int nGameIndex)
 		//Check if clone, if so try parent icon first 
 		if( DriverIsClone(nGameIndex) ) 
 		{ 
-			hIcon = LoadIconFromFile(drivers[nGameIndex]->clone_of->name); 
+			hIcon = LoadIconFromFile(driver_get_clone(drivers[nGameIndex])->name); 
 			if( hIcon == NULL) 
 			{ 
 				hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_MAME32_ICON)); 
@@ -7910,7 +7910,7 @@ void SendIconToProcess(LPPROCESS_INFORMATION pi, int nGameIndex)
 		//Check if clone, if so try parent icon first 
 		if( DriverIsClone(nGameIndex) ) 
 		{ 
-			hIcon = LoadIconFromFile(drivers[nGameIndex]->clone_of->name); 
+			hIcon = LoadIconFromFile(driver_get_clone(drivers[nGameIndex])->name); 
 			if( hIcon == NULL) 
 			{ 
 				hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_MAME32_ICON)); 
