@@ -340,6 +340,25 @@ static ADDRESS_MAP_START( cps1_writemem, ADDRESS_SPACE_PROGRAM, 16 )
 ADDRESS_MAP_END
 
 
+static ADDRESS_MAP_START( kodb_readmem, ADDRESS_SPACE_PROGRAM, 8 )
+	AM_RANGE(0x0000, 0x7fff) AM_READ(MRA8_ROM)
+	AM_RANGE(0x8000, 0xbfff) AM_READ(MRA8_BANK1)
+	AM_RANGE(0xd000, 0xd7ff) AM_READ(MRA8_RAM)
+	AM_RANGE(0xe001, 0xe001) AM_READ(YM2151_status_port_0_r)
+	AM_RANGE(0xe400, 0xe400) AM_READ(OKIM6295_status_0_r)
+	AM_RANGE(0xe800, 0xe800) AM_READ(soundlatch_r)
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( kodb_writemem, ADDRESS_SPACE_PROGRAM, 8 )
+	AM_RANGE(0x0000, 0xbfff) AM_WRITE(MWA8_ROM)
+	AM_RANGE(0xd000, 0xd7ff) AM_WRITE(MWA8_RAM)
+	AM_RANGE(0xe000, 0xe000) AM_WRITE(YM2151_register_port_0_w)
+	AM_RANGE(0xe001, 0xe001) AM_WRITE(YM2151_data_port_0_w)
+	AM_RANGE(0xe400, 0xe400) AM_WRITE(OKIM6295_data_0_w)
+	AM_RANGE(0xf004, 0xf004) AM_WRITE(cps1_snd_bankswitch_w)
+ADDRESS_MAP_END
+
+
 static ADDRESS_MAP_START( sound_readmem, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_READ(MRA8_ROM)
 	AM_RANGE(0x8000, 0xbfff) AM_READ(MRA8_BANK1)
@@ -4080,6 +4099,45 @@ static MACHINE_DRIVER_START( sf2 )
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(cps1)
 	MDRV_CPU_REPLACE("main", M68000, 12000000)
+MACHINE_DRIVER_END
+
+
+static MACHINE_DRIVER_START( kodb )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD_TAG("main", M68000, 10000000)
+	MDRV_CPU_PROGRAM_MAP(cps1_readmem,cps1_writemem)
+	MDRV_CPU_VBLANK_INT(cps1_interrupt,1)
+
+	MDRV_CPU_ADD_TAG("sound", Z80, 3579545)
+	/* audio CPU */
+	MDRV_CPU_PROGRAM_MAP(kodb_readmem,kodb_writemem)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN)
+	MDRV_SCREEN_SIZE(64*8, 32*8)
+	MDRV_VISIBLE_AREA(8*8, (64-8)*8-1, 2*8, 30*8-1 )
+	MDRV_GFXDECODE(cps1_gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(4096)
+
+	MDRV_VIDEO_START(cps1)
+	MDRV_VIDEO_EOF(cps1)
+	MDRV_VIDEO_UPDATE(cps1)
+
+	/* sound hardware */
+	MDRV_SPEAKER_STANDARD_MONO("mono")
+
+	MDRV_SOUND_ADD_TAG("2151", YM2151, 3579545)
+	MDRV_SOUND_CONFIG(ym2151_interface)
+	MDRV_SOUND_ROUTE(0, "mono", 0.35)
+	MDRV_SOUND_ROUTE(1, "mono", 0.35)
+
+	MDRV_SOUND_ADD_TAG("okim", OKIM6295, 7576)
+	MDRV_SOUND_CONFIG(okim6295_interface_region_1)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 MACHINE_DRIVER_END
 
 
@@ -8892,12 +8950,6 @@ static DRIVER_INIT( kodb )
 	mem8[0x7A134] = 0x80;
 	mem8[0x7A136] = 0x6A;
 	mem8[0x7A137] = 0x1;
-	memory_install_read8_handler(1, ADDRESS_SPACE_PROGRAM, 0xe001, 0xe001, 0, 0, YM2151_status_port_0_r);
-	memory_install_read8_handler(1, ADDRESS_SPACE_PROGRAM, 0xe400, 0xe400, 0, 0, OKIM6295_status_0_r);
-	memory_install_read8_handler(1, ADDRESS_SPACE_PROGRAM, 0xe800, 0xe800, 0, 0, soundlatch_r);
-	memory_install_write8_handler(1, ADDRESS_SPACE_PROGRAM, 0xe000, 0xe000, 0, 0, YM2151_register_port_0_w);
-	memory_install_write8_handler(1, ADDRESS_SPACE_PROGRAM, 0xe001, 0xe001, 0, 0, YM2151_data_port_0_w);
-	memory_install_write8_handler(1, ADDRESS_SPACE_PROGRAM, 0xe400, 0xe400, 0, 0, OKIM6295_data_0_w); 
 	init_cps1();
 }
 
@@ -8995,7 +9047,7 @@ GAME( 1991, wonder3,  3wonders, cps1,     3wonders, cps1,     ROT0,   "Capcom", 
 GAME( 1991, kod,      0,        cps1,     kod,      cps1,     ROT0,   "Capcom", "The King of Dragons (World 910711)", 0 )				// "ETC"
 GAME( 1991, kodu,     kod,      cps1,     kodj,     cps1,     ROT0,   "Capcom", "The King of Dragons (US 910910)", 0 )
 GAME( 1991, kodj,     kod,      cps1,     kodj,     cps1,     ROT0,   "Capcom", "The King of Dragons (Japan 910805)", 0 )
-GAME( 1991, kodb,     kod,      cps1,     kod,      kodb,     ROT0,   "bootleg", "The King of Dragons (bootleg)", 0 )		// 910731  "ETC"
+GAME( 1991, kodb,     kod,      kodb,     kod,      kodb,     ROT0,   "bootleg", "The King of Dragons (bootleg)", 0 )		// 910731  "ETC"
 GAME( 1991, captcomm, 0,        cps1,     captcomm, cps1,     ROT0,   "Capcom", "Captain Commando (World 911014)", 0 )				// "OTHER COUNTRY"
 GAME( 1991, captcomu, captcomm, cps1,     captcomm, cps1,     ROT0,   "Capcom", "Captain Commando (US 910928)", 0 )
 GAME( 1991, captcomj, captcomm, cps1,     captcomm, cps1,     ROT0,   "Capcom", "Captain Commando (Japan 911202)", 0 )
