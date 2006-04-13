@@ -104,6 +104,7 @@ enum
 	REGION_MAX
 };
 
+extern const char *memory_region_names[REGION_MAX];
 
 /* artwork options */
 #define ARTWORK_USE_ALL			(~0)

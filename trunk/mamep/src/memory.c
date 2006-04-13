@@ -364,6 +364,7 @@ static data_accessors memory_accessors[ADDRESS_SPACES][4][2] =
 	},
 };
 
+const char *address_space_names[ADDRESS_SPACES] = { "program", "data", "I/O" };
 
 
 /*-------------------------------------------------
@@ -1240,8 +1241,14 @@ static int init_addrspace(UINT8 cpunum, UINT8 spacenum)
 			for (map = space->map; !IS_AMENTRY_END(map); map++)
 				if (!IS_AMENTRY_EXTENDED(map) && HANDLER_IS_ROM(map->read.handler) && !map->region)
 				{
-					map->region = REGION_CPU1 + cpunum;
-					map->region_offs = SPACE_SHIFT(space, map->start);
+					offs_t end = SPACE_SHIFT_END(space, map->end);
+
+					/* make sure they fit within the memory region before doing so, however */
+					if (end < memory_region_length(REGION_CPU1 + cpunum))
+					{
+						map->region = REGION_CPU1 + cpunum;
+						map->region_offs = SPACE_SHIFT(space, map->start);
+					}
 				}
 
 		/* convert region-relative entries to their memory pointers */
