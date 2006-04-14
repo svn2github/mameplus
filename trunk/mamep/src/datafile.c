@@ -1342,63 +1342,6 @@ static UINT8 ParseSeek(long offset, int whence)
 }
 
 
-
-/**************************************************************************
- **************************************************************************
- *
- *      Datafile functions
- *
- **************************************************************************
- **************************************************************************/
-
-
-/**************************************************************************
- *      ci_strcmp - case insensitive string compare
- *
- *      Returns zero if s1 and s2 are equal, ignoring case
- **************************************************************************/
-static int ci_strcmp (const char *s1, const char *s2)
-{
-	int c1, c2;
-
-	while ((c1 = tolower(*s1)) == (c2 = tolower(*s2)))
-	{
-		if (!c1)
-			return 0;
-
-		s1++;
-		s2++;
-	}
-
-	return (c1 - c2);
-}
-
-
-/**************************************************************************
- *      ci_strncmp - case insensitive character array compare
- *
- *      Returns zero if the first n characters of s1 and s2 are equal,
- *      ignoring case.
- **************************************************************************/
-static int ci_strncmp (const char *s1, const char *s2, int n)
-{
-	int c1, c2;
-
-	while (n)
-	{
-		if ((c1 = tolower (*s1)) != (c2 = tolower (*s2)))
-			return (c1 - c2);
-		else if (!c1)
-			break;
-		--n;
-
-		s1++;
-		s2++;
-	}
-	return 0;
-}
-
-
 /**************************************************************************
  *      index_datafile
  *      Create an index for the records in the currently open datafile.
@@ -1432,7 +1375,7 @@ static int index_datafile (struct tDatafileIndex **_index)
 		if (TOKEN_SYMBOL != token) continue;
 
 		/* DATAFILE_TAG_KEY identifies the driver */
-		if (!ci_strncmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
+		if (!mame_strnicmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
 		{
 			token = GetNextToken (&s, &tell);
 			if (TOKEN_EQUALS == token)
@@ -1527,11 +1470,11 @@ static int index_menuidx (const game_driver *drv, struct tDatafileIndex *d_idx, 
 	token = GetNextToken (&s, &tell);
 	while ((m_count < (MAX_MENUIDX_ENTRIES - 1)) && TOKEN_INVALID != token)
 	{
-		if (!ci_strncmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
+		if (!mame_strnicmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
 			break;
 
 		/* DATAFILE_TAG_COMMAND identifies the driver */
-		if (!ci_strncmp (DATAFILE_TAG_COMMAND, (char *)s, strlen (DATAFILE_TAG_COMMAND)))
+		if (!mame_strnicmp (DATAFILE_TAG_COMMAND, (char *)s, strlen (DATAFILE_TAG_COMMAND)))
 		{
 			cmdtag_offset = tell;
 			token = GetNextToken_ex (&s, &tell);
@@ -1607,7 +1550,7 @@ static int index_datafile_drivinfo (struct tDatafileIndex **_index)
 		if (TOKEN_SYMBOL != token) continue;
 
 		/* DATAFILE_TAG_KEY identifies the driver */
-		if (!ci_strncmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
+		if (!mame_strnicmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
 		{
 			token = GetNextToken (&s, &tell);
 			if (TOKEN_EQUALS == token)
@@ -1748,7 +1691,7 @@ static int load_datafile_text (const game_driver *drv, char *buffer, int bufsize
 			if (TOKEN_SYMBOL == token)
 			{
 				/* looking for requested tag */
-				if (!ci_strncmp (tag, (char *)s, strlen (tag)))
+				if (!mame_strnicmp (tag, (char *)s, strlen (tag)))
 				{
 					found = 1;
 #ifdef CMD_LIST
@@ -1759,7 +1702,7 @@ static int load_datafile_text (const game_driver *drv, char *buffer, int bufsize
 					}
 #endif /* CMD_LIST */
 				}
-				else if (!ci_strncmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
+				else if (!mame_strnicmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
 					break;	/* error: tag missing */
 			}
 		}
@@ -1803,7 +1746,7 @@ static int load_datafile_text_ex (char *buffer, int bufsize,
 		if (TOKEN_SYMBOL == token)
 		{
 			/* looking for requested tag */
-			if (!ci_strncmp (tag, (char *)s, strlen (tag)))
+			if (!mame_strnicmp (tag, (char *)s, strlen (tag)))
 			{
 				token = GetNextToken_ex (&s, &tell);
 
@@ -1817,7 +1760,7 @@ static int load_datafile_text_ex (char *buffer, int bufsize,
 
 				break;
 			}
-			else if (!ci_strncmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
+			else if (!mame_strnicmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
 			{
 				token = TOKEN_INVALID;
 				break;	/* error: tag missing */
@@ -1829,7 +1772,7 @@ static int load_datafile_text_ex (char *buffer, int bufsize,
 	while (TOKEN_INVALID != token)
 	{
 		/* end entry when a tag is encountered */
-		if (TOKEN_SYMBOL == token && !ci_strncmp (DATAFILE_TAG_END, (char *)s, strlen (DATAFILE_TAG_END)))
+		if (TOKEN_SYMBOL == token && !mame_strnicmp (DATAFILE_TAG_END, (char *)s, strlen (DATAFILE_TAG_END)))
 			break;
 
 		prev_token = token;
@@ -1932,9 +1875,9 @@ static int load_drivfile_text (const game_driver *drv, char *buffer, int bufsize
 			if (TOKEN_SYMBOL == token)
 			{
 				/* looking for requested tag */
-				if (!ci_strncmp (tag, (char *)s, strlen (tag)))
+				if (!mame_strnicmp (tag, (char *)s, strlen (tag)))
 					found = 1;
-				else if (!ci_strncmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
+				else if (!mame_strnicmp (DATAFILE_TAG_KEY, (char *)s, strlen (DATAFILE_TAG_KEY)))
 					break;	/* error: tag missing */
 			}
 		}
@@ -2175,6 +2118,7 @@ int load_driver_story (const game_driver *drv, char *buffer, int bufsize)
 int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 {
 	const rom_entry *region, *rom, *chunk;
+	const game_driver *clone_of;
 	machine_config game;
 	int result = 1;
 	int i;
@@ -2295,16 +2239,17 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 
 		}
 
-	if (driver_get_clone(drv) && !(driver_get_clone(drv)->flags & NOT_A_DRIVER))
+	clone_of = driver_get_clone(drv);
+	if (clone_of && !(clone_of->flags & NOT_A_DRIVER))
 	{
 		strcat(buffer, _("\nORIGINAL:\n"));
 		strcat(buffer, options.use_lang_list?
-			_LST(driver_get_clone(drv)->description):
-			driver_get_clone(drv)->description);
+			_LST(clone_of->description):
+			clone_of->description);
 		strcat(buffer, _("\n\nCLONES:\n"));
 		for (i = 0; drivers[i]; i++)
 		{
-			if (!ci_strcmp (driver_get_clone(drv)->name, driver_get_clone(drivers[i])->name)) 
+			if (!mame_stricmp (drv->parent, drivers[i]->parent)) 
 			{
 				strcat(buffer, options.use_lang_list?
 					_LST(drivers[i]->description):
@@ -2322,7 +2267,7 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 		strcat(buffer, _("\n\nCLONES:\n"));
 		for (i = 0; drivers[i]; i++)
 		{
-			if (!ci_strcmp (drv->name, driver_get_clone(drivers[i])->name)) 
+			if (!mame_stricmp (drv->name, drivers[i]->parent)) 
 			{
 				strcat(buffer, options.use_lang_list?
 					_LST(drivers[i]->description):
@@ -2376,7 +2321,7 @@ int load_driver_drivinfo (const game_driver *drv, char *buffer, int bufsize)
 	strcat(buffer,"\nGAMES SUPPORTED:\n");
 	for (i = 0; drivers[i]; i++)
 	{
-		if (!ci_strcmp (drv->source_file, drivers[i]->source_file)) 
+		if (!mame_stricmp (drv->source_file, drivers[i]->source_file)) 
 		{
 			strcat(buffer, options.use_lang_list?
 				_LST(drivers[i]->description)):
@@ -2393,6 +2338,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 {
 	const rom_entry *region, *rom, *chunk;
 	const rom_entry *pregion, *prom, *fprom=NULL;
+	const game_driver *clone_of = NULL;
 	const input_port_entry *inp;
 
 	char name[100];
@@ -2430,7 +2376,8 @@ int load_driver_statistics (char *buffer, int bufsize)
  
 		all++;
 
-		if (driver_get_clone(drivers[i]) && !(driver_get_clone(drivers[i])->flags & NOT_A_DRIVER))
+		clone_of = driver_get_clone(drivers[i]);
+		if (clone_of && !(clone_of->flags & NOT_A_DRIVER))
 		{
 			clone = 1;
 			cl++;
@@ -2535,25 +2482,25 @@ int load_driver_statistics (char *buffer, int bufsize)
 		}
 
 
-		if (!ci_strcmp (drivers[i]->source_file+12, "neogeo.c"))
+		if (!mame_stricmp (drivers[i]->source_file+12, "neogeo.c"))
 		{
 			neo++;
 			if (clone) neoc++;
 		}
 
-		if (!ci_strcmp (drivers[i]->source_file+12, "playch10.c"))
+		if (!mame_stricmp (drivers[i]->source_file+12, "playch10.c"))
 		{
 			pch++;
 			if (clone) pchc++;
 		}
 
-		if (!ci_strcmp (drivers[i]->source_file+12, "decocass.c"))
+		if (!mame_stricmp (drivers[i]->source_file+12, "decocass.c"))
 		{
 			deco++;
 			if (clone) decoc++;
 		}
 
-		if (!ci_strcmp (drivers[i]->source_file+12, "cvs.c"))
+		if (!mame_stricmp (drivers[i]->source_file+12, "cvs.c"))
 		{
 			cvs++;
 			if (clone) cvsc++;
@@ -2723,7 +2670,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 
 
 		/* Calc number of various info 'flags' in original and clone games */
-		if (ci_strcmp (drivers[i]->source_file+12, "neogeo.c"))
+		if (mame_stricmp (drivers[i]->source_file+12, "neogeo.c"))
 		{
 			if (drivers[i]->flags & GAME_NOT_WORKING)
 			{
@@ -2880,10 +2827,10 @@ int load_driver_statistics (char *buffer, int bufsize)
 				for (chunk = rom_first_chunk(rom); chunk; chunk = rom_next_chunk(chunk))
 					length += ROM_GETLENGTH(chunk)/32;
 
-				if (driver_get_clone(drivers[i]))
+				if (clone_of)
 				{
 					fprom=NULL;
-					for (pregion = rom_first_region(driver_get_clone(drivers[i])); pregion; pregion = rom_next_region(pregion))
+					for (pregion = rom_first_region(clone_of); pregion; pregion = rom_next_region(pregion))
 						for (prom = rom_first_file(pregion); prom; prom = rom_next_file(prom))
 							if (hash_data_is_equal(ROM_GETHASHDATA(rom), ROM_GETHASHDATA(prom), 0))
 							{
@@ -3020,16 +2967,16 @@ int load_driver_statistics (char *buffer, int bufsize)
 		sprintf(year,"%d",x);
 		for (i = 0; drivers[i]; i++)
 		{
-			if (!ci_strcmp (year, drivers[i]->year))
+			if (!mame_stricmp (year, drivers[i]->year))
 			{ 
 				all++;
 
-				if (driver_get_clone(drivers[i]) && !(driver_get_clone(drivers[i])->flags & NOT_A_DRIVER))
+				if (clone_of && !(clone_of->flags & NOT_A_DRIVER))
 					cl++;
-				if (!ci_strcmp (drivers[i]->source_file+12, "neogeo.c"))
+				if (!mame_stricmp (drivers[i]->source_file+12, "neogeo.c"))
 				{
 					neo++;
-					if (driver_get_clone(drivers[i]) && !(driver_get_clone(drivers[i])->flags & NOT_A_DRIVER))
+					if (clone_of && !(clone_of->flags & NOT_A_DRIVER))
 						neoc++;
 				}
 			}
