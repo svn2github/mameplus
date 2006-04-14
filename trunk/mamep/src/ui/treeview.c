@@ -1156,7 +1156,7 @@ void CreateBIOSFolders(int parent_index)
 			drv = drivers[jj];
 		clone_of = driver_get_clone(drv);
 
-		if (!clone_of->description)
+		if (!clone_of || !clone_of->description)
 			continue;
 
 		for (i = numFolders-1; i >= start_folder; i--)
