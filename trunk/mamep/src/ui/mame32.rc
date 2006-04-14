@@ -1660,7 +1660,7 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     IDS_UI_SHOWPICTURES     "Show or hide the pictures"
-    IDS_UI_ARRANGE          "Contains commands for sorting by various columns"
+//    IDS_UI_ARRANGE          "Contains commands for sorting by various columns"
     IDS_UI_LANGUAGE         "Localize GUI and MAME core."
 END
 
