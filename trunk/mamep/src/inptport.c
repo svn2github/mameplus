@@ -106,8 +106,6 @@
 #include "neogeo.h"
 #endif /* USE_NEOGEO_HACKS */
 
-
-
 /*************************************
  *
  *  Constants
@@ -126,7 +124,6 @@
 #define JOYDIR_DOWN_BIT		(1 << JOYDIR_DOWN)
 #define JOYDIR_LEFT_BIT		(1 << JOYDIR_LEFT)
 #define JOYDIR_RIGHT_BIT	(1 << JOYDIR_RIGHT)
-
 
 
 
@@ -226,7 +223,6 @@ struct _input_port_init_params
 
 
 
-
 /*************************************
  *
  *  Macros
@@ -245,7 +241,6 @@ struct _input_port_init_params
 
 /* original input_ports without modifications */
 input_port_entry *input_ports_default;
-
 
 
 /*************************************
@@ -269,7 +264,6 @@ static const char *seqtypestrings[] = { "standard", "decrement", "increment" };
 static input_port_info *autofire_toggle_port;
 static int normal_buttons;
 static int players;
-
 
 
 /*************************************
@@ -552,7 +546,6 @@ static const input_port_default_entry default_ports_builtin[] =
 #endif /* USE_CUSTOM_BUTTON */
 	INPUT_PORT_DIGITAL_DEF( 1, IPG_PLAYER1,	TOGGLE_AUTOFIRE,		"P1 Toggle Autofire",		SEQ_DEF_0 )
 
-
 	INPUT_PORT_DIGITAL_DEF( 2, IPG_PLAYER2,	JOYSTICK_UP,		"P2 Up",				SEQ_DEF_3(KEYCODE_R, CODE_OR, JOYCODE_2_UP) )
 	INPUT_PORT_DIGITAL_DEF( 2, IPG_PLAYER2,	JOYSTICK_DOWN,      "P2 Down",    			SEQ_DEF_3(KEYCODE_F, CODE_OR, JOYCODE_2_DOWN) )
 	INPUT_PORT_DIGITAL_DEF( 2, IPG_PLAYER2,	JOYSTICK_LEFT,      "P2 Left",    			SEQ_DEF_3(KEYCODE_D, CODE_OR, JOYCODE_2_LEFT) )
@@ -646,7 +639,6 @@ static const input_port_default_entry default_ports_builtin[] =
 #endif /* USE_CUSTOM_BUTTON */
 	INPUT_PORT_DIGITAL_DEF( 3, IPG_PLAYER3,	TOGGLE_AUTOFIRE,		"P3 Toggle Autofire",		SEQ_DEF_0 )
 
-
 	INPUT_PORT_DIGITAL_DEF( 4, IPG_PLAYER4,	JOYSTICK_UP,		"P4 Up",				SEQ_DEF_3(KEYCODE_8_PAD, CODE_OR, JOYCODE_4_UP) )
 	INPUT_PORT_DIGITAL_DEF( 4, IPG_PLAYER4,	JOYSTICK_DOWN,      "P4 Down",    			SEQ_DEF_3(KEYCODE_2_PAD, CODE_OR, JOYCODE_4_DOWN) )
 	INPUT_PORT_DIGITAL_DEF( 4, IPG_PLAYER4,	JOYSTICK_LEFT,      "P4 Left",    			SEQ_DEF_3(KEYCODE_4_PAD, CODE_OR, JOYCODE_4_LEFT) )
@@ -678,7 +670,6 @@ static const input_port_default_entry default_ports_builtin[] =
 	INPUT_PORT_DIGITAL_DEF( 4, IPG_PLAYER4,	CUSTOM4,			"P4 Custom 4",			SEQ_DEF_0 )
 #endif /* USE_CUSTOM_BUTTON */
 	INPUT_PORT_DIGITAL_DEF( 4, IPG_PLAYER4,	TOGGLE_AUTOFIRE,		"P4 Toggle Autofire",		SEQ_DEF_0 )
-
 
 	INPUT_PORT_DIGITAL_DEF( 5, IPG_PLAYER5,	JOYSTICK_UP,		"P5 Up",				SEQ_DEF_1(JOYCODE_5_UP) )
 	INPUT_PORT_DIGITAL_DEF( 5, IPG_PLAYER5,	JOYSTICK_DOWN,      "P5 Down",    			SEQ_DEF_1(JOYCODE_5_DOWN) )
@@ -712,7 +703,6 @@ static const input_port_default_entry default_ports_builtin[] =
 #endif /* USE_CUSTOM_BUTTON */
 	INPUT_PORT_DIGITAL_DEF( 5, IPG_PLAYER5,	TOGGLE_AUTOFIRE,		"P5 Toggle Autofire",		SEQ_DEF_0 )
 
-
 	INPUT_PORT_DIGITAL_DEF( 6, IPG_PLAYER6,	JOYSTICK_UP,		"P6 Up",				SEQ_DEF_1(JOYCODE_6_UP) )
 	INPUT_PORT_DIGITAL_DEF( 6, IPG_PLAYER6,	JOYSTICK_DOWN,      "P6 Down",    			SEQ_DEF_1(JOYCODE_6_DOWN) )
 	INPUT_PORT_DIGITAL_DEF( 6, IPG_PLAYER6,	JOYSTICK_LEFT,      "P6 Left",    			SEQ_DEF_1(JOYCODE_6_LEFT) )
@@ -744,7 +734,6 @@ static const input_port_default_entry default_ports_builtin[] =
 	INPUT_PORT_DIGITAL_DEF( 6, IPG_PLAYER6,	CUSTOM4,			"P6 Custom 4",			SEQ_DEF_0 )
 #endif /* USE_CUSTOM_BUTTON */
 	INPUT_PORT_DIGITAL_DEF( 6, IPG_PLAYER6,	TOGGLE_AUTOFIRE,		"P6 Toggle Autofire",		SEQ_DEF_0 )
-
 
 	INPUT_PORT_DIGITAL_DEF( 7, IPG_PLAYER7,	JOYSTICK_UP,		"P7 Up",				SEQ_DEF_1(JOYCODE_7_UP) )
 	INPUT_PORT_DIGITAL_DEF( 7, IPG_PLAYER7,	JOYSTICK_DOWN,      "P7 Down",    			SEQ_DEF_1(JOYCODE_7_DOWN) )
@@ -778,7 +767,6 @@ static const input_port_default_entry default_ports_builtin[] =
 #endif /* USE_CUSTOM_BUTTON */
 	INPUT_PORT_DIGITAL_DEF( 7, IPG_PLAYER7,	TOGGLE_AUTOFIRE,		"P7 Toggle Autofire",		SEQ_DEF_0 )
 
-
 	INPUT_PORT_DIGITAL_DEF( 8, IPG_PLAYER8,	JOYSTICK_UP,		"P8 Up",				SEQ_DEF_1(JOYCODE_8_UP) )
 	INPUT_PORT_DIGITAL_DEF( 8, IPG_PLAYER8,	JOYSTICK_DOWN,      "P8 Down",				SEQ_DEF_1(JOYCODE_8_DOWN) )
 	INPUT_PORT_DIGITAL_DEF( 8, IPG_PLAYER8,	JOYSTICK_LEFT,      "P8 Left",				SEQ_DEF_1(JOYCODE_8_LEFT) )
@@ -810,7 +798,6 @@ static const input_port_default_entry default_ports_builtin[] =
 	INPUT_PORT_DIGITAL_DEF( 8, IPG_PLAYER8,	CUSTOM4,			"P8 Custom 4",			SEQ_DEF_0 )
 #endif /* USE_CUSTOM_BUTTON */
 	INPUT_PORT_DIGITAL_DEF( 8, IPG_PLAYER8,	TOGGLE_AUTOFIRE,		"P8 Toggle Autofire",		SEQ_DEF_0 )
-
 
 	INPUT_PORT_DIGITAL_DEF( 0, IPG_OTHER,   START1,				"1 Player Start",		SEQ_DEF_3(KEYCODE_1, CODE_OR, JOYCODE_1_START) )
 	INPUT_PORT_DIGITAL_DEF( 0, IPG_OTHER,   START2,				"2 Players Start",		SEQ_DEF_3(KEYCODE_2, CODE_OR, JOYCODE_2_START) )
@@ -1086,7 +1073,6 @@ static void update_analog_port(int port);
 static void interpolate_analog_port(int port);
 
 static int auto_pressed(input_bit_info *info);
-
 
 
 /*************************************
@@ -2057,7 +2043,7 @@ input_port_entry *input_port_allocate(void (*construct_ipt)(input_port_init_para
  */
 
 	/* construct the ports */
-	construct_ipt(&iip);
+ 	construct_ipt(&iip);
 
 	/* append final IPT_END */
 	input_port_initialize(&iip, IPT_END, NULL, 0);
@@ -3047,8 +3033,6 @@ UINT32 readinputportbytag_safe(const char *tag, UINT32 defvalue)
 		return readinputport(port);
 	return defvalue;
 }
-
-
 
 /*************************************
  *

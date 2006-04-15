@@ -7,7 +7,7 @@
     See also deco32.c, deco_mlc.c, backfire.c
 
     Todo:
-		complete co-processor emulation for wcvol95
+        complete co-processor emulation for wcvol95
 
     Emulation by Bryan McPhail, mish@tendril.co.uk
 */

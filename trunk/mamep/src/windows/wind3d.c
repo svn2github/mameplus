@@ -32,8 +32,8 @@
 #include "window.h"
 #include "video.h"
 #include "blit.h"
-#include "winddraw.h"
 #include "wind3dfx.h"
+#include "winddraw.h"
 #ifdef USE_SCALE_EFFECTS
  #include "scale.h"
 #endif /* USE_SCALE_EFFECTS */
@@ -65,7 +65,6 @@ extern UINT32 win_d3d_preprocess_tfactor;
 #define SHOW_PRESCALE 			0
 
 #define USE_HARDWARE_ROTATION	1
-
 
 
 //============================================================
@@ -1155,7 +1154,7 @@ static int create_surfaces(void)
 	// window mode: allocate the back surface seperately
 	if (win_window_mode)
 	{
-		DDSURFACEDESC2 back_desc = { sizeof(DDSURFACEDESC2) };
+        DDSURFACEDESC2 back_desc = { sizeof(DDSURFACEDESC2) };
 
 		back_desc.dwFlags = DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT;
 		back_desc.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_3DDEVICE | DDSCAPS_VIDEOMEMORY;
@@ -1211,13 +1210,13 @@ static int create_effects_surfaces(void)
 	// create a surface that will hold the RGB effects pattern, based on the primary surface
 	if (win_d3d_use_rgbeffect)
 	{
-		DDSURFACEDESC2 desc = { sizeof(DDSURFACEDESC2) };
+        DDSURFACEDESC2 desc = { sizeof(DDSURFACEDESC2) };
 
 		desc.dwFlags = DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT;
 		desc.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_VIDEOMEMORY;
 
 		// we can save video memory because we only need to partially cover the screen
-		if (!win_window_mode && win_keep_aspect)
+		if (!win_window_mode && win_keep_aspect /*&& win_force_int_stretch != FORCE_INT_STRECT_FULL*/)
 		{
 			desc.dwWidth = primary_desc.dwWidth;
 			desc.dwHeight = (int)((double)primary_desc.dwHeight / aspect_ratio * win_screen_aspect + 0.5);
@@ -1257,7 +1256,7 @@ static int create_effects_surfaces(void)
 
 		for (i = 0; i < 2; i++)
 		{
-			DDSURFACEDESC2 desc =  { sizeof(DDSURFACEDESC2) };
+	        DDSURFACEDESC2 desc =  { sizeof(DDSURFACEDESC2) };
 
 			desc.dwFlags = DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT;
 			desc.ddsCaps.dwCaps = DDSCAPS_TEXTURE | DDSCAPS_VIDEOMEMORY;
@@ -1327,9 +1326,9 @@ static HRESULT CALLBACK enum_textures_callback(LPDDPIXELFORMAT pixelformat, LPVO
 		pixelformat->DUMMYUNIONNAMEN(4).dwBBitMask == 0x001F)
 	{
 			memcpy(preferred_pixelformat, pixelformat, sizeof(DDPIXELFORMAT));
-	}
+    }
 
-	return D3DENUMRET_OK;
+    return D3DENUMRET_OK;
 }
 
 

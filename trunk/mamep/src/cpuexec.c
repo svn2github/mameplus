@@ -176,7 +176,6 @@ static void cpu_load(int config_type, xml_data_node *parentnode);
 static void cpu_save(int config_type, xml_data_node *parentnode);
 
 
-
 /*************************************
  *
  *  Watchdog Flags

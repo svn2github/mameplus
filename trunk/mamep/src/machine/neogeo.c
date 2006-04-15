@@ -253,6 +253,7 @@ DRIVER_INIT( neogeo )
 
 	mem16 = (UINT16 *)memory_region(REGION_USER1);
 
+
 	/* irritating maze uses a trackball */
 	if (!strcmp(Machine->gamedrv->name,"irrmaze"))
 	{

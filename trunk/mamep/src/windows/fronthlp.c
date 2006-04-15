@@ -17,8 +17,8 @@
 #include "hash.h"
 #include "info.h"
 #include "audit.h"
-#include "sound/samples.h"
 #include "unzip.h"
+#include "sound/samples.h"
 
 #include "rc.h"
 
@@ -34,7 +34,6 @@
 #ifndef INVALID_SET_FILE_POINTER
 #define INVALID_SET_FILE_POINTER ((DWORD)-1)
 #endif
-
 
 #ifndef MESS
 enum { LIST_XML = 1, LIST_FULL, LIST_ROMS, LIST_SAMPLES,

@@ -628,7 +628,6 @@ const char *cpunum_dump_state(int cpunum);
 /* shot name for statistics and GUI */
 const char *cputype_shortname(int cputype);
 
-
 /*************************************
  *
  *   CPU type acccessors

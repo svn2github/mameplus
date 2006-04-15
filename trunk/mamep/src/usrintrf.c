@@ -171,6 +171,7 @@ static ui_menu_handler menu_stack_handler[MENU_STACK_DEPTH];
 static UINT32 menu_string_pool_offset;
 static char menu_string_pool[MENU_STRING_POOL_SIZE];
 
+
 static int single_step;
 static int auto_pause;
 static int scroll_reset;

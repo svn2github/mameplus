@@ -362,7 +362,7 @@ static void print_game_rom(FILE* out, const game_driver* game)
 		{
 			int offset, length, in_parent, is_disk, is_bios, found_bios, i;
 			char name[100], bios_name[100];
-	int checksum_found = 0;
+			int checksum_found = 0;
 
 			strcpy(name,ROM_GETNAME(rom));
 			offset = ROM_GETOFFSET(rom);

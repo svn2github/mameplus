@@ -14,6 +14,7 @@ static const char helpfile[] = "docs\\windows.txt";
 static const char helpfile[] = "mess.chm";
 #endif
 
+
 //============================================================
 //	osd_display_loading_rom_message
 //============================================================
@@ -40,7 +41,7 @@ int osd_display_loading_rom_message(const char *name,rom_load_data *romdata)
 
 int check_for_double_click_start(int argc)
 {
-	STARTUPINFO startup_info = { sizeof(STARTUPINFO) };
+ 	STARTUPINFO startup_info = { sizeof(STARTUPINFO) };
 
 	// determine our startup information
 	GetStartupInfo(&startup_info);
@@ -51,7 +52,7 @@ int check_for_double_click_start(int argc)
 		char message_text[1024] = "";
 		int button;
 
-#ifndef MESS
+  #ifndef MESS
 		sprintf(message_text, APPLONGNAME " v%s - Multiple Arcade Machine Emulator\n"
 							  "Copyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n"
 							  "\n"
@@ -67,13 +68,13 @@ int check_for_double_click_start(int argc)
 							  "\n"
 							  "Would you like to open the documentation now?"
 							  , build_version);
-#else
+  #else
 		sprintf(message_text, APPLONGNAME " is a console application, you should launch it from a command prompt.\n"
 							  "\n"
 							  "Please consult the documentation for more information.\n"
 							  "\n"
 							  "Would you like to open the documentation now?");
-#endif
+  #endif
 
 		// pop up a messagebox with some information
 		button = MessageBox(NULL, message_text, APPLONGNAME " usage information...", MB_YESNO | MB_ICONASTERISK);
@@ -119,4 +120,3 @@ int main(int argc, char *argv[])
 }
 #endif /* _MSC_VER */
 #endif /* !DONT_USE_DLL */
-

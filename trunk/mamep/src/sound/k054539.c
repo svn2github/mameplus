@@ -227,8 +227,8 @@ else
 			do {																		\
 				*bufl++ += (INT16)(cur_val*lvol);										\
 				*bufr++ += (INT16)(cur_val*rvol);										\
-				rbase[rdelta++] += (INT16)(cur_val*rbvol);						\
-				rdelta &= 0x3fff;									\
+				rbase[rdelta++] += (INT16)(cur_val*rbvol);										\
+				rdelta &= 0x3fff;										\
 			} while(0)
 
 			switch(base2[0] & 0xc) {

@@ -17,7 +17,7 @@
 // override malloc to track file/line
 void* malloc_file_line(size_t size, const char *file, int line);
 void* calloc_file_line(size_t size, size_t count, const char *FILE, int line);
-void* realloc_file_line(void *memory, size_t size, const char *file, int line);
+void * realloc_file_line(void *memory, size_t size, const char *file, int line);
 
 #undef malloc
 #define malloc(x) malloc_file_line(x, __FILE__, __LINE__)

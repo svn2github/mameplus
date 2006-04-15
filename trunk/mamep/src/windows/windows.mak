@@ -246,7 +246,6 @@ $(OBJ)/$(MAMEOS)/asmtile.o: src/$(MAMEOS)/asmtile.asm
 
 
 
-
 #-------------------------------------------------
 # if building with a UI, set the C flags and
 # include the ui.mak
@@ -263,9 +262,8 @@ COREOBJS += $(OBJ)/x86drc.o
 endif
 
 
-
 #-------------------------------------------------
-# generic rule for the resource compiler
+# configure resources
 #-------------------------------------------------
 
 ifdef USE_GCC
@@ -281,6 +279,10 @@ else
     RCDEFS += -D_WIN32_IE=0x0400
     RCFLAGS += -Isrc
 endif
+
+#-------------------------------------------------
+# generic rule for the resource compiler
+#-------------------------------------------------
 
 $(OBJ)/%.res: src/%.rc
 	@echo Compiling resources $<...

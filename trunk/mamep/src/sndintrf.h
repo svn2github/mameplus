@@ -257,8 +257,6 @@ const char *sndtype_get_info_string(int sndtype, UINT32 state);
 const char *sndtype_shortname(int sndtype);
 
 
-
-
 /***************************************************************************
 
     Sound chip interfaces by (type,index) pair

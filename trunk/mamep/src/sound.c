@@ -46,7 +46,6 @@
 #endif /* USE_VOLUME_AUTO_ADJUST */
 
 
-
 /***************************************************************************
     TYPE DEFINITIONS
 ***************************************************************************/
@@ -122,7 +121,6 @@ static int have_sample = 0;
 #endif /* USE_VOLUME_AUTO_ADJUST */
 
 
-
 /***************************************************************************
     FUNCTION PROTOTYPES
 ***************************************************************************/
@@ -141,7 +139,6 @@ static void mixer_update(void *param, stream_sample_t **inputs, stream_sample_t 
 INLINE INT16 calc_volume_final(INT32 sample);
 INLINE INT16 calc_volume_mixer(INT32 sample);
 #endif /* USE_VOLUME_AUTO_ADJUST */
-
 
 
 /***************************************************************************

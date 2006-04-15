@@ -122,7 +122,7 @@ struct _rom_entry
 	UINT32			_offset;			/* offset to load it to */
 	UINT32			_length;			/* length of the file */
 	UINT32			_flags;				/* flags */
-	UINT8			_bios;			/* BIOS */
+	UINT8			_bios;				/* BIOS */
 	const char *	_hashdata;			/* hashing informations (checksums) */
 };
 

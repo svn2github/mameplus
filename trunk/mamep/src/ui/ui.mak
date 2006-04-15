@@ -27,7 +27,7 @@ TMPOBJS = \
 	$(OBJ)/ui/dxdecode.o \
 	$(OBJ)/ui/picker.o \
 	$(OBJ)/ui/properties.o \
-	$(OBJ)/ui/tabview.o \
+        $(OBJ)/ui/tabview.o \
 	$(OBJ)/ui/help.o \
 	$(OBJ)/ui/history.o \
 	$(OBJ)/ui/dialogs.o \
@@ -35,6 +35,7 @@ TMPOBJS = \
 	$(OBJ)/ui/options.o \
 	$(OBJ)/ui/layout.o \
 	$(OBJ)/ui/translate.o
+
 ifneq ($(USE_UI_COLOR_DISPLAY),)
     TMPOBJS += $(OBJ)/ui/paletteedit.o
 endif
@@ -51,14 +52,17 @@ else
 
     ifeq ($(NO_DLL),)
         GUIOBJS += $(OBJ)/ui/m32main.o
+
         # add resource file
         GUIOBJS += $(OBJ)/ui/mame32.res
     else
         OSOBJS += $(OBJ)/ui/m32main.o
+
         # add resource file
         OSOBJS += $(OBJ)/ui/mame32.res
     endif
 endif
+
 
 #####################################################################
 # compiler

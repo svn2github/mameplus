@@ -199,7 +199,6 @@ void cop411_get_info(UINT32 state, union cpuinfo *info);
 
 
 
-
 /*************************************
  *
  *  Debug logging
@@ -1683,7 +1682,6 @@ const char *cputype_shortname(int cputype)
 
 	return s;
 }
-
 
 
 /*************************************

@@ -245,8 +245,6 @@ static int samplelen[8];
 
 static int bankaddress;
 
-
-
 static void set_ninjakd2_bank(void)
 {
 	unsigned char *RAM = memory_region(REGION_CPU1);

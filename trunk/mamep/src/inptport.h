@@ -716,8 +716,6 @@ extern UINT16 custom_button[MAX_PLAYERS][MAX_CUSTOM_BUTTONS];
 extern int custom_buttons;
 #endif /* USE_CUSTOM_BUTTON */
 
-
-
 /*************************************
  *
  *  Function prototypes
