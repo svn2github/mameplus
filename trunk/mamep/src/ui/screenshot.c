@@ -93,6 +93,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 #endif /* MESS */
 {
 	BOOL loaded = FALSE;
+	const game_driver *clone_of = driver_get_clone(drivers[nGame]);
 	char buf [64];
 
 	/* No need to reload the same one again */
@@ -110,7 +111,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 	{
 		loaded = LoadSoftwareScreenShot(drivers[nGame], lpSoftwareName, nType);
 		if (!loaded && DriverIsClone(nGame))
-			loaded = LoadSoftwareScreenShot(driver_get_clone(drivers[nGame]), lpSoftwareName, nType);
+			loaded = LoadSoftwareScreenShot(clone_of, lpSoftwareName, nType);
 	}
 	if (!loaded)
 #endif /* MESS */
@@ -131,26 +132,26 @@ BOOL LoadScreenShot(int nGame, int nType)
 	}
 
 	/* If not loaded, see if there is a clone and try that */
-	if (!loaded && driver_get_clone(drivers[nGame]) != NULL)
+	if (!loaded && clone_of != NULL)
 	{
 #ifdef USE_IPS
 		if (lpIPSName)
 		{
-			sprintf(buf, "%s/%s", driver_get_clone(drivers[nGame])->name, lpIPSName);
+			sprintf(buf, "%s/%s", clone_of->name, lpIPSName);
 			dprintf("found clone ipsname: %s", buf);
 		}
 		else
 #endif /* USE_IPS */
-			sprintf(buf, "%s", driver_get_clone(drivers[nGame])->name);
+			sprintf(buf, "%s", clone_of->name);
 		loaded = LoadDIB(buf, &m_hDIB, &m_hPal, nType);
-		if (!loaded && driver_get_clone(driver_get_clone(drivers[nGame])))
+		if (!loaded && driver_get_clone(clone_of))
 		{
 #ifdef USE_IPS
 			if (lpIPSName)
-				sprintf(buf, "%s/%s", driver_get_clone(driver_get_clone(drivers[nGame]))->name, lpIPSName);
+				sprintf(buf, "%s/%s", clone_of->parent, lpIPSName);
 			else
 #endif /* USE_IPS */
-				sprintf(buf, "%s", driver_get_clone(driver_get_clone(drivers[nGame]))->name);
+				sprintf(buf, "%s", clone_of->parent);
 			loaded = LoadDIB(buf, &m_hDIB, &m_hPal, nType);
 		}
 	}

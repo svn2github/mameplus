@@ -303,7 +303,7 @@ char * ConvertToWindowsNewlines(const char *source)
 	return buf;
 }
 
-char * strlower(const char *s)
+const char * strlower(const char *s)
 {
 	static char buf[100 * 1024];
 
@@ -346,12 +346,13 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 		for (ndriver = 0; ndriver < GetNumGames(); ndriver++)
 		{
 			const game_driver *gamedrv = drivers[ndriver];
+			const game_driver *clone_of = NULL;
 			struct DriversInfo *gameinfo = &drivers_info[ndriver];
 			const rom_entry *region, *rom;
 			machine_config drv;
 			const input_port_entry *input_ports;
 			int speakernum, num_speakers;
-			gameinfo->isClone = (driver_get_clone(gamedrv) && (driver_get_clone(gamedrv)->flags & NOT_A_DRIVER) == 0);
+			gameinfo->isClone = ((clone_of = driver_get_clone(gamedrv)) != NULL && (clone_of->flags & NOT_A_DRIVER) == 0);
 			gameinfo->isBroken = ((gamedrv->flags & GAME_NOT_WORKING) != 0);
 			gameinfo->supportsSaveState = ((gamedrv->flags & GAME_SUPPORTS_SAVE) != 0);
 			gameinfo->isHarddisk = FALSE;
@@ -457,7 +458,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			{
 				for (i = 0; i < GetNumGames(); i++)
 				{
-					if (driver_get_clone(gamedrv) == drivers[i])
+					if (clone_of == drivers[i])
 					{
 						gameinfo->parentIndex = i;
 						break;

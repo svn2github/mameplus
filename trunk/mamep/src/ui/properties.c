@@ -1303,18 +1303,20 @@ LPWSTR GameInfoTitle(int nIndex)
 static LPWSTR GameInfoCloneOf(int nIndex)
 {
 	char buf[1024];
+	const game_driver *clone_of = NULL;
 
 	buf[0] = '\0';
 
 	if (DriverIsClone(nIndex))
 	{
+		clone_of = driver_get_clone(drivers[nIndex]);
 		UseLangList()?
 		sprintf(buf, "%s [%s]",
-				ConvertAmpersandString(_LST(driver_get_clone(drivers[nIndex])->description)),
-				driver_get_clone(drivers[nIndex])->name):
+				ConvertAmpersandString(_LST(clone_of->description)),
+				clone_of->name):
 		sprintf(buf, "%s [%s]",
-				ConvertAmpersandString(ModifyThe(driver_get_clone(drivers[nIndex])->description)),
-				driver_get_clone(drivers[nIndex])->name);
+				ConvertAmpersandString(ModifyThe(clone_of->description)),
+				clone_of->name);
 	}
 
 	return _Unicode(buf);

@@ -15,6 +15,26 @@ static const char helpfile[] = "mess.chm";
 #endif
 
 //============================================================
+//	osd_display_loading_rom_message
+//============================================================
+
+// called while loading ROMs. It is called a last time with name == 0 to signal
+// that the ROM loading process is finished.
+// return non-zero to abort loading
+#ifndef DONT_USE_DLL
+#ifndef _MSC_VER
+int osd_display_loading_rom_message(const char *name,rom_load_data *romdata)
+{
+	if (name)
+		fprintf(stdout, _WINDOWS("loading %-12s\r"), name);
+	else
+		fprintf(stdout, "%30s\r", "");
+	fflush(stdout);
+
+	return 0;
+}
+
+//============================================================
 //  check_for_double_click_start
 //============================================================
 
@@ -77,26 +97,6 @@ int check_for_double_click_start(int argc)
 		}
 		return 1;
 	}
-	return 0;
-}
-
-//============================================================
-//	osd_display_loading_rom_message
-//============================================================
-
-// called while loading ROMs. It is called a last time with name == 0 to signal
-// that the ROM loading process is finished.
-// return non-zero to abort loading
-#ifndef DONT_USE_DLL
-#ifndef _MSC_VER
-int osd_display_loading_rom_message(const char *name,rom_load_data *romdata)
-{
-	if (name)
-		fprintf(stdout, _WINDOWS("loading %-12s\r"), name);
-	else
-		fprintf(stdout, "%30s\r", "");
-	fflush(stdout);
-
 	return 0;
 }
 

@@ -3919,12 +3919,13 @@ static void PaintBackgroundImage(HWND hWnd, HRGN hRgn, int x, int y)
 
 static LPCSTR GetCloneParentName(int nItem)
 {
+	const game_driver *clone_of = NULL;
 	if (DriverIsClone(nItem) == TRUE)
 	{
-		if (UseLangList())
-			return _LST(driver_get_clone(drivers[nItem])->description);
-		else
-			return ModifyThe(driver_get_clone(drivers[nItem])->description);
+		clone_of = driver_get_clone(drivers[nItem]);
+		if( clone_of )
+			return  (UseLangList()) ? 
+					_LST(clone_of->description) : ModifyThe(clone_of->description);
 	}
 	return "";
 }
@@ -5579,17 +5580,18 @@ static void InitListView()
 static void AddDriverIcon(int nItem,int default_icon_index)
 {
 	HICON hIcon = 0;
+	const game_driver *clone_of = driver_get_clone(drivers[nItem]);
 
 	/* if already set to rom or clone icon, we've been here before */
 	if (icon_index[nItem] == 1 || icon_index[nItem] == 3)
 		return;
 
 	hIcon = LoadIconFromFile((char *)drivers[nItem]->name);
-	if (hIcon == NULL && driver_get_clone(drivers[nItem]) != NULL)
+	if (hIcon == NULL && clone_of != NULL)
 	{
-		hIcon = LoadIconFromFile((char *)driver_get_clone(drivers[nItem])->name);
-		if (hIcon == NULL && driver_get_clone(driver_get_clone(drivers[nItem])) != NULL)
-			hIcon = LoadIconFromFile((char *)driver_get_clone(driver_get_clone(drivers[nItem]))->name);
+		hIcon = LoadIconFromFile((char *)drivers[nItem]->parent);
+		if (hIcon == NULL && driver_get_clone(clone_of) != NULL)
+			hIcon = LoadIconFromFile((char *)clone_of->parent);
 	}
 
 	if (hIcon != NULL)
@@ -7823,7 +7825,7 @@ BOOL SendIconToEmulationWindow(int nGameIndex)
 		//Check if clone, if so try parent icon first 
 		if( DriverIsClone(nGameIndex) ) 
 		{ 
-			hIcon = LoadIconFromFile(driver_get_clone(drivers[nGameIndex])->name); 
+			hIcon = LoadIconFromFile(drivers[nGameIndex]->parent); 
 			if( hIcon == NULL) 
 			{ 
 				hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_MAME32_ICON)); 
@@ -7910,7 +7912,7 @@ void SendIconToProcess(LPPROCESS_INFORMATION pi, int nGameIndex)
 		//Check if clone, if so try parent icon first 
 		if( DriverIsClone(nGameIndex) ) 
 		{ 
-			hIcon = LoadIconFromFile(driver_get_clone(drivers[nGameIndex])->name); 
+			hIcon = LoadIconFromFile(drivers[nGameIndex]->parent); 
 			if( hIcon == NULL) 
 			{ 
 				hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_MAME32_ICON)); 
