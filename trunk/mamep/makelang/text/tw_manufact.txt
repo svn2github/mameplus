@@ -86,7 +86,7 @@ Absolute Entertainment Inc.
 Academysoft-Elory
 
 
-# NBA Jam Extreme
+# Acclaim PSX
 Acclaim
 
 
@@ -162,7 +162,7 @@ Amutech
 Apple
 
 
-# SportTime Table Hockey (Arcadia, V 2.1)
+# Arcadia System BIOS
 Arcadia Systems
 
 
@@ -202,7 +202,7 @@ Atari Games
 Athena
 
 
-# Power Instinct 3 - Groove On Fight (J 970416 V1.001)
+# Atlus PSX
 Atlus
 
 
@@ -230,7 +230,7 @@ Bandai
 Banpresto
 
 
-# The Crystal Maze: Team Challenge (SWP)
+# MPU4 Video Firmware
 Barcrest
 
 
@@ -258,7 +258,7 @@ Blastar
 Bootleg
 
 
-# The Crystal of Kings
+# Crystal System BIOS
 Brezzasoft
 
 
@@ -430,6 +430,10 @@ Digitrex Techstar
 Dong Bang Electron
 
 
+# Pang Pang
+Dong Gue La Mi Ltd.
+
+
 # Got-cha Mini Game Festival
 Dongsung
 
@@ -528,6 +532,10 @@ Ed
 
 # Battle Bakraid (Japan) (Wed Apr 7 1999)
 Eighting
+
+
+# PS Arcade 95
+Eighting/Raizing
 
 
 # Space Force (set 2)
@@ -810,7 +818,7 @@ Human Amusement
 Human Inc.
 
 
-# Kisekae Mahjong
+# Multi Amenity Cassette System BIOS
 I'Max
 
 
@@ -992,6 +1000,10 @@ Leland Corp.
 
 # Poker Ladies (Leprechaun ver. 510)
 Leprechaun
+
+
+# Battle Bubble (v2.00)
+Limenko
 
 
 # Star Wars Trilogy (ver A)
@@ -1258,7 +1270,7 @@ Omori Electric
 Omori Electric Co., Ltd.
 
 
-# Marine Boy
+# River Patrol (Orca)
 Orca
 
 
@@ -1926,7 +1938,7 @@ Volt Electronics
 WAVE
 
 
-# Sea Hunter Pengiun
+# Sea Hunter Penguin
 WSAC Systems?
 
 
@@ -2018,7 +2030,7 @@ Yumekobo
 Yun Sung
 
 
-# Scorpion (set 1)
+# Eyes (Zaccaria)
 Zaccaria
 
 
