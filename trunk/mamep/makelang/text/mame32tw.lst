@@ -710,7 +710,8 @@ arkbloc2	打磚塊 / Block (Game Corporation 盜版)	打磚塊 / Block (Game Corporation
 arkangc	打磚塊 (Game Corporation 盜版)	打磚塊 (Game Corporation 盜版)	bootleg
 arkatour	打磚塊 / Tournament Arkanoid (美國版)	打磚塊 / Tournament Arkanoid (美國版)	Taito America Corporation (Romstar license)
 minivadr	迷你小蜜蜂	迷你小蜜蜂	Taito Corporation
-bonzeadv	地獄冒險 / Bonze Adventure (世界版)	地獄冒險 / Bonze Adventure (世界版)	Taito Corporation Japan
+bonzeadv	地獄冒險 / Bonze Adventure (世界版, 新版)	地獄冒險 / Bonze Adventure (世界版, 新版)	Taito Corporation Japan
+bonzeado	地獄冒險 / Bonze Adventure (世界版, 舊版)	地獄冒險 / Bonze Adventure (世界版, 舊版)	Taito Corporation Japan
 bonzeadu	地獄冒險 / Bonze Adventure (美國版)	地獄冒險 / Bonze Adventure (美國版)	Taito America Corporation
 jigkmgri	地獄冒險 (日本版)	地獄冒險 (日本版)	Taito Corporation
 asuka	飛鳥 & 飛鳥 (日本版)	飛鳥 & 飛鳥 (日本版)	Taito Corporation
@@ -1855,6 +1856,9 @@ robocopb	機器戰警 (世界版 盜版)	機器戰警 (世界版 盜版)	bootleg
 hippodrm	競技場 - 激鬥幻想 / Hippodrome (美國版)	競技場 - 激鬥幻想 / Hippodrome (美國版)	Data East USA
 ffantasy	競技場 - 激鬥幻想 (日本版 revision 2)	競技場 - 激鬥幻想 (日本版 revision 2)	Data East Corporation
 ffantasa	競技場 - 激鬥幻想 (日本版)	競技場 - 激鬥幻想 (日本版)	Data East Corporation
+midres	午夜逆襲 (世界版)	午夜逆襲 (世界版)	Data East Corporation
+midresu	午夜逆襲 (美國版)	午夜逆襲 (美國版)	Data East USA
+midresj	午夜逆襲 (日本版)	午夜逆襲 (日本版)	Data East Corporation
 madmotor	瘋狂摩托車	瘋狂摩托車	Mitchell
 vaportra	空牙 / Vapor Trail - Hyper Offence Formation (世界版 revision 1)	空牙 / Vapor Trail - Hyper Offence Formation (世界版 revision 1)	Data East Corporation
 vaportru	空牙 / Vapor Trail - Hyper Offence Formation (美國版)	空牙 / Vapor Trail - Hyper Offence Formation (美國版)	Data East USA
@@ -2096,6 +2100,9 @@ bm6thmix	節奏 DJ: 狂熱節拍 6th MIX - The UK underground music (ver JA-A)	節奏 DJ
 hangplt	滑翔翼	滑翔翼	Konami
 nbapbp	NBA 實況籃球	NBA 實況籃球	Konami
 gradius4	宇宙巡航艦 4: 復活	宇宙巡航艦 4: 復活	Konami
+midnrun	午夜快車	午夜快車	Konami
+windheat	勁風賽車	勁風賽車	Konami
+evilngt	惡魔之夜 (ver EAA)	惡魔之夜 (ver EAA)	Konami
 topsecex	最高機密 (Exidy) (version 1.0)	最高機密 (Exidy) (version 1.0)	Exidy
 dominos	多米諾骨牌	多米諾骨牌	Atari
 ultratnk	終極坦克	終極坦克	Atari
@@ -2933,7 +2940,8 @@ newfant	新天蠶變幻想曲	新天蠶變幻想曲	Comad & New Japan System
 fantsy95	天蠶變幻想 '95	天蠶變幻想 '95	Hi-max Technology Inc.
 missw96	天蠶變少女世界 '96 NUDE	天蠶變少女世界 '96 NUDE	Comad
 missmw96	天蠶變少女世界 '96 NUDE / Miss Mister World '96 Nude	天蠶變少女世界 '96 NUDE / Miss Mister World '96 Nude	Comad
-fantsia2	天蠶變幻想曲 II	天蠶變幻想曲 II	Comad
+fantsia2	天蠶變幻想曲 II (set 1)	天蠶變幻想曲 II (set 1)	Comad
+fntsia2a	天蠶變幻想曲 II (set 2, less explicit)	天蠶變幻想曲 II (set 2, less explicit)	Comad
 wbeachvl	世界沙灘排球 (set 1)	世界沙灘排球 (set 1)	Playmark
 wbeachv2	世界沙灘排球 (set 2)	世界沙灘排球 (set 2)	Playmark
 natodef	北約防線	北約防線	Pacific Novelty
@@ -3034,6 +3042,7 @@ kovsh	三國戰記 - 風雲再起 (ver. 322)	三國戰記 - 風雲再起 (ver. 322)	IGS
 photoy2k	大家來找碴	大家來找碴	IGS
 raf102j	大家來找碴 (ver. 102, 日本機板)	大家來找碴 (ver. 102, 日本機板)	IGS
 killbld	傲劍狂刀	傲劍狂刀	IGS
+killbldt	傲劍狂刀 (台灣版?)	傲劍狂刀 (台灣版?)	IGS
 olds	西遊釋厄傳 SUPER (韓國版 101)	西遊釋厄傳 SUPER (韓國版 101)	IGS
 olds100	西遊釋厄傳 SUPER (100)	西遊釋厄傳 SUPER (100)	IGS
 olds100a	西遊釋厄傳 SUPER (100 alt)	西遊釋厄傳 SUPER (100 alt)	IGS
@@ -3099,3 +3108,4 @@ yuka	遊華	遊華	Yubis / T.System
 yujan	遊雀	遊雀	Yubis / T.System
 bmcbowl	滾球之星	滾球之星	BMC
 rbmk	實戰麻將王 加強版	實戰麻將王 加強版	GMS
+lastfght	絕地大反攻	絕地大反攻	Subsino
