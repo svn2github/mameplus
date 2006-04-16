@@ -789,8 +789,8 @@ static struct
 	{
 		MAME32NAME " game list files (*.lst)\0*.lst;\0All files (*.*)\0*.*\0",
 		NULL,
-		"Select a game list file",
-		GetLangDir,
+		"Select a game list file to export",
+		GetLastDir,
 		"lst"
 	},
 };
@@ -3785,7 +3785,7 @@ static void DisableSelection()
 	mmi.cbSize         = sizeof(mmi);
 	mmi.fMask          = MIIM_TYPE;
 	mmi.fType          = MFT_STRING;
-	mmi.dwTypeData     = _Unicode(_UI("Proper&ties of Driver"));
+	mmi.dwTypeData     = _Unicode(_UI("Propert&ies for Driver"));
 	mmi.cch            = lstrlen(mmi.dwTypeData);
 	SetMenuItemInfo(hMenu, ID_FOLDER_SOURCEPROPERTIES, FALSE, &mmi);
 
@@ -3823,7 +3823,7 @@ static void EnableSelection(int nGame)
 	mmi.cch            = lstrlen(mmi.dwTypeData);
 	SetMenuItemInfo(hMenu, ID_FILE_PLAY, FALSE, &mmi);
 
-	snprintf(buf, sizeof(buf) / sizeof(buf[0]), _UI("Proper&ties of %s"),
+	snprintf(buf, sizeof(buf) / sizeof(buf[0]), _UI("Propert&ies for %s"),
 	         GetDriverFilename(nGame));
 	mmi.cbSize         = sizeof(mmi);
 	mmi.fMask          = MIIM_TYPE;
@@ -6814,7 +6814,7 @@ static void UpdateMenu(HMENU hMenu)
 
 		SetMenuItemInfo(hMenu, ID_FILE_PLAY, FALSE, &mItem);
 
-		snprintf(buf, sizeof(buf) / sizeof(buf[0]), _UI("Proper&ties of %s"),
+		snprintf(buf, sizeof(buf) / sizeof(buf[0]), _UI("Propert&ies for %s"),
 		         GetDriverFilename(nGame));
 
 		mItem.cbSize     = sizeof(mItem);
@@ -6839,7 +6839,7 @@ static void UpdateMenu(HMENU hMenu)
 
 		SetMenuItemInfo(hMenu, ID_FILE_PLAY, FALSE, &mItem);
 
-		snprintf(buf, sizeof(buf) / sizeof(buf[0]), _UI("Proper&ties of %s"), "...");
+		snprintf(buf, sizeof(buf) / sizeof(buf[0]), _UI("Propert&ies for %s"), "...");
 
 		mItem.cbSize     = sizeof(mItem);
 		mItem.fMask      = MIIM_TYPE;

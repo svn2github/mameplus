@@ -669,7 +669,7 @@ static struct rc_option rc_winui_opts[] =
 	{ "bkground_directory", NULL, rc_string, &settings.bgdir, "bkground", 0, 0, NULL, "directory for bkground" },
 	{ "folder_directory", NULL, rc_string, &settings.folderdir, "folders", 0, 0, NULL, "directory for folders-ini" },
 
-	{ "Windows UI specific startup options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+	{ "Windows UI specific interface options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
 	{ "save_version", NULL, rc_string, &rc_dummy_args.save_version, "", 0, 0, NULL, "save version" },
 	{ "reset_gui", NULL, rc_bool, &bResetGUI, "0", 0, 0, NULL, "enable version mismatch warning" },
 	{ "game_check", NULL, rc_bool, &settings.game_check, "1", 0, 0, NULL, "search for new games" },
