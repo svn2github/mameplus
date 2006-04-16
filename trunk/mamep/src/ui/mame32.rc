@@ -846,6 +846,8 @@ BEGIN
     GROUPBOX        "",IDC_STATIC,4,192,140,28,WS_DISABLED
     CONTROL         "Transparent in-game UI",IDC_TRANSUI,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,192,120,10
+    CONTROL         "IntensitySlider",IDC_TRANSPARENCY,"msctls_trackbar32",
+                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,10,206,105,10
     CTEXT           "128",IDC_TRANSPARENCYDISP,120,206,20,10,NOT WS_GROUP
 #endif /* TRANS_UI */
     GROUPBOX        "",IDC_STATIC,147,45,108,114,WS_DISABLED
