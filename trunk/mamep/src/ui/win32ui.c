@@ -310,7 +310,7 @@ static void             ChangeLanguage(int id);
 static void             MamePlayRecordGame(void);
 static void             MamePlayBackGame(const char* fname_playback);
 static void             MamePlayRecordWave(void);
-static void             MamePlayRecordMng(void);
+static void             MamePlayRecordMNG(void);
 static void             MameLoadState(void);
 static BOOL             CommonFileDialogW(BOOL open_for_write, char *filename, int filetype);
 static BOOL             CommonFileDialogA(BOOL open_for_write, char *filename, int filetype);
@@ -738,7 +738,7 @@ static char * g_pRecordName = NULL;
 static char * g_pPlayBkName = NULL;
 static char * g_pSaveStateName = NULL;
 static char * g_pRecordWaveName = NULL;
-static char * g_pRecordMngName = NULL;
+static char * g_pRecordMNGName = NULL;
 static char * override_playback_directory = NULL;
 static char * override_savestate_directory = NULL;
 
@@ -773,7 +773,7 @@ static struct
 		"wav"
 	},
 	{
-		"MNG files (*.mng)\0*.mng;\0All files (*.*)\0*.*\0",
+		"Videos (*.mng)\0*.mng;\0All files (*.*)\0*.*\0",
 		NULL,
 		"Select a mng file to record",
 		GetLastDir,
@@ -958,8 +958,6 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 //	sprintf(&pCmdLine[strlen(pCmdLine)], " -ftr %d",                    pOpts->frames_to_display);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -effect %s",                 pOpts->effect);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -screen_aspect %s",          pOpts->aspect);
-	if (g_pRecordMngName != NULL)
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -mngwrite \"%s\"",           g_pRecordMngName);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -cs %s",           pOpts->clean_stretch);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -zoom %i", pOpts->zoom);
 #ifdef USE_SCALE_EFFECTS
@@ -1119,6 +1117,8 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -rec \"%s\"",                g_pRecordName);
 	if (g_pRecordWaveName != NULL)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -wavwrite \"%s\"",           g_pRecordWaveName);
+	if (g_pRecordMNGName != NULL)
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -mngwrite \"%s\"",           g_pRecordMNGName);
 	if (g_pSaveStateName != NULL)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -state \"%s\"",              g_pSaveStateName);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%slog",                     pOpts->errorlog        ? "" : "no");
@@ -1126,8 +1126,9 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	if (pOpts->old_timing)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -rdtsc");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sleds",                    pOpts->leds            ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sskip_gameinfo",           pOpts->skip_gameinfo   ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -priority %d",               pOpts->priority);
+	if (pOpts->skip_gameinfo)
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -skip_gameinfo");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -priority %i",               pOpts->priority);
 	if (pOpts->autosave)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -autosave");
 
@@ -1229,10 +1230,10 @@ static int RunMAME(int nGameIndex)
 		argv[argc++] = "-wavwrite";
 		argv[argc++] = g_pRecordWaveName;
 	}
-	if (g_pRecordMngName != NULL)
+	if (g_pRecordMNGName != NULL)
 	{
 		argv[argc++] = "-mngwrite";
-		argv[argc++] = g_pRecordMngName;
+		argv[argc++] = g_pRecordMNGName;
 	}
 	if (g_pSaveStateName != NULL)
 	{
@@ -2197,6 +2198,7 @@ static void TabSelectionChanged(void)
 
 static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+	extern int mame_validitychecks(int);
 	WNDCLASS wndclass;
 	RECT     rect;
 	int      i;
@@ -2365,11 +2367,11 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	hTreeView = GetDlgItem(hMain, IDC_TREE);
 	hwndList  = GetDlgItem(hMain, IDC_LIST);
 
-	//history_filename = strdup(GetHistoryFileName());
+	//history_filename = mame_strdup(GetHistoryFileName());
 #ifdef STORY_DATAFILE
-	//story_filename = strdup(GetStoryFileName());
+	//story_filename = mame_strdup(GetStoryFileName());
 #endif /* STORY_DATAFILE */
-	//mameinfo_filename = strdup(GetMAMEInfoFileName());
+	//mameinfo_filename = mame_strdup(GetMAMEInfoFileName());
 
 	if (!InitSplitters())
 		return FALSE;
@@ -2714,7 +2716,7 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 		if (i >= 0 && i < MAX_PATCHES && GetPatchName(patch_name, drivers[Picker_GetSelectedItem(hwndList)]->name, i))
 		{
 			FreeIfAllocated(&g_IPSMenuSelectName);
-			g_IPSMenuSelectName = strdup(patch_name);
+			g_IPSMenuSelectName = mame_strdup(patch_name);
 			dprintf("menusele: %d %s, updateSS", (int)(LOWORD(wParam)), patch_name);
 			UpdateScreenShot();
 		}
@@ -4702,7 +4704,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 
 			if (pOpts->patchname)
 			{
-				char *temp = strdup(pOpts->patchname);
+				char *temp = mame_strdup(pOpts->patchname);
 				char *token = NULL;
 
 				if (temp)
@@ -4737,7 +4739,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 
 			FreeIfAllocated(&pOpts->patchname);
 			if (new_opt[0] != '\0')
-				pOpts->patchname = strdup(new_opt);
+				pOpts->patchname = mame_strdup(new_opt);
 
 			dprintf("%s / %s | %d", patch_name, pOpts->patchname, strlen(new_opt));
 			SaveGameOptions(nGame);
@@ -4770,7 +4772,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		return TRUE;
 
 	case ID_FILE_PLAY_RECORD_MNG:
-		MamePlayRecordMng();
+		MamePlayRecordMNG();
 		return TRUE;
 
 	case ID_FILE_LOADSTATE :
@@ -6437,7 +6439,7 @@ static void MamePlayRecordWave()
 	}	
 }
 
-static void MamePlayRecordMng()
+static void MamePlayRecordMNG()
 {
 	int  nGame;
 	char filename[MAX_PATH];
@@ -6448,9 +6450,9 @@ static void MamePlayRecordMng()
 
 	if (CommonFileDialog(TRUE, filename, FILETYPE_MNG_FILES))
 	{
-		g_pRecordMngName = filename;
+		g_pRecordMNGName = filename;
 		MamePlayGameWithOptions(nGame);
-		g_pRecordMngName = NULL;
+		g_pRecordMNGName = NULL;
 	}	
 }
 

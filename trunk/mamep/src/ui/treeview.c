@@ -35,7 +35,7 @@
 #endif
 
 #include <io.h>
-#include "MAME32.h"	// include this first
+#include "mame32.h"	// include this first
 #include "driver.h"
 #include "hash.h"
 #include "M32Util.h"
@@ -460,7 +460,7 @@ void CreateSourceFolders(int parent_index)
 		if (s == NULL || s[0] == '\0')
 			continue;
 
-		// look for an extant source treefolder for this game
+		// look for an existant source treefolder for this game
 		// (likely to be the previous one, so start at the end)
 		for (i=numFolders-1;i>=start_folder;i--)
 		{
@@ -658,6 +658,7 @@ static const char* ParseManufacturer(const char *s, int *pParsedChars )
 /* Analyze Manufacturer Names for typical patterns, that don't distinguish between companies (e.g. Co., Ltd., Inc., etc. */
 static const char* TrimManufacturer(const char *s)
 {
+	//Also remove Country specific suffixes (e.g. Japan, Italy, America, USA, ...)
 	int i=0;
 	char strTemp[256];
 	static char strTemp2[256];
@@ -693,7 +694,7 @@ static const char* TrimManufacturer(const char *s)
 				}
 				break;
 			case 3:
-				if( ci_strncmp(strTemp, "co.", 3) == 0 || ci_strncmp(strTemp, "ltd", 3) == 0 || ci_strncmp(strTemp, "inc", 3) == 0)
+				if( ci_strncmp(strTemp, "co.", 3) == 0 || ci_strncmp(strTemp, "ltd", 3) == 0 || ci_strncmp(strTemp, "inc", 3) == 0  || ci_strncmp(strTemp, "SRL", 3) == 0 || ci_strncmp(strTemp, "USA", 3) == 0)
 				{
 					j=l;
 					while( s[strlen(s)-j-1] == ' ' || s[strlen(s)-j-1] == ',' )
@@ -708,7 +709,7 @@ static const char* TrimManufacturer(const char *s)
 				}
 				break;
 			case 4:
-				if( ci_strncmp(strTemp, "inc.", 4) == 0 || ci_strncmp(strTemp, "ltd.", 4) == 0 || ci_strncmp(strTemp, "corp", 4) == 0)
+				if( ci_strncmp(strTemp, "inc.", 4) == 0 || ci_strncmp(strTemp, "ltd.", 4) == 0 || ci_strncmp(strTemp, "corp", 4) == 0 || ci_strncmp(strTemp, "game", 4) == 0)
 				{
 					j=l;
 					while( s[strlen(s)-j-1] == ' ' || s[strlen(s)-j-1] == ',' )
@@ -723,7 +724,7 @@ static const char* TrimManufacturer(const char *s)
 				}
 				break;
 			case 5:
-				if( ci_strncmp(strTemp, "corp.", 5) == 0 )
+				if( ci_strncmp(strTemp, "corp.", 5) == 0 || ci_strncmp(strTemp, "Games", 5) == 0 || ci_strncmp(strTemp, "Italy", 5) == 0 || ci_strncmp(strTemp, "Japan", 5) == 0)
 				{
 					j=l;
 					while( s[strlen(s)-j-1] == ' ' || s[strlen(s)-j-1] == ',' )
@@ -738,7 +739,7 @@ static const char* TrimManufacturer(const char *s)
 				}
 				break;
 			case 6:
-				if( ci_strncmp(strTemp, "co-ltd", 6) == 0 )
+				if( ci_strncmp(strTemp, "co-ltd", 6) == 0 || ci_strncmp(strTemp, "S.R.L.", 6) == 0)
 				{
 					j=l;
 					while( s[strlen(s)-j-1] == ' ' || s[strlen(s)-j-1] == ',' )
@@ -753,7 +754,22 @@ static const char* TrimManufacturer(const char *s)
 				}
 				break;
 			case 7:
-				if( ci_strncmp(strTemp, "co. ltd", 7) == 0 )
+				if( ci_strncmp(strTemp, "co. ltd", 7) == 0  || ci_strncmp(strTemp, "America", 7) == 0)
+				{
+					j=l;
+					while( s[strlen(s)-j-1] == ' ' || s[strlen(s)-j-1] == ',' )
+					{
+						j++;
+					}
+					if( j!=l)
+					{
+						memset(strTemp2, '\0', 256 );
+						strncpy(strTemp2, s, strlen(s)-j );	
+					}
+				}
+				break;
+			case 8:
+				if( ci_strncmp(strTemp, "co. ltd.", 8) == 0  )
 				{
 					j=l;
 					while( s[strlen(s)-j-1] == ' ' || s[strlen(s)-j-1] == ',' )
@@ -783,7 +799,7 @@ static const char* TrimManufacturer(const char *s)
 				}
 				break;
 			case 10:
-				if( ci_strncmp(strTemp, "corp, ltd.", 9) == 0 )
+				if( ci_strncmp(strTemp, "corp, ltd.", 10) == 0  || ci_strncmp(strTemp, "industries", 10) == 0  || ci_strncmp(strTemp, "of America", 10) == 0)
 				{
 					j=l;
 					while( s[strlen(s)-j-1] == ' ' || s[strlen(s)-j-1] == ',' )
@@ -798,7 +814,22 @@ static const char* TrimManufacturer(const char *s)
 				}
 				break;
 			case 11:
-				if( ci_strncmp(strTemp, "corporation", 11) == 0 )
+				if( ci_strncmp(strTemp, "corporation", 11) == 0 || ci_strncmp(strTemp, "enterprises", 11) == 0 )
+				{
+					j=l;
+					while( s[strlen(s)-j-1] == ' ' || s[strlen(s)-j-1] == ',' )
+					{
+						j++;
+					}
+					if( j!=l)
+					{
+						memset(strTemp2, '\0', 256 );
+						strncpy(strTemp2, s, strlen(s)-j );	
+					}
+				}
+				break;
+			case 16:
+				if( ci_strncmp(strTemp, "industries japan", 16) == 0 )
 				{
 					j=l;
 					while( s[strlen(s)-j-1] == ' ' || s[strlen(s)-j-1] == ',' )

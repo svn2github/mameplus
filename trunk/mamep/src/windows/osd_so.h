@@ -224,9 +224,6 @@ extern SHAREDOBJ_FUNC(void)  CLIB_DECL free(void *memory);
 #include "mamecore.h"
 #include "mame.h"
 
-// in validity.c
-extern int mame_validitychecks(int game);
-
 // in windows/winmain.c
 extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 
@@ -250,9 +247,6 @@ extern const int win_key_trans_table[][4];
 #else /* !DONT_USE_DLL */
 #include "mamecore.h"
 #include "mame.h"
-
-// in validity.c
-extern int mame_validitychecks(int game);
 
 // in windows/winmain.c
 extern int main_(int argc, char **argv);
