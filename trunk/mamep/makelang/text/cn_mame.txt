@@ -760,7 +760,7 @@ Cancel
 
 # ui_text.c: 152
 Card Number:
-º«“‰ø®∫≈:
+º«“‰ø®±‡∫≈:
 
 # drivers/cischeat.c: 1586 drivers/namcos22.c: 3952, 4026 ui_text.c: 235
 Center

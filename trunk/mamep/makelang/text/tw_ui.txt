@@ -2479,7 +2479,7 @@ Use RDTSC timing system
 使用 RDTSC 時序系統
 
 # ui/mame32.rc: 852
-Use additional Artwork
+Use additional artwork
 使用附加的 Artwork 圖片
 
 # ui/mame32.rc: 732

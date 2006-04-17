@@ -43,7 +43,7 @@ Version 0.3, Februari 2000
 #ifdef _MSC_VER
 #define snprintf _snprintf
 #endif
-#define BUF_SIZE 2048
+#define BUF_SIZE 4096
 #ifdef WINUI
 #define ALLOC_OPTION_SIZE 4
 #endif

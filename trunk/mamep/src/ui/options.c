@@ -735,8 +735,8 @@ static struct rc_option rc_winui_opts[] =
 	{ "list_font", NULL, rc_string, &rc_dummy_args.list_font, "-8,0,0,0,400,0,0,0,0,0,0,0,0", 0, 0, FontDecodeString, "game list font size" },
 	{ "list_fontface", NULL, rc_string, &rc_dummy_args.list_fontface, "MS Sans Serif", 0, 0, FontfaceDecodeString, "game list font face" },
 	{ "use_broken_icon", NULL, rc_bool, &settings.use_broken_icon, "1", 0, 0, NULL, "use broken icon for not working games" },
-	{ "font_color", NULL, rc_int, &settings.list_font_color, "16777215", -1, (UINT)-1, NULL, "game list font color" },
-	{ "clone_color", NULL, rc_int, &settings.list_clone_color, "12632256", -1, (UINT)-1, NULL, "clone game list font color" },
+	{ "font_color", NULL, rc_int, &settings.list_font_color, "-1", -1, (UINT)-1, NULL, "game list font color" },
+	{ "clone_color", NULL, rc_int, &settings.list_clone_color, "8421504", -1, (UINT)-1, NULL, "clone game list font color" },
 	{ "broken_color", NULL, rc_int, &settings.list_broken_color, "202", -1, (UINT)-1, NULL, "broken game list font color" },
 	{ "custom_color", NULL, rc_string, &rc_dummy_args.custom_color, "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0", 0, 0, CusColorDecodeString, "custom colors" },
 
