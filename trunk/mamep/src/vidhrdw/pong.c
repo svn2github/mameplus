@@ -193,9 +193,9 @@ VIDEO_UPDATE( pong )
 	/* save state of the vblank flip-flop 74107/A2 */
 	hit_vbl_0 = hit_vbl_q;
 
-	logerror("VIDEO_UPDATE at H:%d, V:%d\n", (int)activecpu_get_reg(GS_H), (int)activecpu_get_reg(GS_V));
+	logerror("VIDEO_UPDATE at H:%d, V:%d\n", (int)cpunum_get_reg(0, GS_H), (int)cpunum_get_reg(0, GS_V));
 
-	activecpu_set_reg(GS_V, 0);
+	cpunum_set_reg(0, GS_V, 0);
 	V = 0;
 	VRESET = 1;
 }
