@@ -288,22 +288,27 @@ extern link_info m68kdrc_link_make_cc;
 /* Access the CPU registers */
 #define CPU_TYPE         m68kdrc_cpu.cpu_type
 
-#define REG68K_DA           m68kdrc_cpu.dar /* easy access to data and address regs */
-#define REG68K_D            m68kdrc_cpu.dar
-#define REG68K_A            (m68kdrc_cpu.dar+8)
-#define REG68K_PPC 	  m68kdrc_cpu.ppc
-#define REG68K_PC           m68kdrc_cpu.pc
-#define REG68K_SP_BASE      m68kdrc_cpu.sp
-#define REG68K_USP          m68kdrc_cpu.sp[0]
-#define REG68K_ISP          m68kdrc_cpu.sp[4]
-#define REG68K_MSP          m68kdrc_cpu.sp[6]
-#define REG68K_SP           m68kdrc_cpu.dar[15]
-#define REG68K_VBR          m68kdrc_cpu.vbr
-#define REG68K_SFC          m68kdrc_cpu.sfc
-#define REG68K_DFC          m68kdrc_cpu.dfc
-#define REG68K_CACR         m68kdrc_cpu.cacr
-#define REG68K_CAAR         m68kdrc_cpu.caar
-#define REG68K_IR           m68kdrc_cpu.ir
+#define REG68K_DA        m68kdrc_cpu.dar /* easy access to data and address regs */
+#define REG68K_D         m68kdrc_cpu.dar
+#define REG68K_A         (m68kdrc_cpu.dar+8)
+#define REG68K_PPC 	 m68kdrc_cpu.ppc
+#define REG68K_PC        m68kdrc_cpu.pc
+#define REG68K_SP_BASE   m68kdrc_cpu.sp
+#define REG68K_USP       m68kdrc_cpu.sp[0]
+#define REG68K_ISP       m68kdrc_cpu.sp[4]
+#define REG68K_MSP       m68kdrc_cpu.sp[6]
+#define REG68K_SP        m68kdrc_cpu.dar[15]
+#define REG68K_VBR       m68kdrc_cpu.vbr
+#define REG68K_SFC       m68kdrc_cpu.sfc
+#define REG68K_DFC       m68kdrc_cpu.dfc
+#define REG68K_CACR      m68kdrc_cpu.cacr
+#define REG68K_CAAR      m68kdrc_cpu.caar
+#define REG68K_IR        m68kdrc_cpu.ir
+
+#define REG68K_FP        m68kdrc_cpu.fpr
+#define REG68K_FPCR      m68kdrc_cpu.fpcr
+#define REG68K_FPSR      m68kdrc_cpu.fpsr
+#define REG68K_FPIAR     m68kdrc_cpu.fpiar
 
 #define FLAG_T1          m68kdrc_cpu.t1_flag
 #define FLAG_T0          m68kdrc_cpu.t0_flag
@@ -1127,6 +1132,12 @@ DRC_CFLAG_NEG_32(EAX, ECX)
 /* =============================== PROTOTYPES ============================= */
 /* ======================================================================== */
 
+typedef union
+{
+	UINT64 i;
+	double f;
+} fp_reg;
+
 typedef struct
 {
 	uint cpu_type;     /* CPU Type: 68000, 68008, 68010, 68EC020, or 68020 */
@@ -1140,6 +1151,10 @@ typedef struct
 	uint cacr;         /* Cache Control Register (m68020, unemulated) */
 	uint caar;         /* Cache Address Register (m68020, unemulated) */
 	uint ir;           /* Instruction Register */
+    fp_reg fpr[8];     /* FPU Data Register (m68040) */
+	uint fpiar;        /* FPU Instruction Address Register (m68040) */
+	uint fpsr;         /* FPU Status Register (m68040) */
+	uint fpcr;         /* FPU Control Register (m68040) */
 	uint t1_flag;      /* Trace 1 */
 	uint t0_flag;      /* Trace 0 */
 	uint s_flag;       /* Supervisor */

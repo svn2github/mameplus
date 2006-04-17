@@ -36,6 +36,7 @@ static const char* copyright_notice =
 
 #include "d68kops.h"
 #include "d68kcpu.h"
+#include "d68kfpu.c"
 
 
 /* ======================================================================== */
