@@ -929,12 +929,16 @@ M68KMAKE_OP(1111, 0, ., .)
 
 M68KMAKE_OP(040fpu0, 32, ., .)
 {
+	M68KMAKE_CODE_VERIFY(0);
+
 	m68040drc_fpu_op0(drc);
 }
 
 
 M68KMAKE_OP(040fpu1, 32, ., .)
 {
+	M68KMAKE_CODE_VERIFY(0);
+
 	m68040drc_fpu_op1(drc);
 }
 

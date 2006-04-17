@@ -2,6 +2,7 @@
 #include <math.h>
 
 static drc_core *drc;
+
 static void DRC_READ_EA_8(void)
 {
 	int ea = REG68K_IR & 0x3f;
@@ -655,7 +656,7 @@ static void fmove_reg_mem(UINT16 w2)
 		}
 		case 1:		// Single-precision Real
 		{
-			_call(double_to_INT32);
+			_call(float_to_UINT32);
 			DRC_WRITE_EA_32();
 			break;
 		}
