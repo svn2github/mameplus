@@ -86,7 +86,7 @@ static const char helpfile[] = "mess.chm";
 //  PROTOTYPES
 //============================================================
 
-//static int check_for_double_click_start(int argc);
+static int check_for_double_click_start(int argc);
 static void osd_exit(void);
 static LONG CALLBACK exception_filter(struct _EXCEPTION_POINTERS *info);
 static const char *lookup_symbol(UINT32 address);
@@ -121,13 +121,11 @@ int main(int argc, char **argv)
 	// set up exception handling
 	pass_thru_filter = SetUnhandledExceptionFilter(exception_filter);
 
-#if 0 // move into windows/climain.c
-#ifndef WINUI
+// #ifndef WINUI
 	// check for double-clicky starts
 	if (check_for_double_click_start(argc) != 0)
 		return 1;
-#endif
-#endif
+// #endif
 
 	// parse the map file, if present
 	strcpy(mapfile_name, argv[0]);
@@ -286,7 +284,6 @@ int osd_is_bad_read_ptr(const void *ptr, size_t size)
 }
 
 
-#if 0 // moved to windows/climain.c
 //============================================================
 //  check_for_double_click_start
 //============================================================
@@ -352,7 +349,6 @@ static int check_for_double_click_start(int argc)
 	}
 	return 0;
 }
-#endif
 
 //============================================================
 //  exception_filter
