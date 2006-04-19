@@ -1454,6 +1454,7 @@ static int index_menuidx (const game_driver *drv, struct tDatafileIndex *d_idx, 
 			gd_idx++;
 		}
 
+		if (gd_idx->driver == gdrv) break;
 		gdrv = driver_get_clone(gdrv);
 	} while (!gd_idx->driver && gdrv);
 
