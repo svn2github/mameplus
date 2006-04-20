@@ -2,22 +2,28 @@
 #error "PIXEL_BITS not defined"
 #endif
 
-#include "interp.inc"
+#include "hlq.inc"
 
 #ifdef PIXEL_LQ_FILTER
-	#define PIXEL_PROC				_TOKEN3(lq2x_, PIXEL_BITS, _def)
+	#define PIXEL_PROC				_TOKEN3(lq3x_, PIXEL_BITS, _def)
 #else
-	#define PIXEL_PROC				_TOKEN3(hq2x_, PIXEL_BITS, _def)
+	#define PIXEL_PROC				_TOKEN3(hq3x_, PIXEL_BITS, _def)
 #endif
 
 #define P0 							dst0[0]
 #define P1 							dst0[1]
-#define P2 							dst1[0]
-#define P3 							dst1[1]
+#define P2 							dst0[2]
+#define P3 							dst1[0]
+#define P4 							dst1[1]
+#define P5 							dst1[2]
+#define P6 							dst2[0]
+#define P7 							dst2[1]
+#define P8 							dst2[2]
 
 void PIXEL_PROC(
 	PIXEL_UINT* dst0, 
 	PIXEL_UINT* dst1, 
+	PIXEL_UINT* dst2, 
 	const PIXEL_UINT* src0, 
 	const PIXEL_UINT* src1, 
 	const PIXEL_UINT* src2, 
@@ -70,17 +76,18 @@ void PIXEL_PROC(
 
 		switch (pattern) {
 #ifdef PIXEL_LQ_FILTER		
-		#include "lq2x.dat"
+		#include "lq3x.dat"
 #else
-		#include "hq2x.dat"
+		#include "hq3x.dat"
 #endif
 		}
 
 		src0 += 1;
 		src1 += 1;
 		src2 += 1;
-		dst0 += 2;
-		dst1 += 2;
+		dst0 += 3;
+		dst1 += 3;
+		dst2 += 3;
 	}
 }
 
@@ -88,6 +95,11 @@ void PIXEL_PROC(
 #undef P1
 #undef P2
 #undef P3
+#undef P4
+#undef P5
+#undef P6
+#undef P7
+#undef P8
 
-#undef PIXEL_PROC
 #undef PIXEL_BITS
+#undef PIXEL_PROC

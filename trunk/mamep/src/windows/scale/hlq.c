@@ -4,32 +4,32 @@
 #include "interp.h"
 
 #define PIXEL_BITS 15
-#include "hq2x.inc"
+#include "hlq2x.inc"
 
 #define PIXEL_BITS 16
-#include "hq2x.inc"
+#include "hlq2x.inc"
 
 #define PIXEL_BITS 32
-#include "hq2x.inc"
+#include "hlq2x.inc"
 
 #define PIXEL_BITS 15
-#include "hq3x.inc"
+#include "hlq3x.inc"
 
 #define PIXEL_BITS 16
-#include "hq3x.inc"
+#include "hlq3x.inc"
 
 #define PIXEL_BITS 32
-#include "hq3x.inc"
+#include "hlq3x.inc"
 
 #ifdef SUPPORT_4X_EFFECT
 #define PIXEL_BITS 15
-#include "hq4x.inc"
+#include "hlq4x.inc"
 
 #define PIXEL_BITS 16
-#include "hq4x.inc"
+#include "hlq4x.inc"
 
 #define PIXEL_BITS 32
-#include "hq4x.inc"
+#include "hlq4x.inc"
 #endif /* SUPPORT_4X_EFFECT */
 
 
@@ -37,30 +37,30 @@
 #define PIXEL_LQ_FILTER
 
 #define PIXEL_BITS 15
-#include "hq2x.inc"
+#include "hlq2x.inc"
 
 #define PIXEL_BITS 16
-#include "hq2x.inc"
+#include "hlq2x.inc"
 
 #define PIXEL_BITS 32
-#include "hq2x.inc"
+#include "hlq2x.inc"
 
 #define PIXEL_BITS 15
-#include "hq3x.inc"
+#include "hlq3x.inc"
 
 #define PIXEL_BITS 16
-#include "hq3x.inc"
+#include "hlq3x.inc"
 
 #define PIXEL_BITS 32
-#include "hq3x.inc"
+#include "hlq3x.inc"
 
 #ifdef SUPPORT_4X_EFFECT
 #define PIXEL_BITS 15
-#include "hq4x.inc"
+#include "hlq4x.inc"
 
 #define PIXEL_BITS 16
-#include "hq4x.inc"
+#include "hlq4x.inc"
 
 #define PIXEL_BITS 32
-#include "hq4x.inc"
+#include "hlq4x.inc"
 #endif /* SUPPORT_4X_EFFECT */

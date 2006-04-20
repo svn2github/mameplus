@@ -2,7 +2,7 @@
 #error "PIXEL_BITS not defined"
 #endif
 
-#include "interp.inc"
+#include "hlq.inc"
 
 #ifdef PIXEL_LQ_FILTER
 	#define PIXEL_PROC				_TOKEN3(lq4x_, PIXEL_BITS, _def)

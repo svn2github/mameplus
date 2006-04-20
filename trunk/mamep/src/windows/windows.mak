@@ -109,9 +109,6 @@ ifneq ($(USE_JOY_MOUSE_MOVE),)
 DEFS += -DUSE_JOY_MOUSE_MOVE
 endif
 
-# enable the Scale2x, Eagle and 2xSaI scale effects
-# USE_SCALE_EFFECTS = 1
-
 #-------------------------------------------------
 # Windows-specific objects
 #-------------------------------------------------
