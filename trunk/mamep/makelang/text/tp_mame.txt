@@ -3999,11 +3999,11 @@ Swap
 
 
 # ui_text.c: 88
-THIS GAME DOESN'T WORK PROPERLY
+THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.
 
 
 # datafile.c: 2143
-THIS GAME DOESN'T WORK PROPERLY\n
+THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n
 
 
 # drivers/aerofgt.c: 1025, 1115 drivers/cave.c: 1679 drivers/f1gp.c: 313 drivers/midzeus.c: 1219 drivers/pgm.c: 813, 1005 drivers/psikyo.c: 649, 769, 1007, 1211 drivers/toaplan1.c: 1189, 1264, 1334, 1409, 1498 drivers/toaplan2.c: 2358, 2405, 2475, 2547, 2608, 2651, 2697, 2844, 2961, 3076, 3153, 3214, 3323
