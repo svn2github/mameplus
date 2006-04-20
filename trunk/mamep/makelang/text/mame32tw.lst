@@ -14,6 +14,7 @@ hangly	¤pºëÆF / Hangly-Man (set 1)	¤pºëÆF / Hangly-Man (set 1)	hack
 hangly2	¤pºëÆF / Hangly-Man (set 2)	¤pºëÆF / Hangly-Man (set 2)	hack
 hangly3	¤pºëÆF / Hangly-Man (set 3)	¤pºëÆF / Hangly-Man (set 3)	hack
 piranhah	¤pºëÆF / ­¹¤H³½ (hack)	¤pºëÆF / ­¹¤H³½ (hack)	hack
+abscam	¤pºëÆF / Abscam	¤pºëÆF / Abscam	GL (US Billiards License)
 crush	¹x¥Ö°­ (Kural Samno)	¹x¥Ö°­ (Kural Samno)	Kural Samno Electric
 crush2	¹x¥Ö°­ (Kural Esco - µsª©?)	¹x¥Ö°­ (Kural Esco - µsª©?)	Kural Esco Electric
 crush3	¹x¥Ö°­ (Kural - µsª©?)	¹x¥Ö°­ (Kural - µsª©?)	Kural Electric
@@ -32,6 +33,7 @@ mspacman	Ms. ¤pºëÆF	Ms. ¤pºëÆF	Midway
 mspacmnf	Ms. ¤pºëÆF (with speedup hack)	Ms. ¤pºëÆF (with speedup hack)	Midway
 mspacmat	Ms. ¤pºëÆF / Ms. Pac Attack	Ms. ¤pºëÆF / Ms. Pac Attack	hack
 mspacmab	Ms. ¤pºëÆF (µsª©)	Ms. ¤pºëÆF (µsª©)	bootleg
+mspacmbe	Ms. ¤pºëÆF (µsª©, ¥[±K)	Ms. ¤pºëÆF (µsª©, ¥[±K)	bootleg
 pacgal	Ms. ¤pºëÆF / Pac-Gal	Ms. ¤pºëÆF / Pac-Gal	hack
 mspacpls	Ms. ¤pºëÆF Plus	Ms. ¤pºëÆF Plus	hack
 alibaba	ªü¨½¤Ú¤Ú»P 40 ¤jµs	ªü¨½¤Ú¤Ú»P 40 ¤jµs	Sega
@@ -1048,6 +1050,7 @@ mswordr1	Å]¼C (¥@¬Éª© 900623)	Å]¼C (¥@¬Éª© 900623)	Capcom
 mswordu	Å]¼C (¬ü°êª© 900725)	Å]¼C (¬ü°êª© 900725)	Capcom
 mswordj	Å]¼C (¤é¥»ª© 900623)	Å]¼C (¤é¥»ª© 900623)	Capcom
 cawing	¬ü°ê®ü­x / Carrier Air Wing (¥@¬Éª© 901012)	¬ü°ê®ü­x / Carrier Air Wing (¥@¬Éª© 901012)	Capcom
+cawingr1	¬ü°ê®ü­x / Carrier Air Wing (¥@¬Éª© 901009)	¬ü°ê®ü­x / Carrier Air Wing (¥@¬Éª© 901009)	Capcom
 cawingu	¬ü°ê®ü­x / Carrier Air Wing (¬ü°êª© 901012)	¬ü°ê®ü­x / Carrier Air Wing (¬ü°êª© 901012)	Capcom
 cawingj	¬ü°ê®ü­x (¤é¥»ª© 901012)	¬ü°ê®ü­x (¤é¥»ª© 901012)	Capcom
 nemo	¹Ú¤Û«_ÀI (¥@¬Éª© 901130)	¹Ú¤Û«_ÀI (¥@¬Éª© 901130)	Capcom
@@ -1356,6 +1359,7 @@ sfex2j	§Ö¥´±Û­· EX 2 (¤é¥»ª© 980312)	§Ö¥´±Û­· EX 2 (¤é¥»ª© 980312)	Capcom/Arika
 sfex2a	§Ö¥´±Û­· EX 2 (¨È¬wª© 980312)	§Ö¥´±Û­· EX 2 (¨È¬wª© 980312)	Capcom/Arika
 plsmaswd	¬P¼C®æ°« 2 / Plasma Sword (¬ü°êª© 980316)	¬P¼C®æ°« 2 / Plasma Sword (¬ü°êª© 980316)	Capcom
 stargld2	¬P¼C®æ°« 2 (¤é¥»ª© 980316)	¬P¼C®æ°« 2 (¤é¥»ª© 980316)	Capcom
+plsmswda	¬P¼C®æ°« 2 / Plasma Sword (¨È¬wª© 980316)	¬P¼C®æ°« 2 / Plasma Sword (¨È¬wª© 980316)	Capcom
 tgmj	«XÃ¹´µ¤è¶ô¤j®v (¤é¥»ª© 980710)	«XÃ¹´µ¤è¶ô¤j®v (¤é¥»ª© 980710)	Capcom/Arika
 techromn	¶W¿û¾Ô°O / Tech Romancer (¼Ú¬wª© 980914)	¶W¿û¾Ô°O / Tech Romancer (¼Ú¬wª© 980914)	Capcom
 techromu	¶W¿û¾Ô°O / Tech Romancer (¬ü°êª© 980914)	¶W¿û¾Ô°O / Tech Romancer (¬ü°êª© 980914)	Capcom
@@ -1720,6 +1724,7 @@ vonusa	¹q¸£¾Ô¾÷ / Virtual On Cyber Troopers (¬ü°êª©)	¹q¸£¾Ô¾÷ / Virtual On Cyber
 dynabb	¤õÃzÂ¾´Î '97	¤õÃzÂ¾´Î '97	Sega
 zerogun	¹s¦¡¾Ô¾÷ (Model 2B)	¹s¦¡¾Ô¾÷ (Model 2B)	Psikyo
 zerogunj	¹s¦¡¾Ô¾÷ (¤é¥»ª© Model 2B)	¹s¦¡¾Ô¾÷ (¤é¥»ª© Model 2B)	Psikyo
+skisuprg	SEGA ·Æ³·¾÷ Super G	SEGA ·Æ³·¾÷ Super G	Sega
 stcc	SEGA ©Ð¨®ÀA¼ÐÁÉ	SEGA ©Ð¨®ÀA¼ÐÁÉ	Sega
 hotd	¦º¤`°­«Î	¦º¤`°­«Î	Sega
 topskatr	·ÆªO¾÷	·ÆªO¾÷	Sega
@@ -2102,6 +2107,7 @@ nbapbp	NBA ¹êªpÄx²y	NBA ¹êªpÄx²y	Konami
 gradius4	¦t©z¨µ¯èÄ¥ 4: ´_¬¡	¦t©z¨µ¯èÄ¥ 4: ´_¬¡	Konami
 midnrun	¤È©]§Ö¨®	¤È©]§Ö¨®	Konami
 windheat	«l­·ÁÉ¨®	«l­·ÁÉ¨®	Konami
+totlvice	ª®À»Âùºj (ver JAA)	ª®À»Âùºj (ver JAA)	Konami
 evilngt	´cÅ]¤§©] (ver EAA)	´cÅ]¤§©] (ver EAA)	Konami
 topsecex	³Ì°ª¾÷±K (Exidy) (version 1.0)	³Ì°ª¾÷±K (Exidy) (version 1.0)	Exidy
 dominos	¦h¦Ì¿Õ°©µP	¦h¦Ì¿Õ°©µP	Atari
@@ -2826,6 +2832,8 @@ hotgmck3	¹ï¾Ô³Â³¶¼ö±¡ªá©Û 3 ¼Æ¦ì½Ä®ö (¤é¥»ª©)	¹ï¾Ô³Â³¶¼ö±¡ªá©Û 3 ¼Æ¦ì½Ä®ö (¤é¥»ª
 hotgm4ev	¹ï¾Ô³Â³¶¼ö±¡ªá©Û 4 Ever (¤é¥»ª©)	¹ï¾Ô³Â³¶¼ö±¡ªá©Û 4 Ever (¤é¥»ª©)	Psikyo
 hotgmcki	¹ï¾Ô³Â³¶¼ö±¡ªá©Û Integral (¤é¥»ª©)	¹ï¾Ô³Â³¶¼ö±¡ªá©Û Integral (¤é¥»ª©)	Psikyo
 biomtoy	¥Í¤Æª±¨ã§L (unprotected)	¥Í¤Æª±¨ã§L (unprotected)	Gaelco
+djboy	DJ ¨k«Ä	DJ ¨k«Ä	Sammy / Williams [Kaneko]
+djboyj	DJ ¨k«Ä (¤é¥»ª©)	DJ ¨k«Ä (¤é¥»ª©)	Sega [Kaneko]
 airbustr	ªÅ¤¤³ùÂS (¥@¬Éª©)	ªÅ¤¤³ùÂS (¥@¬Éª©)	Kaneko (Namco license)
 airbustj	ªÅ¤¤³ùÂS (¤é¥»ª©)	ªÅ¤¤³ùÂS (¤é¥»ª©)	Kaneko (Namco license)
 galpanic	¤ÑÅúÅÜ (set 1)	¤ÑÅúÅÜ (set 1)	Kaneko
@@ -2997,6 +3005,9 @@ rongrngg	ÀsÀs (¼w°êª©)	ÀsÀs (¼w°êª©)	Nakanihon
 mjdchuka	³Â³¶ ¤j¤¤µØ°é (¤¤°êª©, v. D111)	³Â³¶ ¤j¤¤µØ°é (¤¤°êª©, v. D111)	Dynax
 ddenlovr	¶Â¥Õ´Ñ Vol. 1 (­»´äª©)	¶Â¥Õ´Ñ Vol. 1 (­»´äª©)	Dynax
 hkagerou	µØ¶§ª¢ [BET] (¤é¥»ª©)	µØ¶§ª¢ [BET] (¤é¥»ª©)	Nakanihon + Dynax
+realbrk	¼²²y¾Ç¶é Real Break (¼Ú¬wª©)	¼²²y¾Ç¶é Real Break (¼Ú¬wª©)	Nakanihon
+realbrkk	¼²²y¾Ç¶é Real Break (Áú°êª©)	¼²²y¾Ç¶é Real Break (Áú°êª©)	Nakanihon
+realbrkj	¼²²y¾Ç¶é Real Break (¤é¥»ª©)	¼²²y¾Ç¶é Real Break (¤é¥»ª©)	Nakanihon
 mjchuuka	³Â³¶¤¤µØ¨à¤k (¤¤°êª©)	³Â³¶¤¤µØ¨à¤k (¤¤°êª©)	Dynax
 mjreach1	³Â³¶ ¥ßª½¤@µo (¤é¥»ª©)	³Â³¶ ¥ßª½¤@µo (¤é¥»ª©)	Nihon System
 pkgnsh	»È¥É³Ó­t (¤é¥»ª©)	»È¥É³Ó­t (¤é¥»ª©)	Nakanihon / Dynax

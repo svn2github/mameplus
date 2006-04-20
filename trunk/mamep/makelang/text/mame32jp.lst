@@ -16,6 +16,7 @@ hangly	パックマン / Hangly-Man (set 1)	ぱっくまん	hack
 hangly2	パックマン / Hangly-Man (set 2)	ぱっくまん	hack
 hangly3	パックマン / Hangly-Man (set 3)	ぱっくまん	hack
 piranhah	パックマン / Piranha (ハック)	ぱっくまん	hack
+abscam	パックマン / Abscam	ぱっくまん	GL (US Billiards License)
 crush	クラッシュローラー (Kural Samno)	くらっしゅろーらー	Kural Samno Electric
 crush2	クラッシュローラー (Kural Esco) (海賊版?)	くらっしゅろーらー	Kural Esco Electric
 crush3	クラッシュローラー (Kural) (海賊版?)	くらっしゅろーらー	Kural Electric
@@ -47,6 +48,7 @@ mspacmat	ミズ・パックマン / Ms. Pac Attack	みずぱっくまん	hack
 woodpek	ウッドペッカー (set 1)	うっどぺっかー	Amenip (Palcom Queen River)
 woodpeka	ウッドペッカー (set 2)	うっどぺっかー	Amenip
 mspacmab	ミズ・パックマン (海賊版)	みずぱっくまん	bootleg
+mspacmbe	ミズ・パックマン (encrypted) (海賊版)	みずぱっくまん	bootleg
 pacgal	ミズ・パックマン / Pac-Gal	みずぱっくまん	hack
 mspacpls	ミズ・パックマン / Ms. Pac-Man Plus	みずぱっくまん	hack
 ponpoko	ポンポコ	ぽんぽこ	Sigma Enterprises Inc.
@@ -2006,6 +2008,7 @@ mswordr1	マジックソード -Heroic Fantasy (海外版 900623)	まじっくそーど	Capcom
 mswordu	マジックソード -Heroic Fantasy (USA版 900725)	まじっくそーど	Capcom
 mswordj	マジックソード -Heroic Fantasy (日本版 900623)	まじっくそーど	Capcom
 cawing	U.S.ネイビー / Carrier Air Wing (海外版 901012)	ゆーえすねいびー	Capcom
+cawingr1	U.S.ネイビー / Carrier Air Wing (海外版 901009)	ゆーえすねいびー	Capcom
 cawingu	U.S.ネイビー / Carrier Air Wing (USA版 901012)	ゆーえすねいびー	Capcom
 cawingj	U.S.ネイビー (日本版 901012)	ゆーえすねいびー	Capcom
 nemo	ニモ (海外版 901130)	にも	Capcom
@@ -2314,6 +2317,7 @@ sfex2j	ストリートファイターEX 2 (日本版 980312)	すとりーとふぁいたー_4いーえっく
 sfex2a	ストリートファイターEX 2 (アジア版 980312)	すとりーとふぁいたー_4いーえっくす_2_1	Capcom/Arika
 plsmaswd	スターグラディエイター2 -ナイトメア オブ ビルシュタイン / Plasma Sword (USA版 980316)	すたーぐらでぃえいたー_2	Capcom
 stargld2	スターグラディエイター2 -ナイトメア オブ ビルシュタイン (日本版 980316)	すたーぐらでぃえいたー_2	Capcom
+plsmswda	スターグラディエイター2 -ナイトメア オブ ビルシュタイン / Plasma Sword (アジア版 980316)	すたーぐらでぃえいたー_2	Capcom
 tgmj	テトリス ザ・グランドマスター (日本版 980710)	てとりす_3ざぐらんどますたー	Capcom/Arika
 techromn	超鋼戦紀キカイオー / Tech Romancer (欧州版 980914)	ちょうこうせんききかいおー	Capcom
 techromu	超鋼戦紀キカイオー / Tech Romancer (USA版 980914)	ちょうこうせんききかいおー	Capcom
@@ -3046,8 +3050,10 @@ dynabb	ダイナマイトベースボール97	だいなまいとべーすぼーる97	Sega
 zerogun	ゼロガンナー (Model 2B)	ぜろがんなー	Psikyo
 zerogunj	ゼロガンナー (日本版 Model 2B)	ぜろがんなー	Psikyo
 pltkids	パイロットキッズ (Model 2B)	ぱいろっときっず	Psikyo
+skisuprg	セガスキー スーパーG	せがすきーすーぱーじー	Sega
 stcc	セガ ツーリングカーチャンピオンシップ	せがつーりんぐかーちゃんぴおんしっぷ	Sega
 hotd	ザ・ハウス・オブ・ザ・デッド	ざはうすおぶざでっど	Sega
+overrev	オーバーレブ	おーばーれぶ	Jaleco
 topskatr	トップスケーター -Sega Skateboarding	とっぷすけーたー	Sega
 bel	ビハインド・エネミーラインズ	びはいんどえねみーらいんず	Sega/EPL Productions
 vf3	バーチャファイター3	ばーちゃふぁいたー_3_1	Sega
@@ -3836,6 +3842,7 @@ thrilld	スリルドライブ	すりるどらいぶ	Konami
 midnrun	ミッドナイトラン -ロードファイター2	みっどないとらん	Konami
 windheat	ワインディングヒート	わいんでぃんぐひーと	Konami
 polystar	とべ！ポリスターズ (ver JAA)	とべぽりすたーず	Konami
+totlvice	トータルバイス (ver JAA)	とーたるばいす	Konami
 btltryst	バトルトライスト (ver JAC)	ばとるとらいすと	Konami
 heatof11	ワールドサッカーチャンピオンシップ / Heat of Eleven '98 (ver EAA)	わーるどさっかーちゃんぴおんしっぷ	Konami
 evilngt	エヴィルナイト (ver EAA)	えびるないと	Konami
@@ -5233,6 +5240,7 @@ roldfrog	ザ・リターン・オブ・レディーフロッグ	ざりたーんおぶれでぃーふろっぐ	Mic
 roldfrga	ザ・リターン・オブ・レディーフロッグ (set 2)	ざりたーんおぶれでぃーふろっぐ	Microhard
 rebus	リーバス	りーばす	Microhard
 funystrp	ファニーストリップ	ふぁにーすとりっぷ	Microhard / MagicGames
+puckpepl	ファニーストリップ / Puck People	ふぁにーすとりっぷ	Microhard
 thoop	サンダーフープ (ver 1)	さんだーふーぷ	Gaelco
 squash	スカッシュ (ver 1.0)	すかっしゅ	Gaelco
 wrally	ワールドラリー (set 1)	わーるどらりー_1	Gaelco
@@ -5258,7 +5266,8 @@ bangj	GUNガバチョ (日本版)	がんがばちょ	Gaelco
 speedup	スピードアップ	すぴーどあっぷ	Gaelco
 surfplnt	サーフプラネット	さーふぷらねっと	Gaelco
 radikalb	ラジカルバイカーズ	らじかるばいかーず	Gaelco
-djboy	DJボーイ	でぃーじぇいぼーい	Kaneko
+djboy	DJボーイ	でぃーじぇいぼーい	Sammy / Williams [Kaneko]
+djboyj	DJボーイ (日本版)	でぃーじぇいぼーい	Sega [Kaneko]
 airbustr	エア・バスター -Trouble Specialty Raid Unit (海外版)	えあばすたー	Kaneko (Namco license)
 airbustj	エア・バスター -Trouble Specialty Raid Unit (日本版)	えあばすたー	Kaneko (Namco license)
 galpanic	ギャルズパニック (set 1)	ぎゃるずぱにっく_1	Kaneko
@@ -5502,10 +5511,10 @@ supmodel	スーパーモデル	すーぱーもでる	Comad &amp; New Japan System
 newfant	ニューファンタジア	にゅーふぁんたじあ	Comad &amp; New Japan System
 fantsy95	ファンタジー'95	ふぁんたじー95	Hi-max Technology Inc.
 zipzap	ジップ&ザップ	じっぷあんどざっぷ	Barko Corp
-missw96	ミスワールド'96ヌード	みすわーるど96ぬーど	Comad
-missmw96	ミス・ミスターワールド'96ヌード	みすみすたーわーるど96ぬーど	Comad
-fantsia2	ファンタジアII (set 1)	ふぁんたじあ_2	Comad
-fntsia2a	ファンタジアII (set 2 less explicit)	ふぁんたじあ_2	Comad
+missw96	ミスワールド'96 (Nude)	みすわーるど96	Comad
+missmw96	ミス・ミスターワールド'96 (Nude)	みすみすたーわーるど96	Comad
+fantsia2	ファンタジアII (Explicit)	ふぁんたじあ_2	Comad
+fntsia2a	ファンタジアII (Less Explicit)	ふぁんたじあ_2	Comad
 galhustl	ギャルズハスラー	ぎゃるずはすらー	ACE International
 sslam	スーパースラム (set 1)	すーぱーすらむ	Playmark
 sslama	スーパースラム (set 2)	すーぱーすらむ	Playmark
@@ -5519,7 +5528,7 @@ excelsr	エクセルシオール	えくせるしおーる	Playmark
 hotmind	ホットマインド	ほっとまいんど	Playmark
 drtomy	Dr.トミー	どくたーとみー	Playmark
 sderby	スーパーダービー	すーぱーだーびー	Playmark
-pmroulet	ルーレット (Playmark)	るーれっと	Playmark
+pmroulet	クルーピアー (Playmark Roulette)	くるーぴあー	Playmark
 sharkatt	シャークアタック	しゃーくあたっく	Pacific Novelty
 thief	シーフ	しーふ	Pacific Novelty
 natodef	NATOディフェンス	なとーでぃふぇんす	Pacific Novelty
@@ -5611,6 +5620,7 @@ bubl2000	バブル2000	ばぶる2000	Tuning
 hotbubl	ホットバブル	ほっとばぶる	Pandora
 popspops	ポップスポップス	ぽっぷすぽっぷす	Afega
 firehawk	ファイヤーホーク	ふぁいやーほーく	ESD
+mangchi	マンチ	まんち	Afega
 spec2k	スペクトラム2000 (欧州版)	すぺくとらむ2000	Yonatech
 multchmp	マルチチャンプ (海外版)	まるちちゃんぷ_1	ESD
 multchmk	マルチチャンプ (韓国版)	まるちちゃんぷ_1	ESD
@@ -5662,6 +5672,7 @@ ddenlovr	ドンデンラバー Vol.1 白黒つけよっ (香港版)	どんでんらばーぼりゅーむ1	Dy
 hanakanz	花かんざし (日本版)	はなかんざし	Dynax
 hkagerou	華陽炎 [BET] (日本版)	はなかげろう	Nakanihon + Dynax
 realbrk	ビリヤードアカデミー リアルブレイク (欧州版)	びりやーどあかでみーりあるぶれいく	Nakanihon
+realbrkk	ビリヤードアカデミー リアルブレイク (韓国版)	びりやーどあかでみーりあるぶれいく	Nakanihon
 realbrkj	ビリヤードアカデミー リアルブレイク (日本版)	びりやーどあかでみーりあるぶれいく	Nakanihon
 mjchuuka	麻雀中華兒女 (中国版)	まーじゃんちゅうかねじょ	Dynax
 mjreach1	麻雀 立直一発 (日本版)	まーじゃんりーちいっぱつ	Nihon System
@@ -5717,7 +5728,7 @@ kovsh	三國戦紀 スーパーヒーローズ (ver 322)	さんごくせんき_1_2すーぱーひーろーず
 photoy2k	リアルアンドフェイク	りあるあんどふぇいく	IGS
 raf102j	リアルアンドフェイク (日本基板 ver 102)	りあるあんどふぇいく	IGS
 killbld	ザ・キリングブレード	ざきりんぐぶれーど	IGS
-killbldt	ザ・キリングブレード (台湾版?)	ざきりんぐぶれーど	IGS
+killbldt	ザ・キリングブレード (中国基板)	ざきりんぐぶれーど	IGS
 puzlstar	パズルスター	ぱずるすたー	IGS
 olds	オリエンタルレジェンドスーパー (韓国版 ver 101)	おりえんたるれじぇんど_2すーぱー	IGS
 olds100	オリエンタルレジェンドスーパー (ver 100)	おりえんたるれじぇんど_2すーぱー	IGS
@@ -6026,8 +6037,9 @@ puzlbang	ラップラップパズル (ver 2.8 / 990106)	らっぷらっぷぱずる	Omega System
 suplup	スーパーラップラップパズル (ver 4.0 / 990518)	すーぱーらっぷらっぷぱずる	Omega System
 vamphalf	ヴァンプ×1／2 (韓国版)	ばんぷはーふ	Danbi &amp; F2 System
 misncrft	ミッションクラフト (ver 2.4)	みっしょんくらふと	Sun
-puzzlekg	パズルキング -Dance & Puzzle	ぱずるきんぐ	Eolith
 hidnctch	ヒドゥンキャッチ (海外版 pcb ver 3.03)	ひどぅんきゃっち	Eolith
+puzzlekg	パズルキング -Dance & Puzzle	ぱずるきんぐ	Eolith
+nhidctch	ニューヒドゥンキャッチ (韓国版 pcb ver 3.02)	にゅーひどぅんきゃっち	Eolith
 landbrk	ランドブレイカー (海外版 pcb ver 3.02)	らんどぶれいかー	Eolith
 landbrka	ランドブレイカー (海外版 pcb ver 3.03)	らんどぶれいかー	Eolith
 raccoon	ラクーンワールド	らくーんわーるど	Eolith
@@ -6152,3 +6164,4 @@ rbmk	実戦麻将王	じっせんまーじゃんおう	GMS
 go2000	ゴー2000	ごーつーさうざん	SA
 mirax	ミラックス	みらっくす	Current Technologies
 lastfght	ラストファイティング	らすとふぁいてぃんぐ	Subsino
+sliver	スリバー	すりばー	Hollow Corp
