@@ -783,7 +783,7 @@ Could not open '%s' as a valid savestate file.
 
 
 # ui/mame32.rc: 861
-Crop Artwork
+Crop artwork
 
 
 # ui/properties.c: 491

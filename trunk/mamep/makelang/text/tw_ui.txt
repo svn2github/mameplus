@@ -763,7 +763,7 @@ Could not open '%s' as a valid savestate file.
 無法開啟 '%s' 為有效的儲存狀態檔。
 
 # ui/mame32.rc: 861
-Crop Artwork
+Crop artwork
 裁切 Artwork 圖片
 
 # ui/properties.c: 491
