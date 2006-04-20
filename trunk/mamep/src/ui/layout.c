@@ -56,7 +56,7 @@ FOLDERDATA g_folderData[] =
 	{"Year",            "year",              FOLDER_YEAR,         IDI_FOLDER_YEAR,          0,             0,            CreateYearFolders },
 	{"Driver",          "driver",            FOLDER_SOURCE,       IDI_FOLDER_SOURCE,        0,             0,            CreateSourceFolders },
 #ifdef MISC_FOLDER
-	{"BIOS",            "bios",              FOLDER_BIOS,         IDI_FOLDER,               0,             0,            CreateBIOSFolders },
+	{"BIOS",            "bios",              FOLDER_BIOS,         IDI_FOLDER,               0,             0,            CreateBIOSFolders,          DriverIsBios,  TRUE },
 #endif /* MISC_FOLDER */
 	{"CPU",             "cpu",               FOLDER_CPU,          IDI_FOLDER,               0,             0,            CreateCPUFolders },
 	{"Sound",           "sound",             FOLDER_SND,          IDI_FOLDER,               0,             0,            CreateSoundFolders },
