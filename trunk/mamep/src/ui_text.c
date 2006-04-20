@@ -85,7 +85,7 @@ static const char *mame_default_text[] =
 	"The sound emulation isn't 100% accurate.",
 	"The " GAMENOUN " lacks sound.",
 	"Screen flipping in cocktail mode is not supported.",
-	"THIS " CAPGAMENOUN " DOESN'T WORK PROPERLY",
+	"THIS " CAPGAMENOUN " DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.",
 	"The " GAMENOUN " has protection which isn't fully emulated.",
 	"There are working clones of this " GAMENOUN ". They are:",
 	"One or more ROMs/CHDs for this " GAMENOUN " are incorrect. The " GAMENOUN " may not run correctly.",
