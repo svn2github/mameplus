@@ -38,6 +38,7 @@
 #include "patch.h"
 #endif /* USE_IPS */
 
+
 /***************************************************************************
 	function prototypes
  ***************************************************************************/
@@ -497,6 +498,15 @@ BOOL DriverIsHarddisk(int driver_index)
 {
 	return GetDriversInfo(driver_index)->isHarddisk;
 }
+
+BOOL DriverIsBios(int driver_index)
+{
+	BOOL bBios = FALSE;
+	if( !( (drivers[driver_index]->flags & NOT_A_DRIVER ) == 0)   )
+		bBios = TRUE;
+	return bBios;
+}
+
 
 BOOL DriverHasOptionalBIOS(int driver_index)
 {

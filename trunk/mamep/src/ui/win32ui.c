@@ -7820,6 +7820,7 @@ BOOL MouseHasBeenMoved(void)
 
 BOOL SendIconToEmulationWindow(int nGameIndex)
 {
+	const game_driver *clone_of = NULL;
 	HICON hIcon; 
 	hIcon = LoadIconFromFile(drivers[nGameIndex]->name); 
 	if( hIcon == NULL ) 
@@ -7827,7 +7828,8 @@ BOOL SendIconToEmulationWindow(int nGameIndex)
 		//Check if clone, if so try parent icon first 
 		if( DriverIsClone(nGameIndex) ) 
 		{ 
-			hIcon = LoadIconFromFile(drivers[nGameIndex]->parent); 
+			if( ( clone_of = driver_get_clone(drivers[nGameIndex])) != NULL )
+				hIcon = LoadIconFromFile(clone_of->name); 
 			if( hIcon == NULL) 
 			{ 
 				hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_MAME32_ICON)); 
@@ -7908,13 +7910,15 @@ HWND GetGameWindow(void)
 void SendIconToProcess(LPPROCESS_INFORMATION pi, int nGameIndex)
 {
 	HICON hIcon; 
+	const game_driver *clone_of = NULL;
 	hIcon = LoadIconFromFile(drivers[nGameIndex]->name); 
 	if( hIcon == NULL ) 
 	{ 
 		//Check if clone, if so try parent icon first 
 		if( DriverIsClone(nGameIndex) ) 
 		{ 
-			hIcon = LoadIconFromFile(drivers[nGameIndex]->parent); 
+			if( ( clone_of = driver_get_clone(drivers[nGameIndex])) != NULL )
+				hIcon = LoadIconFromFile(clone_of->name); 
 			if( hIcon == NULL) 
 			{ 
 				hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_MAME32_ICON)); 

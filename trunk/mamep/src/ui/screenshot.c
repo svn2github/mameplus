@@ -110,7 +110,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 	if (lpSoftwareName)
 	{
 		loaded = LoadSoftwareScreenShot(drivers[nGame], lpSoftwareName, nType);
-		if (!loaded && DriverIsClone(nGame))
+		if (!loaded && ((clone_of = driver_get_clone(drivers[nGame])) != NULL && !(clone_of->flags & NOT_A_DRIVER)))
 			loaded = LoadSoftwareScreenShot(clone_of, lpSoftwareName, nType);
 	}
 	if (!loaded)

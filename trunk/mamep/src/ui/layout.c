@@ -85,6 +85,7 @@ FOLDERDATA g_folderData[] =
 	{"Samples",    	    "samples",           FOLDER_SAMPLES,      IDI_FOLDER,               0,             0,            NULL,                       DriverUsesSamples,  TRUE },
 #ifndef MISC_FOLDER
 	{"Save State",      "savestate",         FOLDER_SAVESTATE,    IDI_FOLDER,               0,             0,            NULL,                       DriverSupportsSaveState,  TRUE },
+	{"BIOS",            "bios",              FOLDER_BIOS,         IDI_FOLDER,               0,             0,            NULL,                       DriverIsBios,  TRUE },
 #endif /* !MISC_FOLDER */
 	{ NULL }
 };

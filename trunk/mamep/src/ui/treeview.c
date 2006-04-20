@@ -387,6 +387,13 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 	LPTREEFOLDER lpFolder = GetCurrentFolder();
 	LPTREEFOLDER lpParent = NULL;
 	const game_driver *clone_of = NULL;
+	
+	//Filter out the Bioses on all Folders, except for the Bios Folder
+	if( lpFolder->m_nFolderId != FOLDER_BIOS )
+	{
+		if( !( (drivers[nGame]->flags & NOT_A_DRIVER ) == 0) )
+			return TRUE;
+	}
 	// Filter games--return TRUE if the game should be HIDDEN in this view
 	if( GetFilterInherit() )
 	{

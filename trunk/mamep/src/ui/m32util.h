@@ -42,6 +42,7 @@ BOOL DriverHasOptionalBIOS(int driver_index);
 BOOL DriverIsStereo(int driver_index);
 BOOL DriverSupportsDisable2ndMon(int driver_index);
 BOOL DriverIsVector(int driver_index);
+BOOL DriverIsBios(int driver_index);
 BOOL DriverUsesRoms(int driver_index);
 BOOL DriverUsesSamples(int driver_index);
 BOOL DriverUsesYM3812(int driver_index);

@@ -8,6 +8,7 @@
 
 static const char *stat_versions[] =
 {
+	"0.105u2    April     19th 2006",
 	"0.105u1    April     13th 2006",
 	"0.105      April      4th 2006",
 	"0.104u9    April      2nd 2006",
@@ -323,7 +324,8 @@ static const char *stat_versions[] =
 
 static const char *stat_history[] =
 {
-	"0.105u1    858    6129  +33",
+	"0.105u2    865    6116  +13",
+	"0.105u1    858    6103  +7",
 	"0.105      858    6096  +0",
 	"0.104u9    858    6096  +15",
 	"0.104u8    856    6081  +14",
@@ -2143,7 +2145,7 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 		strcat(buffer, "\n");
 
 		if (drv->flags & GAME_NOT_WORKING)
-			strcat(buffer, _("THIS GAME DOESN'T WORK PROPERLY\n"));
+			strcat(buffer, _("THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n"));
 
 		if (drv->flags & GAME_UNEMULATED_PROTECTION)
 			strcat(buffer, _("The game has protection which isn't fully emulated.\n"));
