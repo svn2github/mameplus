@@ -501,24 +501,28 @@ static const char * scale_effects_long_name[] =
 	"None",
 	"Andrea's Scale2x",
 	"Andrea's Scale2x3",
-#ifdef SUPPORT_4X_EFFECT
+#ifdef USE_4X_SCALE
 	"Andrea's Scale2x4",
-#endif /* SUPPORT_4X_EFFECT */
+#endif /* USE_4X_SCALE */
 	"Andrea's Scale3x",
-	"Dirk Stevens' Eagle",
 	"ElSemi's SuperScale",
 	"SuperScale 75% SL",
 	"Kreed's 2xSaI",
 	"Kreed's Super 2xSaI",
 	"Kreed's Super Eagle",
+	"Dirk Stevens' Eagle",
 	"Maxim Stepin's HQ2x",
+	"Andrea's HQ2x3",
+	"Andrea's HQ2x4",
 	"Andrea's LQ2x",
+	"Andrea's LQ2x3",
+	"Andrea's LQ2x4",
 	"Maxim Stepin's HQ3x",
 	"Andrea's LQ3x",
-#ifdef SUPPORT_4X_EFFECT
+#ifdef USE_4X_SCALE
 	"Maxim Stepin's HQ4x",
 	"Andrea's LQ4x",
-#endif /* SUPPORT_4X_EFFECT */
+#endif /* USE_4X_SCALE */
 	NULL
 };
 
@@ -527,24 +531,28 @@ static const char * scale_effects_short_name[] =
 	"none",
 	"scale2x",
 	"scale2x3",
-#ifdef SUPPORT_4X_EFFECT
+#ifdef USE_4X_SCALE
 	"scale2x4",
-#endif /* SUPPORT_4X_EFFECT */
+#endif /* USE_4X_SCALE */
 	"scale3x",
-	"eagle",
 	"superscale",
 	"superscale75",
 	"2xsai",
 	"super2xsai",
 	"supereagle",
+	"eagle",
 	"hq2x",
+	"hq2x3",
+	"hq2x4",
 	"lq2x",
+	"lq2x3",
+	"lq2x4",
 	"hq3x",
 	"lq3x",
-#ifdef SUPPORT_4X_EFFECT
+#ifdef USE_4X_SCALE
 	"hq4x",
 	"lq4x",
-#endif /* SUPPORT_4X_EFFECT */
+#endif /* USE_4X_SCALE */
 	NULL
 };
 
@@ -1400,7 +1408,6 @@ INT_PTR CALLBACK GamePropertiesDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LP
 		UpdateBackgroundBrush(hWnd);
 		ShowWindow(hDlg, SW_SHOW);
 		return 1;
-
 	}
 	return 0;
 }

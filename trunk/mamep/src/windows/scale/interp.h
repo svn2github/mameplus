@@ -40,10 +40,16 @@
 
 static __M64_CONST CONST_ZERO = _MM_PI16(0, 0, 0, 0);
 static __M64_CONST CONST_3333 = _MM_PI16(3, 3, 3, 3);
+static __M64_CONST CONST_4444 = _MM_PI16(4, 4, 4, 4);
 static __M64_CONST CONST_5555 = _MM_PI16(5, 5, 5, 5);
 static __M64_CONST CONST_6666 = _MM_PI16(6, 6, 6, 6);
 static __M64_CONST CONST_7777 = _MM_PI16(7, 7, 7, 7);
+static __M64_CONST CONST_8888 = _MM_PI16(8, 8, 8, 8);
 static __M64_CONST CONST_9999 = _MM_PI16(9, 9, 9, 9);
+static __M64_CONST CONST_AAAA = _MM_PI16(10, 10, 10, 10);
+static __M64_CONST CONST_BBBB = _MM_PI16(11, 11, 11, 11);
+static __M64_CONST CONST_CCCC = _MM_PI16(12, 12, 12, 12);
+static __M64_CONST CONST_DDDD = _MM_PI16(13, 13, 13, 13);
 static __M64_CONST CONST_EEEE = _MM_PI16(14, 14, 14, 14);
 static __M64_CONST CONST_FFFF = _MM_PI16(15, 15, 15, 15);
 
@@ -189,6 +195,35 @@ INLINE __m64 interp_71(__m64 c1, __m64 c2)
 	return _mm_srli_pi16(_mm_add_pi16(c1, c2), 3);
 }
 
+INLINE __m64 interp_655(__m64 c1, __m64 c2, __m64 c3)
+{
+	// (c1*6+c2*5+c3*5)/16;
+	c1 = _mm_mullo_pi16(c1, CONST_6666);
+	c2 = _mm_add_pi16(c2, c3);
+	c2 = _mm_mullo_pi16(c2, CONST_5555);
+	return _mm_srli_pi16(_mm_add_pi16(c1, c2), 4);
+}
+
+INLINE __m64 interp_754(__m64 c1, __m64 c2, __m64 c3)
+{
+	// (c1*7+c2*5+c3*4)/16;
+	c1 = _mm_mullo_pi16(c1, CONST_7777);
+	c2 = _mm_mullo_pi16(c2, CONST_5555);
+	c3 = _mm_mullo_pi16(c3, CONST_4444);
+	c2 = _mm_add_pi16(c2, c3);
+	return _mm_srli_pi16(_mm_add_pi16(c1, c2), 4);
+}
+
+INLINE __m64 interp_763(__m64 c1, __m64 c2, __m64 c3)
+{
+	// (c1*7+c2*6+c3*3)/16;
+	c1 = _mm_mullo_pi16(c1, CONST_7777);
+	c2 = _mm_mullo_pi16(c2, CONST_6666);
+	c3 = _mm_mullo_pi16(c3, CONST_3333);
+	c2 = _mm_add_pi16(c2, c3);
+	return _mm_srli_pi16(_mm_add_pi16(c1, c2), 4);
+}
+
 INLINE __m64 interp_772(__m64 c1, __m64 c2, __m64 c3)
 {
 	// ((c1+c2)*7+c3*2)/16;
@@ -196,6 +231,88 @@ INLINE __m64 interp_772(__m64 c1, __m64 c2, __m64 c3)
 	c1 = _mm_mullo_pi16(c1, CONST_7777);
 	c3 = _mm_add_pi16(c3, c3);
 	return _mm_srli_pi16(_mm_add_pi16(c1, c3), 4);
+}
+
+INLINE __m64 interp_853(__m64 c1, __m64 c2, __m64 c3)
+{
+	// (c1*8+c2*5+c3*3)/16;
+	c1 = _mm_mullo_pi16(c1, CONST_8888);
+	c2 = _mm_mullo_pi16(c2, CONST_5555);
+	c3 = _mm_mullo_pi16(c3, CONST_3333);
+	c2 = _mm_add_pi16(c2, c3);
+	return _mm_srli_pi16(_mm_add_pi16(c1, c2), 4);
+}
+
+INLINE __m64 interp_943(__m64 c1, __m64 c2, __m64 c3)
+{
+	// (c1*9+c2*4+c3*3)/16;
+	c1 = _mm_mullo_pi16(c1, CONST_9999);
+	c2 = _mm_mullo_pi16(c2, CONST_4444);
+	c3 = _mm_mullo_pi16(c3, CONST_3333);
+	c2 = _mm_add_pi16(c2, c3);
+	return _mm_srli_pi16(_mm_add_pi16(c1, c2), 4);
+}
+
+INLINE __m64 interp_961(__m64 c1, __m64 c2, __m64 c3)
+{
+	// (c1*9+c2*6+c3)/16;
+	c1 = _mm_mullo_pi16(c1, CONST_9999);
+	c2 = _mm_mullo_pi16(c2, CONST_6666);
+	c2 = _mm_add_pi16(c2, c3);
+	return _mm_srli_pi16(_mm_add_pi16(c1, c2), 4);
+}
+
+INLINE __m64 interp_1033(__m64 c1, __m64 c2, __m64 c3)
+{
+	// (c1*10+c2*3+c3*3)/16;
+	c1 = _mm_mullo_pi16(c1, CONST_AAAA);
+	c2 = _mm_add_pi16(c2, c3);
+	c2 = _mm_mullo_pi16(c2, CONST_3333);
+	return _mm_srli_pi16(_mm_add_pi16(c1, c2), 4);
+}
+
+INLINE __m64 interp_1051(__m64 c1, __m64 c2, __m64 c3)
+{
+	// (c1*10+c2*5+c3)/16;
+	c1 = _mm_mullo_pi16(c1, CONST_AAAA);
+	c2 = _mm_mullo_pi16(c2, CONST_5555);
+	c2 = _mm_add_pi16(c2, c3);
+	return _mm_srli_pi16(_mm_add_pi16(c1, c2), 4);
+}
+
+INLINE __m64 interp_1132(__m64 c1, __m64 c2, __m64 c3)
+{
+	// (c1*11+c2*3+c3*2)/16;
+	c1 = _mm_mullo_pi16(c1, CONST_BBBB);
+	c2 = _mm_mullo_pi16(c2, CONST_3333);
+	c3 = _mm_add_pi16(c3, c3);
+	c2 = _mm_add_pi16(c2, c3);
+	return _mm_srli_pi16(_mm_add_pi16(c1, c2), 4);
+}
+
+INLINE __m64 interp_115(__m64 c1, __m64 c2)
+{
+	// (c1*11+c2*5)/16;
+	c1 = _mm_mullo_pi16(c1, CONST_BBBB);
+	c2 = _mm_mullo_pi16(c2, CONST_5555);
+	return _mm_srli_pi16(_mm_add_pi16(c1, c2), 4);
+}
+
+INLINE __m64 interp_1231(__m64 c1, __m64 c2, __m64 c3)
+{
+	// (c1*12+c2*3+c3)/16;
+	c1 = _mm_mullo_pi16(c1, CONST_CCCC);
+	c2 = _mm_mullo_pi16(c2, CONST_3333);
+	c2 = _mm_add_pi16(c2, c3);
+	return _mm_srli_pi16(_mm_add_pi16(c1, c2), 4);
+}
+
+INLINE __m64 interp_133(__m64 c1, __m64 c2)
+{
+	// (c1*13+c2*3)/16;
+	c1 = _mm_mullo_pi16(c1, CONST_DDDD);
+	c2 = _mm_mullo_pi16(c2, CONST_3333);
+	return _mm_srli_pi16(_mm_add_pi16(c1, c2), 4);
 }
 
 INLINE __m64 interp_1411(__m64 c1, __m64 c2, __m64 c3)
@@ -247,6 +364,35 @@ INLINE int interp_diff(UINT16 c1, UINT16 c2)
 #define INTERP_15_HNMASK 	(~0x00c210U)
 #define INTERP_16_HNMASK 	(~0x008410U)
 #define INTERP_32_HNMASK 	(~0x808080U)
+
+#define INTERP_16_GEN2(a,b) \
+INLINE UINT16 interp_16_##a##b(UINT16 p1, UINT16 p2) \
+{ \
+	return INTERP_16_MASK_1((INTERP_16_MASK_1(p1)*a + INTERP_16_MASK_1(p2)*b) / 16) \
+		| INTERP_16_MASK_2((INTERP_16_MASK_2(p1)*a + INTERP_16_MASK_2(p2)*b) / 16); \
+}
+
+#define INTERP_16_GEN3(a,b,c) \
+INLINE UINT16 interp_16_##a##b##c(UINT16 p1, UINT16 p2, UINT16 p3) \
+{ \
+	return INTERP_16_MASK_1((INTERP_16_MASK_1(p1)*a + INTERP_16_MASK_1(p2)*b + INTERP_16_MASK_1(p3)*c) / 16) \
+		| INTERP_16_MASK_2((INTERP_16_MASK_2(p1)*a + INTERP_16_MASK_2(p2)*b + INTERP_16_MASK_2(p3)*c) / 16); \
+}
+
+#define INTERP_32_GEN2(a,b) \
+INLINE UINT32 interp_32_##a##b(UINT32 p1, UINT32 p2) \
+{ \
+	return INTERP_32_MASK_1((INTERP_32_MASK_1(p1)*a + INTERP_32_MASK_1(p2)*b) / 16) \
+		| INTERP_32_MASK_2((INTERP_32_MASK_2(p1)*a + INTERP_32_MASK_2(p2)*b) / 16); \
+}
+
+#define INTERP_32_GEN3(a,b,c) \
+INLINE UINT32 interp_32_##a##b##c(UINT32 p1, UINT32 p2, UINT32 p3) \
+{ \
+	return INTERP_32_MASK_1((INTERP_32_MASK_1(p1)*a + INTERP_32_MASK_1(p2)*b + INTERP_32_MASK_1(p3)*c) / 16) \
+		| INTERP_32_MASK_2((INTERP_32_MASK_2(p1)*a + INTERP_32_MASK_2(p2)*b + INTERP_32_MASK_2(p3)*c) / 16); \
+}
+
 
 INLINE UINT16 interp_15_11(UINT16 p1, UINT16 p2)
 {
@@ -468,29 +614,22 @@ INLINE UINT16 interp_16_71(UINT16 p1, UINT16 p2)
 #endif
 }
 
-INLINE UINT16 interp_16_772(UINT16 p1, UINT16 p2, UINT16 p3)
-{
-	return INTERP_16_MASK_1(((INTERP_16_MASK_1(p1) + INTERP_16_MASK_1(p2))*7 + INTERP_16_MASK_1(p3)*2) / 16)
-		| INTERP_16_MASK_2(((INTERP_16_MASK_2(p1) + INTERP_16_MASK_2(p2))*7 + INTERP_16_MASK_2(p3)*2) / 16);
-}
-
-INLINE UINT16 interp_16_1411(UINT16 p1, UINT16 p2, UINT16 p3)
-{
-	return INTERP_16_MASK_1((INTERP_16_MASK_1(p1)*14 + INTERP_16_MASK_1(p2) + INTERP_16_MASK_1(p3)) / 16)
-		| INTERP_16_MASK_2((INTERP_16_MASK_2(p1)*14 + INTERP_16_MASK_2(p2) + INTERP_16_MASK_2(p3)) / 16);
-}
-
-INLINE UINT16 interp_16_151(UINT16 p1, UINT16 p2)
-{
-	return INTERP_16_MASK_1((INTERP_16_MASK_1(p1)*15 + INTERP_16_MASK_1(p2)) / 16)
-		| INTERP_16_MASK_2((INTERP_16_MASK_2(p1)*15 + INTERP_16_MASK_2(p2)) / 16);
-}
-
-INLINE UINT16 interp_16_97(UINT16 p1, UINT16 p2)
-{
-	return INTERP_16_MASK_1((INTERP_16_MASK_1(p1)*9 + INTERP_16_MASK_1(p2)*7) / 16)
-		| INTERP_16_MASK_2((INTERP_16_MASK_2(p1)*9 + INTERP_16_MASK_2(p2)*7) / 16);
-}
+INTERP_16_GEN3(6,5,5)
+INTERP_16_GEN3(7,5,4)
+INTERP_16_GEN3(7,6,3)
+INTERP_16_GEN3(7,7,2)
+INTERP_16_GEN3(8,5,3)
+INTERP_16_GEN3(9,4,3)
+INTERP_16_GEN3(9,6,1)
+INTERP_16_GEN3(10,3,3)
+INTERP_16_GEN3(10,5,1)
+INTERP_16_GEN3(11,3,2)
+INTERP_16_GEN2(11,5)
+INTERP_16_GEN3(12,3,1)
+INTERP_16_GEN2(13,3)
+INTERP_16_GEN3(14,1,1)
+INTERP_16_GEN2(15,1)
+INTERP_16_GEN2(9,7)
 
 INLINE UINT32 interp_32_11(UINT32 p1, UINT32 p2)
 {
@@ -590,30 +729,22 @@ INLINE UINT32 interp_32_71(UINT32 p1, UINT32 p2)
 #endif
 }
 
-INLINE UINT32 interp_32_772(UINT32 p1, UINT32 p2, UINT32 p3)
-{
-	return INTERP_32_MASK_1(((INTERP_32_MASK_1(p1) + INTERP_32_MASK_1(p2))*7 + INTERP_32_MASK_1(p3)*2) / 16)
-		| INTERP_32_MASK_2(((INTERP_32_MASK_2(p1) + INTERP_32_MASK_2(p2))*7 + INTERP_32_MASK_2(p3)*2) / 16);
-}
-
-INLINE UINT32 interp_32_1411(UINT32 p1, UINT32 p2, UINT32 p3)
-{
-	return INTERP_32_MASK_1((INTERP_32_MASK_1(p1)*14 + INTERP_32_MASK_1(p2) + INTERP_32_MASK_1(p3)) / 16)
-		| INTERP_32_MASK_2((INTERP_32_MASK_2(p1)*14 + INTERP_32_MASK_2(p2) + INTERP_32_MASK_2(p3)) / 16);
-}
-
-INLINE UINT32 interp_32_151(UINT32 p1, UINT32 p2)
-{
-	return INTERP_32_MASK_1((INTERP_32_MASK_1(p1)*15 + INTERP_32_MASK_1(p2)) / 16)
-		| INTERP_32_MASK_2((INTERP_32_MASK_2(p1)*15 + INTERP_32_MASK_2(p2)) / 16);
-}
-
-INLINE UINT32 interp_32_97(UINT32 p1, UINT32 p2)
-{
-	return INTERP_32_MASK_1((INTERP_32_MASK_1(p1)*9 + INTERP_32_MASK_1(p2)*7) / 16)
-		| INTERP_32_MASK_2((INTERP_32_MASK_2(p1)*9 + INTERP_32_MASK_2(p2)*7) / 16);
-}
-
+INTERP_32_GEN3(6,5,5)
+INTERP_32_GEN3(7,5,4)
+INTERP_32_GEN3(7,6,3)
+INTERP_32_GEN3(7,7,2)
+INTERP_32_GEN3(8,5,3)
+INTERP_32_GEN3(9,4,3)
+INTERP_32_GEN3(9,6,1)
+INTERP_32_GEN3(10,3,3)
+INTERP_32_GEN3(10,5,1)
+INTERP_32_GEN3(11,3,2)
+INTERP_32_GEN2(11,5)
+INTERP_32_GEN3(12,3,1)
+INTERP_32_GEN2(13,3)
+INTERP_32_GEN3(14,1,1)
+INTERP_32_GEN2(15,1)
+INTERP_32_GEN2(9,7)
 
 /***************************************************************************/
 /* diff */

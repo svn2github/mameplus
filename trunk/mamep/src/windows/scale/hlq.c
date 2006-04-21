@@ -1,16 +1,27 @@
-/* HQx C implementation */
-//#undef INTERP_MMX
-
 #include "interp.h"
 
+/* HQx C implementation */
+
 #define PIXEL_BITS 15
 #include "hlq2x.inc"
 
 #define PIXEL_BITS 16
 #include "hlq2x.inc"
 
+#define PIXEL_BITS 16
+#include "hlq2x3.inc"
+
+#define PIXEL_BITS 16
+#include "hlq2x4.inc"
+
 #define PIXEL_BITS 32
 #include "hlq2x.inc"
+
+#define PIXEL_BITS 32
+#include "hlq2x3.inc"
+
+#define PIXEL_BITS 32
+#include "hlq2x4.inc"
 
 #define PIXEL_BITS 15
 #include "hlq3x.inc"
@@ -21,7 +32,7 @@
 #define PIXEL_BITS 32
 #include "hlq3x.inc"
 
-#ifdef SUPPORT_4X_EFFECT
+#ifdef USE_4X_SCALE
 #define PIXEL_BITS 15
 #include "hlq4x.inc"
 
@@ -30,7 +41,7 @@
 
 #define PIXEL_BITS 32
 #include "hlq4x.inc"
-#endif /* SUPPORT_4X_EFFECT */
+#endif /* USE_4X_SCALE */
 
 
 /* LQx C implementation */
@@ -42,9 +53,21 @@
 #define PIXEL_BITS 16
 #include "hlq2x.inc"
 
+#define PIXEL_BITS 16
+#include "hlq2x3.inc"
+
+#define PIXEL_BITS 16
+#include "hlq2x4.inc"
+
 #define PIXEL_BITS 32
 #include "hlq2x.inc"
 
+#define PIXEL_BITS 32
+#include "hlq2x3.inc"
+
+#define PIXEL_BITS 32
+#include "hlq2x4.inc"
+
 #define PIXEL_BITS 15
 #include "hlq3x.inc"
 
@@ -54,7 +77,7 @@
 #define PIXEL_BITS 32
 #include "hlq3x.inc"
 
-#ifdef SUPPORT_4X_EFFECT
+#ifdef USE_4X_SCALE
 #define PIXEL_BITS 15
 #include "hlq4x.inc"
 
@@ -63,4 +86,4 @@
 
 #define PIXEL_BITS 32
 #include "hlq4x.inc"
-#endif /* SUPPORT_4X_EFFECT */
+#endif /* USE_4X_SCALE */

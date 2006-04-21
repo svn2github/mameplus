@@ -5,14 +5,16 @@
 #include "hlq.inc"
 
 #ifdef PIXEL_LQ_FILTER
-	#define PIXEL_PROC				_TOKEN3(lq2x_, PIXEL_BITS, _def)
+	#define PIXEL_PROC				_TOKEN3(lq2x4_, PIXEL_BITS, _def)
 #else
-	#define PIXEL_PROC				_TOKEN3(hq2x_, PIXEL_BITS, _def)
+	#define PIXEL_PROC				_TOKEN3(hq2x4_, PIXEL_BITS, _def)
 #endif
 
 void PIXEL_PROC(
 	PIXEL_UINT* dst0, 
 	PIXEL_UINT* dst1, 
+	PIXEL_UINT* dst2, 
+	PIXEL_UINT* dst3, 
 	const PIXEL_UINT* src0, 
 	const PIXEL_UINT* src1, 
 	const PIXEL_UINT* src2, 
@@ -67,9 +69,9 @@ void PIXEL_PROC(
 
 		switch (pattern) {
 #ifdef PIXEL_LQ_FILTER		
-		#include "lq2x.dat"
+		#include "lq2x4.dat"
 #else
-		#include "hq2x.dat"
+		#include "hq2x4.dat"
 #endif
 		}
 
@@ -78,6 +80,8 @@ void PIXEL_PROC(
 		src2 += 1;
 		dst0 += 2;
 		dst1 += 2;
+		dst2 += 2;
+		dst3 += 2;
 	}
 }
 

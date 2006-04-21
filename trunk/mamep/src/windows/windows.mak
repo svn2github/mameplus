@@ -150,6 +150,10 @@ else
 OSOBJS += $(OBJ)/$(MAMEOS)/scale/hlq.o
 endif
 
+ifneq ($(USE_4X_SCALE),)
+DEFS += -DUSE_4X_SCALE
+endif
+
 $(OBJ)/$(MAMEOS)/scale/superscale.o: src/$(MAMEOS)/scale/superscale.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<

@@ -9,25 +9,14 @@
 #undef _TOKEN3
 #undef _TOKEN4
 
+#undef P
 #undef MUR
 #undef MDR
 #undef MDL
 #undef MUL
-
-#undef IC
-#undef I11
-#undef I211
-#undef I31
-#undef I332
-#undef I431
-#undef I521
-#undef I53
-#undef I611
-#undef I71
-#undef I772
-#undef I97
-#undef I1411
-#undef I151
+#undef I1
+#undef I2
+#undef I3
 
 #undef PIXEL_UINT
 #undef PIXEL_INDEX
@@ -55,7 +44,6 @@
 
 	#if PIXEL_BITS == 16
 		#define PIXEL_COLOR				PIXEL_UINT
-		#define PIXEL_INDEX				PIXEL_UINT
 		#define PIXEL_PACK(v)			(v)
 		#define PIXEL_UNPACK(v)			(v)
 		#define PIXEL_COPY(p0, p1)		c[p0] = c[p1]
@@ -93,7 +81,6 @@
 #else
 
 	#define PIXEL_COLOR					PIXEL_UINT
-	#define PIXEL_INDEX					PIXEL_UINT
 	#define PIXEL_PACK(v)				v
 	#define PIXEL_UNPACK(v)				v
 	#define PIXEL_SRC(p, v)				c[p] = v
@@ -110,22 +97,13 @@
 		
 #endif
 
+#define P(a, b) 						_TOKEN2(dst, b)[a]
+
 #define MUR								PIXEL_DIFF(1, 5)
 #define MDR								PIXEL_DIFF(5, 7)
 #define MDL								PIXEL_DIFF(7, 3)
 #define MUL								PIXEL_DIFF(3, 1)
 
-#define IC(p0)							INTERP_0(p0)
-#define I11(p0,p1)						PIXEL_PACK(INTERP_(11)(c[p0], c[p1]))
-#define I211(p0,p1,p2)					PIXEL_PACK(INTERP_(211)(c[p0], c[p1], c[p2]))
-#define I31(p0,p1)						PIXEL_PACK(INTERP_(31)(c[p0], c[p1]))
-#define I332(p0,p1,p2)					PIXEL_PACK(INTERP_(332)(c[p0], c[p1], c[p2]))
-#define I431(p0,p1,p2)					PIXEL_PACK(INTERP_(431)(c[p0], c[p1], c[p2]))
-#define I521(p0,p1,p2)					PIXEL_PACK(INTERP_(521)(c[p0], c[p1], c[p2]))
-#define I53(p0,p1)						PIXEL_PACK(INTERP_(53)(c[p0], c[p1]))
-#define I611(p0,p1,p2)					PIXEL_PACK(INTERP_(611)(c[p0], c[p1], c[p2]))
-#define I71(p0,p1)						PIXEL_PACK(INTERP_(71)(c[p0], c[p1]))
-#define I772(p0,p1,p2)					PIXEL_PACK(INTERP_(772)(c[p0], c[p1], c[p2]))
-#define I97(p0,p1)						PIXEL_PACK(INTERP_(97)(c[p0], c[p1]))
-#define I1411(p0,p1,p2)					PIXEL_PACK(INTERP_(1411)(c[p0], c[p1], c[p2]))
-#define I151(p0,p1)						PIXEL_PACK(INTERP_(151)(c[p0], c[p1]))
+#define I1(p0) 							INTERP_0(p0)
+#define I2(i0, i1, p0, p1) 				PIXEL_PACK(INTERP_(_TOKEN2(i0, i1))(c[p0], c[p1]))
+#define I3(i0, i1, i2, p0, p1, p2) 		PIXEL_PACK(INTERP_(_TOKEN3(i0, i1, i2))(c[p0], c[p1], c[p2]))

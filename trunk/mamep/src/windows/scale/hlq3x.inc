@@ -10,16 +10,6 @@
 	#define PIXEL_PROC				_TOKEN3(hq3x_, PIXEL_BITS, _def)
 #endif
 
-#define P0 							dst0[0]
-#define P1 							dst0[1]
-#define P2 							dst0[2]
-#define P3 							dst1[0]
-#define P4 							dst1[1]
-#define P5 							dst1[2]
-#define P6 							dst2[0]
-#define P7 							dst2[1]
-#define P8 							dst2[2]
-
 void PIXEL_PROC(
 	PIXEL_UINT* dst0, 
 	PIXEL_UINT* dst1, 
@@ -31,7 +21,9 @@ void PIXEL_PROC(
 {
 	int pattern;
 	PIXEL_COLOR c[9];
+#ifdef PIXEL_INDEX
 	PIXEL_INDEX s[9];
+#endif
 
 	unsigned i;
 	unsigned last = count - 1;
@@ -90,16 +82,6 @@ void PIXEL_PROC(
 		dst2 += 3;
 	}
 }
-
-#undef P0
-#undef P1
-#undef P2
-#undef P3
-#undef P4
-#undef P5
-#undef P6
-#undef P7
-#undef P8
 
 #undef PIXEL_BITS
 #undef PIXEL_PROC
