@@ -10,12 +10,7 @@
 #include "rc.h"
 
 // scale2x
-#ifdef __GNUC__
- #include "scale/scale2x.h"
-#else
- #define __restrict__
- #include "scale/scale2x_vc.h"
-#endif
+#include "scale/scale2x.h"
 #include "scale/scale3x.h"
 #include "scale/hlq.h"
 

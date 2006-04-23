@@ -32,17 +32,10 @@
  * - derivative works of the program are allowed.
  */
 
-#ifndef __SCALE2X_H
-#define __SCALE2X_H
+
+#include "scale2x.h"
 
 #include <assert.h>
-
-/***************************************************************************/
-/* Basic types */
-
-typedef unsigned char scale2x_uint8;
-typedef unsigned short scale2x_uint16;
-typedef unsigned scale2x_uint32;
 
 /***************************************************************************/
 /* Scale2x C implementation */
@@ -56,7 +49,7 @@ typedef unsigned scale2x_uint32;
  */
 /* #define USE_SCALE_RANDOMWRITE */
 
-INLINE void scale2x_8_def_whole(scale2x_uint8* __restrict__ dst0, scale2x_uint8* __restrict__ dst1, const scale2x_uint8* __restrict__ src0, const scale2x_uint8* __restrict__ src1, const scale2x_uint8* __restrict__ src2, unsigned count)
+INLINE void scale2x_8_def_whole(scale2x_uint8* restrict dst0, scale2x_uint8* restrict dst1, const scale2x_uint8* restrict src0, const scale2x_uint8* restrict src1, const scale2x_uint8* restrict src2, unsigned count)
 {
 	assert(count >= 2);
 
@@ -115,7 +108,7 @@ INLINE void scale2x_8_def_whole(scale2x_uint8* __restrict__ dst0, scale2x_uint8*
 	}
 }
 
-INLINE void scale2x_8_def_border(scale2x_uint8* __restrict__ dst, const scale2x_uint8* __restrict__ src0, const scale2x_uint8* __restrict__ src1, const scale2x_uint8* __restrict__ src2, unsigned count)
+INLINE void scale2x_8_def_border(scale2x_uint8* restrict dst, const scale2x_uint8* restrict src0, const scale2x_uint8* restrict src1, const scale2x_uint8* restrict src2, unsigned count)
 {
 	assert(count >= 2);
 
@@ -160,7 +153,7 @@ INLINE void scale2x_8_def_border(scale2x_uint8* __restrict__ dst, const scale2x_
 	}
 }
 
-INLINE void scale2x_8_def_center(scale2x_uint8* __restrict__ dst, const scale2x_uint8* __restrict__ src0, const scale2x_uint8* __restrict__ src1, const scale2x_uint8* __restrict__ src2, unsigned count)
+INLINE void scale2x_8_def_center(scale2x_uint8* restrict dst, const scale2x_uint8* restrict src0, const scale2x_uint8* restrict src1, const scale2x_uint8* restrict src2, unsigned count)
 {
 	assert(count >= 2);
 
@@ -205,7 +198,7 @@ INLINE void scale2x_8_def_center(scale2x_uint8* __restrict__ dst, const scale2x_
 	}
 }
 
-INLINE void scale2x_16_def_whole(scale2x_uint16* __restrict__ dst0, scale2x_uint16* __restrict__ dst1, const scale2x_uint16* __restrict__ src0, const scale2x_uint16* __restrict__ src1, const scale2x_uint16* __restrict__ src2, unsigned count)
+INLINE void scale2x_16_def_whole(scale2x_uint16* restrict dst0, scale2x_uint16* restrict dst1, const scale2x_uint16* restrict src0, const scale2x_uint16* restrict src1, const scale2x_uint16* restrict src2, unsigned count)
 {
 	assert(count >= 2);
 
@@ -264,7 +257,7 @@ INLINE void scale2x_16_def_whole(scale2x_uint16* __restrict__ dst0, scale2x_uint
 	}
 }
 
-INLINE void scale2x_16_def_border(scale2x_uint16* __restrict__ dst, const scale2x_uint16* __restrict__ src0, const scale2x_uint16* __restrict__ src1, const scale2x_uint16* __restrict__ src2, unsigned count)
+INLINE void scale2x_16_def_border(scale2x_uint16* restrict dst, const scale2x_uint16* restrict src0, const scale2x_uint16* restrict src1, const scale2x_uint16* restrict src2, unsigned count)
 {
 	assert(count >= 2);
 
@@ -309,7 +302,7 @@ INLINE void scale2x_16_def_border(scale2x_uint16* __restrict__ dst, const scale2
 	}
 }
 
-INLINE void scale2x_16_def_center(scale2x_uint16* __restrict__ dst, const scale2x_uint16* __restrict__ src0, const scale2x_uint16* __restrict__ src1, const scale2x_uint16* __restrict__ src2, unsigned count)
+INLINE void scale2x_16_def_center(scale2x_uint16* restrict dst, const scale2x_uint16* restrict src0, const scale2x_uint16* restrict src1, const scale2x_uint16* restrict src2, unsigned count)
 {
 	assert(count >= 2);
 
@@ -354,7 +347,7 @@ INLINE void scale2x_16_def_center(scale2x_uint16* __restrict__ dst, const scale2
 	}
 }
 
-INLINE void scale2x_32_def_whole(scale2x_uint32* __restrict__ dst0, scale2x_uint32* __restrict__ dst1, const scale2x_uint32* __restrict__ src0, const scale2x_uint32* __restrict__ src1, const scale2x_uint32* __restrict__ src2, unsigned count)
+INLINE void scale2x_32_def_whole(scale2x_uint32* restrict dst0, scale2x_uint32* restrict dst1, const scale2x_uint32* restrict src0, const scale2x_uint32* restrict src1, const scale2x_uint32* restrict src2, unsigned count)
 {
 	assert(count >= 2);
 
@@ -413,7 +406,7 @@ INLINE void scale2x_32_def_whole(scale2x_uint32* __restrict__ dst0, scale2x_uint
 	}
 }
 
-INLINE void scale2x_32_def_border(scale2x_uint32* __restrict__ dst, const scale2x_uint32* __restrict__ src0, const scale2x_uint32* __restrict__ src1, const scale2x_uint32* __restrict__ src2, unsigned count)
+INLINE void scale2x_32_def_border(scale2x_uint32* restrict dst, const scale2x_uint32* restrict src0, const scale2x_uint32* restrict src1, const scale2x_uint32* restrict src2, unsigned count)
 {
 	assert(count >= 2);
 
@@ -458,7 +451,7 @@ INLINE void scale2x_32_def_border(scale2x_uint32* __restrict__ dst, const scale2
 	}
 }
 
-INLINE void scale2x_32_def_center(scale2x_uint32* __restrict__ dst, const scale2x_uint32* __restrict__ src0, const scale2x_uint32* __restrict__ src1, const scale2x_uint32* __restrict__ src2, unsigned count)
+INLINE void scale2x_32_def_center(scale2x_uint32* restrict dst, const scale2x_uint32* restrict src0, const scale2x_uint32* restrict src1, const scale2x_uint32* restrict src2, unsigned count)
 {
 	assert(count >= 2);
 
@@ -518,7 +511,7 @@ INLINE void scale2x_32_def_center(scale2x_uint32* __restrict__ dst, const scale2
  * \param dst0 First destination row, double length in pixels.
  * \param dst1 Second destination row, double length in pixels.
  */
-INLINE void scale2x_8_def(scale2x_uint8* dst0, scale2x_uint8* dst1, const scale2x_uint8* src0, const scale2x_uint8* src1, const scale2x_uint8* src2, unsigned count)
+void scale2x_8_def(scale2x_uint8* dst0, scale2x_uint8* dst1, const scale2x_uint8* src0, const scale2x_uint8* src1, const scale2x_uint8* src2, unsigned count)
 {
 #ifdef USE_SCALE_RANDOMWRITE
 	scale2x_8_def_whole(dst0, dst1, src0, src1, src2, count);
@@ -539,7 +532,7 @@ INLINE void scale2x_8_def(scale2x_uint8* dst0, scale2x_uint8* dst1, const scale2
  * \param dst0 First destination row, double length in pixels.
  * \param dst1 Second destination row, double length in pixels.
  */
-INLINE void scale2x_16_def(scale2x_uint16* dst0, scale2x_uint16* dst1, const scale2x_uint16* src0, const scale2x_uint16* src1, const scale2x_uint16* src2, unsigned count)
+void scale2x_16_def(scale2x_uint16* dst0, scale2x_uint16* dst1, const scale2x_uint16* src0, const scale2x_uint16* src1, const scale2x_uint16* src2, unsigned count)
 {
 #ifdef USE_SCALE_RANDOMWRITE
 	scale2x_16_def_whole(dst0, dst1, src0, src1, src2, count);
@@ -560,7 +553,7 @@ INLINE void scale2x_16_def(scale2x_uint16* dst0, scale2x_uint16* dst1, const sca
  * \param dst0 First destination row, double length in pixels.
  * \param dst1 Second destination row, double length in pixels.
  */
-INLINE void scale2x_32_def(scale2x_uint32* dst0, scale2x_uint32* dst1, const scale2x_uint32* src0, const scale2x_uint32* src1, const scale2x_uint32* src2, unsigned count)
+void scale2x_32_def(scale2x_uint32* dst0, scale2x_uint32* dst1, const scale2x_uint32* src0, const scale2x_uint32* src1, const scale2x_uint32* src2, unsigned count)
 {
 #ifdef USE_SCALE_RANDOMWRITE
 	scale2x_32_def_whole(dst0, dst1, src0, src1, src2, count);
@@ -675,7 +668,7 @@ void scale2x4_32_def(scale2x_uint32* dst0, scale2x_uint32* dst1, scale2x_uint32*
 /***************************************************************************/
 /* Scale2x MMX implementation */
 
-#if defined(__GNUC__) && defined(__i386__)
+#ifdef USE_MMX_INTERP_SCALE
 
 /*
  * Apply the Scale2x effect at a single row.
@@ -916,6 +909,7 @@ INLINE void scale2x_16_mmx_border(scale2x_uint16* dst, const scale2x_uint16* src
 	/* always do the first and last run */
 	count -= 2*4;
 
+#ifdef __GNUC__
 	__asm__ __volatile__(
 /* first run */
 		/* set the current, current_pre, current_next registers */
@@ -1097,6 +1091,196 @@ INLINE void scale2x_16_mmx_border(scale2x_uint16* dst, const scale2x_uint16* src
 		:
 		: "cc"
 	);
+#else /* __GNUC__ */
+/* ref: scale2x-2.2/contrib/visualc/scale2x.cpp */
+  __asm {
+    mov eax, src0;
+    mov ebx, src1;
+    mov ecx, src2;
+    mov edx, dst;
+    mov esi, count;
+
+    /* first run */
+    /* set the current, current_pre, current_next registers */
+    pxor mm0,mm0; /* use a fake black out of screen */
+    movq mm7, qword ptr [ebx];
+    movq mm1, qword ptr [ebx + 8];
+    psrlq mm0, 48;
+    psllq mm1, 48;
+    movq mm2, mm7;
+    movq mm3, mm7;
+    psllq mm2, 16;
+    psrlq mm3, 16;
+    por mm0, mm2;
+    por mm1, mm3;
+
+    /* current_upper */
+    movq mm6, qword ptr [eax];
+
+    /* compute the upper-left pixel for dst0 on %%mm2 */
+    /* compute the upper-right pixel for dst0 on %%mm4 */
+    movq mm2, mm0;
+    movq mm4, mm1;
+    movq mm3, mm0;
+    movq mm5, mm1;
+    pcmpeqw mm2, mm6;
+    pcmpeqw mm4, mm6;
+    pcmpeqw mm3, qword ptr [ecx];
+    pcmpeqw mm5, qword ptr [ecx];
+    pandn mm3,mm2;
+    pandn mm5,mm4;
+    movq mm2,mm0;
+    movq mm4,mm1;
+    pcmpeqw mm2,mm1;
+    pcmpeqw mm4,mm0;
+    pandn mm2,mm3;
+    pandn mm4,mm5;
+    movq mm3,mm2;
+    movq mm5,mm4;
+    pand mm2,mm6;
+    pand mm4,mm6;
+    pandn mm3,mm7;
+    pandn mm5,mm7;
+    por mm2,mm3;
+    por mm4,mm5;
+
+    /* set *dst0 */
+    movq mm3,mm2;
+    punpcklwd mm2,mm4;
+    punpckhwd mm3,mm4;
+    movq qword ptr [edx], mm2;
+    movq qword ptr [edx + 8], mm3;
+
+    /* next */
+    add eax, 8;
+    add ebx, 8;
+    add ecx, 8;
+    add edx, 16;
+
+    /* central runs */
+    shr esi, 2;
+    jz label1;
+    align 4;
+  label0:
+
+    /* set the current, current_pre, current_next registers */
+    movq mm0, qword ptr [ebx-8];
+    movq mm7, qword ptr [ebx];
+    movq mm1, qword ptr [ebx+8];
+    psrlq mm0,48;
+    psllq mm1,48;
+    movq mm2,mm7;
+    movq mm3,mm7;
+    psllq mm2,16;
+    psrlq mm3,16;
+    por mm0,mm2;
+    por mm1,mm3;
+
+    /* current_upper */
+    movq mm6, qword ptr [eax];
+
+    /* compute the upper-left pixel for dst0 on %%mm2 */
+    /* compute the upper-right pixel for dst0 on %%mm4 */
+    movq mm2,mm0;
+    movq mm4,mm1;
+    movq mm3,mm0;
+    movq mm5,mm1;
+    pcmpeqw mm2,mm6;
+    pcmpeqw mm4,mm6;
+    pcmpeqw mm3, qword ptr [ecx];
+    pcmpeqw mm5, qword ptr [ecx];
+    pandn mm3,mm2;
+    pandn mm5,mm4;
+    movq mm2,mm0;
+    movq mm4,mm1;
+    pcmpeqw mm2,mm1;
+    pcmpeqw mm4,mm0;
+    pandn mm2,mm3;
+    pandn mm4,mm5;
+    movq mm3,mm2;
+    movq mm5,mm4;
+    pand mm2,mm6;
+    pand mm4,mm6;
+    pandn mm3,mm7;
+    pandn mm5,mm7;
+    por mm2,mm3;
+    por mm4,mm5;
+
+    /* set *dst0 */
+    movq mm3,mm2;
+    punpcklwd mm2,mm4;
+    punpckhwd mm3,mm4;
+    movq qword ptr [edx], mm2;
+    movq qword ptr [edx+8], mm3;
+
+    /* next */
+    add eax,8;
+    add ebx,8;
+    add ecx,8;
+    add edx,16;
+
+    dec esi;
+    jnz label0;
+  label1:
+
+    /* final run */
+    /* set the current, current_pre, current_next registers */
+    movq mm0, qword ptr [ebx-8];
+    movq mm7, qword ptr [ebx];
+    pxor mm1,mm1; /* use a fake black out of screen */
+    psrlq mm0,48;
+    psllq mm1,48;
+    movq mm2,mm7;
+    movq mm3,mm7;
+    psllq mm2,16;
+    psrlq mm3,16;
+    por mm0,mm2;
+    por mm1,mm3;
+
+    /* current_upper */
+    movq mm6, qword ptr [eax];
+
+    /* compute the upper-left pixel for dst0 on %%mm2 */
+    /* compute the upper-right pixel for dst0 on %%mm4 */
+    movq mm2,mm0;
+    movq mm4,mm1;
+    movq mm3,mm0;
+    movq mm5,mm1;
+    pcmpeqw mm2,mm6;
+    pcmpeqw mm4,mm6;
+    pcmpeqw mm3, qword ptr [ecx];
+    pcmpeqw mm5, qword ptr [ecx];
+    pandn mm3,mm2;
+    pandn mm5,mm4;
+    movq mm2,mm0;
+    movq mm4,mm1;
+    pcmpeqw mm2,mm1;
+    pcmpeqw mm4,mm0;
+    pandn mm2,mm3;
+    pandn mm4,mm5;
+    movq mm3,mm2;
+    movq mm5,mm4;
+    pand mm2,mm6;
+    pand mm4,mm6;
+    pandn mm3,mm7;
+    pandn mm5,mm7;
+    por mm2,mm3;
+    por mm4,mm5;
+
+    /* set *dst0 */
+    movq mm3,mm2;
+    punpcklwd mm2,mm4;
+    punpckhwd mm3,mm4;
+    movq qword ptr [edx], mm2;
+    movq qword ptr [edx+8], mm3;
+
+    mov src0, eax;
+    mov src1, ebx;
+    mov src2, ecx;
+    mov dst, edx;
+    mov count, esi;
+  }
+#endif /* __GNUC__ */
 }
 
 INLINE void scale2x_32_mmx_border(scale2x_uint32* dst, const scale2x_uint32* src0, const scale2x_uint32* src1, const scale2x_uint32* src2, unsigned count)
@@ -1107,6 +1291,7 @@ INLINE void scale2x_32_mmx_border(scale2x_uint32* dst, const scale2x_uint32* src
 	/* always do the first and last run */
 	count -= 2*2;
 
+#ifdef __GNUC__
 	__asm__ __volatile__(
 /* first run */
 		/* set the current, current_pre, current_next registers */
@@ -1288,6 +1473,195 @@ INLINE void scale2x_32_mmx_border(scale2x_uint32* dst, const scale2x_uint32* src
 		:
 		: "cc"
 	);
+#else /* __GNUC__ */
+/* ref: scale2x-2.2/contrib/visualc/scale2x.cpp */
+  __asm {
+    mov eax, src0;
+    mov ebx, src1;
+    mov ecx, src2;
+    mov edx, dst;
+    mov esi, count;
+
+    /* first run */
+    /* set the current, current_pre, current_next registers */
+    pxor mm0,mm0;
+    movq mm7,qword ptr [ebx];
+    movq mm1,qword ptr [ebx + 8];
+    psrlq mm0,32;
+    psllq mm1,32;
+    movq mm2,mm7;
+    movq mm3,mm7;
+    psllq mm2,32;
+    psrlq mm3,32;
+    por mm0,mm2;
+    por mm1,mm3;
+
+    /* current_upper */
+    movq mm6,qword ptr [eax];
+
+    /* compute the upper-left pixel for dst0 on %%mm2 */
+    /* compute the upper-right pixel for dst0 on %%mm4 */
+    movq mm2,mm0;
+    movq mm4,mm1;
+    movq mm3,mm0;
+    movq mm5,mm1;
+    pcmpeqd mm2,mm6;
+    pcmpeqd mm4,mm6;
+    pcmpeqd mm3,qword ptr [ecx];
+    pcmpeqd mm5,qword ptr [ecx];
+    pandn mm3,mm2;
+    pandn mm5,mm4;
+    movq mm2,mm0;
+    movq mm4,mm1;
+    pcmpeqd mm2,mm1;
+    pcmpeqd mm4,mm0;
+    pandn mm2,mm3;
+    pandn mm4,mm5;
+    movq mm3,mm2;
+    movq mm5,mm4;
+    pand mm2,mm6;
+    pand mm4,mm6;
+    pandn mm3,mm7;
+    pandn mm5,mm7;
+    por mm2,mm3;
+    por mm4,mm5;
+
+    /* set *dst0 */
+    movq mm3,mm2;
+    punpckldq mm2,mm4;
+    punpckhdq mm3,mm4;
+    movq qword ptr [edx],mm2;
+    movq qword ptr [edx+8],mm3;
+
+    /* next */
+    add eax,8;
+    add ebx,8;
+    add ecx,8;
+    add edx,16;
+
+    /* central runs */
+    shr esi,1;
+    jz label1;
+label0:
+
+  /* set the current, current_pre, current_next registers */
+    movq mm0,qword ptr [ebx-8];
+    movq mm7,qword ptr [ebx];
+    movq mm1,qword ptr [ebx+8];
+    psrlq mm0,32;
+    psllq mm1,32;
+    movq mm2,mm7;
+    movq mm3,mm7;
+    psllq mm2,32;
+    psrlq mm3,32;
+    por mm0,mm2;
+    por mm1,mm3;
+
+    /* current_upper */
+    movq mm6,qword ptr[eax];
+
+    /* compute the upper-left pixel for dst0 on %%mm2 */
+    /* compute the upper-right pixel for dst0 on %%mm4 */
+    movq mm2,mm0;
+    movq mm4,mm1;
+    movq mm3,mm0;
+    movq mm5,mm1;
+    pcmpeqd mm2,mm6;
+    pcmpeqd mm4,mm6;
+    pcmpeqd mm3,qword ptr[ecx];
+    pcmpeqd mm5,qword ptr[ecx];
+    pandn mm3,mm2;
+    pandn mm5,mm4;
+    movq mm2,mm0;
+    movq mm4,mm1;
+    pcmpeqd mm2,mm1;
+    pcmpeqd mm4,mm0;
+    pandn mm2,mm3;
+    pandn mm4,mm5;
+    movq mm3,mm2;
+    movq mm5,mm4;
+    pand mm2,mm6;
+    pand mm4,mm6;
+    pandn mm3,mm7;
+    pandn mm5,mm7;
+    por mm2,mm3;
+    por mm4,mm5;
+
+    /* set *dst0 */
+    movq mm3,mm2;
+    punpckldq mm2,mm4;
+    punpckhdq mm3,mm4;
+    movq qword ptr [edx],mm2;
+    movq qword ptr [edx+8],mm3;
+
+    /* next */
+    add eax,8;
+    add ebx,8;
+    add ecx,8;
+    add edx,16;
+
+    dec esi;
+    jnz label0;
+label1:
+
+    /* final run */
+    /* set the current, current_pre, current_next registers */
+    movq mm0,qword ptr [ebx-8];
+    movq mm7,qword ptr [ebx];
+    pxor mm1,mm1;
+    psrlq mm0,32;
+    psllq mm1,32;
+    movq mm2,mm7;
+    movq mm3,mm7;
+    psllq mm2,32;
+    psrlq mm3,32;
+    por mm0,mm2;
+    por mm1,mm3;
+
+    /* current_upper */
+    movq mm6,qword ptr [eax];
+
+    /* compute the upper-left pixel for dst0 on %%mm2 */
+    /* compute the upper-right pixel for dst0 on %%mm4 */
+    movq mm2,mm0;
+    movq mm4,mm1;
+    movq mm3,mm0;
+    movq mm5,mm1;
+    pcmpeqd mm2,mm6;
+    pcmpeqd mm4,mm6;
+    pcmpeqd mm3,qword ptr [ecx];
+    pcmpeqd mm5,qword ptr [ecx];
+    pandn mm3,mm2;
+    pandn mm5,mm4;
+    movq mm2,mm0;
+    movq mm4,mm1;
+    pcmpeqd mm2,mm1;
+    pcmpeqd mm4,mm0;
+    pandn mm2,mm3;
+    pandn mm4,mm5;
+    movq mm3,mm2;
+    movq mm5,mm4;
+    pand mm2,mm6;
+    pand mm4,mm6;
+    pandn mm3,mm7;
+    pandn mm5,mm7;
+    por mm2,mm3;
+    por mm4,mm5;
+
+    /* set *dst0 */
+    movq mm3,mm2;
+    punpckldq mm2,mm4;
+    punpckhdq mm3,mm4;
+    movq qword ptr [edx],mm2;
+    movq qword ptr [edx+8],mm3;
+
+    mov src0, eax;
+    mov src1, ebx;
+    mov src2, ecx;
+    mov dst, edx;
+    mov count, esi;
+  }
+#endif /* __GNUC__ */
 }
 
 /**
@@ -1314,7 +1688,7 @@ INLINE void scale2x_32_mmx_border(scale2x_uint32* dst, const scale2x_uint32* src
  * \param dst1 Second destination row, double length in pixels.
  */
 #if 0
-static void scale2x_8_mmx(scale2x_uint8* dst0, scale2x_uint8* dst1, const scale2x_uint8* src0, const scale2x_uint8* src1, const scale2x_uint8* src2, unsigned count)
+void scale2x_8_mmx(scale2x_uint8* dst0, scale2x_uint8* dst1, const scale2x_uint8* src0, const scale2x_uint8* src1, const scale2x_uint8* src2, unsigned count)
 {
 	if (count % 8 != 0 || count < 16) {
 		scale2x_8_def(dst0, dst1, src0, src1, src2, count);
@@ -1336,7 +1710,7 @@ static void scale2x_8_mmx(scale2x_uint8* dst0, scale2x_uint8* dst1, const scale2
  * \param dst0 First destination row, double length in pixels.
  * \param dst1 Second destination row, double length in pixels.
  */
-static void scale2x_16_mmx(scale2x_uint16* dst0, scale2x_uint16* dst1, const scale2x_uint16* src0, const scale2x_uint16* src1, const scale2x_uint16* src2, unsigned count)
+void scale2x_16_mmx(scale2x_uint16* dst0, scale2x_uint16* dst1, const scale2x_uint16* src0, const scale2x_uint16* src1, const scale2x_uint16* src2, unsigned count)
 {
 	if (count % 4 != 0 || count < 8) {
 		scale2x_16_def(dst0, dst1, src0, src1, src2, count);
@@ -1357,7 +1731,7 @@ static void scale2x_16_mmx(scale2x_uint16* dst0, scale2x_uint16* dst1, const sca
  * \param dst0 First destination row, double length in pixels.
  * \param dst1 Second destination row, double length in pixels.
  */
-static void scale2x_32_mmx(scale2x_uint32* dst0, scale2x_uint32* dst1, const scale2x_uint32* src0, const scale2x_uint32* src1, const scale2x_uint32* src2, unsigned count)
+void scale2x_32_mmx(scale2x_uint32* dst0, scale2x_uint32* dst1, const scale2x_uint32* src0, const scale2x_uint32* src1, const scale2x_uint32* src2, unsigned count)
 {
 	if (count % 2 != 0 || count < 4) {
 		scale2x_32_def(dst0, dst1, src0, src1, src2, count);
@@ -1470,17 +1844,4 @@ void scale2x4_32_mmx(scale2x_uint32* dst0, scale2x_uint32* dst1, scale2x_uint32*
 	}
 }
 
-/**
- * End the use of the MMX instructions.
- * This function must be called before using any floating-point operations.
- */
-INLINE void scale2x_mmx_emms(void)
-{
-	__asm__ __volatile__ (
-		"emms"
-	);
-}
-
-#endif
-
-#endif
+#endif /* USE_MMX_INTERP_SCALE */

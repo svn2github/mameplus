@@ -319,9 +319,12 @@ endif
 #-------------------------------------------------
 
 ifdef USE_GCC
-    DEFS = -DX86_ASM -DLSB_FIRST -DINLINE="static __inline__" -Dasm=__asm__ -DCRLF=3 -DXML_STATIC
+    DEFS = -DX86_ASM -DLSB_FIRST -DINLINE="static __inline__" -Dasm=__asm__ -DCRLF=3 -DXML_STATIC -Drestrict=__restrict
 else
     DEFS = -DLSB_FIRST=1 -DINLINE='static __forceinline' -Dinline=__inline -D__inline__=__inline -DCRLF=3 -DXML_STATIC
+	ifndef INTEL
+		DEFS += -Drestrict=
+	endif
 endif
 
 ifdef DEBUG
@@ -444,7 +447,7 @@ else
              -W3 -nologo
 
     ifdef INTEL
-        CFLAGS += -Qc99
+		CFLAGS += -Qc99 -Qrestrict
     endif
 
     ifneq ($(W_ERROR),)

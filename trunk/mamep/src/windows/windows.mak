@@ -141,7 +141,8 @@ CFLAGS += -DUSE_SCALE_EFFECTS
 OSOBJS += $(OBJ)/$(MAMEOS)/scale.o
 
 OBJDIRS += $(OBJ)/$(MAMEOS)/scale
-OSOBJS += $(OBJ)/$(MAMEOS)/scale/superscale.o $(OBJ)/$(MAMEOS)/scale/eagle_fm.o $(OBJ)/$(MAMEOS)/scale/2xsaimmx.o
+OSOBJS += $(OBJ)/$(MAMEOS)/scale/superscale.o $(OBJ)/$(MAMEOS)/scale/eagle.o $(OBJ)/$(MAMEOS)/scale/2xsaimmx.o
+OSOBJS += $(OBJ)/$(MAMEOS)/scale/scale2x.o $(OBJ)/$(MAMEOS)/scale/scale3x.o
 
 ifneq ($(USE_MMX_INTERP_SCALE),)
 DEFS += -DUSE_MMX_INTERP_SCALE
@@ -157,7 +158,7 @@ endif
 $(OBJ)/$(MAMEOS)/scale/superscale.o: src/$(MAMEOS)/scale/superscale.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
-$(OBJ)/$(MAMEOS)/scale/eagle_fm.o: src/$(MAMEOS)/scale/eagle_fm.asm
+$(OBJ)/$(MAMEOS)/scale/eagle.o: src/$(MAMEOS)/scale/eagle.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
 $(OBJ)/$(MAMEOS)/scale/2xsaimmx.o: src/$(MAMEOS)/scale/2xsaimmx.asm
