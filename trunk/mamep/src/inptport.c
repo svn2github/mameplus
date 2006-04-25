@@ -997,7 +997,7 @@ static const input_port_default_entry default_ports_builtin[] =
 	INPUT_PORT_DIGITAL_DEF( 0, IPG_UI,      UI_TIME,		"Show Current Time",	SEQ_DEF_0 )
 #endif
 #ifdef USE_SHOW_INPUT_LOG
-	INPUT_PORT_DIGITAL_DEF( 0, IPG_UI,      UI_SHOW_INPUT_LOG,	"Show Input Log",	SEQ_DEF_0 )
+	INPUT_PORT_DIGITAL_DEF( 0, IPG_UI,      UI_SHOW_INPUT_LOG,	"Show Button Input",	SEQ_DEF_0 )
 #endif
 
 	INPUT_PORT_DIGITAL_DEF( 0, IPG_UI,      UI_UP,				"UI Up",				SEQ_DEF_3(KEYCODE_UP, CODE_OR, JOYCODE_1_UP) )

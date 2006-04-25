@@ -687,7 +687,7 @@ Config
 組態檔
 
 # ui/mame32.rc: 839
-Confirm before exiting game
+Quit game with confirmation
 離開遊戲之前要先確認
 
 # ui/mame32.rc: 1483

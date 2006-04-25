@@ -3887,7 +3887,7 @@ Show Gfx
 グラフィックデータ表\示
 
 # inptport.c: 1013
-Show Input Log
+Show Button Input
 入力履歴を表\示
 
 # inptport.c: 1030

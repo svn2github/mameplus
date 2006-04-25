@@ -3887,7 +3887,7 @@ Show Gfx
 
 
 # inptport.c: 1000
-Show Input Log
+Show Button Input
 
 
 # inptport.c: 1017

@@ -3763,8 +3763,8 @@ Show Gfx
 显示图像信息
 
 # inptport.c: 1013
-Show Input Log
-显示指令输入记录
+Show Button Input
+显示按钮输入
 
 # inptport.c: 1030
 Show Profiler

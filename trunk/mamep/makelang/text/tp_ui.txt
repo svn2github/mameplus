@@ -707,7 +707,7 @@ Config
 
 
 # ui/mame32.rc: 839
-Confirm before exiting game
+Quit game with confirmation
 
 
 # ui/mame32.rc: 1483

@@ -862,7 +862,7 @@ BEGIN
                     HIDC_ENABLE_AUTOSAVE
     CONTROL         "Disable second monitor emulation",IDC_DISABLE_2ND_MONITOR,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,123,135,10
-    CONTROL         "Confirm before exiting game",IDC_CONFIRM_QUIT,"Button",
+    CONTROL         "Quit game with confirmation",IDC_CONFIRM_QUIT,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,136,135,10
 #ifdef AUTO_PAUSE_PLAYBACK
     CONTROL         "Auto pause when playback is finished",IDC_AUTO_PAUSE_PLAYBACK,"Button",

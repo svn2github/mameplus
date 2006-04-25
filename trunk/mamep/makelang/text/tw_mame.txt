@@ -3731,7 +3731,7 @@ Show Gfx
 顯示圖形資料
 
 # inptport.c: 1000
-Show Input Log
+Show Button Input
 顯示輸入記錄
 
 # inptport.c: 1017
