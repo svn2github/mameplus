@@ -296,6 +296,7 @@ static void m68040_init(int index, int clock, const void *config, int (*irqcallb
 	m68k_set_cpu_type(M68K_CPU_TYPE_68040);
 	m68k_memory_intf = interface_d32;
 	m68k_state_register("m68040", index);
+	m68kfpu_state_register("m68040", index);
 	m68k_set_int_ack_callback(irqcallback);
 }
 #endif

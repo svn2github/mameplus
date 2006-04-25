@@ -1013,6 +1013,14 @@ void m68k_state_register(const char *type, int index)
 	state_save_register_func_postload(m68k_post_load);
 }
 
+void m68kfpu_state_register(const char *type, int index)
+{
+	state_save_register_item_array(type, index, REG_FP);
+	state_save_register_item(type, index, REG_FPCR);
+	state_save_register_item(type, index, REG_FPSR);
+	state_save_register_item(type, index, REG_FPIAR);
+}
+
 #endif /* M68K_COMPILE_FOR_MAME */
 
 /* ======================================================================== */
