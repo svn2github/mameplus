@@ -581,6 +581,21 @@ struct m68k_memory_interface m68k_memory_intf;
 
 static void m68000_init(int index, int clock, const void *config, int (*irqcallback)(int))
 {
+	const struct m68k_encryption_interface *interface = config;
+
+	// Default Memory Routines
+	M68000_regs.Memory_Interface = interface_d16;
+
+	// Import encryption routines if present
+	if (interface)
+	{
+		M68000_regs.Memory_Interface.read8pc = interface->read8pc;
+		M68000_regs.Memory_Interface.read16pc = interface->read16pc;
+		M68000_regs.Memory_Interface.read32pc = interface->read32pc;
+		M68000_regs.Memory_Interface.read16d = interface->read16d;
+		M68000_regs.Memory_Interface.read32d = interface->read32d;
+	}
+
 	m68000_state_register("m68000", index);
 	M68000_regs.reset_callback = 0;
 	M68000_regs.cmpild_instr_callback = 0;
@@ -590,32 +605,21 @@ static void m68000_init(int index, int clock, const void *config, int (*irqcallb
 
 static void m68000_reset(void)
 {
-	//struct m68k_encryption_interface *interface = param;
 	void (*resetc)(void);
 	void (*cmpic)(unsigned int, int);
 	void (*rtec)(void);
 	int (*irqc)(int irqline);
-
-	// Default Memory Routines
-	a68k_memory_intf = interface_d16;
-	mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].addrmask;
-
-	// Import encryption routines if present
-	//if (param)
-	//{
-	//	a68k_memory_intf.read8pc = interface->read8pc;
-	//	a68k_memory_intf.read16pc = interface->read16pc;
-	//	a68k_memory_intf.read32pc = interface->read32pc;
-	//	a68k_memory_intf.read16d = interface->read16d;
-	//	a68k_memory_intf.read32d = interface->read32d;
-	//}
 
 	resetc = M68000_regs.reset_callback;
 	cmpic = M68000_regs.cmpild_instr_callback;
 	rtec = M68000_regs.rte_instr_callback;
 	irqc = M68000_regs.irq_callback;
 
+	a68k_memory_intf = M68000_regs.Memory_Interface;
+
 	memset(&M68000_regs,0,sizeof(M68000_regs));
+
+	M68000_regs.Memory_Interface = a68k_memory_intf;
 
 	M68000_regs.reset_callback = resetc;
 	M68000_regs.cmpild_instr_callback = cmpic;
@@ -632,7 +636,8 @@ static void m68000_reset(void)
 
 	M68000_RESET();
 
-	M68000_regs.Memory_Interface = a68k_memory_intf;
+	a68k_memory_intf = M68000_regs.Memory_Interface;
+	mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].addrmask;
 }
 
 static void m68000_exit(void)
@@ -785,6 +790,21 @@ static offs_t m68000_dasm(char *buffer, offs_t pc, UINT8 *oprom, UINT8 *opram, i
 
 static void m68008_init(int index, int clock, const void *config, int (*irqcallback)(int))
 {
+	const struct m68k_encryption_interface *interface = config;
+
+	// Default Memory Routines
+	M68000_regs.Memory_Interface = interface_d8;
+
+	// Import encryption routines if present
+	if (interface)
+	{
+		M68000_regs.Memory_Interface.read8pc = interface->read8pc;
+		M68000_regs.Memory_Interface.read16pc = interface->read16pc;
+		M68000_regs.Memory_Interface.read32pc = interface->read32pc;
+		M68000_regs.Memory_Interface.read16d = interface->read16d;
+		M68000_regs.Memory_Interface.read32d = interface->read32d;
+	}
+
 	m68000_state_register("m68008", index);
 	M68000_regs.reset_callback = 0;
 	M68000_regs.cmpild_instr_callback = 0;
@@ -794,32 +814,21 @@ static void m68008_init(int index, int clock, const void *config, int (*irqcallb
 
 static void m68008_reset(void)
 {
-	//struct m68k_encryption_interface *interface = param;
 	void (*resetc)(void);
 	void (*cmpic)(unsigned int, int);
 	void (*rtec)(void);
 	int (*irqc)(int irqline);
-
-	// Default Memory Routines
-	a68k_memory_intf = interface_d8;
-	mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].addrmask;
-
-	// Import encryption routines if present
-	//if (param)
-	//{
-	//	a68k_memory_intf.read8pc = interface->read8pc;
-	//	a68k_memory_intf.read16pc = interface->read16pc;
-	//	a68k_memory_intf.read32pc = interface->read32pc;
-	//	a68k_memory_intf.read16d = interface->read16d;
-	//	a68k_memory_intf.read32d = interface->read32d;
-	//}
 
 	resetc = M68000_regs.reset_callback;
 	cmpic = M68000_regs.cmpild_instr_callback;
 	rtec = M68000_regs.rte_instr_callback;
 	irqc = M68000_regs.irq_callback;
 
+	a68k_memory_intf = M68000_regs.Memory_Interface;
+
 	memset(&M68000_regs,0,sizeof(M68000_regs));
+
+	M68000_regs.Memory_Interface = a68k_memory_intf;
 
 	M68000_regs.reset_callback = resetc;
 	M68000_regs.cmpild_instr_callback = cmpic;
@@ -836,7 +845,8 @@ static void m68008_reset(void)
 
 	M68000_RESET();
 
-	M68000_regs.Memory_Interface = a68k_memory_intf;
+	a68k_memory_intf = M68000_regs.Memory_Interface;
+	mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].addrmask;
 }
 
 static offs_t m68008_dasm(char *buffer, offs_t pc, UINT8 *oprom, UINT8 *opram, int bytes)
@@ -867,6 +877,21 @@ static offs_t m68008_dasm(char *buffer, offs_t pc, UINT8 *oprom, UINT8 *opram, i
 
 static void m68010_init(int index, int clock, const void *config, int (*irqcallback)(int))
 {
+	const struct m68k_encryption_interface *interface = config;
+
+	// Default Memory Routines
+	M68010_regs.Memory_Interface = interface_d16;
+
+	// Import encryption routines if present
+	if (interface)
+	{
+		M68010_regs.Memory_Interface.read8pc = interface->read8pc;
+		M68010_regs.Memory_Interface.read16pc = interface->read16pc;
+		M68010_regs.Memory_Interface.read32pc = interface->read32pc;
+		M68010_regs.Memory_Interface.read16d = interface->read16d;
+		M68010_regs.Memory_Interface.read32d = interface->read32d;
+	}
+
 	m68010_state_register("m68010", index);
 	M68010_regs.reset_callback = 0;
 	M68010_regs.cmpild_instr_callback = 0;
@@ -876,32 +901,21 @@ static void m68010_init(int index, int clock, const void *config, int (*irqcallb
 
 static void m68010_reset(void)
 {
-	//struct m68k_encryption_interface *interface = param;
 	void (*resetc)(void);
 	void (*cmpic)(unsigned int, int);
 	void (*rtec)(void);
 	int (*irqc)(int irqline);
-
-	// Default Memory Routines
-	a68k_memory_intf = interface_d16;
-	mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].addrmask;
-
-	// Import encryption routines if present
-	//if (param)
-	//{
-	//	a68k_memory_intf.read8pc = interface->read8pc;
-	//	a68k_memory_intf.read16pc = interface->read16pc;
-	//	a68k_memory_intf.read32pc = interface->read32pc;
-	//	a68k_memory_intf.read16d = interface->read16d;
-	//	a68k_memory_intf.read32d = interface->read32d;
-	//}
 
 	resetc = M68010_regs.reset_callback;
 	cmpic = M68010_regs.cmpild_instr_callback;
 	rtec = M68010_regs.rte_instr_callback;
 	irqc = M68010_regs.irq_callback;
 
+	a68k_memory_intf = M68010_regs.Memory_Interface;
+
 	memset(&M68010_regs,0,sizeof(M68010_regs));
+
+	M68010_regs.Memory_Interface = a68k_memory_intf;
 
 	M68010_regs.reset_callback = resetc;
 	M68010_regs.cmpild_instr_callback = cmpic;
@@ -918,7 +932,8 @@ static void m68010_reset(void)
 
 	M68010_RESET();
 
-	M68010_regs.Memory_Interface = a68k_memory_intf;
+	a68k_memory_intf = M68010_regs.Memory_Interface;
+	mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].addrmask;
 }
 
 static void m68010_exit(void)
