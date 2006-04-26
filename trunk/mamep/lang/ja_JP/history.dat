@@ -2,7 +2,7 @@
 #                                                          #
 #           AGDB-Japan HISTORY.DAT                         #
 # @@                         2ch EDITION TYPE2           #
-#                                            Ver. 0.104u6  #
+#                                            Ver. 0.105u2  #
 #                                                          #
 #  ƒA[ƒP[ƒhƒQ[ƒ€ƒf[ƒ^ƒx[ƒXiAGDBj•ÒŽ[ˆÏˆõ‰ï          #
 #      http://terrazi.com/agdb/ (Not Found)                #
@@ -16,7 +16,7 @@
 #  history.dati‰ß‹ŽƒƒO’u‚«êj                           #
 #      http://history1.client.jp/                          #
 #                                                          #
-#@@@@@@@@@@@ @@@@@@@        (06.03.21)   #
+#@@@@@@@@@@@ @@@@@@@        (06.04.25)   #
 #**********************************************************#
 
 #*************************************************************#
@@ -254,11 +254,6 @@ CPU\¬[N2A03, Z80]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ƒA[ƒP[ƒh‚ÌˆÚAìBh’ˆ•Ô‚èh‚Æ‚¢‚¤”­‘z‚ª’¿‚µ‚¢B
 ƒQ[ƒ€ƒoƒ‰ƒ“ƒX‚Í—Ç‚¢‚ªAƒn[ƒhƒEƒFƒA‚ÌƒXƒvƒ‰ƒCƒg«”\‚ª‚Ü‚¾’á‚­A
 ‚æ‚­‰æ–Ê‚ª‚¿‚ç‚Â‚«A“G‚â’e‚ªŒ©“ï‚­‚È‚é‚±‚Æ‚ª‘½‚©‚Á‚½B
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -872,6 +867,30 @@ CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[YM-3812, DAC]
 
 $end
 
+$info=acpsx
+$bio
+Acclaim PSX
+
+
+”­”„”NF1995
+
+ŠJ”­Œ³FAcclaim / ƒ\ƒj[@”­”„Œ³FAcclaim
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFAcclaim PSX
+
+CPU\¬[PSX CPU]@‰¹Œ¹ƒ`ƒbƒv[SPU]
+
+
+¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
 $info=ace
 $bio
 Ace
@@ -881,7 +900,7 @@ Ace
 
 ŠJ”­^”­”„Œ³FAllied Leisure
 
-ƒWƒƒƒ“ƒ‹F¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+ƒWƒƒƒ“ƒ‹FƒVƒ…[ƒeƒBƒ“ƒO
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“
 
@@ -1065,10 +1084,6 @@ CPU\¬[G65C816, SPC700]@‰¹Œ¹ƒ`ƒbƒv[Custom]
 ƒTƒEƒ“ƒhAƒOƒ‰ƒtƒBƒbƒNAƒQ[ƒ€ƒVƒXƒeƒ€‚Ì‚Ç‚ê‚à‚ªGˆí‚È—ÇìB
 
 
-¦uNintendo Super Systemv‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒX[ƒp[ƒtƒ@ƒ~ƒRƒ“v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-3–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -1173,10 +1188,6 @@ CPU\¬[G65C816, SPC700]@‰¹Œ¹ƒ`ƒbƒv[Custom]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
-
-
-¦uNintendo Super Systemv‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒX[ƒp[ƒtƒ@ƒ~ƒRƒ“v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-3–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -1318,12 +1329,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
 
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -1334,7 +1339,7 @@ $bio
 
 ”­”„”NF1987.10
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹FƒVƒ…[ƒeƒBƒ“ƒO
 
@@ -1366,7 +1371,7 @@ $bio
 
 ”­”„”NF1987.07
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹FƒVƒ…[ƒeƒBƒ“ƒO
 
@@ -1490,7 +1495,7 @@ Air Attack -‹óP-
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[OKI6295]
 
 
-¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+¦NMK‚ÌuƒTƒ“ƒ_[ƒhƒ‰ƒSƒ“v‚ÌƒfƒbƒhƒRƒs[ì•iB
 
 
 
@@ -1972,12 +1977,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM-2612, SN76496 (2)]
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
 
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -2029,12 +2028,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM-2612, SN76496 (2)]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -2403,12 +2396,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 ƒ{ƒX‚É‡‚í‚¹‚½“ÁŽêUŒ‚‚ª‚Å‚«‚È‚¢B‹Æ–±—p‚ð‚â‚èž‚ñ‚¾l‚È‚ç‹t‚É‚â‚è‰ž‚¦‚ª‚ ‚é‚Ì‚Å‚ÍB
 ‚Ü‚½AŽžŠÔ“à‚È‚ç‰½“xŽ€‚ñ‚Å‚à‚æ‚¢‚½‚ß‘Ì—ÍƒQ[ƒW‚ª–³‚­‚È‚è¤ƒ_ƒ[ƒW‚ðŽó‚¯‚é‚½‚Ñ‚Éâ–½‚Ì‹©‚Ñ‚ð•·‚­‚±‚Æ‚É‚È‚èA
 ”ñí‚É‚¤‚é‚³‚¢B ‚±‚Ìì•i‚ªuMegaTechv‚Æ‚µ‚Ä‰‚ß‚Ä”­”„‚³‚ê‚½‚à‚Ì‚Å‚ ‚éB
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -3076,7 +3063,7 @@ $bio
 
 ”­”„”NF1991.02
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹FŠi“¬ƒAƒNƒVƒ‡ƒ“
 
@@ -3176,6 +3163,38 @@ CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[OKI6295]
 •Ä‘ƒAƒ^ƒŠŽÐ‚Ì‘n—§20Žü”N‹L”O‚Æ‚µ‚ÄA‰”N‚Ì–¼ìuƒZƒ“ƒ`ƒs[ƒgv‚Æuƒ~ƒTƒCƒ‹ƒRƒ}ƒ“ƒhv‚ðƒŠƒƒCƒN‚µ‚½‚Ì‚ª‚±‚Ìì•iB
 ƒQ[ƒ€“à—e‚É‚Í•Ï‰»‚Í‚È‚­AƒIƒŠƒWƒiƒ‹‚Æ“¯‚¶‚­ƒgƒ‰ƒbƒNƒ{[ƒ‹‚ð‹ìŽg‚µ‚ÄƒvƒŒƒC‚·‚é‚Æ‚¢‚¤“Á’¥‚Í‚»‚Ì‚Ü‚ÜŒp³‚³‚ê‚½B
 ³Ž®‚É‚Í”­”„‚³‚ê‚È‚©‚Á‚½ì•i‚¾‚ªAˆê•”ŠCŠO‚ÌƒQ[ƒ€ƒVƒ‡[‚È‚Ç‚Åo“W‚³‚ê‚Ä‚¢‚éB
+
+
+
+$end
+
+$info=ar_bios
+$bio
+Arcadia Super Select System
+
+
+”­”„”NF1988
+
+ŠJ”­Œ³FCommodore / Arcadia System@”­”„Œ³FArcadia System
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFArcadia Super Select System
+
+CPU\¬[68000]
+
+
+ƒˆ[ƒƒbƒp‚ð‚Í‚¶‚ßA
+“ú–{‚Å‚à”‘½‚­‚ÌƒNƒŠƒG[ƒ^[‚Ì‰º‚ÅŠˆ–ô‚µ‚½•Ä‘ƒRƒ‚ƒh[ƒ‹ŽÐ‚Ìƒp[ƒ\ƒiƒ‹ƒRƒ“ƒsƒ…[ƒ^uAmigav‚ðƒx[ƒX‚ÉA
+CPU‚ÉuAmigav‚Æ“¯‚¶‚­ƒ‚ƒgƒ[ƒ‰ŽÐ‚ÌMC68000‚ðÌ—p‚µA87”N11ŒŽAMOAƒGƒLƒXƒ|‚É‚¨‚¢‚Ä‰p‘Arcadia SystemŽÐ‚©‚ç”­•\‚³‚ê‚½‚Ì‚ªA
+‚±‚Ì‹Æ–±—pƒQ[ƒ€Œü‚¯ƒVƒXƒeƒ€Šî”ÂuSuper Select Systemv‚Å‚ ‚éB
+‚Ð‚Æ‚Â‚ÌƒVƒXƒeƒ€Šî”Â‚ÅÅ‘å10ƒ^ƒCƒgƒ‹‚ÌƒQ[ƒ€Šî”Â‚ðŒq‚®‚±‚Æ‚ª‰Â”\‚ÅA
+ƒ\ƒtƒg‹Ÿ‹‹‚Í“¯‚¶‚­ƒˆ[ƒƒbƒp‚Ìƒpƒ\ƒRƒ“ƒQ[ƒ€ŠE‚ÅŠˆ–ô‚µ‚½MastertronicŽÐ‚ªŠJ”­‚µ‚½ƒpƒ\ƒRƒ“Œü‚¯‚Ìƒ^ƒCƒgƒ‹‚ðA
+Arcadia SystemŽÐ‚ª‹Æ–±—p‚ÉˆÚA‚µ”Ì”„‚·‚é‚ÆŒ`‚ðŽæ‚èA•Ä‘‚Å‚ÍLerlandŽÐ‚Ìe‰ïŽÐTradeWestŽÐ‚ª’S“–‚µ‚Ä‚¢‚½B
+ƒQ[ƒ€Ž©‘Ì‚Í”ü‚µ‚¢ƒOƒ‰ƒtƒBƒbƒN•`ŽÊ‚É‚æ‚éŠ®¬“x‚Ì‚‚¢ì•i‚ªƒŠƒŠ[ƒX‚³‚ê‚½‚ªAƒpƒ\ƒRƒ“‚©‚ç‚ÌˆÚA‚Æ‚ ‚Á‚ÄƒQ[ƒ€‚Ì‘€ì•û–@‚É–â‘è‚ª‚ ‚èA
+‚í‚¸‚©1”N—]‚è‚Å‚»‚Ì–ð–Ú‚ðI‚¦‚é‚±‚Æ‚É‚È‚Á‚Ä‚µ‚Ü‚Á‚½B
 
 
 
@@ -3810,12 +3829,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
 
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -3838,13 +3851,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
 
 
 
@@ -4245,7 +4251,7 @@ Astro Chase (Max-A-Flex”Å)
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFExidy Max-A-Flex Game System
+ƒVƒXƒeƒ€ƒ{[ƒhFExidy Max-A-Flex
 
 CPU\¬[M6502, M68705]@‰¹Œ¹ƒ`ƒbƒv[Pokey, DAC]
 
@@ -4358,12 +4364,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -4588,6 +4588,30 @@ CPU\¬[M6502]
 
 $end
 
+$info=atpsx
+$bio
+Atari PSX
+
+
+”­”„”NF1996
+
+ŠJ”­Œ³FAtari Games / ƒ\ƒj[@”­”„Œ³FAtari Games
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFAtari PSX
+
+CPU\¬[PSX CPU]@‰¹Œ¹ƒ`ƒbƒv[SPU]
+
+
+¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
 $info=soccer
 $bio
 ƒTƒbƒJ[
@@ -4705,9 +4729,34 @@ CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[X1-010]
 
 $end
 
+$info=atluspsx
+$bio
+ƒAƒgƒ‰ƒX PSX
+
+
+”­”„”NF1996
+
+ŠJ”­Œ³FƒAƒgƒ‰ƒX / ƒ\ƒj[@”­”„Œ³FƒAƒgƒ‰ƒX
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFAtari PSX
+
+CPU\¬[PSX CPU]@‰¹Œ¹ƒ`ƒbƒv[SPU]
+
+
+
+
+
+
+
+$end
+
 $info=atomicp
 $bio
-ƒAƒgƒ~ƒbƒNƒ|ƒCƒ“ƒg
+Atomic Point
 
 
 ”­”„”NF1990
@@ -4718,12 +4767,15 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰F4•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFƒZƒK ƒVƒXƒeƒ€16
+ƒVƒXƒeƒ€ƒ{[ƒhFƒZƒK ƒVƒXƒeƒ€16B
 
 CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[YM2413]
 
 
-ƒZƒK‚Ìuƒtƒ‰ƒbƒVƒ…ƒ|ƒCƒ“ƒgv‚ð–Í‹[‚Á‚½ƒfƒbƒhƒRƒs[“I‚Èì•iB
+ƒZƒK‚Ìuƒtƒ‰ƒbƒVƒ…ƒ|ƒCƒ“ƒgv‚ð–Í‹[‚µ‚½ƒfƒbƒhƒRƒs[“I‚Èì•iuAtomic PointvB
+ƒQ[ƒ€ƒ‹[ƒ‹‚ÍƒIƒŠƒWƒiƒ‹‚©‚ç‘å‚µ‚Ä•Ï‰»‚Í‚È‚¢‚ªAƒuƒƒbƒN‚ªÏ‚Ý‚ ‚ª‚Á‚Äƒsƒ“ƒ`‚Æ‚È‚é‚Æƒiƒ€ƒR‚ÌuŒ¹•½“¢–‚“`v‚Ì‰¹Šy‚ª—¬‚ê‚é‚Æ‚¢‚¤A
+ŠØ‘»‚ÌƒQ[ƒ€‚É‘½‚¢’˜ìŒ –³Ž‹‚Ìì‚è‚Æ‚È‚Á‚Ä‚¢‚éB
+Šî”Â‚ÍƒZƒK‚ÌƒVƒXƒeƒ€16B‚ªŒ³‚Æ‚È‚Á‚Ä‚¢‚é‚ªA“ÆŽ©‚É‰ü‘¢‚ªŽ{‚³‚ê‚½Šî”Â‚Æ‚È‚Á‚Ä‚¢‚éB
 
 
 
@@ -5131,6 +5183,35 @@ CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[OKI6295 (2)]
 
 $end
 
+$info=konamigv
+$bio
+ƒRƒiƒ~ ‚f‚uƒVƒXƒeƒ€
+
+
+”­”„”NF1995
+
+ŠJ”­Œ³FƒRƒiƒ~ / ƒ\ƒj[@”­”„Œ³FƒRƒiƒ~
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒRƒiƒ~ GVƒVƒXƒeƒ€
+
+CPU\¬[PSX CPU]@‰¹Œ¹ƒ`ƒbƒv[CD/DA, SPU]
+
+
+ƒRƒiƒ~‚É‚æ‚éƒvƒŒƒCƒXƒe[ƒVƒ‡ƒ“ŒÝŠ·Šî”Â‚ª‚±‚ÌuGVƒVƒXƒeƒ€v‚Å‚ ‚éB
+Šî”Â‚Í‘¼‚Ìƒ[ƒJ[‚ÌPSŒÝŠ·Šî”Â“¯—lAƒ\ƒj[»‚Ìƒ`ƒbƒv‚ð’†S‚É\¬‚³‚ê‚Ä‚¢‚é‚ªA
+“ÆŽ©‚ÉSCSIƒ^ƒCƒv‚ÌCDƒhƒ‰ƒCƒu‚ð“‹Ú‚µAƒpƒbƒP[ƒW‰»‚³‚ê‚Ä‚¢‚é‚Æ‚¢‚¤“Á’¥‚ª‚ ‚éB
+ƒQ[ƒ€ƒ^ƒCƒgƒ‹‚ÍCD ROM•ûŽ®‚Å”z‹‹‚³‚êA“ú–{‚Å‚Íui‚ß!‘Îí‚Ï‚¸‚é‚¾‚ÜvuŽÀ‹µƒpƒƒtƒ‹ƒvƒ–ì‹…'96v‚È‚Ç‚ð‚Í‚¶‚ßA
+‘“à–¢”­”„‚Ìƒ^ƒCƒgƒ‹‚ðŠÜ‚ß‚½‘S8ì•i‚ªƒŠƒŠ[ƒX‚³‚ê‚Ä‚¢‚éB
+‚Ü‚½ƒAƒƒŠƒJ‚Å‚ÍuGVƒVƒXƒeƒ€v‚ÆŒÄ‚Î‚ê‚¸AuBaby Phoenixv‚Æ‚¢‚¤–¼Ì‚ÅŒÄ‚Î‚ê‚Ä‚¢‚éB
+
+
+
+$end
+
 $info=bssoccer
 $bio
 Back Street Soccer
@@ -5493,11 +5574,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -5783,11 +5859,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 Žç”õ‚àƒRƒ“ƒsƒ…[ƒ^‚Ü‚©‚¹‚ÅA‘€ì‚Í‚à‚Ì‚·‚²‚­ŠÈ’P‚Å‚ ‚éB
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -5867,11 +5938,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -6473,6 +6539,37 @@ CPU\¬[TMS34020, Z80]@‰¹Œ¹ƒ`ƒbƒv[BSMT2000]
 
 $end
 
+$info=btltryst
+$bio
+ƒoƒgƒ‹ƒgƒ‰ƒCƒXƒg
+
+
+”­”„”NF1998.02
+
+ŠJ”­^”­”„Œ³FƒRƒiƒ~
+
+ƒWƒƒƒ“ƒ‹F‘ÎíŠi“¬ƒAƒNƒVƒ‡ƒ“
+
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+3ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒRƒiƒ~ M2ƒVƒXƒeƒ€
+
+CPU\¬[PPC602]
+
+
+96”N‚É“oê‚µ‚½uƒtƒ@ƒCƒeƒBƒ“ƒO•pv‚É‘±‚­ƒRƒiƒ~‚Ì3Dƒ|ƒŠƒSƒ“‘ÎíŠi“¬ƒQ[ƒ€uƒoƒgƒ‹ƒgƒ‰ƒCƒXƒgvB
+•‘‘ä‚ÍÜ‹à‘ˆ’DˆÙŽíŠi“¬‹Z‚ð‘èÞ‚Æ‚µ‚½–¢—ˆ‚ÌƒeƒŒƒr”Ô‘g"ƒoƒgƒ‹ƒgƒ‰ƒCƒXƒg"‚ÅA‘€ì‚Í8•ûŒüƒŒƒo[‚ÆƒLƒbƒNAƒpƒ“ƒ`AƒK[ƒh‚Æ3‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚·‚éB
+‚Ü‚½—§‚Á‚½‚Ü‚Ü‚Å‚à‰º’iUŒ‚‚ðƒK[ƒh‚Å‚«‚éu‘O–ÊƒK[ƒhƒVƒXƒeƒ€vA“G‚ÌUŒ‚‚É‡‚í‚¹‚Ä“G‚Ì‘¤–Ê‚É‰ñ‚è‚±‚ÞuƒGƒXƒP[ƒvvA
+UŒ‚‚ðŽó‚¯‚Ä‚àd‰»ŽžŠÔ‚È‚­ŽŸ‚ÌUŒ‚‚ª‰Â”\‚ÈuU–hˆê‘ÌUŒ‚v‚Æ‚¢‚Á‚½ƒQ[ƒ€ƒVƒXƒeƒ€‚ðÌ—p‚µ‚Ä‚¢‚éB
+ƒ^ƒCƒ€ƒŠƒŠ[ƒX‚ÅŽg—p‰Â”\‚Æ‚È‚éƒLƒƒƒ‰ƒNƒ^[‚âAƒfƒ‚¥ƒGƒ“ƒfƒBƒ“ƒOƒAƒjƒ‚Éu‹@“®ŒxŽ@ƒpƒgƒŒƒCƒo[vuUŠk‹@“®‘àv‚Ì‰Ÿˆä Žç
+Ž‚ªƒvƒƒfƒ…[ƒX‚µ‚½‚±‚Æ‚Å’–Ú‚³‚ê‚½‚ªAƒQ[ƒ€Ž©‘Ì‚Ìo—ˆ‚ªƒCƒ}ƒCƒ`‚¾‚Á‚½‚½‚ßƒqƒbƒgì‚Æ‚Í‚È‚ç‚È‚©‚Á‚½B
+‚¿‚È‚Ý‚Éƒvƒƒgƒ^ƒCƒv”ÅuƒLƒ“ƒO¥ƒGƒNƒXƒ^[ƒ~ƒl[ƒ^[ƒYv‚Å‚ÍƒTƒEƒ“ƒh’S“–‚É“¯‚¶‚­ƒAƒjƒ”Ô‘g‚ð‚Í‚¶‚ß‚Æ‚µ‚ÄŠˆ–ô‚·‚éìˆäŒ›ŽŸ Ž‚ð‹N—p‚µ‚Ä‚¢‚½‚ªA
+»•i”Å‚Å‚Í•ÏX‚³‚ê‚Ä‚¢‚éB
+
+
+
+$end
+
 $info=bzone
 $bio
 ƒoƒgƒ‹ƒ][ƒ“
@@ -6605,7 +6702,7 @@ Beach Festival World Championship 1997
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM3812, OKI6295]
 
 
-¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+¦ƒrƒfƒIƒVƒXƒeƒ€‚Ìuƒpƒ[ƒXƒpƒCƒNƒXv‚ÌƒfƒbƒhƒRƒs[ì•iB
 
 
 
@@ -6733,7 +6830,7 @@ Beat the Champ
 
 ŠJ”­Œ³FƒRƒiƒ~@”­”„Œ³FƒRƒiƒ~i¦‘“à”Ì”„‚È‚µ j
 
-ƒWƒƒƒ“ƒ‹FƒAƒNƒVƒ‡ƒ“
+ƒWƒƒƒ“ƒ‹FƒXƒ|[ƒc
 
 ƒRƒ“ƒgƒ[ƒ‰Fƒgƒ‰ƒbƒNƒ{[ƒ‹+3ƒ{ƒ^ƒ“
 
@@ -7745,12 +7842,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
 
-¦uMEGA PLAYv‚Æ‚ÍA
-ƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA
-4–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -7774,12 +7865,10 @@ CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[OKI6295 (2)]
 
 UPLì‚ÌƒƒJƒjƒJƒ‹‚È¢ŠE‚ª•‘‘ä‚ÌƒIƒŠƒWƒiƒŠƒeƒBˆì‚ê‚éƒVƒ…[ƒeƒBƒ“ƒOì•iB
 ƒ‰ƒCƒt§‚Ì‘å‚«‚ÈŽ©‹@‚ð‘€ì‚µ‚ÄAƒm[ƒ}ƒ‹’e‚Ü‚½‚ÍŠÑ’Ê’e‚ÆAƒJ[ƒ\ƒ‹‚ðŽg—p‚µ‚Ä“G’e‚ð‚àÁ–Å‚³‚¹‚é‹­—Í‚Èƒr[ƒ€‚ð‹ìŽg‚µ‚Äí‚¤B
-ƒƒCƒ“ƒtƒ@ƒCƒA[ƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‘±‚¯‚é‚±‚Æ‚Å‹­—Íƒtƒ@ƒCƒA[‚ðŒ‚‚Â‚±‚Æ‚ª‚Å‚«A
-‚à‚¤ˆê•û‚Ìƒ{ƒ^ƒ“‚ÅƒJ[ƒ\ƒ‹‚ð“®‚©‚µƒr[ƒ€‚ðŒ‚‚Â‚±‚Æ‚ª‚Å‚«‚éB
-‚»‚Ì“Æ“Á‚Ì‘€ì•û–@‚ÉŠµ‚ê‚é‚Ü‚Å‚ª‘å•ÏB
-‘S9ƒXƒe[ƒWB
-ŠeƒvƒŒƒCƒ„[‚É‘Î‚µ‚Ä"“ï“xƒŒƒxƒ‹ŒŸoƒ†ƒjƒbƒg"‚Æ‚¢‚¤ƒVƒXƒeƒ€‚ª‚ ‚é‚Æ‚¢‚¤‚ªA
-ÅIƒ{ƒX‚Í‹¥ˆ«‚È“ïˆÕ“x‚Å‚ ‚éB
+ƒƒCƒ“ƒtƒ@ƒCƒA[ƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‘±‚¯‚é‚±‚Æ‚Å‹­—Íƒtƒ@ƒCƒA[‚ðŒ‚‚Â‚±‚Æ‚ª‚Å‚«A‚à‚¤ˆê•û‚Ìƒ{ƒ^ƒ“‚ÅƒJ[ƒ\ƒ‹‚ð“®‚©‚µƒr[ƒ€‚ðŒ‚‚Â‚±‚Æ‚ª‚Å‚«‚éB
+‚»‚Ì“Æ“Á‚Ì‘€ì•û–@‚ÉŠµ‚ê‚é‚Ü‚Å‚ª‘å•ÏB‘S9ƒXƒe[ƒWB
+ŠeƒvƒŒƒCƒ„[‚É‘Î‚µ‚Ä"“ï“xƒŒƒxƒ‹ŒŸoƒ†ƒjƒbƒg"‚Æ‚¢‚¤ƒVƒXƒeƒ€‚ª‚ ‚é‚Æ‚¢‚¤‚ªAÅIƒ{ƒX‚Í‹¥ˆ«‚È“ïˆÕ“x‚Å‚ ‚éB
+‚¿‚È‚Ý‚ÉŠeƒXƒe[ƒW‚Ìƒ{ƒX‚Ì–¼‘O‚ÍŽð‚ÌŽí—Þ‚Ì–¼‘O‚©‚ç—R—ˆ‚µ‚Ä‚¢‚éB
 
 
 
@@ -8070,7 +8159,7 @@ $bio
 
 ”­”„”NF1991
 
-ŠJ”­Œ³Fƒ†[ƒs[ƒGƒ‹iUPLj@”­”„Œ³FƒGƒkƒGƒ€ƒPƒCiNMKj
+ŠJ”­^”­”„Œ³Fƒ†[ƒs[ƒGƒ‹iUPLj
 
 ƒWƒƒƒ“ƒ‹FƒVƒ…[ƒeƒBƒ“ƒO
 
@@ -9385,12 +9474,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 2l“¯ŽžƒvƒŒƒC‚Å‚à‚»‚ê‚¼‚êŸŽè‚É“®‚«‰ñ‚é‚±‚Æ‚ª‚Å‚«‚éB
 
 
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -9770,7 +9853,7 @@ Boulder DashiMax-A-Flex”Åj
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFExidy Max-A-Flex Game System
+ƒVƒXƒeƒ€ƒ{[ƒhFExidy Max-A-Flex
 
 CPU\¬[M6502, M68705]@‰¹Œ¹ƒ`ƒbƒv[Pokey, DAC]
 
@@ -10155,7 +10238,7 @@ BristlesiMax-A-Flex”Åj
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFExidy Max-A-Flex Game System
+ƒVƒXƒeƒ€ƒ{[ƒhFExidy Max-A-Flex
 
 CPU\¬[M6502, M68705]@‰¹Œ¹ƒ`ƒbƒv[Pokey, DAC]
 
@@ -10267,6 +10350,33 @@ CPU\¬[Z80 (3)]@‰¹Œ¹ƒ`ƒbƒv[YM2203, YM3526]
 
 
 ¦uƒoƒuƒ‹ƒ{ƒuƒ‹v‚ÌƒRƒs[ƒQ[ƒ€
+
+
+
+$end
+
+$info=missb2
+$bio
+Miss Bubble II
+
+
+”­”„”NF1996
+
+ŠJ”­^”­”„Œ³FAlpha
+
+ƒWƒƒƒ“ƒ‹FƒAƒNƒVƒ‡ƒ“
+
+ƒRƒ“ƒgƒ[ƒ‰F2•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[Z80 (3)]@‰¹Œ¹ƒ`ƒbƒv[YM2203, YM3526]
+
+
+86”N‚É“oê‚µ‚½ƒ^ƒCƒg[‚Ìuƒoƒuƒ‹ƒ{ƒuƒ‹v‚ÌƒfƒbƒhƒRƒs[ì•iB
+ƒe[ƒ}‹È‚â‰B‚µƒRƒ}ƒ“ƒh‚ð‚Í‚¶‚ßA‚¢‚­‚Â‚©‚Ì—v‘f‚ªƒIƒŠƒWƒiƒ‹‚©‚ç—¬—p‚³‚ê‚Ä‚¢‚é‚ªAŽ©‹@‚ª‹°—³‚©‚çƒlƒYƒ~‚ÉƒLƒƒƒ‰ƒNƒ^[‚ª•`‚«Š·‚¦‚ç‚êA
+3ƒ‰ƒEƒ“ƒh‚²‚Æ‚Éƒk[ƒh‰æ‘œ‚ªŒ©‚ç‚ê‚é‚Æ‚¢‚¤’Eˆß—v‘f‚ð‰Á‚¦‚ç‚ê‚Ä‚¢‚é‘¼A
+ƒWƒƒƒ“ƒvŽž‚ÌŒø‰Ê‰¹‚É‰½ŒÌ‚©‹©‚Ñº‚ªŽg—p‚³‚ê‚Ä‚¢‚é‚È‚Ç‹CŽ‚¿ˆ«‚¢‰ü‘¢‚à‰Á‚¦‚ç‚ê‚Ä‚¢‚éB‘S100ƒXƒe[ƒWB
 
 
 
@@ -10912,7 +11022,7 @@ $bio
 
 ”­”„”NF1993.07
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹F‘ÎíŠi“¬ƒAƒNƒVƒ‡ƒ“
 
@@ -11621,11 +11731,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -11843,6 +11948,40 @@ CPU\¬[R5000 (little), ADSP2181]@‰¹Œ¹ƒ`ƒbƒv[DMA-driven DAC (6)]
 
 $end
 
+$info=decocass
+$bio
+ƒfƒREƒJƒZƒbƒgƒVƒXƒeƒ€
+
+
+”­”„”NF1980.12
+
+ŠJ”­^”­”„Œ³Fƒf[ƒ^ƒC[ƒXƒg
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒf[ƒ^ƒC[ƒXƒg ƒfƒR¥ƒJƒZƒbƒgƒVƒXƒeƒ€
+
+CPU\¬[M6502 (2), I8X41]@‰¹Œ¹ƒ`ƒbƒv[AY8910 (2)]
+
+
+ƒf[ƒ^ƒC[ƒXƒg‚ª¢ŠE‰‚ÌƒQ[ƒ€ŒðŠ·ƒVƒXƒeƒ€‚Æ‚µ‚Ä¬Œ÷‚µA
+ƒrƒfƒIƒQ[ƒ€ŠE‚É‘å‚«‚È‰e‹¿‚ð—^‚¦‚½–¼‹@uƒfƒR¥ƒJƒZƒbƒgƒVƒXƒeƒ€vB
+Å‘å‚Ì“Á’¥‚Í‚»‚Ì–¼‚Ì‚Æ‚¨‚èAê—p‚ÌŽ¥‹CƒJƒZƒbƒgƒe[ƒv‚É‚æ‚éƒQ[ƒ€”z‹‹‚ÅA‚±‚ê‚É‚æ‚èŠî”Â‚ð–ˆ‰ñŽæ‚è‘Ö‚¦‚é‚Ì‚Å‚Í‚È‚­A
+ƒZƒLƒ…ƒŠƒeƒB‰ñ˜H‚Æ‚È‚éƒyƒAƒ‚ƒWƒ…[ƒ‹‚ðŽæ‘Ö‚¦A
+ƒQ[ƒ€“à—e‚ªŽû˜^‚³‚ê‚½ƒJƒZƒbƒgƒe[ƒv‚ð“Ç‚Ýž‚Ü‚¹‚é‚±‚Æ‚Å•Êƒ^ƒCƒgƒ‹‚Ìì•i‚ª—V‚×‚é‚æ‚¤‚É‚È‚Á‚½‚Æ‚±‚ë‚Å‚ ‚éB
+ƒJƒZƒbƒgƒe[ƒv‚ÆƒyƒAƒ‚ƒWƒ…[ƒ‹‚ªŠî”Âƒ^ƒCƒv‚Ìƒ^ƒCƒgƒ‹‚æ‚è‚àˆÀ‰¿‚¾‚Á‚½‚½‚ßA‘½‚­‚Ì“X‚ÅŠ½Œ}‚³‚êA
+‚Ü‚½uƒnƒ“ƒo[ƒK[vuƒƒbƒNƒ“ƒ`ƒFƒCƒXvuƒo[ƒjƒ“ƒ‰ƒo[v‚Æ‚¢‚Á‚½ƒqƒbƒgì‚É‚àŒb‚Ü‚êA
+–ñ5”N‚Æ‚¢‚¤’·ŠúŠÔ‚É“n‚Á‚Ä‘æˆêü‚ÅŠˆ–ô‚·‚é‚±‚Æ‚È‚Á‚½BƒAƒƒŠƒJ‚Å‚àƒf[ƒ^ƒC[ƒXƒgUSA‚ð’Ê‚¶”Ì”„‚³‚ê‚½‚ªA
+Žsê‚Å‘å‚«‚È—Í‚ðŽ‚ÂƒfƒBƒXƒgƒŠƒrƒ…[ƒ^[‚Ì—˜‰v‚ÉŒq‚ª‚ç‚È‚©‚Á‚½‚±‚Æ‚©‚ç‚ ‚Ü‚è•‹y‚¹‚¸A
+‘ã‚í‚è‚Éƒqƒbƒgì‚Æ‚È‚Á‚½ƒ^ƒCƒgƒ‹‚Íê—pŠî”Â‚ÉˆÚA‚³‚êA“ú–{‚Å‚àƒŠƒŠ[ƒX‚³‚ê‚Ä‚¢‚éB
+‚¿‚È‚Ý‚É‚±‚ÌƒVƒXƒeƒ€“à‘ ‚Ìƒe[ƒuƒ‹Œ^âž‘Ì‚Í“–Žž82–œ‰~‚Æ‚‰¿‚È‚à‚Ì‚¾‚Á‚½B
+
+
+
+$end
+
 $info=pc_cvnia
 $bio
 Castlevania iPlayChoice-10”Åj
@@ -11864,11 +12003,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 “ú–{–¼uˆ«–‚éƒhƒ‰ƒLƒ…ƒ‰vB
 ”wŒi‚Ìãk–§‚³AƒLƒƒƒ‰ƒNƒ^‚ÌƒŠƒAƒ‹‚³‚Éd“_‚ð‚¨‚¢‚½A‰¡ƒXƒNƒ[ƒ‹‚Ìƒzƒ‰[EƒAƒNƒVƒ‡ƒ“B
 •sŽv‹c‚È—Í‚ð”é‚ß‚½ƒ€ƒ`‚ðŽ‚ÂŽålŒöEƒVƒ‚ƒ“‚ªA‚±‚Ìƒ€ƒ`‚ÆƒQ[ƒ€’†‚ÉŽè‚É“ü‚éƒAƒCƒeƒ€‚ð‹ìŽg‚µ‚ÄAƒhƒ‰ƒLƒ…ƒ‰‚ð“|‚·‚½‚ß‚Éí‚¤B
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -12197,7 +12331,7 @@ CPU‚Æ‚Ì‘ÎíƒvƒŒƒCA‚³‚ç‚ÉUŒ‚‚ÆŽç”õ‚ª‚ ‚é–{Ši“I–ì‹…ƒQ[ƒ€‚Ìæ‹ì‚¯‚Æ‚È‚Á‚½‚Ì‚ªA‚
 ‘IŽè‚ÌŒÂlƒf[ƒ^‚ðŽæ‚è“ü‚êA“–Žž‚Ì–ì‹…ƒQ[ƒ€‚Æ‚µ‚Ä‚ÍA‘½Ê‚È‹…ŽíA‘ã‘ÅAƒoƒ“ƒg‚È‚Ç‚Ì—lX‚ÈƒVƒXƒeƒ€‚ª·‚èž‚Ü‚ê‚Ä‚¢‚éB
 ƒQ[ƒ€‚Ìƒ‹[ƒ‹‚ÍAƒEƒ‰UŒ‚‚ÌƒRƒ“ƒsƒ…[ƒ^ƒ`[ƒ€‚ÉŸ‚¿‰z‚³‚ê‚Ä‚µ‚Ü‚¤‚ÆƒQ[ƒ€ƒI[ƒo[B
 ‰¹º‡¬‚É‚æ‚éuƒXƒgƒ‰ƒCƒN[vuƒAƒEƒg[v‚ÌƒR[ƒ‹‚ªƒXƒ^ƒWƒAƒ€‚Ì•µˆÍ‹C‚ð·‚èã‚°‚éB
-—]’k‚¾‚ªAƒRƒ“ƒsƒ…[ƒ^ƒAƒ‹ƒSƒŠƒYƒ€‚ÌŽã“_‚ð‚Â‚¢‚ÄAƒoƒ“ƒg‚ð‘½—p‚·‚éŒÆ‘§‚ÈƒvƒŒƒC‚ª‘¶Ý‚µ‚½B
+—]’k‚¾‚ªAƒRƒ“ƒsƒ…[ƒ^ƒAƒ‹ƒSƒŠƒYƒ€‚ÌŽã“_‚ð‚Â‚¢‚Äƒoƒ“ƒg‚ð‘½—p‚·‚é‚Æ‚¢‚¤ŒÆ‘§‚ÈƒvƒŒƒC‚ª‘¶Ý‚·‚éB
 
 
 
@@ -13105,11 +13239,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ‚³‚ç‚í‚ê‚½’‡ŠÔ‚ÌƒKƒWƒFƒbƒg‚ð‹~‚¢o‚·‚½‚ß‚Éˆ«í‹ê“¬B
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -13807,12 +13936,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM-2612, SN76496 (2)]
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
 
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -13919,12 +14042,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
-
-
-¦uMEGA PLAYv‚Æ‚ÍA
-ƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA
-4–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -14284,11 +14401,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ‘S8ƒXƒe[ƒWB
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -14349,10 +14461,6 @@ CPU\¬[G65C816, SPC700]@‰¹Œ¹ƒ`ƒbƒv[Custom]
 ‰ñ‚è‚·‚¬‚é‚ÆŒ‚Á‚Ä‚µ‚Ü‚¤‚Ù‚ÇŠŠ‚ç‚©‚É‰æ–Ê‚ª‰ñ“]‚·‚éB
 ‚Ü‚½A‚a‚f‚l‚à‘f°‚ç‚µ‚­ƒX[ƒp[ƒtƒ@ƒ~ƒRƒ““Æ“Á‚Ì‰¹F‚ð‘t‚Å‚Ä‚­‚ê‚éB
 ‰Æ’ë‹@—p‚Æ‚¢‚¤‚±‚Æ‚Å‘½­–ÑF‚ª•Ï‚í‚Á‚Ä‚¢‚é‚ªA—V‚Ñ‚â‚·‚¢—Çì‚Æ‚È‚Á‚Ä‚¢‚éB
-
-
-¦uNintendo Super Systemv‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒX[ƒp[ƒtƒ@ƒ~ƒRƒ“v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-3–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -14833,7 +14941,7 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰F2•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“i—vŠm”Fj
 
-ƒVƒXƒeƒ€ƒ{[ƒhFCentury Electronics Convertible Video SystemiCVSj
+ƒVƒXƒeƒ€ƒ{[ƒhFCentury Electronics Century Video SystemiCVSj
 
 CPU\¬[S2650 (2)]@‰¹Œ¹ƒ`ƒbƒv[DAC (2), TMS5110]
 
@@ -15026,12 +15134,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM-2612, SN76496 (2)]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -15991,7 +16093,7 @@ $end
 
 $info=crmaze
 $bio
-Crystal Maze
+The Crystal Maze
 
 
 ”­”„”NF1994
@@ -16002,7 +16104,7 @@ Crystal Maze
 
 ƒRƒ“ƒgƒ[ƒ‰F8ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+ƒVƒXƒeƒ€ƒ{[ƒhFBarcrest MPU4 Video Firmware
 
 CPU\¬[M6809, 68000]@‰¹Œ¹ƒ`ƒbƒv[AY8910, SAA1099]
 
@@ -16033,6 +16135,36 @@ CPU\¬[SE3208]@‰¹Œ¹ƒ`ƒbƒv[VRender Zero]
 
 
 
+
+
+
+$end
+
+$info=crysbios
+$bio
+ƒNƒŠƒXƒ^ƒ‹ƒVƒXƒeƒ€
+
+
+”­”„”NF2001
+
+ŠJ”­Œ³FƒuƒŒƒbƒcƒ@ƒ\ƒtƒg / Magic Eyes@”­”„Œ³FƒuƒŒƒbƒcƒ@ƒ\ƒtƒg
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒuƒŒƒbƒcƒ@ƒ\ƒtƒg ƒNƒŠƒXƒ^ƒ‹ƒVƒXƒeƒ€
+
+CPU\¬[SE3208]@‰¹Œ¹ƒ`ƒbƒv[VRender Zero]
+
+
+ŠCŠOŒü‚¯‚ÉSNK‚ÌuNEO¥GEOv‚Ìì•i‚ð”Ì”„‚µ‚Ä‚¢‚½“ú–{‚ÌƒuƒŒƒbƒcƒ@ƒ\ƒtƒg‚ÆA
+ŠØ‘‚Ìƒ}ƒWƒbƒNƒAƒCƒYŽÐ‚Ì‹¤“¯ŠJ”­‚É‚æ‚è“oê‚µ‚½uƒNƒŠƒXƒ^ƒ‹ƒVƒXƒeƒ€vB
+ƒXƒyƒbƒN“I‚É‚ÍuNEO¥GEO MVSv‚ÌãˆÊŠî”Â‚É‚ ‚½‚é‚à‚Ì‚Æ‚È‚Á‚Ä‚¨‚èA“¯‚¶‚­ROMƒJ[ƒgƒŠƒbƒW‚É‚æ‚èƒQ[ƒ€‚ª”z‹‹‚³‚ê‚Ä‚¢‚éB
+Žå‚ÉŠCŠOŒü‚¯‚Ì‚à‚Ì‚Æ‚µ‚ÄŠJ”­‚³‚ê‚½‚à‚Ì‚ç‚µ‚­AƒƒLƒVƒR‚ÌEvogaŽÐ‚ÌuEvolution Soccerv‚ÆA
+ƒuƒŒƒbƒcƒ@ƒ\ƒtƒgŠJ”­‚ÌuƒUEƒNƒŠƒXƒ^ƒ‹ƒIƒuƒLƒ“ƒOƒXv‚Ì2ƒ^ƒCƒgƒ‹‚ªƒŠƒŠ[ƒX‚³‚êAŒãŽÒ‚Í‹É­”‚È‚ª‚ç“ú–{‚Å‚à”Ì”„‚³‚ê‚Ä‚¢‚éB
+‚µ‚©‚µ‚±‚Ì2ƒ^ƒCƒgƒ‹‚¾‚¯‚Å‚±‚ÌuƒNƒŠƒXƒ^ƒ‹ƒVƒXƒeƒ€v‚ÍŽp‚ðÁ‚µ‚Ä‚µ‚Ü‚¢A
+ŠJ”­Œ³‚Å‚ ‚éƒuƒŒƒbƒcƒ@ƒ\ƒtƒg‚à‚Ü‚½ƒTƒ“ƒAƒ~ƒ…[ƒYƒƒ“ƒg‚É‹zŽû‡•¹‚³‚êAŽp‚ðÁ‚·‚±‚Æ‚É‚È‚éB
 
 
 
@@ -16171,6 +16303,38 @@ CPU\¬[8080]@‰¹Œ¹ƒ`ƒbƒv[Custom]
 
 $end
 
+$info=cvs
+$bio
+Century Video System
+
+
+”­”„”NF1981
+
+ŠJ”­^”­”„Œ³FCentury Electronics
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFCentury Electronics Century Video SystemiCVSj
+
+CPU\¬[S2650 (2), M37710]@‰¹Œ¹ƒ`ƒbƒv[DAC (2), TMS5110]
+
+
+‰p‘Century ElectronicsŽÐ‚æ‚è“oê‚µ‚½ƒQ[ƒ€ŒðŠ·ƒVƒXƒeƒ€‚ª‚±‚ÌuCentury Video System(CVS)v‚Å‚ ‚éB
+ƒQ[ƒ€‚Íƒ‚ƒWƒ…[ƒ‹‚ÆROMƒJ[ƒgƒŠƒbƒWŽg—p‚µA‚±‚ê‚ðŒðŠ·‚·‚é‚±‚Æ‚Åˆá‚¤ì•i‚ðƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚Æ‚¢‚¤A
+ƒf[ƒ^ƒC[ƒXƒg‚ÌƒfƒR¥ƒJƒZƒbƒgƒVƒXƒeƒ€‚ÉŽ—‚½ì‚è‚Æ‚È‚Á‚Ä‚¢‚éB‚Ü‚½ƒ{ƒCƒXƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‹@”\‚ð“‹Ú‚µA81”N`84”N‚Ì3”NŠÔA
+“ú–{‚Å‚Í“–Žž‚ÌƒWƒƒƒpƒ“ƒŒƒWƒƒ[(ƒWƒƒƒŒƒR)‚ªuƒRƒXƒ‚ƒXv‚È‚Ç‚Ì5ƒ^ƒCƒgƒ‹‚ð—A“ü”Ì”„A
+–{‘ƒCƒMƒŠƒX‚Å‚Í‚»‚Ì5ƒ^ƒCƒgƒ‹‚ðŠÜ‚ß‚½10ì•i‚ª”­”„‚³‚ê‚½‚ªA
+“oê‚µ‚½ì•i‚ª‚Ç‚ê‚à‘eˆ«‚Èì•i‚Î‚©‚è‚ÅA“oê’¼‘O‚Ì–{‘‚Å‚ÌŠú‘Ò“x‚Æ‚Í”½‘Î‚ÉA
+‚Ü‚Á‚½‚­”„‚ê‚È‚¢‚Ü‚ÜA84”N1ŒŽ‰ïŽÐ‚Í“|ŽY‚·‚é‚±‚Æ‚É‚È‚éB
+‚Ç‚¤‚â‚çƒAƒƒŠƒJ‚Å‚ÍCentury ElectronicsŽÐ‚Ìì•i‚ðˆµ‚Á‚Ä‚¢‚½Tuni Electro Service(TES)ŽÐ‚ªA
+uConvertible Video Systemv‚Æ‚¢‚¤–¼Ì‚Å”Ì”„‚µ‚Ä‚¢‚½‚æ‚¤‚Å‚ ‚éB
+
+
+
+$end
+
 $info=cybattlr
 $bio
 ƒTƒCƒoƒgƒ‰[
@@ -16269,12 +16433,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 
 ‹Æ–±—p‚©‚ç‚ÌˆÚAì‚¾‚ªAŠî–{ƒVƒXƒeƒ€ˆÈŠO‚Ù‚Æ‚ñ‚Çˆá‚¤ì•i‚É‚È‚Á‚Ä‚¨‚èAƒIƒŠƒWƒiƒ‹‚Ì—v‘f‚ª‹­‚¢B
 ‘S8–Ê’†A2–Ê‚Ü‚Å‚ÍŒxŠ¯‚Æ‚µ‚Äí‚¢A‚»‚êˆÈ~‚Í“ÁŽê‘•b•ž‚ð’…—p‚µE-SWAT‚Æ‚µ‚Äí‚¤B
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -16636,11 +16794,12 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+4ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒoƒVƒXƒeƒ€
+ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒJƒlƒRƒVƒXƒeƒ€
 
 CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
 
 
+lH“I‚É‘¢‚ç‚ê‚½ƒhƒ‰ƒSƒ“’B‚ð‹ì‚èA
 ƒVƒ‡ƒbƒg‚ÆƒoƒjƒbƒVƒ…Aƒ{ƒ“ƒo[‚ð‹ìŽg‚µ‚Äi‚ÞcƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒOB
 ƒVƒ‡ƒbƒg‚ð‰Ÿ‚µ‚Á‚Ï‚È‚µ‚É‚·‚é‚Æƒ[ƒ^[‚ðÁ”ï‚µ‚Ä‹­—Í‚ÈuƒoƒjƒbƒVƒ…v‚Å‚ÌUŒ‚‚ª‰Â”\B
 ƒoƒjƒbƒVƒ…ƒ[ƒ^[‚ÍA“G‚ÉƒVƒ‡ƒbƒg‚ðŒ‚‚¿ž‚Þ‚©AƒAƒCƒeƒ€‚ðŽæ‚é‚±‚Æ‚É‚æ‚è‰ñ•œ‚Å‚«‚éB
@@ -16845,7 +17004,7 @@ $bio
 
 ƒWƒƒƒ“ƒ‹Fƒ~ƒjƒQ[ƒ€
 
-ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+3ƒ{ƒ^ƒ“
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“
 
 ƒVƒXƒeƒ€ƒ{[ƒhFƒRƒiƒ~ ƒVƒXƒeƒ€GX Type2
 
@@ -17465,7 +17624,7 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰F2•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFCentury Electronics Convertible Video SystemiCVSj
+ƒVƒXƒeƒ€ƒ{[ƒhFCentury Electronics Century Video SystemiCVSj
 
 CPU\¬[S2650 (2)]@‰¹Œ¹ƒ`ƒbƒv[DAC (2), TMS5110]
 
@@ -17592,10 +17751,6 @@ CPU\¬[G65C816, SPC700]@‰¹Œ¹ƒ`ƒbƒv[Custom]
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
 
-¦uNintendo Super Systemv‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒX[ƒp[ƒtƒ@ƒ~ƒRƒ“v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-3–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -17661,7 +17816,7 @@ $bio
 
 ”­”„”NF1998.05
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹FƒŒ[ƒVƒ“ƒO
 
@@ -17691,7 +17846,7 @@ $bio
 
 ”­”„”NF1998.12
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹FƒŒ[ƒVƒ“ƒO
 
@@ -17722,7 +17877,7 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰F4•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“i—vŠm”Fj
 
-ƒVƒXƒeƒ€ƒ{[ƒhFCentury Electronics Convertible Video SystemiCVSj
+ƒVƒXƒeƒ€ƒ{[ƒhFCentury Electronics Century Video SystemiCVSj
 
 CPU\¬[S2650 (2)]@‰¹Œ¹ƒ`ƒbƒv[DAC (2), TMS5110]
 
@@ -17833,7 +17988,7 @@ Dead Eye
 
 ƒWƒƒƒ“ƒ‹FƒKƒ“ƒVƒ…[ƒeƒBƒ“ƒO
 
-ƒRƒ“ƒgƒ[ƒ‰:8•ûŒüƒŒƒo[+3ƒ{ƒ^ƒ“
+ƒRƒ“ƒgƒ[ƒ‰:ƒKƒ“ƒRƒ“ƒgƒ[ƒ‰
 
 ƒVƒXƒeƒ€ƒ{[ƒhFƒRƒiƒ~ GVƒVƒXƒeƒ€
 
@@ -17896,7 +18051,7 @@ CPU\¬[PSX CPU]@‰¹Œ¹ƒ`ƒbƒv[SPU]
 
 æ‚É‰Æ’ë‹@—p‚ÉˆÚA‚³‚ê‚½‘Oì‚ðƒx[ƒX‚ÉAV‚½‚È—v‘f‚ð‰Á‚¦ƒŠƒŠ[ƒX‚³‚ê‚½ƒo[ƒWƒ‡ƒ“ƒAƒbƒv”ÅB
 ‘Oì‚ªƒx[ƒX‚È‚ª‚ç‚àAƒpƒ[ƒAƒbƒv‚µ‚½ƒOƒ‰ƒtƒBƒbƒNAƒLƒƒƒ‰ƒNƒ^[EƒXƒe[ƒW‚Ì’Ç‰ÁA
-ƒRƒ}ƒ“ƒhŒn“‚Ì®—AƒVƒŠ[ƒY‚Ì“Á’·‚Å‚ ‚é‘ÅŒ‚A“Š‚°A–hŒä‚Ìu‚R‚·‚­‚ÝvEƒz[ƒ‹ƒh(‚Â‚©‚ÝUŒ‚)‚Ì‹­‰»“™A
+ƒRƒ}ƒ“ƒhŒn“‚Ì®—AƒVƒŠ[ƒY‚Ì“Á’·‚Å‚ ‚é‘ÅŒ‚A“Š‚°A–hŒä‚Ìu3‚·‚­‚ÝvEƒz[ƒ‹ƒh(‚Â‚©‚ÝUŒ‚)‚Ì‹­‰»“™A
 ƒVƒXƒeƒ€–Ê‚Å‚à‘å‚«‚­‰ü—Ç‚³‚êA“ïˆÕ“x‚à‰º‚ª‚Á‚Ä‚¢‚éB
 
 “–‰AƒZƒKƒTƒ^[ƒ“ŒÝŠ·‹Æ–±—pŠî”ÂuST-Vv‚É‚ÄŠJ”­‚³‚êƒƒPƒeƒXƒg‚às‚È‚í‚ê‚Ä‚¢‚½‚ªA
@@ -18547,7 +18702,7 @@ $bio
 
 ”­”„”NF1994.07
 
-ŠJ”­Œ³Fƒ}[ƒ`ƒ“Eƒ}ƒŠƒGƒbƒ^iƒƒbƒL[ƒhƒ}[ƒ`ƒ“j@”­”„Œ³FƒZƒK
+ŠJ”­Œ³Fƒ}[ƒ`ƒ“Eƒ}ƒŠƒGƒbƒ^iƒƒbƒL[ƒhƒ}[ƒ`ƒ“j/ ƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹FƒAƒNƒVƒ‡ƒ“ƒVƒ…[ƒeƒBƒ“ƒO
 
@@ -19002,7 +19157,7 @@ Digger (CVS”Å)
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFCentury Electronics Convertible Video SystemiCVSj
+ƒVƒXƒeƒ€ƒ{[ƒhFCentury Electronics Century Video SystemiCVSj
 
 CPU\¬[S2650 (2)]@‰¹Œ¹ƒ`ƒbƒv[TMS5110, DAC(2)]
 
@@ -19400,9 +19555,9 @@ CPU\¬[Z80 (3)]@‰¹Œ¹ƒ`ƒbƒv[SN76496 (4)]
 ‰æ–Ê“à‚Ìƒtƒ‹[ƒc‚ð‘S•”Žæ‚é‚©A‘S‚Ä‚Ì“G‚ð“|‚·‚ÆƒXƒe[ƒWƒNƒŠƒAB
 ‚¨“¾ˆÓ‚ÌuEXTRAv‚É‚æ‚é1UP‚âAˆê“xŽg—p‚·‚é‚Æ‚µ‚Î‚ç‚­‚ÌŠÔŽg‚¦‚È‚­‚È‚éƒGƒiƒW[ƒ{[ƒ‹‚È‚Çuƒ~ƒXƒ^[Do!v‚ÌƒVƒXƒeƒ€‚ðŒp³‚µ‚Ä‚¢‚éB
 —]’k‚¾‚ªA‚±‚ÌƒQ[ƒ€‚ÍA1984”N‚ÌAMƒVƒ‡[‚ÉuDo!ƒ‰ƒ“ƒ‰ƒ“v‚Æ‚¢‚¤ƒ^ƒCƒgƒ‹‚Åo•i‚³‚ê‚Ä‚¢‚é‚ªA
-‚±‚ÌŽž‚ÍŠCŠOŒü‚¯‚Æ‚µ‚Ä‚Ì‚Ý”­”„‚³‚êA“ú–{‚Å‚Í3”N’x‚ê‚Ì1987”N‚É”­”„‚³‚ê‚Ä‚¢‚éB
-‚Ü‚½A‚·‚Å‚ÉƒŠƒŠ[ƒX‘O‚Éƒ†ƒjƒo[ƒTƒ‹ŽÐ‚Í‚±‚Ìì•i‚ðÅŒã‚ÉƒrƒfƒIƒQ[ƒ€‹ÆŠE‚©‚ç“P‘Þ‚·‚é‚±‚Æ‚ðŒˆ‚ß‚Ä‚¢‚½‚Ì‚¾‚ªA
-‚»‚Ì——R‚ÍuƒAƒ^ƒŠƒVƒ‡ƒbƒNv‚âuƒtƒ@ƒ~ƒRƒ“v‚Ì“oê‚È‚ÇAuƒrƒfƒIƒQ[ƒ€ƒVƒ‡ƒbƒNv‚Ì‰e‹¿‚Å‚ ‚Á‚½B
+‚±‚ÌŽž‚ÍŠCŠOŒü‚¯‚Æ‚µ‚Ä‚Ì‚Ý”­”„‚³‚êA“ú–{‚Å‚ÍƒfƒBƒXƒgƒŠƒrƒ…[ƒ^[‚ð’Ê‚¶‚Ä3”N’x‚ê‚Ì1987”N‚É”­”„‚³‚ê‚Ä‚¢‚éB
+‚¿‚È‚Ý‚É“oê“–Žž‚É‚ÍŠù‚Éƒ†ƒjƒo[ƒTƒ‹‚ÍƒQ[ƒ€ŠE‚©‚ç“P‘Þ‚µA‹}¬’·‚µ‚Ä‚«‚½ƒpƒ`ƒ“ƒR‹ÆŠE‚Ö‚ÆˆÚ‚Á‚Ä‚¢‚½‚½‚ßA
+ŠJ”­’†‚¾‚Á‚½LDƒQ[ƒ€uƒAƒhƒxƒ“ƒ`ƒƒ[Mr.Do!v‚Í‚¨‘ “ü‚è‚É‚È‚Á‚Ä‚µ‚Ü‚Á‚½B
 
 
 
@@ -20110,11 +20265,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 “à—e‚Í‚³‚ç‚í‚ê‚Ä‚µ‚Ü‚Á‚½—öl‚ð•‚¯‚éˆ×‚ÉŽålŒöƒrƒŠ[‚ªí‚¤‚Æ‚¢‚¤‚à‚ÌB
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -20227,11 +20377,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ŽÀÛ‚Ìƒ‹[ƒ‹‚É‚»‚Á‚Ä‚¢‚é‚Ì‚àŠy‚µ‚ß‚é‚Æ‚±‚ëB
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -20340,11 +20485,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ‚¨ˆãŽÒ‚³‚ñ‚É‚È‚Á‚½ƒ}ƒŠƒI‚ÍAƒJƒvƒZƒ‹‚Ì–ò‚ð“Š‚°ž‚ñ‚ÅAƒrƒ“‚Ì’†‚ÌƒoƒCƒLƒ“‚­‚ñ‚ð‘ÞŽ¡‚µ‚Ä‚¢‚­B
 “¯F‚ÌƒoƒCƒLƒ“‚­‚ñ‚©ƒJƒvƒZƒ‹‚ÍAcA‰¡‚Ç‚¿‚ç‚©‚É4‚Â•À‚Ô‚ÆÁ‚¦‚éB
 ‘S•”‚ÌƒoƒCƒLƒ“‚­‚ñ‚ðÁ‚·‚±‚Æ‚ª–Ú“I‚ÌƒpƒYƒ‹ƒQ[ƒ€‚¾B
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -21292,12 +21432,7 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 
 Œõüeƒ\ƒtƒgBƒJƒ‚Œ‚‚¿‚ÆAƒNƒŒ[ŽËŒ‚‚ªŠy‚µ‚ß‚éB
 ‚P‚O‰H‚ÌƒJƒ‚‚ªo‚é‚Æ‚P–ÊI—¹Bˆê’è”ˆÈãŽd—¯‚ß‚È‚¢‚ÆƒQ[ƒ€ƒI[ƒo[B
-ˆê‰H‚à—Ž‚Æ‚¹‚È‚¢‚ÆŒ¢‚ÉÎ‚í‚ê‚éB
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
+ˆê‰H‚à—Ž‚Æ‚¹‚È‚¢‚ÆŒ¢‚ÉÎ‚í‚ê‚Ä‚µ‚Ü‚¤B
 
 
 
@@ -21469,7 +21604,7 @@ $end
 
 $info=dyger
 $bio
-ƒ_ƒCƒK[
+Dyger
 
 
 ”­”„”NF1989.04
@@ -21541,8 +21676,9 @@ CPU\¬[V30, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2151, DAC]
 “à—e‚Íƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^”Å‚©‚çˆêV‚³‚ê‚½PCƒGƒ“ƒWƒ“”Å‚ªƒx[ƒX‚Æ‚È‚Á‚Ä‚¢‚éB
 ƒvƒŒƒCƒ„[‚ÍA–³§ŒÀ‚ÉŽg—p‰Â”\‚È”š’e‚ðŽg‚Á‚ÄAƒXƒe[ƒW‚Ìƒ‚ƒ“ƒXƒ^[‚½‚¿‘S‚Ä‚ð“|‚¹‚ÎƒXƒe[ƒWƒNƒŠƒAB
 1ƒ‰ƒEƒ“ƒh“à‚ÅuBONUSv‚ðW‚ß‚é‚Æƒ{[ƒiƒXƒXƒe[ƒW‚É“ü‚èAƒXƒRƒAƒAƒbƒv‚ð‘_‚¤‚±‚Æ‚ª‚Å‚«‚éB
-‚à‚¿‚ë‚ñ‰Î—ÍƒAƒbƒv‚âƒŠƒ‚ƒRƒ“‚È‚ÇA‚¨“éõ‚Ý‚ÌƒAƒCƒeƒ€‚à“oê‚·‚éB
-‘S36ƒXƒe[ƒWB2l—p¥4l—pâž‘Ì‚ðŽg‚¦‚ÎPCƒGƒ“ƒWƒ“”Å‚ÅD•]‚¾‚Á‚½•¡”l‚É‚æ‚é‘ÎíƒvƒŒƒC‚à‰Â”\B
+‚à‚¿‚ë‚ñ‰Î—ÍƒAƒbƒv‚âƒŠƒ‚ƒRƒ“‚È‚ÇA‚¨“éõ‚Ý‚ÌƒAƒCƒeƒ€‚à“oê‚·‚éB‘S36ƒXƒe[ƒWB
+2l—p¥4l—pâž‘Ì‚ðŽg‚¦‚ÎPCƒGƒ“ƒWƒ“”Å‚ÅD•]‚¾‚Á‚½•¡”l‚É‚æ‚é‘ÎíƒvƒŒƒC‚à‰Â”\B
+Å‰AƒAƒCƒŒƒ€‚Å‚Í‚È‚­UPL‚ªƒA[ƒP[ƒh”Å‚ðì‚ë‚¤‚Æ‚µ‚½‚ªAƒnƒhƒ\ƒ“‚Æ‚Ìƒ‰ƒCƒZƒ“ƒX—¿‚ÉÜ‚è‡‚¢‚ª•t‚©‚¸’f”O‚µ‚½‚Æ‚¢‚¤B
 
 
 
@@ -21742,7 +21878,7 @@ $bio
 
 ”­”„”NF1988
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹FƒAƒNƒVƒ‡ƒ“
 
@@ -22813,6 +22949,35 @@ CPU\¬[Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910]
 
 $end
 
+$info=evilngt
+$bio
+ƒGƒ”ƒBƒ‹ƒiƒCƒg
+
+
+”­”„”NF1998.09
+
+ŠJ”­^”­”„Œ³FƒRƒiƒ~
+
+ƒWƒƒƒ“ƒ‹FƒKƒ“ƒVƒ…[ƒeƒBƒ“ƒO
+
+ƒRƒ“ƒgƒ[ƒ‰Fƒnƒ“ƒhƒKƒ“Œ^ƒKƒ“ƒRƒ“ƒgƒ[ƒ‰[(P1¥P3)+ƒVƒ‡ƒbƒgƒKƒ“Œ^ƒKƒ“ƒRƒ“ƒgƒ[ƒ‰[(P2)
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒRƒiƒ~ M2ƒVƒXƒeƒ€
+
+CPU\¬[PPC602]
+
+
+ƒRƒiƒ~‚©‚ç“oê‚µ‚½ƒzƒ‰[ŒnƒKƒ“ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€B
+ƒQ[ƒ€‚Ís•û•s–¾‚Ì—öl‚ð‘{‚·‚½‚ß‰®•~“à‚©‚çŽn‚Ü‚èA’n‰º“¹‚âˆâÕA•æ’n‚È‚Ç‚ÌƒR[ƒX‚©‚çƒXƒe[ƒW‚ð‘I‘ð‚·‚é‚±‚Æ‚ª‚Å‚«A
+ƒQ[ƒ€’†Žè‚É“ü‚ê‚½ƒAƒCƒeƒ€‚É‚æ‚èƒR[ƒX‚ª•Ï‰»‚·‚é‚Æ‚¢‚¤ƒ}ƒ‹ƒ`ƒXƒg[ƒŠ[•ûŽ®‚ðÌ—p‚µA
+‚»‚ê‚¼‚êˆÙ‚È‚éƒGƒ“ƒfƒBƒ“ƒO‚ª—pˆÓ‚³‚ê‚Ä‚¢‚éB
+‚Ü‚½3l‚Ü‚Å“¯ŽžƒvƒŒƒC‚ª‰Â”\‚Æ‚È‚Á‚Ä‚¨‚èA1P‘¤‚Æ3P‘¤‚Íƒnƒ“ƒhƒKƒ“A2P‘¤‚ÍƒVƒ‡ƒbƒgƒKƒ“ƒ^ƒCƒv‚ÌƒRƒ“ƒgƒ[ƒ‰[Žg—p‚µA
+ƒnƒ“ƒhƒKƒ“‚ÌeŒû‚ð^ã‚ÉŒü‚¯‚ÄŽc’eƒQ[ƒW‚ð‚½‚ßƒKƒ“ƒRƒ“ƒgƒ[ƒ‰[‚ÌÔ‚¢ƒ‰ƒCƒg‚ªŒõ‚Á‚½‚çŠÑ’Ê’e‚ðAƒVƒ‡ƒbƒgƒKƒ“‚Å‚Íˆê”­‚ÅL”ÍˆÍ‚ÉUŒ‚‚ª‰Â”\‚Æ‚È‚Á‚Ä‚¢‚éB
+
+
+
+$end
+
 $info=evilston
 $bio
 Evil Stone
@@ -22913,11 +23078,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 
 •Ï‰»‚É‚Æ‚ñ‚¾ƒR[ƒX‚ðƒ‚ƒgƒNƒƒXƒoƒCƒN‚Éæ‚èAƒI[ƒo[ƒq[ƒg‚µ‚È‚¢‚æ‚¤‚ÉáŠQ‚ð‚±‚¦AƒS[ƒ‹‚ð–ÚŽw‚·‚Æ‚¢‚¤
 ƒVƒ“ƒvƒ‹‚ÈƒŒ[ƒVƒ“ƒOƒQ[ƒ€B
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -23520,10 +23680,6 @@ CPU\¬[G65C816, SPC700]@‰¹Œ¹ƒ`ƒbƒv[Custom]
 ƒT[ƒLƒbƒg‚ðƒNƒŠƒA‚µ‚Ä‚¢‚­‚ÆA‚æ‚è“ïˆÕ“x‚Ì‚‚¢ƒR[ƒX‚ªoŒ»‚·‚éB
 
 
-¦uNintendo Super Systemv‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒX[ƒp[ƒtƒ@ƒ~ƒRƒ“v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-3–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -23534,7 +23690,7 @@ $bio
 
 ”­”„”NF1991.11
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹FƒŒ[ƒVƒ“ƒO
 
@@ -23548,7 +23704,7 @@ CPU\¬[V60, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM3438 (2), RF5C68]
 ƒqƒbƒgì‚Æ‚È‚Á‚½uƒX[ƒp[ƒ‚ƒiƒRGPv‚É‘±‚¢‚ÄƒŠƒŠ[ƒX‚µ‚½SYSTEM32‚ðŽg—p‚µ‚½ƒI[ƒ\ƒhƒbƒNƒX‚ÈF1ƒŒ[ƒXƒQ[ƒ€B
 ƒIƒŠƒWƒiƒ‹ƒT[ƒLƒbƒg‚ð4Žü‚µ‚Äƒ‰ƒbƒvƒ^ƒCƒ€‚Æ‡ˆÊ‚ð‹£‚¤B
 Ž‹“_‚Íƒ}ƒVƒ“Œã•û‚©‚çŒ©‚½ƒŠƒAƒrƒ…[BƒMƒAƒ`ƒFƒ“ƒW‚Íƒpƒhƒ‹ƒVƒtƒg‚Æ‚È‚Á‚Ä‚¢‚éB
-ƒAƒNƒeƒBƒuƒXƒs[ƒJ[‚ð“‹Ú‚µ‚Ä‚¨‚èAƒGƒ“ƒWƒ“‰¹‚È‚Ç‚ÌƒTƒEƒ“ƒh‚Í”——Í‚ ‚é‚à‚Ì‚¾‚Á‚½B
+ƒAƒNƒeƒBƒuƒXƒs[ƒJ[‚ð“‹Ú‚µ‚Ä‚¨‚èAƒGƒ“ƒWƒ“‰¹‚È‚Ç‚ÌƒTƒEƒ“ƒh‚Í”——Í‚ ‚é‚à‚Ì‚Å‚ ‚éB
 
 
 
@@ -23586,7 +23742,7 @@ $bio
 
 ”­”„”NF1993.08
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹FƒŒ[ƒVƒ“ƒO
 
@@ -24305,6 +24461,37 @@ CPU\¬[ARM, HuC6280]@‰¹Œ¹ƒ`ƒbƒv[YM2151, OKI6295 (2)]
 
 $end
 
+$info=ftimpact
+$bio
+ƒtƒ@ƒCƒ^[ƒYƒCƒ“ƒpƒNƒg
+
+
+”­”„”NF1996.02
+
+ŠJ”­^”­”„Œ³Fƒ^ƒCƒg[
+
+ƒWƒƒƒ“ƒ‹F‘ÎíŠi“¬ƒAƒNƒVƒ‡ƒ“
+
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+3ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒ^ƒCƒg[ FX-1BƒVƒXƒeƒ€
+
+CPU\¬[PSX CPU]@‰¹Œ¹ƒ`ƒbƒv[SPU]
+
+
+ƒ^ƒCƒg[‚æ‚è“oê‚µ‚½ƒ‚[ƒVƒ‡ƒ“ƒLƒƒƒvƒ`ƒƒ[‚ðŽg‚Á‚½3Dƒ|ƒŠƒSƒ“Ši“¬ƒQ[ƒ€uƒtƒ@ƒCƒ^[ƒYƒCƒ“ƒpƒNƒgvB
+ƒQ[ƒ€‚ÍƒŠƒ“ƒOƒAƒEƒgŽ®‚ÌƒQ[ƒ€ƒVƒXƒeƒ€‚ðÌ—p‚µ‚½ƒI[ƒ\ƒhƒbƒNƒX‚È“à—e‚Æ‚È‚Á‚Ä‚¢‚éB
+‚µ‚©‚µ‚±‚Ìì•i‚Ì“Á’¥‚ÍŽg—p‚Å‚«‚é8l‚ÌƒvƒŒƒCƒ„[ƒLƒƒƒ‰ƒNƒ^[‚Ì‚¤‚¿7l‚ÍA
+Žg—p‚·‚é—¬”h‚ð3Ží—Þ‚©‚ç‘I‘ð‚Å‚«‚é‚Æ‚±‚ë‚Å‚ ‚èA‚»‚ê‚É‚æ‚èÅ‘å22Ží—Þ‚ÌƒLƒƒƒ‰ƒNƒ^[‚©‚ç‘I‘ð‚Å‚«‚é‚±‚Æ‚Å‚ ‚éB
+‚Ü‚½ƒLƒƒƒ‰ƒNƒ^[‚ÌˆÚ“®‚ÉŽg—p‚·‚éuƒVƒtƒgƒ{ƒ^ƒ“v‚Ì‘¶Ý‚É‚æ‚èAƒWƒƒƒ“ƒvUŒ‚AƒoƒbƒNƒXƒeƒbƒvAŽ²‚¸‚ç‚µ¥”w–ÊŽæ‚ª‰Â”\‚È‚Æ‚±‚ë‚âA
+’Êí‹Z¥ƒRƒ}ƒ“ƒh‹Z–â‚í‚¸‚Â‚È‚°‚ç‚ê‚é“Æ“Á‚Ì˜A‘±‹ZƒVƒXƒeƒ€‚à“Á’¥‚Å‚ ‚éB
+Žc”O‚È‚ª‚çæ‚É“oê‚µ‚½uƒTƒCƒLƒbƒNƒtƒH[ƒXv‚Ì‚æ‚¤‚È‘å‚«‚­˜b‘è‚Æ‚È‚éƒIƒŠƒWƒiƒŠƒeƒB‚ª–³‚©‚Á‚½‚±‚Æ‚âA
+ƒZƒK‚Ìuƒo[ƒ`ƒƒƒtƒ@ƒCƒ^[3v‚ÌƒŠƒŠ[ƒX’¼‘O‚Ì“oê‚¾‚Á‚½‚½‚ß’–Ú‚ð—‚Ñ‚é‚±‚Æ‚ª­‚È‚­AŽv‚¤‚æ‚¤‚Èƒqƒbƒgì‚Æ‚È‚ç‚È‚©‚Á‚½B
+
+
+
+$end
+
 $info=ftimpcta
 $bio
 ƒtƒ@ƒCƒ^[ƒYƒCƒ“ƒpƒNƒgƒG[ƒX
@@ -24316,7 +24503,7 @@ $bio
 
 ƒWƒƒƒ“ƒ‹F‘ÎíŠi“¬ƒAƒNƒVƒ‡ƒ“
 
-ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+6ƒ{ƒ^ƒ“
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+3ƒ{ƒ^ƒ“
 
 ƒVƒXƒeƒ€ƒ{[ƒhFƒ^ƒCƒg[ FX-1BƒVƒXƒeƒ€
 
@@ -24538,7 +24725,7 @@ $bio
 
 ”­”„”NF1995.11
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹F‘ÎíŠi“¬ƒAƒNƒVƒ‡ƒ“
 
@@ -24569,7 +24756,7 @@ $bio
 
 ”­”„”NF1998.03
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹F‘ÎíŠi“¬ƒAƒNƒVƒ‡ƒ“
 
@@ -25196,12 +25383,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
 
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -25477,7 +25658,7 @@ Flip & Flop (Max-A-Flex”Å)
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFExidy Max-A-Flex Game System
+ƒVƒXƒeƒ€ƒ{[ƒhFExidy Max-A-Flex
 
 CPU\¬[M6502, M68705]@‰¹Œ¹ƒ`ƒbƒv[Pokey, DAC]
 
@@ -26331,7 +26512,9 @@ Funny Bubble
 CPU\¬[Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[OKI6295]
 
 
-¦uƒpƒYƒ‹[ƒvv‚ÌŠC‘¯”Å
+ŠØ‘ComadŽÐ‚ª»ì‚µ‚½uƒpƒYƒ‹[ƒvv‚ÌŠC‘¯”ÅB
+”wŒi‚ðƒk[ƒh‰æ‘œ‚É‘‚«‘Ö‚¦‚Ä‚¢‚é’ö“x‚ÌŠC‘¯”Å‚¾‚ªAƒQ[ƒ€ƒVƒXƒeƒ€Ž©‘Ì‚ÍƒpƒYƒ‹[ƒv‚©‚ç•Ï‰»‚ª‚È‚¢‚Ì‚Å‚»‚ê‚È‚è‚ÉŠy‚µ‚ß‚éB
+ŽÀ‚ÍComadŽÐ‚ªŠJ”­‚µ‚½ì•i‚Å‚Í‚È‚­A“¯‚¶‚­ŠØ‘‚ÌINCHANG Electronics‚Æ‚¢‚¤‰ïŽÐ‚ªì‚Á‚½‚Æ‚àŒ¾‚í‚ê‚éB
 
 
 
@@ -26488,7 +26671,7 @@ $bio
 
 ”­”„”NF1990.05
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹FƒVƒ…[ƒeƒBƒ“ƒO
 
@@ -26519,7 +26702,7 @@ $bio
 
 ”­”„”NF1990.11
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹FƒVƒ…[ƒeƒBƒ“ƒO
 
@@ -27276,7 +27459,7 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒoƒVƒXƒeƒ€
+ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒ”ƒ@ƒVƒXƒeƒ€
 
 CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
 
@@ -27356,7 +27539,7 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒoƒVƒXƒeƒ€
+ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒJƒlƒRƒVƒXƒeƒ€
 
 CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
 
@@ -27384,7 +27567,7 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒoƒVƒXƒeƒ€
+ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒJƒlƒRƒVƒXƒeƒ€
 
 CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
 
@@ -27552,8 +27735,8 @@ CPU\¬[PSX CPU]
 8•ûŒüƒŒƒo[‚ÅƒLƒƒƒ‰ƒNƒ^[EƒJ[ƒ\ƒ‹ˆÚ“®AŽËŒ‚AƒWƒƒƒ“ƒv‰ñ”ðA‰œ‹`‚Ì3‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚·‚éB
 ƒQ[ƒ€ƒVƒXƒeƒ€‚ÍA
 ŽËŒ‚‚Íƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‘±‚¯‚é‚±‚Æ‚Å˜AŽË‚ª‰Â”\‚ÅAƒWƒƒƒ“ƒv’†‚É‚Í“–‚½‚è”»’è‚Í‚È‚¢‚ªÚ‹ßí‚Å‚ÌƒXƒL‚Í‘å‚«‚­‚È‚é‚Æ‚¢‚¤ƒfƒƒŠƒbƒg‚ª‚ ‚èA
-‚Ü‚½“G‚ð“|‚µuƒKƒ€ƒVƒƒƒ‰ƒQ[ƒWv‚ð—­‚ß‚Ä‚¢‚­‚±‚Æ‚Åˆê’èŽžŠÔ–³“Gó‘Ô‚Æ‚È‚éu‰œ‹`ƒKƒ€ƒVƒƒƒ‰v‚ªŽg—p‰Â”\‚Å‚ ‚éB
-’¿‚µ‚¢ƒ^ƒCƒv‚ÌƒAƒNƒVƒ‡ƒ“ƒVƒ…[ƒeƒBƒ“ƒO‚¾‚ªA‚Ç‚±‚©ƒ~ƒbƒ`ƒFƒ‹‚Ì‘Og‚Æ‚à‚¢‚¦‚éTAD‚ÌuƒJƒx[ƒ‹v‚âuƒuƒ‰ƒbƒhƒuƒ‰ƒU[ƒYv‚ðœfœi‚Æ‚³‚¹‚éì•iB
+‚Ü‚½“G‚ð“|‚µuƒKƒ€ƒVƒƒƒ‰ƒQ[ƒWv‚ð—­‚ß‚Ä‚¢‚­‚±‚Æ‚Åˆê’èŽžŠÔ–³“Gó‘Ô‚Æ‚È‚éu‰œ‹`ƒKƒ€ƒVƒƒƒ‰v‚ªŽg—p‰Â”\‚Æ‚È‚éB
+’¿‚µ‚¢ƒ^ƒCƒv‚ÌƒAƒNƒVƒ‡ƒ“ƒVƒ…[ƒeƒBƒ“ƒO‚¾‚ªA‚Ç‚±‚©ƒ~ƒbƒ`ƒFƒ‹‚Ì‘Og‚Æ‚à‚¢‚¦‚éTAD‚ÌuƒJƒx[ƒ‹v‚âuƒuƒ‰ƒbƒhƒuƒ‰ƒU[ƒYv‚ðœfœi‚Æ‚³‚¹‚éì•i‚Å‚ ‚éB
 
 
 
@@ -27806,11 +27989,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -28330,12 +28508,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 ‹Æ–±—p‚ÌƒIƒŠƒWƒiƒ‹‚©‚ç­‚µƒAƒŒƒ“ƒW‚ª‰Á‚¦‚ç‚ê‚Ä‚¢‚é‚ªAˆÚAì‚Æ‚µ‚Ä‚ÍŠ®¬“x‚Ì‚‚¢ì•i‚Å‚ ‚éB
 
 
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -28805,13 +28977,14 @@ $bio
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2203, YM3812, OKI6295]
 
 
-ƒtƒEƒL‚©‚ç“oê‚µ‚½ŒÅ’è‰æ–Êƒ^ƒCƒv‚ÌƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
+Žå‚ÉƒAƒ~ƒ…[ƒYƒƒ“ƒgŽ{Ý‚ð‰c‹Æ‚µ‚Ä‚¢‚½ƒtƒEƒL‚©‚ç“oê‚µ‚½ƒfƒrƒ…[ì‚ÌŒÅ’è‰æ–Êƒ^ƒCƒv‚ÌƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
+–‚‰¤‚ªŽx”z‚·‚é¢ŠE‚ð••ˆó‚µAƒGƒCƒŠƒA•P‚ð•‚¯o‚·‚Ì‚ª‚±‚ÌƒQ[ƒ€‚ÌƒXƒg[ƒŠ[B
 ŽålŒö‚Ì‚¨‹à‚ð‹‚ß‚éƒ}ƒCƒ‹‚ÆA
 ‚¨•P—l‚ª–Ú“I‚Ìƒ„[ƒh‚ð‘€ì‚µ‚ÄAˆÀ‘S’n‘Ñ‚Ìƒ^ƒ}ƒS’Ê˜H‚©‚çƒ^ƒCƒ~ƒ“ƒO‚ðŒ©‚È‚ª‚çƒAƒCƒeƒ€‚ð‰ñŽû‚µAƒXƒe[ƒW‚ðƒNƒŠƒA‚µ‚Ä‚¢‚­B
 ‚±‚ÌƒQ[ƒ€‚ÍAŽålŒö‚ª’Ê‚Á‚½Œã‚É•ªg‚ªŽc‚Á‚Ä‚µ‚Ü‚¢AˆÚ“®‚·‚é”ÍˆÍ‚ª§ŒÀ‚³‚ê‚Ä‚µ‚Ü‚¤‚Æ‚±‚ë‚ªƒ|ƒCƒ“ƒgB
 •ªg‚Ìã‚ð’Ê‰ß‚·‚é‚±‚Æ‚Í‚Å‚«‚È‚­A•ªg‚É“G‚ªG‚ê‚Ä‚µ‚Ü‚Á‚Ä‚àƒ~ƒX‚É‚È‚é‚Ì‚Å’ˆÓB
 ‹Ù‹}‰ñ”ðƒ{ƒ^ƒ“‚ð‰Ÿ‚·‚±‚Æ‚ÅAŠª‚«Žæ‚ç‚ê‚é‚©‚Ì‚æ‚¤‚É‘f‘‚­–ß‚é‚±‚Æ‚ª‚Å‚«‚éB
-ƒ{ƒX‚à“oê‚·‚éA‘S49ƒXƒe[ƒWB
+ƒ{ƒX‚à“oê‚·‚éA‘S49ƒXƒe[ƒWB—]’k‚¾‚ªŽålŒöuƒ}ƒCƒ‹v‚ÍƒtƒEƒLƒOƒ‹[ƒv‚Ìƒ}ƒXƒRƒbƒgƒLƒƒƒ‰‚Å‚ ‚éB
 
 
 
@@ -28963,7 +29136,7 @@ Gold Bug
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFCentury Electronics Convertible Video SystemiCVSj
+ƒVƒXƒeƒ€ƒ{[ƒhFCentury Electronics Century Video SystemiCVSj
 
 CPU\¬[S2650 (2)]@‰¹Œ¹ƒ`ƒbƒv[DAC (2), TMS5110]
 
@@ -29029,12 +29202,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 THE@DUELi‘Îíƒ‚[ƒhj‚ÍA‚PlƒvƒŒƒC‚ÌŽž‚ÍƒfƒXƒAƒ_[ŒR•ºŽm’B‚Æ‚ÌŸ‚¿”²‚«íB
 ‚QlƒvƒŒƒC‚ÌŽž‚ÍƒvƒŒƒCƒ„[“¯Žm‚Ìí‚¢‚Æ‚È‚éB
 —]’k‚¾‚ªAŽålŒö‚ÌˆêlAƒeƒBƒŠƒX‚Í‹Ø“÷Ž¿‚Ì—íŽm‚É‚µ‚©Œ©‚¦‚È‚¢‚ªAŒ³‰¤——l‚Å‚ ‚éB
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -29127,12 +29294,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 ‚Ü‚½‰Šúƒ‰ƒCƒtÝ’è‚Ì•ÏX‚â8•ªŠÔ‚ÌƒvƒŒƒC§ŒÀŽžŠÔ‚ªÝ‚¯‚ç‚ê‚Ä‚¢‚é‚½‚ßAMEGA-TECH”Å‚Æ”ä‚×‚é‚Æ“ïˆÕ“x‚ªã‚ª‚Á‚Ä‚¢‚éB
 
 
-¦uMEGA PLAYv‚Æ‚ÍA
-ƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA
-4–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -29160,12 +29321,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 Šî–{ƒVƒXƒeƒ€‚É•Ï‰»‚Í‚È‚¢‚ªA¡ì‚Å‚Í–‚–@ƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‘±‚¯‚é‚±‚Æ‚Å–‚–@‚ÌˆÐ—Í‚ð’²®‚Å‚«‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
 uTHE DUELv‚Å‚ÍA1lƒvƒŒƒC‚ÌŽž‚Íƒ_[ƒNƒKƒ‹ƒhŒR•ºŽm’B‚Æ‚ÌŸ‚¿”²‚«í‚Æ‚È‚Á‚Ä‚¨‚èA
 2lƒvƒŒƒC‚ÌŽž‚É‚ÍƒvƒŒƒCƒ„[“¯Žm‚Ìí‚¢‚Æ‚È‚éB
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -29584,11 +29739,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ƒ{[ƒ‹‚ª‚È‚©‚È‚©‚Ü‚Á‚·‚®‚É”ò‚Î‚È‚¢B
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -29793,11 +29943,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 Še–Ê‚Í‚P`‚X‚Â‚Ì–Ê‚Å\¬‚³‚êƒ[ƒvƒ][ƒ“‚Å‚Â‚È‚ª‚Á‚Ä‚¢‚éB
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -29871,9 +30016,9 @@ CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2610]
 ŒÂ«“I‚ÈƒLƒƒƒ‰ƒNƒ^[‚ÆíŽ¯‚ðˆí’E‚µ‚½”X‚Ì•KŽE‹Z‚©‚çl‹C‚ðŒÄ‚ñ‚¾ì•i‚Å‚ ‚éB
 ‚Ù‚Æ‚ñ‚Ç‚Ì’Êí‹ZAƒ_ƒbƒVƒ…UŒ‚‚ÉƒLƒƒƒ“ƒZƒ‹‚ð‚©‚¯‚é‚±‚Æ‚ª‰Â”\‚Æ‚È‚Á‚Ä‚¢‚é‚Ù‚©‚ÉA
 2’iƒWƒƒƒ“ƒv‚ª‚Å‚«‚é‚æ‚¤‚É‚È‚Á‚½‚±‚Æ‚Å‹ó’†‚©‚ç•KŽE‹Z‚ð•ú‚Â‚±‚Æ‚à‚Å‚«‚éB
-‚Ü‚½‘SƒLƒƒƒ‰ƒNƒ^[‚ÌŒJ‚èo‚¹‚é“Š‚°‹Z‚ÍA‹¤’Ê‚ÌƒRƒ}ƒ“ƒh“ü—Í‚ÅUŒ‚‰Â”\‚Å‚ ‚éB
+‚Ü‚½‘SƒLƒƒƒ‰ƒNƒ^[‚ÌŒJ‚èo‚¹‚é“Š‚°‹Z‚ÍA‹¤’Ê‚ÌƒRƒ}ƒ“ƒh“ü—Í‚ÅUŒ‚‰Â”\B
 ‚»‚ê‚É‚µ‚Ä‚àA‹ŒŒŽ›‚ÌŒŒ‚ðˆø‚­‚à‚Ì’B‚ÍA‹°‚ë‚µ‚¢l‚Î‚©‚è‚Å‚ ‚éB
-ƒLƒƒƒ‰ƒNƒ^[ƒfƒUƒCƒ“‚Í“–ŽžƒAƒgƒ‰ƒX‚ÌƒAƒ‹ƒoƒCƒ^[‚¾‚Á‚½‘º“c˜@Ž¢ Ž‚Å‚ ‚éB
+ƒLƒƒƒ‰ƒNƒ^[ƒfƒUƒCƒ“‚Í“–ŽžƒAƒgƒ‰ƒX‚ÌƒAƒ‹ƒoƒCƒ^[‚¾‚Á‚½‘º“c˜@Ž¢ ŽB
 
 
 
@@ -29917,7 +30062,7 @@ $bio
 
 ”­”„”NF1990.10
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹FƒŒ[ƒVƒ“ƒO
 
@@ -29992,11 +30137,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ƒA[ƒP[ƒh”Å‚Æ”ä‚×‚ÄŒ©—ò‚è‚·‚é“_‚Í‘½X‚ ‚é‚ªA•µˆÍ‹C‚â‘€ìŠ´Šo‚Í’‰ŽÀ‚ÉˆÚA‚³‚ê‚Ä‚¢‚éB
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -30050,12 +30190,11 @@ CPU\¬[68000 (2), Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2151, 007232]
 
 
 uƒOƒ‰ƒfƒBƒEƒXvu¹—…™ÖŽÖvuƒOƒ‰ƒfƒBƒEƒXIIv‚Æ‘±‚¢‚½l‹CƒVƒŠ[ƒY‚Ì4ì–ÚB
-ƒpƒ[ƒAƒbƒv‚ÌƒoƒŠƒG[ƒVƒ‡ƒ“‚ª‘‚¦‚½‘¼AD‚«‚È‘•”õ‚Ì‘g‚Ý‡‚í‚¹‚ª‰Â”\‚Æ‚È‚éƒ^ƒCƒvƒGƒfƒBƒbƒg‚à—pˆÓ‚³‚ê‚Ä‚¢‚éB
-‚Ü‚½A3DƒXƒe[ƒW‚à‚ ‚éB
-‚µ‚©‚µAŠÌS‚ÌƒQ[ƒ€“à—e‚Í‚¢‚Ü‚¢‚¿‚ÅA
-IŽnˆ——Ž‚¿‚µ‚Ä‚¢‚é‚±‚Æ‚É‚æ‚éƒeƒ“ƒ|‚Ìˆ«‚³‚Æ“WŠJ‚Ì’x‚³A“ïˆÕ“x‚Ìƒoƒ‰ƒ“ƒX‚ªÅˆ«‚Å‚ ‚é‚È‚ÇA‚Æ‚Ä‚à_˜b‚Ìˆæ‚É‚Í’B‚µ‚Ä‚¢‚È‚¢B
-‚É‚à‚©‚©‚í‚ç‚¸‚»‚±‚»‚±‚Ìƒqƒbƒgì‚Æ‚È‚Á‚½‚Æ‚¢‚¤‚±‚Æ‚ÍA‘OìA‘OXì‚ª‚»‚ê‚Ù‚ÇˆÌ‘å‚¾‚Á‚½‚Æ‚¢‚¤‚±‚Æ‚È‚Ì‚¾‚ë‚¤B
-‘S10ƒXƒe[ƒW
+¡ì‚Å‚ÍƒQ[ƒ€ƒŒƒxƒ‹‚ðƒrƒMƒi[‚ÆƒeƒNƒjƒJƒ‹‚©‚ç‘I‘ð‚Å‚«‚é‚æ‚¤‚É‚È‚Á‚½‚Ù‚©A
+ƒEƒFƒ|ƒ“ƒ^ƒCƒv‚ÆƒV[ƒ‹ƒhƒ‰ƒCƒt‚ª‘I‘ð‚Å‚«‚éƒ^ƒCƒvƒZƒŒƒNƒg‚ÆŠeƒpƒ[ƒ[ƒ^[‚ðŽ©—R‚ÉƒZƒŒƒNƒg‚Å‚«‚éƒGƒfƒBƒbƒgƒ‚[ƒh‚ª“oêB
+‚Ü‚½ƒpƒ[ƒAƒbƒv‚ÌƒoƒŠƒG[ƒVƒ‡ƒ“‚à‘‚¦AƒXƒe[ƒW\¬‚É‚à3DƒXƒNƒ[ƒ‹ƒXƒe[ƒW‚ª“oê‚·‚é‚È‚Ç‚ÌV—v‘f‚à·‚èž‚Ü‚ê‚Ä‚¢‚éB
+‰æ–Ê‚Ìˆ——Ž‚¿‚â‚ ‚Ü‚è‚É‚à‚‚·‚¬‚é“ïˆÕ“xÝ’è‚©‚ç‘½‚­‚ÌƒvƒŒƒCƒ„[‚©‚çŒ™‰}‚³‚êA‚±‚ê‚Ü‚Å‚Ì‚æ‚¤‚Èƒqƒbƒgì‚É‚Í‚È‚ç‚È‚©‚Á‚½‚ªA
+‚»‚ñ‚È’†‚Å‚àƒ‹[ƒvƒvƒŒƒC‚·‚éƒvƒŒƒCƒ„[‚ª“oê‚µ‚½‚±‚Æ‚É‚Í‚à‚Í‚â’E–X‚à‚Ì‚Å‚ ‚éB‘S10ƒXƒe[ƒWB
 
 
 
@@ -30163,12 +30302,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM-3438, SN76496 (2)]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
-
-
-¦uMEGA PLAYv‚Æ‚ÍA
-ƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA
-4–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -30401,12 +30534,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
 
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -30484,7 +30611,7 @@ CPU\¬[68EC020]
 Šî–{“I‚É‚ÍƒX[ƒp[ƒ[ƒ‹ƒhƒXƒ^ƒWƒAƒ€ƒVƒŠ[ƒY‚ªƒx[ƒX‚Æ‚È‚Á‚Ä‚¨‚èAŽvlƒ‹[ƒ`ƒ“‚âƒAƒ‹ƒSƒŠƒYƒ€‚à“¯‚¶‚¾‚ªA
 ƒpƒ‰ƒ[ƒ^[‚Ì’²®‚ÆƒXƒ^ƒWƒAƒ€‚ªL‚­‚È‚Á‚½‚½‚ßŠO–ì‚ÌŽç”õ‚ðƒI[ƒg‘€ì‚ð‘I‘ð‚Å‚«‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
 ‘¼‚É‚à“Š‹…ƒR[ƒX‚Ì‚‚³‚ð’²®‚Å‚«‚é‚æ‚¤‚É‚È‚èABGM‚É‚ÍŠe‹…’c‚ÌƒIƒtƒBƒVƒƒƒ‹‰ž‰‡‰Ì‚ðÌ—p‚·‚é‚È‚ÇA“Æ“Á‚Ì–¡‚àŽ‚Á‚Ä‚¢‚éB
-‚¿‚È‚Ý‚ÉŒ³X‚Í‘IŽè‚ð8“ªg‚É‚µ‚½ŠCŠOŒü‚¯‚Ì–ì‹…ƒQ[ƒ€‚Æ‚µ‚Äì•i‚Æ‚µ‚Äì‚ç‚ê‚Ä‚¢‚½B
+‚¿‚È‚Ý‚ÉŒ³X‚Í‘IŽè‚ð8“ªg‚É‚µ‚½ŠCŠOŒü‚¯‚Ì–ì‹…ƒQ[ƒ€‚Æ‚µ‚Äì‚ç‚ê‚Ä‚¢‚½B
 
 
 
@@ -30509,12 +30636,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -30785,8 +30906,12 @@ $bio
 CPU\¬[68EC020, 68000]@‰¹Œ¹ƒ`ƒbƒv[ES5505]
 
 
-
-
+“–Žž”‘½‚­ƒŠƒŠ[ƒX‚³‚ê‚½ƒ‚[ƒ^[ƒŒ[ƒXuF1v‚ð‘èÞ‚Æ‚µ‚½ƒŒ[ƒVƒ“ƒOƒQ[ƒ€‚Ì‚Ð‚Æ‚ÂB
+‚»‚Ì’†‚Å‚àFOCAAƒtƒWƒeƒŒƒrƒWƒ‡ƒ“‚©‚çƒ‰ƒCƒZƒ“ƒX‚ðŽó‚¯AŽÀŽÊ‚ðŽæ‚èž‚ñ‚¾ƒfƒ‚‰f‘œ‚âŽÀÝ‚·‚éƒR[ƒX¥ƒ`[ƒ€–¼‚ðŽæ‚è“ü‚êA
+“–Žž‚ÌF1’†Œp‚³‚È‚ª‚ç‚Ì“WŠJ‚È‚ÇA‚©‚È‚è‚±‚¾‚í‚Á‚½“à—e‚Æ‚È‚Á‚Ä‚¢‚éB
+‚Ü‚½ƒŒ[ƒX’†‚É‚ÍƒAƒNƒVƒfƒ“ƒg‚âƒ}ƒVƒ“ƒgƒ‰ƒuƒ‹‚ª‹N‚±‚èAƒsƒbƒgƒCƒ“‚ª•K—v‚Æ‚È‚é‚Æ‚¢‚¤“Á’¥‚à’¿‚µ‚¢B
+‚¿‚È‚Ý‚ÉƒV[ƒg‚ª’²®‚Å‚«‚éƒtƒH[ƒ~ƒ…ƒ‰[ƒ}ƒVƒ“Œ^‚Ìê—pâž‘Ì‚É‚ÍuƒX[ƒp[ƒOƒ‰ƒ“ƒhƒGƒtƒFƒNƒgvA
+‘¼‚Ìâž‘Ì‚ÉŽû‚Ü‚é‚Ì‚ÍuƒOƒ‰ƒ“ƒhƒGƒtƒFƒNƒgv‚Æƒ^ƒCƒgƒ‹‚ªˆÙ‚È‚é‚ª“à—e‚Í“¯‚¶‚Å‚ ‚éB
 
 
 
@@ -30810,9 +30935,10 @@ $bio
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2610]
 
 
-ƒ^ƒCƒg[F2ƒVƒXƒeƒ€‘æ10’e‚ÌA‰œs‚«‚Ì‚ ‚éƒ^ƒCƒv‚Ì“®•¨ˆ¤ŒìŠi“¬ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
+ƒ^ƒCƒg[F2ƒVƒXƒeƒ€‘æ10’e‚Æ‚È‚é‰¡ƒXƒNƒ[ƒ‹ƒ^ƒCƒv‚Ì“®•¨ˆ¤ŒìŠi“¬ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
 ‘€ì•û–@‚ÍA8•ûŒüƒŒƒo[‚ÅˆÚ“®Aƒpƒ“ƒ`AƒLƒbƒNA‚Æ‚Ç‚ßA•Ší‚ÉŽg—p‚·‚éUŒ‚ƒ{ƒ^ƒ“‚ÆAƒWƒƒƒ“ƒvƒ{ƒ^ƒ“‚Ì2‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚·‚éB
-‚Ü‚½A2‚Â‚Ìƒ{ƒ^ƒ“‚ð“¯Žž‚É‰Ÿ‚µ‚Ä‘å‹Z‚ðŽdŠ|‚¯‚é‚±‚Æ‚ª‚Å‚«‚éB
+‚Ü‚½A2‚Â‚Ìƒ{ƒ^ƒ“‚ð“¯Žž‚É‰Ÿ‚µ‚Ä‘å‹Z‚ðŽdŠ|‚¯‚é‚±‚Æ‚ª‚Å‚«Aˆ«‚Ì–§—Â‘gD‚©‚ç“®•¨‚½‚¿‚ð•‚¯o‚·‚ÆA
+“®•¨‚½‚¿‚ªƒvƒŒƒCƒ„[‚ð•‚¯‚Ä‚­‚ê‚éBˆêŒ©Aƒe[ƒ}‚¾‚¯‚ð•·‚­‚ÆƒCƒƒ‚ƒm‚Èì•i‚ÉŽv‚¦‚é‚ªA“à—e‚Í‚µ‚Á‚©‚è‚Æ‚µ‚Ä‚¢‚éB
 ƒXƒe[ƒW\¬‚ÍAŠXA—ñŽÔA‘DAƒWƒƒƒ“ƒOƒ‹‚È‚Ç‚Ì‘S7ƒXƒe[ƒWB
 ƒ‚ƒjƒ^‚ð2‘äŽg—p‚µ‚Ä‚Ì4l“¯ŽžƒvƒŒƒC‚à‰Â”\B
 
@@ -30893,9 +31019,9 @@ $bio
 CPU\¬[Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910 (2)]
 
 
-5‚Â‚Ì˜f¯‚ðŽx”z‚·‚éuƒrƒbƒOƒfƒ‚[ƒ‹v‚ð“|‚·‚½‚ßA’n‹…‚©‚çŠi“¬ƒƒ{ƒbƒguƒQƒbƒgƒXƒ^[v‚ª‘—‚èž‚Ü‚ê‚½B
-‚±‚ÌƒQ[ƒ€‚ÍA
-ƒ^ƒCƒK[ƒVƒŠ[ƒY‚Å‚¨“éõ‚Ý‚Ì“ŒˆŸƒvƒ‰ƒ“‚ªŠJ”­‚µ‚½Aƒƒ{ƒbƒg‚ðŽålŒö‚Æ‚µ‚½‰¡ƒXƒNƒ[ƒ‹ƒ^ƒCƒv‚ÌƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€‚Å‚ ‚éB
+5‚Â‚Ì˜f¯‚ðŽx”z‚·‚éuƒrƒbƒOƒfƒ‚[ƒ‹v‚ð“|‚·‚½‚ßA
+’n‹…‚©‚çŠi“¬ƒƒ{ƒbƒguƒQƒbƒgƒXƒ^[v‚ª‘—‚èž‚Ü‚ê‚½‚Æ‚¢‚¤ƒXƒg[ƒŠ[‚ÌA
+ƒ^ƒCƒK[ƒVƒŠ[ƒY‚Å‚¨“éõ‚Ý‚Ì“ŒˆŸƒvƒ‰ƒ“‚ªŠJ”­‚µ‚½ƒƒ{ƒbƒg‚ªŽålŒö‚Ì‰¡ƒXƒNƒ[ƒ‹ƒ^ƒCƒv‚ÌƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€‚Å‚ ‚éB
 ‘€ì‚Í8•ûŒüƒŒƒo[‚ÅƒLƒƒƒ‰ƒNƒ^[‚ÌˆÚ“®A2‚Â‚Ìƒ{ƒ^ƒ“‚ðƒpƒ“ƒ`‚ÆƒLƒbƒN‚ÉŽg—p‚·‚éB
 ƒLƒƒƒ‰ƒNƒ^[‚ªƒeƒLƒpƒL‚Æ“®‚­‚Ì‚ª‚Æ‚Ä‚àˆóÛ“IB
 ‚Ç‚¤‚Å‚à‚¢‚¢‚ªAƒpƒ[ƒAƒbƒvƒAƒCƒeƒ€‚É‚Í“¯ŽÐ‚Ìuƒ^ƒCƒK[ƒwƒŠv‚Æ“¯‚¶ƒLƒƒƒ‰ƒNƒ^[‚ª—p‚¢‚ç‚ê‚Ä‚¢‚éB
@@ -30923,8 +31049,12 @@ $bio
 CPU\¬[SH-2 (2), 68000]@‰¹Œ¹ƒ`ƒbƒv[SCSP]
 
 
-
-
+uƒRƒbƒgƒ“vƒVƒŠ[ƒY‚Å’m‚ç‚ê‚éƒTƒNƒZƒX‚æ‚è“oê‚µ‚½cƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€B
+5Ží—Þ‚ÌˆÙ‚È‚é•Ší‚ð‘•”õ‚µ‚½íŽÔ‚ð‘€‚è‚È‚ª‚çA‚»‚Ì–C“ƒ‚ðù‰ñ‚³‚¹‚È‚ª‚ç‘€ì‚·‚é‚Æ‚¢‚¤ˆê•—•Ï‚í‚Á‚½ì•i‚Å‚ ‚éB
+‘€ì‚ÍƒŒƒo[‚ÅŽ©‹@‚ÌˆÚ“®‚ðs‚¢A‚»‚ê‚¼‚ê¶ù‰ñ¥‰Eù‰ñ‚Ì2‚Â‚Ìƒ{ƒ^ƒ“‚Æƒtƒ‹ƒI[ƒgƒ^ƒCƒv‚ÌƒVƒ‡ƒbƒgƒ{ƒ^ƒ“‚ðŽg—pB
+3‚Â‚Ìƒ{ƒ^ƒ“‚ð“¯Žž‚É‰Ÿ‚·‚±‚Æ‚ÅƒXƒyƒVƒƒƒ‹ƒEƒFƒ|ƒ“‚ðŽg‚¤‚±‚Æ‚ª‚Å‚«‚éB
+ƒQ[ƒ€’†A‰©F‚ÌƒJƒEƒ“ƒ^[‚ªoŒ»‚·‚é‚Æƒ^ƒCƒ€ƒAƒ^ƒbƒN‚ªƒXƒ^[ƒg‚µAŽžŠÔ“à‚Éƒ^[ƒQƒbƒg‚Æ‚È‚é“G‚ð“|‚¹‚Îƒ{[ƒiƒXƒ|ƒCƒ“ƒg‚ª“ü‚éB
+‚È‚©‚È‚©‚Ì—Çì‚È‚Ì‚¾‚ªAo‰ñ‚è‚ªˆ«‚©‚Á‚½‚Ì‚Æ‘¼ŽÐ‚©‚ç‹­—Í‚Èƒ‰ƒCƒoƒ‹ì•i‚ª“oê‚µ‚½‚½‚ßA‚»‚Ì‰e‚É‰B‚ê‚Ä‚µ‚Ü‚Á‚½B
 
 
 
@@ -31023,7 +31153,7 @@ Guided Missile
 
 ƒWƒƒƒ“ƒ‹FƒVƒ…[ƒeƒBƒ“ƒO
 
-ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“
+ƒRƒ“ƒgƒ[ƒ‰F2•ûŒüƒŒƒo[i1ƒ{ƒ^ƒ“•t‚«j
 
 ƒVƒXƒeƒ€ƒ{[ƒhFMidway 8080 System
 
@@ -31136,8 +31266,13 @@ $bio
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2610]
 
 
-a‚ß‚Ìãk–§‚ÈƒOƒ‰ƒtƒBƒbƒN‚ÆA‹Ã‚è‚É‹Ã‚Á‚½‰‰o‚ª‘f°‚ç‚µ‚¢ƒVƒ…[ƒeƒBƒ“ƒOì•iB
-ƒQ[ƒ€ƒoƒ‰ƒ“ƒX‚àâ–­‚ÅA’e‚æ‚¯‚Ì‰õŠ´‚ð‘¶•ª‚É–¡‚í‚¤‚±‚Æ‚ª‚Å‚«‚éB
+ƒ^ƒCƒg[‚æ‚è“oê‚µ‚½a‚ß‚Ìãk–§‚ÈƒOƒ‰ƒtƒBƒbƒN‚Æ‰‰o‚ª‘f°‚ç‚µ‚¢ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€uƒKƒ“¥ƒtƒƒ“ƒeƒBƒAvB
+‘€ì‚Í8•ûŒüƒŒƒo[‚Æ2ƒ{ƒ^ƒ“‚Æ‚¢‚¤ƒXƒ^ƒ“ƒ_[ƒh‚ÈƒXƒ^ƒCƒ‹‚ÅAƒQ[ƒ€’†‹â‰Ý‚ðW‚ß‚é‚±‚Æ‚ÅƒVƒ‡ƒbƒg‚ªƒpƒ[ƒAƒbƒvA
+‹à‰ò‚ðW‚ß‚é‚±‚Æ‚Åƒ{ƒ€‚ðƒXƒgƒbƒN‚·‚é‚±‚Æ‚ª‚Å‚«A”­ŽËŽž‚ÉUŒ‚”ÍˆÍ‚ð‘€ì‚Å‚«‚é‚Æ‚¢‚¤“Á’¥‚ª‚ ‚éB
+ƒQ[ƒ€ƒVƒXƒeƒ€‚±‚»ƒVƒ“ƒvƒ‹‚È‚ª‚çA‰‰o–Ê‚Å‚Í“–ŽžA—Þ‚ðŒ©‚È‚¢Š®¬“x‚Ì‚‚³‚ðŒÖ‚èA
+ƒQ[ƒ€ƒoƒ‰ƒ“ƒX‚àâ–­‚Å’e‚æ‚¯‚Ì‰õŠ´‚ð‘¶•ª‚É–¡‚í‚¤‚±‚Æ‚ª‚Å‚«‚éB
+“oê“–Žž‚ÍŠi“¬ƒQ[ƒ€ƒu[ƒ€‚Æd‚È‚è‚ ‚Ü‚è‘å‚«‚­˜b‘è‚Æ‚È‚ç‚È‚©‚Á‚½‚ªA¡ì‚ÌƒRƒ“ƒZƒvƒg‚ðˆø‚«Œp‚¢‚¾uƒƒ^ƒ‹ƒuƒ‰ƒbƒNv‚Ì“oêA
+’e–‹ŒnƒVƒ…[ƒeƒBƒ“ƒO‚Ìæ‹ì‚¯uƒoƒgƒ‹ƒKƒŒƒbƒKv’a¶‚Ì‚«‚Á‚©‚¯‚É‚È‚Á‚½‚±‚Æ‚ÅAŒã”N‚É‚È‚èÄ•]‰¿‚³‚ê‚é‚±‚Æ‚Æ‚È‚Á‚½B
 
 
 
@@ -31180,17 +31315,18 @@ $bio
 
 ƒWƒƒƒ“ƒ‹F—Ž‰ºŒ^ƒpƒYƒ‹
 
-ƒRƒ“ƒgƒ[ƒ‰F4•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
+ƒRƒ“ƒgƒ[ƒ‰F3•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
 ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
 
 CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2203]
 
 
-ã‚©‚ç—Ž‚¿‚Ä‚­‚é52–‡‚Ìƒgƒ‰ƒ“ƒvƒJ[ƒh‚ÌAŠG‚©”‚ð3–‡ˆÈã‘µ‚¦‚ÄÁ‚µ‚Ä‚¢‚«AƒXƒRƒA‚ðã‚°‚Ä‚¢‚­ƒpƒYƒ‹ƒQ[ƒ€B
-ƒŒƒo[‚ÅƒJ[ƒh‚ð¶‰E‚ÉˆÚ“®‚Æ—Ž‰ºƒXƒs[ƒh‚ÌƒAƒbƒvA2‚Â‚Ìƒ{ƒ^ƒ“‚ÅƒJ[ƒh‚ð‘I‘ð‚·‚éB
-‰æ–Êã•”‚Ü‚ÅƒJ[ƒh‚ªÏ‚Ýã‚ª‚Á‚Ä‚µ‚Ü‚¤‚©Aƒg[ƒ^ƒ‹ƒ|ƒCƒ“ƒg‚ª0‚É‚È‚Á‚Ä‚µ‚Ü‚¤‚ÆƒQ[ƒ€ƒI[ƒo[‚Æ‚È‚éB
-‚Ü‚½AƒXƒe[ƒWƒNƒŠƒAŽž‚ÉƒJ[ƒh‚ªŽc‚Á‚Ä‚µ‚Ü‚Á‚½ê‡‚ÍŒ¸“_‚Ì‘ÎÛ‚Æ‚È‚éB
+‰æ–Êã‚©‚ç—Ž‚¿‚Ä‚­‚é52–‡‚ÌŠG‚Ü‚½‚Í”‚Ì•`‚©‚ê‚½ƒJ[ƒh‚ð3–‡ˆÈã‚»‚ë‚¦‚ÄÁ‚µ‚Ä‚¢‚«Aƒ|ƒCƒ“ƒg‚ð‰Ò‚®‚Æ‚¢‚¤ƒpƒYƒ‹ƒQ[ƒ€B
+ƒŒƒo[‚ÅƒJ[ƒh‚ð“®‚©‚µAƒJ[ƒhƒ`ƒFƒ“ƒW‚Ì‰E‰ñ‚è¥¶‰ñ‚è‚Æ2‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚·‚éBƒ‹[ƒ‹‚ÍA
+‰æ–Êã•”‚Ü‚ÅƒJ[ƒh‚ªÏ‚Ýã‚ª‚Á‚Ä‚µ‚Ü‚¤‚©Aƒg[ƒ^ƒ‹ƒ|ƒCƒ“ƒg‚ª0‚É‚È‚Á‚Ä‚µ‚Ü‚¤‚ÆƒQ[ƒ€ƒI[ƒo[‚Æ‚È‚èA
+ƒXƒe[ƒWƒNƒŠƒAŽž‚ÉƒJ[ƒh‚ªŽc‚Á‚Ä‚µ‚Ü‚Á‚½ê‡‚ÍŒ¸“_‚Ì‘ÎÛ‚Æ‚È‚éB
+1lƒvƒŒƒC‚ÆƒJ[ƒh‚ð1–‡‚¸‚ÂŒðŒÝ‚É‘€ì‚µA‹£‚¢‡‚¤2l‘ÎíƒvƒŒƒC‚à‰Â”\‚Å‚ ‚éB
 
 
 
@@ -31248,8 +31384,12 @@ $bio
 CPU\¬[68000, ƒÊPD7810]@‰¹Œ¹ƒ`ƒbƒv[YM2151, OKI6295]
 
 
-
-
+’†¢•—‚Ì¢ŠE‚ð•‘‘ä‚Æ‚µ‚½ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€uƒKƒ“ƒ}ƒXƒ^[vB
+ƒQ[ƒ€‚Í‚’á·‚Ì‚ ‚éƒXƒe[ƒW‚Å‚»‚ê‚¼‚êƒŒƒxƒ‹‚ÌÝ‚¯‚ç‚ê‚½ƒ{ƒX‚Æ‚Ìˆê‹R‘Å‚¿‚Æ‚¢‚¤ƒXƒ^ƒCƒ‹‚ª’†S‚ÅA
+UŒ‚‚Íƒpƒ“ƒ`‚âƒLƒbƒN‚¾‚¯‚Å‚È‚­ƒRƒ}ƒ“ƒh“ü—Í‚É‚æ‚èA“Š‚°‹Z‚âeA•KŽE‹Z‚ð•ú‚Â‚±‚Æ‚ª‚Å‚«‚é‚Æ‚¢‚¤A
+Ši“¬ƒQ[ƒ€‚É‹ß‚¢“à—e‚Æ‚È‚Á‚Ä‚¨‚èA‘ŠŽè‚Ìƒ‰ƒCƒtƒQ[ƒW‚ð‘S‚Ä’D‚¦‚ÎƒXƒe[ƒWƒNƒŠƒA‚Æ‚È‚éB
+ƒoƒgƒ‹’†‚É‚Í’¹‚âƒCƒmƒVƒV‚ðUŒ‚‚·‚é‚Æ“÷‚Æ‚È‚èAƒQ[ƒW‚ð‰ñ•œ‚·‚é‚±‚Æ‚à‰Â”\‚¾‚ªA“®•¨‚Ì‚Ü‚Ü‚¾‚Æƒ_ƒ[ƒW‚ðŽó‚¯‚Ä‚µ‚Ü‚¤B
+ƒQ[ƒ€ŠJŽnŽž‚Ì—ûKƒXƒe[ƒW‚ð‡‚í‚¹‚½‘S12ƒXƒe[ƒWB
 
 
 
@@ -31322,7 +31462,7 @@ $bio
 
 ”­”„”NF1994.09
 
-ŠJ”­Œ³FÊ‹ž@”­”„Œ³FƒWƒƒƒŒƒR
+ŠJ”­^”­”„Œ³FÊ‹ž
 
 ƒWƒƒƒ“ƒ‹FƒVƒ…[ƒeƒBƒ“ƒO
 
@@ -31404,7 +31544,7 @@ $end
 
 $info=gunbustr
 $bio
-ƒKƒ“ƒoƒXƒ^[
+ƒKƒ“EƒoƒXƒ^[
 
 
 ”­”„”NF1992
@@ -31421,7 +31561,13 @@ CPU\¬[68EC020, 68000]@‰¹Œ¹ƒ`ƒbƒv[ES5505]
 
 
 ƒ^ƒCƒg[‚æ‚è“oê‚µ‚½4l‚Ü‚Å“¯Žž‚ÉƒvƒŒƒC‰Â”\‚ÈƒKƒ“ƒVƒ…[ƒeƒBƒ“ƒOì•iB
-1‚Â‚Ìâž‘Ì‚É2‚Â‚Ìƒ‚ƒjƒ^[‚Æ‚ð‘•”õ4‚Â‚ÌƒKƒ“ƒRƒ“ƒgƒ[ƒ‰‚ÆƒWƒ‡ƒCƒXƒeƒBƒbƒN‚ð‘•”õA2‘Î2‚Ì‘ÎíƒvƒŒƒC‚à‰Â”\‚Å‚ ‚éB
+1‚Â‚Ìâž‘Ì‚É2‚Â‚Ìƒ‚ƒjƒ^[‚ÆƒWƒ‡ƒCƒXƒeƒBƒbƒNA4‚Â‚ÌƒKƒ“ƒRƒ“ƒgƒ[ƒ‰[‚ð‘•”õ‚Æ‚©‚È‚è‘åŒ^‚Ìâž‘Ì‚Æ‚È‚Á‚Ä‚¢‚éB
+ƒKƒ“ƒRƒ“ƒgƒ[ƒ‰[‚É‚Í’Êí’e‚Æƒ~ƒTƒCƒ‹—p‚Ì2‚Â‚ÌƒgƒŠƒK[‚ª‚ ‚èA¶‰E‚Ée‚ðŒü‚¯‚é‚±‚Æ‚ÅƒvƒŒƒCƒ„[‚ÌŽ‹“_‚ðˆÚ‚·‚±‚Æ‚ª‚Å‚«‚éB
+‘¼‚ÌƒKƒ“ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€‚Æ‚ÍˆÙ‚È‚èAƒWƒ‡ƒCƒXƒeƒBƒbƒN‚Åˆê’è“à‚Ì”ÍˆÍ‚ðˆÚ“®‚·‚é‚±‚Æ‚ª‚Å‚«‚é‚Ì‚à“Á’¥‚ÅA
+‚±‚ê‚É‚æ‚è“G‚ÌUŒ‚‚ð‚©‚í‚·‚±‚Æ‚à‰Â”\‚Æ‚È‚Á‚Ä‚¢‚éB
+‚Ü‚½•¡”‚ÌƒvƒŒƒCƒ„[“¯Žm‚ªƒ`[ƒ€‚É•ª‚©‚êA‘ŠŽè‚Ìƒ‰ƒCƒt‚ð’D‚¢‡‚¤‘ÎíƒvƒŒƒC‚âA
+‘I‚ñ‚¾ƒLƒƒƒ‰ƒNƒ^[‚É‚æ‚Á‚ÄŒÂ«‚ÌˆÙ‚È‚éUŒ‚‚ª‰Â”\‚È‹¦—ÍƒvƒŒƒC‚É‚æ‚é‘ÎCPUí‚È‚Ç—lX‚ÈV‚µ‚¢ŽŽ‚Ý‚à·‚èž‚Ü‚ê‚Ä‚¢‚éB
+Žc”O‚È‚ª‚çƒqƒbƒgì‚É‚Í‚È‚ç‚È‚©‚Á‚½‚ªAƒKƒ“ƒVƒ…[ƒeƒBƒ“ƒO‚ÉV‚µ‚¢•—‚ð‘—‚èž‚Þ‚±‚Æ‚É‚È‚Á‚½B
 
 
 
@@ -31475,12 +31621,11 @@ $bio
 CPU\¬[V33, V30]@‰¹Œ¹ƒ`ƒbƒv[YM2151, GA20]
 
 
-ƒRƒ“ƒoƒbƒgƒMƒA‚Ég‚ð•ï‚ñ‚Åƒ‰ƒCƒtƒ‹‚ðŒ‚‚¿‚Ü‚­‚èAí“¬—pƒW[ƒv‚âí“¬—pƒwƒŠ‚ð’D‚Á‚½‚èA
-•Ší‚ðƒpƒ[ƒAƒbƒv‚³‚¹‚È‚ª‚ç“G’n‚Éö“ü‚·‚é‰¡ƒXƒNƒ[ƒ‹ƒAƒNƒVƒ‡ƒ“B
-ƒLƒƒƒ‰‚â”wŒi‚È‚Ç‚ÌƒOƒ‰ƒtƒBƒbƒN‚Íãk–§‚É•`‚«ž‚ñ‚Å‚ ‚é‚ªA
-‚±‚ÌŽžŠú‚ÌƒAƒCƒŒƒ€‚É‚µ‚Ä‚Í’¿‚µ‚­A“Á‚É‚Ð‚Ë‚è‚Ì‚È‚¢ƒI[ƒ\ƒhƒbƒNƒX‚ÈƒQ[ƒ€“à—e‚Æ‚È‚Á‚Ä‚¢‚éB
-Œã‚É“¯ŽÐÅŒãƒA[ƒP[ƒhƒQ[ƒ€uƒWƒIƒXƒg[ƒ€v‚Ö‚Æ‘±‚«A
-ŠJ”­ƒXƒ^ƒbƒt‚ÍuƒiƒXƒJv‚Æ‚µ‚ÄNEOGEO‚Ìƒqƒbƒgìuƒƒ^ƒ‹ƒXƒ‰ƒbƒOvƒVƒŠ[ƒY‚ð¶‚Ýo‚·‚±‚Æ‚É‚È‚éB
+ƒRƒ“ƒoƒbƒgƒMƒA‚Ég‚ð•ï‚ñ‚¾•ºŽm‚ð‘€‚èAƒ‰ƒCƒtƒ‹‚ð•Ší‚É“G’n‚Éö“ü‚·‚é‚Æ‚¢‚¤“à—e‚Ì‰¡ƒXƒNƒ[ƒ‹ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
+“G‚ð“|‚µ‚½‚èƒ{ƒbƒNƒX‚ð”j‰ó‚·‚é‚Æ“oê‚·‚éƒAƒCƒeƒ€‚É‚æ‚èƒtƒ‹ƒI[ƒg‹@ŠÖe‚âƒoƒY[ƒJ–C‚È‚Ç‚Éƒpƒ[ƒAƒbƒv‚·‚é‚±‚Æ‚ª‚Å‚«‚é‚Ù‚©‚ÉA
+ƒpƒ[ƒAƒbƒv‚µ‚½•Ší‚É‚Í’e”‚ªŒÀ‚ç‚ê‚Ä‚¨‚èA“¯‚¶‚æ‚¤‚ÉƒAƒCƒeƒ€‚ðŽè‚É“ü‚ê‚é‚±‚Æ‚Å•â‹‹‚·‚é‚±‚Æ‚à‰Â”\B
+‚Ü‚½ƒ[ƒv‚É‚Â‚©‚Ü‚è‚È‚ª‚çUŒ‚‚µ‚½‚èAƒpƒ[ƒ[ƒ_[‚È‚Ç‚Ì•ºŠí‚âƒXƒe[ƒWã‚É‚ ‚éŒÅ’è•Ší‚È‚Ç‚àŽg‚¤‚±‚Æ‚ª‚Å‚«‚éB
+“à—eŽ©‘Ì‚Í“–Žž‚ÌƒAƒCƒŒƒ€‚É‚Í’¿‚µ‚¢ƒI[ƒ\ƒhƒbƒNƒX‚È‚à‚Ì‚¾‚ªAƒLƒƒƒ‰ƒNƒ^[‚â”wŒi‚ÌƒOƒ‰ƒtƒBƒbƒN‚ªãk–§‚É•`‚«ž‚Ü‚ê‚½—Çì‚Å‚ ‚éB
 
 
 
@@ -31504,11 +31649,18 @@ $bio
 CPU\¬[V33, V30]@‰¹Œ¹ƒ`ƒbƒv[YM2151, GA20]
 
 
-“¯ŽÐ‚ÌuƒKƒ“ƒtƒH[ƒXv‚Ì‘±•Ò‚É‚ ‚½‚éì•iB
-‘Oì‚ð‚Í‚é‚©‚Éã‰ñ‚é‘u‰õŠ´Aãk–§‚ÈƒOƒ‰ƒtƒBƒbƒN‚ªƒEƒŠB
-ƒQ[ƒ€‚Ì“ïˆÕ“x‚Í‚‚ßB
-ƒAƒCƒŒƒ€‚Í‚±‚ê‚ðÅŒã‚ÉƒA[ƒP[ƒh‚©‚ç“P‘Þ‚µAƒAƒsƒGƒX‚Æ‚µ‚Ä‘¶‘±‚·‚é‚±‚Æ‚Æ‚È‚éB
-‚»‚µ‚ÄA‚±‚ÌƒQ[ƒ€‚ÌƒXƒ^ƒbƒt‚ªŒã‚Ì–¼ìAuƒƒ^ƒ‹ƒXƒ‰ƒbƒOv‚ð¶‚Ýo‚·‚Ì‚Å‚ ‚éB
+ƒAƒCƒŒƒ€ÅŒã‚ÌƒA[ƒP[ƒhƒQ[ƒ€‚Æ‚µ‚Ä“oê‚µ‚½‚Ì‚ÍuƒKƒ“ƒtƒH[ƒXv‚Ì‘±•Ò‚Æ‚È‚é‚±‚ÌuƒWƒIƒXƒg[ƒ€vB
+ƒQ[ƒ€ƒVƒXƒeƒ€‚Í‘Oì‚©‚ç‘å‚«‚È•Ï‰»‚Í‚È‚¢‚ªAƒRƒ}ƒ“ƒ_[‚Ì•Ší‚ª2’š‚Æ‚È‚Á‚½‚±‚Æ‚Å“¯Žž‚É2•ûŒü‚ÉUŒ‚‚·‚é‚±‚Æ‚ª‰Â”\‚Æ‚È‚Á‚Ä‚¢‚éB
+‚Ü‚½lŽ¿‚Æ‚È‚Á‚Ä‚¢‚éƒMƒƒƒ‹‚ð•‚¯ŒMÍ‚ðW‚ß‚é‚±‚Æ‚Åƒ{[ƒiƒXƒ|ƒCƒ“ƒg‚àŽè‚É“ü‚éB
+‘Oì‚Ì“Á’¥‚Å‚ ‚éãk–§‚ÈƒOƒ‰ƒtƒBƒbƒN‚ðˆø‚«Œp‚¬A‚‚ß‚Ì“ïˆÕ“x‚È‚ª‚ç‚àA
+‚»‚ê‚ðã‰ñ‚é”j‰ó‚Ì‘u‰õŠ´‚ª‚±‚Ìì•i‚ÌƒEƒŠ‚Å‚ ‚éB‘S5ƒXƒe[ƒWB
+ƒAƒCƒŒƒ€‚Í‚»‚ÌŒãA“¯”N‚Ée‰ïŽÐƒiƒiƒI‚É‚æ‚èƒ[ƒJ[•”–å‚ª•Â½‚³‚ê‚½‚ªA
+97”N7ŒŽ‚Éƒ†ƒEƒrƒX‚ª”ƒ‚¢Žæ‚Á‚½‚±‚Æ‚Å98”N10ŒŽ’¼‰cƒQ[ƒ€ê‚Ì‰^‰c‰ïŽÐuƒAƒsƒGƒXv‚µ‚Ä‘¶‘±‚µA
+ƒAƒgƒ‰ƒXŽP‰º‚ðŒo—R‚µ‚Ä“Æ—§‚·‚é‚±‚Æ‚É‚È‚éB
+ˆê•û‚Å‰ïŽÐ‚ª•Â½‚³‚ê‚½‚±‚Æ‚ÅAƒQ[ƒ€ŠJ”­‚ðs‚Á‚Ä‚«‚½ƒXƒ^ƒbƒt‚Í“Æ—§‚µV‰ïŽÐuƒiƒXƒJv‚ð—§‚¿ã‚°A
+¡ì‚Ì—v‘f‚ðˆø‚«Œp‚¢‚¾ƒqƒbƒgìuƒƒ^ƒ‹ƒXƒ‰ƒbƒOv‚ðì‚èo‚µ‚½ŒãSNK‚Ö‚ÆˆÚ‚èA
+ƒiƒiƒI‚Éˆø‚«ã‚°‚½Žc‚è‚ÌƒXƒ^ƒbƒt‚Í97”N4ŒŽuƒAƒCƒŒƒ€ƒ\ƒtƒgƒEƒFƒAƒGƒ“ƒWƒjƒAƒŠƒ“ƒOv‚ðÝ—§A
+ƒiƒiƒI‚ðe‰ïŽÐ‚É•ª‰»‚µAÄ‚ÑƒQ[ƒ€‹ÆŠE‚Ö‚Æ‹A‚Á‚Ä‚­‚é‚±‚Æ‚Æ‚È‚Á‚½B
 
 
 
@@ -31532,12 +31684,15 @@ $bio
 CPU\¬[68EC020, 68000]@‰¹Œ¹ƒ`ƒbƒv[ES5505]
 
 
-ƒ^ƒCƒg[‚æ‚è“oê‚µ‚½ƒƒJƒjƒJƒ‹‚ÈƒLƒƒƒ‰ƒNƒ^[‚ª‘½”“oê‚·‚éd”h‚ÈcƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒOì•iB
-‘€ì‚ÍˆÚ“®—p8•ûŒüƒŒƒo[‚ÆAUŒ‚‚É2‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚·‚éB
-‚±‚Ìì•i‚ÌÅ‘å‚Ì“Á’¥‚ÍAŽ©‹@‚Ì‘O•û‚É‚ ‚éA
-‚Ü‚é‚Å‘Î’n•ºŠí‚Ì‚æ‚¤‚ÈƒTƒCƒg‚ð‹ó’†•¨‚ÉƒƒbƒN‚·‚é‚±‚Æ‚ÅAƒƒbƒNƒIƒ“ƒŒ[ƒU[‚ÆŒÄ‚Î‚ê‚éƒz[ƒ~ƒ“ƒOƒŒ[ƒU[‚ðŽg—p‚Å‚«‚é“_B
-‚µ‚©‚àAƒTƒCƒg‚ÍÅ‚8‚Â‚Ü‚Å“¯Žž‚ÉƒƒbƒNƒIƒ“‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA•¡”‚Ì“G‚ðˆê“x‚ÌƒŒ[ƒU[”­ŽË‚Å“|‚·‚±‚Æ‚Å‚“¾“_‚Æ‚È‚éB
-ãŽè‚É‚Ü‚Æ‚ß‚ç‚ê‚½Gì‚ÆŒÄ‚Ô‚É‚Ó‚³‚í‚µ‚¢ì•iB‘S7ƒXƒe[ƒWB
+ƒ^ƒCƒg[‚æ‚è“oê‚µ‚½cƒXƒNƒ[ƒ‹ƒVƒ…ƒeƒBƒ“ƒOƒQ[ƒ€uƒŒƒCƒtƒH[ƒXvB
+‘€ì‚ÍŽ©‹@‚ÌˆÚ“®—p‚Ì8•ûŒüƒŒƒo[‚ÆA2‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚·‚éB
+ƒ{ƒ^ƒ“‚ÍƒVƒ‡ƒbƒg‚Æ‚±‚Ìì•iÅ‘å‚Ì“Á’¥‚ÌuƒƒbƒNƒIƒ“ƒŒ[ƒU[v‚Æ‚È‚Á‚Ä‚¨‚èA
+ƒVƒ‡ƒbƒg‚Å‹ó’†‚Ì“G‚ðAƒƒbƒNƒIƒ“ƒŒ[ƒU[‚Å’nã‚â’á‹ó‚Ì“G‚ðUŒ‚‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
+ƒƒbƒNƒIƒ“ƒŒ[ƒU[‚Í“G‚ðƒTƒCƒg‚É‘¨‚¦‚é‚ÆAŽ©“®“I‚ÉƒƒbƒNƒIƒ“‚·‚é‚Æ‚¢‚¤“Á’¥‚ª‚ ‚éB
+‚Ü‚½ƒpƒ[ƒAƒbƒv‚·‚é‚±‚Æ‚ÅÅ‘å8‚Â‚Ü‚Å“¯Žž‚ÉƒƒbƒNƒIƒ“‚ª‰Â”\‚Æ‚È‚Á‚Ä‚¨‚èA•¡”‚Ì“G‚ðˆê“x‚É“|‚·‚±‚Æ‚Å‚“¾“_‚Æ‚È‚éB
+ƒQ[ƒ€«A¢ŠEŠÏA‰‰oAƒTƒEƒ“ƒh‚Ì‚Ç‚ê‚à‚ªãŽè‚­‚‚¢ƒŒƒxƒ‹‚É‚Ü‚Æ‚ß‚ç‚ê‚Ä‚¢‚éGì‚ÆŒÄ‚Ô‚É‚Ó‚³‚í‚µ‚¢ì•i‚ÅA
+Œã‚Ìì•i‚É‚à‘å‚«‚È‰e‹¿‚ð—^‚¦‚é‚±‚Æ‚Æ‚È‚Á‚½B
+‘S7ƒXƒe[ƒWB
 
 
 
@@ -31586,15 +31741,20 @@ $bio
 
 ƒWƒƒƒ“ƒ‹FƒpƒYƒ‹
 
-ƒRƒ“ƒgƒ[ƒ‰F¦Ú×•s–¾
+ƒRƒ“ƒgƒ[ƒ‰F4•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
 ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
 
 CPU\¬[V30]
 
 
-
-
+“ú–{‚ÌƒQ[ƒ€ŠE‚É‚¨‚¢‚ÄŠv–½‚ð‹N‚±‚µ‚½‰¡ˆäŒR•½Ž‚ªl‚¦o‚µAŒg‘Ñ—pƒQ[ƒ€‚Æ‚µ‚Äƒqƒbƒg‚µ‚½“¯–¼‚Ìì•i‚ÌƒA[ƒP[ƒh”ÅB
+ƒ‹[ƒ‹‚Í‰º‚©‚ç‚¹‚èã‚ª‚Á‚Ä‚­‚éƒpƒlƒ‹‚ÉƒJ[ƒ\ƒ‹‚ð‡‚í‚¹AƒJ[ƒ\ƒ‹“à‚Ìƒpƒlƒ‹‚ðã‰º‚É“ü‚ê‘Ö‚¦‚éƒ{ƒ^ƒ“‚ÆA
+ƒtƒB[ƒ‹ƒh‚ð‚¹‚èã‚°‚éƒ{ƒ^ƒ“‚ðŽg‚¢A4Ží—Þ‚Ìƒ‰ƒCƒ“‚ð¶‰E‚Ì•Ç‚É‚Â‚È‚°‚ÄÁ‚µ‚Ä‚¢‚­‚Æ‚¢‚¤‚à‚ÌB
+’Pƒ‚É¶‰E‚ðˆê–{‚Ìü‚Å‚Â‚È‚®‚±‚Æ‚ÅÁ‚·‚±‚Æ‚ª‚Å‚«‚é‚ªA“r’†‚ÉŽ}•ª‚©‚ê‚ðì‚Á‚ÄÁ‚·•ªŠò‚âAã‰º‚ðãŽè‚­‚Â‚È‚¢‚ÅÁ‚·ƒWƒOƒUƒOA
+ƒ‰ƒCƒ“”š”­’†‚É•Êƒ‰ƒCƒ“‚ð‚Â‚È‚°‚ÄÁ‚·Œã•t‚¯A“¯‚¶‚æ‚¤‚É”š”­’†‚É•Ê‚ÌêŠ‚Å•Êƒ‰ƒCƒ“‚ðÁ‚·—£‚ê‹Z‚ÆŠô‚Â‚©‚ÌƒeƒNƒjƒbƒN‚ª‚ ‚éB
+ƒQ[ƒ€ƒ‚[ƒh‚ÍƒvƒŒƒCƒ„[‚ªCOM‚Æ‘Îí‚·‚éu1l‚Å‘Îív‚É‚Í3ƒLƒƒƒ‰‚Æ‘Îí‚·‚éŠÈ’Pƒ‚[ƒh‚ÆA‘SƒLƒƒƒ‰‚Æ‘Îí‚·‚é˜A”­ƒ‚[ƒh‚ª‚ ‚èA
+2l‚Å‘Îí‚à‰Â”\‚Æ‚È‚Á‚Ä‚¢‚éB‚Ü‚½Å‚“¾“_‚ð–ÚŽw‚µ‚Ð‚½‚·‚çƒvƒŒƒC‚·‚éuƒGƒ“ƒhƒŒƒXƒ‚[ƒhv‚à‚ ‚éB
 
 
 
@@ -31637,7 +31797,7 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+3ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒoƒVƒXƒeƒ€
+ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒ”ƒ@ƒVƒXƒeƒ€
 
 CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
 
@@ -31649,8 +31809,8 @@ CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
 Ž×–‚‚È•aŒ´‹Û‚Í‰æ–ÊŠO‚Ö‘Å‚¿”ò‚Î‚µ‚ÄÁ‚·Ž–‚à‰Â”\‚¾‚ªA‚»‚Ìê‡‚ÍƒQ[ƒW‚ªã‚ª‚ç‚È‚¢B
 
 ŽÀ‚Í¡ì‚ÍƒJƒlƒR‚Ìƒtƒ‰ƒbƒVƒ…ƒƒ‚ƒŠ[ƒJ[ƒh‚É‚æ‚èA‘‚«Š·‚¦‰Â”\‚Èƒƒ‚ƒŠ[ƒJ[ƒh‚Æê—p‚ÌƒXƒƒbƒg‚ð
-ƒX[ƒp[ƒJƒlƒRƒVƒXƒeƒ€‚Ìƒ}ƒU[ƒ{[ƒh‚ÉŽæ‚è•t‚¯‚é‚Æ‚¢‚Á‚½“à—e‚ÌVƒVƒXƒeƒ€uƒJƒlƒR‚m‚n‚u‚`@‚e‚Pv‚Ì‘æ‚P’e‚É‚È‚é—\’è‚¾‚Á‚½‚Ì‚¾‚ªA
-ƒX[ƒp[ƒmƒoƒVƒXƒeƒ€‚Ì—ÊŽYE»ì‚ð”­’‚µ‚Ä‚¢‚½“ú—§»ìŠ‚Æ‚ÌÙ”»¹‘¿‚Å‘S‚Ä‚ÌŒv‰æ‚ª“ÚÁA
+ƒX[ƒp[ƒJƒlƒRƒVƒXƒeƒ€‚Ìƒ}ƒU[ƒ{[ƒh‚ÉŽæ‚è•t‚¯‚é‚Æ‚¢‚Á‚½“à—e‚ÌVƒVƒXƒeƒ€uƒJƒlƒRNOVA F1v‚Ì‘æ1’e‚É‚È‚é—\’è‚¾‚Á‚½‚Ì‚¾‚ªA
+ƒX[ƒp[ƒmƒ”ƒ@ƒVƒXƒeƒ€‚Ì—ÊŽY¥»ì‚ð”­’‚µ‚Ä‚¢‚½“ú—§»ìŠ‚Æ‚ÌÙ”»¹‘¿‚Å‘S‚Ä‚ÌŒv‰æ‚ª“ÚÁA
 ‰ïŽÐŽ©‘Ì‚ÌŠˆ“®‚àŽ~‚Ü‚Á‚Ä‚µ‚Ü‚¤‚±‚Æ‚É‚È‚éB
 
 
@@ -31668,15 +31828,20 @@ $bio
 
 ƒWƒƒƒ“ƒ‹FƒAƒNƒVƒ‡ƒ“ƒVƒ…[ƒeƒBƒ“ƒO
 
-ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+3i2jƒ{ƒ^ƒ“
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2i3jƒ{ƒ^ƒ“
 
 ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
 
 CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
 
 
-‰ö‚µ‚°‚È”\—Í‚ðŽ‚Â3l‚ªí‚¤ƒVƒ…[ƒeƒBƒ“ƒOì•iB
-lŠÔ‚ð‘€‚é“_‚Æ•‘‘äÝ’è‚©‚ç•µˆÍ‹C‚ÍˆÙ‚È‚é‚ªA“à—e“I‚É‚Í“¯ŽÐuŽñ—Ì–Iv‚É’Ê‚¸‚é‚à‚Ì‚ª‚ ‚éB
+Žº’¬Žž‘ã‚ð•‘‘ä‚É‚µ‚½’e–‹ŒnƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€u‚®‚í‚ñ‚°vB
+‚±‚Ìì•i‚Ì“Á’¥‚ÍuŽ®_v‚ÆŒÄ‚Î‚ê‚éƒLƒƒƒ‰ƒNƒ^[‚É‚Æ‚èœß‚¢‚½_‚Ì‘¶Ý‚ÅA‚±‚ê‚É‚æ‚èƒQ[ƒ€‚ÌU—ª–@‚ª•Ï‚í‚Á‚Ä‚­‚éB
+‚Ü‚½3l‚ÌƒLƒƒƒ‰ƒNƒ^[‚à‚»‚ê‚¼‚ê«”\‚ªˆÙ‚È‚èA“G‚àlŠÔ‚¾‚¯‚Å‚È‚­•s‹C–¡‚È—d‰ö’B‚ª“oê‚·‚é‚Ì‚à“Á’¥‚Å‚ ‚éB
+‘€ì‚Í8•ûŒüƒŒƒo[‚ÅŽ©‹@‚ÌˆÚ“®‚ÆŽ®_‚ÌˆÚ“®AƒVƒ‡ƒbƒg¥Ž®_‚Ì‘€ìA”ª‘Š’e‚Ì”­ŽË‚Ì2‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—pB
+ƒVƒ‡ƒbƒgƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Á‚Ï‚È‚µ‚É‚·‚é‚±‚Æ‚ÅŽ®_‚ð‘€ì‚Å‚«‚é‚æ‚¤‚É‚È‚èA
+‘«ê‚ÉŠÖŒW‚È‚­UŒ‚‚ª‰Â”\‚ÅA“G’e‚ÌƒXƒs[ƒh‚ð’x‚­‚µ‚½‚èA‚»‚Ì‚Ü‚Ü“G‚ð“|‚·‚±‚Æ‚Å’e‚ð‚¨‹à‚É•Ï‚¦‚é‚±‚Æ‚ª‚Å‚«‚éB
+lŠÔ‚ð‘€‚é“_‚Æ•‘‘äÝ’è‚©‚ç•µˆÍ‹C‚ÍˆÙ‚È‚é‚ªA“à—e“I‚É‚Í“¯ŽÐuŽñ—Ì–Ivu“{Žñ—Ì–Iv‚É’Ê‚¸‚é‚à‚Ì‚ª‚ ‚éB
 
 
 
@@ -31722,17 +31887,20 @@ $bio
 
 ƒWƒƒƒ“ƒ‹F—Ž‰ºŒ^ƒpƒYƒ‹
 
-ƒRƒ“ƒgƒ[ƒ‰F4•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
+ƒRƒ“ƒgƒ[ƒ‰F3•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
 ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
 
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2203, YM3812, OKI6295]
 
 
-•x‹M¤‰ï‚æ‚è“oê‚µ‚½A—Ž‰ºŒ^ƒpƒYƒ‹ì•iB
-”MŒŒ”Ô’·‚âƒTƒ€ƒ‰ƒC”Ô’·A”ü­—”Ô’·‚È‚ÇŒÂ«“I‚ÈƒLƒƒƒ‰ƒNƒ^[‚ª‘S•”‚Å6l“oê‚·‚éB
-ƒGƒ“ƒhƒŒƒXƒ‚[ƒh‚Ìu‚¤‚Å‚¾‚ß‚µ•ÒvA
-ƒXƒg[ƒŠ[ƒ‚[ƒh‚Ìu”Ô’·“ˆê•ÒvA‘ÎíƒvƒŒƒC‚ðs‚¤u“ñl‚ÅŒˆ“¬v‚Ì3‚Â‚Ìƒ‚[ƒh‚ª—pˆÓ‚³‚ê‚Ä‚¢‚éB
+uƒXƒXƒ!!ƒ}ƒCƒ‹ƒXƒ}ƒCƒ‹v‚É‘±‚«ƒtƒEƒL‚æ‚è“oê‚µ‚½—Ž‰ºŒ^ƒRƒ~ƒJƒ‹ƒpƒYƒ‹ƒQ[ƒ€B
+”MŒŒ”Ô’·uƒ€ƒTƒVv‚âƒWƒƒƒ“ƒOƒ‹”Ô’·uƒpƒYƒIv‚È‚Ç6l‚ÌŒÂ«“I‚È”Ô’·ƒLƒƒƒ‰‚ª“oê‚·‚éB
+‘€ì‚ÍƒŒƒo[‚ÅƒuƒƒbƒN‚ÌˆÚ“®‚Æ2‚Â‚Ìƒ{ƒ^ƒ“‚Å‰ñ“]‚³‚¹AƒuƒƒbƒN‚ð‰¡AcALŽš‚É‚»‚ë‚¦‚é‚±‚Æ‚ÅÁ‚·‚±‚Æ‚ª‚Å‚«A
+Á‚µ‚½ƒuƒƒbƒN‚ð–WŠQƒuƒƒbƒN‚Æ‚µ‚Ä‘ŠŽè‚ÌƒtƒB[ƒ‹ƒh‚É‘—‚èž‚Þ‚±‚Æ‚ª‚Å‚«‚éB
+ƒQ[ƒ€’†A‘å—Ê‚ÌƒuƒƒbƒN‚ð”½‰ž(Á–Å)‚³‚¹‚é‚±‚Æ‚Åu‚â‚Á‚½‚º‰æ–Êv‚Æ‚¢‚¤‰‰o‚à‚ ‚éB
+ƒQ[ƒ€ƒ‚[ƒh‚ÍƒGƒ“ƒhƒŒƒXƒ‚[ƒh‚Ìu‚¤‚Å‚¾‚ß‚µ•ÒvAƒXƒg[ƒŠ[ƒ‚[ƒh‚Ìu”Ô’·“ˆê•ÒvA‘ÎíƒvƒŒƒC‚ðs‚¤u“ñl‚ÅŒˆ“¬v‚Ì3‚Â‚Ìƒ‚[ƒh‚ª—pˆÓ‚³‚ê‚Ä‚¢‚éB
+Šî–{‚ð‚¨‚³‚¦‚½ì•i‚¾‚ªAŽc”O‚È‚ª‚çƒpƒYƒ‹ƒQ[ƒ€ƒu[ƒ€‚Ì’†‚Å‚Í‚»‚Ì‘¶ÝŠ´‚ðŽ¦‚·‚±‚Æ‚ª‚Å‚«‚È‚©‚Á‚½B
 
 
 
@@ -31848,12 +32016,14 @@ $bio
 CPU\¬[68000]@‰¹ºƒ`ƒbƒv[OKI6295 (2)]
 
 
-‚©‚í‚¤‚»ŒN‚Æ‚Â‚¿‚Ô‚½ŒN‚ªƒJƒƒCƒCA‰¡ƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒOB
-Ž©‹@‚ÌƒVƒ‡ƒbƒg‚ªŠCŽY•¨‚â–ìØ‚¾‚Á‚½‚èA
-‘¼‚ÌƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€‚É‚ ‚éƒ{ƒ“ƒo[‚Ì‘ã‚í‚è‚É–³“Gó‘Ô‚É‚È‚éu‚Ñ‚Á‚®v‚ª—pˆÓ‚³‚ê‚Ä‚¢‚éB
-ƒAƒCƒeƒ€‚àu‚­‚¾‚à‚Ìv‚âu‚Ó‚ç‚í‚ vAƒpƒ[ƒAƒbƒvƒAƒCƒeƒ€‚àu‚Â‚¨‚¢vu‚·‚Ø‚µ‚á‚é ‚Â‚¨‚¢v‚È‚ÇA
-ƒLƒƒƒ‰‚Í‰Âˆ¤‚­ƒRƒ~ƒJƒ‹‚È“à—e‚Æ‚Í— • ‚É“ïˆÕ“x‚Í”ñí‚É‚‚¢B
-‚±‚ÌƒQ[ƒ€A–§‚©‚ÉP-47‚ÌƒpƒƒfƒB‚Ì‚æ‚¤‚ÉŽv‚¦‚é‚Ì‚¾‚ªA‹C‚Ì‚¹‚¢‚¾‚ë‚¤‚©B
+NMK‚æ‚è“oê‚µ‚½ƒRƒ~ƒJƒ‹‚È‰¡ƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€B
+8•ûŒüƒŒƒo[‚ÆUŒ‚AƒrƒbƒO‚Ì2‚Â‚Ìƒ{ƒ^ƒ“‚ð‘€ì‚ÉŽg—p‚·‚éB
+Ž©‹@‚ª1P‘¤u‚©‚í‚¤‚»vA2P‘¤u‚Â‚¿‚Ô‚½vAŒÂ«“I‚È“GƒLƒƒƒ‰‚È‚Ç•’Ê‚ÌƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€‚Å‚ÍŒ©‚ç‚ê‚È‚¢ƒLƒƒƒ‰ƒNƒ^[‚½‚¿‚ÆA
+ƒVƒ‡ƒbƒg‚ªŠCŽY•¨‚â–ìØA‚¿‚ÑƒLƒƒƒ‰‚ª‚­‚Á‚Â‚­u‚¨‚Õ‚µ‚å‚ñv‚È‚ÇAƒJƒƒCƒCƒLƒƒƒ‰ƒNƒ^[‚ÆƒRƒ~ƒJƒ‹‚È“à—e‚ª“Á’¥‚Å‚ ‚éB
+‚µ‚©‚µ‚»‚Ì— • ‚ÉŽ©‹@‚ª‘å‚«‚¢A“G’e‚ÌƒXƒs[ƒh‚ª‘¬‚¢‚È‚Ç‚Ì“Á’¥‚à‚ ‚è“ïˆÕ“x‚Í”ñí‚É‚‚­‚È‚Á‚Ä‚¨‚èA
+‚»‚ÌƒAƒ“ƒoƒ‰ƒ“ƒX‚³‚Å‘½‚­‚ÌƒvƒŒƒCƒ„[‚ÉˆóÛ•t‚¯‚½ì•i‚Å‚ ‚éB
+Šî–{“I‚É‚ÍUŒ‚‚ÍƒVƒ‡ƒbƒg‚¾‚¯‚¾‚ªAƒ{ƒ€(ƒ{ƒ“ƒo[)‚Ì‘ã‚í‚è‚É–³“Gó‘Ô‚Æ‚È‚éu‚Ñ‚Á‚®v‚ª—pˆÓ‚³‚ê‚Ä‚¢‚éB
+“–‰AUPL‚©‚ç‚ÌƒŠƒŠ[ƒX‚Ì—\’è‚ÅƒƒPƒeƒXƒg‚ªs‚í‚ê‚½‚ªAÅI“I‚ÉƒeƒNƒ‚‚©‚çƒŠƒŠ[ƒX‚³‚ê‚Ä‚¢‚éB
 
 
 
@@ -31870,16 +32040,19 @@ $bio
 
 ƒWƒƒƒ“ƒ‹FƒAƒNƒVƒ‡ƒ“
 
-ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+3ƒ{ƒ^ƒ“
 
 ƒVƒXƒeƒ€ƒ{[ƒhFƒWƒƒƒŒƒR ƒƒKƒVƒXƒeƒ€1
 
 CPU\¬[68000 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2151, OKI6295 (2)]
 
 
-“à—e‚Í‚ ‚è‚ª‚¿‚ÈƒAƒNƒVƒ‡ƒ“‚à‚Ì‚¾‚ªA“G‚ð“|‚µ‚½Žž‚ÉA‰æ–ÊŽè‘O‚ÉƒAƒbƒv‚É‚È‚Á‚Ä”ò‚ñ‚Å‚­‚é‚È‚Ç‰‰o‚É—Í‚ª“ü‚Á‚Ä‚¢‚éB
-8•ûŒüƒŒƒo[‚ÅˆÚ“®Aƒpƒ“ƒ`‚ÆƒLƒbƒNUŒ‚‚ÆAƒWƒƒƒ“ƒv‚Éƒ{ƒ^ƒ“‚ð2‚ÂŽg—p‚·‚éB
-‘S6ƒXƒe[ƒWB
+ƒWƒƒƒŒƒRuƒƒKƒVƒXƒeƒ€1v‚Ì‘æ4’e‚Æ‚µ‚Ä“oê‚µ‚½ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
+‘€ì‚Í8•ûŒüƒŒƒo[‚Æƒpƒ“ƒ`¥ƒLƒbƒNAƒWƒƒƒ“ƒvA“Š‚°‚Ì3‚Â‚Ìƒ{ƒ^ƒ“‚ÌŽg—pA
+ƒQ[ƒ€‚ÍŒÃ‘ã’†‘‚ð•‘‘ä‚Éˆ³­‚ðs‚¤—d–‚‰¤‚ÌŠz‚Éu—ì•„v‚ð“\‚è•t‚¯‚é‚±‚Æ‚ª–Ú“I‚Å‚ ‚éB
+ƒXƒe[ƒW‚Í¼•û‚©‚ç—d“VŽR‚Ü‚Å‚Ì‘S6ƒXƒe[ƒWA‚»‚ê‚¼‚ê‚ÌƒXƒe[ƒW‚É‚Íu–‚ÐŒ³ƒv”z‰º‚Ì9l‚Ìƒ{ƒX‚ª‘Ò‚¿Žó‚¯‚Ä‚¢‚éB
+“à—eŽ©‘Ì‚Í‚ ‚è‚ª‚¿‚ÈƒAƒNƒVƒ‡ƒ“‚à‚Ì‚¾‚ªA“G‚ð“|‚µ‚½Žž‚É‰æ–ÊŽè‘O‚ÉƒAƒbƒv‚É‚È‚Á‚Ä”ò‚ñ‚Å‚­‚é‚È‚Ç‰‰o‚É—Í‚ª“ü‚Á‚Ä‚¢‚éB
+—]’k‚¾‚ªA—ƒLƒƒƒ‰‚ª1Ží—Þ‚µ‚©“oê‚µ‚È‚¢‚Æ‚¢‚¤Š¿L‚¢“à—e‚Æ‚È‚Á‚Ä‚¢‚éB
 
 
 
@@ -31903,12 +32076,12 @@ $bio
 CPU\¬[Z80 (3)]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910 (2)]
 
 
-SNK‚æ‚è“oê‚µ‚½uƒnƒ‹21v‚ÍA
+V“ú–{Šé‰æ‚æ‚è“oê‚µ‚½uƒnƒ‹21v‚ÍA
 1ƒvƒŒƒCƒ„[‹@‚ÌuCLAINv‚Æ2ƒvƒŒƒCƒ„[‹@‚ÌuHALv‚ð‘€ì‚µ‚ÄA
 ‘Î‹óA‘Î’n‚Ì•ºŠí‚ðŽg‚¢•ª‚¯‚Äi‚ñ‚Å‚¢‚­cƒXƒNƒ[ƒ‹ƒ^ƒCƒv‚ÌƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€B
 Šî–{“I‚É‚Íuƒ[ƒrƒEƒXv‚Ì‰e‹¿‚ð‘å‚«‚­Žó‚¯‚½ì•i‚¾‚ªA
 ƒ~ƒX‚ð‚µ‚½ê‡‚É‚»‚Ìê‚©‚çƒXƒ^[ƒg‚·‚é‚È‚ÇƒVƒXƒeƒ€–Ê‚Å‚Ì“ÆŽ©ƒAƒCƒfƒBƒA‚ªŒ©‚ç‚ê‚éB
-‚Ü‚½A’nã‚ÉÝ’u‚µ‚Ä‚ ‚éEƒpƒlƒ‹‚ð5‚ÂW‚ß‚é‚±‚Æ‚ÅA20•bŠÔ–³“G‚Ì‚È‚è‹­—Í‚ÈƒVƒ‡ƒbƒg‚ð”­ŽË‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
+‚Ü‚½A’nã‚ÉÝ’u‚µ‚Ä‚ ‚éEƒpƒlƒ‹‚ð5‚ÂW‚ß‚é‚±‚Æ‚ÅA20•bŠÔ–³“Gó‘Ô‚Æ‚È‚è‹­—Í‚ÈƒVƒ‡ƒbƒg‚ð”­ŽË‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
 
 
 
@@ -31933,10 +32106,11 @@ CPU\¬[M6809, Z80]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910 (4)]
 
 
 76”N‚Éˆê“xs‚í‚ê‚é“V‘ÌƒVƒ‡[AƒnƒŒ[œa¯‚ÌÚ‹ß‚É‡‚í‚¹‚Äì‚ç‚ê‚½ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€B
-Œ‚‚¿˜R‚ç‚µ‚½“G‚ª’n‹…‚Éƒ_ƒ[ƒW‚ð—^‚¦A’n‹…‚Ìƒ_ƒ[ƒW‚ª100“‚É’B‚·‚é‚ÆƒQ[ƒ€ƒI[ƒo[B
-Œ‚‚¿˜R‚ç‚µ‚ð‹–‚³‚È‚¢‚Æ‚¢‚¤ƒVƒXƒeƒ€‚ÍA“¯ŽÐ‚ÌƒXƒy[ƒXƒCƒ“ƒx[ƒ_[‚É’Ê‚¶‚é‚à‚Ì‚ª‚ ‚éB
-ƒVƒ…[ƒeƒBƒ“ƒO‚Æ‚µ‚Ä‚ÍƒI[ƒ\ƒhƒbƒNƒX‚Èì‚è‚¾‚ªAƒpƒ[ƒAƒbƒv‚ð‚·‚é‚ÆŽ©‹@‚Ì‰Î—Í‚ª”ò–ô“I‚Éã‚ª‚èA“G‚ð”j‰ó‚·‚é‘u‰õŠ´‚ª‘¶•ª‚É–¡‚í‚¦‚éB
-ƒQ[ƒ€ƒfƒUƒCƒ“‚ÍMTJŽA‰¹Šy‚ÍOGRŽ‚ª’S“–B
+‘¾—zŒn˜f¯‚É”—‚éƒnƒŒ[‘åœa¯‚ð‘jŽ~‚·‚×‚­A‘åœa¯“à•”‚Ì’†•ƒRƒ“ƒsƒ…[ƒ^‚ð”j‰ó‚·‚é‚Æ‚¢‚¤‚Ì‚ªƒQ[ƒ€‚Ì–Ú“I‚Å‚ ‚éB
+ƒpƒ[ƒAƒbƒv‚·‚é‚Æƒ}ƒC¥ƒVƒbƒv‚ÌŽü‚è‚ÉƒVƒbƒvŒ^”š’e‚ª“oê‚µA”ñí’Eoƒ{ƒ^ƒ“‚ð‰Ÿ‚·‚±‚Æ‚Å‚»‚Ìê‚Ì“G‚ðˆê‘|‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
+‚Ü‚½Šâ‚È‚Ç‚ð”j‰ó‚·‚é‚Æƒp[ƒc‚ªoŒ»Aƒpƒ[ƒAƒbƒv‚µ‚½ƒ}ƒC¥ƒVƒbƒv‚Ì‹­—Í‚È‰Î—Í‚Å“G‚ð”j‰ó‚·‚é‘u‰õŠ´‚ª‘¶•ª‚É–¡‚í‚¦‚é‚Ì‚à“Á’¥‚Å‚ ‚éB
+Œ‚‚¿˜R‚ç‚µ‚½“G‚ª’n‹…‚Éƒ_ƒ[ƒW‚ð—^‚¦A’n‹…‚Ìƒ_ƒ[ƒW‚ª100“‚É’B‚·‚é‚ÆƒQ[ƒ€ƒI[ƒo[‚Æ‚¢‚¤ƒVƒXƒeƒ€‚ÍA
+“¯ŽÐ‚ÌƒXƒy[ƒXƒCƒ“ƒx[ƒ_[‚É’Ê‚¶‚é‚à‚Ì‚ª‚ ‚éBƒQ[ƒ€ƒfƒUƒCƒ“‚ÍMTJŽA‰¹Šy‚ÍOGRŽ‚ª’S“–B
 
 
 
@@ -31960,8 +32134,15 @@ $bio
 CPU\¬[V30, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2151, DAC]
 
 
-–Ø‚Ã‚¿UŒ‚‚ÆƒWƒƒƒ“ƒv‚ðãŽè‚ÉŽg‚¢‚È‚ª‚çA“G‚ð“|‚µ‚Â‚Âæ‚ÌƒXƒe[ƒW‚ð–ÚŽw‚µ‚Äi‚ñ‚Å‚¢‚­ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
+ƒAƒCƒŒƒ€‚©‚ç“oê‚µ‚½u‘åH‚ÌŒ¹‚³‚ñv‚ªŽå–ð‚ÌƒX[ƒp[]ŒË‚ÁŽqƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
+‘€ì‚ÍŠÈ’P‚ÅƒŒƒo[‚Æ2‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚µA
+ƒŒƒo[‚ðã‰º‚É“ü—Í‚µ‚È‚ª‚çUŒ‚‚·‚é‚±‚Æ‚Åuã‘Å‚¿v‚â“G‚ðˆêuƒ}ƒq‚³‚¹‚é‚±‚Æ‚ª‚Å‚«‚éu’n‚Ð‚Ñ‚«v‚ð‹N‚±‚·‚¾‚¯‚Å‚È‚­A
+UŒ‚‚ð–hŒä‚·‚é‚±‚Æ‚ª‚Å‚«‚éB‚Ü‚½–Ø‚Ã‚¿‚ÌUŒ‚•û–@‚É‚æ‚Á‚Ä‚à’P‚ÉU‚è‰º‚ë‚·‚¾‚¯‚Å‚È‚­A
+ƒWƒƒƒ“ƒv‚µ‚ÄU‚è‰º‚ë‚·‚±‚Æ‚Å—^‚¦‚éƒ_ƒ[ƒW‚Ì—Ê‚ª•Ï‰»‚·‚é‚Æ‚¢‚¤“Á’¥‚à‚ ‚éB
 •”—–Ú’¬¤“XŠXA•”—Ç–]‘ä“y’nŠJ”­A•–Ø‘gHŽ–Œ»êA•–Ø‘gƒrƒ‹‚È‚Ç‚Ì‘S6ƒXƒe[ƒWB
+ƒQ[ƒ€Ž©‘Ì‚Íƒqƒbƒgì‚Æ‚Í‚È‚ç‚È‚©‚Á‚½‚ªA
+96”N‚É‘åŽèƒpƒ`ƒXƒƒ[ƒJ[ŽO—m•¨ŽY‚ªƒ‰ƒCƒZƒ“ƒX‚ðŽó‚¯»ì‚µ‚½ƒpƒ`ƒ“ƒR‹@uCR‘åH‚ÌŒ¹‚³‚ñv‚Ì‘åƒqƒbƒg‚É‚æ‚èA
+‚»‚Ì–¼‘O‚ðL‚ß‚é‚±‚Æ‚Æ‚È‚Á‚½‚Æ‚¢‚¤’¿‚µ‚¢ì•i‚Å‚ ‚éB
 
 
 
@@ -31992,184 +32173,6 @@ CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910]
 ‚±‚ÌƒeƒNƒjƒbƒN‚Æ‚µ‚Ä‚Íƒ{ƒ^ƒ“˜A‘Å‚·‚é‚æ‚è‚àƒz[ƒ‹ƒh‚µ‚Ä‚µ‚Ü‚¤•û‚ªAƒ^ƒCƒ}[‚ÌŒ¸‚è‚ðÅ¬ŒÀ‚É—}‚¦‚é‚±‚Æ‚ª‚Å‚«‚éB
 Šl“¾‚µ‚½•¶”‚É‚æ‚èu‚ ‚ñ‚½‚Í‚Â‚æ‚¢Iv‚È‚Ç‚ÌƒƒbƒZ[ƒW‚ª•\Ž¦‚³‚ê‚éB
 ‚Ü‚½A–¡‚í‚¢[‚¢BGM‚à“Á’¥“IB
-
-
-
-$end
-
-$info=hanamai
-$bio
-‰Ø‚Ì•‘
-
-
-”­”„”NF1988.12
-
-ŠJ”­^”­”„Œ³Fƒ_ƒCƒiƒbƒNƒX
-
-ƒWƒƒƒ“ƒ‹F‰ÔŽD
-
-ƒRƒ“ƒgƒ[ƒ‰F‰ÔŽDƒpƒlƒ‹
-
-ƒVƒXƒeƒ€ƒ{[ƒhF’†“ú–{ƒŠ[ƒX DX-BASE
-
-CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910, YM2203, MSM5205]
-
-
-ƒvƒŒƒCƒ„[‚Íƒ^ƒCƒ€ƒ}ƒVƒ“‚Éæ‚èŽžŠÔ‚ðˆÚ“®‚µAŠe”N‘ã‚É‘¶Ý‚·‚éƒ_ƒCƒAƒi‚ð“|‚µ‚Ä‚¢‚­‚Æ‚¢‚¤’Eˆßƒ^ƒCƒv‚Ì‰ÔŽDƒQ[ƒ€B
-
-
-
-$end
-
-$info=hnkochou
-$bio
-‰ØŒÓ’±
-
-
-”­”„”NF1989.03
-
-ŠJ”­^”­”„Œ³Fƒ_ƒCƒiƒbƒNƒX
-
-ƒWƒƒƒ“ƒ‹F‰ÔŽD
-
-ƒRƒ“ƒgƒ[ƒ‰F‰ÔŽDƒpƒlƒ‹
-
-ƒVƒXƒeƒ€ƒ{[ƒhF’†“ú–{ƒŠ[ƒX DX-BASE
-
-CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910, YM2203, MSM5205]
-
-
-¦u‰Ø‚Ì•‘v‚ÌBET”Å
-
-
-
-$end
-
-$info=hnoridur
-$bio
-‰ØÜ’ß
-
-
-”­”„”NF1989
-
-ŠJ”­^”­”„Œ³Fƒ_ƒCƒiƒbƒNƒX
-
-ƒWƒƒƒ“ƒ‹F‰ÔŽD
-
-ƒRƒ“ƒgƒ[ƒ‰F‰ÔŽDƒpƒlƒ‹
-
-ƒVƒXƒeƒ€ƒ{[ƒhF’†“ú–{ƒŠ[ƒX DX-BASE
-
-CPU\¬[Z80]@‰¹ºƒ`ƒbƒv[AY-3-8910, YM2413, MSM5205]
-
-
-’EˆßƒQ[ƒ€ŠE‚Å—lX‚ÈŠv–½‚ª‹N‚±‚Á‚½ŽžŠú‚É“oê‚µ‚½‚Ì‚ª‚±‚Ìì•iB
-’Eˆß–ƒ‚æ‚èƒvƒŒƒCƒ„[‚Ì”N—î‘w‚ª‚‚¢‰ÔŽD‚ÉA
-“–ŽžA•œŠˆ‚µ‚Ä‚«‚½ŽÀŽÊ‚à‚Ì‚ÉƒAƒCƒhƒ‹ŒnƒOƒ‰ƒtƒBƒbƒN‚ðÌ—p‚µ‚½‚±‚Æ‚É‚æ‚èA
-Œã‚ÉƒŠƒŠ[ƒX‚·‚éu‰Ø‹â‰Ív‚Æ•À‚Ôƒƒ“ƒOƒqƒbƒgì‚Æ‚È‚éB
-‚Ü‚½AŒã‚Ìƒ_ƒCƒiƒbƒNƒX‚ÌƒOƒ‰ƒtƒBƒbƒN‚ÌƒeƒCƒXƒg‚ðŒˆ’è•t‚¯‚é‚±‚Æ‚Æ‚È‚Á‚½ì•i‚Å‚à‚ ‚éB
-
-
-
-$end
-
-$info=hanaoji
-$bio
-‰Ô‚Æ‚¨‚¶‚³‚ñ
-
-
-”­”„”NF1991.06
-
-ŠJ”­^”­”„Œ³F“ú–{•¨ŽY
-
-ƒWƒƒƒ“ƒ‹F‰ÔŽD
-
-ƒRƒ“ƒgƒ[ƒ‰F‰ÔŽDƒpƒlƒ‹
-
-ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
-
-CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[YM3812, DAC]
-
-
-
-
-
-
-
-$end
-
-$info=hnayayoi
-$bio
-‰Ø–í¶
-
-
-”­”„”NF1986.12
-
-ŠJ”­^”­”„Œ³Fƒ_ƒCƒiƒGƒŒƒNƒgƒƒjƒNƒXiƒ_ƒCƒiƒbƒNƒXj
-
-ƒWƒƒƒ“ƒ‹F‰ÔŽD
-
-ƒRƒ“ƒgƒ[ƒ‰F‰ÔŽDƒpƒlƒ‹
-
-ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
-
-CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2203, MSM5205]
-
-
-’Eˆß–ƒƒQ[ƒ€‚Ì˜V•Üƒ[ƒJ[Eƒ_ƒCƒiƒbƒNƒX‚Ìƒƒ“ƒOƒZƒ‰[ì•i‚ª‚±‚Ìu‰Ø–í¶vB
-‚»‚Ì——R‚Éã‚°‚ç‚ê‚é‚Ì‚ª“–Žž‚Æ‚µ‚Ä‚ÍŠ®¬“x‚Ì‚‚¢ƒOƒ‰ƒtƒBƒbƒN‚ÆA
-“¯ƒWƒƒƒ“ƒ‹‚É‚¨‚¢‚Ä‹£‘ˆƒ[ƒJ[‚ª­‚È‚¢‚±‚Æ‚Å‚ ‚Á‚½B
-“à—e‚Í‰ÔŽD‚Ìu‚±‚¢‚±‚¢v‚È‚Ì‚¾‚ªA’EˆßƒV[ƒ“‚Å‰¦‚ÉŽw‚ÅŒŠ‚ðŠJ‚¯A
-’†‚ð”`‚«ž‚ÞƒV[ƒ“‚â”’•ƒVƒ‡[‚ðŽv‚í‚¹‚é‚È‚ÇA“–Žž‚Æ‚µ‚Ä‚Í‹Ã‚Á‚½ì•i‚Æ‚È‚Á‚Ä‚¢‚éB
-
-
-
-$end
-
-$info=hnfubuki
-$bio
-‰Øá
-
-
-”­”„”NF1987.02
-
-ŠJ”­^”­”„Œ³Fƒ_ƒCƒiƒbƒNƒX
-
-ƒWƒƒƒ“ƒ‹F‰ÔŽD
-
-ƒRƒ“ƒgƒ[ƒ‰F‰ÔŽDƒpƒlƒ‹
-
-ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
-
-CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2203, MSM5205]
-
-
-¦u‰Ø–í¶v‚ÌBET”Å
-
-
-
-$end
-
-$info=hanagumi
-$bio
-ƒTƒNƒ‰‘åí ‰Ô‘g‘ÎíƒRƒ‰ƒ€ƒX
-
-
-”­”„”NF1997.11
-
-ŠJ”­^”­”„Œ³FƒZƒK
-
-ƒWƒƒƒ“ƒ‹F—Ž‰ºŒ^ƒpƒYƒ‹
-
-ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+4ƒ{ƒ^ƒ“
-
-ƒVƒXƒeƒ€ƒ{[ƒhFƒZƒK ƒ^ƒCƒ^ƒ“ ƒrƒfƒIƒQ[ƒ€ƒVƒXƒeƒ€iST-Vj
-
-CPU\¬[SH-2 (2), 68000]@‰¹Œ¹ƒ`ƒbƒv[SCSP
-
-
-ƒpƒYƒ‹ƒQ[ƒ€‚ÌŒ†ìuƒRƒ‰ƒ€ƒXv‚ÉuƒTƒNƒ‰‘åív‚ÌƒLƒƒƒ‰ƒNƒ^[‚ðƒLƒƒƒXƒeƒBƒ“ƒO‚µ‚ÄƒAƒŒƒ“ƒW‚µ‚½ì•iB
-Žg—p‚·‚éƒLƒƒƒ‰‚É‚æ‚Á‚ÄUŒ‚”\—Í‚É·‚ª‚ ‚éB
 
 
 
@@ -32218,8 +32221,201 @@ $bio
 CPU\¬[Z80]@‰¹ºƒ`ƒbƒv[YM2413, OKI6295]
 
 
+DIPƒXƒCƒbƒ`‚ðØ‚è‘Ö‚¦‚é‚±‚Æ‚ÅƒXƒRƒAƒ^ƒCƒv‚Ìu‰Ô‚©‚ñ‚´‚µv‚Æƒƒ_ƒ‹ƒ^ƒCƒv‚Ìu‰ÔâÏv‚ðŽû˜^‚µ‚½2in1ƒ^ƒCƒv‚Ì‰ÔŽDƒQ[ƒ€B
+ƒ‹[ƒ‹‚Í—¼•û‚Æ‚àu‰Ô‡‚í‚¹v‚±‚¢‚±‚¢‚ÅA“oê‚·‚é—‚ÌŽq‚âƒ{[ƒiƒXƒQ[ƒ€‚à‹¤’Ê‚Å‚ ‚éB
+ƒQ[ƒ€’†AŽO˜AŸ‚·‚ê‚Î“_”‚ª‚à‚ç‚¦‚éuŽO˜AŸƒ{[ƒiƒXƒQ[ƒ€vAƒRƒ“ƒsƒ…[ƒ^‚ÆƒvƒŒƒCƒ„[‚Ì‘S‚Ä‚ÌŽèŽD‚ðŒðŠ·‚·‚éu”é‹Z ‚Ç‚ñ‚Å‚ñvA
+Ÿ—˜Žž‚É‚Íuƒ_ƒuƒ‹ƒAƒbƒvƒQ[ƒ€v‚ªŠy‚µ‚ß‚éBƒ_ƒuƒ‹ƒAƒbƒvƒQ[ƒ€‚Å‚Í3‰ñ‚ÌŸ•‰‚Ì‚¤‚¿AŸ‚Á‚½‰ñ”‚Å”{—¦‚ª‚«‚Ü‚èA
+1‰ñŸ‚Ä‚ÎƒC[ƒuƒ“Šm’èA‘S‚Ä•‰‚¯‚Ä‚àÅ’áƒxƒbƒg‚Í•Ûá‚³‚ê‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
 
 
+
+$end
+
+$info=hanamai
+$bio
+‰Ø‚Ì•‘
+
+
+”­”„”NF1988.12
+
+ŠJ”­^”­”„Œ³Fƒ_ƒCƒiƒbƒNƒX
+
+ƒWƒƒƒ“ƒ‹F‰ÔŽD
+
+ƒRƒ“ƒgƒ[ƒ‰F‰ÔŽDƒpƒlƒ‹
+
+ƒVƒXƒeƒ€ƒ{[ƒhF’†“ú–{ƒŠ[ƒX DX-BASE
+
+CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910, YM2203, MSM5205]
+
+
+ƒ_ƒCƒiƒbƒNƒX‚ð‘ã•\‚·‚é’Eˆß‰ÔŽDƒQ[ƒ€u‰ØƒVƒŠ[ƒYv‚Ì‘æ4ì–ÚB
+¡‰ñ‚ÍƒvƒŒƒCƒ„[‚ªƒ^ƒCƒ€ƒ}ƒVƒ“‚ÅŽžŠÔ‚ðˆÚ“®‚µAŠe”N‘ã‚É‘¶Ý‚·‚éP©lƒ_ƒCƒAƒi‚ð“|‚µ‚Ä‚¢‚­‚Æ‚¢‚¤‚à‚ÌB
+ƒ‹[ƒ‹‚Í‚±‚ê‚Ü‚Å’Ê‚èu‰Ô‡‚í‚¹v‚±‚¢‚±‚¢‚ÅAƒ[ƒ•¶‚©‚çŽn‚Ü‚è‘ŠŽè‚ÌŽ‚¿•¶”‚ð‘S‚ÄŸ‚¿Žæ‚é‚©A
+ŽO˜Aƒ`ƒƒƒ“‚·‚ê‚ÎŽŸ‚ÌŽž‘ã‚Éƒ^ƒCƒ€ƒXƒŠƒbƒv‚·‚é‚±‚Æ‚ª‚Å‚«AŽ©•ª‚Ì•¶”‚ª‚È‚­‚È‚ê‚ÎƒQ[ƒ€ƒI[ƒo[‚Æ‚È‚éB
+‚Ü‚½˜AŸ‚µ‚½‚èAu‚ß‚­‚èŽDv‚©‚çu”é‹ZƒGƒiƒW[v‚ªoŒ»‚·‚é‚Æƒ{[ƒiƒX“¾“_‚ª‰ÁŽZ‚³‚ê‚é‚Æ‚¢‚¤“Á“T‚à‚ ‚éB
+“ïˆÕ“x‚Í‚‚ß‚¾‚ªA”’ŠÛ‚ÅC³‚³‚ê‚é‰ßŒƒ‚È’EˆßƒV[ƒ“‚ª‘½‚­‚ÌƒvƒŒƒCƒ„[‚ÉˆóÛ•t‚¯‚½‚Æ‚¢‚¤ƒqƒbƒgì‚Æ‚È‚Á‚½B
+
+
+
+$end
+
+$info=hnkochou
+$bio
+‰ØŒÓ’±
+
+
+”­”„”NF1989.03
+
+ŠJ”­^”­”„Œ³Fƒ_ƒCƒiƒbƒNƒX
+
+ƒWƒƒƒ“ƒ‹F‰ÔŽD
+
+ƒRƒ“ƒgƒ[ƒ‰F‰ÔŽDƒpƒlƒ‹
+
+ƒVƒXƒeƒ€ƒ{[ƒhF’†“ú–{ƒŠ[ƒX DX-BASE
+
+CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910, YM2203, MSM5205]
+
+
+¦u‰Ø‚Ì•‘v‚ÌBET”Å
+
+
+
+$end
+
+$info=hnoridur
+$bio
+‰ØÜ’ß
+
+
+”­”„”NF1989
+
+ŠJ”­^”­”„Œ³Fƒ_ƒCƒiƒbƒNƒX
+
+ƒWƒƒƒ“ƒ‹F‰ÔŽD
+
+ƒRƒ“ƒgƒ[ƒ‰F‰ÔŽDƒpƒlƒ‹
+
+ƒVƒXƒeƒ€ƒ{[ƒhF’†“ú–{ƒŠ[ƒX DX-BASE
+
+CPU\¬[Z80]@‰¹ºƒ`ƒbƒv[AY-3-8910, YM2413, MSM5205]
+
+
+ƒqƒbƒgìu‰Ø‚Ì•‘v‚É‘±‚­‰ØƒVƒŠ[ƒY‚Æ‚µ‚ÄA’EˆßƒQ[ƒ€ŠE‚Å—lX‚ÈŠv–½‚ª‹N‚±‚Á‚½ŽžŠú‚É“oê‚µ‚½‚Ì‚ª‚±‚Ìu‰ØÜ’ßvB
+ƒQ[ƒ€ƒVƒXƒeƒ€‚Å‚Í•Ï‰»‚Í‚È‚­A‰Ô‡‚í‚¹‚±‚¢‚±‚¢‚ð‘èÞ‚Æ‚µ‚½’Eˆß‰ÔŽD‚Æ‚È‚Á‚Ä‚¢‚éB
+‚µ‚©‚µA‚±‚ê‚Ü‚Å‚Æ‚Íˆá‚¢’Eˆß–ƒ‚Ì•ª–ì‚Å‘ä“ª‚µ‚Ä‚«‚½ƒAƒCƒhƒ‹ŒnƒOƒ‰ƒtƒBƒbƒN‚ðÌ—p‚µ‚½‚±‚Æ‚ÅA
+‚³‚ç‚ÉƒvƒŒƒCƒ„[‚Ì”N—î‘w‚ðL‚°‚æ‚¤‚µ‚½A‚Ð‚Æ‚Â‚Ìƒ^[ƒjƒ“ƒOƒ|ƒCƒ“ƒg‚Æ‚È‚éì•i‚Å‚ ‚éB
+‘Oìu‰Ø‚Ì•‘v‚Ì‚æ‚¤‚Èƒqƒbƒgì‚É‚Í‚È‚ç‚È‚©‚Á‚½‚ªAŒã‚ÉƒŠƒŠ[ƒX‚·‚éu‰Ø‹â‰Ív‚Æ•À‚Ôƒƒ“ƒOƒ‰ƒ“ì‚Æ‚È‚èA
+‚Ü‚½Œã‚Ìƒ_ƒCƒiƒbƒNƒXA’†“ú–{ƒvƒƒWƒFƒNƒg(ƒ_ƒCƒiƒbƒNƒXƒ\ƒtƒg)AƒeƒNƒmƒgƒbƒv‚Æ‘±‚­“Æ“Á‚ÌƒOƒ‰ƒtƒBƒbƒNƒeƒCƒXƒg‚ðŒˆ’è•t‚¯‚é‚±‚Æ‚Æ‚È‚Á‚½ì•i‚Å‚à‚ ‚éB
+
+
+
+$end
+
+$info=hanaoji
+$bio
+‰Ô‚Æ‚¨‚¶‚³‚ñ
+
+
+”­”„”NF1991.06
+
+ŠJ”­^”­”„Œ³F“ú–{•¨ŽY
+
+ƒWƒƒƒ“ƒ‹F‰ÔŽD
+
+ƒRƒ“ƒgƒ[ƒ‰F‰ÔŽDƒpƒlƒ‹
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[YM3812, DAC]
+
+
+
+
+
+
+
+$end
+
+$info=hnayayoi
+$bio
+‰Ø–í¶
+
+
+”­”„”NF1986.12
+
+ŠJ”­^”­”„Œ³Fƒ_ƒCƒiƒGƒŒƒNƒgƒƒjƒNƒXiƒ_ƒCƒiƒbƒNƒXj
+
+ƒWƒƒƒ“ƒ‹F‰ÔŽD
+
+ƒRƒ“ƒgƒ[ƒ‰F‰ÔŽDƒpƒlƒ‹
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2203, MSM5205]
+
+
+’Eˆß–ƒƒQ[ƒ€‚Ì˜V•Üƒ[ƒJ[Eƒ_ƒCƒiƒbƒNƒX‚Ì‘Ogƒ_ƒCƒiƒGƒŒƒNƒgƒƒjƒNƒX‚æ‚è“oê‚µ‚½ƒƒ“ƒOƒZƒ‰[ì•iu‰Ø–í¶vB
+ƒQ[ƒ€‚Í‰Ô‡‚í‚¹‚±‚¢‚±‚¢‚ÅAƒ[ƒ•¶‚©‚çŽn‚Ü‚èA•¶”‚ª‚È‚­‚È‚Á‚Ä‚µ‚Ü‚¦‚ÎƒQ[ƒ€ƒI[ƒo[‚Æ‚È‚èA
+‘ŠŽè‚Æ‚ÌŸ•‰‚ÉŸ‚Â‚±‚Æ‚ª‚Å‚«‚ê‚ÎAu–í¶vì‚Ì’EˆßƒV[ƒ“‚ðŒ©‚é‚±‚Æ‚ª‚Å‚«‚é‚Æ‚¢‚¤‚à‚ÌB
+‚»‚Ì’EˆßƒV[ƒ“‚Å‚Í‰¦‚ÉŽw‚ÅŒŠ‚ðŠJ‚¯A’†‚ð”`‚«ž‚ÞƒV[ƒ“‚â”’•ƒVƒ‡[‚ðŽv‚í‚¹‚é‰‰o‚È‚Ç“–Žž‚Æ‚µ‚Ä‚Í‹Ã‚Á‚½ì•i‚Æ‚È‚Á‚Ä‚¢‚éB
+‚Ü‚½ƒ‰ƒCƒoƒ‹ì•i‚Æ”ä‚×Š®¬“x‚Ì‚‚¢ƒOƒ‰ƒtƒBƒbƒN‚©‚ç¬Œ÷‚ðŽû‚ß‚½ì•i‚Å‚ ‚éB
+
+
+
+$end
+
+$info=hnfubuki
+$bio
+‰Øá
+
+
+”­”„”NF1987.02
+
+ŠJ”­^”­”„Œ³Fƒ_ƒCƒiƒbƒNƒX
+
+ƒWƒƒƒ“ƒ‹F‰ÔŽD
+
+ƒRƒ“ƒgƒ[ƒ‰F‰ÔŽDƒpƒlƒ‹
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2203, MSM5205]
+
+
+¦u‰Ø–í¶v‚ÌBET”Å
+
+
+
+$end
+
+$info=hanagumi
+$bio
+ƒTƒNƒ‰‘åí ‰Ô‘g‘ÎíƒRƒ‰ƒ€ƒX
+
+
+”­”„”NF1997.10
+
+ŠJ”­^”­”„Œ³FƒZƒK
+
+ƒWƒƒƒ“ƒ‹F—Ž‰ºŒ^ƒpƒYƒ‹
+
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒZƒK ƒ^ƒCƒ^ƒ“ ƒrƒfƒIƒQ[ƒ€ƒVƒXƒeƒ€iST-Vj
+
+CPU\¬[SH-2 (2), 68000]@‰¹Œ¹ƒ`ƒbƒv[SCSP
+
+
+‰Æ’ë—pƒQ[ƒ€‹@ƒZƒKƒTƒ^[ƒ“‚Ì‘åƒqƒbƒgìuƒTƒNƒ‰‘åív‚Ì“oêƒLƒƒƒ‰ƒNƒ^[‚½‚¿‚ðƒLƒƒƒXƒeƒBƒ“ƒO‚µ‚½ƒpƒYƒ‹ƒQ[ƒ€‚ªA
+‚±‚ÌuƒTƒNƒ‰‘åí ‰Ô‘g‘ÎíƒRƒ‰ƒ€ƒXvB
+ƒQ[ƒ€ƒVƒXƒeƒ€‚ÍuƒRƒ‰ƒ€ƒXv‚ªŠî–{‚Æ‚È‚Á‚Ä‚¢‚é‚ªA—lX‚ÈƒIƒŠƒWƒiƒ‹‚Ì—v‘f‚à·‚èž‚Ü‚ê‚Ä‚¨‚èA
+•óÎ‚ðÁ‚µ‚Ä‚¢‚­‚±‚Æ‚Åu‹C‡v‚ª‚½‚Ü‚é‚ÆuLIPSv‚ªoŒ»A‘ŠŽè‚ÉŽž•óÎ‚ð‘—‚èž‚ÞuUŒ‚vA
+Ž©•ª‚ÌƒtƒB[ƒ‹ƒh‚Ì•óÎ‚ð”ƒ‰ƒCƒ“•ªÁ‚·‚±‚Æ‚ª‚Å‚«‚éu–hŒävAƒŒƒxƒ‹3‚Ü‚Å‹C‡‚ð‚½‚ß‚é‚±‚Æ‚Å“¯F‚Ì•óÎ‚ð‘S‚ÄÁ‚·‚±‚Æ‚ª‚Å‚«‚éu–‚•óÎv‚È‚ÇA
+ƒ^ƒCƒgƒ‹’Ê‚è‘ÎíƒvƒŒƒC‚ð’†S‚Æ‚µ‚½ì‚è‚È‚Á‚Ä‚¢‚éB‚Ü‚½Žg—p‚·‚éƒLƒƒƒ‰‚É‚æ‚Á‚ÄUŒ‚”\—Í‚É·‚ªÝ‚¯‚ç‚ê‚Ä‚¢‚éB
+‚¿‚È‚Ý‚ÉƒZƒKƒTƒ^[ƒ“‚©‚ç‚ÌˆÚAì‚ÅAˆêŒ©‚·‚é‚Æ‚½‚¾‚Ìƒtƒ@ƒ“Œü‚¯‚Ìì•—‚¾‚ªA
+ƒRƒ‰ƒ€ƒXƒVƒŠ[ƒY‚Ì’†‚Å‚à‚‚¢Š®¬“x‚ðŒÖ‚éì•i‚Å‚ ‚éB
 
 
 
@@ -32318,7 +32514,7 @@ $bio
 
 ”­”„”NF1985.07
 
-ŠJ”­Œ³FƒRƒAƒ‰ƒ“ƒh / ƒZƒK@”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒRƒAƒ‰ƒ“ƒh / ƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹FƒŒ[ƒVƒ“ƒO
 
@@ -32335,6 +32531,7 @@ CPU\¬[68000 (2), Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2203, Sega_PCM]
 ƒOƒ‰ƒtƒBƒbƒN‚ª‚Æ‚Ä‚à”ü‚µ‚­AƒAƒ‹ƒvƒXAƒOƒ‰ƒ“ƒhƒLƒƒƒjƒIƒ“A“s‰ï‚Ì–éAƒV[ƒTƒCƒhAƒT[ƒLƒbƒg‚Ì‘S5ƒXƒe[ƒW‚ð‘–‚è”²‚¯‚éB
 ƒXƒeƒŒƒIƒTƒEƒ“ƒh‚É‚æ‚é”——Í‚ ‚éŒø‰Ê‰¹‚ÆBGM‚àGˆí‚Å‚ ‚éB
 ‚Ü‚½Aƒnƒ“ƒhƒ‹‚Ì‚Ý‚Å‘€ì‚·‚éƒVƒbƒgƒ_ƒEƒ“ƒ^ƒCƒv‚Ìâž‘Ì‚à‘¶Ý‚µ‚½B
+ŠJ”­‚ÍƒRƒAƒ‰ƒ“ƒh‚ÆƒZƒK‚Ì‘æ“ñƒ\ƒtƒgƒEƒFƒAŒ¤‹†ŠJ”­•”A’ÊÌuAM2EAM2Œ¤v‚Å‚ ‚éB
 
 
 
@@ -32418,8 +32615,10 @@ CPU\¬[68010, TMS34010 (2), ADSP2100, 68000, TMS32010]
 ƒnƒ“ƒhƒ‹‚ÆƒMƒA‚É‰Á‚¦‚ÄƒNƒ‰ƒbƒ`‚ª—pˆÓ‚³‚êAƒCƒOƒjƒbƒVƒ‡ƒ“ƒL[‚ð‰ñ‚µ‚ÄƒGƒ“ƒWƒ“‚ð‚©‚¯‚é‚Æ‚±‚ë‚©‚çƒXƒ^[ƒgB
 ‚Ü‚½AƒNƒ‰ƒbƒVƒ…Žž‚É‚ÍƒCƒ“ƒXƒ^ƒ“ƒgƒŠƒvƒŒƒC‚Æ‚¢‚¤•ÊŽ‹“_‚©‚ç‚ÌŽ–ŒÌÄŒ»‰f‘œ‚ª‹Ù”—‚µ‚½BGM‚Æ‚Æ‚à‚É—¬‚ê‚é‚Æ‚¢‚¤‚Ì‚àŒ©Š‚Å‚ ‚éB
 ƒQ[ƒ€ŠJŽnŽž‚ÉƒI[ƒgƒ}‚Æƒ}ƒjƒ…ƒAƒ‹AƒXƒs[ƒhƒgƒ‰ƒbƒN‚ÆƒXƒ^ƒ“ƒgƒgƒ‰ƒbƒN‚ðƒZƒŒƒNƒg‰Â”\B
-’N‚à‚ªƒR[ƒXŠO‚Ì‹‚É‚¿‚å‚Á‚©‚¢‚ðo‚µ‚½‚­‚È‚éB
-ƒhƒ‰ƒCƒuƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ð‹É‚ß‚é‚½‚ßŠJ”­‚É3”N‚à”ï‚â‚³‚ê‚½‚Æ‚¢‚¤B
+’N‚à‚ªƒR[ƒXŠO‚Ì‹‚É‚¿‚å‚Á‚©‚¢‚ðo‚µ‚½‚­‚È‚éBƒhƒ‰ƒCƒuƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ð‹É‚ß‚é‚½‚ßŠJ”­‚É3”N‚à”ï‚â‚³‚ê‚½‚Æ‚¢‚¤B
+ƒiƒ€ƒR‚ª“¯ŽžŠú‚ÉuƒEƒCƒjƒ“ƒOƒ‰ƒ“v‚ð”­•\‚µ‚½‚ªA“–Žžƒiƒ€ƒR‚Ìì•i‚ð”Ì”„‚·‚é‚½‚ß‚É‚ÍƒAƒ^ƒŠƒQ[ƒ€ƒYŽÐ‚ð’Ê‚¶‚È‚¯‚ê‚Î‚È‚ç‚È‚©‚Á‚½‚½‚ßA
+ƒAƒ^ƒŠƒQ[ƒ€ƒYŽÐ‚Æ‚ÌŽ‘–{ŠÖŒW‚ð‰ðÁAƒ^ƒCƒ€ƒ[ƒi[ŽÐ‚ÉŠ”Ž®‚ð”„‹p‚µA
+ƒAƒ^ƒŠƒQ[ƒ€ƒYŽÐ‚ÍÄ‚Ñƒ^ƒCƒ€ƒ[ƒi[ŽÐ‚ÌŽq‰ïŽÐ‚Æ‚È‚Á‚½B
 
 
 
@@ -32831,18 +33030,20 @@ $bio
 
 ƒWƒƒƒ“ƒ‹FƒhƒbƒgƒC[ƒg
 
-ƒRƒ“ƒgƒ[ƒ‰F4•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“
+ƒRƒ“ƒgƒ[ƒ‰F4•ûŒüƒŒƒo[(¶‘¤)+1ƒ{ƒ^ƒ“
 
 ƒVƒXƒeƒ€ƒ{[ƒhFƒAƒCƒŒƒ€ M15ƒVƒXƒeƒ€
 
 CPU\¬[M6502]
 
 
-“–Žž‚Í‚Ü‚¾“ñ—¬ƒ[ƒJ[‚Ì1‚Â‚¾‚Á‚½IPM‚©‚çŽÐ–¼‚ð•Ï‚¦‚½ƒAƒCƒŒƒ€‚©‚ç“oê‚µ‚½uƒwƒbƒhƒIƒ“vB
-ƒIƒŠƒWƒiƒ‹”Å‚Æ‚Ìˆá‚¢‚ÍƒR[ƒXã‚Éo‚Ä‚­‚éuIREMv‚Ì•¶Žš‚ð‚»‚ë‚¦‚é‚Æƒ{[ƒiƒX“¾“_‚ª“ü‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
-‚Ü‚½‰¡‰æ–Êƒ^ƒCƒv‚©‚çc‰æ–Êƒ^ƒCƒv‚ÉA”wŒi‚ªÂF‚©‚ç•‚Ö‚Æ•ÏX‚³‚êAŽ©‹@‚Ì”š”­Žž‚ÌƒOƒ‰ƒtƒBƒbƒN‚ª•`‚«‚©‚¦‚ç‚ê‚Ä‚¢‚éB
-‘¼‚É‚àŒø‰Ê‰¹‚à•ÏX‚³‚ê‚Ä‚¢‚é‚ªAƒIƒŠƒWƒiƒ‹”Å‚É”ä‚×‚Ä”——Í‚ª‚È‚­Aâž‘Ì‚ÌÝ’u‘ä”‚à‚»‚ê’ö‘½‚­‚È‚¢B
-‚¿‚È‚Ý‚ÉŽ©‹@‚ð‘€ì‚·‚éƒŒƒo[‚Í‰E‘¤‚Å‚Í‚È‚­¶‘¤‚É‚ ‚éB
+“–Žž‚Í‚Ü‚¾“ñ—¬ƒ[ƒJ[‚Ì1‚Â‚¾‚Á‚½IPM‚©‚çŽÐ–¼‚ð•Ï‚¦‚½ƒAƒCƒŒƒ€‚æ‚è“oê‚µ‚½uƒwƒbƒhƒIƒ“vB
+ƒQ[ƒ€ƒ‹[ƒ‹‚ÍƒIƒŠƒWƒiƒ‹‚Æ“¯‚¶‚ÅAƒXƒyƒVƒƒƒ‹ƒhƒbƒg‚à“oê‚·‚éB
+ˆá‚¢‚ÍƒR[ƒXã‚Éo‚Ä‚­‚éuIREMv‚Ì•¶Žš‚ð‚»‚ë‚¦‚é‚Æƒ{[ƒiƒX“¾“_‚ª‰ÁŽZ‚³‚ê‚é‚Æ‚±‚ë‚âA
+‰¡‰æ–Êƒ^ƒCƒv‚©‚çc‰æ–Êƒ^ƒCƒv‚ÉA”wŒi‚ªÂF‚©‚ç•‚ÉA
+Ž©‹@‚Ì”š”­Žž‚ÌƒOƒ‰ƒtƒBƒbƒN‚ª•`‚«‚©‚¦‚ç‚ê‚Ä‚¢‚é‚È‚Ç‚Ì•ÏX‚ª‰Á‚¦‚ç‚ê‚Ä‚¢‚éB
+‘¼‚É‚àŒø‰Ê‰¹‚È‚Ç‚à•ÏX‚³‚ê‚Ä‚¢‚é‚ªAƒIƒŠƒWƒiƒ‹”Å‚É”ä‚×‚Ä”——Í‚ª‚È‚­Aâž‘Ì‚ÌÝ’u‘ä”‚à‚»‚ê’ö‘½‚­‚È‚¢B
+‚¿‚È‚Ý‚ÉƒZƒKƒIƒŠƒWƒiƒ‹‚ÌƒwƒbƒhƒIƒ“‚Å‚ÍŽ©‹@‚ð‘€ì‚·‚éƒŒƒo[‚Í‰E‘¤‚É‚ ‚é‚ªA‚±‚Ìì•i‚Å‚Í¶‘¤‚É•t‚¯‚ç‚ê‚Ä‚¢‚éB
 
 
 
@@ -32893,8 +33094,13 @@ $bio
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM3812, OKI6295]
 
 
-
-
+ŠØ‘‚ÌuESD(Excellent Soft Design)vŽÐ‚É‚æ‚é2ì–Ú‚Æ‚È‚éƒIƒŠƒWƒiƒ‹ì•iB
+“à—e‚Íƒ|ƒŠ[‚ÆƒTƒŠ[‚ð‘€‚è5‚Â‚Ì‘A‘S50ƒXƒe[ƒW‚Ì¢ŠE‚ð‰ñ‚èAƒ{ƒX‚ð“|‚µ‚Ä‚¢‚­‚Æ‚¢‚¤A
+“ú–{‚Å‚à‘½‚­Œ©‚ç‚ê‚éƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€‚ÌƒXƒ^ƒCƒ‹‚Å‚ ‚éB
+“G‚ÍƒLƒƒƒbƒ`ƒRƒs[uUSE YOUR HEAD?v‚Æ‚ ‚é’Ê‚èAŽ©•ª‚ÌŽñ‚ð“Š‚°‚Â‚¯‚éƒwƒbƒhƒAƒ^ƒbƒN‚©A
+ƒXƒe[ƒWã‚É‚ ‚éƒ{[ƒ‹‚ð‚Ô‚Â‚¯‚é‚±‚Æ‚Å“|‚·‚±‚Æ‚ª‚Å‚«‚éB
+ƒ{[ƒiƒX—v‘f‚âŒø‰Ê‰¹‚Í‘¼ŽÐ‚Ìì•i‚©‚ç‚»‚Ì‚Ü‚Ü—¬—p‚µ‚Ä‚¨‚èA‚ ‚Ü‚è–J‚ß‚ç‚ê‚é‚à‚Ì‚Å‚Í‚È‚¢‚ªA
+“ú–{‚Å‚àƒtƒEƒL(•x‹M¤‰ï)‚ª­”‚È‚ª‚ç—A“ü”Ì”„‚µ‚Ä‚¢‚éB
 
 
 
@@ -32913,12 +33119,37 @@ Heart Attack -The A Maze Zing-
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFCentury Electronics Convertible Video SystemiCVSj
+ƒVƒXƒeƒ€ƒ{[ƒhFCentury Electronics Century Video SystemiCVSj
 
 CPU\¬[S2650 (2)]@‰¹Œ¹ƒ`ƒbƒv[DAC (2), TMS5110]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
+$info=heatof11
+$bio
+ƒUEƒ[ƒ‹ƒhƒTƒbƒJ[ƒ`ƒƒƒ“ƒsƒIƒ“ƒVƒbƒv
+
+
+”­”„”NF1998
+
+ŠJ”­^”­”„Œ³FƒRƒiƒ~
+
+ƒWƒƒƒ“ƒ‹FƒXƒ|[ƒc
+
+ƒRƒ“ƒgƒ[ƒ‰F¦Ú×•s–¾
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒRƒiƒ~ M2ƒVƒXƒeƒ€
+
+CPU\¬[PPC602]
+
+
+
+
 
 
 
@@ -32956,7 +33187,7 @@ $bio
 
 ”­”„”NF1996
 
-ŠJ”­^”­”„Œ³FƒAƒgƒ‰ƒX
+ŠJ”­Œ³Fƒ‰ƒNƒWƒ“@”­”„Œ³FƒAƒgƒ‰ƒX
 
 ƒWƒƒƒ“ƒ‹F‘ÎíŠi“¬ƒAƒNƒVƒ‡ƒ“
 
@@ -32967,8 +33198,14 @@ $bio
 CPU\¬[PSX CPU]@‰¹Œ¹ƒ`ƒbƒv[SPU]
 
 
-
-
+3Dƒ|ƒŠƒSƒ“‚É‚æ‚é‘æ“ñŽŸŠi“¬ƒQ[ƒ€ƒu[ƒ€‚Ì’†AƒAƒgƒ‰ƒX‚æ‚è“oê‚µ‚½ì•iuƒwƒuƒ“ƒYƒQ[ƒgvB
+ŠJ”­‚Í‰Æ’ë—pƒQ[ƒ€‹@Œü‚¯‚Æ‚µ‚ÄƒAƒgƒ‰ƒX‚âƒnƒhƒ\ƒ“‚Ìƒ\ƒtƒgŠJ”­¥ˆÚA‚ðŽè‚ª‚¯‚½ƒ‰ƒNƒWƒ“(RACDYM)‚ª’S“–‚µ‚Ä‚¢‚éB
+3Dƒ|ƒŠƒSƒ“Ši“¬ƒQ[ƒ€‚È‚ª‚çƒQ[ƒ€ƒVƒXƒeƒ€‚Í2Dƒ^ƒCƒv‚Ì‚à‚Ì‚ªŠî‘b‚Æ‚È‚Á‚Ä‚¨‚èA
+ƒXƒe[ƒW‚É‚Í“Vˆä‚ªÝ‚¯‚ç‚ê‚Ä‚¢‚é‚Ì‚ª“Á’¥‚Å‚ ‚éB
+‘€ì‚ÍƒLƒƒƒ‰ƒNƒ^[‚ðˆÚ“®‚³‚¹‚éƒŒƒo[‚ÆƒLƒbƒNAƒpƒ“ƒ`AƒK[ƒh‚Ì3‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—pA
+‰æ–Êã•”‚Ìuƒ\ƒ‹ƒQ[ƒWv‚ð‚½‚ß‚Äuƒ\ƒ‹=ƒpƒ[v‚ðŠJ•ú‚·‚é‚±‚Æ‚ÅUŒ‚—Í¥–hŒä—Í‚ðƒAƒbƒv‚³‚¹‚é‚±‚Æ‚ª‚Å‚«‚éB
+Œ³XuƒOƒ‹[ƒ”¥ƒIƒ“¥ƒtƒ@ƒCƒgv‚Æ‹¤‚É‹Æ–±—p‚Æ‚µ‚ÄŠJ”­‚³‚ê‚Ä‚¢‚½‚ªAæ‚ÉˆÚAì‚Æ‚È‚é‰Æ’ë—p”Å‚ª”Ì”„‚³‚ê‚Ä‚µ‚Ü‚Á‚½‚½‚ßA
+o‰ñ‚è‚ªˆ«‚­‚È‚Á‚Ä‚µ‚Ü‚¢‘åŽ¸”s‚µ‚Ä‚µ‚Ü‚Á‚½‚Æ‚¢‚¤B
 
 
 
@@ -33026,7 +33263,7 @@ CPU\¬[Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[SN76496 (2)]
 ƒVƒ‡ƒbƒg‚ÍƒŒƒo[‘€ì‚Å”CˆÓ‚Ì•ûŒü‚É”­ŽË‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
 ‚Ü‚½A’·‹——£ƒ~ƒTƒCƒ‹”­ŽËŽž‚É‚ÍAƒ~ƒTƒCƒ‹‚ðƒŒƒo[‚Å¶‰E‚É§Œä‚Å‚«‚éB
 ‚½‚¾‚µAŒ‚‚¿‚·‚¬‚é‚ÆƒI[ƒo[ƒq[ƒg‚·‚é‚Ì‚Å’ˆÓB
-‹­§ƒXƒNƒ[ƒ‹‚ªŽ~‚Ü‚é‚ÆAƒ{ƒX‚Ì—vÇƒWƒƒƒCƒƒO‚ª“oê‚·‚éB
+‹­§ƒXƒNƒ[ƒ‹‚ªŽ~‚Ü‚é‚ÆAÅI—vÇƒWƒƒƒCƒƒO‚ª“oê‚·‚éB
 
 
 
@@ -33050,6 +33287,11 @@ $bio
 CPU\¬[ARM]
 
 
+‹ß–¢—ˆ‚ð•‘‘ä‚Éƒnƒ“ƒhƒ{[ƒ‹‚©‚ç”­“W‚µ‚½VƒXƒ|[ƒcuƒwƒr[ƒXƒ}ƒbƒVƒ…v‚ª‘èÞ‚ÌƒXƒ|[ƒcƒQ[ƒ€B
+‚»‚ê‚¼‚ê“Æ“Á‚Ì•KŽEƒVƒ…[ƒg‚Æ”\—Í‚Ì“Á’¥‚ªˆÙ‚È‚é10ƒ`[ƒ€‚©‚çƒvƒŒƒC‚·‚éƒ`[ƒ€‚ð‘I‚ÑA§ŒÀŽžŠÔ“à‚É“¾“_‚ª‘½‚¢ƒ`[ƒ€‚ªŸ—˜‚·‚é‚Æ‚¢‚¤ƒQ[ƒ€ƒ‹[ƒ‹‚Å‚ ‚é‚ªA
+uƒ‹[ƒ‹–³—p‚ÌŠi“¬‹…‹Z!v‚Æ‚ ‚é’Ê‚èA‘ŠŽè‚É‘Ì“–‚½‚è‚µƒ{[ƒ‹‚ð’D‚Á‚½‚èA•Ší‚ðŽg‚Á‚Ä‚Ìƒ‰ƒtƒvƒŒƒC‚à‰Â”\‚Æ‚È‚Á‚Ä‚¨‚èA
+ƒpƒ[ƒQ[ƒW‚ª‚½‚Ü‚ê‚Î•KŽEƒVƒ…[ƒg¥•ŠíŽg—p‚ªŽg‚¦‚é‚æ‚¤‚É‚È‚éB”hŽè‚È‰‰o‚ÆƒfƒRƒQ[‚ç‚µ‚¢“Æ“Á‚Ìì•—‚ðŽ‚Á‚½ì•i‚Å‚ ‚éB
+‚¿‚È‚Ý‚ÉƒpƒX‚ÅƒS[ƒ‹‚ðŒˆ‚ß‚é‚Æƒ{[ƒiƒX“¾“_‚ª“ü‚é‚ªAŠÈ’P‚ÉƒS[ƒ‹‚Å‚«‚Ä‚µ‚Ü‚¤‚Æ‚¢‚¤ƒoƒO‚ª‚ ‚éB
 
 
 
@@ -33222,7 +33464,7 @@ Hero
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFCentury Electronics Convertible Video SystemiCVSj
+ƒVƒXƒeƒ€ƒ{[ƒhFCentury Electronics Century Video SystemiCVSj
 
 CPU\¬[S2650 (2)]@‰¹Œ¹ƒ`ƒbƒv[DAC (2), TMS5110]
 
@@ -33596,11 +33838,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 —‚Ìl‚âA‹³ŽöAŒxŠ¯‚ðŒ‚‚Â‚Æƒ~ƒX‚Æ‚È‚Á‚Ä‚µ‚Ü‚¤B
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -33728,7 +33965,11 @@ $bio
 CPU\¬[V33, V30]@‰¹Œ¹ƒ`ƒbƒv[YM2151, GA20]
 
 
-ƒlƒo[ƒ‰ƒ“ƒh‚ð•‘‘ä‚Æ‚µ‚½A‰¡ƒXƒNƒ[ƒ‹ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
+91”N‚ÉŒöŠJ‚³‚ê‚½ƒ_ƒXƒeƒBƒ“Eƒzƒtƒ}ƒ“Aƒƒrƒ“EƒEƒBƒŠƒAƒ€ƒY‚Ì‰f‰æuƒtƒbƒNv‚ðƒQ[ƒ€‰»‚µ‚½ì•iB
+’†”N‚Æ‚È‚Á‚½ƒs[ƒ^[ƒpƒ“‚ªƒtƒbƒN‘D’·‚É‚³‚ç‚í‚ê‚½Žq‹Ÿ‚½‚¿‚ð•‚¯o‚·‚Æ‚¢‚¤A
+ƒlƒo[ƒ‰ƒ“ƒh‚ð•‘‘ä‚Æ‚µ‚½‰¡ƒXƒNƒ[ƒ‹ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€‚Å‚ ‚éB
+‘€ì‚Í8•ûŒüƒŒƒo[‚ÆUŒ‚AƒWƒƒƒ“ƒv‚Ì2ƒ{ƒ^ƒ“A“ñ‚Â‚Ìƒ{ƒ^ƒ“‚ð“¯Žž‚É‰Ÿ‚¹‚Î•KŽE‹Z‚ÆƒI[ƒ\ƒhƒbƒNƒX‚È“à—e‚Æ‚È‚Á‚Ä‚¢‚é‚ªA
+˜A‘±‹Z‚ªŒˆ‚Ü‚éƒeƒ“ƒ|‚Ì—Ç‚³‚Æƒoƒ‰ƒ“ƒX‚ÌŽæ‚ê‚½“ïˆÕ“xÝ’è‚É‚æ‚è—Çì‚Æ‚µ‚ÄŽdã‚ª‚Á‚Ä‚¢‚éB
 ‘S6ƒXƒe[ƒWB
 
 
@@ -33942,7 +34183,7 @@ Hot Pinball
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM3812, OKI6295]
 
 
-ŠØ‘»‚Ì’Eˆßƒsƒ“ƒ{[ƒ‹ƒQ[ƒ€B
+ŠØ‘»‚Ì’Eˆßƒsƒ“ƒ{[ƒ‹ƒQ[ƒ€‚ÅAƒeƒNƒ‚‚ÌuƒX[ƒp[ƒsƒ“ƒ{[ƒ‹ƒAƒNƒVƒ‡ƒ“v‚ð‰ü•Ï‚µ‚½ƒfƒbƒhƒRƒs[ì•iB
 ‚SŽí—Þ‚ÌƒXƒe[ƒW‚ª‚ ‚èA‚»‚ê‚¼‚ê‚Tl•ª‚Ì—«‚Ì‰æ‘œ‚ª—pˆÓ‚³‚ê‚Ä‚¢‚ÄAƒQ[ƒ€ƒI[ƒo[Žž‚ÉŠÓÜ‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
 “¾“_‚ðˆê’è—ÊŠl“¾‚·‚é‚²‚Æ‚ÉŒ©‚ç‚ê‚é‰æ‘œ‚ÌŽí—Þ‚â‰ßŒƒ‚³‚ª•Ï‚í‚Á‚Ä‚¢‚­B
 ‚È‚¨‰æ‘œ‚Í‘S‚Ä–³C³‚È‚Ì‚Å‰{——’ˆÓB
@@ -33969,13 +34210,10 @@ $bio
 CPU\¬[68000 (2)]@‰¹ºƒ`ƒbƒv[YM2151 ,DAC]
 
 
-ƒZƒK‚©‚ç“oê‚µ‚½Œ©‰º‚ë‚µŒ^‚ÌƒŒ[ƒXƒQ[ƒ€B
-‡ˆÊ‚É‰ž‚¶‚Ä‚à‚ç‚¦‚éÜ‹à‚âƒR[ƒX‚É—Ž‚¿‚Ä‚¢‚é‚¨‹à‚ðW‚ß‚ÄA
-ƒXƒe[ƒWŠÔ‚ÌƒVƒ‡ƒbƒv‚Åƒp[ƒc‚ðw“ü‚µŽÔ‚ð‰ü‘¢‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
-‘S30ƒXƒe[ƒW‚ÅÅ‘å4l‚Ü‚Å‚Ì“¯ŽžƒvƒŒƒC‚ª‰Â”\B
-‘ŽYƒQ[ƒ€‚Å‚Í’¿‚µ‚­4l‚Å1‚Â‚Ì‰æ–Ê‚ðˆÍ‚Þ‚Æ‚¢‚¤‘åŒ^âž‘Ì‚Å‚ ‚Á‚½B
-—]’k‚¾‚ª‰Šú‚ÌƒVƒXƒeƒ€24ê—pƒQ[ƒ€‚ÍA
-ƒtƒƒbƒs[ƒfƒBƒXƒN+ƒZƒLƒ…ƒŠƒeƒB[ƒ`ƒbƒv‚Æ‚¢‚¤ƒ\ƒtƒg‹Ÿ‹‹‚ª˜b‘è‚É‚È‚Á‚½‚ªA
+ƒZƒK‚©‚ç“oê‚µ‚½ƒgƒbƒvƒrƒ…[ƒ^ƒCƒv‚ÌƒŒ[ƒXƒQ[ƒ€B
+‡ˆÊ‚É‰ž‚¶‚Ä‚à‚ç‚¦‚éÜ‹à‚âƒR[ƒX‚É—Ž‚¿‚Ä‚¢‚é‚¨‹à‚ðW‚ß‚ÄAƒXƒe[ƒWŠÔ‚ÌƒVƒ‡ƒbƒv‚Åƒp[ƒc‚ðw“ü‚µŽÔ‚ð‰ü‘¢‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
+‘S30ƒXƒe[ƒW‚ÅÅ‘å4l‚Ü‚Å‚Ì“¯ŽžƒvƒŒƒC‚ª‰Â”\B‘ŽYƒQ[ƒ€‚Å‚Í’¿‚µ‚­4l‚Å1‚Â‚Ì‰æ–Ê‚ðˆÍ‚Þ‚Æ‚¢‚¤‘åŒ^ê—pâž‘Ì‚Å‚ ‚éB
+—]’k‚¾‚ª‰Šú‚ÌƒVƒXƒeƒ€24ê—pƒQ[ƒ€‚ÍAƒtƒƒbƒs[ƒfƒBƒXƒN+ƒZƒLƒ…ƒŠƒeƒB[ƒ`ƒbƒv‚Æ‚¢‚¤ƒ\ƒtƒg‹Ÿ‹‹‚ª˜b‘è‚É‚È‚Á‚½‚ªA
 ”ç“÷‚É‚àƒƒ“ƒeƒiƒ“ƒX‚Ì”Ï‚í‚µ‚³‚©‚ç‚â‚ª‚ÄROMƒLƒbƒg‚Ì‚Ý‚Å‹Ÿ‹‹‚³‚ê‚é‚±‚Æ‚É‚È‚éB
 
 
@@ -34185,7 +34423,7 @@ Hunchback
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFCentury Electronics Convertible Video SystemiCVSj
+ƒVƒXƒeƒ€ƒ{[ƒhFCentury Electronics Century Video SystemiCVSj
 
 CPU\¬[S2650 (2)]@‰¹Œ¹ƒ`ƒbƒv[DAC (2), TMS5110]
 
@@ -34209,7 +34447,7 @@ Hunchback Olympic
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFCentury Electronics Convertible Video SystemiCVSj
+ƒVƒXƒeƒ€ƒ{[ƒhFCentury Electronics Century Video SystemiCVSj
 
 CPU\¬[S2650 (2)]@‰¹Œ¹ƒ`ƒbƒv[DAC (2), TMS5110]
 
@@ -34380,6 +34618,39 @@ CPU\¬[68000 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2151, OKI6295]
 Ž©‹@‚Íí“¬‹@Œ`‘Ô‚Å‚ÍˆÚ“®ƒXƒs[ƒh‚ª‘¬‚­A“–‚½‚è”»’è‚ª¬‚³‚­‚È‚èAƒA[ƒ}[Œ`‘Ô‚Å‚ÍUŒ‚—Í‚Ìã¸AáŠQ•¨‚É“–‚½‚Á‚Ä‚à‚â‚ç‚ê‚È‚¢‚È‚ÇA
 Œ`‘Ô‚É‚æ‚Á‚Ä‘å‚«‚­“Á«‚ª•Ï‰»‚·‚éˆ×A‚¤‚Ü‚­—¼•û‚ÌŒ`‘Ô‚ðŽg‚¢‚±‚È‚·Ž–‚ªU—ª‚Ìƒ|ƒCƒ“ƒgB
 ‚Ü‚½AƒXƒe[ƒWƒNƒŠƒAŒã‚É‚ÍŽc‚Á‚Ä‚¢‚é‰‡Œì•º‚âƒ{ƒ}[ƒQ[ƒW‚ÌŽc—Ê‚É‚æ‚Á‚Äƒ{[ƒiƒXƒ|ƒCƒ“ƒg‚ð“¾‚é‚±‚Æ‚ª‚Å‚«‚éB
+
+
+
+$end
+
+$info=hng64
+$bio
+ƒnƒCƒp[ƒlƒIƒWƒI‚U‚S
+
+
+”­”„”NF1997.08
+
+ŠJ”­^”­”„Œ³FƒGƒX¥ƒGƒk¥ƒPƒCiSNKj
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFSNK ƒnƒCƒp[ƒlƒIƒWƒI64
+
+CPU\¬[R4600(big), V30, Z80]
+
+
+‘å¬Œ÷‚ðŽû‚ß‚½uNEO¥GEO MVSv‚¾‚Á‚½‚ªA3Dƒ|ƒŠƒSƒ“‚É‚æ‚é‘¼ŽÐ‚Ìì•i‚Ìƒqƒbƒg‚È‚ÇA
+ŽžŠÔ‚ªŒo‚Â‚É‚Â‚ê™X‚É‹ZpŠJ”­‚É·‚ª¶‚Ü‚êŽn‚ß‚½‚½‚ßA
+SNK‚ªV‚½‚ÉŠJ”­‚µ‚½64ƒrƒbƒgCGƒVƒXƒeƒ€Šî”Â‚ª‚±‚ÌuƒnƒCƒp[ƒlƒIƒWƒI64v‚Å‚ ‚éB
+‚»‚ê‚Ü‚Å‚ÌMVS“¯—lAƒQ[ƒ€ƒ^ƒCƒgƒ‹‚ÍROMƒJ[ƒgƒŠƒbƒW‚Å”z‹‹‚³‚êACG‰æ‘œ‚ÆƒXƒvƒ‰ƒCƒg‰æ‘œ‚Ì‹@”\‚ð•¹‚¹Ž‚¿A
+ì•i‚É‚æ‚Á‚Ä‚Í3D‚Æ2D‰æ‘œ‚Ì‘g‚Ý‡‚í‚¹‚ª‰Â”\‚Æ‚¢‚¤“Á’¥‚ðŽ‚Á‚Ä‚¢‚éB
+MVS‚ÌŒãŒp‹@‚Æ‚µ‚ÄŠú‘Ò‚³‚ê‚½ƒVƒXƒeƒ€Šî”Â‚Æ‚µ‚ÄƒRƒNƒsƒbƒgƒ^ƒCƒv‚Ìuƒ‰ƒEƒ“ƒhƒgƒŠƒbƒvRVv‚©‚çŽn‚Ü‚èA
+2ì–Ú‚Æ‚È‚éuƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc`Ž˜°`v‚Å‚ÍŠî”Âƒ^ƒCƒv‚Ìì•i‚Æ‚µ‚Äo‰×‚³‚êA
+ƒJƒƒ‰‚Æ‘Îí‘ŠŽè‚ð’­‚ß‚é‰t»‰æ–Ê‚ª”õ‚¦•t‚¯‚ç‚ê‚½âž‘Ì‚ªƒZƒbƒg”Ì”„‚³‚ê‚é‚È‚Ç’–Ú“x‚Í‘å‚«‚©‚Á‚½B
+‚µ‚©‚µA“oê‚µ‚½ ‚É‚ÍƒXƒyƒbƒN“I‚É‚àƒ‰ƒCƒoƒ‹ŽÐ‚æ‚è‚àŒã‚ê‚ðŽæ‚Á‚Ä‚¨‚èA‚Ü‚½A
+”­”„ƒ^ƒCƒgƒ‹‚Ì”ñ—Í‚¾‚Á‚½‚½‚ß‚ÉŽ¸”s‚ÅI‚í‚Á‚Ä‚µ‚Ü‚¢AŒ‹‹ÇMVS‚ª‚»‚ÌŒã‚àŠˆ–ô‚µ‘±‚¯‚é‚±‚Æ‚É‚È‚éB
 
 
 
@@ -34797,7 +35068,7 @@ CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[AY-8910, DAC]
 
 $end
 
-$info=iganinju
+$info=kazan
 $bio
 ˆÉ‰ê”Ep“` -ŒÜ_‚Ì‘-
 
@@ -35912,7 +36183,7 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰Fƒ}[ƒWƒƒƒ“ƒpƒlƒ‹
 
-ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒoƒVƒXƒeƒ€
+ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒ”ƒ@ƒVƒXƒeƒ€
 
 CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
 
@@ -35940,7 +36211,7 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰Fƒ}[ƒWƒƒƒ“ƒpƒlƒ‹
 
-ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒoƒVƒXƒeƒ€
+ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒJƒlƒRƒVƒXƒeƒ€
 
 CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
 
@@ -36104,12 +36375,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM-2612, SN76496 (2)]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -36683,7 +36948,7 @@ Jump Kids
 CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[OKI6295]
 
 
-¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+¦uƒ^ƒ“ƒuƒ‹ƒ|ƒbƒvv‚ÌƒfƒbƒhƒRƒs[ì•iB
 
 
 
@@ -37253,7 +37518,7 @@ $bio
 
 ƒWƒƒƒ“ƒ‹FƒNƒCƒY
 
-ƒRƒ“ƒgƒ[ƒ‰F¦Ú×•s–¾
+ƒRƒ“ƒgƒ[ƒ‰F4•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“
 
 ƒVƒXƒeƒ€ƒ{[ƒhFƒZƒK ƒ^ƒCƒ^ƒ“ ƒrƒfƒIƒQ[ƒ€ƒVƒXƒeƒ€iST-Vj
 
@@ -37761,12 +38026,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 
 –¢—ˆ‚ÌƒQ[ƒ€ƒZƒ“ƒ^[‚ª•‘‘ä‚ÌƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€BƒRƒ“ƒsƒ…[ƒ^‚É‚³‚ç‚í‚ê‚½Žq‹Ÿ‚½‚¿‚ð‹~‚¢o‚·‚Ì‚ª–Ú“IB
 ŽålŒö‚Í8ƒ^ƒCƒv‚ÌƒLƒƒƒ‰‚É•Ïg‚Å‚«‚éB‚Ü‚½Aƒ_ƒCƒ„ƒ‚ƒ“ƒhW‚ß‚é‚±‚Æ‚É‚æ‚è“ÁŽêUŒ‚‚ª‰Â”\‚É‚È‚éB
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -39323,7 +39582,7 @@ $bio
 
 ”­”„”NF1991.02
 
-ŠJ”­Œ³FƒGƒkƒGƒ€ƒPƒCiNMKj@”­”„Œ³Fƒ†[ƒs[ƒGƒ‹iUPLj
+ŠJ”­^”­”„Œ³Fƒ†[ƒs[ƒGƒ‹iUPLj
 
 ƒWƒƒƒ“ƒ‹FƒVƒ…[ƒeƒBƒ“ƒO
 
@@ -39336,10 +39595,12 @@ CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[OKI6295 (2)]
 
 ‚±‚ÌƒQ[ƒ€‚Ì‘å‚«‚È“Á’¥‚ÍA‘•”õ‚·‚é•Ší‚É‚Í‚»‚ê‚¼‚êd‚³‚ªÝ’è‚³‚êA‘•”õ‰Â”\‚È•Ší‚Ì‘d—Ê‚ª’è‚ß‚ç‚ê‚Ä‚¢‚é“_‚É‚ ‚éB
 ƒƒCƒ“ƒKƒ“AƒTƒuƒEƒGƒ|ƒ“Aƒ{ƒ€‚È‚Ç12Ží—Þ‚Ì•Ší‚ªŽg—p‰Â”\B
-ƒƒCƒ“ƒKƒ“‚Æƒ{ƒ€‚Éƒ{ƒ^ƒ“‚ð2‚ÂŽg—pB
-ƒƒCƒ“ƒKƒ“‚ð‰Ÿ‚µ‚È‚ª‚çƒ{ƒ€‚ð‰Ÿ‚·‚±‚Æ‚ÅƒTƒuƒEƒGƒ|ƒ“‚Ì”­ŽË•ûŒü‚ð•ÏX‚Å‚«‚éB
-‘S6ƒXƒe[ƒWB
-—]’k‚¾‚ªUPL‚Í“¯”N3ŒŽ‚É“|ŽYB
+ƒƒCƒ“ƒKƒ“‚Æƒ{ƒ€‚Éƒ{ƒ^ƒ“‚ð2‚ÂŽg—pBƒƒCƒ“ƒKƒ“‚ð‰Ÿ‚µ‚È‚ª‚çƒ{ƒ€‚ð‰Ÿ‚·‚±‚Æ‚ÅƒTƒuƒEƒGƒ|ƒ“‚Ì”­ŽË•ûŒü‚ð•ÏX‚Å‚«‚éB
+‘S6ƒXƒe[ƒWB—]’k‚¾‚ªƒXƒe[ƒWƒNƒŠƒAŒã‚ÉŽc‚Á‚½ƒ{ƒ€‚Ì”‚É‚æ‚èÅ‘åÏÚ—Ê‚ª•Ï‰»‚·‚é‚à‚Ì‚Æ‚µ‚È‚¢ƒo[ƒWƒ‡ƒ“‚ª‚ ‚èA
+ƒ^ƒCƒgƒ‹ƒƒS‚ªƒpƒŒƒbƒgƒ`ƒFƒ“ƒW‚·‚é‚à‚Ì‚ªƒŒƒAƒo[ƒWƒ‡ƒ“‚ÆŒ¾‚í‚ê‚Ä‚¢‚éB
+‚Ü‚½Šî”Â‚É‚ÍNMK»‚Ìƒ`ƒbƒv‚ªŽg—p‚³‚ê‚Ä‚¢‚é‚ªAÝŒv¥ŠJ”­‚ÍUPL‚Å‚ ‚éB
+Žc”O‚È‚ª‚çUPL‚Í“¯”N3ŒŽ‚É“|ŽY‚µ‚Ü‚¢AŠJ”­’†‚¾‚Á‚½ƒxƒ‹ƒgƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€uBREAK SHOWvA
+‰¡ƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒOu‰õ‘¬I‚·‚Ï‚ë`‚¸IIv‚Í‚¨‘ “ü‚è‚Æ‚È‚Á‚½B
 
 
 
@@ -39463,11 +39724,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ƒAƒCƒŒƒ€§ì‚ÌƒA[ƒP[ƒh”Å‚©‚ç‚ÌˆÚAB•‘‘ä‚Æ‚È‚é‚Ì‚ÍA“ä‚Ì‘gD "X" ‚ÌŠÙB
 ‚»‚ÌÅãŠK‚É•ß‚í‚ê‚Ìg‚Æ‚È‚Á‚Ä‚¢‚éƒVƒ‹ƒrƒA‚ð•‚¯o‚·‚Ì‚ªÅI–Ú“I‚Å‚ ‚éB
 ŽålŒö‚ÍƒJƒ“ƒt[‚Ì’Bl‚Å‚ ‚éƒg[ƒ}ƒX‚¾B
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -40025,12 +40281,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 l‹C–Ÿ‰æu–k“l‚ÌŒv‚ÌƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
 “G‚ð“|‚µ‚È‚ª‚çƒpƒ[ƒAƒbƒv‚µ‚Ä‚¢‚­‚Ì‚ª“Á’¥“I‚Å‚ ‚èA‚»‚ê‚É‚Â‚ê‚ÄƒPƒ“ƒVƒƒE‚Ìã’…‚ª”j‚êUŒ‚‚à˜A‘Å‚É•Ï‚í‚éB
 ‘S4Í‚Å\¬‚³‚ê‚Ä‚¢‚éB
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -40878,10 +41128,6 @@ CPU\¬[G65C816, SPC700]@‰¹Œ¹ƒ`ƒbƒv[Custom]
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
 
-¦uNintendo Super Systemv‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒX[ƒp[ƒtƒ@ƒ~ƒRƒ“v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-3–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -41526,7 +41772,7 @@ Logger
 
 ƒRƒ“ƒgƒ[ƒ‰F4•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFCentury Electronics Convertible Video SystemiCVSj
+ƒVƒXƒeƒ€ƒ{[ƒhFCentury Electronics Century Video SystemiCVSj
 
 CPU\¬[S2650 (2)]@‰¹Œ¹ƒ`ƒbƒv[DAC (2), TMS5110]
 
@@ -42484,7 +42730,7 @@ $end
 
 $info=madmotor
 $bio
-ƒ}ƒbƒhƒ‚[ƒ^[
+Mad Motor
 
 
 ”­”„”NF1989
@@ -42500,7 +42746,13 @@ $bio
 CPU\¬[68000, HuC6280]@‰¹Œ¹ƒ`ƒbƒv[YM2203, YM2151, OKI6295 (2)]
 
 
-¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+ƒoƒCƒN‚Éæ‚Á‚½h—¼˜r‚É•Ší‚ð‘•”õ‚µ‚½‹â”¯‚Ì’jh‚ð‘€ì‚µ‚ÄA
+‚‘¬“¹˜H‚Å‰£‚è‡‚¢‚ð‚·‚é‚Æ‚¢‚¤ƒTƒCƒo[ƒpƒ“ƒN‚È•µˆÍ‹C‚Ì‰¡ƒXƒNƒ[ƒ‹ƒAƒNƒVƒ‡ƒ“B
+ƒEƒBƒŠ[’†‚É“¹˜H‚ÌáŠQ•¨‚ÉÚG‚µ‚½‚èA“]“|‚³‚¹‚½“G‚ÌƒoƒCƒN‚ª”š”­‚·‚éŽž‚Éd‚È‚é‚±‚Æ‚ÅƒWƒƒƒ“ƒv‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
+‚±‚ê‚ð—˜—p‚µ‚Ä‹ó’†‚Ì“G‚ðUŒ‚‚Å‚«‚éB“G‚ÌUŒ‚‚ðŽó‚¯‚ÄŽålŒö‚Ì‘Ì—Í‚ª–³‚­‚È‚é‚Æh˜r‚©‚çƒJƒbƒ^[‚ª¶‚¦‚½‹Sh‚É•Ïg‚·‚éB
+‚±‚Ì•ÏgƒV[ƒ“‚Íub‰¤‹Lv‚Ì‚æ‚¤‚Éƒh”hŽè‚È‚Ì‚ÅˆêŒ©‚Ì‰¿’l—L‚èB
+“G‚ÌUŒ‚‚È‚Ç‚Ì“–‚½‚è”»’è‚ª‚Í‚Á‚«‚è‚¹‚¸AƒQ[ƒ€‚Æ‚µ‚Ä‚ÍƒCƒ}ƒCƒ`‚Èì•i‚È‚Ì‚ªŽc”OB
+‰½ŒÌ‚©ƒQ[ƒ€’†‚Éuƒƒ{ƒRƒbƒv2v‚ÌŠÅ”Â‚ª‚ ‚Á‚½‚è‚·‚éB
 
 
 
@@ -42532,7 +42784,7 @@ $end
 
 $info=madshark
 $bio
-ƒ}ƒbƒhƒVƒƒ[ƒN
+ƒ}ƒbƒhEƒVƒƒ[ƒN
 
 
 ”­”„”NF1993
@@ -42549,8 +42801,9 @@ CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[X1-010]
 
 
 ƒAƒ‹ƒ…ƒÅŒã‚Ìì•i‚Æ‚È‚Á‚½cƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒOB
-ƒOƒ‰ƒtƒBƒbƒNAƒXƒe[ƒW\¬A‘u‰õŠ´A‘S‚Ä‚É‚¨‚¢‚Äu—‹“dv‚ðˆÓŽ¯‚µ‚½ì‚èB
-ƒQ[ƒ€ƒoƒ‰ƒ“ƒX‚àu—‹“dv“¯—l‚É—Ç‚¢‚Ì‚ÅAu—‹“dv‚Æ‚Í‚Ü‚½ˆá‚Á‚½‰ðŽß‚ÅŠy‚µ‚ß‚éB
+ƒOƒ‰ƒtƒBƒbƒNAƒXƒe[ƒW\¬A‘u‰õŠ´A‘S‚Ä‚É‚¨‚¢‚Äu—‹“dv‚ðˆÓŽ¯‚µ‚½ì‚è‚Æ‚È‚Á‚Ä‚¨‚èA
+8•ûŒüƒŒƒo[‚ÅŽ©‹@‚Ì‘€ìAƒVƒ‡ƒbƒgƒ{ƒ^ƒ“Aƒ{ƒ€ƒ{ƒ^ƒ“‚ðŽg—p‚·‚éB
+ƒQ[ƒ€ƒoƒ‰ƒ“ƒX‚à“¯—l‚É—Ç‚¢‚Ì‚ÅAu—‹“dv‚Æ‚Í‚Ü‚½ˆá‚Á‚½‰ðŽß‚ÅŠy‚µ‚ß‚éB
 ‘S7ƒXƒe[ƒW‚Å‰i‹vƒ‹[ƒvB
 
 
@@ -43902,7 +44155,7 @@ $bio
 CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YM278B]
 
 
-u’kŽÐuƒ„ƒ“ƒOƒ}ƒKƒWƒ“ƒAƒbƒp[ƒYv‚É‚Ä˜AÚ‚³‚ê‚Ä‚¢‚½”ª_‚Ð‚ë‚«Œ´ì‚ÌƒRƒ~ƒbƒNuG-tastev‚ÌƒLƒƒƒ‰‚ª“oê‚·‚éA
+u’kŽÐuƒ„ƒ“ƒOƒ}ƒKƒWƒ“ƒAƒbƒp[ƒYvŽ‚É‚Ä˜AÚ‚³‚ê‚Ä‚¢‚½”ª_‚Ð‚ë‚«Œ´ì‚ÌƒRƒ~ƒbƒNuG-tastev‚ÌƒLƒƒƒ‰‚ª“oê‚·‚éA
 ’Eˆßƒ}[ƒWƒƒƒ“‚È‚ç‚ÊuƒtƒFƒeƒBƒVƒYƒ€–ƒvƒQ[ƒ€B
 ƒQ[ƒ€–{•Ò‚ÍƒI[ƒ\ƒhƒbƒNƒX‚Èƒ}[ƒWƒƒƒ“ƒQ[ƒ€‚ÅAƒvƒŒƒCƒ„[‚ª3‰ñã‚ª‚é‚©‘ŠŽè‚ÌŽ‚¿“_‚ð0ˆÈ‰º‚É‚·‚é‚±‚Æ‚ÅƒNƒŠƒA‚Æ‚È‚éB
 ‚Ü‚½Gƒpƒ[‚ð—­‚ß‚é‚±‚Æ‚ÅŠeƒXƒe[ƒW‚²‚Æ‚ÉƒAƒCƒeƒ€‚ðw“ü‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
@@ -46111,6 +46364,30 @@ CPU\¬[S2650]@‰¹Œ¹ƒ`ƒbƒv[SN76477 (2)]
 
 $end
 
+$info=mangchi
+$bio
+Mang-Chi
+
+
+”­”„”NF2000
+
+ŠJ”­^”­”„Œ³FAFEGA
+
+ƒWƒƒƒ“ƒ‹FƒpƒYƒ‹
+
+ƒRƒ“ƒgƒ[ƒ‰F4•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2151, OKI6295]
+
+
+¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
 $info=maniach
 $bio
 Mania Challenge
@@ -46424,11 +46701,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -46508,11 +46780,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ƒfƒBƒXƒNƒVƒXƒeƒ€‚Ål‹C‚Ì‚ ‚Á‚½ƒSƒ‹ƒtƒQ[ƒ€‚ðŠî‚É‚µ‚½ƒQ[ƒ€B
 1ƒ‰ƒEƒ“ƒh‚ð‹K’èƒI[ƒo[“à‚ÅƒvƒŒƒC‚·‚é‚ÆAŽŸ‚ÌƒR[ƒX‚Öi‚ß‚é–ÊƒNƒŠƒA[ƒ^ƒCƒv‚ÌƒSƒ‹ƒtƒQ[ƒ€‚¾B
 ƒoƒbƒNƒAƒbƒv‚Ì“‹Ú‚É‚æ‚èƒf[ƒ^‚Ì•Û‘¶‚ª‰Â”\‚É‚È‚Á‚½B
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -46930,7 +47197,7 @@ The Mating Game
 
 ƒRƒ“ƒgƒ[ƒ‰F¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
-ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+ƒVƒXƒeƒ€ƒ{[ƒhFBarcrest MPU4 Video Firmware
 
 CPU\¬[68000, M6809]@‰¹Œ¹ƒ`ƒbƒv[AY8910, SAA1099]
 
@@ -47012,6 +47279,37 @@ CPU\¬[Z80, M6809]@‰¹Œ¹ƒ`ƒbƒv[DAC]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
+$info=maxaflex
+$bio
+MAX-A-FLEX
+
+
+”­”„”NF1984
+
+ŠJ”­^”­”„Œ³FExidy
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFExidy Max-A-Flex
+
+CPU\¬[M6502, M68705]@‰¹Œ¹ƒ`ƒbƒv[POKEY, DAC]
+
+
+ƒA[ƒP[ƒhƒQ[ƒ€êt–¾Šú‚æ‚è”‘½‚­‚Ìì•i‚ð¶‚Ýo‚µA
+“ú–{‚Å‚àuƒT[ƒJƒXv‚âuƒƒ{ƒbƒgƒ{ƒEƒ‹vuƒfƒXƒŒ[ƒXv‚È‚Ç‚Å’m‚ç‚ê‚½•Ä‘‚ÌƒQ[ƒ€ƒ[ƒJ[
+ƒGƒLƒVƒfƒBŽÐ‚ªŠJ”­‚µ‚½ƒ}ƒ‹ƒ`ƒQ[ƒ€ƒVƒXƒeƒ€uMAX-A-FLEXvB
+ROMƒJ[ƒgƒŠƒbƒW‚É‚æ‚èƒQ[ƒ€ŒðŠ·‚ªs‚í‚ê‚é‚Æ‚¢‚¤Œ`Ž®‚ðÌ—p‚µAƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA
+ƒRƒ“ƒgƒ[ƒ‹ƒpƒlƒ‹ã‚ÉŽc‚èŽžŠÔ‚ª•\Ž¦‚³‚ê‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éBƒQ[ƒ€ƒ^ƒCƒgƒ‹‚Í‰Æ’ë—pƒRƒ“ƒsƒ…[ƒ^uCommodore64v‚É‚¨‚¢‚ÄA
+uƒoƒ‹ƒ_[ƒ_ƒbƒVƒ…v‚âuSPY vs. SPYv‚È‚Ç‚ðŠJ”­‚µ‚½First Star SoftwareŽÐ‚©‚çƒ‰ƒCƒZƒ“ƒX‚ðŽó‚¯A
+“oê‚Æ“¯Žž‚É“¯‚¶‚­uCommodore64v‚Å”­”„‚³‚ê‚½uƒoƒ‹ƒ_[ƒ_ƒbƒVƒ…vuAstro Chasev‚È‚Ç4ƒ^ƒCƒgƒ‹‚ªƒŠƒŠ[ƒX‚³‚ê‚½‚ªA
+‚»‚ÌŒã‚Í‘±‚©‚È‚©‚Á‚½B
 
 
 
@@ -47238,12 +47536,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM-3438, SN76496 (2)]
 
 
 “ú–{Œê–¼uƒ}ƒWƒ“ƒT[ƒKvB
-
-
-¦uMEGA PLAYv‚Æ‚ÍA
-ƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA
-4–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -47530,9 +47822,35 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ‘S8ƒXƒe[ƒWB
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
+
+$end
+
+$info=megaplay
+$bio
+MEGA PLAY
+
+
+”­”„”NF1993
+
+ŠJ”­Œ³FƒZƒK@”­”„Œ³FƒZƒKi¦‘“à”Ì”„‚È‚µj
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒZƒK MEGA PLAY SYSTEM 
+
+CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM3438, SN76496 (2)]
+
+
+ƒZƒK‚ª”­”„‚µ‚½ŠCŠOŒü‚¯‰Æ’ë—pƒQ[ƒ€‹@uGENESISv‚ðƒx[ƒX‚Éì‚ç‚ê‚½ƒVƒXƒeƒ€Šî”Â‚ª‚±‚ÌuMEGA PLAYv‚Å‚ ‚éB
+“ú–{‚Å‚Í”Ì”„‚³‚ê‚¸Aæ‚Ì“oê‚µ‚½uMEGA-TECHv‚Æ‚ÍŠî–{“I‚ÈƒXƒyƒbƒN‚Í‚Ù‚Æ‚ñ‚Ç“¯‚¶‚¾‚ªA
+ƒQ[ƒ€ƒvƒŒƒC‚Ì§ŒÀŽžŠÔ‚ª‚È‚­‚È‚èAƒRƒlƒNƒ^‚ÉJAMMA‹KŠi‚ðÌ—p‚·‚é‚È‚Ç‚Ìˆá‚¢‚ª‚ ‚éB
+‚Ü‚½uMEGA-TECHv‚Æ‚ÍŒÝŠ·«‚ª‚È‚­AV‚½‚ÉƒJƒXƒ^ƒ€‰»‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pA
+‚Ð‚Æ‚Â‚ÌŠî”Â‚ÅÅ‘å4ƒ^ƒCƒgƒ‹‚Ü‚ÅŒq‚®‚±‚Æ‚ª‚Å‚«‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
+ƒQ[ƒ€ƒ^ƒCƒgƒ‹‚É‚ÍuGENESISv‚©‚çˆÚA‚³‚ê‚½uƒ\ƒjƒbƒNƒUƒwƒbƒWƒzƒbƒOvƒVƒŠ[ƒY‚âA
+“ú–{‚Ål‹C‚ðŒÄ‚ñ‚¾uƒKƒ“ƒXƒ^[ƒq[ƒ[ƒYv‚È‚Ç‚ªƒŠƒŠ[ƒX‚³‚ê‚½‚ªA
+V‚½‚ÉŠJ”­‚µ‚½uMODEL1vì•i‚ªŠCŠO‚Å‚à¬Œ÷‚µ‚½‰e‹¿‚ðŽó‚¯A’Z–½‚ÉI‚í‚Á‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
 
 
 
@@ -47588,6 +47906,37 @@ CPU\¬[M6809, Z80, I8039]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910, DAC]
 Žc‹@‚ª‚È‚¢ê‡‚ÍAƒƒKƒTƒCƒ“‚Æ‚¢‚¤ƒLƒƒƒ‰ƒNƒ^[‚Éƒpƒ[ƒAƒbƒv‚·‚éB
 Ž©‹@‚ª‚Æ‚Ä‚à’x‚­A‚È‚©‚È‚©“ï“x‚ª‚‚¢ƒQ[ƒ€‚Å‚ ‚éB
 “–Žž‚ÌƒQ[ƒ€‚Æ‚µ‚Ä‚Í’¿‚µ‚¢ƒR[ƒX‚Ì•ªŠò‚àŽæ‚è“ü‚ê‚ç‚ê‚Ä‚¢‚½B
+
+
+
+$end
+
+$info=megatech
+$bio
+MEGA-TECH SYSTEM
+
+
+”­”„”NF1989
+
+ŠJ”­Œ³FƒZƒK@”­”„Œ³FƒZƒKi¦‘“à”Ì”„‚È‚µj
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒZƒK MEGA-TECH SYSTEM
+
+CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM3438, SN76496 (2)]
+
+
+“–ŽžƒAƒƒŠƒJ‚Ì‰Æ’ë—pƒQ[ƒ€Žsê‚ðƒŠ[ƒh‚µ‚½–¼‹@uSEGA GENESISv‚ÆA
+‚»‚Ì‘OguMASTER SYSTEMv‚ðƒx[ƒX‚É‹Æ–±—p‚Æ‚µ‚Äì‚ç‚ê‚½‚Ì‚ª‚±‚ÌƒVƒXƒeƒ€Šî”ÂB
+ƒRƒCƒ“‚ð“Š“ü‚·‚é‚±‚Æ‚ÅƒvƒŒƒCŽžŠÔ‚ðŽè‚É“ü‚ê‚é‚Æ‚¢‚¤ƒQ[ƒ€ƒVƒXƒeƒ€‚ðŽæ‚Á‚Ä‚¨‚èA
+ê—pâž‘Ì‚É‚ÍƒQ[ƒ€—p‚Ìƒ‚ƒjƒ^[‚ÆA‚»‚Ìâž‘Ì‚ÉŽû˜^‚³‚ê‚½ƒ^ƒCƒgƒ‹‚ª•\Ž¦‚³‚ê‚éƒ‚ƒjƒ^[‚ªâž‘Ìã•”‚É”õ‚¦‚ç‚êA
+ƒQ[ƒ€’†‚É‚Í‚»‚Ìì•i‚Ì‘€ì•û–@‚âƒXƒg[ƒŠ[‚ªÐ‰î‚³‚ê‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
+‚Ü‚½ƒQ[ƒ€’†‚ÉƒRƒCƒ“‚ð“ü‚ê‚é‚±‚Æ‚ÅX‚ÉƒvƒŒƒCŽžŠÔ‚ð‰Ò‚®‚±‚Æ‚ª‚Å‚«A
+ê—p‚ÌROMƒJ[ƒgƒŠƒbƒW‚É‚æ‚èAÅ‘å8ƒ^ƒCƒgƒ‹‚Ü‚Å‚Ìì•i‚ð‚Ð‚Æ‚Â‚ÌŠî”Â‚Åˆµ‚¤‚±‚Æ‚ª‚Å‚«‚éB
+“ú–{‚Å‚Í‚Ù‚Æ‚ñ‚Çˆµ‚í‚ê‚é‚±‚Æ‚Ì‚È‚©‚Á‚½ƒVƒXƒeƒ€‚¾‚ªAŠCŠO‚Å‚ÍuGENESISvl‹C‚Ì”g‚Éæ‚è”‘½‚­‚Ìƒ^ƒCƒgƒ‹‚ðƒŠƒŠ[ƒX‚·‚é‚±‚Æ‚Æ‚È‚Á‚½B
 
 
 
@@ -47856,8 +48205,7 @@ CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2610]
 ‚Ü‚½ŠJ”­ŽÒ‚É‚æ‚é–{“–‚ÌƒXƒg[ƒŠ[‚ªƒfƒ‚Žž‚É‰pŒê‚Å—¬‚ê‚éB
 ‘f°‚ç‚µ‚¢‰æ‘œˆ—‚É‚ÍƒvƒƒOƒ‰ƒ}[Ž©‚çuF2ƒVƒXƒeƒ€‚ÌŒÀŠE‚É’§‚ñ‚¾v‚ÆŒ¾‚¤B
 uƒKƒ“ƒtƒƒ“ƒeƒBƒAv‚Ì‘±•Ò‚Æ‚µ‚ÄŒê‚ç‚ê‚éŽ–‚à‚ ‚é‚ªƒRƒ“ƒZƒvƒgã‚Å‚Ì‘±•Ò‚ÌŽ–‚ÅA
-ƒXƒg[ƒŠ[‚É‚ÍŠÖ˜A«‚Í‚È‚¢B
-uƒvƒƒWƒFƒNƒgEƒKƒ“ƒtƒƒ“ƒeƒBƒA‡Uv‚ÆŒÄ‚Î‚ê‚é‚±‚Æ‚à‚ ‚éB
+ƒXƒg[ƒŠ[‚É‚ÍŠÖ˜A«‚Í‚È‚¢BuƒvƒƒWƒFƒNƒgEƒKƒ“ƒtƒƒ“ƒeƒBƒA‡Uv‚ÆŒÄ‚Î‚ê‚é‚±‚Æ‚à‚ ‚éB
 
 
 
@@ -48276,11 +48624,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ƒGƒ“ƒfƒBƒ“ƒO‚ð‚·‚×‚ÄŒ©‚é‚Ì‚Í“ï‚µ‚¢B
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -48493,11 +48836,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 “ú–{–¼uƒ}ƒCƒNƒ^ƒCƒ\ƒ“Eƒpƒ“ƒ`ƒAƒEƒg!!vB
 ‚±‚ÌƒQ[ƒ€‚ÍƒA[ƒP[ƒh”Å‚¾‚Á‚½‚à‚Ì‚ðƒAƒƒŠƒJ‚Åƒtƒ@ƒ~ƒRƒ“‰»‚µA‚»‚ÌŒã“ú–{‚Åƒtƒ@ƒ~ƒRƒ“‰»‚³‚ê‚½‚à‚ÌB
 ŽålŒö‚Ìƒ{ƒNƒT[‚Å‚ ‚éƒŠƒgƒ‹ƒ}ƒbƒN‚Éƒ}ƒCƒNEƒ^ƒCƒ\ƒ“‚©‚ç’§íó‚ª“Í‚¢‚½A‚Æ‚¢‚¤‚Ì‚ªŽn‚Ü‚è‚Ìƒ{ƒNƒVƒ“ƒOƒQ[ƒ€
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -48943,7 +49281,7 @@ $end
 
 $info=missw96
 $bio
-Miss.mister World '96 Nude
+Miss World '96 Nude
 
 
 ”­”„”NF1996
@@ -48959,7 +49297,12 @@ Miss.mister World '96 Nude
 CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[OKI6295]
 
 
-¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+ŠØ‘ComadŽÐ‚ð‘ã•\‚·‚éƒJƒlƒR‚ÌuƒMƒƒƒ‹ƒYƒpƒjƒbƒNv‚ÌƒfƒbƒhƒRƒs[ì•i‚Ì‚Ð‚Æ‚ÂB
+ƒAƒ‹ƒSƒŠƒYƒ€ASE‚ª‚»‚Ì‚Ü‚Ü—¬—p‚³‚ê‚Ä‚¨‚èABGM‚à—mŠy‚ð–³’f‚ÅŽg—p‚·‚é‚È‚Ç”ÅŒ ‚ð–³Ž‹‚µ‚½ì‚è‚Æ‚È‚Á‚Ä‚¨‚èA
+ƒQ[ƒ€”wŒi‚Í–³C³‚Ìƒk[ƒh‰æ‘œ‚É•`‚«Š·‚¦‚ç‚ê‚Ä‚¢‚éBƒQ[ƒ€ƒVƒXƒeƒ€‚Í•Ï‚í‚è‚È‚¢‚ªA
+‰æ‘œ‚Ìˆê’è•”•ª‚ð‹­ˆø‚ÉwŽæ‚Á‚Ä‚µ‚Ü‚¤‚Æƒ~ƒX‚Æ‚È‚Á‚Ä‚µ‚Ü‚¤‚Æ‚¢‚¤Œ»Û‚ª‹N‚±‚é‚±‚Æ‚ª‚ ‚éB
+‚¿‚È‚Ý‚É•Êƒo[ƒWƒ‡ƒ“uMiss.mister World '96 Nudev‚Å‚ÍA—«‚¾‚¯‚Å‚È‚­’j«‚Ì–³C³‰æ‘œ‚ª’Ç‰Á‚³‚ê‚Ä‚¢‚éB
+—]’k‚¾‚ªAƒI[ƒXƒgƒ‰ƒŠƒA‚Å‚Í96”N8ŒŽ‚ÉRefused Classification(RC)‚Æ‚¢‚¤‹K§‚Éˆø‚Á‚©‚©‚è—¼ì•i‚Æ‚à”­”„‹ÖŽ~¥‰ñŽû‚³‚ê‚Ä‚¢‚éB
 
 
 
@@ -49261,7 +49604,7 @@ $bio
 
 ƒWƒƒƒ“ƒ‹FƒKƒ“ƒVƒ…[ƒeƒBƒ“ƒO
 
-ƒRƒ“ƒgƒ[ƒ‰FƒKƒ“ƒRƒ“ƒgƒ[ƒ‰[
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“iƒKƒ“ƒRƒ“ƒgƒ[ƒ‰[j
 
 ƒVƒXƒeƒ€ƒ{[ƒhFSSVƒVƒXƒeƒ€
 
@@ -49901,12 +50244,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 Žq‹Ÿ‚½‚¿‚Ìƒˆ‚Èˆ¤‚Å‚µ‚©ƒ}ƒCƒPƒ‹‚Ì‘Ì‚ð–ü‚·‚±‚Æ‚ª‚Å‚«‚È‚¢‚Ì‚É‚ÍA‘¼ˆÓ‚Í‚È‚¢‚ÆŽv‚í‚ê‚éB
 
 
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -50391,6 +50728,30 @@ CPU\¬[Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910 (2)]
 
 $end
 
+$info=bctvidbs
+$bio
+MPU4 Video Firmware
+
+
+”­”„”NF199?
+
+ŠJ”­^”­”„Œ³FBarcrest
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFBarcrest MPU4 Video Firmware
+
+CPU\¬[M6809, 68000]@‰¹Œ¹ƒ`ƒbƒv[AY8910, SAA1099]
+
+
+¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
 $info=mrdrillr
 $bio
 ƒ~ƒXƒ^[ƒhƒŠƒ‰[
@@ -50554,13 +50915,10 @@ CPU\¬[Z80 (3)]@‰¹Œ¹ƒ`ƒbƒv[SN76496 (4)]
 
 ‘åƒqƒbƒgìuƒ~ƒXƒ^[Do!v‚Ì‘±•Ò‚Æ‚µ‚Ä“oê‚µ‚½ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€‚ªA‚±‚Ìuƒ~ƒXƒ^[Do VS ƒ†ƒjƒR[ƒ“vB
 uƒ~ƒXƒ^[Do!vƒVƒŠ[ƒY‚ÍA–ˆ‰ñƒQ[ƒ€‚Ì“à—e‚ª‚Ü‚Á‚½‚­ˆÙ‚È‚Á‚Ä‚¢‚é‚Ì‚ª‘å‚«‚È“Á’¥‚Å‚ ‚éB
-‚³‚ÄA
-¡‰ñ‚Ìƒ‹[ƒ‹‚ÍA
-ŽålŒö‚ÌƒsƒGƒ‚ð‘€ì‚µ‚ÄA
+‚³‚ÄA¡‰ñ‚Ìƒ‹[ƒ‹‚ÍAŽålŒö‚ÌƒsƒGƒ‚ð‘€ì‚µ‚ÄA
 ƒnƒ“ƒ}[ƒuƒƒbƒN‚Å°‚ÉŒŠ‚ðŠJ‚¯A“GƒLƒƒƒ‰ƒNƒ^[‚Ìƒ†ƒjƒR[ƒ“‚ª‚Í‚Ü‚Á‚½‚Æ‚±‚ë‚ðAã’i‚©‚çƒuƒƒbƒN‚Å’×‚µ‚Ä‚â‚Á‚Â‚¯‚é‚Æ‚¢‚¤‚à‚ÌB
-‘S‚Ä‚Ì“G‚ð“|‚·‚Æ–ÊƒNƒŠƒA‚Æ‚È‚éB
-ƒGƒLƒXƒgƒ‰ƒ‚ƒ“ƒXƒ^[‚à“oê‚µ‚Ä‚¢‚éB
-‘S8–Ê‚Åƒ‹[ƒvB
+‘S‚Ä‚Ì“G‚ð“|‚·‚Æ–ÊƒNƒŠƒA‚Æ‚È‚éBƒGƒLƒXƒgƒ‰ƒ‚ƒ“ƒXƒ^[‚à“oê‚µ‚Ä‚¢‚éB‘S8–Ê‚Åƒ‹[ƒvB
+‘±ì‚Æ‚È‚éuƒ~ƒXƒ^[‚c‚'‚“ƒƒCƒ‹ƒhƒ‰ƒCƒhv‚ÍƒRƒ“ƒZƒvƒg‚ªˆÙ‚È‚é‚½‚ßA³“”hŒn‚Ìuƒ~ƒXƒ^[Do!vƒVƒŠ[ƒY‚Íˆê’U‚±‚Ìì•i‚ÅI‚í‚é‚±‚Æ‚É‚È‚éB
 
 
 
@@ -50859,6 +51217,36 @@ CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM-3812, OKI6295]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
+$info=macsbios
+$bio
+ƒ}ƒ‹ƒ`ƒAƒƒjƒeƒBƒJƒZƒbƒgƒVƒXƒeƒ€
+
+
+”­”„”NF1995.12
+
+ŠJ”­^”­”„Œ³FƒAƒCƒ}ƒbƒNƒX
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒAƒCƒ}ƒbƒNƒX ƒ}ƒ‹ƒ`ƒAƒƒjƒeƒBƒJƒZƒbƒgƒVƒXƒeƒ€iM.A.C.S.j
+
+CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[ST0016]
+
+
+“¯ŽžŠú‚Éu’…‚¹‚©‚¦ ‚Ü`‚¶‚á‚ñv‚Åƒfƒrƒ…[‚µ‚½ƒAƒCƒ}ƒbƒNƒX‚ÌROMƒJƒZƒbƒgƒ^ƒCƒvƒVƒXƒeƒ€Šî”Â‚ª‚±‚ÌuM.A.C.S.vB
+ƒfƒrƒ…[ì‚Å‚¢‚«‚È‚èƒVƒXƒeƒ€Šî”Â‚ðŠJ”­‚·‚é‚Æ‚¢‚¤ˆÓ—~“I‚ÈŒ`‚Å“oê‚µA
+ƒRƒlƒNƒ^‚ÍJAMMA‹KŠi‚ðÌ—pA“¯Žž‚ÉÅ‘å2–{‚ÌROMƒJƒZƒbƒg‚ðƒZƒbƒg‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
+Šî”Â‚Ì”\—Í‚Í‚»‚ê‚Ù‚Ç‚Å‚È‚¢‚à‚Ì‚ÌA‚»‚ê‚ð¶‚©‚µ‚½ì•i‚ðì‚èo‚µ‚½–£—Í“I‚Èƒ^ƒCƒgƒ‹‚ðƒŠƒŠ[ƒX‚µ‚Ä‚¢‚éB
+‚µ‚©‚µAƒAƒCƒ}ƒbƒNƒX‚Æ‚¢‚¤‰ïŽÐŽ©‘Ì‚ª•sˆÀ’è‚ÅAƒ‰ƒCƒ“ƒiƒbƒv‚É•À‚ñ‚Å‚¢‚½uƒWƒOƒ\[ƒpƒ‰ƒ_ƒCƒXvuƒNƒCƒYI”Þ—‚ªH‚É’…‘Ö‚¦‚½‚çv‚Í‚¨‘ “ü‚è‚ÉB
+Œ‹‹ÇAŽ©ŽÐŠJ”­‚Ì”­”„‚³‚ê‚½ƒ^ƒCƒgƒ‹‚Í‚í‚¸‚©3ìATƒVƒXƒeƒ€‚Æ‚¢‚¤—Bˆê‚ÌƒT[ƒhƒp[ƒeƒB‚©‚çƒŠƒŠ[ƒX‚³‚ê‚½ƒ^ƒCƒgƒ‹‚ðŠÜ‚ß‚Ä‚à5ì‚¾‚¯A
+ƒVƒXƒeƒ€Šî”ÂŽ©‘Ì‚Ìo‰×”‚à‚Ù‚Æ‚ñ‚Ç‚È‚¢‚Æ‚¢‚¤Œ‹‰Ê‚Æ‚È‚Á‚Ä‚µ‚Ü‚Á‚½B
 
 
 
@@ -51233,12 +51621,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 “ú–{Œê–¼uE‰¤2 |Œ¶‰eé|vB
 “¯–¼‚Ìƒ}ƒ“ƒK‚ªŒ´ì‚ÌƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
 ŽålŒö‚ÌE‚Æ‚È‚Á‚ÄAŽôp‚ðŽg‚¢–‚•¨‚ð“|‚µáS‚Á‚½D“cM’·‚ð“|‚·‚±‚Æ‚ª–Ú“IB
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -52022,10 +52404,6 @@ CPU\¬[G65C816, SPC700]@‰¹Œ¹ƒ`ƒbƒv[Custom]
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
 
-¦uNintendo Super Systemv‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒX[ƒp[ƒtƒ@ƒ~ƒRƒ“v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-3–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -52381,6 +52759,41 @@ CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2610]
 
 $end
 
+$info=neogeo
+$bio
+ƒlƒI¥ƒWƒI ƒ}ƒ‹ƒ`ƒrƒfƒIƒVƒXƒeƒ€
+
+
+”­”„”NF1990.04
+
+ŠJ”­Œ³FƒAƒ‹ƒtƒ@“dŽqiADKj@”­”„Œ³FƒGƒX¥ƒGƒk¥ƒPƒCiSNKj
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFSNK ƒlƒI¥ƒWƒI ƒ}ƒ‹ƒ`ƒrƒfƒIƒVƒXƒeƒ€iNEO¥GEO MVSj
+
+CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2610]
+
+
+SNK‚æ‚è“oê‚µ‚½–¼‹@uƒlƒI¥ƒWƒIMVSvB‚»‚ÌŽn‚Ü‚è‚ÍƒAƒ‹ƒtƒ@“dŽq‚ªƒn[ƒhƒEƒFƒAŠJ”­‚ðs‚¢SNK‚ÉŽ‚¿ž‚ÝA
+ƒAƒ‹ƒtƒ@“dŽq‚ªƒQ[ƒ€ŠJ”­‚É‹¦—Í‚·‚é‚Ì‚ððŒ‚ÉSNK‚ª”Ì”„‚ðŒˆ‚ß‚½‚Ì‚ªÅ‰‚Å‚ ‚éB
+uƒA[ƒP[ƒhƒQ[ƒ€‚ª‚»‚Ì‚Ü‚Ü‰Æ’ë‚Å—V‚×‚év‚Æ‚¢‚¤G‚êž‚Ý‚ÅA“–‰‚Í‚Ð‚Æ‚Â‚Ìâž‘Ì‚Å6ƒ^ƒCƒgƒ‹‚©‚ç‘I‘ð‚Å‚«‚éuMVSv‚ÆA
+‚Ù‚Ú“¯‚¶”\—Í‚ðŽ‚Â‰Æ’ë—pƒQ[ƒ€‹@uNEOGEOv‚ðƒrƒfƒIƒVƒ‡ƒbƒv‚È‚Ç‚Å‘Ý‚µo‚·‚Æ‚¢‚¤”Ì”„í—ª‚Å•‹y‚ð‘_‚Á‚Ä‚¢‚½B
+‚»‚ÌŒãAƒQ[ƒ€ƒf[ƒ^‚ðˆø‚«Œp‚®‚±‚Æ‚ª‚Å‚«‚éê—p‚Ìƒƒ‚ƒŠ[ƒJ[ƒh‚âA1`4–{—p‚ÌMVS‚ª“oêB
+NEOGEO‚É‚à‰Æ’ë—p”Å‚ª”Ì”„‚³‚ê‚é‚È‚ÇA™X‚É¢ŠEŠe’n‚É‚à•‹y‚µA
+SNK‚ª‘—Í‚ð‹“‚°ƒ\ƒtƒgŠJ”­‚ðs‚Á‚½‚±‚Æ‚âAˆÀ‰¿‚ÈŠJ”­ƒRƒXƒg‚É‚æ‚éADK‚ð’†S‚Æ‚µ‚½‘½‚­‚ÌƒT[ƒhƒp[ƒeƒB‚ÌŽQ‰Á‚É‚æ‚èA
+”‘½‚­‚Ìƒqƒbƒgì‚ª¶‚Ü‚êAˆê–ôƒQ[ƒ€ƒZƒ“ƒ^[‚ÌŽå–ð‚Æ‚È‚èAˆêŽž‘ã‚ð’z‚­‚±‚Æ‚É‚È‚éB
+‚µ‚©‚µ¶‚«Žc‚é‚±‚Æ‚ª¢“ï‚Æ‚È‚Á‚½ƒT[ƒhƒp[ƒeƒB‚ÌÁ–ÅA“Œ“ìƒAƒWƒA‚ð’†S‚Æ‚·‚éŠC‘¯”Å‚Ì‰¡sA
+‹}¬’·‚µ‚Ä‚«‚½‘¼ŽÐ‚Ì‹Zp—Í‚É‚æ‚é‰e‹¿‚ÆA‚»‚Ì‘ÎRô‚Æ‚È‚éŒãŒp‹@uƒnƒCƒp[ƒlƒIƒWƒI64v‚ÌŽ¸”s‚É‚æ‚èA
+ŽŸ¢‘ãƒVƒXƒeƒ€‚ÉˆÚ‚éƒ^ƒCƒ~ƒ“ƒO‚ðŽ¸‚¢A‚Ü‚½‘½•ª–ì‚ÉL‚°‚½Ž–‹Æ‚ÌŽ¸”s‚àd‚È‚Á‚ÄA‹‚É‚ÍSNKŽ©g‚ªÁ–ÅA
+‚»‚Ì”ÅŒ ‚ðŽó‚¯‚Â‚¢‚¾‰ïŽÐ‚É‚æ‚èŽŸ¢‘ãƒVƒXƒeƒ€‚ÉˆÚ‚é‚Æ‚¢‚¤Œ‹––‚ðŒ}‚¦‚é‚±‚Æ‚É‚È‚Á‚½B
+
+
+
+$end
+
 $info=neocup98
 $bio
 ƒlƒIƒWƒIƒJƒbƒv'‚X‚W -ƒUEƒ[ƒhƒgƒDƒUƒrƒNƒgƒŠ[-
@@ -52538,6 +52951,30 @@ CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[OKI6295]
 2˜AŸ‚·‚é‚Æ‚¿‚å‚Á‚Æ‚µ‚½‰f‘œ‚ª—¬‚ê‚éB
 ‚Ü‚½A‘Oì‚É‘‚µ‚Ä‰æ‘œ‚Ì“à—e‚ª‰ßŒƒ‚É‚È‚Á‚Ä‚¨‚èA‰æ‘œ‚Í‘S‚Ä–³C³‚Å‚ ‚éB
 ƒhƒCƒc‚Å‚Í“oêŒãAƒA[ƒP[ƒhNO.1ƒQ[ƒ€‚É‚È‚Á‚½‚Æ‚¢‚¤B
+
+
+
+$end
+
+$info=nhidctch
+$bio
+New Hidden Catch
+
+
+”­”„”NF1999.04
+
+ŠJ”­Œ³FEolith@”­”„Œ³FKorea Hi-Tech Industry
+
+ƒWƒƒƒ“ƒ‹FƒpƒYƒ‹
+
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[E1-32N]
+
+
+¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
 
 
@@ -53228,11 +53665,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ƒŠƒ…ƒE‚Í•ƒ‚ÌŽ€‚ÌŒ´ˆö‹†–¾‚ÆA“ä‚Ì“G‚ð“|‚·ˆ×‚É—§‚¿ã‚ª‚Á‚½‚Ì‚¾B
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -53257,11 +53689,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 “ú–{–¼u”EŽÒ—´Œ•“`‡UvB
 ‘Oì‚©‚ç1”NŒãA“ä‚ÌˆÃ•‘gD‚Æ‚Ìí‚¢‚ª•‘‘äB
 ƒOƒ‰ƒtƒBƒbƒNEƒTƒEƒ“ƒh‚Æ‚à‚ÉA‘Oì‚ðã‰ñ‚éo—ˆ‚Å‚ ‚éB
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -53289,11 +53716,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ƒeƒNƒ‚‚Ìl‹CƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€w”EŽÒ—´Œ•“`x‚ÌƒVƒŠ[ƒY‘æ3’eB
 c‚â‰¡‚ÉƒXƒNƒ[ƒ‹‚·‚éƒXƒe[ƒW‚ðAŒ•‚âƒAƒCƒeƒ€A5Ží—Þ‚Ì”Ep‚ðŽg‚Á‚Äi‚ñ‚Å‚¢‚­B
 ŽålŒöuƒŠƒ…ƒEEƒnƒ„ƒuƒTv‚Ì“®‚«‚ª‘Oì‚æ‚è‘½Ê‚É‚È‚Á‚Ä‚¢‚éB
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -53460,8 +53882,8 @@ CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2203 (2)]
 ‚Ü‚½AƒŒƒo[‚ÆƒWƒƒƒ“ƒvƒ{ƒ^ƒ“‚Ì‘g‚Ý‡‚í‚¹‚ÅŽOŠp‚Æ‚Ñ‚ª‰Â”\B
 ŽOŠp‚Æ‚Ñ‚ðŽg‚Á‚Ä“o‚éê–Ê‚à‘½‚­AƒQ[ƒ€‚Ìƒ|ƒCƒ“ƒg‚Æ‚È‚éB
 ‘Oì‚Ì‚æ‚¤‚É“G‚ð‘S–Å‚·‚éƒXƒe[ƒW‚âA…’†A“´ŒA‚È‚ÇƒXƒe[ƒW‚Ì\¬‚à‘½ÊB
-ƒpƒ[ƒAƒbƒv‚âƒ{ƒX‚à“oê‚µA‘S‘Ì“I‚É—Ç‚­‚Å‚«‚Ä‚¢‚éì•i‚Å‚ ‚éB
-‘S31ƒXƒe[ƒWB
+ƒpƒ[ƒAƒbƒv‚âƒ{ƒX‚à“oê‚µA‘S‘Ì“I‚É—Ç‚­‚Å‚«‚Ä‚¢‚éì•i‚Å‚ ‚éB‘S31ƒXƒe[ƒWB
+‚¿‚È‚Ý‚ÉƒƒPƒeƒXƒg—p‚ÌROM‚ð‚»‚Ì‚Ü‚Ü¶ŽY‚µ‚½ƒo[ƒWƒ‡ƒ“‚ª‚ ‚èA“à—e‚àŽáŠ±ˆÙ‚È‚é‚Æ‚¢‚¤B
 
 
 
@@ -53498,6 +53920,37 @@ CPU\¬[Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910 (2)]
 
 $end
 
+$info=nss
+$bio
+Nintendo Super System
+
+
+”­”„”NF1991.11
+
+ŠJ”­Œ³F”C“V“°@”­”„Œ³F”C“V“°i¦‘“à”Ì”„‚È‚µj
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhF”C“V“° Nintendo Super System
+
+CPU\¬[G65C816, SPC700]@‰¹Œ¹ƒ`ƒbƒv[Custom]
+
+
+ŠCŠO‚ÅŠˆ–ô‚µ‚½uPlayChoice-10v‚ÌãˆÊ‹@Ží‚Æ‚µ‚Ä“oê‚µ‚½ƒ}ƒ‹ƒ`ƒQ[ƒ€ƒVƒXƒeƒ€uNintendo Super SystemvB
+‚±‚ÌƒVƒXƒeƒ€‚Ìƒx[ƒX‚Æ‚È‚Á‚½‚Ì‚Í“ú–{‚Å‚àuƒX[ƒp[ƒtƒ@ƒ~ƒRƒ“v‚Æ‚µ‚Ä’m‚ç‚ê‚éA
+ŠCŠOŒü‚¯‰Æ’ë—pƒQ[ƒ€‹@uSuper Nintendo Entertainment System(SNES)v‚Å‚ ‚éB
+ƒvƒŒƒC‚·‚éƒQ[ƒ€‚ð3ƒ^ƒCƒgƒ‹‚©‚ç‘I‘ð‚·‚é‚±‚Æ‚ª‰Â”\‚Æ‚È‚Á‚Ä‚¨‚èASNES—p‚Ì‚à‚Ì‚ÆƒfƒUƒCƒ“‚ÌˆÙ‚È‚é\ŽšƒL[‚âƒXƒ^[ƒgA
+ƒZƒŒƒNƒgƒ{ƒ^ƒ“‚ð”õ‚¦‚½ƒnƒ“ƒhƒwƒ‹ƒhƒ^ƒCƒv‚ÌƒRƒ“ƒgƒ[ƒ‰[‚ðŽg—p‚·‚é‚Æ‚¢‚¤“Á’¥‚ðŽ‚Á‚Ä‚¢‚éB
+ƒAƒƒŠƒJ‚Å‚ÍSNES‚Ì”Ì”„‚Æ“¯Žž‚ÉuƒX[ƒp[ƒ}ƒŠƒIƒ[ƒ‹ƒhvuF-ZEROvuƒX[ƒp[ƒeƒjƒXv‚Æ‹¤‚ÉƒA[ƒP[ƒh‚É•À‚ÑA
+ŽsêŠJ‘ñ‚Ì–ð–Ú‚ð•‰‚¤‚±‚Æ‚É‚È‚Á‚½‚ªA’ZŠúŠÔ‚Ì‚¤‚¿‚ÉSNES‚ªƒqƒbƒg‚µ‚½‚½‚ßA
+‚»‚ê‚Ù‚ÇŠˆ–ô‚µ‚È‚¢‚Ü‚Ü‹Æ–±—pƒVƒXƒeƒ€‚Æ‚µ‚Ä‚Ì–ð–Ú‚ðI‚¦A92”N6ŒŽ”C“V“°‚Í‘S‚Ä‚Ì‹Æ–±—p•”–å‚©‚ç“P‘Þ‚·‚é‚±‚Æ‚É‚È‚Á‚½B
+
+
+
+$end
+
 $info=pc_wcup
 $bio
 Nintendo World Cup iPlayChoice-10”Åj
@@ -53519,11 +53972,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 “ú–{–¼u”MŒŒ‚ZƒhƒbƒWƒ{[ƒ‹•” ƒTƒbƒJ[•ÒvB
 ƒPƒ“ƒJ‚ÉAƒhƒbƒWƒ{[ƒ‹‚É‚Æ‘åŠˆ–ô‚Ì‚­‚É‚¨‚­‚ñ‚ªA¡“x‚ÍƒTƒbƒJ[‚É‚È‚®‚èž‚ÝB
 ƒ‹[ƒ‹–³—pA—“¬‚ ‚è‚ÌA’´‰ßŒƒƒTƒbƒJ[ƒQ[ƒ€B
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -54601,7 +55049,7 @@ CPU\¬[ARM]@‰¹Œ¹ƒ`ƒbƒv[OKI6295 (2)]
 uƒpƒ“vƒVƒŠ[ƒY‚Å’m‚ç‚ê‚éƒ~ƒbƒ`ƒFƒ‹‚æ‚è“oê‚µ‚½–¼ìƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
 8•ûŒüƒŒƒo[‚Åuêi—Ùv‚ð‘€ì‚µAƒAƒ^ƒbƒNAƒWƒƒƒ“ƒvAƒXƒyƒVƒƒƒ‹ƒAƒ^ƒbƒN‚Ì3‚Â‚Ìƒ{ƒ^ƒ“‚ÆƒVƒ“ƒvƒ‹‚È‚ª‚çA
 “Vˆä‚É‚Â‚©‚Ü‚Á‚½‚èƒXƒ‰ƒCƒfƒBƒ“ƒO‚©‚ç“G‚ð“Š‚°‚é‚±‚Æ‚ª‚Å‚«‚é‚È‚Ç‘½Ê‚ÈƒAƒNƒVƒ‡ƒ“‚ª‰Â”\‚Å‚ ‚éB
-‘¼‚É‚àƒXƒyƒVƒƒƒ‹ƒAƒ^ƒbƒN‚Ì‘åŽEwuƒLƒŠƒ“¯Õ‚èv‚Ì‚Ù‚©‚ÉƒŒƒo[‚ðU‚Á‚ÄUŒ‚‚·‚é‚±‚Æ‚ÅuƒLƒUƒ~•‘‚¢v‚ÆŒÄ‚Î‚ê‚é‹­—Í‚È‹Z‚ðŒJ‚èo‚·‚±‚Æ‚ª‚Å‚«‚éB
+‘¼‚É‚àƒXƒyƒVƒƒƒ‹ƒAƒ^ƒbƒN‚Ì‘åŽEwuƒLƒŠƒ“¯Õ‚èv‚âƒŒƒo[‚ðU‚Á‚ÄUŒ‚‚·‚é‚±‚Æ‚ÅuƒLƒUƒ~•‘‚¢v‚ÆŒÄ‚Î‚ê‚é‹­—Í‚È‹Z‚ðŒJ‚èo‚·‚±‚Æ‚ª‚Å‚«‚éB
 ƒQ[ƒ€ƒvƒ‰ƒ“ƒi[‚ÉƒJƒvƒRƒ“‚ð‘ÞŽÐ‚µ‚½uƒXƒgƒ‰ƒCƒ_[”ò—³v‚ÌŽlˆä_ˆêŽ‚ªŠÖ‚í‚Á‚½‚±‚Æ‚âA“¯ì‚É“Ž—‚µ‚Ä‚¢‚é‚±‚Æ‚Å—L–¼‚Å‚Í‚ ‚é‚ªA
 ‚»‚ÌƒXƒg[ƒŠ[AƒAƒNƒVƒ‡ƒ“‹¤‚ÉŠ®¬“x‚Í‚‚­A‚Ü‚½o‰ñ‚Á‚½‚Ì‚ª­‚È‚©‚Á‚½‚±‚Æ‚àd‚È‚èAŒ»Ý‚Å‚àƒJƒ‹ƒg“I‚Èl‹C‚ðŽ‚Âì•i‚Å‚ ‚éB
 
@@ -54697,7 +55145,7 @@ $bio
 
 ”­”„”NF1986.09
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹FƒŒ[ƒVƒ“ƒO
 
@@ -54821,6 +55269,31 @@ CPU\¬[68000 (2), M6809]@‰¹Œ¹ƒ`ƒbƒv[YM2151, 053260 (2)]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
+$info=overrev
+$bio
+ƒI[ƒo[ƒŒƒu
+
+
+”­”„”NF1997
+
+ŠJ”­^”­”„Œ³FƒWƒƒƒŒƒR
+
+ƒWƒƒƒ“ƒ‹FƒŒ[ƒVƒ“ƒO
+
+ƒRƒ“ƒgƒ[ƒ‰FŽ©“®ŽÔƒnƒ“ƒhƒ‹Œ^ƒRƒ“ƒgƒ[ƒ‰+2ƒyƒ_ƒ‹+ƒMƒA
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒZƒK MODEL2 C-CRX
+
+CPU\¬[i960KB, 68000]@‰¹Œ¹ƒ`ƒbƒv[SCSP]
+
+
+
+
 
 
 
@@ -55620,7 +56093,7 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒoƒVƒXƒeƒ€
+ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒ”ƒ@ƒVƒXƒeƒ€
 
 CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
 
@@ -55713,6 +56186,30 @@ CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[OKI6295 (2)]
 
 $end
 
+$info=paradlx
+$bio
+Paradise Deluxe
+
+
+”­”„”NF199?
+
+ŠJ”­^”­”„Œ³FYun Sung
+
+ƒWƒƒƒ“ƒ‹FƒpƒYƒ‹
+
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[OKI6295 (2)]
+
+
+¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
 $info=pturn
 $bio
 ƒpƒ‰ƒŒƒ‹ƒ^[ƒ“
@@ -55757,12 +56254,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -56333,6 +56824,37 @@ CPU\¬[Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[SN76496 (2)]
 
 $end
 
+$info=pgm
+$bio
+‚o‚f‚lƒVƒXƒeƒ€
+
+
+”­”„”NF1996
+
+ŠJ”­Œ³FIGS@”­”„Œ³FƒAƒ‹ƒ^
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFIGS POLYGAME MASTERiPGMj
+
+CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[ICS2115]
+
+
+‘ä˜p‚ÌƒQ[ƒ€ƒ[ƒJ[IGSŽÐ‚ªŠJ”­‚µA
+“ú–{‚Å‚ÍƒAƒ‹ƒ^‚Æ‚¢‚¤‰ïŽÐ‚ª”Ì”„‚µ‚½‚Ì‚ª‚±‚Ì16ƒrƒbƒgƒVƒXƒeƒ€ƒ{[ƒhuPOLYGAME MASTERv‚Å‚ ‚éB
+Œ`ó‚ÍSNK‚ÌuƒlƒI¥ƒWƒIMVSv‚Ì1–{—pƒ}ƒU[ƒ{[ƒhuMV1v‚ÉŽ—‚Ä‚¨‚èAƒXƒyƒbƒN“I‚É‚à‹ß‚¢”\—Í‚ðŽ‚¿A
+ƒQ[ƒ€ƒ^ƒCƒgƒ‹‚ÍROMƒJ[ƒgƒŠƒbƒW‚É‚æ‚Á‚Ä”z‹‹‚³‚ê‚éB
+‚±‚ÌƒVƒXƒeƒ€‚Ì“oê‚É‚æ‚èIGSŽÐ‚Í“ú–{ˆÈŠO‚ÌƒAƒWƒA‚ÌƒQ[ƒ€ƒ[ƒJ[‚Æ‚µ‚Ä‚Í‰‚Ì“ÆŽ©‚ÌƒQ[ƒ€ƒVƒXƒeƒ€‚ðŠJ”­‚µ‚½ƒ[ƒJ[‚Æ‚È‚èA
+ƒAƒWƒA‚Å‚ÍuMVSv‚Ìƒ‰ƒCƒoƒ‹‹@Ží‚Æ‚µ‚ÄŠˆ–ô‚µA‚â‚ª‚Ä“ú–{‚Å‚àu’†‘—´vuŽOš í‹LvƒVƒŠ[ƒY‚È‚Ç‚Ìì•i‚ª”Ì”„‚³‚ê‚é‚æ‚¤‚É‚È‚Á‚½B
+‚»‚ÌŒ‹‰Êu“¬Œ¶‹¶v(03”N)‚Ü‚Å‚É\”ƒ^ƒCƒgƒ‹‚Ìì•i‚ª‘—‚èo‚³‚êA‘åƒqƒbƒgì‚Í‚È‚©‚Á‚½‚à‚Ì‚ÌƒRƒA‚ÈƒvƒŒƒCƒ„[‚ðŽä‚«‚Â‚¯‚é‚±‚Æ‚É¬Œ÷‚µA
+l‹C‚ðW‚ß‚é‚±‚Æ‚É‚È‚éB‚¿‚È‚Ý‚É“ú–{‚Å‚ÍuPGMƒVƒXƒeƒ€v‚ÆŒÄ‚Î‚ê‚é‚Ì‚ª•’Ê‚Å‚ ‚éB
+
+
+
+$end
+
 $info=phantom2
 $bio
 Phantom II
@@ -56753,11 +57275,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -56789,6 +57306,30 @@ CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[SN76496]
 
 $end
 
+$info=pangpang
+$bio
+Pang Pang
+
+
+”­”„”NF1994
+
+ŠJ”­^”­”„Œ³FDong Gue La Mi
+
+ƒWƒƒƒ“ƒ‹F¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[OKI6295]
+
+
+¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
 $info=ppcar
 $bio
 Ping Pong Car
@@ -56798,7 +57339,7 @@ Ping Pong Car
 
 ŠJ”­^”­”„Œ³FIcarus
 
-ƒWƒƒƒ“ƒ‹F¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+ƒWƒƒƒ“ƒ‹FƒAƒNƒVƒ‡ƒ“
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“
 
@@ -57360,6 +57901,39 @@ CPU\¬[M6809, M6808]@‰¹Œ¹ƒ`ƒbƒv[DAC, HC55516]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
+$info=playch10
+$bio
+PlayChoice-10
+
+
+”­”„”NF1988.08
+
+ŠJ”­Œ³F”C“V“°@”­”„Œ³F”C“V“°i¦‘“à”Ì”„‚È‚µj
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhF”C“V“° PlayChoice-10
+
+CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[N2A03, DAC]
+
+
+ƒqƒbƒg‚µ‚½uVS.ƒVƒXƒeƒ€v‚É‚Í“ú–{‚Å‚ÍÔ‚¢ƒVƒbƒgƒ_ƒEƒ“ƒ^ƒCƒv‚Ìuƒ}ƒ‹ƒ`¥ƒfƒBƒXƒvƒŒƒCƒVƒXƒeƒ€v‚ÆA
+‚ ‚Ü‚èŒ©‚ç‚ê‚½–³‚©‚Á‚½‚ª2‚Â‚Ìâž‘Ì‚ð‚­‚Á‚Â‚¯‚½uƒAƒbƒvƒ‰ƒCƒgvƒ^ƒCƒv‚ª‚ ‚Á‚½‚ªA
+ŠCŠO‚Å‚Í1l—p‚ÌuVS.UNISYSTEMv‚Æ‚¢‚¤‚à‚Ì‚ðŠÜ‚ß3Ží—Þ‚ ‚èA‚±‚ê‚ð“‡‚·‚é–Ú“I‚Å“oê‚µ‚½‚Ì‚ª‚±‚ÌuPlauChoice-10v‚Å‚ ‚éB
+ƒx[ƒX‚Í“¯‚¶‚­uNintendo Entertainment System(NES)v‚¾‚ªAV‚½‚É10ƒ^ƒCƒgƒ‹‚©‚çƒQ[ƒ€‚ð‘I‘ð‚·‚é‚±‚Æ‚ª‰Â”\‚Æ‚È‚èA
+ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ª‰Á‚¦‚ç‚ê‚Ä‚¢‚éB
+‚Ü‚½”C“V“°‚ð’†S‚ÉƒRƒiƒ~AƒAƒCƒŒƒ€‚Æ‚¢‚Á‚½ƒ[ƒJ[‚©‚çuVS.ƒVƒXƒeƒ€v‚É‚ÍŽû˜^‚³‚ê‚È‚©‚Á‚½—L–¼ƒ^ƒCƒgƒ‹‚âA
+uŒõüev‚ðŽg—p‚·‚éì•i‚ª”‘½‚­“oê‚µ¬Œ÷‚·‚é‚«‚Á‚©‚¯‚Æ‚È‚Á‚½B
+“ú–{‚Å‚Í‹}Šg‘å‚µ‚½‰Æ’ë—p•”–å‚ÆV‚½‚È–@—¥‚É‚æ‚éƒA[ƒP[ƒhƒQ[ƒ€‚Ì‹K§‚©‚çAŠù‚É”C“V“°‚Í‘“à‚Å‚ÌŠˆ“®‚ðŽ~‚ß‚Ä‚¢‚½‚ªA
+ŠCŠO‚Å‚ÍŠˆ–ô‚µ‘±‚¯A‚±‚ÌƒVƒXƒeƒ€‚ÍNintendo of America‚©‚ç‚ÌƒŠƒŠ[ƒX‚Æ‚È‚Á‚Ä‚¢‚éB
+‚¿‚È‚Ý‚ÉuPlayChoice-10v‚É‚ÍƒAƒbƒvƒ‰ƒCƒgŒ^‚Ìâž‘Ì‚ÆAƒo[‚È‚Ç‚ÅŽg‚í‚ê‚é‘ìãƒ^ƒCƒv‚Ìâž‘Ì‚ª“oê‚µ‚Ä‚¢‚éB
 
 
 
@@ -58629,11 +59203,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ÅIƒXƒe[ƒW‚ðœ‚­6ƒXƒe[ƒW‚ÍA‚Ç‚±‚©‚ç‚Å‚àŽn‚ß‚ç‚ê‚é‚Æ‚¢‚¤Ž©—R‘I‘ð§B
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -58644,7 +59213,7 @@ $bio
 
 ”­”„”NF1988.08
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹FƒŒ[ƒVƒ“ƒO
 
@@ -59441,11 +60010,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ‚Ql“¯ŽžƒvƒŒƒC‚ÅA‘Îí‚àŠy‚µ‚ß‚éB
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -59589,6 +60153,31 @@ $bio
 ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
 
 CPU\¬[DECO CPU16, M6502]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910 (2)]
+
+
+
+
+
+
+
+$end
+
+$info=psarc95
+$bio
+PS Arcade 95
+
+
+”­”„”NF1997
+
+ŠJ”­Œ³Fƒ‰ƒCƒWƒ“ƒO / ƒGƒCƒeƒBƒ“ƒO / ƒ\ƒj[@”­”„Œ³Fƒ‰ƒCƒWƒ“ƒO / ƒGƒCƒeƒBƒ“ƒO
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒ‰ƒCƒWƒ“ƒO PS Arcade 95
+
+CPU\¬[PSX CPU, 68000]@‰¹Œ¹ƒ`ƒbƒv[SPU, YMF271]
 
 
 
@@ -60373,13 +60962,17 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰Fƒ_ƒCƒAƒ‹ƒRƒ“ƒgƒ[ƒ‰[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒoƒVƒXƒeƒ€
+ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒ”ƒ@ƒVƒXƒeƒ€
 
 CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
 
 
-
-
+ƒ~ƒbƒ`ƒFƒ‹ŠJ”­‚ÌVŠ´ŠoƒpƒYƒ‹ƒQ[ƒ€B
+‚¤‚¸‚Ü‚«ó‚ÌƒŒ[ƒ‹‚Ìã‚ð—¬‚ê‚Ä‚­‚éƒWƒ…ƒGƒ‹ƒXƒg[ƒ“‚ÉŒü‚¯‚ÄA”­ŽË‘ä‚©‚çƒWƒ…ƒGƒ‹ƒXƒg[ƒ“‚ð‘Å‚¿o‚µA
+“¯‚¶F‚ÌƒWƒ…ƒGƒ‹ƒXƒg[ƒ“‚ð3‚Â‘µ‚¦‚ÄÁ‚µ‚Ä‚¢‚­BƒŒ[ƒ‹‚ÌI“_‚É‚ ‚éƒfƒbƒhƒ{[ƒ‹‚Ü‚ÅƒWƒ…ƒGƒ‹ƒXƒg[ƒ“‚ª“Í‚­‚ÆƒQ[ƒ€ƒI[ƒo[B
+ƒWƒ…ƒGƒ‹ƒXƒg[ƒ“‚ðÁ‚µ‚½‰ÓŠ‚ÌŒã—ñ‚ÌƒWƒ…ƒGƒ‹ƒXƒg[ƒ“‚ªƒŒ[ƒ‹‚ð“]‚ª‚èA‘O—ñ‚É‹l‚Ü‚é‚±‚Æ‚Å˜A½‚Ìƒ`ƒƒƒ“ƒX‚ª‚ ‚éB
+‚È‚¨RealNetworksŽÐ‚ÌƒIƒ“ƒ‰ƒCƒ“ƒQ[ƒ€ƒT[ƒrƒXuRealArcadev‚È‚Ç‚Å”z‹‹‚³‚ê‚éPopCap GamesŽÐ‚ÌuZUMAv‚Æ‚¢‚¤‚±‚Ìì•i‚Æ‚æ‚­Ž—‚½ƒQ[ƒ€‚ª‚ ‚é‚ªA
+ƒ~ƒbƒ`ƒFƒ‹ŽÐ‚Ì‹–‰Â‚ð“¾‚¸‚ÉƒAƒCƒfƒA‚ð“—p‚µ‚½h‚Ü‚ª‚¢•¨h‚Å‚ ‚èA‚±‚¿‚ç‚ªƒIƒŠƒWƒiƒ‹‚Å‚ ‚éB
 
 
 
@@ -60387,24 +60980,29 @@ $end
 
 $info=pzloop2j
 $bio
-ƒpƒYƒ‹[ƒv‚Q
+ƒpƒYƒ‹[ƒv ƒc[
 
 
 ”­”„”NF2001.02
 
-ŠJ”­Œ³Fƒ~ƒbƒ`ƒFƒ‹@”­”„Œ³FƒJƒvƒRƒ“ 
+ŠJ”­Œ³Fƒ~ƒbƒ`ƒFƒ‹@”­”„Œ³FƒJƒvƒRƒ“
 
 ƒWƒƒƒ“ƒ‹FƒpƒYƒ‹
 
-ƒRƒ“ƒgƒ[ƒ‰Fƒ_ƒCƒ„ƒ‹i8•ûŒüƒŒƒo[j+1ƒ{ƒ^ƒ“
+ƒRƒ“ƒgƒ[ƒ‰Fƒpƒhƒ‹ƒRƒ“ƒgƒ[ƒ‰i8•ûŒüƒŒƒo[j+1ƒ{ƒ^ƒ“
 
 ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒvƒRƒ“ ƒvƒŒƒCƒVƒXƒeƒ€2iCPS2j
 
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[QSound]
 
 
-
-
+V‚µ‚¢ƒpƒYƒ‹ƒQ[ƒ€‚Æ‚µ‚Äƒqƒbƒgì‚Æ‚È‚Á‚½uƒpƒYƒ‹[ƒvv‚Ì‘±ìB
+ƒQ[ƒ€ƒ‹[ƒ‹‚É•ÏX‚Í‚È‚¢‚ªAƒpƒ[ƒ{[ƒ‹‚ð‚Ô‚Â‚¯A
+•Ï‰»‚³‚¹‚é‚±‚Æ‚Åˆê“x‚É‘½‚­‚Ì‹Ê‚ðÁ‚·‚±‚Æ‚ª‚Å‚«‚éuƒpƒ[ƒNƒ‰ƒbƒVƒ…v‚ÆŒÄ‚Î‚ê‚éA
+VƒVƒXƒeƒ€‚ª·‚èž‚Ü‚ê‚½Vƒ‚[ƒhuƒpƒ[ƒ‚[ƒhv‚ª“oêB
+‘¼‚É‚àŽålŒöuƒ‚ƒWƒ‡v‚ª‹Ê‚É•Â‚¶ž‚ß‚ç‚ê‚½”Þ—‚ð•‚¯‚é‚½‚ßƒpƒYƒ‹[ƒv‚ð‰ð‚«i‚ÞuƒXƒe[ƒWƒ‚[ƒhvA
+‘Oì‚Ì3Šª‚«‚©‚ç4Šª‚«‚Ö‚Æ‘‚¦AƒŒƒxƒ‹100‚ð–ÚŽw‚µ’WX‚Æ”—‚è—ˆ‚é‹Ê‚ðÁ‚µ‚Ä‚¢‚­u‚Æ‚±‚Æ‚ñƒ‚[ƒhvA
+1ƒRƒCƒ“‚Å‘Îí‰Â”\‚ÅA˜A½‚ð‹N‚±‚µƒIƒWƒƒƒ}‹Ê‚ÅUŒ‚‚µ‚ ‚¤u2l‚Å‘Îíƒ‚[ƒhv‚È‚Ç‚ÅŠy‚µ‚Þ‚±‚Æ‚ª‚Å‚«‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
 
 
 
@@ -60501,7 +61099,7 @@ $end
 
 $info=pbobblen
 $bio
-ƒpƒYƒ‹ƒ{ƒuƒ‹ (MVS”Åj
+ƒpƒYƒ‹ƒ{ƒuƒ‹ iMVS”Åj
 
 
 ”­”„”NF1994.12
@@ -60827,6 +61425,30 @@ Puzzle King
 ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
 
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2151, OKI6295]
+
+
+¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
+$info=puzzlekg
+$bio
+Puzzle King -Dance & Puzzle-
+
+
+”­”„”NF1998
+
+ŠJ”­^”­”„Œ³FEolith
+
+ƒWƒƒƒ“ƒ‹F—Ž‰ºŒ^ƒpƒYƒ‹
+
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[E1-32N]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
@@ -61922,16 +62544,16 @@ $bio
 
 ƒWƒƒƒ“ƒ‹FƒNƒCƒY
 
-ƒRƒ“ƒgƒ[ƒ‰F4•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
+ƒRƒ“ƒgƒ[ƒ‰F2•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
 ƒVƒXƒeƒ€ƒ{[ƒhFƒZƒK ƒVƒXƒeƒ€24
 
 CPU\¬[68000 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2151, DAC]
 
 
-ƒXƒg[ƒŠ[Žd—§‚Ä‚ÌRPG•—‚ÌƒNƒCƒYƒQ[ƒ€B
-ƒvƒŒƒCƒ„[‚Í4l‚ÌƒLƒƒƒ‰ƒNƒ^[‚©‚ç1l‚ð‘I‘ð‚µA‚à‚Ì‚Ì‚¯‚ð‘ÞŽ¡‚µ‚Ä‚¢‚­B
-‚Ü‚½A³‰ð‚·‚é‚½‚Ñ‚É‘‚¦‚é“¿ƒQ[ƒW‚ª—­‚Ü‚é‚Æ•Ïg‚·‚é‚±‚Æ‚ªo—ˆA–â‘è‚Ìƒmƒ‹ƒ}‚ð‘½‚­Œ¸‚ç‚·‚±‚Æ‚ªo—ˆ‚éB
+ƒZƒK‚æ‚è“oê‚µ‚½ƒXƒg[ƒŠ[Žd—§‚Ä‚ÌRPG•—‚ÌƒNƒCƒYƒQ[ƒ€B
+ƒvƒŒƒCƒ„[‚Í4l‚ÌƒS[ƒXƒgƒnƒ“ƒ^[‚½‚¿‚©‚ç1l‚ð‘I‘ð‚µA–‚•¨‚â—d‰ö‚½‚¿‚ðƒNƒCƒY‚Å¬•§‚³‚¹‚Ä‚¢‚­‚Ì‚ªƒQ[ƒ€‚Ì–Ú“IB
+‚Ü‚½A³‰ð‚·‚é‚½‚Ñ‚É‘‚¦‚éu“¿ƒQ[ƒWv‚ª—­‚Ü‚é‚Æ•Ïg‚·‚é‚±‚Æ‚ª‚Å‚«‚é‚æ‚¤‚É‚È‚èA–â‘è‚Ìƒmƒ‹ƒ}‚ð‘½‚­Œ¸‚ç‚·‚±‚Æ‚ªo—ˆ‚éB
 ƒXƒe[ƒWƒNƒŠƒAŒã‚É‚Íƒ~ƒjƒQ[ƒ€‚à—pˆÓ‚³‚ê‚Ä‚¢‚éB
 
 
@@ -62609,7 +63231,7 @@ $bio
 CPU\¬[V30, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2151]
 
 
-u‰õŒ†ƒ„ƒ“ƒ`ƒƒŠÛv‚ÅM—p‚ðŽ¸‚Á‚Ä‚µ‚Ü‚Á‚½ƒAƒCƒŒƒ€‚ª”­”„‚µ‚½‹NŽ€‰ñ¶‚Ì‘åƒqƒbƒgì•iB
+uƒXƒpƒ‹ƒ^ƒ“Xv‚ÌƒqƒbƒgˆÈ—ˆA­‚µˆÓ‹CÁ’¾‹C–¡‚¾‚Á‚½ƒAƒCƒŒƒ€‚ª”­”„‚µ‚½‹NŽ€‰ñ¶‚Ì‘åƒqƒbƒgì•iB
 “Æ“Á‚Ì¢ŠEŠÏ‚Æí—ª«‚Ì‚‚¢ƒQ[ƒ€ƒVƒXƒeƒ€A“ä‚Ì¶–½‘ÌƒtƒH[ƒX‚Æ‚¢‚¤‘S‚­V‚µ‚¢UŒ‚•û–@A
 ’´‹‘åíŠÍ‚Ì“oê‚È‚ÇV‚½‚ÈƒAƒCƒfƒA‚ª‹l‚ßž‚Ü‚ê‚½Œ†ìB
 ƒVƒ‡ƒbƒgƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‘±‚¯‚é‚±‚Æ‚Å”g“®–C‚Æ‚¢‚¤‹­—Í‚È—­‚ßŒ‚‚¿‚ª‰Â”\‚ÅA
@@ -62640,7 +63262,7 @@ $bio
 CPU\¬[V30, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2151, DAC]
 
 
-‘‚­‚Ü‚Å‚à‚È‚¢‚ªA‚±‚Ìì•i‚Í“¯ŽÐ‚Ì‘åƒqƒbƒgƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€uR-TYPEv‚Ì‘±•Ò‚Å‚ ‚éB
+ˆê–ôƒAƒCƒŒƒ€‚ÌŠÅ”Âì•i‚Æ‚È‚Á‚½‘åƒqƒbƒgƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€uR-TYPEv‚Ì‘±•ÒB
 ƒvƒŒƒCƒ„[‚ÍuR-9‰üv‚Éæ‚èž‚ÝA‘h‚è‹tP‚É‚‚Ô‚éV¶ƒoƒCƒh’é‘‚ÌŽè‚©‚ç‰F’ˆ‚ðŽç‚é‚±‚Æ‚ð–Ú“I‚Æ‚µ‚Ä‚¢‚éB
 Šî–{“I‚È‘€ì•û–@‚âƒpƒ[ƒAƒbƒvƒVƒXƒeƒ€‚ðŒp³‚·‚é‚È‚ÇA‘Oì‚ð‘å‚«‚­•ÏX‚·‚é‚±‚Æ‚Í”ð‚¯‚Ä‚¢‚éB
 ‚½‚¾‚µA
@@ -62701,11 +63323,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -63073,11 +63690,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ‚¿‚È‚Ý‚ÉƒQ[ƒ€ƒXƒ^[ƒgŽž‚Éƒ}ƒVƒ“‚ð2‘ä‚Ì‚¤‚¿‚©‚ç‘I‘ð‚Å‚«‚é‚ªA‚Ç‚¿‚ç‚à«”\‚Íˆê‚ç‚µ‚¢B
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -63100,11 +63712,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 
 
 “ú–{–¼uƒnƒCƒEƒFƒCƒXƒ^[‡Uv‚¾‚ªA‘“à‚Å‚Í–¢”­”„B
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -64654,7 +65261,7 @@ Rescue Raider
 
 ƒRƒ“ƒgƒ[ƒ‰FƒcƒCƒ“ƒŒƒo[i8•ûŒü+8•ûŒüj+1ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+ƒVƒXƒeƒ€ƒ{[ƒhFSente Arcarde ComputeriSACj
 
 CPU\¬[M6809, Z80]@‰¹Œ¹ƒ`ƒbƒv[CEM3394 (6)]
 
@@ -64759,12 +65366,10 @@ CPU\¬[Z80 (3), M68705]@‰¹Œ¹ƒ`ƒbƒv[SN76496 (2)]
 
 “ú–{’†‚ðƒu[ƒ€‚ÉŠª‚«ž‚ñ‚¾AƒCƒ“ƒx[ƒ_[‚ªƒpƒ[ƒAƒbƒv‚µ‚Ä‹A‚Á‚Ä‚«‚½‚Æ‚¢‚¤‹L”O‚·‚×‚«ì•iB
 ƒOƒ‰ƒtƒBƒbƒN‚ÆƒTƒEƒ“ƒh‚Æ‚à‚É‚©‚È‚è”ü‚µ‚­‚È‚Á‚Ä‚¢‚éB
-‘€ì•û–@‚ÍŽ©‹@‚Ìƒ[ƒ[ƒrƒB‚ð2•ûŒüƒŒƒo[‚Å“®‚©‚µAƒr[ƒ€ƒ{ƒ^ƒ“‚ÅUŒ‚‚·‚éB
-ƒr[ƒ€‚Í•W€‚Å‚à2˜AŽË‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
+‘€ì•û–@‚ÍŽ©‹@‚Ìƒ[ƒ[ƒrƒB‚ð2•ûŒüƒŒƒo[‚Å“®‚©‚µAƒr[ƒ€ƒ{ƒ^ƒ“‚ÅUŒ‚‚·‚éBƒr[ƒ€‚Í•W€‚Å‚à2˜AŽË‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
 ‚Ü‚½Aƒpƒ[ƒAƒbƒvƒAƒCƒeƒ€‚É‚æ‚èŠÑ’Êƒr[ƒ€‚âAƒƒCƒhƒr[ƒ€A4˜AŽË‚ª‰Â”\‚Æ‚È‚éB
-–¼ŒÃ‰®Œ‚‚¿‚âƒŒƒCƒ“ƒ{[‚È‚Ç‚ÌƒeƒNƒjƒbƒN‚àŒ’ÝB
-’†S‚É’e‚ª–½’†‚µ‚È‚¢‚ÆA’e‚ð’µ‚Ë•Ô‚µ‚Ä‚­‚é“G‚ª‚È‚©‚È‚©Žè‹­‚¢B
-‘S16ƒXƒe[ƒW‚Åƒ‹[ƒv‚·‚éB
+–¼ŒÃ‰®Œ‚‚¿‚âƒŒƒCƒ“ƒ{[‚È‚Ç‚ÌƒeƒNƒjƒbƒN‚àŒ’ÝB’†S‚É’e‚ª–½’†‚µ‚È‚¢‚ÆA’e‚ð’µ‚Ë•Ô‚µ‚Ä‚­‚é“G‚ª‚È‚©‚È‚©Žè‹­‚¢B
+‘S16ƒXƒe[ƒW‚Åƒ‹[ƒv‚·‚éBŠJ”­‚ÍUPLB‚Ù‚Æ‚ñ‚Ç‚â‚Á‚Â‚¯ŽdŽ–‚¾‚Á‚½‚ç‚µ‚¢B
 
 
 
@@ -64821,12 +65426,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 “¯ŽÐ‚ÌuƒVƒƒƒh[ƒ_ƒ“ƒT[v‚ÌƒAƒEƒgƒTƒCƒhƒXƒg[ƒŠ[“I‚Èì•i‚Å‚ ‚éB
 ƒvƒŒƒCƒ„[‚ÍŽålŒöuƒ€ƒTƒVv‚ð‘€‚èA“G‚ª‹ß‹——£‚Ì‚Æ‚«‚Í“A‰“‹——£‚Ì‚Æ‚«‚ÍŽè— Œ•‚ðŽg‚¢AŒ»‚ê‚é“G‚ð“|‚µæ‚Éi‚ÞB
 Žè— Œ•‚ÍŽ‚Ä‚é”‚ÉãŒÀ‚ª‚ ‚é‚ªAƒAƒCƒeƒ€‚ðŽæ‚é‚±‚Æ‚É‚æ‚è”‚ð‘‚â‚·‚±‚Æ‚ª‰Â”\B
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -65751,10 +66350,6 @@ CPU\¬[G65C816, SPC700]@‰¹Œ¹ƒ`ƒbƒv[Custom]
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
 
-¦uNintendo Super Systemv‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒX[ƒp[ƒtƒ@ƒ~ƒRƒ“v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-3–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -66065,11 +66660,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 “ú–{–¼uN.Y.ƒjƒƒƒ“ƒL[ƒYvB
 ƒJƒYƒ[‚É‚³‚ç‚í‚ê‚½—ölƒWƒ‹‚ð‹~‚¤‚½‚ß‚ÉA”L‚ÌƒEƒBƒŠ[‚ªí‚¤ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
 4‚Â‚ÌƒXƒe[ƒW‚©‚ç¬‚èAƒAƒCƒeƒ€w“ü‚É‚æ‚éƒpƒ[ƒAƒbƒv‚Ì—v‘f‚à‚ ‚éBƒ{[ƒiƒX–Ê‚à‚ ‚èB
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -66827,11 +67417,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ‚à‚¿‚ë‚ñ‚Ql“¯ŽžƒvƒŒƒC‚ª‰Â”\B
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -66885,11 +67470,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ƒA[ƒP[ƒh‚©‚ç‚ÌˆÚA‚¾‚ªAƒ^ƒCƒgƒ‹‚±‚»‚Í‚¿‚á‚ß‚¿‚á‚¾‚ªA“à—e‚ÍƒA[ƒP[ƒh‚ä‚¸‚è‚ÌƒVƒŠƒAƒX‚È‚à‚ÌB
 RPG—v‘f‚ª‘å•‚ÉŽæ‚è“ü‚ê‚ç‚ê‚½‚ªAƒƒCƒ“‚ÍƒA[ƒP[ƒh”Å‚Æ“¯‚¶‰¡ƒXƒNƒ[ƒ‹‚ÅA
 ‚ ‚ÌˆóÛ“I‚È—[“ú‚ÌƒXƒe[ƒW‚à‚ ‚éB
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -67810,8 +68390,13 @@ $bio
 CPU\¬[68000, ƒÊPD7810]@‰¹Œ¹ƒ`ƒbƒv[OKI6295, YM2413]
 
 
-
-
+ƒ~ƒbƒ`ƒFƒ‹‚æ‚è“oê‚µ‚½ƒpƒYƒ‹ƒQ[ƒ€B
+ƒ‹[ƒ‹‚Í‚±‚ê‚Ü‚Å“oê‚µ‚½–ƒ”v‚ðŽg‚Á‚½ƒpƒYƒ‹ƒQ[ƒ€‚Æ“¯‚¶‚­A‡ŽqŽæ‚è‚ÆŽqŽæ‚è‚ÅŽR‚ð•ö‚µ‚È‚ª‚çA
+‰æ–Ê‰º•”‚É‚ ‚é—á‘è’Ê‚è‚É‘µ‚¦‚Ä‚¢‚­‚Æ‚¢‚¤‚à‚ÌB
+ƒQ[ƒ€’†¢‚Á‚½Žž‚É‚Í‚¨•‚¯ƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Ä—lX‚ÈŒø‰Ê‚ðŽó‚¯‚é‚±‚Æ‚ª‚Å‚«A
+‚Ü‚½ƒXƒe[ƒW‚ðƒNƒŠƒA‚·‚é‚²‚Æ‚É‰Ò‚¢‚¾ƒXƒRƒA‚ðÁ”ï‚µ‚Ä‚¨•‚¯‹@”\‚ðŽ‚Á‚½•«‚ðŒÙ‚¤‚±‚Æ‚à‚Å‚«‚éB
+ƒQ[ƒ€ƒ‚[ƒh‚Í‰SŽÒŒü‚¯‚ÌuŒP—ûv‘S3–Ê‚ÆAŠµ‚ê‚½l‚É‚àŽè‰ž‚¦\•ª‚ÌuŽÀ‘Hv‘S8–Ê‚Æ‚¢‚¤2Ží—Þ‚©‚ç‘I‘ð‚ª‰Â”\B
+Žè‹l‚Ü‚è‚É‚È‚Á‚½‚èA§ŒÀŽžŠÔ‚ª‚È‚­‚È‚Á‚Ä‚µ‚Ü‚¤‚ÆƒQ[ƒ€ƒI[ƒo[‚Æ‚È‚éB
 
 
 
@@ -68617,6 +69202,30 @@ CPU\¬[Z80 (2), M68705]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910 (4), DAC]
 
 $end
 
+$info=shpeng
+$bio
+Sea Hunter Pengiun
+
+
+”­”„”NF1995
+
+ŠJ”­^”­”„Œ³FWSAC Systems?
+
+ƒWƒƒƒ“ƒ‹FƒAƒNƒVƒ‡ƒ“
+
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+3ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2203]
+
+
+¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
 $info=seawolf
 $bio
 ƒV[ƒEƒ‹ƒt
@@ -68871,7 +69480,7 @@ $end
 
 $info=srally2
 $bio
-ƒZƒKƒ‰ƒŠ[‚Q -SEGA RALLY CHAMPIONSHIP-
+ƒZƒKƒ‰ƒŠ[‚Q -SEGA RALLY CHAMPIONSHIP- iƒcƒCƒ“”Åj
 
 
 ”­”„”NF1998.02
@@ -68895,7 +69504,32 @@ CPU\¬[PPC603]
 ƒQ[ƒ€ƒ‚[ƒh‚Í‘Oì“¯—lAŠeƒR[ƒX‚ð‡”Ô‚ÉƒNƒŠƒA[‚µ‚Ä‚¢‚­ƒ`ƒƒƒ“ƒsƒIƒ“ƒVƒbƒv‚ÆA
 D‚«‚ÈƒR[ƒX‚ÌŽü‰ñƒ^ƒCƒ€‚ð‹£‚¤ƒvƒ‰ƒNƒeƒBƒX‚Ì2‚Â‚ª‚ ‚éB
 “D‚µ‚Ô‚«‚Ì•\Œ»‚âAƒ}ƒVƒ“‚²‚Æ‚ÉˆÙ‚È‚éƒ^ƒRƒ[ƒ^[‚È‚Ç×‚©‚¢•”•ª‚É‚±‚¾‚í‚è‚ªŒõ‚éB
-ƒfƒ‰ƒbƒNƒXâž‘Ì‚ÍƒRƒbƒNƒsƒbƒg‘S‘Ì‚ª“®‚«AƒR[ƒX‚Ì‹N•š‚â‰ÁŒ¸‘¬‚ð‘ÌŠ´‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
+50ƒCƒ“ƒ`ƒvƒƒWƒFƒNƒ^[‚ðŽg—p‚µ‚½ƒfƒ‰ƒbƒNƒXâž‘Ì‚ÍƒRƒbƒNƒsƒbƒg‘S‘Ì‚ª“®‚«A
+ƒR[ƒX‚Ì‹N•š‚â‰ÁŒ¸‘¬‚ð‘ÌŠ´‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
+
+
+
+$end
+
+$info=sraly2dx
+$bio
+ƒZƒKƒ‰ƒŠ[‚Q -SEGA RALLY CHAMPIONSHIP- iƒfƒ‰ƒbƒNƒX”Åj
+
+
+”­”„”NF1998.02
+
+ŠJ”­Œ³FƒZƒKiƒZƒK¥ƒƒbƒ\j@”­”„Œ³FƒZƒK
+
+ƒWƒƒƒ“ƒ‹FƒŒ[ƒVƒ“ƒO
+
+ƒRƒ“ƒgƒ[ƒ‰FŽ©“®ŽÔƒnƒ“ƒhƒ‹Œ^ƒRƒ“ƒgƒ[ƒ‰[+2ƒyƒ_ƒ‹+ƒMƒA+ƒTƒCƒhƒuƒŒ[ƒL+1ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒZƒK MODEL3 ƒXƒeƒbƒv2.0
+
+CPU\¬[PPC603]
+
+
+¦uƒZƒKƒ‰ƒŠ[2 -SEGA RALLY CHAMPIONSHIP-iƒcƒCƒ“”ÅjvŽQÆ
 
 
 
@@ -68927,6 +69561,31 @@ WRCi¢ŠEƒ‰ƒŠ[‘IŽèŒ j‚ðƒ‚ƒ`[ƒt‚É‚µ‚½–{Šiƒ‰ƒŠ[ƒŒ[ƒXƒQ[ƒ€B
 ƒT[ƒLƒbƒgƒŒ[ƒX‚É‚Í–³‚¢“Æ“Á‚Ì–£—Í‚ª‚ ‚èAL‚­•‹y‚µ‚½ƒcƒCƒ“ƒ^ƒCƒvâž‘Ì‚ð’†S‚É‘åƒqƒbƒg‚µ‚½B
 ‚±‚ÌƒQ[ƒ€‚ÌŠJ”­’†‚ÍAŽÀŽÔ‚ð‘–‚ç‚¹‚½‚èA‘“àŠO‚Ìƒ‰ƒŠ[ƒhƒ‰ƒCƒo[‚©‚çƒAƒhƒoƒCƒX‚ðŽó‚¯‚é‚È‚Ç‚µ‚ÄA
 ‘–sŠ´Šo‚ðÄŒ»‚·‚é‚±‚Æ‚É“w‚ß‚½‚Æ‚¢‚¤B
+
+
+
+$end
+
+$info=skisuprg
+$bio
+ƒZƒK ƒXƒL[ƒX[ƒp[‚f
+
+
+”­”„”NF1996.12
+
+ŠJ”­^”­”„Œ³FƒZƒK
+
+ƒWƒƒƒ“ƒ‹FƒXƒ|[ƒc
+
+ƒRƒ“ƒgƒ[ƒ‰FƒXƒL[Œ^ƒtƒbƒgƒRƒ“ƒgƒ[ƒ‰[
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒZƒK MODEL2 C-CRX
+
+CPU\¬[i960KB, 68000]@‰¹Œ¹ƒ`ƒbƒv[SCSP]
+
+
+
+
 
 
 
@@ -69195,7 +69854,7 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰Fƒpƒhƒ‹ƒRƒ“ƒgƒ[ƒ‰[+1ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒoƒVƒXƒeƒ€
+ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒJƒlƒRƒVƒXƒeƒ€
 
 CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
 
@@ -69220,7 +69879,7 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒoƒVƒXƒeƒ€
+ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒJƒlƒRƒVƒXƒeƒ€
 
 CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
 
@@ -69420,6 +70079,30 @@ Sente Diagnostic Cartridge
 ƒVƒXƒeƒ€ƒ{[ƒhFSente Arcarde ComputeriSACj
 
 CPU\¬[M6809, Z80]@‰¹Œ¹ƒ`ƒbƒv[CEM3394 (6)]
+
+
+¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
+$info=sextriv
+$bio
+Sex Triv
+
+
+”­”„”NF1985
+
+ŠJ”­^”­”„Œ³FStatus Games
+
+ƒWƒƒƒ“ƒ‹FƒNƒCƒY
+
+ƒRƒ“ƒgƒ[ƒ‰F4ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[8085A]@‰¹Œ¹ƒ`ƒbƒv[AY8910]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
@@ -69973,12 +70656,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
 
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -70357,10 +71034,8 @@ CPU\¬[Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910]
 
 
 ‚±‚Ìu«Šûv‚ÍuƒWƒƒƒ“ƒsƒ…[ƒ^[v‚ðŠJ”­‚µ‚½ƒAƒ‹ƒtƒ@“dŽq‚ª‘ål‚ðƒ^[ƒQƒbƒg‚ÉV‚½‚ÈƒWƒƒƒ“ƒ‹‚ð’z‚¢‚½ì•i‚Å‚ ‚éB
-ƒQ[ƒ€“à—e‚Í«Šû‚Ìƒ‹[ƒ‹‚ÉŠî‚Ã‚¢‚Ä‘ŠŽè‚ð‹l‚ß‚ê‚ÎŸ—˜‚Æ‚È‚é‚Æ‚¢‚¤‚à‚ÌB
-‹î‚Í4•ûŒüƒŒƒo[ƒJ[ƒ\ƒ‹‚ðˆÚ“®‚³‚¹“®‚©‚µ‚½‚¢‹î‚ðŒˆ’èƒ{ƒ^ƒ“‚Å‘I‚ÑA
-‹î‚ð— •Ô‚·u¬‚èv‚ª‚Å‚«‚éê‡‚É‚Í¬‚èƒ{ƒ^ƒ“‚ð‰Ÿ‚¹‚Î¬‚è‹î‚Æ‚È‚èA
-‚Ü‚½Ž‚¿ŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¢‚é‚ªAŽg‚¢Ø‚Á‚½Œã‚ÍˆêŽè20•b§ŒÀ‚Æ‚È‚éB
+ƒQ[ƒ€“à—e‚Í«Šû‚Ìƒ‹[ƒ‹‚ÉŠî‚Ã‚¢‚Ä‘ŠŽè‚ð‹l‚ß‚ê‚ÎŸ—˜‚Æ‚È‚é‚Æ‚¢‚¤‚à‚ÌB‹î‚Í4•ûŒüƒŒƒo[ƒJ[ƒ\ƒ‹‚ðˆÚ“®‚³‚¹“®‚©‚µ‚½‚¢‹î‚ðŒˆ’èƒ{ƒ^ƒ“‚Å‘I‚ÑA
+‹î‚ð— •Ô‚·u¬‚èv‚ª‚Å‚«‚éê‡‚É‚Í¬‚èƒ{ƒ^ƒ“‚ð‰Ÿ‚¹‚Î¬‚è‹î‚ÉB‚Ü‚½Ž‚¿ŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¢‚é‚ªAŽg‚¢Ø‚Á‚½Œã‚ÍˆêŽè20•b§ŒÀ‚Æ‚È‚éB
 1ƒvƒŒƒCŽžŠÔ‚ª’·‚¢‚½‚ß•W€‰¿Ši‚Í1ƒvƒŒƒC2ƒRƒCƒ“AƒvƒŒƒCƒ„[“¯Žm‚Ì‘ÎíŽž‚Å‚à“¯‚¶‚Å‚ ‚éB
 ‘åƒqƒbƒgì‚Æ‚Í‚È‚ç‚È‚©‚Á‚½‚à‚Ì‚ÌA‹i’ƒ“X‚âƒQ[ƒ€“X‚É2000‘ä‚Ù‚Ço‰×‚³‚êA
 “ú–{«Šû˜A–¿‚ÌƒTƒƒ“‚É‚à’u‚©‚ê‚Ä‚¢‚½B
@@ -70977,7 +71652,7 @@ Skill Trek
 
 ƒRƒ“ƒgƒ[ƒ‰F¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
-ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+ƒVƒXƒeƒ€ƒ{[ƒhFBarcrest MPU4 Video Firmware
 
 CPU\¬[M6809, 68000]@‰¹Œ¹ƒ`ƒbƒv[AY8910, SAA1099]
 
@@ -71007,10 +71682,6 @@ CPU\¬[G65C816, SPC700]@‰¹Œ¹ƒ`ƒbƒv[Custom]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
-
-
-¦uNintendo Super Systemv‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒX[ƒp[ƒtƒ@ƒ~ƒRƒ“v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-3–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -71644,6 +72315,30 @@ CPU\¬[M6809 (2)]@‰¹Œ¹ƒ`ƒbƒv[SN76496 (2)]
 
 $end
 
+$info=sliver
+$bio
+Sliver
+
+
+”­”„”NF1996
+
+ŠJ”­^”­”„Œ³FHollow Corp
+
+ƒWƒƒƒ“ƒ‹F¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+ƒRƒ“ƒgƒ[ƒ‰F¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[68000, I8051]@‰¹Œ¹ƒ`ƒbƒv[OKI6295]
+
+
+¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
 $info=sltblgpo
 $bio
 Slots iBelgian Cash”Åj
@@ -71863,7 +72558,10 @@ Snapper
 CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[YM-2413]
 
 
-¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+ƒtƒB[ƒ‹ƒhã‚É‚ ‚éƒhƒbƒg‚ð‰ñŽû‚·‚é‚±‚Æ‚Å‘Ì‚ªL‚Ñ‚Ä‚¢‚­‚Æ‚¢‚¤A
+ƒrƒfƒIƒQ[ƒ€êt–¾Šú‚æ‚è‚ ‚éwŽæ‚èƒQ[ƒ€AƒXƒl[ƒNƒQ[ƒ€‚ð‘èÞ‚Æ‚µ‚½ì•iB
+ˆê’è”‚Ìƒhƒbƒg‚ð‰ñŽû‚·‚é‚±‚Æ‚ÅoŒ»‚·‚éoŒû‚©‚ç’Eo‚·‚é‚ÆƒXƒe[ƒWƒNƒŠƒA‚Æ‚È‚éB
+ƒtƒB[ƒ‹ƒhã‚ð“®‚«‰ñ‚é“G‚âA•ÇAƒXƒl[ƒN‚Ì‘Ì‚ÉÚG‚·‚é‚Æƒ~ƒX‚Æ‚È‚éB
 
 
 
@@ -72071,10 +72769,10 @@ $end
 
 $info=slrasslt
 $bio
-ƒ\[ƒ‰[ƒAƒTƒ‹ƒg
+ƒ\[ƒ‰[ƒAƒTƒ‹ƒgEƒŠƒoƒCƒYƒh
 
 
-”­”„”NF1997.07
+”­”„”NF1997.12
 
 ŠJ”­^”­”„Œ³FƒRƒiƒ~
 
@@ -72087,15 +72785,8 @@ $bio
 CPU\¬[PPC403, 68000, ADSP21062]
 
 
-‚ ‚ÌuƒOƒ‰ƒfƒBƒEƒXv‚ª3Dƒ|ƒŠƒSƒ“ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€‚Æ‚µ‚Ä“oêB
-ƒvƒŒƒCƒ„[‚Íã‹‰ŽÒŒü‚¯‚ÌuƒrƒbƒNƒoƒCƒp[vAƒXƒs[ƒh‚Ì‘¬‚¢uƒ[ƒhƒuƒŠƒeƒBƒbƒVƒ…vA
-UŒ‚—Í‚Ì‚‚­‰SŽÒŒü‚¯‚ÌuƒAƒ‹ƒsƒjƒAv‚Ì3‹@‚©‚ç‹@‘Ì‚ð‘I‘ð‚Å‚«‚é‚æ‚¤‚É‚È‚èA‚±‚ê‚Ü‚Å‚É‚È‚¢ƒoƒŠƒG[ƒVƒ‡ƒ“‚É•x‚ñ‚¾ƒvƒŒƒC‚ª‰Â”\‚Æ‚È‚Á‚Ä‚¢‚éB
-‚Ü‚½‘€ì•û–@‚É‚àƒgƒŠƒK[‚ðˆø‚­ƒVƒ‡ƒbƒg‚Æƒ~ƒTƒCƒ‹ƒ{ƒ^ƒ“‚Æ‚È‚Á‚½‚Ì‚à‘å‚«‚È•Ï‰»‚Ì‚Ð‚Æ‚Â‚ÅA
-ƒgƒŠƒK[‚Íƒ~ƒTƒCƒ‹ƒ{ƒ^ƒ“‚Æ“¯Žž‚ÉŽg—p‚·‚é‚±‚Æ‚ÅA‚½‚ßŒ‚‚¿ƒŒ[ƒU[‚ðŒ‚‚Â‚±‚Æ‚ª‚Å‚«‚é‚æ‚¤‚É‚È‚Á‚½‚Ù‚©A
-VIEW SHIFTƒ{ƒ^ƒ“‚ð‰Ÿ‚·‚±‚Æ‚ÅƒvƒŒƒCŽ‹“_‚ðØ‚è‘Ö‚¦‚é‚±‚Æ‚ª‚Å‚«‚éB
-ƒQ[ƒ€ƒVƒXƒeƒ€‚É‚¨‚¢‚Ä‚Íƒpƒ[ƒAƒbƒv‚Í‚±‚ê‚Ü‚Å‚ÌƒOƒ‰ƒfƒBƒEƒXƒVƒŠ[ƒY‚ÌƒVƒXƒeƒ€‚ðˆø‚«Œp‚¢‚Å‚¢‚é‚ªA
-“G‚ð“|‚·‚Ì‚É§ŒÀŽžŠÔ‚ªÝ‚¯‚ç‚ê‚½‚±‚Æ‚ÅAí—ª“I‚ÈƒvƒŒƒC‚ª•K—v‚Æ‚È‚Á‚½B
-ƒX[ƒp[ƒE[ƒn[‚ðÌ—p‚µ‚½‘åŒ^‚Ìê—pâž‘Ì‚âƒeƒNƒmƒTƒEƒ“ƒh‚È‚ÇA‚±‚ê‚Ü‚Å‚ÌƒOƒ‰ƒfƒBƒEƒX‚Æ‚Íˆêü‚ðŠú‚·ì•i‚Å‚ ‚éB
+
+
 
 
 
@@ -72144,11 +72835,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -72438,7 +73124,7 @@ $bio
 
 ”­”„”NF1996.05
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹F‘ÎíŠi“¬ƒAƒNƒVƒ‡ƒ“
 
@@ -72485,12 +73171,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 ƒXƒyƒVƒƒƒ‹ƒXƒe[ƒW‚âŽc‹@ƒAƒbƒv‚ª”pŽ~‚³‚ê‚Ä‚¢‚éB
 
 
-¦uMEGA PLAYv‚Æ‚ÍA
-ƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA
-4–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -72521,12 +73201,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 ŠeƒXƒe[ƒW‚ÌÅŒã‚É‚ÍDr.ƒGƒbƒOƒ}ƒ“‚Æ‚Ì‘ÎŒˆ‚ª‘Ò‚ÂB ‘S6ƒXƒe[ƒWB
 
 
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -72549,12 +73223,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
-
-
-¦uMEGA PLAYv‚Æ‚ÍA
-ƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA
-4–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -72584,12 +73252,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 ¡ì‚Å‚Í’í•ª‚Æ‚µ‚ÄƒVƒbƒ|‚ª2–{‚ ‚éƒLƒcƒluƒ}ƒCƒ‹ƒXi’ÊÌƒeƒCƒ‹ƒXjv‚ª“oêA‚Ql“¯ŽžƒvƒŒƒC‚Å‚Í2ƒvƒŒƒCƒ„[‚ª‘€ì‚Å‚«‚éB
 ƒXƒe[ƒW‚ÌŽdŠ|‚¯‚ª‘å•‚Éƒpƒ[ƒAƒbƒvA
 ˆ¤‹@‚Ì•¡—t‹@‚ÅƒGƒbƒOƒ}ƒ“‚Ì‹ó’†íŠÍ‚Éæ‚èž‚Ý‚Â‚¢‚É‚Í‰F’ˆ‚Ö‚Æ”ò‚Ñ—§‚ÂI
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -73258,7 +73920,7 @@ $bio
 
 ”­”„”NF1985.11
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹FƒAƒNƒVƒ‡ƒ“ƒVƒ…[ƒeƒBƒ“ƒO
 
@@ -73302,12 +73964,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 ‹Æ–±—puƒXƒy[ƒXƒnƒŠƒA[v‚©‚ç‚Ì‘±•ÒB ‘S12ƒXƒe[ƒW‚ÍA‚Ç‚±‚©‚ç‚Å‚àƒXƒ^[ƒg‚Å‚«‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
 ¡‰ñ‚Í^‚ÁÔ‚Èƒ{ƒfƒBƒX[ƒc‚Ég‚ð•ï‚Ýí‚¤‚ªA‰æ–Ê‚Å‚ÍÔƒWƒƒ[ƒW‚É‚µ‚©Œ©‚¦‚È‚¢B
 ƒ{[ƒiƒXƒXƒe[ƒW‚Éƒ†[ƒ‰ƒCƒA‚Í—ˆ‚Ä‚­‚ê‚¸Aƒtƒ‰ƒCƒ“ƒOƒ\[ƒT[‚Éæ‚Á‚Äí‚¤B
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -75387,6 +76043,37 @@ CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[OKI6295]
 
 $end
 
+$info=stvbios
+$bio
+ƒZƒK ƒ^ƒCƒ^ƒ“ ƒrƒfƒIƒQ[ƒ€ƒVƒXƒeƒ€
+
+
+”­”„”NF1995.02
+
+ŠJ”­^”­”„Œ³FƒZƒK
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒZƒK ƒ^ƒCƒ^ƒ“ ƒrƒfƒIƒQ[ƒ€ƒVƒXƒeƒ€iST-Vj
+
+CPU\¬[SH-2 (2), 68000]@‰¹Œ¹ƒ`ƒbƒv[SCSP]
+
+
+ƒZƒK‚ª‰Æ’ë—pƒQ[ƒ€‹@uƒZƒKƒTƒ^[ƒ“v‚ðƒx[ƒX‚ÉŠJ”­‚µ‚½ƒVƒXƒeƒ€Šî”ÂuST-VvB
+Šî–{Žd—l‚Í“¯‹@‚Æ‚Ù‚Ú‹¤’Ê‚µ‚½ŒÝŠ·Šî”Â‚¾‚ªACDƒhƒ‰ƒCƒu‚ðŽæ‚èœ‚«A
+ƒOƒ‰ƒtƒBƒbƒN«”\‚ªŒüã‚µ‚Ä‚¢‚é‚Æ‚¢‚¤“Á’¥‚ðŽ‚Á‚Ä‚¢‚éBƒ\ƒtƒg‚ÍŠî–{“I‚É‚Íê—p‚ÌROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pA
+‚±‚ê‚ðŒðŠ·‚·‚é‚±‚Æ‚ÅƒQ[ƒ€‚ð•ÏX‚·‚é‚±‚Æ‚ª‚Å‚«‚é‚ªAuƒXƒ|[ƒcƒtƒBƒbƒVƒ“ƒOv‚È‚Ç‚Å‚ÍCDƒhƒ‰ƒCƒu‚ðŽg—p‚·‚éB
+Šù‚ÉuMODEL2v‚Ì“oê‚É‚æ‚è–{Ši“I‚ÈCG‚ðŽg—p‚µ‚½ì•i‚ª“oê‚·‚é‚±‚Æ‚Í­‚È‚©‚Á‚½‚ªA
+CGì•i‚É”ä‚×ˆÀ‚¢ŠJ”­ƒRƒXƒg‚Åì•i‚ªì‚ê‚é‚Æ‚ ‚èAƒAƒgƒ‰ƒXAƒJƒvƒRƒ“AƒTƒ“ƒ\ƒtƒg‚È‚Ç‚Ìƒ[ƒJ[‚ªƒT[ƒhƒp[ƒeƒB‚Æ‚µ‚ÄŽQ‰Á‚µA
+ƒXƒvƒ‰ƒCƒg‹@”\‚ðŽg‚Á‚½2DƒQ[ƒ€‚ª”‘½‚­“oê‚·‚é‚±‚Æ‚Æ‚È‚Á‚½B‚»‚ÌŒ‹‰ÊA5”NˆÈã‚àŒ»–ð‚ÅŠˆ–ô‚µ‘±‚¯A50ƒ^ƒCƒgƒ‹ˆÈã‚Ìì•i‚ðŽc‚·‚±‚Æ‚É‚È‚éB
+‚¿‚È‚Ý‚É“ú–{‚Å‚ÍuST-Vv–¼‚Å”Ì”„‚³‚ê‚Ä‚¨‚èA³Ž®–¼Ì‚Å‚ ‚éuSEGA TITAN VIDEOGAME SYSTEMv‚Íê‚çŠCŠO‚ÅŽg‚í‚ê‚Ä‚¢‚éB
+
+
+
+$end
+
 $info=stkclmns
 $bio
 ƒXƒ^ƒbƒNƒRƒ‰ƒ€ƒX
@@ -75955,9 +76642,9 @@ $bio
 CPU\¬[M6809 (2)]@‰¹Œ¹ƒ`ƒbƒv[Pokey (4), TMS5220]
 
 
-à–¾‚·‚é‚Ü‚Å‚à‚È‚¢‚ªA‚ ‚ÌƒWƒ‡[ƒWEƒ‹[ƒJƒXŒ´ì‚Ì‰f‰æuƒXƒ^[ƒEƒH[ƒYv‚ðƒQ[ƒ€‰»‚µ‚½ì•iB
+SF‰f‰æ‚Ì‹àŽš“ƒAƒWƒ‡[ƒWEƒ‹[ƒJƒXŒ´ì‚ÌuƒXƒ^[ƒEƒH[ƒYv‚ðƒQ[ƒ€‰»‚µ‚½ì•iB
 ƒQ[ƒ€“à—e‚Í‘åŒ^âž‘Ì‚ðŽg—p‚µ‚½ƒƒCƒ„[ƒtƒŒ[ƒ€‚Ì3DƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€‚Å‚ ‚éB
-“–Žž‚ÌƒQ[ƒ€‚Æ‚µ‚Ä‚ÍƒXƒs[ƒhA‘€ì«AƒŠƒAƒ‹‚³‚Æ‚¢‚¤‘S‚Ä‚Ì“_‚ªGˆí‚¾‚Á‚½ì•iB
+“–Žž‚ÌƒQ[ƒ€‚Æ‚µ‚Ä‚ÍƒXƒs[ƒhA‘€ì«AƒŠƒAƒ‹‚³‚Æ‚¢‚¤‘S‚Ä‚Ì“_‚ªGˆí‚Å‚ ‚éB
 ƒQ[ƒ€‚Ì–Ú“I‚Í“¯–¿ŒR‚ÌXƒEƒCƒ“ƒO‚Éæ‚èž‚ÝAƒfƒXƒXƒ^[‚ð”j‰ó‚·‚é‚±‚ÆB
 6‚Â‚ÌƒV[ƒ‹ƒh‚ð‘S‚ÄŽ¸‚Á‚Ä‚µ‚Ü‚¤‚ÆƒQ[ƒ€ƒI[ƒo[‚Æ‚È‚éB
 ƒQ[ƒ€ŠJŽnŽž‚ÉƒC[ƒW[Aƒ~ƒfƒBƒAƒ€Aƒn[ƒh‚Ì3‚Â‚©‚çƒvƒŒƒCƒ‚[ƒh‚ð‘I‚Ô‚±‚Æ‚ª‚Å‚«‚éB
@@ -76276,6 +76963,38 @@ CPU\¬[SH-2 (2), 68000]
 
 $end
 
+$info=stepstag
+$bio
+ƒXƒeƒbƒsƒ“ƒOƒXƒe[ƒW
+
+
+”­”„”NF1999.06
+
+ŠJ”­^”­”„Œ³FƒWƒƒƒŒƒR
+
+ƒWƒƒƒ“ƒ‹FƒŠƒYƒ€ƒAƒNƒVƒ‡ƒ“
+
+ƒRƒ“ƒgƒ[ƒ‰Fƒtƒbƒgƒpƒlƒ‹
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[68000 (2)]
+
+
+ƒRƒiƒ~‚Ìuƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“(DDR)v‚Ìƒqƒbƒg‚É‚æ‚èA‰¹ƒQ[ƒu[ƒ€‚Ì’†‚Å‚àV‚µ‚¢Œ`‚ª¶‚Ü‚ê‚½ŽžŠú‚ÉA
+ƒWƒƒƒŒƒR‚æ‚è“oê‚µ‚½‚à‚¤‚Ð‚Æ‚Â‚ÌƒŠƒYƒ€ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€uƒXƒeƒbƒsƒ“ƒOƒXƒe[ƒWvB
+ƒvƒŒƒC•û–@‚Í¶‰E‚É‰©¥ÔAã‰º‚ÉÂ‚Æ•À‚ñ‚¾ƒpƒlƒ‹‚ðâž‘Ì‚©‚ç—¬‚ê‚éƒTƒEƒ“ƒh‚É‡‚í‚¹ƒXƒeƒbƒv‚ð“¥‚Þ‚Æ‚¢‚¤A
+uDDRvˆÈ—ˆ•Ï‚í‚ç‚È‚¢Šî–{ƒXƒ^ƒCƒ‹‚Å‚ ‚éB
+ƒQ[ƒ€ƒ‚[ƒh‚ÍuBASIC STEPv‚Æ¶‰E‚ÌƒXƒeƒbƒv‚ð‹C‚É‚¹‚¸”zF‚¾‚¯‚ÌƒXƒeƒbƒv‚Å—V‚Ô‚±‚Æ‚ª‚Å‚«‚éuFREE STEPv‚Ì2Ží—ÞA
+“ïˆÕ“x‚àuEASYvuNORMALvuHARDv‚Ì3Ží—Þ‚ª—pˆÓ‚³‚ê‚Ä‚¢‚éB
+Žû˜^‹È‚ÍƒJƒo[‹È‚ð’†S‚É‘S14‹ÈB‚»‚Ì‚¤‚¿13‹È‚ÍƒIƒŠƒWƒiƒ‹ƒAƒŒƒ“ƒW‚É‚æ‚é‚à‚Ì‚È‚ª‚çA
+ƒXƒeƒbƒvƒ_ƒ“ƒXƒu[ƒ€‚Ì‰Î•t‚¯–ðuSTEPSv‚Ì‘åƒqƒbƒgƒiƒ“ƒo[u5,6,7,8v‚ªŒ´‹È‚Ì‚Ü‚ÜA
+ƒrƒfƒIƒNƒŠƒbƒv‚àƒIƒŠƒWƒiƒ‹ƒvƒƒ‚[ƒVƒ‡ƒ“ƒrƒfƒI‚ª‚»‚Ì‚Ü‚Ü—¬‚ê‚é‚Æ‚¢‚¤uDDRv‚É‚à‚È‚©‚Á‚½“Á’¥‚ðŽ‚Á‚½ì•i‚Å‚ ‚éB
+
+
+
+$end
+
 $info=stinger
 $bio
 ƒXƒeƒBƒ“ƒK[
@@ -76584,12 +77303,11 @@ CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[QSound]
 
 
 uƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ZEROv‚Ì‘±•ÒB
-‚µ‚©‚µƒXƒg[ƒŠ[–Ê‚ÌŠÖ˜A«‚Í‚È‚­A‚æ‚Á‚ÄA‰½‚Å‚à‚ ‚è‚Æ‚È‚Á‚Ä‚¢‚éB
-uƒQƒ“vuƒ_ƒ‹ƒVƒ€vuƒƒŒƒ“ƒgvuƒUƒ“ƒMƒGƒtvu‚³‚­‚çv‚ÆA
-‚à‚Í‚âV‚µ‚¢‚ÆŒÄ‚×‚é‚Ì‚©‚Ç‚¤‚©‚à‚í‚©‚ç‚È‚¢VƒLƒƒƒ‰ƒNƒ^[‚ª5l’Ç‰Á‚³‚ê‚ÄA
-ƒVƒXƒeƒ€–Ê‚Å‚ÍA
-ƒX[ƒp[ƒRƒ“ƒ{ƒQ[ƒW‚ð—˜—p‚µ‚ÄAˆê’èŽžŠÔ“à‚É¦‚Ü‚¶‚¢˜A‘±UŒ‚‚ªày—ô‚·‚éuƒIƒŠƒWƒiƒ‹ƒRƒ“ƒ{vƒVƒXƒeƒ€‚ðÌ—p‚µ‚Ä‚¢‚éB
-‚»‚Ì‘¼Auƒ[ƒƒJƒEƒ“ƒ^[v‚àƒpƒ“ƒ`‚ÆƒLƒbƒN‚Ì2Ží—Þ‚ªŽg—p‰Â”\‚Æ‚È‚Á‚Ä‚¢‚éB
+“à—e‚ÍuZEROv‚Ìƒo[ƒWƒ‡ƒ“ƒAƒbƒv”Å“I‚È‚à‚Ì‚Æ‚È‚Á‚Ä‚¨‚èAuƒ_ƒ‹ƒVƒ€vuƒUƒ“ƒMƒGƒtv‚Æ‚¢‚Á‚½‚¨“éõ‚Ý‚ÌƒLƒƒƒ‰ƒNƒ^[‚©‚çA
+uƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[v‚Å“oê‚µ‚½uƒQƒ“vAVƒLƒƒƒ‰ƒNƒ^[u‚³‚­‚çv‚È‚Ç‚ÌƒLƒƒƒ‰ƒNƒ^[‚Ì’Ç‰Á‚³‚ê‚Ä‚¢‚éB
+‚Ü‚½ƒVƒXƒeƒ€–Ê‚Å‚Í‘Oì‚Ì–â‘è“_‚¾‚Á‚½ZEROƒRƒ“ƒ{‚ª”pŽ~‚³‚ê‚½‘ã‚í‚è‚ÉA
+—­‚Ü‚Á‚½ƒQ[ƒW‚ðÁ”ï‚·‚é‚±‚Æ‚Åˆê’èŽžŠÔ“à‚É˜A‘±‹Z‚ð•ú‚Â‚±‚Æ‚ª‰Â”\‚ÈuƒIƒŠƒWƒiƒ‹ƒRƒ“ƒ{v‚ðÌ—p‚µA
+uƒ[ƒƒJƒEƒ“ƒ^[v‚àƒpƒ“ƒ`‚ÆƒLƒbƒN‚Ì2Ží—Þ‚ªŽg—p‰Â”\‚È‚Ç‚Ì‰ü—Ç‚ª‰Á‚¦‚ç‚ê‚½‚±‚Æ‚ÅAƒoƒ‰ƒ“ƒX‚ÌŽæ‚ê‚½ì•i‚Æ‚È‚Á‚Ä‚¢‚éB
 
 
 
@@ -77491,12 +78209,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
 
-¦uMEGA PLAYv‚Æ‚ÍA
-ƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA
-4–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -77613,7 +78325,7 @@ $bio
 
 ”­”„”NF1991.06
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹FƒVƒ…[ƒeƒBƒ“ƒO
 
@@ -77624,8 +78336,7 @@ $bio
 CPU\¬[68000 (3), Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2151, Sega PCM]
 
 
-uG-LOCv‚Ìƒo[ƒWƒ‡ƒ“ƒAƒbƒv”Å“I‚Èì•i‚Æ‚È‚Á‚½‚Ì‚ª‚±‚Ìì•iB
-uƒAƒtƒ^[ƒo[ƒi[vƒVƒŠ[ƒY‚É‹ß‚¢ì‚è‚É‚È‚Á‚Ä‚¢‚éB
+uG-LOCv‚Ìƒo[ƒWƒ‡ƒ“ƒAƒbƒv”Å“I‚Èì•i‚Æ‚È‚Á‚½‚Ì‚ª‚±‚Ìì•iBuƒAƒtƒ^[ƒo[ƒi[vƒVƒŠ[ƒY‚É‹ß‚¢ì‚è‚É‚È‚Á‚Ä‚¢‚éB
 §ŒÀŽžŠÔ“à‚Ìƒ~ƒbƒVƒ‡ƒ“ƒNƒŠƒA[Œ`Ž®‚ð”pŽ~‚µ‚ÄA‘S15ƒXƒe[ƒW‚ÌŽc‹@§‚ÉƒVƒXƒeƒ€‚ª•ÏXB
 —U“±ƒ~ƒTƒCƒ‹‚âƒoƒ‹ƒJƒ“–C‚ÌŽg—p§ŒÀ‚È‚Ç‚ð‚È‚­‚µAƒAƒtƒ^[ƒo[ƒi[‚É‚æ‚éƒI[ƒo[ƒq[ƒg‚à”rœ‚³‚ê‚½B
 uG-LOCv‚æ‚è“G‹@‚ÌUŒ‚‚ªŒƒ‚µ‚­‚È‚èA‘u‰õŠ´‚ÆƒXƒs[ƒhŠ´‚ª‚æ‚è‘‚µ‚Ä‚¢‚éB
@@ -78263,11 +78974,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ‘Oì‚É‚ ‚Á‚½‚R‚c–Ê‚ª‚È‚­‚È‚Á‚½B
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -78485,6 +79191,34 @@ CPU\¬[68EC020, 68000]@‰¹Œ¹ƒ`ƒbƒv[ES5505]
 uƒX[ƒp[ƒ_ƒbƒVƒ…vuƒnƒCƒp[ƒVƒ…[ƒgvuƒX[ƒp[ƒK[ƒhv‚È‚Ç‘S•”‚Å7Ží—Þ‚à‚ ‚é’´•KŽE‹Z‚ÍA
 Å‰‚Í2Ží—Þ‚µ‚©‘I‚×‚È‚¢‚ªAŸ‚¿i‚Þ‚±‚Æ‚Åƒ†ƒjƒbƒg‚ð‰Ò‚¬A‚Ç‚ñ‚Ç‚ñ‹­—Í‚È‹Z‚ªŽg—p‰Â”\‚Æ‚È‚éB
 ‚»‚Ì‘¼AŽ©•ª‚ÌƒVƒ…[ƒg‚ð‚à‚¤ˆê“xŒ©‚é‚±‚Æ‚ª‚Å‚«‚éVTR‹@”\‚ð“‹Ú‚·‚é‚È‚ÇA‰‰o–Ê‚Å‚Ì‹­‰»‚ª}‚ç‚ê‚Ä‚¢‚éB
+
+
+
+$end
+
+$info=taitofx1
+$bio
+ƒ^ƒCƒg[ ‚e‚w|‚P
+
+
+”­”„”NF1996.03
+
+ŠJ”­Œ³Fƒ^ƒCƒg[ / ƒ\ƒj[@”­”„Œ³Fƒ^ƒCƒg[
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒ^ƒCƒg[ FX-1ƒVƒXƒeƒ€
+
+CPU\¬[PSX CPU, Z80]@‰¹Œ¹ƒ`ƒbƒv[SPU, YM2610B]
+
+
+–¼ƒVƒXƒeƒ€Šî”ÂuF3ƒVƒXƒeƒ€(F3ƒpƒbƒP[ƒWƒVƒXƒeƒ€)v‚É‘±‚¢‚ÄA
+ƒ^ƒCƒg[‚ªŠJ”­‚µ‚½ƒvƒŒƒCƒXƒe[ƒVƒ‡ƒ“ŒÝŠ·CGŠî”ÂuFX-1vB
+ƒ\ƒj[‚ªŠJ”­‚µ‚½uZNv‚ðƒƒCƒ“ƒ{[ƒh‚Æ‚µA‚»‚±‚ÉŠeì•i‚ÌuFX-1vƒ{[ƒh‚ª•t‚­‚Æ‚¢‚¤ƒVƒXƒeƒ€Šî”Â‚Ì\¬‚É‚È‚Á‚Ä‚¢‚éB
+uƒX[ƒp[ƒtƒbƒgƒ{[ƒ‹ƒ`ƒƒƒ“ƒvv‚ª‰Ì—p‚Æ‚È‚èAuƒTƒCƒLƒbƒNƒtƒH[ƒXvAƒo[ƒWƒ‡ƒ“ƒAƒbƒv”Å‚Æ‚È‚éuFX-1Bv‚Å‚ÍuƒŒƒCƒXƒg[ƒ€v‚È‚Ç‚ð¶‚Ýo‚µA
+97”N‚É“oê‚·‚éuGƒ_ƒ‰ƒCƒAƒX Ver.2v‚Ü‚Å‚Ì10ƒ^ƒCƒgƒ‹‚ÉŽg—p‚³‚ê‚é‚±‚Æ‚É‚È‚Á‚½ƒVƒXƒeƒ€Šî”Â‚Å‚ ‚éB
 
 
 
@@ -78799,12 +79533,6 @@ RPG—v‘f‚ð‰Á‚¦‚½ƒIƒŠƒWƒiƒ‹ƒ‚[ƒh‚ª‘I‚×‚éB
 ‚Ü‚½AƒpƒXƒ[ƒh‚É‚æ‚éƒRƒ“ƒeƒBƒjƒ…[‚ª‰Â”\‚Æ‚È‚Á‚Ä‚¢‚éB
 
 
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -78889,6 +79617,39 @@ CPU\¬[S2650]
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
 ¦uƒXƒy[ƒXƒCƒ“ƒx[ƒ_[v‚ÌƒRƒs[ƒQ[ƒ€
+
+
+
+$end
+
+$info=skns
+$bio
+ƒX[ƒp[EƒJƒlƒREƒmƒ”ƒ@EƒVƒXƒeƒ€
+
+
+”­”„”NF1996.09
+
+ŠJ”­Œ³F“ú—§»ìŠ@”­”„Œ³FƒJƒlƒR
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒ”ƒ@ƒVƒXƒeƒ€
+
+CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
+
+
+Ž¸”s‚ÉI‚í‚Á‚½uAXƒVƒXƒeƒ€v‚ÌÕ‚ðˆø‚«Œp‚¬A“oê‚µ‚½32ƒrƒbƒgƒVƒXƒeƒ€ƒ{[ƒhuƒX[ƒp[ƒmƒ”ƒ@ƒVƒXƒeƒ€vB
+ƒZƒKAƒiƒ€ƒR‚Ì‚æ‚¤‚È’PˆêŠî”Â‚Å‚Í‚È‚­AˆÀ‰¿‚É‹Ÿ‹‹¥ŒðŠ·‚ª‚Å‚«‚éROMƒJƒZƒbƒg‚É‚æ‚éŽŸ¢‘ãƒVƒXƒeƒ€‚Æ‚µ‚Ä“oê‚µA
+“X‚É‚Íƒ}ƒU[ƒ{[ƒh‚ð–³ž‚Å‘Ý‚µo‚·‘ã‚í‚è‚ÉROMƒJƒZƒbƒg‚ð”Ì”„AƒTƒuƒ{[ƒh‚ð’Ç‰Á‚·‚é‚±‚Æ‚ÅCGƒQ[ƒ€‚à‰Â”\‚ÅA
+“ÆŽ©‚ÌƒQ[ƒ€ƒfƒUƒCƒ“ƒVƒXƒeƒ€uƒI[ƒTƒŠƒ“ƒOƒVƒXƒeƒ€v‚É‚æ‚èƒT[ƒhƒp[ƒeƒB‚ªƒQ[ƒ€ŠJ”­‚ðs‚¤‚Æ‚¢‚¤
+uƒX[ƒp[ƒmƒ”ƒ@ƒVƒXƒeƒ€Œv‰æv‚Ì‚à‚ÆŽsê•‹y‚ð‘_‚Á‚Ä‚¢‚½B‚µ‚©‚µŠJ”­¥»‘¢Œ³‚Ì“ú—§»ìŠ‚ÆA
+uƒI[ƒTƒŠƒ“ƒOƒVƒXƒeƒ€v‚ÌŠJ”­Œ³‚Å‚ ‚é“ú—§ƒ\ƒtƒgƒEƒFƒAƒGƒ“ƒWƒjƒAƒŠƒ“ƒO‚ÌoŒüŽÐˆõ‚É‚æ‚éŒo‰cŽx”z‚É‚æ‚èA
+‰ïŽÐ‚ª‘¹ŠQ‚ð”í‚Á‚½‚Æ‚µ‚ÄƒJƒlƒR‘¤‚ª‘i×‚ð‹N‚±‚µA‘S‚Ä‚ÌŒv‰æ‚ªŽ¸”s‚ÉI‚í‚Á‚Ä‚µ‚Ü‚¤B
+‚»‚ê‚¾‚¯‚Å‚È‚­AƒJƒlƒRŽ©g‚àV‚µ‚¢ì•i‚ðì‚èo‚·‚±‚Æ‚ª‚Å‚«‚È‚­‚È‚èA
+2000”N4ŒŽAC—•”–å‚ðœ‚¢‚½‘S‚Ä‚ÌŽ–‹Æ‚©‚ç“P‘Þ‚·‚é‚±‚Æ‚É‚È‚éB
+—]’k‚¾‚ª“–‰–¼‘O‚ªuƒX[ƒp[ƒJƒlƒRƒmƒ”ƒ@ƒVƒXƒeƒ€v‚¾‚Á‚½‚ªAŒã‚ÉuƒX[ƒp[ƒJƒlƒRƒVƒXƒeƒ€v‚Æ•ÏX‚µ‚Ä‚¢‚éB
 
 
 
@@ -79023,11 +79784,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ‚±‚ÌƒQ[ƒ€‚É‚æ‚èAƒtƒ@ƒ~ƒRƒ“‚Ì’m–¼“x‚Íˆê‹C‚É‚‚Ü‚Á‚½‚Æ‚¢‚Á‚Ä‚à‰ßŒ¾‚Å‚Í‚È‚¢‚¾‚ë‚¤B
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -79059,11 +79815,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 “ú–{‚Å‚Í4”NŒã‚Ì1992”N‚É”­”„B
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -79091,11 +79842,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ‚»‚ê‚É‰Á‚¦¡‰ñ‚ÍAƒ}ƒbƒvŒ`Ž®‚Ìƒ‹[ƒg‘I‘ð‹@”\AV‚½‚Èƒpƒ[ƒAƒbƒvƒAƒCƒeƒ€‚ðƒXƒgƒbƒN‚Å‚«‚é“_‚ª‘‚¦‚½B
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -79118,10 +79864,6 @@ CPU\¬[G65C816, SPC700]@‰¹Œ¹ƒ`ƒbƒv[Custom]
 
 
 ‹°—³ƒ‰ƒ“ƒh‚ð•‘‘ä‚Éƒ}ƒŠƒI‚ªAÄ‚Ñ–‚‰¤ƒNƒbƒp‚É‚³‚ç‚í‚ê‚½ƒs[ƒ`•P‚ð‹~‚¤‚½‚ß–`Œ¯‚Éo”­‚·‚éB
-
-
-¦uNintendo Super Systemv‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒX[ƒp[ƒtƒ@ƒ~ƒRƒ“v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-3–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -79229,12 +79971,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 F-1ƒŒ[ƒX‚ðÄŒ»‚µ‚½A‹Æ–±—p‚©‚ç‚ÌˆÚA”ÅB
 ‹Æ–±—p‚Æ“¯‚¶‚­ƒX[ƒp[ƒ‚ƒiƒRGP‚É‰Á‚¦A‘S16í‚ðí‚¤ƒ[ƒ‹ƒhƒ`ƒƒƒ“ƒsƒIƒ“ƒVƒbƒvAƒtƒŠ[ƒvƒ‰ƒNƒeƒBƒX‚ª’Ç‰Á‚³‚ê‚Ä‚¢‚éB
 ƒX[ƒp[ƒ‚ƒiƒRGPƒ‚[ƒh‚Å‚Í1‰ñ–Ú‚ÌƒŒ[ƒX‚Å3ˆÊˆÈ“à‚ÉƒS[ƒ‹‚·‚ê‚ÎA2‰ñ–Ú‚ÌƒŒ[ƒXAƒEƒFƒbƒgƒŒ[ƒX‚Éi‚Þ‚±‚Æ‚ª‚Å‚«‚éB
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -79830,7 +80566,7 @@ Super Slam
 CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[OKI6295]
 
 
-¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+¦ƒiƒ€ƒR‚ÌuƒX[ƒp[ƒ[ƒ‹ƒhƒR[ƒgv‚ÌƒfƒbƒhƒRƒs[ì•iB
 
 
 
@@ -79884,10 +80620,6 @@ CPU\¬[G65C816, SPC700]@‰¹Œ¹ƒ`ƒbƒv[Custom]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
-
-
-¦uNintendo Super Systemv‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒX[ƒp[ƒtƒ@ƒ~ƒRƒ“v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-3–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -80345,10 +81077,6 @@ CPU\¬[G65C816, SPC700]@‰¹Œ¹ƒ`ƒbƒv[Custom]
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
 
-¦uNintendo Super Systemv‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒX[ƒp[ƒtƒ@ƒ~ƒRƒ“v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-3–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -80372,12 +81100,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 
 ‹Æ–±—p‚ðƒAƒŒƒ“ƒW‚µ‚½ˆÚAì‚ÅA2DƒV[ƒ“‚Æ3DƒV[ƒ“‚ªŒðŒÝ‚É“WŠJ‚·‚éB
 2DƒV[ƒ“‚Å‚Íã¸‚Æ‰º~‚ª‚Å‚«‚È‚­‚È‚Á‚Ä‚¢‚é‚È‚Ç‹Æ–±—p‚Æˆá‚¤•”•ª‚ª‚ ‚éB3DƒV[ƒ““r’†A’†ƒ{ƒX‚ª“oêB
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -81042,11 +81764,12 @@ $bio
 CPU\¬[V60]@‰¹Œ¹ƒ`ƒbƒv[ES5506]
 
 
-ƒ‚[ƒ^ƒ‹ƒRƒ“ƒoƒbƒg‚È‚Ç‚Æ“¯‚¶‰æ‘œŽæ‚èž‚ÝŒ^‚Ì‘ÎíŠi“¬ƒQ[ƒ€B
-“–Žž‚ÌƒQ[ƒ€‚É‚µ‚Ä‚Í“®‚«‚ªŠŠ‚ç‚©‚Å‘€ì«‚àˆ«‚­‚È‚­A‚È‚©‚È‚©‚ÌŠ®¬“x‚ÉŽdã‚ª‚Á‚Ä‚¢‚éB
-“Š‚°ŽógƒVƒXƒeƒ€‚â•ŠíE‚¢ƒVƒXƒeƒ€‚ð“‹Ú‚µ‚Ä‚¢‚é‚ªAŽóg‚ÉŽ¸”s‚·‚é‚Æƒ_ƒ[ƒW2”{A
-•ŠíUŒ‚‚ÍŒ„‚ª‘å‚«‚­‚ÄŽg‚¢‚Ã‚ç‚¢‚È‚ÇAƒCƒ}ƒCƒ`‚ÈŽd—l‚Æ‚È‚Á‚Ä‚¢‚éB
-‚Ü‚½A•Ší‚â•KŽE‹Z‚Åƒgƒhƒ‚ðŽh‚·‚Æ‘Îí‘ŠŽè‚Í—lX‚ÈŽc“‚ÈŽ€‚É•û‚ð‚·‚éB
+‰æ‘œŽæ‚èž‚ÝŒ^‚ÌƒfƒWƒ^ƒCƒY‘ÎíŠi“¬ƒQ[ƒ€B
+“Š‚°ŽógƒVƒXƒeƒ€‚â•ŠíE‚¢ƒVƒXƒeƒ€‚ð“‹Ú‚µ‚Ä‚¢‚é‚ªAŽóg‚ÉŽ¸”s‚·‚é‚Æƒ_ƒ[ƒW2”{A•ŠíUŒ‚‚ÍŒ„‚ª‘å‚«‚­‚ÄŽg‚¢‚Ã‚ç‚¢‚È‚ÇAƒCƒ}ƒCƒ`‚ÈŽd—l‚Æ‚È‚Á‚Ä‚¢‚éB
+‚Ü‚½A•Ší‚â•KŽE‹Z‚Åƒgƒhƒ‚ðŽh‚·‚Æ‘Îí‘ŠŽè‚Í—lX‚ÈŽc“‚ÈÅŒã‚ðŒ}‚¦‚é‚±‚Æ‚É‚È‚é
+“–Žž‚ÌƒQ[ƒ€‚É‚µ‚Ä‚Í“®‚«‚ªŠŠ‚ç‚©‚Å‘€ì«‚àˆ«‚­‚È‚­A‚È‚©‚È‚©‚ÌŠ®¬“x‚ÉŽdã‚ª‚Á‚Ä‚¢‚é‚ªAo‰ñ‚è‚ÍƒCƒ}ƒCƒ`‚Å‚ ‚Á‚½B
+ŠJ”­‚Í“|ŽY‚µ‚½UPL‚ÌƒXƒ^ƒbƒt‚ª’†S‚ÌV‰ïŽÐuƒXƒJƒ‰ƒxvBƒTƒ~[H‹Æ‚©‚çŠCŠOŒü‚¯‚Ìì•i‚Æ‚µ‚ÄA
+ƒ‚[ƒ^ƒ‹ƒRƒ“ƒoƒbƒg‚ÌŠî”Â’ñ‹Ÿ‚ðŽó‚¯A“¯‚¶˜Hü‚Å‚ÌŠJ”­‚ð‹­‚¢‚ç‚ê‚½‚Æ‚¢‚¤B
 
 
 
@@ -81306,6 +82029,35 @@ ADK‚æ‚è“oê‚µ‚½MVS‰‚Ì–{«ŠûB
 –{«Šû‚Æ‚Í‚³‚Ý«Šû‚Ì2‚Â‚Ìƒ‚[ƒh‚ª—pˆÓ‚³‚ê‚Ä‚¢‚é‚Ì‚ÅA«Šû‚Ìƒ‹[ƒ‹‚ð’m‚ç‚È‚¢l‚Å‚àŠy‚µ‚Þ‚±‚Æ‚ª‚Å‚«‚éB
 ‚Ü‚½A‰SŽÒƒ‚[ƒh‚Å‚Í‹î‚Ì“®‚¯‚é”ÍˆÍ‚ðŽ¦‚µ‚Ä‚­‚ê‚é‚È‚ÇeØ‚ÈƒVƒXƒeƒ€‚ªŽæ‚ç‚ê‚Ä‚¢‚éB
 2l‚Å‘ÎíƒvƒŒƒC‚à‰Â”\B
+
+
+
+$end
+
+$info=konamigx
+$bio
+ƒRƒiƒ~ ƒVƒXƒeƒ€‚f‚w
+
+
+”­”„”NF1994
+
+ŠJ”­^”­”„Œ³FƒRƒiƒ~
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒRƒiƒ~ ƒVƒXƒeƒ€GX
+
+CPU\¬[68EC020, 68000]@‰¹Œ¹ƒ`ƒbƒv[054539 (2)]
+
+
+uƒcƒCƒ“16ƒVƒXƒeƒ€v‚É‘±‚­ƒRƒiƒ~‚Ì16ƒrƒbƒgƒVƒXƒeƒ€Šî”ÂuƒVƒXƒeƒ€GXvB
+ƒ}ƒU[ƒ{[ƒh‚ÆƒTƒuƒ{[ƒh‚Æ‚¢‚¤‘g‚Ý‡‚í‚¹‚¾‚ªAƒ}ƒU[ƒ{[ƒh‚ÍŒã‚É‰ü—Ç”Å‚ªƒŠƒŠ[ƒX‚³‚ê‚Ä‚¨‚èA
+‚Ü‚½ƒQ[ƒ€“à—e‚ðŽû˜^‚·‚éƒTƒuƒ{[ƒh‚É‚à‚»‚ê‚¼‚êƒOƒ‰ƒtƒBƒbƒN«”\‚â“ü—Í‹@”\A
+ƒ‚ƒjƒ^[ƒVƒXƒeƒ€‚ÌˆÙ‚È‚é4Ží—Þ‚Ìƒ{[ƒh‚ª“oê‚µ‚Ä‚¢‚éB
+“–‰‚ÍƒVƒXƒeƒ€Šî”Â‚Æ‚µ‚Ä”Ì”„‚³‚ê‚¸‚É8ì–Ú‚Æ‚È‚éuƒhƒ‰ƒO[ƒ“ƒ}ƒCƒgv‚ÅŒðŠ·—pƒTƒuƒ{[ƒh‚Ì”Ì”„‚ðŽn‚ß‚Ä‚¢‚éB
+uƒŒ[ƒVƒ“ƒOƒtƒH[ƒXv‚©‚çuƒEƒCƒjƒ“ƒOƒXƒpƒCƒNv‚Ü‚ÅŽg—p‚³‚ê‚é‚±‚Æ‚Æ‚È‚Á‚½B
 
 
 
@@ -82603,11 +83355,6 @@ NESi•Ä‘”Å‚Ìƒtƒ@ƒ~ƒRƒ“j‚Å‚Íƒ~ƒŠƒIƒ“ƒZƒ‰[‚ð‹L˜^‚µ‚½ì•iB
 ŽÀÝ‚·‚é12ƒ`[ƒ€‚ª“oêA‘IŽè’B‚àŽÀ–¼‚Å‚ ‚éB
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -82744,12 +83491,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM-2612, SN76496 (2)]
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
 
-¦uMEGA PLAYv‚Æ‚ÍA
-ƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA
-4–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -82884,11 +83625,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 “ú–{‚Å‚Ù‚Æ‚ñ‚Ç’m‚ç‚ê‚Ä‚¢‚È‚©‚Á‚½ˆ×‚Å‚ ‚éB
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -82969,11 +83705,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ƒA[ƒP[ƒh”Å‚©‚ç‚ÌˆÚA‚Ì‰¡ƒXƒNƒ[ƒ‹ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
 ŽålŒö‚ÍAƒAƒƒŠƒJ‚Å–­‚ÉŽó‚¯‚Ä‚¢‚é‹T”EŽÒ‚Ì‚SliHjB
 ˆ«‚Ì‘gDƒtƒbƒgƒNƒ‰ƒ“‚É‚³‚ç‚í‚ê‚½ƒqƒƒCƒ“AƒGƒCƒvƒŠƒ‹‚ð•‚¯o‚·‚½‚ßAŽ€—Í‚ðs‚­‚µ‚Äí‚¢‚ð’§‚ÞB
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -83086,8 +83817,8 @@ CPU\¬[PSX CPU, M37710]@‰¹Œ¹ƒ`ƒbƒv[C352]
 
 
 ‘Oì‚©‚çƒVƒXƒeƒ€–Ê‚Å•ÏX‚ª‚ ‚è‚È‚ª‚ç‚àA‘Oì‚ð—y‚©‚Éã‰ñ‚éo—ˆ‚Å“oê‚µ‚½‚Ì‚ª‚±‚Ìì•iB
-‰Ò“­ŽžŠÔ‚ðŒo‚é‚±‚Æ‚É‚æ‚èŽg—p‚Å‚«‚éƒLƒƒƒ‰ƒNƒ^[‚ª‘‚¦‚é‚Æ‚¢‚¤uƒ^ƒCƒ€ƒŠƒŠ[ƒXv
-ƒVƒXƒeƒ€‚ªÌ—p‚³‚êAÅI“I‚É‚Í‘S23l‚ÌƒLƒƒƒ‰ƒNƒ^[‚ªŽg‚¤‚±‚Æ‚ªo—ˆ‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
+‰Ò“­ŽžŠÔ‚ðŒo‚é‚±‚Æ‚É‚æ‚èŽg—p‚Å‚«‚éƒLƒƒƒ‰ƒNƒ^[‚ª‘‚¦‚é‚Æ‚¢‚¤uƒ^ƒCƒ€ƒŠƒŠ[ƒXvƒVƒXƒeƒ€‚ªÌ—p‚³‚êA
+ÅI“I‚É‚Í‘S23l‚ÌƒLƒƒƒ‰ƒNƒ^[‚ªŽg‚¤‚±‚Æ‚ªo—ˆ‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
 ‚±‚Ìì•i‚©‚ç“ÆŽ©‚ÌƒXƒ^ƒ“ƒX‚ð’z‚«AƒZƒK‚Ìuƒo[ƒ`ƒƒƒtƒ@ƒCƒ^[v‚Æ•À‚Ô‚R‚cŠi“¬ƒQ[ƒ€‚Ì‘ã•\ì‚Æ‚È‚éB
 Œã‚ÉƒLƒƒƒ‰ƒNƒ^[ƒoƒ‰ƒ“ƒX‚ªŒ©’¼‚³‚ê‚½Ver.ƒÀ‚ª“oê‚·‚éB
 
@@ -83170,7 +83901,7 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰Fƒ}[ƒWƒƒƒ“ƒpƒlƒ‹
 
-ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒoƒVƒXƒeƒ€
+ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒ”ƒ@ƒVƒXƒeƒ€
 
 CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
 
@@ -83333,11 +84064,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ƒtƒ@ƒ~ƒRƒ“ƒeƒjƒX‚ÌŒ´“_‚Æ‚¢‚¦‚éì•iB
 “–ŽžA”C“V“°‚ÍƒA[ƒP[ƒh‚àŽè‚ª‚¯‚Ä‚¨‚èA“¯‚¶‚à‚Ì‚ªw‚u‚rƒeƒjƒXx‚Æ‚µ‚ÄƒŠƒŠ[ƒX‚³‚ê‚Ä‚¢‚½B
 ƒ{[ƒ‹‚Ì‰e‚ð’n–Ê‚É—Ž‚Æ‚·‚Æ‚¢‚¤A“–Žž‚Æ‚µ‚Ä‚Í‰æŠú“I‚Èˆ—‚ÅA‹——£‚ª‚Â‚©‚Ý‚â‚·‚­‚È‚Á‚Ä‚¢‚éB
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -83525,18 +84251,20 @@ $bio
 
 ƒWƒƒƒ“ƒ‹F—Ž‰ºŒ^ƒpƒYƒ‹
 
-ƒRƒ“ƒgƒ[ƒ‰F4•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“
+ƒRƒ“ƒgƒ[ƒ‰F3•ûŒüƒŒƒo[+1ƒ{ƒ^ƒ“
 
 ƒVƒXƒeƒ€ƒ{[ƒhFƒZƒK ƒVƒXƒeƒ€E
 
 CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[SN76496 (2)]
 
 
-“–‰ƒVƒXƒeƒ€16B‚ªŽg‚í‚ê‚½ƒeƒgƒŠƒX‚¾‚Á‚½‚ªA‘åƒqƒbƒgì‚Æ‚È‚Á‚½‚½‚ßŠî”Â¶ŽY‚ªŠÔ‚É‡‚í‚¸A
-‚»‚Ì‚½‚ß•s‘«‚µ‚½ƒVƒXƒeƒ€16B‚Ì‘ã‚í‚è‚É—]‚Á‚½ƒVƒXƒeƒ€16A‚ªŽg‚í‚ê‚½‚à‚Ì‚ÌA
-‚»‚ê‚Å‚à‘«‚è‚È‚©‚Á‚½‚½‚ß“oê‚µ‚½‚Ì‚ª‚±‚ÌƒZƒKƒ}[ƒN‡Vƒx[ƒXŠî”Â‚ÌƒVƒXƒeƒ€E”ÅƒeƒgƒŠƒX‚Å‚ ‚éB
-‚µ‚©‚µƒVƒXƒeƒ€16‚©‚çƒOƒŒ[ƒhƒ_ƒEƒ“‚µ‚Ä‚µ‚Ü‚Á‚Ä‚¢‚é‚½‚ßƒOƒ‰ƒtƒBƒbƒN‚â‘€ì«AƒTƒEƒ“ƒh‚Í‘å‚«‚­—ò‚é‚±‚Æ‚É‚È‚éB
-‚Ü‚½ƒ^ƒCƒg[‚ªŽ©ŽÐ‚ÌƒVƒXƒeƒ€Šî”ÂBƒVƒXƒeƒ€‚ðŽg‚Á‚½OEM¶ŽY‚ðs‚Á‚Ä‚¢‚éB
+ƒVƒXƒeƒ€16B‚ðŽg—p‚µ‚½uƒeƒgƒŠƒXv‚Ì‘åƒqƒbƒg‚É‚æ‚é‰e‹¿‚ðŽó‚¯“oê‚µ‚½‚Ì‚ª‚±‚ÌƒVƒXƒeƒ€E”Å‚ÌƒeƒgƒŠƒXB
+“–‰‚Í“¯‚¶‚­ƒVƒXƒeƒ€16B‚ðŽg—p‚µ‚½o‰×Ï‚Ý‚Ì‘¼ì•i‚ÌŠî”Â‚ð‰ñŽû‚µROMŒðŠ·‚ðs‚Á‚½‚èA
+ƒVƒXƒeƒ€16A‚ÌÝŒÉ•ª‚ðŽg—p‚·‚é‚±‚Æ‚Å•s‘«‚µ‚½•ª‚ðƒJƒo[‚µ‚Ä‚¢‚½‚ªA‚»‚ê‚Å‚àƒJƒo[‚µ‚«‚ê‚È‚©‚Á‚½‚½‚ßA
+—õ‰¿”Å‚Æ‚È‚é‚±‚ÌƒZƒKƒ}[ƒN‡Vƒx[ƒXŠî”Â‚ðŽg—p‚µ‚½‚Ì‚ª“oê‚Ì‚«‚Á‚©‚¯B
+ƒVƒXƒeƒ€16‚æ‚èƒOƒŒ[ƒhƒ_ƒEƒ“‚µ‚½8ƒrƒbƒg‚Ìƒn[ƒhƒEƒFƒA‚ðŽg—p‚µ‚Ä‚¢‚é‚½‚ßA
+ƒQ[ƒ€ƒVƒXƒeƒ€‚É•Ï‰»‚Í‚È‚¢‚à‚Ì‚ÌƒOƒ‰ƒtƒBƒbƒN‚â‘€ì«AƒTƒEƒ“ƒh‚ÍƒVƒXƒeƒ€16”Å‚Æ”ä‚×‚é‚Æ‘å‚«‚­—ò‚éB
+—]’k‚¾‚ªƒ^ƒCƒg[‚ªŽ©ŽÐ‚ÌƒVƒXƒeƒ€Šî”Â‚ðŽg‚¢OEM¶ŽY‚ðs‚Á‚½BƒVƒXƒeƒ€”Å‚ÌƒeƒgƒŠƒX‚à‚ ‚éB
 
 
 
@@ -83566,12 +84294,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 —]’k‚¾‚ªƒƒKƒhƒ‰ƒCƒu”Å‚ðƒZƒK‚ª”Ì”„‚µ‚æ‚¤‚Æ‚µ‚Ä–³Šú‰„’·‚Æ‚È‚Á‚½‚ªA
 ‚±‚ÌMEGA-TECH”Å‚Í‹Æ–±—p‚Æ‚µ‚Ä“oê‚·‚é‚½‚ßA
 ‰Æ’ë—p‚É‚¨‚¯‚é¢ŠE“I‚È”Ì”„“ÆèŒ ‚ðŽ‚Á‚Ä‚¢‚½”C“V“°‚Æ‚ÌŠÔ‚É‚Í–â‘è‚Í‚È‚©‚Á‚½‚à‚Ì‚Æl‚¦‚ç‚ê‚éB
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -83967,8 +84689,9 @@ $bio
 CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[X1-010]
 
 
-
-
+–‚•¨‚É‚³‚ç‚í‚ê‚½”Þ—‚ð‹~‚¤‚Æ‚¢‚¤ƒXƒg[ƒŠ[‚Ì”äŠr“IƒVƒ“ƒvƒ‹‚ÈƒuƒƒbƒN•ö‚µƒQ[ƒ€B
+‚½‚Ü‚É‰æ–Ê‚ð‰¡Ø‚éæ‚è•¨‚Éƒ{[ƒ‹‚ð“–‚Ä‚é‚ÆƒAƒCƒeƒ€‚ªoŒ»‚µAŽæ‚é‚±‚Æ‚Å—lX‚Éƒpƒ[ƒAƒbƒv‚ª‰Â”\B
+ŠeƒXƒe[ƒW‚É‚Íˆê•—•Ï‚í‚Á‚½“GƒLƒƒƒ‰‚ª”z’u‚³‚ê‚Ä‚¢‚½‚è‚·‚é‚Ì‚Å‹C‚ª”²‚¯‚È‚¢B
 
 
 
@@ -84127,7 +84850,13 @@ $bio
 CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[OKI6295 (2)]
 
 
-NMK‚ªŠJ”­‚µ‚½cƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒO‚Ì—ÇìB
+NMK‚ªŠJ”­‚µ‚½cƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒO‚Ì—ÇìuƒTƒ“ƒ_[ƒhƒ‰ƒSƒ“vB
+‘€ì‚ÍƒŒƒo[‚Æ2ƒ{ƒ^ƒ“‚ÌŠî–{ƒXƒ^ƒCƒ‹‚¾‚ªAƒƒCƒhƒ^ƒCƒv‚ÌLˆæŽU’e‹@ŠÖ–CA
+ƒoƒ‹ƒJƒ“ƒ^ƒCƒv‚ÌU“®—±Žq‘¬ŽË–C‚È‚Ç4Ží—Þ‚Ì“Á’¥“I‚È“ÁŽê•ºŠí‚ª‚ ‚èAí—ª“I‚Èí‚¢‚ªŠy‚µ‚Þ‚±‚Æ‚ª‚Å‚«‚éB
+‚Ü‚½ƒ{ƒ“ƒo[‚Íã‹ó350km‚É‚ ‚éí—ªŽx‰‡UŒ‚‰q¯"SOL"‚©‚ç‚ÌƒTƒeƒ‰ƒCƒgƒŒ[ƒU[‚É‚æ‚éŠj—Z‡ƒiƒp[ƒ€ƒr[ƒ€‚Æ‚È‚Á‚Ä‚¨‚èA
+"SOL"‚Æ‚ÌƒRƒ“ƒrƒl[ƒVƒ‡ƒ“ƒvƒŒƒC‚ªd—v‚Æ‚È‚Á‚Ä‚­‚éB
+ƒXƒe[ƒW˜”Õ‚©‚ç“ïˆÕ“x‚Í‚‚ß‚ÅA“G‚ÌoŒ»ƒpƒ^[ƒ“‚ðŠo‚¦‚È‚¢‚Æ‚È‚©‚È‚©æ‚Ö‚Íi‚ß‚¸Aƒ{ƒ“ƒo[‚ðŽg‚Á‚Ä‚ÌƒSƒŠ‰Ÿ‚µ‚Åi‚Þê–Ê‚à‚ ‚é‚ªA
+‰‰o‚Ì”hŽè‚³‚ªŽó‚¯ƒqƒbƒgì‚Æ‚È‚Á‚½B‘S8ƒXƒe[ƒW‚Ìƒ‹[ƒv§‚¾‚ªA2Žü–ÚˆÈ~‚ªŠô‚Â‚©‚ÌƒXƒe[ƒW‚ª”ò‚Î‚³‚ê‘S‘Ì“I‚È\¬‚ª’Z‚­‚È‚Á‚Ä‚¢‚éB
 
 
 
@@ -84186,12 +84915,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 ƒpƒ[ƒAƒbƒv‚Í–L•x‚¾‚ªŽg‚¦‚È‚¢•¨‚à‘½‚­A‚½‚­‚³‚ñ‚Ì•Ší‚ðŽ‚Á‚Ä‚¢‚é‚Æ“G‚ÌUŒ‚‚ªŒƒ‚µ‚­‚È‚é“Á’¥‚ª‚ ‚é‚Ì‚ÅA
 ‘I‚ñ‚ÅŽæ‚é•K—v‚ª‚ ‚éBƒpƒ[ƒAƒbƒv‚Í2Ží—Þ‚ÌƒXƒe[ƒW‚Å•ÊX‚É‚È‚éB
 X68000”Å‚Ì“ïˆÕ“x‚ªŒƒ—ó‚ð‹É‚ß‚½‚Ì‚É‘Î‚µAŠô•ª‰¸‚â‚©‚É‚È‚Á‚Ä‚¢‚éB
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -84889,6 +85612,31 @@ CPU\¬[V60, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM3438, MultiPCM]
 
 $end
 
+$info=polystar
+$bio
+‚Æ‚×Iƒ|ƒŠƒXƒ^[ƒY
+
+
+”­”„”NF1997
+
+ŠJ”­^”­”„Œ³FƒRƒiƒ~
+
+ƒWƒƒƒ“ƒ‹FƒVƒ…[ƒeƒBƒ“ƒO
+
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒRƒiƒ~ M2ƒVƒXƒeƒ€
+
+CPU\¬[PPC602]
+
+
+
+
+
+
+
+$end
+
 $info=toffy
 $bio
 Toffy
@@ -85200,12 +85948,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 
 
 –k•Ä”ÅƒX[ƒp[ƒŠ[ƒOB
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -85565,6 +86307,30 @@ CPU\¬[68000 (2), Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2151, ADPCM]
 
 $end
 
+$info=toppyrap
+$bio
+Toppy & Rappy
+
+
+”­”„”NF1996
+
+ŠJ”­^”­”„Œ³FSemiCom
+
+ƒWƒƒƒ“ƒ‹FƒAƒNƒVƒ‡ƒ“
+
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+3ƒ{ƒ^ƒ“
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2151, OKI6295]
+
+
+¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
 $info=toratora
 $bio
 Tora Tora
@@ -85746,6 +86512,31 @@ CPU\¬[TMS34010, M6809]@‰¹Œ¹ƒ`ƒbƒv[YM2151, DAC, OKI6295]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
+$info=totlvice
+$bio
+ƒg[ƒ^ƒ‹ƒoƒCƒX
+
+
+”­”„”NF1997
+
+ŠJ”­^”­”„Œ³FƒRƒiƒ~
+
+ƒWƒƒƒ“ƒ‹FƒKƒ“ƒVƒ…[ƒeƒBƒ“ƒO
+
+ƒRƒ“ƒgƒ[ƒ‰FƒKƒ“ƒRƒ“ƒgƒ[ƒ‰[
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒRƒiƒ~ M2ƒVƒXƒeƒ€
+
+CPU\¬[PPC602]
+
+
+
+
 
 
 
@@ -85972,6 +86763,31 @@ CPU\¬[M6809 (2), 68000]@‰¹Œ¹ƒ`ƒbƒv[Namco 15XX]
 
 $end
 
+$info=tps
+$bio
+‚s‚o‚rƒVƒXƒeƒ€
+
+
+”­”„”NF1997
+
+ŠJ”­Œ³FƒeƒNƒ‚ / ƒ\ƒj[@”­”„Œ³FƒeƒNƒ‚
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒeƒNƒ‚ TPSƒVƒXƒeƒ€
+
+CPU\¬[PSX CPU]@‰¹Œ¹ƒ`ƒbƒv[SPU]
+
+
+
+
+
+
+
+$end
+
 $info=trackfld
 $bio
 ƒnƒCƒp[ƒIƒŠƒ“ƒsƒbƒN
@@ -86023,11 +86839,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ˜A‘Å–½‚ÌƒXƒ|[ƒcƒQ[ƒ€B
 ‚P‚O‚Oƒ[ƒgƒ‹A•’µ‚ÑAƒn[ƒhƒ‹A‚â‚è“Š‚°‚Ì‚SŽí–Ú‚Å‹L˜^‚ð‹£‚¤B
 ”M‚­‚È‚é‚ÆŽè‚Ì’É‚¢‚Ì‚à–Y‚ê–²’†‚É‚È‚Á‚Ä‚µ‚Ü‚¤‚Ì‚¾B
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -86987,11 +87798,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ˆê‚à‘‚­•½˜a‚ðŽæ‚è–ß‚·‚Ì‚¾I
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -87374,11 +88180,11 @@ CPU\¬[68000 (2),Z80]@‰¹Œ¹ƒ`ƒbƒv[YM2151, Sega PCM]
 
 
 –¼ìuƒAƒEƒgƒ‰ƒ“v‚Ì‘±•ÒB
-ƒjƒ…[ƒˆ[ƒN‚©‚çƒƒTƒ“ƒ[ƒ‹ƒX‚Ü‚Å‚ÌƒAƒƒŠƒJ‘å—¤‰¡’f‚ª•‘‘ä‚Æ‚È‚Á‚Ä‚¢‚éB
+¡‰ñ‚Íƒjƒ…[ƒˆ[ƒN‚©‚çƒƒTƒ“ƒ[ƒ‹ƒX‚Ü‚Å‚ÌƒAƒƒŠƒJ‘å—¤‰¡’f‚ª•‘‘ä‚Æ‚È‚Á‚Ä‚¢‚éB
 ‘Oì‚Æ‚ÌÅ‘å‚Ì‘Šˆá“_‚Æ‚µ‚Ä‚ÍAƒR[ƒX‚Ì•ªŠò“_‚ª–³‚­‚È‚èAƒ^ƒCƒgƒ‹’Ê‚èƒ^[ƒ{‚ªŽg—p‰Â”\‚É‚È‚Á‚½‚±‚ÆA
 ƒpƒ[ƒAƒbƒvƒp[ƒc‚Ìw“üAƒ‰ƒCƒoƒ‹ŽÔ‚Ì“oêA‚¯‚½‚½‚Ü‚µ‚¢ƒTƒCƒŒƒ“‚ªˆóÛ“I‚ÈƒpƒgƒJ[‚Ì–WŠQ‚È‚Ç‚ª‚ ‚éB
-‚Ü‚½AƒŒ[ƒX‚Æ‚µ‚Ä‚Ì—v‘f‚ª‚‚­‚È‚Á‚Ä‚¨‚èA”’‚¢ƒ‰ƒCƒoƒ‹ŽÔ‚Æ‚ÌŸ•‰‚É•‰‚¯‚Ä‚µ‚Ü‚¤‚ÆA
-•ŽèÈ‚Ì”Þ—‚ªƒ‰ƒCƒoƒ‹ŽÔ‚Ì•û‚ÉˆÚ‚é‚Æ‚¢‚¤‰‰o‚ª‚ ‚éB
+‚Ü‚½AƒŒ[ƒX‚Æ‚µ‚Ä‚Ì—v‘f‚ª‚‚­‚È‚Á‚Ä‚¨‚èAƒXƒe[ƒW“r’†‚Åƒ}ƒVƒ“‚ðƒ`ƒ…[ƒ“ƒAƒbƒv‚·‚é‚±‚Æ‚ª‚Å‚«‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éB
+”’‚¢ƒ‰ƒCƒoƒ‹ŽÔ‚Æ‚ÌŸ•‰‚É•‰‚¯‚Ä‚µ‚Ü‚¤‚Æ•ŽèÈ‚Ì”Þ—‚ªƒ‰ƒCƒoƒ‹ŽÔ‚Ì•û‚ÉˆÚ‚é‚Æ‚¢‚¤‰‰o‚ª‚ ‚éB
 BGM‚ÍƒƒbƒNF‚ª”Z‚­‚È‚èŽ^”Û—¼˜_‚ðŒÄ‚ñ‚¾‚ªAuRush a difficultyv‚ÍƒZƒK‘ÌŠ´ƒQ[ƒ€–¼‹È‚Ì‚P‚Â‚É‹“‚°‚ç‚ê‚éB
 ƒI[ƒo[ƒq[ƒgŽžˆÈŠO‚Í‰½“x‚Å‚àƒ^[ƒ{‚ÌŽg—p‚ª‰Â”\B‘S16ƒXƒe[ƒW‚Å4ƒGƒŠƒAB
 
@@ -87471,7 +88277,7 @@ Turnover
 
 ƒRƒ“ƒgƒ[ƒ‰F¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
 
-ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+ƒVƒXƒeƒ€ƒ{[ƒhFBarcrest MPU4 Video Firmware
 
 CPU\¬[M6809, 68000]@‰¹Œ¹ƒ`ƒbƒv[AY8910, SAA1099]
 
@@ -87599,7 +88405,7 @@ Twin Action
 
 ”­”„”NF1995
 
-ŠJ”­^”­”„Œ³FAfega
+ŠJ”­^”­”„Œ³FAFEGA
 
 ƒWƒƒƒ“ƒ‹FƒVƒ…[ƒeƒBƒ“ƒO
 
@@ -87610,7 +88416,12 @@ Twin Action
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[OKI6295]
 
 
-¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+ŠØ‘AFEGAŽÐ‚æ‚è“oê‚µ‚½ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€B
+“à—e‚ÍƒRƒ~ƒJƒ‹ƒVƒ…[ƒeƒBƒ“ƒO‚¾‚ªAŽÀÛ‚É‚Í90”N‚É“oê‚µ‚½UPL‚ÌuUS AAF ƒ€ƒXƒ^ƒ“ƒOv‚ÌƒfƒbƒhƒRƒs[ì•i‚Å‚ ‚éB
+ƒQ[ƒ€ƒVƒXƒeƒ€‚É‚ÍƒIƒŠƒWƒiƒ‹‚©‚ç•Ï‰»‚ª–³‚­AƒOƒ‰ƒtƒBƒbƒN‚à‘S–Ê“I‚É•`‚«Š·‚¦‚ç‚ê‚Ä‚¢‚é‚à‚Ì‚ÌA
+ƒXƒe[ƒW3‚Ì”wŒi‚Å‚Í‚»‚Ì‚Ü‚Ü—¬—p‚³‚ê‚Ä‚¢‚éBƒRƒs[ì•i‚ª¶‚Ýo‚³‚ê‚é‚±‚Æ‚Í‘“àŠOAŽž‘ã‚ð–â‚í‚¸‘½‚­Œ©‚ç‚ê‚½‚ªA
+AFEGAŽÐ‚Í‚»‚Ì’†‚Å‚àŒã‚É“ú–{‚Å‚àƒrƒXƒR‚æ‚è”­”„‚³‚êˆê•”‚Å—L–¼‚Æ‚È‚Á‚½uƒXƒeƒbƒK[1v‚È‚ÇAŒˆ‚µ‚ÄŠ®¬“x‚Í‚‚­‚È‚¢‚ªA
+ƒIƒŠƒWƒiƒ‹‚Ìì•i‚ðì‚èo‚·‚±‚Æ‚É¬Œ÷‚µ‚½ƒ[ƒJ[‚Ì‚Ð‚Æ‚Â‚Å‚ ‚éB
 
 
 
@@ -87792,7 +88603,7 @@ $end
 
 $info=twinfalc
 $bio
-Twin Falcons
+Whizz
 
 
 ”­”„”NF1989
@@ -87801,14 +88612,19 @@ Twin Falcons
 
 ƒWƒƒƒ“ƒ‹FƒVƒ…[ƒeƒBƒ“ƒO
 
-ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+3ƒ{ƒ^ƒ“
+ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
 ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
 
 CPU\¬[Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2151]
 
 
-¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+ŠØ‘PhilkoŽÐ‚©‚ç“oê‚µ‚½‰¡ƒXƒNƒ[ƒ‹ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€uWhizzvB
+ƒQ[ƒ€‚Í•êŠÍ‚©‚ç‹@–§Žw—ß‚ðŽó‚¯‚½ƒvƒŒƒCƒ„[uWhizzv‚ª8•ûŒüƒŒƒo[‚Æƒ{ƒ€A
+ƒVƒ“ƒOƒ‹ƒVƒ‡ƒbƒg‚Ì2ƒ{ƒ^ƒ“‚ðŽg‚Á‚Ä“G‚ð“|‚µ‚Ä‚¢‚­‚Æ‚¢‚¤‚à‚ÌBŠeƒXƒe[ƒW‚Ìƒ{ƒX‚ð”j‰ó‚·‚ê‚ÎƒXƒe[ƒWƒNƒŠƒA‚Æ‚È‚éB
+ƒpƒ[ƒAƒbƒvƒAƒCƒeƒ€‚É‚ÍƒŒ[ƒU[‚â3A5ƒEƒFƒCƒVƒ‡ƒbƒg‚Ì‚Ù‚©‚ÉAƒI[ƒg˜AŽË‚âƒXƒs[ƒhƒAƒbƒv‚È‚Ç‚à“oêB
+“ïˆÕ“x‚Í”äŠr“I—}‚¦‚ß‚¾‚ªA‰“‹ßŠ´‚ª”»‚è‚Ã‚ç‚¢‚Æ‚¢‚¤“ï“_‚ª‚ ‚éB‘S8ƒXƒe[ƒWB
+‚¿‚È‚Ý‚É–k•ÄŒü‚¯‚ÉPOARA‚Æ‚¢‚¤ƒ[ƒJ[‚ªƒ‰ƒCƒZƒ“ƒX‚ð“¾‚Ä”Ì”„‚µ‚½uTwin Falconsv‚Æ‚¢‚¤•Êƒ^ƒCƒgƒ‹”Å‚ª‚ ‚éB
 
 
 
@@ -87924,7 +88740,7 @@ CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[AY-3-8910 (2), 005289, VLM5030]
 ‚±‚ê‚Ü‚Å‚É‚È‚¢ƒCƒ“ƒpƒNƒg‚Ì‚ ‚éƒoƒŠƒAA2l“¯ŽžƒvƒŒƒCŽž‚Ìc‰¡‚Ì‡‘ÌƒtƒH[ƒ[ƒVƒ‡ƒ“UŒ‚‚È‚ÇA
 V‚µ‚¢—v‘f‚ª·‚è‚¾‚­‚³‚ñ‚ÌƒRƒ~ƒJƒ‹ƒVƒ…[ƒeƒBƒ“ƒOƒQ[ƒ€‚Ì–¼ì‚Å‚ ‚éB
 ‚»‚ÌƒRƒ~ƒJƒ‹‚ÈƒQ[ƒ€ƒfƒUƒCƒ“‚ªŽó‚¯AƒJƒbƒvƒ‹¥—«‘w‚È‚Ç•L‚¢ƒvƒŒƒCƒ„[‚ÉD‚Ü‚êA
-ƒRƒiƒ~‚ÌŠÅ”Âì•i‚É‚È‚é‚¾‚¯‚Å‚È‚­A‚»‚ÌŒã‚Ì‰ïŽÐ‚Ì•ûŒü«‚Ü‚Å‚àŒˆ’è•t‚¯‚é‚±‚Æ‚É‚È‚éB
+ƒRƒiƒ~‚ÌŠÅ”Âì•i‚É‚È‚é‚¾‚¯‚Å‚È‚­A‚»‚ÌŒã‚Ì‰ïŽÐ‚Ì•ûŒü«‚Ü‚Å‚àŒˆ’è•t‚¯‚é‚±‚Æ‚É‚È‚Á‚½B
 
 
 
@@ -88032,7 +88848,7 @@ $end
 
 $info=tx1
 $bio
-‚s‚w|‚P
+‚s‚w|‚P i‘“à”Åj
 
 
 ”­”„”NF1983.11
@@ -88055,6 +88871,34 @@ CPU\¬[I8086 (2), Z80]@‰¹Œ¹ƒ`ƒbƒv[AY8910]
 ‘I‚ñ‚¾ƒR[ƒX‚É‚æ‚è“ìƒAƒtƒŠƒJAƒAƒƒŠƒJA“ú–{‚È‚ÇAa`h‚Ü‚Å‚ÌƒS[ƒ‹‚ª—pˆÓ‚³‚ê‚Ä‚¢‚Ä‚¢‚éB
 “–Žž‚Æ‚µ‚Ä‚ÍÅ‚•ô‚ÌŠ®¬“x‚ðŒÖ‚éƒŒ[ƒVƒ“ƒOƒQ[ƒ€‚Å‚ ‚Á‚½‚ªA
 “oêˆÈ‘O‚æ‚èƒqƒbƒg‚µ‚Ä‚¢‚½ƒiƒ€ƒR‚Ìuƒ|[ƒ‹ƒ|ƒWƒVƒ‡ƒ“v‚É‚Í“G‚í‚È‚©‚Á‚½B
+
+
+
+$end
+
+$info=tx1a
+$bio
+‚s‚w|‚P iŠCŠO”Åj
+
+
+”­”„”NF1984
+
+ŠJ”­Œ³F’C–¤“dŽqH‹Æ@”­”„Œ³FƒAƒ^ƒŠ / ƒ^ƒCƒg[
+
+ƒWƒƒƒ“ƒ‹FƒŒ[ƒVƒ“ƒO
+
+ƒRƒ“ƒgƒ[ƒ‰FŽ©“®ŽÔƒnƒ“ƒhƒ‹Œ^ƒRƒ“ƒgƒ[ƒ‰[+ƒyƒ_ƒ‹+ƒMƒA
+
+ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
+
+CPU\¬[I8086 (2), Z80]@‰¹Œ¹ƒ`ƒbƒv[AY8910]
+
+
+¦uTX-1i‘“à”ÅjvŽQÆB
+
+‚±‚ê‚Í“ú–{‚Ì’C–¤“dŽqH‹Æ‚ªŠJ”­‚µ‚½uTX-1v‚ÌŠCŠOŒü‚¯‹–‘øì•iB
+ƒAƒƒŠƒJ‚Å‚Í’C–¤“dŽqH‹Æ‚©‚çƒiƒ€ƒR‚ð’Ê‚¶‚ÄƒAƒ^ƒŠŽÐ‚ªA
+ƒˆ[ƒƒbƒp‚È‚Ç¼”¼‹…’nˆæ‚Å‚Íƒ^ƒCƒg[‚ª‚»‚ê‚¼‚êƒ‰ƒCƒZƒ“ƒX‹–‘ø‚ð“¾‚Ä”Ì”„‚µ‚Ä‚¢‚éB
 
 
 
@@ -88379,6 +89223,9 @@ CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[X1-010, YM2612]
 
 
 ƒEƒ‹ƒgƒ‰íŽm‚½‚¿‚ª“oê‚·‚éƒI[ƒ\ƒhƒbƒNƒX‚ÈŠi“¬ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
+ƒEƒ‹ƒgƒ‰íŽm3l‚Ì’†‚©‚çƒvƒŒƒCƒ„[‚ð‘I‘ð‚µA8•ûŒüƒŒƒo[‚Æ3‚Â‚Ìƒ{ƒ^ƒ“‚ð‘€ì‚µ‰öb‚ð‚â‚Á‚Â‚¯‚Ä‚¢‚­B
+ƒ{ƒ^ƒ“‚ÍUŒ‚AƒWƒƒƒ“ƒvAƒEƒ‹ƒgƒ‰ƒ{ƒ“ƒo[‚Æ‚È‚Á‚Ä‚¨‚èAƒ‰ƒCƒt‚ª‚È‚­‚È‚Á‚½‚èŽc‚èƒ^ƒCƒ€‚ª‚È‚­‚È‚é‚Æƒƒ“ƒ~ƒXA
+Žc‹@‚ª‘S‚Ä‚È‚­‚È‚é‚ÆƒQ[ƒ€ƒI[ƒo[‚Æ‚È‚éB
 2P“¯ŽžƒvƒŒƒC‚à‰Â”\B
 
 
@@ -88495,11 +89342,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -88771,7 +89613,7 @@ $bio
 
 ”­”„”NF1990.05
 
-ŠJ”­Œ³FƒGƒkƒGƒ€ƒPƒCiNMKj@”­”„Œ³Fƒ†[ƒs[ƒGƒ‹iUPLj
+ŠJ”­^”­”„Œ³Fƒ†[ƒs[ƒGƒ‹iUPLj
 
 ƒWƒƒƒ“ƒ‹FƒVƒ…[ƒeƒBƒ“ƒO
 
@@ -89129,9 +89971,10 @@ CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[OKI6295 (2)]
 UPL‚æ‚è“oê‚µ‚½ƒgƒbƒvƒrƒ…[ƒ^ƒCƒv‚Ìƒtƒ@ƒ“ƒ^ƒWƒbƒNƒAƒNƒVƒ‡ƒ“ì•iuƒoƒ“ƒ_ƒCƒNvB
 ‘€ì‚ÍˆÚ“®—p‚Ì8•ûŒüƒŒƒo[AUŒ‚‚ÆƒWƒƒƒ“ƒv‚É2‚Â‚Ìƒ{ƒ^ƒ“‚ðŽg—p‚·‚éB
 ƒvƒŒƒCƒ„[‚ÍÅ‰‚©‚ç‘•”õ‚µ‚Ä‚¢‚éŒ•‚Ì‘¼‚ÉAƒ‚[ƒjƒ“ƒOƒXƒ^[A”š’eA–‚–@‚È‚Ç‚ðŽg‚Á‚Äi‚ñ‚Å‚¢‚­B
-ƒvƒŒƒCƒ„[‚Íƒ‰ƒCƒt§‚ÌƒXƒgƒbƒN§B
-2l“¯ŽžƒvƒŒƒC‚ª‰Â”\B
-“à—e‚Í”ñí‚ÉƒI[ƒ\ƒhƒbƒNƒX‚ÅAUPL‚Ìì•i‚É‚µ‚Ä‚ÍƒIƒŠƒWƒiƒŠƒeƒB‚ÉŒ‡‚¯‚éì•i‚Å‚ ‚éB
+ƒvƒŒƒCƒ„[‚Íƒ‰ƒCƒt§‚ÌƒXƒgƒbƒN§B‚¿‚È‚Ý‚É“G‚ð“¥‚Ý‚Â‚¯‚Äƒ_ƒ[ƒW‚ð—^‚¦‚é‚±‚Æ‚à‚Å‚«‚éB
+2l“¯ŽžƒvƒŒƒC‚ª‰Â”\B“à—e‚Í”ñí‚ÉƒI[ƒ\ƒhƒbƒNƒX‚ÅAUPL‚Ìì•i‚É‚µ‚Ä‚ÍƒIƒŠƒWƒiƒŠƒeƒB‚ÉŒ‡‚¯‚éì•i‚Å‚ ‚éB
+“–‰‚ÍƒVƒ…ƒgƒ‰[ƒ‹‚Ìƒvƒ‰ƒ“ƒi[‚É‚æ‚éƒXƒg[ƒŠ[‚ª‚ ‚Á‚½‚ªƒ{ƒc‚É‚È‚èA
+‚Ü‚½ƒLƒƒƒ‰ƒNƒ^[ƒfƒUƒCƒ“’iŠK‚Å‚Í—íŽm‚Æƒhƒ[ƒt‚Æ‚¢‚¤–^ì•i‚ÌƒpƒNƒŠ‚Ì‚æ‚¤‚ÈƒLƒƒƒ‰ƒNƒ^[‚à—pˆÓ‚³‚ê‚Ä‚¢‚½B
 
 
 
@@ -89766,17 +90609,20 @@ $bio
 
 ƒWƒƒƒ“ƒ‹FŠi“¬ƒAƒNƒVƒ‡ƒ“
 
-ƒRƒ“ƒgƒ[ƒ‰F8•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
+ƒRƒ“ƒgƒ[ƒ‰F4•ûŒüƒŒƒo[+2ƒ{ƒ^ƒ“
 
 ƒVƒXƒeƒ€ƒ{[ƒhFê—pŠî”Â
 
 CPU\¬[Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2151, DAC]
 
 
-•‘‘ä‚Í1988”N‚Ìƒjƒ…[ƒˆ[ƒNAƒ[ƒOƒX’c‚É‚³‚ç‚í‚ê‚½ƒ}ƒhƒ“ƒi‚ð•‚¯o‚·‚½‚ßAƒq[ƒ[ƒrƒWƒ‰ƒ“ƒe‚Í—§‚¿Œü‚©‚¤B
-ƒOƒ‰ƒtƒBƒbƒN‚ÆBGM‚±‚»ƒpƒ[ƒAƒbƒv‚µ‚½‚à‚Ì‚ÌAƒQ[ƒ€“à—e‚ÉŠÖ‚µ‚Ä‚ÍA“¯ŽÐ‚ÌuƒXƒpƒ‹ƒ^ƒ“Xv‚©‚ç‚Ü‚Á‚½‚­i•à‚µ‚Ä‚¢‚È‚¢B
-uR-TYPEv‚Ì“oêˆÈ—ˆ‚¸‚Á‚Æ—DG‚Èì•i‚ðƒŠƒŠ[ƒX‚µ‘±‚¯‚½’†‚ÅAƒAƒCƒŒƒ€‚ªŒ©‚¹‚½—Bˆê‚ÌƒXƒL‚Å‚ ‚Á‚½B
-‚Ü‚½A‚µ‚á‚ª‚Ý‚È‚ª‚çUŒ‚‚µ‘±‚¯‚é‚±‚Æ‚ÅA‰i‹vƒpƒ^[ƒ“‚Æ‚È‚éƒoƒO‚Ü‚ÅuƒXƒpƒ‹ƒ^ƒ“Xv‚Æ“¯‚¶‚Å‚ ‚é‚±‚Æ‚É‚ÍA‚½‚¾‚½‚¾‹êÎEEEB
+1988”N‚Ìƒjƒ…[ƒˆ[ƒN‚ð•‘‘ä‚Éƒ[ƒOƒX’c‚É‚³‚ç‚í‚ê‚½ƒ}ƒhƒ“ƒi‚ð•‚¯o‚·‚½‚ßA
+ŽålŒöƒrƒWƒ‰ƒ“ƒe‚ªŠˆ–ô‚·‚é‰¡ƒXƒNƒ[ƒ‹ƒAƒNƒVƒ‡ƒ“ƒQ[ƒ€B
+ƒŒƒo[‚ÅƒrƒWƒ‰ƒ“ƒe‚ð“®‚©‚µAƒLƒbƒN‚Æƒpƒ“ƒ`‚Ì2‚Âƒ{ƒ^ƒ“‚ðŽg—p‚·‚éB
+ƒXƒe[ƒW“r’†‚ÅŽè‚É“ü‚éƒkƒ“ƒ`ƒƒƒN‚Íˆê’èƒ_ƒ[ƒW‚ðŽó‚¯‚é‚ÆŽg‚¦‚È‚­‚È‚é‚Ì‚Å’ˆÓB
+’Í‚Ý‚©‚©‚Á‚Ä‚­‚é“G‚É‚ÍƒŒƒo[‚ðƒKƒ`ƒƒƒKƒ`ƒƒ“®‚©‚·‚±‚Æ‚Å’ïR‚Å‚«‚é‚Æ‚±‚ë‚âA
+‚µ‚á‚ª‚ÝUŒ‚‚ð‘±‚¯‚é‚±‚Æ‚Å‰i‹vƒpƒ^[ƒ“‚Æ‚È‚Á‚Ä‚µ‚Ü‚¤‚Æ‚¢‚¤Œ»Û‚Ü‚Å‚ ‚ÌuƒXƒpƒ‹ƒ^ƒ“Xv‚»‚Á‚­‚è‚Ìì•i‚Æ‚È‚Á‚Ä‚¨‚èA
+Œˆ‚µ‚Ä‚æ‚­o—ˆ‚½‚à‚Ì‚Æ‚ÍŒ¾‚¦‚È‚¢B‚µ‚©‚µ”¼”NŒã‚É“oê‚·‚éuÅŒã‚Ì”E“¹v‚Ìƒqƒbƒg‚É‚æ‚è‚»‚ÌŽ¸”s‚à‚«”ò‚ñ‚Å‚µ‚Ü‚Á‚½B
 
 
 
@@ -89971,7 +90817,7 @@ $bio
 
 ”­”„”NF1994.09
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹FƒKƒ“ƒVƒ…[ƒeƒBƒ“ƒO
 
@@ -90003,7 +90849,7 @@ $bio
 
 ”­”„”NF1995.09
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹FƒKƒ“ƒVƒ…[ƒeƒBƒ“ƒO
 
@@ -90033,7 +90879,7 @@ $bio
 
 ”­”„”NF1993.12
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹F‘ÎíŠi“¬ƒAƒNƒVƒ‡ƒ“
 
@@ -90095,7 +90941,7 @@ $bio
 
 ”­”„”NF1994.11
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹F‘ÎíŠi“¬ƒAƒNƒVƒ‡ƒ“
 
@@ -90127,7 +90973,7 @@ $bio
 
 ”­”„”NF1994.11
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹F‘ÎíŠi“¬ƒAƒNƒVƒ‡ƒ“
 
@@ -90159,7 +91005,7 @@ $bio
 
 ”­”„”NF1996.09
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹F‘ÎíŠi“¬ƒAƒNƒVƒ‡ƒ“
 
@@ -90191,7 +91037,7 @@ $bio
 
 ”­”„”NF1997.09
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹F‘ÎíŠi“¬ƒAƒNƒVƒ‡ƒ“
 
@@ -90221,7 +91067,7 @@ $bio
 
 ”­”„”NF1996.03
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹F‘ÎíŠi“¬ƒAƒNƒVƒ‡ƒ“
 
@@ -90281,7 +91127,7 @@ $bio
 
 ”­”„”NF1992.08
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹FƒŒ[ƒVƒ“ƒO
 
@@ -90312,7 +91158,7 @@ $bio
 
 ”­”„”NF1993
 
-ŠJ”­^”­”„Œ³FƒZƒK
+ŠJ”­Œ³FƒZƒKiAM2j@”­”„Œ³FƒZƒK
 
 ƒWƒƒƒ“ƒ‹FƒŒ[ƒVƒ“ƒO
 
@@ -90656,11 +91502,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ’jŽq‚Æ—ŽqA8ƒ•‘‚Ì‘IŽè‚ª“oê‚·‚éB
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚êAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-
-
 
 $end
 
@@ -90702,7 +91543,7 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰Fƒpƒhƒ‹ƒRƒ“ƒgƒ[ƒ‰[+1ƒ{ƒ^ƒ“
 
-ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒoƒVƒXƒeƒ€
+ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒ”ƒ@ƒVƒXƒeƒ€
 
 CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
 
@@ -90761,18 +91602,16 @@ $bio
 
 ƒRƒ“ƒgƒ[ƒ‰Fƒ}[ƒWƒƒƒ“ƒpƒlƒ‹
 
-ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒmƒoƒVƒXƒeƒ€
+ƒVƒXƒeƒ€ƒ{[ƒhFƒJƒlƒR ƒX[ƒp[ƒJƒlƒRƒVƒXƒeƒ€
 
 CPU\¬[SH-2]@‰¹Œ¹ƒ`ƒbƒv[YMZ280B]
 
 
 ƒJƒlƒR‚ÌƒŠƒŠ[ƒX‚µ‚½‘Îí–ƒB
 ƒ^ƒCƒgƒ‹‚Í•ÏX‚³‚ê‚½‚ªAŽÀŽ¿“I‚É‚ÍƒWƒƒƒ“ƒWƒƒƒ“ƒpƒ‰ƒ_ƒCƒX‚Ì‘æ‚R’e‚ÆŽv‚í‚ê‚éB
-ƒQ[ƒ€ƒVƒXƒeƒ€‚ÌŠX‚ÉAƒWƒƒƒ“ƒpƒ‰ƒVƒŠ[ƒY‚©‚ç‚Ì—¬—p‚ÆŽv‚í‚ê‚éƒfƒUƒCƒ“‚ªŒ©‚ç‚êA
-ƒQ[ƒ€ƒVƒXƒeƒ€“I‚Í‘S‚­“¯‚¶‚ÆŒ¾‚¦‚éB
-ƒLƒƒƒ‰ƒfƒUƒCƒ“‚ÍA¡‰ñ‚à•¡”‚Ìì‰Æ‚Ì‹£‰‰‚É‚È‚Á‚Ä‚¢‚é‚±‚Æ‚©‚ç
-‚±‚Ì•Ó‚àƒWƒƒƒ“ƒpƒ‰ƒVƒŠ[ƒY‚Ì’¼Œn‚Å‚ ‚é‚±‚Æ‚ªl‚¦‚ç‚ê‚éB
-‚µ‚©‚µAƒQ[ƒ€ƒoƒ‰ƒ“ƒX‚Íˆ«‚¢B
+ƒQ[ƒ€ƒVƒXƒeƒ€‚ÌŠX‚ÉAƒWƒƒƒ“ƒpƒ‰ƒVƒŠ[ƒY‚©‚ç‚Ì—¬—p‚ÆŽv‚í‚ê‚éƒfƒUƒCƒ“‚ªŒ©‚ç‚êAƒQ[ƒ€ƒVƒXƒeƒ€“I‚Í‘S‚­“¯‚¶‚ÆŒ¾‚¦‚éB
+ƒLƒƒƒ‰ƒfƒUƒCƒ“‚ÍA¡‰ñ‚à•¡”‚Ìì‰Æ‚Ì‹£‰‰‚É‚È‚Á‚Ä‚¢‚é‚±‚Æ‚©‚çA
+‚±‚Ì•Ó‚àƒWƒƒƒ“ƒpƒ‰ƒVƒŠ[ƒY‚Ì’¼Œn‚Å‚ ‚é‚±‚Æ‚ªl‚¦‚ç‚ê‚éB‚µ‚©‚µAƒQ[ƒ€ƒoƒ‰ƒ“ƒX‚Íˆ«‚¢B
 
 
 
@@ -91430,7 +92269,7 @@ CPU\¬[N2A03]@‰¹Œ¹ƒ`ƒbƒv[NES, DAC]
 “Vˆä‚Ì•Ší(–³“GƒX[ƒp[ƒgƒƒbƒREƒXƒs[ƒhUPÔ‹ÊE“§–¾•sŽ€g–òƒrƒ“EƒX[ƒp[Žè— Œ•)‚Ì’†‚©‚ç3Ží—ÞW‚ß‚é‚ÆA
 ”E–@ƒKƒ}ƒpƒbƒNƒ“‚ÅƒJƒGƒ‹‚ÌuƒpƒbƒNƒ“v‚ª“oê‚µA
 ‹à”›‚è‚É‚ ‚Á‚½—d‰ö‚½‚¿‚ðŽžŠÔ“à‚ÉH‚×‚Ä‚¢‚­‚±‚Æ‚ª‚Å‚«‚éB
-ƒtƒ@ƒ~ƒRƒ“”Å‚Æˆá‚¢A“GƒLƒƒƒ‰‚ªu‚¨‚ä‚«v‚©‚çuŽM—v‚ÉAuƒsƒ“–Vv‚©‚çu•S–Úv‚ÉA‚»‚ê‚¼‚ê•ÏX‚³‚ê‚Ä‚¢‚éB
+ƒtƒ@ƒ~ƒRƒ“”Å‚Æˆá‚¢A“GƒLƒƒƒ‰‚ªu‚¨‚ä‚«v‚©‚çuŽM—vAuƒsƒ“–Vv‚©‚çu•S–Úv‚É‚»‚ê‚¼‚ê•ÏX‚³‚ê‚Ä‚¢‚éB
 
 
 ¦uVS.ƒVƒXƒeƒ€v‚Æ‚ÍAuƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ÌŠî”Â‚ðŒ³‚É”C“V“°‚ªŠJ”­‚µ‚½‚à‚ÌB
@@ -92863,8 +93702,9 @@ Wiggie Waggie
 CPU\¬[68000, Z80]@‰¹Œ¹ƒ`ƒbƒv[OKI6295]
 
 
-”äŠr“IƒVƒ“ƒvƒ‹‚©‚ÂƒAƒ_ƒ‹ƒg‚ÈƒuƒƒbƒN•ö‚µƒQ[ƒ€B
-Å‰‚©‚ç”wŒi‚É—«‚Ìƒk[ƒh‚ª•`‚©‚ê‚Ä‚¢‚é‚ªAƒXƒe[ƒWƒNƒŠƒA‚·‚é‚²‚Æ‚É‚æ‚è‘N–¾‚É‚È‚Á‚Ä‚¢‚­B
+ƒZƒ^‚ÌuƒTƒ“ƒ_[•ƒ‰ƒCƒgƒjƒ“ƒOv‚ÌƒfƒbƒhƒRƒs[ì•i‚ÅAƒAƒ_ƒ‹ƒg•—‚É‰ü•Ï‚³‚ê‚½ƒuƒƒbƒN•ö‚µƒQ[ƒ€B
+Å‰‚©‚ç”wŒi‚É—«‚Ìƒk[ƒh‚ª•`‚©‚ê‚Ä‚¢‚é‚ªAƒXƒe[ƒWƒNƒŠƒA‚·‚é–ˆ‚É’iX‚Æ‘N–¾‚É‚È‚Á‚Ä‚¢‚­B
+‚Ü‚½AŽžXoŒ»‚·‚é•¨‘Ì‚Éƒ{[ƒ‹‚ð“–‚Ä‚é‚Æƒpƒ[ƒAƒbƒvƒAƒCƒeƒ€‚ªoŒ»‚·‚éB
 ‘S25ƒXƒe[ƒW‚ÅAÅŒã‚É‚Í‹…‚ðH‚¤‚Æ‚¢‚¤”½‘¥“I‚Èƒ{ƒX‚ª‘Ò‚¿\‚¦‚Ä‚¢‚éB
 
 
@@ -92942,12 +93782,7 @@ Wild Gunman iPlayChoice-10”Åj
 CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 
 
-ƒXƒŠƒŠƒ“ƒO‚È‘Œ‚‚¿ƒQ[ƒ€B‘ŠŽè‚Íˆ«ŽÒ‚Î‚©‚è‚¾‚ªA‰‚ß‚©‚ç\‚¦‚½‚èæ‚ÉŒ‚‚Â‚Ì‚ÍNG
-
-
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA
-ŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µAƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¢‚éB
+ƒXƒŠƒŠƒ“ƒO‚È‘Œ‚‚¿ƒQ[ƒ€B‘ŠŽè‚Íˆ«ŽÒ‚Î‚©‚è‚¾‚ªA‰‚ß‚©‚ç\‚¦‚½‚èæ‚ÉŒ‚‚Â‚Ì‚ÍNGB
 
 
 
@@ -93782,12 +94617,6 @@ CPU\¬[68000, Z80 (2)]@‰¹Œ¹ƒ`ƒbƒv[YM2612, SN76496]
 24ƒJ‘‚Ìƒ`[ƒ€‚©‚ç1ƒ`[ƒ€‘I‘ðA—DŸ‚ð–ÚŽw‚µ‚Äí‚¤ƒTƒbƒJ[ƒQ[ƒ€B
 ƒgƒbƒvƒrƒ…[‰æ–Ê‚ªŠî–{‚¾‚ªAƒS[ƒ‹ƒLƒbƒN‚âƒR[ƒi[ƒLƒbƒN‚Ì‚Æ‚«‚Í3D‰æ–Ê‚ÉØ‚è‘Ö‚í‚éB
 “¯“_Žž‚É‚ÍAPKí‚à‚ ‚éB
-
-
-¦uMEGA-TECHv‚Æ‚ÍAƒZƒK‚ÌŠCŠO”­”„‚Ì‰Æ’ë—pƒ}ƒVƒ“uSega Genesisv(“ú–{–¼ ƒƒKƒhƒ‰ƒCƒu)
-‚ÆuMaster Systemv‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚ÅA
-ƒ\ƒtƒg‚É‚ÍuMEGA-TECHv—p‚ÉƒJƒXƒ^ƒ€‚³‚ê‚½ROMƒJ[ƒgƒŠƒbƒW‚ðŽg—pB
-ƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¨‚èA8–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
 
 
 
@@ -95029,7 +95858,11 @@ Xyonix
 CPU\¬[Z80]@‰¹Œ¹ƒ`ƒbƒv[SN76496 (2)]
 
 
-¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+ƒpƒYƒ‹ƒQ[ƒ€‚Ì–¼ìuƒeƒgƒŠƒXv‚Ì“à—e‚ð–Í‹[‚µ‚½ƒpƒYƒ‹ƒQ[ƒ€uXyonixvB
+ƒ‹[ƒ‹‚ÍƒeƒgƒŠƒX“¯—lAˆê’è”‚Ìƒ‰ƒCƒ“‚ðÁ‚¹‚ÎƒXƒe[ƒWƒNƒŠƒA‚Æ‚È‚é‚Æ‚¢‚¤‚à‚ÌB
+“ú–{‚ÌƒvƒŒƒCƒ„[‚©‚ç‚·‚ê‚Î•s‹C–¡‚ÈƒOƒ‰ƒtƒBƒbƒN‚ÆBGM‚ª“‚¢‚ÆŽv‚¤ì•i‚©‚à‚µ‚ê‚È‚¢‚ªA
+’a¶ŠÔ‚à‚È‚¢“–Žž‚ÌŠØ‘‚ÌƒrƒfƒIƒQ[ƒ€‹ÆŠE‚Ì‚±‚Æ‚ðl‚¦‚Ä‚Ý‚ê‚Î‚±‚ê‚ª•’Ê‚¾‚Á‚½‚Ì‚©‚à‚µ‚ê‚È‚¢B
+‚µ‚©‚µ“¯‚¶”N‚É“oê‚·‚é“¯ŽÐ‚ÌuWhizzv‚Æ”ä‚×‚Ä‚Ý‚ê‚ÎA‚»‚Ì“à—e‚Í‚¨‘e––‚È‚à‚Ì‚Å‚ ‚éB
 
 
 
@@ -95164,11 +95997,6 @@ CPU\¬[Z80, N2A03]@‰¹Œ¹ƒ`ƒbƒv[Nintendo, DAC]
 ³Ž®–¼Ì‚ªuYo! Noidv‚Å‚ ‚éB
 
 
-¦uPlayChoice-10v‚Æ‚ÍA”C“V“°‚Ì‰Æ’ë—pƒ}ƒVƒ“uƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^v‚ð‰ž—p‚µ‚½ƒVƒXƒeƒ€‚Å‚ ‚éB
-10–{‚Ìƒ\ƒtƒgƒEƒFƒA‚©‚çƒZƒŒƒNƒg‚µ‚ÄƒvƒŒƒC‚·‚é‚±‚Æ‚ª‰Â”\‚ÅAŠCŠO‚Ì‚Ý‚Å—¬’Ê‚µ‚½B
-ƒtƒ@ƒ~ƒŠ[ƒRƒ“ƒsƒ…[ƒ^‚Æ‘S‚­“¯‚¶ROM‚ªŽg—p‚³‚ê‚Ä‚¨‚èAƒvƒŒƒCŽžŠÔ‚É§ŒÀ‚ªÝ‚¯‚ç‚ê‚Ä‚¢‚éB
-
-
 
 $end
 
@@ -95196,7 +96024,7 @@ CPU\¬[8080]
 —^ì‚ª–Ø‚ðØ‚èI‚í‚é‘O‚É‘S‚Ä‚ÌƒJƒ‰ƒX‚ð‘ÞŽ¡‚Å‚«‚È‚¢‚Æƒ~ƒX‚Æ‚È‚éB
 ˆêŒ©A‹¦—Í‚µ‚Äì‹Æ‚µ‚Ä‚¢‚é‚æ‚¤‚ÉŽv‚¦‚½2l‚¾‚ªAŽÀ‚Í—^ì‚Íƒ^ƒCƒ}[‚Ì–ðŠ„‚ð‚µ‚Ä‚¢‚½‚¾‚¯‚È‚Ì‚Å‚ ‚éEEEEB
 ‚Ü‚½A“¯‚¶“à—e‚Ì‚à‚Ì‚ªƒEƒCƒ“ƒOŽÐ‚©‚çu—^ì‚Æƒhƒ“•½v‚Ìƒ^ƒCƒgƒ‹‚Å”­”„‚³‚ê‚Ä‚¢‚éB
-‚±‚Ì—‚”NAƒWƒƒƒgƒŒ‚ÍƒCƒ“ƒx[ƒ_[ŒãˆâÇ‚Ì‚½‚ß‚PŒŽ‚É‚Q‰ñ•s“n‚è‚ðo‚µA•‰Â‚P‚W‰­‰~‚Å“|ŽY‚µ‚½B
+‚±‚Ì—‚”NAƒWƒƒƒgƒŒ‚ÍƒCƒ“ƒx[ƒ_[ŒãˆâÇ‚Ì‚½‚ß1ŒŽ‚É2‰ñ•s“n‚è‚ðo‚µA•‰Â18‰­‰~‚Å“|ŽY‚µ‚½B
 
 
 
@@ -95841,6 +96669,62 @@ CPU\¬[68000]@‰¹Œ¹ƒ`ƒbƒv[OKI6295]
 
 
 ¦ŠCŠO»•i‚Ì‚½‚ßÚ×•s–¾
+
+
+
+$end
+
+$info=cpzn1
+$bio
+‚y‚m|‚P
+
+
+”­”„”NF1997
+
+ŠJ”­Œ³FƒJƒvƒRƒ“ / ƒ\ƒj[@”­”„Œ³FƒJƒvƒRƒ“
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒ\ƒj[ ZN-1
+
+CPU\¬[PSX CPU, Z80]@‰¹Œ¹ƒ`ƒbƒv[SPU, QSound]
+
+
+¢ŠE‚Ìƒ\ƒj[‚ªì‚èo‚µ‚½‰Æ’ë—pƒQ[ƒ€‹@uƒvƒŒƒCƒXƒe[ƒVƒ‡ƒ“v‚ðƒx[ƒX‚ÉŠJ”­‚µ‚½‹Æ–±—pƒVƒXƒeƒ€Šî”ÂuZNvB
+“¯Šî”Â‚ðƒ}ƒU[ƒ{[ƒh‚Æ‚µ‚ÄŽg—p‚·‚éƒ^ƒCƒg[‚ÌuFX-1v‚âAˆ—”\—Í‚âƒƒ‚ƒŠ[‚ð‹­‰»‚µ‚½ƒiƒ€ƒR‚ÌuƒVƒXƒeƒ€11v‚È‚ÇA
+Šeƒ[ƒJ[‚É‚æ‚Á‚Ä‚±‚ÌuZNv‚ðƒJƒXƒ^ƒ€‚µ‚½PSŒÝŠ·Šî”Â‚Í‚¢‚­‚Â‚©‚ ‚èA
+ƒJƒvƒRƒ“‚ªŽg—p‚µ‚½uZNv‚àŠî”Â‚ðŒðŠ·‚·‚é‚±‚Æ‚ÅƒQ[ƒ€ƒ^ƒCƒgƒ‹‚ð•ÏX‚·‚é‚Æ‚¢‚¤APSŠî”Â‚Ì“TŒ^“I‚ÈŒ`‚ðŽæ‚Á‚Ä‚¢‚éB
+‚µ‚©‚µ•W€“I‚ÈuZNv‚ÌƒTƒEƒ“ƒhƒ`ƒbƒv‚ðŽg‚¤‚Ì‚Å‚Í‚È‚­A
+‚±‚ê‚Ü‚ÅuCPSvŠî”Â‚ÅŽg‚í‚ê‚Ä‚¢‚½Q-SOUNDƒVƒXƒeƒ€‚ð“ÆŽ©‚ÉÌ—p‚µ‚Ä‚¢‚é‚Æ‚¢‚¤“Á’¥‚ª‚ ‚éB
+ƒJƒvƒRƒ“Ž©g‚ª‚±‚ÌƒVƒXƒeƒ€Šî”Â‚ðŽg—p‚µ‚½ì•i‚Í‚»‚ê‚Ù‚Ç‚È‚¢‚ªA“¯ŽÐ‚Æ‹¦—ÍŠÖŒW‚É‚ ‚éƒAƒŠƒJ‚ª‘½‚­‚Ìì•i‚ðì‚èo‚µŠˆ–ô‚·‚é‚±‚Æ‚É‚È‚Á‚½B
+Œã‚É“oê‚·‚é‰ü—Ç”Å‚ÌuZN-2v‚ðŠÜ‚ßAPS‚Ìƒn[ƒhƒEƒFƒA‚ðŽg—p‚µ‚½‹Æ–±—pŠî”Â‚Í2000”N2ŒŽ‚Ü‚Å‚É30–œ–‡‚ào‰×‚³‚ê‚½‚Æ‚¢‚¤B
+‚¿‚È‚Ý‚ÉƒJƒvƒRƒ“‚ªŽg—p‚·‚éuZNvŠî”Â‚ÍuPSXv‚Æ‚àŒÄ‚Î‚ê‚é‚ç‚µ‚¢B
+
+
+
+$end
+
+$info=cpzn2
+$bio
+‚y‚m|‚Q
+
+
+”­”„”NF1997
+
+ŠJ”­Œ³FƒJƒvƒRƒ“ / ƒ\ƒj[@”­”„Œ³FƒJƒvƒRƒ“
+
+ƒWƒƒƒ“ƒ‹F¦ƒVƒXƒeƒ€ƒ{[ƒh
+
+ƒRƒ“ƒgƒ[ƒ‰F\\\
+
+ƒVƒXƒeƒ€ƒ{[ƒhFƒ\ƒj[ ZN-2
+
+CPU\¬[PSX CPU, Z80]@‰¹Œ¹ƒ`ƒbƒv[SPU, QSound]
+
+
+¦uZN-1vŽQÆ
 
 
 
