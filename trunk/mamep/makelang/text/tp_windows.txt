@@ -871,7 +871,7 @@ compare files with known MAME roms (brief)
 
 
 # windows/config.c: 278
-confirm before exiting game
+quit game with confirmation
 
 
 # windows/config.c: 298

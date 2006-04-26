@@ -3732,7 +3732,7 @@ Show Gfx
 
 # inptport.c: 1000
 Show Button Input
-顯示輸入記錄
+顯示按鈕輸入
 
 # inptport.c: 1017
 Show Profiler
@@ -3831,12 +3831,12 @@ Swap
 交換
 
 # ui_text.c: 88
-THIS GAME DOESN'T WORK PROPERLY
-這個遊戲無法正確運作
+THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.
+這個遊戲無法執行。您無法正確執行它，不用白忙。
 
 # datafile.c: 2143
-THIS GAME DOESN'T WORK PROPERLY\n
-這個遊戲無法正確運作\n
+THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n
+這個遊戲無法執行。您無法正確執行它，不用白忙。\n
 
 # drivers/aerofgt.c: 1025, 1115 drivers/cave.c: 1679 drivers/f1gp.c: 313 drivers/midzeus.c: 1219 drivers/pgm.c: 813, 1005 drivers/psikyo.c: 649, 769, 1007, 1211 drivers/toaplan1.c: 1189, 1264, 1334, 1409, 1498 drivers/toaplan2.c: 2358, 2405, 2475, 2547, 2608, 2651, 2697, 2844, 2961, 3076, 3153, 3214, 3323
 Taiwan
@@ -3932,7 +3932,7 @@ There are known problems with this game:
 
 # ui_text.c: 90
 There are working clones of this game. They are:
-本遊戲尚有可運作的仿製版。版本為:
+本遊戲尚有可執行的仿製版。版本為:
 
 # inptport.c: 987 
 Throttle

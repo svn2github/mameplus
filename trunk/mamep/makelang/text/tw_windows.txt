@@ -859,8 +859,8 @@ compare files with known MAME roms (brief)
 與已知的 MAME ROM 檔比較 (簡短)
 
 # windows/config.c: 278
-confirm before exiting game
-離開遊戲之前要先確認
+quit game with confirmation
+離開遊戲時先確認
 
 # windows/config.c: 298
 create the default configuration file

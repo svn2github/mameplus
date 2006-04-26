@@ -688,7 +688,7 @@ Config
 
 # ui/mame32.rc: 839
 Quit game with confirmation
-離開遊戲之前要先確認
+離開遊戲時先確認
 
 # ui/mame32.rc: 1483
 Contains commands for displaying help

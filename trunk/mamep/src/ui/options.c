@@ -570,7 +570,7 @@ static struct rc_option rc_game_opts[] =
 	{ "ips", NULL, rc_string, &gOpts.patchname, NULL, 0, 0, NULL, "ips datfile name"},
 #endif /* USE_IPS */
 	{ "disable_second_monitor", NULL, rc_bool, &gOpts.disable_2nd_monitor, "1", 0, 0, NULL, "disable second monitor emulation" },
-	{ "confirm_quit", NULL, rc_bool, &gOpts.confirm_quit, "1", 0, 0, NULL, "confirm before exiting game" },
+	{ "confirm_quit", NULL, rc_bool, &gOpts.confirm_quit, "1", 0, 0, NULL, "quit game with confirmation" },
 #ifdef AUTO_PAUSE_PLAYBACK
 	{ "auto_pause_playback", NULL, rc_bool, &gOpts.auto_pause_playback, "0", 0, 0, NULL, "automatic pause when playback is finished" },
 #endif /* AUTO_PAUSE_PLAYBACK */
