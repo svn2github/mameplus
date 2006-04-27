@@ -1,8 +1,6 @@
 #include "osd_so.h"
 #include <stdio.h>
 #include <stdlib.h>
-#undef strdup
-#undef stricmp
 #include <string.h>
 
 struct ui_lang_info_t ui_lang_info[UI_LANG_MAX] =
@@ -21,12 +19,16 @@ struct ui_lang_info_t ui_lang_info[UI_LANG_MAX] =
 	{  "hu_HU", "HU", "Hungarian",            1250, 0 },
 };
 
-static const char *mmo_filename[UI_MSG_MAX] =
+static struct ui_lang_filename
 {
-	"mame",
-	"lst",
-	"readings",
-	"manufact"
+	const char *filename;
+	int dont_free;
+} mmo_filename[UI_MSG_MAX] =
+{
+	{ "mame",     1 },
+	{ "lst",      1 },
+	{ "readings", 1 },
+	{ "manufact", 1 }
 };
 
 struct mmo_data {
@@ -56,9 +58,9 @@ int lang_find_langname(const char *name)
 
 	for (i = 0; i < UI_LANG_MAX; i++)
 	{
-		if (!stricmp(ui_lang_info[i].name, name))
+		if (!mame_stricmp(ui_lang_info[i].name, name))
 			return i;
-		if (!stricmp(ui_lang_info[i].shortname, name))
+		if (!mame_stricmp(ui_lang_info[i].shortname, name))
 			return i;
 	}
 
@@ -85,7 +87,7 @@ void set_langcode(int langcode)
 
 void assign_msg_catategory(int msgcat, const char *name)
 {
-	mmo_filename[msgcat] = strdup(name);
+	mmo_filename[msgcat].filename = mame_strdup(name);
 }
 
 
@@ -100,10 +102,10 @@ static void load_mmo(int msgcat)
 	if (p->status != MMO_NOT_LOADED)
 		return;
 
-	if (!mmo_filename[msgcat])
+	if (!mmo_filename[msgcat].filename)
 		return;
 
-	sprintf(filename, "lang\\%s\\%s.mmo", ui_lang_info[current_lang].name, mmo_filename[msgcat]);
+	sprintf(filename, "lang\\%s\\%s.mmo", ui_lang_info[current_lang].name, mmo_filename[msgcat].filename);
 
 	if ((fp = fopen(filename, "rb")) == NULL)
 		goto mmo_readerr;
@@ -192,4 +194,37 @@ char *lang_message(int msgcat, const char *str)
 	}
 
 	return (char *)str;
+}
+
+void ui_lang_shutdown(void)
+{
+	int i;
+
+	for (i = 0; i < UI_MSG_MAX; i++)
+	{
+		int j;
+
+		for (j = 0; j < UI_LANG_MAX; j++)
+		{
+			struct mmo *p = &mmo_table[j][i];
+
+			if (p->mmo_index)
+			{
+				free(p->mmo_index);
+				p->mmo_index = NULL;
+			}
+
+			if (p->mmo_str)
+			{
+				free(p->mmo_str);
+				p->mmo_str = NULL;
+			}
+		}
+
+		if (!mmo_filename[i].dont_free && mmo_filename[i].filename)
+		{
+			free((char *)mmo_filename[i].filename);
+			mmo_filename[i].filename = NULL;
+		}
+	}
 }

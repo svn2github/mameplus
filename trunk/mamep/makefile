@@ -756,7 +756,7 @@ else
 
 endif
 
-romcmp$(EXE): $(OBJ)/romcmp.o $(OBJ)/unzip.o $(OBJ)/ui_lang.o $(VCOBJS) $(ZLIB) $(OSDBGOBJS)
+romcmp$(EXE): $(OBJ)/romcmp.o $(OBJ)/unzip.o $(OBJ)/mamecore.o $(OBJ)/ui_lang.o $(VCOBJS) $(ZLIB) $(OSDBGOBJS)
 	@echo Linking $@...
     ifdef USE_GCC
 	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ $(LIBS) -o $@

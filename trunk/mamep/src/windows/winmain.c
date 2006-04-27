@@ -188,6 +188,8 @@ int main(int argc, char **argv)
 #endif
 	free_pathlists();
 
+	ui_lang_shutdown();
+
 #ifdef MALLOC_DEBUG
 	{
 		void check_unfreed_mem(void);
