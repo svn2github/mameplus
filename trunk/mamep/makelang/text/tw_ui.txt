@@ -686,10 +686,6 @@ Comment Files
 Config
 組態檔
 
-# ui/mame32.rc: 839
-Quit game with confirmation
-離開遊戲時先確認
-
 # ui/mame32.rc: 1483
 Contains commands for displaying help
 包含顯示說明用的命令
@@ -1686,6 +1682,10 @@ Propert&ies for Driver
 Propery Sheet Error %d %X
 內容表錯誤 %d %X
 
+# ui/mame32.rc: 839
+Quit game with confirmation
+離開遊戲時先確認
+
 # ui/mame32.rc: 65, 172
 R&emove From This Folder
 從這個資料夾中移除(&E)
@@ -2533,6 +2533,14 @@ Vertical
 # ui/properties.c: 1227
 Video emulation isn't 100% accurate
 視訊模擬尚未達到 100% 精確
+
+# ui/win32ui.c: 776
+Videos (*.mng)
+視訊檔 (*.mng)
+
+# ui/mame32.rc: 181
+View PC&B Info
+檢視 PCB 資訊(&B)
 
 # ui/mame32.rc: 657
 Volume attenuation

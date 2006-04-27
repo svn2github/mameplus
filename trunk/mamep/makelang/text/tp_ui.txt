@@ -2570,6 +2570,14 @@ Vertical
 Video emulation isn't 100% accurate
 
 
+# ui/win32ui.c: 776
+Videos (*.mng)
+
+
+# ui/mame32.rc: 181
+View PC&B Info
+
+
 # ui/mame32.rc: 657
 Volume attenuation
 
