@@ -4959,6 +4959,25 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		TabView_UpdateSelection(hTabCtrl);
 		break;
 
+#ifdef USE_VIEW_PCBINFO
+	case ID_VIEW_PCBINFO:
+		{
+			int  nGame;
+			char filename[MAX_PATH];
+
+			*filename = 0;
+
+			nGame = Picker_GetSelectedItem(hwndList);
+			if (driver_get_clone(drivers[nGame]) && !(driver_get_clone(drivers[nGame])->flags & NOT_A_DRIVER))
+				sprintf(filename, "pcb/%s.txt", driver_get_clone(drivers[nGame])->name);
+			else
+				sprintf(filename, "pcb/%s.txt", drivers[nGame]->name);
+
+			DisplayTextFile(hMain, filename);
+		}
+		break;
+#endif /* USE_VIEW_PCBINFO */
+
 		// toggle tab's existence
 	case ID_TOGGLE_TAB_SCREENSHOT :
 	case ID_TOGGLE_TAB_FLYER :

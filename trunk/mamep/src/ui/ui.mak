@@ -129,11 +129,7 @@ else
 endif
 
 #####################################################################
-
-ifneq ($(USE_MISC_FOLDER),)
-DEFS += -DMISC_FOLDER
-RCDEFS += -DMISC_FOLDER
-endif
+# Mame CORE with Windows UI options
 
 ifneq ($(USE_UI_COLOR_DISPLAY),)
 RCDEFS += -DUI_COLOR_DISPLAY
@@ -163,10 +159,6 @@ ifneq ($(USE_JOYSTICK_ID),)
 RCDEFS += -DJOYSTICK_ID
 endif
 
-ifneq ($(USE_SHOW_SPLASH_SCREEN),)
-RCDEFS += -DUSE_SHOW_SPLASH_SCREEN
-endif
-
 # Support Stick-type Pointing Device by miko2u@hotmail.com
 ifneq ($(USE_JOY_MOUSE_MOVE),)
 RCDEFS += -DUSE_JOY_MOUSE_MOVE
@@ -174,4 +166,22 @@ endif
 
 ifneq ($(USE_VOLUME_AUTO_ADJUST),)
 RCDEFS += -DUSE_VOLUME_AUTO_ADJUST
+endif
+
+#####################################################################
+# Windows UI specific options
+
+ifneq ($(USE_MISC_FOLDER),)
+DEFS += -DMISC_FOLDER
+RCDEFS += -DMISC_FOLDER
+endif
+
+ifneq ($(USE_SHOW_SPLASH_SCREEN),)
+DEFS += -DUSE_SHOW_SPLASH_SCREEN
+RCDEFS += -DUSE_SHOW_SPLASH_SCREEN
+endif
+
+ifneq ($(USE_VIEW_PCBINFO),)
+DEFS += -DUSE_VIEW_PCBINFO
+RCDEFS += -DUSE_VIEW_PCBINFO
 endif

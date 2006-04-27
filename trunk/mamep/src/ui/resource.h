@@ -493,6 +493,7 @@
 #define ID_FOLDER_SOURCEPROPERTIES      40096
 #define ID_OPTIONS_PALETTE              40098 // UI_COLOR_DISPLAY
 #define ID_OPTIONS_MMO2LST              40099
+#define ID_VIEW_PCBINFO                 40100 // USE_VIEW_PCBINFO
 
 #define ID_LANGUAGE_ENGLISH_US          40101
 #define ID_LANGUAGE_JAPANESE            40102

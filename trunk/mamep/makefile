@@ -389,10 +389,6 @@ ifdef X86_M68K_DRC
     DEFS += -DX86_M68K_DRC
 endif
 
-ifneq ($(USE_SHOW_SPLASH_SCREEN),)
-    DEFS += -DUSE_SHOW_SPLASH_SCREEN
-endif
-
 ifneq ($(USE_SHOW_TIME),)
     DEFS += -DUSE_SHOW_TIME
 endif
@@ -756,7 +752,7 @@ else
 
 endif
 
-romcmp$(EXE): $(OBJ)/romcmp.o $(OBJ)/unzip.o $(OBJ)/mamecore.o $(OBJ)/ui_lang.o $(VCOBJS) $(ZLIB) $(OSDBGOBJS)
+romcmp$(EXE): $(OBJ)/romcmp.o $(OBJ)/unzip.o $(OBJ)/ui_lang.o $(VCOBJS) $(ZLIB) $(OSDBGOBJS)
 	@echo Linking $@...
     ifdef USE_GCC
 	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ $(LIBS) -o $@
