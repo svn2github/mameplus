@@ -720,7 +720,7 @@ BEGIN
     CONTROL         "Switch color depths to fit",IDC_SWITCHBPP,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,129,118,10,0,
                     HIDC_SWITCHBPP
-    GROUPBOX        "Full screen brightness",IDC_BRIGHTNESSTEXT,136,109,120,30,NOT WS_GROUP
+    GROUPBOX        "Full screen gamma",IDC_BRIGHTNESSTEXT,136,109,120,30,NOT WS_GROUP
     CONTROL         "Slider1",IDC_BRIGHTNESS,"msctls_trackbar32",TBS_BOTH | 
                     TBS_NOTICKS | WS_TABSTOP,142,123,87,10,0,HIDC_BRIGHTNESS
     CTEXT           "2.00",IDC_BRIGHTNESSDISP,233,123,17,10,SS_CENTERIMAGE | 

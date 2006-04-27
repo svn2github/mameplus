@@ -2208,7 +2208,7 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 	hCtrl = GetDlgItem(hWnd, IDC_BRIGHTNESSDISP);
 	if (hCtrl)
 	{
-		snprintf(buf,sizeof(buf), "%03.2f", o->gfx_brightness);
+		snprintf(buf,sizeof(buf), "%03.2f", o->gfx_gamma);
 		Static_SetTextA(hCtrl, buf);
 	}
 	
@@ -2810,7 +2810,7 @@ static void AssignGamma(HWND hWnd)
 
 static void AssignBrightness(HWND hWnd)
 {
-	pGameOpts->gfx_brightness = g_nBrightnessIndex / 20.0 + 0.1;
+	pGameOpts->gfx_gamma = g_nBrightnessIndex / 20.0 + 0.1;
 }
 
 static void AssignBeam(HWND hWnd)
@@ -3119,7 +3119,7 @@ static void ResetDataMap(void)
 	// add the 0.001 to make sure it truncates properly to the integer
 	// (we don't want 35.99999999 to be cut down to 35 because of floating point error)
 	g_nGammaIndex           = (int)((pGameOpts->f_gamma_correct  - 0.5) * 20.0 + 0.001);
-	g_nBrightnessIndex      = (int)((pGameOpts->gfx_brightness   - 0.1) * 20.0 + 0.001);
+	g_nBrightnessIndex      = (int)((pGameOpts->gfx_gamma   - 0.1) * 20.0 + 0.001);
 	g_nBrightCorrectIndex   = (int)((pGameOpts->f_bright_correct - 0.5) * 20.0 + 0.001);
 	g_nPauseBrightIndex     = (int)((pGameOpts->f_pause_bright   - 0.5) * 20.0 + 0.001);
 	g_nBeamIndex            = (int)((pGameOpts->f_beam           - 1.0) * 20.0 + 0.001);
@@ -3319,8 +3319,8 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_MATCHREFRESH,  DM_BOOL, CT_BUTTON,   &pGameOpts->matchrefresh,  DM_BOOL, &pGameOpts->matchrefresh,  0, 0, 0);
 	DataMapAdd(IDC_SYNCREFRESH,   DM_BOOL, CT_BUTTON,   &pGameOpts->syncrefresh,   DM_BOOL, &pGameOpts->syncrefresh,   0, 0, 0);
 	DataMapAdd(IDC_THROTTLE,      DM_BOOL, CT_BUTTON,   &pGameOpts->throttle,      DM_BOOL, &pGameOpts->throttle,      0, 0, 0);
-	DataMapAdd(IDC_BRIGHTNESS,    DM_INT,  CT_SLIDER,   &g_nBrightnessIndex,       DM_FLOAT, &pGameOpts->gfx_brightness, 0, 0, AssignBrightness);
-	DataMapAdd(IDC_BRIGHTNESSDISP,DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->gfx_brightness, 0, 0, 0);
+	DataMapAdd(IDC_BRIGHTNESS,    DM_INT,  CT_SLIDER,   &g_nBrightnessIndex,       DM_FLOAT, &pGameOpts->gfx_gamma, 0, 0, AssignBrightness);
+	DataMapAdd(IDC_BRIGHTNESSDISP,DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->gfx_gamma, 0, 0, 0);
 	/* pGameOpts->frames_to_display */
 	DataMapAdd(IDC_EFFECT,        DM_INT,  CT_COMBOBOX, &g_nEffectIndex,           DM_STRING, &pGameOpts->effect,	   0, 0, AssignEffect);
 	DataMapAdd(IDC_ASPECTRATIOD,  DM_NONE, CT_NONE, &pGameOpts->aspect,            DM_STRING, &pGameOpts->aspect,      0, 0, 0);

@@ -83,7 +83,7 @@ typedef struct
 	BOOL   matchrefresh;
 	BOOL   syncrefresh;
 	BOOL   throttle;
-	float  gfx_brightness;
+	float  gfx_gamma;
 	int    frames_to_display;
 	char*  effect;
 	char*  aspect;

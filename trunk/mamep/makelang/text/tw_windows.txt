@@ -858,10 +858,6 @@ compare files with known MAME roms
 compare files with known MAME roms (brief)
 與已知的 MAME ROM 檔比較 (簡短)
 
-# windows/config.c: 278
-quit game with confirmation
-離開遊戲時先確認
-
 # windows/config.c: 298
 create the default configuration file
 建立預設設定檔
@@ -1314,6 +1310,10 @@ prefer RDTSC over QueryPerformanceCounter for timing
 prescale effect
 預縮放效果
 
+# windows/config.c: 278
+quit game with confirmation
+離開遊戲時先確認
+
 # windows/config.c: 267
 record an input file
 記錄輸入檔
@@ -1455,8 +1455,8 @@ set specific monitor refresh rate
 設定特定的顯示器更新頻率
 
 # windows/video.c: 239
-sets the brightness in full screen mode
-設定全螢幕模式的亮度
+sets the gamma in full screen mode
+設定全螢幕模式的 Gamma 值
 
 # windows/video.c: 240
 sets the number of frames to run within the game

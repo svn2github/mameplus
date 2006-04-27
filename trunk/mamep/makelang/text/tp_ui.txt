@@ -1163,7 +1163,7 @@ Full
 
 
 # ui/mame32.rc: 700
-Full screen brightness
+Full screen gamma
 
 
 # ui/mame32.rc: 948

@@ -1135,8 +1135,8 @@ Full
 完全
 
 # ui/mame32.rc: 700
-Full screen brightness
-全螢幕亮度
+Full screen gamma
+全螢幕 Gamma 值
 
 # ui/mame32.rc: 948
 Game Filters
