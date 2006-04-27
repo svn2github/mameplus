@@ -205,7 +205,9 @@ enum
 	CPU_TMS7000,
 	CPU_TMS7000_EXL,
 	CPU_COP411,
-#endif
+	CPU_SM8500,
+	CPU_V30MZ,
+#endif /* MESS */
     CPU_COUNT
 };
 
@@ -510,9 +512,6 @@ void activecpu_set_opbase(offs_t val);
 offs_t activecpu_dasm(char *buffer, offs_t pc);
 offs_t activecpu_dasm_new(char *buffer, offs_t pc, UINT8 *oprom, UINT8 *opram, int bytes);
 
-/* return a string containing the state of the flags on the active CPU */
-const char *activecpu_flags(void);
-
 /* return a string containing the state of the active CPU */
 const char *activecpu_dump_state(void);
 
@@ -627,6 +626,7 @@ const char *cpunum_dump_state(int cpunum);
 
 /* shot name for statistics and GUI */
 const char *cputype_shortname(int cputype);
+
 
 /*************************************
  *

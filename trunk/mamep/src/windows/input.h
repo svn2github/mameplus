@@ -53,6 +53,9 @@ typedef struct _KEYBOARD_INDICATOR_PARAMETERS {
 
 extern int win_use_mouse;
 
+int osd_get_leds(void);
+void osd_set_leds(int state);
+
 void start_led(void);
 void stop_led(void);
 void input_mouse_button_down(int button, int x, int y);

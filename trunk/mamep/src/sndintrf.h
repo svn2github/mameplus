@@ -80,6 +80,7 @@ enum
 	SOUND_QSOUND,
 	SOUND_SAA1099,
 	SOUND_IREMGA20,
+	SOUND_ES5503,
 	SOUND_ES5505,
 	SOUND_ES5506,
 	SOUND_BSMT2000,
@@ -110,7 +111,6 @@ enum
 	SOUND_WAVE,
 	SOUND_SID6581,
 	SOUND_SID8580,
-	SOUND_ES5503,
 #endif
 
 	/* filters start here */
@@ -255,6 +255,8 @@ const char *sndtype_get_info_string(int sndtype, UINT32 state);
 #define sndtype_core_credits(sndtype)			sndtype_get_info_string(sndtype, SNDINFO_STR_CORE_CREDITS)
 
 const char *sndtype_shortname(int sndtype);
+
+
 
 
 /***************************************************************************

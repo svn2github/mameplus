@@ -2010,9 +2010,9 @@ static void init_joycodes(void)
 	for (gun = 0; gun < lightgun_count; gun++)
 	{
 		if (win_use_raw_mouse)
-			sprintf(mousename, _WINDOWS("Lightgun on Mouse %d "), mouse + 1);
+			sprintf(mousename, _WINDOWS("Lightgun on Mouse %d "), gun + 1);
 		else
-			sprintf(mousename, _WINDOWS("Lightgun %d "), mouse + 1);
+			sprintf(mousename, _WINDOWS("Lightgun %d "), gun + 1);
 		// add lightgun axes (fix me -- should enumerate these)
 		sprintf(tempname, "%sX", mousename);
 		add_joylist_entry(tempname, JOYCODE(gun, CODETYPE_GUNAXIS, 0), CODE_OTHER_ANALOG_ABSOLUTE);
