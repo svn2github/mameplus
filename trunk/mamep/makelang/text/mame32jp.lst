@@ -135,6 +135,7 @@ mooncrsg	ムーンクレスタ (Gremlin)	むーんくれすた	Gremlin
 smooncrs	ムーンクレスタ / Super Moon Cresta	むーんくれすた	Gremlin
 mooncrsb	ムーンクレスタ (海賊版 set 1)	むーんくれすた	bootleg
 mooncrs2	ムーンクレスタ (海賊版 set 2)	むーんくれすた	Nichibutsu
+mooncrs3	ムーンクレスタ (海賊版 set 3)	むーんくれすた	bootleg
 fantazia	ムーンクレスタ / Fantazia	むーんくれすた	bootleg
 moonqsr	ムーンクエーサー	むーんくえーさー	Nichibutsu
 mshuttle	ムーンシャトル / Moon Shuttle (USA版?)	むーんしゃとる	Nichibutsu
@@ -244,6 +245,7 @@ froggrmc	フロッガー (Moon Cresta hardware)	ふろっがー	bootleg?
 amidar	アミダー	あみだー	Konami
 amidaru	アミダー (Stern)	あみだー	Konami (Stern license)
 amidaro	アミダー (Olympia)	あみだー	Konami (Olympia license)
+amidarb	アミダー (海賊版)	あみだー	bootleg
 amigo	アミダー / Amigo	あみだー	bootleg
 turtles	ターピン / Turtles	たーぴん	[Konami] (Stern license)
 turpin	ターピン	たーぴん	[Konami] (Sega license)
@@ -2117,6 +2119,7 @@ ssf2tb	スーパーストリートファイターII -ザ・トーナメント・バトル (海外版 931119)	
 ssf2tbr1	スーパーストリートファイターII -ザ・トーナメント・バトル (海外版 930911)	すーぱーすとりーとふぁいたー2_2ざとーなめんとばとる	Capcom
 ssf2tbj	スーパーストリートファイターII -ザ・トーナメント・バトル (日本版 930911)	すーぱーすとりーとふぁいたー2_2ざとーなめんとばとる	Capcom
 ecofghtr	アルティミットエコロジー / Eco Fighters (海外版 931203)	あるてぃみっとえころじー	Capcom
+ecofghtu	アルティミットエコロジー / Eco Fighters (USA版 931203)	あるてぃみっとえころじー	Capcom
 ecofghta	アルティミットエコロジー / Eco Fighters (アジア版 931203)	あるてぃみっとえころじー	Capcom
 uecology	アルティミットエコロジー (日本版 931203)	あるてぃみっとえころじー	Capcom
 ddtod	ダンジョンズ&ドラゴンズ -タワーオブドゥーム (欧州版 940412)	だんじょんずあんどどらごんず_1たわーおぶどぅーむ	Capcom
@@ -3733,6 +3736,7 @@ xmen2pj	X-MEN (2 players ver JAA)	えっくすめん_1	Konami
 xmen6p	X-MEN (6 players ver ECB)	えっくすめん_1	Konami
 xmen6pu	X-MEN (6 players ver UCB)	えっくすめん_1	Konami
 xexex	ゼクセクス (ver EAA)	ぜくせくす	Konami
+xexexa	ゼクセクス (ver AAA)	ぜくせくす	Konami
 xexexj	ゼクセクス (ver JAA)	ぜくせくす	Konami
 asterix	アステリクス (ver EAD)	あすてりくす	Konami
 astrxeac	アステリクス (ver EAC)	あすてりくす	Konami
@@ -4918,6 +4922,7 @@ roundup	フィッター / Round-Up	ふぃったー	Amenip/Centuri
 fitter	フィッター	ふぃったー	Taito Corporation
 thepit	ザ・ピット	ざぴっと	Taito
 thepitc	ザ・ピット (Centuri)	ざぴっと	Centuri
+thepitb	ザ・ピット (海賊版)	ざぴっと	Bootleg
 dockman	ドックマン	どっくまん	Taito Corporation
 portman	ポートマン	ぽーとまん	Nova Games Ltd.
 funnymou	ファニーマウス	ふぁにーまうす	Chuo Co. Ltd
@@ -5739,6 +5744,7 @@ kov2p	三國戦紀 武将争覇 プラス -Nine Dragons	さんごくせんき_2_2	IGS
 ddp2	怒首領蜂II	どどんぱち_2	IGS
 puzzli2	ぱづり2 スーパー	ぱづり_2すーぱー	IGS
 martmast	マーシャルマスターズ	ま－しゃるますたーず	IGS
+theglad	闘幻狂 -ROAD OF THE SWORD	とうげんきょう	IGS
 dmnfrnt	デーモンフロント (V102)	でーもんふろんと	IGS
 dmnfrnta	デーモンフロント (V105)	でーもんふろんと	IGS
 hitme	ヒットミー	ひっとみー	RamTek
@@ -5851,6 +5857,7 @@ ar_spot	スポット (Arcadia)	すぽっと	Arcadia Systems
 ar_sprg	スペースレンジャー (Arcadia ver 2.0)	すぺーすれんじゃー	Arcadia Systems
 ar_xeon	ゼノン (Arcadia ver 2.3)	ぜのん	Arcadia Systems
 mquake	ムーンクエイク	むーんくえいく	Sente
+upscope	アップスコープ	あっぷすこーぷ	Grand Products
 crysking	ザ・クリスタルオブキングス	ざくりすたるおぶきんぐす	Brezzasoft
 evosocc	エボリューションサッカー	えぼりゅーしょんさっかー	Evoga
 qntoondo	クイントゥーン (オランダ版 Game Card 95-750-136)	くいんとぅーん	BFM/ELAM
@@ -5949,6 +5956,7 @@ findout	ファインドアウト (ver 4.04)	ふぁいんどあうと	Elettronolo
 quiz	クイズ (rev 2)	くいず	Italian bootleg
 quiz211	クイズ (rev 2.1)	くいず	Elettronolo
 gs4002	セレクション (ver 40.02TMB)	せれくしょん	G.E.I.
+gepoker	ポーカー (ver 50.02)	ぽーかー	Greyhound Electronics
 gt102c	トリビア (ver 1.02C)	とりびあ_1_102C	Greyhound Electronics
 gt102b	トリビア (ver 1.02B)	とりびあ_1_102B	Greyhound Electronics
 gt102c1	トリビア (ver 1.02C alt questions 1)	とりびあ_1_102CAQ1	Greyhound Electronics
