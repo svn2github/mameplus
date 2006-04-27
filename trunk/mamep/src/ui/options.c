@@ -456,7 +456,7 @@ static struct rc_option rc_game_opts[] =
 	{ "matchrefresh", NULL, rc_bool, &gOpts.matchrefresh, "0", 0, 0, NULL, "attempt to match the game's refresh rate" },
 	{ "syncrefresh", NULL, rc_bool, &gOpts.syncrefresh, "0", 0, 0, NULL, "syncronize only to the monitor refresh" },
 	{ "throttle", NULL, rc_bool, &gOpts.throttle, "1", 0, 0, NULL, "throttle speed to the game's framerate" },
-	{ "full_screen_brightness", "fsb", rc_float, &gOpts.gfx_brightness, "1.0", 0.10, 2.0, NULL, "sets the brightness in full screen mode" },
+	{ "full_screen_gamma", "fsg", rc_float, &gOpts.gfx_brightness, "1.0", 0.10, 2.0, NULL, "sets the gamma in full screen mode" },
 	{ "frames_to_run", "ftr", rc_int, &gOpts.frames_to_display, "0", 0, 0, NULL, "sets the number of frames to run within the game" },
 	{ "effect", NULL, rc_string, &gOpts.effect, "none", 0, 0, NULL, "specify the blitting effect" },
 	{ "screen_aspect", NULL, rc_string, &gOpts.aspect, "4:3", 0, 0, NULL, "specify an alternate monitor aspect ratio" },
