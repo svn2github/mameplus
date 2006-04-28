@@ -545,7 +545,7 @@ static BOOL CALLBACK monitor_enum_proc(HMONITOR monitor_enum, HDC dc, LPRECT rec
 
 	if (!GetMonitorInfo(monitor_enum, (LPMONITORINFO)&monitor_info))
 	{
-		fprintf(stderr, "ERROR: Failed to get display monitor information\n");
+		fprintf(stderr, _WINDOWS("ERROR: Failed to get display monitor information\n"));
 		return FALSE;	// stop enumeration
 	}
 
@@ -612,12 +612,12 @@ int osd_create_display(const osd_create_params *params, UINT32 *rgb_components)
 			fatalerror("ERROR: Unable to find a monitor");
 
 		if (screen_name)
-			fprintf(stderr, "WARNING: Screen %s not found, using primary display monitor\n", screen_name);
+			fprintf(stderr, _WINDOWS("WARNING: Screen %s not found, using primary display monitor\n"), screen_name);
 		else if (verbose)
-			fprintf(stderr, "Screen name not specified, using primary display monitor\n");
+			fprintf(stderr, _WINDOWS("Screen name not specified, using primary display monitor\n"));
 	}
 	else if (verbose)
-		fprintf(stderr, "Using %s as specified\n", screen_name);
+		fprintf(stderr, _WINDOWS("Using %s as specified\n"), screen_name);
 
 	// create the window
 	if (win_create_window(video_width, video_height, video_depth, video_attributes, aspect_ratio))

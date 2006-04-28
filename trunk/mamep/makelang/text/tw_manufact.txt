@@ -694,7 +694,7 @@ GAPS Inc.
 GAT
 
 
-# Piranha
+# Abscam
 GL
 
 
@@ -750,6 +750,10 @@ Global Corporation
 Gottlieb
 
 
+# Up Scope
+Grand Products
+
+
 # Taxi Driver
 Graphic Techno
 
@@ -788,6 +792,10 @@ Hara Industries
 
 # Fantasy '95
 Hi-max Technology Inc.
+
+
+# Sliver
+Hollow Corp
 
 
 # Mahjong Hourouki Part 1 - Seisyun Hen (Japan)
