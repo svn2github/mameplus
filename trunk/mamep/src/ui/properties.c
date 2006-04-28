@@ -124,7 +124,7 @@ static void FlickerSelectionChange(HWND hwnd);
 static void GammaSelectionChange(HWND hwnd);
 static void BrightCorrectSelectionChange(HWND hwnd);
 static void PauseBrightSelectionChange(HWND hwnd);
-static void BrightnessSelectionChange(HWND hwnd);
+static void FullScreenGammaSelectionChange(HWND hwnd);
 static void IntensitySelectionChange(HWND hwnd);
 static void A2DSelectionChange(HWND hwnd);
 static void ResDepthSelectionChange(HWND hWnd, HWND hWndCtrl);
@@ -150,7 +150,6 @@ static void InitializeDefaultInputUI(HWND hWnd);
 static void InitializeAnalogAxesUI(HWND hWnd);
 static void InitializeEffectUI(HWND hWnd);
 static void InitializeArtresUI(HWND hWnd);
-static void InitializeD3DFilterUI(HWND hwnd);
 static void InitializeD3DEffectUI(HWND hwnd);
 static void InitializeD3DPrescaleUI(HWND hwnd);
 static void InitializeBIOSUI(HWND hwnd);
@@ -208,7 +207,7 @@ static int  g_nIntensityIndex  = 0;
 static int  g_nRotateIndex     = 0;
 static int  g_nScreenIndex     = 0;
 static int  g_nInputIndex      = 0;
-static int  g_nBrightnessIndex = 0;
+static int  g_nFullScreenGammaIndex = 0;
 static int  g_nEffectIndex     = 0;
 static int  g_nLedmodeIndex    = 0;
 static int  g_nA2DIndex        = 0;
@@ -293,7 +292,7 @@ static DWORD dwHelpIDs[] =
 	IDC_BACKDROPS,          HIDC_BACKDROPS,
 	IDC_BEAM,               HIDC_BEAM,
 	IDC_BEZELS,             HIDC_BEZELS,
-	IDC_BRIGHTNESS,         HIDC_BRIGHTNESS,
+	IDC_FSGAMMA,            HIDC_FSGAMMA,
 	IDC_BRIGHTCORRECT,      HIDC_BRIGHTCORRECT,
 	IDC_BROADCAST,          HIDC_BROADCAST,
 	IDC_RANDOM_BG,          HIDC_RANDOM_BG,
@@ -483,17 +482,6 @@ static const char * d3d_effects_short_name[] =
 };
 
 #define NUMD3DEFFECTS (sizeof(d3d_effects_short_name) / sizeof(d3d_effects_short_name[0]))
-
-static const char * d3d_filter_long_name[] =
-{
-	"None",
-	"Bilinear",
-	"Cubic (flat kernel)",
-	"Cubic (gaussian kernel)",
-	"Anisotropic"
-};
-
-#define NUMD3DFILTER (sizeof(d3d_filter_long_name) / sizeof(d3d_filter_long_name[0]))
 
 #ifdef USE_SCALE_EFFECTS
 static const char * scale_effects_long_name[] =
@@ -1505,7 +1493,6 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 		changed = ReadControl(hDlg, wID);
 		break;
 
-	case IDC_D3D_FILTER :
 	case IDC_D3D_EFFECT :
 	case IDC_D3D_PRESCALE :
 		if (wNotifyCode == CBN_SELCHANGE)
@@ -2204,8 +2191,8 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 		}
 	}
 
-	
-	hCtrl = GetDlgItem(hWnd, IDC_BRIGHTNESSDISP);
+
+	hCtrl = GetDlgItem(hWnd, IDC_FSGAMMADISP);
 	if (hCtrl)
 	{
 		snprintf(buf,sizeof(buf), "%03.2f", o->gfx_gamma);
@@ -2495,9 +2482,9 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_SYNCREFRESH),     ddraw || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_REFRESH),         !in_window && ((ddraw && DirectDraw_HasRefresh()) || d3d));
 	EnableWindow(GetDlgItem(hWnd, IDC_REFRESHTEXT),     !in_window && ((ddraw && DirectDraw_HasRefresh()) || d3d));
-	EnableWindow(GetDlgItem(hWnd, IDC_BRIGHTNESS),      ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_BRIGHTNESSTEXT),  ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_BRIGHTNESSDISP),  ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMA),         ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMATEXT),     ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMADISP),     ddraw || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT), (ddraw && hws) || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT2),(ddraw && hws) || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATION),    (ddraw && hws) || d3d);
@@ -2518,7 +2505,6 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd,IDC_ZOOMTEXT),d3d);
 	EnableWindow(GetDlgItem(hWnd,IDC_ZOOMDIST),d3d);
 	EnableWindow(GetDlgItem(hWnd,IDC_D3D_FILTER),d3d);
-	EnableWindow(GetDlgItem(hWnd,IDC_D3D_FILTERTEXT),d3d);
 	EnableWindow(GetDlgItem(hWnd,IDC_D3D_TEXTURE_MANAGEMENT),d3d);
 	EnableWindow(GetDlgItem(hWnd,IDC_D3D_EFFECT),d3d);
 	EnableWindow(GetDlgItem(hWnd,IDC_D3D_EFFECTTEXT),d3d);
@@ -2808,9 +2794,9 @@ static void AssignGamma(HWND hWnd)
 	pGameOpts->f_gamma_correct = g_nGammaIndex / 20.0 + 0.5;
 }
 
-static void AssignBrightness(HWND hWnd)
+static void AssignFullScreenGamma(HWND hWnd)
 {
-	pGameOpts->gfx_gamma = g_nBrightnessIndex / 20.0 + 0.1;
+	pGameOpts->gfx_gamma = g_nFullScreenGammaIndex / 20.0 + 0.1;
 }
 
 static void AssignBeam(HWND hWnd)
@@ -3119,7 +3105,7 @@ static void ResetDataMap(void)
 	// add the 0.001 to make sure it truncates properly to the integer
 	// (we don't want 35.99999999 to be cut down to 35 because of floating point error)
 	g_nGammaIndex           = (int)((pGameOpts->f_gamma_correct  - 0.5) * 20.0 + 0.001);
-	g_nBrightnessIndex      = (int)((pGameOpts->gfx_gamma   - 0.1) * 20.0 + 0.001);
+	g_nFullScreenGammaIndex = (int)((pGameOpts->gfx_gamma        - 0.1) * 20.0 + 0.001);
 	g_nBrightCorrectIndex   = (int)((pGameOpts->f_bright_correct - 0.5) * 20.0 + 0.001);
 	g_nPauseBrightIndex     = (int)((pGameOpts->f_pause_bright   - 0.5) * 20.0 + 0.001);
 	g_nBeamIndex            = (int)((pGameOpts->f_beam           - 1.0) * 20.0 + 0.001);
@@ -3319,24 +3305,24 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_MATCHREFRESH,  DM_BOOL, CT_BUTTON,   &pGameOpts->matchrefresh,  DM_BOOL, &pGameOpts->matchrefresh,  0, 0, 0);
 	DataMapAdd(IDC_SYNCREFRESH,   DM_BOOL, CT_BUTTON,   &pGameOpts->syncrefresh,   DM_BOOL, &pGameOpts->syncrefresh,   0, 0, 0);
 	DataMapAdd(IDC_THROTTLE,      DM_BOOL, CT_BUTTON,   &pGameOpts->throttle,      DM_BOOL, &pGameOpts->throttle,      0, 0, 0);
-	DataMapAdd(IDC_BRIGHTNESS,    DM_INT,  CT_SLIDER,   &g_nBrightnessIndex,       DM_FLOAT, &pGameOpts->gfx_gamma, 0, 0, AssignBrightness);
-	DataMapAdd(IDC_BRIGHTNESSDISP,DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->gfx_gamma, 0, 0, 0);
+	DataMapAdd(IDC_FSGAMMA,       DM_INT,  CT_SLIDER,   &g_nFullScreenGammaIndex,  DM_FLOAT, &pGameOpts->gfx_gamma,    0, 0, AssignFullScreenGamma);
+	DataMapAdd(IDC_FSGAMMADISP,   DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->gfx_gamma,    0, 0, 0);
 	/* pGameOpts->frames_to_display */
-	DataMapAdd(IDC_EFFECT,        DM_INT,  CT_COMBOBOX, &g_nEffectIndex,           DM_STRING, &pGameOpts->effect,	   0, 0, AssignEffect);
-	DataMapAdd(IDC_ASPECTRATIOD,  DM_NONE, CT_NONE, &pGameOpts->aspect,            DM_STRING, &pGameOpts->aspect,      0, 0, 0);
-	DataMapAdd(IDC_ASPECTRATION,  DM_NONE, CT_NONE, &pGameOpts->aspect,            DM_STRING, &pGameOpts->aspect,      0, 0, 0);
-	DataMapAdd(IDC_SIZES,         DM_NONE, CT_NONE, &pGameOpts->resolution,        DM_STRING, &pGameOpts->resolution,  0, 0, 0);
-	DataMapAdd(IDC_RESDEPTH,      DM_NONE, CT_NONE, &pGameOpts->resolution,        DM_STRING, &pGameOpts->resolution,  0, 0, 0);
+	DataMapAdd(IDC_EFFECT,        DM_INT,  CT_COMBOBOX, &g_nEffectIndex,           DM_STRING, &pGameOpts->effect,	     0, 0, AssignEffect);
+	DataMapAdd(IDC_ASPECTRATIOD,  DM_NONE, CT_NONE,     &pGameOpts->aspect,        DM_STRING, &pGameOpts->aspect,      0, 0, 0);
+	DataMapAdd(IDC_ASPECTRATION,  DM_NONE, CT_NONE,     &pGameOpts->aspect,        DM_STRING, &pGameOpts->aspect,      0, 0, 0);
+	DataMapAdd(IDC_SIZES,         DM_NONE, CT_NONE,     &pGameOpts->resolution,    DM_STRING, &pGameOpts->resolution,  0, 0, 0);
+	DataMapAdd(IDC_RESDEPTH,      DM_NONE, CT_NONE,     &pGameOpts->resolution,    DM_STRING, &pGameOpts->resolution,  0, 0, 0);
 	DataMapAdd(IDC_CLEAN_STRETCH, DM_INT,  CT_COMBOBOX, &g_nCleanStretchIndex,     DM_STRING, &pGameOpts->clean_stretch, 0, 0, AssignCleanStretch);
-	DataMapAdd(IDC_ZOOM,          DM_INT,  CT_SLIDER,   &pGameOpts->zoom,          DM_INT, &pGameOpts->zoom,      0, 0, 0);
-	DataMapAdd(IDC_ZOOMDIST,      DM_NONE, CT_NONE,   NULL,          DM_INT, &pGameOpts->zoom,      0, 0, 0);
+	DataMapAdd(IDC_ZOOM,          DM_INT,  CT_SLIDER,   &pGameOpts->zoom,          DM_INT,    &pGameOpts->zoom,        0, 0, 0);
+	DataMapAdd(IDC_ZOOMDIST,      DM_NONE, CT_NONE,     NULL,                      DM_INT,    &pGameOpts->zoom,        0, 0, 0);
 #ifdef USE_SCALE_EFFECTS
 	DataMapAdd(IDC_SCALEEFFECT,   DM_INT,  CT_COMBOBOX, &g_nScaleEffectIndex,      DM_STRING, &pGameOpts->scale_effect,0, 0, AssignScaleEffect);
 #endif /* USE_SCALE_EFFECTS */
 
 	// direct3d
 	DataMapAdd(IDC_D3D,           DM_BOOL, CT_BUTTON,   &pGameOpts->use_d3d,       DM_BOOL, &pGameOpts->use_d3d,       0, 0, 0);
-	DataMapAdd(IDC_D3D_FILTER,    DM_INT,  CT_COMBOBOX, &pGameOpts->d3d_filter,    DM_INT, &pGameOpts->d3d_filter,     0, 0, 0);
+	DataMapAdd(IDC_D3D_FILTER,    DM_BOOL, CT_BUTTON,   &pGameOpts->d3d_filter,    DM_BOOL, &pGameOpts->d3d_filter,    0, 0, 0);
 	DataMapAdd(IDC_D3D_TEXTURE_MANAGEMENT,DM_BOOL,CT_BUTTON,&pGameOpts->d3d_texture_management,DM_BOOL,&pGameOpts->d3d_texture_management, 0, 0, 0);
 	DataMapAdd(IDC_D3D_EFFECT,    DM_INT,  CT_COMBOBOX, &g_nD3DEffectIndex,        DM_STRING, &pGameOpts->d3d_effect,  0, 0, AssignD3DEffect);
 	DataMapAdd(IDC_D3D_PRESCALE,  DM_INT,  CT_COMBOBOX, &g_nD3DPrescaleIndex,      DM_STRING, &pGameOpts->d3d_prescale,0, 0, AssignD3DPrescale);
@@ -3611,7 +3597,6 @@ static void InitializeOptions(HWND hDlg)
 	InitializeAnalogAxesUI(hDlg);
 	InitializeEffectUI(hDlg);
 	InitializeArtresUI(hDlg);
-	InitializeD3DFilterUI(hDlg);
 	InitializeD3DEffectUI(hDlg);
 	InitializeD3DPrescaleUI(hDlg);
 	InitializeBIOSUI(hDlg);
@@ -3647,9 +3632,9 @@ static void InitializeMisc(HWND hDlg)
 				(WPARAM)FALSE,
 				(LPARAM)MAKELONG(0, 30)); /* [0.50, 2.00] in .05 increments */
 
-	SendDlgItemMessage(hDlg, IDC_BRIGHTNESS, TBM_SETRANGE,
+	SendDlgItemMessage(hDlg, IDC_FSGAMMA, TBM_SETRANGE,
 				(WPARAM)FALSE,
-				(LPARAM)MAKELONG(0, 38)); /* [0.10, 2.00] in .05 increments */
+				(LPARAM)MAKELONG(0, 78)); /* [0.10, 4.00] in .05 increments */
 
 	SendDlgItemMessage(hDlg, IDC_INTENSITY, TBM_SETRANGE,
 				(WPARAM)FALSE,
@@ -3713,9 +3698,9 @@ static void OptOnHScroll(HWND hwnd, HWND hwndCtl, UINT code, int pos)
 		PauseBrightSelectionChange(hwnd);
 	}
 	else
-	if (hwndCtl == GetDlgItem(hwnd, IDC_BRIGHTNESS))
+	if (hwndCtl == GetDlgItem(hwnd, IDC_FSGAMMA))
 	{
-		BrightnessSelectionChange(hwnd);
+		FullScreenGammaSelectionChange(hwnd);
 	}
 	else
 	if (hwndCtl == GetDlgItem(hwnd, IDC_BEAM))
@@ -3861,21 +3846,21 @@ static void PauseBrightSelectionChange(HWND hwnd)
 	Static_SetTextA(GetDlgItem(hwnd, IDC_PAUSEBRIGHTDISP), buf);
 }
 
-/* Handle changes to the Brightness slider */
-static void BrightnessSelectionChange(HWND hwnd)
+/* Handle changes to the Fullscreen Gamma slider */
+static void FullScreenGammaSelectionChange(HWND hwnd)
 {
 	char   buf[100];
 	int    nValue;
-	double dBrightness;
+	double dGamma;
 
 	/* Get the current value of the control */
-	nValue = SendDlgItemMessage(hwnd, IDC_BRIGHTNESS, TBM_GETPOS, 0, 0);
+	nValue = SendDlgItemMessage(hwnd, IDC_FSGAMMA, TBM_GETPOS, 0, 0);
 
-	dBrightness = nValue / 20.0 + 0.1;
+	dGamma = nValue / 20.0 + 0.1;
 
 	/* Set the static display to the new value */
-	snprintf(buf,sizeof(buf),"%03.2f", dBrightness);
-	Static_SetTextA(GetDlgItem(hwnd, IDC_BRIGHTNESSDISP), buf);
+	snprintf(buf,sizeof(buf),"%03.2f", dGamma);
+	Static_SetTextA(GetDlgItem(hwnd, IDC_FSGAMMADISP), buf);
 }
 
 /* Handle changes to the Intensity slider */
@@ -4399,19 +4384,6 @@ static void InitializeArtresUI(HWND hwnd)
 		ComboBox_AddStringA(hCtrl, _UI("Auto"));		/* 0 */
 		ComboBox_AddStringA(hCtrl, _UI("Standard"));  /* 1 */
 		ComboBox_AddStringA(hCtrl, _UI("High"));		/* 2 */
-	}
-}
-
-static void InitializeD3DFilterUI(HWND hwnd)
-{
-	HWND hCtrl = GetDlgItem(hwnd,IDC_D3D_FILTER);
-
-	if (hCtrl)
-	{
-		int i;
-
-		for (i=0;i<NUMD3DFILTER;i++)
-			ComboBox_AddStringA(hCtrl,_UI(d3d_filter_long_name[i]));
 	}
 }
 

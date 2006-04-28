@@ -623,32 +623,27 @@ BEGIN
     CONTROL         "Rotation of effects for rotated games",IDC_D3D_ROTATE_EFFECTS,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,73,220,10,0,
                     HIDC_D3D_ROTATE_EFFECTS
-    GROUPBOX        "Interpolation method",IDC_D3D_FILTERTEXT,10,86,117,30
-    COMBOBOX        IDC_D3D_FILTER,16,97,105,95,CBS_DROPDOWNLIST |WS_VSCROLL | 
-                    WS_TABSTOP,0,HIDC_D3D_FILTER
-    GROUPBOX        "Effect",IDC_D3D_EFFECTTEXT,10,119,117,30
-    COMBOBOX        IDC_D3D_EFFECT,16,130,105,95,CBS_DROPDOWNLIST | 
+    CONTROL         "Enable Bilinear filtering",IDC_D3D_FILTER,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,87,220,10,0,
+                    HIDC_D3D_FILTER
+    GROUPBOX        "Effect",IDC_D3D_EFFECTTEXT,10,100,117,30
+    COMBOBOX        IDC_D3D_EFFECT,16,111,105,95,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP,0,HIDC_D3D_EFFECT
-    GROUPBOX        "Prescale",IDC_D3D_PRESCALETEXT,10,152,117,30
-    COMBOBOX        IDC_D3D_PRESCALE,16,163,105,95,CBS_DROPDOWNLIST | 
+    GROUPBOX        "Prescale",IDC_D3D_PRESCALETEXT,10,133,117,30
+    COMBOBOX        IDC_D3D_PRESCALE,16,144,105,95,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP,0,HIDC_D3D_PRESCALE
-#ifdef QA_MERGE
-	GROUPBOX        "",IDC_STATIC,119,64,84,28
-#endif
-    GROUPBOX        "Scanline intensity",IDC_D3D_SCANLINES_ENABLE,133,86,116,30
-    CONTROL         "Slider1",IDC_D3D_SCANLINES,"msctls_trackbar32",TBS_BOTH | 
-                    TBS_NOTICKS | WS_TABSTOP,139,99,78,10,0,
-                    HIDC_D3D_SCANLINES
-    CTEXT           "100",IDC_D3D_SCANLINES_DISP,216,99,30,10
-    GROUPBOX        "Feedback strength",IDC_D3D_FEEDBACK_ENABLE,133,119,116,30
-    CONTROL         "Slider3",IDC_D3D_FEEDBACK,"msctls_trackbar32",TBS_BOTH | 
-                    TBS_NOTICKS | WS_TABSTOP,139,132,78,10,0,
-                    HIDC_D3D_FEEDBACK
-    CTEXT           "100",IDC_D3D_FEEDBACK_DISP,216,132,30,10
-    GROUPBOX        "Force zoom level",IDC_ZOOMTEXT,133,152,116,30
+    GROUPBOX        "Force zoom level",IDC_ZOOMTEXT,10,166,117,30
     CONTROL         "Slider1",IDC_ZOOM,"msctls_trackbar32",TBS_BOTH | 
-                    TBS_NOTICKS | WS_TABSTOP,139,165,78,10,0,HIDC_ZOOM
-    CTEXT           "2",IDC_ZOOMDIST,216,165,30,10
+                    TBS_NOTICKS | WS_TABSTOP,16,179,90,10,0,HIDC_ZOOM
+    CTEXT           "2",IDC_ZOOMDIST,110,179,10,10
+    GROUPBOX        "Scanline intensity",IDC_D3D_SCANLINES_ENABLE,133,100,116,30
+    CONTROL         "Slider1",IDC_D3D_SCANLINES,"msctls_trackbar32",TBS_BOTH | 
+                    TBS_NOTICKS | WS_TABSTOP,139,113,78,10,0,HIDC_D3D_SCANLINES
+    CTEXT           "100",IDC_D3D_SCANLINES_DISP,216,113,30,10
+    GROUPBOX        "Feedback strength",IDC_D3D_FEEDBACK_ENABLE,133,133,116,30
+    CONTROL         "Slider3",IDC_D3D_FEEDBACK,"msctls_trackbar32",TBS_BOTH | 
+                    TBS_NOTICKS | WS_TABSTOP,139,146,78,10,0,HIDC_D3D_FEEDBACK
+    CTEXT           "100",IDC_D3D_FEEDBACK_DISP,216,146,30,10
     PUSHBUTTON      "Reset",IDC_PROP_RESET,4,225,117,14,0,0,HIDC_PROP_RESET
     PUSHBUTTON      "Restore Default Settings",IDC_USE_DEFAULT,138,225,117,14,
                     0,0,HIDC_USE_DEFAULT
@@ -720,10 +715,10 @@ BEGIN
     CONTROL         "Switch color depths to fit",IDC_SWITCHBPP,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,129,118,10,0,
                     HIDC_SWITCHBPP
-    GROUPBOX        "Full screen gamma",IDC_BRIGHTNESSTEXT,136,109,120,30,NOT WS_GROUP
-    CONTROL         "Slider1",IDC_BRIGHTNESS,"msctls_trackbar32",TBS_BOTH | 
-                    TBS_NOTICKS | WS_TABSTOP,142,123,87,10,0,HIDC_BRIGHTNESS
-    CTEXT           "2.00",IDC_BRIGHTNESSDISP,233,123,17,10,SS_CENTERIMAGE | 
+    GROUPBOX        "Full screen gamma",IDC_FSGAMMATEXT,136,109,120,30,NOT WS_GROUP
+    CONTROL         "Slider1",IDC_FSGAMMA,"msctls_trackbar32",TBS_BOTH | 
+                    TBS_NOTICKS | WS_TABSTOP,142,123,87,10,0,HIDC_FSGAMMA
+    CTEXT           "2.00",IDC_FSGAMMADISP,233,123,17,10,SS_CENTERIMAGE | 
                     NOT WS_GROUP
     CONTROL         "Stretch using hardware",IDC_HWSTRETCH,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,142,45,114,10,0,

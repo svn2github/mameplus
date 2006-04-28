@@ -17,7 +17,7 @@
 #define HIDC_BEZELS                     0x809e03fd    // IDD_PROP_MISC [Englisch (USA)]
 #define HIDC_BIOS                       0x809e04b4    // IDD_PROP_MISC [Englisch (USA)]
 #define HIDC_BRIGHTCORRECT              0x809a0400    // IDD_PROP_DISPLAY [Englisch (USA)]
-#define HIDC_BRIGHTNESS                 0x809c047a    // IDD_PROP_ADVANCED [Englisch (USA)]
+#define HIDC_FSGAMMA                    0x809c047a    // IDD_PROP_ADVANCED [Englisch (USA)]
 #define HIDC_BROADCAST                  0x80ad0486    // IDD_INTERFACE_OPTIONS [Englisch (USA)]
 #define HIDC_CHEAT                      0x809e03f6    // IDD_PROP_MISC [Englisch (USA)]
 #define HIDC_CLEAN_STRETCH              0x809a04a7    // IDD_PROP_DISPLAY [Englisch (USA)]

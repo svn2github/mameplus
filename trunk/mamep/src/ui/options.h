@@ -97,7 +97,7 @@ typedef struct
 	/* Direct3D 2D video */
 	int    zoom;
 	BOOL   d3d_texture_management;
-	int    d3d_filter;
+	BOOL   d3d_filter;
 	int    d3d_feedback;
 	int    d3d_scanlines;
 	BOOL   d3d_rotate_effects;

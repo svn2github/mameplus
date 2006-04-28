@@ -188,9 +188,9 @@
 #define IDC_TRANSLUCENCY                1081
 #define IDC_VERSION                     1082
 #define IDC_ARTWORK                     1083
-#define IDC_BRIGHTNESS                  1084
+#define IDC_FSGAMMA                     1084
 #define IDC_GAMMADISP                   1085
-#define IDC_BRIGHTNESSDISP              1086
+#define IDC_FSGAMMADISP                 1086
 #define IDC_BRIGHTCORRECTDISP           1087
 #define IDC_FLICKERDISP                 1088
 #define IDC_INTENSITYDISP               1089
@@ -250,7 +250,7 @@
 #define IDC_REFRESH                     1148
 #define IDC_REFRESHTEXT                 1149
 #define IDC_EFFECT                      1150
-#define IDC_BRIGHTNESSTEXT              1151
+#define IDC_FSGAMMATEXT                 1151
 #define IDC_STEADYKEY                   1152
 #define IDC_ASPECTRATIO                 1153
 #define IDC_ASPECTRATION                1154
@@ -383,10 +383,9 @@
 #define IDC_ZOOMTEXT                    1344
 #define IDC_CLEAN_STRETCHTEXT           1345
 #define IDC_SCREENTEXT                  1346
-#define IDC_D3D_FILTERTEXT              1347
-#define IDC_D3D_EFFECTTEXT              1348
-#define IDC_D3D_PRESCALETEXT            1349
-#define IDC_USE_LIST                    1350
+#define IDC_D3D_EFFECTTEXT              1347
+#define IDC_D3D_PRESCALETEXT            1348
+#define IDC_USE_LIST                    1349
 
 #define IDC_SCALEEFFECT                 1351 // USE_SCALE_EFFECTS
 #define IDC_SCALEEFFECTTEXT             1352 // USE_SCALE_EFFECTS

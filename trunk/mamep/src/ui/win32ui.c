@@ -968,7 +968,7 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	if (pOpts->use_d3d)
 	{
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3d");
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -flt %i",pOpts->d3d_filter);
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sflt",pOpts->d3d_filter?"":"no");
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sd3dtexmanage",    pOpts->d3d_texture_management ? "" : "no");
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3deffect %s",      pOpts->d3d_effect);
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3dprescale %s",    pOpts->d3d_prescale);
