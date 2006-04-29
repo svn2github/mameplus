@@ -266,7 +266,7 @@ INLINE void get_screen_bounds(RECT *bounds)
 {
 	MONITORINFO monitor_info = { sizeof(MONITORINFO) };
 
-	assert_always(GetMonitorInfo(monitor, &monitor_info), "Failed to get monitor info");
+	assert_always(GetMonitorInfo(monitor, &monitor_info), _WINDOWS("Failed to get monitor info"));
 
 	*bounds = monitor_info.rcMonitor;
 }
@@ -332,7 +332,7 @@ INLINE void get_work_area(RECT *maximum)
 
 	MONITORINFO monitor_info = { sizeof(MONITORINFO) };
 
-	assert_always(GetMonitorInfo(monitor, &monitor_info), "Failed to get monitor info");
+	assert_always(GetMonitorInfo(monitor, &monitor_info), _WINDOWS("Failed to get monitor info"));
 
 	*maximum = monitor_info.rcWork;
 

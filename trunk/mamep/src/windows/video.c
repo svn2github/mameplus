@@ -553,7 +553,7 @@ static BOOL CALLBACK monitor_enum_proc(HMONITOR monitor_enum, HDC dc, LPRECT rec
 	{
 		fprintf(stderr, _WINDOWS("Enumerating display monitors... Found: %s %s\n"),
 				monitor_info.szDevice,
-				monitor_info.dwFlags & MONITORINFOF_PRIMARY ? "(primary)" : "");
+				monitor_info.dwFlags & MONITORINFOF_PRIMARY ? _WINDOWS("(primary)") : "");
 	}
 
 	// save the primary monitor handle

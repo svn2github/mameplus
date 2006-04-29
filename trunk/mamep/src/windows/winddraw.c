@@ -168,7 +168,7 @@ int select_display_adapter(void)
 	result = DirectDrawEnumerateEx(devices_enum_callback, NULL, DDENUM_ATTACHEDSECONDARYDEVICES | DDENUM_DETACHEDSECONDARYDEVICES);
 	if (result != DD_OK)
 	{
-		fprintf(stderr, "Error enumerating display adapters with DirectDraw: %08x\n", (UINT32)result);
+		fprintf(stderr, _WINDOWS("Error enumerating display adapters with DirectDraw: %08x\n"), (UINT32)result);
 		return 1;
 	}
 

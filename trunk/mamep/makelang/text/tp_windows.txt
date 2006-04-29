@@ -82,6 +82,10 @@
 (dd) stretch video using the hardware
 
 
+# windows/video.c: 556
+(primary)
+
+
 # windows/input.c: 992
 Autoenabling joysticks due to presence of a %s\n
 
@@ -214,6 +218,10 @@ Error creating scanline surface[%d]: %08x\n
 Error creating texture surface: %08x\n
 
 
+# windows/winddraw.c: 171
+Error enumerating display adapters with DirectDraw: %08x\n
+
+
 # windows/wind3d.c: 946 windows/winddraw.c: 633
 Error enumerating modes: %08x\n
 
@@ -320,6 +328,10 @@ Error: RGB effects (multiply mode) not supported\n
 
 # windows/wind3d.c: 1365
 Error: required texture size too large (max: %ix%i, need %ix%i)\n
+
+
+# windows/window.c: 269, 335
+Failed to get monitor info
 
 
 # windows/config.c: 582

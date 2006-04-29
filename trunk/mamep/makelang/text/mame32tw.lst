@@ -2434,6 +2434,7 @@ preisl2d	原始島 2 (解密 C)	原始島 2 (解密 C)	Yumekobo
 mslug3	越南大戰: 合金彈頭 3	越南大戰: 合金彈頭 3	SNK
 mslug3n	越南大戰: 合金彈頭 3 (未加密)	越南大戰: 合金彈頭 3 (未加密)	SNK
 mslug3d	越南大戰: 合金彈頭 3 (解密 C)	越南大戰: 合金彈頭 3 (解密 C)	SNK
+ms6boot	越南大戰: 合金彈頭 3 / Metal Slug 6 (盜版)	越南大戰: 合金彈頭 3 / Metal Slug 6 (盜版)	bootleg
 kof2000	拳皇 2000	拳皇 2000	SNK
 kof2000n	拳皇 2000 (未加密)	拳皇 2000 (未加密)	SNK
 kof2000d	拳皇 2000 (解密 C)	拳皇 2000 (解密 C)	SNK
@@ -2470,9 +2471,11 @@ matrim	新豪血寺一族 - 鬥婚	新豪血寺一族 - 鬥婚	Noise Factory / Atlus
 matrimd	新豪血寺一族 - 鬥婚 (解密 C)	新豪血寺一族 - 鬥婚 (解密 C)	Noise Factory / Atlus
 matrimbl	新豪血寺一族 - 鬥婚 (盜版)	新豪血寺一族 - 鬥婚 (盜版)	bootleg
 pnyaa	寵物方塊	寵物方塊	Aiky / Taito
+ms5pcb	越南大戰: 合金彈頭 5 (JAMMA PCB)	越南大戰: 合金彈頭 5 (JAMMA PCB)	SNK Playmore
 mslug5	越南大戰: 合金彈頭 5	越南大戰: 合金彈頭 5	SNK Playmore
 ms5plus	越南大戰: 合金彈頭 5 PLUS (盜版)	越南大戰: 合金彈頭 5 PLUS (盜版)	bootleg
-svcpcb	SNK VS. 卡普空 - SVC 渾沌 (JAMMA PCB)	SNK VS. 卡普空 - SVC 渾沌 (JAMMA PCB)	Playmore
+svcpcb	SNK VS. 卡普空 - SVC 渾沌 (JAMMA PCB, set 1)	SNK VS. 卡普空 - SVC 渾沌 (JAMMA PCB, set 1)	Playmore
+svcpcba	SNK VS. 卡普空 - SVC 渾沌 (JAMMA PCB, set 2)	SNK VS. 卡普空 - SVC 渾沌 (JAMMA PCB, set 2)	Playmore
 svc	SNK VS. 卡普空 - SVC 渾沌 (MVS)	SNK VS. 卡普空 - SVC 渾沌 (MVS)	Playmore
 svcboot	SNK VS. 卡普空 - SVC 渾沌 (MVS) (盜版)	SNK VS. 卡普空 - SVC 渾沌 (MVS) (盜版)	bootleg
 svcplus	SNK VS. 卡普空 - SVC 渾沌 PLUS (set 1, 盜版)	SNK VS. 卡普空 - SVC 渾沌 PLUS (set 1, 盜版)	bootleg
@@ -3033,6 +3036,7 @@ vbowl	世界杯保齡球 (世界版, V101XCM)	世界杯保齡球 (世界版, V101XCM)	Alta / IGS
 vbowlj	世界杯保齡球 (日本版, V100JCM)	世界杯保齡球 (日本版, V100JCM)	Alta / IGS
 drgnwrld	中國龍 / Dragon World (世界版, V0400)	中國龍 / Dragon World (世界版, V0400)	IGS
 drgwrld3	中國龍 / Dragon World (世界版, V0300)	中國龍 / Dragon World (世界版, V0300)	IGS
+lordgun	槍王 (美國版)	槍王 (美國版)	IGS
 hfh	黃飛鴻	黃飛鴻	IGS
 tarzan	泰山	泰山	IGS
 orlegend	西遊釋厄傳 (ver. 126)	西遊釋厄傳 (ver. 126)	IGS
@@ -3052,7 +3056,7 @@ kov115	三國戰記 (ver. 115)	三國戰記 (ver. 115)	IGS
 kovj	三國戰記 (ver. 100, 日文機板)	三國戰記 (ver. 100, 日文機板)	IGS
 kovsh	三國戰記 - 風雲再起 (ver. 322)	三國戰記 - 風雲再起 (ver. 322)	IGS
 photoy2k	大家來找碴	大家來找碴	IGS
-raf102j	大家來找碴 (ver. 102, 日本機板)	大家來找碴 (ver. 102, 日本機板)	IGS
+raf102j	大家來找碴 / Real and Fake (ver. 102, 日本機板)	大家來找碴 / Real and Fake (ver. 102, 日本機板)	IGS
 killbld	傲劍狂刀	傲劍狂刀	IGS
 killbldt	傲劍狂刀 (中文機板)	傲劍狂刀 (中文機板)	IGS
 puzlstar	魔幻星座	魔幻星座	IGS

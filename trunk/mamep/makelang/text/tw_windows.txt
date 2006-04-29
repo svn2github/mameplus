@@ -82,6 +82,10 @@
 (dd) stretch video using the hardware
 (dd) 使用硬體延展視訊
 
+# windows/video.c: 556
+(primary)
+(主顯示器)
+
 # windows/input.c: 992
 Autoenabling joysticks due to presence of a %s\n
 自動啟用搖桿，因為存在一個%s\n
@@ -214,6 +218,10 @@ Error creating scanline surface[%d]: %08x\n
 Error creating texture surface: %08x\n
 建立材質介面時發生錯誤: %08x\n
 
+# windows/winddraw.c: 171
+Error enumerating display adapters with DirectDraw: %08x\n
+列舉 DirectDraw 顯示介面卡時發生錯誤: %08x\n
+
 # windows/wind3d.c: 946 windows/winddraw.c: 633
 Error enumerating modes: %08x\n
 列舉模式時發生錯誤: %08x\n
@@ -321,6 +329,10 @@ Error: RGB effects (multiply mode) not supported\n
 # windows/wind3d.c: 1365
 Error: required texture size too large (max: %ix%i, need %ix%i)\n
 錯誤: 必要的材質大小太大 (最大: %ix%i, 需要 %ix%i)\n
+
+# windows/window.c: 269, 335
+Failed to get monitor info
+無法取得顯示器資訊
 
 # windows/config.c: 582
 Failed to open file for playback
@@ -1200,7 +1212,7 @@ force specific zoom level
 
 # windows/config.c: 232
 gamma correction
-Gamma 修正
+Gamma 值修正
 
 # windows/config.c: 268
 generate error.log
