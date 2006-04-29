@@ -5204,6 +5204,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( mslug3 )	/* 0256 (c) 2000 SNK */
 	DRIVER( mslug3n )	/* 0256 (c) 2000 SNK */
 	DRIVER( mslug3d )	/* 0256 (c) 2000 SNK */
+	DRIVER( ms6boot )
 	DRIVER( kof2000 )	/* 0257 (c) 2000 SNK */
 	DRIVER( kof2000n )	/* 0257 (c) 2000 SNK */
 	DRIVER( kof2000d )	/* 0257 (c) 2000 SNK */
@@ -5242,9 +5243,11 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( matrimd )	/* 0266 (c) 2002 Atlus */
 	DRIVER( matrimbl )	/* 0266 (c) 2002 bootleg */
 	DRIVER( pnyaa )		/* 0267 (c) 2003 Aiky / Taito */
+	DRIVER( ms5pcb )
 	DRIVER( mslug5 )	/* 0268 (c) 2003 Playmore */
 	DRIVER( ms5plus )	/* bootleg */
 	DRIVER( svcpcb )	/* 0269 (c) 2003 Playmore / Capcom - JAMMA PCB */
+	DRIVER( svcpcba )
 	DRIVER( svc )		/* 0269 (c) 2003 Playmore / Capcom */
 	DRIVER( svcboot )	/* bootleg */
 	DRIVER( svcplus )	/* bootleg */

@@ -1,3 +1,4 @@
+; ref: raine-0.43.2/source/video/eagle.asm
 ;
 ; Eagle.asm
 ;
