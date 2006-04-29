@@ -1513,6 +1513,10 @@ READ16_HANDLER( killbld_prot_r )
 {
 //  printf("killbld prot w\n");
 	unsigned short res ;
+	static const unsigned long kb_region[6]={
+		0x89911417,0x89911416,0x89911419,
+		0x89911420,0x89911418,0x89911421
+		};
 
 	offset&=0xf;
 	res=0;
@@ -1524,10 +1528,8 @@ READ16_HANDLER( killbld_prot_r )
 			res=reg&0x7f;
 		}
 		else if(kb_cmd==5)
-		{	// this is meant to be region, but it doesn't work in mame?!
-//          res=(0x89911417>>(8*(ptr-1)))&0xff; // china
-			res=(0x89911421>>(8*(ptr-1)))&0xff; // world
-
+		{
+			res=((kb_region[readinputport(4)])>>(8*(ptr-1)))&0xff;
 		}
 	}
 	logerror("%06X: ASIC25 R CMD %X  VAL %X",activecpu_get_pc(),kb_cmd,res);

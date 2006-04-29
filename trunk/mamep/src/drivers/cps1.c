@@ -8754,6 +8754,74 @@ static DRIVER_INIT( wof3sj )
 	init_cps1();
 }
 
+static DRIVER_INIT( wofsjb )
+{
+	UINT8 *mem8 = memory_region(REGION_CPU1);
+	// Patch Q sound protection? check
+	mem8[0x5A1A] = 0x00;
+	mem8[0x5A1B] = 0x67;
+	mem8[0x5A1C] = 0x56;
+	mem8[0x5A1D] = 0x00;
+	mem8[0x5A1E] = 0x7C;
+	mem8[0x5A1F] = 0x20;
+	mem8[0x5A20] = 0xF1;
+	mem8[0x5A21] = 0x00;
+	mem8[0x5A22] = 0x00;
+	mem8[0x5A23] = 0x80;
+	mem8[0x5A24] = 0x28;
+	mem8[0x5A25] = 0x4A;
+	mem8[0x5A26] = 0x1F;
+	mem8[0x5A27] = 0x00;
+	mem8[0x5A28] = 0x00;
+	mem8[0x5A29] = 0x6A;
+	mem8[0x5A40] = 0x5C;
+	mem8[0x5A41] = 0x11;
+	mem8[0x5A42] = 0x01;
+	mem8[0x5A43] = 0x00;
+	mem8[0x5A44] = 0x5C;
+	mem8[0x5A45] = 0x11;
+	mem8[0x5A46] = 0x03;
+	mem8[0x5A47] = 0x00;
+	mem8[0x5A4A] = 0x07;
+	mem8[0x5A4B] = 0x00;
+	mem8[0x5A4C] = 0x5C;
+	mem8[0x5A4D] = 0x11;
+	mem8[0x5A4E] = 0x09;
+	mem8[0x5A4F] = 0x00;
+	mem8[0x5A50] = 0x5C;
+	mem8[0x5A51] = 0x31;
+	mem8[0x5A52] = 0x0C;
+	mem8[0x5A53] = 0x00;
+	mem8[0x5A54] = 0x5C;
+	mem8[0x5A55] = 0x11;
+	mem8[0x5A56] = 0x0F;
+	mem8[0x5A57] = 0x00;
+	mem8[0x5A58] = 0x5C;
+	mem8[0x5A59] = 0x11;
+	mem8[0x72A6] = 0x71;
+	mem8[0x72A7] = 0x4E;
+	mem8[0x72A8] = 0x71;
+	mem8[0x72A9] = 0x4E;
+	mem8[0x72AA] = 0x71;
+	mem8[0x72AB] = 0x4E;
+	mem8[0x72AC] = 0x71;
+	mem8[0x72AD] = 0x4E;
+	mem8[0x72AE] = 0x71;
+	mem8[0x72AF] = 0x4E;
+	mem8[0x72B0] = 0x71;
+	mem8[0x72B1] = 0x4E;
+	mem8[0x72B2] = 0x39;
+	mem8[0x72B3] = 0x30;
+	mem8[0x72B4] = 0xF1;
+	mem8[0x72B5] = 0x00;
+	mem8[0x72B6] = 0xFE;
+	mem8[0x72B7] = 0x9F;
+	mem8[0x72B8] = 0x00;
+	mem8[0x72B9] = 0x0C;
+	wof_decode();
+	init_cps1();
+}
+
 static DRIVER_INIT( sf2m2 )
 {
 	UINT8 *mem8 = memory_region(REGION_CPU1);
@@ -9129,7 +9197,7 @@ GAME( 1997, wof3sj,   wof,      qsound,   wofh,     wof3sj,   ROT0,   "hack",  "
 GAME( 1997, wof3sja,  wof,      qsound,   wofh,     wof3sj,   ROT0,   "hack",  "Three Holy Swords (set 2)", GAME_IMPERFECT_SOUND )
 GAME( 1995, wofsj,    wof,      qsound,   wofsj,    wof3sj,   ROT0,   "hack",  "Holy Sword Three Kingdoms (set 1)", GAME_IMPERFECT_SOUND )
 GAME( 1995, wofsja,   wof,      qsound,   wofsj,    wof3sj,   ROT0,   "hack",  "Holy Sword Three Kingdoms (set 2)", GAME_IMPERFECT_SOUND )
-GAME( 1995, wofsjb,   wof,      qsound,   wof,      wof,     ROT0,   "hack",  "Holy Sword Three Kingdoms (set 3)", GAME_NOT_WORKING )
+GAME( 1995, wofsjb,   wof,      qsound,   wof,      wofsjb,   ROT0,   "hack",  "Holy Sword Three Kingdoms (set 3)", GAME_UNEMULATED_PROTECTION )
 GAME( 1993, dino,     0,        qsound,   dino,     dino,     ROT0,   "Capcom", "Cadillacs and Dinosaurs (World 930201)", 0 )			// "ETC"
 GAME( 1993, dinou,    dino,     qsound,   dino,     dino ,    ROT0,   "Capcom", "Cadillacs and Dinosaurs (US 930201)", 0 )
 GAME( 1993, dinoj,    dino,     qsound,   dino,     dino ,    ROT0,   "Capcom", "Cadillacs Kyouryuu-Shinseiki (Japan 930201)", 0 )
