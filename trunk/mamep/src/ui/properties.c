@@ -132,9 +132,6 @@ static void RefreshSelectionChange(HWND hWnd, HWND hWndCtrl);
 static void VolumeSelectionChange(HWND hwnd);
 static void AudioLatencySelectionChange(HWND hwnd);
 static void ThreadPrioritySelectionChange(HWND hwnd);
-#ifdef TRANS_UI
-static void TransparencySelectionChange(HWND hwnd);
-#endif /* TRANS_UI */
 static void D3DScanlinesSelectionChange(HWND hwnd);
 static void D3DFeedbackSelectionChange(HWND hwnd);
 static void ZoomSelectionChange(HWND hwnd);
@@ -166,6 +163,9 @@ static void InitializeScaleEffectUI(HWND hwnd);
 #ifdef JOYSTICK_ID
 static void InitializeJoyidUI(HWND hWnd);
 #endif /* JOYSTICK_ID */
+#ifdef TRANS_UI
+static void TransparencySelectionChange(HWND hwnd);
+#endif /* TRANS_UI */
 static void PropToOptions(HWND hWnd, options_type *o);
 static void OptionsToProp(HWND hWnd, options_type *o);
 static void SetPropEnabledControls(HWND hWnd);
@@ -567,7 +567,7 @@ static struct ComboBoxDevices
 } g_ComboBoxDevice[] = 
 {
 	{ "Keyboard",              "keyboard"  },
-	{ "Mouse",	           "mouse"     },
+	{ "Mouse",                 "mouse"     },
 	{ "Joystick",              "joystick"  },
 	{ "Lightgun",              "lightgun"  },
 };
@@ -722,19 +722,7 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIco
 		background_brush = CreateSolidBrush(GetSysColor(COLOR_3DFACE));
 
 	g_hIcon = CopyIcon(hIcon);
-
 	g_pFolder = folder;
-#if 0
-	if (folder)
-	{
-		game_num = GetUnifiedDriver(folder);
-		if (game_num != -1)
-			g_pFolder = NULL;
-	}
-	else
-		folder = GetUnifiedFolder(game_num);
-#endif
-
 	InitGameAudit(game_num);
 
 	if (IS_FOLDER)
@@ -956,11 +944,11 @@ static LPWSTR GameInfoInput(int nIndex)
 	int nplayer = 0;
 	const char* control = 0;
 	int nbutton = 0;
-#if 0
+#if 0 // no space
 	int ncoin = 0;
 	const char* service = 0;
 	const char* tilt = 0;
-#endif
+#endif // no space
 
 	begin_resource_tracking();
 
@@ -1098,7 +1086,7 @@ static LPWSTR GameInfoInput(int nIndex)
 			case IPT_LIGHTGUN_Y:
 				control = _UI("Lightgun");
 				break;
-#if 0
+#if 0 // no space
 			case IPT_COIN1:
 				if (ncoin < 1) ncoin = 1;
 				break;
@@ -1129,7 +1117,7 @@ static LPWSTR GameInfoInput(int nIndex)
 			case IPT_TILT :
 				tilt = "yes";
 				break;
-#endif
+#endif // no space
 		}
 		++input;
 	}
@@ -2469,62 +2457,62 @@ static void SetPropEnabledControls(HWND hWnd)
 	else
 		d3d = pGameOpts->use_d3d;
 
-	EnableWindow(GetDlgItem(hWnd, IDC_MAXIMIZE), in_window);
-	EnableWindow(GetDlgItem(hWnd, IDC_RESDEPTH), !in_window);
-	EnableWindow(GetDlgItem(hWnd, IDC_RESDEPTHTEXT), !in_window);
+	EnableWindow(GetDlgItem(hWnd, IDC_MAXIMIZE),               in_window);
+	EnableWindow(GetDlgItem(hWnd, IDC_RESDEPTH),               !in_window);
+	EnableWindow(GetDlgItem(hWnd, IDC_RESDEPTHTEXT),           !in_window);
 
-	EnableWindow(GetDlgItem(hWnd, IDC_WAITVSYNC),       ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_TRIPLE_BUFFER),   ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_HWSTRETCH),       ddraw && DirectDraw_HasHWStretch());
-	EnableWindow(GetDlgItem(hWnd, IDC_SWITCHRES),       !in_window && (ddraw || d3d));
-	EnableWindow(GetDlgItem(hWnd, IDC_SWITCHBPP),       !in_window && (ddraw || d3d));
-	EnableWindow(GetDlgItem(hWnd, IDC_MATCHREFRESH),    ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_SYNCREFRESH),     ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_REFRESH),         !in_window && ((ddraw && DirectDraw_HasRefresh()) || d3d));
-	EnableWindow(GetDlgItem(hWnd, IDC_REFRESHTEXT),     !in_window && ((ddraw && DirectDraw_HasRefresh()) || d3d));
-	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMA),         ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMATEXT),     ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMADISP),     ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT), (ddraw && hws) || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT2),(ddraw && hws) || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATION),    (ddraw && hws) || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOD),    (ddraw && hws) || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_SCANLINES),       !g_nEffectIndex && (!ddraw || !(hws)) && !d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_CLEAN_STRETCH),   (ddraw && hws) || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_CLEAN_STRETCHTEXT), (ddraw && hws) || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_SCREEN),          (ddraw || d3d) && multimon);
-	EnableWindow(GetDlgItem(hWnd, IDC_SCREENTEXT),      (ddraw || d3d) && multimon);
+	EnableWindow(GetDlgItem(hWnd, IDC_WAITVSYNC),              ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_TRIPLE_BUFFER),          ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_HWSTRETCH),              ddraw && DirectDraw_HasHWStretch());
+	EnableWindow(GetDlgItem(hWnd, IDC_SWITCHRES),              !in_window && (ddraw || d3d));
+	EnableWindow(GetDlgItem(hWnd, IDC_SWITCHBPP),              !in_window && (ddraw || d3d));
+	EnableWindow(GetDlgItem(hWnd, IDC_MATCHREFRESH),           ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_SYNCREFRESH),            ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_REFRESH),                !in_window && ((ddraw && DirectDraw_HasRefresh()) || d3d));
+	EnableWindow(GetDlgItem(hWnd, IDC_REFRESHTEXT),            !in_window && ((ddraw && DirectDraw_HasRefresh()) || d3d));
+	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMA),                !in_window && (ddraw || d3d));
+	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMATEXT),            !in_window && (ddraw || d3d));
+	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMADISP),            !in_window && (ddraw || d3d));
+	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT),        (ddraw && hws) || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT2),       (ddraw && hws) || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATION),           (ddraw && hws) || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOD),           (ddraw && hws) || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_SCANLINES),              !g_nEffectIndex && (!ddraw || !(hws)) && !d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_CLEAN_STRETCH),          (ddraw && hws) || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_CLEAN_STRETCHTEXT),      (ddraw && hws) || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_SCREEN),                 (ddraw || d3d) && multimon);
+	EnableWindow(GetDlgItem(hWnd, IDC_SCREENTEXT),             (ddraw || d3d) && multimon);
 
 #ifdef USE_SCALE_EFFECTS
-	EnableWindow(GetDlgItem(hWnd, IDC_SCALEEFFECTTEXT), ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_SCALEEFFECT),     ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_SCALEEFFECTTEXT),        ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_SCALEEFFECT),            ddraw || d3d);
 #endif /* USE_SCALE_EFFECTS */
 
 	// d3d
-	EnableWindow(GetDlgItem(hWnd,IDC_ZOOM),d3d);
-	EnableWindow(GetDlgItem(hWnd,IDC_ZOOMTEXT),d3d);
-	EnableWindow(GetDlgItem(hWnd,IDC_ZOOMDIST),d3d);
-	EnableWindow(GetDlgItem(hWnd,IDC_D3D_FILTER),d3d);
-	EnableWindow(GetDlgItem(hWnd,IDC_D3D_TEXTURE_MANAGEMENT),d3d);
-	EnableWindow(GetDlgItem(hWnd,IDC_D3D_EFFECT),d3d);
-	EnableWindow(GetDlgItem(hWnd,IDC_D3D_EFFECTTEXT),d3d);
-	EnableWindow(GetDlgItem(hWnd,IDC_D3D_PRESCALE),d3d);
-	EnableWindow(GetDlgItem(hWnd,IDC_D3D_PRESCALETEXT),d3d);
-	EnableWindow(GetDlgItem(hWnd,IDC_D3D_ROTATE_EFFECTS),d3d);
-	EnableWindow(GetDlgItem(hWnd,IDC_EFFECTOVERRIDES),d3d);
-	EnableWindow(GetDlgItem(hWnd,IDC_D3D_SCANLINES),d3d);
-	EnableWindow(GetDlgItem(hWnd,IDC_D3D_SCANLINES_DISP),d3d);
-	EnableWindow(GetDlgItem(hWnd,IDC_D3D_SCANLINES_ENABLE),d3d);
-	EnableWindow(GetDlgItem(hWnd,IDC_D3D_FEEDBACK),d3d);
-	EnableWindow(GetDlgItem(hWnd,IDC_D3D_FEEDBACK_DISP),d3d);
-	EnableWindow(GetDlgItem(hWnd,IDC_D3D_FEEDBACK_ENABLE),d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_ZOOM),                   d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_ZOOMTEXT),               d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_ZOOMDIST),               d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_D3D_FILTER),             d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_D3D_TEXTURE_MANAGEMENT), d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_D3D_EFFECT),             d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_D3D_EFFECTTEXT),         d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_D3D_PRESCALE),           d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_D3D_PRESCALETEXT),       d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_D3D_ROTATE_EFFECTS),     d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_EFFECTOVERRIDES),        d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_D3D_SCANLINES),          d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_D3D_SCANLINES_DISP),     d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_D3D_SCANLINES_ENABLE),   d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_D3D_FEEDBACK),           d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_D3D_FEEDBACK_DISP),      d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_D3D_FEEDBACK_ENABLE),    d3d);
 
 #ifdef TRANS_UI
 	hCtrl = GetDlgItem(hWnd, IDC_TRANSUI);
 	useart = Button_GetCheck(hCtrl);
 
-	EnableWindow(GetDlgItem(hWnd, IDC_TRANSPARENCY),    useart);
-	EnableWindow(GetDlgItem(hWnd, IDC_TRANSPARENCYDISP),useart);
+	EnableWindow(GetDlgItem(hWnd, IDC_TRANSPARENCY),           useart);
+	EnableWindow(GetDlgItem(hWnd, IDC_TRANSPARENCYDISP),       useart);
 #endif /* TRANS_UI */
 
 	/* Artwork options */
@@ -2532,21 +2520,21 @@ static void SetPropEnabledControls(HWND hWnd)
 
 	useart = Button_GetCheck(hCtrl);
 
-	EnableWindow(GetDlgItem(hWnd, IDC_ARTWORK_CROP),	useart);
-	EnableWindow(GetDlgItem(hWnd, IDC_BACKDROPS),		useart);
-	EnableWindow(GetDlgItem(hWnd, IDC_BEZELS),			useart);
-	EnableWindow(GetDlgItem(hWnd, IDC_OVERLAYS),		useart);
-	EnableWindow(GetDlgItem(hWnd, IDC_ARTRES),			useart);
-	EnableWindow(GetDlgItem(hWnd, IDC_ARTRESTEXT),		useart);
-	EnableWindow(GetDlgItem(hWnd, IDC_ARTMISCTEXT),		useart);
+	EnableWindow(GetDlgItem(hWnd, IDC_ARTWORK_CROP),           useart);
+	EnableWindow(GetDlgItem(hWnd, IDC_BACKDROPS),              useart);
+	EnableWindow(GetDlgItem(hWnd, IDC_BEZELS),                 useart);
+	EnableWindow(GetDlgItem(hWnd, IDC_OVERLAYS),               useart);
+	EnableWindow(GetDlgItem(hWnd, IDC_ARTRES),                 useart);
+	EnableWindow(GetDlgItem(hWnd, IDC_ARTRESTEXT),             useart);
+	EnableWindow(GetDlgItem(hWnd, IDC_ARTMISCTEXT),            useart);
 
 	/* Joystick options */
 	joystick_attached = DIJoystick.Available();
 
-	Button_Enable(GetDlgItem(hWnd,IDC_JOYSTICK),		joystick_attached);
-	EnableWindow(GetDlgItem(hWnd, IDC_A2DTEXT),			joystick_attached);
-	EnableWindow(GetDlgItem(hWnd, IDC_A2DDISP),			joystick_attached);
-	EnableWindow(GetDlgItem(hWnd, IDC_A2D),				joystick_attached);
+	Button_Enable(GetDlgItem(hWnd,IDC_JOYSTICK),               joystick_attached);
+	EnableWindow(GetDlgItem(hWnd, IDC_A2DTEXT),                joystick_attached);
+	EnableWindow(GetDlgItem(hWnd, IDC_A2DDISP),                joystick_attached);
+	EnableWindow(GetDlgItem(hWnd, IDC_A2D),                    joystick_attached);
 #ifdef JOYSTICK_ID
 	if (Button_GetCheck(GetDlgItem(hWnd, IDC_JOYSTICK)) && DIJoystick.Available())
 	{
@@ -2607,6 +2595,7 @@ static void SetPropEnabledControls(HWND hWnd)
 
 	if (!in_window && (nIndex <= -1 || DriverUsesLightGun(nIndex)))
 	{
+#if 0
 		// on WinXP the Lightgun and Dual Lightgun switches are no longer supported use mouse instead
 		OSVERSIONINFOEX osvi;
 		BOOL bOsVersionInfoEx;
@@ -2624,7 +2613,7 @@ static void SetPropEnabledControls(HWND hWnd)
 
 		if( bOsVersionInfoEx && (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT) && (osvi.dwMajorVersion >= 5) )
 		{
-		BOOL use_lightgun;
+			BOOL use_lightgun;
 			//XP and above...
 			Button_Enable(GetDlgItem(hWnd,IDC_LIGHTGUN),FALSE);
 			use_lightgun = Button_GetCheck(GetDlgItem(hWnd,IDC_USE_MOUSE));
@@ -2632,14 +2621,15 @@ static void SetPropEnabledControls(HWND hWnd)
 			Button_Enable(GetDlgItem(hWnd,IDC_RELOAD),use_lightgun);
 		}
 		else
+#endif
 		{
 			BOOL use_lightgun;
 			// Older than XP 
-		Button_Enable(GetDlgItem(hWnd,IDC_LIGHTGUN), TRUE);
-		use_lightgun = Button_GetCheck(GetDlgItem(hWnd,IDC_LIGHTGUN));
-		Button_Enable(GetDlgItem(hWnd,IDC_DUAL_LIGHTGUN),use_lightgun);
-		Button_Enable(GetDlgItem(hWnd,IDC_RELOAD),use_lightgun);
-	}
+			Button_Enable(GetDlgItem(hWnd,IDC_LIGHTGUN), TRUE);
+			use_lightgun = Button_GetCheck(GetDlgItem(hWnd,IDC_LIGHTGUN));
+			Button_Enable(GetDlgItem(hWnd,IDC_DUAL_LIGHTGUN),use_lightgun);
+			Button_Enable(GetDlgItem(hWnd,IDC_RELOAD),use_lightgun);
+		}
 	}
 	else
 	{
@@ -2796,7 +2786,7 @@ static void AssignGamma(HWND hWnd)
 
 static void AssignFullScreenGamma(HWND hWnd)
 {
-	pGameOpts->gfx_gamma = g_nFullScreenGammaIndex / 20.0 + 0.1;
+	pGameOpts->gfx_gamma = g_nFullScreenGammaIndex / 20.0;
 }
 
 static void AssignBeam(HWND hWnd)
@@ -3105,15 +3095,15 @@ static void ResetDataMap(void)
 	// add the 0.001 to make sure it truncates properly to the integer
 	// (we don't want 35.99999999 to be cut down to 35 because of floating point error)
 	g_nGammaIndex           = (int)((pGameOpts->f_gamma_correct  - 0.5) * 20.0 + 0.001);
-	g_nFullScreenGammaIndex = (int)((pGameOpts->gfx_gamma        - 0.1) * 20.0 + 0.001);
+	g_nFullScreenGammaIndex = (int)( pGameOpts->gfx_gamma               * 20.0 + 0.001);
 	g_nBrightCorrectIndex   = (int)((pGameOpts->f_bright_correct - 0.5) * 20.0 + 0.001);
 	g_nPauseBrightIndex     = (int)((pGameOpts->f_pause_bright   - 0.5) * 20.0 + 0.001);
 	g_nBeamIndex            = (int)((pGameOpts->f_beam           - 1.0) * 20.0 + 0.001);
-	g_nFlickerIndex         = (int)(pGameOpts->f_flicker);
+	g_nFlickerIndex         = (int)( pGameOpts->f_flicker);
 	g_nIntensityIndex       = (int)((pGameOpts->f_intensity      - 0.5) * 20.0 + 0.001);
-	g_nA2DIndex             = (int)(pGameOpts->f_a2d                    * 20.0 + 0.001);
+	g_nA2DIndex             = (int)( pGameOpts->f_a2d                   * 20.0 + 0.001);
 #ifdef TRANS_UI
-	g_nUITransparencyIndex  = (int)(pGameOpts->ui_transparency);
+	g_nUITransparencyIndex  = (int)( pGameOpts->ui_transparency);
 #endif /* TRANS_UI */
 
 	// if no controller type was specified or it was standard
@@ -3634,7 +3624,7 @@ static void InitializeMisc(HWND hDlg)
 
 	SendDlgItemMessage(hDlg, IDC_FSGAMMA, TBM_SETRANGE,
 				(WPARAM)FALSE,
-				(LPARAM)MAKELONG(0, 78)); /* [0.10, 4.00] in .05 increments */
+				(LPARAM)MAKELONG(0, 80)); /* [0.0, 4.00] in .05 increments */
 
 	SendDlgItemMessage(hDlg, IDC_INTENSITY, TBM_SETRANGE,
 				(WPARAM)FALSE,
@@ -3856,7 +3846,7 @@ static void FullScreenGammaSelectionChange(HWND hwnd)
 	/* Get the current value of the control */
 	nValue = SendDlgItemMessage(hwnd, IDC_FSGAMMA, TBM_GETPOS, 0, 0);
 
-	dGamma = nValue / 20.0 + 0.1;
+	dGamma = nValue / 20.0;
 
 	/* Set the static display to the new value */
 	snprintf(buf,sizeof(buf),"%03.2f", dGamma);
