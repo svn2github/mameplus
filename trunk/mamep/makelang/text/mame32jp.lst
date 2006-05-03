@@ -4514,9 +4514,10 @@ s1945p	ストライカーズ1945 プラス	すとらいかーず_1_31945ぷらす	Psikyo
 s1945pd	ストライカーズ1945 プラス (decrypted C)	すとらいかーず_1_31945ぷらす	Psikyo
 preisle2	原始島2 / Prehistoric Isle 2	げんしとう_2	Yumekobo
 preisl2d	原始島2 / Prehistoric Isle 2 (decrypted C)	げんしとう_2	Yumekobo
-mslug3	メタルスラッグ3	めたるすらっぐ_3	SNK
-mslug3n	メタルスラッグ3 (not encrypted)	めたるすらっぐ_3	SNK
-mslug3d	メタルスラッグ3 (decrypted C)	めたるすらっぐ_3	SNK
+mslug3	メタルスラッグ3	めたるすらっぐ_3_1	SNK
+mslug3n	メタルスラッグ3 (not encrypted)	めたるすらっぐ_3_1	SNK
+mslug3d	メタルスラッグ3 (decrypted C)	めたるすらっぐ_3_1	SNK
+ms6boot	メタルスラッグ3 / Metal Slug 6 (海賊版)	めたるすらっぐ_3_2	bootleg
 kof2000	ザ・キング・オブ・ファイターズ 2000	ざきんぐおぶふぁいたーず_07_1_2000	SNK
 kof2000n	ザ・キング・オブ・ファイターズ 2000 (not encrypted)	ざきんぐおぶふぁいたーず_07_1_2000	SNK
 kof2000d	ザ・キング・オブ・ファイターズ 2000 (decrypted C)	ざきんぐおぶふぁいたーず_07_1_2000	SNK
@@ -4534,7 +4535,7 @@ cthd2003	ザ・キング・オブ・ファイターズ 2001 / Crouching Tiger Hidden Dragon 200
 ct2k3sp	ザ・キング・オブ・ファイターズ 2001 / Crouching Tiger Hidden Dragon 2003 Super Plus (海賊版)	ざきんぐおぶふぁいたーず_08_3_2001	bootleg
 mslug4	メタルスラッグ4	めたるすらっぐ_4_1	Mega
 mslug4d	メタルスラッグ4 (decrypted C)	めたるすらっぐ_4_1	Mega
-ms4plus	メタルスラッグ4 Plus (海賊版)	めたるすらっぐ_4_2ぷらす	bootleg
+ms4plus	メタルスラッグ4 / Metal Slug 4 Plus (海賊版)	めたるすらっぐ_4_2	bootleg
 rotd	レイジ・オブ・ザ・ドラゴンズ	れいじおぶざどらごんず	Evoga / Playmore
 rotdd	レイジ・オブ・ザ・ドラゴンズ (decrypted C)	れいじおぶざどらごんず	Evoga / Playmore
 kof2002	ザ・キング・オブ・ファイターズ 2002 -Challenge to Ultimate Battle	ざきんぐおぶふぁいたーず_09_1_2002	Eolith / Playmore
@@ -4553,9 +4554,11 @@ matrim	新豪血寺一族 闘婚 -Matrimelee	しんごうけつじいちぞくとうこん	Noise Factor
 matrimd	新豪血寺一族 闘婚 -Matrimelee (decrypted C)	しんごうけつじいちぞくとうこん	Noise Factory / Atlus
 matrimbl	新豪血寺一族 闘婚 -Matrimelee (海賊版)	しんごうけつじいちぞくとうこん	bootleg
 pnyaa	ポチッとにゃ～	ぽちっとにゃー	Aiky / Taito
+ms5pcb	メタルスラッグ5 (JAMMA PCB)	めたるすらっぐ_5	SNK Playmore
 mslug5	メタルスラッグ5	めたるすらっぐ_5	SNK Playmore
 ms5plus	メタルスラッグ5 / Metal Slug 5 Plus (海賊版)	めたるすらっぐ_5	bootleg
-svcpcb	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB)	えすえぬけいばーさすかぷこん	Playmore
+svcpcb	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB set 1)	えすえぬけいばーさすかぷこん	Playmore
+svcpcba	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB set 2)	えすえぬけいばーさすかぷこん	Playmore
 svc	SNK VS. CAPCOM -SVC CHAOS (MVS)	えすえぬけいばーさすかぷこん	Playmore
 svcboot	SNK VS. CAPCOM -SVC CHAOS (MVS) (海賊版)	えすえぬけいばーさすかぷこん	bootleg
 svcplus	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Plus (海賊版 set1)	えすえぬけいばーさすかぷこん	bootleg

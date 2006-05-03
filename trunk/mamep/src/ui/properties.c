@@ -2593,9 +2593,8 @@ static void SetPropEnabledControls(HWND hWnd)
 #endif /* USE_JOY_MOUSE_MOVE */
 	}
 
-	if (!in_window && (nIndex <= -1 || DriverUsesLightGun(nIndex)))
+	if (nIndex <= -1 || DriverUsesLightGun(nIndex))
 	{
-#if 0
 		// on WinXP the Lightgun and Dual Lightgun switches are no longer supported use mouse instead
 		OSVERSIONINFOEX osvi;
 		BOOL bOsVersionInfoEx;
@@ -2614,14 +2613,25 @@ static void SetPropEnabledControls(HWND hWnd)
 		if( bOsVersionInfoEx && (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT) && (osvi.dwMajorVersion >= 5) )
 		{
 			BOOL use_lightgun;
+#if 1
+			BOOL use_mouse;
+			//XP and above...
+			Button_Enable(GetDlgItem(hWnd,IDC_LIGHTGUN), TRUE);
+			Button_Enable(GetDlgItem(hWnd,IDC_USE_MOUSE), TRUE);
+			use_lightgun = Button_GetCheck(GetDlgItem(hWnd,IDC_LIGHTGUN));
+			use_mouse = Button_GetCheck(GetDlgItem(hWnd,IDC_USE_MOUSE));
+			Button_Enable(GetDlgItem(hWnd,IDC_LIGHTGUN), !use_mouse);
+			Button_Enable(GetDlgItem(hWnd,IDC_DUAL_LIGHTGUN),use_lightgun && !use_mouse);
+			Button_Enable(GetDlgItem(hWnd,IDC_RELOAD),use_lightgun || use_mouse);
+#else
 			//XP and above...
 			Button_Enable(GetDlgItem(hWnd,IDC_LIGHTGUN),FALSE);
 			use_lightgun = Button_GetCheck(GetDlgItem(hWnd,IDC_USE_MOUSE));
 			Button_Enable(GetDlgItem(hWnd,IDC_DUAL_LIGHTGUN),FALSE);
 			Button_Enable(GetDlgItem(hWnd,IDC_RELOAD),use_lightgun);
+#endif
 		}
 		else
-#endif
 		{
 			BOOL use_lightgun;
 			// Older than XP 
@@ -3311,59 +3321,59 @@ static void BuildDataMap(void)
 #endif /* USE_SCALE_EFFECTS */
 
 	// direct3d
-	DataMapAdd(IDC_D3D,           DM_BOOL, CT_BUTTON,   &pGameOpts->use_d3d,       DM_BOOL, &pGameOpts->use_d3d,       0, 0, 0);
-	DataMapAdd(IDC_D3D_FILTER,    DM_BOOL, CT_BUTTON,   &pGameOpts->d3d_filter,    DM_BOOL, &pGameOpts->d3d_filter,    0, 0, 0);
-	DataMapAdd(IDC_D3D_TEXTURE_MANAGEMENT,DM_BOOL,CT_BUTTON,&pGameOpts->d3d_texture_management,DM_BOOL,&pGameOpts->d3d_texture_management, 0, 0, 0);
-	DataMapAdd(IDC_D3D_EFFECT,    DM_INT,  CT_COMBOBOX, &g_nD3DEffectIndex,        DM_STRING, &pGameOpts->d3d_effect,  0, 0, AssignD3DEffect);
-	DataMapAdd(IDC_D3D_PRESCALE,  DM_INT,  CT_COMBOBOX, &g_nD3DPrescaleIndex,      DM_STRING, &pGameOpts->d3d_prescale,0, 0, AssignD3DPrescale);
-	DataMapAdd(IDC_D3D_ROTATE_EFFECTS,DM_BOOL,CT_BUTTON,&pGameOpts->d3d_rotate_effects,DM_BOOL,&pGameOpts->d3d_rotate_effects, 0, 0, 0);
-	DataMapAdd(IDC_D3D_SCANLINES, DM_INT,  CT_SLIDER,   &pGameOpts->d3d_scanlines, DM_INT, &pGameOpts->d3d_scanlines,  0, 0, 0);
-	DataMapAdd(IDC_D3D_SCANLINES_DISP, DM_NONE,  CT_NONE,   NULL, DM_INT, &pGameOpts->d3d_scanlines, 0, 0, 0);
-	DataMapAdd(IDC_D3D_FEEDBACK,  DM_INT,  CT_SLIDER,   &pGameOpts->d3d_feedback,  DM_INT, &pGameOpts->d3d_feedback,   0, 0, 0);
-	DataMapAdd(IDC_D3D_FEEDBACK_DISP,  DM_NONE,  CT_NONE,   NULL,  DM_INT, &pGameOpts->d3d_feedback, 0, 0, 0);
+	DataMapAdd(IDC_D3D,           DM_BOOL, CT_BUTTON,   &pGameOpts->use_d3d,       DM_BOOL,   &pGameOpts->use_d3d,         0, 0, 0);
+	DataMapAdd(IDC_D3D_FILTER,    DM_BOOL, CT_BUTTON,   &pGameOpts->d3d_filter,    DM_BOOL,   &pGameOpts->d3d_filter,      0, 0, 0);
+	DataMapAdd(IDC_D3D_TEXTURE_MANAGEMENT, DM_BOOL, CT_BUTTON, &pGameOpts->d3d_texture_management, DM_BOOL,&pGameOpts->d3d_texture_management, 0, 0, 0);
+	DataMapAdd(IDC_D3D_EFFECT,    DM_INT,  CT_COMBOBOX, &g_nD3DEffectIndex,        DM_STRING, &pGameOpts->d3d_effect,      0, 0, AssignD3DEffect);
+	DataMapAdd(IDC_D3D_PRESCALE,  DM_INT,  CT_COMBOBOX, &g_nD3DPrescaleIndex,      DM_STRING, &pGameOpts->d3d_prescale,    0, 0, AssignD3DPrescale);
+	DataMapAdd(IDC_D3D_ROTATE_EFFECTS, DM_BOOL, CT_BUTTON, &pGameOpts->d3d_rotate_effects, DM_BOOL,&pGameOpts->d3d_rotate_effects, 0, 0, 0);
+	DataMapAdd(IDC_D3D_SCANLINES, DM_INT,  CT_SLIDER,   &pGameOpts->d3d_scanlines, DM_INT,    &pGameOpts->d3d_scanlines,   0, 0, 0);
+	DataMapAdd(IDC_D3D_SCANLINES_DISP, DM_NONE, CT_NONE, NULL,                     DM_INT,    &pGameOpts->d3d_scanlines,   0, 0, 0);
+	DataMapAdd(IDC_D3D_FEEDBACK,  DM_INT,  CT_SLIDER,   &pGameOpts->d3d_feedback,  DM_INT,    &pGameOpts->d3d_feedback,    0, 0, 0);
+	DataMapAdd(IDC_D3D_FEEDBACK_DISP, DM_NONE, CT_NONE, NULL,                      DM_INT,    &pGameOpts->d3d_feedback,    0, 0, 0);
 
 	/* input */
-	DataMapAdd(IDC_DEFAULT_INPUT, DM_INT,  CT_COMBOBOX, &g_nInputIndex,            DM_STRING, &pGameOpts->ctrlr,       0, 0, AssignInput);
-	DataMapAdd(IDC_USE_MOUSE,     DM_BOOL, CT_BUTTON,   &pGameOpts->use_mouse,     DM_BOOL,   &pGameOpts->use_mouse,   0, 0, 0);   
-	DataMapAdd(IDC_JOYSTICK,      DM_BOOL, CT_BUTTON,   &pGameOpts->use_joystick,  DM_BOOL,   &pGameOpts->use_joystick,0, 0, 0);
-	DataMapAdd(IDC_A2D,           DM_INT,  CT_SLIDER,   &g_nA2DIndex,              DM_FLOAT,  &pGameOpts->f_a2d,       0, 0, AssignA2D);
-	DataMapAdd(IDC_A2DDISP,       DM_NONE, CT_NONE,     NULL,                      DM_FLOAT,  &pGameOpts->f_a2d,       0, 0, 0);
-	DataMapAdd(IDC_STEADYKEY,     DM_BOOL, CT_BUTTON,   &pGameOpts->steadykey,     DM_BOOL,   &pGameOpts->steadykey,   0, 0, 0);
-	DataMapAdd(IDC_LIGHTGUN,      DM_BOOL, CT_BUTTON,   &pGameOpts->lightgun,      DM_BOOL,   &pGameOpts->lightgun,    0, 0, 0);
-	DataMapAdd(IDC_DUAL_LIGHTGUN, DM_BOOL, CT_BUTTON,   &pGameOpts->dual_lightgun, DM_BOOL,   &pGameOpts->dual_lightgun, 0, 0, 0);
-	DataMapAdd(IDC_RELOAD,DM_BOOL, CT_BUTTON,  &pGameOpts->offscreen_reload,DM_BOOL, &pGameOpts->offscreen_reload, 0, 0, 0);
+	DataMapAdd(IDC_DEFAULT_INPUT, DM_INT,  CT_COMBOBOX, &g_nInputIndex,            DM_STRING, &pGameOpts->ctrlr,           0, 0, AssignInput);
+	DataMapAdd(IDC_USE_MOUSE,     DM_BOOL, CT_BUTTON,   &pGameOpts->use_mouse,     DM_BOOL,   &pGameOpts->use_mouse,       0, 0, 0);   
+	DataMapAdd(IDC_JOYSTICK,      DM_BOOL, CT_BUTTON,   &pGameOpts->use_joystick,  DM_BOOL,   &pGameOpts->use_joystick,    0, 0, 0);
+	DataMapAdd(IDC_A2D,           DM_INT,  CT_SLIDER,   &g_nA2DIndex,              DM_FLOAT,  &pGameOpts->f_a2d,           0, 0, AssignA2D);
+	DataMapAdd(IDC_A2DDISP,       DM_NONE, CT_NONE,     NULL,                      DM_FLOAT,  &pGameOpts->f_a2d,           0, 0, 0);
+	DataMapAdd(IDC_STEADYKEY,     DM_BOOL, CT_BUTTON,   &pGameOpts->steadykey,     DM_BOOL,   &pGameOpts->steadykey,       0, 0, 0);
+	DataMapAdd(IDC_LIGHTGUN,      DM_BOOL, CT_BUTTON,   &pGameOpts->lightgun,      DM_BOOL,   &pGameOpts->lightgun,        0, 0, 0);
+	DataMapAdd(IDC_DUAL_LIGHTGUN, DM_BOOL, CT_BUTTON,   &pGameOpts->dual_lightgun, DM_BOOL,   &pGameOpts->dual_lightgun,   0, 0, 0);
+	DataMapAdd(IDC_RELOAD,        DM_BOOL, CT_BUTTON,   &pGameOpts->offscreen_reload,DM_BOOL, &pGameOpts->offscreen_reload,0, 0, 0);
 #ifdef USE_JOY_MOUSE_MOVE
-	DataMapAdd(IDC_USE_STICKPOINT,DM_BOOL, CT_BUTTON,   &pGameOpts->use_stickpoint,DM_BOOL,   &pGameOpts->use_stickpoint, 0, 0, 0);
+	DataMapAdd(IDC_USE_STICKPOINT,DM_BOOL, CT_BUTTON,   &pGameOpts->use_stickpoint,DM_BOOL,   &pGameOpts->use_stickpoint,  0, 0, 0);
 #endif /* USE_JOY_MOUSE_MOVE */
 #ifdef JOYSTICK_ID
-	DataMapAdd(IDC_JOYID1,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[0],      DM_INT, &pGameOpts->joyid[0], 0, 0, 0);
-	DataMapAdd(IDC_JOYID2,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[1],      DM_INT, &pGameOpts->joyid[1], 0, 0, 0);
-	DataMapAdd(IDC_JOYID3,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[2],      DM_INT, &pGameOpts->joyid[2], 0, 0, 0);
-	DataMapAdd(IDC_JOYID4,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[3],      DM_INT, &pGameOpts->joyid[3], 0, 0, 0);
-	DataMapAdd(IDC_JOYID5,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[4],      DM_INT, &pGameOpts->joyid[4], 0, 0, 0);
-	DataMapAdd(IDC_JOYID6,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[5],      DM_INT, &pGameOpts->joyid[5], 0, 0, 0);
-	DataMapAdd(IDC_JOYID7,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[6],      DM_INT, &pGameOpts->joyid[6], 0, 0, 0);
-	DataMapAdd(IDC_JOYID8,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[7],      DM_INT, &pGameOpts->joyid[7], 0, 0, 0);
+	DataMapAdd(IDC_JOYID1,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[0],      DM_INT, &pGameOpts->joyid[0],           0, 0, 0);
+	DataMapAdd(IDC_JOYID2,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[1],      DM_INT, &pGameOpts->joyid[1],           0, 0, 0);
+	DataMapAdd(IDC_JOYID3,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[2],      DM_INT, &pGameOpts->joyid[2],           0, 0, 0);
+	DataMapAdd(IDC_JOYID4,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[3],      DM_INT, &pGameOpts->joyid[3],           0, 0, 0);
+	DataMapAdd(IDC_JOYID5,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[4],      DM_INT, &pGameOpts->joyid[4],           0, 0, 0);
+	DataMapAdd(IDC_JOYID6,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[5],      DM_INT, &pGameOpts->joyid[5],           0, 0, 0);
+	DataMapAdd(IDC_JOYID7,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[6],      DM_INT, &pGameOpts->joyid[6],           0, 0, 0);
+	DataMapAdd(IDC_JOYID8,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[7],      DM_INT, &pGameOpts->joyid[7],           0, 0, 0);
 #endif /* JOYSTICK_ID */
-	DataMapAdd(IDC_ANALOG_AXES,   DM_NONE, CT_NONE,     &pGameOpts->digital,DM_STRING,&pGameOpts->digital, 0, 0, AssignAnalogAxes);
+	DataMapAdd(IDC_ANALOG_AXES,   DM_NONE, CT_NONE,     &pGameOpts->digital,       DM_STRING,&pGameOpts->digital,          0, 0, AssignAnalogAxes);
 	/*Controller mapping*/
-	DataMapAdd(IDC_PADDLE,        DM_INT, CT_COMBOBOX,  &g_nPaddleIndex,			DM_STRING,&pGameOpts->paddle, 0, 0, AssignPaddle);
-	DataMapAdd(IDC_ADSTICK,       DM_INT, CT_COMBOBOX,  &g_nADStickIndex,			DM_STRING,&pGameOpts->adstick, 0, 0, AssignADStick);
-	DataMapAdd(IDC_PEDAL,         DM_INT, CT_COMBOBOX,  &g_nPedalIndex,				DM_STRING,&pGameOpts->pedal, 0, 0, AssignPedal);
-	DataMapAdd(IDC_DIAL,		  DM_INT, CT_COMBOBOX,  &g_nDialIndex,				DM_STRING,&pGameOpts->dial, 0, 0, AssignDial);
-	DataMapAdd(IDC_TRACKBALL,     DM_INT, CT_COMBOBOX,  &g_nTrackballIndex,			DM_STRING,&pGameOpts->trackball, 0, 0, AssignTrackball);
-	DataMapAdd(IDC_LIGHTGUNDEVICE,DM_INT, CT_COMBOBOX,  &g_nLightgunIndex,			DM_STRING,&pGameOpts->lightgun_device, 0, 0, AssignLightgun);
+	DataMapAdd(IDC_PADDLE,        DM_INT, CT_COMBOBOX,  &g_nPaddleIndex,           DM_STRING,&pGameOpts->paddle,           0, 0, AssignPaddle);
+	DataMapAdd(IDC_ADSTICK,       DM_INT, CT_COMBOBOX,  &g_nADStickIndex,          DM_STRING,&pGameOpts->adstick,          0, 0, AssignADStick);
+	DataMapAdd(IDC_PEDAL,         DM_INT, CT_COMBOBOX,  &g_nPedalIndex,            DM_STRING,&pGameOpts->pedal,            0, 0, AssignPedal);
+	DataMapAdd(IDC_DIAL,          DM_INT, CT_COMBOBOX,  &g_nDialIndex,             DM_STRING,&pGameOpts->dial,             0, 0, AssignDial);
+	DataMapAdd(IDC_TRACKBALL,     DM_INT, CT_COMBOBOX,  &g_nTrackballIndex,        DM_STRING,&pGameOpts->trackball,        0, 0, AssignTrackball);
+	DataMapAdd(IDC_LIGHTGUNDEVICE,DM_INT, CT_COMBOBOX,  &g_nLightgunIndex,         DM_STRING,&pGameOpts->lightgun_device,  0, 0, AssignLightgun);
 
 
 	/* core video */
-	DataMapAdd(IDC_BRIGHTCORRECT,    DM_INT,  CT_SLIDER,   &g_nBrightCorrectIndex,    DM_FLOAT, &pGameOpts->f_bright_correct, 0, 0, AssignBrightCorrect);
-	DataMapAdd(IDC_BRIGHTCORRECTDISP,DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->f_bright_correct, 0, 0, 0);
-	DataMapAdd(IDC_PAUSEBRIGHT,      DM_INT,  CT_SLIDER,   &g_nPauseBrightIndex,      DM_FLOAT, &pGameOpts->f_pause_bright,   0, 0, AssignPauseBright);
-	DataMapAdd(IDC_PAUSEBRIGHTDISP,  DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->f_pause_bright,   0, 0, 0);
-	DataMapAdd(IDC_ROTATE,           DM_INT,  CT_COMBOBOX, &g_nRotateIndex,           DM_INT,   &pGameOpts->ror,              0, 0, AssignRotate);
-	DataMapAdd(IDC_FLIPX,            DM_BOOL, CT_BUTTON,   &pGameOpts->flipx,         DM_BOOL,  &pGameOpts->flipx,            0, 0, 0);
-	DataMapAdd(IDC_FLIPY,            DM_BOOL, CT_BUTTON,   &pGameOpts->flipy,         DM_BOOL,  &pGameOpts->flipy,            0, 0, 0);
-	DataMapAdd(IDC_SCREEN,        DM_INT,  CT_COMBOBOX, &g_nScreenIndex,           DM_STRING, &pGameOpts->screen, 0, 0, AssignScreen);
+	DataMapAdd(IDC_BRIGHTCORRECT,    DM_INT,  CT_SLIDER,   &g_nBrightCorrectIndex, DM_FLOAT, &pGameOpts->f_bright_correct, 0, 0, AssignBrightCorrect);
+	DataMapAdd(IDC_BRIGHTCORRECTDISP,DM_NONE, CT_NONE,     NULL,                   DM_FLOAT, &pGameOpts->f_bright_correct, 0, 0, 0);
+	DataMapAdd(IDC_PAUSEBRIGHT,      DM_INT,  CT_SLIDER,   &g_nPauseBrightIndex,   DM_FLOAT, &pGameOpts->f_pause_bright,   0, 0, AssignPauseBright);
+	DataMapAdd(IDC_PAUSEBRIGHTDISP,  DM_NONE, CT_NONE,     NULL,                   DM_FLOAT, &pGameOpts->f_pause_bright,   0, 0, 0);
+	DataMapAdd(IDC_ROTATE,           DM_INT,  CT_COMBOBOX, &g_nRotateIndex,        DM_INT,   &pGameOpts->ror,              0, 0, AssignRotate);
+	DataMapAdd(IDC_FLIPX,            DM_BOOL, CT_BUTTON,   &pGameOpts->flipx,      DM_BOOL,  &pGameOpts->flipx,            0, 0, 0);
+	DataMapAdd(IDC_FLIPY,            DM_BOOL, CT_BUTTON,   &pGameOpts->flipy,      DM_BOOL,  &pGameOpts->flipy,            0, 0, 0);
+	DataMapAdd(IDC_SCREEN,           DM_INT,  CT_COMBOBOX, &g_nScreenIndex,        DM_STRING,&pGameOpts->screen,           0, 0, AssignScreen);
 	/* debugres */
 	DataMapAdd(IDC_GAMMA,         DM_INT,  CT_SLIDER,   &g_nGammaIndex,            DM_FLOAT, &pGameOpts->f_gamma_correct,  0, 0, AssignGamma);
 	DataMapAdd(IDC_GAMMADISP,     DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->f_gamma_correct,  0, 0, 0);
@@ -3400,18 +3410,18 @@ static void BuildDataMap(void)
 
 	/* misc */
 	DataMapAdd(IDC_CHEAT,         DM_BOOL, CT_BUTTON,   &pGameOpts->cheat,         DM_BOOL, &pGameOpts->cheat,         0, 0, 0);
-/*	DataMapAdd(IDC_DEBUG,         DM_BOOL, CT_BUTTON,   &pGameOpts->mame_debug,    DM_BOOL, &pGameOpts->mame_debug,    0, 0, 0);*/
+/*	DataMapAdd(IDC_DEBUG,       DM_BOOL, CT_BUTTON,   &pGameOpts->mame_debug,    DM_BOOL, &pGameOpts->mame_debug,    0, 0, 0); */
 	DataMapAdd(IDC_LOG,           DM_BOOL, CT_BUTTON,   &pGameOpts->errorlog,      DM_BOOL, &pGameOpts->errorlog,      0, 0, 0);
 	DataMapAdd(IDC_SLEEP,         DM_BOOL, CT_BUTTON,   &pGameOpts->sleep,         DM_BOOL, &pGameOpts->sleep,         0, 0, 0);
 	DataMapAdd(IDC_OLD_TIMING,    DM_BOOL, CT_BUTTON,   &pGameOpts->old_timing,    DM_BOOL, &pGameOpts->old_timing,    0, 0, 0);
 	DataMapAdd(IDC_LEDS,          DM_BOOL, CT_BUTTON,   &pGameOpts->leds,          DM_BOOL, &pGameOpts->leds,          0, 0, 0);
 	DataMapAdd(IDC_LEDMODE,       DM_INT,  CT_COMBOBOX, &g_nLedmodeIndex,          DM_STRING, &pGameOpts->ledmode,     0, 0, AssignLedmode);
-	DataMapAdd(IDC_HIGH_PRIORITY,      DM_INT,  CT_SLIDER,   &g_nPriorityIndex,         DM_INT,  &pGameOpts->priority,      0, 0, AssignPriority);
-	DataMapAdd(IDC_HIGH_PRIORITYTXT,  DM_NONE, CT_NONE,     NULL,                      DM_INT,  &pGameOpts->priority,      0, 0, 0);
+	DataMapAdd(IDC_HIGH_PRIORITY, DM_INT,  CT_SLIDER,   &g_nPriorityIndex,         DM_INT,  &pGameOpts->priority,      0, 0, AssignPriority);
+	DataMapAdd(IDC_HIGH_PRIORITYTXT,DM_NONE,CT_NONE,    NULL,                      DM_INT,  &pGameOpts->priority,      0, 0, 0);
 	DataMapAdd(IDC_SKIP_GAME_INFO,DM_BOOL,CT_BUTTON,    &pGameOpts->skip_gameinfo, DM_BOOL, &pGameOpts->skip_gameinfo, 0, 0, 0);
 	DataMapAdd(IDC_BIOS,          DM_INT,  CT_COMBOBOX, &g_nBiosIndex,             DM_STRING, &pGameOpts->bios,        0, 0, AssignBios);
-	DataMapAdd(IDC_ENABLE_AUTOSAVE, DM_BOOL, CT_BUTTON, &pGameOpts->autosave,      DM_BOOL, &pGameOpts->autosave,     0, 0, 0);
-	DataMapAdd(IDC_DISABLE_2ND_MONITOR,  DM_BOOL, CT_BUTTON,   &pGameOpts->disable_2nd_monitor,  DM_BOOL, &pGameOpts->disable_2nd_monitor,  0, 0, 0);
+	DataMapAdd(IDC_ENABLE_AUTOSAVE, DM_BOOL, CT_BUTTON, &pGameOpts->autosave,      DM_BOOL, &pGameOpts->autosave,      0, 0, 0);
+	DataMapAdd(IDC_DISABLE_2ND_MONITOR, DM_BOOL, CT_BUTTON, &pGameOpts->disable_2nd_monitor, DM_BOOL, &pGameOpts->disable_2nd_monitor, 0, 0, 0);
 	DataMapAdd(IDC_CONFIRM_QUIT,  DM_BOOL, CT_BUTTON,   &pGameOpts->confirm_quit,  DM_BOOL, &pGameOpts->confirm_quit,  0, 0, 0);
 #ifdef AUTO_PAUSE_PLAYBACK
 	DataMapAdd(IDC_AUTO_PAUSE_PLAYBACK,  DM_BOOL, CT_BUTTON,   &pGameOpts->auto_pause_playback,  DM_BOOL, &pGameOpts->auto_pause_playback,  0, 0, 0);
@@ -3624,7 +3634,7 @@ static void InitializeMisc(HWND hDlg)
 
 	SendDlgItemMessage(hDlg, IDC_FSGAMMA, TBM_SETRANGE,
 				(WPARAM)FALSE,
-				(LPARAM)MAKELONG(0, 80)); /* [0.0, 4.00] in .05 increments */
+				(LPARAM)MAKELONG(0, 80)); /* [0.00, 4.00] in .05 increments */
 
 	SendDlgItemMessage(hDlg, IDC_INTENSITY, TBM_SETRANGE,
 				(WPARAM)FALSE,
