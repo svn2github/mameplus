@@ -1426,6 +1426,7 @@ arkblock	アルカノイド / Block (日本版) (海賊版)	あるかのいど_1	bootleg
 arkbloc2	アルカノイド / Block (Game Corporation 海賊版)	あるかのいど_1	bootleg
 arkangc	アルカノイド (Game Corporation 海賊版)	あるかのいど_1	bootleg
 arkatour	アルカノイド / Tournament Arkanoid (USA版)	あるかのいど_1	Taito America Corporation (Romstar license)
+tetrsark	テトリス (D.R. Korea)	てとりす_1_3でぃーあーるこれあ	D.R. Korea
 sqix	スーパークイックス (set 1)	すーぱーくいっくす	Taito
 sqixa	スーパークイックス (set 2)	すーぱーくいっくす	Taito
 sqixbl	スーパークイックス (海賊版)	すーぱーくいっくす	bootleg
@@ -1792,6 +1793,7 @@ tekipaki	洗脳ゲーム テキ・パキ	せんのうげーむてきぱき	Toaplan
 ghox	ゴークス	ごーくす	Toaplan
 dogyuun	ドギューン！！	どぎゅーん	Toaplan
 kbash	ナックルバッシュ	なっくるばっしゅ	Toaplan
+kbash2	ナックルバッシュ / Knuckle Bash 2 (海賊版)	なっくるばっしゅ	bootleg
 truxton2	達人王 (日本版)	たつじんおう	Toaplan
 pipibibs	フーピー	ふーぴー	Toaplan
 whoopee	フーピー	ふーぴー	Toaplan
@@ -3425,6 +3427,7 @@ fghthsta	ファイターズヒストリー (USA版 ver 42-05 alt hardware )	ふぁいたーずひす
 hvysmsh	ハイパーハンドボール ヘビースマッシュ -The Future Sports (日本版 ver -2)	はいぱーはんどぼーるへびーすまっしゅ	Data East Corporation
 nslasher	ナイトスラッシャーズ (韓国版 rev 1.3)	ないとすらっしゃーず	Data East Corporation
 nslashej	ナイトスラッシャーズ (日本版 rev 1.2)	ないとすらっしゃーず	Data East Corporation
+nslashes	ナイトスラッシャーズ (海外版 rev 1.2)	ないとすらっしゃーず	Data East Corporation
 lockload	ガンハード / Locked 'n Loaded (USA版)	がんはーど	Data East Corporation
 joemacr	ジョー&マック リターンズ (海外版 ver 1.1 1994.05.27)	じょーあんどまっくりたーんず	Data East
 joemacra	ジョー&マック リターンズ (海外版 ver 1.0 1994.05.19)	じょーあんどまっくりたーんず	Data East
@@ -4517,7 +4520,7 @@ preisl2d	原始島2 / Prehistoric Isle 2 (decrypted C)	げんしとう_2	Yumekobo
 mslug3	メタルスラッグ3	めたるすらっぐ_3_1	SNK
 mslug3n	メタルスラッグ3 (not encrypted)	めたるすらっぐ_3_1	SNK
 mslug3d	メタルスラッグ3 (decrypted C)	めたるすらっぐ_3_1	SNK
-ms6boot	メタルスラッグ3 / Metal Slug 6 (海賊版)	めたるすらっぐ_3_2	bootleg
+mslug3b6	メタルスラッグ3 / Metal Slug 6 (海賊版)	めたるすらっぐ_3_2	bootleg
 kof2000	ザ・キング・オブ・ファイターズ 2000	ざきんぐおぶふぁいたーず_07_1_2000	SNK
 kof2000n	ザ・キング・オブ・ファイターズ 2000 (not encrypted)	ざきんぐおぶふぁいたーず_07_1_2000	SNK
 kof2000d	ザ・キング・オブ・ファイターズ 2000 (decrypted C)	ざきんぐおぶふぁいたーず_07_1_2000	SNK
@@ -4557,7 +4560,7 @@ pnyaa	ポチッとにゃ～	ぽちっとにゃー	Aiky / Taito
 ms5pcb	メタルスラッグ5 (JAMMA PCB)	めたるすらっぐ_5	SNK Playmore
 mslug5	メタルスラッグ5	めたるすらっぐ_5	SNK Playmore
 ms5plus	メタルスラッグ5 / Metal Slug 5 Plus (海賊版)	めたるすらっぐ_5	bootleg
-svcpcb	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB set 1)	えすえぬけいばーさすかぷこん	Playmore
+svcpcb	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB)	えすえぬけいばーさすかぷこん	Playmore
 svcpcba	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB set 2)	えすえぬけいばーさすかぷこん	Playmore
 svc	SNK VS. CAPCOM -SVC CHAOS (MVS)	えすえぬけいばーさすかぷこん	Playmore
 svcboot	SNK VS. CAPCOM -SVC CHAOS (MVS) (海賊版)	えすえぬけいばーさすかぷこん	bootleg
@@ -4659,7 +4662,8 @@ battlan2	バトルレーン！ Vol.5 (set 2)	ばとるれーんぼるふぁいぶ	Technos (Taito li
 battlan3	バトルレーン！ Vol.5 (set 3)	ばとるれーんぼるふぁいぶ	Technos (Taito license)
 ddragon	双截龍 <ダブルドラゴン> (日本版)	だぶるどらごん_1	Technos
 ddragonu	双截龍 <ダブルドラゴン> (USA版)	だぶるどらごん_1	[Technos] (Taito America license)
-ddragonw	双截龍 <ダブルドラゴン> (海外版)	だぶるどらごん_1	[Technos] (Taito license)
+ddragonw	双截龍 <ダブルドラゴン> (海外版 set 1)	だぶるどらごん_1	[Technos] (Taito license)
+ddragnw1	双截龍 <ダブルドラゴン> (海外版 set 2)	だぶるどらごん_1	[Technos] (Taito license)
 ddragonb	双截龍 <ダブルドラゴン> (海賊版)	だぶるどらごん_1	bootleg
 spdodgeb	熱血高校ドッジボール部 / Super Dodge Ball (USA版)	ねっけつこうこうどっじぼーるぶ	Technos
 nkdodgeb	熱血高校ドッジボール部 (日本版) (海賊版)	ねっけつこうこうどっじぼーるぶ	Technos
@@ -5234,8 +5238,8 @@ dogfight	ドッグファイト (Thunderbolt)	どっぐふぁいと	[Orca] Thunderbolt
 moguchan	モグチャン	もぐちゃん	Orca (Eastern Commerce Inc. license) (bootleg?)
 percuss	ザ・パーカッサー	ざぱーかっさー	Orca
 bounty	ザ・バウンティ	ざばうんてぃ	Orca
-espial	イスパイアル (USA版?)	いすぱいある	[Orca] Thunderbolt
-espiale	イスパイアル (欧州版)	いすぱいある	[Orca] Thunderbolt
+espial	イスパイアル (欧州版)	いすぱいある	[Orca] Thunderbolt
+espialu	イスパイアル (USA版?)	いすぱいある	[Orca] Thunderbolt
 netwars	ネットウォーズ	ねっとうぉーず	Orca (Esco Trading Co license)
 vastar	バスター (set 1)	ばすたー	Sesame Japan
 vastar2	バスター (set 2)	ばすたー	Sesame Japan
@@ -5738,18 +5742,19 @@ raf102j	リアルアンドフェイク (日本基板 ver 102)	りあるあんどふぇいく	IGS
 killbld	ザ・キリングブレード	ざきりんぐぶれーど	IGS
 killbldt	ザ・キリングブレード (中国基板)	ざきりんぐぶれーど	IGS
 puzlstar	パズルスター	ぱずるすたー	IGS
-olds	オリエンタルレジェンドスーパー (韓国版 ver 101)	おりえんたるれじぇんど_2すーぱー	IGS
-olds100	オリエンタルレジェンドスーパー (ver 100)	おりえんたるれじぇんど_2すーぱー	IGS
-olds100a	オリエンタルレジェンドスーパー (ver 100 alt)	おりえんたるれじぇんど_2すーぱー	IGS
+olds	オリエンタルレジェンドスーパー スペシャル (韓国版 ver 101)	おりえんたるれじぇんど_2すーぱーすぺしゃる	IGS
+olds100	オリエンタルレジェンドスーパー スペシャル (ver 100)	おりえんたるれじぇんど_2すーぱーすぺしゃる	IGS
+olds100a	オリエンタルレジェンドスーパー スペシャル (ver 100 alt)	おりえんたるれじぇんど_2すーぱーすぺしゃる	IGS
 kov2	三國戦紀 武将争覇	さんごくせんき_2_1	IGS
 kov2106	三國戦紀 武将争覇 (106)	さんごくせんき_2_1	IGS
 kov2p	三國戦紀 武将争覇 プラス -Nine Dragons	さんごくせんき_2_2	IGS
 ddp2	怒首領蜂II	どどんぱち_2	IGS
 puzzli2	ぱづり2 スーパー	ぱづり_2すーぱー	IGS
-martmast	マーシャルマスターズ	ま－しゃるますたーず	IGS
+martmast	形意拳	しんいーけん	IGS
 theglad	闘幻狂 -ROAD OF THE SWORD	とうげんきょう	IGS
 dmnfrnt	デーモンフロント (V102)	でーもんふろんと	IGS
 dmnfrnta	デーモンフロント (V105)	でーもんふろんと	IGS
+ddp3	怒首領蜂 大往生 (V100)	どどんぱち_3だいおうじょう	Cave
 hitme	ヒットミー	ひっとみー	RamTek
 mblkjack	ブラックジャック (Mirco)	ぶらっくじゃっく	Mirco
 barricad	バリケード	ばりけーど	RamTek

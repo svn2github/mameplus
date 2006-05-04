@@ -711,6 +711,7 @@ arkblock	打磚塊 / Block (盜版, 日文)	打磚塊 / Block (盜版, 日文)	bootleg
 arkbloc2	打磚塊 / Block (Game Corporation 盜版)	打磚塊 / Block (Game Corporation 盜版)	bootleg
 arkangc	打磚塊 (Game Corporation 盜版)	打磚塊 (Game Corporation 盜版)	bootleg
 arkatour	打磚塊 / Tournament Arkanoid (美國版)	打磚塊 / Tournament Arkanoid (美國版)	Taito America Corporation (Romstar license)
+tetrsark	俄羅斯方塊 (D.R. 韓國版)	俄羅斯方塊 (D.R. 韓國版)	D.R. Korea
 minivadr	迷你小蜜蜂	迷你小蜜蜂	Taito Corporation
 bonzeadv	地獄冒險 / Bonze Adventure (世界版, 新版)	地獄冒險 / Bonze Adventure (世界版, 新版)	Taito Corporation Japan
 bonzeado	地獄冒險 / Bonze Adventure (世界版, 舊版)	地獄冒險 / Bonze Adventure (世界版, 舊版)	Taito Corporation Japan
@@ -1906,6 +1907,7 @@ semibase	無限勝負 (SemiCom Baseball)	無限勝負 (SemiCom Baseball)	SemiCom
 dblewing	雙翼	雙翼	Mitchell
 nslasher	午夜殺生 (韓國版 Rev 1.3)	午夜殺生 (韓國版 Rev 1.3)	Data East Corporation
 nslashej	午夜殺生 (日本版 Rev 1.2)	午夜殺生 (日本版 Rev 1.2)	Data East Corporation
+nslashes	午夜殺生 (Over Sea Rev 1.2)	午夜殺生 (Over Sea Rev 1.2)	Data East Corporation
 sotsugyo	卒業證書	卒業證書	Mitchell (Atlus license)
 sshangha	超級上海 (日本版)	超級上海 (日本版)	Hot-B.
 sshanghb	超級上海 (世界版, 盜版)	超級上海 (世界版, 盜版)	bootleg
@@ -2434,7 +2436,7 @@ preisl2d	原始島 2 (解密 C)	原始島 2 (解密 C)	Yumekobo
 mslug3	越南大戰: 合金彈頭 3	越南大戰: 合金彈頭 3	SNK
 mslug3n	越南大戰: 合金彈頭 3 (未加密)	越南大戰: 合金彈頭 3 (未加密)	SNK
 mslug3d	越南大戰: 合金彈頭 3 (解密 C)	越南大戰: 合金彈頭 3 (解密 C)	SNK
-ms6boot	越南大戰: 合金彈頭 3 / Metal Slug 6 (盜版)	越南大戰: 合金彈頭 3 / Metal Slug 6 (盜版)	bootleg
+mslug3b6	越南大戰: 合金彈頭 3 / Metal Slug 6 (盜版)	越南大戰: 合金彈頭 3 / Metal Slug 6 (盜版)	bootleg
 kof2000	拳皇 2000	拳皇 2000	SNK
 kof2000n	拳皇 2000 (未加密)	拳皇 2000 (未加密)	SNK
 kof2000d	拳皇 2000 (解密 C)	拳皇 2000 (解密 C)	SNK
@@ -2474,7 +2476,7 @@ pnyaa	寵物方塊	寵物方塊	Aiky / Taito
 ms5pcb	越南大戰: 合金彈頭 5 (JAMMA PCB)	越南大戰: 合金彈頭 5 (JAMMA PCB)	SNK Playmore
 mslug5	越南大戰: 合金彈頭 5	越南大戰: 合金彈頭 5	SNK Playmore
 ms5plus	越南大戰: 合金彈頭 5 PLUS (盜版)	越南大戰: 合金彈頭 5 PLUS (盜版)	bootleg
-svcpcb	SNK VS. 卡普空 - SVC 渾沌 (JAMMA PCB, set 1)	SNK VS. 卡普空 - SVC 渾沌 (JAMMA PCB, set 1)	Playmore
+svcpcb	SNK VS. 卡普空 - SVC 渾沌 (JAMMA PCB)	SNK VS. 卡普空 - SVC 渾沌 (JAMMA PCB)	Playmore
 svcpcba	SNK VS. 卡普空 - SVC 渾沌 (JAMMA PCB, set 2)	SNK VS. 卡普空 - SVC 渾沌 (JAMMA PCB, set 2)	Playmore
 svc	SNK VS. 卡普空 - SVC 渾沌 (MVS)	SNK VS. 卡普空 - SVC 渾沌 (MVS)	Playmore
 svcboot	SNK VS. 卡普空 - SVC 渾沌 (MVS) (盜版)	SNK VS. 卡普空 - SVC 渾沌 (MVS) (盜版)	bootleg
@@ -2539,7 +2541,8 @@ kuniokun	熱血硬派 (日本版)	熱血硬派 (日本版)	Technos
 kuniokub	熱血硬派 (日本版 盜版)	熱血硬派 (日本版 盜版)	bootleg
 ddragon	雙截龍 (日本版)	雙截龍 (日本版)	Technos
 ddragonu	雙截龍 (美國版)	雙截龍 (美國版)	[Technos] (Taito America license)
-ddragonw	雙截龍 (世界版)	雙截龍 (世界版)	[Technos] (Taito license)
+ddragonw	雙截龍 (世界版 Set 1)	雙截龍 (世界版 Set 1)	[Technos] (Taito license)
+ddragnw1	雙截龍 (世界版 Set 2)	雙截龍 (世界版 Set 2)	[Technos] (Taito license)
 ddragonb	雙截龍 (盜版)	雙截龍 (盜版)	bootleg
 spdodgeb	熱血高校躲避球 / Super Dodge Ball (美國版)	熱血高校躲避球 / Super Dodge Ball (美國版)	Technos
 nkdodgeb	熱血高校躲避球 (日本版 盜版)	熱血高校躲避球 (日本版 盜版)	Technos
@@ -3060,9 +3063,9 @@ raf102j	大家來找碴 / Real and Fake (ver. 102, 日本機板)	大家來找碴 / Real and Fa
 killbld	傲劍狂刀	傲劍狂刀	IGS
 killbldt	傲劍狂刀 (中文機板)	傲劍狂刀 (中文機板)	IGS
 puzlstar	魔幻星座	魔幻星座	IGS
-olds	西遊釋厄傳 SUPER (韓國版 101)	西遊釋厄傳 SUPER (韓國版 101)	IGS
-olds100	西遊釋厄傳 SUPER (100)	西遊釋厄傳 SUPER (100)	IGS
-olds100a	西遊釋厄傳 SUPER (100 alt)	西遊釋厄傳 SUPER (100 alt)	IGS
+olds	西遊釋厄傳 Super / Special (韓國版 101)	西遊釋厄傳 Super / Special (韓國版 101)	IGS
+olds100	西遊釋厄傳 Super / Special (100)	西遊釋厄傳 Super / Special (100)	IGS
+olds100a	西遊釋厄傳 Super / Special (100 alt)	西遊釋厄傳 Super / Special (100 alt)	IGS
 kov2	三國戰記 2	三國戰記 2	IGS
 kov2106	三國戰記 2 (106)	三國戰記 2 (106)	IGS
 kov2p	三國戰記 2 - 飛龍在天	三國戰記 2 - 飛龍在天	IGS
@@ -3072,6 +3075,7 @@ martmast	形意拳	形意拳	IGS
 theglad	神劍伏魔錄	神劍伏魔錄	IGS
 dmnfrnt	魔域戰線 (V102)	魔域戰線 (V102)	IGS
 dmnfrnta	魔域戰線 (V105)	魔域戰線 (V105)	IGS
+ddp3	怒首領蜂 大往生 (V100)	怒首領蜂 大往生 (V100)	Cave
 bankp	銀行大盜	銀行大盜	[Sanritsu] Sega
 mjkjidai	麻雀狂時代 (日本版)	麻雀狂時代 (日本版)	Sanritsu
 mayumi	危機一髮真由美 (日本版)	危機一髮真由美 (日本版)	[Sanritsu] Victory L.L.C.
@@ -3090,7 +3094,7 @@ rmhaijin	真實麻雀牌牌 - 人事異動篇 (日本版)	真實麻雀牌牌 - 人事異動篇 (日本版)	A
 rmhaisei	真實麻雀牌牌 - 成長篇 (日本版)	真實麻雀牌牌 - 成長篇 (日本版)	Visco
 themj	麻雀 (日本版)	麻雀 (日本版)	Visco
 hanaroku	花六	花六	Alba
-yumefuda	夢札 [BET]	夢札 [BET]	Alba
+yumefuda	(Medal) 夢札 [BET]	(Medal) 夢札 [BET]	Alba
 hourouki	麻雀放浪記 Part 1 - 青春篇 (日本版)	麻雀放浪記 Part 1 - 青春篇 (日本版)	Home Data
 mhgaiden	麻雀放浪記 外傳 (日本版)	麻雀放浪記 外傳 (日本版)	Home Data
 mjhokite	麻雀放浪記 掟 (日本版)	麻雀放浪記 掟 (日本版)	Home Data
