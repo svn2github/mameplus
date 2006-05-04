@@ -777,6 +777,8 @@ xml2info$(EXE): $(OBJ)/xml2info.o $(EXPAT) $(ZLIB) $(OSDBGOBJS)
     endif
 
 
+jedutil$(EXE): $(OBJ)/jedutil.o $(OBJ)/jedparse.o $(OSDBGOBJS)
+
 
 
 #-------------------------------------------------

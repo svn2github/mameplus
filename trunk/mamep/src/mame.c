@@ -226,7 +226,8 @@ const char *memory_region_names[REGION_MAX] =
 	"REGION_USER6",
 	"REGION_USER7",
 	"REGION_USER8",
-	"REGION_DISKS"
+	"REGION_DISKS",
+	"REGION_PLDS"
 };
 
 
@@ -931,7 +932,7 @@ void *_malloc_or_die(size_t size, const char *file, int line)
 		return result;
 
 	/* otherwise, die horribly */
-	fatalerror(_("Failed to allocate %d bytes (%s:%d)"), size, file, line);
+	fatalerror(_("Failed to allocate %d bytes (%s:%d)"), (int)size, file, line);
 }
 
 
