@@ -1138,7 +1138,7 @@ GAPS Inc.
 GAT
 
 
-# Piranha
+# Abscam
 GL
 
 
@@ -1182,6 +1182,10 @@ Genie
 Global Corporation
 
 
+# Up Scope
+Grand Products
+
+
 # Trivia (UK Version 5.07)
 Grayhound Electronics
 
@@ -1208,6 +1212,10 @@ Hanaho Games
 
 # Fantasy '95
 Hi-max Technology Inc.
+
+
+# Sliver
+Hollow Corp
 
 
 # Schmeiser Robo (Japan)
