@@ -22,15 +22,15 @@
          none -- no axes on any joysticks are digital\n
          none -- 沒有任何搖桿上的軸是數位裝置\n
 
-# windows/fronthlp.c: 462
+# windows/fronthlp.c: 465
         MAME -createconfig to create a mame.ini\n\n
         MAME -createconfig 建立 mame.ini 檔案\n\n
 
-# windows/fronthlp.c: 461
+# windows/fronthlp.c: 464
         MAME -showconfig   for a list of configuration options\n
         MAME -showconfig   列出設定選項的清單\n
 
-# windows/fronthlp.c: 460
+# windows/fronthlp.c: 463
         MAME -showusage    for a brief list of options\n
         MAME -showusage    列出選項的簡短描述\n
 
@@ -62,7 +62,7 @@
  - digital
  - 數位
 
-# windows/fronthlp.c: 765
+# windows/fronthlp.c: 768
 %d %s found, %d were OK.\n
 %d %s 找到，%d 是正確的。\n
 
@@ -74,7 +74,7 @@
 %s surface created: %s (%s)\n
 已建立%s介面: %s (%s)\n
 
-# windows/fronthlp.c: 192
+# windows/fronthlp.c: 197
 (BAD) 
 (損壞) 
 
@@ -126,7 +126,7 @@ Blit surface created: %s\n
 Blitter initialisation complete (%.2lfMB video memory free)\n
 初始化 blitter 完成 (釋放視訊記憶體 %.2lfMB)\n
 
-# windows/fronthlp.c: 78
+# windows/fronthlp.c: 81
 CRC-32s
 CRC-32
 
@@ -134,7 +134,7 @@ CRC-32
 Configuration options
 設定選項
 
-# windows/fronthlp.c: 786
+# windows/fronthlp.c: 789
 ERROR     %s\n
 錯誤      %s\n
 
@@ -342,11 +342,11 @@ Failed to open file for playback
 Failed to open file for recording
 無法開啟檔案來記錄
 
-# windows/fronthlp.c: 463
+# windows/fronthlp.c: 466
 For usage instructions, please consult the file windows.txt\n
 關於使用方式指令集，請參閱\ windows.txt 檔案\n
 
-# windows/fronthlp.c: 67
+# windows/fronthlp.c: 70
 Frontend Related
 Frontend 相關
 
@@ -354,7 +354,7 @@ Frontend 相關
 Full Screen\tAlt+Enter
 全螢幕\tAlt+Enter
 
-# windows/fronthlp.c: 523
+# windows/fronthlp.c: 526
 Game \"%s\" not supported!\n
 遊戲 \"%s\" 未支援!\n
 
@@ -394,7 +394,7 @@ Joystick %d axis %d is now %s\n
 Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 搖桿 %d: %s (%d 軸, %d 按鈕, %d POV)\n
 
-# windows/fronthlp.c: 787
+# windows/fronthlp.c: 790
 KNOWN     %s\n
 已知的    %s\n
 
@@ -422,7 +422,7 @@ Lightgun not supported in windowed mode
 Lightgun on Mouse %d 
 光線槍在滑鼠 %d 
 
-# windows/fronthlp.c: 456
+# windows/fronthlp.c: 459
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\n著作權 (C) 1997-2006 隸屬於 Nicola Salmoria 與 MAME 團隊\n\n
 
@@ -466,19 +466,19 @@ Mouse
 Mouse %d 
 滑鼠 %d 
 
-# windows/fronthlp.c: 236
+# windows/fronthlp.c: 273
 NO MATCH\n
 沒有符合的\n
 
-# windows/fronthlp.c: 230
+# windows/fronthlp.c: 265
 NOT A ROM\n
 不是 ROM 檔\n
 
-# windows/fronthlp.c: 492
+# windows/fronthlp.c: 495
 Name:     Description:\n
 名稱:     描述:\n
 
-# windows/fronthlp.c: 626
+# windows/fronthlp.c: 629
 Name:    Clone of:\n
 名稱:    原作:\n
 
@@ -506,7 +506,7 @@ Out of memory in variable expansion!
 Out of memory!
 記憶體不足!
 
-# windows/fronthlp.c: 789
+# windows/fronthlp.c: 792
 PARTKNOWN %s\n
 部分已知  %s\n
 
@@ -614,7 +614,7 @@ Texture
 Toggle fullscreen
 切換全螢幕
 
-# windows/fronthlp.c: 788
+# windows/fronthlp.c: 791
 UNKNOWN   %s\n
 未知的    %s\n
 
@@ -666,7 +666,7 @@ Unable to render to back_surface: %08x\n
 Unable to render to preprocess texture: %08x\n
 無法演算描繪前置處理器材質: %08x\n
 
-# windows/fronthlp.c: 459
+# windows/fronthlp.c: 462
 Usage:  MAME gamename [options]\n\n
 用法:   MAME 遊戲名稱 [選項]\n\n
 
@@ -742,11 +742,11 @@ Windows 聲音選項
 Windows video options
 Windows 版本視訊選項
 
-# windows/fronthlp.c: 758
+# windows/fronthlp.c: 761
 \"%8s\" not found!\n
 \"%8s\" 找不到!\n
 
-# windows/fronthlp.c: 760
+# windows/fronthlp.c: 763
 \"%8s\" not supported!\n
 \"%8s\" 未支援!\n
 
@@ -766,7 +766,7 @@ additional customised settings (undocumented)
 additional pause brightness
 附加的暫停亮度
 
-# windows/fronthlp.c: 73
+# windows/fronthlp.c: 76
 all available info on driver in XML format
 驅動中的全部可用資訊 (XML 格式)
 
@@ -858,11 +858,11 @@ change system bios
 cheat filename
 作弊碼檔案名稱
 
-# windows/fronthlp.c: 86
+# windows/fronthlp.c: 89
 compare files with known MAME roms
 與已知的 MAME ROM 檔比較
 
-# windows/fronthlp.c: 87
+# windows/fronthlp.c: 90
 compare files with known MAME roms (brief)
 與已知的 MAME ROM 檔比較 (簡短)
 
@@ -970,7 +970,7 @@ draw antialiased vectors
 draw translucent vectors
 描繪半透明向量圖形
 
-# windows/fronthlp.c: 76
+# windows/fronthlp.c: 79
 driver sourcefile
 驅動原始碼檔案
 
@@ -1230,19 +1230,19 @@ invalid
 ips datfile name
 ips 資料檔名稱
 
-# windows/fronthlp.c: 728
+# windows/fronthlp.c: 731
 is bad\n
 損壞\n
 
-# windows/fronthlp.c: 738
+# windows/fronthlp.c: 741
 is best available\n
 是最佳的可用狀態\n
 
-# windows/fronthlp.c: 733
+# windows/fronthlp.c: 736
 is good\n
 正確\n
 
-# windows/fronthlp.c: 743
+# windows/fronthlp.c: 746
 is missing optional files\n
 是遺失的可省略檔案\n
 
@@ -1250,11 +1250,11 @@ is missing optional files\n
 lightgun
 光線槍
 
-# windows/fronthlp.c: 83
+# windows/fronthlp.c: 86
 list optional samples for a driver
 列出指定驅動可省略的樣本檔
 
-# windows/fronthlp.c: 82
+# windows/fronthlp.c: 85
 list required roms for a driver
 列出指定驅動必要的 ROM 檔
 
@@ -1326,23 +1326,23 @@ quit game with confirmation
 record an input file
 記錄輸入檔
 
-# windows/fronthlp.c: 84
+# windows/fronthlp.c: 87
 report romsets that have problems
 報告有問題的 ROM 集合
 
-# windows/fronthlp.c: 85
+# windows/fronthlp.c: 88
 report samplesets that have problems
 報告有問題的樣本檔集合
 
-# windows/fronthlp.c: 756
+# windows/fronthlp.c: 759
 romset
 ROM 集合
 
-# windows/fronthlp.c: 696
+# windows/fronthlp.c: 699
 romset %s 
 ROM 集合 %s 
 
-# windows/fronthlp.c: 766
+# windows/fronthlp.c: 769
 romsets
 個 ROM 集合
 
@@ -1362,15 +1362,15 @@ run in a window/run on full screen
 running %s (%s) [press return]
 按一下 [Enter] 執行 %s (%s)
 
-# windows/fronthlp.c: 756
+# windows/fronthlp.c: 759
 sampleset
 樣本檔集合
 
-# windows/fronthlp.c: 719
+# windows/fronthlp.c: 722
 sampleset %s 
 樣本檔集合 %s 
 
-# windows/fronthlp.c: 766
+# windows/fronthlp.c: 769
 samplesets
 個樣本檔集合
 
@@ -1470,15 +1470,15 @@ sets the gamma in full screen mode
 sets the number of frames to run within the game
 設定執行遊戲的畫面總數
 
-# windows/fronthlp.c: 74
+# windows/fronthlp.c: 77
 short name, full name
 簡短名稱，完整名稱
 
-# windows/fronthlp.c: 77
+# windows/fronthlp.c: 80
 show clones
 顯示仿製版
 
-# windows/fronthlp.c: 69, 70
+# windows/fronthlp.c: 72, 73
 show help message
 顯示說明訊息
 
@@ -1630,7 +1630,7 @@ window frame color (light)
 window frame color (medium)
 視窗的邊框色彩 (中間)
 
-# windows/fronthlp.c: 75
+# windows/fronthlp.c: 78
 year, manufacturer and full name
 年代，製造廠商和完整名稱
 
