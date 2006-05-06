@@ -1010,6 +1010,10 @@ Effects
 Emulation
 エミュレーション
 
+# ui/mame32.rc: 626
+Enable Bilinear filtering
+バイリニア補間を有効
+
 # ui/mame32.rc: 847
 Enable game cheats
 ゲームチートを有効化
@@ -2689,8 +2693,4 @@ settings then exit.\n\n
 # ui/dialogs.c: 117
 the next time MAME32 is run.\n\n
 反映されます。\n\n
-
-# ui/mame32.rc: 626
-Enable Bilinear filtering
-バイリニア補間を有効
 

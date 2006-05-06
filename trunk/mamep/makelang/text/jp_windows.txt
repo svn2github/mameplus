@@ -82,6 +82,10 @@
 (dd) stretch video using the hardware
 (dd) ハードウェアを使用して画面を拡大
 
+# windows/video.c: 556
+(primary)
+(プライマリ)
+
 # windows/input.c: 992
 Autoenabling joysticks due to presence of a %s\n
 %sが存在するためジョイスティックを自動的に有効にします\n
@@ -133,6 +137,18 @@ Configuration options
 # windows/fronthlp.c: 786
 ERROR     %s\n
 エラー    %s\n
+
+# windows/video.c: 548
+ERROR: Failed to get display monitor information\n
+エラー: モニタの情報の取得に失敗しました\n
+
+# windows/video.c: 612
+ERROR: Unable to find a monitor
+エラー: モニタを見つける事が出来ません
+
+# windows/video.c: 554
+Enumerating display monitors... Found: %s %s\n
+モニタを列挙しています... 見つかりました: %s %s\n
 
 # windows/wind3d.c: 664
 Error creating Direct3D7 device: %08x\n
@@ -201,6 +217,10 @@ Error creating scanline surface[%d]: %08x\n
 # windows/wind3d.c: 1441
 Error creating texture surface: %08x\n
 テクスチャ画面バッファが作成できません: %08x\n
+
+# windows/winddraw.c: 171
+Error enumerating display adapters with DirectDraw: %08x\n
+DirectDrawでディスプレイアダプタの列挙が出来ません: %08x\n
 
 # windows/wind3d.c: 946 windows/winddraw.c: 633
 Error enumerating modes: %08x\n
@@ -309,6 +329,10 @@ Error: RGB effects (multiply mode) not supported\n
 # windows/wind3d.c: 1365
 Error: required texture size too large (max: %ix%i, need %ix%i)\n
 エラー: 要求されたテクスチャが大きすぎます (最大: %ix%i、%ix%iが必要)\n
+
+# windows/window.c: 269, 335
+Failed to get monitor info
+モニタの情報の取得に失敗しました
 
 # windows/config.c: 582
 Failed to open file for playback
@@ -570,6 +594,10 @@ Scale surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 Scanline surface[%i] created: %s\n
 スキャンライン画面バッファ[%i]が作成されました: %s\n
 
+# windows/video.c: 617
+Screen name not specified, using primary display monitor\n
+スクリーン名が指定されていない為、プライマリモニタを使用します\n
+
 # windows/sound.c: 234, 238
 Sound buffer: overflows=%d underflows=%d\n
 サウンドバッファ: オーバフロー=%d アンダーフロー=%d\n
@@ -658,6 +686,10 @@ Usage:  MAME gamename [options]\n\n
 Usage: %s [game] [options]\nOptions:\n
 使用法: %s [ゲーム] [オプション]\nオプション:\n
 
+# windows/video.c: 620
+Using %s as specified\n
+指定された%sを使用します\n
+
 # windows/wind3d.c: 632
 Using %s pre-scale effect\n
 プリスケールエフェクト %s を使用します\n
@@ -673,6 +705,10 @@ DirectInput %dを使用します\n
 # windows/wind3d.c: 1087
 Using a %s buffer and pageflipping\n
 ページフリップに%sバッファを使用します\n
+
+# windows/video.c: 615
+WARNING: Screen %s not found, using primary display monitor\n
+警告: スクリーン%sが見つからない為、プライマリモニタを使用します\n
 
 # windows/wind3d.c: 1625 windows/winddraw.c: 983
 Warning: could not create gamma control to change brightness: %08x\n
@@ -985,6 +1021,10 @@ enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is prese
 # windows/config.c: 273
 enable automatic restore at startup and save at exit
 起動時の自動読み込みと終了時の自動保存を有効
+
+# windows/wind3dfx.c: 199
+enable bilinear filtering
+バイリニア補間を有効
 
 # windows/input.c: 256
 enable dual lightgun input
@@ -1605,44 +1645,4 @@ window frame color (medium)
 # windows/fronthlp.c: 75
 year, manufacturer and full name
 サポートゲーム、製造年、メーカーのリストを表\示
-
-# windows/video.c: 556
-(primary)
-(プライマリ)
-
-# windows/video.c: 548
-ERROR: Failed to get display monitor information\n
-エラー: モニタの情報の取得に失敗しました\n
-
-# windows/video.c: 612
-ERROR: Unable to find a monitor
-エラー: モニタを見つける事が出来ません
-
-# windows/video.c: 554
-Enumerating display monitors... Found: %s %s\n
-モニタを列挙しています... 見つかりました: %s %s\n
-
-# windows/winddraw.c: 171
-Error enumerating display adapters with DirectDraw: %08x\n
-DirectDrawでディスプレイアダプタの列挙が出来ません: %08x\n
-
-# windows/window.c: 269, 335
-Failed to get monitor info
-モニタの情報の取得に失敗しました
-
-# windows/video.c: 617
-Screen name not specified, using primary display monitor\n
-スクリーン名が指定されていない為、プライマリモニタを使用します\n
-
-# windows/video.c: 620
-Using %s as specified\n
-指定された%sを使用します\n
-
-# windows/video.c: 615
-WARNING: Screen %s not found, using primary display monitor\n
-警告: スクリーン%sが見つからない為、プライマリモニタを使用します\n
-
-# windows/wind3dfx.c: 199
-enable bilinear filtering
-バイリニア補間を有効
 
