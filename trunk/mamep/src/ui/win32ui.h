@@ -41,6 +41,9 @@ void GetRealColumnOrder(int order[]);
 HICON LoadIconFromFile(const char *iconname);
 void UpdateScreenShot(void);
 void ResizePickerControls(HWND hWnd);
+#ifdef USE_VIEW_PCBINFO
+void PaintBackgroundImage(HWND hWnd, HRGN hRgn, int x, int y);
+#endif /* USE_VIEW_PCBINFO */
 
 void UpdateListView(void);
 

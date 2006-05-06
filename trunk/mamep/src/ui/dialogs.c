@@ -41,6 +41,9 @@
 #include "mame32.h"
 #include "properties.h"
 #include "dialogs.h"
+#ifdef USE_VIEW_PCBINFO
+#include "file.h"
+#endif /* USE_VIEW_PCBINFO */
 #include "translate.h"
 
 #ifdef _MSC_VER
@@ -67,6 +70,12 @@ static void DisableFilterControls(HWND hWnd, LPFOLDERDATA lpFilterRecord,
 static void EnableFilterExclusions(HWND hWnd, DWORD dwCtrlID);
 static DWORD ValidateFilters(LPFOLDERDATA lpFilterRecord, DWORD dwFlags);
 static void OnHScroll(HWND hWnd, HWND hwndCtl, UINT code, int pos);
+
+#ifdef USE_VIEW_PCBINFO
+static HWND hPcbInfo = NULL;
+static WNDPROC g_lpPcbInfoWndProc = NULL;
+static LRESULT CALLBACK PcbInfoWndProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam);
+#endif /* USE_VIEW_PCBINFO */
 
 /***************************************************************************/
 
@@ -765,6 +774,274 @@ INT_PTR CALLBACK DirectXDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 	}
 	return 0;
 }
+
+#ifdef USE_VIEW_PCBINFO
+INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
+{
+	HBITMAP hBackground = GetBackgroundBitmap();
+
+	switch (Msg)
+	{
+		case WM_INITDIALOG:
+		{
+			int  nGame;
+			char szGame[MAX_PATH];
+			char buf[MAX_PATH];
+			const char *szDir=GetPcbinfoDir();
+			mame_file *mfile;
+			long filelen;
+			const game_driver *clone_of = NULL;
+			char *PcbData;
+			LV_ITEM lvi;
+			HWND hWndList = GetDlgItem(GetMainWindow(), IDC_LIST);
+			LOGFONTA font;
+			HFONT hPcbFont;
+			HDC hDC;
+			RECT rect;
+			TEXTMETRIC tm;
+			int nLines, nLineHeight;
+			SCROLLINFO ScrollBar;
+
+			hPcbInfo = hDlg;
+
+			g_lpPcbInfoWndProc = (WNDPROC)(LONG)(int)GetWindowLong(GetDlgItem(hDlg, IDC_PCBINFO), GWL_WNDPROC);
+			SetWindowLong(GetDlgItem(hDlg, IDC_PCBINFO), GWL_WNDPROC, (LONG)PcbInfoWndProc);
+
+			memset((void *)&font, 0, sizeof(font));
+			font.lfHeight = -13;
+			font.lfCharSet = ANSI_CHARSET;
+			font.lfOutPrecision = OUT_DEFAULT_PRECIS;
+			font.lfClipPrecision = CLIP_DEFAULT_PRECIS;
+			font.lfQuality = DEFAULT_QUALITY;
+			font.lfPitchAndFamily = FIXED_PITCH;
+			strcpy(font.lfFaceName, "Courier New");
+//			strcpy(font.lfFaceName, "FixedSys");
+
+			hPcbFont = CreateFontIndirectA(&font);
+
+			lvi.iItem = ListView_GetNextItem(hWndList, -1, LVIS_SELECTED | LVIS_FOCUSED);
+			if (lvi.iItem == -1)
+				return 1;
+
+			lvi.iSubItem = 0;
+			lvi.mask	 = LVIF_PARAM;
+			ListView_GetItem(hWndList, &lvi);
+
+			nGame = lvi.lParam;
+			if ((clone_of = driver_get_clone(drivers[nGame]))&& !(clone_of->flags & NOT_A_DRIVER))
+				strcpy(szGame, clone_of->name);
+			else
+				strcpy(szGame, drivers[nGame]->name);
+
+			sprintf(buf, "%s\\%s.txt", szDir, szGame);
+
+			mfile = mame_fopen(NULL, buf, FILETYPE_HISTORY, 0);
+
+			if (mfile == NULL)
+			{
+				sprintf(buf, "%s\\pcb\\%s.txt", szDir, szGame);
+				mfile = mame_fopen(NULL, buf, FILETYPE_HISTORY, 0);
+			}
+
+			if ( mfile != NULL )
+			{
+				filelen = (long)mame_fsize(mfile);
+
+				PcbData = (char *)malloc(filelen+1);
+
+				if ( PcbData != NULL )
+				{
+					mame_fread(mfile, PcbData, filelen);
+					
+					PcbData[filelen] = '\0';
+
+					sprintf(buf, 
+							_UI(MAME32NAME " PCB Info: %s [%s]"), 
+							ConvertAmpersandString(UseLangList() ?
+									_LST(drivers[nGame]->description) :
+									ModifyThe(drivers[nGame]->description)), 
+							drivers[nGame]->name);
+					SetWindowText(hDlg, _Unicode(buf));
+					SetWindowFont(GetDlgItem(hDlg, IDC_PCBINFO), hPcbFont, FALSE);
+					Edit_SetTextA(GetDlgItem(hDlg, IDC_PCBINFO), PcbData);
+
+					Edit_GetRect(GetDlgItem(hDlg, IDC_PCBINFO),&rect);
+					nLines = Edit_GetLineCount(GetDlgItem(hDlg, IDC_PCBINFO) );
+					GetListFont(&font);
+					hDC = GetDC(GetDlgItem(hDlg, IDC_PCBINFO));
+					GetTextMetrics (hDC, &tm);
+					nLineHeight = tm.tmHeight - tm.tmInternalLeading;
+					if( ( (rect.bottom - rect.top) / nLineHeight) < (nLines) )
+					{
+						//more than one Page, so show Scrollbar
+						SetScrollRange(GetDlgItem(hDlg, IDC_PCBINFO), SB_VERT, 0, nLines, TRUE); 
+					}
+					else
+					{
+						//hide Scrollbar
+						SetScrollRange(GetDlgItem(hDlg, IDC_PCBINFO),SB_VERT, 0, 0, TRUE);
+					}
+
+					ScrollBar.cbSize = sizeof(SCROLLINFO);
+					ScrollBar.fMask = SIF_RANGE;
+					GetScrollInfo(GetDlgItem(hDlg, IDC_PCBINFO), SB_HORZ, &ScrollBar);
+					if( (ScrollBar.nMax - ScrollBar.nMin) < (rect.right - rect.left) )
+					{
+						//hide Scrollbar
+						SetScrollRange(GetDlgItem(hDlg, IDC_PCBINFO),SB_HORZ, 0, 0, TRUE);
+					}
+
+//					ShowWindow(GetDlgItem(hDlg, IDC_PCBINFO), SW_SHOW);
+
+					free(PcbData);
+				}
+
+				mame_fclose(mfile);
+			}
+			else
+			{
+				MessageBox(GetMainWindow(), _Unicode(_UI("No PCB Info available for this game.")), _Unicode(MAME32NAME), MB_OK | MB_ICONEXCLAMATION);
+				EndDialog(hDlg, 0);
+			}
+
+			return 1;
+		}
+
+		case WM_SIZE:
+			{
+				POINT p = {0, 0};
+				RECT rect, fRect;
+				DWORD dwStyle;
+				DWORD dwStyleEx;
+				SCROLLINFO ScrollBar;
+
+				ClientToScreen(hDlg, &p);
+				GetWindowRect(hDlg, &fRect);
+				OffsetRect(&fRect, -p.x, -p.y);
+
+				if (fRect.bottom < 50)
+				{
+					fRect.bottom = 50;
+					SetWindowPos(hDlg, 0, 0, 0, fRect.right-fRect.left, fRect.bottom-fRect.top, SWP_NOMOVE);
+				}
+
+				if (fRect.right < 110)
+				{
+					fRect.right = 110;
+					SetWindowPos(hDlg, 0, 0, 0, fRect.right-fRect.left, fRect.bottom-fRect.top, SWP_NOMOVE);
+				}
+
+				rect.left = 12;
+				rect.top = 32;
+				rect.right = fRect.right - 9;
+				rect.bottom = fRect.bottom - 25;
+
+				dwStyle   = GetWindowLong(GetDlgItem(hDlg, IDC_PCBINFO), GWL_STYLE);
+				dwStyleEx = GetWindowLong(GetDlgItem(hDlg, IDC_PCBINFO), GWL_EXSTYLE);
+
+				AdjustWindowRectEx(&rect, dwStyle, FALSE, dwStyleEx);
+				MoveWindow(GetDlgItem(hDlg, IDC_PCBINFO),
+						   fRect.left  + rect.left,
+						   fRect.top   + rect.top,
+						   rect.right  - rect.left,
+						   rect.bottom - rect.top,
+						   TRUE);
+
+				GetWindowRect(GetDlgItem(hDlg, IDCANCEL), &rect);
+				MoveWindow(GetDlgItem(hDlg, IDCANCEL),
+						   (fRect.right - fRect.left)/2 - (rect.right-rect.left)/2 - 4,
+						   fRect.bottom - (rect.bottom - rect.top) - 12,
+						   rect.right - rect.left,
+						   rect.bottom - rect.top,
+						   TRUE);
+
+				// Get H scoll bar useness
+				ShowScrollBar(GetDlgItem(hDlg,IDC_PCBINFO), SB_HORZ, TRUE);
+				ScrollBar.cbSize = sizeof(SCROLLINFO);
+				ScrollBar.fMask = SIF_RANGE | SIF_PAGE;
+				GetScrollInfo(GetDlgItem(hDlg,IDC_PCBINFO), SB_HORZ, &ScrollBar);
+				if (ScrollBar.nPage > ScrollBar.nMax)
+				{
+					ShowScrollBar(GetDlgItem(hDlg,IDC_PCBINFO), SB_HORZ, FALSE);
+				}
+
+				// Get V scoll bar useness
+				ShowScrollBar(GetDlgItem(hDlg,IDC_PCBINFO), SB_VERT, TRUE);
+				ScrollBar.cbSize = sizeof(SCROLLINFO);
+				ScrollBar.fMask = SIF_RANGE | SIF_PAGE;
+				GetScrollInfo(GetDlgItem(hDlg,IDC_PCBINFO), SB_VERT, &ScrollBar);
+				if (ScrollBar.nPage > ScrollBar.nMax)
+				{
+					ShowScrollBar(GetDlgItem(hDlg,IDC_PCBINFO), SB_VERT, FALSE);
+				}
+
+				ShowWindow(GetDlgItem(hDlg,IDC_PCBINFO),SW_SHOW);
+				ShowWindow(GetDlgItem(hDlg,IDCANCEL),SW_SHOW);
+
+				InvalidateRect(GetDlgItem(hDlg,IDC_PCBINFO),NULL,FALSE);
+				return 1;
+			}
+
+		case WM_CTLCOLORSTATIC:
+			if (GetBackgroundBitmap() && (HWND)lParam == GetDlgItem(hDlg, IDC_PCBINFO))
+			{
+				static HBRUSH hBrush=0;
+				HDC hDC=(HDC)wParam;
+				LOGBRUSH lb;
+
+				if (hBrush)
+					DeleteObject(hBrush);
+				lb.lbStyle  = BS_HOLLOW;
+				hBrush = CreateBrushIndirect(&lb);
+				SetBkMode(hDC, TRANSPARENT);
+				SetTextColor(hDC, GetListFontColor());
+				return (LRESULT) hBrush;
+			}
+			break;
+
+		case WM_PAINT:
+			if (hBackground != NULL)
+			{
+				PaintBackgroundImage(hDlg, NULL, 0, 0);
+				InvalidateRect(hDlg, NULL, FALSE);
+			}
+			break;
+
+		case WM_COMMAND:
+			switch (GET_WM_COMMAND_ID(wParam, lParam))
+			{
+			case IDCANCEL:
+				EndDialog(hDlg, 0);
+				return 1;
+			}
+	}
+	return 0;
+}
+
+static LRESULT CALLBACK PcbInfoWndProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
+{
+	HBITMAP hBackground = GetBackgroundBitmap();
+
+	switch (Msg)
+	{
+		case WM_ERASEBKGND:
+			return TRUE;
+		case WM_PAINT:
+			if (hBackground != NULL)
+			{
+				POINT p = { 0, 0 };
+
+				/* get base point of background bitmap */
+				MapWindowPoints(hDlg,hPcbInfo,&p,1);
+				PaintBackgroundImage(hDlg, NULL, p.x, p.y);
+				/* to ensure our parent procedure repaints the whole client area */
+				InvalidateRect(hDlg, NULL, FALSE);
+			}
+			break;
+	}
+	return CallWindowProc(g_lpPcbInfoWndProc, hDlg, Msg, wParam, lParam);
+}
+#endif /* USE_VIEW_PCBINFO */
 
 /***************************************************************************
     private functions

@@ -286,7 +286,9 @@ static BOOL             TreeViewNotify(NMHDR *nm);
 static void             ResetBackground(const char *szFile);
 static void             RandomSelectBackground(void);
 static void             LoadBackgroundBitmap(void);
+#ifndef USE_VIEW_PCBINFO
 static void             PaintBackgroundImage(HWND hWnd, HRGN hRgn, int x, int y);
+#endif /* USE_VIEW_PCBINFO */
 
 static int CLIB_DECL    DriverDataCompareFunc(const void *arg1,const void *arg2);
 static int              GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_subitem);
@@ -3795,6 +3797,9 @@ static void DisableSelection()
 	EnableMenuItem(hMenu, ID_FILE_PLAY_RECORD,	   MF_GRAYED);
 	EnableMenuItem(hMenu, ID_GAME_PROPERTIES,	   MF_GRAYED);
 	EnableMenuItem(hMenu, ID_FOLDER_SOURCEPROPERTIES,	   MF_GRAYED);
+#ifdef USE_VIEW_PCBINFO
+	EnableMenuItem(hMenu, ID_VIEW_PCBINFO,		   MF_GRAYED);
+#endif /* USE_VIEW_PCBINFO */
 
 	SetStatusBarText(0, _UI("No Selection"));
 	SetStatusBarText(1, "");
@@ -3846,6 +3851,9 @@ static void EnableSelection(int nGame)
 
 	EnableMenuItem(hMenu, ID_FILE_PLAY, 		   MF_ENABLED);
 	EnableMenuItem(hMenu, ID_FILE_PLAY_RECORD,	   MF_ENABLED);
+#ifdef USE_VIEW_PCBINFO
+	EnableMenuItem(hMenu, ID_VIEW_PCBINFO,		   MF_ENABLED);
+#endif /* USE_VIEW_PCBINFO */
 
 	if (!oldControl)
 	{
@@ -3862,7 +3870,11 @@ static void EnableSelection(int nGame)
 	UpdateScreenShot();
 }
 
+#ifdef USE_VIEW_PCBINFO
+void PaintBackgroundImage(HWND hWnd, HRGN hRgn, int x, int y)
+#else /* USE_VIEW_PCBINFO */
 static void PaintBackgroundImage(HWND hWnd, HRGN hRgn, int x, int y)
+#endif /* USE_VIEW_PCBINFO */
 {
 	RECT		rcClient;
 	HRGN		rgnBitmap;
@@ -4959,25 +4971,6 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		TabView_UpdateSelection(hTabCtrl);
 		break;
 
-#ifdef USE_VIEW_PCBINFO
-	case ID_VIEW_PCBINFO:
-		{
-			int  nGame;
-			char filename[MAX_PATH];
-
-			*filename = 0;
-
-			nGame = Picker_GetSelectedItem(hwndList);
-			if (driver_get_clone(drivers[nGame]) && !(driver_get_clone(drivers[nGame])->flags & NOT_A_DRIVER))
-				sprintf(filename, "pcb/%s.txt", driver_get_clone(drivers[nGame])->name);
-			else
-				sprintf(filename, "pcb/%s.txt", drivers[nGame]->name);
-
-			DisplayTextFile(hMain, filename);
-		}
-		break;
-#endif /* USE_VIEW_PCBINFO */
-
 		// toggle tab's existence
 	case ID_TOGGLE_TAB_SCREENSHOT :
 	case ID_TOGGLE_TAB_FLYER :
@@ -5188,6 +5181,14 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		}
 
 		return TRUE;
+
+#ifdef USE_VIEW_PCBINFO
+	case ID_VIEW_PCBINFO:
+		DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_PCBINFO),
+				  hMain, PCBInfoDialogProc);
+		SetFocus(hwndList);
+		return TRUE;
+#endif /* USE_VIEW_PCBINFO */
 
 	case ID_OPTIONS_BG:
 		{

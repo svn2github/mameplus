@@ -493,21 +493,23 @@
 #define ID_OPTIONS_PALETTE              40098 // UI_COLOR_DISPLAY
 #define ID_OPTIONS_MMO2LST              40099
 #define ID_VIEW_PCBINFO                 40100 // USE_VIEW_PCBINFO
+#define IDC_PCBINFO                     40101 // USE_VIEW_PCBINFO
+#define IDD_PCBINFO                     40102 // USE_VIEW_PCBINFO
 
-#define ID_LANGUAGE_ENGLISH_US          40101
-#define ID_LANGUAGE_JAPANESE            40102
-#define ID_LANGUAGE_SMPL_CHINESE        40103
-#define ID_LANGUAGE_TRAD_CHINESE        40104
-#define ID_LANGUAGE_KOREAN              40105
-#define ID_LANGUAGE_FRENCH              40106
-#define ID_LANGUAGE_SPANISH             40107
-#define ID_LANGUAGE_ITALIAN             40108
-#define ID_LANGUAGE_GERMAN              40109
-#define ID_LANGUAGE_PORTUGUESE_BRA      40110
-#define ID_LANGUAGE_POLISH              40111
-#define ID_LANGUAGE_HUNGARIAN           40112
+#define ID_LANGUAGE_ENGLISH_US          40201
+#define ID_LANGUAGE_JAPANESE            40202
+#define ID_LANGUAGE_SMPL_CHINESE        40203
+#define ID_LANGUAGE_TRAD_CHINESE        40204
+#define ID_LANGUAGE_KOREAN              40205
+#define ID_LANGUAGE_FRENCH              40206
+#define ID_LANGUAGE_SPANISH             40207
+#define ID_LANGUAGE_ITALIAN             40208
+#define ID_LANGUAGE_GERMAN              40209
+#define ID_LANGUAGE_PORTUGUESE_BRA      40210
+#define ID_LANGUAGE_POLISH              40211
+#define ID_LANGUAGE_HUNGARIAN           40212
 
-#define ID_PLAY_PATCH                   40200	// USE_IPS
+#define ID_PLAY_PATCH                   40300	// USE_IPS
 
 #define IDC_STATIC                      -1
 

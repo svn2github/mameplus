@@ -668,6 +668,9 @@ static struct rc_option rc_winui_opts[] =
 	{ "icon_directory", NULL, rc_string, &settings.iconsdir, "icons", 0, 0, NULL, "directory for icons" },
 	{ "bkground_directory", NULL, rc_string, &settings.bgdir, "bkground", 0, 0, NULL, "directory for bkground" },
 	{ "folder_directory", NULL, rc_string, &settings.folderdir, "folders", 0, 0, NULL, "directory for folders-ini" },
+#ifdef USE_VIEW_PCBINFO
+	{ "pcbinfo_directory", NULL, rc_string, &settings.pcbinfodir, "pcb", 0, 0, NULL, "directory for pcb info" },
+#endif /* USE_VIEW_PCBINFO */
 
 	{ "Windows UI specific interface options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
 	{ "save_version", NULL, rc_string, &rc_dummy_args.save_version, "", 0, 0, NULL, "save version" },
@@ -2161,6 +2164,21 @@ void SetStoryFileName(const char* path)
 		settings.story_filename = strdup(path);
 }
 #endif /* STORY_DATAFILE */
+
+#ifdef USE_VIEW_PCBINFO
+const char* GetPcbinfoDir(void)
+{
+	return settings.pcbinfodir;
+}
+
+void SetPcbinfoDir(const char* path)
+{
+	FreeIfAllocated(&settings.pcbinfodir);
+
+	if (path != NULL)
+		settings.pcbinfodir = mame_strdup(path);
+}
+#endif /* USE_VIEW_PCBINFO */
 
 const char* GetMAMEInfoFileName(void)
 {

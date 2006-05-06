@@ -130,6 +130,9 @@ const DIRECTORYINFO g_directoryInfo[] =
 	{ "Icons",                 GetIconsDir,        SetIconsDir,        FALSE, 0 },
 	{ "Background Images",     GetBgDir,           SetBgDir,           FALSE, 0 },
 	{ "Comment Files",         GetCommentDir,      SetCommentDir,      FALSE, DIRDLG_COMMENT },
+#ifdef USE_VIEW_PCBINFO
+	{ "PCB Info Files",        GetPcbinfoDir,      SetPcbinfoDir,      FALSE, 0 },
+#endif /* USE_VIEW_PCBINFO */
 	{ NULL }
 };
 

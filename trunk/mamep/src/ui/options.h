@@ -377,6 +377,9 @@ typedef struct
 	char*    ctrlrdir;
 	char*    folderdir;
 	char*    commentdir;
+#ifdef USE_VIEW_PCBINFO
+	char*    pcbinfodir;
+#endif /* USE_VIEW_PCBINFO */
 
 #ifdef UI_COLOR_DISPLAY
 	/* ui palette */
@@ -655,6 +658,11 @@ void SetHistoryFileName(const char* path);
 const char* GetStoryFileName(void);
 void SetStoryFileName(const char* path);
 #endif /* STORY_DATAFILE */
+
+#ifdef USE_VIEW_PCBINFO
+const char* GetPcbinfoDir(void);
+void SetPcbinfoDir(const char* path);
+#endif /* USE_VIEW_PCBINFO */
 
 const char* GetMAMEInfoFileName(void);
 void SetMAMEInfoFileName(const char* path);

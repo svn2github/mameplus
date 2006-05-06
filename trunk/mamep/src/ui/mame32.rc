@@ -1258,6 +1258,18 @@ BEGIN
                     0,0,HIDC_USE_DEFAULT
 END
 
+#ifdef USE_VIEW_PCBINFO
+IDD_PCBINFO DIALOG DISCARDABLE  0, 0, 466, 260
+STYLE DS_MODALFRAME | WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "PCB Info"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "&Close",2,203,240,60,14
+    EDITTEXT        IDC_PCBINFO,3,3,460,230,ES_MULTILINE | ES_READONLY | NOT WS_BORDER | 
+                    WS_VSCROLL | WS_HSCROLL
+END
+#endif /* USE_VIEW_PCBINFO */
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1612,6 +1624,7 @@ BEGIN
     ID_CONTEXT_SELECT_RANDOM "Randomly select a game."
     ID_CONTEXT_RESET_PLAYCOUNT "Reset playcount of currently selected game"
     ID_CONTEXT_RESET_PLAYTIME "Reset play time of currently selected game"
+    ID_VIEW_PCBINFO         "View game PCB informations"
     ID_GAME_AUDIT           "Audit ROM and samples sets"
     ID_CONTEXT_SHOW_FOLDER  "Show or hide folder"
     ID_FOLDER_AUDIT         "Audit ROM and samples sets"
