@@ -91,6 +91,7 @@
 #define IDI_SOUNDTAB                    666
 #define IDD_PALETTE                     190 // UI_COLOR_DISPLAY
 #define IDD_PROP_BIOS                   191
+#define IDD_PCBINFO                     192 // USE_VIEW_PCBINFO
 #define IDB_TOOLBAR_US                  193
 #define IDB_TOOLBAR_JP                  194
 #define IDB_TOOLBAR_CN                  195
@@ -494,7 +495,6 @@
 #define ID_OPTIONS_MMO2LST              40099
 #define ID_VIEW_PCBINFO                 40100 // USE_VIEW_PCBINFO
 #define IDC_PCBINFO                     40101 // USE_VIEW_PCBINFO
-#define IDD_PCBINFO                     40102 // USE_VIEW_PCBINFO
 
 #define ID_LANGUAGE_ENGLISH_US          40201
 #define ID_LANGUAGE_JAPANESE            40202
