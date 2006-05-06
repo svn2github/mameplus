@@ -66,7 +66,7 @@ Absolute Entertainment Inc.
 Academysoft-Elory
 Academysoft-Elory
 
-# NBA Jam Extreme
+# Acclaim PSX
 Acclaim
 Acclaim
 
@@ -142,7 +142,7 @@ Amutech
 Apple
 Apple
 
-# SportTime Table Hockey (Arcadia, V 2.1)
+# Arcadia System BIOS
 Arcadia Systems
 Arcadia Systems
 
@@ -182,7 +182,7 @@ Atari Games
 Athena
 Athena
 
-# Power Instinct 3 - Groove On Fight (J 970416 V1.001)
+# Atlus PSX
 Atlus
 Atlus
 
@@ -210,7 +210,7 @@ Bandai
 Banpresto
 Banpresto
 
-# The Crystal Maze: Team Challenge (SWP)
+# MPU4 Video Firmware
 Barcrest
 Barcrest
 
@@ -234,7 +234,11 @@ Bee-Oh
 Blastar
 Blastar
 
-# The Crystal of Kings
+# Super Glob (Pac-Man hardware) German
+Bootleg
+Bootleg
+
+# Crystal System BIOS
 Brezzasoft
 Brezzasoft
 
@@ -293,6 +297,10 @@ Chuo Co. Ltd
 # Cerberus
 Cinematronics
 Cinematronics
+
+# Fred Flintstones' Memory Match
+Coastal Amusements
+Coastal Amusements
 
 # Quizmaster
 Coinmaster
@@ -402,6 +410,10 @@ Digitrex Techstar
 Dong Bang Electron
 Dong Bang Electron
 
+# Pang Pang
+Dong Gue La Mi Ltd.
+Dong Gue La Mi Ltd.
+
 # Got-cha Mini Game Festival
 Dongsung
 Dongsung
@@ -502,6 +514,10 @@ Ed
 Eighting
 Eighting
 
+# PS Arcade 95
+Eighting/Raizing
+Eighting/Raizing
+
 # Space Force (set 2)
 Elcon
 Elcon
@@ -582,6 +598,10 @@ Eolith
 Epos Corporation
 Epos Corporation
 
+# Poizone
+Eterna
+Eterna
+
 # Mouja (Japan)
 Etona
 Etona
@@ -654,7 +674,7 @@ GAPS Inc.
 GAT
 GAT
 
-# Piranha
+# Abscam
 GL
 GL
 
@@ -710,6 +730,10 @@ Global Corporation
 Gottlieb
 Gottlieb
 
+# Up Scope
+Grand Products
+Grand Products
+
 # Taxi Driver
 Graphic Techno
 Graphic Techno
@@ -750,6 +774,10 @@ Hara Industries
 Hi-max Technology Inc.
 Hi-max Technology Inc.
 
+# Sliver
+Hollow Corp
+Hollow Corp
+
 # Mahjong Hourouki Part 1 - Seisyun Hen (Japan)
 Home Data
 Home Data
@@ -778,7 +806,7 @@ Human Amusement
 Human Inc.
 Human Inc.
 
-# Kisekae Mahjong
+# Multi Amenity Cassette System BIOS
 I'Max
 I'Max
 
@@ -858,7 +886,7 @@ Jeil Computer System
 Jetsoft
 Jetsoft
 
-# Defender (bootleg)
+# Star Fighter
 Jeutel
 Jeutel
 
@@ -962,6 +990,10 @@ Leland Corp.
 Leprechaun
 Leprechaun
 
+# Battle Bubble (v2.00)
+Limenko
+Limenko
+
 # Star Wars Trilogy (ver A)
 LucasArts
 LucasArts
@@ -1018,7 +1050,7 @@ Mega
 Merit
 Merit
 
-# Pang Poms
+# Gekitoride-Jong Space (10011 Ver.A)
 Metro
 Metro
 
@@ -1226,7 +1258,7 @@ Omori Electric
 Omori Electric Co., Ltd.
 Omori Electric Co., Ltd.
 
-# Marine Boy
+# River Patrol (Orca)
 Orca
 Orca
 
@@ -1237,6 +1269,10 @@ Oriental
 # Defence Command
 Outer Limits
 Outer Limits
+
+# Police Trainer (Rev 1.3)
+P & P Marketing
+P & P Marketing
 
 # Bowl-O-Rama
 P&P Marketing
@@ -1286,7 +1322,7 @@ Playmore
 Playtronic SRL
 Playtronic SRL
 
-# News
+# News (set 1)
 Poby
 Poby
 
@@ -1546,7 +1582,7 @@ Stern
 Subelectro
 Subelectro
 
-# Penguin Brothers (Japan)
+# Crazy Fight
 Subsino
 Subsino
 
@@ -1693,6 +1729,10 @@ Tamtex
 # Lock-On
 Tatsumi
 Tatsumi
+
+# TX-1
+Tazmi
+Tazmi
 
 # Hole Land
 Tecfri
@@ -1890,6 +1930,10 @@ Volt Electronics
 WAVE
 WAVE
 
+# Sea Hunter Penguin
+WSAC Systems?
+WSAC Systems?
+
 # Shienryu (JUET 961226 V1.000)
 Warashi
 Warashi
@@ -1978,7 +2022,7 @@ Yumekobo
 Yun Sung
 Yun Sung
 
-# Scorpion (set 1)
+# Eyes (Zaccaria)
 Zaccaria
 Zaccaria
 
@@ -2029,16 +2073,4 @@ hackeado
 # Chewing Gum
 unknown
 desconocido
-
-# Super Glob (Pac-Man hardware) German
-Bootleg
-
-
-# Poizone
-Eterna
-
-
-# Police Trainer (Rev 1.3)
-P & P Marketing
-
 
