@@ -802,6 +802,8 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			int nLines, nLineHeight;
 			SCROLLINFO ScrollBar;
 
+			TranslateDialog(hDlg, lParam, FALSE);
+
 			hPcbInfo = hDlg;
 
 			g_lpPcbInfoWndProc = (WNDPROC)(LONG)(int)GetWindowLong(GetDlgItem(hDlg, IDC_PCBINFO), GWL_WNDPROC);
