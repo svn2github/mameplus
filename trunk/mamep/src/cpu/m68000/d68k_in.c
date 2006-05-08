@@ -931,7 +931,12 @@ M68KMAKE_OP(040fpu0, 32, ., .)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	m68040drc_fpu_op0(drc);
+	if(CPU_TYPE_IS_040_PLUS(CPU_TYPE))
+	{
+		m68040drc_fpu_op0(drc);
+		return;
+	}
+	m68kdrc_exception_1111();
 }
 
 
@@ -939,7 +944,12 @@ M68KMAKE_OP(040fpu1, 32, ., .)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	m68040drc_fpu_op1(drc);
+	if(CPU_TYPE_IS_040_PLUS(CPU_TYPE))
+	{
+		m68040drc_fpu_op1(drc);
+		return;
+	}
+	m68kdrc_exception_1111();
 }
 
 
