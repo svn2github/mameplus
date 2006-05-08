@@ -387,7 +387,7 @@ static void release_subtable(table_data *tabledata, UINT8 subentry);
 static UINT8 *open_subtable(table_data *tabledata, offs_t l1index);
 static void close_subtable(table_data *tabledata, offs_t l1index);
 static int allocate_memory(void);
-static void *allocate_memory_block(int cpunum, int spacenum, offs_t start, offs_t end, void *memory, int region, offs_t region_offs);
+static void *allocate_memory_block(int cpunum, int spacenum, offs_t start, offs_t end, void *memory);
 static void register_for_save(int cpunum, int spacenum, offs_t start, void *base, size_t numbytes);
 static address_map *assign_intersecting_blocks(addrspace_data *space, offs_t start, offs_t end, UINT8 *base);
 static int find_memory(void);
@@ -2045,9 +2045,9 @@ static int allocate_memory(void)
 					if (!IS_AMENTRY_EXTENDED(map) && map->memory)
 					{
 						if (!IS_AMENTRY_MATCH_MASK(map))
-							allocate_memory_block(cpunum, spacenum, map->start, map->end, map->memory, map->region, map->region_offs);
+							allocate_memory_block(cpunum, spacenum, map->start, map->end, map->memory);
 						else
-							allocate_memory_block(cpunum, spacenum, map->start, map->start + map->mask, map->memory, map->region, map->region_offs);
+							allocate_memory_block(cpunum, spacenum, map->start, map->start + map->mask, map->memory);
 					}
 
 				/* loop over all blocks just allocated and assign pointers from them */
@@ -2104,7 +2104,7 @@ static int allocate_memory(void)
 					/* we now have a block to allocate; do it */
 					curstart = curstart * MEMORY_BLOCK_SIZE;
 					curend = curend * MEMORY_BLOCK_SIZE + (MEMORY_BLOCK_SIZE - 1);
-					block = allocate_memory_block(cpunum, spacenum, curstart, curend, NULL, 0, 0);
+					block = allocate_memory_block(cpunum, spacenum, curstart, curend, NULL);
 
 					/* assign memory that intersected the new block */
 					unassigned = assign_intersecting_blocks(space, curstart, curend, block);
@@ -2120,10 +2120,11 @@ static int allocate_memory(void)
     memory block of data
 -------------------------------------------------*/
 
-static void *allocate_memory_block(int cpunum, int spacenum, offs_t start, offs_t end, void *memory, int region, offs_t region_offs)
+static void *allocate_memory_block(int cpunum, int spacenum, offs_t start, offs_t end, void *memory)
 {
 	memory_block *block = &memory_block_list[memory_block_count];
 	int allocatemem = (memory == NULL);
+	int region;
 
 	VPRINTF(("allocate_memory_block(%d,%d,%08X,%08X,%08X)\n", cpunum, spacenum, start, end, (UINT32)memory));
 
@@ -2134,22 +2135,18 @@ static void *allocate_memory_block(int cpunum, int spacenum, offs_t start, offs_
 		memset(memory, 0, end - start + 1);
 	}
 
-	/* register for saving */
-	if (region)
+	/* register for saving, but only if we're not part of a memory region */
+	for (region = 0; region < MAX_MEMORY_REGIONS; region++)
 	{
-		offs_t length = memory_region_length(region);
-
-		if (length > region_offs)
+		UINT8 *region_base = memory_region(region);
+		UINT32 region_length = memory_region_length(region);
+		if (region_base != NULL && region_length != 0 && (UINT8 *)memory >= region_base && ((UINT8 *)memory + (end - start + 1)) < region_base + region_length)
 		{
-			int valid_length = end - start + 1;
-
-			if (valid_length > length - region_offs)
-				valid_length = length - region_offs;
-
-			register_for_save(cpunum, spacenum, start, memory, valid_length);
+			VPRINTF(("skipping save of this memory block as it is covered by a memory region\n"));
+			break;
 		}
 	}
-	else
+	if (region == MAX_MEMORY_REGIONS)
 		register_for_save(cpunum, spacenum, start, memory, end - start + 1);
 
 	/* fill in the tracking block */
