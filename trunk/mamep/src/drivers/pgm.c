@@ -1924,10 +1924,12 @@ READ16_HANDLER( killbld_prot_r )
 {
 //  printf("killbld prot w\n");
 	unsigned short res ;
+#if 0
 	static const unsigned long kb_region[6]={
 		0x89911417,0x89911416,0x89911419,
 		0x89911420,0x89911418,0x89911421
 		};
+#endif
 
 	offset&=0xf;
 	res=0;
