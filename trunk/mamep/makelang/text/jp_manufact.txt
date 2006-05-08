@@ -914,6 +914,10 @@ Current Technologies
 D. R. Korea
 
 
+# Tetris (D.R. Korea)
+D.R. Korea
+
+
 # Pipeline
 Daehyun Electronics
 
@@ -1670,7 +1674,7 @@ SNK
 SNK Electronics corp.
 
 
-# Metal Slug 5
+# Metal Slug 5 (JAMMA PCB)
 SNK Playmore
 
 

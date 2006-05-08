@@ -22,15 +22,15 @@
          none -- no axes on any joysticks are digital\n
          none -- 全てのジョイスティックの軸をデジタルにしません\n
 
-# windows/fronthlp.c: 462
+# windows/fronthlp.c: 465
         MAME -createconfig to create a mame.ini\n\n
         MAME -createconfig 設定ファイルmame.iniを作成します\n
 
-# windows/fronthlp.c: 461
+# windows/fronthlp.c: 464
         MAME -showconfig   for a list of configuration options\n
         MAME -showconfig   設定オプションの一覧を表\示します\n
 
-# windows/fronthlp.c: 460
+# windows/fronthlp.c: 463
         MAME -showusage    for a brief list of options\n
         MAME -showusage    対応しているオプションの一覧を表\示します\n
 
@@ -62,7 +62,7 @@
  - digital
  - デジタル
 
-# windows/fronthlp.c: 765
+# windows/fronthlp.c: 768
 %d %s found, %d were OK.\n
 %d個の%sが見つかり、%d個は正常です。\n
 
@@ -74,7 +74,7 @@
 %s surface created: %s (%s)\n
 %s画面バッファが作成されました: %s (%s)\n
 
-# windows/fronthlp.c: 192
+# windows/fronthlp.c: 197
 (BAD) 
 (異常) 
 
@@ -126,7 +126,7 @@ Blit surface created: %s\n
 Blitter initialisation complete (%.2lfMB video memory free)\n
 描画の初期化が完了 (%.2lfMBのビデオメモリが残っています)\n
 
-# windows/fronthlp.c: 78
+# windows/fronthlp.c: 81
 CRC-32s
 CRC-32
 
@@ -134,7 +134,7 @@ CRC-32
 Configuration options
 設定オプション
 
-# windows/fronthlp.c: 786
+# windows/fronthlp.c: 789
 ERROR     %s\n
 エラー    %s\n
 
@@ -342,11 +342,11 @@ Failed to open file for playback
 Failed to open file for recording
 入力を保存するファイルが作成できません
 
-# windows/fronthlp.c: 463
+# windows/fronthlp.c: 466
 For usage instructions, please consult the file windows.txt\n
 使い方の説明については、対応する windows.txt ファイルを参照して下さい\n
 
-# windows/fronthlp.c: 67
+# windows/fronthlp.c: 70
 Frontend Related
 その他のMAMEフロントエンドオプション
 
@@ -354,7 +354,7 @@ Frontend Related
 Full Screen\tAlt+Enter
 フルスクリーン\tAlt+Enter
 
-# windows/fronthlp.c: 523
+# windows/fronthlp.c: 526
 Game \"%s\" not supported!\n
 「%s」というゲームには対応していません！\n
 
@@ -406,7 +406,7 @@ Joystick %d axis %d is now %s\n
 Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 ジョイスティック%d: %s (%d個の軸、%d個のボタン、%d個の視点)\n
 
-# windows/fronthlp.c: 787
+# windows/fronthlp.c: 790
 KNOWN     %s\n
 判明      %s\n
 
@@ -434,7 +434,7 @@ Lightgun not supported in windowed mode
 Lightgun on Mouse %d 
 マウス %d の光線銃
 
-# windows/fronthlp.c: 456
+# windows/fronthlp.c: 459
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 
@@ -478,19 +478,19 @@ Mouse
 Mouse %d 
 マウス%d
 
-# windows/fronthlp.c: 236
+# windows/fronthlp.c: 273
 NO MATCH\n
 マッチしません\n
 
-# windows/fronthlp.c: 230
+# windows/fronthlp.c: 265
 NOT A ROM\n
 ROMではありません\n
 
-# windows/fronthlp.c: 492
+# windows/fronthlp.c: 495
 Name:     Description:\n
 名前:     詳細:\n
 
-# windows/fronthlp.c: 626
+# windows/fronthlp.c: 629
 Name:    Clone of:\n
 名前:    クローン:\n
 
@@ -518,7 +518,7 @@ Out of memory in variable expansion!
 Out of memory!
 メモリが足りません!
 
-# windows/fronthlp.c: 789
+# windows/fronthlp.c: 792
 PARTKNOWN %s\n
 一部判明  %s\n
 
@@ -626,7 +626,7 @@ Texture
 Toggle fullscreen
 フルスクリーン切り替え
 
-# windows/fronthlp.c: 788
+# windows/fronthlp.c: 791
 UNKNOWN   %s\n
 不明      %s\n
 
@@ -678,7 +678,7 @@ back_surfaceに描画出来ません: %08x\n
 Unable to render to preprocess texture: %08x\n
 前処理用テクスチャに描画出来ません: %08x\n
 
-# windows/fronthlp.c: 459
+# windows/fronthlp.c: 462
 Usage:  MAME gamename [options]\n\n
 使用法:  MAME ゲーム名 [オプション]\n\n
 
@@ -754,11 +754,11 @@ Windows版：サウンド設定
 Windows video options
 Windows版：表\示設定
 
-# windows/fronthlp.c: 758
+# windows/fronthlp.c: 761
 \"%8s\" not found!\n
 「%8s」は見つかりません!\n
 
-# windows/fronthlp.c: 760
+# windows/fronthlp.c: 763
 \"%8s\" not supported!\n
 「%8s」には対応していません!\n
 
@@ -778,7 +778,7 @@ additional customised settings (undocumented)
 additional pause brightness
 ポーズ時の明るさ
 
-# windows/fronthlp.c: 73
+# windows/fronthlp.c: 76
 all available info on driver in XML format
 存在する全てのドライバ情報をXML形式で出力
 
@@ -870,11 +870,11 @@ change system bios
 cheat filename
 チートファイルの名前
 
-# windows/fronthlp.c: 86
+# windows/fronthlp.c: 89
 compare files with known MAME roms
 ファイルを既知のMAME romと比較する
 
-# windows/fronthlp.c: 87
+# windows/fronthlp.c: 90
 compare files with known MAME roms (brief)
 ファイルを既知のMAME romと比較する (大まかに)
 
@@ -982,7 +982,7 @@ draw antialiased vectors
 draw translucent vectors
 ベクターの透過表\示
 
-# windows/fronthlp.c: 76
+# windows/fronthlp.c: 79
 driver sourcefile
 ドライバのソ\ースファイル名を表\示
 
@@ -1242,19 +1242,19 @@ invalid
 ips datfile name
 IPSデータファイル名
 
-# windows/fronthlp.c: 728
+# windows/fronthlp.c: 731
 is bad\n
 は異常です\n
 
-# windows/fronthlp.c: 738
+# windows/fronthlp.c: 741
 is best available\n
 は現状では最良な状態です\n
 
-# windows/fronthlp.c: 733
+# windows/fronthlp.c: 736
 is good\n
 は正常です\n
 
-# windows/fronthlp.c: 743
+# windows/fronthlp.c: 746
 is missing optional files\n
 は不足しています(オプション)
 
@@ -1262,11 +1262,11 @@ is missing optional files\n
 lightgun
 光線銃
 
-# windows/fronthlp.c: 83
+# windows/fronthlp.c: 86
 list optional samples for a driver
 ドライバの使用サンプルのリスト
 
-# windows/fronthlp.c: 82
+# windows/fronthlp.c: 85
 list required roms for a driver
 ドライバに必要なROMのリスト
 
@@ -1338,23 +1338,23 @@ quit game with confirmation
 record an input file
 入力を保存するファイル名
 
-# windows/fronthlp.c: 84
+# windows/fronthlp.c: 87
 report romsets that have problems
 問題のあるROMファイルを報告
 
-# windows/fronthlp.c: 85
+# windows/fronthlp.c: 88
 report samplesets that have problems
 問題のあるサンプルファイルを報告
 
-# windows/fronthlp.c: 756
+# windows/fronthlp.c: 759
 romset
 ROMセット
 
-# windows/fronthlp.c: 696
+# windows/fronthlp.c: 699
 romset %s 
 ROMセット%s
 
-# windows/fronthlp.c: 766
+# windows/fronthlp.c: 769
 romsets
 ROMセット
 
@@ -1374,15 +1374,15 @@ run in a window/run on full screen
 running %s (%s) [press return]
 リターンキーを押すと、ゲーム%s (%s)の実行を開始します
 
-# windows/fronthlp.c: 756
+# windows/fronthlp.c: 759
 sampleset
 サンプルセット
 
-# windows/fronthlp.c: 719
+# windows/fronthlp.c: 722
 sampleset %s 
 サンプルセット%s
 
-# windows/fronthlp.c: 766
+# windows/fronthlp.c: 769
 samplesets
 サンプルセット
 
@@ -1482,15 +1482,15 @@ sets the gamma in full screen mode
 sets the number of frames to run within the game
 指定したフレーム数で終了
 
-# windows/fronthlp.c: 74
+# windows/fronthlp.c: 77
 short name, full name
 ゲームディレクトリ名＋ゲームのフルネームを表\示
 
-# windows/fronthlp.c: 77
+# windows/fronthlp.c: 80
 show clones
 ゲームのクローン版を表\示
 
-# windows/fronthlp.c: 69, 70
+# windows/fronthlp.c: 72, 73
 show help message
 ヘルプの表\示
 
@@ -1642,7 +1642,7 @@ window frame color (light)
 window frame color (medium)
 ウィンドウ フレーム
 
-# windows/fronthlp.c: 75
+# windows/fronthlp.c: 78
 year, manufacturer and full name
 サポートゲーム、製造年、メーカーのリストを表\示
 
