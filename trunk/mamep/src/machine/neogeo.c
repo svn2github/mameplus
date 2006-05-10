@@ -148,7 +148,9 @@ MACHINE_RESET( neogeo )
 
 	/* not ideal having these here, but they need to be checked every reset at least */
 	/* the rom banking is tied directly to the dipswitch?, or is there a bank write somewhere? */
-	if (!strcmp(Machine->gamedrv->name,"svcpcb"))
+	if (!strcmp(Machine->gamedrv->name,"ms5pcb") ||
+		!strcmp(Machine->gamedrv->name,"svcpcb") ||
+		!strcmp(Machine->gamedrv->name,"svcpcba"))
 	{
 		int harddip3 = readinputportbytag("HARDDIP")&1;
 		memcpy(memory_region( REGION_USER1 ),memory_region( REGION_USER1 )+0x20000+harddip3*0x20000, 0x20000);

@@ -150,6 +150,7 @@ void neogeo_set_lower_resolution( void )
 		!strcmp(Machine->gamedrv->name,"kof99d") ||	// added
 		!strcmp(Machine->gamedrv->name,"mslug3") ||
 		!strcmp(Machine->gamedrv->name,"mslug3n") ||
+		!strcmp(Machine->gamedrv->name,"mslug3b6") ||
 		!strcmp(Machine->gamedrv->name,"mslug3d") ||	// added
 		!strcmp(Machine->gamedrv->name,"kof2000") ||
 		!strcmp(Machine->gamedrv->name,"kof2000n") ||
@@ -160,6 +161,7 @@ void neogeo_set_lower_resolution( void )
 		!strcmp(Machine->gamedrv->name,"kof2001h") ||
 		!strcmp(Machine->gamedrv->name,"kof2001d") ||	// added
 		!strcmp(Machine->gamedrv->name,"cthd2003") ||
+		!strcmp(Machine->gamedrv->name,"cthd2k3a") ||	// added
 		!strcmp(Machine->gamedrv->name,"ct2k3sp") ||
 		!strcmp(Machine->gamedrv->name,"kf2k1pls") ||	// added
 		!strcmp(Machine->gamedrv->name,"kf2k1pa") ||	// added
@@ -169,15 +171,19 @@ void neogeo_set_lower_resolution( void )
 		!strcmp(Machine->gamedrv->name,"kf2k2pls") ||
 		!strcmp(Machine->gamedrv->name,"kf2k2pla") ||
 		!strcmp(Machine->gamedrv->name,"kf2k2plb") ||	// added
+		!strcmp(Machine->gamedrv->name,"kf2k2plc") ||	// added
 		!strcmp(Machine->gamedrv->name,"kf2k2mp") ||
 		!strcmp(Machine->gamedrv->name,"kf2k2mp2") ||
 		!strcmp(Machine->gamedrv->name,"kof10th") ||
 		!strcmp(Machine->gamedrv->name,"kf2k5uni") ||
 		!strcmp(Machine->gamedrv->name,"kf10thep") ||
 		!strcmp(Machine->gamedrv->name,"kof2k4se") ||
+		!strcmp(Machine->gamedrv->name,"kf2k4pls") ||	// added
+		!strcmp(Machine->gamedrv->name,"ms5pcb") ||
 		!strcmp(Machine->gamedrv->name,"mslug5") ||
 		!strcmp(Machine->gamedrv->name,"ms5plus") ||
 		!strcmp(Machine->gamedrv->name,"svcpcb") ||
+		!strcmp(Machine->gamedrv->name,"svcpcba") ||
 		!strcmp(Machine->gamedrv->name,"svc") ||
 		!strcmp(Machine->gamedrv->name,"svcboot") ||
 		!strcmp(Machine->gamedrv->name,"svcplus") ||

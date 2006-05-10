@@ -7103,23 +7103,22 @@ ROM_START( mslug5 ) /* Encrypted Set */
 ROM_END
 
 /* program roms are the same on the PCB version, GFX roms etc. are different arrangement */
-ROM_START( ms5pcb ) /* Encrypted Set */
+ROM_START( ms5pcb ) /* Encrypted Set, JAMMA PCB */
 	ROM_REGION( 0x800000, REGION_CPU1, 0 )
-	ROM_LOAD32_WORD_SWAP( "268-p1.bin", 0x000000, 0x400000, CRC(d0466792) SHA1(880819933d997fab398f91061e9dbccb959ae8a1) )
-	ROM_LOAD32_WORD_SWAP( "268-p2.bin", 0x000002, 0x400000, CRC(fbf6b61e) SHA1(9ec743d5988b5e3183f37f8edf45c72a8c0c893e) )
+	ROM_LOAD32_WORD_SWAP( "268-p1r.bin", 0x000000, 0x400000, CRC(d0466792) SHA1(880819933d997fab398f91061e9dbccb959ae8a1) )
+	ROM_LOAD32_WORD_SWAP( "268-p2r.bin", 0x000002, 0x400000, CRC(fbf6b61e) SHA1(9ec743d5988b5e3183f37f8edf45c72a8c0c893e) )
 
-	/* The Encrypted Boards do _not_ have an s1 rom, data for it comes from the Cx ROMs */
 	ROM_REGION( 0x20000, REGION_GFX1, 0 )
-	ROM_FILL( 0x000000, 0x20000, 0 )
+	ROM_FILL(                 0x000000, 0x20000, 0 )
 	ROM_REGION( 0x20000, REGION_GFX2, 0 )
-	ROM_LOAD( "sfix.sfx", 0x000000, 0x20000, CRC(354029fc) SHA1(4ae4bf23b4c2acff875775d4cbff5583893ce2a1) )
+	ROM_LOAD( "sfix.sfx",  0x000000, 0x20000, CRC(354029fc) SHA1(4ae4bf23b4c2acff875775d4cbff5583893ce2a1) )
 
 	ROM_REGION16_BE( 0x80000, REGION_USER1, 0 )
 	/* this contains both an ASIA and JAPAN bios, HARDDIP3 on the PCB selects which to use */
 	ROM_LOAD16_WORD_SWAP( "268-bios.bin", 0x00000, 0x80000, CRC(b4590283) SHA1(47047ed5b6062babc0a0bebcc30e4b3f021e115a) )
 
 	ROM_REGION( 0x50000, REGION_CPU2, 0 )
-	/* Encrypted, we load it here for reference and replace with decrypted ROM */
+	/* Encrypted */
 	ROM_LOAD( "268-m1.bin", 0x00000, 0x10000, CRC(58b107d0) SHA1(cc7fe66ff4f9c026cde4df06f86c848eb21f7af8) )
 	/* Decrypted */
 	ROM_LOAD( "268-m1_decrypted.bin", 0x00000, 0x10000, CRC(3c0655a7) SHA1(ae839d4c2b87a7aa3dd8e5caddc43eb75ee9b732) )
@@ -7129,13 +7128,11 @@ ROM_START( ms5pcb ) /* Encrypted Set */
 	ROM_LOAD( "000-lo.lo", 0x00000, 0x10000, CRC(e09e253c) SHA1(2b1c719531dac9bb503f22644e6e4236b91e7cfc) )
 
 	ROM_REGION( 0x1000000, REGION_SOUND1, 0 )
-	/* Encrypted */
 	ROM_LOAD( "268-v1.bin", 0x000000, 0x1000000, CRC(8458afe5) SHA1(62b4c6e7db763e9ff2697bbcdb43dc5a56b48c68) )
 
 	NO_DELTAT_REGION
 
 	ROM_REGION( 0x4000000, REGION_GFX3, 0 )
-	/* Encrypted */
 	ROM_LOAD32_WORD( "268-c1.bin", 0x0000000, 0x1000000, CRC(802042e8) SHA1(ff028b65f60f0b51b255a380cc47ec19fdc0c0cf) ) /* Plane 0,1 */
 	ROM_LOAD32_WORD( "268-c2.bin", 0x0000002, 0x1000000, CRC(3b89fb9f) SHA1(cbc0729aae961f683b105ec3e1cda58b3f985abc) ) /* Plane 2,3 */
 	ROM_LOAD32_WORD( "268-c3.bin", 0x2000000, 0x1000000, CRC(0f3f59e3) SHA1(8cc751dc7d4e94864a9ce3346f23b8f011082fcc) ) /* Plane 0,1 */
@@ -7215,8 +7212,8 @@ ROM_END
 /* alt PCB version, this one has the same program roms as the MVS set, and different GFX / Sound rom arrangements */
 ROM_START( svcpcba ) /* Encrypted Set, JAMMA PCB */
 	ROM_REGION( 0x800000, REGION_CPU1, 0 )
-	ROM_LOAD32_WORD_SWAP( "269-p1a.bin", 0x000000, 0x400000, CRC(38e2005e) SHA1(1b902905916a30969282f1399a756e32ff069097)  )
-	ROM_LOAD32_WORD_SWAP( "269-p2a.bin", 0x000002, 0x400000, CRC(6d13797c) SHA1(3cb71a95cea6b006b44cac0f547df88aec0007b7)  )
+	ROM_LOAD32_WORD_SWAP( "269-p1.rom", 0x000000, 0x400000, CRC(38e2005e) SHA1(1b902905916a30969282f1399a756e32ff069097) )
+	ROM_LOAD32_WORD_SWAP( "269-p2.rom", 0x000002, 0x400000, CRC(6d13797c) SHA1(3cb71a95cea6b006b44cac0f547df88aec0007b7) )
 
 	ROM_REGION( 0x80000, REGION_GFX1, 0 ) /* larger char set */
 	ROM_FILL( 0x000000, 0x80000, 0 )
@@ -7227,7 +7224,7 @@ ROM_START( svcpcba ) /* Encrypted Set, JAMMA PCB */
 	/* this contains both an ASIA and JAPAN bios, HARDDIP3 on the PCB selects which to use */
 	ROM_LOAD16_WORD_SWAP( "269-bios.bin", 0x00000, 0x80000, CRC(b4590283) SHA1(47047ed5b6062babc0a0bebcc30e4b3f021e115a) )
 
-	ROM_REGION( 0x50000, REGION_CPU2, 0 )
+	ROM_REGION( 0x90000, REGION_CPU2, 0 )
 	/* Encrypted */
 	ROM_LOAD( "269-m1.bin", 0x00000, 0x20000, CRC(7d337756) SHA1(205b8b5be7acc8d564fe17835795f25b13c27d7a) )
 	/* Decrypted */
@@ -7239,14 +7236,14 @@ ROM_START( svcpcba ) /* Encrypted Set, JAMMA PCB */
 
 	ROM_REGION( 0x1000000, REGION_SOUND1, 0 )
 	/* Encrypted */
-	ROM_LOAD( "269-v1a.bin", 0x000000, 0x1000000, CRC(a6af4753) SHA1(ec4f61a526b707a7faec4653b773beb3bf3a17ba) )
+	ROM_LOAD( "269-v1.rom", 0x000000, 0x1000000, CRC(a6af4753) SHA1(ec4f61a526b707a7faec4653b773beb3bf3a17ba) )
 
 	ROM_REGION( 0x4000000, REGION_GFX3, 0 )
 	/* Encrypted */
-	ROM_LOAD32_WORD( "269-c1a.bin", 0x0000000, 0x1000000, CRC(e64d2b0c) SHA1(0714198c400e5c273181e4c6f906b49e35fef75d) ) /* Plane 0,1 */
-	ROM_LOAD32_WORD( "269-c2a.bin", 0x0000002, 0x1000000, CRC(249089c2) SHA1(1c0ca19e330efe1a74b2d35a1a9a8d61481e16a9) ) /* Plane 2,3 */
-	ROM_LOAD32_WORD( "269-c3a.bin", 0x2000000, 0x1000000, CRC(d32f2fab) SHA1(273d58cb3c9075075b1ca39a3b247a2cd545fbe7) ) /* Plane 0,1 */
-	ROM_LOAD32_WORD( "269-c4a.bin", 0x2000002, 0x1000000, CRC(bf77e878) SHA1(e6e76f8eed0d04ee9ad39bf38ce305930b10e2c1) ) /* Plane 2,3 */
+	ROM_LOAD32_WORD( "269-c1.rom", 0x0000000, 0x1000000, CRC(e64d2b0c) SHA1(0714198c400e5c273181e4c6f906b49e35fef75d) ) /* Plane 0,1 */
+	ROM_LOAD32_WORD( "269-c2.rom", 0x0000002, 0x1000000, CRC(249089c2) SHA1(1c0ca19e330efe1a74b2d35a1a9a8d61481e16a9) ) /* Plane 2,3 */
+	ROM_LOAD32_WORD( "269-c3.rom", 0x2000000, 0x1000000, CRC(d32f2fab) SHA1(273d58cb3c9075075b1ca39a3b247a2cd545fbe7) ) /* Plane 0,1 */
+	ROM_LOAD32_WORD( "269-c4.rom", 0x2000002, 0x1000000, CRC(bf77e878) SHA1(e6e76f8eed0d04ee9ad39bf38ce305930b10e2c1) ) /* Plane 2,3 */
 ROM_END
 
 ROM_START( svc ) /* Encrypted Set, MVS Set */
@@ -8168,6 +8165,103 @@ ROM_START( mslug3b6 ) /* This "Metal Slug 6" is a hack/bootleg of Metal Slug 3, 
 	ROM_LOAD16_BYTE( "256-c8.bin",   0x3000001, 0x800000, CRC(4d9be34c) SHA1(a737bdfa2b815aea7067e7af2636e83a9409c414) ) /* Plane 2,3 */
 ROM_END
 
+ROM_START( cthd2k3a ) /* Protected hack/bootleg of kof2001 Phenixsoft */
+	ROM_REGION( 0x500000, REGION_CPU1, 0 )
+	ROM_LOAD16_WORD_SWAP( "5003-p1a.bin", 0x000000, 0x100000, CRC(83783954) )
+	ROM_LOAD16_WORD_SWAP( "5003-p2a.bin", 0x100000, 0x400000, CRC(84b0b164) )
+
+	NEO_SFIX_128K( "5003-s1a.bin", CRC(956d8273) )
+
+	NEO_BIOS_SOUND_128K( "5003-m1a.bin", CRC(3ee21b7e) )
+
+	/* sound roms are identical to kof2001 */
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 )
+	ROM_LOAD( "262-v1.bin", 0x000000, 0x400000, CRC(83d49ecf) SHA1(2f2c116e45397652e77fcf5d951fa5f71b639572) )
+	ROM_LOAD( "5003-v2a.bin", 0x400000, 0x400000, CRC(2b498449) )
+	ROM_LOAD( "262-v3.bin", 0x800000, 0x400000, CRC(2ae38dbe) SHA1(4e82b7dd3b899d61907620517a5a27bdaba0725d) )
+	ROM_LOAD( "262-v4.bin", 0xc00000, 0x400000, CRC(26ec4dd9) SHA1(8bd68d95a2d913be41a51f51e48dbe3bff5924fb) )
+
+	NO_DELTAT_REGION
+
+	ROM_REGION( 0x4000000, REGION_GFX3, 0 )
+	ROM_LOAD16_BYTE( "5003-c1a.bin", 0x0000000, 0x800000, CRC(eddd5e2f) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "5003-c2a.bin", 0x0000001, 0x800000, CRC(23d8d1d6) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "5003-c3d.bin", 0x1000000, 0x800000, CRC(71b3172d) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "5003-c4d.bin", 0x1000001, 0x800000, CRC(564c70c1) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "5003-c5d.bin", 0x2000000, 0x800000, CRC(8ef8aef9) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "5003-c6d.bin", 0x2000001, 0x800000, CRC(8a0fd440) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "5003-c7a.bin", 0x3000000, 0x800000, CRC(4f50e1ae) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "5003-c8a.bin", 0x3000001, 0x800000, CRC(4f5f09bf) ) /* Plane 2,3 */
+ROM_END
+
+ROM_START( kf2k2plc ) /* bootleg */
+	ROM_REGION( 0x500000, REGION_CPU1, 0 )
+	ROM_LOAD16_WORD_SWAP( "265-p1pc.bin",0x000000, 0x100000, CRC(ebedae17) )
+	ROM_LOAD16_WORD_SWAP( "265-p2.bin", 0x100000, 0x400000, CRC(327266b8) SHA1(98f445cc0a94f8744d74bca71cb420277622b034) )
+
+	NEO_SFIX_128K( "265-s1pc.bin", CRC(fecbb589) )
+
+	NEO_BIOS_SOUND_128K( "265-m1_decrypted.bin", CRC(1c661a4b) SHA1(4e5aa862a0a182a806d538996ddc68d9f2dffaf7) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 )
+	/* Encrypted */
+	ROM_LOAD( "265-v1.bin", 0x000000, 0x800000, CRC(15e8f3f5) SHA1(7c9e6426b9fa6db0158baa17a6485ffce057d889) )
+	ROM_LOAD( "265-v2.bin", 0x800000, 0x800000, CRC(da41d6f9) SHA1(a43021f1e58947dcbe3c8ca5283b20b649f0409d) )
+
+	NO_DELTAT_REGION
+
+	ROM_REGION( 0x4000000, REGION_GFX3, 0 )
+	/* Encrypted */
+	ROM_LOAD16_BYTE( "265-c1.bin", 0x0000000, 0x800000, CRC(2b65a656) SHA1(9c46d8cf5b1ef322db442ac6a9b9406ab49206c5) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "265-c2.bin", 0x0000001, 0x800000, CRC(adf18983) SHA1(150cd4a5e51e9df88688469d2ea7675c2cf3658a) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "265-c3.bin", 0x1000000, 0x800000, CRC(875e9fd7) SHA1(28f52d56192d48bbc5dc3c97abf456bd34a58cbd) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "265-c4.bin", 0x1000001, 0x800000, CRC(2da13947) SHA1(f8d79ec2c236aa3d3648a4f715676899602122c1) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "265-c5.bin", 0x2000000, 0x800000, CRC(61bd165d) SHA1(b3424db84bc683d858fb635bc42728f9cdd89caf) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "265-c6.bin", 0x2000001, 0x800000, CRC(03fdd1eb) SHA1(6155c7e802062f4eafa27e414c4e73ee59b868bf) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "265-c7.bin", 0x3000000, 0x800000, CRC(1a2749d8) SHA1(af7d9ec1d576209826fa568f676bbff92f6d6ddd) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "265-c8.bin", 0x3000001, 0x800000, CRC(ab0bb549) SHA1(d23afb60b7f831f7d4a98ad3c4a00ee19877a1ce) ) /* Plane 2,3 */
+ROM_END
+
+ROM_START( kf2k4pls )
+	ROM_REGION( 0x500000, REGION_CPU1, 0 )
+	ROM_LOAD16_WORD_SWAP( "k2k4s-p1p.bin", 0x060000, 0x020000, CRC(ed97c684) )
+	ROM_CONTINUE(                       0x0c0000, 0x040000 )
+	ROM_CONTINUE(                       0x000000, 0x040000 )
+	ROM_CONTINUE(                       0x0a0000, 0x020000 )
+	ROM_CONTINUE(                       0x100000, 0x040000 )
+	ROM_CONTINUE(                       0x0c0000, 0x020000 )
+	ROM_CONTINUE(                       0x040000, 0x020000 )
+	ROM_CONTINUE(                       0x040000, 0x020000 )
+	ROM_CONTINUE(                       0x080000, 0x020000 )
+	ROM_CONTINUE(                       0x080000, 0x020000 )
+	ROM_CONTINUE(                       0x000000, 0x020000 )
+	ROM_CONTINUE(                       0x100000, 0x040000 )
+	ROM_LOAD16_WORD_SWAP( "k2k4s-p2.bin", 0x400000, 0x100000, CRC(e6c50566) SHA1(cc6a3489a3bfeb4dcc65b6ddae0030f7e66fbabe) )
+	ROM_CONTINUE(                       0x300000, 0x100000 )
+	ROM_CONTINUE(                       0x200000, 0x100000 )
+	ROM_CONTINUE(                       0x100000, 0x100000 )
+
+	NEO_SFIX_128K( "k2k4s-s1p.bin", CRC(cc0ab564) )
+
+	NEO_BIOS_SOUND_128K( "k2k4s-m1.bin", CRC(5a47d9ad) SHA1(0197737934653acc6c97221660d789e9914f3578) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 )
+	ROM_LOAD( "k2k4s-v2.bin", 0x000000, 0x800000, CRC(e4ddfb3f) SHA1(eb8220ab01c16cf9244b7f3f9912bec0db561b85) )
+	ROM_LOAD( "k2k4s-v1.bin", 0x800000, 0x800000, CRC(b887d287) SHA1(f593a5722df6f6fac023d189a739a117e976bb2f) )
+
+	NO_DELTAT_REGION
+
+	ROM_REGION( 0x4000000, REGION_GFX3, 0 )
+	ROM_LOAD16_BYTE( "k2k4s-c4.bin", 0x0000000, 0x800000, CRC(7a050288) SHA1(55a20c5b01e11a859f096af3f8e09986025d288f) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "k2k4s-c8.bin", 0x0000001, 0x800000, CRC(e924afcf) SHA1(651e974f7339d2cdcfa58c5398013197a0525b77) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "k2k4s-c3.bin", 0x1000000, 0x800000, CRC(959fad0b) SHA1(63ab83ddc5f688dc8165a7ff8d262df3fcd942a2) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "k2k4s-c7.bin", 0x1000001, 0x800000, CRC(efe6a468) SHA1(2a414285e48aa948b5b0d4a9333bab083b5fb853) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "k2k4s-c2.bin", 0x2000000, 0x800000, CRC(74bba7c6) SHA1(e01adc7a4633bc0951b9b4f09abc07d728e9a2d9) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "k2k4s-c6.bin", 0x2000001, 0x800000, CRC(e20d2216) SHA1(5d28eea7b581e780b78f391a8179f1678ee0d9a5) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "k2k4s-c1.bin", 0x3000000, 0x800000, CRC(fa705b2b) SHA1(f314c66876589601806352484dd8e45bc41be692) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "k2k4s-c5.bin", 0x3000001, 0x800000, CRC(2c912ff9) SHA1(b624a625ea3e221808b7ea43fb0b1a51d8c1853e) ) /* Plane 2,3 */
+ROM_END
+
 /******************************************************************************/
 
 /* dummy entry for the dummy bios driver */
@@ -8860,6 +8954,21 @@ DRIVER_INIT( matrimbl )
 	init_neogeo();
 }
 
+DRIVER_INIT( kf2k2plc )
+{
+	kof2002_decrypt_68k();
+	neogeo_fix_bank_type = 0;
+	neogeo_bootleg_sx_decrypt(2);
+	cmc50_neogeo_gfx_decrypt(0xec);
+	neo_pcm2_swap(0);
+	init_neogeo();
+}
+
+DRIVER_INIT( kf2k4pls )
+{
+	neogeo_bootleg_sx_decrypt(1);
+	init_neogeo();
+}
 
 
 /******************************************************************************/
@@ -9026,7 +9135,7 @@ GAMEB( 1999, garoud,   garou,    neogeo, neogeo, neogeo,  garoud,   ROT0, "SNK",
 GAMEB( 2000, mslug3,   neogeo,   neogeo, neogeo, neogeo,  mslug3,   ROT0, "SNK", "Metal Slug 3" , 0) /* Encrypted Code & GFX */
 GAMEB( 2000, mslug3n,  mslug3,   neogeo, neogeo, neogeo,  mslug3n,  ROT0, "SNK", "Metal Slug 3 (not encrypted)" , 0) /* Encrypted GFX */
 GAMEB( 2000, mslug3d,  mslug3,   neogeo, neogeo, neogeo,  mslug3d,  ROT0, "SNK", "Metal Slug 3 (decrypted C)", 0 )
-GAMEB( 2000, mslug3b6, mslug3,   neogeo, neogeo, neogeo,  mslug3b6, ROT0, "bootleg", "Metal Slug 6 (Metal Slug 3 bootleg)", 0 ) /* real Metal Slug 6 is an Atomiswave HW game, see atomswav.c ;-) */
+GAMEB( 2005, mslug3b6, mslug3,   neogeo, neogeo, neogeo,  mslug3b6, ROT0, "bootleg", "Metal Slug 6 (Metal Slug 3 bootleg)", 0 ) /* real Metal Slug 6 is an Atomiswave HW game, see atomswav.c ;-) */
 GAMEB( 2000, kof2000,  neogeo,   neogeo, neogeo, neogeo,  kof2000,  ROT0, "SNK", "The King of Fighters 2000" , 0) /* Encrypted Code & GFX */
 GAMEB( 2000, kof2000n, kof2000,  neogeo, neogeo, neogeo,  kof2000n, ROT0, "SNK", "The King of Fighters 2000 (not encrypted)" , 0) /* Encrypted GFX */
 GAMEB( 2000, kof2000d, kof2000,  neogeo, neogeo, neogeo,  kof2000d, ROT0, "SNK", "The King of Fighters 2000 (decrypted C)", 0 )
@@ -9038,6 +9147,7 @@ GAMEB( 2001, kof2001,  neogeo,   neogeo, neogeo, neogeo,  kof2001,  ROT0, "Eolit
 GAMEB( 2001, kof2001h, kof2001,  neogeo, neogeo, neogeo,  kof2001,  ROT0, "Eolith / SNK", "The King of Fighters 2001 (set 2)" , 0) /* Encrypted GFX */
 GAMEB( 2001, kof2001d, kof2001,  neogeo, neogeo, neogeo,  gfxdec52, ROT0, "Eolith / SNK", "The King of Fighters 2001 (decrypted C)", 0 )
 GAMEB( 2003, cthd2003, kof2001,  neogeo, neogeo, neogeo,  cthd2003, ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg)", 0 ) /* Protected Hack / Bootleg of kof2001 */
+GAMEB( 2003, cthd2k3a, kof2001,  neogeo, neogeo, neogeo,  neogeo,   ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg, set 2)", 0 ) /* Protected Hack / Bootleg of kof2001 */
 GAMEB( 2003, ct2k3sp,  kof2001,  neogeo, neogeo, neogeo,  ct2k3sp,  ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 Super Plus (The King of Fighters 2001 bootleg)", 0 ) /* Protected Hack / Bootleg of kof2001 */
 GAMEB( 2002, kf2k1pls, kof2001,  neogeo, neogeo, neogeo,  kf2k1pls, ROT0, "bootleg", "The King of Fighters 2001 Plus (set 1, bootleg)", 0 )
 GAMEB( 2002, kf2k1pa,  kof2001,  neogeo, neogeo, neogeo,  kf2k1pa,  ROT0, "bootleg", "The King of Fighters 2001 Plus (set 2, bootleg)", 0 )
@@ -9047,17 +9157,19 @@ GAMEB( 2002, kof2002b, kof2002,  neogeo, neogeo, neogeo,  kof2002b, ROT0, "bootl
 GAMEB( 2002, kf2k2pls, kof2002,  neogeo, neogeo, neogeo,  kf2k2pls, ROT0, "bootleg", "The King of Fighters 2002 Plus (set 1, bootleg)" , 0) /* Encrypted GFX */
 GAMEB( 2002, kf2k2pla, kof2002,  neogeo, neogeo, neogeo,  kf2k2pls, ROT0, "bootleg", "The King of Fighters 2002 Plus (set 2, bootleg)" , 0) /* Encrypted GFX */
 GAMEB( 2002, kf2k2plb, kof2002,  neogeo, neogeo, neogeo,  kf2k2pls, ROT0, "bootleg", "The King of Fighters 2002 Plus (set 3, bootleg)" , 0) /* Encrypted GFX */
+GAMEB( 2002, kf2k2plc, kof2002,  neogeo, neogeo, neogeo,  kf2k2plc, ROT0, "bootleg", "The King of Fighters 2002 Super (set 4, bootleg)", 0 ) /* Encrypted GFX */
 GAMEB( 2002, kf2k2mp,  kof2002,  neogeo, neogeo, neogeo,  kf2k2mp,  ROT0, "bootleg", "The King of Fighters 2002 Magic Plus (bootleg)" , 0) /* Encrypted GFX */
 GAMEB( 2002, kf2k2mp2, kof2002,  neogeo, neogeo, neogeo,  kof2km2,  ROT0, "bootleg", "The King of Fighters 2002 Magic Plus II (bootleg)" , 0) /* Encrypted GFX */
 GAMEB( 2002, kof10th,  kof2002,  neogeo, neogeo, neogeo,  kof10th,  ROT0, "bootleg", "The King Of Fighters 10th Anniversary (The King of Fighters 2002 bootleg)", 0 ) // fake SNK copyright
 GAMEB( 2004, kf2k5uni, kof2002,  neogeo, neogeo, neogeo,  kf2k5uni, ROT0, "bootleg", "The King of Fighters 10th Anniversary 2005 Unique (The King of Fighters 2002 bootleg)", 0 ) // fake SNK copyright
 GAMEB( 2005, kf10thep, kof2002,  neogeo, neogeo, neogeo,  kf10thep, ROT0, "bootleg", "The King of Fighters 10th Anniversary Extra Plus (The King of Fighters 2002 bootleg)", 0 ) // fake SNK copyright
 GAMEB( 2004, kof2k4se, kof2002,  neogeo, neogeo, neogeo,  kof2k4se, ROT0, "bootleg", "The King of Fighters Special Edition 2004 (The King of Fighters 2002 bootleg)", 0 ) /* Hack / Bootleg of kof2002 */
+GAMEB( 2004, kf2k4pls, kof2002,  neogeo, neogeo, neogeo,  kf2k4pls, ROT0, "bootleg", "The King of Fighters Special Edition 2004 Plus (The King of Fighters 2002 bootleg)", 0 ) /* Hack / Bootleg of kof2002 */
 GAMEB( 2003, mslug5,   neogeo,   neogeo, neogeo, neogeo,  mslug5,   ROT0, "SNK Playmore", "Metal Slug 5", 0 )
-GAME ( 2003, ms5pcb,   0,                neogeo, neogeo,  ms5pcb,   ROT0, "SNK Playmore", "Metal Slug 5 (JAMMA PCB)", 0 )
+GAME ( 2003, ms5pcb,   0,                neogeo, svcpcb,  ms5pcb,   ROT0, "SNK Playmore", "Metal Slug 5 (JAMMA PCB)", 0 ) // not a clone of neogeo because it's NOT a neogeo cart.
 GAMEB( 2003, ms5plus,  mslug5,   neogeo, neogeo, neogeo,  ms5plus,  ROT0, "bootleg", "Metal Slug 5 Plus (bootleg)",0 )
 GAME ( 2003, svcpcb,   0,                neogeo, svcpcb,  svcpcb,   ROT0, "Playmore", "SvC Chaos - SNK vs Capcom (JAMMA PCB)", 0 ) // not a clone of neogeo because it's NOT a neogeo cart.
-GAME ( 2003, svcpcba,  svcpcb,           neogeo, svcpcb,  svcpcb,   ROT0, "Playmore", "SVC Chaos - SNK vs CAPCOM (JAMMA PCB, set 2)" , 0 ) /* Encrypted Code */
+GAME ( 2003, svcpcba,  svcpcb,           neogeo, svcpcb,  svcpcb,   ROT0, "Playmore", "SVC Chaos - SNK vs CAPCOM (JAMMA PCB, set 2)" , 0 ) // not a clone of neogeo because it's NOT a neogeo cart.
 GAMEB( 2003, svc,      neogeo,   neogeo, neogeo, neogeo,  svchaosa, ROT0, "Playmore", "SvC Chaos - SNK vs Capcom (MVS)", 0 )
 GAMEB( 2003, svcboot,  svc,      neogeo, neogeo, neogeo,  svcboot,  ROT0, "bootleg", "SvC Chaos - SNK vs Capcom (MVS) (bootleg)",0 )
 GAMEB( 2003, svcplus,  svc,      neogeo, neogeo, neogeo,  svcplus,  ROT0, "bootleg", "SvC Chaos - SNK vs Capcom Plus (set 1, bootleg)",0 )

@@ -5224,6 +5224,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( kf2k1pls )	/* 0262 (c) 2001 bootleg */
 	DRIVER( kf2k1pa )	/* 0262 (c) 2001 bootleg */
 	DRIVER( cthd2003 )	/* bootleg of kof2001*/
+	DRIVER( cthd2k3a )	/* bootleg of kof2001*/
 	DRIVER( ct2k3sp )	/* bootleg of kof2001 */
 	DRIVER( mslug4 )	/* 0263 (c) 2002 Mega Enterprise */
 	DRIVER( mslug4d )	/* 0263 (c) 2002 Mega Enterprise */
@@ -5236,12 +5237,14 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( kf2k2pls )	/* bootleg */
 	DRIVER( kf2k2pla )	/* bootleg */
 	DRIVER( kf2k2plb )	/* bootleg */
+	DRIVER( kf2k2plc )	/* bootleg */
 	DRIVER( kf2k2mp )	/* bootleg */
 	DRIVER( kf2k2mp2 )	/* bootleg */
 	DRIVER( kof10th )	/* bootleg of kof2002 */
 	DRIVER( kf2k5uni )	/* bootleg of kof2002 */
 	DRIVER( kf10thep )	/* bootleg of kof2002 */
 	DRIVER( kof2k4se )	/* bootleg of kof2002 */
+	DRIVER( kf2k4pls )	/* bootleg of kof2002 */
 	DRIVER( matrim )	/* 0266 (c) 2002 Atlus */
 	DRIVER( matrimd )	/* 0266 (c) 2002 Atlus */
 	DRIVER( matrimbl )	/* 0266 (c) 2002 bootleg */

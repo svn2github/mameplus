@@ -8831,6 +8831,21 @@ static DRIVER_INIT( sf2m2 )
 	init_cps1();
 }
 
+static DRIVER_INIT( sf2m13 )
+{
+	UINT8 *mem8 = memory_region(REGION_CPU1);
+	// Fix scroll
+	mem8[0x1d22a] = 0x20;
+	mem8[0x1d22b] = 0x01;
+	// Fix bg layer
+	mem8[0x1d270] = 0x66;
+	mem8[0x1d271] = 0x01;
+	// Fix gfx
+	mem8[0x1d470] = 0x70;
+	mem8[0x1d471] = 0x01;
+	init_cps1();
+}
+
 static DRIVER_INIT( kodb )
 {
 	UINT8 *mem8 = memory_region(REGION_CPU1);
@@ -9161,17 +9176,17 @@ GAME( 1992, sf2accp2, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","St
 GAME( 1992, sf2m1,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (M1)", GAME_NOT_WORKING )
 GAME( 1992, sf2m2,    sf2ce,    sf2,      sf2,      sf2m2,    ROT0,   "hack","Street Fighter II' - Champion Edition (M2)", 0 )
 GAME( 1992, sf2m3,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (M3)", GAME_NOT_WORKING )
-GAME (1992, sf2m4,    sf2ce,    sf2,      sf2j,     cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (M4)", 0 )
-GAME (1992, sf2m5,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (M5)", 0 )
-GAME (1992, sf2m6,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (Subdue the Dragon set 2)", 0 )
-GAME (1992, sf2m7,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (M7)", 0 )
-GAME (1992, sf2m8,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack",  "Street Fighter II' - Champion Edition (M8)", GAME_NOT_WORKING )
-GAME (1992, sf2m13,   sf2ce,    sf2,      sf2j,     cps1,     ROT0,   "hack",  "Street Fighter II' - Champion Edition (M13)", GAME_NOT_WORKING )
-GAME( 1999, sf2ceh,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack",  "Street Fighter II' - Champion Edition (Hispanic 990804)", 0 )
-GAME( 1992, sf2tlona, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack",	"Street Fighter II' - Champion Edition (Slay the Dragon set 1)", 0 )
-GAME( 1992, sf2tlonb, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack",	"Street Fighter II' - Champion Edition (Slay the Dragon set 2)", 0 )
-GAME (1992, sf2yyc,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (YYC)", 0 )
-GAME (1992, sf2koryu, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (Subdue the Dragon set 1)", 0 )	// title should use Chinese Reading instead of Japanese
+GAME( 1992, sf2m4,    sf2ce,    sf2,      sf2j,     cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (M4)", 0 )
+GAME( 1992, sf2m5,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (M5)", 0 )
+GAME( 1992, sf2m6,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (Subdue the Dragon set 2)", 0 )
+GAME( 1992, sf2m7,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (M7)", 0 )
+GAME( 1992, sf2m8,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (M8)", GAME_NOT_WORKING )
+GAME( 1992, sf2m13,   sf2ce,    sf2,      sf2j,     sf2m13,   ROT0,   "hack","Street Fighter II' - Champion Edition (M13)", 0 )
+GAME( 1999, sf2ceh,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (Hispanic 990804)", 0 )
+GAME( 1992, sf2tlona, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (Slay the Dragon set 1)", 0 )
+GAME( 1992, sf2tlonb, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (Slay the Dragon set 2)", 0 )
+GAME( 1992, sf2yyc,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (YYC)", 0 )
+GAME( 1992, sf2koryu, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (Subdue the Dragon set 1)", 0 )	// title should use Chinese Reading instead of Japanese
 GAME( 1992, varth,    0,        cps1,     varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (World 920714)" , 0)		// "ETC"
 GAME( 1992, varthr1,  varth,    cps1,     varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (World 920612)" , 0)		// "ETC"
 GAME( 1992, varthu,   varth,    cps1,     varth,    cps1,     ROT270, "Capcom (Romstar license)", "Varth - Operation Thunderstorm (US 920612)", 0 )
