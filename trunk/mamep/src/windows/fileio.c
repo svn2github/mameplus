@@ -119,40 +119,40 @@ struct rc_option fileio_opts[] =
 	// name, shortname, type, dest, deflt, min, max, func, help
 	{ "Windows path and directory options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
 #ifndef MESS
-	{ "rompath", "rp", rc_string, &pathlist[FILETYPE_ROM].rawpath, "roms", 0, 0, NULL, "path to romsets" },
+	{ "rompath", "rp", rc_string, (char *)&pathlist[FILETYPE_ROM].rawpath, "roms", 0, 0, NULL, "path to romsets" },
 #else
-	{ "biospath", "bp", rc_string, &pathlist[FILETYPE_ROM].rawpath, "bios", 0, 0, NULL, "path to BIOS sets" },
-	{ "softwarepath", "swp", rc_string, &pathlist[FILETYPE_IMAGE].rawpath, "software", 0, 0, NULL, "path to software" },
-	{ "hash_directory", "hash", rc_string, &pathlist[FILETYPE_HASH].rawpath, "hash", 0, 0, NULL, "path to hash files" },
+	{ "biospath", "bp", rc_string, (char *)&pathlist[FILETYPE_ROM].rawpath, "bios", 0, 0, NULL, "path to BIOS sets" },
+	{ "softwarepath", "swp", rc_string, (char *)&pathlist[FILETYPE_IMAGE].rawpath, "software", 0, 0, NULL, "path to software" },
+	{ "hash_directory", "hash", rc_string, (char *)&pathlist[FILETYPE_HASH].rawpath, "hash", 0, 0, NULL, "path to hash files" },
 #endif
-	{ "samplepath", "sp", rc_string, &pathlist[FILETYPE_SAMPLE].rawpath, "samples", 0, 0, NULL, "path to samplesets" },
+	{ "samplepath", "sp", rc_string, (char *)&pathlist[FILETYPE_SAMPLE].rawpath, "samples", 0, 0, NULL, "path to samplesets" },
 #ifdef __WIN32__
-	{ "inipath", NULL, rc_string, &inipath, ".;ini", 0, 0, set_inipath, "path to ini files" },
+	{ "inipath", NULL, rc_string, (char *)&inipath, ".;ini", 0, 0, set_inipath, "path to ini files" },
 #else
-	{ "inipath", NULL, rc_string, &inipath, "$HOME/.mame;.;ini", 0, 0, set_inipath, "path to ini files" },
+	{ "inipath", NULL, rc_string, (char *)&inipath, "$HOME/.mame;.;ini", 0, 0, set_inipath, "path to ini files" },
 #endif
-	{ "cfg_directory", NULL, rc_string, &pathlist[FILETYPE_CONFIG].rawpath, "cfg", 0, 0, NULL, "directory to save configurations" },
-	{ "nvram_directory", NULL, rc_string, &pathlist[FILETYPE_NVRAM].rawpath, "nvram", 0, 0, NULL, "directory to save nvram contents" },
-	{ "memcard_directory", NULL, rc_string, &pathlist[FILETYPE_MEMCARD].rawpath, "memcard", 0, 0, NULL, "directory to save memory card contents" },
-	{ "input_directory", NULL, rc_string, &pathlist[FILETYPE_INPUTLOG].rawpath, "inp", 0, 0, NULL, "directory to save input device logs" },
-	{ "hiscore_directory", NULL, rc_string, &pathlist[FILETYPE_HIGHSCORE].rawpath, "hi", 0, 0, NULL, "directory to save hiscores" },
-	{ "state_directory", NULL, rc_string, &pathlist[FILETYPE_STATE].rawpath, "sta", 0, 0, NULL, "directory to save states" },
-	{ "artwork_directory", NULL, rc_string, &pathlist[FILETYPE_ARTWORK].rawpath, "artwork", 0, 0, NULL, "directory for Artwork (Overlays etc.)" },
-	{ "snapshot_directory", NULL, rc_string, &pathlist[FILETYPE_SCREENSHOT].rawpath, "snap", 0, 0, NULL, "directory for screenshots (.png format)" },
-	{ "diff_directory", NULL, rc_string, &pathlist[FILETYPE_IMAGE_DIFF].rawpath, "diff", 0, 0, NULL, "directory for hard drive image difference files" },
-	{ "ctrlr_directory", NULL, rc_string, &pathlist[FILETYPE_CTRLR].rawpath, "ctrlr", 0, 0, NULL, "directory to save controller definitions" },
-	{ "comment_directory", NULL, rc_string, &pathlist[FILETYPE_COMMENT].rawpath, "comments", 0, 0, NULL, "directory to save comment files" },
+	{ "cfg_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_CONFIG].rawpath, "cfg", 0, 0, NULL, "directory to save configurations" },
+	{ "nvram_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_NVRAM].rawpath, "nvram", 0, 0, NULL, "directory to save nvram contents" },
+	{ "memcard_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_MEMCARD].rawpath, "memcard", 0, 0, NULL, "directory to save memory card contents" },
+	{ "input_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_INPUTLOG].rawpath, "inp", 0, 0, NULL, "directory to save input device logs" },
+	{ "hiscore_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_HIGHSCORE].rawpath, "hi", 0, 0, NULL, "directory to save hiscores" },
+	{ "state_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_STATE].rawpath, "sta", 0, 0, NULL, "directory to save states" },
+	{ "artwork_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_ARTWORK].rawpath, "artwork", 0, 0, NULL, "directory for Artwork (Overlays etc.)" },
+	{ "snapshot_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_SCREENSHOT].rawpath, "snap", 0, 0, NULL, "directory for screenshots (.png format)" },
+	{ "diff_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_IMAGE_DIFF].rawpath, "diff", 0, 0, NULL, "directory for hard drive image difference files" },
+	{ "ctrlr_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_CTRLR].rawpath, "ctrlr", 0, 0, NULL, "directory to save controller definitions" },
+	{ "comment_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_COMMENT].rawpath, "comments", 0, 0, NULL, "directory to save comment files" },
 #ifdef USE_IPS
-	{ "ips_directory", NULL, rc_string, &pathlist[FILETYPE_PATCH].rawpath, "ips", 0, 0, NULL, "directory for ips files" },
+	{ "ips_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_PATCH].rawpath, "ips", 0, 0, NULL, "directory for ips files" },
 #endif /* USE_IPS */
-	{ "lang_directory", NULL, rc_string, &lang_directory, "lang", 0, 0, NULL, "directory for localized language files" },
+	{ "lang_directory", NULL, rc_string, (char *)&lang_directory, "lang", 0, 0, NULL, "directory for localized language files" },
 	{ "cheat_file", NULL, rc_string, &cheatfile, "cheat.dat", 0, 0, NULL, "cheat filename" },
-	{ "history_file", NULL, rc_string, &history_filename, "history.dat", 0, 0, NULL, NULL },
+	{ "history_file", NULL, rc_string, (char *)&history_filename, "history.dat", 0, 0, NULL, NULL },
 #ifdef STORY_DATAFILE
-	{ "story_file", NULL, rc_string, &story_filename, "story.dat", 0, 0, NULL, NULL },
+	{ "story_file", NULL, rc_string, (char *)&story_filename, "story.dat", 0, 0, NULL, NULL },
 #endif /* STORY_DATAFILE */
-	{ "mameinfo_file", NULL, rc_string, &mameinfo_filename, "mameinfo.dat", 0, 0, NULL, NULL },
-	{ "hiscore_file", NULL, rc_string, &db_filename, "hiscore.dat", 0, 0, NULL, NULL },
+	{ "mameinfo_file", NULL, rc_string, (char *)&mameinfo_filename, "mameinfo.dat", 0, 0, NULL, NULL },
+	{ "hiscore_file", NULL, rc_string, (char *)&db_filename, "hiscore.dat", 0, 0, NULL, NULL },
 	{ NULL,	NULL, rc_end, NULL, NULL, 0, 0,	NULL, NULL }
 };
 
