@@ -31,6 +31,15 @@ void * realloc_file_line(void *memory, size_t size, const char *file, int line);
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf
 
+#ifdef NO_FORCEINLINE
+#ifdef INLINE
+#undef INLINE
+#endif
+
+//#define INLINE static __forceinline
+#define INLINE static __inline
+#endif /* NO_FORCEINLINE */
+
 /* Turn off type mismatch warnings */
 #pragma warning(disable:592)		// "variable is used before its value is set"
 #pragma warning(disable:4018)		// "signed/unsigned mismatch"
