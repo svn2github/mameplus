@@ -8167,12 +8167,12 @@ ROM_END
 
 ROM_START( cthd2k3a ) /* Protected hack/bootleg of kof2001 Phenixsoft */
 	ROM_REGION( 0x500000, REGION_CPU1, 0 )
-	ROM_LOAD16_WORD_SWAP( "5003-p1a.bin", 0x000000, 0x100000, CRC(83783954) )
-	ROM_LOAD16_WORD_SWAP( "5003-p2a.bin", 0x100000, 0x400000, CRC(84b0b164) )
+	ROM_LOAD16_WORD_SWAP( "5003-p1a.bin", 0x000000, 0x100000, CRC(1185fe39) )
+	ROM_LOAD16_WORD_SWAP( "5003-p2a.bin", 0x100000, 0x400000, CRC(ea71faf7) )
 
-	NEO_SFIX_128K( "5003-s1a.bin", CRC(956d8273) )
+	NEO_SFIX_128K( "5003-s1a.bin", CRC(174ccffd) )
 
-	NEO_BIOS_SOUND_128K( "5003-m1a.bin", CRC(3ee21b7e) )
+	NEO_BIOS_SOUND_128K( "5003-m1a.bin", CRC(a37cc447) )
 
 	/* sound roms are identical to kof2001 */
 	ROM_REGION( 0x1000000, REGION_SOUND1, 0 )
@@ -8184,14 +8184,14 @@ ROM_START( cthd2k3a ) /* Protected hack/bootleg of kof2001 Phenixsoft */
 	NO_DELTAT_REGION
 
 	ROM_REGION( 0x4000000, REGION_GFX3, 0 )
-	ROM_LOAD16_BYTE( "5003-c1a.bin", 0x0000000, 0x800000, CRC(eddd5e2f) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "5003-c2a.bin", 0x0000001, 0x800000, CRC(23d8d1d6) ) /* Plane 2,3 */
-	ROM_LOAD16_BYTE( "5003-c3d.bin", 0x1000000, 0x800000, CRC(71b3172d) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "5003-c4d.bin", 0x1000001, 0x800000, CRC(564c70c1) ) /* Plane 2,3 */
-	ROM_LOAD16_BYTE( "5003-c5d.bin", 0x2000000, 0x800000, CRC(8ef8aef9) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "5003-c6d.bin", 0x2000001, 0x800000, CRC(8a0fd440) ) /* Plane 2,3 */
-	ROM_LOAD16_BYTE( "5003-c7a.bin", 0x3000000, 0x800000, CRC(4f50e1ae) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "5003-c8a.bin", 0x3000001, 0x800000, CRC(4f5f09bf) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "5003-c1a.bin", 0x0000000, 0x800000, CRC(dc90c563) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "5003-c2a.bin", 0x0000001, 0x800000, CRC(7b08d331) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "5003-c3.bin", 0x1000000, 0x800000, CRC(ac4aff71) SHA1(c983f642e68deaa40fee3e208f2dd55f3bacbdc1) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "5003-c4.bin", 0x1000001, 0x800000, CRC(afef5d66) SHA1(39fe785563fbea54bba88de60dcc62e2458bd74a) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "5003-c5.bin", 0x2000000, 0x800000, CRC(c7c1ae50) SHA1(f54f5be7513a5ce2f01ab107a2b26f6a9ee1f2a9) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "5003-c6.bin", 0x2000001, 0x800000, CRC(613197f9) SHA1(6d1fefa1be81b79e251e55a1352544c0298e4674) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "5003-c7a.bin", 0x3000000, 0x800000, CRC(ad2d72b3) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "5003-c8a.bin", 0x3000001, 0x800000, CRC(8c3fc1b5) ) /* Plane 2,3 */
 ROM_END
 
 ROM_START( kf2k2plc ) /* bootleg */
@@ -8919,6 +8919,13 @@ DRIVER_INIT( cthd2003 )
 	patch_cthd2003();
 }
 
+DRIVER_INIT( cthd2k3a )
+{
+	cthd2k3a_px_decrypt();
+	decrypt_cthd2003();
+ 	init_neogeo();
+}
+
 DRIVER_INIT ( ct2k3sp )
 {
 	decrypt_ct2k3sp();
@@ -9147,7 +9154,7 @@ GAMEB( 2001, kof2001,  neogeo,   neogeo, neogeo, neogeo,  kof2001,  ROT0, "Eolit
 GAMEB( 2001, kof2001h, kof2001,  neogeo, neogeo, neogeo,  kof2001,  ROT0, "Eolith / SNK", "The King of Fighters 2001 (set 2)" , 0) /* Encrypted GFX */
 GAMEB( 2001, kof2001d, kof2001,  neogeo, neogeo, neogeo,  gfxdec52, ROT0, "Eolith / SNK", "The King of Fighters 2001 (decrypted C)", 0 )
 GAMEB( 2003, cthd2003, kof2001,  neogeo, neogeo, neogeo,  cthd2003, ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg)", 0 ) /* Protected Hack / Bootleg of kof2001 */
-GAMEB( 2003, cthd2k3a, kof2001,  neogeo, neogeo, neogeo,  neogeo,   ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg, set 2)", 0 ) /* Protected Hack / Bootleg of kof2001 */
+GAMEB( 2003, cthd2k3a, kof2001,  neogeo, neogeo, neogeo,  cthd2k3a, ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg, set 2)", 0 ) /* Protected Hack / Bootleg of kof2001 */
 GAMEB( 2003, ct2k3sp,  kof2001,  neogeo, neogeo, neogeo,  ct2k3sp,  ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 Super Plus (The King of Fighters 2001 bootleg)", 0 ) /* Protected Hack / Bootleg of kof2001 */
 GAMEB( 2002, kf2k1pls, kof2001,  neogeo, neogeo, neogeo,  kf2k1pls, ROT0, "bootleg", "The King of Fighters 2001 Plus (set 1, bootleg)", 0 )
 GAMEB( 2002, kf2k1pa,  kof2001,  neogeo, neogeo, neogeo,  kf2k1pa,  ROT0, "bootleg", "The King of Fighters 2001 Plus (set 2, bootleg)", 0 )

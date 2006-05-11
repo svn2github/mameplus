@@ -2326,8 +2326,8 @@ V-V                           TP-027
 	DRIVER( sf2m5 )		/* hack */
 	DRIVER( sf2m6 )		/* hack */
 	DRIVER( sf2m7 )		/* hack */
-//	DRIVER( sf2m8 )		/* hack */
-//	DRIVER( sf2m13 )	/* hack */
+	DRIVER( sf2m8 )		/* hack */
+	DRIVER( sf2m13 )	/* hack */
 	DRIVER( sf2ceh )	/* hack, Hispanic 990804 */
 	DRIVER( sf2tlona )	/* hack, Tu Long set 1 */
 	DRIVER( sf2tlonb )	/* hack, Tu Long set 2 */
@@ -2357,6 +2357,8 @@ V-V                           TP-027
 	DRIVER( dinou )		/* 01/02/1993 (c) 1993 (US)    (CPS1 + QSound) */
 	DRIVER( dinoj )		/* 01/02/1993 (c) 1993 (Japan) (CPS1 + QSound) */
 	DRIVER( dinoh )		/* hack */
+	DRIVER( dinoha )	/* hack */
+	DRIVER( dinohb )	/* hack */
 	DRIVER( punisher )	/* 22/04/1993 (c) 1993 (World) (CPS1 + QSound) */
 	DRIVER( punishru )	/* 22/04/1993 (c) 1993 (US)    (CPS1 + QSound) */
 	DRIVER( punishrj )	/* 22/04/1993 (c) 1993 (Japan) (CPS1 + QSound) */

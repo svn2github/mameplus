@@ -7792,6 +7792,64 @@ ROM_START( dinoh )
 	ROM_LOAD( "cd_q4.rom",      0x180000, 0x80000, CRC(2c67821d) SHA1(6e2528d0b22508300a6a142a796dd3bf53a66946) )
 ROM_END
 
+ROM_START( dinoha )
+	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "kl2-l2.800",  0x000000, 0x100000, CRC(c6ae7338) )
+	ROM_LOAD16_WORD_SWAP( "kl2-r1.800",  0x100000, 0x100000, CRC(4c70dca7) )
+
+	ROM_REGION( 0x400000, REGION_GFX1, 0 )
+	ROMX_LOAD( "cd-a.160",   0x000000, 0x80000, CRC(7e4f9fb3), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(              0x000004, 0x80000 )
+	ROM_CONTINUE(              0x200000, 0x80000 )
+	ROM_CONTINUE(              0x200004, 0x80000 )
+	ROMX_LOAD( "cd-b.160",   0x000002, 0x80000, CRC(89532d85), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(              0x000006, 0x80000 )
+	ROM_CONTINUE(              0x200002, 0x80000 )
+	ROM_CONTINUE(              0x200006, 0x80000 )
+
+	ROM_REGION( 0x8000, REGION_GFX2, 0 )
+	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
+
+	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
+	ROM_LOAD( "cd_q.rom",       0x00000, 0x08000, CRC(605fdb0b) SHA1(9da90ddc6513aaaf2260f0c69719c6b0e585ba8c) )
+	ROM_CONTINUE(               0x10000, 0x18000 )
+
+	ROM_REGION( 0x200000, REGION_SOUND1, 0 ) /* QSound samples */
+	ROM_LOAD( "cd_q1.rom",      0x000000, 0x80000, CRC(60927775) SHA1(f8599bc84c38573ebbe8685822c58b6a38b50462) )
+	ROM_LOAD( "cd_q2.rom",      0x080000, 0x80000, CRC(770f4c47) SHA1(fec8ef00a6669d4d5e37787ecc7b58ee46709326) )
+	ROM_LOAD( "cd_q3.rom",      0x100000, 0x80000, CRC(2f273ffc) SHA1(f0de462f6c4d251911258e0ebd886152c14d1586) )
+	ROM_LOAD( "cd_q4.rom",      0x180000, 0x80000, CRC(2c67821d) SHA1(6e2528d0b22508300a6a142a796dd3bf53a66946) )
+ROM_END
+
+ROM_START( dinohb )
+	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "cd-d.800",  0x000000, 0x100000, CRC(2a7b2915) )
+	ROM_LOAD16_WORD_SWAP( "cd-e.800",  0x100000, 0x100000, CRC(e8370226) )
+
+	ROM_REGION( 0x400000, REGION_GFX1, 0 )
+	ROMX_LOAD( "cd-a.160",   0x000000, 0x80000, CRC(7e4f9fb3), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(              0x000004, 0x80000 )
+	ROM_CONTINUE(              0x200000, 0x80000 )
+	ROM_CONTINUE(              0x200004, 0x80000 )
+	ROMX_LOAD( "cd-b.160",   0x000002, 0x80000, CRC(89532d85), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(              0x000006, 0x80000 )
+	ROM_CONTINUE(              0x200002, 0x80000 )
+	ROM_CONTINUE(              0x200006, 0x80000 )
+
+	ROM_REGION( 0x8000, REGION_GFX2, 0 )
+	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
+
+	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
+	ROM_LOAD( "cd_q.rom",       0x00000, 0x08000, CRC(605fdb0b) SHA1(9da90ddc6513aaaf2260f0c69719c6b0e585ba8c) )
+	ROM_CONTINUE(               0x10000, 0x18000 )
+
+	ROM_REGION( 0x200000, REGION_SOUND1, 0 ) /* QSound samples */
+	ROM_LOAD( "cd_q1.rom",      0x000000, 0x80000, CRC(60927775) SHA1(f8599bc84c38573ebbe8685822c58b6a38b50462) )
+	ROM_LOAD( "cd_q2.rom",      0x080000, 0x80000, CRC(770f4c47) SHA1(fec8ef00a6669d4d5e37787ecc7b58ee46709326) )
+	ROM_LOAD( "cd_q3.rom",      0x100000, 0x80000, CRC(2f273ffc) SHA1(f0de462f6c4d251911258e0ebd886152c14d1586) )
+	ROM_LOAD( "cd_q4.rom",      0x180000, 0x80000, CRC(2c67821d) SHA1(6e2528d0b22508300a6a142a796dd3bf53a66946) )
+ROM_END
+
 ROM_START( punisher )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_BYTE( "pse_26.rom",       0x000000, 0x20000, CRC(389a99d2) SHA1(e97f4225554e4603cb0e3edd296a90bb2e467ca7) )
@@ -8484,6 +8542,58 @@ static DRIVER_INIT( dinoh )
 	init_cps1();
 }
 
+static DRIVER_INIT( dinohb )
+{
+	UINT8 *mem8 = memory_region(REGION_CPU1);
+	// Fix draw scroll
+	mem8[0x006c2] = 0xC0;
+	mem8[0x006c3] = 0xFF;
+	// Fix gfx
+	mem8[0x006cc] = 0x80;
+	mem8[0x006cd] = 0x00;
+	mem8[0x006ce] = 0x0C;
+	mem8[0x006cf] = 0x01;
+	mem8[0x006de] = 0x80;
+	mem8[0x006df] = 0x00;
+	mem8[0x006e0] = 0x10;
+	mem8[0x006e1] = 0x01;
+	mem8[0x006f0] = 0x80;
+	mem8[0x006f1] = 0x00;
+	mem8[0x006f2] = 0x14;
+	mem8[0x006f3] = 0x01;
+	mem8[0x00704] = 0x80;
+	mem8[0x00705] = 0x00;
+	mem8[0x00706] = 0x0E;
+	mem8[0x00707] = 0x01;
+	mem8[0x00718] = 0x80;
+	mem8[0x00719] = 0x00;
+	mem8[0x0071a] = 0x12;
+	mem8[0x0071b] = 0x01;
+	mem8[0x0072c] = 0x80;
+	mem8[0x0072d] = 0x00;
+	mem8[0x0072e] = 0x16;
+	mem8[0x0072f] = 0x01;
+	// Fix screen transitions
+	mem8[0x00b28] = 0x00;
+	mem8[0x00b29] = 0x70;
+	mem8[0x00b2a] = 0x00;
+	mem8[0x00b2b] = 0x72;
+	mem8[0x00b2c] = 0x3C;
+	mem8[0x00b2d] = 0x34;
+	mem8[0x00b32] = 0xC1;
+	mem8[0x00b33] = 0x20;
+	// Fix sound
+	mem8[0x00666] = 0xF1;
+	mem8[0x00667] = 0x00;
+	mem8[0x00668] = 0x02;
+	mem8[0x00669] = 0x80;
+	mem8[0xaaa6c] = 0xD8;
+	mem8[0xaaa6d] = 0x00;
+
+	dino_decode();
+	init_cps1();
+}
+
 static DRIVER_INIT( wofh )
 {
 	UINT8 *mem8 = memory_region(REGION_CPU1);
@@ -8836,13 +8946,6 @@ static DRIVER_INIT( sf2m13 )
 	UINT8 *mem8 = memory_region(REGION_CPU1);
 	// Fix scroll
 	mem8[0x1d22a] = 0x20;
-	mem8[0x1d22b] = 0x01;
-	// Fix bg layer
-	mem8[0x1d270] = 0x66;
-	mem8[0x1d271] = 0x01;
-	// Fix gfx
-	mem8[0x1d470] = 0x70;
-	mem8[0x1d471] = 0x01;
 	init_cps1();
 }
 
@@ -9216,7 +9319,9 @@ GAME( 1995, wofsjb,   wof,      qsound,   wof,      wofsjb,   ROT0,   "hack",  "
 GAME( 1993, dino,     0,        qsound,   dino,     dino,     ROT0,   "Capcom", "Cadillacs and Dinosaurs (World 930201)", 0 )			// "ETC"
 GAME( 1993, dinou,    dino,     qsound,   dino,     dino ,    ROT0,   "Capcom", "Cadillacs and Dinosaurs (US 930201)", 0 )
 GAME( 1993, dinoj,    dino,     qsound,   dino,     dino ,    ROT0,   "Capcom", "Cadillacs Kyouryuu-Shinseiki (Japan 930201)", 0 )
-GAME( 1993, dinoh,    dino,     qsound,   dinoh,    dinoh,    ROT0,   "hack",   "Cadillacs and Dinosaurs (hack)", 0 )
+GAME( 1993, dinoh,    dino,     qsound,   dinoh,    dinoh,    ROT0,   "hack",   "Cadillacs and Dinosaurs (hack set 1)", 0 )
+GAME( 1993, dinoha,   dino,     qsound,   dinoh,    dino,     ROT0,   "hack",   "Cadillacs and Dinosaurs (hack set 2)", GAME_NOT_WORKING )
+GAME( 1997, dinohb,   dino,     qsound,   dinoh,    dinohb,   ROT0,   "hack",   "Cadillacs and Dinosaurs (hack set 3)", 0 )
 GAME( 1993, punisher, 0,        qsound,   punisher, punisher, ROT0,   "Capcom", "The Punisher (World 930422)", 0 )					// "ETC"
 GAME( 1993, punishru, punisher, qsound,   punisher, punisher, ROT0,   "Capcom", "The Punisher (US 930422)", 0 )
 GAME( 1993, punishrj, punisher, qsound,   punisher, punisher, ROT0,   "Capcom", "The Punisher (Japan 930422)", 0 )

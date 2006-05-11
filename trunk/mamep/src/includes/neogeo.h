@@ -114,6 +114,7 @@ void lans2004_decrypt_68k(void);
 void lans2004_vx_decrypt(void);
 void kof96ep_px_decrypt(void);
 void kf2k1pa_sx_decrypt(void);
+void cthd2k3a_px_decrypt(void);
 void kf2k2mp_px_decrypt(void);
 void kof2002b_gfx_decrypt(UINT8 *src, int size);
 void install_ms5plus_protection(void);
