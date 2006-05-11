@@ -20,7 +20,6 @@
 #ifndef __MISC_H
 #define __MISC_H
 #include <stdio.h>
-#include <stdarg.h>
 
 /* clock stuff */
 typedef long uclock_t;
@@ -30,14 +29,5 @@ uclock_t uclock(void);
 /* print colum stuff */
 void print_colums(const char *text1, const char *text2);
 void fprint_colums(FILE *f, const char *text1, const char *text2);
-
-#ifdef _MSC_VER
-#define snprintf _snprintf
-#define vsnprintf _vsnprintf
-#else
-int snprintf(char *s, size_t maxlen, const char *fmt, ...);
-int vsnprintf(char *str, size_t count, const char *fmt, va_list arg);
-#endif
-
 
 #endif /* ifndef __MISC_H */

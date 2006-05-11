@@ -53,8 +53,8 @@ typedef unsigned __int64					UINT64;
 #else
 __extension__ typedef unsigned long long	UINT64;
 __extension__ typedef signed long long		INT64;
-#endif // _MSC_VER
-#endif // _WINDOWS_H
+#endif
+#endif
 
 /* Combine two 32-bit integers into a 64-bit integer */
 #define COMBINE_64_32_32(A,B)     ((((UINT64)(A))<<32) | (UINT32)(B))
@@ -140,20 +140,5 @@ INLINE INT32 _fixed_mul_shift(INT32 val1, INT32 val2, UINT8 shift)
 
 #endif
 
-
-/* Turn off type mismatch warnings */
-#ifndef __GNUC__
-#pragma warning(disable:592)		// "variable is used before its value is set"
-#pragma warning(disable:4018)		// "signed/unsigned mismatch"
-#pragma warning(disable:4022)		// "pointer mismatch for actual parameter"
-#pragma warning(disable:4090)		// "different 'const' qualifiers"
-#pragma warning(disable:4142)		// "benign redefinition of type"
-#pragma warning(disable:4146)		// "unary minus operator applied to unsigned type"
-#pragma warning(disable:4244)		// "possible loss of data"
-#pragma warning(disable:4305)		// "truncation from 'type' to 'type'
-#pragma warning(disable:4550)		// "expression evaluates .. missing an argument list"
-#pragma warning(disable:4552)		// "operator has no effect"
-#pragma warning(disable:4761)		// "integral size mismatch in argument"
-#endif
 
 #endif	/* defined OSD_CPU_H */

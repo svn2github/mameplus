@@ -41,12 +41,6 @@ Version 0.2, May 2000
 #include "misc.h"
 
 
-/* Turn off type mismatch warnings */
-#ifdef _MSC_VER
-#pragma warning(disable:4018)		// "signed/unsigned mismatch"
-#pragma warning(disable:4244)		// "possible loss of data"
-#endif
-
 #ifdef HAVE_GETTIMEOFDAY
 /* Standard UNIX clock() is based on CPU time, not real time.
    Here is a real-time drop in replacement for UNIX systems that have the
