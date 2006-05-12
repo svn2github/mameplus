@@ -17,7 +17,7 @@
 #include "mamecore.h"
 
 #define MAX_GFX_PLANES		8
-#define MAX_GFX_SIZE		32
+#define MAX_GFX_SIZE		64
 #define MAX_ABS_GFX_SIZE	1024
 
 #define EXTENDED_XOFFS		{ 0 }
