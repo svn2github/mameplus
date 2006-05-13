@@ -1,1 +1,1 @@
-Place external folder ini files here
+Place external folder list files here
