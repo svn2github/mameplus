@@ -7575,6 +7575,45 @@ ROM_START( wofsjb )
 	ROM_LOAD( "tk2_q4.rom",     0x180000, 0x80000, CRC(36642e88) SHA1(8ab25b19e2b67215a5cb1f3aa81b9d26009cfeb8) )
 ROM_END
 
+ROM_START( wofb )
+	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
+	ROM_LOAD16_BYTE( "3-f2ab.040",  0x000000, 0x80000, CRC(61fd0a01) )
+	ROM_LOAD16_BYTE( "1-9207.040",  0x000001, 0x80000, CRC(7f59e24c) )
+	ROM_LOAD16_BYTE( "4-d4d2.010",  0x100000, 0x20000, CRC(fe5eee87) )
+	ROM_LOAD16_BYTE( "2-6c41.010",  0x100001, 0x20000, CRC(739379be) )
+
+	ROM_REGION( 0x400000, REGION_GFX1, 0 )
+	ROMX_LOAD( "5-caf3.040",   0x000000, 0x40000, CRC(c8dcaa95), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x000004, 0x40000 )
+	ROMX_LOAD( "6-034f.040",   0x000001, 0x40000, CRC(1ab0000c), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x000005, 0x40000 )
+	ROMX_LOAD( "7-b0fa.040",   0x000002, 0x40000, CRC(8425ff6b), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x000006, 0x40000 )
+	ROMX_LOAD( "8-a6b7.040",   0x000003, 0x40000, CRC(24ce197b), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x000007, 0x40000 )
+	ROMX_LOAD( "9-8a2c.040",   0x200000, 0x40000, CRC(9d20ef9b), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x200004, 0x40000 )
+	ROMX_LOAD( "10-7d24.040",  0x200001, 0x40000, CRC(90c93dd2), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x200005, 0x40000 )
+	ROMX_LOAD( "11-4171.040",  0x200002, 0x40000, CRC(219fd7e2), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x200006, 0x40000 )
+	ROMX_LOAD( "12-f56b.040",  0x200003, 0x40000, CRC(efc17c9a), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x200007, 0x40000 )
+
+	ROM_REGION( 0x8000, REGION_GFX2, 0 )
+	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
+
+	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
+	ROM_LOAD( "tk2_qa.rom",     0x00000, 0x08000, CRC(c9183a0d) SHA1(d8b1d41c572f08581f8ab9eb878de77d6ea8615d) )
+	ROM_CONTINUE(               0x10000, 0x18000 )
+
+	ROM_REGION( 0x200000, REGION_SOUND1, 0 ) /* QSound samples */
+	ROM_LOAD( "tk2_q1.rom",     0x000000, 0x80000, CRC(611268cf) SHA1(83ab059f2110fb25fdcff928d56b790fc1f5c975) )
+	ROM_LOAD( "tk2_q2.rom",     0x080000, 0x80000, CRC(20f55ca9) SHA1(90134e9a9c4749bb65c728b66ea4dac1fd4d88a4) )
+	ROM_LOAD( "tk2_q3.rom",     0x100000, 0x80000, CRC(bfcf6f52) SHA1(2a85ff3fc89b4cbabd20779ec12da2e116333c7c) )
+	ROM_LOAD( "tk2_q4.rom",     0x180000, 0x80000, CRC(36642e88) SHA1(8ab25b19e2b67215a5cb1f3aa81b9d26009cfeb8) )
+ROM_END
+
 ROM_START( sf2hf )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "s92e_23a.bin",  0x000000, 0x80000, CRC(2DD72514) SHA1(4411353c389669299c27ac183c7e1caa3d4cec90) )
@@ -7840,6 +7879,46 @@ ROM_START( dinohb )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
 
 	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
+	ROM_LOAD( "cd_q.rom",       0x00000, 0x08000, CRC(605fdb0b) SHA1(9da90ddc6513aaaf2260f0c69719c6b0e585ba8c) )
+	ROM_CONTINUE(               0x10000, 0x18000 )
+
+	ROM_REGION( 0x200000, REGION_SOUND1, 0 ) /* QSound samples */
+	ROM_LOAD( "cd_q1.rom",      0x000000, 0x80000, CRC(60927775) SHA1(f8599bc84c38573ebbe8685822c58b6a38b50462) )
+	ROM_LOAD( "cd_q2.rom",      0x080000, 0x80000, CRC(770f4c47) SHA1(fec8ef00a6669d4d5e37787ecc7b58ee46709326) )
+	ROM_LOAD( "cd_q3.rom",      0x100000, 0x80000, CRC(2f273ffc) SHA1(f0de462f6c4d251911258e0ebd886152c14d1586) )
+	ROM_LOAD( "cd_q4.rom",      0x180000, 0x80000, CRC(2c67821d) SHA1(6e2528d0b22508300a6a142a796dd3bf53a66946) )
+ROM_END
+
+ROM_START( dinob )
+	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
+	ROM_LOAD16_BYTE( "3.bin",  0x000001, 0x80000, CRC(13dfeb08) )
+	ROM_LOAD16_BYTE( "5.bin",  0x000000, 0x80000, CRC(96dfcbf1) )
+	ROM_LOAD16_BYTE( "2.bin",  0x100001, 0x80000, CRC(0e4058ba) )
+	ROM_LOAD16_BYTE( "7.bin",  0x100000, 0x80000, CRC(6133f349) )
+
+	ROM_REGION( 0x400000, REGION_GFX1, 0 )
+	ROMX_LOAD( "4.bin",   0x000000, 0x40000, CRC(f3c2c98d), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x000004, 0x40000 )
+	ROMX_LOAD( "8.bin",   0x000001, 0x40000, CRC(d574befc), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x000005, 0x40000 )
+	ROMX_LOAD( "9.bin",   0x000002, 0x40000, CRC(55ef0adc), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x000006, 0x40000 )
+	ROMX_LOAD( "6.bin",   0x000003, 0x40000, CRC(cc0805fc), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x000007, 0x40000 )
+	ROMX_LOAD( "13.bin",  0x200000, 0x40000, CRC(1371f714), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x200004, 0x40000 )
+	ROMX_LOAD( "12.bin",  0x200001, 0x40000, CRC(b284c4a7), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x200005, 0x40000 )
+	ROMX_LOAD( "11.bin",  0x200002, 0x40000, CRC(b7ad3394), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x200006, 0x40000 )
+	ROMX_LOAD( "10.bin",  0x200003, 0x40000, CRC(88847705), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x200007, 0x40000 )
+
+	ROM_REGION( 0x8000, REGION_GFX2, 0 )
+	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
+
+	ROM_REGION( 0x80000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
+	ROM_LOAD( "1.bin",          0x00000, 0x80000, CRC(7d921309) )
 	ROM_LOAD( "cd_q.rom",       0x00000, 0x08000, CRC(605fdb0b) SHA1(9da90ddc6513aaaf2260f0c69719c6b0e585ba8c) )
 	ROM_CONTINUE(               0x10000, 0x18000 )
 
@@ -8946,6 +9025,13 @@ static DRIVER_INIT( sf2m13 )
 	UINT8 *mem8 = memory_region(REGION_CPU1);
 	// Fix scroll
 	mem8[0x1d22a] = 0x20;
+	mem8[0x1d22b] = 0x01;
+	// Fix bg layer
+	mem8[0x1d270] = 0x66;
+	mem8[0x1d271] = 0x01;
+	// Fix gfx
+	mem8[0x1d470] = 0x70;
+	mem8[0x1d471] = 0x01;
 	init_cps1();
 }
 
@@ -9316,12 +9402,14 @@ GAME( 1997, wof3sja,  wof,      qsound,   wofh,     wof3sj,   ROT0,   "hack",  "
 GAME( 1995, wofsj,    wof,      qsound,   wofsj,    wof3sj,   ROT0,   "hack",  "Holy Sword Three Kingdoms (set 1)", GAME_IMPERFECT_SOUND )
 GAME( 1995, wofsja,   wof,      qsound,   wofsj,    wof3sj,   ROT0,   "hack",  "Holy Sword Three Kingdoms (set 2)", GAME_IMPERFECT_SOUND )
 GAME( 1995, wofsjb,   wof,      qsound,   wof,      wofsjb,   ROT0,   "hack",  "Holy Sword Three Kingdoms (set 3)", GAME_UNEMULATED_PROTECTION )
+GAME( 1992, wofb,     wof,      qsound,   wof,      wof,      ROT0,   "bootleg","Warriors of Fate (bootleg)", GAME_NOT_WORKING )
 GAME( 1993, dino,     0,        qsound,   dino,     dino,     ROT0,   "Capcom", "Cadillacs and Dinosaurs (World 930201)", 0 )			// "ETC"
 GAME( 1993, dinou,    dino,     qsound,   dino,     dino ,    ROT0,   "Capcom", "Cadillacs and Dinosaurs (US 930201)", 0 )
 GAME( 1993, dinoj,    dino,     qsound,   dino,     dino ,    ROT0,   "Capcom", "Cadillacs Kyouryuu-Shinseiki (Japan 930201)", 0 )
 GAME( 1993, dinoh,    dino,     qsound,   dinoh,    dinoh,    ROT0,   "hack",   "Cadillacs and Dinosaurs (hack set 1)", 0 )
 GAME( 1993, dinoha,   dino,     qsound,   dinoh,    dino,     ROT0,   "hack",   "Cadillacs and Dinosaurs (hack set 2)", GAME_NOT_WORKING )
-GAME( 1997, dinohb,   dino,     qsound,   dinoh,    dinohb,   ROT0,   "hack",   "Cadillacs and Dinosaurs (hack set 3)", 0 )
+GAME( 1997, dinohb,   dino,     qsound,   dinoh,    dinohb,   ROT0,   "hack",   "Cadillacs and Dinosaurs (hack set 3)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, dinob,    dino,     qsound,   dino,     dinohb,   ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1993, punisher, 0,        qsound,   punisher, punisher, ROT0,   "Capcom", "The Punisher (World 930422)", 0 )					// "ETC"
 GAME( 1993, punishru, punisher, qsound,   punisher, punisher, ROT0,   "Capcom", "The Punisher (US 930422)", 0 )
 GAME( 1993, punishrj, punisher, qsound,   punisher, punisher, ROT0,   "Capcom", "The Punisher (Japan 930422)", 0 )

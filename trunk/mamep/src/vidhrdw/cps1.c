@@ -333,8 +333,6 @@ static struct CPS1config cps1_config_table[]=
 	{"knights", BATTRY_4, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 3 },
 	{"knightsu",BATTRY_4, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 3 },
 	{"knightsj",BATTRY_4, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 3 },
-	{"knightsh",NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 3 },
-	{"knightsb",BATTRY_4, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 3 },
 	{"sf2ce",   NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff },
 	{"sf2ceua", NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff },
 	{"sf2ceub", NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff },
@@ -352,11 +350,6 @@ static struct CPS1config cps1_config_table[]=
 	{"sf2m5",   NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
 	{"sf2m6",   NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
 	{"sf2m7",   NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
-	{"sf2m8",   HACK_B_3, 2,2,2, 0x0000,0xffff,0x0000,0xffff },
-	{"sf2m13",  NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
-	{"sf2ceh",  NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff },
-	{"sf2tlona",NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
-	{"sf2tlonb",NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
 	{"sf2yyc",  NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
 	{"sf2koryu",NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
 	{"varth",   CPS_B_04, 0,0,0, 0x0000,0xffff,0x0c00,0x0fff },	/* CPSB test has been patched out (60=0008) */
@@ -368,23 +361,40 @@ static struct CPS1config cps1_config_table[]=
 	{"wofa",    NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* bootleg? */
 	{"wofu",    QSOUND_1, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"wofj",    QSOUND_1, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
-	{"wofh",    HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 11 },
-	{"wofha",   HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 11 },
-	{"wof3js",  CPS_B_01, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
-	{"wof3sj",  HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 11 },
-	{"wof3sja", HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 11 },
-	{"wofsj",   HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 11 },
-	{"wofsja",  HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 11 },
-	{"wofsjb",  CPS_B_01, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"dino",    QSOUND_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
 	{"dinou",   QSOUND_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
 	{"dinoj",   QSOUND_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
+	{"cawingb", CPS_B_16, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 12 },
 	{"dinoh",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
+	{"dinoha",  QSOUND_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
+	{"dinohb",  QSOUND_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
+	{"dinob",   QSOUND_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
+	{"knightsh",NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 3 },
+	{"knightsb",BATTRY_4, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 3 },
+	{"sf2m8",   HACK_B_3, 2,2,2, 0x0000,0xffff,0x0000,0xffff },
+	{"sf2m13",  NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
+	{"sf2tlona",NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
+	{"sf2tlonb",NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
+	{"sf2ceh",  NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff },
+	{"sf2ceb",  NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff },
+	{"sfzch",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
+	{"sfach",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
+	{"wofh",    HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 11 },
+	{"wofha",   HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 11 },
+	{"wof3js",  CPS_B_01, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
+	{"wofsj",   HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 11 },
+	{"wofsja",  HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 11 },
+	{"wofsjb",  CPS_B_01, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
+	{"wof3sj",  HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 11 },
+	{"wof3sja", HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 11 },
+	{"wofb",    CPS_B_01, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"punisher",QSOUND_3, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"punishru",QSOUND_3, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"punishrj",QSOUND_3, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"slammast",QSOUND_4, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"slammasu",QSOUND_4, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
+	{"slammasa",QSOUND_4, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
+	{"slammash",QSOUND_4, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"mbomberj",QSOUND_4, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"mbombrd", QSOUND_5, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"mbombrdj",QSOUND_5, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
@@ -400,10 +410,6 @@ static struct CPS1config cps1_config_table[]=
 	{"pnicku",  NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"pang3",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 5 },	/* EEPROM port is among the CPS registers */
 	{"pang3j",  NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 5 },	/* EEPROM port is among the CPS registers */
-//#ifdef MESS
-	{"sfach",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
-	{"sfzch",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
-//#endif
 
     /* CPS2 games */
 	{"cps2",    NOBATTRY, 4,4,4, 0x0000,0xffff,0x0000,0xffff },
@@ -429,6 +435,7 @@ static struct CPS1config cps1_config_table[]=
 	{"xmcotaj1",NOBATTRY, 4,4,4, 0x0000,0xffff,0x0000,0xffff, 8 },
 	{"xmcotajr",NOBATTRY, 4,4,4, 0x0000,0xffff,0x0000,0xffff, 8 },
 	{"xmcotaa", NOBATTRY, 4,4,4, 0x0000,0xffff,0x0000,0xffff, 8 },
+	{"xmcotad", NOBATTRY, 4,4,4, 0x0000,0xffff,0x0000,0xffff, 8 },
 	{0}		/* End of table */
 };
 
@@ -485,14 +492,12 @@ static MACHINE_RESET( cps )
 		UINT16 *rom = (UINT16 *)memory_region(REGION_CPU1);
 		rom[0xe5332/2] = 0x6014;
 	}
-
 	if (strcmp(gamename, "dinoh" )==0)
 	{
 		/* Patch out Q-Sound test */
 		UINT16 *rom = (UINT16 *)memory_region(REGION_CPU1);	
 		rom[0xaacf4/2] = 0x4e71;
 	}
-
 #if 0
 	if (strcmp(gamename, "sf2accp2" )==0)
 	{
@@ -920,6 +925,13 @@ void cps1_get_video_base(void )
 		scroll1xoff = 0xffc0;
 		scroll2xoff = 0xffc0;
 		scroll3xoff = 0xffc0;
+	}
+	else if (cps1_game_config->kludge == 12)
+	{
+		cps1_obj=cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
+		scroll1xoff = 0xffc0;
+		scroll2xoff = 0;
+		scroll3xoff = 0;
 	}
 	else
 	{
@@ -2017,3 +2029,128 @@ void cps2_objram_latch(void)
 	memcpy(cps2_buffered_obj, cps2_objbase(), cps2_obj_size);
 }
 
+/***************************************************************************
+
+    Refresh screen
+
+***************************************************************************/
+
+void fcrash_render_sprites(mame_bitmap *bitmap,const rectangle *cliprect)
+{
+	int pos;
+	int base=0x50c8/2; /* and 10c8/2 for the buffer? */
+
+	for (pos=0;pos<0x2000;pos+=4)
+	{
+		int tileno;
+		int xpos;
+		int ypos;
+		int flipx,flipy;
+		int colour;
+
+		tileno = cps1_gfxram[base+pos];
+		xpos   = cps1_gfxram[base+pos+2];
+		ypos   = cps1_gfxram[base+pos-1];
+		flipx  = cps1_gfxram[base+pos+1]&0x20;
+		flipy  = cps1_gfxram[base+pos+1]&0x40;
+		colour = cps1_gfxram[base+pos+1]&0x1f;
+		ypos = 256-ypos;
+
+		drawgfx(bitmap,Machine->gfx[1],tileno,colour,flipx,flipy,xpos+48,ypos-16,cliprect,TRANSPARENCY_PEN,15);
+
+	}
+
+}
+
+void fcrash_render_layer(mame_bitmap *bitmap,const rectangle *cliprect,int layer,int primask)
+{
+	switch (layer)
+	{
+		case 0:
+			fcrash_render_sprites(bitmap,cliprect);
+			break;
+		case 1:
+		case 2:
+		case 3:
+			tilemap_draw(bitmap,cliprect,cps1_bg_tilemap[layer-1],TILEMAP_BACK,primask);
+			break;
+	}
+}
+
+void fcrash_render_high_layer(mame_bitmap *bitmap, const rectangle *cliprect, int layer)
+{
+	switch (layer)
+	{
+		case 0:
+			/* there are no high priority sprites */
+			break;
+		case 1:
+		case 2:
+		case 3:
+			tilemap_draw(NULL,cliprect,cps1_bg_tilemap[layer-1],TILEMAP_FRONT,1);
+			break;
+	}
+}
+
+VIDEO_UPDATE( fcrash )
+{
+ //   int layercontrol,l0,l1,l2,l3;
+	int videocontrol=cps1_port(0x22);
+
+
+	flip_screen_set(videocontrol & 0x8000);
+
+//  layercontrol = cps1_output[cps1_game_config->layer_control/2];
+
+	/* Get video memory base registers */
+	cps1_get_video_base();
+
+	/* Build palette */
+	cps1_build_palette();
+
+	cps1_update_transmasks();
+
+	tilemap_set_scrollx(cps1_bg_tilemap[0],0,cps1_scroll1x-60);
+	tilemap_set_scrolly(cps1_bg_tilemap[0],0,cps1_scroll1y);
+	if (videocontrol & 0x01)	/* linescroll enable */
+	{
+		int scrly=-cps1_scroll2y;
+		int i;
+		int otheroffs;
+
+		tilemap_set_scroll_rows(cps1_bg_tilemap[1],1024);
+
+		otheroffs = cps1_port(CPS1_ROWSCROLL_OFFS);
+
+		for (i = 0;i < 256;i++)
+			tilemap_set_scrollx(cps1_bg_tilemap[1],(i - scrly) & 0x3ff,cps1_scroll2x + cps1_other[(i + otheroffs) & 0x3ff]);
+	}
+	else
+	{
+		tilemap_set_scroll_rows(cps1_bg_tilemap[1],1);
+		tilemap_set_scrollx(cps1_bg_tilemap[1],0,cps1_scroll2x-60);
+	}
+	tilemap_set_scrolly(cps1_bg_tilemap[1],0,cps1_scroll2y);
+	tilemap_set_scrollx(cps1_bg_tilemap[2],0,cps1_scroll3x-60);
+	tilemap_set_scrolly(cps1_bg_tilemap[2],0,cps1_scroll3y);
+
+
+	/* turn all tilemaps on regardless of settings in get_video_base() */
+	/* (write a custom get_video_base for this bootleg hardware? */
+	tilemap_set_enable(cps1_bg_tilemap[0],1);
+	tilemap_set_enable(cps1_bg_tilemap[1],1);
+	tilemap_set_enable(cps1_bg_tilemap[2],1);
+
+	/* Blank screen */
+	fillbitmap(bitmap,Machine->pens[4095],cliprect);
+
+	fillbitmap(priority_bitmap,0,cliprect);
+
+	fcrash_render_layer(bitmap,cliprect,3,0);
+	fcrash_render_high_layer(bitmap,cliprect,3); /* prepare mask for sprites */
+	fcrash_render_layer(bitmap,cliprect,2,0);
+	fcrash_render_high_layer(bitmap,cliprect,2); /* prepare mask for sprites */
+	fcrash_render_layer(bitmap,cliprect,1,0);
+	fcrash_render_high_layer(bitmap,cliprect,1); /* prepare mask for sprites */
+	fcrash_render_layer(bitmap,cliprect,0,0);
+}
