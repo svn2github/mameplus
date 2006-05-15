@@ -109,13 +109,14 @@ const DIRECTORYINFO g_directoryInfo[] =
 	{ "ROMs",                  GetRomDirs,         SetRomDirs,         TRUE,  DIRDLG_ROMS },
 	{ "Samples",               GetSampleDirs,      SetSampleDirs,      TRUE,  DIRDLG_SAMPLES },
 	{ "Ini Files",             GetIniDir,          SetIniDir,          FALSE, DIRDLG_INI },
+	{ "Language Files",        GetLangDir,         SetLangDir,         FALSE, 0 },
 #ifdef USE_IPS
 	{ "IPS Files",             GetPatchDir,        SetPatchDir,        FALSE, 0 },
 #endif /* USE_IPS */
 	{ "Config",                GetCfgDir,          SetCfgDir,          FALSE, DIRDLG_CFG },
 	{ "High Scores",           GetHiDir,           SetHiDir,           FALSE, DIRDLG_HI },
 	{ "Snapshots",             GetImgDir,          SetImgDir,          FALSE, DIRDLG_IMG },
-	{ "Input files (*.inp)",   GetInpDir,          SetInpDir,          FALSE, DIRDLG_INP },
+	{ "Input Files (*.inp)",   GetInpDir,          SetInpDir,          FALSE, DIRDLG_INP },
 	{ "State",                 GetStateDir,        SetStateDir,        FALSE, 0 },
 	{ "Artwork",               GetArtDir,          SetArtDir,          FALSE, 0 },
 	{ "Memory Card",           GetMemcardDir,      SetMemcardDir,      FALSE, 0 },
@@ -130,6 +131,7 @@ const DIRECTORYINFO g_directoryInfo[] =
 	{ "Icons",                 GetIconsDir,        SetIconsDir,        FALSE, 0 },
 	{ "Background Images",     GetBgDir,           SetBgDir,           FALSE, 0 },
 	{ "Comment Files",         GetCommentDir,      SetCommentDir,      FALSE, DIRDLG_COMMENT },
+	{ "External Folder List",  GetFolderDir,       SetFolderDir,       FALSE, 0 },
 #ifdef USE_VIEW_PCBINFO
 	{ "PCB Info Files",        GetPcbinfoDir,      SetPcbinfoDir,      FALSE, 0 },
 #endif /* USE_VIEW_PCBINFO */

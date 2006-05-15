@@ -1,3 +1,5 @@
+#include "osd_so.h"
+
 /***************************************************************************
 
     version.c
@@ -8,7 +10,5 @@
     Visit http://mamedev.org for licensing and usage restrictions.
 
 ***************************************************************************/
-
-#include "osd_so.h"
 
 char build_version[] = "0.106 ("__DATE__")";
