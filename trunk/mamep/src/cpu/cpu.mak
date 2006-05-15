@@ -743,33 +743,26 @@ ASMDEFS += -DA68KEM
 endif
 
 # generate asm source files for the 68000/68020 emulators
-$(OBJ)/cpu/m68000/68000.asm:  src/cpu/m68000/make68k.c $(OSDBGOBJS)
+M68000ASM_GENERATED_STAMP = $(OBJ)/cpu/m68000/asm68k_stamp
+
+$(M68000ASM_GENERATED_STAMP): src/cpu/m68000/make68k.c $(OSDBGOBJS)
 	@echo Compiling $<...
 ifdef USE_GCC
 	$(XCC) $(CDEFS) $(CFLAGS) $(CONSOLE_PROGRAM) -O0 -DDOS -o $(OBJ)/cpu/m68000/make68k$(EXE) $< $(OSDBGOBJS)
 else
 	$(CC) $(CDEFS) $(CFLAGS) -Fe$(OBJ)/cpu/m68000/make68k$(EXE) -Fo$(OBJ)/cpu/m68000 $< $(OSDBGOBJS) -link $(CONSOLE_PROGRAM)
 endif
+	@echo -n > $(M68000_GENERATED_STAMP)
+
+$(OBJ)/cpu/m68000/68000.asm: $(M68000ASM_GENERATED_STAMP)
 	@echo Generating $@...
 	@$(OBJ)/cpu/m68000/make68k$(EXE) $@ $(OBJ)/cpu/m68000/68000tab.asm 00 $(P6OPT)
 
-$(OBJ)/cpu/m68000/68010.asm:  src/cpu/m68000/make68k.c $(OSDBGOBJS)
-	@echo Compiling $<...
-ifdef USE_GCC
-	$(XCC) $(CDEFS) $(CFLAGS) $(CONSOLE_PROGRAM) -O0 -DDOS -o $(OBJ)/cpu/m68000/make68k$(EXE) $< $(OSDBGOBJS)
-else
-	$(CC) $(CDEFS) $(CFLAGS) -Fe$(OBJ)/cpu/m68000/make68k$(EXE) -Fo$(OBJ)/cpu/m68000 $< $(OSDBGOBJS) -link $(CONSOLE_PROGRAM)
-endif
+$(OBJ)/cpu/m68000/68010.asm: $(M68000ASM_GENERATED_STAMP)
 	@echo Generating $@...
 	@$(OBJ)/cpu/m68000/make68k$(EXE) $@ $(OBJ)/cpu/m68000/68010tab.asm 10 $(P6OPT)
 
-$(OBJ)/cpu/m68000/68020.asm:  src/cpu/m68000/make68k.c $(OSDBGOBJS)
-	@echo Compiling $<...
-ifdef USE_GCC
-	$(XCC) $(CDEFS) $(CFLAGS) $(CONSOLE_PROGRAM) -O0 -DDOS -o $(OBJ)/cpu/m68000/make68k$(EXE) $< $(OSDBGOBJS)
-else
-	$(CC) $(CDEFS) $(CFLAGS) -Fe$(OBJ)/cpu/m68000/make68k$(EXE) -Fo$(OBJ)/cpu/m68000 $<  $(OSDBGOBJS)-link $(CONSOLE_PROGRAM)
-endif
+$(OBJ)/cpu/m68000/68020.asm: $(M68000ASM_GENERATED_STAMP)
 	@echo Generating $@...
 	@$(OBJ)/cpu/m68000/make68k$(EXE) $@ $(OBJ)/cpu/m68000/68020tab.asm 20 $(P6OPT)
 
