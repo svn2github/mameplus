@@ -752,7 +752,7 @@ ifdef USE_GCC
 else
 	$(CC) $(CDEFS) $(CFLAGS) -Fe$(OBJ)/cpu/m68000/make68k$(EXE) -Fo$(OBJ)/cpu/m68000 $< $(OSDBGOBJS) -link $(CONSOLE_PROGRAM)
 endif
-	@echo -n > $(M68000_GENERATED_STAMP)
+	@echo -n > $(M68000ASM_GENERATED_STAMP)
 
 $(OBJ)/cpu/m68000/68000.asm: $(M68000ASM_GENERATED_STAMP)
 	@echo Generating $@...
