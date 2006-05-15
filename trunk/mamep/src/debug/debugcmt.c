@@ -107,6 +107,7 @@ int debug_comment_init(void)
 {
 	/* allocate enough comment groups for the total # of cpu's */
 	debug_comments = (comment_group*) malloc(cpu_gettotalcpu() * sizeof(comment_group));
+	memset(debug_comments, 0, cpu_gettotalcpu() * sizeof(comment_group));
 
 	/* automatically load em up */
 	debug_comment_load();
