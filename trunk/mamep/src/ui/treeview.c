@@ -23,6 +23,7 @@
 #include <windows.h>
 #include <windowsx.h>
 #include <shellapi.h>
+#include <shlwapi.h>
 #include <commctrl.h>
 #include <stdio.h>  /* for sprintf */
 #include <stdlib.h> /* For malloc and free */
@@ -387,6 +388,7 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 	LPTREEFOLDER lpFolder = GetCurrentFolder();
 	LPTREEFOLDER lpParent = NULL;
 	const game_driver *clone_of = NULL;
+	LPWSTR filter_text = GetFilterText();
 	
 	//Filter out the Bioses on all Folders, except for the Bios Folder
 	if( lpFolder->m_nFolderId != FOLDER_BIOS )
@@ -410,13 +412,16 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 		}
 	}
 	/*Filter Text is already global*/
-
-	if (MyStrStrI(drivers[nGame]->description,GetFilterText()) == NULL &&
-		MyStrStrI(drivers[nGame]->name,GetFilterText()) == NULL && 
-		MyStrStrI(drivers[nGame]->source_file,GetFilterText()) == NULL && 
-		MyStrStrI(drivers[nGame]->manufacturer,GetFilterText()) == NULL)
+	
+	if (!wcslen(filter_text))
+		return FALSE;
+	
+	if (StrStrI(_Unicode(UseLangList() ? _LST(drivers[nGame]->description) : drivers[nGame]->description), filter_text) == NULL &&
+		StrStrI(_Unicode(drivers[nGame]->name), filter_text) == NULL && 
+		StrStrI(_Unicode(drivers[nGame]->source_file), filter_text) == NULL && 
+		StrStrI(_Unicode(UseLangList()? _MANUFACT(drivers[nGame]->manufacturer) : drivers[nGame]->manufacturer),filter_text) == NULL)
 	{
-			return TRUE;
+		return TRUE;
 	}
 
 	// Are there filters set on this folder?

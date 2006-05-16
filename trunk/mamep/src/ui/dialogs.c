@@ -23,6 +23,7 @@
 #include <windows.h>
 #include <windowsx.h>
 #include <shellapi.h>
+#include <shlwapi.h>
 #include <commctrl.h>
 #include <commdlg.h>
 #include <string.h>
@@ -52,7 +53,7 @@
 
 #define FILTERTEXT_LEN 256
 
-static char g_FilterText[FILTERTEXT_LEN];
+static WCHAR g_FilterText[FILTERTEXT_LEN];
 
 #define NUM_EXCLUSIONS  9
 
@@ -79,7 +80,7 @@ static LRESULT CALLBACK PcbInfoWndProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARA
 
 /***************************************************************************/
 
-const char * GetFilterText(void)
+LPCWSTR GetFilterText(void)
 {
 	return g_FilterText;
 }
@@ -403,7 +404,7 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 		{
 			char tmp[80];
 			
-			Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_EDIT), _Unicode(g_FilterText));
+			Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_EDIT), g_FilterText);
 			Edit_SetSel(GetDlgItem(hDlg, IDC_FILTER_EDIT), 0, -1);
 			// Mask out non filter flags
 			dwFilters = folder->m_dwFlags & F_MASK;
@@ -536,7 +537,8 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 			{
 				WCHAR buf[FILTERTEXT_LEN];
 				Edit_GetText(GetDlgItem(hDlg, IDC_FILTER_EDIT), buf, FILTERTEXT_LEN);
-				strncpy(g_FilterText, _String(buf), FILTERTEXT_LEN);
+				StrTrim(buf, _Unicode(" "));
+				wcsncpy(g_FilterText, buf, FILTERTEXT_LEN);
 			}
 			
 			// see which buttons are checked

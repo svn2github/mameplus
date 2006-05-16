@@ -101,6 +101,7 @@ ifdef USE_GCC
     GUILIBS += \
 		-lkernel32 \
 		-lshell32 \
+		-lshlwapi \
 		-lcomctl32 \
 		-lcomdlg32 \
 		-ladvapi32 \

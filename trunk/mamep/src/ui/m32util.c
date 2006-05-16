@@ -260,19 +260,19 @@ void DisplayTextFile(HWND hWnd, const char *cName)
  
 	MessageBoxW(NULL, _Unicode(msg), _Unicode(cName), MB_OK); 
 }
-
-char* MyStrStrI(const char* pFirst, const char* pSrch)
+/*
+LPWSTR MyStrStrI(LPCWSTR pFirst, LPCWSTR pSrch)
 {
-	char* cp = (char*)pFirst;
-	char* s1;
-	char* s2;
+	LPWSTR cp = (LPWSTR)pFirst;
+	LPWSTR s1;
+	LPWSTR s2;
 	
 	while (*cp)
 	{
 		s1 = cp;
-		s2 = (char*)pSrch;
+		s2 = (LPWSTR)pSrch;
 		
-		while (*s1 && *s2 && !mame_strnicmp(s1, s2, 1))
+		while (*s1 && *s2 && !wcsnicmp(s1, s2, 1))
 			s1++, s2++;
 		
 		if (!*s2)
@@ -282,7 +282,7 @@ char* MyStrStrI(const char* pFirst, const char* pSrch)
 	}
 	return NULL;
 }
-
+*/
 char * ConvertToWindowsNewlines(const char *source)
 {
 	static char buf[100 * 1024];
