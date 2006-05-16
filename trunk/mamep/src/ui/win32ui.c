@@ -2406,6 +2406,8 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	bShowStatusBar = GetShowStatusBar();
 	bShowTabCtrl   = GetShowTabCtrl();
 
+	CheckMenuRadioItem(GetMenu(hMain), ID_VIEW_BYGAME, ID_VIEW_BYPLAYTIME, GetSortColumn(), MF_CHECKED);
+
 	CheckMenuItem(GetMenu(hMain), ID_VIEW_FOLDERS, (bShowTree) ? MF_CHECKED : MF_UNCHECKED);
 	ToolBar_CheckButton(hToolBar, ID_VIEW_FOLDERS, (bShowTree) ? MF_CHECKED : MF_UNCHECKED);
 	CheckMenuItem(GetMenu(hMain), ID_VIEW_TOOLBARS, (bShowToolBar) ? MF_CHECKED : MF_UNCHECKED);
@@ -4400,6 +4402,16 @@ static void PressKey(HWND hwnd, UINT vk)
 }
 #endif
 
+static void DoSortColumn(int column)
+{
+	int id;
+
+	SetSortColumn(column);
+
+	for (id = 0; id < COLUMN_MAX; id++)
+		CheckMenuItem(GetMenu(hMain), ID_VIEW_BYGAME + id, id == column ? MF_CHECKED : MF_UNCHECKED);
+}
+
 static void SetView(int menu_id)
 {
 	BOOL force_reset = FALSE;
@@ -4419,6 +4431,7 @@ static void SetView(int menu_id)
 	if (force_reset)
 	{
 		Picker_Sort(hwndList);
+		DoSortColumn(GetSortColumn());
 	}
 }
 
@@ -4473,6 +4486,7 @@ static void ResetListView()
 	} while (i != -1);
 
 	Picker_Sort(hwndList);
+	DoSortColumn(GetSortColumn());
 
 	if (bListReady)
 	{
@@ -4825,38 +4839,19 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 
 	/* Arrange Icons submenu */
 	case ID_VIEW_BYGAME:
-		SetSortReverse(FALSE);
-		SetSortColumn(COLUMN_GAMES);
-		Picker_Sort(hwndList);
-		break;
-
+	case ID_VIEW_BYROMS:
+	case ID_VIEW_BYSAMPLES:
 	case ID_VIEW_BYDIRECTORY:
-		SetSortReverse(FALSE);
-		SetSortColumn(COLUMN_DIRECTORY);
-		Picker_Sort(hwndList);
-		break;
-
-	case ID_VIEW_BYMANUFACTURER:
-		SetSortReverse(FALSE);
-		SetSortColumn(COLUMN_MANUFACTURER);
-		Picker_Sort(hwndList);
-		break;
-
-	case ID_VIEW_BYTIMESPLAYED:
-		SetSortReverse(FALSE);
-		SetSortColumn(COLUMN_PLAYED);
-		Picker_Sort(hwndList);
-		break;
-
 	case ID_VIEW_BYTYPE:
-		SetSortReverse(FALSE);
-		SetSortColumn(COLUMN_TYPE);
-		Picker_Sort(hwndList);
-		break;
-
+	case ID_VIEW_TRACKBALL:
+	case ID_VIEW_BYTIMESPLAYED:
+	case ID_VIEW_BYMANUFACTURER:
 	case ID_VIEW_BYYEAR:
+	case ID_VIEW_BYCLONE:
+	case ID_VIEW_BYSRCDRIVERS:
+	case ID_VIEW_BYPLAYTIME:
 		SetSortReverse(FALSE);
-		SetSortColumn(COLUMN_YEAR);
+		DoSortColumn(id - ID_VIEW_BYGAME);
 		Picker_Sort(hwndList);
 		break;
 
@@ -5545,7 +5540,7 @@ static void InitListView()
 
 	static const struct PickerCallbacks s_gameListCallbacks =
 	{
-		SetSortColumn,			/* pfnSetSortColumn */
+		DoSortColumn,			/* pfnSetSortColumn */
 		GetSortColumn,			/* pfnGetSortColumn */
 		SetSortReverse,			/* pfnSetSortReverse */
 		GetSortReverse,			/* pfnGetSortReverse */
@@ -6506,7 +6501,8 @@ static void MamePlayGameWithOptions(int nGame)
 	in_emulation = FALSE;
 
 	// re-sort if sorting on # of times played
-	if (GetSortColumn() == COLUMN_PLAYED)
+	if (GetSortColumn() == COLUMN_PLAYED
+	 || GetSortColumn() == COLUMN_PLAYTIME)
 		Picker_Sort(hwndList);
 
 	UpdateStatusBar();
