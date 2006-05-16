@@ -418,7 +418,7 @@ Arrange &Icons
 Arranges icons in a grid
 
 
-# ui/layout.c: 120
+# ui/layout.c: 121
 Artwork
 
 
@@ -502,7 +502,7 @@ BIOS missing
 Backdrops
 
 
-# ui/layout.c: 131
+# ui/layout.c: 132
 Background Images
 
 
@@ -626,7 +626,7 @@ CPU
 Cabinet
 
 
-# ui/layout.c: 123
+# ui/layout.c: 124
 Cabinets
 
 
@@ -690,11 +690,11 @@ Colors aren't 100% accurate
 Colors:
 
 
-# ui/layout.c: 132
+# ui/layout.c: 133
 Comment Files
 
 
-# ui/layout.c: 115
+# ui/layout.c: 116
 Config
 
 
@@ -726,7 +726,7 @@ Control &Panel
 Control Panel
 
 
-# ui/layout.c: 126
+# ui/layout.c: 127
 Control Panels
 
 
@@ -738,7 +738,7 @@ Control Type
 Control Type:
 
 
-# ui/layout.c: 128
+# ui/layout.c: 129
 Controller Files
 
 
@@ -1078,6 +1078,10 @@ Error while saving custom file %s
 Exit the application
 
 
+# ui/layout.c: 134
+External Folder List
+
+
 # ui/layout.c: 75
 FPS
 
@@ -1114,7 +1118,7 @@ Flip screen upside-down
 Flyer
 
 
-# ui/layout.c: 122
+# ui/layout.c: 123
 Flyers
 
 
@@ -1210,7 +1214,7 @@ Go to Microsoft's DirectX Web Page
 Grouped
 
 
-# ui/layout.c: 129
+# ui/layout.c: 130
 Hard Drive Difference
 
 
@@ -1226,7 +1230,7 @@ Hide &mouse cursor (requires restart)
 High
 
 
-# ui/layout.c: 116
+# ui/layout.c: 117
 High Scores
 
 
@@ -1242,11 +1246,11 @@ Horizontal
 How cheats work
 
 
-# ui/layout.c: 113
+# ui/layout.c: 114
 IPS Files
 
 
-# ui/layout.c: 130
+# ui/layout.c: 131
 Icons
 
 
@@ -1286,8 +1290,8 @@ Inheritable Filters
 Ini Files
 
 
-# ui/layout.c: 118
-Input files (*.inp)
+# ui/layout.c: 119
+Input Files (*.inp)
 
 
 # ui/mame32.rc: 453
@@ -1346,6 +1350,10 @@ Keyboard
 L&arge Icons
 
 
+# ui/layout.c: 112
+Language Files
+
+
 # ui/options.c: 295 ui/win32ui.c: 664
 Large Icons
 
@@ -1394,7 +1402,7 @@ MAME release notes
 MAME savestate files (*.sta)
 
 
-# ui/dialogs.c: 859
+# ui/dialogs.c: 861
 MAME32 PCB Info: %s [%s]
 
 
@@ -1434,7 +1442,7 @@ Manufacturer
 Marquee
 
 
-# ui/layout.c: 124
+# ui/layout.c: 125
 Marquees
 
 
@@ -1442,7 +1450,7 @@ Marquees
 Match game refresh rate
 
 
-# ui/layout.c: 121 
+# ui/layout.c: 122 
 Memory Card
 
 
@@ -1474,7 +1482,7 @@ Move Item
 Move Up
 
 
-# ui/layout.c: 127
+# ui/layout.c: 128
 NVRAM
 
 
@@ -1498,7 +1506,7 @@ No Cocktail
 No Dump
 
 
-# ui/dialogs.c: 903
+# ui/dialogs.c: 905
 No PCB Info available for this game.
 
 
@@ -1582,7 +1590,7 @@ P&layback Input...
 PCB Info
 
 
-# ui/layout.c: 134
+# ui/layout.c: 136
 PCB Info Files
 
 
@@ -2230,7 +2238,7 @@ Small Icons
 Snapshot
 
 
-# ui/layout.c: 117
+# ui/layout.c: 118
 Snapshots
 
 
@@ -2302,7 +2310,7 @@ Standard
 Start out maximized
 
 
-# ui/layout.c: 119
+# ui/layout.c: 120
 State
 
 
@@ -2374,7 +2382,7 @@ Throttle
 Title
 
 
-# ui/layout.c: 125
+# ui/layout.c: 126
 Titles
 
 

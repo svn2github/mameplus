@@ -666,7 +666,7 @@ Fun World
 Fuuki
 
 
-# Selection (Version 40.02TMB)
+# Selection (Version 40.02TMB) set 1
 G.E.I.
 
 
@@ -694,7 +694,7 @@ GMS
 GREEN SOFT
 
 
-# Xor World (prototype)
+# Master Boy (Spanish, PCB Rev A)
 Gaelco
 
 
@@ -1432,6 +1432,10 @@ SNK of America
 
 # Bishoujo Janshi Pretty Sailor 18-kin (Japan)
 SPHINX
+
+
+# Fishing Maniac 3
+Saero Entertainment
 
 
 # Elan Doree - Legend of Dragon (JUET 980922 V1.006)

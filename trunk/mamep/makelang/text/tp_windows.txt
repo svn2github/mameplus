@@ -438,11 +438,11 @@ Lightgun on Mouse %d
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 
 
-# windows/blit.c: 1158
+# windows/blit.c: 486
 MMX not supported\n
 
 
-# windows/blit.c: 1156
+# windows/blit.c: 484
 MMX supported\n
 
 
@@ -574,11 +574,11 @@ Rendering to an off-screen surface and using blt()\n
 Restoring surfaces\n
 
 
-# windows/blit.c: 1154
+# windows/blit.c: 482
 SSE supported\n
 
 
-# windows/blit.c: 1152
+# windows/blit.c: 480
 SSE2 supported\n
 
 

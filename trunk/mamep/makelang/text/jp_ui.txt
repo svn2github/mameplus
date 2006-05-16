@@ -418,7 +418,7 @@ Arrange &Icons
 Arranges icons in a grid
 アイコンを等間隔に整列します
 
-# ui/layout.c: 120
+# ui/layout.c: 121
 Artwork
 アートワーク
 
@@ -502,7 +502,7 @@ BIOS がありません
 Backdrops
 バックドロップ
 
-# ui/layout.c: 131
+# ui/layout.c: 132
 Background Images
 背景画像
 
@@ -626,7 +626,7 @@ CPU
 Cabinet
 筐体
 
-# ui/layout.c: 123
+# ui/layout.c: 124
 Cabinets
 筐体
 
@@ -690,11 +690,11 @@ Colors aren't 100% accurate
 Colors:
 色数:
 
-# ui/layout.c: 132
+# ui/layout.c: 133
 Comment Files
 コメントファイル
 
-# ui/layout.c: 115
+# ui/layout.c: 116
 Config
 設定ファイル
 
@@ -726,7 +726,7 @@ Control &Panel
 Control Panel
 コンパネ
 
-# ui/layout.c: 126
+# ui/layout.c: 127
 Control Panels
 コントロールパネル
 
@@ -738,7 +738,7 @@ Control Type
 Control Type:
 コントロール:
 
-# ui/layout.c: 128
+# ui/layout.c: 129
 Controller Files
 コントローラ定義ファイル
 
@@ -1078,6 +1078,10 @@ Error while saving custom file %s
 Exit the application
 アプリケーションを終了します
 
+# ui/layout.c: 134
+External Folder List
+外部フォルダリスト
+
 # ui/layout.c: 75
 FPS
 FPS
@@ -1114,7 +1118,7 @@ Flip screen upside-down
 Flyer
 広告ポスター
 
-# ui/layout.c: 122
+# ui/layout.c: 123
 Flyers
 広告ポスター
 
@@ -1210,7 +1214,7 @@ Microsoft's DirectX Webページを表\示
 Grouped
 グループ化
 
-# ui/layout.c: 129
+# ui/layout.c: 130
 Hard Drive Difference
 ハードディスク差分ファイル
 
@@ -1226,7 +1230,7 @@ Hide &mouse cursor (requires restart)
 High
 高い
 
-# ui/layout.c: 116
+# ui/layout.c: 117
 High Scores
 ハイスコア
 
@@ -1242,11 +1246,11 @@ Horizontal
 How cheats work
 チートの使用方法を説明します
 
-# ui/layout.c: 113
+# ui/layout.c: 114
 IPS Files
 IPSファイル
 
-# ui/layout.c: 130
+# ui/layout.c: 131
 Icons
 アイコン
 
@@ -1286,8 +1290,8 @@ Inheritable Filters
 Ini Files
 INIファイル
 
-# ui/layout.c: 118
-Input files (*.inp)
+# ui/layout.c: 119
+Input Files (*.inp)
 再生ファイル (*.inp)
 
 # ui/mame32.rc: 453
@@ -1346,6 +1350,10 @@ Keyboard
 L&arge Icons
 大きなアイコン(&A)
 
+# ui/layout.c: 112
+Language Files
+言語ファイル
+
 # ui/options.c: 295 ui/win32ui.c: 664
 Large Icons
 大きなアイコン
@@ -1394,7 +1402,7 @@ MAMEリリースノートを表\示します
 MAME savestate files (*.sta)
 MAME ステートファイル (*.sta)
 
-# ui/dialogs.c: 859
+# ui/dialogs.c: 861
 MAME32 PCB Info: %s [%s]
 MAME32 PCB情報: %s [%s]
 
@@ -1434,7 +1442,7 @@ Manufacturer
 Marquee
 マーキー
 
-# ui/layout.c: 124
+# ui/layout.c: 125
 Marquees
 マーキー
 
@@ -1442,7 +1450,7 @@ Marquees
 Match game refresh rate
 リフレッシュレートを変更
 
-# ui/layout.c: 121 
+# ui/layout.c: 122 
 Memory Card
 メモリカード
 
@@ -1474,7 +1482,7 @@ Move Item
 Move Up
 上に移動
 
-# ui/layout.c: 127
+# ui/layout.c: 128
 NVRAM
 NVRAMファイル
 
@@ -1498,7 +1506,7 @@ No Cocktail
 No Dump
 未ダンプ
 
-# ui/dialogs.c: 903
+# ui/dialogs.c: 905
 No PCB Info available for this game.
 このゲームにPCB情報がありません。
 
@@ -1582,7 +1590,7 @@ P&layback Input...
 PCB Info
 PCB情報
 
-# ui/layout.c: 134
+# ui/layout.c: 136
 PCB Info Files
 PCB情報ファイル
 
@@ -2230,7 +2238,7 @@ Small Icons
 Snapshot
 スクリーンショット
 
-# ui/layout.c: 117
+# ui/layout.c: 118
 Snapshots
 スクリーンショット
 
@@ -2302,7 +2310,7 @@ Standard
 Start out maximized
 ウィンドウ最大化
 
-# ui/layout.c: 119
+# ui/layout.c: 120
 State
 ゲームステート
 
@@ -2374,7 +2382,7 @@ Throttle
 Title
 タイトル画面
 
-# ui/layout.c: 125
+# ui/layout.c: 126
 Titles
 タイトル画面
 
