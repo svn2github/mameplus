@@ -33,6 +33,7 @@ neonopon - Neo No Panepon (beta)
  npong10 - Neo Pong (v1.0)
   pnicku - Pnickies (US 940608)
 poknight - Poker Night
+    pong - Pong
 preisl2d - Prehistoric Isle 2 (decrypted C)
    rotdd - Rage of the Dragons (decrypted C)
  s1945pd - Strikers 1945 Plus (decrypted C)
