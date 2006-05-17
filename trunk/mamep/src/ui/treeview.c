@@ -388,7 +388,7 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 	LPTREEFOLDER lpFolder = GetCurrentFolder();
 	LPTREEFOLDER lpParent = NULL;
 	const game_driver *clone_of = NULL;
-	LPWSTR filter_text = GetFilterText();
+	LPCWSTR filter_text = GetFilterText();
 	
 	//Filter out the Bioses on all Folders, except for the Bios Folder
 	if( lpFolder->m_nFolderId != FOLDER_BIOS )
