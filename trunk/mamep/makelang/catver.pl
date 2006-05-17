@@ -25,6 +25,8 @@ while (<IN>)
 		$category =~ s/\[/</g;
 		$category =~ s/\]/>/g;
 
+		$category =~ s/([^\d])0+/\1/g if $filename eq "VerAdded";
+
 		next if $category =~ /^SNAME-/;
 		next if $category =~ /^BIOS$/;
 		next if $category eq '';
@@ -90,6 +92,8 @@ __HEAD__
 			print OUT "[Plus!]\n";
 			while (<EXTRA>)
 			{
+				s/^[\s]+//;
+				s/\s.*//;
 				print OUT;
 			}
 			close (EXTRA);
