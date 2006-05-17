@@ -416,10 +416,10 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 	if (!wcslen(filter_text))
 		return FALSE;
 	
-	if (StrStrI(_Unicode(UseLangList() ? _LST(drivers[nGame]->description) : drivers[nGame]->description), filter_text) == NULL &&
-		StrStrI(_Unicode(drivers[nGame]->name), filter_text) == NULL && 
-		StrStrI(_Unicode(drivers[nGame]->source_file), filter_text) == NULL && 
-		StrStrI(_Unicode(UseLangList()? _MANUFACT(drivers[nGame]->manufacturer) : drivers[nGame]->manufacturer),filter_text) == NULL)
+	if (MyStrStrI(_Unicode(UseLangList() ? _LST(drivers[nGame]->description) : drivers[nGame]->description), filter_text) == NULL &&
+	    MyStrStrI(_Unicode(drivers[nGame]->name), filter_text) == NULL && 
+	    MyStrStrI(_Unicode(drivers[nGame]->source_file), filter_text) == NULL && 
+	    MyStrStrI(_Unicode(UseLangList()? _MANUFACT(drivers[nGame]->manufacturer) : drivers[nGame]->manufacturer), filter_text) == NULL)
 	{
 		return TRUE;
 	}

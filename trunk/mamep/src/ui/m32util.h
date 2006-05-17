@@ -28,7 +28,7 @@ extern void DisplayTextFile(HWND hWnd, const char *cName);
 /* Check for old version of comctl32.dll */
 extern LONG GetCommonControlVersion(void);
 
-//extern LPWSTR MyStrStrI(LPCWSTR pFirst, LPCWSTR pSrch);
+extern LPWSTR MyStrStrI(LPCWSTR pStr, LPCWSTR pSrch);
 extern char * ConvertToWindowsNewlines(const char *source);
 extern const char * strlower(const char *s);
 
