@@ -8,9 +8,8 @@
 //============================================================
 
 // Needed for RAW Input
-#ifndef _WIN32_WINNT
+#undef _WIN32_WINNT
 #define _WIN32_WINNT 0x501
-#endif
 #define WM_INPUT 0x00FF
 
 // standard windows headers
