@@ -8223,19 +8223,9 @@ ROM_START( kf2k2plc ) /* bootleg */
 ROM_END
 
 ROM_START( kf2k4pls )
-	ROM_REGION( 0x500000, REGION_CPU1, 0 )
-	ROM_LOAD16_WORD_SWAP( "k2k4s-p1p.bin", 0x060000, 0x020000, CRC(ed97c684) SHA1(0eb8f18f422252c32186b7daa278c9206e189a1a) )
-	ROM_CONTINUE(                       0x0c0000, 0x040000 )
-	ROM_CONTINUE(                       0x000000, 0x040000 )
-	ROM_CONTINUE(                       0x0a0000, 0x020000 )
-	ROM_CONTINUE(                       0x100000, 0x040000 )
-	ROM_CONTINUE(                       0x0c0000, 0x020000 )
-	ROM_CONTINUE(                       0x040000, 0x020000 )
-	ROM_CONTINUE(                       0x040000, 0x020000 )
-	ROM_CONTINUE(                       0x080000, 0x020000 )
-	ROM_CONTINUE(                       0x080000, 0x020000 )
-	ROM_CONTINUE(                       0x000000, 0x020000 )
-	ROM_CONTINUE(                       0x100000, 0x040000 )
+	ROM_REGION( 0x600000, REGION_CPU1, 0 )
+	ROM_LOAD16_WORD_SWAP( "k2k4s-p1p.bin", 0x000000, 0x100000, CRC(ed97c684) SHA1(0eb8f18f422252c32186b7daa278c9206e189a1a) )
+	ROM_CONTINUE(                       0x500000, 0x100000 )
 	ROM_LOAD16_WORD_SWAP( "k2k4s-p1.bin", 0x400000, 0x100000, CRC(e6c50566) SHA1(cc6a3489a3bfeb4dcc65b6ddae0030f7e66fbabe) )
 	ROM_CONTINUE(                       0x300000, 0x100000 )
 	ROM_CONTINUE(                       0x200000, 0x100000 )
@@ -8973,6 +8963,23 @@ DRIVER_INIT( kf2k2plc )
 
 DRIVER_INIT( kf2k4pls )
 {
+	unsigned char *src = memory_region(REGION_CPU1);
+	unsigned char *dst = (unsigned char*)malloc(0x200000);
+
+	if (dst)
+	{
+		memcpy(dst,src,0x100000);
+		memcpy(dst+0x100000,src+0x500000,0x100000);
+		memcpy(src+0x000000,dst+0x1A0000,0x020000);
+		memcpy(src+0x020000,dst+0x080000,0x020000);
+		memcpy(src+0x040000,dst+0x140000,0x020000);
+		memcpy(src+0x060000,dst+0x000000,0x020000);
+		memcpy(src+0x080000,dst+0x180000,0x020000);
+		memcpy(src+0x0A0000,dst+0x0A0000,0x020000);
+		memcpy(src+0x0C0000,dst+0x100000,0x020000);
+		memcpy(src+0x0E0000,dst+0x040000,0x020000);
+		free(dst);
+	}
 	neogeo_bootleg_sx_decrypt(1);
 	init_neogeo();
 }
