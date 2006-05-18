@@ -2400,31 +2400,26 @@ int load_driver_statistics (char *buffer, int bufsize)
 		/* Calc all graphic resolution and aspect ratio numbers */
 		if (drivers[i]->flags & ORIENTATION_SWAP_XY)
 		{
-			x = drv.default_visible_area.max_y - drv.default_visible_area.min_y + 1;
-			y = drv.default_visible_area.max_x - drv.default_visible_area.min_x + 1;
+			ax = 1.0f;
+			ay = drv.screen[0].aspect;
 
-			ax = drv.aspect_y;
-			ay = drv.aspect_x;
-			if (ax == 0 && ay == 0)
-			{
+			if (ax == 0 && ay == 0){
 				ax = 3;
 				ay = 4;
 			}
-
+			x = drv.screen[0].default_visible_area.max_y - drv.screen[0].default_visible_area.min_y + 1;
+			y = drv.screen[0].default_visible_area.max_x - drv.screen[0].default_visible_area.min_x + 1;
 		}
 		else
 		{
-			x = drv.default_visible_area.max_x - drv.default_visible_area.min_x + 1;
-			y = drv.default_visible_area.max_y - drv.default_visible_area.min_y + 1;
-
-			ax = drv.aspect_x;
-			ay = drv.aspect_y;
-			if (ax == 0 && ay == 0)
-			{
+			ax = drv.screen[0].aspect;
+			ay = 1.0f;
+			if (ax == 0 && ay == 0) {
 				ax = 4;
 				ay = 3;
 			}
-
+			x = drv.screen[0].default_visible_area.max_x - drv.screen[0].default_visible_area.min_x + 1;
+			y = drv.screen[0].default_visible_area.max_y - drv.screen[0].default_visible_area.min_y + 1;
 		}
 
 		if (drv.video_attributes & VIDEO_TYPE_VECTOR)
@@ -2661,7 +2656,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 
 
 		/* Calc all Frames_Per_Second numbers */
-		fps[0] = drv.frames_per_second;
+		fps[0] = drv.screen[0].refresh_rate;
 		for (n = 1; n < 50; n++)
 		{
 			if (fps[n] == fps[0])
