@@ -375,13 +375,13 @@ static void gaelco2_draw_sprites(mame_bitmap *bitmap, const rectangle *cliprect,
 	int end_offset = start_offset + 0x1000;
 
 	/* sprite offset is based on the visible area */
-	int spr_x_adjust = (Machine->visible_area.max_x - 320 + 1) - (511 - 320 - 1) - ((gaelco2_vregs[0] >> 4) & 0x01) + xoffs;
+	int spr_x_adjust = (Machine->visible_area[0].max_x - 320 + 1) - (511 - 320 - 1) - ((gaelco2_vregs[0] >> 4) & 0x01) + xoffs;
 
 //#ifndef ONE_MONITOR
 	if (!options.disable_2nd_monitor)
 	{
 		if (dual_monitor){
-			spr_x_adjust = ((Machine->visible_area.max_x/2) - 320 + 1) - (511 - 320 - 1) - ((gaelco2_vregs[0] >> 4) & 0x01) + xoffs;
+			spr_x_adjust = ((Machine->visible_area[0].max_x/2) - 320 + 1) - (511 - 320 - 1) - ((gaelco2_vregs[0] >> 4) & 0x01) + xoffs;
 		}
 	}
 //#endif
@@ -531,7 +531,7 @@ VIDEO_UPDATE( gaelco2_dual )
 	int scroll1y = gaelco2_videoram[0x2804/2] + 0x01;
 
 	if (!options.disable_2nd_monitor)
-		scroll1x -= ((Machine->visible_area.max_x/2) + 1);
+		scroll1x -= ((Machine->visible_area[0].max_x/2) + 1);
 
 	/* set y scroll registers */
 	tilemap_set_scrolly(pant[0], 0, scroll0y & 0x1ff);
@@ -562,18 +562,18 @@ VIDEO_UPDATE( gaelco2_dual )
 		{
 			rectangle cliprect1, cliprect2;
 			cliprect1.min_x = 0;
-			cliprect1.max_x = Machine->visible_area.max_x/2;
+			cliprect1.max_x = Machine->visible_area[0].max_x/2;
 			cliprect1.min_y = 16;
 			cliprect1.max_y = 256-1;
 
-			cliprect2.min_x = (Machine->visible_area.max_x/2) + 1;
-			cliprect2.max_x = Machine->visible_area.max_x;
+			cliprect2.min_x = (Machine->visible_area[0].max_x/2) + 1;
+			cliprect2.max_x = Machine->visible_area[0].max_x;
 			cliprect2.min_y = 16;
 			cliprect2.max_y = 256-1;
 
 			/* monitor 2 output */
 			tilemap_draw(bitmap,&cliprect2,pant[1], 0, 0);
-			gaelco2_draw_sprites(bitmap,&cliprect2, 0x8000, (Machine->visible_area.max_x/2) + 1);
+			gaelco2_draw_sprites(bitmap,&cliprect2, 0x8000, (Machine->visible_area[0].max_x/2) + 1);
 
 			/* monitor 1 output */
 			tilemap_draw(bitmap,&cliprect1,pant[0], 0, 0);

@@ -51,6 +51,9 @@ enum
 #ifdef INP_CAPTION
 	FILETYPE_INPCAPTION,
 #endif /* INP_CAPTION */
+#ifdef NEW_RENDER
+	FILETYPE_FONT,
+#endif
 	FILETYPE_end 	/* dummy last entry */
 };
 

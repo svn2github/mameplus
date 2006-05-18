@@ -222,6 +222,7 @@ static void output_oslog(const char *buffer)
 int osd_init(void)
 {
 	extern int win_init_input(void);
+	extern int win_init_video(void);
 	extern void win_blit_init(void);
 	extern int win_erroroslog;
 	int result;
@@ -231,6 +232,10 @@ int osd_init(void)
 	result = win_init_window();
 	if (result == 0)
 		result = win_init_input();
+#ifdef NEW_RENDER
+	if (result == 0)
+		result = win_init_video();
+#endif
 
 	add_pause_callback(win_pause);
 	add_exit_callback(osd_exit);

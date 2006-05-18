@@ -1763,7 +1763,7 @@ void cheat_init(void)
 {
 	int	screenWidth, screenHeight;
 
-	artwork_get_screensize(&screenWidth, &screenHeight);
+	ui_get_bounds(&screenWidth, &screenHeight);
 
 	he_did_cheat =			0;
 
@@ -1804,7 +1804,7 @@ void cheat_init(void)
 	InitStringTable();
 
 	periodic_timer = timer_alloc(cheat_periodic);
-	timer_adjust(periodic_timer, TIME_IN_HZ(Machine->refresh_rate), 0, TIME_IN_HZ(Machine->refresh_rate));
+	timer_adjust(periodic_timer, TIME_IN_HZ(Machine->refresh_rate[0]), 0, TIME_IN_HZ(Machine->refresh_rate[0]));
 
 	add_exit_callback(cheat_exit);
 }
@@ -8509,7 +8509,7 @@ static void HandleLocalCommandCheat(UINT32 type, UINT32 address, UINT32 data, UI
 
 					refresh /= 65536.0;
 
-					set_refresh_rate(refresh);
+					set_refresh_rate(0, refresh);
 				}
 				break;
 			}
@@ -10122,7 +10122,7 @@ static void cheat_periodicAction(CheatAction * action)
 	{
 		case kType_NormalOrDelay:
 		{
-			if(action->frameTimer >= (parameter * Machine->refresh_rate))
+			if(action->frameTimer >= (parameter * Machine->refresh_rate[0]))
 			{
 				action->frameTimer = 0;
 
@@ -10168,7 +10168,7 @@ static void cheat_periodicAction(CheatAction * action)
 
 				if(currentValue != action->lastValue)
 				{
-					action->frameTimer = parameter * Machine->refresh_rate;
+					action->frameTimer = parameter * Machine->refresh_rate[0];
 
 					action->flags |= kActionFlag_WasModified;
 				}

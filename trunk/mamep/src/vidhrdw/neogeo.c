@@ -280,7 +280,7 @@ void neogeo_set_lower_resolution( void )
 		!strcmp(Machine->gamedrv->name,"npong10") ||	// added
 		!strcmp(Machine->gamedrv->name,"syscheck") ||	// added
 		!strcmp(Machine->gamedrv->name,"frogfest"))	// added
-				set_visible_area(1*8,39*8-1,Machine->visible_area.min_y,Machine->visible_area.max_y);
+				set_visible_area(0, 1*8,39*8-1,Machine->visible_area[0].min_y,Machine->visible_area[0].max_y);
 }
 
 extern unsigned int neogeo_frame_counter;

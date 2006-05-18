@@ -208,7 +208,7 @@ VIDEO_START( rallybik )
 		return 1;
 	}
 
-	num_tiles = (Machine->drv->screen_width/8+1)*(Machine->drv->screen_height/8);
+	num_tiles = (Machine->drv->screen[0].maxwidth/8+1)*(Machine->drv->screen[0].maxheight/8);
 
 	spriteram_offs = tileram_offs = 0;
 
@@ -227,9 +227,9 @@ VIDEO_START( rallybik )
 
 VIDEO_START( toaplan1 )
 {
-	tmpbitmap1 = auto_bitmap_alloc(Machine->drv->screen_width,Machine->drv->screen_height);
-	tmpbitmap2 = auto_bitmap_alloc(Machine->drv->screen_width,Machine->drv->screen_height);
-	tmpbitmap3 = auto_bitmap_alloc(Machine->drv->screen_width,Machine->drv->screen_height);
+	tmpbitmap1 = auto_bitmap_alloc(Machine->drv->screen[0].maxwidth,Machine->drv->screen[0].maxheight);
+	tmpbitmap2 = auto_bitmap_alloc(Machine->drv->screen[0].maxwidth,Machine->drv->screen[0].maxheight);
+	tmpbitmap3 = auto_bitmap_alloc(Machine->drv->screen[0].maxwidth,Machine->drv->screen[0].maxheight);
 
 	spriteram16 = auto_malloc(TOAPLAN1_SPRITERAM_SIZE);
 	memset(spriteram16,0,TOAPLAN1_SPRITERAM_SIZE);
@@ -247,7 +247,7 @@ VIDEO_START( toaplan1 )
 		return 1;
 	}
 
-	num_tiles = (Machine->drv->screen_width/8+1)*(Machine->drv->screen_height/8);
+	num_tiles = (Machine->drv->screen[0].maxwidth/8+1)*(Machine->drv->screen[0].maxheight/8);
 
 	spriteram_offs = tileram_offs = 0;
 
@@ -1022,7 +1022,7 @@ static void toaplan1_render (mame_bitmap *bitmap)
 	int flip;
 	tile_struct *tinfo;
 
-	fillbitmap (bitmap, Machine->pens[0x120], &Machine->visible_area);
+	fillbitmap (bitmap, Machine->pens[0x120], &Machine->visible_area[0]);
 
 #ifdef BGDBG
 
@@ -1062,7 +1062,7 @@ if( toaplan_dbg_priority != 0 ){
 				(tinfo->color&0x3f),
 				0,0,						/* flipx,flipy */
 				tinfo->xpos,tinfo->ypos,
-				&Machine->visible_area,pen,0);
+				&Machine->visible_area[0],pen,0);
 			tinfo++;
 		}
 	}
@@ -1102,8 +1102,8 @@ if ( toaplan_dbg_sprite_only == 0 ){
 			int xpos,ypos;
 
 			if ( flip ){
-				xpos = (512 - tinfo->xpos) - 8 - (512 - Machine->drv->screen_width);
-				ypos = (512 - tinfo->ypos) - 8 - (512 - Machine->drv->screen_height);
+				xpos = (512 - tinfo->xpos) - 8 - (512 - Machine->drv->screen[0].maxwidth);
+				ypos = (512 - tinfo->ypos) - 8 - (512 - Machine->drv->screen[0].maxheight);
 		}
 			else{
 				xpos = tinfo->xpos;
@@ -1115,7 +1115,7 @@ if ( toaplan_dbg_sprite_only == 0 ){
 				(tinfo->color&0x3f),
 				flip,flip,							/* flipx,flipy */
 				xpos,ypos,
-				&Machine->visible_area,pen,0);
+				&Machine->visible_area[0],pen,0);
 			tinfo++;
 		}
 		priority++;
@@ -1139,7 +1139,7 @@ static void zerowing_render (mame_bitmap *bitmap)
 	int flip;
 	tile_struct *tinfo;
 
-	fillbitmap (bitmap, Machine->pens[0x120], &Machine->visible_area);
+	fillbitmap (bitmap, Machine->pens[0x120], &Machine->visible_area[0]);
 
 	if (bcu_flipscreen)
 		flip = 1;
@@ -1160,8 +1160,8 @@ static void zerowing_render (mame_bitmap *bitmap)
 			int xpos,ypos;
 
 			if ( flip ){
-				xpos = (512 - tinfo->xpos) - 8 - (512 - Machine->drv->screen_width);
-				ypos = (512 - tinfo->ypos) - 8 - (512 - Machine->drv->screen_height);
+				xpos = (512 - tinfo->xpos) - 8 - (512 - Machine->drv->screen[0].maxwidth);
+				ypos = (512 - tinfo->ypos) - 8 - (512 - Machine->drv->screen[0].maxheight);
 			}
 			else{
 				xpos = tinfo->xpos;
@@ -1173,7 +1173,7 @@ static void zerowing_render (mame_bitmap *bitmap)
 				(tinfo->color&0x3f),
 				flip,flip,							/* flipx,flipy */
 				xpos,ypos,
-				&Machine->visible_area,pen,0);
+				&Machine->visible_area[0],pen,0);
 			tinfo++;
 		}
 		priority++;
@@ -1188,7 +1188,7 @@ static void demonwld_render (mame_bitmap *bitmap)
 	int flip;
 	tile_struct *tinfo;
 
-	fillbitmap (bitmap, Machine->pens[0], &Machine->visible_area);
+	fillbitmap (bitmap, Machine->pens[0], &Machine->visible_area[0]);
 
 #ifdef BGDBG
 
@@ -1218,7 +1218,7 @@ if (code_pressed_memory(KEYCODE_B)) { toaplan_dbg_layer[3] ^= 1; }
 if( toaplan_dbg_priority != 0 ){
 
 	palette_set_color(0x120,0xf,0xf,0xf);
-	fillbitmap (bitmap, Machine->pens[0x120], &Machine->visible_area);
+	fillbitmap (bitmap, Machine->pens[0x120], &Machine->visible_area[0]);
 	priority = toaplan_dbg_priority - 1;
 				{
 		tinfo = (tile_struct *)&(tile_list[priority][0]);
@@ -1231,7 +1231,7 @@ if( toaplan_dbg_priority != 0 ){
 				(tinfo->color&0x3f),
 				0,0,						/* flipx,flipy */
 				tinfo->xpos,tinfo->ypos,
-				&Machine->visible_area,pen,0);
+				&Machine->visible_area[0],pen,0);
 			tinfo++;
 				}
 			}
@@ -1265,8 +1265,8 @@ if( toaplan_dbg_priority != 0 ){
 			int xpos,ypos;
 
 			if ( flip ){
-				xpos = (512 - tinfo->xpos) - 8 - (512 - Machine->drv->screen_width);
-				ypos = (512 - tinfo->ypos) - 8 - (512 - Machine->drv->screen_height);
+				xpos = (512 - tinfo->xpos) - 8 - (512 - Machine->drv->screen[0].maxwidth);
+				ypos = (512 - tinfo->ypos) - 8 - (512 - Machine->drv->screen[0].maxheight);
 			}
 			else{
 				xpos = tinfo->xpos;
@@ -1278,7 +1278,7 @@ if( toaplan_dbg_priority != 0 ){
 				(tinfo->color&0x3f),
 				flip,flip,							/* flipx,flipy */
 				xpos,ypos,
-				&Machine->visible_area,pen,0);
+				&Machine->visible_area[0],pen,0);
 			tinfo++;
 			}
 		priority++;
@@ -1299,7 +1299,7 @@ static void rallybik_render (mame_bitmap *bitmap)
 	int flip;
 	tile_struct *tinfo;
 
-	fillbitmap (bitmap, Machine->pens[0], &Machine->visible_area);
+	fillbitmap (bitmap, Machine->pens[0], &Machine->visible_area[0]);
 
 	if (bcu_flipscreen)
 		flip = 1;
@@ -1327,12 +1327,12 @@ static void rallybik_render (mame_bitmap *bitmap)
 					(tinfo->color&0x3f), 				/* bit 7 not for colour */
 					(tinfo->color & 0x0100),(tinfo->color & 0x0200),	/* flipx,flipy */
 					tinfo->xpos,tinfo->ypos,
-					&Machine->visible_area,pen,0);
+					&Machine->visible_area[0],pen,0);
 			}else{
 				/* BG */
 				if ( flip ){
-					xpos = (512 - tinfo->xpos) - 8 - (512 - Machine->drv->screen_width);
-					ypos = (512 - tinfo->ypos) - 8 - (512 - Machine->drv->screen_height);
+					xpos = (512 - tinfo->xpos) - 8 - (512 - Machine->drv->screen[0].maxwidth);
+					ypos = (512 - tinfo->ypos) - 8 - (512 - Machine->drv->screen[0].maxheight);
 				}
 				else{
 					xpos = tinfo->xpos;
@@ -1343,7 +1343,7 @@ static void rallybik_render (mame_bitmap *bitmap)
 					(tinfo->color&0x3f),
 					flip,flip,							/* flipx,flipy */
 					xpos,ypos,
-					&Machine->visible_area,pen,0);
+					&Machine->visible_area[0],pen,0);
 			}
 			tinfo++;
 		}
@@ -1363,7 +1363,7 @@ static void toaplan1_sprite_render (mame_bitmap *bitmap)
 	tile_struct *tinfo_sp;
 	rectangle sp_rect;
 
-	fillbitmap (tmpbitmap1, Machine->pens[0],&Machine->visible_area);
+	fillbitmap (tmpbitmap1, Machine->pens[0],&Machine->visible_area[0]);
 
 	flip = 0;
 
@@ -1388,7 +1388,7 @@ static void toaplan1_sprite_render (mame_bitmap *bitmap)
 			(tinfo_sp->color&0x3f),			/* bit 7 not for colour */
 			flipx,flipy,					/* flipx,flipy */
 			tinfo_sp->xpos,tinfo_sp->ypos,
-			&Machine->visible_area,TRANSPARENCY_PEN,0
+			&Machine->visible_area[0],TRANSPARENCY_PEN,0
 		);
 
 		fillbitmap (tmpbitmap3, Machine->pens[0], &sp_rect);
@@ -1418,7 +1418,7 @@ static void toaplan1_sprite_render (mame_bitmap *bitmap)
 						(tinfo->color&0x3f),
 						flip,flip,
 						tinfo->xpos,tinfo->ypos,
-						&Machine->visible_area,TRANSPARENCY_PEN,0
+						&Machine->visible_area[0],TRANSPARENCY_PEN,0
 					);
 					dirty=1;
 				}
@@ -1431,7 +1431,7 @@ static void toaplan1_sprite_render (mame_bitmap *bitmap)
 						(tinfo->color&0x3f),
 						flip,flip,
 						tinfo->xpos,tinfo->ypos,
-						&Machine->visible_area,TRANSPARENCY_PEN,0
+						&Machine->visible_area[0],TRANSPARENCY_PEN,0
 					);
 					dirty=1;
 				}
@@ -1444,7 +1444,7 @@ static void toaplan1_sprite_render (mame_bitmap *bitmap)
 						(tinfo->color&0x3f),
 						flip,flip,
 						tinfo->xpos,tinfo->ypos,
-						&Machine->visible_area,TRANSPARENCY_PEN,0
+						&Machine->visible_area[0],TRANSPARENCY_PEN,0
 					);
 					dirty=1;
 				}
@@ -1457,7 +1457,7 @@ static void toaplan1_sprite_render (mame_bitmap *bitmap)
 						(tinfo->color&0x3f),
 						flip,flip,
 						tinfo->xpos,tinfo->ypos,
-						&Machine->visible_area,TRANSPARENCY_PEN,0
+						&Machine->visible_area[0],TRANSPARENCY_PEN,0
 					);
 					dirty=1;
 				}
@@ -1476,7 +1476,7 @@ static void toaplan1_sprite_render (mame_bitmap *bitmap)
 				(tinfo_sp->color&0x3f),
 				flipx,flipy,
 				tinfo_sp->xpos,tinfo_sp->ypos,
-				&Machine->visible_area,TRANSPARENCY_PEN,0
+				&Machine->visible_area[0],TRANSPARENCY_PEN,0
 			);
 			if ( priority == 0 ){			/* demonwld : sprite mask effect in BOSS dying */
 				toaplan1_sprite_0_copy(
@@ -1499,7 +1499,7 @@ static void toaplan1_sprite_render (mame_bitmap *bitmap)
 				(tinfo_sp->color&0x3f),
 				flipx,flipy,
 				tinfo_sp->xpos,tinfo_sp->ypos,
-				&Machine->visible_area,TRANSPARENCY_PEN,0
+				&Machine->visible_area[0],TRANSPARENCY_PEN,0
 			);
 		}
 		}
@@ -1509,7 +1509,7 @@ static void toaplan1_sprite_render (mame_bitmap *bitmap)
 	copybitmap(bitmap, tmpbitmap1, 
 		fcu_flipscreen, fcu_flipscreen,
 		0, 0,
-		&Machine->visible_area, TRANSPARENCY_PEN, 0
+		&Machine->visible_area[0], TRANSPARENCY_PEN, 0
 	);
 
 }

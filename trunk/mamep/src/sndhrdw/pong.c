@@ -44,7 +44,7 @@ static void pong_sh_start(void)
 	sample_set_volume(CHANNEL_VBLANK, 0.0);
 	sample_set_volume(CHANNEL_SCORE, 0.0);
 
-	timer_pulse(TIME_IN_HZ(Machine->drv->frames_per_second), 0, pong_sh_update);
+	timer_pulse(TIME_IN_HZ(Machine->refresh_rate[0]), 0, pong_sh_update);
 }
 
 struct Samplesinterface pong_samples_interface =
