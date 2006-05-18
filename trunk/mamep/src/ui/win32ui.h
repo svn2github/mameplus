@@ -16,6 +16,10 @@
 #include "MAME32.h"	// include this first
 #include <driver.h>
 
+#if !defined(SEARCH_PROMPT)
+#define SEARCH_PROMPT "type a keyword"
+#endif
+
 enum
 {
 	TAB_PICKER = 0,
@@ -37,6 +41,7 @@ extern const ICONDATA g_iconData[];
 HWND GetMainWindow(void);
 HWND GetTreeView(void);
 int GetNumGames(void);
+LPWSTR GetSearchText(void);
 void GetRealColumnOrder(int order[]);
 HICON LoadIconFromFile(const char *iconname);
 void UpdateScreenShot(void);

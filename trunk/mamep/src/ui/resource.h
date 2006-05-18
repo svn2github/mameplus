@@ -25,6 +25,7 @@
 #define IDS_UI_REFRESH                  93
 #define IDS_UI_CUSTOMIZE                94
 #define IDS_UI_LANGUAGE                 88	// status bar (IDS_UI_FONT + 13)
+#define ID_TOOLBAR_EDIT                 99
 #define IDD_MAIN                        101
 #define IDA_TAB_KEYS                    106
 #define IDI_MAME32_ICON                 107

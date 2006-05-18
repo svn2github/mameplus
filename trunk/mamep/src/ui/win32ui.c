@@ -543,6 +543,9 @@ static struct OSDJoystick* g_pJoyGUI = NULL;
 /* store current keyboard state (in internal codes) here */
 static input_code keyboard_state[ __code_max ]; /* __code_max #defines the number of internal key_codes */
 
+/* search */
+static WCHAR g_SearchText[256];
+
 /* table copied from windows/inputs.c */
 // table entry indices
 #define MAME_KEY		0
@@ -1653,6 +1656,11 @@ HICON LoadIconFromFile(const char *iconname)
 int GetNumGames()
 {
 	return game_count;
+}
+
+LPWSTR GetSearchText(void)
+{
+	return g_SearchText;
 }
 
 /* Sets the treeview and listviews sizes in accordance with their visibility and the splitters */
@@ -3545,7 +3553,7 @@ static void CopyToolTipTextA(LPTOOLTIPTEXTA lpttt)
 
 static HWND InitToolbar(HWND hParent)
 {
-	return CreateToolbarEx(hParent,
+	HWND hToolBar = CreateToolbarEx(hParent,
 	                       WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS |
 	                       CCS_TOP | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS,
 	                       1,
@@ -3559,6 +3567,13 @@ static HWND InitToolbar(HWND hParent)
 	                       0,
 	                       0,
 	                       sizeof(TBBUTTON));
+
+	// create Edit Control
+	HWND hEdit= CreateWindowEx( 0L, _Unicode("Edit"), _Unicode(_UI(SEARCH_PROMPT)), WS_CHILD | WS_BORDER | WS_VISIBLE | ES_LEFT, 
+								260, 1, 200, 20, hParent, (HMENU) ID_TOOLBAR_EDIT, hInst, 0 );
+	SetParent (hEdit, hToolBar);
+
+	return hToolBar;
 }
 
 static HWND InitStatusBar(HWND hParent)
@@ -4906,6 +4921,38 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		ToolBar_CheckButton(hToolBar, IDC_USE_LIST, UseLangList() ^ (GetLangcode() == UI_LANG_EN_US) ? MF_CHECKED : MF_UNCHECKED);
 		ResetListView();
 		UpdateHistory();
+		break;
+
+	case ID_TOOLBAR_EDIT:
+		{
+			WCHAR buf[256];
+
+			Edit_GetText(hwndCtl, buf, sizeof(buf));
+			switch (codeNotify)
+			{
+			case EN_CHANGE:
+				//put search routine here first, add a 200ms timer later.
+				if ((!_wcsicmp(buf, _Unicode(_UI(SEARCH_PROMPT))) && !_wcsicmp(g_SearchText, _Unicode(""))) ||
+				    (!_wcsicmp(g_SearchText, _Unicode(_UI(SEARCH_PROMPT))) && !_wcsicmp(buf, _Unicode(""))))
+				{
+					wcscpy(g_SearchText, buf);
+				}
+				else
+				{
+					wcscpy(g_SearchText, buf);
+					ResetListView();
+				}
+				break;
+			case EN_SETFOCUS:
+				if (!_wcsicmp(buf, _Unicode(_UI(SEARCH_PROMPT))))
+					SetWindowTextW(hwndCtl, _Unicode(""));
+				break;
+			case EN_KILLFOCUS:
+				if (wcslen(buf) == 0)
+					SetWindowTextW(hwndCtl, _Unicode(_UI(SEARCH_PROMPT)));
+				break;
+			}
+		}
 		break;
 
 	case ID_GAME_AUDIT:

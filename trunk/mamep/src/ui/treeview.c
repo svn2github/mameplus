@@ -37,6 +37,7 @@
 
 #include <io.h>
 #include "mame32.h"	// include this first
+#include "win32ui.h"
 #include "driver.h"
 #include "hash.h"
 #include "M32Util.h"
@@ -389,6 +390,7 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 	LPTREEFOLDER lpParent = NULL;
 	const game_driver *clone_of = NULL;
 	LPCWSTR filter_text = GetFilterText();
+	LPCWSTR search_text = GetSearchText();
 	
 	//Filter out the Bioses on all Folders, except for the Bios Folder
 	if( lpFolder->m_nFolderId != FOLDER_BIOS )
@@ -396,6 +398,24 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 		if( !( (drivers[nGame]->flags & NOT_A_DRIVER ) == 0) )
 			return TRUE;
 	}
+
+	if (wcslen(search_text) && _wcsicmp(search_text, _Unicode(_UI(SEARCH_PROMPT))))
+	{
+		if (MyStrStrI(_Unicode(drivers[nGame]->description), search_text) == NULL &&
+			MyStrStrI(_Unicode(_LST(drivers[nGame]->description)), search_text) == NULL &&
+		    MyStrStrI(_Unicode(drivers[nGame]->name), search_text) == NULL)
+			return TRUE;
+	}
+
+	if (wcslen(filter_text))
+	{
+		if (MyStrStrI(_Unicode(UseLangList() ? _LST(drivers[nGame]->description) : drivers[nGame]->description), filter_text) == NULL &&
+		    MyStrStrI(_Unicode(drivers[nGame]->name), filter_text) == NULL && 
+		    MyStrStrI(_Unicode(drivers[nGame]->source_file), filter_text) == NULL && 
+		    MyStrStrI(_Unicode(UseLangList()? _MANUFACT(drivers[nGame]->manufacturer) : drivers[nGame]->manufacturer), filter_text) == NULL)
+			return TRUE;
+	}
+
 	// Filter games--return TRUE if the game should be HIDDEN in this view
 	if( GetFilterInherit() )
 	{
@@ -410,18 +430,6 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 				dwMask |= lpParent->m_dwFlags;
 			}
 		}
-	}
-	/*Filter Text is already global*/
-	
-	if (!wcslen(filter_text))
-		return FALSE;
-	
-	if (MyStrStrI(_Unicode(UseLangList() ? _LST(drivers[nGame]->description) : drivers[nGame]->description), filter_text) == NULL &&
-	    MyStrStrI(_Unicode(drivers[nGame]->name), filter_text) == NULL && 
-	    MyStrStrI(_Unicode(drivers[nGame]->source_file), filter_text) == NULL && 
-	    MyStrStrI(_Unicode(UseLangList()? _MANUFACT(drivers[nGame]->manufacturer) : drivers[nGame]->manufacturer), filter_text) == NULL)
-	{
-		return TRUE;
 	}
 
 	// Are there filters set on this folder?
