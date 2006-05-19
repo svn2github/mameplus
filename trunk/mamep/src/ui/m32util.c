@@ -67,7 +67,16 @@ static struct DriversInfo
 	BOOL supportsSaveState;
 	BOOL hasM68K;
 	int parentIndex;
+	int aspect_x;
+	int aspect_y;
 } *drivers_info = NULL;
+
+static struct
+{
+	int aspect;
+	int x;
+	int y;
+} aspect_db[100];
 
 
 /***************************************************************************
@@ -331,6 +340,78 @@ const char * GetDriverFilename(int nIndex)
 	return GetFilename(drivers[nIndex]->source_file);
 }
 
+static void get_aspect(float aspect, int *aspect_x, int *aspect_y)
+{
+	static float fzero;
+	int val = aspect * 10000.0f + 0.5f;
+	int i;
+
+	for (i = 0; i < sizeof (aspect_db) / sizeof (aspect_db[0]); i++)
+	{
+		if (aspect_db[i].aspect == val)
+		{
+			*aspect_x = aspect_db[i].x;
+			*aspect_y = aspect_db[i].y;
+			return;
+		}
+
+		if (aspect_db[i].aspect == fzero)
+		{
+			int x, y;
+
+			if (val > 10000)
+			{
+				for (x = 2; x < 100; x++)
+					for (y = 1; y < x; y++)
+					{
+						int as;
+
+						if ((~x & 1) && (~y & 1))
+							continue;
+
+						as = ((float)x / (float)y) * 10000.0f + 0.5f;
+
+						if (val == as)
+						{
+							aspect_db[i].aspect = val;
+							*aspect_x = aspect_db[i].x = x;
+							*aspect_y = aspect_db[i].y = y;
+							return;
+						}
+					}
+			}
+			else
+			{
+				for (y = 2; y < 100; y++)
+					for (x = 1; x < y; x++)
+					{
+						int as;
+
+						if ((~x & 1) && (~y & 1))
+							continue;
+
+						as = ((float)x / (float)y) * 10000.0f + 0.5f;
+
+						if (val == as)
+						{
+							aspect_db[i].aspect = val;
+							*aspect_x = aspect_db[i].x = x;
+							*aspect_y = aspect_db[i].y = y;
+							return;
+						}
+					}
+			}
+
+			aspect_db[i].aspect = val;
+			*aspect_x = aspect_db[i].x = x;
+			*aspect_y = aspect_db[i].y = y;
+			return;
+		}
+	}
+
+	exit(1);
+}
+
 static struct DriversInfo* GetDriversInfo(int driver_index)
 {
 	if (drivers_info == NULL)
@@ -460,21 +541,28 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 				}
 			}
 
+			get_aspect(drv.screen[0].aspect, &gameinfo->aspect_x, &gameinfo->aspect_y);
+
 			gameinfo->supportsDisable2ndMon = FALSE;
 			{
-				float aspect_x = drv.screen[0].aspect;
-				float aspect_y = drv.screen[0].aspect;
+				float aspect = drv.screen[0].aspect;
 
 				options.disable_2nd_monitor = 1;
 				expand_machine_driver(gamedrv->drv, &drv);
 				options.disable_2nd_monitor = 0;
 
-				if (aspect_x != drv.screen[0].aspect || aspect_y != drv.screen[0].aspect)
+				if (aspect != drv.screen[0].aspect)
 					gameinfo->supportsDisable2ndMon = TRUE;
 			}
 		}
 	}
 	return &drivers_info[driver_index];
+}
+
+void GetDriverAspect(int driver_index, int *aspect_x, int *aspect_y)
+{
+	*aspect_x = GetDriversInfo(driver_index)->aspect_x;
+	*aspect_y = GetDriversInfo(driver_index)->aspect_y;
 }
 
 BOOL DriverIsClone(int driver_index)

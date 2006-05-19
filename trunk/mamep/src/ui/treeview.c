@@ -1303,7 +1303,6 @@ void CreateResolutionFolders(int parent_index)
 void CreateAspectFolders(int parent_index)
 {
 	int i,jj;
-	float ax, ay;
 	int nGames = GetNumGames();
 	int start_folder = numFolders;
 	machine_config drv;
@@ -1315,27 +1314,16 @@ void CreateAspectFolders(int parent_index)
 
 	for (jj = 0; jj < nGames; jj++)
 	{
+		int ax, ay;
+
 		expand_machine_driver(drivers[jj]->drv, &drv);
 
 		if (drivers[jj]->flags & ORIENTATION_SWAP_XY)
-		{
-		    ax = 1.0f;
-		    ay = drv.screen[0].aspect;
-			if (ax == 0 && ay == 0) {
-				ax = 3;
-				ay = 4;
-			}
-		}
+			GetDriverAspect(jj, &ay, &ax);
 		else
-		{
-		    ax = drv.screen[0].aspect;
-		    ay = 1.0f;
-			if (ax == 0 && ay == 0) {
-				ax = 4;
-				ay = 3;
-			}
-		}
-		sprintf(Aspect, "%f:%f", ax, ay);
+			GetDriverAspect(jj, &ax, &ay);
+
+		sprintf(Aspect, "%d:%d", ax, ay);
 
 		for (i=numFolders-1;i>=start_folder;i--)
 		{

@@ -879,31 +879,22 @@ static LPWSTR GameInfoSound(int nIndex)
 static LPWSTR GameInfoScreen(int nIndex)
 {
 	char buf[1024];
-	float ax, ay;
 	machine_config drv;
+	int ax, ay;
+
 	expand_machine_driver(drivers[nIndex]->drv, &drv);
 
 	if (drv.video_attributes & VIDEO_TYPE_VECTOR)
 	{
 		if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
 		{
-		    ax = 1.0f;
-		    ay = drv.screen[0].aspect;
-			if (ax == 0 && ay == 0) {
-				ax = 3;
-				ay = 4;
-			}
-			sprintf(buf,_UI("Vector (V) %f Hz (%f:%f) (%d colors)"),
+			GetDriverAspect(nIndex, &ay, &ax);
+			sprintf(buf,_UI("Vector (V) %f Hz (%d:%d) (%d colors)"),
 				drv.screen[0].refresh_rate, ax, ay, drv.total_colors);
 		}
 		else
 		{
-		    ax = drv.screen[0].aspect;
-		    ay = 1.0f;
-			if (ax == 0 && ay == 0) {
-				ax = 4;
-				ay = 3;
-			}
+			GetDriverAspect(nIndex, &ax, &ay);
 			sprintf(buf,_UI("Vector (H) %f Hz (%d:%d) (%d colors)"),
 					drv.screen[0].refresh_rate, ax, ay, drv.total_colors);
 		}
@@ -912,26 +903,16 @@ static LPWSTR GameInfoScreen(int nIndex)
 	{
 		if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
 		{
-		    ax = 1.0f;
-		    ay = drv.screen[0].aspect;
-			if (ax == 0 && ay == 0) {
-				ax = 3;
-				ay = 4;
-			}
-			sprintf(buf,_UI("%d x %d (V) %f Hz (%f:%f) (%d colors)"),
+			GetDriverAspect(nIndex, &ay, &ax);
+			sprintf(buf,_UI("%d x %d (V) %f Hz (%d:%d) (%d colors)"),
 					drv.screen[0].default_visible_area.max_y - drv.screen[0].default_visible_area.min_y + 1,
 					drv.screen[0].default_visible_area.max_x - drv.screen[0].default_visible_area.min_x + 1,
 					drv.screen[0].refresh_rate, ax, ay, drv.total_colors);
 		}
 		else
 		{
-		    ax = drv.screen[0].aspect;
-		    ay = 1.0f;
-			if (ax == 0 && ay == 0) {
-				ax = 4;
-				ay = 3;
-			}
-			sprintf(buf,_UI("%d x %d (H) %f Hz (%f:%f) (%d colors)"),
+			GetDriverAspect(nIndex, &ax, &ay);
+			sprintf(buf,_UI("%d x %d (H) %f Hz (%d:%d) (%d colors)"),
 					drv.screen[0].default_visible_area.max_x - drv.screen[0].default_visible_area.min_x + 1,
 					drv.screen[0].default_visible_area.max_y - drv.screen[0].default_visible_area.min_y + 1,
 					drv.screen[0].refresh_rate, ax, ay, drv.total_colors);

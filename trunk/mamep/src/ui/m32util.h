@@ -34,6 +34,8 @@ extern const char * strlower(const char *s);
 
 extern const char * GetDriverFilename(int nIndex);
 extern const char * GetFilename(const char *filename);
+extern void GetDriverAspect(int driver_index, int *aspect_x, int *aspect_y);
+
 
 BOOL DriverIsClone(int driver_index);
 BOOL DriverIsBroken(int driver_index);
