@@ -2359,7 +2359,6 @@ int load_driver_statistics (char *buffer, int bufsize)
 	char name[100];
 	char year[4];
 	int i, n, x, y;
-	float ax, ay;
 	int all = 0, cl = 0, vec = 0, vecc = 0, neo = 0, neoc = 0;
 	int pch = 0, pchc = 0, deco = 0, decoc = 0, cvs = 0, cvsc = 0, noyear = 0, nobutt = 0, noinput = 0;
 	int vertical = 0, verticalc = 0, horizontal = 0, horizontalc = 0;
@@ -2371,14 +2370,12 @@ int load_driver_statistics (char *buffer, int bufsize)
 	static int flags[20], romsize[10];
 	static int numcpu[4][CPU_COUNT], numsnd[4][SOUND_COUNT], sumcpu[MAX_CPU+1], sumsound[MAX_SOUND+1];
 	static int resx[400], resy[400], resnum[400];
-	static int asx[30], asy[30], asnum[30];
+	static int aspect[30], asx[30], asy[30], asnum[30];
 	static int palett[300], palettnum[300], control[35];
 	static int fpsnum[50];
 	float fps[50];
 
-
 	*buffer = 0;
-
 
 	strcat(buffer, APPNAME " ");
 	strcat(buffer, build_version);
@@ -2404,24 +2401,15 @@ int load_driver_statistics (char *buffer, int bufsize)
 		/* Calc all graphic resolution and aspect ratio numbers */
 		if (drivers[i]->flags & ORIENTATION_SWAP_XY)
 		{
-			ax = 1.0f;
-			ay = drv.screen[0].aspect;
+			aspect[0] = 10000.0f / drv.screen[0].aspect + 0.5f;
 
-			if (ax == 0 && ay == 0){
-				ax = 3;
-				ay = 4;
-			}
 			x = drv.screen[0].default_visible_area.max_y - drv.screen[0].default_visible_area.min_y + 1;
 			y = drv.screen[0].default_visible_area.max_x - drv.screen[0].default_visible_area.min_x + 1;
 		}
 		else
 		{
-			ax = drv.screen[0].aspect;
-			ay = 1.0f;
-			if (ax == 0 && ay == 0) {
-				ax = 4;
-				ay = 3;
-			}
+			aspect[0] = drv.screen[0].aspect * 10000.0f + 0.5f;
+
 			x = drv.screen[0].default_visible_area.max_x - drv.screen[0].default_visible_area.min_x + 1;
 			y = drv.screen[0].default_visible_area.max_y - drv.screen[0].default_visible_area.min_y + 1;
 		}
@@ -2455,23 +2443,21 @@ int load_driver_statistics (char *buffer, int bufsize)
 		}
 
 		/* Store all aspect ratio numbers */
-		for (n = 0; n < 15; n++)
+		for (n = 1; n < 15; n++)
 		{
-			if (asx[n] == ax && asy[n] == ay)
+			if (aspect[n] == aspect[0])
 			{
-				asnum [n]++;
+				asnum[n]++;
 				break;
 			}
 
-			if (asx[n] == 0)
+			if (asnum[n] == 0)
 			{
-				asx[n] = ax;
-				asy[n] = ay;
-				asnum [n]++;
+				aspect[n] = aspect[0];
+				asnum[n]++;
 				break;
 			}
 		}
-
 
 		/* Calc all palettesize numbers */
 		x = drv.total_colors;
@@ -3138,53 +3124,112 @@ int load_driver_statistics (char *buffer, int bufsize)
 	strcat(buffer, name);
 
 
+	/* VIDEO_ASPECT_RATIO: Calculate all games video x:y ratio */
+	for (n = 1; n < 15; n++)
+	{
+		int done = 0;
 
+		if (!asnum[n])
+			break;
+
+		if (aspect[n] > 10000)
+		{
+			for (x = 2; !done && x < 100; x++)
+				for (y = 1; y < x; y++)
+				{
+					int as;
+
+					if ((~x & 1) && (~y & 1))
+						continue;
+
+					as = ((float)x / (float)y) * 10000.0f + 0.5f;
+
+					if (aspect[n] == as)
+					{
+						done = 1;
+						asx[n] = x;
+						asy[n] = y;
+						break;
+					}
+				}
+		}
+		else
+		{
+			for (y = 2; !done && y < 100; y++)
+				for (x = 1; x < y; x++)
+				{
+					int as;
+
+					if ((~x & 1) && (~y & 1))
+						continue;
+
+					as = ((float)x / (float)y) * 10000.0f + 0.5f;
+
+					if (aspect[n] == as)
+					{
+						done = 1;
+						asx[n] = x;
+						asy[n] = y;
+						break;
+					}
+				}
+		}
+	}
 
 	/* VIDEO_ASPECT_RATIO: Sort all games video ratio by x and y */
-	i = 0;
-	for (cl = 0; cl < 15; cl++)
+	for (i = 15; i < 30; i++)
 	{
-		x = 1280;
-		for (n = 0; n < 15; n++)
-		{
-			if (asx[n] && x > asx[n])
-				x = asx[n];
-		}
+		for (cl = 1; cl < 15; cl++)
+			if (asnum[cl])
+				break;
 
-		y = 1280;
-		for (n = 0; n < 15; n++)
-		{
-			if (x == asx[n] && y > asy[n])
-				y = asy[n];
-		}
+		if (cl >= 15)
+			break;
 
-		for (n = 0; n < 15; n++)
+		for (n = cl + 1; n < 15; n++)
 		{
-			if (x == asx[n] && y == asy[n])
+			if (!asnum[n])
+				continue;
+
+			if (asx[n] && asy[n])
 			{
-				/* Store all sorted resolutions in the higher array */
-				asx[15+i] = asx[n];
-				asy[15+i] = asy[n];
-				asnum[15+i] = asnum[n];
-				i++;
-				asx[n] = 0, asy[n] = 0, asnum[n] = 0;
+				if (asx[n] > asx[cl])
+					continue;
+
+				if (asx[n] == asx[cl] && asy[n] > asy[cl])
+					continue;
 			}
+			else
+			{
+				if (aspect[n] > aspect[cl])
+					continue;
+			}
+
+			cl = n;
 		}
+
+		/* Store all sorted resolutions in the higher array */
+		aspect[i] = aspect[cl];
+		asnum[i] = asnum[cl];
+		asx[i] = asx[cl];
+		asy[i] = asy[cl];
+
+		asnum[cl] = 0;
 	}
 
 	/* Print all VIDEO_ASPECT_RATIO's */
 	strcat(buffer,_("\n\nVIDEO ASPECT RATIO X:Y (ALL)\n\n"));
-	for (n = 15; n < 30; n++)
+	for (n = 15; asnum[n] && n < 30; n++)
 	{
-		if (asx[n])
-		{
-			sprintf(name, "%4d   :%4d    | %4d\n", asx[n], asy[n], asnum[n]);
-			strcat(buffer, name);
-			if (i > 14)
-				strcat(buffer, "\nWARNING: ASPECT RATIO number too high!\n");
-		}
-
+		if (asx[n] && asy[n])
+			sprintf(name, "%2d  : %2d  (%4d)  %1.3f\n", asx[n], asy[n], asnum[n], aspect[n] / 10000.0f);
+		else
+			sprintf(name, " ?  :  ?   (%4d)  %1.3f\n", asnum[n], aspect[n] / 10000.0f);
+		strcat(buffer, name);
 	}
+
+	if (asnum[14])
+		strcat(buffer, "\nWARNING: ASPECT RATIO number too high!\n");
 
 	/* Print the video_attributes */
 	strcat(buffer,_("\n\nVIDEO NEEDS... : ORIG   CLNS\n\n"));
@@ -3345,9 +3390,10 @@ int load_driver_statistics (char *buffer, int bufsize)
 
 	memset(flags, 0, sizeof flags);
 	memset(romsize, 0, sizeof romsize);
+	memset(aspect, 0, sizeof aspect);
+	memset(asnum, 0, sizeof asnum);
 	memset(asx, 0, sizeof asx);
 	memset(asy, 0, sizeof asy);
-	memset(asnum, 0, sizeof asnum);
 	memset(control, 0, sizeof control);
 	memset(fps, 0, sizeof fps);
 	memset(fpsnum, 0, sizeof fpsnum);
