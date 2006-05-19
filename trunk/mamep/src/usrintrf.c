@@ -1705,11 +1705,17 @@ static void handle_keys(mame_bitmap *bitmap)
 		ui_set_handler(menu_ui_handler, 0);
 
 	if (input_ui_pressed(IPT_UI_CHEAT))
-		ui_set_handler(menu_cheat, (1 << 31) | (1 << 30) | (1 << 8) | 1);
+	{
+		ui_menu_stack_push(menu_cheat, (1 << 31) | (1 << 30) | (1 << 8) | 1);
+		ui_set_handler(menu_ui_handler, 0);
+	}
 
 #ifdef CMD_LIST
 	if (input_ui_pressed(IPT_UI_COMMAND))
-		ui_set_handler(menu_command, 1 << 24);
+	{
+		ui_menu_stack_push(menu_command, 1 << 24);
+		ui_set_handler(menu_ui_handler, 0);
+	}
 #endif /* CMD_LIST */
 
 	/* if the on-screen display isn't up and the user has toggled it, turn it on */
