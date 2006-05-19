@@ -8,6 +8,8 @@
 
 static const char *stat_versions[] =
 {
+	"0.106u1    May       18th 2006",
+	"0.106      May       13th 2006",
 	"0.105u5    May       11th 2006",
 	"0.105u4    May        3rd 2006",
 	"0.105u3    April     27th 2006",
@@ -327,6 +329,8 @@ static const char *stat_versions[] =
 
 static const char *stat_history[] =
 {
+	"0.106u1    862    6166  +0",
+	"0.106      862    6166  +0",
 	"0.105u5    862    6166  +8",
 	"0.105u4    860    6158  +8",
 	"0.105u3    860    6150  +34",
