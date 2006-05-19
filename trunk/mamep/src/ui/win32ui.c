@@ -25,9 +25,6 @@
 ***************************************************************************/
 #define MULTISESSION 0
 
-#undef _WIN32_WINNT
-#define _WIN32_WINNT 0x400
-
 #ifdef _MSC_VER
 #ifndef NONAMELESSUNION
 #define NONAMELESSUNION 
