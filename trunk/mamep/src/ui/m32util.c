@@ -462,14 +462,14 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 
 			gameinfo->supportsDisable2ndMon = FALSE;
 			{
-				int aspect_x = drv.aspect_x;											\
-				int aspect_y = drv.aspect_y;											\
+				float aspect_x = drv.screen[0].aspect;
+				float aspect_y = drv.screen[0].aspect;
 
 				options.disable_2nd_monitor = 1;
 				expand_machine_driver(gamedrv->drv, &drv);
 				options.disable_2nd_monitor = 0;
 
-				if (aspect_x != drv.aspect_x || aspect_y != drv.aspect_y)
+				if (aspect_x != drv.screen[0].aspect || aspect_y != drv.screen[0].aspect)
 					gameinfo->supportsDisable2ndMon = TRUE;
 			}
 		}

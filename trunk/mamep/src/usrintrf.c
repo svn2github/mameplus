@@ -587,7 +587,7 @@ int ui_get_string_width(const char *s)
 void ui_show_fps_temp(double seconds)
 {
 	if (!showfps)
-		showfpstemp = (int)(seconds * Machine->refresh_rate);
+		showfpstemp = (int)(seconds * Machine->refresh_rate[0]);
 }
 
 
@@ -653,7 +653,7 @@ void CLIB_DECL ui_popup(const char *text,...)
 	vsprintf(popup_text,text,arg);
 	va_end(arg);
 	seconds = strlen(popup_text) / 40 + 2;
-	popup_text_counter = seconds * Machine->refresh_rate;
+	popup_text_counter = seconds * Machine->refresh_rate[0];
 }
 
 
@@ -663,7 +663,7 @@ void CLIB_DECL ui_popup_time(int seconds, const char *text,...)
 	va_start(arg,text);
 	vsprintf(popup_text,text,arg);
 	va_end(arg);
-	popup_text_counter = seconds * Machine->refresh_rate;
+	popup_text_counter = seconds * Machine->refresh_rate[0];
 }
 
 
@@ -1624,7 +1624,7 @@ skip_comment:
 			}
 			if (next_caption_timer == 0)
 			{
-				next_caption_timer = 5 * Machine->drv->frames_per_second;	// 5sec.
+				next_caption_timer = 5 * Machine->drv->screen[0].refresh_rate;	// 5sec.
 			}
 
 			strcpy(next_caption, &read_buf[i]);
@@ -3550,10 +3550,10 @@ static int sprintf_game_info(char *buf)
 	else
 		bufptr += sprintf(bufptr,"\n%s:\n%d x %d %s %f Hz\n",
 				ui_getstring(UI_screenres),
-				Machine->visible_area.max_x - Machine->visible_area.min_x + 1,
-				Machine->visible_area.max_y - Machine->visible_area.min_y + 1,
+				Machine->visible_area[0].max_x - Machine->visible_area[0].min_x + 1,
+				Machine->visible_area[0].max_y - Machine->visible_area[0].min_y + 1,
 				(Machine->gamedrv->flags & ORIENTATION_SWAP_XY) ? _("(V)") : _("(H)"),
-				Machine->refresh_rate);
+				Machine->refresh_rate[0]);
 	return bufptr - buf;
 }
 
@@ -4838,7 +4838,7 @@ static void onscrd_overclock(int increment,int arg)
 
 static void onscrd_refresh(int increment,int arg)
 {
-	float delta = Machine->refresh_rate - Machine->drv->frames_per_second;
+	float delta = Machine->refresh_rate[0] - Machine->drv->screen[0].refresh_rate;
 	char buf[30];
 
 	increment *= 1000;
@@ -4857,13 +4857,13 @@ static void onscrd_refresh(int increment,int arg)
 		if (delta < -10)
 			delta = -10;
 
-		newrate = Machine->drv->frames_per_second;
+		newrate = Machine->drv->screen[0].refresh_rate;
 		if (delta != 0)
 			newrate = (floor(newrate * 1000) / 1000) + delta;
-		set_refresh_rate(newrate);
+		set_refresh_rate(0, newrate);
 	}
 
-	sprintf(buf,"%s %.3f", ui_getstring (UI_refresh_rate), Machine->refresh_rate);
+	sprintf(buf,"%s %.3f", ui_getstring (UI_refresh_rate), Machine->refresh_rate[0]);
 	displayosd(buf,(10 + delta) * 5,100/2);
 }
 

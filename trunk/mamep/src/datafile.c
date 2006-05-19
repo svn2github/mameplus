@@ -2359,7 +2359,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 	char name[100];
 	char year[4];
 	int i, n, x, y;
-	int ax, ay;
+	float ax, ay;
 	int all = 0, cl = 0, vec = 0, vecc = 0, neo = 0, neoc = 0;
 	int pch = 0, pchc = 0, deco = 0, decoc = 0, cvs = 0, cvsc = 0, noyear = 0, nobutt = 0, noinput = 0;
 	int vertical = 0, verticalc = 0, horizontal = 0, horizontalc = 0;

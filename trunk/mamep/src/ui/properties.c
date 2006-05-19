@@ -879,6 +879,7 @@ static LPWSTR GameInfoSound(int nIndex)
 static LPWSTR GameInfoScreen(int nIndex)
 {
 	char buf[1024];
+	float ax, ay;
 	machine_config drv;
 	expand_machine_driver(drivers[nIndex]->drv, &drv);
 
@@ -886,50 +887,54 @@ static LPWSTR GameInfoScreen(int nIndex)
 	{
 		if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
 		{
-			if (drv.aspect_y == 0 && drv.aspect_x == 0)
-			{
-				drv.aspect_y = 3;
-				drv.aspect_x = 4;
+		    ax = 1.0f;
+		    ay = drv.screen[0].aspect;
+			if (ax == 0 && ay == 0) {
+				ax = 3;
+				ay = 4;
 			}
-			sprintf(buf,_UI("Vector (V) %f Hz (%d:%d) (%d colors)"),
-					drv.frames_per_second, drv.aspect_y, drv.aspect_x, drv.total_colors);
+			sprintf(buf,_UI("Vector (V) %f Hz (%f:%f) (%d colors)"),
+				drv.screen[0].refresh_rate, ax, ay, drv.total_colors);
 		}
 		else
 		{
-			if (drv.aspect_x == 0 && drv.aspect_y == 0)
-			{
-				drv.aspect_x = 4;
-				drv.aspect_y = 3;
+		    ax = drv.screen[0].aspect;
+		    ay = 1.0f;
+			if (ax == 0 && ay == 0) {
+				ax = 4;
+				ay = 3;
 			}
 			sprintf(buf,_UI("Vector (H) %f Hz (%d:%d) (%d colors)"),
-					drv.frames_per_second, drv.aspect_x, drv.aspect_y, drv.total_colors);
+					drv.screen[0].refresh_rate, ax, ay, drv.total_colors);
 		}
 	}
 	else
 	{
 		if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
 		{
-			if (drv.aspect_y == 0 && drv.aspect_x == 0)
-			{
-				drv.aspect_y = 3;
-				drv.aspect_x = 4;
+		    ax = 1.0f;
+		    ay = drv.screen[0].aspect;
+			if (ax == 0 && ay == 0) {
+				ax = 3;
+				ay = 4;
 			}
-			sprintf(buf,_UI("%d x %d (V) %f Hz (%d:%d) (%d colors)"),
-					drv.default_visible_area.max_y - drv.default_visible_area.min_y + 1,
-					drv.default_visible_area.max_x - drv.default_visible_area.min_x + 1,
-					drv.frames_per_second, drv.aspect_y, drv.aspect_x, drv.total_colors);
+			sprintf(buf,_UI("%d x %d (V) %f Hz (%f:%f) (%d colors)"),
+					drv.screen[0].default_visible_area.max_y - drv.screen[0].default_visible_area.min_y + 1,
+					drv.screen[0].default_visible_area.max_x - drv.screen[0].default_visible_area.min_x + 1,
+					drv.screen[0].refresh_rate, ax, ay, drv.total_colors);
 		}
 		else
 		{
-			if (drv.aspect_x == 0 && drv.aspect_y == 0)
-			{
-				drv.aspect_x = 4;
-				drv.aspect_y = 3;
+		    ax = drv.screen[0].aspect;
+		    ay = 1.0f;
+			if (ax == 0 && ay == 0) {
+				ax = 4;
+				ay = 3;
 			}
-			sprintf(buf,_UI("%d x %d (H) %f Hz (%d:%d) (%d colors)"),
-					drv.default_visible_area.max_x - drv.default_visible_area.min_x + 1,
-					drv.default_visible_area.max_y - drv.default_visible_area.min_y + 1,
-					drv.frames_per_second, drv.aspect_x, drv.aspect_y, drv.total_colors);
+			sprintf(buf,_UI("%d x %d (H) %f Hz (%f:%f) (%d colors)"),
+					drv.screen[0].default_visible_area.max_x - drv.screen[0].default_visible_area.min_x + 1,
+					drv.screen[0].default_visible_area.max_y - drv.screen[0].default_visible_area.min_y + 1,
+					drv.screen[0].refresh_rate, ax, ay, drv.total_colors);
 		}
 	}
 	return _Unicode(buf);

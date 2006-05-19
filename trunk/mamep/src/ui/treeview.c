@@ -1271,14 +1271,14 @@ void CreateResolutionFolders(int parent_index)
 		if (drivers[jj]->flags & ORIENTATION_SWAP_XY)
 		{
 			sprintf(Resolution, "%dx%d (V)",
-						drv.default_visible_area.max_y - drv.default_visible_area.min_y + 1,
-						drv.default_visible_area.max_x - drv.default_visible_area.min_x + 1);
+						drv.screen[0].default_visible_area.max_y - drv.screen[0].default_visible_area.min_y + 1,
+						drv.screen[0].default_visible_area.max_x - drv.screen[0].default_visible_area.min_x + 1);
 		}
 		else
 		{
 			sprintf(Resolution, "%dx%d (H)",
-						drv.default_visible_area.max_x - drv.default_visible_area.min_x + 1,
-						drv.default_visible_area.max_y - drv.default_visible_area.min_y + 1);
+						drv.screen[0].default_visible_area.max_x - drv.screen[0].default_visible_area.min_x + 1,
+						drv.screen[0].default_visible_area.max_y - drv.screen[0].default_visible_area.min_y + 1);
 		}
 
 		for (i=numFolders-1;i>=start_folder;i--)
@@ -1303,6 +1303,7 @@ void CreateResolutionFolders(int parent_index)
 void CreateAspectFolders(int parent_index)
 {
 	int i,jj;
+	float ax, ay;
 	int nGames = GetNumGames();
 	int start_folder = numFolders;
 	machine_config drv;
@@ -1318,22 +1319,23 @@ void CreateAspectFolders(int parent_index)
 
 		if (drivers[jj]->flags & ORIENTATION_SWAP_XY)
 		{
-			if (drv.aspect_y == 0 && drv.aspect_x == 0)
-			{
-				drv.aspect_y = 3;
-				drv.aspect_x = 4;
+		    ax = 1.0f;
+		    ay = drv.screen[0].aspect;
+			if (ax == 0 && ay == 0) {
+				ax = 3;
+				ay = 4;
 			}
-			sprintf(Aspect, "%d:%d", drv.aspect_y, drv.aspect_x);
 		}
 		else
 		{
-			if (drv.aspect_x == 0 && drv.aspect_y == 0)
-			{
-				drv.aspect_x = 4;
-				drv.aspect_y = 3;
+		    ax = drv.screen[0].aspect;
+		    ay = 1.0f;
+			if (ax == 0 && ay == 0) {
+				ax = 4;
+				ay = 3;
 			}
-			sprintf(Aspect, "%d:%d", drv.aspect_x, drv.aspect_y);
 		}
+		sprintf(Aspect, "%f:%f", ax, ay);
 
 		for (i=numFolders-1;i>=start_folder;i--)
 		{
@@ -1374,7 +1376,7 @@ void CreateFPSFolders(int parent_index)
 		machine_config drv;
 
 		expand_machine_driver(drivers[i]->drv,&drv);
-		f = drv.frames_per_second;
+		f = drv.screen[0].refresh_rate;
 
 		for (jj = 0; jj < nFPS; jj++)
 			if (fps[jj] == f)
