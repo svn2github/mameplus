@@ -310,7 +310,7 @@ int run_game(int game)
 			nvram_load();
 
 			/* initialize the UI and display the startup screens */
-			if (ui_init(!settingsloaded && !options.skip_disclaimer, !options.skip_warnings, !options.skip_gameinfo) != 0)
+			if (ui_display_startup_screens(!settingsloaded && !options.skip_disclaimer, !options.skip_warnings, !options.skip_gameinfo) != 0)
 				fatalerror(_("User cancelled"));
 
 			/* ensure we don't show the opening screens on a reset */
@@ -1120,7 +1120,7 @@ static void init_machine(void)
 #ifdef NEW_RENDER
 	render_init();
 #endif
-//	ui_init();
+	ui_init();
 	generic_machine_init();
 	generic_video_init();
 	rand_seed = 0x9d14abd7;

@@ -24,7 +24,7 @@ static int 		 sp_overdraw = 0;
 static void ninjak2_postload(void)
 {
 	memset(bg_dirtybuffer,1,1024);
-	fillbitmap(bitmap_sp,15,&Machine->visible_area);
+	fillbitmap(bitmap_sp,15,&Machine->visible_area[0]);
 }
 
 VIDEO_START( ninjakd2 )

@@ -183,8 +183,8 @@ VIDEO_UPDATE( pong )
 		}
 	}
 
-	copybitmap(bitmap,tmpbitmap,0,0,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
-	fillbitmap(tmpbitmap, Machine->pens[0], &Machine->visible_area);
+	copybitmap(bitmap,tmpbitmap,0,0,0,0,&Machine->visible_area[0],TRANSPARENCY_NONE,0);
+	fillbitmap(tmpbitmap, Machine->pens[0], &Machine->visible_area[0]);
 
 	/* reset the VPAD timers */
 	vpad1_timer = 0;
