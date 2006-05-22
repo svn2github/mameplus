@@ -1774,8 +1774,9 @@ static void handle_keys(void)
 	if (input_ui_pressed(IPT_UI_CONFIGURE))
 		ui_set_handler(menu_ui_handler, 0);
 
-	if (input_ui_pressed(IPT_UI_CHEAT))
+	if (options.cheat && input_ui_pressed(IPT_UI_CHEAT))
 	{
+		ui_menu_stack_reset();
 		ui_menu_stack_push(menu_cheat, (1 << 31) | (1 << 30) | (1 << 8) | 1);
 		ui_set_handler(menu_ui_handler, 0);
 	}
@@ -1783,6 +1784,7 @@ static void handle_keys(void)
 #ifdef CMD_LIST
 	if (input_ui_pressed(IPT_UI_COMMAND))
 	{
+		ui_menu_stack_reset();
 		ui_menu_stack_push(menu_command, 1 << 24);
 		ui_set_handler(menu_ui_handler, 0);
 	}
