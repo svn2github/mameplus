@@ -113,6 +113,7 @@ else
     TMPLIBS = \
 		kernel32.lib \
 		shell32.lib \
+		shlwapi.lib \
 		comctl32.lib \
 		comdlg32.lib \
 		advapi32.lib \
