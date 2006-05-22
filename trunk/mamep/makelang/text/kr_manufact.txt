@@ -1,6 +1,34 @@
 # Conquer
 <unknown>
+<알수없음>
 
+# Super Glob (Pac-Man hardware) German
+Bootleg
+해적판
+
+# Quiz (Revision 2)
+Italian bootleg
+이탈리아 해적판
+
+# Digger Man
+Unknown
+알수없음
+
+# Magic Brush
+bootleg
+해적판
+
+# Omega
+bootleg?
+해적판
+
+# Puckman (Falcom?)
+hack
+핵
+
+# Chewing Gum
+unknown
+알수없음
 
 # Sea Bass Fishing (JUET 971110 V0.001)
 A wave inc.
@@ -66,7 +94,7 @@ Absolute Entertainment Inc.
 Academysoft-Elory
 
 
-# NBA Jam Extreme
+# Acclaim PSX
 Acclaim
 
 
@@ -142,7 +170,7 @@ Amutech
 Apple
 
 
-# SportTime Table Hockey (Arcadia, V 2.1)
+# Arcadia System BIOS
 Arcadia Systems
 
 
@@ -182,7 +210,7 @@ Atari Games
 Athena
 
 
-# Power Instinct 3 - Groove On Fight (J 970416 V1.001)
+# Atlus PSX
 Atlus
 
 
@@ -210,7 +238,7 @@ Bandai
 Banpresto
 
 
-# The Crystal Maze: Team Challenge (SWP)
+# MPU4 Video Firmware
 Barcrest
 
 
@@ -234,11 +262,7 @@ Bee-Oh
 Blastar
 
 
-# Super Glob (Pac-Man hardware) German
-Bootleg
-
-
-# The Crystal of Kings
+# Crystal System BIOS
 Brezzasoft
 
 
@@ -298,6 +322,10 @@ Chuo Co. Ltd
 Cinematronics
 
 
+# Fred Flintstones' Memory Match
+Coastal Amusements
+
+
 # Quizmaster
 Coinmaster
 
@@ -344,6 +372,10 @@ Current Technologies
 
 # Hexa
 D. R. Korea
+
+
+# Tetris (D.R. Korea)
+D.R. Korea
 
 
 # Pipeline
@@ -404,6 +436,10 @@ Digitrex Techstar
 
 # Double Point
 Dong Bang Electron
+
+
+# Pang Pang
+Dong Gue La Mi Ltd.
 
 
 # Got-cha Mini Game Festival
@@ -504,6 +540,10 @@ Ed
 
 # Battle Bakraid (Japan) (Wed Apr 7 1999)
 Eighting
+
+
+# PS Arcade 95
+Eighting/Raizing
 
 
 # Space Force (set 2)
@@ -650,7 +690,7 @@ Fun World
 Fuuki
 
 
-# Selection (Version 40.02TMB)
+# Selection (Version 40.02TMB) set 1
 G.E.I.
 
 
@@ -662,7 +702,7 @@ GAPS Inc.
 GAT
 
 
-# Piranha
+# Abscam
 GL
 
 
@@ -678,7 +718,7 @@ GMS
 GREEN SOFT
 
 
-# Xor World (prototype)
+# Master Boy (Spanish, PCB Rev A)
 Gaelco
 
 
@@ -716,6 +756,10 @@ Global Corporation
 
 # Reactor
 Gottlieb
+
+
+# Up Scope
+Grand Products
 
 
 # Taxi Driver
@@ -758,6 +802,10 @@ Hara Industries
 Hi-max Technology Inc.
 
 
+# Sliver
+Hollow Corp
+
+
 # Mahjong Hourouki Part 1 - Seisyun Hen (Japan)
 Home Data
 
@@ -786,7 +834,7 @@ Human Amusement
 Human Inc.
 
 
-# Kisekae Mahjong
+# Multi Amenity Cassette System BIOS
 I'Max
 
 
@@ -842,10 +890,6 @@ Irem America
 Island Design
 
 
-# Quiz (Revision 2)
-Italian bootleg
-
-
 # Poker Night
 JMK
 
@@ -866,7 +910,7 @@ Jeil Computer System
 Jetsoft
 
 
-# Defender (bootleg)
+# Star Fighter
 Jeutel
 
 
@@ -970,6 +1014,10 @@ Leland Corp.
 Leprechaun
 
 
+# Battle Bubble (v2.00)
+Limenko
+
+
 # Star Wars Trilogy (ver A)
 LucasArts
 
@@ -1026,7 +1074,7 @@ Mega
 Merit
 
 
-# Pang Poms
+# Gekitoride-Jong Space (10011 Ver.A)
 Metro
 
 
@@ -1234,7 +1282,7 @@ Omori Electric
 Omori Electric Co., Ltd.
 
 
-# Marine Boy
+# River Patrol (Orca)
 Orca
 
 
@@ -1298,7 +1346,7 @@ Playmore
 Playtronic SRL
 
 
-# News
+# News (set 1)
 Poby
 
 
@@ -1394,7 +1442,7 @@ SNK
 SNK Electronics corp.
 
 
-# Metal Slug 5
+# Metal Slug 5 (JAMMA PCB)
 SNK Playmore
 
 
@@ -1404,6 +1452,10 @@ SNK of America
 
 # Bishoujo Janshi Pretty Sailor 18-kin (Japan)
 SPHINX
+
+
+# Fishing Maniac 3
+Saero Entertainment
 
 
 # Elan Doree - Legend of Dragon (JUET 980922 V1.006)
@@ -1558,7 +1610,7 @@ Stern
 Subelectro
 
 
-# Penguin Brothers (Japan)
+# Crazy Fight
 Subsino
 
 
@@ -1706,6 +1758,10 @@ Tamtex
 Tatsumi
 
 
+# TX-1
+Tazmi
+
+
 # Hole Land
 Tecfri
 
@@ -1818,10 +1874,6 @@ Universal Video Spiel
 Uniwang
 
 
-# Digger Man
-Unknown
-
-
 # Rabio Lepus (Japan)
 V-System Co.
 
@@ -1900,6 +1952,10 @@ Volt Electronics
 
 # Ashita no Joe (Japan)
 WAVE
+
+
+# Sea Hunter Penguin
+WSAC Systems?
 
 
 # Shienryu (JUET 961226 V1.000)
@@ -1990,7 +2046,7 @@ Yumekobo
 Yun Sung
 
 
-# Scorpion (set 1)
+# Eyes (Zaccaria)
 Zaccaria
 
 
@@ -2022,23 +2078,7 @@ Zilec Games
 Zilec-Zenitone
 
 
-# Magic Brush
-bootleg
-
-
-# Omega
-bootleg?
-
-
 # X-Files
 dgPIX Entertainment Inc.
-
-
-# Puckman (Falcom?)
-hack
-
-
-# Chewing Gum
-unknown
 
 
