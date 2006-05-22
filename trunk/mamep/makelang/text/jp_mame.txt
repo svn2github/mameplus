@@ -1,16 +1,16 @@
-# datafile.c: 3117
+# datafile.c: 3102
           DIAL:  %4d\n
                 ダイアル:  %4d\n
 
-# datafile.c: 3123
+# datafile.c: 3108
          OTHER:  %4d\n
                   その他:  %4d\n
 
-# datafile.c: 3121
+# datafile.c: 3106
          PEDAL:  %4d\n
                   ペダル:  %4d\n
 
-# datafile.c: 3116
+# datafile.c: 3101
         PADDLE:  %4d\n
                   パドル:  %4d\n
 
@@ -18,35 +18,35 @@
        FOUND: %s\n
 見つかった物: %s\n
 
-# datafile.c: 3110
+# datafile.c: 3095
        JOY2WAY:  %4d\n
         ２方向スティック:  %4d\n
 
-# datafile.c: 3111
+# datafile.c: 3096
        JOY4WAY:  %4d\n
         ４方向スティック:  %4d\n
 
-# datafile.c: 3112
+# datafile.c: 3097
        JOY8WAY:  %4d\n
         ８方向スティック:  %4d\n
 
-# datafile.c: 3119
+# datafile.c: 3104
       AD STICK:  %4d\n
       アナログスティック:  %4d\n
 
-# datafile.c: 3120
+# datafile.c: 3105
       LIGHTGUN:  %4d\n
                   光線銃:  %4d\n
 
-# datafile.c: 3104
+# datafile.c: 3089
      PLAYERS %d:  %4d\n
             %d プレイヤー:  %4d\n
 
-# datafile.c: 3118
+# datafile.c: 3103
      TRACKBALL:  %4d\n
                 トラック:  %4d\n
 
-# datafile.c: 3132
+# datafile.c: 3117
     BUTTONS%3d:  %4d\n
                ボタン%3d:  %4d\n
 
@@ -54,7 +54,7 @@
     EXPECTED: %s\n
     正常な物: %s\n
 
-# datafile.c: 3138
+# datafile.c: 3123
     NO BUTTONS:  %4d\n
             ボタン未使用:  %4d\n
 
@@ -62,43 +62,43 @@
    FOUND: 
 見つかった物: 
 
-# datafile.c: 2942
+# datafile.c: 2927
  %4d HARDDISK\n
  %4d ハードディスク\n
 
-# datafile.c: 2938
+# datafile.c: 2923
  %4d HORIZONTAL + %4d\n %4d VERTICAL   + %4d\n
  %4d 横型       + %4d\n %4d 縦型       + %4d\n
 
-# datafile.c: 2934
+# datafile.c: 2919
  %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
  %4d PLAYCHOICE + %4d\n %4d デコカセ   + %4d\n %4d CVS        + %4d\n
 
-# datafile.c: 2936
+# datafile.c: 2921
  %4d RASTER     + %4d\n %4d VECTOR     + %4d\n
  %4d ラスタ     + %4d\n %4d ベクタ     + %4d\n
 
-# datafile.c: 2940
+# datafile.c: 2925
  %4d STEREO     + %4d\n
  %4d ステレオ   + %4d\n
 
-# datafile.c: 3113
+# datafile.c: 3098
  DOUBLEJOY2WAY:  %4d\n
 ２方向デュアルスティック:  %4d\n
 
-# datafile.c: 3114
+# datafile.c: 3099
  DOUBLEJOY4WAY:  %4d\n
 ４方向デュアルスティック:  %4d\n
 
-# datafile.c: 3115
+# datafile.c: 3100
  DOUBLEJOY8WAY:  %4d\n
 ８方向デュアルスティック:  %4d\n
 
-# datafile.c: 3043
+# datafile.c: 3028
  GAMES WITH  %d CPUs: %4d\n
  %d個のCPU使用ゲーム: %4d\n
 
-# datafile.c: 3074
+# datafile.c: 3059
  GAMES WITH  %d SNDINTRF: %4d\n
  %d個の音源使用ゲーム: %4d\n
 
@@ -214,15 +214,15 @@
 %d results found
 %d個の結果が見つかりました
 
-# usrintrf.c: 2122, 2288
+# usrintrf.c: 2216, 2382
 %s Analog
 %s アナログ
 
-# usrintrf.c: 2129, 2294
+# usrintrf.c: 2223, 2388
 %s Dec
 %s 増加
 
-# usrintrf.c: 2136, 2300
+# usrintrf.c: 2230, 2394
 %s Inc
 %s 減少
 
@@ -250,11 +250,11 @@
 (Card may already exist)
 (カードを既に作成済みかも知れません)
 
-# usrintrf.c: 3555
+# usrintrf.c: 3649
 (H)
 (横)
 
-# usrintrf.c: 3555
+# usrintrf.c: 3649
 (V)
 (縦)
 
@@ -362,7 +362,7 @@
 24 Bit
 24ビット
 
-# datafile.c: 3194
+# datafile.c: 3238
 24-BIT DISPLAY : %3d  + %3d\n
 24ビット表\示   : %3d  + %3d\n
 
@@ -658,7 +658,7 @@ Artwork
 Asia
 アジア
 
-# mame.c: 927
+# mame.c: 928
 Attempted to malloc zero bytes (%s:%d)
 0バイトのmallocを行おうとしました(%s:%d)
 
@@ -998,7 +998,7 @@ Custom Buttons
 DIAL
 ダイアル
 
-# datafile.c: 3192
+# datafile.c: 3236
 DUAL MONITOR   : %3d  + %3d\n
 デュアルモニタ : %3d  + %3d\n
 
@@ -1262,19 +1262,19 @@ Error loading memory card
 Error: 
 エラー: 
 
-# mame.c: 1453, 1457
+# mame.c: 1463, 1467
 Error: Failed to load state
 エラー: ステートの読み込みが失敗しました
 
-# mame.c: 1377
+# mame.c: 1387
 Error: Failed to save state
 エラー: ステートの保存が失敗しました
 
-# mame.c: 1340
+# mame.c: 1350
 Error: Unable to save state due to illegal registrations. See error.log for details.
 エラー: 不正な登録のためステートを保存する事が出来ません。詳細はerror.logをご覧下さい。
 
-# usrintrf.c: 1591
+# usrintrf.c: 1683
 Error: illegal caption file
 エラー: 不正なキャプションファイルです
 
@@ -1286,19 +1286,19 @@ Europe
 Expert
 エキスパート
 
-# mame.c: 935
+# mame.c: 936
 Failed to allocate %d bytes (%s:%d)
 %dバイトのmallocが失敗しました(%s:%d)
 
-# cheat.c: 6583 debug/mamedbg.c: 792 drivers/4enraya.c: 119 drivers/8080bw.c: 698, 790 drivers/alpha68k.c: 1570, 1624 drivers/amidar.c: 186 drivers/angelkds.c: 480 drivers/bestleag.c: 278 drivers/bigstrkb.c: 160 drivers/brkthru.c: 233, 236, 278, 281 drivers/cninja.c: 727 drivers/cps1.c: 1088, 1358 drivers/darius.c: 675, 713, 751 drivers/ddragon3.c: 424 drivers/deniam.c: 277 drivers/epos.c: 151, 154, 160 drivers/fuukifg3.c: 354 drivers/gameplan.c: 399, 850 drivers/karnov.c: 461 drivers/m62.c: 617, 668, 719, 769, 821, 873, 927, 1027, 1080 drivers/mcr.c: 1134 drivers/megaplay.c: 224 drivers/metro.c: 3236 drivers/ninjaw.c: 542 drivers/nmg5.c: 237 drivers/nmk16.c: 2662 drivers/phoenix.c: 324 drivers/quizdna.c: 153, 241, 343 drivers/rohga.c: 445, 513 drivers/safarir.c: 188 drivers/segas16a.c: 1283 drivers/segas16b.c: 2511 drivers/sidepckt.c: 231 drivers/slapfght.c: 534 drivers/ssv.c: 2572 drivers/suprridr.c: 251 drivers/system1.c: 888, 1724 drivers/system16.c: 1795 drivers/taito_f2.c: 3104 drivers/taito_l.c: 1841, 1994 drivers/taito_z.c: 2384, 2453 drivers/tecmo16.c: 207 drivers/thepit.c: 276, 331, 372 drivers/trackfld.c: 539, 550 drivers/vigilant.c: 240 drivers/vsnes.c: 1065, 1467, 1691, 1749, 1775 drivers/wallc.c: 187 drivers/warriorb.c: 344 drivers/wc90.c: 250 drivers/wc90b.c: 267 drivers/xain.c: 399 drivers/yamato.c: 381 drivers/zac2650.c: 83, 133 drivers/zerozone.c: 148 ui_text.c: 209
+# cheat.c: 6583 debug/mamedbg.c: 790 drivers/4enraya.c: 119 drivers/8080bw.c: 698, 790 drivers/alpha68k.c: 1570, 1624 drivers/amidar.c: 186 drivers/angelkds.c: 480 drivers/bestleag.c: 278 drivers/bigstrkb.c: 160 drivers/brkthru.c: 233, 236, 278, 281 drivers/cninja.c: 727 drivers/cps1.c: 1088, 1358 drivers/darius.c: 675, 713, 751 drivers/ddragon3.c: 424 drivers/deniam.c: 277 drivers/epos.c: 151, 154, 160 drivers/fuukifg3.c: 354 drivers/gameplan.c: 399, 850 drivers/karnov.c: 461 drivers/m62.c: 617, 668, 719, 769, 821, 873, 927, 1027, 1080 drivers/mcr.c: 1134 drivers/megaplay.c: 224 drivers/metro.c: 3236 drivers/ninjaw.c: 542 drivers/nmg5.c: 237 drivers/nmk16.c: 2662 drivers/phoenix.c: 324 drivers/quizdna.c: 153, 241, 343 drivers/rohga.c: 445, 513 drivers/safarir.c: 188 drivers/segas16a.c: 1283 drivers/segas16b.c: 2511 drivers/sidepckt.c: 231 drivers/slapfght.c: 534 drivers/ssv.c: 2572 drivers/suprridr.c: 251 drivers/system1.c: 888, 1724 drivers/system16.c: 1795 drivers/taito_f2.c: 3104 drivers/taito_l.c: 1841, 1994 drivers/taito_z.c: 2384, 2453 drivers/tecmo16.c: 207 drivers/thepit.c: 276, 331, 372 drivers/trackfld.c: 539, 550 drivers/vigilant.c: 240 drivers/vsnes.c: 1065, 1467, 1691, 1749, 1775 drivers/wallc.c: 187 drivers/warriorb.c: 344 drivers/wc90.c: 250 drivers/wc90b.c: 267 drivers/xain.c: 399 drivers/yamato.c: 381 drivers/zac2650.c: 83, 133 drivers/zerozone.c: 148 ui_text.c: 209
 Fast
 速い
 
-# mamecore.h: 186
+# mamecore.h: 198
 Fatal error: %s (%s:%d)
 致命的なエラー: %s (%s:%d)
 
-# mamecore.h: 183
+# mamecore.h: 195
 Fatal error: %s\nCaused by assert: %s:%d: %s
 致命的なエラー: %s\nアサートの結果: %s:%d: %s
 
@@ -1354,7 +1354,7 @@ French
 Full
 フル
 
-# datafile.c: 2147
+# datafile.c: 2151
 GAME: 
 ゲーム: 
 
@@ -1434,11 +1434,11 @@ Greater Or Equal
 Greater or Equal
 以上
 
-# datafile.c: 3196
+# datafile.c: 3240
 HI/TRUE BITMAP : %3d  + %3d\n
 RGBダイレクト  : %3d  + %3d\n
 
-# datafile.c: 3200
+# datafile.c: 3244
 HIGHLIGHTS     : %3d  + %3d\n
 ハイライト使用 : %3d  + %3d\n
 
@@ -1538,15 +1538,15 @@ Horizontally
 IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
 「%s」を合法的に遊ぶ権利がなければESCを押してください。
 
-# datafile.c: 2955
+# datafile.c: 2940
 IMPERFECT COLORS   : %3d  %3d\n
 色の再現が不完全   : %3d  %3d\n
 
-# datafile.c: 2951
+# datafile.c: 2936
 IMPERFECT GRAPHICS : %3d  %3d\n
 画像の再現が不完全 : %3d  %3d\n
 
-# datafile.c: 2959
+# datafile.c: 2944
 IMPERFECT SOUND    : %3d  %3d\n
 音の再現が不完全   : %3d  %3d\n
 
@@ -1838,11 +1838,11 @@ Load Selected Card
 Load State
 プレイ状態の復帰
 
-# usrintrf.c: 5004
+# usrintrf.c: 5021
 Load cancelled
 読み込みを中止しました
 
-# usrintrf.c: 5036
+# usrintrf.c: 5052
 Load from position %c
 %c から読み込みました
 
@@ -1862,11 +1862,11 @@ Low
 MAME Statistics
 MAMEの統計データ
 
-# mame.c: 184
+# mame.c: 188
 MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n
 MAMEはエミュレータです: いくつかのアーケードマシンをほぼ忠実に再現します。しか\nし、ハードウェアが要求するROMイメージと呼ばれるソ\フトウェアがなければ動作しま\nせん。ROMは他の商用ソ\フトウェアと同様に著作物であるため、あなたが所持していな\nいアーケードマシンのROMを使用することは違法になります。言うまでもなくMAMEと一\n緒に配布してはいけません。ROMと一緒にMAMEを配布することは著作権の侵害であり、\n直ちにゲームメーカーに報告され、然るべき法的措置がとられるでしょう。\n
 
-# datafile.c: 2139
+# datafile.c: 2143
 MAMEInfo:\n
 MAME情報:\n
 
@@ -2030,11 +2030,11 @@ Mouse Y 8
 NA
 なし
 
-# datafile.c: 2961
+# datafile.c: 2946
 NO COCKTAIL        : %3d  %3d\n
 カクテル未サポート : %3d  %3d\n
 
-# datafile.c: 2963
+# datafile.c: 2948
 NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 正常なダンプが不明 : %3d  %3d\n(%3d ROM、全%dゲーム)\n
 
@@ -2042,11 +2042,11 @@ NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 NO MATCH\n
 マッチしません\n
 
-# datafile.c: 2957
+# datafile.c: 2942
 NO SOUND           : %3d  %3d\n
 サウンド無し       : %3d  %3d\n
 
-# datafile.c: 2947
+# datafile.c: 2932
 NON-WORKING        : %3d  %3d\n
 動作不可           : %3d  %3d\n
 
@@ -2098,7 +2098,7 @@ Normal/Delay
 Not Equal
 異なる
 
-# debug/mamedbg.c: 4279 
+# debug/mamedbg.c: 4277 
 Not found
 見つかりません
 
@@ -3598,15 +3598,15 @@ Previous Game
 Previous values already restored
 前回の値は既に復帰済みです
 
-# usrintrf.c: 5050
+# usrintrf.c: 5065
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 このゲームを終了しますか？\n\n終了する場合は決定キー/ボタンを、\n続ける場合はキャンセルキー/ボタンを押して下さい。
 
-# video.c: 1054
+# video.c: 1123
 REC START
 録画開始
 
-# video.c: 1059
+# video.c: 1128
 REC STOP (%d frames)
 録画終了 (%d フレーム)
 
@@ -3614,7 +3614,7 @@ REC STOP (%d frames)
 RHS
 RHS
 
-# datafile.c: 2965
+# datafile.c: 2950
 ROM NEEDS REDUMP   : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 再ダンプが必要     : %3d  %3d\n(%3d ROM、全%dゲーム)\n
 
@@ -3710,7 +3710,7 @@ Ron
 Rotation
 回転
 
-# datafile.c: 3198
+# datafile.c: 3242
 SHADOWS        : %3d  + %3d\n
 影使用         : %3d  + %3d\n
 
@@ -3738,11 +3738,11 @@ Save Snapshot
 Save State
 プレイ状態の保存
 
-# usrintrf.c: 5002
+# usrintrf.c: 5019
 Save cancelled
 保存を中止しました
 
-# usrintrf.c: 5031
+# usrintrf.c: 5047
 Save to position %c
 %c に保存しました
 
@@ -3758,7 +3758,7 @@ Screen Resolution
 Screen flipping in cocktail mode is not supported.
 カクテルモードの画面反転に対応していません。
 
-# datafile.c: 2175
+# datafile.c: 2179
 Screen flipping in cocktail mode is not supported.\n
 カクテルモードの画面反転に対応していません。\n
 
@@ -3810,11 +3810,11 @@ Select current level
 Select next level
 次のレベルを選択
 
-# usrintrf.c: 4995
+# usrintrf.c: 5012
 Select position to load from
 読み込むファイル(0-9,A-Z)を押してください
 
-# usrintrf.c: 4993
+# usrintrf.c: 5010
 Select position to save to
 保存するファイル(0-9,A-Z)を押してください
 
@@ -3950,15 +3950,15 @@ Start a New Cheat Search
 State
 ステート
 
-# mame.c: 1450
+# mame.c: 1460
 State successfully loaded.
 ステートを正常に読み込みました。
 
-# mame.c: 1374
+# mame.c: 1384
 State successfully saved.
 ステートを正常に保存しました。
 
-# mame.c: 1372
+# mame.c: 1382
 State successfully saved.\nWarning: Save states are not officially supported for this game.
 ステートを正常に保存しました。\n警告: このゲームはステートセーブを公式にサポートしていません。
 
@@ -4002,7 +4002,7 @@ Swap
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.
 ※このゲームは全く動作しません。現状では正常に動作させる事は不可能\です。
 
-# datafile.c: 2154
+# datafile.c: 2158
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n
 ※このゲームは全く動作しません。現状では正常に動作させる事は不可能\です。\n
 
@@ -4042,7 +4042,7 @@ Text Label
 The colors are completely wrong.
 色が再現されません。
 
-# datafile.c: 2163
+# datafile.c: 2167
 The colors are completely wrong.\n
 色が再現されません。\n
 
@@ -4050,7 +4050,7 @@ The colors are completely wrong.\n
 The colors aren't 100% accurate.
 色の再現が不完全です。
 
-# datafile.c: 2166
+# datafile.c: 2170
 The colors aren't 100% accurate.\n
 色の再現が不完全です。\n
 
@@ -4062,7 +4062,7 @@ The format of this zipfile is not supported, please recompress it
 The game has protection which isn't fully emulated.
 このゲームはプロテクトのためエミュレーションが不完全です。
 
-# datafile.c: 2157
+# datafile.c: 2161
 The game has protection which isn't fully emulated.\n
 このゲームはプロテクトのためエミュレーションが不完全です。\n
 
@@ -4070,7 +4070,7 @@ The game has protection which isn't fully emulated.\n
 The game lacks sound.
 サウンドが再生されません。
 
-# datafile.c: 2169
+# datafile.c: 2173
 The game lacks sound.\n
 サウンドが再生されません。\n
 
@@ -4078,7 +4078,7 @@ The game lacks sound.\n
 The sound emulation isn't 100% accurate.
 サウンドエミュレーションが不完全です。
 
-# datafile.c: 2172
+# datafile.c: 2176
 The sound emulation isn't 100% accurate.\n
 サウンドエミュレーションが不完全です。\n
 
@@ -4086,7 +4086,7 @@ The sound emulation isn't 100% accurate.\n
 The video emulation isn't 100% accurate.
 ビデオエミュレーションが不完全です。
 
-# datafile.c: 2160
+# datafile.c: 2164
 The video emulation isn't 100% accurate.\n
 ビデオエミュレーションが不完全です。\n
 
@@ -4274,7 +4274,7 @@ UI スクロールロック切り替え
 UI Up
 UI 上
 
-# datafile.c: 2949
+# datafile.c: 2934
 UNEMULATED PROTEC. : %3d  %3d\n
 プロテクト未対応   : %3d  %3d\n
 
@@ -4290,27 +4290,27 @@ US
 USA
 アメリカ
 
-# mame.c: 738
+# mame.c: 739
 Unable to extend malloc tracking array to %d slots
 %dスロットにmallocトラッキングを拡張する事が出来ません
 
-# mame.c: 1409
+# mame.c: 1419
 Unable to load due to pending anonymous timers. See error.log for details.
 何かのタイマーが保留中のためステートを読み込むことが出来ません。詳細はerror.logをご覧下さい。
 
-# mame.c: 1325
+# mame.c: 1335
 Unable to save due to pending anonymous timers. See error.log for details.
 何かのタイマーが保留中のためステートを保存する事が出来ません。詳細はerror.logをご覧下さい。
 
-# mame.c: 1186
+# mame.c: 1196
 Unable to start machine emulation
 マシンのエミュレーションを開始する事が出来ません
 
-# mame.c: 1188
+# mame.c: 1198
 Unable to start sound emulation
 サウンドエミュレーションを開始する事が出来ません
 
-# mame.c: 1190
+# mame.c: 1200
 Unable to start video emulation
 ビデオエミュレーションを開始する事が出来ません。
 
@@ -4462,7 +4462,7 @@ User Interface
 User Select
 ユーザの選択
 
-# mame.c: 310
+# mame.c: 314
 User cancelled
 ユーザがキャンセルしました
 
@@ -4538,7 +4538,7 @@ Volume Up
 WARNING: the game might not run correctly.
 警告: ゲームは正しく実行できません。
 
-# datafile.c: 2953
+# datafile.c: 2938
 WRONG COLORS       : %3d  %3d\n
 色が違う           : %3d  %3d\n
 
@@ -4626,103 +4626,103 @@ Your filesystem seems to be corrupt, please check it
 Zoom
 ズーム
 
-# datafile.c: 3081
+# datafile.c: 3066
 \n    SNDINTRF:  (1)  (2)  (3)  (4)\n\n
 \n        音源:  (1)  (2)  (3)  (4)\n\n
 
-# datafile.c: 3093
+# datafile.c: 3078
 \n    TOTAL: %4d\n
 \n     合計: %4d\n
 
-# datafile.c: 3064
+# datafile.c: 3049
 \n   TOTAL: %4d\n
 \n    合計: %4d\n
 
-# datafile.c: 2256, 2274
+# datafile.c: 2260, 2278
 \nORIGINAL:\n
 \n原作:\n
 
-# datafile.c: 2196
+# datafile.c: 2200
 \nROM REGION:\n
 \nROMリージョン:\n
 
-# datafile.c: 3008
+# datafile.c: 2993
 \nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d MB (UNCOMPRESSED)\n%d MB + %d MB MERGED\n
 \nROMファイル: %d\n%d + %d マージされたROM\n\nファイルサイズ: %d KB (非圧縮)\n%d KB + %d KB マージ\n
 
-# datafile.c: 2302
+# datafile.c: 2306
 \nSOURCE: %s\n
 \nソ\ースファイル: %s\n
 
-# datafile.c: 2111
+# datafile.c: 2115
 \nStory:\n
 \nストーリー:\n
 
-# datafile.c: 3229
+# datafile.c: 3273
 \nWARNING: FPS number too high!\n
 \n警告: FPSの値が大きすぎます！\n
 
-# datafile.c: 2932
+# datafile.c: 2917
 \n\n %4d GAMES (ALL)\n %4d ORIGINALS  + %4d CLNS\n %4d NEOGEO     + %4d\n
 \n\n %4d ゲーム (全て)\n %4d 原作       + %4d クローン\n %4d ネオジオ   + %4d\n
 
-# datafile.c: 3098
+# datafile.c: 3083
 \n\nCABINET INPUT CONTROL: (ALL)\n\n
 \n\n筐体入力パネル: (全て)\n\n
 
-# datafile.c: 2260, 2278
+# datafile.c: 2264, 2282
 \n\nCLONES:\n
 \n\nクローン:\n
 
-# datafile.c: 3038
+# datafile.c: 3023
 \n\nCPU HARDWARE (ORIGINAL GAMES)\n\n
 \n\nCPUハードウェア (原作)\n\n
 
-# datafile.c: 3205
+# datafile.c: 3249
 \n\nFRAMES PER SECOND (%d): (ALL)\n\n
 \n\n秒あたりのフレーム数 (%d): (全て)\n\n
 
-# datafile.c: 2946
+# datafile.c: 2931
 \n\nGAME INFO FLAGS   : ORIG CLNS\n\n
 \n\nゲーム情報フラグ   : 原作 クローン\n\n
 
-# datafile.c: 3328
+# datafile.c: 3372
 \n\nMAME VERSIONS (%3d)\n\n
 \n\nMAME バージョン (%3d)\n\n
 
-# datafile.c: 3289
+# datafile.c: 3333
 \n\nRESOLUTION & PALETTESIZE: (ALL)\n    (%d)          (%d)\n\n
 \n\n解像度 & パレット数: (全て)\n    (%d)          (%d)\n\n
 
-# datafile.c: 3010
+# datafile.c: 2995
 \n\nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d KB (UNCOMPRESSED)\n%d KB + %d KB MERGED\n
 \n\nROMファイル: %d\n%d + %d マージされたROM\n\nファイルサイズ: %d KB (非圧縮)\n%d KB + %d KB マージ\n
 
-# datafile.c: 3069
+# datafile.c: 3054
 \n\nSOUND SYSTEM (ORIGINAL GAMES)\n\n
 \n\nサウンド システム (原作)\n\n
 
-# datafile.c: 3016
+# datafile.c: 3001
 \n\nTYPICAL ROMSET SIZE (ALL)\n
 \n\n標準的なROMセットサイズ (全て)\n
 
-# datafile.c: 3318
+# datafile.c: 3362
 \n\nVERSION - DRIVERS - SUPPORT:\n\n
 \n\nバージョン ドライバ サポート:\n\n
 
-# datafile.c: 3177
+# datafile.c: 3221
 \n\nVIDEO ASPECT RATIO X:Y (ALL)\n\n
 \n\n画面表\示比率 X:Y (全て)\n\n
 
-# datafile.c: 3191
+# datafile.c: 3235
 \n\nVIDEO NEEDS... : ORIG   CLNS\n\n
 \n\n表\示に必要     : 原作   クローン\n\n
 
-# datafile.c: 3028
+# datafile.c: 3013
 \n\nYEAR    NEW GAMES\n\n
 \n\n年      新しいゲーム\n\n
 
-# datafile.c: 2972
+# datafile.c: 2957
 \n\nYEAR: ORIG  CLNS NEOGEO  ALL\n\n
 \n\n年: 原作 クローン ネオジオ 全て\n\n
 
@@ -4730,7 +4730,7 @@ Zoom
 \tPlease Go To\n\thttp://cheat.retrogames.com/faq.htm\n\tFor Documentation\n
 \tヘルプについては\n\thttp://cheat.retrogames.com/faq.htm\n\tこちらを参照ください\n
 
-# mamecore.h: 182 
+# mamecore.h: 194 
 assert: %s:%d: %s
 アサート: %s:%d: %s
 
