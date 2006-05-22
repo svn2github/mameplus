@@ -4368,12 +4368,19 @@ static UINT32 warnings_ui_handler(UINT32 state)
 						GAME_IMPERFECT_GRAPHICS | \
 						GAME_NO_COCKTAIL)
 	int i;
-	char buf[2048];
-	char *bufptr = buf;
+	static char *buf;
 	int res;
 
-	if (rom_load_warnings() > 0 || (Machine->gamedrv->flags & WARNING_FLAGS))
+	if (rom_load_warnings() == 0 && (Machine->gamedrv->flags & WARNING_FLAGS) == 0)
+		return 1000;
+
+	if (buf == NULL)
 	{
+		char *bufptr;
+
+		buf = malloc(2048);
+		bufptr = buf;
+
 		if (rom_load_warnings() > 0)
 		{
 			bufptr += sprintf(bufptr, "%s\n", ui_getstring(UI_incorrectroms));
@@ -4440,28 +4447,34 @@ static UINT32 warnings_ui_handler(UINT32 state)
 		}
 
 		bufptr += sprintf(bufptr, "\n\n%s", ui_getstring(UI_typeok));
-
-		ui_draw_message_window_scroll(buf);
-
-		res = ui_window_scroll_keys();
-		if (res == 0)
-		{
-			/* an 'O' or left joystick kicks us to the next state */
-			if (code_pressed_memory(KEYCODE_O) || input_ui_pressed(IPT_UI_LEFT))
-				return 1;
-
-			/* a 'K' or right joystick exits the state */
-			if (state == 1 && (code_pressed_memory(KEYCODE_K) || input_ui_pressed(IPT_UI_RIGHT)))
-				return 1000;
-		}
-
-		/* if the user cancels, exit out completely */
-		//if (input_ui_pressed(IPT_UI_CANCEL))
-		if (res == 2)
-			return UI_HANDLER_CANCEL;
 	}
-	else
-		return 1000;
+
+	ui_draw_message_window_scroll(buf);
+
+	res = ui_window_scroll_keys();
+	if (res == 0)
+	{
+		/* an 'O' or left joystick kicks us to the next state */
+		if (code_pressed_memory(KEYCODE_O) || input_ui_pressed(IPT_UI_LEFT))
+			return 1;
+
+		/* a 'K' or right joystick exits the state */
+		if (state == 1 && (code_pressed_memory(KEYCODE_K) || input_ui_pressed(IPT_UI_RIGHT)))
+		{
+			free(buf);
+			buf = NULL;
+			return 1000;
+		}
+	}
+
+	/* if the user cancels, exit out completely */
+	//if (input_ui_pressed(IPT_UI_CANCEL))
+	if (res == 2)
+	{
+		free(buf);
+		buf = NULL;
+		return UI_HANDLER_CANCEL;
+	}
 
 	return state;
 }
