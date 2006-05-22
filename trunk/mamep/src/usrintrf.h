@@ -161,8 +161,4 @@ void ui_auto_pause(void);
 /* renders the fps counter */
 void ui_display_fps(void);
 
-#ifdef USE_SHOW_INPUT_LOG
-void add_filled_box_noedge(int x1, int y1, int x2, int y2);
-#endif
-
 #endif	/* __USRINTRF_H__ */

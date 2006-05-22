@@ -1,7 +1,3 @@
-#ifdef NEW_RENDER
-error !NEW_RENDER_IS_NOT_SUPPORTED_YET!
-#endif
-
 /*
 To do:
  - make single step work reliably
@@ -31,6 +27,11 @@ To do:
 #ifdef USE_SHOW_TIME
 #include <time.h>
 #endif /* USE_SHOW_TIME */
+
+#ifdef NEW_RENDER
+#include "render.h"
+#include "rendfont.h"
+#endif
 
 #ifdef MESS
 #include "mess.h"
@@ -112,6 +113,15 @@ struct _input_item_data
 #define UI_BOX_TB_BORDER		(ui_get_char_width(' ') / 2)
 #endif /* UI_COLOR_DISPLAY */
 
+#ifdef NEW_RENDER
+#define UI_FONT_NAME			NULL
+#define UI_FONT_HEIGHT			0.05f
+#define UI_LINE_WIDTH			0.005f
+#define UI_SCALE_FACTOR			10000.0f
+#define UI_SCALE_TO_INT(x)		((int)((float)(x) * UI_SCALE_FACTOR))
+#define UI_UNSCALE_TO_FLOAT(x)	((x) * (1.0f / UI_SCALE_FACTOR))
+#endif
+
 #ifdef UI_COLOR_DISPLAY
 #define UI_SCROLL_TEXT_COLOR		MAX_COLORTABLE
 #endif /* UI_COLOR_DISPLAY */
@@ -147,6 +157,10 @@ static int next_caption_frame, caption_timer;
 #endif /* INP_CAPTION */
 
 static rgb_t ui_bgcolor;
+
+#ifdef NEW_RENDER
+static render_font *ui_font;
+#endif
 
 /* current UI handler */
 static UINT32 (*ui_handler_callback)(UINT32);
@@ -203,7 +217,7 @@ static int onscrd_total_items;
 static input_seq starting_seq;
 
 
-
+#ifndef NEW_RENDER
 /* -- begin this stuff will go away with the new rendering system */
 #define MAX_RENDER_ELEMENTS	1000
 
@@ -219,6 +233,7 @@ typedef struct _render_element render_element;
 static render_element elemlist[MAX_RENDER_ELEMENTS];
 static int elemindex;
 /* -- end this stuff will go away with the new rendering system */
+#endif
 
 #ifdef USE_SHOW_TIME
 static int show_time = 0;
@@ -242,7 +257,11 @@ static void draw_multiline_text_box(const char *text, int offset, int justify, f
 static void create_font(void);
 static void onscrd_init(void);
 
+#ifndef NEW_RENDER
 static void handle_keys(mame_bitmap *bitmap);
+#else
+static void handle_keys(void);
+#endif
 static void ui_display_profiler(void);
 static void ui_display_popup(void);
 static int setup_menu(int selected);
@@ -290,6 +309,7 @@ static UINT32 gameinfo_ui_handler(UINT32 state);
 static UINT32 confirm_quit_ui_handler(UINT32 state);
 
 
+#ifndef NEW_RENDER
 /* -- begin this stuff will go away with the new rendering system */
 static void ui_raw2rot_rect(rectangle *rect);
 static void ui_rot2raw_rect(rectangle *rect);
@@ -297,9 +317,19 @@ static void add_line(int x1, int y1, int x2, int y2, rgb_t color);
 static void add_fill(int left, int top, int right, int bottom, rgb_t color);
 static void add_char(int x, int y, UINT16 ch, int color);
 static void add_filled_box(int x1, int y1, int x2, int y2);
-static void add_filled_box_black(int x1, int y1, int x2, int y2);
 static void render_ui(mame_bitmap *dest);
 /* -- end this stuff will go away with the new rendering system */
+#else
+#define add_line(x0,y0,x1,y1,color)	render_ui_add_line(UI_UNSCALE_TO_FLOAT(x0), UI_UNSCALE_TO_FLOAT(y0), UI_UNSCALE_TO_FLOAT(x1), UI_UNSCALE_TO_FLOAT(y1), UI_LINE_WIDTH, color)
+#define add_fill(x0,y0,x1,y1,color) render_ui_add_rect(UI_UNSCALE_TO_FLOAT(x0), UI_UNSCALE_TO_FLOAT(y0), UI_UNSCALE_TO_FLOAT(x1), UI_UNSCALE_TO_FLOAT(y1), color)
+#define add_char(x,y,ch,color)		render_ui_add_char(UI_UNSCALE_TO_FLOAT(x), UI_UNSCALE_TO_FLOAT(y), UI_FONT_HEIGHT, color, ui_font, ch)
+static void add_filled_box(int x1, int y1, int x2, int y2);
+#endif
+
+static void add_filled_box_black(int x1, int y1, int x2, int y2);
+#ifdef USE_SHOW_INPUT_LOG
+static void add_filled_box_noedge(int x1, int y1, int x2, int y2);
+#endif /* USE_SHOW_INPUT_LOG */
 
 
 
@@ -322,8 +352,10 @@ INLINE void ui_set_handler(UINT32 (*callback)(UINT32), int param)
 
 INLINE void erase_screen(mame_bitmap *bitmap)
 {
+#ifndef NEW_RENDER
 	fillbitmap(bitmap, get_black_pen(), NULL);
 	schedule_full_refresh();
+#endif
 }
 
 
@@ -345,8 +377,12 @@ int ui_init(void)
 #endif
 		fatalerror("uistring_init failed");
 
+#ifndef NEW_RENDER
 	/* build up the font */
 	create_font();
+#else
+	ui_font = render_font_alloc(NULL);
+#endif
 
 #ifdef INP_CAPTION
 	next_caption_frame = -1;
@@ -402,7 +438,9 @@ void ui_exit(void)
 
 int ui_display_startup_screens(int show_disclaimer, int show_warnings, int show_gameinfo)
 {
+#ifndef NEW_RENDER
 	mame_bitmap *bitmap = artwork_get_ui_bitmap();
+#endif
 	int state;
 
 	/* initialize the on-screen display system */
@@ -415,11 +453,13 @@ int ui_display_startup_screens(int show_disclaimer, int show_warnings, int show_
 	Show_Time_Position = 0;
 #endif /* USE_SHOW_TIME */
 
+#ifndef NEW_RENDER
 	/* disable artwork for the start */
 	artwork_enable(FALSE);
 
 	/* before doing anything else, update the video and audio system once */
 	update_video_and_audio();
+#endif
 
 	/* loop over states */
 	for (state = -1; state < 3 && !mame_is_scheduled_event_pending(); state++)
@@ -457,7 +497,11 @@ int ui_display_startup_screens(int show_disclaimer, int show_warnings, int show_
 			int ui_width, ui_height;
 
 			/* reset the contents of the screen */
+#ifndef NEW_RENDER
 			erase_screen(bitmap);
+#else
+			render_container_empty(render_container_get_ui());
+#endif
 
 			/* first draw a box around the whole screen */
 			ui_get_bounds(&ui_width, &ui_height);
@@ -471,7 +515,9 @@ int ui_display_startup_screens(int show_disclaimer, int show_warnings, int show_
 				return 1;
 
 			/* render and update */
+#ifndef NEW_RENDER
 			render_ui(bitmap);
+#endif
 			video_frame_update();
 		}
 
@@ -483,8 +529,10 @@ int ui_display_startup_screens(int show_disclaimer, int show_warnings, int show_
 	/* clear the input memory */
 	while (code_read_async() != CODE_NONE) ;
 
+#ifndef NEW_RENDER
 	/* enable artwork now */
 	artwork_enable(TRUE);
+#endif
 
 	return 0;
 }
@@ -501,6 +549,7 @@ int ui_display_startup_screens(int show_disclaimer, int show_warnings, int show_
 
 void ui_set_visible_area(int xmin, int ymin, int xmax, int ymax)
 {
+#ifndef NEW_RENDER
 	/* fill in the rect */
 	uirawbounds.min_x = xmin;
 	uirawbounds.min_y = ymin;
@@ -517,6 +566,7 @@ void ui_set_visible_area(int xmin, int ymin, int xmax, int ymax)
 
 	/* rebuild the font */
 	create_font();
+#endif
 }
 
 
@@ -527,8 +577,16 @@ void ui_set_visible_area(int xmin, int ymin, int xmax, int ymax)
  *
  *************************************/
 
+#ifndef NEW_RENDER
 void ui_update_and_render(mame_bitmap *bitmap)
+#else
+void ui_update_and_render(void)
+#endif
 {
+#ifdef NEW_RENDER
+	render_container_empty(render_container_get_ui());
+#endif
+
 	/* call the current UI handler */
 	if (ui_handler_callback != NULL)
 	{
@@ -551,7 +609,11 @@ void ui_update_and_render(mame_bitmap *bitmap)
 			single_step = FALSE;
 		}
 
+#ifndef NEW_RENDER
 		handle_keys(bitmap);
+#else
+		handle_keys();
+#endif
 
 		/* then let the cheat engine display its stuff */
 		if (options.cheat)
@@ -569,12 +631,14 @@ void ui_update_and_render(mame_bitmap *bitmap)
 	/* finally, display any popup messages */
 	ui_display_popup();
 
+#ifndef NEW_RENDER
 	/* flush the UI to the bitmap */
 	render_ui(bitmap);
 
 	/* decrement the dirty count */
 	if (ui_dirty)
 		ui_dirty--;
+#endif
 }
 
 
@@ -1566,7 +1630,9 @@ static void display_time(mame_bitmap *bitmap)
 
 static void create_font(void)
 {
+#ifndef NEW_RENDER
 	uifont_buildfont(&uirotcharwidth, &uirotcharheight);
+#endif
 }
 
 
@@ -1689,7 +1755,11 @@ skip_comment:
  *
  *************************************/
 
+#ifndef NEW_RENDER
 static void handle_keys(mame_bitmap *bitmap)
+#else
+static void handle_keys(void)
+#endif
 {
 #ifdef MESS
 	if (options.disable_normal_ui || ((Machine->gamedrv->flags & GAME_COMPUTER) && !mess_ui_active()))
@@ -1732,12 +1802,14 @@ static void handle_keys(mame_bitmap *bitmap)
 		mame_schedule_soft_reset();
 
 	/* handle a request to display graphics/palette (note that this loops internally) */
+#ifndef NEW_RENDER
 	if (input_ui_pressed(IPT_UI_SHOW_GFX))
 	{
 		osd_sound_enable(0);
 		showcharset(bitmap);
 		osd_sound_enable(1);
 	}
+#endif
 
 	/* handle a save state request */
 	if (input_ui_pressed(IPT_UI_SAVE_STATE))
@@ -1747,9 +1819,11 @@ static void handle_keys(mame_bitmap *bitmap)
 	if (input_ui_pressed(IPT_UI_LOAD_STATE))
 		initiate_load_save(LOADSAVE_LOAD);
 
+#ifndef NEW_RENDER
 	/* handle a save snapshot request */
 	if (input_ui_pressed(IPT_UI_SNAPSHOT))
 		save_screen_snapshot(bitmap);
+#endif
 
 #ifdef INP_CAPTION
 	draw_caption();
@@ -3767,6 +3841,7 @@ static void show_colors(int submode)
 #endif
 
 
+#ifndef NEW_RENDER
 static void showcharset(mame_bitmap *bitmap)
 {
 	int i;
@@ -4195,6 +4270,7 @@ static void showcharset(mame_bitmap *bitmap)
 	/* mark all the tilemaps dirty on exit so they are updated correctly on the next frame */
 	tilemap_mark_all_tiles_dirty(NULL);
 }
+#endif
 
 
 int ui_display_decoding(int percent)
@@ -5011,6 +5087,12 @@ static UINT32 confirm_quit_ui_handler(UINT32 state)
 }
 
 
+void ui_auto_pause(void)
+{
+	auto_pause = 1;
+}
+
+
 void ui_display_fps(void)
 {
 	int ui_width, ui_height;
@@ -5067,6 +5149,8 @@ static void ui_display_popup(void)
  *  Temporary rendering system
  *
  *************************************/
+
+#ifndef NEW_RENDER
 
 void ui_get_bounds(int *width, int *height)
 {
@@ -5214,65 +5298,6 @@ static void add_char(int x, int y, UINT16 ch, int color)
 }
 
 
-static void add_filled_box_color(int x1, int y1, int x2, int y2, rgb_t color)
-{
-#ifdef UI_COLOR_DISPLAY
-	add_fill(x1 + 3, y1 + 3, x2 - 3, y2 - 3, color);
-
-	/* top edge */
-	add_line(x1,     y1,     x2,     y1,     SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x1 + 1, y1 + 1, x2 - 1, y1 + 1, SYSTEM_COLOR_FRAMEMEDIUM);
-	add_line(x1 + 2, y1 + 2, x2 - 2, y1 + 2, SYSTEM_COLOR_FRAMEDARK);
-
-	/* bottom edge */
-	add_line(x1 + 3, y2 - 2, x2 - 2, y2 - 2, SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x1 + 1, y2 - 1, x2 - 1, y2 - 1, SYSTEM_COLOR_FRAMEMEDIUM);
-	add_line(x1,     y2,     x2,     y2,     SYSTEM_COLOR_FRAMEDARK);
-
-	/* left edge */
-	add_line(x1,     y1 + 1, x1,     y2 - 1, SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x1 + 1, y1 + 2, x1 + 1, y2 - 2, SYSTEM_COLOR_FRAMEMEDIUM);
-	add_line(x1 + 2, y1 + 3, x1 + 2, y2 - 2, SYSTEM_COLOR_FRAMEDARK);
-
-	/* right edge */
-	add_line(x2 - 2, y1 + 3, x2 - 2, y2 - 3, SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x2 - 1, y1 + 2, x2 - 1, y2 - 2, SYSTEM_COLOR_FRAMEMEDIUM);
-	add_line(x2,     y1 + 1, x2,     y2 - 1, SYSTEM_COLOR_FRAMEDARK);
-#else /* UI_COLOR_DISPLAY */
-	add_fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, color);
-
-	add_line(x1, y1, x2, y1, RGB_WHITE);
-	add_line(x2, y1, x2, y2, RGB_WHITE);
-	add_line(x2, y2, x1, y2, RGB_WHITE);
-	add_line(x1, y2, x1, y1, RGB_WHITE);
-#endif /* UI_COLOR_DISPLAY */
-}
-
-
-static void add_filled_box(int x1, int y1, int x2, int y2)
-{
-	add_filled_box_color(x1, y1, x2, y2, ui_bgcolor);
-}
-
-
-static void add_filled_box_black(int x1, int y1, int x2, int y2)
-{
-	add_filled_box_color(x1, y1, x2, y2, RGB_BLACK);
-}
-
-
-#ifdef USE_SHOW_INPUT_LOG
-void add_filled_box_noedge(int x1, int y1, int x2, int y2)
-{
-#ifdef UI_COLOR_DISPLAY
-	add_fill(x1, y1, x2, y2, ui_bgcolor);
-#else /* UI_COLOR_DISPLAY */
-	add_fill(x1, y1, x2, y2, RGB_BLACK);
-#endif /* UI_COLOR_DISPLAY */
-}
-#endif
-
-
 static void render_ui(mame_bitmap *dest)
 {
 	int ui_need_scroll = FALSE;
@@ -5361,7 +5386,88 @@ static void render_ui(mame_bitmap *dest)
 	elemindex = 0;
 }
 
-void ui_auto_pause(void)
+#else
+
+void ui_get_bounds(int *width, int *height)
 {
-	auto_pause = 1;
+	*width = UI_SCALE_TO_INT(1.0f);
+	*height = UI_SCALE_TO_INT(1.0f);
 }
+
+
+int ui_get_line_height(void)
+{
+	return UI_SCALE_TO_INT(UI_FONT_HEIGHT);
+}
+
+
+int ui_get_char_width(UINT16 ch)
+{
+	return UI_SCALE_TO_INT(render_font_get_char_width(ui_font, UI_FONT_HEIGHT, ch));
+}
+
+
+int ui_get_string_width(const char *s)
+{
+	return UI_SCALE_TO_INT(render_font_get_string_width(ui_font, UI_FONT_HEIGHT, s));
+}
+#endif
+
+
+static void add_filled_box_color(int x1, int y1, int x2, int y2, rgb_t color)
+{
+#ifdef UI_COLOR_DISPLAY
+	add_fill(x1 + 3, y1 + 3, x2 - 3, y2 - 3, color);
+
+	/* top edge */
+	add_line(x1,     y1,     x2,     y1,     SYSTEM_COLOR_FRAMELIGHT);
+	add_line(x1 + 1, y1 + 1, x2 - 1, y1 + 1, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_line(x1 + 2, y1 + 2, x2 - 2, y1 + 2, SYSTEM_COLOR_FRAMEDARK);
+
+	/* bottom edge */
+	add_line(x1 + 3, y2 - 2, x2 - 2, y2 - 2, SYSTEM_COLOR_FRAMELIGHT);
+	add_line(x1 + 1, y2 - 1, x2 - 1, y2 - 1, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_line(x1,     y2,     x2,     y2,     SYSTEM_COLOR_FRAMEDARK);
+
+	/* left edge */
+	add_line(x1,     y1 + 1, x1,     y2 - 1, SYSTEM_COLOR_FRAMELIGHT);
+	add_line(x1 + 1, y1 + 2, x1 + 1, y2 - 2, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_line(x1 + 2, y1 + 3, x1 + 2, y2 - 2, SYSTEM_COLOR_FRAMEDARK);
+
+	/* right edge */
+	add_line(x2 - 2, y1 + 3, x2 - 2, y2 - 3, SYSTEM_COLOR_FRAMELIGHT);
+	add_line(x2 - 1, y1 + 2, x2 - 1, y2 - 2, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_line(x2,     y1 + 1, x2,     y2 - 1, SYSTEM_COLOR_FRAMEDARK);
+#else /* UI_COLOR_DISPLAY */
+	add_fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, color);
+
+	add_line(x1, y1, x2, y1, RGB_WHITE);
+	add_line(x2, y1, x2, y2, RGB_WHITE);
+	add_line(x2, y2, x1, y2, RGB_WHITE);
+	add_line(x1, y2, x1, y1, RGB_WHITE);
+#endif /* UI_COLOR_DISPLAY */
+}
+
+
+static void add_filled_box(int x1, int y1, int x2, int y2)
+{
+	add_filled_box_color(x1, y1, x2, y2, ui_bgcolor);
+}
+
+
+static void add_filled_box_black(int x1, int y1, int x2, int y2)
+{
+	add_filled_box_color(x1, y1, x2, y2, RGB_BLACK);
+}
+
+
+#ifdef USE_SHOW_INPUT_LOG
+static void add_filled_box_noedge(int x1, int y1, int x2, int y2)
+{
+#ifdef UI_COLOR_DISPLAY
+	add_fill(x1, y1, x2, y2, ui_bgcolor);
+#else /* UI_COLOR_DISPLAY */
+	add_fill(x1, y1, x2, y2, RGB_BLACK);
+#endif /* UI_COLOR_DISPLAY */
+}
+#endif /* USE_SHOW_INPUT_LOG */
