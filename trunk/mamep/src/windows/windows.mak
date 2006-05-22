@@ -62,6 +62,9 @@ ifdef USE_GCC
   CFLAGSOSDEPEND += -Wno-strict-aliasing
 else
   CFLAGS += /FI"windows/winprefix.h"
+  ifneq ($(NO_FORCEINLINE),)
+  DEFS += -DNO_FORCEINLINE
+  endif
 endif
 
 ifdef WIN95_MULTIMON

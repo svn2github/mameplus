@@ -59,7 +59,7 @@ INLINE int _vec_mult(int x, int y)
         mov eax, x
         imul y
         mov result, edx
-}
+    }
 
     return result;
 }
