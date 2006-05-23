@@ -10,7 +10,7 @@ struct m68k_memory_interface a68k_memory_intf;
 // If we are only using assembler cores, we need to define these
 // otherwise they are declared by the C core.
 
-#if 1 //ks hcmame s switch m68k core
+#if 0 //ks hcmame s switch m68k core
 #if (HAS_M68000)
 #undef A68K0
 #define A68K0
