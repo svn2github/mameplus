@@ -1027,7 +1027,24 @@ static void create_machine(int game)
 #if (HAS_M68000)
 			if(type == CPU_M68000)
 			{
-				internal_drv.cpu[cpunum].cpu_type += options.m68k_core;
+				switch (options.m68k_core)
+				{
+				case 2:
+#if (HAS_M68000ASM)
+					// enable ASM core
+					internal_drv.cpu[cpunum].cpu_type += 2;
+					break;
+#endif
+				case 1:
+#if (HAS_M68000DRC)
+					// enable DRC core
+					internal_drv.cpu[cpunum].cpu_type += 1;
+					break;
+#endif
+				default:
+					break;
+				}
+
 				logerror("cpu[%d]: M68000 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68000]);
 				//printf  ("cpu[%d]: M68000 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68000]);
 			}
@@ -1035,7 +1052,24 @@ static void create_machine(int game)
 #if (HAS_M68008)
 			if(type == CPU_M68008)
 			{
-				internal_drv.cpu[cpunum].cpu_type += options.m68k_core;
+				switch (options.m68k_core)
+				{
+				case 2:
+#if (HAS_M68000ASM)
+					// enable ASM core
+					internal_drv.cpu[cpunum].cpu_type += 2;
+					break;
+#endif
+				case 1:
+#if (HAS_M68000DRC)
+					// enable DRC core
+					internal_drv.cpu[cpunum].cpu_type += 1;
+					break;
+#endif
+				default:
+					break;
+				}
+
 				logerror("cpu[%d]: M68008 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68008]);
 				//printf  ("cpu[%d]: M68008 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68008]);
 			}
@@ -1043,7 +1077,24 @@ static void create_machine(int game)
 #if (HAS_M68010)
 			if(type == CPU_M68010)
 			{
-				internal_drv.cpu[cpunum].cpu_type += options.m68k_core;
+				switch (options.m68k_core)
+				{
+				case 2:
+#if (HAS_M68010ASM)
+					// enable ASM core
+					internal_drv.cpu[cpunum].cpu_type += 2;
+					break;
+#endif
+				case 1:
+#if (HAS_M68000DRC)
+					// enable DRC core
+					internal_drv.cpu[cpunum].cpu_type += 1;
+					break;
+#endif
+				default:
+					break;
+				}
+
 				logerror("cpu[%d]: M68010 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68010]);
 				//printf  ("cpu[%d]: M68010 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68010]);
 			}
@@ -1051,9 +1102,23 @@ static void create_machine(int game)
 #if (HAS_M68EC020)
 			if(type == CPU_M68EC020)
 			{
-				if (options.m68k_core)
-					// ASM core is disabled
-					internal_drv.cpu[cpunum].cpu_type = CPU_M68EC020DRC;
+				switch (options.m68k_core)
+				{
+				case 2:
+#if (HAS_M68020ASM)
+					// enable ASM core
+					internal_drv.cpu[cpunum].cpu_type += 2;
+					break;
+#endif
+				case 1:
+#if (HAS_M68000DRC)
+					// enable DRC core
+					internal_drv.cpu[cpunum].cpu_type += 1;
+					break;
+#endif
+				default:
+					break;
+				}
 
 				logerror("cpu[%d]: M68EC020 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68EC020]);
 				//printf  ("cpu[%d]: M68EC020 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68EC020]);
@@ -1062,9 +1127,23 @@ static void create_machine(int game)
 #if (HAS_M68020)
 			if(type == CPU_M68020)
 			{
-				if (options.m68k_core)
-					// ASM core is disabled
-					internal_drv.cpu[cpunum].cpu_type = CPU_M68020DRC;
+				switch (options.m68k_core)
+				{
+				case 2:
+#if (HAS_M68020ASM)
+					// enable ASM core
+					internal_drv.cpu[cpunum].cpu_type += 2;
+					break;
+#endif
+				case 1:
+#if (HAS_M68000DRC)
+					// enable DRC core
+					internal_drv.cpu[cpunum].cpu_type += 1;
+					break;
+#endif
+				default:
+					break;
+				}
 
 				logerror("cpu[%d]: M68020 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68020]);
 				//printf  ("cpu[%d]: M68020 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68020]);
@@ -1073,9 +1152,23 @@ static void create_machine(int game)
 #if (HAS_M68040)
 			if(type == CPU_M68040)
 			{
-				if (options.m68k_core)
-					// ASM core is disabled
-					internal_drv.cpu[cpunum].cpu_type = CPU_M68040DRC;
+				switch (options.m68k_core)
+				{
+				case 2:
+#if (HAS_M68040ASM)
+					// enable ASM core
+					internal_drv.cpu[cpunum].cpu_type += 2;
+					break;
+#endif
+				case 1:
+#if (HAS_M68000DRC)
+					// enable DRC core
+					internal_drv.cpu[cpunum].cpu_type += 1;
+					break;
+#endif
+				default:
+					break;
+				}
 
 				logerror("cpu[%d]: M68040 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68040]);
 				//printf  ("cpu[%d]: M68040 %s core\n", cpunum, names[internal_drv.cpu[cpunum].cpu_type - CPU_M68040]);

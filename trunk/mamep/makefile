@@ -81,15 +81,6 @@ NEW_DEBUGGER = 1
 # uncomment next line to use the new rendering system
 # NEW_RENDER = 1
 
-# uncomment next line to use Assembler 68000 engine
-# X86_ASM_68000 = 1
-
-# uncomment next line to use Assembler 68020 engine
-# X86_ASM_68020 = 1
-
-# uncomment next line to use DRC 68K engine
-# X86_M68K_DRC = 1
-
 # uncomment next line to use DRC MIPS3 engine
 X86_MIPS3_DRC = 1
 
@@ -98,6 +89,18 @@ X86_PPC_DRC = 1
 
 # uncomment next line to use DRC Voodoo rasterizers
 # X86_VOODOO_DRC = 1
+
+# uncomment next line to use Assembler 68000 engine
+X86_ASM_68000 = 1
+
+# uncomment next line to use Assembler 68010 engine
+X86_ASM_68010 = 1
+
+# uncomment next line to use Assembler 68020 engine
+# X86_ASM_68020 = 1
+
+# uncomment next line to use DRC 68K engine
+X86_M68K_DRC = 1
 
 
 
@@ -113,6 +116,9 @@ X86_PPC_DRC = 1
 # PM = 1
 # AMD64 = 1
 
+
+# uncomment next line if you are building for a 64-bit target
+# PTR64 = 1
 
 # uncomment next line to use cygwin compiler
 # COMPILESYSTEM_CYGWIN	= 1
@@ -133,6 +139,23 @@ BUILD_ZLIB = 1
 ###########################################################################
 ##################   END USER-CONFIGURABLE OPTIONS   ######################
 ###########################################################################
+
+
+#-------------------------------------------------
+# sanity check the configuration
+#-------------------------------------------------
+
+# disable DRC cores for 64-bit builds
+ifdef PTR64
+X86_MIPS3_DRC =
+X86_PPC_DRC =
+X86_VOODOO_DRC =
+X86_ASM_68000 =
+X86_ASM_68010 =
+X86_ASM_68020 =
+X86_M68K_DRC =
+endif
+
 
 
 #-------------------------------------------------
@@ -199,8 +222,6 @@ endif
 
 ifeq ($(MAMEOS),msdos)
     PREFIX = d
-else
-    PREFIX =
 endif
 ifdef X86_VOODOO_DRC
 DEFS += -DVOODOO_DRC
@@ -322,9 +343,13 @@ ifdef USE_GCC
     DEFS = -DX86_ASM -DLSB_FIRST -DINLINE="static __inline__" -Dasm=__asm__ -DCRLF=3 -DXML_STATIC -Drestrict=__restrict
 else
     DEFS = -DLSB_FIRST=1 -DINLINE='static __forceinline' -Dinline=__inline -D__inline__=__inline -DCRLF=3 -DXML_STATIC
-	ifndef INTEL
-		DEFS += -Drestrict=
-	endif
+    ifndef INTEL
+        DEFS += -Drestrict=
+    endif
+endif
+
+ifdef PTR64
+DEFS += -DPTR64
 endif
 
 ifdef DEBUG
@@ -649,7 +674,7 @@ emulator:	maketree $(EMULATOR)
 
 extrafiles:	$(TOOLS)
 
-maketree: $(sort $(OBJDIRS))
+maketree: $(sort $(OBJDIRS)) $(OSPREBUILD)
 
 clean:
 	@echo Deleting object tree $(OBJ)...
@@ -835,7 +860,7 @@ $(OBJ)/%.a:
 	@echo Archiving $@...
 	$(RM) $@
 ifdef USE_GCC
-	$(AR) cr $@ $^
+	$(AR) -cr $@ $^
 else
 	$(AR) $(ARFLAGS) -out:$@ $^
 endif

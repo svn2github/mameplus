@@ -670,7 +670,12 @@ M68000DRC_GENERATED_HEADERS = \
 
 OBJDIRS += $(OBJ)/cpu/m68000
 CPUOBJS += $(OBJ)/cpu/m68000/m68kcpu.o $(OBJ)/cpu/m68000/m68kmame.o $(subst .c,.o,$(M68000_GENERATED_FILES))
+ifneq ($(X86_M68K_DRC),)
+CPUDEFS += -DHAS_M68000DRC=1
 CPUOBJS += $(OBJ)/cpu/m68000/d68kcpu.o $(OBJ)/cpu/m68000/d68kmame.o $(subst .c,.o,$(M68000DRC_GENERATED_FILES))
+else
+CPUDEFS += -DHAS_M68000DRC=0
+endif
 DBGOBJS += $(OBJ)/cpu/m68000/m68kdasm.o
 
 M68000_GENERATED_STAMP = $(OBJ)/cpu/m68000/m68k_stamp
@@ -729,17 +734,42 @@ $(OBJ)/cpu/m68000/d68kcpu.o: $(M68000DRC_GENERATED_HEADERS)
 
 # ASM core support
 ifneq ($(filter M68000 M68008,$(CPUS)),)
+ifneq ($(X86_ASM_68000),)
+CPUDEFS += -DHAS_M68000ASM=1
 CPUOBJS += $(OBJ)/cpu/m68000/asmintf.o $(OBJ)/cpu/m68000/68000.o
 ASMDEFS += -DA68K0
+else
+CPUDEFS += -DHAS_M68000ASM=0
+endif
 endif
 ifneq ($(filter M68010,$(CPUS)),)
+ifneq ($(X86_ASM_68010),)
+CPUDEFS += -DHAS_M68010ASM=1
 CPUOBJS += $(OBJ)/cpu/m68000/asmintf.o $(OBJ)/cpu/m68000/68010.o
 ASMDEFS += -DA68K1
+else
+CPUDEFS += -DHAS_M68010ASM=0
+endif
 endif
 ifneq ($(filter M68EC020 M68020,$(CPUS)),)
+ifneq ($(X86_ASM_68020),)
+CPUDEFS += -DHAS_M68020ASM=1
 CPUOBJS += $(OBJ)/cpu/m68000/asmintf.o $(OBJ)/cpu/m68000/68020.o
 ASMDEFS += -DA68K2
 ASMDEFS += -DA68KEM
+else
+CPUDEFS += -DHAS_M68020ASM=0
+endif
+endif
+ifneq ($(filter M68040,$(CPUS)),)
+ifneq ($(X86_ASM_68040),)
+CPUDEFS += -DHAS_M68040ASM=1
+CPUOBJS += $(OBJ)/cpu/m68000/asmintf.o $(OBJ)/cpu/m68000/68040.o
+ASMDEFS += -DA68K2
+ASMDEFS += -DA68KEM
+else
+CPUDEFS += -DHAS_M68040ASM=0
+endif
 endif
 
 # generate asm source files for the 68000/68020 emulators

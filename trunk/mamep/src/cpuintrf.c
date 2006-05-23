@@ -422,33 +422,57 @@ static const struct
 #endif
 #if (HAS_M68000)
 	{ CPU_M68000, m68000c_get_info },
+#if (HAS_M68000DRC)
 	{ CPU_M68000DRC, m68000drc_get_info },		//ks hcmame switch m68k core
+#endif
+#if (HAS_M68000ASM)
 	{ CPU_M68000ASM, m68000asm_get_info },		//ks hcmame switch m68k core
+#endif
 #endif
 #if (HAS_M68008)
 	{ CPU_M68008, m68008c_get_info },
+#if (HAS_M68000DRC)
 	{ CPU_M68008DRC, m68008drc_get_info },		//ks hcmame switch m68k core
+#endif
+#if (HAS_M68000ASM)
 	{ CPU_M68008ASM, m68008asm_get_info },		//ks hcmame switch m68k core
+#endif
 #endif
 #if (HAS_M68010)
 	{ CPU_M68010, m68010c_get_info },
+#if (HAS_M68000DRC)
 	{ CPU_M68010DRC, m68010drc_get_info },		//ks hcmame switch m68k core
+#endif
+#if (HAS_M68010ASM)
 	{ CPU_M68010ASM, m68010asm_get_info },		//ks hcmame switch m68k core
+#endif
 #endif
 #if (HAS_M68EC020)
 	{ CPU_M68EC020, m68ec020c_get_info },
+#if (HAS_M68000DRC)
 	{ CPU_M68EC020DRC, m68ec020drc_get_info },	//ks hcmame switch m68k core
+#endif
+#if (HAS_M68020ASM)
 	{ CPU_M68EC020ASM, m68ec020asm_get_info },	//ks hcmame switch m68k core
+#endif
 #endif
 #if (HAS_M68020)
 	{ CPU_M68020, m68020c_get_info },
+#if (HAS_M68000DRC)
 	{ CPU_M68020DRC, m68020drc_get_info },		//ks hcmame switch m68k core
+#endif
+#if (HAS_M68020ASM)
 	{ CPU_M68020ASM, m68020asm_get_info },		//ks hcmame switch m68k core
+#endif
 #endif
 #if (HAS_M68040)
 	{ CPU_M68040, m68040c_get_info },
+#if (HAS_M68000DRC)
 	{ CPU_M68040DRC, m68040drc_get_info },		//ks hcmame switch m68k core
+#endif
+#if (HAS_M68040ASM)
 	{ CPU_M68040ASM, m68040asm_get_info },		//ks hcmame switch m68k core
+#endif
 #endif
 #if (HAS_T11)
 	{ CPU_T11, t11_get_info },
