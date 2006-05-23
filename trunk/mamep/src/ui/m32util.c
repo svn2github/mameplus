@@ -403,8 +403,8 @@ static void get_aspect(float aspect, int *aspect_x, int *aspect_y)
 			}
 
 			aspect_db[i].aspect = val;
-			*aspect_x = aspect_db[i].x = x;
-			*aspect_y = aspect_db[i].y = y;
+			*aspect_x = aspect_db[i].x = 0;
+			*aspect_y = aspect_db[i].y = 0;
 			return;
 		}
 	}

@@ -1741,7 +1741,7 @@ static int load_datafile_text_ex (char *buffer, int bufsize,
 	int offset = 0;
 	UINT32	token = TOKEN_SYMBOL;
 	UINT32 	prev_token = TOKEN_SYMBOL;
-	UINT8 *s;
+	UINT8 *s = NULL;
 	int len;
 	long tell;
 

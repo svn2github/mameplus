@@ -175,13 +175,11 @@ ifdef USE_GCC
         CC = @gcc
         XCC = @gcc
         LD = @gcc
-        DLLWRAP = @dllwrap
     else
         AR = @i686-pc-mingw32-ar
         CC = @i686-pc-mingw32-gcc
         XCC = @i686-pc-mingw32-gcc
         LD = @i686-pc-mingw32-gcc
-        DLLWRAP = @i686-pc-mingw32-dllwrap
     endif
 else
     ifdef INTEL
@@ -742,8 +740,7 @@ ifneq ($(NO_DLL),)
 else
 	$(RM) $@
     ifdef USE_GCC
-		$(DLLWRAP) --image-base=0x10080000 --dllname=$@ --driver-name=gcc \
-			$(LDFLAGS) $(OSDBGLDFLAGS) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(MAPDLLFLAGS)
+		$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) -shared -o $@ $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(MAPDLLFLAGS)
     else
 		$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) -dll -out:$@ $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(MAPDLLFLAGS)
     endif

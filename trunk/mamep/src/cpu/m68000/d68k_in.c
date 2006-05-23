@@ -2446,7 +2446,6 @@ M68KMAKE_OP(asr, 8, r, .)
 {
 	link_info link1;
 	link_info link2;
-	link_info link3;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
@@ -2485,7 +2484,7 @@ _resolve_link(&link2);
 	_mov_m8abs_r8(&DY, REG_AL);
 
 	if (update_flag)
-		_jmp_near_link(&link3);
+		_jmp_near_link(&link2);
 
 _resolve_link(&link1);
 	if (update_flag)
@@ -2496,7 +2495,7 @@ _resolve_link(&link1);
 
 	if (update_flag)
 	{
-_resolve_link(&link3);
+_resolve_link(&link2);
 		DRC_NFLAG_8();
 		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
 		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
@@ -2508,7 +2507,6 @@ M68KMAKE_OP(asr, 16, r, .)
 {
 	link_info link1;
 	link_info link2;
-	link_info link3;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
@@ -2547,7 +2545,7 @@ _resolve_link(&link2);
 	_mov_m16abs_r16(&DY, REG_AX);
 
 	if (update_flag)
-		_jmp_near_link(&link3);
+		_jmp_near_link(&link2);
 
 _resolve_link(&link1);
 	if (update_flag)
@@ -2558,7 +2556,7 @@ _resolve_link(&link1);
 
 	if (update_flag)
 	{
-_resolve_link(&link3);
+_resolve_link(&link2);
 		DRC_NFLAG_16();
 		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
 		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
@@ -2570,7 +2568,6 @@ M68KMAKE_OP(asr, 32, r, .)
 {
 	link_info link1;
 	link_info link2;
-	link_info link3;
 	int update_flag ;
 
 	M68KMAKE_CODE_VERIFY(2);
@@ -2609,7 +2606,7 @@ _resolve_link(&link2);
 	_mov_m32abs_r32(&DY, REG_EAX);
 
 	if (update_flag)
-		_jmp_near_link(&link3);
+		_jmp_near_link(&link2);
 
 _resolve_link(&link1);
 	if (update_flag)
@@ -2620,7 +2617,7 @@ _resolve_link(&link1);
 
 	if (update_flag)
 	{
-_resolve_link(&link3);
+_resolve_link(&link2);
 		DRC_NFLAG_32();
 		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
 		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
@@ -2808,7 +2805,6 @@ M68KMAKE_OP(asl, 8, r, .)
 {
 	link_info link1;
 	link_info link5;
-	link_info link6;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
@@ -2880,7 +2876,7 @@ _resolve_link(&link5);
 	_mov_m8abs_r8(&DY, REG_AL);
 
 	if (update_flag)
-		_jmp_near_link(&link6);
+		_jmp_near_link(&link5);
 
 _resolve_link(&link1);
 	if (update_flag)
@@ -2890,7 +2886,7 @@ _resolve_link(&link1);
 		_mov_m16abs_imm(&FLAG_X, XFLAG_CLEAR);
 		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
 
-_resolve_link(&link6);
+_resolve_link(&link5);
 		DRC_NFLAG_8();
 	}
 }
@@ -2900,7 +2896,6 @@ M68KMAKE_OP(asl, 16, r, .)
 {
 	link_info link1;
 	link_info link5;
-	link_info link6;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
@@ -2973,7 +2968,7 @@ _resolve_link(&link5);
 	_mov_m16abs_r16(&DY, REG_AX);
 
 	if (update_flag)
-		_jmp_near_link(&link6);
+		_jmp_near_link(&link5);
 
 _resolve_link(&link1);
 	if (update_flag)
@@ -2983,7 +2978,7 @@ _resolve_link(&link1);
 		_mov_m16abs_imm(&FLAG_X, XFLAG_CLEAR);
 		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
 
-_resolve_link(&link6);
+_resolve_link(&link5);
 		DRC_NFLAG_16();
 	}
 }
@@ -2993,7 +2988,6 @@ M68KMAKE_OP(asl, 32, r, .)
 {
 	link_info link1;
 	link_info link5;
-	link_info link6;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
@@ -3063,7 +3057,7 @@ _resolve_link(&link5);
 	_mov_m32abs_r32(&DY, REG_EAX);
 
 	if (update_flag)
-		_jmp_near_link(&link6);
+		_jmp_near_link(&link5);
 
 _resolve_link(&link1);
 	if (update_flag)
@@ -3073,7 +3067,7 @@ _resolve_link(&link1);
 		_mov_m16abs_imm(&FLAG_X, XFLAG_CLEAR);
 		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
 
-_resolve_link(&link6);
+_resolve_link(&link5);
 		DRC_NFLAG_32();
 	}
 }
@@ -8289,7 +8283,6 @@ M68KMAKE_OP(lsr, 8, r, .)
 {
 	link_info link1;
 	link_info link2;
-	link_info link3;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
@@ -8333,7 +8326,7 @@ _resolve_link(&link2);
 		_mov_m8abs_imm(&FLAG_N, NFLAG_CLEAR);
 		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
 
-		_jmp_near_link(&link3);
+		_jmp_near_link(&link2);
 	}
 
 _resolve_link(&link1);
@@ -8344,7 +8337,7 @@ _resolve_link(&link1);
 		DRC_NFLAG_8();
 		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
 
-_resolve_link(&link3);
+_resolve_link(&link2);
 		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
 	}
 }
@@ -8354,7 +8347,6 @@ M68KMAKE_OP(lsr, 16, r, .)
 {
 	link_info link1;
 	link_info link2;
-	link_info link3;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
@@ -8398,7 +8390,7 @@ _resolve_link(&link2);
 		_mov_m8abs_imm(&FLAG_N, NFLAG_CLEAR);
 		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
 
-		_jmp_near_link(&link3);
+		_jmp_near_link(&link2);
 	}
 
 _resolve_link(&link1);
@@ -8409,7 +8401,7 @@ _resolve_link(&link1);
 		DRC_NFLAG_16();
 		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
 
-_resolve_link(&link3);
+_resolve_link(&link2);
 		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
 	}
 }
@@ -8419,7 +8411,6 @@ M68KMAKE_OP(lsr, 32, r, .)
 {
 	link_info link1;
 	link_info link2;
-	link_info link3;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
@@ -8460,7 +8451,7 @@ _resolve_link(&link2);
 		_mov_m8abs_imm(&FLAG_N, NFLAG_CLEAR);
 		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
 
-		_jmp_near_link(&link3);
+		_jmp_near_link(&link2);
 	}
 
 _resolve_link(&link1);
@@ -8471,7 +8462,7 @@ _resolve_link(&link1);
 		DRC_NFLAG_32();
 		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
 
-_resolve_link(&link3);
+_resolve_link(&link2);
 		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
 	}
 }
@@ -8586,7 +8577,6 @@ M68KMAKE_OP(lsl, 8, r, .)
 {
 	link_info link1;
 	link_info link2;
-	link_info link3;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
@@ -8627,7 +8617,7 @@ _resolve_link(&link2);
 		DRC_CXFLAG_COND_C();
 		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
 
-		_jmp_near_link(&link3);
+		_jmp_near_link(&link2);
 	}
 
 _resolve_link(&link1);
@@ -8636,7 +8626,7 @@ _resolve_link(&link1);
 		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
 		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
 
-_resolve_link(&link3);
+_resolve_link(&link2);
 		DRC_NFLAG_8();
 		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
 	}
@@ -8647,7 +8637,6 @@ M68KMAKE_OP(lsl, 16, r, .)
 {
 	link_info link1;
 	link_info link2;
-	link_info link3;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
@@ -8688,7 +8677,7 @@ _resolve_link(&link2);
 		DRC_CXFLAG_COND_C();
 		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
 
-		_jmp_near_link(&link3);
+		_jmp_near_link(&link2);
 	}
 
 _resolve_link(&link1);
@@ -8697,7 +8686,7 @@ _resolve_link(&link1);
 		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
 		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
 
-_resolve_link(&link3);
+_resolve_link(&link2);
 		DRC_NFLAG_16();
 		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
 	}
@@ -8708,7 +8697,6 @@ M68KMAKE_OP(lsl, 32, r, .)
 {
 	link_info link1;
 	link_info link2;
-	link_info link3;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
@@ -8746,7 +8734,7 @@ _resolve_link(&link2);
 		DRC_CXFLAG_COND_C();
 		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
 
-		_jmp_near_link(&link3);
+		_jmp_near_link(&link2);
 	}
 
 _resolve_link(&link1);
@@ -8755,7 +8743,7 @@ _resolve_link(&link1);
 		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
 		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
 
-_resolve_link(&link3);
+_resolve_link(&link2);
 		DRC_NFLAG_32();
 		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
 	}
@@ -11158,7 +11146,6 @@ M68KMAKE_OP(nbcd, 8, ., d)
 {
 	link_info link1;
 	link_info link2;
-	link_info link3;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
@@ -11204,7 +11191,7 @@ _resolve_link(&link2);
 		_mov_m16abs_imm(&FLAG_C, CFLAG_SET);
 		_mov_m16abs_imm(&FLAG_X, XFLAG_SET);
 
-		_jmp_near_link(&link3);
+		_jmp_near_link(&link2);
 	}
 
 _resolve_link(&link1);
@@ -11214,7 +11201,7 @@ _resolve_link(&link1);
 		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
 		_mov_m16abs_imm(&FLAG_X, XFLAG_CLEAR);
 
-_resolve_link(&link3);
+_resolve_link(&link2);
 		DRC_NFLAG_8();				/* Undefined N behavior */
 	}
 }
@@ -12298,7 +12285,6 @@ M68KMAKE_OP(ror, 8, r, .)
 {
 	link_info link1;
 	link_info link2;
-	link_info link3;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
@@ -12339,7 +12325,7 @@ _resolve_link(&link2);
 	{
 		DRC_CFLAG_COND_C();
 
-		_jmp_near_link(&link3);
+		_jmp_near_link(&link2);
 	}
 
 _resolve_link(&link1);
@@ -12347,7 +12333,7 @@ _resolve_link(&link1);
 	{
 		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
 
-_resolve_link(&link3);
+_resolve_link(&link2);
 		DRC_NFLAG_8();
 		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
 		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
@@ -12359,7 +12345,6 @@ M68KMAKE_OP(ror, 16, r, .)
 {
 	link_info link1;
 	link_info link2;
-	link_info link3;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
@@ -12399,7 +12384,7 @@ _resolve_link(&link2);
 	{
 		DRC_CFLAG_COND_C();
 
-		_jmp_near_link(&link3);
+		_jmp_near_link(&link2);
 	}
 
 _resolve_link(&link1);
@@ -12407,7 +12392,7 @@ _resolve_link(&link1);
 	{
 		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
 
-_resolve_link(&link3);
+_resolve_link(&link2);
 		DRC_NFLAG_16();
 		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
 		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
@@ -12420,7 +12405,6 @@ M68KMAKE_OP(ror, 32, r, .)
 {
 	link_info link1;
 	link_info link2;
-	link_info link3;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
@@ -12458,7 +12442,7 @@ _resolve_link(&link2);
 	{
 		DRC_CFLAG_COND_C();
 
-		_jmp_near_link(&link3);
+		_jmp_near_link(&link2);
 	}
 
 _resolve_link(&link1);
@@ -12466,7 +12450,7 @@ _resolve_link(&link1);
 	{
 		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
 
-_resolve_link(&link3);
+_resolve_link(&link2);
 		DRC_NFLAG_32();
 		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
 		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
@@ -12583,7 +12567,6 @@ M68KMAKE_OP(rol, 8, r, .)
 {
 	link_info link1;
 	link_info link2;
-	link_info link3;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
@@ -12624,7 +12607,7 @@ _resolve_link(&link2);
 	{
 		DRC_CFLAG_COND_C();
 
-		_jmp_near_link(&link3);
+		_jmp_near_link(&link2);
 	}
 
 _resolve_link(&link1);
@@ -12632,7 +12615,7 @@ _resolve_link(&link1);
 	{
 		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
 
-_resolve_link(&link3);
+_resolve_link(&link2);
 		DRC_NFLAG_8();
 		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
 		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
@@ -12644,7 +12627,6 @@ M68KMAKE_OP(rol, 16, r, .)
 {
 	link_info link1;
 	link_info link2;
-	link_info link3;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
@@ -12685,7 +12667,7 @@ _resolve_link(&link2);
 	{
 		DRC_CFLAG_COND_C();
 
-		_jmp_near_link(&link3);
+		_jmp_near_link(&link2);
 	}
 
 _resolve_link(&link1);
@@ -12693,7 +12675,7 @@ _resolve_link(&link1);
 	{
 		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
 
-_resolve_link(&link3);
+_resolve_link(&link2);
 		DRC_NFLAG_16();
 		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
 		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
@@ -12705,7 +12687,6 @@ M68KMAKE_OP(rol, 32, r, .)
 {
 	link_info link1;
 	link_info link2;
-	link_info link3;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
@@ -12743,7 +12724,7 @@ _resolve_link(&link2);
 	{
 		DRC_CFLAG_COND_C();
 
-		_jmp_near_link(&link3);
+		_jmp_near_link(&link2);
 	}
 
 _resolve_link(&link1);
@@ -12751,7 +12732,7 @@ _resolve_link(&link1);
 	{
 		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
 
-_resolve_link(&link3);
+_resolve_link(&link2);
 		DRC_NFLAG_32();
 		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
 		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
@@ -12910,6 +12891,9 @@ M68KMAKE_OP(roxr, 8, r, .)
 
 		_jmp_near_link(&link3);
 	}
+	//else
+	//	just remove warnings
+	//	memset(&link3, 0, 1);
 
 _resolve_link(&link2);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
@@ -12926,6 +12910,10 @@ _resolve_link(&link2);
 
 		_jmp_near_link(&link4);
 	}
+	//else
+	//	just remove warnings
+	//	memset(&link4, 0, 1);
+
 
 _resolve_link(&link1);
 	if (update_flag)
@@ -12984,6 +12972,9 @@ M68KMAKE_OP(roxr, 16, r, .)
 
 		_jmp_near_link(&link3);
 	}
+	//else
+	//	just remove warnings
+	//	memset(&link3, 0, 1);
 
 _resolve_link(&link2);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
@@ -13000,6 +12991,9 @@ _resolve_link(&link2);
 
 		_jmp_near_link(&link4);
 	}
+	//else
+	//	just remove warnings
+	//	memset(&link4, 0, 1);
 
 _resolve_link(&link1);
 	if (update_flag)
@@ -13058,6 +13052,9 @@ M68KMAKE_OP(roxr, 32, r, .)
 
 		_jmp_near_link(&link3);
 	}
+	//else
+	//	just remove warnings
+	//	memset(&link3, 0, 1);
 
 _resolve_link(&link2);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
@@ -13074,6 +13071,9 @@ _resolve_link(&link2);
 
 		_jmp_near_link(&link4);
 	}
+	//else
+	//	just remove warnings
+	//	memset(&link4, 0, 1);
 
 _resolve_link(&link1);
 	if (update_flag)
@@ -13242,6 +13242,9 @@ M68KMAKE_OP(roxl, 8, r, .)
 
 		_jmp_near_link(&link3);
 	}
+	//else
+	//	just remove warnings
+	//	memset(&link3, 0, 1);
 
 _resolve_link(&link2);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
@@ -13258,6 +13261,9 @@ _resolve_link(&link2);
 
 		_jmp_near_link(&link4);
 	}
+	//else
+	//	just remove warnings
+	//	memset(&link4, 0, 1);
 
 _resolve_link(&link1);
 	if (update_flag)
@@ -13316,6 +13322,9 @@ M68KMAKE_OP(roxl, 16, r, .)
 
 		_jmp_near_link(&link3);
 	}
+	//else
+	//	just remove warnings
+	//	memset(&link3, 0, 1);
 
 _resolve_link(&link2);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
@@ -13332,6 +13341,9 @@ _resolve_link(&link2);
 
 		_jmp_near_link(&link4);
 	}
+	//else
+	//	just remove warnings
+	//	memset(&link4, 0, 1);
 
 _resolve_link(&link1);
 	if (update_flag)
@@ -13390,6 +13402,9 @@ M68KMAKE_OP(roxl, 32, r, .)
 
 		_jmp_near_link(&link3);
 	}
+	//else
+	//	just remove warnings
+	//	memset(&link3, 0, 1);
 
 _resolve_link(&link2);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
@@ -13406,6 +13421,9 @@ _resolve_link(&link2);
 
 		_jmp_near_link(&link4);
 	}
+	//else
+	//	just remove warnings
+	//	memset(&link4, 0, 1);
 
 _resolve_link(&link1);
 	if (update_flag)

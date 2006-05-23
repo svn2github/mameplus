@@ -33,6 +33,23 @@
 
 
 #-------------------------------------------------
+# configure the resource compiler
+#-------------------------------------------------
+
+ifdef USE_GCC
+    ifndef USE_XGCC
+        RC = @windres --use-temp-file
+    else
+        RC = @i686-pc-mingw32-windres
+    endif
+    RCDEFS += -DNDEBUG -D_WIN32_IE=0x0400
+    RCFLAGS += -O coff --include-dir src
+else
+    RC = @rc
+    RCDEFS += -D_WIN32_IE=0x0400
+    RCFLAGS += -Isrc
+endif
+
 # nasm for Windows (but not cygwin) has a "w"
 # at the end
 #-------------------------------------------------
@@ -117,8 +134,6 @@ endif
 #-------------------------------------------------
 
 OSOBJS = \
-	$(OBJ)/$(MAMEOS)/asmblit.o \
-	$(OBJ)/$(MAMEOS)/asmtile.o \
 	$(OBJ)/$(MAMEOS)/blit.o \
 	$(OBJ)/$(MAMEOS)/config.o \
 	$(OBJ)/$(MAMEOS)/fileio.o \
@@ -137,6 +152,13 @@ OSOBJS = \
 
 OSTOOLOBJS = \
 	$(OBJ)/$(MAMEOS)/osd_tool.o
+
+# add 32-bit optimized blitters
+ifndef PTR64
+OSOBJS += \
+	$(OBJ)/$(MAMEOS)/asmblit.o \
+	$(OBJ)/$(MAMEOS)/asmtile.o
+endif
 
 # extra targets and rules for the scale effects
 ifneq ($(USE_SCALE_EFFECTS),)
@@ -266,24 +288,6 @@ ifndef X86_MIPS3_DRC
 COREOBJS += $(OBJ)/x86drc.o
 endif
 
-
-#-------------------------------------------------
-# configure resources
-#-------------------------------------------------
-
-ifdef USE_GCC
-    ifndef USE_XGCC
-        RC = @windres --use-temp-file
-    else
-        RC = @i686-pc-mingw32-windres
-    endif
-    RCDEFS += -DNDEBUG -D_WIN32_IE=0x0400
-    RCFLAGS += -O coff --include-dir src
-else
-    RC = @rc
-    RCDEFS += -D_WIN32_IE=0x0400
-    RCFLAGS += -Isrc
-endif
 
 #-------------------------------------------------
 # generic rule for the resource compiler
