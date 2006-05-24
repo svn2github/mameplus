@@ -23,7 +23,9 @@ include config.def
 # build rules will be included from $(TARGET).mak
 #-------------------------------------------------
 
+ifeq ($(TARGET),)
 TARGET = mame
+endif
 
 
 
@@ -32,19 +34,8 @@ TARGET = mame
 # build rules will be includes from $(MAMEOS)/$(MAMEOS).mak
 #-------------------------------------------------
 
+ifeq ($(MAMEOS),)
 MAMEOS = windows
-
-
-
-# select compiler
-# USE_GCC = 1
-# USE_VC = 1
-# INTEL = 1
-# if compiler is not selected, GCC is used as the default.
-ifndef USE_VC
-    ifndef USE_GCC
-        USE_GCC = 1
-    endif
 endif
 
 ifneq ($(NO_DLL),)
@@ -66,11 +57,6 @@ endif
 # specify program options; see each option below 
 # for details
 #-------------------------------------------------
-
-ifdef USE_VC
-# uncomment one of the next lines to use Whole Program Optimization
-# USE_IPO = 1
-endif
 
 # uncomment next line to include the debugger
 # DEBUG = 1
@@ -146,7 +132,7 @@ BUILD_ZLIB = 1
 #-------------------------------------------------
 
 # disable DRC cores for 64-bit builds
-ifdef PTR64
+ifneq ($(PTR64),)
 X86_MIPS3_DRC =
 X86_PPC_DRC =
 X86_VOODOO_DRC =
@@ -165,48 +151,27 @@ endif
 # extension for executables
 EXE = .exe
 
-# CPU core include paths
-VPATH=src $(wildcard src/cpu/*)
-
 # compiler, linker and utilities
-ifdef USE_GCC
-    ifndef USE_XGCC
-        AR = @ar
-        CC = @gcc
-        XCC = @gcc
-        LD = @gcc
-    else
-        AR = @i686-pc-mingw32-ar
-        CC = @i686-pc-mingw32-gcc
-        XCC = @i686-pc-mingw32-gcc
-        LD = @i686-pc-mingw32-gcc
-    endif
+ifneq ($(USE_XGCC),)
+    AR = @i686-pc-mingw32-ar
+    CC = @i686-pc-mingw32-gcc
+    XCC = @i686-pc-mingw32-gcc
+    LD = @i686-pc-mingw32-gcc
 else
-    ifdef INTEL
-        AR = @xilib
-        CC = @icl
-        LD = @xilink
-    else
-        AR = @lib
-        CC = @cl
-        LD = @link
-    endif
+    AR = @ar
+    CC = @gcc
+    XCC = @gcc
+    LD = @gcc
 endif
-
 ASM = @nasm
 ASMFLAGS = -f coff
 MD = -mkdir.exe
 RM = @rm -f
 
-ifdef USE_GCC
-    WINDOWS_PROGRAM = -mwindows
-    CONSOLE_PROGRAM = -mconsole
-else
-    WINDOWS_PROGRAM = -subsystem:windows
-    CONSOLE_PROGRAM = -subsystem:console
-endif
+WINDOWS_PROGRAM = -mwindows
+CONSOLE_PROGRAM = -mconsole
 
-ifdef I686
+ifneq ($(I686),)
     P6OPT = ppro
 else
     P6OPT = notppro
@@ -221,84 +186,42 @@ endif
 ifeq ($(MAMEOS),msdos)
     PREFIX = d
 endif
-ifdef X86_VOODOO_DRC
-DEFS += -DVOODOO_DRC
+
+COMPILER_SUFFIX =
+XEXTRA_SUFFIX = $(EXTRA_SUFFIX)
+
+# by default, compile for Pentium target and add no suffix
+ARCHSUFFIX =
+ARCH = -march=pentium
+
+ifneq ($(ATHLON),)
+    ARCHSUFFIX = at
+    ARCH = -march=athlon -m3dnow
 endif
 
-ifdef USE_GCC
-    COMPILER_SUFFIX =
-    XEXTRA_SUFFIX = $(EXTRA_SUFFIX)
+ifneq ($(ATHLONXP),)
+    ARCHSUFFIX = ax
+    ARCH = -march=athlon-xp -m3dnow -msse
+endif
 
-    # by default, compile for Pentium target and add no suffix
-    ARCHSUFFIX =
-    ARCH = -march=pentium
+ifneq ($(I686),)
+    ARCHSUFFIX = pp
+    ARCH = -march=i686 -mmmx
+endif
 
-    ifdef AMD64
-        ARCHSUFFIX = 64
-        ARCH = -march=athlon64
-    endif
+ifneq ($(P4),)
+    ARCHSUFFIX = p4
+    ARCH = -march=pentium4 -msse2
+endif
 
-    ifdef ATHLON
-        ARCHSUFFIX = at
-        ARCH = -march=athlon -m3dnow
-    endif
+ifneq ($(AMD64),)
+    ARCHSUFFIX = 64
+    ARCH = -march=athlon64
+endif
 
-    ifdef ATHLONXP
-        ARCHSUFFIX = ax
-        ARCH = -march=athlon-xp -m3dnow -msse
-    endif
-
-    ifdef I686
-        ARCHSUFFIX = pp
-        ARCH = -march=i686 -mmmx
-    endif
-
-    ifdef P4
-        ARCHSUFFIX = p4
-        ARCH = -march=pentium4 -msse2
-    endif
-
-    ifdef PM
-        ARCHSUFFIX = pm
-        ARCH = -march=pentium3 -msse2
-    endif
-else
-    ifdef INTEL
-        COMPILER_SUFFIX = -icc
-    else
-        COMPILER_SUFFIX = -vc
-    endif
-
-    XEXTRA_SUFFIX = $(EXTRA_SUFFIX)
-
-    # by default, compile for Pentium target and add no suffix
-    ARCHSUFFIX =
-    ARCH = -G5
-
-    ifdef I686
-        ARCHSUFFIX = pp
-        ARCH = -G6
-    endif
-
-    ifdef P4
-        ARCHSUFFIX = p4
-        ARCH = -G7
-        ifdef INTEL
-            ARCH += -QxN
-        else
-            ARCH += -arch:SSE2
-        endif
-    endif
-
-    ifdef PM
-        ARCHSUFFIX = pm
-        ARCH = -G6
-        ifdef INTEL
-            ARCH += -QxB
-        else
-            ARCH += -arch:SSE2
-        endif
-    endif
+ifneq ($(PM),)
+    ARCHSUFFIX = pm
+    ARCH = -march=pentiumm
 endif
 
 NAME = $(PREFIX)$(TARGET)$(SUFFIX)$(ARCHSUFFIX)$(XEXTRA_SUFFIX)$(COMPILER_SUFFIX)
@@ -308,7 +231,7 @@ ifeq ($(NO_DLL),)
 endif
 
 # debug builds just get the 'd' suffix and nothing more
-ifdef DEBUG
+ifneq ($(DEBUG),)
     NAME = $(PREFIX)$(TARGET)$(SUFFIX)$(XEXTRA_SUFFIX)d
     ifeq ($(NO_DLL),)
         LIBNAME = $(PREFIX)$(TARGET)$(SUFFIX)$(XEXTRA_SUFFIX)libd
@@ -324,7 +247,6 @@ OBJ = obj/$(NAME)
 ifneq ($(NO_DLL),)
     EMULATOR = $(NAME)$(EXE)
 else
-    EMULATORLIB = $(LIBNAME).lib
     EMULATORDLL = $(LIBNAME).dll
     EMULATORCLI = $(NAME)$(EXE)
     EMULATORGUI = $(GUINAME)$(EXE)
@@ -337,29 +259,26 @@ endif
 # compile-time definitions
 #-------------------------------------------------
 
-ifdef USE_GCC
-    DEFS = -DX86_ASM -DLSB_FIRST -DINLINE="static __inline__" -Dasm=__asm__ -DCRLF=3 -DXML_STATIC -Drestrict=__restrict
-else
-    DEFS = -DLSB_FIRST=1 -DINLINE='static __forceinline' -Dinline=__inline -D__inline__=__inline -DCRLF=3 -DXML_STATIC
-    ifndef INTEL
-        DEFS += -Drestrict=
-    endif
-endif
+DEFS = -DX86_ASM -DLSB_FIRST -DINLINE="static __inline__" -Dasm=__asm__ -DCRLF=3 -DXML_STATIC -Drestrict=__restrict
 
-ifdef PTR64
+ifneq ($(PTR64),)
 DEFS += -DPTR64
 endif
 
-ifdef DEBUG
+ifneq ($(DEBUG),)
 DEFS += -DMAME_DEBUG
 endif
 
-ifdef NEW_DEBUGGER
+ifneq ($(NEW_DEBUGGER),)
 DEFS += -DNEW_DEBUGGER
 endif
 
-ifdef NEW_RENDER
+ifneq ($(NEW_RENDER),)
 DEFS += -DNEW_RENDER
+endif
+
+ifneq ($(X86_VOODOO_DRC),)
+DEFS += -DVOODOO_DRC
 endif
 
 ifneq ($(USE_STORY_DATAFILE),)
@@ -404,12 +323,8 @@ ifneq ($(USE_IPS),)
     DEFS += -DUSE_IPS
 endif
 
-ifdef USE_VOLUME_AUTO_ADJUST
+ifneq ($(USE_VOLUME_AUTO_ADJUST),)
     DEFS += -DUSE_VOLUME_AUTO_ADJUST
-endif
-
-ifdef X86_M68K_DRC
-    DEFS += -DX86_M68K_DRC
 endif
 
 ifneq ($(USE_SHOW_TIME),)
@@ -426,125 +341,59 @@ endif
 # compile and linking flags
 #-------------------------------------------------
 
-ifdef USE_GCC
-    CFLAGS = -std=gnu89 -Isrc -Isrc/includes -Isrc/zlib -Iextra/include -Isrc/$(MAMEOS)
+CFLAGS = -std=gnu89 -Isrc -Isrc/includes -Isrc/zlib -Iextra/include -Isrc/$(MAMEOS)
 
-    ifneq ($(W_ERROR),)
-        CFLAGS += -Werror 
-    else
-        CFLAGS += -Wno-error 
-    endif
-
-    ifneq ($(SYMBOLS),)
-        CFLAGS += -O0 -Wall -Wno-unused -g
-    else
-        CFLAGS += -DNDEBUG \
-			$(ARCH) -O3 -fno-strict-aliasing \
-			-Wall \
-			-Wno-sign-compare \
-			-Wno-unused-functions \
-			-Wpointer-arith \
-			-Wbad-function-cast \
-			-Wcast-align \
-			-Wstrict-prototypes \
-			-Wundef \
-			-Wwrite-strings \
-			-Wdeclaration-after-statement
-		#	-Wformat-security
-    endif
-
-    ifdef I686
-    # If you have a trouble in I686 build, try to remove a comment.
-    #    CFLAGS += -fno-builtin -fno-omit-frame-pointer 
-    endif
-
-    # extra options needed *only* for the osd files
-    CFLAGSOSDEPEND = $(CFLAGS)
-
+ifneq ($(W_ERROR),)
+    CFLAGS += -Werror 
 else
-    CFLAGS = -Isrc -Isrc/includes -Isrc/zlib -Isrc/$(MAMEOS) \
-             -W3 -nologo
-
-    ifdef INTEL
-		CFLAGS += -Qc99 -Qrestrict
-    endif
-
-    ifneq ($(W_ERROR),)
-        CFLAGS += -WX
-    endif
-
-    ifneq ($(SYMBOLS),)
-        CFLAGS += -Od -RTC1 -MLd -ZI -Zi -GS
-    else
-        ifneq ($(USE_IPO),)
-            ifdef INTEL
-                CFLAGS += -Qipo -Qipo_obj
-            else
-                CFLAGS += -GL
-            endif
-        endif
-
-        ifdef INTEL
-            CFLAGS += -O3 -Qip -Qvec_report0
-        else
-            CFLAGS += -O2
-        endif
-
-        CFLAGS += -Og -Ob2 -Oi -Ot -Oy -GA -Gy -GF
-        CFLAGS += -DNDEBUG -ML $(ARCH)
-    endif
+    CFLAGS += -Wno-error 
 endif
 
-ifdef USE_GCC
-    LDFLAGS = -Lextra/lib
-
-    ifeq ($(SYMBOLS),)
-        LDFLAGS += -s
-    endif
-
-    ifneq ($(MAP),)
-        MAPFLAGS = -Wl,-Map,$(NAME).map
-        MAPDLLFLAGS = -Wl,-Map,$(LIBNAME).map
-        MAPCLIFLAGS = -Wl,-Map,$(NAME).map
-        MAPGUIFLAGS = -Wl,-Map,$(GUINAME).map
-    else
-        MAPFLAGS =
-        MAPDLLFLAGS =
-        MAPCLIFLAGS =
-        MAPGUIFLAGS =
-    endif
+ifneq ($(SYMBOLS),)
+    CFLAGS += -O0 -Wall -Wno-unused -g
 else
-    ARFLAGS = -nologo
-
-    LDFLAGS += -machine:x86 -nologo -opt:noref
-
-    ifneq ($(SYMBOLS),)
-        LDFLAGS += -debug:full -incremental -nodefaultlib:libc
-    else
-        LDFLAGS += -release -incremental:no
-
-        ifneq ($(USE_IPO),)
-            ifndef INTEL
-                ARFLAGS += -LTCG
-                LDFLAGS += -LTCG
-            endif
-        endif
-    endif
-
-    ifneq ($(MAP),)
-        MAPFLAGS = -map
-        MAPDLLFLAGS = -map
-        MAPCLIFLAGS = -map
-        MAPGUIFLAGS = -map
-    else
-        MAPFLAGS =
-        MAPDLLFLAGS =
-        MAPCLIFLAGS =
-        MAPGUIFLAGS =
-    endif
+    CFLAGS += -DNDEBUG \
+	$(ARCH) -O3 -fno-strict-aliasing \
+	-Wall \
+	-Wno-sign-compare \
+	-Wno-unused-functions \
+	-Wpointer-arith \
+	-Wbad-function-cast \
+	-Wcast-align \
+	-Wstrict-prototypes \
+	-Wundef \
+	-Wwrite-strings \
+	-Wdeclaration-after-statement
+	#-Wformat-security
 endif
 
-ifdef COMPILESYSTEM_CYGWIN
+ifneq ($(I686),)
+# If you have a trouble in I686 build, try to remove a comment.
+#    CFLAGS += -fno-builtin -fno-omit-frame-pointer 
+endif
+
+# extra options needed *only* for the osd files
+CFLAGSOSDEPEND = $(CFLAGS)
+
+LDFLAGS = -Lextra/lib
+
+ifeq ($(SYMBOLS),)
+    LDFLAGS += -s
+endif
+
+ifneq ($(MAP),)
+    MAPFLAGS = -Wl,-Map,$(NAME).map
+    MAPDLLFLAGS = -Wl,-Map,$(LIBNAME).map
+    MAPCLIFLAGS = -Wl,-Map,$(NAME).map
+    MAPGUIFLAGS = -Wl,-Map,$(GUINAME).map
+else
+    MAPFLAGS =
+    MAPDLLFLAGS =
+    MAPCLIFLAGS =
+    MAPGUIFLAGS =
+endif
+
+ifneq ($(COMPILESYSTEM_CYGWIN),)
 CFLAGS	+= -mno-cygwin
 LDFLAGS	+= -mno-cygwin
 endif
@@ -567,7 +416,7 @@ VPATH = src $(wildcard src/cpu/*)
 OBJDIRS = obj $(OBJ) $(OBJ)/cpu $(OBJ)/sound $(OBJ)/$(MAMEOS) \
 	$(OBJ)/drivers $(OBJ)/machine $(OBJ)/vidhrdw $(OBJ)/sndhrdw $(OBJ)/debug
 
-ifdef MESS
+ifneq ($(MESS),)
 OBJDIRS += $(OBJ)/mess $(OBJ)/mess/systems $(OBJ)/mess/machine \
 	$(OBJ)/mess/vidhrdw $(OBJ)/mess/sndhrdw $(OBJ)/mess/tools
 endif
@@ -594,7 +443,7 @@ SOUNDLIB = $(OBJ)/libsound.a
 LIBS = 
 
 # add expat XML library
-ifdef BUILD_EXPAT
+ifneq ($(BUILD_EXPAT),)
 CFLAGS += -Isrc/expat
 OBJDIRS += $(OBJ)/expat
 EXPAT = $(OBJ)/libexpat.a
@@ -605,7 +454,7 @@ EXPAT =
 endif
 
 # add ZLIB compression library
-ifdef BUILD_ZLIB
+ifneq ($(BUILD_ZLIB),)
 CFLAGS += -Isrc/zlib
 OBJDIRS += $(OBJ)/zlib
 ZLIB = $(OBJ)/libz.a
@@ -642,11 +491,11 @@ include src/sound/sound.mak
 # combine the various definitions to one
 CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS)
 
-ifdef BUILD_EXPAT
+ifneq ($(BUILD_EXPAT),)
 COREOBJS += $(EXPAT)
 endif
 
-ifdef BUILD_ZLIB
+ifneq ($(BUILD_ZLIB),)
 COREOBJS += $(ZLIB)
 endif
 
@@ -709,95 +558,50 @@ else
 endif
 
 # always recompile the version string
-ifdef USE_GCC
 	$(CC) $(CDEFS) $(CFLAGS) -c src/version.c -o $(OBJ)/version.o
-else
-	@echo -n Compiling\040
-	$(CC) $(CDEFS) $(CFLAGS) -c src/version.c -Fo$(OBJ)/version.o
-endif
 	@echo Linking $@...
 
 ifneq ($(NO_DLL),)
-
-    ifdef USE_GCC
-        ifneq ($(WINUI),)
-			$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(WINDOWS_PROGRAM) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) -o $@ $(MAPFLAGS)
-        else
-			$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) -o $@ $(MAPFLAGS)
-        endif
+    ifneq ($(WINUI),)
+	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(WINDOWS_PROGRAM) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) -o $@ $(MAPFLAGS)
     else
-        ifneq ($(WINUI),)
-			$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(WINDOWS_PROGRAM) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) -out:$(EMULATOR) $(MAPFLAGS)
-        else
-			$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) -out:$(EMULATOR) $(MAPFLAGS)
-        endif
+	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) -o $@ $(MAPFLAGS)
     endif
 
     ifneq ($(UPX),)
-		upx -9 $(EMULATOR)
+	upx -9 $(EMULATOR)
     endif
 
 else
+    # build DLL
 	$(RM) $@
-    ifdef USE_GCC
-		$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) -shared -o $@ $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(MAPDLLFLAGS)
-    else
-		$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) -dll -out:$@ $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(MAPDLLFLAGS)
-    endif
+	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) -shared -o $@ $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(MAPDLLFLAGS)
     ifneq ($(UPX),)
-		upx -9 $@
+	upx -9 $@
     endif
 
-# gui target
+    # gui target
     $(EMULATORGUI): $(EMULATORDLL) $(GUIOBJS)
-		@echo Linking $@...
-    ifdef USE_GCC
-		$(LD) $(LDFLAGS) $(WINDOWS_PROGRAM) $(EMULATORDLL) $^ -o $@ $(GUILIBS) $(MAPGUIFLAGS)
-    else
-		$(LD) $(LDFLAGS) $(WINDOWS_PROGRAM) $(EMULATORLIB) $(GUIOBJS) -out:$@ $(GUILIBS) $(LIBS) $(MAPGUIFLAGS)
-    endif
+	@echo Linking $@...
+	$(LD) $(LDFLAGS) $(WINDOWS_PROGRAM) $^ -o $@ $(GUILIBS) $(MAPGUIFLAGS)
     ifneq ($(UPX),)
-		upx -9 $@
+	upx -9 $@
     endif
 
-# cli target
-    $(EMULATORCLI):	$(EMULATORDLL) $(CLIOBJS)
-		@echo Linking $@...
-    ifdef USE_GCC
-		$(LD) $(LDFLAGS) $(CONSOLE_PROGRAM) $(EMULATORDLL) $^ -o $@ $(CLILIBS) $(MAPCLIFLAGS)
-    else
-		$(LD) $(LDFLAGS) $(CONSOLE_PROGRAM) $(EMULATORLIB) $(CLIOBJS) -out:$@ $(CLILIBS) $(MAPCLIFLAGS)
-    endif
+    # cli target
+    $(EMULATORCLI): $(EMULATORDLL) $(CLIOBJS)
+	@echo Linking $@...
+	$(LD) $(LDFLAGS) $(CONSOLE_PROGRAM) $^ -o $@ $(CLILIBS) $(MAPCLIFLAGS)
     ifneq ($(UPX),)
-		upx -9 $@
+	upx -9 $@
     endif
-
 endif
 
 romcmp$(EXE): $(OBJ)/romcmp.o $(OBJ)/unzip.o $(OBJ)/mamecore.o $(OBJ)/ui_lang.o $(VCOBJS) $(ZLIB) $(OSDBGOBJS)
-	@echo Linking $@...
-    ifdef USE_GCC
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ $(LIBS) -o $@
-    else
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ $(LIBS) -out:$@
-    endif
 
 chdman$(EXE): $(OBJ)/chdman.o $(OBJ)/chd.o $(OBJ)/chdcd.o $(OBJ)/cdrom.o $(OBJ)/md5.o $(OBJ)/sha1.o $(OBJ)/version.o $(ZLIB) $(OSTOOLOBJS) $(OSDBGOBJS)
-	@echo Linking $@...
-    ifdef USE_GCC
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ $(LIBS) -o $@
-    else
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ $(LIBS) -out:$@
-    endif
 
 xml2info$(EXE): $(OBJ)/xml2info.o $(EXPAT) $(ZLIB) $(OSDBGOBJS)
-	@echo Linking $@...
-    ifdef USE_GCC
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ $(LIBS) -o $@
-    else
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ $(LIBS) -out:$@
-    endif
-
 
 jedutil$(EXE): $(OBJ)/jedutil.o $(OBJ)/jedparse.o $(OSDBGOBJS)
 
@@ -809,7 +613,7 @@ jedutil$(EXE): $(OBJ)/jedutil.o $(OBJ)/jedparse.o $(OSDBGOBJS)
 
 $(CPULIB): $(CPUOBJS)
 
-ifdef DEBUG
+ifneq ($(DEBUG),)
 $(CPULIB): $(DBGOBJS)
 endif
 
@@ -828,22 +632,12 @@ $(OBJ)/libz.a: $(OBJ)/zlib/adler32.o $(OBJ)/zlib/compress.o $(OBJ)/zlib/crc32.o 
 #-------------------------------------------------
 
 $(OBJ)/$(MAMEOS)/%.o: src/$(MAMEOS)/%.c
-ifdef USE_GCC
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -c $< -o $@
-else
-	@echo -n Compiling\040
-	$(CC) $(CDEFS) $(CFLAGS) -Fo$@ -c $<
-endif
 
 $(OBJ)/%.o: src/%.c
-ifdef USE_GCC
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
-else
-	@echo -n Compiling\040
-	$(CC) $(CDEFS) $(CFLAGS) -Fo$@ -c $<
-endif
 
 $(OBJ)/%.pp: src/%.c
 	@echo Compiling $<...
@@ -856,8 +650,8 @@ $(OBJ)/%.s: src/%.c
 $(OBJ)/%.a:
 	@echo Archiving $@...
 	$(RM) $@
-ifdef USE_GCC
 	$(AR) -cr $@ $^
-else
-	$(AR) $(ARFLAGS) -out:$@ $^
-endif
+
+%$(EXE):
+	@echo Linking $@...
+	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ $(LIBS) -o $@

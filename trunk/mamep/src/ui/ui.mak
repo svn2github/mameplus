@@ -1,12 +1,10 @@
 #####################################################################
 # make SUFFIX=32
 
-ifdef USE_GCC
 # use CFLAGSOSDEPEND
 $(OBJ)/ui/%.o: src/ui/%.c
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -c $< -o $@
-endif
 
 OBJDIRS += $(OBJ)/ui
 
@@ -42,7 +40,7 @@ endif
 
 $(OBJ)/ui/ui.a: $(TMPOBJS)
 
-ifdef USE_GCC
+ifeq ($(MSVC_BUILD),)
     GUIOBJS += $(OBJ)/ui/m32main.o $(OBJ)/ui/ui.a
 
     # add resource file
@@ -64,6 +62,7 @@ else
 endif
 
 
+
 #####################################################################
 # compiler
 
@@ -78,26 +77,19 @@ DEFS += \
 	-D_WIN32_WINNT=0x0400 \
 	-DPATH_SEPARATOR=\'/\'
 
-ifeq ($(USE_GCC),)
-    DEFS += -DLVS_EX_LABELTIP=0x00004000
-endif
-
 
 
 #####################################################################
 # Resources
 
-ifdef USE_GCC
-    RCFLAGS += --include-dir src/ui
-else
-    RCFLAGS += -Isrc/ui
-endif
+RCFLAGS += --include-dir src/ui
+
 
 
 #####################################################################
 # Linker
 
-ifdef USE_GCC
+ifeq ($(MSVC_BUILD),)
     GUILIBS += \
 		-lkernel32 \
 		-lshell32 \
@@ -111,17 +103,17 @@ ifdef USE_GCC
 		-lunicows
 else
     TMPLIBS = \
-		kernel32.lib \
-		shell32.lib \
-		shlwapi.lib \
-		comctl32.lib \
-		comdlg32.lib \
-		advapi32.lib \
-		ddraw.lib \
-		dinput.lib \
-		dxguid.lib \
-		htmlhelp.lib \
-		unicows.lib
+		-lkernel32 \
+		-lshell32 \
+		-lshlwapi \
+		-lcomctl32 \
+		-lcomdlg32 \
+		-ladvapi32 \
+		-lddraw \
+		-ldinput \
+		-ldxguid \
+		-lhtmlhelp \
+		-lunicows
 
     ifneq ($(NO_DLL),)
         GUILIBS = $(TMPLIBS)

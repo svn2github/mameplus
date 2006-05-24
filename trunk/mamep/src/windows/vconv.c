@@ -47,70 +47,100 @@ struct _translation_info
 
 static const translation_info gcc_translate[] =
 {
-	{ 0,		"-D*",					"/D*" },
-	{ 0,		"-U*",					"/U*" },
-	{ 0,		"-I*",					"/I*" },
-	{ 0,		"-o*",					"~*" },
-	{ 0,		"-include*",			"/FI*" },
-	{ 0,		"-c",					"/c~/Fo" },
-	{ 0,		"-E",					"/E" },
-	{ 0,		"-S",					"/FA~/Fa" },
-	{ VS7,		"-O0",					"/Od /GS" },
-	{ 0,		"-O0",					"/Od" },
-	{ 0,		"-O3",					"/O2" },
-	{ 0,		"-g",					"/Zi" },
-	{ VS2005,	"-fno-strict-aliasing",	"" },		// deprecated in VS2005
+#ifdef ICC_BUILD
+	{ 0,		"-Drestrict=*",		"/Qrestrict" },
+#else
+	{ 0,		"-Drestrict=*",		"/Drestrict=" },
+#endif
+	{ 0,		"-DINLINE=*",		"/DINLINE=\"static __forceinline\"" },
+
+	{ 0,		"-D*",			"/D*" },
+	{ 0,		"-U*",			"/U*" },
+	{ 0,		"-I*",			"/I*" },
+	{ 0,		"-o*",			"~*" },
+	{ 0,		"-include*",		"/FI*" },
+	{ 0,		"-c",			"/c~/Fo" },
+	{ 0,		"-E",			"/E" },
+	{ 0,		"-S",			"/FA~/Fa" },
+	{ VS7,		"-O0",			"/Od /GS" },
+#ifdef ICC_BUILD
+	{ 0,		"-O3",			"/O3 /Qip /Qvec_report0" },
+#else
+	{ 0,		"-O3",			"/O2" },
+#endif
+	{ 0,		"-g",			"/RTC1 /MLd /ZI /Zi" },
+	{ VS2005,	"-fno-strict-aliasing",	"" },	// deprecated in VS2005
 	{ 0,		"-fno-strict-aliasing",	"/Oa" },
-	{ 0,		"-Werror",				"/WX" },
-	{ VS2005,	"-Wall",				"/Wall /W3 /wd4018 /wd4146 /wd4242 /wd4244 /wd4305 /wd4619 /wd4702 /wd4706 /wd4710 /wd4711 /wd4738 /wd4826" },
-	{ VS7,		"-Wall",				"/Wall /W3 /wd4018 /wd4146 /wd4242 /wd4244 /wd4305 /wd4550 /wd4619 /wd4702 /wd4706 /wd4710 /wd4711 /wd4826" },
-	{ 0,		"-Wall",				"/W0" },
-	{ VS7,		"-Wno-unused",			"/wd4100 /wd4101 /wd4102" },
-	{ 0,		"-W*",					"" },
-	{ VS2005,	"-march=*",				"" },		// deprecated in VS2005
-	{ 0,		"-march=pentium",		"/G5" },
-	{ 0,		"-march=athlon",		"/G7" },
+	{ 0,		"-Werror",		"/WX" },
+	{ VS2005,	"-Wall",		"/Wall /W3 /wd4018 /wd4146 /wd4242 /wd4244 /wd4305 /wd4619 /wd4702 /wd4706 /wd4710 /wd4711 /wd4738 /wd4826" },
+	{ VS7,		"-Wall",		"/Wall /W3 /wd4018 /wd4146 /wd4242 /wd4244 /wd4305 /wd4550 /wd4619 /wd4702 /wd4706 /wd4710 /wd4711 /wd4826" },
+	{ 0,		"-Wall",		"/W0" },
+	{ VS7,		"-Wno-unused",		"/wd4100 /wd4101 /wd4102" },
+	{ 0,		"-W*",			"" },
+	{ VS2005,	"-march=*",		"" },		// deprecated in VS2005
+	{ 0,		"-march=pentium",	"/G5" },
+	{ 0,		"-march=athlon",	"/G7" },
+	{ 0,		"-march=athlon-xp",	"/G7" },
+	{ 0,		"-march=i686",		"/G6" },
 	{ 0,		"-march=pentiumpro",	"/G6" },
-	{ 0,		"-march=pentium4",		"/G7" },
-	{ 0,		"-march=athlon64",		"/G7" },
-	{ 0,		"-march=pentium3",		"/G6" },
-	{ 0,		"-msse2",				"/arch:SSE2" },
-	{ 0,		"-mwindows",			"" },
-	{ 0,		"-mno-cygwin",			"" },
-	{ 0,		"-std=gnu89",			"" },
+#ifdef ICC_BUILD
+	{ 0,		"-march=pentium4",	"/G7 /QxN" },
+#else
+	{ 0,		"-march=pentium4",	"/G7 /arch:SSE2" },
+#endif
+	{ 0,		"-march=athlon64",	"/G7" },
+	{ 0,		"-march=pentium3",	"/G6" },
+#ifdef ICC_BUILD
+	{ 0,		"-march=pentiumm",	"/G6 /QxB" },
+#else
+	{ 0,		"-march=pentiumm",	"/G6 /arch:SSE2" },
+#endif
+	{ 0,		"-mmmx",		"" },
+	{ 0,		"-msee",		"" }, // "/arch:SSE"
+	{ 0,		"-msse2",		"" }, // "/arch:SSE2"
+	{ 0,		"-m3dnow",		"" },
+	{ 0,		"-mwindows",		"" },
+	{ 0,		"-mno-cygwin",		"" },
+#ifdef ICC_BUILD
+	{ 0,		"-std=gnu89",		"/Qc99" },
+#else
+	{ 0,		"-std=gnu89",		"" },
+#endif
 	{ 0 }
 };
 
 static const translation_info ld_translate[] =
 {
-	{ 0,		"-l*",				"*.lib" },
-	{ 0,		"-o*",				"/out:*" },
+	{ 0,		"-l*",			"*.lib" },
+	{ 0,		"-o*",			"/out:*" },
 	{ 0,		"-Wl,-Map,*",		"/map:*" },
  	{ 0,		"-Wl,--allow-multiple-definition", "/force:multiple" },
 	{ 0,		"-mno-cygwin",		"" },
-	{ 0,		"-s",				"" },
-	{ 0,		"-WO",				"" },
-	{ 0,		"-mconsole",		"" },
-	{ 0,		"-mwindows",		"" },
-	{ 0,		"-shared",			"/dll" },
+	{ 0,		"-s",			"" },
+	{ 0,		"-WO",			"" },
+	{ 0,		"-mconsole",		"-subsystem:console" },
+	{ 0,		"-mwindows",		"-subsystem:windows" },
+	{ 0,		"-shared",		"/dll" },
+	{ 0,		"-L*",			"" },
+	{ 0,		"*.dll",		"*.lib" },
 	{ 0 }
 };
 
 static const translation_info ar_translate[] =
 {
-	{ 0,		"-cr",				"" },
+	{ 0,		"-cr",			"" },
 	{ 0 }
 };
 
 
 static const translation_info windres_translate[] =
 {
-	{ 0,		"-D*",				"/D*" },
-	{ 0,		"-U*",				"/U*" },
+	{ 0,		"-D*",			"/D*" },
+	{ 0,		"-U*",			"/U*" },
 	{ 0,		"--include-dir*",	"/I*" },
-	{ 0,		"-o*",				"/fo*" },
-	{ 0,		"-O*",				"" },
-	{ 0,		"-i*",				"*" },
+	{ 0,		"-o*",			"/fo*" },
+	{ 0,		"-O*",			"" },
+	{ 0,		"-i*",			"*" },
 	{ 0 }
 };
 
@@ -206,7 +236,11 @@ static void build_command_line(int argc, char *argv[])
 	{
 		transtable = gcc_translate;
 		executable = "cl.exe";
+#ifdef ICC_BUILD
+		dst += sprintf(dst, "icl /nologo ");
+#else
 		dst += sprintf(dst, "cl /nologo ");
+#endif
 	}
 	else if (!strcmp(argv[1], "windres"))
 	{
@@ -218,13 +252,21 @@ static void build_command_line(int argc, char *argv[])
 	{
 		transtable = ld_translate;
 		executable = "link.exe";
-		dst += sprintf(dst, "link /nologo /debug ");
+#ifdef ICC_BUILD
+		dst += sprintf(dst, "xilink /nologo ");
+#else
+		dst += sprintf(dst, "link /nologo ");
+#endif
 	}
 	else if (!strcmp(argv[1], "ar"))
 	{
 		transtable = ar_translate;
 		executable = "lib.exe";
+#ifdef ICC_BUILD
+		dst += sprintf(dst, "xilib /nologo ");
+#else
 		dst += sprintf(dst, "lib /nologo ");
+#endif
 		outstring = "/out:";
 		output_is_first = 1;
 	}
@@ -343,7 +385,52 @@ static void build_command_line(int argc, char *argv[])
 		// it can also be a Windows-specific option which is passed through unscathed
 		else
 		{
-			int dotrans = (*src != '/');
+			char *temp = NULL;
+			int dotrans;
+
+			for (i = 0; transtable[i].gcc_option; i++)
+			{
+				const char *compare = transtable[i].gcc_option;
+				int clen, slen;
+
+				// check version number
+				if (exe_version < transtable[i].vc_version)
+					continue;
+
+				if (*compare++ != '*')
+					continue;
+
+				clen = strlen(compare);
+				slen = strlen(src);
+
+				if (clen > slen)
+					continue;
+
+				if (strcmp(src + slen - clen, compare) == 0)
+				{
+					const char *replace = transtable[i].vc_option;
+					int j;
+
+					temp = malloc(slen + strlen(replace));
+
+					for (j = 0; replace[j]; j++)
+					{
+						if (replace[j] == '*')
+						{
+							strcpy(temp + j, src);
+							strcpy(temp + j + slen - clen, replace + j + 1);
+							break;
+						}
+
+						temp[j] = replace[j];
+					}
+
+					src = temp;
+					break;
+				}
+			}
+
+			dotrans = (*src != '/');
 
 			// if the output filename is implicitly first, append the out parameter
 			if (output_is_first)
@@ -359,6 +446,9 @@ static void build_command_line(int argc, char *argv[])
 				src++;
 			}
 			*dst++ = ' ';
+
+			if (temp)
+				free(temp);
 		}
 	}
 

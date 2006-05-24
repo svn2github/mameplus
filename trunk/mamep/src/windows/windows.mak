@@ -20,6 +20,11 @@
 # for details
 #-------------------------------------------------
 
+# uncomment next line to enable a build using Microsoft tools
+# MSVC_BUILD = 1
+# uncomment next line to enable a build using Intel tools
+# ICC_BUILD = 1
+
 # uncomment next line to enable multi-monitor stubs on Windows 95/NT
 # you will need to find multimon.h and put it into your include
 # path in order to make this work
@@ -36,25 +41,93 @@
 # configure the resource compiler
 #-------------------------------------------------
 
-ifdef USE_GCC
-    ifndef USE_XGCC
-        RC = @windres --use-temp-file
-    else
-        RC = @i686-pc-mingw32-windres
-    endif
-    RCDEFS += -DNDEBUG -D_WIN32_IE=0x0400
-    RCFLAGS += -O coff --include-dir src
+ifeq ($(USE_XGCC),)
+    RC = @windres --use-temp-file
 else
-    RC = @rc
-    RCDEFS += -D_WIN32_IE=0x0400
-    RCFLAGS += -Isrc
+    RC = @i686-pc-mingw32-windres
+endif
+RCDEFS += -DNDEBUG -D_WIN32_IE=0x0400
+RCFLAGS += -O coff --include-dir src
+
+
+
+#-------------------------------------------------
+# overrides for the MSVC compiler
+#-------------------------------------------------
+
+ifneq ($(ICC_BUILD),)
+    COMPILER_SUFFIX = -icc
+    VCONVDEFS = -DICC_BUILD
+    MSVC_BUILD = 1
+else
+    ifneq ($(MSVC_BUILD),)
+        COMPILER_SUFFIX = -vc
+        VCONVDEFS =
+    endif
 endif
 
+ifneq ($(MSVC_BUILD),)
+# replace the various compilers with vconv.exe prefixes
+CC = @$(OBJ)/vconv.exe gcc -I.
+LD = @$(OBJ)/vconv.exe ld
+AR = @$(OBJ)/vconv.exe ar
+RC = @$(OBJ)/vconv.exe windres
+
+# turn on link-time codegen if the MAXOPT flag is also set
+ifneq ($(MAXOPT),)
+    ifneq ($(ICC_BUILD),)
+        CC += /Qipo /Qipo_obj
+    else
+        CC += /GL
+        LD += /LTCG
+    endif
+endif
+
+# /Og enable global optimization
+# /Ob<n> inline expansion (level 2)
+# /Oi enable intrinsic functions
+# /Ot favor code speed
+# /Oy enable frame pointer omission
+# /GA optimize for Windows Application
+# /Gy separate functions for linker
+# /GF enable read-only string pooling
+CC += /Og /Ob2 /Oi /Ot /Oy /GA /Gy /GF
+
+# filter X86_ASM define
+DEFS := $(filter-out -DX86_ASM,$(DEFS))
+
+# add some VC++-specific defines
+DEFS += -DNONAMELESSUNION -D_CRT_SECURE_NO_DEPRECATE -DXML_STATIC -Dinline=__inline -D__inline__=__inline -Dsnprintf=_snprintf -Dvsnprintf=_vsnprintf
+
+# make msvcprep into a pre-build step
+OSPREBUILD = msvcprep
+
+# rules for building vconv using the mingw tools for bootstrapping
+msvcprep: $(OBJ)/vconv.exe
+
+$(OBJ)/vconv.exe: $(OBJ)/windows/vconv.o
+	@echo Linking $@...
+	@gcc $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ $(LIBS) -lversion -o $@
+
+$(OBJ)/windows/vconv.o: src/windows/vconv.c
+	@echo Compiling $<...
+	@gcc $(VCONVDEFS) $(CDEFS) $(CFLAGSOSDEPEND) -c $< -o $@
+
+else
+# overwrite optimze option for Pentium M
+    ifneq ($(PM),)
+        ARCH = -march=pentium3 -msse2
+    endif
+endif
+
+
+
+#-------------------------------------------------
 # nasm for Windows (but not cygwin) has a "w"
 # at the end
 #-------------------------------------------------
 
-ifndef COMPILESYSTEM_CYGWIN
+ifeq ($(COMPILESYSTEM_CYGWIN),)
 ASM = @nasmw
 endif
 
@@ -74,38 +147,24 @@ CURPATH = ./
 #-------------------------------------------------
 
 # add our prefix files to the mix
-ifdef USE_GCC
-  CFLAGS += -mwindows -include src/$(MAMEOS)/winprefix.h
-  CFLAGSOSDEPEND += -Wno-strict-aliasing
-else
-  CFLAGS += /FI"windows/winprefix.h"
-  ifneq ($(NO_FORCEINLINE),)
-  DEFS += -DNO_FORCEINLINE
-  endif
+CFLAGS += -mwindows -include src/$(MAMEOS)/winprefix.h
+CFLAGSOSDEPEND += -Wno-strict-aliasing
+
+ifneq ($(NO_FORCEINLINE),)
+DEFS += -DNO_FORCEINLINE
 endif
 
-ifdef WIN95_MULTIMON
+ifneq ($(WIN95_MULTIMON),)
 CFLAGS += -DWIN95_MULTIMON
 endif
 
 # add the windows libaries
-ifdef USE_GCC
-LIBS += -lunicows -luser32 -lgdi32 -lddraw -ldsound -ldinput -ldxguid -lwinmm
-else
-LIBS += unicows.lib user32.lib gdi32.lib ddraw.lib dsound.lib dinput.lib dxguid.lib winmm.lib advapi32.lib
-endif
+LIBS += -lunicows -luser32 -lgdi32 -lddraw -ldsound -ldinput -ldxguid -lwinmm -ladvapi32 -lshell32
 CLILIBS =
 
 
 
 DEFS += -DMAMENAME=APPNAME
-
-ifeq ($(USE_GCC),)
-    DEFS += -DINVALID_FILE_ATTRIBUTES=\(\(DWORD\)-1\)
-    DEFS += -DINVALID_SET_FILE_POINTER=\(\(DWORD\)-1\)
-    DEFS += -DWIN32
-    DEFS += -DZEXPORT= -DZEXTERN= 
-endif
 
 DEFS+= -DNONAMELESSUNION
 DEFS+= -DDIRECTSOUND_VERSION=0x0300
@@ -154,7 +213,7 @@ OSTOOLOBJS = \
 	$(OBJ)/$(MAMEOS)/osd_tool.o
 
 # add 32-bit optimized blitters
-ifndef PTR64
+ifeq ($(PTR64),)
 OSOBJS += \
 	$(OBJ)/$(MAMEOS)/asmblit.o \
 	$(OBJ)/$(MAMEOS)/asmtile.o
@@ -191,37 +250,19 @@ $(OBJ)/$(MAMEOS)/scale/2xsaimmx.o: src/$(MAMEOS)/scale/2xsaimmx.asm
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
 
 $(OBJ)/$(MAMEOS)/scale/hlq.o: src/$(MAMEOS)/scale/hlq.c
-    ifdef USE_GCC
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -Wno-unused-variable -mno-mmx -UINTERP_MMX -c $< -o $@
-    else
-	@echo -n Compiling\040
-	$(CC) $(CDEFS) $(CFLAGS) -Fo$@ -c $<
-    endif
 
 $(OBJ)/$(MAMEOS)/scale/hlq_mmx.o: src/$(MAMEOS)/scale/hlq.c
-    ifdef USE_GCC
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -Wno-unused-variable -mmmx -DINTERP_MMX -c $< -o $@
-    else
-	@echo -n Compiling\040
-	$(CC) $(CDEFS) $(CFLAGS) -Fo$@ -c $<
-    endif
-endif
-
-ifdef USE_GCC
-VCOBJS =
-else
-CFLAGS += -Isrc/vc
-OBJDIRS += $(OBJ)/vc
-VCOBJS = $(OBJ)/vc/dirent.o
 endif
 
 OSOBJS += $(VCOBJS)
 CLIOBJS = $(OBJ)/$(MAMEOS)/climain.o
 
 # add debug-specific files
-ifdef DEBUG
+ifneq ($(DEBUG),)
 OSOBJS += \
 	$(OBJ)/$(MAMEOS)/debugwin.o
 endif
@@ -247,7 +288,7 @@ OSDBGOBJS =
 OSDBGLDFLAGS =
 
 # debug build: enable guard pages on all memory allocations
-ifdef DEBUG
+ifneq ($(DEBUG),)
 ifeq ($(WINUI),)
 DEFS += -DMALLOC_DEBUG
 OSDBGOBJS += $(OBJ)/$(MAMEOS)/winalloc.o
@@ -284,7 +325,7 @@ include src/ui/ui.mak
 endif
 
 # if we are not using x86drc.o, we should be
-ifndef X86_MIPS3_DRC
+ifeq ($(X86_MIPS3_DRC),)
 COREOBJS += $(OBJ)/x86drc.o
 endif
 
@@ -295,8 +336,4 @@ endif
 
 $(OBJ)/%.res: src/%.rc
 	@echo Compiling resources $<...
-ifdef USE_GCC
 	$(RC) $(RCDEFS) $(RCFLAGS) -o $@ -i $<
-else
-	$(RC) $(RCDEFS) $(RCFLAGS) -Fo$@ $<
-endif

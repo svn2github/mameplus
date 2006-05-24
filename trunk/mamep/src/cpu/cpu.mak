@@ -690,28 +690,16 @@ $(M68000DRC_GENERATED_FILES) $(M68000DRC_GENERATED_HEADERS): $(M68000DRC_GENERAT
 # when we compile source files we need to include generated files from the OBJ directory
 $(OBJ)/cpu/m68000/%.o: src/cpu/m68000/%.c
 	@echo Compiling $<...
-ifdef USE_GCC
 	$(CC) $(CDEFS) $(CFLAGS) -I$(OBJ)/cpu/m68000 -c $< -o $@
-else
-	$(CC) $(CDEFS) $(CFLAGS) -I$(OBJ)/cpu/m68000 -c -Fo$@ $<
-endif
 
 # when we compile generated files we need to include stuff from the src directory
 $(OBJ)/cpu/m68000/%.o: $(OBJ)/cpu/m68000/%.c
 	@echo Compiling $<...
-ifdef USE_GCC
 	$(CC) $(CDEFS) $(CFLAGS) -Isrc/cpu/m68000 -c $< -o $@
-else
-	$(CC) $(CDEFS) $(CFLAGS) -Isrc/cpu/m68000 -c -Fo$@ $<
-endif
 
 # rule to link the generator
 $(OBJ)/cpu/m68000/%$(EXE): $(OBJ)/cpu/m68000/%.o
-ifdef USE_GCC
 	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ -o $@
-else
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ -out:$@
-endif
 
 # rule to generate the C files
 $(M68000_GENERATED_STAMP): $(OBJ)/cpu/m68000/m68kmake$(EXE) m68k_in.c
@@ -777,11 +765,7 @@ M68000ASM_GENERATED_STAMP = $(OBJ)/cpu/m68000/asm68k_stamp
 
 $(M68000ASM_GENERATED_STAMP): src/cpu/m68000/make68k.c $(OSDBGOBJS)
 	@echo Compiling $<...
-ifdef USE_GCC
 	$(XCC) $(CDEFS) $(CFLAGS) $(CONSOLE_PROGRAM) -O0 -DDOS -o $(OBJ)/cpu/m68000/make68k$(EXE) $< $(OSDBGOBJS)
-else
-	$(CC) $(CDEFS) $(CFLAGS) -Fe$(OBJ)/cpu/m68000/make68k$(EXE) -Fo$(OBJ)/cpu/m68000 $< $(OSDBGOBJS) -link $(CONSOLE_PROGRAM)
-endif
 	@echo -n > $(M68000ASM_GENERATED_STAMP)
 
 $(OBJ)/cpu/m68000/68000.asm: $(M68000ASM_GENERATED_STAMP)
