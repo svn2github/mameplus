@@ -19,8 +19,13 @@
 
 // MAMEOS headers
 #include "blit.h"
+#ifndef NEW_RENDER
+#include "videoold.h"
+#include "windold.h"
+#else
 #include "video.h"
 #include "window.h"
+#endif
 
 
 
@@ -97,7 +102,7 @@ static UINT8 *				active_fast_blitter;
 static UINT8 *				active_update_blitter;
 
 // current parameters
-static win_blit_params	active_blitter_params;
+static win_blit_params		active_blitter_params;
 
 // MMX/SSE/SSE2 supported?
 static int					use_mmx;

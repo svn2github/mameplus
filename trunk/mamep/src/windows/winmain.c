@@ -20,11 +20,16 @@
 
 // MAME headers
 #include "driver.h"
+#ifndef NEW_RENDER
+#include "windold.h"
+#include "videoold.h"
+#else
 #include "window.h"
+#include "video.h"
+#endif
 #include "osd_so.h"
 #include "input.h"
 #include "config.h"
-#include "video.h"
 
 
 #define ENABLE_PROFILER		0
@@ -177,7 +182,7 @@ int main(int argc, char **argv)
 
 	// restore the original LED state and close keyboard handle
 	stop_led();
-	win_process_events(0);
+	winwindow_process_events(0);
 
 	// close errorlog, input and playback
 	cli_frontend_exit();
@@ -222,22 +227,22 @@ static void output_oslog(const char *buffer)
 int osd_init(void)
 {
 	extern int win_init_input(void);
-	extern int win_init_video(void);
 	extern void win_blit_init(void);
 	extern int win_erroroslog;
-	int result;
+	int result = 0;
 
-	win_blit_init();
-
-	result = win_init_window();
-	if (result == 0)
-		result = win_init_input();
 #ifdef NEW_RENDER
 	if (result == 0)
-		result = win_init_video();
-#endif
+		result = winvideo_init();
+#else
+	win_blit_init();
 
-	add_pause_callback(win_pause);
+	if (result == 0)
+		result = win_init_window();
+#endif
+	if (result == 0)
+		result = win_init_input();
+
 	add_exit_callback(osd_exit);
 
 	if (win_erroroslog)

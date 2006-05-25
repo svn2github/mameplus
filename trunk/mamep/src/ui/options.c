@@ -532,7 +532,7 @@ static struct rc_option rc_game_opts[] =
 	{ "Mame CORE vector game options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
 	{ "antialias", "aa", rc_bool, &gOpts.antialias, "1", 0, 0, NULL, "draw antialiased vectors" },
 	{ "translucency", "tl", rc_bool, &gOpts.translucency, "1", 0, 0, NULL, "draw translucent vectors" },
-	{ "beam", NULL, rc_float, &gOpts.f_beam, "1.0", 1.0, 16.0, NULL, "set beam width in vector " GAMESNOUN },
+	{ "beam", NULL, rc_float, &gOpts.f_beam, "1.0", 0.1, 16.0, NULL, "set beam width in vector " GAMESNOUN },
 	{ "flicker", NULL, rc_float, &gOpts.f_flicker, "0.0", 0.0, 100.0, NULL, "set flickering in vector " GAMESNOUN },
 	{ "intensity", NULL, rc_float, &gOpts.f_intensity, "1.5", 0.5, 3.0, NULL, "set intensity in vector " GAMESNOUN },
 

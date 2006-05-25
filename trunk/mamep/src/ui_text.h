@@ -221,6 +221,15 @@ enum
 	UI_refresh_rate,
 	UI_decoding_gfx,
 
+#ifdef NEW_RENDER
+	UI_video,
+	UI_screen,
+	UI_rotate_clockwise,
+	UI_rotate_counterclockwise,
+	UI_flip_x,
+	UI_flip_y,
+#endif
+
 	/* autofire stuff */
 	UI_autofireoff,
 	UI_autofireon,

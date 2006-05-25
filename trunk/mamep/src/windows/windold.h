@@ -1,6 +1,6 @@
 //============================================================
 //
-//  window.h - Win32 window handling
+//  windold.h - Win32 window handling
 //
 //  Copyright (c) 1996-2006, Nicola Salmoria and the MAME Team.
 //  Visit http://mamedev.org for licensing and usage restrictions.
@@ -135,7 +135,7 @@ extern int			win_use_raw_mouse;
 int win_init_window(void);
 int win_create_window(int width, int height, int depth, int attributes, double aspect);
 void win_destroy_window(void);
-void win_update_cursor_state(void);
+void window_update_cursor_state(void);
 void win_toggle_maximize(int force_maximize);
 void win_toggle_full_screen(void);
 void win_adjust_window(void);
@@ -147,8 +147,8 @@ void win_update_video_window(mame_bitmap *bitmap, const rectangle *bounds, void 
 
 void win_set_palette_entry(int _index, UINT8 red, UINT8 green, UINT8 blue);
 
-int win_process_events(int ingame);
-void win_process_events_periodic(void);
+int winwindow_process_events(int ingame);
+void winwindow_process_events_periodic(void);
 
 UINT32 *win_prepare_palette(win_blit_params *params);
 

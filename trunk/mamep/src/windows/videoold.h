@@ -1,6 +1,6 @@
 //============================================================
 //
-//  video.h - Win32 implementation of MAME video routines
+//  videoold.h - Win32 implementation of MAME video routines
 //
 //  Copyright (c) 1996-2006, Nicola Salmoria and the MAME Team.
 //  Visit http://mamedev.org for licensing and usage restrictions.
@@ -52,7 +52,7 @@ extern UINT8		blit_swapxy;
 void win_pause(int pause);
 void win_orient_rect(rectangle *rect);
 void win_disorient_rect(rectangle *rect);
-void win_set_frameskip(int frameskip);		// <0 = auto
-int win_get_frameskip(void);				// <0 = auto
+void winvideo_set_frameskip(int frameskip);		// <0 = auto
+int winvideo_get_frameskip(void);				// <0 = auto
 
 #endif

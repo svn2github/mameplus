@@ -193,7 +193,6 @@ endif
 #-------------------------------------------------
 
 OSOBJS = \
-	$(OBJ)/$(MAMEOS)/blit.o \
 	$(OBJ)/$(MAMEOS)/config.o \
 	$(OBJ)/$(MAMEOS)/fileio.o \
 	$(OBJ)/$(MAMEOS)/fronthlp.o \
@@ -202,15 +201,27 @@ OSOBJS = \
 	$(OBJ)/$(MAMEOS)/rc.o \
 	$(OBJ)/$(MAMEOS)/sound.o \
 	$(OBJ)/$(MAMEOS)/ticker.o \
-	$(OBJ)/$(MAMEOS)/video.o \
-	$(OBJ)/$(MAMEOS)/window.o \
-	$(OBJ)/$(MAMEOS)/wind3d.o \
-	$(OBJ)/$(MAMEOS)/wind3dfx.o \
-	$(OBJ)/$(MAMEOS)/winddraw.o \
 	$(OBJ)/$(MAMEOS)/winmain.o \
 
-OSTOOLOBJS = \
-	$(OBJ)/$(MAMEOS)/osd_tool.o
+ifndef NEW_RENDER
+OSOBJS += \
+	$(OBJ)/$(MAMEOS)/blit.o \
+	$(OBJ)/$(MAMEOS)/videoold.o \
+	$(OBJ)/$(MAMEOS)/windold.o \
+	$(OBJ)/$(MAMEOS)/wind3old.o \
+	$(OBJ)/$(MAMEOS)/wind4old.o \
+	$(OBJ)/$(MAMEOS)/winddold.o
+else
+OSOBJS += \
+	$(OBJ)/$(MAMEOS)/rendsoft.o \
+	$(OBJ)/$(MAMEOS)/video.o \
+	$(OBJ)/$(MAMEOS)/window.o \
+	$(OBJ)/$(MAMEOS)/drawd3d.o \
+	$(OBJ)/$(MAMEOS)/drawgdi.o
+
+$(OBJ)/$(MAMEOS)/rendsoft.o : rendersw.c
+endif
+
 
 # add 32-bit optimized blitters
 ifeq ($(PTR64),)
@@ -218,6 +229,9 @@ OSOBJS += \
 	$(OBJ)/$(MAMEOS)/asmblit.o \
 	$(OBJ)/$(MAMEOS)/asmtile.o
 endif
+
+OSTOOLOBJS = \
+	$(OBJ)/$(MAMEOS)/osd_tool.o
 
 # extra targets and rules for the scale effects
 ifneq ($(USE_SCALE_EFFECTS),)

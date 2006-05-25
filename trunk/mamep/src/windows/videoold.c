@@ -36,8 +36,8 @@
 
 // MAMEOS headers
 #include "blit.h"
-#include "video.h"
-#include "window.h"
+#include "videoold.h"
+#include "windold.h"
 #include "rc.h"
 #include "input.h"
 #ifdef USE_SCALE_EFFECTS
@@ -58,7 +58,7 @@
 //============================================================
 
 // from input.c
-extern void win_poll_input(void);
+extern void wininput_poll(void);
 extern void win_pause_input(int pause);
 extern int verbose;
 
@@ -1139,8 +1139,8 @@ void osd_update_video_and_audio(mame_display *display)
 		options.confirm_quit = 0;
 
 	// poll the joystick values here
-	win_process_events(1);
-	win_poll_input();
+	winwindow_process_events(1);
+	wininput_poll();
 }
 
 #else
@@ -1265,10 +1265,10 @@ void win_pause(int paused)
 
 
 //============================================================
-//  win_set_frameskip
+//  winvideo_set_frameskip
 //============================================================
 
-void win_set_frameskip(int value)
+void winvideo_set_frameskip(int value)
 {
 	if (value >= 0)
 	{
@@ -1285,10 +1285,10 @@ void win_set_frameskip(int value)
 
 
 //============================================================
-//  win_get_frameskip
+//  winvideo_get_frameskip
 //============================================================
 
-int win_get_frameskip(void)
+int winvideo_get_frameskip(void)
 {
 	return autoframeskip ? -1 : frameskip;
 }

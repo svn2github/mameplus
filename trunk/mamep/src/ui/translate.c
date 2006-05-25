@@ -432,8 +432,8 @@ static BOOL CALLBACK translate_dialog_items(HWND hControl, LPARAM lParam)
 	// only works RichEdit20W on Win9x
 	else if (!strcmp(buffer, "RichEdit20W"))
 		translate_richedit20(hControl);
-	//else if (!strcmp(buffer,"msctls_updown32"))
-	//	ShowWindow(hControl, SW_HIDE);
+//	else if (!strcmp(buffer,"msctls_updown32"))
+//		ShowWindow(hControl, SW_HIDE);
 
 	return TRUE;
 }

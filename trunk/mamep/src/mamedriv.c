@@ -3745,6 +3745,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 
 	/* other Data East games */
 	DRIVER( madalien )	/* (c) 1980 */
+	DRIVER( madalina )	/* (c) 1980 */
 	DRIVER( astrof )	/* (c) [1980?] */
 	DRIVER( astrof2 )	/* (c) [1980?] */
 	DRIVER( astrof3 )	/* (c) [1980?] */
@@ -3957,6 +3958,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( fghthstu )	/* MBF (c) 1993 Data East Corporation (US) */
 	DRIVER( fghthsta )	/* MBF (c) 1993 Data East Corporation (US) */
 	DRIVER( hvysmsh )	/* MBG */
+	DRIVER( hvysmsha )	/* MBG */
 	DRIVER( nslasher )	/* MBH (c) 1993 Data East Corporation */
 	DRIVER( nslashej )	/* MBH (c) 1993 Data East Corporation (Japan)*/
 	DRIVER( nslashes )	/* MBH (c) 1993 Data East Corporation (Japan)*/
@@ -5577,6 +5579,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( umk3r11 )	/* (c) 1994 Midway */
 	DRIVER( umk3r10 )	/* (c) 1994 Midway */
 	DRIVER( wwfmania )	/* (c) 1995 Midway */
+	DRIVER( wwfmanib )	/* (c) 1995 Midway */
 	DRIVER( openice )	/* (c) 1995 Midway */
 	DRIVER( nbahangt )	/* (c) 1996 Midway */
 	DRIVER( nbamht )	/* (c) 1996 Midway */
@@ -7130,5 +7133,7 @@ Other Sun games
 	DRIVER( lastfght )	/* (c) 2000 Subsino */
 	DRIVER( sliver )	/* (c) 1996 Hollow Corp */
 	DRIVER( intrscti )	/* ???? */
+	DRIVER( pasha2 )	/* (c) 1998 Dong Sung */
+	DRIVER( trvmadns )	/* (c) 1985 Thunderhead Inc. */
 
 #endif	/* DRIVER_RECURSIVE */

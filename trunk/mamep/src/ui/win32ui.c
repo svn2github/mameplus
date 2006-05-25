@@ -1083,7 +1083,6 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	if (DriverIsVector(nGameIndex))
 	{
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%saa",                      pOpts->antialias       ? "" : "no");
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -%stl",                      pOpts->translucency    ? "" : "no");
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -beam %f",                   pOpts->f_beam);
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -flicker %f",                pOpts->f_flicker);
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -intensity %f",              pOpts->f_intensity);

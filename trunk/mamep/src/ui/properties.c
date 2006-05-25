@@ -2787,7 +2787,7 @@ static void AssignFullScreenGamma(HWND hWnd)
 
 static void AssignBeam(HWND hWnd)
 {
-	pGameOpts->f_beam = g_nBeamIndex / 20.0 + 1.0;
+	pGameOpts->f_beam = g_nBeamIndex / 20.0 + 0.1;
 }
 
 static void AssignFlicker(HWND hWnd)
@@ -3094,7 +3094,7 @@ static void ResetDataMap(void)
 	g_nFullScreenGammaIndex = (int)( pGameOpts->gfx_gamma               * 20.0 + 0.001);
 	g_nBrightCorrectIndex   = (int)((pGameOpts->f_bright_correct - 0.5) * 20.0 + 0.001);
 	g_nPauseBrightIndex     = (int)((pGameOpts->f_pause_bright   - 0.5) * 20.0 + 0.001);
-	g_nBeamIndex            = (int)((pGameOpts->f_beam           - 1.0) * 20.0 + 0.001);
+	g_nBeamIndex            = (int)((pGameOpts->f_beam           - 0.1) * 20.0 + 0.001);
 	g_nFlickerIndex         = (int)( pGameOpts->f_flicker);
 	g_nIntensityIndex       = (int)((pGameOpts->f_intensity      - 0.5) * 20.0 + 0.001);
 	g_nA2DIndex             = (int)( pGameOpts->f_a2d                   * 20.0 + 0.001);

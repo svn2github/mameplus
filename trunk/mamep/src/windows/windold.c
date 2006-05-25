@@ -24,10 +24,10 @@
 // MAME headers
 #include "osdepend.h"
 #include "driver.h"
-#include "window.h"
-#include "winddraw.h"
-#include "wind3d.h"
-#include "video.h"
+#include "windold.h"
+#include "winddold.h"
+#include "wind3old.h"
+#include "videoold.h"
 #include "blit.h"
 #include "input.h"
 #include "../debug/window.h"
@@ -610,10 +610,10 @@ void win_destroy_window(void)
 
 
 //============================================================
-//  win_update_cursor_state
+//  window_update_cursor_state
 //============================================================
 
-void win_update_cursor_state(void)
+void window_update_cursor_state(void)
 {
 	static POINT last_cursor_pos = {-1,-1};
 	RECT bounds;	// actual screen area of game video
@@ -1141,7 +1141,7 @@ void win_adjust_window_for_visible(int min_x, int max_x, int min_y, int max_y)
 		win_update_video_window(NULL, NULL, NULL);
 
 		// update the cursor state
-		win_update_cursor_state();
+		window_update_cursor_state();
 
 		// unpause the input devices
 		win_pause_input(0);
@@ -1409,30 +1409,30 @@ void win_adjust_window(void)
 	logerror("Physical width %d, height %d\n",win_physical_width,win_physical_height);
 
 	// update the cursor state
-	win_update_cursor_state();
+	window_update_cursor_state();
 }
 
 
 
 //============================================================
-//  win_process_events_periodic
+//  winwindow_process_events_periodic
 //============================================================
 
-void win_process_events_periodic(void)
+void winwindow_process_events_periodic(void)
 {
 	cycles_t curr = osd_cycles();
 	if (curr - last_event_check < osd_cycles_per_second() / 8)
 		return;
-	win_process_events(1);
+	winwindow_process_events(1);
 }
 
 
 
 //============================================================
-//  win_process_events
+//  winwindow_process_events
 //============================================================
 
-int win_process_events(int ingame)
+int winwindow_process_events(int ingame)
 {
 	int is_debugger_visible = 0;
 	MSG message;
