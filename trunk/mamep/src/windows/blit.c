@@ -89,9 +89,6 @@ void *asmblit_srclookup;
 void *asmblit_dstdata;
 UINT32 asmblit_dstpitch;
 
-UINT32 asmblit_mmxmask[4];
-UINT32 asmblit_rgbmask[MAX_VIDEO_HEIGHT * 2 * 16];
-
 
 //============================================================
 //  LOCAL VARIABLES

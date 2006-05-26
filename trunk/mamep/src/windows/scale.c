@@ -54,8 +54,6 @@ struct { int effect; int xsize; int ysize; const char *name; } scale_effect;
 //	IMPORTS
 //============================================================
 
-extern UINT32 asmblit_cpuid_features(void);
-
 
 
 //============================================================
@@ -260,6 +258,43 @@ int scale_exit(void)
 }
 
 //============================================================
+//	x86_get_features
+//============================================================
+
+static UINT32 x86_get_features(void)
+{
+	UINT32 features = 0;
+#ifdef _MSC_VER
+	__asm
+	{
+		mov eax, 1
+		xor ebx, ebx
+		xor ecx, ecx
+		xor edx, edx
+		__asm _emit 0Fh __asm _emit 0A2h	// cpuid
+		mov features, edx
+	}
+#else /* !_MSC_VER */
+	__asm__
+	(
+	        "pushl %%ebx         ; "
+		"movl $1,%%eax       ; "
+		"xorl %%ebx,%%ebx    ; "
+		"xorl %%ecx,%%ecx    ; "
+		"xorl %%edx,%%edx    ; "
+		"cpuid               ; "
+		"movl %%edx,%0       ; "
+                "popl %%ebx          ; "
+	: "=&a" (features)		/* result has to go in eax */
+	: 				/* no inputs */
+	: "%ecx", "%edx"	/* clobbers ebx, ecx and edx */
+	);
+#endif /* MSC_VER */
+	return features;
+}
+
+
+//============================================================
 //	scale_init
 //============================================================
 
@@ -267,7 +302,7 @@ int scale_init(void)
 {
 	static char name[64];
 
-	UINT32 features = asmblit_cpuid_features();
+	UINT32 features = x86_get_features();
 	use_mmx = (features & (1 << 23));
 
 	scale_effect.xsize = scale_effect.ysize = 1;

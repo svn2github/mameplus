@@ -226,7 +226,6 @@ endif
 # add 32-bit optimized blitters
 ifeq ($(PTR64),)
 OSOBJS += \
-	$(OBJ)/$(MAMEOS)/asmblit.o \
 	$(OBJ)/$(MAMEOS)/asmtile.o
 endif
 
