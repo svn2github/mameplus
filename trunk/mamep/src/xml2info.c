@@ -482,6 +482,24 @@ void process_videoheight(struct state_t* state, enum token_t t, const char* s, u
 	}
 }
 
+/* Convert gamelist:game:video:aspectx -> game:video:aspectx */
+void process_videoaspectx(struct state_t* state, enum token_t t, const char* s, unsigned len, const char** attributes)
+{
+	if (t == token_data) {
+		state->level[3].tag = "aspectx";
+		process_float3(state, t, s, len, attributes);
+	}
+}
+
+/* Convert gamelist:game:video:aspecty -> game:video:aspecty */
+void process_videoaspecty(struct state_t* state, enum token_t t, const char* s, unsigned len, const char** attributes)
+{
+	if (t == token_data) {
+		state->level[3].tag = "aspecty";
+		process_float3(state, t, s, len, attributes);
+	}
+}
+
 /* Detect Convert gamelist:game:dipswitch:dipvalue:default */
 void process_dipswitchdipvalue(struct state_t* state, enum token_t t, const char* s, unsigned len, const char** attributes)
 {
@@ -572,8 +590,8 @@ struct conversion_t {
 	{ 3, { "mame", "game", "video", "orientation", 0 }, process_item3 },
 	{ 3, { "mame", "game", "video", "width", 0 }, process_videowidth },
 	{ 3, { "mame", "game", "video", "height", 0 }, process_videoheight },
-	{ 3, { "mame", "game", "video", "aspectx", 0 }, process_num3 },
-	{ 3, { "mame", "game", "video", "aspecty", 0 }, process_num3 },
+	{ 3, { "mame", "game", "video", "aspectx", 0 }, process_videoaspectx },
+	{ 3, { "mame", "game", "video", "aspecty", 0 }, process_videoaspecty },
 	{ 3, { "mame", "game", "video", "refresh", 0 }, process_videorefresh },
 	{ 2, { "mame", "game", "sound", 0, 0 }, process_set2 },
 	{ 3, { "mame", "game", "sound", "channels", 0 }, process_num3 },
