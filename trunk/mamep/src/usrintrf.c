@@ -119,8 +119,13 @@ struct _input_item_data
 #define UI_HANDLER_CANCEL		((UINT32)~0)
 
 #ifdef UI_COLOR_DISPLAY
+#ifdef NEW_RENDER
+#define UI_BOX_LR_BORDER		(ui_get_char_width('M') * 3 / 4)
+#define UI_BOX_TB_BORDER		(ui_get_char_width('M') * 3 / 4)
+#else
 #define UI_BOX_LR_BORDER		3
 #define UI_BOX_TB_BORDER		3
+#endif
 #else /* UI_COLOR_DISPLAY */
 #define UI_BOX_LR_BORDER		(ui_get_char_width('M') / 2)
 #define UI_BOX_TB_BORDER		(ui_get_char_width('M') / 2)
@@ -1200,34 +1205,9 @@ void ui_draw_menu(const ui_menu_item *items, int numitems, int selected)
 		/* if we're selected, draw with a different background */
 		if (itemnum == selected)
 #ifdef UI_COLOR_DISPLAY
-		{
 			add_fill(visible_left, line_y,
 			         visible_left + visible_width - 1, line_y + ui_get_line_height() - 1,
 			         CURSOR_COLOR);
-#ifdef NEW_RENDER
-// fixme
-			add_line(	visible_left - UI_BOX_LR_BORDER,
-					visible_top - UI_BOX_TB_BORDER,
-					visible_left + visible_width - 1 + UI_BOX_LR_BORDER,
-					visible_top - UI_BOX_TB_BORDER,
-					ARGB_WHITE);
-			add_line(	visible_left - UI_BOX_LR_BORDER,
-					visible_top - UI_BOX_TB_BORDER,
-					visible_left - UI_BOX_LR_BORDER,
-					visible_top + visible_height - 1 + UI_BOX_TB_BORDER,
-					ARGB_WHITE);
-			add_line(	visible_left - UI_BOX_LR_BORDER,
-					visible_top + visible_height - 1 + UI_BOX_TB_BORDER,
-					visible_left + visible_width - 1 + UI_BOX_LR_BORDER,
-					visible_top + visible_height - 1 + UI_BOX_TB_BORDER,
-					ARGB_WHITE);
-			add_line(	visible_left + visible_width - 1 + UI_BOX_LR_BORDER,
-					visible_top - UI_BOX_TB_BORDER,
-					visible_left + visible_width - 1 + UI_BOX_LR_BORDER,
-					visible_top + visible_height - 1 + UI_BOX_TB_BORDER,
-					ARGB_WHITE);
-#endif
-		}
 #else
 			itemfg = MENU_SELECTCOLOR;
 #endif /* UI_COLOR_DISPLAY */
@@ -5605,6 +5585,40 @@ static void render_ui(mame_bitmap *dest)
 	elemindex = 0;
 }
 
+static void add_filled_box_color(int x1, int y1, int x2, int y2, rgb_t color)
+{
+#ifdef UI_COLOR_DISPLAY
+	add_fill(x1 + 3, y1 + 3, x2 - 3, y2 - 3, color);
+
+	/* top edge */
+	add_line(x1,     y1,     x2,     y1,     SYSTEM_COLOR_FRAMELIGHT);
+	add_line(x1 + 1, y1 + 1, x2 - 1, y1 + 1, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_line(x1 + 2, y1 + 2, x2 - 2, y1 + 2, SYSTEM_COLOR_FRAMEDARK);
+
+	/* bottom edge */
+	add_line(x1 + 3, y2 - 2, x2 - 2, y2 - 2, SYSTEM_COLOR_FRAMELIGHT);
+	add_line(x1 + 1, y2 - 1, x2 - 1, y2 - 1, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_line(x1,     y2,     x2,     y2,     SYSTEM_COLOR_FRAMEDARK);
+
+	/* left edge */
+	add_line(x1,     y1 + 1, x1,     y2 - 1, SYSTEM_COLOR_FRAMELIGHT);
+	add_line(x1 + 1, y1 + 2, x1 + 1, y2 - 2, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_line(x1 + 2, y1 + 3, x1 + 2, y2 - 2, SYSTEM_COLOR_FRAMEDARK);
+
+	/* right edge */
+	add_line(x2 - 2, y1 + 3, x2 - 2, y2 - 3, SYSTEM_COLOR_FRAMELIGHT);
+	add_line(x2 - 1, y1 + 2, x2 - 1, y2 - 2, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_line(x2,     y1 + 1, x2,     y2 - 1, SYSTEM_COLOR_FRAMEDARK);
+#else /* UI_COLOR_DISPLAY */
+	add_fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, color);
+
+	add_line(x1, y1, x2, y1, ARGB_WHITE);
+	add_line(x2, y1, x2, y2, ARGB_WHITE);
+	add_line(x2, y2, x1, y2, ARGB_WHITE);
+	add_line(x1, y2, x1, y1, ARGB_WHITE);
+#endif /* UI_COLOR_DISPLAY */
+}
+
 #else
 
 void ui_get_bounds(int *width, int *height)
@@ -5646,33 +5660,44 @@ static rgb_t ui_get_rgb_color(rgb_t color)
 
 	return color;
 }
-#endif
-
 
 static void add_filled_box_color(int x1, int y1, int x2, int y2, rgb_t color)
 {
 #ifdef UI_COLOR_DISPLAY
-	add_fill(x1 + 3, y1 + 3, x2 - 3, y2 - 3, color);
+	int w1 = UI_BOX_LR_BORDER / 3;
+	int w2 = w1 * 2;
+	int w3 = w1 * 3;
+	int mw = w1;
 
-	/* top edge */
-	add_line(x1,     y1,     x2,     y1,     SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x1 + 1, y1 + 1, x2 - 1, y1 + 1, SYSTEM_COLOR_FRAMEMEDIUM);
-	add_line(x1 + 2, y1 + 2, x2 - 2, y1 + 2, SYSTEM_COLOR_FRAMEDARK);
+	add_fill(x1 + w3, y1 + w3, x2 - w3, y2 - w3, color);
 
 	/* bottom edge */
-	add_line(x1 + 3, y2 - 2, x2 - 2, y2 - 2, SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x1 + 1, y2 - 1, x2 - 1, y2 - 1, SYSTEM_COLOR_FRAMEMEDIUM);
-	add_line(x1,     y2,     x2,     y2,     SYSTEM_COLOR_FRAMEDARK);
-
-	/* left edge */
-	add_line(x1,     y1 + 1, x1,     y2 - 1, SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x1 + 1, y1 + 2, x1 + 1, y2 - 2, SYSTEM_COLOR_FRAMEMEDIUM);
-	add_line(x1 + 2, y1 + 3, x1 + 2, y2 - 2, SYSTEM_COLOR_FRAMEDARK);
+	add_fill(x1 + w3, y2 - w2 - mw, x2 - w2, y2 - w2, SYSTEM_COLOR_FRAMELIGHT);
 
 	/* right edge */
-	add_line(x2 - 2, y1 + 3, x2 - 2, y2 - 3, SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x2 - 1, y1 + 2, x2 - 1, y2 - 2, SYSTEM_COLOR_FRAMEMEDIUM);
-	add_line(x2,     y1 + 1, x2,     y2 - 1, SYSTEM_COLOR_FRAMEDARK);
+	add_fill(x2 - w2 - mw, y1 + w3, x2 - w2, y2 - w3, SYSTEM_COLOR_FRAMELIGHT);
+	add_fill(x2 - w1 - mw, y1 + w2, x2 - w1, y2 - w2, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_fill(x2      - mw, y1 + w1, x2,      y2 - w1, SYSTEM_COLOR_FRAMEDARK);
+
+	/* bottom edge */
+	add_fill(x1,      y2      - mw, x2,      y2,      SYSTEM_COLOR_FRAMEDARK);
+	/* top edge */
+	add_fill(x1 + w2, y1 + w2, x2 - w2, y1 + w2 + mw, SYSTEM_COLOR_FRAMEDARK);
+	/* left edge */
+	add_fill(x1 + w2, y1 + w2, x1 + w2 + mw, y2 - w1, SYSTEM_COLOR_FRAMEDARK);
+
+	/* bottom edge */
+	add_fill(x1 + w1, y2 - w1 - mw, x2 - w1, y2 - w1, SYSTEM_COLOR_FRAMEMEDIUM);
+	/* top edge */
+	add_fill(x1 + w1, y1 + w1, x2 - w1, y1 + w1 + mw, SYSTEM_COLOR_FRAMEMEDIUM);
+	/* left edge */
+	add_fill(x1 + w1, y1 + w1, x1 + w1 + mw, y2 - w1, SYSTEM_COLOR_FRAMEMEDIUM);
+
+	/* top edge */
+	add_fill(x1,      y1,      x2,      y1      + mw, SYSTEM_COLOR_FRAMELIGHT);
+	/* left edge */
+	add_fill(x1,      y1,      x1      + mw, y2,      SYSTEM_COLOR_FRAMELIGHT);
+
 #else /* UI_COLOR_DISPLAY */
 	add_fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, color);
 
@@ -5682,6 +5707,7 @@ static void add_filled_box_color(int x1, int y1, int x2, int y2, rgb_t color)
 	add_line(x1, y2, x1, y1, ARGB_WHITE);
 #endif /* UI_COLOR_DISPLAY */
 }
+#endif
 
 
 static void add_filled_box(int x1, int y1, int x2, int y2)
