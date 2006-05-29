@@ -31,7 +31,6 @@
 	 IS_COMPATIBLE_TYPE(_valtype, INT32)  || IS_COMPATIBLE_TYPE(_valtype, UINT32) ||	\
 	 IS_COMPATIBLE_TYPE(_valtype, INT16)  || IS_COMPATIBLE_TYPE(_valtype, UINT16) ||	\
 	 IS_COMPATIBLE_TYPE(_valtype, INT8)   || IS_COMPATIBLE_TYPE(_valtype, UINT8) ||		\
-	 IS_COMPATIBLE_TYPE(_valtype, char)   || IS_COMPATIBLE_TYPE(_valtype, unsigned char) || \
 	 IS_COMPATIBLE_TYPE(_valtype, PAIR)   || IS_COMPATIBLE_TYPE(_valtype, PAIR64))
 
 #define state_save_register_generic(_mod, _inst, _name, _val, _valsize, _count) 		\
