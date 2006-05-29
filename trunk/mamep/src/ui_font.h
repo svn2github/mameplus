@@ -10,6 +10,7 @@
 #ifndef UI_FONT_H
 #define UI_FONT_H
 
+#ifndef NEW_RENDER
 #include "palette.h"
 
 void uifont_buildfont(int *rotcharwidth, int *rotcharheight);
@@ -23,5 +24,6 @@ void convert_command_move(char *buf);
 #endif /* UI_COLOR_DISPLAY */
 
 extern pen_t uifont_colortable[MAX_COLORTABLE];
+#endif
 
 #endif

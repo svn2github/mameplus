@@ -70,7 +70,8 @@ ifdef NEW_RENDER
 COREOBJS += $(OBJ)/render.o \
 			$(OBJ)/rendfont.o
 else
-COREOBJS += $(OBJ)/artwork.o
+COREOBJS += $(OBJ)/artwork.o \
+			$(OBJ)/ui_font.o
 endif
 
 ifdef X86_MIPS3_DRC
@@ -84,7 +85,6 @@ endif
 
 COREOBJS += \
 	$(OBJ)/datafile.o \
-	$(OBJ)/ui_font.o \
 	$(OBJ)/ui_lang.o \
 
 #-------------------------------------------------

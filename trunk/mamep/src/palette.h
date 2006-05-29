@@ -75,6 +75,7 @@
 #ifndef __PALETTE_H__
 #define __PALETTE_H__
 
+#ifndef NEW_RENDER
 #ifdef UI_COLOR_DISPLAY
 #define USE_PALETTE_MAP
 #else /* UI_COLOR_DISPLAY */
@@ -82,6 +83,7 @@
 #define USE_PALETTE_MAP
 #endif /* TRANS_UI */
 #endif /* UI_COLOR_DISPLAY */
+#endif
 
 #include "memory.h"
 

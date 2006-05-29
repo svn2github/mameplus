@@ -112,6 +112,10 @@ static char *resolution;
 static char *aspect;
 static char *mngwrite;
 
+#ifdef UI_COLOR_DISPLAY
+static char *colortable_str[MAX_COLORTABLE];
+#endif /* UI_COLOR_DISPLAY */
+
 static int win_gfx_width, win_gfx_height;
 int win_start_maximized;
 
@@ -180,6 +184,9 @@ static int decode_cleanstretch(struct rc_option *option, const char *arg, int pr
 static int decode_resolution(struct rc_option *option, const char *arg, int priority);
 static int decode_ftr(struct rc_option *option, const char *arg, int priority);
 static int decode_aspect(struct rc_option *option, const char *arg, int priority);
+#ifdef UI_COLOR_DISPLAY
+static int decode_palette(struct rc_option *option, const char *arg, int priority);
+#endif /* UI_COLOR_DISPLAY */
 static void update_throttle(mame_time emutime);
 static void update_fps(mame_time emutime);
 static void update_autoframeskip(void);
@@ -238,6 +245,37 @@ struct rc_option video_opts[] =
 #endif
 	{ NULL,	NULL, rc_end, NULL, NULL, 0, 0,	NULL, NULL }
 };
+
+#ifdef UI_COLOR_DISPLAY
+struct rc_option palette_opts[] =
+{
+	// name,           shortname, type,         dest,                                      deflt,       min,max,func,          help
+	{ "Mame CORE palette options",    NULL, rc_seperator, NULL,                                      NULL,          0, 0, decode_palette, NULL },
+	{ "font_blank",         NULL, rc_string,    &colortable_str[FONT_COLOR_BLANK],         "0,0,0",       0, 0, decode_palette, "font blank color" },
+	{ "font_normal",        NULL, rc_string,    &colortable_str[FONT_COLOR_NORMAL],        "255,255,255", 0, 0, decode_palette, "font normal color" },
+	{ "font_special",       NULL, rc_string,    &colortable_str[FONT_COLOR_SPECIAL],       "247,203,0",   0, 0, decode_palette, "font special color" },
+	{ "system_background",  NULL, rc_string,    &colortable_str[SYSTEM_COLOR_BACKGROUND],  "0,0,255",     0, 0, decode_palette, "window background color" },
+	{ "system_framemedium", NULL, rc_string,    &colortable_str[SYSTEM_COLOR_FRAMEMEDIUM], "192,192,192", 0, 0, decode_palette, "window frame color (medium)" },
+	{ "system_framelight",  NULL, rc_string,    &colortable_str[SYSTEM_COLOR_FRAMELIGHT],  "224,224,224", 0, 0, decode_palette, "window frame color (light)" },
+	{ "system_framedark",   NULL, rc_string,    &colortable_str[SYSTEM_COLOR_FRAMEDARK],   "128,128,128", 0, 0, decode_palette, "window frame color (dark)" },
+	{ "osdbar_framemedium", NULL, rc_string,    &colortable_str[OSDBAR_COLOR_FRAMEMEDIUM], "192,192,192", 0, 0, decode_palette, "OSD bar color (medium)" },
+	{ "osdbar_framelight",  NULL, rc_string,    &colortable_str[OSDBAR_COLOR_FRAMELIGHT],  "224,224,224", 0, 0, decode_palette, "OSD bar color (light)" },
+	{ "osdbar_framedark",   NULL, rc_string,    &colortable_str[OSDBAR_COLOR_FRAMEDARK],   "128,128,128", 0, 0, decode_palette, "OSD bar color (dark)" },
+	{ "osdbar_defaultbar",  NULL, rc_string,    &colortable_str[OSDBAR_COLOR_DEFAULTBAR],  "60,120,240",  0, 0, decode_palette, "OSD bar color (default)" },
+	{ "button_red",         NULL, rc_string,    &colortable_str[BUTTON_COLOR_RED],         "255,64,64",   0, 0, decode_palette, "button color (red)" },
+	{ "button_yellow",      NULL, rc_string,    &colortable_str[BUTTON_COLOR_YELLOW],      "255,238,0",   0, 0, decode_palette, "button color (yellow)" },
+	{ "button_green",       NULL, rc_string,    &colortable_str[BUTTON_COLOR_GREEN],       "0,255,64",    0, 0, decode_palette, "button color (green)" },
+	{ "button_blue",        NULL, rc_string,    &colortable_str[BUTTON_COLOR_BLUE],        "0,170,255",   0, 0, decode_palette, "button color (blue)" },
+	{ "button_purple",      NULL, rc_string,    &colortable_str[BUTTON_COLOR_PURPLE],      "170,0,255",   0, 0, decode_palette, "button color (purple)" },
+	{ "button_pink",        NULL, rc_string,    &colortable_str[BUTTON_COLOR_PINK],        "255,0,170",   0, 0, decode_palette, "button color (pink)" },
+	{ "button_aqua",        NULL, rc_string,    &colortable_str[BUTTON_COLOR_AQUA],        "0,255,204",   0, 0, decode_palette, "button color (aqua)" },
+	{ "button_silver",      NULL, rc_string,    &colortable_str[BUTTON_COLOR_SILVER],      "255,0,255", 0, 0, decode_palette, "button color (silver)" },
+	{ "button_navy",        NULL, rc_string,    &colortable_str[BUTTON_COLOR_NAVY],        "255,160,0",   0, 0, decode_palette, "button color (navy)" },
+	{ "button_lime",        NULL, rc_string,    &colortable_str[BUTTON_COLOR_LIME],        "190,190,190", 0, 0, decode_palette, "button color (lime)" },
+	{ "cursor",             NULL, rc_string,    &colortable_str[CURSOR_COLOR],             "60,120,240",  0, 0, decode_palette, "cursor color" },
+	{ NULL,                 NULL, rc_end,       NULL,                                  NULL,          0, 0, NULL, NULL }
+};
+#endif /* UI_COLOR_DISPLAY */
 
 
 
@@ -775,6 +813,39 @@ static int decode_aspect(struct rc_option *option, const char *arg, int priority
 	option->priority = priority;
 	return 0;
 }
+
+
+
+#ifdef UI_COLOR_DISPLAY
+//============================================================
+//	decode_palette
+//============================================================
+
+static int decode_palette(struct rc_option *option, const char *arg, int priority)
+{
+	int pal[3];
+	int i;
+
+	i = ((char **)option->dest) - colortable_str;
+
+	if (sscanf(arg, "%d,%d,%d", &pal[0], &pal[1], &pal[2]) != 3 ||
+		pal[0] < 0 || pal[0] >= 256 ||
+		pal[1] < 0 || pal[1] >= 256 ||
+		pal[2] < 0 || pal[2] >= 256 )
+	{
+		fprintf(stderr, _WINDOWS("error: invalid value for palette: %s\n"), arg);
+		return -1;
+	}
+
+	options.uicolortable[i][0] = pal[0];
+	options.uicolortable[i][1] = pal[1];
+	options.uicolortable[i][2] = pal[2];
+
+	option->priority = priority;
+
+	return 0;
+}
+#endif /* UI_COLOR_DISPLAY */
 
 
 

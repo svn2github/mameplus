@@ -826,7 +826,7 @@ render_target *render_target_alloc(const char *layoutfile, int singleview)
 
 	/* allocate memory for the target */
 	target = malloc(sizeof(*target));
-	memset(target, 0, sizeof(target));
+	memset(target, 0, sizeof(*target));
 
 	/* add it to the list */
 	target->next = targetlist;

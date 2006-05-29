@@ -169,6 +169,10 @@ extern int command_counter;
 static int next_caption_frame, caption_timer;
 #endif /* INP_CAPTION */
 
+#ifdef NEW_RENDER
+static rgb_t uifont_colortable[MAX_COLORTABLE];
+#endif
+
 static rgb_t ui_bgcolor;
 
 #ifdef NEW_RENDER
@@ -339,9 +343,11 @@ static void add_filled_box(int x1, int y1, int x2, int y2);
 static void render_ui(mame_bitmap *dest);
 /* -- end this stuff will go away with the new rendering system */
 #else
-#define add_line(x0,y0,x1,y1,color)	render_ui_add_line(UI_UNSCALE_TO_FLOAT(x0), UI_UNSCALE_TO_FLOAT(y0), UI_UNSCALE_TO_FLOAT(x1), UI_UNSCALE_TO_FLOAT(y1), UI_LINE_WIDTH, color, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA))
-#define add_fill(x0,y0,x1,y1,color) render_ui_add_rect(UI_UNSCALE_TO_FLOAT(x0), UI_UNSCALE_TO_FLOAT(y0), UI_UNSCALE_TO_FLOAT(x1), UI_UNSCALE_TO_FLOAT(y1), color, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA))
-#define add_char(x,y,ch,color)		render_ui_add_char(UI_UNSCALE_TO_FLOAT(x), UI_UNSCALE_TO_FLOAT(y), UI_FONT_HEIGHT, render_get_ui_aspect(), color, ui_font, ch)
+static rgb_t ui_get_rgb_color(rgb_t color);
+
+#define add_line(x0,y0,x1,y1,color)	render_ui_add_line(UI_UNSCALE_TO_FLOAT(x0), UI_UNSCALE_TO_FLOAT(y0), UI_UNSCALE_TO_FLOAT(x1), UI_UNSCALE_TO_FLOAT(y1), UI_LINE_WIDTH, ui_get_rgb_color(color), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA))
+#define add_fill(x0,y0,x1,y1,color) render_ui_add_rect(UI_UNSCALE_TO_FLOAT(x0), UI_UNSCALE_TO_FLOAT(y0), UI_UNSCALE_TO_FLOAT(x1), UI_UNSCALE_TO_FLOAT(y1), ui_get_rgb_color(color), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA))
+#define add_char(x,y,ch,color)		render_ui_add_char(UI_UNSCALE_TO_FLOAT(x), UI_UNSCALE_TO_FLOAT(y), UI_FONT_HEIGHT, render_get_ui_aspect(), ui_get_rgb_color(color), ui_font, ch)
 static void add_filled_box(int x1, int y1, int x2, int y2);
 #endif
 
@@ -401,6 +407,25 @@ int ui_init(void)
 	create_font();
 #else
 	ui_font = render_font_alloc("ui.bdf");
+
+	{
+		int i;
+
+		for (i = 0; i < MAX_COLORTABLE; i++)
+			uifont_colortable[i] = MAKE_ARGB(
+				0xff,
+				options.uicolortable[i][0],
+				options.uicolortable[i][1],
+				options.uicolortable[i][2]);
+#ifdef TRANS_UI
+		if (options.use_transui)
+			uifont_colortable[SYSTEM_COLOR_BACKGROUND] = MAKE_ARGB(
+				options.ui_transparency,
+				options.uicolortable[SYSTEM_COLOR_BACKGROUND][0],
+				options.uicolortable[SYSTEM_COLOR_BACKGROUND][1],
+				options.uicolortable[SYSTEM_COLOR_BACKGROUND][2]);
+#endif /* TRANS_UI */
+	}
 #endif
 
 #ifdef INP_CAPTION
@@ -452,9 +477,9 @@ void ui_exit(void)
 	if (ui_font)
 		render_font_free(ui_font);
 	ui_font = NULL;
-#endif
-
+#else
 	uifont_freefont();
+#endif
 }
 
 
@@ -819,11 +844,6 @@ void ui_draw_text(const char *buf, int x, int y)
  *
  *************************************/
 
-INLINE int myisspace(unsigned char c)
-{
-	return isspace(c);
-}
-
 void ui_draw_text_full(const char *origs, int x, int y, int wrapwidth, int offset, int maxlines, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, int *totalwidth, int *totalheight)
 {
 	const unsigned char *s = (const unsigned char *)origs;
@@ -995,7 +1015,7 @@ void ui_draw_text_full(const char *origs, int x, int y, int wrapwidth, int offse
 				if (*check == '\n')
 					check++;
 				else
-					while (*check && myisspace(*check)) check++;
+					while (*check && isspace(*check)) check++;
 			}
 
 			if (*check)
@@ -1066,7 +1086,7 @@ void ui_draw_text_full(const char *origs, int x, int y, int wrapwidth, int offse
 		if (*s == '\n')
 			s++;
 		else
-			while (*s && myisspace(*s)) s++;
+			while (*s && isspace(*s)) s++;
 	}
 
 	/* report the width and height of the resulting space */
@@ -1180,12 +1200,36 @@ void ui_draw_menu(const ui_menu_item *items, int numitems, int selected)
 		/* if we're selected, draw with a different background */
 		if (itemnum == selected)
 #ifdef UI_COLOR_DISPLAY
+		{
 			add_fill(visible_left, line_y,
 			         visible_left + visible_width - 1, line_y + ui_get_line_height() - 1,
 			         CURSOR_COLOR);
+#ifdef NEW_RENDER
+// fixme
+			add_line(	visible_left - UI_BOX_LR_BORDER,
+					visible_top - UI_BOX_TB_BORDER,
+					visible_left + visible_width - 1 + UI_BOX_LR_BORDER,
+					visible_top - UI_BOX_TB_BORDER,
+					ARGB_WHITE);
+			add_line(	visible_left - UI_BOX_LR_BORDER,
+					visible_top - UI_BOX_TB_BORDER,
+					visible_left - UI_BOX_LR_BORDER,
+					visible_top + visible_height - 1 + UI_BOX_TB_BORDER,
+					ARGB_WHITE);
+			add_line(	visible_left - UI_BOX_LR_BORDER,
+					visible_top + visible_height - 1 + UI_BOX_TB_BORDER,
+					visible_left + visible_width - 1 + UI_BOX_LR_BORDER,
+					visible_top + visible_height - 1 + UI_BOX_TB_BORDER,
+					ARGB_WHITE);
+			add_line(	visible_left + visible_width - 1 + UI_BOX_LR_BORDER,
+					visible_top - UI_BOX_TB_BORDER,
+					visible_left + visible_width - 1 + UI_BOX_LR_BORDER,
+					visible_top + visible_height - 1 + UI_BOX_TB_BORDER,
+					ARGB_WHITE);
+#endif
+		}
 #else
 			itemfg = MENU_SELECTCOLOR;
-
 #endif /* UI_COLOR_DISPLAY */
 
 		/* if we're on the top line, display the up arrow */
@@ -5585,6 +5629,22 @@ int ui_get_char_width(UINT16 ch)
 int ui_get_string_width(const char *s)
 {
 	return UI_SCALE_TO_INT(render_font_get_string_width(ui_font, UI_FONT_HEIGHT, render_get_ui_aspect(), s));
+}
+
+static rgb_t ui_get_rgb_color(rgb_t color)
+{
+	if (color < MAX_COLORTABLE)
+		return uifont_colortable[color];
+
+	// fixme
+	if (color == UI_SCROLL_TEXT_COLOR)
+		return ARGB_WHITE;
+
+	// fixme
+	if (color == UI_TRANSPARENT_COLOR)
+		color = uifont_colortable[SYSTEM_COLOR_BACKGROUND];
+
+	return color;
 }
 #endif
 

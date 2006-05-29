@@ -17,6 +17,11 @@
 
 #define VERBOSE 0
 
+#ifdef NEW_RENDER
+#undef TRANS_UI
+#undef UI_COLOR_DISPLAY
+#endif
+
 #ifdef TRANS_UI
 #include "artwork.h"
 #ifndef USE_SAMPLE_MACORS_FOR_TRANSPARENT_UI
@@ -104,6 +109,33 @@ static void palette_reset(void);
 static void recompute_adjusted_palette(int brightness_or_gamma_changed);
 static void internal_modify_pen(pen_t pen, rgb_t color, int pen_bright);
 
+
+
+/*-------------------------------------------------
+    rgb_to_direct15 - convert an RGB triplet to
+    a 15-bit OSD-specified RGB value
+-------------------------------------------------*/
+
+INLINE UINT16 rgb_to_direct15(rgb_t rgb)
+{
+	return  ( ((RGB_RED(rgb) >> 3) << direct_rgb_rshift) |
+			((RGB_GREEN(rgb) >> 3) << direct_rgb_gshift) |
+			( (RGB_BLUE(rgb) >> 3) << direct_rgb_bshift));
+}
+
+
+
+/*-------------------------------------------------
+    rgb_to_direct32 - convert an RGB triplet to
+    a 32-bit OSD-specified RGB value
+-------------------------------------------------*/
+
+INLINE UINT32 rgb_to_direct32(rgb_t rgb)
+{
+	return  ( (RGB_RED(rgb) << direct_rgb_rshift) |
+			(RGB_GREEN(rgb) << direct_rgb_gshift) |
+			( RGB_BLUE(rgb) << direct_rgb_bshift));
+}
 
 
 
@@ -281,34 +313,6 @@ void update_palettemap(void)
 	black_pen = uifont_colortable[FONT_COLOR_BLANK];
 	white_pen = uifont_colortable[FONT_COLOR_NORMAL];
 }
-
-
-/*-------------------------------------------------
-    rgb_to_direct15 - convert an RGB triplet to
-    a 15-bit OSD-specified RGB value
--------------------------------------------------*/
-
-INLINE UINT16 rgb_to_direct15(rgb_t rgb)
-{
-	return  ( ((RGB_RED(rgb) >> 3) << direct_rgb_rshift) |
-			((RGB_GREEN(rgb) >> 3) << direct_rgb_gshift) |
-			( (RGB_BLUE(rgb) >> 3) << direct_rgb_bshift));
-}
-
-
-
-/*-------------------------------------------------
-    rgb_to_direct32 - convert an RGB triplet to
-    a 32-bit OSD-specified RGB value
--------------------------------------------------*/
-
-INLINE UINT32 rgb_to_direct32(rgb_t rgb)
-{
-	return  ( (RGB_RED(rgb) << direct_rgb_rshift) |
-			(RGB_GREEN(rgb) << direct_rgb_gshift) |
-			( RGB_BLUE(rgb) << direct_rgb_bshift));
-}
-
 
 
 #ifdef TRANS_UI
