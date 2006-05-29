@@ -59,6 +59,19 @@ To do:
 #define MAX_SETUPMENU_ITEMS		20
 #define MAX_OSD_ITEMS			50
 
+#define ARGB_WHITE				MAKE_ARGB(0xff,0xff,0xff,0xff)
+#define ARGB_BLACK				MAKE_ARGB(0xff,0x00,0x00,0x00)
+
+#ifdef NEW_RENDER
+#define MENU_TEXTCOLOR			MAKE_ARGB(0xff,0xff,0xff,0xff)
+#define MENU_SELECTCOLOR		MAKE_ARGB(0xff,0xff,0xff,0x00)
+#define MENU_BACKCOLOR			MAKE_ARGB(0xe0,0x10,0x10,0x30)
+#else
+#define MENU_TEXTCOLOR			MAKE_ARGB(0xff,0xff,0xff,0xff)
+#define MENU_SELECTCOLOR		MAKE_ARGB(0xff,0xff,0xff,0x00)
+#define MENU_BACKCOLOR			MAKE_ARGB(0x00,0x00,0x00,0x00)
+#endif
+
 enum
 {
 	ANALOG_ITEM_KEYSPEED = 0,
@@ -109,14 +122,14 @@ struct _input_item_data
 #define UI_BOX_LR_BORDER		3
 #define UI_BOX_TB_BORDER		3
 #else /* UI_COLOR_DISPLAY */
-#define UI_BOX_LR_BORDER		(ui_get_char_width(' ') / 2)
-#define UI_BOX_TB_BORDER		(ui_get_char_width(' ') / 2)
+#define UI_BOX_LR_BORDER		(ui_get_char_width('M') / 2)
+#define UI_BOX_TB_BORDER		(ui_get_char_width('M') / 2)
 #endif /* UI_COLOR_DISPLAY */
 
 #ifdef NEW_RENDER
 #define UI_FONT_NAME			NULL
-#define UI_FONT_HEIGHT			0.05f
-#define UI_LINE_WIDTH			0.005f
+#define UI_FONT_HEIGHT			(1.0f / 25.0f)
+#define UI_LINE_WIDTH			(1.0f / 500.0f)
 #define UI_SCALE_FACTOR			10000.0f
 #define UI_SCALE_TO_INT(x)		((int)((float)(x) * UI_SCALE_FACTOR))
 #define UI_UNSCALE_TO_FLOAT(x)	((x) * (1.0f / UI_SCALE_FACTOR))
@@ -166,6 +179,7 @@ static render_font *ui_font;
 static UINT32 (*ui_handler_callback)(UINT32);
 static UINT32 ui_handler_param;
 
+#ifndef NEW_RENDER
 /* raw coordinates, relative to the real scrbitmap */
 static rectangle uirawbounds;
 
@@ -173,6 +187,7 @@ static rectangle uirawbounds;
 static rectangle uirotbounds;
 static int uirotwidth, uirotheight;
 static int uirotcharwidth, uirotcharheight;
+#endif
 
 static int multiline_text_box_visible_lines;
 static int multiline_text_box_target_lines;
@@ -238,9 +253,12 @@ static int elemindex;
 #ifdef USE_SHOW_TIME
 static int show_time = 0;
 static int Show_Time_Position;
-static void display_time(mame_bitmap *bitmap);
+static void display_time(void);
 #endif /* USE_SHOW_TIME */
 
+#ifdef USE_SHOW_INPUT_LOG
+static void display_input_log(void);
+#endif /* USE_SHOW_INPUT_LOG */
 
 
 
@@ -288,6 +306,7 @@ static UINT32 menu_command_contents(UINT32 state);
 #endif /* CMD_LIST */
 static UINT32 menu_cheat(UINT32 state);
 static UINT32 menu_memory_card(UINT32 state);
+static UINT32 menu_video(UINT32 state);
 static UINT32 menu_reset_game(UINT32 state);
 
 #ifndef MESS
@@ -320,9 +339,9 @@ static void add_filled_box(int x1, int y1, int x2, int y2);
 static void render_ui(mame_bitmap *dest);
 /* -- end this stuff will go away with the new rendering system */
 #else
-#define add_line(x0,y0,x1,y1,color)	render_ui_add_line(UI_UNSCALE_TO_FLOAT(x0), UI_UNSCALE_TO_FLOAT(y0), UI_UNSCALE_TO_FLOAT(x1), UI_UNSCALE_TO_FLOAT(y1), UI_LINE_WIDTH, color)
-#define add_fill(x0,y0,x1,y1,color) render_ui_add_rect(UI_UNSCALE_TO_FLOAT(x0), UI_UNSCALE_TO_FLOAT(y0), UI_UNSCALE_TO_FLOAT(x1), UI_UNSCALE_TO_FLOAT(y1), color)
-#define add_char(x,y,ch,color)		render_ui_add_char(UI_UNSCALE_TO_FLOAT(x), UI_UNSCALE_TO_FLOAT(y), UI_FONT_HEIGHT, color, ui_font, ch)
+#define add_line(x0,y0,x1,y1,color)	render_ui_add_line(UI_UNSCALE_TO_FLOAT(x0), UI_UNSCALE_TO_FLOAT(y0), UI_UNSCALE_TO_FLOAT(x1), UI_UNSCALE_TO_FLOAT(y1), UI_LINE_WIDTH, color, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA))
+#define add_fill(x0,y0,x1,y1,color) render_ui_add_rect(UI_UNSCALE_TO_FLOAT(x0), UI_UNSCALE_TO_FLOAT(y0), UI_UNSCALE_TO_FLOAT(x1), UI_UNSCALE_TO_FLOAT(y1), color, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA))
+#define add_char(x,y,ch,color)		render_ui_add_char(UI_UNSCALE_TO_FLOAT(x), UI_UNSCALE_TO_FLOAT(y), UI_FONT_HEIGHT, render_get_ui_aspect(), color, ui_font, ch)
 static void add_filled_box(int x1, int y1, int x2, int y2);
 #endif
 
@@ -381,7 +400,7 @@ int ui_init(void)
 	/* build up the font */
 	create_font();
 #else
-	ui_font = render_font_alloc(NULL);
+	ui_font = render_font_alloc("ui.bdf");
 #endif
 
 #ifdef INP_CAPTION
@@ -395,11 +414,15 @@ int ui_init(void)
 #ifdef UI_COLOR_DISPLAY
 	ui_bgcolor = SYSTEM_COLOR_BACKGROUND;
 #else /* UI_COLOR_DISPLAY */
-	ui_bgcolor = RGB_BLACK;
+#ifdef NEW_RENDER
+	ui_bgcolor = MENU_BACKCOLOR;
+#else
+	ui_bgcolor = ARGB_BLACK;
+#endif
 #endif /* UI_COLOR_DISPLAY */
 #endif /* TRANS_UI */
 
-	text_color = RGB_WHITE;
+	text_color = ARGB_WHITE;
 
 	/* initialize the menu state */
 	ui_menu_stack_reset();
@@ -425,6 +448,12 @@ int ui_init(void)
 
 void ui_exit(void)
 {
+#ifdef NEW_RENDER
+	if (ui_font)
+		render_font_free(ui_font);
+	ui_font = NULL;
+#endif
+
 	uifont_freefont();
 }
 
@@ -585,7 +614,22 @@ void ui_update_and_render(void)
 {
 #ifdef NEW_RENDER
 	render_container_empty(render_container_get_ui());
+
+	/* if we're paused, dim the whole screen */
+	if (mame_is_paused())
+	{
+		int alpha = (1.0f - options.pause_bright) * 255.0f;
+		if (alpha > 255)
+			alpha = 255;
+		if (alpha < 0)
+			alpha = 0;
+		render_ui_add_rect(0.0f, 0.0f, 1.0f, 1.0f, MAKE_ARGB(alpha,0x00,0x00,0x00), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+	}
 #endif
+
+	/* first draw the FPS counter and profiler */
+	ui_display_fps();
+	ui_display_profiler();
 
 	/* call the current UI handler */
 	if (ui_handler_callback != NULL)
@@ -598,10 +642,6 @@ void ui_update_and_render(void)
 	/* otherwise, we handle non-menu cases */
 	else
 	{
-		/* first display the FPS counter and profiler */
-		ui_display_fps();
-		ui_display_profiler();
-
 		/* if we're single-stepping, pause now */
 		if (single_step)
 		{
@@ -768,7 +808,7 @@ void ui_draw_text(const char *buf, int x, int y)
 {
 	int ui_width, ui_height;
 	ui_get_bounds(&ui_width, &ui_height);
-	ui_draw_text_full(buf, x, y, ui_width - x, 0, 0, JUSTIFY_LEFT, WRAP_WORD, DRAW_OPAQUE, RGB_WHITE, ui_bgcolor, NULL, NULL);
+	ui_draw_text_full(buf, x, y, ui_width - x, 0, 0, JUSTIFY_LEFT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, ui_bgcolor, NULL, NULL);
 }
 
 
@@ -784,12 +824,13 @@ INLINE int myisspace(unsigned char c)
 	return isspace(c);
 }
 
-void ui_draw_text_full(const char *s, int x, int y, int wrapwidth, int offset, int maxlines, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, int *totalwidth, int *totalheight)
+void ui_draw_text_full(const char *origs, int x, int y, int wrapwidth, int offset, int maxlines, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, int *totalwidth, int *totalheight)
 {
-	const char *linestart;
+	const unsigned char *s = (const unsigned char *)origs;
+	const unsigned char *linestart;
 	int cury = y;
 	int maxwidth = 0;
-	const char *uparrow = NULL;
+	const unsigned char *uparrow = NULL;
 
 	if (offset)
 		uparrow = ui_getstring (UI_uparrow);
@@ -801,19 +842,19 @@ void ui_draw_text_full(const char *s, int x, int y, int wrapwidth, int offset, i
 	/* loop over lines */
 	while (*s)
 	{
-		const char *lastspace = NULL;
+		const unsigned char *lastspace = NULL;
 		int line_justify = justify;
 		int lastspace_width = 0;
 		int curwidth = 0;
 		int curx = x;
-		const char *lastchar;
+		const unsigned char *lastchar;
 		int lastchar_width = 0;
-		const char *lasttruncate;
+		const unsigned char *lasttruncate;
 		int lasttruncate_width = 0;
 		int truncate_width = 3 * ui_get_char_width('.');
 		UINT16 code;
 		int increment;
-		const char *end;
+		const unsigned char *end;
 		int has_DBC = FALSE;
 
 		/* if the line starts with a tab character, center it regardless */
@@ -936,7 +977,7 @@ void ui_draw_text_full(const char *s, int x, int y, int wrapwidth, int offset, i
 
 		if (maxlines == 1)
 		{
-			const char *check = s;
+			const unsigned char *check = s;
 
 			/* skip past any spaces at the beginning of the next line */
 			if (wrap == WRAP_TRUNCATE)
@@ -1055,8 +1096,9 @@ void ui_draw_menu(const ui_menu_item *items, int numitems, int selected)
 	int left_hilight_width = ui_get_string_width(left_hilight);
 	int right_hilight_width = ui_get_string_width(right_hilight);
 	int left_arrow_width = ui_get_string_width(left_arrow);
-	int space_width = ui_get_char_width(' ');
+	int right_arrow_width = ui_get_string_width(right_arrow);
 	int line_height = ui_get_line_height();
+	int gutter_width;
 
 	int effective_width, effective_left;
 	int visible_width, visible_height;
@@ -1066,6 +1108,11 @@ void ui_draw_menu(const ui_menu_item *items, int numitems, int selected)
 	int visible_lines;
 	int top_line;
 	int itemnum, linenum;
+
+	/* the left/right gutters are the max of all stuff that might go in there */
+	gutter_width = MAX(left_hilight_width, right_hilight_width);
+	gutter_width = MAX(gutter_width, left_arrow_width);
+	gutter_width = MAX(gutter_width, right_arrow_width);
 
 	/* start with the bounds */
 	ui_get_bounds(&ui_width, &ui_height);
@@ -1079,11 +1126,11 @@ void ui_draw_menu(const ui_menu_item *items, int numitems, int selected)
 		int total_width;
 
 		/* compute width of left hand side */
-		total_width = left_hilight_width + ui_get_string_width(item->text) + right_hilight_width;
+		total_width = gutter_width + ui_get_string_width(item->text) + gutter_width;
 
 		/* add in width of right hand side */
 		if (item->subtext)
-			total_width += 2 * space_width + ui_get_string_width(item->subtext);
+			total_width += 2 * gutter_width + ui_get_string_width(item->subtext);
 
 		/* track the maximum */
 		if (total_width > visible_width)
@@ -1119,8 +1166,8 @@ void ui_draw_menu(const ui_menu_item *items, int numitems, int selected)
 		top_line = numitems - visible_lines;
 
 	/* determine effective positions taking into account the hilighting arrows */
-	effective_width = visible_width - left_hilight_width - right_hilight_width;
-	effective_left = visible_left + left_hilight_width;
+	effective_width = visible_width - 2 * gutter_width;
+	effective_left = visible_left + gutter_width;
 
 	/* loop over visible lines */
 	for (linenum = 0; linenum < visible_lines; linenum++)
@@ -1128,28 +1175,33 @@ void ui_draw_menu(const ui_menu_item *items, int numitems, int selected)
 		int line_y = visible_top + linenum * line_height;
 		int itemnum = top_line + linenum;
 		const ui_menu_item *item = &items[itemnum];
+		rgb_t itemfg = MENU_TEXTCOLOR;
 
-#ifdef UI_COLOR_DISPLAY
+		/* if we're selected, draw with a different background */
 		if (itemnum == selected)
+#ifdef UI_COLOR_DISPLAY
 			add_fill(visible_left, line_y,
 			         visible_left + visible_width - 1, line_y + ui_get_line_height() - 1,
 			         CURSOR_COLOR);
+#else
+			itemfg = MENU_SELECTCOLOR;
+
 #endif /* UI_COLOR_DISPLAY */
 
 		/* if we're on the top line, display the up arrow */
 		if (linenum == 0 && top_line != 0)
 			ui_draw_text_full(up_arrow, effective_left, line_y, effective_width, 0, 1,
-						JUSTIFY_CENTER, WRAP_TRUNCATE, DRAW_NORMAL, RGB_WHITE, RGB_BLACK, NULL, NULL);
+						JUSTIFY_CENTER, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 
 		/* if we're on the bottom line, display the down arrow */
 		else if (linenum == visible_lines - 1 && itemnum != numitems - 1)
 			ui_draw_text_full(down_arrow, effective_left, line_y, effective_width, 0, 1,
-						JUSTIFY_CENTER, WRAP_TRUNCATE, DRAW_NORMAL, RGB_WHITE, RGB_BLACK, NULL, NULL);
+						JUSTIFY_CENTER, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 
 		/* if we don't have a subitem, just draw the string centered */
 		else if (!item->subtext)
 			ui_draw_text_full(item->text, effective_left, line_y, effective_width, 0, 1,
-						JUSTIFY_CENTER, WRAP_TRUNCATE, DRAW_NORMAL, RGB_WHITE, RGB_BLACK, NULL, NULL);
+						JUSTIFY_CENTER, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 
 		/* otherwise, draw the item on the left and the subitem text on the right */
 		else
@@ -1157,30 +1209,26 @@ void ui_draw_menu(const ui_menu_item *items, int numitems, int selected)
 			int subitem_invert = item->flags & MENU_FLAG_INVERT;
 			const char *subitem_text = item->subtext;
 			int item_width, subitem_width;
-#ifdef UI_COLOR_DISPLAY
-			int draw = DRAW_NORMAL;
-#else /* UI_COLOR_DISPLAY */
-			int draw = DRAW_OPAQUE;
-#endif /* UI_COLOR_DISPLAY */
-			rgb_t fgcolor = RGB_WHITE;
-			rgb_t bgcolor = RGB_BLACK;
+
+			rgb_t fgcolor = itemfg;
+			rgb_t bgcolor = ARGB_BLACK;
 
 			if (subitem_invert)
 			{
 #ifdef UI_COLOR_DISPLAY
 				fgcolor = FONT_COLOR_SPECIAL;
 #else /* UI_COLOR_DISPLAY */
-				fgcolor = RGB_BLACK;
-				bgcolor = RGB_WHITE;
+				fgcolor = ARGB_BLACK;
+				bgcolor = itemfg;
 #endif /* UI_COLOR_DISPLAY */
 			}
 
 			/* draw the left-side text */
 			ui_draw_text_full(item->text, effective_left, line_y, effective_width, 0, 1,
-						JUSTIFY_LEFT, WRAP_TRUNCATE, DRAW_NORMAL, RGB_WHITE, RGB_BLACK, &item_width, NULL);
+						JUSTIFY_LEFT, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, &item_width, NULL);
 
 			/* give 2 spaces worth of padding */
-			item_width += 2 * space_width;
+			item_width += 2 * gutter_width;
 
 			/* if the subitem doesn't fit here, display dots */
 			if (ui_get_string_width(subitem_text) > effective_width - item_width)
@@ -1192,15 +1240,19 @@ void ui_draw_menu(const ui_menu_item *items, int numitems, int selected)
 
 			/* draw the subitem right-justified */
 			ui_draw_text_full(subitem_text, effective_left + item_width, line_y, effective_width - item_width, 0, 1,
-						JUSTIFY_RIGHT, WRAP_TRUNCATE, draw, fgcolor, bgcolor, &subitem_width, NULL);
+#ifdef UI_COLOR_DISPLAY
+						JUSTIFY_RIGHT, WRAP_TRUNCATE, DRAW_NORMAL, fgcolor, bgcolor, &subitem_width, NULL);
+#else /* UI_COLOR_DISPLAY */
+						JUSTIFY_RIGHT, WRAP_TRUNCATE, item_invert ? DRAW_OPAQUE : DRAW_NORMAL, fgcolor, bgcolor, &subitem_width, NULL);
+#endif /* UI_COLOR_DISPLAY */
 
 			/* apply arrows */
 			if (itemnum == selected && (item->flags & MENU_FLAG_LEFT_ARROW))
 				ui_draw_text_full(left_arrow, effective_left + effective_width - subitem_width - left_arrow_width, line_y, left_arrow_width, 0, 1,
-							JUSTIFY_LEFT, WRAP_NEVER, DRAW_NORMAL, RGB_WHITE, RGB_BLACK, NULL, NULL);
+							JUSTIFY_LEFT, WRAP_NEVER, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 			if (itemnum == selected && (item->flags & MENU_FLAG_RIGHT_ARROW))
 				ui_draw_text_full(right_arrow, visible_left, line_y, visible_width, 0, 1,
-							JUSTIFY_RIGHT, WRAP_TRUNCATE, DRAW_NORMAL, RGB_WHITE, RGB_BLACK, NULL, NULL);
+							JUSTIFY_RIGHT, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 		}
 
 #ifndef UI_COLOR_DISPLAY
@@ -1208,10 +1260,10 @@ void ui_draw_menu(const ui_menu_item *items, int numitems, int selected)
 		if (itemnum == selected)
 		{
 			ui_draw_text_full(left_hilight, visible_left, line_y, visible_width, 0, 1,
-						JUSTIFY_LEFT, WRAP_TRUNCATE, DRAW_NORMAL, RGB_WHITE, RGB_BLACK, NULL, NULL);
+						JUSTIFY_LEFT, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 			if (!(item->flags & (MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW)))
 				ui_draw_text_full(right_hilight, visible_left, line_y, visible_width, 0, 1,
-							JUSTIFY_RIGHT, WRAP_TRUNCATE, DRAW_NORMAL, RGB_WHITE, RGB_BLACK, NULL, NULL);
+							JUSTIFY_RIGHT, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 		}
 #endif /* !UI_COLOR_DISPLAY */
 	}
@@ -1227,7 +1279,7 @@ void ui_draw_menu(const ui_menu_item *items, int numitems, int selected)
 
 		/* compute the multi-line target width/height */
 		ui_draw_text_full(item->subtext, 0, 0, visible_width * 3 / 4, 0, 0,
-					JUSTIFY_RIGHT, WRAP_WORD, DRAW_NONE, RGB_WHITE, RGB_BLACK, &target_width, &target_height);
+					JUSTIFY_RIGHT, WRAP_WORD, DRAW_NONE, ARGB_WHITE, ARGB_BLACK, &target_width, &target_height);
 
 		/* determine the target location */
 		target_x = visible_left + visible_width - target_width - UI_BOX_LR_BORDER;
@@ -1241,7 +1293,7 @@ void ui_draw_menu(const ui_menu_item *items, int numitems, int selected)
 						target_x + target_width - 1 + UI_BOX_LR_BORDER,
 						target_y + target_height - 1 + UI_BOX_TB_BORDER);
 		ui_draw_text_full(item->subtext, target_x, target_y, target_width, 0, target_height / ui_get_line_height(),
-					JUSTIFY_RIGHT, WRAP_WORD, DRAW_NORMAL, RGB_WHITE, RGB_BLACK, NULL, NULL);
+					JUSTIFY_RIGHT, WRAP_WORD, DRAW_NORMAL, ARGB_WHITE, ARGB_BLACK, NULL, NULL);
 	}
 }
 
@@ -1393,7 +1445,7 @@ static void draw_multiline_text_box(const char *text, int offset, int justify, f
 
 	/* compute the multi-line target width/height */
 	ui_draw_text_full(text, 0, 0, ui_width - 2 * UI_BOX_LR_BORDER - 2, 0, 0,
-				justify, WRAP_WORD, DRAW_NONE, text_color, RGB_BLACK, &target_width, &target_height);
+				justify, WRAP_WORD, DRAW_NONE, text_color, ARGB_BLACK, &target_width, &target_height);
 
 	multiline_text_box_target_lines = target_height / ui_get_line_height();
 
@@ -1434,7 +1486,7 @@ static void draw_multiline_text_box(const char *text, int offset, int justify, f
 	               target_y + target_height - 1 + margin_y);
 
 	ui_draw_text_full(text, target_x, target_y, target_width, offset, multiline_text_box_visible_lines,
-				justify, WRAP_WORD, DRAW_NORMAL, text_color, RGB_BLACK, NULL, NULL);
+				justify, WRAP_WORD, DRAW_NORMAL, text_color, ARGB_BLACK, NULL, NULL);
 }
 
 
@@ -1456,7 +1508,7 @@ static void ui_draw_message_window_scroll(const char *text)
 {
 	text_color = UI_SCROLL_TEXT_COLOR;
 	draw_multiline_text_box(text, message_window_scroll, JUSTIFY_LEFT, 0.5, 0.5);
-	text_color = RGB_WHITE;
+	text_color = ARGB_WHITE;
 }
 
 
@@ -1570,7 +1622,7 @@ static int ui_window_scroll_keys(void)
 
 #define DISPLAY_AMPM 0
 
-static void display_time(mame_bitmap *bitmap)
+static void display_time(void)
 {
 	char buf[20];
 #if DISPLAY_AMPM
@@ -1579,6 +1631,9 @@ static void display_time(mame_bitmap *bitmap)
 	int width;
 	time_t ltime;
 	struct tm *today;
+	int ui_width, ui_height;
+
+	ui_get_bounds(&ui_width, &ui_height);
 
 	time(&ltime);
 	today = localtime(&ltime);
@@ -1598,15 +1653,15 @@ static void display_time(mame_bitmap *bitmap)
 #else
 	sprintf(buf, "%02d:%02d:%02d", today->tm_hour, today->tm_min, today->tm_sec);
 #endif /* DISPLAY_AMPM */
-	width = strlen(buf) * uirotcharwidth;
+	width = ui_get_string_width(buf);
 	switch(Show_Time_Position)
 	{
 		case 0:
-			ui_draw_text(buf, uirotwidth - width, uirotheight - uirotcharheight);
+			ui_draw_text(buf, ui_width - width, ui_height - ui_get_line_height());
 			break;
 
 		case 1:
-			ui_draw_text(buf, uirotwidth - width, 0);
+			ui_draw_text(buf, ui_width - width, 0);
 			break;
 
 		case 2:
@@ -1614,11 +1669,29 @@ static void display_time(mame_bitmap *bitmap)
 			break;
 
 		case 3:
-			ui_draw_text(buf, 0, uirotheight - uirotcharheight);
+			ui_draw_text(buf, 0, ui_height - ui_get_line_height());
 			break;
 	}
 }
 #endif /* USE_SHOW_TIME */
+
+#ifdef USE_SHOW_INPUT_LOG
+static void display_input_log(void)
+{
+	int ui_width, ui_height;
+
+	ui_get_bounds(&ui_width, &ui_height);
+
+	add_filled_box_noedge(0, ui_height - ui_get_line_height(), ui_width - 1, ui_height - 1);
+	ui_draw_text(command_buffer, 0, ui_height - ui_get_line_height());
+
+	if (--command_counter == 0) {
+		schedule_full_refresh();
+		memset(command_buffer, 0, COMMAND_LOG_BUFSIZE);
+	}
+}
+#endif /* USE_SHOW_INPUT_LOG */
+
 
 
 
@@ -1870,7 +1943,7 @@ static void handle_keys(void)
 	}
 
 	if (show_time)
-		display_time(bitmap);
+		display_time();
 #endif /* USE_SHOW_TIME */
 
 #ifdef USE_SHOW_INPUT_LOG
@@ -1884,16 +1957,7 @@ static void handle_keys(void)
 
 	/* show popup message if input exist any log */
 	if (show_input_log && command_counter)
-	{
-		add_filled_box_noedge(0, uirotheight - uirotcharheight, uirotwidth - 1, uirotheight - 1);
-
-		ui_draw_text(command_buffer, 0, uirotheight - uirotcharheight);
-
-		if (--command_counter == 0) {
-			schedule_full_refresh();
-			memset(command_buffer, 0, COMMAND_LOG_BUFSIZE);
-		}
-	}
+		display_input_log();
 #endif /* USE_SHOW_INPUT_LOG */
 
 	/* toggle movie recording */
@@ -2039,6 +2103,11 @@ do { \
 
   	/* add game document menu */
 	ADD_MENU(UI_gamedocuments, menu_documents, 0);
+
+#ifdef NEW_RENDER
+	/* add video options menu */
+	ADD_MENU(UI_video, menu_video, 1000 << 16);
+#endif
 
 	/* add cheat menu */
 	if (options.cheat)
@@ -3524,6 +3593,97 @@ static UINT32 menu_memory_card(UINT32 state)
 
 /*************************************
  *
+ *  Video menu
+ *
+ *************************************/
+
+#ifdef NEW_RENDER
+static UINT32 menu_video(UINT32 state)
+{
+	ui_menu_item item_list[100];
+	int curtarget = state >> 16;
+	int selected = state & 0xffff;
+	int menu_items = 0;
+
+	/* reset the menu and string pool */
+	memset(item_list, 0, sizeof(item_list));
+	menu_string_pool_offset = 0;
+
+	/* if we have a current target of 1000, we may need to select from multiple targets */
+	if (curtarget == 1000)
+	{
+		/* count up the targets, creating menu items for them */
+		for ( ; menu_items < ARRAY_LENGTH(item_list); menu_items++)
+		{
+			/* get the indexed target */
+			render_target *target = render_target_get_indexed(menu_items);
+			if (target == NULL)
+				break;
+
+			/* create a string for the item */
+			item_list[menu_items].text = &menu_string_pool[menu_string_pool_offset];
+			menu_string_pool_offset += sprintf(&menu_string_pool[menu_string_pool_offset], "%s%d", ui_getstring(UI_screen), menu_items) + 1;
+		}
+
+		/* if we only ended up with one, auto-select it */
+		if (menu_items == 1)
+			return menu_video(0 << 16);
+
+		/* add an item to return */
+		item_list[menu_items++].text = ui_getstring(UI_returntomain);
+
+		/* draw the menu */
+		ui_draw_menu(item_list, menu_items, selected);
+
+		/* handle the keys */
+		if (ui_menu_generic_keys(&selected, menu_items))
+			return selected | (curtarget << 16);
+
+		/* handle actions */
+		if (input_ui_pressed(IPT_UI_SELECT))
+			return (selected << 16) | 0;
+	}
+
+	/* otherwise, draw the list of layouts */
+	else
+	{
+		render_target *target = render_target_get_indexed(curtarget);
+		assert(target != NULL);
+
+		/* add all the views */
+		for ( ; menu_items < ARRAY_LENGTH(item_list); menu_items++)
+		{
+			const char *name = render_target_get_view_name(target, menu_items);
+			if (name == NULL)
+				break;
+
+			/* create a string for the item */
+			item_list[menu_items].text = name;
+		}
+
+		/* add an item to return */
+		item_list[menu_items++].text = ui_getstring(UI_returntomain);
+
+		/* draw the menu */
+		ui_draw_menu(item_list, menu_items, selected);
+
+		/* handle the keys */
+		if (ui_menu_generic_keys(&selected, menu_items))
+			return selected | (curtarget << 16);
+
+		/* handle actions */
+		if (input_ui_pressed(IPT_UI_SELECT))
+			render_target_set_view(target, selected);
+	}
+
+	return selected | (curtarget << 16);
+}
+#endif
+
+
+
+/*************************************
+ *
  *  Game reset action
  *
  *************************************/
@@ -3873,7 +4033,7 @@ static void showcharset(mame_bitmap *bitmap)
 		static const rectangle fullrect = { 0, 10000, 0, 10000 };
 		int back = ui_bgcolor;
 
-		ui_bgcolor = RGB_BLACK;
+		ui_bgcolor = ARGB_BLACK;
 
 		/* mark the whole thing dirty */
 		artwork_mark_ui_dirty(fullrect.min_x, fullrect.min_y, fullrect.max_x, fullrect.max_y);
@@ -4592,8 +4752,8 @@ static void drawbar(int leftx, int topy, int width, int height, int percentage, 
 	current_x = leftx + (width - 1) * percentage / 100;
 
 	/* draw the top and bottom lines */
-	add_line(leftx, bar_top, leftx + width - 1, bar_top, RGB_WHITE);
-	add_line(leftx, bar_bottom, leftx + width - 1, bar_bottom, RGB_WHITE);
+	add_line(leftx, bar_top, leftx + width - 1, bar_top, ARGB_WHITE);
+	add_line(leftx, bar_bottom, leftx + width - 1, bar_bottom, ARGB_WHITE);
 
 #ifdef UI_COLOR_DISPLAY
 	/* top of the bar */
@@ -4612,11 +4772,11 @@ static void drawbar(int leftx, int topy, int width, int height, int percentage, 
 	add_line(default_x, bar_top - 1, default_x, bar_bottom + 1, OSDBAR_COLOR_DEFAULTBAR);
 #else /* UI_COLOR_DISPLAY */
 	/* draw default marker */
-	add_line(default_x, topy, default_x, bar_top, RGB_WHITE);
-	add_line(default_x, bar_bottom, default_x, topy + height - 1, RGB_WHITE);
+	add_line(default_x, topy, default_x, bar_top, ARGB_WHITE);
+	add_line(default_x, bar_bottom, default_x, topy + height - 1, ARGB_WHITE);
 
 	/* fill in the percentage */
-	add_fill(leftx, bar_top + 1, current_x, bar_bottom - 1, RGB_WHITE);
+	add_fill(leftx, bar_top + 1, current_x, bar_bottom - 1, ARGB_WHITE);
 #endif /* UI_COLOR_DISPLAY */
 }
 
@@ -4642,7 +4802,7 @@ static void displayosd(const char *text,int percentage,int default_percentage)
 
 	/* determine the text height */
 	ui_draw_text_full(text, 0, 0, ui_width - 2 * UI_BOX_LR_BORDER, 0, 0,
-				JUSTIFY_CENTER, WRAP_WORD, DRAW_NONE, RGB_WHITE, RGB_BLACK, NULL, &text_height);
+				JUSTIFY_CENTER, WRAP_WORD, DRAW_NONE, ARGB_WHITE, ARGB_BLACK, NULL, &text_height);
 
 	/* add a box around the whole area */
 	add_filled_box(	space_width,
@@ -4656,7 +4816,7 @@ static void displayosd(const char *text,int percentage,int default_percentage)
 
 	/* draw the actual text */
 	ui_draw_text_full(text, space_width + UI_BOX_LR_BORDER, line_height + ui_height - UI_BOX_TB_BORDER - text_height, ui_width - 2 * UI_BOX_LR_BORDER, 0, text_height / ui_get_line_height(),
-				JUSTIFY_CENTER, WRAP_WORD, DRAW_NORMAL, RGB_WHITE, RGB_BLACK, NULL, &text_height);
+				JUSTIFY_CENTER, WRAP_WORD, DRAW_NORMAL, ARGB_WHITE, ARGB_BLACK, NULL, &text_height);
 }
 
 static void onscrd_adjuster(int increment,int arg)
@@ -5120,7 +5280,7 @@ void ui_display_fps(void)
 
 	/* get the current FPS text */
 	ui_draw_text_full(osd_get_fps_text(mame_get_performance_info()), 0, 0, ui_width, 0, 0,
-				JUSTIFY_RIGHT, WRAP_WORD, DRAW_OPAQUE, RGB_WHITE, ui_bgcolor, NULL, NULL);
+				JUSTIFY_RIGHT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, ui_bgcolor, NULL, NULL);
 
 	/* update the temporary FPS display state */
 	if (showfpstemp)
@@ -5138,7 +5298,7 @@ static void ui_display_profiler(void)
 	if (show_profiler)
 	{
 		ui_get_bounds(&ui_width, &ui_height);
-		ui_draw_text_full(profiler_get_text(), 0, 0, ui_width, 0, 0, JUSTIFY_LEFT, WRAP_WORD, DRAW_OPAQUE, RGB_WHITE, ui_bgcolor, NULL, NULL);
+		ui_draw_text_full(profiler_get_text(), 0, 0, ui_width, 0, 0, JUSTIFY_LEFT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, ui_bgcolor, NULL, NULL);
 	}
 }
 
@@ -5340,9 +5500,9 @@ static void render_ui(mame_bitmap *dest)
 			ui_need_scroll = TRUE;
 
 #ifdef UI_COLOR_DISPLAY
-		if (color == RGB_BLACK)
+		if (color == ARGB_BLACK)
 			color = get_black_pen();
-		else if (color == RGB_WHITE)
+		else if (color == ARGB_WHITE)
 			color = get_white_pen();
 		else if (color == UI_SCROLL_TEXT_COLOR)
 		{
@@ -5354,7 +5514,7 @@ static void render_ui(mame_bitmap *dest)
 		else if (color < MAX_COLORTABLE)
 			color = uifont_colortable[color];
 #else /* UI_COLOR_DISPLAY */
-		if (color)
+		if (color & 0xffffff)
 			color = get_white_pen();
 		else
 			color = get_black_pen();
@@ -5418,13 +5578,13 @@ int ui_get_line_height(void)
 
 int ui_get_char_width(UINT16 ch)
 {
-	return UI_SCALE_TO_INT(render_font_get_char_width(ui_font, UI_FONT_HEIGHT, ch));
+	return UI_SCALE_TO_INT(render_font_get_char_width(ui_font, UI_FONT_HEIGHT, render_get_ui_aspect(), ch));
 }
 
 
 int ui_get_string_width(const char *s)
 {
-	return UI_SCALE_TO_INT(render_font_get_string_width(ui_font, UI_FONT_HEIGHT, s));
+	return UI_SCALE_TO_INT(render_font_get_string_width(ui_font, UI_FONT_HEIGHT, render_get_ui_aspect(), s));
 }
 #endif
 
@@ -5456,10 +5616,10 @@ static void add_filled_box_color(int x1, int y1, int x2, int y2, rgb_t color)
 #else /* UI_COLOR_DISPLAY */
 	add_fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, color);
 
-	add_line(x1, y1, x2, y1, RGB_WHITE);
-	add_line(x2, y1, x2, y2, RGB_WHITE);
-	add_line(x2, y2, x1, y2, RGB_WHITE);
-	add_line(x1, y2, x1, y1, RGB_WHITE);
+	add_line(x1, y1, x2, y1, ARGB_WHITE);
+	add_line(x2, y1, x2, y2, ARGB_WHITE);
+	add_line(x2, y2, x1, y2, ARGB_WHITE);
+	add_line(x1, y2, x1, y1, ARGB_WHITE);
 #endif /* UI_COLOR_DISPLAY */
 }
 
@@ -5472,7 +5632,7 @@ static void add_filled_box(int x1, int y1, int x2, int y2)
 
 static void add_filled_box_black(int x1, int y1, int x2, int y2)
 {
-	add_filled_box_color(x1, y1, x2, y2, RGB_BLACK);
+	add_filled_box_color(x1, y1, x2, y2, ARGB_BLACK);
 }
 
 
@@ -5482,7 +5642,7 @@ static void add_filled_box_noedge(int x1, int y1, int x2, int y2)
 #ifdef UI_COLOR_DISPLAY
 	add_fill(x1, y1, x2, y2, ui_bgcolor);
 #else /* UI_COLOR_DISPLAY */
-	add_fill(x1, y1, x2, y2, RGB_BLACK);
+	add_fill(x1, y1, x2, y2, ARGB_BLACK);
 #endif /* UI_COLOR_DISPLAY */
 }
 #endif /* USE_SHOW_INPUT_LOG */
