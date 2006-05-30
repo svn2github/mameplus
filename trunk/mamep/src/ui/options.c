@@ -441,16 +441,22 @@ static struct rc_option rc_game_opts[] =
 	{ "waitvsync", NULL, rc_bool, &gOpts.wait_vsync, "0", 0, 0, NULL, "wait for vertical sync (reduces tearing)"},
 	{ "triplebuffer", "tb", rc_bool, &gOpts.use_triplebuf, "0", 0, 0, NULL, "triple buffering (only if fullscreen)" },
 	{ "window", "w", rc_bool, &gOpts.window_mode, "0", 0, 0, NULL, "run in a window/run on full screen" },
+#ifndef NEW_RENDER
 	{ "ddraw", "dd", rc_bool, &gOpts.use_ddraw, "1", 0, 0, NULL, "use DirectDraw for rendering" },
+#endif
 	{ "direct3d", "d3d", rc_bool, &gOpts.use_d3d, "0", 0, 0, NULL, "use Direct3D for rendering" },
+#ifndef NEW_RENDER
 	{ "hwstretch", "hws", rc_bool, &gOpts.ddraw_stretch, "1", 0, 0, NULL, "stretch video using the hardware" },
+#endif
 	{ "screen", NULL, rc_string, &gOpts.screen, NULL, 0, 0, NULL, "specify which screen to use" },
 	{ "cleanstretch", "cs", rc_string, &gOpts.clean_stretch, "auto", 0, 0, CleanStretchDecodeString, "stretch to integer ratios" },
 	{ "resolution", "r", rc_string, &gOpts.resolution, "auto", 0, 0, NULL, "set resolution" },
 	{ "refresh", NULL, rc_int, &gOpts.gfx_refresh, "0", 0, 0, NULL, "set specific monitor refresh rate" },
 	{ "scanlines", "sl", rc_bool, &gOpts.scanlines, "0", 0, 0, NULL, "emulate win_old_scanlines" },
 	{ "switchres", NULL, rc_bool, &gOpts.switchres, "1", 0, 0, NULL, "switch resolutions to best fit" },
+#ifndef NEW_RENDER
 	{ "switchbpp", NULL, rc_bool, &gOpts.switchbpp, "1", 0, 0, NULL, "switch color depths to best fit" },
+#endif
 	{ "maximize", "max", rc_bool, &gOpts.maximize, "1", 0, 0, NULL, "start out maximized" },
 	{ "keepaspect", "ka", rc_bool, &gOpts.keepaspect, "1", 0, 0, NULL, "enforce aspect ratio" },
 	{ "matchrefresh", NULL, rc_bool, &gOpts.matchrefresh, "0", 0, 0, NULL, "attempt to match the game's refresh rate" },
@@ -458,13 +464,16 @@ static struct rc_option rc_game_opts[] =
 	{ "throttle", NULL, rc_bool, &gOpts.throttle, "1", 0, 0, NULL, "throttle speed to the game's framerate" },
 	{ "full_screen_gamma", "fsg", rc_float, &gOpts.gfx_gamma, "1.0", 0.0, 4.0, NULL, "sets the gamma in full screen mode" },
 	{ "frames_to_run", "ftr", rc_int, &gOpts.frames_to_display, "0", 0, 0, NULL, "sets the number of frames to run within the game" },
+#ifndef NEW_RENDER
 	{ "effect", NULL, rc_string, &gOpts.effect, "none", 0, 0, NULL, "specify the blitting effect" },
+#endif
 	{ "screen_aspect", NULL, rc_string, &gOpts.aspect, "4:3", 0, 0, NULL, "specify an alternate monitor aspect ratio" },
 	{ "mngwrite", NULL, rc_string, &gOpts.mngwrite, NULL, 0, 0, NULL, "save video in specified mng file" },
 #ifdef USE_SCALE_EFFECTS
 	{ "scale_effect", NULL, rc_string, &gOpts.scale_effect, "none", 0, 0, NULL, "SaI scale effect" },
 #endif /* USE_SCALE_EFFECTS */
 
+#ifndef NEW_RENDER
 	{ "Windows Direct3D 2D video options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
 	{ "zoom", "z", rc_int, &gOpts.zoom, "2", 1, 8, NULL, "force specific zoom level" },
 	{ "d3dtexmanage", NULL, rc_bool, &gOpts.d3d_texture_management, "1", 0, 0, NULL, "Use DirectX texture management" },
@@ -472,6 +481,7 @@ static struct rc_option rc_game_opts[] =
 	{ NULL, NULL, rc_link, rc_game_d3d_override_opts, NULL, 0, 0, NULL, NULL },
 	{ "d3dcustom", NULL, rc_string, &gOpts.d3d_rc_custom, NULL, 0, 0, NULL, "customised blitting effects preset" },
 	{ "d3dexpert", NULL, rc_string, &gOpts.d3d_rc_expert, NULL, 0, 0, NULL, "additional customised settings (undocumented)" },
+#endif
 
 	{ "Windows misc options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
 	{ "sleep", NULL, rc_bool, &gOpts.sleep, "1", 0, 0, NULL, "allow MAME to give back time to the system when it's not needed" },
@@ -531,7 +541,6 @@ static struct rc_option rc_game_opts[] =
 	/* vector */
 	{ "Mame CORE vector game options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
 	{ "antialias", "aa", rc_bool, &gOpts.antialias, "1", 0, 0, NULL, "draw antialiased vectors" },
-	{ "translucency", "tl", rc_bool, &gOpts.translucency, "1", 0, 0, NULL, "draw translucent vectors" },
 	{ "beam", NULL, rc_float, &gOpts.f_beam, "1.0", 0.1, 16.0, NULL, "set beam width in vector " GAMESNOUN },
 	{ "flicker", NULL, rc_float, &gOpts.f_flicker, "0.0", 0.0, 100.0, NULL, "set flickering in vector " GAMESNOUN },
 	{ "intensity", NULL, rc_float, &gOpts.f_intensity, "1.5", 0.5, 3.0, NULL, "set intensity in vector " GAMESNOUN },
@@ -549,12 +558,14 @@ static struct rc_option rc_game_opts[] =
 	/* misc */
 	{ "Mame CORE misc options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
 	{ "validate", "valid", rc_bool, &gOpts.validate, "0", 0, 0, NULL, "validate all game drivers" },
+#ifndef NEW_RENDER
 	{ "artwork", "art", rc_bool, &gOpts.use_artwork, "1", 0, 0, NULL, "use additional " GAMENOUN " artwork (sets default for specific options below)" },
 	{ "use_backdrops", "backdrop", rc_bool, &gOpts.backdrops, "1", 0, 0, NULL, "use backdrop artwork" },
 	{ "use_overlays", "overlay", rc_bool, &gOpts.overlays, "1", 0, 0, NULL, "use overlay artwork" },
 	{ "use_bezels", "bezel", rc_bool, &gOpts.bezels, "1", 0, 0, NULL, "use bezel artwork" },
 	{ "artwork_crop", "artcrop", rc_bool, &gOpts.artwork_crop, "0", 0, 0, NULL, "crop artwork to " GAMENOUN " screen only" },
 	{ "artwork_resolution", "artres", rc_int, &gOpts.artres, "0", 0, 0, NULL, "artwork resolution (0 for auto)" },
+#endif
 	{ "cheat", "c", rc_bool, &gOpts.cheat, "0", 0, 0, NULL, "enable/disable cheat subsystem" },
 	{ "debug", "d", rc_bool, &gOpts.mame_debug, "0", 0, 0, NULL, "enable/disable debugger (only if available)" },
 	{ "debugscript", NULL, rc_string, &gOpts.mame_debugscript, NULL, 0, 0, NULL, "script for debugger (only if available)" },

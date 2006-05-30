@@ -151,7 +151,6 @@ typedef struct
 
 	/* Core vector */
 	BOOL   antialias;
-	BOOL   translucency;
 	float  f_beam;
 	float  f_flicker;
 	float  f_intensity;

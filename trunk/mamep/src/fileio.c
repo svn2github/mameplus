@@ -195,6 +195,9 @@ mame_file *mame_fopen_error(const char *gamename, const char *filename, int file
 
 		/* write-only cases */
 		case FILETYPE_SCREENSHOT:
+#ifdef WINUI
+			break;
+#endif
 		case FILETYPE_MOVIE:
 		case FILETYPE_DEBUGLOG:
 			if (!openforwrite)
@@ -301,6 +304,9 @@ mame_file *mame_fopen_error(const char *gamename, const char *filename, int file
 
 		/* screenshot files */
 		case FILETYPE_SCREENSHOT:
+#ifdef WINUI
+			return generic_fopen(filetype, NULL, filename, 0, openforwrite ? FILEFLAG_OPENWRITE : FILEFLAG_OPENREAD, error);
+#endif
 		case FILETYPE_MOVIE:
 #ifndef MESS
 			return generic_fopen(filetype, NULL, filename, 0, FILEFLAG_OPENWRITE, error);

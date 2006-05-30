@@ -187,7 +187,6 @@
 #define IDC_PROP_SAMPLES                1078
 #define IDC_PROP_CLONEOF_TEXT           1079
 #define IDC_PROP_CLONEOF                1080
-#define IDC_TRANSLUCENCY                1081
 #define IDC_VERSION                     1082
 #define IDC_ARTWORK                     1083
 #define IDC_FSGAMMA                     1084

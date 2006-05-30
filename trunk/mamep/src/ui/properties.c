@@ -341,7 +341,6 @@ static DWORD dwHelpIDs[] =
 	IDC_SWITCHRES,          HIDC_SWITCHRES,
 	IDC_SYNCREFRESH,        HIDC_SYNCREFRESH,
 	IDC_THROTTLE,           HIDC_THROTTLE,
-	IDC_TRANSLUCENCY,       HIDC_TRANSLUCENCY,
 	IDC_TRIPLE_BUFFER,      HIDC_TRIPLE_BUFFER,
 	IDC_USE_DEFAULT,        HIDC_USE_DEFAULT,
 	IDC_USE_MOUSE,          HIDC_USE_MOUSE,
@@ -3366,7 +3365,6 @@ static void BuildDataMap(void)
 
 	/* vector */
 	DataMapAdd(IDC_ANTIALIAS,     DM_BOOL, CT_BUTTON,   &pGameOpts->antialias,     DM_BOOL,  &pGameOpts->antialias,        0, 0, 0);
-	DataMapAdd(IDC_TRANSLUCENCY,  DM_BOOL, CT_BUTTON,   &pGameOpts->translucency,  DM_BOOL,  &pGameOpts->translucency,     0, 0, 0);
 	DataMapAdd(IDC_BEAM,          DM_INT,  CT_SLIDER,   &g_nBeamIndex,             DM_FLOAT, &pGameOpts->f_beam,           0, 0, AssignBeam);
 	DataMapAdd(IDC_BEAMDISP,      DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->f_beam,           0, 0, 0);
 	DataMapAdd(IDC_FLICKER,       DM_INT,  CT_SLIDER,   &g_nFlickerIndex,          DM_FLOAT, &pGameOpts->f_flicker,        0, 0, AssignFlicker);

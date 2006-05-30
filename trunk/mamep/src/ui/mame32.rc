@@ -918,9 +918,6 @@ BEGIN
     CONTROL         "Draw antialiased vectors",IDC_ANTIALIAS,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,45,200,10,0,
                     HIDC_ANTIALIAS
-    CONTROL         "Draw translucent vectors",IDC_TRANSLUCENCY,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,59,200,10,0,
-                    HIDC_TRANSLUCENCY
     GROUPBOX        "Beam width",IDC_BEAMTEXT,75,75,110,28
     CONTROL         "BeamSlider",IDC_BEAM,"msctls_trackbar32",TBS_BOTH | 
                     TBS_NOTICKS | WS_TABSTOP,81,87,74,10,0,HIDC_BEAM

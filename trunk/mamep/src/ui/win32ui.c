@@ -947,13 +947,17 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	if (pOpts->use_triplebuf)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%stb",                  pOpts->use_triplebuf ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sw",                       pOpts->window_mode     ? "" : "no");
+#ifndef NEW_RENDER
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sdd",                      pOpts->use_ddraw       ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%shws",                     pOpts->ddraw_stretch   ? "" : "no");
+#endif
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -r %s",                      pOpts->resolution);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -refresh %d",                pOpts->gfx_refresh);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%ssl",                      pOpts->scanlines       ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sswitchres",               pOpts->switchres       ? "" : "no");
+#ifndef NEW_RENDER
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sswitchbpp",               pOpts->switchbpp       ? "" : "no");
+#endif
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%smax",                     pOpts->maximize        ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%ska",                      pOpts->keepaspect      ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%smatchrefresh",            pOpts->matchrefresh    ? "" : "no");
@@ -961,10 +965,11 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sthrottle",                pOpts->throttle        ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -fsg %f",                    pOpts->gfx_gamma);
 //	sprintf(&pCmdLine[strlen(pCmdLine)], " -ftr %d",                    pOpts->frames_to_display);
+#ifndef NEW_RENDER
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -effect %s",                 pOpts->effect);
+#endif
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -screen_aspect %s",          pOpts->aspect);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -cs %s",           pOpts->clean_stretch);
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -zoom %i", pOpts->zoom);
 #ifdef USE_SCALE_EFFECTS
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -scale_effect %s",           pOpts->scale_effect);
 #endif /* USE_SCALE_EFFECTS */
@@ -973,6 +978,8 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	if (pOpts->use_d3d)
 	{
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3d");
+#ifndef NEW_RENDER
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -zoom %i", pOpts->zoom);
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sflt",pOpts->d3d_filter?"":"no");
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sd3dtexmanage",    pOpts->d3d_texture_management ? "" : "no");
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3deffect %s",      pOpts->d3d_effect);
@@ -980,6 +987,7 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sd3deffectrotate", pOpts->d3d_rotate_effects ? "" : "no");
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3dscan %i",        pOpts->d3d_scanlines);
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3dfeedback %i",    pOpts->d3d_feedback);
+#endif
 	}
 	else
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -nod3d");
@@ -1098,6 +1106,7 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 #endif /* USE_VOLUME_AUTO_ADJUST */
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -audio_latency %i",          pOpts->audio_latency);
 
+#ifndef NEW_RENDER
 	/* misc artwork options */
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sart",                     pOpts->use_artwork     ? "" : "no");
 	if (pOpts->use_artwork == TRUE)
@@ -1108,6 +1117,7 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sartcrop",                 pOpts->artwork_crop    ? "" : "no");
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -artres %d",                 pOpts->artres);
 	}
+#endif
 
 	/* misc */
 //	sprintf(&pCmdLine[strlen(pCmdLine)], " -%svalidate",                  pOpts->validate      ? "" : "no");
@@ -1639,8 +1649,8 @@ HICON LoadIconFromFile(const char *iconname)
 			sprintf(tmpIcoName, "%s.ico", iconname);
 			if (stat(tmpStr, &file_stat) == 0)
 			{
-				SetCorePathList(FILETYPE_ARTWORK, GetIconsDir());
-				if (load_zipped_file(FILETYPE_ARTWORK, 0, "icons.zip", tmpIcoName, &bufferPtr, &bufferLen) == 0)
+				SetCorePathList(FILETYPE_SCREENSHOT, GetIconsDir());
+				if (load_zipped_file(FILETYPE_SCREENSHOT, 0, "icons.zip", tmpIcoName, &bufferPtr, &bufferLen) == 0)
 				{
 					hIcon = FormatICOInMemoryToHICON(bufferPtr, bufferLen);
 					free(bufferPtr);
@@ -1648,6 +1658,9 @@ HICON LoadIconFromFile(const char *iconname)
 			}
 		}
 	}
+
+	SetCorePathList(FILETYPE_SCREENSHOT, GetImgDir());
+
 	return hIcon;
 }
 

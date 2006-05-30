@@ -221,36 +221,36 @@ BOOL LoadDIB(LPCTSTR filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type)
 	switch (pic_type)
 	{
 	case TAB_SCREENSHOT :
-		SetCorePathList(FILETYPE_ARTWORK,GetImgDir());
+		SetCorePathList(FILETYPE_SCREENSHOT,GetImgDir());
 		zip_name = "snap";
 		break;
 	case TAB_FLYER :
-		SetCorePathList(FILETYPE_ARTWORK,GetFlyerDir());
+		SetCorePathList(FILETYPE_SCREENSHOT,GetFlyerDir());
 		zip_name = "flyers";
 		break;
 	case TAB_CABINET :
-		SetCorePathList(FILETYPE_ARTWORK,GetCabinetDir());
+		SetCorePathList(FILETYPE_SCREENSHOT,GetCabinetDir());
 		zip_name = "cabinets";
 		break;
 	case TAB_MARQUEE :
-		SetCorePathList(FILETYPE_ARTWORK,GetMarqueeDir());
+		SetCorePathList(FILETYPE_SCREENSHOT,GetMarqueeDir());
 		zip_name = "marquees";
 		break;
 	case TAB_TITLE :
-		SetCorePathList(FILETYPE_ARTWORK,GetTitlesDir());
+		SetCorePathList(FILETYPE_SCREENSHOT,GetTitlesDir());
 		zip_name = "titles";
 		break;
 	case TAB_CONTROL_PANEL :
-		SetCorePathList(FILETYPE_ARTWORK,GetControlPanelDir());
+		SetCorePathList(FILETYPE_SCREENSHOT,GetControlPanelDir());
 		zip_name = "cpanel";
 		break;
 	case BACKGROUND :
-		SetCorePathList(FILETYPE_ARTWORK,GetBgDir());
+		SetCorePathList(FILETYPE_SCREENSHOT,GetBgDir());
 		zip_name = "bkground";
 		break;
 #ifdef USE_IPS
 	case TAB_IPS :
-		SetCorePathList(FILETYPE_ARTWORK,GetPatchDir());
+		SetCorePathList(FILETYPE_SCREENSHOT,GetPatchDir());
 		zip_name = "ips";
 		break;
 #endif /* USE_IPS */
@@ -261,12 +261,14 @@ BOOL LoadDIB(LPCTSTR filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type)
 
 	// look for the raw file
 	dprintf("LoadDIB %s", filename);
-	mfile = mame_fopen(NULL,filename,FILETYPE_ARTWORK,0);
+	mfile = mame_fopen(NULL,filename,FILETYPE_SCREENSHOT,0);
 	if (mfile == NULL)
 	{
 		// and look for the zip
-		mfile = mame_fopen(zip_name,filename,FILETYPE_ARTWORK,0);
+		mfile = mame_fopen(zip_name,filename,FILETYPE_SCREENSHOT,0);
 	}
+
+	SetCorePathList(FILETYPE_SCREENSHOT, GetImgDir());
 
 	if (mfile == NULL)
 		return FALSE;
