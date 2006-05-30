@@ -6,6 +6,47 @@
 
 struct monaco_gfx monaco_gfx;
 
+static gfx_element *led_font;
+
+static int build_led_font(void)
+{
+	static const UINT8 fontdata[10 * 8] =
+	{
+		0x70,0x88,0x88,0x88,0x88,0x88,0x70,0x00,
+		0x10,0x30,0x10,0x10,0x10,0x10,0x10,0x00,
+		0x70,0x88,0x08,0x10,0x20,0x40,0xf8,0x00,
+		0x70,0x88,0x08,0x30,0x08,0x88,0x70,0x00,
+		0x10,0x30,0x50,0x90,0xf8,0x10,0x10,0x00,
+		0xf8,0x80,0xf0,0x08,0x08,0x88,0x70,0x00,
+		0x70,0x80,0xf0,0x88,0x88,0x88,0x70,0x00,
+		0xf8,0x08,0x08,0x10,0x20,0x20,0x20,0x00,
+		0x70,0x88,0x88,0x70,0x88,0x88,0x70,0x00,
+		0x70,0x88,0x88,0x88,0x78,0x08,0x70,0x00
+	};
+	static const gfx_layout layout =
+	{
+		8,6,
+		10,
+		1,
+		{ 0 },
+		{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
+		{ 0, 1, 2, 3, 4, 5 },
+		8*8
+	};
+	static pen_t colortable[2];
+
+	led_font = allocgfx(&layout);
+	if (!led_font)
+		fatalerror("Fatal error: could not allocate memory for decimal font!");
+
+	decodegfx(led_font, fontdata, 0, led_font->total_elements);
+
+	led_font->colortable = colortable;
+	led_font->total_colors = 1;
+
+	return 0;
+}
+
 static void draw_computer( mame_bitmap *bitmap )
 {
 	const rectangle *clip = &Machine->visible_area[0];
@@ -525,38 +566,28 @@ static void draw_leds( mame_bitmap *bitmap )
 {
 	int i, data;
 
-	data = monaco_gfx.led_score;
+	led_font->colortable[0] = get_black_pen();
+	led_font->colortable[1] = get_white_pen();
 
+	data = monaco_gfx.led_score;
 	for( i=3; i>=0; i-- )
 	{
-#if 1		// FIXME
-		uifont_drawchar(bitmap,
-			'0'+(data%10),0, /* number, color */
-			0,SCREEN_HEIGHT-6-i*6, NULL);
-#else
-		drawgfx( bitmap, Machine->uifont,
-			'0'+(data%10),0, /* number, color */
+		drawgfx( bitmap, led_font,
+			data%10,0, /* number, color */
 			0,1, /* no flip */
 			0,SCREEN_HEIGHT-6-i*6,
 			NULL, TRANSPARENCY_NONE,0 );
-#endif
 		data = data/10;
 	}
 
 	data = monaco_gfx.led_time;
 	for( i=1; i>=0; i-- )
 	{
-#if 1		// FIXME
-		uifont_drawchar(bitmap,
-			'0'+(data%10),0, /* number, color */
-			12,SCREEN_HEIGHT-6-i*6, NULL);
-#else
-		drawgfx( bitmap, Machine->uifont,
-			'0'+(data%10),0, /* number, color */
+		drawgfx( bitmap, led_font,
+			data%10,0, /* number, color */
 			0,1, /* no flip */
 			12,SCREEN_HEIGHT-6-i*6,
 			NULL, TRANSPARENCY_NONE,0 );
-#endif
 		data = data/10;
 	}
 }
@@ -656,5 +687,6 @@ VIDEO_START( monaco )
 	palette_set_color( 0x96, 132,132,132 ); // grey (road)
 // 0,198,255: wet road
 // 255,215,0: yellow trim
-	return 0;
+
+	return build_led_font();
 }

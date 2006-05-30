@@ -1172,7 +1172,7 @@ MACHINE_DRIVER_END
 /*****************************************************************/
 
 ROM_START( monaco )
-	ROM_REGION( 0x10000, REGION_CPU1, 0 )	/* fake */
+	ROM_REGION( 0x10000, REGION_CPU1, ROMREGION_ERASE00 )	/* fake */
 
 	ROM_REGION( 0x3000, REGION_GFX1, 0 )
 	ROM_LOAD( "pr125", 512*0,  512, CRC(7a66ed4c) SHA1(514e129c334a551b931c90b063b073a9b4bdffc3) ) /* light data */
