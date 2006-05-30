@@ -145,7 +145,7 @@ struct rc_option fileio_opts[] =
 #ifdef USE_IPS
 	{ "ips_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_PATCH].rawpath, "ips", 0, 0, NULL, "directory for ips files" },
 #endif /* USE_IPS */
-	{ "lang_directory", NULL, rc_string, (char *)&lang_directory, "lang", 0, 0, NULL, "directory for localized language files" },
+	{ "lang_directory", NULL, rc_string, (char *)&lang_directory, "lang", 0, 0, NULL, "directory for localized data files" },
 	{ "cheat_file", NULL, rc_string, &cheatfile, "cheat.dat", 0, 0, NULL, "cheat filename" },
 	{ "history_file", NULL, rc_string, (char *)&history_filename, "history.dat", 0, 0, NULL, NULL },
 #ifdef STORY_DATAFILE

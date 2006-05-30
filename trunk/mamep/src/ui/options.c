@@ -620,7 +620,7 @@ static struct rc_option rc_mamew_opts[] =
 #ifdef USE_IPS
 	{ "ips_directory", NULL, rc_string, &settings.patchdir, "ips", 0, 0, NULL, "directory for ips files" },
 #endif /* USE_IPS */
-	{ "lang_directory", NULL, rc_string, &settings.langdir, "lang", 0, 0, NULL, "directory for localized language files" },
+	{ "lang_directory", NULL, rc_string, &settings.langdir, "lang", 0, 0, NULL, "directory for localized data files" },
 	{ "cheat_file", NULL, rc_string, &settings.cheat_filename, "cheat.dat", 0, 0, NULL, "cheat filename" },
 	{ "history_file", NULL, rc_string, &settings.history_filename, "history.dat", 0, 0, NULL, NULL },
 #ifdef STORY_DATAFILE
