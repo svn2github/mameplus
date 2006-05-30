@@ -82,7 +82,11 @@ enum
 };
 
 #ifdef TRANS_UI
+#ifndef NEW_RENDER
 #define UI_TRANSPARENT_COLOR	0xfffffffe
+#else
+#define UI_TRANSPARENT_COLOR	SYSTEM_COLOR_BACKGROUND
+#endif
 #endif /* TRANS_UI */
 
 enum
@@ -176,6 +180,8 @@ static int next_caption_frame, caption_timer;
 
 #ifdef NEW_RENDER
 static rgb_t uifont_colortable[MAX_COLORTABLE];
+static render_texture *bgtexture;
+static mame_bitmap *bgbitmap;
 #endif
 
 static rgb_t ui_bgcolor;
@@ -344,21 +350,22 @@ static void ui_rot2raw_rect(rectangle *rect);
 static void add_line(int x1, int y1, int x2, int y2, rgb_t color);
 static void add_fill(int left, int top, int right, int bottom, rgb_t color);
 static void add_char(int x, int y, UINT16 ch, int color);
-static void add_filled_box(int x1, int y1, int x2, int y2);
 static void render_ui(mame_bitmap *dest);
 /* -- end this stuff will go away with the new rendering system */
 #else
+static void build_bgtexture(void);
+static void free_bgtexture(void);
 static rgb_t ui_get_rgb_color(rgb_t color);
 
 #define add_line(x0,y0,x1,y1,color)	render_ui_add_line(UI_UNSCALE_TO_FLOAT(x0), UI_UNSCALE_TO_FLOAT(y0), UI_UNSCALE_TO_FLOAT(x1), UI_UNSCALE_TO_FLOAT(y1), UI_LINE_WIDTH, ui_get_rgb_color(color), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA))
-#define add_fill(x0,y0,x1,y1,color) render_ui_add_rect(UI_UNSCALE_TO_FLOAT(x0), UI_UNSCALE_TO_FLOAT(y0), UI_UNSCALE_TO_FLOAT(x1), UI_UNSCALE_TO_FLOAT(y1), ui_get_rgb_color(color), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA))
+static void add_fill(int x0, int y0, int x1, int y1, rgb_t color);
 #define add_char(x,y,ch,color)		render_ui_add_char(UI_UNSCALE_TO_FLOAT(x), UI_UNSCALE_TO_FLOAT(y), UI_FONT_HEIGHT, render_get_ui_aspect(), ui_get_rgb_color(color), ui_font, ch)
-static void add_filled_box(int x1, int y1, int x2, int y2);
 #endif
 
-static void add_filled_box_black(int x1, int y1, int x2, int y2);
+static void add_filled_box(int x0, int y0, int x1, int y1);
+static void add_filled_box_black(int x0, int y0, int x1, int y1);
 #ifdef USE_SHOW_INPUT_LOG
-static void add_filled_box_noedge(int x1, int y1, int x2, int y2);
+static void add_filled_box_noedge(int x0, int y0, int x1, int y1);
 #endif /* USE_SHOW_INPUT_LOG */
 
 
@@ -411,6 +418,8 @@ int ui_init(void)
 	/* build up the font */
 	create_font();
 #else
+	build_bgtexture();
+
 	ui_font = render_font_alloc("ui.bdf");
 
 	{
@@ -422,14 +431,6 @@ int ui_init(void)
 				options.uicolortable[i][0],
 				options.uicolortable[i][1],
 				options.uicolortable[i][2]);
-#ifdef TRANS_UI
-		if (options.use_transui)
-			uifont_colortable[SYSTEM_COLOR_BACKGROUND] = MAKE_ARGB(
-				options.ui_transparency,
-				options.uicolortable[SYSTEM_COLOR_BACKGROUND][0],
-				options.uicolortable[SYSTEM_COLOR_BACKGROUND][1],
-				options.uicolortable[SYSTEM_COLOR_BACKGROUND][2]);
-#endif /* TRANS_UI */
 	}
 #endif
 
@@ -484,6 +485,8 @@ void ui_exit(void)
 	ui_font = NULL;
 #else
 	uifont_freefont();
+
+	free_bgtexture();
 #endif
 }
 
@@ -5645,6 +5648,55 @@ int ui_get_string_width(const char *s)
 	return UI_SCALE_TO_INT(render_font_get_string_width(ui_font, UI_FONT_HEIGHT, render_get_ui_aspect(), s));
 }
 
+static void build_bgtexture(void)
+{
+	rgb_t pen;
+	int i;
+
+	bgbitmap = bitmap_alloc_depth(1, 1024, 32);
+	if (!bgbitmap)
+		fatalerror("build_bgtexture failed");
+
+	pen = MAKE_ARGB(
+		0xff,
+		options.uicolortable[SYSTEM_COLOR_BACKGROUND][0],
+		options.uicolortable[SYSTEM_COLOR_BACKGROUND][1],
+		options.uicolortable[SYSTEM_COLOR_BACKGROUND][2]);
+
+	for (i = 0; i < bgbitmap->height; i++)
+	{
+#ifdef TRANS_UI
+		if (options.use_transui)
+		{
+			double gradual = (float)(1024 - i) / 1024.0f + 0.1f;
+
+			if (gradual > 1.0f)
+				gradual = 1.0f;
+			else if (gradual < 0.2f)
+				gradual = 0.2f;
+
+			pen = MAKE_ARGB(
+				options.ui_transparency,
+				(UINT8)(options.uicolortable[SYSTEM_COLOR_BACKGROUND][0] * gradual),
+				(UINT8)(options.uicolortable[SYSTEM_COLOR_BACKGROUND][1] * gradual),
+				(UINT8)(options.uicolortable[SYSTEM_COLOR_BACKGROUND][2] * gradual));
+		}
+#endif /* TRANS_UI */
+
+		*(UINT32 *)bgbitmap->line[i] = pen;
+	}
+
+	bgtexture = render_texture_alloc(bgbitmap, NULL, NULL, TEXFORMAT_ARGB32_PM, render_texture_hq_scale, NULL);
+}
+
+static void free_bgtexture(void)
+{
+	bitmap_free(bgbitmap);
+	bgbitmap = NULL;
+	render_texture_free(bgtexture);
+	bgtexture = NULL;
+}
+
 static rgb_t ui_get_rgb_color(rgb_t color)
 {
 	if (color < MAX_COLORTABLE)
@@ -5654,14 +5706,18 @@ static rgb_t ui_get_rgb_color(rgb_t color)
 	if (color == UI_SCROLL_TEXT_COLOR)
 		return ARGB_WHITE;
 
-	// fixme
-	if (color == UI_TRANSPARENT_COLOR)
-		color = uifont_colortable[SYSTEM_COLOR_BACKGROUND];
-
 	return color;
 }
 
-static void add_filled_box_color(int x1, int y1, int x2, int y2, rgb_t color)
+static void add_fill(int x0, int y0, int x1, int y1, rgb_t color)
+{
+	if (color == UI_TRANSPARENT_COLOR)
+		render_container_add_quad(render_container_get_ui(), UI_UNSCALE_TO_FLOAT(x0), UI_UNSCALE_TO_FLOAT(y0), UI_UNSCALE_TO_FLOAT(x1), UI_UNSCALE_TO_FLOAT(y1), ARGB_WHITE, bgtexture, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+	else
+		render_ui_add_rect(UI_UNSCALE_TO_FLOAT(x0), UI_UNSCALE_TO_FLOAT(y0), UI_UNSCALE_TO_FLOAT(x1), UI_UNSCALE_TO_FLOAT(y1), ui_get_rgb_color(color), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+}
+
+static void add_filled_box_color(int x0, int y0, int x1, int y1, rgb_t color)
 {
 #ifdef UI_COLOR_DISPLAY
 	int w1 = UI_BOX_LR_BORDER / 3;
@@ -5669,66 +5725,66 @@ static void add_filled_box_color(int x1, int y1, int x2, int y2, rgb_t color)
 	int w3 = w1 * 3;
 	int mw = w1;
 
-	add_fill(x1 + w3, y1 + w3, x2 - w3, y2 - w3, color);
+	add_fill(x0 + w3, y0 + w3, x1 - w3, y1 - w3, color);
 
 	/* bottom edge */
-	add_fill(x1 + w3, y2 - w2 - mw, x2 - w2, y2 - w2, SYSTEM_COLOR_FRAMELIGHT);
+	add_fill(x0 + w3, y1 - w2 - mw, x1 - w2, y1 - w2, SYSTEM_COLOR_FRAMELIGHT);
 
 	/* right edge */
-	add_fill(x2 - w2 - mw, y1 + w3, x2 - w2, y2 - w3, SYSTEM_COLOR_FRAMELIGHT);
-	add_fill(x2 - w1 - mw, y1 + w2, x2 - w1, y2 - w2, SYSTEM_COLOR_FRAMEMEDIUM);
-	add_fill(x2      - mw, y1 + w1, x2,      y2 - w1, SYSTEM_COLOR_FRAMEDARK);
+	add_fill(x1 - w2 - mw, y0 + w3, x1 - w2, y1 - w3, SYSTEM_COLOR_FRAMELIGHT);
+	add_fill(x1 - w1 - mw, y0 + w2, x1 - w1, y1 - w2, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_fill(x1      - mw, y0 + w1, x1,      y1 - w1, SYSTEM_COLOR_FRAMEDARK);
 
 	/* bottom edge */
-	add_fill(x1,      y2      - mw, x2,      y2,      SYSTEM_COLOR_FRAMEDARK);
+	add_fill(x0,      y1      - mw, x1,      y1,      SYSTEM_COLOR_FRAMEDARK);
 	/* top edge */
-	add_fill(x1 + w2, y1 + w2, x2 - w2, y1 + w2 + mw, SYSTEM_COLOR_FRAMEDARK);
+	add_fill(x0 + w2, y0 + w2, x1 - w2, y0 + w2 + mw, SYSTEM_COLOR_FRAMEDARK);
 	/* left edge */
-	add_fill(x1 + w2, y1 + w2, x1 + w2 + mw, y2 - w1, SYSTEM_COLOR_FRAMEDARK);
+	add_fill(x0 + w2, y0 + w2, x0 + w2 + mw, y1 - w1, SYSTEM_COLOR_FRAMEDARK);
 
 	/* bottom edge */
-	add_fill(x1 + w1, y2 - w1 - mw, x2 - w1, y2 - w1, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_fill(x0 + w1, y1 - w1 - mw, x1 - w1, y1 - w1, SYSTEM_COLOR_FRAMEMEDIUM);
 	/* top edge */
-	add_fill(x1 + w1, y1 + w1, x2 - w1, y1 + w1 + mw, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_fill(x0 + w1, y0 + w1, x1 - w1, y0 + w1 + mw, SYSTEM_COLOR_FRAMEMEDIUM);
 	/* left edge */
-	add_fill(x1 + w1, y1 + w1, x1 + w1 + mw, y2 - w1, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_fill(x0 + w1, y0 + w1, x0 + w1 + mw, y1 - w1, SYSTEM_COLOR_FRAMEMEDIUM);
 
 	/* top edge */
-	add_fill(x1,      y1,      x2,      y1      + mw, SYSTEM_COLOR_FRAMELIGHT);
+	add_fill(x0,      y0,      x1,      y0      + mw, SYSTEM_COLOR_FRAMELIGHT);
 	/* left edge */
-	add_fill(x1,      y1,      x1      + mw, y2,      SYSTEM_COLOR_FRAMELIGHT);
+	add_fill(x0,      y0,      x0      + mw, y1,      SYSTEM_COLOR_FRAMELIGHT);
 
 #else /* UI_COLOR_DISPLAY */
-	add_fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, color);
+	add_fill(x0 + 1, y0 + 1, x1 - 1, y1 - 1, color);
 
-	add_line(x1, y1, x2, y1, ARGB_WHITE);
-	add_line(x2, y1, x2, y2, ARGB_WHITE);
-	add_line(x2, y2, x1, y2, ARGB_WHITE);
-	add_line(x1, y2, x1, y1, ARGB_WHITE);
+	add_line(x0, y0, x1, y0, ARGB_WHITE);
+	add_line(x1, y0, x1, y1, ARGB_WHITE);
+	add_line(x1, y1, x0, y1, ARGB_WHITE);
+	add_line(x0, y1, x0, y0, ARGB_WHITE);
 #endif /* UI_COLOR_DISPLAY */
 }
 #endif
 
 
-static void add_filled_box(int x1, int y1, int x2, int y2)
+static void add_filled_box(int x0, int y0, int x1, int y1)
 {
-	add_filled_box_color(x1, y1, x2, y2, ui_bgcolor);
+	add_filled_box_color(x0, y0, x1, y1, ui_bgcolor);
 }
 
 
-static void add_filled_box_black(int x1, int y1, int x2, int y2)
+static void add_filled_box_black(int x0, int y0, int x1, int y1)
 {
-	add_filled_box_color(x1, y1, x2, y2, ARGB_BLACK);
+	add_filled_box_color(x0, y0, x1, y1, ARGB_BLACK);
 }
 
 
 #ifdef USE_SHOW_INPUT_LOG
-static void add_filled_box_noedge(int x1, int y1, int x2, int y2)
+static void add_filled_box_noedge(int x0, int y0, int x1, int y1)
 {
 #ifdef UI_COLOR_DISPLAY
-	add_fill(x1, y1, x2, y2, ui_bgcolor);
+	add_fill(x0, y0, x1, y1, ui_bgcolor);
 #else /* UI_COLOR_DISPLAY */
-	add_fill(x1, y1, x2, y2, ARGB_BLACK);
+	add_fill(x0, y0, x1, y1, ARGB_BLACK);
 #endif /* UI_COLOR_DISPLAY */
 }
 #endif /* USE_SHOW_INPUT_LOG */
