@@ -14,6 +14,7 @@
 
 // standard windows headers
 #define WIN32_LEAN_AND_MEAN
+#define UNICODE
 #include <windows.h>
 #include <windowsx.h>
 
@@ -35,6 +36,12 @@
 #else
 #include "../debug/window.h"
 #endif
+
+#ifdef WINUI
+#include "ui/resource.h"
+#else
+#include "windows/resource.h"
+#endif /* WINUI */
 
 #ifdef MESS
 #include "menu.h"
@@ -249,7 +256,8 @@ int win_window_create(win_monitor_info *monitor, const char *layout, const char 
 	int result = 0;
 	HMENU menu = NULL;
 	RECT monitorbounds, client;
-	TCHAR title[256];
+	WCHAR title[256];
+	char buf[256];
 	HDC dc;
 
 	// allocate a new window object
@@ -299,7 +307,8 @@ int win_window_create(win_monitor_info *monitor, const char *layout, const char 
 	monitorbounds = monitor->info.rcMonitor;
 
 	// make the window title
-	sprintf(title, APPNAME ": %s [%s]", Machine->gamedrv->description, Machine->gamedrv->name);
+	sprintf(buf, APPNAME ": %s [%s]", (options.use_lang_list ? _LST(Machine->gamedrv->description) : Machine->gamedrv->description), Machine->gamedrv->name);
+	MultiByteToWideChar(ui_lang_info[options.langcode].codepage, 0, buf, -1, title, sizeof title);
 
 	// create the window menu if needed
 #if HAS_WINDOW_MENU
@@ -1203,7 +1212,11 @@ static int create_window_class(void)
 		wc.lpfnWndProc		= win_video_window_proc;
 #endif
 		wc.hCursor			= LoadCursor(NULL, IDC_ARROW);
-		wc.hIcon			= LoadIcon(NULL, IDI_APPLICATION);
+#ifdef WINUI
+		wc.hIcon			= LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_MAME32_ICON));
+#else /* WINUI */
+		wc.hIcon			= LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_MAME_ICON));
+#endif /* WINUI */
 		wc.lpszMenuName		= NULL;
 		wc.hbrBackground	= NULL;
 		wc.style			= 0;
@@ -1235,5 +1248,11 @@ static void update_system_menu(win_window_info *window)
 	// add to the system menu
 	menu = GetSystemMenu(window->hwnd, FALSE);
 	if (menu)
-		AppendMenu(menu, MF_ENABLED | MF_STRING, MENU_FULLSCREEN, "Full Screen\tAlt+Enter");
+	{
+		WCHAR buf[256];
+
+		MultiByteToWideChar(ui_lang_info[options.langcode].codepage,
+                                    0, _WINDOWS("Full Screen\tAlt+Enter"), -1, buf, sizeof (buf) / sizeof (*buf));
+		AppendMenu(menu, MF_ENABLED | MF_STRING, MENU_FULLSCREEN, buf);
+	}
 }

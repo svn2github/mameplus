@@ -1062,6 +1062,20 @@ int palette_init(void)
 	int i;
 	UINT32 temp;
 
+#ifdef NEW_RENDER
+	if (colormode == DIRECT_15BIT)
+	{
+		direct_rgb_components[0] = 0x1f << 10;
+		direct_rgb_components[1] = 0x1f << 5;
+		direct_rgb_components[2] = 0x1f;
+	}
+	else
+	{
+		direct_rgb_components[0] = 0xff << 16;
+		direct_rgb_components[1] = 0xff << 8;
+		direct_rgb_components[2] = 0xff;
+	}
+#endif
 	if (colormode != PALETTIZED_16BIT)
 	{
 		/* first convert the RGB components we got back into shifts */

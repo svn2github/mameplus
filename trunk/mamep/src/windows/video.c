@@ -97,6 +97,9 @@ int throttle = 1;
 static int frameskip;
 static int autoframeskip;
 
+// from mame.c
+extern UINT8 exit_pending;
+
 
 
 //============================================================
@@ -483,6 +486,10 @@ void osd_update(mame_time emutime)
 	// increment the frameskip counter
 	frameskip_counter = (frameskip_counter + 1) % FRAMESKIP_LEVELS;
 
+	// don't confirm quit
+	if (exit_pending)
+		options.confirm_quit = 0;
+
 	// poll the joystick values here
 	winwindow_process_events(TRUE);
 	wininput_poll();
@@ -513,13 +520,23 @@ const char *osd_get_fps_text(const performance_info *performance)
 
 	// if we're paused, display less info
 	if (mame_is_paused())
+#ifdef INP_CAPTION
+		dest += sprintf(dest, "frame:%d %s%2d%4d/%d fps",
+				cpu_getcurrentframe(),
+#else /* INP_CAPTION */
 		dest += sprintf(dest, "%s%2d%4d/%d fps",
+#endif /* INP_CAPTION */
 				autoframeskip ? "auto" : "fskp", frameskip,
 				(int)(performance->frames_per_second + 0.5),
 				PAUSED_REFRESH_RATE);
 	else
 	{
+#ifdef INP_CAPTION
+		dest += sprintf(dest, "frame:%d %s%2d%4d%%%4d/%d fps",
+				cpu_getcurrentframe(),
+#else /* INP_CAPTION */
 		dest += sprintf(dest, "%s%2d%4d%%%4d/%d fps",
+#endif /* INP_CAPTION */
 				autoframeskip ? "auto" : "fskp", frameskip,
 				(int)(performance->game_speed_percent + 0.5),
 				(int)(performance->frames_per_second + 0.5),
