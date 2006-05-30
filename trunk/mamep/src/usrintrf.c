@@ -485,8 +485,6 @@ void ui_exit(void)
 	ui_font = NULL;
 #else
 	uifont_freefont();
-
-	free_bgtexture();
 #endif
 }
 
@@ -5687,6 +5685,7 @@ static void build_bgtexture(void)
 	}
 
 	bgtexture = render_texture_alloc(bgbitmap, NULL, NULL, TEXFORMAT_ARGB32_PM, render_texture_hq_scale, NULL);
+	add_exit_callback(free_bgtexture);
 }
 
 static void free_bgtexture(void)
