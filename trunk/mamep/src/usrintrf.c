@@ -4822,7 +4822,7 @@ static void displayosd(const char *text,int percentage,int default_percentage)
 	ui_height -= 2 * line_height;
 
 #ifdef UI_COLOR_DISPLAY
-	line_height = 16;
+	line_height = line_height * 16 / 10;
 #endif /* UI_COLOR_DISPLAY */
 
 	/* determine the text height */
