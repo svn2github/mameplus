@@ -846,8 +846,8 @@ static MACHINE_DRIVER_START( touchgo )
 	/* sound hardware */
 	/* the chip is stereo, but the game sound is mono because the right channel
        output is for cabinet 1 and the left channel output is for cabinet 2 */
-//#ifndef ONE_MONITOR
-	if (!options.disable_2nd_monitor)
+//#ifdef ONE_MONITOR
+	if (options.disable_2nd_monitor)
 	{
 		MDRV_SPEAKER_STANDARD_STEREO("left", "right")
 	}
