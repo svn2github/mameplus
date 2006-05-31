@@ -2516,6 +2516,8 @@ static layout_view *load_layout_view(xml_data_node *viewnode, layout_element *el
 	layout_view *view;
 	float xscale, yscale;
 	float xoffs, yoffs;
+	unsigned char buf[100];
+	const char *name;
 	int first;
 	int layer;
 
@@ -2524,7 +2526,9 @@ static layout_view *load_layout_view(xml_data_node *viewnode, layout_element *el
 	memset(view, 0, sizeof(*view));
 
 	/* allocate a copy of the name */
-	view->name = copy_string(xml_get_attribute_string(viewnode, "name", ""));
+	name = xml_get_attribute_string(viewnode, "name", "");
+	utf8_decode_string(name, buf, sizeof buf);
+	view->name = copy_string(buf);
 
 	/* loop over all the layer types we support */
 	first = TRUE;
@@ -3237,6 +3241,7 @@ static const char *vert_side_by_side_layout =
 
 static const char *layout_make_standard(int screen, int numscreens)
 {
+	unsigned char buf[100];
 	char name[100];
 	int ax, ay;
 
@@ -3256,9 +3261,15 @@ static const char *layout_make_standard(int screen, int numscreens)
 
 	/* choose a name based on the screen */
 	if (numscreens == 1)
-		sprintf(name, "Standard (%d:%d)", ax, ay);
+	{
+		xml_encode_string(_("Standard (%d:%d)"), buf, sizeof buf);
+		sprintf(name, buf, ax, ay);
+	}
 	else
-		sprintf(name, "Screen %d Standard (%d:%d)", screen, ax, ay);
+	{
+		xml_encode_string(_("Screen %d Standard (%d:%d)"), buf, sizeof buf);
+		sprintf(name, buf, screen, ax, ay);
+	}
 
 	/* make a "Standard" layout which is based on the aspect ratio */
 	if (Machine->gamedrv->flags & ORIENTATION_SWAP_XY)
@@ -3276,6 +3287,8 @@ static const char *layout_make_standard(int screen, int numscreens)
 
 static const char *layout_make_dual(int screen, int numscreens)
 {
+	unsigned char buf[100];
+
 	/* only do this once, and only if we have 2 screens */
 	if (numscreens != 2)
 		return NULL;
@@ -3284,16 +3297,28 @@ static const char *layout_make_dual(int screen, int numscreens)
 	if (Machine->gamedrv->flags & ORIENTATION_SWAP_XY)
 	{
 		if (screen == 0)
-			sprintf(giant_string_buffer, vert_side_by_side_layout, "Dual Side-by-Side", 0, Machine->drv->screen[0].aspect, numscreens - 1, Machine->drv->screen[1].aspect, 0);
+		{
+			xml_encode_string(_("Dual Side-by-Side"), buf, sizeof buf);
+			sprintf(giant_string_buffer, vert_side_by_side_layout, buf, 0, Machine->drv->screen[0].aspect, numscreens - 1, Machine->drv->screen[1].aspect, 0);
+		}
 		else
-			sprintf(giant_string_buffer, vert_over_under_layout, "Dual Over-Under", 0, Machine->drv->screen[0].aspect, numscreens - 1, Machine->drv->screen[1].aspect + DUAL_SCREEN_SEPARATION, 0);
+		{
+			xml_encode_string(_("Dual Over-Under"), buf, sizeof buf);
+			sprintf(giant_string_buffer, vert_over_under_layout, buf, 0, Machine->drv->screen[0].aspect, numscreens - 1, Machine->drv->screen[1].aspect + DUAL_SCREEN_SEPARATION, 0);
+		}
 	}
 	else
 	{
 		if (screen == 0)
-			sprintf(giant_string_buffer, horz_over_under_layout, "Dual Over-Under", 0, Machine->drv->screen[0].aspect, numscreens - 1, Machine->drv->screen[1].aspect, 0);
+		{
+			xml_encode_string(_("Dual Over-Under"), buf, sizeof buf);
+			sprintf(giant_string_buffer, horz_over_under_layout, buf, 0, Machine->drv->screen[0].aspect, numscreens - 1, Machine->drv->screen[1].aspect, 0);
+		}
 		else
-			sprintf(giant_string_buffer, horz_side_by_side_layout, "Dual Side-by-Side", 0, Machine->drv->screen[0].aspect, numscreens - 1, Machine->drv->screen[1].aspect + DUAL_SCREEN_SEPARATION, 0);
+		{
+			xml_encode_string(_("Dual Side-by-Side"), buf, sizeof buf);
+			sprintf(giant_string_buffer, horz_side_by_side_layout, buf, 0, Machine->drv->screen[0].aspect, numscreens - 1, Machine->drv->screen[1].aspect + DUAL_SCREEN_SEPARATION, 0);
+		}
 	}
 
 	return giant_string_buffer;
@@ -3307,15 +3332,23 @@ static const char *layout_make_dual(int screen, int numscreens)
 
 static const char *layout_make_cocktail(int screen, int numscreens)
 {
+	unsigned char buf[100];
+
 	/* only do this once, and only if we have 1 or 2 screens */
 	if (screen != 0 || numscreens > 2)
 		return NULL;
 
 	/* make a "Cocktail" layout which is based on the screen 0 aspect ratio */
 	if (Machine->gamedrv->flags & ORIENTATION_SWAP_XY)
-		sprintf(giant_string_buffer, vert_side_by_side_layout, "Cocktail", 0, Machine->drv->screen[0].aspect, numscreens - 1, Machine->drv->screen[numscreens - 1].aspect, 180);
+	{
+		xml_encode_string(_("Cocktail"), buf, sizeof buf);
+		sprintf(giant_string_buffer, vert_side_by_side_layout, buf, 0, Machine->drv->screen[0].aspect, numscreens - 1, Machine->drv->screen[numscreens - 1].aspect, 180);
+	}
 	else
-		sprintf(giant_string_buffer, horz_over_under_layout, "Cocktail", 0, Machine->drv->screen[0].aspect, numscreens - 1, Machine->drv->screen[numscreens - 1].aspect, 180);
+	{
+		xml_encode_string(_("Cocktail"), buf, sizeof buf);
+		sprintf(giant_string_buffer, horz_over_under_layout, buf, 0, Machine->drv->screen[0].aspect, numscreens - 1, Machine->drv->screen[numscreens - 1].aspect, 180);
+	}
 
 	return giant_string_buffer;
 }
@@ -3331,6 +3364,7 @@ static const char *layout_make_native(int screen, int numscreens)
 {
 	int ax = Machine->drv->screen[screen].default_visible_area.max_x + 1 - Machine->drv->screen[screen].default_visible_area.min_x;
 	int ay = Machine->drv->screen[screen].default_visible_area.max_y + 1 - Machine->drv->screen[screen].default_visible_area.min_y;
+	unsigned char buf[100];
 	char name[100];
 	int div;
 
@@ -3352,9 +3386,15 @@ static const char *layout_make_native(int screen, int numscreens)
 
 	/* choose a name based on the screen */
 	if (numscreens == 1)
-		sprintf(name, "Native (%d:%d)", ax, ay);
+	{
+		xml_encode_string(_("Native (%d:%d)"), buf, sizeof buf);
+		sprintf(name, buf, ax, ay);
+	}
 	else
-		sprintf(name, "Screen %d Native (%d:%d)", screen, ax, ay);
+	{
+		xml_encode_string(_("Screen %d Native (%d:%d)"), buf, sizeof buf);
+		sprintf(name, buf, screen, ax, ay);
+	}
 
 	/* make a "Native" layout which is based on the aspect ratio */
 	sprintf(giant_string_buffer, single_screen_layout, name, screen, (float)ax, (float)ay);

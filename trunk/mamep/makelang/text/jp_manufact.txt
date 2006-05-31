@@ -954,6 +954,10 @@ Dong Bang Electron
 Dong Gue La Mi Ltd.
 
 
+# Pasha Pasha 2
+Dong Sung
+
+
 # Got-cha Mini Game Festival
 Dongsung
 
@@ -1876,6 +1880,10 @@ Test ROM
 
 # Lethal Justice
 The Game Room
+
+
+# Trivia Madness
+Thunderhead Inc.
 
 
 # Area 51 (Time Warner License)
