@@ -426,6 +426,21 @@ int ui_init(void)
 	build_bgtexture();
 
 	ui_font = render_font_alloc("ui.bdf");
+	if (uifont_need_font_warning())
+	{
+		options.langcode = UI_LANG_EN_US;
+		set_langcode(options.langcode);
+		fprintf(stderr, "error: loading local font file\nUse %s\n",
+			ui_lang_info[options.langcode].description);
+
+		/* re-load the localization file */
+#if 0
+		if (uistring_init(options.language_file) != 0)
+#else
+		if (uistring_init() != 0)
+#endif
+			fatalerror("uistring_init failed");
+	}
 
 	ui_set_visible_area(0, 0, 0, 0);
 
