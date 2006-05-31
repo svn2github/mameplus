@@ -1453,3 +1453,12 @@ void convert_command_move(char *buf)
 		}
 	}
 }
+
+
+int render_font_get_pixel_height(const render_font *font)
+{
+	if (font)
+		return font->height;
+
+	return 0;
+}

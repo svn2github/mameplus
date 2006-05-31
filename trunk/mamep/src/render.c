@@ -1297,8 +1297,10 @@ static render_primitive **add_container_primitives(render_primitive **primnext, 
 		prim = alloc_render_primitive();
 		prim->bounds.x0 = floor(xform->xoffs + bounds.x0 * xform->xscale + 0.5f);
 		prim->bounds.y0 = floor(xform->yoffs + bounds.y0 * xform->yscale + 0.5f);
-		prim->bounds.x1 = prim->bounds.x0 + ceil((bounds.x1 - bounds.x0) * xform->xscale);
-		prim->bounds.y1 = prim->bounds.y0 + ceil((bounds.y1 - bounds.y0) * xform->yscale);
+		//prim->bounds.x1 = prim->bounds.x0 + ceil((bounds.x1 - bounds.x0) * xform->xscale);
+		//prim->bounds.y1 = prim->bounds.y0 + ceil((bounds.y1 - bounds.y0) * xform->yscale);
+		prim->bounds.x1 = prim->bounds.x0 + floor((bounds.x1 - bounds.x0) * xform->xscale + 0.99f);
+		prim->bounds.y1 = prim->bounds.y0 + floor((bounds.y1 - bounds.y0) * xform->yscale + 0.99f);
 		prim->color.r = xform->color.r * item->color.r;
 		prim->color.g = xform->color.g * item->color.g;
 		prim->color.b = xform->color.b * item->color.b;

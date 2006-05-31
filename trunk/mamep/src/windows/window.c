@@ -519,6 +519,7 @@ static void draw_video_contents(win_window_info *window, HDC dc, int update)
 		// ensure the target bounds are up-to-date, and then get the primitives
 		RECT client;
 		GetClientRect(window->hwnd, &client);
+		ui_set_visible_area(client.left, client.top, client.right - 1, client.bottom - 1);
 		render_target_set_bounds(window->target, rect_width(&client), rect_height(&client), winvideo_monitor_get_aspect(window->monitor));
 		window->primlist = render_target_get_primitives(window->target);
 	}
