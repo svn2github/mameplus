@@ -104,6 +104,8 @@ static void mspacman_decode(void)
 	/* CPU ROMs */
 
 	RAM = memory_region(REGION_CPU1);
+#ifndef _MSC_VER
+	// ICC doesn't work this... strange
 	for (i = 0; i < 0x1000; i++)
 	{
 	RAM[0x10000+i] = RAM[0x0000+i];
@@ -111,9 +113,15 @@ static void mspacman_decode(void)
 	RAM[0x12000+i] = RAM[0x2000+i];
 	RAM[0x1a000+i] = RAM[0x2000+i];  /*not needed but it's there*/
 	RAM[0x1b000+i] = RAM[0x3000+i];  /*not needed but it's there*/
-
 	}
-
+#else
+	// ICC works fine
+	memcpy(&RAM[0x10000], &RAM[0x0000], 0x1000);
+	memcpy(&RAM[0x11000], &RAM[0x1000], 0x1000);
+	memcpy(&RAM[0x12000], &RAM[0x2000], 0x1000);
+	memcpy(&RAM[0x1a000], &RAM[0x2000], 0x1000);  /*not needed but it's there*/
+	memcpy(&RAM[0x1b000], &RAM[0x3000], 0x1000);  /*not needed but it's there*/
+#endif
 
 	for (i = 0; i < 0x1000; i++)
 	{
