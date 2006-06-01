@@ -5763,7 +5763,7 @@ INLINE rgb_t ui_get_rgb_color(rgb_t color)
 static void add_fill(int x0, int y0, int x1, int y1, rgb_t color)
 {
 	if (color == UI_TRANSPARENT_COLOR)
-		render_container_add_quad(render_container_get_ui(), UI_UNSCALE_TO_FLOAT(x0), UI_UNSCALE_TO_FLOAT(y0), UI_UNSCALE_TO_FLOAT(x1), UI_UNSCALE_TO_FLOAT(y1), uifont_colortable[UI_TRANSPARENT_COLOR], bgtexture, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+		render_ui_add_quad(UI_UNSCALE_TO_FLOAT(x0), UI_UNSCALE_TO_FLOAT(y0), UI_UNSCALE_TO_FLOAT(x1), UI_UNSCALE_TO_FLOAT(y1), uifont_colortable[UI_TRANSPARENT_COLOR], bgtexture, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 	else
 		render_ui_add_rect(UI_UNSCALE_TO_FLOAT(x0), UI_UNSCALE_TO_FLOAT(y0), UI_UNSCALE_TO_FLOAT(x1), UI_UNSCALE_TO_FLOAT(y1), ui_get_rgb_color(color), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 }

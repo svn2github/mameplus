@@ -955,12 +955,7 @@ void render_target_set_bounds(render_target *target, INT32 width, INT32 height, 
 
 	/* set the UI window size if not disabled */
 	if (!target->disableui)
-	{
-		INT32 viswidth, visheight;
-
-		render_target_compute_visible_area(target, target->width, target->height, target->pixel_aspect, target->orientation, &viswidth, &visheight);
-		ui_set_visible_area(0, 0, viswidth - 1, visheight - 1);
-	}
+		ui_set_visible_area(0, 0, target->width - 1, target->height - 1);
 }
 
 
@@ -1595,8 +1590,15 @@ static void render_texture_get_scaled(render_texture *texture, UINT32 dwidth, UI
 	{
 		/* didn't find one -- take the entry with the lowest seqnum */
 		int lowest = 0;
-		for (scalenum = 1; scalenum < ARRAY_LENGTH(texture->scaled); scalenum++)
+		for (scalenum = 0; scalenum < ARRAY_LENGTH(texture->scaled); scalenum++)
 		{
+			/* if unused bitmap is found, use it */
+			if (texture->scaled[scalenum].bitmap == NULL)
+			{
+				lowest = scalenum;
+				break;
+			}
+
 			/* skip if bitmap is busy */
 			if (texture->scaled[scalenum].scene == scene)
 				continue;
