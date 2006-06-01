@@ -870,14 +870,14 @@ static void draw_quad(d3d_info *d3d, const render_primitive *prim, const render_
 		return;
 
 	// fill in the vertexes clockwise
-	vertex[0].x = prim->bounds.x0;
-	vertex[0].y = prim->bounds.y0;
-	vertex[1].x = prim->bounds.x1;
-	vertex[1].y = prim->bounds.y0;
-	vertex[2].x = prim->bounds.x1;
-	vertex[2].y = prim->bounds.y1;
-	vertex[3].x = prim->bounds.x0;
-	vertex[3].y = prim->bounds.y1;
+	vertex[0].x = prim->bounds.x0 + 0.5f;
+	vertex[0].y = prim->bounds.y0 + 0.5f;
+	vertex[1].x = prim->bounds.x1 + 0.5f;
+	vertex[1].y = prim->bounds.y0 + 0.5f;
+	vertex[2].x = prim->bounds.x1 + 0.5f;
+	vertex[2].y = prim->bounds.y1 + 0.5f;
+	vertex[3].x = prim->bounds.x0 + 0.5f;
+	vertex[3].y = prim->bounds.y1 + 0.5f;
 
 	// if we have a texture, set the U/V coordinates
 	if (texture != NULL)
