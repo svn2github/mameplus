@@ -195,7 +195,7 @@
 
 #define LAYOUT_VERSION			2
 
-#define MAX_TEXTURE_SCALES		4
+#define MAX_TEXTURE_SCALES		8
 
 #define DUAL_SCREEN_SEPARATION	0.01
 
@@ -273,6 +273,7 @@ struct _scaled_texture
 {
 	mame_bitmap *		bitmap;				/* final bitmap */
 	UINT32				seqid;				/* sequence number */
+	UINT32			scene;
 };
 
 
@@ -432,11 +433,11 @@ static view_item_state *item_statelist;
 static void render_exit(void);
 
 /* render targets */
-static render_primitive **add_container_primitives(render_primitive **primnext, const object_transform *xform, const render_container *container, int blendmode);
-static render_primitive **add_element_primitives(render_primitive **primnext, const object_transform *xform, const layout_element *element, int state, int blendmode);
+static render_primitive **add_container_primitives(render_primitive **primnext, const object_transform *xform, const render_container *container, int blendmode, UINT32 scene);
+static render_primitive **add_element_primitives(render_primitive **primnext, const object_transform *xform, const layout_element *element, int state, int blendmode, UINT32 scene);
 
 /* render textures */
-static void render_texture_get_scaled(render_texture *texture, UINT32 dwidth, UINT32 dheight, render_texinfo *texinfo);
+static void render_texture_get_scaled(render_texture *texture, UINT32 dwidth, UINT32 dheight, render_texinfo *texinfo, UINT32 scene);
 
 /* render containers */
 static render_container *render_container_alloc(void);
@@ -951,6 +952,15 @@ void render_target_set_bounds(render_target *target, INT32 width, INT32 height, 
 	target->width = width;
 	target->height = height;
 	target->pixel_aspect = pixel_aspect;
+
+	/* set the UI window size if not disabled */
+	if (!target->disableui)
+	{
+		INT32 viswidth, visheight;
+
+		render_target_compute_visible_area(target, target->width, target->height, target->pixel_aspect, target->orientation, &viswidth, &visheight);
+		ui_set_visible_area(0, 0, viswidth - 1, visheight - 1);
+	}
 }
 
 
@@ -1175,6 +1185,9 @@ const render_primitive *render_target_get_primitives(render_target *target)
 	render_primitive **primnext;
 	int itemcount[ITEM_LAYER_MAX];
 	int layer;
+	static UINT32 scene = 12345;
+
+	scene++;
 
 	/* free any previous primitives */
 	while (target->primlist != NULL)
@@ -1233,9 +1246,9 @@ const render_primitive *render_target_get_primitives(render_target *target)
 
 			/* if there is no associated element, it must be a screen element */
 			if (item->element != NULL)
-				primnext = add_element_primitives(primnext, &item_xform, item->element, item->state->curstate, blendmode);
+				primnext = add_element_primitives(primnext, &item_xform, item->element, item->state->curstate, blendmode, scene);
 			else
-				primnext = add_container_primitives(primnext, &item_xform, screen_container[item->index], blendmode);
+				primnext = add_container_primitives(primnext, &item_xform, screen_container[item->index], blendmode, scene);
 
 			/* keep track of how many items are in the layer */
 			itemcount[layer]++;
@@ -1254,7 +1267,7 @@ const render_primitive *render_target_get_primitives(render_target *target)
 		ui_xform.orientation = target->orientation;
 
 		/* add UI elements */
-		primnext = add_container_primitives(primnext, &ui_xform, ui_container, BLENDMODE_ALPHA);
+		primnext = add_container_primitives(primnext, &ui_xform, ui_container, BLENDMODE_ALPHA, scene);
 	}
 
 	return target->primlist;
@@ -1266,7 +1279,7 @@ const render_primitive *render_target_get_primitives(render_target *target)
     based on the container
 -------------------------------------------------*/
 
-static render_primitive **add_container_primitives(render_primitive **primnext, const object_transform *xform, const render_container *container, int blendmode)
+static render_primitive **add_container_primitives(render_primitive **primnext, const object_transform *xform, const render_container *container, int blendmode, UINT32 scene)
 {
 	int orientation = add_orientation(container->orientation, xform->orientation);
 	render_primitive *prim;
@@ -1333,7 +1346,8 @@ static render_primitive **add_container_primitives(render_primitive **primnext, 
 					render_texture_get_scaled(item->texture,
 										(orientation & ORIENTATION_SWAP_XY) ? (prim->bounds.y1 - prim->bounds.y0) : (prim->bounds.x1 - prim->bounds.x0),
 										(orientation & ORIENTATION_SWAP_XY) ? (prim->bounds.x1 - prim->bounds.x0) : (prim->bounds.y1 - prim->bounds.y0),
-										&prim->texture);
+										&prim->texture,
+										scene);
 
 					/* apply the final orientation from the quad flags and then build up the final flags */
 					prim->flags = PRIMFLAG_TEXORIENT(orientation) | PRIMFLAG_TEXFORMAT(item->texture->format) | PRIMFLAG_BLENDMODE(blendmode);
@@ -1369,7 +1383,7 @@ static render_primitive **add_container_primitives(render_primitive **primnext, 
     for an element in the current state
 -------------------------------------------------*/
 
-static render_primitive **add_element_primitives(render_primitive **primnext, const object_transform *xform, const layout_element *element, int state, int blendmode)
+static render_primitive **add_element_primitives(render_primitive **primnext, const object_transform *xform, const layout_element *element, int state, int blendmode, UINT32 scene)
 {
 	INT32 width = ceil(xform->xscale);
 	INT32 height = ceil(xform->yscale);
@@ -1394,7 +1408,7 @@ static render_primitive **add_element_primitives(render_primitive **primnext, co
 	prim->bounds.y1 = prim->bounds.y0 + height;
 	prim->color = xform->color;
 	prim->flags = PRIMFLAG_TEXORIENT(xform->orientation) | PRIMFLAG_BLENDMODE(blendmode) | PRIMFLAG_TEXFORMAT(texture->format);
-	render_texture_get_scaled(texture, (xform->orientation & ORIENTATION_SWAP_XY) ? height : width, (xform->orientation & ORIENTATION_SWAP_XY) ? width : height, &prim->texture);
+	render_texture_get_scaled(texture, (xform->orientation & ORIENTATION_SWAP_XY) ? height : width, (xform->orientation & ORIENTATION_SWAP_XY) ? width : height, &prim->texture, scene);
 
 	/* add it to the list */
 	*primnext = prim;
@@ -1543,7 +1557,7 @@ void render_texture_set_bitmap(render_texture *texture, mame_bitmap *bitmap, con
     bitmap (if we can)
 -------------------------------------------------*/
 
-static void render_texture_get_scaled(render_texture *texture, UINT32 dwidth, UINT32 dheight, render_texinfo *texinfo)
+static void render_texture_get_scaled(render_texture *texture, UINT32 dwidth, UINT32 dheight, render_texinfo *texinfo, UINT32 scene)
 {
 	UINT8 bpp = (texture->format == TEXFORMAT_PALETTE16 || texture->format == TEXFORMAT_RGB15) ? 16 : 32;
 	scaled_texture *scaled = NULL;
@@ -1582,8 +1596,15 @@ static void render_texture_get_scaled(render_texture *texture, UINT32 dwidth, UI
 		/* didn't find one -- take the entry with the lowest seqnum */
 		int lowest = 0;
 		for (scalenum = 1; scalenum < ARRAY_LENGTH(texture->scaled); scalenum++)
-			if (texture->scaled[scalenum].seqid < texture->scaled[lowest].seqid)
+		{
+			/* skip if bitmap is busy */
+			if (texture->scaled[scalenum].scene == scene)
+				continue;
+
+			if (texture->scaled[lowest].scene == scene
+			 || texture->scaled[scalenum].seqid < texture->scaled[lowest].seqid)
 				lowest = scalenum;
+		}
 
 		/* throw out any existing entries */
 		scaled = &texture->scaled[lowest];
@@ -1605,6 +1626,8 @@ static void render_texture_get_scaled(render_texture *texture, UINT32 dwidth, UI
 	texinfo->height = dheight;
 	texinfo->palette = texture->palette;
 	texinfo->seqid = scaled->seqid;
+
+	scaled->scene = scene;
 }
 
 
