@@ -1266,6 +1266,7 @@ $(OBJ)/taito.a: \
 	$(OBJ)/drivers/volfied.o $(OBJ)/machine/volfied.o $(OBJ)/vidhrdw/volfied.o \
 	$(OBJ)/drivers/warriorb.o $(OBJ)/vidhrdw/warriorb.o \
 	$(OBJ)/drivers/wgp.o $(OBJ)/vidhrdw/wgp.o \
+	$(OBJ)/machine/daikaiju.o \
 	$(OBJ)/machine/mb87078.o \
 	$(OBJ)/sndhrdw/taitosnd.o \
 	$(OBJ)/vidhrdw/taitoic.o \

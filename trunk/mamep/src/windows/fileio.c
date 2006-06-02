@@ -17,7 +17,7 @@
 #include "osdepend.h"
 #include "driver.h"
 #include "unzip.h"
-#include "rc.h"
+#include "options.h"
 #include "osd_so.h"
 
 #ifdef MESS
@@ -63,10 +63,11 @@ extern const char *mameinfo_filename;
 extern const char *lang_directory;
 
 // from cheat.c
-extern char *cheatfile;
+extern const char *cheatfile;
 
 // from hiscore.c
 extern const char *db_filename;
+
 
 
 //============================================================
@@ -74,10 +75,8 @@ extern const char *db_filename;
 //============================================================
 
 typedef struct _pathdata pathdata;
-
 struct _pathdata
 {
-	const char *rawpath;
 	const char **path;
 	int pathcount;
 };
@@ -99,63 +98,90 @@ static osd_file openfile[MAX_OPEN_FILES];
 
 
 //============================================================
-//	GLOBAL VARIABLES
-//============================================================
-
-static const char *inipath;
-
-//============================================================
-//	PROTOTYPES
-//============================================================
-
-static int set_inipath(struct rc_option *option, const char *arg, int priority);
-
-//============================================================
 //  FILE PATH OPTIONS
 //============================================================
 
-struct rc_option fileio_opts[] =
+const options_entry fileio_opts[] =
 {
-	// name, shortname, type, dest, deflt, min, max, func, help
-	{ "Windows path and directory options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+	{ NULL,                       NULL,       OPTION_HEADER,     "PATH AND DIRECTORY OPTIONS" },
 #ifndef MESS
-	{ "rompath", "rp", rc_string, (char *)&pathlist[FILETYPE_ROM].rawpath, "roms", 0, 0, NULL, "path to romsets" },
+	{ "rompath;rp",               "roms",     0,                 "path to ROMsets and hard disk images" },
 #else
-	{ "biospath", "bp", rc_string, (char *)&pathlist[FILETYPE_ROM].rawpath, "bios", 0, 0, NULL, "path to BIOS sets" },
-	{ "softwarepath", "swp", rc_string, (char *)&pathlist[FILETYPE_IMAGE].rawpath, "software", 0, 0, NULL, "path to software" },
-	{ "hash_directory", "hash", rc_string, (char *)&pathlist[FILETYPE_HASH].rawpath, "hash", 0, 0, NULL, "path to hash files" },
+	{ "biospath;bp",              "bios",     0,                 "path to BIOS sets" },
+	{ "softwarepath;swp",         "software", 0,                 "path to software" },
+	{ "hash_directory;hash",      "hash",     0,                 "path to hash files" },
 #endif
-	{ "samplepath", "sp", rc_string, (char *)&pathlist[FILETYPE_SAMPLE].rawpath, "samples", 0, 0, NULL, "path to samplesets" },
+	{ "samplepath;sp",            "samples",  0,                 "path to samplesets" },
 #ifdef __WIN32__
-	{ "inipath", NULL, rc_string, (char *)&inipath, ".;ini", 0, 0, set_inipath, "path to ini files" },
+	{ "inipath",                  ".;ini",    0,                 "path to ini files" },
 #else
-	{ "inipath", NULL, rc_string, (char *)&inipath, "$HOME/.mame;.;ini", 0, 0, set_inipath, "path to ini files" },
+	{ "inipath",                  "$HOME/.mame;.;ini", 0,        "path to ini files" },
 #endif
-	{ "cfg_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_CONFIG].rawpath, "cfg", 0, 0, NULL, "directory to save configurations" },
-	{ "nvram_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_NVRAM].rawpath, "nvram", 0, 0, NULL, "directory to save nvram contents" },
-	{ "memcard_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_MEMCARD].rawpath, "memcard", 0, 0, NULL, "directory to save memory card contents" },
-	{ "input_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_INPUTLOG].rawpath, "inp", 0, 0, NULL, "directory to save input device logs" },
-	{ "hiscore_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_HIGHSCORE].rawpath, "hi", 0, 0, NULL, "directory to save hiscores" },
-	{ "state_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_STATE].rawpath, "sta", 0, 0, NULL, "directory to save states" },
-	{ "artwork_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_ARTWORK].rawpath, "artwork", 0, 0, NULL, "directory for Artwork (Overlays etc.)" },
-	{ "snapshot_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_SCREENSHOT].rawpath, "snap", 0, 0, NULL, "directory for screenshots (.png format)" },
-	{ "diff_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_IMAGE_DIFF].rawpath, "diff", 0, 0, NULL, "directory for hard drive image difference files" },
-	{ "ctrlr_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_CTRLR].rawpath, "ctrlr", 0, 0, NULL, "directory to save controller definitions" },
-	{ "comment_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_COMMENT].rawpath, "comments", 0, 0, NULL, "directory to save comment files" },
+	{ "cfg_directory",            "cfg",      0,                 "directory to save configurations" },
+	{ "nvram_directory",          "nvram",    0,                 "directory to save nvram contents" },
+	{ "memcard_directory",        "memcard",  0,                 "directory to save memory card contents" },
+	{ "input_directory",          "inp",      0,                 "directory to save input device logs" },
+	{ "hiscore_directory",        "hi",       0,                 "directory to save hiscores" },
+	{ "state_directory",          "sta",      0,                 "directory to save states" },
+	{ "artwork_directory",        "artwork",  0,                 "path to artwork files" },
+	{ "snapshot_directory",       "snap",     0,                 "directory to save screenshots" },
+	{ "diff_directory",           "diff",     0,                 "directory to save hard drive image difference files" },
+	{ "ctrlr_directory",          "ctrlr",    0,                 "path to controller definitions" },
+	{ "comment_directory",        "comments", 0,                 "directory to save debugger comments" },
 #ifdef USE_IPS
-	{ "ips_directory", NULL, rc_string, (char *)&pathlist[FILETYPE_PATCH].rawpath, "ips", 0, 0, NULL, "directory for ips files" },
+	{ "ips_directory",            "ips",      0,                 "directory for ips files" },
+#else /* USE_IPS */
+	{ "ips_directory",            "ips",      OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* USE_IPS */
-	{ "lang_directory", NULL, rc_string, (char *)&lang_directory, "lang", 0, 0, NULL, "directory for localized data files" },
-	{ "cheat_file", NULL, rc_string, &cheatfile, "cheat.dat", 0, 0, NULL, "cheat filename" },
-	{ "history_file", NULL, rc_string, (char *)&history_filename, "history.dat", 0, 0, NULL, NULL },
+	{ "lang_directory",           "lang",     0,                 "directory for localized data files" },
+	{ "cheat_file",               "cheat.dat", 0,                "cheat filename" },
+	{ "history_file",             "history.dat", 0,              "history database name" },
 #ifdef STORY_DATAFILE
-	{ "story_file", NULL, rc_string, (char *)&story_filename, "story.dat", 0, 0, NULL, NULL },
+	{ "story_file",               "story.dat", 0,                 "story database name" },
+#else /* STORY_DATAFILE */
+	{ "story_file",               "story.dat", OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* STORY_DATAFILE */
-	{ "mameinfo_file", NULL, rc_string, (char *)&mameinfo_filename, "mameinfo.dat", 0, 0, NULL, NULL },
-	{ "hiscore_file", NULL, rc_string, (char *)&db_filename, "hiscore.dat", 0, 0, NULL, NULL },
-	{ NULL,	NULL, rc_end, NULL, NULL, 0, 0,	NULL, NULL }
+	{ "mameinfo_file",            "mameinfo.dat", 0,              "mameinfo database name" },
+	{ "hiscore_file",             "hiscore.dat", 0,               "high score database name" },
+	{ NULL }
 };
 
+
+static const struct
+{
+	int	filetype;
+	const char *option;
+} fileio_options[] =
+{
+	{ FILETYPE_ROM,			"rompath" },
+#ifndef MESS
+	{ FILETYPE_IMAGE,		"rompath" },
+#else
+	{ FILETYPE_IMAGE,		"softwarepath" },
+	{ FILETYPE_HASH,		"hash_directory" },
+#endif
+	{ FILETYPE_IMAGE_DIFF,	"diff_directory" },
+	{ FILETYPE_SAMPLE,		"samplepath" },
+	{ FILETYPE_ARTWORK,		"artwork_directory" },
+	{ FILETYPE_NVRAM,		"nvram_directory" },
+	{ FILETYPE_HIGHSCORE,	"hiscore_directory" },
+	{ FILETYPE_CONFIG,		"cfg_directory" },
+	{ FILETYPE_INPUTLOG,	"input_directory" },
+	{ FILETYPE_STATE,		"state_directory" },
+	{ FILETYPE_MEMCARD,		"memcard_directory" },
+	{ FILETYPE_SCREENSHOT,	"snapshot_directory" },
+	{ FILETYPE_MOVIE,		"snapshot_directory" },
+	{ FILETYPE_CTRLR,		"ctrlr_directory" },
+	{ FILETYPE_INI,			"inipath" },
+	{ FILETYPE_COMMENT,		"comment_directory" },
+#ifdef USE_IPS
+	{ FILETYPE_PATCH,		"ips_directory" },
+#endif /* USE_IPS */
+#ifdef INP_CAPTION
+	{ FILETYPE_INPCAPTION,	"input_directory" },
+#endif /* INP_CAPTION */
+	{ 0 }
+};
 
 
 //============================================================
@@ -293,32 +319,13 @@ static char *copy_and_expand_variables(const char *path, int len)
 }
 
 
+
 //============================================================
-//	request_decompose_rompath
+//  free_pathlist
 //============================================================
 
-static int set_inipath(struct rc_option *option, const char *arg, int priority)
+void free_pathlist(pathdata *list)
 {
-	pathlist[FILETYPE_INI].rawpath = mame_strdup(arg);
-	option->priority = priority;
-
-	return 0;
-}
-
-
-//============================================================
-//  expand_pathlist
-//============================================================
-
-static void expand_pathlist(pathdata *list)
-{
-	const char *rawpath = (list->rawpath) ? list->rawpath : "";
-	const char *token;
-
-#if VERBOSE
-	printf("Expanding: %s\n", rawpath);
-#endif
-
 	// free any existing paths
 	if (list->pathcount != 0)
 	{
@@ -332,6 +339,24 @@ static void expand_pathlist(pathdata *list)
 	// by default, start with an empty list
 	list->path = NULL;
 	list->pathcount = 0;
+}
+
+
+
+//============================================================
+//  expand_pathlist
+//============================================================
+
+static void expand_pathlist(pathdata *list, const char *rawpath)
+{
+	const char *token;
+
+#if VERBOSE
+	printf("Expanding: %s\n", rawpath);
+#endif
+
+	// free any existing paths
+	free_pathlist(list);
 
 	// look for separators
 	token = strchr(rawpath, ';');
@@ -361,17 +386,12 @@ static void expand_pathlist(pathdata *list)
 		if (!token)
 			token = rawpath + strlen(rawpath);
 	}
-
-	// when finished, reset the path info, so that future INI parsing will
-	// cause us to get called again
-	free((void *)list->rawpath);
-	list->rawpath = NULL;
 }
 
 
 
 //============================================================
-//  get_path_for_filetype
+//  free_pathlists
 //============================================================
 
 void free_pathlists(void)
@@ -379,23 +399,7 @@ void free_pathlists(void)
 	int i;
 
 	for (i = 0;i < FILETYPE_end;i++)
-	{
-		pathdata *list = &pathlist[i];
-
-		// free any existing paths
-		if (list->pathcount != 0)
-		{
-			int pathindex;
-
-			for (pathindex = 0; pathindex < list->pathcount; pathindex++)
-				free((void *)list->path[pathindex]);
-			free((void *)list->path);
-		}
-
-		// by default, start with an empty list
-		list->path = NULL;
-		list->pathcount = 0;
-	}
+		free_pathlist(&pathlist[i]);
 }
 
 
@@ -408,56 +412,40 @@ static const char *get_path_for_filetype(int filetype, int pathindex, DWORD *cou
 {
 	pathdata *list;
 
-	// handle aliasing of some paths
-	switch (filetype)
+	if (filetype == FILETYPE_NVRAM && (Machine->record_file || Machine->playback_file))
+		filetype = FILETYPE_INPUTLOG;
+
+	list = &pathlist[filetype];
+
+	// if we don't have expanded paths, expand them now
+	if (list->pathcount == 0)
 	{
-#ifndef MESS
-		case FILETYPE_IMAGE:
-			list = &pathlist[FILETYPE_ROM];
-			break;
-#endif
+		const char *rawpath = NULL;
+		int optnum;
 
-#ifdef USE_IPS
-		case FILETYPE_IPS:
-			list = &pathlist[FILETYPE_PATCH];
-			break;
-#endif /* USE_IPS */
-
-#ifdef INP_CAPTION
-		case FILETYPE_INPCAPTION:
-			list = &pathlist[FILETYPE_INPUTLOG];
-			break;
-#endif /* INP_CAPTION */
-
-		/* load vnram file from input_directory when record/playback is on */
-		case FILETYPE_NVRAM:
-			if (Machine->record_file || Machine->playback_file)
+		// find the filetype in the list of options
+		for (optnum = 0; fileio_options[optnum].option != NULL; optnum++)
+			if (fileio_options[optnum].filetype == filetype)
 			{
-				list = &pathlist[FILETYPE_INPUTLOG];
+				rawpath = options_get_string(fileio_options[optnum].option, FALSE);
 				break;
 			}
 
-		default:
-			list = &pathlist[filetype];
-			break;
-	}
+		// if we don't have a path, set an empty string
+		if (rawpath == NULL)
+			rawpath = "";
 
-	// if we don't have expanded paths, expand them now
-	if (list->pathcount == 0 || list->rawpath)
-	{
 		// special hack for ROMs
 		if (list == &pathlist[FILETYPE_ROM] && rompath_extra)
 		{
 			// this may leak a little memory, but it's a hack anyway! :-P
-			const char *rawpath = (list->rawpath) ? list->rawpath : "";
-			char *newpath = malloc(strlen(rompath_extra) + strlen(rawpath) + 2);
+			char *newpath = malloc_or_die(strlen(rompath_extra) + strlen(rawpath) + 2);
 			sprintf(newpath, "%s;%s", rompath_extra, rawpath);
-			free((void *)list->rawpath);
-			list->rawpath = newpath;
+			rawpath = newpath;
 		}
 
 		// decompose the path
-		expand_pathlist(list);
+		expand_pathlist(list, rawpath);
 	}
 
 	// set the count
@@ -869,7 +857,7 @@ int osd_display_loading_rom_message(const char *name,rom_load_data *romdata)
 	if (name)
 		fprintf(stdout, _WINDOWS("loading %-32s\r"), name);
 	else
-		fprintf(stdout, "                                        \r");
+		fprintf(stdout, "        %-32s\r", "");
 	fflush(stdout);
 
 	return 0;
@@ -889,7 +877,6 @@ int osd_display_loading_rom_message(const char *name, rom_load_data *romdata)
 #endif /* !WINUI */
 
 
-#ifdef WINUI
 //============================================================
 //  set_pathlist
 //============================================================
@@ -899,21 +886,27 @@ void set_pathlist(int file_type, const char *new_rawpath)
 	pathdata *list = &pathlist[file_type];
 
 	// free any existing paths
-	if (list->pathcount != 0)
-	{
-		int pathindex;
+	free_pathlist(list);
 
-		for (pathindex = 0; pathindex < list->pathcount; pathindex++)
-			free((void *)list->path[pathindex]);
-		free((void *) list->path);
-	}
-
-	// by default, start with an empty list
-	list->path = NULL;
-	list->pathcount = 0;
-
-	free((void *)list->rawpath);
-	list->rawpath = new_rawpath;
-
+	// set a new path value if present
+	if (new_rawpath)
+		expand_pathlist(list, new_rawpath);
 }
-#endif
+
+
+//============================================================
+//  setup_datafile
+//============================================================
+
+void setup_datafile(void)
+{
+	lang_directory= options_get_string("lang_directory", TRUE);
+
+	cheatfile = options_get_string("cheat_file", TRUE);
+	history_filename = options_get_string("history_file", TRUE);
+#ifdef STORY_DATAFILE
+	story_filename = options_get_string("story_file", TRUE);
+#endif /* STORY_DATAFILE */
+	mameinfo_filename = options_get_string("mameinfo_file", TRUE);
+	db_filename = options_get_string("hiscore_file", TRUE);
+}

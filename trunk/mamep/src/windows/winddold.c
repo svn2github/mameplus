@@ -25,7 +25,6 @@
 #include "driver.h"
 #include "profiler.h"
 #include "windold.h"
-#include "rc.h"
 #include "videoold.h"
 #include "blit.h"
 #ifdef USE_SCALE_EFFECTS

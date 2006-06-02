@@ -140,6 +140,24 @@ extern SHAREDOBJ_FUNC(int)          sndtype_clock(int sndnum);
 #include "state.h"
 extern SHAREDOBJ_FUNC(int) state_save_check_file(mame_file *file, const char *gamename, int validate_signature, void (CLIB_DECL *errormsg)(const char *fmt, ...));
 
+#include "options.h"
+extern SHAREDOBJ_FUNC(void)         options_add_entries(const options_entry *entrylist);
+extern SHAREDOBJ_FUNC(void)         options_free_entries(void);
+extern SHAREDOBJ_FUNC(int)          options_parse_command_line(int argc, char **argv);
+extern SHAREDOBJ_FUNC(int)          options_parse_xml_file(mame_file *xmlfile);
+extern SHAREDOBJ_FUNC(int)          options_parse_ini_file(mame_file *inifile);
+extern SHAREDOBJ_FUNC(void)         options_output_xml_file(FILE *xmlfile);
+extern SHAREDOBJ_FUNC(void)         options_output_ini_file(FILE *inifile);
+extern SHAREDOBJ_FUNC(void)         options_output_help(FILE *output);
+extern SHAREDOBJ_FUNC(const char *) options_get_string(const char * name, int report_error);
+extern SHAREDOBJ_FUNC(int)          options_get_bool(const char * name, int report_error);
+extern SHAREDOBJ_FUNC(int)          options_get_int(const char * name, int report_error);
+extern SHAREDOBJ_FUNC(float)        options_get_float(const char * name, int report_error);
+extern SHAREDOBJ_FUNC(void)         options_set_string(const char * name, const char *value);
+extern SHAREDOBJ_FUNC(void)         options_set_bool(const char * name, int value);
+extern SHAREDOBJ_FUNC(void)         options_set_int(const char * name, int value);
+extern SHAREDOBJ_FUNC(void)         options_set_float(const char * name, float value);
+
 #include "unzip.h"
 extern SHAREDOBJ_FUNC(int)  load_zipped_file (int pathtype, int pathindex, const char *zipfile, const char *filename, unsigned char **buf, unsigned int *length);
 extern SHAREDOBJ_FUNC(int)  checksum_zipped_file (int pathtype, int pathindex, const char *zipfile, const char *filename, unsigned int *length, unsigned int *sum);
@@ -164,37 +182,6 @@ extern SHAREDOBJ_DATA struct neogeo_bios_info neogeo_bios[NEOGEO_BIOS_MAX];
 #endif /* NEOGEO_BIOS_SELECT */
 
 
-#include "rc.h"
-extern SHAREDOBJ_FUNC(struct rc_struct *) rc_create(void);
-extern SHAREDOBJ_FUNC(void) rc_destroy(struct rc_struct *rc);
-extern SHAREDOBJ_FUNC(int) rc_register(struct rc_struct *rc, struct rc_option *option);
-extern SHAREDOBJ_FUNC(int) rc_unregister(struct rc_struct *rc, struct rc_option *option);
-extern SHAREDOBJ_FUNC(int) rc_load(struct rc_struct *rc, const char *name, int priority, int continue_on_errors);
-extern SHAREDOBJ_FUNC(int) rc_save(struct rc_struct *rc, const char *name, int append);
-extern SHAREDOBJ_FUNC(int) osd_rc_read(struct rc_struct *rc, mame_file *f, const char *description, int priority, int continue_on_errors);
-extern SHAREDOBJ_FUNC(int) osd_rc_write(struct rc_struct *rc, mame_file *f, const char *description);
-extern SHAREDOBJ_FUNC(int) osd_rc_write_changes(struct rc_struct *rc, mame_file *f, const char *description, int (*changed)(struct rc_option *, void *), void *param);
-extern SHAREDOBJ_FUNC(int) rc_read(struct rc_struct *rc, FILE *f, const char *description, int priority, int continue_on_errors);
-extern SHAREDOBJ_FUNC(int) rc_write(struct rc_struct *rc, FILE *f, const char *description);
-extern SHAREDOBJ_FUNC(int) rc_parse_commandline(struct rc_struct *rc, int argc, char *argv[], int priority, int(*arg_callback)(char *arg));
-extern SHAREDOBJ_FUNC(int) rc_get_non_option_args(struct rc_struct *rc, int *argc, char **argv[]);
-
-extern SHAREDOBJ_FUNC(void) rc_print_help(struct rc_struct *rc, FILE *f);
-extern SHAREDOBJ_FUNC(void) rc_print_man_options(struct rc_struct *rc, FILE *f);
-extern SHAREDOBJ_FUNC(int) rc_verify_power_of_2(struct rc_option *option, const char *arg, int priority);
-extern SHAREDOBJ_FUNC(int) rc_option_requires_arg(struct rc_struct *rc, const char *name);
-extern SHAREDOBJ_FUNC(int) rc_option_requires_arg2(struct rc_option *option, const char *name);
-extern SHAREDOBJ_FUNC(int) rc_option_requires_arg3(struct rc_option *option);
-extern SHAREDOBJ_FUNC(int) rc_get_priority(struct rc_struct *rc, const char *name);
-extern SHAREDOBJ_FUNC(int) rc_get_priority2(struct rc_option *option, const char *name);
-extern SHAREDOBJ_FUNC(int) rc_get_priority3(struct rc_option *option);
-extern SHAREDOBJ_FUNC(int) rc_set_option(struct rc_struct *rc, const char *name, const char *arg, int priority);
-extern SHAREDOBJ_FUNC(int) rc_set_option2(struct rc_option *option, const char *name, const char *arg, int priority);
-extern SHAREDOBJ_FUNC(int) rc_set_option3(struct rc_option *option, const char *arg, int priority);
-extern SHAREDOBJ_FUNC(struct rc_option *) rc_get_option(struct rc_struct *rc, const char *name);
-extern SHAREDOBJ_FUNC(struct rc_option *) rc_get_option2(struct rc_option *option, const char *name);
-extern SHAREDOBJ_FUNC(struct rc_option *) rc_get_options(struct rc_struct *rc);
-
 // in windows/input.c
 extern SHAREDOBJ_DATA const int win_key_trans_table[][4];
 
@@ -206,11 +193,10 @@ extern SHAREDOBJ_FUNCPTR(int)  (*osd_display_loading_rom_message_)(const char *n
 extern SHAREDOBJ_FUNC(void)    set_pathlist(int file_type, const char *new_rawpath);
 
 // in windows/*.c
-extern SHAREDOBJ_DATA struct rc_option frontend_opts[];
-extern SHAREDOBJ_DATA struct rc_option fileio_opts[];
-extern SHAREDOBJ_DATA struct rc_option input_opts[];
-extern SHAREDOBJ_DATA struct rc_option sound_opts[];
-extern SHAREDOBJ_DATA struct rc_option video_opts[];
+extern const options_entry fileio_opts[];
+extern const options_entry video_opts[];
+extern const options_entry palette_opts[];
+extern const options_entry input_opts[];
 
 #ifdef MALLOC_DEBUG
 // in windows/winalloc.c
@@ -233,12 +219,11 @@ extern int (*osd_display_loading_rom_message_)(const char *name, rom_load_data *
 extern void set_pathlist(int file_type, const char *new_rawpath);
 
 // in windows/*.c
-#include "rc.h"
-extern struct rc_option frontend_opts[];
-extern struct rc_option fileio_opts[];
-extern struct rc_option input_opts[];
-extern struct rc_option sound_opts[];
-extern struct rc_option video_opts[];
+#include "options.h"
+extern const options_entry fileio_opts[];
+extern const options_entry video_opts[];
+extern const options_entry palette_opts[];
+extern const options_entry input_opts[];
 
 // in windows/input.c
 extern const int win_key_trans_table[][4];
@@ -257,12 +242,11 @@ extern void set_pathlist(int file_type, const char *new_rawpath);
 extern int (*osd_display_loading_rom_message_)(const char *name, rom_load_data *romdata);
 
 // in windows/*.c
-#include "rc.h"
-extern struct rc_option frontend_opts[];
-extern struct rc_option fileio_opts[];
-extern struct rc_option input_opts[];
-extern struct rc_option sound_opts[];
-extern struct rc_option video_opts[];
+#include "options.h"
+extern const options_entry fileio_opts[];
+extern const options_entry video_opts[];
+extern const options_entry palette_opts[];
+extern const options_entry input_opts[];
 
 // in windows/input.c
 extern const int win_key_trans_table[][4];

@@ -67,7 +67,9 @@ UINT8 *ui_transparent_background[3];
     LOCAL VARIABLES
 -------------------------------------------------*/
 
+#ifndef NEW_RENDER
 static UINT8 direct_rgb_rshift, direct_rgb_gshift, direct_rgb_bshift;
+#endif
 
 rgb_t *game_palette;				/* RGB palette as set by the driver */
 static rgb_t *adjusted_palette;		/* actual RGB palette after brightness/gamma adjustments */
@@ -118,9 +120,13 @@ static void internal_modify_pen(pen_t pen, rgb_t color, int pen_bright);
 
 INLINE UINT16 rgb_to_direct15(rgb_t rgb)
 {
+#ifndef NEW_RENDER
 	return  ( ((RGB_RED(rgb) >> 3) << direct_rgb_rshift) |
 			((RGB_GREEN(rgb) >> 3) << direct_rgb_gshift) |
 			( (RGB_BLUE(rgb) >> 3) << direct_rgb_bshift));
+#else
+	return ((RGB_RED(rgb) >> 3) << 10) | ((RGB_GREEN(rgb) >> 3) << 5) | ((RGB_BLUE(rgb) >> 3) << 0);
+#endif
 }
 
 
@@ -132,9 +138,13 @@ INLINE UINT16 rgb_to_direct15(rgb_t rgb)
 
 INLINE UINT32 rgb_to_direct32(rgb_t rgb)
 {
+#ifndef NEW_RENDER
 	return  ( (RGB_RED(rgb) << direct_rgb_rshift) |
 			(RGB_GREEN(rgb) << direct_rgb_gshift) |
 			( RGB_BLUE(rgb) << direct_rgb_bshift));
+#else
+	return rgb;
+#endif
 }
 
 
@@ -1060,9 +1070,21 @@ static int palette_alloc(void)
 int palette_init(void)
 {
 	int i;
-	UINT32 temp;
 
-#ifdef NEW_RENDER
+#ifndef NEW_RENDER
+	if (colormode != PALETTIZED_16BIT)
+	{
+		UINT32 temp;
+
+		/* first convert the RGB components we got back into shifts */
+		for (temp = direct_rgb_components[0], direct_rgb_rshift = 0; !(temp & 1); temp >>= 1)
+			direct_rgb_rshift++;
+		for (temp = direct_rgb_components[1], direct_rgb_gshift = 0; !(temp & 1); temp >>= 1)
+			direct_rgb_gshift++;
+		for (temp = direct_rgb_components[2], direct_rgb_bshift = 0; !(temp & 1); temp >>= 1)
+			direct_rgb_bshift++;
+	}
+#else
 	if (colormode == DIRECT_15BIT)
 	{
 		direct_rgb_components[0] = 0x1f << 10;
@@ -1076,16 +1098,6 @@ int palette_init(void)
 		direct_rgb_components[2] = 0xff;
 	}
 #endif
-	if (colormode != PALETTIZED_16BIT)
-	{
-		/* first convert the RGB components we got back into shifts */
-		for (temp = direct_rgb_components[0], direct_rgb_rshift = 0; !(temp & 1); temp >>= 1)
-			direct_rgb_rshift++;
-		for (temp = direct_rgb_components[1], direct_rgb_gshift = 0; !(temp & 1); temp >>= 1)
-			direct_rgb_gshift++;
-		for (temp = direct_rgb_components[2], direct_rgb_bshift = 0; !(temp & 1); temp >>= 1)
-			direct_rgb_bshift++;
-	}
 
 #ifdef TRANS_UI
 	if (options.use_transui)
@@ -1284,11 +1296,11 @@ int palette_init(void)
 int palette_get_total_colors_with_ui(void)
 {
 	int result = Machine->drv->total_colors;
-#ifndef NEW_RENDER
 	if (Machine->drv->video_attributes & VIDEO_HAS_SHADOWS && !(colormode & DIRECT_RGB))
 		result += Machine->drv->total_colors;
 	if (Machine->drv->video_attributes & VIDEO_HAS_HIGHLIGHTS && !(colormode & DIRECT_RGB))
 		result += Machine->drv->total_colors;
+#ifndef NEW_RENDER
 #ifdef TRANS_UI
 	result += trans_colors;
 #endif /* TRANS_UI */

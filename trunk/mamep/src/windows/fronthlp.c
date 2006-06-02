@@ -21,8 +21,8 @@
 #include "unzip.h"
 #include "jedparse.h"
 #include "sound/samples.h"
+#include "options.h"
 
-#include "rc.h"
 
 /* Quick fix to allow compilation with win32api 2.4 */
 #undef INVALID_FILE_ATTRIBUTES
@@ -37,62 +37,16 @@
 #define INVALID_SET_FILE_POINTER ((DWORD)-1)
 #endif
 
-#ifndef MESS
-enum { LIST_XML = 1, LIST_FULL, LIST_ROMS, LIST_SAMPLES,
-		LIST_GAMES, LIST_CLONES,
-		LIST_CRC,
-		LIST_CPU, LIST_CPUCLASS, LIST_SOURCEFILE,
-		 };
-#else
-#include "infomess.h"
-enum { LIST_XML = 1, LIST_FULL, LIST_ROMS, LIST_SAMPLES,
-		LIST_GAMES, LIST_CLONES,
-		LIST_CRC,
-		LIST_SOURCEFILE,
-		LIST_MESSDEVICES };
-#endif
-
-#define VERIFY_ROMS		0x00000001
-#define VERIFY_SAMPLES	0x00000002
-
 #define KNOWN_START 0
 #define KNOWN_ALL   1
 #define KNOWN_NONE  2
 #define KNOWN_SOME  3
 
-static int list = 0;
-static int verify = 0;
-static int ident = 0;
-static int help = 0;
 
-struct rc_option frontend_opts[] =
-{
-	{ "Frontend Related", NULL,	rc_seperator, NULL, NULL, 0, 0,	NULL, NULL },
-
-	{ "help", "h", rc_set_int, &help, NULL, 1, 0, NULL, "show help message" },
-	{ "?", NULL,   rc_set_int, &help, NULL, 1, 0, NULL, "show help message" },
-
-	/* list options follow */
-	{ "listxml", "lx", rc_set_int, &list, NULL, LIST_XML, 0, NULL, "all available info on driver in XML format" },
-	{ "listfull", "ll", rc_set_int,	&list, NULL, LIST_FULL,	0, NULL, "short name, full name" },
-	{ "listgames", NULL, rc_set_int, &list, NULL, LIST_GAMES, 0, NULL, "year, manufacturer and full name" },
-	{ "listsource",	"ls", rc_set_int, &list, NULL, LIST_SOURCEFILE, 0, NULL, "driver sourcefile" },
-	{ "listclones", "lc", rc_set_int, &list, NULL, LIST_CLONES, 0, NULL, "show clones" },
-	{ "listcrc", NULL, rc_set_int, &list, NULL, LIST_CRC, 0, NULL, "CRC-32s" },
-#ifdef MESS
-	{ "listdevices", NULL, rc_set_int, &list, NULL, LIST_MESSDEVICES, 0, NULL, "list available devices" },
-#endif
-	{ "listroms", NULL, rc_set_int, &list, NULL, LIST_ROMS, 0, NULL, "list required roms for a driver" },
-	{ "listsamples", NULL, rc_set_int, &list, NULL, LIST_SAMPLES, 0, NULL, "list optional samples for a driver" },
-	{ "verifyroms", NULL, rc_set_int, &verify, NULL, VERIFY_ROMS, 0, NULL, "report romsets that have problems" },
-	{ "verifysamples", NULL, rc_set_int, &verify, NULL, VERIFY_SAMPLES, 0, NULL, "report samplesets that have problems" },
-	{ "romident", NULL, rc_set_int, &ident, NULL, 1, 0, NULL, "compare files with known MAME roms" },
-	{ "isknown", NULL, rc_set_int, &ident, NULL, 2, 0, NULL, "compare files with known MAME roms (brief)" },
-	{ NULL, NULL, rc_end, NULL, NULL, 0, 0, NULL, NULL }
-};
+static FILE *verify_file;
 
 
-static int silentident,knownstatus,identfiles,identmatches,identnonroms;
+static int knownstatus,identfiles,identmatches,identnonroms;
 
 
 
@@ -179,7 +133,7 @@ static void namecopy(char *name_ref,const char *desc)
     match_roms - scan for a matching ROM by hash
 -------------------------------------------------*/
 
-static void match_roms(const game_driver *driver, const char *hash, int length, int *found)
+static void match_roms(const game_driver *driver, const char *hash, int length, int *found, FILE *output)
 {
 	const rom_entry *region, *rom;
 
@@ -190,11 +144,11 @@ static void match_roms(const game_driver *driver, const char *hash, int length, 
 			{
 				int baddump = hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_BAD_DUMP);
 
-				if (!silentident)
+				if (output != NULL)
 				{
 					if (*found != 0)
-						printf("             ");
-					printf("= %s%-12s  %s\n",baddump ? _WINDOWS("(BAD) ") : "",ROM_GETNAME(rom),(options.use_lang_list ? _LST(driver->description) : driver->description));
+						fprintf(output, "             ");
+					fprintf(output, "= %s%-12s  %s\n",baddump ? _WINDOWS("(BAD) ") : "",ROM_GETNAME(rom),(options.use_lang_list ? _LST(driver->description) : driver->description));
 				}
 				(*found)++;
 			}
@@ -207,7 +161,7 @@ static void match_roms(const game_driver *driver, const char *hash, int length, 
     fusemap into raw data first
 -------------------------------------------------*/
 
-void identify_data(const char *name, const UINT8 *data, int length)
+void identify_data(const char *name, const UINT8 *data, int length, FILE *output)
 {
 	int namelen = strlen(name);
 	char hash[HASH_BUF_SIZE];
@@ -248,12 +202,12 @@ void identify_data(const char *name, const UINT8 *data, int length)
 
 	/* output the name */
 	identfiles++;
-	if (!silentident)
-		printf("%s ", &name[i]);
+	if (output != NULL)
+		fprintf(output, "%s ", &name[i]);
 
 	/* see if we can find a match in the ROMs */
 	for (i = 0; drivers[i]; i++)
-		match_roms(drivers[i], hash, length, &found);
+		match_roms(drivers[i], hash, length, &found, output);
 
 	/* if we didn't find it, try to guess what it might be */
 	if (found == 0)
@@ -261,16 +215,16 @@ void identify_data(const char *name, const UINT8 *data, int length)
 		/* if not a power of 2, assume it is a non-ROM file */
 		if ((length & (length - 1)) != 0)
 		{
-			if (!silentident)
-				printf(_WINDOWS("NOT A ROM\n"));
+			if (output != NULL)
+				fprintf(output, _WINDOWS("NOT A ROM\n"));
 			identnonroms++;
 		}
 
 		/* otherwise, it's just not a match */
 		else
 		{
-			if (!silentident)
-				printf(_WINDOWS("NO MATCH\n"));
+			if (output != NULL)
+				fprintf(output, _WINDOWS("NO MATCH\n"));
 			if (knownstatus == KNOWN_START)
 				knownstatus = KNOWN_NONE;
 			else if (knownstatus == KNOWN_ALL)
@@ -300,7 +254,7 @@ void identify_data(const char *name, const UINT8 *data, int length)
     files
 -------------------------------------------------*/
 
-void identify_file(const char *name)
+void identify_file(const char *name, FILE *output)
 {
 	int namelen = strlen(name);
 	int length;
@@ -326,7 +280,7 @@ void identify_file(const char *name)
 					if (data != NULL)
 					{
 						readuncompresszip(zip, entry, data);
-						identify_data(entry->name, data, entry->uncompressed_size);
+						identify_data(entry->name, data, entry->uncompressed_size, output);
 						free(data);
 					}
 				}
@@ -353,7 +307,7 @@ void identify_file(const char *name)
 			if (data != NULL)
 			{
 				fread(data, 1, length, f);
-				identify_data(name, data, length);
+				identify_data(name, data, length, output);
 				free(data);
 			}
 		}
@@ -367,7 +321,7 @@ void identify_file(const char *name)
     all the files in it
 -------------------------------------------------*/
 
-void identify_dir(const char *dirname)
+void identify_dir(const char *dirname, FILE *output)
 {
 	WIN32_FIND_DATA entry;
 	char *dirfilter;
@@ -398,7 +352,7 @@ void identify_dir(const char *dirname)
 			/* create a full path to the file and identify it */
 			char *buf = (char *)malloc(strlen(dirname) + 1 + strlen(entry.cFileName) + 1);
 			sprintf(buf, "%s\\%s", dirname, entry.cFileName);
-			identify_file(buf);
+			identify_file(buf, output);
 			free(buf);
 		}
 
@@ -415,10 +369,14 @@ void identify_dir(const char *dirname)
     romident - identify files
 -------------------------------------------------*/
 
-void romident(const char *name)
+void romident(const char *name, FILE *output)
 {
 	TCHAR error[256];
 	DWORD attr;
+
+	/* reset the globals */
+	knownstatus = KNOWN_START;
+	identfiles = identmatches = identnonroms = 0;
 
 	/* see what kind of file we're looking at */
 	attr = GetFileAttributes(name);
@@ -433,376 +391,572 @@ void romident(const char *name)
 
 	/* directory -- scan it */
 	if (attr & FILE_ATTRIBUTE_DIRECTORY)
-		identify_dir(name);
+		identify_dir(name, output);
 	else
-		identify_file(name);
+		identify_file(name, output);
 }
 
 
-int frontend_help (const char *gamename, const char *filename)
+INLINE int isclone(int drvindex)
 {
-	machine_config drv;
-	int i, j;
-	const game_driver *gamedrv;
-	const game_driver *clone_of;
-	const char *all_games = "*";
-	char *pdest = NULL;
-	int result = 0;
-
-	/* display help unless a game or an utility are specified */
-	if (!gamename && !help && !list && !ident && !verify)
-		help = 1;
-
-	if (help)  /* brief help - useful to get current version info */
-	{
-		#ifndef MESS
-		printf(_WINDOWS("M.A.M.E. v%s - Multiple Arcade Machine Emulator\n"
-				"Copyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n"),build_version);
-		printf(_WINDOWS("%s\n"), _(mame_disclaimer));
-		printf(_WINDOWS("Usage:  " APPNAME " gamename [options]\n\n"));
-		printf(_WINDOWS("        " APPNAME " -showusage    for a brief list of options\n"));
-		printf(_WINDOWS("        " APPNAME " -showconfig   for a list of configuration options\n"));
-		printf(_WINDOWS("        " APPNAME " -createconfig to create a mame.ini\n\n"));
-		printf(_WINDOWS("For usage instructions, please consult the file windows.txt\n"));
-		#else
-		showmessinfo();
-		#endif
-		return 0;
-	}
-
-	/* HACK: some options REQUIRE gamename field to work: default to "*" */
-	if (!gamename || (strlen(gamename) == 0))
-		gamename = all_games;
-
-	/* since the cpuintrf structure is filled dynamically now, we have to init first */
-	cpuintrf_init();
-	sndintrf_init();
-
-#define isclone(i) \
-	((clone_of = driver_get_clone(drivers[i])) != NULL && (clone_of->flags & NOT_A_DRIVER) == 0)
-
-	switch (list)  /* front-end utilities ;) */
-	{
-        #ifdef MESS
-		case LIST_MESSDEVICES:
-			/* send the gamename to MESS */
-			print_mess_devices(gamename);
-			return 0;
-			break;
-		#endif
-
-		case LIST_FULL: /* games list with descriptions */
-			printf(_WINDOWS("Name:     Description:\n"));
-			for (i = 0; drivers[i]; i++)
-				if (	((drivers[i]->flags & NOT_A_DRIVER) == 0) &&
-					!strwildcmp(gamename, drivers[i]->name))
-				{
-					char name[200];
-
-					printf("%-10s",drivers[i]->name);
-
-					namecopy(name,drivers[i]->description);
-					printf("\"%s",name);
-
-					/* print the additional description only if we are listing clones */
-					{
-						pdest = strstr(drivers[i]->description, " (");
-						result = pdest - drivers[i]->description;
-						if (pdest != NULL && result > 0 )
-  							printf("%s", pdest);
-					}
-					printf("\"\n");
-				}
-			return 0;
-			break;
-
-		case LIST_ROMS: /* game roms list or */
-		case LIST_SAMPLES: /* game samples list */
-			j = 0;
-			while (drivers[j] && (mame_stricmp(gamename,drivers[j]->name) != 0))
-				j++;
-			if (drivers[j] == 0)
-			{
-				printf(_WINDOWS("Game \"%s\" not supported!\n"),gamename);
-				return 1;
-			}
-			gamedrv = drivers[j];
-			if (list == LIST_ROMS)
-			{
-				const rom_entry *region, *rom, *chunk;
-				char buf[512];
-
-				printf("This is the list of the ROMs required for driver \"%s\".\n"
-						"Name            Size Checksum\n",gamename);
-
-				for (region = gamedrv->rom; region; region = rom_next_region(region))
-				{
-					for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
-					{
-						const char *name = ROM_GETNAME(rom);
-						const char* hash = ROM_GETHASHDATA(rom);
-						int length = -1; /* default is for disks! */
-
-						if (ROMREGION_ISROMDATA(region))
-						{
-							length = 0;
-							for (chunk = rom_first_chunk(rom); chunk; chunk = rom_next_chunk(chunk))
-								length += ROM_GETLENGTH(chunk);
-						}
-
-						printf("%-12s ", name);
-						if (length >= 0)
-							printf("%7d",length);
-							else
-							printf("       ");
-
-						if (!hash_data_has_info(hash, HASH_INFO_NO_DUMP))
-						{
-							if (hash_data_has_info(hash, HASH_INFO_BAD_DUMP))
-								printf(" BAD");
-
-							hash_data_print(hash, 0, buf);
-							printf(" %s", buf);
-						}
-						else
-							printf(" NO GOOD DUMP KNOWN");
-
-						printf("\n");
-					}
-				}
-			}
-			else
-			{
-#if (HAS_SAMPLES)
-				int k;
-				expand_machine_driver(gamedrv->drv, &drv);
-				for( k = 0; drv.sound[k].sound_type && k < MAX_SOUND; k++ )
-				{
-					const char **samplenames = NULL;
-					if( drv.sound[k].sound_type == SOUND_SAMPLES )
-							samplenames = ((struct Samplesinterface *)drv.sound[k].config)->samplenames;
-					if (samplenames != 0 && samplenames[0] != 0)
-					{
-						i = 0;
-						while (samplenames[i] != 0)
-						{
-							printf("%s\n",samplenames[i]);
-							i++;
-						}
-					}
-				}
-#endif
-			}
-			return 0;
-			break;
-
-		case LIST_GAMES: /* list games, production year, manufacturer */
-			for (i = 0; drivers[i]; i++)
-				if (!strwildcmp(gamename, drivers[i]->description))
-				{
-					char name[200];
-
-					printf("%-5s%-36s ",drivers[i]->year, (options.use_lang_list ? _MANUFACT(drivers[i]->manufacturer) : drivers[i]->manufacturer));
-
-					if (options.use_lang_list)
-					{
-						strcpy(name, _LST(drivers[i]->description));
-						printf("\"%s\"\n", name);
-						continue;
-					}
-
-					namecopy(name,drivers[i]->description);
-					printf("%s",name);
-
-					/* print the additional description only if we are listing clones */
-					pdest = strstr(drivers[i]->description, " (");
-					result = pdest - drivers[i]->description;
-					if (pdest != NULL && result > 0 )
-						printf(" %s", pdest);
-
-					printf("\n");
-				}
-			return 0;
-			break;
-
-		case LIST_CLONES: /* list clones */
-			printf(_WINDOWS("Name:    Clone of:\n"));
-			for (i = 0; drivers[i]; i++)
-				if (	isclone(i) &&
-						(!strwildcmp(gamename,drivers[i]->name)
-								|| !strwildcmp(gamename,clone_of->name)))
-					printf("%-8s %-8s\n",drivers[i]->name,clone_of->name);
-			return 0;
-			break;
-
-		case LIST_SOURCEFILE:
-			for (i = 0; drivers[i]; i++)
-				if (!strwildcmp(gamename,drivers[i]->name))
-					printf("%-8s %s\n",drivers[i]->name,drivers[i]->source_file);
-			return 0;
-			break;
-
-		case LIST_CRC: /* list all crc-32 */
-			for (i = 0; drivers[i]; i++)
-			{
-				const rom_entry *region, *rom;
-
-				for (region = rom_first_region(drivers[i]); region; region = rom_next_region(region))
-					for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
-					{
-						char chksum[256];
-
-						if (hash_data_extract_printable_checksum(ROM_GETHASHDATA(rom), HASH_CRC, chksum))
-							printf("%s %-12s %s\n",chksum,ROM_GETNAME(rom),(options.use_lang_list ? _LST(drivers[i]->description) : drivers[i]->description));
-					}
-			}
-			return 0;
-			break;
-
-		case LIST_XML: /* list all info */
-			print_mame_xml( stdout, drivers );
-			return 0;
-	}
-
-	if (verify)  /* "verify" utilities */
-	{
-		int err = 0;
-		int correct = 0;
-		int incorrect = 0;
-		int res = 0;
-		int total = 0;
-		int checked = 0;
-		int notfound = 0;
+	const game_driver *clone_of = driver_get_clone(drivers[drvindex]);
+	return (clone_of != NULL && (clone_of->flags & NOT_A_DRIVER) == 0);
+}
 
 
-		for (i = 0; drivers[i]; i++)
+int frontend_listxml(FILE *output)
+{
+	print_mame_xml(output, drivers);
+	return 0;
+}
+
+
+int frontend_listfull(FILE *output)
+{
+	const char *gamename = options_get_string("", FALSE);
+	int drvindex, count = 0;
+
+	/* a NULL gamename == '*' */
+	if (gamename == NULL)
+		gamename = "*";
+
+	/* print the header */
+	fprintf(output, _WINDOWS("Name:     Description:\n"));
+
+	/* iterate over drivers */
+	for (drvindex = 0; drivers[drvindex]; drvindex++)
+		if ((drivers[drvindex]->flags & NOT_A_DRIVER) == 0 && strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
-			if (!strwildcmp(gamename, drivers[i]->name))
-				total++;
-		}
+			char name[200];
 
-		for (i = 0; drivers[i]; i++)
-		{
-			if (strwildcmp(gamename, drivers[i]->name))
+			fprintf(output, "%-10s", drivers[drvindex]->name);
+
+			if (options.use_lang_list)
+			{
+				strcpy(name, _LST(drivers[drvindex]->description));
+				fprintf(output, "\"%s\"\n", name);
 				continue;
-
-			if (verify & VERIFY_ROMS)
-			{
-				res = audit_verify_roms (i, (verify_printf_proc)printf);
-
-				if (res == CLONE_NOTFOUND || res == NOTFOUND)
-				{
-					notfound++;
-					goto nextloop;
-				}
-
-				printf (_WINDOWS("romset %s "), drivers[i]->name);
-				if (isclone(i))
-					printf ("[%s] ", clone_of->name);
-			}
-			if (verify & VERIFY_SAMPLES)
-			{
-				const char **samplenames = NULL;
-				expand_machine_driver(drivers[i]->drv, &drv);
-#if (HAS_SAMPLES)
-				for( j = 0; drv.sound[j].sound_type && j < MAX_SOUND; j++ )
- 					if( drv.sound[j].sound_type == SOUND_SAMPLES )
- 						samplenames = ((struct Samplesinterface *)drv.sound[j].config)->samplenames;
-#endif
-				/* ignore games that need no samples */
-				if (samplenames == 0 || samplenames[0] == 0)
-					goto nextloop;
-
-				res = audit_verify_samples (i, (verify_printf_proc)printf);
-				if (res == NOTFOUND)
-				{
-					notfound++;
-					goto nextloop;
-				}
-				printf (_WINDOWS("sampleset %s "), drivers[i]->name);
 			}
 
-			if (res == NOTFOUND)
-			{
-				printf ("oops, should never come along here\n");
-			}
-			else if (res == INCORRECT)
-			{
-				printf (_WINDOWS("is bad\n"));
-				incorrect++;
-			}
-			else if (res == CORRECT)
-			{
-				printf (_WINDOWS("is good\n"));
-				correct++;
-			}
-			else if (res == BEST_AVAILABLE)
-			{
-				printf (_WINDOWS("is best available\n"));
-				correct++;
-			}
-			else if (res == MISSING_OPTIONAL)
-			{
-				printf (_WINDOWS("is missing optional files\n"));
-				correct++;
-			}
-			if (res)
-				err = res;
+			namecopy(name,drivers[drvindex]->description);
+			fprintf(output, "\"%s",name);
 
-nextloop:
-			checked++;
-			fprintf(stderr,"%d%%\r",100 * checked / total);
+			/* print the additional description only if we are listing clones */
+			{
+				char *pdest = pdest = strstr(drivers[drvindex]->description, " (");
+
+				if (pdest != NULL && pdest > drivers[drvindex]->description)
+					fprintf(output, "%s", pdest);
+			}
+
+			fprintf(output, "\"\n");
+
+			count++;
 		}
 
-		if (correct+incorrect == 0)
+	/* return an error if none found */
+	return (count > 0) ? 0 : 1;
+}
+
+
+int frontend_listgames(FILE *output)
+{
+	const char *gamename = options_get_string("", FALSE);
+	int drvindex, count = 0;
+
+	/* a NULL gamename == '*' */
+	if (gamename == NULL)
+		gamename = "*";
+
+	for (drvindex = 0; drivers[drvindex]; drvindex++)
+		if ((drivers[drvindex]->flags & NOT_A_DRIVER) == 0 && strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
-			printf ("%s ", (verify & VERIFY_ROMS) ? _WINDOWS("romset") : _WINDOWS("sampleset") );
-			if (notfound > 0)
-				printf(_WINDOWS("\"%8s\" not found!\n"),gamename);
-			else
-				printf(_WINDOWS("\"%8s\" not supported!\n"),gamename);
-			return 1;
+			char name[200];
+
+			fprintf(output, "%-5s%-36s ",drivers[drvindex]->year, (options.use_lang_list ? _MANUFACT(drivers[drvindex]->manufacturer) : drivers[drvindex]->manufacturer));
+
+			if (options.use_lang_list)
+			{
+				strcpy(name, _LST(drivers[drvindex]->description));
+				fprintf(output, "\"%s\"\n", name);
+				continue;
+			}
+
+			namecopy(name,drivers[drvindex]->description);
+			fprintf(output, "\"%s",name);
+
+			/* print the additional description only if we are listing clones */
+			{
+				char *pdest = pdest = strstr(drivers[drvindex]->description, " (");
+
+				if (pdest != NULL && pdest > drivers[drvindex]->description)
+					fprintf(output, "%s", pdest);
+			}
+
+			fprintf(output, "\"\n");
+
+			count++;
 		}
-		else
+
+	/* return an error if none found */
+	return (count > 0) ? 0 : 1;
+}
+
+int frontend_listsource(FILE *output)
+{
+	const char *gamename = options_get_string("", FALSE);
+	int drvindex, count = 0;
+
+	/* a NULL gamename == '*' */
+	if (gamename == NULL)
+		gamename = "*";
+
+	/* iterate over drivers */
+	for (drvindex = 0; drivers[drvindex]; drvindex++)
+		if (strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
-			printf(_WINDOWS("%d %s found, %d were OK.\n"), correct+incorrect,
-					(verify & VERIFY_ROMS)? _WINDOWS("romsets") : _WINDOWS("samplesets"), correct);
-			if (incorrect > 0)
-				return 2;
-			else
-				return 0;
+			fprintf(output, "%-8s %s\n", drivers[drvindex]->name, drivers[drvindex]->source_file);
+			count++;
 		}
-		return 0;
-	}
-	if (ident)
+
+	/* return an error if none found */
+	return (count > 0) ? 0 : 1;
+}
+
+
+int frontend_listclones(FILE *output)
+{
+	const char *gamename = options_get_string("", FALSE);
+	int drvindex, count = 0;
+
+	/* a NULL gamename == '*' */
+	if (gamename == NULL)
+		gamename = "*";
+
+	/* print the header */
+	fprintf(output, _WINDOWS("Name:    Clone of:\n"));
+
+	/* iterate over drivers */
+	for (drvindex = 0; drivers[drvindex]; drvindex++)
 	{
-		if (ident == 2) silentident = 1;
-		else silentident = 0;
+		const game_driver *clone_of = driver_get_clone(drivers[drvindex]);
 
-		knownstatus = KNOWN_START;
-		identfiles = identmatches = identnonroms = 0;
-		romident(filename);
-		if (ident == 2)
-		{
-			switch (knownstatus)
+		/* if we are a clone, and either our name matches the gamename, or the clone's name matches, display us */
+		if (clone_of != NULL && (clone_of->flags & NOT_A_DRIVER) == 0)
+			if (strwildcmp(gamename, drivers[drvindex]->name) == 0 || strwildcmp(gamename, clone_of->name) == 0)
 			{
-				case KNOWN_START: printf(_WINDOWS("ERROR     %s\n"),gamename); break;
-				case KNOWN_ALL:   printf(_WINDOWS("KNOWN     %s\n"),gamename); break;
-				case KNOWN_NONE:  printf(_WINDOWS("UNKNOWN   %s\n"),gamename); break;
-				case KNOWN_SOME:  printf(_WINDOWS("PARTKNOWN %s\n"),gamename); break;
+				fprintf(output, "%-8s %-8s\n", drivers[drvindex]->name, clone_of->name);
+				count++;
+			}
+	}
+
+	/* return an error if none found */
+	return (count > 0) ? 0 : 1;
+}
+
+
+int frontend_listcrc(FILE *output)
+{
+	int drvindex;
+
+	/* iterate over drivers */
+	for (drvindex = 0; drivers[drvindex]; drvindex++)
+	{
+		const rom_entry *region, *rom;
+
+		/* iterate over regions, and then ROMs within the region */
+		for (region = rom_first_region(drivers[drvindex]); region; region = rom_next_region(region))
+			for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
+			{
+				char hashbuf[512];
+
+				/* if we have a CRC, display it */
+				if (hash_data_extract_printable_checksum(ROM_GETHASHDATA(rom), HASH_CRC, hashbuf))
+					fprintf(output, "%s %-12s %s\n", hashbuf, ROM_GETNAME(rom), (options.use_lang_list ? _LST(drivers[drvindex]->description) : drivers[drvindex]->description));
+			}
+	}
+
+	return 0;
+}
+
+
+int frontend_listroms(FILE *output)
+{
+	const char *gamename = options_get_string("", FALSE);
+	const rom_entry *region, *rom, *chunk;
+	const game_driver **gamedrv;
+
+	/* find the gamename */
+	for (gamedrv = (const game_driver **)&drivers[0]; *gamedrv != NULL; gamedrv++)
+		if (mame_stricmp(gamename, (*gamedrv)->name) == 0)
+			break;
+
+	/* error if not found */
+	if (*gamedrv == NULL)
+	{
+		fprintf(stderr, _WINDOWS("Game \"%s\" not supported!\n"), gamename);
+		return 1;
+	}
+
+	/* print the header */
+	fprintf(output, _WINDOWS("This is the list of the ROMs required for driver \"%s\".\n"
+			"Name            Size Checksum\n"), gamename);
+
+	/* iterate over regions and then ROMs within the region */
+	for (region = (*gamedrv)->rom; region; region = rom_next_region(region))
+		for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
+		{
+			const char *name = ROM_GETNAME(rom);
+			const char* hash = ROM_GETHASHDATA(rom);
+			char hashbuf[512];
+			int length = -1; /* default is for disks! */
+
+			/* accumulate the total length of all chunks */
+			if (ROMREGION_ISROMDATA(region))
+			{
+				length = 0;
+				for (chunk = rom_first_chunk(rom); chunk; chunk = rom_next_chunk(chunk))
+					length += ROM_GETLENGTH(chunk);
+			}
+
+			/* start with the name */
+			fprintf(output, "%-12s ", name);
+
+			/* output the length next */
+			if (length >= 0)
+				fprintf(output, "%7d", length);
+			else
+				fprintf(output, "       ");
+
+			/* output the hash data */
+			if (!hash_data_has_info(hash, HASH_INFO_NO_DUMP))
+			{
+				if (hash_data_has_info(hash, HASH_INFO_BAD_DUMP))
+					printf(_WINDOWS(" BAD"));
+
+				hash_data_print(hash, 0, hashbuf);
+				fprintf(output, " %s", hashbuf);
+			}
+			else
+				fprintf(output, _WINDOWS(" NO GOOD DUMP KNOWN"));
+
+			/* end with a CR */
+			fprintf(output, "\n");
+		}
+
+	return 0;
+}
+
+
+int frontend_listsamples(FILE *output)
+{
+	const char *gamename = options_get_string("", FALSE);
+	const game_driver **gamedrv;
+#if (HAS_SAMPLES)
+	machine_config drv;
+	int sndnum;
+#endif
+
+	/* find the gamename */
+	for (gamedrv = (const game_driver **)&drivers[0]; *gamedrv != NULL; gamedrv++)
+		if (mame_stricmp(gamename, (*gamedrv)->name) == 0)
+			break;
+
+	/* error if not found */
+	if (*gamedrv == NULL)
+	{
+		fprintf(stderr, _WINDOWS("Game \"%s\" not supported!\n"), gamename);
+		return 1;
+	}
+
+#if (HAS_SAMPLES)
+	expand_machine_driver((*gamedrv)->drv, &drv);
+	for (sndnum = 0; drv.sound[sndnum].sound_type && sndnum < MAX_SOUND; sndnum++)
+	{
+		const char **samplenames = NULL;
+
+		/* if we hit a sample generator, grab the sample list */
+		if (drv.sound[sndnum].sound_type == SOUND_SAMPLES)
+			samplenames = ((struct Samplesinterface *)drv.sound[sndnum].config)->samplenames;
+
+		/* if the list is legit, walk it and print the sample info */
+		if (samplenames != NULL && samplenames[0] != NULL)
+		{
+			int sampnum;
+
+			for (sampnum = 0; samplenames[sampnum] != NULL; sampnum++)
+				fprintf(output, "%s\n", samplenames[sampnum]);
+		}
+	}
+#endif
+
+	return 0;
+}
+
+
+CLIB_DECL void verify_printf(const char *fmt, ...)
+{
+	va_list arg;
+
+	/* dump to the buffer */
+	va_start(arg, fmt);
+	vfprintf(verify_file, fmt, arg);
+	va_end(arg);
+}
+
+
+
+int frontend_verifyroms(FILE *output)
+{
+	const char *gamename = options_get_string("", FALSE);
+	int correct = 0;
+	int incorrect = 0;
+	int checked = 0;
+	int notfound = 0;
+	int total;
+	int drvindex;
+
+	/* a NULL gamename == '*' */
+	if (gamename == NULL)
+		gamename = "*";
+
+	/* first count up how many drivers match the string */
+	total = 0;
+	for (drvindex = 0; drivers[drvindex]; drvindex++)
+		if (!strwildcmp(gamename, drivers[drvindex]->name))
+			total++;
+
+	/* gross: stash the output handle in a global */
+	verify_file = output;
+
+	/* now iterate over drivers */
+	for (drvindex = 0; drivers[drvindex]; drvindex++)
+	{
+		int res;
+
+		/* skip if we don't match */
+		if (strwildcmp(gamename, drivers[drvindex]->name))
+			continue;
+
+		/* audit the ROMs in this set */
+		res = audit_verify_roms(drvindex, verify_printf);
+
+		/* if not found, count that and leave it at that */
+		if (res == CLONE_NOTFOUND || res == NOTFOUND)
+			notfound++;
+
+		/* else display information about what we discovered */
+		else
+		{
+			const game_driver *clone_of;
+
+			/* output the name of the driver and its clone */
+			fprintf(output, _WINDOWS("romset %s "), drivers[drvindex]->name);
+			clone_of = driver_get_clone(drivers[drvindex]);
+			if (clone_of != NULL)
+				fprintf(output, "[%s] ", clone_of->name);
+
+			/* switch off of the result */
+			switch (res)
+			{
+				case INCORRECT:
+					fprintf(output, _WINDOWS("is bad\n"));
+					incorrect++;
+					break;
+
+				case CORRECT:
+					fprintf(output, _WINDOWS("is good\n"));
+					correct++;
+					break;
+
+				case BEST_AVAILABLE:
+					fprintf(output, _WINDOWS("is best available\n"));
+					correct++;
+					break;
+
+				case MISSING_OPTIONAL:
+					fprintf(output, _WINDOWS("is missing optional files\n"));
+					correct++;
+					break;
 			}
 		}
 
-		if (identmatches == identfiles)
-			return 0;
-		else if (identmatches == identfiles - identnonroms)
-			return 1;
-		else if (identmatches > 0)
-			return 2;
-		else
-			return 3;
+		/* update progress information on stderr */
+		checked++;
+		fprintf(stderr, "%d%%\r", 100 * checked / total);
 	}
 
-	/* FIXME: horrible hack to tell that no frontend option was used */
-	return 1234;
+	/* if we didn't get anything at all, display a generic end message */
+	if (correct + incorrect == 0)
+	{
+		printf ("%s ", _WINDOWS("romset") );
+		if (notfound > 0)
+			printf(_WINDOWS("\"%8s\" not found!\n"), gamename);
+		else
+			printf(_WINDOWS("\"%8s\" not supported!\n"), gamename);
+ 		return 1;
+	}
+
+	/* otherwise, print a summary */
+	else
+	{
+		printf(_WINDOWS("%d %s found, %d were OK.\n"), correct+incorrect, _WINDOWS("romset"), correct);
+		return (incorrect > 0) ? 2 : 0;
+	}
+}
+
+
+
+int frontend_verifysamples(FILE *output)
+{
+	const char *gamename = options_get_string("", FALSE);
+	int correct = 0;
+	int incorrect = 0;
+	int checked = 0;
+	int notfound = 0;
+	int total;
+	int drvindex;
+
+	/* a NULL gamename == '*' */
+	if (gamename == NULL)
+		gamename = "*";
+
+	/* first count up how many drivers match the string */
+	total = 0;
+	for (drvindex = 0; drivers[drvindex]; drvindex++)
+		if (!strwildcmp(gamename, drivers[drvindex]->name))
+			total++;
+
+	/* gross: stash the output handle in a global */
+	verify_file = output;
+
+	/* now iterate over drivers */
+	for (drvindex = 0; drivers[drvindex]; drvindex++)
+	{
+		const char **samplenames = NULL;
+#if (HAS_SAMPLES)
+		machine_config drv;
+		int sndnum;
+#endif
+		int res;
+
+		/* skip if we don't match */
+		if (strwildcmp(gamename, drivers[drvindex]->name))
+			continue;
+
+		/* expand the machine driver and look for samples */
+#if (HAS_SAMPLES)
+		expand_machine_driver(drivers[drvindex]->drv, &drv);
+		for (sndnum = 0; drv.sound[sndnum].sound_type && sndnum < MAX_SOUND; sndnum++)
+			if (drv.sound[sndnum].sound_type == SOUND_SAMPLES)
+				samplenames = ((struct Samplesinterface *)drv.sound[sndnum].config)->samplenames;
+#endif
+		/* if we have samples, continue */
+		if (samplenames != NULL && samplenames[0] != NULL)
+		{
+			/* audit the samples in this set */
+			res = audit_verify_samples(drvindex, verify_printf);
+
+			/* if not found, count that and leave it at that */
+			if (res == NOTFOUND)
+				notfound++;
+
+			/* else display information about what we discovered */
+			else
+			{
+				fprintf(output, _WINDOWS("sampleset %s "), drivers[drvindex]->name);
+
+				/* switch off of the result */
+				switch (res)
+				{
+					case INCORRECT:
+						fprintf(output, _WINDOWS("is bad\n"));
+						incorrect++;
+						break;
+
+					case CORRECT:
+						fprintf(output, _WINDOWS("is good\n"));
+						correct++;
+						break;
+
+					case BEST_AVAILABLE:
+						fprintf(output, _WINDOWS("is best available\n"));
+						correct++;
+						break;
+
+					case MISSING_OPTIONAL:
+						fprintf(output, _WINDOWS("is missing optional files\n"));
+						correct++;
+						break;
+				}
+			}
+		}
+
+		/* update progress information on stderr */
+		checked++;
+		fprintf(stderr, "%d%%\r", 100 * checked / total);
+	}
+
+	/* if we didn't get anything at all, display a generic end message */
+	if (correct + incorrect == 0)
+	{
+		printf ("%s ", _WINDOWS("sampleset") );
+		if (notfound > 0)
+			printf(_WINDOWS("\"%8s\" not found!\n"), gamename);
+		else
+			printf(_WINDOWS("\"%8s\" not supported!\n"), gamename);
+ 		return 1;
+	}
+
+	/* otherwise, print a summary */
+	else
+	{
+		printf(_WINDOWS("%d %s found, %d were OK.\n"), correct+incorrect, _WINDOWS("samplesets"), correct);
+		return (incorrect > 0) ? 2 : 0;
+	}
+}
+
+
+int frontend_romident(FILE *output)
+{
+	/* do the identification */
+	romident(options_get_string("", FALSE), output);
+
+	/* return the appropriate error code */
+	if (identmatches == identfiles)
+		return 0;
+	else if (identmatches == identfiles - identnonroms)
+		return 1;
+	else if (identmatches > 0)
+		return 2;
+	else
+		return 3;
+}
+
+
+int frontend_isknown(FILE *output)
+{
+	const char *gamename = options_get_string("", FALSE);
+
+	/* do the identification */
+	romident(gamename, NULL);
+
+	/* switch off of the result to print a summary */
+	switch (knownstatus)
+	{
+		case KNOWN_START: fprintf(output, _WINDOWS("ERROR     %s\n"), gamename); break;
+		case KNOWN_ALL:   fprintf(output, _WINDOWS("KNOWN     %s\n"), gamename); break;
+		case KNOWN_NONE:  fprintf(output, _WINDOWS("UNKNOWN   %s\n"), gamename); break;
+		case KNOWN_SOME:  fprintf(output, _WINDOWS("PARTKNOWN %s\n"), gamename); break;
+	}
+
+	/* return the appropriate error code */
+	if (identmatches == identfiles)
+		return 0;
+	else if (identmatches == identfiles - identnonroms)
+		return 1;
+	else if (identmatches > 0)
+		return 2;
+	else
+		return 3;
 }

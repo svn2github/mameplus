@@ -65,7 +65,7 @@ endif
 NEW_DEBUGGER = 1
 
 # uncomment next line to use the new rendering system
-# NEW_RENDER = 1
+NEW_RENDER = 1
 
 # uncomment next line to use DRC MIPS3 engine
 X86_MIPS3_DRC = 1
@@ -163,8 +163,6 @@ else
     XCC = @gcc
     LD = @gcc
 endif
-ASM = @nasm
-ASMFLAGS = -f coff
 MD = -mkdir.exe
 RM = @rm -f
 

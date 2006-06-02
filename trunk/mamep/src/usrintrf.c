@@ -368,7 +368,7 @@ static void add_fill(int x0, int y0, int x1, int y1, rgb_t color);
 #endif
 
 static void add_filled_box(int x0, int y0, int x1, int y1);
-static void add_filled_box_black(int x0, int y0, int x1, int y1);
+static void add_black_box(int x1, int y1, int x2, int y2);
 #ifdef USE_SHOW_INPUT_LOG
 static void add_filled_box_noedge(int x0, int y0, int x1, int y1);
 #endif /* USE_SHOW_INPUT_LOG */
@@ -583,7 +583,7 @@ int ui_display_startup_screens(int show_disclaimer, int show_warnings, int show_
 		while (code_read_async() != CODE_NONE) ;
 
 		/* loop while we have a handler */
-		while (ui_handler_callback != NULL)
+		while (ui_handler_callback != NULL && !mame_is_scheduled_event_pending())
 		{
 			int ui_width, ui_height;
 
@@ -594,16 +594,15 @@ int ui_display_startup_screens(int show_disclaimer, int show_warnings, int show_
 			render_container_empty(render_container_get_ui());
 #endif
 
-			/* first draw a box around the whole screen */
-			ui_get_bounds(&ui_width, &ui_height);
-			add_filled_box_black(0, 0, ui_width - 1, ui_height - 1);
-
 			/* call the handler */
-			ui_handler_param = (*ui_handler_callback)(ui_handler_param);
 			if (ui_handler_param == 1000)
 				break;
 			if (ui_handler_param == UI_HANDLER_CANCEL)
 				return 1;
+
+			/* first draw a box around the whole screen */
+			ui_get_bounds(&ui_width, &ui_height);
+			add_black_box(0, 0, ui_width - 1, ui_height - 1);
 
 			/* render and update */
 #ifndef NEW_RENDER
@@ -1966,11 +1965,9 @@ static void handle_keys(void)
 	if (input_ui_pressed(IPT_UI_LOAD_STATE))
 		initiate_load_save(LOADSAVE_LOAD);
 
-#ifndef NEW_RENDER
 	/* handle a save snapshot request */
 	if (input_ui_pressed(IPT_UI_SNAPSHOT))
-		save_screen_snapshot(bitmap);
-#endif
+		save_screen_snapshot(NULL);
 
 #ifdef INP_CAPTION
 	draw_caption();
@@ -3709,11 +3706,11 @@ static UINT32 menu_video(UINT32 state)
 
 		/* handle the keys */
 		if (ui_menu_generic_keys(&selected, menu_items))
-			return selected | (curtarget << 16);
+			return selected;
 
 		/* handle actions */
 		if (input_ui_pressed(IPT_UI_SELECT))
-			return (selected << 16) | 0;
+			return ui_menu_stack_push(menu_video, (selected << 16) | render_target_get_view(render_target_get_indexed(selected)));
 	}
 
 	/* otherwise, draw the list of layouts */
@@ -3734,14 +3731,14 @@ static UINT32 menu_video(UINT32 state)
 		}
 
 		/* add an item to return */
-		item_list[menu_items++].text = ui_getstring(UI_returntomain);
+		item_list[menu_items++].text = ui_getstring(UI_returntoprior);
 
 		/* draw the menu */
 		ui_draw_menu(item_list, menu_items, selected);
 
 		/* handle the keys */
 		if (ui_menu_generic_keys(&selected, menu_items))
-			return selected | (curtarget << 16);
+			return selected;
 
 		/* handle actions */
 		if (input_ui_pressed(IPT_UI_SELECT))
@@ -5736,7 +5733,7 @@ static void build_bgtexture(void)
 
 	*(UINT32 *)bgbitmap->line[0] = MAKE_ARGB(0xff, 0xff, 0xff, 0xff);
 
-	bgtexture = render_texture_alloc(bgbitmap, NULL, NULL, TEXFORMAT_ARGB32_PM, render_bgtexture_scale, NULL);
+	bgtexture = render_texture_alloc(bgbitmap, NULL, NULL, TEXFORMAT_ARGB32, render_bgtexture_scale, NULL);
 	add_exit_callback(free_bgtexture);
 }
 
@@ -5820,7 +5817,7 @@ static void add_filled_box(int x0, int y0, int x1, int y1)
 }
 
 
-static void add_filled_box_black(int x0, int y0, int x1, int y1)
+static void add_black_box(int x0, int y0, int x1, int y1)
 {
 	add_filled_box_color(x0, y0, x1, y1, ARGB_BLACK);
 }
