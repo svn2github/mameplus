@@ -113,7 +113,7 @@ struct _d3d_vertex
 	float					rhw;
 	D3DCOLOR 				color;
 	float					u0, v0;
-	float					padding;
+	//float					padding;
 };
 
 
