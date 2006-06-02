@@ -11,6 +11,7 @@
 
 #include "restrack.h"
 #include "ui_lang.h"
+#include "osd_so.h"
 
 
 

@@ -34,6 +34,9 @@ TMPOBJS = \
 	$(OBJ)/ui/layout.o \
 	$(OBJ)/ui/translate.o
 
+# fixme
+TMPOBJS += $(OBJ)/ui/rc.o
+
 ifneq ($(USE_UI_COLOR_DISPLAY),)
     TMPOBJS += $(OBJ)/ui/paletteedit.o
 endif

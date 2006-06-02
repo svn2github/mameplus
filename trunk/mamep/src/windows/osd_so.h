@@ -61,14 +61,18 @@ extern SHAREDOBJ_FUNC(int) load_driver_mameinfo (const game_driver *drv, char *b
 extern SHAREDOBJ_FUNC(int) load_driver_drivinfo (const game_driver *drv, char *buffer, int bufsize);
 extern SHAREDOBJ_FUNC(int) load_driver_statistics (char *buffer, int bufsize);
 
+extern SHAREDOBJ_DATA const char *lang_directory;
+extern SHAREDOBJ_DATA const char *history_filename;
+#ifdef STORY_DATAFILE
+extern SHAREDOBJ_DATA const char *story_filename;
+#endif /* STORY_DATAFILE */
+extern SHAREDOBJ_DATA const char *mameinfo_filename;
+
 #include "mame.h"
 extern SHAREDOBJ_DATA char            build_version[];
 extern SHAREDOBJ_DATA global_options  options;
 extern SHAREDOBJ_DATA running_machine *Machine;
 extern SHAREDOBJ_FUNC(void)   expand_machine_driver(void (*constructor)(machine_config *), machine_config *output);
-extern SHAREDOBJ_FUNC(void)   begin_resource_tracking(void);
-extern SHAREDOBJ_FUNC(void)   end_resource_tracking(void);
-extern SHAREDOBJ_FUNC(void *) _auto_malloc(size_t size, const char *file, int line) ATTR_MALLOC;
 extern SHAREDOBJ_FUNC(int)    mame_validitychecks(int game);
 
 #include "mamecore.h"
@@ -158,6 +162,17 @@ extern SHAREDOBJ_FUNC(void)         options_set_bool(const char * name, int valu
 extern SHAREDOBJ_FUNC(void)         options_set_int(const char * name, int value);
 extern SHAREDOBJ_FUNC(void)         options_set_float(const char * name, float value);
 
+#include "restrack.h"
+extern SHAREDOBJ_FUNC(void)   add_free_resources_callback(void (*callback)(void));
+extern SHAREDOBJ_FUNC(void)   init_resource_tracking(void);
+extern SHAREDOBJ_FUNC(void)   exit_resource_tracking(void);
+extern SHAREDOBJ_FUNC(void)   begin_resource_tracking(void);
+extern SHAREDOBJ_FUNC(void)   end_resource_tracking(void);
+extern SHAREDOBJ_FUNC(void *) _auto_malloc(size_t size, const char *file, int line) ATTR_MALLOC;
+extern SHAREDOBJ_FUNC(void *) _malloc_or_die(size_t size, const char *file, int line) ATTR_MALLOC;
+extern SHAREDOBJ_FUNC(char *) auto_strdup(const char *str) ATTR_MALLOC;
+extern SHAREDOBJ_FUNC(char *) auto_strdup_allow_null(const char *str) ATTR_MALLOC;
+
 #include "unzip.h"
 extern SHAREDOBJ_FUNC(int)  load_zipped_file (int pathtype, int pathindex, const char *zipfile, const char *filename, unsigned char **buf, unsigned int *length);
 extern SHAREDOBJ_FUNC(int)  checksum_zipped_file (int pathtype, int pathindex, const char *zipfile, const char *filename, unsigned int *length, unsigned int *sum);
@@ -192,11 +207,16 @@ extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 extern SHAREDOBJ_FUNCPTR(int)  (*osd_display_loading_rom_message_)(const char *name, rom_load_data *romdata);
 extern SHAREDOBJ_FUNC(void)    set_pathlist(int file_type, const char *new_rawpath);
 
+// in windows/misc.c
+extern SHAREDOBJ_FUNC(void) print_colums(const char *text1, const char *text2);
+extern SHAREDOBJ_FUNC(void) fprint_colums(FILE *f, const char *text1, const char *text2);
+
 // in windows/*.c
 extern const options_entry fileio_opts[];
 extern const options_entry video_opts[];
 extern const options_entry palette_opts[];
 extern const options_entry input_opts[];
+
 
 #ifdef MALLOC_DEBUG
 // in windows/winalloc.c
@@ -210,6 +230,14 @@ extern SHAREDOBJ_FUNC(void)  CLIB_DECL free(void *memory);
 #else /* _MSC_VER */
 #include "mamecore.h"
 #include "mame.h"
+
+// in datafile.c
+extern const char *lang_directory;
+extern const char *history_filename;
+#ifdef STORY_DATAFILE
+extern const char *story_filename;
+#endif /* STORY_DATAFILE */
+extern const char *mameinfo_filename;
 
 // in windows/winmain.c
 extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
@@ -233,6 +261,14 @@ extern const int win_key_trans_table[][4];
 #else /* !DONT_USE_DLL */
 #include "mamecore.h"
 #include "mame.h"
+
+// in datafile.c
+extern const char *lang_directory;
+extern const char *history_filename;
+#ifdef STORY_DATAFILE
+extern const char *story_filename;
+#endif /* STORY_DATAFILE */
+extern const char *mameinfo_filename;
 
 // in windows/winmain.c
 extern int main_(int argc, char **argv);

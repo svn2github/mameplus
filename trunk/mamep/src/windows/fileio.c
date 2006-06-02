@@ -55,12 +55,13 @@
 
 extern char *rompath_extra;
 
+// from datafile.c
+extern const char *lang_directory;
 extern const char *history_filename;
 #ifdef STORY_DATAFILE
 extern const char *story_filename;
 #endif /* STORY_DATAFILE */
 extern const char *mameinfo_filename;
-extern const char *lang_directory;
 
 // from cheat.c
 extern const char *cheatfile;

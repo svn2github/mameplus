@@ -176,7 +176,7 @@ static const options_entry config_opts[] =
 	{ "m68k_core",                "0",    OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 #ifdef TRANS_UI
-	{ "use_trans_ui",             "1",    0,                 "use transparent background for UI text" },
+	{ "use_trans_ui",             "1",    OPTION_BOOLEAN,    "use transparent background for UI text" },
 	{ "ui_transparency",          "160",  0,                 "transparency of UI background [0 - 255]" },
 #else /* TRANS_UI */
 	{ "use_trans_ui",             "1",    OPTION_DEPRECATED, "(disabled by compiling option)" },

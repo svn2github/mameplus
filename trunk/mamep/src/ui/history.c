@@ -25,7 +25,6 @@
 
 #include "MAME32.h"
 #include <driver.h>
-#include <rc.h>
 #include "m32util.h"
 #include "bitmask.h"
 #include "options.h"
@@ -53,11 +52,17 @@ LPCWSTR GetGameHistory(int driver_index)
 
 	historyBuf[0] = '\0';
 
-	rc_set_option2(fileio_opts, "history_file", 	  GetHistoryFileName(),  MAXINT_PTR);
+	FreeIfAllocated((char **)&lang_directory);
+	lang_directory = strdup(GetLangDir());
+
+	FreeIfAllocated((char **)&history_filename);
+	history_filename = strdup(GetHistoryFileName());
 #ifdef STORY_DATAFILE
-	rc_set_option2(fileio_opts, "story_file", 	  GetStoryFileName(),  MAXINT_PTR);
+	FreeIfAllocated((char **)&story_filename);
+	story_filename = strdup(GetStoryFileName());
 #endif /* STORY_DATAFILE */
-	rc_set_option2(fileio_opts, "mameinfo_file",	  GetMAMEInfoFileName(), MAXINT_PTR);
+	FreeIfAllocated((char **)&mameinfo_filename);
+	mameinfo_filename = strdup(GetMAMEInfoFileName());
 
 	*dataBuf = 0;
 	if (load_driver_history(drivers[driver_index], dataBuf, sizeof(dataBuf)) == 0)
@@ -103,7 +108,13 @@ LPCWSTR GetGameStory(int driver_index)
 
 	historyBuf[0] = '\0';
 
-	rc_set_option2(fileio_opts, "story_file", 	  GetStoryFileName(),  MAXINT_PTR);
+	FreeIfAllocated((char **)&lang_directory);
+	lang_directory = strdup(GetLangDir());
+
+#ifdef STORY_DATAFILE
+	FreeIfAllocated((char **)&story_filename);
+	story_filename = strdup(GetStoryFileName());
+#endif /* STORY_DATAFILE */
 
 	*dataBuf = 0;
 	if (load_driver_story(drivers[driver_index], dataBuf, sizeof(dataBuf)) == 0)

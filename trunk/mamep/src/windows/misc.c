@@ -39,6 +39,7 @@ Version 0.2, May 2000
 #endif
 
 #include "misc.h"
+#include "osd_so.h"
 
 
 #ifdef HAVE_GETTIMEOFDAY
