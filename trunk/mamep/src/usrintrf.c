@@ -597,8 +597,6 @@ int ui_display_startup_screens(int show_disclaimer, int show_warnings, int show_
 			/* call the handler */
 			if (ui_handler_param == 1000)
 				break;
-			if (ui_handler_param == UI_HANDLER_CANCEL)
-				return 1;
 
 			/* first draw a box around the whole screen */
 			ui_get_bounds(&ui_width, &ui_height);
@@ -612,6 +610,9 @@ int ui_display_startup_screens(int show_disclaimer, int show_warnings, int show_
 		}
 
 		scroll_reset = TRUE;
+
+		if (ui_handler_param == UI_HANDLER_CANCEL)
+			return 1;
 	}
 
 	ui_set_handler(NULL, 0);
@@ -713,7 +714,7 @@ void ui_update_and_render(void)
 	{
 		ui_handler_param = (*ui_handler_callback)(ui_handler_param);
 		if (ui_handler_param == UI_HANDLER_CANCEL)
-			ui_set_handler(NULL, 0);
+			ui_set_handler(NULL, UI_HANDLER_CANCEL);
 	}
 
 	/* otherwise, we handle non-menu cases */
