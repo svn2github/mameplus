@@ -1108,8 +1108,10 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sbackdrop",                pOpts->backdrops       ? "" : "no");
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%soverlay",                 pOpts->overlays        ? "" : "no");
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sbezel",                   pOpts->bezels          ? "" : "no");
+#if 0
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sartcrop",                 pOpts->artwork_crop    ? "" : "no");
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -artres %d",                 pOpts->artres);
+#endif
 	}
 #endif
 
@@ -2228,13 +2230,13 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 		game_count++;
 
 	/* custom per-game icons */
-	icon_index = auto_malloc(sizeof(int) * game_count);
+	icon_index = malloc(sizeof(int) * game_count);
 	if (!icon_index)
 		return FALSE;
 	ZeroMemory(icon_index,sizeof(int) * game_count);
 
 	/* sorted list of drivers by name */
-	sorted_drivers = (driver_data_type *) auto_malloc(sizeof(driver_data_type) * game_count);
+	sorted_drivers = (driver_data_type *) malloc(sizeof(driver_data_type) * game_count);
 	if (!sorted_drivers)
 		return FALSE;
 	for (i=0;i<game_count;i++)
@@ -2631,6 +2633,17 @@ static void Win32UI_exit()
 	DestroyIcons();
 
 	DestroyAcceleratorTable(hAccel);
+
+	if (icon_index != NULL)
+	{
+		free(icon_index);
+		icon_index = NULL;
+	}
+	if (sorted_drivers != NULL)
+	{
+		free(sorted_drivers);
+		sorted_drivers = NULL;
+	}
 
 	DirectInputClose();
 	DirectDraw_Close();
