@@ -770,6 +770,78 @@ void render_font_free(render_font *font)
 }
 
 
+static void render_texture_clean_scale(mame_bitmap *dest, const mame_bitmap *source, const rectangle *orig_sbounds, void *param)
+{
+	UINT32 *dbase = dest->base;
+	UINT32 drowpixels = dest->rowpixels;
+	const UINT32 *sbase;
+	UINT32 srowpixels = source->rowpixels;
+	int swidth, sheight;
+	int xscale, yscale;
+	int x, y;
+	int sx, sy;
+
+	/* compute the real source bounds */
+	if (orig_sbounds != NULL)
+	{
+		sbase = (const UINT32 *)source->base + orig_sbounds->min_y * srowpixels + orig_sbounds->min_x;
+		swidth = orig_sbounds->max_x - orig_sbounds->min_x;
+		sheight = orig_sbounds->max_y - orig_sbounds->min_y;
+	}
+	else
+	{
+		sbase = (const UINT32 *)source->base;
+		swidth  = source->width;
+		sheight = source->height;
+	}
+
+	xscale = dest->width / swidth;
+	yscale = dest->height / sheight;
+
+	for (y = 0; y < sheight; y++)
+		for (sy = 0; sy < yscale; sy++)
+		{
+			const UINT32 *s = &sbase[y * srowpixels];
+			UINT32 *d = &dbase[(y * yscale + sy) * drowpixels];
+
+			for (x = 0; x < swidth; x++)
+			{
+				rgb_t color = *s++;
+
+				for (sx = 0; sx < xscale; sx++)
+					*d++ = color;
+			}
+		}
+}
+
+
+static void render_texture_clean_or_hq_scale(mame_bitmap *dest, const mame_bitmap *source, const rectangle *sbounds, void *param)
+{
+	int swidth, sheight;
+	int xscale, yscale;
+
+	/* compute the real source bounds */
+	if (sbounds != NULL)
+	{
+		swidth = sbounds->max_x - sbounds->min_x;
+		sheight = sbounds->max_y - sbounds->min_y;
+	}
+	else
+	{
+		swidth = source->width;
+		sheight = source->height;
+	}
+
+	xscale = dest->width / swidth;
+	yscale = dest->height / sheight;
+
+	if (xscale * swidth == dest->width && yscale * sheight == dest->height)
+		render_texture_clean_scale(dest, source, sbounds, param);
+	else
+		render_texture_hq_scale(dest, source, sbounds, param);
+}
+
+
 /*-------------------------------------------------
     render_font_char_expand - expand the raw data
     for a character into a bitmap
@@ -859,7 +931,7 @@ static void render_font_char_expand(render_font *font, render_font_char *ch)
 	}
 
 	/* wrap a texture around the bitmap */
-	ch->texture = render_texture_alloc(ch->bitmap, NULL, NULL, TEXFORMAT_ARGB32, render_texture_hq_scale, NULL);
+	ch->texture = render_texture_alloc(ch->bitmap, NULL, NULL, TEXFORMAT_ARGB32, render_texture_clean_or_hq_scale, NULL);
 }
 
 
