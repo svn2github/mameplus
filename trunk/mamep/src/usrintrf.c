@@ -135,8 +135,8 @@ struct _input_item_data
 //#define UI_FONT_HEIGHT			(1.0f / 25.0f)
 #define UI_FONT_HEIGHT			ui_font_height
 #define UI_LINE_WIDTH			(1.0f / (float)ui_screen_height)
-#define UI_SCALE_TO_INT_X(x)		((int)((float)(x) * ui_screen_width))
-#define UI_SCALE_TO_INT_Y(y)		((int)((float)(y) * ui_screen_height))
+#define UI_SCALE_TO_INT_X(x)		((int)((float)(x) * ui_screen_width + 0.5f))
+#define UI_SCALE_TO_INT_Y(y)		((int)((float)(y) * ui_screen_height + 0.5f))
 #define UI_UNSCALE_TO_FLOAT_X(x)	((float)(x) / (float)ui_screen_width)
 #define UI_UNSCALE_TO_FLOAT_Y(y)	((float)(y) / (float)ui_screen_height)
 #endif
