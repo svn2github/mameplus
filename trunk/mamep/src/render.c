@@ -814,9 +814,11 @@ float render_get_ui_aspect(void)
 	if (targetlist != NULL)
 	{
 		if (!(targetlist->orientation & ORIENTATION_SWAP_XY))
-			return (float)targetlist->height / ((float)targetlist->width * targetlist->pixel_aspect);
+			//return (float)targetlist->height / ((float)targetlist->width * targetlist->pixel_aspect);
+			return (float)targetlist->height / ((float)targetlist->width);
 		else
-			return (float)targetlist->width / ((float)targetlist->height * targetlist->pixel_aspect);
+			//return (float)targetlist->width / ((float)targetlist->height * targetlist->pixel_aspect);
+			return (float)targetlist->width / ((float)targetlist->height);
 	}
 
 	return 1.0f;
