@@ -123,13 +123,8 @@ struct _input_item_data
 #define UI_HANDLER_CANCEL		((UINT32)~0)
 
 #ifdef UI_COLOR_DISPLAY
-#ifdef NEW_RENDER
-#define UI_BOX_LR_BORDER		UI_SCALE_TO_INT(ui_box_border_width)
-#define UI_BOX_TB_BORDER		UI_SCALE_TO_INT(ui_box_border_height)
-#else
 #define UI_BOX_LR_BORDER		3
 #define UI_BOX_TB_BORDER		3
-#endif
 #else /* UI_COLOR_DISPLAY */
 #define UI_BOX_LR_BORDER		(ui_get_char_width('M') / 2)
 #define UI_BOX_TB_BORDER		(ui_get_char_width('M') / 2)
@@ -139,10 +134,11 @@ struct _input_item_data
 #define UI_FONT_NAME			NULL
 //#define UI_FONT_HEIGHT			(1.0f / 25.0f)
 #define UI_FONT_HEIGHT			ui_font_height
-#define UI_LINE_WIDTH			(1.0f / 500.0f)
-#define UI_SCALE_FACTOR			10000.0f
-#define UI_SCALE_TO_INT(x)		((int)((float)(x) * UI_SCALE_FACTOR))
-#define UI_UNSCALE_TO_FLOAT(x)	((x) * (1.0f / UI_SCALE_FACTOR))
+#define UI_LINE_WIDTH			(1.0f / (float)ui_screen_height)
+#define UI_SCALE_TO_INT_X(x)		((int)((float)(x) * ui_screen_width))
+#define UI_SCALE_TO_INT_Y(y)		((int)((float)(y) * ui_screen_height))
+#define UI_UNSCALE_TO_FLOAT_X(x)	((float)(x) / (float)ui_screen_width)
+#define UI_UNSCALE_TO_FLOAT_Y(y)	((float)(y) / (float)ui_screen_height)
 #endif
 
 #ifdef UI_COLOR_DISPLAY
@@ -191,8 +187,7 @@ static rgb_t ui_bgcolor;
 static render_font *ui_font;
 static float ui_font_height;
 
-static float ui_pixel_width, ui_pixel_height;
-static float ui_box_border_width, ui_box_border_height;
+static int ui_screen_width, ui_screen_height;
 #endif
 
 /* current UI handler */
@@ -362,9 +357,9 @@ static void build_bgtexture(void);
 static void free_bgtexture(void);
 INLINE rgb_t ui_get_rgb_color(rgb_t color);
 
-#define add_line(x0,y0,x1,y1,color)	render_ui_add_line(UI_UNSCALE_TO_FLOAT(x0), UI_UNSCALE_TO_FLOAT(y0), UI_UNSCALE_TO_FLOAT(x1), UI_UNSCALE_TO_FLOAT(y1), UI_LINE_WIDTH, ui_get_rgb_color(color), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA))
+#define add_line(x0,y0,x1,y1,color)	render_ui_add_line(UI_UNSCALE_TO_FLOAT_X(x0), UI_UNSCALE_TO_FLOAT_Y(y0), UI_UNSCALE_TO_FLOAT_X(x1), UI_UNSCALE_TO_FLOAT_Y(y1), UI_LINE_WIDTH, ui_get_rgb_color(color), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA))
 static void add_fill(int x0, int y0, int x1, int y1, rgb_t color);
-#define add_char(x,y,ch,color)		render_ui_add_char(UI_UNSCALE_TO_FLOAT(x), UI_UNSCALE_TO_FLOAT(y), UI_FONT_HEIGHT, render_get_ui_aspect(), ui_get_rgb_color(color), ui_font, ch)
+#define add_char(x,y,ch,color)		render_ui_add_char(UI_UNSCALE_TO_FLOAT_X(x), UI_UNSCALE_TO_FLOAT_Y(y), UI_FONT_HEIGHT, render_get_ui_aspect(), ui_get_rgb_color(color), ui_font, ch)
 #endif
 
 static void add_filled_box(int x0, int y0, int x1, int y1);
@@ -658,17 +653,12 @@ void ui_set_visible_area(int xmin, int ymin, int xmax, int ymax)
 	/* rebuild the font */
 	create_font();
 #else
-	int width = xmax - xmin + 1;
-	int height = ymax - ymin + 1;
 	int scaling;
 
-	ui_pixel_width = 1.0f / width;
-	ui_pixel_height = 1.0f / height;
+	ui_screen_width = xmax - xmin + 1;
+	ui_screen_height = ymax - ymin + 1;
 
-	ui_font_height = ui_pixel_height * render_font_get_pixel_height(ui_font);
-
-	ui_box_border_width = ui_pixel_width * 3.0f;
-	ui_box_border_height = ui_pixel_height * 3.0f;
+	ui_font_height = render_font_get_pixel_height(ui_font) / (float)ui_screen_height;
 
 	scaling = (int)(1.0f / ui_font_height / 25.0f);
 	if (scaling >= 2)
@@ -5631,64 +5621,29 @@ static void render_ui(mame_bitmap *dest)
 	elemindex = 0;
 }
 
-static void add_filled_box_color(int x1, int y1, int x2, int y2, rgb_t color)
-{
-#ifdef UI_COLOR_DISPLAY
-	add_fill(x1 + 3, y1 + 3, x2 - 3, y2 - 3, color);
-
-	/* top edge */
-	add_line(x1,     y1,     x2,     y1,     SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x1 + 1, y1 + 1, x2 - 1, y1 + 1, SYSTEM_COLOR_FRAMEMEDIUM);
-	add_line(x1 + 2, y1 + 2, x2 - 2, y1 + 2, SYSTEM_COLOR_FRAMEDARK);
-
-	/* bottom edge */
-	add_line(x1 + 3, y2 - 2, x2 - 2, y2 - 2, SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x1 + 1, y2 - 1, x2 - 1, y2 - 1, SYSTEM_COLOR_FRAMEMEDIUM);
-	add_line(x1,     y2,     x2,     y2,     SYSTEM_COLOR_FRAMEDARK);
-
-	/* left edge */
-	add_line(x1,     y1 + 1, x1,     y2 - 1, SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x1 + 1, y1 + 2, x1 + 1, y2 - 2, SYSTEM_COLOR_FRAMEMEDIUM);
-	add_line(x1 + 2, y1 + 3, x1 + 2, y2 - 2, SYSTEM_COLOR_FRAMEDARK);
-
-	/* right edge */
-	add_line(x2 - 2, y1 + 3, x2 - 2, y2 - 3, SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x2 - 1, y1 + 2, x2 - 1, y2 - 2, SYSTEM_COLOR_FRAMEMEDIUM);
-	add_line(x2,     y1 + 1, x2,     y2 - 1, SYSTEM_COLOR_FRAMEDARK);
-#else /* UI_COLOR_DISPLAY */
-	add_fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, color);
-
-	add_line(x1, y1, x2, y1, ARGB_WHITE);
-	add_line(x2, y1, x2, y2, ARGB_WHITE);
-	add_line(x2, y2, x1, y2, ARGB_WHITE);
-	add_line(x1, y2, x1, y1, ARGB_WHITE);
-#endif /* UI_COLOR_DISPLAY */
-}
-
 #else
-
 void ui_get_bounds(int *width, int *height)
 {
-	*width = UI_SCALE_TO_INT(1.0f);
-	*height = UI_SCALE_TO_INT(1.0f);
+	*width = UI_SCALE_TO_INT_X(1.0f);
+	*height = UI_SCALE_TO_INT_Y(1.0f);
 }
 
 
 int ui_get_line_height(void)
 {
-	return UI_SCALE_TO_INT(UI_FONT_HEIGHT);
+	return UI_SCALE_TO_INT_Y(UI_FONT_HEIGHT);
 }
 
 
 int ui_get_char_width(UINT16 ch)
 {
-	return UI_SCALE_TO_INT(render_font_get_char_width(ui_font, UI_FONT_HEIGHT, render_get_ui_aspect(), ch));
+	return UI_SCALE_TO_INT_X(render_font_get_char_width(ui_font, UI_FONT_HEIGHT, render_get_ui_aspect(), ch));
 }
 
 
 int ui_get_string_width(const char *s)
 {
-	return UI_SCALE_TO_INT(render_font_get_string_width(ui_font, UI_FONT_HEIGHT, render_get_ui_aspect(), s));
+	return UI_SCALE_TO_INT_X(render_font_get_string_width(ui_font, UI_FONT_HEIGHT, render_get_ui_aspect(), s));
 }
 
 static void render_bgtexture_scale(mame_bitmap *dest, const mame_bitmap *source, const rectangle *sbounds, void *param)
@@ -5707,7 +5662,7 @@ static void render_bgtexture_scale(mame_bitmap *dest, const mame_bitmap *source,
 		float gradual;
 		rgb_t pen;
 
-		rate = ui_pixel_height * (float)y;
+		rate = UI_UNSCALE_TO_FLOAT_Y(y);
 		if (rate < 0.1f)
 			gradual = 1.0f;
 		else if (rate < 0.9f)
@@ -5760,56 +5715,50 @@ INLINE rgb_t ui_get_rgb_color(rgb_t color)
 
 static void add_fill(int x0, int y0, int x1, int y1, rgb_t color)
 {
+	x1++;
+	y1++;
+
 	if (color == UI_TRANSPARENT_COLOR)
-		render_ui_add_quad(UI_UNSCALE_TO_FLOAT(x0), UI_UNSCALE_TO_FLOAT(y0), UI_UNSCALE_TO_FLOAT(x1), UI_UNSCALE_TO_FLOAT(y1), uifont_colortable[UI_TRANSPARENT_COLOR], bgtexture, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+		render_ui_add_quad(UI_UNSCALE_TO_FLOAT_X(x0), UI_UNSCALE_TO_FLOAT_Y(y0), UI_UNSCALE_TO_FLOAT_X(x1), UI_UNSCALE_TO_FLOAT_Y(y1), uifont_colortable[UI_TRANSPARENT_COLOR], bgtexture, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 	else
-		render_ui_add_rect(UI_UNSCALE_TO_FLOAT(x0), UI_UNSCALE_TO_FLOAT(y0), UI_UNSCALE_TO_FLOAT(x1), UI_UNSCALE_TO_FLOAT(y1), ui_get_rgb_color(color), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-}
-
-static void add_filled_box_color(int x0, int y0, int x1, int y1, rgb_t color)
-{
-#ifdef UI_COLOR_DISPLAY
-	float xx0 = UI_UNSCALE_TO_FLOAT(x0);
-	float yy0 = UI_UNSCALE_TO_FLOAT(y0);
-	float xx1 = UI_UNSCALE_TO_FLOAT(x1);
-	float yy1 = UI_UNSCALE_TO_FLOAT(y1);
-	float w1 = ui_box_border_width / 3.0f;
-	float w2 = w1 * 2.0f;
-	float w3 = w1 * 3.0f;
-	float mw = w1;
-
-	add_fill(x0 + 1, y0 + 1, x1 - 1, y1 - 1, color);
-
-	/* top edge */
-	render_ui_add_rect(xx0,      yy0,      xx1,      yy0      + mw, ui_get_rgb_color(SYSTEM_COLOR_FRAMELIGHT), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-	render_ui_add_rect(xx0 + w1, yy0 + w1, xx1 - w1, yy0 + w1 + mw, ui_get_rgb_color(SYSTEM_COLOR_FRAMEMEDIUM), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-	render_ui_add_rect(xx0 + w2, yy0 + w2, xx1 - w2, yy0 + w2 + mw, ui_get_rgb_color(SYSTEM_COLOR_FRAMEDARK), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-
-	/* bottom edge */
-	render_ui_add_rect(xx0 + w3, yy1 - w2 - mw, xx1 - w2, yy1 - w2, ui_get_rgb_color(SYSTEM_COLOR_FRAMELIGHT), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-	render_ui_add_rect(xx0 + w1, yy1 - w1 - mw, xx1 - w1, yy1 - w1, ui_get_rgb_color(SYSTEM_COLOR_FRAMEMEDIUM), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-	render_ui_add_rect(xx0,      yy1      - mw, xx1,      yy1,      ui_get_rgb_color(SYSTEM_COLOR_FRAMEDARK), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-
-	/* right edge */
-	render_ui_add_rect(xx1 - w2 - mw, yy0 + w3, xx1 - w2, yy1 - w3, ui_get_rgb_color(SYSTEM_COLOR_FRAMELIGHT), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-	render_ui_add_rect(xx1 - w1 - mw, yy0 + w2, xx1 - w1, yy1 - w2, ui_get_rgb_color(SYSTEM_COLOR_FRAMEMEDIUM), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-	render_ui_add_rect(xx1      - mw, yy0 + w1, xx1,      yy1 - w1, ui_get_rgb_color(SYSTEM_COLOR_FRAMEDARK), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-
-	/* left edge */
-	render_ui_add_rect(xx0,      yy0,      xx0      + mw, yy1,      ui_get_rgb_color(SYSTEM_COLOR_FRAMELIGHT), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-	render_ui_add_rect(xx0 + w1, yy0 + w1, xx0 + w1 + mw, yy1 - w1, ui_get_rgb_color(SYSTEM_COLOR_FRAMEMEDIUM), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-	render_ui_add_rect(xx0 + w2, yy0 + w2, xx0 + w2 + mw, yy1 - w1, ui_get_rgb_color(SYSTEM_COLOR_FRAMEDARK), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-
-#else /* UI_COLOR_DISPLAY */
-	add_fill(x0 + 1, y0 + 1, x1 - 1, y1 - 1, color);
-
-	add_line(x0, y0, x1, y0, ARGB_WHITE);
-	add_line(x1, y0, x1, y1, ARGB_WHITE);
-	add_line(x1, y1, x0, y1, ARGB_WHITE);
-	add_line(x0, y1, x0, y0, ARGB_WHITE);
-#endif /* UI_COLOR_DISPLAY */
+		render_ui_add_rect(UI_UNSCALE_TO_FLOAT_X(x0), UI_UNSCALE_TO_FLOAT_Y(y0), UI_UNSCALE_TO_FLOAT_X(x1), UI_UNSCALE_TO_FLOAT_Y(y1), ui_get_rgb_color(color), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 }
 #endif
+
+
+static void add_filled_box_color(int x1, int y1, int x2, int y2, rgb_t color)
+{
+#ifdef UI_COLOR_DISPLAY
+	add_fill(x1 + 3, y1 + 3, x2 - 3, y2 - 3, color);
+
+	/* top edge */
+	add_line(x1,     y1,     x2,     y1,     SYSTEM_COLOR_FRAMELIGHT);
+	add_line(x1 + 1, y1 + 1, x2 - 1, y1 + 1, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_line(x1 + 2, y1 + 2, x2 - 2, y1 + 2, SYSTEM_COLOR_FRAMEDARK);
+
+	/* bottom edge */
+	add_line(x1 + 3, y2 - 2, x2 - 2, y2 - 2, SYSTEM_COLOR_FRAMELIGHT);
+	add_line(x1 + 1, y2 - 1, x2 - 1, y2 - 1, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_line(x1,     y2,     x2,     y2,     SYSTEM_COLOR_FRAMEDARK);
+
+	/* left edge */
+	add_line(x1,     y1 + 1, x1,     y2 - 1, SYSTEM_COLOR_FRAMELIGHT);
+	add_line(x1 + 1, y1 + 2, x1 + 1, y2 - 2, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_line(x1 + 2, y1 + 3, x1 + 2, y2 - 2, SYSTEM_COLOR_FRAMEDARK);
+
+	/* right edge */
+	add_line(x2 - 2, y1 + 3, x2 - 2, y2 - 3, SYSTEM_COLOR_FRAMELIGHT);
+	add_line(x2 - 1, y1 + 2, x2 - 1, y2 - 2, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_line(x2,     y1 + 1, x2,     y2 - 1, SYSTEM_COLOR_FRAMEDARK);
+#else /* UI_COLOR_DISPLAY */
+	add_fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, color);
+
+	add_line(x1, y1, x2, y1, ARGB_WHITE);
+	add_line(x2, y1, x2, y2, ARGB_WHITE);
+	add_line(x2, y2, x1, y2, ARGB_WHITE);
+	add_line(x1, y2, x1, y1, ARGB_WHITE);
+#endif /* UI_COLOR_DISPLAY */
+}
 
 
 static void add_filled_box(int x0, int y0, int x1, int y1)
