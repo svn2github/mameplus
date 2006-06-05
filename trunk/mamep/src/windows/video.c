@@ -995,7 +995,7 @@ static void extract_video_config(void)
 	video_config.gamma         = options_get_float ("full_screen_gamma", TRUE);
 
 	// performance options: sanity check values
-	if (video_config.frameskip < 0 || video_config.frameskip > FRAMESKIP_LEVELS)
+	if (video_config.frameskip < 0 || video_config.frameskip >= FRAMESKIP_LEVELS)
 	{
 		fprintf(stderr, "Invalid frameskip value %d; reverting to 0\n", video_config.frameskip);
 		video_config.frameskip = 0;

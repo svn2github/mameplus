@@ -486,7 +486,7 @@ extern int win_d3d_tex_manage;
 	win_d3d_use_filter         = options_get_bool  ("d3dfilter", TRUE);
 
 	// performance options: sanity check values
-	if (frameskip < 0 || frameskip > FRAMESKIP_LEVELS)
+	if (frameskip < 0 || frameskip >= FRAMESKIP_LEVELS)
 	{
 		fprintf(stderr, "Invalid frameskip value %d; reverting to 0\n", frameskip);
 		frameskip = 0;
