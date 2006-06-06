@@ -207,16 +207,13 @@ extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 extern SHAREDOBJ_FUNCPTR(int)  (*osd_display_loading_rom_message_)(const char *name, rom_load_data *romdata);
 extern SHAREDOBJ_FUNC(void)    set_pathlist(int file_type, const char *new_rawpath);
 
-// in windows/misc.c
-extern SHAREDOBJ_FUNC(void) print_colums(const char *text1, const char *text2);
-extern SHAREDOBJ_FUNC(void) fprint_colums(FILE *f, const char *text1, const char *text2);
-
 // in windows/*.c
-extern const options_entry fileio_opts[];
-extern const options_entry video_opts[];
-extern const options_entry palette_opts[];
-extern const options_entry input_opts[];
-
+extern SHAREDOBJ_DATA const options_entry config_opts[];
+extern SHAREDOBJ_DATA const options_entry language_opts[];
+extern SHAREDOBJ_DATA const options_entry fileio_opts[];
+extern SHAREDOBJ_DATA const options_entry video_opts[];
+extern SHAREDOBJ_DATA const options_entry palette_opts[];
+extern SHAREDOBJ_DATA const options_entry input_opts[];
 
 #ifdef MALLOC_DEBUG
 // in windows/winalloc.c
@@ -248,6 +245,8 @@ extern void set_pathlist(int file_type, const char *new_rawpath);
 
 // in windows/*.c
 #include "options.h"
+extern const options_entry config_opts[];
+extern const options_entry language_opts[];
 extern const options_entry fileio_opts[];
 extern const options_entry video_opts[];
 extern const options_entry palette_opts[];
@@ -279,6 +278,8 @@ extern int (*osd_display_loading_rom_message_)(const char *name, rom_load_data *
 
 // in windows/*.c
 #include "options.h"
+extern const options_entry config_opts[];
+extern const options_entry language_opts[];
 extern const options_entry fileio_opts[];
 extern const options_entry video_opts[];
 extern const options_entry palette_opts[];

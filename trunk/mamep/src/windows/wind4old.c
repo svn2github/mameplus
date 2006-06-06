@@ -42,9 +42,6 @@
 //  IMPORTS
 //============================================================
 
-// from input.c
-extern int verbose;
-
 // from wind3d.c (surfaces)
 extern LPDIRECTDRAWSURFACE7 win_d3d_background_surface;
 extern LPDIRECTDRAWSURFACE7 win_d3d_scanline_surface[2];
@@ -804,8 +801,7 @@ static int effects_rgb_init(void)
 
 		if (fp == NULL)
 		{
-			if (verbose)
-				fprintf(stderr, _("Unable to find RGB effects pattern\n"));
+			verbose_printf(_WINDOWS("Unable to find RGB effects pattern\n"));
 			free(pattern_rgb_data);
 			return 1;
 		}
@@ -813,8 +809,7 @@ static int effects_rgb_init(void)
 		filesize = ftell(fp);
 		if (filesize != patternsize)
 		{
-			if (verbose)
-				fprintf(stderr, _("RGB pattern has a wrong filesize (expected %i bytes, found %i)\n"), patternsize, filesize);
+			verbose_printf(_WINDOWS("RGB pattern has a wrong filesize (expected %i bytes, found %i)\n"), patternsize, filesize);
 			free(pattern_rgb_data);
 			return 1;
 		}

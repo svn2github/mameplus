@@ -24,13 +24,20 @@ void * realloc_file_line(void *memory, size_t size, const char *file, int line);
 #endif
 
 #ifdef _MSC_VER
+void *__cdecl _alloca(size_t);
+#define alloca _alloca
+#endif
+
+#ifdef __GNUC__
+#define alloca	__builtin_alloca
+#endif
+
+#ifdef _MSC_VER
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf
 
 #ifdef NO_FORCEINLINE
-#ifdef INLINE
 #undef INLINE
-#endif
 
 //#define INLINE static __forceinline
 #define INLINE static __inline
