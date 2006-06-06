@@ -847,7 +847,7 @@ static MACHINE_DRIVER_START( touchgo )
 	/* the chip is stereo, but the game sound is mono because the right channel
        output is for cabinet 1 and the left channel output is for cabinet 2 */
 //#ifdef ONE_MONITOR
-	if (options.disable_2nd_monitor)
+	if (!options.disable_2nd_monitor)
 	{
 		MDRV_SPEAKER_STANDARD_STEREO("left", "right")
 	}
@@ -860,7 +860,7 @@ static MACHINE_DRIVER_START( touchgo )
 	MDRV_SOUND_ADD(GAELCO_GAE1, 0)
 	MDRV_SOUND_CONFIG(touchgo_snd_interface)
 	MDRV_SOUND_ROUTE(0, "left", 1.0)
-//#ifndef ONE_MONITOR
+//#ifdef ONE_MONITOR
 	if (!options.disable_2nd_monitor)
 	{
 		MDRV_SOUND_ROUTE(1, "right", 1.0)
