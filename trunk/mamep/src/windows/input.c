@@ -271,7 +271,7 @@ const options_entry input_opts[] =
 	{ "keyboard_leds;leds",       "1",        OPTION_BOOLEAN,    "enable keyboard LED emulation" },
 	{ "led_mode",                 "ps/2",     0,                 "LED mode (PS/2|USB)" },
 	{ "a2d_deadzone;a2d",         "0.3",      0,                 "minimal analog value for digital input" },
-	{ "ctrlr",                    NULL,       0,                 "preconfigure for specified controller" },
+	{ "ctrlr",                    "Standard", 0,                 "preconfigure for specified controller" },
 #ifdef USE_JOY_MOUSE_MOVE
 	// Support Stick-type Pointing Device (miko2u@hotmail.com)
 	{ "stickpoint",               "0",        OPTION_BOOLEAN,    "enable pointing stick input" },
