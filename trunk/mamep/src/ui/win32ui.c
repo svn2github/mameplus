@@ -53,8 +53,6 @@
 #include "osdepend.h"
 #include "unzip.h"
 
-#include "misc.h"
-
 #include "resource.h"
 #include "resource.hm"
 

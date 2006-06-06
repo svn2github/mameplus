@@ -34,7 +34,6 @@ Version 0.3, Februari 2000
 #include <sys/stat.h>
 #include "fileio.h"
 #include "rc.h"
-#include "misc.h"
 
 #include "rc.h"
 #include "osdepend.h"
@@ -73,6 +72,70 @@ static const char *_WINDOWS(const char *str)
 	return lang_message(UI_MSG_OSD1, str);
 }
 #endif
+
+static void fprint_colums(FILE *f, const char *text1, const char *text2)
+{
+   const char *text[2];
+   int i, j, cols, width[2], done = 0;
+   char *e_cols = getenv("COLUMNS");
+
+   cols = e_cols? atoi(e_cols):80;
+   if ( cols < 6 ) cols = 6;  /* minimum must be 6 */
+   cols--;
+
+   /* initialize our arrays */
+   text[0] = text1;
+   text[1] = text2;
+   width[0] = cols * 0.4;
+   width[1] = cols - width[0];
+
+   while(!done)
+   {
+      done = 1;
+      for(i = 0; i < 2; i++)
+      {
+         int to_print = width[i]-1; /* always leave one space open */
+
+         /* we don't want to print more then we have */
+         j = strlen(text[i]);
+         if (to_print > j)
+           to_print = j;
+
+         /* if they have preffered breaks, try to give them to them */
+         for(j=0; j<to_print; j++)
+            if(text[i][j] == '\n')
+            {
+               to_print = j;
+               break;
+            }
+
+         /* if we don't have enough space, break at the first ' ' or '\n' */
+         if(to_print < strlen(text[i]))
+         {
+           while(to_print && (text[i][to_print] != ' ') &&
+              (text[i][to_print] != '\n'))
+              to_print--;
+
+           /* if it didn't work, just print the columnwidth */
+           if(!to_print)
+              to_print = width[i]-1;
+         }
+         fprintf(f, "%-*.*s", width[i], to_print, text[i]);
+
+         /* adjust ptr */
+         text[i] += to_print;
+
+         /* skip ' ' and '\n' */
+         while((text[i][0] == ' ') || (text[i][0] == '\n'))
+            text[i]++;
+
+         /* do we still have text to print */
+         if(text[i][0])
+            done = 0;
+      }
+      fprintf(f, "\n");
+   }
+}
 
 static const char *rc_quote_string(const char *str)
 {
