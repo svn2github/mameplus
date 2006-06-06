@@ -156,6 +156,7 @@ static void  LoadAltOptions(alt_options_type *alt_option);
 
 static BOOL  IsOptionEqual(options_type *o1, options_type *o2);
 
+#if 0
 static void  ResetD3DEffect(void);
 static void  SortD3DEffectByOverrides(void);
 
@@ -167,6 +168,15 @@ static int   D3DPrescaleDecode(struct rc_option *option, const char *arg, int pr
 static int   CleanStretchDecodeString(struct rc_option *option, const char *arg, int priority);
 
 static int   LedmodeDecodeString(struct rc_option *option, const char *arg, int priority);
+
+#ifdef UI_COLOR_DISPLAY
+static int   PaletteDecodeString(struct rc_option *option, const char *arg, int priority);
+#endif /* UI_COLOR_DISPLAY */
+
+#endif
+
+static void  LanguageEncodeString(void);
+static int   LanguageDecodeString(void);
 
 static void  JoyInfoEncodeString(void);
 static int   JoyInfoDecodeString(struct rc_option *option, const char *arg, int priority);
@@ -208,10 +218,6 @@ static int   FolderFlagDecodeString(struct rc_option *option, const char *arg, i
 static void  HideFolderEncodeString(void);
 static int   HideFolderDecodeString(struct rc_option *option, const char *arg, int priority);
 
-static int   PaletteDecodeString(struct rc_option *option, const char *arg, int priority);
-
-static void  LanguageEncodeString(void);
-static int   LanguageDecodeString(struct rc_option *option, const char *arg, int priority);
 
 
 /***************************************************************************
@@ -396,191 +402,53 @@ static struct
 	char *ui_key_quit;
 
 	char *ui_hide_folder;
-
-	/* MAMEW core */
-	char *langname;
 } rc_dummy_args;
-
-// D3D override effect handling
-// Note: D3D effect's priority is depend on orderm last option is highest.
-// To handle it correctly in mame.ini, we must sort lines by priority.
-static int *d3d_override_enables[] =
-{
-	&gOpts.d3d_feedback_enable,
-	&gOpts.d3d_scanlines_enable
-};
-
-#define NUM_D3DOVERRIDES (sizeof (d3d_override_enables) / sizeof (*d3d_override_enables))
-
-static struct rc_option d3d_override_opts_template[] =
-{
-	// related d3d_override_enables
-	{ "d3dfeedback", NULL, rc_int, &gOpts.d3d_feedback, "0", 0, 100, D3DFeedbackDecode, "feedback strength" },
-	{ "d3dscan", NULL, rc_int, &gOpts.d3d_scanlines, "100", 0, 100, D3DScanlinesDecode, "scanline intensity" },
-	// note: rotate is not related preset and override options
-	{ "d3deffectrotate", NULL, rc_bool, &gOpts.d3d_rotate_effects, "1", 0, 0, NULL, "enable rotation of effects for rotated games" },
-	// force enable prescale, or use setting in preset
-	{ "d3dprescale", NULL, rc_string, &gOpts.d3d_prescale, "auto", 0, 0, D3DPrescaleDecode, "enable prescale" },
-	// select preset
-	{ "d3deffect", NULL, rc_string, &gOpts.d3d_effect, "none", 0, 0, D3DEffectDecode, "specify the blitting effects" },
-
-	{ NULL,	NULL, rc_end, NULL, NULL, 0, 0,	NULL, NULL }
-};
-
-#define NUM_D3DEFFECTS ((sizeof (d3d_override_opts_template) / sizeof (*d3d_override_opts_template)) - NUM_D3DOVERRIDES - 1)
-
-// D3D effect settings are stored here. They are sorted d3d_override_opts_template by priority.
-static struct rc_option rc_game_d3d_override_opts[NUM_D3DOVERRIDES + NUM_D3DEFFECTS + 1];
-
 
 static struct rc_option rc_game_opts[] =
 {
-	{ "Windows video options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "autoframeskip", "afs", rc_bool, &gOpts.autoframeskip, "1", 0, 0, NULL, "skip frames to speed up emulation" },
-	{ "frameskip", "fs", rc_int, &gOpts.frameskip, "0", 0, 12, NULL, "set frameskip explicitly (autoframeskip needs to be off)" },
-	{ "waitvsync", NULL, rc_bool, &gOpts.wait_vsync, "0", 0, 0, NULL, "wait for vertical sync (reduces tearing)"},
-	{ "triplebuffer", "tb", rc_bool, &gOpts.use_triplebuf, "0", 0, 0, NULL, "triple buffering (only if fullscreen)" },
-	{ "window", "w", rc_bool, &gOpts.window_mode, "0", 0, 0, NULL, "run in a window/run on full screen" },
-//#ifndef NEW_RENDER
-	{ "ddraw", "dd", rc_bool, &gOpts.use_ddraw, "1", 0, 0, NULL, "use DirectDraw for rendering" },
-//#endif
-	{ "direct3d", "d3d", rc_bool, &gOpts.use_d3d, "0", 0, 0, NULL, "use Direct3D for rendering" },
-//#ifndef NEW_RENDER
-	{ "hwstretch", "hws", rc_bool, &gOpts.ddraw_stretch, "1", 0, 0, NULL, "stretch video using the hardware" },
-//#endif
-	{ "screen", NULL, rc_string, &gOpts.screen, NULL, 0, 0, NULL, "specify which screen to use" },
-	{ "cleanstretch", NULL, rc_string, &gOpts.clean_stretch, "auto", 0, 0, CleanStretchDecodeString, "stretch to integer ratios" },
-	{ "resolution", "r", rc_string, &gOpts.resolution, "auto", 0, 0, NULL, "set resolution" },
-	{ "refresh", NULL, rc_int, &gOpts.gfx_refresh, "0", 0, 0, NULL, "set specific monitor refresh rate" },
-	{ "scanlines", NULL, rc_bool, &gOpts.scanlines, "0", 0, 0, NULL, "emulate win_old_scanlines" },
-	{ "switchres", NULL, rc_bool, &gOpts.switchres, "1", 0, 0, NULL, "switch resolutions to best fit" },
-//#ifndef NEW_RENDER
-	{ "switchbpp", NULL, rc_bool, &gOpts.switchbpp, "1", 0, 0, NULL, "switch color depths to best fit" },
-//#endif
-	{ "maximize", "max", rc_bool, &gOpts.maximize, "1", 0, 0, NULL, "start out maximized" },
-	{ "keepaspect", NULL, rc_bool, &gOpts.keepaspect, "1", 0, 0, NULL, "enforce aspect ratio" },
-	{ "matchrefresh", NULL, rc_bool, &gOpts.matchrefresh, "0", 0, 0, NULL, "attempt to match the game's refresh rate" },
-	{ "syncrefresh", NULL, rc_bool, &gOpts.syncrefresh, "0", 0, 0, NULL, "syncronize only to the monitor refresh" },
-	{ "throttle", NULL, rc_bool, &gOpts.throttle, "1", 0, 0, NULL, "throttle speed to the game's framerate" },
-	{ "full_screen_gamma", "fsg", rc_float, &gOpts.gfx_gamma, "1.0", 0.0, 4.0, NULL, "sets the gamma in full screen mode" },
-	{ "frames_to_run", "ftr", rc_int, &gOpts.frames_to_display, "0", 0, 0, NULL, "sets the number of frames to run within the game" },
-//#ifndef NEW_RENDER
-	{ "effect", NULL, rc_string, &gOpts.effect, "none", 0, 0, NULL, "specify the blitting effect" },
-//#endif
-	{ "screen_aspect", NULL, rc_string, &gOpts.aspect, "4:3", 0, 0, NULL, "specify an alternate monitor aspect ratio" },
-	{ "mngwrite", NULL, rc_string, &gOpts.mngwrite, NULL, 0, 0, NULL, "save video in specified mng file" },
+	{ "CORE VIDEO OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+	{ "rotate", NULL, rc_bool, &gOpts.rotate, "1", 0, 0, NULL, "rotate the game screen according to the game's orientation needs it" },
+	{ "ror", NULL, rc_bool, &gOpts.ror, "0", 0, 0, NULL, "rotate screen clockwise 90 degrees" },
+	{ "rol", NULL, rc_bool, &gOpts.rol, "0", 0, 0, NULL, "rotate screen counterclockwise 90 degrees" },
+	{ "autoror", NULL, rc_bool, &gOpts.autoror, "0", 0, 0, NULL, "automatically rotate screen clockwise 90 degrees if vertical" },
+	{ "autorol", NULL, rc_bool, &gOpts.autorol, "0", 0, 0, NULL, "automatically rotate screen counterclockwise 90 degrees if vertical" },
+	{ "flipx", NULL, rc_bool, &gOpts.flipx, "0", 0, 0, NULL, "flip screen left-right" },
+	{ "flipy", NULL, rc_bool, &gOpts.flipy, "0", 0, 0, NULL, "flip screen upside-down" },
+	{ "brightness", NULL, rc_float, &gOpts.brightness, "1.0", 0.5, 2.0, NULL, "brightness correction" },
+	{ "pause_brightness", NULL, rc_float, &gOpts.pause_brightness, "1.0", 0.5, 2.0, NULL, "additional pause brightness" },
 #ifdef USE_SCALE_EFFECTS
 	{ "scale_effect", NULL, rc_string, &gOpts.scale_effect, "none", 0, 0, NULL, "SaI scale effect" },
 #endif /* USE_SCALE_EFFECTS */
 
-//#ifndef NEW_RENDER
-	{ "Windows Direct3D 2D video options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "zoom", "z", rc_int, &gOpts.zoom, "2", 1, 8, NULL, "force specific zoom level" },
-	{ "d3dtexmanage", NULL, rc_bool, &gOpts.d3d_texture_management, "1", 0, 0, NULL, "Use DirectX texture management" },
-	{ "d3dfilter", "flt", rc_bool, &gOpts.d3d_filter, "1", 0, 0, NULL, "enable bilinear filtering" },
-	{ NULL, NULL, rc_link, rc_game_d3d_override_opts, NULL, 0, 0, NULL, NULL },
-	{ "d3dcustom", NULL, rc_string, &gOpts.d3d_rc_custom, NULL, 0, 0, NULL, "customised blitting effects preset" },
-	{ "d3dexpert", NULL, rc_string, &gOpts.d3d_rc_expert, NULL, 0, 0, NULL, "additional customised settings (undocumented)" },
-//#endif
+	{ "CORE VECTOR OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+	{ "antialias", NULL, rc_bool, &gOpts.antialias, "1", 0, 0, NULL, "use antialiasing when drawing vectors" },
+	{ "beam", NULL, rc_float, &gOpts.beam, "1.0", 0.1, 16.0, NULL, "set vector beam width" },
+	{ "flicker", NULL, rc_float, &gOpts.flicker, "1.0", 0.0, 100.0, NULL, "set vector flicker effect" },
+	{ "intensity", NULL, rc_float, &gOpts.intensity, "1.0", 0.5, 3.0, NULL, "set vector intensity" },
 
-	{ "Windows misc options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "sleep", NULL, rc_bool, &gOpts.sleep, "1", 0, 0, NULL, "allow MAME to give back time to the system when it's not needed" },
-	{ "rdtsc", NULL, rc_bool, &gOpts.old_timing, "0", 0, 0, NULL, "prefer RDTSC over QueryPerformanceCounter for timing" },
-	{ "priority", NULL, rc_int, &gOpts.priority, "0", -15, 1, NULL, "thread priority" },
-
-	{ "Windows sound options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+	{ "CORE SOUND OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+	{ "sound", NULL, rc_bool, &gOpts.sound, "1", 0, 0, NULL, "enable sound output" },
+	{ "samplerate", NULL, rc_int, &gOpts.samplerate, "48000", 5000, 50000, NULL, "set sound output sample rate" },
+	{ "samples", NULL, rc_bool, &gOpts.samples, "1", 0, 0, NULL, "enable the use of external samples if available" },
+	{ "volume", NULL, rc_int, &gOpts.volume, "0", -32, 0, NULL, "sound volume in decibels (-32 min, 0 max)" },
+#ifdef USE_VOLUME_AUTO_ADJUST
+	{ "volume_adjust", NULL, rc_bool, &gOpts.volume_adjust, "0", 0, 0, NULL, "enable/disable volume auto adjust" },
+#endif /* USE_VOLUME_AUTO_ADJUST */
 	{ "audio_latency", NULL, rc_int, &gOpts.audio_latency, "1", 1, 4, NULL, "set audio latency (increase to reduce glitches)" },
 	{ "wavwrite", NULL, rc_string, &gOpts.wavwrite, NULL, 0, 0, NULL, "save sound in wav file" },
 
-	{ "Input device options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "mouse", NULL, rc_bool, &gOpts.use_mouse, "0", 0, 0, NULL, "enable mouse input" },
-	{ "joystick", "joy", rc_bool, &gOpts.use_joystick, "0", 0, 0, NULL, "enable joystick input" },
-	{ "lightgun", "gun", rc_bool, &gOpts.lightgun, "0", 0, 0, NULL, "enable lightgun input" },
-	{ "dual_lightgun", "dual", rc_bool, &gOpts.dual_lightgun, "0", 0, 0, NULL, "enable dual lightgun input" },
-	{ "offscreen_reload", "reload", rc_bool, &gOpts.offscreen_reload, "0", 0, 0, NULL, "offscreen shots reload" },				
-	{ "steadykey", "steady", rc_bool, &gOpts.steadykey, "0", 0, 0, NULL, "enable steadykey support" },
-	{ "keyboard_leds", "leds", rc_bool, &gOpts.leds, "1", 0, 0, NULL, "enable keyboard LED emulation" },
-	{ "led_mode", NULL, rc_string, &gOpts.ledmode, "ps/2", 0, 0, LedmodeDecodeString, "LED mode (ps/2|usb)" },
-	{ "a2d_deadzone", "a2d", rc_float, &gOpts.f_a2d, "0.3", 0.0, 1.0, NULL, "minimal analog value for digital input" },
-	{ "ctrlr", NULL, rc_string, &gOpts.ctrlr, "Standard", 0, 0, NULL, "preconfigure for specified controller" },
-#ifdef USE_JOY_MOUSE_MOVE
-	{ "stickpoint", NULL, rc_bool, &gOpts.use_stickpoint, "0", 0, 0, NULL, "enable pointing stick input" },
-#endif /* USE_JOY_MOUSE_MOVE */
-#ifdef JOYSTICK_ID
-	{ "joyid1", NULL, rc_int, &gOpts.joyid[0], "0", 0, 0, NULL, "set joystick ID (Player1)" },
-	{ "joyid2", NULL, rc_int, &gOpts.joyid[1], "1", 0, 0, NULL, "set joystick ID (Player2)" },
-	{ "joyid3", NULL, rc_int, &gOpts.joyid[2], "2", 0, 0, NULL, "set joystick ID (Player3)" },
-	{ "joyid4", NULL, rc_int, &gOpts.joyid[3], "3", 0, 0, NULL, "set joystick ID (Player4)" },
-	{ "joyid5", NULL, rc_int, &gOpts.joyid[4], "4", 0, 0, NULL, "set joystick ID (Player5)" },
-	{ "joyid6", NULL, rc_int, &gOpts.joyid[5], "5", 0, 0, NULL, "set joystick ID (Player6)" },
-	{ "joyid7", NULL, rc_int, &gOpts.joyid[6], "6", 0, 0, NULL, "set joystick ID (Player7)" },
-	{ "joyid8", NULL, rc_int, &gOpts.joyid[7], "7", 0, 0, NULL, "set joystick ID (Player8)" },
-#endif /* JOYSTICK_ID */
-	{ "paddle_device", "paddle", rc_string, &gOpts.paddle, "keyboard", 0, 0, NULL, "enable (keyboard|mouse|joystick) if a paddle control is present" },
-	{ "adstick_device", "adstick", rc_string, &gOpts.adstick, "keyboard", 0, 0, NULL, "enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is present" },
-	{ "pedal_device", "pedal", rc_string, &gOpts.pedal, "keyboard", 0, 0, NULL, "enable (keyboard|mouse|joystick|lightgun) if a pedal control is present" },
-	{ "dial_device", "dial", rc_string, &gOpts.dial, "keyboard", 0, 0, NULL, "enable (keyboard|mouse|joystick|lightgun) if a dial control is present" },
-	{ "trackball_device", "trackball", rc_string, &gOpts.trackball, "keyboard", 0, 0, NULL, "enable (keyboard|mouse|joystick|lightgun) if a trackball control is present" },
-	{ "lightgun_device", NULL, rc_string, &gOpts.lightgun_device, "keyboard", 0, 0, NULL, "enable (keyboard|mouse|joystick|lightgun) if a lightgun control is present" },
-	{ "digital", NULL, rc_string, &gOpts.digital, "none", 0, 0, NULL, "mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])" },
-
-	/* options supported by the mame core */
-	/* video */
-	{ "Mame CORE video options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "norotate", NULL, rc_bool , &gOpts.norotate, "0", 0, 0, NULL, "do not apply rotation" },
-	{ "ror", NULL, rc_bool, &gOpts.ror, "0", 0, 0, NULL, "rotate screen clockwise" },
-	{ "rol", NULL, rc_bool, &gOpts.rol, "0", 0, 0, NULL, "rotate screen anti-clockwise" },
-	{ "autoror", NULL, rc_bool, &gOpts.auto_ror, "0", 0, 0, NULL, "automatically rotate screen clockwise for vertical " GAMESNOUN },
-	{ "autorol", NULL, rc_bool, &gOpts.auto_rol, "0", 0, 0, NULL, "automatically rotate screen anti-clockwise for vertical " GAMESNOUN },
-	{ "flipx", NULL, rc_bool, &gOpts.flipx, "0", 0, 0, NULL, "flip screen upside-down" },
-	{ "flipy", NULL, rc_bool, &gOpts.flipy, "0", 0, 0, NULL, "flip screen left-right" },
-	{ "gamma", NULL, rc_float, &gOpts.f_gamma_correct , "1.0", 0.5, 2.0, NULL, "gamma correction"},
-	{ "brightness", NULL, rc_float, &gOpts.f_bright_correct, "1.0", 0.5, 2.0, NULL, "brightness correction" },
-	{ "pause_brightness", NULL, rc_float, &gOpts.f_pause_bright, "0.65", 0.5, 2.0, NULL, "additional pause brightness"},
-
-	/* vector */
-	{ "Mame CORE vector game options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "antialias", "aa", rc_bool, &gOpts.antialias, "1", 0, 0, NULL, "draw antialiased vectors" },
-	{ "beam", NULL, rc_float, &gOpts.f_beam, "1.0", 0.1, 16.0, NULL, "set beam width in vector " GAMESNOUN },
-	{ "flicker", NULL, rc_float, &gOpts.f_flicker, "0.0", 0.0, 100.0, NULL, "set flickering in vector " GAMESNOUN },
-	{ "intensity", NULL, rc_float, &gOpts.f_intensity, "1.5", 0.5, 3.0, NULL, "set intensity in vector " GAMESNOUN },
-
-	/* sound */
-	{ "Mame CORE sound options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "samplerate", "sr", rc_int, &gOpts.samplerate, "44100", 5000, 50000, NULL, "set samplerate" },
-	{ "samples", NULL, rc_bool, &gOpts.use_samples, "1", 0, 0, NULL, "use samples" },
-	{ "sound", NULL, rc_bool, &gOpts.enable_sound, "1", 0, 0, NULL, "enable/disable sound and sound CPUs" },
-	{ "volume", NULL, rc_int, &gOpts.attenuation, "0", -32, 0, NULL, "volume (range [-32,0])" },
-#ifdef USE_VOLUME_AUTO_ADJUST
-	{ "volume_adjust", NULL, rc_bool, &gOpts.use_volume_adjust, "0", 0, 0, NULL, "enable/disable volume auto adjust" },
-#endif /* USE_VOLUME_AUTO_ADJUST */
-
-	/* misc */
-	{ "Mame CORE misc options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "validate", "valid", rc_bool, &gOpts.validate, "0", 0, 0, NULL, "validate all game drivers" },
-//#ifndef NEW_RENDER
-	{ "artwork", "art", rc_bool, &gOpts.use_artwork, "1", 0, 0, NULL, "use additional " GAMENOUN " artwork (sets default for specific options below)" },
-	{ "use_backdrops", "backdrop", rc_bool, &gOpts.backdrops, "1", 0, 0, NULL, "use backdrop artwork" },
-	{ "use_overlays", "overlay", rc_bool, &gOpts.overlays, "1", 0, 0, NULL, "use overlay artwork" },
-	{ "use_bezels", "bezel", rc_bool, &gOpts.bezels, "1", 0, 0, NULL, "use bezel artwork" },
-	{ "artwork_crop", "artcrop", rc_bool, &gOpts.artwork_crop, "0", 0, 0, NULL, "crop artwork to " GAMENOUN " screen only" },
-	{ "artwork_resolution", "artres", rc_int, &gOpts.artres, "0", 0, 0, NULL, "artwork resolution (0 for auto)" },
-//#endif
-	{ "cheat", "c", rc_bool, &gOpts.cheat, "0", 0, 0, NULL, "enable/disable cheat subsystem" },
-	{ "debug", NULL, rc_bool, &gOpts.mame_debug, "0", 0, 0, NULL, "enable/disable debugger (only if available)" },
-	{ "debugscript", NULL, rc_string, &gOpts.mame_debugscript, NULL, 0, 0, NULL, "script for debugger (only if available)" },
-	{ "playback", "pb", rc_string, &gOpts.playbackname, NULL, 0, 0, NULL, "playback an input file" },
-	{ "record", "rec", rc_string, &gOpts.recordname, NULL, 0, 0, NULL, "record an input file" },
-	{ "log", NULL, rc_bool, &gOpts.errorlog, "0", 0, 0, NULL, "generate error.log" },
-	{ "oslog", NULL, rc_bool, &gOpts.win_erroroslog, "0", 0, 0, NULL, "output error log to debugger" },
-	{ "skip_gameinfo", NULL, rc_bool, &gOpts.skip_gameinfo, "0", 0, 0, NULL, "skip displaying the " GAMENOUN " info screen" },
-	{ "bios", NULL, rc_string, &gOpts.bios, "default", 0, 14, NULL, "change system bios" },
-	{ "state", NULL, rc_string, &gOpts.statename, NULL, 0, 0, NULL, "state to load" },
-	{ "autosave", NULL, rc_bool, &gOpts.autosave, "0", 0, 0, NULL, "enable automatic restore at startup and save at exit" },
+	{ "CORE MISC OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+	{ "bios", NULL, rc_string, &gOpts.bios, "default", 0, 0, NULL, "select the system BIOS to use" },
+	{ "cheat", NULL, rc_bool, &gOpts.cheat, "0", 0, 0, NULL, "enable cheat subsystem" },
+	{ "skip_gameinfo", NULL, rc_bool, &gOpts.skip_gameinfo, "0", 0, 0, NULL, "skip displaying the information screen at startup" },
+	{ "artwork", NULL, rc_bool, &gOpts.artwork, "1", 0, 0, NULL, "enable external artwork, if available" },
+	{ "use_backdrops", NULL, rc_bool, &gOpts.use_backdrops, "1", 0, 0, NULL, "enable backdrops if artwork is enabled and available" },
+	{ "use_overlays", NULL, rc_bool, &gOpts.use_overlays, "1", 0, 0, NULL, "enable overlays if artwork is enabled and available" },
+	{ "use_bezels", NULL, rc_bool, &gOpts.use_bezels, "1", 0, 0, NULL, "enable bezels if artwork is enabled and available" },
 #ifdef USE_IPS
-	{ "ips", NULL, rc_string, &gOpts.patchname, NULL, 0, 0, NULL, "ips datfile name"},
+	{ "ips", NULL, rc_string, &gOpts.ips, NULL, 0, 0, NULL, "ips datfile name" },
 #endif /* USE_IPS */
-	{ "disable_second_monitor", NULL, rc_bool, &gOpts.disable_2nd_monitor, "1", 0, 0, NULL, "disable second monitor emulation" },
+	{ "disable_second_monitor", NULL, rc_bool, &gOpts.disable_second_monitor, "1", 0, 0, NULL, "" },
 	{ "confirm_quit", NULL, rc_bool, &gOpts.confirm_quit, "1", 0, 0, NULL, "quit game with confirmation" },
 #ifdef AUTO_PAUSE_PLAYBACK
 	{ "auto_pause_playback", NULL, rc_bool, &gOpts.auto_pause_playback, "0", 0, 0, NULL, "automatic pause when playback is finished" },
@@ -589,80 +457,164 @@ static struct rc_option rc_game_opts[] =
 	{ "m68k_core", NULL, rc_int, &gOpts.m68k_core, "0", 0, 2, NULL, "change m68k core (0:C, 1:DRC, 2:ASM+DRC)" },
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 #ifdef TRANS_UI
-	{ "use_trans_ui", NULL, rc_bool, &gOpts.use_transui, "1", 0, 0, NULL, "use transparent background for UI text" },
+	{ "use_trans_ui", NULL, rc_bool, &gOpts.use_trans_ui, "1", 0, 0, NULL, "use transparent background for UI text" },
 	{ "ui_transparency", NULL, rc_int, &gOpts.ui_transparency, "160", 0, 255, NULL, "transparency of UI background [0 - 255]" },
 #endif /* TRANS_UI */
+
+	{ "CORE STATE/PLAYBACK OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+	{ "playback", NULL, rc_string, &gOpts.playback, NULL, 0, 0, NULL, "playback an input file" },
+	{ "record", NULL, rc_string, &gOpts.record, NULL, 0, 0, NULL, "record an input file" },
+	{ "state", NULL, rc_string, &gOpts.state, NULL, 0, 0, NULL, "saved state to load" },
+	{ "autosave", NULL, rc_bool, &gOpts.autosave, "0", 0, 0, NULL, "enable automatic restore at startup, and automatic save at exit time" },
+
+	{ "CORE DEBUGGING OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+	{ "log", NULL, rc_bool, &gOpts.log, "0", 0, 0, NULL, "generate an error.log file" },
+	{ "oslog", NULL, rc_bool, &gOpts.oslog, "0", 0, 0, NULL, "output error.log data to the system debugger" },
+	{ "verbose", NULL, rc_bool, &gOpts.verbose, "0", 0, 0, NULL, "display additional diagnostic information" },
+
+	{ "CORE CONFIGURATION OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+	{ "readconfig", NULL, rc_bool, &gOpts.readconfig, "0", 0, 0, NULL, "enable loading of configuration files" },
+
+	{ "INPUT DEVICE OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+	{ "mouse", NULL, rc_bool, &gOpts.mouse, "0", 0, 0, NULL, "enable mouse input" },
+	{ "joystick", NULL, rc_bool, &gOpts.joystick, "0", 0, 0, NULL, "enable joystick input" },
+	{ "lightgun", NULL, rc_bool, &gOpts.lightgun, "0", 0, 0, NULL, "enable lightgun input" },
+	{ "dual_lightgun", NULL, rc_bool, &gOpts.dual_lightgun, "0", 0, 0, NULL, "enable dual lightgun input" },
+	{ "offscreen_reload", NULL, rc_bool, &gOpts.offscreen_reload, "0", 0, 0, NULL, "offscreen shots reload" },
+	{ "steadykey", NULL, rc_bool, &gOpts.steadykey, "0", 0, 0, NULL, "enable steadykey support" },
+	{ "keyboard_leds", NULL, rc_bool, &gOpts.keyboard_leds, "1", 0, 0, NULL, "enable keyboard LED emulation" },
+	{ "led_mode", NULL, rc_string, &gOpts.led_mode, "ps/2", 0, 0, NULL, "LED mode (PS/2|USB)" },
+	{ "a2d_deadzone", NULL, rc_float, &gOpts.a2d_deadzone, "0.3", 0.0, 1.0, NULL, "minimal analog value for digital input" },
+	{ "ctrlr", NULL, rc_string, &gOpts.ctrlr, "Standard", 0, 0, NULL, "preconfigure for specified controller" },
+#ifdef USE_JOY_MOUSE_MOVE
+	{ "stickpoint", NULL, rc_bool, &gOpts.stickpoint, "0", 0, 0, NULL, "enable pointing stick input" },
+#endif /* USE_JOY_MOUSE_MOVE */
+#ifdef JOYSTICK_ID
+	{ "joyid1", NULL, rc_int, &gOpts.joyid1, "0", 0, 0, NULL, "set joystick ID (Player1)" },
+	{ "joyid2", NULL, rc_int, &gOpts.joyid2, "1", 0, 0, NULL, "set joystick ID (Player2)" },
+	{ "joyid3", NULL, rc_int, &gOpts.joyid3, "2", 0, 0, NULL, "set joystick ID (Player3)" },
+	{ "joyid4", NULL, rc_int, &gOpts.joyid4, "3", 0, 0, NULL, "set joystick ID (Player4)" },
+	{ "joyid5", NULL, rc_int, &gOpts.joyid5, "4", 0, 0, NULL, "set joystick ID (Player5)" },
+	{ "joyid6", NULL, rc_int, &gOpts.joyid6, "5", 0, 0, NULL, "set joystick ID (Player6)" },
+	{ "joyid7", NULL, rc_int, &gOpts.joyid7, "6", 0, 0, NULL, "set joystick ID (Player7)" },
+	{ "joyid8", NULL, rc_int, &gOpts.joyid8, "7", 0, 0, NULL, "set joystick ID (Player8)" },
+#endif /* JOYSTICK_ID */
+	{ "paddle_device", NULL, rc_string, &gOpts.paddle_device, "keyboard", 0, 0, NULL, "enable (keyboard|mouse|joystsick) if a paddle control is present" },
+	{ "adstick_device", NULL, rc_string, &gOpts.adstick_device, "keyboard", 0, 0, NULL, "enable (keyboard|mouse|joystsick) if an analog joystick control is present" },
+	{ "pedal_device", NULL, rc_string, &gOpts.pedal_device, "keyboard", 0, 0, NULL, "enable (keyboard|mouse|joystsick) if a pedal control is present" },
+	{ "dial_device", NULL, rc_string, &gOpts.dial_device, "keyboard", 0, 0, NULL, "enable (keyboard|mouse|joystsick) if a dial control is present" },
+	{ "trackball_device", NULL, rc_string, &gOpts.trackball_device, "keyboard", 0, 0, NULL, "enable (keyboard|mouse|joystsick) if a trackball control is present" },
+	{ "lightgun_device", NULL, rc_string, &gOpts.lightgun_device, "keyboard", 0, 0, NULL, "enable (keyboard|mouse|joystsick) if a lightgun control is present" },
+	{ "digital", NULL, rc_string, &gOpts.digital, "none", 0, 0, NULL, "mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])" },
+
+	{ "PERFORMANCE OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+	{ "autoframeskip", NULL, rc_bool, &gOpts.autoframeskip, "1", 0, 0, NULL, "enable automatic frameskip selection" },
+	{ "frameskip", NULL, rc_int, &gOpts.frameskip, "0", 0, 12, NULL, "set frameskip to fixed value, 0-12 (autoframeskip must be disabled)" },
+	{ "throttle", NULL, rc_bool, &gOpts.throttle, "1", 0, 0, NULL, "enable throttling to keep game running in sync with real time" },
+	{ "sleep", NULL, rc_bool, &gOpts.sleep, "1", 0, 0, NULL, "enable sleeping, which gives time back to other applications when idle" },
+	{ "rdtsc", NULL, rc_bool, &gOpts.rdtsc, "0", 0, 0, NULL, "use the RDTSC instruction for timing; faster but may result in uneven performance" },
+	{ "priority", NULL, rc_int, &gOpts.priority, "0", -15, 1, NULL, "thread priority for the main game thread; range from -15 to 1" },
+
+	{ "MISC VIDEO OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+	{ "frames_to_run", NULL, rc_int, &gOpts.frames_to_run, "0", 0, 0, NULL, "number of frames to run before automatically exiting" },
+	{ "mngwrite", NULL, rc_string, &gOpts.mngwrite, NULL, 0, 0, NULL, "optional filename to write a MNG movie of the current session" },
+
+	{ "GLOBAL VIDEO OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+	{ "window", NULL, rc_bool, &gOpts.window, "0", 0, 0, NULL, "enable window mode; otherwise, full screen mode is assumed" },
+	{ "maximize", NULL, rc_bool, &gOpts.maximize, "1", 0, 0, NULL, "default to maximized windows; otherwise, windows will be minimized" },
+	{ "numscreens", NULL, rc_int, &gOpts.numscreens, "1", 1, 4, NULL, "number of screens to create; usually, you want just one" },
+	{ "extra_layout", NULL, rc_string, &gOpts.extra_layout, NULL, 0, 0, NULL, "name of an extra layout file to parse" },
+
+	{ "PER-WINDOW VIDEO OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+	{ "screen0", NULL, rc_string, &gOpts.screen0, "auto", 0, 0, NULL, "explicit name of the first screen; 'auto' here will try to make a best guess" },
+	{ "aspect0", NULL, rc_string, &gOpts.aspect0, "auto", 0, 0, NULL, "aspect ratio of the first screen; 'auto' here will try to make a best guess" },
+	{ "resolution0", NULL, rc_string, &gOpts.resolution0, "auto", 0, 0, NULL, "preferred resolution of the first screen; format is <width>x<height>[x<depth>[@<refreshrate>]] or 'auto'" },
+	{ "view0", NULL, rc_string, &gOpts.view0, "auto", 0, 0, NULL, "preferred view for the first screen" },
+	{ "screen1", NULL, rc_string, &gOpts.screen1, "auto", 0, 0, NULL, "explicit name of the second screen; 'auto' here will try to make a best guess" },
+	{ "aspect1", NULL, rc_string, &gOpts.aspect1, "auto", 0, 0, NULL, "aspect ratio of the second screen; 'auto' here will try to make a best guess" },
+	{ "resolution1", NULL, rc_string, &gOpts.resolution1, "auto", 0, 0, NULL, "preferred resolution of the second screen; format is <width>x<height>[x<depth>[@<refreshrate>]] or 'auto'" },
+	{ "view1", NULL, rc_string, &gOpts.view1, "auto", 0, 0, NULL, "preferred view for the second screen" },
+	{ "screen2", NULL, rc_string, &gOpts.screen2, "auto", 0, 0, NULL, "explicit name of the third screen; 'auto' here will try to make a best guess" },
+	{ "aspect2", NULL, rc_string, &gOpts.aspect2, "auto", 0, 0, NULL, "aspect ratio of the third screen; 'auto' here will try to make a best guess" },
+	{ "resolution2", NULL, rc_string, &gOpts.resolution2, "auto", 0, 0, NULL, "preferred resolution of the third screen; format is <width>x<height>[x<depth>[@<refreshrate>]] or 'auto'" },
+	{ "view2", NULL, rc_string, &gOpts.view2, "auto", 0, 0, NULL, "preferred view for the third screen" },
+	{ "screen3", NULL, rc_string, &gOpts.screen3, "auto", 0, 0, NULL, "explicit name of the fourth screen; 'auto' here will try to make a best guess" },
+	{ "aspect3", NULL, rc_string, &gOpts.aspect3, "auto", 0, 0, NULL, "aspect ratio of the fourth screen; 'auto' here will try to make a best guess" },
+	{ "resolution3", NULL, rc_string, &gOpts.resolution3, "auto", 0, 0, NULL, "preferred resolution of the fourth screen; format is <width>x<height>[x<depth>[@<refreshrate>]] or 'auto'" },
+	{ "view3", NULL, rc_string, &gOpts.view3, "auto", 0, 0, NULL, "preferred view for the fourth screen" },
+
+	{ "DIRECTX VIDEO OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+	{ "direct3d", NULL, rc_bool, &gOpts.direct3d, "1", 0, 0, NULL, "enable using Direct3D 9 for video rendering if available (preferred)" },
+	{ "d3dversion", NULL, rc_int, &gOpts.d3dversion, "9", 8, 9, NULL, "specify the preferred Direct3D version (8 or 9)" },
+	{ "waitvsync", NULL, rc_bool, &gOpts.waitvsync, "0", 0, 0, NULL, "enable waiting for the start of VBLANK before flipping screens; reduces tearing effects" },
+	{ "syncrefresh", NULL, rc_bool, &gOpts.syncrefresh, "0", 0, 0, NULL, "enable using the start of VBLANK for throttling instead of the game time" },
+	{ "triplebuffer", NULL, rc_bool, &gOpts.triplebuffer, "0", 0, 0, NULL, "enable triple buffering" },
+	{ "switchres", NULL, rc_bool, &gOpts.switchres, "0", 0, 0, NULL, "enable resolution switching" },
+	{ "filter", NULL, rc_bool, &gOpts.filter, "1", 0, 0, NULL, "enable bilinear filtering on screen output" },
+	{ "full_screen_gamma", NULL, rc_float, &gOpts.full_screen_gamma, "1.0", 0.0, 4.0, NULL, "gamma value in full screen mode" },
 
 	{ NULL,	NULL, rc_end, NULL, NULL, 0, 0,	NULL, NULL }
 };
 
 static struct rc_option rc_mamew_opts[] =
 {
-	/* Create ini file to match official MAME -createconfig */
-	{ "Frontend Related", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-
-	/* name, shortname, type, dest, deflt, min, max, func, help */
-	{ "Windows path and directory options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "rompath", "rp", rc_string, &settings.romdirs, "roms", 0, 0, NULL, "path to romsets" },
-	{ "samplepath", "sp", rc_string, &settings.sampledirs, "samples", 0, 0, NULL, "path to samplesets" },
-	{ "inipath", NULL, rc_string, &settings.inidirs, "ini", 0, 0, NULL, "directory for ini files" },
-	{ "cfg_directory", NULL, rc_string, &settings.cfgdir, "cfg", 0, 0, NULL, "directory to save configurations" },
-	{ "nvram_directory", NULL, rc_string, &settings.nvramdir, "nvram", 0, 0, NULL, "directory to save nvram contents" },
-	{ "memcard_directory", NULL, rc_string, &settings.memcarddir, "memcard", 0, 0, NULL, "directory to save memory card contents" },
-	{ "input_directory", NULL, rc_string, &settings.inpdir, "inp", 0, 0, NULL, "directory to save input device logs" },
-	{ "hiscore_directory", NULL, rc_string, &settings.hidir, "hi", 0, 0, NULL, "directory to save hiscores" },
-	{ "state_directory", NULL, rc_string, &settings.statedir, "sta", 0, 0, NULL, "directory to save states" },
-	{ "artwork_directory", NULL, rc_string, &settings.artdir, "artwork", 0, 0, NULL, "directory for Artwork (Overlays etc.)" },
-	{ "snapshot_directory", NULL, rc_string, &settings.imgdir, "snap", 0, 0, NULL, "directory for screenshots (.png format)" },
-	{ "diff_directory", NULL, rc_string, &settings.diffdir, "diff", 0, 0, NULL, "directory for hard drive image difference files" },
-	{ "ctrlr_directory", NULL, rc_string, &settings.ctrlrdir, "ctrlr", 0, 0, NULL, "directory to save controller definitions" },
-	{ "comment_directory", NULL, rc_string, &settings.commentdir, "comments", 0, 0, NULL, "directory to save comment files" },
+	{ "PATH AND DIRECTORY OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+	{ "rompath", NULL, rc_string, &settings.rompath, "roms", 0, 0, NULL, "path to ROMsets and hard disk images" },
+	{ "samplepath", NULL, rc_string, &settings.samplepath, "samples", 0, 0, NULL, "path to samplesets" },
+	{ "inipath", NULL, rc_string, &settings.inipath, ".;ini", 0, 0, NULL, "path to ini files" },
+	{ "cfg_directory", NULL, rc_string, &settings.cfg_directory, "cfg", 0, 0, NULL, "directory to save configurations" },
+	{ "nvram_directory", NULL, rc_string, &settings.nvram_directory, "nvram", 0, 0, NULL, "directory to save nvram contents" },
+	{ "memcard_directory", NULL, rc_string, &settings.memcard_directory, "memcard", 0, 0, NULL, "directory to save memory card contents" },
+	{ "input_directory", NULL, rc_string, &settings.input_directory, "inp", 0, 0, NULL, "directory to save input device logs" },
+	{ "hiscore_directory", NULL, rc_string, &settings.hiscore_directory, "hi", 0, 0, NULL, "directory to save hiscores" },
+	{ "state_directory", NULL, rc_string, &settings.state_directory, "sta", 0, 0, NULL, "directory to save states" },
+	{ "artwork_directory", NULL, rc_string, &settings.artwork_directory, "artwork", 0, 0, NULL, "path to artwork files" },
+	{ "snapshot_directory", NULL, rc_string, &settings.snapshot_directory, "snap", 0, 0, NULL, "directory to save screenshots" },
+	{ "diff_directory", NULL, rc_string, &settings.diff_directory, "diff", 0, 0, NULL, "directory to save hard drive image difference files" },
+	{ "ctrlr_directory", NULL, rc_string, &settings.ctrlr_directory, "ctrlr", 0, 0, NULL, "path to controller definitions" },
+	{ "comment_directory", NULL, rc_string, &settings.comment_directory, "comments", 0, 0, NULL, "directory to save debugger comments" },
 #ifdef USE_IPS
-	{ "ips_directory", NULL, rc_string, &settings.patchdir, "ips", 0, 0, NULL, "directory for ips files" },
+	{ "ips_directory", NULL, rc_string, &settings.ips_directory, "ips", 0, 0, NULL, "directory for ips files" },
 #endif /* USE_IPS */
-	{ "lang_directory", NULL, rc_string, &settings.langdir, "lang", 0, 0, NULL, "directory for localized data files" },
-	{ "cheat_file", NULL, rc_string, &settings.cheat_filename, "cheat.dat", 0, 0, NULL, "cheat filename" },
-	{ "history_file", NULL, rc_string, &settings.history_filename, "history.dat", 0, 0, NULL, NULL },
+	{ "lang_directory", NULL, rc_string, &settings.lang_directory, "lang", 0, 0, NULL, "directory for localized data files" },
+	{ "cheat_file", NULL, rc_string, &settings.cheat_file, "cheat.dat", 0, 0, NULL, "cheat filename" },
+	{ "history_file", NULL, rc_string, &settings.history_file, "history.dat", 0, 0, NULL, "history database name" },
 #ifdef STORY_DATAFILE
-	{ "story_file", NULL, rc_string, &settings.story_filename, "story.dat", 0, 0, NULL, NULL },
+	{ "story_file", NULL, rc_string, &settings.story_file, "story.dat", 0, 0, NULL, "story database name" },
 #endif /* STORY_DATAFILE */
-	{ "mameinfo_file", NULL, rc_string, &settings.mameinfo_filename, "mameinfo.dat", 0, 0, NULL, NULL },
-	{ "hiscore_file", NULL, rc_string, &settings.hiscore_filename, "hiscore.dat", 0, 0, NULL, NULL },
+	{ "mameinfo_file", NULL, rc_string, &settings.mameinfo_file, "mameinfo.dat", 0, 0, NULL, "mameinfo database name" },
+	{ "hiscore_file", NULL, rc_string, &settings.hiscore_file, "hiscore.dat", 0, 0, NULL, "high score database name" },
 
 	{ NULL, NULL, rc_link, rc_game_opts, NULL, 0,	0, NULL, NULL },
 
 #ifdef UI_COLOR_DISPLAY
-	{ "Mame CORE palette options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "font_blank", NULL, rc_string, &settings.ui_palette[FONT_COLOR_BLANK], "0,0,0", 0, 0, PaletteDecodeString, "font blank color" },
-	{ "font_normal", NULL, rc_string, &settings.ui_palette[FONT_COLOR_NORMAL], "255,255,255", 0, 0, PaletteDecodeString, "font normal color" },
-	{ "font_special", NULL, rc_string, &settings.ui_palette[FONT_COLOR_SPECIAL], "247,203,0", 0, 0, PaletteDecodeString, "font special color" },
-	{ "system_background", NULL, rc_string, &settings.ui_palette[SYSTEM_COLOR_BACKGROUND], "0,0,255", 0, 0, PaletteDecodeString, "window background color" },
-	{ "system_framemedium", NULL, rc_string, &settings.ui_palette[SYSTEM_COLOR_FRAMEMEDIUM], "192,192,192", 0, 0, PaletteDecodeString, "window frame color (medium)" },
-	{ "system_framelight", NULL, rc_string, &settings.ui_palette[SYSTEM_COLOR_FRAMELIGHT], "224,224,224", 0, 0, PaletteDecodeString, "window frame color (light)" },
-	{ "system_framedark", NULL, rc_string, &settings.ui_palette[SYSTEM_COLOR_FRAMEDARK], "128,128,128", 0, 0, PaletteDecodeString, "window frame color (dark)" },
-	{ "osdbar_framemedium", NULL, rc_string, &settings.ui_palette[OSDBAR_COLOR_FRAMEMEDIUM], "192,192,192", 0, 0, PaletteDecodeString, "OSD bar color (medium)" },
-	{ "osdbar_framelight", NULL, rc_string, &settings.ui_palette[OSDBAR_COLOR_FRAMELIGHT], "224,224,224", 0, 0, PaletteDecodeString, "OSD bar color (light)" },
-	{ "osdbar_framedark", NULL, rc_string, &settings.ui_palette[OSDBAR_COLOR_FRAMEDARK], "128,128,128", 0, 0, PaletteDecodeString, "OSD bar color (dark)" },
-	{ "osdbar_defaultbar", NULL, rc_string, &settings.ui_palette[OSDBAR_COLOR_DEFAULTBAR], "60,120,240", 0, 0, PaletteDecodeString, "OSD bar color (default)" },
-	{ "button_red", NULL, rc_string, &settings.ui_palette[BUTTON_COLOR_RED], "255,64,64", 0, 0, PaletteDecodeString, "button color (red)" },
-	{ "button_yellow", NULL, rc_string, &settings.ui_palette[BUTTON_COLOR_YELLOW], "255,238,0", 0, 0, PaletteDecodeString, "button color (yellow)" },
-	{ "button_green", NULL, rc_string, &settings.ui_palette[BUTTON_COLOR_GREEN], "0,255,64", 0, 0, PaletteDecodeString, "button color (green)" },
-	{ "button_blue", NULL, rc_string, &settings.ui_palette[BUTTON_COLOR_BLUE], "0,170,255", 0, 0, PaletteDecodeString, "button color (blue)" },
-	{ "button_purple", NULL, rc_string, &settings.ui_palette[BUTTON_COLOR_PURPLE], "170,0,255", 0, 0, PaletteDecodeString, "button color (purple)" },
-	{ "button_pink", NULL, rc_string, &settings.ui_palette[BUTTON_COLOR_PINK], "255,0,170", 0, 0, PaletteDecodeString, "button color (pink)" },
-	{ "button_aqua", NULL, rc_string, &settings.ui_palette[BUTTON_COLOR_AQUA], "0,255,204", 0, 0, PaletteDecodeString, "button color (aqua)" },
-	{ "button_silver", NULL, rc_string, &settings.ui_palette[BUTTON_COLOR_SILVER], "255,0,255", 0, 0, PaletteDecodeString, "button color (silver)" },
-	{ "button_navy", NULL, rc_string, &settings.ui_palette[BUTTON_COLOR_NAVY], "255,160,0", 0, 0, PaletteDecodeString, "button color (navy)" },
-	{ "button_lime", NULL, rc_string, &settings.ui_palette[BUTTON_COLOR_LIME], "190,190,190", 0, 0, PaletteDecodeString, "button color (lime)" },
-	{ "cursor", NULL, rc_string, &settings.ui_palette[CURSOR_COLOR], "60,120,240", 0, 0, PaletteDecodeString, "cursor color" },
+	{ "CORE PALETTE OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+	{ "font_blank", NULL, rc_string, &settings.font_blank, "0,0,0", 0, 0, NULL, "font blank color" },
+	{ "font_normal", NULL, rc_string, &settings.font_normal, "255,255,255", 0, 0, NULL, "font normal color" },
+	{ "font_special", NULL, rc_string, &settings.font_special, "247,203,0", 0, 0, NULL, "font special color" },
+	{ "system_background", NULL, rc_string, &settings.system_background, "0,0,255", 0, 0, NULL, "window background color" },
+	{ "system_framemedium", NULL, rc_string, &settings.system_framemedium, "192,192,192", 0, 0, NULL, "window frame color (medium)" },
+	{ "system_framelight", NULL, rc_string, &settings.system_framelight, "224,224,224", 0, 0, NULL, "window frame color (light)" },
+	{ "system_framedark", NULL, rc_string, &settings.system_framedark, "128,128,128", 0, 0, NULL, "window frame color (dark)" },
+	{ "osdbar_framemedium", NULL, rc_string, &settings.osdbar_framemedium, "192,192,192", 0, 0, NULL, "OSD bar color (medium)" },
+	{ "osdbar_framelight", NULL, rc_string, &settings.osdbar_framelight, "224,224,224", 0, 0, NULL, "OSD bar color (light)" },
+	{ "osdbar_framedark", NULL, rc_string, &settings.osdbar_framedark, "128,128,128", 0, 0, NULL, "OSD bar color (dark)" },
+	{ "osdbar_defaultbar", NULL, rc_string, &settings.osdbar_defaultbar, "60,120,240", 0, 0, NULL, "OSD bar color (default)" },
+	{ "button_red", NULL, rc_string, &settings.button_red, "255,64,64", 0, 0, NULL, "button color (red)" },
+	{ "button_yellow", NULL, rc_string, &settings.button_yellow, "255,238,0", 0, 0, NULL, "button color (yellow)" },
+	{ "button_green", NULL, rc_string, &settings.button_green, "0,255,64", 0, 0, NULL, "button color (green)" },
+	{ "button_blue", NULL, rc_string, &settings.button_blue, "0,170,255", 0, 0, NULL, "button color (blue)" },
+	{ "button_purple", NULL, rc_string, &settings.button_purple, "170,0,255", 0, 0, NULL, "button color (purple)" },
+	{ "button_pink", NULL, rc_string, &settings.button_pink, "255,0,170", 0, 0, NULL, "button color (pink)" },
+	{ "button_aqua", NULL, rc_string, &settings.button_aqua, "0,255,204", 0, 0, NULL, "button color (aqua)" },
+	{ "button_silver", NULL, rc_string, &settings.button_silver, "255,0,255", 0, 0, NULL, "button color (silver)" },
+	{ "button_navy", NULL, rc_string, &settings.button_navy, "255,160,0", 0, 0, NULL, "button color (navy)" },
+	{ "button_lime", NULL, rc_string, &settings.button_lime, "190,190,190", 0, 0, NULL, "button color (lime)" },
+	{ "cursor", NULL, rc_string, &settings.cursor, "60,120,240", 0, 0, NULL, "cursor color" },
 #endif /* UI_COLOR_DISPLAY */
 
-	{ "Configuration options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "readconfig",	"rc", rc_bool, &settings.readconfig, "1", 0, 0, NULL, "enable/disable loading of configfiles" },
-	{ "verbose", "v", rc_bool, &settings.verbose, "0", 0, 0, NULL, "display additional diagnostic information" },
-
-	{ "Language options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "language", "lang", rc_string, &rc_dummy_args.langname, "auto", 0, 0, LanguageDecodeString, "select translation language" },
+	{ "CORE LANGUAGE OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+	{ "language", NULL, rc_string, &settings.language, "auto", 0, 0, NULL, "select translation language" },
 	{ "use_lang_list", NULL, rc_bool, &settings.use_lang_list, "1", 0, 0, NULL, "enable/disable local language game list" },
 
 	{ NULL,	NULL, rc_end, NULL, NULL, 0, 0,	NULL, NULL }
@@ -816,6 +768,39 @@ static struct rc_option rc_winui_opts[] =
 	{ NULL,	NULL, rc_end, NULL, NULL, 0, 0,	NULL, NULL }
 };
 
+struct ui_palette_assign
+{
+	int code;
+	char **data;
+};
+
+static struct ui_palette_assign ui_palette_tbl[] =
+{
+	{ FONT_COLOR_BLANK,  &settings.font_blank },
+	{ FONT_COLOR_NORMAL,  &settings.font_normal },
+	{ FONT_COLOR_SPECIAL,  &settings.font_special },
+	{ SYSTEM_COLOR_BACKGROUND,  &settings.system_background },
+	{ SYSTEM_COLOR_FRAMEMEDIUM,  &settings.system_framemedium },
+	{ SYSTEM_COLOR_FRAMELIGHT,  &settings.system_framelight },
+	{ SYSTEM_COLOR_FRAMEDARK,  &settings.system_framedark },
+	{ OSDBAR_COLOR_FRAMEMEDIUM,  &settings.osdbar_framemedium },
+	{ OSDBAR_COLOR_FRAMELIGHT,  &settings.osdbar_framelight },
+	{ OSDBAR_COLOR_FRAMEDARK,  &settings.osdbar_framedark },
+	{ OSDBAR_COLOR_DEFAULTBAR,  &settings.osdbar_defaultbar },
+	{ BUTTON_COLOR_RED,  &settings.button_red },
+	{ BUTTON_COLOR_YELLOW,  &settings.button_yellow },
+	{ BUTTON_COLOR_GREEN,  &settings.button_green },
+	{ BUTTON_COLOR_BLUE,  &settings.button_blue },
+	{ BUTTON_COLOR_PURPLE,  &settings.button_purple },
+	{ BUTTON_COLOR_PINK,  &settings.button_pink },
+	{ BUTTON_COLOR_AQUA,  &settings.button_aqua },
+	{ BUTTON_COLOR_SILVER,  &settings.button_silver },
+	{ BUTTON_COLOR_NAVY,  &settings.button_navy },
+	{ BUTTON_COLOR_LIME,  &settings.button_lime },
+	{ CURSOR_COLOR,  &settings.cursor },
+	{ MAX_COLORTABLE, NULL }
+};
+
 /***************************************************************************
     External functions  
  ***************************************************************************/
@@ -829,8 +814,6 @@ void OptionsInit()
 	//code_init();
 	settings.show_folder_flags = NewBits(MAX_FOLDERS);
 	SetAllBits(settings.show_folder_flags,TRUE);
-
-	ResetD3DEffect();
 
 	if (!(rc_core = rc_create()))
 		exit(1);
@@ -877,8 +860,8 @@ void OptionsInit()
 
 	// have our mame core (file code) know about our rom path
 	// this leaks a little, but the win32 file core writes to this string
-	SetCorePathList(FILETYPE_ROM, settings.romdirs);
-	SetCorePathList(FILETYPE_SAMPLE, settings.sampledirs);
+	SetCorePathList(FILETYPE_ROM, settings.rompath);
+	SetCorePathList(FILETYPE_SAMPLE, settings.samplepath);
 #ifdef MESS
 	SetCorePathList(FILETYPE_HASH, settings.mess.hashdir);
 #endif
@@ -1096,9 +1079,9 @@ static options_type * GetAltOptions(alt_options_type *alt_option)
 
 #ifdef USE_IPS
 		// HACK: DO NOT INHERIT IPS CONFIGURATION
-		char *patchname = alt_option->option->patchname;
+		char *ips = alt_option->option->ips;
 
-		alt_option->option->patchname = NULL;
+		alt_option->option->ips = NULL;
 #endif /* USE_IPS */
 
 		// if bios has been loaded, save it
@@ -1122,7 +1105,7 @@ static options_type * GetAltOptions(alt_options_type *alt_option)
 		}
 
 #ifdef USE_IPS
-		alt_option->option->patchname = patchname;
+		alt_option->option->ips = ips;
 #endif /* USE_IPS */
 	}
 
@@ -1186,9 +1169,9 @@ options_type * GetGameOptions(int driver_index)
 		options_type *opt = GetParentOptions(driver_index);
 #ifdef USE_IPS
 		// HACK: DO NOT INHERIT IPS CONFIGURATION
-		char *patchname = game_options[driver_index].patchname;
+		char *ips = game_options[driver_index].ips;
 
-		game_options[driver_index].patchname = NULL;
+		game_options[driver_index].ips = NULL;
 #endif /* USE_IPS */
 
 		// DO NOT OVERRIDE if game name is same as parent
@@ -1201,7 +1184,7 @@ options_type * GetGameOptions(int driver_index)
 		}
 
 #ifdef USE_IPS
-		game_options[driver_index].patchname = patchname;
+		game_options[driver_index].ips = ips;
 #endif /* USE_IPS */
 	}
 
@@ -1317,14 +1300,25 @@ const char * GetImageTabShortName(int tab_index)
 #ifdef UI_COLOR_DISPLAY
 const char *GetUIPaletteString(int n)
 {
-	return settings.ui_palette[n];
+	int i;
+
+	for (i = 0; ui_palette_tbl[i].data; i++)
+		if (ui_palette_tbl[i].code == n)
+			return *ui_palette_tbl[i].data;
+
+	return NULL;
 }
 
 void SetUIPaletteString(int n, const char *s)
 {
-	FreeIfAllocated(&settings.ui_palette[n]);
+	int i;
 
-	settings.ui_palette[n] = strdup(s);
+	for (i = 0; ui_palette_tbl[i].data; i++)
+		if (ui_palette_tbl[i].code == n)
+		{
+			FreeIfAllocated(ui_palette_tbl[i].data);
+			*ui_palette_tbl[i].data = strdup(s);
+		}
 }
 #endif /* UI_COLOR_DISPLAY */
 
@@ -1799,56 +1793,56 @@ BOOL GetDisplaySplashScreen (void)
 
 const char* GetRomDirs(void)
 {
-	return settings.romdirs;
+	return settings.rompath;
 }
 
 void SetRomDirs(const char* paths)
 {
-	FreeIfAllocated(&settings.romdirs);
+	FreeIfAllocated(&settings.rompath);
 
 	if (paths != NULL)
 	{
-		settings.romdirs = strdup(paths);
+		settings.rompath = strdup(paths);
 
 		// have our mame core (file code) know about it
 		// this leaks a little, but the win32 file core writes to this string
-		SetCorePathList(FILETYPE_ROM, settings.romdirs);
+		SetCorePathList(FILETYPE_ROM, settings.rompath);
 	}
 }
 
 const char* GetSampleDirs(void)
 {
-	return settings.sampledirs;
+	return settings.samplepath;
 }
 
 void SetSampleDirs(const char* paths)
 {
-	FreeIfAllocated(&settings.sampledirs);
+	FreeIfAllocated(&settings.samplepath);
 
 	if (paths != NULL)
 	{
-		settings.sampledirs = strdup(paths);
+		settings.samplepath = strdup(paths);
 		
 		// have our mame core (file code) know about it
 		// this leaks a little, but the win32 file core writes to this string
-		SetCorePathList(FILETYPE_SAMPLE, settings.sampledirs);
+		SetCorePathList(FILETYPE_SAMPLE, settings.samplepath);
 	}
 }
 
 const char* GetIniDir(void)
 {
-	return settings.inidirs;
+	return settings.inipath;
 }
 
 void SetIniDir(const char* path)
 {
-	if (!strcmp(path, settings.inidirs))
+	if (!strcmp(path, settings.inipath))
 		return;
 
-	FreeIfAllocated(&settings.inidirs);
+	FreeIfAllocated(&settings.inipath);
 
 	if (path != NULL)
-		settings.inidirs = strdup(path);
+		settings.inipath = strdup(path);
 
 	if (MessageBox(0, _Unicode(reload_config_msg), TEXT("Reload configurations"), MB_YESNO | MB_ICONQUESTION) == IDNO)
 	{
@@ -1863,119 +1857,119 @@ void SetIniDir(const char* path)
 
 const char* GetCtrlrDir(void)
 {
-	return settings.ctrlrdir;
+	return settings.ctrlr_directory;
 }
 
 void SetCtrlrDir(const char* path)
 {
-	FreeIfAllocated(&settings.ctrlrdir);
+	FreeIfAllocated(&settings.ctrlr_directory);
 
 	if (path != NULL)
-		settings.ctrlrdir = strdup(path);
+		settings.ctrlr_directory = strdup(path);
 }
 
 const char* GetCfgDir(void)
 {
-	return settings.cfgdir;
+	return settings.cfg_directory;
 }
 
 void SetCfgDir(const char* path)
 {
-	FreeIfAllocated(&settings.cfgdir);
+	FreeIfAllocated(&settings.cfg_directory);
 
 	if (path != NULL)
-		settings.cfgdir = strdup(path);
+		settings.cfg_directory = strdup(path);
 }
 
 const char* GetHiDir(void)
 {
-	return settings.hidir;
+	return settings.hiscore_directory;
 }
 
 void SetHiDir(const char* path)
 {
-	FreeIfAllocated(&settings.hidir);
+	FreeIfAllocated(&settings.hiscore_directory);
 
 	if (path != NULL)
-		settings.hidir = strdup(path);
+		settings.hiscore_directory = strdup(path);
 }
 
 const char* GetNvramDir(void)
 {
-	return settings.nvramdir;
+	return settings.nvram_directory;
 }
 
 void SetNvramDir(const char* path)
 {
-	FreeIfAllocated(&settings.nvramdir);
+	FreeIfAllocated(&settings.nvram_directory);
 
 	if (path != NULL)
-		settings.nvramdir = strdup(path);
+		settings.nvram_directory = strdup(path);
 }
 
 const char* GetInpDir(void)
 {
-	return settings.inpdir;
+	return settings.input_directory;
 }
 
 void SetInpDir(const char* path)
 {
-	FreeIfAllocated(&settings.inpdir);
+	FreeIfAllocated(&settings.input_directory);
 
 	if (path != NULL)
-		settings.inpdir = strdup(path);
+		settings.input_directory = strdup(path);
 }
 
 const char* GetImgDir(void)
 {
-	return settings.imgdir;
+	return settings.snapshot_directory;
 }
 
 void SetImgDir(const char* path)
 {
-	FreeIfAllocated(&settings.imgdir);
+	FreeIfAllocated(&settings.snapshot_directory);
 
 	if (path != NULL)
-		settings.imgdir = strdup(path);
+		settings.snapshot_directory = strdup(path);
 }
 
 const char* GetStateDir(void)
 {
-	return settings.statedir;
+	return settings.state_directory;
 }
 
 void SetStateDir(const char* path)
 {
-	FreeIfAllocated(&settings.statedir);
+	FreeIfAllocated(&settings.state_directory);
 
 	if (path != NULL)
-		settings.statedir = strdup(path);
+		settings.state_directory = strdup(path);
 }
 
 const char* GetArtDir(void)
 {
-	return settings.artdir;
+	return settings.artwork_directory;
 }
 
 void SetArtDir(const char* path)
 {
-	FreeIfAllocated(&settings.artdir);
+	FreeIfAllocated(&settings.artwork_directory);
 
 	if (path != NULL)
-		settings.artdir = strdup(path);
+		settings.artwork_directory = strdup(path);
 }
 
 const char* GetMemcardDir(void)
 {
-	return settings.memcarddir;
+	return settings.memcard_directory;
 }
 
 void SetMemcardDir(const char* path)
 {
-	FreeIfAllocated(&settings.memcarddir);
+	FreeIfAllocated(&settings.memcard_directory);
 
 	if (path != NULL)
-		settings.memcarddir = strdup(path);
+		settings.memcard_directory = strdup(path);
 }
 
 const char* GetFlyerDir(void)
@@ -2044,56 +2038,56 @@ void SetControlPanelDir(const char *path)
 
 const char* GetDiffDir(void)
 {
-	return settings.diffdir;
+	return settings.diff_directory;
 }
 
 void SetDiffDir(const char* path)
 {
-	FreeIfAllocated(&settings.diffdir);
+	FreeIfAllocated(&settings.diff_directory);
 
 	if (path != NULL)
-		settings.diffdir = strdup(path);
+		settings.diff_directory = strdup(path);
 }
 
 const char* GetCommentDir(void)
 {
-	return settings.commentdir;
+	return settings.comment_directory;
 }
 
 void SetCommentDir(const char* path)
 {
-	FreeIfAllocated(&settings.commentdir);
+	FreeIfAllocated(&settings.comment_directory);
 
 	if (path != NULL)
-		settings.commentdir = strdup(path);
+		settings.comment_directory = strdup(path);
 }
 
 #ifdef USE_IPS
 const char *GetPatchDir(void)
 {
-	return settings.patchdir;
+	return settings.ips_directory;
 }
 
 void SetPatchDir(const char *path)
 {
-	FreeIfAllocated(&settings.patchdir);
+	FreeIfAllocated(&settings.ips_directory);
 
 	if (path != NULL)
-		settings.patchdir = strdup(path);
+		settings.ips_directory = strdup(path);
 }
 #endif /* USE_IPS */
 
 const char* GetLangDir(void)
 {
-	return settings.langdir;
+	return settings.lang_directory;
 }
 
 void SetLangDir(const char* path)
 {
-	FreeIfAllocated(&settings.langdir);
+	FreeIfAllocated(&settings.lang_directory);
 
 	if (path != NULL)
-		settings.langdir = strdup(path);
+		settings.lang_directory = strdup(path);
 }
 
 const char* GetIconsDir(void)
@@ -2135,44 +2129,44 @@ void SetFolderDir(const char *path)
 		settings.folderdir = strdup(path);
 }
 
-const char* GetCheatFileName(void)
+const char* GetCheatFile(void)
 {
-	return settings.cheat_filename;
+	return settings.cheat_file;
 }
 
-void SetCheatFileName(const char* path)
+void SetCheatFile(const char* path)
 {
-	FreeIfAllocated(&settings.cheat_filename);
+	FreeIfAllocated(&settings.cheat_file);
 
 	if (path != NULL)
-		settings.cheat_filename = strdup(path);
+		settings.cheat_file = strdup(path);
 }
 
-const char* GetHistoryFileName(void)
+const char* GetHistoryFile(void)
 {
-	return settings.history_filename;
+	return settings.history_file;
 }
 
-void SetHistoryFileName(const char* path)
+void SetHistoryFile(const char* path)
 {
-	FreeIfAllocated(&settings.history_filename);
+	FreeIfAllocated(&settings.history_file);
 
 	if (path != NULL)
-		settings.history_filename = strdup(path);
+		settings.history_file = strdup(path);
 }
 
 #ifdef STORY_DATAFILE
-const char* GetStoryFileName(void)
+const char* GetStoryFile(void)
 {
-	return settings.story_filename;
+	return settings.story_file;
 }
 
-void SetStoryFileName(const char* path)
+void SetStoryFile(const char* path)
 {
-	FreeIfAllocated(&settings.story_filename);
+	FreeIfAllocated(&settings.story_file);
 
 	if (path != NULL)
-		settings.story_filename = strdup(path);
+		settings.story_file = strdup(path);
 }
 #endif /* STORY_DATAFILE */
 
@@ -2191,30 +2185,30 @@ void SetPcbinfoDir(const char* path)
 }
 #endif /* USE_VIEW_PCBINFO */
 
-const char* GetMAMEInfoFileName(void)
+const char* GetMAMEInfoFile(void)
 {
-	return settings.mameinfo_filename;
+	return settings.mameinfo_file;
 }
 
-void SetMAMEInfoFileName(const char* path)
+void SetMAMEInfoFile(const char* path)
 {
-	FreeIfAllocated(&settings.mameinfo_filename);
+	FreeIfAllocated(&settings.mameinfo_file);
 
 	if (path != NULL)
-		settings.mameinfo_filename = strdup(path);
+		settings.mameinfo_file = strdup(path);
 }
 
-const char* GetHiscoreFileName(void)
+const char* GetHiscoreFile(void)
 {
-	return settings.hiscore_filename;
+	return settings.hiscore_file;
 }
 
-void SetHiscoreFileName(const char* path)
+void SetHiscoreFile(const char* path)
 {
-	FreeIfAllocated(&settings.hiscore_filename);
+	FreeIfAllocated(&settings.hiscore_file);
 
 	if (path != NULL)
-		settings.hiscore_filename = strdup(path);
+		settings.hiscore_file = strdup(path);
 }
 
 void ResetGameOptions(int driver_index)
@@ -3159,7 +3153,7 @@ static int rc_load_winui_config(void)
 	int i = num_games;
 	int line = 0;
 
-	SetCorePathList(FILETYPE_INI, settings.inidirs);
+	SetCorePathList(FILETYPE_INI, settings.inipath);
 	filename = strlower(WINUI_INI);
 
 	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 0)))
@@ -3245,8 +3239,8 @@ static int rc_save_winui_config(void)
 	mame_file *file;
 	int i;
 
-        mkdir(settings.inidirs);
-	SetCorePathList(FILETYPE_INI, settings.inidirs);
+        mkdir(settings.inipath);
+	SetCorePathList(FILETYPE_INI, settings.inipath);
 	filename = strlower(WINUI_INI);
 
 	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 1)))
@@ -3321,8 +3315,6 @@ static int rc_load_default_config(void)
 	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 0)))
 		return 0;
 
-	ResetD3DEffect();
-
 	sprintf(filename, "%s", MAME_INI);
 
 	gOpts = global;
@@ -3330,6 +3322,8 @@ static int rc_load_default_config(void)
 	global = gOpts;
 
 	mame_fclose(file);
+
+	LanguageDecodeString();
 
 	return retval;
 }
@@ -3342,7 +3336,6 @@ static int rc_save_default_config(void)
 
 	gOpts = global;
 	validate_game_option(&gOpts);
-	SortD3DEffectByOverrides();
 	LanguageEncodeString();
 
 	SetCorePathList(FILETYPE_INI, get_base_config_directory());
@@ -3360,14 +3353,14 @@ static int rc_save_default_config(void)
 
 static void validate_game_option(options_type *opt)
 {
-	if (!strcmp(opt->resolution, "0x0x0"))
+	if (!strcmp(opt->resolution0, "0x0x0@0"))
 	{
-		FreeIfAllocated(&opt->resolution);
-		opt->resolution = strdup("auto");
+		FreeIfAllocated(&opt->resolution0);
+		opt->resolution0 = strdup("auto");
 	}
 
 	if (DirectDraw_GetNumDisplays() < 2)
-		FreeIfAllocated(&opt->screen);
+		FreeIfAllocated(&opt->screen0);
 }
 
 static int rc_game_is_changed(struct rc_option *option, void *param)
@@ -3387,8 +3380,8 @@ static int rc_game_is_changed(struct rc_option *option, void *param)
 		case rc_string:
 #ifdef USE_IPS
 			// HACK: DO NOT INHERIT IPS CONFIGURATION
-			if (option->dest == &gOpts.patchname)
-				return (gOpts.patchname != NULL);
+			if (option->dest == &gOpts.ips)
+				return (gOpts.ips != NULL);
 #endif /* USE_IPS */
 			if (*(char **)option->dest == *(char **)compare)
 				retval = 0;
@@ -3418,24 +3411,24 @@ static options_type *update_game_use_default(int driver_index)
 	options_type *opt = GetParentOptions(driver_index);
 #ifdef USE_IPS
 	// HACK: DO NOT INHERIT IPS CONFIGURATION
-	char *patchname;
+	char *ips;
 #endif /* USE_IPS */
 
 	if (opt == &game_options[driver_index])
 		return NULL;
 
 #ifdef USE_IPS
-	patchname = game_options[driver_index].patchname;
-	game_options[driver_index].patchname = NULL;
+	ips = game_options[driver_index].ips;
+	game_options[driver_index].ips = NULL;
 #endif /* USE_IPS */
 
 	game_variables[driver_index].use_default = IsOptionEqual(&game_options[driver_index], opt);
 
 #ifdef USE_IPS
-	if (game_variables[driver_index].use_default && patchname)
+	if (game_variables[driver_index].use_default && ips)
 		dprintf("%s: use_default with ips", drivers[driver_index]->name);
 
-	game_options[driver_index].patchname = patchname;
+	game_options[driver_index].ips = ips;
 #endif /* USE_IPS */
 
 	return opt;
@@ -3453,13 +3446,11 @@ static int rc_load_game_config(int driver_index)
 
 	game_variables[driver_index].options_loaded = TRUE;
 	game_variables[driver_index].use_default = TRUE;
-	SetCorePathList(FILETYPE_INI, settings.inidirs);
+	SetCorePathList(FILETYPE_INI, settings.inipath);
 	sprintf(filename, "%s.ini", drivers[driver_index]->name);
 
 	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 0)))
 		return 0;
-
-	ResetD3DEffect();
 
 	gOpts = game_options[driver_index];
 	retval = osd_rc_read(rc_game, file, filename, 1, 1);
@@ -3491,19 +3482,17 @@ static int rc_save_game_config(int driver_index)
 
 #ifdef USE_IPS
 	// HACK: DO NOT INHERIT IPS CONFIGURATION
-	if (game_variables[driver_index].use_default && !game_options[driver_index].patchname)
+	if (game_variables[driver_index].use_default && !game_options[driver_index].ips)
 #else /* USE_IPS */
 	if (game_variables[driver_index].use_default)
 #endif /* USE_IPS */
 	{
-		sprintf(filename, "%s\\%s.ini", settings.inidirs, drivers[driver_index]->name);
+		sprintf(filename, "%s\\%s.ini", settings.inipath, drivers[driver_index]->name);
 		unlink(filename);
 		return 0;
 	}
 
-	SortD3DEffectByOverrides();
-
-	SetCorePathList(FILETYPE_INI, settings.inidirs);
+	SetCorePathList(FILETYPE_INI, settings.inipath);
 	strcpy(filename, strlower(drivers[driver_index]->name));
 	strcat(filename, ".ini");
 
@@ -3525,7 +3514,7 @@ static options_type *update_alt_use_default(alt_options_type *alt_option)
 	char *bios;
 #ifdef USE_IPS
 	// HACK: DO NOT INHERIT IPS CONFIGURATION
-	char *patchname;
+	char *ips;
 #endif /* USE_IPS */
 
 	// try vector.ini
@@ -3536,17 +3525,17 @@ static options_type *update_alt_use_default(alt_options_type *alt_option)
 	alt_option->option->bios = global.bios;
 
 #ifdef USE_IPS
-	patchname = alt_option->option->patchname;
-	alt_option->option->patchname = NULL;
+	ips = alt_option->option->ips;
+	alt_option->option->ips = NULL;
 #endif /* USE_IPS */
 
 	alt_option->variable->use_default = IsOptionEqual(alt_option->option, opt);
 
 #ifdef USE_IPS
-	if (alt_option->variable->use_default && patchname)
+	if (alt_option->variable->use_default && ips)
 		dprintf("%s: use_default with ips", alt_option->name);
 
-	alt_option->option->patchname = patchname;
+	alt_option->option->ips = ips;
 #endif /* USE_IPS */
 
 	alt_option->option->bios = bios;
@@ -3563,7 +3552,7 @@ static int rc_load_alt_config(alt_options_type *alt_option)
 
 	alt_option->variable->options_loaded = TRUE;
 	alt_option->variable->use_default = TRUE;
-	SetCorePathList(FILETYPE_INI, settings.inidirs);
+	SetCorePathList(FILETYPE_INI, settings.inipath);
 	sprintf(filename, "%s", alt_option->name);
 	len = strlen(filename);
 
@@ -3573,8 +3562,6 @@ static int rc_load_alt_config(alt_options_type *alt_option)
 
 	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 0)))
 		return 0;
-
-	ResetD3DEffect();
 
 	gOpts = *alt_option->option;
 	retval = osd_rc_read(rc_game, file, filename, 1, 1);
@@ -3608,21 +3595,19 @@ static int rc_save_alt_config(alt_options_type *alt_option)
 
 #ifdef USE_IPS
 	// HACK: DO NOT INHERIT IPS CONFIGURATION
-	if (alt_option->variable->use_default && !alt_option->has_bios && !alt_option->option->patchname)
+	if (alt_option->variable->use_default && !alt_option->has_bios && !alt_option->option->ips)
 #else /* USE_IPS */
 	if (alt_option->variable->use_default && !alt_option->has_bios)
 #endif /* USE_IPS */
 	{
 		char buf[_MAX_PATH];
 
-		sprintf(buf, "%s\\%s.ini", settings.inidirs, filename);
+		sprintf(buf, "%s\\%s.ini", settings.inipath, filename);
 		unlink(buf);
 		return 0;
 	}
 
-	SortD3DEffectByOverrides();
-
-	SetCorePathList(FILETYPE_INI, settings.inidirs);
+	SetCorePathList(FILETYPE_INI, settings.inipath);
 
 	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 1)))
 		return -1;
@@ -3666,28 +3651,7 @@ static void FreeSettings(settings_type *p)
 	settings = save;
 }
 
-static void ResetD3DEffect(void)
-{
-	memcpy(rc_game_d3d_override_opts, d3d_override_opts_template, sizeof rc_game_d3d_override_opts);
-}
-
-static void SortD3DEffectByOverrides(void)
-{
-	struct rc_option *p = rc_game_d3d_override_opts;
-	int i;
-
-	for (i = 0; i < NUM_D3DOVERRIDES; i++)
-		if (!*d3d_override_enables[i])
-			*p++ = d3d_override_opts_template[i];
-
-	for (i = 0; i < NUM_D3DEFFECTS; i++)
-		*p++ = d3d_override_opts_template[NUM_D3DOVERRIDES + i];
-
-	for (i = 0; i < NUM_D3DOVERRIDES; i++)
-		if (*d3d_override_enables[i])
-			*p++ = d3d_override_opts_template[i];
-}
-
+#ifndef NEW_RENDER
 static int D3DEffectDecode(struct rc_option *option, const char *arg, int priority)
 {
 	option->priority = priority;
@@ -3762,6 +3726,7 @@ static int CleanStretchDecodeString(struct rc_option *option, const char *arg, i
 
 	return 0;
 }
+#endif
 
 static int LedmodeDecodeString(struct rc_option *option, const char *arg, int priority)
 {
@@ -4389,18 +4354,17 @@ static int PaletteDecodeString(struct rc_option *option, const char *arg, int pr
 	return 0;
 }
 
-static int LanguageDecodeString(struct rc_option *option, const char *arg, int priority)
+static int LanguageDecodeString(void)
 {
 	int langcode;
 
-	if (arg == NULL)
+	if (settings.language == NULL)
 		langcode = -1;
 	else
-		langcode = stricmp(arg, "auto") ? lang_find_langname(arg) : -1;
+		langcode = stricmp(settings.language, "auto") ? lang_find_langname(settings.language) : -1;
 
 	SetLangcode(langcode);
-	FreeIfAllocated((char **)option->dest);
-	option->priority = priority;
+	FreeIfAllocated(&settings.language);
 
 	return 0;
 }
@@ -4409,8 +4373,8 @@ static void LanguageEncodeString(void)
 {
 	int langcode = GetLangcode();
 
-	FreeIfAllocated(&rc_dummy_args.langname);
-	rc_dummy_args.langname = strdup(langcode < 0 ? "auto" : ui_lang_info[langcode].name);
+	FreeIfAllocated(&settings.language);
+	settings.language = strdup(langcode < 0 ? "auto" : ui_lang_info[langcode].name);
 }
 
 static void SaveFolderFlags(const char *folderName, DWORD dwFlags)

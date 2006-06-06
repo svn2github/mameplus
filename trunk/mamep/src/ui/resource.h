@@ -120,20 +120,15 @@
 #define IDC_HELP_TEXT                   1011
 #define IDC_SCREEN                      1011
 #define IDC_TAB                         1012
-#define IDC_SCANLINES                   1013
 #define IDC_CHEAT                       1014
 #define IDC_LOG                         1015
 #define IDC_SLEEP                       1016
 #define IDC_BACKDROPS                   1017
-#define IDC_ARTWORK_CROP                1018
 #define IDC_OVERLAYS                    1019
 #define IDC_LEDS                        1020
 #define IDC_BEZELS                      1021
-#define IDC_DDRAW                       1022
-#define IDC_GAMMA                       1023
 #define IDC_BRIGHTCORRECT               1024
 #define IDC_USE_DEFAULT                 1025
-#define IDC_VSCANLINES                  1026
 #define IDC_SAMPLERATE                  1027
 #define IDC_DEPTH                       1028
 #define IDC_ANTIALIAS                   1029
@@ -190,7 +185,6 @@
 #define IDC_VERSION                     1082
 #define IDC_ARTWORK                     1083
 #define IDC_FSGAMMA                     1084
-#define IDC_GAMMADISP                   1085
 #define IDC_FSGAMMADISP                 1086
 #define IDC_BRIGHTCORRECTDISP           1087
 #define IDC_FLICKERDISP                 1088
@@ -235,12 +229,8 @@
 #define IDC_PROP_DISPLAY                1131
 #define IDC_USE_SOUND                   1133
 #define IDC_WAITVSYNC                   1134
-#define IDC_HWSTRETCH                   1135
 #define IDC_SWITCHRES                   1136
-#define IDC_SWITCHBPP                   1137
 #define IDC_MAXIMIZE                    1138
-#define IDC_KEEPASPECT                  1139
-#define IDC_MATCHREFRESH                1140
 #define IDC_SYNCREFRESH                 1141
 #define IDC_USE_STICKPOINT              1142	// USE_JOY_MOUSE_MOVE (Support Stick-type Pointing Device by miko2u@hotmail.com)
 #define IDC_USE_MOUSE                   1143
@@ -250,7 +240,6 @@
 #define IDC_RESDEPTHTEXT                1147
 #define IDC_REFRESH                     1148
 #define IDC_REFRESHTEXT                 1149
-#define IDC_EFFECT                      1150
 #define IDC_FSGAMMATEXT                 1151
 #define IDC_STEADYKEY                   1152
 #define IDC_ASPECTRATIO                 1153
@@ -259,7 +248,6 @@
 #define IDC_ASPECTRATIOTEXT             1156
 #define IDC_JOY_GUI                     1157
 #define IDC_BROADCAST                   1158
-#define IDC_ARTRES                      1159
 #define IDC_A2D                         1160
 #define IDC_A2DDISP                     1161
 #define IDC_A2DTEXT                     1162
@@ -285,21 +273,8 @@
 #define IDC_HIGH_PRIORITY               1182
 #define IDC_D3D                         1183
 #define IDC_D3D_FILTER                  1184
-#define IDC_D3D_TEXTURE_MANAGEMENT      1185
 #define IDC_AUDIO_LATENCY               1186
-#define IDC_D3D_EFFECT                  1187
-#define IDC_D3D_PRESCALE                1189
-#define IDC_D3D_ROTATE_EFFECTS          1190
-#define IDC_CLEAN_STRETCH               1191
 #define IDC_AUDIO_LATENCY_DISP          1192
-#define IDC_D3D_SCANLINES               1193
-#define IDC_D3D_SCANLINES_ENABLE        1194
-#define IDC_D3D_SCANLINES_DISP          1195
-#define IDC_D3D_FEEDBACK_ENABLE         1199
-#define IDC_D3D_FEEDBACK                1200
-#define IDC_D3D_FEEDBACK_DISP           1201
-#define IDC_ZOOM                        1202
-#define IDC_ZOOMDIST                    1203
 #define IDC_BIOS                        1204
 #define IDC_HIDE_MOUSE                  1205
 #define IDC_AUDIT_DETAILS_PROP          1206
@@ -382,10 +357,7 @@
 #define IDC_BIOSTEXT7                   1342
 #define IDC_BIOSTEXT8                   1343
 #define IDC_ZOOMTEXT                    1344
-#define IDC_CLEAN_STRETCHTEXT           1345
 #define IDC_SCREENTEXT                  1346
-#define IDC_D3D_EFFECTTEXT              1347
-#define IDC_D3D_PRESCALETEXT            1348
 #define IDC_USE_LIST                    1349
 
 #define IDC_SCALEEFFECT                 1351 // USE_SCALE_EFFECTS

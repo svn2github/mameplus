@@ -64,146 +64,166 @@ typedef struct
 
 typedef struct
 {
-	/* video */
-	BOOL   autoframeskip;
-	int    frameskip;
-	BOOL   wait_vsync;
-	BOOL   use_triplebuf;
-	BOOL   window_mode;
-	BOOL   use_ddraw;
-	BOOL   use_d3d;
-	BOOL   ddraw_stretch;
-	char*  resolution;
-	int    gfx_refresh;
-	BOOL   scanlines;
-	BOOL   switchres;
-	BOOL   switchbpp;
-	BOOL   maximize;
-	BOOL   keepaspect;
-	BOOL   matchrefresh;
-	BOOL   syncrefresh;
-	BOOL   throttle;
-	float  gfx_gamma;
-	int    frames_to_display;
-	char*  effect;
-	char*  aspect;
-	char*  screen;
-	char*  clean_stretch;
-	char*  mngwrite;
+//
+// CORE VIDEO OPTIONS
+//
+	BOOL	rotate;
+	BOOL	ror;
+	BOOL	rol;
+	BOOL	autoror;
+	BOOL	autorol;
+	BOOL	flipx;
+	BOOL	flipy;
+	float	brightness;
+	float	pause_brightness;
 #ifdef USE_SCALE_EFFECTS
 	char*  scale_effect;
 #endif /* USE_SCALE_EFFECTS */
-
-	/* Direct3D 2D video */
-	int    zoom;
-	BOOL   d3d_texture_management;
-	BOOL   d3d_filter;
-	int    d3d_feedback;
-	int    d3d_scanlines;
-	BOOL   d3d_rotate_effects;
-	char*  d3d_prescale;
-	char*  d3d_effect;
-	BOOL   d3d_feedback_enable;
-	BOOL   d3d_scanlines_enable;
-	char*  d3d_rc_custom;
-	char*  d3d_rc_expert;
-
-	/* sound */
-	int audio_latency;
-	char* wavwrite;
-
-	/* input */
-	BOOL   use_mouse;
-	BOOL   use_joystick;
-	BOOL   lightgun;
-	BOOL   dual_lightgun;
-	BOOL   offscreen_reload;
-	BOOL   steadykey;
-	BOOL   leds;
-	char*  ledmode;
-	float  f_a2d;
-	char*  ctrlr;
-#ifdef USE_JOY_MOUSE_MOVE
-	BOOL   use_stickpoint;
-#endif /* USE_JOY_MOUSE_MOVE */
-#ifdef JOYSTICK_ID
-	int    joyid[8];
-#endif /* JOYSTICK_ID */
-	char*   paddle;
-	char*   adstick;
-	char*   pedal;
-	char*   dial;
-	char*   trackball;
-	char*   lightgun_device;
-	char*   digital;
-
-	/* Core video */
-	float  f_bright_correct; /* "1.0", 0.5, 2.0 */
-	float  f_pause_bright; /* "0.65", 0.5, 2.0 */
-	BOOL   norotate;
-	BOOL   ror;
-	BOOL   rol;
-	BOOL   auto_ror;
-	BOOL   auto_rol;
-	BOOL   flipx;
-	BOOL   flipy;
-	float  f_gamma_correct;
-
-	/* Core vector */
-	BOOL   antialias;
-	float  f_beam;
-	float  f_flicker;
-	float  f_intensity;
-
-	/* Sound */
-	int    samplerate;
-	BOOL   use_samples;
-	BOOL   enable_sound;
-	int    attenuation;
+//
+// CORE VECTOR OPTIONS
+//
+	BOOL	antialias;
+	float	beam;
+	float	flicker;
+	float	intensity;
+//
+// CORE SOUND OPTIONS
+//
+	BOOL	sound;
+	int	samplerate;
+	BOOL	samples;
+	int	volume;
 #ifdef USE_VOLUME_AUTO_ADJUST
-	BOOL   use_volume_adjust;
+	BOOL	volume_adjust;
 #endif /* USE_VOLUME_AUTO_ADJUST */
-
-	/* Misc artwork options */
-	BOOL   use_artwork;
-	BOOL   backdrops;
-	BOOL   overlays;
-	BOOL   bezels;
-	BOOL   artwork_crop;
-	int    artres;
-
-	/* misc */
-	BOOL   validate;
-	BOOL   cheat;
-	BOOL   mame_debug;
-	BOOL   errorlog;
-	BOOL   win_erroroslog;
-	char*  mame_debugscript;
-	char*  playbackname;
-	char*  recordname;
-	BOOL   sleep;
-	BOOL   old_timing;
-	int    priority;
-	BOOL   skip_gameinfo;
-	char*  bios;
-	char*  statename;
-	BOOL   autosave;
+	int	audio_latency;
+	char*	wavwrite;
+//
+// CORE MISC OPTIONS
+//
+	char*	bios;
+	BOOL	cheat;
+	BOOL	skip_gameinfo;
+	BOOL	artwork;
+	BOOL	use_backdrops;
+	BOOL	use_overlays;
+	BOOL	use_bezels;
 #ifdef USE_IPS
-	char*  patchname;
+	char*	ips;
 #endif /* USE_IPS */
-	BOOL   disable_2nd_monitor;
-	BOOL   confirm_quit;
+	BOOL	disable_second_monitor;
+	BOOL	confirm_quit;
 #ifdef AUTO_PAUSE_PLAYBACK
-	BOOL   auto_pause_playback;
+	BOOL	auto_pause_playback;
 #endif /* AUTO_PAUSE_PLAYBACK */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-	int    m68k_core;
+	int	m68k_core;
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 #ifdef TRANS_UI
-	BOOL   use_transui;
-	int    ui_transparency;
+	BOOL	use_trans_ui;
+	int	ui_transparency;
 #endif /* TRANS_UI */
-
+//
+// CORE STATE/PLAYBACK OPTIONS
+//
+	char*	playback;
+	char*	record;
+	char*	state;
+	BOOL	autosave;
+//
+// CORE DEBUGGING OPTIONS
+//
+	BOOL	log;
+	BOOL	oslog;
+	BOOL	verbose;
+//
+// CORE CONFIGURATION OPTIONS
+//
+	BOOL	readconfig;
+//
+// INPUT DEVICE OPTIONS
+//
+	BOOL	mouse;
+	BOOL	joystick;
+	BOOL	lightgun;
+	BOOL	dual_lightgun;
+	BOOL	offscreen_reload;
+	BOOL	steadykey;
+	BOOL	keyboard_leds;
+	char*	led_mode;
+	float	a2d_deadzone;
+	char*	ctrlr;
+#ifdef USE_JOY_MOUSE_MOVE
+	BOOL	stickpoint;
+#endif /* USE_JOY_MOUSE_MOVE */
+#ifdef JOYSTICK_ID
+	int	joyid1;
+	int	joyid2;
+	int	joyid3;
+	int	joyid4;
+	int	joyid5;
+	int	joyid6;
+	int	joyid7;
+	int	joyid8;
+#endif /* JOYSTICK_ID */
+	char*	paddle_device;
+	char*	adstick_device;
+	char*	pedal_device;
+	char*	dial_device;
+	char*	trackball_device;
+	char*	lightgun_device;
+	char*	digital;
+//
+// PERFORMANCE OPTIONS
+//
+	BOOL	autoframeskip;
+	int	frameskip;
+	BOOL	throttle;
+	BOOL	sleep;
+	BOOL	rdtsc;
+	int	priority;
+//
+// MISC VIDEO OPTIONS
+//
+	int	frames_to_run;
+	char*	mngwrite;
+//
+// GLOBAL VIDEO OPTIONS
+//
+	BOOL	window;
+	BOOL	maximize;
+	int	numscreens;
+	char*	extra_layout;
+//
+// PER-WINDOW VIDEO OPTIONS
+//
+	char*	screen0;
+	char*	aspect0;
+	char*	resolution0;
+	char*	view0;
+	char*	screen1;
+	char*	aspect1;
+	char*	resolution1;
+	char*	view1;
+	char*	screen2;
+	char*	aspect2;
+	char*	resolution2;
+	char*	view2;
+	char*	screen3;
+	char*	aspect3;
+	char*	resolution3;
+	char*	view3;
+//
+// DIRECTX VIDEO OPTIONS
+//
+	BOOL	direct3d;
+	int	d3dversion;
+	BOOL	waitvsync;
+	BOOL	syncrefresh;
+	BOOL	triplebuffer;
+	BOOL	switchres;
+	BOOL	filter;
+	float	full_screen_gamma;
 } options_type;
 
 // List of artwork types to display in the screen shot area
@@ -342,54 +362,78 @@ typedef struct
 	BOOL     hide_mouse;    // Should mouse cursor be hidden on startup?
 	BOOL     full_screen;   // Should we fake fullscreen?
 
+#ifdef USE_SHOW_SPLASH_SCREEN
+	BOOL     display_splash_screen;
+#endif /* USE_SHOW_SPLASH_SCREEN */
+
 	char*    flyerdir;
 	char*    cabinetdir;
 	char*    marqueedir;
 	char*	 titlesdir;
 	char*	 cpaneldir;
-
-	char*    romdirs;
-	char*    sampledirs;
-	char*    inidirs;
-	char*    cfgdir;
-	char*    nvramdir;
-	char*    memcarddir;
-	char*    inpdir;
-	char*    hidir;
-	char*    statedir;
-	char*    artdir;
-	char*    imgdir;
-	char*    diffdir;
-#ifdef USE_IPS
-	char*    patchdir;
-#endif /* USE_IPS */
 	char*    iconsdir;
 	char*    bgdir;
-	char*    cheat_filename;
-	char*    history_filename;
-#ifdef STORY_DATAFILE
-	char*    story_filename;
-#endif /* STORY_DATAFILE */
-	char*    mameinfo_filename;
-	char*    hiscore_filename;
-	char*    langdir;
-	char*    ctrlrdir;
 	char*    folderdir;
-	char*    commentdir;
 #ifdef USE_VIEW_PCBINFO
 	char*    pcbinfodir;
 #endif /* USE_VIEW_PCBINFO */
 
+	/* directory and datafile */
+	char*	rompath;
+	char*	samplepath;
+	char*	inipath;
+	char*	cfg_directory;
+	char*	nvram_directory;
+	char*	memcard_directory;
+	char*	input_directory;
+	char*	hiscore_directory;
+	char*	state_directory;
+	char*	artwork_directory;
+	char*	snapshot_directory;
+	char*	diff_directory;
+	char*	ctrlr_directory;
+	char*	comment_directory;
+#ifdef USE_IPS
+	char*	ips_directory;
+#endif /* USE_IPS */
+	char*	lang_directory;
+	char*	cheat_file;
+	char*	history_file;
+#ifdef STORY_DATAFILE
+	char*	story_file;
+#endif /* STORY_DATAFILE */
+	char*	mameinfo_file;
+	char*	hiscore_file;
+
 #ifdef UI_COLOR_DISPLAY
 	/* ui palette */
-	char*    ui_palette[MAX_COLORTABLE];
+	char*    font_blank;
+	char*    font_normal;
+	char*    font_special;
+	char*    system_background;
+	char*    system_framemedium;
+	char*    system_framelight;
+	char*    system_framedark;
+	char*    osdbar_framemedium;
+	char*    osdbar_framelight;
+	char*    osdbar_framedark;
+	char*    osdbar_defaultbar;
+	char*    button_red;
+	char*    button_yellow;
+	char*    button_green;
+	char*    button_blue;
+	char*    button_purple;
+	char*    button_pink;
+	char*    button_aqua;
+	char*    button_silver;
+	char*    button_navy;
+	char*    button_lime;
+	char*    cursor;
 #endif /* UI_COLOR_DISPLAY */
 
-#ifdef USE_SHOW_SPLASH_SCREEN
-    BOOL     display_splash_screen;
-#endif /* USE_SHOW_SPLASH_SCREEN */
-
+	/* language */
 	int      langcode;
+	char*	 language;
 	BOOL     use_lang_list;
 
 	/* configuration */
@@ -398,6 +442,8 @@ typedef struct
 
 } settings_type; /* global settings for the UI only */
 
+
+/*----------------------------------------*/
 void OptionsInit(void);
 void OptionsExit(void);
 
@@ -413,8 +459,8 @@ options_type* GetParentOptions(int driver_index);
 options_type* GetGameOptions(int driver_index);
 
 BOOL GetGameUsesDefaults(int driver_index);
-BOOL GetFolderUsesDefaults(const char *name);
 void SetGameUsesDefaults(int driver_index, BOOL use_defaults);
+BOOL GetFolderUsesDefaults(const char *name);
 void SetFolderUsesDefaults(const char *name, BOOL use_defaults);
 
 const char *GetUnifiedFolder(int driver_index);
@@ -425,26 +471,21 @@ const char *GetDefaultBios(int bios_index);
 void SetDefaultBios(int bios_index, const char *value);
 
 void SaveOptions(void);
-
+void SaveDefaultOptions(void);
 void SaveFolderOptions(const char *name);
+void SaveGameOptions(int driver_index);
 
 void ResetGUI(void);
 void ResetGameDefaults(void);
 void ResetAllGameOptions(void);
+void ResetGameOptions(int driver_index);
 
-int GetLangcode(void);
-void SetLangcode(int langcode);
 
-BOOL UseLangList(void);
-void SetUseLangList(BOOL is_use);
+/*----------------------------------------*/
+char * GetVersionString(void);
 
 const char * GetImageTabLongName(int tab_index);
 const char * GetImageTabShortName(int tab_index);
-
-#ifdef UI_COLOR_DISPLAY
-const char *GetUIPaletteString(int n);
-void SetUIPaletteString(int n, const char *s);
-#endif /* UI_COLOR_DISPLAY */
 
 void SetViewMode(int val);
 int  GetViewMode(void);
@@ -573,104 +614,6 @@ void SetDisplaySplashScreen(BOOL val);
 BOOL GetDisplaySplashScreen(void);
 #endif /* USE_SHOW_SPLASH_SCREEN */
 
-const char* GetRomDirs(void);
-void SetRomDirs(const char* paths);
-
-const char* GetSampleDirs(void);
-void  SetSampleDirs(const char* paths);
-
-const char* GetIniDir(void);
-void  SetIniDir(const char* path);
-
-const char* GetCfgDir(void);
-void SetCfgDir(const char* path);
-
-const char* GetHiDir(void);
-void SetHiDir(const char* path);
-
-const char* GetNvramDir(void);
-void SetNvramDir(const char* path);
-
-const char* GetInpDir(void);
-void SetInpDir(const char* path);
-
-const char* GetImgDir(void);
-void SetImgDir(const char* path);
-
-const char* GetStateDir(void);
-void SetStateDir(const char* path);
-
-const char* GetArtDir(void);
-void SetArtDir(const char* path);
-
-const char* GetMemcardDir(void);
-void SetMemcardDir(const char* path);
-
-const char* GetFlyerDir(void);
-void SetFlyerDir(const char* path);
-
-const char* GetCabinetDir(void);
-void SetCabinetDir(const char* path);
-
-const char* GetMarqueeDir(void);
-void SetMarqueeDir(const char* path);
-
-const char* GetTitlesDir(void);
-void SetTitlesDir(const char* path);
-
-const char * GetControlPanelDir(void);
-void SetControlPanelDir(const char *path);
-
-const char* GetDiffDir(void);
-void SetDiffDir(const char* path);
-
-const char *GetIconsDir(void);
-void SetIconsDir(const char *path);
-
-const char *GetBgDir(void);
-void SetBgDir(const char *path);
-
-const char* GetCtrlrDir(void);
-void SetCtrlrDir(const char* path);
-
-const char* GetCommentDir(void);
-void SetCommentDir(const char* path);
-
-#ifdef USE_IPS
-const char *GetPatchDir(void);
-void SetPatchDir(const char *path);
-#endif /* USE_IPS */
-
-const char *GetLangDir(void);
-void SetLangDir(const char *path);
-
-const char *GetFolderDir(void);
-void SetFolderDir(const char *path);
-
-const char* GetCheatFileName(void);
-void SetCheatFileName(const char* path);
-
-const char* GetHistoryFileName(void);
-void SetHistoryFileName(const char* path);
-
-#ifdef STORY_DATAFILE
-const char* GetStoryFileName(void);
-void SetStoryFileName(const char* path);
-#endif /* STORY_DATAFILE */
-
-#ifdef USE_VIEW_PCBINFO
-const char* GetPcbinfoDir(void);
-void SetPcbinfoDir(const char* path);
-#endif /* USE_VIEW_PCBINFO */
-
-const char* GetMAMEInfoFileName(void);
-void SetMAMEInfoFileName(const char* path);
-
-const char* GetHiscoreFileName(void);
-void SetHiscoreFileName(const char* path);
-
-void ResetGameOptions(int driver_index);
-
 int GetRomAuditResults(int driver_index);
 void SetRomAuditResults(int driver_index, int audit_results);
 
@@ -686,12 +629,131 @@ int GetPlayTime(int driver_index);
 void GetTextPlayTime(int driver_index, char *buf);
 void ResetPlayTime(int driver_index);
 
-char * GetVersionString(void);
+char* GetExecCommand(void);
+void SetExecCommand(char* cmd);
 
-void SaveGameOptions(int driver_index);
-void SaveDefaultOptions(void);
+int GetExecWait(void);
+void SetExecWait(int wait);
+
+BOOL GetHideMouseOnStartup(void);
+void SetHideMouseOnStartup(BOOL hide);
+
+BOOL GetRunFullScreen(void);
+void SetRunFullScreen(BOOL fullScreen);
 
 
+/*----------------------------------------*/
+const char* GetRomDirs(void);
+void SetRomDirs(const char* paths);
+
+const char* GetSampleDirs(void);
+void  SetSampleDirs(const char* paths);
+
+const char* GetIniDir(void);
+void  SetIniDir(const char* path);
+
+const char* GetCfgDir(void);
+void SetCfgDir(const char* path);
+
+const char* GetNvramDir(void);
+void SetNvramDir(const char* path);
+
+const char* GetMemcardDir(void);
+void SetMemcardDir(const char* path);
+
+const char* GetInpDir(void);
+void SetInpDir(const char* path);
+
+const char* GetHiDir(void);
+void SetHiDir(const char* path);
+
+const char* GetStateDir(void);
+void SetStateDir(const char* path);
+
+const char* GetArtDir(void);
+void SetArtDir(const char* path);
+
+const char* GetImgDir(void);
+void SetImgDir(const char* path);
+
+const char* GetDiffDir(void);
+void SetDiffDir(const char* path);
+
+const char* GetCtrlrDir(void);
+void SetCtrlrDir(const char* path);
+
+const char* GetCommentDir(void);
+void SetCommentDir(const char* path);
+
+#ifdef USE_IPS
+const char *GetPatchDir(void);
+void SetPatchDir(const char *path);
+#endif /* USE_IPS */
+
+const char *GetLangDir(void);
+void SetLangDir(const char *path);
+
+const char* GetCheatFile(void);
+void SetCheatFile(const char*);
+
+const char* GetHistoryFile(void);
+void SetHistoryFile(const char*);
+
+#ifdef STORY_DATAFILE
+const char* GetStoryFile(void);
+void SetStoryFile(const char*);
+
+#endif /* STORY_DATAFILE */
+const char* GetMAMEInfoFile(void);
+void SetMAMEInfoFile(const char*);
+
+const char* GetHiscoreFile(void);
+void SetHiscoreFile(const char*);
+
+#ifdef UI_COLOR_DISPLAY
+const char *GetUIPaletteString(int n);
+void SetUIPaletteString(int n, const char *s);
+#endif /* UI_COLOR_DISPLAY */
+
+int GetLangcode(void);
+void SetLangcode(int langcode);
+
+BOOL UseLangList(void);
+void SetUseLangList(BOOL is_use);
+
+
+/*----------------------------------------*/
+const char* GetFlyerDir(void);
+void SetFlyerDir(const char* path);
+
+const char* GetCabinetDir(void);
+void SetCabinetDir(const char* path);
+
+const char* GetMarqueeDir(void);
+void SetMarqueeDir(const char* path);
+
+const char* GetTitlesDir(void);
+void SetTitlesDir(const char* path);
+
+const char * GetControlPanelDir(void);
+void SetControlPanelDir(const char *path);
+
+const char *GetIconsDir(void);
+void SetIconsDir(const char *path);
+
+const char *GetBgDir(void);
+void SetBgDir(const char *path);
+
+const char *GetFolderDir(void);
+void SetFolderDir(const char *path);
+
+#ifdef USE_VIEW_PCBINFO
+const char* GetPcbinfoDir(void);
+void SetPcbinfoDir(const char* path);
+#endif /* USE_VIEW_PCBINFO */
+
+
+/*----------------------------------------*/
 // Keyboard control of ui
 input_seq *Get_ui_key_up(void);
 input_seq *Get_ui_key_down(void);
@@ -770,17 +832,5 @@ void SetUIJoyHistoryDown(int joycodeIndex, int val);
 
 int GetUIJoyExec(int joycodeIndex);
 void SetUIJoyExec(int joycodeIndex, int val);
-
-char* GetExecCommand(void);
-void SetExecCommand(char* cmd);
-
-int GetExecWait(void);
-void SetExecWait(int wait);
-
-BOOL GetHideMouseOnStartup(void);
-void SetHideMouseOnStartup(BOOL hide);
-
-BOOL GetRunFullScreen(void);
-void SetRunFullScreen(BOOL fullScreen);
 
 #endif

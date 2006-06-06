@@ -870,13 +870,13 @@ static int GetTotalPathLen(void)
 	len += strlen(GetArtDir());
 	len += strlen(GetImgDir());
 	len += strlen(GetDiffDir());
-	len += strlen(GetCheatFileName());
-	len += strlen(GetHistoryFileName());
+	len += strlen(GetCheatFile());
+	len += strlen(GetHistoryFile());
 #ifdef STORY_DATAFILE
-	len += strlen(GetStoryFileName());
+	len += strlen(GetStoryFile());
 #endif /* STORY_DATAFILE */
-	len += strlen(GetMAMEInfoFileName());
-	len += strlen(GetHiscoreFileName());
+	len += strlen(GetMAMEInfoFile());
+	len += strlen(GetHiscoreFile());
 	len += strlen(GetCtrlrDir());
 #ifdef USE_IPS
 	len += strlen(GetPatchDir());
@@ -924,52 +924,54 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -artwork_directory \"%s\"",  GetArtDir());
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -snapshot_directory \"%s\"", GetImgDir());
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -diff_directory \"%s\"",     GetDiffDir());
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -cheat_file \"%s\"",         GetCheatFileName());
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -cheat_file \"%s\"",         GetCheatFile());
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -ctrlr_directory \"%s\"",    GetCtrlrDir());
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -comment_directory \"%s\"",  GetCommentDir());
 #ifdef USE_IPS
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -ips_directory \"%s\"",      GetPatchDir());
 #endif /* USE_IPS */
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -lang_directory \"%s\"",     GetLangDir());
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -history_file \"%s\"",       GetHistoryFileName());
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -history_file \"%s\"",       GetHistoryFile());
 #ifdef STORY_DATAFILE
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -story_file \"%s\"",         GetStoryFileName());
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -story_file \"%s\"",         GetStoryFile());
 #endif /* STORY_DATAFILE */
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -mameinfo_file \"%s\"",      GetMAMEInfoFileName());
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -hiscore_file \"%s\"",       GetHiscoreFileName());
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -mameinfo_file \"%s\"",      GetMAMEInfoFile());
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -hiscore_file \"%s\"",       GetHiscoreFile());
 
 	/* video */
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%safs",                     pOpts->autoframeskip   ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -fs %d",                     pOpts->frameskip);
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%swaitvsync",               pOpts->wait_vsync      ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%stb",                      pOpts->use_triplebuf ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sw",                       pOpts->window_mode     ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sautoframeskip",           pOpts->autoframeskip   ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -frameskip %d",              pOpts->frameskip);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%swaitvsync",               pOpts->waitvsync      ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%striplebuffer",            pOpts->triplebuffer ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%swindow",                  pOpts->window     ? "" : "no");
 #ifndef NEW_RENDER
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sdd",                      pOpts->use_ddraw       ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%shws",                     pOpts->ddraw_stretch   ? "" : "no");
 #endif
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -r %s",                      pOpts->resolution);
+	if (pOpts->screen0)
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -screen0 %s",                pOpts->screen0); 
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -resolution0 %s",            pOpts->resolution0);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -aspect0 %s",                pOpts->aspect0);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sswitchres",               pOpts->switchres       ? "" : "no");
 #ifndef NEW_RENDER
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sswitchbpp",               pOpts->switchbpp       ? "" : "no");
 #endif
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%smax",                     pOpts->maximize        ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%smaximize",                pOpts->maximize        ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%ssyncrefresh",             pOpts->syncrefresh     ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sthrottle",                pOpts->throttle        ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -fsg %f",                    pOpts->gfx_gamma);
-//	sprintf(&pCmdLine[strlen(pCmdLine)], " -ftr %d",                    pOpts->frames_to_display);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -full_screen_gamma %f",      pOpts->full_screen_gamma);
+//	sprintf(&pCmdLine[strlen(pCmdLine)], " -frames_to_run %d",         pOpts->frames_to_run);
 #ifndef NEW_RENDER
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -effect %s",                 pOpts->effect);
 #endif
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -screen_aspect %s",          pOpts->aspect);
 #ifdef USE_SCALE_EFFECTS
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -scale_effect %s",           pOpts->scale_effect);
 #endif /* USE_SCALE_EFFECTS */
 
 	// d3d
-	if (pOpts->use_d3d)
+	if (pOpts->direct3d)
 	{
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3d");
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -direct3d");
 #ifndef NEW_RENDER
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -zoom %i", pOpts->zoom);
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sflt",pOpts->d3d_filter?"":"no");
@@ -982,7 +984,7 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 #endif
 	}
 	else
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -nod3d");
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -nodirect3d");
 
 #ifdef UI_COLOR_DISPLAY
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -font_blank \"%s\"",         GetUIPaletteString(FONT_COLOR_BLANK));
@@ -1010,27 +1012,27 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 #endif /* UI_COLOR_DISPLAY */
 
 	/* input */
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%smouse",                   pOpts->use_mouse       ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sjoy",                     pOpts->use_joystick    ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -a2d %f",                    pOpts->f_a2d);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%smouse",                   pOpts->mouse       ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sjoystick",                pOpts->joystick    ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -a2d_deadzone %f",           pOpts->a2d_deadzone);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%ssteady",                  pOpts->steadykey       ? "" : "no");
 
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sgun",                pOpts->lightgun        ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sdual",           pOpts->dual_lightgun ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sreload",        pOpts->offscreen_reload ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%slightgun",                pOpts->lightgun        ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sdual_lightgun",           pOpts->dual_lightgun ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%soffscreen_reload",        pOpts->offscreen_reload ? "" : "no");
 
 #ifdef USE_JOY_MOUSE_MOVE
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sstickpoint",              pOpts->use_stickpoint  ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sstickpoint",              pOpts->stickpoint  ? "" : "no");
 #endif /* USE_JOY_MOUSE_MOVE */
 #ifdef JOYSTICK_ID
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -joyid1 %d",                 pOpts->joyid[0]);
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -joyid2 %d",                 pOpts->joyid[1]);
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -joyid3 %d",                 pOpts->joyid[2]);
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -joyid4 %d",                 pOpts->joyid[3]);
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -joyid5 %d",                 pOpts->joyid[4]);
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -joyid6 %d",                 pOpts->joyid[5]);
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -joyid7 %d",                 pOpts->joyid[6]);
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -joyid8 %d",                 pOpts->joyid[7]);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -joyid1 %d",                 pOpts->joyid1);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -joyid2 %d",                 pOpts->joyid2);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -joyid3 %d",                 pOpts->joyid3);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -joyid4 %d",                 pOpts->joyid4);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -joyid5 %d",                 pOpts->joyid5);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -joyid6 %d",                 pOpts->joyid6);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -joyid7 %d",                 pOpts->joyid7);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -joyid8 %d",                 pOpts->joyid8);
 #endif /* JOYSTICK_ID */
 
 	if (pOpts->ctrlr && strlen(pOpts->ctrlr) > 0)
@@ -1039,23 +1041,23 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -digital \"%s\"",            pOpts->digital);
 
 	/* controller mapping*/
-	if (strlen(pOpts->paddle) > 0)
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -paddle \"%s\"",             pOpts->paddle);
-	if (strlen(pOpts->adstick) > 0)
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -adstick \"%s\"",            pOpts->adstick);
-	if (strlen(pOpts->pedal) > 0)
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -pedal \"%s\"",              pOpts->pedal);
-	if (strlen(pOpts->dial) > 0)
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -dial \"%s\"",               pOpts->dial);
-	if (strlen(pOpts->trackball) > 0)
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -trackball \"%s\"",          pOpts->trackball);
+	if (strlen(pOpts->paddle_device) > 0)
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -paddle_device \"%s\"",      pOpts->paddle_device);
+	if (strlen(pOpts->adstick_device) > 0)
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -adstick_device \"%s\"",     pOpts->adstick_device);
+	if (strlen(pOpts->pedal_device) > 0)
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -pedal_device \"%s\"",       pOpts->pedal_device);
+	if (strlen(pOpts->dial_device) > 0)
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -dial_device \"%s\"",        pOpts->dial_device);
+	if (strlen(pOpts->trackball_device) > 0)
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -trackball_device \"%s\"",   pOpts->trackball_device);
 	if (strlen(pOpts->lightgun_device) > 0)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -lightgun_device \"%s\"",    pOpts->lightgun_device);
 
 
 	/* core video */
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -brightness %f",                 pOpts->f_bright_correct); 
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -pause_brightness %f",       pOpts->f_pause_bright); 
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -brightness %f",             pOpts->brightness); 
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -pause_brightness %f",       pOpts->pause_brightness); 
 	//if (pOpts->norotate)
 	//	sprintf(&pCmdLine[strlen(pCmdLine)], " -%snorotate",                pOpts->norotate ? "" : "no");
 #ifndef NEW_RENDER
@@ -1070,54 +1072,46 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -refresh %d",                pOpts->gfx_refresh);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -gamma %f",                  pOpts->f_gamma_correct);
 #endif
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sror",pOpts->ror ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%srol",pOpts->rol ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sautoror", pOpts->auto_ror ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sautorol", pOpts->auto_rol ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sflipx",pOpts->flipx ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sflipy",pOpts->flipy ? "" : "no");
-	if (pOpts->screen)
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -screen %s",       pOpts->screen); 
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sror",                     pOpts->ror ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%srol",                     pOpts->rol ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sautoror",                 pOpts->autoror ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sautorol",                 pOpts->autorol ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sflipx",                   pOpts->flipx ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sflipy",                   pOpts->flipy ? "" : "no");
 
 	/* vector */
 	if (DriverIsVector(nGameIndex))
 	{
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -%saa",                      pOpts->antialias       ? "" : "no");
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -beam %f",                   pOpts->f_beam);
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -flicker %f",                pOpts->f_flicker);
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -intensity %f",              pOpts->f_intensity);
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -%santialias",               pOpts->antialias       ? "" : "no");
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -beam %f",                   pOpts->beam);
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -flicker %f",                pOpts->flicker);
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -intensity %f",              pOpts->intensity);
 	}
 
 	/* sound */
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -sr %d",                     pOpts->samplerate);
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%ssamples",                 pOpts->use_samples     ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%ssound",                   pOpts->enable_sound    ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -volume %d",                    pOpts->attenuation);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -samplerate %d",             pOpts->samplerate);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%ssamples",                 pOpts->samples     ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%ssound",                   pOpts->sound    ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -volume %d",                 pOpts->volume);
 #ifdef USE_VOLUME_AUTO_ADJUST
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%svolume_adjust",           pOpts->use_volume_adjust ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%svolume_adjust",           pOpts->volume_adjust ? "" : "no");
 #endif /* USE_VOLUME_AUTO_ADJUST */
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -audio_latency %i",          pOpts->audio_latency);
 
-#ifndef NEW_RENDER
 	/* misc artwork options */
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sart",                     pOpts->use_artwork     ? "" : "no");
-	if (pOpts->use_artwork == TRUE)
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sartwork",                 pOpts->artwork     ? "" : "no");
+	if (pOpts->artwork == TRUE)
 	{
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sbackdrop",                pOpts->backdrops       ? "" : "no");
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -%soverlay",                 pOpts->overlays        ? "" : "no");
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sbezel",                   pOpts->bezels          ? "" : "no");
-#if 0
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sartcrop",                 pOpts->artwork_crop    ? "" : "no");
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -artres %d",                 pOpts->artres);
-#endif
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -%suse_backdrops",           pOpts->use_backdrops       ? "" : "no");
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -%suse_overlays",            pOpts->use_overlays        ? "" : "no");
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -%suse_bezels",              pOpts->use_bezels          ? "" : "no");
 	}
-#endif
 
 	/* misc */
 //	sprintf(&pCmdLine[strlen(pCmdLine)], " -%svalidate",                pOpts->validate      ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sc",                       pOpts->cheat          ? "" : "no");
-	if (pOpts->mame_debug)
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sdebug",                   pOpts->mame_debug     ? "" : "no");
+	//if (pOpts->mame_debug)
+	//	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sdebug",                   pOpts->mame_debug     ? "" : "no");
 	if (g_pPlayBkName != NULL)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -pb \"%s\"",                 g_pPlayBkName);
 	if (g_pRecordName != NULL)
@@ -1128,28 +1122,28 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -mngwrite \"%s\"",           g_pRecordMNGName);
 	if (g_pSaveStateName != NULL)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -state \"%s\"",              g_pSaveStateName);
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%slog",                     pOpts->errorlog        ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%slog",                     pOpts->log        ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%ssleep",                   pOpts->sleep           ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%srdtsc",                   pOpts->old_timing      ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sleds",                    pOpts->leds            ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%srdtsc",                   pOpts->rdtsc      ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%skeyboard_leds",           pOpts->keyboard_leds            ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sskip_gameinfo",           pOpts->skip_gameinfo   ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -priority %i",               pOpts->priority);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sautosave",                pOpts->autosave        ? "" : "no");
 
 	if (DriverHasOptionalBIOS(nGameIndex))
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -bios %s",pOpts->bios);		
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -bios %s",                   pOpts->bios);		
 
 #ifdef USE_IPS
-	if (pOpts->patchname != NULL)
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -ips %s",                  pOpts->patchname);
+	if (pOpts->ips != NULL)
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -ips %s",                    pOpts->ips);
 #endif /* USE_IPS */
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sdsm",                     pOpts->disable_2nd_monitor    ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sdisable_second_monitor",  pOpts->disable_second_monitor    ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sconfirm_quit",            pOpts->confirm_quit           ? "" : "no");
 #ifdef AUTO_PAUSE_PLAYBACK
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sauto_pause_playback",     pOpts->auto_pause_playback    ? "" : "no");
 #endif /* AUTO_PAUSE_PLAYBACK */
 #ifdef TRANS_UI
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%suse_trans_ui",            pOpts->use_transui            ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%suse_trans_ui",            pOpts->use_trans_ui            ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -ui_transparency %d",        pOpts->ui_transparency);
 #endif /* TRANS_UI */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
@@ -2380,11 +2374,11 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	hTreeView = GetDlgItem(hMain, IDC_TREE);
 	hwndList  = GetDlgItem(hMain, IDC_LIST);
 
-	//history_filename = mame_strdup(GetHistoryFileName());
+	//history_filename = mame_strdup(GetHistoryFile());
 #ifdef STORY_DATAFILE
-	//story_filename = mame_strdup(GetStoryFileName());
+	//story_filename = mame_strdup(GetStoryFile());
 #endif /* STORY_DATAFILE */
-	//mameinfo_filename = mame_strdup(GetMAMEInfoFileName());
+	//mameinfo_filename = mame_strdup(GetMAMEInfoFile());
 
 	if (!InitSplitters())
 		return FALSE;
@@ -4758,9 +4752,9 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 
 			new_opt[0] = '\0';
 
-			if (pOpts->patchname)
+			if (pOpts->ips)
 			{
-				char *temp = mame_strdup(pOpts->patchname);
+				char *temp = mame_strdup(pOpts->ips);
 				char *token = NULL;
 
 				if (temp)
@@ -4793,11 +4787,11 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 				strcat(new_opt, patch_name);
 			}
 
-			FreeIfAllocated(&pOpts->patchname);
+			FreeIfAllocated(&pOpts->ips);
 			if (new_opt[0] != '\0')
-				pOpts->patchname = mame_strdup(new_opt);
+				pOpts->ips = mame_strdup(new_opt);
 
-			dprintf("%s / %s | %d", patch_name, pOpts->patchname, strlen(new_opt));
+			dprintf("%s / %s | %d", patch_name, pOpts->ips, strlen(new_opt));
 			SaveGameOptions(nGame);
 		}
 		return TRUE;
@@ -6667,7 +6661,7 @@ static void AdjustMetrics(void)
 static void EnablePlayOptions(int nIndex, options_type *o)
 {
 	if (!DIJoystick.Available())
-		o->use_joystick = FALSE;
+		o->joystick = FALSE;
 }
 
 static int FindIconIndex(int nIconResource)
@@ -6816,9 +6810,9 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 
 				InsertMenu(hMenu, 1, MF_BYPOSITION, ID_PLAY_PATCH + patch_count, _Unicode(ConvertAmpersandString(buf)));
 
-				if (pOpts->patchname != NULL)
+				if (pOpts->ips != NULL)
 				{
-					strcpy(buf, pOpts->patchname);
+					strcpy(buf, pOpts->ips);
 					token = strtok(buf, ",");
 					for (i = 0; i < MAX_PATCHES && token; i++)
 					{

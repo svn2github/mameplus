@@ -121,7 +121,6 @@ static void InitializeMisc(HWND hDlg);
 static void OptOnHScroll(HWND hWnd, HWND hwndCtl, UINT code, int pos);
 static void BeamSelectionChange(HWND hwnd);
 static void FlickerSelectionChange(HWND hwnd);
-static void GammaSelectionChange(HWND hwnd);
 static void BrightCorrectSelectionChange(HWND hwnd);
 static void PauseBrightSelectionChange(HWND hwnd);
 static void FullScreenGammaSelectionChange(HWND hwnd);
@@ -132,9 +131,6 @@ static void RefreshSelectionChange(HWND hWnd, HWND hWndCtrl);
 static void VolumeSelectionChange(HWND hwnd);
 static void AudioLatencySelectionChange(HWND hwnd);
 static void ThreadPrioritySelectionChange(HWND hwnd);
-static void D3DScanlinesSelectionChange(HWND hwnd);
-static void D3DFeedbackSelectionChange(HWND hwnd);
-static void ZoomSelectionChange(HWND hwnd);
 static void UpdateDisplayModeUI(HWND hwnd, DWORD dwDepth, DWORD dwRefresh);
 static void InitializeDisplayModeUI(HWND hwnd);
 static void InitializeSoundUI(HWND hwnd);
@@ -145,14 +141,9 @@ static void InitializeResDepthUI(HWND hwnd);
 static void InitializeRefreshUI(HWND hwnd);
 static void InitializeDefaultInputUI(HWND hWnd);
 static void InitializeAnalogAxesUI(HWND hWnd);
-static void InitializeEffectUI(HWND hWnd);
-static void InitializeArtresUI(HWND hWnd);
-static void InitializeD3DEffectUI(HWND hwnd);
-static void InitializeD3DPrescaleUI(HWND hwnd);
 static void InitializeBIOSUI(HWND hwnd);
 static void InitializeDefaultBIOSUI(HWND hwnd);
 static void InitializeLEDModeUI(HWND hwnd);
-static void InitializeCleanStretchUI(HWND hwnd);
 static void InitializeControllerMappingUI(HWND hwnd);
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 static void InitializeM68kCoreUI(HWND hwnd);
@@ -198,7 +189,6 @@ static BOOL g_bReset           = FALSE;
 static int  g_nSampleRateIndex = 0;
 static int  g_nVolumeIndex     = 0;
 static int  g_nPriorityIndex   = 0;
-static int  g_nGammaIndex      = 0;
 static int  g_nBrightCorrectIndex = 0;
 static int  g_nPauseBrightIndex = 0;
 static int  g_nBeamIndex       = 0;
@@ -208,7 +198,6 @@ static int  g_nRotateIndex     = 0;
 static int  g_nScreenIndex     = 0;
 static int  g_nInputIndex      = 0;
 static int  g_nFullScreenGammaIndex = 0;
-static int  g_nEffectIndex     = 0;
 static int  g_nLedmodeIndex    = 0;
 static int  g_nA2DIndex        = 0;
 static int  g_nPaddleIndex = 0;
@@ -218,9 +207,6 @@ static int  g_nDialIndex = 0;
 static int  g_nTrackballIndex = 0;
 static int  g_nLightgunIndex = 0;
 static BOOL g_bAnalogCheckState[65]; // 8 Joysticks  * 8 Axes each
-static int  g_nCleanStretchIndex = 0;
-static int  g_nD3DEffectIndex  = 0;
-static int  g_nD3DPrescaleIndex  = 0;
 static int  g_nBiosIndex       = 0;
 #ifdef USE_SCALE_EFFECTS
 static int  g_nScaleEffectIndex= 0;
@@ -278,12 +264,9 @@ BOOL PropSheetFilter_BIOS(void)
 /* Help IDs */
 static DWORD dwHelpIDs[] =
 {
-	
 	IDC_A2D,                HIDC_A2D,
 	IDC_ANTIALIAS,          HIDC_ANTIALIAS,
-	IDC_ARTRES,             HIDC_ARTRES,
 	IDC_ARTWORK,            HIDC_ARTWORK,
-	IDC_ARTWORK_CROP,       HIDC_ARTWORK_CROP,
 	IDC_ASPECTRATIOD,       HIDC_ASPECTRATIOD,
 	IDC_ASPECTRATION,       HIDC_ASPECTRATION,
 	IDC_ASPECTRATIOTEXT,    HIDC_ASPECTRATION,
@@ -297,9 +280,7 @@ static DWORD dwHelpIDs[] =
 	IDC_BROADCAST,          HIDC_BROADCAST,
 	IDC_RANDOM_BG,          HIDC_RANDOM_BG,
 	IDC_CHEAT,              HIDC_CHEAT,
-	IDC_DDRAW,              HIDC_DDRAW,
 	IDC_DEFAULT_INPUT,      HIDC_DEFAULT_INPUT,
-	IDC_EFFECT,             HIDC_EFFECT,
 	IDC_FILTER_CLONES,      HIDC_FILTER_CLONES,
 	IDC_FILTER_EDIT,        HIDC_FILTER_EDIT,
 	IDC_FILTER_NONWORKING,  HIDC_FILTER_NONWORKING,
@@ -312,16 +293,12 @@ static DWORD dwHelpIDs[] =
 	IDC_FLIPX,              HIDC_FLIPX,
 	IDC_FLIPY,              HIDC_FLIPY,
 	IDC_FRAMESKIP,          HIDC_FRAMESKIP,
-	IDC_GAMMA,              HIDC_GAMMA,
 	IDC_HISTORY,            HIDC_HISTORY,
-	IDC_HWSTRETCH,          HIDC_HWSTRETCH,
 	IDC_INTENSITY,          HIDC_INTENSITY,
 	IDC_JOYSTICK,           HIDC_JOYSTICK,
-	IDC_KEEPASPECT,         HIDC_KEEPASPECT,
 	IDC_LEDS,               HIDC_LEDS,
 	IDC_LOG,                HIDC_LOG,
 	IDC_SLEEP,              HIDC_SLEEP,
-	IDC_MATCHREFRESH,       HIDC_MATCHREFRESH,
 	IDC_MAXIMIZE,           HIDC_MAXIMIZE,
 	IDC_OVERLAYS,           HIDC_OVERLAYS,
 	IDC_PROP_RESET,         HIDC_PROP_RESET,
@@ -334,10 +311,8 @@ static DWORD dwHelpIDs[] =
 	IDC_ROTATE,             HIDC_ROTATE,
 	IDC_SAMPLERATE,         HIDC_SAMPLERATE,
 	IDC_SAMPLES,            HIDC_SAMPLES,
-	IDC_SCANLINES,          HIDC_SCANLINES,
 	IDC_SIZES,              HIDC_SIZES,
 	IDC_START_GAME_CHECK,   HIDC_START_GAME_CHECK,
-	IDC_SWITCHBPP,          HIDC_SWITCHBPP,
 	IDC_SWITCHRES,          HIDC_SWITCHRES,
 	IDC_SYNCREFRESH,        HIDC_SYNCREFRESH,
 	IDC_THROTTLE,           HIDC_THROTTLE,
@@ -346,6 +321,7 @@ static DWORD dwHelpIDs[] =
 	IDC_USE_MOUSE,          HIDC_USE_MOUSE,
 	IDC_USE_SOUND,          HIDC_USE_SOUND,
 	IDC_VOLUME,             HIDC_VOLUME,
+	IDC_AUDIO_LATENCY,      HIDC_AUDIO_LATENCY,
 	IDC_WAITVSYNC,          HIDC_WAITVSYNC,
 	IDC_WINDOWED,           HIDC_WINDOWED,
 	IDC_PAUSEBRIGHT,        HIDC_PAUSEBRIGHT,
@@ -357,19 +333,10 @@ static DWORD dwHelpIDs[] =
 	IDC_JOY_GUI,            HIDC_JOY_GUI,
 	IDC_RANDOM_BG,          HIDC_RANDOM_BG,
 	IDC_SKIP_GAME_INFO,     HIDC_SKIP_GAME_INFO,
-	IDC_HIGH_PRIORITY,           HIDC_HIGH_PRIORITY,
+	IDC_HIGH_PRIORITY,      HIDC_HIGH_PRIORITY,
 	IDC_D3D,                HIDC_D3D,
 	IDC_D3D_FILTER,         HIDC_D3D_FILTER,
-	IDC_D3D_EFFECT,         HIDC_D3D_EFFECT,
-	IDC_D3D_TEXTURE_MANAGEMENT, HIDC_D3D_TEXTURE_MANAGEMENT,
-	IDC_AUDIO_LATENCY,      HIDC_AUDIO_LATENCY,
-	IDC_D3D_PRESCALE,       HIDC_D3D_PRESCALE,
-	IDC_D3D_SCANLINES,      HIDC_D3D_SCANLINES,
-	IDC_D3D_FEEDBACK,       HIDC_D3D_FEEDBACK,
-	IDC_ZOOM,               HIDC_ZOOM,
 	IDC_BIOS,               HIDC_BIOS,
-	IDC_CLEAN_STRETCH,      HIDC_CLEAN_STRETCH,
-	IDC_D3D_ROTATE_EFFECTS, HIDC_D3D_ROTATE_EFFECTS,
 	IDC_STRETCH_SCREENSHOT_LARGER, HIDC_STRETCH_SCREENSHOT_LARGER,
 	IDC_LEDMODE,            HIDC_LEDMODE,
 	IDC_SCREEN,             HIDC_SCREEN,
@@ -383,104 +350,6 @@ static DWORD dwHelpIDs[] =
 	IDC_ENABLE_AUTOSAVE,    HIDC_ENABLE_AUTOSAVE,
 	0,                      0
 };
-
-static const char *d3d_prescale_name[] =
-{
-	"None",
-	"Auto",
-	"Full",
-	"2",
-	"3",
-	"4"
-};
-
-#define NUMD3DPRESCALE (sizeof(d3d_prescale_name) / sizeof(d3d_prescale_name[0]))
-
-static const char *clean_stretch_name[] =
-{
-	"None",
-	"Full",
-	"Auto",
-	"Horizontal",
-	"Vertical"
-};
-
-#define NUMCLEANSTRETCH (sizeof(clean_stretch_name) / sizeof(clean_stretch_name[0]))
-
-static struct ComboBoxEffect
-{
-	const char*	m_pText;
-	const char* m_pData;
-} g_ComboBoxEffect[] = 
-{
-	{ "None",                           "none"    },
-	{ "25% scanlines",                  "scan25"  },
-	{ "50% scanlines",                  "scan50"  },
-	{ "75% scanlines",                  "scan75"  },
-	{ "75% vertical scanlines",         "scan75v" },
-	{ "RGB triad of 16 pixels",         "rgb16"   },
-	{ "RGB triad of 6 pixels",          "rgb6"    },
-	{ "RGB triad of 4 pixels",          "rgb4"    },
-	{ "RGB triad of 4 vertical pixels", "rgb4v"   },
-	{ "RGB triad of 3 pixels",          "rgb3"    },
-	{ "RGB tiny",                       "rgbtiny" },
-	{ "RGB sharp",                      "sharp"   }
-};
-
-#define NUMEFFECTS (sizeof(g_ComboBoxEffect) / sizeof(g_ComboBoxEffect[0]))
-
-static const char * d3d_effects_long_name[] =
-{
-	"None",
-	"Auto",
-	"Aperture grille",
-	"Dot medium mask",
-	"Dot medium bright",
-	"RGB minimum mask",
-	"RGB medium mask",
-	"RGB maximum bright",
-	"RGB micro",
-	"RGB tiny",
-// This is same as -prescale, see in windows/wind3dfx.c
-//	"RGB sharp",
-	"RGB 3 pixel triad",
-	"RGB 4 pixel triad",
-// Completely same as "RGB 4 pixel triad"
-//	"RGB 4 vertical pixel triad",
-	"RGB 6 pixel triad",
-	"RGB 16 pixel triad",
-	"Scanlines 25%",
-	"Scanlines 50%",
-	"Scanlines 75%"
-// Completely same as "Scanlines 75%"
-//	"Scanlines vertical 75%"
-};
-
-static const char * d3d_effects_short_name[] =
-{
-	"none",
-	"auto",
-	"aperturegrille",
-	"dotmedmask",
-	"dotmedbright",
-	"rgbminmask",
-	"rgbmedmask",
-	"rgbmaxbright",
-	"rgbmicro",
-	"rgbtiny",
-//	"sharp",
-	"rgb3",
-	"rgb4",
-//	"rgb4v",
-	"rgb6",
-	"rgb16",
-	"scan25",
-	"scan50",
-	"scan75"
-//	"scan75v"
-};
-
-#define NUMD3DEFFECTS (sizeof(d3d_effects_short_name) / sizeof(d3d_effects_short_name[0]))
 
 #ifdef USE_SCALE_EFFECTS
 static const char * scale_effects_long_name[] =
@@ -1387,13 +1256,10 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 	{
 	case IDC_SIZES:
 	case IDC_FRAMESKIP:
-	case IDC_EFFECT:
 	case IDC_DEFAULT_INPUT:
 	case IDC_ROTATE:
 	case IDC_SCREEN:
 	case IDC_SAMPLERATE:
-	case IDC_ARTRES:
-	case IDC_CLEAN_STRETCH:
 	case IDC_M68K_CORE:
 #ifdef USE_SCALE_EFFECTS
 	case IDC_SCALEEFFECT:
@@ -1408,6 +1274,21 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 	case IDC_JOYID7:
 	case IDC_JOYID8:
 #endif /* JOYSTICK_ID */
+	case IDC_PADDLE:
+	case IDC_ADSTICK:
+	case IDC_PEDAL:
+	case IDC_DIAL:
+	case IDC_TRACKBALL:
+	case IDC_LIGHTGUNDEVICE:
+	case IDC_BIOS :
+	case IDC_BIOS1 :
+	case IDC_BIOS2 :
+	case IDC_BIOS3 :
+	case IDC_BIOS4 :
+	case IDC_BIOS5 :
+	case IDC_BIOS6 :
+	case IDC_BIOS7 :
+	case IDC_BIOS8 :
 		if (wNotifyCode == CBN_SELCHANGE)
 		{
 			changed = TRUE;
@@ -1433,18 +1314,6 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 				}
 				break;
 
-	case IDC_PADDLE:
-	case IDC_ADSTICK:
-	case IDC_PEDAL:
-	case IDC_DIAL:
-	case IDC_TRACKBALL:
-	case IDC_LIGHTGUNDEVICE:
-		if (wNotifyCode == CBN_SELCHANGE)
-		{
-			changed = TRUE;
-		}
-		break;
-
 	case IDC_REFRESH:
 		if (wNotifyCode == LBN_SELCHANGE)
 		{
@@ -1464,28 +1333,6 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 
 	case IDC_TRIPLE_BUFFER:
 		changed = ReadControl(hDlg, wID);
-		break;
-
-	case IDC_D3D_EFFECT :
-	case IDC_D3D_PRESCALE :
-		if (wNotifyCode == CBN_SELCHANGE)
-			changed = TRUE;
-		break;
-	case IDC_BIOS :
-		if (wNotifyCode == CBN_SELCHANGE)
-			changed = TRUE;
-		break;
-
-	case IDC_BIOS1 :
-	case IDC_BIOS2 :
-	case IDC_BIOS3 :
-	case IDC_BIOS4 :
-	case IDC_BIOS5 :
-	case IDC_BIOS6 :
-	case IDC_BIOS7 :
-	case IDC_BIOS8 :
-		if (wNotifyCode == CBN_SELCHANGE)
-			changed = TRUE;
 		break;
 
 	case IDC_PROP_RESET:
@@ -1561,28 +1408,11 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 		}
 		break;
 
-	default:
 #ifdef MESS
+	default:
 		if (MessPropertiesCommand(g_nGame, hDlg, wNotifyCode, wID, &changed))
 			break;
 #endif
-
-		if (wNotifyCode == BN_CLICKED)
-		{
-			switch (wID)
-			{
-			case IDC_SCANLINES:
-				if (Button_GetCheck(GetDlgItem(hDlg, IDC_SCANLINES)))
-					Button_SetCheck(GetDlgItem(hDlg, IDC_VSCANLINES), FALSE);
-				break;
-
-			case IDC_VSCANLINES:
-				if (Button_GetCheck(GetDlgItem(hDlg, IDC_VSCANLINES)))
-					Button_SetCheck(GetDlgItem(hDlg, IDC_SCANLINES), FALSE);
-				break;
-			}
-			changed = TRUE;
-		}
 	}
 
 	if (changed == TRUE)
@@ -1929,19 +1759,20 @@ static void PropToOptions(HWND hWnd, options_type *o)
 			case 32: strcat(buffer, "x32"); break;
 			}
 		}
-		if (strcmp(buffer,"0x0x0") == 0)
-			sprintf(buffer,"auto");
-		FreeIfAllocated(&o->resolution);
-		o->resolution = mame_strdup(buffer);
-	}
 
-	/* refresh */
-	hCtrl = GetDlgItem(hWnd, IDC_REFRESH);
-	if (hCtrl)
-	{
-		nIndex = ComboBox_GetCurSel(hCtrl);
-		
-		pGameOpts->gfx_refresh = ComboBox_GetItemData(hCtrl, nIndex);
+		/* refresh */
+		hCtrl = GetDlgItem(hWnd, IDC_REFRESH);
+		if (hCtrl)
+		{
+			nIndex = ComboBox_GetCurSel(hCtrl);
+			
+			sprintf(buffer + strlen(buffer), "@%ld", ComboBox_GetItemData(hCtrl, nIndex));
+		}
+
+		if (strcmp(buffer,"0x0x0@0") == 0)
+			sprintf(buffer,"auto");
+		FreeIfAllocated(&o->resolution0);
+		o->resolution0 = strdup(buffer);
 	}
 
 	/* aspect ratio */
@@ -1966,8 +1797,8 @@ static void PropToOptions(HWND hWnd, options_type *o)
 		}
 
 		snprintf(buffer,sizeof(buffer),"%d:%d",n,d);
-		FreeIfAllocated(&o->aspect);
-		o->aspect = mame_strdup(buffer);
+		FreeIfAllocated(&o->aspect0);
+		o->aspect0 = strdup(buffer);
 	}
 	/*analog axes*/
 	hCtrl = GetDlgItem(hWnd, IDC_ANALOG_AXES);	
@@ -2013,9 +1844,9 @@ static void PropToOptions(HWND hWnd, options_type *o)
 		}
 		if (mame_stricmp (digital,o->digital) != 0)
 		{
-			// save the new setting
 			FreeIfAllocated(&o->digital);
-			o->digital = mame_strdup(digital);
+			if (digital != NULL)
+				o->digital = strdup(digital);
 		}
 	}
 #ifdef MESS
@@ -2033,24 +1864,25 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 	int  w = 0;
 	int  n = 0;
 	int  d = 0;
+	int  r = 0;
 
 	g_bInternalSet = TRUE;
 
 	/* video */
 
 	/* get desired resolution */
-	if (!mame_stricmp(o->resolution, "auto"))
+	if (!mame_stricmp(o->resolution0, "auto"))
 	{
 		w = h = 0;
 	}
 	else
-	if (sscanf(o->resolution, "%dx%dx%d", &w, &h, &d) < 2)
+	if (sscanf(o->resolution0, "%dx%dx%d@%d", &w, &h, &d, &r) < 2)
 	{
-		w = h = d = 0;
+		w = h = d = r = 0;
 	}
 
 	/* Setup sizes list based on depth. */
-	UpdateDisplayModeUI(hWnd, d, o->gfx_refresh);
+	UpdateDisplayModeUI(hWnd, d, r);
 
 	/* Screen size drop down list */
 	hCtrl = GetDlgItem(hWnd, IDC_SIZES);
@@ -2132,7 +1964,7 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 	hCtrl = GetDlgItem(hWnd, IDC_REFRESH);
 	if (hCtrl)
 	{
-		if (o->gfx_refresh == 0)
+		if (r == 0)
 		{
 			/* default to auto */
 			ComboBox_SetCurSel(hCtrl, 0);
@@ -2154,7 +1986,7 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 				nRefresh = ComboBox_GetItemData(hCtrl, nCount);
 
 				/* If we match, set nSelection to the right value */
-				if (o->gfx_refresh == nRefresh)
+				if (r == nRefresh)
 				{
 					nSelection = nCount;
 					break;
@@ -2168,7 +2000,7 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 	hCtrl = GetDlgItem(hWnd, IDC_FSGAMMADISP);
 	if (hCtrl)
 	{
-		snprintf(buf,sizeof(buf), "%03.2f", o->gfx_gamma);
+		snprintf(buf,sizeof(buf), "%03.2f", o->full_screen_gamma);
 		Static_SetTextA(hCtrl, buf);
 	}
 	
@@ -2180,7 +2012,7 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 		n = 0;
 		d = 0;
 
-		if (sscanf(o->aspect, "%d:%d", &n, &d) == 2 && n != 0 && d != 0)
+		if (sscanf(o->aspect0, "%d:%d", &n, &d) == 2 && n != 0 && d != 0)
 		{
 			sprintf(buf, "%d", n);
 			Edit_SetTextA(hCtrl, buf);
@@ -2194,27 +2026,18 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 		}
 	}
 
-	ZoomSelectionChange(hWnd);
-
 	/* core video */
-	hCtrl = GetDlgItem(hWnd, IDC_GAMMADISP);
-	if (hCtrl)
-	{
-		sprintf(buf, "%03.2f", o->f_gamma_correct);
-		Static_SetTextA(hCtrl, buf);
-	}
-
 	hCtrl = GetDlgItem(hWnd, IDC_BRIGHTCORRECTDISP);
 	if (hCtrl)
 	{
-		sprintf(buf, "%03.2f", o->f_bright_correct);
+		sprintf(buf, "%03.2f", o->brightness);
 		Static_SetTextA(hCtrl, buf);
 	}
 
 	hCtrl = GetDlgItem(hWnd, IDC_PAUSEBRIGHTDISP);
 	if (hCtrl)
 	{
-		sprintf(buf, "%03.2f", o->f_pause_bright);
+		sprintf(buf, "%03.2f", o->pause_brightness);
 		Static_SetTextA(hCtrl, buf);
 	}
 
@@ -2222,7 +2045,7 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 	hCtrl = GetDlgItem(hWnd, IDC_A2DDISP);
 	if (hCtrl)
 	{
-		sprintf(buf, "%03.2f", o->f_a2d);
+		sprintf(buf, "%03.2f", o->a2d_deadzone);
 		Static_SetTextA(hCtrl, buf);
 	}
 
@@ -2327,21 +2150,21 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 	hCtrl = GetDlgItem(hWnd, IDC_BEAMDISP);
 	if (hCtrl)
 	{
-		sprintf(buf, "%03.2f", o->f_beam);
+		sprintf(buf, "%03.2f", o->beam);
 		Static_SetTextA(hCtrl, buf);
 	}
 
 	hCtrl = GetDlgItem(hWnd, IDC_FLICKERDISP);
 	if (hCtrl)
 	{
-		sprintf(buf, "%03.2f", o->f_flicker);
+		sprintf(buf, "%03.2f", o->flicker);
 		Static_SetTextA(hCtrl, buf);
 	}
 
 	hCtrl = GetDlgItem(hWnd, IDC_INTENSITYDISP);
 	if (hCtrl)
 	{
-		sprintf(buf, "%03.2f", o->f_intensity);
+		sprintf(buf, "%03.2f", o->intensity);
 		Static_SetTextA(hCtrl, buf);
 	}
 
@@ -2349,15 +2172,12 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 	hCtrl = GetDlgItem(hWnd, IDC_VOLUMEDISP);
 	if (hCtrl)
 	{
-		sprintf(buf, "%ddB", o->attenuation);
+		sprintf(buf, "%ddB", o->volume);
 		Static_SetTextA(hCtrl, buf);
 	}
 	AudioLatencySelectionChange(hWnd);
 
 	ThreadPrioritySelectionChange(hWnd);
-	// d3d
-	D3DScanlinesSelectionChange(hWnd);
-	D3DFeedbackSelectionChange(hWnd);
 
 	g_bInternalSet = FALSE;
 
@@ -2397,9 +2217,7 @@ static void SetPropEnabledControls(HWND hWnd)
 	HWND hCtrl;
 	int  nIndex;
 	int  sound;
-	BOOL ddraw = FALSE;
 	BOOL d3d = FALSE;
-	BOOL hws = FALSE;
 	BOOL useart = FALSE;
 	BOOL multimon = (DirectDraw_GetNumDisplays() >= 2);
 	int joystick_attached = 9;
@@ -2419,78 +2237,42 @@ static void SetPropEnabledControls(HWND hWnd)
 	if (hCtrl)
 		in_window = Button_GetCheck(hCtrl);
 	else
-		in_window = pGameOpts->window_mode;
-
-	// check ddraw is enabled
-	hCtrl = GetDlgItem(hWnd, IDC_DDRAW);
-	if (hCtrl)
-		ddraw = Button_GetCheck(hCtrl);
-	else
-		ddraw = pGameOpts->use_ddraw;
-
-	// check hw stretch is enabled
-	hCtrl = GetDlgItem(hWnd, IDC_HWSTRETCH);
-	if (hCtrl)
-		hws = DirectDraw_HasHWStretch() && Button_GetCheck(hCtrl);
-	else
-		hws = DirectDraw_HasHWStretch() && pGameOpts->ddraw_stretch;
+		in_window = pGameOpts->window;
 
 	// check d3d is enabled
 	hCtrl = GetDlgItem(hWnd, IDC_D3D);
 	if (hCtrl)
 		d3d = Button_GetCheck(hCtrl);
 	else
-		d3d = pGameOpts->use_d3d;
+		d3d = pGameOpts->direct3d;
 
 	EnableWindow(GetDlgItem(hWnd, IDC_MAXIMIZE),               in_window);
 	EnableWindow(GetDlgItem(hWnd, IDC_RESDEPTH),               !in_window);
 	EnableWindow(GetDlgItem(hWnd, IDC_RESDEPTHTEXT),           !in_window);
 
-	EnableWindow(GetDlgItem(hWnd, IDC_WAITVSYNC),              ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_TRIPLE_BUFFER),          ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_HWSTRETCH),              ddraw && DirectDraw_HasHWStretch());
-	EnableWindow(GetDlgItem(hWnd, IDC_SWITCHRES),              !in_window && (ddraw || d3d));
-	EnableWindow(GetDlgItem(hWnd, IDC_SWITCHBPP),              !in_window && (ddraw || d3d));
-	EnableWindow(GetDlgItem(hWnd, IDC_MATCHREFRESH),           ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_SYNCREFRESH),            ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_REFRESH),                !in_window && ((ddraw && DirectDraw_HasRefresh()) || d3d));
-	EnableWindow(GetDlgItem(hWnd, IDC_REFRESHTEXT),            !in_window && ((ddraw && DirectDraw_HasRefresh()) || d3d));
-	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMA),                !in_window && (ddraw || d3d));
-	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMATEXT),            !in_window && (ddraw || d3d));
-	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMADISP),            !in_window && (ddraw || d3d));
-	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT),        (ddraw && hws) || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT2),       (ddraw && hws) || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATION),           (ddraw && hws) || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOD),           (ddraw && hws) || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_SCANLINES),              !g_nEffectIndex && (!ddraw || !(hws)) && !d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_CLEAN_STRETCH),          (ddraw && hws) || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_CLEAN_STRETCHTEXT),      (ddraw && hws) || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_SCREEN),                 (ddraw || d3d) && multimon);
-	EnableWindow(GetDlgItem(hWnd, IDC_SCREENTEXT),             (ddraw || d3d) && multimon);
+	EnableWindow(GetDlgItem(hWnd, IDC_WAITVSYNC),              d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_TRIPLE_BUFFER),          d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_SWITCHRES),              !in_window && d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_SYNCREFRESH),            d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_REFRESH),                !in_window && d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_REFRESHTEXT),            !in_window && d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMA),                !in_window && d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMATEXT),            !in_window && d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMADISP),            !in_window && d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT),        d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT2),       d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATION),           d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOD),           d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_SCREEN),                 d3d && multimon);
+	EnableWindow(GetDlgItem(hWnd, IDC_SCREENTEXT),             d3d && multimon);
 
 #ifdef USE_SCALE_EFFECTS
-	EnableWindow(GetDlgItem(hWnd, IDC_SCALEEFFECTTEXT),        ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_SCALEEFFECT),            ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_SCALEEFFECTTEXT),        d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_SCALEEFFECT),            d3d);
 #endif /* USE_SCALE_EFFECTS */
 
 	// d3d
-	EnableWindow(GetDlgItem(hWnd, IDC_ZOOM),                   d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_ZOOMTEXT),               d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_ZOOMDIST),               d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_D3D_FILTER),             d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_D3D_TEXTURE_MANAGEMENT), d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_D3D_EFFECT),             d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_D3D_EFFECTTEXT),         d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_D3D_PRESCALE),           d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_D3D_PRESCALETEXT),       d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_D3D_ROTATE_EFFECTS),     d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_EFFECTOVERRIDES),        d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_D3D_SCANLINES),          d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_D3D_SCANLINES_DISP),     d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_D3D_SCANLINES_ENABLE),   d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_D3D_FEEDBACK),           d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_D3D_FEEDBACK_DISP),      d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_D3D_FEEDBACK_ENABLE),    d3d);
 
 #ifdef TRANS_UI
 	hCtrl = GetDlgItem(hWnd, IDC_TRANSUI);
@@ -2505,12 +2287,9 @@ static void SetPropEnabledControls(HWND hWnd)
 
 	useart = Button_GetCheck(hCtrl);
 
-	EnableWindow(GetDlgItem(hWnd, IDC_ARTWORK_CROP),           useart);
 	EnableWindow(GetDlgItem(hWnd, IDC_BACKDROPS),              useart);
 	EnableWindow(GetDlgItem(hWnd, IDC_BEZELS),                 useart);
 	EnableWindow(GetDlgItem(hWnd, IDC_OVERLAYS),               useart);
-	EnableWindow(GetDlgItem(hWnd, IDC_ARTRES),                 useart);
-	EnableWindow(GetDlgItem(hWnd, IDC_ARTRESTEXT),             useart);
 	EnableWindow(GetDlgItem(hWnd, IDC_ARTMISCTEXT),            useart);
 
 	/* Joystick options */
@@ -2599,15 +2378,15 @@ static void SetPropEnabledControls(HWND hWnd)
 		{
 			BOOL use_lightgun;
 #if 1
-			BOOL use_mouse;
+			BOOL mouse;
 			//XP and above...
 			Button_Enable(GetDlgItem(hWnd,IDC_LIGHTGUN), TRUE);
 			Button_Enable(GetDlgItem(hWnd,IDC_USE_MOUSE), TRUE);
 			use_lightgun = Button_GetCheck(GetDlgItem(hWnd,IDC_LIGHTGUN));
-			use_mouse = Button_GetCheck(GetDlgItem(hWnd,IDC_USE_MOUSE));
-			Button_Enable(GetDlgItem(hWnd,IDC_LIGHTGUN), !use_mouse);
-			Button_Enable(GetDlgItem(hWnd,IDC_DUAL_LIGHTGUN),use_lightgun && !use_mouse);
-			Button_Enable(GetDlgItem(hWnd,IDC_RELOAD),use_lightgun || use_mouse);
+			mouse = Button_GetCheck(GetDlgItem(hWnd,IDC_USE_MOUSE));
+			Button_Enable(GetDlgItem(hWnd,IDC_LIGHTGUN), !mouse);
+			Button_Enable(GetDlgItem(hWnd,IDC_DUAL_LIGHTGUN),use_lightgun && !mouse);
+			Button_Enable(GetDlgItem(hWnd,IDC_RELOAD),use_lightgun || mouse);
 #else
 			//XP and above...
 			Button_Enable(GetDlgItem(hWnd,IDC_LIGHTGUN),FALSE);
@@ -2752,7 +2531,7 @@ static void AssignSampleRate(HWND hWnd)
 
 static void AssignVolume(HWND hWnd)
 {
-	pGameOpts->attenuation = g_nVolumeIndex - 32;
+	pGameOpts->volume = g_nVolumeIndex - 32;
 }
 
 static void AssignPriority(HWND hWnd)
@@ -2763,62 +2542,57 @@ static void AssignPriority(HWND hWnd)
 static void AssignBrightCorrect(HWND hWnd)
 {
 	/* "1.0", 0.5, 2.0 */
-	pGameOpts->f_bright_correct = g_nBrightCorrectIndex / 20.0 + 0.5;
+	pGameOpts->brightness = g_nBrightCorrectIndex / 20.0 + 0.5;
 	
 }
 
 static void AssignPauseBright(HWND hWnd)
 {
 	/* "0.65", 0.5, 2.0 */
-	pGameOpts->f_pause_bright = g_nPauseBrightIndex / 20.0 + 0.5;
+	pGameOpts->pause_brightness = g_nPauseBrightIndex / 20.0 + 0.5;
 	
-}
-
-static void AssignGamma(HWND hWnd)
-{
-	pGameOpts->f_gamma_correct = g_nGammaIndex / 20.0 + 0.5;
 }
 
 static void AssignFullScreenGamma(HWND hWnd)
 {
-	pGameOpts->gfx_gamma = g_nFullScreenGammaIndex / 20.0;
+	pGameOpts->full_screen_gamma = g_nFullScreenGammaIndex / 20.0;
 }
 
 static void AssignBeam(HWND hWnd)
 {
-	pGameOpts->f_beam = g_nBeamIndex / 20.0 + 0.1;
+	pGameOpts->beam = g_nBeamIndex / 20.0 + 0.1;
 }
 
 static void AssignFlicker(HWND hWnd)
 {
-	pGameOpts->f_flicker = g_nFlickerIndex;
+	pGameOpts->flicker = g_nFlickerIndex;
 }
 
 static void AssignIntensity(HWND hWnd)
 {
-	pGameOpts->f_intensity = g_nIntensityIndex / 20.0 + 0.5;
+	pGameOpts->intensity = g_nIntensityIndex / 20.0 + 0.5;
 }
 
 static void AssignA2D(HWND hWnd)
 {
-	pGameOpts->f_a2d = g_nA2DIndex / 20.0;
+	pGameOpts->a2d_deadzone = g_nA2DIndex / 20.0;
 }
 
 static void AssignRotate(HWND hWnd)
 {
 	pGameOpts->ror = 0;
 	pGameOpts->rol = 0;
-	pGameOpts->norotate = 0;
-	pGameOpts->auto_ror = 0;
-	pGameOpts->auto_rol = 0;
+	pGameOpts->rotate = 1;
+	pGameOpts->autoror = 0;
+	pGameOpts->autorol = 0;
 
 	switch (g_nRotateIndex)
 	{
 	case 1:  pGameOpts->ror = 1; break;
 	case 2:  pGameOpts->rol = 1; break;
-	case 3 : pGameOpts->norotate = 1; break;
-	case 4 : pGameOpts->auto_ror = 1; break;
-	case 5 : pGameOpts->auto_rol = 1; break;
+	case 3 : pGameOpts->rotate = 0; break;
+	case 4 : pGameOpts->autoror = 1; break;
+	case 5 : pGameOpts->autorol = 1; break;
 		default: break;
 	}
 }
@@ -2831,9 +2605,9 @@ static void AssignScreen(HWND hWnd)
 	if (iMonitors >= 2)
 		ptr = DirectDraw_GetDisplayDriver(g_nScreenIndex);
 
-	FreeIfAllocated(&pGameOpts->screen);
+	FreeIfAllocated(&pGameOpts->screen0);
 	if (ptr != NULL)
-		pGameOpts->screen = mame_strdup(ptr);
+		pGameOpts->screen0 = strdup(ptr);
 }
 
 
@@ -2847,7 +2621,7 @@ static void AssignInput(HWND hWnd)
 	if (new_length == CB_ERR)
 	{
 		dprintf("error getting text len");
-		pGameOpts->ctrlr = mame_strdup("Standard");
+		pGameOpts->ctrlr = strdup("Standard");
 		return;
 	}
 	pGameOpts->ctrlr = (char *)malloc(new_length + 1);
@@ -2855,7 +2629,7 @@ static void AssignInput(HWND hWnd)
 	if (strcmp(pGameOpts->ctrlr, _UI("Standard")) == 0)
 	{
 		FreeIfAllocated(&pGameOpts->ctrlr);
-		pGameOpts->ctrlr = mame_strdup("Standard");
+		pGameOpts->ctrlr = strdup("Standard");
 	}
 
 }
@@ -2924,109 +2698,78 @@ static void AssignAnalogAxes(HWND hWnd)
 	{
 		//all axes on all joysticks are digital
 		FreeIfAllocated(&pGameOpts->digital);
-		pGameOpts->digital = mame_strdup("all");
+		pGameOpts->digital = strdup("all");
 	}
 	if( nCheckCounter == 0 )
 	{
 		// no axes are treated as digital, which is the default...
 		FreeIfAllocated(&pGameOpts->digital);
-		pGameOpts->digital = mame_strdup("none");
+		pGameOpts->digital = strdup("none");
 	}
-}
-
-static void AssignEffect(HWND hWnd)
-{
-	const char* ptr= (const char*)ComboBox_GetItemData(hWnd, g_nEffectIndex);
-
-	FreeIfAllocated(&pGameOpts->effect);
-	if (ptr != NULL)
-		pGameOpts->effect = mame_strdup(ptr);
 }
 
 static void AssignLedmode(HWND hWnd)
 {
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nLedmodeIndex);
 
-	FreeIfAllocated(&pGameOpts->ledmode);
+	FreeIfAllocated(&pGameOpts->led_mode);
 	if (ptr != NULL)
-		pGameOpts->ledmode = mame_strdup(ptr);
+		pGameOpts->led_mode = strdup(ptr);
 }
 
 static void AssignPaddle(HWND hWnd)
 {
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nPaddleIndex);
-	FreeIfAllocated(&pGameOpts->paddle);
+
+	FreeIfAllocated(&pGameOpts->paddle_device);
 	if (ptr != NULL)
-		pGameOpts->paddle = mame_strdup(ptr);
+		pGameOpts->paddle_device = strdup(ptr);
 }
 
 static void AssignADStick(HWND hWnd)
 {
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nADStickIndex);
-	FreeIfAllocated(&pGameOpts->adstick);
+
+	FreeIfAllocated(&pGameOpts->adstick_device);
 	if (ptr != NULL)
-		pGameOpts->adstick = mame_strdup(ptr);
+		pGameOpts->adstick_device = strdup(ptr);
+
 }
 
 static void AssignPedal(HWND hWnd)
 {
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nPedalIndex);
-	FreeIfAllocated(&pGameOpts->pedal);
+
+	FreeIfAllocated(&pGameOpts->pedal_device);
 	if (ptr != NULL)
-		pGameOpts->pedal = mame_strdup(ptr);
+		pGameOpts->pedal_device = strdup(ptr);
 }
 
 static void AssignDial(HWND hWnd)
 {
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nDialIndex);
-	FreeIfAllocated(&pGameOpts->dial);
+
+	FreeIfAllocated(&pGameOpts->dial_device);
 	if (ptr != NULL)
-		pGameOpts->dial = mame_strdup(ptr);
+		pGameOpts->dial_device = strdup(ptr);
 }
 
 static void AssignTrackball(HWND hWnd)
 {
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nTrackballIndex);
-	FreeIfAllocated(&pGameOpts->trackball);
+
+	FreeIfAllocated(&pGameOpts->trackball_device);
 	if (ptr != NULL)
-		pGameOpts->trackball = mame_strdup(ptr);
+		pGameOpts->trackball_device = strdup(ptr);
 }
 
 static void AssignLightgun(HWND hWnd)
 {
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nLightgunIndex);
+
 	FreeIfAllocated(&pGameOpts->lightgun_device);
 	if (ptr != NULL)
-		pGameOpts->lightgun_device = mame_strdup(ptr);
-}
-
-
-static void AssignCleanStretch(HWND hWnd)
-{
-	char buf[128];
-
-	FreeIfAllocated(&pGameOpts->clean_stretch);
-	strcpy(buf, clean_stretch_name[g_nCleanStretchIndex]);
-	if (*buf >= 'A')
-		*buf -= 'A' - 'a';
-	pGameOpts->clean_stretch = mame_strdup(buf);
-}
-
-static void AssignD3DEffect(HWND hWnd)
-{
-	FreeIfAllocated(&pGameOpts->d3d_effect);
-	pGameOpts->d3d_effect = mame_strdup(d3d_effects_short_name[g_nD3DEffectIndex]);
-}
-
-static void AssignD3DPrescale(HWND hWnd)
-{
-	char buf[128];
-
-	FreeIfAllocated(&pGameOpts->d3d_prescale);
-	strcpy(buf, d3d_prescale_name[g_nD3DPrescaleIndex]);
-	if (*buf >= 'A')
-		*buf -= 'A' - 'a';
-	pGameOpts->d3d_prescale = mame_strdup(buf);
+		pGameOpts->lightgun_device = strdup(ptr);
 }
 
 static void AssignBios(HWND hWnd)
@@ -3034,9 +2777,9 @@ static void AssignBios(HWND hWnd)
 	FreeIfAllocated(&pGameOpts->bios);
 
 	if (g_biosinfo && g_nBiosIndex)
-		pGameOpts->bios = mame_strdup(g_biosinfo[g_nBiosIndex]._name);
+		pGameOpts->bios = strdup(g_biosinfo[g_nBiosIndex]._name);
 	else
-		pGameOpts->bios = mame_strdup(BIOS_DEFAULT);
+		pGameOpts->bios = strdup(BIOS_DEFAULT);
 }
 
 #define AssignDefaultBios(i) \
@@ -3066,7 +2809,7 @@ AssignDefaultBios(7)
 static void AssignScaleEffect(HWND hWnd)
 {
 	FreeIfAllocated(&pGameOpts->scale_effect);
-	pGameOpts->scale_effect = mame_strdup(scale_effects_short_name[g_nScaleEffectIndex]);
+	pGameOpts->scale_effect = strdup(scale_effects_short_name[g_nScaleEffectIndex]);
 }
 #endif /* USE_SCALE_EFFECTS */
 
@@ -3089,14 +2832,13 @@ static void ResetDataMap(void)
 
 	// add the 0.001 to make sure it truncates properly to the integer
 	// (we don't want 35.99999999 to be cut down to 35 because of floating point error)
-	g_nGammaIndex           = (int)((pGameOpts->f_gamma_correct  - 0.5) * 20.0 + 0.001);
-	g_nFullScreenGammaIndex = (int)( pGameOpts->gfx_gamma               * 20.0 + 0.001);
-	g_nBrightCorrectIndex   = (int)((pGameOpts->f_bright_correct - 0.5) * 20.0 + 0.001);
-	g_nPauseBrightIndex     = (int)((pGameOpts->f_pause_bright   - 0.5) * 20.0 + 0.001);
-	g_nBeamIndex            = (int)((pGameOpts->f_beam           - 0.1) * 20.0 + 0.001);
-	g_nFlickerIndex         = (int)( pGameOpts->f_flicker);
-	g_nIntensityIndex       = (int)((pGameOpts->f_intensity      - 0.5) * 20.0 + 0.001);
-	g_nA2DIndex             = (int)( pGameOpts->f_a2d                   * 20.0 + 0.001);
+	g_nFullScreenGammaIndex = (int)( pGameOpts->full_screen_gamma       * 20.0 + 0.001);
+	g_nBrightCorrectIndex   = (int)((pGameOpts->brightness       - 0.5) * 20.0 + 0.001);
+	g_nPauseBrightIndex     = (int)((pGameOpts->pause_brightness - 0.5) * 20.0 + 0.001);
+	g_nBeamIndex            = (int)((pGameOpts->beam             - 0.1) * 20.0 + 0.001);
+	g_nFlickerIndex         = (int)( pGameOpts->flicker);
+	g_nIntensityIndex       = (int)((pGameOpts->intensity        - 0.5) * 20.0 + 0.001);
+	g_nA2DIndex             = (int)( pGameOpts->a2d_deadzone            * 20.0 + 0.001);
 #ifdef TRANS_UI
 	g_nUITransparencyIndex  = (int)( pGameOpts->ui_transparency);
 #endif /* TRANS_UI */
@@ -3105,11 +2847,11 @@ static void ResetDataMap(void)
 	if (pGameOpts->ctrlr == NULL || mame_stricmp(pGameOpts->ctrlr,"Standard") == 0)
 	{
 		FreeIfAllocated(&pGameOpts->ctrlr);
-		pGameOpts->ctrlr = mame_strdup("Standard");
+		pGameOpts->ctrlr = strdup("Standard");
 	}
 
 	g_nScreenIndex = 0;
-	if (pGameOpts->screen != NULL)
+	if (pGameOpts->screen0 != NULL)
 	{
 		int iMonitors = DirectDraw_GetNumDisplays();
 		int i;
@@ -3118,7 +2860,7 @@ static void ResetDataMap(void)
 		{
 			const char *name = DirectDraw_GetDisplayDriver(i);
 
-			if (name && mame_stricmp(pGameOpts->screen, name) == 0)
+			if (name && mame_stricmp(pGameOpts->screen0, name) == 0)
 				g_nScreenIndex = i;
 		}
 	}
@@ -3128,14 +2870,14 @@ static void ResetDataMap(void)
 		g_nRotateIndex = 1;
 	if (pGameOpts->ror == FALSE && pGameOpts->rol == TRUE)
 		g_nRotateIndex = 2;
-	if (pGameOpts->norotate)
+	if (!pGameOpts->rotate)
 		g_nRotateIndex = 3;
-	if (pGameOpts->auto_ror)
+	if (pGameOpts->autoror)
 		g_nRotateIndex = 4;
-	if (pGameOpts->auto_rol)
+	if (pGameOpts->autorol)
 		g_nRotateIndex = 5;
 
-	g_nVolumeIndex = pGameOpts->attenuation + 32;
+	g_nVolumeIndex = pGameOpts->volume + 32;
 	g_nPriorityIndex = pGameOpts->priority + 15;
 	switch (pGameOpts->samplerate)
 	{
@@ -3147,38 +2889,11 @@ static void ResetDataMap(void)
 		case 44100:  g_nSampleRateIndex = 3; break;
 	}
 
-	g_nEffectIndex = 0;
-	for (i = 0; i < NUMEFFECTS; i++)
-	{
-		if (!mame_stricmp(pGameOpts->effect, g_ComboBoxEffect[i].m_pData))
-			g_nEffectIndex = i;
-	}
 	g_nLedmodeIndex = 0;
 	for (i = 0; i < NUMLEDMODES; i++)
 	{
-		if (!mame_stricmp(pGameOpts->ledmode, g_ComboBoxLedmode[i].m_pData))
+		if (!mame_stricmp(pGameOpts->led_mode, g_ComboBoxLedmode[i].m_pData))
 			g_nLedmodeIndex = i;
-	}
-
-	g_nCleanStretchIndex = 0;
-	for (i = 0; i < NUMCLEANSTRETCH; i++)
-	{
-		if (!mame_stricmp(pGameOpts->clean_stretch, clean_stretch_name[i]))
-			g_nCleanStretchIndex = i;
-	}
-
-	g_nD3DEffectIndex = 0;
-	for (i = 0; i < NUMD3DEFFECTS; i++)
-	{
-		if (!mame_stricmp(pGameOpts->d3d_effect, d3d_effects_short_name[i]))
-			g_nD3DEffectIndex = i;
-	}
-
-	g_nD3DPrescaleIndex = 0;
-	for (i = 0; i < NUMD3DPRESCALE; i++)
-	{
-		if (!mame_stricmp(pGameOpts->d3d_prescale, d3d_prescale_name[i]))
-			g_nD3DPrescaleIndex = i;
 	}
 
 	g_biosinfo = NULL;
@@ -3209,7 +2924,7 @@ static void ResetDataMap(void)
 
 			if (drv)
 			{
-				options.bios = mame_strdup(GetDefaultBios(i));
+				options.bios = strdup(GetDefaultBios(i));
 				default_bios_index[i] = determine_bios_rom(drv->bios);
 				free(options.bios);
 				options.bios = NULL;
@@ -3229,31 +2944,31 @@ static void ResetDataMap(void)
 	g_nPaddleIndex = 0;
 	for (i = 0; i < NUMDEVICES; i++)
 	{
-		if (!mame_stricmp(pGameOpts->paddle, g_ComboBoxDevice[i].m_pData))
+		if (!mame_stricmp(pGameOpts->paddle_device, g_ComboBoxDevice[i].m_pData))
 			g_nPaddleIndex = i;
 	}
 	g_nADStickIndex = 0;
 	for (i = 0; i < NUMDEVICES; i++)
 	{
-		if (!mame_stricmp(pGameOpts->adstick, g_ComboBoxDevice[i].m_pData))
+		if (!mame_stricmp(pGameOpts->adstick_device, g_ComboBoxDevice[i].m_pData))
 			g_nADStickIndex = i;
 	}
 	g_nPedalIndex = 0;
 	for (i = 0; i < NUMDEVICES; i++)
 	{
-		if (!mame_stricmp(pGameOpts->pedal, g_ComboBoxDevice[i].m_pData))
+		if (!mame_stricmp(pGameOpts->pedal_device, g_ComboBoxDevice[i].m_pData))
 			g_nPedalIndex = i;
 	}
 	g_nDialIndex = 0;
 	for (i = 0; i < NUMDEVICES; i++)
 	{
-		if (!mame_stricmp(pGameOpts->dial, g_ComboBoxDevice[i].m_pData))
+		if (!mame_stricmp(pGameOpts->dial_device, g_ComboBoxDevice[i].m_pData))
 			g_nDialIndex = i;
 	}
 	g_nTrackballIndex = 0;
 	for (i = 0; i < NUMDEVICES; i++)
 	{
-		if (!mame_stricmp(pGameOpts->trackball, g_ComboBoxDevice[i].m_pData))
+		if (!mame_stricmp(pGameOpts->trackball_device, g_ComboBoxDevice[i].m_pData))
 			g_nTrackballIndex = i;
 	}
 	g_nLightgunIndex = 0;
@@ -3276,142 +2991,120 @@ static void BuildDataMap(void)
 	/* video */
 	DataMapAdd(IDC_AUTOFRAMESKIP, DM_BOOL, CT_BUTTON,   &pGameOpts->autoframeskip, DM_BOOL, &pGameOpts->autoframeskip, 0, 0, 0);
 	DataMapAdd(IDC_FRAMESKIP,     DM_INT,  CT_COMBOBOX, &pGameOpts->frameskip,     DM_INT,  &pGameOpts->frameskip,     0, 0, 0);
-	DataMapAdd(IDC_WAITVSYNC,     DM_BOOL, CT_BUTTON,   &pGameOpts->wait_vsync,    DM_BOOL, &pGameOpts->wait_vsync,    0, 0, 0);
-	DataMapAdd(IDC_TRIPLE_BUFFER, DM_BOOL, CT_BUTTON,   &pGameOpts->use_triplebuf, DM_BOOL, &pGameOpts->use_triplebuf, 0, 0, 0);
-	DataMapAdd(IDC_WINDOWED,      DM_BOOL, CT_BUTTON,   &pGameOpts->window_mode,   DM_BOOL, &pGameOpts->window_mode,   0, 0, 0);
-	DataMapAdd(IDC_DDRAW,         DM_BOOL, CT_BUTTON,   &pGameOpts->use_ddraw,     DM_BOOL, &pGameOpts->use_ddraw,     0, 0, 0);
-	DataMapAdd(IDC_HWSTRETCH,     DM_BOOL, CT_BUTTON,   &pGameOpts->ddraw_stretch, DM_BOOL, &pGameOpts->ddraw_stretch, 0, 0, 0);
-	DataMapAdd(IDC_REFRESH,       DM_NONE, CT_NONE,     &pGameOpts->gfx_refresh,   DM_INT,  &pGameOpts->gfx_refresh,   0, 0, 0);
-	DataMapAdd(IDC_SCANLINES,     DM_BOOL, CT_BUTTON,   &pGameOpts->scanlines,     DM_BOOL, &pGameOpts->scanlines,     0, 0, 0);
+	DataMapAdd(IDC_WAITVSYNC,     DM_BOOL, CT_BUTTON,   &pGameOpts->waitvsync,     DM_BOOL, &pGameOpts->waitvsync,     0, 0, 0);
+	DataMapAdd(IDC_TRIPLE_BUFFER, DM_BOOL, CT_BUTTON,   &pGameOpts->triplebuffer,  DM_BOOL, &pGameOpts->triplebuffer,  0, 0, 0);
+	DataMapAdd(IDC_WINDOWED,      DM_BOOL, CT_BUTTON,   &pGameOpts->window,        DM_BOOL, &pGameOpts->window,        0, 0, 0);
 	DataMapAdd(IDC_SWITCHRES,     DM_BOOL, CT_BUTTON,   &pGameOpts->switchres,     DM_BOOL, &pGameOpts->switchres,     0, 0, 0);
-	DataMapAdd(IDC_SWITCHBPP,     DM_BOOL, CT_BUTTON,   &pGameOpts->switchbpp,     DM_BOOL, &pGameOpts->switchbpp,     0, 0, 0);
 	DataMapAdd(IDC_MAXIMIZE,      DM_BOOL, CT_BUTTON,   &pGameOpts->maximize,      DM_BOOL, &pGameOpts->maximize,      0, 0, 0);
-	DataMapAdd(IDC_KEEPASPECT,    DM_BOOL, CT_BUTTON,   &pGameOpts->keepaspect,    DM_BOOL, &pGameOpts->keepaspect,    0, 0, 0);
-	DataMapAdd(IDC_MATCHREFRESH,  DM_BOOL, CT_BUTTON,   &pGameOpts->matchrefresh,  DM_BOOL, &pGameOpts->matchrefresh,  0, 0, 0);
 	DataMapAdd(IDC_SYNCREFRESH,   DM_BOOL, CT_BUTTON,   &pGameOpts->syncrefresh,   DM_BOOL, &pGameOpts->syncrefresh,   0, 0, 0);
 	DataMapAdd(IDC_THROTTLE,      DM_BOOL, CT_BUTTON,   &pGameOpts->throttle,      DM_BOOL, &pGameOpts->throttle,      0, 0, 0);
-	DataMapAdd(IDC_FSGAMMA,       DM_INT,  CT_SLIDER,   &g_nFullScreenGammaIndex,  DM_FLOAT, &pGameOpts->gfx_gamma,    0, 0, AssignFullScreenGamma);
-	DataMapAdd(IDC_FSGAMMADISP,   DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->gfx_gamma,    0, 0, 0);
-	/* pGameOpts->frames_to_display */
-	DataMapAdd(IDC_EFFECT,        DM_INT,  CT_COMBOBOX, &g_nEffectIndex,           DM_STRING, &pGameOpts->effect,	     0, 0, AssignEffect);
-	DataMapAdd(IDC_ASPECTRATIOD,  DM_NONE, CT_NONE,     &pGameOpts->aspect,        DM_STRING, &pGameOpts->aspect,      0, 0, 0);
-	DataMapAdd(IDC_ASPECTRATION,  DM_NONE, CT_NONE,     &pGameOpts->aspect,        DM_STRING, &pGameOpts->aspect,      0, 0, 0);
-	DataMapAdd(IDC_SIZES,         DM_NONE, CT_NONE,     &pGameOpts->resolution,    DM_STRING, &pGameOpts->resolution,  0, 0, 0);
-	DataMapAdd(IDC_RESDEPTH,      DM_NONE, CT_NONE,     &pGameOpts->resolution,    DM_STRING, &pGameOpts->resolution,  0, 0, 0);
-	DataMapAdd(IDC_CLEAN_STRETCH, DM_INT,  CT_COMBOBOX, &g_nCleanStretchIndex,     DM_STRING, &pGameOpts->clean_stretch, 0, 0, AssignCleanStretch);
-	DataMapAdd(IDC_ZOOM,          DM_INT,  CT_SLIDER,   &pGameOpts->zoom,          DM_INT,    &pGameOpts->zoom,        0, 0, 0);
-	DataMapAdd(IDC_ZOOMDIST,      DM_NONE, CT_NONE,     NULL,                      DM_INT,    &pGameOpts->zoom,        0, 0, 0);
+	DataMapAdd(IDC_FSGAMMA,       DM_INT,  CT_SLIDER,   &g_nFullScreenGammaIndex,  DM_FLOAT, &pGameOpts->full_screen_gamma, 0, 0, AssignFullScreenGamma);
+	DataMapAdd(IDC_FSGAMMADISP,   DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->full_screen_gamma, 0, 0, 0);
+	/* pGameOpts->frames_to_run */
+	DataMapAdd(IDC_ASPECTRATIOD,  DM_NONE, CT_NONE,     &pGameOpts->aspect0,       DM_STRING, &pGameOpts->aspect0,     0, 0, 0);
+	DataMapAdd(IDC_ASPECTRATION,  DM_NONE, CT_NONE,     &pGameOpts->aspect0,       DM_STRING, &pGameOpts->aspect0,     0, 0, 0);
+	DataMapAdd(IDC_SIZES,         DM_NONE, CT_NONE,     &pGameOpts->resolution0,   DM_STRING, &pGameOpts->resolution0, 0, 0, 0);
+	DataMapAdd(IDC_RESDEPTH,      DM_NONE, CT_NONE,     &pGameOpts->resolution0,   DM_STRING, &pGameOpts->resolution0, 0, 0, 0);
+	DataMapAdd(IDC_REFRESH,       DM_NONE, CT_NONE,     &pGameOpts->resolution0,   DM_STRING, &pGameOpts->resolution0, 0, 0, 0);
 #ifdef USE_SCALE_EFFECTS
 	DataMapAdd(IDC_SCALEEFFECT,   DM_INT,  CT_COMBOBOX, &g_nScaleEffectIndex,      DM_STRING, &pGameOpts->scale_effect,0, 0, AssignScaleEffect);
 #endif /* USE_SCALE_EFFECTS */
 
 	// direct3d
-	DataMapAdd(IDC_D3D,           DM_BOOL, CT_BUTTON,   &pGameOpts->use_d3d,       DM_BOOL,   &pGameOpts->use_d3d,         0, 0, 0);
-	DataMapAdd(IDC_D3D_FILTER,    DM_BOOL, CT_BUTTON,   &pGameOpts->d3d_filter,    DM_BOOL,   &pGameOpts->d3d_filter,      0, 0, 0);
-	DataMapAdd(IDC_D3D_TEXTURE_MANAGEMENT, DM_BOOL, CT_BUTTON, &pGameOpts->d3d_texture_management, DM_BOOL,&pGameOpts->d3d_texture_management, 0, 0, 0);
-	DataMapAdd(IDC_D3D_EFFECT,    DM_INT,  CT_COMBOBOX, &g_nD3DEffectIndex,        DM_STRING, &pGameOpts->d3d_effect,      0, 0, AssignD3DEffect);
-	DataMapAdd(IDC_D3D_PRESCALE,  DM_INT,  CT_COMBOBOX, &g_nD3DPrescaleIndex,      DM_STRING, &pGameOpts->d3d_prescale,    0, 0, AssignD3DPrescale);
-	DataMapAdd(IDC_D3D_ROTATE_EFFECTS, DM_BOOL, CT_BUTTON, &pGameOpts->d3d_rotate_effects, DM_BOOL,&pGameOpts->d3d_rotate_effects, 0, 0, 0);
-	DataMapAdd(IDC_D3D_SCANLINES, DM_INT,  CT_SLIDER,   &pGameOpts->d3d_scanlines, DM_INT,    &pGameOpts->d3d_scanlines,   0, 0, 0);
-	DataMapAdd(IDC_D3D_SCANLINES_DISP, DM_NONE, CT_NONE, NULL,                     DM_INT,    &pGameOpts->d3d_scanlines,   0, 0, 0);
-	DataMapAdd(IDC_D3D_FEEDBACK,  DM_INT,  CT_SLIDER,   &pGameOpts->d3d_feedback,  DM_INT,    &pGameOpts->d3d_feedback,    0, 0, 0);
-	DataMapAdd(IDC_D3D_FEEDBACK_DISP, DM_NONE, CT_NONE, NULL,                      DM_INT,    &pGameOpts->d3d_feedback,    0, 0, 0);
+	DataMapAdd(IDC_D3D,           DM_BOOL, CT_BUTTON,   &pGameOpts->direct3d,      DM_BOOL,   &pGameOpts->direct3d,        0, 0, 0);
+	DataMapAdd(IDC_D3D_FILTER,    DM_BOOL, CT_BUTTON,   &pGameOpts->filter,        DM_BOOL,   &pGameOpts->filter,          0, 0, 0);
 
 	/* input */
 	DataMapAdd(IDC_DEFAULT_INPUT, DM_INT,  CT_COMBOBOX, &g_nInputIndex,            DM_STRING, &pGameOpts->ctrlr,           0, 0, AssignInput);
-	DataMapAdd(IDC_USE_MOUSE,     DM_BOOL, CT_BUTTON,   &pGameOpts->use_mouse,     DM_BOOL,   &pGameOpts->use_mouse,       0, 0, 0);   
-	DataMapAdd(IDC_JOYSTICK,      DM_BOOL, CT_BUTTON,   &pGameOpts->use_joystick,  DM_BOOL,   &pGameOpts->use_joystick,    0, 0, 0);
-	DataMapAdd(IDC_A2D,           DM_INT,  CT_SLIDER,   &g_nA2DIndex,              DM_FLOAT,  &pGameOpts->f_a2d,           0, 0, AssignA2D);
-	DataMapAdd(IDC_A2DDISP,       DM_NONE, CT_NONE,     NULL,                      DM_FLOAT,  &pGameOpts->f_a2d,           0, 0, 0);
+	DataMapAdd(IDC_USE_MOUSE,     DM_BOOL, CT_BUTTON,   &pGameOpts->mouse,         DM_BOOL,   &pGameOpts->mouse,           0, 0, 0);   
+	DataMapAdd(IDC_JOYSTICK,      DM_BOOL, CT_BUTTON,   &pGameOpts->joystick,      DM_BOOL,   &pGameOpts->joystick,        0, 0, 0);
+	DataMapAdd(IDC_A2D,           DM_INT,  CT_SLIDER,   &g_nA2DIndex,              DM_FLOAT,  &pGameOpts->a2d_deadzone,    0, 0, AssignA2D);
+	DataMapAdd(IDC_A2DDISP,       DM_NONE, CT_NONE,     NULL,                      DM_FLOAT,  &pGameOpts->a2d_deadzone,    0, 0, 0);
 	DataMapAdd(IDC_STEADYKEY,     DM_BOOL, CT_BUTTON,   &pGameOpts->steadykey,     DM_BOOL,   &pGameOpts->steadykey,       0, 0, 0);
 	DataMapAdd(IDC_LIGHTGUN,      DM_BOOL, CT_BUTTON,   &pGameOpts->lightgun,      DM_BOOL,   &pGameOpts->lightgun,        0, 0, 0);
 	DataMapAdd(IDC_DUAL_LIGHTGUN, DM_BOOL, CT_BUTTON,   &pGameOpts->dual_lightgun, DM_BOOL,   &pGameOpts->dual_lightgun,   0, 0, 0);
 	DataMapAdd(IDC_RELOAD,        DM_BOOL, CT_BUTTON,   &pGameOpts->offscreen_reload,DM_BOOL, &pGameOpts->offscreen_reload,0, 0, 0);
 #ifdef USE_JOY_MOUSE_MOVE
-	DataMapAdd(IDC_USE_STICKPOINT,DM_BOOL, CT_BUTTON,   &pGameOpts->use_stickpoint,DM_BOOL,   &pGameOpts->use_stickpoint,  0, 0, 0);
+	DataMapAdd(IDC_USE_STICKPOINT,DM_BOOL, CT_BUTTON,   &pGameOpts->stickpoint,DM_BOOL,   &pGameOpts->stickpoint,          0, 0, 0);
 #endif /* USE_JOY_MOUSE_MOVE */
 #ifdef JOYSTICK_ID
-	DataMapAdd(IDC_JOYID1,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[0],      DM_INT, &pGameOpts->joyid[0],           0, 0, 0);
-	DataMapAdd(IDC_JOYID2,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[1],      DM_INT, &pGameOpts->joyid[1],           0, 0, 0);
-	DataMapAdd(IDC_JOYID3,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[2],      DM_INT, &pGameOpts->joyid[2],           0, 0, 0);
-	DataMapAdd(IDC_JOYID4,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[3],      DM_INT, &pGameOpts->joyid[3],           0, 0, 0);
-	DataMapAdd(IDC_JOYID5,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[4],      DM_INT, &pGameOpts->joyid[4],           0, 0, 0);
-	DataMapAdd(IDC_JOYID6,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[5],      DM_INT, &pGameOpts->joyid[5],           0, 0, 0);
-	DataMapAdd(IDC_JOYID7,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[6],      DM_INT, &pGameOpts->joyid[6],           0, 0, 0);
-	DataMapAdd(IDC_JOYID8,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid[7],      DM_INT, &pGameOpts->joyid[7],           0, 0, 0);
+	DataMapAdd(IDC_JOYID1,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid1,        DM_INT, &pGameOpts->joyid1,             0, 0, 0);
+	DataMapAdd(IDC_JOYID2,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid2,        DM_INT, &pGameOpts->joyid2,             0, 0, 0);
+	DataMapAdd(IDC_JOYID3,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid3,        DM_INT, &pGameOpts->joyid3,             0, 0, 0);
+	DataMapAdd(IDC_JOYID4,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid4,        DM_INT, &pGameOpts->joyid4,             0, 0, 0);
+	DataMapAdd(IDC_JOYID5,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid5,        DM_INT, &pGameOpts->joyid5,             0, 0, 0);
+	DataMapAdd(IDC_JOYID6,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid6,        DM_INT, &pGameOpts->joyid6,             0, 0, 0);
+	DataMapAdd(IDC_JOYID7,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid7,        DM_INT, &pGameOpts->joyid7,             0, 0, 0);
+	DataMapAdd(IDC_JOYID8,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid8,        DM_INT, &pGameOpts->joyid8,             0, 0, 0);
 #endif /* JOYSTICK_ID */
 	DataMapAdd(IDC_ANALOG_AXES,   DM_NONE, CT_NONE,     &pGameOpts->digital,       DM_STRING,&pGameOpts->digital,          0, 0, AssignAnalogAxes);
 	/*Controller mapping*/
-	DataMapAdd(IDC_PADDLE,        DM_INT, CT_COMBOBOX,  &g_nPaddleIndex,           DM_STRING,&pGameOpts->paddle,           0, 0, AssignPaddle);
-	DataMapAdd(IDC_ADSTICK,       DM_INT, CT_COMBOBOX,  &g_nADStickIndex,          DM_STRING,&pGameOpts->adstick,          0, 0, AssignADStick);
-	DataMapAdd(IDC_PEDAL,         DM_INT, CT_COMBOBOX,  &g_nPedalIndex,            DM_STRING,&pGameOpts->pedal,            0, 0, AssignPedal);
-	DataMapAdd(IDC_DIAL,          DM_INT, CT_COMBOBOX,  &g_nDialIndex,             DM_STRING,&pGameOpts->dial,             0, 0, AssignDial);
-	DataMapAdd(IDC_TRACKBALL,     DM_INT, CT_COMBOBOX,  &g_nTrackballIndex,        DM_STRING,&pGameOpts->trackball,        0, 0, AssignTrackball);
+	DataMapAdd(IDC_PADDLE,        DM_INT, CT_COMBOBOX,  &g_nPaddleIndex,           DM_STRING,&pGameOpts->paddle_device,    0, 0, AssignPaddle);
+	DataMapAdd(IDC_ADSTICK,       DM_INT, CT_COMBOBOX,  &g_nADStickIndex,          DM_STRING,&pGameOpts->adstick_device,   0, 0, AssignADStick);
+	DataMapAdd(IDC_PEDAL,         DM_INT, CT_COMBOBOX,  &g_nPedalIndex,            DM_STRING,&pGameOpts->pedal_device,     0, 0, AssignPedal);
+	DataMapAdd(IDC_DIAL,          DM_INT, CT_COMBOBOX,  &g_nDialIndex,             DM_STRING,&pGameOpts->dial_device,      0, 0, AssignDial);
+	DataMapAdd(IDC_TRACKBALL,     DM_INT, CT_COMBOBOX,  &g_nTrackballIndex,        DM_STRING,&pGameOpts->trackball_device, 0, 0, AssignTrackball);
 	DataMapAdd(IDC_LIGHTGUNDEVICE,DM_INT, CT_COMBOBOX,  &g_nLightgunIndex,         DM_STRING,&pGameOpts->lightgun_device,  0, 0, AssignLightgun);
 
 
 	/* core video */
-	DataMapAdd(IDC_BRIGHTCORRECT,    DM_INT,  CT_SLIDER,   &g_nBrightCorrectIndex, DM_FLOAT, &pGameOpts->f_bright_correct, 0, 0, AssignBrightCorrect);
-	DataMapAdd(IDC_BRIGHTCORRECTDISP,DM_NONE, CT_NONE,     NULL,                   DM_FLOAT, &pGameOpts->f_bright_correct, 0, 0, 0);
-	DataMapAdd(IDC_PAUSEBRIGHT,      DM_INT,  CT_SLIDER,   &g_nPauseBrightIndex,   DM_FLOAT, &pGameOpts->f_pause_bright,   0, 0, AssignPauseBright);
-	DataMapAdd(IDC_PAUSEBRIGHTDISP,  DM_NONE, CT_NONE,     NULL,                   DM_FLOAT, &pGameOpts->f_pause_bright,   0, 0, 0);
+	DataMapAdd(IDC_BRIGHTCORRECT,    DM_INT,  CT_SLIDER,   &g_nBrightCorrectIndex, DM_FLOAT, &pGameOpts->brightness,       0, 0, AssignBrightCorrect);
+	DataMapAdd(IDC_BRIGHTCORRECTDISP,DM_NONE, CT_NONE,     NULL,                   DM_FLOAT, &pGameOpts->brightness,       0, 0, 0);
+	DataMapAdd(IDC_PAUSEBRIGHT,      DM_INT,  CT_SLIDER,   &g_nPauseBrightIndex,   DM_FLOAT, &pGameOpts->pause_brightness, 0, 0, AssignPauseBright);
+	DataMapAdd(IDC_PAUSEBRIGHTDISP,  DM_NONE, CT_NONE,     NULL,                   DM_FLOAT, &pGameOpts->pause_brightness, 0, 0, 0);
 	DataMapAdd(IDC_ROTATE,           DM_INT,  CT_COMBOBOX, &g_nRotateIndex,        DM_INT,   &pGameOpts->ror,              0, 0, AssignRotate);
 	DataMapAdd(IDC_FLIPX,            DM_BOOL, CT_BUTTON,   &pGameOpts->flipx,      DM_BOOL,  &pGameOpts->flipx,            0, 0, 0);
 	DataMapAdd(IDC_FLIPY,            DM_BOOL, CT_BUTTON,   &pGameOpts->flipy,      DM_BOOL,  &pGameOpts->flipy,            0, 0, 0);
-	DataMapAdd(IDC_SCREEN,           DM_INT,  CT_COMBOBOX, &g_nScreenIndex,        DM_STRING,&pGameOpts->screen,           0, 0, AssignScreen);
+	DataMapAdd(IDC_SCREEN,           DM_INT,  CT_COMBOBOX, &g_nScreenIndex,        DM_STRING,&pGameOpts->screen0,           0, 0, AssignScreen);
 	/* debugres */
-	DataMapAdd(IDC_GAMMA,         DM_INT,  CT_SLIDER,   &g_nGammaIndex,            DM_FLOAT, &pGameOpts->f_gamma_correct,  0, 0, AssignGamma);
-	DataMapAdd(IDC_GAMMADISP,     DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->f_gamma_correct,  0, 0, 0);
 
 	/* vector */
 	DataMapAdd(IDC_ANTIALIAS,     DM_BOOL, CT_BUTTON,   &pGameOpts->antialias,     DM_BOOL,  &pGameOpts->antialias,        0, 0, 0);
-	DataMapAdd(IDC_BEAM,          DM_INT,  CT_SLIDER,   &g_nBeamIndex,             DM_FLOAT, &pGameOpts->f_beam,           0, 0, AssignBeam);
-	DataMapAdd(IDC_BEAMDISP,      DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->f_beam,           0, 0, 0);
-	DataMapAdd(IDC_FLICKER,       DM_INT,  CT_SLIDER,   &g_nFlickerIndex,          DM_FLOAT, &pGameOpts->f_flicker,        0, 0, AssignFlicker);
-	DataMapAdd(IDC_FLICKERDISP,   DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->f_flicker,        0, 0, 0);
-	DataMapAdd(IDC_INTENSITY,     DM_INT,  CT_SLIDER,   &g_nIntensityIndex,        DM_FLOAT, &pGameOpts->f_intensity,      0, 0, AssignIntensity);	
-	DataMapAdd(IDC_INTENSITYDISP, DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->f_intensity,      0, 0, 0);
+	DataMapAdd(IDC_BEAM,          DM_INT,  CT_SLIDER,   &g_nBeamIndex,             DM_FLOAT, &pGameOpts->beam,             0, 0, AssignBeam);
+	DataMapAdd(IDC_BEAMDISP,      DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->beam,             0, 0, 0);
+	DataMapAdd(IDC_FLICKER,       DM_INT,  CT_SLIDER,   &g_nFlickerIndex,          DM_FLOAT, &pGameOpts->flicker,          0, 0, AssignFlicker);
+	DataMapAdd(IDC_FLICKERDISP,   DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->flicker,          0, 0, 0);
+	DataMapAdd(IDC_INTENSITY,     DM_INT,  CT_SLIDER,   &g_nIntensityIndex,        DM_FLOAT, &pGameOpts->intensity,        0, 0, AssignIntensity);	
+	DataMapAdd(IDC_INTENSITYDISP, DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->intensity,        0, 0, 0);
 
 	/* sound */
 	DataMapAdd(IDC_SAMPLERATE,    DM_INT,  CT_COMBOBOX, &g_nSampleRateIndex,       DM_INT,  &pGameOpts->samplerate,    0, 0, AssignSampleRate);
-	DataMapAdd(IDC_SAMPLES,       DM_BOOL, CT_BUTTON,   &pGameOpts->use_samples,   DM_BOOL, &pGameOpts->use_samples,   0, 0, 0);
-	DataMapAdd(IDC_USE_SOUND,     DM_BOOL, CT_BUTTON,   &pGameOpts->enable_sound,  DM_BOOL, &pGameOpts->enable_sound,  0, 0, 0);
-	DataMapAdd(IDC_VOLUME,        DM_INT,  CT_SLIDER,   &g_nVolumeIndex,           DM_INT,  &pGameOpts->attenuation,   0, 0, AssignVolume);
-	DataMapAdd(IDC_VOLUMEDISP,    DM_NONE, CT_NONE,     NULL,                      DM_INT,  &pGameOpts->attenuation,   0, 0, 0);
+	DataMapAdd(IDC_SAMPLES,       DM_BOOL, CT_BUTTON,   &pGameOpts->samples,       DM_BOOL, &pGameOpts->samples,       0, 0, 0);
+	DataMapAdd(IDC_USE_SOUND,     DM_BOOL, CT_BUTTON,   &pGameOpts->sound,         DM_BOOL, &pGameOpts->sound,         0, 0, 0);
+	DataMapAdd(IDC_VOLUME,        DM_INT,  CT_SLIDER,   &g_nVolumeIndex,           DM_INT,  &pGameOpts->volume,        0, 0, AssignVolume);
+	DataMapAdd(IDC_VOLUMEDISP,    DM_NONE, CT_NONE,     NULL,                      DM_INT,  &pGameOpts->volume,        0, 0, 0);
 #ifdef USE_VOLUME_AUTO_ADJUST
-	DataMapAdd(IDC_VOLUME_ADJUST, DM_BOOL, CT_BUTTON,   &pGameOpts->use_volume_adjust, DM_BOOL, &pGameOpts->use_volume_adjust, 0, 0, 0);
+	DataMapAdd(IDC_VOLUME_ADJUST, DM_BOOL, CT_BUTTON,   &pGameOpts->volume_adjust, DM_BOOL, &pGameOpts->volume_adjust, 0, 0, 0);
 #endif /* USE_VOLUME_AUTO_ADJUST */
 	DataMapAdd(IDC_AUDIO_LATENCY, DM_INT,  CT_SLIDER,   &pGameOpts->audio_latency, DM_INT,  &pGameOpts->audio_latency, 0, 0, 0);
 	DataMapAdd(IDC_AUDIO_LATENCY_DISP, DM_NONE,  CT_NONE,   NULL, DM_INT, &pGameOpts->audio_latency, 0, 0, 0);
 
 	/* misc artwork options */
-	DataMapAdd(IDC_ARTWORK,       DM_BOOL, CT_BUTTON,   &pGameOpts->use_artwork,   DM_BOOL, &pGameOpts->use_artwork,   0, 0, 0);
-	DataMapAdd(IDC_BACKDROPS,     DM_BOOL, CT_BUTTON,   &pGameOpts->backdrops,     DM_BOOL, &pGameOpts->backdrops,     0, 0, 0);
-	DataMapAdd(IDC_OVERLAYS,      DM_BOOL, CT_BUTTON,   &pGameOpts->overlays,      DM_BOOL, &pGameOpts->overlays,      0, 0, 0);
-	DataMapAdd(IDC_BEZELS,        DM_BOOL, CT_BUTTON,   &pGameOpts->bezels,        DM_BOOL, &pGameOpts->bezels,        0, 0, 0);
-	DataMapAdd(IDC_ARTRES,        DM_INT,  CT_COMBOBOX, &pGameOpts->artres,        DM_INT,  &pGameOpts->artres,        0, 0, 0);
-	DataMapAdd(IDC_ARTWORK_CROP,  DM_BOOL, CT_BUTTON,   &pGameOpts->artwork_crop,  DM_BOOL, &pGameOpts->artwork_crop,  0, 0, 0);
+	DataMapAdd(IDC_ARTWORK,       DM_BOOL, CT_BUTTON,   &pGameOpts->artwork,   DM_BOOL, &pGameOpts->artwork,   0, 0, 0);
+	DataMapAdd(IDC_BACKDROPS,     DM_BOOL, CT_BUTTON,   &pGameOpts->use_backdrops,     DM_BOOL, &pGameOpts->use_backdrops,     0, 0, 0);
+	DataMapAdd(IDC_OVERLAYS,      DM_BOOL, CT_BUTTON,   &pGameOpts->use_overlays,      DM_BOOL, &pGameOpts->use_overlays,      0, 0, 0);
+	DataMapAdd(IDC_BEZELS,        DM_BOOL, CT_BUTTON,   &pGameOpts->use_bezels,        DM_BOOL, &pGameOpts->use_bezels,        0, 0, 0);
 
 	/* misc */
 	DataMapAdd(IDC_CHEAT,         DM_BOOL, CT_BUTTON,   &pGameOpts->cheat,         DM_BOOL, &pGameOpts->cheat,         0, 0, 0);
 /*	DataMapAdd(IDC_DEBUG,       DM_BOOL, CT_BUTTON,   &pGameOpts->mame_debug,    DM_BOOL, &pGameOpts->mame_debug,    0, 0, 0); */
-	DataMapAdd(IDC_LOG,           DM_BOOL, CT_BUTTON,   &pGameOpts->errorlog,      DM_BOOL, &pGameOpts->errorlog,      0, 0, 0);
+	DataMapAdd(IDC_LOG,           DM_BOOL, CT_BUTTON,   &pGameOpts->log,      DM_BOOL, &pGameOpts->log,      0, 0, 0);
 	DataMapAdd(IDC_SLEEP,         DM_BOOL, CT_BUTTON,   &pGameOpts->sleep,         DM_BOOL, &pGameOpts->sleep,         0, 0, 0);
-	DataMapAdd(IDC_OLD_TIMING,    DM_BOOL, CT_BUTTON,   &pGameOpts->old_timing,    DM_BOOL, &pGameOpts->old_timing,    0, 0, 0);
-	DataMapAdd(IDC_LEDS,          DM_BOOL, CT_BUTTON,   &pGameOpts->leds,          DM_BOOL, &pGameOpts->leds,          0, 0, 0);
-	DataMapAdd(IDC_LEDMODE,       DM_INT,  CT_COMBOBOX, &g_nLedmodeIndex,          DM_STRING, &pGameOpts->ledmode,     0, 0, AssignLedmode);
+	DataMapAdd(IDC_OLD_TIMING,    DM_BOOL, CT_BUTTON,   &pGameOpts->rdtsc,    DM_BOOL, &pGameOpts->rdtsc,    0, 0, 0);
+	DataMapAdd(IDC_LEDS,          DM_BOOL, CT_BUTTON,   &pGameOpts->keyboard_leds,          DM_BOOL, &pGameOpts->keyboard_leds,          0, 0, 0);
+	DataMapAdd(IDC_LEDMODE,       DM_INT,  CT_COMBOBOX, &g_nLedmodeIndex,          DM_STRING, &pGameOpts->led_mode,     0, 0, AssignLedmode);
 	DataMapAdd(IDC_HIGH_PRIORITY, DM_INT,  CT_SLIDER,   &g_nPriorityIndex,         DM_INT,  &pGameOpts->priority,      0, 0, AssignPriority);
 	DataMapAdd(IDC_HIGH_PRIORITYTXT,DM_NONE,CT_NONE,    NULL,                      DM_INT,  &pGameOpts->priority,      0, 0, 0);
 	DataMapAdd(IDC_SKIP_GAME_INFO,DM_BOOL,CT_BUTTON,    &pGameOpts->skip_gameinfo, DM_BOOL, &pGameOpts->skip_gameinfo, 0, 0, 0);
 	DataMapAdd(IDC_BIOS,          DM_INT,  CT_COMBOBOX, &g_nBiosIndex,             DM_STRING, &pGameOpts->bios,        0, 0, AssignBios);
 	DataMapAdd(IDC_ENABLE_AUTOSAVE, DM_BOOL, CT_BUTTON, &pGameOpts->autosave,      DM_BOOL, &pGameOpts->autosave,      0, 0, 0);
-	DataMapAdd(IDC_DISABLE_2ND_MONITOR, DM_BOOL, CT_BUTTON, &pGameOpts->disable_2nd_monitor, DM_BOOL, &pGameOpts->disable_2nd_monitor, 0, 0, 0);
+	DataMapAdd(IDC_DISABLE_2ND_MONITOR, DM_BOOL, CT_BUTTON, &pGameOpts->disable_second_monitor, DM_BOOL, &pGameOpts->disable_second_monitor, 0, 0, 0);
 	DataMapAdd(IDC_CONFIRM_QUIT,  DM_BOOL, CT_BUTTON,   &pGameOpts->confirm_quit,  DM_BOOL, &pGameOpts->confirm_quit,  0, 0, 0);
 #ifdef AUTO_PAUSE_PLAYBACK
 	DataMapAdd(IDC_AUTO_PAUSE_PLAYBACK,  DM_BOOL, CT_BUTTON,   &pGameOpts->auto_pause_playback,  DM_BOOL, &pGameOpts->auto_pause_playback,  0, 0, 0);
 #endif /* AUTO_PAUSE_PLAYBACK */
 #ifdef TRANS_UI
-	DataMapAdd(IDC_TRANSUI,       DM_BOOL, CT_BUTTON,   &pGameOpts->use_transui,   DM_BOOL, &pGameOpts->use_transui,   0, 0, 0);
+	DataMapAdd(IDC_TRANSUI,       DM_BOOL, CT_BUTTON,   &pGameOpts->use_trans_ui,   DM_BOOL, &pGameOpts->use_trans_ui,   0, 0, 0);
 	DataMapAdd(IDC_TRANSPARENCY,  DM_INT,  CT_SLIDER,   &g_nUITransparencyIndex,   DM_INT,  &pGameOpts->ui_transparency, 0, 0, AssignUI_TRANSPARENCY);
 	DataMapAdd(IDC_TRANSPARENCYDISP, DM_NONE,  CT_NONE,   NULL, DM_INT,  &pGameOpts->ui_transparency, 0, 0, 0);
 #endif /* TRANS_UI */
@@ -3457,8 +3150,8 @@ BOOL IsControlOptionValue(HWND hDlg,HWND hwnd_ctrl, options_type *opts )
 	{
 		int n1=0, n2=0;
 
-		sscanf(pGameOpts->aspect,"%i",&n1);
-		sscanf(opts->aspect,"%i",&n2);
+		sscanf(pGameOpts->aspect0,"%i",&n1);
+		sscanf(opts->aspect0,"%i",&n2);
 
 		return n1 == n2;
 	}
@@ -3466,8 +3159,8 @@ BOOL IsControlOptionValue(HWND hDlg,HWND hwnd_ctrl, options_type *opts )
 	{
 		int temp, d1=0, d2=0;
 
-		sscanf(pGameOpts->aspect,"%i:%i",&temp,&d1);
-		sscanf(opts->aspect,"%i:%i",&temp,&d2);
+		sscanf(pGameOpts->aspect0,"%i:%i",&temp,&d1);
+		sscanf(opts->aspect0,"%i:%i",&temp,&d2);
 
 		return d1 == d2;
 	}
@@ -3475,11 +3168,11 @@ BOOL IsControlOptionValue(HWND hDlg,HWND hwnd_ctrl, options_type *opts )
 	{
 		int xx1=0,yy1=0,xx2=0,yy2=0;
 
-		if (strcmp(pGameOpts->resolution,"auto") != 0)
-			sscanf(pGameOpts->resolution,"%d x %d",&xx1,&yy1);
+		if (strcmp(pGameOpts->resolution0,"auto") != 0)
+			sscanf(pGameOpts->resolution0,"%d x %d",&xx1,&yy1);
 		
-		if (strcmp(opts->resolution,"auto") != 0)
-			sscanf(opts->resolution,"%d x %d",&xx2,&yy2);
+		if (strcmp(opts->resolution0,"auto") != 0)
+			sscanf(opts->resolution0,"%d x %d",&xx2,&yy2);
 
 		return xx1 == xx2 && yy1 == yy2;
 	}
@@ -3487,11 +3180,11 @@ BOOL IsControlOptionValue(HWND hDlg,HWND hwnd_ctrl, options_type *opts )
 	{
 		int temp,d1=0,d2=0;
 
-		if (strcmp(pGameOpts->resolution,"auto") != 0)
-			sscanf(pGameOpts->resolution,"%d x %d x %d",&temp,&temp,&d1);
+		if (strcmp(pGameOpts->resolution0,"auto") != 0)
+			sscanf(pGameOpts->resolution0,"%d x %d x %d",&temp,&temp,&d1);
 
-		if (strcmp(opts->resolution,"auto") != 0)
-			sscanf(opts->resolution,"%d x %d x %d",&temp,&temp,&d2);
+		if (strcmp(opts->resolution0,"auto") != 0)
+			sscanf(opts->resolution0,"%d x %d x %d",&temp,&temp,&d2);
 
 		return d1 == d2;
 	}
@@ -3579,14 +3272,9 @@ static void InitializeOptions(HWND hDlg)
 	InitializeScreenUI(hDlg);
 	InitializeDefaultInputUI(hDlg);
 	InitializeAnalogAxesUI(hDlg);
-	InitializeEffectUI(hDlg);
-	InitializeArtresUI(hDlg);
-	InitializeD3DEffectUI(hDlg);
-	InitializeD3DPrescaleUI(hDlg);
 	InitializeBIOSUI(hDlg);
 	InitializeDefaultBIOSUI(hDlg);
 	InitializeLEDModeUI(hDlg);
-	InitializeCleanStretchUI(hDlg);
 	InitializeControllerMappingUI(hDlg);
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 	InitializeM68kCoreUI(hDlg);
@@ -3603,10 +3291,6 @@ static void InitializeOptions(HWND hDlg)
 static void InitializeMisc(HWND hDlg)
 {
 	Button_Enable(GetDlgItem(hDlg, IDC_JOYSTICK), DIJoystick.Available());
-
-	SendDlgItemMessage(hDlg, IDC_GAMMA, TBM_SETRANGE,
-				(WPARAM)FALSE,
-				(LPARAM)MAKELONG(0, 30)); /* [0.50, 2.00] in .05 increments */
 
 	SendDlgItemMessage(hDlg, IDC_BRIGHTCORRECT, TBM_SETRANGE,
 				(WPARAM)FALSE,
@@ -3642,15 +3326,6 @@ static void InitializeMisc(HWND hDlg)
 	SendDlgItemMessage(hDlg, IDC_AUDIO_LATENCY, TBM_SETRANGE,
 				(WPARAM)FALSE,
 				(LPARAM)MAKELONG(1, 4)); // [1, 4]
-	SendDlgItemMessage(hDlg, IDC_D3D_SCANLINES, TBM_SETRANGE,
-				(WPARAM)FALSE,
-				(LPARAM)MAKELONG(0, 100)); // [0, 100]
-	SendDlgItemMessage(hDlg, IDC_D3D_FEEDBACK, TBM_SETRANGE,
-				(WPARAM)FALSE,
-				(LPARAM)MAKELONG(0, 100)); // [0, 100]
-	SendDlgItemMessage(hDlg, IDC_ZOOM, TBM_SETRANGE,
-				(WPARAM)FALSE,
-				(LPARAM)MAKELONG(1, 8)); // [1, 8]
 #ifdef TRANS_UI
 	SendDlgItemMessage(hDlg, IDC_TRANSPARENCY, TBM_SETRANGE,
 				(WPARAM)FALSE,
@@ -3666,11 +3341,6 @@ static void OptOnHScroll(HWND hwnd, HWND hwndCtl, UINT code, int pos)
 	if (hwndCtl == GetDlgItem(hwnd, IDC_FLICKER))
 	{
 		FlickerSelectionChange(hwnd);
-	}
-	else
-	if (hwndCtl == GetDlgItem(hwnd, IDC_GAMMA))
-	{
-		GammaSelectionChange(hwnd);
 	}
 	else
 	if (hwndCtl == GetDlgItem(hwnd, IDC_BRIGHTCORRECT))
@@ -3715,21 +3385,6 @@ static void OptOnHScroll(HWND hwnd, HWND hwndCtl, UINT code, int pos)
 	if (hwndCtl == GetDlgItem(hwnd, IDC_AUDIO_LATENCY))
 	{
 		AudioLatencySelectionChange(hwnd);
-	}
-	else
-	if (hwndCtl == GetDlgItem(hwnd, IDC_D3D_SCANLINES))
-	{
-		D3DScanlinesSelectionChange(hwnd);
-	}
-	else
-	if (hwndCtl == GetDlgItem(hwnd, IDC_D3D_FEEDBACK))
-	{
-		D3DFeedbackSelectionChange(hwnd);
-	}
-	else
-	if (hwndCtl == GetDlgItem(hwnd, IDC_ZOOM))
-	{
-		ZoomSelectionChange(hwnd);
 	}
 #ifdef TRANS_UI
 	else
@@ -3777,23 +3432,6 @@ static void FlickerSelectionChange(HWND hwnd)
 	/* Set the static display to the new value */
 	snprintf(buf,sizeof(buf), "%03.2f", dFlicker);
 	Static_SetTextA(GetDlgItem(hwnd, IDC_FLICKERDISP), buf);
-}
-
-/* Handle changes to the Gamma slider */
-static void GammaSelectionChange(HWND hwnd)
-{
-	char   buf[100];
-	UINT   nValue;
-	double dGamma;
-
-	/* Get the current value of the control */
-	nValue = SendDlgItemMessage(hwnd, IDC_GAMMA, TBM_GETPOS, 0, 0);
-
-	dGamma = nValue / 20.0 + 0.5;
-
-	/* Set the static display to the new value */
-	snprintf(buf,sizeof(buf), "%03.2f", dGamma);
-	Static_SetTextA(GetDlgItem(hwnd, IDC_GAMMADISP), buf);
 }
 
 /* Handle changes to the Brightness Correction slider */
@@ -3973,55 +3611,6 @@ static void ThreadPrioritySelectionChange(HWND hwnd)
 	Static_SetTextA(GetDlgItem(hwnd,IDC_HIGH_PRIORITYTXT),buffer);
 
 }
-
-static void D3DScanlinesSelectionChange(HWND hwnd)
-{
-	char buffer[100];
-	int value;
-
-	// Get the current value of the control
-	value = SendDlgItemMessage(hwnd,IDC_D3D_SCANLINES, TBM_GETPOS, 0, 0);
-
-	// Set the static display to the new value
-	if (value == 100)
-		snprintf(buffer,sizeof(buffer),_UI("Disabled"));
-	else
-		snprintf(buffer,sizeof(buffer),"%i",value);
-	Static_SetText(GetDlgItem(hwnd,IDC_D3D_SCANLINES_DISP), _Unicode(buffer));
-
-}
-
-static void D3DFeedbackSelectionChange(HWND hwnd)
-{
-	char buffer[100];
-	int value;
-
-	// Get the current value of the control
-	value = SendDlgItemMessage(hwnd,IDC_D3D_FEEDBACK, TBM_GETPOS, 0, 0);
-
-	/* Set the static display to the new value */
-	if (value == 0)
-		snprintf(buffer,sizeof(buffer),_UI("Disabled"));
-	else
-		snprintf(buffer,sizeof(buffer),"%i",value);
-	Static_SetText(GetDlgItem(hwnd,IDC_D3D_FEEDBACK_DISP), _Unicode(buffer));
-
-}
-
-static void ZoomSelectionChange(HWND hwnd)
-{
-	char buffer[100];
-	int value;
-
-	// Get the current value of the control
-	value = SendDlgItemMessage(hwnd,IDC_ZOOM, TBM_GETPOS, 0, 0);
-
-	/* Set the static display to the new value */
-	snprintf(buffer,sizeof(buffer),"%i",value);
-	Static_SetTextA(GetDlgItem(hwnd,IDC_ZOOMDIST),buffer);
-
-}
-
 
 /* Adjust possible choices in the Screen Size drop down */
 static void UpdateDisplayModeUI(HWND hwnd, DWORD dwDepth, DWORD dwRefresh)
@@ -4343,60 +3932,6 @@ static void InitializeDefaultInputUI(HWND hwnd)
 	}
 }
 
-static void InitializeEffectUI(HWND hwnd)
-{
-	HWND hCtrl = GetDlgItem(hwnd, IDC_EFFECT);
-
-	if (hCtrl)
-	{
-		int i;
-		for (i = 0; i < NUMEFFECTS; i++)
-		{
-			ComboBox_InsertStringA(hCtrl, i, _UI(g_ComboBoxEffect[i].m_pText));
-			ComboBox_SetItemData( hCtrl, i, g_ComboBoxEffect[i].m_pData);
-		}
-	}
-}
-
-/* Populate the Art Resolution drop down */
-static void InitializeArtresUI(HWND hwnd)
-{
-	HWND hCtrl = GetDlgItem(hwnd, IDC_ARTRES);
-
-	if (hCtrl)
-	{
-		ComboBox_AddStringA(hCtrl, _UI("Auto"));		/* 0 */
-		ComboBox_AddStringA(hCtrl, _UI("Standard"));  /* 1 */
-		ComboBox_AddStringA(hCtrl, _UI("High"));		/* 2 */
-	}
-}
-
-static void InitializeD3DEffectUI(HWND hwnd)
-{
-	HWND hCtrl = GetDlgItem(hwnd,IDC_D3D_EFFECT);
-
-	if (hCtrl)
-	{
-		int i;
-
-		for (i=0;i<NUMD3DEFFECTS;i++)
-			ComboBox_AddStringA(hCtrl,_UI(d3d_effects_long_name[i]));
-	}
-}
-
-static void InitializeD3DPrescaleUI(HWND hwnd)
-{
-	HWND hCtrl = GetDlgItem(hwnd,IDC_D3D_PRESCALE);
-
-	if (hCtrl)
-	{
-		int i;
-
-		for (i=0;i<NUMD3DPRESCALE;i++)
-			ComboBox_AddStringA(hCtrl,_UI(d3d_prescale_name[i]));
-	}
-}
-
 /* Populate the LED mode drop down */
 static void InitializeLEDModeUI(HWND hwnd)
 {
@@ -4509,19 +4044,6 @@ static void InitializeDefaultBIOSUI(HWND hwnd)
 				ComboBox_AddStringA(hCtrl,drv->bios[i]._description);
 			}
 		}
-	}
-}
-
-static void InitializeCleanStretchUI(HWND hwnd)
-{
-	HWND hCtrl = GetDlgItem(hwnd, IDC_CLEAN_STRETCH);
-
-	if (hCtrl)
-	{
-		int i;
-
-		for (i=0;i<NUMCLEANSTRETCH;i++)
-			ComboBox_AddStringA(hCtrl,_UI(clean_stretch_name[i]));
 	}
 }
 
