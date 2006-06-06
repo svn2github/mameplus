@@ -264,7 +264,7 @@ const options_entry language_opts[] =
 
 const options_entry palette_opts[] =
 {
-	{ NULL,                       NULL,          OPTION_HEADER,     "CORE VECTOR OPTIONS" },
+	{ NULL,                       NULL,          OPTION_HEADER,     "CORE PALETTE OPTIONS" },
 #ifdef UI_COLOR_DISPLAY
 	{ "font_blank",               "0,0,0",       0,                 "font blank color" },
 	{ "font_normal",              "255,255,255", 0,                 "font normal color" },
