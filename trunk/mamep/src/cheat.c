@@ -2024,8 +2024,8 @@ UINT32 cheat_menu(UINT32 state)
 
 	if(input_ui_pressed(IPT_UI_CANCEL))
 		sel = -1;
-	//if(input_ui_pressed(IPT_UI_CONFIGURE))
-	//	sel = -2;
+//  if(input_ui_pressed(IPT_UI_CONFIGURE))
+//      sel = -2;
 
 	if((sel == -1) || (sel == -2))
 	{
@@ -2314,11 +2314,11 @@ static INT32 UserSelectValueMenu(int selection, CheatEntry * entry)
 		sel = -1;
 	}
 
-	//if(input_ui_pressed(IPT_UI_CONFIGURE))
-	//{
-	//	firstTime = 1;
-	//	sel = -2;
-	//}
+//  if(input_ui_pressed(IPT_UI_CONFIGURE))
+//  {
+//      firstTime = 1;
+//      sel = -2;
+//  }
 
 	// get a key
 	keyValue = ReadHexInput();
@@ -2413,10 +2413,10 @@ static INT32 CommentMenu(int selection, CheatEntry * entry)
 		sel = -1;
 	}
 
-	//if(input_ui_pressed(IPT_UI_CONFIGURE))
-	//{
-	//	sel = -2;
-	//}
+//  if(input_ui_pressed(IPT_UI_CONFIGURE))
+//  {
+//      sel = -2;
+//  }
 
 	if (sel == -1 || sel == -2)
 	{
@@ -2864,8 +2864,8 @@ static int EnableDisableCheatMenu(int selection, int firstTime, int shortcut)
 		sel = -1;
 
 	///* The UI key takes us all the way back out */
-	//if(input_ui_pressed(IPT_UI_CONFIGURE) && shortcut == 0)
-	//	sel = -2;
+//  if(input_ui_pressed(IPT_UI_CONFIGURE))
+//      sel = -2;
 
 	if(sel == -1 || sel == -2)
 	{
@@ -4605,11 +4605,11 @@ static int EditCheatMenu(CheatEntry * entry, int selection)
 		editActive = 0;
 	}
 
-	//if(input_ui_pressed(IPT_UI_CONFIGURE))
-	//{
-	//	sel = -2;
-	//	editActive = 0;
-	//}
+//  if(input_ui_pressed(IPT_UI_CONFIGURE))
+//  {
+//      sel = -2;
+//      editActive = 0;
+//  }
 
 	if(	(sel == -1) ||
 		(sel == -2))
@@ -4958,8 +4958,8 @@ static int DoSearchMenuClassic(int selection, int startNew)
 
 	if(input_ui_pressed(IPT_UI_CANCEL))
 		sel = -1;
-	//if(input_ui_pressed(IPT_UI_CONFIGURE))
-	//	sel = -2;
+//  if(input_ui_pressed(IPT_UI_CONFIGURE))
+//      sel = -2;
 
 	if(sel == kMenu_Value)
 	{
@@ -5366,8 +5366,8 @@ static int DoSearchMenu(int selection, int startNew)
 
 	if(input_ui_pressed(IPT_UI_CANCEL))
 		sel = -1;
-	//if(input_ui_pressed(IPT_UI_CONFIGURE))
-	//	sel = -2;
+//  if(input_ui_pressed(IPT_UI_CONFIGURE))
+//      sel = -2;
 
 	if(	(sel == -1) ||
 		(sel == -2))
@@ -5523,8 +5523,8 @@ static int AddEditCheatMenu(int selection)
 
 	if(input_ui_pressed(IPT_UI_CANCEL))
 		sel = -1;
-	//if(input_ui_pressed(IPT_UI_CONFIGURE))
-	//	sel = -2;
+//  if(input_ui_pressed(IPT_UI_CONFIGURE))
+//      sel = -2;
 
 	if(	(sel == -1) ||
 		(sel == -2))
@@ -5864,8 +5864,8 @@ static int ViewSearchResults(int selection, int firstTime)
 
 	if(input_ui_pressed(IPT_UI_CANCEL))
 		sel = -1;
-	//if(input_ui_pressed(IPT_UI_CONFIGURE))
-	//	sel = -2;
+//  if(input_ui_pressed(IPT_UI_CONFIGURE))
+//      sel = -2;
 
 	if(	(sel == -1) ||
 		(sel == -2))
@@ -6054,8 +6054,8 @@ static int ChooseWatch(int selection)
 
 	if(input_ui_pressed(IPT_UI_CANCEL))
 		sel = -1;
-	//if(input_ui_pressed(IPT_UI_CONFIGURE))
-	//	sel = -2;
+//  if(input_ui_pressed(IPT_UI_CONFIGURE))
+//      sel = -2;
 
 	if(	(sel == -1) ||
 		(sel == -2))
@@ -6566,8 +6566,8 @@ static int EditWatch(WatchInfo * entry, int selection)
 
 	if(input_ui_pressed(IPT_UI_CANCEL))
 		sel = -1;
-	//if(input_ui_pressed(IPT_UI_CONFIGURE))
-	//	sel = -2;
+//  if(input_ui_pressed(IPT_UI_CONFIGURE))
+//      sel = -2;
 
 	if(	(sel == -1) ||
 		(sel == -2))
@@ -6733,8 +6733,8 @@ static int SelectSearchRegions(int selection, SearchInfo * search)
 
 	if(input_ui_pressed(IPT_UI_CANCEL))
 		sel = -1;
-	//if(input_ui_pressed(IPT_UI_CONFIGURE))
-	//	sel = -2;
+//  if(input_ui_pressed(IPT_UI_CONFIGURE))
+//      sel = -2;
 
 	if((sel == -1) || (sel == -2))
 	{
@@ -6870,8 +6870,8 @@ static int SelectSearch(int selection)
 
 	if(input_ui_pressed(IPT_UI_CANCEL))
 		sel = -1;
-	//if(input_ui_pressed(IPT_UI_CONFIGURE))
-	//	sel = -2;
+//  if(input_ui_pressed(IPT_UI_CONFIGURE))
+//      sel = -2;
 
 	if((sel == -1) || (sel == -2))
 	{
@@ -6905,10 +6905,10 @@ static INT32 DisplayHelp(int selection)
 		sel = -1;
 	}
 
-	//if(input_ui_pressed(IPT_UI_CONFIGURE))
-	//{
-	//	sel = -2;
-	//}
+//  if(input_ui_pressed(IPT_UI_CONFIGURE))
+//  {
+//      sel = -2;
+//  }
 
 	if (sel == -1 || sel == -2)
 	{
@@ -7076,8 +7076,8 @@ static int SelectOptions(int selection)
 
 	if(input_ui_pressed(IPT_UI_CANCEL))
 		sel = -1;
-	//if(input_ui_pressed(IPT_UI_CONFIGURE))
-	//	sel = -2;
+//  if(input_ui_pressed(IPT_UI_CONFIGURE))
+//      sel = -2;
 
 	if((sel == -1) || (sel == -2))
 	{

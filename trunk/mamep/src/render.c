@@ -13,6 +13,7 @@
         * no way to view tilemaps/charsets
         * invaders doesn't compute minimum size correctly (lines are missing)
         * LEDs missing
+        * listxml output needs to be cleaned up
 
     OSD-specific things that are busted:
         * need to respect options for:
@@ -193,6 +194,8 @@
 
 #define MAX_TEXTURE_SCALES		8
 
+#define NUM_PRIMLISTS			2
+
 #define DUAL_SCREEN_SEPARATION	0.01
 
 enum
@@ -370,8 +373,7 @@ struct _render_target
 	render_target *		next;				/* keep a linked list of targets */
 	layout_view *		curview;			/* current view */
 	layout_file *		filelist;			/* list of layout files */
-	render_primitive *	primlist;			/* list of primitives */
-	render_primitive **	primnext;			/* pointer to address of next primitive */
+	render_primitive_list primlist[NUM_PRIMLISTS];/* list of primitives */
 	INT32				width;				/* width in pixels */
 	INT32				height;				/* height in pixels */
 	float				pixel_aspect;		/* aspect ratio of individual pixels */
@@ -431,9 +433,9 @@ static view_item_state *item_statelist;
 static void render_exit(void);
 
 /* render targets */
-static void add_container_primitives(render_target *target, const object_transform *xform, const render_container *container, int blendmode, UINT32 scene);
-static void add_element_primitives(render_target *target, const object_transform *xform, const layout_element *element, int state, int blendmode, UINT32 scene);
-static void add_clear_and_optimize_primitive_list(render_target *target);
+static void add_container_primitives(render_primitive_list *list, const object_transform *xform, const render_container *container, int blendmode, UINT32 scene);
+static void add_element_primitives(render_primitive_list *list, const object_transform *xform, const layout_element *element, int state, int blendmode, UINT32 scene);
+static void add_clear_and_optimize_primitive_list(render_target *target, render_primitive_list *list);
 
 /* render textures */
 static void render_texture_get_scaled(render_texture *texture, UINT32 dwidth, UINT32 dheight, render_texinfo *texinfo, UINT32 scene);
@@ -693,10 +695,10 @@ INLINE render_primitive *alloc_render_primitive(int type)
     to the end of the list
 -------------------------------------------------*/
 
-INLINE void append_render_primitive(render_target *target, render_primitive *prim)
+INLINE void append_render_primitive(render_primitive_list *list, render_primitive *prim)
 {
-	*target->primnext = prim;
-	target->primnext = &prim->next;
+	*list->nextptr = prim;
+	list->nextptr = &prim->next;
 }
 
 
@@ -730,6 +732,9 @@ void render_init(void)
 
 	/* make sure we clean up after ourselves */
 	add_exit_callback(render_exit);
+
+	/* set up the list of render targets */
+	targetlist = NULL;
 
 	/* zap the free lists */
 	render_primitive_free_list = NULL;
@@ -825,7 +830,8 @@ float render_get_ui_aspect(void)
 	/* and pixel_aspect of the first target */
 	if (targetlist != NULL)
 	{
-		if (!(targetlist->orientation & ORIENTATION_SWAP_XY))
+		int orient = orientation_add(targetlist->orientation, ui_container->orientation);
+		if (!(orient & ORIENTATION_SWAP_XY))
 			//return (float)targetlist->height / ((float)targetlist->width * targetlist->pixel_aspect);
 			return (float)targetlist->height / ((float)targetlist->width);
 		else
@@ -856,7 +862,7 @@ render_target *render_target_alloc(const char *layoutfile, int singleview)
 	layout_file **nextfile;
 	render_target *target;
 	render_target **nextptr;
-	int scrnum, scrcount;
+	int scrnum, listnum, scrcount;
 
 	/* allocate memory for the target */
 	target = malloc_or_die(sizeof(*target));
@@ -871,6 +877,10 @@ render_target *render_target_alloc(const char *layoutfile, int singleview)
 	target->height = 480;
 	target->pixel_aspect = 1.0f;
 	target->orientation = ROT0;
+
+	/* allocate a lock for the primitive list */
+	for (listnum = 0; listnum < NUM_PRIMLISTS; listnum++)
+		target->primlist[listnum].lock = osd_lock_alloc();
 
 	/* count the screens */
 	for (scrnum = 0; Machine->drv->screen[scrnum].tag != NULL; scrnum++) ;
@@ -949,17 +959,24 @@ render_target *render_target_alloc(const char *layoutfile, int singleview)
 void render_target_free(render_target *target)
 {
 	render_target **curr;
+	int listnum;
 
 	/* remove us from the list */
 	for (curr = &targetlist; *curr != target; curr = &(*curr)->next) ;
 	*curr = target->next;
 
 	/* free any primitives */
-	while (target->primlist != NULL)
+	for (listnum = 0; listnum < NUM_PRIMLISTS; listnum++)
 	{
-		render_primitive *temp = target->primlist;
-		target->primlist = temp->next;
-		free_render_primitive(temp);
+		osd_lock_acquire(target->primlist[listnum].lock);
+		while (target->primlist[listnum].head != NULL)
+		{
+			render_primitive *temp = target->primlist[listnum].head;
+			target->primlist[listnum].head = temp->next;
+			free_render_primitive(temp);
+		}
+		osd_lock_release(target->primlist[listnum].lock);
+		osd_lock_free(target->primlist[listnum].lock);
 	}
 
 	/* free the layout files */
@@ -1206,25 +1223,35 @@ void render_target_get_minimum_size(render_target *target, INT32 *minwidth, INT3
     of primitives for a given render target
 -------------------------------------------------*/
 
-const render_primitive *render_target_get_primitives(render_target *target)
+const render_primitive_list *render_target_get_primitives(render_target *target)
 {
 	object_transform root_xform, ui_xform;
 	int itemcount[ITEM_LAYER_MAX];
 	render_primitive *prim;
 	INT32 viswidth, visheight;
-	int layer;
+	int layer, listnum;
 	static UINT32 scene = 12345;
 
 	scene++;
 
-	/* free any previous primitives */
-	while (target->primlist != NULL)
+	/* find a non-busy list to work with */
+	for (listnum = 0; listnum < NUM_PRIMLISTS; listnum++)
+		if (osd_lock_try(target->primlist[listnum].lock))
+			break;
+	if (listnum == NUM_PRIMLISTS)
 	{
-		render_primitive *temp = target->primlist;
-		target->primlist = temp->next;
+		listnum = 0;
+		osd_lock_acquire(target->primlist[listnum].lock);
+	}
+
+	/* free any previous primitives */
+	while (target->primlist[listnum].head != NULL)
+	{
+		render_primitive *temp = target->primlist[listnum].head;
+		target->primlist[listnum].head = temp->next;
 		free_render_primitive(temp);
 	}
-	target->primnext = &target->primlist;
+	target->primlist[listnum].nextptr = &target->primlist[listnum].head;
 
 	/* start with a clip push primitive */
 	prim = alloc_render_primitive(RENDER_PRIMITIVE_CLIP_PUSH);
@@ -1232,7 +1259,7 @@ const render_primitive *render_target_get_primitives(render_target *target)
 	prim->bounds.y0 = 0.0f;
 	prim->bounds.x1 = (float)target->width;
 	prim->bounds.y1 = (float)target->height;
-	append_render_primitive(target, prim);
+	append_render_primitive(&target->primlist[listnum], prim);
 
 	/* compute the visible width/height */
 	render_target_compute_visible_area(target, target->width, target->height, target->pixel_aspect, target->orientation, &viswidth, &visheight);
@@ -1282,9 +1309,9 @@ const render_primitive *render_target_get_primitives(render_target *target)
 
 			/* if there is no associated element, it must be a screen element */
 			if (item->element != NULL)
-				add_element_primitives(target, &item_xform, item->element, item->state->curstate, blendmode, scene);
+				add_element_primitives(&target->primlist[listnum], &item_xform, item->element, item->state->curstate, blendmode, scene);
 			else
-				add_container_primitives(target, &item_xform, screen_container[item->index], blendmode, scene);
+				add_container_primitives(&target->primlist[listnum], &item_xform, screen_container[item->index], blendmode, scene);
 
 			/* keep track of how many items are in the layer */
 			itemcount[layer]++;
@@ -1303,16 +1330,17 @@ const render_primitive *render_target_get_primitives(render_target *target)
 		ui_xform.orientation = target->orientation;
 
 		/* add UI elements */
-		add_container_primitives(target, &ui_xform, ui_container, BLENDMODE_ALPHA, scene);
+		add_container_primitives(&target->primlist[listnum], &ui_xform, ui_container, BLENDMODE_ALPHA, scene);
 	}
 
 	/* add a clip pop primitive for completeness */
 	prim = alloc_render_primitive(RENDER_PRIMITIVE_CLIP_POP);
-	append_render_primitive(target, prim);
+	append_render_primitive(&target->primlist[listnum], prim);
 
 	/* optimize the list before handing it off */
-	add_clear_and_optimize_primitive_list(target);
-	return target->primlist;
+	add_clear_and_optimize_primitive_list(target, &target->primlist[listnum]);
+	osd_lock_release(target->primlist[listnum].lock);
+	return &target->primlist[listnum];
 }
 
 
@@ -1321,7 +1349,7 @@ const render_primitive *render_target_get_primitives(render_target *target)
     based on the container
 -------------------------------------------------*/
 
-static void add_container_primitives(render_target *target, const object_transform *xform, const render_container *container, int blendmode, UINT32 scene)
+static void add_container_primitives(render_primitive_list *list, const object_transform *xform, const render_container *container, int blendmode, UINT32 scene)
 {
 	int orientation = orientation_add(container->orientation, xform->orientation);
 	render_primitive *prim;
@@ -1333,7 +1361,7 @@ static void add_container_primitives(render_target *target, const object_transfo
 	prim->bounds.y0 = round_nearest(xform->yoffs);
 	prim->bounds.x1 = prim->bounds.x0 + round_nearest(xform->xscale);
 	prim->bounds.y1 = prim->bounds.y0 + round_nearest(xform->yscale);
-	append_render_primitive(target, prim);
+	append_render_primitive(list, prim);
 
 	/* iterate over elements */
 	for (item = container->itemlist; item != NULL; item = item->next)
@@ -1403,12 +1431,12 @@ static void add_container_primitives(render_target *target, const object_transfo
 		}
 
 		/* add to the list */
-		append_render_primitive(target, prim);
+		append_render_primitive(list, prim);
 	}
 
 	/* add a clip pop primitive */
 	prim = alloc_render_primitive(RENDER_PRIMITIVE_CLIP_POP);
-	append_render_primitive(target, prim);
+	append_render_primitive(list, prim);
 }
 
 
@@ -1417,7 +1445,7 @@ static void add_container_primitives(render_target *target, const object_transfo
     for an element in the current state
 -------------------------------------------------*/
 
-static void add_element_primitives(render_target *target, const object_transform *xform, const layout_element *element, int state, int blendmode, UINT32 scene)
+static void add_element_primitives(render_primitive_list *list, const object_transform *xform, const layout_element *element, int state, int blendmode, UINT32 scene)
 {
 	INT32 width = round_nearest(xform->xscale);
 	INT32 height = round_nearest(xform->yscale);
@@ -1439,7 +1467,7 @@ static void add_element_primitives(render_target *target, const object_transform
 	prim->color = xform->color;
 	prim->flags = PRIMFLAG_TEXORIENT(xform->orientation) | PRIMFLAG_BLENDMODE(blendmode) | PRIMFLAG_TEXFORMAT(texture->format);
 	render_texture_get_scaled(texture, (xform->orientation & ORIENTATION_SWAP_XY) ? height : width, (xform->orientation & ORIENTATION_SWAP_XY) ? width : height, &prim->texture, scene);
-	append_render_primitive(target, prim);
+	append_render_primitive(list, prim);
 }
 
 
@@ -1448,7 +1476,7 @@ static void add_element_primitives(render_target *target, const object_transform
     optimize the primitive list
 -------------------------------------------------*/
 
-static void add_clear_and_optimize_primitive_list(render_target *target)
+static void add_clear_and_optimize_primitive_list(render_target *target, render_primitive_list *list)
 {
 	render_bounds *clipstack[8];
 	render_bounds **clip = &clipstack[-1];
@@ -1457,7 +1485,7 @@ static void add_clear_and_optimize_primitive_list(render_target *target)
 	render_primitive *prim;
 
 	/* find the first quad in the list */
-	for (prim = target->primlist; prim != NULL; prim = prim->next)
+	for (prim = list->head; prim != NULL; prim = prim->next)
 	{
 		if (prim->type == RENDER_PRIMITIVE_CLIP_PUSH)
 			*++clip = &prim->bounds;
@@ -1559,9 +1587,9 @@ static void add_clear_and_optimize_primitive_list(render_target *target)
 
 	/* we know that the first primitive in the list will be the global clip */
 	/* so we insert the clears immediately after */
-	assert(target->primlist->type == RENDER_PRIMITIVE_CLIP_PUSH);
-	*clearnext = target->primlist->next;
-	target->primlist->next = clearlist;
+	assert(list->head->type == RENDER_PRIMITIVE_CLIP_PUSH);
+	*clearnext = list->head->next;
+	list->head->next = clearlist;
 }
 
 
@@ -1573,12 +1601,12 @@ static void add_clear_and_optimize_primitive_list(render_target *target)
 ***************************************************************************/
 
 /*-------------------------------------------------
-    render_view_item_get_state - get a pointer
+    render_view_item_get_state_ptr - get a pointer
     to the state block associated with the given
     name
 -------------------------------------------------*/
 
-static view_item_state *render_view_item_get_state(const char *itemname)
+static view_item_state *render_view_item_get_state_ptr(const char *itemname)
 {
 	view_item_state *state;
 
@@ -1596,6 +1624,24 @@ static view_item_state *render_view_item_get_state(const char *itemname)
 	state->next = item_statelist;
 	item_statelist = state;
 	return state;
+}
+
+
+/*-------------------------------------------------
+    render_view_item_get_state - return the value
+    associated with a given state name
+-------------------------------------------------*/
+
+int render_view_item_get_state(const char *itemname)
+{
+	view_item_state *state;
+
+	/* search the statelist for a matching string */
+	for (state = item_statelist; state != NULL; state = state->next)
+		if (strcmp(itemname, state->name) == 0)
+			return state->curstate;
+
+	return 0;
 }
 
 
@@ -1866,6 +1912,28 @@ void render_container_empty(render_container *container)
 int render_container_is_empty(render_container *container)
 {
 	return (container->itemlist == NULL);
+}
+
+
+/*-------------------------------------------------
+    render_container_get_orientation - return the
+    orientation of a container
+-------------------------------------------------*/
+
+int render_container_get_orientation(render_container *container)
+{
+	return container->orientation;
+}
+
+
+/*-------------------------------------------------
+    render_container_set_orientation - set the
+    orientation of a container
+-------------------------------------------------*/
+
+void render_container_set_orientation(render_container *container, int orientation)
+{
+	container->orientation = orientation;
 }
 
 
@@ -2912,7 +2980,7 @@ static view_item *load_view_item(xml_data_node *itemnode, layout_element *elemli
 
 	/* fetch common data */
 	item->index = xml_get_attribute_int(itemnode, "index", -1);
-	item->state = render_view_item_get_state(item->name);
+	item->state = render_view_item_get_state_ptr(item->name);
 	item->state->curstate = (item->name[0] != 0 && item->element != NULL) ? item->element->defstate : 0;
 	if (load_bounds(xml_get_sibling(itemnode->child, "bounds"), &item->bounds))
 		goto error;

@@ -212,6 +212,7 @@ static int					mouse_count;
 static LPDIRECTINPUTDEVICE	mouse_device[MAX_MICE+1];
 static LPDIRECTINPUTDEVICE2	mouse_device2[MAX_MICE+1];
 static raw_mouse			raw_mouse_device[MAX_MICE];
+static osd_lock *			raw_mouse_lock;
 static DIDEVCAPS			mouse_caps[MAX_MICE+1];
 #ifdef USE_JOY_MOUSE_MOVE // Support Stick-type Pointing Device (miko2u@hotmail.com)
 static DIMOUSESTATE2			mouse_state[MAX_MICE];
@@ -1212,6 +1213,9 @@ int wininput_init(void)
 
 	add_pause_callback(win_pause_input);
 
+	// allocate a lock
+	raw_mouse_lock = osd_lock_alloc();
+
 	// decode the options
 	extract_input_config();
 
@@ -1253,6 +1257,8 @@ int wininput_init(void)
 	keyboard_count = 0;
 	result = IDirectInput_EnumDevices(dinput, DIDEVTYPE_KEYBOARD, enum_keyboard_callback, 0, DIEDFL_ATTACHEDONLY);
 	if (result != DI_OK)
+		goto cant_init_keyboard;
+	if (keyboard_count == 0)
 		goto cant_init_keyboard;
 
 	// initialize mouse devices
@@ -1371,6 +1377,9 @@ void win_shutdown_input(void)
 	if (dinput)
 		IDirectInput_Release(dinput);
 	dinput = NULL;
+
+	// release lock
+	osd_lock_free(raw_mouse_lock);
 }
 
 
@@ -3239,6 +3248,7 @@ static void process_raw_input(PRAWINPUT raw)
 	USHORT button_flags;
 	BYTE *buttons;
 
+	osd_lock_acquire(raw_mouse_lock);
 	for ( i=0; i < mouse_count; i++)
 	{
 		if (raw_mouse_device[i].device_handle == raw->header.hDevice)
@@ -3279,8 +3289,7 @@ static void process_raw_input(PRAWINPUT raw)
 			raw_mouse_device[i].flags = raw->data.mouse.usFlags;
 		}
 	}
-
-	return;
+	osd_lock_release(raw_mouse_lock);
 }
 
 
@@ -3330,6 +3339,7 @@ static void win_read_raw_mouse(void)
 {
 	int i;
 
+	osd_lock_acquire(raw_mouse_lock);
 	for ( i = 0; i < mouse_count; i++)
 	{
 		mouse_state[i] = raw_mouse_device[i].mouse_state;
@@ -3350,4 +3360,5 @@ static void win_read_raw_mouse(void)
 			raw_mouse_device[i].mouse_state.lZ = 0;
 		}
 	}
+	osd_lock_release(raw_mouse_lock);
 }

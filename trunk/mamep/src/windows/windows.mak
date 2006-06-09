@@ -73,6 +73,9 @@ LD = @$(OBJ)/vconv.exe ld
 AR = @$(OBJ)/vconv.exe ar
 RC = @$(OBJ)/vconv.exe windres
 
+# make sure we use the multithreaded runtime
+CC += /MT
+
 # turn on link-time codegen if the MAXOPT flag is also set
 ifneq ($(MAXOPT),)
     ifneq ($(ICC_BUILD),)
@@ -121,6 +124,9 @@ else
 endif
 
 
+ifdef PTR64
+LIBS +=  -lbufferoverflowu
+endif
 
 #-------------------------------------------------
 # nasm for Windows (but not cygwin) has a "w"

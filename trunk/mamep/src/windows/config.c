@@ -387,6 +387,7 @@ int cli_frontend_init(int argc, char **argv)
 	options_add_entries(palette_opts);
 #ifdef MESS
 	options_add_entries(mess_opts);
+	options_set_option_callback("", win_mess_driver_name_callback);
 #endif // MESS
 	options_add_entries(language_opts);
 
@@ -441,7 +442,9 @@ int cli_frontend_init(int argc, char **argv)
 	}
 
 	// reparse the command line to ensure its options override all
+	// note that we re-fetch the gamename here as it will get overridden
 	options_parse_command_line(argc, argv);
+	gamename = options_get_string("", FALSE);
 
 	// clear all core options
 	memset(&options, 0, sizeof(options));
@@ -815,6 +818,11 @@ static void extract_options(const game_driver *driver, machine_config *drv)
 		debug_source_script(stemp);
 #endif
 #endif
+
+{
+	extern const char *cheatfile;
+	cheatfile = options_get_string("cheat_file", TRUE);
+}
 
 	// need a decent default for debug width/height
 	if (options.debug_width == 0)
