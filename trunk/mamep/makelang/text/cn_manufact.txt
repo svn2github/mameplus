@@ -550,6 +550,10 @@ Current Technologies
 D. R. Korea
 
 
+# Tetris (D.R. Korea)
+D.R. Korea
+
+
 # Pipeline
 Daehyun Electronics
 
@@ -596,6 +600,10 @@ Dong Bang Electron
 
 # Pang Pang
 Dong Gue La Mi Ltd.
+
+
+# Pasha Pasha 2
+Dong Sung
 
 
 # Got-cha Mini Game Festival
@@ -834,7 +842,7 @@ Free Enterprise Games
 Fun World
 
 
-# Selection (Version 40.02TMB)
+# Selection (Version 40.02TMB) set 1
 G.E.I.
 
 
@@ -846,7 +854,7 @@ GAPS Inc.
 GAT
 
 
-# Piranha
+# Abscam
 GL
 
 
@@ -858,7 +866,7 @@ GMS
 GREEN SOFT
 
 
-# Xor World (prototype)
+# Master Boy (Spanish, PCB Rev A)
 Gaelco
 
 
@@ -898,6 +906,10 @@ Global Corporation
 Gottlieb
 
 
+# Up Scope
+Grand Products
+
+
 # Taxi Driver
 Graphic Techno
 
@@ -932,6 +944,10 @@ Hanaho Games
 
 # Fantasy '95
 Hi-max Technology Inc.
+
+
+# Sliver
+Hollow Corp
 
 
 # Mahjong Hourouki Part 1 - Seisyun Hen (Japan)
@@ -1510,12 +1526,16 @@ SNK
 SNK Electronics corp.
 
 
-# Metal Slug 5
+# Metal Slug 5 (JAMMA PCB)
 SNK Playmore
 
 
 # Bishoujo Janshi Pretty Sailor 18-kin (Japan)
 SPHINX
+
+
+# Fishing Maniac 3
+Saero Entertainment
 
 
 # Elan Doree - Legend of Dragon (JUET 980922 V1.006)
@@ -1812,6 +1832,10 @@ Test ROM
 
 # Lethal Justice
 The Game Room
+
+
+# Trivia Madness
+Thunderhead Inc.
 
 
 # Area 51 (Time Warner License)
