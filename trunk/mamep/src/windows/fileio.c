@@ -176,6 +176,7 @@ static const struct
 	{ FILETYPE_COMMENT,		"comment_directory" },
 #ifdef USE_IPS
 	{ FILETYPE_PATCH,		"ips_directory" },
+	{ FILETYPE_IPS,		    "ips_directory" },
 #endif /* USE_IPS */
 #ifdef INP_CAPTION
 	{ FILETYPE_INPCAPTION,	"input_directory" },
