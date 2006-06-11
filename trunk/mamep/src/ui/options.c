@@ -544,6 +544,9 @@ static struct rc_option rc_game_opts[] =
 	{ "view3", NULL, rc_string, &gOpts.view3, "auto", 0, 0, NULL, "preferred view for the fourth screen" },
 
 	{ "DIRECTX VIDEO OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+#ifndef NEW_RENDER
+	{ "ddraw", NULL, rc_bool, &gOpts.ddraw, "1", 0, 0, NULL, "enable using DirectDraw for video rendering (preferred)" },
+#endif
 	{ "direct3d", NULL, rc_bool, &gOpts.direct3d, "1", 0, 0, NULL, "enable using Direct3D 9 for video rendering if available (preferred)" },
 	{ "d3dversion", NULL, rc_int, &gOpts.d3dversion, "9", 8, 9, NULL, "specify the preferred Direct3D version (8 or 9)" },
 	{ "waitvsync", NULL, rc_bool, &gOpts.waitvsync, "0", 0, 0, NULL, "enable waiting for the start of VBLANK before flipping screens; reduces tearing effects" },
@@ -552,6 +555,26 @@ static struct rc_option rc_game_opts[] =
 	{ "switchres", NULL, rc_bool, &gOpts.switchres, "0", 0, 0, NULL, "enable resolution switching" },
 	{ "filter", NULL, rc_bool, &gOpts.filter, "1", 0, 0, NULL, "enable bilinear filtering on screen output" },
 	{ "full_screen_gamma", NULL, rc_float, &gOpts.full_screen_gamma, "1.0", 0.0, 4.0, NULL, "gamma value in full screen mode" },
+#ifndef NEW_RENDER
+	{ "hwstretch", NULL, rc_bool, &gOpts.hwstretch, "1", 0, 0, NULL, "(dd) stretch video using the hardware" },
+   	{ "cleanstretch", NULL, rc_string, &gOpts.cleanstretch, "auto", 0, 0, NULL, "stretch to integer ratios" },
+	{ "refresh", NULL, rc_int, &gOpts.refresh, "0", 0, 0, NULL, "set specific monitor refresh rate" },
+	{ "scanlines", NULL, rc_bool, &gOpts.scanlines, "0", 0, 0, NULL, "emulate win_old_scanlines" },
+	{ "switchbpp", NULL, rc_bool, &gOpts.switchbpp, "1", 0, 0, NULL, "switch color depths to best fit" },
+	{ "keepaspect", NULL, rc_bool, &gOpts.keepaspect, "1", 0, 0, NULL, "enforce aspect ratio" },
+	{ "matchrefresh", NULL, rc_bool, &gOpts.matchrefresh, "0", 0, 0, NULL, "attempt to match the game's refresh rate" },
+	{ "effect", NULL, rc_string, &gOpts.effect, "none", 0, 0, NULL, "specify the blitting effect" },
+	{ "gamma", NULL, rc_float, &gOpts.gamma , "1.0", 0.5, 2.0, NULL, "gamma correction"},
+    
+	{ "zoom", NULL, rc_int, &gOpts.zoom, "2", 1, 8, NULL, "force specific zoom level" },
+	{ "d3dtexmanage", NULL, rc_bool, &gOpts.d3dtexmanage, "1", 0, 0, NULL, "Use DirectX texture management" },
+    
+	{ "d3dfeedback", NULL, rc_int, &gOpts.d3dfeedback, "0", 0, 100, NULL, "feedback strength" },
+	{ "d3dscan", NULL, rc_int, &gOpts.d3dscan, "100", 0, 100, NULL, "scanline intensity" },
+	{ "d3deffectrotate", NULL, rc_bool, &gOpts.d3deffectrotate, "1", 0, 0, NULL, "enable rotation of effects for rotated games" },
+	{ "d3dprescale", NULL, rc_string, &gOpts.d3dprescale, "auto", 0, 0, NULL, "enable prescale" },
+	{ "d3deffect", NULL, rc_string, &gOpts.d3deffect, "none", 0, 0, NULL, "specify the blitting effects" },
+#endif
 
 	{ NULL,	NULL, rc_end, NULL, NULL, 0, 0,	NULL, NULL }
 };
@@ -3651,7 +3674,7 @@ static void FreeSettings(settings_type *p)
 	settings = save;
 }
 
-#ifndef NEW_RENDER
+#if 0
 static int D3DEffectDecode(struct rc_option *option, const char *arg, int priority)
 {
 	option->priority = priority;

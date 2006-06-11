@@ -192,7 +192,7 @@ typedef struct
 //
 	BOOL	window;
 	BOOL	maximize;
-	int	numscreens;
+	int		numscreens;
 	char*	extra_layout;
 //
 // PER-WINDOW VIDEO OPTIONS
@@ -216,14 +216,39 @@ typedef struct
 //
 // DIRECTX VIDEO OPTIONS
 //
+#ifndef NEW_RENDER
+	BOOL	ddraw;
+#endif
 	BOOL	direct3d;
-	int	d3dversion;
+	int		d3dversion;
 	BOOL	waitvsync;
 	BOOL	syncrefresh;
 	BOOL	triplebuffer;
 	BOOL	switchres;
 	BOOL	filter;
 	float	full_screen_gamma;
+
+#ifndef NEW_RENDER
+	BOOL	hwstretch;
+    char*   cleanstretch;
+    int     refresh;
+    BOOL   scanlines;
+    BOOL   switchbpp;
+    BOOL   keepaspect;
+    BOOL   matchrefresh;
+    char*  effect;
+    float  gamma;
+    
+    int    zoom;
+    BOOL   d3dtexmanage;
+    
+    int    d3dfeedback;
+    int    d3dscan;
+    BOOL   d3deffectrotate;
+    char*  d3dprescale;
+    char*  d3deffect;
+#endif
+
 } options_type;
 
 // List of artwork types to display in the screen shot area

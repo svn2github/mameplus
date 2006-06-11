@@ -144,6 +144,8 @@ static void InitializeAnalogAxesUI(HWND hWnd);
 static void InitializeBIOSUI(HWND hwnd);
 static void InitializeDefaultBIOSUI(HWND hwnd);
 static void InitializeLEDModeUI(HWND hwnd);
+static void InitializeNumScreenUI(HWND hwnd);
+static void InitializeD3DVerUI(HWND hwnd);
 static void InitializeControllerMappingUI(HWND hwnd);
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 static void InitializeM68kCoreUI(HWND hwnd);
@@ -207,6 +209,8 @@ static int  g_nDialIndex = 0;
 static int  g_nTrackballIndex = 0;
 static int  g_nLightgunIndex = 0;
 static BOOL g_bAnalogCheckState[65]; // 8 Joysticks  * 8 Axes each
+static int  g_nNumScreenIndex = 0;
+static int  g_nD3DVerIndex = 0;
 static int  g_nBiosIndex       = 0;
 #ifdef USE_SCALE_EFFECTS
 static int  g_nScaleEffectIndex= 0;
@@ -1260,6 +1264,8 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 	case IDC_ROTATE:
 	case IDC_SCREEN:
 	case IDC_SAMPLERATE:
+	case IDC_NUM_SCREEN:
+	case IDC_D3D_VER:
 	case IDC_M68K_CORE:
 #ifdef USE_SCALE_EFFECTS
 	case IDC_SCALEEFFECT:
@@ -2265,10 +2271,12 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOD),           d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_SCREEN),                 d3d && multimon);
 	EnableWindow(GetDlgItem(hWnd, IDC_SCREENTEXT),             d3d && multimon);
+	EnableWindow(GetDlgItem(hWnd, IDC_D3D_VER),                d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_D3D_VERTEXT),            d3d);
 
-#ifdef USE_SCALE_EFFECTS
-	EnableWindow(GetDlgItem(hWnd, IDC_SCALEEFFECTTEXT),        d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_SCALEEFFECT),            d3d);
+#if 1//def USE_SCALE_EFFECTS
+	EnableWindow(GetDlgItem(hWnd, IDC_SCALEEFFECTTEXT),        0/*d3d*/);
+	EnableWindow(GetDlgItem(hWnd, IDC_SCALEEFFECT),            0/*d3d*/);
 #endif /* USE_SCALE_EFFECTS */
 
 	// d3d
@@ -2772,6 +2780,28 @@ static void AssignLightgun(HWND hWnd)
 		pGameOpts->lightgun_device = strdup(ptr);
 }
 
+static void AssignNumScreen(HWND hWnd)
+{
+	switch (g_nNumScreenIndex)
+	{
+		case 1:  pGameOpts->numscreens = 2; break;
+		case 2:  pGameOpts->numscreens = 3; break;
+		case 3:  pGameOpts->numscreens = 4; break;
+		default:
+		case 0:  pGameOpts->numscreens = 1; break;
+	}
+}
+
+static void AssignD3DVer(HWND hWnd)
+{
+	switch (g_nD3DVerIndex)
+	{
+		case 1:  pGameOpts->d3dversion = 8; break;
+		default:
+		case 0:  pGameOpts->d3dversion = 9; break;
+	}
+}
+
 static void AssignBios(HWND hWnd)
 {
 	FreeIfAllocated(&pGameOpts->bios);
@@ -2896,6 +2926,22 @@ static void ResetDataMap(void)
 			g_nLedmodeIndex = i;
 	}
 
+	switch (pGameOpts->numscreens)
+	{
+		case 2:  g_nNumScreenIndex = 1; break;
+		case 3:  g_nNumScreenIndex = 2; break;
+		case 4:  g_nNumScreenIndex = 3; break;
+		default:
+		case 1:  g_nNumScreenIndex = 0; break;
+	}
+
+	switch (pGameOpts->d3dversion)
+	{
+		case 8:  g_nD3DVerIndex = 1; break;
+		default:
+		case 9:  g_nD3DVerIndex = 0; break;
+	}
+
 	g_biosinfo = NULL;
 	if (IS_GAME)
 		g_biosinfo = drivers[g_nGame]->bios;
@@ -2996,6 +3042,7 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_WINDOWED,      DM_BOOL, CT_BUTTON,   &pGameOpts->window,        DM_BOOL, &pGameOpts->window,        0, 0, 0);
 	DataMapAdd(IDC_SWITCHRES,     DM_BOOL, CT_BUTTON,   &pGameOpts->switchres,     DM_BOOL, &pGameOpts->switchres,     0, 0, 0);
 	DataMapAdd(IDC_MAXIMIZE,      DM_BOOL, CT_BUTTON,   &pGameOpts->maximize,      DM_BOOL, &pGameOpts->maximize,      0, 0, 0);
+	DataMapAdd(IDC_NUM_SCREEN,    DM_INT,  CT_COMBOBOX, &g_nNumScreenIndex,        DM_INT,  &pGameOpts->numscreens,    0, 0, AssignNumScreen);
 	DataMapAdd(IDC_SYNCREFRESH,   DM_BOOL, CT_BUTTON,   &pGameOpts->syncrefresh,   DM_BOOL, &pGameOpts->syncrefresh,   0, 0, 0);
 	DataMapAdd(IDC_THROTTLE,      DM_BOOL, CT_BUTTON,   &pGameOpts->throttle,      DM_BOOL, &pGameOpts->throttle,      0, 0, 0);
 	DataMapAdd(IDC_FSGAMMA,       DM_INT,  CT_SLIDER,   &g_nFullScreenGammaIndex,  DM_FLOAT, &pGameOpts->full_screen_gamma, 0, 0, AssignFullScreenGamma);
@@ -3012,6 +3059,7 @@ static void BuildDataMap(void)
 
 	// direct3d
 	DataMapAdd(IDC_D3D,           DM_BOOL, CT_BUTTON,   &pGameOpts->direct3d,      DM_BOOL,   &pGameOpts->direct3d,        0, 0, 0);
+	DataMapAdd(IDC_D3D_VER,       DM_INT,  CT_COMBOBOX, &g_nD3DVerIndex,           DM_INT,    &pGameOpts->d3dversion,       0, 0, AssignD3DVer);
 	DataMapAdd(IDC_D3D_FILTER,    DM_BOOL, CT_BUTTON,   &pGameOpts->filter,        DM_BOOL,   &pGameOpts->filter,          0, 0, 0);
 
 	/* input */
@@ -3275,6 +3323,8 @@ static void InitializeOptions(HWND hDlg)
 	InitializeBIOSUI(hDlg);
 	InitializeDefaultBIOSUI(hDlg);
 	InitializeLEDModeUI(hDlg);
+	InitializeNumScreenUI(hDlg);
+	InitializeD3DVerUI(hDlg);
 	InitializeControllerMappingUI(hDlg);
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 	InitializeM68kCoreUI(hDlg);
@@ -4044,6 +4094,34 @@ static void InitializeDefaultBIOSUI(HWND hwnd)
 				ComboBox_AddStringA(hCtrl,drv->bios[i]._description);
 			}
 		}
+	}
+}
+
+static void InitializeNumScreenUI(HWND hwnd)
+{
+	HWND    hCtrl;
+
+	hCtrl = GetDlgItem(hwnd, IDC_NUM_SCREEN);
+	if (hCtrl)
+	{
+		ComboBox_AddStringA(hCtrl, "1");
+		ComboBox_AddStringA(hCtrl, "2");
+		ComboBox_AddStringA(hCtrl, "3");
+		ComboBox_AddStringA(hCtrl, "4");
+		ComboBox_SetCurSel(hCtrl, 0);
+	}
+}
+
+static void InitializeD3DVerUI(HWND hwnd)
+{
+	HWND    hCtrl;
+
+	hCtrl = GetDlgItem(hwnd, IDC_D3D_VER);
+	if (hCtrl)
+	{
+		ComboBox_AddStringA(hCtrl, "Direct3D 9");
+		ComboBox_AddStringA(hCtrl, "Direct3D 8");
+		ComboBox_SetCurSel(hCtrl, 0);
 	}
 }
 

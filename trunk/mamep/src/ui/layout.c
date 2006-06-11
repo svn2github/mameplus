@@ -161,7 +161,7 @@ const PROPERTYSHEETINFO g_propSheets[] =
 	{ FALSE,	NULL,					IDD_PROP_AUDIT,			GameAuditDialogProc },
 	{ TRUE,		NULL,					IDD_PROP_DISPLAY,		GameOptionsProc },
 	{ TRUE,		NULL,					IDD_PROP_ADVANCED,		GameOptionsProc },
-	{ TRUE,		NULL,					IDD_PROP_DIRECT3D,		GameOptionsProc },
+//	{ TRUE,		NULL,					IDD_PROP_DIRECT3D,		GameOptionsProc },
 	{ TRUE,		NULL,					IDD_PROP_SOUND,			GameOptionsProc },
 	{ TRUE,		NULL,					IDD_PROP_INPUT,			GameOptionsProc },
 	{ TRUE,		NULL,					IDD_PROP_CONTROLLER,	GameOptionsProc },

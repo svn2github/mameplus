@@ -2,6 +2,7 @@
 // Microsoft Developer Studio generated include file.
 // Used by mame32.rc
 //
+#define NEW_RENDER
 #define IDPAUSE                         3
 #define IDAPPLY                         4
 #define IDS_UI_FILE                     71
@@ -273,7 +274,14 @@
 #define IDC_HIGH_PRIORITY               1182
 #define IDC_D3D                         1183
 #define IDC_D3D_FILTER                  1184
+#define IDC_D3D_VER                    1185
 #define IDC_AUDIO_LATENCY               1186
+#define IDC_D3D_VERTEXT                 1187
+#ifndef NEW_RENDER
+#define IDC_CLEAN_STRETCH               1191
+#else
+#define IDC_NUM_SCREEN                  1191
+#endif
 #define IDC_AUDIO_LATENCY_DISP          1192
 #define IDC_BIOS                        1204
 #define IDC_HIDE_MOUSE                  1205
@@ -357,6 +365,11 @@
 #define IDC_BIOSTEXT7                   1342
 #define IDC_BIOSTEXT8                   1343
 #define IDC_ZOOMTEXT                    1344
+#ifndef NEW_RENDER
+#define IDC_CLEAN_STRETCHTEXT           1345
+#else
+#define IDC_NUM_SCREENTEXT              1345
+#endif
 #define IDC_SCREENTEXT                  1346
 #define IDC_USE_LIST                    1349
 

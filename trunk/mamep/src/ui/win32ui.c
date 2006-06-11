@@ -945,8 +945,8 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%striplebuffer",            pOpts->triplebuffer ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%swindow",                  pOpts->window     ? "" : "no");
 #ifndef NEW_RENDER
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sdd",                      pOpts->use_ddraw       ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%shws",                     pOpts->ddraw_stretch   ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sdd",                      pOpts->ddraw       ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%shwstretch",               pOpts->hwstretch   ? "" : "no");
 #endif
 	if (pOpts->screen0)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -screen0 %s",                pOpts->screen0); 
@@ -957,10 +957,11 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sswitchbpp",               pOpts->switchbpp       ? "" : "no");
 #endif
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%smaximize",                pOpts->maximize        ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -numscreens %d",            pOpts->numscreens);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%ssyncrefresh",             pOpts->syncrefresh     ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sthrottle",                pOpts->throttle        ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -full_screen_gamma %f",      pOpts->full_screen_gamma);
-//	sprintf(&pCmdLine[strlen(pCmdLine)], " -frames_to_run %d",         pOpts->frames_to_run);
+//	sprintf(&pCmdLine[strlen(pCmdLine)], " -frames_to_run %d",          pOpts->frames_to_run);
 #ifndef NEW_RENDER
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -effect %s",                 pOpts->effect);
 #endif
@@ -974,13 +975,15 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -direct3d");
 #ifndef NEW_RENDER
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -zoom %i", pOpts->zoom);
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sflt",pOpts->d3d_filter?"":"no");
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sd3dtexmanage",    pOpts->d3d_texture_management ? "" : "no");
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3deffect %s",      pOpts->d3d_effect);
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3dprescale %s",    pOpts->d3d_prescale);
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sd3deffectrotate", pOpts->d3d_rotate_effects ? "" : "no");
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3dscan %i",        pOpts->d3d_scanlines);
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3dfeedback %i",    pOpts->d3d_feedback);
+#endif
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sfilter",pOpts->filter?"":"no");
+#ifndef NEW_RENDER
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sd3dtexmanage",    pOpts->d3dtexmanage ? "" : "no");
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3deffect %s",      pOpts->d3deffect);
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3dprescale %s",    pOpts->d3dprescale);
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sd3deffectrotate", pOpts->d3deffectrotate ? "" : "no");
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3dscan %i",        pOpts->d3dscan);
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3dfeedback %i",    pOpts->d3dfeedback);
 #endif
 	}
 	else
@@ -1061,16 +1064,16 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	//if (pOpts->norotate)
 	//	sprintf(&pCmdLine[strlen(pCmdLine)], " -%snorotate",                pOpts->norotate ? "" : "no");
 #ifndef NEW_RENDER
-	if (pOpts->clean_stretch)
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -cleanstretch %s",                     pOpts->clean_stretch);
+	if (pOpts->cleanstretch)
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -cleanstretch %s",       pOpts->cleanstretch);
 	if (pOpts->keepaspect)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%skeepaspect",              pOpts->keepaspect      ? "" : "no");
 	if (pOpts->scanlines)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sscanlines",               pOpts->scanlines       ? "" : "no");
 	if (pOpts->matchrefresh)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%smatchrefresh",            pOpts->matchrefresh    ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -refresh %d",                pOpts->gfx_refresh);
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -gamma %f",                  pOpts->f_gamma_correct);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -refresh %d",                pOpts->refresh);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -gamma %f",                  pOpts->gamma);
 #endif
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sror",                     pOpts->ror ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%srol",                     pOpts->rol ? "" : "no");
