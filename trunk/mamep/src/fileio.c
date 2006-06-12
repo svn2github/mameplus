@@ -250,7 +250,7 @@ mame_file *mame_fopen_error(const char *gamename, const char *filename, int file
 		/* disk images */
 		case FILETYPE_IMAGE:
 #ifndef MESS
-			return generic_fopen(filetype, gamename, filename, 0, FILEFLAG_OPENREAD | FILEFLAG_NOZIP, error);
+			return generic_fopen(filetype, gamename, filename, 0, FILEFLAG_OPENREAD, error);
 #else
 			{
 				int flags = FILEFLAG_ALLOW_ABSOLUTE;
