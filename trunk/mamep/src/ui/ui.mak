@@ -165,6 +165,10 @@ ifneq ($(USE_VOLUME_AUTO_ADJUST),)
 RCDEFS += -DUSE_VOLUME_AUTO_ADJUST
 endif
 
+ifneq ($(NEW_RENDER),)
+RCDEFS += -DNEW_RENDER
+endif
+
 #####################################################################
 # Windows UI specific options
 

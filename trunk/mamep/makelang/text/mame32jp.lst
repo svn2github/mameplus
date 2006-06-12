@@ -1378,6 +1378,7 @@ halleysc	ハレーズコメット (日本版 set 1)	はれーずこめっと	Taito Corporation
 halleycj	ハレーズコメット (日本版 set 2)	はれーずこめっと	Taito Corporation
 lsasquad	陸海空 -最前線 (set 1)	りくかいくうさいぜんせん	Taito
 storming	陸海空 -最前線 (set 2)	りくかいくうさいぜんせん	Taito
+daikaiju	大怪獣の逆襲	だいかいじゅうのぎゃくしゅう	Taito
 tokio	スクランブルフォーメーション	すくらんぶるふぉーめーしょん	Taito Corporation
 tokiou	スクランブルフォーメーション (USA版)	すくらんぶるふぉーめーしょん	Taito America Corporation (Romstar license)
 tokiob	スクランブルフォーメーション (海賊版)	すくらんぶるふぉーめーしょん	bootleg
@@ -1944,7 +1945,8 @@ lwingsjp	アレスの翼 -The Legendary Soldiers (日本版)	あれすのつばさ	Capcom
 sidearms	サイドアーム -Hyper Dyne (海外版)	さいどあーむ	Capcom
 sidearmr	サイドアーム -Hyper Dyne (USA版)	さいどあーむ	Capcom (Romstar license)
 sidearjp	サイドアーム -Hyper Dyne (日本版)	さいどあーむ	Capcom
-turtship	タートルシップ (日本版)	たーとるしっぷ	Philko (Pacific Games license)
+turtship	タートルシップ (USA版)	たーとるしっぷ	Philko (Sharp Image license)
+turtshij	タートルシップ (日本版)	たーとるしっぷ	Philko (Pacific Games license)
 turtshik	タートルシップ (韓国版)	たーとるしっぷ	Philko
 dyger	ダイガー (韓国版 set 1)	だいがー	Philko
 dygera	ダイガー (韓国版 set 2)	だいがー	Philko
@@ -3171,6 +3173,7 @@ mt_sonia	ソニック・ザ・ヘッジホッグ (Mega-Tech set 2)	そにっくざへっじほっぐ_1	S
 mt_fshrk	鮫！鮫！鮫！ / Fire Shark (Mega-Tech)	さめさめさめ	Toaplan / Sega
 mt_gaxe2	ゴールデンアックスII (Mega-Tech)	ごーるでんあっくす_2	Sega
 mt_stf	ジョー・モンタナII スポーツトークフットボール (Mega-Tech)	じょーもんたな2	Sega
+mt_mlh	マリオ・レミューホッケー (Mega-Tech)	まりおれみゅーほっけー	Sega
 mt_kcham	カメレオンキッド / Kid Chameleon (Mega-Tech)	かめれおんきっど	Sega
 mt_soni2	ソニック・ザ・ヘッジホッグ2 (Mega-Tech)	そにっくざへっじほっぐ_2	Sega
 mp_sonic	ソニック・ザ・ヘッジホッグ (Mega Play)	そにっくざへっじほっぐ_1	Sega
@@ -3230,7 +3233,7 @@ cppicf	ピーターペッパーズ アイスクリームファクトリー (Cassette set 1)	ぴーたーぺ
 cppicf2	ピーターペッパーズ アイスクリームファクトリー (Cassette set 2)	ぴーたーぺっぱーずあいすくりーむふぁくとりー	Data East Corporation
 cfghtice	ファイティングアイスホッケー (Cassette)	ふぁいてぃんぐあいすほっけー	Data East Corporation
 cbdash	バルダーダッシュ (Cassette)	ばるだーだっしゅ	Data East Corporation
-chwy	ハイウェイチェイス? (Cassette)	はいうぇいちぇいす	Data East Corporation
+chwy	ハイウェイチェイス (Cassette)	はいうぇいちぇいす	Data East Corporation
 cflyball	フライングボール (Cassette)	ふらいんぐぼーる	Data East Corporation
 czeroize	ゼロイゼ (Cassette)	ぜろいぜ	Data East Corporation
 madalien	マッドエイリアン	まっどえいりあん	Data East Corporation
