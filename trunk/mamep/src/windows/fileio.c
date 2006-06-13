@@ -112,7 +112,7 @@ const options_entry fileio_opts[] =
 #endif
 	{ "samplepath;sp",            "samples",  0,                 "path to samplesets" },
 #ifdef __WIN32__
-	{ "inipath",                  ".;ini",    0,                 "path to ini files" },
+	{ "inipath",                  "ini",    0,                   "path to ini files" },
 #else
 	{ "inipath",                  "$HOME/.mame;.;ini", 0,        "path to ini files" },
 #endif

@@ -61,6 +61,8 @@ int options_parse_ini_file(mame_file *inifile);
 
 void options_output_xml_file(FILE *xmlfile);
 void options_output_ini_file(FILE *inifile);
+void options_output_xml_file_marked(FILE *xmlfile);
+void options_output_ini_file_marked(FILE *inifile);
 
 void options_output_help(FILE *output);
 
@@ -73,5 +75,10 @@ void options_set_string(const char *name, const char *value);
 void options_set_bool(const char *name, int value);
 void options_set_int(const char *name, int value);
 void options_set_float(const char *name, float value);
+
+void options_clear_output_mark(void);
+
+void *options_get_datalist(void);
+void options_set_datalist(void *);
 
 #endif	/* __OPTIONS_H__ */

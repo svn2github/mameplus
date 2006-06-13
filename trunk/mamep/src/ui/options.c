@@ -29,25 +29,21 @@
 #include <malloc.h>
 #include <math.h>
 #include <direct.h>
+#include <ctype.h>
 
 #include "MAME32.h"	// include this first
-#include "screenshot.h"
-#include "bitmask.h"
 #include "driver.h"
-#include "inptport.h"
+#include "../options.h"
+#include "bitmask.h"
+#include "picker.h"
+#include "dijoystick.h"
+#include "treeview.h"
 #include "m32util.h"
-#include "resource.h"
-#include "TreeView.h"
-#include "file.h"
 #include "splitters.h"
 #include "DirectDraw.h"
-#include "dijoystick.h"
-#include "audit.h"
 #include "options.h"
-#include "picker.h"
-#include "io.h"
 #include "translate.h"
-#include "rc.h"
+#include "directories.h"
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
@@ -58,15 +54,210 @@
     Internal structures
  ***************************************************************************/
 
-// defined in src/windows/rc.c
-struct rc_struct
+typedef struct
 {
-	struct rc_option *option;
-	int option_size;
-	char **arg;
-	int arg_size;
-	int args_registered;
-};
+	char *name;
+	DWORD flags;
+} f_flag_entry;
+
+typedef struct
+{
+	f_flag_entry *entry;
+	int           num;
+} f_flag;
+
+typedef struct
+{
+	char     *save_version;
+	BOOL     reset_gui;
+	INT      folder_id;
+	BOOL     view;
+	BOOL     show_folderlist;
+	LPBITS   show_folder_flags;
+	f_flag   folder_flag;
+	BOOL     show_toolbar;
+	BOOL     show_statusbar;
+	BOOL     show_screenshot;
+	BOOL     show_screenshottab;
+	int      show_tab_flags;
+#ifdef STORY_DATAFILE
+	int      datafile_tab;
+#else /* STORY_DATAFILE */
+	int      history_tab;
+#endif /* STORY_DATAFILE */
+	char     *current_tab;
+	BOOL     game_check;        /* Startup GameCheck */
+	BOOL     joygui;
+	BOOL     keygui;
+	BOOL     broadcast;
+	BOOL     random_bg;
+	int      cycle_screenshot;
+	BOOL     stretch_screenshot_larger;
+	int      screenshot_bordersize;
+	COLORREF screenshot_bordercolor;
+	BOOL     inherit_filter;
+	BOOL     offset_clones;
+	BOOL	 game_caption;
+
+	char     *default_game;
+	int      column_widths[COLUMN_MAX];
+	int      column_order[COLUMN_MAX];
+	int      column_shown[COLUMN_MAX];
+	int      sort_column;
+	BOOL     sort_reverse;
+	int      window_x;
+	int      window_y;
+	int      window_width;
+	int      window_height;
+	UINT     window_state;
+	int      splitters[4];		/* NPW 5-Feb-2003 - I don't like hard coding this, but I don't have a choice */
+	COLORREF custom_color[16]; /* This is how many custom colors can be shown on the standard ColorPicker */
+	BOOL     use_broken_icon;
+	LOGFONTA list_logfont;
+	COLORREF font_color;
+	COLORREF clone_color;
+	COLORREF broken_color;
+
+	// Keyboard control of ui
+	KeySeq   ui_key_up;
+	KeySeq   ui_key_down;
+	KeySeq   ui_key_left;
+	KeySeq   ui_key_right;
+	KeySeq   ui_key_start;
+	KeySeq   ui_key_pgup;
+	KeySeq   ui_key_pgdwn;
+	KeySeq   ui_key_home;
+	KeySeq   ui_key_end;
+	KeySeq   ui_key_ss_change;
+	KeySeq   ui_key_history_up;
+	KeySeq   ui_key_history_down;
+
+	KeySeq   ui_key_context_filters;	/* CTRL F */
+	KeySeq   ui_key_select_random;		/* CTRL R */
+	KeySeq   ui_key_game_audit;		/* ALT A */
+	KeySeq   ui_key_game_properties;	/* ALT VK_RETURN */
+	KeySeq   ui_key_help_contents;		/* VK_F1 */
+	KeySeq   ui_key_update_gamelist;	/* VK_F5 */
+	KeySeq   ui_key_view_folders;		/* ALT D */
+	KeySeq   ui_key_view_fullscreen;	/* VK_F11 */
+	KeySeq   ui_key_view_pagetab;		/* ALT B */
+	KeySeq   ui_key_view_picture_area;	/* ALT P */
+	KeySeq   ui_key_view_status;		/* ALT S */
+	KeySeq   ui_key_view_toolbars;		/* ALT T */
+
+	KeySeq   ui_key_view_tab_cabinet;	/* ALT 3 */
+	KeySeq   ui_key_view_tab_cpanel;	/* ALT 6 */
+	KeySeq   ui_key_view_tab_flyer;		/* ALT 2 */
+	KeySeq   ui_key_view_tab_history;	/* ALT 7 */
+#ifdef STORY_DATAFILE
+	KeySeq   ui_key_view_tab_story;		/* ALT 8 */
+#endif /* STORY_DATAFILE */
+	KeySeq   ui_key_view_tab_marquee;	/* ALT 4 */
+	KeySeq   ui_key_view_tab_screenshot;	/* ALT 1 */
+	KeySeq   ui_key_view_tab_title;		/* ALT 5 */
+	KeySeq   ui_key_quit;			/* ALT Q */
+
+	// Joystick control of ui
+	// array of 4 is joystick index, stick or button, etc.
+	int      ui_joy_up[4];
+	int      ui_joy_down[4];
+	int      ui_joy_left[4];
+	int      ui_joy_right[4];
+	int      ui_joy_start[4];
+	int      ui_joy_pgup[4];
+	int      ui_joy_pgdwn[4];
+	int      ui_joy_home[4];
+	int      ui_joy_end[4];
+	int      ui_joy_ss_change[4];
+	int      ui_joy_history_up[4];
+	int      ui_joy_history_down[4];
+	int      ui_joy_exec[4];
+
+	char*    exec_command;  // Command line to execute on ui_joy_exec   
+	int      exec_wait;     // How long to wait before executing
+	BOOL     hide_mouse;    // Should mouse cursor be hidden on startup?
+	BOOL     full_screen;   // Should we fake fullscreen?
+
+#ifdef USE_SHOW_SPLASH_SCREEN
+	BOOL     display_splash_screen;
+#endif /* USE_SHOW_SPLASH_SCREEN */
+//
+// PATH AND DIRECTORY OPTIONS
+//
+	char*    flyer_directory;
+	char*    cabinet_directory;
+	char*    marquee_directory;
+	char*	 title_directory;
+	char*	 cpanel_directory;
+	char*    icon_directory;
+	char*    bkground_directory;
+	char*    folder_directory;
+#ifdef USE_VIEW_PCBINFO
+	char*    pcbinfo_directory;
+#endif /* USE_VIEW_PCBINFO */
+//
+// PATH AND DIRECTORY OPTIONS
+//
+	/* directory and datafile */
+	char*	rompath;
+	char*	samplepath;
+	char*	inipath;
+	char*	cfg_directory;
+	char*	nvram_directory;
+	char*	memcard_directory;
+	char*	input_directory;
+	char*	hiscore_directory;
+	char*	state_directory;
+	char*	artwork_directory;
+	char*	snapshot_directory;
+	char*	diff_directory;
+	char*	ctrlr_directory;
+	char*	comment_directory;
+#ifdef USE_IPS
+	char*	ips_directory;
+#endif /* USE_IPS */
+	char*	lang_directory;
+	char*	cheat_file;
+	char*	history_file;
+#ifdef STORY_DATAFILE
+	char*	story_file;
+#endif /* STORY_DATAFILE */
+	char*	mameinfo_file;
+	char*	hiscore_file;
+//
+// CORE PALETTE OPTIONS
+//
+#ifdef UI_COLOR_DISPLAY
+	/* ui palette */
+	char*    font_blank;
+	char*    font_normal;
+	char*    font_special;
+	char*    system_background;
+	char*    system_framemedium;
+	char*    system_framelight;
+	char*    system_framedark;
+	char*    osdbar_framemedium;
+	char*    osdbar_framelight;
+	char*    osdbar_framedark;
+	char*    osdbar_defaultbar;
+	char*    button_red;
+	char*    button_yellow;
+	char*    button_green;
+	char*    button_blue;
+	char*    button_purple;
+	char*    button_pink;
+	char*    button_aqua;
+	char*    button_silver;
+	char*    button_navy;
+	char*    button_lime;
+	char*    cursor;
+#endif /* UI_COLOR_DISPLAY */
+//
+// CORE LANGUAGE OPTIONS
+//
+	int      langcode;
+	BOOL     use_lang_list;
+} settings_type; /* global settings for the UI only */
 
 struct _backup
 {
@@ -86,13 +277,13 @@ typedef struct
 	BOOL use_default; // whether or not we should just use default options
 	int alt_index; // index for alt_option if driver is unified
 
-} game_variables_type;
+} driver_variables_type;
 
 typedef struct
 {
 	const char *name;
 	options_type *option;
-	game_variables_type *variable;
+	driver_variables_type *variable;
 	BOOL has_bios;
 	BOOL need_vector_config;
 	int driver_index; // index for driver if driver is unified
@@ -103,12 +294,6 @@ struct _default_bios
 	const game_driver *drv;
 	alt_options_type *alt_option;
 };
-
-typedef struct
-{
-	char  name[80];
-	DWORD flags;
-} folder_flags_type;
 
 struct _joycodes
 {
@@ -127,23 +312,39 @@ static void  build_default_bios(void);
 static void  build_alt_options(void);
 static void  unify_alt_options(void);
 
-static int   initialize_rc_winui_config(void);
-static int   rc_load_winui_config(void);
-static int   rc_save_winui_config(void);
+static void  options_create_entry_core(void);
+static void  options_create_entry_driver(void);
+static void  options_create_entry_winui(void);
 
-static int   rc_load_default_config(void);
-static int   rc_save_default_config(void);
-static int   rc_load_game_config(int driver_index);
-static int   rc_save_game_config(int driver_index);
-static int   rc_load_alt_config(alt_options_type *alt_option);
-static int   rc_save_alt_config(alt_options_type *alt_option);
+static void  options_free_entry_core(void);
+static void  options_free_entry_driver(void);
+static void  options_free_entry_winui(void);
 
-static int   rc_write_folder_flags(mame_file *file);
+static void  options_free_string_core(settings_type *s);
+static void  options_free_string_driver(options_type *p);
+static void  options_free_string_winui(settings_type *p);
 
-static void  validate_game_option(options_type *opt);
+static void  options_get_core(settings_type *p);
+static void  options_get_driver(options_type *p);
+static void  options_get_winui(settings_type *p);
 
-static void  rc_duplicate_strings(struct rc_option *option);
-static void  rc_free_strings(struct rc_option *option);
+static void  options_duplicate_settings(const settings_type *source, settings_type *dest);
+static void  options_duplicate_driver(const options_type *source, options_type *dest);
+
+static BOOL  options_compare_driver(const options_type *p1, const options_type *p2);
+static void  options_set_mark_driver(const options_type *p, const options_type *parent);
+
+static int   options_load_default_config(void);
+static int   options_load_driver_config(int driver_index);
+static int   options_load_alt_config(alt_options_type *alt_option);
+static int   options_load_winui_config(void);
+
+static int   options_save_default_config(void);
+static int   options_save_driver_config(int driver_index);
+static int   options_save_alt_config(alt_options_type *alt_option);
+static int   options_save_winui_config(void);
+
+static void  validate_driver_option(options_type *opt);
 
 static void  CopySettings(const settings_type *source, settings_type *dest);
 static void  FreeSettings(settings_type *p);
@@ -156,77 +357,21 @@ static void  LoadAltOptions(alt_options_type *alt_option);
 
 static BOOL  IsOptionEqual(options_type *o1, options_type *o2);
 
-#if 0
-static void  ResetD3DEffect(void);
-static void  SortD3DEffectByOverrides(void);
-
-static int   D3DEffectDecode(struct rc_option *option, const char *arg, int priority);
-static int   D3DFeedbackDecode(struct rc_option *option, const char *arg, int priority);
-static int   D3DScanlinesDecode(struct rc_option *option, const char *arg, int priority);
-static int   D3DPrescaleDecode(struct rc_option *option, const char *arg, int priority);
-
-static int   CleanStretchDecodeString(struct rc_option *option, const char *arg, int priority);
-
-static int   LedmodeDecodeString(struct rc_option *option, const char *arg, int priority);
-
-#ifdef UI_COLOR_DISPLAY
-static int   PaletteDecodeString(struct rc_option *option, const char *arg, int priority);
-#endif /* UI_COLOR_DISPLAY */
-
-#endif
-
-static void  LanguageEncodeString(void);
-static int   LanguageDecodeString(void);
-
-static void  JoyInfoEncodeString(void);
-static int   JoyInfoDecodeString(struct rc_option *option, const char *arg, int priority);
-
-static void  KeySeqEncodeString(void);
-static int   KeySeqDecodeString(struct rc_option *option, const char *arg, int priority);
-
-static char  *ColumnEncodeString(int *data);
-static int   ColumnDecodeString(struct rc_option *option, const char *str, int* data, int priority);
-
-static void  ColumnOrderEncodeString(void);
-static int   ColumnOrderDecodeString(struct rc_option *option, const char *arg, int priority);
-
-static void  ColumnShownEncodeString(void);
-static int   ColumnShownDecodeString(struct rc_option *option, const char *arg, int priority);
-
-static void  ColumnEncodeWidths(void);
-static int   ColumnDecodeWidths(struct rc_option *option, const char *arg, int priority);
-
-static void  CusColorEncodeString(void);
-static int   CusColorDecodeString(struct rc_option *option, const char *arg, int priority);
-
-static void  SplitterEncodeString(void);
-static int   SplitterDecodeString(struct rc_option *option, const char *arg, int priority);
-
-static void  ListEncodeString(void);
-static int   ListDecodeString(struct rc_option *option, const char *arg, int priority);
-
-static void  FontEncodeString(void);
-static int   FontDecodeString(struct rc_option *option, const char *arg, int priority);
-
-static void  FontfaceEncodeString(void);
-static int   FontfaceDecodeString(struct rc_option *option, const char *arg, int priority);
-
-static void  SaveFolderFlags(const char *folderName, DWORD dwFlags);
-
-static int   FolderFlagDecodeString(struct rc_option *option, const char *arg, int priority);
-
-static void  HideFolderEncodeString(void);
-static int   HideFolderDecodeString(struct rc_option *option, const char *arg, int priority);
-
+static void  set_folder_flag(f_flag *flag, const char *folderName, DWORD dwFlags);
+static void  free_folder_flag(f_flag *flag);
 
 
 /***************************************************************************
     Internal defines
  ***************************************************************************/
 
-#define FOLDERFLAG_OPT		"folder_flag"
+#define FRAMESKIP_LEVELS	12
+#define MAX_WINDOWS		4
+
 #define ALLOC_FOLDERFLAG	8
 #define ALLOC_FOLDERS		100
+
+#define CSV_ARRAY_MAX		256
 
 #define WINUI_INI MAME32NAME "ui.ini"
 #define MAME_INI MAMENAME ".ini"
@@ -240,11 +385,9 @@ static settings_type settings;
 
 static struct _backup backup;
 
-static options_type gOpts;  // Used in conjunction with regGameOpts
-
 static options_type global; // Global 'default' options
-static options_type *game_options;  // Array of Game specific options
-static game_variables_type *game_variables;  // Array of game specific extra data
+static options_type *driver_options;  // Array of Game specific options
+static driver_variables_type *driver_variables;  // Array of driver specific extra data
 
 static int  num_alt_options = 0;
 static int alt_options_len = 700;
@@ -253,12 +396,8 @@ alt_options_type *alt_options;  // Array of Folder specific options
 // default bios setting
 static struct _default_bios default_bios[MAX_SYSTEM_BIOS];
 
-static int num_folder_flags = 0;
-static folder_flags_type *folder_flags;
-
 /* Global UI options */
-static int  num_games = 0;
-static BOOL bResetGUI      = FALSE;
+static int  num_drivers = 0;
 
 // Screen shot Page tab control text
 // these must match the order of the options flags in options.h
@@ -305,492 +444,25 @@ static const char *view_modes[VIEW_MAX] =
 	"Grouped"
 };
 
-static struct _joycodes joycode_axis[] =
-{
-	{ "JOYCODE_STICK_BTN",  JOYCODE_STICK_BTN },
-	{ "JOYCODE_STICK_AXIS", JOYCODE_STICK_AXIS },
-	{ "JOYCODE_STICK_POV",  JOYCODE_STICK_POV },
-	{ NULL, 0 }
-};
 
-static struct _joycodes joycode_dir[] =
-{
-	{ "JOYCODE_DIR_BTN", JOYCODE_DIR_BTN },
-	{ "JOYCODE_DIR_NEG", JOYCODE_DIR_NEG },
-	{ "JOYCODE_DIR_POS", JOYCODE_DIR_POS },
-	{ NULL, 0 }
-};
+#define DEFINE_JOYCODE_START(name)	static struct _joycodes name[] = {
+#define DEFINE_JOYCODE(name)	{ #name, name },
+#define DEFINE_JOYCODE_END	{ NULL, 0 } };
 
-static char reload_config_msg[] =
-MAME32NAME " has changed *.ini file directory.\n\n\
-Would you like to migrate old configurations to the new directory?";
+DEFINE_JOYCODE_START(joycode_axis)
+	DEFINE_JOYCODE(JOYCODE_STICK_BTN)
+	DEFINE_JOYCODE(JOYCODE_STICK_AXIS)
+	DEFINE_JOYCODE(JOYCODE_STICK_POV)
+DEFINE_JOYCODE_END
 
+DEFINE_JOYCODE_START(joycode_dir)
+	DEFINE_JOYCODE(JOYCODE_DIR_BTN)
+	DEFINE_JOYCODE(JOYCODE_DIR_NEG)
+	DEFINE_JOYCODE(JOYCODE_DIR_POS)
+DEFINE_JOYCODE_END
 
-//============================================================
-//	rc options
-//============================================================
-
-static struct rc_struct *rc_core;
-static struct rc_struct *rc_game;
-static struct rc_struct **rc_winui;
-
-/* temporary for rc, it is need to save settings */
-static struct
-{
-	/* WINUI */
-	char *save_version;
-
-	char *view;
-	char *list_font;
-	char *list_fontface;
-	char *custom_color;
-	char *splitter;
-	char *column_width;
-	char *column_order;
-	char *column_shown;
-
-	char *ui_joy_up;
-	char *ui_joy_down;
-	char *ui_joy_left;
-	char *ui_joy_right;
-	char *ui_joy_start;
-	char *ui_joy_pgup;
-	char *ui_joy_pgdwn;
-	char *ui_joy_home;
-	char *ui_joy_end;
-	char *ui_joy_ss_change;
-	char *ui_joy_history_up;
-	char *ui_joy_history_down;
-	char *ui_joy_exec;
-
-	char *ui_key_up;
-	char *ui_key_down;
-	char *ui_key_left;
-	char *ui_key_right;
-	char *ui_key_start;
-	char *ui_key_pgup;
-	char *ui_key_pgdwn;
-	char *ui_key_home;
-	char *ui_key_end;
-	char *ui_key_ss_change;
-	char *ui_key_history_up;
-	char *ui_key_history_down;
-
-	char *ui_key_context_filters;
-	char *ui_key_select_random;
-	char *ui_key_game_audit;
-	char *ui_key_game_properties;
-	char *ui_key_help_contents;
-	char *ui_key_update_gamelist;
-	char *ui_key_view_folders;
-	char *ui_key_view_fullscreen;
-	char *ui_key_view_pagetab;
-	char *ui_key_view_picture_area;
-	char *ui_key_view_status;
-	char *ui_key_view_toolbars;
-
-	char *ui_key_view_tab_cabinet;
-	char *ui_key_view_tab_cpanel;
-	char *ui_key_view_tab_flyer;
-	char *ui_key_view_tab_history;
-#ifdef STORY_DATAFILE
-	char *ui_key_view_tab_story;
-#endif /* STORY_DATAFILE */
-	char *ui_key_view_tab_marquee;
-	char *ui_key_view_tab_screenshot;
-	char *ui_key_view_tab_title;
-	char *ui_key_quit;
-
-	char *ui_hide_folder;
-} rc_dummy_args;
-
-static struct rc_option rc_game_opts[] =
-{
-	{ "CORE VIDEO OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "rotate", NULL, rc_bool, &gOpts.rotate, "1", 0, 0, NULL, "rotate the game screen according to the game's orientation needs it" },
-	{ "ror", NULL, rc_bool, &gOpts.ror, "0", 0, 0, NULL, "rotate screen clockwise 90 degrees" },
-	{ "rol", NULL, rc_bool, &gOpts.rol, "0", 0, 0, NULL, "rotate screen counterclockwise 90 degrees" },
-	{ "autoror", NULL, rc_bool, &gOpts.autoror, "0", 0, 0, NULL, "automatically rotate screen clockwise 90 degrees if vertical" },
-	{ "autorol", NULL, rc_bool, &gOpts.autorol, "0", 0, 0, NULL, "automatically rotate screen counterclockwise 90 degrees if vertical" },
-	{ "flipx", NULL, rc_bool, &gOpts.flipx, "0", 0, 0, NULL, "flip screen left-right" },
-	{ "flipy", NULL, rc_bool, &gOpts.flipy, "0", 0, 0, NULL, "flip screen upside-down" },
-	{ "brightness", NULL, rc_float, &gOpts.brightness, "1.0", 0.5, 2.0, NULL, "brightness correction" },
-	{ "pause_brightness", NULL, rc_float, &gOpts.pause_brightness, "1.0", 0.5, 2.0, NULL, "additional pause brightness" },
-#ifdef USE_SCALE_EFFECTS
-	{ "scale_effect", NULL, rc_string, &gOpts.scale_effect, "none", 0, 0, NULL, "SaI scale effect" },
-#endif /* USE_SCALE_EFFECTS */
-
-	{ "CORE VECTOR OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "antialias", NULL, rc_bool, &gOpts.antialias, "1", 0, 0, NULL, "use antialiasing when drawing vectors" },
-	{ "beam", NULL, rc_float, &gOpts.beam, "1.0", 0.1, 16.0, NULL, "set vector beam width" },
-	{ "flicker", NULL, rc_float, &gOpts.flicker, "1.0", 0.0, 100.0, NULL, "set vector flicker effect" },
-	{ "intensity", NULL, rc_float, &gOpts.intensity, "1.0", 0.5, 3.0, NULL, "set vector intensity" },
-
-	{ "CORE SOUND OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "sound", NULL, rc_bool, &gOpts.sound, "1", 0, 0, NULL, "enable sound output" },
-	{ "samplerate", NULL, rc_int, &gOpts.samplerate, "48000", 5000, 50000, NULL, "set sound output sample rate" },
-	{ "samples", NULL, rc_bool, &gOpts.samples, "1", 0, 0, NULL, "enable the use of external samples if available" },
-	{ "volume", NULL, rc_int, &gOpts.volume, "0", -32, 0, NULL, "sound volume in decibels (-32 min, 0 max)" },
-#ifdef USE_VOLUME_AUTO_ADJUST
-	{ "volume_adjust", NULL, rc_bool, &gOpts.volume_adjust, "0", 0, 0, NULL, "enable/disable volume auto adjust" },
-#endif /* USE_VOLUME_AUTO_ADJUST */
-	{ "audio_latency", NULL, rc_int, &gOpts.audio_latency, "1", 1, 4, NULL, "set audio latency (increase to reduce glitches)" },
-	{ "wavwrite", NULL, rc_string, &gOpts.wavwrite, NULL, 0, 0, NULL, "save sound in wav file" },
-
-	{ "CORE MISC OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "bios", NULL, rc_string, &gOpts.bios, "default", 0, 0, NULL, "select the system BIOS to use" },
-	{ "cheat", NULL, rc_bool, &gOpts.cheat, "0", 0, 0, NULL, "enable cheat subsystem" },
-	{ "skip_gameinfo", NULL, rc_bool, &gOpts.skip_gameinfo, "0", 0, 0, NULL, "skip displaying the information screen at startup" },
-	{ "artwork", NULL, rc_bool, &gOpts.artwork, "1", 0, 0, NULL, "enable external artwork, if available" },
-	{ "use_backdrops", NULL, rc_bool, &gOpts.use_backdrops, "1", 0, 0, NULL, "enable backdrops if artwork is enabled and available" },
-	{ "use_overlays", NULL, rc_bool, &gOpts.use_overlays, "1", 0, 0, NULL, "enable overlays if artwork is enabled and available" },
-	{ "use_bezels", NULL, rc_bool, &gOpts.use_bezels, "1", 0, 0, NULL, "enable bezels if artwork is enabled and available" },
-#ifdef USE_IPS
-	{ "ips", NULL, rc_string, &gOpts.ips, NULL, 0, 0, NULL, "ips datfile name" },
-#endif /* USE_IPS */
-	{ "disable_second_monitor", NULL, rc_bool, &gOpts.disable_second_monitor, "1", 0, 0, NULL, "" },
-	{ "confirm_quit", NULL, rc_bool, &gOpts.confirm_quit, "1", 0, 0, NULL, "quit game with confirmation" },
-#ifdef AUTO_PAUSE_PLAYBACK
-	{ "auto_pause_playback", NULL, rc_bool, &gOpts.auto_pause_playback, "0", 0, 0, NULL, "automatic pause when playback is finished" },
-#endif /* AUTO_PAUSE_PLAYBACK */
-#if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-	{ "m68k_core", NULL, rc_int, &gOpts.m68k_core, "0", 0, 2, NULL, "change m68k core (0:C, 1:DRC, 2:ASM+DRC)" },
-#endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
-#ifdef TRANS_UI
-	{ "use_trans_ui", NULL, rc_bool, &gOpts.use_trans_ui, "1", 0, 0, NULL, "use transparent background for UI text" },
-	{ "ui_transparency", NULL, rc_int, &gOpts.ui_transparency, "192", 0, 255, NULL, "transparency of UI background [0 - 255]" },
-#endif /* TRANS_UI */
-
-	{ "CORE STATE/PLAYBACK OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "playback", NULL, rc_string, &gOpts.playback, NULL, 0, 0, NULL, "playback an input file" },
-	{ "record", NULL, rc_string, &gOpts.record, NULL, 0, 0, NULL, "record an input file" },
-	{ "state", NULL, rc_string, &gOpts.state, NULL, 0, 0, NULL, "saved state to load" },
-	{ "autosave", NULL, rc_bool, &gOpts.autosave, "0", 0, 0, NULL, "enable automatic restore at startup, and automatic save at exit time" },
-
-	{ "CORE DEBUGGING OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "log", NULL, rc_bool, &gOpts.log, "0", 0, 0, NULL, "generate an error.log file" },
-	{ "oslog", NULL, rc_bool, &gOpts.oslog, "0", 0, 0, NULL, "output error.log data to the system debugger" },
-	{ "verbose", NULL, rc_bool, &gOpts.verbose, "0", 0, 0, NULL, "display additional diagnostic information" },
-
-	{ "CORE CONFIGURATION OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "readconfig", NULL, rc_bool, &gOpts.readconfig, "0", 0, 0, NULL, "enable loading of configuration files" },
-
-	{ "INPUT DEVICE OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "mouse", NULL, rc_bool, &gOpts.mouse, "0", 0, 0, NULL, "enable mouse input" },
-	{ "joystick", NULL, rc_bool, &gOpts.joystick, "0", 0, 0, NULL, "enable joystick input" },
-	{ "lightgun", NULL, rc_bool, &gOpts.lightgun, "0", 0, 0, NULL, "enable lightgun input" },
-	{ "dual_lightgun", NULL, rc_bool, &gOpts.dual_lightgun, "0", 0, 0, NULL, "enable dual lightgun input" },
-	{ "offscreen_reload", NULL, rc_bool, &gOpts.offscreen_reload, "0", 0, 0, NULL, "offscreen shots reload" },
-	{ "steadykey", NULL, rc_bool, &gOpts.steadykey, "0", 0, 0, NULL, "enable steadykey support" },
-	{ "keyboard_leds", NULL, rc_bool, &gOpts.keyboard_leds, "1", 0, 0, NULL, "enable keyboard LED emulation" },
-	{ "led_mode", NULL, rc_string, &gOpts.led_mode, "ps/2", 0, 0, NULL, "LED mode (PS/2|USB)" },
-	{ "a2d_deadzone", NULL, rc_float, &gOpts.a2d_deadzone, "0.3", 0.0, 1.0, NULL, "minimal analog value for digital input" },
-	{ "ctrlr", NULL, rc_string, &gOpts.ctrlr, "Standard", 0, 0, NULL, "preconfigure for specified controller" },
-#ifdef USE_JOY_MOUSE_MOVE
-	{ "stickpoint", NULL, rc_bool, &gOpts.stickpoint, "0", 0, 0, NULL, "enable pointing stick input" },
-#endif /* USE_JOY_MOUSE_MOVE */
-#ifdef JOYSTICK_ID
-	{ "joyid1", NULL, rc_int, &gOpts.joyid1, "0", 0, 0, NULL, "set joystick ID (Player1)" },
-	{ "joyid2", NULL, rc_int, &gOpts.joyid2, "1", 0, 0, NULL, "set joystick ID (Player2)" },
-	{ "joyid3", NULL, rc_int, &gOpts.joyid3, "2", 0, 0, NULL, "set joystick ID (Player3)" },
-	{ "joyid4", NULL, rc_int, &gOpts.joyid4, "3", 0, 0, NULL, "set joystick ID (Player4)" },
-	{ "joyid5", NULL, rc_int, &gOpts.joyid5, "4", 0, 0, NULL, "set joystick ID (Player5)" },
-	{ "joyid6", NULL, rc_int, &gOpts.joyid6, "5", 0, 0, NULL, "set joystick ID (Player6)" },
-	{ "joyid7", NULL, rc_int, &gOpts.joyid7, "6", 0, 0, NULL, "set joystick ID (Player7)" },
-	{ "joyid8", NULL, rc_int, &gOpts.joyid8, "7", 0, 0, NULL, "set joystick ID (Player8)" },
-#endif /* JOYSTICK_ID */
-	{ "paddle_device", NULL, rc_string, &gOpts.paddle_device, "keyboard", 0, 0, NULL, "enable (keyboard|mouse|joystsick) if a paddle control is present" },
-	{ "adstick_device", NULL, rc_string, &gOpts.adstick_device, "keyboard", 0, 0, NULL, "enable (keyboard|mouse|joystsick) if an analog joystick control is present" },
-	{ "pedal_device", NULL, rc_string, &gOpts.pedal_device, "keyboard", 0, 0, NULL, "enable (keyboard|mouse|joystsick) if a pedal control is present" },
-	{ "dial_device", NULL, rc_string, &gOpts.dial_device, "keyboard", 0, 0, NULL, "enable (keyboard|mouse|joystsick) if a dial control is present" },
-	{ "trackball_device", NULL, rc_string, &gOpts.trackball_device, "keyboard", 0, 0, NULL, "enable (keyboard|mouse|joystsick) if a trackball control is present" },
-	{ "lightgun_device", NULL, rc_string, &gOpts.lightgun_device, "keyboard", 0, 0, NULL, "enable (keyboard|mouse|joystsick) if a lightgun control is present" },
-	{ "digital", NULL, rc_string, &gOpts.digital, "none", 0, 0, NULL, "mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])" },
-
-	{ "PERFORMANCE OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "autoframeskip", NULL, rc_bool, &gOpts.autoframeskip, "1", 0, 0, NULL, "enable automatic frameskip selection" },
-	{ "frameskip", NULL, rc_int, &gOpts.frameskip, "0", 0, 12, NULL, "set frameskip to fixed value, 0-12 (autoframeskip must be disabled)" },
-	{ "throttle", NULL, rc_bool, &gOpts.throttle, "1", 0, 0, NULL, "enable throttling to keep game running in sync with real time" },
-	{ "sleep", NULL, rc_bool, &gOpts.sleep, "1", 0, 0, NULL, "enable sleeping, which gives time back to other applications when idle" },
-	{ "rdtsc", NULL, rc_bool, &gOpts.rdtsc, "0", 0, 0, NULL, "use the RDTSC instruction for timing; faster but may result in uneven performance" },
-	{ "priority", NULL, rc_int, &gOpts.priority, "0", -15, 1, NULL, "thread priority for the main game thread; range from -15 to 1" },
-
-	{ "MISC VIDEO OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "frames_to_run", NULL, rc_int, &gOpts.frames_to_run, "0", 0, 0, NULL, "number of frames to run before automatically exiting" },
-	{ "mngwrite", NULL, rc_string, &gOpts.mngwrite, NULL, 0, 0, NULL, "optional filename to write a MNG movie of the current session" },
-
-	{ "GLOBAL VIDEO OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "window", NULL, rc_bool, &gOpts.window, "0", 0, 0, NULL, "enable window mode; otherwise, full screen mode is assumed" },
-	{ "maximize", NULL, rc_bool, &gOpts.maximize, "1", 0, 0, NULL, "default to maximized windows; otherwise, windows will be minimized" },
-	{ "numscreens", NULL, rc_int, &gOpts.numscreens, "1", 1, 4, NULL, "number of screens to create; usually, you want just one" },
-	{ "extra_layout", NULL, rc_string, &gOpts.extra_layout, NULL, 0, 0, NULL, "name of an extra layout file to parse" },
-
-	{ "PER-WINDOW VIDEO OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "screen0", NULL, rc_string, &gOpts.screen0, "auto", 0, 0, NULL, "explicit name of the first screen; 'auto' here will try to make a best guess" },
-	{ "aspect0", NULL, rc_string, &gOpts.aspect0, "auto", 0, 0, NULL, "aspect ratio of the first screen; 'auto' here will try to make a best guess" },
-	{ "resolution0", NULL, rc_string, &gOpts.resolution0, "auto", 0, 0, NULL, "preferred resolution of the first screen; format is <width>x<height>[x<depth>[@<refreshrate>]] or 'auto'" },
-	{ "view0", NULL, rc_string, &gOpts.view0, "auto", 0, 0, NULL, "preferred view for the first screen" },
-	{ "screen1", NULL, rc_string, &gOpts.screen1, "auto", 0, 0, NULL, "explicit name of the second screen; 'auto' here will try to make a best guess" },
-	{ "aspect1", NULL, rc_string, &gOpts.aspect1, "auto", 0, 0, NULL, "aspect ratio of the second screen; 'auto' here will try to make a best guess" },
-	{ "resolution1", NULL, rc_string, &gOpts.resolution1, "auto", 0, 0, NULL, "preferred resolution of the second screen; format is <width>x<height>[x<depth>[@<refreshrate>]] or 'auto'" },
-	{ "view1", NULL, rc_string, &gOpts.view1, "auto", 0, 0, NULL, "preferred view for the second screen" },
-	{ "screen2", NULL, rc_string, &gOpts.screen2, "auto", 0, 0, NULL, "explicit name of the third screen; 'auto' here will try to make a best guess" },
-	{ "aspect2", NULL, rc_string, &gOpts.aspect2, "auto", 0, 0, NULL, "aspect ratio of the third screen; 'auto' here will try to make a best guess" },
-	{ "resolution2", NULL, rc_string, &gOpts.resolution2, "auto", 0, 0, NULL, "preferred resolution of the third screen; format is <width>x<height>[x<depth>[@<refreshrate>]] or 'auto'" },
-	{ "view2", NULL, rc_string, &gOpts.view2, "auto", 0, 0, NULL, "preferred view for the third screen" },
-	{ "screen3", NULL, rc_string, &gOpts.screen3, "auto", 0, 0, NULL, "explicit name of the fourth screen; 'auto' here will try to make a best guess" },
-	{ "aspect3", NULL, rc_string, &gOpts.aspect3, "auto", 0, 0, NULL, "aspect ratio of the fourth screen; 'auto' here will try to make a best guess" },
-	{ "resolution3", NULL, rc_string, &gOpts.resolution3, "auto", 0, 0, NULL, "preferred resolution of the fourth screen; format is <width>x<height>[x<depth>[@<refreshrate>]] or 'auto'" },
-	{ "view3", NULL, rc_string, &gOpts.view3, "auto", 0, 0, NULL, "preferred view for the fourth screen" },
-
-	{ "DIRECTX VIDEO OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-#ifndef NEW_RENDER
-	{ "ddraw", NULL, rc_bool, &gOpts.ddraw, "1", 0, 0, NULL, "enable using DirectDraw for video rendering (preferred)" },
-#endif
-	{ "direct3d", NULL, rc_bool, &gOpts.direct3d, "1", 0, 0, NULL, "enable using Direct3D 9 for video rendering if available (preferred)" },
-	{ "d3dversion", NULL, rc_int, &gOpts.d3dversion, "9", 8, 9, NULL, "specify the preferred Direct3D version (8 or 9)" },
-	{ "waitvsync", NULL, rc_bool, &gOpts.waitvsync, "0", 0, 0, NULL, "enable waiting for the start of VBLANK before flipping screens; reduces tearing effects" },
-	{ "syncrefresh", NULL, rc_bool, &gOpts.syncrefresh, "0", 0, 0, NULL, "enable using the start of VBLANK for throttling instead of the game time" },
-	{ "triplebuffer", NULL, rc_bool, &gOpts.triplebuffer, "0", 0, 0, NULL, "enable triple buffering" },
-	{ "switchres", NULL, rc_bool, &gOpts.switchres, "0", 0, 0, NULL, "enable resolution switching" },
-	{ "filter", NULL, rc_bool, &gOpts.filter, "1", 0, 0, NULL, "enable bilinear filtering on screen output" },
-	{ "full_screen_gamma", NULL, rc_float, &gOpts.full_screen_gamma, "1.0", 0.0, 4.0, NULL, "gamma value in full screen mode" },
-#ifndef NEW_RENDER
-	{ "hwstretch", NULL, rc_bool, &gOpts.hwstretch, "1", 0, 0, NULL, "(dd) stretch video using the hardware" },
-   	{ "cleanstretch", NULL, rc_string, &gOpts.cleanstretch, "auto", 0, 0, NULL, "stretch to integer ratios" },
-	{ "refresh", NULL, rc_int, &gOpts.refresh, "0", 0, 0, NULL, "set specific monitor refresh rate" },
-	{ "scanlines", NULL, rc_bool, &gOpts.scanlines, "0", 0, 0, NULL, "emulate win_old_scanlines" },
-	{ "switchbpp", NULL, rc_bool, &gOpts.switchbpp, "1", 0, 0, NULL, "switch color depths to best fit" },
-	{ "keepaspect", NULL, rc_bool, &gOpts.keepaspect, "1", 0, 0, NULL, "enforce aspect ratio" },
-	{ "matchrefresh", NULL, rc_bool, &gOpts.matchrefresh, "0", 0, 0, NULL, "attempt to match the game's refresh rate" },
-	{ "effect", NULL, rc_string, &gOpts.effect, "none", 0, 0, NULL, "specify the blitting effect" },
-	{ "gamma", NULL, rc_float, &gOpts.gamma , "1.0", 0.5, 2.0, NULL, "gamma correction"},
-    
-	{ "zoom", NULL, rc_int, &gOpts.zoom, "2", 1, 8, NULL, "force specific zoom level" },
-	{ "d3dtexmanage", NULL, rc_bool, &gOpts.d3dtexmanage, "1", 0, 0, NULL, "Use DirectX texture management" },
-    
-	{ "d3dfeedback", NULL, rc_int, &gOpts.d3dfeedback, "0", 0, 100, NULL, "feedback strength" },
-	{ "d3dscan", NULL, rc_int, &gOpts.d3dscan, "100", 0, 100, NULL, "scanline intensity" },
-	{ "d3deffectrotate", NULL, rc_bool, &gOpts.d3deffectrotate, "1", 0, 0, NULL, "enable rotation of effects for rotated games" },
-	{ "d3dprescale", NULL, rc_string, &gOpts.d3dprescale, "auto", 0, 0, NULL, "enable prescale" },
-	{ "d3deffect", NULL, rc_string, &gOpts.d3deffect, "none", 0, 0, NULL, "specify the blitting effects" },
-#endif
-
-	{ NULL,	NULL, rc_end, NULL, NULL, 0, 0,	NULL, NULL }
-};
-
-static struct rc_option rc_mamew_opts[] =
-{
-	{ "PATH AND DIRECTORY OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "rompath", NULL, rc_string, &settings.rompath, "roms", 0, 0, NULL, "path to ROMsets and hard disk images" },
-	{ "samplepath", NULL, rc_string, &settings.samplepath, "samples", 0, 0, NULL, "path to samplesets" },
-	{ "inipath", NULL, rc_string, &settings.inipath, "ini", 0, 0, NULL, "path to ini files" },
-	{ "cfg_directory", NULL, rc_string, &settings.cfg_directory, "cfg", 0, 0, NULL, "directory to save configurations" },
-	{ "nvram_directory", NULL, rc_string, &settings.nvram_directory, "nvram", 0, 0, NULL, "directory to save nvram contents" },
-	{ "memcard_directory", NULL, rc_string, &settings.memcard_directory, "memcard", 0, 0, NULL, "directory to save memory card contents" },
-	{ "input_directory", NULL, rc_string, &settings.input_directory, "inp", 0, 0, NULL, "directory to save input device logs" },
-	{ "hiscore_directory", NULL, rc_string, &settings.hiscore_directory, "hi", 0, 0, NULL, "directory to save hiscores" },
-	{ "state_directory", NULL, rc_string, &settings.state_directory, "sta", 0, 0, NULL, "directory to save states" },
-	{ "artwork_directory", NULL, rc_string, &settings.artwork_directory, "artwork", 0, 0, NULL, "path to artwork files" },
-	{ "snapshot_directory", NULL, rc_string, &settings.snapshot_directory, "snap", 0, 0, NULL, "directory to save screenshots" },
-	{ "diff_directory", NULL, rc_string, &settings.diff_directory, "diff", 0, 0, NULL, "directory to save hard drive image difference files" },
-	{ "ctrlr_directory", NULL, rc_string, &settings.ctrlr_directory, "ctrlr", 0, 0, NULL, "path to controller definitions" },
-	{ "comment_directory", NULL, rc_string, &settings.comment_directory, "comments", 0, 0, NULL, "directory to save debugger comments" },
-#ifdef USE_IPS
-	{ "ips_directory", NULL, rc_string, &settings.ips_directory, "ips", 0, 0, NULL, "directory for ips files" },
-#endif /* USE_IPS */
-	{ "lang_directory", NULL, rc_string, &settings.lang_directory, "lang", 0, 0, NULL, "directory for localized data files" },
-	{ "cheat_file", NULL, rc_string, &settings.cheat_file, "cheat.dat", 0, 0, NULL, "cheat filename" },
-	{ "history_file", NULL, rc_string, &settings.history_file, "history.dat", 0, 0, NULL, "history database name" },
-#ifdef STORY_DATAFILE
-	{ "story_file", NULL, rc_string, &settings.story_file, "story.dat", 0, 0, NULL, "story database name" },
-#endif /* STORY_DATAFILE */
-	{ "mameinfo_file", NULL, rc_string, &settings.mameinfo_file, "mameinfo.dat", 0, 0, NULL, "mameinfo database name" },
-	{ "hiscore_file", NULL, rc_string, &settings.hiscore_file, "hiscore.dat", 0, 0, NULL, "high score database name" },
-
-	{ NULL, NULL, rc_link, rc_game_opts, NULL, 0,	0, NULL, NULL },
 
 #ifdef UI_COLOR_DISPLAY
-	{ "CORE PALETTE OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "font_blank", NULL, rc_string, &settings.font_blank, "0,0,0", 0, 0, NULL, "font blank color" },
-	{ "font_normal", NULL, rc_string, &settings.font_normal, "255,255,255", 0, 0, NULL, "font normal color" },
-	{ "font_special", NULL, rc_string, &settings.font_special, "247,203,0", 0, 0, NULL, "font special color" },
-	{ "system_background", NULL, rc_string, &settings.system_background, "0,0,128", 0, 0, NULL, "window background color" },
-	{ "system_framemedium", NULL, rc_string, &settings.system_framemedium, "192,192,192", 0, 0, NULL, "window frame color (medium)" },
-	{ "system_framelight", NULL, rc_string, &settings.system_framelight, "224,224,224", 0, 0, NULL, "window frame color (light)" },
-	{ "system_framedark", NULL, rc_string, &settings.system_framedark, "128,128,128", 0, 0, NULL, "window frame color (dark)" },
-	{ "osdbar_framemedium", NULL, rc_string, &settings.osdbar_framemedium, "192,192,192", 0, 0, NULL, "OSD bar color (medium)" },
-	{ "osdbar_framelight", NULL, rc_string, &settings.osdbar_framelight, "224,224,224", 0, 0, NULL, "OSD bar color (light)" },
-	{ "osdbar_framedark", NULL, rc_string, &settings.osdbar_framedark, "128,128,128", 0, 0, NULL, "OSD bar color (dark)" },
-	{ "osdbar_defaultbar", NULL, rc_string, &settings.osdbar_defaultbar, "60,120,240", 0, 0, NULL, "OSD bar color (default)" },
-	{ "button_red", NULL, rc_string, &settings.button_red, "255,64,64", 0, 0, NULL, "button color (red)" },
-	{ "button_yellow", NULL, rc_string, &settings.button_yellow, "255,238,0", 0, 0, NULL, "button color (yellow)" },
-	{ "button_green", NULL, rc_string, &settings.button_green, "0,255,64", 0, 0, NULL, "button color (green)" },
-	{ "button_blue", NULL, rc_string, &settings.button_blue, "0,170,255", 0, 0, NULL, "button color (blue)" },
-	{ "button_purple", NULL, rc_string, &settings.button_purple, "170,0,255", 0, 0, NULL, "button color (purple)" },
-	{ "button_pink", NULL, rc_string, &settings.button_pink, "255,0,170", 0, 0, NULL, "button color (pink)" },
-	{ "button_aqua", NULL, rc_string, &settings.button_aqua, "0,255,204", 0, 0, NULL, "button color (aqua)" },
-	{ "button_silver", NULL, rc_string, &settings.button_silver, "255,0,255", 0, 0, NULL, "button color (silver)" },
-	{ "button_navy", NULL, rc_string, &settings.button_navy, "255,160,0", 0, 0, NULL, "button color (navy)" },
-	{ "button_lime", NULL, rc_string, &settings.button_lime, "190,190,190", 0, 0, NULL, "button color (lime)" },
-	{ "cursor", NULL, rc_string, &settings.cursor, "60,120,240", 0, 0, NULL, "cursor color" },
-#endif /* UI_COLOR_DISPLAY */
-
-	{ "CORE LANGUAGE OPTIONS", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "language", NULL, rc_string, &settings.language, "auto", 0, 0, NULL, "select translation language" },
-	{ "use_lang_list", NULL, rc_bool, &settings.use_lang_list, "1", 0, 0, NULL, "enable/disable local language game list" },
-
-	{ NULL,	NULL, rc_end, NULL, NULL, 0, 0,	NULL, NULL }
-};
-
-static struct rc_option rc_winui_opts[] =
-{
-	{ "Windows UI specific directory options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "flyer_directory", NULL, rc_string, &settings.flyerdir, "flyers", 0, 0, NULL, "directory for flyers" },
-	{ "cabinet_directory", NULL, rc_string, &settings.cabinetdir, "cabinets", 0, 0, NULL, "directory for cabinets" },
-	{ "marquee_directory", NULL, rc_string, &settings.marqueedir, "marquees", 0, 0, NULL, "directory for marquees" },
-	{ "title_directory", NULL, rc_string, &settings.titlesdir, "titles", 0, 0, NULL, "directory for titles" },
-	{ "cpanel_directory", NULL, rc_string, &settings.cpaneldir, "cpanel", 0, 0, NULL, "directory for control panel" },
-	{ "icon_directory", NULL, rc_string, &settings.iconsdir, "icons", 0, 0, NULL, "directory for icons" },
-	{ "bkground_directory", NULL, rc_string, &settings.bgdir, "bkground", 0, 0, NULL, "directory for bkground" },
-	{ "folder_directory", NULL, rc_string, &settings.folderdir, "folders", 0, 0, NULL, "directory for folders-ini" },
-#ifdef USE_VIEW_PCBINFO
-	{ "pcbinfo_directory", NULL, rc_string, &settings.pcbinfodir, "pcb", 0, 0, NULL, "directory for pcb info" },
-#endif /* USE_VIEW_PCBINFO */
-
-	{ "Windows UI specific interface options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "save_version", NULL, rc_string, &rc_dummy_args.save_version, "", 0, 0, NULL, "save version" },
-	{ "reset_gui", NULL, rc_bool, &bResetGUI, "0", 0, 0, NULL, "enable version mismatch warning" },
-	{ "game_check", NULL, rc_bool, &settings.game_check, "1", 0, 0, NULL, "search for new games" },
-	{ "joygui", NULL, rc_bool, &settings.use_joygui, "0", 0, 0, NULL, "allow game selection by a joystick" },
-	{ "keygui", NULL, rc_bool, &settings.use_keygui, "0", 0, 0, NULL, "allow game selection by a keyboard" },
-	{ "broadcast", NULL, rc_bool, &settings.broadcast, "0", 0, 0, NULL, "broadcast selected game to all windows" },
-	{ "random_bg", NULL, rc_bool, &settings.random_bg, "1", 0, 0, NULL, "random select background image" },
-	{ "cycle_screenshot", NULL, rc_int, &settings.cycle_screenshot, "0", 0, 99999, NULL, "cycle screen shot image" },
-	{ "stretch_screenshot_larger", NULL, rc_bool, &settings.stretch_screenshot_larger, "0", 0, 0, NULL, "stretch screenshot larger" },
-	{ "screenshot_bordersize", NULL, rc_int, &settings.screenshot_bordersize, "11", 0, 999, NULL, "screen shot border size" },
-	{ "screenshot_bordercolor", NULL, rc_int, &settings.screenshot_bordercolor, "-1", -1, (UINT)-1, NULL, "screen shot border color" },
-	{ "inherit_filter", NULL, rc_bool, &settings.inherit_filter, "0", 0, 0, NULL, "inheritable filters" },
-	{ "offset_clones", NULL, rc_bool, &settings.offset_clones, "1", 0, 0, NULL, "no offset for clones missing parent in view" },
-	{ "game_caption", NULL, rc_bool, &settings.game_caption, "1", 0, 0, NULL, "show game caption" },
-#ifdef USE_SHOW_SPLASH_SCREEN
-	{ "display_splash_screen", NULL, rc_bool, &settings.display_splash_screen, "0", 0, 0, NULL, "display splash screen on start" },
-#endif /* USE_SHOW_SPLASH_SCREEN */
-
-	{ "Windows UI specific general options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-#ifdef MESS
-	{ "default_system", NULL, rc_string, &settings.default_game, "nes", 0, 0, NULL, "last selected system name" },
-#else
-	{ "default_game", NULL, rc_string, &settings.default_game, "puckman", 0, 0, NULL, "last selected game name" },
-#endif
-	{ "show_toolbar", NULL, rc_bool, &settings.show_toolbar, "1", 0, 0, NULL, "show tool bar" },
-	{ "show_statusbar", NULL, rc_bool, &settings.show_statusbar, "1", 0, 0, NULL, "show status bar" },
-	{ "show_folderlist", NULL, rc_bool, &settings.show_folderlist, "1", 0, 0, NULL, "show folder list" },
-	{ "show_screenshot", NULL, rc_bool, &settings.show_screenshot, "1", 0, 0, NULL, "show image picture" },
-	{ "show_screenshottab", NULL, rc_bool, &settings.show_tabctrl, "1", 0, 0, NULL, "show tab control" },
-	{ "show_tab_flags", NULL, rc_int, &settings.show_tab_flags, "63", 0, 0, NULL, "show tab control flags" },
-	{ "current_tab", NULL, rc_string, &settings.current_tab, "snapshot", 0, 0, NULL, "current image picture" },
-#ifdef STORY_DATAFILE
-	// TAB_ALL = 10
-	{ "datafile_tab", NULL, rc_int, &settings.history_tab, "10", 0, MAX_TAB_TYPES+TAB_SUBTRACT, NULL, "where to show history on tab" },
-#else /* STORY_DATAFILE */
-	// TAB_ALL = 9
-	{ "history_tab", NULL, rc_int, &settings.history_tab, "9", 0, MAX_TAB_TYPES+TAB_SUBTRACT, NULL, "where to show history on tab" },
-#endif /* STORY_DATAFILE */
-	{ "exec_command", NULL, rc_string, &settings.exec_command, NULL, 0, 0, NULL, "execute command line" },
-	{ "exec_wait", NULL, rc_int, &settings.exec_wait, "0", 0, 0, NULL, "execute wait" },
-	{ "hide_mouse", NULL, rc_bool, &settings.hide_mouse, "0", 0, 0, NULL, "hide mouse" },
-	{ "full_screen", NULL, rc_bool, &settings.full_screen, "0", 0, 0, NULL, "full screen" },
-
-	{ "Windows UI specific window position options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "window_x", NULL, rc_int, &settings.area.x, "0", 0, (UINT)-1, NULL, "window left position" },
-	{ "window_y", NULL, rc_int, &settings.area.y, "0", 0, (UINT)-1, NULL, "window top position" },
-	{ "window_width", NULL, rc_int, &settings.area.width, "640", 550, (UINT)-1, NULL, "window width" },
-	{ "window_height", NULL, rc_int, &settings.area.height, "400", 400, (UINT)-1, NULL, "window height" },
-	{ "window_state", NULL, rc_int, &settings.windowstate, "1", 0, 0, NULL, "window state" },
-
-	{ "Windows UI specific list options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "list_mode", NULL, rc_string, &rc_dummy_args.view, "Grouped", 0, 0, ListDecodeString, "view mode" },
-	{ "splitters", NULL, rc_string, &rc_dummy_args.splitter, "150,300", 0, 0, SplitterDecodeString, "splitter position" },
-	/* re-arrange default column_width, column_order, sort_column */
-	{ "column_widths", NULL, rc_string, &rc_dummy_args.column_width, "186,68,84,84,64,88,74,108,60,144,84,60", 0, 0, ColumnDecodeWidths, "column width settings" },
-	{ "column_order", NULL, rc_string, &rc_dummy_args.column_order, "0,2,3,4,5,6,7,8,9,10,11,1", 0, 0, ColumnOrderDecodeString, "column order settings" },
-	{ "column_shown", NULL, rc_string, &rc_dummy_args.column_shown, "1,0,1,1,1,1,1,1,1,1,1,1", 0, 0, ColumnShownDecodeString, "show or hide column settings" },
-	{ "sort_column", NULL, rc_int, &settings.sort_column, "0", 0, COLUMN_MAX-1, NULL, "sort column" },
-	{ "sort_reverse", NULL, rc_bool, &settings.sort_reverse, "0", 0, 0, NULL, "sort descending" },
-	{ "folder_id", NULL, rc_int, &settings.folder_id, "0", 0, (UINT)-1, NULL, "last selected folder id" },
-
-	{ "Windows UI specific list font options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "list_font", NULL, rc_string, &rc_dummy_args.list_font, "-8,0,0,0,400,0,0,0,0,0,0,0,0", 0, 0, FontDecodeString, "game list font size" },
-	{ "list_fontface", NULL, rc_string, &rc_dummy_args.list_fontface, "MS Sans Serif", 0, 0, FontfaceDecodeString, "game list font face" },
-	{ "use_broken_icon", NULL, rc_bool, &settings.use_broken_icon, "1", 0, 0, NULL, "use broken icon for not working games" },
-	{ "font_color", NULL, rc_int, &settings.list_font_color, "-1", -1, (UINT)-1, NULL, "game list font color" },
-	{ "clone_color", NULL, rc_int, &settings.list_clone_color, "8421504", -1, (UINT)-1, NULL, "clone game list font color" },
-	{ "broken_color", NULL, rc_int, &settings.list_broken_color, "202", -1, (UINT)-1, NULL, "broken game list font color" },
-	{ "custom_color", NULL, rc_string, &rc_dummy_args.custom_color, "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0", 0, 0, CusColorDecodeString, "custom colors" },
-
-	{ "Windows UI specific GUI joystick options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "ui_joy_up", NULL, rc_string, &rc_dummy_args.ui_joy_up, "1,JOYCODE_STICK_AXIS,2,JOYCODE_DIR_NEG", 0, 0, JoyInfoDecodeString, "joystick to up" },
-	{ "ui_joy_down", NULL, rc_string, &rc_dummy_args.ui_joy_down, "1,JOYCODE_STICK_AXIS,2,JOYCODE_DIR_POS", 0, 0, JoyInfoDecodeString, "joystick to down" },
-	{ "ui_joy_left", NULL, rc_string, &rc_dummy_args.ui_joy_left, "1,JOYCODE_STICK_AXIS,1,JOYCODE_DIR_NEG", 0, 0, JoyInfoDecodeString, "joystick to left" },
-	{ "ui_joy_right", NULL, rc_string, &rc_dummy_args.ui_joy_right, "1,JOYCODE_STICK_AXIS,1,JOYCODE_DIR_POS", 0, 0, JoyInfoDecodeString, "joystick to right" },
-	{ "ui_joy_start", NULL, rc_string, &rc_dummy_args.ui_joy_start, "1,JOYCODE_STICK_BTN,1,JOYCODE_DIR_BTN", 0, 0, JoyInfoDecodeString, "joystick to start game" },
-	{ "ui_joy_pgup", NULL, rc_string, &rc_dummy_args.ui_joy_pgup, "2,JOYCODE_STICK_AXIS,2,JOYCODE_DIR_NEG", 0, 0, JoyInfoDecodeString, "joystick to page-up" },
-	{ "ui_joy_pgdwn", NULL, rc_string, &rc_dummy_args.ui_joy_pgdwn, "2,JOYCODE_STICK_AXIS,2,JOYCODE_DIR_POS", 0, 0, JoyInfoDecodeString, "joystick to page-down" },
-	{ "ui_joy_home", NULL, rc_string, &rc_dummy_args.ui_joy_home, NULL, 0, 0, JoyInfoDecodeString, "joystick to home" },
-	{ "ui_joy_end", NULL, rc_string, &rc_dummy_args.ui_joy_end, NULL, 0, 0, JoyInfoDecodeString, "joystick to end" },
-	{ "ui_joy_ss_change", NULL, rc_string, &rc_dummy_args.ui_joy_ss_change, "2,JOYCODE_STICK_BTN,3,JOYCODE_DIR_BTN", 0, 0, JoyInfoDecodeString, "joystick to change picture" },
-	{ "ui_joy_history_up", NULL, rc_string, &rc_dummy_args.ui_joy_history_up, "2,JOYCODE_STICK_BTN,4,JOYCODE_DIR_BTN", 0, 0, JoyInfoDecodeString, "joystick to scroll history up" },
-	{ "ui_joy_history_down",NULL, rc_string, &rc_dummy_args.ui_joy_history_down, "2,JOYCODE_STICK_BTN,1,JOYCODE_DIR_BTN", 0, 0, JoyInfoDecodeString, "joystick to scroll history down" },
-	{ "ui_joy_exec", NULL, rc_string, &rc_dummy_args.ui_joy_exec, NULL, 0, 0, JoyInfoDecodeString, "joystick execute commandline" },
-
-	{ "Windows UI specific GUI keyboard options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "ui_key_up", NULL, rc_string, &rc_dummy_args.ui_key_up, "KEYCODE_UP", 0, 0, KeySeqDecodeString, "keyboard to up" },
-	{ "ui_key_down", NULL, rc_string, &rc_dummy_args.ui_key_down, "KEYCODE_DOWN", 0, 0, KeySeqDecodeString, "keyboard to down" },
-	{ "ui_key_left", NULL, rc_string, &rc_dummy_args.ui_key_left, "KEYCODE_LEFT", 0, 0, KeySeqDecodeString, "keyboard to left" },
-	{ "ui_key_right", NULL, rc_string, &rc_dummy_args.ui_key_right, "KEYCODE_RIGHT", 0, 0, KeySeqDecodeString, "keyboard to right" },
-	{ "ui_key_start", NULL, rc_string, &rc_dummy_args.ui_key_start, "KEYCODE_ENTER NOT KEYCODE_LALT", 0, 0, KeySeqDecodeString, "keyboard to start game" },
-	{ "ui_key_pgup", NULL, rc_string, &rc_dummy_args.ui_key_pgup, "KEYCODE_PGUP", 0, 0, KeySeqDecodeString, "keyboard to page-up" },
-	{ "ui_key_pgdwn", NULL, rc_string, &rc_dummy_args.ui_key_pgdwn, "KEYCODE_PGDN", 0, 0, KeySeqDecodeString, "keyboard to page-down" },
-	{ "ui_key_home", NULL, rc_string, &rc_dummy_args.ui_key_home, "KEYCODE_HOME", 0, 0, KeySeqDecodeString, "keyboard to home" },
-	{ "ui_key_end", NULL, rc_string, &rc_dummy_args.ui_key_end, "KEYCODE_END", 0, 0, KeySeqDecodeString, "keyboard to end" },
-	{ "ui_key_ss_change", NULL, rc_string, &rc_dummy_args.ui_key_ss_change, "KEYCODE_LALT KEYCODE_0", 0, 0, KeySeqDecodeString, "keyboard to change picture" },
-	{ "ui_key_history_up", NULL, rc_string, &rc_dummy_args.ui_key_history_up, "KEYCODE_INSERT", 0, 0, KeySeqDecodeString, "keyboard to history up" },
-	{ "ui_key_history_down", NULL, rc_string, &rc_dummy_args.ui_key_history_down, "KEYCODE_DEL", 0, 0, KeySeqDecodeString, "keyboard to history down" },
-
-	{ "ui_key_context_filters", NULL, rc_string, &rc_dummy_args.ui_key_context_filters, "KEYCODE_LCONTROL KEYCODE_F", 0, 0, KeySeqDecodeString, "keyboard to context filters" },
-	{ "ui_key_select_random", NULL, rc_string, &rc_dummy_args.ui_key_select_random, "KEYCODE_LCONTROL KEYCODE_R", 0, 0, KeySeqDecodeString, "keyboard to select random" },
-	{ "ui_key_game_audit", NULL, rc_string, &rc_dummy_args.ui_key_game_audit, "KEYCODE_LALT KEYCODE_A", 0, 0, KeySeqDecodeString, "keyboard to game audit" },
-	{ "ui_key_game_properties", NULL, rc_string, &rc_dummy_args.ui_key_game_properties, "KEYCODE_LALT KEYCODE_ENTER", 0, 0, KeySeqDecodeString, "keyboard to game properties" },
-	{ "ui_key_help_contents", NULL, rc_string, &rc_dummy_args.ui_key_help_contents, "KEYCODE_F1", 0, 0, KeySeqDecodeString, "keyboard to help contents" },
-	{ "ui_key_update_gamelist", NULL, rc_string, &rc_dummy_args.ui_key_update_gamelist, "KEYCODE_F5", 0, 0, KeySeqDecodeString, "keyboard to update game list" },
-	{ "ui_key_view_folders", NULL, rc_string, &rc_dummy_args.ui_key_view_folders, "KEYCODE_LALT KEYCODE_D", 0, 0, KeySeqDecodeString, "keyboard to view folders" },
-	{ "ui_key_view_fullscreen", NULL, rc_string, &rc_dummy_args.ui_key_view_fullscreen, "KEYCODE_F11", 0, 0, KeySeqDecodeString, "keyboard to full screen" },
-	{ "ui_key_view_pagetab", NULL, rc_string, &rc_dummy_args.ui_key_view_pagetab, "KEYCODE_LALT KEYCODE_B", 0, 0, KeySeqDecodeString, "keyboard to view page tab" },
-	{ "ui_key_view_picture_area", NULL, rc_string, &rc_dummy_args.ui_key_view_picture_area, "KEYCODE_LALT KEYCODE_P", 0, 0, KeySeqDecodeString, "keyboard to view picture area" },
-	{ "ui_key_view_status", NULL, rc_string, &rc_dummy_args.ui_key_view_status, "KEYCODE_LALT KEYCODE_S", 0, 0, KeySeqDecodeString, "keyboard to view status" },
-	{ "ui_key_view_toolbars", NULL, rc_string, &rc_dummy_args.ui_key_view_toolbars, "KEYCODE_LALT KEYCODE_T", 0, 0, KeySeqDecodeString, "keyboard to view toolbars" },
-
-	{ "ui_key_view_tab_cabinet", NULL, rc_string, &rc_dummy_args.ui_key_view_tab_cabinet, "KEYCODE_LALT KEYCODE_3", 0, 0, KeySeqDecodeString, "keyboard to view tab cabinet" },
-	{ "ui_key_view_tab_cpanel", NULL, rc_string, &rc_dummy_args.ui_key_view_tab_cpanel, "KEYCODE_LALT KEYCODE_6", 0, 0, KeySeqDecodeString, "keyboard to view tab control panel" },
-	{ "ui_key_view_tab_flyer", NULL, rc_string, &rc_dummy_args.ui_key_view_tab_flyer, "KEYCODE_LALT KEYCODE_2", 0, 0, KeySeqDecodeString, "keyboard to view tab flyer" },
-	{ "ui_key_view_tab_history", NULL, rc_string, &rc_dummy_args.ui_key_view_tab_history, "KEYCODE_LALT KEYCODE_7", 0, 0, KeySeqDecodeString, "keyboard to view tab history" },
-#ifdef STORY_DATAFILE
-	{ "ui_key_view_tab_story", NULL, rc_string, &rc_dummy_args.ui_key_view_tab_story, "KEYCODE_LALT KEYCODE_8", 0, 0, KeySeqDecodeString, "keyboard to view tab story" },
-#endif /* STORY_DATAFILE */
-	{ "ui_key_view_tab_marquee", NULL, rc_string, &rc_dummy_args.ui_key_view_tab_marquee, "KEYCODE_LALT KEYCODE_4", 0, 0, KeySeqDecodeString, "keyboard to view tab marquee" },
-	{ "ui_key_view_tab_screenshot", NULL, rc_string, &rc_dummy_args.ui_key_view_tab_screenshot, "KEYCODE_LALT KEYCODE_1", 0, 0, KeySeqDecodeString, "keyboard to view tab screen shot" },
-	{ "ui_key_view_tab_title", NULL, rc_string, &rc_dummy_args.ui_key_view_tab_title, "KEYCODE_LALT KEYCODE_5", 0, 0, KeySeqDecodeString, "keyboard to view tab title" },
-	{ "ui_key_quit", NULL, rc_string, &rc_dummy_args.ui_key_quit, "KEYCODE_LALT KEYCODE_Q", 0, 0, KeySeqDecodeString, "keyboard to quit application" },
-
-	{ "Windows UI specific folder list hide options", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
-	{ "folder_hide", NULL, rc_string, &rc_dummy_args.ui_hide_folder, NULL, 0, 0, HideFolderDecodeString, "hide selected item in folder list" },
-
-	{FOLDERFLAG_OPT, NULL, rc_use_function, NULL, NULL, 0, 0, FolderFlagDecodeString, "folder list filters settings" },
-
-	{ NULL,	NULL, rc_end, NULL, NULL, 0, 0,	NULL, NULL }
-};
-
 struct ui_palette_assign
 {
 	int code;
@@ -823,6 +495,14 @@ static struct ui_palette_assign ui_palette_tbl[] =
 	{ CURSOR_COLOR,  &settings.cursor },
 	{ MAX_COLORTABLE, NULL }
 };
+#endif /* UI_COLOR_DISPLAY */
+
+
+static char reload_config_msg[] =
+	MAME32NAME
+	" has changed *.ini file directory.\n\n"
+	"Would you like to migrate old configurations to the new directory?";
+
 
 /***************************************************************************
     External functions  
@@ -830,27 +510,26 @@ static struct ui_palette_assign ui_palette_tbl[] =
 
 void OptionsInit()
 {
-	game_variables_type default_variables;
+	driver_variables_type default_variables;
 	int i;
 
-	num_games = GetNumGames();
-	//code_init();
-	settings.show_folder_flags = NewBits(MAX_FOLDERS);
-	SetAllBits(settings.show_folder_flags,TRUE);
+	memset(&settings, 0, sizeof (settings));
+	memset(&global, 0, sizeof (global));
+	memset(&backup, 0, sizeof (backup));
 
-	if (!(rc_core = rc_create()))
-		exit(1);
+	num_drivers = GetNumGames();
+	code_init();
 
-	if (rc_register(rc_core, rc_mamew_opts))
-		exit(1);
+	options_free_entries();
 
-	if (!(rc_game = rc_create()))
-		exit(1);
+	options_create_entry_core();
+	options_get_core(&settings);
+	options_get_driver(&global);
 
-	if (rc_register(rc_game, rc_game_opts))
-		exit(1);
+	options_create_entry_driver();
 
-	global = gOpts;
+	/* Setup default font */
+	GetTranslatedFont(&settings.list_logfont);
 
 	default_variables.play_count  = 0;
 	default_variables.play_time = 0;
@@ -861,17 +540,18 @@ void OptionsInit()
 	default_variables.alt_index = -1;
 
 	/* This allocation should be checked */
-	game_options = (options_type *)malloc(num_games * sizeof(options_type));
-	game_variables = (game_variables_type *)malloc(num_games * sizeof(game_variables_type));
+	driver_options = (options_type *)malloc(num_drivers * sizeof(options_type));
+	driver_variables = (driver_variables_type *)malloc(num_drivers * sizeof(driver_variables_type));
 
-	memset(game_options, 0, num_games * sizeof(options_type));
-	for (i = 0; i < num_games; i++)
-		game_variables[i] = default_variables;
+	memset(driver_options, 0, num_drivers * sizeof(options_type));
+	for (i = 0; i < num_drivers; i++)
+		driver_variables[i] = default_variables;
 
 	build_alt_options();
 	build_default_bios();
 
-	initialize_rc_winui_config();
+	options_create_entry_winui();
+	options_get_winui(&settings);
 
 	// Create Backup
 	CopySettings(&settings, &backup.settings);
@@ -894,159 +574,69 @@ void OptionsExit(void)
 {
 	int i;
 
-	for (i = 0; i < num_games; i++)
-		FreeGameOptions(&game_options[i]);
+	for (i = 0; i < num_drivers; i++)
+		FreeGameOptions(&driver_options[i]);
 
 	for (i = 0; i < num_alt_options; i++)
 		FreeGameOptions(alt_options[i].option);
 
-	free(game_options);
-	free(game_variables);
+	free(driver_options);
+	free(driver_variables);
 	free(alt_options);
 
 	FreeGameOptions(&global);
 	FreeGameOptions(&backup.global);
 
 	FreeSettings(&settings);
+	FreeSettings(&backup.settings);
 
-	free(rc_core);
-	free(rc_game);
-
-	for (i = 0; i < num_games; i++)
-		free(rc_winui[i]->option->dest);
-	free(rc_winui);
-
-	free(folder_flags);
+	options_free_entry_core();
+	options_free_entry_driver();
+	options_free_entry_winui();
 }
 
-// needed to walk the tree
-static void rc_free_strings(struct rc_option *option)
+static void CopySettings(const settings_type *source, settings_type *dest)
 {
-	int i;
-
-	for (i = 0; option[i].type; i++)
-	{
-		switch (option[i].type)
-		{
-		case rc_link:
-			rc_free_strings(option[i].dest);
-			break;
-
-		case rc_string:
-			FreeIfAllocated((char **)option[i].dest);
-			break;
-		}
-	}
+	options_duplicate_settings(source, dest);
 }
 
-// frees the sub-data (strings)
-void FreeGameOptions(options_type *o)
+static void FreeSettings(settings_type *p)
 {
-	gOpts = *o;
-	rc_free_strings(rc_game->option);
-	*o = gOpts;
+	options_free_string_core(p);
+	options_free_string_winui(p);
 }
 
-// needed to walk the tree
-static void rc_duplicate_strings(struct rc_option *option)
-{
-	int i;
-
-	for (i = 0; option[i].type; i++)
-	{
-		char **p;
-
-		switch (option[i].type)
-		{
-		case rc_link:
-			rc_duplicate_strings(option[i].dest);
-			break;
-
-		case rc_string:
-			p = (char **)option[i].dest;
-			if (*p)
-				*p = strdup(*p);
-			break;
-		}
-	}
-}
-
-// performs a "deep" copy--strings in source are allocated and copied in dest
 void CopyGameOptions(const options_type *source, options_type *dest)
 {
-	gOpts = *source;
-	rc_duplicate_strings(rc_game->option);
-	*dest = gOpts;
+	options_duplicate_driver(source, dest);
 }
 
-// needed to walk the tree
-// break *o1 and *o2
-static int rc_compare_strings(struct rc_option *option, options_type *o1, options_type *o2)
+void FreeGameOptions(options_type *o)
 {
-	int i;
-
-	for (i = 0; option[i].type; i++)
-	{
-		char **p;
-		char *s;
-
-		switch (option[i].type)
-		{
-		case rc_link:
-			if (rc_compare_strings(option[i].dest, o1, o2))
-				return 1;
-			break;
-
-		case rc_string:
-			p = (char **)option[i].dest;
-
-			gOpts = *o1;
-			s = *p;
-
-			gOpts = *o2;
-
-			if (s != *p)
-			{
-				if (!s || !*p)
-					return 1;
-
-				if (strcmp(s, *p) != 0)
-					return 1;
-			}
-
-			*p = s;
-			*o2 = gOpts;
-			break;
-		}
-	}
-
-	return 0;
+	options_free_string_driver(o);
 }
 
-BOOL IsOptionEqual(options_type *o1, options_type *o2)
+static BOOL IsOptionEqual(options_type *o1, options_type *o2)
 {
 	options_type opt1, opt2;
 
-	validate_game_option(o1);
-	validate_game_option(o2);
+	validate_driver_option(o1);
+	validate_driver_option(o2);
 
 	opt1 = *o1;
 	opt2 = *o2;
 
-	if (rc_compare_strings(rc_game->option, &opt1, &opt2))
+	if (options_compare_driver(&opt1, &opt2))
 		return FALSE;
 
-	if (memcmp(&opt1, &opt2, sizeof (options_type)) == 0)
-		return TRUE;
-
-	return FALSE;
+	return TRUE;
 }
 
 BOOL GetGameUsesDefaults(int driver_index)
 {
-	assert (0 <= driver_index && driver_index < num_games);
+	assert (0 <= driver_index && driver_index < num_drivers);
 
-	return game_variables[driver_index].use_default;
+	return driver_variables[driver_index].use_default;
 }
 
 BOOL GetFolderUsesDefaults(const char *name)
@@ -1060,9 +650,9 @@ BOOL GetFolderUsesDefaults(const char *name)
 
 void SetGameUsesDefaults(int driver_index, BOOL use_defaults)
 {
-	assert (0 <= driver_index && driver_index < num_games);
+	assert (0 <= driver_index && driver_index < num_drivers);
 
-	game_variables[driver_index].use_default = use_defaults;
+	driver_variables[driver_index].use_default = use_defaults;
 }
 
 void SetFolderUsesDefaults(const char *name, BOOL use_defaults)
@@ -1076,12 +666,12 @@ void SetFolderUsesDefaults(const char *name, BOOL use_defaults)
 
 const char *GetUnifiedFolder(int driver_index)
 {
-	assert (0 <= driver_index && driver_index < num_games);
+	assert (0 <= driver_index && driver_index < num_drivers);
 
-	if (game_variables[driver_index].alt_index == -1)
+	if (driver_variables[driver_index].alt_index == -1)
 		return NULL;
 
-	return alt_options[game_variables[driver_index].alt_index].name;
+	return alt_options[driver_variables[driver_index].alt_index].name;
 }
 
 int GetUnifiedDriver(const char *name)
@@ -1168,14 +758,14 @@ options_type* GetVectorOptions(void)
 
 options_type* GetSourceOptions(int driver_index)
 {
-	assert (0 <= driver_index && driver_index < num_games);
+	assert (0 <= driver_index && driver_index < num_drivers);
 
 	return GetFolderOptions(GetDriverFilename(driver_index));
 }
 
 options_type* GetParentOptions(int driver_index)
 {
-	assert (0 <= driver_index && driver_index < num_games);
+	assert (0 <= driver_index && driver_index < num_drivers);
 
 	if (DriverIsClone(driver_index))
 		return GetGameOptions(DriverParentIndex(driver_index));
@@ -1185,36 +775,36 @@ options_type* GetParentOptions(int driver_index)
 
 options_type * GetGameOptions(int driver_index)
 {
-	assert (0 <= driver_index && driver_index < num_games);
+	assert (0 <= driver_index && driver_index < num_drivers);
 
-	if (game_variables[driver_index].use_default)
+	if (driver_variables[driver_index].use_default)
 	{
 		options_type *opt = GetParentOptions(driver_index);
 #ifdef USE_IPS
 		// HACK: DO NOT INHERIT IPS CONFIGURATION
-		char *ips = game_options[driver_index].ips;
+		char *ips = driver_options[driver_index].ips;
 
-		game_options[driver_index].ips = NULL;
+		driver_options[driver_index].ips = NULL;
 #endif /* USE_IPS */
 
-		// DO NOT OVERRIDE if game name is same as parent
-		if (opt != &game_options[driver_index])
+		// DO NOT OVERRIDE if driver name is same as parent
+		if (opt != &driver_options[driver_index])
 		{
 			// free strings what will be never used now
-			FreeGameOptions(&game_options[driver_index]);
+			FreeGameOptions(&driver_options[driver_index]);
 
-			CopyGameOptions(opt,&game_options[driver_index]);
+			CopyGameOptions(opt,&driver_options[driver_index]);
 		}
 
 #ifdef USE_IPS
-		game_options[driver_index].ips = ips;
+		driver_options[driver_index].ips = ips;
 #endif /* USE_IPS */
 	}
 
-	if (game_variables[driver_index].options_loaded == FALSE)
+	if (driver_variables[driver_index].options_loaded == FALSE)
 		LoadGameOptions(driver_index);
 
-	return &game_options[driver_index];
+	return &driver_options[driver_index];
 }
 
 const game_driver *GetSystemBiosInfo(int bios_index)
@@ -1253,7 +843,7 @@ void SetDefaultBios(int bios_index, const char *value)
 
 void ResetGUI(void)
 {
-	bResetGUI = TRUE;
+	settings.reset_gui = TRUE;
 }
 
 int GetLangcode(void)
@@ -1365,24 +955,24 @@ BOOL GetGameCheck(void)
 	return settings.game_check;
 }
 
-void SetJoyGUI(BOOL use_joygui)
+void SetJoyGUI(BOOL joygui)
 {
-	settings.use_joygui = use_joygui;
+	settings.joygui = joygui;
 }
 
 BOOL GetJoyGUI(void)
 {
-	return settings.use_joygui;
+	return settings.joygui;
 }
 
-void SetKeyGUI(BOOL use_keygui)
+void SetKeyGUI(BOOL keygui)
 {
-	settings.use_keygui = use_keygui;
+	settings.keygui = keygui;
 }
 
 BOOL GetKeyGUI(void)
 {
-	return settings.use_keygui;
+	return settings.keygui;
 }
 
 void SetCycleScreenshot(int cycle_screenshot)
@@ -1536,12 +1126,12 @@ BOOL GetShowStatusBar(void)
 
 void SetShowTabCtrl(BOOL val)
 {
-	settings.show_tabctrl = val;
+	settings.show_screenshottab = val;
 }
 
 BOOL GetShowTabCtrl(void)
 {
-	return settings.show_tabctrl;
+	return settings.show_screenshottab;
 }
 
 void SetShowToolBar(BOOL val)
@@ -1581,22 +1171,28 @@ const char *GetDefaultGame(void)
 
 void SetWindowArea(AREA *area)
 {
-	memcpy(&settings.area, area, sizeof(AREA));
+	settings.window_x = area->x;
+	settings.window_y = area->y;
+	settings.window_width = area->width;
+	settings.window_height = area->height;
 }
 
 void GetWindowArea(AREA *area)
 {
-	memcpy(area, &settings.area, sizeof(AREA));
+	area->x = settings.window_x;
+	area->y = settings.window_y;
+	area->width = settings.window_width;
+	area->height = settings.window_height;
 }
 
 void SetWindowState(UINT state)
 {
-	settings.windowstate = state;
+	settings.window_state = state;
 }
 
 UINT GetWindowState(void)
 {
-	return settings.windowstate;
+	return settings.window_state;
 }
 
 void SetCustomColor(int iIndex, COLORREF uColor)
@@ -1624,61 +1220,61 @@ BOOL GetUseBrokenIcon(void)
 
 void SetListFont(LOGFONTA *font)
 {
-	memcpy(&settings.list_font, font, sizeof(LOGFONTA));
+	memcpy(&settings.list_logfont, font, sizeof(LOGFONTA));
 }
 
 void GetListFont(LOGFONTA *font)
 {
-	memcpy(font, &settings.list_font, sizeof(LOGFONTA));
+	memcpy(font, &settings.list_logfont, sizeof(LOGFONTA));
 }
 
 void SetListFontColor(COLORREF uColor)
 {
-	if (settings.list_font_color == GetSysColor(COLOR_WINDOWTEXT))
-		settings.list_font_color = (COLORREF)-1;
+	if (settings.font_color == GetSysColor(COLOR_WINDOWTEXT))
+		settings.font_color = (COLORREF)-1;
 	else
-		settings.list_font_color = uColor;
+		settings.font_color = uColor;
 }
 
 COLORREF GetListFontColor(void)
 {
-	if (settings.list_font_color == (COLORREF)-1)
+	if (settings.font_color == (COLORREF)-1)
 		return (GetSysColor(COLOR_WINDOWTEXT));
 
-	return settings.list_font_color;
+	return settings.font_color;
 }
 
 void SetListCloneColor(COLORREF uColor)
 {
-	if (settings.list_clone_color == GetSysColor(COLOR_WINDOWTEXT))
-		settings.list_clone_color = (COLORREF)-1;
+	if (settings.clone_color == GetSysColor(COLOR_WINDOWTEXT))
+		settings.clone_color = (COLORREF)-1;
 	else
-		settings.list_clone_color = uColor;
+		settings.clone_color = uColor;
 }
 
 COLORREF GetListCloneColor(void)
 {
-	if (settings.list_clone_color == (COLORREF)-1)
+	if (settings.clone_color == (COLORREF)-1)
 		return (GetSysColor(COLOR_WINDOWTEXT));
 
-	return settings.list_clone_color;
+	return settings.clone_color;
 
 }
 
 void SetListBrokenColor(COLORREF uColor)
 {
-	if (settings.list_broken_color == GetSysColor(COLOR_WINDOWTEXT))
-		settings.list_broken_color = (COLORREF)-1;
+	if (settings.broken_color == GetSysColor(COLOR_WINDOWTEXT))
+		settings.broken_color = (COLORREF)-1;
 	else
-		settings.list_broken_color = uColor;
+		settings.broken_color = uColor;
 }
 
 COLORREF GetListBrokenColor(void)
 {
-	if (settings.list_broken_color == (COLORREF)-1)
+	if (settings.broken_color == (COLORREF)-1)
 		return (GetSysColor(COLOR_WINDOWTEXT));
 
-	return settings.list_broken_color;
+	return settings.broken_color;
 
 }
 
@@ -1709,15 +1305,26 @@ BOOL AllowedToSetShowTab(int tab, BOOL show)
 
 int GetHistoryTab(void)
 {
+#ifdef STORY_DATAFILE
+	return settings.datafile_tab;
+#else /* STORY_DATAFILE */
 	return settings.history_tab;
+#endif /* STORY_DATAFILE */
 }
 
 void SetHistoryTab(int tab, BOOL show)
 {
+#ifdef STORY_DATAFILE
+	if (show)
+		settings.datafile_tab = tab;
+	else
+		settings.datafile_tab = TAB_NONE;
+#else /* STORY_DATAFILE */
 	if (show)
 		settings.history_tab = tab;
 	else
 		settings.history_tab = TAB_NONE;
+#endif /* STORY_DATAFILE */
 }
 
 void SetColumnWidths(int width[])
@@ -1725,7 +1332,7 @@ void SetColumnWidths(int width[])
 	int i;
 
 	for (i = 0; i < COLUMN_MAX; i++)
-		settings.column_width[i] = width[i];
+		settings.column_widths[i] = width[i];
 }
 
 void GetColumnWidths(int width[])
@@ -1733,19 +1340,19 @@ void GetColumnWidths(int width[])
 	int i;
 
 	for (i = 0; i < COLUMN_MAX; i++)
-		width[i] = settings.column_width[i];
+		width[i] = settings.column_widths[i];
 }
 
 void SetSplitterPos(int splitterId, int pos)
 {
 	if (splitterId < GetSplitterCount())
-		settings.splitter[splitterId] = pos;
+		settings.splitters[splitterId] = pos;
 }
 
 int  GetSplitterPos(int splitterId)
 {
 	if (splitterId < GetSplitterCount())
-		return settings.splitter[splitterId];
+		return settings.splitters[splitterId];
 
 	return -1; /* Error */
 }
@@ -1871,7 +1478,7 @@ void SetIniDir(const char* path)
 	{
 		int i;
 
-		for (i = 0 ; i < num_games; i++)
+		for (i = 0 ; i < num_drivers; i++)
 			LoadGameOptions(i);
 	}
 
@@ -1997,66 +1604,66 @@ void SetMemcardDir(const char* path)
 
 const char* GetFlyerDir(void)
 {
-	return settings.flyerdir;
+	return settings.flyer_directory;
 }
 
 void SetFlyerDir(const char* path)
 {
-	FreeIfAllocated(&settings.flyerdir);
+	FreeIfAllocated(&settings.flyer_directory);
 
 	if (path != NULL)
-		settings.flyerdir = strdup(path);
+		settings.flyer_directory = strdup(path);
 }
 
 const char* GetCabinetDir(void)
 {
-	return settings.cabinetdir;
+	return settings.cabinet_directory;
 }
 
 void SetCabinetDir(const char* path)
 {
-	FreeIfAllocated(&settings.cabinetdir);
+	FreeIfAllocated(&settings.cabinet_directory);
 
 	if (path != NULL)
-		settings.cabinetdir = strdup(path);
+		settings.cabinet_directory = strdup(path);
 }
 
 const char* GetMarqueeDir(void)
 {
-	return settings.marqueedir;
+	return settings.marquee_directory;
 }
 
 void SetMarqueeDir(const char* path)
 {
-	FreeIfAllocated(&settings.marqueedir);
+	FreeIfAllocated(&settings.marquee_directory);
 
 	if (path != NULL)
-		settings.marqueedir = strdup(path);
+		settings.marquee_directory = strdup(path);
 }
 
 const char* GetTitlesDir(void)
 {
-	return settings.titlesdir;
+	return settings.title_directory;
 }
 
 void SetTitlesDir(const char* path)
 {
-	FreeIfAllocated(&settings.titlesdir);
+	FreeIfAllocated(&settings.title_directory);
 
 	if (path != NULL)
-		settings.titlesdir = strdup(path);
+		settings.title_directory = strdup(path);
 }
 
 const char * GetControlPanelDir(void)
 {
-	return settings.cpaneldir;
+	return settings.cpanel_directory;
 }
 
 void SetControlPanelDir(const char *path)
 {
-	FreeIfAllocated(&settings.cpaneldir);
+	FreeIfAllocated(&settings.cpanel_directory);
 	if (path != NULL)
-		settings.cpaneldir = strdup(path);
+		settings.cpanel_directory = strdup(path);
 }
 
 const char* GetDiffDir(void)
@@ -2115,41 +1722,41 @@ void SetLangDir(const char* path)
 
 const char* GetIconsDir(void)
 {
-	return settings.iconsdir;
+	return settings.icon_directory;
 }
 
 void SetIconsDir(const char* path)
 {
-	FreeIfAllocated(&settings.iconsdir);
+	FreeIfAllocated(&settings.icon_directory);
 
 	if (path != NULL)
-		settings.iconsdir = strdup(path);
+		settings.icon_directory = strdup(path);
 }
 
 const char* GetBgDir(void)
 {
-	return settings.bgdir;
+	return settings.bkground_directory;
 }
 
 void SetBgDir(const char* path)
 {
-	FreeIfAllocated(&settings.bgdir);
+	FreeIfAllocated(&settings.bkground_directory);
 
 	if (path != NULL)
-		settings.bgdir = strdup(path);
+		settings.bkground_directory = strdup(path);
 }
 
 const char *GetFolderDir(void)
 {
-	return settings.folderdir;
+	return settings.folder_directory;
 }
 
 void SetFolderDir(const char *path)
 {
-	FreeIfAllocated(&settings.folderdir);
+	FreeIfAllocated(&settings.folder_directory);
 
 	if (path != NULL)
-		settings.folderdir = strdup(path);
+		settings.folder_directory = strdup(path);
 }
 
 const char* GetCheatFile(void)
@@ -2196,15 +1803,15 @@ void SetStoryFile(const char* path)
 #ifdef USE_VIEW_PCBINFO
 const char* GetPcbinfoDir(void)
 {
-	return settings.pcbinfodir;
+	return settings.pcbinfo_directory;
 }
 
 void SetPcbinfoDir(const char* path)
 {
-	FreeIfAllocated(&settings.pcbinfodir);
+	FreeIfAllocated(&settings.pcbinfo_directory);
 
 	if (path != NULL)
-		settings.pcbinfodir = mame_strdup(path);
+		settings.pcbinfo_directory = mame_strdup(path);
 }
 #endif /* USE_VIEW_PCBINFO */
 
@@ -2236,15 +1843,15 @@ void SetHiscoreFile(const char* path)
 
 void ResetGameOptions(int driver_index)
 {
-	assert(0 <= driver_index && driver_index < num_games);
+	assert(0 <= driver_index && driver_index < num_drivers);
 
 	// make sure it's all loaded up.
 	GetGameOptions(driver_index);
 
-	if (!game_variables[driver_index].use_default)
+	if (!driver_variables[driver_index].use_default)
 	{
-		FreeGameOptions(&game_options[driver_index]);
-		game_variables[driver_index].use_default = TRUE;
+		FreeGameOptions(&driver_options[driver_index]);
+		driver_variables[driver_index].use_default = TRUE;
 		
 		// this will delete the custom file
 		SaveGameOptions(driver_index);
@@ -2276,7 +1883,7 @@ void ResetAllGameOptions(void)
 {
 	int i;
 
-	for (i = 0; i < num_games; i++)
+	for (i = 0; i < num_drivers; i++)
 		ResetGameOptions(i);
 
 	for (i = 0; i < num_alt_options; i++)
@@ -2285,37 +1892,37 @@ void ResetAllGameOptions(void)
 
 int GetRomAuditResults(int driver_index)
 {
-	assert(0 <= driver_index && driver_index < num_games);
+	assert(0 <= driver_index && driver_index < num_drivers);
 
-	return game_variables[driver_index].rom_audit_results;
+	return driver_variables[driver_index].rom_audit_results;
 }
 
 void SetRomAuditResults(int driver_index, int audit_results)
 {
-	assert(0 <= driver_index && driver_index < num_games);
+	assert(0 <= driver_index && driver_index < num_drivers);
 
-	game_variables[driver_index].rom_audit_results = audit_results;
+	driver_variables[driver_index].rom_audit_results = audit_results;
 }
 
 int GetSampleAuditResults(int driver_index)
 {
-	assert(0 <= driver_index && driver_index < num_games);
+	assert(0 <= driver_index && driver_index < num_drivers);
 
-	return game_variables[driver_index].samples_audit_results;
+	return driver_variables[driver_index].samples_audit_results;
 }
 
 void SetSampleAuditResults(int driver_index, int audit_results)
 {
-	assert(0 <= driver_index && driver_index < num_games);
+	assert(0 <= driver_index && driver_index < num_drivers);
 
-	game_variables[driver_index].samples_audit_results = audit_results;
+	driver_variables[driver_index].samples_audit_results = audit_results;
 }
 
 void IncrementPlayCount(int driver_index)
 {
-	assert(0 <= driver_index && driver_index < num_games);
+	assert(0 <= driver_index && driver_index < num_drivers);
 
-	game_variables[driver_index].play_count++;
+	driver_variables[driver_index].play_count++;
 
 	// maybe should do this
 	//SavePlayCount(driver_index);
@@ -2323,62 +1930,62 @@ void IncrementPlayCount(int driver_index)
 
 int GetPlayCount(int driver_index)
 {
-	assert(0 <= driver_index && driver_index < num_games);
+	assert(0 <= driver_index && driver_index < num_drivers);
 
-	return game_variables[driver_index].play_count;
+	return driver_variables[driver_index].play_count;
 }
 
 void ResetPlayCount(int driver_index)
 {
 	int i = 0;
-	assert(driver_index < num_games);
+	assert(driver_index < num_drivers);
 	if ( driver_index < 0 )
 	{
-		//All games
-		for ( i= 0; i< num_games; i++ )
-			game_variables[i].play_count = 0;
+		//All drivers
+		for ( i= 0; i< num_drivers; i++ )
+			driver_variables[i].play_count = 0;
 	}
 	else
 	{
-		game_variables[driver_index].play_count = 0;
+		driver_variables[driver_index].play_count = 0;
 	}
 }
 
 void ResetPlayTime(int driver_index)
 {
 	int i = 0;
-	assert(driver_index < num_games);
+	assert(driver_index < num_drivers);
 	if ( driver_index < 0 )
 	{
-		//All games
-		for ( i= 0; i< num_games; i++ )
-			game_variables[i].play_time = 0;
+		//All drivers
+		for ( i= 0; i< num_drivers; i++ )
+			driver_variables[i].play_time = 0;
 	}
 	else
 	{
-		game_variables[driver_index].play_time = 0;
+		driver_variables[driver_index].play_time = 0;
 	}
 }
 
 int GetPlayTime(int driver_index)
 {
-	assert(0 <= driver_index && driver_index < num_games);
+	assert(0 <= driver_index && driver_index < num_drivers);
 
-	return game_variables[driver_index].play_time;
+	return driver_variables[driver_index].play_time;
 }
 
 void IncrementPlayTime(int driver_index, int playtime)
 {
-	assert(0 <= driver_index && driver_index < num_games);
-	game_variables[driver_index].play_time += playtime;
+	assert(0 <= driver_index && driver_index < num_drivers);
+	driver_variables[driver_index].play_time += playtime;
 }
 
 void GetTextPlayTime(int driver_index, char *buf)
 {
 	int hour, minute, second;
-	int temp = game_variables[driver_index].play_time;
+	int temp = driver_variables[driver_index].play_time;
 
-	assert(0 <= driver_index && driver_index < num_games);
+	assert(0 <= driver_index && driver_index < num_drivers);
 
 	hour = temp / 3600;
 	temp = temp - 3600*hour;
@@ -2765,16 +2372,20 @@ char* GetVersionString(void)
 
 void SetFolderFlags(const char *folderName, DWORD dwFlags)
 {
-	SaveFolderFlags(folderName, dwFlags);
+	set_folder_flag(&settings.folder_flag, folderName, dwFlags);
 }
 
 DWORD GetFolderFlags(const char *folderName)
 {
 	int i;
 
-	for (i = 0; i < num_folder_flags; i++)
-		if (!strcmp(folderName, folder_flags[i].name))
-			return folder_flags[i].flags;
+	if (settings.folder_flag.entry == NULL)
+		return 0;
+
+	for (i = 0; i < settings.folder_flag.num; i++)
+		if (settings.folder_flag.entry[i].name
+		 && strcmp(folderName, settings.folder_flag.entry[i].name) == 0)
+			return settings.folder_flag.entry[i].flags;
 
 	return 0;
 }
@@ -2783,15 +2394,15 @@ void SaveGameOptions(int driver_index)
 {
 	int i;
 
-	assert (0 <= driver_index && driver_index < num_games);
+	assert (0 <= driver_index && driver_index < num_drivers);
 
-	rc_save_game_config(driver_index);
+	options_save_driver_config(driver_index);
 
-	for (i = 0; i < num_games; i++)
+	for (i = 0; i < num_drivers; i++)
 		if (DriverParentIndex(i) == driver_index)
 		{
-			game_variables[i].use_default = TRUE;
-			game_variables[i].options_loaded = FALSE;
+			driver_variables[i].use_default = TRUE;
+			driver_variables[i].options_loaded = FALSE;
 		}
 }
 
@@ -2799,22 +2410,22 @@ static void InvalidateGameOptionsInDriver(const char *name)
 {
 	int i;
 
-	for (i = 0; i < num_games; i++)
+	for (i = 0; i < num_drivers; i++)
 	{
-		if (game_variables[i].alt_index != -1)
+		if (driver_variables[i].alt_index != -1)
 			continue;
 
 		if (strcmp(GetDriverFilename(i), name) == 0)
 		{
-			game_variables[i].use_default = TRUE;
-			game_variables[i].options_loaded = FALSE;
+			driver_variables[i].use_default = TRUE;
+			driver_variables[i].options_loaded = FALSE;
 		}
 	}
 }
 
 static void SaveAltOptions(alt_options_type *alt_option)
 {
-	rc_save_alt_config(alt_option);
+	options_save_alt_config(alt_option);
 
 	if (alt_option->option == GetVectorOptions())
 	{
@@ -2845,7 +2456,7 @@ void SaveDefaultOptions(void)
 {
 	int i;
 
-	rc_save_default_config();
+	options_save_default_config();
 
 	for (i = 0; i < num_alt_options; i++)
 	{
@@ -2853,10 +2464,10 @@ void SaveDefaultOptions(void)
 		alt_options[i].variable->options_loaded = FALSE;
 	}
 
-	for (i = 0; i < num_games; i++)
+	for (i = 0; i < num_drivers; i++)
 	{
-		game_variables[i].use_default = TRUE;
-		game_variables[i].options_loaded = FALSE;
+		driver_variables[i].use_default = TRUE;
+		driver_variables[i].options_loaded = FALSE;
 	}
 
 	/* default option has bios tab. so save default bios */
@@ -2870,7 +2481,7 @@ void SaveDefaultOptions(void)
 			FreeIfAllocated(&alt_options[i].option->bios);
 			alt_options[i].option->bios = bios;
 
-			rc_save_alt_config(&alt_options[i]);
+			options_save_alt_config(&alt_options[i]);
 		}
 }
 
@@ -2878,14 +2489,14 @@ void SaveOptions(void)
 {
 	int i;
 
-	rc_save_winui_config();
-	rc_save_default_config();
+	options_save_winui_config();
+	options_save_default_config();
 
-	for (i = 0; i < num_games; i++)
-		rc_save_game_config(i);
+	for (i = 0; i < num_drivers; i++)
+		options_save_driver_config(i);
 
 	for (i = 0; i < num_alt_options; i++)
-		rc_save_alt_config(&alt_options[i]);
+		options_save_alt_config(&alt_options[i]);
 }
 
 /***************************************************************************
@@ -2969,7 +2580,7 @@ static void build_default_bios(void)
 {
 	int i;
 
-	for (i = 0; i < num_games; i++)
+	for (i = 0; i < num_drivers; i++)
 	{
 		if (drivers[i]->bios)
 		{
@@ -3003,7 +2614,7 @@ static void build_default_bios(void)
 static void build_alt_options(void)
 {
 	options_type *pOpts;
-	game_variables_type *pVars;
+	driver_variables_type *pVars;
 	int i;
 
 	alt_options = (alt_options_type *)malloc(alt_options_len * sizeof (alt_options_type));
@@ -3014,17 +2625,17 @@ static void build_alt_options(void)
 
 	regist_alt_option("Vector");
 
-	for (i = 0; i < num_games; i++)
+	for (i = 0; i < num_drivers; i++)
 		regist_alt_option(GetDriverFilename(i));
 
 	pOpts = (options_type *)malloc(num_alt_options * sizeof (options_type));
-	pVars = (game_variables_type *)malloc(num_alt_options * sizeof (game_variables_type));
+	pVars = (driver_variables_type *)malloc(num_alt_options * sizeof (driver_variables_type));
 
 	if (!pOpts || !pVars)
 		exit(0);
 
 	memset(pOpts, 0, num_alt_options * sizeof (options_type));
-	memset(pVars, 0, num_alt_options * sizeof (game_variables_type));
+	memset(pVars, 0, num_alt_options * sizeof (driver_variables_type));
 
 	for (i = 0; i < num_alt_options; i++)
 	{
@@ -3037,7 +2648,7 @@ static void build_alt_options(void)
 		alt_options[i].driver_index = -1;
 	}
 
-	for (i = 0; i < num_games; i++)
+	for (i = 0; i < num_drivers; i++)
 	{
 		const char *src = GetDriverFilename(i);
 		int n = bsearch_alt_option(src);
@@ -3047,11 +2658,11 @@ static void build_alt_options(void)
 	}
 }
 
-static void  unify_alt_options(void)
+static void unify_alt_options(void)
 {
 	int i;
 
-	for (i = 0; i < num_games; i++)
+	for (i = 0; i < num_drivers; i++)
 	{
 		char buf[16];
 		int n;
@@ -3063,93 +2674,11 @@ static void  unify_alt_options(void)
 
 		dprintf("Unify %s", drivers[i]->name);
 
-		game_variables[i].alt_index = n;
-		alt_options[n].option = &game_options[i];
-		alt_options[n].variable = &game_variables[i];
+		driver_variables[i].alt_index = n;
+		alt_options[n].option = &driver_options[i];
+		alt_options[n].variable = &driver_variables[i];
 		alt_options[n].driver_index = i;
 	}
-}
-
-static int initialize_rc_winui_config(void)
-{
-	static char unknown[3];
-	static struct rc_option flag_opts[] =
-	{
-		{ "%s_playcount", NULL, rc_int, NULL, "0", 0, (UINT32)-1, NULL, "Play Counts" },
-		{ "%s_play_time", NULL, rc_int, NULL, "0", 0, (UINT32)-1, NULL, "Play Time" },
-		{ "%s_rom_audit", NULL, rc_int, NULL, unknown, -1, 5, NULL, "Has Roms" },
-		{ "%s_samples_audit", NULL, rc_int, NULL, unknown, -1, 5, NULL, "Has Samples" },
-		{ NULL,	NULL, rc_end, NULL, NULL, 0, 0,	NULL, NULL }
-	};
-	struct rc_option *rc;
-	int i, j;
-
-#define REGIST_GAME_OPT(n, item)			\
-	rc[n].name = buf;				\
-	rc[n].dest = &game_variables[i].item;		\
-	buf += strlen(buf) + 1;
-
-#define NUM_FLAG_OPTS	(sizeof flag_opts / sizeof *flag_opts)
-
-	sprintf(unknown, "%d", UNKNOWN);
-
-	rc_winui = (struct rc_struct **)malloc(sizeof(struct rc_struct *) * (num_games + 1));
-	if (!rc_winui)
-		exit(0);
-
-	if (!(rc_winui[num_games] = rc_create()))
-		exit(0);
-
-	if (rc_register(rc_winui[num_games], rc_winui_opts))
-		exit(0);
-
-	SetLangcode(settings.langcode);
-	SetUseLangList(UseLangList());
-
-	/* Setup default font */
-	GetTranslatedFont(&settings.list_font);
-
-	for (i = 0; i < num_games; i++)
-	{
-		char work[NUM_FLAG_OPTS * 32];
-		char *buf;
-		size_t name_size;
-
-		if (!(rc_winui[i] = rc_create()))
-			exit(0);
-
-		name_size = 0;
-
-		for (j = 0; j < NUM_FLAG_OPTS; j++)
-		{
-			if (flag_opts[j].name == NULL)
-				break;
-			sprintf(work + name_size, flag_opts[j].name, drivers[i]->name);
-			name_size += strlen(work + name_size) + 1;
-		}
-
-		buf = malloc(sizeof flag_opts + name_size);
-		if (!buf)
-			exit(0);
-
-		rc = (struct rc_option *)buf;
-		buf += sizeof flag_opts;
-
-		memcpy(buf, work, name_size);
-
-		for (j = 0; j < NUM_FLAG_OPTS; j++)
-			rc[j] = flag_opts[j];
-
-		REGIST_GAME_OPT(0, play_count);
-		REGIST_GAME_OPT(1, play_time);
-		REGIST_GAME_OPT(2, rom_audit_results);
-		REGIST_GAME_OPT(3, samples_audit_results);
-
-		if (rc_register(rc_winui[i], rc))
-			exit(0);
-	}
-
-	return 0;
 }
 
 static const char *get_base_config_directory(void)
@@ -3168,268 +2697,7 @@ static const char *get_base_config_directory(void)
 	return path;
 }
 
-static int rc_load_winui_config(void)
-{
-	const char *filename;
-	char buf[1024];
-	mame_file *file;
-	int i = num_games;
-	int line = 0;
-
-	SetCorePathList(FILETYPE_INI, settings.inipath);
-	filename = strlower(WINUI_INI);
-
-	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 0)))
-		return 0;
-
-	FreeIfAllocated(&rc_dummy_args.save_version);
-	rc_dummy_args.save_version = strdup("(unknown)");
-
-	while (mame_fgets(buf, sizeof buf, file))
-	{
-		struct rc_option *option = NULL;
-		char *name, *tmp, *arg = NULL;
-		int last;
-
-		line ++;
-
-		/* get option name */
-		if (!(name = strtok(buf, " \t\r\n")))
-			continue;
-		if (name[0] == '#')
-			continue;
-
-		/* get complete rest of line */
-		arg = strtok(NULL, "\r\n");
-
-		/* ignore white space */
-		for (; (*arg == '\t' || *arg == ' '); arg++)
-			;
-
-		/* deal with quotations */
-		if (arg[0] == '"')
-			arg = strtok(arg, "\"");
-		else if (arg[0] == '\'')
-			arg = strtok(arg, "'");
-		else
-			arg = strtok(arg, " \t\r\n");
-
-		if (!arg)
-		{
-			fprintf(stderr,
-				_WINDOWS("error: %s requires an argument, on line %d of file: %s\n"),
-				name, line, filename);
-				continue;
-		}
-
-		last = i;
-		for (; i <= num_games; i++)
-			if ((option = rc_get_option(rc_winui[i], name)) != NULL)
-				break;
-
-		if (!option)
-			for (i = 0; i < last; i++)
-				if ((option = rc_get_option(rc_winui[i], name)) != NULL)
-					break;
-
-		if (!option)
-		{
-			fprintf(stderr, _WINDOWS("error: unknown option %s, on line %d of file: %s\n"),
-				name, line, filename);
-			i = last;
-			continue;
-		}
-		else if ((tmp = strtok(NULL, " \t\r\n")) && (tmp[0] != '#') )
-		{
-			fprintf(stderr,
-				_WINDOWS("error: trailing garbage: \"%s\" on line: %d of file: %s\n"),
-				tmp, line, filename);
-		}
-		else if (!rc_set_option3(option, arg, 1))
-			continue;
-
-		fprintf(stderr, _WINDOWS("   ignoring line\n"));
-	}
-
-	mame_fclose(file);
-
-	return 0;
-}
-
-static int rc_save_winui_config(void)
-{
-	const char *filename;
-	mame_file *file;
-	int i;
-
-        mkdir(settings.inipath);
-	SetCorePathList(FILETYPE_INI, settings.inipath);
-	filename = strlower(WINUI_INI);
-
-	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 1)))
-		return 0;
-
-	FreeIfAllocated(&rc_dummy_args.save_version);
-	rc_dummy_args.save_version = strdup(GetVersionString());
-
-	ColumnOrderEncodeString();
-	ColumnShownEncodeString();
-	ColumnEncodeWidths();
-	CusColorEncodeString();
-	SplitterEncodeString();
-	ListEncodeString();
-	FontEncodeString();
-	FontfaceEncodeString();
-	HideFolderEncodeString();
-	JoyInfoEncodeString();
-	KeySeqEncodeString();
-
-	osd_rc_write(rc_winui[num_games], file, filename);
-
-	rc_write_folder_flags(file);
-
-	for (i = 0; i < num_games; i++)
-	{
-		if ((game_variables[i].rom_audit_results == UNKNOWN)
-		 && (game_variables[i].samples_audit_results == UNKNOWN)
-		 && (game_variables[i].play_count == 0))
-			continue;
-
-		osd_rc_write(rc_winui[i], file, drivers[i]->description);
-	}
-
-	mame_fclose(file);
-
-	return 0;
-}
-
-static int rc_write_folder_flags(mame_file *file)
-{
-	int found = 0;
-	int i;
-
-	mame_fprintf(file, "### %s ###\r\n", _UI("Windows UI specific folder list filters options"));
-
-	for (i = 0; i < num_folder_flags; i++)
-		if (folder_flags[i].name[0] != '\0')
-		{
-			found = 1;
-			mame_fprintf(file, "%-21s   ", FOLDERFLAG_OPT);
-			mame_fprintf(file, "\"%s,%ld\"\r\n", folder_flags[i].name, folder_flags[i].flags);
-		}
-
-	if (!found)
-		mame_fprintf(file, "# %-19s   <NULL> (not set)\r\n", FOLDERFLAG_OPT);
-
-	mame_fprintf(file, "\r\n");
-
-	return 0;
-}
-
-static int rc_load_default_config(void)
-{
-	char filename[_MAX_PATH];
-	mame_file *file;
-	int retval;
-
-	SetCorePathList(FILETYPE_INI, get_base_config_directory());
-	strcpy(filename, MAME_INI);
-
-	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 0)))
-		return 0;
-
-	sprintf(filename, "%s", MAME_INI);
-
-	gOpts = global;
-	retval = osd_rc_read(rc_core, file, filename, 1, 1);
-	global = gOpts;
-
-	mame_fclose(file);
-
-	LanguageDecodeString();
-
-	return retval;
-}
-
-static int rc_save_default_config(void)
-{
-	char filename[_MAX_PATH];
-	mame_file *file;
-	int retval;
-
-	gOpts = global;
-	validate_game_option(&gOpts);
-	LanguageEncodeString();
-
-	SetCorePathList(FILETYPE_INI, get_base_config_directory());
-	strcpy(filename, strlower(MAME_INI));
-
-	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 1)))
-		return -1;
-
-	retval = osd_rc_write(rc_core, file, filename);
-
-	mame_fclose(file);
-
-	return retval;
-}
-
-static void validate_game_option(options_type *opt)
-{
-	if (!strcmp(opt->resolution0, "0x0x0@0"))
-	{
-		FreeIfAllocated(&opt->resolution0);
-		opt->resolution0 = strdup("auto");
-	}
-
-	if (DirectDraw_GetNumDisplays() < 2)
-		FreeIfAllocated(&opt->screen0);
-}
-
-static int rc_game_is_changed(struct rc_option *option, void *param)
-{
-	int offset = (UINT8 *)option->dest - (UINT8 *)&gOpts;
-	void *compare = (UINT8 *)param + offset;
-	int retval = 0;
-
-	if (offset < 0 || offset >= sizeof (gOpts))
-	{
-		retval = 1;
-	}
-	else
-	{
-		switch (option->type)
-		{
-		case rc_string:
-#ifdef USE_IPS
-			// HACK: DO NOT INHERIT IPS CONFIGURATION
-			if (option->dest == &gOpts.ips)
-				return (gOpts.ips != NULL);
-#endif /* USE_IPS */
-			if (*(char **)option->dest == *(char **)compare)
-				retval = 0;
-			else if (!*(char **)option->dest || !*(char **)compare)
-				retval = 1;
-			else
-				retval = strcmp(*(char **)option->dest, *(char **)compare);
-			break;
-		case rc_bool:
-		case rc_int:
-			retval = (*(int *)option->dest) - (*(int *)compare);
-			break;
-		case rc_float:
-			retval = memcmp(option->dest, compare, sizeof (float));
-			break;
-		}
-	}
-
-	//if (retval)
-	//	dprintf("%s", option->name);
-
-	return retval;
-}
-
-static options_type *update_game_use_default(int driver_index)
+static options_type *update_driver_use_default(int driver_index)
 {
 	options_type *opt = GetParentOptions(driver_index);
 #ifdef USE_IPS
@@ -3437,98 +2705,24 @@ static options_type *update_game_use_default(int driver_index)
 	char *ips;
 #endif /* USE_IPS */
 
-	if (opt == &game_options[driver_index])
+	if (opt == &driver_options[driver_index])
 		return NULL;
 
 #ifdef USE_IPS
-	ips = game_options[driver_index].ips;
-	game_options[driver_index].ips = NULL;
+	ips = driver_options[driver_index].ips;
+	driver_options[driver_index].ips = NULL;
 #endif /* USE_IPS */
 
-	game_variables[driver_index].use_default = IsOptionEqual(&game_options[driver_index], opt);
+	driver_variables[driver_index].use_default = IsOptionEqual(&driver_options[driver_index], opt);
 
 #ifdef USE_IPS
-	if (game_variables[driver_index].use_default && ips)
+	if (driver_variables[driver_index].use_default && ips)
 		dprintf("%s: use_default with ips", drivers[driver_index]->name);
 
-	game_options[driver_index].ips = ips;
+	driver_options[driver_index].ips = ips;
 #endif /* USE_IPS */
 
 	return opt;
-}
-
-static int rc_load_game_config(int driver_index)
-{
-	char filename[_MAX_PATH];
-	mame_file *file;
-	int retval;
-	int alt_index = game_variables[driver_index].alt_index;
-
-	if (alt_index != -1)
-		return rc_load_alt_config(&alt_options[alt_index]);
-
-	game_variables[driver_index].options_loaded = TRUE;
-	game_variables[driver_index].use_default = TRUE;
-	SetCorePathList(FILETYPE_INI, settings.inipath);
-	sprintf(filename, "%s.ini", drivers[driver_index]->name);
-
-	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 0)))
-		return 0;
-
-	gOpts = game_options[driver_index];
-	retval = osd_rc_read(rc_game, file, filename, 1, 1);
-	game_options[driver_index] = gOpts;
-
-	update_game_use_default(driver_index);
-	mame_fclose(file);
-
-	return retval;
-}
-
-static int rc_save_game_config(int driver_index)
-{
-	char filename[_MAX_PATH];
-	mame_file *file;
-	int retval;
-	options_type *parent;
-	int alt_index = game_variables[driver_index].alt_index;
-
-	if (game_variables[driver_index].options_loaded == FALSE)
-		return 0;
-
-	if (alt_index != -1)
-		return rc_save_alt_config(&alt_options[alt_index]);
-
-	parent = update_game_use_default(driver_index);
-	if (parent == NULL)
-		return 0;
-
-#ifdef USE_IPS
-	// HACK: DO NOT INHERIT IPS CONFIGURATION
-	if (game_variables[driver_index].use_default && !game_options[driver_index].ips)
-#else /* USE_IPS */
-	if (game_variables[driver_index].use_default)
-#endif /* USE_IPS */
-	{
-		sprintf(filename, "%s\\%s.ini", settings.inipath, drivers[driver_index]->name);
-		unlink(filename);
-		return 0;
-	}
-
-	SetCorePathList(FILETYPE_INI, settings.inipath);
-	strcpy(filename, strlower(drivers[driver_index]->name));
-	strcat(filename, ".ini");
-
-	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 1)))
-		return -1;
-
-	gOpts = game_options[driver_index];
-	retval = osd_rc_write_changes(rc_game, file, drivers[driver_index]->description,
-	                              rc_game_is_changed, parent);
-
-	mame_fclose(file);
-
-	return retval;
 }
 
 static options_type *update_alt_use_default(alt_options_type *alt_option)
@@ -3566,7 +2760,532 @@ static options_type *update_alt_use_default(alt_options_type *alt_option)
 	return opt;
 }
 
-static int rc_load_alt_config(alt_options_type *alt_option)
+static void validate_resolution(char **p)
+{
+	if (strcmp(*p, "0x0x0@0") == 0)
+	{
+		FreeIfAllocated(p);
+		*p = strdup("auto");
+	}
+}
+
+static void validate_driver_option(options_type *opt)
+{
+	validate_resolution(&opt->resolution0);
+	validate_resolution(&opt->resolution1);
+	validate_resolution(&opt->resolution2);
+	validate_resolution(&opt->resolution3);
+
+	//if (DirectDraw_GetNumDisplays() < 2)
+	//	FreeIfAllocated(&opt->screen);
+}
+
+static void set_folder_flag(f_flag *flag, const char *folderName, DWORD dwFlags)
+{
+	int i;
+
+	if (flag->entry == NULL)
+	{
+		flag->entry = malloc(ALLOC_FOLDERFLAG * sizeof(*flag->entry));
+		if (!flag->entry)
+		{
+			dprintf("error: malloc failed in set_folder_flag\n");
+			return;
+		}
+
+		flag->num = ALLOC_FOLDERFLAG;
+		memset(flag->entry, 0, flag->num * sizeof(*flag->entry));
+	}
+
+	for (i = 0; i < flag->num; i++)
+		if (flag->entry[i].name
+		 && strcmp(flag->entry[i].name, folderName) == 0)
+		{
+			if (dwFlags == 0)
+			{
+				free(flag->entry[i].name);
+				flag->entry[i].name = NULL;
+			}
+			else
+				flag->entry[i].flags = dwFlags;
+
+			return;
+		}
+
+	if (dwFlags == 0)
+		return;
+
+	for (i = 0; i < flag->num; i++)
+		if (flag->entry[i].name == NULL)
+			break;
+
+	if (i == flag->num)
+	{
+		f_flag_entry *tmp;
+
+		tmp = realloc(flag->entry, (flag->num + ALLOC_FOLDERFLAG) * sizeof(*tmp));
+		if (!tmp)
+		{
+			dprintf("error: realloc failed in set_folder_flag\n");
+			return;
+		}
+
+		flag->entry = tmp;
+		memset(tmp + flag->num, 0, ALLOC_FOLDERFLAG * sizeof(*tmp));
+		flag->num += ALLOC_FOLDERFLAG;
+	}
+
+	flag->entry[i].name = strdup(folderName);
+	flag->entry[i].flags = dwFlags;
+}
+
+static void free_folder_flag(f_flag *flag)
+{
+	int i;
+
+	for (i = 0; i < flag->num; i++)
+		FreeIfAllocated(&flag->entry[i].name);
+
+	free(flag->entry);
+	flag->entry = NULL;
+	flag->num = 0;
+}
+
+static void LoadGameOptions(int driver_index)
+{
+	assert (0 <= driver_index && driver_index < num_drivers);
+
+	options_load_driver_config(driver_index);
+}
+
+static void LoadAltOptions(alt_options_type *alt_option)
+{
+	options_load_alt_config(alt_option);
+}
+
+static void LoadDefaultOptions(void)
+{
+	options_load_default_config();
+}
+
+static void LoadOptions(void)
+{
+	LoadDefaultOptions();
+	options_load_winui_config();
+	SetLangcode(settings.langcode);
+	SetUseLangList(UseLangList());
+
+#if 0
+	if (!settings.reset_gui)
+	{
+		static char oldInfoMsg[400] = 
+MAME32NAME " has detected outdated configuration data.\n\n\
+The detected configuration data is from Version %s of " MAME32NAME ".\n\
+The current version is %s. It is recommended that the\n\
+configuration is set to the new defaults.\n\n\
+Would you like to use the new configuration?";
+
+		char *current_version;
+		const char *save_version = settings.save_version;
+
+		current_version = GetVersionString();
+
+		if (save_version && *save_version && strcmp(save_version, current_version) != 0)
+		{
+			char msg[400];
+			sprintf(msg,_UI(oldInfoMsg), save_version, current_version);
+			if (MessageBox(0, _Unicode(msg), _Unicode(_UI("Version Mismatch")), MB_YESNO | MB_ICONQUESTION) == IDYES)
+				settings.reset_gui = TRUE;
+		}
+	}
+#endif
+
+	if (settings.reset_gui)
+	{
+		FreeSettings(&settings);
+		CopySettings(&backup.settings, &settings);
+		SetLangcode(settings.langcode);
+		SetUseLangList(UseLangList());
+	}
+
+	settings.reset_gui = FALSE;
+}
+
+
+//============================================================
+
+static void *options_core;	// all options
+static void *options_driver;	// all options except fileio, palette, and language 
+static void *options_winui;	// only GUI related
+
+const options_entry winui_opts[] =
+{
+	{ NULL,                          NULL,                         OPTION_HEADER,     "PATH AND DIRECTORY OPTIONS"},
+	{ "flyer_directory",             "flyers",                     0,                 "directory for flyers"},
+	{ "cabinet_directory",           "cabinets",                   0,                 "directory for cabinets"},
+	{ "marquee_directory",           "marquees",                   0,                 "directory for marquees"},
+	{ "title_directory",             "titles",                     0,                 "directory for titles"},
+	{ "cpanel_directory",            "cpanel",                     0,                 "directory for control panel"},
+	{ "icon_directory",              "icons",                      0,                 "directory for icons"},
+	{ "bkground_directory",          "bkground",                   0,                 "directory for bkground"},
+	{ "folder_directory",            "folders",                    0,                 "directory for folders-ini"},
+#ifdef USE_VIEW_PCBINFO
+	{ "pcbinfo_directory",           "pcb",                        0,                 "directory for pcb info"},
+#endif /* USE_VIEW_PCBINFO */
+
+	{ NULL,                          NULL,                         OPTION_HEADER,     "INTERFACE OPTIONS"},
+	{ "save_version",                NULL,                         0,                 "save version"},
+	{ "reset_gui",                   "0",                          OPTION_BOOLEAN,    "enable version mismatch warning"},
+	{ "game_check",                  "1",                          OPTION_BOOLEAN,    "search for new games"},
+	{ "joygui",                      "0",                          OPTION_BOOLEAN,    "allow game selection by a joystick"},
+	{ "keygui",                      "0",                          OPTION_BOOLEAN,    "allow game selection by a keyboard"},
+	{ "broadcast",                   "0",                          OPTION_BOOLEAN,    "broadcast selected game to all windows"},
+	{ "random_bg",                   "1",                          OPTION_BOOLEAN,    "random select background image"},
+	{ "cycle_screenshot",            "0",                          0,                 "cycle screen shot image"},
+	{ "stretch_screenshot_larger",   "0",                          OPTION_BOOLEAN,    "stretch screenshot larger"},
+	{ "screenshot_bordersize",       "11",                         0,                 "screen shot border size"},
+	{ "screenshot_bordercolor",      "-1",                         0,                 "screen shot border color"},
+	{ "inherit_filter",              "0",                          OPTION_BOOLEAN,    "inheritable filters"},
+	{ "offset_clones",               "1",                          OPTION_BOOLEAN,    "no offset for clones missing parent in view"},
+	{ "game_caption",                "1",                          OPTION_BOOLEAN,    "show game caption"},
+#ifdef USE_SHOW_SPLASH_SCREEN
+	{ "display_splash_screen",       "0",                          OPTION_BOOLEAN,    "display splash screen on start"},
+#endif /* USE_SHOW_SPLASH_SCREEN */
+
+	{ NULL,                          NULL,                         OPTION_HEADER,     "GENERAL OPTIONS"},
+#ifdef MESS
+	{ "default_system",              "nes",                        0,                 "last selected system name"},
+#else
+	{ "default_game",                "puckman",                    0,                 "last selected game name"},
+#endif
+	{ "show_toolbar",                "1",                          OPTION_BOOLEAN,    "show tool bar"},
+	{ "show_statusbar",              "1",                          OPTION_BOOLEAN,    "show status bar"},
+	{ "show_folderlist",             "1",                          OPTION_BOOLEAN,    "show folder list"},
+	{ "show_screenshot",             "1",                          OPTION_BOOLEAN,    "show image picture"},
+	{ "show_screenshottab",          "1",                          OPTION_BOOLEAN,    "show tab control"},
+	{ "show_tab_flags",              "63",                         0,                 "show tab control flags"},
+	{ "current_tab",                 "snapshot",                   0,                 "current image picture"},
+#ifdef STORY_DATAFILE
+	// TAB_ALL = 10
+	{ "datafile_tab",                "10",                         0,                 "where to show history on tab"},
+#else /* STORY_DATAFILE */
+	// TAB_ALL = 9
+	{ "history_tab",                 "9",                          0,                 "where to show history on tab"},
+#endif /* STORY_DATAFILE */
+	{ "exec_command",                NULL,                         0,                 "execute command line"},
+	{ "exec_wait",                   "0",                          0,                 "execute wait"},
+	{ "hide_mouse",                  "0",                          OPTION_BOOLEAN,    "hide mouse"},
+	{ "full_screen",                 "0",                          OPTION_BOOLEAN,    "full screen"},
+
+	{ NULL,                          NULL,                         OPTION_HEADER,     "WINDOW POSITION OPTIONS"},
+	{ "window_x",                    "0",                          0,                 "window left position"},
+	{ "window_y",                    "0",                          0,                 "window top position"},
+	{ "window_width",                "640",                        0,                 "window width"},
+	{ "window_height",               "400",                        0,                 "window height"},
+	{ "window_state",                "1",                          0,                 "window state"},
+
+	{ NULL,                          NULL,                         OPTION_HEADER,     "LISTVIEW OPTIONS"},
+	{ "list_mode",                   "Grouped",                    0,                 "view mode"},
+	{ "splitters",                   "150,300",                    0,                 "splitter position"},
+	{ "column_widths",               "186,68,84,84,64,88,74,108,60,144,84,60", 0,     "column width settings"},
+	{ "column_order",                "0,2,3,4,5,6,7,8,9,10,11,1",  0,                 "column order settings"},
+	{ "column_shown",                "1,0,1,1,1,1,1,1,1,1,1,1",    0,                 "show or hide column settings"},
+	{ "sort_column",                 "0",                          0,                 "sort column"},
+	{ "sort_reverse",                "0",                          OPTION_BOOLEAN,    "sort descending"},
+	{ "folder_id",                   "0",                          0,                 "last selected folder id"},
+	{ "use_broken_icon",             "1",                          OPTION_BOOLEAN,    "use broken icon for not working games"},
+
+	{ NULL,                          NULL,                         OPTION_HEADER,     "LIST FONT OPTIONS"},
+	{ "list_font",                   "-8,0,0,0,400,0,0,0,0,0,0,0,0", 0,               "game list font size"},
+	{ "list_fontface",               "MS Sans Serif",              0,                 "game list font face"},
+	{ "font_color",                  "-1",                         0,                 "game list font color"},
+	{ "clone_color",                 "8421504",                    0,                 "clone game list font color"},
+	{ "broken_color",                "202",                        0,                 "broken game list font color"},
+	{ "custom_color",                "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0", 0,            "custom colors"},
+
+	{ NULL,                          NULL,                         OPTION_HEADER,     "FOLDER LIST HIDE OPTIONS"},
+	{ "folder_hide",                 NULL,                         0,                 "hide selected item in folder list"},
+	{ "folder_flag",                 NULL,                         0,                 "folder list filters settings" },
+
+	{ NULL,                          NULL,                         OPTION_HEADER,     "GUI JOYSTICK OPTIONS"},
+	{ "ui_joy_up",                   "1,JOYCODE_STICK_AXIS,2,JOYCODE_DIR_NEG", 0,     "joystick to up"},
+	{ "ui_joy_down",                 "1,JOYCODE_STICK_AXIS,2,JOYCODE_DIR_POS", 0,     "joystick to down"},
+	{ "ui_joy_left",                 "1,JOYCODE_STICK_AXIS,1,JOYCODE_DIR_NEG", 0,     "joystick to left"},
+	{ "ui_joy_right",                "1,JOYCODE_STICK_AXIS,1,JOYCODE_DIR_POS", 0,     "joystick to right"},
+	{ "ui_joy_start",                "1,JOYCODE_STICK_BTN,1,JOYCODE_DIR_BTN", 0,      "joystick to start game"},
+	{ "ui_joy_pgup",                 "2,JOYCODE_STICK_AXIS,2,JOYCODE_DIR_NEG", 0,     "joystick to page-up"},
+	{ "ui_joy_pgdwn",                "2,JOYCODE_STICK_AXIS,2,JOYCODE_DIR_POS", 0,     "joystick to page-down"},
+	{ "ui_joy_home",                 NULL,                         0,                 "joystick to home"},
+	{ "ui_joy_end",                  NULL,                         0,                 "joystick to end"},
+	{ "ui_joy_ss_change",            "2,JOYCODE_STICK_BTN,3,JOYCODE_DIR_BTN", 0,      "joystick to change picture"},
+	{ "ui_joy_history_up",           "2,JOYCODE_STICK_BTN,4,JOYCODE_DIR_BTN", 0,      "joystick to scroll history up"},
+	{ "ui_joy_history_down",         "2,JOYCODE_STICK_BTN,1,JOYCODE_DIR_BTN", 0,      "joystick to scroll history down"},
+	{ "ui_joy_exec",                 NULL,                         0,                 "joystick execute commandline"},
+
+	{ NULL,                          NULL,                         OPTION_HEADER,     "GUI KEYBOARD OPTIONS"},
+	{ "ui_key_up",                   "KEYCODE_UP",                 0,                 "keyboard to up"},
+	{ "ui_key_down",                 "KEYCODE_DOWN",               0,                 "keyboard to down"},
+	{ "ui_key_left",                 "KEYCODE_LEFT",               0,                 "keyboard to left"},
+	{ "ui_key_right",                "KEYCODE_RIGHT",              0,                 "keyboard to right"},
+	{ "ui_key_start",                "KEYCODE_ENTER NOT KEYCODE_LALT", 0,             "keyboard to start game"},
+	{ "ui_key_pgup",                 "KEYCODE_PGUP",               0,                 "keyboard to page-up"},
+	{ "ui_key_pgdwn",                "KEYCODE_PGDN",               0,                 "keyboard to page-down"},
+	{ "ui_key_home",                 "KEYCODE_HOME",               0,                 "keyboard to home"},
+	{ "ui_key_end",                  "KEYCODE_END",                0,                 "keyboard to end"},
+	{ "ui_key_ss_change",            "KEYCODE_LALT KEYCODE_0",     0,                 "keyboard to change picture"},
+	{ "ui_key_history_up",           "KEYCODE_INSERT",             0,                 "keyboard to history up"},
+	{ "ui_key_history_down",         "KEYCODE_DEL",                0,                 "keyboard to history down"},
+
+	{ "ui_key_context_filters",      "KEYCODE_LCONTROL KEYCODE_F", 0,                 "keyboard to context filters"},
+	{ "ui_key_select_random",        "KEYCODE_LCONTROL KEYCODE_R", 0,                 "keyboard to select random"},
+	{ "ui_key_game_audit",           "KEYCODE_LALT KEYCODE_A",     0,                 "keyboard to game audit"},
+	{ "ui_key_game_properties",      "KEYCODE_LALT KEYCODE_ENTER", 0,                 "keyboard to game properties"},
+	{ "ui_key_help_contents",        "KEYCODE_F1",                 0,                 "keyboard to help contents"},
+	{ "ui_key_update_gamelist",      "KEYCODE_F5",                 0,                 "keyboard to update game list"},
+	{ "ui_key_view_folders",         "KEYCODE_LALT KEYCODE_D",     0,                 "keyboard to view folders"},
+	{ "ui_key_view_fullscreen",      "KEYCODE_F11",                0,                 "keyboard to full screen"},
+	{ "ui_key_view_pagetab",         "KEYCODE_LALT KEYCODE_B",     0,                 "keyboard to view page tab"},
+	{ "ui_key_view_picture_area",    "KEYCODE_LALT KEYCODE_P",     0,                 "keyboard to view picture area"},
+	{ "ui_key_view_status",          "KEYCODE_LALT KEYCODE_S",     0,                 "keyboard to view status"},
+	{ "ui_key_view_toolbars",        "KEYCODE_LALT KEYCODE_T",     0,                 "keyboard to view toolbars"},
+
+	{ "ui_key_view_tab_cabinet",     "KEYCODE_LALT KEYCODE_3",     0,                 "keyboard to view tab cabinet"},
+	{ "ui_key_view_tab_cpanel",      "KEYCODE_LALT KEYCODE_6",     0,                 "keyboard to view tab control panel"},
+	{ "ui_key_view_tab_flyer",       "KEYCODE_LALT KEYCODE_2",     0,                 "keyboard to view tab flyer"},
+	{ "ui_key_view_tab_history",     "KEYCODE_LALT KEYCODE_7",     0,                 "keyboard to view tab history"},
+#ifdef STORY_DATAFILE
+	{ "ui_key_view_tab_story",       "KEYCODE_LALT KEYCODE_8",     0,                 "keyboard to view tab story"},
+#endif /* STORY_DATAFILE */
+	{ "ui_key_view_tab_marquee",     "KEYCODE_LALT KEYCODE_4",     0,                 "keyboard to view tab marquee"},
+	{ "ui_key_view_tab_screenshot",  "KEYCODE_LALT KEYCODE_1",     0,                 "keyboard to view tab screen shot"},
+	{ "ui_key_view_tab_title",       "KEYCODE_LALT KEYCODE_5",     0,                 "keyboard to view tab title"},
+	{ "ui_key_quit",                 "KEYCODE_LALT KEYCODE_Q",     0,                 "keyboard to quit application"},
+
+	{ NULL }
+};
+
+static const char *driver_flag_names[] =
+{
+	"_playcount",
+	"_play_time",
+	"_rom_audit",
+	"_samples_audit"
+};
+
+static char driver_flag_unknown[3];
+
+static options_entry driver_flag_opts[] =
+{
+	{ NULL, NULL,                OPTION_HEADER, "DRIVER FLAGS"},
+	{ NULL, "0",                 0,             "Play Counts" },
+	{ NULL, "0",                 0,             "Play Time" },
+	{ NULL, driver_flag_unknown, 0,             "Has Roms" },
+	{ NULL, driver_flag_unknown, 0,             "Has Samples" },
+	{ NULL }
+};
+
+static void options_add_driver_flag_opts(void)
+{
+	int i, j;
+
+	sprintf(driver_flag_unknown, "%d", UNKNOWN);
+
+	for (i = 0; i < num_drivers; i++)
+	{
+		char buf[256];
+		char *p = buf;
+
+		driver_flag_opts[0].description = drivers[i]->description;
+
+		for (j = 0; j < sizeof (driver_flag_names) / sizeof (*driver_flag_names); j++)
+		{
+
+			driver_flag_opts[j + 1].name = p;
+			strcpy(p, drivers[i]->name);
+			p += strlen(p);
+			strcat(p, driver_flag_names[j]);
+			p += strlen(p) + 1;
+		}
+
+		options_add_entries(driver_flag_opts);
+	}
+}
+
+static void options_get_driver_flag_opts(void)
+{
+	int i, j;
+
+	for (i = 0; i < num_drivers; i++)
+	{
+		int *flags[] =
+		{
+			&driver_variables[i].play_count,
+			&driver_variables[i].play_time,
+			&driver_variables[i].rom_audit_results,
+			&driver_variables[i].samples_audit_results
+		};
+		char buf[256];
+		char *p;
+
+		strcpy(buf, drivers[i]->name);
+		p = buf + strlen(buf);
+
+		for (j = 0; j < sizeof (driver_flag_names) / sizeof (*driver_flag_names); j++)
+		{
+			strcpy(p, driver_flag_names[j]);
+			*flags[j] = options_get_int(buf, FALSE);
+		}
+	}
+}
+
+static void options_set_driver_flag_opts(void)
+{
+	int i, j;
+
+	for (i = 0; i < num_drivers; i++)
+	{
+		int *flags[] =
+		{
+			&driver_variables[i].play_count,
+			&driver_variables[i].play_time,
+			&driver_variables[i].rom_audit_results,
+			&driver_variables[i].samples_audit_results
+		};
+		char buf[256];
+		char *p;
+
+		strcpy(buf, drivers[i]->name);
+		p = buf + strlen(buf);
+
+		for (j = 0; j < sizeof (driver_flag_names) / sizeof (*driver_flag_names); j++)
+		{
+			strcpy(p, driver_flag_names[j]);
+			options_set_int(buf, *flags[j]);
+		}
+	}
+}
+
+
+//============================================================
+
+static void options_set_core(const settings_type *p);
+static void options_set_driver(const options_type *p);
+static void options_set_winui(const settings_type *p);
+
+static void options_create_entry_core(void)
+{
+	options_set_datalist(NULL);
+
+	options_add_entries(fileio_opts);
+	options_add_entries(config_opts);
+	options_add_entries(input_opts);
+	options_add_entries(video_opts);
+	options_add_entries(palette_opts);
+	options_add_entries(language_opts);
+
+	options_core = options_get_datalist();
+}
+
+static void options_create_entry_driver(void)
+{
+	options_set_datalist(NULL);
+
+	options_add_entries(config_opts);
+	options_add_entries(input_opts);
+	options_add_entries(video_opts);
+
+	options_driver = options_get_datalist();
+}
+
+static void options_create_entry_winui(void)
+{
+	options_set_datalist(NULL);
+
+	options_add_entries(winui_opts);
+	options_add_driver_flag_opts();
+
+	options_winui = options_get_datalist();
+}
+
+static void options_free_entry_core(void)
+{
+	options_set_datalist(options_core);
+	options_free_entries();
+	options_core = NULL;
+}
+
+static void options_free_entry_driver(void)
+{
+	options_set_datalist(options_driver);
+	options_free_entries();
+	options_driver = NULL;
+}
+
+static void options_free_entry_winui(void)
+{
+	options_set_datalist(options_winui);
+	options_free_entries();
+	options_winui = NULL;
+}
+
+
+static int options_load_default_config(void)
+{
+	char filename[_MAX_PATH];
+	mame_file *file;
+	int retval = 0;
+
+	SetCorePathList(FILETYPE_INI, get_base_config_directory());
+	strcpy(filename, MAME_INI);
+
+	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 0)))
+		return 0;
+
+	options_set_datalist(options_core);
+	options_set_core(&backup.settings);
+	options_set_driver(&backup.global);
+
+	retval = options_parse_ini_file(file);
+	options_get_core(&settings);
+	options_get_driver(&global);
+
+	mame_fclose(file);
+
+	return retval;
+}
+
+static int options_load_driver_config(int driver_index)
+{
+	char filename[_MAX_PATH];
+	mame_file *file;
+	int retval;
+	int alt_index = driver_variables[driver_index].alt_index;
+
+	if (alt_index != -1)
+		return options_load_alt_config(&alt_options[alt_index]);
+
+	driver_variables[driver_index].options_loaded = TRUE;
+	driver_variables[driver_index].use_default = TRUE;
+	SetCorePathList(FILETYPE_INI, settings.inipath);
+	sprintf(filename, "%s.ini", drivers[driver_index]->name);
+
+	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 0)))
+		return 0;
+
+	options_set_datalist(options_driver);
+	options_set_driver(&driver_options[driver_index]);
+
+	retval = options_parse_ini_file(file);
+	options_get_driver(&driver_options[driver_index]);
+
+	update_driver_use_default(driver_index);
+
+	mame_fclose(file);
+
+	return retval;
+}
+
+static int options_load_alt_config(alt_options_type *alt_option)
 {
 	char filename[_MAX_PATH];
 	mame_file *file;
@@ -3586,9 +3305,11 @@ static int rc_load_alt_config(alt_options_type *alt_option)
 	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 0)))
 		return 0;
 
-	gOpts = *alt_option->option;
-	retval = osd_rc_read(rc_game, file, filename, 1, 1);
-	*alt_option->option = gOpts;
+	options_set_datalist(options_driver);
+	options_set_driver(alt_option->option);
+
+	retval = options_parse_ini_file(file);
+	options_get_driver(alt_option->option);
 
 	update_alt_use_default(alt_option);
 
@@ -3597,24 +3318,127 @@ static int rc_load_alt_config(alt_options_type *alt_option)
 	return retval;
 }
 
-static int rc_save_alt_config(alt_options_type *alt_option)
+static int options_load_winui_config(void)
+{
+	const char *filename;
+	mame_file *file;
+	int retval;
+
+	SetCorePathList(FILETYPE_INI, settings.inipath);
+	filename = strlower(WINUI_INI);
+
+	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 0)))
+		return 0;
+
+	options_set_datalist(options_winui);
+	options_set_winui(&backup.settings);
+
+	FreeIfAllocated(&settings.save_version);
+	settings.save_version = strdup("(unknown)");
+
+	retval = options_parse_ini_file(file);
+	options_get_winui(&settings);
+
+	options_get_driver_flag_opts();
+
+	mame_fclose(file);
+
+	return retval;
+}
+
+
+static int options_save_default_config(void)
 {
 	char filename[_MAX_PATH];
-	mame_file *file;
-	int len;
-	int retval;
+	FILE *file;
+
+	validate_driver_option(&global);
+
+	strcpy(filename, strlower(MAME_INI));
+
+	if (!(file = fopen(filename, "wt")))
+		return -1;
+
+	options_set_datalist(options_core);
+	options_set_core(&settings);
+	options_set_driver(&global);
+
+	options_output_ini_file(file);
+
+	fclose(file);
+
+	return 0;
+}
+
+static int options_save_driver_config(int driver_index)
+{
+	char filename[_MAX_PATH];
+	FILE *file;
+	const char *inipath = GetIniDir();
 	options_type *parent;
+	int alt_index = driver_variables[driver_index].alt_index;
+
+	if (driver_variables[driver_index].options_loaded == FALSE)
+		return 0;
+
+	if (alt_index != -1)
+		return options_save_alt_config(&alt_options[alt_index]);
+
+	parent = update_driver_use_default(driver_index);
+	if (parent == NULL)
+		return 0;
+
+	sprintf(filename, "%s\\%s.ini", settings.inipath, strlower(drivers[driver_index]->name));
+
+	mkdir(inipath);
+
+#ifdef USE_IPS
+	// HACK: DO NOT INHERIT IPS CONFIGURATION
+	if (driver_variables[driver_index].use_default && !driver_options[driver_index].ips)
+#else /* USE_IPS */
+	if (driver_variables[driver_index].use_default)
+#endif /* USE_IPS */
+	{
+		unlink(filename);
+		return 0;
+	}
+
+	if (!(file = fopen(filename, "wt")))
+		return -1;
+
+	options_set_datalist(options_driver);
+	options_set_driver(&driver_options[driver_index]);
+
+	options_set_mark_driver(&driver_options[driver_index], parent);
+	options_output_ini_file_marked(file);
+
+	fclose(file);
+
+	return 0;
+}
+
+static int options_save_alt_config(alt_options_type *alt_option)
+{
+	char filename[_MAX_PATH];
+	FILE *file;
+	const char *inipath = GetIniDir();
+	options_type *parent;
+	int len;
 
 	if (alt_option->variable->options_loaded == FALSE)
 		return 0;
 
 	parent = update_alt_use_default(alt_option);
 
-	sprintf(filename, "%s", strlower(alt_option->name));
-	len = strlen(filename);
+	sprintf(filename, "%s\\%s", inipath, strlower(alt_option->name));
 
-	if (len > 2 && filename[len - 2] == '.' && filename[len - 1] == 'c')
+	len = strlen(filename);
+	if (len > 2 && stricmp(filename + (len - 2), ".c") == 0)
 		filename[len - 2] = '\0';
+
+	strcat(filename, ".ini");
+
+	mkdir(inipath);
 
 #ifdef USE_IPS
 	// HACK: DO NOT INHERIT IPS CONFIGURATION
@@ -3623,601 +3447,868 @@ static int rc_save_alt_config(alt_options_type *alt_option)
 	if (alt_option->variable->use_default && !alt_option->has_bios)
 #endif /* USE_IPS */
 	{
-		char buf[_MAX_PATH];
-
-		sprintf(buf, "%s\\%s.ini", settings.inipath, filename);
-		unlink(buf);
+		unlink(filename);
 		return 0;
 	}
 
-	SetCorePathList(FILETYPE_INI, settings.inipath);
-
-	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 1)))
+	if (!(file = fopen(filename, "wt")))
 		return -1;
 
-	gOpts = *alt_option->option;
-	retval = osd_rc_write_changes(rc_game, file, alt_option->name,
-			rc_game_is_changed, parent);
+	options_set_datalist(options_driver);
+	options_set_driver(alt_option->option);
 
-	mame_fclose(file);
+	options_set_mark_driver(alt_option->option, parent);
+	options_output_ini_file_marked(file);
 
-	return retval;
-}
-
-static void CopySettings(const settings_type *source, settings_type *dest)
-{
-	settings_type save = settings;
-
-	settings = *source;
-	memset(&gOpts, 0, sizeof(gOpts));
-
-	rc_duplicate_strings(rc_core->option);
-	rc_duplicate_strings(rc_winui[num_games]->option);
-	settings.show_folder_flags = DuplicateBits(settings.show_folder_flags);
-
-	*dest = settings;
-	settings = save;
-}
-
-static void FreeSettings(settings_type *p)
-{
-	settings_type save = settings;
-	settings = *p;
-	memset(&gOpts, 0, sizeof(gOpts));
-
-	rc_free_strings(rc_core->option);
-	rc_free_strings(rc_winui[num_games]->option);
-
-	DeleteBits(p->show_folder_flags);
-	p->show_folder_flags = NULL;
-
-	settings = save;
-}
-
-#if 0
-static int D3DEffectDecode(struct rc_option *option, const char *arg, int priority)
-{
-	option->priority = priority;
-
-	// reset overrides
-	gOpts.d3d_feedback_enable = FALSE;
-	gOpts.d3d_scanlines_enable = FALSE;
+	fclose(file);
 
 	return 0;
 }
 
-static int D3DFeedbackDecode(struct rc_option *option, const char *arg, int priority)
+static int options_save_winui_config(void)
 {
-	option->priority = priority;
+	FILE *file;
+	char filename[_MAX_PATH];
+	const char *inipath = GetIniDir();
 
-	// enable override
-	gOpts.d3d_feedback_enable = TRUE;
+	mkdir(inipath);
+	sprintf(filename, "%s\\%s", inipath, strlower(WINUI_INI));
 
-	return 0;
-}
-
-static int D3DScanlinesDecode(struct rc_option *option, const char *arg, int priority)
-{
-	option->priority = priority;
-
-	// enable override
-	gOpts.d3d_scanlines_enable = TRUE;
-
-	return 0;
-}
-
-static int D3DPrescaleDecode(struct rc_option *option, const char *arg, int priority)
-{
-	char **p = option->dest;
-
-	option->priority = priority;
-
-	// convert old option to new
-	if (!strcmp(arg, "0"))
-	{
-		FreeIfAllocated(p);
-		*p = strdup("auto");
-	}
-
-	if (!strcmp(arg, "1"))
-	{
-		FreeIfAllocated(p);
-		*p = strdup("full");
-	}
-
-	return 0;
-}
-
-static int CleanStretchDecodeString(struct rc_option *option, const char *arg, int priority)
-{
-	char **p = option->dest;
-
-	option->priority = priority;
-
-	// convert old option to new
-	if (!strcmp(arg, "0"))
-	{
-		FreeIfAllocated(p);
-		*p = strdup("auto");
-	}
-
-	if (!strcmp(arg, "1"))
-	{
-		FreeIfAllocated(p);
-		*p = strdup("full");
-	}
-
-	return 0;
-}
-#endif
-
-static int LedmodeDecodeString(struct rc_option *option, const char *arg, int priority)
-{
-	if ( strcmp( arg, "ps/2" ) != 0 &&
-		strcmp( arg, "usb" ) != 0 )
-	{
-		fprintf(stderr, "error: invalid value for led_mode: %s\n", arg);
+	if (!(file = fopen(filename, "wt")))
 		return -1;
-	}
-	option->priority = priority;
+
+	FreeIfAllocated(&settings.save_version);
+	settings.save_version = strdup(GetVersionString());
+
+	options_set_datalist(options_winui);
+	options_set_winui(&settings);
+	options_set_driver_flag_opts();
+
+	options_output_ini_file(file);
+
+	fclose(file);
 
 	return 0;
 }
 
-static void KeySeqEncodeString(void)
+
+//============================================================
+
+static void options_duplicate_core(const settings_type *source, settings_type *dest);
+static void options_duplicate_winui(const settings_type *source, settings_type *dest);
+
+static void options_duplicate_settings(const settings_type *source, settings_type *dest)
 {
-	KeySeq *ks;
-	char **pp;
+	options_set_datalist(options_core);
+	options_duplicate_core(source, dest);
 
-	pp = &rc_dummy_args.ui_key_up;
-	for (ks = &settings.ui_key_up; ks <= &settings.ui_key_quit; ks++, pp++)
-	{
-		FreeIfAllocated(pp);
-
-		*pp = strdup(ks->seq_string);
-	}
+	options_set_datalist(options_winui);
+	options_duplicate_winui(source, dest);
 }
 
-static int KeySeqDecodeString(struct rc_option *option, const char *arg, int priority)
+
+//============================================================
+
+#define _options_get_bool(p,name)	do { *p = options_get_bool(name, FALSE); } while (0)
+#define options_copy_bool(src,dest)	do { *dest = src; } while (0)
+#define options_free_bool(p)
+#define _options_compare_bool(v1,v2)	do { if (v1 != v2) return TRUE; } while (0)
+
+INLINE BOOL options_compare_bool(BOOL v1, BOOL v2)
 {
-	KeySeq *ks;
-	input_seq *is;
-	char **pp;
-
-	pp = &rc_dummy_args.ui_key_up;
-	ks = &settings.ui_key_up;
-
-	while (pp != option->dest)
-	{
-		pp++;
-		ks++;
-	}
-
-	assert (&settings.ui_key_up <= ks && ks <= &settings.ui_key_quit);
-
-	FreeIfAllocated(&ks->seq_string);
-	ks->seq_string = *pp;
-	*pp = NULL;
-
-	is = &(ks->is);
-
-	//get the new input sequence
-	string_to_seq(arg, is);
-	//dprintf("seq=%s,,,%04i %04i %04i %04i \n",arg,(*is)[0],(*is)[1],(*is)[2],(*is)[3]);
-
-	FreeIfAllocated((char **)option->dest);
-
-	option->priority = priority;
-
-	return 0;
+	_options_compare_bool(v1, v2);
+	return FALSE;
 }
 
-static void JoyInfoEncodeString(void)
+#define _options_get_int(p,name)	do { *p = options_get_int(name, FALSE); } while (0)
+#define options_copy_int(src,dest)	do { *dest = src; } while (0)
+#define options_free_int(p)
+#define _options_compare_int(v1,v2)	do { if (v1 != v2) return TRUE; } while (0)
+
+INLINE BOOL options_compare_int(int v1, int v2)
 {
-	int i, j;
-	char buf[80];
-	int *data;
+	_options_compare_int(v1, v2);
+	return FALSE;
+}
+
+#define _options_get_float(p,name)	do { *p = options_get_float(name, FALSE); } while (0)
+#define options_copy_float(src,dest)	do { *dest = src; } while (0)
+#define options_free_float(p)
+#define _options_compare_float(v1,v2)	do { if (v1 != v2) return TRUE; } while (0)
+
+INLINE BOOL options_compare_float(float v1, float v2)
+{
+	_options_compare_float(v1, v2);
+	return FALSE;
+}
+
+
+//============================================================
+
+static void _options_get_csv_int(int *dest, int numitems, const char *name)
+{
+	const char *stemp = options_get_string(name, FALSE);
+	int array[CSV_ARRAY_MAX];
+	char buf[256];
 	char *p;
-	char **pp;
+	int i;
 
-	pp = &rc_dummy_args.ui_joy_up;
-	for (data = settings.ui_joy_up; data <= settings.ui_joy_exec; data += 4, pp++)
+	if (numitems > CSV_ARRAY_MAX)
 	{
-		FreeIfAllocated(pp);
+		dprintf("too many arrays: %d", numitems);
+		return;
+	}
 
-		if (data[0] == 0)
-			continue;
+	if (stemp == NULL)
+		return;
+
+	p = buf;
+	if (*stemp == '-')
+		*p++ = *stemp++;
+
+	if (!isdigit(*stemp))
+		return;
+
+	while (isdigit(*stemp))
+		*p++ = *stemp++;
+	*p = '\0';
+
+	array[0] = atoi(buf);
+
+	for (i = 1; i < numitems; i++)
+	{
+		while (*stemp == ' ')
+			stemp++;
+
+		if (*stemp++ != ',')
+			return;
 
 		p = buf;
+		if (*stemp == '-')
+			*p++ = *stemp++;
+
+		if (!isdigit(*stemp))
+			return;
+
+		while (isdigit(*stemp))
+			*p++ = *stemp++;
 		*p = '\0';
 
-		for (i = 0; i < 4; i++)
-		{
-			switch (i)
-			{
-			case 2:
-				*p++ = ',';
-			case 0:
-				sprintf(p, "%d", data[i]);
-				break;
-
-			case 1:
-				*p++ = ',';
-				for (j = 0; joycode_axis[j].name; j++)
-					if (joycode_axis[j].value == data[i])
-					{
-						strcpy(p, joycode_axis[j].name);
-						break;
-					}
-				break;
-
-			case 3:
-				*p++ = ',';
-				for (j = 0; joycode_dir[j].name; j++)
-					if (joycode_dir[j].value == data[i])
-					{
-						strcpy(p, joycode_dir[j].name);
-						break;
-					}
-				break;
-			}
-
-			p += strlen(p);
-		}
-
-		*pp = strdup(buf);
+		array[i] = atoi(buf);
 	}
+
+	if (*stemp != '\0')
+		return;
+
+	for (i = 0; i < numitems; i++)
+		dest[i] = array[i];
 }
 
-static int JoyInfoDecodeString(struct rc_option *option, const char *arg, int priority)
+static void options_set_csv_int(const char *name, const int *src, int numitems)
 {
-	int  i;
-	char *s, *p;
-	int temp[4];
-	char buf[80];
-	int *data;
-	char **pp;
+	char buf[1024];
+	char *p;
+	int i;
 
-	pp = &rc_dummy_args.ui_joy_up;
-	for (i = 0; ; i += 4, pp++)
+	sprintf(buf, "%d", src[0]);
+	p = buf + strlen(buf);
+
+	for (i = 1; i < numitems; i++)
 	{
-		if (pp == option->dest)
-			break;
-	}
-	data = settings.ui_joy_up + i;
-
-	assert (settings.ui_joy_up <= data && data <= settings.ui_joy_exec);
-
-	memset(data, 0, sizeof (*data) * 4);
-
-	if (arg == NULL)
-		return 0;
-
-	strcpy(buf, arg);
-	p = buf;
-
-	for (i = 0; p && i < 4; i++)
-	{
-		int j = 0;
-		s = p;
-		
-		if ((p = strchr(s, ',')) != NULL && *p == ',')
-		{
-			*p = '\0';
-			p++;
-		}
-
-		switch (i)
-		{
-		case 0:
-		case 2:
-			temp[i] = atoi(s);
-			break;
-
-		case 1:
-			for (j = 0; joycode_axis[j].name; j++)
-				if (!strcmp(joycode_axis[j].name, s))
-				{
-					temp[i] = joycode_axis[j].value;
-					break;
-				}
-			break;
-
-		case 3:
-			for (j = 0; joycode_dir[j].name; j++)
-				if (!strcmp(joycode_dir[j].name, s))
-				{
-					temp[i] = joycode_dir[j].value;
-					break;
-				}
-			break;
-		}
-
-		// lookup fails
-		if (!joycode_axis[j].name)
-			break;
+		sprintf(p, ",%d", src[i]);
+		p += strlen(p);
 	}
 
-	FreeIfAllocated((char **)option->dest);
-
-	if ((i != 4) || (p))
-	{
-		fprintf(stderr, "error invalid value for %s: %s\n", option->name, arg);
-		return -1;
-	}
-
-	for (i = 0; i < 4; i++)
-		data[i] = temp[i];
-
-	option->priority = priority;
-
-	return 0;
+	options_set_string(name, buf);
 }
 
-static int ColumnDecodeString(struct rc_option *option, const char *arg, int *data, int priority)
-{
-	int  i;
-	char *s, *p;
-	int temp[COLUMN_MAX];
-	char buf[80];
-
-	if (arg == NULL)
-		return -1;
-
-	strcpy(buf, arg);
-	p = buf;
-
-	for (i = 0; p && i < COLUMN_MAX; i++)
-	{
-		s = p;
-		
-		if ((p = strchr(s, ',')) != NULL && *p == ',')
-		{
-			*p = '\0';
-			p++;
-		}
-		temp[i] = atoi(s);
-	}
-
-	FreeIfAllocated((char **)option->dest);
-
-	if ((i != COLUMN_MAX) || (p))
-	{
-		fprintf(stderr, "error invalid value for %s: %s\n", option->name, arg);
-		return -1;
-	}
-
-	for (i = 0; i < COLUMN_MAX; i++)
-		data[i] = temp[i];
-
-	option->priority = priority;
-
-	return 0;
-}
-
-static char *ColumnEncodeString(int *data)
-{
-	int  i;
-	char str[80];
-
-	sprintf(str, "%d", data[0]);
-	
-	for (i = 1; i < COLUMN_MAX; i++)
-		sprintf(str + strlen(str), ",%d", data[i]);
-
-	return strdup(str);
-}
-
-static int ColumnOrderDecodeString(struct rc_option *option, const char *arg, int priority)
-{
-	return ColumnDecodeString(option, arg, settings.column_order, priority);
-}
-
-static void ColumnOrderEncodeString(void)
-{
-	FreeIfAllocated(&rc_dummy_args.column_order);
-	rc_dummy_args.column_order = ColumnEncodeString(settings.column_order);
-}
-
-static int ColumnShownDecodeString(struct rc_option *option, const char *arg, int priority)
-{
-	return ColumnDecodeString(option, arg, settings.column_shown, priority);
-}
-
-static void  ColumnShownEncodeString(void)
-{
-	FreeIfAllocated(&rc_dummy_args.column_shown);
-	rc_dummy_args.column_shown = ColumnEncodeString(settings.column_shown);
-}
-
-static int ColumnDecodeWidths(struct rc_option *option, const char *arg, int priority)
-{
-	return ColumnDecodeString(option, arg, settings.column_width, priority);
-}
-
-static void ColumnEncodeWidths(void)
-{
-	FreeIfAllocated(&rc_dummy_args.column_width);
-	rc_dummy_args.column_width = ColumnEncodeString(settings.column_width);
-}
-
-static int CusColorDecodeString(struct rc_option *option, const char *arg, int priority)
-{
-	int  i;
-	char *s, *p;
-	COLORREF temp[16];
-	char buf[80];
-
-	if (arg == NULL)
-		return -1;
-
-	strcpy(buf, arg);
-	p = buf;
-
-	for (i = 0; p && i < 16; i++)
-	{
-		s = p;
-		
-		if ((p = strchr(s, ',')) != NULL && *p == ',')
-		{
-			*p = '\0';
-			p++;
-		}
-		temp[i] = atoi(s);
-	}
-
-	FreeIfAllocated((char **)option->dest);
-
-	if ((i != 16) || (p))
-	{
-		fprintf(stderr, "error invalid value for %s: %s\n", option->name, arg);
-		return -1;
-	}
-
-	for (i = 0; i < 16; i++)
-		settings.custom_color[i] = temp[i];
-
-	option->priority = priority;
-
-	return 0;
-}
-
-static void CusColorEncodeString(void)
-{
-	int  i;
-	char str[256];
-
-	sprintf(str, "%lu", settings.custom_color[0]);
-	
-	for (i = 1; i < 16; i++)
-		sprintf(str + strlen(str), ",%lu", settings.custom_color[i]);
-
-	FreeIfAllocated(&rc_dummy_args.custom_color);
-	rc_dummy_args.custom_color = strdup(str);
-}
-
-static int SplitterDecodeString(struct rc_option *option, const char *arg, int priority)
-{
-	int  i;
-	char *s, *p;
-	int temp[SPLITTER_MAX];
-	char buf[80];
-
-	if (arg == NULL)
-		return -1;
-
-	strcpy(buf, arg);
-	p = buf;
-
-	for (i = 0; p && i < SPLITTER_MAX; i++)
-	{
-		s = p;
-		
-		if ((p = strchr(s, ',')) != NULL && *p == ',')
-		{
-			*p = '\0';
-			p++;
-		}
-		temp[i] = atoi(s);
-	}
-
-	if ((i != SPLITTER_MAX) || (p))
-	{
-		fprintf(stderr, "error invalid value for %s: %s\n", option->name, arg);
-		FreeIfAllocated((char **)option->dest);
-		return -1;
-	}
-
-	for (i = 0; i < SPLITTER_MAX; i++)
-		settings.splitter[i] = temp[i];
-
-	option->priority = priority;
-	FreeIfAllocated((char **)option->dest);
-
-	return 0;
-}
-
-static void SplitterEncodeString(void)
-{
-	int  i;
-	char str[80];
-
-	sprintf(str, "%d", settings.splitter[0]);
-	
-	for (i = 1; i < SPLITTER_MAX; i++)
-		sprintf(str + strlen(str), ",%d", settings.splitter[i]);
-
-	FreeIfAllocated(&rc_dummy_args.splitter);
-	rc_dummy_args.splitter = strdup(str);
-}
-
-static int ListDecodeString(struct rc_option *option, const char *arg, int priority)
+INLINE void options_copy_csv_int(const int *src, int *dest, int numitems)
 {
 	int i;
 
-	settings.view = VIEW_GROUPED;
+	for (i = 0; i < numitems; i++)
+		dest[i] = src[i];
+}
 
-	if (arg == NULL)
-		return -1;
+#define options_free_csv_int(p,num)
 
-	for (i = VIEW_LARGE_ICONS; i < VIEW_MAX; i++)
+
+//============================================================
+
+INLINE void _options_get_string_allow_null(char **p, const char *name)
+{
+	const char *stemp = options_get_string(name, FALSE);
+
+	FreeIfAllocated(p);
+	if (stemp)
+		*p = strdup(stemp);
+}
+
+#define options_set_string_allow_null(name,value)	options_set_string(name,value)
+
+INLINE void options_copy_string_allow_null(const char *src, char **dest)
+{
+	FreeIfAllocated(dest);
+
+	if (src)
+		*dest = strdup(src);
+}
+
+#define options_free_string_allow_null			FreeIfAllocated
+#define _options_compare_string_allow_null(s1,s2)	do { if (s1 != s2) { if (!s1 || !s2) return TRUE; if (strcmp(s1, s2) != 0) return TRUE; } } while (0)
+
+INLINE BOOL options_compare_string_allow_null(const char *s1, const char *s2)
+{
+	_options_compare_string_allow_null(s1, s2);
+	return FALSE;
+}
+
+INLINE void _options_get_string(char **p, const char *name)
+{
+	const char *stemp = options_get_string(name, FALSE);
+
+	if (stemp && *stemp)
 	{
-		if (strcmp(arg, view_modes[i]) == 0)
-		{
-			settings.view = i;
-			option->priority = priority;
-			FreeIfAllocated((char **)option->dest);
+		FreeIfAllocated(p);
+		*p = strdup(stemp);
+	}
+}
 
-			return 0;
+INLINE void options_copy_string(const char *src, char **dest)
+{
+	FreeIfAllocated(dest);
+
+	*dest = strdup(src);
+}
+
+#define options_free_string			FreeIfAllocated
+#define _options_compare_string(s1,s2)		do { if (strcmp(s1, s2) != 0) return TRUE; } while (0)
+
+INLINE BOOL options_compare_string(const char *s1, const char *s2)
+{
+	_options_compare_string(s1, s2);
+	return FALSE;
+}
+
+
+//============================================================
+
+INLINE void _options_get_int_min(int *p, const char *name, int min)
+{
+	int val = options_get_int(name, FALSE);
+	if (val >= min)
+		*p = val;
+}
+
+#define options_set_min			options_set_int
+#define options_copy_int_min		options_copy_int
+#define options_free_int_min		options_free_int
+#define _options_compare_int_min	_options_compare_int
+
+
+//============================================================
+
+INLINE void _options_get_int_max(int *p, const char *name, int max)
+{
+	int val = options_get_int(name, FALSE);
+	if (val <= max)
+		*p = val;
+}
+
+#define options_set_max			options_set_int
+#define options_copy_int_max		options_copy_int
+#define options_free_int_max		options_free_int
+#define _options_compare_int_max	_options_compare_int
+
+
+//============================================================
+
+INLINE void _options_get_int_min_max(int *p, const char *name, int min, int max)
+{
+	int val = options_get_int(name, FALSE);
+	if (val >= min && val <= max)
+		*p = val;
+}
+
+#define options_set_min_max		options_set_int
+#define options_copy_int_min_max	options_copy_int
+#define options_free_int_min_max	options_free_int
+#define _options_compare_int_min_max	_options_compare_int
+
+
+//============================================================
+
+INLINE void _options_get_int_positive(int *p, const char *name)
+{
+	int val = options_get_int(name, FALSE);
+	if (val >= 0)
+		*p = val;
+}
+
+#define options_set_int_positive	options_set_int
+#define options_copy_int_positive	options_copy_int
+#define options_free_int_positive	options_free_int
+#define _options_compare_int_positive	_options_compare_int
+#define options_compare_int_positive	options_compare_int
+
+
+//============================================================
+
+INLINE void _options_get_float_min(float *p, const char *name, float min)
+{
+	float val = options_get_float(name, FALSE);
+	if (val >= min)
+		*p = val;
+}
+
+#define options_set_float_min		options_set_float
+#define options_copy_float_min		options_copy_float
+#define options_free_float_min		options_free_float
+#define _options_compare_float_min	_options_compare_float
+
+
+//============================================================
+
+INLINE void _options_get_float_max(float *p, const char *name, float max)
+{
+	float val = options_get_float(name, FALSE);
+	if (val <= max)
+		*p = val;
+}
+
+#define options_set_float_max		options_set_float
+#define options_copy_float_max		options_copy_float
+#define options_free_float_max		options_free_float
+#define _options_compare_float_max	_options_compare_float
+
+
+//============================================================
+
+INLINE void _options_get_float_min_max(float *p, const char *name, float min, float max)
+{
+	float val = options_get_float(name, FALSE);
+	if (val >= min && val <= max)
+		*p = val;
+}
+
+#define options_set_float_min_max	options_set_float
+#define options_copy_float_min_max	options_copy_float
+#define options_free_float_min_max	options_free_float
+#define _options_compare_float_min_max	_options_compare_float
+
+
+//============================================================
+
+#define _options_get_samplerate(p,name)	_options_get_int_min_max(p, name, 5000, 50000)
+#define options_set_samplerate		options_set_int
+#define options_copy_samplerate		options_copy_int
+#define options_free_samplerate		options_free_int
+#define _options_compare_samplerate	_options_compare_int
+#define options_compare_samplerate	options_compare_int
+
+
+//============================================================
+
+#define _options_get_volume(p,name)	_options_get_int_min_max(p, name, -32, 0)
+#define options_set_volume		options_set_int
+#define options_copy_volume		options_copy_int
+#define options_free_volume		options_free_int
+#define _options_compare_volume		_options_compare_int
+#define options_compare_volume		options_compare_int
+
+
+//============================================================
+
+#define _options_get_audio_latency(p,name)	_options_get_int_min_max(p, name, 1, 4)
+#define options_set_audio_latency		options_set_int
+#define options_copy_audio_latency		options_copy_int
+#define options_free_audio_latency		options_free_int
+#define _options_compare_audio_latency		_options_compare_int
+#define options_compare_audio_latency		options_compare_int
+
+
+//============================================================
+
+#if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
+#define _options_get_m68k_core(p,name)	_options_get_int_min_max(p, name, 0, 2)
+#define options_set_m68k_core		options_set_int
+#define options_copy_m68k_core		options_copy_int
+#define options_free_m68k_core		options_free_int
+#define _options_compare_m68k_core	_options_compare_int
+#define options_compare_m68k_core	options_compare_int
+#endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
+
+
+//============================================================
+
+#ifdef TRANS_UI
+#define _options_get_ui_transparency(p,name)	_options_get_int_min_max(p, name, 0, 255)
+#define options_set_ui_transparency		options_set_int
+#define options_copy_ui_transparency		options_copy_int
+#define options_free_ui_transparency		options_free_int
+#define _options_compare_ui_transparency	_options_compare_int
+#define options_compare_ui_transparency		options_compare_int
+#endif /* TRANS_UI */
+
+
+//============================================================
+
+#define _options_get_brightness(p,name)	_options_get_float_min_max(p, name, 0.5, 2.0)
+#define options_set_brightness		options_set_float
+#define options_copy_brightness		options_copy_float
+#define options_free_brightness		options_free_float
+#define _options_compare_brightness	_options_compare_float
+#define options_compare_brightness	options_compare_float
+
+
+//============================================================
+
+#define _options_get_beam(p,name)	_options_get_float_min_max(p, name, 0.1, 16.0)
+#define options_set_beam		options_set_float
+#define options_copy_beam		options_copy_float
+#define options_free_beam		options_free_float
+#define _options_compare_beam		_options_compare_float
+#define options_compare_beam		options_compare_float
+
+
+//============================================================
+
+#define _options_get_flicker(p,name)	_options_get_float_min_max(p, name, 0.0, 100.0)
+#define options_set_flicker		options_set_float
+#define options_copy_flicker		options_copy_float
+#define options_free_flicker		options_free_float
+#define _options_compare_flicker	_options_compare_float
+#define options_compare_flicker		options_compare_float
+
+
+//============================================================
+
+#define _options_get_intensity(p,name)	_options_get_float_min_max(p, name, 0.5, 3.0)
+#define options_set_intensity		options_set_float
+#define options_copy_intensity		options_copy_float
+#define options_free_intensity		options_free_float
+#define _options_compare_intensity	_options_compare_float
+#define options_compare_intensity	options_compare_float
+
+
+//============================================================
+
+INLINE void _options_get_analog_select(char **p, const char *name)
+{
+	const char *stemp = options_get_string(name, FALSE);
+
+	if (stemp && *stemp)
+	{
+		if (strcmp(stemp, "keyboard") == 0
+		 || strcmp(stemp, "mouse") == 0
+		 || strcmp(stemp, "joystick") == 0
+		 || strcmp(stemp, "lightgun") == 0)
+		{
+			FreeIfAllocated(p);
+			*p = strdup(stemp);
 		}
 	}
-
-	FreeIfAllocated((char **)option->dest);
-	return -1;
 }
 
-static void ListEncodeString(void)
+#define options_set_analog_select	options_set_string
+#define options_copy_analog_select	options_copy_string
+#define options_free_analog_select	options_free_string
+#define _options_compare_analog_select	_options_compare_string
+#define options_compare_analog_select	options_compare_string
+
+
+//============================================================
+
+#define MAX_JOYSTICKS		8
+#define MAX_AXES		8
+
+INLINE void _options_get_digital(char **p, const char *name)
 {
-	FreeIfAllocated(&rc_dummy_args.view);
-	rc_dummy_args.view = strdup(view_modes[settings.view]);
+	const char *stemp = options_get_string(name, FALSE);
+
+	if (stemp && *stemp)
+	{
+		if (strcmp(stemp, "none") == 0
+		 || strcmp(stemp, "all") == 0)
+		{
+			FreeIfAllocated(p);
+			*p = strdup(stemp);
+			return;
+		}
+
+		/* scan the string */
+		while (1)
+		{
+			int joynum = 0;
+			int axisnum = 0;
+
+			/* stop if we hit the end */
+			if (stemp[0] == 0)
+				break;
+
+			/* we require the next bits to be j<N> */
+			if (tolower(stemp[0]) != 'j' || sscanf(&stemp[1], "%d", &joynum) != 1)
+				return;
+			stemp++;
+			while (stemp[0] != 0 && isdigit(stemp[0]))
+				stemp++;
+
+			/* if we are followed by a comma or an end, mark all the axes digital */
+			if (stemp[0] == 0 || stemp[0] == ',')
+			{
+				if (joynum == 0 || joynum > MAX_JOYSTICKS)
+					return;
+				if (stemp[0] == 0)
+					break;
+				stemp++;
+				continue;
+			}
+
+			/* loop over axes */
+			while (1)
+			{
+				/* stop if we hit the end */
+				if (stemp[0] == 0)
+					break;
+
+				/* if we hit a comma, skip it and break out */
+				if (stemp[0] == ',')
+				{
+					stemp++;
+					break;
+				}
+
+				/* we require the next bits to be a<N> */
+				if (tolower(stemp[0]) != 'a' || sscanf(&stemp[1], "%d", &axisnum) != 1)
+					return;
+				stemp++;
+				while (stemp[0] != 0 && isdigit(stemp[0]))
+					stemp++;
+
+				/* set that axis to digital */
+				if (joynum == 0 || joynum > MAX_JOYSTICKS || axisnum >= MAX_AXES)
+					return;
+			}
+		}
+
+		FreeIfAllocated(p);
+		*p = strdup(stemp);
+	}
 }
 
-/* Parse the given comma-delimited string into a LOGFONT structure */
-static int FontDecodeString(struct rc_option *option, const char *arg, int priority)
+#define options_set_digital		options_set_string
+#define options_copy_digital		options_copy_string
+#define options_free_digital		options_free_string
+#define _options_compare_digital	_options_compare_string
+#define options_compare_digital		options_compare_string
+
+
+//============================================================
+
+INLINE void _options_get_led_mode(char **p, const char *name)
 {
-	LOGFONTA* f = &settings.list_font;
+	const char *stemp = options_get_string(name, FALSE);
 
-	if (arg == NULL)
-		return -1;
-
-	sscanf(arg, "%li,%li,%li,%li,%li,%i,%i,%i,%i,%i,%i,%i,%i",
-	            &f->lfHeight,
-	            &f->lfWidth,
-	            &f->lfEscapement,
-	            &f->lfOrientation,
-	            &f->lfWeight,
-	            (int*)&f->lfItalic,
-	            (int*)&f->lfUnderline,
-	            (int*)&f->lfStrikeOut,
-	            (int*)&f->lfCharSet,
-	            (int*)&f->lfOutPrecision,
-	            (int*)&f->lfClipPrecision,
-	            (int*)&f->lfQuality,
-	            (int*)&f->lfPitchAndFamily);
-
-	option->priority = priority;
-	FreeIfAllocated((char **)option->dest);
-
-	return 0;
+	if (stemp && *stemp)
+	{
+		if (strcmp(stemp, "ps/2") == 0
+		 || strcmp(stemp, "usb") == 0)
+		{
+			FreeIfAllocated(p);
+			*p = strdup(stemp);
+		}
+	}
 }
 
-/* Encode the given LOGFONT structure into a comma-delimited string */
-static void FontEncodeString(void)
+#define options_set_led_mode		options_set_string
+#define options_copy_led_mode		options_copy_string
+#define options_free_led_mode		options_free_string
+#define _options_compare_led_mode	_options_compare_string
+#define options_compare_led_mode	options_compare_string
+
+
+//============================================================
+
+INLINE void _options_get_aspect(char **p, const char *name)
 {
-	LOGFONTA* f = &settings.list_font;
+	const char *stemp = options_get_string(name, FALSE);
+
+	if (stemp && *stemp)
+	{
+		int num, den;
+
+		if (strcmp(stemp, "auto") == 0
+		 || (sscanf(stemp, "%d:%d", &num, &den) == 2 && num > 0 && den > 0))
+		{
+			FreeIfAllocated(p);
+			*p = strdup(stemp);
+		}
+	}
+}
+
+#define options_set_aspect	options_set_string
+#define options_copy_aspect	options_copy_string
+#define options_free_aspect	options_free_string
+#define _options_compare_aspect	_options_compare_string
+#define options_compare_aspect	options_compare_string
+
+
+//============================================================
+
+INLINE void _options_get_resolution(char **p, const char *name)
+{
+	const char *stemp = options_get_string(name, FALSE);
+
+	if (stemp && *stemp)
+	{
+		int width, height, depth, refresh;
+
+		if (strcmp(stemp, "auto") == 0
+		 || sscanf(stemp, "%dx%dx%d@%d", &width, &height, &depth, &refresh) >= 2)
+		{
+			FreeIfAllocated(p);
+			*p = strdup(stemp);
+		}
+	}
+}
+
+#define options_set_resolution		options_set_string
+#define options_copy_resolution		options_copy_string
+#define options_free_resolution		options_free_string
+#define _options_compare_resolution	_options_compare_string
+#define options_compare_resolution	options_compare_string
+
+
+//============================================================
+
+#define _options_get_frameskip(p,name)	_options_get_int_min_max(p, name, 0, FRAMESKIP_LEVELS - 1)
+#define options_set_frameskip		options_set_int
+#define options_copy_frameskip		options_copy_int
+#define options_free_frameskip		options_free_int
+#define _options_compare_frameskip	_options_compare_int
+#define options_compare_frameskip	options_compare_int
+
+
+//============================================================
+
+#define _options_get_priority(p,name)	_options_get_int_min_max(p, name, -15, 0)
+#define options_set_priority		options_set_int
+#define options_copy_priority		options_copy_int
+#define options_free_priority		options_free_int
+#define _options_compare_priority	_options_compare_int
+#define options_compare_priority	options_compare_int
+
+
+//============================================================
+
+#define _options_get_numscreens(p,name)	_options_get_int_min_max(p, name, 1, MAX_WINDOWS)
+#define options_set_numscreens		options_set_int
+#define options_copy_numscreens		options_copy_int
+#define options_free_numscreens		options_free_int
+#define _options_compare_numscreens	_options_compare_int
+#define options_compare_numscreens	options_compare_int
+
+
+//============================================================
+
+#define _options_get_full_screen_gamma(p,name)	_options_get_float_min_max(p, name, 0.0, 4.0)
+#define options_set_full_screen_gamma		options_set_float
+#define options_copy_full_screen_gamma		options_copy_float
+#define options_free_full_screen_gamma		options_free_float
+#define _options_compare_full_screen_gamma	_options_compare_float
+#define options_compare_full_screen_gamma	options_compare_float
+
+
+//============================================================
+
+#define _options_get_d3dversion(p,name)	_options_get_int_min_max(p, name, 8, 9)
+#define options_set_d3dversion		options_set_int
+#define options_copy_d3dversion		options_copy_int
+#define options_free_d3dversion		options_free_int
+#define _options_compare_d3dversion	_options_compare_int
+#define options_compare_d3dversion	options_compare_int
+
+
+//============================================================
+
+INLINE void _options_get_langcode(int *p, const char *name)
+{
+	const char *langname = options_get_string("language", FALSE);
+	int langcode;
+
+	if (langname == NULL)
+		langcode = -1;
+	else
+		langcode = stricmp(langname, "auto") ? lang_find_langname(langname) : -1;
+
+	*p = langcode;
+}
+
+INLINE void options_set_langcode(const char *name, int langcode)
+{
+	options_set_string("language", langcode < 0 ? "auto" : ui_lang_info[langcode].name);
+}
+
+#define options_copy_langcode		options_copy_int
+#define options_free_langcode(p)
+
+
+//============================================================
+
+#ifdef UI_COLOR_DISPLAY
+INLINE void _options_get_palette(char **p, const char *name)
+{
+	const char *stemp = options_get_string(name, FALSE);
+	int pal[3];
+	int i;
+
+	if (stemp == NULL)
+		return;
+
+	if (sscanf(stemp, "%d,%d,%d", &pal[0], &pal[1], &pal[2]) != 3)
+		return;
+
+	for (i = 0; i < 3; i++)
+		if (pal[i] < 0 || pal[i] > 255)
+			return;
+
+	FreeIfAllocated(p);
+	*p = strdup(stemp);
+}
+
+#define options_set_palette(name,value)	options_set_string(name,value)
+#define options_copy_palette		options_copy_string
+#define options_free_palette		FreeIfAllocated
+#endif /* UI_COLOR_DISPLAY */
+
+
+//============================================================
+
+#ifdef STORY_DATAFILE
+#define _options_get_datafile_tab(p,name)	_options_get_int_min_max(p, name, 0, MAX_TAB_TYPES+TAB_SUBTRACT)
+#define options_copy_datafile_tab		options_copy_int
+#define options_free_datafile_tab		options_free_int
+#define _options_compare_datafile_tab		_options_compare_int
+#else /* STORY_DATAFILE */
+#define _options_get_history_tab(p,name)	_options_get_int_min_max(p, name, 0, MAX_TAB_TYPES+TAB_SUBTRACT)
+#define options_copy_history_tab		options_copy_int
+#define options_free_history_tab		options_free_int
+#define _options_compare_history_tab		_options_compare_int
+#endif /* STORY_DATAFILE */
+
+
+//============================================================
+
+INLINE void _options_get_list_mode(int *view, const char *name)
+{
+	const char *stemp = options_get_string("list_mode", FALSE);
+	int i;
+
+	if (stemp == NULL)
+		return;
+
+	for (i = 0; i < VIEW_MAX; i++)
+		if (strcmp(stemp, view_modes[i]) == 0)
+		{
+			*view = i;
+			break;
+		}
+}
+
+#define options_set_list_mode(name,view)	options_set_string("list_mode", view_modes[view])
+#define options_copy_list_mode			options_copy_int
+#define options_free_list_mode(p)
+
+
+//============================================================
+
+INLINE void _options_get_list_font(LOGFONTA *f, const char *name)
+{
+	const char *stemp = options_get_string("list_font", FALSE);
+	LONG temp[13];
+	char buf[256];
+	char *p;
+	int i;
+
+	if (stemp == NULL)
+		return;
+
+	p = buf;
+	if (*stemp == '-')
+		*p++ = *stemp++;
+
+	if (!isdigit(*stemp))
+		return;
+
+	while (isdigit(*stemp))
+		*p++ = *stemp++;
+	*p = '\0';
+
+	temp[0] = atol(buf);
+
+	for (i = 1; i < sizeof (temp) / sizeof (*temp); i++)
+	{
+		while (*stemp == ' ')
+			stemp++;
+
+		if (*stemp++ != ',')
+			return;
+
+		p = buf;
+		if (*stemp == '-')
+			*p++ = *stemp++;
+
+		if (!isdigit(*stemp))
+			return;
+
+		while (isdigit(*stemp))
+			*p++ = *stemp++;
+		*p = '\0';
+
+		temp[i] = atol(buf);
+	}
+
+	if (*stemp != '\0')
+		return;
+
+	for (i = 5; i < sizeof (temp) / sizeof (*temp); i++)
+		if (temp[i] < 0 || temp[i] > 255)
+			return;
+
+	f->lfHeight         = temp[0];
+	f->lfWidth          = temp[1];
+	f->lfEscapement     = temp[2];
+	f->lfOrientation    = temp[3];
+	f->lfWeight         = temp[4];
+
+	f->lfItalic         = temp[5];
+	f->lfUnderline      = temp[6];
+	f->lfStrikeOut      = temp[7];
+	f->lfCharSet        = temp[8];
+	f->lfOutPrecision   = temp[9];
+	f->lfClipPrecision  = temp[10];
+	f->lfQuality        = temp[11];
+	f->lfPitchAndFamily = temp[12];
+}
+
+INLINE void _options_get_list_fontface(LOGFONTA *f, const char *name)
+{
+	const char *stemp = options_get_string("list_fontface", FALSE);
+
+	if (stemp == NULL || *stemp == '\0')
+		return;
+
+	if (strlen(stemp) + 1 > sizeof (f->lfFaceName))
+		return;
+
+	strcpy(f->lfFaceName, stemp);
+}
+
+INLINE void options_set_list_font(const char *name, const LOGFONTA *f)
+{
 	char buf[512];
 
-	sprintf(buf, "%li,%li,%li,%li,%li,%i,%i,%i,%i,%i,%i,%i,%i",
+	sprintf(buf, "%ld,%ld,%ld,%ld,%ld,%d,%d,%d,%d,%d,%d,%d,%d",
 	             f->lfHeight,
 	             f->lfWidth,
 	             f->lfEscapement,
@@ -4232,276 +4323,522 @@ static void FontEncodeString(void)
 	             f->lfQuality,
 	             f->lfPitchAndFamily);
 
-	FreeIfAllocated(&rc_dummy_args.list_font);
-	rc_dummy_args.list_font = strdup(buf);
+	options_set_string("list_font", buf);
 }
 
-static int FontfaceDecodeString(struct rc_option *option, const char *arg, int priority)
+#define options_set_list_fontface(name,f)	options_set_string("list_fontface", (f)->lfFaceName)
+
+INLINE void options_copy_list_font(const LOGFONTA *src, LOGFONTA *dest)
 {
-	if (arg == NULL)
-		return -1;
-
-	strcpy(settings.list_font.lfFaceName, arg);
-	option->priority = priority;
-	FreeIfAllocated((char **)option->dest);
-
-	return 0;
+	dest->lfHeight         = src->lfHeight;
+	dest->lfWidth          = src->lfWidth;
+	dest->lfEscapement     = src->lfEscapement;
+	dest->lfOrientation    = src->lfOrientation;
+	dest->lfWeight         = src->lfWeight;
+	dest->lfItalic         = src->lfItalic;
+	dest->lfUnderline      = src->lfUnderline;
+	dest->lfStrikeOut      = src->lfStrikeOut;
+	dest->lfCharSet        = src->lfCharSet;
+	dest->lfOutPrecision   = src->lfOutPrecision;
+	dest->lfClipPrecision  = src->lfClipPrecision;
+	dest->lfQuality        = src->lfQuality;
+	dest->lfPitchAndFamily = src->lfPitchAndFamily;
 }
 
-static void FontfaceEncodeString(void)
+INLINE void options_copy_list_fontface(const LOGFONTA *src, LOGFONTA *dest)
 {
-	FreeIfAllocated(&rc_dummy_args.list_fontface);
-	rc_dummy_args.list_fontface = strdup(settings.list_font.lfFaceName);
+	strcpy(dest->lfFaceName, src->lfFaceName);
 }
 
-static int FolderFlagDecodeString(struct rc_option *option, const char *arg, int priority)
+#define options_free_list_font(p)
+#define options_free_list_fontface(p)
+
+
+//============================================================
+
+#define _options_get_csv_color(dest,numitems,name)	_options_get_csv_int((int *)dest, numitems, name)
+#define options_set_csv_color(name,src,numitems)	options_set_csv_int(name, (const int *)src, numitems)
+#define options_copy_csv_color(src,dest,numitems)	options_copy_csv_int((const int *)src, (int *)dest, numitems)
+#define options_free_csv_color(p,num)
+
+
+//============================================================
+
+#define _options_get_sort_column(p,name)	_options_get_int_min_max(p, name, 0, COLUMN_MAX-1)
+#define options_set_sort_column			options_set_int
+#define options_copy_sort_column		options_copy_int
+#define options_free_sort_column		options_free_int
+#define _options_compare_sort_column		_options_compare_int
+
+
+//============================================================
+
+INLINE void _options_get_ui_joy(int *array, const char *name)
 {
-	char str[80], *p;
+	const char *stemp = options_get_string(name, FALSE);
+	char buf[256];
+	char *p;
+	int  i;
 
-	if (arg == NULL)
-		return 0;
+	for (i = 0; i < 4; i++)
+		array[0] = 0;
 
-	strcpy(str, arg);
-	p = strrchr(str, ',');
-	if (p == NULL)
+	if (stemp == NULL)
+		return;
+
+	if (!isdigit(*stemp))
+		return;
+
+	p = buf;
+	while (isdigit(*stemp))
+		*p++ = *stemp++;
+	*p = '\0';
+
+	array[0] = atoi(buf);
+
+	for (i = 1; i < 4; i++)
 	{
-		fprintf(stderr, "error invalid value for %s: %s\n", option->name, arg);
-		FreeIfAllocated((char **)option->dest);
+		int j;
 
-		return -1;
+		if (*stemp++ != ',')
+			return;
+
+		p = buf;
+		while (*stemp != ',' && *stemp != '\0')
+			*p++ = *stemp++;
+		*p = '\0';
+
+		switch (i)
+		{
+		case 2:
+			array[i] = atoi(buf);
+			break;
+
+		case 1:
+			for (j = 0; ; j++)
+			{
+				if (joycode_axis[j].name == NULL)
+					return;
+
+				if (!strcmp(joycode_axis[j].name, buf))
+				{
+					array[i] = joycode_axis[j].value;
+					break;
+				}
+			}
+			break;
+
+		case 3:
+			for (j = 0; ; j++)
+			{
+				if (joycode_dir[j].name == NULL)
+					return;
+
+				if (!strcmp(joycode_dir[j].name, buf))
+				{
+					array[i] = joycode_dir[j].value;
+					break;
+				}
+			}
+			break;
+		}
 	}
 
-	*p++ = '\0';
-
-	SaveFolderFlags(str, atoi(p));
-	option->priority = priority;
-
-	return 0;
+	if (*stemp != '\0')
+		return;
 }
 
-static void HideFolderEncodeString(void)
+INLINE void options_set_ui_joy(const char *name, const int *array)
 {
-	int i;
-	int num_saved = 0;
-	char buf[2000];
+	char buf[80];
+	int axis, dir;
 
-	strcpy(buf,"");
+	options_set_string(name, NULL);
 
-	// we save the ones that are NOT displayed, so we can add new ones
-	// and upgraders will see them
-	for (i=0; i < MAX_FOLDERS; i++)
+	if (array[0] == 0)
+		return;
+
+	for (axis = 0; ; axis++)
 	{
-		if (TestBit(settings.show_folder_flags, i) == FALSE)
+		if (joycode_axis[axis].name == NULL)
+			return;
+
+		if (joycode_axis[axis].value == array[1])
+			break;
+	}
+
+	for (dir = 0; ; dir++)
+	{
+		if (joycode_dir[dir].name == NULL)
+			return;
+
+		if (joycode_dir[dir].value == array[3])
+			break;
+	}
+
+	sprintf(buf, "%d,%s,%d,%s", array[0], joycode_axis[axis].name, array[2], joycode_dir[dir].name);
+	options_set_string(name, buf);
+}
+
+#define options_copy_ui_joy(src,dest)	options_copy_csv_int(src,dest,4)
+#define options_free_ui_joy(p)
+
+
+//============================================================
+
+INLINE void _options_get_ui_key(KeySeq *ks, const char *name)
+{
+	const char *stemp = options_get_string(name, FALSE);
+
+	FreeIfAllocated(&ks->seq_string);
+
+	if (stemp == NULL)
+		return;
+
+	ks->seq_string = strdup(stemp);
+
+	string_to_seq(ks->seq_string, &ks->is);
+	//dprintf("seq=%s,,,%04i %04i %04i %04i \n",stemp,ks->is.code[0],ks->is.code[1],ks->is.code[2],ks->is.code[3]);
+}
+
+INLINE void options_set_ui_key(const char *name, const KeySeq *ks)
+{
+	options_set_string(name, ks->seq_string);
+}
+
+INLINE void options_copy_ui_key(const KeySeq *src, KeySeq *dest)
+{
+	FreeIfAllocated(&dest->seq_string);
+
+	if (src->seq_string == NULL)
+		return;
+
+	dest->seq_string = strdup(src->seq_string);
+
+	string_to_seq(dest->seq_string, &dest->is);
+	//dprintf("seq=%s,,,%04i %04i %04i %04i \n",stemp,ks->is.code[0],ks->is.code[1],ks->is.code[2],ks->is.code[3]);
+}
+
+INLINE void options_free_ui_key(KeySeq *ks)
+{
+	FreeIfAllocated(&ks->seq_string);
+}
+
+
+//============================================================
+
+INLINE void _options_get_folder_hide(LPBITS *flags, const char *name)
+{
+	const char *stemp = options_get_string("folder_hide", FALSE);
+
+	if (*flags)
+		DeleteBits(*flags);
+
+	*flags = NewBits(MAX_FOLDERS);
+	SetAllBits(*flags ,TRUE);
+
+	if (stemp == NULL)
+		return;
+
+	while (*stemp)
+	{
+		char buf[256];
+		char *p;
+		int i;
+
+		if (*stemp == ',')
+			break;
+
+		p = buf;
+		while (*stemp != '\0' && *stemp != ',')
+			*p++ = *stemp++;
+		*p = '\0';
+
+		for (i = 0; g_folderData[i].m_lpTitle != NULL; i++)
+		{
+			if (strcmp(g_folderData[i].short_name, buf) == 0)
+			{
+				ClearBit(*flags, g_folderData[i].m_nFolderId);
+				break;
+			}
+		}
+
+		if (*stemp++ != ',')
+			return;
+
+		while (*stemp == ' ')
+			stemp++;
+	}
+}
+
+INLINE void options_set_folder_hide(const char *name, LPBITS flags)
+{
+	char buf[1024];
+	char *p;
+	int i;
+
+	p = buf;
+	for (i = 0; i < MAX_FOLDERS; i++)
+		if (TestBit(flags, i) == FALSE)
 		{
 			int j;
 
-			if (num_saved != 0)
-				strcat(buf,", ");
-
-			for (j=0; g_folderData[j].m_lpTitle != NULL; j++)
+			for (j = 0; g_folderData[j].m_lpTitle != NULL; j++)
 			{
 				if (g_folderData[j].m_nFolderId == i && g_folderData[j].short_name)
 				{
-					strcat(buf, g_folderData[j].short_name);
-					num_saved++;
+					if (p != buf)
+						*p++ = ',';
+
+					strcpy(p, g_folderData[j].short_name);
+					p += strlen(p);
 					break;
 				}
 			}
 		}
-	}
+	*p = '\0';
 
-	FreeIfAllocated(&rc_dummy_args.ui_hide_folder);
-
-	if (num_saved)
-		rc_dummy_args.ui_hide_folder = strdup(buf);
+	options_set_string("folder_hide", buf);
 }
 
-static int HideFolderDecodeString(struct rc_option *option, const char *arg, int priority)
+INLINE void options_copy_folder_hide(const LPBITS src, LPBITS *dest)
 {
-	char *token;
+	if (*dest)
+		DeleteBits(*dest);
 
-	if (settings.show_folder_flags)
-		DeleteBits(settings.show_folder_flags);
+	*dest = DuplicateBits(src);
+}
 
-	settings.show_folder_flags = NewBits(MAX_FOLDERS);
-	SetAllBits(settings.show_folder_flags,TRUE);
+INLINE void options_free_folder_hide(LPBITS *flags)
+{
+	if (*flags)
+		DeleteBits(*flags);
+}
 
-	option->priority = priority;
 
-	if (arg == NULL)
-		return 0;
+//============================================================
 
-	token = strdup(arg);
-	FreeIfAllocated(&rc_dummy_args.ui_hide_folder);
+INLINE void _options_get_folder_flag(f_flag *flags, const char *name)
+{
+	const char *stemp = options_get_string(name, FALSE);
 
-	if (token == NULL)
-		return 0;
+	free_folder_flag(flags);
 
-	token = strtok(token, ", \t");
-	while (token != NULL)
+	if (stemp == NULL)
+		return;
+
+	while (*stemp)
 	{
-		int j;
+		char buf[256];
+		char *p1;
+		char *p2;
 
-		for (j=0; g_folderData[j].m_lpTitle != NULL; j++)
+		if (*stemp == ',')
+			break;
+
+		p1 = buf;
+		while (*stemp != '\0' && *stemp != ',')
+			*p1++ = *stemp++;
+		*p1++ = '\0';
+
+		if (*stemp++ != ',')
+			return;
+
+		while (*stemp == ' ')
+			stemp++;
+
+		if (!isdigit(*stemp))
+			return;
+
+		p2 = p1;
+		while (isdigit(*stemp))
+			*p2++ = *stemp++;
+		*p2 = '\0';
+
+		set_folder_flag(flags, buf, atoi(p1));
+
+		if (*stemp++ != ',')
+			return;
+
+		while (*stemp == ' ')
+			stemp++;
+	}
+}
+
+INLINE void options_set_folder_flag(const char *name, const f_flag *flags)
+{
+	char buf[1024];
+	char *p;
+	int i;
+
+	p = buf;
+	for (i = 0; i < flags->num; i++)
+		if (flags->entry[i].name != NULL)
 		{
-			if (strcmp(g_folderData[j].short_name, token) == 0)
-			{
-				ClearBit(settings.show_folder_flags, g_folderData[j].m_nFolderId);
-				break;
-			}
+			if (p != buf)
+				*p++ = ',';
+
+			sprintf(p, "%s,%ld", flags->entry[i].name, flags->entry[i].flags);
+
+			p += strlen(p);
 		}
-		token = strtok(NULL, ", \t");
-	}
+	*p = '\0';
 
-	return 0;
+	options_set_string("folder_flag", buf);
 }
 
-static int PaletteDecodeString(struct rc_option *option, const char *arg, int priority)
-{
-	int pal[3];
-
-	if (arg == NULL)
-		return -1;
-
-	if (sscanf(arg, "%d,%d,%d", &pal[0], &pal[1], &pal[2]) != 3 ||
-		pal[0] < 0 || pal[0] >= 256 ||
-		pal[1] < 0 || pal[1] >= 256 ||
-		pal[2] < 0 || pal[2] >= 256 )
-	{
-		fprintf(stderr, _WINDOWS("error: invalid value for palette: %s\n"), arg);
-		return -1;
-	}
-
-	option->priority = priority;
-
-	return 0;
-}
-
-static int LanguageDecodeString(void)
-{
-	int langcode;
-
-	if (settings.language == NULL)
-		langcode = -1;
-	else
-		langcode = stricmp(settings.language, "auto") ? lang_find_langname(settings.language) : -1;
-
-	SetLangcode(langcode);
-	FreeIfAllocated(&settings.language);
-
-	return 0;
-}
-
-static void LanguageEncodeString(void)
-{
-	int langcode = GetLangcode();
-
-	FreeIfAllocated(&settings.language);
-	settings.language = strdup(langcode < 0 ? "auto" : ui_lang_info[langcode].name);
-}
-
-static void SaveFolderFlags(const char *folderName, DWORD dwFlags)
+INLINE void options_copy_folder_flag(const f_flag *src, f_flag *dest)
 {
 	int i;
 
-	for (i = 0; i < num_folder_flags; i++)
-		if (!strcmp(folder_flags[i].name, folderName))
-		{
-			if (dwFlags == 0)
-				folder_flags[i].name[0] = '\0';
-			else
-				folder_flags[i].flags = dwFlags;
-			return;
-		}
+	free_folder_flag(dest);
 
-	if (dwFlags == 0)
-		return;
-
-	for (i = 0; i < num_folder_flags; i++)
-		if (folder_flags[i].name[0] == '\0')
-			break;
-
-	if (i == num_folder_flags)
-	{
-		folder_flags_type *tmp;
-
-		tmp = realloc(folder_flags, (num_folder_flags + ALLOC_FOLDERFLAG) * sizeof(folder_flags_type));
-		if (!tmp)
-		{
-			fprintf(stderr, "error: realloc failed in SaveFolderFlags\n");
-			return;
-		}
-
-		folder_flags = tmp;
-		memset(tmp + num_folder_flags, 0, ALLOC_FOLDERFLAG * sizeof(folder_flags_type));
-		num_folder_flags += ALLOC_FOLDERFLAG;
-	}
-
-	strcpy(folder_flags[i].name, folderName);
-	folder_flags[i].flags = dwFlags;
+	for (i = 0; i < src->num; i++)
+		if (src->entry[i].name != NULL)
+			set_folder_flag(dest, src->entry[i].name, src->entry[i].flags);
 }
 
-static void LoadGameOptions(int driver_index)
-{
-	assert (0 <= driver_index && driver_index < num_games);
+#define options_free_folder_flag	free_folder_flag
 
-	rc_load_game_config(driver_index);
-}
 
-static void LoadAltOptions(alt_options_type *alt_option)
-{
-	rc_load_alt_config(alt_option);
-}
+//============================================================
 
-static void LoadDefaultOptions(void)
-{
-	rc_load_default_config();
-}
+#undef START_OPT_FUNC_CORE
+#undef END_OPT_FUNC_CORE
+#undef START_OPT_FUNC_DRIVER
+#undef END_OPT_FUNC_DRIVER
+#undef START_OPT_FUNC_WINUI
+#undef END_OPT_FUNC_WINUI
+#undef DEFINE_OPT
+#undef DEFINE_OPT_CSV
+#undef DEFINE_OPT_STRUCT
+#undef DEFINE_OPT_ARRAY
 
-static void LoadOptions(void)
-{
-	LoadDefaultOptions();
-	rc_load_winui_config();
-	SetLangcode(settings.langcode);
-	SetUseLangList(UseLangList());
+#define START_OPT_FUNC_CORE	static void options_get_core(settings_type *p) {
+#define END_OPT_FUNC_CORE	}
+#define START_OPT_FUNC_DRIVER	static void options_get_driver(options_type *p) {
+#define END_OPT_FUNC_DRIVER	}
+#define START_OPT_FUNC_WINUI	static void options_get_winui(settings_type *p) {
+#define END_OPT_FUNC_WINUI	}
+#define DEFINE_OPT(type,name)	_options_get_##type((&p->name), #name);
+#define DEFINE_OPT_CSV(type,name)	_options_get_csv_##type((p->name), sizeof (p->name) / sizeof (*p->name), #name);
+#define DEFINE_OPT_STRUCT		DEFINE_OPT
+#define DEFINE_OPT_ARRAY(type,name)	_options_get_##type((p->name), #name);
+#include "optdef.h"
 
-#if 0
-	if (!bResetGUI)
-	{
-		static char oldInfoMsg[400] = 
-MAME32NAME " has detected outdated configuration data.\n\n\
-The detected configuration data is from Version %s of " MAME32NAME ".\n\
-The current version is %s. It is recommended that the\n\
-configuration is set to the new defaults.\n\n\
-Would you like to use the new configuration?";
 
-		char *current_version;
+#undef START_OPT_FUNC_CORE
+#undef END_OPT_FUNC_CORE
+#undef START_OPT_FUNC_DRIVER
+#undef END_OPT_FUNC_DRIVER
+#undef START_OPT_FUNC_WINUI
+#undef END_OPT_FUNC_WINUI
+#undef DEFINE_OPT
+#undef DEFINE_OPT_CSV
+#undef DEFINE_OPT_STRUCT
+#undef DEFINE_OPT_ARRAY
 
-		current_version = GetVersionString();
+#define START_OPT_FUNC_CORE	static void options_set_core(const settings_type *p) {
+#define END_OPT_FUNC_CORE	}
+#define START_OPT_FUNC_DRIVER	static void options_set_driver(const options_type *p) {
+#define END_OPT_FUNC_DRIVER	}
+#define START_OPT_FUNC_WINUI	static void options_set_winui(const settings_type *p) {
+#define END_OPT_FUNC_WINUI	}
+#define DEFINE_OPT(type,name)	options_set_##type(#name, (p->name));
+#define DEFINE_OPT_CSV(type,name)	options_set_csv_##type(#name, (p->name), sizeof (p->name) / sizeof (*p->name));
+#define DEFINE_OPT_STRUCT(type,name)	options_set_##type(#name, (&p->name));
+#define DEFINE_OPT_ARRAY(type,name)	options_set_##type(#name, (p->name));
+#include "optdef.h"
 
-		if (rc_dummy_args.save_version && *rc_dummy_args.save_version && strcmp(rc_dummy_args.save_version, current_version) != 0)
-		{
-			char msg[400];
-			sprintf(msg,_UI(oldInfoMsg), rc_dummy_args.save_version, current_version);
-			if (MessageBox(0, _Unicode(msg), _Unicode(_UI("Version Mismatch")), MB_YESNO | MB_ICONQUESTION) == IDYES)
-				bResetGUI = TRUE;
-		}
 
-		FreeIfAllocated(&rc_dummy_args.save_version);
-	}
-#endif
+#undef START_OPT_FUNC_CORE
+#undef END_OPT_FUNC_CORE
+#undef START_OPT_FUNC_DRIVER
+#undef END_OPT_FUNC_DRIVER
+#undef START_OPT_FUNC_WINUI
+#undef END_OPT_FUNC_WINUI
+#undef DEFINE_OPT
+#undef DEFINE_OPT_CSV
+#undef DEFINE_OPT_STRUCT
+#undef DEFINE_OPT_ARRAY
 
-	if (bResetGUI)
-	{
-		FreeSettings(&settings);
-		settings = backup.settings;
-		SetLangcode(settings.langcode);
-		SetUseLangList(UseLangList());
-	}
-	else
-		FreeSettings(&backup.settings);
+#define START_OPT_FUNC_CORE	static void options_free_string_core(settings_type *p) { \
+				options_set_datalist(options_core);
+#define END_OPT_FUNC_CORE	}
+#define START_OPT_FUNC_DRIVER	static void options_free_string_driver(options_type *p) { \
+				options_set_datalist(options_driver);
+#define END_OPT_FUNC_DRIVER	}
+#define START_OPT_FUNC_WINUI	static void options_free_string_winui(settings_type *p) { \
+				options_set_datalist(options_winui);
+#define END_OPT_FUNC_WINUI	}
+#define DEFINE_OPT(type,name)	options_free_##type(&p->name);
+#define DEFINE_OPT_CSV(type,name)	options_free_csv_##type((p->name), sizeof (p->name) / sizeof (*p->name));
+#define DEFINE_OPT_STRUCT		DEFINE_OPT
+#define DEFINE_OPT_ARRAY(type,name)	options_free_##type(p->name);
+#include "optdef.h"
 
-	bResetGUI = FALSE;
-}
+
+#undef START_OPT_FUNC_CORE
+#undef END_OPT_FUNC_CORE
+#undef START_OPT_FUNC_DRIVER
+#undef END_OPT_FUNC_DRIVER
+#undef START_OPT_FUNC_WINUI
+#undef END_OPT_FUNC_WINUI
+#undef DEFINE_OPT
+#undef DEFINE_OPT_CSV
+#undef DEFINE_OPT_STRUCT
+#undef DEFINE_OPT_ARRAY
+
+#define START_OPT_FUNC_CORE	static void options_duplicate_core(const settings_type *source, settings_type *dest) { \
+				options_set_datalist(options_core);
+#define END_OPT_FUNC_CORE	}
+#define START_OPT_FUNC_DRIVER	static void options_duplicate_driver(const options_type *source, options_type *dest) { \
+				options_set_datalist(options_driver);
+#define END_OPT_FUNC_DRIVER	}
+#define START_OPT_FUNC_WINUI	static void options_duplicate_winui(const settings_type *source, settings_type *dest) { \
+				options_set_datalist(options_winui);
+#define END_OPT_FUNC_WINUI	}
+#define DEFINE_OPT(type,name)	options_copy_##type((source->name), (&dest->name));
+#define DEFINE_OPT_CSV(type,name)	options_copy_csv_##type((source->name), (dest->name), sizeof (dest->name) / sizeof (*dest->name));
+#define DEFINE_OPT_STRUCT(type,name)	options_copy_##type((&source->name), (&dest->name));
+#define DEFINE_OPT_ARRAY(type,name)	options_copy_##type((source->name), (dest->name));
+#include "optdef.h"
+
+
+#undef START_OPT_FUNC_CORE
+#undef END_OPT_FUNC_CORE
+#undef START_OPT_FUNC_DRIVER
+#undef END_OPT_FUNC_DRIVER
+#undef START_OPT_FUNC_WINUI
+#undef END_OPT_FUNC_WINUI
+#undef DEFINE_OPT
+#undef DEFINE_OPT_CSV
+#undef DEFINE_OPT_STRUCT
+#undef DEFINE_OPT_ARRAY
+
+#define START_OPT_FUNC_DRIVER	static BOOL options_compare_driver(const options_type *p1, const options_type *p2) { \
+				options_set_datalist(options_driver);
+#define END_OPT_FUNC_DRIVER	return 0; \
+				}
+#define DEFINE_OPT(type,name)	_options_compare_##type((p1->name), (p2->name));
+#include "optdef.h"
+
+#undef START_OPT_FUNC_CORE
+#undef END_OPT_FUNC_CORE
+#undef START_OPT_FUNC_DRIVER
+#undef END_OPT_FUNC_DRIVER
+#undef START_OPT_FUNC_WINUI
+#undef END_OPT_FUNC_WINUI
+#undef DEFINE_OPT
+#undef DEFINE_OPT_CSV
+#undef DEFINE_OPT_STRUCT
+#undef DEFINE_OPT_ARRAY
+
+#define START_OPT_FUNC_DRIVER	static void options_set_mark_driver(const options_type *p, const options_type *parent) { \
+				options_set_datalist(options_driver); \
+				options_clear_output_mark();
+#define END_OPT_FUNC_DRIVER	}
+#define DEFINE_OPT(type,name)	do { if (options_compare_##type((p->name), (parent->name))) options_set_##type(#name, (p->name)); } while (0);
+#include "optdef.h"
 
 /* End of options.c */

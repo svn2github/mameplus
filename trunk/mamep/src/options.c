@@ -13,6 +13,7 @@
 #include "mame.h"
 #include "fileio.h"
 #include "options.h"
+#include "osd_so.h"
 
 #include <ctype.h>
 
@@ -39,6 +40,7 @@ struct _options_data
 	const char *			data;				/* data for this item */
 	const char *			description;		/* description for this item */
 	void					(*callback)(const char *arg);	/* callback to be invoked when parsing */
+	int					mark;
 };
 
 
@@ -66,6 +68,75 @@ static void update_data(options_data *data, const char *newdata);
     Core system management
 
 ***************************************************************************/
+
+/*-------------------------------------------------
+    generate_find_cache
+-------------------------------------------------*/
+
+struct find_cache_entry
+{
+	const char *name;
+	options_data *data;
+};
+
+static struct
+{
+	options_data *current_entry;
+	struct find_cache_entry *cache;
+	int count;
+} find_cache;
+
+static int compare_entry(const void *compare1, const void *compare2)
+{
+	const struct find_cache_entry *p1 = (const struct find_cache_entry *)compare1;
+	const struct find_cache_entry *p2 = (const struct find_cache_entry *)compare2;
+
+	return strcmp(p1->name, p2->name);
+}
+
+static void generate_find_cache(void)
+{
+	struct find_cache_entry *p;
+	options_data *data;
+	int len;
+
+	find_cache.current_entry = datalist;
+
+	if (find_cache.cache != NULL)
+		free(find_cache.cache);
+
+	len = 256;
+
+	find_cache.cache = malloc(len * sizeof (*find_cache.cache));
+	p = find_cache.cache;
+	find_cache.count = 0;
+
+	/* scan all entries */
+	for (data = datalist; data != NULL; data = data->next)
+		if (!(data->flags & OPTION_HEADER))
+		{
+			int namenum;
+
+			/* loop over names */
+			for (namenum = 0; namenum < ARRAY_LENGTH(data->names); namenum++)
+				if (data->names[namenum] != NULL)
+				{
+					if (find_cache.count >= len)
+					{
+						len *= 2;
+						find_cache.cache = realloc(find_cache.cache, len * sizeof (*find_cache.cache));
+						p = find_cache.cache + find_cache.count;
+					}
+
+					p->data = data;
+					p->name = data->names[namenum];
+					p++;
+					find_cache.count++;
+				}
+		}
+
+	qsort(find_cache.cache, find_cache.count, sizeof (*find_cache.cache), compare_entry);
+}
 
 /*-------------------------------------------------
     copy_string - allocate a copy of a string
@@ -128,6 +199,15 @@ void options_add_entries(const options_entry *entrylist)
 {
 	options_data *data;
 
+	if (find_cache.current_entry == datalist)
+	{
+		if (find_cache.cache != NULL)
+			free(find_cache.cache);
+
+		find_cache.cache = NULL;
+		find_cache.current_entry = NULL;
+	}
+
 	/* loop over entries until we hit a NULL name */
 	for ( ; entrylist->name != NULL || (entrylist->flags & OPTION_HEADER); entrylist++)
 	{
@@ -173,6 +253,15 @@ void options_set_option_callback(const char *name, void (*callback)(const char *
 
 void options_free_entries(void)
 {
+	if (find_cache.current_entry == datalist)
+	{
+		if (find_cache.cache != NULL)
+			free(find_cache.cache);
+
+		find_cache.cache = NULL;
+		find_cache.current_entry = NULL;
+	}
+
 	/* free all of the registered data */
 	while (datalist != NULL)
 	{
@@ -325,9 +414,37 @@ void options_output_ini_file(FILE *inifile)
 		else if ((data->flags & (OPTION_DEPRECATED | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
 		{
 			if (data->data != NULL)
-				fprintf(inifile, "%-20s%s\n", data->names[0], data->data);
+				fprintf(inifile, "%-26s %s\n", data->names[0], data->data);
 			else
-				fprintf(inifile, "# %-18s<NULL> (not set)\n", data->names[0]);
+				fprintf(inifile, "# %-24s <NULL> (not set)\n", data->names[0]);
+		}
+	}
+}
+
+
+/*-------------------------------------------------
+    options_output_ini_file_marked - output the
+    current marked state to an INI file
+-------------------------------------------------*/
+
+void options_output_ini_file_marked(FILE *inifile)
+{
+	options_data *data;
+
+	/* loop over all items */
+	for (data = datalist; data != NULL; data = data->next)
+	{
+		/* header: just print */
+		if ((data->flags & OPTION_HEADER) != 0)
+			fprintf(inifile, "\n#\n# %s\n#\n", data->description);
+
+		/* otherwise, output entries for all non-deprecated and non-command items */
+		else if (data->mark && (data->flags & (OPTION_DEPRECATED | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
+		{
+			if (data->data != NULL)
+				fprintf(inifile, "%-26s %s\n", data->names[0], data->data);
+			else
+				fprintf(inifile, "# %-24s <NULL> (not set)\n", data->names[0]);
 		}
 	}
 }
@@ -475,6 +592,28 @@ void options_set_float(const char *name, float value)
     matches the given string
 -------------------------------------------------*/
 
+#if 1
+static options_data *find_entry_data(const char *string, int is_command_line)
+{
+	struct find_cache_entry temp, *result;
+	int has_no_prefix;
+
+	/* determine up front if we should look for "no" boolean options */
+	has_no_prefix = (is_command_line && strncmp(string, "no", 2) == 0);
+
+	if (find_cache.current_entry != datalist)
+		generate_find_cache();
+
+	temp.name = has_no_prefix ? &string[2] : &string[0];
+
+	result = bsearch(&temp, find_cache.cache, find_cache.count, sizeof (*find_cache.cache), compare_entry);
+	if (result)
+		return result->data;
+
+	return NULL;
+}
+
+#else
 static options_data *find_entry_data(const char *string, int is_command_line)
 {
 	options_data *data;
@@ -499,6 +638,7 @@ static options_data *find_entry_data(const char *string, int is_command_line)
 	/* didn't find it at all */
 	return NULL;
 }
+#endif
 
 
 /*-------------------------------------------------
@@ -525,4 +665,38 @@ static void update_data(options_data *data, const char *newdata)
 	if (data->data)
 		free((void *)data->data);
 	data->data = copy_string(datastart, dataend + 1);
+	data->mark = TRUE;
+}
+
+
+void options_clear_output_mark(void)
+{
+	options_data *data;
+
+	for (data = datalist; data != NULL; data = data->next)
+		data->mark = FALSE;
+}
+
+
+void *options_get_datalist(void)
+{
+	return datalist;
+}
+
+
+void options_set_datalist(void *newlist)
+{
+	options_data *p = newlist;
+	datalist = p;
+
+	if (p == NULL)
+	{
+		datalist_nextptr = &datalist;
+		return;
+	}
+
+	while (p->next != NULL)
+		p = p->next;
+
+	datalist_nextptr = &p->next;
 }

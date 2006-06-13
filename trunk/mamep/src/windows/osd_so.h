@@ -129,6 +129,7 @@ extern SHAREDOBJ_FUNC(int)  png_write_datastream(mame_file *fp, png_info *p);
 extern SHAREDOBJ_FUNC(int)  png_write_bitmap(mame_file *fp, mame_bitmap *bitmap);
 
 #include "../input.h"
+SHAREDOBJ_FUNC(int)  code_init(void);
 SHAREDOBJ_FUNC(void) seq_copy(input_seq *seqdst, const input_seq *seqsrc);
 SHAREDOBJ_FUNC(int)  string_to_seq(const char *string, input_seq *seq);
 
@@ -152,6 +153,8 @@ extern SHAREDOBJ_FUNC(int)          options_parse_xml_file(mame_file *xmlfile);
 extern SHAREDOBJ_FUNC(int)          options_parse_ini_file(mame_file *inifile);
 extern SHAREDOBJ_FUNC(void)         options_output_xml_file(FILE *xmlfile);
 extern SHAREDOBJ_FUNC(void)         options_output_ini_file(FILE *inifile);
+extern SHAREDOBJ_FUNC(void)         options_output_xml_file_marked(FILE *xmlfile);
+extern SHAREDOBJ_FUNC(void)         options_output_ini_file_marked(FILE *inifile);
 extern SHAREDOBJ_FUNC(void)         options_output_help(FILE *output);
 extern SHAREDOBJ_FUNC(const char *) options_get_string(const char * name, int report_error);
 extern SHAREDOBJ_FUNC(int)          options_get_bool(const char * name, int report_error);
@@ -161,6 +164,9 @@ extern SHAREDOBJ_FUNC(void)         options_set_string(const char * name, const 
 extern SHAREDOBJ_FUNC(void)         options_set_bool(const char * name, int value);
 extern SHAREDOBJ_FUNC(void)         options_set_int(const char * name, int value);
 extern SHAREDOBJ_FUNC(void)         options_set_float(const char * name, float value);
+extern SHAREDOBJ_FUNC(void)         options_clear_output_mark(void);
+extern SHAREDOBJ_FUNC(void *)       options_get_datalist(void);
+extern SHAREDOBJ_FUNC(void)         options_set_datalist(void *);
 
 #include "restrack.h"
 extern SHAREDOBJ_FUNC(void)   add_free_resources_callback(void (*callback)(void));

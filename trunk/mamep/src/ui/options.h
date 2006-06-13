@@ -192,7 +192,7 @@ typedef struct
 //
 	BOOL	window;
 	BOOL	maximize;
-	int		numscreens;
+	int	numscreens;
 	char*	extra_layout;
 //
 // PER-WINDOW VIDEO OPTIONS
@@ -220,33 +220,34 @@ typedef struct
 	BOOL	ddraw;
 #endif
 	BOOL	direct3d;
-	int		d3dversion;
+	int	d3dversion;
 	BOOL	waitvsync;
 	BOOL	syncrefresh;
 	BOOL	triplebuffer;
 	BOOL	switchres;
 	BOOL	filter;
+	int     prescale;
 	float	full_screen_gamma;
 
 #ifndef NEW_RENDER
 	BOOL	hwstretch;
-    char*   cleanstretch;
-    int     refresh;
-    BOOL   scanlines;
-    BOOL   switchbpp;
-    BOOL   keepaspect;
-    BOOL   matchrefresh;
-    char*  effect;
-    float  gamma;
-    
-    int    zoom;
-    BOOL   d3dtexmanage;
-    
-    int    d3dfeedback;
-    int    d3dscan;
-    BOOL   d3deffectrotate;
-    char*  d3dprescale;
-    char*  d3deffect;
+	char*	cleanstretch;
+	int	refresh;
+	BOOL	scanlines;
+	BOOL	switchbpp;
+	BOOL	keepaspect;
+	BOOL	matchrefresh;
+	char*	effect;
+	float	gamma;
+
+	int	zoom;
+	BOOL	d3dtexmanage;
+
+	int	d3dfeedback;
+	int	d3dscan;
+	BOOL	d3deffectrotate;
+	char*	d3dprescale;
+	char*	d3deffect;
 #endif
 
 } options_type;
@@ -280,192 +281,6 @@ enum
 // Because we have added the Options after MAX_TAB_TYPES, we have to subtract 3 here
 // (that's how many options we have after MAX_TAB_TYPES)
 #define TAB_SUBTRACT 3
-
-
-typedef struct
-{
-	/* frontend */
-	BOOL   listclones;
-
-	INT      folder_id;
-	BOOL     view;
-	BOOL     show_folderlist;
-	LPBITS   show_folder_flags;
-	BOOL     show_toolbar;
-	BOOL     show_statusbar;
-	BOOL     show_screenshot;
-	BOOL     show_tabctrl;
-	int      show_tab_flags;
-	int      history_tab;
-	char     *current_tab;
-	BOOL     game_check;        /* Startup GameCheck */
-	BOOL     use_joygui;
-	BOOL     use_keygui;
-	BOOL     broadcast;
-	BOOL     random_bg;
-	int      cycle_screenshot;
-	BOOL     stretch_screenshot_larger;
-	int      screenshot_bordersize;
-	COLORREF screenshot_bordercolor;
-	BOOL     inherit_filter;
-	BOOL     offset_clones;
-	BOOL	 game_caption;
-
-	char     *default_game;
-	int      column_width[COLUMN_MAX];
-	int      column_order[COLUMN_MAX];
-	int      column_shown[COLUMN_MAX];
-	int      sort_column;
-	BOOL     sort_reverse;
-	AREA     area;
-	UINT     windowstate;
-	int      splitter[4];		/* NPW 5-Feb-2003 - I don't like hard coding this, but I don't have a choice */
-	COLORREF custom_color[16]; /* This is how many custom colors can be shown on the standard ColorPicker */
-	BOOL     use_broken_icon;
-	LOGFONTA list_font;
-	COLORREF list_font_color;
-	COLORREF list_clone_color;
-	COLORREF list_broken_color;
-
-	// Keyboard control of ui
-	KeySeq   ui_key_up;
-	KeySeq   ui_key_down;
-	KeySeq   ui_key_left;
-	KeySeq   ui_key_right;
-	KeySeq   ui_key_start;
-	KeySeq   ui_key_pgup;
-	KeySeq   ui_key_pgdwn;
-	KeySeq   ui_key_home;
-	KeySeq   ui_key_end;
-	KeySeq   ui_key_ss_change;
-	KeySeq   ui_key_history_up;
-	KeySeq   ui_key_history_down;
-
-	KeySeq   ui_key_context_filters;	/* CTRL F */
-	KeySeq   ui_key_select_random;		/* CTRL R */
-	KeySeq   ui_key_game_audit;		/* ALT A */
-	KeySeq   ui_key_game_properties;	/* ALT VK_RETURN */
-	KeySeq   ui_key_help_contents;		/* VK_F1 */
-	KeySeq   ui_key_update_gamelist;	/* VK_F5 */
-	KeySeq   ui_key_view_folders;		/* ALT D */
-	KeySeq   ui_key_view_fullscreen;	/* VK_F11 */
-	KeySeq   ui_key_view_pagetab;		/* ALT B */
-	KeySeq   ui_key_view_picture_area;	/* ALT P */
-	KeySeq   ui_key_view_status;		/* ALT S */
-	KeySeq   ui_key_view_toolbars;		/* ALT T */
-
-	KeySeq   ui_key_view_tab_cabinet;	/* ALT 3 */
-	KeySeq   ui_key_view_tab_cpanel;	/* ALT 6 */
-	KeySeq   ui_key_view_tab_flyer;		/* ALT 2 */
-	KeySeq   ui_key_view_tab_history;	/* ALT 7 */
-#ifdef STORY_DATAFILE
-	KeySeq   ui_key_view_tab_story;		/* ALT 8 */
-#endif /* STORY_DATAFILE */
-	KeySeq   ui_key_view_tab_marquee;	/* ALT 4 */
-	KeySeq   ui_key_view_tab_screenshot;	/* ALT 1 */
-	KeySeq   ui_key_view_tab_title;		/* ALT 5 */
-	KeySeq   ui_key_quit;			/* ALT Q */
-
-	// Joystick control of ui
-	// array of 4 is joystick index, stick or button, etc.
-	int      ui_joy_up[4];
-	int      ui_joy_down[4];
-	int      ui_joy_left[4];
-	int      ui_joy_right[4];
-	int      ui_joy_start[4];
-	int      ui_joy_pgup[4];
-	int      ui_joy_pgdwn[4];
-	int      ui_joy_home[4];
-	int      ui_joy_end[4];
-	int      ui_joy_ss_change[4];
-	int      ui_joy_history_up[4];
-	int      ui_joy_history_down[4];
-	int      ui_joy_exec[4];
-
-	char*    exec_command;  // Command line to execute on ui_joy_exec   
-	int      exec_wait;     // How long to wait before executing
-	BOOL     hide_mouse;    // Should mouse cursor be hidden on startup?
-	BOOL     full_screen;   // Should we fake fullscreen?
-
-#ifdef USE_SHOW_SPLASH_SCREEN
-	BOOL     display_splash_screen;
-#endif /* USE_SHOW_SPLASH_SCREEN */
-
-	char*    flyerdir;
-	char*    cabinetdir;
-	char*    marqueedir;
-	char*	 titlesdir;
-	char*	 cpaneldir;
-	char*    iconsdir;
-	char*    bgdir;
-	char*    folderdir;
-#ifdef USE_VIEW_PCBINFO
-	char*    pcbinfodir;
-#endif /* USE_VIEW_PCBINFO */
-
-	/* directory and datafile */
-	char*	rompath;
-	char*	samplepath;
-	char*	inipath;
-	char*	cfg_directory;
-	char*	nvram_directory;
-	char*	memcard_directory;
-	char*	input_directory;
-	char*	hiscore_directory;
-	char*	state_directory;
-	char*	artwork_directory;
-	char*	snapshot_directory;
-	char*	diff_directory;
-	char*	ctrlr_directory;
-	char*	comment_directory;
-#ifdef USE_IPS
-	char*	ips_directory;
-#endif /* USE_IPS */
-	char*	lang_directory;
-	char*	cheat_file;
-	char*	history_file;
-#ifdef STORY_DATAFILE
-	char*	story_file;
-#endif /* STORY_DATAFILE */
-	char*	mameinfo_file;
-	char*	hiscore_file;
-
-#ifdef UI_COLOR_DISPLAY
-	/* ui palette */
-	char*    font_blank;
-	char*    font_normal;
-	char*    font_special;
-	char*    system_background;
-	char*    system_framemedium;
-	char*    system_framelight;
-	char*    system_framedark;
-	char*    osdbar_framemedium;
-	char*    osdbar_framelight;
-	char*    osdbar_framedark;
-	char*    osdbar_defaultbar;
-	char*    button_red;
-	char*    button_yellow;
-	char*    button_green;
-	char*    button_blue;
-	char*    button_purple;
-	char*    button_pink;
-	char*    button_aqua;
-	char*    button_silver;
-	char*    button_navy;
-	char*    button_lime;
-	char*    cursor;
-#endif /* UI_COLOR_DISPLAY */
-
-	/* language */
-	int      langcode;
-	char*	 language;
-	BOOL     use_lang_list;
-
-	/* configuration */
-	BOOL     readconfig;
-	BOOL     verbose;
-
-} settings_type; /* global settings for the UI only */
 
 
 /*----------------------------------------*/
@@ -521,10 +336,10 @@ BOOL GetGameCheck(void);
 void SetVersionCheck(BOOL version_check);
 BOOL GetVersionCheck(void);
 
-void SetJoyGUI(BOOL use_joygui);
+void SetJoyGUI(BOOL joygui);
 BOOL GetJoyGUI(void);
 
-void SetKeyGUI(BOOL use_keygui);
+void SetKeyGUI(BOOL keygui);
 BOOL GetKeyGUI(void);
 
 void SetCycleScreenshot(int cycle_screenshot);

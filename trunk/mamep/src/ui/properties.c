@@ -34,7 +34,6 @@
 #include "MAME32.h"	// include this first
 #include "driver.h"
 #include "info.h"
-#include "rc.h"
 #include "audit.h"
 #include "audit32.h"
 #include "bitmask.h"
