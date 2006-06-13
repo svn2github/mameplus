@@ -403,9 +403,17 @@ int cli_frontend_init(int argc, char **argv)
 	if (gamename != NULL)
 		drvnum = driver_get_index(extract_base_name(gamename, basename, ARRAY_LENGTH(basename)));
 
+	// load mame.ini from current dir
+	set_pathlist(FILETYPE_INI, ".");
+
 	// now parse the core set of INI files
 	parse_ini_file(CONFIGNAME ".ini");
+
+	// use inipath from configuration
+	set_pathlist(FILETYPE_INI, NULL);
+
 	parse_ini_file(extract_base_name(argv[0], buffer, ARRAY_LENGTH(buffer)));
+
 #ifdef MAME_DEBUG
 	parse_ini_file("debug.ini");
 #endif
