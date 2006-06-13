@@ -15,7 +15,9 @@ START_OPT_FUNC_CORE
 	DEFINE_OPT(string,               diff_directory);
 	DEFINE_OPT(string,               ctrlr_directory);
 	DEFINE_OPT(string,               comment_directory);
+#ifdef USE_IPS
 	DEFINE_OPT(string,               ips_directory);
+#endif /* USE_IPS */
 	DEFINE_OPT(string,               lang_directory);
 	DEFINE_OPT(string,               cheat_file);
 	DEFINE_OPT(string,               history_file);
@@ -91,7 +93,9 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(bool,                 use_backdrops)
 	DEFINE_OPT(bool,                 use_overlays)
 	DEFINE_OPT(bool,                 use_bezels)
-	DEFINE_OPT(string_allow_null,    ips)
+#ifdef USE_IPS
+	DEFINE_OPT(ips,                  ips)
+#endif /* USE_IPS */
 	DEFINE_OPT(bool,                 disable_second_monitor)
 	DEFINE_OPT(bool,                 confirm_quit)
 	DEFINE_OPT(bool,                 auto_pause_playback)

@@ -3829,6 +3829,24 @@ INLINE void _options_get_float_min_max(float *p, const char *name, float min, fl
 
 //============================================================
 
+#ifdef USE_IPS
+#define _options_get_ips		_options_get_string_allow_null
+#define options_set_ips			options_set_string_allow_null
+#define options_copy_ips		options_copy_string_allow_null
+#define options_free_ips		options_free_string_allow_null
+#define _options_compare_ips(s1,s2)	do { ; } while (0)
+
+INLINE BOOL options_compare_ips(const char *s1, const char *s2)
+{
+	if (s1)
+		return TRUE;
+}
+
+#endif /* USE_IPS */
+
+
+//============================================================
+
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 #define _options_get_m68k_core(p,name)	_options_get_int_min_max(p, name, 0, 2)
 #define options_set_m68k_core		options_set_int
