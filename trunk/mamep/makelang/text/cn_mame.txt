@@ -4618,6 +4618,14 @@ Zoom
 \tPlease Go To\n\thttp://cheat.retrogames.com/faq.htm\n\tFor Documentation\n
 \t请访问\n\thttp://cheat.retrogames.com/faq.htm\n\t取得帮助文档\n
 
+# ui_text.c: 81
+\xab
+\x11
+
+# ui_text.c: 82
+\xbb
+\x10
+
 # cheat.c: 2553
 cheat database not found
 未找到作弊码数据库
@@ -4876,14 +4884,6 @@ Unable to extend malloc tracking array to %d slots
 
 # cheat.c: 930
 Watch me for good answer
-
-
-# ui_text.c: 81
-\xab
-
-
-# ui_text.c: 82
-\xbb
 
 
 # mamecore.h: 194 

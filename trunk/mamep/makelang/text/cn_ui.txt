@@ -1330,6 +1330,10 @@ Keyboard
 L&arge Icons
 大图标(&A)
 
+# ui/layout.c: 112
+Language Files
+语言文件
+
 # ui/options.c: 295 ui/win32ui.c: 667
 Large Icons
 大图标
@@ -1553,6 +1557,14 @@ Overlays
 # ui/mame32.rc: 55
 P&layback Input...
 回放输入指令(&L)...
+
+# ui/mame32.rc: 1261
+PCB Info
+PCB 信息
+
+# ui/layout.c: 136
+PCB Info Files
+PCB 信息文件
 
 # ui/properties.c: 555
 PS/2 Keyboard
@@ -2670,6 +2682,10 @@ settings then exit.\n\n
 the next time MAME32 is run.\n\n
 MAME32 下次运行时生效。\n\n
 
+# ui/win32ui.h: 20
+type a keyword
+键入关键字
+
 # ui/mame32.rc: 390
                                 
 
@@ -2690,10 +2706,6 @@ External Folder List
 Input Files (*.inp)
 
 
-# ui/layout.c: 112
-Language Files
-
-
 # ui/dialogs.c: 863
 MAME32 PCB Info: %s [%s]
 
@@ -2706,14 +2718,6 @@ MAME32 game list files (*.lst)
 No PCB Info available for this game.
 
 
-# ui/mame32.rc: 1261
-PCB Info
-
-
-# ui/layout.c: 136
-PCB Info Files
-
-
 # ui/mame32.rc: 1579
 Save game list in specified lst file
 
@@ -2724,9 +2728,5 @@ Show game PCB information
 
 # ui/mame32.rc: 389
 and John Hardy IV
-
-
-# ui/win32ui.h: 20
-type a keyword
 
 
