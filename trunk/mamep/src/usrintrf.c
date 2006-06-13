@@ -485,7 +485,7 @@ int ui_init(void)
 	ui_menu_stack_reset();
 
 	/* initialize the on-screen display system */
-	onscrd_init();
+	//onscrd_init();
 
 	/* reset globals */
 	single_step = FALSE;
@@ -603,6 +603,8 @@ int ui_display_startup_screens(int show_disclaimer, int show_warnings, int show_
 		if (ui_handler_param == UI_HANDLER_CANCEL)
 			return 1;
 	}
+
+	ui_set_handler(NULL, 0);
 
 	/* clear the input memory */
 	while (code_read_async() != CODE_NONE) ;
