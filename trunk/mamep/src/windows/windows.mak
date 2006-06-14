@@ -210,7 +210,7 @@ OSOBJS = \
 	$(OBJ)/$(MAMEOS)/ticker.o \
 	$(OBJ)/$(MAMEOS)/winmain.o \
 
-ifndef NEW_RENDER
+ifeq ($(NEW_RENDER),)
 OSOBJS += \
 	$(OBJ)/$(MAMEOS)/blit.o \
 	$(OBJ)/$(MAMEOS)/videoold.o \
@@ -236,7 +236,7 @@ OSTOOLOBJS = \
 	$(OBJ)/$(MAMEOS)/osd_tool.o
 
 # extra targets and rules for the scale effects
-ifdef NEW_RENDER
+ifneq ($(NEW_RENDER),)
 USE_SCALE_EFFECTS =
 endif
 ifneq ($(USE_SCALE_EFFECTS),)

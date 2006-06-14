@@ -24,6 +24,6 @@ int scale_init(void);
 int scale_exit(void);
 int scale_check(int depth);
 int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth, int update);
-int scale_decode(struct rc_option *option, const char *arg, int priority);
+int scale_decode(const char *arg);
 
 #endif

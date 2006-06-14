@@ -21,7 +21,9 @@ START_OPT_FUNC_CORE
 	DEFINE_OPT(string,               lang_directory);
 	DEFINE_OPT(string,               cheat_file);
 	DEFINE_OPT(string,               history_file);
+#ifdef STORY_DATAFILE
 	DEFINE_OPT(string,               story_file);
+#endif /* STORY_DATAFILE */
 	DEFINE_OPT(string,               mameinfo_file);
 	DEFINE_OPT(string,               hiscore_file);
 
@@ -81,7 +83,9 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(samplerate,           samplerate)
 	DEFINE_OPT(bool,                 samples)
 	DEFINE_OPT(volume,               volume)
+#ifdef USE_VOLUME_AUTO_ADJUST
 	DEFINE_OPT(bool,                 volume_adjust)
+#endif /* USE_VOLUME_AUTO_ADJUST */
 	DEFINE_OPT(audio_latency,        audio_latency)
 	DEFINE_OPT(string_allow_null,    wavwrite)
 
@@ -98,7 +102,9 @@ START_OPT_FUNC_DRIVER
 #endif /* USE_IPS */
 	DEFINE_OPT(bool,                 disable_second_monitor)
 	DEFINE_OPT(bool,                 confirm_quit)
+#ifdef AUTO_PAUSE_PLAYBACK
 	DEFINE_OPT(bool,                 auto_pause_playback)
+#endif /* AUTO_PAUSE_PLAYBACK */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 	DEFINE_OPT(m68k_core,            m68k_core)
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
@@ -132,7 +138,11 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(led_mode,             led_mode)
 	DEFINE_OPT(float,                a2d_deadzone)
 	DEFINE_OPT(string_allow_null,    ctrlr)
+#ifdef USE_JOY_MOUSE_MOVE
+	// Support Stick-type Pointing Device (miko2u@hotmail.com)
 	DEFINE_OPT(bool,                 stickpoint)
+#endif /* USE_JOY_MOUSE_MOVE */
+#ifdef JOYSTICK_ID
 	DEFINE_OPT(int_positive,         joyid1)
 	DEFINE_OPT(int_positive,         joyid2)
 	DEFINE_OPT(int_positive,         joyid3)
@@ -141,6 +151,7 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(int_positive,         joyid6)
 	DEFINE_OPT(int_positive,         joyid7)
 	DEFINE_OPT(int_positive,         joyid8)
+#endif /* JOYSTICK_ID */
 	DEFINE_OPT(analog_select,        paddle_device)
 	DEFINE_OPT(analog_select,        adstick_device)
 	DEFINE_OPT(analog_select,        pedal_device)

@@ -119,9 +119,6 @@ UINT8 blit_swapxy;
 //static char *effect;
 //static char *aspect;
 static char *mngwrite;
-#ifdef USE_SCALE_EFFECTS
-static char *win_scale_effect;
-#endif /* USE_SCALE_EFFECTS */
 
 // primary monitor handle
 static HMONITOR primary_monitor;
@@ -440,6 +437,13 @@ static void extract_video_config(void)
 {
 extern int win_d3d_use_filter;
 extern int win_d3d_tex_manage;
+
+#ifdef USE_SCALE_EFFECTS
+	const char *stemp = options_get_string("scale_effect", TRUE);
+
+	if (stemp)
+		scale_decode(stemp);
+#endif /* USE_SCALE_EFFECTS */
 
 	// performance options: extract the data
 	autoframeskip              = options_get_bool  ("autoframeskip", TRUE);

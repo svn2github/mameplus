@@ -7,7 +7,6 @@
 
 // MAME headers
 #include "driver.h"
-#include "rc.h"
 
 // scale2x
 #include "scale/scale2x.h"
@@ -140,10 +139,10 @@ static void (*scale_hlq4x_32_def)(UINT32* dst0, UINT32* dst1, UINT32* dst2, UINT
 #endif /* USE_4X_SCALE */
 
 //============================================================
-//	scale_parse
+//	scale_decode
 //============================================================
 
-int scale_decode(struct rc_option *option, const char *arg, int priority)
+int scale_decode(const char *arg)
 {
 	if (!strcmp(arg, "none"))
 	{
@@ -241,7 +240,6 @@ int scale_decode(struct rc_option *option, const char *arg, int priority)
 	else
 		return -1;
 
-	option->priority = priority;
 	return 0;
 }
 

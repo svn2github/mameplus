@@ -24,6 +24,7 @@
 
 // MAME headers
 #include "driver.h"
+#include "winmain.h"
 #include "windold.h"
 #include "videoold.h"
 #include "blit.h"
