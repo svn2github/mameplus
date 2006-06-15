@@ -348,7 +348,7 @@ sub ParseSrcFiles
 					{
 
 						# multi-line string
-						while (/^\s*$/)
+						while (/^\s*$/ && !eof (IN))
 						{
 							$_ = <IN>;
 							$nextline++;
@@ -371,7 +371,6 @@ sub ParseSrcFiles
 
 							# convert HISTORYNAME
 							s/HISTORYNAME/"History"/g;
-
 						}
 
 						last unless /^\s*"/;

@@ -1253,11 +1253,14 @@ Icons
 # ui/mame32.rc: 762
 Image enhancement
 
+
 # ui/mame32.rc: 0
 Number of screens
 
+
 # ui/mame32.rc: 0
 Direct3D version
+
 
 # ui/win32ui.c: 788
 Image Files (*.png,*.bmp)
