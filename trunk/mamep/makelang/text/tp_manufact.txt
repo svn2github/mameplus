@@ -66,7 +66,7 @@ Absolute Entertainment Inc.
 Academysoft-Elory
 
 
-# Acclaim PSX
+# NBA Jam Extreme
 Acclaim
 
 
@@ -142,7 +142,7 @@ Amutech
 Apple
 
 
-# Arcadia System BIOS
+# SportTime Table Hockey (Arcadia, V 2.1)
 Arcadia Systems
 
 
@@ -182,7 +182,7 @@ Atari Games
 Athena
 
 
-# Atlus PSX
+# Power Instinct 3 - Groove On Fight (J 970416 V1.001)
 Atlus
 
 
@@ -210,7 +210,7 @@ Bandai
 Banpresto
 
 
-# MPU4 Video Firmware
+# The Crystal Maze: Team Challenge (SWP)
 Barcrest
 
 
@@ -238,7 +238,7 @@ Blastar
 Bootleg
 
 
-# Crystal System BIOS
+# The Crystal of Kings
 Brezzasoft
 
 
@@ -520,10 +520,6 @@ Ed
 
 # Battle Bakraid (Japan) (Wed Apr 7 1999)
 Eighting
-
-
-# PS Arcade 95
-Eighting/Raizing
 
 
 # Space Force (set 2)
@@ -814,7 +810,7 @@ Human Amusement
 Human Inc.
 
 
-# Multi Amenity Cassette System BIOS
+# Kisekae Mahjong
 I'Max
 
 
@@ -1314,7 +1310,7 @@ Paradise Co. Ltd.
 Petaco S.A.
 
 
-# Turtle Ship (Japan)
+# Turtle Ship (North America)
 Philko
 
 
