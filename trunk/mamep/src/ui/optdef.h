@@ -139,7 +139,6 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(float,                a2d_deadzone)
 	DEFINE_OPT(string_allow_null,    ctrlr)
 #ifdef USE_JOY_MOUSE_MOVE
-	// Support Stick-type Pointing Device (miko2u@hotmail.com)
 	DEFINE_OPT(bool,                 stickpoint)
 #endif /* USE_JOY_MOUSE_MOVE */
 #ifdef JOYSTICK_ID

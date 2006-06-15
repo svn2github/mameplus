@@ -181,7 +181,6 @@ DEFS+= -DDIRECTDRAW_VERSION=0x0300
 DEFS+= -DCLIB_DECL=__cdecl
 DEFS+= -DDECL_SPEC=
 
-# Support Stick-type Pointing Device by miko2u@hotmail.com
 ifneq ($(USE_JOY_MOUSE_MOVE),)
 DEFS+= -DDIRECTINPUT_VERSION=0x0700
 else
@@ -190,11 +189,6 @@ endif
 
 ifneq ($(USE_JOYSTICK_ID),)
 DEFS += -DJOYSTICK_ID
-endif
-
-# Support Stick-type Pointing Device by miko2u@hotmail.com
-ifneq ($(USE_JOY_MOUSE_MOVE),)
-DEFS += -DUSE_JOY_MOUSE_MOVE
 endif
 
 #-------------------------------------------------

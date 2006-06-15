@@ -321,6 +321,11 @@ ifneq ($(USE_IPS),)
     DEFS += -DUSE_IPS
 endif
 
+# Support Stick-type Pointing Device by miko2u@hotmail.com
+ifneq ($(USE_JOY_MOUSE_MOVE),)
+DEFS += -DUSE_JOY_MOUSE_MOVE
+endif
+
 ifneq ($(USE_VOLUME_AUTO_ADJUST),)
     DEFS += -DUSE_VOLUME_AUTO_ADJUST
 endif

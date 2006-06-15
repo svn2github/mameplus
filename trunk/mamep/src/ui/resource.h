@@ -232,7 +232,7 @@
 #define IDC_SWITCHRES                   1136
 #define IDC_MAXIMIZE                    1138
 #define IDC_SYNCREFRESH                 1141
-#define IDC_USE_STICKPOINT              1142	// USE_JOY_MOUSE_MOVE (Support Stick-type Pointing Device by miko2u@hotmail.com)
+#define IDC_USE_STICKPOINT              1142
 #define IDC_USE_MOUSE                   1143
 #define IDC_THROTTLE                    1144
 #define IDC_RESDEPTH                    1145
