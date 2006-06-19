@@ -437,7 +437,8 @@ int ui_init(void)
 			fatalerror("uistring_init failed");
 	}
 
-	ui_set_visible_area(0, 0, 0, 0);
+	// temporary
+	ui_set_visible_area(0, 0, 16, 16);
 
 	{
 		int i;
@@ -5664,50 +5665,36 @@ int ui_get_string_width(const char *s)
 	return UI_SCALE_TO_INT_X(render_font_get_string_width(ui_font, UI_FONT_HEIGHT, render_get_ui_aspect(), s));
 }
 
-static void render_bgtexture_scale(mame_bitmap *dest, const mame_bitmap *source, const rectangle *sbounds, void *param)
-{
-	rgb_t argb = *(UINT32 *)source->line[0];
-	UINT8 a = RGB_ALPHA(argb);
-	float r = (float)RGB_RED(argb);
-	float g = (float)RGB_GREEN(argb);
-	float b = (float)RGB_BLUE(argb);
-	int x, y;
-
-	for (y = 0; y < dest->height; y++)
-	{
-		UINT32 *base = (UINT32 *)dest->line[y];
-		float rate;
-		float gradual;
-		rgb_t pen;
-
-		rate = UI_UNSCALE_TO_FLOAT_Y(y);
-		if (rate < 0.1f)
-			gradual = 1.0f;
-		else if (rate < 0.9f)
-			gradual = (0.9f - rate) / 0.8f;
-		else
-			gradual = 0.0f;
-
-		pen = MAKE_ARGB(
-			a,
-			(UINT8)(r * gradual),
-			(UINT8)(g * gradual),
-			(UINT8)(b * gradual));
-
-		for (x = 0; x < dest->width; x++)
-			*base++ = pen;
-	}
-}
-
 static void build_bgtexture(void)
 {
-	bgbitmap = bitmap_alloc_depth(1, 1, 32);
+	float r = (float)options.uicolortable[UI_TRANSPARENT_COLOR][0];
+	float g = (float)options.uicolortable[UI_TRANSPARENT_COLOR][1];
+	float b = (float)options.uicolortable[UI_TRANSPARENT_COLOR][2];
+	UINT8 a = 0xff;
+	int i;
+
+	bgbitmap = bitmap_alloc_depth(1, 1024, 32);
 	if (!bgbitmap)
 		fatalerror("build_bgtexture failed");
 
-	*(UINT32 *)bgbitmap->line[0] = MAKE_ARGB(0xff, 0xff, 0xff, 0xff);
+#ifdef TRANS_UI
+	if (options.use_transui)
+		a = options.ui_transparency;
+#endif /* TRANS_UI */
 
-	bgtexture = render_texture_alloc(bgbitmap, NULL, NULL, TEXFORMAT_ARGB32, render_bgtexture_scale, NULL);
+	for (i = 0; i < bgbitmap->height; i++)
+	{
+		double gradual = (float)(1024 - i) / 1024.0f + 0.1f;
+
+		if (gradual > 1.0f)
+			gradual = 1.0f;
+		else if (gradual < 0.2f)
+			gradual = 0.2f;
+
+		*(UINT32 *)bgbitmap->line[i] = MAKE_ARGB(a, (UINT8)(r * gradual), (UINT8)(g * gradual), (UINT8)(b * gradual));
+	}
+
+	bgtexture = render_texture_alloc(bgbitmap, NULL, NULL, TEXFORMAT_ARGB32, render_texture_hq_scale, NULL);
 	add_exit_callback(free_bgtexture);
 }
 
@@ -5737,7 +5724,7 @@ static void add_fill(int x0, int y0, int x1, int y1, rgb_t color)
 	y1++;
 
 	if (color == UI_TRANSPARENT_COLOR)
-		render_ui_add_quad(UI_UNSCALE_TO_FLOAT_X(x0), UI_UNSCALE_TO_FLOAT_Y(y0), UI_UNSCALE_TO_FLOAT_X(x1), UI_UNSCALE_TO_FLOAT_Y(y1), uifont_colortable[UI_TRANSPARENT_COLOR], bgtexture, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+		render_ui_add_quad(UI_UNSCALE_TO_FLOAT_X(x0), UI_UNSCALE_TO_FLOAT_Y(y0), UI_UNSCALE_TO_FLOAT_X(x1), UI_UNSCALE_TO_FLOAT_Y(y1), MAKE_ARGB(0xff, 0xff, 0xff, 0xff), bgtexture, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 	else
 		render_ui_add_rect(UI_UNSCALE_TO_FLOAT_X(x0), UI_UNSCALE_TO_FLOAT_Y(y0), UI_UNSCALE_TO_FLOAT_X(x1), UI_UNSCALE_TO_FLOAT_Y(y1), ui_get_rgb_color(color), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 }

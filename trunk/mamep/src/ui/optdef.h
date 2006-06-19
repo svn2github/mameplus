@@ -174,6 +174,7 @@ START_OPT_FUNC_DRIVER
 // GLOBAL VIDEO OPTIONS
 	DEFINE_OPT(bool,                 window)
 	DEFINE_OPT(bool,                 maximize)
+	DEFINE_OPT(bool,                 keepaspect)
 	DEFINE_OPT(numscreens,           numscreens)
 	DEFINE_OPT(string_allow_null,    extra_layout)
 

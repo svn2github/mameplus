@@ -192,6 +192,7 @@ typedef struct
 //
 	BOOL	window;
 	BOOL	maximize;
+	BOOL	keepaspect;
 	int	numscreens;
 	char*	extra_layout;
 //
@@ -235,7 +236,6 @@ typedef struct
 	int	refresh;
 	BOOL	scanlines;
 	BOOL	switchbpp;
-	BOOL	keepaspect;
 	BOOL	matchrefresh;
 	char*	effect;
 	float	gamma;
