@@ -29,6 +29,7 @@
 #include "osd_so.h"
 #include "input.h"
 #include "config.h"
+#include "osdepend.h"
 
 
 #define ENABLE_PROFILER		0

@@ -2962,6 +2962,7 @@ V-V                           TP-027
 	/* Sega G-80 vector games */
 	DRIVER( spacfury )	/* (c) 1981 */
 	DRIVER( spacfura )	/* no copyright notice */
+	DRIVER( spacfurb )	/* no copyright notice */
 	DRIVER( zektor )	/* (c) 1982 */
 	DRIVER( tacscan )	/* (c) 1982 */
 	DRIVER( elim2 )		/* (c) 1981 Gremlin */
@@ -3687,6 +3688,8 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 						/* 10 */
 	DRIVER( mp_mazin )	/* 11 */
 	DRIVER( mp_col3 )	/* ?? */
+
+	DRIVER( hshavoc )	/* (c) 1993 Data East */
 
 	/* Data East "Burger Time hardware" games */
 	DRIVER( lnc )		/* (c) 1981 */
@@ -5839,6 +5842,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( valtric )	/* (c) 1986 Jaleco */
 	DRIVER( butasan )	/* (c) 1987 Jaleco */
 	DRIVER( psychic5 )	/* (c) 1987 Jaleco */
+	DRIVER( bombsa )	/* (c) 1988 Jaleco */
 	DRIVER( ginganin )	/* (c) 1987 Jaleco */
 	DRIVER( gingania )	/* (c) 1987 Jaleco */
 	DRIVER( skyfox )	/* (c) 1987 Jaleco + Nichibutsu USA license */
@@ -6476,6 +6480,7 @@ Other Sun games
 	DRIVER( madball )	/* (c) 1998 Yun Sung */
 	DRIVER( cannball )	/* (c) 1995 Yun Sung / Soft Visio */
 	DRIVER( magix )		/* (c) 1995 Yun Sung */
+	DRIVER( rocktris )	/* (c) 1994? Yun Sung */
 	DRIVER( magicbub )	/* (c) Yun Sung */
 	DRIVER( magicbua )	/* (c) Yun Sung */
 	DRIVER( shocking )	/* (c) 1997 Yun Sung */
@@ -6548,6 +6553,7 @@ Other Sun games
 	DRIVER( mjfriday )	/* "26" (c) [1989] Dynax */
 	DRIVER( jantouki )	/* "27" Jantouki 1989 Dynax */
 	DRIVER( mjifb )		/* "29" 1990 Dynax */
+	DRIVER( janptr96 )	/* 1996 Dynax */
 	DRIVER( sprtmtch )	/* "31" (c) 1989 Dynax + Fabtek license */
 	DRIVER( maya )		/* (c) 1994 Promat */
 	DRIVER( inca )		/* (c) 199? ???? */
@@ -6586,6 +6592,7 @@ Other Sun games
 	DRIVER( mjelctrn )	/* "???" Mahjong Electron Base parts 2 & 4 */
 	DRIVER( mjelct3 )	/* "???" Mahjong Electron Base parts 2 & 3 */
 	DRIVER( mjelct3a )	/* "???" Mahjong Electron Base parts 2 & 3 */
+	DRIVER( majxtal7 )	/* "???" */
 
 	/* Sigma games */
 	DRIVER( nyny )		/* (c) 1980 Sigma Ent. Inc. */
@@ -6956,7 +6963,8 @@ Other Sun games
 	DRIVER( mspuzzle )	/* (c) 1994 Min Corp. */
 	DRIVER( mspuzzln )	/* (c) 1994 Min Corp. */
 	DRIVER( msbingo )	/* (C) 1994 Min Corp. */
-	DRIVER( dblpoint )	/* (c) 1995 Dong Bang Electron */
+	DRIVER( dblpoint )	/* (c) 1995 Min Corp. */
+	DRIVER( dblpoind )	/* (c) 1995 Dong Bang Electron */
 	DRIVER( hangman )	/* (c) 1984 Status Games */
 	DRIVER( trivquiz )	/* (c) 1984 Status Games */
 	DRIVER( statriv2 )	/* (c) 1984 Status Games */
@@ -7138,5 +7146,10 @@ Other Sun games
 	DRIVER( intrscti )	/* ???? */
 	DRIVER( pasha2 )	/* (c) 1998 Dong Sung */
 	DRIVER( trvmadns )	/* (c) 1985 Thunderhead Inc. */
+	DRIVER( rcorsair )	/* (c) 1984 Nakasawa */
+	DRIVER( pzlestar )	/* (c) 199? Sang Ho Soft */
+	DRIVER( sexyboom )	/* (c) 1992 Sang Ho Soft */
+	DRIVER( sfkick )	/* (c) 199? HEC */
+	DRIVER( spinkick )	/* (c) 199? HEC */
 
 #endif	/* DRIVER_RECURSIVE */

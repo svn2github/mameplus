@@ -4109,7 +4109,7 @@ INLINE void _options_get_resolution(char **p, const char *name)
 
 //============================================================
 
-#define _options_get_priority(p,name)	_options_get_int_min_max(p, name, -15, 0)
+#define _options_get_priority(p,name)	_options_get_int_min_max(p, name, -15, 1)
 #define options_set_priority		options_set_int
 #define options_copy_priority		options_copy_int
 #define options_free_priority		options_free_int

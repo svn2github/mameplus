@@ -110,7 +110,11 @@ msvcprep: $(OBJ)/vconv.exe
 
 $(OBJ)/vconv.exe: $(OBJ)/windows/vconv.o
 	@echo Linking $@...
+ifdef PTR64
+	@link.exe /nologo $^ version.lib bufferoverflowu.lib /out:$@
+else
 	@link.exe /nologo $^ version.lib /out:$@
+endif
 
 $(OBJ)/windows/vconv.o: src/windows/vconv.c
 	@echo Compiling $<...
@@ -125,7 +129,7 @@ endif
 
 
 ifdef PTR64
-LIBS +=  -lbufferoverflowu
+LIBS += -lbufferoverflowu
 endif
 
 #-------------------------------------------------

@@ -694,7 +694,7 @@ int frontend_listsamples(FILE *output)
 }
 
 
-CLIB_DECL void verify_printf(const char *fmt, ...)
+void CLIB_DECL verify_printf(const char *fmt, ...)
 {
 	va_list arg;
 
