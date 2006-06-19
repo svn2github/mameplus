@@ -22,603 +22,607 @@ Casino *Mature*
 Category
 
 
-# 154
+# 155
 Climbing
 
 
-# 171
+# 172
 Driving
 
 
-# 199
+# 201
 Driving / 1st Person
 
 
-# 255
+# 261
 Driving / Boat
 
 
-# 261
+# 267
+Driving / Plane
+
+
+# 270
 Driving / Race
 
 
-# 319
+# 328
 Driving / Race (chase view)
 
 
-# 420
+# 455
 Driving / Race (chase view) Bike
 
 
-# 449
+# 488
 Driving / Race 1st P Bike
 
 
-# 456
+# 495
 Driving / Race 1st Person
 
 
-# 473
+# 516
 Driving / Race Bike
 
 
-# 490
+# 533
 Driving / Race Track
 
 
-# 527
+# 570
 Fighter / 2.5D
 
 
-# 760
+# 817
 Fighter / 2D
 
 
-# 817
+# 874
 Fighter / 3D
 
 
-# 825
+# 882
 Fighter / Field
 
 
-# 841
+# 898
 Fighter / Misc.
 
 
-# 848
+# 905
 Fighter / Multiplay
 
 
-# 852
+# 909
 Fighter / Third Person
 
 
-# 855
+# 912
 Fighter / Versus
 
 
-# 1336
+# 1412
 Fighter / Versus *Mature*
 
 
-# 1340
+# 1416
 Fighter / Versus Co-op
 
 
-# 1359
+# 1435
 Fighter / Vertical
 
 
-# 1383
+# 1459
 Maze
 
 
-# 1628
+# 1705
 Maze *Mature*
 
 
-# 1631
+# 1708
 Maze / Digging
 
 
-# 1663
+# 1740
 Maze / Digging *Mature*
 
 
-# 1666
+# 1743
 Maze / Driving
 
 
-# 1690
+# 1767
 Maze / Fighter
 
 
-# 1719
+# 1796
 Maze / Outline
 
 
-# 1737
+# 1814
 Maze / Outline *Mature*
 
 
-# 1740
+# 1817
 Maze / Shooter Large
 
 
-# 1816
+# 1893
 Maze / Shooter Small
 
 
-# 1877
+# 1954
 Maze / Shooter Small *Mature*
 
 
-# 1881
+# 1958
 Maze / Surround
 
 
-# 1895
+# 1972
 Mini-Games
 
 
-# 1933
+# 2011
 Misc.
 
 
-# 2012
+# 2090
 Misc. *Mature*
 
 
-# 2021
+# 2099
 Misc. Betting
 
 
-# 2051
+# 2129
 Misc. Betting *Mature*
 
 
-# 2060
+# 2138
 Multiplay
 
 
-# 2093
+# 2171
 Multiplay *Mature*
 
 
-# 2102
+# 2181
+Not Classified
+
+
+# 2297
 Pinball
 
 
-# 2121
+# 2316
 Pinball *Mature*
 
 
-# 2127
+# 2322
 Pinball / Pachinko *Mature*
 
 
-# 2133
+# 2328
 Platform / Fighter
 
 
-# 2154
+# 2349
 Platform / Fighter Scrolling
 
 
-# 2329
+# 2524
 Platform / Run Jump
 
 
-# 2557
+# 2752
 Platform / Run Jump *Mature*
 
 
-# 2563
+# 2758
 Platform / Run Jump Scrolling
 
 
-# 2636
+# 2831
 Platform / Shooter
 
 
-# 2653
+# 2848
 Platform / Shooter Scrolling
 
 
-# 2854
+# 3049
 Puzzle
 
 
-# 2896
+# 3094
 Puzzle *Mature*
 
 
-# 2902
+# 3100
 Puzzle / Cards
 
 
-# 2905
+# 3103
 Puzzle / Cards *Mature*
 
 
-# 2917
+# 3115
 Puzzle / Drop
 
 
-# 3036
+# 3240
 Puzzle / Drop *Mature*
 
 
-# 3054
+# 3258
 Puzzle / Match
 
 
-# 3085
+# 3289
 Puzzle / Match *Mature*
 
 
-# 3111
+# 3316
 Puzzle / Maze
 
 
-# 3125
+# 3330
 Puzzle / Outline
 
 
-# 3140
+# 3345
 Puzzle / Outline *Mature*
 
 
-# 3166
+# 3371
 Puzzle / Sliding
 
 
-# 3177
+# 3382
 Puzzle / Sliding *Mature*
 
 
-# 3182
+# 3388
 Puzzle / Toss
 
 
-# 3233
+# 3439
 Puzzle / Toss *Mature*
 
 
-# 3243
+# 3449
 Quiz / Chinese
 
 
-# 3247
+# 3453
 Quiz / English
 
 
-# 3293
+# 3501
 Quiz / English *Mature*
 
 
-# 3309
+# 3517
 Quiz / French
 
 
-# 3313
+# 3521
 Quiz / German
 
 
-# 3317
+# 3525
 Quiz / Italian
 
 
-# 3322
+# 3531
 Quiz / Japanese
 
 
-# 3380
+# 3589
 Quiz / Japanese *Mature*
 
 
-# 3385
+# 3594
 Quiz / Korean
 
 
-# 3388
+# 3597
 Quiz / Music English
 
 
-# 3392
+# 3601
 Quiz / Music Japanese
 
 
-# 3396
+# 3605
 Quiz / Spanish
 
 
-# 3399
+# 3609
 Rhythm
 
 
-# 3422
+# 3632
 Shooter / 1st Person
 
 
-# 3447
+# 3648
 Shooter / 3rd Person
 
 
-# 3487
+# 3690
 Shooter / Command
 
 
-# 3515
+# 3718
 Shooter / Driving
 
 
-# 3524
+# 3727
 Shooter / Driving (chase view)
 
 
-# 3565
+# 3769
 Shooter / Driving 1st Person
 
 
-# 3573
+# 3777
 Shooter / Driving Diagonal
 
 
-# 3578
+# 3782
 Shooter / Driving Horizontal
 
 
-# 3592
+# 3796
 Shooter / Driving Vertical
 
 
-# 3642
+# 3846
 Shooter / Field
 
 
-# 3773
+# 3978
 Shooter / Field *Mature*
 
 
-# 3781
+# 3986
 Shooter / Flying
 
 
-# 3833
+# 4039
 Shooter / Flying (chase view)
 
 
-# 3863
+# 4072
 Shooter / Flying 1st Person
 
 
-# 3898
+# 4108
 Shooter / Flying Diagonal
 
 
-# 3906
+# 4116
 Shooter / Flying Horizontal
 
 
-# 4112
+# 4325
 Shooter / Flying Horizontal *Mature*
 
 
-# 4115
+# 4328
 Shooter / Flying Vertical
 
 
-# 4514
+# 4728
 Shooter / Flying Vertical *Mature*
 
 
-# 4517
+# 4731
 Shooter / Gallery
 
 
-# 4871
+# 5086
 Shooter / Gallery *Mature*
 
 
-# 4874
+# 5089
 Shooter / Gun
 
 
-# 4979
+# 5216
 Shooter / Misc.
 
 
-# 4995
+# 5234
 Shooter / Misc. Horizontal
 
 
-# 5018
+# 5257
 Shooter / Misc. Vertical
 
 
-# 5038
+# 5277
 Shooter / Versus
 
 
-# 5047
+# 5290
 Shooter / Walking
 
 
-# 5150
+# 5394
 Sports
 
 
-# 5174
+# 5418
 Sports / Armwrestling
 
 
-# 5178
+# 5422
 Sports / Baseball
 
 
-# 5256
+# 5500
 Sports / Basketball
 
 
-# 5307
+# 5551
 Sports / Bowling
 
 
-# 5339
+# 5583
 Sports / Boxing
 
 
-# 5375
+# 5619
 Sports / Bull Fighting
 
 
-# 5379
+# 5623
 Sports / Darts
 
 
-# 5386
+# 5630
 Sports / Dodgeball
 
 
-# 5391
+# 5635
 Sports / Fishing
 
 
-# 5397
+# 5641
 Sports / Football Amer.
 
 
-# 5443
+# 5688
 Sports / Football Rugby
 
 
-# 5448
+# 5693
 Sports / Golf
 
 
-# 5539
+# 5786
 Sports / Handball
 
 
-# 5543
+# 5790
 Sports / Hang Gliding
 
 
-# 5548
+# 5796
 Sports / Hockey
 
 
-# 5564
+# 5812
 Sports / Horse Racing
 
 
-# 5576
+# 5826
 Sports / Horseshoes
 
 
-# 5581
+# 5831
 Sports / Multiplay
 
 
-# 5588
+# 5839
 Sports / Ping pong
 
 
-# 5591
+# 5844
 Sports / Pool
 
 
-# 5627
+# 5880
 Sports / Pool *Mature*
 
 
-# 5640
+# 5893
 Sports / Shuffleboard
 
 
-# 5646
+# 5899
 Sports / Skateboarding
 
 
-# 5655
+# 5908
 Sports / Skiing
 
 
-# 5675
+# 5929
 Sports / SkyDiving
 
 
-# 5679
+# 5933
 Sports / Soccer
 
 
-# 5768
+# 6022
 Sports / Sumo
 
 
-# 5771
+# 6025
 Sports / Swimming
 
 
-# 5782
+# 6036
 Sports / Tennis
 
 
-# 5812
+# 6066
 Sports / Track & Field
 
 
-# 5849
+# 6103
 Sports / VolleyBall
 
 
-# 5873
+# 6127
 Tabletop
 
 
-# 5879
+# 6133
 Tabletop *Mature*
 
 
-# 5882
+# 6136
 Tabletop / Hanafuda
 
 
-# 5890
+# 6144
 Tabletop / Hanafuda *Mature*
 
 
-# 5909
+# 6163
 Tabletop / Mahjong
 
 
-# 5934
+# 6188
 Tabletop / Mahjong *Mature*
 
 
-# 6151
+# 6407
 Tabletop / Othello
 
 
-# 6157
+# 6413
 Tabletop / Othello *Mature*
 
 
-# 6160
+# 6416
 Tabletop / Renju
 
 
-# 6164
+# 6420
 Tabletop / Shougi
 
 
-# 6172
-Unplayable
-
-
-# 6415
+# 6429
 Wrestling
 
 

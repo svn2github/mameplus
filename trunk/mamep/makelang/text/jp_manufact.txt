@@ -650,6 +650,10 @@ bootleg?
 hack
 ハック
 
+# Chewing Gum
+unknown
+不明
+
 # Sea Bass Fishing (JUET 971110 V0.001)
 A wave inc.
 
@@ -2080,9 +2084,5 @@ Zilec-Zenitone
 
 # X-Files
 dgPIX Entertainment Inc.
-
-
-# Chewing Gum
-unknown
 
 
