@@ -145,6 +145,7 @@ static void InitializeDefaultBIOSUI(HWND hwnd);
 static void InitializeLEDModeUI(HWND hwnd);
 static void InitializeNumScreenUI(HWND hwnd);
 static void InitializeD3DVerUI(HWND hwnd);
+static void InitializePrescaleUI(HWND hwnd);
 static void InitializeControllerMappingUI(HWND hwnd);
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 static void InitializeM68kCoreUI(HWND hwnd);
@@ -299,6 +300,7 @@ static DWORD dwHelpIDs[] =
 	IDC_HISTORY,            HIDC_HISTORY,
 	IDC_INTENSITY,          HIDC_INTENSITY,
 	IDC_JOYSTICK,           HIDC_JOYSTICK,
+	IDC_KEEPASPECT,         HIDC_KEEPASPECT,
 	IDC_LEDS,               HIDC_LEDS,
 	IDC_LOG,                HIDC_LOG,
 	IDC_SLEEP,              HIDC_SLEEP,
@@ -339,6 +341,7 @@ static DWORD dwHelpIDs[] =
 	IDC_HIGH_PRIORITY,      HIDC_HIGH_PRIORITY,
 	IDC_D3D,                HIDC_D3D,
 	IDC_D3D_FILTER,         HIDC_D3D_FILTER,
+	IDC_D3D_PRESCALE,       HIDC_D3D_PRESCALE,
 	IDC_BIOS,               HIDC_BIOS,
 	IDC_STRETCH_SCREENSHOT_LARGER, HIDC_STRETCH_SCREENSHOT_LARGER,
 	IDC_LEDMODE,            HIDC_LEDMODE,
@@ -2280,6 +2283,8 @@ static void SetPropEnabledControls(HWND hWnd)
 
 	// d3d
 	EnableWindow(GetDlgItem(hWnd, IDC_D3D_FILTER),             d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_D3D_PRESCALE),           d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_D3D_PRESCALETEXT),       d3d);
 
 #ifdef TRANS_UI
 	hCtrl = GetDlgItem(hWnd, IDC_TRANSUI);
@@ -3041,6 +3046,7 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_WINDOWED,      DM_BOOL, CT_BUTTON,   &pGameOpts->window,        DM_BOOL, &pGameOpts->window,        0, 0, 0);
 	DataMapAdd(IDC_SWITCHRES,     DM_BOOL, CT_BUTTON,   &pGameOpts->switchres,     DM_BOOL, &pGameOpts->switchres,     0, 0, 0);
 	DataMapAdd(IDC_MAXIMIZE,      DM_BOOL, CT_BUTTON,   &pGameOpts->maximize,      DM_BOOL, &pGameOpts->maximize,      0, 0, 0);
+	DataMapAdd(IDC_KEEPASPECT,    DM_BOOL, CT_BUTTON,   &pGameOpts->keepaspect,    DM_BOOL, &pGameOpts->keepaspect,    0, 0, 0);
 	DataMapAdd(IDC_NUM_SCREEN,    DM_INT,  CT_COMBOBOX, &g_nNumScreenIndex,        DM_INT,  &pGameOpts->numscreens,    0, 0, AssignNumScreen);
 	DataMapAdd(IDC_SYNCREFRESH,   DM_BOOL, CT_BUTTON,   &pGameOpts->syncrefresh,   DM_BOOL, &pGameOpts->syncrefresh,   0, 0, 0);
 	DataMapAdd(IDC_THROTTLE,      DM_BOOL, CT_BUTTON,   &pGameOpts->throttle,      DM_BOOL, &pGameOpts->throttle,      0, 0, 0);
@@ -3058,8 +3064,9 @@ static void BuildDataMap(void)
 
 	// direct3d
 	DataMapAdd(IDC_D3D,           DM_BOOL, CT_BUTTON,   &pGameOpts->direct3d,      DM_BOOL,   &pGameOpts->direct3d,        0, 0, 0);
-	DataMapAdd(IDC_D3D_VER,       DM_INT,  CT_COMBOBOX, &g_nD3DVerIndex,           DM_INT,    &pGameOpts->d3dversion,       0, 0, AssignD3DVer);
+	DataMapAdd(IDC_D3D_VER,       DM_INT,  CT_COMBOBOX, &g_nD3DVerIndex,           DM_INT,    &pGameOpts->d3dversion,      0, 0, AssignD3DVer);
 	DataMapAdd(IDC_D3D_FILTER,    DM_BOOL, CT_BUTTON,   &pGameOpts->filter,        DM_BOOL,   &pGameOpts->filter,          0, 0, 0);
+	DataMapAdd(IDC_D3D_PRESCALE,  DM_INT,  CT_COMBOBOX, &pGameOpts->prescale,      DM_INT,    &pGameOpts->prescale,        0, 0, 0);
 
 	/* input */
 	DataMapAdd(IDC_DEFAULT_INPUT, DM_INT,  CT_COMBOBOX, &g_nInputIndex,            DM_STRING, &pGameOpts->ctrlr,           0, 0, AssignInput);
@@ -3324,6 +3331,7 @@ static void InitializeOptions(HWND hDlg)
 	InitializeLEDModeUI(hDlg);
 	InitializeNumScreenUI(hDlg);
 	InitializeD3DVerUI(hDlg);
+	InitializePrescaleUI(hDlg);
 	InitializeControllerMappingUI(hDlg);
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 	InitializeM68kCoreUI(hDlg);
@@ -3832,6 +3840,20 @@ static void InitializeScreenUI(HWND hwnd)
 
 		for (i = 0; i < iMonitors; i++)
 			ComboBox_InsertStringA(hCtrl, i, DirectDraw_GetDisplayName(i));
+	}
+}
+
+static void InitializePrescaleUI(HWND hwnd)
+{
+	HWND hCtrl = GetDlgItem(hwnd, IDC_D3D_PRESCALE);
+	if (hCtrl)
+	{
+		ComboBox_AddStringA(hCtrl, "None");
+		ComboBox_AddStringA(hCtrl, "1");
+		ComboBox_AddStringA(hCtrl, "2");
+		ComboBox_AddStringA(hCtrl, "3");
+		ComboBox_AddStringA(hCtrl, "4");
+		ComboBox_SetCurSel(hCtrl, 1);
 	}
 }
 

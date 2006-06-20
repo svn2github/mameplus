@@ -231,6 +231,7 @@
 #define IDC_WAITVSYNC                   1134
 #define IDC_SWITCHRES                   1136
 #define IDC_MAXIMIZE                    1138
+#define IDC_KEEPASPECT                  1139
 #define IDC_SYNCREFRESH                 1141
 #define IDC_USE_STICKPOINT              1142
 #define IDC_USE_MOUSE                   1143
@@ -276,6 +277,7 @@
 #define IDC_D3D_VER                    1185
 #define IDC_AUDIO_LATENCY               1186
 #define IDC_D3D_VERTEXT                 1187
+#define IDC_D3D_PRESCALE                1189
 #ifndef NEW_RENDER
 #define IDC_CLEAN_STRETCH               1191
 #else
@@ -370,6 +372,7 @@
 #define IDC_NUM_SCREENTEXT              1345
 #endif
 #define IDC_SCREENTEXT                  1346
+#define IDC_D3D_PRESCALETEXT            1348
 #define IDC_USE_LIST                    1349
 
 #define IDC_SCALEEFFECT                 1351 // USE_SCALE_EFFECTS

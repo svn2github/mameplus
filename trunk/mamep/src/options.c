@@ -40,7 +40,7 @@ struct _options_data
 	const char *			data;				/* data for this item */
 	const char *			description;		/* description for this item */
 	void					(*callback)(const char *arg);	/* callback to be invoked when parsing */
-	int					mark;
+	int						mark;
 };
 
 

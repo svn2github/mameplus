@@ -977,10 +977,11 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -zoom %i", pOpts->zoom);
 #endif
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sfilter",pOpts->filter?"":"no");
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -%skeepaspect",pOpts->keepaspect?"":"no");
+		sprintf(&pCmdLine[strlen(pCmdLine)], " -prescale %d",    pOpts->prescale);
 #ifndef NEW_RENDER
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sd3dtexmanage",    pOpts->d3dtexmanage ? "" : "no");
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3deffect %s",      pOpts->d3deffect);
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3dprescale %s",    pOpts->d3dprescale);
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sd3deffectrotate", pOpts->d3deffectrotate ? "" : "no");
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3dscan %i",        pOpts->d3dscan);
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3dfeedback %i",    pOpts->d3dfeedback);
