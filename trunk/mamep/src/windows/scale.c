@@ -275,14 +275,14 @@ static UINT32 x86_get_features(void)
 #else /* !_MSC_VER */
 	__asm__
 	(
-	        "pushl %%ebx         ; "
+		"pushl %%ebx         ; "
 		"movl $1,%%eax       ; "
 		"xorl %%ebx,%%ebx    ; "
 		"xorl %%ecx,%%ecx    ; "
 		"xorl %%edx,%%edx    ; "
 		"cpuid               ; "
 		"movl %%edx,%0       ; "
-                "popl %%ebx          ; "
+		"popl %%ebx          ; "
 	: "=&a" (features)		/* result has to go in eax */
 	: 				/* no inputs */
 	: "%ecx", "%edx"	/* clobbers ebx, ecx and edx */

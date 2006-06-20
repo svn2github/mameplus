@@ -532,7 +532,7 @@ int winwindow_video_window_create(int index, win_monitor_info *monitor, const wi
 	if (video_config.numscreens == 1)
 		sprintf(buf, APPNAME ": %s [%s]", (options.use_lang_list ? _LST(Machine->gamedrv->description) : Machine->gamedrv->description), Machine->gamedrv->name);
 	else
- 		sprintf(buf, APPNAME ": %s [%s] - Screen %d", (options.use_lang_list ? _LST(Machine->gamedrv->description) : Machine->gamedrv->description), Machine->gamedrv->name, index);
+		sprintf(buf, _WINDOWS(APPNAME ": %s [%s] - Screen %d"), (options.use_lang_list ? _LST(Machine->gamedrv->description) : Machine->gamedrv->description), Machine->gamedrv->name, index);
 	MultiByteToWideChar(ui_lang_info[options.langcode].codepage, 0, buf, -1, window->title, sizeof window->title);
 
 	// set the initial maximized state
