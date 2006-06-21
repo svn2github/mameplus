@@ -3716,7 +3716,7 @@ static UINT32 menu_video(UINT32 state)
 		}
 
 		/* add an item to return */
-		item_list[menu_items++].text = "Rotate View";
+		item_list[menu_items++].text = _("Rotate View");
 
 		/* add an item to return */
 		item_list[menu_items++].text = ui_getstring(UI_returntoprior);
