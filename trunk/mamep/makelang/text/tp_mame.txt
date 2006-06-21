@@ -17,8 +17,10 @@
 # romload.c: 300
        FOUND: %s\n
 
+
 # usrintrf.c: 0
 Rotate View
+
 
 # datafile.c: 3101
        JOY2WAY:  %4d\n
