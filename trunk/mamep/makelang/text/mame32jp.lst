@@ -2622,6 +2622,7 @@ heiankyo	平安京エイリアン	へいあんきょうえいりあん	Denki Onkyo
 alphaho	アルファファイター／ヘッドオン	あるふぁふぁいたーへっどおん	Data East Corporation
 spacfury	スペースフューリー (rev C)	すぺーすふゅーりー	Sega
 spacfura	スペースフューリー (rev A)	すぺーすふゅーりー	Sega
+spacfurb	スペースフューリー (rev B)	すぺーすふゅーりー	Sega
 zektor	ゼクター (rev B)	ぜくたー	Sega
 tacscan	タックスキャン	たっくすきゃん	Sega
 elim2	エリミネーター (2 players set 1)	えりみねーたー	Gremlin
@@ -3185,6 +3186,7 @@ mp_bio	クライング -亜生命戦争 / Bio-hazard Battle (Mega Play)	くらいんぐ	Sega
 mp_soni2	ソニック・ザ・ヘッジホッグ2 (Mega Play)	そにっくざへっじほっぐ_2	Sega
 mp_mazin	マジンサーガ / Mazin Wars (Mega Play)	まじんさーが	Sega
 mp_col3	コラムスIII -対決！コラムスワールド / Columns III -Revenge of Columns (Mega Play)	こらむす_3	Sega
+hshavoc	ハイシーズハボック	はいしーずはぼっく	Data East
 lnc	ロックンチェイス	ろっくんちぇいす	Data East Corporation
 zoar	ミッションX / Zoar	みっしょんえっくす	Data East USA
 btime	ハンバーガー / Burger Time (Data East set 1)	はんばーがー	Data East Corporation
@@ -5082,6 +5084,7 @@ argus	アーガス	あーがす	[NMK] (Jaleco license)
 valtric	バルトリック	ばるとりっく	[NMK] (Jaleco license)
 butasan	ぶたさん (日本版)	ぶたさん	[NMK] (Jaleco license)
 psychic5	サイキック5	さいきっく5	Jaleco
+bombsa	ボムズアウェイ	ぼむずあうぇい	Jaleco
 ginganin	銀河任侠伝 (set 1)	ぎんがにんきょうでん	Jaleco
 gingania	銀河任侠伝 (set 2)	ぎんがにんきょうでん	Jaleco
 skyfox	エクセライザー / Sky Fox	えくせらいざー	Jaleco (Nichibutsu USA license)
@@ -5555,6 +5558,7 @@ wbeachvl	ワールドビーチバレー (set 1)	わーるどびーちばれー	Playmark
 wbeachv2	ワールドビーチバレー (set 2)	わーるどびーちばれー	Playmark
 excelsr	エクセルシオール	えくせるしおーる	Playmark
 hotmind	ホットマインド	ほっとまいんど	Playmark
+hrdtimes	ハードタイムス	はーどたいむす	Playmark
 drtomy	Dr.トミー	どくたーとみー	Playmark
 sderby	スーパーダービー	すーぱーだーびー	Playmark
 pmroulet	クルーピア (Playmark Roulette)	くるーぴあ	Playmark
@@ -5617,6 +5621,7 @@ torus	トーラス	とーらす	Yun Sung
 madball	マッドボール (ver 2.0)	まっどぼーる	Yun Sung
 cannball	キャノンボール	きゃのんぼーる	Yun Sung / Soft Vision
 magix	マジックス	まじっくす_1	Yun Sung
+rocktris	ロックトリス	ろっくとりす	Yun Sung
 magicbub	マジックバブル	まじっくばぶる	Yun Sung
 magicbua	マジックバブル (adult ver)	まじっくばぶる	Yun Sung
 shocking	ショッキング	しょっきんぐ	Yun Sung
@@ -5674,6 +5679,7 @@ drgpunch	ドラゴンパンチ (日本版)	どらごんぱんち	Dynax
 mjfriday	麻雀フライデー (日本版)	まーじゃんふらいでー	Dynax
 jantouki	キャンパスハンティング雀闘記 (日本版)	きゃんぱすはんてぃんぐじゃんとうき	Dynax
 mjifb	麻雀IF [BET] (日本版)	まーじゃんいふ	Dynax
+janptr96	ジャンピューター'96 (日本版)	じゃんぴゅーたーないんてぃーんしっくす	Dynax
 sprtmtch	ドラゴンパンチ / Sports Match	どらごんぱんち	Dynax (Fabtek license)
 maya	マヤ	まや	Promat
 inca	インカ	いんか	<unknown>
@@ -5710,6 +5716,7 @@ pkgnshdx	パチンコ銀玉勝負DX (日本版)	ぱちんこぎんだましょうぶ_2でらっくす	Nakani
 mjelctrn	マージャン電子基盤 スーパーエクスプレス (日本版 parts 2 & 4)	まーじゃんでんしきばんすーぱーえくすぷれす	Dynax
 mjelct3	マージャン電子基盤 スーパーエクスプレス (日本版 parts 2 & 3)	まーじゃんでんしきばんすーぱーえくすぷれす	Dynax
 mjelct3a	マージャン電子基盤 スーパーエクスプレス (日本版 parts 2 & 3 alt)	まーじゃんでんしきばんすーぱーえくすぷれす	Dynax
+majxtal7	麻雀クリスタル7 (日本版)	まーじゃんくりすたるせぶん	Dynax
 nyny	ニューヨークニューヨーク	にゅーよーくにゅーよーく	Sigma Enterprises Inc.
 nynyg	ニューヨークニューヨーク (Gottlieb)	にゅーよーくにゅーよーく	Sigma Enterprises Inc. (Gottlieb license)
 arcadia	わが青春のアルカディア	わがせいしゅんのあるかでぃあ	Sigma Enterprises Inc.
@@ -6028,7 +6035,8 @@ gumbo	ガンボー	がんぼー	Min Corp.
 mspuzzle	ミスパズル	みすぱずる	Min Corp.
 mspuzzln	ミスパズル (Nudes)	みすぱずる	Min Corp.
 msbingo	ミスビンゴ	みすびんご	Min Corp.
-dblpoint	ダブルポイント -夜上海	だぶるぽいんと	Dong Bang Electron
+dblpoint	ダブルポイント -夜上海	だぶるぽいんと	Min Corp.
+dblpoind	ダブルポイント -夜上海 (Dong Bang Electron) (海賊版?)	だぶるぽいんと	Dong Bang Electron
 hangman	ハングマン -The Video Game	はんぐまん	Status Games
 trivquiz	トリブ クイズ	とりぶ_1	Status Games
 statriv2	トリブ ツー	とりぶ_2	Status Games
@@ -6206,3 +6214,8 @@ sliver	スリバー	すりばー	Hollow Corp
 intrscti	インターセクティ	いんたーせくてぃ	Unknown
 pasha2	パシャパシャ2	ぱしゃぱしゃ_2	Dong Sung
 trvmadns	トリビアマッドネス	とりびあまっどねす	Thunderhead Inc.
+rcorsair	レッドコルセア	れっどこるせあ	Nakasawa
+pzlestar	パズルスター? (Sang Ho)	ぱずるすたー	Sang Ho Soft
+sexyboom	セクシーブーン	せくしーぶーん	Sang Ho Soft
+sfkick	スーパーフリーキック	すーぱーふりーきっく	HEC
+spinkick	スピンキック	すぴんきっく	HEC
