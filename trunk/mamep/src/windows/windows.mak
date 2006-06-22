@@ -100,7 +100,7 @@ CC += /Og /Ob2 /Oi /Ot /Oy /GA /Gy /GF
 DEFS := $(filter-out -DX86_ASM,$(DEFS))
 
 # add some VC++-specific defines
-DEFS += -DNONAMELESSUNION -D_CRT_SECURE_NO_DEPRECATE -DXML_STATIC -Dinline=__inline -D__inline__=__inline -Dsnprintf=_snprintf -Dvsnprintf=_vsnprintf
+DEFS += -D_CRT_SECURE_NO_DEPRECATE -DXML_STATIC -Dinline=__inline -D__inline__=__inline -Dsnprintf=_snprintf -Dvsnprintf=_vsnprintf
 
 # make msvcprep into a pre-build step
 OSPREBUILD = msvcprep
@@ -179,7 +179,7 @@ CLILIBS =
 
 DEFS += -DMAMENAME=APPNAME
 
-DEFS+= -DNONAMELESSUNION
+#DEFS+= -DNONAMELESSUNION
 DEFS+= -DDIRECTSOUND_VERSION=0x0300
 DEFS+= -DDIRECTDRAW_VERSION=0x0300
 DEFS+= -DCLIB_DECL=__cdecl
@@ -218,15 +218,17 @@ OSOBJS += \
 	$(OBJ)/$(MAMEOS)/winddold.o
 else
 OSOBJS += \
-	$(OBJ)/$(MAMEOS)/rendsoft.o \
 	$(OBJ)/$(MAMEOS)/video.o \
 	$(OBJ)/$(MAMEOS)/window.o \
 	$(OBJ)/$(MAMEOS)/d3d8intf.o \
 	$(OBJ)/$(MAMEOS)/d3d9intf.o \
 	$(OBJ)/$(MAMEOS)/drawd3d.o \
+	$(OBJ)/$(MAMEOS)/drawdd.o \
 	$(OBJ)/$(MAMEOS)/drawgdi.o
 
-$(OBJ)/$(MAMEOS)/rendsoft.o : rendersw.c
+$(OBJ)/$(MAMEOS)/drawdd.o : rendersw.c
+
+$(OBJ)/$(MAMEOS)/drawgdi.o : rendersw.c
 endif
 
 

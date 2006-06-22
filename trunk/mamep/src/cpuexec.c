@@ -1480,7 +1480,8 @@ static void cpu_updatecallback(int param)
 	/* reset the refresh timer */
 	mame_timer_adjust(refresh_timer, time_never, 0, time_never);
 
-logerror("Partial: (previous reset)\n");
+	/* reset partial updates */
+	reset_partial_updates();
 }
 
 
