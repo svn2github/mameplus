@@ -3738,6 +3738,10 @@ Rotate Clockwise
 Rotate Counter-clockwise
 ”½ŽžŒv‰ñ‚è‚É‰ñ“]
 
+# usrintrf.c: 0
+Rotate View
+‰æ–Ê‚ð‰ñ“]
+
 # drivers/epos.c: 152 
 Rotation
 ‰ñ“]
