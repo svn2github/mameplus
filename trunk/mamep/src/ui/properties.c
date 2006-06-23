@@ -2243,7 +2243,6 @@ static void SetPropEnabledControls(HWND hWnd)
 	BOOL ddraw = TRUE;
 //	BOOL d3d = FALSE;
 	BOOL d3d = TRUE;
-	BOOL hws = TRUE;
 	BOOL useart = FALSE;
 	BOOL multimon = (DirectDraw_GetNumDisplays() >= 2);
 	int joystick_attached = 9;
