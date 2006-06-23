@@ -364,7 +364,7 @@ Input: Autoenabling lightguns due to presence of a %s\n
 
 # windows/input.c: 927
 Input: Autoenabling mice due to presence of a %s\n
-入力: 
+入力: %sが存在するためマウスを自動的に有効にします\n
 
 # windows/input.c: 1968
 Input: Joystick %d axis %d is now %s\n
