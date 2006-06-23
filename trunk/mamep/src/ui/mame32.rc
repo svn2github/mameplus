@@ -690,22 +690,18 @@ END
 
 IDD_PROP_ADVANCED DIALOGEX 0, 0, 262, 246
 STYLE WS_CHILD | WS_CAPTION
-CAPTION "Direct3D"
+CAPTION "Advanced"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_DISPLAY,IDC_STATIC,20,10,20,20
     LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
-#ifndef NEW_RENDER
-    CONTROL         "Use DirectDraw",IDC_DDRAW,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,10,45,118,10,0,HIDC_DDRAW
-#else
-    CONTROL         "Use Direct3D",IDC_D3D,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,10,45,118,10,0,HIDC_D3D
-#endif
+    CONTROL         "Stretch using hardware",IDC_HWSTRETCH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,140,176,118,10,0,
+                    HIDC_HWSTRETCH
     CONTROL         "Triple buffering",IDC_TRIPLE_BUFFER,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,59,118,10,0,
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,104,118,10,0,
                     HIDC_TRIPLE_BUFFER
 #ifndef NEW_RENDER
     CONTROL         "Match game refresh rate",IDC_MATCHREFRESH,"Button",
@@ -713,33 +709,28 @@ BEGIN
                     HIDC_MATCHREFRESH
 #else
     CONTROL         "Enable bilinear filtering",IDC_D3D_FILTER,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,73,118,10,0,
+                    BS_AUTOCHECKBOX | WS_TABSTOP,140,189,118,10,0,
                     HIDC_D3D_FILTER
 #endif
     CONTROL         "Sync to monitor refresh",IDC_SYNCREFRESH,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,87,118,10,0,
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,91,118,10,0,
                     HIDC_SYNCREFRESH
     CONTROL         "Wait for vertical sync",IDC_WAITVSYNC,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,101,118,10,0,
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,79,118,10,0,
                     HIDC_WAITVSYNC
     CONTROL         "Switch resolutions to fit",IDC_SWITCHRES,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,115,118,10,0,
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,117,118,10,0,
                     HIDC_SWITCHRES
 #ifndef NEW_RENDER
     CONTROL         "Switch color depths to fit",IDC_SWITCHBPP,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,129,118,10,0,
                     HIDC_SWITCHBPP
 #endif
-    GROUPBOX        "Full screen gamma",IDC_FSGAMMATEXT,134,164,124,30,NOT WS_GROUP
+    GROUPBOX        "Full screen gamma",IDC_FSGAMMATEXT,4,163,124,30,NOT WS_GROUP
     CONTROL         "Slider1",IDC_FSGAMMA,"msctls_trackbar32",TBS_BOTH | 
-                    TBS_NOTICKS | WS_TABSTOP,140,178,90,10,0,HIDC_FSGAMMA
-    CTEXT           "2.00",IDC_FSGAMMADISP,233,178,17,10,SS_CENTERIMAGE | 
+                    TBS_NOTICKS | WS_TABSTOP,10,177,90,10,0,HIDC_FSGAMMA
+    CTEXT           "2.00",IDC_FSGAMMADISP,103,177,17,10,SS_CENTERIMAGE | 
                     NOT WS_GROUP
-#ifndef NEW_RENDER
-    CONTROL         "Stretch using hardware",IDC_HWSTRETCH,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,142,45,114,10,0,
-                    HIDC_HWSTRETCH
-#endif
     LTEXT           "Aspect ratio",IDC_ASPECTRATIOTEXT,140,78,58,12,
                     SS_CENTERIMAGE
     EDITTEXT        IDC_ASPECTRATION,200,78,22,12,ES_RIGHT | ES_AUTOHSCROLL | 
@@ -776,13 +767,16 @@ BEGIN
     COMBOBOX        IDC_EFFECT,142,168,108,180,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP,0,HIDC_EFFECT
 #else
-    GROUPBOX        "Direct3D version",IDC_D3D_VERTEXT,4,129,124,30
-    COMBOBOX        IDC_D3D_VER,10,141,112,180,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    GROUPBOX        "DirectX",IDC_D3D_VERTEXT,134,163,124,57
+    COMBOBOX        IDC_D3D_VER,140,203,112,180,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "Prescale",IDC_D3D_PRESCALETEXT,4,164,124,30
-    COMBOBOX        IDC_D3D_PRESCALE,10,174,112,80,CBS_DROPDOWNLIST | 
+    GROUPBOX        "Prescale",IDC_D3D_PRESCALETEXT,4,130,124,30
+    COMBOBOX        IDC_D3D_PRESCALE,10,142,112,80,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP,0,HIDC_D3D_PRESCALE
-    GROUPBOX        "Screen",IDC_SCREENTEXT,134,45,124,114
+    GROUPBOX        "Video output method",IDC_VIDEOTEXT,4,45,124,30
+    COMBOBOX        IDC_VIDEO,10,57,112,180,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    GROUPBOX        "Screen",IDC_SCREENTEXT,134,45,124,115
     COMBOBOX        IDC_SCREEN,140,60,114,100,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP,0,HIDC_SCREEN
 #endif

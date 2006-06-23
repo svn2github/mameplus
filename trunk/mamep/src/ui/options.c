@@ -4047,6 +4047,31 @@ INLINE void _options_get_led_mode(char **p, const char *name)
 
 //============================================================
 
+INLINE void _options_get_video(char **p, const char *name)
+{
+	const char *stemp = options_get_string(name, FALSE);
+
+	if (stemp && *stemp)
+	{
+		if (strcmp(stemp, "gdi") == 0
+		 || strcmp(stemp, "ddraw") == 0
+		 || strcmp(stemp, "d3d") == 0)
+		{
+			FreeIfAllocated(p);
+			*p = strdup(stemp);
+		}
+	}
+}
+
+#define options_set_video		options_set_string
+#define options_copy_video		options_copy_string
+#define options_free_video		options_free_string
+#define _options_compare_video	_options_compare_string
+#define options_compare_video	options_compare_string
+
+
+//============================================================
+
 INLINE void _options_get_aspect(char **p, const char *name)
 {
 	const char *stemp = options_get_string(name, FALSE);

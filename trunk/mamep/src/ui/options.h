@@ -217,39 +217,18 @@ typedef struct
 //
 // DIRECTX VIDEO OPTIONS
 //
-#ifndef NEW_RENDER
-	BOOL	ddraw;
-#endif
-	BOOL	direct3d;
-	int	d3dversion;
+	char*	video;
 	BOOL	waitvsync;
 	BOOL	syncrefresh;
 	BOOL	triplebuffer;
 	BOOL	switchres;
-	BOOL	filter;
 	int     prescale;
 	float	full_screen_gamma;
 
-#ifndef NEW_RENDER
 	BOOL	hwstretch;
-	char*	cleanstretch;
-	int	refresh;
-	BOOL	scanlines;
-	BOOL	switchbpp;
-	BOOL	matchrefresh;
-	char*	effect;
-	float	gamma;
 
-	int	zoom;
-	BOOL	d3dtexmanage;
-
-	int	d3dfeedback;
-	int	d3dscan;
-	BOOL	d3deffectrotate;
-	char*	d3dprescale;
-	char*	d3deffect;
-#endif
-
+	int		d3dversion;
+	BOOL	filter;
 } options_type;
 
 // List of artwork types to display in the screen shot area

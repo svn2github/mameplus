@@ -941,54 +941,33 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	/* video */
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sautoframeskip",           pOpts->autoframeskip   ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -frameskip %d",              pOpts->frameskip);
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%swaitvsync",               pOpts->waitvsync      ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%striplebuffer",            pOpts->triplebuffer ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%swindow",                  pOpts->window     ? "" : "no");
-#ifndef NEW_RENDER
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sdd",                      pOpts->ddraw       ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%shwstretch",               pOpts->hwstretch   ? "" : "no");
-#endif
 	if (pOpts->screen0)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -screen0 %s",                pOpts->screen0); 
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -resolution0 %s",            pOpts->resolution0);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -aspect0 %s",                pOpts->aspect0);
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sswitchres",               pOpts->switchres       ? "" : "no");
-#ifndef NEW_RENDER
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sswitchbpp",               pOpts->switchbpp       ? "" : "no");
-#endif
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%smaximize",                pOpts->maximize        ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -numscreens %d",            pOpts->numscreens);
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%ssyncrefresh",             pOpts->syncrefresh     ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%skeepaspect",				pOpts->keepaspect      ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -numscreens %d",             pOpts->numscreens);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sthrottle",                pOpts->throttle        ? "" : "no");
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -full_screen_gamma %f",      pOpts->full_screen_gamma);
 //	sprintf(&pCmdLine[strlen(pCmdLine)], " -frames_to_run %d",          pOpts->frames_to_run);
-#ifndef NEW_RENDER
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -effect %s",                 pOpts->effect);
-#endif
 #ifdef USE_SCALE_EFFECTS
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -scale_effect %s",           pOpts->scale_effect);
 #endif /* USE_SCALE_EFFECTS */
 
-	// d3d
-	if (pOpts->direct3d)
-	{
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -direct3d");
-#ifndef NEW_RENDER
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -zoom %i", pOpts->zoom);
-#endif
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sfilter",pOpts->filter?"":"no");
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -%skeepaspect",pOpts->keepaspect?"":"no");
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -prescale %d",    pOpts->prescale);
-#ifndef NEW_RENDER
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sd3dtexmanage",    pOpts->d3dtexmanage ? "" : "no");
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3deffect %s",      pOpts->d3deffect);
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -%sd3deffectrotate", pOpts->d3deffectrotate ? "" : "no");
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3dscan %i",        pOpts->d3dscan);
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -d3dfeedback %i",    pOpts->d3dfeedback);
-#endif
-	}
-	else
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -nodirect3d");
+	// dx
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -video %s", pOpts->video);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%swaitvsync",               pOpts->waitvsync      ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%ssyncrefresh",             pOpts->syncrefresh     ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%striplebuffer",            pOpts->triplebuffer ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sswitchres",               pOpts->switchres       ? "" : "no");
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -prescale %d",    pOpts->prescale);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -full_screen_gamma %f",      pOpts->full_screen_gamma);
+
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%shwstretch", pOpts->hwstretch   ? "" : "no");
+
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -d3dversion %i", pOpts->d3dversion);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sfilter",pOpts->filter?"":"no");
 
 #ifdef UI_COLOR_DISPLAY
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -font_blank \"%s\"",         GetUIPaletteString(FONT_COLOR_BLANK));

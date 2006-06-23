@@ -197,15 +197,18 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(string_allow_null,    view3)
 
 // DIRECTX VIDEO OPTIONS
-	DEFINE_OPT(bool,                 direct3d)
-	DEFINE_OPT(d3dversion,           d3dversion)
+	DEFINE_OPT(video,                video)
 	DEFINE_OPT(bool,                 waitvsync)
 	DEFINE_OPT(bool,                 syncrefresh)
 	DEFINE_OPT(bool,                 triplebuffer)
 	DEFINE_OPT(bool,                 switchres)
-	DEFINE_OPT(bool,                 filter)
 	DEFINE_OPT(int_positive,         prescale)
 	DEFINE_OPT(full_screen_gamma,    full_screen_gamma)
+
+	DEFINE_OPT(bool,                 hwstretch)
+
+	DEFINE_OPT(int_positive,    d3dversion)
+	DEFINE_OPT(bool,                 filter)
 END_OPT_FUNC_DRIVER
 #endif
 

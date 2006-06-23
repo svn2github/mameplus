@@ -229,7 +229,9 @@
 #define IDC_PROP_DISPLAY                1131
 #define IDC_USE_SOUND                   1133
 #define IDC_WAITVSYNC                   1134
+#define IDC_HWSTRETCH                   1135
 #define IDC_SWITCHRES                   1136
+#define IDC_VIDEO                       1137
 #define IDC_MAXIMIZE                    1138
 #define IDC_KEEPASPECT                  1139
 #define IDC_SYNCREFRESH                 1141
@@ -272,7 +274,6 @@
 #define IDC_PAUSEBRIGHT                 1180
 #define IDC_PAUSEBRIGHTDISP             1181
 #define IDC_HIGH_PRIORITY               1182
-#define IDC_D3D                         1183
 #define IDC_D3D_FILTER                  1184
 #define IDC_D3D_VER                    1185
 #define IDC_AUDIO_LATENCY               1186
@@ -374,6 +375,7 @@
 #define IDC_SCREENTEXT                  1346
 #define IDC_D3D_PRESCALETEXT            1348
 #define IDC_USE_LIST                    1349
+#define IDC_VIDEOTEXT                   1350
 
 #define IDC_SCALEEFFECT                 1351 // USE_SCALE_EFFECTS
 #define IDC_SCALEEFFECTTEXT             1352 // USE_SCALE_EFFECTS

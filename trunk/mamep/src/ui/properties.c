@@ -145,6 +145,7 @@ static void InitializeDefaultBIOSUI(HWND hwnd);
 static void InitializeLEDModeUI(HWND hwnd);
 static void InitializeNumScreenUI(HWND hwnd);
 static void InitializeD3DVerUI(HWND hwnd);
+static void InitializeVideoUI(HWND hwnd);
 static void InitializePrescaleUI(HWND hwnd);
 static void InitializeControllerMappingUI(HWND hwnd);
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
@@ -211,6 +212,7 @@ static int  g_nLightgunIndex = 0;
 static BOOL g_bAnalogCheckState[65]; // 8 Joysticks  * 8 Axes each
 static int  g_nNumScreenIndex = 0;
 static int  g_nD3DVerIndex = 0;
+static int  g_nVideoIndex = 0;
 static int  g_nBiosIndex       = 0;
 #ifdef USE_SCALE_EFFECTS
 static int  g_nScaleEffectIndex= 0;
@@ -298,6 +300,7 @@ static DWORD dwHelpIDs[] =
 	IDC_FLIPY,              HIDC_FLIPY,
 	IDC_FRAMESKIP,          HIDC_FRAMESKIP,
 	IDC_HISTORY,            HIDC_HISTORY,
+	IDC_HWSTRETCH,          HIDC_HWSTRETCH,
 	IDC_INTENSITY,          HIDC_INTENSITY,
 	IDC_JOYSTICK,           HIDC_JOYSTICK,
 	IDC_KEEPASPECT,         HIDC_KEEPASPECT,
@@ -339,7 +342,6 @@ static DWORD dwHelpIDs[] =
 	IDC_RANDOM_BG,          HIDC_RANDOM_BG,
 	IDC_SKIP_GAME_INFO,     HIDC_SKIP_GAME_INFO,
 	IDC_HIGH_PRIORITY,      HIDC_HIGH_PRIORITY,
-	IDC_D3D,                HIDC_D3D,
 	IDC_D3D_FILTER,         HIDC_D3D_FILTER,
 	IDC_D3D_PRESCALE,       HIDC_D3D_PRESCALE,
 	IDC_BIOS,               HIDC_BIOS,
@@ -433,6 +435,18 @@ static struct ComboBoxLedmode
 
 #define NUMLEDMODES (sizeof(g_ComboBoxLedmode) / sizeof(g_ComboBoxLedmode[0]))
 
+static struct ComboBoxVideo
+{
+	const char*	m_pText;
+	const char*	m_pData;
+} g_ComboBoxVideo[] = 
+{
+	{ "GDI",                  "gdi"    },
+	{ "DirectDraw",           "ddraw"   },
+	{ "Direct3D",             "d3d"     },
+};
+
+#define NUMVIDEO (sizeof(g_ComboBoxVideo) / sizeof(g_ComboBoxVideo[0]))
 
 static struct ComboBoxDevices
 {
@@ -1268,6 +1282,7 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 	case IDC_SAMPLERATE:
 	case IDC_NUM_SCREEN:
 	case IDC_D3D_VER:
+	case IDC_VIDEO:
 	case IDC_M68K_CORE:
 #ifdef USE_SCALE_EFFECTS
 	case IDC_SCALEEFFECT:
@@ -2225,7 +2240,10 @@ static void SetPropEnabledControls(HWND hWnd)
 	HWND hCtrl;
 	int  nIndex;
 	int  sound;
-	BOOL d3d = FALSE;
+	BOOL ddraw = TRUE;
+//	BOOL d3d = FALSE;
+	BOOL d3d = TRUE;
+	BOOL hws = TRUE;
 	BOOL useart = FALSE;
 	BOOL multimon = (DirectDraw_GetNumDisplays() >= 2);
 	int joystick_attached = 9;
@@ -2248,18 +2266,20 @@ static void SetPropEnabledControls(HWND hWnd)
 		in_window = pGameOpts->window;
 
 	// check d3d is enabled
+/*
 	hCtrl = GetDlgItem(hWnd, IDC_D3D);
 	if (hCtrl)
 		d3d = Button_GetCheck(hCtrl);
 	else
 		d3d = pGameOpts->direct3d;
-
+*/
 	EnableWindow(GetDlgItem(hWnd, IDC_MAXIMIZE),               in_window);
 	EnableWindow(GetDlgItem(hWnd, IDC_RESDEPTH),               !in_window);
 	EnableWindow(GetDlgItem(hWnd, IDC_RESDEPTHTEXT),           !in_window);
 
 	EnableWindow(GetDlgItem(hWnd, IDC_WAITVSYNC),              d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_TRIPLE_BUFFER),          d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_HWSTRETCH),              ddraw && DirectDraw_HasHWStretch());
 	EnableWindow(GetDlgItem(hWnd, IDC_SWITCHRES),              !in_window && d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_SYNCREFRESH),            d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_REFRESH),                !in_window && d3d);
@@ -2729,6 +2749,15 @@ static void AssignLedmode(HWND hWnd)
 		pGameOpts->led_mode = strdup(ptr);
 }
 
+static void AssignVideo(HWND hWnd)
+{
+	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nVideoIndex);
+
+	FreeIfAllocated(&pGameOpts->video);
+	if (ptr != NULL)
+		pGameOpts->video = strdup(ptr);
+}
+
 static void AssignPaddle(HWND hWnd)
 {
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nPaddleIndex);
@@ -2930,6 +2959,13 @@ static void ResetDataMap(void)
 			g_nLedmodeIndex = i;
 	}
 
+	g_nVideoIndex = 0;
+	for (i = 0; i < NUMVIDEO; i++)
+	{
+		if (!mame_stricmp(pGameOpts->video, g_ComboBoxVideo[i].m_pData))
+			g_nVideoIndex = i;
+	}
+
 	switch (pGameOpts->numscreens)
 	{
 		case 2:  g_nNumScreenIndex = 1; break;
@@ -3063,7 +3099,10 @@ static void BuildDataMap(void)
 #endif /* USE_SCALE_EFFECTS */
 
 	// direct3d
-	DataMapAdd(IDC_D3D,           DM_BOOL, CT_BUTTON,   &pGameOpts->direct3d,      DM_BOOL,   &pGameOpts->direct3d,        0, 0, 0);
+	DataMapAdd(IDC_VIDEO,         DM_INT,  CT_COMBOBOX, &g_nVideoIndex,            DM_STRING, &pGameOpts->video,     0, 0, AssignVideo);
+	
+	DataMapAdd(IDC_HWSTRETCH,     DM_BOOL, CT_BUTTON,   &pGameOpts->hwstretch, DM_BOOL, &pGameOpts->hwstretch, 0, 0, 0);
+
 	DataMapAdd(IDC_D3D_VER,       DM_INT,  CT_COMBOBOX, &g_nD3DVerIndex,           DM_INT,    &pGameOpts->d3dversion,      0, 0, AssignD3DVer);
 	DataMapAdd(IDC_D3D_FILTER,    DM_BOOL, CT_BUTTON,   &pGameOpts->filter,        DM_BOOL,   &pGameOpts->filter,          0, 0, 0);
 	DataMapAdd(IDC_D3D_PRESCALE,  DM_INT,  CT_COMBOBOX, &pGameOpts->prescale,      DM_INT,    &pGameOpts->prescale,        0, 0, 0);
@@ -3331,6 +3370,7 @@ static void InitializeOptions(HWND hDlg)
 	InitializeLEDModeUI(hDlg);
 	InitializeNumScreenUI(hDlg);
 	InitializeD3DVerUI(hDlg);
+	InitializeVideoUI(hDlg);
 	InitializePrescaleUI(hDlg);
 	InitializeControllerMappingUI(hDlg);
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
@@ -4143,6 +4183,20 @@ static void InitializeD3DVerUI(HWND hwnd)
 		ComboBox_AddStringA(hCtrl, "Direct3D 9");
 		ComboBox_AddStringA(hCtrl, "Direct3D 8");
 		ComboBox_SetCurSel(hCtrl, 0);
+	}
+}
+
+static void InitializeVideoUI(HWND hwnd)
+{
+	HWND    hCtrl;
+
+	hCtrl = GetDlgItem(hwnd, IDC_VIDEO);
+	if (hCtrl)
+	{
+		ComboBox_AddStringA(hCtrl, "GDI");
+		ComboBox_AddStringA(hCtrl, "DirectDraw");
+		ComboBox_AddStringA(hCtrl, "Direct3D");
+		ComboBox_SetCurSel(hCtrl, 2);
 	}
 }
 
