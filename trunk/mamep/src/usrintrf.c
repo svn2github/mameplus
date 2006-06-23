@@ -5333,7 +5333,6 @@ static UINT32 confirm_quit_ui_handler(UINT32 state)
 
 	if (input_ui_pressed(IPT_UI_CANCEL))
 	{
-		mame_schedule_exit();
 		return UI_HANDLER_CANCEL;
 	}
 
