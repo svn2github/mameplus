@@ -4192,10 +4192,12 @@ static void InitializeVideoUI(HWND hwnd)
 	hCtrl = GetDlgItem(hwnd, IDC_VIDEO);
 	if (hCtrl)
 	{
-		ComboBox_AddStringA(hCtrl, "GDI");
-		ComboBox_AddStringA(hCtrl, "DirectDraw");
-		ComboBox_AddStringA(hCtrl, "Direct3D");
-		ComboBox_SetCurSel(hCtrl, 2);
+		int i;
+		for (i = 0; i < NUMVIDEO; i++)
+		{
+			ComboBox_InsertStringA(hCtrl, i, _UI(g_ComboBoxVideo[i].m_pText));
+			ComboBox_SetItemData( hCtrl, i, g_ComboBoxVideo[i].m_pData);
+		}
 	}
 }
 
