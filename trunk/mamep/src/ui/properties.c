@@ -2240,9 +2240,9 @@ static void SetPropEnabledControls(HWND hWnd)
 	HWND hCtrl;
 	int  nIndex;
 	int  sound;
-	BOOL ddraw = TRUE;
-//	BOOL d3d = FALSE;
-	BOOL d3d = TRUE;
+	const char* video_mode;
+	BOOL ddraw = FALSE;
+	BOOL d3d = FALSE;
 	BOOL useart = FALSE;
 	BOOL multimon = (DirectDraw_GetNumDisplays() >= 2);
 	int joystick_attached = 9;
@@ -2264,36 +2264,38 @@ static void SetPropEnabledControls(HWND hWnd)
 	else
 		in_window = pGameOpts->window;
 
-	// check d3d is enabled
-/*
-	hCtrl = GetDlgItem(hWnd, IDC_D3D);
+	hCtrl = GetDlgItem(hWnd, IDC_VIDEO);
 	if (hCtrl)
-		d3d = Button_GetCheck(hCtrl);
+		video_mode = (const char*)ComboBox_GetItemData(hCtrl, g_nVideoIndex);
 	else
-		d3d = pGameOpts->direct3d;
-*/
+		video_mode = (const char*)pGameOpts->video;
+
+	ddraw = !mame_stricmp(video_mode, g_ComboBoxVideo[1].m_pData);
+	d3d   = !mame_stricmp(video_mode, g_ComboBoxVideo[2].m_pData);
+
 	EnableWindow(GetDlgItem(hWnd, IDC_MAXIMIZE),               in_window);
 	EnableWindow(GetDlgItem(hWnd, IDC_RESDEPTH),               !in_window);
 	EnableWindow(GetDlgItem(hWnd, IDC_RESDEPTHTEXT),           !in_window);
 
-	EnableWindow(GetDlgItem(hWnd, IDC_WAITVSYNC),              d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_TRIPLE_BUFFER),          d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_WAITVSYNC),              ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_TRIPLE_BUFFER),          ddraw || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_HWSTRETCH),              ddraw && DirectDraw_HasHWStretch());
-	EnableWindow(GetDlgItem(hWnd, IDC_SWITCHRES),              !in_window && d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_SYNCREFRESH),            d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_REFRESH),                !in_window && d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_REFRESHTEXT),            !in_window && d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMA),                !in_window && d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMATEXT),            !in_window && d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMADISP),            !in_window && d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT),        d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT2),       d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATION),           d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOD),           d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_SCREEN),                 d3d && multimon);
-	EnableWindow(GetDlgItem(hWnd, IDC_SCREENTEXT),             d3d && multimon);
+	EnableWindow(GetDlgItem(hWnd, IDC_SWITCHRES),              !in_window && (ddraw || d3d));
+	EnableWindow(GetDlgItem(hWnd, IDC_SYNCREFRESH),            ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_REFRESH),                !in_window && ((ddraw && DirectDraw_HasRefresh()) || d3d));
+	EnableWindow(GetDlgItem(hWnd, IDC_REFRESHTEXT),            !in_window && ((ddraw && DirectDraw_HasRefresh()) || d3d));
+	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMA),                !in_window && (ddraw || d3d));
+	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMATEXT),            !in_window && (ddraw || d3d));
+	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMADISP),            !in_window && (ddraw || d3d));
+	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT),        ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT2),       ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATION),           ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOD),           ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_SCREEN),                 (ddraw || d3d) && multimon);
+	EnableWindow(GetDlgItem(hWnd, IDC_SCREENTEXT),             (ddraw || d3d) && multimon);
+
 	EnableWindow(GetDlgItem(hWnd, IDC_D3D_VER),                d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_D3D_VERTEXT),            d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_DXTEXT),                 ddraw || d3d);
 
 #if 1//def USE_SCALE_EFFECTS
 	EnableWindow(GetDlgItem(hWnd, IDC_SCALEEFFECTTEXT),        0/*d3d*/);

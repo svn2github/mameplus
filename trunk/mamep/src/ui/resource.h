@@ -275,9 +275,9 @@
 #define IDC_PAUSEBRIGHTDISP             1181
 #define IDC_HIGH_PRIORITY               1182
 #define IDC_D3D_FILTER                  1184
-#define IDC_D3D_VER                    1185
+#define IDC_D3D_VER                     1185
 #define IDC_AUDIO_LATENCY               1186
-#define IDC_D3D_VERTEXT                 1187
+#define IDC_DXTEXT                      1187
 #define IDC_D3D_PRESCALE                1189
 #ifndef NEW_RENDER
 #define IDC_CLEAN_STRETCH               1191
