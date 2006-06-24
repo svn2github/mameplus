@@ -730,9 +730,6 @@ void ui_update_and_render(void)
 	mess_ui_update();
 #endif
 
-	/* finally, display any popup messages */
-	ui_display_popup();
-
 #ifndef NEW_RENDER
 	/* flush the UI to the bitmap */
 	render_ui(bitmap);
