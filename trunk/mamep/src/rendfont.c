@@ -1071,6 +1071,12 @@ static void font_scale_clean(mame_bitmap *dest, const mame_bitmap *source, const
 	xscale = dest->width / swidth;
 	yscale = dest->height / sheight;
 
+	if (xscale == 0 || yscale == 0)
+	{
+		font_scale(dest, source, orig_sbounds, param);
+		return;
+	}
+
 	for (y = 0; y < sheight; y++)
 		for (sy = 0; sy < yscale; sy++)
 		{

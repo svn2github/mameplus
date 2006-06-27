@@ -661,19 +661,24 @@ void ui_set_visible_area(int xmin, int ymin, int xmax, int ymax)
 	/* rebuild the font */
 	create_font();
 #else
-	int scaling;
+	int height;
 
 	ui_screen_width = xmax - xmin + 1;
 	ui_screen_height = ymax - ymin + 1;
 
-	ui_font_height = render_font_get_pixel_height(ui_font) / (float)ui_screen_height;
+	ui_font_height = 1.0f / 25.0f;
 
-	while (ui_font_height > 1.0f / 20.0f)
-		ui_font_height = 1.0f / 20.0f;
+	height = render_font_get_pixel_height(ui_font);
+	if (height <= 13)
+	{
+		int scaling;
 
-	scaling = (int)(1.0f / ui_font_height / 25.0f);
-	if (scaling >= 2)
-		ui_font_height *= (float)scaling;
+		ui_font_height = height / (float)ui_screen_height;
+
+		scaling = (int)(1.0f / ui_font_height / 25.0f);
+		if (scaling >= 2)
+			ui_font_height *= (float)scaling;
+	}
 #endif
 }
 
