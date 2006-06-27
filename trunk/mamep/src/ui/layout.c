@@ -71,7 +71,6 @@ FOLDERDATA g_folderData[] =
 	{"Vector",          "vector",            FOLDER_VECTOR,       IDI_FOLDER,               F_VECTOR,      F_RASTER,     NULL,                       DriverIsVector,    TRUE },
 #ifdef MISC_FOLDER
 	{"Resolution",      "resolution",        FOLDER_RESOLUTION,   IDI_FOLDER,               0,             0,            CreateResolutionFolders },
-	{"Aspect Ratio",    "aspect",            FOLDER_ASPECT,       IDI_FOLDER,               0,             0,            CreateAspectFolders },
 	{"FPS",             "fps",               FOLDER_FPS,          IDI_FOLDER,               0,             0,            CreateFPSFolders },
 	{"Save State",      "savestate",         FOLDER_SAVESTATE,    IDI_FOLDER,               0,             0,            CreateSaveStateFolders },
 	{"Control Type",    "control",           FOLDER_CONTROL,      IDI_FOLDER,               0,             0,            CreateControlFolders },

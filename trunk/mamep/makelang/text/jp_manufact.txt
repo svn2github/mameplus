@@ -950,7 +950,7 @@ Digital Controls Inc.
 Digitrex Techstar
 
 
-# Double Point
+# Double Point (Dong Bang Electron, bootleg?)
 Dong Bang Electron
 
 
@@ -1208,6 +1208,10 @@ H.A.R. Management
 
 # Double Cheese
 HAR
+
+
+# Super Free Kick
+HEC
 
 
 # Laser Base (set 1)
@@ -1482,6 +1486,10 @@ NTC
 Nakanihon
 
 
+# Red Corsair
+Nakasawa
+
+
 # Neo Pong (v1.1)
 Neodev
 
@@ -1692,6 +1700,10 @@ Saero Entertainment
 
 # Elan Doree - Legend of Dragon (JUET 980922 V1.006)
 Sai-Mate
+
+
+# Puzzle Star (Sang Ho Soft)
+Sang Ho Soft
 
 
 # NCAA Basketball (Nintendo Super System)

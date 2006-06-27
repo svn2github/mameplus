@@ -410,7 +410,7 @@ Digital Soft
 Digitrex Techstar
 
 
-# Double Point
+# Double Point (Dong Bang Electron, bootleg?)
 Dong Bang Electron
 
 
@@ -760,6 +760,10 @@ H.A.R. Management
 
 # Double Cheese
 HAR
+
+
+# Super Free Kick
+HEC
 
 
 # Laser Base (set 1)
@@ -1146,6 +1150,10 @@ NTC
 Nakanihon
 
 
+# Red Corsair
+Nakasawa
+
+
 # PuckMan (Japan set 1, Probably Bootleg)
 Namco
 
@@ -1452,6 +1460,10 @@ Sammy Industries
 
 # Extreme Downhill (v1.5)
 Sammy Industries Japan
+
+
+# Puzzle Star (Sang Ho Soft)
+Sang Ho Soft
 
 
 # Dream Shopper

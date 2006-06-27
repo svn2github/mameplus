@@ -3093,6 +3093,9 @@ static const char *xml_get_attribute_string_with_subst(xml_data_node *node, cons
 	if (str == NULL)
 		return defvalue;
 
+	if (mame_stricmp(attribute, "name") == 0)
+		str = _(str);
+
 	/* if no tildes, don't worry */
 	if (strchr(str, '~') == NULL)
 		return str;
@@ -3385,8 +3388,6 @@ static layout_view *load_layout_view(xml_data_node *viewnode, layout_element *el
 	layout_view *view;
 	float xscale, yscale;
 	float xoffs, yoffs;
-	unsigned char buf[100];
-	const char *name;
 	int first;
 	int layer;
 
@@ -3395,9 +3396,7 @@ static layout_view *load_layout_view(xml_data_node *viewnode, layout_element *el
 	memset(view, 0, sizeof(*view));
 
 	/* allocate a copy of the name */
-	name = xml_get_attribute_string_with_subst(viewnode, "name", "");
-	utf8_decode_string(name, buf, sizeof buf);
-	view->name = copy_string(buf);
+	view->name = copy_string(xml_get_attribute_string_with_subst(viewnode, "name", ""));
 
 	/* loop over all the layer types we support */
 	first = TRUE;

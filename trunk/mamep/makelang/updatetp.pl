@@ -181,6 +181,7 @@ sub ReadSrcFiles
 		my $path = "$dir$_";
 
 		&ParseSrcFiles ($path) if -f "$srcdir/$path";
+		&ParseLayoutFiles ($path) if -f "$srcdir/$path";
 		&ReadSrcFiles ("$path/") if -d "$srcdir/$path";
 	}
 }
@@ -415,6 +416,37 @@ sub ParseSrcFiles
 			$found{$_} =~ s/^,/$file:/;
 			$SRC{$_} .= " $found{$_}";
 		}
+	}
+}
+
+sub ParseLayoutFiles
+{
+	my $file = $_[0];
+
+	return unless $file =~ /\.lay$/i;
+
+	print "$file\n";
+	open (IN, "$srcdir/$file") || return;
+
+	my $lines;
+	my %found;
+
+	$lines = 0;
+	while (<IN>)
+	{
+		$lines++;
+		next unless /\<view\s+name\s*=\s*"([^"]+)"\>/i;
+
+		$found{$1} .= ", $lines";
+	}
+
+	close(IN);
+
+	foreach (keys %found)
+	{
+		$found{$_} =~ s/^,/$file:/;
+		$SRC{$_} .= " $found{$_}";
+		$TEMPLATE{$_} .= "$templatefiles[0] ";
 	}
 }
 

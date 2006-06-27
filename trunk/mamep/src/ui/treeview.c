@@ -1300,50 +1300,6 @@ void CreateResolutionFolders(int parent_index)
 	}
 }
 
-void CreateAspectFolders(int parent_index)
-{
-	int i,jj;
-	int nGames = GetNumGames();
-	int start_folder = numFolders;
-	machine_config drv;
-	char Aspect[20];
-	LPTREEFOLDER lpFolder = treeFolders[parent_index];
-
-	// no games in top level folder
-	SetAllBits(lpFolder->m_lpGameBits,FALSE);
-
-	for (jj = 0; jj < nGames; jj++)
-	{
-		int ax, ay;
-
-		expand_machine_driver(drivers[jj]->drv, &drv);
-
-		if (drivers[jj]->flags & ORIENTATION_SWAP_XY)
-			GetDriverAspect(jj, &ay, &ax);
-		else
-			GetDriverAspect(jj, &ax, &ay);
-
-		sprintf(Aspect, "%d:%d", ax, ay);
-
-		for (i=numFolders-1;i>=start_folder;i--)
-		{
-			if (strcmp(treeFolders[i]->m_lpTitle, Aspect) == 0)
-			{
-				AddGame(treeFolders[i],jj);
-				break;
-			}
-		}
-		if (i == start_folder-1)
-		{
-			LPTREEFOLDER lpTemp;
-			lpTemp = NewFolder(Aspect, 0, FALSE, next_folder_id++, parent_index, IDI_FOLDER,
-							   GetFolderFlags(Aspect));
-			AddFolder(lpTemp);
-			AddGame(lpTemp,jj);
-		}
-	}
-}
-
 void CreateFPSFolders(int parent_index)
 {
 	int i,jj;
