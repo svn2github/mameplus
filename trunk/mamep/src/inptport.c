@@ -2476,6 +2476,7 @@ static void update_playback_record(int portnum, UINT32 portvalue)
 		{
 			mame_fclose(Machine->playback_file);
 			Machine->playback_file = NULL;
+			options.playback = NULL;
 
 			ui_popup(_("End of playback"));
 
