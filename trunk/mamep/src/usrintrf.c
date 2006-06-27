@@ -668,6 +668,9 @@ void ui_set_visible_area(int xmin, int ymin, int xmax, int ymax)
 
 	ui_font_height = render_font_get_pixel_height(ui_font) / (float)ui_screen_height;
 
+	while (ui_font_height > 1.0f / 20.0f)
+		ui_font_height = 1.0f / 20.0f;
+
 	scaling = (int)(1.0f / ui_font_height / 25.0f);
 	if (scaling >= 2)
 		ui_font_height *= (float)scaling;
@@ -992,7 +995,7 @@ void ui_draw_text_full(const char *origs, int x, int y, int wrapwidth, int offse
 				}
 
 				/* if we didn't hit a space, back up one character */
-				else if (s > linestart)
+				else if (s > linestart && lastchar > linestart)
 				{
 					s = lastchar;
 					curwidth = lastchar_width;
@@ -6144,32 +6147,6 @@ int ui_get_char_width(UINT16 ch)
 }
 
 
-int ui_get_string_width(const char *s)
-{
-	int len = 0;
-
-	while (*s)
-	{
-		UINT16 code;
-		int increment;
-
-		increment = uifont_decodechar(s, &code);
-#ifdef UI_COLOR_DISPLAY
-		if (increment == 3)
-		{
-			s++;
-			continue;
-		}
-#endif /* UI_COLOR_DISPLAY */
-
-		len += ui_get_char_width(code);
-		s += increment;
-	}
-
-	return len;
-}
-
-
 static void ui_raw2rot_rect(rectangle *rect)
 {
 	int temp, w, h;
@@ -6375,11 +6352,12 @@ int ui_get_char_width(UINT16 ch)
 	return UI_SCALE_TO_INT_X(render_font_get_char_width(ui_font, UI_FONT_HEIGHT, render_get_ui_aspect(), ch));
 }
 
-
+#if 0
 int ui_get_string_width(const char *s)
 {
 	return UI_SCALE_TO_INT_X(render_font_get_string_width(ui_font, UI_FONT_HEIGHT, render_get_ui_aspect(), s));
 }
+#endif
 
 static void build_bgtexture(void)
 {
@@ -6445,6 +6423,32 @@ static void add_fill(int x0, int y0, int x1, int y1, rgb_t color)
 		render_ui_add_rect(UI_UNSCALE_TO_FLOAT_X(x0), UI_UNSCALE_TO_FLOAT_Y(y0), UI_UNSCALE_TO_FLOAT_X(x1), UI_UNSCALE_TO_FLOAT_Y(y1), ui_get_rgb_color(color), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 }
 #endif
+
+
+int ui_get_string_width(const char *s)
+{
+	int len = 0;
+
+	while (*s)
+	{
+		UINT16 code;
+		int increment;
+
+		increment = uifont_decodechar(s, &code);
+#ifdef UI_COLOR_DISPLAY
+		if (increment == 3)
+		{
+			s++;
+			continue;
+		}
+#endif /* UI_COLOR_DISPLAY */
+
+		len += ui_get_char_width(code);
+		s += increment;
+	}
+
+	return len;
+}
 
 
 static void add_filled_box_color(int x1, int y1, int x2, int y2, rgb_t color)
