@@ -564,6 +564,7 @@ void OptionsInit()
 	// have our mame core (file code) know about our rom path
 	// this leaks a little, but the win32 file core writes to this string
 	SetCorePathList(FILETYPE_ROM, settings.rompath);
+	SetCorePathList(FILETYPE_IMAGE, settings.rompath);
 	SetCorePathList(FILETYPE_SAMPLE, settings.samplepath);
 #ifdef MESS
 	SetCorePathList(FILETYPE_HASH, settings.mess.hashdir);
@@ -1437,6 +1438,7 @@ void SetRomDirs(const char* paths)
 		// have our mame core (file code) know about it
 		// this leaks a little, but the win32 file core writes to this string
 		SetCorePathList(FILETYPE_ROM, settings.rompath);
+		SetCorePathList(FILETYPE_IMAGE, settings.rompath);
 	}
 }
 
