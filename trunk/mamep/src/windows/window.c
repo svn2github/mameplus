@@ -57,19 +57,19 @@ extern int drawd3d_init(win_draw_callbacks *callbacks);
 //============================================================
 
 // window styles
-#define WINDOW_STYLE			WS_OVERLAPPEDWINDOW
-#define WINDOW_STYLE_EX			0
+#define WINDOW_STYLE					WS_OVERLAPPEDWINDOW
+#define WINDOW_STYLE_EX					0
 
 // debugger window styles
-#define DEBUG_WINDOW_STYLE		WS_OVERLAPPED
-#define DEBUG_WINDOW_STYLE_EX	0
+#define DEBUG_WINDOW_STYLE				WS_OVERLAPPED
+#define DEBUG_WINDOW_STYLE_EX			0
 
 // full screen window styles
-#define FULLSCREEN_STYLE		WS_POPUP
-#define FULLSCREEN_STYLE_EX		WS_EX_TOPMOST
+#define FULLSCREEN_STYLE				WS_POPUP
+#define FULLSCREEN_STYLE_EX				WS_EX_TOPMOST
 
 // minimum window dimension
-#define MIN_WINDOW_DIM			200
+#define MIN_WINDOW_DIM					200
 
 // custom window messages
 #define WM_USER_FINISH_CREATE_WINDOW	(WM_USER + 0)
@@ -186,6 +186,7 @@ static void mtlog_dump(void)
 #else
 void mtlog_add(const char *event) { }
 #endif
+
 
 
 //============================================================
@@ -500,7 +501,7 @@ void winwindow_update_cursor_state(void)
 
 int winwindow_video_window_create(int index, win_monitor_info *monitor, const win_window_config *config)
 {
-	win_window_info *window;
+	win_window_info *window, *win;
 	char buf[256];
 	char option[20];
 
@@ -515,6 +516,12 @@ int winwindow_video_window_create(int index, win_monitor_info *monitor, const wi
 	window->refresh = config->refresh;
 	window->monitor = monitor;
 	window->fullscreen = !video_config.windowed;
+
+	// see if we are safe for fullscreen
+	window->fullscreen_safe = TRUE;
+	for (win = win_window_list; win != NULL; win = win->next)
+		if (win->monitor == monitor)
+			window->fullscreen_safe = FALSE;
 
 	// add us to the list
 	*last_window_ptr = window;
@@ -662,7 +669,11 @@ void winwindow_video_window_update(win_window_info *window)
 			// post a redraw request with the primitive list as a parameter
 			last_update_time = timeGetTime();
 			mtlog_add("winwindow_video_window_update: PostMessage start");
+#if ENABLE_THREADS
 			PostMessage(window->hwnd, WM_USER_REDRAW, 0, (LPARAM)primlist);
+#else
+			SendMessage(window->hwnd, WM_USER_REDRAW, 0, (LPARAM)primlist);
+#endif
 			mtlog_add("winwindow_video_window_update: PostMessage end");
 		}
 	}
@@ -788,7 +799,34 @@ static void set_starting_view(int index, win_window_info *window, const char *vi
 
 		// count the number of screens
 		for (scrcount = 0; Machine->drv->screen[scrcount].tag != NULL; scrcount++) ;
-		viewindex = index % scrcount;
+
+		// if we have enough screens to be one per monitor, assign in order
+		if (video_config.numscreens >= scrcount)
+		{
+			// find the first view with this screen and this screen only
+			for (viewindex = 0; ; viewindex++)
+			{
+				UINT32 viewscreens = render_target_get_view_screens(window->target, viewindex);
+				if (viewscreens == (1 << index))
+					break;
+				if (viewscreens == 0)
+				{
+					viewindex = -1;
+					break;
+				}
+			}
+		}
+
+		// otherwise, find the first view that has all the screens
+		if (viewindex == -1)
+		{
+			for (viewindex = 0; ; viewindex++)
+			{
+				UINT32 viewscreens = render_target_get_view_screens(window->target, viewindex);
+				if (viewscreens == (1 << scrcount) - 1)
+					break;
+			}
+		}
 	}
 
 	// make sure it's a valid view
@@ -947,7 +985,6 @@ static int complete_create(win_window_info *window)
 	RECT monitorbounds, client;
 	int tempwidth, tempheight;
 	HMENU menu = NULL;
-	int result = 0;
 	HDC dc;
 
 	assert(GetCurrentThreadId() == window_threadid);
@@ -995,10 +1032,12 @@ static int complete_create(win_window_info *window)
 	adjust_window_position_after_major_change(window);
 
 	// finish off by trying to initialize DirectX; if we fail, ignore it
-	result = (*draw.window_init)(window);
+	if ((*draw.window_init)(window))
+		return 1;
 
 	// show the window
-	ShowWindow(window->hwnd, SW_SHOW);
+	if (!window->fullscreen || window->fullscreen_safe)
+		ShowWindow(window->hwnd, SW_SHOW);
 
 	// clear the window
 	dc = GetDC(window->hwnd);
@@ -1582,8 +1621,6 @@ static void adjust_window_position_after_major_change(win_window_info *window)
 
 static void set_fullscreen(win_window_info *window, int fullscreen)
 {
-	int result;
-
 	assert(GetCurrentThreadId() == window_threadid);
 
 	// if we're in the right state, punt
@@ -1644,12 +1681,12 @@ static void set_fullscreen(win_window_info *window, int fullscreen)
 	adjust_window_position_after_major_change(window);
 
 	// show ourself
-	ShowWindow(window->hwnd, SW_SHOW);
-
-	// reconfigure the drawers
-	result = 0;
-	if ((*draw.window_init)(window))
-		exit(1);
+	if (!window->fullscreen || window->fullscreen_safe)
+	{
+		ShowWindow(window->hwnd, SW_SHOW);
+		if ((*draw.window_init)(window))
+			exit(1);
+	}
 
 	// ensure we're still adjusted correctly
 	adjust_window_position_after_major_change(window);

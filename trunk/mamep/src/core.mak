@@ -89,6 +89,21 @@ COREOBJS += \
 	$(OBJ)/datafile.o \
 	$(OBJ)/ui_lang.o \
 
+
+#-------------------------------------------------
+# layouts
+#-------------------------------------------------
+
+LAYOUTS = $(wildcard src/layout/*)
+
+LAYOUTHEADERS = $(subst src,$(OBJ),$(subst .lay,.lh,$(LAYOUTS)))
+
+$(OBJ)/%.lh: src/%.lay
+
+$(OBJ)/render.o: $(LAYOUTHEADERS)
+
+
+
 #-------------------------------------------------
 # additional core files needed for the debugger
 #-------------------------------------------------

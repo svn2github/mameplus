@@ -50,58 +50,6 @@ static int knownstatus,identfiles,identmatches,identnonroms;
 
 
 
-/* compare string[8] using standard(?) DOS wildchars ('?' & '*')      */
-/* for this to work correctly, the shells internal wildcard expansion */
-/* mechanism has to be disabled. Look into msdos.c */
-
-int strwildcmp(const char *sp1, const char *sp2)
-{
-	char s1[9], s2[9];
-	int i, l1, l2;
-	char *p;
-
-	strncpy(s1, sp1, 8); s1[8] = 0; if (s1[0] == 0) strcpy(s1, "*");
-
-	strncpy(s2, sp2, 8); s2[8] = 0; if (s2[0] == 0) strcpy(s2, "*");
-
-	p = strchr(s1, '*');
-	if (p)
-	{
-		for (i = p - s1; i < 8; i++) s1[i] = '?';
-		s1[8] = 0;
-	}
-
-	p = strchr(s2, '*');
-	if (p)
-	{
-		for (i = p - s2; i < 8; i++) s2[i] = '?';
-		s2[8] = 0;
-	}
-
-	l1 = strlen(s1);
-	if (l1 < 8)
-	{
-		for (i = l1 + 1; i < 8; i++) s1[i] = ' ';
-		s1[8] = 0;
-	}
-
-	l2 = strlen(s2);
-	if (l2 < 8)
-	{
-		for (i = l2 + 1; i < 8; i++) s2[i] = ' ';
-		s2[8] = 0;
-	}
-
-	for (i = 0; i < 8; i++)
-	{
-		if (s1[i] == '?' && s2[i] != '?') s1[i] = s2[i];
-		if (s2[i] == '?' && s1[i] != '?') s2[i] = s1[i];
-	}
-
-	return mame_stricmp(s1, s2);
-}
-
-
 static void namecopy(char *name_ref,const char *desc)
 {
 	char name[200];
@@ -406,7 +354,13 @@ INLINE int isclone(int drvindex)
 
 int frontend_listxml(FILE *output)
 {
-	print_mame_xml(output, drivers);
+	const char *gamename = options_get_string("", FALSE);
+
+	/* a NULL gamename == '*' */
+	if (gamename == NULL)
+		gamename = "*";
+
+	print_mame_xml(output, drivers, gamename);
 	return 0;
 }
 
@@ -425,7 +379,7 @@ int frontend_listfull(FILE *output)
 
 	/* iterate over drivers */
 	for (drvindex = 0; drivers[drvindex]; drvindex++)
-		if ((drivers[drvindex]->flags & NOT_A_DRIVER) == 0 && strwildcmp(gamename, drivers[drvindex]->name) == 0)
+		if ((drivers[drvindex]->flags & NOT_A_DRIVER) == 0 && mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
 			char name[200];
 
@@ -469,7 +423,7 @@ int frontend_listgames(FILE *output)
 		gamename = "*";
 
 	for (drvindex = 0; drivers[drvindex]; drvindex++)
-		if ((drivers[drvindex]->flags & NOT_A_DRIVER) == 0 && strwildcmp(gamename, drivers[drvindex]->name) == 0)
+		if ((drivers[drvindex]->flags & NOT_A_DRIVER) == 0 && mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
 			char name[200];
 
@@ -513,7 +467,7 @@ int frontend_listsource(FILE *output)
 
 	/* iterate over drivers */
 	for (drvindex = 0; drivers[drvindex]; drvindex++)
-		if (strwildcmp(gamename, drivers[drvindex]->name) == 0)
+		if (mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
 			fprintf(output, "%-8s %s\n", drivers[drvindex]->name, drivers[drvindex]->source_file);
 			count++;
@@ -543,7 +497,7 @@ int frontend_listclones(FILE *output)
 
 		/* if we are a clone, and either our name matches the gamename, or the clone's name matches, display us */
 		if (clone_of != NULL && (clone_of->flags & NOT_A_DRIVER) == 0)
-			if (strwildcmp(gamename, drivers[drvindex]->name) == 0 || strwildcmp(gamename, clone_of->name) == 0)
+			if (mame_strwildcmp(gamename, drivers[drvindex]->name) == 0 || mame_strwildcmp(gamename, clone_of->name) == 0)
 			{
 				fprintf(output, "%-8s %-8s\n", drivers[drvindex]->name, clone_of->name);
 				count++;
@@ -723,7 +677,7 @@ int frontend_verifyroms(FILE *output)
 	/* first count up how many drivers match the string */
 	total = 0;
 	for (drvindex = 0; drivers[drvindex]; drvindex++)
-		if (!strwildcmp(gamename, drivers[drvindex]->name))
+		if (!mame_strwildcmp(gamename, drivers[drvindex]->name))
 			total++;
 
 	/* gross: stash the output handle in a global */
@@ -735,7 +689,7 @@ int frontend_verifyroms(FILE *output)
 		int res;
 
 		/* skip if we don't match */
-		if (strwildcmp(gamename, drivers[drvindex]->name))
+		if (mame_strwildcmp(gamename, drivers[drvindex]->name))
 			continue;
 
 		/* audit the ROMs in this set */
@@ -824,7 +778,7 @@ int frontend_verifysamples(FILE *output)
 	/* first count up how many drivers match the string */
 	total = 0;
 	for (drvindex = 0; drivers[drvindex]; drvindex++)
-		if (!strwildcmp(gamename, drivers[drvindex]->name))
+		if (!mame_strwildcmp(gamename, drivers[drvindex]->name))
 			total++;
 
 	/* gross: stash the output handle in a global */
@@ -841,7 +795,7 @@ int frontend_verifysamples(FILE *output)
 		int res;
 
 		/* skip if we don't match */
-		if (strwildcmp(gamename, drivers[drvindex]->name))
+		if (mame_strwildcmp(gamename, drivers[drvindex]->name))
 			continue;
 
 		/* expand the machine driver and look for samples */
