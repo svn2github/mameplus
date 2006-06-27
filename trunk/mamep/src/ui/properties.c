@@ -2500,15 +2500,6 @@ static void SetPropEnabledControls(HWND hWnd)
 		Button_Enable(GetDlgItem(hWnd,IDC_ENABLE_AUTOSAVE),FALSE);
 	}
 
-	if (nIndex <= -1 || DriverSupportsDisable2ndMon(nIndex))
-	{
-		Button_Enable(GetDlgItem(hWnd,IDC_DISABLE_2ND_MONITOR),TRUE);
-	}
-	else
-	{
-		Button_Enable(GetDlgItem(hWnd,IDC_DISABLE_2ND_MONITOR),FALSE);
-	}
-
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 	if (nIndex != GLOBAL_OPTIONS && nIndex != FOLDER_OPTIONS)
 	{
@@ -3192,7 +3183,6 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_SKIP_GAME_INFO,DM_BOOL,CT_BUTTON,    &pGameOpts->skip_gameinfo, DM_BOOL, &pGameOpts->skip_gameinfo, 0, 0, 0);
 	DataMapAdd(IDC_BIOS,          DM_INT,  CT_COMBOBOX, &g_nBiosIndex,             DM_STRING, &pGameOpts->bios,        0, 0, AssignBios);
 	DataMapAdd(IDC_ENABLE_AUTOSAVE, DM_BOOL, CT_BUTTON, &pGameOpts->autosave,      DM_BOOL, &pGameOpts->autosave,      0, 0, 0);
-	DataMapAdd(IDC_DISABLE_2ND_MONITOR, DM_BOOL, CT_BUTTON, &pGameOpts->disable_second_monitor, DM_BOOL, &pGameOpts->disable_second_monitor, 0, 0, 0);
 	DataMapAdd(IDC_CONFIRM_QUIT,  DM_BOOL, CT_BUTTON,   &pGameOpts->confirm_quit,  DM_BOOL, &pGameOpts->confirm_quit,  0, 0, 0);
 #ifdef AUTO_PAUSE_PLAYBACK
 	DataMapAdd(IDC_AUTO_PAUSE_PLAYBACK,  DM_BOOL, CT_BUTTON,   &pGameOpts->auto_pause_playback,  DM_BOOL, &pGameOpts->auto_pause_playback,  0, 0, 0);

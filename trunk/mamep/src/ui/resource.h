@@ -323,7 +323,6 @@
 
 #define IDC_EFFECTOVERRIDES             1301
 #define IDC_AUTO_PAUSE_PLAYBACK         1302 // USE_AUTO_PAUSE_PLAYBACK
-#define IDC_DISABLE_2ND_MONITOR         1303 // disable_2nd_monitor
 #define IDC_CONFIRM_QUIT                1304 // confirm_quit
 #define IDC_M68K_CORE                   1305 // ks hcmame s switch m68k core
 #define IDC_M68K_CORETEXT               1306 // ks hcmame s switch m68k core

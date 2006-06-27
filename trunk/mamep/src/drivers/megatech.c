@@ -103,9 +103,9 @@ INPUT_PORTS_START( megatech ) /* Genesis Input Ports */
 //  PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_START1 ) PORT_PLAYER(2)
 
 	PORT_START	/* Temp - Fake dipswitch to turn on / off sms vdp display */
-	PORT_DIPNAME( 0x01, 0x00, "SMS VDP Display (fake)" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
+//  PORT_DIPNAME( 0x01, 0x01, "SMS VDP Display (fake)" )
+//  PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+//  PORT_DIPSETTING(    0x01, DEF_STR( On ) )
 
 	PORT_START
     PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE2 ) PORT_NAME("Select") PORT_CODE(KEYCODE_0)
@@ -460,18 +460,9 @@ static MACHINE_DRIVER_START( megatech )
 	MDRV_VIDEO_START(megatech)
 	MDRV_VIDEO_UPDATE(megatech)
 
-	if (options.disable_2nd_monitor)
-	{
-		MDRV_ASPECT_RATIO(4,3)
-		MDRV_SCREEN_SIZE(320,224)
-		MDRV_VISIBLE_AREA(0, 319, 0, 223)
-	}
-	else
-	{
-	    MDRV_ASPECT_RATIO(4,6)
-	    MDRV_SCREEN_SIZE(320,224+192) /* +192 for megatech BIOS screen/menu */
-	    MDRV_VISIBLE_AREA(0, 319, 0, 223+192)
-	}
+	MDRV_ASPECT_RATIO(4,6)
+	MDRV_SCREEN_SIZE(320,224+192) /* +192 for megatech BIOS screen/menu */
+	MDRV_VISIBLE_AREA(0, 319, 0, 223+192)
 	MDRV_PALETTE_LENGTH(64+32) /* +32 for megatech bios vdp part */
 
 	/* sound hardware */

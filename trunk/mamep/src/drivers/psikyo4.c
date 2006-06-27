@@ -64,7 +64,7 @@ NOTE: The version number (A/B) on Lode Runner: The Dig Fight is ONLY displayed w
 #include "machine/eeprom.h"
 #include "sound/ymf278b.h"
 
-#define DUAL_SCREEN 0 /* Display both screens simultaneously if 1, change in vidhrdw too */
+#define DUAL_SCREEN 1 /* Display both screens simultaneously if 1, change in vidhrdw too */
 #define ROMTEST 0 /* Does necessary stuff to perform rom test, uses RAM as it doesn't dispose of GFX after decoding */
 
 UINT32 *psikyo4_vidregs;
@@ -435,21 +435,15 @@ static MACHINE_DRIVER_START( ps4big )
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN)
-//#if DUAL_SCREEN
-	if (!options.disable_2nd_monitor)
-	{
-	    MDRV_ASPECT_RATIO(8,3)
-	    MDRV_SCREEN_SIZE(80*8, 32*8)
-	    MDRV_VISIBLE_AREA(0, 80*8-1, 0, 28*8-1)
-	}
-//#else
-	else
-	{
-	    MDRV_ASPECT_RATIO(4,3)
-	    MDRV_SCREEN_SIZE(64*8, 32*8)
-	    MDRV_VISIBLE_AREA(0, 40*8-1, 0, 28*8-1)
-	}
-//#endif
+#if DUAL_SCREEN
+	MDRV_ASPECT_RATIO(8,3)
+	MDRV_SCREEN_SIZE(80*8, 32*8)
+	MDRV_VISIBLE_AREA(0, 80*8-1, 0, 28*8-1)
+#else
+	MDRV_ASPECT_RATIO(4,3)
+	MDRV_SCREEN_SIZE(64*8, 32*8)
+	MDRV_VISIBLE_AREA(0, 40*8-1, 0, 28*8-1)
+#endif
 
 	MDRV_GFXDECODE(gfxdecodeinfops4)
 	MDRV_PALETTE_LENGTH((0x2000/4)*2 + 2) /* 0x2000/4 for each screen. 1 for each screen clear colour */
@@ -470,17 +464,11 @@ static MACHINE_DRIVER_START( ps4small )
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(ps4big)
 
-//#if DUAL_SCREEN
-	if (!options.disable_2nd_monitor)
-	{
-		MDRV_VISIBLE_AREA(0, 80*8-1, 0, 30*8-1)
-	}
-//#else
-	else
-	{
-		MDRV_VISIBLE_AREA(0, 40*8-1, 0, 30*8-1)
-	}
-//#endif
+#if DUAL_SCREEN
+	MDRV_VISIBLE_AREA(0, 80*8-1, 0, 30*8-1)
+#else
+	MDRV_VISIBLE_AREA(0, 40*8-1, 0, 30*8-1)
+#endif
 MACHINE_DRIVER_END
 
 

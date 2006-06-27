@@ -226,34 +226,15 @@ VIDEO_UPDATE(backfire)
 		UINT16* line_dest = (UINT16 *)(bitmap->line[y]);
 		UINT16* line_src = (UINT16 *)(backfire_left->line[y]);
 		UINT16* line_src2 = (UINT16 *)(backfire_right->line[y]);
-
-		if (options.disable_2nd_monitor)
+		/* left screen */
+		for (x=0*8;x<40*8;x++)
 		{
-			if (readinputport(6) & 1)
-			{
-				/* left screen */
-				for (x=0*8;x<40*8;x++)
-					line_dest[x] = line_src[x];
-			}
-			else
-			{
-				/* right screen */
-				for (x=0*8;x<40*8;x++)
-					line_dest[x] = line_src2[x];
-			}
+			line_dest[x] = line_src[x];
 		}
-		else
+		/* right screen */
+		for (x=0*8;x<40*8;x++)
 		{
-			/* left screen */
-			for (x=0*8;x<40*8;x++)
-			{
-				line_dest[x] = line_src[x];
-			}
-			/* right screen */
-			for (x=0*8;x<40*8;x++)
-			{
-				line_dest[x+40*8] = line_src2[x];
-			}
+			line_dest[x+40*8] = line_src2[x];
 		}
 	}
 
@@ -450,8 +431,8 @@ INPUT_PORTS_START( backfire )
 	PORT_START
 	PORT_BIT ( 0x00ff, 0x0080, IPT_PADDLE ) PORT_MINMAX(0x00,0xff) PORT_SENSITIVITY(30) PORT_KEYDELTA(1)
 
-	PORT_START	/* Fake: To switch between monitors at run time */
-	PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_SERVICE2 ) PORT_TOGGLE PORT_NAME("Monitor Switch") PORT_CODE(KEYCODE_EQUALS) 
+	PORT_START
+	/* ?? */
 INPUT_PORTS_END
 
 
@@ -536,18 +517,10 @@ static MACHINE_DRIVER_START( backfire )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN )
 	MDRV_SCREEN_SIZE(80*8, 32*8)
-	if (options.disable_2nd_monitor)
-	{
-		MDRV_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
-		MDRV_ASPECT_RATIO(4,3)
-	}
-	else
-	{
-		MDRV_VISIBLE_AREA(0*8, 80*8-1, 1*8, 31*8-1)
-		MDRV_ASPECT_RATIO(8,3)
-	}
+	MDRV_VISIBLE_AREA(0*8, 80*8-1, 1*8, 31*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo_backfire)
 	MDRV_PALETTE_LENGTH(2048)
+	MDRV_ASPECT_RATIO(8,3)
 
 	MDRV_VIDEO_START(backfire)
 	MDRV_VIDEO_UPDATE(backfire)

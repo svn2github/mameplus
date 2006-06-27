@@ -166,8 +166,6 @@ const options_entry config_opts[] =
 #else /* USE_IPS */
 	{ "ips",                      NULL,   OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* USE_IPS */
-	{ "disable_second_monitor;dsm",
-	                              "1",    OPTION_BOOLEAN,    "disable second monitor emulation" },
 	{ "confirm_quit",             "1",    OPTION_BOOLEAN,    "quit game with confirmation" },
 #ifdef AUTO_PAUSE_PLAYBACK
 	{ "auto_pause_playback",      "0",    OPTION_BOOLEAN,    "automatic pause when playback is finished" },
@@ -771,7 +769,6 @@ static void extract_options(const game_driver *driver, machine_config *drv)
 #ifdef USE_IPS
 	options.patchname = options_get_string("ips", TRUE);
 #endif /* USE_IPS */
-	options.disable_2nd_monitor = options_get_bool("disable_second_monitor", TRUE);
 	options.confirm_quit = options_get_bool("confirm_quit", TRUE);
 #ifdef AUTO_PAUSE_PLAYBACK
 	options.auto_pause_playback = options_get_bool("auto_pause_playback", TRUE);

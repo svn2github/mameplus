@@ -111,7 +111,6 @@ typedef struct
 #ifdef USE_IPS
 	char*	ips;
 #endif /* USE_IPS */
-	BOOL	disable_second_monitor;
 	BOOL	confirm_quit;
 #ifdef AUTO_PAUSE_PLAYBACK
 	BOOL	auto_pause_playback;

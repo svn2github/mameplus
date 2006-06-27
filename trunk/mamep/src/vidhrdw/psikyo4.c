@@ -28,7 +28,7 @@ HgKairak: 86010000 1f201918 a0000000 Large Screen
 
 #include "driver.h"
 
-#define DUAL_SCREEN 0 /* Display both screens simultaneously if 1, change in driver too */
+#define DUAL_SCREEN 1 /* Display both screens simultaneously if 1, change in driver too */
 
 static UINT32 screen; /* for PS4 games when DUAL_SCREEN=0 */
 
@@ -108,12 +108,9 @@ static void psikyo4_drawsprites( mame_bitmap *bitmap, const rectangle *cliprect,
 				flipy = !flipy;
 			}
 
-//#if DUAL_SCREEN /* if we are displaying both screens simultaneously */
-			if (!options.disable_2nd_monitor)
-			{
-				if(scr) xpos += 40*8;
-			}
-//#endif
+#if DUAL_SCREEN /* if we are displaying both screens simultaneously */
+			if(scr) xpos += 40*8;
+#endif
 
 			if (flipx)	{ xstart = wide-1;  xend = -1;    xinc = -1; }
 			else		{ xstart = 0;       xend = wide;  xinc = +1; }
@@ -136,8 +133,7 @@ static void psikyo4_drawsprites( mame_bitmap *bitmap, const rectangle *cliprect,
 
 VIDEO_UPDATE( psikyo4 )
 {
-//#if DUAL_SCREEN
-	if (!options.disable_2nd_monitor)
+#if DUAL_SCREEN
 	{
 		rectangle clip;
 
@@ -157,8 +153,7 @@ VIDEO_UPDATE( psikyo4 )
 		fillbitmap(bitmap, Machine->pens[0x1001], &clip);
 		psikyo4_drawsprites(bitmap, &clip, 0x2000);
 	}
-//#else
-	else
+#else
 	{
 		if (readinputport(9) & 1) screen = 0x0000; /* change screens from false dip, is this ok? */
 		else if (readinputport(9) & 2) screen = 0x2000;
@@ -166,7 +161,7 @@ VIDEO_UPDATE( psikyo4 )
 		fillbitmap(bitmap, Machine->pens[(screen==0x0000)?0x1000:0x1001], cliprect);
 		psikyo4_drawsprites(bitmap, cliprect, screen);
 	}
-//#endif
+#endif
 
 
 #if 0

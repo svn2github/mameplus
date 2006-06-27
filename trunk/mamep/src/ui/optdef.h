@@ -100,7 +100,6 @@ START_OPT_FUNC_DRIVER
 #ifdef USE_IPS
 	DEFINE_OPT(ips,                  ips)
 #endif /* USE_IPS */
-	DEFINE_OPT(bool,                 disable_second_monitor)
 	DEFINE_OPT(bool,                 confirm_quit)
 #ifdef AUTO_PAUSE_PLAYBACK
 	DEFINE_OPT(bool,                 auto_pause_playback)

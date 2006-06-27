@@ -57,7 +57,6 @@ static struct DriversInfo
 	BOOL isHarddisk;
 	BOOL hasOptionalBIOS;
 	BOOL isStereo;
-	BOOL supportsDisable2ndMon;
 	BOOL isVector;
 	BOOL usesRoms;
 	BOOL usesSamples;
@@ -438,7 +437,6 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 					break;
 				}
 			gameinfo->hasOptionalBIOS = (gamedrv->bios != NULL);
-			options.disable_2nd_monitor = 0;
 			expand_machine_driver(gamedrv->drv, &drv);
 
 			num_speakers = 0;
@@ -542,18 +540,6 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			}
 
 			get_aspect(drv.screen[0].aspect, &gameinfo->aspect_x, &gameinfo->aspect_y);
-
-			gameinfo->supportsDisable2ndMon = FALSE;
-			{
-				float aspect = drv.screen[0].aspect;
-
-				options.disable_2nd_monitor = 1;
-				expand_machine_driver(gamedrv->drv, &drv);
-				options.disable_2nd_monitor = 0;
-
-				if (aspect != drv.screen[0].aspect)
-					gameinfo->supportsDisable2ndMon = TRUE;
-			}
 		}
 	}
 	return &drivers_info[driver_index];
@@ -597,11 +583,6 @@ BOOL DriverHasOptionalBIOS(int driver_index)
 BOOL DriverIsStereo(int driver_index)
 {
 	return GetDriversInfo(driver_index)->isStereo;
-}
-
-BOOL DriverSupportsDisable2ndMon(int driver_index)
-{
-	return GetDriversInfo(driver_index)->supportsDisable2ndMon;
 }
 
 BOOL DriverIsVector(int driver_index)

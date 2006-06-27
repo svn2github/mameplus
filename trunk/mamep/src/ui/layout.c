@@ -75,7 +75,6 @@ FOLDERDATA g_folderData[] =
 	{"FPS",             "fps",               FOLDER_FPS,          IDI_FOLDER,               0,             0,            CreateFPSFolders },
 	{"Save State",      "savestate",         FOLDER_SAVESTATE,    IDI_FOLDER,               0,             0,            CreateSaveStateFolders },
 	{"Control Type",    "control",           FOLDER_CONTROL,      IDI_FOLDER,               0,             0,            CreateControlFolders },
- 	{"Dual-Monitor",    "dualmonitor",       FOLDER_DUALMON,      IDI_FOLDER,               0,             0,            NULL,                       DriverSupportsDisable2ndMon,  TRUE },
 #else /* MISC_FOLDER */
 	{"Trackball",       "trackball",         FOLDER_TRACKBALL,    IDI_FOLDER,               0,             0,            NULL,                       DriverUsesTrackball,	TRUE },
 	{"Lightgun",        "lightgun",          FOLDER_LIGHTGUN,     IDI_FOLDER,               0,             0,            NULL,                       DriverUsesLightGun,TRUE },

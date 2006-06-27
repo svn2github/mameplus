@@ -1120,7 +1120,6 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	if (pOpts->ips != NULL)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -ips %s",                    pOpts->ips);
 #endif /* USE_IPS */
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sdisable_second_monitor",  pOpts->disable_second_monitor    ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sconfirm_quit",            pOpts->confirm_quit           ? "" : "no");
 #ifdef AUTO_PAUSE_PLAYBACK
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sauto_pause_playback",     pOpts->auto_pause_playback    ? "" : "no");

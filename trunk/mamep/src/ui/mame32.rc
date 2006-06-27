@@ -881,8 +881,6 @@ BEGIN
     CONTROL         "Auto restore and save (only if available)",IDC_ENABLE_AUTOSAVE,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,110,135,10,0,
                     HIDC_ENABLE_AUTOSAVE
-    CONTROL         "Disable second monitor emulation",IDC_DISABLE_2ND_MONITOR,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,123,135,10
     CONTROL         "Quit game with confirmation",IDC_CONFIRM_QUIT,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,136,135,10
 #ifdef AUTO_PAUSE_PLAYBACK

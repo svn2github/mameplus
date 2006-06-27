@@ -239,7 +239,6 @@ struct _global_options
 #ifdef USE_IPS
 	const char*	patchname;		/* International Patching System */
 #endif /* USE_IPS */
-	int		disable_2nd_monitor;	/* 1 to disable second monitor emulation */
 	int		confirm_quit;	/* 1 for confirm before exiting game */
 #ifdef AUTO_PAUSE_PLAYBACK
 	int		auto_pause_playback;	/* 1 for automatic pause when playback is finished */

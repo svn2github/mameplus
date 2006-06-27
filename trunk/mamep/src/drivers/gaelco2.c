@@ -27,7 +27,7 @@ extern UINT16 *gaelco2_vregs;
 extern UINT16 *snowboar_protection;
 
 /* comment this line to display 2 monitors for the dual monitor games */
-#define ONE_MONITOR
+//#define ONE_MONITOR
 
 /* from machine/gaelco2.c */
 DRIVER_INIT( alighunt );
@@ -802,7 +802,7 @@ PORT_START	/* SERVICESW + 4P INPUTS */
 	PORT_BIT( 0xf800, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 PORT_START	/* Fake: To switch between monitors at run time */
-	PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_SERVICE4 ) PORT_TOGGLE PORT_NAME("Monitor Switch") PORT_CODE(KEYCODE_EQUALS)
+	PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_SERVICE4 ) PORT_TOGGLE
 INPUT_PORTS_END
 
 static struct gaelcosnd_interface touchgo_snd_interface =
@@ -821,21 +821,14 @@ static MACHINE_DRIVER_START( touchgo )
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 
 	/* video hardware */
-	MDRV_SCREEN_SIZE(64*16, 32*16)
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_BUFFERS_SPRITERAM)
-//#ifdef ONE_MONITOR
-	if (options.disable_2nd_monitor)
-	{
-		MDRV_VISIBLE_AREA(0, 480-1, 16, 256-1)
-		MDRV_ASPECT_RATIO(4,3)
-	}
-//#else
-	else
-	{
-		MDRV_VISIBLE_AREA(0, 2*480-1, 16, 256-1)
-		MDRV_ASPECT_RATIO(8,3)
-//#endif
-	}
+	MDRV_SCREEN_SIZE(64*16, 32*16)
+#ifdef ONE_MONITOR
+	MDRV_VISIBLE_AREA(0, 480-1, 16, 256-1)
+#else
+	MDRV_VISIBLE_AREA(0, 2*480-1, 16, 256-1)
+	MDRV_ASPECT_RATIO(8,3)
+#endif
 	MDRV_GFXDECODE(gfxdecodeinfo_0x0400000)
 	MDRV_PALETTE_LENGTH(4096*16 - 16)	/* game's palette is 4096 but we allocate 15 more for shadows & highlights */
 
@@ -846,26 +839,13 @@ static MACHINE_DRIVER_START( touchgo )
 	/* sound hardware */
 	/* the chip is stereo, but the game sound is mono because the right channel
        output is for cabinet 1 and the left channel output is for cabinet 2 */
-//#ifdef ONE_MONITOR
-	if (!options.disable_2nd_monitor)
-	{
-		MDRV_SPEAKER_STANDARD_STEREO("left", "right")
-	}
-//#else
-	else
-	{
-		MDRV_SPEAKER_STANDARD_MONO("left")
-	}
-//#endif
+#ifndef ONE_MONITOR
+	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
+#endif
 	MDRV_SOUND_ADD(GAELCO_GAE1, 0)
 	MDRV_SOUND_CONFIG(touchgo_snd_interface)
 	MDRV_SOUND_ROUTE(0, "left", 1.0)
-//#ifdef ONE_MONITOR
-	if (!options.disable_2nd_monitor)
-	{
-		MDRV_SOUND_ROUTE(1, "right", 1.0)
-	}
-//#endif
+	MDRV_SOUND_ROUTE(1, "right", 1.0)
 MACHINE_DRIVER_END
 
 /*
@@ -1270,7 +1250,7 @@ PORT_START	/* SERVICESW */
 	PORT_BIT( 0xf800, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 PORT_START	/* Fake: To switch between monitors at run time */
-	PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_SERVICE4 ) PORT_TOGGLE PORT_NAME("Monitor Switch") PORT_CODE(KEYCODE_EQUALS)
+	PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_SERVICE4 ) PORT_TOGGLE
 INPUT_PORTS_END
 
 static struct gaelcosnd_interface wrally2_snd_interface =
@@ -1291,21 +1271,14 @@ static MACHINE_DRIVER_START( wrally2 )
 	MDRV_NVRAM_HANDLER(gaelco2)
 
 	/* video hardware */
-	MDRV_SCREEN_SIZE(64*16, 32*16)
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_BUFFERS_SPRITERAM)
-//#ifdef ONE_MONITOR
-	if (options.disable_2nd_monitor)
-	{
-		MDRV_VISIBLE_AREA(0, 384-1, 16, 256-1)
-		MDRV_ASPECT_RATIO(4,3)
-	}
-//#else
-	else
-	{
-		MDRV_VISIBLE_AREA(0, 2*384-1, 16, 256-1)
-		MDRV_ASPECT_RATIO(8,3)
-	}
-//#endif
+	MDRV_SCREEN_SIZE(64*16, 32*16)
+#ifdef ONE_MONITOR
+	MDRV_VISIBLE_AREA(0, 384-1, 16, 256-1)
+#else
+	MDRV_VISIBLE_AREA(0, 2*384-1, 16, 256-1)
+	MDRV_ASPECT_RATIO(8,3)
+#endif
 	MDRV_GFXDECODE(gfxdecodeinfo_0x0200000)
 	MDRV_PALETTE_LENGTH(4096*16 - 16)	/* game's palette is 4096 but we allocate 15 more for shadows & highlights */
 
@@ -1316,26 +1289,13 @@ static MACHINE_DRIVER_START( wrally2 )
 	/* sound hardware */
 	/* the chip is stereo, but the game sound is mono because the right channel
        output is for cabinet 1 and the left channel output is for cabinet 2 */
-//#ifndef ONE_MONITOR
-	if (!options.disable_2nd_monitor)
-	{
-		MDRV_SPEAKER_STANDARD_STEREO("left", "right")
-	}
-//#else
-	else
-	{
-		MDRV_SPEAKER_STANDARD_MONO("left")
-	}
-//#endif
+#ifndef ONE_MONITOR
+	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
+#endif
 	MDRV_SOUND_ADD(GAELCO_GAE1, 0)
 	MDRV_SOUND_CONFIG(wrally2_snd_interface)
 	MDRV_SOUND_ROUTE(0, "left", 1.0)
-//#ifndef ONE_MONITOR
-	if (!options.disable_2nd_monitor)
-	{
-		MDRV_SOUND_ROUTE(1, "right", 1.0)
-	}
-//#endif
+	MDRV_SOUND_ROUTE(1, "right", 1.0)
 MACHINE_DRIVER_END
 
 /*

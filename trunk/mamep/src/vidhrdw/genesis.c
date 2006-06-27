@@ -226,10 +226,7 @@ VIDEO_START( megatech )
 	if (start_megatech_video_normal())
 		return 1;
 
-	if (options.disable_2nd_monitor)
-		scanbase = 0;
-	else
-		scanbase = 256;
+	scanbase = 256;
 	return 0;
 }
 
@@ -308,30 +305,15 @@ VIDEO_UPDATE( megatech )
 	int y;
 
 	/* generate the final screen */
-	if (options.disable_2nd_monitor)
-	{
-		starty = (cliprect->min_y) ? 0 : cliprect->min_y;
-		for (y = starty; y <= cliprect->max_y; y++)
-			drawline((UINT16 *)bitmap->line[y], y, 0);
-	}
-	else
-	{
-		starty = (cliprect->min_y < 192) ? 192 : cliprect->min_y;
-		for (y = starty; y <= cliprect->max_y; y++)
-			drawline((UINT16 *)bitmap->line[y], y-192, 0);
-	}
+	starty = (cliprect->min_y < 192) ? 192 : cliprect->min_y;
+	for (y = starty; y <= cliprect->max_y; y++)
+		drawline((UINT16 *)bitmap->line[y], y-192, 0);
 
 	/* sms display should be on second monitor, for now we control it with a fake dipswitch while
        the driver is in development */
-	if (options.disable_2nd_monitor)
-	{
-		if (readinputport(5)&0x01)
-			update_megatech_video_normal(bitmap, cliprect);
-	}
-	else
-	{
+	/*if (readinputport(5)&0x01)*/
 		update_megatech_video_normal(bitmap, cliprect);
-	}
+
 }
 
 /* megaplay, draws either Genesis or SMS (single screen display) */
