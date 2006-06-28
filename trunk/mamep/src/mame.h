@@ -253,6 +253,7 @@ struct _global_options
 #ifdef UI_COLOR_DISPLAY
 	UINT8           uicolortable[MAX_COLORTABLE][3];	/* palette options for UI */
 #endif /* UI_COLOR_DISPLAY */
+	int		ui_lines;
 	int		autofiredelay[MAX_PLAYERS];	/* autofire delay */
 
 	int		debug_width;	/* requested width of debugger bitmap */

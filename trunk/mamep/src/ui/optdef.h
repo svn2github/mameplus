@@ -111,6 +111,7 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(bool,                 use_trans_ui)
 	DEFINE_OPT(ui_transparency,      ui_transparency)
 #endif /* TRANS_UI */
+	DEFINE_OPT(ui_lines,             ui_lines)
 
 // CORE STATE/PLAYBACK OPTIONS
 	DEFINE_OPT(string_allow_null,    playback)

@@ -3850,8 +3850,45 @@ INLINE BOOL options_compare_ips(const char *s1, const char *s2)
 //============================================================
 
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-#define _options_get_m68k_core(p,name)	_options_get_int_min_max(p, name, 0, 2)
-#define options_set_m68k_core		options_set_int
+INLINE void _options_get_m68k_core(int *p, const char *name)
+{
+	const char *stemp = options_get_string(name, FALSE);
+
+	if (stemp != NULL)
+	{
+		if (stricmp(stemp, "c") == 0)
+			*p= 0;
+		else if (stricmp(stemp, "drc") == 0)
+			*p= 1;
+		else if (stricmp(stemp, "asm") == 0)
+			*p= 2;
+		else
+		{
+			int value = options_get_int("m68k_core", FALSE);
+
+			if (value >= 0 && value <= 2)
+				*p = value;
+		}
+	}
+}
+
+INLINE void options_set_m68k_core(const char *name, int value)
+{
+	switch (value)
+	{
+	case 0:
+	default:
+		options_set_string(name, "c");
+		break;
+	case 1:
+		options_set_string(name, "drc");
+		break;
+	case 2:
+		options_set_string(name, "asm");
+		break;
+	}
+}
+
 #define options_copy_m68k_core		options_copy_int
 #define options_free_m68k_core		options_free_int
 #define _options_compare_m68k_core	_options_compare_int
@@ -3869,6 +3906,40 @@ INLINE BOOL options_compare_ips(const char *s1, const char *s2)
 #define _options_compare_ui_transparency	_options_compare_int
 #define options_compare_ui_transparency		options_compare_int
 #endif /* TRANS_UI */
+
+
+//============================================================
+
+INLINE void _options_get_ui_lines(int *p, const char *name)
+{
+	const char *stemp = options_get_string(name, FALSE);
+
+	if (stemp != NULL)
+	{
+		if (stricmp(stemp, "auto") == 0)
+			*p = 0;
+		else
+		{
+			int val = options_get_int(name, FALSE);
+
+			if (val >= 16 && val <= 64)
+				*p = val;
+		}
+	}
+}
+
+INLINE void options_set_ui_lines(const char *name, int value)
+{
+	if (value == 0)
+		options_set_string(name, "auto");
+	else
+		options_set_int(name, value);
+}
+
+#define options_copy_ui_lines		options_copy_int
+#define options_free_ui_lines		options_free_int
+#define _options_compare_ui_lines	_options_compare_int
+#define options_compare_ui_lines	options_compare_int
 
 
 //============================================================

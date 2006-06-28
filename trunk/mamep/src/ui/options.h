@@ -122,6 +122,7 @@ typedef struct
 	BOOL	use_trans_ui;
 	int	ui_transparency;
 #endif /* TRANS_UI */
+	int	ui_lines;
 //
 // CORE STATE/PLAYBACK OPTIONS
 //

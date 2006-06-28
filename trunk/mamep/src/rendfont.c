@@ -603,7 +603,7 @@ static const UINT8 uifontdata12x12[MAX_GLYPH_FONT * 24] =
 
 static UINT8 *uifontdata_db;
 static UINT16 _uifonttable[65536];
-static int need_font_warning = 1;
+static int db_font_needed = 1;
 
 
 
@@ -693,6 +693,10 @@ render_font *render_font_alloc(const char *filename)
 	font = malloc_or_die(sizeof(*font));
 	memset(font, 0, sizeof(*font));
 
+	db_font_needed = 1;
+	if (ui_lang_info[options.langcode].numchars == 0)
+		db_font_needed = 0;
+
 	/* attempt to load the font */
 	if (filename != NULL && render_font_load_bdf(font, filename) == 0)
 		return font;
@@ -704,8 +708,12 @@ render_font *render_font_alloc(const char *filename)
 
 	if (uifontdata_db)
 		free(uifontdata_db);
+	uifontdata_db = NULL;
 
-	if ((uifontdata_db = load_fontdata()) == NULL)
+	if (db_font_needed)
+		uifontdata_db = load_fontdata();
+
+	if (uifontdata_db == NULL)
 	{
 		const UINT8 *uifontdata = uifontdata6x8;
 
@@ -865,10 +873,7 @@ static void render_font_char_expand(render_font *font, render_font_char *ch)
 	}
 
 	/* wrap a texture around the bitmap */
-	if (font->format == FONT_FORMAT_BINARY)
-		ch->texture = render_texture_alloc(ch->bitmap, NULL, NULL, TEXFORMAT_ARGB32, font_scale_clean, NULL);
-	else
-		ch->texture = render_texture_alloc(ch->bitmap, NULL, NULL, TEXFORMAT_ARGB32, font_scale, NULL);
+	ch->texture = render_texture_alloc(ch->bitmap, NULL, NULL, TEXFORMAT_ARGB32, font_scale_clean, NULL);
 }
 
 
@@ -1071,7 +1076,7 @@ static void font_scale_clean(mame_bitmap *dest, const mame_bitmap *source, const
 	xscale = dest->width / swidth;
 	yscale = dest->height / sheight;
 
-	if (xscale == 0 || yscale == 0)
+	if (xscale * swidth != dest->width || yscale * sheight != dest->height)
 	{
 		font_scale(dest, source, orig_sbounds, param);
 		return;
@@ -1314,7 +1319,7 @@ static int render_font_load_raw(render_font *font, const UINT8 *data, int width,
 
 int uifont_need_font_warning(void)
 {
-	return need_font_warning;
+	return db_font_needed;
 }
 
 // fixme: support BDF file
@@ -1324,20 +1329,17 @@ static UINT8 *load_fontdata(void)
 	int fontsize = (ui_lang_info[options.langcode].numchars + MAX_GLYPH_FONT) * 24;
 	UINT8 *fontdata;
 
-	need_font_warning = 0;
-
-	if (!ui_lang_info[options.langcode].numchars)
-		return NULL;
+	db_font_needed = 1;
 
 	if ((fd = fopen(_("font\\fontname.fnt"), "rb")) == NULL)
-	{
-		need_font_warning = 1;
 		return NULL;
-	}
 
-	fontdata = malloc(fontsize);
+	fontdata = malloc_or_die(fontsize);
 	memset(fontdata,0,fontsize);
 	fread(fontdata, fontsize, 1, fd);
+
+	db_font_needed = 0;
+
 	return fontdata;
 }
 

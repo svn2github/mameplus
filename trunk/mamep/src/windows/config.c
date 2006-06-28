@@ -185,6 +185,7 @@ const options_entry config_opts[] =
 	{ "use_trans_ui",             "1",    OPTION_DEPRECATED, "(disabled by compiling option)" },
 	{ "ui_transparency",          "192",  OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* TRANS_UI */
+	{ "ui_lines",                 "auto", 0,                 "in-game ui text lines [16 - 64 or auto]" },
 
 	// save states and input recording
 	{ NULL,                       NULL,   OPTION_HEADER,     "CORE STATE/PLAYBACK OPTIONS" },
@@ -774,21 +775,53 @@ static void extract_options(const game_driver *driver, machine_config *drv)
 	options.auto_pause_playback = options_get_bool("auto_pause_playback", TRUE);
 #endif /* AUTO_PAUSE_PLAYBACK */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-	options.m68k_core = options_get_int("m68k_core", TRUE);
-	if (options.m68k_core < 0 || options.m68k_core > 2)
+	options.m68k_core = 0;
+	stemp = options_get_string("m68k_core", TRUE);
+	if (stemp != NULL)
 	{
-		fprintf(stderr, _("Illegal integer value for %s = %s\n"), "m68k_core", options.m68k_core);
-		options.m68k_core = 0;
+		if (mame_stricmp(stemp, "c") == 0)
+			options.m68k_core = 0;
+		else if (mame_stricmp(stemp, "drc") == 0)
+			options.m68k_core = 1;
+		else if (mame_stricmp(stemp, "asm") == 0)
+			options.m68k_core = 2;
+		else
+		{
+			options.m68k_core = options_get_int("m68k_core", TRUE);
+
+			if (options.m68k_core < 0 || options.m68k_core > 2)
+			{
+				fprintf(stderr, _WINDOWS("Illegal value for %s = %s\n"), "m68k_core", stemp);
+				options.m68k_core = 0;
+			}
+		}
 	}
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
+#ifdef TRANS_UI
 	options.use_transui = options_get_bool("use_trans_ui", TRUE);
 	options.ui_transparency = options_get_int("ui_transparency", TRUE);
 	if (options.ui_transparency < 0 || options.ui_transparency > 255)
 	{
-		fprintf(stderr, _("Illegal integer value for %s = %s\n"), "ui_transparency", options.ui_transparency);
-		options.ui_transparency = 160;
+		fprintf(stderr, _WINDOWS("Illegal value for %s = %s\n"), "ui_transparency", options_get_string("ui_transparency", FALSE));
+		options.ui_transparency = 192;
 	}
+#endif /* TRANS_UI */
+	options.ui_lines = 0;
+	stemp = options_get_string("ui_lines", TRUE);
+	if (stemp != NULL)
+	{
+		options.ui_lines = 0;
+		if (mame_stricmp(stemp, "auto") != 0)
+		{
+			options.ui_lines = options_get_int("ui_lines", TRUE);
 
+			if (options.ui_lines < 16 || options.ui_lines > 64)
+			{
+				fprintf(stderr, _WINDOWS("Illegal value for %s = %s\n"), "ui_lines", stemp);
+				options.ui_lines = 0;
+			}
+		}
+	}
 #ifdef MESS
 	win_mess_extract_options();
 #endif /* MESS */
