@@ -3922,7 +3922,7 @@ INLINE void _options_get_ui_lines(int *p, const char *name)
 		{
 			int val = options_get_int(name, FALSE);
 
-			if (val >= 16 && val <= 64)
+			if (val == 0 || (val >= 16 && val <= 64))
 				*p = val;
 		}
 	}

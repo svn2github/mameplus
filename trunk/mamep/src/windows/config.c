@@ -810,12 +810,11 @@ static void extract_options(const game_driver *driver, machine_config *drv)
 	stemp = options_get_string("ui_lines", TRUE);
 	if (stemp != NULL)
 	{
-		options.ui_lines = 0;
 		if (mame_stricmp(stemp, "auto") != 0)
 		{
 			options.ui_lines = options_get_int("ui_lines", TRUE);
 
-			if (options.ui_lines < 16 || options.ui_lines > 64)
+			if (options.ui_lines == 0 || (options.ui_lines < 16 || options.ui_lines > 64))
 			{
 				fprintf(stderr, _WINDOWS("Illegal value for %s = %s\n"), "ui_lines", stemp);
 				options.ui_lines = 0;
