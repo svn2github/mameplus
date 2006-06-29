@@ -215,4 +215,5 @@ VIDEO_UPDATE( ninjakd2 )
 		ninjakd2_draw_foreground(bitmap);
 	}
 
+	return 0;
 }

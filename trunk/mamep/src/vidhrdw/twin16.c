@@ -621,6 +621,7 @@ VIDEO_UPDATE( twin16 )
 	draw_layer( bitmap,0 );
 	draw_sprites( bitmap,0 );
 	tilemap_draw(bitmap, cliprect, fg_tilemap, 0, 0);
+	return 0;
 }
 
 VIDEO_UPDATE( vulcan )
@@ -631,6 +632,7 @@ VIDEO_UPDATE( vulcan )
 	draw_sprites( bitmap, 0 );
 	draw_layer( bitmap,0 );
 	tilemap_draw(bitmap, cliprect, fg_tilemap, 0, 0);
+	return 0;
 }
 
 VIDEO_UPDATE( miaj )
@@ -641,5 +643,6 @@ VIDEO_UPDATE( miaj )
 	draw_sprites( bitmap, 1 );
 	draw_sprites( bitmap, 0 );
 	tilemap_draw(bitmap, cliprect, fg_tilemap, 0, 0);
+	return 0;
 }
 

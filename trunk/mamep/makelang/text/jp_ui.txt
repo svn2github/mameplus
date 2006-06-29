@@ -1146,7 +1146,7 @@ Global vector options\nCustom options used by all games in the Vector
 Go to Microsoft's DirectX Web Page
 Microsoft's DirectX Webページを表\示
 
-# ui/options.c: 444, 2988 ui/win32ui.c: 669
+# ui/options.c: 444, 2990 ui/win32ui.c: 669
 Grouped
 グループ化
 
@@ -1346,7 +1346,7 @@ MAME32ゲームリストファイル (*.lst)
 MAME32 has changed *.ini file directory.\n\nWould you like to migrate old configurations to the new directory?
 MAME32は *.iniファイルディレクトリを変更しました。\n\n古い設定を新しいディレクトリに移動しますか？
 
-# ui/options.c: 2882
+# ui/options.c: 2884
 MAME32 has detected outdated configuration data.\n\nThe detected configuration data is from Version %s of MAME32.\nThe current version is %s. It is recommended that the\nconfiguration is set to the new defaults.\n\nWould you like to use the new configuration?
 MAME32 は、古い設定情報を検出しました。\n\n検出した情報は、MAME32 バージョン %s のものです。\n現在のバージョンは %s です。\n現在のバージョンによる新しいデフォルト設定を使用することを推奨します。\n\n新しい設定を使用しますか？
 
@@ -1358,7 +1358,7 @@ MAME32 version by
 MAME32 will now reset the selected\n
 MAME32 は選択された項目をリセットし\n
 
-# ui/mame32.rc: 372, 396, 407, 439, 459, 482, 521, 540, 614, 656, 693, 795, 862, 933, 967, 994, 1031, 1056, 1073, 1146, 1164, 1192, 1207, 1244, 1283 ui/options.c: 3000 ui/translate.c: 101
+# ui/mame32.rc: 372, 396, 407, 439, 459, 482, 521, 540, 614, 656, 693, 795, 862, 933, 967, 994, 1031, 1056, 1073, 1146, 1164, 1192, 1207, 1244, 1283 ui/options.c: 3002 ui/translate.c: 101
 MS Sans Serif
 ＭＳ Ｐゴシック
 
@@ -1562,7 +1562,7 @@ Pedal
 Pedal device
 ペダルディバイス
 
-# ui/options.c: 3081 ui/win32ui.c: 831
+# ui/options.c: 3083 ui/win32ui.c: 831
 Play Time
 プレイ時間
 
@@ -1694,7 +1694,7 @@ Refresh game list
 Refresh:
 リフレッシュ:
 
-# ui/options.c: 1477
+# ui/options.c: 1479
 Reload configurations
 設定の再読み込み
 
@@ -2402,7 +2402,7 @@ Use various icon for Not Working game
 Use volume auto adjust
 自動音量調整機能\を使用
 
-# ui/layout.c: 71 ui/mame32.rc: 933 ui/options.c: 756, 2626 ui/properties.c: 634 ui/treeview.c: 304 ui/win32ui.c: 5495
+# ui/layout.c: 71 ui/mame32.rc: 933 ui/options.c: 757, 2628 ui/properties.c: 634 ui/treeview.c: 304 ui/win32ui.c: 5495
 Vector
 ベクタ
 
@@ -2414,7 +2414,7 @@ Vector (H)
 Vector (V)
 ベクタ (V)
 
-# ui/options.c: 2897
+# ui/options.c: 2899
 Version Mismatch
 バージョンの相違
 

@@ -105,6 +105,7 @@ typedef struct
 	BOOL	cheat;
 	BOOL	skip_gameinfo;
 	BOOL	artwork;
+	BOOL	artwork_crop;
 	BOOL	use_backdrops;
 	BOOL	use_overlays;
 	BOOL	use_bezels;

@@ -94,6 +94,7 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(bool,                 cheat)
 	DEFINE_OPT(bool,                 skip_gameinfo)
 	DEFINE_OPT(bool,                 artwork)
+	DEFINE_OPT(bool,                 artwork_crop);
 	DEFINE_OPT(bool,                 use_backdrops)
 	DEFINE_OPT(bool,                 use_overlays)
 	DEFINE_OPT(bool,                 use_bezels)

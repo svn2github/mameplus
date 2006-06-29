@@ -1524,6 +1524,7 @@ VIDEO_UPDATE( toaplan1 )
 
 	toaplan1_render(bitmap);
 	toaplan1_sprite_render(bitmap);
+	return 0;
 }
 
 VIDEO_UPDATE( zerowing )
@@ -1534,6 +1535,7 @@ VIDEO_UPDATE( zerowing )
 
 	zerowing_render(bitmap);
 	toaplan1_sprite_render(bitmap);
+	return 0;
 }
 
 VIDEO_UPDATE( demonwld )
@@ -1544,6 +1546,7 @@ VIDEO_UPDATE( demonwld )
 
 	demonwld_render(bitmap);
 	toaplan1_sprite_render(bitmap);
+	return 0;
 }
 
 VIDEO_UPDATE( rallybik )
@@ -1553,6 +1556,7 @@ VIDEO_UPDATE( rallybik )
 	rallybik_find_sprites();
 
 	rallybik_render(bitmap);
+	return 0;
 }
 
 /****************************************************************************

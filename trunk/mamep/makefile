@@ -531,11 +531,7 @@ emulator:	maketree $(EMULATOR)
 
 extrafiles:	$(TOOLS)
 
-ifneq ($(NEW_RENDER),)
-maketree: $(sort $(OBJDIRS)) $(OSPREBUILD) $(LAYOUTHEADERS)
-else
 maketree: $(sort $(OBJDIRS)) $(OSPREBUILD)
-endif
 
 clean:
 	@echo Deleting object tree $(OBJ)...

@@ -22,15 +22,15 @@
          none -- no axes on any joysticks are digital\n
 
 
-# windows/config.c: 692
+# windows/config.c: 693
         MAME -createconfig to create a mame.ini\n\n
 
 
-# windows/config.c: 691
+# windows/config.c: 692
         MAME -showconfig   for a list of configuration options\n
 
 
-# windows/config.c: 690
+# windows/config.c: 691
         MAME -showusage    for a brief list of options\n
 
 
@@ -78,11 +78,11 @@
 (dd) stretch video using the hardware
 
 
-# windows/video.c: 612 windows/videoold.c: 356
+# windows/video.c: 635 windows/videoold.c: 356
 (primary)
 
 
-# windows/video.c: 327 windows/videoold.c: 648
+# windows/video.c: 350 windows/videoold.c: 648
 Average FPS: %f (%d frames)\n
 
 
@@ -110,7 +110,7 @@ Blit surface created: %s\n
 Blitter initialisation complete (%.2lfMB video memory free)\n
 
 
-# windows/config.c: 223
+# windows/config.c: 225
 CRC-32s
 
 
@@ -314,15 +314,15 @@ Error: required texture size too large (max: %ix%i, need %ix%i)\n
 Failed to get monitor info
 
 
-# windows/config.c: 897
+# windows/config.c: 924
 Failed to open file for playback
 
 
-# windows/config.c: 931
+# windows/config.c: 958
 Failed to open file for recording
 
 
-# windows/config.c: 693
+# windows/config.c: 694
 For usage instructions, please consult the file windows.txt\n
 
 
@@ -378,7 +378,7 @@ Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 
 
-# windows/input.c: 3245
+# windows/input.c: 3252
 Input: Using RAWMOUSE for Mouse input\n
 
 
@@ -434,7 +434,7 @@ Lightgun not supported in windowed mode
 Lightgun on Mouse %d 
 
 
-# windows/config.c: 686
+# windows/config.c: 687
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 
 
@@ -474,19 +474,19 @@ Name:     Description:\n
 Name:    Clone of:\n
 
 
-# windows/config.c: 275
+# windows/config.c: 276
 OSD bar color (dark)
 
 
-# windows/config.c: 276
+# windows/config.c: 277
 OSD bar color (default)
 
 
-# windows/config.c: 274
+# windows/config.c: 275
 OSD bar color (light)
 
 
-# windows/config.c: 273
+# windows/config.c: 274
 OSD bar color (medium)
 
 
@@ -638,7 +638,7 @@ Unable to blt scale_surface to texture_surface: %08x\n
 Unable to blt target_surface: %08x\n
 
 
-# windows/input.c: 2931, 2938
+# windows/input.c: 2938, 2945
 Unable to close the keyboard device. (error %d)\n
 
 
@@ -654,7 +654,7 @@ Unable to lock blit_surface: %08x\n
 Unable to lock target_surface: %08x\n
 
 
-# windows/input.c: 2882, 2892
+# windows/input.c: 2889, 2899
 Unable to open the keyboard device. (error %d)\n
 
 
@@ -666,7 +666,7 @@ Unable to render to back_surface: %08x\n
 Unable to render to preprocess texture: %08x\n
 
 
-# windows/config.c: 689
+# windows/config.c: 690
 Usage:  MAME gamename [options]\n\n
 
 
@@ -730,7 +730,7 @@ Windows Direct3D 2D video options
 \"%8s\" not supported!\n
 
 
-# windows/config.c: 474
+# windows/config.c: 475
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 
 
@@ -742,7 +742,7 @@ additional customised settings (undocumented)
 additional pause brightness
 
 
-# windows/config.c: 218
+# windows/config.c: 220
 all available info on driver in XML format
 
 
@@ -758,7 +758,7 @@ analog joystick
 attempt to match the game's refresh rate
 
 
-# windows/config.c: 171
+# windows/config.c: 172
 automatic pause when playback is finished
 
 
@@ -766,47 +766,47 @@ automatic pause when playback is finished
 brightness correction
 
 
-# windows/config.c: 283
+# windows/config.c: 284
 button color (aqua)
 
 
-# windows/config.c: 280
+# windows/config.c: 281
 button color (blue)
 
 
-# windows/config.c: 279
+# windows/config.c: 280
 button color (green)
 
 
-# windows/config.c: 286
+# windows/config.c: 287
 button color (lime)
 
 
-# windows/config.c: 285
+# windows/config.c: 286
 button color (navy)
 
 
-# windows/config.c: 282
+# windows/config.c: 283
 button color (pink)
 
 
-# windows/config.c: 281
+# windows/config.c: 282
 button color (purple)
 
 
-# windows/config.c: 277
+# windows/config.c: 278
 button color (red)
 
 
-# windows/config.c: 284
+# windows/config.c: 285
 button color (silver)
 
 
-# windows/config.c: 278
+# windows/config.c: 279
 button color (yellow)
 
 
-# windows/config.c: 177
+# windows/config.c: 178
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 
 
@@ -814,19 +814,19 @@ change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 cheat filename
 
 
-# windows/config.c: 231
+# windows/config.c: 233
 compare files with known MAME roms
 
 
-# windows/config.c: 232
+# windows/config.c: 234
 compare files with known MAME roms (brief)
 
 
-# windows/config.c: 212
+# windows/config.c: 214
 create the default configuration file
 
 
-# windows/config.c: 287
+# windows/config.c: 288
 cursor color
 
 
@@ -874,7 +874,7 @@ directory to save nvram contents
 directory to save states
 
 
-# windows/config.c: 200
+# windows/config.c: 202
 display additional diagnostic information
 
 
@@ -882,7 +882,7 @@ display additional diagnostic information
 double
 
 
-# windows/config.c: 221
+# windows/config.c: 223
 driver sourcefile
 
 
@@ -954,7 +954,7 @@ enable rotation of effects for rotated games
 enable steadykey support
 
 
-# windows/config.c: 257
+# windows/config.c: 258
 enable/disable local language game list
 
 
@@ -974,11 +974,11 @@ error: invalid value for cleanstretch: %s\n
 error: invalid value for d3dprescale: %s\n
 
 
-# windows/config.c: 876
+# windows/config.c: 903
 error: invalid value for language: %s\nUse %s\n
 
 
-# windows/config.c: 968
+# windows/config.c: 995
 error: invalid value for palette: %s\n
 
 
@@ -994,15 +994,15 @@ flip screen left-right
 flip screen upside-down
 
 
-# windows/config.c: 266
+# windows/config.c: 267
 font blank color
 
 
-# windows/config.c: 267
+# windows/config.c: 268
 font normal color
 
 
-# windows/config.c: 268
+# windows/config.c: 269
 font special color
 
 
@@ -1014,7 +1014,7 @@ force specific zoom level
 invalid
 
 
-# windows/config.c: 165
+# windows/config.c: 166
 ips datfile name
 
 
@@ -1038,11 +1038,11 @@ is missing optional files\n
 lightgun
 
 
-# windows/config.c: 228
+# windows/config.c: 230
 list optional samples for a driver
 
 
-# windows/config.c: 227
+# windows/config.c: 229
 list required roms for a driver
 
 
@@ -1082,7 +1082,7 @@ path to samplesets
 pedal
 
 
-# windows/config.c: 191
+# windows/config.c: 193
 playback an input file
 
 
@@ -1094,19 +1094,19 @@ preconfigure for specified controller
 prescale effect
 
 
-# windows/config.c: 169
+# windows/config.c: 170
 quit game with confirmation
 
 
-# windows/config.c: 192
+# windows/config.c: 194
 record an input file
 
 
-# windows/config.c: 229
+# windows/config.c: 231
 report romsets that have problems
 
 
-# windows/config.c: 230
+# windows/config.c: 232
 report samplesets that have problems
 
 
@@ -1142,7 +1142,7 @@ scale effects surface created: %s\n
 scanline intensity
 
 
-# windows/config.c: 256
+# windows/config.c: 257
 select translation language
 
 
@@ -1186,11 +1186,11 @@ set joystick ID (Player8)
 set specific monitor refresh rate
 
 
-# windows/config.c: 220
+# windows/config.c: 222
 short name, full name
 
 
-# windows/config.c: 222
+# windows/config.c: 224
 show clones
 
 
@@ -1198,11 +1198,11 @@ show clones
 show help message
 
 
-# windows/config.c: 214
+# windows/config.c: 216
 show this help
 
 
-# windows/config.c: 142, 750 
+# windows/config.c: 142, 751 
 sound
 
 
@@ -1230,7 +1230,7 @@ switch color depths to best fit
 trackball
 
 
-# windows/config.c: 183
+# windows/config.c: 184
 transparency of UI background [0 - 255]
 
 
@@ -1242,27 +1242,27 @@ triple
 use DirectX texture management
 
 
-# windows/config.c: 182
+# windows/config.c: 183
 use transparent background for UI text
 
 
-# windows/config.c: 269
+# windows/config.c: 270
 window background color
 
 
-# windows/config.c: 272
+# windows/config.c: 273
 window frame color (dark)
 
 
-# windows/config.c: 271
+# windows/config.c: 272
 window frame color (light)
 
 
-# windows/config.c: 270
+# windows/config.c: 271
 window frame color (medium)
 
 
-# windows/config.c: 219
+# windows/config.c: 221
 year, manufacturer and full name
 
 

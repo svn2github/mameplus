@@ -248,4 +248,5 @@ VIDEO_UPDATE( hcastle )
 		draw_sprites( bitmap,cliprect, buffered_spriteram, 0 );
 		draw_sprites( bitmap,cliprect, buffered_spriteram_2, 1 );
 	}
+	return 0;
 }

@@ -253,6 +253,7 @@ VIDEO_UPDATE( tnk3 )
 		tnk3_draw_text( bitmap, bank, &ram[0xf800] );
 		tnk3_draw_status( bitmap, bank, &ram[0xfc00] );
 	}
+	return 0;
 }
 
 void athena_draw_sprites( mame_bitmap *bitmap, int xscroll, int yscroll )
@@ -327,6 +328,7 @@ VIDEO_UPDATE( athena )
 		tnk3_draw_text( bitmap, bank, &ram[0xf800] );
 		tnk3_draw_status( bitmap, bank, &ram[0xfc00] );
 	}
+	return 0;
 }
 
 /************************************************************************************/
@@ -387,6 +389,7 @@ VIDEO_UPDATE( sgladiat )
 	tnk3_draw_sprites( bitmap, scrollx, scrolly );
 
 	tnk3_draw_text( bitmap, 0, &pMem[0xf000] );
+	return 0;
 }
 
 /**************************************************************************************/
@@ -457,6 +460,7 @@ VIDEO_UPDATE( ikari )
 
 	tnk3_draw_text( bitmap, -1, &ram[0xf800] );
 	tnk3_draw_status( bitmap, -1, &ram[0xfc00] );
+	return 0;
 }
 
 /**************************************************************/
@@ -641,6 +645,7 @@ VIDEO_UPDATE( tdfever )
 	tdfever_draw_sp( bitmap, sp_scroll_x, sp_scroll_y, 0 );
 
 	tdfever_draw_tx( bitmap, tx_attributes, 0, 0, 0xf800 );
+	return 0;
 }
 
 VIDEO_UPDATE( gwar )
@@ -713,4 +718,5 @@ VIDEO_UPDATE( gwar )
 		UINT8 text_attribute = ram[gwar_sp_baseaddr+0x8c0];
 		tdfever_draw_tx( bitmap, text_attribute, 0, 0, gwar_tx_baseaddr );
 	}
+	return 0;
 }

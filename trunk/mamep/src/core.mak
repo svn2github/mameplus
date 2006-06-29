@@ -91,16 +91,15 @@ COREOBJS += \
 
 
 #-------------------------------------------------
-# layouts
+# core layouts
 #-------------------------------------------------
 
-LAYOUTS = $(wildcard src/layout/*)
-
-LAYOUTHEADERS = $(subst src,$(OBJ),$(subst .lay,.lh,$(LAYOUTS)))
-
-$(OBJ)/%.lh: src/%.lay
-
-$(OBJ)/render.o: $(LAYOUTHEADERS)
+$(OBJ)/render.o:	$(OBJ)/layout/dualhovu.lh \
+					$(OBJ)/layout/dualhsxs.lh \
+					$(OBJ)/layout/dualhuov.lh \
+					$(OBJ)/layout/horizont.lh \
+					$(OBJ)/layout/triphsxs.lh \
+					$(OBJ)/layout/vertical.lh \
 
 
 

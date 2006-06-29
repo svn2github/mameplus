@@ -616,6 +616,7 @@ VIDEO_UPDATE( monaco )
 	draw_player( bitmap );
 	draw_signal( bitmap );
 	draw_leds( bitmap );
+	return 0;
 }
 
 VIDEO_START( monaco )

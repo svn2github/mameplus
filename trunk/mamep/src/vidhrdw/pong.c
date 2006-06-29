@@ -198,6 +198,7 @@ VIDEO_UPDATE( pong )
 	cpunum_set_reg(0, GS_V, 0);
 	V = 0;
 	VRESET = 1;
+	return 0;
 }
 
 /******* HORIZONTAL SYNC *****************************************************
