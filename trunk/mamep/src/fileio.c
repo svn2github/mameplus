@@ -305,7 +305,8 @@ mame_file *mame_fopen_error(const char *gamename, const char *filename, int file
 		/* screenshot files */
 		case FILETYPE_SCREENSHOT:
 #ifdef WINUI
-			return generic_fopen(filetype, NULL, filename, 0, openforwrite ? FILEFLAG_OPENWRITE : FILEFLAG_OPENREAD, error);
+			if (!openforwrite) 
+				return generic_fopen(filetype, gamename, filename, 0, FILEFLAG_OPENREAD, error);
 #endif
 		case FILETYPE_MOVIE:
 #ifndef MESS
