@@ -322,6 +322,10 @@ Failed to open file for playback
 Failed to open file for recording
 入力を保存するファイルが作成できません
 
+# windows/input.c: 2681
+Fast Forward
+早送り
+
 # windows/config.c: 694
 For usage instructions, please consult the file windows.txt\n
 使い方の説明については、対応する windows.txt ファイルを参照して下さい\n

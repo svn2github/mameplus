@@ -322,6 +322,10 @@ Failed to open file for playback
 Failed to open file for recording
 
 
+# windows/input.c: 2681
+Fast Forward
+
+
 # windows/config.c: 694
 For usage instructions, please consult the file windows.txt\n
 

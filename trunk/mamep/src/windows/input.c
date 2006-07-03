@@ -2678,7 +2678,7 @@ void osd_customize_inputport_list(input_port_default_entry *defaults)
 			// insert for fastforward
 			case IPT_OSD_3:
 				idef->token = "FAST_FORWARD";
-				idef->name = "Fast Forward";
+				idef->name = _WINDOWS("Fast Forward");
 				seq_set_1(&idef->defaultseq, KEYCODE_INSERT);
 				break;
 		}
