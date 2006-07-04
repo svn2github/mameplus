@@ -681,11 +681,11 @@ void ui_set_visible_area(int xmin, int ymin, int xmax, int ymax)
 
 	if (lines < 16)
 	{
-		ui_font_height = 1.0f / 16.0f;
+		ui_font_height = 1.0f / 20.0f;
 		return;
 	}
 
-	while (lines > 32)
+	while (lines >= 40)
 	{
 		height *= 2.0f;
 		lines = (float)ui_screen_height / height;
