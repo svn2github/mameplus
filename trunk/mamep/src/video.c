@@ -15,6 +15,9 @@
 #include "png.h"
 #include "debugger.h"
 #include "vidhrdw/vector.h"
+#ifdef USE_SCALE_EFFECTS
+#include "osdscale.h"
+#endif /* USE_SCALE_EFFECTS */
 
 #ifdef NEW_RENDER
 #include "render.h"
@@ -59,6 +62,15 @@ static
 #endif
 mame_bitmap *scrbitmap[MAX_SCREENS][2];
 static int curbitmap[MAX_SCREENS];
+
+#ifdef USE_SCALE_EFFECTS
+mame_bitmap *scalebitmap[MAX_SCREENS][2];
+mame_bitmap *workbitmap[MAX_SCREENS][2];
+static int scale_xsize;
+static int scale_ysize;
+static int scale_depth;
+static int use_workbitmap;
+#endif /* USE_SCALE_EFFECTS */
 
 /* the active video display */
 #ifndef NEW_RENDER
@@ -109,6 +121,11 @@ static void decode_graphics(const gfx_decode *gfxdecodeinfo);
 static void scale_vectorgames(int gfx_width, int gfx_height, int *width, int *height);
 static int init_buffered_spriteram(void);
 static void recompute_fps(int skipped_it);
+#ifdef USE_SCALE_EFFECTS
+static void alloc_scalebitmap(void);
+static void free_scalebitmap(void);
+static void texture_set_scalebitmap(int scrnum, int curbank, rectangle *visarea);
+#endif /* USE_SCALE_EFFECTS */
 
 
 
@@ -290,6 +307,38 @@ int video_init(void)
 	/* initialize tilemaps */
 	if (tilemap_init() != 0)
 		fatalerror("tilemap_init failed");
+
+#ifdef USE_SCALE_EFFECTS
+	use_workbitmap = (scrformat[0] == TEXFORMAT_PALETTE16);
+	scale_depth = (scrformat[0] == TEXFORMAT_RGB15) ? 15 : 32;
+
+	if (scale_init())
+	{
+		logerror("WARNING: scale_effect \"%s\" has any problem\n", scale_effect.name);
+		logerror("WARNING: scale effect is disabled\n");
+		scale_effect.effect = 0;
+	}
+
+	if (scale_effect.effect)
+	{
+		if (scale_check(scale_depth))
+		{
+			logerror("WARNING: scale_effect \"%s\" does not support depth %d\n", scale_effect.name, scale_depth);
+			use_workbitmap = 1;
+			scale_depth = (scale_depth == 15) ? 32 : 15;
+			if (scale_check(scale_depth))
+			{
+				logerror("WARNING: scale_effect \"%s\" does not support both depth 15 and 32\n", scale_effect.name);
+				logerror("WARNING: scale effect is disabled\n");
+
+				scale_exit();
+				scale_effect.effect = 0;
+				scale_init();
+			}
+		}
+	}
+#endif /* USE_SCALE_EFFECTS */
+
 	return 0;
 }
 
@@ -343,6 +392,11 @@ static void video_exit(void)
 	for (scrnum = 0; scrnum < MAX_SCREENS; scrnum++)
 		if (Machine->drv->screen[scrnum].tag != NULL && scrtexture[scrnum] != NULL)
 			render_texture_free(scrtexture[scrnum]);
+
+#ifdef USE_SCALE_EFFECTS
+	free_scalebitmap();
+	scale_exit();
+#endif /* USE_SCALE_EFFECTS */
 }
 #endif
 }
@@ -899,6 +953,201 @@ static void recompute_fps(int skipped_it)
 }
 
 
+#ifdef USE_SCALE_EFFECTS
+static void alloc_scalebitmap(void)
+{
+	int scrnum;
+
+	free_scalebitmap();
+
+	scale_xsize = scale_effect.xsize;
+	scale_ysize = scale_effect.ysize;
+
+	for (scrnum = 0; scrnum < MAX_SCREENS; scrnum++)
+	{
+		if (Machine->drv->screen[scrnum].tag != NULL)
+		{
+			int bank;
+
+			for (bank = 0; bank < 2; bank++)
+			{
+				scalebitmap[scrnum][bank] = bitmap_alloc_depth(
+					Machine->drv->screen[scrnum].maxwidth * scale_xsize,
+					Machine->drv->screen[scrnum].maxheight * scale_ysize,
+					scale_depth);
+
+				if (!use_workbitmap)
+					continue;
+
+				workbitmap[scrnum][bank] = bitmap_alloc_depth(
+					Machine->drv->screen[scrnum].maxwidth,
+					Machine->drv->screen[scrnum].maxheight,
+					scale_depth);
+			}
+		}
+	}
+}
+
+static void free_scalebitmap(void)
+{
+	int scrnum;
+
+	for (scrnum = 0; scrnum < MAX_SCREENS; scrnum++)
+	{
+		if (Machine->drv->screen[scrnum].tag != NULL)
+		{
+			int bank;
+
+			for (bank = 0; bank < 2; bank++)
+			{
+				if (scalebitmap[scrnum][bank])
+					bitmap_free(scalebitmap[scrnum][bank]);
+				if (workbitmap[scrnum][bank])
+					bitmap_free(workbitmap[scrnum][bank]);
+			}
+		}
+	}
+
+	scale_xsize = 0;
+	scale_ysize = 0;
+}
+
+static void convert_palette_to_32(const mame_bitmap *src, mame_bitmap *dst, const rectangle *visarea, const rgb_t *palette)
+{
+	int x, y;
+
+	for (y = visarea->min_x; y < visarea->max_y; y++)
+	{
+		UINT32 *dst32 = ((UINT32 *)dst->line[y]) + visarea->min_x;
+		UINT16 *src16 = ((UINT16 *)src->line[y]) + visarea->min_x;
+
+		for (x = visarea->min_x; x < visarea->max_x; x++)
+			*dst32++ = palette[*src16++];
+	}
+}
+
+static void convert_palette_to_15(const mame_bitmap *src, mame_bitmap *dst, const rectangle *visarea, const rgb_t *palette)
+{
+	int x, y;
+
+	for (y = visarea->min_x; y < visarea->max_y; y++)
+	{
+		UINT16 *dst16 = ((UINT16 *)dst->line[y]) + visarea->min_x;
+		UINT16 *src16 = ((UINT16 *)src->line[y]) + visarea->min_x;
+
+		for (x = visarea->min_x; x < visarea->max_x; x++)
+		{
+			UINT32 color = palette[*src16++];
+			*dst16++ = ((color >> 9) & 0x7c00) | ((color >> 6) & 0x03e0) | ((color >> 3) & 0x001f);
+		}
+	}
+}
+
+static void convert_15_to_32(const mame_bitmap *src, mame_bitmap *dst, const rectangle *visarea)
+{
+	int x, y;
+
+	for (y = visarea->min_x; y < visarea->max_y; y++)
+	{
+		UINT32 *dst32 = ((UINT32 *)dst->line[y]) + visarea->min_x;
+		UINT16 *src16 = ((UINT16 *)src->line[y]) + visarea->min_x;
+
+		for (x = visarea->min_x; x < visarea->max_x; x++)
+		{
+			UINT16 pix = *src16++;
+			UINT32 color = ((pix & 0x7c00) << 9) | ((pix & 0x03e0) << 6) | ((pix & 0x001f) << 3);
+			*dst32++ = color | ((color >> 5) & 0x070707) | 0xff000000;
+		}
+	}
+}
+
+static void convert_32_to_15(mame_bitmap *src, mame_bitmap *dst, const const rectangle *visarea)
+{
+	int x, y;
+
+	for (y = visarea->min_x; y < visarea->max_y; y++)
+	{
+		UINT16 *dst16 = ((UINT16 *)dst->line[y]) + visarea->min_x;
+		UINT32 *src32 = ((UINT32 *)src->line[y]) + visarea->min_x;
+
+		for (x = visarea->min_x; x < visarea->max_x; x++)
+		{
+			UINT32 color = *src32++;
+			*dst16++ = ((color >> 9) & 0x7c00) | ((color >> 6) & 0x03e0) | ((color >> 3) & 0x001f);
+		}
+	}
+}
+
+static void texture_set_scalebitmap(int scrnum, int curbank, rectangle *visarea)
+{
+	mame_bitmap *target = scrbitmap[scrnum][curbank];
+	const rgb_t *palette;
+	mame_bitmap *dst;
+	int width = visarea->max_x - visarea->min_x;
+	int height = visarea->max_y - visarea->min_y;
+	int update = 0;
+
+	if (scale_xsize != scale_effect.xsize || scale_ysize != scale_effect.ysize)
+	{
+		alloc_scalebitmap();
+		update = 1;
+	}
+
+	dst = scalebitmap[scrnum][curbank];
+
+	switch (scrformat[scrnum])
+	{
+	case TEXFORMAT_PALETTE16:
+		palette = &adjusted_palette[Machine->drv->screen[scrnum].palette_base];
+		target = workbitmap[scrnum][curbank];
+
+		if (scale_depth == 32)
+			convert_palette_to_32(scrbitmap[scrnum][curbank], target, visarea, palette);
+		else
+			convert_palette_to_15(scrbitmap[scrnum][curbank], target, visarea, palette);
+
+		break;
+
+	case TEXFORMAT_RGB15:
+		if (scale_depth == 15)
+			break;
+
+		target = workbitmap[scrnum][curbank];
+		convert_15_to_32(scrbitmap[scrnum][curbank], target, visarea);
+		break;
+
+	case TEXFORMAT_RGB32:
+		if (scale_depth == 32)
+			break;
+
+		convert_32_to_15(scrbitmap[scrnum][curbank], target, visarea);
+		target = workbitmap[scrnum][curbank];
+		break;
+	}
+
+	if (scale_depth == 32)
+	{
+		UINT32 *src32 = ((UINT32 *)target->line[visarea->min_y]) + visarea->min_x;
+		UINT32 *dst32 = ((UINT32 *)dst->line[visarea->min_y]) + visarea->min_x;
+		scale_perform_scale((UINT8 *)src32, (UINT8 *)dst32, target->rowbytes, dst->rowbytes, width, height, 32, update);
+	}
+	else
+	{
+		UINT16 *src16 = ((UINT16 *)target->line[visarea->min_y]) + visarea->min_x;
+		UINT16 *dst16 = ((UINT16 *)dst->line[visarea->min_y]) + visarea->min_x;
+		scale_perform_scale((UINT8 *)src16, (UINT8 *)dst16, target->rowbytes, dst->rowbytes, width, height, 15, update);
+	}
+
+	visarea->min_x *= scale_effect.xsize;
+	visarea->max_x *= scale_effect.xsize;
+	visarea->min_y *= scale_effect.ysize;
+	visarea->max_y *= scale_effect.ysize;
+
+	render_texture_set_bitmap(scrtexture[scrnum], dst, visarea, NULL, (scale_depth == 32) ? TEXFORMAT_RGB32 : TEXFORMAT_RGB15);
+}
+#endif /* USE_SCALE_EFFECTS */
+
+
 /*-------------------------------------------------
     video_frame_update - handle frameskipping and UI,
     plus updating the screen during normal
@@ -942,6 +1191,11 @@ void video_frame_update(void)
 						rectangle visarea = Machine->visible_area[scrnum];
 						visarea.max_x++;
 						visarea.max_y++;
+#ifdef USE_SCALE_EFFECTS
+						if (scale_effect.effect)
+							texture_set_scalebitmap(scrnum, curbitmap[scrnum], &visarea);
+						else
+#endif /* USE_SCALE_EFFECTS */
 						render_texture_set_bitmap(scrtexture[scrnum], scrbitmap[scrnum][curbitmap[scrnum]], &visarea, &adjusted_palette[Machine->drv->screen[scrnum].palette_base], scrformat[scrnum]);
 						curbitmap[scrnum] = 1 - curbitmap[scrnum];
 					}

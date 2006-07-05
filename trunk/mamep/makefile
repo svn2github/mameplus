@@ -276,6 +276,10 @@ ifneq ($(X86_VOODOO_DRC),)
 DEFS += -DVOODOO_DRC
 endif
 
+ifneq ($(USE_SCALE_EFFECTS),)
+DEFS += -DUSE_SCALE_EFFECTS
+endif
+
 ifneq ($(USE_STORY_DATAFILE),)
     DEFS += -DSTORY_DATAFILE
 endif

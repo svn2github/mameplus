@@ -250,11 +250,7 @@ OSTOOLOBJS = \
 	$(OBJ)/$(MAMEOS)/osd_tool.o
 
 # extra targets and rules for the scale effects
-ifneq ($(NEW_RENDER),)
-USE_SCALE_EFFECTS =
-endif
 ifneq ($(USE_SCALE_EFFECTS),)
-CFLAGS += -DUSE_SCALE_EFFECTS
 OSOBJS += $(OBJ)/$(MAMEOS)/scale.o
 
 OBJDIRS += $(OBJ)/$(MAMEOS)/scale

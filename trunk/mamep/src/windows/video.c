@@ -34,6 +34,10 @@
 #include "options.h"
 #endif
 
+#ifdef USE_SCALE_EFFECTS
+#include "osdscale.h"
+#endif /* USE_SCALE_EFFECTS */
+
 // MAMEOS headers
 #include "winmain.h"
 #include "video.h"
@@ -267,6 +271,11 @@ const options_entry video_opts[] =
 #ifndef NEW_RENDER
 	{ "d3dfilter",                "0",    OPTION_DEPRECATED, "(deprecated)" },
 #endif
+
+#ifdef USE_SCALE_EFFECTS
+	{ "scale_effect",             NULL,   0,                 "SaI scale effect" },
+#endif /* USE_SCALE_EFFECTS */
+
 	{ NULL }
 };
 
@@ -1002,6 +1011,12 @@ static void extract_video_config(void)
 {
 	const char *stemp;
 	int itemp;
+
+#ifdef USE_SCALE_EFFECTS
+	stemp = options_get_string("scale_effect", TRUE);
+	if (stemp)
+		scale_decode(stemp);
+#endif /* USE_SCALE_EFFECTS */
 
 	// performance options: extract the data
 	video_config.autoframeskip = options_get_bool ("autoframeskip", TRUE);
