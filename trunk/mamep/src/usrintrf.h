@@ -161,4 +161,6 @@ void ui_auto_pause(void);
 /* renders the fps counter */
 void ui_display_fps(void);
 
+void ui_set_startup_text(const char *text, int force);
+
 #endif	/* __USRINTRF_H__ */
