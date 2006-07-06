@@ -76,9 +76,6 @@ typedef struct
 	BOOL	flipy;
 	float	brightness;
 	float	pause_brightness;
-#ifdef USE_SCALE_EFFECTS
-	char*  scale_effect;
-#endif /* USE_SCALE_EFFECTS */
 //
 // CORE VECTOR OPTIONS
 //
@@ -230,6 +227,9 @@ typedef struct
 
 	int		d3dversion;
 	BOOL	filter;
+#ifdef USE_SCALE_EFFECTS
+	char*  scale_effect;
+#endif /* USE_SCALE_EFFECTS */
 } options_type;
 
 // List of artwork types to display in the screen shot area

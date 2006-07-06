@@ -214,15 +214,15 @@
 %d results found
 
 
-# usrintrf.c: 2419, 2585
+# usrintrf.c: 2434, 2600
 %s Analog
 
 
-# usrintrf.c: 2426, 2591
+# usrintrf.c: 2441, 2606
 %s Dec
 
 
-# usrintrf.c: 2433, 2597
+# usrintrf.c: 2448, 2612
 %s Inc
 
 
@@ -250,11 +250,11 @@
 (Card may already exist)
 
 
-# usrintrf.c: 4012
+# usrintrf.c: 4080
 (H)
 
 
-# usrintrf.c: 4012
+# usrintrf.c: 4080
 (V)
 
 
@@ -682,7 +682,7 @@ Autocenter Speed
 Autofire (in some games)
 
 
-# ui_text.c: 250
+# ui_text.c: 254
 Autofire Delay
 
 
@@ -786,7 +786,7 @@ Cancel
 Card Number:
 
 
-# drivers/cischeat.c: 1586 drivers/namcos22.c: 3925, 3999 ui_text.c: 253
+# drivers/cischeat.c: 1586 drivers/namcos22.c: 3925, 3999 ui_text.c: 257
 Center
 
 
@@ -990,7 +990,7 @@ Country
 Create New Card
 
 
-# usrintrf.c: 3823
+# usrintrf.c: 3838
 Crop to Screen
 
 
@@ -1022,7 +1022,7 @@ Data Shift
 Decimal
 
 
-# video.c: 530
+# video.c: 503
 Decoding (%d%%)
 
 
@@ -1298,7 +1298,7 @@ Error: Failed to save state
 Error: Unable to save state due to illegal registrations. See error.log for details.
 
 
-# usrintrf.c: 1849
+# usrintrf.c: 1860
 Error: illegal caption file
 
 
@@ -1498,15 +1498,15 @@ Help not available yet
 Hex
 
 
-# usrintrf.c: 3803
+# usrintrf.c: 3818
 Hide Backdrops
 
 
-# usrintrf.c: 3815
+# usrintrf.c: 3830
 Hide Bezels
 
 
-# usrintrf.c: 3809
+# usrintrf.c: 3824
 Hide Overlays
 
 
@@ -1790,7 +1790,7 @@ Label
 Label Type
 
 
-# drivers/snowbros.c: 853 inptport.c: 419 ui_text.c: 342
+# drivers/snowbros.c: 853 inptport.c: 419 ui_text.c: 346
 Language
 
 
@@ -1906,11 +1906,11 @@ Load Selected Card
 Load State
 
 
-# usrintrf.c: 6139
+# usrintrf.c: 6207
 Load cancelled
 
 
-# usrintrf.c: 6170
+# usrintrf.c: 6238
 Load from position %c
 
 
@@ -2174,7 +2174,7 @@ No
 No previous values saved
 
 
-# cheat.c: 1108, 2923 inptport.c: 463 sound/custom.c: 77 
+# cheat.c: 1108, 2923 inptport.c: 463 sound/custom.c: 77 usrintrf.c: 3917 
 None
 
 
@@ -2210,11 +2210,11 @@ OK
 OPTIONAL %-12s NOT FOUND\n
 
 
-# inptport.c: 356 ui_text.c: 38, 247
+# inptport.c: 356 ui_text.c: 38, 251
 Off
 
 
-# inptport.c: 357 ui_text.c: 37, 248
+# inptport.c: 357 ui_text.c: 37, 252
 On
 
 
@@ -3682,15 +3682,15 @@ Previous Game
 Previous values already restored
 
 
-# usrintrf.c: 6183
+# usrintrf.c: 6251
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 
 
-# video.c: 1580
+# video.c: 1607
 REC START
 
 
-# video.c: 1585
+# video.c: 1612
 REC STOP (%d frames)
 
 
@@ -3806,7 +3806,7 @@ Rotate Clockwise
 Rotate Counter-clockwise
 
 
-# usrintrf.c: 3798
+# usrintrf.c: 3813
 Rotate View
 
 
@@ -3842,12 +3842,16 @@ Save Snapshot
 Save State
 
 
-# usrintrf.c: 6137
+# usrintrf.c: 6205
 Save cancelled
 
 
-# usrintrf.c: 6165
+# usrintrf.c: 6233
 Save to position %c
+
+
+# ui_text.c: 247
+Scale Effect
 
 
 # drivers/turbo.c: 413 png.c: 431 
@@ -3950,11 +3954,11 @@ Select current level
 Select next level
 
 
-# usrintrf.c: 6130
+# usrintrf.c: 6198
 Select position to load from
 
 
-# usrintrf.c: 6128
+# usrintrf.c: 6196
 Select position to save to
 
 
@@ -4002,11 +4006,11 @@ Set/Clear
 Set/Clear Bits
 
 
-# usrintrf.c: 3805
+# usrintrf.c: 3820
 Show Backdrops
 
 
-# usrintrf.c: 3817
+# usrintrf.c: 3832
 Show Bezels
 
 
@@ -4034,7 +4038,7 @@ Show Current Time
 Show FPS
 
 
-# usrintrf.c: 3821
+# usrintrf.c: 3836
 Show Full Artwork
 
 
@@ -4042,7 +4046,7 @@ Show Full Artwork
 Show Gfx
 
 
-# usrintrf.c: 3811
+# usrintrf.c: 3826
 Show Overlays
 
 
@@ -4302,7 +4306,7 @@ Title
 Toaplan
 
 
-# ui_text.c: 249
+# ui_text.c: 253
 Toggle
 
 
@@ -4678,7 +4682,7 @@ Vector Game
 Vector Intensity
 
 
-# inptport.c: 410 ui_text.c: 337
+# inptport.c: 410 ui_text.c: 341
 Version
 
 
@@ -4826,11 +4830,11 @@ Your filesystem seems to be corrupt, please check it
 Zoom
 
 
-# usrintrf.c: 4667
+# usrintrf.c: 4735
 Zoom = %d
 
 
-# usrintrf.c: 4669
+# usrintrf.c: 4737
 Zoom Auto
 
 
@@ -5012,6 +5016,10 @@ region invalidated - %d results remain
 
 # cheat.c: 4948, 5344
 saved all memory regions
+
+
+# video.c: 949
+scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
 
 
 # drivers/harddriv.c: 3190 drivers/segas16b.c: 941, 1012 ui_text.c: 47 xml2info.c: 596, 597, 613

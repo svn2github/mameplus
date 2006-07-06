@@ -214,15 +214,15 @@
 %d results found
 %d個の結果が見つかりました
 
-# usrintrf.c: 2419, 2585
+# usrintrf.c: 2434, 2600
 %s Analog
 %s アナログ
 
-# usrintrf.c: 2426, 2591
+# usrintrf.c: 2441, 2606
 %s Dec
 %s 増加
 
-# usrintrf.c: 2433, 2597
+# usrintrf.c: 2448, 2612
 %s Inc
 %s 減少
 
@@ -250,11 +250,11 @@
 (Card may already exist)
 (カードを既に作成済みかも知れません)
 
-# usrintrf.c: 4012
+# usrintrf.c: 4080
 (H)
 (横)
 
-# usrintrf.c: 4012
+# usrintrf.c: 4080
 (V)
 (縦)
 
@@ -682,7 +682,7 @@ Autocenter Speed
 Autofire (in some games)
 連射 (対応ゲームのみ)
 
-# ui_text.c: 250
+# ui_text.c: 254
 Autofire Delay
 連射間隔
 
@@ -786,7 +786,7 @@ Cancel
 Card Number:
 カード番号:
 
-# drivers/cischeat.c: 1586 drivers/namcos22.c: 3925, 3999 ui_text.c: 253
+# drivers/cischeat.c: 1586 drivers/namcos22.c: 3925, 3999 ui_text.c: 257
 Center
 センタリング
 
@@ -990,7 +990,7 @@ Country
 Create New Card
 新しいカードを作成
 
-# usrintrf.c: 3823
+# usrintrf.c: 3838
 Crop to Screen
 画面外をカット
 
@@ -1022,7 +1022,7 @@ Data Shift
 Decimal
 10進
 
-# video.c: 530
+# video.c: 503
 Decoding (%d%%)
 デコード中 (%d%%)
 
@@ -1298,7 +1298,7 @@ Error: Failed to save state
 Error: Unable to save state due to illegal registrations. See error.log for details.
 エラー: 不正な登録のためステートを保存する事が出来ません。詳細はerror.logをご覧下さい。
 
-# usrintrf.c: 1849
+# usrintrf.c: 1860
 Error: illegal caption file
 エラー: 不正なキャプションファイルです
 
@@ -1498,15 +1498,15 @@ Help not available yet
 Hex
 16進
 
-# usrintrf.c: 3803
+# usrintrf.c: 3818
 Hide Backdrops
 バックドロップを隠す
 
-# usrintrf.c: 3815
+# usrintrf.c: 3830
 Hide Bezels
 ベゼルを隠す
 
-# usrintrf.c: 3809
+# usrintrf.c: 3824
 Hide Overlays
 オーバレイを隠す
 
@@ -1790,7 +1790,7 @@ Label
 Label Type
 ラベルタイプ
 
-# drivers/snowbros.c: 853 inptport.c: 419 ui_text.c: 342
+# drivers/snowbros.c: 853 inptport.c: 419 ui_text.c: 346
 Language
 言語
 
@@ -1906,11 +1906,11 @@ Load Selected Card
 Load State
 プレイ状態の復帰
 
-# usrintrf.c: 6139
+# usrintrf.c: 6207
 Load cancelled
 読み込みを中止しました
 
-# usrintrf.c: 6170
+# usrintrf.c: 6238
 Load from position %c
 %c から読み込みました
 
@@ -2174,7 +2174,7 @@ No
 No previous values saved
 前回の値が保存されていません
 
-# cheat.c: 1108, 2923 inptport.c: 463 sound/custom.c: 77 
+# cheat.c: 1108, 2923 inptport.c: 463 sound/custom.c: 77 usrintrf.c: 3917 
 None
 なし
 
@@ -2210,11 +2210,11 @@ OK
 OPTIONAL %-12s NOT FOUND\n
 オプションの%-12s 見つかりません\n
 
-# inptport.c: 356 ui_text.c: 38, 247
+# inptport.c: 356 ui_text.c: 38, 251
 Off
 OFF
 
-# inptport.c: 357 ui_text.c: 37, 248
+# inptport.c: 357 ui_text.c: 37, 252
 On
 ON
 
@@ -3682,15 +3682,15 @@ Previous Game
 Previous values already restored
 前回の値は既に復帰済みです
 
-# usrintrf.c: 6183
+# usrintrf.c: 6251
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 このゲームを終了しますか？\n\n終了する場合は決定キー/ボタンを、\n続ける場合はキャンセルキー/ボタンを押して下さい。
 
-# video.c: 1580
+# video.c: 1607
 REC START
 録画開始
 
-# video.c: 1585
+# video.c: 1612
 REC STOP (%d frames)
 録画終了 (%d フレーム)
 
@@ -3806,7 +3806,7 @@ Rotate Clockwise
 Rotate Counter-clockwise
 反時計回りに回転
 
-# usrintrf.c: 3798
+# usrintrf.c: 3813
 Rotate View
 画面を回転
 
@@ -3842,13 +3842,17 @@ Save Snapshot
 Save State
 プレイ状態の保存
 
-# usrintrf.c: 6137
+# usrintrf.c: 6205
 Save cancelled
 保存を中止しました
 
-# usrintrf.c: 6165
+# usrintrf.c: 6233
 Save to position %c
 %c に保存しました
+
+# ui_text.c: 247
+Scale Effect
+スケールエフェクト
 
 # drivers/turbo.c: 413 png.c: 431 
 Screen
@@ -3950,11 +3954,11 @@ Select current level
 Select next level
 次のレベルを選択
 
-# usrintrf.c: 6130
+# usrintrf.c: 6198
 Select position to load from
 読み込むファイル(0-9,A-Z)を押してください
 
-# usrintrf.c: 6128
+# usrintrf.c: 6196
 Select position to save to
 保存するファイル(0-9,A-Z)を押してください
 
@@ -4002,11 +4006,11 @@ Set/Clear
 Set/Clear Bits
 ビットのセット/クリア
 
-# usrintrf.c: 3805
+# usrintrf.c: 3820
 Show Backdrops
 バックドロップを表\示
 
-# usrintrf.c: 3817
+# usrintrf.c: 3832
 Show Bezels
 ベゼルを表\示
 
@@ -4034,7 +4038,7 @@ Show Current Time
 Show FPS
 FPSの表\示
 
-# usrintrf.c: 3821
+# usrintrf.c: 3836
 Show Full Artwork
 全てのアートワークを表\示
 
@@ -4042,7 +4046,7 @@ Show Full Artwork
 Show Gfx
 グラフィックデータ表\示
 
-# usrintrf.c: 3811
+# usrintrf.c: 3826
 Show Overlays
 オーバレイを表\示
 
@@ -4302,7 +4306,7 @@ Title
 Toaplan
 東亜プラン
 
-# ui_text.c: 249
+# ui_text.c: 253
 Toggle
 切り替え
 
@@ -4678,7 +4682,7 @@ Vector Game
 Vector Intensity
 ベクタ明度
 
-# inptport.c: 410 ui_text.c: 337
+# inptport.c: 410 ui_text.c: 341
 Version
 バージョン
 
@@ -4826,11 +4830,11 @@ Your filesystem seems to be corrupt, please check it
 Zoom
 ズーム
 
-# usrintrf.c: 4667
+# usrintrf.c: 4735
 Zoom = %d
 ズーム = %d
 
-# usrintrf.c: 4669
+# usrintrf.c: 4737
 Zoom Auto
 ズーム 自動
 
@@ -5013,6 +5017,10 @@ region invalidated - %d results remain
 # cheat.c: 4948, 5344
 saved all memory regions
 全てのメモリ領域を保存しました
+
+# video.c: 949
+scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
+スケールエフェクト「%s」は15ビットカラー、32ビットカラー共にサポートされていません。スケールエフェクトを無効にします。
 
 # drivers/harddriv.c: 3190 drivers/segas16b.c: 941, 1012 ui_text.c: 47 xml2info.c: 596, 597, 613
 sound

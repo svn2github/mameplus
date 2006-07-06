@@ -210,6 +210,9 @@ START_OPT_FUNC_DRIVER
 
 	DEFINE_OPT(int_positive,    d3dversion)
 	DEFINE_OPT(bool,                 filter)
+#ifdef USE_SCALE_EFFECTS
+	DEFINE_OPT(string_allow_null,    scale_effect)
+#endif /* USE_SCALE_EFFECTS */
 END_OPT_FUNC_DRIVER
 #endif
 

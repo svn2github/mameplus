@@ -230,6 +230,10 @@ enum
 	UI_flip_y,
 #endif
 
+#ifdef USE_SCALE_EFFECTS
+	UI_scaleeffect,
+#endif /* USE_SCALE_EFFECTS */
+
 	/* autofire stuff */
 	UI_autofireoff,
 	UI_autofireon,

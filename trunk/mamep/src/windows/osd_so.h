@@ -83,6 +83,12 @@ extern SHAREDOBJ_FUNC(char *)	mame_strdup(const char *str);
 #include "osdepend.h"
 extern SHAREDOBJ_FUNC(void) logerror(const char *text,...);
 
+#ifdef USE_SCALE_EFFECTS
+#include "osdscale.h"
+extern SHAREDOBJ_FUNC(const char *) scale_name(int effect);
+extern SHAREDOBJ_FUNC(const char *) scale_desc(int effect);
+#endif /* USE_SCALE_EFFECTS */
+
 #include "fileio.h"
 extern SHAREDOBJ_FUNC(int)          mame_faccess(const char *filename, int filetype);
 extern SHAREDOBJ_FUNC(mame_file *)  mame_fopen(const char *gamename, const char *filename, int filetype, int openforwrite);

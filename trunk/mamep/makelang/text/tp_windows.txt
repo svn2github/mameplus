@@ -78,11 +78,11 @@
 (dd) stretch video using the hardware
 
 
-# windows/video.c: 558 windows/videoold.c: 356
+# windows/video.c: 575 windows/videoold.c: 356
 (primary)
 
 
-# windows/video.c: 359 windows/videoold.c: 648
+# windows/video.c: 364 windows/videoold.c: 648
 Average FPS: %f (%d frames)\n
 
 
@@ -546,7 +546,7 @@ SSE supported\n
 SSE2 supported\n
 
 
-# windows/video.c: 276 windows/videoold.c: 264
+# windows/video.c: 281 windows/videoold.c: 264
 SaI scale effect
 
 
@@ -678,7 +678,7 @@ Usage:  MAME gamename [options]\n\n
 Using %s pre-scale effect\n
 
 
-# windows/winddold.c: 356
+# windows/video.c: 953 windows/winddold.c: 356
 Using %s scale effect\n
 
 

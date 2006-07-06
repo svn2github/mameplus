@@ -124,6 +124,11 @@ struct _performance_info
 
 int video_init(void);
 
+#ifdef USE_SCALE_EFFECTS
+void video_init_scale_effect(void);
+void video_exit_scale_effect(void);
+#endif /* USE_SCALE_EFFECTS */
+
 /* set the current visible area of the screen bitmap */
 void set_visible_area(int scrnum, int min_x, int max_x, int min_y, int max_y);
 

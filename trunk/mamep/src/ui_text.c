@@ -70,7 +70,7 @@ static const char *mame_default_text[] =
 #endif /* CMD_LIST */
 
 	/* special characters */
-#ifndef NEW_RENDER
+#if 1 //#ifndef NEW_RENDER
 	"\x11",
 	"\x10",
 	"\x18",
@@ -242,6 +242,10 @@ static const char *mame_default_text[] =
 	"Flip X",
 	"Flip Y",
 #endif
+
+#ifdef USE_SCALE_EFFECTS
+	"Scale Effect",
+#endif /* USE_SCALE_EFFECTS */
 
 	/* autofire stuff */
 	"Off",

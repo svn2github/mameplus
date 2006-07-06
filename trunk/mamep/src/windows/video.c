@@ -149,6 +149,11 @@ static const int waittable[FRAMESKIP_LEVELS][FRAMESKIP_LEVELS] =
 	{12,0,0,0,0,0,0,0,0,0,0,0 }
 };
 
+#ifdef USE_SCALE_EFFECTS
+static int cur_scale_xsize;
+static int cur_scale_ysize;
+#endif /* USE_SCALE_EFFECTS */
+
 
 
 //============================================================
@@ -464,6 +469,18 @@ int osd_update(mame_time emutime)
 	// update all the windows, but only if we're not skipping this frame
 	if (!skiptable[effective_frameskip()][frameskip_counter])
 	{
+#ifdef USE_SCALE_EFFECTS
+		extern int win_scale_res_changed;
+
+		win_scale_res_changed = 0;
+		if (scale_effect.xsize != cur_scale_xsize || scale_effect.ysize != cur_scale_ysize)
+		{
+			win_scale_res_changed = 1;
+			cur_scale_xsize = scale_effect.xsize;
+			cur_scale_ysize = scale_effect.ysize;
+		}
+#endif /* USE_SCALE_EFFECTS */
+
 		profiler_mark(PROFILER_BLIT);
 		for (window = win_window_list; window != NULL; window = window->next)
 			winwindow_video_window_update(window);
@@ -929,7 +946,12 @@ static void extract_video_config(void)
 #ifdef USE_SCALE_EFFECTS
 	stemp = options_get_string("scale_effect", TRUE);
 	if (stemp)
+	{
 		scale_decode(stemp);
+
+		if (scale_effect.effect)
+			verbose_printf(_WINDOWS("Using %s scale effect\n"), scale_desc(scale_effect.effect));
+	}
 #endif /* USE_SCALE_EFFECTS */
 
 	// performance options: extract the data

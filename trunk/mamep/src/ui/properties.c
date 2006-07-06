@@ -33,6 +33,9 @@
 
 #include "MAME32.h"	// include this first
 #include "driver.h"
+#ifdef USE_SCALE_EFFECTS
+#include "osdscale.h"
+#endif /* USE_SCALE_EFFECTS */
 #include "info.h"
 #include "audit.h"
 #include "audit32.h"
@@ -358,70 +361,6 @@ static DWORD dwHelpIDs[] =
 	IDC_ENABLE_AUTOSAVE,    HIDC_ENABLE_AUTOSAVE,
 	0,                      0
 };
-
-#ifdef USE_SCALE_EFFECTS
-static const char * scale_effects_long_name[] =
-{
-	"None",
-	"Andrea's Scale2x",
-	"Andrea's Scale2x3",
-#ifdef USE_4X_SCALE
-	"Andrea's Scale2x4",
-#endif /* USE_4X_SCALE */
-	"Andrea's Scale3x",
-	"ElSemi's SuperScale",
-	"SuperScale 75% SL",
-	"Kreed's 2xSaI",
-	"Kreed's Super 2xSaI",
-	"Kreed's Super Eagle",
-	"Dirk Stevens' Eagle",
-	"Maxim Stepin's HQ2x",
-	"Andrea's HQ2x3",
-	"Andrea's HQ2x4",
-	"Andrea's LQ2x",
-	"Andrea's LQ2x3",
-	"Andrea's LQ2x4",
-	"Maxim Stepin's HQ3x",
-	"Andrea's LQ3x",
-#ifdef USE_4X_SCALE
-	"Maxim Stepin's HQ4x",
-	"Andrea's LQ4x",
-#endif /* USE_4X_SCALE */
-	NULL
-};
-
-static const char * scale_effects_short_name[] =
-{
-	"none",
-	"scale2x",
-	"scale2x3",
-#ifdef USE_4X_SCALE
-	"scale2x4",
-#endif /* USE_4X_SCALE */
-	"scale3x",
-	"superscale",
-	"superscale75",
-	"2xsai",
-	"super2xsai",
-	"supereagle",
-	"eagle",
-	"hq2x",
-	"hq2x3",
-	"hq2x4",
-	"lq2x",
-	"lq2x3",
-	"lq2x4",
-	"hq3x",
-	"lq3x",
-#ifdef USE_4X_SCALE
-	"hq4x",
-	"lq4x",
-#endif /* USE_4X_SCALE */
-	NULL
-};
-
-#define NUMSCALEEFFECTS ((sizeof(scale_effects_short_name) / sizeof(scale_effects_short_name[0])) - 1)
-#endif /* USE_SCALE_EFFECTS */
 
 static struct ComboBoxLedmode
 {
@@ -2292,11 +2231,6 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_D3D_VER),                d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_DXTEXT),                 ddraw || d3d);
 
-#if 1//def USE_SCALE_EFFECTS
-	EnableWindow(GetDlgItem(hWnd, IDC_SCALEEFFECTTEXT),        0/*d3d*/);
-	EnableWindow(GetDlgItem(hWnd, IDC_SCALEEFFECT),            0/*d3d*/);
-#endif /* USE_SCALE_EFFECTS */
-
 	// d3d
 	EnableWindow(GetDlgItem(hWnd, IDC_D3D_FILTER),             d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_D3D_PRESCALE),           d3d);
@@ -2859,7 +2793,7 @@ AssignDefaultBios(7)
 static void AssignScaleEffect(HWND hWnd)
 {
 	FreeIfAllocated(&pGameOpts->scale_effect);
-	pGameOpts->scale_effect = strdup(scale_effects_short_name[g_nScaleEffectIndex]);
+	pGameOpts->scale_effect = strdup(scale_name(g_nScaleEffectIndex));
 }
 #endif /* USE_SCALE_EFFECTS */
 
@@ -3007,9 +2941,9 @@ static void ResetDataMap(void)
 
 #ifdef USE_SCALE_EFFECTS
 	g_nScaleEffectIndex = 0;
-	for (i = 0; i < NUMSCALEEFFECTS; i++)
+	for (i = 0; scale_name(i); i++)
 	{
-		if (!mame_stricmp(pGameOpts->scale_effect, scale_effects_short_name[i]))
+		if (!mame_stricmp(pGameOpts->scale_effect, scale_name(i)))
 			g_nScaleEffectIndex = i;
 	}
 #endif /* USE_SCALE_EFFECTS */
@@ -4292,8 +4226,10 @@ static void InitializeJoyidUI(HWND hWnd)
 	{
 		int i;
 
-		for (i=0;i<NUMSCALEEFFECTS;i++)
-			ComboBox_AddStringA(hCtrl,_UI(scale_effects_long_name[i]));
+		ComboBox_AddStringA(hCtrl,_UI("None"));
+
+		for (i = 1; scale_name(i); i++)
+			ComboBox_AddStringA(hCtrl,_UI(scale_desc(i)));
 	}
 }
 #endif /* USE_SCALE_EFFECTS */

@@ -34,6 +34,9 @@
 #include "input.h"
 #include "options.h"
 #include "debugwin.h"
+#ifdef USE_SCALE_EFFECTS
+#include "osdscale.h"
+#endif /* USE_SCALE_EFFECTS */
 
 #ifdef WINUI
 #include "ui/resource.h"
@@ -97,6 +100,10 @@ int win_physical_height;
 
 // raw mouse support
 int win_use_raw_mouse = 0;
+
+#ifdef USE_SCALE_EFFECTS
+int win_scale_res_changed;
+#endif /* USE_SCALE_EFFECTS */
 
 
 
@@ -643,6 +650,13 @@ void winwindow_video_window_update(win_window_info *window)
 				SendMessage(window->hwnd, WM_USER_SET_MAXSIZE, 0, 0);
 		}
 	}
+#ifdef USE_SCALE_EFFECTS
+	if (win_scale_res_changed)
+	{
+		if (!window->fullscreen && !window->ismaximized)
+			SendMessage(window->hwnd, WM_USER_SET_MINSIZE, 0, 0);
+	}
+#endif /* USE_SCALE_EFFECTS */
 
 	// if we're visible and running and not in the middle of a resize, draw
 	if (window->hwnd != NULL && window->target != NULL)
@@ -1404,6 +1418,14 @@ static void get_min_bounds(win_window_info *window, RECT *bounds, int constrain)
 
 	// get the minimum target size
 	render_target_get_minimum_size(window->target, &minwidth, &minheight);
+
+#ifdef USE_SCALE_EFFECTS
+	if (win_scale_res_changed)
+	{
+		minwidth *= scale_effect.xsize;
+		minheight *= scale_effect.ysize;
+	}
+#endif /* USE_SCALE_EFFECTS */
 
 	// expand to our minimum dimensions
 	if (minwidth < MIN_WINDOW_DIM)

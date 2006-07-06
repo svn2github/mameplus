@@ -2,7 +2,7 @@
                                 
 Japanese game list by 俺、ぶろん
 
-# ui/properties.c: 1029
+# ui/properties.c: 968
 %d colors 
 %d 色 
 
@@ -18,35 +18,35 @@ Japanese game list by 俺、ぶろん
 %dx%d (V)
 %dx%d (V)
 
-# ui/properties.c: 3843
+# ui/properties.c: 3777
 %li bit
 %li ビット
 
-# ui/properties.c: 1005
+# ui/properties.c: 944
 %s (%d player)
 %s (%d プレイヤー)
 
-# ui/properties.c: 1016
+# ui/properties.c: 955
 %s (%d player, %d button)
 %s (%d プレイヤー、%d ボタン)
 
-# ui/properties.c: 1014
+# ui/properties.c: 953
 %s (%d player, %d buttons)
 %s (%d プレイヤー、%d ボタン)
 
-# ui/properties.c: 1002
+# ui/properties.c: 941
 %s (%d players)
 %s (%d プレイヤー)
 
-# ui/properties.c: 1011
+# ui/properties.c: 950
 %s (%d players, %d button)
 %s (%d プレイヤー、%d ボタン)
 
-# ui/properties.c: 1008
+# ui/properties.c: 947
 %s (%d players, %d buttons)
 %s (%d プレイヤー、%d ボタン)
 
-# ui/properties.c: 1148
+# ui/properties.c: 1087
 %s\nThis is also global driver options in the %s
 %s\nそしてこれはドライバ%sのグローバルオプションです
 
@@ -310,7 +310,7 @@ A sharing violation occurred.
 A&udit
 監査(&U)
 
-# ui/properties.c: 952 ui/treeview.c: 1419
+# ui/properties.c: 891 ui/treeview.c: 1419
 AD Stick
 アナログスティック
 
@@ -374,7 +374,7 @@ Allows filtering out games from a folder
 Analog deadzone
 アナログ変換の割合
 
-# ui/properties.c: 3809
+# ui/properties.c: 3743
 Anti-clockwise
 反時計回り
 
@@ -414,15 +414,15 @@ Audit ROM and samples sets
 Audit complete.\n
 チェック終了\n
 
-# ui/properties.c: 3728, 3830, 3900
+# ui/properties.c: 3662, 3764, 3834
 Auto
 自動
 
-# ui/properties.c: 3812
+# ui/properties.c: 3746
 Auto anti-clockwise
 自動的に反時計回り
 
-# ui/properties.c: 3811
+# ui/properties.c: 3745
 Auto clockwise
 自動的に時計回り
 
@@ -446,11 +446,11 @@ Available
 Available fields:
 利用可能\フィールド:
 
-# ui/properties.c: 3943
+# ui/properties.c: 3877
 Axis
 軸
 
-# ui/properties.c: 3953
+# ui/properties.c: 3887
 AxisId
 軸ID
 
@@ -458,7 +458,7 @@ AxisId
 BIOS
 BIOS
 
-# ui/properties.c: 1104
+# ui/properties.c: 1043
 BIOS missing
 BIOS がありません
 
@@ -626,7 +626,7 @@ Christopher Kirmse and Michael Soderstrom
 Clean stretch
 整数倍に拡大
 
-# ui/properties.c: 3808
+# ui/properties.c: 3742
 Clockwise
 時計回り
 
@@ -642,11 +642,11 @@ Clone of:
 Clones
 クローン
 
-# ui/properties.c: 1068
+# ui/properties.c: 1007
 Colors are completely wrong
 色が再現されない
 
-# ui/properties.c: 1074
+# ui/properties.c: 1013
 Colors aren't 100% accurate
 色の再現が不完全
 
@@ -762,11 +762,11 @@ Customize interface options.
 Customize which columns are used in the game list
 ゲームリストに用いる表\示項目を設定します
 
-# ui/properties.c: 3807
+# ui/properties.c: 3741
 Default
 デフォルト
 
-# ui/properties.c: 578
+# ui/properties.c: 517
 Default Game
 標準のゲーム
 
@@ -794,7 +794,7 @@ Description
 Details
 詳細
 
-# ui/properties.c: 944 ui/treeview.c: 1421
+# ui/properties.c: 883 ui/treeview.c: 1421
 Dial
 ダイヤル
 
@@ -806,7 +806,7 @@ Dial device
 Digital joystick axes
 デジタルスティックの軸
 
-# ui/mame32.rc: 614 ui/properties.c: 446
+# ui/mame32.rc: 614 ui/properties.c: 385
 Direct3D
 Direct3D
 
@@ -890,19 +890,19 @@ Double Joy 4-Way
 Double Joy 8-Way
 8方向デュアルスティック
 
-# ui/properties.c: 880, 896, 897
+# ui/properties.c: 819, 835, 836
 Double Joystick 2-Way
 ２方向デュアルスティック
 
-# ui/properties.c: 876, 877, 900
+# ui/properties.c: 815, 816, 839
 Double Joystick 2-Way Vertical
 ２方向デュアルスティック 縦
 
-# ui/properties.c: 883, 903
+# ui/properties.c: 822, 842
 Double Joystick 4-Way
 ４方向デュアルスティック
 
-# ui/properties.c: 885, 905
+# ui/properties.c: 824, 844
 Double Joystick 8-Way
 ８方向デュアルスティック
 
@@ -910,7 +910,7 @@ Double Joystick 8-Way
 Draw antialiased vectors
 アンチエイリアス
 
-# ui/properties.c: 3785
+# ui/properties.c: 3719
 Draw every frame
 フレームスキップなし
 
@@ -990,7 +990,7 @@ Enable steadykey support
 Enforce aspect ratio
 表\示比率を固定
 
-# ui/audit32.c: 103 ui/properties.c: 590, 673
+# ui/audit32.c: 103 ui/properties.c: 529, 612
 Error
 エラー
 
@@ -1110,11 +1110,11 @@ Game filters
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 下記より選択された項目をリスト上非表\示にします
 
-# ui/properties.c: 1086
+# ui/properties.c: 1025
 Game lacks sound
 サウンドが未対応
 
-# ui/properties.c: 1062
+# ui/properties.c: 1001
 Game protection isn't fully emulated
 プロテクトのため動作が不完全
 
@@ -1130,15 +1130,15 @@ Gamma correction
 General
 全般
 
-# ui/properties.c: 1150
+# ui/properties.c: 1089
 Global driver options\nCustom options used by all games in the %s
 グローバルドライバオプションです。\n%sの全ゲームのカスタム設定として使用されます。
 
-# ui/properties.c: 1130
+# ui/properties.c: 1069
 Global game options\nDefault options used by all games
 グローバルゲームオプションです。\n全ゲームのデフォルト設定として使用されます。
 
-# ui/properties.c: 1133
+# ui/properties.c: 1072
 Global vector options\nCustom options used by all games in the Vector
 グローバルベクタオプションです。\nベクタの全ゲームのカスタム設定として使用されます。
 
@@ -1250,31 +1250,31 @@ Joy 4-Way
 Joy 8-Way
 8方向スティック
 
-# ui/properties.c: 459, 3938
+# ui/properties.c: 398, 3872
 Joystick
 ジョイスティック
 
-# ui/properties.c: 838, 839, 860
+# ui/properties.c: 777, 778, 799
 Joystick 2-Way
 ２方向スティック
 
-# ui/properties.c: 842, 856, 857
+# ui/properties.c: 781, 795, 796
 Joystick 2-Way Vertical
 ２方向スティック 縦
 
-# ui/properties.c: 845, 863
+# ui/properties.c: 784, 802
 Joystick 4-Way
 ４方向スティック
 
-# ui/properties.c: 847, 865
+# ui/properties.c: 786, 804
 Joystick 8-Way
 ８方向スティック
 
-# ui/properties.c: 3948
+# ui/properties.c: 3882
 JoystickId
 ジョイスティックID
 
-# ui/properties.c: 457
+# ui/properties.c: 396
 Keyboard
 キーボード
 
@@ -1290,7 +1290,7 @@ Language Files
 Large Icons
 大きなアイコン
 
-# ui/layout.c: 79 ui/properties.c: 460, 956 ui/treeview.c: 1423
+# ui/layout.c: 79 ui/properties.c: 399, 895 ui/treeview.c: 1423
 Lightgun
 光線銃
 
@@ -1398,7 +1398,7 @@ Missing Sound
 Missing optional
 追加のROMがありません
 
-# ui/properties.c: 458
+# ui/properties.c: 397
 Mouse
 マウス
 
@@ -1454,7 +1454,7 @@ No offset for clones missing parent in view
 Non-Wor&king
 動作不可(&K)
 
-# ui/dialogs.c: 218 ui/properties.c: 365, 3810, 3877
+# ui/dialogs.c: 218 ui/properties.c: 3744, 3811, 4229 
 None
 なし
 
@@ -1470,7 +1470,7 @@ Not Working
 Not found
 見つかりません
 
-# ui/properties.c: 1050
+# ui/properties.c: 989
 Not working
 動作不可
 
@@ -1530,11 +1530,11 @@ PCB情報
 PCB Info Files
 PCB情報ファイル
 
-# ui/properties.c: 432
+# ui/properties.c: 371
 PS/2 Keyboard
 PS/2 キーボード
 
-# ui/properties.c: 941 ui/treeview.c: 1420
+# ui/properties.c: 880 ui/treeview.c: 1420
 Paddle
 パドル
 
@@ -1642,7 +1642,7 @@ Propert&ies for %s
 Propert&ies for Driver
 ドライバのプロパティ(&i)
 
-# ui/properties.c: 589, 672
+# ui/properties.c: 528, 611
 Propery Sheet Error %d %X
 プロパティシートのエラーです %d %X
 
@@ -1666,7 +1666,7 @@ ROM check:
 ROMs
 ROM
 
-# ui/properties.c: 1106
+# ui/properties.c: 1045
 ROMs missing
 ROMが見つかりません
 
@@ -1818,7 +1818,7 @@ Screen
 Screen flip support is missing
 カクテルモードの画面反転に未対応
 
-# ui/properties.c: 1098
+# ui/properties.c: 1037
 Screen flipping is not supported
 カクテルモードの画面反転に未対応
 
@@ -2042,47 +2042,47 @@ Show these fields in this order:
 Size:
 サイズ:
 
-# ui/properties.c: 3786
+# ui/properties.c: 3720
 Skip 1 of 12 frames
 12フレームに1回スキップ
 
-# ui/properties.c: 3795
+# ui/properties.c: 3729
 Skip 10 of 12 frames
 12フレームに10回スキップ
 
-# ui/properties.c: 3796
+# ui/properties.c: 3730
 Skip 11 of 12 frames
 12フレームに11回スキップ
 
-# ui/properties.c: 3787
+# ui/properties.c: 3721
 Skip 2 of 12 frames
 12フレームに2回スキップ
 
-# ui/properties.c: 3788
+# ui/properties.c: 3722
 Skip 3 of 12 frames
 12フレームに3回スキップ
 
-# ui/properties.c: 3789
+# ui/properties.c: 3723
 Skip 4 of 12 frames
 12フレームに4回スキップ
 
-# ui/properties.c: 3790
+# ui/properties.c: 3724
 Skip 5 of 12 frames
 12フレームに5回スキップ
 
-# ui/properties.c: 3791
+# ui/properties.c: 3725
 Skip 6 of 12 frames
 12フレームに6回スキップ
 
-# ui/properties.c: 3792
+# ui/properties.c: 3726
 Skip 7 of 12 frames
 12フレームに7回スキップ
 
-# ui/properties.c: 3793
+# ui/properties.c: 3727
 Skip 8 of 12 frames
 12フレームに8回スキップ
 
-# ui/properties.c: 3794
+# ui/properties.c: 3728
 Skip 9 of 12 frames
 12フレームに9回スキップ
 
@@ -2150,7 +2150,7 @@ Sort items by year
 Sound
 サウンド
 
-# ui/properties.c: 1092
+# ui/properties.c: 1031
 Sound emulation isn't 100% accurate
 音の再現が不完全
 
@@ -2166,7 +2166,7 @@ Sounds (*.wav)
 St&ory
 ストーリー(&O)
 
-# ui/properties.c: 2643, 2648, 2651, 2897, 2900, 3994, 4017 
+# ui/properties.c: 2577, 2582, 2585, 2831, 2834, 3928, 3951 
 Standard
 標準
 
@@ -2194,7 +2194,7 @@ Story
 Stretch using hardware
 ハードウェア拡大表\示
 
-# ui/properties.c: 1183 ui/treeview.c: 1354, 1355
+# ui/properties.c: 1122 ui/treeview.c: 1354, 1355
 Supported
 対応
 
@@ -2262,7 +2262,7 @@ Toggle Screen Shot
 Total:
 合計:
 
-# ui/layout.c: 78 ui/properties.c: 948 ui/treeview.c: 1422 ui/win32ui.c: 825
+# ui/layout.c: 78 ui/properties.c: 887 ui/treeview.c: 1422 ui/win32ui.c: 825
 Trackball
 トラックボール
 
@@ -2334,7 +2334,7 @@ Troubleshooting Documentation
 Type
 種別
 
-# ui/properties.c: 433
+# ui/properties.c: 372
 USB Keyboard
 USB キーボード
 
@@ -2358,7 +2358,7 @@ Unavailable
 Unemulated Protection
 プロテクトの再現が不完全
 
-# ui/audit32.c: 469 ui/properties.c: 999, 1044
+# ui/audit32.c: 469 ui/properties.c: 938, 983
 Unknown
 不明
 
@@ -2366,7 +2366,7 @@ Unknown
 Unknown error.
 原因不明のエラーが発生しました。
 
-# ui/properties.c: 1185 ui/treeview.c: 1357, 1358
+# ui/properties.c: 1124 ui/treeview.c: 1357, 1358
 Unsupported
 未対応
 
@@ -2402,7 +2402,7 @@ Use various icon for Not Working game
 Use volume auto adjust
 自動音量調整機能\を使用
 
-# ui/layout.c: 71 ui/mame32.rc: 933 ui/options.c: 757, 2628 ui/properties.c: 634 ui/treeview.c: 304 ui/win32ui.c: 5495
+# ui/layout.c: 71 ui/mame32.rc: 933 ui/options.c: 757, 2628 ui/properties.c: 573 ui/treeview.c: 304 ui/win32ui.c: 5495
 Vector
 ベクタ
 
@@ -2422,7 +2422,7 @@ Version Mismatch
 Vertical
 縦型
 
-# ui/properties.c: 1080
+# ui/properties.c: 1019
 Video emulation isn't 100% accurate
 画像の再現が不完全
 
@@ -2466,7 +2466,7 @@ Window frame (dark)
 Window frame (light)
 ウィンドウ フレーム (明)
 
-# ui/layout.c: 66 ui/properties.c: 1052
+# ui/layout.c: 66 ui/properties.c: 991
 Working
 動作可
 

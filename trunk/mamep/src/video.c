@@ -69,6 +69,7 @@ mame_bitmap *workbitmap[MAX_SCREENS][2];
 static int scale_xsize;
 static int scale_ysize;
 static int scale_depth;
+static int scale_dirty[MAX_SCREENS * 2];
 static int use_workbitmap;
 #endif /* USE_SCALE_EFFECTS */
 
@@ -122,7 +123,7 @@ static void scale_vectorgames(int gfx_width, int gfx_height, int *width, int *he
 static int init_buffered_spriteram(void);
 static void recompute_fps(int skipped_it);
 #ifdef USE_SCALE_EFFECTS
-static void alloc_scalebitmap(void);
+static void allocate_scalebitmap(void);
 static void free_scalebitmap(void);
 static void texture_set_scalebitmap(int scrnum, int curbank, rectangle *visarea);
 #endif /* USE_SCALE_EFFECTS */
@@ -309,34 +310,7 @@ int video_init(void)
 		fatalerror("tilemap_init failed");
 
 #ifdef USE_SCALE_EFFECTS
-	use_workbitmap = (scrformat[0] == TEXFORMAT_PALETTE16);
-	scale_depth = (scrformat[0] == TEXFORMAT_RGB15) ? 15 : 32;
-
-	if (scale_init())
-	{
-		logerror("WARNING: scale_effect \"%s\" has any problem\n", scale_effect.name);
-		logerror("WARNING: scale effect is disabled\n");
-		scale_effect.effect = 0;
-	}
-
-	if (scale_effect.effect)
-	{
-		if (scale_check(scale_depth))
-		{
-			logerror("WARNING: scale_effect \"%s\" does not support depth %d\n", scale_effect.name, scale_depth);
-			use_workbitmap = 1;
-			scale_depth = (scale_depth == 15) ? 32 : 15;
-			if (scale_check(scale_depth))
-			{
-				logerror("WARNING: scale_effect \"%s\" does not support both depth 15 and 32\n", scale_effect.name);
-				logerror("WARNING: scale effect is disabled\n");
-
-				scale_exit();
-				scale_effect.effect = 0;
-				scale_init();
-			}
-		}
-	}
+	video_init_scale_effect();
 #endif /* USE_SCALE_EFFECTS */
 
 	return 0;
@@ -394,8 +368,7 @@ static void video_exit(void)
 			render_texture_free(scrtexture[scrnum]);
 
 #ifdef USE_SCALE_EFFECTS
-	free_scalebitmap();
-	scale_exit();
+	video_exit_scale_effect();
 #endif /* USE_SCALE_EFFECTS */
 }
 #endif
@@ -952,7 +925,47 @@ static void recompute_fps(int skipped_it)
 
 
 #ifdef USE_SCALE_EFFECTS
-static void alloc_scalebitmap(void)
+void video_init_scale_effect(void)
+{
+	use_workbitmap = (scrformat[0] == TEXFORMAT_PALETTE16);
+	scale_depth = (scrformat[0] == TEXFORMAT_RGB15) ? 15 : 32;
+
+	if (scale_init())
+	{
+		logerror("WARNING: scale effect is disabled\n");
+		scale_effect.effect = 0;
+	}
+
+	if (scale_effect.effect)
+	{
+		if (scale_check(scale_depth))
+		{
+			int old_depth = scale_depth;
+
+			use_workbitmap = 1;
+			scale_depth = (scale_depth == 15) ? 32 : 15;
+			if (scale_check(scale_depth))
+			{
+				ui_popup(_("scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled."),
+					scale_desc(scale_effect.effect));
+
+				scale_exit();
+				scale_effect.effect = 0;
+				scale_init();
+			}
+			else
+				logerror("WARNING: scale_effect \"%s\" does not support depth %d, use depth %d\n", scale_desc(scale_effect.effect), old_depth, scale_depth);
+		}
+	}
+}
+
+void video_exit_scale_effect(void)
+{
+	free_scalebitmap();
+	scale_exit();
+}
+
+static void allocate_scalebitmap(void)
 {
 	int scrnum;
 
@@ -969,6 +982,8 @@ static void alloc_scalebitmap(void)
 
 			for (bank = 0; bank < 2; bank++)
 			{
+				scale_dirty[scrnum * MAX_SCREENS + bank] = 1;
+
 				scalebitmap[scrnum][bank] = bitmap_alloc_depth(
 					Machine->drv->screen[scrnum].maxwidth * scale_xsize,
 					Machine->drv->screen[scrnum].maxheight * scale_ysize,
@@ -994,14 +1009,29 @@ static void free_scalebitmap(void)
 	{
 		if (Machine->drv->screen[scrnum].tag != NULL)
 		{
+			rectangle visarea = Machine->visible_area[scrnum];
 			int bank;
+
+			visarea.max_x++;
+			visarea.max_y++;
+
+			render_texture_set_bitmap(scrtexture[scrnum], scrbitmap[scrnum][curbitmap[scrnum]], &visarea, &adjusted_palette[Machine->drv->screen[scrnum].palette_base], scrformat[scrnum]);
+
+			scrchanged[scrnum] &= ~UPDATE_HAS_NOT_CHANGED;
 
 			for (bank = 0; bank < 2; bank++)
 			{
 				if (scalebitmap[scrnum][bank])
+				{
 					bitmap_free(scalebitmap[scrnum][bank]);
+					scalebitmap[scrnum][bank] = NULL;
+				}
+
 				if (workbitmap[scrnum][bank])
+				{
 					bitmap_free(workbitmap[scrnum][bank]);
+					workbitmap[scrnum][bank] = NULL;
+				}
 			}
 		}
 	}
@@ -1083,13 +1113,10 @@ static void texture_set_scalebitmap(int scrnum, int curbank, rectangle *visarea)
 	mame_bitmap *dst;
 	int width = visarea->max_x - visarea->min_x;
 	int height = visarea->max_y - visarea->min_y;
-	int update = 0;
+	int scalebank = scrnum * MAX_SCREENS + curbank;
 
 	if (scale_xsize != scale_effect.xsize || scale_ysize != scale_effect.ysize)
-	{
-		alloc_scalebitmap();
-		update = 1;
-	}
+		allocate_scalebitmap();
 
 	dst = scalebitmap[scrnum][curbank];
 
@@ -1127,13 +1154,13 @@ static void texture_set_scalebitmap(int scrnum, int curbank, rectangle *visarea)
 	{
 		UINT32 *src32 = ((UINT32 *)target->line[visarea->min_y]) + visarea->min_x;
 		UINT32 *dst32 = ((UINT32 *)dst->line[visarea->min_y]) + visarea->min_x;
-		scale_perform_scale((UINT8 *)src32, (UINT8 *)dst32, target->rowbytes, dst->rowbytes, width, height, 32, update);
+		scale_perform_scale((UINT8 *)src32, (UINT8 *)dst32, target->rowbytes, dst->rowbytes, width, height, 32, scale_dirty[scalebank], scalebank);
 	}
 	else
 	{
 		UINT16 *src16 = ((UINT16 *)target->line[visarea->min_y]) + visarea->min_x;
 		UINT16 *dst16 = ((UINT16 *)dst->line[visarea->min_y]) + visarea->min_x;
-		scale_perform_scale((UINT8 *)src16, (UINT8 *)dst16, target->rowbytes, dst->rowbytes, width, height, 15, update);
+		scale_perform_scale((UINT8 *)src16, (UINT8 *)dst16, target->rowbytes, dst->rowbytes, width, height, 15, scale_dirty[scalebank], scalebank);
 	}
 
 	visarea->min_x *= scale_effect.xsize;

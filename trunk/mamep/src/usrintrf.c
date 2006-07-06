@@ -33,6 +33,11 @@ To do:
 #include "rendfont.h"
 #endif
 
+#ifdef USE_SCALE_EFFECTS
+#include "osdscale.h"
+#include "video.h"
+#endif /* USE_SCALE_EFFECTS */
+
 #ifdef MESS
 #include "mess.h"
 #include "mesintrf.h"
@@ -322,6 +327,9 @@ static UINT32 menu_command_contents(UINT32 state);
 static UINT32 menu_cheat(UINT32 state);
 static UINT32 menu_memory_card(UINT32 state);
 static UINT32 menu_video(UINT32 state);
+#ifdef USE_SCALE_EFFECTS
+static UINT32 menu_scale_effect(UINT32 state);
+#endif /* USE_SCALE_EFFECTS */
 static UINT32 menu_reset_game(UINT32 state);
 
 #ifndef MESS
@@ -2244,6 +2252,10 @@ do { \
 	ADD_MENU(UI_video, menu_video, 1000 << 16);
 #endif
 
+#ifdef USE_SCALE_EFFECTS
+	ADD_MENU(UI_scaleeffect, menu_scale_effect, scale_effect.effect);
+#endif /* USE_SCALE_EFFECTS */
+
 	/* add cheat menu */
 	if (options.cheat)
 		ADD_MENU(UI_cheat, menu_cheat, 1);
@@ -3883,6 +3895,59 @@ static UINT32 menu_video(UINT32 state)
 	return selected | (curtarget << 16);
 }
 #endif
+
+
+
+#ifdef USE_SCALE_EFFECTS
+/*************************************
+ *
+ *  Scale Effect menu
+ *
+ *************************************/
+
+static UINT32 menu_scale_effect(UINT32 state)
+{
+	ui_menu_item item_list[100];
+	int selected = state;
+	int menu_items = 0;
+
+	/* reset the menu */
+	memset(item_list, 0, sizeof(item_list));
+
+	item_list[0].text = _("None");
+
+	/* count up the targets, creating menu items for them */
+	for (menu_items = 1 ; menu_items < ARRAY_LENGTH(item_list); menu_items++)
+	{
+		const char *desc = scale_desc(menu_items);
+		if (desc == NULL)
+			break;
+
+		/* create a string for the item */
+		item_list[menu_items].text = desc;
+	}
+
+	/* add an item to return */
+	item_list[menu_items++].text = ui_getstring(UI_returntomain);
+
+	/* draw the menu */
+	ui_draw_menu(item_list, menu_items, selected);
+
+	/* handle the keys */
+	if (ui_menu_generic_keys(&selected, menu_items))
+		return selected;
+
+	/* handle actions */
+	if (input_ui_pressed(IPT_UI_SELECT))
+	{
+		video_exit_scale_effect();
+		scale_decode(scale_name(selected)); 
+		video_init_scale_effect();
+	}
+
+	return selected;
+}
+#endif /* USE_SCALE_EFFECTS */
 
 
 

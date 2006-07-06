@@ -78,11 +78,11 @@
 (dd) stretch video using the hardware
 (dd) ハードウェアを使用して画面を拡大
 
-# windows/video.c: 558 windows/videoold.c: 356
+# windows/video.c: 575 windows/videoold.c: 356
 (primary)
 (プライマリ)
 
-# windows/video.c: 359 windows/videoold.c: 648
+# windows/video.c: 364 windows/videoold.c: 648
 Average FPS: %f (%d frames)\n
 平均FPS: %f (%d フレーム)\n
 
@@ -546,7 +546,7 @@ SSEがサポートされています\n
 SSE2 supported\n
 SSE2がサポートされています\n
 
-# windows/video.c: 276 windows/videoold.c: 264
+# windows/video.c: 281 windows/videoold.c: 264
 SaI scale effect
 SaIスケールエフェクト
 
@@ -678,7 +678,7 @@ Usage:  MAME gamename [options]\n\n
 Using %s pre-scale effect\n
 プリスケールエフェクト %s を使用します\n
 
-# windows/winddold.c: 356
+# windows/video.c: 953 windows/winddold.c: 356
 Using %s scale effect\n
 スケールエフェクト %s を使用します\n
 
