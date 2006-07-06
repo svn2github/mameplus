@@ -101,6 +101,11 @@ enum
 	LOADSAVE_SAVE
 };
 
+#define SHORTCUT_MENU_CHEAT	1
+#ifdef CMD_LIST
+#define SHORTCUT_MENU_COMMAND	2
+#endif /* CMD_LIST */
+
 
 
 /*************************************
@@ -1954,19 +1959,11 @@ static void handle_keys(void)
 		ui_set_handler(ui_handler_menu, 0);
 
 	if (options.cheat && input_ui_pressed(IPT_UI_CHEAT))
-	{
-		ui_menu_stack_reset();
-		ui_menu_stack_push(menu_cheat, (1 << 31) | (1 << 30) | (1 << 8) | 1);
-		ui_set_handler(ui_handler_menu, 0);
-	}
+		ui_set_handler(ui_handler_menu, SHORTCUT_MENU_CHEAT);
 
 #ifdef CMD_LIST
 	if (input_ui_pressed(IPT_UI_COMMAND))
-	{
-		ui_menu_stack_reset();
-		ui_menu_stack_push(menu_command, 1 << 24);
-		ui_set_handler(ui_handler_menu, 0);
-	}
+		ui_set_handler(ui_handler_menu, SHORTCUT_MENU_COMMAND);
 #endif /* CMD_LIST */
 
 	/* if the on-screen display isn't up and the user has toggled it, turn it on */
@@ -2130,6 +2127,50 @@ static UINT32 ui_handler_startup(UINT32 state)
 
 static UINT32 ui_handler_menu(UINT32 state)
 {
+	if (state == SHORTCUT_MENU_CHEAT)
+	{
+		if (menu_handler != menu_cheat)
+			ui_menu_stack_reset();
+
+		if (((menu_state >> 31) & 1) == 0)
+			ui_menu_stack_reset();
+
+		/* if we have no menus stacked up, start with the cheat menu */
+		if (menu_handler == NULL)
+			ui_menu_stack_push(menu_cheat, (1 << 31) | (1 << 30) | (1 << 8) | 1);
+	}
+	else
+	{
+		if (menu_handler == menu_cheat)
+		{
+			if (((menu_state >> 31) & 1) != 0)
+				ui_menu_stack_reset();
+		}
+	}
+
+#ifdef CMD_LIST
+	if (state == SHORTCUT_MENU_COMMAND)
+	{
+		if (menu_handler != menu_command && menu_handler != menu_command_contents)
+			ui_menu_stack_reset();
+
+		if ((menu_state >> 24) == 0)
+			ui_menu_stack_reset();
+
+		/* if we have no menus stacked up, start with the command menu */
+		if (menu_handler == NULL)
+			ui_menu_stack_push(menu_command, 1 << 24);
+	}
+	else
+	{
+		if (menu_handler == menu_command || menu_handler == menu_command_contents)
+		{
+			if ((menu_state >> 24) != 0)
+				ui_menu_stack_reset();
+		}
+	}
+#endif /* CMD_LIST */
+
 	/* if we have no menus stacked up, start with the main menu */
 	if (menu_handler == NULL)
 		ui_menu_stack_push(menu_main, 0);
@@ -2138,10 +2179,24 @@ static UINT32 ui_handler_menu(UINT32 state)
 	menu_state = (*menu_handler)(menu_state);
 
 	/* if the menus are to be hidden, return a cancel here */
+	if (state == SHORTCUT_MENU_CHEAT)
+	{
+		if (input_ui_pressed(IPT_UI_CHEAT) || menu_handler == NULL)
+			return UI_HANDLER_CANCEL;
+	}
+	else
+#ifdef CMD_LIST
+	if (state == SHORTCUT_MENU_COMMAND)
+	{
+		if (input_ui_pressed(IPT_UI_COMMAND) || menu_handler == NULL)
+			return UI_HANDLER_CANCEL;
+	}
+	else
+#endif /* CMD_LIST */
 	if (input_ui_pressed(IPT_UI_CONFIGURE) || menu_handler == NULL)
 		return UI_HANDLER_CANCEL;
 
-	return 0;
+	return state;
 }
 
 
@@ -3494,10 +3549,6 @@ static UINT32 menu_command(UINT32 state)
 				selected = menu_items - 1;
 		}
 
-		/* close this menu by shortcut key */
-		if (shortcut && input_ui_pressed(IPT_UI_COMMAND))
-			return ui_menu_stack_pop();
-
 		/* handle actions */
 		if (input_ui_pressed(IPT_UI_SELECT))
 		{
@@ -3641,10 +3692,6 @@ static UINT32 menu_cheat(UINT32 state)
 
 	state = cheat_menu(state);
 	if ((state & ((1 << 8) - 1)) == 0)
-		return ui_menu_stack_pop();
-
-	/* close this menu by shortcut key */
-	if (shortcut && input_ui_pressed(IPT_UI_CHEAT))
 		return ui_menu_stack_pop();
 
 	return state;
