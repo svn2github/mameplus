@@ -281,6 +281,10 @@ extern const char *story_filename;
 #endif /* STORY_DATAFILE */
 extern const char *mameinfo_filename;
 
+#ifdef USE_SCALE_EFFECTS
+#include "osdscale.h"
+#endif /* USE_SCALE_EFFECTS */
+
 // in windows/winmain.c
 extern int main_(int argc, char **argv);
 
