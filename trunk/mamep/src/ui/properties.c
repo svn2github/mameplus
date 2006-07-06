@@ -2941,11 +2941,12 @@ static void ResetDataMap(void)
 
 #ifdef USE_SCALE_EFFECTS
 	g_nScaleEffectIndex = 0;
-	for (i = 0; scale_name(i); i++)
-	{
-		if (!mame_stricmp(pGameOpts->scale_effect, scale_name(i)))
-			g_nScaleEffectIndex = i;
-	}
+	if (pGameOpts->scale_effect)
+		for (i = 0; scale_name(i); i++)
+		{
+			if (!mame_stricmp(pGameOpts->scale_effect, scale_name(i)))
+				g_nScaleEffectIndex = i;
+		}
 #endif /* USE_SCALE_EFFECTS */
 
 	g_nPaddleIndex = 0;

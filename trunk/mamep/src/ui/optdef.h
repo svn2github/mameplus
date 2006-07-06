@@ -71,6 +71,9 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(bool,                 flipy)
 	DEFINE_OPT(brightness,           brightness)
 	DEFINE_OPT(brightness,           pause_brightness)
+#ifdef USE_SCALE_EFFECTS
+	DEFINE_OPT(string_allow_null,    scale_effect)
+#endif /* USE_SCALE_EFFECTS */
 
 // CORE VECTOR OPTIONS
 	DEFINE_OPT(bool,                 antialias)
@@ -208,11 +211,8 @@ START_OPT_FUNC_DRIVER
 
 	DEFINE_OPT(bool,                 hwstretch)
 
-	DEFINE_OPT(int_positive,    d3dversion)
+	DEFINE_OPT(int_positive,         d3dversion)
 	DEFINE_OPT(bool,                 filter)
-#ifdef USE_SCALE_EFFECTS
-	DEFINE_OPT(string_allow_null,    scale_effect)
-#endif /* USE_SCALE_EFFECTS */
 END_OPT_FUNC_DRIVER
 #endif
 

@@ -362,14 +362,14 @@ static void video_exit(void)
 {
 	int scrnum;
 
+#ifdef USE_SCALE_EFFECTS
+	video_exit_scale_effect();
+#endif /* USE_SCALE_EFFECTS */
+
 	/* free all the render textures */
 	for (scrnum = 0; scrnum < MAX_SCREENS; scrnum++)
 		if (Machine->drv->screen[scrnum].tag != NULL && scrtexture[scrnum] != NULL)
 			render_texture_free(scrtexture[scrnum]);
-
-#ifdef USE_SCALE_EFFECTS
-	video_exit_scale_effect();
-#endif /* USE_SCALE_EFFECTS */
 }
 #endif
 }
@@ -1168,7 +1168,7 @@ static void texture_set_scalebitmap(int scrnum, int curbank, rectangle *visarea)
 	visarea->min_y *= scale_effect.ysize;
 	visarea->max_y *= scale_effect.ysize;
 
-	render_texture_set_bitmap(scrtexture[scrnum], dst, visarea, NULL, (scale_depth == 32) ? TEXFORMAT_RGB32 : TEXFORMAT_RGB15);
+	//render_texture_set_bitmap(scrtexture[scrnum], dst, visarea, NULL, (scale_depth == 32) ? TEXFORMAT_RGB32 : TEXFORMAT_RGB15);
 }
 #endif /* USE_SCALE_EFFECTS */
 

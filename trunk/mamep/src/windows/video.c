@@ -277,10 +277,6 @@ const options_entry video_opts[] =
 	{ "d3dfilter",                "0",    OPTION_DEPRECATED, "(deprecated)" },
 #endif
 
-#ifdef USE_SCALE_EFFECTS
-	{ "scale_effect",             NULL,   0,                 "SaI scale effect" },
-#endif /* USE_SCALE_EFFECTS */
-
 	{ NULL }
 };
 

@@ -129,6 +129,9 @@ const options_entry config_opts[] =
 	{ "flipy",                    "0",    OPTION_BOOLEAN,    "flip screen upside-down" },
 	{ "brightness",               "1.0",  0,                 "brightness correction" },
 	{ "pause_brightness",         "1.0",  0,                 "additional pause brightness" },
+#ifdef USE_SCALE_EFFECTS
+	{ "scale_effect",             "none", 0,                 "SaI scale effect" },
+#endif /* USE_SCALE_EFFECTS */
 
 	// vector options
 	{ NULL,                       NULL,   OPTION_HEADER,     "CORE VECTOR OPTIONS" },
