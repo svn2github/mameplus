@@ -1,24 +1,24 @@
-# windows/input.c: 1700
+# windows/input.c: 1711
          all -- all axes on all joysticks are digital\n
          all -- 全てのジョイスティックの全ての軸をデジタルにします\n
 
-# windows/input.c: 1706
+# windows/input.c: 1717
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
          j1,j2a2 -- 全てのジョイスティック1の軸とジョイスティック2の軸2をデジタルにします\n
 
-# windows/input.c: 1704
+# windows/input.c: 1715
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
          j1a5a6 -- ジョイスティック1の軸5と6をデジタルにします\n
 
-# windows/input.c: 1701
+# windows/input.c: 1712
          j<N> -- all axes on joystick <N> are digital\n
          j<N> -- ジョイスティック<N>の全ての軸をデジタルにします\n
 
-# windows/input.c: 1702
+# windows/input.c: 1713
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
          j<N>a<M> -- ジョイスティック<N>の軸<M>をデジタルにします\n
 
-# windows/input.c: 1699
+# windows/input.c: 1710
          none -- no axes on any joysticks are digital\n
          none -- 全てのジョイスティックの軸をデジタルにしません\n
 
@@ -34,11 +34,11 @@
         MAME -showusage    for a brief list of options\n
         MAME -showusage    対応しているオプションの一覧を表\示します\n
 
-# windows/input.c: 1703
+# windows/input.c: 1714
     Multiple axes can be specified for one joystick:\n
     一つのジョイスティックの複数の軸を指定する事が出来ます:\n
 
-# windows/input.c: 1705
+# windows/input.c: 1716
     Multiple joysticks can be specified separated by commas:\n
     コンマで区切る事で複数のジョイスティック指定する事が出来ます:\n
 
@@ -46,7 +46,7 @@
  (%.2lfMB video memory available)
  (%.2lfMBのビデオメモリがあります)
 
-# windows/input.c: 2161
+# windows/input.c: 2163
  - digital
  - デジタル
 
@@ -62,7 +62,7 @@
 %d %s found, %d were OK.\n
 %d個の%sが見つかり、%d個は正常です。\n
 
-# windows/input.c: 2094
+# windows/input.c: 2096
 %s Button %d
 %s ボタン %d
 
@@ -78,11 +78,11 @@
 (dd) stretch video using the hardware
 (dd) ハードウェアを使用して画面を拡大
 
-# windows/video.c: 635 windows/videoold.c: 356
+# windows/video.c: 558 windows/videoold.c: 356
 (primary)
 (プライマリ)
 
-# windows/video.c: 350 windows/videoold.c: 648
+# windows/video.c: 359 windows/videoold.c: 648
 Average FPS: %f (%d frames)\n
 平均FPS: %f (%d フレーム)\n
 
@@ -126,7 +126,7 @@ Direct3D: エラー: RGBエフェクト (多重化モード)がサポートされていません\n
 Direct3D: Warning: using fall-back method for scanline blending.\n
 Direct3D: 警告: フォールバック手法を使用してスキャンラインを合成します。\n
 
-# windows/input.c: 1240
+# windows/input.c: 1242
 DirectInput: Using DirectInput %d\n
 DirectInput: DirectInput %dを使用します\n
 
@@ -322,7 +322,7 @@ Failed to open file for playback
 Failed to open file for recording
 入力を保存するファイルが作成できません
 
-# windows/input.c: 2681
+# windows/input.c: 2683
 Fast Forward
 早送り
 
@@ -346,75 +346,75 @@ Hardware stretching supported\n
 Initialising DirectDraw & Direct3D 7 blitter
 DirectDrawとDirect3D描画の初期化中
 
-# windows/input.c: 317
+# windows/input.c: 319
 Input device options
 入力デバイス設定
 
-# windows/input.c: 2161
+# windows/input.c: 2163
 Input:  Axis %d (%s)%s\n
 入力:  軸%d (%s)%s\n
 
-# windows/input.c: 2024
+# windows/input.c: 2026
 Input: %s: %s\n
 入力: %s: %s\n
 
-# windows/input.c: 934
+# windows/input.c: 936
 Input: Autoenabling joysticks due to presence of a %s\n
 入力: %sが存在するためジョイスティックを自動的に有効にします\n
 
-# windows/input.c: 941
+# windows/input.c: 943
 Input: Autoenabling lightguns due to presence of a %s\n
 入力: %sが存在するため光線銃を自動的に有効にします\n
 
-# windows/input.c: 927
+# windows/input.c: 929
 Input: Autoenabling mice due to presence of a %s\n
 入力: %sが存在するためマウスを自動的に有効にします\n
 
-# windows/input.c: 1969
+# windows/input.c: 1971
 Input: Joystick %d axis %d is now %s\n
 入力: ジョイスティック%d 軸%d は%sです\n
 
-# windows/input.c: 2145
+# windows/input.c: 2147
 Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 入力: ジョイスティック%d: %s (%d個の軸、%d個のボタン、%d個の視点)\n
 
-# windows/input.c: 1312
+# windows/input.c: 1314
 Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 入力: キーボード=%d  マウス=%d  ジョイスティック=%d  光線銃=%d\n
 
-# windows/input.c: 3252
+# windows/input.c: 3260
 Input: Using RAWMOUSE for Mouse input\n
 入力: マウスの入力にRAWMOUSEを使用します\n
 
-# windows/input.c: 1314
+# windows/input.c: 1316
 Input: \"%s\" controller support enabled\n
 入力: コントローラ「%s」のサポートが有効です\n
 
-# windows/input.c: 2166, 2199
+# windows/input.c: 2168, 2201
 J%d %s
 J%d %s
 
-# windows/input.c: 2175
+# windows/input.c: 2177
 J%d %s +
 J%d %s +
 
-# windows/input.c: 2171
+# windows/input.c: 2173
 J%d %s -
 J%d %s -
 
-# windows/input.c: 2220
+# windows/input.c: 2222
 J%d %s D
 J%d %s 下
 
-# windows/input.c: 2224
+# windows/input.c: 2226
 J%d %s L
 J%d %s 左
 
-# windows/input.c: 2228
+# windows/input.c: 2230
 J%d %s R
 J%d %s 右
 
-# windows/input.c: 2216
+# windows/input.c: 2218
 J%d %s U
 J%d %s 上
 
@@ -422,19 +422,19 @@ J%d %s 上
 KNOWN     %s\n
 判明      %s\n
 
-# windows/input.c: 325
+# windows/input.c: 327
 LED mode (ps/2|usb)
 LEDモード (ps/2|usb)
 
-# windows/input.c: 2133
+# windows/input.c: 2135
 Lightgun %d 
 光線銃 %d 
 
-# windows/input.c: 2516
+# windows/input.c: 2518
 Lightgun not supported in windowed mode
 ウインドウモードでは光線銃はサポートされません
 
-# windows/input.c: 2131
+# windows/input.c: 2133
 Lightgun on Mouse %d 
 マウス %d の光線銃
 
@@ -454,11 +454,11 @@ MMXがサポートされています\n
 Managed texture
 テクスチャ管理
 
-# windows/input.c: 2021
+# windows/input.c: 2023
 Mouse 
 マウス
 
-# windows/input.c: 2019
+# windows/input.c: 2021
 Mouse %d 
 マウス%d
 
@@ -546,7 +546,7 @@ SSEがサポートされています\n
 SSE2 supported\n
 SSE2がサポートされています\n
 
-# windows/videoold.c: 264
+# windows/video.c: 276 windows/videoold.c: 264
 SaI scale effect
 SaIスケールエフェクト
 
@@ -566,43 +566,43 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 サウンド: バッファ オーバフロー=%d アンダーフロー=%d\n
 
-# windows/input.c: 2073
+# windows/input.c: 2075
 Stick %d %s +
 スティック %d %s +
 
-# windows/input.c: 2066
+# windows/input.c: 2068
 Stick %d %s -
 スティック %d %s -
 
-# windows/input.c: 2075
+# windows/input.c: 2077
 Stick %s +
 スティック %s +
 
-# windows/input.c: 2068
+# windows/input.c: 2070
 Stick %s -
 スティック %s -
 
-# windows/input.c: 2039
+# windows/input.c: 2041
 Stick%sX+
 スティック%sX+
 
-# windows/input.c: 2037
+# windows/input.c: 2039
 Stick%sX-
 スティック%sX-
 
-# windows/input.c: 2043
+# windows/input.c: 2045
 Stick%sY+
 スティック%sY+
 
-# windows/input.c: 2041
+# windows/input.c: 2043
 Stick%sY-
 スティック%sY-
 
-# windows/input.c: 2047
+# windows/input.c: 2049
 Stick%sZ+
 スティック%sZ+
 
-# windows/input.c: 2045
+# windows/input.c: 2047
 Stick%sZ-
 スティック%sZ-
 
@@ -614,7 +614,7 @@ Texture
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
 これはドライバ「%s」に必要なROMのリストです。\n名前          サイズ チェックサム\n
 
-# windows/input.c: 2663
+# windows/input.c: 2665
 Toggle fullscreen
 フルスクリーン切り替え
 
@@ -642,7 +642,7 @@ Unable to blt scale_surface to texture_surface: %08x\n
 Unable to blt target_surface: %08x\n
 画面バッファに描画出来ません: %08x\n
 
-# windows/input.c: 2938, 2945
+# windows/input.c: 2946, 2953
 Unable to close the keyboard device. (error %d)\n
 キーボードディバイスがクローズ出来ません。(エラー %d)\n
 
@@ -658,7 +658,7 @@ Unable to lock blit_surface: %08x\n
 Unable to lock target_surface: %08x\n
 対象となる画面バッファがロック出来ません: %08x\n
 
-# windows/input.c: 2889, 2899
+# windows/input.c: 2897, 2907
 Unable to open the keyboard device. (error %d)\n
 キーボードディバイスがオープン出来ません。(エラー %d)\n
 
@@ -750,11 +750,11 @@ additional pause brightness
 all available info on driver in XML format
 存在する全てのドライバ情報をXML形式で出力
 
-# windows/input.c: 1967
+# windows/input.c: 1969
 analog
 アナログ
 
-# windows/input.c: 1248
+# windows/input.c: 1250
 analog joystick
 アナログジョイスティック
 
@@ -838,11 +838,11 @@ cursor color
 customised blitting effects preset
 エフェクト描画のプリセットをカスタマイズ
 
-# windows/input.c: 344, 1251
+# windows/input.c: 346, 1253
 dial
 ダイアル
 
-# windows/input.c: 307, 350, 1747, 1967
+# windows/input.c: 309, 352, 1756, 1969
 digital
 デジタル
 
@@ -894,31 +894,31 @@ driver sourcefile
 emulate win_old_scanlines
 スキャンラインエフェクトを有効
 
-# windows/input.c: 341
+# windows/input.c: 300, 343
 enable (keyboard|mouse|joystick) if a paddle control is present
 パドルが存在するときに有効 (keyboard|mouse|joystick)
 
-# windows/input.c: 344
+# windows/input.c: 346
 enable (keyboard|mouse|joystick|lightgun) if a dial control is present
 ダイアルが存在するときに有効 (keyboard|mouse|joystick)
 
-# windows/input.c: 346
+# windows/input.c: 348
 enable (keyboard|mouse|joystick|lightgun) if a lightgun control is present
 光線銃が存在するときに有効 (keyboard|mouse|joystick)
 
-# windows/input.c: 348
+# windows/input.c: 350
 enable (keyboard|mouse|joystick|lightgun) if a mouse control is present
 マウスが存在するときに有効 (keyboard|mouse|joystick)
 
-# windows/input.c: 343
+# windows/input.c: 345
 enable (keyboard|mouse|joystick|lightgun) if a pedal control is present
 ペダルが存在するときに有効 (keyboard|mouse|joystick)
 
-# windows/input.c: 345
+# windows/input.c: 347
 enable (keyboard|mouse|joystick|lightgun) if a trackball control is present
 トラックボールが存在するときに有効 (keyboard|mouse|joystick)
 
-# windows/input.c: 342
+# windows/input.c: 344
 enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is present
 アナログジョイスティックが存在するときに有効 (keyboard|mouse|joystick)
 
@@ -926,27 +926,27 @@ enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is prese
 enable bilinear filtering
 バイリニア補間を有効
 
-# windows/input.c: 267
+# windows/input.c: 269
 enable dual lightgun input
 デュアル光線銃を使用
 
-# windows/input.c: 265
+# windows/input.c: 267
 enable joystick input
 ジョイスティックを使用
 
-# windows/input.c: 270, 324
+# windows/input.c: 272, 326
 enable keyboard LED emulation
 キーボードLEDエミュレーションを有効
 
-# windows/input.c: 266
+# windows/input.c: 268
 enable lightgun input
 光線銃を使用
 
-# windows/input.c: 264, 318
+# windows/input.c: 266, 320
 enable mouse input
 マウスまたはトラックボールを使用
 
-# windows/input.c: 275, 329
+# windows/input.c: 277, 331
 enable pointing stick input
 スティック型マウスを使用
 
@@ -954,7 +954,7 @@ enable pointing stick input
 enable rotation of effects for rotated games
 回転したゲームに対してエフェクトの回転を有効
 
-# windows/input.c: 269, 323
+# windows/input.c: 271, 325
 enable steadykey support
 ボタンの同時押し認識を容易にする
 
@@ -1014,7 +1014,7 @@ font special color
 force specific zoom level
 拡大レベルを強制的に指定
 
-# windows/input.c: 1967
+# windows/input.c: 1969
 invalid
 不正
 
@@ -1038,7 +1038,7 @@ is good\n
 is missing optional files\n
 は不足しています(オプション)
 
-# windows/input.c: 320, 1249, 1619, 1714
+# windows/input.c: 322, 1251, 1630, 1725
 lightgun
 光線銃
 
@@ -1058,19 +1058,19 @@ loading %-12s\r
 loading %-32s\r
 読み込み中 %-32s\r
 
-# windows/input.c: 307, 350
+# windows/input.c: 309, 352
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 特定のジョイスティックや軸をデジタルに設定 (none|all|j<N>*|j<N>a<M>[,...])
 
-# windows/input.c: 272, 326
+# windows/input.c: 274, 328
 minimal analog value for digital input
 デジタル入力変換時のアナログ最小値
 
-# windows/input.c: 268, 322
+# windows/input.c: 270, 324
 offscreen shots reload
 画面外のショットを割り当てる
 
-# windows/input.c: 341, 1247
+# windows/input.c: 343, 1249
 paddle
 パドル
 
@@ -1082,7 +1082,7 @@ iniファイルへのパスを指定
 path to samplesets
 サンプルファイルへのパスを指定
 
-# windows/input.c: 343, 1250
+# windows/input.c: 345, 1252
 pedal
 ペダル
 
@@ -1090,7 +1090,7 @@ pedal
 playback an input file
 入力の再現するファイル名
 
-# windows/input.c: 273, 327
+# windows/input.c: 275, 329
 preconfigure for specified controller
 コントローラの指定
 
@@ -1154,35 +1154,35 @@ select translation language
 set audio latency (increase to reduce glitches)
 オーディオのレイテンシを指定
 
-# windows/input.c: 280, 332
+# windows/input.c: 282, 334
 set joystick ID (Player1)
 ジョイスティックIDを指定 (プレイヤー1)
 
-# windows/input.c: 281, 333
+# windows/input.c: 283, 335
 set joystick ID (Player2)
 ジョイスティックIDを指定 (プレイヤー2)
 
-# windows/input.c: 282, 334
+# windows/input.c: 284, 336
 set joystick ID (Player3)
 ジョイスティックIDを指定 (プレイヤー3)
 
-# windows/input.c: 283, 335
+# windows/input.c: 285, 337
 set joystick ID (Player4)
 ジョイスティックIDを指定 (プレイヤー4)
 
-# windows/input.c: 284, 336
+# windows/input.c: 286, 338
 set joystick ID (Player5)
 ジョイスティックIDを指定 (プレイヤー5)
 
-# windows/input.c: 285, 337
+# windows/input.c: 287, 339
 set joystick ID (Player6)
 ジョイスティックIDを指定 (プレイヤー6)
 
-# windows/input.c: 286, 338
+# windows/input.c: 288, 340
 set joystick ID (Player7)
 ジョイスティックIDを指定 (プレイヤー7)
 
-# windows/input.c: 287, 339
+# windows/input.c: 289, 341
 set joystick ID (Player8)
 ジョイスティックIDを指定 (プレイヤー8)
 
@@ -1230,7 +1230,7 @@ stretch to integer ratios
 switch color depths to best fit
 画面色数の変更を可能\にする
 
-# windows/input.c: 345, 1252
+# windows/input.c: 347, 1254
 trackball
 トラックボール
 

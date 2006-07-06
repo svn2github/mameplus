@@ -527,7 +527,7 @@ static void decode_graphics(const gfx_decode *gfxdecodeinfo)
 #ifdef NEW_RENDER
 {
 	char buffer[200];
-	sprintf(buffer, "Decoding (%d%%)", curgfx * 100 / totalgfx);
+	sprintf(buffer, _("Decoding (%d%%)"), curgfx * 100 / totalgfx);
 	ui_set_startup_text(buffer, FALSE);
 }
 #endif

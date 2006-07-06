@@ -384,9 +384,9 @@ static int display_loading_rom_message(const char *name, rom_load_data *romdata)
 	char buffer[200];
 
 	if (name != NULL)
-		sprintf(buffer, "Loading (%d%%)", 100 * romdata->romsloaded / romdata->romstotal);
+		sprintf(buffer, _("Loading (%d%%)"), 100 * romdata->romsloaded / romdata->romstotal);
 	else
-		sprintf(buffer, "Loading Complete");
+		sprintf(buffer, _("Loading Complete"));
 
 	ui_set_startup_text(buffer, FALSE);
 #endif

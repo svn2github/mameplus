@@ -452,8 +452,11 @@ int ui_init(void)
 			fatalerror("uistring_init failed");
 	}
 
-	// temporary
-	ui_set_visible_area(0, 0, 16, 16);
+	ui_set_visible_area(
+		Machine->drv->screen[0].default_visible_area.min_x,
+		Machine->drv->screen[0].default_visible_area.min_y,
+		Machine->drv->screen[0].default_visible_area.max_x,
+		Machine->drv->screen[0].default_visible_area.max_y);
 
 	{
 		int i;
@@ -4664,9 +4667,9 @@ static void handle_tilemap_keys(showgfx_state *state, int viswidth, int visheigh
 	if (state->tilemap.zoom != oldstate.tilemap.zoom)
 	{
 		if (state->tilemap.zoom != 0)
-			ui_popup("Zoom = %d", state->tilemap.zoom);
+			ui_popup(_("Zoom = %d"), state->tilemap.zoom);
 		else
-			ui_popup("Zoom Auto");
+			ui_popup(_("Zoom Auto"));
 	}
 
 	/* handle rotation (R) */
@@ -5436,7 +5439,7 @@ static UINT32 ui_handler_disclaimer(UINT32 state)
 		bufptr += sprintf(bufptr, "\n\n%s", ui_getstring(UI_copyright3));
 	}
 
-	ui_draw_message_window(giant_string_buffer);
+	ui_draw_message_window_scroll(giant_string_buffer);
 
 	res = ui_window_scroll_keys();
 	if (res == 0)
@@ -5550,7 +5553,7 @@ static UINT32 ui_handler_warnings(UINT32 state)
 		bufptr += sprintf(bufptr, "\n\n%s", ui_getstring(UI_typeok));
 	}
 
-	ui_draw_message_window(giant_string_buffer);
+	ui_draw_message_window_scroll(giant_string_buffer);
 
 	res = ui_window_scroll_keys();
 	if (res == 0)
@@ -5605,7 +5608,7 @@ static UINT32 ui_handler_gameinfo(UINT32 state)
 	}
 
 	/* draw the window */
-	ui_draw_message_window(giant_string_buffer);
+	ui_draw_message_window_scroll(giant_string_buffer);
 
 	res = ui_window_scroll_keys();
 

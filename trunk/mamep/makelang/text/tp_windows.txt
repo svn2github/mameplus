@@ -1,24 +1,24 @@
-# windows/input.c: 1700
+# windows/input.c: 1711
          all -- all axes on all joysticks are digital\n
 
 
-# windows/input.c: 1706
+# windows/input.c: 1717
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
 
 
-# windows/input.c: 1704
+# windows/input.c: 1715
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
 
 
-# windows/input.c: 1701
+# windows/input.c: 1712
          j<N> -- all axes on joystick <N> are digital\n
 
 
-# windows/input.c: 1702
+# windows/input.c: 1713
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
 
 
-# windows/input.c: 1699
+# windows/input.c: 1710
          none -- no axes on any joysticks are digital\n
 
 
@@ -34,11 +34,11 @@
         MAME -showusage    for a brief list of options\n
 
 
-# windows/input.c: 1703
+# windows/input.c: 1714
     Multiple axes can be specified for one joystick:\n
 
 
-# windows/input.c: 1705
+# windows/input.c: 1716
     Multiple joysticks can be specified separated by commas:\n
 
 
@@ -46,7 +46,7 @@
  (%.2lfMB video memory available)
 
 
-# windows/input.c: 2161
+# windows/input.c: 2163
  - digital
 
 
@@ -62,7 +62,7 @@
 %d %s found, %d were OK.\n
 
 
-# windows/input.c: 2094
+# windows/input.c: 2096
 %s Button %d
 
 
@@ -78,11 +78,11 @@
 (dd) stretch video using the hardware
 
 
-# windows/video.c: 635 windows/videoold.c: 356
+# windows/video.c: 558 windows/videoold.c: 356
 (primary)
 
 
-# windows/video.c: 350 windows/videoold.c: 648
+# windows/video.c: 359 windows/videoold.c: 648
 Average FPS: %f (%d frames)\n
 
 
@@ -126,7 +126,7 @@ Direct3D: Error: RGB effects (multiply mode) not supported\n
 Direct3D: Warning: using fall-back method for scanline blending.\n
 
 
-# windows/input.c: 1240
+# windows/input.c: 1242
 DirectInput: Using DirectInput %d\n
 
 
@@ -322,7 +322,7 @@ Failed to open file for playback
 Failed to open file for recording
 
 
-# windows/input.c: 2681
+# windows/input.c: 2683
 Fast Forward
 
 
@@ -346,75 +346,75 @@ Hardware stretching supported\n
 Initialising DirectDraw & Direct3D 7 blitter
 
 
-# windows/input.c: 317
+# windows/input.c: 319
 Input device options
 
 
-# windows/input.c: 2161
+# windows/input.c: 2163
 Input:  Axis %d (%s)%s\n
 
 
-# windows/input.c: 2024
+# windows/input.c: 2026
 Input: %s: %s\n
 
 
-# windows/input.c: 934
+# windows/input.c: 936
 Input: Autoenabling joysticks due to presence of a %s\n
 
 
-# windows/input.c: 941
+# windows/input.c: 943
 Input: Autoenabling lightguns due to presence of a %s\n
 
 
-# windows/input.c: 927
+# windows/input.c: 929
 Input: Autoenabling mice due to presence of a %s\n
 
 
-# windows/input.c: 1969
+# windows/input.c: 1971
 Input: Joystick %d axis %d is now %s\n
 
 
-# windows/input.c: 2145
+# windows/input.c: 2147
 Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 
 
-# windows/input.c: 1312
+# windows/input.c: 1314
 Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 
 
-# windows/input.c: 3252
+# windows/input.c: 3260
 Input: Using RAWMOUSE for Mouse input\n
 
 
-# windows/input.c: 1314
+# windows/input.c: 1316
 Input: \"%s\" controller support enabled\n
 
 
-# windows/input.c: 2166, 2199
+# windows/input.c: 2168, 2201
 J%d %s
 
 
-# windows/input.c: 2175
+# windows/input.c: 2177
 J%d %s +
 
 
-# windows/input.c: 2171
+# windows/input.c: 2173
 J%d %s -
 
 
-# windows/input.c: 2220
+# windows/input.c: 2222
 J%d %s D
 
 
-# windows/input.c: 2224
+# windows/input.c: 2226
 J%d %s L
 
 
-# windows/input.c: 2228
+# windows/input.c: 2230
 J%d %s R
 
 
-# windows/input.c: 2216
+# windows/input.c: 2218
 J%d %s U
 
 
@@ -422,19 +422,19 @@ J%d %s U
 KNOWN     %s\n
 
 
-# windows/input.c: 325
+# windows/input.c: 327
 LED mode (ps/2|usb)
 
 
-# windows/input.c: 2133
+# windows/input.c: 2135
 Lightgun %d 
 
 
-# windows/input.c: 2516
+# windows/input.c: 2518
 Lightgun not supported in windowed mode
 
 
-# windows/input.c: 2131
+# windows/input.c: 2133
 Lightgun on Mouse %d 
 
 
@@ -454,11 +454,11 @@ MMX supported\n
 Managed texture
 
 
-# windows/input.c: 2021
+# windows/input.c: 2023
 Mouse 
 
 
-# windows/input.c: 2019
+# windows/input.c: 2021
 Mouse %d 
 
 
@@ -546,7 +546,7 @@ SSE supported\n
 SSE2 supported\n
 
 
-# windows/videoold.c: 264
+# windows/video.c: 276 windows/videoold.c: 264
 SaI scale effect
 
 
@@ -566,43 +566,43 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 
 
-# windows/input.c: 2073
+# windows/input.c: 2075
 Stick %d %s +
 
 
-# windows/input.c: 2066
+# windows/input.c: 2068
 Stick %d %s -
 
 
-# windows/input.c: 2075
+# windows/input.c: 2077
 Stick %s +
 
 
-# windows/input.c: 2068
+# windows/input.c: 2070
 Stick %s -
 
 
-# windows/input.c: 2039
+# windows/input.c: 2041
 Stick%sX+
 
 
-# windows/input.c: 2037
+# windows/input.c: 2039
 Stick%sX-
 
 
-# windows/input.c: 2043
+# windows/input.c: 2045
 Stick%sY+
 
 
-# windows/input.c: 2041
+# windows/input.c: 2043
 Stick%sY-
 
 
-# windows/input.c: 2047
+# windows/input.c: 2049
 Stick%sZ+
 
 
-# windows/input.c: 2045
+# windows/input.c: 2047
 Stick%sZ-
 
 
@@ -614,7 +614,7 @@ Texture
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
 
 
-# windows/input.c: 2663
+# windows/input.c: 2665
 Toggle fullscreen
 
 
@@ -642,7 +642,7 @@ Unable to blt scale_surface to texture_surface: %08x\n
 Unable to blt target_surface: %08x\n
 
 
-# windows/input.c: 2938, 2945
+# windows/input.c: 2946, 2953
 Unable to close the keyboard device. (error %d)\n
 
 
@@ -658,7 +658,7 @@ Unable to lock blit_surface: %08x\n
 Unable to lock target_surface: %08x\n
 
 
-# windows/input.c: 2889, 2899
+# windows/input.c: 2897, 2907
 Unable to open the keyboard device. (error %d)\n
 
 
@@ -750,11 +750,11 @@ additional pause brightness
 all available info on driver in XML format
 
 
-# windows/input.c: 1967
+# windows/input.c: 1969
 analog
 
 
-# windows/input.c: 1248
+# windows/input.c: 1250
 analog joystick
 
 
@@ -838,11 +838,11 @@ cursor color
 customised blitting effects preset
 
 
-# windows/input.c: 344, 1251
+# windows/input.c: 346, 1253
 dial
 
 
-# windows/input.c: 307, 350, 1747, 1967
+# windows/input.c: 309, 352, 1756, 1969
 digital
 
 
@@ -894,31 +894,31 @@ driver sourcefile
 emulate win_old_scanlines
 
 
-# windows/input.c: 341
+# windows/input.c: 300, 343
 enable (keyboard|mouse|joystick) if a paddle control is present
 
 
-# windows/input.c: 344
+# windows/input.c: 346
 enable (keyboard|mouse|joystick|lightgun) if a dial control is present
 
 
-# windows/input.c: 346
+# windows/input.c: 348
 enable (keyboard|mouse|joystick|lightgun) if a lightgun control is present
 
 
-# windows/input.c: 348
+# windows/input.c: 350
 enable (keyboard|mouse|joystick|lightgun) if a mouse control is present
 
 
-# windows/input.c: 343
+# windows/input.c: 345
 enable (keyboard|mouse|joystick|lightgun) if a pedal control is present
 
 
-# windows/input.c: 345
+# windows/input.c: 347
 enable (keyboard|mouse|joystick|lightgun) if a trackball control is present
 
 
-# windows/input.c: 342
+# windows/input.c: 344
 enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is present
 
 
@@ -926,27 +926,27 @@ enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is prese
 enable bilinear filtering
 
 
-# windows/input.c: 267
+# windows/input.c: 269
 enable dual lightgun input
 
 
-# windows/input.c: 265
+# windows/input.c: 267
 enable joystick input
 
 
-# windows/input.c: 270, 324
+# windows/input.c: 272, 326
 enable keyboard LED emulation
 
 
-# windows/input.c: 266
+# windows/input.c: 268
 enable lightgun input
 
 
-# windows/input.c: 264, 318
+# windows/input.c: 266, 320
 enable mouse input
 
 
-# windows/input.c: 275, 329
+# windows/input.c: 277, 331
 enable pointing stick input
 
 
@@ -954,7 +954,7 @@ enable pointing stick input
 enable rotation of effects for rotated games
 
 
-# windows/input.c: 269, 323
+# windows/input.c: 271, 325
 enable steadykey support
 
 
@@ -1014,7 +1014,7 @@ font special color
 force specific zoom level
 
 
-# windows/input.c: 1967
+# windows/input.c: 1969
 invalid
 
 
@@ -1038,7 +1038,7 @@ is good\n
 is missing optional files\n
 
 
-# windows/input.c: 320, 1249, 1619, 1714
+# windows/input.c: 322, 1251, 1630, 1725
 lightgun
 
 
@@ -1058,19 +1058,19 @@ loading %-12s\r
 loading %-32s\r
 
 
-# windows/input.c: 307, 350
+# windows/input.c: 309, 352
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 
 
-# windows/input.c: 272, 326
+# windows/input.c: 274, 328
 minimal analog value for digital input
 
 
-# windows/input.c: 268, 322
+# windows/input.c: 270, 324
 offscreen shots reload
 
 
-# windows/input.c: 341, 1247
+# windows/input.c: 343, 1249
 paddle
 
 
@@ -1082,7 +1082,7 @@ path to ini files
 path to samplesets
 
 
-# windows/input.c: 343, 1250
+# windows/input.c: 345, 1252
 pedal
 
 
@@ -1090,7 +1090,7 @@ pedal
 playback an input file
 
 
-# windows/input.c: 273, 327
+# windows/input.c: 275, 329
 preconfigure for specified controller
 
 
@@ -1154,35 +1154,35 @@ select translation language
 set audio latency (increase to reduce glitches)
 
 
-# windows/input.c: 280, 332
+# windows/input.c: 282, 334
 set joystick ID (Player1)
 
 
-# windows/input.c: 281, 333
+# windows/input.c: 283, 335
 set joystick ID (Player2)
 
 
-# windows/input.c: 282, 334
+# windows/input.c: 284, 336
 set joystick ID (Player3)
 
 
-# windows/input.c: 283, 335
+# windows/input.c: 285, 337
 set joystick ID (Player4)
 
 
-# windows/input.c: 284, 336
+# windows/input.c: 286, 338
 set joystick ID (Player5)
 
 
-# windows/input.c: 285, 337
+# windows/input.c: 287, 339
 set joystick ID (Player6)
 
 
-# windows/input.c: 286, 338
+# windows/input.c: 288, 340
 set joystick ID (Player7)
 
 
-# windows/input.c: 287, 339
+# windows/input.c: 289, 341
 set joystick ID (Player8)
 
 
@@ -1230,7 +1230,7 @@ stretch to integer ratios
 switch color depths to best fit
 
 
-# windows/input.c: 345, 1252
+# windows/input.c: 347, 1254
 trackball
 
 
