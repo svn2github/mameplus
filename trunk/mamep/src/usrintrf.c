@@ -3688,8 +3688,6 @@ static UINT32 menu_command_contents(UINT32 state)
 
 static UINT32 menu_cheat(UINT32 state)
 {
-	int shortcut = (state >> 31) & 1;
-
 	state = cheat_menu(state);
 	if ((state & ((1 << 8) - 1)) == 0)
 		return ui_menu_stack_pop();
