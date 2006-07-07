@@ -1209,22 +1209,22 @@ int Picker_GetNumColumns(HWND hWnd)
 /* Add ... to Items in ListView if needed */
 static LPCTSTR MakeShortString(HDC hDC, LPCTSTR lpszLong, int nColumnLen, int nOffset)
 {
-	static TCHAR szThreeDots[4];
 	static TCHAR szShort[MAX_PATH];
+	static TCHAR szThreeDots[4];
 	int nStringLen = lstrlen(lpszLong);
 	int nAddLen;
 	SIZE size;
 	int i;
 
-	lstrcpy(szThreeDots, _Unicode("..."));
 	GetTextExtentPoint32(hDC, lpszLong, nStringLen, &size);
 	if (nStringLen == 0 || size.cx + nOffset <= nColumnLen)
 		return lpszLong;
 
-	lstrcpy(szShort, lpszLong);
-	GetTextExtentPoint32(hDC, szThreeDots, sizeof(szThreeDots), &size);
+	lstrcpy(szThreeDots, _Unicode("..."));
+	GetTextExtentPoint32(hDC, szThreeDots, lstrlen(szThreeDots), &size);
 	nAddLen = size.cx;
 
+	lstrcpy(szShort, lpszLong);
 	for (i = nStringLen - 1; i > 0; i--)
 	{
 		szShort[i] = 0;
