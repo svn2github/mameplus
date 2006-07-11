@@ -199,7 +199,6 @@ static int  g_nBrightCorrectIndex = 0;
 static int  g_nPauseBrightIndex = 0;
 static int  g_nBeamIndex       = 0;
 static int  g_nFlickerIndex    = 0;
-static int  g_nIntensityIndex  = 0;
 static int  g_nRotateIndex     = 0;
 static int  g_nScreenIndex     = 0;
 static int  g_nInputIndex      = 0;
@@ -304,7 +303,6 @@ static DWORD dwHelpIDs[] =
 	IDC_FRAMESKIP,          HIDC_FRAMESKIP,
 	IDC_HISTORY,            HIDC_HISTORY,
 	IDC_HWSTRETCH,          HIDC_HWSTRETCH,
-	IDC_INTENSITY,          HIDC_INTENSITY,
 	IDC_JOYSTICK,           HIDC_JOYSTICK,
 	IDC_KEEPASPECT,         HIDC_KEEPASPECT,
 	IDC_LEDS,               HIDC_LEDS,
@@ -2118,13 +2116,6 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 		Static_SetTextA(hCtrl, buf);
 	}
 
-	hCtrl = GetDlgItem(hWnd, IDC_INTENSITYDISP);
-	if (hCtrl)
-	{
-		sprintf(buf, "%03.2f", o->intensity);
-		Static_SetTextA(hCtrl, buf);
-	}
-
 	/* sound */
 	hCtrl = GetDlgItem(hWnd, IDC_VOLUMEDISP);
 	if (hCtrl)
@@ -2521,11 +2512,6 @@ static void AssignFlicker(HWND hWnd)
 	pGameOpts->flicker = g_nFlickerIndex;
 }
 
-static void AssignIntensity(HWND hWnd)
-{
-	pGameOpts->intensity = g_nIntensityIndex / 20.0 + 0.5;
-}
-
 static void AssignA2D(HWND hWnd)
 {
 	pGameOpts->a2d_deadzone = g_nA2DIndex / 20.0;
@@ -2821,7 +2807,6 @@ static void ResetDataMap(void)
 	g_nPauseBrightIndex     = (int)((pGameOpts->pause_brightness - 0.5) * 20.0 + 0.001);
 	g_nBeamIndex            = (int)((pGameOpts->beam             - 0.1) * 20.0 + 0.001);
 	g_nFlickerIndex         = (int)( pGameOpts->flicker);
-	g_nIntensityIndex       = (int)((pGameOpts->intensity        - 0.5) * 20.0 + 0.001);
 	g_nA2DIndex             = (int)( pGameOpts->a2d_deadzone            * 20.0 + 0.001);
 #ifdef TRANS_UI
 	g_nUITransparencyIndex  = (int)( pGameOpts->ui_transparency);
@@ -3079,8 +3064,6 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_BEAMDISP,      DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->beam,             0, 0, 0);
 	DataMapAdd(IDC_FLICKER,       DM_INT,  CT_SLIDER,   &g_nFlickerIndex,          DM_FLOAT, &pGameOpts->flicker,          0, 0, AssignFlicker);
 	DataMapAdd(IDC_FLICKERDISP,   DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->flicker,          0, 0, 0);
-	DataMapAdd(IDC_INTENSITY,     DM_INT,  CT_SLIDER,   &g_nIntensityIndex,        DM_FLOAT, &pGameOpts->intensity,        0, 0, AssignIntensity);	
-	DataMapAdd(IDC_INTENSITYDISP, DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->intensity,        0, 0, 0);
 
 	/* sound */
 	DataMapAdd(IDC_SAMPLERATE,    DM_INT,  CT_COMBOBOX, &g_nSampleRateIndex,       DM_INT,  &pGameOpts->samplerate,    0, 0, AssignSampleRate);
@@ -3322,10 +3305,6 @@ static void InitializeMisc(HWND hDlg)
 				(WPARAM)FALSE,
 				(LPARAM)MAKELONG(0, 80)); /* [0.00, 4.00] in .05 increments */
 
-	SendDlgItemMessage(hDlg, IDC_INTENSITY, TBM_SETRANGE,
-				(WPARAM)FALSE,
-				(LPARAM)MAKELONG(0, 50)); /* [0.50, 3.00] in .05 increments */
-
 	SendDlgItemMessage(hDlg, IDC_A2D, TBM_SETRANGE,
 				(WPARAM)FALSE,
 				(LPARAM)MAKELONG(0, 20)); /* [0.00, 1.00] in .05 increments */
@@ -3388,11 +3367,6 @@ static void OptOnHScroll(HWND hwnd, HWND hwndCtl, UINT code, int pos)
 	if (hwndCtl == GetDlgItem(hwnd, IDC_VOLUME))
 	{
 		VolumeSelectionChange(hwnd);
-	}
-	else
-	if (hwndCtl == GetDlgItem(hwnd, IDC_INTENSITY))
-	{
-		IntensitySelectionChange(hwnd);
 	}
 	else
 	if (hwndCtl == GetDlgItem(hwnd, IDC_A2D))
@@ -3501,23 +3475,6 @@ static void FullScreenGammaSelectionChange(HWND hwnd)
 	/* Set the static display to the new value */
 	snprintf(buf,sizeof(buf),"%03.2f", dGamma);
 	Static_SetTextA(GetDlgItem(hwnd, IDC_FSGAMMADISP), buf);
-}
-
-/* Handle changes to the Intensity slider */
-static void IntensitySelectionChange(HWND hwnd)
-{
-	char   buf[100];
-	UINT   nValue;
-	double dIntensity;
-
-	/* Get the current value of the control */
-	nValue = SendDlgItemMessage(hwnd, IDC_INTENSITY, TBM_GETPOS, 0, 0);
-
-	dIntensity = nValue / 20.0 + 0.5;
-
-	/* Set the static display to the new value */
-	snprintf(buf,sizeof(buf), "%03.2f", dIntensity);
-	Static_SetTextA(GetDlgItem(hwnd, IDC_INTENSITYDISP), buf);
 }
 
 /* Handle changes to the A2D slider */

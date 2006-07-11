@@ -949,12 +949,6 @@ BEGIN
                     TBS_NOTICKS | WS_TABSTOP,81,118,74,10,0,HIDC_FLICKER
     RTEXT           "100.00",IDC_FLICKERDISP,155,118,25,10,SS_CENTERIMAGE | 
                     NOT WS_GROUP
-    GROUPBOX        "Intensity",IDC_INTENSITYTEXT,75,137,110,28
-    CONTROL         "IntensitySlider",IDC_INTENSITY,"msctls_trackbar32",
-                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,81,149,74,10,0,
-                    HIDC_INTENSITY
-    RTEXT           "1.5",IDC_INTENSITYDISP,155,149,25,10,SS_CENTERIMAGE | 
-                    NOT WS_GROUP
     PUSHBUTTON      "Reset",IDC_PROP_RESET,4,225,117,14,0,0,HIDC_PROP_RESET
     PUSHBUTTON      "Restore Default Settings",IDC_USE_DEFAULT,138,225,117,14,
                     0,0,HIDC_USE_DEFAULT

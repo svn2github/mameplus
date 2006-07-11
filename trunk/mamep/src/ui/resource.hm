@@ -42,7 +42,6 @@
 #define HIDC_HIGH_PRIORITY              0x809e049e    // IDD_PROP_MISC [Englisch (USA)]
 #define HIDC_HISTORY                    0x806504cb    // IDD_MAIN [Englisch (USA)]
 #define HIDC_HWSTRETCH                  0x809c04dc    // IDD_PROP_ADVANCED [Englisch (USA)]
-#define HIDC_INTENSITY                  0x809f0428    // IDD_PROP_VECTOR [Englisch (USA)]
 #define HIDC_JOYSTICK                   0x809d03eb    // IDD_PROP_INPUT [Englisch (USA)]
 #define HIDC_JOY_GUI                    0x80ad0485    // IDD_INTERFACE_OPTIONS [Englisch (USA)]
 #define HIDC_KEEPASPECT                 0x809a0473    // IDD_PROP_DISPLAY [Englisch (USA)]

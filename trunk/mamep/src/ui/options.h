@@ -75,6 +75,8 @@ typedef struct
 	BOOL	flipx;
 	BOOL	flipy;
 	float	brightness;
+	float	contrast;	// todo: GUI
+	float	gamma;		// todo: GUI
 	float	pause_brightness;
 #ifdef USE_SCALE_EFFECTS
 	char*  scale_effect;
@@ -85,7 +87,6 @@ typedef struct
 	BOOL	antialias;
 	float	beam;
 	float	flicker;
-	float	intensity;
 //
 // CORE SOUND OPTIONS
 //
@@ -224,11 +225,17 @@ typedef struct
 	BOOL	triplebuffer;
 	BOOL	switchres;
 	int     prescale;
+	float	full_screen_brightness;	// todo: GUI
+	float	full_screen_contrast;	// todo: GUI
 	float	full_screen_gamma;
-
+//
+// DIRECTDRAW-SPECIFIC OPTIONS
+//
 	BOOL	hwstretch;
-
-	int		d3dversion;
+//
+// DIRECT3D-SPECIFIC OPTIONS
+//
+	int	d3dversion;
 	BOOL	filter;
 } options_type;
 

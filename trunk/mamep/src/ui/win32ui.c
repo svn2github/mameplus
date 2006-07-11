@@ -962,6 +962,8 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%striplebuffer",            pOpts->triplebuffer ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%sswitchres",               pOpts->switchres       ? "" : "no");
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -prescale %d",    pOpts->prescale);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -full_screen_brightness %f", pOpts->full_screen_brightness);
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -full_screen_contrast %f",   pOpts->full_screen_contrast);
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -full_screen_gamma %f",      pOpts->full_screen_gamma);
 
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -%shwstretch", pOpts->hwstretch   ? "" : "no");
@@ -1040,6 +1042,8 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 
 	/* core video */
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -brightness %f",             pOpts->brightness); 
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -contrast %f",               pOpts->contrast); 
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -gamma %f",                  pOpts->gamma); 
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -pause_brightness %f",       pOpts->pause_brightness); 
 	//if (pOpts->norotate)
 	//	sprintf(&pCmdLine[strlen(pCmdLine)], " -%snorotate",                pOpts->norotate ? "" : "no");
@@ -1068,7 +1072,6 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -%santialias",               pOpts->antialias       ? "" : "no");
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -beam %f",                   pOpts->beam);
 		sprintf(&pCmdLine[strlen(pCmdLine)], " -flicker %f",                pOpts->flicker);
-		sprintf(&pCmdLine[strlen(pCmdLine)], " -intensity %f",              pOpts->intensity);
 	}
 
 	/* sound */

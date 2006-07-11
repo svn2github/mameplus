@@ -136,7 +136,6 @@
 #define IDC_FLICKER                     1031
 #define IDC_FLIPX                       1032
 #define IDC_FLIPY                       1033
-#define IDC_INTENSITY                   1034
 #define IDC_DIRECTX_HELP                1035
 #define IDB_WEB_PAGE                    1036
 #define IDC_ROMS_PROGRESS               1037
@@ -155,7 +154,6 @@
 #define IDC_DIR_INSERT                  1050
 #define IDC_DIR_DELETE                  1051
 #define IDC_FLICKERTEXT                 1052
-#define IDC_INTENSITYTEXT               1053
 #define IDC_SSFRAME                     1054
 #define IDC_SSNONE                      1056
 #define IDC_SSPICTURE                   1057
@@ -188,7 +186,6 @@
 #define IDC_FSGAMMADISP                 1086
 #define IDC_BRIGHTCORRECTDISP           1087
 #define IDC_FLICKERDISP                 1088
-#define IDC_INTENSITYDISP               1089
 #define IDC_BEAMDISP                    1090
 #define IDC_AUTOFRAMESKIP               1091
 #define IDC_TREE                        1092

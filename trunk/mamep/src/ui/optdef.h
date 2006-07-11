@@ -70,7 +70,9 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(bool,                 flipx)
 	DEFINE_OPT(bool,                 flipy)
 	DEFINE_OPT(brightness,           brightness)
-	DEFINE_OPT(brightness,           pause_brightness)
+	DEFINE_OPT(contrast,             contrast)
+	DEFINE_OPT(gamma,                gamma)
+	DEFINE_OPT(pause_brightness,     pause_brightness)
 #ifdef USE_SCALE_EFFECTS
 	DEFINE_OPT(string_allow_null,    scale_effect)
 #endif /* USE_SCALE_EFFECTS */
@@ -79,7 +81,6 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(bool,                 antialias)
 	DEFINE_OPT(beam,                 beam)
 	DEFINE_OPT(flicker,              flicker)
-	DEFINE_OPT(intensity,            intensity)
 
 // CORE SOUND OPTIONS
 	DEFINE_OPT(bool,                 sound)
@@ -207,11 +208,15 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(bool,                 triplebuffer)
 	DEFINE_OPT(bool,                 switchres)
 	DEFINE_OPT(int_positive,         prescale)
-	DEFINE_OPT(full_screen_gamma,    full_screen_gamma)
+	DEFINE_OPT(brightness,           full_screen_brightness)
+	DEFINE_OPT(contrast,             full_screen_contrast)
+	DEFINE_OPT(gamma,                full_screen_gamma)
 
+// DIRECTDRAW-SPECIFIC OPTIONS
 	DEFINE_OPT(bool,                 hwstretch)
 
-	DEFINE_OPT(int_positive,         d3dversion)
+// DIRECT3D-SPECIFIC OPTIONS
+	DEFINE_OPT(d3dversion,           d3dversion)
 	DEFINE_OPT(bool,                 filter)
 END_OPT_FUNC_DRIVER
 #endif

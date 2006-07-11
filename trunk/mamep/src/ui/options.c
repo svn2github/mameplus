@@ -3946,7 +3946,7 @@ INLINE void options_set_ui_lines(const char *name, int value)
 
 //============================================================
 
-#define _options_get_brightness(p,name)	_options_get_float_min_max(p, name, 0.5, 2.0)
+#define _options_get_brightness(p,name)	_options_get_float_min_max(p, name, 0.1f, 2.0f)
 #define options_set_brightness		options_set_float
 #define options_copy_brightness		options_copy_float
 #define options_free_brightness		options_free_float
@@ -3956,7 +3956,37 @@ INLINE void options_set_ui_lines(const char *name, int value)
 
 //============================================================
 
-#define _options_get_beam(p,name)	_options_get_float_min_max(p, name, 0.1, 16.0)
+#define _options_get_contrast(p,name)	_options_get_float_min_max(p, name, 0.1f, 2.0f)
+#define options_set_contrast		options_set_float
+#define options_copy_contrast		options_copy_float
+#define options_free_contrast		options_free_float
+#define _options_compare_contrast	_options_compare_float
+#define options_compare_contrast	options_compare_float
+
+
+//============================================================
+
+#define _options_get_pause_brightness(p,name)	_options_get_float_min_max(p, name, 0.0f, 1.0f)
+#define options_set_pause_brightness		options_set_float
+#define options_copy_pause_brightness		options_copy_float
+#define options_free_pause_brightness		options_free_float
+#define _options_compare_pause_brightness	_options_compare_float
+#define options_compare_pause_brightness	options_compare_float
+
+
+//============================================================
+
+#define _options_get_gamma(p,name)	_options_get_float_min_max(p, name, 0.1f, 3.0f);
+#define options_set_gamma		options_set_float
+#define options_copy_gamma		options_copy_float
+#define options_free_gamma		options_free_float
+#define _options_compare_gamma	_options_compare_float
+#define options_compare_gamma	options_compare_float
+
+
+//============================================================
+
+#define _options_get_beam(p,name)	_options_get_float_min_max(p, name, 0.1f, 16.0f)
 #define options_set_beam		options_set_float
 #define options_copy_beam		options_copy_float
 #define options_free_beam		options_free_float
@@ -3966,22 +3996,12 @@ INLINE void options_set_ui_lines(const char *name, int value)
 
 //============================================================
 
-#define _options_get_flicker(p,name)	_options_get_float_min_max(p, name, 0.0, 100.0)
+#define _options_get_flicker(p,name)	_options_get_float_min_max(p, name, 0.0f, 100.0f)
 #define options_set_flicker		options_set_float
 #define options_copy_flicker		options_copy_float
 #define options_free_flicker		options_free_float
 #define _options_compare_flicker	_options_compare_float
 #define options_compare_flicker		options_compare_float
-
-
-//============================================================
-
-#define _options_get_intensity(p,name)	_options_get_float_min_max(p, name, 0.5, 3.0)
-#define options_set_intensity		options_set_float
-#define options_copy_intensity		options_copy_float
-#define options_free_intensity		options_free_float
-#define _options_compare_intensity	_options_compare_float
-#define options_compare_intensity	options_compare_float
 
 
 //============================================================
@@ -4225,16 +4245,6 @@ INLINE void _options_get_resolution(char **p, const char *name)
 #define options_free_numscreens		options_free_int
 #define _options_compare_numscreens	_options_compare_int
 #define options_compare_numscreens	options_compare_int
-
-
-//============================================================
-
-#define _options_get_full_screen_gamma(p,name)	_options_get_float_min_max(p, name, 0.0, 4.0)
-#define options_set_full_screen_gamma		options_set_float
-#define options_copy_full_screen_gamma		options_copy_float
-#define options_free_full_screen_gamma		options_free_float
-#define _options_compare_full_screen_gamma	_options_compare_float
-#define options_compare_full_screen_gamma	options_compare_float
 
 
 //============================================================
