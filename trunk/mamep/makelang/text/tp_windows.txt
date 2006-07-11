@@ -22,15 +22,15 @@
          none -- no axes on any joysticks are digital\n
 
 
-# windows/config.c: 693
+# windows/config.c: 683
         MAME -createconfig to create a mame.ini\n\n
 
 
-# windows/config.c: 692
+# windows/config.c: 682
         MAME -showconfig   for a list of configuration options\n
 
 
-# windows/config.c: 691
+# windows/config.c: 681
         MAME -showusage    for a brief list of options\n
 
 
@@ -78,11 +78,11 @@
 (dd) stretch video using the hardware
 
 
-# windows/video.c: 575 windows/videoold.c: 356
+# windows/video.c: 571 windows/videoold.c: 356
 (primary)
 
 
-# windows/video.c: 364 windows/videoold.c: 648
+# windows/video.c: 360 windows/videoold.c: 648
 Average FPS: %f (%d frames)\n
 
 
@@ -110,7 +110,7 @@ Blit surface created: %s\n
 Blitter initialisation complete (%.2lfMB video memory free)\n
 
 
-# windows/config.c: 225
+# windows/config.c: 229
 CRC-32s
 
 
@@ -314,11 +314,11 @@ Error: required texture size too large (max: %ix%i, need %ix%i)\n
 Failed to get monitor info
 
 
-# windows/config.c: 924
+# windows/config.c: 902
 Failed to open file for playback
 
 
-# windows/config.c: 958
+# windows/config.c: 936
 Failed to open file for recording
 
 
@@ -326,7 +326,7 @@ Failed to open file for recording
 Fast Forward
 
 
-# windows/config.c: 694
+# windows/config.c: 684
 For usage instructions, please consult the file windows.txt\n
 
 
@@ -438,7 +438,7 @@ Lightgun not supported in windowed mode
 Lightgun on Mouse %d 
 
 
-# windows/config.c: 687
+# windows/config.c: 677
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 
 
@@ -478,19 +478,19 @@ Name:     Description:\n
 Name:    Clone of:\n
 
 
-# windows/config.c: 276
+# windows/config.c: 266
 OSD bar color (dark)
 
 
-# windows/config.c: 277
+# windows/config.c: 267
 OSD bar color (default)
 
 
-# windows/config.c: 275
+# windows/config.c: 265
 OSD bar color (light)
 
 
-# windows/config.c: 274
+# windows/config.c: 264
 OSD bar color (medium)
 
 
@@ -546,7 +546,7 @@ SSE supported\n
 SSE2 supported\n
 
 
-# windows/video.c: 281 windows/videoold.c: 264
+# windows/config.c: 135 windows/videoold.c: 264
 SaI scale effect
 
 
@@ -670,7 +670,7 @@ Unable to render to back_surface: %08x\n
 Unable to render to preprocess texture: %08x\n
 
 
-# windows/config.c: 690
+# windows/config.c: 680
 Usage:  MAME gamename [options]\n\n
 
 
@@ -678,7 +678,7 @@ Usage:  MAME gamename [options]\n\n
 Using %s pre-scale effect\n
 
 
-# windows/video.c: 953 windows/winddold.c: 356
+# windows/video.c: 948 windows/winddold.c: 356
 Using %s scale effect\n
 
 
@@ -734,7 +734,7 @@ Windows Direct3D 2D video options
 \"%8s\" not supported!\n
 
 
-# windows/config.c: 475
+# windows/config.c: 465
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 
 
@@ -742,11 +742,11 @@ Windows Direct3D 2D video options
 additional customised settings (undocumented)
 
 
-# windows/config.c: 131
+# windows/config.c: 133
 additional pause brightness
 
 
-# windows/config.c: 220
+# windows/config.c: 224
 all available info on driver in XML format
 
 
@@ -762,55 +762,51 @@ analog joystick
 attempt to match the game's refresh rate
 
 
-# windows/config.c: 172
+# windows/config.c: 176
 automatic pause when playback is finished
 
 
-# windows/config.c: 130
-brightness correction
-
-
-# windows/config.c: 284
+# windows/config.c: 274
 button color (aqua)
 
 
-# windows/config.c: 281
+# windows/config.c: 271
 button color (blue)
 
 
-# windows/config.c: 280
+# windows/config.c: 270
 button color (green)
 
 
-# windows/config.c: 287
+# windows/config.c: 277
 button color (lime)
 
 
-# windows/config.c: 286
+# windows/config.c: 276
 button color (navy)
 
 
-# windows/config.c: 283
+# windows/config.c: 273
 button color (pink)
 
 
-# windows/config.c: 282
+# windows/config.c: 272
 button color (purple)
 
 
-# windows/config.c: 278
+# windows/config.c: 268
 button color (red)
 
 
-# windows/config.c: 285
+# windows/config.c: 275
 button color (silver)
 
 
-# windows/config.c: 279
+# windows/config.c: 269
 button color (yellow)
 
 
-# windows/config.c: 178
+# windows/config.c: 182
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 
 
@@ -818,19 +814,19 @@ change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 cheat filename
 
 
-# windows/config.c: 233
+# windows/config.c: 237
 compare files with known MAME roms
 
 
-# windows/config.c: 234
+# windows/config.c: 238
 compare files with known MAME roms (brief)
 
 
-# windows/config.c: 214
+# windows/config.c: 218
 create the default configuration file
 
 
-# windows/config.c: 288
+# windows/config.c: 278
 cursor color
 
 
@@ -878,7 +874,7 @@ directory to save nvram contents
 directory to save states
 
 
-# windows/config.c: 202
+# windows/config.c: 206
 display additional diagnostic information
 
 
@@ -886,7 +882,7 @@ display additional diagnostic information
 double
 
 
-# windows/config.c: 223
+# windows/config.c: 227
 driver sourcefile
 
 
@@ -958,11 +954,11 @@ enable rotation of effects for rotated games
 enable steadykey support
 
 
-# windows/config.c: 258
+# windows/config.c: 248
 enable/disable local language game list
 
 
-# windows/config.c: 147
+# windows/config.c: 151
 enable/disable volume auto adjust
 
 
@@ -978,11 +974,11 @@ error: invalid value for cleanstretch: %s\n
 error: invalid value for d3dprescale: %s\n
 
 
-# windows/config.c: 903
+# windows/config.c: 881
 error: invalid value for language: %s\nUse %s\n
 
 
-# windows/config.c: 995
+# windows/config.c: 973
 error: invalid value for palette: %s\n
 
 
@@ -998,15 +994,15 @@ flip screen left-right
 flip screen upside-down
 
 
-# windows/config.c: 267
+# windows/config.c: 257
 font blank color
 
 
-# windows/config.c: 268
+# windows/config.c: 258
 font normal color
 
 
-# windows/config.c: 269
+# windows/config.c: 259
 font special color
 
 
@@ -1018,7 +1014,7 @@ force specific zoom level
 invalid
 
 
-# windows/config.c: 166
+# windows/config.c: 170
 ips datfile name
 
 
@@ -1042,11 +1038,11 @@ is missing optional files\n
 lightgun
 
 
-# windows/config.c: 230
+# windows/config.c: 234
 list optional samples for a driver
 
 
-# windows/config.c: 229
+# windows/config.c: 233
 list required roms for a driver
 
 
@@ -1086,7 +1082,7 @@ path to samplesets
 pedal
 
 
-# windows/config.c: 193
+# windows/config.c: 197
 playback an input file
 
 
@@ -1098,19 +1094,19 @@ preconfigure for specified controller
 prescale effect
 
 
-# windows/config.c: 170
+# windows/config.c: 174
 quit game with confirmation
 
 
-# windows/config.c: 194
+# windows/config.c: 198
 record an input file
 
 
-# windows/config.c: 231
+# windows/config.c: 235
 report romsets that have problems
 
 
-# windows/config.c: 232
+# windows/config.c: 236
 report samplesets that have problems
 
 
@@ -1134,7 +1130,7 @@ sampleset %s
 samplesets
 
 
-# windows/config.c: 152
+# windows/config.c: 156
 save sound in wav file
 
 
@@ -1146,11 +1142,11 @@ scale effects surface created: %s\n
 scanline intensity
 
 
-# windows/config.c: 257
+# windows/config.c: 247
 select translation language
 
 
-# windows/config.c: 151
+# windows/config.c: 155
 set audio latency (increase to reduce glitches)
 
 
@@ -1190,11 +1186,11 @@ set joystick ID (Player8)
 set specific monitor refresh rate
 
 
-# windows/config.c: 222
+# windows/config.c: 226
 short name, full name
 
 
-# windows/config.c: 224
+# windows/config.c: 228
 show clones
 
 
@@ -1202,11 +1198,11 @@ show clones
 show help message
 
 
-# windows/config.c: 216
+# windows/config.c: 220
 show this help
 
 
-# windows/config.c: 142, 751 
+# windows/config.c: 146, 737 
 sound
 
 
@@ -1234,7 +1230,7 @@ switch color depths to best fit
 trackball
 
 
-# windows/config.c: 184
+# windows/config.c: 188
 transparency of UI background [0 - 255]
 
 
@@ -1246,27 +1242,27 @@ triple
 use DirectX texture management
 
 
-# windows/config.c: 183
+# windows/config.c: 187
 use transparent background for UI text
 
 
-# windows/config.c: 270
+# windows/config.c: 260
 window background color
 
 
-# windows/config.c: 273
+# windows/config.c: 263
 window frame color (dark)
 
 
-# windows/config.c: 272
+# windows/config.c: 262
 window frame color (light)
 
 
-# windows/config.c: 271
+# windows/config.c: 261
 window frame color (medium)
 
 
-# windows/config.c: 221
+# windows/config.c: 225
 year, manufacturer and full name
 
 

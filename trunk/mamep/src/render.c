@@ -4044,9 +4044,6 @@ static const char *xml_get_attribute_string_with_subst(xml_data_node *node, cons
 	if (str == NULL)
 		return defvalue;
 
-	if (mame_stricmp(attribute, "name") == 0)
-		str = _(str);
-
 	/* if no tildes, don't worry */
 	if (strchr(str, '~') == NULL)
 		return str;

@@ -437,7 +437,10 @@ sub ParseLayoutFiles
 		$lines++;
 		next unless /\<view\s+name\s*=\s*"([^"]+)"\>/i;
 
-		$found{$1} .= ", $lines";
+		$_ = $1;
+		s/~[^~]+~/%d/g;
+		s/\d+/%d/g;
+		$found{$_} .= ", $lines";
 	}
 
 	close(IN);

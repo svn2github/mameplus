@@ -22,15 +22,15 @@
          none -- no axes on any joysticks are digital\n
          none -- 全てのジョイスティックの軸をデジタルにしません\n
 
-# windows/config.c: 693
+# windows/config.c: 683
         MAME -createconfig to create a mame.ini\n\n
         MAME -createconfig 設定ファイルmame.iniを作成します\n
 
-# windows/config.c: 692
+# windows/config.c: 682
         MAME -showconfig   for a list of configuration options\n
         MAME -showconfig   設定オプションの一覧を表\示します\n
 
-# windows/config.c: 691
+# windows/config.c: 681
         MAME -showusage    for a brief list of options\n
         MAME -showusage    対応しているオプションの一覧を表\示します\n
 
@@ -78,11 +78,11 @@
 (dd) stretch video using the hardware
 (dd) ハードウェアを使用して画面を拡大
 
-# windows/video.c: 575 windows/videoold.c: 356
+# windows/video.c: 571 windows/videoold.c: 356
 (primary)
 (プライマリ)
 
-# windows/video.c: 364 windows/videoold.c: 648
+# windows/video.c: 360 windows/videoold.c: 648
 Average FPS: %f (%d frames)\n
 平均FPS: %f (%d フレーム)\n
 
@@ -110,7 +110,7 @@ Blit surface created: %s\n
 Blitter initialisation complete (%.2lfMB video memory free)\n
 描画の初期化が完了 (%.2lfMBのビデオメモリが残っています)\n
 
-# windows/config.c: 225
+# windows/config.c: 229
 CRC-32s
 CRC-32
 
@@ -314,11 +314,11 @@ Error: required texture size too large (max: %ix%i, need %ix%i)\n
 Failed to get monitor info
 モニタの情報の取得に失敗しました
 
-# windows/config.c: 924
+# windows/config.c: 902
 Failed to open file for playback
 再生ファイルが読み込めません
 
-# windows/config.c: 958
+# windows/config.c: 936
 Failed to open file for recording
 入力を保存するファイルが作成できません
 
@@ -326,7 +326,7 @@ Failed to open file for recording
 Fast Forward
 早送り
 
-# windows/config.c: 694
+# windows/config.c: 684
 For usage instructions, please consult the file windows.txt\n
 使い方の説明については、対応する windows.txt ファイルを参照して下さい\n
 
@@ -438,7 +438,7 @@ Lightgun not supported in windowed mode
 Lightgun on Mouse %d 
 マウス %d の光線銃
 
-# windows/config.c: 687
+# windows/config.c: 677
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 
@@ -478,19 +478,19 @@ Name:     Description:\n
 Name:    Clone of:\n
 名前:    クローン:\n
 
-# windows/config.c: 276
+# windows/config.c: 266
 OSD bar color (dark)
 OSD バー (暗)
 
-# windows/config.c: 277
+# windows/config.c: 267
 OSD bar color (default)
 OSD バー (デフォルト)
 
-# windows/config.c: 275
+# windows/config.c: 265
 OSD bar color (light)
 OSD バー (明)
 
-# windows/config.c: 274
+# windows/config.c: 264
 OSD bar color (medium)
 OSD バー
 
@@ -546,7 +546,7 @@ SSEがサポートされています\n
 SSE2 supported\n
 SSE2がサポートされています\n
 
-# windows/video.c: 281 windows/videoold.c: 264
+# windows/config.c: 135 windows/videoold.c: 264
 SaI scale effect
 SaIスケールエフェクト
 
@@ -670,7 +670,7 @@ back_surfaceに描画出来ません: %08x\n
 Unable to render to preprocess texture: %08x\n
 前処理用テクスチャに描画出来ません: %08x\n
 
-# windows/config.c: 690
+# windows/config.c: 680
 Usage:  MAME gamename [options]\n\n
 使用法:  MAME ゲーム名 [オプション]\n\n
 
@@ -678,7 +678,7 @@ Usage:  MAME gamename [options]\n\n
 Using %s pre-scale effect\n
 プリスケールエフェクト %s を使用します\n
 
-# windows/video.c: 953 windows/winddold.c: 356
+# windows/video.c: 948 windows/winddold.c: 356
 Using %s scale effect\n
 スケールエフェクト %s を使用します\n
 
@@ -734,7 +734,7 @@ Windows版：Direct3Dの2Dビデオ設定
 \"%8s\" not supported!\n
 「%8s」には対応していません!\n
 
-# windows/config.c: 475
+# windows/config.c: 465
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n「%s」に似たゲームは下記の通りです\nサポートされているゲーム (似ているもの順):\n\n
 
@@ -742,11 +742,11 @@ Windows版：Direct3Dの2Dビデオ設定
 additional customised settings (undocumented)
 付加的なカスタマイズ設定 (ドキュメントなし)
 
-# windows/config.c: 131
+# windows/config.c: 133
 additional pause brightness
 ポーズ時の明るさ
 
-# windows/config.c: 220
+# windows/config.c: 224
 all available info on driver in XML format
 存在する全てのドライバ情報をXML形式で出力
 
@@ -762,55 +762,51 @@ analog joystick
 attempt to match the game's refresh rate
 リフレッシュレートマッチを有効
 
-# windows/config.c: 172
+# windows/config.c: 176
 automatic pause when playback is finished
 再生終了時に自動停止
 
-# windows/config.c: 130
-brightness correction
-明るさ
-
-# windows/config.c: 284
+# windows/config.c: 274
 button color (aqua)
 ボタン (S 0r 7)
 
-# windows/config.c: 281
+# windows/config.c: 271
 button color (blue)
 ボタン (D or 4)
 
-# windows/config.c: 280
+# windows/config.c: 270
 button color (green)
 ボタン (C or 3)
 
-# windows/config.c: 287
+# windows/config.c: 277
 button color (lime)
 ボタン (10)
 
-# windows/config.c: 286
+# windows/config.c: 276
 button color (navy)
 ボタン (9)
 
-# windows/config.c: 283
+# windows/config.c: 273
 button color (pink)
 ボタン (P or 6)
 
-# windows/config.c: 282
+# windows/config.c: 272
 button color (purple)
 ボタン (K or 5)
 
-# windows/config.c: 278
+# windows/config.c: 268
 button color (red)
 ボタン (A or 1)
 
-# windows/config.c: 285
+# windows/config.c: 275
 button color (silver)
 ボタン (8)
 
-# windows/config.c: 279
+# windows/config.c: 269
 button color (yellow)
 ボタン (B or 2)
 
-# windows/config.c: 178
+# windows/config.c: 182
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 M68Kコアを変更 (0:C、1:DRC、2:ASM+DRC)
 
@@ -818,19 +814,19 @@ M68Kコアを変更 (0:C、1:DRC、2:ASM+DRC)
 cheat filename
 チートファイルの名前
 
-# windows/config.c: 233
+# windows/config.c: 237
 compare files with known MAME roms
 ファイルを既知のMAME romと比較する
 
-# windows/config.c: 234
+# windows/config.c: 238
 compare files with known MAME roms (brief)
 ファイルを既知のMAME romと比較する (大まかに)
 
-# windows/config.c: 214
+# windows/config.c: 218
 create the default configuration file
 デフォルト設定ファイルを作成
 
-# windows/config.c: 288
+# windows/config.c: 278
 cursor color
 カーソ\ル
 
@@ -878,7 +874,7 @@ NVRAMの内容を保存するパスを指定
 directory to save states
 ステートサーブデータを保存するパスを指定
 
-# windows/config.c: 202
+# windows/config.c: 206
 display additional diagnostic information
 起動時に診断用の情報を表\示
 
@@ -886,7 +882,7 @@ display additional diagnostic information
 double
 ダブル
 
-# windows/config.c: 223
+# windows/config.c: 227
 driver sourcefile
 ドライバのソ\ースファイル名を表\示
 
@@ -958,11 +954,11 @@ enable rotation of effects for rotated games
 enable steadykey support
 ボタンの同時押し認識を容易にする
 
-# windows/config.c: 258
+# windows/config.c: 248
 enable/disable local language game list
 ローカライズされたゲームリストを有効
 
-# windows/config.c: 147
+# windows/config.c: 151
 enable/disable volume auto adjust
 自動音量調整機能\を有効
 
@@ -978,11 +974,11 @@ error: invalid value for cleanstretch: %s\n
 error: invalid value for d3dprescale: %s\n
 エラー: 不正なd3dprescale指定: %s\n
 
-# windows/config.c: 903
+# windows/config.c: 881
 error: invalid value for language: %s\nUse %s\n
 エラー: 不正な言語指定: %s\n%sを使用します\n
 
-# windows/config.c: 995
+# windows/config.c: 973
 error: invalid value for palette: %s\n
 エラー: 不正なパレット指定: %s\n
 
@@ -998,15 +994,15 @@ flip screen left-right
 flip screen upside-down
 上下反転
 
-# windows/config.c: 267
+# windows/config.c: 257
 font blank color
 フォント (空白)
 
-# windows/config.c: 268
+# windows/config.c: 258
 font normal color
 フォント (通常)
 
-# windows/config.c: 269
+# windows/config.c: 259
 font special color
 フォント (特殊)
 
@@ -1018,7 +1014,7 @@ force specific zoom level
 invalid
 不正
 
-# windows/config.c: 166
+# windows/config.c: 170
 ips datfile name
 IPSデータファイル名
 
@@ -1042,11 +1038,11 @@ is missing optional files\n
 lightgun
 光線銃
 
-# windows/config.c: 230
+# windows/config.c: 234
 list optional samples for a driver
 ドライバの使用サンプルのリスト
 
-# windows/config.c: 229
+# windows/config.c: 233
 list required roms for a driver
 ドライバに必要なROMのリスト
 
@@ -1086,7 +1082,7 @@ path to samplesets
 pedal
 ペダル
 
-# windows/config.c: 193
+# windows/config.c: 197
 playback an input file
 入力の再現するファイル名
 
@@ -1098,19 +1094,19 @@ preconfigure for specified controller
 prescale effect
 プリスケールエフェクト
 
-# windows/config.c: 170
+# windows/config.c: 174
 quit game with confirmation
 ゲーム終了時に確認する
 
-# windows/config.c: 194
+# windows/config.c: 198
 record an input file
 入力を保存するファイル名
 
-# windows/config.c: 231
+# windows/config.c: 235
 report romsets that have problems
 問題のあるROMファイルを報告
 
-# windows/config.c: 232
+# windows/config.c: 236
 report samplesets that have problems
 問題のあるサンプルファイルを報告
 
@@ -1134,7 +1130,7 @@ sampleset %s
 samplesets
 サンプルセット
 
-# windows/config.c: 152
+# windows/config.c: 156
 save sound in wav file
 サウンドをWAVファイルに保存
 
@@ -1146,11 +1142,11 @@ scale effects surface created: %s\n
 scanline intensity
 スキャンラインの輝度
 
-# windows/config.c: 257
+# windows/config.c: 247
 select translation language
 使用する言語を選択
 
-# windows/config.c: 151
+# windows/config.c: 155
 set audio latency (increase to reduce glitches)
 オーディオのレイテンシを指定
 
@@ -1190,11 +1186,11 @@ set joystick ID (Player8)
 set specific monitor refresh rate
 リフレッシュレートを設定
 
-# windows/config.c: 222
+# windows/config.c: 226
 short name, full name
 ゲームディレクトリ名＋ゲームのフルネームを表\示
 
-# windows/config.c: 224
+# windows/config.c: 228
 show clones
 ゲームのクローン版を表\示
 
@@ -1202,11 +1198,11 @@ show clones
 show help message
 ヘルプの表\示
 
-# windows/config.c: 216
+# windows/config.c: 220
 show this help
 このヘルプを表\示
 
-# windows/config.c: 142, 751 
+# windows/config.c: 146, 737 
 sound
 音源
 
@@ -1234,7 +1230,7 @@ switch color depths to best fit
 trackball
 トラックボール
 
-# windows/config.c: 184
+# windows/config.c: 188
 transparency of UI background [0 - 255]
 UIの背景の透明度 [0 - 255]
 
@@ -1246,27 +1242,27 @@ triple
 use DirectX texture management
 DirectXのテクスチャ管理を使用
 
-# windows/config.c: 183
+# windows/config.c: 187
 use transparent background for UI text
 UIテキストの背景を半透明にする
 
-# windows/config.c: 270
+# windows/config.c: 260
 window background color
 ウィンドウ 背景色
 
-# windows/config.c: 273
+# windows/config.c: 263
 window frame color (dark)
 ウィンドウ フレーム (暗)
 
-# windows/config.c: 272
+# windows/config.c: 262
 window frame color (light)
 ウィンドウ フレーム (明)
 
-# windows/config.c: 271
+# windows/config.c: 261
 window frame color (medium)
 ウィンドウ フレーム
 
-# windows/config.c: 221
+# windows/config.c: 225
 year, manufacturer and full name
 サポートゲーム、製造年、メーカーのリストを表\示
 

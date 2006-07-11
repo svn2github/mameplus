@@ -3786,6 +3786,58 @@ static UINT32 menu_memory_card(UINT32 state)
  *************************************/
 
 #ifdef NEW_RENDER
+static const char *translate_view(const unsigned char *s)
+{
+	unsigned char *p = &menu_string_pool[menu_string_pool_offset];
+	const unsigned char *idx[8];
+	const unsigned char **pp;
+
+	pp = idx;
+	while (*s)
+	{
+		if (isdigit(*s))
+		{
+			*pp++ = s;
+
+			*p++ = '%';
+			*p++ = 'd';
+
+			for (s++; *s; s++)
+				if (!isdigit(*s))
+					break;
+		}
+		else
+			*p++ = *s++;
+	}
+	*p = '\0';
+
+	s = _(&menu_string_pool[menu_string_pool_offset]);
+	menu_string_pool_offset += strlen(s) + 1;
+
+	p = &menu_string_pool[menu_string_pool_offset];
+
+	pp = idx;
+	while (*s)
+	{
+		if (s[0] == '%' && s[1] == 'd')
+		{
+			s += 2;
+
+			while (isdigit(**pp))
+				*p++ = *(*pp)++;
+			pp++;
+		}
+		else
+			*p++ = *s++;
+	}
+	*p = '\0';
+
+	s = &menu_string_pool[menu_string_pool_offset];
+	menu_string_pool_offset += strlen(s) + 1;
+
+	return s;
+}
+
 static UINT32 menu_video(UINT32 state)
 {
 	ui_menu_item item_list[100];
@@ -3869,7 +3921,7 @@ static UINT32 menu_video(UINT32 state)
 				break;
 
 			/* create a string for the item */
-			item_list[menu_items].text = name;
+			item_list[menu_items].text = translate_view(name);
 		}
 
 		/* add an item to rotate */
