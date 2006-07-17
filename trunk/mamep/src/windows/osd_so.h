@@ -289,12 +289,7 @@ extern int (*osd_display_loading_rom_message_)(const char *name, rom_load_data *
 
 // in windows/*.c
 #include "options.h"
-extern const options_entry config_opts[];
-extern const options_entry language_opts[];
-extern const options_entry fileio_opts[];
-extern const options_entry video_opts[];
-extern const options_entry palette_opts[];
-extern const options_entry input_opts[];
+extern const options_entry windows_opts[];
 
 // in windows/input.c
 extern const int win_key_trans_table[][4];
