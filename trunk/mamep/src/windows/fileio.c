@@ -100,52 +100,6 @@ static osd_file openfile[MAX_OPEN_FILES];
 //  FILE PATH OPTIONS
 //============================================================
 
-const options_entry fileio_opts[] =
-{
-	{ NULL,                       NULL,       OPTION_HEADER,     "PATH AND DIRECTORY OPTIONS" },
-#ifndef MESS
-	{ "rompath;rp",               "roms",     0,                 "path to ROMsets and hard disk images" },
-#else
-	{ "biospath;bp",              "bios",     0,                 "path to BIOS sets" },
-	{ "softwarepath;swp",         "software", 0,                 "path to software" },
-	{ "hash_directory;hash",      "hash",     0,                 "path to hash files" },
-#endif
-	{ "samplepath;sp",            "samples",  0,                 "path to samplesets" },
-#ifdef __WIN32__
-	{ "inipath",                  "ini",    0,                   "path to ini files" },
-#else
-	{ "inipath",                  "$HOME/.mame;.;ini", 0,        "path to ini files" },
-#endif
-	{ "cfg_directory",            "cfg",      0,                 "directory to save configurations" },
-	{ "nvram_directory",          "nvram",    0,                 "directory to save nvram contents" },
-	{ "memcard_directory",        "memcard",  0,                 "directory to save memory card contents" },
-	{ "input_directory",          "inp",      0,                 "directory to save input device logs" },
-	{ "hiscore_directory",        "hi",       0,                 "directory to save hiscores" },
-	{ "state_directory",          "sta",      0,                 "directory to save states" },
-	{ "artwork_directory",        "artwork",  0,                 "path to artwork files" },
-	{ "snapshot_directory",       "snap",     0,                 "directory to save screenshots" },
-	{ "diff_directory",           "diff",     0,                 "directory to save hard drive image difference files" },
-	{ "ctrlr_directory",          "ctrlr",    0,                 "path to controller definitions" },
-	{ "comment_directory",        "comments", 0,                 "directory to save debugger comments" },
-#ifdef USE_IPS
-	{ "ips_directory",            "ips",      0,                 "directory for ips files" },
-#else /* USE_IPS */
-	{ "ips_directory",            "ips",      OPTION_DEPRECATED, "(disabled by compiling option)" },
-#endif /* USE_IPS */
-	{ "lang_directory",           "lang",     0,                 "directory for localized data files" },
-	{ "cheat_file",               "cheat.dat", 0,                "cheat filename" },
-	{ "history_file",             "history.dat", 0,              "history database name" },
-#ifdef STORY_DATAFILE
-	{ "story_file",               "story.dat", 0,                 "story database name" },
-#else /* STORY_DATAFILE */
-	{ "story_file",               "story.dat", OPTION_DEPRECATED, "(disabled by compiling option)" },
-#endif /* STORY_DATAFILE */
-	{ "mameinfo_file",            "mameinfo.dat", 0,              "mameinfo database name" },
-	{ "hiscore_file",             "hiscore.dat", 0,               "high score database name" },
-	{ NULL }
-};
-
-
 static const struct
 {
 	int	filetype;
@@ -162,7 +116,7 @@ static const struct
 #endif
 	{ FILETYPE_IMAGE_DIFF,	"diff_directory" },
 	{ FILETYPE_SAMPLE,		"samplepath" },
-	{ FILETYPE_ARTWORK,		"artwork_directory" },
+	{ FILETYPE_ARTWORK,		"artpath" },
 	{ FILETYPE_NVRAM,		"nvram_directory" },
 	{ FILETYPE_HIGHSCORE,	"hiscore_directory" },
 	{ FILETYPE_CONFIG,		"cfg_directory" },
@@ -171,7 +125,7 @@ static const struct
 	{ FILETYPE_MEMCARD,		"memcard_directory" },
 	{ FILETYPE_SCREENSHOT,	"snapshot_directory" },
 	{ FILETYPE_MOVIE,		"snapshot_directory" },
-	{ FILETYPE_CTRLR,		"ctrlr_directory" },
+	{ FILETYPE_CTRLR,		"ctrlrpath" },
 	{ FILETYPE_INI,			"inipath" },
 	{ FILETYPE_COMMENT,		"comment_directory" },
 #ifdef USE_IPS

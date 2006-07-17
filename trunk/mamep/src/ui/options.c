@@ -3178,12 +3178,7 @@ static void options_create_entry_core(void)
 {
 	options_set_datalist(NULL);
 
-	options_add_entries(fileio_opts);
-	options_add_entries(config_opts);
-	options_add_entries(input_opts);
-	options_add_entries(video_opts);
-	options_add_entries(palette_opts);
-	options_add_entries(language_opts);
+	options_add_entries(windows_opts);
 
 	options_core = options_get_datalist();
 }
@@ -3192,9 +3187,7 @@ static void options_create_entry_driver(void)
 {
 	options_set_datalist(NULL);
 
-	options_add_entries(config_opts);
-	options_add_entries(input_opts);
-	options_add_entries(video_opts);
+	options_add_entries(windows_opts);
 
 	options_driver = options_get_datalist();
 }

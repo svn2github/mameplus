@@ -166,7 +166,6 @@ static UINT8 win_d3d_flipy;
 // derived attributes
 static int video_attributes;
 static int needs_6bpp_per_gun;
-static int pixel_aspect_ratio;
 
 
 
@@ -587,7 +586,6 @@ int win_d3d_init(int width, int height, int depth, int attributes, double aspect
 
 		video_attributes = attributes;
 		needs_6bpp_per_gun	= ((attributes & VIDEO_NEEDS_6BITS_PER_GUN) != 0);
-		pixel_aspect_ratio	= (attributes & VIDEO_PIXEL_ASPECT_RATIO_MASK);
 	}
 	if (aspect)
 	{
@@ -779,22 +777,8 @@ static double compute_mode_score(int width, int height, int depth, int refresh)
 	// determine minimum requirements
 	target_width = max_width * effect_min_xscale;
 	target_height = max_height * effect_min_yscale;
-	if (pixel_aspect_ratio == VIDEO_PIXEL_ASPECT_RATIO_1_2)
-	{
-		if (!blit_swapxy)
-			target_height *= 2;
-		else
-			target_width *= 2;
-	}
-	else if (win_old_scanlines)
+	if (win_old_scanlines)
 		target_width *= 2, target_height *= 2;
-	if (pixel_aspect_ratio == VIDEO_PIXEL_ASPECT_RATIO_2_1)
-	{
-		if (!blit_swapxy)
-			target_width *= 2;
-		else
-			target_height *= 2;
-	}
 
 #ifdef USE_SCALE_EFFECTS
 	target_width *= win_d3d_swapxy ? scale_effect.ysize : scale_effect.xsize;

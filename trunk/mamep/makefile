@@ -545,11 +545,6 @@ clean:
 	@echo Deleting $(TOOLS)...
 	$(RM) $(TOOLS)
 
-check: $(EMULATOR) xml2info$(EXE)
-	./$(EMULATOR) -listxml > $(NAME).xml
-	./xml2info < $(NAME).xml > $(NAME).lst
-	./xmllint --valid --noout $(NAME).xml
-
 
 
 #-------------------------------------------------
@@ -612,14 +607,20 @@ else
 endif
 
 file2str$(EXE): $(OBJ)/file2str.o $(OSDBGOBJS)
+	@echo Linking $@...
+	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $^ $(LIBS) -o $@
 
 romcmp$(EXE): $(OBJ)/romcmp.o $(OBJ)/unzip.o $(OBJ)/mamecore.o $(OBJ)/ui_lang.o $(VCOBJS) $(ZLIB) $(OSDBGOBJS)
+	@echo Linking $@...
+	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $^ $(LIBS) -o $@
 
 chdman$(EXE): $(OBJ)/chdman.o $(OBJ)/chd.o $(OBJ)/chdcd.o $(OBJ)/cdrom.o $(OBJ)/md5.o $(OBJ)/sha1.o $(OBJ)/version.o $(ZLIB) $(OSTOOLOBJS) $(OSDBGOBJS)
-
-xml2info$(EXE): $(OBJ)/xml2info.o $(EXPAT) $(ZLIB) $(OSDBGOBJS)
+	@echo Linking $@...
+	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $^ $(LIBS) -o $@
 
 jedutil$(EXE): $(OBJ)/jedutil.o $(OBJ)/jedparse.o $(OSDBGOBJS)
+	@echo Linking $@...
+	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $^ $(LIBS) -o $@
 
 
 

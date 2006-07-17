@@ -220,12 +220,7 @@ extern SHAREDOBJ_FUNCPTR(int)  (*osd_display_loading_rom_message_)(const char *n
 extern SHAREDOBJ_FUNC(void)    set_pathlist(int file_type, const char *new_rawpath);
 
 // in windows/*.c
-extern SHAREDOBJ_DATA const options_entry config_opts[];
-extern SHAREDOBJ_DATA const options_entry language_opts[];
-extern SHAREDOBJ_DATA const options_entry fileio_opts[];
-extern SHAREDOBJ_DATA const options_entry video_opts[];
-extern SHAREDOBJ_DATA const options_entry palette_opts[];
-extern SHAREDOBJ_DATA const options_entry input_opts[];
+extern SHAREDOBJ_DATA const options_entry windows_opts[];
 
 #ifdef MALLOC_DEBUG
 // in windows/winalloc.c
