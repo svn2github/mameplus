@@ -5302,6 +5302,33 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( syscheck )	/* FFFF (c) 2004 Blastar */
 	DRIVER( frogfest )	/* 0202 (c) 2005 Rastersoft */
 
+/* new */
+DRIVER( ltorb1 )
+DRIVER( neodemo )
+DRIVER( fr2ch )
+DRIVER( cnbe )
+DRIVER( ngem2k )
+DRIVER( neo2500 )
+/* new Decrypted */
+/*
+DRIVER( ct2k3ad )
+DRIVER( cthd2k3d )
+DRIVER( kof10thd )
+DRIVER( kof2003d )
+DRIVER( mslug5d )
+DRIVER( samsho5d )
+DRIVER( samsh5sd )
+DRIVER( lans2k4d )
+DRIVER( svcd )
+DRIVER( jckeygpd )
+DRIVER( kf2k3pcd )
+DRIVER( kogd )
+DRIVER( pnyaad )
+*/
+/* new Bootleg */
+DRIVER( kof97pla )
+DRIVER( mslug5b )
+	
 	/* Hyper NeoGeo 64 uses a 3 digit rom code? */
 
  	DRIVER( hng64 )
