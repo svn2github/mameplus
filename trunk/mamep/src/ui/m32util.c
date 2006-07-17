@@ -542,7 +542,7 @@ int DriverParentIndex(int driver_index)
 }
 
 #ifdef USE_IPS
-int HasPatch(const char *game_name, const char *patch_name)
+int GetPatchCount(const char *game_name, const char *patch_name)
 {
 	int Count = 0;
 
@@ -569,7 +569,7 @@ int HasPatch(const char *game_name, const char *patch_name)
 	return Count;
 }
 
-int GetPatchName(char *patch_name, const char *game_name, const int patch_index)
+int GetPatchFilename(char *patch_name, const char *game_name, const int patch_index)
 {
 	struct _finddata_t c_file;
 	long hFile;

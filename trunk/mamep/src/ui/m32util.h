@@ -53,8 +53,8 @@ BOOL DriverHasM68K(int driver_index);
 int DriverParentIndex(int driver_index);
 
 #ifdef USE_IPS
-int HasPatch(const char *game_name, const char *patch_name);
-int GetPatchName(char *patch_name, const char *game_name, const int patch_index);
+int GetPatchCount(const char *game_name, const char *patch_name);
+int GetPatchFilename(char *patch_name, const char *game_name, const int patch_index);
 LPWSTR GetPatchDesc(const char *game_name, const char *patch_name);
 #endif /* USE_IPS */
 

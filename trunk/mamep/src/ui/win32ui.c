@@ -219,7 +219,7 @@ int MIN_HEIGHT = DBU_MIN_HEIGHT;
 #define MAX_BGFILES 100
 
 #ifdef USE_IPS
-#define MAX_PATCHES 64
+#define MAX_PATCHES 128
 #define MAX_PATCHNAME 64
 #endif /* USE_IPS */
 
@@ -2719,7 +2719,7 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 		}
 
 		i = (int)(LOWORD(wParam)) - ID_PLAY_PATCH;
-		if (i >= 0 && i < MAX_PATCHES && GetPatchName(patch_name, drivers[Picker_GetSelectedItem(hwndList)]->name, i))
+		if (i >= 0 && i < MAX_PATCHES && GetPatchFilename(patch_name, drivers[Picker_GetSelectedItem(hwndList)]->name, i))
 		{
 			FreeIfAllocated(&g_IPSMenuSelectName);
 			g_IPSMenuSelectName = mame_strdup(patch_name);
@@ -3719,10 +3719,15 @@ static void UpdateHistory(void)
 	if (GetSelectedPick() >= 0)
 	{
 		LPCWSTR histText;
-
+		
 #ifdef USE_IPS
 		if (g_IPSMenuSelectName)
+		{
+			WCHAR *p = NULL;
 			histText = GetPatchDesc(drivers[Picker_GetSelectedItem(hwndList)]->name, g_IPSMenuSelectName);
+			if((p = wcschr(histText,'/')))	// no category
+				histText = p + 1;
+		}
 		else
 #endif /* USE_IPS */
 #ifdef STORY_DATAFILE
@@ -4057,6 +4062,23 @@ char* ConvertAmpersandString(const char *s)
 
 	static char buf[200];
 	char *ptr;
+
+	ptr = buf;
+	while (*s)
+	{
+		if (*s == '&')
+			*ptr++ = *s;
+		*ptr++ = *s++;
+	}
+	*ptr = 0;
+
+	return buf;
+}
+
+LPWSTR ConvertAmpersandStringW(LPCWSTR s)
+{
+	static WCHAR buf[200];
+	LPWSTR ptr;
 
 	ptr = buf;
 	while (*s)
@@ -4728,9 +4750,9 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 	if ((id >= ID_PLAY_PATCH) && (id < ID_PLAY_PATCH + MAX_PATCHES))
 	{
 		int  nGame = Picker_GetSelectedItem(hwndList);
-		char patch_name[MAX_PATCHNAME];
+		char patch_filename[MAX_PATCHNAME];
 
-		if (GetPatchName(patch_name, drivers[nGame]->name, id-ID_PLAY_PATCH))
+		if (GetPatchFilename(patch_filename, drivers[nGame]->name, id-ID_PLAY_PATCH))
 		{
 			options_type* pOpts = GetGameOptions(nGame);
 			static char new_opt[MAX_PATCHNAME * MAX_PATCHES];
@@ -4747,10 +4769,10 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 
 				while (token)
 				{
-					if (!strcmp(patch_name, token))
+					if (!strcmp(patch_filename, token))
 					{
 						dprintf("dup!");
-						patch_name[0] = '\0';
+						patch_filename[0] = '\0';
 					}
 					else
 					{
@@ -4765,18 +4787,17 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 				free(temp);
 			}
 
-			if (patch_name[0] != '\0')
+			if (patch_filename[0] != '\0')
 			{
 				if (new_opt[0] != '\0')
 					strcat(new_opt, ",");
-				strcat(new_opt, patch_name);
+				strcat(new_opt, patch_filename);
 			}
 
 			FreeIfAllocated(&pOpts->ips);
 			if (new_opt[0] != '\0')
 				pOpts->ips = mame_strdup(new_opt);
 
-			dprintf("%s / %s | %d", patch_name, pOpts->ips, strlen(new_opt));
 			SaveGameOptions(nGame);
 		}
 		return TRUE;
@@ -6756,6 +6777,7 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 {
 	HMENU hMenuLoad;
 	HMENU hMenu;
+	HMENU hSubMenu = NULL;
 	
 	TPMPARAMS tpmp;
 	ZeroMemory(&tpmp,sizeof(tpmp));
@@ -6773,40 +6795,73 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 	{
 		int  nGame = Picker_GetSelectedItem(hwndList);
 		options_type* pOpts = GetGameOptions(nGame);
-		int  patch_count = HasPatch(drivers[nGame]->name, "*");
-		char patch_name[MAX_PATCHNAME];
-		char buf[MAX_PATCHNAME * MAX_PATCHES];
-		char *token;
+		int  patch_count = GetPatchCount(drivers[nGame]->name, "*");
 		int  i;
+		
+		WCHAR patch_category[128];
+		char patch_filename[MAX_PATCHNAME];
+		WCHAR wbuf[MAX_PATCHNAME * MAX_PATCHES];
+		char buf[MAX_PATCHNAME * MAX_PATCHES];
+		WCHAR *wp = NULL;
+		char *p = NULL;
 
 		if (patch_count > MAX_PATCHES)
 			patch_count = MAX_PATCHES;
 
 		while (patch_count--)
 		{
-			if (GetPatchName(patch_name, drivers[nGame]->name, patch_count))
+			if (GetPatchFilename(patch_filename, drivers[nGame]->name, patch_count))
 			{
-				LPWSTR patch_desc = GetPatchDesc(drivers[nGame]->name, patch_name);
+				LPWSTR patch_desc = GetPatchDesc(drivers[nGame]->name, patch_filename);
 
 				if (patch_desc && patch_desc[0])
-					snprintf(buf, ARRAY_LENGTH(buf), "   %s", strtok(_String(patch_desc), "\r\n"));
+					//has lang specific ips desc, get the first line as display name
+					snwprintf(wbuf, ARRAY_LENGTH(wbuf), _Unicode("   %s"), wcstok(patch_desc, _Unicode("\r\n")));
 				else
-					snprintf(buf, ARRAY_LENGTH(buf), "   %s", patch_name);
+					//otherwise, use .dat filename instead
+					snwprintf(wbuf, ARRAY_LENGTH(wbuf), _Unicode("   %s"), _Unicode(patch_filename));
 
-				InsertMenu(hMenu, 1, MF_BYPOSITION, ID_PLAY_PATCH + patch_count, _Unicode(ConvertAmpersandString(buf)));
+				// patch_count--, add menu items in reversed order
+				if(!(wp = wcschr(wbuf,'/')))	// no category
+					InsertMenu(hMenu, 1, MF_BYPOSITION, ID_PLAY_PATCH + patch_count, ConvertAmpersandStringW(wbuf));
+				else	// has category
+				{
+					*wp = '\0';
+					
+					for (i=1; i<GetMenuItemCount(hMenu); i++)	// do not create submenu if exists
+					{
+						hSubMenu = GetSubMenu(hMenu, i);
+						if (hSubMenu)
+						{
+							GetMenuString(hMenu, i, patch_category, 127, MF_BYPOSITION);
+							if (!wcscmp(patch_category, wbuf))
+								break;
+							hSubMenu = NULL;
+						}
+					}
+					
+					if(!hSubMenu)
+					{
+						hSubMenu = CreateMenu();
+						InsertMenu(hSubMenu, 0, MF_BYPOSITION, ID_PLAY_PATCH + patch_count, ConvertAmpersandStringW(wp + 1));
+						InsertMenu(hMenu, 1, MF_BYPOSITION | MF_POPUP, (UINT)hSubMenu, ConvertAmpersandStringW(wbuf));
+					}
+					else
+						InsertMenu(hSubMenu, 0, MF_BYPOSITION, ID_PLAY_PATCH + patch_count, ConvertAmpersandStringW(wp + 1));
+				}
 
 				if (pOpts->ips != NULL)
 				{
 					strcpy(buf, pOpts->ips);
-					token = strtok(buf, ",");
-					for (i = 0; i < MAX_PATCHES && token; i++)
+					p = strtok(buf, ",");
+					for (i = 0; i < MAX_PATCHES && p; i++)
 					{
-						if (!strcmp(patch_name, token))
+						if (!strcmp(patch_filename, p))
 						{
 							CheckMenuItem(hMenu,ID_PLAY_PATCH + patch_count, MF_BYCOMMAND | MF_CHECKED);
 							break;
 						}
-						token = strtok(NULL, ",");
+						p = strtok(NULL, ",");
 					}
 				}
 			}
