@@ -921,11 +921,11 @@ static void CreateCommandLine(int nGameIndex, char* pCmdLine)
 
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -hiscore_directory \"%s\"",  GetHiDir());
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -state_directory \"%s\"",    GetStateDir());
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -artwork_directory \"%s\"",  GetArtDir());
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -artpath \"%s\"",  GetArtDir());
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -snapshot_directory \"%s\"", GetImgDir());
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -diff_directory \"%s\"",     GetDiffDir());
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -cheat_file \"%s\"",         GetCheatFile());
-	sprintf(&pCmdLine[strlen(pCmdLine)], " -ctrlr_directory \"%s\"",    GetCtrlrDir());
+	sprintf(&pCmdLine[strlen(pCmdLine)], " -ctrlrpath \"%s\"",    GetCtrlrDir());
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -comment_directory \"%s\"",  GetCommentDir());
 #ifdef USE_IPS
 	sprintf(&pCmdLine[strlen(pCmdLine)], " -ips_directory \"%s\"",      GetPatchDir());

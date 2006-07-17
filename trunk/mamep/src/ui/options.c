@@ -208,10 +208,10 @@ typedef struct
 	char*	input_directory;
 	char*	hiscore_directory;
 	char*	state_directory;
-	char*	artwork_directory;
+	char*	artpath;
 	char*	snapshot_directory;
 	char*	diff_directory;
-	char*	ctrlr_directory;
+	char*	ctrlrpath;
 	char*	comment_directory;
 #ifdef USE_IPS
 	char*	ips_directory;
@@ -1489,15 +1489,15 @@ void SetIniDir(const char* path)
 
 const char* GetCtrlrDir(void)
 {
-	return settings.ctrlr_directory;
+	return settings.ctrlrpath;
 }
 
 void SetCtrlrDir(const char* path)
 {
-	FreeIfAllocated(&settings.ctrlr_directory);
+	FreeIfAllocated(&settings.ctrlrpath);
 
 	if (path != NULL)
-		settings.ctrlr_directory = strdup(path);
+		settings.ctrlrpath = strdup(path);
 }
 
 const char* GetCfgDir(void)
@@ -1580,15 +1580,15 @@ void SetStateDir(const char* path)
 
 const char* GetArtDir(void)
 {
-	return settings.artwork_directory;
+	return settings.artpath;
 }
 
 void SetArtDir(const char* path)
 {
-	FreeIfAllocated(&settings.artwork_directory);
+	FreeIfAllocated(&settings.artpath);
 
 	if (path != NULL)
-		settings.artwork_directory = strdup(path);
+		settings.artpath = strdup(path);
 }
 
 const char* GetMemcardDir(void)

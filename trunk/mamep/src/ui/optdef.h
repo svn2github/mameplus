@@ -10,10 +10,10 @@ START_OPT_FUNC_CORE
 	DEFINE_OPT(string,               input_directory);
 	DEFINE_OPT(string,               hiscore_directory);
 	DEFINE_OPT(string,               state_directory);
-	DEFINE_OPT(string,               artwork_directory);
+	DEFINE_OPT(string,               artpath);
 	DEFINE_OPT(string,               snapshot_directory);
 	DEFINE_OPT(string,               diff_directory);
-	DEFINE_OPT(string,               ctrlr_directory);
+	DEFINE_OPT(string,               ctrlrpath);
 	DEFINE_OPT(string,               comment_directory);
 #ifdef USE_IPS
 	DEFINE_OPT(string,               ips_directory);
@@ -181,7 +181,6 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(bool,                 maximize)
 	DEFINE_OPT(bool,                 keepaspect)
 	DEFINE_OPT(numscreens,           numscreens)
-	DEFINE_OPT(string_allow_null,    extra_layout)
 
 // PER-WINDOW VIDEO OPTIONS
 	DEFINE_OPT(string_allow_null,    screen0)
