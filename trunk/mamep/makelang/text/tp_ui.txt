@@ -1,3 +1,11 @@
+# ui/mame32.rc: 0
+Video output method
+
+
+# ui/mame32.rc: 0
+Advanced
+
+
 # ui/mame32.rc: 390
                                 
 

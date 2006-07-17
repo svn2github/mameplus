@@ -298,7 +298,7 @@ Absolute Entertainment Inc.
 Academysoft-Elory
 
 
-# Acclaim PSX
+# NBA Jam Extreme
 Acclaim
 
 
@@ -362,7 +362,7 @@ Amstar
 Amutech
 
 
-# Arcadia System BIOS
+# SportTime Table Hockey (Arcadia, V 2.1)
 Arcadia Systems
 
 
@@ -402,7 +402,7 @@ Atari Games
 Athena
 
 
-# Atlus PSX
+# Power Instinct 3 - Groove On Fight (J 970416 V1.001)
 Atlus
 
 
@@ -426,7 +426,7 @@ Bally Midway
 Banpresto
 
 
-# MPU4 Video Firmware
+# The Crystal Maze: Team Challenge (SWP)
 Barcrest
 
 
@@ -450,7 +450,7 @@ Bee-Oh
 Blastar
 
 
-# Crystal System BIOS
+# The Crystal of Kings
 Brezzasoft
 
 
@@ -594,7 +594,7 @@ Digital Controls Inc.
 Digitrex Techstar
 
 
-# Double Point
+# Double Point (Dong Bang Electron, bootleg?)
 Dong Bang Electron
 
 
@@ -696,10 +696,6 @@ Ed
 
 # Battle Bakraid (Japan) (Wed Apr 7 1999)
 Eighting
-
-
-# PS Arcade 95
-Eighting/Raizing
 
 
 # Space Force (set 2)
@@ -934,6 +930,10 @@ H.A.R. Management
 HAR
 
 
+# Super Free Kick
+HEC
+
+
 # Laser Base (set 1)
 HOEI
 
@@ -978,7 +978,7 @@ Human Amusement
 Human Inc.
 
 
-# Multi Amenity Cassette System BIOS
+# Kisekae Mahjong
 I'Max
 
 
@@ -1290,6 +1290,10 @@ NTC
 Nakanihon
 
 
+# Red Corsair
+Nakasawa
+
+
 # PuckMan (Japan set 1, Probably Bootleg)
 Namco
 
@@ -1386,6 +1390,10 @@ Outer Limits
 P & P Marketing
 
 
+# Magic Fly
+P&A Games
+
+
 # Bowl-O-Rama
 P&P Marketing
 
@@ -1418,7 +1426,7 @@ Paradise Co. Ltd.
 Petaco S.A.
 
 
-# Turtle Ship (Japan)
+# Turtle Ship (North America)
 Philko
 
 
@@ -1540,6 +1548,10 @@ Saero Entertainment
 
 # Elan Doree - Legend of Dragon (JUET 980922 V1.006)
 Sai-Mate
+
+
+# Puzzle Star (Sang Ho Soft)
+Sang Ho Soft
 
 
 # Dream Shopper
