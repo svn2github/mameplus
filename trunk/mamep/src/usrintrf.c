@@ -2542,7 +2542,8 @@ static UINT32 menu_default_input(UINT32 state)
 		/* if the clear key was pressed, reset the selected item */
 		if (input_ui_pressed(IPT_UI_CLEAR))
 		{
-			input_menu_toggle_none_default(selected_seq, selected_seq, selected_defseq);
+			if (selected_seq)
+				input_menu_toggle_none_default(selected_seq, selected_seq, selected_defseq);
 			record_next = FALSE;
 		}
 
@@ -2711,7 +2712,8 @@ static UINT32 menu_game_input(UINT32 state)
 		/* if the clear key was pressed, reset the selected item */
 		if (input_ui_pressed(IPT_UI_CLEAR))
 		{
-			input_menu_toggle_none_default(selected_item_data->seq, selected_item_data->seq, &default_seq);
+			if (selected_item_data)
+				input_menu_toggle_none_default(selected_item_data->seq, selected_item_data->seq, &default_seq);
 			record_next = FALSE;
 		}
 
