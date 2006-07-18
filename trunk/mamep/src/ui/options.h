@@ -65,51 +65,15 @@ typedef struct
 typedef struct
 {
 //
-// CORE VIDEO OPTIONS
+// CONFIGURATION OPTIONS
 //
-	BOOL	rotate;
-	BOOL	ror;
-	BOOL	rol;
-	BOOL	autoror;
-	BOOL	autorol;
-	BOOL	flipx;
-	BOOL	flipy;
-	float	brightness;
-	float	contrast;	// todo: GUI
-	float	gamma;		// todo: GUI
-	float	pause_brightness;
-#ifdef USE_SCALE_EFFECTS
-	char*  scale_effect;
-#endif /* USE_SCALE_EFFECTS */
+	BOOL	readconfig;
+	BOOL	skip_gameinfo;
 //
-// CORE VECTOR OPTIONS
-//
-	BOOL	antialias;
-	float	beam;
-	float	flicker;
-//
-// CORE SOUND OPTIONS
-//
-	BOOL	sound;
-	int	samplerate;
-	BOOL	samples;
-	int	volume;
-#ifdef USE_VOLUME_AUTO_ADJUST
-	BOOL	volume_adjust;
-#endif /* USE_VOLUME_AUTO_ADJUST */
-	int	audio_latency;
-	char*	wavwrite;
-//
-// CORE MISC OPTIONS
+// MISC OPTIONS
 //
 	char*	bios;
 	BOOL	cheat;
-	BOOL	skip_gameinfo;
-	BOOL	artwork;
-	BOOL	artwork_crop;
-	BOOL	use_backdrops;
-	BOOL	use_overlays;
-	BOOL	use_bezels;
 #ifdef USE_IPS
 	char*	ips;
 #endif /* USE_IPS */
@@ -126,77 +90,65 @@ typedef struct
 #endif /* TRANS_UI */
 	int	ui_lines;
 //
-// CORE STATE/PLAYBACK OPTIONS
+// STATE/PLAYBACK OPTIONS
 //
-	char*	playback;
-	char*	record;
 	char*	state;
 	BOOL	autosave;
+	char*	playback;
+	char*	record;
+	char*	mngwrite;
+	char*	wavwrite;
 //
-// CORE DEBUGGING OPTIONS
+// DEBUGGING OPTIONS
 //
 	BOOL	log;
 	BOOL	oslog;
 	BOOL	verbose;
 //
-// CORE CONFIGURATION OPTIONS
-//
-	BOOL	readconfig;
-//
-// INPUT DEVICE OPTIONS
-//
-	BOOL	mouse;
-	BOOL	joystick;
-	BOOL	lightgun;
-	BOOL	dual_lightgun;
-	BOOL	offscreen_reload;
-	BOOL	steadykey;
-	BOOL	keyboard_leds;
-	char*	led_mode;
-	float	a2d_deadzone;
-	char*	ctrlr;
-#ifdef USE_JOY_MOUSE_MOVE
-	BOOL	stickpoint;
-#endif /* USE_JOY_MOUSE_MOVE */
-#ifdef JOYSTICK_ID
-	int	joyid1;
-	int	joyid2;
-	int	joyid3;
-	int	joyid4;
-	int	joyid5;
-	int	joyid6;
-	int	joyid7;
-	int	joyid8;
-#endif /* JOYSTICK_ID */
-	char*	paddle_device;
-	char*	adstick_device;
-	char*	pedal_device;
-	char*	dial_device;
-	char*	trackball_device;
-	char*	lightgun_device;
-	char*	digital;
-//
 // PERFORMANCE OPTIONS
 //
 	BOOL	autoframeskip;
 	int	frameskip;
+	int	frames_to_run;
 	BOOL	throttle;
 	BOOL	sleep;
 	BOOL	rdtsc;
 	int	priority;
 //
-// MISC VIDEO OPTIONS
+// VIDEO OPTIONS
 //
-	int	frames_to_run;
-	char*	mngwrite;
-//
-// GLOBAL VIDEO OPTIONS
-//
+	char*	video;
+	int	numscreens;
 	BOOL	window;
 	BOOL	maximize;
 	BOOL	keepaspect;
-	int	numscreens;
-	char*	extra_layout;
+	int	prescale;
+	char*	effect;
+#ifdef USE_SCALE_EFFECTS
+	char*	scale_effect;
+#endif /* USE_SCALE_EFFECTS */
+	float	pause_brightness;
+	BOOL	waitvsync;
+	BOOL	syncrefresh;
+//
+// VIDEO ROTATION OPTIONS
+//
+	BOOL	rotate;
+	BOOL	ror;
+	BOOL	rol;
+	BOOL	autoror;
+	BOOL	autorol;
+	BOOL	flipx;
+	BOOL	flipy;
+//
+// DIRECTDRAW-SPECIFIC OPTIONS
+//
+	BOOL	hwstretch;
+//
+// DIRECT3D-SPECIFIC OPTIONS
+//
+	int	d3dversion;
+	BOOL	filter;
 //
 // PER-WINDOW VIDEO OPTIONS
 //
@@ -217,26 +169,83 @@ typedef struct
 	char*	resolution3;
 	char*	view3;
 //
-// DIRECTX VIDEO OPTIONS
+// FULL SCREEN OPTIONS
 //
-	char*	video;
-	BOOL	waitvsync;
-	BOOL	syncrefresh;
 	BOOL	triplebuffer;
 	BOOL	switchres;
-	int     prescale;
 	float	full_screen_brightness;	// todo: GUI
 	float	full_screen_contrast;	// todo: GUI
 	float	full_screen_gamma;
 //
-// DIRECTDRAW-SPECIFIC OPTIONS
+// GAME SCREEN OPTIONS
 //
-	BOOL	hwstretch;
+	float	brightness;
+	float	contrast;	// todo: GUI
+	float	gamma;		// todo: GUI
 //
-// DIRECT3D-SPECIFIC OPTIONS
+// VECTOR RENDERING OPTIONS
 //
-	int	d3dversion;
-	BOOL	filter;
+	BOOL	antialias;
+	float	beam;
+	float	flicker;
+//
+// ARTWORK OPTIONS
+//
+	BOOL	artwork;
+	BOOL	artwork_crop;
+	BOOL	use_backdrops;
+	BOOL	use_overlays;
+	BOOL	use_bezels;
+//
+// SOUND OPTIONS
+//
+	BOOL	sound;
+	int	samplerate;
+	BOOL	samples;
+	int	volume;
+#ifdef USE_VOLUME_AUTO_ADJUST
+	BOOL	volume_adjust;
+#endif /* USE_VOLUME_AUTO_ADJUST */
+	int	audio_latency;
+//
+// INPUT DEVICE OPTIONS
+//
+	char*	ctrlr;
+#ifdef USE_JOY_MOUSE_MOVE
+	BOOL	stickpoint;
+#endif /* USE_JOY_MOUSE_MOVE */
+#ifdef JOYSTICK_ID
+	int	joyid1;
+	int	joyid2;
+	int	joyid3;
+	int	joyid4;
+	int	joyid5;
+	int	joyid6;
+	int	joyid7;
+	int	joyid8;
+#endif /* JOYSTICK_ID */
+	BOOL	mouse;
+	BOOL	joystick;
+	BOOL	lightgun;
+	BOOL	dual_lightgun;
+	BOOL	offscreen_reload;
+	BOOL	steadykey;
+	float	a2d_deadzone;
+	char*	digital;
+//
+// AUTOMATIC DEVICE SELECTION OPTIONS
+//
+	char*	paddle_device;
+	char*	adstick_device;
+	char*	pedal_device;
+	char*	dial_device;
+	char*	trackball_device;
+	char*	lightgun_device;
+//
+// OUTPUT DEVICE OPTIONS
+//
+	BOOL	keyboard_leds;
+	char*	led_mode;
 } options_type;
 
 // List of artwork types to display in the screen shot area

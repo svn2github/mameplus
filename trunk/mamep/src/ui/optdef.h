@@ -61,47 +61,12 @@ END_OPT_FUNC_CORE
 
 #ifdef START_OPT_FUNC_DRIVER
 START_OPT_FUNC_DRIVER
-// CORE VIDEO OPTIONS
-	DEFINE_OPT(bool,                 rotate)
-	DEFINE_OPT(bool,                 ror)
-	DEFINE_OPT(bool,                 rol)
-	DEFINE_OPT(bool,                 autoror)
-	DEFINE_OPT(bool,                 autorol)
-	DEFINE_OPT(bool,                 flipx)
-	DEFINE_OPT(bool,                 flipy)
-	DEFINE_OPT(brightness,           brightness)
-	DEFINE_OPT(contrast,             contrast)
-	DEFINE_OPT(gamma,                gamma)
-	DEFINE_OPT(pause_brightness,     pause_brightness)
-#ifdef USE_SCALE_EFFECTS
-	DEFINE_OPT(string_allow_null,    scale_effect)
-#endif /* USE_SCALE_EFFECTS */
-
-// CORE VECTOR OPTIONS
-	DEFINE_OPT(bool,                 antialias)
-	DEFINE_OPT(beam,                 beam)
-	DEFINE_OPT(flicker,              flicker)
-
-// CORE SOUND OPTIONS
-	DEFINE_OPT(bool,                 sound)
-	DEFINE_OPT(samplerate,           samplerate)
-	DEFINE_OPT(bool,                 samples)
-	DEFINE_OPT(volume,               volume)
-#ifdef USE_VOLUME_AUTO_ADJUST
-	DEFINE_OPT(bool,                 volume_adjust)
-#endif /* USE_VOLUME_AUTO_ADJUST */
-	DEFINE_OPT(audio_latency,        audio_latency)
-	DEFINE_OPT(string_allow_null,    wavwrite)
-
-// CORE MISC OPTIONS
+// CONFIGURATION OPTIONS
+	DEFINE_OPT(bool,                 readconfig)
+	DEFINE_OPT(bool,                 skip_gameinfo)
+// MISC OPTIONS
 	DEFINE_OPT(string,               bios)
 	DEFINE_OPT(bool,                 cheat)
-	DEFINE_OPT(bool,                 skip_gameinfo)
-	DEFINE_OPT(bool,                 artwork)
-	DEFINE_OPT(bool,                 artwork_crop);
-	DEFINE_OPT(bool,                 use_backdrops)
-	DEFINE_OPT(bool,                 use_overlays)
-	DEFINE_OPT(bool,                 use_bezels)
 #ifdef USE_IPS
 	DEFINE_OPT(ips,                  ips)
 #endif /* USE_IPS */
@@ -118,69 +83,58 @@ START_OPT_FUNC_DRIVER
 #endif /* TRANS_UI */
 	DEFINE_OPT(ui_lines,             ui_lines)
 
-// CORE STATE/PLAYBACK OPTIONS
-	DEFINE_OPT(string_allow_null,    playback)
-	DEFINE_OPT(string_allow_null,    record)
+// STATE/PLAYBACK OPTIONS
 	DEFINE_OPT(string_allow_null,    state)
 	DEFINE_OPT(bool,                 autosave)
+	DEFINE_OPT(string_allow_null,    playback)
+	DEFINE_OPT(string_allow_null,    record)
+	DEFINE_OPT(string_allow_null,    mngwrite)
+	DEFINE_OPT(string_allow_null,    wavwrite)
 
-// CORE DEBUGGING OPTIONS
+// DEBUGGING OPTIONS
 	DEFINE_OPT(bool,                 log)
 	DEFINE_OPT(bool,                 oslog)
 	DEFINE_OPT(bool,                 verbose)
 
-// CORE CONFIGURATION OPTIONS
-	DEFINE_OPT(bool,                 readconfig)
-
-// INPUT DEVICE OPTIONS
-	DEFINE_OPT(bool,                 mouse)
-	DEFINE_OPT(bool,                 joystick)
-	DEFINE_OPT(bool,                 lightgun)
-	DEFINE_OPT(bool,                 dual_lightgun)
-	DEFINE_OPT(bool,                 offscreen_reload)
-	DEFINE_OPT(bool,                 steadykey)
-	DEFINE_OPT(bool,                 keyboard_leds)
-	DEFINE_OPT(led_mode,             led_mode)
-	DEFINE_OPT(float,                a2d_deadzone)
-	DEFINE_OPT(string_allow_null,    ctrlr)
-#ifdef USE_JOY_MOUSE_MOVE
-	DEFINE_OPT(bool,                 stickpoint)
-#endif /* USE_JOY_MOUSE_MOVE */
-#ifdef JOYSTICK_ID
-	DEFINE_OPT(int_positive,         joyid1)
-	DEFINE_OPT(int_positive,         joyid2)
-	DEFINE_OPT(int_positive,         joyid3)
-	DEFINE_OPT(int_positive,         joyid4)
-	DEFINE_OPT(int_positive,         joyid5)
-	DEFINE_OPT(int_positive,         joyid6)
-	DEFINE_OPT(int_positive,         joyid7)
-	DEFINE_OPT(int_positive,         joyid8)
-#endif /* JOYSTICK_ID */
-	DEFINE_OPT(analog_select,        paddle_device)
-	DEFINE_OPT(analog_select,        adstick_device)
-	DEFINE_OPT(analog_select,        pedal_device)
-	DEFINE_OPT(analog_select,        dial_device)
-	DEFINE_OPT(analog_select,        trackball_device)
-	DEFINE_OPT(analog_select,        lightgun_device)
-	DEFINE_OPT(digital,              digital)
-
 // PERFORMANCE OPTIONS
 	DEFINE_OPT(bool,                 autoframeskip)
 	DEFINE_OPT(frameskip,            frameskip)
+	DEFINE_OPT(int_positive,         frames_to_run)
 	DEFINE_OPT(bool,                 throttle)
 	DEFINE_OPT(bool,                 sleep)
 	DEFINE_OPT(bool,                 rdtsc)
 	DEFINE_OPT(priority,             priority)
 
-// MISC VIDEO OPTIONS
-	DEFINE_OPT(int_positive,         frames_to_run)
-	DEFINE_OPT(string_allow_null,    mngwrite)
-
-// GLOBAL VIDEO OPTIONS
+// VIDEO OPTIONS
+	DEFINE_OPT(video,                video)
+	DEFINE_OPT(numscreens,           numscreens)
 	DEFINE_OPT(bool,                 window)
 	DEFINE_OPT(bool,                 maximize)
 	DEFINE_OPT(bool,                 keepaspect)
-	DEFINE_OPT(numscreens,           numscreens)
+	DEFINE_OPT(int_positive,         prescale)
+	DEFINE_OPT(string_allow_null,    effect)
+#ifdef USE_SCALE_EFFECTS
+	DEFINE_OPT(string_allow_null,    scale_effect)
+#endif /* USE_SCALE_EFFECTS */
+	DEFINE_OPT(pause_brightness,     pause_brightness)
+	DEFINE_OPT(bool,                 waitvsync)
+	DEFINE_OPT(bool,                 syncrefresh)
+
+// VIDEO ROTATION OPTIONS
+	DEFINE_OPT(bool,                 rotate)
+	DEFINE_OPT(bool,                 ror)
+	DEFINE_OPT(bool,                 rol)
+	DEFINE_OPT(bool,                 autoror)
+	DEFINE_OPT(bool,                 autorol)
+	DEFINE_OPT(bool,                 flipx)
+	DEFINE_OPT(bool,                 flipy)
+
+// DIRECTDRAW-SPECIFIC OPTIONS
+	DEFINE_OPT(bool,                 hwstretch)
+
+// DIRECT3D-SPECIFIC OPTIONS
+	DEFINE_OPT(d3dversion,           d3dversion)
+	DEFINE_OPT(bool,                 filter)
 
 // PER-WINDOW VIDEO OPTIONS
 	DEFINE_OPT(string_allow_null,    screen0)
@@ -200,23 +154,75 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(resolution,           resolution3)
 	DEFINE_OPT(string_allow_null,    view3)
 
-// DIRECTX VIDEO OPTIONS
-	DEFINE_OPT(video,                video)
-	DEFINE_OPT(bool,                 waitvsync)
-	DEFINE_OPT(bool,                 syncrefresh)
+// FULL SCREEN OPTIONS
 	DEFINE_OPT(bool,                 triplebuffer)
 	DEFINE_OPT(bool,                 switchres)
-	DEFINE_OPT(int_positive,         prescale)
 	DEFINE_OPT(brightness,           full_screen_brightness)
 	DEFINE_OPT(contrast,             full_screen_contrast)
 	DEFINE_OPT(gamma,                full_screen_gamma)
 
-// DIRECTDRAW-SPECIFIC OPTIONS
-	DEFINE_OPT(bool,                 hwstretch)
+// GAME SCREEN OPTIONS
+	DEFINE_OPT(brightness,           brightness)
+	DEFINE_OPT(contrast,             contrast)
+	DEFINE_OPT(gamma,                gamma)
 
-// DIRECT3D-SPECIFIC OPTIONS
-	DEFINE_OPT(d3dversion,           d3dversion)
-	DEFINE_OPT(bool,                 filter)
+// VECTOR RENDERING OPTIONS
+	DEFINE_OPT(bool,                 antialias)
+	DEFINE_OPT(beam,                 beam)
+	DEFINE_OPT(flicker,              flicker)
+
+// ARTWORK OPTIONS
+	DEFINE_OPT(bool,                 artwork)
+	DEFINE_OPT(bool,                 artwork_crop);
+	DEFINE_OPT(bool,                 use_backdrops)
+	DEFINE_OPT(bool,                 use_overlays)
+	DEFINE_OPT(bool,                 use_bezels)
+
+// SOUND OPTIONS
+	DEFINE_OPT(bool,                 sound)
+	DEFINE_OPT(samplerate,           samplerate)
+	DEFINE_OPT(bool,                 samples)
+	DEFINE_OPT(volume,               volume)
+#ifdef USE_VOLUME_AUTO_ADJUST
+	DEFINE_OPT(bool,                 volume_adjust)
+#endif /* USE_VOLUME_AUTO_ADJUST */
+	DEFINE_OPT(audio_latency,        audio_latency)
+
+// INPUT DEVICE OPTIONS
+	DEFINE_OPT(string_allow_null,    ctrlr)
+#ifdef USE_JOY_MOUSE_MOVE
+	DEFINE_OPT(bool,                 stickpoint)
+#endif /* USE_JOY_MOUSE_MOVE */
+#ifdef JOYSTICK_ID
+	DEFINE_OPT(int_positive,         joyid1)
+	DEFINE_OPT(int_positive,         joyid2)
+	DEFINE_OPT(int_positive,         joyid3)
+	DEFINE_OPT(int_positive,         joyid4)
+	DEFINE_OPT(int_positive,         joyid5)
+	DEFINE_OPT(int_positive,         joyid6)
+	DEFINE_OPT(int_positive,         joyid7)
+	DEFINE_OPT(int_positive,         joyid8)
+#endif /* JOYSTICK_ID */
+	DEFINE_OPT(bool,                 mouse)
+	DEFINE_OPT(bool,                 joystick)
+	DEFINE_OPT(bool,                 lightgun)
+	DEFINE_OPT(bool,                 dual_lightgun)
+	DEFINE_OPT(bool,                 offscreen_reload)
+	DEFINE_OPT(bool,                 steadykey)
+	DEFINE_OPT(float,                a2d_deadzone)
+	DEFINE_OPT(digital,              digital)
+
+// AUTOMATIC DEVICE SELECTION OPTIONS
+	DEFINE_OPT(analog_select,        paddle_device)
+	DEFINE_OPT(analog_select,        adstick_device)
+	DEFINE_OPT(analog_select,        pedal_device)
+	DEFINE_OPT(analog_select,        dial_device)
+	DEFINE_OPT(analog_select,        trackball_device)
+	DEFINE_OPT(analog_select,        lightgun_device)
+
+// OUTPUT DEVICE OPTIONS
+	DEFINE_OPT(bool,                 keyboard_leds)
+	DEFINE_OPT(led_mode,             led_mode)
 END_OPT_FUNC_DRIVER
 #endif
 
