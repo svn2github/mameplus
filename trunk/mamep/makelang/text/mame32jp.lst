@@ -671,8 +671,9 @@ knckhead	ƒiƒbƒNƒ‹ƒwƒbƒY (ŠCŠO”Å)	‚È‚Á‚­‚é‚Ö‚Á‚¸	Namco
 knckhedj	ƒiƒbƒNƒ‹ƒwƒbƒY (“ú–{”Å)	‚È‚Á‚­‚é‚Ö‚Á‚¸	Namco
 swcourt	ƒX[ƒp[ƒ[ƒ‹ƒhƒR[ƒg (ŠCŠO”Å)	‚·[‚Ï[‚í[‚é‚Ç‚±[‚Æ	Namco
 swcourtj	ƒX[ƒp[ƒ[ƒ‹ƒhƒR[ƒg (“ú–{”Å)	‚·[‚Ï[‚í[‚é‚Ç‚±[‚Æ	Namco
-emeralda	ƒGƒƒ‰ƒ‹ƒfƒBƒA (“ú–{”Å ver B)	‚¦‚ß‚ç‚é‚Å‚¡‚ 	Namco
-emerldaa	ƒGƒƒ‰ƒ‹ƒfƒBƒA (“ú–{”Å)	‚¦‚ß‚ç‚é‚Å‚¡‚ 	Namco
+emeralda	ƒGƒƒ‰ƒ‹ƒfƒBƒA (ŠCŠO”Å)	‚¦‚ß‚ç‚é‚Å‚¡‚ 	Namco
+emeraldj	ƒGƒƒ‰ƒ‹ƒfƒBƒA (“ú–{”Å ver B)	‚¦‚ß‚ç‚é‚Å‚¡‚ 	Namco
+emerldja	ƒGƒƒ‰ƒ‹ƒfƒBƒA (“ú–{”Å)	‚¦‚ß‚ç‚é‚Å‚¡‚ 	Namco
 numanath	ƒjƒ…[ƒ}ƒ“ƒAƒXƒŒƒ`ƒbƒNƒX (ŠCŠO”Å)	‚É‚ã[‚Ü‚ñ‚ ‚·‚ê‚¿‚Á‚­‚·	Namco
 numanatj	ƒjƒ…[ƒ}ƒ“ƒAƒXƒŒƒ`ƒbƒNƒX (“ú–{”Å)	‚É‚ã[‚Ü‚ñ‚ ‚·‚ê‚¿‚Á‚­‚·	Namco
 quiztou	”M“¬IŒƒ“¬IƒNƒCƒY“‡II (“ú–{”Å)	‚Ë‚Á‚Æ‚¤‚°‚«‚Æ‚¤‚­‚¢‚¸‚Æ‚¤	Namco
@@ -2209,6 +2210,7 @@ mshb	ƒ}[ƒ”ƒ‹EƒX[ƒp[ƒq[ƒ[ƒY (ƒuƒ‰ƒWƒ‹”Å 951117)	‚Ü[‚Ô‚é‚·[‚Ï[‚Ğ[‚ë[‚¸
 ddsom	ƒ_ƒ“ƒWƒ‡ƒ“ƒY&ƒhƒ‰ƒSƒ“ƒY -ƒVƒƒƒh[ƒI[ƒo[ƒ~ƒXƒ^ƒ‰ (‰¢B”Å 960619)	‚¾‚ñ‚¶‚å‚ñ‚¸‚ ‚ñ‚Ç‚Ç‚ç‚²‚ñ‚¸_2‚µ‚á‚Ç[‚¨[‚Î[‚İ‚·‚½‚ç	Capcom
 ddsomr1	ƒ_ƒ“ƒWƒ‡ƒ“ƒY&ƒhƒ‰ƒSƒ“ƒY -ƒVƒƒƒh[ƒI[ƒo[ƒ~ƒXƒ^ƒ‰ (‰¢B”Å 960223)	‚¾‚ñ‚¶‚å‚ñ‚¸‚ ‚ñ‚Ç‚Ç‚ç‚²‚ñ‚¸_2‚µ‚á‚Ç[‚¨[‚Î[‚İ‚·‚½‚ç	Capcom
 ddsomr2	ƒ_ƒ“ƒWƒ‡ƒ“ƒY&ƒhƒ‰ƒSƒ“ƒY -ƒVƒƒƒh[ƒI[ƒo[ƒ~ƒXƒ^ƒ‰ (‰¢B”Å 960209)	‚¾‚ñ‚¶‚å‚ñ‚¸‚ ‚ñ‚Ç‚Ç‚ç‚²‚ñ‚¸_2‚µ‚á‚Ç[‚¨[‚Î[‚İ‚·‚½‚ç	Capcom
+ddsomr3	ƒ_ƒ“ƒWƒ‡ƒ“ƒY&ƒhƒ‰ƒSƒ“ƒY -ƒVƒƒƒh[ƒI[ƒo[ƒ~ƒXƒ^ƒ‰ (‰¢B”Å 960208)	‚¾‚ñ‚¶‚å‚ñ‚¸‚ ‚ñ‚Ç‚Ç‚ç‚²‚ñ‚¸_2‚µ‚á‚Ç[‚¨[‚Î[‚İ‚·‚½‚ç	Capcom
 ddsomu	ƒ_ƒ“ƒWƒ‡ƒ“ƒY&ƒhƒ‰ƒSƒ“ƒY -ƒVƒƒƒh[ƒI[ƒo[ƒ~ƒXƒ^ƒ‰ (USA”Å 960619)	‚¾‚ñ‚¶‚å‚ñ‚¸‚ ‚ñ‚Ç‚Ç‚ç‚²‚ñ‚¸_2‚µ‚á‚Ç[‚¨[‚Î[‚İ‚·‚½‚ç	Capcom
 ddsomur1	ƒ_ƒ“ƒWƒ‡ƒ“ƒY&ƒhƒ‰ƒSƒ“ƒY -ƒVƒƒƒh[ƒI[ƒo[ƒ~ƒXƒ^ƒ‰ (USA”Å 960209)	‚¾‚ñ‚¶‚å‚ñ‚¸‚ ‚ñ‚Ç‚Ç‚ç‚²‚ñ‚¸_2‚µ‚á‚Ç[‚¨[‚Î[‚İ‚·‚½‚ç	Capcom
 ddsomjr1	ƒ_ƒ“ƒWƒ‡ƒ“ƒY&ƒhƒ‰ƒSƒ“ƒY -ƒVƒƒƒh[ƒI[ƒo[ƒ~ƒXƒ^ƒ‰ (“ú–{”Å 960206)	‚¾‚ñ‚¶‚å‚ñ‚¸‚ ‚ñ‚Ç‚Ç‚ç‚²‚ñ‚¸_2‚µ‚á‚Ç[‚¨[‚Î[‚İ‚·‚½‚ç	Capcom
@@ -4039,6 +4041,7 @@ indytem2	ƒCƒ“ƒfƒBEƒWƒ‡[ƒ“ƒY / Indiana Jones and the Temple of Doom (set 2)	‚¢‚
 indytem3	ƒCƒ“ƒfƒBEƒWƒ‡[ƒ“ƒY / Indiana Jones and the Temple of Doom (set 3)	‚¢‚ñ‚Å‚¡‚¶‚å[‚ñ‚¸	Atari Games
 indytem4	ƒCƒ“ƒfƒBEƒWƒ‡[ƒ“ƒY / Indiana Jones and the Temple of Doom (set 4)	‚¢‚ñ‚Å‚¡‚¶‚å[‚ñ‚¸	Atari Games
 indytemd	ƒCƒ“ƒfƒBEƒWƒ‡[ƒ“ƒY / Indiana Jones and the Temple of Doom (ƒhƒCƒc”Å)	‚¢‚ñ‚Å‚¡‚¶‚å[‚ñ‚¸	Atari Games
+indytemc	ƒCƒ“ƒfƒBEƒWƒ‡[ƒ“ƒY / Indiana Jones and the Temple of Doom (Cocktail)	‚¢‚ñ‚Å‚¡‚¶‚å[‚ñ‚¸	Atari Games
 roadrunn	ƒ‹[ƒj[Eƒeƒ…[ƒ“ƒY ƒ[ƒhEƒ‰ƒ“ƒi[ (rev 2)	‚é[‚É[‚Ä‚ã[‚ñ‚¸‚ë[‚Ç‚ç‚ñ‚È[	Atari Games
 roadrun2	ƒ‹[ƒj[Eƒeƒ…[ƒ“ƒY ƒ[ƒhEƒ‰ƒ“ƒi[ (rev 1+)	‚é[‚É[‚Ä‚ã[‚ñ‚¸‚ë[‚Ç‚ç‚ñ‚È[	Atari Games
 roadrun1	ƒ‹[ƒj[Eƒeƒ…[ƒ“ƒY ƒ[ƒhEƒ‰ƒ“ƒi[ (rev 1)	‚é[‚É[‚Ä‚ã[‚ñ‚¸‚ë[‚Ç‚ç‚ñ‚È[	Atari Games
@@ -4485,7 +4488,7 @@ breakers	ƒuƒŒƒCƒJ[ƒY	‚Ô‚ê‚¢‚©[‚¸_1	Visco
 miexchng	ƒ}ƒl[ƒAƒCƒhƒ‹ƒGƒNƒXƒ`ƒFƒ“ƒWƒƒ[	‚Ü‚Ë[‚ ‚¢‚Ç‚é‚¦‚­‚·‚¿‚¥‚ñ‚¶‚á[	Face
 kof97	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY '97 (set 1)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_04_1_1997	SNK
 kof97a	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY '97 (set 2)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_04_1_1997	SNK
-kof97pls	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY '97 / The King of Fighters '97 Plus (ŠC‘¯”Å set 1)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_04_2_1997	bootleg
+kof97pls	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY '97 / The King of Fighters '97 Plus (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_04_2_1997	bootleg
 kog	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY '97 / King of Gladiator (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_04_2_1997	bootleg
 magdrop3	ƒ}ƒWƒJƒ‹ƒhƒƒbƒvIII	‚Ü‚¶‚©‚é‚Ç‚ë‚Á‚Õ_3	Data East Corporation
 lastblad	–‹––˜Q–Ÿ Œ‰Ø‚ÌŒ•m (set 1)	‚Î‚­‚Ü‚Â‚ë‚Ü‚ñ‚°‚Á‚©‚Ì‚¯‚ñ‚µ_1	SNK
@@ -4550,7 +4553,7 @@ cthd2003	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2001 / Crouching Tiger Hidden Dragon 200
 cthd2k3a	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2001 / Crouching Tiger Hidden Dragon 2003 (ŠC‘¯”Å set 2)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_08_3_2001	bootleg
 ct2k3sp	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2001 / Crouching Tiger Hidden Dragon 2003 Super Plus (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_08_3_2001	bootleg
 mslug4	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO4	‚ß‚½‚é‚·‚ç‚Á‚®_4_1	Mega
-mslug4d	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO4 (decrypted C)	‚ß‚½‚é‚·‚ç‚Á‚®_4_1	Mega
+mslug4d	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO4 (custom decrypted C)	‚ß‚½‚é‚·‚ç‚Á‚®_4_1	Mega
 ms4plus	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO4 / Metal Slug 4 Plus (ŠC‘¯”Å)	‚ß‚½‚é‚·‚ç‚Á‚®_4_2	bootleg
 rotd	ƒŒƒCƒWEƒIƒuEƒUEƒhƒ‰ƒSƒ“ƒY	‚ê‚¢‚¶‚¨‚Ô‚´‚Ç‚ç‚²‚ñ‚¸	Evoga / Playmore
 rotdd	ƒŒƒCƒWEƒIƒuEƒUEƒhƒ‰ƒSƒ“ƒY (decrypted C)	‚ê‚¢‚¶‚¨‚Ô‚´‚Ç‚ç‚²‚ñ‚¸	Evoga / Playmore
@@ -4606,6 +4609,14 @@ neopong	ƒlƒIEƒ|ƒ“ (ver 1.1)	‚Ë‚¨‚Û‚ñ	Neodev
 npong10	ƒlƒIEƒ|ƒ“ (ver 1.0)	‚Ë‚¨‚Û‚ñ	Neodev
 syscheck	ƒlƒIƒVƒXƒeƒ€ƒ`ƒFƒbƒN (ver 1.0b)	‚Ë‚¨‚µ‚·‚Ä‚Ş‚¿‚¥‚Á‚­	Blastar
 frogfest	ƒtƒƒbƒOƒtƒB[ƒXƒg	‚Ó‚ë‚Á‚®‚Ó‚¡[‚·‚Æ	Rastersoft
+ltorb1	ƒWƒ‡[ƒ“ƒYEƒCƒ“ƒfƒBƒAƒiEƒAƒ“ƒhEƒU¥ƒƒXƒgEƒeƒ“ƒvƒ‹EƒIƒuERA (20050717)	‚¶‚å[‚ñ‚¸‚¢‚ñ‚Å‚¡‚ ‚È‚ ‚ñ‚Ç‚´‚ë‚·‚Æ‚Ä‚ñ‚Õ‚é‚¨‚Ô‚ [‚é‚¦[	Blastar
+neodemo	ƒlƒIƒfƒ‚	‚Ë‚¨‚Å‚à	Chaos
+fr2ch	ƒAƒCƒhƒ‹–ƒƒtƒ@ƒCƒiƒ‹ƒƒ}ƒ“ƒX2 (CD”Å) (ŠC‘¯”Å)	‚ ‚¢‚Ç‚é‚Ü[‚¶‚á‚ñ‚Ó‚Ÿ‚¢‚È‚é‚ë‚Ü‚ñ‚·_2	Video System Co.
+cnbe	ƒR[ƒhƒl[ƒ€ -Blut Engel (2006-01-19)	‚±[‚Ç‚Ë[‚Ş	homebrew
+ngem2k	ƒGƒkƒW[ƒG[ƒGƒ€2K (ƒx[ƒ^”Å 2006-01-18)	‚¦‚Ê‚¶[‚¢[‚¦‚Ş‚Â[‚³‚¤‚´‚ñ	homebrew
+neo2500	ƒlƒI2500 ƒfƒ‚	‚Ë‚¨2500‚Å‚à	blastar@gmx.net
+kof97pla	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY '97 / The King of Fighters '97 Plus (ŠC‘¯”Å set 2)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_04_2_1997	bootleg
+mslug5b	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO5 (ŠC‘¯”Å)	‚ß‚½‚é‚·‚ç‚Á‚®_5	bootleg
 roadedge	ƒ‰ƒEƒ“ƒhƒgƒŠƒbƒvRV (rev B)	‚ç‚¤‚ñ‚Ç‚Æ‚è‚Á‚Õ‚ [‚é‚Ô‚¢	SNK
 sams64_2	˜°2 <ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc2> -ƒAƒXƒ‰a–‚“`	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_5_2	SNK
 fatfurwa	‰ì˜T“`à -ƒƒCƒ‹ƒhƒAƒ“ƒrƒVƒ‡ƒ“ (rev A)	‚ª‚ë‚¤‚Å‚ñ‚¹‚Â_4‚í‚¢‚é‚Ç‚ ‚ñ‚Ñ‚µ‚å‚ñ	SNK
@@ -4864,7 +4875,8 @@ rmpgwt11	ƒ‰ƒ“ƒy[ƒW ƒ[ƒ‹ƒhƒcƒA[ (rev 1.1)	‚ç‚ñ‚Ø[‚¶_2‚í[‚é‚Ç‚Â‚ [	Midway
 crusnusa	ƒNƒ‹[ƒWƒ“USA (rev L4.1)	‚­‚é[‚¶‚ñ_1‚ä[‚¦‚·‚¦[	Midway
 crusnu40	ƒNƒ‹[ƒWƒ“USA (rev L4.0)	‚­‚é[‚¶‚ñ_1‚ä[‚¦‚·‚¦[	Midway
 crusnu21	ƒNƒ‹[ƒWƒ“USA (rev L2.1)	‚­‚é[‚¶‚ñ_1‚ä[‚¦‚·‚¦[	Midway
-crusnwld	ƒNƒ‹[ƒWƒ“ƒ[ƒ‹ƒh (rev L2.3)	‚­‚é[‚¶‚ñ_2‚í[‚é‚Ç	Midway
+crusnwld	ƒNƒ‹[ƒWƒ“ƒ[ƒ‹ƒh (rev L2.4)	‚­‚é[‚¶‚ñ_2‚í[‚é‚Ç	Midway
+crusnw23	ƒNƒ‹[ƒWƒ“ƒ[ƒ‹ƒh (rev L2.3)	‚­‚é[‚¶‚ñ_2‚í[‚é‚Ç	Midway
 crusnw20	ƒNƒ‹[ƒWƒ“ƒ[ƒ‹ƒh (rev L2.0)	‚­‚é[‚¶‚ñ_2‚í[‚é‚Ç	Midway
 crusnw13	ƒNƒ‹[ƒWƒ“ƒ[ƒ‹ƒh (rev L1.3)	‚­‚é[‚¶‚ñ_2‚í[‚é‚Ç	Midway
 offroadc	ƒIƒtƒ[ƒhƒ`ƒƒƒŒƒ“ƒW	‚¨‚Ó‚ë[‚Ç‚¿‚á‚ê‚ñ‚¶	Midway
@@ -5169,7 +5181,7 @@ natsuiro	‰ÄF–ƒ (“ú–{”Å)	‚È‚Â‚¢‚ë‚Ü[‚¶‚á‚ñ	Video System Co.
 mfunclub	–ƒƒtƒ@ƒ“ƒNƒ‰ƒu -ƒAƒCƒhƒ‹Å‘Oü (“ú–{”Å)	‚Ü[‚¶‚á‚ñ‚Ó‚Ÿ‚ñ‚­‚ç‚Ô	Video System Co.
 daiyogen	–ƒ‘å—\Œ¾ -‚±‚ÌƒMƒƒƒ‹è‚¢t‚É‚Â‚« (“ú–{”Å)	‚Ü[‚¶‚á‚ñ‚¾‚¢‚æ‚°‚ñ	Video System Co.
 nmsengen	”MŒŒ–ƒéŒ¾IƒAƒtƒ^[ƒtƒ@ƒCƒu (“ú–{”Å)	‚Ë‚Á‚¯‚Â‚Ü[‚¶‚á‚ñ‚¹‚ñ‚°‚ñ‚ ‚Ó‚½[‚Ó‚Ÿ‚¢‚Ô	Video System Co.
-fromance	ƒAƒCƒhƒ‹–ƒƒtƒ@ƒCƒiƒ‹ƒƒ}ƒ“ƒX (“ú–{”Å)	‚ ‚¢‚Ç‚é‚Ü[‚¶‚á‚ñ‚Ó‚Ÿ‚¢‚È‚é‚ë‚Ü‚ñ‚·	Video System Co.
+fromance	ƒAƒCƒhƒ‹–ƒƒtƒ@ƒCƒiƒ‹ƒƒ}ƒ“ƒX (“ú–{”Å)	‚ ‚¢‚Ç‚é‚Ü[‚¶‚á‚ñ‚Ó‚Ÿ‚¢‚È‚é‚ë‚Ü‚ñ‚·_1	Video System Co.
 pipedrm	ƒpƒCƒvƒhƒŠ[ƒ€ (USA”Å)	‚Ï‚¢‚Õ‚Ç‚è[‚Ş	Video System Co.
 pipedrmj	ƒpƒCƒvƒhƒŠ[ƒ€ (“ú–{”Å)	‚Ï‚¢‚Õ‚Ç‚è[‚Ş	Video System Co.
 hatris	ƒnƒbƒgƒŠƒX (“ú–{”Å)	‚Í‚Á‚Æ‚è‚·	Video System Co.
@@ -6218,3 +6230,5 @@ pzlestar	ƒpƒYƒ‹ƒXƒ^[ (Sang Ho Soft)	‚Ï‚¸‚é‚·‚½[	Sang Ho Soft
 sexyboom	ƒZƒNƒV[ƒu[ƒ“	‚¹‚­‚µ[‚Ô[‚ñ	Sang Ho Soft
 sfkick	ƒX[ƒp[ƒtƒŠ[ƒLƒbƒN	‚·[‚Ï[‚Ó‚è[‚«‚Á‚­	HEC
 spinkick	ƒXƒsƒ“ƒLƒbƒN	‚·‚Ò‚ñ‚«‚Á‚­	HEC
+7mezzo	ƒZƒbƒe ƒG ƒƒbƒcƒH	‚¹‚Á‚Ä‚¦‚ß‚Á‚Â‚§	Unknown
+magicfly	ƒ}ƒWƒbƒNƒtƒ‰ƒC	‚Ü‚¶‚Á‚­‚Ó‚ç‚¢	P&amp;A Games
