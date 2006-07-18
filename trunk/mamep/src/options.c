@@ -397,6 +397,88 @@ int options_parse_ini_file(mame_file *inifile)
 
 
 /*-------------------------------------------------
+    options_output_command_line_marked - output the
+    current marked state as command line string
+-------------------------------------------------*/
+
+int options_output_command_line_marked(char *buf)
+{
+	options_data *data;
+	int total = 1;
+
+	/* loop over all items */
+	for (data = datalist; data != NULL; data = data->next)
+	{
+		/* output entries for all non-deprecated and non-command items */
+		if (data->mark && (data->flags & (OPTION_DEPRECATED | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
+		{
+			int len = 2 + strlen(data->names[0]);
+
+			if (data->flags & OPTION_BOOLEAN)
+			{
+				int value = FALSE;
+
+				sscanf(data->data, "%d", &value);
+
+				if (value)
+				{
+					if (buf)
+						sprintf(buf, "-%s ", data->names[0]);
+				}
+				else
+				{
+					if (buf)
+						sprintf(buf, "-no%s ", data->names[0]);
+					len += 2;
+				}
+			}
+			else
+			{
+				if (data->data != NULL)
+				{
+					const char *temp = data->data;
+					int has_space = FALSE;
+
+					for (temp = data->data; *temp != 0; temp++)
+						if (isspace(*temp))
+						{
+							has_space = TRUE;
+							break;
+						}
+
+					if (has_space)
+					{
+						if (buf)
+							sprintf(buf, "-%s \"%s\" ", data->names[0], data->data);
+						len += 3 + strlen(data->data);
+					}
+					else
+					{
+						if (buf)
+							sprintf(buf, "-%s %s ", data->names[0], data->data);
+						len += 1 + strlen(data->data);
+					}
+				}
+			}
+
+			if (buf)
+				buf += len;
+			total += len;
+		}
+	}
+
+	if (buf)
+	{
+		if (total > 1)
+			buf--;
+		*buf = '\0';
+	}
+
+	return total;
+}
+
+
+/*-------------------------------------------------
     options_output_ini_file - output the current
     state to an INI file
 -------------------------------------------------*/

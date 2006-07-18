@@ -312,12 +312,10 @@ static void  build_default_bios(void);
 static void  build_alt_options(void);
 static void  unify_alt_options(void);
 
-static void  options_create_entry_core(void);
-static void  options_create_entry_driver(void);
+static void  options_create_entry_cli(void);
 static void  options_create_entry_winui(void);
 
-static void  options_free_entry_core(void);
-static void  options_free_entry_driver(void);
+static void  options_free_entry_cli(void);
 static void  options_free_entry_winui(void);
 
 static void  options_free_string_core(settings_type *s);
@@ -332,7 +330,8 @@ static void  options_duplicate_settings(const settings_type *source, settings_ty
 static void  options_duplicate_driver(const options_type *source, options_type *dest);
 
 static BOOL  options_compare_driver(const options_type *p1, const options_type *p2);
-static void  options_set_mark_driver(const options_type *p, const options_type *parent);
+static void  options_set_mark_core(const settings_type *p, const settings_type *ref);
+static void  options_set_mark_driver(const options_type *p, const options_type *ref);
 
 static int   options_load_default_config(void);
 static int   options_load_driver_config(int driver_index);
@@ -380,6 +379,9 @@ static void  free_folder_flag(f_flag *flag);
 /***************************************************************************
     Internal variables
  ***************************************************************************/
+
+static void *options_cli;	// all options
+static void *options_winui;	// only GUI related
 
 static settings_type settings;
 
@@ -522,11 +524,9 @@ void OptionsInit()
 
 	options_free_entries();
 
-	options_create_entry_core();
+	options_create_entry_cli();
 	options_get_core(&settings);
 	options_get_driver(&global);
-
-	options_create_entry_driver();
 
 	/* Setup default font */
 	GetTranslatedFont(&settings.list_logfont);
@@ -591,8 +591,7 @@ void OptionsExit(void)
 	FreeSettings(&settings);
 	FreeSettings(&backup.settings);
 
-	options_free_entry_core();
-	options_free_entry_driver();
+	options_free_entry_cli();
 	options_free_entry_winui();
 }
 
@@ -603,17 +602,22 @@ static void CopySettings(const settings_type *source, settings_type *dest)
 
 static void FreeSettings(settings_type *p)
 {
+	options_set_datalist(options_cli);
 	options_free_string_core(p);
+
+	options_set_datalist(options_winui);
 	options_free_string_winui(p);
 }
 
 void CopyGameOptions(const options_type *source, options_type *dest)
 {
+	options_set_datalist(options_cli);
 	options_duplicate_driver(source, dest);
 }
 
 void FreeGameOptions(options_type *o)
 {
+	options_set_datalist(options_cli);
 	options_free_string_driver(o);
 }
 
@@ -627,6 +631,7 @@ static BOOL IsOptionEqual(options_type *o1, options_type *o2)
 	opt1 = *o1;
 	opt2 = *o2;
 
+	options_set_datalist(options_cli);
 	if (options_compare_driver(&opt1, &opt2))
 		return FALSE;
 
@@ -2916,10 +2921,6 @@ Would you like to use the new configuration?";
 
 //============================================================
 
-static void *options_core;	// all options
-static void *options_driver;	// all options except fileio, palette, and language 
-static void *options_winui;	// only GUI related
-
 const options_entry winui_opts[] =
 {
 	{ NULL,                          NULL,                         OPTION_HEADER,     "PATH AND DIRECTORY OPTIONS"},
@@ -3174,22 +3175,13 @@ static void options_set_core(const settings_type *p);
 static void options_set_driver(const options_type *p);
 static void options_set_winui(const settings_type *p);
 
-static void options_create_entry_core(void)
+static void options_create_entry_cli(void)
 {
 	options_set_datalist(NULL);
 
 	options_add_entries(windows_opts);
 
-	options_core = options_get_datalist();
-}
-
-static void options_create_entry_driver(void)
-{
-	options_set_datalist(NULL);
-
-	options_add_entries(windows_opts);
-
-	options_driver = options_get_datalist();
+	options_cli = options_get_datalist();
 }
 
 static void options_create_entry_winui(void)
@@ -3202,18 +3194,11 @@ static void options_create_entry_winui(void)
 	options_winui = options_get_datalist();
 }
 
-static void options_free_entry_core(void)
+static void options_free_entry_cli(void)
 {
-	options_set_datalist(options_core);
+	options_set_datalist(options_cli);
 	options_free_entries();
-	options_core = NULL;
-}
-
-static void options_free_entry_driver(void)
-{
-	options_set_datalist(options_driver);
-	options_free_entries();
-	options_driver = NULL;
+	options_cli = NULL;
 }
 
 static void options_free_entry_winui(void)
@@ -3236,7 +3221,7 @@ static int options_load_default_config(void)
 	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 0)))
 		return 0;
 
-	options_set_datalist(options_core);
+	options_set_datalist(options_cli);
 	options_set_core(&backup.settings);
 	options_set_driver(&backup.global);
 
@@ -3267,7 +3252,7 @@ static int options_load_driver_config(int driver_index)
 	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 0)))
 		return 0;
 
-	options_set_datalist(options_driver);
+	options_set_datalist(options_cli);
 	options_set_driver(&driver_options[driver_index]);
 
 	retval = options_parse_ini_file(file);
@@ -3300,7 +3285,7 @@ static int options_load_alt_config(alt_options_type *alt_option)
 	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 0)))
 		return 0;
 
-	options_set_datalist(options_driver);
+	options_set_datalist(options_cli);
 	options_set_driver(alt_option->option);
 
 	retval = options_parse_ini_file(file);
@@ -3354,7 +3339,7 @@ static int options_save_default_config(void)
 	if (!(file = fopen(filename, "wt")))
 		return -1;
 
-	options_set_datalist(options_core);
+	options_set_datalist(options_cli);
 	options_set_core(&settings);
 	options_set_driver(&global);
 
@@ -3401,9 +3386,10 @@ static int options_save_driver_config(int driver_index)
 	if (!(file = fopen(filename, "wt")))
 		return -1;
 
-	options_set_datalist(options_driver);
+	options_set_datalist(options_cli);
 	options_set_driver(&driver_options[driver_index]);
 
+	options_clear_output_mark();
 	options_set_mark_driver(&driver_options[driver_index], parent);
 	options_output_ini_file_marked(file);
 
@@ -3449,9 +3435,10 @@ static int options_save_alt_config(alt_options_type *alt_option)
 	if (!(file = fopen(filename, "wt")))
 		return -1;
 
-	options_set_datalist(options_driver);
+	options_set_datalist(options_cli);
 	options_set_driver(alt_option->option);
 
+	options_clear_output_mark();
 	options_set_mark_driver(alt_option->option, parent);
 	options_output_ini_file_marked(file);
 
@@ -3486,6 +3473,42 @@ static int options_save_winui_config(void)
 	return 0;
 }
 
+char *OptionsGetCommandLine(int driver_index, void (*override_callback)(void))
+{
+	options_type *opt;
+	char pModule[_MAX_PATH];
+	char *p;
+	int pModuleLen;
+	int len;
+
+	GetModuleFileNameA(GetModuleHandle(NULL), pModule, _MAX_PATH);
+	pModuleLen = strlen(pModule) + 10 + strlen(drivers[driver_index]->name);
+
+	opt = GetGameOptions(driver_index);
+
+	options_set_datalist(options_cli);
+	options_set_core(&backup.settings);
+	options_set_driver(&backup.global);
+
+	options_clear_output_mark();
+	options_set_mark_core(&settings, &backup.settings);
+	options_set_mark_driver(opt, &backup.global);
+
+	if (override_callback)
+		override_callback();
+
+	len = options_output_command_line_marked(NULL);
+
+	p = malloc(pModuleLen + len + 1);
+	sprintf(p, "\"%s\" %s -norc ", pModule, drivers[driver_index]->name);
+	options_output_command_line_marked(p + pModuleLen);
+
+	if (p[pModuleLen] == '\0')
+		p[pModuleLen - 1] = '\0';
+
+	return p;
+}
+
 
 //============================================================
 
@@ -3494,7 +3517,7 @@ static void options_duplicate_winui(const settings_type *source, settings_type *
 
 static void options_duplicate_settings(const settings_type *source, settings_type *dest)
 {
-	options_set_datalist(options_core);
+	options_set_datalist(options_cli);
 	options_duplicate_core(source, dest);
 
 	options_set_datalist(options_winui);
@@ -4272,6 +4295,7 @@ INLINE void options_set_langcode(const char *name, int langcode)
 
 #define options_copy_langcode		options_copy_int
 #define options_free_langcode(p)
+#define options_compare_langcode	options_compare_int
 
 
 //============================================================
@@ -4300,6 +4324,7 @@ INLINE void _options_get_palette(char **p, const char *name)
 #define options_set_palette(name,value)	options_set_string(name,value)
 #define options_copy_palette		options_copy_string
 #define options_free_palette		FreeIfAllocated
+#define options_compare_palette		options_compare_string
 #endif /* UI_COLOR_DISPLAY */
 
 
@@ -4883,14 +4908,11 @@ INLINE void options_copy_folder_flag(const f_flag *src, f_flag *dest)
 #undef DEFINE_OPT_STRUCT
 #undef DEFINE_OPT_ARRAY
 
-#define START_OPT_FUNC_CORE	static void options_free_string_core(settings_type *p) { \
-				options_set_datalist(options_core);
+#define START_OPT_FUNC_CORE	static void options_free_string_core(settings_type *p) {
 #define END_OPT_FUNC_CORE	}
-#define START_OPT_FUNC_DRIVER	static void options_free_string_driver(options_type *p) { \
-				options_set_datalist(options_driver);
+#define START_OPT_FUNC_DRIVER	static void options_free_string_driver(options_type *p) {
 #define END_OPT_FUNC_DRIVER	}
-#define START_OPT_FUNC_WINUI	static void options_free_string_winui(settings_type *p) { \
-				options_set_datalist(options_winui);
+#define START_OPT_FUNC_WINUI	static void options_free_string_winui(settings_type *p) {
 #define END_OPT_FUNC_WINUI	}
 #define DEFINE_OPT(type,name)	options_free_##type(&p->name);
 #define DEFINE_OPT_CSV(type,name)	options_free_csv_##type((p->name), sizeof (p->name) / sizeof (*p->name));
@@ -4910,14 +4932,11 @@ INLINE void options_copy_folder_flag(const f_flag *src, f_flag *dest)
 #undef DEFINE_OPT_STRUCT
 #undef DEFINE_OPT_ARRAY
 
-#define START_OPT_FUNC_CORE	static void options_duplicate_core(const settings_type *source, settings_type *dest) { \
-				options_set_datalist(options_core);
+#define START_OPT_FUNC_CORE	static void options_duplicate_core(const settings_type *source, settings_type *dest) {
 #define END_OPT_FUNC_CORE	}
-#define START_OPT_FUNC_DRIVER	static void options_duplicate_driver(const options_type *source, options_type *dest) { \
-				options_set_datalist(options_driver);
+#define START_OPT_FUNC_DRIVER	static void options_duplicate_driver(const options_type *source, options_type *dest) {
 #define END_OPT_FUNC_DRIVER	}
-#define START_OPT_FUNC_WINUI	static void options_duplicate_winui(const settings_type *source, settings_type *dest) { \
-				options_set_datalist(options_winui);
+#define START_OPT_FUNC_WINUI	static void options_duplicate_winui(const settings_type *source, settings_type *dest) {
 #define END_OPT_FUNC_WINUI	}
 #define DEFINE_OPT(type,name)	options_copy_##type((source->name), (&dest->name));
 #define DEFINE_OPT_CSV(type,name)	options_copy_csv_##type((source->name), (dest->name), sizeof (dest->name) / sizeof (*dest->name));
@@ -4937,8 +4956,7 @@ INLINE void options_copy_folder_flag(const f_flag *src, f_flag *dest)
 #undef DEFINE_OPT_STRUCT
 #undef DEFINE_OPT_ARRAY
 
-#define START_OPT_FUNC_DRIVER	static BOOL options_compare_driver(const options_type *p1, const options_type *p2) { \
-				options_set_datalist(options_driver);
+#define START_OPT_FUNC_DRIVER	static BOOL options_compare_driver(const options_type *p1, const options_type *p2) {
 #define END_OPT_FUNC_DRIVER	return 0; \
 				}
 #define DEFINE_OPT(type,name)	_options_compare_##type((p1->name), (p2->name));
@@ -4955,11 +4973,11 @@ INLINE void options_copy_folder_flag(const f_flag *src, f_flag *dest)
 #undef DEFINE_OPT_STRUCT
 #undef DEFINE_OPT_ARRAY
 
-#define START_OPT_FUNC_DRIVER	static void options_set_mark_driver(const options_type *p, const options_type *parent) { \
-				options_set_datalist(options_driver); \
-				options_clear_output_mark();
+#define START_OPT_FUNC_CORE	static void options_set_mark_core(const settings_type *p, const settings_type *ref) {
+#define END_OPT_FUNC_CORE	}
+#define START_OPT_FUNC_DRIVER	static void options_set_mark_driver(const options_type *p, const options_type *ref) {
 #define END_OPT_FUNC_DRIVER	}
-#define DEFINE_OPT(type,name)	do { if (options_compare_##type((p->name), (parent->name))) options_set_##type(#name, (p->name)); } while (0);
+#define DEFINE_OPT(type,name)	do { if (options_compare_##type((p->name), (ref->name))) options_set_##type(#name, (p->name)); } while (0);
 #include "optdef.h"
 
 /* End of options.c */

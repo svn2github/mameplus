@@ -283,6 +283,8 @@ enum
 void OptionsInit(void);
 void OptionsExit(void);
 
+char *OptionsGetCommandLine(int driver_index, void (*override_callback)(void));
+
 void FreeGameOptions(options_type *o);
 void CopyGameOptions(const options_type *source, options_type *dest);
 

@@ -59,6 +59,7 @@ int options_parse_command_line(int argc, char **argv);
 int options_parse_xml_file(mame_file *xmlfile);
 int options_parse_ini_file(mame_file *inifile);
 
+int options_output_command_line_marked(char *buf);
 void options_output_xml_file(FILE *xmlfile);
 void options_output_ini_file(FILE *inifile);
 void options_output_xml_file_marked(FILE *xmlfile);
