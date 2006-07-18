@@ -1155,13 +1155,13 @@ static void texture_set_scalebitmap(int scrnum, int curbank)
 	if (scale_depth == 32)
 	{
 		UINT32 *src32 = ((UINT32 *)target->line[visarea.min_y]) + visarea.min_x;
-		UINT32 *dst32 = ((UINT32 *)dst->line[visarea.min_y]) + visarea.min_x;
+		UINT32 *dst32 = ((UINT32 *)dst->line[visarea.min_y * scale_effect.ysize]) + visarea.min_x * scale_effect.xsize;
 		scale_perform_scale((UINT8 *)src32, (UINT8 *)dst32, target->rowbytes, dst->rowbytes, width, height, 32, scale_dirty[scalebank], scalebank);
 	}
 	else
 	{
 		UINT16 *src16 = ((UINT16 *)target->line[visarea.min_y]) + visarea.min_x;
-		UINT16 *dst16 = ((UINT16 *)dst->line[visarea.min_y]) + visarea.min_x;
+		UINT32 *dst16 = ((UINT16 *)dst->line[visarea.min_y * scale_effect.ysize]) + visarea.min_x * scale_effect.xsize;
 		scale_perform_scale((UINT8 *)src16, (UINT8 *)dst16, target->rowbytes, dst->rowbytes, width, height, 15, scale_dirty[scalebank], scalebank);
 	}
 
