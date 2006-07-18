@@ -1161,7 +1161,7 @@ static void texture_set_scalebitmap(int scrnum, int curbank)
 	else
 	{
 		UINT16 *src16 = ((UINT16 *)target->line[visarea.min_y]) + visarea.min_x;
-		UINT32 *dst16 = ((UINT16 *)dst->line[visarea.min_y * scale_effect.ysize]) + visarea.min_x * scale_effect.xsize;
+		UINT16 *dst16 = ((UINT16 *)dst->line[visarea.min_y * scale_effect.ysize]) + visarea.min_x * scale_effect.xsize;
 		scale_perform_scale((UINT8 *)src16, (UINT8 *)dst16, target->rowbytes, dst->rowbytes, width, height, 15, scale_dirty[scalebank], scalebank);
 	}
 
