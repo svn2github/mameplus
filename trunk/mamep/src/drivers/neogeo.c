@@ -10042,5 +10042,5 @@ GAME ( 2003, kf2k3pcd, kf2k3pcb,         neogeo, neogeo,  kf2k3pcd, ROT0, "SNK P
 GAMEB( 2005, kogd,     kof97,    neogeo, neogeo, kog,     neogeo,   ROT0, "bootleg", "The King of gladiator (The King of Fighters '97 bootleg / fully decrypted)", 0 )
 GAMEB( 2003, pnyaad,   pnyaa,    neogeo, neogeo, neogeo,  pnyaad,   ROT0, "Aiky / Taito", "Pochi and Nyaa / Pochi tto Nyaa (decrypted C)" , 0 ) /* Encrypted Sound */
 /* new Bootleg */
-GAMEB( 2003, kof97pla, kof97,    neogeo, neogeo, neogeo,  kof97pla, ROT0, "bootleg", "The King of Fighters '97 Plus (bootleg / set 2)", 0 )
+GAMEB( 2003, kof97pla, kof97,    neogeo, neogeo, neogeo,  kof97pla, ROT0, "bootleg", "The King of Fighters '97 Plus 2003 (bootleg)", 0 )
 GAMEB( 2003, mslug5b,  mslug5,   neogeo, neogeo, neogeo,  mslug5b,  ROT0, "bootleg", "Metal Slug 5 (bootleg)", 0 )
