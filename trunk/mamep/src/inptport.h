@@ -103,12 +103,6 @@ enum
 	IPT_CATEGORY_NAME,			/* MESS only */
 	IPT_CATEGORY_SETTING,		/* MESS only */
 
-	/* custom action buttons */
-	IPT_CUSTOM1,
-	IPT_CUSTOM2,
-	IPT_CUSTOM3,
-	IPT_CUSTOM4,
-
 	/* start buttons */
 	IPT_START1,
 	IPT_START2,
@@ -175,6 +169,12 @@ enum
 	IPT_BUTTON8,
 	IPT_BUTTON9,
 	IPT_BUTTON10,
+
+	/* custom action buttons */
+	IPT_CUSTOM1,
+	IPT_CUSTOM2,
+	IPT_CUSTOM3,
+	IPT_CUSTOM4,
 
 	/* autofire control buttons */
 	IPT_TOGGLE_AUTOFIRE,
