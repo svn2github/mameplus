@@ -312,6 +312,8 @@ static void  build_default_bios(void);
 static void  build_alt_options(void);
 static void  unify_alt_options(void);
 
+static void  generate_default_ctrlr(void);
+
 static void  options_create_entry_cli(void);
 static void  options_create_entry_winui(void);
 
@@ -569,6 +571,8 @@ void OptionsInit()
 #ifdef MESS
 	SetCorePathList(FILETYPE_HASH, settings.mess.hashdir);
 #endif
+
+	generate_default_ctrlr();
 }
 
 void OptionsExit(void)
@@ -1503,6 +1507,8 @@ void SetCtrlrDir(const char* path)
 
 	if (path != NULL)
 		settings.ctrlrpath = strdup(path);
+
+	generate_default_ctrlr();
 }
 
 const char* GetCfgDir(void)
@@ -2704,6 +2710,42 @@ static const char *get_base_config_directory(void)
 	return path;
 }
 
+static void generate_default_ctrlr(void)
+{
+	static const char *default_ctrlr = 
+		"<mameconfig version=\"10\">\n"
+		"\t<system name=\"default\">\n"
+		"\t\t<!--\n"
+		"\t\t\tStandard input customization file\n"
+		"\t\t\t(dummy file for GUI)\n"
+		"\t\t-->\n"
+		"\t</system>\n"
+		"</mameconfig>\n";
+	const char *ctrlrpath = GetCtrlrDir();
+	const char *ctrlr = backup.global.ctrlr;
+	char filename[_MAX_PATH];
+	FILE *fp;
+	BOOL DoCreate;
+
+	SetCorePathList(FILETYPE_CTRLR, ctrlrpath);
+	DoCreate = !mame_faccess(ctrlr, FILETYPE_CTRLR);
+
+	dprintf("I %shave ctrlr %s", DoCreate ? "don't " : "", ctrlr);
+
+	if (!DoCreate)
+		return;
+
+	sprintf(filename, "%s\\%s.cfg", ctrlrpath, ctrlr);
+	_mkdir(ctrlrpath);
+
+	fp = fopen(filename, "wt");
+	if (fp)
+	{
+		fputs(default_ctrlr, fp);
+		fclose(fp);
+	}
+}
+
 static options_type *update_driver_use_default(int driver_index)
 {
 	options_type *opt = GetParentOptions(driver_index);
@@ -3368,7 +3410,7 @@ static int options_save_driver_config(int driver_index)
 	if (parent == NULL)
 		return 0;
 
-	sprintf(filename, "%s\\%s.ini", settings.inipath, strlower(drivers[driver_index]->name));
+	sprintf(filename, "%s\\%s.ini", inipath, strlower(drivers[driver_index]->name));
 
 	mkdir(inipath);
 
