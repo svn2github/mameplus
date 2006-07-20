@@ -134,9 +134,9 @@ BEGIN
         MENUITEM SEPARATOR
         POPUP "&Language"
         BEGIN
-            MENUITEM "English (US)",                ID_LANGUAGE_ENGLISH_US
-            MENUITEM "Chinese (Simp)",              ID_LANGUAGE_SMPL_CHINESE
-            MENUITEM "Chinese (Trad)",              ID_LANGUAGE_TRAD_CHINESE
+            MENUITEM "English (United States)",     ID_LANGUAGE_ENGLISH_US
+            MENUITEM "Chinese (PRC)",               ID_LANGUAGE_SMPL_CHINESE
+            MENUITEM "Chinese (Taiwan)",            ID_LANGUAGE_TRAD_CHINESE
             MENUITEM "French",                      ID_LANGUAGE_FRENCH
             MENUITEM "German",                      ID_LANGUAGE_GERMAN
             MENUITEM "Hungarian",                   ID_LANGUAGE_HUNGARIAN
@@ -144,7 +144,7 @@ BEGIN
             MENUITEM "Japanese",                    ID_LANGUAGE_JAPANESE
             MENUITEM "Korean",                      ID_LANGUAGE_KOREAN
             MENUITEM "Polish",                      ID_LANGUAGE_POLISH
-            MENUITEM "Portuguese (BRA)",            ID_LANGUAGE_PORTUGUESE_BRA
+            MENUITEM "Portuguese (Brazil)",         ID_LANGUAGE_PORTUGUESE_BRA
             MENUITEM "Spanish",                     ID_LANGUAGE_SPANISH
         END
     END
