@@ -877,10 +877,11 @@ static BOOL WaitWithMessageLoop(HANDLE hEvent)
 
 static void override_options(void)
 {
+	if (override_playback_directory)
+		options_set_string("input_directory", override_playback_directory);
+
 	if (g_pSaveStateName)
 		options_set_string("state", g_pSaveStateName);
-	if (override_playback_directory)
-		options_set_string("inp", override_playback_directory);
 	if (g_pPlayBkName)
 		options_set_string("pb", g_pPlayBkName);
 	if (g_pRecordName)
