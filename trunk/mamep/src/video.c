@@ -955,6 +955,9 @@ void video_init_scale_effect(void)
 			else
 				logerror("WARNING: scale_effect \"%s\" does not support depth %d, use depth %d\n", scale_desc(scale_effect.effect), old_depth, scale_depth);
 		}
+
+		if (scale_effect.effect)
+			logerror("scale effect: %s (depth:%d)\n", scale_effect.name, scale_depth);
 	}
 }
 
@@ -981,7 +984,7 @@ static void allocate_scalebitmap(void)
 
 			for (bank = 0; bank < 2; bank++)
 			{
-				scale_dirty[scrnum * MAX_SCREENS + bank] = 1;
+				scale_dirty[scrnum * 2 + bank] = 1;
 
 				scalebitmap[scrnum][bank] = bitmap_alloc_depth(
 					Machine->drv->screen[scrnum].maxwidth * scale_xsize,
@@ -1079,7 +1082,7 @@ static void convert_15_to_32(const mame_bitmap *src, mame_bitmap *dst, const rec
 		{
 			UINT16 pix = *src16++;
 			UINT32 color = ((pix & 0x7c00) << 9) | ((pix & 0x03e0) << 6) | ((pix & 0x001f) << 3);
-			*dst32++ = color | ((color >> 5) & 0x070707) | 0xff000000;
+			*dst32++ = color | ((color >> 5) & 0x070707);
 		}
 	}
 }
@@ -1108,7 +1111,7 @@ static void texture_set_scalebitmap(int scrnum, int curbank)
 	const rgb_t *palette;
 	rectangle visarea = eff_visible_area[scrnum];
 	int width, height;
-	int scalebank = scrnum * MAX_SCREENS + curbank;
+	int scalebank = scrnum * 2 + curbank;
 
 	visarea = eff_visible_area[scrnum];
 	visarea.max_x++;
@@ -1119,8 +1122,6 @@ static void texture_set_scalebitmap(int scrnum, int curbank)
 
 	if (scale_xsize != scale_effect.xsize || scale_ysize != scale_effect.ysize)
 		allocate_scalebitmap();
-
-	dst = scalebitmap[scrnum][curbank];
 
 	switch (scrformat[scrnum])
 	{
@@ -1147,11 +1148,12 @@ static void texture_set_scalebitmap(int scrnum, int curbank)
 		if (scale_depth == 32)
 			break;
 
-		convert_32_to_15(scrbitmap[scrnum][curbank], target, &visarea);
 		target = workbitmap[scrnum][curbank];
+		convert_32_to_15(scrbitmap[scrnum][curbank], target, &visarea);
 		break;
 	}
 
+	dst = scalebitmap[scrnum][curbank];
 	if (scale_depth == 32)
 	{
 		UINT32 *src32 = ((UINT32 *)target->line[visarea.min_y]) + visarea.min_x;
@@ -1164,6 +1166,7 @@ static void texture_set_scalebitmap(int scrnum, int curbank)
 		UINT16 *dst16 = ((UINT16 *)dst->line[visarea.min_y * scale_effect.ysize]) + visarea.min_x * scale_effect.xsize;
 		scale_perform_scale((UINT8 *)src16, (UINT8 *)dst16, target->rowbytes, dst->rowbytes, width, height, 15, scale_dirty[scalebank], scalebank);
 	}
+	scale_dirty[scalebank] = 0;
 
 	render_texture_set_bitmap(scrtexture[scrnum], dst, NULL, NULL, (scale_depth == 32) ? TEXFORMAT_RGB32 : TEXFORMAT_RGB15);
 }
