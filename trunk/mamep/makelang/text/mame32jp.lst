@@ -4030,6 +4030,7 @@ cloaksp	ƒNƒ[ƒN&ƒ_ƒK[ (ƒXƒyƒCƒ“”Å)	‚­‚ë[‚­‚ ‚ñ‚Ç‚¾‚ª[	Atari
 cloakfr	ƒNƒ[ƒN&ƒ_ƒK[ (ƒtƒ‰ƒ“ƒX”Å)	‚­‚ë[‚­‚ ‚ñ‚Ç‚¾‚ª[	Atari
 cloakgr	ƒNƒ[ƒN&ƒ_ƒK[ (ƒhƒCƒc”Å)	‚­‚ë[‚­‚ ‚ñ‚Ç‚¾‚ª[	Atari
 cloud9	ƒNƒ‰ƒEƒh9 (prototype)	‚­‚ç‚¤‚Ç‚È‚¢‚ñ	Atari
+firebeas	ƒtƒ@ƒCƒAƒr[ƒXƒg (prototype)	‚Ó‚Ÿ‚¢‚ ‚Ñ[‚·‚Æ	Atari
 jedi	ƒXƒ^[EƒEƒH[ƒY -ƒWƒFƒ_ƒC‚Ì•œQ	‚·‚½[‚¤‚§[‚¸_6‚¶‚¥‚¾‚¢‚Ì‚Ó‚­‚µ‚ã‚¤	Atari
 peterpak	ƒs[ƒ^[ƒpƒbƒNƒ‰ƒbƒg	‚Ò[‚½[‚Ï‚Á‚­‚ç‚Á‚Æ	Atari Games
 marble	ƒ}[ƒuƒ‹ƒ}ƒbƒhƒlƒX (set 1)	‚Ü[‚Ô‚é‚Ü‚Á‚Ç‚Ë‚·	Atari Games
@@ -4429,7 +4430,6 @@ gururin	‚®‚é‚è‚ñ	‚®‚é‚è‚ñ	Face
 pspikes2	ƒpƒ[ƒXƒpƒCƒNƒXII	‚Ï‚í[‚·‚Ï‚¢‚­‚·2	Video System Co.
 fatfury3	‰ì˜T“`à3 -—y‚©‚È‚é“¬‚¢	‚ª‚ë‚¤‚Å‚ñ‚¹‚Â_3	SNK
 zupapa	ƒYƒpƒpI	‚¸‚Ï‚Ï	SNK
-zupapad	ƒYƒpƒpI (custom decrypted C)	‚¸‚Ï‚Ï	SNK
 panicbom	ƒ{ƒ“ƒo[ƒ}ƒ“ ‚Ï‚É‚Á‚­ƒ{ƒ“ƒo[	‚Ú‚ñ‚Î[‚Ü‚ñ‚Ï‚É‚Á‚­‚Ú‚ñ‚Î[	Eighting / Hudson
 aodk	’É‰õGANGANsi‹È	‚Â‚¤‚©‚¢‚ª‚ñ‚ª‚ñ‚±‚¤‚µ‚ñ‚«‚å‚­	ADK / SNK
 sonicwi2	ƒ\ƒjƒbƒNƒEƒBƒ“ƒOƒX2	‚»‚É‚Á‚­‚¤‚¡‚ñ‚®‚·_2	Video System Co.
@@ -4521,44 +4521,31 @@ kof99a	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY '99 -ƒ~ƒŒƒjƒAƒ€ƒoƒgƒ‹ (set 2)	‚´‚«‚ñ‚®‚¨‚Ô
 kof99e	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY '99 -ƒ~ƒŒƒjƒAƒ€ƒoƒgƒ‹ (earlier)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_06_1999	SNK
 kof99n	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY '99 -ƒ~ƒŒƒjƒAƒ€ƒoƒgƒ‹ (not encrypted)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_06_1999	SNK
 kof99p	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY '99 -ƒ~ƒŒƒjƒAƒ€ƒoƒgƒ‹ (prototype)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_06_1999	SNK
-kof99d	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY '99 -ƒ~ƒŒƒjƒAƒ€ƒoƒgƒ‹ (decrypted C)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_06_1999	SNK
 ganryu	•‘ ŠŞ—¬‹L	‚Ş‚³‚µ‚ª‚ñ‚è‚ã‚¤‚«	Visco
-ganryud	•‘ ŠŞ—¬‹L (decrypted C)	‚Ş‚³‚µ‚ª‚ñ‚è‚ã‚¤‚«	Visco
 garou	‰ì˜T -ƒ}[ƒNEƒIƒuEƒUEƒEƒ‹ƒ”ƒX (set 1)	‚ª‚ë‚¤‚Ü[‚­‚¨‚Ô‚´‚¤‚é‚Ô‚·	SNK
 garouo	‰ì˜T -ƒ}[ƒNEƒIƒuEƒUEƒEƒ‹ƒ”ƒX (set 2)	‚ª‚ë‚¤‚Ü[‚­‚¨‚Ô‚´‚¤‚é‚Ô‚·	SNK
 garoup	‰ì˜T -ƒ}[ƒNEƒIƒuEƒUEƒEƒ‹ƒ”ƒX (prototype)	‚ª‚ë‚¤‚Ü[‚­‚¨‚Ô‚´‚¤‚é‚Ô‚·	SNK
-garoud	‰ì˜T -ƒ}[ƒNEƒIƒuEƒUEƒEƒ‹ƒ”ƒX (decrypted C)	‚ª‚ë‚¤‚Ü[‚­‚¨‚Ô‚´‚¤‚é‚Ô‚·	SNK
 s1945p	ƒXƒgƒ‰ƒCƒJ[ƒY1945 ƒvƒ‰ƒX	‚·‚Æ‚ç‚¢‚©[‚¸_1_31945‚Õ‚ç‚·	Psikyo
-s1945pd	ƒXƒgƒ‰ƒCƒJ[ƒY1945 ƒvƒ‰ƒX (decrypted C)	‚·‚Æ‚ç‚¢‚©[‚¸_1_31945‚Õ‚ç‚·	Psikyo
 preisle2	Œ´n“‡2 / Prehistoric Isle 2	‚°‚ñ‚µ‚Æ‚¤_2	Yumekobo
-preisl2d	Œ´n“‡2 / Prehistoric Isle 2 (decrypted C)	‚°‚ñ‚µ‚Æ‚¤_2	Yumekobo
 mslug3	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO3	‚ß‚½‚é‚·‚ç‚Á‚®_3_1	SNK
 mslug3n	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO3 (not encrypted)	‚ß‚½‚é‚·‚ç‚Á‚®_3_1	SNK
-mslug3d	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO3 (decrypted C)	‚ß‚½‚é‚·‚ç‚Á‚®_3_1	SNK
 mslug3b6	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO3 / Metal Slug 6 (ŠC‘¯”Å)	‚ß‚½‚é‚·‚ç‚Á‚®_3_2	bootleg
 kof2000	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2000	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_07_1_2000	SNK
 kof2000n	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2000 (not encrypted)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_07_1_2000	SNK
-kof2000d	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2000 (decrypted C)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_07_1_2000	SNK
 bangbead	ƒoƒ“ƒr[ƒh	‚Î‚ñ‚Ñ[‚Ç	Visco
 nitd	ƒiƒCƒgƒƒAEƒCƒ“EƒUEƒ_[ƒN	‚È‚¢‚Æ‚ß‚ ‚¢‚ñ‚´‚¾[‚­	Eleven / Gavaking
-nitdd	ƒiƒCƒgƒƒAEƒCƒ“EƒUEƒ_[ƒN (decrypted C)	‚È‚¢‚Æ‚ß‚ ‚¢‚ñ‚´‚¾[‚­	Eleven / Gavaking
 sengoku3	í‘“`³2001	‚¹‚ñ‚²‚­‚Å‚ñ‚µ‚å‚¤_32001	SNK
-sengok3d	í‘“`³2001 (decrypted C)	‚¹‚ñ‚²‚­‚Å‚ñ‚µ‚å‚¤_32001	SNK
 kof2001	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2001 (set 1)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_08_1_2001	Eolith / SNK
 kof2001h	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2001 (set 2)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_08_1_2001	Eolith / SNK
-kof2001d	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2001 (decrypted C)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_08_1_2001	Eolith / SNK
 kf2k1pls	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2001 / The King of Fighters 2001 Plus (ŠC‘¯”Å set 1)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_08_2_2001	bootleg
 kf2k1pa	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2001 / The King of Fighters 2001 Plus (ŠC‘¯”Å set 2)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_08_2_2001	bootleg
 cthd2003	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2001 / Crouching Tiger Hidden Dragon 2003 (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_08_3_2001	bootleg
 cthd2k3a	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2001 / Crouching Tiger Hidden Dragon 2003 (ŠC‘¯”Å set 2)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_08_3_2001	bootleg
 ct2k3sp	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2001 / Crouching Tiger Hidden Dragon 2003 Super Plus (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_08_3_2001	bootleg
 mslug4	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO4	‚ß‚½‚é‚·‚ç‚Á‚®_4_1	Mega
-mslug4d	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO4 (custom decrypted C)	‚ß‚½‚é‚·‚ç‚Á‚®_4_1	Mega
 ms4plus	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO4 / Metal Slug 4 Plus (ŠC‘¯”Å)	‚ß‚½‚é‚·‚ç‚Á‚®_4_2	bootleg
 rotd	ƒŒƒCƒWEƒIƒuEƒUEƒhƒ‰ƒSƒ“ƒY	‚ê‚¢‚¶‚¨‚Ô‚´‚Ç‚ç‚²‚ñ‚¸	Evoga / Playmore
-rotdd	ƒŒƒCƒWEƒIƒuEƒUEƒhƒ‰ƒSƒ“ƒY (decrypted C)	‚ê‚¢‚¶‚¨‚Ô‚´‚Ç‚ç‚²‚ñ‚¸	Evoga / Playmore
 kof2002	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 -Challenge to Ultimate Battle	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_1_2002	Eolith / Playmore
-kof2002d	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 -Challenge to Ultimate Battle (decrypted C)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_1_2002	Eolith / Playmore
 kof2002b	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 -Challenge to Ultimate Battle (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_1_2002	bootleg
 kf2k2pls	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Plus (ŠC‘¯”Å set 1)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
 kf2k2pla	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Plus (ŠC‘¯”Å set 2)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
@@ -4572,7 +4559,6 @@ kf10thep	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 10th Anniver
 kof2k4se	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters Special Edition 2004 (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
 kf2k4pls	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters Special Edition 2004 Plus (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
 matrim	V‹ŒŒ›ˆê‘° “¬¥ -Matrimelee	‚µ‚ñ‚²‚¤‚¯‚Â‚¶‚¢‚¿‚¼‚­‚Æ‚¤‚±‚ñ	Noise Factory / Atlus
-matrimd	V‹ŒŒ›ˆê‘° “¬¥ -Matrimelee (decrypted C)	‚µ‚ñ‚²‚¤‚¯‚Â‚¶‚¢‚¿‚¼‚­‚Æ‚¤‚±‚ñ	Noise Factory / Atlus
 matrimbl	V‹ŒŒ›ˆê‘° “¬¥ -Matrimelee (ŠC‘¯”Å)	‚µ‚ñ‚²‚¤‚¯‚Â‚¶‚¢‚¿‚¼‚­‚Æ‚¤‚±‚ñ	bootleg
 pnyaa	ƒ|ƒ`ƒb‚Æ‚É‚á`	‚Û‚¿‚Á‚Æ‚É‚á[	Aiky / Taito
 ms5pcb	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO5 (JAMMA PCB)	‚ß‚½‚é‚·‚ç‚Á‚®_5	SNK Playmore
@@ -4588,22 +4574,22 @@ svcsplus	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Super Plus (ŠC‘¯”
 samsho5	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ë (set 1)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_1‚º‚ë	Yuki Enterprise / SNK Playmore
 samsho5h	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ë (set 2)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_1‚º‚ë	Yuki Enterprise / SNK Playmore
 samsho5b	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ë (ŠC‘¯”Å)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_1‚º‚ë	bootleg
-kf2k3pcb	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 (“ú–{”Å JAMMA PCB)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_2003	SNK Playmore
-kof2003	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 (ŠCŠO / USA”Å MVS)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_2003	SNK Playmore
-kf2k3bl	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 (ŠC‘¯”Å set 1)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_2003	bootleg
+kf2k3pcb	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 (“ú–{”Å JAMMA PCB)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_1_2003	SNK Playmore
+kof2003	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 (ŠCŠO / USA”Å MVS)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_1_2003	SNK Playmore
+kf2k3bl	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 (ŠC‘¯”Å set 1)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_1_2003	bootleg
 kf2k3bla	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 (ŠC‘¯”Å set 2)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_2003	bootleg
-kf2k3pl	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 / The King of Fighters 2004 Plus / Hero (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_2003	bootleg
-kf2k3upl	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 / The King of Fighters 2004 Ultra Plus (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_2003	bootleg
+kf2k3pl	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 / The King of Fighters 2004 Plus / Hero (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_2_2003	bootleg
+kf2k3upl	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 / The King of Fighters 2004 Ultra Plus (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_1_2003	bootleg
 samsh5sp	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ëƒXƒyƒVƒƒƒ‹ (set 1 uncensored)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_2‚º‚ë‚·‚Ø‚µ‚á‚é	Yuki Enterprise / SNK Playmore
 samsh5sh	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ëƒXƒyƒVƒƒƒ‹ (set 2 censored)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_2‚º‚ë‚·‚Ø‚µ‚á‚é	Yuki Enterprise / SNK Playmore
 samsh5sn	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ëƒXƒyƒVƒƒƒ‹ (set 3 less censored)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_2‚º‚ë‚·‚Ø‚µ‚á‚é	Yuki Enterprise / SNK Playmore
 jockeygp	ƒWƒ‡ƒbƒL[ƒOƒ‰ƒ“ƒvƒŠ	‚¶‚å‚Á‚«[‚®‚ç‚ñ‚Õ‚è	Sun Amusement / BrezzaSoft
 vliner	V-ƒ‰ƒCƒi[ (set 1)	‚Ô‚¢‚ç‚¢‚È[	Dyna / BreezaSoft
 vlinero	V-ƒ‰ƒCƒi[ (set 2)	‚Ô‚¢‚ç‚¢‚È[	Dyna / BreezaSoft
+diggerma	ƒfƒBƒK[ƒ}ƒ“ (prototype)	‚Å‚¡‚ª[‚Ü‚ñ	Kyle Hodgetts
 beast	ƒVƒƒƒh[EƒIƒuEƒUEƒr[ƒXƒg -–‚«‚Ì| (Neo Demo)	‚µ‚á‚Ç[‚¨‚Ô‚´‚Ñ[‚·‚Æ	Psygnosis
 columnsn	ƒRƒ‰ƒ€ƒX (Neo-Geo)	‚±‚ç‚Ş‚·_1	Sega
 poknight	ƒ|[ƒJ[ƒiƒCƒg	‚Û[‚©[‚È‚¢‚Æ	JMK
-diggerma	ƒfƒBƒK[ƒ}ƒ“	‚Å‚¡‚ª[‚Ü‚ñ	Unknown
 neonopon	ƒlƒI‚Ìƒpƒlƒ|ƒ“ (beta)	‚Ë‚¨‚Ì‚Ï‚Ë‚Û‚ñ	Blastar
 neopong	ƒlƒIEƒ|ƒ“ (ver 1.1)	‚Ë‚¨‚Û‚ñ	Neodev
 npong10	ƒlƒIEƒ|ƒ“ (ver 1.0)	‚Ë‚¨‚Û‚ñ	Neodev
@@ -4614,8 +4600,8 @@ neodemo	ƒlƒIƒfƒ‚	‚Ë‚¨‚Å‚à	Chaos
 fr2ch	ƒAƒCƒhƒ‹–ƒƒtƒ@ƒCƒiƒ‹ƒƒ}ƒ“ƒX2 (CD”Å) (ŠC‘¯”Å)	‚ ‚¢‚Ç‚é‚Ü[‚¶‚á‚ñ‚Ó‚Ÿ‚¢‚È‚é‚ë‚Ü‚ñ‚·_2	Video System Co.
 cnbe	ƒR[ƒhƒl[ƒ€ -Blut Engel (2006-01-19)	‚±[‚Ç‚Ë[‚Ş	homebrew
 ngem2k	ƒGƒkƒW[ƒG[ƒGƒ€2K (ƒx[ƒ^”Å 2006-01-18)	‚¦‚Ê‚¶[‚¢[‚¦‚Ş‚Â[‚³‚¤‚´‚ñ	homebrew
-neo2500	ƒlƒI2500 ƒfƒ‚	‚Ë‚¨2500‚Å‚à	blastar@gmx.net
-kof97pla	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY '97 / The King of Fighters '97 Plus (ŠC‘¯”Å set 2)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_04_2_1997	bootleg
+neo2500	ƒlƒI2500 ƒfƒ‚	‚Ë‚¨2500‚Å‚à	Blastar
+kof97pla	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY '97 / The King of Fighters '97 Plus (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_04_2_1997	bootleg
 mslug5b	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO5 (ŠC‘¯”Å)	‚ß‚½‚é‚·‚ç‚Á‚®_5	bootleg
 roadedge	ƒ‰ƒEƒ“ƒhƒgƒŠƒbƒvRV (rev B)	‚ç‚¤‚ñ‚Ç‚Æ‚è‚Á‚Õ‚ [‚é‚Ô‚¢	SNK
 sams64_2	˜°2 <ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc2> -ƒAƒXƒ‰a–‚“`	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_5_2	SNK
