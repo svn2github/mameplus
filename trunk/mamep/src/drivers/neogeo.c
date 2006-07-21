@@ -6032,24 +6032,6 @@ ROM_START( sengoku3 ) /* Original Version - Encrypted GFX */
 	ROM_LOAD16_BYTE( "261-c4.bin", 0x1000001, 0x800000, CRC(0b45ae53) SHA1(a19fb21408ab633aee8bbf38bf43b5e26766b355) )
 ROM_END
 
-ROM_START( diggerma )
-	ROM_REGION( 0x100000, REGION_CPU1, 0 )
-	ROM_LOAD16_WORD_SWAP( "dig_p1.rom", 0x000000, 0x080000, CRC(eda433d7) SHA1(abb14c66777ab0fe4ac76a402e253a49df7178d8) )
-
-	NEO_SFIX_64K( "dig_s1.rom", CRC(75a88c1f) SHA1(295dd9225f1e3d2fc64a65b3c287c7f1765417b1) )
-
-	NEO_BIOS_SOUND_64K( "dig_m1.rom", CRC(833cdf1b) SHA1(3a92c79adbe0d37956ea46a4746d6f1cbf7d2c14) )
-
-	ROM_REGION( 0x200000, REGION_SOUND1, 0 )
-	ROM_LOAD( "dig_v1.rom", 0x000000, 0x080000, CRC(ee15bda4) SHA1(fe2206728e6efd02d6302869a98b196eb19a17df) )
-
-	NO_DELTAT_REGION
-
-	ROM_REGION( 0x400000, REGION_GFX3, 0 )
-	ROM_LOAD16_BYTE( "dig_c1.rom", 0x000000, 0x080000, CRC(3db0a4ed) SHA1(6214faa883d97ea05809b6af7e0c85a236a18a28) )
-	ROM_LOAD16_BYTE( "dig_c2.rom", 0x000001, 0x080000, CRC(3e632161) SHA1(83711c4286fb1d9f3f91414ac6e5fed36618033e) )
-ROM_END
-
 ROM_START( neopong )
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )
 	ROM_LOAD16_WORD_SWAP( "pong_p1.rom", 0x000000, 0x020000, CRC(9f35e29d) SHA1(261ce9305950debbc2fe088a45ab0fa83d6cf10d) )
@@ -8813,6 +8795,25 @@ ROM_START( mslug5b )
 	ROM_LOAD16_BYTE( "268-c8c.bin", 0x3000001, 0x800000, CRC(551d720e) SHA1(ebf69e334fcaba0fda6fd432fd0970283a365d12) ) /* Plane 2,3 */
 ROM_END
 
+ROM_START( diggerma ) /* Unlicensed Prototype, no official game ID # */
+	ROM_REGION( 0x100000, REGION_CPU1, 0 )
+	ROM_LOAD16_WORD_SWAP( "dig_p1.rom", 0x000000, 0x080000, CRC(eda433d7) SHA1(abb14c66777ab0fe4ac76a402e253a49df7178d8) )
+
+	NEO_SFIX_64K( "dig_s1.rom", CRC(75a88c1f) SHA1(295dd9225f1e3d2fc64a65b3c287c7f1765417b1) )
+
+	NEO_BIOS_SOUND_64K( "dig_m1.rom", CRC(833cdf1b) SHA1(3a92c79adbe0d37956ea46a4746d6f1cbf7d2c14) )
+
+	ROM_REGION( 0x200000, REGION_SOUND1, 0 )
+	ROM_LOAD( "dig_v1.rom", 0x000000, 0x080000, CRC(ee15bda4) SHA1(fe2206728e6efd02d6302869a98b196eb19a17df) )
+
+	NO_DELTAT_REGION
+
+	ROM_REGION( 0x400000, REGION_GFX3, 0 )
+	ROM_LOAD16_BYTE( "dig_c1.rom", 0x000000, 0x080000, CRC(3db0a4ed) SHA1(6214faa883d97ea05809b6af7e0c85a236a18a28) )
+	ROM_LOAD16_BYTE( "dig_c2.rom", 0x000001, 0x080000, CRC(3e632161) SHA1(83711c4286fb1d9f3f91414ac6e5fed36618033e) )
+ROM_END
+
+
 /******************************************************************************/
 
 /* dummy entry for the dummy bios driver */
@@ -10008,10 +10009,12 @@ GAMEB( 2001, jockeygp, neogeo,   neogeo, neogeo, jockeygp,jockeygp, ROT0, "Sun A
 GAMEB( 2001, vliner,   neogeo,   neogeo, neogeo, vliner,  vliner,   ROT0, "Dyna / BreezaSoft", "V-Liner (set 1)", 0 )
 GAMEB( 2001, vlinero,  vliner,   neogeo, neogeo, vliner,  vliner,   ROT0, "Dyna / BreezaSoft", "V-Liner (set 2)", 0 )
 
+/* Kyle Hodgetts */
+GAMEB( 2000, diggerma, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Kyle Hodgetts", "Digger Man (prototype)", 0 )
+
 /* homebrew */
 GAMEB( 1989, beast,    neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Psygnosis", "Shadow of the Beast (Neo Demo)", GAME_NO_SOUND )
 GAMEB( 1990, columnsn, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Sega", "Columns (Neo-Geo)", GAME_NO_SOUND )
-GAMEB( 1994, diggerma, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Unknown", "Digger Man", 0 )
 GAMEB( 200?, poknight, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "JMK", "Poker Night", GAME_NO_SOUND )
 GAMEB( 2002, neonopon, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Blastar", "Neo No Panepon (beta)", 0 )
 GAMEB( 2002, neopong,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Neodev", "Neo Pong (v1.1)", 0 )

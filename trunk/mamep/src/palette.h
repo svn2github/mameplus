@@ -245,7 +245,7 @@ void fillbitmap_ts(mame_bitmap *dest,pen_t pen,const rectangle *clip);
 
 INLINE UINT8 pal1bit(UINT8 bits)
 {
-	return bits ? 0xff : 0x00;
+	return (bits & 1) ? 0xff : 0x00;
 }
 
 

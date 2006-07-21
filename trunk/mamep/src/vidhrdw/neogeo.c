@@ -271,9 +271,9 @@ void neogeo_set_lower_resolution( void )
 		!strcmp(Machine->gamedrv->name,"jockeygp") ||
 		!strcmp(Machine->gamedrv->name,"vliner") ||
 		!strcmp(Machine->gamedrv->name,"vlinero") ||
+		!strcmp(Machine->gamedrv->name,"diggerma") ||
 		!strcmp(Machine->gamedrv->name,"beast") ||	// added
 		!strcmp(Machine->gamedrv->name,"columnsn") ||	// added
-		!strcmp(Machine->gamedrv->name,"diggerma") ||	// added
 		!strcmp(Machine->gamedrv->name,"poknight") ||	// added
 		!strcmp(Machine->gamedrv->name,"neonopon") ||	// added
 		!strcmp(Machine->gamedrv->name,"neopong") ||	// added

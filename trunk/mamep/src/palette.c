@@ -1231,15 +1231,14 @@ void palette_config(void)
 #else /* UI_COLOR_DISPLAY */
 			if (total_colors_with_ui + MAX_COLORTABLE <= 65534)
 			{
-				game_palette[total_colors + 0] = adjusted_palette[total_colors + 0] = MAKE_RGB(0x00,0x00,0x00);
-				game_palette[total_colors + 1] = adjusted_palette[total_colors + 1] = MAKE_RGB(0xff,0xff,0xff);
-				black_pen = total_colors_with_ui++;
-				white_pen = total_colors_with_ui++;
+				total_colors_with_ui += 2;
+				black_pen = total_colors + 0;
+				white_pen = total_colors + 1;
 			}
 			else
 			{
-				game_palette[0] = adjusted_palette[0] = MAKE_RGB(0x00,0x00,0x00);
-				game_palette[65535] = adjusted_palette[65535] = MAKE_RGB(0xff,0xff,0xff);
+				mark_pen_dirty(black_pen, game_palette[black_pen] = adjusted_palette[black_pen] = MAKE_RGB(0x00,0x00,0x00));
+				mark_pen_dirty(white_pen, game_palette[white_pen] = adjusted_palette[white_pen] = MAKE_RGB(0xff,0xff,0xff));
 				black_pen = 0;
 				white_pen = 65535;
 			}
@@ -1329,14 +1328,12 @@ int palette_get_total_colors_with_ui(void)
 		result += Machine->drv->total_colors;
 	if (Machine->drv->video_attributes & VIDEO_HAS_HIGHLIGHTS && !(colormode & DIRECT_RGB))
 		result += Machine->drv->total_colors;
-#ifndef NEW_RENDER
 #ifdef TRANS_UI
 	result += trans_colors;
 #endif /* TRANS_UI */
 	result += MAX_COLORTABLE;
 	if (result > 65534)
 		return 65534;
-#endif
 	return result;
 }
 
