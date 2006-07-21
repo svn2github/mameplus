@@ -5102,7 +5102,6 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( pspikes2 )	/* 0068 (c) 1994 Video System Co. */
 	DRIVER( fatfury3 )	/* 0069 (c) 1995 SNK */
 	DRIVER( zupapa )	/* 0070 Zupapa - released in 2001, 1994 prototype probably exists */
-	DRIVER( zupapad )	/* 0070 Zupapa - released in 2001, 1994 prototype probably exists */
 				/* 0071 Bang Bang Busters (prototype) 1994 Visco */
 				/* 0072 Last Odyssey Pinball Fantasia (prototype) 1995 Monolith */
 	DRIVER( panicbom )	/* 0073 (c) 1994 Eighting / Hudson */
@@ -5208,46 +5207,33 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( kof99e )	/* 0251 (c) 1999 SNK */
 	DRIVER( kof99n )	/* 0251 (c) 1999 SNK */
 	DRIVER( kof99p )	/* 0251 (c) 1999 SNK */
-	DRIVER( kof99d )	/* 0251 (c) 1999 SNK */
 	DRIVER( ganryu )	/* 0252 (c) 1999 Visco */
-	DRIVER( ganryud )	/* 0252 (c) 1999 Visco */
 	DRIVER( garou )		/* 0253 (c) 1999 SNK */
 	DRIVER( garouo )	/* 0253 (c) 1999 SNK */
 	DRIVER( garoup )	/* 0253 (c) 1999 SNK */
-	DRIVER( garoud )	/* 0253 (c) 1999 SNK */
 	DRIVER( s1945p )	/* 0254 (c) 1999 Psikyo */
-	DRIVER( s1945pd )	/* 0254 (c) 1999 Psikyo */
 	DRIVER( preisle2 )	/* 0255 (c) 1999 Yumekobo */
-	DRIVER( preisl2d )	/* 0255 (c) 1999 Yumekobo */
 	DRIVER( mslug3 )	/* 0256 (c) 2000 SNK */
 	DRIVER( mslug3n )	/* 0256 (c) 2000 SNK */
-	DRIVER( mslug3d )	/* 0256 (c) 2000 SNK */
 	DRIVER( mslug3b6 )	/* bootleg */
 	DRIVER( kof2000 )	/* 0257 (c) 2000 SNK */
 	DRIVER( kof2000n )	/* 0257 (c) 2000 SNK */
-	DRIVER( kof2000d )	/* 0257 (c) 2000 SNK */
 				/* 0258 SNK vs. Capcom? */
 	DRIVER( bangbead )	/* 0259 (c) 2000 Visco */
 //	DRIVER( bangbedp )	/* 0259 (c) 2000 Visco */
 	DRIVER( nitd )		/* 0260 (c) 2000 Eleven / Gavaking */
-	DRIVER( nitdd )		/* 0260 (c) 2000 Eleven / Gavaking */
 	DRIVER( sengoku3 )	/* 0261 (c) 2001 SNK */
-	DRIVER( sengok3d )	/* 0261 (c) 2001 SNK */
 	DRIVER( kof2001 )	/* 0262 (c) 2001 Eolith / SNK */
 	DRIVER( kof2001h )	/* 0262 (c) 2001 Eolith / SNK */
-	DRIVER( kof2001d )	/* 0262 (c) 2001 Eolith / SNK */
 	DRIVER( kf2k1pls )	/* 0262 (c) 2001 bootleg */
 	DRIVER( kf2k1pa )	/* 0262 (c) 2001 bootleg */
 	DRIVER( cthd2003 )	/* bootleg of kof2001*/
 	DRIVER( cthd2k3a )	/* bootleg of kof2001*/
 	DRIVER( ct2k3sp )	/* bootleg of kof2001 */
 	DRIVER( mslug4 )	/* 0263 (c) 2002 Mega Enterprise */
-	DRIVER( mslug4d )	/* 0263 (c) 2002 Mega Enterprise */
 	DRIVER( ms4plus )	/* 0263 bootleg */
 	DRIVER( rotd )		/* 0264 (c) 2002 Evoga */
-	DRIVER( rotdd )		/* 0264 (c) 2002 Evoga */
 	DRIVER( kof2002 )	/* 0265 (c) 2002 Eolith / Playmore */
-	DRIVER( kof2002d )	/* 0265 (c) 2002 Eolith / Playmore */
 	DRIVER( kof2002b )	/* 0265 (c) 2002 bootleg */
 	DRIVER( kf2k2pls )	/* bootleg */
 	DRIVER( kf2k2pla )	/* bootleg */
@@ -5261,7 +5247,6 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( kof2k4se )	/* bootleg of kof2002 */
 	DRIVER( kf2k4pls )	/* bootleg of kof2002 */
 	DRIVER( matrim )	/* 0266 (c) 2002 Atlus */
-	DRIVER( matrimd )	/* 0266 (c) 2002 Atlus */
 	DRIVER( matrimbl )	/* 0266 (c) 2002 bootleg */
 	DRIVER( pnyaa )		/* 0267 (c) 2003 Aiky / Taito */
 	DRIVER( ms5pcb )	/* 0268 (c) 2003 Playmore */
@@ -5304,32 +5289,48 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( syscheck )	/* FFFF (c) 2004 Blastar */
 	DRIVER( frogfest )	/* 0202 (c) 2005 Rastersoft */
 
-/* new */
-DRIVER( ltorb1 )
-DRIVER( neodemo )
-DRIVER( fr2ch )
-DRIVER( cnbe )
-DRIVER( ngem2k )
-DRIVER( neo2500 )
-/* new Decrypted */
-/*
-DRIVER( ct2k3ad )
-DRIVER( cthd2k3d )
-DRIVER( kof10thd )
-DRIVER( kof2003d )
-DRIVER( mslug5d )
-DRIVER( samsho5d )
-DRIVER( samsh5sd )
-DRIVER( lans2k4d )
-DRIVER( svcd )
-DRIVER( jckeygpd )
-DRIVER( kf2k3pcd )
-DRIVER( kogd )
-DRIVER( pnyaad )
-*/
-/* new Bootleg */
-DRIVER( kof97pla )
-DRIVER( mslug5b )
+    /* new */
+    DRIVER( ltorb1 )
+    DRIVER( neodemo )
+    DRIVER( fr2ch )
+    DRIVER( cnbe )
+    DRIVER( ngem2k )
+    DRIVER( neo2500 )
+	/* new Bootleg */
+	DRIVER( kof97pla )
+	DRIVER( mslug5b )
+
+#ifdef USE_NEOGEO_DECRYPTED
+	/* decrypted junk */
+	DRIVER( zupapad )	/* 0070 Zupapa - released in 2001, 1994 prototype probably exists */
+	DRIVER( kof99d )	/* 0251 (c) 1999 SNK */
+	DRIVER( ganryud )	/* 0252 (c) 1999 Visco */
+	DRIVER( garoud )	/* 0253 (c) 1999 SNK */
+	DRIVER( s1945pd )	/* 0254 (c) 1999 Psikyo */
+	DRIVER( preisl2d )	/* 0255 (c) 1999 Yumekobo */
+	DRIVER( mslug3d )	/* 0256 (c) 2000 SNK */
+	DRIVER( kof2000d )	/* 0257 (c) 2000 SNK */
+	DRIVER( nitdd )		/* 0260 (c) 2000 Eleven / Gavaking */
+	DRIVER( sengok3d )	/* 0261 (c) 2001 SNK */
+	DRIVER( kof2001d )	/* 0262 (c) 2001 Eolith / SNK */
+	DRIVER( mslug4d )	/* 0263 (c) 2002 Mega Enterprise */
+	DRIVER( rotdd )		/* 0264 (c) 2002 Evoga */
+	DRIVER( kof2002d )	/* 0265 (c) 2002 Eolith / Playmore */
+	DRIVER( matrimd )	/* 0266 (c) 2002 Atlus */
+    DRIVER( ct2k3ad )
+    DRIVER( cthd2k3d )
+    DRIVER( kof10thd )
+    DRIVER( kof2003d )
+    DRIVER( mslug5d )
+    DRIVER( samsho5d )
+    DRIVER( samsh5sd )
+    DRIVER( lans2k4d )
+    DRIVER( svcd )
+    DRIVER( jckeygpd )
+    DRIVER( kf2k3pcd )
+    DRIVER( kogd )
+    DRIVER( pnyaad )
+#endif /* USE_NEOGEO_DECRYPTED */
 	
 	/* Hyper NeoGeo 64 uses a 3 digit rom code? */
 
