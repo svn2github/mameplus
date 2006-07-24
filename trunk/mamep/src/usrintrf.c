@@ -771,11 +771,11 @@ void ui_update_and_render(void)
 #else
 		handle_keys();
 #endif
-
-		/* then let the cheat engine display its stuff */
-		if (options.cheat)
-			cheat_display_watches();
 	}
+
+	/* then let the cheat engine display its stuff */
+	if (options.cheat)
+		cheat_display_watches();
 
 	/* finally, display any popup messages */
 	ui_display_popup();
@@ -4261,6 +4261,7 @@ static void showgfx_exit(void)
 
 static void handle_palette_keys(showgfx_state *state)
 {
+	int rowcount, screencount;
 	int total;
 
 	/* handle zoom (minus,plus) */
@@ -4290,23 +4291,27 @@ static void handle_palette_keys(showgfx_state *state)
 	/* cache some info in locals */
 	total = state->palette.which ? Machine->drv->color_table_len : Machine->drv->total_colors;
 
+	/* determine number of entries per row and total */
+	rowcount = state->palette.count;
+	screencount = rowcount * rowcount;
+
 	/* handle keyboard navigation */
 	if (input_ui_pressed_repeat(IPT_UI_UP, 4))
-		state->palette.offset -= state->palette.count;
+		state->palette.offset -= rowcount;
 	if (input_ui_pressed_repeat(IPT_UI_DOWN, 4))
-		state->palette.offset += state->palette.count;
+		state->palette.offset += rowcount;
 	if (input_ui_pressed_repeat(IPT_UI_PAGE_UP, 6))
-		state->palette.offset -= state->palette.count * state->palette.count;
+		state->palette.offset -= screencount;
 	if (input_ui_pressed_repeat(IPT_UI_PAGE_DOWN, 6))
-		state->palette.offset += state->palette.count * state->palette.count;
+		state->palette.offset += screencount;
 	if (input_ui_pressed_repeat(IPT_UI_HOME, 4))
 		state->palette.offset = 0;
 	if (input_ui_pressed_repeat(IPT_UI_END, 4))
 		state->palette.offset = total;
 
 	/* clamp within range */
-	if (state->palette.offset + state->palette.count > ((total + state->palette.count - 1) / state->palette.count))
-		state->palette.offset = ((total + state->palette.count - 1) / state->palette.count) * state->palette.count - state->palette.count * state->palette.count;
+	if (state->palette.offset + screencount > ((total + rowcount - 1) / rowcount) * rowcount)
+		state->palette.offset = ((total + rowcount - 1) / rowcount) * rowcount - screencount;
 	if (state->palette.offset < 0)
 		state->palette.offset = 0;
 }
@@ -6089,8 +6094,8 @@ static void onscrd_brightness(int increment,int arg)
 	{
 		brightness = floor(render_container_get_brightness(container) * 1000.0f + 0.5f);
 		brightness += 10 * increment;
-		if (brightness < 800) brightness = 800;
-		if (brightness > 1200) brightness = 1200;
+		if (brightness < 100) brightness = 100;
+		if (brightness > 2000) brightness = 2000;
 		render_container_set_brightness(container, (float)brightness / 1000.0f);
 	}
 	brightness = floor(render_container_get_brightness(container) * 1000.0f + 0.5f);
@@ -6099,7 +6104,7 @@ static void onscrd_brightness(int increment,int arg)
 		sprintf(buf,"Screen %d %s %3d%%", arg, ui_getstring (UI_brightness), brightness / 10);
 	else
 		sprintf(buf,"%s %3d%%", ui_getstring (UI_brightness), brightness / 10);
-	displayosd(buf, 800, 1200, 1000, brightness);
+	displayosd(buf, 100, 2000, 1000, brightness);
 }
 
 static void onscrd_contrast(int increment,int arg)
@@ -6139,7 +6144,7 @@ static void onscrd_gamma(int increment,int arg)
 	{
 		gamma = floor(render_container_get_gamma(container) * 1000.0f + 0.5f);
 		gamma += 50 * increment;
-		if (gamma < 500) gamma = 500;
+		if (gamma < 100) gamma = 100;
 		if (gamma > 3000) gamma = 3000;
 		render_container_set_gamma(container, (float)gamma / 1000.0f);
 	}
@@ -6149,7 +6154,7 @@ static void onscrd_gamma(int increment,int arg)
 		sprintf(buf,"Screen %d %s %4.2f", arg, ui_getstring (UI_gamma), (double)gamma / 1000.0f);
 	else
 		sprintf(buf,"%s %4.2f", ui_getstring (UI_gamma), (double)gamma / 1000.0f);
-	displayosd(buf, 500, 3000, 1000, gamma);
+	displayosd(buf, 100, 3000, 1000, gamma);
 }
 
 static void onscrd_xscale(int increment,int arg)
