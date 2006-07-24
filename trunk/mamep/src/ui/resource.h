@@ -18,13 +18,13 @@
 #define IDS_UI_LARGEICONS               91
 #define IDS_UI_SMALLICONS               87
 #define IDS_UI_LIST                     98
-#define IDS_UI_DETAILS                  89
+#define IDS_UI_DETAILS                  88
 #define IDS_UI_SPACER2                  90
 #define IDS_UI_ARRANGE                  96	// status bar (IDS_UI_TOOLBAR + 15)
 #define IDS_UI_LINEUPICONS              92
 #define IDS_UI_REFRESH                  93
 #define IDS_UI_CUSTOMIZE                94
-#define IDS_UI_LANGUAGE                 88	// status bar (IDS_UI_FONT + 13)
+#define IDS_UI_LANGUAGE                 89	// status bar (IDS_UI_FONT + 13)
 #define ID_TOOLBAR_EDIT                 99
 #define IDD_MAIN                        101
 #define IDA_TAB_KEYS                    106
@@ -89,7 +89,6 @@
 #define IDI_HEADER_DOWN                 183
 #define IDD_PROP_DIRECT3D               184
 #define IDD_PROP_CONTROLLER             185
-#define IDI_SOUNDTAB                    666
 #define IDD_PALETTE                     190 // UI_COLOR_DISPLAY
 #define IDD_PROP_BIOS                   191
 #define IDD_PCBINFO                     192 // USE_VIEW_PCBINFO
@@ -106,6 +105,17 @@
 #define IDB_TOOLBAR_PL                  203
 #define IDB_TOOLBAR_HU                  204
 #define IDB_SPLASH                      210
+#define IDI_INFO                        701
+#define IDI_LARGE                       702
+#define IDI_SMALL                       703
+#define IDI_LIST                        704
+#define IDI_DETAILS                     705
+#define IDI_GROUP                       706
+#define IDI_PROPERTY                    707
+#define IDI_PCB                         708
+#define IDI_SND                         709
+#define IDI_BIOS                        710
+#define IDI_VIDEO                       711
 #define IDC_LIST                        1000
 #define IDC_PLAY                        1001
 #define IDC_DISPLAYS                    1002
@@ -486,6 +496,12 @@
 #define ID_OPTIONS_MMO2LST              40099
 #define ID_VIEW_PCBINFO                 40100 // USE_VIEW_PCBINFO
 #define IDC_PCBINFO                     40101 // USE_VIEW_PCBINFO
+
+#define ID_STYLE_BASIC					40190
+#define ID_STYLE_GRAY					40191
+#define ID_STYLE_OFFICE					40192
+#define ID_STYLE_OFFICE2003				40193
+#define ID_STYLE_OFFICE2007				40194
 
 #define ID_LANGUAGE_ENGLISH_US          40201
 #define ID_LANGUAGE_JAPANESE            40202

@@ -132,6 +132,14 @@ BEGIN
         MENUITEM "&Background Image...",        ID_OPTIONS_BG
         MENUITEM "&Export Game List...",        ID_OPTIONS_MMO2LST
         MENUITEM SEPARATOR
+        POPUP "&Menu Style"
+        BEGIN
+            MENUITEM "Basic",						ID_STYLE_BASIC
+            MENUITEM "Gray",						ID_STYLE_GRAY
+            MENUITEM "Office XP",					ID_STYLE_OFFICE
+            MENUITEM "Office 2003",					ID_STYLE_OFFICE2003
+            MENUITEM "Office 2007",					ID_STYLE_OFFICE2007
+        END
         POPUP "&Language"
         BEGIN
             MENUITEM "English (United States)",     ID_LANGUAGE_ENGLISH_US
@@ -353,14 +361,24 @@ IDI_YEAR                ICON    DISCARDABLE     "res\\year.ico"
 IDI_KEYBOARD            ICON    DISCARDABLE     "res\\keyboard.ico"
 IDI_JOYSTICK            ICON    DISCARDABLE     "res\\joystick.ico"
 IDI_CPU                 ICON    DISCARDABLE     "res\\cpu.ico"
-IDI_SOUND               ICON    DISCARDABLE     "res\\samples.ico"
-IDI_SOUNDTAB            ICON    DISCARDABLE     "res\\sound.ico"
+IDI_SOUND               ICON    DISCARDABLE     "res\\sound.ico"
 IDI_SOURCE              ICON    DISCARDABLE     "res\\source.ico"
 IDI_HARDDISK            ICON    DISCARDABLE     "res\\harddisk.ico"
 IDI_DISPLAY             ICON    DISCARDABLE     "res\\display.ico"
 IDI_CHECKMARK           ICON    DISCARDABLE     "res\\checkmark.ico"
 IDI_HEADER_UP           ICON    DISCARDABLE     "res\\header_up.ico"
 IDI_HEADER_DOWN         ICON    DISCARDABLE     "res\\header_down.ico"
+IDI_INFO                ICON    DISCARDABLE     "res\\info.ico"
+IDI_LARGE               ICON    DISCARDABLE     "res\\large.ico"
+IDI_SMALL               ICON    DISCARDABLE     "res\\small.ico"
+IDI_LIST                ICON    DISCARDABLE     "res\\list.ico"
+IDI_DETAILS             ICON    DISCARDABLE     "res\\details.ico"
+IDI_GROUP               ICON    DISCARDABLE     "res\\group.ico"
+IDI_PROPERTY            ICON    DISCARDABLE     "res\\property.ico"
+IDI_PCB                 ICON    DISCARDABLE     "res\\pcb.ico"
+IDI_SND                 ICON    DISCARDABLE     "res\\snd.ico"
+IDI_BIOS                ICON    DISCARDABLE     "res\\bios.ico"
+IDI_VIDEO               ICON    DISCARDABLE     "res\\video.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -656,7 +674,7 @@ STYLE WS_CHILD | WS_CAPTION
 CAPTION "Sound"
 FONT 8, "MS Sans Serif"
 BEGIN
-    ICON            IDI_SOUNDTAB,IDC_STATIC,20,10,20,20
+    ICON            IDI_SOUND,IDC_STATIC,20,10,20,20
     LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1

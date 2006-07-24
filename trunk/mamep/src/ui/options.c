@@ -252,6 +252,9 @@ typedef struct
 	char*    button_lime;
 	char*    cursor;
 #endif /* UI_COLOR_DISPLAY */
+
+	int      menu_style;
+
 //
 // CORE LANGUAGE OPTIONS
 //
@@ -855,6 +858,17 @@ void ResetGUI(void)
 {
 	settings.reset_gui = TRUE;
 }
+
+void SetMenuStyle(int style)
+{
+	settings.menu_style = style;
+}
+
+int GetMenuStyle(void)
+{
+	return settings.menu_style;
+}
+
 
 int GetLangcode(void)
 {
@@ -2996,6 +3010,7 @@ const options_entry winui_opts[] =
 #ifdef USE_SHOW_SPLASH_SCREEN
 	{ "display_splash_screen",       "0",                          OPTION_BOOLEAN,    "display splash screen on start"},
 #endif /* USE_SHOW_SPLASH_SCREEN */
+	{ "menu_style",                  "3",                          0,                 "current menu style"},
 
 	{ NULL,                          NULL,                         OPTION_HEADER,     "GENERAL OPTIONS"},
 #ifdef MESS

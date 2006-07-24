@@ -6,6 +6,10 @@ $(OBJ)/ui/%.o: src/ui/%.c
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -c $< -o $@
 
+$(OBJ)/ui/%.o: src/ui/%.cpp
+	@echo Compiling $<...
+	@g++ -mwindows -c $< -o $@
+
 OBJDIRS += $(OBJ)/ui
 
 # only OS specific output files and rules
@@ -25,14 +29,15 @@ TMPOBJS = \
 	$(OBJ)/ui/dxdecode.o \
 	$(OBJ)/ui/picker.o \
 	$(OBJ)/ui/properties.o \
-        $(OBJ)/ui/tabview.o \
+    $(OBJ)/ui/tabview.o \
 	$(OBJ)/ui/help.o \
 	$(OBJ)/ui/history.o \
 	$(OBJ)/ui/dialogs.o \
 	$(OBJ)/ui/win32ui.o \
 	$(OBJ)/ui/options.o \
 	$(OBJ)/ui/layout.o \
-	$(OBJ)/ui/translate.o
+	$(OBJ)/ui/translate.o \
+	$(OBJ)/ui/imagemenu.o
 
 ifneq ($(USE_UI_COLOR_DISPLAY),)
     TMPOBJS += $(OBJ)/ui/paletteedit.o
@@ -100,6 +105,8 @@ ifeq ($(MSVC_BUILD),)
 		-lddraw \
 		-ldinput \
 		-ldxguid \
+		-lmsimg32 \
+		-lstdc++ \
 		-lunicows
 else
     TMPLIBS = \

@@ -77,6 +77,7 @@
 #include "windows/window.h"
 #include "PaletteEdit.h"
 #include "translate.h"
+#include "imagemenu.h"
 
 #include "DirectDraw.h"
 #include "DirectInput.h"
@@ -307,6 +308,7 @@ static LRESULT CALLBACK PictureFrameWndProc(HWND hWnd, UINT uMsg, WPARAM wParam,
 static LRESULT CALLBACK PictureWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 static void             ChangeLanguage(int id);
+static void             ChangeMenuStyle(int id);
 static void             MamePlayRecordGame(void);
 static void             MamePlayBackGame(const char* fname_playback);
 static void             MamePlayRecordWave(void);
@@ -494,6 +496,31 @@ typedef struct
 	LPPROCESS_INFORMATION ProcessInfo;
 	HWND hwndFound;
 } FINDWINDOWHANDLE;
+
+static struct
+{
+	UINT itemID;
+	UINT iconID;
+} menu_icon_table[] =
+{
+	{ ID_HELP_ABOUT,			IDI_MAME32_ICON },
+	{ ID_FILE_AUDIT,			IDI_CHECKMARK },
+	{ ID_GAME_AUDIT,			IDI_CHECKMARK },
+	{ ID_FILE_PLAY,				IDI_WIN_ROMS },
+	{ ID_FILE_EXIT,				IDI_WIN_REDX },
+	{ ID_FILE_PLAY_RECORD_MNG,	IDI_VIDEO },
+	{ ID_FILE_PLAY_RECORD_WAVE,	IDI_SOUND },
+	{ ID_FILE_PLAY_RECORD,		IDI_JOYSTICK },
+	{ ID_OPTIONS_DIR,			IDI_FOLDER },
+	{ ID_VIEW_GROUPED,			IDI_GROUP },
+	{ ID_VIEW_DETAIL,			IDI_DETAILS },
+	{ ID_VIEW_LIST_MENU,		IDI_LIST },
+	{ ID_VIEW_SMALL_ICON,		IDI_SMALL },
+	{ ID_VIEW_LARGE_ICON,		IDI_LARGE },
+	{ ID_GAME_PROPERTIES,		IDI_PROPERTY },
+	{ ID_VIEW_PCBINFO,			IDI_PCB },
+	{ NULL }
+};
 
 /***************************************************************************
     Internal variables
@@ -1797,7 +1824,6 @@ static void ChangeLanguage(int id)
 
 	TranslateDialog(hMain, 0, TRUE);
 	TranslateMenu(GetMenu(hMain), 0);
-
 	DrawMenuBar(hMain);
 
 	TranslateTreeFolders(hTreeView);
@@ -1813,6 +1839,52 @@ static void ChangeLanguage(int id)
 	ResetColumnDisplay(FALSE);
 
 	Picker_SetSelectedItem(hwndList, nGame);
+}
+
+
+static void ApplyMenuStyle(HINSTANCE hInst, HWND hwnd, HMENU menuHandle)
+{
+	if (ImageMenu_Supported())
+	{
+		IMITEM imi;
+		int i;
+
+		ImageMenu_Create(hwnd, menuHandle, 1);
+
+		imi.mask = IMIF_LOADFROMRES|IMIF_ICON;
+		imi.hInst = hInst;
+
+	    for (i = 0; menu_icon_table[i].itemID; i++)
+	    {
+		    imi.itemID = menu_icon_table[i].itemID;
+		    imi.imageStr = MAKEINTRESOURCE(menu_icon_table[i].iconID);
+		    ImageMenu_SetItemImage(&imi);
+	    }
+
+		ImageMenu_SetStyle(hwnd, GetMenuStyle());
+	}
+}
+
+static void ChangeMenuStyle(int id)
+{
+	if (ImageMenu_Supported())
+	{
+		if (id)
+			SetMenuStyle(id - ID_STYLE_BASIC);
+	
+		CheckMenuRadioItem(GetMenu(hMain), ID_STYLE_BASIC, ID_STYLE_BASIC + MENU_STYLE_MAX - 1, ID_STYLE_BASIC + GetMenuStyle(), MF_BYCOMMAND);
+		ApplyMenuStyle(hInst, hMain, GetMenu(hMain));
+	}
+	else
+	{
+		int i;
+
+		SetMenuStyle(MENU_STYLE_BASIC);
+		CheckMenuRadioItem(GetMenu(hMain), ID_STYLE_BASIC, ID_STYLE_BASIC + MENU_STYLE_MAX - 1, ID_STYLE_BASIC, MF_BYCOMMAND);
+
+		for (i = MENU_STYLE_BASIC + 1; i < MENU_STYLE_MAX; i++)
+			EnableMenuItem(GetMenu(hMain), ID_STYLE_BASIC + i, MF_GRAYED);
+	}
 }
 
 // used for our sorted array of game names
@@ -2197,6 +2269,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 		g_pJoyGUI = NULL;
 
 	ChangeLanguage(0);
+	ChangeMenuStyle(0);
 
 	if (GetHideMouseOnStartup())
 	{    
@@ -2454,6 +2527,7 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 
 	case WM_INITMENUPOPUP:
 		UpdateMenu(GetMenu(hWnd));
+		ApplyMenuStyle(hInst, hWnd, GetMenu(hWnd));
 		break;
 
 	case WM_CONTEXTMENU:
@@ -2668,27 +2742,32 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 
 	case WM_MEASUREITEM :
 	{
-		LPMEASUREITEMSTRUCT lpmis = (LPMEASUREITEMSTRUCT) lParam;
-
-		// tell the list view that each row (item) should be just taller than our font
-
-		//DefWindowProc(hWnd, message, wParam, lParam);
-		//dprintf("default row height calculation gives %u\n",lpmis->itemHeight);
-
-		TEXTMETRIC tm;
-		HDC hDC = GetDC(NULL);
-		HFONT hFontOld = (HFONT)SelectObject(hDC,hFont);
-
-		GetTextMetrics(hDC,&tm);
-		
-		lpmis->itemHeight = tm.tmHeight + tm.tmExternalLeading + 1;
-		if (lpmis->itemHeight < 17)
-			lpmis->itemHeight = 17;
-		//dprintf("we would do %u\n",tm.tmHeight + tm.tmExternalLeading + 1);
-		SelectObject(hDC,hFontOld);
-		ReleaseDC(NULL,hDC);
-
-		return TRUE;
+		if (wParam) // the message was NOT sent by a menu
+		{
+		    LPMEASUREITEMSTRUCT lpmis = (LPMEASUREITEMSTRUCT) lParam;
+    
+		    // tell the list view that each row (item) should be just taller than our font
+    
+		    //DefWindowProc(hWnd, message, wParam, lParam);
+		    //dprintf("default row height calculation gives %u\n",lpmis->itemHeight);
+    
+		    TEXTMETRIC tm;
+		    HDC hDC = GetDC(NULL);
+		    HFONT hFontOld = (HFONT)SelectObject(hDC,hFont);
+    
+		    GetTextMetrics(hDC,&tm);
+		    
+		    lpmis->itemHeight = tm.tmHeight + tm.tmExternalLeading + 1;
+		    if (lpmis->itemHeight < 17)
+			    lpmis->itemHeight = 17;
+		    //dprintf("we would do %u\n",tm.tmHeight + tm.tmExternalLeading + 1);
+		    SelectObject(hDC,hFontOld);
+		    ReleaseDC(NULL,hDC);
+    
+		    return TRUE;
+		}
+		else
+			return FALSE;
 	}
 	default:
 
@@ -3756,8 +3835,18 @@ static void GamePicker_OnHeaderContextMenu(POINT pt, int nColumn)
 	hMenuLoad = LoadMenu(hInst, MAKEINTRESOURCE(IDR_CONTEXT_HEADER));
 	hMenu = GetSubMenu(hMenuLoad, 0);
 	TranslateMenu(hMenu, ID_SORT_ASCENDING);
+	
+	if (ImageMenu_Supported())
+	{
+		ImageMenu_CreatePopup(hMain, hMenuLoad);
+		ImageMenu_SetStyle(hMain, GetMenuStyle());
+	}
+
 	lastColumnClick = nColumn;
 	TrackPopupMenu(hMenu,TPM_LEFTALIGN | TPM_RIGHTBUTTON,pt.x,pt.y,0,hMain,NULL);
+
+	if (ImageMenu_Supported())
+		ImageMenu_Remove(hMenuLoad, 0);
 
 	DestroyMenu(hMenuLoad);
 }
@@ -4451,6 +4540,12 @@ static void PickCloneColor(void)
 static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 {
 	int i;
+
+	if ((id >= ID_STYLE_BASIC) && (id < ID_STYLE_BASIC + MENU_STYLE_MAX))
+	{
+		ChangeMenuStyle(id);
+		return TRUE;
+	}
 
 	if ((id >= ID_LANGUAGE_ENGLISH_US) && (id < ID_LANGUAGE_ENGLISH_US + UI_LANG_MAX))
 	{
@@ -6490,7 +6585,8 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 	HMENU hMenuLoad;
 	HMENU hMenu;
 	HMENU hSubMenu = NULL;
-	
+
+	int  nGame = Picker_GetSelectedItem(hwndList);
 	TPMPARAMS tpmp;
 	ZeroMemory(&tpmp,sizeof(tpmp));
 	tpmp.cbSize = sizeof(tpmp);
@@ -6505,7 +6601,6 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 #ifdef USE_IPS
 	if (have_selection)
 	{
-		int  nGame = Picker_GetSelectedItem(hwndList);
 		options_type* pOpts = GetGameOptions(nGame);
 		int  patch_count = GetPatchCount(drivers[nGame]->name, "*");
 		int  i;
@@ -6581,9 +6676,20 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 	}
 #endif /* USE_IPS */
 
+	if (ImageMenu_Supported())
+	{
+		ImageMenu_CreatePopup(hMain, hMenu);
+
+		ImageMenu_SetMenuTitleProps(hMenu, _Unicode(ModifyThe(drivers[nGame]->description)), TRUE, RGB(255,255,255));
+		ImageMenu_SetMenuTitleBkProps(hMenu, RGB(255,237,213), RGB(255,186,94), TRUE, TRUE);
+	}
+
 	dprintf("%d,%d,%d,%d", tpmp.rcExclude.left,tpmp.rcExclude.right,tpmp.rcExclude.top,tpmp.rcExclude.bottom);
 	//the menu should not overlap SSFRAME
 	TrackPopupMenuEx(hMenu,TPM_LEFTALIGN | TPM_RIGHTBUTTON,pt.x,pt.y,hMain,&tpmp);
+	
+	if (ImageMenu_Supported())
+		ImageMenu_Remove(hMenu, 0);
 
 	DestroyMenu(hMenuLoad);
 }
@@ -6610,7 +6716,16 @@ static BOOL HandleScreenShotContextMenu(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 	UpdateMenu(hMenu);
 
+	if (ImageMenu_Supported())
+	{
+		ImageMenu_CreatePopup(hWnd, hMenuLoad);
+		ImageMenu_SetStyle(hWnd, GetMenuStyle());
+	}
+
 	TrackPopupMenu(hMenu,TPM_LEFTALIGN | TPM_RIGHTBUTTON,pt.x,pt.y,0,hWnd,NULL);
+
+	if (ImageMenu_Supported())
+		ImageMenu_Remove(hMenuLoad, 0);
 
 	DestroyMenu(hMenuLoad);
 
@@ -6738,7 +6853,6 @@ static void UpdateMenu(HMENU hMenu)
 		else
 			CheckMenuItem(hMenu,ID_CONTEXT_SHOW_FOLDER_START + i,MF_BYCOMMAND | MF_UNCHECKED);
 	}
-
 }
 
 void InitTreeContextMenu(HMENU hTreeMenu)
@@ -7558,6 +7672,7 @@ void SwitchFullScreenMode(void)
 		// Restore the menu
 		SetMenu(hMain, LoadMenu(hInst,MAKEINTRESOURCE(IDR_UI_MENU)));
 		TranslateMenu(GetMenu(hMain), 0);
+		DrawMenuBar(hMain);
 
 		// Refresh the checkmarks
 		CheckMenuItem(GetMenu(hMain), ID_VIEW_FOLDERS, GetShowFolderList() ? MF_CHECKED : MF_UNCHECKED); 

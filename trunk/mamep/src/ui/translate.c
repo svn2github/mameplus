@@ -26,6 +26,8 @@
 #include "TreeView.h"
 #include "M32Util.h"
 
+#include "options.h"
+
 #if 0 //#if defined(__GNUC__)
 /* fix warning: cast does not match function type */
 #undef  TreeView_GetNextItem
@@ -120,30 +122,33 @@ int InitTranslator(int langcode)
 }
 
 
-static void TranslateMenuW(HMENU hMenu)
+static void TranslateMenuRecurse(HMENU hMenu)
 {
+	BOOL         isMenuBarItem = (hMenu == popstr[0].hMenu);
 	HMENU        hSubMenu;
+	MENUITEMINFO mii;
 	int          i;
 
-	for (i = 0; i < GetMenuItemCount(hMenu); i++)
+	for (i = GetMenuItemCount(hMenu) - 1; i >= 0; i--)
 	{
-		MENUITEMINFO  mii;
 		WCHAR         buffer[1024];
 		int           id;
 		char         *p;
 
 		hSubMenu = GetSubMenu(hMenu, i);
 		if (hSubMenu != NULL )
-			TranslateMenuW(hSubMenu);
+			TranslateMenuRecurse(hSubMenu);
 
 		mii.cbSize     = sizeof(MENUITEMINFO);
-		mii.fMask      = MIIM_ID | MIIM_DATA | MIIM_TYPE;
-		mii.fType      = MFT_STRING;
+		mii.fMask      = MIIM_ID | MIIM_STRING | MIIM_FTYPE;
 		mii.dwTypeData = buffer;
 		mii.cch        = sizeof(buffer) / sizeof(*buffer);
 		*buffer        = '\0';
 
-		if (!GetMenuItemInfo(hMenu, i, MF_BYPOSITION, &mii) || !mii.wID)
+		if (!GetMenuItemInfo(hMenu, i, TRUE, &mii) || !mii.wID)
+			continue;
+
+		if (mii.fType & MFT_SEPARATOR)
 			continue;
 
 		id = mii.wID - MENUA;
@@ -188,92 +193,16 @@ static void TranslateMenuW(HMENU hMenu)
 		}
 
 		p = _UI(MenuStrings[id]);
+
+		if (isMenuBarItem)
+			ModifyMenu(hMenu, i, MF_BYPOSITION, mii.wID, _Unicode(p));
+
 		mii.cbSize     = sizeof(MENUITEMINFO);
-		mii.fMask      = MIIM_TYPE;
-		mii.fType     |= MFT_STRING;
+		mii.fMask      = MIIM_STRING | MIIM_FTYPE;
 		mii.dwTypeData = _Unicode(p);
 		mii.cch        = lstrlen(mii.dwTypeData);
 
-		SetMenuItemInfo(hMenu, i, MF_BYPOSITION, &mii);
-	}
-}
-
-
-static void TranslateMenuA(HMENU hMenu)
-{
-	HMENU        hSubMenu;
-	int          i;
-
-	for (i = 0; i < GetMenuItemCount(hMenu); i++)
-	{
-		MENUITEMINFOA mii;
-		char          buffer[1024];
-		int           id;
-		char         *p;
-
-		hSubMenu = GetSubMenu(hMenu, i);
-		if (hSubMenu != NULL )
-			TranslateMenuA(hSubMenu);
-
-		mii.cbSize     = sizeof(MENUITEMINFO);
-		mii.fMask      = MIIM_ID | MIIM_DATA | MIIM_TYPE;
-		mii.fType      = MFT_STRING;
-		mii.dwTypeData = buffer;
-		mii.cch        = sizeof(buffer) / sizeof(*buffer);
-		*buffer        = '\0';
-
-		if (!GetMenuItemInfoA(hMenu, i, MF_BYPOSITION, &mii) || !mii.wID)
-			continue;
-
-		id = mii.wID - MENUA;
-		if (id < 0 || id >= NUM_MENUA)
-		{
-			int j;
-
-			for (j = 0; j < NUM_POPSTR; j++)
-				if (hMenu == popstr[j].hMenu)
-				{
-					mii.wID = popstr[j].uiString + i;
-					if (popstr[j].uiString >= MENUA)
-					{
-						id = mii.wID - MENUA;
-						if (id >= NUM_MENUA)
-							continue;
-					}
-					else
-					{
-						id = mii.wID - MENUB + NUM_MENUA;
-						if (id >= NUM_MENUA + NUM_MENUB)
-							continue;
-					}
-					break;
-				}
-
-			if (j == NUM_POPSTR)
-				continue;
-		}
-
-		if (!MenuStrings[id])
-		{
-			MenuStrings[id] = strdup(buffer);
-			if (!MenuStrings[id])
-				continue;
-		}
-
-		if (!MenuHelpStrings[id])
-		{
-			LoadStringA(GetModuleHandle(NULL), mii.wID, buffer, sizeof(buffer) / sizeof(*buffer));
-			MenuHelpStrings[id] = strdup(buffer);
-		}
-
-		p = _UI(MenuStrings[id]);
-		mii.cbSize     = sizeof(MENUITEMINFO);
-		mii.fMask      = MIIM_TYPE;
-		mii.fType      |= MFT_STRING;
-		mii.dwTypeData = p;
-		mii.cch        = strlen(mii.dwTypeData);
-
-		SetMenuItemInfoA(hMenu, i, MF_BYPOSITION, &mii);
+		SetMenuItemInfo(hMenu, i, TRUE, &mii);
 	}
 }
 
@@ -306,10 +235,7 @@ void TranslateMenu(HMENU hMenu, int uiString)
 		popstr[3].uiString = uiString;
 	}
 
-	if (OnNT())
-		TranslateMenuW(hMenu);
-	else
-		TranslateMenuA(hMenu);
+	TranslateMenuRecurse(hMenu);
 }
 
 

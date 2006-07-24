@@ -91,7 +91,9 @@ static TREEICON treeIconNames[] =
 	{ IDI_SOUND,               "sound" },
 	{ IDI_CPU,                 "cpu" },
 	{ IDI_HARDDISK,            "harddisk" },
-	{ IDI_SOURCE,              "source" }
+	{ IDI_SOURCE,              "source" },
+	{ IDI_SND,                 "snd" },
+	{ IDI_BIOS,                "bios" }
 };
 
 /***************************************************************************
@@ -969,7 +971,7 @@ void CreateSoundFolders(int parent_index)
 			continue;
 		}
 
-		lpTemp = NewFolder(name, 0, FALSE, next_folder_id++, parent_index, IDI_SOUND,
+		lpTemp = NewFolder(name, 0, FALSE, next_folder_id++, parent_index, IDI_SND,
 		                   GetFolderFlags(name));
 		AddFolder(lpTemp);
 		map[i] = treeFolders[nFolder++];
@@ -1223,7 +1225,7 @@ void CreateBIOSFolders(int parent_index)
 		if (i == start_folder-1)
 		{
 			LPTREEFOLDER lpTemp;
-			lpTemp = NewFolder(clone_of->description, 0, FALSE, next_folder_id++, parent_index, IDI_CPU,
+			lpTemp = NewFolder(clone_of->description, 0, FALSE, next_folder_id++, parent_index, IDI_BIOS,
 			                   GetFolderFlags(clone_of->description));
 			AddFolder(lpTemp);
 			AddGame(lpTemp,jj);
