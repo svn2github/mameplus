@@ -438,7 +438,7 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 
 	// Filter out clones?
 	if (dwMask & F_CLONES
-	&&	!(((clone_of = driver_get_clone(drivers[nGame])) != NULL && (clone_of->flags & NOT_A_DRIVER) == 0)) )
+	&&	( ( (clone_of = driver_get_clone(drivers[nGame]) ) != NULL) && ( (clone_of->flags & NOT_A_DRIVER) == 0)) )
 		return TRUE;
 
 	for (i = 0; g_lpFilterList[i].m_dwFilterType; i++)
