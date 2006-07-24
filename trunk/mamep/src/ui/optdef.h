@@ -297,6 +297,7 @@ START_OPT_FUNC_WINUI
 	DEFINE_OPT_CSV(int,              column_order)
 	DEFINE_OPT_CSV(int,              column_shown)
 	DEFINE_OPT(sort_column,          sort_column)
+	DEFINE_OPT(menu_style,           menu_style)
 	DEFINE_OPT(bool,                 sort_reverse)
 	DEFINE_OPT(int_positive,         folder_id)
 	DEFINE_OPT(bool,                 use_broken_icon)

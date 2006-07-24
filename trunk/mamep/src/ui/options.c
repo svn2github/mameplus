@@ -44,7 +44,8 @@
 #include "options.h"
 #include "translate.h"
 #include "directories.h"
-
+#include "imagemenu.h"
+	
 #ifdef _MSC_VER
 #define snprintf _snprintf
 #endif
@@ -104,6 +105,7 @@ typedef struct
 	int      column_order[COLUMN_MAX];
 	int      column_shown[COLUMN_MAX];
 	int      sort_column;
+	int      menu_style;
 	BOOL     sort_reverse;
 	int      window_x;
 	int      window_y;
@@ -252,8 +254,6 @@ typedef struct
 	char*    button_lime;
 	char*    cursor;
 #endif /* UI_COLOR_DISPLAY */
-
-	int      menu_style;
 
 //
 // CORE LANGUAGE OPTIONS
@@ -859,17 +859,6 @@ void ResetGUI(void)
 	settings.reset_gui = TRUE;
 }
 
-void SetMenuStyle(int style)
-{
-	settings.menu_style = style;
-}
-
-int GetMenuStyle(void)
-{
-	return settings.menu_style;
-}
-
-
 int GetLangcode(void)
 {
 	if (settings.langcode < 0)
@@ -1421,6 +1410,16 @@ void SetSortColumn(int column)
 int GetSortColumn(void)
 {
 	return settings.sort_column;
+}
+
+void SetMenuStyle(int style)
+{
+	settings.menu_style = style;
+}
+
+int GetMenuStyle(void)
+{
+	return settings.menu_style;
 }
 
 void SetSortReverse(BOOL reverse)
@@ -3010,7 +3009,6 @@ const options_entry winui_opts[] =
 #ifdef USE_SHOW_SPLASH_SCREEN
 	{ "display_splash_screen",       "0",                          OPTION_BOOLEAN,    "display splash screen on start"},
 #endif /* USE_SHOW_SPLASH_SCREEN */
-	{ "menu_style",                  "3",                          0,                 "current menu style"},
 
 	{ NULL,                          NULL,                         OPTION_HEADER,     "GENERAL OPTIONS"},
 #ifdef MESS
@@ -3051,6 +3049,7 @@ const options_entry winui_opts[] =
 	{ "column_order",                "0,2,3,4,5,6,7,8,9,10,11,1",  0,                 "column order settings"},
 	{ "column_shown",                "1,0,1,1,1,1,1,1,1,1,1,1",    0,                 "show or hide column settings"},
 	{ "sort_column",                 "0",                          0,                 "sort column"},
+	{ "menu_style",                  "3",                          0,                 "current menu style"},
 	{ "sort_reverse",                "0",                          OPTION_BOOLEAN,    "sort descending"},
 	{ "folder_id",                   "0",                          0,                 "last selected folder id"},
 	{ "use_broken_icon",             "1",                          OPTION_BOOLEAN,    "use broken icon for not working games"},
@@ -4573,6 +4572,14 @@ INLINE void options_copy_list_fontface(const LOGFONTA *src, LOGFONTA *dest)
 #define options_free_sort_column		options_free_int
 #define _options_compare_sort_column		_options_compare_int
 
+
+//============================================================
+
+#define _options_get_menu_style(p,name)	_options_get_int_min_max(p, name, MENU_STYLE_BASIC, MENU_STYLE_MAX - 1)
+#define options_set_menu_style		options_set_int
+#define options_copy_menu_style		options_copy_int
+#define options_free_menu_style		options_free_int
+#define options_compare_menu_style	options_compare_int
 
 //============================================================
 
