@@ -519,7 +519,7 @@ static struct
 	{ ID_VIEW_LARGE_ICON,		IDI_LARGE },
 	{ ID_GAME_PROPERTIES,		IDI_PROPERTY },
 	{ ID_VIEW_PCBINFO,			IDI_PCB },
-	{ NULL }
+	{ 0 }
 };
 
 /***************************************************************************
