@@ -267,9 +267,9 @@ ccboot	ƒNƒŒƒCƒW[ƒNƒ‰ƒCƒ}[ (ŠC‘¯”Å set 1)	‚­‚ê‚¢‚¶[‚­‚ç‚¢‚Ü[_1	bootleg
 ccboot2	ƒNƒŒƒCƒW[ƒNƒ‰ƒCƒ}[ (ŠC‘¯”Å set 2)	‚­‚ê‚¢‚¶[‚­‚ç‚¢‚Ü[_1	bootleg
 ckong	ƒhƒ“ƒL[ƒRƒ“ƒO / Crazy Kong Part II (set 1)	‚Ç‚ñ‚«[‚±‚ñ‚®_1	Falcon
 ckonga	ƒhƒ“ƒL[ƒRƒ“ƒO / Crazy Kong Part II (set 2)	‚Ç‚ñ‚«[‚±‚ñ‚®_1	Falcon
-ckongjeu	ƒhƒ“ƒL[ƒRƒ“ƒO / Crazy Kong Part II (Jeutel ŠC‘¯”Å)	‚Ç‚ñ‚«[‚±‚ñ‚®_1	bootleg
-ckongo	ƒhƒ“ƒL[ƒRƒ“ƒO / Crazy Kong (Orca ŠC‘¯”Å)	‚Ç‚ñ‚«[‚±‚ñ‚®_1	bootleg
-ckongalc	ƒhƒ“ƒL[ƒRƒ“ƒO / Crazy Kong (Alca ŠC‘¯”Å)	‚Ç‚ñ‚«[‚±‚ñ‚®_1	bootleg
+ckongjeu	ƒhƒ“ƒL[ƒRƒ“ƒO / Crazy Kong Part II (Jeutel) (ŠC‘¯”Å)	‚Ç‚ñ‚«[‚±‚ñ‚®_1	bootleg
+ckongo	ƒhƒ“ƒL[ƒRƒ“ƒO / Crazy Kong (Orca) (ŠC‘¯”Å)	‚Ç‚ñ‚«[‚±‚ñ‚®_1	bootleg
+ckongalc	ƒhƒ“ƒL[ƒRƒ“ƒO / Crazy Kong (Alca) (ŠC‘¯”Å)	‚Ç‚ñ‚«[‚±‚ñ‚®_1	bootleg
 bigkong	ƒhƒ“ƒL[ƒRƒ“ƒO / Big Kong	‚Ç‚ñ‚«[‚±‚ñ‚®_1	bootleg
 monkeyd	ƒhƒ“ƒL[ƒRƒ“ƒO / Monkey Donkey	‚Ç‚ñ‚«[‚±‚ñ‚®_1	bootleg
 rpatrolb	ƒŠƒo[ƒpƒgƒ[ƒ‹ (ŠC‘¯”Å)	‚è‚Î[‚Ï‚Æ‚ë[‚é	bootleg
@@ -604,7 +604,7 @@ ws89	ƒvƒ–ì‹…ƒ[ƒ‹ƒhƒXƒ^ƒWƒAƒ€'89 -ŠJ–‹”Å (“ú–{”Å)	‚Õ‚ë‚â‚«‚ã‚¤‚í[‚é‚Ç‚·‚½‚¶‚ 
 dangseed	ƒfƒ“ƒWƒƒƒ‰ƒXƒV[ƒh (“ú–{”Å)	‚Å‚ñ‚¶‚á‚ç‚·‚µ[‚Ç	Namco
 ws90	ƒvƒ–ì‹…ƒ[ƒ‹ƒhƒXƒ^ƒWƒAƒ€'90 -Œƒ“¬”Å (“ú–{”Å)	‚Õ‚ë‚â‚«‚ã‚¤‚í[‚é‚Ç‚·‚½‚¶‚ ‚Ş_390	Namco
 pistoldm	ƒsƒXƒgƒ‹‘å–¼‚Ì–`Œ¯ (“ú–{”Å)	‚Ò‚·‚Æ‚é‚¾‚¢‚İ‚å‚¤‚Ì‚Ú‚¤‚¯‚ñ	Namco
-boxyboy	‘qŒÉ”Ôƒfƒ‰ƒbƒNƒX / Boxy Boy. (USA”Å)	‚»‚¤‚±‚Î‚ñ‚Å‚ç‚Á‚­‚·	Namco
+boxyboy	‘qŒÉ”Ôƒfƒ‰ƒbƒNƒX / Boxy Boy (USA”Å)	‚»‚¤‚±‚Î‚ñ‚Å‚ç‚Á‚­‚·	Namco
 soukobdx	‘qŒÉ”Ôƒfƒ‰ƒbƒNƒX (“ú–{”Å)	‚»‚¤‚±‚Î‚ñ‚Å‚ç‚Á‚­‚·	Namco
 puzlclub	ƒpƒYƒ‹ƒNƒ‰ƒu (“ú–{”Å prototype)	‚Ï‚¸‚é‚­‚ç‚Ô	Namco
 tankfrce	ƒ^ƒ“ƒNƒtƒH[ƒX (USA”Å)	‚½‚ñ‚­‚Ó‚§[‚·	Namco
@@ -982,6 +982,7 @@ galxwar2	ƒMƒƒƒ‰ƒNƒV[ƒEƒH[ƒY (Universal set 2)	‚¬‚á‚ç‚­‚µ[‚¤‚§[‚¸	Universal
 galxwart	ƒMƒƒƒ‰ƒNƒV[ƒEƒH[ƒY (Taito?)	‚¬‚á‚ç‚­‚µ[‚¤‚§[‚¸	Taito?
 starw	ƒMƒƒƒ‰ƒNƒV[ƒEƒH[ƒY / Star Wars	‚¬‚á‚ç‚­‚µ[‚¤‚§[‚¸	bootleg
 lrescue	ƒ‹ƒiƒŒƒXƒLƒ…[	‚é‚È‚ê‚·‚«‚ã[	Taito
+lrescuem	ƒ‹ƒiƒŒƒXƒLƒ…[ (Model Racing) (ŠC‘¯”Å)	‚é‚È‚ê‚·‚«‚ã[	Taito (Model Racing bootleg)
 grescue	ƒ‹ƒiƒŒƒXƒLƒ…[ / Galaxy Rescue	‚é‚È‚ê‚·‚«‚ã[	Taito (Universal license?)
 desterth	ƒ‹ƒiƒŒƒXƒLƒ…[ / Destination Earth	‚é‚È‚ê‚·‚«‚ã[	bootleg
 cosmicmo	ƒXƒy[ƒXƒCƒ“ƒx[ƒ_[ / Cosmic Monsters	‚·‚Ø[‚·‚¢‚ñ‚×[‚¾[_1_1	Universal
@@ -995,7 +996,7 @@ schaser	ƒXƒy[ƒXƒ`ƒFƒCƒT[	‚·‚Ø[‚·‚¿‚¥‚¢‚³[	Taito
 schasrcv	ƒXƒy[ƒXƒ`ƒFƒCƒT[ (CV ver)	‚·‚Ø[‚·‚¿‚¥‚¢‚³[	Taito
 lupin3	ƒ‹ƒpƒ“O¢	‚é‚Ï‚ñ‚³‚ñ‚¹‚¢	Taito
 spclaser	ƒXƒy[ƒXƒEƒH[ / Space Laser	‚·‚Ø[‚·‚¤‚§[	GamePlan (Taito)
-laser	ƒXƒy[ƒXƒEƒH[ / Laser	‚·‚Ø[‚·‚¤‚§[	<unknown>
+laser	ƒXƒy[ƒXƒEƒH[ / Astro Laser	‚·‚Ø[‚·‚¤‚§[	Leisure Time Electronics Inc.
 spcewarl	ƒXƒy[ƒXƒEƒH[ (Leijac)	‚·‚Ø[‚·‚¤‚§[	Leijac (Konami)
 polaris	ƒ|ƒ‰ƒŠƒX (set 1)	‚Û‚ç‚è‚·	Taito
 polarisa	ƒ|ƒ‰ƒŠƒX (set 2)	‚Û‚ç‚è‚·	Taito
@@ -1423,10 +1424,10 @@ arknoidj	ƒAƒ‹ƒJƒmƒCƒh (“ú–{”Å)	‚ ‚é‚©‚Ì‚¢‚Ç_1	Taito Corporation
 arkbl2	ƒAƒ‹ƒJƒmƒCƒh (“ú–{”Å) (ŠC‘¯”Å set 2)	‚ ‚é‚©‚Ì‚¢‚Ç_1	bootleg
 arkbl3	ƒAƒ‹ƒJƒmƒCƒh (“ú–{”Å) (ŠC‘¯”Å set 3)	‚ ‚é‚©‚Ì‚¢‚Ç_1	bootleg
 paddle2	ƒAƒ‹ƒJƒmƒCƒh / Paddle 2	‚ ‚é‚©‚Ì‚¢‚Ç_1	bootleg
-arkatayt	ƒAƒ‹ƒJƒmƒCƒh (“ú–{”Å) (Tayto ŠC‘¯”Å)	‚ ‚é‚©‚Ì‚¢‚Ç_1	bootleg
+arkatayt	ƒAƒ‹ƒJƒmƒCƒh (“ú–{”Å) (Tayto) (ŠC‘¯”Å)	‚ ‚é‚©‚Ì‚¢‚Ç_1	bootleg
 arkblock	ƒAƒ‹ƒJƒmƒCƒh / Block (“ú–{”Å) (ŠC‘¯”Å)	‚ ‚é‚©‚Ì‚¢‚Ç_1	bootleg
-arkbloc2	ƒAƒ‹ƒJƒmƒCƒh / Block (Game Corporation ŠC‘¯”Å)	‚ ‚é‚©‚Ì‚¢‚Ç_1	bootleg
-arkangc	ƒAƒ‹ƒJƒmƒCƒh (Game Corporation ŠC‘¯”Å)	‚ ‚é‚©‚Ì‚¢‚Ç_1	bootleg
+arkbloc2	ƒAƒ‹ƒJƒmƒCƒh / Block (Game Corporation) (ŠC‘¯”Å)	‚ ‚é‚©‚Ì‚¢‚Ç_1	bootleg
+arkangc	ƒAƒ‹ƒJƒmƒCƒh (Game Corporation) (ŠC‘¯”Å)	‚ ‚é‚©‚Ì‚¢‚Ç_1	bootleg
 arkatour	ƒAƒ‹ƒJƒmƒCƒh / Tournament Arkanoid (USA”Å)	‚ ‚é‚©‚Ì‚¢‚Ç_1	Taito America Corporation (Romstar license)
 tetrsark	ƒeƒgƒŠƒX (D.R. Korea)	‚Ä‚Æ‚è‚·_1_3‚Å‚¡[‚ [‚é‚±‚ê‚ 	D.R. Korea
 sqix	ƒX[ƒp[ƒNƒCƒbƒNƒX (set 1)	‚·[‚Ï[‚­‚¢‚Á‚­‚·	Taito
@@ -1575,6 +1576,7 @@ pwheelsj	ƒpƒ[ƒzƒC[ƒ‹ƒY (“ú–{”Å)	‚Ï‚í[‚Ù‚¢[‚é‚¸	Taito Corporation
 racingb	ƒŒ[ƒVƒ“ƒOƒr[ƒg (ŠCŠO”Å)	‚ê[‚µ‚ñ‚®‚Ñ[‚Æ	Taito Corporation Japan
 topland	ƒgƒbƒvƒ‰ƒ“ƒfƒBƒ“ƒO (ŠCŠO”Å)	‚Æ‚Á‚Õ‚ç‚ñ‚Å‚¡‚ñ‚®	Taito Corporation Japan
 ainferno	ƒGƒAEƒCƒ“ƒtƒFƒ‹ƒm (USA”Å)	‚¦‚ ‚¢‚ñ‚Ó‚¥‚é‚Ì	Taito America Corporation
+mlanding	ƒ~ƒbƒhƒiƒCƒgƒ‰ƒ“ƒfƒBƒ“ƒO	‚İ‚Á‚Ç‚È‚¢‚Æ‚ç‚ñ‚Å‚¡‚ñ‚®	Taito Corporation
 gunbustr	ƒKƒ“ƒoƒXƒ^[ (“ú–{”Å)	‚ª‚ñ‚Î‚·‚½[	Taito Corporation
 superchs	ƒX[ƒp[ƒ`ƒFƒCƒX -ƒNƒŠƒ~ƒiƒ‹ƒ^[ƒ~ƒl[ƒVƒ‡ƒ“ (USA”Å)	‚·[‚Ï[‚¿‚¥‚¢‚·	Taito America Corporation
 groundfx	ƒOƒ‰ƒ“ƒhƒGƒtƒFƒNƒg / ƒX[ƒp[ƒOƒ‰ƒ“ƒhƒGƒtƒFƒNƒg (“ú–{”Å)	‚®‚ç‚ñ‚Ç‚¦‚Ó‚¥‚­‚Æ	Taito Corporation
@@ -2604,6 +2606,8 @@ sspacatc	ƒXƒy[ƒXƒAƒ^ƒbƒN (cocktail)	‚·‚Ø[‚·‚ ‚½‚Á‚­	Sega
 sspacaho	ƒXƒy[ƒXƒAƒ^ƒbƒN^ƒwƒbƒhƒIƒ“	‚·‚Ø[‚·‚ ‚½‚Á‚­‚Ö‚Á‚Ç‚¨‚ñ	Sega
 headon	ƒwƒbƒhƒIƒ“ (2 players)	‚Ö‚Á‚Ç‚¨‚ñ_1	Gremlin
 headonb	ƒwƒbƒhƒIƒ“ (1 player)	‚Ö‚Á‚Ç‚¨‚ñ_1	Gremlin
+headons	ƒwƒbƒhƒIƒ“ (Sidam) (ŠC‘¯”Å)	‚Ö‚Á‚Ç‚¨‚ñ_1	[Gremlin] (Sidam bootleg)
+supcrash	ƒwƒbƒhƒIƒ“ / Super Crash (ŠC‘¯”Å)	‚Ö‚Á‚Ç‚¨‚ñ_1	[Gremlim] (Video G Electronic Games bootleg)
 headon2	ƒwƒbƒhƒIƒ“2	‚Ö‚Á‚Ç‚¨‚ñ_2	Sega
 invho2	ƒXƒy[ƒXƒCƒ“ƒrƒ“ƒR^ƒwƒbƒhƒIƒ“2	‚·‚Ø[‚·‚¢‚ñ‚Ñ‚ñ‚±‚Ö‚Á‚Ç‚¨‚ñ2	Sega
 nsub	N-ƒTƒu (upright)	‚¦‚Ê‚³‚Ô	Sega
@@ -2616,7 +2620,8 @@ sptrekct	ƒXƒy[ƒXƒgƒŒƒbƒN (cocktail)	‚·‚Ø[‚·‚Æ‚ê‚Á‚­	Sega
 carnival	ƒJ[ƒjƒoƒ‹ (upright)	‚©[‚É‚Î‚é	Sega
 carnvckt	ƒJ[ƒjƒoƒ‹ (cocktail)	‚©[‚É‚Î‚é	Sega
 brdrline	ƒ{[ƒ_[ƒ‰ƒCƒ“	‚Ú[‚¾[‚ç‚¢‚ñ	Sega
-brdrlinb	ƒ{[ƒ_[ƒ‰ƒCƒ“ (ŠC‘¯”Å)	‚Ú[‚¾[‚ç‚¢‚ñ	bootleg
+brdrlins	ƒ{[ƒ_[ƒ‰ƒCƒ“ (Sidam) (ŠC‘¯”Å)	‚Ú[‚¾[‚ç‚¢‚ñ	[Sega] (Sidam bootleg)
+brdrlinb	ƒ{[ƒ_[ƒ‰ƒCƒ“ (Karateco) (ŠC‘¯”Å)	‚Ú[‚¾[‚ç‚¢‚ñ	[Sega] (Karateco bootleg)
 digger	ƒfƒBƒbƒK[	‚Å‚¡‚Á‚ª[	Sega
 pulsar	ƒpƒ‹ƒT[	‚Ï‚é‚³[	Sega
 heiankyo	•½ˆÀ‹ƒGƒCƒŠƒAƒ“	‚Ö‚¢‚ ‚ñ‚«‚å‚¤‚¦‚¢‚è‚ ‚ñ	Denki Onkyo
@@ -3251,6 +3256,8 @@ acombat	ƒAƒXƒgƒƒtƒ@ƒCƒ^[ / Astro Combat	‚ ‚·‚Æ‚ë‚Ó‚Ÿ‚¢‚½[	bootleg
 sstarbtl	ƒAƒXƒgƒƒtƒ@ƒCƒ^[/ Super Star Battle	‚ ‚·‚Æ‚ë‚Ó‚Ÿ‚¢‚½[	bootleg
 tomahawk	ƒgƒ}ƒz[ƒN777 (rev 1)	‚Æ‚Ü‚Ù[‚­777	Data East
 tomahaw5	ƒgƒ}ƒz[ƒN777 (rev 5)	‚Æ‚Ü‚Ù[‚­777	Data East
+progolf	ƒvƒƒSƒ‹ƒt (set 1)	‚Õ‚ë‚²‚é‚Ó	Data East Corporation
+progolfa	ƒvƒƒSƒ‹ƒt (set 2)	‚Õ‚ë‚²‚é‚Ó	Data East Corporation
 prosoccr	ƒvƒƒTƒbƒJ[	‚Õ‚ë‚³‚Á‚©[	Data East Corporation
 prosport	ƒvƒƒXƒ|[ƒc	‚Õ‚ë‚·‚Û[‚Â	Data East Corporation
 boomrang	ƒWƒFƒlƒVƒX	‚¶‚¥‚Ë‚µ‚·	Data East Corporation
@@ -4029,6 +4036,10 @@ cloak	ƒNƒ[ƒN&ƒ_ƒK[ (rev 5)	‚­‚ë[‚­‚ ‚ñ‚Ç‚¾‚ª[	Atari
 cloaksp	ƒNƒ[ƒN&ƒ_ƒK[ (ƒXƒyƒCƒ“”Å)	‚­‚ë[‚­‚ ‚ñ‚Ç‚¾‚ª[	Atari
 cloakfr	ƒNƒ[ƒN&ƒ_ƒK[ (ƒtƒ‰ƒ“ƒX”Å)	‚­‚ë[‚­‚ ‚ñ‚Ç‚¾‚ª[	Atari
 cloakgr	ƒNƒ[ƒN&ƒ_ƒK[ (ƒhƒCƒc”Å)	‚­‚ë[‚­‚ ‚ñ‚Ç‚¾‚ª[	Atari
+agentx4	ƒNƒ[ƒN&ƒ_ƒK[ / Agent X (prototype rev 4)	‚­‚ë[‚­‚ ‚ñ‚Ç‚¾‚ª[	Atari
+agentx3	ƒNƒ[ƒN&ƒ_ƒK[ / Agent X (prototype rev 3)	‚­‚ë[‚­‚ ‚ñ‚Ç‚¾‚ª[	Atari
+agentx2	ƒNƒ[ƒN&ƒ_ƒK[ / Agent X (prototype rev 2)	‚­‚ë[‚­‚ ‚ñ‚Ç‚¾‚ª[	Atari
+agentx1	ƒNƒ[ƒN&ƒ_ƒK[ / Agent X (prototype rev 1)	‚­‚ë[‚­‚ ‚ñ‚Ç‚¾‚ª[	Atari
 cloud9	ƒNƒ‰ƒEƒh9 (prototype)	‚­‚ç‚¤‚Ç‚È‚¢‚ñ	Atari
 firebeas	ƒtƒ@ƒCƒAƒr[ƒXƒg (prototype)	‚Ó‚Ÿ‚¢‚ ‚Ñ[‚·‚Æ	Atari
 jedi	ƒXƒ^[EƒEƒH[ƒY -ƒWƒFƒ_ƒC‚Ì•œQ	‚·‚½[‚¤‚§[‚¸_6‚¶‚¥‚¾‚¢‚Ì‚Ó‚­‚µ‚ã‚¤	Atari
@@ -4553,7 +4564,7 @@ kf2k2plb	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Plus (Š
 kf2k2plc	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Super (ŠC‘¯”Å set 4)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
 kf2k2mp	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Magic Plus (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
 kf2k2mp2	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Magic Plus II (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
-kof10th	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / King Of Fighters 10th Anniversary (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
+kof10th	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 10th Anniversary (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
 kf2k5uni	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 10th Anniversary 2005 Unique (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
 kf10thep	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 10th Anniversary Extra Plus (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
 kof2k4se	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters Special Edition 2004 (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
@@ -6062,6 +6073,9 @@ lethalj	ƒŠ[ƒTƒ‹ƒWƒƒƒXƒeƒBƒX	‚è[‚³‚é‚¶‚á‚·‚Ä‚¡‚·	The Game Room
 eggventr	ƒGƒbƒOƒxƒ“ƒ`ƒƒ[ (release 10)	‚¦‚Á‚®‚×‚ñ‚¿‚á[	The Game Room
 eggvent7	ƒGƒbƒOƒxƒ“ƒ`ƒƒ[ (release 7)	‚¦‚Á‚®‚×‚ñ‚¿‚á[	The Game Room
 eggvntdx	ƒGƒbƒOƒxƒ“ƒ`ƒƒ[ƒfƒ‰ƒbƒNƒX	‚¦‚Á‚®‚×‚ñ‚¿‚á[‚Å‚ç‚Á‚­‚·	The Game Room
+ripribit	ƒŠƒbƒp[ƒŠƒrƒbƒg(ver 2.8.4)	‚è‚Á‚Ï[‚è‚Ñ‚Á‚Æ	LAI Games
+cfarm	ƒ`ƒLƒ“ƒtƒ@[ƒ€ (ver 2.0)	‚¿‚«‚ñ‚Ó‚Ÿ[‚Ş	LAI Games
+cclown	ƒNƒŒ[ƒW[ƒNƒ‰ƒEƒ“ƒY (ver 1.0)	‚­‚ê[‚¶[‚­‚ç‚¤‚ñ‚¸	LAI Games
 rotaryf	ƒ[ƒ^ƒŠ[ƒtƒ@ƒCƒ^[	‚ë[‚½‚è[‚Ó‚Ÿ‚¢‚½[	<unknown>
 sbugger	ƒXƒy[ƒXƒoƒK[	‚·‚Ø[‚·‚Î‚ª[	Game-A-Tron
 portrait	ƒ|[ƒgƒŒ[ƒg (set 1)	‚Û[‚Æ‚ê[‚Æ	Olympia
@@ -6088,6 +6102,7 @@ raccoon	ƒ‰ƒN[ƒ“ƒ[ƒ‹ƒh	‚ç‚­[‚ñ‚í[‚é‚Ç	Eolith
 fort2b	ƒtƒH[ƒgƒŒƒX2 ƒuƒ‹[ƒA[ƒP[ƒh (ver 1.01 / PCB ver 3.05)	‚Ó‚§[‚Æ‚ê‚·2	Eolith
 fort2ba	ƒtƒH[ƒgƒŒƒX2 ƒuƒ‹[ƒA[ƒP[ƒh (ver 1.00 / PCB ver 3.05)	‚Ó‚§[‚Æ‚ê‚·2	Eolith
 klondkp	ƒNƒƒ“ƒ_ƒCƒNƒvƒ‰ƒX	‚­‚ë‚ñ‚¾‚¢‚­‚Õ‚ç‚·	Eolith
+hidctch3	ƒqƒhƒDƒ“ƒLƒƒƒbƒ`3 (ver 1.00 / PCB ver 3.05)	‚Ğ‚Ç‚£‚ñ‚«‚á‚Á‚¿_3	Eolith
 xfiles	X-ƒtƒ@ƒCƒ‹	‚¦‚Á‚­‚·‚Ó‚Ÿ‚¢‚é	dgPIX Entertainment Inc.
 kdynastg	ƒLƒ“ƒOEƒIƒuEƒ_ƒCƒiƒXƒgƒMƒA (ver 1.8)	‚«‚ñ‚®‚¨‚Ô‚¾‚¢‚È‚·‚Æ‚¬‚ 	EZ Graphics
 fmaniac3	ƒtƒBƒbƒVƒ“ƒOƒ}ƒjƒAƒbƒN3	‚Ó‚¡‚Á‚µ‚ñ‚®‚Ü‚É‚ ‚Á‚­_3	Saero Entertainment
@@ -6218,3 +6233,6 @@ sfkick	ƒX[ƒp[ƒtƒŠ[ƒLƒbƒN	‚·[‚Ï[‚Ó‚è[‚«‚Á‚­	HEC
 spinkick	ƒXƒsƒ“ƒLƒbƒN	‚·‚Ò‚ñ‚«‚Á‚­	HEC
 7mezzo	ƒZƒbƒe ƒG ƒƒbƒcƒH	‚¹‚Á‚Ä‚¦‚ß‚Á‚Â‚§	Unknown
 magicfly	ƒ}ƒWƒbƒNƒtƒ‰ƒC	‚Ü‚¶‚Á‚­‚Ó‚ç‚¢	P&amp;A Games
+sb2003	ƒX[ƒp[ƒoƒuƒ‹2003 (set 1)	‚·[‚Ï[‚Î‚Ô‚é2003	Limenko
+sb2003a	ƒX[ƒp[ƒoƒuƒ‹2003 (set 2)	‚·[‚Ï[‚Î‚Ô‚é2003	Limenko
+legendoh	ƒŒƒWƒFƒ“ƒhƒIƒuƒq[ƒ[ƒY	‚ê‚¶‚¥‚ñ‚Ç‚¨‚Ô‚Ğ[‚ë[‚¸	Limenko
