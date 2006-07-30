@@ -4547,7 +4547,8 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		return TRUE;
 	}
 
-	if ((id >= ID_LANGUAGE_ENGLISH_US) && (id < ID_LANGUAGE_ENGLISH_US + UI_LANG_MAX))
+	if ((id >= ID_LANGUAGE_ENGLISH_US) && (id < ID_LANGUAGE_ENGLISH_US + UI_LANG_MAX) 
+		&& ((id - ID_LANGUAGE_ENGLISH_US) != GetLangcode()))
 	{
 		ChangeLanguage(id);
 		return TRUE;
@@ -7664,6 +7665,7 @@ void CalculateBestScreenShotRect(HWND hWnd, RECT *pRect, BOOL restrict_height)
 void SwitchFullScreenMode(void)
 {
 	LONG lMainStyle;
+	int i;
 	
 	if (GetRunFullScreen())
 	{
@@ -7679,6 +7681,17 @@ void SwitchFullScreenMode(void)
 		CheckMenuItem(GetMenu(hMain), ID_VIEW_TOOLBARS, GetShowToolBar() ? MF_CHECKED : MF_UNCHECKED);    
 		CheckMenuItem(GetMenu(hMain), ID_VIEW_STATUS, GetShowStatusBar() ? MF_CHECKED : MF_UNCHECKED);
 		CheckMenuItem(GetMenu(hMain), ID_VIEW_PAGETAB, GetShowTabCtrl() ? MF_CHECKED : MF_UNCHECKED);
+		CheckMenuItem(GetMenu(hMain), ID_VIEW_PICTURE_AREA, GetShowScreenShot() ? MF_CHECKED : MF_UNCHECKED);
+		for (i = 0; i < UI_LANG_MAX; i++)
+		{
+			UINT cp = ui_lang_info[i].codepage;
+
+			CheckMenuItem(GetMenu(hMain), i + ID_LANGUAGE_ENGLISH_US, i == GetLangcode() ? MF_CHECKED : MF_UNCHECKED);
+			if (OnNT())
+				EnableMenuItem(GetMenu(hMain), i + ID_LANGUAGE_ENGLISH_US, IsValidCodePage(cp) ? MF_ENABLED : MF_GRAYED);
+			else
+				EnableMenuItem(GetMenu(hMain), i + ID_LANGUAGE_ENGLISH_US, (i == UI_LANG_EN_US || cp == GetACP()) ? MF_ENABLED : MF_GRAYED);
+		}
 
 		// Add frame to dialog again
 		lMainStyle = GetWindowLong(hMain, GWL_STYLE);
@@ -7713,6 +7726,10 @@ void SwitchFullScreenMode(void)
 		{
 			ShowWindow(hMain, SW_NORMAL);
 			SetWindowState( SW_MAXIMIZE );
+		}
+		else
+		{
+			SetWindowState( SW_NORMAL );
 		}
 		ShowWindow(hMain, SW_MAXIMIZE);
 
