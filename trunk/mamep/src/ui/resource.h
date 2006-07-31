@@ -89,6 +89,7 @@
 #define IDI_HEADER_DOWN                 183
 #define IDD_PROP_DIRECT3D               184
 #define IDD_PROP_CONTROLLER             185
+#define IDD_PROP_SCREEN                 187
 #define IDD_PALETTE                     190 // UI_COLOR_DISPLAY
 #define IDD_PROP_BIOS                   191
 #define IDD_PCBINFO                     192 // USE_VIEW_PCBINFO
@@ -130,15 +131,19 @@
 #define IDC_HELP_TEXT                   1011
 #define IDC_SCREEN                      1011
 #define IDC_TAB                         1012
+#define IDC_NUMSCREENS                  1013
 #define IDC_CHEAT                       1014
 #define IDC_LOG                         1015
 #define IDC_SLEEP                       1016
 #define IDC_BACKDROPS                   1017
+#define IDC_ARTWORK_CROP                1018
 #define IDC_OVERLAYS                    1019
 #define IDC_LEDS                        1020
 #define IDC_BEZELS                      1021
+#define IDC_GAMMA                       1023
 #define IDC_BRIGHTCORRECT               1024
 #define IDC_USE_DEFAULT                 1025
+#define IDC_CONTRAST                    1026
 #define IDC_SAMPLERATE                  1027
 #define IDC_DEPTH                       1028
 #define IDC_ANTIALIAS                   1029
@@ -146,6 +151,7 @@
 #define IDC_FLICKER                     1031
 #define IDC_FLIPX                       1032
 #define IDC_FLIPY                       1033
+#define IDC_CONTRASTDISP                1034
 #define IDC_DIRECTX_HELP                1035
 #define IDB_WEB_PAGE                    1036
 #define IDC_ROMS_PROGRESS               1037
@@ -164,7 +170,9 @@
 #define IDC_DIR_INSERT                  1050
 #define IDC_DIR_DELETE                  1051
 #define IDC_FLICKERTEXT                 1052
+#define IDC_FSCONTRAST                  1053
 #define IDC_SSFRAME                     1054
+#define IDC_PRESCALE                    1055
 #define IDC_SSNONE                      1056
 #define IDC_SSPICTURE                   1057
 #define IDC_BEAMTEXT                    1058
@@ -190,12 +198,15 @@
 #define IDC_PROP_SAMPLES                1078
 #define IDC_PROP_CLONEOF_TEXT           1079
 #define IDC_PROP_CLONEOF                1080
+#define IDC_FSCONTRASTDISP              1081
 #define IDC_VERSION                     1082
 #define IDC_ARTWORK                     1083
 #define IDC_FSGAMMA                     1084
+#define IDC_GAMMADISP                   1085
 #define IDC_FSGAMMADISP                 1086
 #define IDC_BRIGHTCORRECTDISP           1087
 #define IDC_FLICKERDISP                 1088
+#define IDC_PRESCALEDISP                1089
 #define IDC_BEAMDISP                    1090
 #define IDC_AUTOFRAMESKIP               1091
 #define IDC_TREE                        1092
@@ -210,6 +221,7 @@
 #define IDC_FILTER_UNAVAILABLE          1101
 #define IDC_FILTER_NONWORKING           1102
 #define IDC_FILTER_CLONES               1103
+#define IDC_NUMSCREENSDISP              1104
 #define IDC_RESET_GAMES                 1105
 #define IDC_RESET_UI                    1106
 #define IDC_RESET_FILTERS               1107
@@ -231,6 +243,7 @@
 #define IDC_TRIPLE_BUFFER               1123
 #define IDC_LOAD_ROMNAME                1124
 #define IDC_DEFAULT_INPUT               1125
+#define IDC_EFFECT                      1126 // visual effects
 #define IDC_FILTER_EDIT                 1129
 #define IDC_ABOUT                       1130
 #define IDC_PROP_DISPLAY                1131
@@ -261,7 +274,6 @@
 #define IDC_A2D                         1160
 #define IDC_A2DDISP                     1161
 #define IDC_A2DTEXT                     1162
-#define IDC_ARTRESTEXT                  1163
 #define IDC_PLAY_GAME                   1164
 #define IDC_LIGHTGUN                    1165
 #define IDC_ASPECTRATIOTEXT2            1166
@@ -285,12 +297,9 @@
 #define IDC_D3D_VER                     1185
 #define IDC_AUDIO_LATENCY               1186
 #define IDC_DXTEXT                      1187
-#define IDC_D3D_PRESCALE                1189
-#ifndef NEW_RENDER
-#define IDC_CLEAN_STRETCH               1191
-#else
-#define IDC_NUM_SCREEN                  1191
-#endif
+#define IDC_FSBRIGHTNESS                1188
+#define IDC_FSBRIGHTNESSDISP            1189
+
 #define IDC_AUDIO_LATENCY_DISP          1192
 #define IDC_BIOS                        1204
 #define IDC_HIDE_MOUSE                  1205
@@ -312,6 +321,7 @@
 #define IDC_GAME_CAPTION                1224
 #define IDC_SCREENSHOT_BORDERSIZE       1225
 #define IDC_SCREENSHOT_BORDERCOLOR      1226
+#define IDC_FSCONTRASTTEXT              1227
 #define IDC_CYCLETIMESECTXT             1230
 #define IDC_SCREENSHOT_BORDERSIZETXT    1232
 #define IDC_PADDLE                      1234
@@ -325,6 +335,8 @@
 #define IDC_HIGH_PRIORITY_TEXT          1242
 #define IDC_HIGH_PRIORITYTXT            1244
 #define IDC_DISPLAY_SPLASH_SCREEN       1245
+#define IDC_FSBRIGHTNESSTEXT            1246
+
 #define ID_CONTEXT_SHOW_FOLDER_START    39000
 #define ID_CONTEXT_SHOW_FOLDER_END      39200
 
@@ -373,13 +385,7 @@
 #define IDC_BIOSTEXT7                   1342
 #define IDC_BIOSTEXT8                   1343
 #define IDC_ZOOMTEXT                    1344
-#ifndef NEW_RENDER
-#define IDC_CLEAN_STRETCHTEXT           1345
-#else
-#define IDC_NUM_SCREENTEXT              1345
-#endif
 #define IDC_SCREENTEXT                  1346
-#define IDC_D3D_PRESCALETEXT            1348
 #define IDC_USE_LIST                    1349
 #define IDC_VIDEOTEXT                   1350
 

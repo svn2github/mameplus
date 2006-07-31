@@ -122,10 +122,16 @@ static void InitializeOptions(HWND hDlg);
 static void InitializeMisc(HWND hDlg);
 static void OptOnHScroll(HWND hWnd, HWND hwndCtl, UINT code, int pos);
 static void BeamSelectionChange(HWND hwnd);
+static void NumScreensSelectionChange(HWND hwnd);
 static void FlickerSelectionChange(HWND hwnd);
+static void PrescaleSelectionChange(HWND hwnd);
+static void GammaSelectionChange(HWND hwnd);
 static void BrightCorrectSelectionChange(HWND hwnd);
+static void ContrastSelectionChange(HWND hwnd);
 static void PauseBrightSelectionChange(HWND hwnd);
 static void FullScreenGammaSelectionChange(HWND hwnd);
+static void FullScreenBrightnessSelectionChange(HWND hwnd);
+static void FullScreenContrastSelectionChange(HWND hwnd);
 static void IntensitySelectionChange(HWND hwnd);
 static void A2DSelectionChange(HWND hwnd);
 static void ResDepthSelectionChange(HWND hWnd, HWND hWndCtrl);
@@ -143,13 +149,12 @@ static void InitializeResDepthUI(HWND hwnd);
 static void InitializeRefreshUI(HWND hwnd);
 static void InitializeDefaultInputUI(HWND hWnd);
 static void InitializeAnalogAxesUI(HWND hWnd);
+static void InitializeEffectUI(HWND hwnd);
 static void InitializeBIOSUI(HWND hwnd);
 static void InitializeDefaultBIOSUI(HWND hwnd);
 static void InitializeLEDModeUI(HWND hwnd);
-static void InitializeNumScreenUI(HWND hwnd);
 static void InitializeD3DVerUI(HWND hwnd);
 static void InitializeVideoUI(HWND hwnd);
-static void InitializePrescaleUI(HWND hwnd);
 static void InitializeControllerMappingUI(HWND hwnd);
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 static void InitializeM68kCoreUI(HWND hwnd);
@@ -195,14 +200,20 @@ static BOOL g_bReset           = FALSE;
 static int  g_nSampleRateIndex = 0;
 static int  g_nVolumeIndex     = 0;
 static int  g_nPriorityIndex   = 0;
-static int  g_nBrightCorrectIndex = 0;
+static int  g_nGammaIndex      = 0;
+static int  g_nContrastIndex      = 0;
+static int  g_nBrightIndex = 0;
 static int  g_nPauseBrightIndex = 0;
 static int  g_nBeamIndex       = 0;
 static int  g_nFlickerIndex    = 0;
 static int  g_nRotateIndex     = 0;
 static int  g_nScreenIndex     = 0;
 static int  g_nInputIndex      = 0;
+static int  g_nPrescaleIndex      = 0;
 static int  g_nFullScreenGammaIndex = 0;
+static int  g_nFullScreenBrightnessIndex = 0;
+static int  g_nFullScreenContrastIndex = 0;
+static int  g_nEffectIndex     = 0;
 static int  g_nLedmodeIndex    = 0;
 static int  g_nA2DIndex        = 0;
 static int  g_nPaddleIndex = 0;
@@ -212,7 +223,6 @@ static int  g_nDialIndex = 0;
 static int  g_nTrackballIndex = 0;
 static int  g_nLightgunIndex = 0;
 static BOOL g_bAnalogCheckState[65]; // 8 Joysticks  * 8 Axes each
-static int  g_nNumScreenIndex = 0;
 static int  g_nD3DVerIndex = 0;
 static int  g_nVideoIndex = 0;
 static int  g_nBiosIndex       = 0;
@@ -272,9 +282,11 @@ BOOL PropSheetFilter_BIOS(void)
 /* Help IDs */
 static DWORD dwHelpIDs[] =
 {
+	
 	IDC_A2D,                HIDC_A2D,
 	IDC_ANTIALIAS,          HIDC_ANTIALIAS,
 	IDC_ARTWORK,            HIDC_ARTWORK,
+	IDC_ARTWORK_CROP,       HIDC_ARTWORK_CROP,
 	IDC_ASPECTRATIOD,       HIDC_ASPECTRATIOD,
 	IDC_ASPECTRATION,       HIDC_ASPECTRATION,
 	IDC_ASPECTRATIOTEXT,    HIDC_ASPECTRATION,
@@ -301,6 +313,7 @@ static DWORD dwHelpIDs[] =
 	IDC_FLIPX,              HIDC_FLIPX,
 	IDC_FLIPY,              HIDC_FLIPY,
 	IDC_FRAMESKIP,          HIDC_FRAMESKIP,
+	IDC_GAMMA,              HIDC_GAMMA,
 	IDC_HISTORY,            HIDC_HISTORY,
 	IDC_HWSTRETCH,          HIDC_HWSTRETCH,
 	IDC_JOYSTICK,           HIDC_JOYSTICK,
@@ -344,7 +357,6 @@ static DWORD dwHelpIDs[] =
 	IDC_SKIP_GAME_INFO,     HIDC_SKIP_GAME_INFO,
 	IDC_HIGH_PRIORITY,      HIDC_HIGH_PRIORITY,
 	IDC_D3D_FILTER,         HIDC_D3D_FILTER,
-	IDC_D3D_PRESCALE,       HIDC_D3D_PRESCALE,
 	IDC_BIOS,               HIDC_BIOS,
 	IDC_STRETCH_SCREENSHOT_LARGER, HIDC_STRETCH_SCREENSHOT_LARGER,
 	IDC_LEDMODE,            HIDC_LEDMODE,
@@ -1212,10 +1224,10 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 	case IDC_ROTATE:
 	case IDC_SCREEN:
 	case IDC_SAMPLERATE:
-	case IDC_NUM_SCREEN:
 	case IDC_D3D_VER:
 	case IDC_VIDEO:
 	case IDC_M68K_CORE:
+	case IDC_EFFECT:
 #ifdef USE_SCALE_EFFECTS
 	case IDC_SCALEEFFECT:
 #endif /* USE_SCALE_EFFECTS */
@@ -1958,7 +1970,29 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 		snprintf(buf,sizeof(buf), "%03.2f", o->full_screen_gamma);
 		Static_SetTextA(hCtrl, buf);
 	}
-	
+
+	hCtrl = GetDlgItem(hWnd, IDC_FSBRIGHTNESSDISP);
+	if (hCtrl)
+	{
+		snprintf(buf,sizeof(buf), "%03.2f", o->full_screen_brightness);
+		Static_SetTextA(hCtrl, buf);
+	}
+
+	hCtrl = GetDlgItem(hWnd, IDC_FSCONTRASTDISP);
+	if (hCtrl)
+	{
+		snprintf(buf,sizeof(buf), "%03.2f", o->full_screen_contrast);
+		Static_SetTextA(hCtrl, buf);
+	}
+
+	hCtrl = GetDlgItem(hWnd, IDC_NUMSCREENSDISP);
+	if (hCtrl)
+	{
+		snprintf(buf,sizeof(buf), "%d", o->numscreens);
+		Static_SetTextA(hCtrl, buf);
+	}
+
+
 	/* aspect ratio */
 	hCtrl  = GetDlgItem(hWnd, IDC_ASPECTRATION);
 	hCtrl2 = GetDlgItem(hWnd, IDC_ASPECTRATIOD);
@@ -1982,6 +2016,20 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 	}
 
 	/* core video */
+	hCtrl = GetDlgItem(hWnd, IDC_GAMMADISP);
+	if (hCtrl)
+	{
+		sprintf(buf, "%03.2f", o->gamma);
+		Static_SetTextA(hCtrl, buf);
+	}
+
+	hCtrl = GetDlgItem(hWnd, IDC_CONTRASTDISP);
+	if (hCtrl)
+	{
+		sprintf(buf, "%03.2f", o->contrast);
+		Static_SetTextA(hCtrl, buf);
+	}
+
 	hCtrl = GetDlgItem(hWnd, IDC_BRIGHTCORRECTDISP);
 	if (hCtrl)
 	{
@@ -2125,6 +2173,8 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 	}
 	AudioLatencySelectionChange(hWnd);
 
+	PrescaleSelectionChange(hWnd);
+
 	ThreadPrioritySelectionChange(hWnd);
 
 	g_bInternalSet = FALSE;
@@ -2151,6 +2201,31 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 			}
 
 			ComboBox_SetCurSel(hCtrl, g_nInputIndex);
+		}
+	}
+
+	g_nEffectIndex = 0;
+	hCtrl = GetDlgItem(hWnd, IDC_EFFECT);	
+	if (hCtrl)
+	{
+		int nCount;
+
+		/* Get the number of items in the control */
+		nCount = ComboBox_GetCount(hCtrl);
+
+		if (o->effect)
+		{
+			while (0 < nCount--)
+			{
+				ComboBox_GetLBTextA(hCtrl, nCount, buf);
+
+				if (mame_stricmp (buf,o->effect) == 0)
+				{
+					g_nEffectIndex = nCount;
+				}
+			}
+
+			ComboBox_SetCurSel(hCtrl, g_nEffectIndex);
 		}
 	}
 
@@ -2204,6 +2279,8 @@ static void SetPropEnabledControls(HWND hWnd)
 
 	EnableWindow(GetDlgItem(hWnd, IDC_WAITVSYNC),              ddraw || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_TRIPLE_BUFFER),          ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_PRESCALE),               ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_PRESCALEDISP),           ddraw || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_HWSTRETCH),              ddraw && DirectDraw_HasHWStretch());
 	EnableWindow(GetDlgItem(hWnd, IDC_SWITCHRES),              !in_window && (ddraw || d3d));
 	EnableWindow(GetDlgItem(hWnd, IDC_SYNCREFRESH),            ddraw || d3d);
@@ -2218,14 +2295,21 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOD),           ddraw || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_SCREEN),                 (ddraw || d3d) && multimon);
 	EnableWindow(GetDlgItem(hWnd, IDC_SCREENTEXT),             (ddraw || d3d) && multimon);
+	EnableWindow(GetDlgItem(hWnd, IDC_FSBRIGHTNESS),           !in_window);
+	EnableWindow(GetDlgItem(hWnd, IDC_FSBRIGHTNESSTEXT),       !in_window);
+	EnableWindow(GetDlgItem(hWnd, IDC_FSBRIGHTNESSDISP),       !in_window);
+	EnableWindow(GetDlgItem(hWnd, IDC_FSCONTRAST),             !in_window);
+	EnableWindow(GetDlgItem(hWnd, IDC_FSCONTRASTTEXT),         !in_window);
+	EnableWindow(GetDlgItem(hWnd, IDC_FSCONTRASTDISP),         !in_window);
 
 	EnableWindow(GetDlgItem(hWnd, IDC_D3D_VER),                d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_DXTEXT),                 ddraw || d3d);
 
 	// d3d
 	EnableWindow(GetDlgItem(hWnd, IDC_D3D_FILTER),             d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_D3D_PRESCALE),           d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_D3D_PRESCALETEXT),       d3d);
+
+	EnableWindow(GetDlgItem(hWnd, IDC_NUMSCREENS),             ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_NUMSCREENSDISP),         ddraw || d3d);
 
 #ifdef TRANS_UI
 	hCtrl = GetDlgItem(hWnd, IDC_TRANSUI);
@@ -2240,6 +2324,7 @@ static void SetPropEnabledControls(HWND hWnd)
 
 	useart = Button_GetCheck(hCtrl);
 
+	EnableWindow(GetDlgItem(hWnd, IDC_ARTWORK_CROP),           useart);
 	EnableWindow(GetDlgItem(hWnd, IDC_BACKDROPS),              useart);
 	EnableWindow(GetDlgItem(hWnd, IDC_BEZELS),                 useart);
 	EnableWindow(GetDlgItem(hWnd, IDC_OVERLAYS),               useart);
@@ -2486,7 +2571,7 @@ static void AssignPriority(HWND hWnd)
 static void AssignBrightCorrect(HWND hWnd)
 {
 	/* "1.0", 0.5, 2.0 */
-	pGameOpts->brightness = g_nBrightCorrectIndex / 20.0 + 0.5;
+	pGameOpts->brightness = g_nBrightIndex / 20.0 + 0.5;
 	
 }
 
@@ -2497,9 +2582,29 @@ static void AssignPauseBright(HWND hWnd)
 	
 }
 
+static void AssignGamma(HWND hWnd)
+{
+	pGameOpts->gamma = g_nGammaIndex / 20.0 + 0.1;
+}
+
+static void AssignContrast(HWND hWnd)
+{
+	pGameOpts->contrast = g_nContrastIndex / 20.0 + 0.1;
+}
+
 static void AssignFullScreenGamma(HWND hWnd)
 {
 	pGameOpts->full_screen_gamma = g_nFullScreenGammaIndex / 20.0;
+}
+
+static void AssignFullScreenBrightness(HWND hWnd)
+{
+	pGameOpts->full_screen_brightness = g_nFullScreenBrightnessIndex / 20.0 + 0.1;
+}
+
+static void AssignFullScreenContrast(HWND hWnd)
+{
+	pGameOpts->full_screen_contrast = g_nFullScreenContrastIndex / 20.0 + 0.1;
 }
 
 static void AssignBeam(HWND hWnd)
@@ -2720,18 +2825,6 @@ static void AssignLightgun(HWND hWnd)
 		pGameOpts->lightgun_device = strdup(ptr);
 }
 
-static void AssignNumScreen(HWND hWnd)
-{
-	switch (g_nNumScreenIndex)
-	{
-		case 1:  pGameOpts->numscreens = 2; break;
-		case 2:  pGameOpts->numscreens = 3; break;
-		case 3:  pGameOpts->numscreens = 4; break;
-		default:
-		case 0:  pGameOpts->numscreens = 1; break;
-	}
-}
-
 static void AssignD3DVer(HWND hWnd)
 {
 	switch (g_nD3DVerIndex)
@@ -2775,6 +2868,27 @@ AssignDefaultBios(5)
 AssignDefaultBios(6)
 AssignDefaultBios(7)
 
+static void AssignEffect(HWND hWnd)
+{
+	int new_length;
+
+	FreeIfAllocated(&pGameOpts->effect);
+
+	new_length = ComboBox_GetLBTextLen(hWnd,g_nEffectIndex);
+	if (new_length == CB_ERR)
+	{
+		dprintf("error getting text len");
+		return;
+	}
+	pGameOpts->effect = (char *)malloc(new_length + 1);
+	ComboBox_GetLBTextA (hWnd, g_nEffectIndex, pGameOpts->effect);
+	if (strcmp(pGameOpts->effect, _UI("None")) == 0)
+	{
+		FreeIfAllocated(&pGameOpts->effect);
+		pGameOpts->effect = strdup("none");
+	}
+}
+
 #ifdef USE_SCALE_EFFECTS
 static void AssignScaleEffect(HWND hWnd)
 {
@@ -2799,12 +2913,16 @@ static void AssignUI_TRANSPARENCY(HWND hWnd)
 static void ResetDataMap(void)
 {
 	int i;
-
 	// add the 0.001 to make sure it truncates properly to the integer
 	// (we don't want 35.99999999 to be cut down to 35 because of floating point error)
+	g_nPrescaleIndex = pGameOpts->prescale;
+	g_nGammaIndex           = (int)((pGameOpts->gamma            - 0.1) * 20.0 + 0.001);
 	g_nFullScreenGammaIndex = (int)( pGameOpts->full_screen_gamma       * 20.0 + 0.001);
-	g_nBrightCorrectIndex   = (int)((pGameOpts->brightness       - 0.5) * 20.0 + 0.001);
+	g_nFullScreenBrightnessIndex= (int)((pGameOpts->full_screen_brightness - 0.1) * 20.0 + 0.001);
+	g_nFullScreenContrastIndex = (int)((pGameOpts->full_screen_contrast   - 0.1) * 20.0 + 0.001);
+	g_nBrightIndex   = (int)((pGameOpts->brightness       - 0.5) * 20.0 + 0.001);
 	g_nPauseBrightIndex     = (int)((pGameOpts->pause_brightness - 0.5) * 20.0 + 0.001);
+	g_nContrastIndex	= (int)((pGameOpts->contrast         - 0.1) * 20.0 + 0.001);
 	g_nBeamIndex            = (int)((pGameOpts->beam             - 0.1) * 20.0 + 0.001);
 	g_nFlickerIndex         = (int)( pGameOpts->flicker);
 	g_nA2DIndex             = (int)( pGameOpts->a2d_deadzone            * 20.0 + 0.001);
@@ -2870,15 +2988,6 @@ static void ResetDataMap(void)
 	{
 		if (!mame_stricmp(pGameOpts->video, g_ComboBoxVideo[i].m_pData))
 			g_nVideoIndex = i;
-	}
-
-	switch (pGameOpts->numscreens)
-	{
-		case 2:  g_nNumScreenIndex = 1; break;
-		case 3:  g_nNumScreenIndex = 2; break;
-		case 4:  g_nNumScreenIndex = 3; break;
-		default:
-		case 1:  g_nNumScreenIndex = 0; break;
 	}
 
 	switch (pGameOpts->d3dversion)
@@ -2980,8 +3089,11 @@ static void BuildDataMap(void)
 
 
 	ResetDataMap();
-
 	/* video */
+	DataMapAdd(IDC_PRESCALE,      DM_INT,  CT_SLIDER,   &pGameOpts->prescale,      DM_INT, &pGameOpts->prescale,       0, 0, 0);
+	DataMapAdd(IDC_PRESCALEDISP,  DM_NONE, CT_NONE,     NULL,                      DM_INT, &pGameOpts->prescale,       0, 0, 0);
+	DataMapAdd(IDC_NUMSCREENS,    DM_INT,  CT_SLIDER,   &pGameOpts->numscreens,    DM_INT, &pGameOpts->numscreens,     0, 0, 0);
+	DataMapAdd(IDC_NUMSCREENSDISP,DM_NONE, CT_NONE,     NULL,                      DM_INT, &pGameOpts->numscreens,     0, 0, 0);
 	DataMapAdd(IDC_AUTOFRAMESKIP, DM_BOOL, CT_BUTTON,   &pGameOpts->autoframeskip, DM_BOOL, &pGameOpts->autoframeskip, 0, 0, 0);
 	DataMapAdd(IDC_FRAMESKIP,     DM_INT,  CT_COMBOBOX, &pGameOpts->frameskip,     DM_INT,  &pGameOpts->frameskip,     0, 0, 0);
 	DataMapAdd(IDC_WAITVSYNC,     DM_BOOL, CT_BUTTON,   &pGameOpts->waitvsync,     DM_BOOL, &pGameOpts->waitvsync,     0, 0, 0);
@@ -2990,12 +3102,16 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_SWITCHRES,     DM_BOOL, CT_BUTTON,   &pGameOpts->switchres,     DM_BOOL, &pGameOpts->switchres,     0, 0, 0);
 	DataMapAdd(IDC_MAXIMIZE,      DM_BOOL, CT_BUTTON,   &pGameOpts->maximize,      DM_BOOL, &pGameOpts->maximize,      0, 0, 0);
 	DataMapAdd(IDC_KEEPASPECT,    DM_BOOL, CT_BUTTON,   &pGameOpts->keepaspect,    DM_BOOL, &pGameOpts->keepaspect,    0, 0, 0);
-	DataMapAdd(IDC_NUM_SCREEN,    DM_INT,  CT_COMBOBOX, &g_nNumScreenIndex,        DM_INT,  &pGameOpts->numscreens,    0, 0, AssignNumScreen);
 	DataMapAdd(IDC_SYNCREFRESH,   DM_BOOL, CT_BUTTON,   &pGameOpts->syncrefresh,   DM_BOOL, &pGameOpts->syncrefresh,   0, 0, 0);
 	DataMapAdd(IDC_THROTTLE,      DM_BOOL, CT_BUTTON,   &pGameOpts->throttle,      DM_BOOL, &pGameOpts->throttle,      0, 0, 0);
 	DataMapAdd(IDC_FSGAMMA,       DM_INT,  CT_SLIDER,   &g_nFullScreenGammaIndex,  DM_FLOAT, &pGameOpts->full_screen_gamma, 0, 0, AssignFullScreenGamma);
 	DataMapAdd(IDC_FSGAMMADISP,   DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->full_screen_gamma, 0, 0, 0);
+	DataMapAdd(IDC_FSBRIGHTNESS,  DM_INT,  CT_SLIDER,   &g_nFullScreenBrightnessIndex,DM_FLOAT,&pGameOpts->full_screen_brightness, 0, 0, AssignFullScreenBrightness);
+	DataMapAdd(IDC_FSBRIGHTNESSDISP,DM_NONE,CT_NONE,    NULL,                      DM_FLOAT, &pGameOpts->full_screen_brightness,   0, 0, 0);
+	DataMapAdd(IDC_FSCONTRAST,    DM_INT,  CT_SLIDER,   &g_nFullScreenContrastIndex,DM_FLOAT,&pGameOpts->full_screen_contrast, 0, 0, AssignFullScreenContrast);
+	DataMapAdd(IDC_FSCONTRASTDISP,DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->full_screen_contrast, 0, 0, 0);
 	/* pGameOpts->frames_to_run */
+	DataMapAdd(IDC_EFFECT,        DM_INT,  CT_COMBOBOX, &g_nEffectIndex,           DM_STRING, &pGameOpts->effect,      0, 0, AssignEffect);
 	DataMapAdd(IDC_ASPECTRATIOD,  DM_NONE, CT_NONE,     &pGameOpts->aspect0,       DM_STRING, &pGameOpts->aspect0,     0, 0, 0);
 	DataMapAdd(IDC_ASPECTRATION,  DM_NONE, CT_NONE,     &pGameOpts->aspect0,       DM_STRING, &pGameOpts->aspect0,     0, 0, 0);
 	DataMapAdd(IDC_SIZES,         DM_NONE, CT_NONE,     &pGameOpts->resolution0,   DM_STRING, &pGameOpts->resolution0, 0, 0, 0);
@@ -3012,7 +3128,6 @@ static void BuildDataMap(void)
 
 	DataMapAdd(IDC_D3D_VER,       DM_INT,  CT_COMBOBOX, &g_nD3DVerIndex,           DM_INT,    &pGameOpts->d3dversion,      0, 0, AssignD3DVer);
 	DataMapAdd(IDC_D3D_FILTER,    DM_BOOL, CT_BUTTON,   &pGameOpts->filter,        DM_BOOL,   &pGameOpts->filter,          0, 0, 0);
-	DataMapAdd(IDC_D3D_PRESCALE,  DM_INT,  CT_COMBOBOX, &pGameOpts->prescale,      DM_INT,    &pGameOpts->prescale,        0, 0, 0);
 
 	/* input */
 	DataMapAdd(IDC_DEFAULT_INPUT, DM_INT,  CT_COMBOBOX, &g_nInputIndex,            DM_STRING, &pGameOpts->ctrlr,           0, 0, AssignInput);
@@ -3048,15 +3163,19 @@ static void BuildDataMap(void)
 
 
 	/* core video */
-	DataMapAdd(IDC_BRIGHTCORRECT,    DM_INT,  CT_SLIDER,   &g_nBrightCorrectIndex, DM_FLOAT, &pGameOpts->brightness,       0, 0, AssignBrightCorrect);
+	DataMapAdd(IDC_BRIGHTCORRECT,    DM_INT,  CT_SLIDER,   &g_nBrightIndex,        DM_FLOAT, &pGameOpts->brightness,       0, 0, AssignBrightCorrect);
 	DataMapAdd(IDC_BRIGHTCORRECTDISP,DM_NONE, CT_NONE,     NULL,                   DM_FLOAT, &pGameOpts->brightness,       0, 0, 0);
 	DataMapAdd(IDC_PAUSEBRIGHT,      DM_INT,  CT_SLIDER,   &g_nPauseBrightIndex,   DM_FLOAT, &pGameOpts->pause_brightness, 0, 0, AssignPauseBright);
 	DataMapAdd(IDC_PAUSEBRIGHTDISP,  DM_NONE, CT_NONE,     NULL,                   DM_FLOAT, &pGameOpts->pause_brightness, 0, 0, 0);
 	DataMapAdd(IDC_ROTATE,           DM_INT,  CT_COMBOBOX, &g_nRotateIndex,        DM_INT,   &pGameOpts->ror,              0, 0, AssignRotate);
 	DataMapAdd(IDC_FLIPX,            DM_BOOL, CT_BUTTON,   &pGameOpts->flipx,      DM_BOOL,  &pGameOpts->flipx,            0, 0, 0);
 	DataMapAdd(IDC_FLIPY,            DM_BOOL, CT_BUTTON,   &pGameOpts->flipy,      DM_BOOL,  &pGameOpts->flipy,            0, 0, 0);
-	DataMapAdd(IDC_SCREEN,           DM_INT,  CT_COMBOBOX, &g_nScreenIndex,        DM_STRING,&pGameOpts->screen0,           0, 0, AssignScreen);
+	DataMapAdd(IDC_SCREEN,           DM_INT,  CT_COMBOBOX, &g_nScreenIndex,        DM_STRING,&pGameOpts->screen0,          0, 0, AssignScreen);
 	/* debugres */
+	DataMapAdd(IDC_GAMMA,         DM_INT,  CT_SLIDER,   &g_nGammaIndex,            DM_FLOAT, &pGameOpts->gamma,            0, 0, AssignGamma);
+	DataMapAdd(IDC_GAMMADISP,     DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->gamma,            0, 0, 0);
+	DataMapAdd(IDC_CONTRAST,      DM_INT,  CT_SLIDER,   &g_nContrastIndex,         DM_FLOAT, &pGameOpts->contrast,         0, 0, AssignContrast);
+	DataMapAdd(IDC_CONTRASTDISP,  DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->contrast,         0, 0, 0);
 
 	/* vector */
 	DataMapAdd(IDC_ANTIALIAS,     DM_BOOL, CT_BUTTON,   &pGameOpts->antialias,     DM_BOOL,  &pGameOpts->antialias,        0, 0, 0);
@@ -3082,6 +3201,7 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_BACKDROPS,     DM_BOOL, CT_BUTTON,   &pGameOpts->use_backdrops,     DM_BOOL, &pGameOpts->use_backdrops,     0, 0, 0);
 	DataMapAdd(IDC_OVERLAYS,      DM_BOOL, CT_BUTTON,   &pGameOpts->use_overlays,      DM_BOOL, &pGameOpts->use_overlays,      0, 0, 0);
 	DataMapAdd(IDC_BEZELS,        DM_BOOL, CT_BUTTON,   &pGameOpts->use_bezels,        DM_BOOL, &pGameOpts->use_bezels,        0, 0, 0);
+	DataMapAdd(IDC_ARTWORK_CROP,  DM_BOOL, CT_BUTTON,   &pGameOpts->artwork_crop,      DM_BOOL, &pGameOpts->artwork_crop,      0, 0, 0);
 
 	/* misc */
 	DataMapAdd(IDC_CHEAT,         DM_BOOL, CT_BUTTON,   &pGameOpts->cheat,         DM_BOOL, &pGameOpts->cheat,         0, 0, 0);
@@ -3269,13 +3389,12 @@ static void InitializeOptions(HWND hDlg)
 	InitializeScreenUI(hDlg);
 	InitializeDefaultInputUI(hDlg);
 	InitializeAnalogAxesUI(hDlg);
+	InitializeEffectUI(hDlg);
 	InitializeBIOSUI(hDlg);
 	InitializeDefaultBIOSUI(hDlg);
 	InitializeLEDModeUI(hDlg);
-	InitializeNumScreenUI(hDlg);
 	InitializeD3DVerUI(hDlg);
 	InitializeVideoUI(hDlg);
-	InitializePrescaleUI(hDlg);
 	InitializeControllerMappingUI(hDlg);
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 	InitializeM68kCoreUI(hDlg);
@@ -3293,6 +3412,18 @@ static void InitializeMisc(HWND hDlg)
 {
 	Button_Enable(GetDlgItem(hDlg, IDC_JOYSTICK), DIJoystick.Available());
 
+	SendDlgItemMessage(hDlg, IDC_GAMMA, TBM_SETRANGE,
+				(WPARAM)FALSE,
+				(LPARAM)MAKELONG(0, 58)); /* [0.10, 3.00] in .05 increments */
+
+	SendDlgItemMessage(hDlg, IDC_NUMSCREENS, TBM_SETRANGE,
+				(WPARAM)FALSE,
+				(LPARAM)MAKELONG(1, 4)); /* [1, 8] in 1 increments, core says upto 8 is supported, but params can only be specified for 4 */
+
+	SendDlgItemMessage(hDlg, IDC_CONTRAST, TBM_SETRANGE,
+				(WPARAM)FALSE,
+				(LPARAM)MAKELONG(0, 38)); /* [0.10, 2.00] in .05 increments */
+
 	SendDlgItemMessage(hDlg, IDC_BRIGHTCORRECT, TBM_SETRANGE,
 				(WPARAM)FALSE,
 				(LPARAM)MAKELONG(0, 30)); /* [0.50, 2.00] in .05 increments */
@@ -3304,6 +3435,14 @@ static void InitializeMisc(HWND hDlg)
 	SendDlgItemMessage(hDlg, IDC_FSGAMMA, TBM_SETRANGE,
 				(WPARAM)FALSE,
 				(LPARAM)MAKELONG(0, 80)); /* [0.00, 4.00] in .05 increments */
+
+	SendDlgItemMessage(hDlg, IDC_FSBRIGHTNESS, TBM_SETRANGE,
+				(WPARAM)FALSE,
+				(LPARAM)MAKELONG(0, 38)); /* [0.10, 2.00] in .05 increments */
+
+	SendDlgItemMessage(hDlg, IDC_FSCONTRAST, TBM_SETRANGE,
+				(WPARAM)FALSE,
+				(LPARAM)MAKELONG(0, 38)); /* [0.10, 2.00] in .05 increments */
 
 	SendDlgItemMessage(hDlg, IDC_A2D, TBM_SETRANGE,
 				(WPARAM)FALSE,
@@ -3323,6 +3462,9 @@ static void InitializeMisc(HWND hDlg)
 	SendDlgItemMessage(hDlg, IDC_AUDIO_LATENCY, TBM_SETRANGE,
 				(WPARAM)FALSE,
 				(LPARAM)MAKELONG(1, 4)); // [1, 4]
+	SendDlgItemMessage(hDlg, IDC_PRESCALE, TBM_SETRANGE,
+				(WPARAM)FALSE,
+				(LPARAM)MAKELONG(1, 10)); // [1, 10] //10 enough ?
 #ifdef TRANS_UI
 	SendDlgItemMessage(hDlg, IDC_TRANSPARENCY, TBM_SETRANGE,
 				(WPARAM)FALSE,
@@ -3340,10 +3482,20 @@ static void OptOnHScroll(HWND hwnd, HWND hwndCtl, UINT code, int pos)
 		FlickerSelectionChange(hwnd);
 	}
 	else
+	if (hwndCtl == GetDlgItem(hwnd, IDC_GAMMA))
+	{
+		GammaSelectionChange(hwnd);
+	}
+	else
 	if (hwndCtl == GetDlgItem(hwnd, IDC_BRIGHTCORRECT))
 	{
 		BrightCorrectSelectionChange(hwnd);
 	}
+	if (hwndCtl == GetDlgItem(hwnd, IDC_CONTRAST))
+	{
+		ContrastSelectionChange(hwnd);
+	}
+	else
 	if (hwndCtl == GetDlgItem(hwnd, IDC_PAUSEBRIGHT))
 	{
 		PauseBrightSelectionChange(hwnd);
@@ -3354,9 +3506,24 @@ static void OptOnHScroll(HWND hwnd, HWND hwndCtl, UINT code, int pos)
 		FullScreenGammaSelectionChange(hwnd);
 	}
 	else
+	if (hwndCtl == GetDlgItem(hwnd, IDC_FSBRIGHTNESS))
+	{
+		FullScreenBrightnessSelectionChange(hwnd);
+	}
+	else
+	if (hwndCtl == GetDlgItem(hwnd, IDC_FSCONTRAST))
+	{
+		FullScreenContrastSelectionChange(hwnd);
+	}
+	else
 	if (hwndCtl == GetDlgItem(hwnd, IDC_BEAM))
 	{
 		BeamSelectionChange(hwnd);
+	}
+	else
+	if (hwndCtl == GetDlgItem(hwnd, IDC_NUMSCREENS))
+	{
+		NumScreensSelectionChange(hwnd);
 	}
 	else
 	if (hwndCtl == GetDlgItem(hwnd, IDC_FLICKER))
@@ -3390,6 +3557,12 @@ static void OptOnHScroll(HWND hwnd, HWND hwndCtl, UINT code, int pos)
 	{
 		ThreadPrioritySelectionChange(hwnd);
 	}
+	else
+	if (hwndCtl == GetDlgItem(hwnd, IDC_PRESCALE))
+	{
+		PrescaleSelectionChange(hwnd);
+	}
+
 
 }
 
@@ -3410,6 +3583,22 @@ static void BeamSelectionChange(HWND hwnd)
 	Static_SetTextA(GetDlgItem(hwnd, IDC_BEAMDISP), buf);
 }
 
+/* Handle changes to the Numscreens slider */
+static void NumScreensSelectionChange(HWND hwnd)
+{
+	char   buf[100];
+	UINT   nValue;
+	int iNumScreens;
+	/* Get the current value of the control */
+	nValue = SendDlgItemMessage(hwnd, IDC_NUMSCREENS, TBM_GETPOS, 0, 0);
+
+	iNumScreens = nValue;
+
+	/* Set the static display to the new value */
+	snprintf(buf,sizeof(buf), "%d", iNumScreens);
+	Static_SetTextA(GetDlgItem(hwnd, IDC_NUMSCREENSDISP), buf);
+}
+
 /* Handle changes to the Flicker slider */
 static void FlickerSelectionChange(HWND hwnd)
 {
@@ -3424,6 +3613,23 @@ static void FlickerSelectionChange(HWND hwnd)
 	/* Set the static display to the new value */
 	snprintf(buf,sizeof(buf), "%03.2f", dFlicker);
 	Static_SetTextA(GetDlgItem(hwnd, IDC_FLICKERDISP), buf);
+}
+
+/* Handle changes to the Gamma slider */
+static void GammaSelectionChange(HWND hwnd)
+{
+	char   buf[100];
+	UINT   nValue;
+	double dGamma;
+
+	/* Get the current value of the control */
+	nValue = SendDlgItemMessage(hwnd, IDC_GAMMA, TBM_GETPOS, 0, 0);
+
+	dGamma = nValue / 20.0 + 0.1;
+
+	/* Set the static display to the new value */
+	snprintf(buf,sizeof(buf), "%03.2f", dGamma);
+	Static_SetTextA(GetDlgItem(hwnd,	IDC_GAMMADISP), buf);
 }
 
 /* Handle changes to the Brightness Correction slider */
@@ -3442,6 +3648,25 @@ static void BrightCorrectSelectionChange(HWND hwnd)
 	snprintf(buf,sizeof(buf), "%03.2f", dValue);
 	Static_SetTextA(GetDlgItem(hwnd, IDC_BRIGHTCORRECTDISP), buf);
 }
+
+/* Handle changes to the Contrast slider */
+static void ContrastSelectionChange(HWND hwnd)
+{
+	char   buf[100];
+	UINT   nValue;
+	double dContrast;
+
+	/* Get the current value of the control */
+	nValue = SendDlgItemMessage(hwnd, IDC_CONTRAST, TBM_GETPOS, 0, 0);
+
+	dContrast = nValue / 20.0 + 0.1;
+
+	/* Set the static display to the new value */
+	snprintf(buf,sizeof(buf), "%03.2f", dContrast);
+	Static_SetTextA(GetDlgItem(hwnd, IDC_CONTRASTDISP), buf);
+}
+
+
 
 /* Handle changes to the Pause Brightness slider */
 static void PauseBrightSelectionChange(HWND hwnd)
@@ -3475,6 +3700,40 @@ static void FullScreenGammaSelectionChange(HWND hwnd)
 	/* Set the static display to the new value */
 	snprintf(buf,sizeof(buf),"%03.2f", dGamma);
 	Static_SetTextA(GetDlgItem(hwnd, IDC_FSGAMMADISP), buf);
+}
+
+/* Handle changes to the Fullscreen Brightness slider */
+static void FullScreenBrightnessSelectionChange(HWND hwnd)
+{
+	char   buf[100];
+	int    nValue;
+	double dBrightness;
+
+	/* Get the current value of the control */
+	nValue = SendDlgItemMessage(hwnd, IDC_FSBRIGHTNESS, TBM_GETPOS, 0, 0);
+
+	dBrightness = nValue / 20.0 + 0.1;
+
+	/* Set the static display to the new value */
+	snprintf(buf,sizeof(buf),"%03.2f", dBrightness);
+	Static_SetTextA(GetDlgItem(hwnd, IDC_FSBRIGHTNESSDISP), buf);
+}
+
+/* Handle changes to the Fullscreen Contrast slider */
+static void FullScreenContrastSelectionChange(HWND hwnd)
+{
+	char   buf[100];
+	int    nValue;
+	double dContrast;
+
+	/* Get the current value of the control */
+	nValue = SendDlgItemMessage(hwnd, IDC_FSCONTRAST, TBM_GETPOS, 0, 0);
+
+	dContrast = nValue / 20.0 + 0.1;
+
+	/* Set the static display to the new value */
+	snprintf(buf,sizeof(buf),"%03.2f", dContrast);
+	Static_SetTextA(GetDlgItem(hwnd, IDC_FSCONTRASTDISP), buf);
 }
 
 /* Handle changes to the A2D slider */
@@ -3571,6 +3830,20 @@ static void AudioLatencySelectionChange(HWND hwnd)
 	/* Set the static display to the new value */
 	snprintf(buffer,sizeof(buffer),"%i/5 ~ %i/5", value, value + 1);
 	Static_SetTextA(GetDlgItem(hwnd,IDC_AUDIO_LATENCY_DISP),buffer);
+}
+
+static void PrescaleSelectionChange(HWND hwnd)
+{
+	char buffer[100];
+	int value;
+
+	// Get the current value of the control
+	value = SendDlgItemMessage(hwnd,IDC_PRESCALE, TBM_GETPOS, 0, 0);
+
+	/* Set the static display to the new value */
+	snprintf(buffer,sizeof(buffer),"%d",value);
+	Static_SetTextA(GetDlgItem(hwnd,IDC_PRESCALEDISP),buffer);
+
 }
 
 static void ThreadPrioritySelectionChange(HWND hwnd)
@@ -3758,20 +4031,6 @@ static void InitializeScreenUI(HWND hwnd)
 
 		for (i = 0; i < iMonitors; i++)
 			ComboBox_InsertStringA(hCtrl, i, DirectDraw_GetDisplayName(i));
-	}
-}
-
-static void InitializePrescaleUI(HWND hwnd)
-{
-	HWND hCtrl = GetDlgItem(hwnd, IDC_D3D_PRESCALE);
-	if (hCtrl)
-	{
-		ComboBox_AddStringA(hCtrl, "None");
-		ComboBox_AddStringA(hCtrl, "1");
-		ComboBox_AddStringA(hCtrl, "2");
-		ComboBox_AddStringA(hCtrl, "3");
-		ComboBox_AddStringA(hCtrl, "4");
-		ComboBox_SetCurSel(hCtrl, 1);
 	}
 }
 
@@ -4036,21 +4295,6 @@ static void InitializeDefaultBIOSUI(HWND hwnd)
 	}
 }
 
-static void InitializeNumScreenUI(HWND hwnd)
-{
-	HWND    hCtrl;
-
-	hCtrl = GetDlgItem(hwnd, IDC_NUM_SCREEN);
-	if (hCtrl)
-	{
-		ComboBox_AddStringA(hCtrl, "1");
-		ComboBox_AddStringA(hCtrl, "2");
-		ComboBox_AddStringA(hCtrl, "3");
-		ComboBox_AddStringA(hCtrl, "4");
-		ComboBox_SetCurSel(hCtrl, 0);
-	}
-}
-
 static void InitializeD3DVerUI(HWND hwnd)
 {
 	HWND    hCtrl;
@@ -4126,6 +4370,53 @@ void UpdateBackgroundBrush(HWND hwndTab)
 		DeleteObject(hBmp);
 		DeleteDC(hDCMem);
 		ReleaseDC(hwndTab, hDC);
+	}
+}
+
+static void InitializeEffectUI(HWND hwnd)
+{
+	HWND hCtrl = GetDlgItem(hwnd, IDC_EFFECT);
+
+	WIN32_FIND_DATAA FindFileData;
+	HANDLE hFind;
+	char *ext;
+	char root[256];
+	char path[256];
+
+	if (hCtrl)
+	{
+		ComboBox_AddStringA(hCtrl, _UI("None"));
+
+		sprintf (path, "%s\\*.*", GetArtDir());
+
+		hFind = FindFirstFileA(path, &FindFileData);
+
+		if (hFind != INVALID_HANDLE_VALUE)
+		{
+			do 
+			{
+				// copy the filename
+				strcpy (root,FindFileData.cFileName);
+
+				// find the extension
+				ext = strrchr (root,'.');
+				if (ext)
+				{
+					// check if it's a cfg file
+					if (strcmp (ext, ".png") == 0)
+					{
+						// and strip off the extension
+						*ext = 0;
+
+						// add it as an option
+						ComboBox_AddStringA(hCtrl, root);
+					}
+				}
+			}
+			while (FindNextFileA (hFind, &FindFileData) != 0);
+			
+			FindClose (hFind);
+		}
 	}
 }
 

@@ -140,6 +140,7 @@ typedef struct
 	BOOL	autorol;
 	BOOL	flipx;
 	BOOL	flipy;
+
 //
 // DIRECTDRAW-SPECIFIC OPTIONS
 //
@@ -173,15 +174,16 @@ typedef struct
 //
 	BOOL	triplebuffer;
 	BOOL	switchres;
-	float	full_screen_brightness;	// todo: GUI
-	float	full_screen_contrast;	// todo: GUI
+	float	full_screen_brightness;
+	float	full_screen_contrast;
 	float	full_screen_gamma;
 //
 // GAME SCREEN OPTIONS
 //
 	float	brightness;
-	float	contrast;	// todo: GUI
-	float	gamma;		// todo: GUI
+	float	contrast;      /* "1.0", 0.5, 2.0 */
+	float	gamma;         /* "1.0", 0.5, 3.0 */
+
 //
 // VECTOR RENDERING OPTIONS
 //
