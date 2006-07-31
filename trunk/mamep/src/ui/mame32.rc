@@ -20,7 +20,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Englisch (USA) resources
+// English (USA) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 #ifdef _WIN32
@@ -651,13 +651,13 @@ BEGIN
     LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
-    GROUPBOX        "Video Output Method",IDC_VIDEOTEXT,4,45,124,30
-    COMBOBOX        IDC_VIDEO,10,57,112,180,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    GROUPBOX        "Video output method",IDC_STATIC,4,45,124,30
+    COMBOBOX        IDC_VIDEO_MODE,10,57,112,180,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
     GROUPBOX        "Direct3D",IDC_DXTEXT,4,77,124,50
     CONTROL         "Enable Bilinear Filtering",IDC_D3D_FILTER,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,90,113,10,0,HIDC_D3D_FILTER
-    COMBOBOX        IDC_D3D_VER,10,106,112,180,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    COMBOBOX        IDC_D3D_VERSION,10,106,112,180,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
     GROUPBOX        "DirectDraw",IDC_DXTEXT,4,128,124,30
     CONTROL         "Stretch using hardware",IDC_HWSTRETCH,"Button",
@@ -1602,7 +1602,7 @@ BEGIN
     ID_LANGUAGE_HUNGARIAN    "Translate into Hungarian"
 END
 
-#endif    // Englisch (USA) resources
+#endif    // English (USA) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

@@ -145,6 +145,8 @@ static void InitializeSoundUI(HWND hwnd);
 static void InitializeSkippingUI(HWND hwnd);
 static void InitializeRotateUI(HWND hwnd);
 static void InitializeScreenUI(HWND hwnd);
+static void InitializeD3DVersionUI(HWND hwnd);
+static void InitializeVideoUI(HWND hwnd);
 static void InitializeResDepthUI(HWND hwnd);
 static void InitializeRefreshUI(HWND hwnd);
 static void InitializeDefaultInputUI(HWND hWnd);
@@ -153,8 +155,6 @@ static void InitializeEffectUI(HWND hwnd);
 static void InitializeBIOSUI(HWND hwnd);
 static void InitializeDefaultBIOSUI(HWND hwnd);
 static void InitializeLEDModeUI(HWND hwnd);
-static void InitializeD3DVerUI(HWND hwnd);
-static void InitializeVideoUI(HWND hwnd);
 static void InitializeControllerMappingUI(HWND hwnd);
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 static void InitializeM68kCoreUI(HWND hwnd);
@@ -215,6 +215,7 @@ static int  g_nFullScreenBrightnessIndex = 0;
 static int  g_nFullScreenContrastIndex = 0;
 static int  g_nEffectIndex     = 0;
 static int  g_nLedmodeIndex    = 0;
+static int  g_nBiosIndex       = 0;
 static int  g_nA2DIndex        = 0;
 static int  g_nPaddleIndex = 0;
 static int  g_nADStickIndex = 0;
@@ -222,10 +223,9 @@ static int  g_nPedalIndex = 0;
 static int  g_nDialIndex = 0;
 static int  g_nTrackballIndex = 0;
 static int  g_nLightgunIndex = 0;
-static BOOL g_bAnalogCheckState[65]; // 8 Joysticks  * 8 Axes each
-static int  g_nD3DVerIndex = 0;
 static int  g_nVideoIndex = 0;
-static int  g_nBiosIndex       = 0;
+static int  g_nD3DVersionIndex = 0;
+static BOOL g_bAnalogCheckState[65]; // 8 Joysticks  * 8 Axes each
 #ifdef USE_SCALE_EFFECTS
 static int  g_nScaleEffectIndex= 0;
 #endif /* USE_SCALE_EFFECTS */
@@ -343,7 +343,6 @@ static DWORD dwHelpIDs[] =
 	IDC_USE_MOUSE,          HIDC_USE_MOUSE,
 	IDC_USE_SOUND,          HIDC_USE_SOUND,
 	IDC_VOLUME,             HIDC_VOLUME,
-	IDC_AUDIO_LATENCY,      HIDC_AUDIO_LATENCY,
 	IDC_WAITVSYNC,          HIDC_WAITVSYNC,
 	IDC_WINDOWED,           HIDC_WINDOWED,
 	IDC_PAUSEBRIGHT,        HIDC_PAUSEBRIGHT,
@@ -357,6 +356,7 @@ static DWORD dwHelpIDs[] =
 	IDC_SKIP_GAME_INFO,     HIDC_SKIP_GAME_INFO,
 	IDC_HIGH_PRIORITY,      HIDC_HIGH_PRIORITY,
 	IDC_D3D_FILTER,         HIDC_D3D_FILTER,
+	IDC_AUDIO_LATENCY,      HIDC_AUDIO_LATENCY,
 	IDC_BIOS,               HIDC_BIOS,
 	IDC_STRETCH_SCREENSHOT_LARGER, HIDC_STRETCH_SCREENSHOT_LARGER,
 	IDC_LEDMODE,            HIDC_LEDMODE,
@@ -391,11 +391,22 @@ static struct ComboBoxVideo
 } g_ComboBoxVideo[] = 
 {
 	{ "GDI",                  "gdi"    },
-	{ "DirectDraw",           "ddraw"   },
-	{ "Direct3D",             "d3d"     },
+	{ "DirectDraw",           "ddraw"  },
+	{ "Direct3D",             "d3d"    },
+};
+#define NUMVIDEO (sizeof(g_ComboBoxVideo) / sizeof(g_ComboBoxVideo[0]))
+
+static struct ComboBoxD3DVersion
+{
+	const char*	m_pText;
+	const int	m_pData;
+} g_ComboBoxD3DVersion[] = 
+{
+	{ "Version 9",           9   },
+	{ "Version 8",           8   },
 };
 
-#define NUMVIDEO (sizeof(g_ComboBoxVideo) / sizeof(g_ComboBoxVideo[0]))
+#define NUMD3DVERSIONS (sizeof(g_ComboBoxD3DVersion) / sizeof(g_ComboBoxD3DVersion[0]))
 
 static struct ComboBoxDevices
 {
@@ -1049,6 +1060,7 @@ LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus)
 	}
 	else
 	{
+			// audit result is no
 #ifdef MESS
 		strcpy(buffer, _UI("BIOS missing"));
 #else
@@ -1222,10 +1234,14 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 	case IDC_FRAMESKIP:
 	case IDC_DEFAULT_INPUT:
 	case IDC_ROTATE:
-	case IDC_SCREEN:
 	case IDC_SAMPLERATE:
-	case IDC_D3D_VER:
-	case IDC_VIDEO:
+	case IDC_VIDEO_MODE:
+		if (wNotifyCode == CBN_SELCHANGE)
+		{
+			changed = TRUE;
+		}
+		break;
+	case IDC_SCREEN:
 	case IDC_M68K_CORE:
 	case IDC_EFFECT:
 #ifdef USE_SCALE_EFFECTS
@@ -1261,7 +1277,6 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 			changed = TRUE;
 		}
 		break;
-
 	case IDC_WINDOWED:
 		changed = ReadControl(hDlg, wID);
 		break;
@@ -1275,6 +1290,12 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 		break;
 
 			case IDC_LEDMODE:
+				if (wNotifyCode == CBN_SELCHANGE)
+				{
+					changed = TRUE;
+				}
+				break;
+			case IDC_D3D_VERSION:
 				if (wNotifyCode == CBN_SELCHANGE)
 				{
 					changed = TRUE;
@@ -1445,7 +1466,6 @@ static INT_PTR HandleGameOptionsNotify(HWND hDlg, UINT Msg, WPARAM wParam, LPARA
 			}
 		}
 		break;
-
 	case PSN_SETACTIVE:
 		/* Initialize the controls. */
 		PopulateControls(hDlg);
@@ -1560,16 +1580,15 @@ static INT_PTR HandleGameOptionsCtlColor(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 			break;
 		}
 	}
-
 	if( Msg == WM_CTLCOLORSTATIC )
 	{
+
 		//	SetBkColor((HDC)wParam,GetSysColor(COLOR_3DFACE) );
 		if( hThemes )
 		{
 			if( fnIsThemed && fnIsThemed() )
 			{
 				HWND hWnd = PropSheet_GetTabControl(GetParent(hDlg));
-
 				// Set the background mode to transparent
 				SetBkMode((HDC)wParam, TRANSPARENT);
 
@@ -1595,9 +1614,7 @@ static INT_PTR HandleGameOptionsCtlColor(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 	}
 	else
 		SetBkColor((HDC)wParam,RGB(255,255,255) );
-
 	UnrealizeObject(background_brush);
-
 	return (DWORD)background_brush;
 }
 
@@ -2240,9 +2257,9 @@ static void SetPropEnabledControls(HWND hWnd)
 	HWND hCtrl;
 	int  nIndex;
 	int  sound;
-	const char* video_mode;
 	BOOL ddraw = FALSE;
 	BOOL d3d = FALSE;
+	BOOL gdi = FALSE;
 	BOOL useart = FALSE;
 	BOOL multimon = (DirectDraw_GetNumDisplays() >= 2);
 	int joystick_attached = 9;
@@ -2264,14 +2281,22 @@ static void SetPropEnabledControls(HWND hWnd)
 	else
 		in_window = pGameOpts->window;
 
-	hCtrl = GetDlgItem(hWnd, IDC_VIDEO);
-	if (hCtrl)
-		video_mode = (const char*)ComboBox_GetItemData(hCtrl, g_nVideoIndex);
-	else
-		video_mode = (const char*)pGameOpts->video;
-
-	ddraw = !mame_stricmp(video_mode, g_ComboBoxVideo[1].m_pData);
-	d3d   = !mame_stricmp(video_mode, g_ComboBoxVideo[2].m_pData);
+	if( ! mame_stricmp(pGameOpts->video, "d3d" ) )
+	{
+		d3d = TRUE;
+		ddraw = FALSE;
+		gdi = FALSE;
+	}else if ( ! mame_stricmp(pGameOpts->video, "ddraw" ) )
+	{
+		d3d = FALSE;
+		ddraw = TRUE;
+		gdi = FALSE;
+	}else
+	{
+		d3d = FALSE;
+		ddraw = FALSE;
+		gdi = TRUE;
+	}
 
 	EnableWindow(GetDlgItem(hWnd, IDC_MAXIMIZE),               in_window);
 	EnableWindow(GetDlgItem(hWnd, IDC_RESDEPTH),               !in_window);
@@ -2289,12 +2314,6 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMA),                !in_window && (ddraw || d3d));
 	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMATEXT),            !in_window && (ddraw || d3d));
 	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMADISP),            !in_window && (ddraw || d3d));
-	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT),        ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT2),       ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATION),           ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOD),           ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_SCREEN),                 (ddraw || d3d) && multimon);
-	EnableWindow(GetDlgItem(hWnd, IDC_SCREENTEXT),             (ddraw || d3d) && multimon);
 	EnableWindow(GetDlgItem(hWnd, IDC_FSBRIGHTNESS),           !in_window);
 	EnableWindow(GetDlgItem(hWnd, IDC_FSBRIGHTNESSTEXT),       !in_window);
 	EnableWindow(GetDlgItem(hWnd, IDC_FSBRIGHTNESSDISP),       !in_window);
@@ -2302,11 +2321,19 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_FSCONTRASTTEXT),         !in_window);
 	EnableWindow(GetDlgItem(hWnd, IDC_FSCONTRASTDISP),         !in_window);
 
-	EnableWindow(GetDlgItem(hWnd, IDC_D3D_VER),                d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT),        ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT2),       ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATION),           ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOD),           ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_SCREEN),                 (ddraw || d3d) && multimon);
+	EnableWindow(GetDlgItem(hWnd, IDC_SCREENTEXT),             (ddraw || d3d) && multimon);
+
 	EnableWindow(GetDlgItem(hWnd, IDC_DXTEXT),                 ddraw || d3d);
 
-	// d3d
 	EnableWindow(GetDlgItem(hWnd, IDC_D3D_FILTER),             d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_D3D_VERSION),            d3d);
+
+	//Switchres and D3D or ddraw enable the per screen parameters
 
 	EnableWindow(GetDlgItem(hWnd, IDC_NUMSCREENS),             ddraw || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_NUMSCREENSDISP),         ddraw || d3d);
@@ -2678,6 +2705,24 @@ static void AssignInput(HWND hWnd)
 
 }
 
+static void AssignVideo(HWND hWnd)
+{
+	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nVideoIndex);
+
+	FreeIfAllocated(&pGameOpts->video);
+	if (ptr != NULL)
+		pGameOpts->video = strdup(ptr);
+}
+
+
+
+static void AssignD3DVersion(HWND hWnd)
+	{
+	const int ptr = (int)ComboBox_GetItemData(hWnd, g_nD3DVersionIndex);
+	pGameOpts->d3dversion = ptr;
+}
+
+
 static void AssignAnalogAxes(HWND hWnd)
 {
 	int nCheckCounter = 0;
@@ -2761,15 +2806,6 @@ static void AssignLedmode(HWND hWnd)
 		pGameOpts->led_mode = strdup(ptr);
 }
 
-static void AssignVideo(HWND hWnd)
-{
-	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nVideoIndex);
-
-	FreeIfAllocated(&pGameOpts->video);
-	if (ptr != NULL)
-		pGameOpts->video = strdup(ptr);
-}
-
 static void AssignPaddle(HWND hWnd)
 {
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nPaddleIndex);
@@ -2823,16 +2859,6 @@ static void AssignLightgun(HWND hWnd)
 	FreeIfAllocated(&pGameOpts->lightgun_device);
 	if (ptr != NULL)
 		pGameOpts->lightgun_device = strdup(ptr);
-}
-
-static void AssignD3DVer(HWND hWnd)
-{
-	switch (g_nD3DVerIndex)
-	{
-		case 1:  pGameOpts->d3dversion = 8; break;
-		default:
-		case 0:  pGameOpts->d3dversion = 9; break;
-	}
 }
 
 static void AssignBios(HWND hWnd)
@@ -2988,7 +3014,6 @@ static void ResetDataMap(void)
 		if (!mame_stricmp(pGameOpts->led_mode, g_ComboBoxLedmode[i].m_pData))
 			g_nLedmodeIndex = i;
 	}
-
 	g_nVideoIndex = 0;
 	for (i = 0; i < NUMVIDEO; i++)
 	{
@@ -2996,11 +3021,11 @@ static void ResetDataMap(void)
 			g_nVideoIndex = i;
 	}
 
-	switch (pGameOpts->d3dversion)
+	g_nD3DVersionIndex = 0;
+	for (i = 0; i < NUMD3DVERSIONS; i++)
 	{
-		case 8:  g_nD3DVerIndex = 1; break;
-		default:
-		case 9:  g_nD3DVerIndex = 0; break;
+		if (pGameOpts->d3dversion == g_ComboBoxD3DVersion[i].m_pData ) 
+			g_nD3DVersionIndex = i;
 	}
 
 	g_biosinfo = NULL;
@@ -3096,6 +3121,8 @@ static void BuildDataMap(void)
 
 	ResetDataMap();
 	/* video */
+	DataMapAdd(IDC_D3D_VERSION,   DM_INT,  CT_COMBOBOX, &g_nD3DVersionIndex,       DM_INT,    &pGameOpts->d3dversion,  0, 0, AssignD3DVersion);
+	DataMapAdd(IDC_VIDEO_MODE,    DM_INT,  CT_COMBOBOX, &g_nVideoIndex,            DM_STRING, &pGameOpts->video,       0, 0, AssignVideo);
 	DataMapAdd(IDC_PRESCALE,      DM_INT,  CT_SLIDER,   &pGameOpts->prescale,      DM_INT, &pGameOpts->prescale,       0, 0, 0);
 	DataMapAdd(IDC_PRESCALEDISP,  DM_NONE, CT_NONE,     NULL,                      DM_INT, &pGameOpts->prescale,       0, 0, 0);
 	DataMapAdd(IDC_NUMSCREENS,    DM_INT,  CT_SLIDER,   &pGameOpts->numscreens,    DM_INT, &pGameOpts->numscreens,     0, 0, 0);
@@ -3128,11 +3155,7 @@ static void BuildDataMap(void)
 #endif /* USE_SCALE_EFFECTS */
 
 	// direct3d
-	DataMapAdd(IDC_VIDEO,         DM_INT,  CT_COMBOBOX, &g_nVideoIndex,            DM_STRING, &pGameOpts->video,     0, 0, AssignVideo);
-	
-	DataMapAdd(IDC_HWSTRETCH,     DM_BOOL, CT_BUTTON,   &pGameOpts->hwstretch, DM_BOOL, &pGameOpts->hwstretch, 0, 0, 0);
-
-	DataMapAdd(IDC_D3D_VER,       DM_INT,  CT_COMBOBOX, &g_nD3DVerIndex,           DM_INT,    &pGameOpts->d3dversion,      0, 0, AssignD3DVer);
+	DataMapAdd(IDC_HWSTRETCH,     DM_BOOL, CT_BUTTON,   &pGameOpts->hwstretch,     DM_BOOL,   &pGameOpts->hwstretch,       0, 0, 0);
 	DataMapAdd(IDC_D3D_FILTER,    DM_BOOL, CT_BUTTON,   &pGameOpts->filter,        DM_BOOL,   &pGameOpts->filter,          0, 0, 0);
 
 	/* input */
@@ -3399,7 +3422,7 @@ static void InitializeOptions(HWND hDlg)
 	InitializeBIOSUI(hDlg);
 	InitializeDefaultBIOSUI(hDlg);
 	InitializeLEDModeUI(hDlg);
-	InitializeD3DVerUI(hDlg);
+	InitializeD3DVersionUI(hDlg);
 	InitializeVideoUI(hDlg);
 	InitializeControllerMappingUI(hDlg);
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
@@ -3984,6 +4007,23 @@ static void InitializeRotateUI(HWND hwnd)
 	}
 }
 
+/* Populate the Video Mode drop down */
+static void InitializeVideoUI(HWND hwnd)
+{
+	HWND    hCtrl;
+
+	hCtrl = GetDlgItem(hwnd, IDC_VIDEO_MODE);
+	if (hCtrl)
+	{
+		int i;
+		for (i = 0; i < NUMVIDEO; i++)
+		{
+			ComboBox_InsertStringA(hCtrl, i, _UI(g_ComboBoxVideo[i].m_pText));
+			ComboBox_SetItemData( hCtrl, i, g_ComboBoxVideo[i].m_pData);
+		}
+	}
+}
+
 /* Populate the resolution depth drop down */
 static void InitializeResDepthUI(HWND hwnd)
 {
@@ -4019,6 +4059,22 @@ static void InitializeResDepthUI(HWND hwnd)
 					ComboBox_SetItemData(hCtrl, nCount++, pDisplayModes->m_Modes[i].m_dwBPP);
 				}
 			}
+		}
+	}
+}
+
+
+/* Populate the D3D Version drop down */
+static void InitializeD3DVersionUI(HWND hwnd)
+{
+	HWND hCtrl = GetDlgItem(hwnd, IDC_D3D_VERSION);
+	if (hCtrl)
+	{
+		int i;
+		for (i = 0; i < NUMD3DVERSIONS; i++)
+		{
+			ComboBox_InsertStringA(hCtrl, i, g_ComboBoxD3DVersion[i].m_pText);
+			ComboBox_SetItemData( hCtrl, i, g_ComboBoxD3DVersion[i].m_pData);
 		}
 	}
 }
@@ -4301,34 +4357,6 @@ static void InitializeDefaultBIOSUI(HWND hwnd)
 	}
 }
 
-static void InitializeD3DVerUI(HWND hwnd)
-{
-	HWND    hCtrl;
-
-	hCtrl = GetDlgItem(hwnd, IDC_D3D_VER);
-	if (hCtrl)
-	{
-		ComboBox_AddStringA(hCtrl, "Direct3D 9");
-		ComboBox_AddStringA(hCtrl, "Direct3D 8");
-		ComboBox_SetCurSel(hCtrl, 0);
-	}
-}
-
-static void InitializeVideoUI(HWND hwnd)
-{
-	HWND    hCtrl;
-
-	hCtrl = GetDlgItem(hwnd, IDC_VIDEO);
-	if (hCtrl)
-	{
-		int i;
-		for (i = 0; i < NUMVIDEO; i++)
-		{
-			ComboBox_InsertStringA(hCtrl, i, _UI(g_ComboBoxVideo[i].m_pText));
-			ComboBox_SetItemData( hCtrl, i, g_ComboBoxVideo[i].m_pData);
-		}
-	}
-}
 
 void UpdateBackgroundBrush(HWND hwndTab)
 {
