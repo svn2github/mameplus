@@ -2976,6 +2976,12 @@ static void ResetDataMap(void)
 		case 44100:  g_nSampleRateIndex = 3; break;
 	}
 
+	if (pGameOpts->effect == NULL || mame_stricmp(pGameOpts->effect,"none") == 0)
+	{
+		FreeIfAllocated(&pGameOpts->effect);
+		pGameOpts->effect = strdup("none");
+	}
+
 	g_nLedmodeIndex = 0;
 	for (i = 0; i < NUMLEDMODES; i++)
 	{
