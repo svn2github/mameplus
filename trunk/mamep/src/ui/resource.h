@@ -106,7 +106,6 @@
 #define IDB_TOOLBAR_PL                  203
 #define IDB_TOOLBAR_HU                  204
 #define IDB_SPLASH                      210
-#ifdef IMAGE_MENU
 #define IDI_INFO                        701
 #define IDI_LARGE                       702
 #define IDI_SMALL                       703
@@ -118,7 +117,6 @@
 #define IDI_SND                         709
 #define IDI_BIOS                        710
 #define IDI_VIDEO                       711
-#else /* IMAGE_MENU */
 #define IDC_LIST                        1000
 #define IDC_PLAY                        1001
 #define IDC_DISPLAYS                    1002
@@ -511,7 +509,7 @@
 #define ID_STYLE_OFFICE					40193
 #define ID_STYLE_OFFICE2003				40194
 #define ID_STYLE_OFFICE2007				40195
-#else /* IMAGE_MENU */
+#endif /* IMAGE_MENU */
 
 #define ID_LANGUAGE_ENGLISH_US          40201
 #define ID_LANGUAGE_JAPANESE            40202

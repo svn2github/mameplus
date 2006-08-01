@@ -558,7 +558,7 @@ void SetUIPaletteString(int n, const char *s);
 #ifdef IMAGE_MENU
 int GetImageMenuStyle(void);
 void SetImageMenuStyle(int style);
-#else /* IMAGE_MENU */
+#endif /* IMAGE_MENU */
 
 int GetLangcode(void);
 void SetLangcode(int langcode);

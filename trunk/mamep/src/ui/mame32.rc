@@ -124,7 +124,7 @@ BEGIN
             MENUITEM "Office 2007",                 ID_STYLE_OFFICE2007
         END
         MENUITEM SEPARATOR
-#else /* IMAGE_MENU */
+#endif /* IMAGE_MENU */
         MENUITEM "&Refresh\tF5",                ID_UPDATE_GAMELIST
         MENUITEM "&Custom Filters...\tCtrl+F",  ID_CONTEXT_FILTERS
         MENUITEM "Customi&ze Fields...",        ID_CUSTOMIZE_FIELDS
@@ -373,7 +373,6 @@ IDI_DISPLAY             ICON    DISCARDABLE     "res\\display.ico"
 IDI_CHECKMARK           ICON    DISCARDABLE     "res\\checkmark.ico"
 IDI_HEADER_UP           ICON    DISCARDABLE     "res\\header_up.ico"
 IDI_HEADER_DOWN         ICON    DISCARDABLE     "res\\header_down.ico"
-#ifdef IMAGE_MENU
 IDI_INFO                ICON    DISCARDABLE     "res\\info.ico"
 IDI_LARGE               ICON    DISCARDABLE     "res\\large.ico"
 IDI_SMALL               ICON    DISCARDABLE     "res\\small.ico"
@@ -385,7 +384,6 @@ IDI_PCB                 ICON    DISCARDABLE     "res\\pcb.ico"
 IDI_SND                 ICON    DISCARDABLE     "res\\snd.ico"
 IDI_BIOS                ICON    DISCARDABLE     "res\\bios.ico"
 IDI_VIDEO               ICON    DISCARDABLE     "res\\video.ico"
-#else /* IMAGE_MENU */
 
 /////////////////////////////////////////////////////////////////////////////
 //
