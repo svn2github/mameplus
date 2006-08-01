@@ -1966,7 +1966,7 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 			{
 				int nRefresh;
 
-				/* Get the screen depth */
+				/* Get the screen Refresh */
 				nRefresh = ComboBox_GetItemData(hCtrl, nCount);
 
 				/* If we match, set nSelection to the right value */
@@ -2598,7 +2598,7 @@ static void AssignPriority(HWND hWnd)
 static void AssignBrightCorrect(HWND hWnd)
 {
 	/* "1.0", 0.5, 2.0 */
-	pGameOpts->brightness = g_nBrightIndex / 20.0 + 0.5;
+	pGameOpts->brightness = g_nBrightIndex / 20.0 + 0.1;
 	
 }
 
@@ -2621,7 +2621,7 @@ static void AssignContrast(HWND hWnd)
 
 static void AssignFullScreenGamma(HWND hWnd)
 {
-	pGameOpts->full_screen_gamma = g_nFullScreenGammaIndex / 20.0;
+	pGameOpts->full_screen_gamma = g_nFullScreenGammaIndex / 20.0 + 0.1;
 }
 
 static void AssignFullScreenBrightness(HWND hWnd)
@@ -2636,7 +2636,7 @@ static void AssignFullScreenContrast(HWND hWnd)
 
 static void AssignBeam(HWND hWnd)
 {
-	pGameOpts->beam = g_nBeamIndex / 20.0 + 0.1;
+	pGameOpts->beam = g_nBeamIndex / 20.0 + 1.0;
 }
 
 static void AssignFlicker(HWND hWnd)
@@ -2648,6 +2648,7 @@ static void AssignA2D(HWND hWnd)
 {
 	pGameOpts->a2d_deadzone = g_nA2DIndex / 20.0;
 }
+
 
 static void AssignRotate(HWND hWnd)
 {
@@ -2943,13 +2944,13 @@ static void ResetDataMap(void)
 	// (we don't want 35.99999999 to be cut down to 35 because of floating point error)
 	g_nPrescaleIndex = pGameOpts->prescale;
 	g_nGammaIndex           = (int)((pGameOpts->gamma            - 0.1) * 20.0 + 0.001);
-	g_nFullScreenGammaIndex = (int)( pGameOpts->full_screen_gamma       * 20.0 + 0.001);
+	g_nFullScreenGammaIndex = (int)((pGameOpts->full_screen_gamma -0.1)  * 20.0 + 0.001);
 	g_nFullScreenBrightnessIndex= (int)((pGameOpts->full_screen_brightness - 0.1) * 20.0 + 0.001);
 	g_nFullScreenContrastIndex = (int)((pGameOpts->full_screen_contrast   - 0.1) * 20.0 + 0.001);
-	g_nBrightIndex   = (int)((pGameOpts->brightness       - 0.5) * 20.0 + 0.001);
-	g_nPauseBrightIndex     = (int)((pGameOpts->pause_brightness - 0.5) * 20.0 + 0.001);
+	g_nBrightIndex   = (int)((pGameOpts->brightness       - 0.1) * 20.0 + 0.001);
 	g_nContrastIndex	= (int)((pGameOpts->contrast         - 0.1) * 20.0 + 0.001);
-	g_nBeamIndex            = (int)((pGameOpts->beam             - 0.1) * 20.0 + 0.001);
+	g_nPauseBrightIndex     = (int)((pGameOpts->pause_brightness - 0.5) * 20.0 + 0.001);
+	g_nBeamIndex            = (int)((pGameOpts->beam             - 1.0) * 20.0 + 0.001);
 	g_nFlickerIndex         = (int)( pGameOpts->flicker);
 	g_nA2DIndex             = (int)( pGameOpts->a2d_deadzone            * 20.0 + 0.001);
 #ifdef TRANS_UI
@@ -3455,7 +3456,7 @@ static void InitializeMisc(HWND hDlg)
 
 	SendDlgItemMessage(hDlg, IDC_BRIGHTCORRECT, TBM_SETRANGE,
 				(WPARAM)FALSE,
-				(LPARAM)MAKELONG(0, 30)); /* [0.50, 2.00] in .05 increments */
+				(LPARAM)MAKELONG(0, 38)); /* [0.10, 2.00] in .05 increments */
 
 	SendDlgItemMessage(hDlg, IDC_PAUSEBRIGHT, TBM_SETRANGE,
 				(WPARAM)FALSE,
@@ -3463,7 +3464,7 @@ static void InitializeMisc(HWND hDlg)
 
 	SendDlgItemMessage(hDlg, IDC_FSGAMMA, TBM_SETRANGE,
 				(WPARAM)FALSE,
-				(LPARAM)MAKELONG(0, 80)); /* [0.00, 4.00] in .05 increments */
+				(LPARAM)MAKELONG(0, 58)); /* [0.10, 3.00] in .05 increments */
 
 	SendDlgItemMessage(hDlg, IDC_FSBRIGHTNESS, TBM_SETRANGE,
 				(WPARAM)FALSE,
@@ -3671,7 +3672,7 @@ static void BrightCorrectSelectionChange(HWND hwnd)
 	/* Get the current value of the control */
 	nValue = SendDlgItemMessage(hwnd, IDC_BRIGHTCORRECT, TBM_GETPOS, 0, 0);
 
-	dValue = nValue / 20.0 + 0.5;
+	dValue = nValue / 20.0 + 0.1;
 
 	/* Set the static display to the new value */
 	snprintf(buf,sizeof(buf), "%03.2f", dValue);
@@ -3724,7 +3725,7 @@ static void FullScreenGammaSelectionChange(HWND hwnd)
 	/* Get the current value of the control */
 	nValue = SendDlgItemMessage(hwnd, IDC_FSGAMMA, TBM_GETPOS, 0, 0);
 
-	dGamma = nValue / 20.0;
+	dGamma = nValue / 20.0 + 0.1;
 
 	/* Set the static display to the new value */
 	snprintf(buf,sizeof(buf),"%03.2f", dGamma);
@@ -3942,7 +3943,6 @@ static void UpdateDisplayModeUI(HWND hwnd, DWORD dwDepth, DWORD dwRefresh)
 			}
 		}
 	}
-
 	ComboBox_SetCurSel(hCtrl, nSelection);
 }
 
@@ -4242,6 +4242,53 @@ static void InitializeDefaultInputUI(HWND hwnd)
 	}
 }
 
+static void InitializeEffectUI(HWND hwnd)
+{
+	HWND hCtrl = GetDlgItem(hwnd, IDC_EFFECT);
+
+	WIN32_FIND_DATAA FindFileData;
+	HANDLE hFind;
+	char *ext;
+	char root[256];
+	char path[256];
+
+	if (hCtrl)
+	{
+		ComboBox_AddStringA(hCtrl, _UI("None"));
+
+		sprintf (path, "%s\\*.*", GetArtDir());
+
+		hFind = FindFirstFileA(path, &FindFileData);
+
+		if (hFind != INVALID_HANDLE_VALUE)
+		{
+			do 
+			{
+				// copy the filename
+				strcpy (root,FindFileData.cFileName);
+
+				// find the extension
+				ext = strrchr (root,'.');
+				if (ext)
+				{
+					// check if it's a cfg file
+					if (strcmp (ext, ".png") == 0)
+					{
+						// and strip off the extension
+						*ext = 0;
+
+						// add it as an option
+						ComboBox_AddStringA(hCtrl, root);
+					}
+				}
+			}
+			while (FindNextFileA (hFind, &FindFileData) != 0);
+			
+			FindClose (hFind);
+		}
+	}
+}
+
 /* Populate the LED mode drop down */
 static void InitializeLEDModeUI(HWND hwnd)
 {
@@ -4404,53 +4451,6 @@ void UpdateBackgroundBrush(HWND hwndTab)
 		DeleteObject(hBmp);
 		DeleteDC(hDCMem);
 		ReleaseDC(hwndTab, hDC);
-	}
-}
-
-static void InitializeEffectUI(HWND hwnd)
-{
-	HWND hCtrl = GetDlgItem(hwnd, IDC_EFFECT);
-
-	WIN32_FIND_DATAA FindFileData;
-	HANDLE hFind;
-	char *ext;
-	char root[256];
-	char path[256];
-
-	if (hCtrl)
-	{
-		ComboBox_AddStringA(hCtrl, _UI("None"));
-
-		sprintf (path, "%s\\*.*", GetArtDir());
-
-		hFind = FindFirstFileA(path, &FindFileData);
-
-		if (hFind != INVALID_HANDLE_VALUE)
-		{
-			do 
-			{
-				// copy the filename
-				strcpy (root,FindFileData.cFileName);
-
-				// find the extension
-				ext = strrchr (root,'.');
-				if (ext)
-				{
-					// check if it's a cfg file
-					if (strcmp (ext, ".png") == 0)
-					{
-						// and strip off the extension
-						*ext = 0;
-
-						// add it as an option
-						ComboBox_AddStringA(hCtrl, root);
-					}
-				}
-			}
-			while (FindNextFileA (hFind, &FindFileData) != 0);
-			
-			FindClose (hFind);
-		}
 	}
 }
 
