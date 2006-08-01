@@ -555,8 +555,8 @@ const char *GetUIPaletteString(int n);
 void SetUIPaletteString(int n, const char *s);
 #endif /* UI_COLOR_DISPLAY */
 
-int GetMenuStyle(void);
-void SetMenuStyle(int style);
+int GetImageMenuStyle(void);
+void SetImageMenuStyle(int style);
 
 int GetLangcode(void);
 void SetLangcode(int langcode);

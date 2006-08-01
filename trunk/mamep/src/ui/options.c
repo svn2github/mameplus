@@ -105,7 +105,7 @@ typedef struct
 	int      column_order[COLUMN_MAX];
 	int      column_shown[COLUMN_MAX];
 	int      sort_column;
-	int      menu_style;
+	int      imagemenu_style;
 	BOOL     sort_reverse;
 	int      window_x;
 	int      window_y;
@@ -1412,14 +1412,14 @@ int GetSortColumn(void)
 	return settings.sort_column;
 }
 
-void SetMenuStyle(int style)
+void SetImageMenuStyle(int style)
 {
-	settings.menu_style = style;
+	settings.imagemenu_style = style;
 }
 
-int GetMenuStyle(void)
+int GetImageMenuStyle(void)
 {
-	return settings.menu_style;
+	return settings.imagemenu_style;
 }
 
 void SetSortReverse(BOOL reverse)
@@ -3049,7 +3049,7 @@ const options_entry winui_opts[] =
 	{ "column_order",                "0,2,3,4,5,6,7,8,9,10,11,1",  0,                 "column order settings"},
 	{ "column_shown",                "1,0,1,1,1,1,1,1,1,1,1,1",    0,                 "show or hide column settings"},
 	{ "sort_column",                 "0",                          0,                 "sort column"},
-	{ "menu_style",                  "3",                          0,                 "current menu style"},
+	{ "imagemenu_style",             "0",                          0,                 "current menu style"},
 	{ "sort_reverse",                "0",                          OPTION_BOOLEAN,    "sort descending"},
 	{ "folder_id",                   "0",                          0,                 "last selected folder id"},
 	{ "use_broken_icon",             "1",                          OPTION_BOOLEAN,    "use broken icon for not working games"},
@@ -4575,11 +4575,11 @@ INLINE void options_copy_list_fontface(const LOGFONTA *src, LOGFONTA *dest)
 
 //============================================================
 
-#define _options_get_menu_style(p,name)	_options_get_int_min_max(p, name, MENU_STYLE_BASIC, MENU_STYLE_MAX - 1)
-#define options_set_menu_style		options_set_int
-#define options_copy_menu_style		options_copy_int
-#define options_free_menu_style		options_free_int
-#define options_compare_menu_style	options_compare_int
+#define _options_get_imagemenu_style(p,name)	_options_get_int_min_max(p, name, 0, MENU_STYLE_MAX)
+#define options_set_imagemenu_style		options_set_int
+#define options_copy_imagemenu_style		options_copy_int
+#define options_free_imagemenu_style		options_free_int
+#define options_compare_imagemenu_style	options_compare_int
 
 //============================================================
 

@@ -1844,7 +1844,7 @@ static void ChangeLanguage(int id)
 
 static void ApplyMenuStyle(HINSTANCE hInst, HWND hwnd, HMENU menuHandle)
 {
-	if (ImageMenu_Supported())
+	if (GetImageMenuStyle() > 0)
 	{
 		IMITEM imi;
 		int i;
@@ -1861,30 +1861,17 @@ static void ApplyMenuStyle(HINSTANCE hInst, HWND hwnd, HMENU menuHandle)
 		    ImageMenu_SetItemImage(&imi);
 	    }
 
-		ImageMenu_SetStyle(hwnd, GetMenuStyle());
+		ImageMenu_SetStyle(hwnd, GetImageMenuStyle() - 1);
 	}
 }
 
 static void ChangeMenuStyle(int id)
 {
-	if (ImageMenu_Supported())
-	{
-		if (id)
-			SetMenuStyle(id - ID_STYLE_BASIC);
-	
-		CheckMenuRadioItem(GetMenu(hMain), ID_STYLE_BASIC, ID_STYLE_BASIC + MENU_STYLE_MAX - 1, ID_STYLE_BASIC + GetMenuStyle(), MF_BYCOMMAND);
-		ApplyMenuStyle(hInst, hMain, GetMenu(hMain));
-	}
-	else
-	{
-		int i;
+	if (id)
+			SetImageMenuStyle(id - ID_STYLE_NONE);
 
-		SetMenuStyle(MENU_STYLE_BASIC);
-		CheckMenuRadioItem(GetMenu(hMain), ID_STYLE_BASIC, ID_STYLE_BASIC + MENU_STYLE_MAX - 1, ID_STYLE_BASIC, MF_BYCOMMAND);
-
-		for (i = MENU_STYLE_BASIC + 1; i < MENU_STYLE_MAX; i++)
-			EnableMenuItem(GetMenu(hMain), ID_STYLE_BASIC + i, MF_GRAYED);
-	}
+		CheckMenuRadioItem(GetMenu(hMain), ID_STYLE_NONE, ID_STYLE_NONE + MENU_STYLE_MAX, ID_STYLE_NONE + GetImageMenuStyle(), MF_BYCOMMAND);
+	ApplyMenuStyle(hInst, hMain, GetMenu(hMain));
 }
 
 // used for our sorted array of game names
@@ -3836,16 +3823,16 @@ static void GamePicker_OnHeaderContextMenu(POINT pt, int nColumn)
 	hMenu = GetSubMenu(hMenuLoad, 0);
 	TranslateMenu(hMenu, ID_SORT_ASCENDING);
 	
-	if (ImageMenu_Supported())
+	if (GetImageMenuStyle() > 0)
 	{
 		ImageMenu_CreatePopup(hMain, hMenuLoad);
-		ImageMenu_SetStyle(hMain, GetMenuStyle());
+		ImageMenu_SetStyle(hMain, GetImageMenuStyle());
 	}
 
 	lastColumnClick = nColumn;
 	TrackPopupMenu(hMenu,TPM_LEFTALIGN | TPM_RIGHTBUTTON,pt.x,pt.y,0,hMain,NULL);
 
-	if (ImageMenu_Supported())
+	if (GetImageMenuStyle() > 0)
 		ImageMenu_Remove(hMenuLoad, 0);
 
 	DestroyMenu(hMenuLoad);
@@ -4541,7 +4528,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 {
 	int i;
 
-	if ((id >= ID_STYLE_BASIC) && (id < ID_STYLE_BASIC + MENU_STYLE_MAX))
+	if ((id >= ID_STYLE_NONE) && (id <= ID_STYLE_NONE + MENU_STYLE_MAX))
 	{
 		ChangeMenuStyle(id);
 		return TRUE;
@@ -6677,7 +6664,7 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 	}
 #endif /* USE_IPS */
 
-	if (ImageMenu_Supported())
+	if (GetImageMenuStyle() > 0)
 	{
 		ImageMenu_CreatePopup(hMain, hMenu);
 
@@ -6689,7 +6676,7 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 	//the menu should not overlap SSFRAME
 	TrackPopupMenuEx(hMenu,TPM_LEFTALIGN | TPM_RIGHTBUTTON,pt.x,pt.y,hMain,&tpmp);
 	
-	if (ImageMenu_Supported())
+	if (GetImageMenuStyle() > 0)
 		ImageMenu_Remove(hMenu, 0);
 
 	DestroyMenu(hMenuLoad);
@@ -6717,15 +6704,15 @@ static BOOL HandleScreenShotContextMenu(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 	UpdateMenu(hMenu);
 
-	if (ImageMenu_Supported())
+	if (GetImageMenuStyle() > 0)
 	{
 		ImageMenu_CreatePopup(hWnd, hMenuLoad);
-		ImageMenu_SetStyle(hWnd, GetMenuStyle());
+		ImageMenu_SetStyle(hWnd, GetImageMenuStyle());
 	}
 
 	TrackPopupMenu(hMenu,TPM_LEFTALIGN | TPM_RIGHTBUTTON,pt.x,pt.y,0,hWnd,NULL);
 
-	if (ImageMenu_Supported())
+	if (GetImageMenuStyle() > 0)
 		ImageMenu_Remove(hMenuLoad, 0);
 
 	DestroyMenu(hMenuLoad);

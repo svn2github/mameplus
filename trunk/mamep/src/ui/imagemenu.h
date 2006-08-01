@@ -89,5 +89,3 @@ EXTERN_C void ImageMenu_SetStyle(HWND hwnd, int newMenuStyle);
 EXTERN_C void ImageMenu_SetMenuProps(MENUPROPS *mp);
 EXTERN_C void ImageMenu_SetMenuTitleProps(HMENU menuHandle, LPTSTR title, BOOL isVerticalTitle, COLORREF textColor);
 EXTERN_C void ImageMenu_SetMenuTitleBkProps(HMENU menuHandle, COLORREF firstColor, COLORREF secondColor, BOOL isGradient, BOOL isVerticalGradient);
-
-#define ImageMenu_Supported()	OnNT()
