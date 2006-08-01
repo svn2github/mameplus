@@ -608,7 +608,7 @@ static int db_font_needed = 1;
 
 
 /***************************************************************************
-    PROTOTYPES
+    FUNCTION PROTOTYPES
 ***************************************************************************/
 
 static void render_font_char_expand(render_font *font, render_font_char *ch);

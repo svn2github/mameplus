@@ -46,7 +46,7 @@
 #include "directories.h"
 #ifdef IMAGE_MENU
 #include "imagemenu.h"
-#endif /* IMAGE_MENU */
+#else /* IMAGE_MENU */
 	
 #ifdef _MSC_VER
 #define snprintf _snprintf
@@ -110,7 +110,7 @@ typedef struct
 	BOOL     sort_reverse;
 #ifdef IMAGE_MENU
 	int      imagemenu_style;
-#endif /* IMAGE_MENU */
+#else /* IMAGE_MENU */
 	int      window_x;
 	int      window_y;
 	int      window_width;
@@ -1436,7 +1436,7 @@ int GetImageMenuStyle(void)
 {
 	return settings.imagemenu_style;
 }
-#endif /* IMAGE_MENU */
+#else /* IMAGE_MENU */
 
 #ifdef USE_SHOW_SPLASH_SCREEN
 void SetDisplaySplashScreen (BOOL val)
@@ -3057,7 +3057,7 @@ const options_entry winui_opts[] =
 	{ "sort_column",                 "0",                          0,                 "sort column"},
 #ifdef IMAGE_MENU
 	{ "imagemenu_style",             "0",                          0,                 "current menu style"},
-#endif /* IMAGE_MENU */
+#else /* IMAGE_MENU */
 	{ "sort_reverse",                "0",                          OPTION_BOOLEAN,    "sort descending"},
 	{ "folder_id",                   "0",                          0,                 "last selected folder id"},
 	{ "use_broken_icon",             "1",                          OPTION_BOOLEAN,    "use broken icon for not working games"},
@@ -4591,7 +4591,7 @@ INLINE void options_copy_list_fontface(const LOGFONTA *src, LOGFONTA *dest)
 #define options_compare_imagemenu_style	options_compare_int
 
 //============================================================
-#endif /* IMAGE_MENU */
+#else /* IMAGE_MENU */
 
 INLINE void _options_get_ui_joy(int *array, const char *name)
 {

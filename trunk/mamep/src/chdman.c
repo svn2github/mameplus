@@ -29,7 +29,7 @@
 
 
 /***************************************************************************
-    PROTOTYPES
+    FUNCTION PROTOTYPES
 ***************************************************************************/
 
 static chd_interface_file *chdman_open(const char *filename, const char *mode);

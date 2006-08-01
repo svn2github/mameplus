@@ -6,11 +6,11 @@ $(OBJ)/ui/%.o: src/ui/%.c
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -c $< -o $@
 
-ifneq ($(USE_IMAGE_MENU),)
+#ifdef IMAGE_MENU
 $(OBJ)/ui/%.o: src/ui/%.cpp
 	@echo Compiling $<...
 	@g++ -mwindows -c $< -o $@
-endif
+#else /* IMAGE_MENU */
 
 OBJDIRS += $(OBJ)/ui
 
@@ -38,14 +38,13 @@ TMPOBJS = \
 	$(OBJ)/ui/win32ui.o \
 	$(OBJ)/ui/options.o \
 	$(OBJ)/ui/layout.o \
+#ifdef IMAGE_MENU
+	$(OBJ)/ui/imagemenu.o \
+#else /* IMAGE_MENU */
 	$(OBJ)/ui/translate.o
 
 ifneq ($(USE_UI_COLOR_DISPLAY),)
     TMPOBJS += $(OBJ)/ui/paletteedit.o
-endif
-
-ifneq ($(USE_IMAGE_MENU),)
-    TMPOBJS += $(OBJ)/ui/imagemenu.o
 endif
 
 $(OBJ)/ui/ui.a: $(TMPOBJS)
@@ -110,14 +109,11 @@ ifeq ($(MSVC_BUILD),)
 		-lddraw \
 		-ldinput \
 		-ldxguid \
+#ifdef IMAGE_MENU
 		-lmsimg32 \
 		-lstdc++ \
+#else /* IMAGE_MENU */
 		-lunicows
-    ifneq ($(USE_IMAGE_MENU),)
-        GUILIBS += \
-		    -lmsimg32 \
-		    -lstdc++
-    endif
 else
     TMPLIBS = \
 		-lkernel32 \

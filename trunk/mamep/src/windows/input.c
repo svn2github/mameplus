@@ -28,22 +28,12 @@
 #include "driver.h"
 #include "winmain.h"
 #include "machine/generic.h"
-#ifndef NEW_RENDER
-#include "windold.h"
-#else
 #include "window.h"
-INLINE int _win_has_menu(void)
-{
-	return 	win_has_menu(win_window_list);
-}
-#define win_video_window		win_window_list->hwnd
-#define win_has_menu			_win_has_menu
-#endif
 #include "options.h"
 #include "input.h"
 #include "debugwin.h"
-
-#define ENABLE_POLL_INPUT_HACK_FOR_SINGLE_STEP
+#include "video.h"
+#include "ui.h"
 
 
 //============================================================
@@ -53,12 +43,8 @@ INLINE int _win_has_menu(void)
 extern int win_physical_width;
 extern int win_physical_height;
 
-#ifndef NEW_RENDER
-extern int win_window_mode;
-#else
-#include "video.h"
-#define win_window_mode video_config.windowed
-#endif
+#define ENABLE_POLL_INPUT_HACK_FOR_SINGLE_STEP
+
 
 
 //============================================================
@@ -157,6 +143,7 @@ struct _raw_mouse
 };
 
 
+
 //============================================================
 //  GLOBAL VARIABLES
 //============================================================
@@ -183,7 +170,6 @@ static cycles_t				last_poll;
 
 // Controller override options
 static float				a2d_deadzone;
-static int					use_mouse;
 static int					use_joystick;
 static int					use_lightgun;
 static int					use_lightgun_dual;
@@ -202,6 +188,7 @@ static LPDIRECTINPUTDEVICE	keyboard_device[MAX_KEYBOARDS];
 static LPDIRECTINPUTDEVICE2	keyboard_device2[MAX_KEYBOARDS];
 static DIDEVCAPS			keyboard_caps[MAX_KEYBOARDS];
 static BYTE					keyboard_state[MAX_KEYBOARDS][MAX_KEYS];
+static UINT8				keyboard_detected_non_di_input;
 
 // additional key data
 static INT8					oldkey[MAX_KEYS];
@@ -828,9 +815,9 @@ static void autoselect_analog_devices(const input_port_entry *inp, int type1, in
 			(type3 != 0 && inp->type == type3))
 		{
 			// autoenable mouse devices
-			if (analog_type[anatype] == SELECT_TYPE_MOUSE && !use_mouse)
+			if (analog_type[anatype] == SELECT_TYPE_MOUSE && !win_use_mouse)
 			{
-				use_mouse = 1;
+				win_use_mouse = 1;
 				verbose_printf(_WINDOWS("Input: Autoenabling mice due to presence of a %s\n"), ananame);
 			}
 
@@ -889,7 +876,7 @@ static BOOL CALLBACK enum_keyboard_callback(LPCDIDEVICEINSTANCE instance, LPVOID
 		goto cant_set_format;
 
 	// set the cooperative level
-	result = IDirectInputDevice_SetCooperativeLevel(keyboard_device[keyboard_count], win_video_window,
+	result = IDirectInputDevice_SetCooperativeLevel(keyboard_device[keyboard_count], win_window_list->hwnd,
 					DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 	if (result != DI_OK)
 		goto cant_set_coop_level;
@@ -964,10 +951,10 @@ static BOOL CALLBACK enum_mouse_callback(LPCDIDEVICEINSTANCE instance, LPVOID re
 
 	// set the cooperative level
 	if (use_lightgun)
-		result = IDirectInputDevice_SetCooperativeLevel(mouse_device[mouse_count], win_video_window,
+		result = IDirectInputDevice_SetCooperativeLevel(mouse_device[mouse_count], win_window_list->hwnd,
 					DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 	else
-		result = IDirectInputDevice_SetCooperativeLevel(mouse_device[mouse_count], win_video_window,
+		result = IDirectInputDevice_SetCooperativeLevel(mouse_device[mouse_count], win_window_list->hwnd,
 					DISCL_FOREGROUND | DISCL_EXCLUSIVE);
 
 	if (result != DI_OK)
@@ -1090,7 +1077,7 @@ static BOOL CALLBACK enum_joystick_callback(LPCDIDEVICEINSTANCE instance, LPVOID
 #else
 	flags = DISCL_FOREGROUND | DISCL_EXCLUSIVE;
 #endif
-	result = IDirectInputDevice_SetCooperativeLevel(joystick_device[joystick_count], win_video_window, flags);
+	result = IDirectInputDevice_SetCooperativeLevel(joystick_device[joystick_count], win_window_list->hwnd, flags);
 	if (result != DI_OK)
 		goto cant_set_coop_level;
 
@@ -1174,7 +1161,7 @@ int wininput_init(void)
 	// initialize mouse devices
 	lightgun_count = 0;
 	mouse_count = 0;
-	if (use_mouse || use_lightgun)
+	if (win_use_mouse || use_lightgun)
 	{
 		lightgun_dual_player_state[0] = lightgun_dual_player_state[1] = 0;
 		lightgun_dual_player_state[2] = lightgun_dual_player_state[3] = 0;
@@ -1332,11 +1319,11 @@ void win_pause_input(int paused)
 		{
 			if (mouse_count > 1)
 			IDirectInputDevice_Acquire(mouse_device[MAX_MICE]);
-			if (mouse_active && !win_has_menu())
+			if (mouse_active && !win_has_menu(win_window_list))
 #ifdef USE_JOY_MOUSE_MOVE
-				for (i = 0; i < mouse_count && (use_mouse || use_lightgun || use_stickpoint); i++)
+				for (i = 0; i < mouse_count && (win_use_mouse || use_lightgun || use_stickpoint); i++)
 #else /* USE_JOY_MOUSE_MOVE */
-				for (i = 0; i < mouse_count && (use_mouse || use_lightgun); i++)
+				for (i = 0; i < mouse_count && (win_use_mouse || use_lightgun); i++)
 #endif /* USE_JOY_MOUSE_MOVE */
 					IDirectInputDevice_Acquire(mouse_device[i]);
 		}
@@ -1378,33 +1365,33 @@ void wininput_poll(void)
 	}
 
 	// poll all keyboards
-#ifdef ENABLE_POLL_INPUT_HACK_FOR_SINGLE_STEP
-	if (is_last_keypress_from_non_di)
+	if (keyboard_detected_non_di_input)
 		result = DIERR_NOTACQUIRED;
 	else
-#endif /* ENABLE_POLL_INPUT_HACK_FOR_SINGLE_STEP */
-	for (i = 0; i < keyboard_count; i++)
-	{
-		// first poll the device
-		if (keyboard_device2[i])
-			IDirectInputDevice2_Poll(keyboard_device2[i]);
-
-		// get the state
-		result = IDirectInputDevice_GetDeviceState(keyboard_device[i], sizeof(keyboard_state[i]), &keyboard_state[i][0]);
-
-		// handle lost inputs here
-		if ((result == DIERR_INPUTLOST || result == DIERR_NOTACQUIRED) && !input_paused)
+		for (i = 0; i < keyboard_count; i++)
 		{
-			result = IDirectInputDevice_Acquire(keyboard_device[i]);
+			// first poll the device
+			if (keyboard_device2[i])
+				IDirectInputDevice2_Poll(keyboard_device2[i]);
+
+			// get the state
+			result = IDirectInputDevice_GetDeviceState(keyboard_device[i], sizeof(keyboard_state[i]), &keyboard_state[i][0]);
+
+			// handle lost inputs here
+			if ((result == DIERR_INPUTLOST || result == DIERR_NOTACQUIRED) && !input_paused)
+			{
+				result = IDirectInputDevice_Acquire(keyboard_device[i]);
+				if (result == DI_OK)
+					result = IDirectInputDevice_GetDeviceState(keyboard_device[i], sizeof(keyboard_state[i]), &keyboard_state[i][0]);
+			}
+
+			// convert to 0 or 1
 			if (result == DI_OK)
-				result = IDirectInputDevice_GetDeviceState(keyboard_device[i], sizeof(keyboard_state[i]), &keyboard_state[i][0]);
+				for (j = 0; j < sizeof(keyboard_state[i]); j++)
+					keyboard_state[i][j] >>= 7;
 		}
 
-		// convert to 0 or 1
-		if (result == DI_OK)
-			for (j = 0; j < sizeof(keyboard_state[i]); j++)
-				keyboard_state[i][j] >>= 7;
-	}
+	keyboard_detected_non_di_input = FALSE;
 
 #ifdef ENABLE_POLL_INPUT_HACK_FOR_SINGLE_STEP
 	is_last_keypress_from_non_di = 0;
@@ -1422,10 +1409,8 @@ void wininput_poll(void)
 				if (vk)
 				{
 					keyboard_state[0][dik] = (GetAsyncKeyState(vk) >> 15) & 1;
-#ifdef ENABLE_POLL_INPUT_HACK_FOR_SINGLE_STEP
 					if (keyboard_state[0][dik])
-						is_last_keypress_from_non_di = 1;
-#endif /* ENABLE_POLL_INPUT_HACK_FOR_SINGLE_STEP */
+						keyboard_detected_non_di_input = TRUE;
 				}
 			}
 
@@ -1473,11 +1458,11 @@ void wininput_poll(void)
 		win_read_raw_mouse();
 	else
 	{
-		if (mouse_active && !win_has_menu())
+		if (mouse_active && !win_has_menu(win_window_list))
 #ifdef USE_JOY_MOUSE_MOVE
-			for (i = 0; i < mouse_count && (use_mouse||use_lightgun||use_stickpoint); i++)
+			for (i = 0; i < mouse_count && (win_use_mouse||use_lightgun||use_stickpoint); i++)
 #else /* USE_JOY_MOUSE_MOVE */
-			for (i = 0; i < mouse_count && (use_mouse||use_lightgun); i++)
+			for (i = 0; i < mouse_count && (win_use_mouse||use_lightgun); i++)
 #endif /* USE_JOY_MOUSE_MOVE */
 			{
 				// first poll the device
@@ -1510,9 +1495,9 @@ void wininput_poll(void)
 int win_is_mouse_captured(void)
 {
 #ifdef USE_JOY_MOUSE_MOVE
-	return (!input_paused && mouse_active && mouse_count > 0 && (use_mouse || use_stickpoint) && !win_has_menu());
+	return (!input_paused && mouse_active && mouse_count > 0 && (win_use_mouse || use_stickpoint) && !win_has_menu(win_window_list));
 #else /* USE_JOY_MOUSE_MOVE */
-	return (!input_paused && mouse_active && mouse_count > 0 && use_mouse && !win_has_menu());
+	return (!input_paused && mouse_active && mouse_count > 0 && win_use_mouse && !win_has_menu(win_window_list));
 #endif /* USE_JOY_MOUSE_MOVE */
 }
 
@@ -1709,7 +1694,7 @@ static int is_key_pressed(os_code keycode)
 		wininput_poll();
 
 	// if the video window isn't visible, we have to get our events from the console
-	if (!win_video_window || !IsWindowVisible(win_video_window))
+	if (!win_window_list->hwnd || !IsWindowVisible(win_window_list->hwnd))
 	{
 		// warning: this code relies on the assumption that when you're polling for
 		// keyboard events before the system is initialized, they are all of the
@@ -1722,7 +1707,7 @@ static int is_key_pressed(os_code keycode)
 
 #if defined(MAME_DEBUG) && defined(NEW_DEBUGGER)
 	// if the debugger is visible and we don't have focus, the key is not pressed
-	if (debugwin_is_debugger_visible() && GetFocus() != win_video_window)
+	if (debugwin_is_debugger_visible() && GetFocus() != win_window_list->hwnd)
 		return 0;
 #endif
 
@@ -1837,7 +1822,7 @@ static void update_joystick_axes(void)
 
 			/* if we've only ever seen one value here, or if we've been stuck at the same value for a long */
 			/* time (1 minute), mark the axis as dead or invalid */
-			if (history[1].count == 0 || history[0].count > Machine->refresh_rate[0] * 60)
+			if (history[1].count == 0 || history[0].count > Machine->screen[0].refresh * 60)
 				newtype = AXIS_TYPE_INVALID;
 
 			/* scan the history and count unique values; if we get more than 3, it's analog */
@@ -2262,7 +2247,7 @@ static INT32 get_joycode_value(os_code joycode)
 					return 0;
 			}
 
-			if (use_stickpoint && !win_has_menu())
+			if (use_stickpoint && !win_has_menu(win_window_list))
 			{
 				LONG val = ((LONG*)&mouse_state[joynum].lX)[joyindex];
 				LONG center = (a2d_deadzone > 0.0 ? (2 / a2d_deadzone) : 1);
@@ -2308,9 +2293,9 @@ static INT32 get_joycode_value(os_code joycode)
 		case CODETYPE_MOUSEAXIS:
 			// if the mouse isn't yet active, make it so
 #ifdef USE_JOY_MOUSE_MOVE
-			if (!mouse_active && (use_mouse||use_stickpoint) && !win_has_menu())
+			if (!mouse_active && (win_use_mouse||use_stickpoint) && !win_has_menu(win_window_list))
 #else /* USE_JOY_MOUSE_MOVE */
-			if (!mouse_active && use_mouse && !win_has_menu())
+			if (!mouse_active && win_use_mouse && !win_has_menu(win_window_list))
 #endif /* USE_JOY_MOUSE_MOVE */
 			{
 				mouse_active = 1;
@@ -2408,7 +2393,7 @@ static void poll_lightguns(void)
 	int player;
 
 	// if the mouse isn't yet active, make it so
-	if (!mouse_active && (use_mouse || use_lightgun) && !win_has_menu())
+	if (!mouse_active && (win_use_mouse || use_lightgun) && !win_has_menu(win_window_list))
 	{
 		mouse_active = 1;
 		win_pause_input(0);
@@ -2419,7 +2404,7 @@ static void poll_lightguns(void)
 		return;
 
 	// Warning message to users - design wise this probably isn't the best function to put this in...
-	if (win_window_mode)
+	if (video_config.windowed)
 		ui_popup(_WINDOWS("Lightgun not supported in windowed mode"));
 
 	// loop over players

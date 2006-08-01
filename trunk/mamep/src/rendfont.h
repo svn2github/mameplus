@@ -9,8 +9,8 @@
 
 ***************************************************************************/
 
-#ifndef RENDFONT_H
-#define RENDFONT_H
+#ifndef __RENDFONT_H__
+#define __RENDFONT_H__
 
 #include "render.h"
 
@@ -33,4 +33,4 @@ int uifont_need_font_warning(void);
 int uifont_decodechar(const UINT8 *s, UINT16 *code);
 
 void convert_command_move(char *buf);
-#endif	/* RENDFONT_H */
+#endif	/* __RENDFONT_H__ */

@@ -17,7 +17,6 @@
 
 include config.def
 
-
 #-------------------------------------------------
 # specify core target: mame, mess, tiny, etc.
 # build rules will be included from $(TARGET).mak
@@ -63,9 +62,6 @@ endif
 
 # uncomment next line to use the new multiwindow debugger
 NEW_DEBUGGER = 1
-
-# uncomment next line to use the new rendering system
-NEW_RENDER = 1
 
 # uncomment next line to use DRC MIPS3 engine
 X86_MIPS3_DRC = 1
@@ -268,10 +264,6 @@ ifneq ($(NEW_DEBUGGER),)
 DEFS += -DNEW_DEBUGGER
 endif
 
-ifneq ($(NEW_RENDER),)
-DEFS += -DNEW_RENDER
-endif
-
 ifneq ($(X86_VOODOO_DRC),)
 DEFS += -DVOODOO_DRC
 endif
@@ -370,9 +362,9 @@ else
 	-Wcast-align \
 	-Wstrict-prototypes \
 	-Wundef \
+#	-Wformat-security
 	-Wwrite-strings \
 	-Wdeclaration-after-statement
-	#-Wformat-security
 endif
 
 ifneq ($(I686),)
@@ -489,7 +481,7 @@ endif
 # include files which define additional targets
 #-------------------------------------------------
 
-all:	maketree emulator extrafiles
+all: maketree emulator extra
 
 
 
@@ -537,7 +529,7 @@ endif
 
 emulator:	maketree $(EMULATOR)
 
-extrafiles:	$(TOOLS)
+extra: $(TOOLS)
 
 maketree: $(sort $(OBJDIRS)) $(OSPREBUILD)
 

@@ -606,6 +606,7 @@ int frontend_listsamples(FILE *output)
 {
 	const char *gamename = options_get_string("", FALSE);
 	const game_driver **gamedrv;
+
 #if (HAS_SAMPLES)
 	machine_config drv;
 	int sndnum;
@@ -788,19 +789,20 @@ int frontend_verifysamples(FILE *output)
 	for (drvindex = 0; drivers[drvindex]; drvindex++)
 	{
 		const char **samplenames = NULL;
-#if (HAS_SAMPLES)
 		machine_config drv;
+		int res;
+
+#if (HAS_SAMPLES)
 		int sndnum;
 #endif
-		int res;
 
 		/* skip if we don't match */
 		if (mame_strwildcmp(gamename, drivers[drvindex]->name))
 			continue;
 
 		/* expand the machine driver and look for samples */
-#if (HAS_SAMPLES)
 		expand_machine_driver(drivers[drvindex]->drv, &drv);
+#if (HAS_SAMPLES)
 		for (sndnum = 0; drv.sound[sndnum].sound_type && sndnum < MAX_SOUND; sndnum++)
 			if (drv.sound[sndnum].sound_type == SOUND_SAMPLES)
 				samplenames = ((struct Samplesinterface *)drv.sound[sndnum].config)->samplenames;

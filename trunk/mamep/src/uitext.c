@@ -1,6 +1,6 @@
 /*********************************************************************
 
-    ui_text.c
+    uitext.c
 
     Functions used to retrieve text used by MAME, to aid in
     translation.
@@ -11,7 +11,7 @@
 *********************************************************************/
 
 #include "driver.h"
-#include "ui_text.h"
+#include "uitext.h"
 
 #ifdef MESS
 extern const char *mess_default_text[];
@@ -20,7 +20,7 @@ extern const char *mess_default_text[];
 
 lang_struct lang;
 
-/* All entries in this table must match the enum ordering in "ui_text.h" */
+/* All entries in this table must match the enum ordering in "uitext.h" */
 static const char *mame_default_text[] =
 {
 	APPNAME,
@@ -234,14 +234,12 @@ static const char *mame_default_text[] =
 	"Refresh rate",
 	"Decoding Graphics",
 
-#ifdef NEW_RENDER
 	"Video Options",
 	"Screen #",
 	"Rotate Clockwise",
 	"Rotate Counter-clockwise",
 	"Flip X",
 	"Flip Y",
-#endif
 
 #ifdef USE_SCALE_EFFECTS
 	"Scale Effect",

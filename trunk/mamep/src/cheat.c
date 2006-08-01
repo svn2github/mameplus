@@ -395,9 +395,12 @@ is selected
 *******************************************************************************/
 
 #include "driver.h"
-#include "ui_text.h"
+#include "ui.h"
+#include "uimenu.h"
+#include "uitext.h"
 #include "machine/eeprom.h"
 #include <ctype.h>
+#include <math.h>
 
 #ifdef MESS
 #include "cheatms.h"
@@ -1532,7 +1535,7 @@ static void old_style_menu(const char **items, const char **subitems, char *flag
 				item_list[menu_items].flags |= MENU_FLAG_RIGHT_ARROW;
 		}
 	}
-	ui_draw_menu(item_list, menu_items, selected);
+	ui_menu_draw(item_list, menu_items, selected);
 }
 
 
@@ -1760,10 +1763,6 @@ static INT32 DoEditDecField(INT32 data, INT32 min, INT32 max)
 
 void cheat_init(void)
 {
-	int	screenWidth, screenHeight;
-
-	ui_get_bounds(&screenWidth, &screenHeight);
-
 	he_did_cheat =			0;
 
 	cheatList =				NULL;
@@ -1788,7 +1787,7 @@ void cheat_init(void)
 	dontPrintNewLabels =	0;
 	autoSaveEnabled =		0;
 
-	fullMenuPageHeight =	screenHeight / ui_get_line_height() - 1;
+	fullMenuPageHeight =	floor(1.0f / ui_get_line_height()) - 1;
 
 	BuildCPUInfoList();
 
@@ -1803,7 +1802,7 @@ void cheat_init(void)
 	InitStringTable();
 
 	periodic_timer = timer_alloc(cheat_periodic);
-	timer_adjust(periodic_timer, TIME_IN_HZ(Machine->refresh_rate[0]), 0, TIME_IN_HZ(Machine->refresh_rate[0]));
+	timer_adjust(periodic_timer, TIME_IN_HZ(Machine->screen[0].refresh), 0, TIME_IN_HZ(Machine->screen[0].refresh));
 
 	add_exit_callback(cheat_exit);
 }
@@ -1969,7 +1968,7 @@ UINT32 cheat_menu(UINT32 state)
 	menu_item[total++].text = ui_getstring(UI_options);
 	menu_item[total++].text = ui_getstring(UI_returntomain);
 
-	ui_draw_menu(menu_item, total, sel);
+	ui_menu_draw(menu_item, total, sel);
 
 	if(UIPressedRepeatThrottle(IPT_UI_DOWN, kVerticalKeyRepeatRate))
 	{
@@ -2016,7 +2015,6 @@ UINT32 cheat_menu(UINT32 state)
 			default:
 				firstEntry = 1;
 				submenu_choice = 1;
-				schedule_full_refresh();
 				break;
 		}
 	}
@@ -2026,12 +2024,7 @@ UINT32 cheat_menu(UINT32 state)
 //  if(input_ui_pressed(IPT_UI_CONFIGURE))
 //      sel = -2;
 
-	if((sel == -1) || (sel == -2))
-	{
-		schedule_full_refresh();
-	}
-
-	return (sel + 1) | (submenu_choice << 8) | (firstEntry << 30) | (shortcut << 31);
+	return sel + 1;
 }
 
 static UINT32 DoShift(UINT32 input, INT8 shift)
@@ -2371,12 +2364,7 @@ static INT32 UserSelectValueMenu(int selection, CheatEntry * entry)
 			value = min;
 	}
 
-	if (sel == -1 || sel == -2)
-	{
-		schedule_full_refresh();
-	}
-
-	return sel + 1;
+	return (sel + 1) | (submenu_choice << 8) | (firstEntry << 30) | (shortcut << 31);
 }
 
 static INT32 CommentMenu(int selection, CheatEntry * entry)
@@ -2416,11 +2404,6 @@ static INT32 CommentMenu(int selection, CheatEntry * entry)
 //  {
 //      sel = -2;
 //  }
-
-	if (sel == -1 || sel == -2)
-	{
-		schedule_full_refresh();
-	}
 
 	return sel + 1;
 }
@@ -2696,7 +2679,6 @@ static int EnableDisableCheatMenu(int selection, int firstTime, int shortcut)
 					{
 						submenu_id = 2;
 						submenu_choice = 1;
-						schedule_full_refresh();
 					}
 					else
 					{
@@ -2756,7 +2738,6 @@ static int EnableDisableCheatMenu(int selection, int firstTime, int shortcut)
 					{
 						submenu_id = 2;
 						submenu_choice = 1;
-						schedule_full_refresh();
 					}
 					else
 					{
@@ -2786,7 +2767,6 @@ static int EnableDisableCheatMenu(int selection, int firstTime, int shortcut)
 				{
 					submenu_id = 1;
 					submenu_choice = 1;
-					schedule_full_refresh();
 				}
 				else
 				{
@@ -2802,7 +2782,6 @@ static int EnableDisableCheatMenu(int selection, int firstTime, int shortcut)
 				{
 					submenu_id = 2;
 					submenu_choice = 1;
-					schedule_full_refresh();
 				}
 				else
 				{
@@ -2846,7 +2825,6 @@ static int EnableDisableCheatMenu(int selection, int firstTime, int shortcut)
 			{
 				submenu_id = 3;
 				submenu_choice = 1;
-				schedule_full_refresh();
 			}
 		}
 	}
@@ -2865,11 +2843,6 @@ static int EnableDisableCheatMenu(int selection, int firstTime, int shortcut)
 	///* The UI key takes us all the way back out */
 //  if(input_ui_pressed(IPT_UI_CONFIGURE))
 //      sel = -2;
-
-	if(sel == -1 || sel == -2)
-	{
-		schedule_full_refresh();
-	}
 
 	return sel + 1;
 }
@@ -4615,7 +4588,6 @@ static int EditCheatMenu(CheatEntry * entry, int selection)
 	{
 		editActive = 0;
 		dirty = 1;
-		schedule_full_refresh();
 	}
 
 	if(dirty)
@@ -4975,7 +4947,7 @@ static int DoSearchMenuClassic(int selection, int startNew)
 
 	if(	(sel == -1) ||
 		(sel == -2))
-		schedule_full_refresh();
+		;
 	else
 		lastPos = sel;
 
@@ -5370,7 +5342,7 @@ static int DoSearchMenu(int selection, int startNew)
 
 	if(	(sel == -1) ||
 		(sel == -2))
-		schedule_full_refresh();
+		;
 	else
 		lastSel = sel;
 
@@ -5524,10 +5496,6 @@ static int AddEditCheatMenu(int selection)
 		sel = -1;
 //  if(input_ui_pressed(IPT_UI_CONFIGURE))
 //      sel = -2;
-
-	if(	(sel == -1) ||
-		(sel == -2))
-		schedule_full_refresh();
 
 	return sel + 1;
 }
@@ -5866,10 +5834,6 @@ static int ViewSearchResults(int selection, int firstTime)
 //  if(input_ui_pressed(IPT_UI_CONFIGURE))
 //      sel = -2;
 
-	if(	(sel == -1) ||
-		(sel == -2))
-		schedule_full_refresh();
-
 	return sel + 1;
 }
 
@@ -6055,10 +6019,6 @@ static int ChooseWatch(int selection)
 		sel = -1;
 //  if(input_ui_pressed(IPT_UI_CONFIGURE))
 //      sel = -2;
-
-	if(	(sel == -1) ||
-		(sel == -2))
-		schedule_full_refresh();
 
 	return sel + 1;
 }
@@ -6568,10 +6528,6 @@ static int EditWatch(WatchInfo * entry, int selection)
 //  if(input_ui_pressed(IPT_UI_CONFIGURE))
 //      sel = -2;
 
-	if(	(sel == -1) ||
-		(sel == -2))
-		schedule_full_refresh();
-
 	return sel + 1;
 }
 
@@ -6735,11 +6691,6 @@ static int SelectSearchRegions(int selection, SearchInfo * search)
 //  if(input_ui_pressed(IPT_UI_CONFIGURE))
 //      sel = -2;
 
-	if((sel == -1) || (sel == -2))
-	{
-		schedule_full_refresh();
-	}
-
 	return sel + 1;
 }
 
@@ -6872,11 +6823,6 @@ static int SelectSearch(int selection)
 //  if(input_ui_pressed(IPT_UI_CONFIGURE))
 //      sel = -2;
 
-	if((sel == -1) || (sel == -2))
-	{
-		schedule_full_refresh();
-	}
-
 	return sel + 1;
 }
 
@@ -6908,11 +6854,6 @@ static INT32 DisplayHelp(int selection)
 //  {
 //      sel = -2;
 //  }
-
-	if (sel == -1 || sel == -2)
-	{
-		schedule_full_refresh();
-	}
 
 	return sel + 1;
 }
@@ -7068,7 +7009,6 @@ static int SelectOptions(int selection)
 			case kMenu_SelectSearchRegions:
 			case kMenu_SelectSearch:
 				submenuChoice = 1;
-				schedule_full_refresh();
 				break;
 		}
 	}
@@ -7077,11 +7017,6 @@ static int SelectOptions(int selection)
 		sel = -1;
 //  if(input_ui_pressed(IPT_UI_CONFIGURE))
 //      sel = -2;
-
-	if((sel == -1) || (sel == -2))
-	{
-		schedule_full_refresh();
-	}
 
 	return sel + 1;
 }
@@ -8504,11 +8439,12 @@ static void HandleLocalCommandCheat(UINT32 type, UINT32 address, UINT32 data, UI
 
 				case kCustomLocation_RefreshRate:
 				{
+					screen_state *state = &Machine->screen[0];
 					double	refresh = data;
 
 					refresh /= 65536.0;
 
-					set_refresh_rate(0, refresh);
+					configure_screen(0, state->width, state->height, &state->visarea, refresh);
 				}
 				break;
 			}
@@ -10121,7 +10057,7 @@ static void cheat_periodicAction(CheatAction * action)
 	{
 		case kType_NormalOrDelay:
 		{
-			if(action->frameTimer >= (parameter * Machine->refresh_rate[0]))
+			if(action->frameTimer >= (parameter * Machine->screen[0].refresh))
 			{
 				action->frameTimer = 0;
 
@@ -10167,7 +10103,7 @@ static void cheat_periodicAction(CheatAction * action)
 
 				if(currentValue != action->lastValue)
 				{
-					action->frameTimer = parameter * Machine->refresh_rate[0];
+					action->frameTimer = parameter * Machine->screen[0].refresh;
 
 					action->flags |= kActionFlag_WasModified;
 				}

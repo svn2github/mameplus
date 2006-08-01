@@ -47,7 +47,7 @@ struct _options_data
 
 
 /***************************************************************************
-    GLOBALS
+    GLOBAL VARIABLES
 ***************************************************************************/
 
 static options_data *		datalist;
@@ -56,7 +56,7 @@ static options_data **		datalist_nextptr = &datalist;
 
 
 /***************************************************************************
-    PROTOTYPES
+    FUNCTION PROTOTYPES
 ***************************************************************************/
 
 static options_data *find_entry_data(const char *string, int is_command_line);
@@ -65,9 +65,7 @@ static void update_data(options_data *data, const char *newdata);
 
 
 /***************************************************************************
-
-    Core system management
-
+    CORE IMPLEMENTATION
 ***************************************************************************/
 
 /*-------------------------------------------------
@@ -352,8 +350,9 @@ int options_parse_ini_file(mame_file *inifile)
 	/* loop over data */
 	while (mame_fgets(giant_string_buffer, GIANT_STRING_BUFFER_SIZE, inifile) != NULL)
 	{
-		char *optionname, *temp;
+		char *optionname, *optiondata, *temp;
 		options_data *data;
+		int inquotes = FALSE;
 
 		/* find the name */
 		for (optionname = giant_string_buffer; *optionname != 0; optionname++)
@@ -378,6 +377,17 @@ int options_parse_ini_file(mame_file *inifile)
 
 		/* NULL-terminate */
 		*temp++ = 0;
+		optiondata = temp;
+
+		/* scan the data, stopping when we hit a comment */
+		for (temp = optiondata; *temp != 0; temp++)
+		{
+			if (*temp == '"')
+				inquotes = !inquotes;
+			if (*temp == '#' && !inquotes)
+				break;
+		}
+		*temp = 0;
 
 		/* find our entry */
 		data = find_entry_data(optionname, FALSE);
@@ -390,7 +400,7 @@ int options_parse_ini_file(mame_file *inifile)
 			continue;
 
 		/* allocate a new copy of data for this */
-		update_data(data, temp);
+		update_data(data, optiondata);
 	}
 	return 0;
 }
@@ -535,8 +545,36 @@ void options_output_ini_file_marked(FILE *inifile)
 
 
 /*-------------------------------------------------
-    options_output_ini_file - output the current
+    options_output_ini_mame_file - output the current
     state to an INI file
+-------------------------------------------------*/
+
+void options_output_ini_mame_file(mame_file *inifile)
+{
+	options_data *data;
+
+	/* loop over all items */
+	for (data = datalist; data != NULL; data = data->next)
+	{
+		/* header: just print */
+		if ((data->flags & OPTION_HEADER) != 0)
+			mame_fprintf(inifile, "\n#\n# %s\n#\n", data->description);
+
+		/* otherwise, output entries for all non-deprecated and non-command items */
+		else if ((data->flags & (OPTION_DEPRECATED | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
+		{
+			if (data->data != NULL)
+				mame_fprintf(inifile, "%-25s %s\n", data->names[0], data->data);
+			else
+				mame_fprintf(inifile, "# %-23s <NULL> (not set)\n", data->names[0]);
+		}
+	}
+}
+
+
+/*-------------------------------------------------
+    options_output_help - output option help to
+    a file
 -------------------------------------------------*/
 
 void options_output_help(FILE *output)
