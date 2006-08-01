@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.106u12     #
+#     Mameinfo.dat日本語版 v0.107u1      #
 #                                        #
-#             July 17, 2006              #
+#             July 31, 2006              #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,365 +12,10 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：848 翻訳済：824
-# 追加項目：327 合計：1175
+# Tester報告：824 翻訳済：800
+# 追加項目：327 合計：1151
 #
 
-
-$info=invrvnge
-$mame
-[バグ]
-
-- カクテルモードのDIPスイッチが機能しない。 invrvnge0106u1gra, cpukett
-
-$end
-
-$info=laser
-$mame
-[バグ]
-
-- 資料によるとこのゲームの名称は“Astro Laser”、製造元は“Leisure Time Electronics Inc.”。 laser0106u10ora, gregf
-
-$end
-
-$info=astinvad
-$mame
-[バグ]
-
-- MAMEでは敵が地面に落ちると画面が点滅するが、これは間違い。
-また、自機がやられたときには、背景は黒のままで手前部分だけがオレンジっぽい色になる。 astinvad0106u11gre, Antny / gregf / rohang
-
-$end
-
-$info=pitfight
-$mame
-[バグ]
-
-- 3つめのコイン入力が動作しない。筐体の写真によると、コインスロットは2つしかない。 pitfight0106u3gra, Roger Coltrane
-
-
-- 起動時にクレジットが2つ勝手に入る。 pitfight0106u3ora, Roger Coltrane
-
-
-- アトラクトモード中で、TYが紹介される場面が一瞬ちらつく。他のバージョノンは問題ない。 pitfight099gre, Roger Coltrane
-
-$end
-
-$info=sfootbal
-$mame
-[バグ]
-
-- どの方向を入力してもキャラクタが左下に移動してしまう。0.85で入力系が新しくなってから発生している。 sfootbal0106u4gra, fossil
-
-$end
-
-$info=stocker
-$mame
-[バグ]
-
-- RAMテストに失敗する。ゲームには影響しない模様。 stocker0106u7gre, BarnacleEd
-
-$end
-
-$info=wtennis
-$mame
-[情報]
-
-- 起動時、リセット(F3)をしてサービスモードを終了させなければならない。
-
-
-[バグ]
-
-- 効果音などが変になっている。0.102から発生。 wtennis0106u5gre, cpukett
-
-$end
-
-$info=robocop2
-$mame
-[バグ]
-
-- 基板上にはDIPスイッチが3つあるがMAMEには2つしか実装されていない。 robocop2_0106u3gra, Roberto Fresca
-
-$end
-
-$info=lastday
-$mame
-[バグ]
-
-- [possible] テストモードで5キーを押すとCoin B、6キーを押すとCoin Aが反応する。 lastday0106u7gra, cpukett
-
-
-- 1面で、船やタンクが鉄橋や高架橋の上に表示されてしまう。 lastday37b6gre, Jonemaan
-
-$end
-
-$info=irobot
-$mame
-[バグ]
-
-- サービスモードのジョイスティックテストで箱を塗りつぶすのがあるが、一番下のラインを塗りつぶすことができない。 irobot0106u1gra, cpukett
-
-$end
-
-$info=lastduel
-$mame
-[バグ]
-
-- コイン1と2の入力が入れ替わっている。 lastduel0106u7gra, cpukett
-
-$end
-
-$info=lethalen
-$mame
-[バグ]
-
-- マスクROMチェックで全てBADになる。 lethalen0106u7gre, cpukett
-
-$end
-
-$info=rtype2
-$mame
-[バグ]
-
-- m72.cゲーム：　サンプルサウンドの音程が低い。 m72_0106u11gre, Stefan Lindberg
-
-$end
-
-$info=dbreed72
-$mame
-[バグ]
-
-- m72.cゲーム：　サンプルサウンドの音程が低い。 m72_0106u11gre, Stefan Lindberg
-
-$end
-
-$info=kroozr
-$mame
-[バグ]
-
-- カクテルモードのDIPスイッチが動作しない。
-またプレイヤー2用の操作もマッピングされていない。 kroozr0106u2gra, cpukett
-
-$end
-
-$info=rougien
-$mame
-[バグ]
-
-- トンネルシーンの最後の部分が化けている。
-残機が無い状態でここに突っ込み、ゲームオーバーになると、タイトル画面が現れるまで画面左下から弾を撃てる。 rougien0106u3yel, Kekule
-
-$end
-
-$info=jdreddp
-$mame
-[バグ]
-
-- プレイヤー4のスタートが割り当てられているが不要。 jdreddp0106u1gra, cpukett
-
-
-- アトラクトモードでコインを入れると画面最上部のラインがちらつく。また“credits:”の最後の文字も同様。 jdreddp0102gre1, RansAckeR
-
-
-- 一部の面で画面の一番下のラインに本来一番上にあるラインが表示される。
-背景が激しく動くシーンでよくわかる。 jdreddp060gre_1, Smitdogg
-
-
-- 下水道のリフトに乗ると、リフトの床が消える。 jdreddp0102gre2, RansAckeR
-
-$end
-
-$info=mgakuen
-$mame
-[バグ]
-
-- 起動中に緑画面が表示されてMAMEがフリーズする。 mgakuen0106u1red, ra
-
-$end
-
-$info=kof10th
-$mame
-[バグ]
-
-- KOFの中でこれだけ“Of”のOの字が大文字。 kof10th0106u1ora, f205v
-
-$end
-
-$info=pc_sjetm
-$mame
-[バグ]
-
-- 斜めスクロール時に画面が乱れる。
-また背景の一部にゴミグラフィックが表示される。 pc_sjetm0106u1gre, Kekule
-
-$end
-
-$info=spnchout
-$mame
-[バグ]
-
-- Dragon Chanのキックの効果音が実機と異なる。
-最後の音は風切り音にならないといけない。 spnchout0106u10gre, MaximRecoil
-
-
-- 実機ではタイトルロゴやテキストの色が上下で違う。 spnchout0102u2gre, MaximRecoil / Red Raphael
-
-$end
-
-$info=hotshock
-$mame
-[バグ]
-
-- カクテルモード用のプレイヤー2の操作が実装されていない。 hotshock0106u1gra, cpukett
-
-$end
-
-$info=pignewt
-$mame
-[バグ]
-
-- 一番下のUnknownのDIPスイッチはカクテルモードの設定。
-また、カクテルモードにすると背景が表示されない。 pignewt0106u3gra, Machone
-
-$end
-
-$info=drgnunit
-$mame
-[バグ]
-
-- 1面で奥のレイヤーと手前のレイヤーでプライオリティの不具合がある。 drgnunit0106u2gre, Kekule
-
-$end
-
-$info=jjsquawk
-$mame
-[バグ]
-
-- DIPスイッチテストで、画面反転を有効にすると表示されている文字が全部ぐちゃぐちゃになる。 jjsquawk0106u1gre, cpukett
-
-$end
-
-$info=kamenrid
-$mame
-[バグ]
-
-- 3番目のボタンがマッピングされていない。入力テストに出てくる。 kamenrid0106u1gra, cpukett
-
-$end
-
-$info=qzkklgy2
-$mame
-[バグ]
-
-- 起動時に“DAT ROM Error”と表示されて動作しない。
-0.102より。
-
-DIPスイッチの1-3を変えるとパスする。 qzkklgy2_0106u6red, Fujix / Haze
-
-$end
-
-$info=jjparads
-$mame
-[バグ]
-
-- チルトスイッチが割り当てられているが、入力テストには出てこない。 jjparads0106u1gra, cpukett
-
-$end
-
-$info=jjparad2
-$mame
-[バグ]
-
-- チルトスイッチが割り当てられているが、入力テストには出てこない。 jjparads0106u1gra, cpukett
-
-$end
-
-$info=dleague
-$mame
-[バグ]
-
-- gdb内ではスクリーンショットを撮るとクラッシュする。
-またgdb外では起動時にクラッシュする。
-全ての環境では起きない。 dleague0106u3red, Firewave
-
-$end
-
-$info=tempest
-$mame
-[情報]
-
-- マウスのコントロールが反転していると言う人がいるが、そんなことはない。
-実際、レベル選択の画面ではマウスを右に動かすとブロックも右に動くので間違いない。
-
-
-[バグ]
-
-- 面から面に移動するときの星が表示されない。0.106から。 tempest0106u11yel, ThudMan
-
-
-- ワープ中にポーズをかけても、星の点滅は止まらない。 tempest0104u2gre, Twisty / asmodius
-
-$end
-
-$info=thunderj
-$mame
-[バグ]
-
-- サービスモードのROMテストで16Lと16Nが不良と表示される。 thunderj0106u3ora, Speedfreak
-
-
-- 最初の「ローリングサンダーセクション」で、マイナーな色違いあり。
-最初のドアの中は緑ではなく黒。 thunderj37b5gre, YMI
-
-$end
-
-$info=mia
-$mame
-[バグ]
-
-- I/Oチェックにプレイヤー1の入力が表示されない。 mia0106u5gre, cpukett
-
-
-- エンディングの捕虜がヘリから出てくるシーンで、
-人の影が赤く表示されている。
-ただし、別ドライバのmiajでも起きているので、
-もしかしたらバグではないかもしれない。 mia055gre, Gmitra
-
-$end
-
-$info=truxton
-$mame
-[バグ]
-
-- タイトル画面の背景は緑色でコインを入れると青色になる。
-MAMEでは青いままになっている。 truxton0106u7gre, Kold666
-
-$end
-
-$info=mahoudai
-$mame
-[バグ]
-
-- サービスモードから抜けると“Common RAM Error”と表示され動作しなくなる。 mahoudai0106u7yel, cpukett
-
-$end
-
-$info=joust2
-$mame
-[情報]
-
-- 初回起動時に、"factory setting restored"と表示されるので、F2キーを押して進む。
-
-
-- 変身キーがスタートボタン。
-
-
-[バグ]
-
-- サービスモードを進んで行き、スイッチテストの次が真っ黒画面になる。ここはカラーRAMのテストかもしれない。
-F2を押すと次に進むことができる。 joust20106u1gre, cpukett
-
-$end
 
 $info=actfancr
 $mame
@@ -522,6 +167,15 @@ $mame
 
 $end
 
+$info=astinvad
+$mame
+[バグ]
+
+- MAMEでは敵が地面に落ちると画面が点滅するが、これは間違い。
+また、自機がやられたときには、背景は黒のままで手前部分だけがオレンジっぽい色になる。 astinvad0106u11gre, Antny / gregf / rohang
+
+$end
+
 $info=gorf
 $mame
 [情報]
@@ -535,6 +189,28 @@ $mame
 
 
 - ゲームスタート後は正しくリセットされない。 gorf060gre, DCisTHEbest / Thenasty
+
+$end
+
+$info=bonzeadv
+$mame
+[バグ]
+
+- 1面の裏ルートでやられると、真っ黒なところから再スタートしてはまる。 bonzeadv0107red, Kold666
+
+$end
+
+$info=pitfight
+$mame
+[バグ]
+
+- アトラクトモード中で、TYが紹介される場面が一瞬ちらつく。他のバージョノンは問題ない。 pitfight099gre, Roger Coltrane
+
+
+- 起動時にクレジットが2つ勝手に入る。 pitfight0106u3ora, Roger Coltrane
+
+
+- 3つめのコイン入力が動作しない。筐体の写真によると、コインスロットは2つしかない。 pitfight0106u3gra, Roger Coltrane
 
 $end
 
@@ -571,6 +247,14 @@ $mame
 たとえば残ライフを2～5に設定できるが、ゲームでは3（2か4を選んだとき）か5（3か5を選んだとき）にしかならない。
 
 コイン設定、言語設定、フリープレイ設定も正しく動作していない。 botanic080u1gra, Pi
+
+$end
+
+$info=stocker
+$mame
+[バグ]
+
+- RAMテストに失敗する。ゲームには影響しない模様。 stocker0106u7gre, BarnacleEd
 
 $end
 
@@ -652,6 +336,19 @@ $mame
 - プレイ中にコインを受け付けない。
 コンティニュー画面ではOK。
 また、サービスキーだけは動作する。 blktiger37b15gre, Bugfinder / fart_flower
+
+$end
+
+$info=wtennis
+$mame
+[情報]
+
+- 起動時、リセット(F3)をしてサービスモードを終了させなければならない。
+
+
+[バグ]
+
+- 効果音などが変になっている。0.102から発生。 wtennis0106u5gre, cpukett
 
 $end
 
@@ -1214,6 +911,17 @@ $mame
 
 $end
 
+$info=lastday
+$mame
+[バグ]
+
+- 1面で、船やタンクが鉄橋や高架橋の上に表示されてしまう。 lastday37b6gre, Jonemaan
+
+
+- [possible] テストモードで5キーを押すとCoin B、6キーを押すとCoin Aが反応する。 lastday0106u7gra, cpukett
+
+$end
+
 $info=jantouki
 $mame
 [バグ]
@@ -1256,6 +964,16 @@ $mame
 
 - 1面のアステロイドベルトを越えたところで、背景は黒色ではなく青色になる。
 面クリアの画面はMAMEと同様、黒で正しい。 splndrbt0103u2gre2, Kold666
+
+
+- アルファ電子製の80年代初頭のゲームは、「SOUND BOARD NO.59 MC 07」と書かれた共通のサウンドボードを使用している。
+EPROMはそれぞれ違うがPROMは同一。（MAMEでは同一のPROMを読み込むので正しい）。
+
+実は、正しいEPROMがあるゲームとでサウンドボードは入れ替えできる。BGMとSE、周波数はそれぞれ独立したポテンショメーターがある。
+
+周波数はMSM5232によるBGMテンポを決定する。MAMEは現在、最大周波数になっている。
+
+※本家に詳細あり splndrbt0103u2gre3, Kold666
 
 $end
 
@@ -1899,6 +1617,14 @@ F1キーで移動、F2キーで選択。
 
 $end
 
+$info=lethalen
+$mame
+[バグ]
+
+- マスクROMチェックで全てBADになる。 lethalen0106u7gre, cpukett
+
+$end
+
 $info=liberate
 $mame
 [バグ]
@@ -2000,6 +1726,22 @@ $mame
 [バグ]
 
 - 背景の表示位置が数ドット左にずれている。 hharryu0100u1gre, qapo
+
+$end
+
+$info=rtype2
+$mame
+[バグ]
+
+- m72.cゲーム：　サンプルサウンドの音程が低い。 m72_0106u11gre, Stefan Lindberg
+
+$end
+
+$info=dbreed72
+$mame
+[バグ]
+
+- m72.cゲーム：　サンプルサウンドの音程が低い。 m72_0106u11gre, Stefan Lindberg
 
 $end
 
@@ -2359,6 +2101,15 @@ $mame
 
 $end
 
+$info=rougien
+$mame
+[バグ]
+
+- トンネルシーンの最後の部分が化けている。
+残機が無い状態でここに突っ込み、ゲームオーバーになると、タイトル画面が現れるまで画面左下から弾を撃てる。 rougien0106u3yel, Kekule
+
+$end
+
 $info=bangball
 $mame
 [バグ]
@@ -2414,6 +2165,21 @@ $mame
 
 グラフィックの表示位置が違っているものがある。
 このバグ自体は新しいものではない。 mhavoc057gre, Smitdogg
+
+$end
+
+$info=jdreddp
+$mame
+[バグ]
+
+- アトラクトモードでコインを入れると画面最上部のラインがちらつく。また“credits:”の最後の文字も同様。 jdreddp0102gre1, RansAckeR
+
+
+- 一部の面で画面の一番下のラインに本来一番上にあるラインが表示される。
+背景が激しく動くシーンでよくわかる。 jdreddp060gre_1, Smitdogg
+
+
+- 下水道のリフトに乗ると、リフトの床が消える。 jdreddp0102gre2, RansAckeR
 
 $end
 
@@ -2630,6 +2396,14 @@ $mame
 
 $end
 
+$info=mgakuen
+$mame
+[バグ]
+
+- 起動中に緑画面が表示されてMAMEがフリーズする。 mgakuen0106u1red, ra
+
+$end
+
 $info=mnight
 $mame
 [バグ]
@@ -2794,6 +2568,14 @@ $mame
 [バグ]
 
 - サウンドの一部が変。わかりやすいところは、審判の声がちゃんとでていないところ。BGMも。 kyukaidk37b6gre, Fujix (みーしょう)
+
+$end
+
+$info=metlhawk
+$mame
+[バグ]
+
+- デバッグビルドでクラッシュする。-nodebugにすると問題ない。 metlhawk0107red, ShimaPong
 
 $end
 
@@ -3127,6 +2909,15 @@ $mame
 
 $end
 
+$info=pc_sjetm
+$mame
+[バグ]
+
+- 斜めスクロール時に画面が乱れる。
+また背景の一部にゴミグラフィックが表示される。 pc_sjetm0106u1gre, Kekule
+
+$end
+
 $info=pc_smb
 $mame
 [バグ]
@@ -3246,6 +3037,18 @@ $mame
 
 - DIPスイッチ情報。
 本家参照。 armwrest37b14gra, stephh
+
+$end
+
+$info=spnchout
+$mame
+[バグ]
+
+- 実機ではタイトルロゴやテキストの色が上下で違う。 spnchout0102u2gre, MaximRecoil / Red Raphael
+
+
+- Dragon Chanのキックの効果音が実機と異なる。
+最後の音は風切り音にならないといけない。 spnchout0106u10gre, MaximRecoil
 
 $end
 
@@ -3618,6 +3421,17 @@ $mame
 
 
 - BGMが左からしか出ない。SEは両方から鳴っている。 gundhara065gre, Karasu
+
+$end
+
+$info=qzkklgy2
+$mame
+[バグ]
+
+- 起動時に“DAT ROM Error”と表示されて動作しない。
+0.102より。
+
+DIPスイッチの1-3を変えるとパスする。 qzkklgy2_0106u6red, Fujix / Haze
 
 $end
 
@@ -4289,6 +4103,16 @@ $mame
 
 $end
 
+$info=dleague
+$mame
+[バグ]
+
+- gdb内ではスクリーンショットを撮るとクラッシュする。
+またgdb外では起動時にクラッシュする。
+全ての環境では起きない。 dleague0106u3red, Firewave
+
+$end
+
 $info=champwr
 $mame
 [バグ]
@@ -4442,6 +4266,32 @@ $mame
 
 $end
 
+$info=tempest
+$mame
+[情報]
+
+- マウスのコントロールが反転していると言う人がいるが、そんなことはない。
+実際、レベル選択の画面ではマウスを右に動かすとブロックも右に動くので間違いない。
+
+
+[バグ]
+
+- ワープ中にポーズをかけても、星の点滅は止まらない。 tempest0104u2gre, Twisty / asmodius
+
+$end
+
+$info=thunderj
+$mame
+[バグ]
+
+- 最初の「ローリングサンダーセクション」で、マイナーな色違いあり。
+最初のドアの中は緑ではなく黒。 thunderj37b5gre, YMI
+
+
+- サービスモードのROMテストで16Lと16Nが不良と表示される。 thunderj0106u3ora, Speedfreak
+
+$end
+
 $info=thunderx
 $mame
 [バグ]
@@ -4501,6 +4351,20 @@ $mame
 
 $end
 
+$info=mia
+$mame
+[バグ]
+
+- I/Oチェックにプレイヤー1の入力が表示されない。 mia0106u5gre, cpukett
+
+
+- エンディングの捕虜がヘリから出てくるシーンで、
+人の影が赤く表示されている。
+ただし、別ドライバのmiajでも起きているので、
+もしかしたらバグではないかもしれない。 mia055gre, Gmitra
+
+$end
+
 $info=ssriders
 $mame
 [バグ]
@@ -4519,6 +4383,42 @@ $mame
 [バグ]
 
 - ゲーム開始デモの"Fire!"の声が2回目からしか出ない。 tmnt095gre, dropdeadhippie
+
+$end
+
+$info=arknoid2
+$mame
+[バグ]
+
+- tnzsでは、青い背景が黒になっている。arknoid2は画面の上下部分やテキストが欠けている。 tnzc0107yel, solarsight / Twisty
+
+$end
+
+$info=tnzs
+$mame
+[バグ]
+
+- tnzsでは、青い背景が黒になっている。arknoid2は画面の上下部分やテキストが欠けている。 tnzc0107yel, solarsight / Twisty
+
+
+[TIPS]
+
+- 面セレクトコマンド：
+
+1) サービススイッチ(9キー)を押しながらリセット
+
+2) 1Pスタートx3　サービス　1Pスタート
+
+(by Mhk)
+
+$end
+
+$info=truxton
+$mame
+[バグ]
+
+- タイトル画面の背景は緑色でコインを入れると青色になる。
+MAMEでは青いままになっている。 truxton0106u7gre, Kold666
 
 $end
 
@@ -4588,6 +4488,14 @@ $mame
 
 
 - 実機と比べると、ボスを倒した爆発のときにハイスコアのテキストがちらつく。MAMEでは再現されていない。 ghox095ora, Kold666
+
+$end
+
+$info=mahoudai
+$mame
+[バグ]
+
+- サービスモードから抜けると“Common RAM Error”と表示され動作しなくなる。 mahoudai0106u7yel, cpukett
 
 $end
 
@@ -5492,6 +5400,14 @@ $mame
 
 $end
 
+$info=invrvnge
+$mame
+[バグ]
+
+- カクテルモードのDIPスイッチが機能しない。 invrvnge0106u1gra, cpukett
+
+$end
+
 $info=jspecter
 $mame
 [バグ]
@@ -5529,6 +5445,14 @@ $mame
 
 $end
 
+$info=sfootbal
+$mame
+[バグ]
+
+- どの方向を入力してもキャラクタが左下に移動してしまう。0.85で入力系が新しくなってから発生している。 sfootbal0106u4gra, fossil
+
+$end
+
 $info=bking
 $mame
 [バグ]
@@ -5548,24 +5472,15 @@ $mame
 [バグ]
 
 - デフォルトの筐体設定はアップライトだが、2人プレイ時にはカクテルモードのように動作する。
-DIP設定も変更できない。 brkthru091u1gra, Thenasty
+DIP設定も変更できない。 brkthru091u1gra, Thenasty / stephh
 
 $end
 
-$info=bzone
+$info=robocop2
 $mame
-[情報]
-
-- 2種類の操作法あり。
-
-1) E,I,D,K,Space: オリジナルに近い操作(上下レバー2本)
-
-2) 方向キー+CTRL: 4方向ジョイスティック
-
-
 [バグ]
 
-- 実際にはボタンは3つだが、MAMEでは1つしか定義されていない。 bzone0104u7gra, M.A.S.H.
+- 基板上にはDIPスイッチが3つあるがMAMEには2つしか実装されていない。 robocop2_0106u3gra, Roberto Fresca
 
 $end
 
@@ -5601,6 +5516,14 @@ $mame
 
 $end
 
+$info=irobot
+$mame
+[バグ]
+
+- サービスモードのジョイスティックテストで箱を塗りつぶすのがあるが、一番下のラインを塗りつぶすことができない。 irobot0106u1gra, cpukett
+
+$end
+
 $info=le2
 $mame
 [バグ]
@@ -5620,6 +5543,15 @@ $mame
 
 $end
 
+$info=kroozr
+$mame
+[バグ]
+
+- カクテルモードのDIPスイッチが動作しない。
+またプレイヤー2用の操作もマッピングされていない。 kroozr0106u2gra, cpukett
+
+$end
+
 $info=gstrik2
 $mame
 [バグ]
@@ -5634,14 +5566,6 @@ $mame
 [バグ]
 
 - サービスモードのスイッチテストで、Video Freezeに割り当てられているキーがない。 hiimpact0106gra, cpukett
-
-$end
-
-$info=timecrsa
-$mame
-[バグ]
-
-- DIPスイッチの4～8はサービスモードのON/OFF。 timecrsa0100u1gra, Nomax
 
 $end
 
@@ -5704,11 +5628,11 @@ $mame
 
 $end
 
-$info=pturn
+$info=hotshock
 $mame
 [バグ]
 
-- プレイヤー数のDIPスイッチが間違っていて、常に3人になる。本家にFIXあり。 pturn0104u7gra, ShimaPong
+- カクテルモード用のプレイヤー2の操作が実装されていない。 hotshock0106u1gra, cpukett
 
 $end
 
@@ -5736,6 +5660,15 @@ $mame
 
 - コイン投入数の増加に伴う、自機増えエラーについて。
 本家リンクを参照。 astrob137b16gra, stephh
+
+$end
+
+$info=pignewt
+$mame
+[バグ]
+
+- 一番下のUnknownのDIPスイッチはカクテルモードの設定。
+また、カクテルモードにすると背景が表示されない。 pignewt0106u3gra, Machone / Canim
 
 $end
 
@@ -5790,6 +5723,22 @@ $mame
 
 $end
 
+$info=jjparads
+$mame
+[バグ]
+
+- チルトスイッチが割り当てられているが、入力テストには出てこない。 jjparads0106u1gra, cpukett
+
+$end
+
+$info=jjparad2
+$mame
+[バグ]
+
+- チルトスイッチが割り当てられているが、入力テストには出てこない。 jjparads0106u1gra, cpukett
+
+$end
+
 $info=quizmeku
 $mame
 [バグ]
@@ -5833,14 +5782,6 @@ MAMEのもともとのコントロール設定との対応は次の通り：
 ボタン1 → スタートボタン
 
 スタートボタン　→ 使用しない qcrayon237b9gra, Fujix / stephh (ほしけん)
-
-$end
-
-$info=tsamurai
-$mame
-[バグ]
-
-- F2ボタンがサービスモードではなく、コイン入力として動作している。 tsamurai0103gra, Jason
 
 $end
 
@@ -6522,6 +6463,22 @@ $mame
 
 $end
 
+$info=drgnunit
+$mame
+[バグ]
+
+- 1面で奥のレイヤーと手前のレイヤーでプライオリティの不具合がある。 drgnunit0106u2gre, Kekule
+
+$end
+
+$info=jjsquawk
+$mame
+[バグ]
+
+- DIPスイッチテストで、画面反転を有効にすると表示されている文字が全部ぐちゃぐちゃになる。 jjsquawk0106u1gre, cpukett
+
+$end
+
 $info=kiwame
 $mame
 [バグ]
@@ -6742,6 +6699,23 @@ $mame
 
 $end
 
+$info=joust2
+$mame
+[情報]
+
+- 初回起動時に、"factory setting restored"と表示されるので、F2キーを押して進む。
+
+
+- 変身キーがスタートボタン。
+
+
+[バグ]
+
+- サービスモードを進んで行き、スイッチテストの次が真っ黒画面になる。ここはカラーRAMのテストかもしれない。
+F2を押すと次に進むことができる。 joust20106u1gre, cpukett
+
+$end
+
 $info=xmen
 $mame
 [バグ]
@@ -6882,6 +6856,18 @@ $mame
 [情報]
 
 - テストモードに入るには起動中に1Pスタートを押し続ける。
+
+$end
+
+$info=bzone
+$mame
+[情報]
+
+- 2種類の操作法あり。
+
+1) E,I,D,K,Space: オリジナルに近い操作(上下レバー2本)
+
+2) 方向キー+CTRL: 4方向ジョイスティック
 
 $end
 
@@ -9203,20 +9189,6 @@ $mame
 $end
 
 $info=thundfox
-$mame
-[TIPS]
-
-- 面セレクトコマンド：
-
-1) サービススイッチ(9キー)を押しながらリセット
-
-2) 1Pスタートx3　サービス　1Pスタート
-
-(by Mhk)
-
-$end
-
-$info=tnzs
 $mame
 [TIPS]
 

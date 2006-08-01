@@ -145,8 +145,18 @@ static void texture_set_scalebitmap(int scrnum, int curbank);
 
 int video_init(void)
 {
-	movie_file = NULL;
+	if (movie_file)
+		record_movie_stop();
 	movie_frame = 0;
+
+	{
+		const char *stemp;
+
+		// start recording movie
+		stemp = options_get_string("mngwrite", TRUE);
+		if (stemp != NULL)
+			record_movie_start(stemp);
+	}
 
 #ifndef NEW_RENDER
 	add_pause_callback(video_pause);
