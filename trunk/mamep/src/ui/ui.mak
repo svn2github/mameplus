@@ -6,9 +6,11 @@ $(OBJ)/ui/%.o: src/ui/%.c
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -c $< -o $@
 
+ifneq ($(USE_IMAGE_MENU),)
 $(OBJ)/ui/%.o: src/ui/%.cpp
 	@echo Compiling $<...
 	@g++ -mwindows -c $< -o $@
+endif
 
 OBJDIRS += $(OBJ)/ui
 
@@ -36,11 +38,14 @@ TMPOBJS = \
 	$(OBJ)/ui/win32ui.o \
 	$(OBJ)/ui/options.o \
 	$(OBJ)/ui/layout.o \
-	$(OBJ)/ui/translate.o \
-	$(OBJ)/ui/imagemenu.o
+	$(OBJ)/ui/translate.o
 
 ifneq ($(USE_UI_COLOR_DISPLAY),)
     TMPOBJS += $(OBJ)/ui/paletteedit.o
+endif
+
+ifneq ($(USE_IMAGE_MENU),)
+    TMPOBJS += $(OBJ)/ui/imagemenu.o
 endif
 
 $(OBJ)/ui/ui.a: $(TMPOBJS)
@@ -108,6 +113,11 @@ ifeq ($(MSVC_BUILD),)
 		-lmsimg32 \
 		-lstdc++ \
 		-lunicows
+    ifneq ($(USE_IMAGE_MENU),)
+        GUILIBS += \
+		    -lmsimg32 \
+		    -lstdc++
+    endif
 else
     TMPLIBS = \
 		-lkernel32 \
@@ -188,4 +198,9 @@ endif
 ifneq ($(USE_VIEW_PCBINFO),)
 DEFS += -DUSE_VIEW_PCBINFO
 RCDEFS += -DUSE_VIEW_PCBINFO
+endif
+
+ifneq ($(USE_IMAGE_MENU),)
+DEFS += -DIMAGE_MENU
+RCDEFS += -DIMAGE_MENU
 endif

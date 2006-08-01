@@ -44,7 +44,9 @@
 #include "options.h"
 #include "translate.h"
 #include "directories.h"
+#ifdef IMAGE_MENU
 #include "imagemenu.h"
+#endif /* IMAGE_MENU */
 	
 #ifdef _MSC_VER
 #define snprintf _snprintf
@@ -105,8 +107,10 @@ typedef struct
 	int      column_order[COLUMN_MAX];
 	int      column_shown[COLUMN_MAX];
 	int      sort_column;
-	int      imagemenu_style;
 	BOOL     sort_reverse;
+#ifdef IMAGE_MENU
+	int      imagemenu_style;
+#endif /* IMAGE_MENU */
 	int      window_x;
 	int      window_y;
 	int      window_width;
@@ -1412,16 +1416,6 @@ int GetSortColumn(void)
 	return settings.sort_column;
 }
 
-void SetImageMenuStyle(int style)
-{
-	settings.imagemenu_style = style;
-}
-
-int GetImageMenuStyle(void)
-{
-	return settings.imagemenu_style;
-}
-
 void SetSortReverse(BOOL reverse)
 {
 	settings.sort_reverse = reverse;
@@ -1431,6 +1425,18 @@ BOOL GetSortReverse(void)
 {
 	return settings.sort_reverse;
 }
+
+#ifdef IMAGE_MENU
+void SetImageMenuStyle(int style)
+{
+	settings.imagemenu_style = style;
+}
+
+int GetImageMenuStyle(void)
+{
+	return settings.imagemenu_style;
+}
+#endif /* IMAGE_MENU */
 
 #ifdef USE_SHOW_SPLASH_SCREEN
 void SetDisplaySplashScreen (BOOL val)
@@ -3049,7 +3055,9 @@ const options_entry winui_opts[] =
 	{ "column_order",                "0,2,3,4,5,6,7,8,9,10,11,1",  0,                 "column order settings"},
 	{ "column_shown",                "1,0,1,1,1,1,1,1,1,1,1,1",    0,                 "show or hide column settings"},
 	{ "sort_column",                 "0",                          0,                 "sort column"},
+#ifdef IMAGE_MENU
 	{ "imagemenu_style",             "0",                          0,                 "current menu style"},
+#endif /* IMAGE_MENU */
 	{ "sort_reverse",                "0",                          OPTION_BOOLEAN,    "sort descending"},
 	{ "folder_id",                   "0",                          0,                 "last selected folder id"},
 	{ "use_broken_icon",             "1",                          OPTION_BOOLEAN,    "use broken icon for not working games"},
@@ -4575,6 +4583,7 @@ INLINE void options_copy_list_fontface(const LOGFONTA *src, LOGFONTA *dest)
 
 //============================================================
 
+#ifdef IMAGE_MENU
 #define _options_get_imagemenu_style(p,name)	_options_get_int_min_max(p, name, 0, MENU_STYLE_MAX)
 #define options_set_imagemenu_style		options_set_int
 #define options_copy_imagemenu_style		options_copy_int
@@ -4582,6 +4591,7 @@ INLINE void options_copy_list_fontface(const LOGFONTA *src, LOGFONTA *dest)
 #define options_compare_imagemenu_style	options_compare_int
 
 //============================================================
+#endif /* IMAGE_MENU */
 
 INLINE void _options_get_ui_joy(int *array, const char *name)
 {

@@ -77,7 +77,9 @@
 #include "windows/window.h"
 #include "PaletteEdit.h"
 #include "translate.h"
+#ifdef IMAGE_MENU
 #include "imagemenu.h"
+#endif /* IMAGE_MENU */
 
 #include "DirectDraw.h"
 #include "DirectInput.h"
@@ -308,7 +310,9 @@ static LRESULT CALLBACK PictureFrameWndProc(HWND hWnd, UINT uMsg, WPARAM wParam,
 static LRESULT CALLBACK PictureWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 static void             ChangeLanguage(int id);
+#ifdef IMAGE_MENU
 static void             ChangeMenuStyle(int id);
+#endif /* IMAGE_MENU */
 static void             MamePlayRecordGame(void);
 static void             MamePlayBackGame(const char* fname_playback);
 static void             MamePlayRecordWave(void);
@@ -497,6 +501,7 @@ typedef struct
 	HWND hwndFound;
 } FINDWINDOWHANDLE;
 
+#ifdef IMAGE_MENU
 static struct
 {
 	UINT itemID;
@@ -521,6 +526,7 @@ static struct
 	{ ID_VIEW_PCBINFO,			IDI_PCB },
 	{ 0 }
 };
+#endif /* IMAGE_MENU */
 
 /***************************************************************************
     Internal variables
@@ -1841,7 +1847,7 @@ static void ChangeLanguage(int id)
 	Picker_SetSelectedItem(hwndList, nGame);
 }
 
-
+#ifdef IMAGE_MENU
 static void ApplyMenuStyle(HINSTANCE hInst, HWND hwnd, HMENU menuHandle)
 {
 	if (GetImageMenuStyle() > 0)
@@ -1873,6 +1879,7 @@ static void ChangeMenuStyle(int id)
 		CheckMenuRadioItem(GetMenu(hMain), ID_STYLE_NONE, ID_STYLE_NONE + MENU_STYLE_MAX, ID_STYLE_NONE + GetImageMenuStyle(), MF_BYCOMMAND);
 	ApplyMenuStyle(hInst, hMain, GetMenu(hMain));
 }
+#endif /* IMAGE_MENU */
 
 // used for our sorted array of game names
 int CLIB_DECL DriverDataCompareFunc(const void *arg1,const void *arg2)
@@ -2256,7 +2263,9 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 		g_pJoyGUI = NULL;
 
 	ChangeLanguage(0);
+#ifdef IMAGE_MENU
 	ChangeMenuStyle(0);
+#endif /* IMAGE_MENU */
 
 	if (GetHideMouseOnStartup())
 	{    
@@ -2514,7 +2523,9 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 
 	case WM_INITMENUPOPUP:
 		UpdateMenu(GetMenu(hWnd));
+#ifdef IMAGE_MENU
 		ApplyMenuStyle(hInst, hWnd, GetMenu(hWnd));
+#endif /* IMAGE_MENU */
 		break;
 
 	case WM_CONTEXTMENU:
@@ -3822,18 +3833,22 @@ static void GamePicker_OnHeaderContextMenu(POINT pt, int nColumn)
 	hMenuLoad = LoadMenu(hInst, MAKEINTRESOURCE(IDR_CONTEXT_HEADER));
 	hMenu = GetSubMenu(hMenuLoad, 0);
 	TranslateMenu(hMenu, ID_SORT_ASCENDING);
-	
+
+#ifdef IMAGE_MENU
 	if (GetImageMenuStyle() > 0)
 	{
 		ImageMenu_CreatePopup(hMain, hMenuLoad);
 		ImageMenu_SetStyle(hMain, GetImageMenuStyle());
 	}
+#endif /* IMAGE_MENU */
 
 	lastColumnClick = nColumn;
 	TrackPopupMenu(hMenu,TPM_LEFTALIGN | TPM_RIGHTBUTTON,pt.x,pt.y,0,hMain,NULL);
 
+#ifdef IMAGE_MENU
 	if (GetImageMenuStyle() > 0)
 		ImageMenu_Remove(hMenuLoad, 0);
+#endif /* IMAGE_MENU */
 
 	DestroyMenu(hMenuLoad);
 }
@@ -4527,12 +4542,13 @@ static void PickCloneColor(void)
 static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 {
 	int i;
-
+#ifdef IMAGE_MENU
 	if ((id >= ID_STYLE_NONE) && (id <= ID_STYLE_NONE + MENU_STYLE_MAX))
 	{
 		ChangeMenuStyle(id);
 		return TRUE;
 	}
+#endif /* IMAGE_MENU */
 
 	if ((id >= ID_LANGUAGE_ENGLISH_US) && (id < ID_LANGUAGE_ENGLISH_US + UI_LANG_MAX) 
 		&& ((id - ID_LANGUAGE_ENGLISH_US) != GetLangcode()))
@@ -6664,6 +6680,7 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 	}
 #endif /* USE_IPS */
 
+#ifdef IMAGE_MENU
 	if (GetImageMenuStyle() > 0)
 	{
 		ImageMenu_CreatePopup(hMain, hMenu);
@@ -6671,13 +6688,16 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 		ImageMenu_SetMenuTitleProps(hMenu, _Unicode(ModifyThe(drivers[nGame]->description)), TRUE, RGB(255,255,255));
 		ImageMenu_SetMenuTitleBkProps(hMenu, RGB(255,237,213), RGB(255,186,94), TRUE, TRUE);
 	}
+#endif /* IMAGE_MENU */
 
 	dprintf("%d,%d,%d,%d", tpmp.rcExclude.left,tpmp.rcExclude.right,tpmp.rcExclude.top,tpmp.rcExclude.bottom);
 	//the menu should not overlap SSFRAME
 	TrackPopupMenuEx(hMenu,TPM_LEFTALIGN | TPM_RIGHTBUTTON,pt.x,pt.y,hMain,&tpmp);
-	
+
+#ifdef IMAGE_MENU
 	if (GetImageMenuStyle() > 0)
 		ImageMenu_Remove(hMenu, 0);
+#endif /* IMAGE_MENU */
 
 	DestroyMenu(hMenuLoad);
 }
@@ -6704,16 +6724,20 @@ static BOOL HandleScreenShotContextMenu(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 	UpdateMenu(hMenu);
 
+#ifdef IMAGE_MENU
 	if (GetImageMenuStyle() > 0)
 	{
 		ImageMenu_CreatePopup(hWnd, hMenuLoad);
 		ImageMenu_SetStyle(hWnd, GetImageMenuStyle());
 	}
+#endif /* IMAGE_MENU */
 
 	TrackPopupMenu(hMenu,TPM_LEFTALIGN | TPM_RIGHTBUTTON,pt.x,pt.y,0,hWnd,NULL);
 
+#ifdef IMAGE_MENU
 	if (GetImageMenuStyle() > 0)
 		ImageMenu_Remove(hMenuLoad, 0);
+#endif /* IMAGE_MENU */
 
 	DestroyMenu(hMenuLoad);
 
