@@ -1,6 +1,6 @@
 /*********************************************************************
 
-    ui_font.c
+    uifont.c
 
     Build font for MAME's user interface.
     By NJ and the MAME Plus! Team

@@ -83,7 +83,7 @@ endif
 
 COREOBJS += \
 	$(OBJ)/datafile.o \
-	$(OBJ)/ui_lang.o \
+	$(OBJ)/uilang.o \
 
 
 #-------------------------------------------------

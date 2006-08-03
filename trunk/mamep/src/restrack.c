@@ -10,7 +10,7 @@
 ***************************************************************************/
 
 #include "restrack.h"
-#include "ui_lang.h"
+#include "uilang.h"
 #include "osd_so.h"
 
 

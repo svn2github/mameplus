@@ -16,9 +16,9 @@
 #include "video.h"
 #include "restrack.h"
 #include "inptport.h"
-#include "ui_pal.h"
-#include "ui_lang.h"
-#include "ui_font.h"
+#include "uipal.h"
+#include "uilang.h"
+#include "uifont.h"
 
 #ifdef MESS
 #include "device.h"
