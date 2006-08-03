@@ -66,7 +66,7 @@ Absolute Entertainment Inc.
 Academysoft-Elory
 Academysoft-Elory
 
-# Acclaim PSX
+# NBA Jam Extreme
 Acclaim
 Acclaim
 
@@ -142,7 +142,7 @@ Amutech
 Apple
 Apple
 
-# Arcadia System BIOS
+# SportTime Table Hockey (Arcadia, V 2.1)
 Arcadia Systems
 Arcadia Systems
 
@@ -182,7 +182,7 @@ Atari Games
 Athena
 Athena
 
-# Atlus PSX
+# Power Instinct 3 - Groove On Fight (J 970416 V1.001)
 Atlus
 Atlus
 
@@ -210,7 +210,7 @@ Bandai
 Banpresto
 Banpresto
 
-# MPU4 Video Firmware
+# The Crystal Maze: Team Challenge (SWP)
 Barcrest
 Barcrest
 
@@ -238,7 +238,7 @@ Blastar
 Bootleg
 Bootleg
 
-# Crystal System BIOS
+# The Crystal of Kings
 Brezzasoft
 Brezzasoft
 
@@ -350,6 +350,10 @@ Current Technologies
 D. R. Korea
 D. R. Korea
 
+# Tetris (D.R. Korea)
+D.R. Korea
+D.R. Korea
+
 # Pipeline
 Daehyun Electronics
 Daehyun Electronics
@@ -406,13 +410,17 @@ Digital Soft
 Digitrex Techstar
 Digitrex Techstar
 
-# Double Point
+# Double Point (Dong Bang Electron, bootleg?)
 Dong Bang Electron
 Dong Bang Electron
 
 # Pang Pang
 Dong Gue La Mi Ltd.
 Dong Gue La Mi Ltd.
+
+# Pasha Pasha 2
+Dong Sung
+Dong Sung
 
 # Got-cha Mini Game Festival
 Dongsung
@@ -513,10 +521,6 @@ Ed
 # Battle Bakraid (Japan) (Wed Apr 7 1999)
 Eighting
 Eighting
-
-# PS Arcade 95
-Eighting/Raizing
-Eighting/Raizing
 
 # Space Force (set 2)
 Elcon
@@ -662,7 +666,7 @@ Fun World
 Fuuki
 Fuuki
 
-# Selection (Version 40.02TMB)
+# Selection (Version 40.02TMB) set 1
 G.E.I.
 G.E.I.
 
@@ -690,7 +694,7 @@ GMS
 GREEN SOFT
 GREEN SOFT
 
-# Xor World (prototype)
+# Master Boy (Spanish, PCB Rev A)
 Gaelco
 Gaelco
 
@@ -758,6 +762,10 @@ H.A.R. Management
 HAR
 HAR
 
+# Super Free Kick
+HEC
+HEC
+
 # Laser Base (set 1)
 HOEI
 HOEI
@@ -806,7 +814,7 @@ Human Amusement
 Human Inc.
 Human Inc.
 
-# Multi Amenity Cassette System BIOS
+# Kisekae Mahjong
 I'Max
 I'Max
 
@@ -1142,6 +1150,10 @@ NTC
 Nakanihon
 Nakanihon
 
+# Red Corsair
+Nakasawa
+Nakasawa
+
 # PuckMan (Japan set 1, Probably Bootleg)
 Namco
 Namco
@@ -1274,6 +1286,10 @@ Outer Limits
 P & P Marketing
 P & P Marketing
 
+# Magic Fly
+P&A Games
+P&A Games
+
 # Bowl-O-Rama
 P&P Marketing
 P&P Marketing
@@ -1306,7 +1322,7 @@ Paradise Co. Ltd.
 Petaco S.A.
 Petaco S.A.
 
-# Turtle Ship (Japan)
+# Turtle Ship (North America)
 Philko
 Philko
 
@@ -1418,7 +1434,7 @@ SNK
 SNK Electronics corp.
 SNK Electronics corp.
 
-# Metal Slug 5
+# Metal Slug 5 (JAMMA PCB)
 SNK Playmore
 SNK Playmore
 
@@ -1429,6 +1445,10 @@ SNK of America
 # Bishoujo Janshi Pretty Sailor 18-kin (Japan)
 SPHINX
 SPHINX
+
+# Fishing Maniac 3
+Saero Entertainment
+Saero Entertainment
 
 # Elan Doree - Legend of Dragon (JUET 980922 V1.006)
 Sai-Mate
@@ -1445,6 +1465,10 @@ Sammy Industries
 # Extreme Downhill (v1.5)
 Sammy Industries Japan
 Sammy Industries Japan
+
+# Puzzle Star (Sang Ho Soft)
+Sang Ho Soft
+Sang Ho Soft
 
 # Dream Shopper
 Sanritsu
@@ -1781,6 +1805,10 @@ Test ROM
 # Lethal Justice
 The Game Room
 The Game Room
+
+# Trivia Madness
+Thunderhead Inc.
+Thunderhead Inc.
 
 # Area 51 (Time Warner License)
 Time Warner

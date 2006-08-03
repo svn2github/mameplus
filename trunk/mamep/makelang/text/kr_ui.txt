@@ -1196,7 +1196,7 @@ Image Files (*.png,*.bmp)
 
 # ui/mame32.rc: 784
 Image enhancement
-이미지 개선
+화면 개선 효과
 
 # ui/layout.c: 64
 Imperfect
@@ -1632,7 +1632,7 @@ Pr&operties
 
 # ui/mame32.rc: 773
 Prescale
-크기조절
+프리스케일
 
 # ui/win32ui.c: 3844, 6876, 6901
 Propert&ies for %s

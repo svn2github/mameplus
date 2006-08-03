@@ -3652,7 +3652,7 @@ Press Any Key
 
 # ui_text.c: 36
 Press Select Key/Button
-Enter 키를 누르세요
+선택 키/버튼을 누르세요
 
 # cheat.c: 1039
 Previous Data
@@ -3836,7 +3836,7 @@ Save to position %c
 
 # ui_text.c: 247
 Scale Effect
-크기조절
+화면 효과
 
 # drivers/turbo.c: 413 png.c: 431 
 Screen
@@ -4964,7 +4964,7 @@ saved all memory regions
 
 # video.c: 948
 scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
-\"%s\" 크기조절 효과는 15 및 32 에서 지원되지 않습니다. 크기조절을 사용하지 않습니다.
+\"%s\" 화면효과는 15 및 32 에서 지원되지 않습니다. 화면효과를 사용하지 않습니다.
 
 # drivers/harddriv.c: 3190 drivers/segas16b.c: 941, 1012 ui_text.c: 47 xml2info.c: 596, 597, 613
 sound
