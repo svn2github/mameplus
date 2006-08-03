@@ -502,14 +502,12 @@
 #define ID_VIEW_PCBINFO                 40100 // USE_VIEW_PCBINFO
 #define IDC_PCBINFO                     40101 // USE_VIEW_PCBINFO
 
-#ifdef IMAGE_MENU
-#define ID_STYLE_NONE					40190
-#define ID_STYLE_BASIC					40191
-#define ID_STYLE_GRAY					40192
-#define ID_STYLE_OFFICE					40193
-#define ID_STYLE_OFFICE2003				40194
-#define ID_STYLE_OFFICE2007				40195
-#endif /* IMAGE_MENU */
+#define ID_STYLE_NONE                   40190 // IMAGE_MENU
+#define ID_STYLE_BASIC                  40191 // IMAGE_MENU
+#define ID_STYLE_GRAY                   40192 // IMAGE_MENU
+#define ID_STYLE_OFFICE                 40193 // IMAGE_MENU
+#define ID_STYLE_OFFICE2003             40194 // IMAGE_MENU
+#define ID_STYLE_OFFICE2007             40195 // IMAGE_MENU
 
 #define ID_LANGUAGE_ENGLISH_US          40201
 #define ID_LANGUAGE_JAPANESE            40202
