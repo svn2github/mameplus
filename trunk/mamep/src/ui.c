@@ -28,7 +28,7 @@
 
 #ifdef MESS
 #include "mess.h"
-#include "mesintrf.h"
+#include "uimess.h"
 #include "inputx.h"
 #endif
 
@@ -220,10 +220,11 @@ static void add_filled_box_noedge(int x0, int y0, int x1, int y1);
     pair for the current UI handler
 -------------------------------------------------*/
 
-INLINE void ui_set_handler(UINT32 (*callback)(UINT32), int param)
+INLINE UINT32 ui_set_handler(UINT32 (*callback)(UINT32), UINT32 param)
 {
 	ui_handler_callback = callback;
 	ui_handler_param = param;
+	return param;
 }
 
 
@@ -1735,23 +1736,23 @@ static UINT32 handler_ingame(UINT32 state)
 
 #ifdef MESS
 	if (options.disable_normal_ui || ((Machine->gamedrv->flags & GAME_COMPUTER) && !mess_ui_active()))
-		return;
+		return 0;
 #endif
 
 	/* if the user pressed ESC, stop the emulation */
 	if (input_ui_pressed(IPT_UI_CANCEL))
-		ui_set_handler(handler_confirm_quit, 0);
+		return ui_set_handler(handler_confirm_quit, 0);
 
 	/* turn on menus if requested */
 	if (input_ui_pressed(IPT_UI_CONFIGURE))
-		ui_set_handler(ui_menu_ui_handler, 0);
+		return ui_set_handler(ui_menu_ui_handler, 0);
 
 	if (options.cheat && input_ui_pressed(IPT_UI_CHEAT))
-		ui_set_handler(ui_menu_ui_handler, SHORTCUT_MENU_CHEAT);
+		return ui_set_handler(ui_menu_ui_handler, SHORTCUT_MENU_CHEAT);
 
 #ifdef CMD_LIST
 	if (input_ui_pressed(IPT_UI_COMMAND))
-		ui_set_handler(ui_menu_ui_handler, SHORTCUT_MENU_COMMAND);
+		return ui_set_handler(ui_menu_ui_handler, SHORTCUT_MENU_COMMAND);
 #endif /* CMD_LIST */
 
 	/* if the on-screen display isn't up and the user has toggled it, turn it on */
@@ -1759,7 +1760,7 @@ static UINT32 handler_ingame(UINT32 state)
 	if (!Machine->debug_mode)
 #endif
 		if (input_ui_pressed(IPT_UI_ON_SCREEN_DISPLAY))
-			ui_set_handler(handler_slider, 0);
+			return ui_set_handler(handler_slider, 0);
 
 	/* handle a reset request */
 	if (input_ui_pressed(IPT_UI_RESET_MACHINE))
@@ -1772,21 +1773,21 @@ static UINT32 handler_ingame(UINT32 state)
 	{
 		if (!is_paused)
 			mame_pause(TRUE);
-		ui_set_handler(ui_gfx_ui_handler, is_paused);
+		return ui_set_handler(ui_gfx_ui_handler, is_paused);
 	}
 
 	/* handle a save state request */
 	if (input_ui_pressed(IPT_UI_SAVE_STATE))
 	{
-		ui_set_handler(handler_load_save, LOADSAVE_SAVE);
 		mame_pause(TRUE);
+		return ui_set_handler(handler_load_save, LOADSAVE_SAVE);
 	}
 
 	/* handle a load state request */
 	if (input_ui_pressed(IPT_UI_LOAD_STATE))
 	{
-		ui_set_handler(handler_load_save, LOADSAVE_LOAD);
 		mame_pause(TRUE);
+		return ui_set_handler(handler_load_save, LOADSAVE_LOAD);
 	}
 
 	/* handle a save snapshot request */
@@ -1927,7 +1928,7 @@ static UINT32 handler_slider(UINT32 state)
 
 	/* the menu key will take us directly to the menu */
 	if (input_ui_pressed(IPT_UI_CONFIGURE))
-		ui_set_handler(ui_menu_ui_handler, 0);
+		return ui_set_handler(ui_menu_ui_handler, 0);
 
 	return 0;
 }

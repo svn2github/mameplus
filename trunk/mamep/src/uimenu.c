@@ -20,6 +20,11 @@
 #endif /* USE_SCALE_EFFECTS */
 #include <ctype.h>
 
+#ifdef MESS
+#include "uimess.h"
+#include "inputx.h"
+#endif /* MESS */
+
 
 
 /***************************************************************************
