@@ -285,7 +285,6 @@ enum
 	IPT_UI_WATCH_VALUE,
 	IPT_UI_EDIT_CHEAT,
 	IPT_UI_TOGGLE_CROSSHAIR,
-	IPT_UI_TOGGLE_LOCK_SCROLL,
 
 	/* additional OSD-specified UI port types (up to 16) */
 	IPT_OSD_1,

@@ -1154,7 +1154,6 @@ int WinMain_(HINSTANCE    hInstance,
 {
 	dprintf("MAME32 starting");
 
-	options.gui_host = 1;
 	use_gui_romloading = TRUE;
 
 	/* set up language for windows */
@@ -7144,7 +7143,6 @@ int osd_display_loading_rom_message(const char *name,rom_load_data *romdata)
 
 	if (use_gui_romloading)
 	{
-		options.gui_host = 1;
 		retval = UpdateLoadProgress(name,romdata);
 	}
 	else

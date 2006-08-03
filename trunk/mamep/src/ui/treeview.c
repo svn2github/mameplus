@@ -1245,10 +1245,10 @@ void CreateResolutionFolders(int parent_index)
 	// create our two subfolders
 	LPTREEFOLDER lpVectorV, lpVectorH;
 	lpVectorV = NewFolder("Vector (V)", 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER,
- 					   GetFolderFlags("Vector (V)"));
+ 			      GetFolderFlags("Vector (V)"));
 	AddFolder(lpVectorV);
 	lpVectorH = NewFolder("Vector (H)", 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER,
- 					   GetFolderFlags("Vector (H)"));
+ 			      GetFolderFlags("Vector (H)"));
 	AddFolder(lpVectorH);
 
 	// no games in top level folder
@@ -1273,14 +1273,14 @@ void CreateResolutionFolders(int parent_index)
 		if (drivers[jj]->flags & ORIENTATION_SWAP_XY)
 		{
 			sprintf(Resolution, "%dx%d (V)",
-						drv.screen[0].default_visible_area.max_y - drv.screen[0].default_visible_area.min_y + 1,
-						drv.screen[0].default_visible_area.max_x - drv.screen[0].default_visible_area.min_x + 1);
+				drv.screen[0].defstate.visarea.max_y - drv.screen[0].defstate.visarea.min_y + 1,
+				drv.screen[0].defstate.visarea.max_x - drv.screen[0].defstate.visarea.min_x + 1);
 		}
 		else
 		{
 			sprintf(Resolution, "%dx%d (H)",
-						drv.screen[0].default_visible_area.max_x - drv.screen[0].default_visible_area.min_x + 1,
-						drv.screen[0].default_visible_area.max_y - drv.screen[0].default_visible_area.min_y + 1);
+				drv.screen[0].defstate.visarea.max_x - drv.screen[0].defstate.visarea.min_x + 1,
+				drv.screen[0].defstate.visarea.max_y - drv.screen[0].defstate.visarea.min_y + 1);
 		}
 
 		for (i=numFolders-1;i>=start_folder;i--)
@@ -1295,7 +1295,7 @@ void CreateResolutionFolders(int parent_index)
 		{
 			LPTREEFOLDER lpTemp;
 			lpTemp = NewFolder(Resolution, 0, FALSE, next_folder_id++, parent_index, IDI_FOLDER,
-							   GetFolderFlags(Resolution));
+					   GetFolderFlags(Resolution));
 			AddFolder(lpTemp);
 			AddGame(lpTemp,jj);
 		}
@@ -1322,7 +1322,7 @@ void CreateFPSFolders(int parent_index)
 		machine_config drv;
 
 		expand_machine_driver(drivers[i]->drv,&drv);
-		f = drv.screen[0].refresh_rate;
+		f = drv.screen[0].defstate.refresh;
 
 		for (jj = 0; jj < nFPS; jj++)
 			if (fps[jj] == f)

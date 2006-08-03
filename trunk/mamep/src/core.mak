@@ -30,6 +30,7 @@ COREOBJS = \
 	$(OBJ)/fileio.o \
 	$(OBJ)/harddisk.o \
 	$(OBJ)/hash.o \
+	$(OBJ)/hiscore.o \
 	$(OBJ)/info.o \
 	$(OBJ)/input.o \
 	$(OBJ)/inptport.o \

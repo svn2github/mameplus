@@ -130,4 +130,6 @@ mame_bitmap *bitmap_alloc_depth(int width, int height, int depth);
 mame_bitmap *auto_bitmap_alloc_depth(int width, int height, int depth);
 void bitmap_free(mame_bitmap *bitmap);
 
+void set_refresh_rate(int scrnum, float refresh);
+
 #endif	/* __VIDEO_H__ */

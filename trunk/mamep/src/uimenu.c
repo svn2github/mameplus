@@ -14,6 +14,11 @@
 #include "cheat.h"
 #include "uimenu.h"
 #include "uitext.h"
+#ifdef USE_SCALE_EFFECTS
+#include "osdscale.h"
+#include "video.h"
+#endif /* USE_SCALE_EFFECTS */
+#include <ctype.h>
 
 
 
@@ -119,6 +124,19 @@ static UINT32 menu_reset_game(UINT32 state);
 static UINT32 menu_file_manager(UINT32 state);
 static UINT32 menu_tape_control(UINT32 state);
 #endif
+#ifdef USE_CUSTOM_BUTTON
+static UINT32 menu_custom_button(UINT32 state);
+#endif /* USE_CUSTOM_BUTTON */
+static UINT32 menu_autofire(UINT32 state);
+static UINT32 menu_documents(UINT32 state);
+static UINT32 menu_document_contents(UINT32 state);
+#ifdef CMD_LIST
+static UINT32 menu_command(UINT32 state);
+static UINT32 menu_command_contents(UINT32 state);
+#endif
+#ifdef USE_SCALE_EFFECTS
+static UINT32 menu_scale_effect(UINT32 state);
+#endif /* USE_SCALE_EFFECTS */
 
 /* menu helpers */
 static int input_menu_get_items(input_item_data *itemlist, int group);
@@ -184,16 +202,16 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected)
 	const char *left_hilight = ui_getstring(UI_lefthilight);
 	const char *right_hilight = ui_getstring(UI_righthilight);
 
-	float left_hilight_width = ui_get_string_width(left_hilight);
-	float right_hilight_width = ui_get_string_width(right_hilight);
-	float left_arrow_width = ui_get_string_width(left_arrow);
-	float right_arrow_width = ui_get_string_width(right_arrow);
-	float line_height = ui_get_line_height();
-	float gutter_width;
+	int left_hilight_width = ui_get_string_width(left_hilight);
+	int right_hilight_width = ui_get_string_width(right_hilight);
+	int left_arrow_width = ui_get_string_width(left_arrow);
+	int right_arrow_width = ui_get_string_width(right_arrow);
+	int line_height = ui_get_line_height();
+	int gutter_width;
 
-	float effective_width, effective_left;
-	float visible_width, visible_height;
-	float visible_top, visible_left;
+	int effective_width, effective_left;
+	int visible_width, visible_height;
+	int visible_top, visible_left;
 	int selected_subitem_too_big = 0;
 	int visible_lines;
 	int top_line;
@@ -210,14 +228,14 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected)
 	for (itemnum = 0; itemnum < numitems; itemnum++)
 	{
 		const ui_menu_item *item = &items[itemnum];
-		float total_width;
+		int total_width;
 
 		/* compute width of left hand side */
 		total_width = gutter_width + ui_get_string_width(item->text) + gutter_width;
 
 		/* add in width of right hand side */
 		if (item->subtext)
-			total_width += 2.0f * gutter_width + ui_get_string_width(item->subtext);
+			total_width += 2 * gutter_width + ui_get_string_width(item->subtext);
 
 		/* track the maximum */
 		if (total_width > visible_width)
@@ -227,27 +245,23 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected)
 		visible_height += line_height;
 	}
 
-	/* add a little bit of slop for rounding */
-	visible_width += 0.01f;
-	visible_height += 0.01f;
-
 	/* if we are too wide or too tall, clamp it down */
-	if (visible_width + 2.0f * UI_BOX_LR_BORDER > 1.0f)
-		visible_width = 1.0f - 2.0f * UI_BOX_LR_BORDER;
-	if (visible_height + 2.0f * UI_BOX_TB_BORDER > 1.0f)
-		visible_height = 1.0f - 2.0f * UI_BOX_TB_BORDER;
-	visible_lines = floor(visible_height / line_height);
-	visible_height = (float)visible_lines * line_height;
+	if (visible_width + 2 * UI_BOX_LR_BORDER > ui_screen_width)
+		visible_width = ui_screen_width - 2 * UI_BOX_LR_BORDER;
+	if (visible_height + 2 * UI_BOX_TB_BORDER > ui_screen_height)
+		visible_height = ui_screen_height - 2 * UI_BOX_TB_BORDER;
+	visible_lines = visible_height / line_height;
+	visible_height = visible_lines * line_height;
 
 	/* compute top/left of inner menu area by centering */
-	visible_left = (1.0f - visible_width) * 0.5f;
-	visible_top = (1.0f - visible_height) * 0.5f;
+	visible_left = (ui_screen_width - visible_width) / 2;
+	visible_top = (ui_screen_height - visible_height) / 2;
 
 	/* first add us a box */
-	ui_draw_outlined_box(visible_left - UI_BOX_LR_BORDER,
-					 visible_top - UI_BOX_TB_BORDER,
-					 visible_left + visible_width + UI_BOX_LR_BORDER,
-					 visible_top + visible_height + UI_BOX_TB_BORDER, UI_FILLCOLOR);
+	add_filled_box(	visible_left - UI_BOX_LR_BORDER,
+					visible_top - UI_BOX_TB_BORDER,
+					visible_left + visible_width - 1 + UI_BOX_LR_BORDER,
+					visible_top + visible_height - 1 + UI_BOX_TB_BORDER);
 
 	/* determine the first visible line based on the current selection */
 	top_line = selected - visible_lines / 2;
@@ -257,34 +271,40 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected)
 		top_line = numitems - visible_lines;
 
 	/* determine effective positions taking into account the hilighting arrows */
-	effective_width = visible_width - 2.0f * gutter_width;
+	effective_width = visible_width - 2 * gutter_width;
 	effective_left = visible_left + gutter_width;
 
 	/* loop over visible lines */
 	for (linenum = 0; linenum < visible_lines; linenum++)
 	{
-		float line_y = visible_top + (float)linenum * line_height;
+		int line_y = visible_top + linenum * line_height;
 		int itemnum = top_line + linenum;
 		const ui_menu_item *item = &items[itemnum];
 		rgb_t itemfg = MENU_TEXTCOLOR;
 
 		/* if we're selected, draw with a different background */
 		if (itemnum == selected)
+#ifdef UI_COLOR_DISPLAY
+			add_fill(visible_left, line_y,
+			         visible_left + visible_width - 1, line_y + ui_get_line_height() - 1,
+			         CURSOR_COLOR);
+#else
 			itemfg = MENU_SELECTCOLOR;
+#endif /* UI_COLOR_DISPLAY */
 
 		/* if we're on the top line, display the up arrow */
 		if (linenum == 0 && top_line != 0)
-			ui_draw_text_full(up_arrow, effective_left, line_y, effective_width,
+			ui_draw_text_full(up_arrow, effective_left, line_y, effective_width, 0, 1,
 						JUSTIFY_CENTER, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 
 		/* if we're on the bottom line, display the down arrow */
 		else if (linenum == visible_lines - 1 && itemnum != numitems - 1)
-			ui_draw_text_full(down_arrow, effective_left, line_y, effective_width,
+			ui_draw_text_full(down_arrow, effective_left, line_y, effective_width, 0, 1,
 						JUSTIFY_CENTER, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 
 		/* if we don't have a subitem, just draw the string centered */
 		else if (!item->subtext)
-			ui_draw_text_full(item->text, effective_left, line_y, effective_width,
+			ui_draw_text_full(item->text, effective_left, line_y, effective_width, 0, 1,
 						JUSTIFY_CENTER, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 
 		/* otherwise, draw the item on the left and the subitem text on the right */
@@ -292,14 +312,27 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected)
 		{
 			int subitem_invert = item->flags & MENU_FLAG_INVERT;
 			const char *subitem_text = item->subtext;
-			float item_width, subitem_width;
+			int item_width, subitem_width;
+
+			rgb_t fgcolor = itemfg;
+			rgb_t bgcolor = ARGB_BLACK;
+
+			if (subitem_invert)
+			{
+#ifdef UI_COLOR_DISPLAY
+				fgcolor = FONT_COLOR_SPECIAL;
+#else /* UI_COLOR_DISPLAY */
+				fgcolor = ARGB_BLACK;
+				bgcolor = itemfg;
+#endif /* UI_COLOR_DISPLAY */
+			}
 
 			/* draw the left-side text */
-			ui_draw_text_full(item->text, effective_left, line_y, effective_width,
+			ui_draw_text_full(item->text, effective_left, line_y, effective_width, 0, 1,
 						JUSTIFY_LEFT, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, &item_width, NULL);
 
 			/* give 2 spaces worth of padding */
-			item_width += 2.0f * gutter_width;
+			item_width += 2 * gutter_width;
 
 			/* if the subitem doesn't fit here, display dots */
 			if (ui_get_string_width(subitem_text) > effective_width - item_width)
@@ -310,27 +343,33 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected)
 			}
 
 			/* draw the subitem right-justified */
-			ui_draw_text_full(subitem_text, effective_left + item_width, line_y, effective_width - item_width,
-						JUSTIFY_RIGHT, WRAP_TRUNCATE, subitem_invert ? DRAW_OPAQUE : DRAW_NORMAL, subitem_invert ? ARGB_BLACK : itemfg, subitem_invert ? itemfg : ARGB_BLACK, &subitem_width, NULL);
+			ui_draw_text_full(subitem_text, effective_left + item_width, line_y, effective_width - item_width, 0, 1,
+#ifdef UI_COLOR_DISPLAY
+						JUSTIFY_RIGHT, WRAP_TRUNCATE, DRAW_NORMAL, fgcolor, bgcolor, &subitem_width, NULL);
+#else /* UI_COLOR_DISPLAY */
+						JUSTIFY_RIGHT, WRAP_TRUNCATE, item_invert ? DRAW_OPAQUE : DRAW_NORMAL, fgcolor, bgcolor, &subitem_width, NULL);
+#endif /* UI_COLOR_DISPLAY */
 
 			/* apply arrows */
 			if (itemnum == selected && (item->flags & MENU_FLAG_LEFT_ARROW))
-				ui_draw_text_full(left_arrow, effective_left + effective_width - subitem_width - left_arrow_width, line_y, left_arrow_width,
+				ui_draw_text_full(left_arrow, effective_left + effective_width - subitem_width - left_arrow_width, line_y, left_arrow_width, 0, 1,
 							JUSTIFY_LEFT, WRAP_NEVER, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 			if (itemnum == selected && (item->flags & MENU_FLAG_RIGHT_ARROW))
-				ui_draw_text_full(right_arrow, visible_left, line_y, visible_width,
+				ui_draw_text_full(right_arrow, visible_left, line_y, visible_width, 0, 1,
 							JUSTIFY_RIGHT, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 		}
 
+#ifndef UI_COLOR_DISPLAY
 		/* draw the arrows for selected items */
 		if (itemnum == selected)
 		{
-			ui_draw_text_full(left_hilight, visible_left, line_y, visible_width,
+			ui_draw_text_full(left_hilight, visible_left, line_y, visible_width, 0, 1,
 						JUSTIFY_LEFT, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 			if (!(item->flags & (MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW)))
-				ui_draw_text_full(right_hilight, visible_left, line_y, visible_width,
+				ui_draw_text_full(right_hilight, visible_left, line_y, visible_width, 0, 1,
 							JUSTIFY_RIGHT, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 		}
+#endif /* !UI_COLOR_DISPLAY */
 	}
 
 	/* if the selected subitem is too big, display it in a separate offset box */
@@ -338,12 +377,12 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected)
 	{
 		const ui_menu_item *item = &items[selected];
 		int linenum = selected - top_line;
-		float line_y = visible_top + (float)linenum * line_height;
-		float target_width, target_height;
-		float target_x, target_y;
+		int line_y = visible_top + linenum * line_height;
+		int target_width, target_height;
+		int target_x, target_y;
 
 		/* compute the multi-line target width/height */
-		ui_draw_text_full(item->subtext, 0, 0, visible_width * 0.75f,
+		ui_draw_text_full(item->subtext, 0, 0, visible_width * 3 / 4, 0, 0,
 					JUSTIFY_RIGHT, WRAP_WORD, DRAW_NONE, ARGB_WHITE, ARGB_BLACK, &target_width, &target_height);
 
 		/* determine the target location */
@@ -353,11 +392,11 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected)
 			target_y = line_y - target_height - UI_BOX_TB_BORDER;
 
 		/* add a box around that */
-		ui_draw_outlined_box(target_x - UI_BOX_LR_BORDER,
-						 target_y - UI_BOX_TB_BORDER,
-						 target_x + target_width + UI_BOX_LR_BORDER,
-						 target_y + target_height + UI_BOX_TB_BORDER, UI_FILLCOLOR);
-		ui_draw_text_full(item->subtext, target_x, target_y, target_width,
+		add_filled_box(	target_x - UI_BOX_LR_BORDER,
+						target_y - UI_BOX_TB_BORDER,
+						target_x + target_width - 1 + UI_BOX_LR_BORDER,
+						target_y + target_height - 1 + UI_BOX_TB_BORDER);
+		ui_draw_text_full(item->subtext, target_x, target_y, target_width, 0, target_height / ui_get_line_height(),
 					JUSTIFY_RIGHT, WRAP_WORD, DRAW_NORMAL, ARGB_WHITE, ARGB_BLACK, NULL, NULL);
 	}
 }
@@ -370,6 +409,12 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected)
 
 int ui_menu_generic_keys(UINT32 *selected, int num_items)
 {
+	static int counter = 0;
+	static int fast = 6;
+	int pan_lines;
+
+	pan_lines = ((ui_screen_height - 2 * UI_BOX_TB_BORDER) / ui_get_line_height()) - 3;
+
 	/* hitting cancel or selecting the last item returns to the previous menu */
 	if (input_ui_pressed(IPT_UI_CANCEL) || (*selected == num_items - 1 && input_ui_pressed(IPT_UI_SELECT)))
 	{
@@ -378,12 +423,45 @@ int ui_menu_generic_keys(UINT32 *selected, int num_items)
 	}
 
 	/* up backs up by one item */
-	if (input_ui_pressed_repeat(IPT_UI_UP, 6))
+	if (input_ui_pressed_repeat(IPT_UI_UP, fast))
 		*selected = (*selected + num_items - 1) % num_items;
 
 	/* down advances by one item */
-	if (input_ui_pressed_repeat(IPT_UI_DOWN, 6))
+	if (input_ui_pressed_repeat(IPT_UI_DOWN, fast))
 		*selected = (*selected + 1) % num_items;
+
+	if (input_port_type_pressed(IPT_UI_UP,0) || input_port_type_pressed(IPT_UI_DOWN,0))
+	{
+		if (++counter == 25)
+		{
+			fast--;
+			if (fast < 2)
+				fast = 2;
+
+			counter = 0;
+		}
+	}
+	else
+	{
+		fast = 6;
+		counter = 0;
+	}
+
+	/* pan-up goes to previous page */
+	if (input_ui_pressed_repeat(IPT_UI_PAGE_UP,8))
+	{
+		*selected -= pan_lines;
+		if (*selected <0)
+			*selected = 0;
+	}
+
+	/* pan-down goes to next page */
+	if (input_ui_pressed_repeat(IPT_UI_PAGE_DOWN,8))
+	{
+		*selected += pan_lines;
+		if (*selected >= num_items)
+			*selected = num_items - 1;
+	}
 
 	/* home goes to the start */
 	if (input_ui_pressed(IPT_UI_HOME))
@@ -444,6 +522,50 @@ UINT32 ui_menu_stack_pop(void)
 
 UINT32 ui_menu_ui_handler(UINT32 state)
 {
+	if (state == SHORTCUT_MENU_CHEAT)
+	{
+		if (menu_stack[menu_stack_index].handler != menu_cheat)
+			ui_menu_stack_reset();
+
+		if (((menu_stack[menu_stack_index].state >> 31) & 1) == 0)
+			ui_menu_stack_reset();
+
+		/* if we have no menus stacked up, start with the cheat menu */
+		if (menu_stack[menu_stack_index].handler == NULL)
+			ui_menu_stack_push(menu_cheat, (1 << 31) | (1 << 30) | (1 << 8) | 1);
+	}
+	else
+	{
+		if (menu_stack[menu_stack_index].handler == menu_cheat)
+		{
+			if (((menu_stack[menu_stack_index].state >> 31) & 1) != 0)
+				ui_menu_stack_reset();
+		}
+	}
+
+#ifdef CMD_LIST
+	if (state == SHORTCUT_MENU_COMMAND)
+	{
+		if (menu_stack[menu_stack_index].handler != menu_command && menu_stack[menu_stack_index].handler != menu_command_contents)
+			ui_menu_stack_reset();
+
+		if ((menu_stack[menu_stack_index].state >> 24) == 0)
+			ui_menu_stack_reset();
+
+		/* if we have no menus stacked up, start with the command menu */
+		if (menu_stack[menu_stack_index].handler == NULL)
+			ui_menu_stack_push(menu_command, 1 << 24);
+	}
+	else
+	{
+		if (menu_stack[menu_stack_index].handler == menu_command || menu_stack[menu_stack_index].handler == menu_command_contents)
+		{
+			if ((menu_stack[menu_stack_index].state >> 24) != 0)
+				ui_menu_stack_reset();
+		}
+	}
+#endif /* CMD_LIST */
+
 	/* if we have no menus stacked up, start with the main menu */
 	if (menu_stack[menu_stack_index].handler == NULL)
 		ui_menu_stack_push(menu_main, 0);
@@ -508,6 +630,13 @@ do { \
 	ADD_MENU(UI_inputgeneral, menu_input_groups, 0);
 	ADD_MENU(UI_inputspecific, menu_input, 1000 << 16);
 
+#ifdef USE_CUSTOM_BUTTON
+	if (custom_buttons)
+		ADD_MENU(UI_custombuttons, menu_custom_button, 0);
+#endif /* USE_CUSTOM_BUTTON */
+
+	ADD_MENU(UI_autofire, menu_autofire, 0);
+
 	/* add optional input-related menus */
 	if (has_dips)
 		ADD_MENU(UI_dipswitches, menu_switches, (IPT_DIPSWITCH_NAME << 16) | (IPT_DIPSWITCH_SETTING << 24));
@@ -544,8 +673,15 @@ do { \
 #endif /* HAS_WAVE */
 #endif /* MESS */
 
+	/* add game document menu */
+	ADD_MENU(UI_gamedocuments, menu_documents, 0);
+
 	/* add video options menu */
 	ADD_MENU(UI_video, menu_video, 1000 << 16);
+
+#ifdef USE_SCALE_EFFECTS
+	ADD_MENU(UI_scaleeffect, menu_scale_effect, scale_effect.effect);
+#endif /* USE_SCALE_EFFECTS */
 
 	/* add cheat menu */
 	if (options.cheat)
@@ -982,7 +1118,7 @@ static UINT32 menu_game_info(UINT32 state)
 static UINT32 menu_cheat(UINT32 state)
 {
 	int result = cheat_menu(state);
-	if (result == 0)
+	if ((state & ((1 << 8) - 1)) == 0)
 		return ui_menu_stack_pop();
 	return result;
 }
@@ -1075,6 +1211,58 @@ static UINT32 menu_memory_card(UINT32 state)
     menu_video - display a menu for video options
 -------------------------------------------------*/
 
+static const char *translate_view(const unsigned char *s)
+{
+	unsigned char *p = &menu_string_pool[menu_string_pool_offset];
+	const unsigned char *idx[8];
+	const unsigned char **pp;
+
+	pp = idx;
+	while (*s)
+	{
+		if (isdigit(*s))
+		{
+			*pp++ = s;
+
+			*p++ = '%';
+			*p++ = 'd';
+
+			for (s++; *s; s++)
+				if (!isdigit(*s))
+					break;
+		}
+		else
+			*p++ = *s++;
+	}
+	*p = '\0';
+
+	s = _(&menu_string_pool[menu_string_pool_offset]);
+	menu_string_pool_offset += strlen(s) + 1;
+
+	p = &menu_string_pool[menu_string_pool_offset];
+
+	pp = idx;
+	while (*s)
+	{
+		if (s[0] == '%' && s[1] == 'd')
+		{
+			s += 2;
+
+			while (isdigit(**pp))
+				*p++ = *(*pp)++;
+			pp++;
+		}
+		else
+			*p++ = *s++;
+	}
+	*p = '\0';
+
+	s = &menu_string_pool[menu_string_pool_offset];
+	menu_string_pool_offset += strlen(s) + 1;
+
+	return s;
+}
+
 static UINT32 menu_video(UINT32 state)
 {
 	ui_menu_item item_list[100];
@@ -1108,7 +1296,7 @@ static UINT32 menu_video(UINT32 state)
 			return menu_video(0 << 16);
 
 		/* add an item for moving the UI */
-		item_list[menu_items++].text = "Move User Interface";
+		item_list[menu_items++].text = _("Move User Interface");
 
 		/* add an item to return */
 		item_list[menu_items++].text = ui_getstring(UI_returntomain);
@@ -1154,36 +1342,36 @@ static UINT32 menu_video(UINT32 state)
 				break;
 
 			/* create a string for the item */
-			item_list[menu_items].text = name;
+			item_list[menu_items].text = translate_view(name);
 		}
 
 		/* add an item to rotate */
-		item_list[menu_items++].text = "Rotate View";
+		item_list[menu_items++].text = _("Rotate View");
 
 		/* add an item to enable/disable backdrops */
 		layermask = render_target_get_layer_config(target);
 		if (layermask & LAYER_CONFIG_ENABLE_BACKDROP)
-			item_list[menu_items++].text = "Hide Backdrops";
+			item_list[menu_items++].text = _("Hide Backdrops");
 		else
-			item_list[menu_items++].text = "Show Backdrops";
+			item_list[menu_items++].text = _("Show Backdrops");
 
 		/* add an item to enable/disable overlays */
 		if (layermask & LAYER_CONFIG_ENABLE_OVERLAY)
-			item_list[menu_items++].text = "Hide Overlays";
+			item_list[menu_items++].text = _("Hide Overlays");
 		else
-			item_list[menu_items++].text = "Show Overlays";
+			item_list[menu_items++].text = _("Show Overlays");
 
 		/* add an item to enable/disable bezels */
 		if (layermask & LAYER_CONFIG_ENABLE_BEZEL)
-			item_list[menu_items++].text = "Hide Bezels";
+			item_list[menu_items++].text = _("Hide Bezels");
 		else
-			item_list[menu_items++].text = "Show Bezels";
+			item_list[menu_items++].text = _("Show Bezels");
 
 		/* add an item to enable/disable cropping */
 		if (layermask & LAYER_CONFIG_ZOOM_TO_SCREEN)
-			item_list[menu_items++].text = "Show Full Artwork";
+			item_list[menu_items++].text = _("Show Full Artwork");
 		else
-			item_list[menu_items++].text = "Crop to Screen";
+			item_list[menu_items++].text = _("Crop to Screen");
 
 		/* add an item to return */
 		item_list[menu_items++].text = ui_getstring(UI_returntoprior);
@@ -1290,6 +1478,582 @@ static UINT32 menu_tape_control(UINT32 state)
 #endif
 
 
+#ifdef USE_CUSTOM_BUTTON
+static UINT32 menu_custom_button(UINT32 state)
+{
+	ui_menu_item item_list[MAX_PLAYERS * MAX_CUSTOM_BUTTONS + 2];
+	int selected = state;
+	int menu_items = 0;
+	UINT16 *custom_item[MAX_PLAYERS * MAX_CUSTOM_BUTTONS];
+	int is_neogeo = !mame_stricmp(Machine->gamedrv->source_file+12, "neogeo.c");
+	int buttons = 0;
+	input_port_entry *in;
+	int i;
+
+	/* reset the menu and string pool */
+	memset(item_list, 0, sizeof(item_list));
+	menu_string_pool_offset = 0;
+
+	if (custom_buttons == 0 || Machine->input_ports == 0)
+		return ui_menu_stack_pop();
+
+	memset(custom_item, 0, sizeof custom_item);
+
+	/* iterate over the input ports and add menu items */
+	for (in = Machine->input_ports; in->type != IPT_END; in++)
+	{
+		int b, p;
+
+		p = in->player;
+		b = in->type;
+
+		if (b >= IPT_BUTTON1 && b < IPT_BUTTON1 + MAX_NORMAL_BUTTONS)
+		{
+			b -= IPT_BUTTON1;
+			if (b >= buttons)
+				buttons = b + 1;
+			continue;
+		}
+
+		if (b >= IPT_CUSTOM1 && b < IPT_CUSTOM1 + custom_buttons)
+		{
+			char colorbutton = is_neogeo ? 'A' : 'a';
+			char *s = &menu_string_pool[menu_string_pool_offset];
+			int n = 1;
+
+			item_list[menu_items].text = _(input_port_name(in));
+
+			b -= IPT_CUSTOM1;
+			custom_item[menu_items] = &custom_button[p][b];
+
+			for (i = 0; i < MAX_NORMAL_BUTTONS; i++, n <<= 1)
+				if (*custom_item[menu_items] & n)
+				{
+					if (&menu_string_pool[menu_string_pool_offset] != s)
+					{
+						menu_string_pool[menu_string_pool_offset++] = '_';
+						menu_string_pool[menu_string_pool_offset++] = '+';
+					}
+
+					menu_string_pool[menu_string_pool_offset++] = '_';
+					menu_string_pool[menu_string_pool_offset++] = colorbutton + i;
+				}
+
+			menu_string_pool[menu_string_pool_offset++] = '\0';
+
+			convert_command_move(s);
+			item_list[menu_items++].subtext = s;
+		}
+	}
+
+	/* add an item to return */
+	item_list[menu_items++].text = ui_getstring(UI_returntomain);
+
+	/* draw the menu */
+	ui_menu_draw(item_list, menu_items, selected);
+
+	/* handle generic menu keys */
+	if (ui_menu_generic_keys(&selected, menu_items))
+		return selected;
+
+	if (selected != menu_items - 1)
+		for (i = 0; i < buttons; i++)
+		{
+			int keycode = KEYCODE_1 + i;
+
+			if (i == 9)
+				keycode = KEYCODE_0;
+
+			if (code_pressed_memory(keycode))
+				*custom_item[selected] ^= 1 << i;
+		}
+
+	return selected;
+}
+#endif /* USE_CUSTOM_BUTTON */
+
+
+static UINT32 menu_autofire(UINT32 state)
+{
+	ui_menu_item item_list[200];
+	int selected = state;
+	int menu_items = 0;
+	input_port_entry *entry[200];
+	input_port_entry *in;
+	int autofire_delay;
+	int players = 0;
+	int i;
+
+	/* reset the menu and string pool */
+	memset(item_list, 0, sizeof(item_list));
+	menu_string_pool_offset = 0;
+
+	if (Machine->input_ports == 0)
+		return ui_menu_stack_pop();
+
+	memset(entry, 0, sizeof(entry));
+
+	/* iterate over the input ports and add menu items */
+	for (in = Machine->input_ports; in->type != IPT_END; in++)
+	{
+		int type = in->type;
+
+		if (input_port_name(in)	&& (
+		    (type >= IPT_BUTTON1 && type < IPT_BUTTON1 + MAX_NORMAL_BUTTONS)
+#ifdef USE_CUSTOM_BUTTON
+		    || (type >= IPT_CUSTOM1 && type < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS)
+#endif /* USE_CUSTOM_BUTTON */
+		   ))
+		{
+			int value = in->autofire_setting;
+
+			entry[menu_items] = in;
+
+			if (players < in->player + 1)
+				players = in->player + 1;
+
+			item_list[menu_items].text = _(input_port_name(in));
+			item_list[menu_items++].subtext = ui_getstring(UI_autofireoff + value);
+		}
+	}
+
+	if (menu_items == 0)
+		return ui_menu_stack_pop();
+
+	autofire_delay = menu_items;
+
+	for (i = 0; i < players; i++)
+	{
+		item_list[menu_items].text = menu_string_pool_add("P%d %s", i + 1, ui_getstring(UI_autofiredelay));
+		item_list[menu_items++].subtext = menu_string_pool_add("%d", options.autofiredelay[i]);
+	}
+
+	item_list[menu_items++].text = ui_getstring (UI_returntomain);
+
+	/* draw the menu */
+	ui_menu_draw(item_list, menu_items, selected);
+
+	if (ui_menu_generic_keys(&selected, menu_items))
+		return selected;
+
+	if (selected >= autofire_delay && selected < autofire_delay + players)
+	{
+		i = selected - autofire_delay;
+
+		if (input_ui_pressed_repeat(IPT_UI_RIGHT,8))
+		{
+			options.autofiredelay[i]++;
+			if (options.autofiredelay[i] > 99)
+				options.autofiredelay[i] = 99;
+		}
+		if (input_ui_pressed_repeat(IPT_UI_LEFT,8))
+		{
+			options.autofiredelay[i]--;
+			if (options.autofiredelay[i] < 1)
+				options.autofiredelay[i] = 1;
+		}
+	}
+	else if (selected < autofire_delay)
+	{
+		int selected_value = entry[selected]->autofire_setting;
+
+		if (input_ui_pressed_repeat(IPT_UI_RIGHT,8))
+		{
+			if (++selected_value > 2)
+				selected_value = 0;
+		}
+		if (input_ui_pressed_repeat(IPT_UI_LEFT,8))
+		{
+			if (--selected_value < 0)
+				selected_value = 2;
+		}
+
+		entry[selected]->autofire_setting = selected_value;
+	}
+
+	return selected;
+}
+
+
+static UINT32 menu_documents(UINT32 state)
+{
+#define NUM_DOCUMENTS	(UI_keyjoyspeed - UI_history)
+
+	ui_menu_item item_list[NUM_DOCUMENTS + 2];
+	int menu_items = 0;
+
+	/* reset the menu */
+	memset(item_list, 0, sizeof(item_list));
+
+	/* build up the menu */
+	for (menu_items = 0; menu_items < NUM_DOCUMENTS; menu_items++)
+		item_list[menu_items].text = ui_getstring(UI_history + menu_items);
+
+	/* add an item for the return */
+	item_list[menu_items++].text = ui_getstring(UI_returntoprior);
+
+	/* draw the menu */
+	ui_menu_draw(item_list, menu_items, state);
+
+	/* handle the keys */
+	if (ui_menu_generic_keys(&state, menu_items))
+		return state;
+	if (input_ui_pressed(IPT_UI_SELECT))
+	{
+#ifdef CMD_LIST
+		if (state + UI_history == UI_command)
+			return ui_menu_stack_push(menu_command, 0);
+#endif /* CMD_LIST */
+
+		return ui_menu_stack_push(menu_document_contents, state << 24);
+	}
+
+	return state;
+
+#undef NUM_DOCUMENT
+}
+
+
+static UINT32 menu_document_contents(UINT32 state)
+{
+	static char *bufptr = NULL;
+	static const game_driver *last_drv;
+	static int last_selected;
+	static int last_dattype;
+	int bufsize = 256 * 1024; // 256KB of history.dat buffer, enough for everything
+	int dattype = (state >> 24) + UI_history;
+	int selected = 0;
+	int res;
+
+	if (bufptr)
+	{
+		if (Machine->gamedrv != last_drv || selected != last_selected || dattype != last_dattype)
+		{
+			/* force buffer to be recreated */
+			free (bufptr);
+			bufptr = NULL;
+		}
+	}
+
+	if (!bufptr)
+	{
+		/* allocate a buffer for the text */
+		bufptr = malloc(bufsize);
+
+		if (bufptr)
+		{
+			int game_paused = mame_is_paused();
+
+			/* Disable sound to prevent strange sound*/
+			if (!game_paused)
+				mame_pause(TRUE);
+
+			if ((dattype == UI_history && (load_driver_history(Machine->gamedrv, bufptr, bufsize) == 0))
+#ifdef STORY_DATAFILE
+			 || (dattype == UI_story && (load_driver_story(Machine->gamedrv, bufptr, bufsize) == 0))
+#endif /* STORY_DATAFILE */
+			 || (dattype == UI_mameinfo && (load_driver_mameinfo(Machine->gamedrv, bufptr, bufsize) == 0))
+			 || (dattype == UI_drivinfo && (load_driver_drivinfo(Machine->gamedrv, bufptr, bufsize) == 0))
+			 || (dattype == UI_statistics && (load_driver_statistics(bufptr, bufsize) == 0)))
+			{
+				last_drv = Machine->gamedrv;
+				last_selected = selected;
+				last_dattype = dattype;
+
+				strcat(bufptr, "\n\t");
+				strcat(bufptr, ui_getstring(UI_lefthilight));
+				strcat(bufptr, " ");
+				strcat(bufptr, ui_getstring(UI_returntoprior));
+				strcat(bufptr, " ");
+				strcat(bufptr, ui_getstring(UI_righthilight));
+				strcat(bufptr, "\n");
+			}
+			else
+			{
+				free(bufptr);
+				bufptr = NULL;
+			}
+
+			if (!game_paused)
+				mame_pause(FALSE);
+		}
+	}
+
+	/* draw the text */
+	if (bufptr)
+		ui_draw_message_window(bufptr);
+	else
+	{
+		char msg[80];
+
+		strcpy(msg, "\t");
+
+		switch (dattype)
+		{
+		case UI_history:
+			strcat(msg, ui_getstring(UI_historymissing));
+			break;
+#ifdef STORY_DATAFILE
+		case UI_story:
+			strcat(msg, ui_getstring(UI_storymissing));
+			break;
+#endif /* STORY_DATAFILE */
+		case UI_mameinfo:
+			strcat(msg, ui_getstring(UI_mameinfomissing));
+			break;
+		case UI_drivinfo:
+			strcat(msg, ui_getstring(UI_drivinfomissing));
+			break;
+		case UI_statistics:
+			strcat(msg, ui_getstring(UI_statisticsmissing));
+			break;
+		}
+
+		strcat(msg, "\n\n\t");
+		strcat(msg, ui_getstring(UI_lefthilight));
+		strcat(msg, " ");
+		strcat(msg, ui_getstring(UI_returntoprior));
+		strcat(msg, " ");
+		strcat(msg, ui_getstring(UI_righthilight));
+
+		ui_draw_message_window(msg);
+	}
+
+	res = ui_window_scroll_keys();
+	if (res > 0)
+		return ui_menu_stack_pop();
+
+	return ((dattype - UI_history) << 24) | selected;
+}
+
+
+#ifdef CMD_LIST
+static UINT32 menu_command(UINT32 state)
+{
+	int selected = state & ((1 << 24) - 1);
+	int shortcut = state >> 24;
+	int menu_items = 0;
+	const char *item[256];
+	int total;
+
+	total = command_sub_menu(Machine->gamedrv, item);
+	if (total)
+	{
+		int last_selected = selected;
+
+		ui_menu_item item_list[256 + 2];
+
+		/* reset the menu and string pool */
+		memset(item_list, 0, sizeof(item_list));
+		menu_string_pool_offset = 0;
+
+		for (menu_items = 0; menu_items < total; menu_items++)
+			item_list[menu_items].text = item[menu_items];
+
+		/* add empty line */
+		item_list[menu_items++].text = "";
+
+		/* add an item for the return */
+		item_list[menu_items++].text = menu_string_pool_add("\t%s",shortcut ? ui_getstring(UI_returntogame) : ui_getstring(UI_returntoprior));
+
+		/* draw the menu */
+		ui_menu_draw(item_list, menu_items, selected);
+
+		/* handle generic menu keys */
+		if (ui_menu_generic_keys(&selected, menu_items))
+			return selected;
+
+		/* skip empty line */
+		if (selected == total)
+		{
+			if (last_selected > selected)
+				selected = total - 1;
+			else
+				selected = menu_items - 1;
+		}
+
+		/* handle actions */
+		if (input_ui_pressed(IPT_UI_SELECT))
+		{
+			if (selected < total)
+				return ui_menu_stack_push(menu_command_contents, (shortcut << 24) | selected);
+		}
+	}
+	else
+	{
+		char buf[80];
+		int res;
+
+		strcpy(buf, "\t");
+		strcat(buf, ui_getstring(UI_commandmissing));
+		strcat(buf, "\n\n\t");
+		strcat(buf, ui_getstring(UI_lefthilight));
+		strcat(buf, " ");
+		if (shortcut)
+			strcat(buf, ui_getstring(UI_returntogame));
+		else
+			strcat(buf, ui_getstring(UI_returntoprior));
+		strcat(buf, " ");
+		strcat(buf, ui_getstring(UI_righthilight));
+
+		ui_draw_message_window(buf);
+
+		res = ui_window_scroll_keys();
+		if (res > 0)
+			return ui_menu_stack_pop();
+	}
+
+	return (shortcut << 24) | selected;
+}
+
+
+static UINT32 menu_command_contents(UINT32 state)
+{
+	static char *bufptr = NULL;
+	static const game_driver *last_drv;
+	static int last_selected;
+	static int last_shortcut;
+	int bufsize = 64 * 1024; // 64KB of command.dat buffer, enough for everything
+	int selected = state & ((1 << 24) - 1);
+	int shortcut = state >> 24;
+	int res;
+
+	if (bufptr)
+	{
+		if (Machine->gamedrv != last_drv || selected != last_selected || shortcut != last_shortcut)
+		{
+			/* force buffer to be recreated */
+			free (bufptr);
+			bufptr = NULL;
+		}
+	}
+
+	if (!bufptr)
+	{
+		/* allocate a buffer for the text */
+		bufptr = malloc(bufsize);
+
+		if (bufptr)
+		{
+			int game_paused = mame_is_paused();
+
+			/* Disable sound to prevent strange sound*/
+			if (!game_paused)
+				mame_pause(TRUE);
+
+			if (load_driver_command_ex(Machine->gamedrv, bufptr, bufsize, selected) == 0)
+			{
+				last_drv = Machine->gamedrv;
+				last_selected = selected;
+				last_shortcut = shortcut;
+
+				convert_command_move(bufptr);
+
+				strcat(bufptr, "\n\t");
+				strcat(bufptr, ui_getstring(UI_lefthilight));
+				strcat(bufptr, " ");
+				if (shortcut)
+					strcat(bufptr, ui_getstring(UI_returntogame));
+				else
+					strcat(bufptr, ui_getstring(UI_returntoprior));
+				strcat(bufptr, " ");
+				strcat(bufptr, ui_getstring(UI_righthilight));
+				strcat(bufptr, "\n");
+			}
+			else
+			{
+				free(bufptr);
+				bufptr = NULL;
+			}
+
+			if (!game_paused)
+				mame_pause(FALSE);
+		}
+	}
+
+	/* draw the text */
+	if (bufptr)
+		ui_draw_message_window(bufptr);
+	else
+	{
+		char buf[80];
+
+		strcpy(buf, "\t");
+		strcat(buf, ui_getstring(UI_commandmissing));
+		strcat(buf, "\n\n\t");
+		strcat(buf, ui_getstring(UI_lefthilight));
+		strcat(buf, " ");
+		if (shortcut)
+			strcat(buf, ui_getstring(UI_returntogame));
+		else
+			strcat(buf, ui_getstring(UI_returntoprior));
+		strcat(buf, " ");
+		strcat(buf, ui_getstring(UI_righthilight));
+
+		ui_draw_message_window(buf);
+	}
+
+	res = ui_window_scroll_keys();
+	if (res > 0)
+		return ui_menu_stack_pop();
+
+	return (shortcut << 24) | selected;
+}
+#endif /* CMD_LIST */
+
+
+#ifdef USE_SCALE_EFFECTS
+/*************************************
+ *
+ *  Scale Effect menu
+ *
+ *************************************/
+
+static UINT32 menu_scale_effect(UINT32 state)
+{
+	ui_menu_item item_list[100];
+	int selected = state;
+	int menu_items = 0;
+
+	/* reset the menu */
+	memset(item_list, 0, sizeof(item_list));
+
+	item_list[0].text = _("None");
+
+	/* count up the targets, creating menu items for them */
+	for (menu_items = 1 ; menu_items < ARRAY_LENGTH(item_list); menu_items++)
+	{
+		const char *desc = scale_desc(menu_items);
+		if (desc == NULL)
+			break;
+
+		/* create a string for the item */
+		item_list[menu_items].text = desc;
+	}
+
+	/* add an item to return */
+	item_list[menu_items++].text = ui_getstring(UI_returntomain);
+
+	/* draw the menu */
+	ui_menu_draw(item_list, menu_items, selected);
+
+	/* handle the keys */
+	if (ui_menu_generic_keys(&selected, menu_items))
+		return selected;
+
+	/* handle actions */
+	if (input_ui_pressed(IPT_UI_SELECT))
+	{
+		video_exit_scale_effect();
+		scale_decode(scale_name(selected)); 
+		video_init_scale_effect();
+	}
+
+	return selected;
+}
+#endif /* USE_SCALE_EFFECTS */
+
+
 
 /***************************************************************************
     MENU HELPERS
@@ -1322,7 +2086,7 @@ static int input_menu_get_items(input_item_data *itemlist, int group)
 			item->defseq = &indef->defaultseq;
 			item->sortorder = item - itemlist;
 			item->type = port_type_is_analog(in->type) ? INPUT_TYPE_ANALOG : INPUT_TYPE_DIGITAL;
-			item->name = menu_string_pool_add(input_format[item->type], in->name);
+			item->name = menu_string_pool_add(_(input_format[item->type]), _(in->name));
 			item->seqname = menu_string_pool_add("%s", seq_name(item->seq, temp, sizeof(temp)));
 			item->invert = seq_cmp(item->seq, item->defseq);
 			item++;
@@ -1335,7 +2099,7 @@ static int input_menu_get_items(input_item_data *itemlist, int group)
 				item->defseq = &indef->defaultdecseq;
 				item->sortorder = item - itemlist;
 				item->type = INPUT_TYPE_ANALOG_DEC;
-				item->name = menu_string_pool_add(input_format[item->type], in->name);
+				item->name = menu_string_pool_add(_(input_format[item->type]), _(in->name));
 				item->seqname = menu_string_pool_add("%s", seq_name(item->seq, temp, sizeof(temp)));
 				item->invert = seq_cmp(item->seq, item->defseq);
 				item++;
@@ -1345,7 +2109,7 @@ static int input_menu_get_items(input_item_data *itemlist, int group)
 				item->defseq = &indef->defaultincseq;
 				item->sortorder = item - itemlist;
 				item->type = INPUT_TYPE_ANALOG_INC;
-				item->name = menu_string_pool_add(input_format[item->type], in->name);
+				item->name = menu_string_pool_add(_(input_format[item->type]), _(in->name));
 				item->seqname = menu_string_pool_add("%s", seq_name(item->seq, temp, sizeof(temp)));
 				item->invert = seq_cmp(item->seq, item->defseq);
 				item++;
@@ -1399,7 +2163,7 @@ static int input_menu_get_game_items(input_item_data *itemlist)
 			item->defseq = &default_seq;
 			item->sortorder = sortorder;
 			item->type = port_type_is_analog(in->type) ? INPUT_TYPE_ANALOG : INPUT_TYPE_DIGITAL;
-			item->name = menu_string_pool_add(input_format[item->type], name);
+			item->name = menu_string_pool_add(_(input_format[item->type]), _(name));
 			item->seqname = menu_string_pool_add("%s", seq_name(curseq, temp, sizeof(temp)));
 			item->invert = seq_cmp(curseq, defseq);
 			item++;
@@ -1416,7 +2180,7 @@ static int input_menu_get_game_items(input_item_data *itemlist)
 				item->defseq = &default_seq;
 				item->sortorder = sortorder;
 				item->type = INPUT_TYPE_ANALOG_DEC;
-				item->name = menu_string_pool_add(input_format[item->type], name);
+				item->name = menu_string_pool_add(_(input_format[item->type]), _(name));
 				item->seqname = menu_string_pool_add("%s", seq_name(curseq, temp, sizeof(temp)));
 				item->invert = seq_cmp(curseq, defseq);
 				item++;
@@ -1430,7 +2194,7 @@ static int input_menu_get_game_items(input_item_data *itemlist)
 				item->defseq = &default_seq;
 				item->sortorder = sortorder;
 				item->type = INPUT_TYPE_ANALOG_INC;
-				item->name = menu_string_pool_add(input_format[item->type], name);
+				item->name = menu_string_pool_add(_(input_format[item->type]), _(name));
 				item->seqname = menu_string_pool_add("%s", seq_name(curseq, temp, sizeof(temp)));
 				item->invert = seq_cmp(curseq, defseq);
 				item++;

@@ -45,6 +45,7 @@
                 - calls memory_init() [memory.c] to process the game's memory maps
                 - calls cpuexec_init() [cpuexec.c] to initialize the CPUs
                 - calls cpuint_init() [cpuint.c] to initialize the CPU interrupts
+                - calls hiscore_init() [hiscore.c] to initialize the hiscores
                 - calls saveload_init() [mame.c] to set up for save/load
                 - calls the driver's DRIVER_INIT callback
                 - calls sound_init() [sound.c] to start the audio system
@@ -77,6 +78,7 @@
 #include "driver.h"
 #include "config.h"
 #include "cheat.h"
+#include "hiscore.h"
 #include "debugger.h"
 #include "profiler.h"
 #include "render.h"
@@ -1118,6 +1120,9 @@ static void init_machine(void)
 	if (devices_init(Machine->gamedrv))
 		fatalerror("devices_init failed");
 #endif
+
+	/* start the hiscore system -- remove me */
+	hiscore_init(Machine->gamedrv->name);
 
 	/* start the save/load system */
 	saveload_init();

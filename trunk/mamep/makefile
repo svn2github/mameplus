@@ -362,9 +362,9 @@ else
 	-Wcast-align \
 	-Wstrict-prototypes \
 	-Wundef \
-#	-Wformat-security
 	-Wwrite-strings \
 	-Wdeclaration-after-statement
+#	-Wformat-security
 endif
 
 ifneq ($(I686),)

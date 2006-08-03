@@ -84,6 +84,7 @@
 #include "config.h"
 #include "xmlfile.h"
 #include "png.h"
+#include "ui.h"
 #include <math.h>
 
 

@@ -75,16 +75,6 @@
 #ifndef __PALETTE_H__
 #define __PALETTE_H__
 
-#ifndef NEW_RENDER
-#ifdef UI_COLOR_DISPLAY
-#define USE_PALETTE_MAP
-#else /* UI_COLOR_DISPLAY */
-#ifdef TRANS_UI
-#define USE_PALETTE_MAP
-#endif /* TRANS_UI */
-#endif /* UI_COLOR_DISPLAY */
-#endif
-
 #include "memory.h"
 
 
@@ -115,50 +105,6 @@
 #define RGB_WHITE			(MAKE_RGB(255,255,255))
 
 
-/***************************************************************************
-	TRANSPARENT UI MACROS
-    these are sample macros defined in osinline.h.
-***************************************************************************/
-
-#ifndef NEW_RENDER
-#ifdef USE_SAMPLE_MACORS_FOR_TRANSPARENT_UI
-
-#define draw_transparent16_PALETTE(src,dst,y) \
-{ \
-	rgb_t color = adjusted_palette[*src]; \
- \
-	UINT8 r = RGB_RED(color); \
-	UINT8 g = RGB_GREEN(color); \
-	UINT8 b = RGB_BLUE(color); \
- \
-	r = ui_transparent_background[0][y << 8 | r]; \
-	g = ui_transparent_background[1][y << 8 | g]; \
-	b = ui_transparent_background[2][y << 8 | b]; \
- \
-	*dst = find_near_palette_by_index(get_colormap_index_by_rgb(r, g, b)); \
-}
-
-#define draw_transparent_DIRECT_RGB(src,dst,y) \
-{ \
-	UINT8 r = *src >> direct_rgb_rshift; \
-	UINT8 g = *src >> direct_rgb_gshift; \
-	UINT8 b = *src >> direct_rgb_bshift; \
- \
-	r = ui_transparent_background[0][y << 8 | r]; \
-	g = ui_transparent_background[1][y << 8 | g]; \
-	b = ui_transparent_background[2][y << 8 | b]; \
- \
-	*dst = ((r) << direct_rgb_rshift) | \
-	       ((g) << direct_rgb_gshift) | \
-	       ((b) << direct_rgb_bshift); \
-}
-
-#define draw_transparent16_RGB15(src,dst,y) draw_transparent_DIRECT_RGB(src,dst,y)
-#define draw_transparent32_RGB32(src,dst,y) draw_transparent_DIRECT_RGB(src,dst,y)
-
-#endif /* USE_SAMPLE_MACORS_FOR_TRANSPARENT_UI */
-#endif
-
 
 /***************************************************************************
     GLOBAL VARIABLES
@@ -168,12 +114,6 @@ extern rgb_t *game_palette;
 extern rgb_t *adjusted_palette;
 extern UINT16 *palette_shadow_table;
 
-
-#ifndef NEW_RENDER
-#ifdef TRANS_UI
-extern UINT8 *ui_transparent_background[3];
-#endif /* TRANS_UI */
-#endif
 
 
 /***************************************************************************
@@ -224,13 +164,6 @@ pen_t get_black_pen(void);
 pen_t get_white_pen(void);
 
 
-#ifdef USE_PALETTE_MAP
-void update_palettemap(void);
-#endif /* USE_PALETTE_MAP */
-
-#ifdef TRANS_UI
-void fillbitmap_ts(mame_bitmap *dest,pen_t pen,const rectangle *clip);
-#endif /* TRANS_UI */
 
 /***************************************************************************
     INLINE FUNCTIONS

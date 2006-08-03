@@ -1787,8 +1787,6 @@ void cheat_init(void)
 	dontPrintNewLabels =	0;
 	autoSaveEnabled =		0;
 
-	fullMenuPageHeight =	floor(1.0f / ui_get_line_height()) - 1;
-
 	BuildCPUInfoList();
 
 	LoadCheatDatabase();
@@ -1891,6 +1889,8 @@ UINT32 cheat_menu(UINT32 state)
 	int submenu_choice = (state  >> 8) & ((1 << 16) - 1);
 	int firstEntry = (state >> 30) & 1;
 	int shortcut = (state >> 31) & 1;
+
+	fullMenuPageHeight = ui_screen_height / ui_get_line_height() - 1;
 
 	memset(menu_item, 0, sizeof(menu_item));
 
@@ -2024,7 +2024,7 @@ UINT32 cheat_menu(UINT32 state)
 //  if(input_ui_pressed(IPT_UI_CONFIGURE))
 //      sel = -2;
 
-	return sel + 1;
+	return (sel + 1) | (submenu_choice << 8) | (firstEntry << 30) | (shortcut << 31);
 }
 
 static UINT32 DoShift(UINT32 input, INT8 shift)
@@ -2364,7 +2364,7 @@ static INT32 UserSelectValueMenu(int selection, CheatEntry * entry)
 			value = min;
 	}
 
-	return (sel + 1) | (submenu_choice << 8) | (firstEntry << 30) | (shortcut << 31);
+	return sel + 1;
 }
 
 static INT32 CommentMenu(int selection, CheatEntry * entry)
@@ -4945,10 +4945,7 @@ static int DoSearchMenuClassic(int selection, int startNew)
 		search->oldOptions.delta &= kSearchByteMaskTable[search->bytes];
 	}
 
-	if(	(sel == -1) ||
-		(sel == -2))
-		;
-	else
+	if (sel != -1 && sel != -2)
 		lastPos = sel;
 
 	return sel + 1;
@@ -5340,10 +5337,7 @@ static int DoSearchMenu(int selection, int startNew)
 //  if(input_ui_pressed(IPT_UI_CONFIGURE))
 //      sel = -2;
 
-	if(	(sel == -1) ||
-		(sel == -2))
-		;
-	else
+	if (sel != -1 && sel != -2)
 		lastSel = sel;
 
 	return sel + 1;
@@ -8439,12 +8433,13 @@ static void HandleLocalCommandCheat(UINT32 type, UINT32 address, UINT32 data, UI
 
 				case kCustomLocation_RefreshRate:
 				{
-					screen_state *state = &Machine->screen[0];
+extern void set_refresh_rate(int scrnum, float refresh);
+
 					double	refresh = data;
 
 					refresh /= 65536.0;
 
-					configure_screen(0, state->width, state->height, &state->visarea, refresh);
+					set_refresh_rate(0, refresh);
 				}
 				break;
 			}
@@ -10057,7 +10052,7 @@ static void cheat_periodicAction(CheatAction * action)
 	{
 		case kType_NormalOrDelay:
 		{
-			if(action->frameTimer >= (parameter * Machine->screen[0].refresh))
+			if(action->frameTimer >= (parameter * Machine->refresh_rate[0]))
 			{
 				action->frameTimer = 0;
 
@@ -10103,7 +10098,7 @@ static void cheat_periodicAction(CheatAction * action)
 
 				if(currentValue != action->lastValue)
 				{
-					action->frameTimer = parameter * Machine->screen[0].refresh;
+					action->frameTimer = parameter * Machine->refresh_rate[0];
 
 					action->flags |= kActionFlag_WasModified;
 				}

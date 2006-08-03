@@ -9527,10 +9527,21 @@ M68KMAKE_OP(move, 32, pd, d)
 	_mov_r32_m32abs(REG_EAX, &DY);
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
+	_sub_r32_imm(REG_ESP, 8);
+
 	_push_r32(REG_EAX);
+
+	_ror_r32_imm(REG_EAX, 16);
+	_mov_m32bd_r32(REG_ESP, 8, REG_EAX);
+
 	DRC_EA_AX_PD_32();
+	_mov_m32bd_r32(REG_ESP, 8, REG_EAX);
+
+	_add_r32_imm(REG_EAX, 2);
 	_push_r32(REG_EAX);
-	m68kdrc_write_32();
+
+	m68kdrc_write_16();
+	m68kdrc_write_16();
 }
 
 
@@ -9541,10 +9552,21 @@ M68KMAKE_OP(move, 32, pd, a)
 	_mov_r32_m32abs(REG_EAX, &AY);
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
+	_sub_r32_imm(REG_ESP, 8);
+
 	_push_r32(REG_EAX);
+
+	_ror_r32_imm(REG_EAX, 16);
+	_mov_m32bd_r32(REG_ESP, 8, REG_EAX);
+
 	DRC_EA_AX_PD_32();
+	_mov_m32bd_r32(REG_ESP, 8, REG_EAX);
+
+	_add_r32_imm(REG_EAX, 2);
 	_push_r32(REG_EAX);
-	m68kdrc_write_32();
+
+	m68kdrc_write_16();
+	m68kdrc_write_16();
 }
 
 
@@ -9555,10 +9577,21 @@ M68KMAKE_OP(move, 32, pd, .)
 	M68KMAKE_GET_OPER_AY_32;
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
+	_sub_r32_imm(REG_ESP, 8);
+
 	_push_r32(REG_EAX);
+
+	_ror_r32_imm(REG_EAX, 16);
+	_mov_m32bd_r32(REG_ESP, 8, REG_EAX);
+
 	DRC_EA_AX_PD_32();
+	_mov_m32bd_r32(REG_ESP, 8, REG_EAX);
+
+	_add_r32_imm(REG_EAX, 2);
 	_push_r32(REG_EAX);
-	m68kdrc_write_32();
+
+	m68kdrc_write_16();
+	m68kdrc_write_16();
 }
 
 
@@ -10356,9 +10389,21 @@ M68KMAKE_OP(movem, 32, re, pd)
 			_sub_r32_imm(REG_EAX, 4);
 			_push_r32(REG_EAX);
 
-			_push_m32abs(&REG68K_DA[15-i]);
+			_sub_r32_imm(REG_ESP, 4);
+
 			_push_r32(REG_EAX);
-			m68kdrc_write_32();
+
+			_mov_r32_m32abs(REG_EBX, &REG68K_DA[15-i]);
+			_push_r32(REG_EBX);
+
+			_ror_r32_imm(REG_EBX, 16);
+			_mov_m32bd_r32(REG_ESP, 8, REG_EBX);
+
+			_add_r32_imm(REG_EAX, 2);
+			_push_r32(REG_EAX);
+
+			m68kdrc_write_16();
+			m68kdrc_write_16();
 
 			_pop_r32(REG_EAX);
 			count++;

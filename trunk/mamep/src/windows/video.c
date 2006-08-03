@@ -235,12 +235,10 @@ int winvideo_init(void)
 			return 1;
 #endif
 
-#if 0
 	// start recording movie
 	stemp = options_get_string("mngwrite", TRUE);
 	if (stemp != NULL)
 		record_movie_start(stemp);
-#endif
 
 	// if we're running < 5 minutes, allow us to skip warnings to facilitate benchmarking/validation testing
 	if (video_config.framestorun > 0 && video_config.framestorun < 60*60*5)

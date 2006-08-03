@@ -735,30 +735,30 @@ static LPWSTR GameInfoScreen(int nIndex)
 	{
 		if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
 		{
-			sprintf(buf,_UI("Vector (V) %f Hz (%d colors)"),
-				drv.screen[0].refresh_rate, drv.total_colors);
+			sprintf(buf, _UI("Vector (V) %f Hz (%d colors)"),
+				drv.screen[0].defstate.refresh, drv.total_colors);
 		}
 		else
 		{
-			sprintf(buf,_UI("Vector (H) %f Hz (%d colors)"),
-					drv.screen[0].refresh_rate, drv.total_colors);
+			sprintf(buf, _UI("Vector (H) %f Hz (%d colors)"),
+				drv.screen[0].defstate.refresh, drv.total_colors);
 		}
 	}
 	else
 	{
 		if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
 		{
-			sprintf(buf,_UI("%d x %d (V) %f Hz (%d colors)"),
-					drv.screen[0].default_visible_area.max_y - drv.screen[0].default_visible_area.min_y + 1,
-					drv.screen[0].default_visible_area.max_x - drv.screen[0].default_visible_area.min_x + 1,
-					drv.screen[0].refresh_rate, drv.total_colors);
+			sprintf(buf, _UI("%d x %d (V) %f Hz (%d colors)"),
+				drv.screen[0].defstate.visarea.max_y - drv.screen[0].defstate.visarea.min_y + 1,
+				drv.screen[0].defstate.visarea.max_x - drv.screen[0].defstate.visarea.min_x + 1,
+				drv.screen[0].defstate.refresh, drv.total_colors);
 		}
 		else
 		{
-			sprintf(buf,_UI("%d x %d (H) %f Hz (%d colors)"),
-					drv.screen[0].default_visible_area.max_x - drv.screen[0].default_visible_area.min_x + 1,
-					drv.screen[0].default_visible_area.max_y - drv.screen[0].default_visible_area.min_y + 1,
-					drv.screen[0].refresh_rate, drv.total_colors);
+			sprintf(buf, _UI("%d x %d (H) %f Hz (%d colors)"),
+				drv.screen[0].defstate.visarea.max_x - drv.screen[0].defstate.visarea.min_x + 1,
+				drv.screen[0].defstate.visarea.max_y - drv.screen[0].defstate.visarea.min_y + 1,
+				drv.screen[0].defstate.refresh, drv.total_colors);
 		}
 	}
 	return _Unicode(buf);

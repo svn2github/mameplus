@@ -1034,7 +1034,6 @@ static const input_port_default_entry default_ports_builtin[] =
 	INPUT_PORT_DIGITAL_DEF( 0, IPG_UI,      UI_SELECT,			"UI Select",			SEQ_DEF_3(KEYCODE_ENTER, CODE_OR, JOYCODE_1_BUTTON1) )
 	INPUT_PORT_DIGITAL_DEF( 0, IPG_UI,      UI_CANCEL,			"UI Cancel",			SEQ_DEF_1(KEYCODE_ESC) )
 	INPUT_PORT_DIGITAL_DEF( 0, IPG_UI,      UI_CLEAR,			"UI Clear",				SEQ_DEF_1(KEYCODE_DEL) )
-	INPUT_PORT_DIGITAL_DEF( 0, IPG_UI,      UI_TOGGLE_LOCK_SCROLL,	"UI Toggle Lock Scroll",	SEQ_DEF_1(KEYCODE_SCRLOCK) )
 	INPUT_PORT_DIGITAL_DEF( 0, IPG_UI,      UI_ZOOM_IN,			"UI Zoom In",			SEQ_DEF_1(KEYCODE_EQUALS) )
 	INPUT_PORT_DIGITAL_DEF( 0, IPG_UI,      UI_ZOOM_OUT,		"UI Zoom Out",			SEQ_DEF_1(KEYCODE_MINUS) )
 	INPUT_PORT_DIGITAL_DEF( 0, IPG_UI,      UI_PREV_GROUP,		"UI Previous Group",	SEQ_DEF_1(KEYCODE_OPENBRACE) )
@@ -3182,10 +3181,8 @@ INLINE void copy_command_buffer(char log)
 {
 	int i, len;
 	int space_width = ui_get_char_width(' ');
-	int ui_width, ui_height;
-	ui_get_bounds(&ui_width, &ui_height);
 
-	#define MAX_COMMAND_LOG		(int)(ui_width / space_width)
+	#define MAX_COMMAND_LOG		(int)(ui_screen_width / space_width)
 
 	len = strlen((char *)command_buffer);
 

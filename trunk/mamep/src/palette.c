@@ -18,18 +18,6 @@
 
 #define VERBOSE 0
 
-#ifdef NEW_RENDER
-#undef TRANS_UI
-#undef UI_COLOR_DISPLAY
-#endif
-
-#ifdef TRANS_UI
-#include "artwork.h"
-#ifndef USE_SAMPLE_MACORS_FOR_TRANSPARENT_UI
-#include "osinline.h"
-#endif /* !USE_SAMPLE_MACORS_FOR_TRANSPARENT_UI */
-#endif /* TRANS_UI */
-
 
 /***************************************************************************
     CONSTANTS
@@ -37,11 +25,6 @@
 
 #define PEN_BRIGHTNESS_BITS		8
 #define MAX_PEN_BRIGHTNESS		(4 << PEN_BRIGHTNESS_BITS)
-
-#ifdef USE_PALETTE_MAP
-/* color map resolution */
-#define PALETTIZED_COLORMAP_SHIFT		5
-#endif /* USE_PALETTE_MAP */
 
 enum
 {
@@ -73,15 +56,6 @@ struct _callback_item
 
 UINT16 *palette_shadow_table;
 
-#ifdef TRANS_UI
-UINT8 *ui_transparent_background[3];
-#endif /* TRANS_UI */
-
-
-#ifndef NEW_RENDER
-static UINT8 direct_rgb_rshift, direct_rgb_gshift, direct_rgb_bshift;
-#endif
-
 rgb_t *game_palette;				/* RGB palette as set by the driver */
 rgb_t *adjusted_palette;			/* actual RGB palette after brightness/gamma adjustments */
 static UINT32 *dirty_palette;
@@ -99,17 +73,6 @@ static pen_t total_colors_with_ui;
 static pen_t black_pen, white_pen;
 
 static callback_item *notify_callback_list;
-
-#ifdef USE_PALETTE_MAP
-/* to find near color from palette */
-static int *palettized_colormap;
-static int *palettized_colormap_index;
-static int colormap_dirty;
-#endif /* USE_PALETTE_MAP */
-
-#ifdef TRANS_UI
-static int trans_colors;
-#endif /* TRANS_UI */
 
 
 
@@ -150,325 +113,6 @@ INLINE UINT32 rgb_to_direct32(rgb_t rgb)
 {
 	return rgb;
 }
-
-
-
-#ifdef USE_PALETTE_MAP
-/*-------------------------------------------------
-	find near palette from all palette
--------------------------------------------------*/
-
-static pen_t find_near_palette_by_index(int idx)
-{
-#define FIND_COLORMAP_CHECK(idx) \
-	{ \
-		int pen = palettized_colormap[idx]; \
-	 \
-		if (pen >= 0) \
-		{ \
-			int i; \
-	 \
-			for (i = 0; i < need_update; i++) \
-				palettized_colormap[update_list[i]] = pen; \
-	 \
-			return pen; \
-		} \
-		else \
-			update_list[need_update++] = idx; \
-	}
-
-#define FIND_COLORMAP_BB \
-	{ \
-		int bb; \
-	 \
-		if ((bb = b - bn) >= 0) \
-			FIND_COLORMAP_CHECK(rr | gg | bb) \
-	 \
-		if (bn && (bb = b + bn) < (1 << PALETTIZED_COLORMAP_SHIFT)) \
-			FIND_COLORMAP_CHECK(rr | gg | bb) \
-	}
-
-#define FIND_COLORMAP_GG \
-	{ \
-		int bn, gn, gg; \
-	 \
-		for (gn = 0; gn <= nn - rn; gn++) \
-		{ \
-			bn = nn - rn - gn; \
-	 \
-			if ((gg = g - gn) >= 0) \
-			{ \
-				gg <<= PALETTIZED_COLORMAP_SHIFT; \
-				FIND_COLORMAP_BB \
-			} \
-	 \
-			if (gn && (gg = g + gn) < (1 << PALETTIZED_COLORMAP_SHIFT)) \
-			{ \
-				gg <<= PALETTIZED_COLORMAP_SHIFT; \
-				FIND_COLORMAP_BB \
-			} \
-		} \
-	}
-
-#define FIND_COLORMAP_RR \
-	{ \
-		int rn, rr; \
-	 \
-		for (rn = 0; rn <= nn; rn++) \
-		{ \
-			if ((rr = r - rn) >= 0) \
-			{ \
-				rr <<= 2 * PALETTIZED_COLORMAP_SHIFT; \
-				FIND_COLORMAP_GG \
-			} \
-	 \
-			if (rn && (rr = r + rn) < (1 << PALETTIZED_COLORMAP_SHIFT)) \
-			{ \
-				rr <<= 2 * PALETTIZED_COLORMAP_SHIFT; \
-				FIND_COLORMAP_GG \
-			} \
-		} \
-	}
-
-#define FIND_COLORMAP \
-	{ \
-		int nn; \
-	 \
-		for (nn = 1; nn < (1 << (3 * PALETTIZED_COLORMAP_SHIFT)); nn++) \
-			FIND_COLORMAP_RR \
-	}
-
-	static UINT16 update_list[1 << (3 * PALETTIZED_COLORMAP_SHIFT)];
-	int need_update = 0;
-	UINT8 r, g, b;
-
-	FIND_COLORMAP_CHECK(idx)
-
-	r = idx >> (2 * PALETTIZED_COLORMAP_SHIFT);
-	g = idx >> PALETTIZED_COLORMAP_SHIFT;
-	b = idx;
-
-	r &= (1 << PALETTIZED_COLORMAP_SHIFT) - 1;
-	g &= (1 << PALETTIZED_COLORMAP_SHIFT) - 1;
-	b &= (1 << PALETTIZED_COLORMAP_SHIFT) - 1;
-
-	FIND_COLORMAP
-
-#undef FIND_COLORMAP
-#undef FIND_COLORMAP_RR
-#undef FIND_COLORMAP_GG
-#undef FIND_COLORMAP_BB
-#undef FIND_COLORMAP_CHECK
-
-	return 0;
-}
-
-
-/*-------------------------------------------------
-	index for palettized_colormap
--------------------------------------------------*/
-
-INLINE int get_colormap_index_by_rgb(UINT8 r, UINT8 g, UINT8 b)
-{
-	return (  ((r >> (8 - PALETTIZED_COLORMAP_SHIFT)) << (2 * PALETTIZED_COLORMAP_SHIFT)) |
-	          ((g >> (8 - PALETTIZED_COLORMAP_SHIFT)) << PALETTIZED_COLORMAP_SHIFT) |
-	           (b >> (8 - PALETTIZED_COLORMAP_SHIFT))  );
-}
-
-
-INLINE int get_colormap_index(rgb_t color)
-{
-	return get_colormap_index_by_rgb(RGB_RED(color), RGB_GREEN(color), RGB_BLUE(color));
-}
-
-
-/*-------------------------------------------------
-	update dirty palettized_colormap
--------------------------------------------------*/
-
-void update_palettemap(void)
-{
-	int i;
-	int colors = total_colors_with_ui;
-
-	black_pen = uifont_colortable[FONT_COLOR_BLANK];
-	white_pen = uifont_colortable[FONT_COLOR_NORMAL];
-
-#ifdef TRANS_UI
-	if (trans_colors == (1 << (3 * PALETTIZED_COLORMAP_SHIFT)))
-		return;
-
-	colors += trans_colors;
-#endif /* TRANS_UI */
-
-	if (!colormap_dirty || !palettized_colormap)
-		return;
-
-	colormap_dirty = 0;
-
-	memset(palettized_colormap_index, -1, colors * sizeof palettized_colormap_index[0]);
-	memset(palettized_colormap, -1, (1 << (3 * PALETTIZED_COLORMAP_SHIFT)) * sizeof palettized_colormap[0]);
-
-	for (i = colors - 1; i >= 0; i--)
-	{
-		int idx = get_colormap_index(adjusted_palette[i]);
-
-		palettized_colormap_index[i] = idx;
-		palettized_colormap[idx] = i;
-	}
-
-	i = 65534 - total_colors;
-	if (i < 0)
-		i = 0;
-	for (; i < MAX_COLORTABLE; i++)
-		uifont_colortable[i] =
-		    find_near_palette_by_index(palettized_colormap_index[total_colors + i]);
-
-	black_pen = uifont_colortable[FONT_COLOR_BLANK];
-	white_pen = uifont_colortable[FONT_COLOR_NORMAL];
-}
-
-
-#ifdef TRANS_UI
-/*-------------------------------------------------
-	draw the transparent box and related
--------------------------------------------------*/
-
-static void fillbitmap_ts_x(mame_bitmap *dest, int sx, int ex, int sy, int ey, int yy)
-{
-	int temp = yy;
-	int y;
-
-	switch (colormode)
-	{
-	case DIRECT_15BIT:
-		for (y = sy;y <= ey;y++)
-		{
-			UINT16 *sp = (UINT16 *)dest->line[y];
-			int x;
-
-			for (x = sx;x <= ex;x++,yy++)
-				draw_transparent16_RGB15(&sp[x], &sp[x],  yy);
-			yy = temp;
-		}
-		break;
-	case DIRECT_32BIT:
-		for (y = sy;y <= ey;y++)
-		{
-			UINT32 *sp = (UINT32 *)dest->line[y];
-			int x;
-
-			for (x = sx;x <= ex;x++,yy++)
-				draw_transparent32_RGB32(&sp[x], &sp[x],  yy);
-			yy = temp;
-		}
-		break;
-	case PALETTIZED_16BIT:
-		for (y = sy;y <= ey;y++)
-		{
-			UINT16 *sp = (UINT16 *)dest->line[y];
-			int x;
-
-			for (x = sx;x <= ex;x++,yy++)
-				draw_transparent16_PALETTE(&sp[x], &sp[x],  yy);
-			yy = temp;
-		}
-		break;
-	}
-}
-static void fillbitmap_ts_y(mame_bitmap *dest, int sx, int ex, int sy, int ey, int yy)
-{
-	int y;
-
-	switch (colormode)
-	{
-	case DIRECT_15BIT:
-		for (y = sy;y <= ey;y++,yy++)
-		{
-			UINT16 *sp = (UINT16 *)dest->line[y];
-			int x;
-
-			for (x = sx;x <= ex;x++)
-				draw_transparent16_RGB15(&sp[x], &sp[x], yy);
-		}
-		break;
-	case DIRECT_32BIT:
-		for (y = sy;y <= ey;y++,yy++)
-		{
-			UINT32 *sp = (UINT32 *)dest->line[y];
-			int x;
-
-			for (x = sx;x <= ex;x++)
-				draw_transparent32_RGB32(&sp[x], &sp[x], yy);
-		}
-		break;
-	case PALETTIZED_16BIT:
-		for (y = sy;y <= ey;y++,yy++)
-		{
-			UINT16 *sp = (UINT16 *)dest->line[y];
-			int x;
-
-			for (x = sx;x <= ex;x++)
-				draw_transparent16_PALETTE(&sp[x], &sp[x], yy);
-		}
-		break;
-	}
-}
-
-void fillbitmap_ts(mame_bitmap *dest,pen_t pen,const rectangle *clip)
-{
-	extern mame_bitmap *scrbitmap[];
-	mame_bitmap *bitmap = artwork_get_ui_bitmap();
-	int w = bitmap->width;
-	int h = bitmap->height;
-	int sx,sy,ex,ey;
-
-	if (!options.use_transui)
-	{
-		fillbitmap(dest, pen, clip);
-		return;
-	}
-
-	/* artwork */
-	if (dest != scrbitmap[0])
-	{
-		artwork_fillbitmap_ts(dest, clip);
-		return;
-	}
-
-	sx = 0;
-	ex = dest->width - 1;
-	sy = 0;
-	ey = dest->height - 1;
-
-	if (clip && sx < clip->min_x) sx = clip->min_x;
-	if (clip && ex > clip->max_x) ex = clip->max_x;
-	if (sx > ex) return;
-	if (clip && sy < clip->min_y) sy = clip->min_y;
-	if (clip && ey > clip->max_y) ey = clip->max_y;
-	if (sy > ey) return;
-
-	switch (Machine->ui_orientation & ORIENTATION_MASK)
-	{
-		case ORIENTATION_SWAP_XY:
-		case ORIENTATION_SWAP_XY | ORIENTATION_FLIP_Y:
-			fillbitmap_ts_x(dest, sx, ex, sy, ey, sx);
-			break;
-		case ORIENTATION_SWAP_XY | ORIENTATION_FLIP_X:
-		case ORIENTATION_SWAP_XY | ORIENTATION_FLIP_X | ORIENTATION_FLIP_Y:
-			fillbitmap_ts_x(dest, sx, ex, sy, ey, w - ex - 1);
-			break;
-		case ORIENTATION_FLIP_Y:
-		case ORIENTATION_FLIP_Y | ORIENTATION_FLIP_X:
-			fillbitmap_ts_y(dest, sx, ex, sy, ey,  h - ey - 1);
-			break;
-		default:
-			fillbitmap_ts_y(dest, sx, ex, sy, ey, sy);
-			break;
-	}
-}
-#endif /* TRANS_UI */
-#endif /* USE_PALETTE_MAP */
 
 
 
@@ -899,20 +543,8 @@ void palette_set_highlight_method(int method)
 
 static void palette_alloc(void)
 {
-	int max_total_colors = total_colors + MAX_COLORTABLE;
+	int max_total_colors = total_colors + 2;
 	int i;
-
-#ifdef TRANS_UI
-	if (options.use_transui && colormode == PALETTIZED_16BIT && max_total_colors < 65534)
-	{
-		trans_colors = 65534 - max_total_colors;
-		if (trans_colors > (1 << (3 * PALETTIZED_COLORMAP_SHIFT)))
-			trans_colors = 1 << (3 * PALETTIZED_COLORMAP_SHIFT);
-		max_total_colors += trans_colors;
-	}
-	else
-		trans_colors = 0;
-#endif /* TRANS_UI */
 
 	/* allocate memory for the raw game palette */
 	game_palette = auto_malloc(max_total_colors * sizeof(game_palette[0]));
@@ -968,33 +600,6 @@ static void palette_alloc(void)
 		Machine->game_colortable = NULL;
 		Machine->remapped_colortable = Machine->pens;	/* straight 1:1 mapping from palette to colortable */
 	}
-
-#ifdef USE_PALETTE_MAP
-	if (colormode == PALETTIZED_16BIT)
-	{
-#ifdef TRANS_UI
-		if (options.use_transui || max_total_colors > 65534)
-#else /* TRANS_UI */
-		if (max_total_colors > 65534)
-#endif /* TRANS_UI */
-		{
-			palettized_colormap = auto_malloc((1 << (3 * PALETTIZED_COLORMAP_SHIFT)) * sizeof palettized_colormap[0]);
-			memset(palettized_colormap, -1, (1 << (3 * PALETTIZED_COLORMAP_SHIFT)) * sizeof palettized_colormap[0]);
-
-			palettized_colormap_index = auto_malloc(max_total_colors * sizeof palettized_colormap_index[0]);
-
-			colormap_dirty = 1;
-			memset(palettized_colormap_index, -1, max_total_colors * sizeof palettized_colormap_index[0]);
-			memset(palettized_colormap, -1, (1 << (3 * PALETTIZED_COLORMAP_SHIFT)) * sizeof palettized_colormap[0]);
-		}
-		else
-		{
-			palettized_colormap = NULL;
-			palettized_colormap_index = NULL;
-			colormap_dirty = 0;
-		}
-	}
-#endif /* USE_PALETTE_MAP */
 
 #if defined(MAME_DEBUG) && !defined(NEW_DEBUGGER)
 	/* allocate memory for the debugger pens */
@@ -1102,85 +707,6 @@ void palette_config(void)
 {
 	int i;
 
-#ifndef NEW_RENDER
-	if (colormode != PALETTIZED_16BIT)
-	{
-		UINT32 temp;
-
-		/* first convert the RGB components we got back into shifts */
-		for (temp = direct_rgb_components[0], direct_rgb_rshift = 0; !(temp & 1); temp >>= 1)
-			direct_rgb_rshift++;
-		for (temp = direct_rgb_components[1], direct_rgb_gshift = 0; !(temp & 1); temp >>= 1)
-			direct_rgb_gshift++;
-		for (temp = direct_rgb_components[2], direct_rgb_bshift = 0; !(temp & 1); temp >>= 1)
-			direct_rgb_bshift++;
-	}
-#endif
-
-#ifdef TRANS_UI
-	if (options.use_transui)
-	{
-		int flipy = Machine->ui_orientation & ORIENTATION_FLIP_Y;
-		int transparency = options.ui_transparency;
-		mame_bitmap *bitmap = artwork_get_ui_bitmap();
-		int w = bitmap->width;
-		int h = bitmap->height;
-		int y;
-
-		if (Machine->ui_orientation & ORIENTATION_SWAP_XY)
-		{
-			int t = h;
-			h = w;
-			w = t;
-			flipy = Machine->ui_orientation & ORIENTATION_FLIP_X;
-		}
-
-		for (i = 0; i < 3; i++)
-		{
-			ui_transparent_background[i] = auto_malloc(h * sizeof ui_transparent_background[i][0] * 256);
-
-			if (!ui_transparent_background[i])
-				return 1;
-
-			for (y = 0; y < h; y++)
-			{
-				int tc;
-				int c;
-#ifdef UI_COLOR_DISPLAY
-				int n = flipy ? h - y : y;
-				double gradual;
-
-				if (n < h * 0.10)
-					gradual = 1.0;
-				else if (n < h * 0.90)
-					gradual = (h * 0.80  - (n - h * 0.10)) / (h * 0.80);
-				else
-					gradual = 0.0;
-
-				tc = options.uicolortable[SYSTEM_COLOR_BACKGROUND][i] * gradual;
-#else /* UI_COLOR_DISPLAY */
-				tc = 0;
-#endif /* UI_COLOR_DISPLAY */
-				for (c = 0; c < 256; c++)
-				{
-					int nn = (y << 8) | c;
-					int col = c;
-
-					if (colormode == DIRECT_15BIT)
-					{
-						col = c & 0x1f;
-						tc >>= 3;
-						ui_transparent_background[i][nn] = (transparency * (tc - col) / 256 + col) & 0x1f;
-					}
-					else
-						ui_transparent_background[i][nn] = transparency * (tc - col) / 256 + col;
-
-				}
-			}
-		}
-	}
-#endif /* TRANS_UI */
-
 	/* recompute the default palette and initalize the color correction table */
 	recompute_adjusted_palette();
 
@@ -1199,23 +725,7 @@ void palette_config(void)
 				palette_set_color(i, RGB_RED(game_palette[i]), RGB_GREEN(game_palette[i]), RGB_BLUE(game_palette[i]));
 
 			/* map the UI pens */
-#ifdef UI_COLOR_DISPLAY
-			for (i = 0; i < MAX_COLORTABLE; i++)
-			{
-				game_palette[total_colors + i] =  adjusted_palette[total_colors + i] =
-				     MAKE_RGB(options.uicolortable[i][0], options.uicolortable[i][1], options.uicolortable[i][2]);
-
-				if (palettized_colormap_index)
-					palettized_colormap_index[total_colors + i] = get_colormap_index(adjusted_palette[total_colors + i]);
-
-				if (total_colors + i < 65534)
-				{
-					uifont_colortable[i] = total_colors + i;
-					total_colors_with_ui++;
-				}
-			}
-#else /* UI_COLOR_DISPLAY */
-			if (total_colors_with_ui + MAX_COLORTABLE <= 65534)
+			if (total_colors_with_ui <= 65534)
 			{
 				total_colors_with_ui += 2;
 				black_pen = total_colors + 0;
@@ -1223,28 +733,11 @@ void palette_config(void)
 			}
 			else
 			{
-				mark_pen_dirty(black_pen, game_palette[black_pen] = adjusted_palette[black_pen] = MAKE_RGB(0x00,0x00,0x00));
-				mark_pen_dirty(white_pen, game_palette[white_pen] = adjusted_palette[white_pen] = MAKE_RGB(0xff,0xff,0xff));
 				black_pen = 0;
 				white_pen = 65535;
 			}
-#endif /* UI_COLOR_DISPLAY */
-
-#ifdef TRANS_UI
-			for (i = 0; i < trans_colors; i++)
-			{
-				int idx = (i / (double)(trans_colors - 1)) * ((1 << (3 * PALETTIZED_COLORMAP_SHIFT)) - 1);
-
-				UINT8 r = (idx >> (2 * PALETTIZED_COLORMAP_SHIFT)) << (8 - PALETTIZED_COLORMAP_SHIFT);
-				UINT8 g = (idx >> (PALETTIZED_COLORMAP_SHIFT)) << (8 - PALETTIZED_COLORMAP_SHIFT);
-				UINT8 b = idx << (8 - PALETTIZED_COLORMAP_SHIFT);
-				rgb_t color = MAKE_RGB(r, g, b);
-
-				adjusted_palette[total_colors_with_ui + i] = game_palette[total_colors_with_ui + i] = color;
-				palettized_colormap_index[total_colors_with_ui + i] = idx;
-				palettized_colormap[idx] = total_colors_with_ui + i;
-			}
-#endif /* TRANS_UI */
+			mark_pen_dirty(black_pen, game_palette[black_pen] = adjusted_palette[black_pen] = MAKE_RGB(0x00,0x00,0x00));
+			mark_pen_dirty(white_pen, game_palette[white_pen] = adjusted_palette[white_pen] = MAKE_RGB(0xff,0xff,0xff));
 			break;
 		}
 
@@ -1256,15 +749,8 @@ void palette_config(void)
 				Machine->pens[i] = rgb_to_direct15(game_palette[i]);
 
 			/* map the UI pens */
-#ifdef UI_COLOR_DISPLAY
-			for (i = 0; i < MAX_COLORTABLE; i++)
-				uifont_colortable[i] = rgb_to_direct15(MAKE_RGB(options.uicolortable[i][0],
-				                                                options.uicolortable[i][1],
-				                                                options.uicolortable[i][2]));
-#else /* UI_COLOR_DISPLAY */
 			black_pen = rgb_to_direct15(MAKE_RGB(0x00,0x00,0x00));
 			white_pen = rgb_to_direct15(MAKE_RGB(0xff,0xff,0xff));
-#endif /* UI_COLOR_DISPLAY */
 			break;
 		}
 
@@ -1275,15 +761,8 @@ void palette_config(void)
 				Machine->pens[i] = rgb_to_direct32(game_palette[i]);
 
 			/* map the UI pens */
-#ifdef UI_COLOR_DISPLAY
-			for (i = 0; i < MAX_COLORTABLE; i++)
-				uifont_colortable[i] = rgb_to_direct32(MAKE_RGB(options.uicolortable[i][0],
-				                                                options.uicolortable[i][1],
-				                                                options.uicolortable[i][2]));
-#else /* UI_COLOR_DISPLAY */
 			black_pen = rgb_to_direct32(MAKE_RGB(0x00,0x00,0x00));
 			white_pen = rgb_to_direct32(MAKE_RGB(0xff,0xff,0xff));
-#endif /* UI_COLOR_DISPLAY */
 			break;
 		}
 	}
@@ -1314,12 +793,8 @@ int palette_get_total_colors_with_ui(void)
 		result += Machine->drv->total_colors;
 	if (Machine->drv->video_attributes & VIDEO_HAS_HIGHLIGHTS && !(colormode & DIRECT_RGB))
 		result += Machine->drv->total_colors;
-#ifdef TRANS_UI
-	result += trans_colors;
-#endif /* TRANS_UI */
-	result += MAX_COLORTABLE;
-	if (result > 65534)
-		return 65534;
+	if (result <= 65534)
+		result += 2;
 	return result;
 }
 
@@ -1345,10 +820,6 @@ static void internal_modify_single_pen(pen_t pen, rgb_t color, int pen_bright)
 	adjusted_color = adjust_palette_entry(color, pen_bright);
 	if (adjusted_color != adjusted_palette[pen])
 	{
-#ifdef USE_PALETTE_MAP
-		colormap_dirty = 1;
-#endif /* USE_PALETTE_MAP */
-
 		/* change the adjusted palette entry */
 		adjusted_palette[pen] = adjusted_color;
 		adjusted_palette_dirty = 1;

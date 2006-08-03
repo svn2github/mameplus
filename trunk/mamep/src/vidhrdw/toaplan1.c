@@ -208,7 +208,7 @@ VIDEO_START( rallybik )
 		return 1;
 	}
 
-	num_tiles = (Machine->drv->screen[0].maxwidth/8+1)*(Machine->drv->screen[0].maxheight/8);
+	num_tiles = (Machine->screen[0].width/8+1)*(Machine->screen[0].height/8);
 
 	spriteram_offs = tileram_offs = 0;
 
@@ -227,9 +227,9 @@ VIDEO_START( rallybik )
 
 VIDEO_START( toaplan1 )
 {
-	tmpbitmap1 = auto_bitmap_alloc(Machine->drv->screen[0].maxwidth,Machine->drv->screen[0].maxheight);
-	tmpbitmap2 = auto_bitmap_alloc(Machine->drv->screen[0].maxwidth,Machine->drv->screen[0].maxheight);
-	tmpbitmap3 = auto_bitmap_alloc(Machine->drv->screen[0].maxwidth,Machine->drv->screen[0].maxheight);
+	tmpbitmap1 = auto_bitmap_alloc(Machine->screen[0].width,Machine->screen[0].height);
+	tmpbitmap2 = auto_bitmap_alloc(Machine->screen[0].width,Machine->screen[0].height);
+	tmpbitmap3 = auto_bitmap_alloc(Machine->screen[0].width,Machine->screen[0].height);
 
 	spriteram16 = auto_malloc(TOAPLAN1_SPRITERAM_SIZE);
 	memset(spriteram16,0,TOAPLAN1_SPRITERAM_SIZE);
@@ -247,7 +247,7 @@ VIDEO_START( toaplan1 )
 		return 1;
 	}
 
-	num_tiles = (Machine->drv->screen[0].maxwidth/8+1)*(Machine->drv->screen[0].maxheight/8);
+	num_tiles = (Machine->screen[0].width/8+1)*(Machine->screen[0].height/8);
 
 	spriteram_offs = tileram_offs = 0;
 
@@ -1102,8 +1102,8 @@ if ( toaplan_dbg_sprite_only == 0 ){
 			int xpos,ypos;
 
 			if ( flip ){
-				xpos = (512 - tinfo->xpos) - 8 - (512 - Machine->drv->screen[0].maxwidth);
-				ypos = (512 - tinfo->ypos) - 8 - (512 - Machine->drv->screen[0].maxheight);
+				xpos = (512 - tinfo->xpos) - 8 - (512 - Machine->screen[0].width);
+				ypos = (512 - tinfo->ypos) - 8 - (512 - Machine->screen[0].height);
 		}
 			else{
 				xpos = tinfo->xpos;
@@ -1160,8 +1160,8 @@ static void zerowing_render (mame_bitmap *bitmap)
 			int xpos,ypos;
 
 			if ( flip ){
-				xpos = (512 - tinfo->xpos) - 8 - (512 - Machine->drv->screen[0].maxwidth);
-				ypos = (512 - tinfo->ypos) - 8 - (512 - Machine->drv->screen[0].maxheight);
+				xpos = (512 - tinfo->xpos) - 8 - (512 - Machine->screen[0].width);
+				ypos = (512 - tinfo->ypos) - 8 - (512 - Machine->screen[0].height);
 			}
 			else{
 				xpos = tinfo->xpos;
@@ -1265,8 +1265,8 @@ if( toaplan_dbg_priority != 0 ){
 			int xpos,ypos;
 
 			if ( flip ){
-				xpos = (512 - tinfo->xpos) - 8 - (512 - Machine->drv->screen[0].maxwidth);
-				ypos = (512 - tinfo->ypos) - 8 - (512 - Machine->drv->screen[0].maxheight);
+				xpos = (512 - tinfo->xpos) - 8 - (512 - Machine->screen[0].width);
+				ypos = (512 - tinfo->ypos) - 8 - (512 - Machine->screen[0].height);
 			}
 			else{
 				xpos = tinfo->xpos;
@@ -1331,8 +1331,8 @@ static void rallybik_render (mame_bitmap *bitmap)
 			}else{
 				/* BG */
 				if ( flip ){
-					xpos = (512 - tinfo->xpos) - 8 - (512 - Machine->drv->screen[0].maxwidth);
-					ypos = (512 - tinfo->ypos) - 8 - (512 - Machine->drv->screen[0].maxheight);
+					xpos = (512 - tinfo->xpos) - 8 - (512 - Machine->screen[0].width);
+					ypos = (512 - tinfo->ypos) - 8 - (512 - Machine->screen[0].height);
 				}
 				else{
 					xpos = tinfo->xpos;
