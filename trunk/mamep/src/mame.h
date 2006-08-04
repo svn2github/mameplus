@@ -18,7 +18,6 @@
 #include "inptport.h"
 #include "uipal.h"
 #include "uilang.h"
-#include "uifont.h"
 
 #ifdef MESS
 #include "device.h"
