@@ -24,19 +24,13 @@
 
 /* preferred font height; use ui_get_line_height() to get actual height */
 //#define UI_TARGET_FONT_HEIGHT		(1.0f / 25.0f)
-#define UI_TARGET_FONT_HEIGHT		ui_font_height
 
 /* width of lines drawn in the UI */
 #define UI_LINE_WIDTH			(1.0f / (float)ui_screen_height)
 
 /* border between outlines and inner text on left/right and top/bottom sides */
-#ifdef UI_COLOR_DISPLAY
 #define UI_BOX_LR_BORDER		3
 #define UI_BOX_TB_BORDER		3
-#else /* UI_COLOR_DISPLAY */
-#define UI_BOX_LR_BORDER		(UI_TARGET_FONT_HEIGHT * 0.25f)
-#define UI_BOX_TB_BORDER		(UI_TARGET_FONT_HEIGHT * 0.25f)
-#endif /* UI_COLOR_DISPLAY */
 
 /* handy colors */
 #define ARGB_WHITE				MAKE_ARGB(0xff,0xff,0xff,0xff)
@@ -121,7 +115,7 @@ void ui_draw_outlined_box(float x0, float y0, float x1, float y1, rgb_t backcolo
 void ui_draw_text(const char *buf, int x, int y);
 
 /* full-on text draw with all the options */
-void ui_draw_text_full(const char *buf, int x, int y, int wrapwidth, int offset, int maxlines, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, int *totalwidth, int *totalheight);
+void ui_draw_text_full(const char *origs, int x, int y, int wrapwidth, int offset, int maxlines, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, int *totalwidth, int *totalheight);
 
 /* draw a multi-line message with a box around it */
 void ui_draw_text_box(const char *text, int justify, float xpos, float ypos, rgb_t backcolor);
@@ -151,9 +145,7 @@ void ui_set_visible_area(int xmin, int ymin, int xmax, int ymax);
 
 void ui_auto_pause(void);
 
-void ui_draw_message_window_scroll(const char *text);
 int ui_window_scroll_keys(void);
 
-extern float ui_font_height;
 extern int ui_screen_width, ui_screen_height;
 #endif	/* __USRINTRF_H__ */

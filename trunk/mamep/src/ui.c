@@ -73,6 +73,7 @@ struct _slider_state
 ***************************************************************************/
 
 #define UI_FONT_NAME			NULL
+#define UI_TARGET_FONT_HEIGHT		ui_font_height
 #define UI_SCALE_TO_INT_X(x)		((int)((float)(x) * ui_screen_width + 0.5f))
 #define UI_SCALE_TO_INT_Y(y)		((int)((float)(y) * ui_screen_height + 0.5f))
 #define UI_UNSCALE_TO_FLOAT_X(x)	((float)(x) / (float)ui_screen_width)
@@ -108,7 +109,7 @@ static rgb_t ui_bgcolor;
 
 static render_font *ui_font;
 
-float ui_font_height;
+static float ui_font_height;
 int ui_screen_width, ui_screen_height;
 
 static int multiline_text_box_visible_lines;
@@ -196,14 +197,13 @@ static INT32 slider_flicker(INT32 newval, char *buffer, int arg);
 
 
 
-static void create_font(void);
-
-
 static void build_bgtexture(void);
 static void free_bgtexture(void);
 
 #define add_line(x0,y0,x1,y1,color)	render_ui_add_line(UI_UNSCALE_TO_FLOAT_X(x0), UI_UNSCALE_TO_FLOAT_Y(y0), UI_UNSCALE_TO_FLOAT_X(x1), UI_UNSCALE_TO_FLOAT_Y(y1), UI_LINE_WIDTH, ui_get_rgb_color(color), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA))
 #define add_char(x,y,ch,color)		render_ui_add_char(UI_UNSCALE_TO_FLOAT_X(x), UI_UNSCALE_TO_FLOAT_Y(y), UI_TARGET_FONT_HEIGHT, render_get_ui_aspect(), ui_get_rgb_color(color), ui_font, ch)
+
+static void add_filled_box_color(int x1, int y1, int x2, int y2, rgb_t color);
 
 #ifdef USE_SHOW_INPUT_LOG
 static void add_filled_box_noedge(int x0, int y0, int x1, int y1);
@@ -602,324 +602,6 @@ void ui_draw_outlined_box(float x0, float y0, float x1, float y1, rgb_t backcolo
 	render_ui_add_line(x1 - hw, y0 + hw, x1 - hw, y1 - hw, UI_LINE_WIDTH, ARGB_WHITE, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 	render_ui_add_line(x1 - hw, y1 - hw, x0 + hw, y1 - hw, UI_LINE_WIDTH, ARGB_WHITE, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 	render_ui_add_line(x0 + hw, y1 - hw, x0 + hw, y0 + hw, UI_LINE_WIDTH, ARGB_WHITE, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-}
-
-
-void add_fill(int x0, int y0, int x1, int y1, rgb_t color)
-{
-	x1++;
-	y1++;
-
-	if (color == UI_FILLCOLOR)
-		render_ui_add_quad(UI_UNSCALE_TO_FLOAT_X(x0), UI_UNSCALE_TO_FLOAT_Y(y0), UI_UNSCALE_TO_FLOAT_X(x1), UI_UNSCALE_TO_FLOAT_Y(y1), MAKE_ARGB(0xff, 0xff, 0xff, 0xff), bgtexture, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-	else
-		render_ui_add_rect(UI_UNSCALE_TO_FLOAT_X(x0), UI_UNSCALE_TO_FLOAT_Y(y0), UI_UNSCALE_TO_FLOAT_X(x1), UI_UNSCALE_TO_FLOAT_Y(y1), ui_get_rgb_color(color), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-}
-
-
-static void add_filled_box_color(int x1, int y1, int x2, int y2, rgb_t color)
-{
-#ifdef UI_COLOR_DISPLAY
-	add_fill(x1 + 3, y1 + 3, x2 - 3, y2 - 3, color);
-
-	/* top edge */
-	add_line(x1,     y1,     x2,     y1,     SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x1 + 1, y1 + 1, x2 - 1, y1 + 1, SYSTEM_COLOR_FRAMEMEDIUM);
-	add_line(x1 + 2, y1 + 2, x2 - 2, y1 + 2, SYSTEM_COLOR_FRAMEDARK);
-
-	/* bottom edge */
-	add_line(x1 + 3, y2 - 2, x2 - 2, y2 - 2, SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x1 + 1, y2 - 1, x2 - 1, y2 - 1, SYSTEM_COLOR_FRAMEMEDIUM);
-	add_line(x1,     y2,     x2,     y2,     SYSTEM_COLOR_FRAMEDARK);
-
-	/* left edge */
-	add_line(x1,     y1 + 1, x1,     y2 - 1, SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x1 + 1, y1 + 2, x1 + 1, y2 - 2, SYSTEM_COLOR_FRAMEMEDIUM);
-	add_line(x1 + 2, y1 + 3, x1 + 2, y2 - 2, SYSTEM_COLOR_FRAMEDARK);
-
-	/* right edge */
-	add_line(x2 - 2, y1 + 3, x2 - 2, y2 - 3, SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x2 - 1, y1 + 2, x2 - 1, y2 - 2, SYSTEM_COLOR_FRAMEMEDIUM);
-	add_line(x2,     y1 + 1, x2,     y2 - 1, SYSTEM_COLOR_FRAMEDARK);
-#else /* UI_COLOR_DISPLAY */
-	add_fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, color);
-
-	add_line(x1, y1, x2, y1, ARGB_WHITE);
-	add_line(x2, y1, x2, y2, ARGB_WHITE);
-	add_line(x2, y2, x1, y2, ARGB_WHITE);
-	add_line(x1, y2, x1, y1, ARGB_WHITE);
-#endif /* UI_COLOR_DISPLAY */
-}
-
-
-void add_filled_box(int x0, int y0, int x1, int y1)
-{
-	add_filled_box_color(x0, y0, x1, y1, ui_bgcolor);
-}
-
-
-/*-------------------------------------------------
-    ui_popup - popup a message for a standard
-    amount of time
--------------------------------------------------*/
-
-void CLIB_DECL ui_popup(const char *text, ...)
-{
-	int seconds;
-	va_list arg;
-
-	/* extract the text */
-	va_start(arg,text);
-	vsprintf(messagebox_text, text, arg);
-	messagebox_backcolor = UI_FILLCOLOR;
-	va_end(arg);
-
-	/* set a timer */
-	seconds = strlen(messagebox_text) / 40 + 2;
-	popup_text_end = osd_cycles() + osd_cycles_per_second() * seconds;
-}
-
-
-/*-------------------------------------------------
-    ui_popup_time - popup a message for a specific
-    amount of time
--------------------------------------------------*/
-
-void CLIB_DECL ui_popup_time(int seconds, const char *text, ...)
-{
-	va_list arg;
-
-	/* extract the text */
-	va_start(arg,text);
-	vsprintf(messagebox_text, text, arg);
-	messagebox_backcolor = UI_FILLCOLOR;
-	va_end(arg);
-
-	/* set a timer */
-	popup_text_end = osd_cycles() + osd_cycles_per_second() * seconds;
-}
-
-
-/*-------------------------------------------------
-    ui_show_fps_temp - show the FPS counter for
-    a specific period of time
--------------------------------------------------*/
-
-void ui_show_fps_temp(double seconds)
-{
-	if (!showfps)
-		showfps_end = osd_cycles() + seconds * osd_cycles_per_second();
-}
-
-
-/*-------------------------------------------------
-    ui_set_show_fps - show/hide the FPS counter
--------------------------------------------------*/
-
-void ui_set_show_fps(int show)
-{
-	showfps = show;
-	if (!show)
-	{
-		showfps = 0;
-		showfps_end = 0;
-	}
-}
-
-
-/*-------------------------------------------------
-    ui_get_show_fps - return the current FPS
-    counter visibility state
--------------------------------------------------*/
-
-int ui_get_show_fps(void)
-{
-	return showfps || (showfps_end != 0);
-}
-
-
-/*-------------------------------------------------
-    ui_set_show_profiler - show/hide the profiler
--------------------------------------------------*/
-
-void ui_set_show_profiler(int show)
-{
-	if (show)
-	{
-		show_profiler = TRUE;
-		profiler_start();
-	}
-	else
-	{
-		show_profiler = FALSE;
-		profiler_stop();
-	}
-}
-
-
-/*-------------------------------------------------
-    ui_get_show_profiler - return the current
-    profiler visibility state
--------------------------------------------------*/
-
-int ui_get_show_profiler(void)
-{
-	return show_profiler;
-}
-
-
-/*-------------------------------------------------
-    ui_is_menu_active - return TRUE if the menu
-    UI handler is active
--------------------------------------------------*/
-
-int ui_is_menu_active(void)
-{
-	return (ui_handler_callback == ui_menu_ui_handler);
-}
-
-
-/*-------------------------------------------------
-    ui_is_slider_active - return TRUE if the slider
-    UI handler is active
--------------------------------------------------*/
-
-int ui_is_slider_active(void)
-{
-	return (ui_handler_callback == handler_slider);
-}
-
-
-
-/***************************************************************************
-    TEXT GENERATORS
-***************************************************************************/
-
-/*-------------------------------------------------
-    sprintf_font_warning - print the warning
-    text about font to the given buffer
--------------------------------------------------*/
-
-static int sprintf_font_warning(char *buffer)
-{
-	static const char *font_warning_string =
-		"Local font file is not installed. "
-		"You must install CJK font into font directory first.\n\n"
-		"Please download from:\n"
-		"http://mameplus.emu-france.com/\n\n"
-		"Press ESC to exit, type OK to continue.";
-
-	strcpy(buffer, font_warning_string);
-	return strlen(buffer);
-}
-
-/*-------------------------------------------------
-    sprintf_disclaimer - print the disclaimer
-    text to the given buffer
--------------------------------------------------*/
-
-static int sprintf_disclaimer(char *buffer)
-{
-	char *bufptr = buffer;
-	bufptr += sprintf(bufptr, "%s\n\n", ui_getstring(UI_copyright1));
-	bufptr += sprintf(bufptr, ui_getstring(UI_copyright2),
-		options.use_lang_list ? _LST(Machine->gamedrv->description) : Machine->gamedrv->description);
-	bufptr += sprintf(bufptr, "\n\n%s", ui_getstring(UI_copyright3));
-	return bufptr - buffer;
-}
-
-
-/*-------------------------------------------------
-    sprintf_warnings - print the warning flags
-    text to the given buffer
--------------------------------------------------*/
-
-static int sprintf_warnings(char *buffer)
-{
-#define WARNING_FLAGS (	GAME_NOT_WORKING | \
-						GAME_UNEMULATED_PROTECTION | \
-						GAME_WRONG_COLORS | \
-						GAME_IMPERFECT_COLORS | \
-						GAME_NO_SOUND |  \
-						GAME_IMPERFECT_SOUND |  \
-						GAME_IMPERFECT_GRAPHICS | \
-						GAME_NO_COCKTAIL)
-	char *bufptr = buffer;
-	int i;
-
-	/* if no warnings, nothing to return */
-	if (rom_load_warnings() == 0 && !(Machine->gamedrv->flags & WARNING_FLAGS))
-		return 0;
-
-	/* add a warning if any ROMs were loaded with warnings */
-	if (rom_load_warnings() > 0)
-	{
-		bufptr += sprintf(bufptr, "%s\n", ui_getstring(UI_incorrectroms));
-		if (Machine->gamedrv->flags & WARNING_FLAGS)
-			*bufptr++ = '\n';
-	}
-
-	/* if we have at least one warning flag, print the general header */
-	if (Machine->gamedrv->flags & WARNING_FLAGS)
-	{
-		bufptr += sprintf(bufptr, "%s\n\n", ui_getstring(UI_knownproblems));
-
-		/* add one line per warning flag */
-#ifdef MESS
-		if (Machine->gamedrv->flags & GAME_COMPUTER)
-			bufptr += sprintf(bufptr, "%s\n\n%s\n", ui_getstring(UI_comp1), ui_getstring(UI_comp2));
-#endif
-		if (Machine->gamedrv->flags & GAME_IMPERFECT_COLORS)
-			bufptr += sprintf(bufptr, "%s\n", ui_getstring(UI_imperfectcolors));
-		if (Machine->gamedrv->flags & GAME_WRONG_COLORS)
-			bufptr += sprintf(bufptr, "%s\n", ui_getstring(UI_wrongcolors));
-		if (Machine->gamedrv->flags & GAME_IMPERFECT_GRAPHICS)
-			bufptr += sprintf(bufptr, "%s\n", ui_getstring(UI_imperfectgraphics));
-		if (Machine->gamedrv->flags & GAME_IMPERFECT_SOUND)
-			bufptr += sprintf(bufptr, "%s\n", ui_getstring(UI_imperfectsound));
-		if (Machine->gamedrv->flags & GAME_NO_SOUND)
-			bufptr += sprintf(bufptr, "%s\n", ui_getstring(UI_nosound));
-		if (Machine->gamedrv->flags & GAME_NO_COCKTAIL)
-			bufptr += sprintf(bufptr, "%s\n", ui_getstring(UI_nococktail));
-
-		/* if there's a NOT WORKING or UNEMULATED PROTECTION warning, make it stronger */
-		if (Machine->gamedrv->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION))
-		{
-			const game_driver *maindrv;
-			const game_driver *clone_of;
-			int foundworking;
-
-			/* add the strings for these warnings */
-			if (Machine->gamedrv->flags & GAME_NOT_WORKING)
-				bufptr += sprintf(bufptr, "%s\n", ui_getstring(UI_brokengame));
-			if (Machine->gamedrv->flags & GAME_UNEMULATED_PROTECTION)
-				bufptr += sprintf(bufptr, "%s\n", ui_getstring(UI_brokenprotection));
-
-			/* find the parent of this driver */
-			clone_of = driver_get_clone(Machine->gamedrv);
-			if (clone_of != NULL && !(clone_of->flags & NOT_A_DRIVER))
- 				maindrv = clone_of;
-			else
-				maindrv = Machine->gamedrv;
-
-			/* scan the driver list for any working clones and add them */
-			foundworking = 0;
-			for (i = 0; drivers[i] != NULL; i++)
-				if (drivers[i] == maindrv || driver_get_clone(drivers[i]) == maindrv)
-					if ((drivers[i]->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION)) == 0)
-					{
-						/* this one works, add a header and display the name of the clone */
-						if (foundworking == 0)
-							bufptr += sprintf(bufptr, "\n\n%s\n\n", ui_getstring(UI_workingclones));
-						bufptr += sprintf(bufptr, "%s\n", drivers[i]->name);
-						foundworking = 1;
-					}
-		}
-	}
-
-	/* add the 'press OK' string */
-	bufptr += sprintf(bufptr, "\n\n%s", ui_getstring(UI_typeok));
-	return bufptr - buffer;
 }
 
 
@@ -1355,6 +1037,271 @@ int ui_window_scroll_keys(void)
 	return 0;
 }
 
+/*-------------------------------------------------
+    ui_popup - popup a message for a standard
+    amount of time
+-------------------------------------------------*/
+
+void CLIB_DECL ui_popup(const char *text, ...)
+{
+	int seconds;
+	va_list arg;
+
+	/* extract the text */
+	va_start(arg,text);
+	vsprintf(messagebox_text, text, arg);
+	messagebox_backcolor = UI_FILLCOLOR;
+	va_end(arg);
+
+	/* set a timer */
+	seconds = strlen(messagebox_text) / 40 + 2;
+	popup_text_end = osd_cycles() + osd_cycles_per_second() * seconds;
+}
+
+
+/*-------------------------------------------------
+    ui_popup_time - popup a message for a specific
+    amount of time
+-------------------------------------------------*/
+
+void CLIB_DECL ui_popup_time(int seconds, const char *text, ...)
+{
+	va_list arg;
+
+	/* extract the text */
+	va_start(arg,text);
+	vsprintf(messagebox_text, text, arg);
+	messagebox_backcolor = UI_FILLCOLOR;
+	va_end(arg);
+
+	/* set a timer */
+	popup_text_end = osd_cycles() + osd_cycles_per_second() * seconds;
+}
+
+
+/*-------------------------------------------------
+    ui_show_fps_temp - show the FPS counter for
+    a specific period of time
+-------------------------------------------------*/
+
+void ui_show_fps_temp(double seconds)
+{
+	if (!showfps)
+		showfps_end = osd_cycles() + seconds * osd_cycles_per_second();
+}
+
+
+/*-------------------------------------------------
+    ui_set_show_fps - show/hide the FPS counter
+-------------------------------------------------*/
+
+void ui_set_show_fps(int show)
+{
+	showfps = show;
+	if (!show)
+	{
+		showfps = 0;
+		showfps_end = 0;
+	}
+}
+
+
+/*-------------------------------------------------
+    ui_get_show_fps - return the current FPS
+    counter visibility state
+-------------------------------------------------*/
+
+int ui_get_show_fps(void)
+{
+	return showfps || (showfps_end != 0);
+}
+
+
+/*-------------------------------------------------
+    ui_set_show_profiler - show/hide the profiler
+-------------------------------------------------*/
+
+void ui_set_show_profiler(int show)
+{
+	if (show)
+	{
+		show_profiler = TRUE;
+		profiler_start();
+	}
+	else
+	{
+		show_profiler = FALSE;
+		profiler_stop();
+	}
+}
+
+
+/*-------------------------------------------------
+    ui_get_show_profiler - return the current
+    profiler visibility state
+-------------------------------------------------*/
+
+int ui_get_show_profiler(void)
+{
+	return show_profiler;
+}
+
+
+/*-------------------------------------------------
+    ui_is_menu_active - return TRUE if the menu
+    UI handler is active
+-------------------------------------------------*/
+
+int ui_is_menu_active(void)
+{
+	return (ui_handler_callback == ui_menu_ui_handler);
+}
+
+
+/*-------------------------------------------------
+    ui_is_slider_active - return TRUE if the slider
+    UI handler is active
+-------------------------------------------------*/
+
+int ui_is_slider_active(void)
+{
+	return (ui_handler_callback == handler_slider);
+}
+
+
+
+/***************************************************************************
+    TEXT GENERATORS
+***************************************************************************/
+
+/*-------------------------------------------------
+    sprintf_font_warning - print the warning
+    text about font to the given buffer
+-------------------------------------------------*/
+
+static int sprintf_font_warning(char *buffer)
+{
+	static const char *font_warning_string =
+		"Local font file is not installed. "
+		"You must install CJK font into font directory first.\n\n"
+		"Please download from:\n"
+		"http://mameplus.emu-france.com/\n\n"
+		"Press ESC to exit, type OK to continue.";
+
+	strcpy(buffer, font_warning_string);
+	return strlen(buffer);
+}
+
+/*-------------------------------------------------
+    sprintf_disclaimer - print the disclaimer
+    text to the given buffer
+-------------------------------------------------*/
+
+static int sprintf_disclaimer(char *buffer)
+{
+	char *bufptr = buffer;
+	bufptr += sprintf(bufptr, "%s\n\n", ui_getstring(UI_copyright1));
+	bufptr += sprintf(bufptr, ui_getstring(UI_copyright2),
+		options.use_lang_list ? _LST(Machine->gamedrv->description) : Machine->gamedrv->description);
+	bufptr += sprintf(bufptr, "\n\n%s", ui_getstring(UI_copyright3));
+	return bufptr - buffer;
+}
+
+
+/*-------------------------------------------------
+    sprintf_warnings - print the warning flags
+    text to the given buffer
+-------------------------------------------------*/
+
+static int sprintf_warnings(char *buffer)
+{
+#define WARNING_FLAGS (	GAME_NOT_WORKING | \
+						GAME_UNEMULATED_PROTECTION | \
+						GAME_WRONG_COLORS | \
+						GAME_IMPERFECT_COLORS | \
+						GAME_NO_SOUND |  \
+						GAME_IMPERFECT_SOUND |  \
+						GAME_IMPERFECT_GRAPHICS | \
+						GAME_NO_COCKTAIL)
+	char *bufptr = buffer;
+	int i;
+
+	/* if no warnings, nothing to return */
+	if (rom_load_warnings() == 0 && !(Machine->gamedrv->flags & WARNING_FLAGS))
+		return 0;
+
+	/* add a warning if any ROMs were loaded with warnings */
+	if (rom_load_warnings() > 0)
+	{
+		bufptr += sprintf(bufptr, "%s\n", ui_getstring(UI_incorrectroms));
+		if (Machine->gamedrv->flags & WARNING_FLAGS)
+			*bufptr++ = '\n';
+	}
+
+	/* if we have at least one warning flag, print the general header */
+	if (Machine->gamedrv->flags & WARNING_FLAGS)
+	{
+		bufptr += sprintf(bufptr, "%s\n\n", ui_getstring(UI_knownproblems));
+
+		/* add one line per warning flag */
+#ifdef MESS
+		if (Machine->gamedrv->flags & GAME_COMPUTER)
+			bufptr += sprintf(bufptr, "%s\n\n%s\n", ui_getstring(UI_comp1), ui_getstring(UI_comp2));
+#endif
+		if (Machine->gamedrv->flags & GAME_IMPERFECT_COLORS)
+			bufptr += sprintf(bufptr, "%s\n", ui_getstring(UI_imperfectcolors));
+		if (Machine->gamedrv->flags & GAME_WRONG_COLORS)
+			bufptr += sprintf(bufptr, "%s\n", ui_getstring(UI_wrongcolors));
+		if (Machine->gamedrv->flags & GAME_IMPERFECT_GRAPHICS)
+			bufptr += sprintf(bufptr, "%s\n", ui_getstring(UI_imperfectgraphics));
+		if (Machine->gamedrv->flags & GAME_IMPERFECT_SOUND)
+			bufptr += sprintf(bufptr, "%s\n", ui_getstring(UI_imperfectsound));
+		if (Machine->gamedrv->flags & GAME_NO_SOUND)
+			bufptr += sprintf(bufptr, "%s\n", ui_getstring(UI_nosound));
+		if (Machine->gamedrv->flags & GAME_NO_COCKTAIL)
+			bufptr += sprintf(bufptr, "%s\n", ui_getstring(UI_nococktail));
+
+		/* if there's a NOT WORKING or UNEMULATED PROTECTION warning, make it stronger */
+		if (Machine->gamedrv->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION))
+		{
+			const game_driver *maindrv;
+			const game_driver *clone_of;
+			int foundworking;
+
+			/* add the strings for these warnings */
+			if (Machine->gamedrv->flags & GAME_NOT_WORKING)
+				bufptr += sprintf(bufptr, "%s\n", ui_getstring(UI_brokengame));
+			if (Machine->gamedrv->flags & GAME_UNEMULATED_PROTECTION)
+				bufptr += sprintf(bufptr, "%s\n", ui_getstring(UI_brokenprotection));
+
+			/* find the parent of this driver */
+			clone_of = driver_get_clone(Machine->gamedrv);
+			if (clone_of != NULL && !(clone_of->flags & NOT_A_DRIVER))
+ 				maindrv = clone_of;
+			else
+				maindrv = Machine->gamedrv;
+
+			/* scan the driver list for any working clones and add them */
+			foundworking = 0;
+			for (i = 0; drivers[i] != NULL; i++)
+				if (drivers[i] == maindrv || driver_get_clone(drivers[i]) == maindrv)
+					if ((drivers[i]->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION)) == 0)
+					{
+						/* this one works, add a header and display the name of the clone */
+						if (foundworking == 0)
+							bufptr += sprintf(bufptr, "\n\n%s\n\n", ui_getstring(UI_workingclones));
+						bufptr += sprintf(bufptr, "%s\n", drivers[i]->name);
+						foundworking = 1;
+					}
+		}
+	}
+
+	/* add the 'press OK' string */
+	bufptr += sprintf(bufptr, "\n\n%s", ui_getstring(UI_typeok));
+	return bufptr - buffer;
+}
+
+
 #ifdef USE_SHOW_TIME
 
 #define DISPLAY_AMPM 0
@@ -1420,18 +1367,6 @@ static void display_input_log(void)
 }
 #endif /* USE_SHOW_INPUT_LOG */
 
-
-
-
-/*************************************
- *
- *  Create the UI font
- *
- *************************************/
-
-static void create_font(void)
-{
-}
 
 
 
@@ -1552,9 +1487,9 @@ skip_comment:
     to the given buffer
 -------------------------------------------------*/
 
-int sprintf_game_info(char *buf)
+int sprintf_game_info(char *buffer)
 {
-	char *bufptr = buf;
+	char *bufptr = buffer;
 	int cpunum, sndnum;
 	int count;
 
@@ -1630,7 +1565,7 @@ int sprintf_game_info(char *buf)
 				Machine->screen[0].visarea.max_y - Machine->screen[0].visarea.min_y + 1,
 				(Machine->gamedrv->flags & ORIENTATION_SWAP_XY) ? "V" : "H",
 				Machine->screen[0].refresh);
-	return bufptr - buf;
+	return bufptr - buffer;
 }
 
 
@@ -2393,6 +2328,59 @@ static INT32 slider_flicker(INT32 newval, char *buffer, int arg)
 	return floor(vector_get_flicker() * 10.0f + 0.5f);
 }
 
+
+
+void add_fill(int x0, int y0, int x1, int y1, rgb_t color)
+{
+	x1++;
+	y1++;
+
+	if (color == UI_FILLCOLOR)
+		render_ui_add_quad(UI_UNSCALE_TO_FLOAT_X(x0), UI_UNSCALE_TO_FLOAT_Y(y0), UI_UNSCALE_TO_FLOAT_X(x1), UI_UNSCALE_TO_FLOAT_Y(y1), MAKE_ARGB(0xff, 0xff, 0xff, 0xff), bgtexture, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+	else
+		render_ui_add_rect(UI_UNSCALE_TO_FLOAT_X(x0), UI_UNSCALE_TO_FLOAT_Y(y0), UI_UNSCALE_TO_FLOAT_X(x1), UI_UNSCALE_TO_FLOAT_Y(y1), ui_get_rgb_color(color), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+}
+
+
+static void add_filled_box_color(int x1, int y1, int x2, int y2, rgb_t color)
+{
+#ifdef UI_COLOR_DISPLAY
+	add_fill(x1 + 3, y1 + 3, x2 - 3, y2 - 3, color);
+
+	/* top edge */
+	add_line(x1,     y1,     x2,     y1,     SYSTEM_COLOR_FRAMELIGHT);
+	add_line(x1 + 1, y1 + 1, x2 - 1, y1 + 1, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_line(x1 + 2, y1 + 2, x2 - 2, y1 + 2, SYSTEM_COLOR_FRAMEDARK);
+
+	/* bottom edge */
+	add_line(x1 + 3, y2 - 2, x2 - 2, y2 - 2, SYSTEM_COLOR_FRAMELIGHT);
+	add_line(x1 + 1, y2 - 1, x2 - 1, y2 - 1, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_line(x1,     y2,     x2,     y2,     SYSTEM_COLOR_FRAMEDARK);
+
+	/* left edge */
+	add_line(x1,     y1 + 1, x1,     y2 - 1, SYSTEM_COLOR_FRAMELIGHT);
+	add_line(x1 + 1, y1 + 2, x1 + 1, y2 - 2, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_line(x1 + 2, y1 + 3, x1 + 2, y2 - 2, SYSTEM_COLOR_FRAMEDARK);
+
+	/* right edge */
+	add_line(x2 - 2, y1 + 3, x2 - 2, y2 - 3, SYSTEM_COLOR_FRAMELIGHT);
+	add_line(x2 - 1, y1 + 2, x2 - 1, y2 - 2, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_line(x2,     y1 + 1, x2,     y2 - 1, SYSTEM_COLOR_FRAMEDARK);
+#else /* UI_COLOR_DISPLAY */
+	add_fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, color);
+
+	add_line(x1, y1, x2, y1, ARGB_WHITE);
+	add_line(x2, y1, x2, y2, ARGB_WHITE);
+	add_line(x2, y2, x1, y2, ARGB_WHITE);
+	add_line(x1, y2, x1, y1, ARGB_WHITE);
+#endif /* UI_COLOR_DISPLAY */
+}
+
+
+void add_filled_box(int x0, int y0, int x1, int y1)
+{
+	add_filled_box_color(x0, y0, x1, y1, ui_bgcolor);
+}
 
 
 void ui_auto_pause(void)
