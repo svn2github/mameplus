@@ -156,7 +156,9 @@ const options_entry windows_opts[] =
 	{ "nvram_directory",          "nvram",    0,                 "directory to save nvram contents" },
 	{ "memcard_directory",        "memcard",  0,                 "directory to save memory card contents" },
 	{ "input_directory",          "inp",      0,                 "directory to save input device logs" },
+#ifdef USE_HISCORE
 	{ "hiscore_directory",        "hi",       0,                 "directory to save hiscores" },
+#endif /* USE_HISCORE */
 	{ "state_directory",          "sta",      0,                 "directory to save states" },
 	{ "artpath;artwork_directory","artwork",  0,                 "path to artwork files" },
 	{ "snapshot_directory",       "snap",     0,                 "directory to save screenshots" },

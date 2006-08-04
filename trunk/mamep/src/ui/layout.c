@@ -112,7 +112,9 @@ const DIRECTORYINFO g_directoryInfo[] =
 	{ "IPS Files",             GetPatchDir,        SetPatchDir,        FALSE, 0 },
 #endif /* USE_IPS */
 	{ "Config",                GetCfgDir,          SetCfgDir,          FALSE, DIRDLG_CFG },
+#ifdef USE_HISCORE
 	{ "High Scores",           GetHiDir,           SetHiDir,           FALSE, DIRDLG_HI },
+#endif /* USE_HISCORE */
 	{ "Snapshots",             GetImgDir,          SetImgDir,          FALSE, DIRDLG_IMG },
 	{ "Input Files (*.inp)",   GetInpDir,          SetInpDir,          FALSE, DIRDLG_INP },
 	{ "State",                 GetStateDir,        SetStateDir,        FALSE, 0 },

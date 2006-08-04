@@ -64,8 +64,10 @@ extern const char *mameinfo_filename;
 // from cheat.c
 extern const char *cheatfile;
 
+#ifdef USE_HISCORE
 // from hiscore.c
 extern const char *db_filename;
+#endif /* USE_HISCORE */
 
 
 
@@ -118,7 +120,9 @@ static const struct
 	{ FILETYPE_SAMPLE,		"samplepath" },
 	{ FILETYPE_ARTWORK,		"artpath" },
 	{ FILETYPE_NVRAM,		"nvram_directory" },
+#ifdef USE_HISCORE
 	{ FILETYPE_HIGHSCORE,	"hiscore_directory" },
+#endif /* USE_HISCORE */
 	{ FILETYPE_CONFIG,		"cfg_directory" },
 	{ FILETYPE_INPUTLOG,	"input_directory" },
 	{ FILETYPE_STATE,		"state_directory" },
@@ -854,5 +858,7 @@ void setup_datafile(void)
 	story_filename = options_get_string("story_file", TRUE);
 #endif /* STORY_DATAFILE */
 	mameinfo_filename = options_get_string("mameinfo_file", TRUE);
+#ifdef USE_HISCORE
 	db_filename = options_get_string("hiscore_file", TRUE);
+#endif /* USE_HISCORE */
 }

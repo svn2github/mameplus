@@ -137,7 +137,9 @@ const char *profiler_get_text(void)
 		"Sound  ",
 		"Mixer  ",
 		"Callbck",
+#ifdef USE_HISCORE
 		"Hiscore",
+#endif /* USE_HISCORE */
 		"Input  ",
 		"Movie  ",
 		"Logerr ",

@@ -8,7 +8,9 @@ START_OPT_FUNC_CORE
 	DEFINE_OPT(string,               nvram_directory);
 	DEFINE_OPT(string,               memcard_directory);
 	DEFINE_OPT(string,               input_directory);
+#ifdef USE_HISCORE
 	DEFINE_OPT(string,               hiscore_directory);
+#endif /* USE_HISCORE */
 	DEFINE_OPT(string,               state_directory);
 	DEFINE_OPT(string,               artpath);
 	DEFINE_OPT(string,               snapshot_directory);
@@ -25,7 +27,9 @@ START_OPT_FUNC_CORE
 	DEFINE_OPT(string,               story_file);
 #endif /* STORY_DATAFILE */
 	DEFINE_OPT(string,               mameinfo_file);
+#ifdef USE_HISCORE
 	DEFINE_OPT(string,               hiscore_file);
+#endif /* USE_HISCORE */
 
 #ifdef UI_COLOR_DISPLAY
 // CORE PALETTE OPTIONS

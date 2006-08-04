@@ -98,7 +98,6 @@ X86_M68K_DRC = 1
 # PM = 1
 # AMD64 = 1
 
-
 # uncomment next line if you are building for a 64-bit target
 # PTR64 = 1
 
@@ -268,6 +267,10 @@ ifneq ($(X86_VOODOO_DRC),)
 DEFS += -DVOODOO_DRC
 endif
 
+ifneq ($(USE_HISCORE),)
+DEFS += -DUSE_HISCORE
+endif
+
 ifneq ($(USE_SCALE_EFFECTS),)
 DEFS += -DUSE_SCALE_EFFECTS
 endif
@@ -344,9 +347,9 @@ endif
 CFLAGS = -std=gnu89 -Isrc -Isrc/includes -Isrc/zlib -Iextra/include -Isrc/$(MAMEOS) -I$(OBJ)/layout
 
 ifneq ($(W_ERROR),)
-    CFLAGS += -Werror 
+    CFLAGS += -Werror
 else
-    CFLAGS += -Wno-error 
+    CFLAGS += -Wno-error
 endif
 
 ifneq ($(SYMBOLS),)
@@ -362,9 +365,9 @@ else
 	-Wcast-align \
 	-Wstrict-prototypes \
 	-Wundef \
+#	-Wformat-security \
 	-Wwrite-strings \
 	-Wdeclaration-after-statement
-#	-Wformat-security
 endif
 
 ifneq ($(I686),)
@@ -407,7 +410,6 @@ VPATH = src $(wildcard src/cpu/*)
 # define the standard object directories
 #-------------------------------------------------
 
-
 OBJDIRS = \
 	obj \
 	$(OBJ) \
@@ -447,7 +449,6 @@ SOUNDLIB = $(OBJ)/libsound.a
 # either build or link against the included 
 # libraries
 #-------------------------------------------------
-
 
 # start with an empty set of libs
 LIBS = 
@@ -527,7 +528,7 @@ endif
 # primary targets
 #-------------------------------------------------
 
-emulator:	maketree $(EMULATOR)
+emulator: maketree $(EMULATOR)
 
 extra: $(TOOLS)
 

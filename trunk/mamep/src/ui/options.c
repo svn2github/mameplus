@@ -212,7 +212,9 @@ typedef struct
 	char*	nvram_directory;
 	char*	memcard_directory;
 	char*	input_directory;
+#ifdef USE_HISCORE
 	char*	hiscore_directory;
+#endif /* USE_HISCORE */
 	char*	state_directory;
 	char*	artpath;
 	char*	snapshot_directory;
@@ -229,7 +231,9 @@ typedef struct
 	char*	story_file;
 #endif /* STORY_DATAFILE */
 	char*	mameinfo_file;
+#ifdef USE_HISCORE
 	char*	hiscore_file;
+#endif /* USE_HISCORE */
 //
 // CORE PALETTE OPTIONS
 //
@@ -1543,6 +1547,7 @@ void SetCfgDir(const char* path)
 		settings.cfg_directory = strdup(path);
 }
 
+#ifdef USE_HISCORE
 const char* GetHiDir(void)
 {
 	return settings.hiscore_directory;
@@ -1555,6 +1560,7 @@ void SetHiDir(const char* path)
 	if (path != NULL)
 		settings.hiscore_directory = strdup(path);
 }
+#endif /* USE_HISCORE */
 
 const char* GetNvramDir(void)
 {
@@ -1860,6 +1866,7 @@ void SetMAMEInfoFile(const char* path)
 		settings.mameinfo_file = strdup(path);
 }
 
+#ifdef USE_HISCORE
 const char* GetHiscoreFile(void)
 {
 	return settings.hiscore_file;
@@ -1872,6 +1879,7 @@ void SetHiscoreFile(const char* path)
 	if (path != NULL)
 		settings.hiscore_file = strdup(path);
 }
+#endif /* USE_HISCORE */
 
 void ResetGameOptions(int driver_index)
 {

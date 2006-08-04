@@ -547,8 +547,10 @@ void SetStoryFile(const char*);
 const char* GetMAMEInfoFile(void);
 void SetMAMEInfoFile(const char*);
 
+#ifdef USE_HISCORE
 const char* GetHiscoreFile(void);
 void SetHiscoreFile(const char*);
+#endif /* USE_HISCORE */
 
 #ifdef UI_COLOR_DISPLAY
 const char *GetUIPaletteString(int n);

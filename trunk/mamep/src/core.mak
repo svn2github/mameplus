@@ -30,7 +30,6 @@ COREOBJS = \
 	$(OBJ)/fileio.o \
 	$(OBJ)/harddisk.o \
 	$(OBJ)/hash.o \
-	$(OBJ)/hiscore.o \
 	$(OBJ)/info.o \
 	$(OBJ)/input.o \
 	$(OBJ)/inptport.o \
@@ -72,6 +71,10 @@ COREOBJS = \
 	$(OBJ)/vidhrdw/generic.o \
 	$(OBJ)/vidhrdw/vector.o \
 
+ifdef USE_HISCORE
+COREOBJS += $(OBJ)/hiscore.o
+endif
+
 ifdef X86_MIPS3_DRC
 COREOBJS += $(OBJ)/x86drc.o
 else
@@ -80,11 +83,13 @@ COREOBJS += $(OBJ)/x86drc.o
 endif
 endif
 
-
 COREOBJS += \
 	$(OBJ)/datafile.o \
-	$(OBJ)/uilang.o \
+	$(OBJ)/uilang.o
 
+ifneq ($(USE_IPS),)
+COREOBJS += $(OBJ)/patch.o
+endif
 
 #-------------------------------------------------
 # core layouts
@@ -131,9 +136,6 @@ COREOBJS += \
 endif
 endif
 
-ifneq ($(USE_IPS),)
-COREOBJS += $(OBJ)/patch.o
-endif
 
 
 #-------------------------------------------------
