@@ -301,6 +301,10 @@ ifneq ($(USE_UI_COLOR_DISPLAY),)
     endif
 endif
 
+ifneq ($(USE_UI_COLOR_PALETTE),)
+    DEFS += -DUI_COLOR_PALETTE
+endif
+
 ifneq ($(USE_JOY_EXTRA_BUTTONS),)
     DEFS += -DUSE_JOY_EXTRA_BUTTONS
 endif

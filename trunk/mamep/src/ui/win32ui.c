@@ -75,7 +75,9 @@
 #include "windows/input.h"
 #include "windows/config.h"
 #include "windows/window.h"
-#include "PaletteEdit.h"
+#ifdef UI_COLOR_PALETTE
+#include "paletteEdit.h"
+#endif /* UI_COLOR_PALETTE */
 #include "translate.h"
 #ifdef IMAGE_MENU
 #include "imagemenu.h"
@@ -5072,12 +5074,12 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		}
 		break;
 
-#ifdef UI_COLOR_DISPLAY
+#ifdef UI_COLOR_PALETTE
 	case ID_OPTIONS_PALETTE:
 		DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_PALETTE),
 				  hMain, PaletteDialogProc);
 		return TRUE;
-#endif /* UI_COLOR_DISPLAY */
+#endif /* UI_COLOR_PALETTE */
 
 	case ID_HELP_ABOUT:
 		DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT),

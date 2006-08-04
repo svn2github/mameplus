@@ -552,10 +552,10 @@ const char* GetHiscoreFile(void);
 void SetHiscoreFile(const char*);
 #endif /* USE_HISCORE */
 
-#ifdef UI_COLOR_DISPLAY
+#ifdef UI_COLOR_PALETTE
 const char *GetUIPaletteString(int n);
 void SetUIPaletteString(int n, const char *s);
-#endif /* UI_COLOR_DISPLAY */
+#endif /* UI_COLOR_PALETTE */
 
 #ifdef IMAGE_MENU
 int GetImageMenuStyle(void);

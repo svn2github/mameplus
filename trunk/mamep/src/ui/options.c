@@ -477,7 +477,7 @@ DEFINE_JOYCODE_START(joycode_dir)
 DEFINE_JOYCODE_END
 
 
-#ifdef UI_COLOR_DISPLAY
+#ifdef UI_COLOR_PALETTE
 struct ui_palette_assign
 {
 	int code;
@@ -510,7 +510,7 @@ static struct ui_palette_assign ui_palette_tbl[] =
 	{ CURSOR_COLOR,  &settings.cursor },
 	{ MAX_COLORTABLE, NULL }
 };
-#endif /* UI_COLOR_DISPLAY */
+#endif /* UI_COLOR_PALETTE */
 
 
 static char reload_config_msg[] =
@@ -931,7 +931,7 @@ const char * GetImageTabShortName(int tab_index)
 	return image_tabs_short_name[tab_index];
 }
 
-#ifdef UI_COLOR_DISPLAY
+#ifdef UI_COLOR_PALETTE
 const char *GetUIPaletteString(int n)
 {
 	int i;
@@ -954,7 +954,7 @@ void SetUIPaletteString(int n, const char *s)
 			*ui_palette_tbl[i].data = strdup(s);
 		}
 }
-#endif /* UI_COLOR_DISPLAY */
+#endif /* UI_COLOR_PALETTE */
 
 void SetViewMode(int val)
 {

@@ -818,7 +818,7 @@ void ui_draw_text_full(const char *origs, int x, int y, int wrapwidth, int offse
 		{
 			increment = uifont_decodechar(linestart, &code);
 #ifdef UI_COLOR_DISPLAY
-				if (increment == 3)
+			if (increment == 3)
 			{
 				linestart++;
 				continue;

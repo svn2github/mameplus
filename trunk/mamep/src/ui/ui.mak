@@ -40,7 +40,7 @@ TMPOBJS = \
 	$(OBJ)/ui/layout.o \
 	$(OBJ)/ui/translate.o
 
-ifneq ($(USE_UI_COLOR_DISPLAY),)
+ifneq ($(USE_UI_COLOR_PALETTE),)
     TMPOBJS += $(OBJ)/ui/paletteedit.o
 endif
 
@@ -110,8 +110,6 @@ ifeq ($(MSVC_BUILD),)
 		-lddraw \
 		-ldinput \
 		-ldxguid \
-		-lmsimg32 \
-		-lstdc++ \
 		-lunicows
     ifneq ($(USE_IMAGE_MENU),)
         GUILIBS += \
@@ -146,6 +144,10 @@ ifneq ($(USE_UI_COLOR_DISPLAY),)
 RCDEFS += -DUI_COLOR_DISPLAY
 endif
 
+ifneq ($(USE_UI_COLOR_PALETTE),)
+RCDEFS += -DUI_COLOR_PALETTE
+endif
+
 ifneq ($(USE_IPS),)
 RCDEFS += -DUSE_IPS
 endif
@@ -154,7 +156,7 @@ ifneq ($(USE_AUTO_PAUSE_PLAYBACK),)
 RCDEFS += -DAUTO_PAUSE_PLAYBACK
 endif
 
-ifneq ($(USE_SCALE_EFFECTS),0)
+ifneq ($(USE_SCALE_EFFECTS),)
 RCDEFS += -DUSE_SCALE_EFFECTS
 endif
 

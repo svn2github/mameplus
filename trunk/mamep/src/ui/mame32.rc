@@ -136,9 +136,9 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Directories...",             ID_OPTIONS_DIR
         MENUITEM "Default Game &Options...",    ID_OPTIONS_DEFAULTS
-#ifdef UI_COLOR_DISPLAY
+#ifdef UI_COLOR_PALETTE
         MENUITEM "&Palette Setting...",         ID_OPTIONS_PALETTE
-#endif /* UI_COLOR_DISPLAY */
+#endif /* UI_COLOR_PALETTE */
         MENUITEM SEPARATOR
         MENUITEM "&Reset to Default...",        ID_OPTIONS_RESET_DEFAULTS
         MENUITEM "&Interface Options...",       ID_OPTIONS_INTERFACE
@@ -1036,7 +1036,7 @@ BEGIN
     PUSHBUTTON      "&Cancel",IDCANCEL,224,227,60,14
 END
 
-#ifdef UI_COLOR_DISPLAY
+#ifdef UI_COLOR_PALETTE
 IDD_PALETTE DIALOG DISCARDABLE  0, 0, 231, 105
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Palette"
@@ -1063,7 +1063,7 @@ BEGIN
     DEFPUSHBUTTON   "&OK",IDOK,174,7,50,14
     PUSHBUTTON      "&Cancel",IDCANCEL,174,24,50,14
 END
-#endif /* UI_COLOR_DISPLAY */
+#endif /* UI_COLOR_PALETTE */
 
 IDD_CUSTOM_FILE DIALOG DISCARDABLE  0, 0, 186, 135
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
@@ -1485,9 +1485,9 @@ BEGIN
     ID_OPTIONS_CLONE_COLOR  "Set list font color for clone games"
     ID_OPTIONS_DIR          "Set directory configuration"
     ID_OPTIONS_DEFAULTS     "Set default game options"
-#ifdef UI_COLOR_DISPLAY
+#ifdef UI_COLOR_PALETTE
     ID_OPTIONS_PALETTE      "Set in-game UI color palette"
-#endif /* UI_COLOR_DISPLAY */
+#endif /* UI_COLOR_PALETTE */
     ID_OPTIONS_BG           "Select a background image file"
     ID_OPTIONS_MMO2LST      "Save game list in specified lst file"
     ID_FOLDER_SOURCEPROPERTIES "Display the driver properties of the selected game"

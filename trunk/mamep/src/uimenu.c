@@ -352,7 +352,7 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected)
 #ifdef UI_COLOR_DISPLAY
 						JUSTIFY_RIGHT, WRAP_TRUNCATE, DRAW_NORMAL, fgcolor, bgcolor, &subitem_width, NULL);
 #else /* UI_COLOR_DISPLAY */
-						JUSTIFY_RIGHT, WRAP_TRUNCATE, item_invert ? DRAW_OPAQUE : DRAW_NORMAL, fgcolor, bgcolor, &subitem_width, NULL);
+						JUSTIFY_RIGHT, WRAP_TRUNCATE, subitem_invert ? DRAW_OPAQUE : DRAW_NORMAL, fgcolor, bgcolor, &subitem_width, NULL);
 #endif /* UI_COLOR_DISPLAY */
 
 			/* apply arrows */

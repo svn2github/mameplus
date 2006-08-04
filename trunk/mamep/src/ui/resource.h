@@ -90,7 +90,7 @@
 #define IDD_PROP_DIRECT3D               184
 #define IDD_PROP_CONTROLLER             185
 #define IDD_PROP_SCREEN                 187
-#define IDD_PALETTE                     190 // UI_COLOR_DISPLAY
+#define IDD_PALETTE                     190 // UI_COLOR_PALETTE
 #define IDD_PROP_BIOS                   191
 #define IDD_PCBINFO                     192 // USE_VIEW_PCBINFO
 #define IDB_TOOLBAR_US                  193
@@ -391,14 +391,14 @@
 #define IDC_SCALEEFFECT                 1351 // USE_SCALE_EFFECTS
 #define IDC_SCALEEFFECTTEXT             1352 // USE_SCALE_EFFECTS
 
-#define IDC_PALETTE_COMBO               1353 // UI_COLOR_DISPLAY
-#define IDC_PALETTE_R                   1354 // UI_COLOR_DISPLAY
-#define IDC_PALETTE_G                   1355 // UI_COLOR_DISPLAY
-#define IDC_PALETTE_B                   1356 // UI_COLOR_DISPLAY
-#define IDC_PALETTE_VIEW                1357 // UI_COLOR_DISPLAY
-#define IDC_PALETTE_TEXTR               1358 // UI_COLOR_DISPLAY
-#define IDC_PALETTE_TEXTG               1359 // UI_COLOR_DISPLAY
-#define IDC_PALETTE_TEXTB               1360 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_COMBO               1353 // UI_COLOR_PALETTE
+#define IDC_PALETTE_R                   1354 // UI_COLOR_PALETTE
+#define IDC_PALETTE_G                   1355 // UI_COLOR_PALETTE
+#define IDC_PALETTE_B                   1356 // UI_COLOR_PALETTE
+#define IDC_PALETTE_VIEW                1357 // UI_COLOR_PALETTE
+#define IDC_PALETTE_TEXTR               1358 // UI_COLOR_PALETTE
+#define IDC_PALETTE_TEXTG               1359 // UI_COLOR_PALETTE
+#define IDC_PALETTE_TEXTB               1360 // UI_COLOR_PALETTE
 
 #define IDC_TRANSUI                     1361 // TRANS_UI
 #define IDC_TRANSPARENCY                1362 // TRANS_UI
@@ -497,7 +497,7 @@
 #define ID_UI_HISTORY_DOWN              40094
 #define ID_FILE_LOADSTATE               40095
 #define ID_FOLDER_SOURCEPROPERTIES      40096
-#define ID_OPTIONS_PALETTE              40098 // UI_COLOR_DISPLAY
+#define ID_OPTIONS_PALETTE              40098 // UI_COLOR_PALETTE
 #define ID_OPTIONS_MMO2LST              40099
 #define ID_VIEW_PCBINFO                 40100 // USE_VIEW_PCBINFO
 #define IDC_PCBINFO                     40101 // USE_VIEW_PCBINFO
