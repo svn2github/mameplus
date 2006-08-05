@@ -9603,13 +9603,45 @@ DRIVER_INIT( samsh5sd )
 	init_gfxdec42();
 }
 
+static void fr2ch_decrypt( void )
+{
+ UINT16 *src = (UINT16*)memory_region( REGION_CPU1 );
+ UINT8 *rom = memory_region( REGION_CPU1 );
+ UINT8 *dst = memory_region( REGION_GFX1 );
+ 
+ INT32 i;
+ UINT8 data[16] = { 
+  0x49, 0x46, 0x41, 0x4E, 0x20, 0x4C, 0x4F, 0x52,
+  0x41, 0x4D, 0x43, 0x4E, 0x20, 0x45, 0x20, 0x32
+ };
+ // change jsr to C004DA
+ src[0x01AF8 >> 1] = 0x04DA; // C00552 (Not used?)
+ src[0x01BF6 >> 1] = 0x04DA; // C0056A (fixes crash)
+ src[0x01ED8 >> 1] = 0x04DA; // C00570 (Not used?)
+ src[0x1C384 >> 1] = 0x04DA; // C00552 (fixes crash) 
+
+ // 0x001C06 - this routine can cause a loop/freeze
+ src[0x01C06 >> 1] = 0x4E75; 
+
+ // Move text for credit + coin info (Thanks to Kanyero)
+ memcpy (dst, dst + 0x600, 0x140);
+
+ // Patch out neogeo intro (Moving S causes garbage)
+ src[0x00112 >> 1] = 0x0180; 
+ src[0x00114 >> 1] = 0x0180; 
+
+ // Hack in the proper identification (see setup menu [F2])
+ for (i = 0; i < 0x10; i++)
+ {
+  rom[0x3A6 + i] = rom[0x61E + i] = rom[0x896 + i] = data[i];
+ }
+}
+
 DRIVER_INIT( fr2ch )
 {
-	UINT16 *mem16 = (UINT16*)memory_region(REGION_CPU1);
-	mem16[0x1BF2/2] = 0x4E71;
-	mem16[0x1BF4/2] = 0x4E71;
-	mem16[0x1BF6/2] = 0x4E71;
-	init_neogeo();
+ fr2ch_decrypt();
+
+ init_neogeo();
 }
 
 DRIVER_INIT( jckeygpd )
