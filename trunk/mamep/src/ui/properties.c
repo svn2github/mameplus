@@ -2332,6 +2332,7 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_SCREENTEXT),             (ddraw || d3d) && multimon);
 
 	EnableWindow(GetDlgItem(hWnd, IDC_DXTEXT),                 ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_DXTEXT2),                 ddraw || d3d);
 
 	EnableWindow(GetDlgItem(hWnd, IDC_D3D_FILTER),             d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_D3D_VERSION),            d3d);

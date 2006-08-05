@@ -295,9 +295,10 @@
 #define IDC_D3D_FILTER                  1184
 #define IDC_AUDIO_LATENCY               1186
 #define IDC_D3D_VERSION                 1187
-#define IDC_DXTEXT                     1188
+#define IDC_DXTEXT                      1188
 #define IDC_FSBRIGHTNESS                1189
 #define IDC_FSBRIGHTNESSDISP            1190
+#define IDC_DXTEXT2                     1191
 
 #define IDC_AUDIO_LATENCY_DISP          1192
 #define IDC_BIOS                        1204

@@ -244,6 +244,10 @@ extern const char *story_filename;
 #endif /* STORY_DATAFILE */
 extern const char *mameinfo_filename;
 
+#ifdef USE_SCALE_EFFECTS
+#include "osdscale.h"
+#endif /* USE_SCALE_EFFECTS */
+
 // in windows/winmain.c
 extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 
@@ -252,13 +256,8 @@ extern int (*osd_display_loading_rom_message_)(const char *name, rom_load_data *
 extern void set_pathlist(int file_type, const char *new_rawpath);
 
 // in windows/*.c
-#include "options.h"
-extern const options_entry config_opts[];
-extern const options_entry language_opts[];
-extern const options_entry fileio_opts[];
-extern const options_entry video_opts[];
-extern const options_entry palette_opts[];
-extern const options_entry input_opts[];
+#include "../options.h"
+extern const options_entry windows_opts[];
 
 // in windows/input.c
 extern const int win_key_trans_table[][4];

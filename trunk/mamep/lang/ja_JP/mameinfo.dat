@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.107u1      #
+#     Mameinfo.dat日本語版 v0.107u2      #
 #                                        #
-#             July 31, 2006              #
+#             August 5, 2006             #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：824 翻訳済：800
-# 追加項目：327 合計：1151
+# Tester報告：826 翻訳済：803
+# 追加項目：327 合計：1153
 #
 
 
@@ -352,14 +352,6 @@ $mame
 
 $end
 
-$info=zoar
-$mame
-[バグ]
-
-- アップライト筐体設定のDIPが動作せず、常にカクテルモードになっている。 zoar095u5gre, Thenasty
-
-$end
-
 $info=btoads
 $mame
 [バグ]
@@ -419,14 +411,6 @@ $mame
 
 - 筐体設定のDIPスイッチ（カクテル・アップライト）が動作せず、常にカクテルモードになっている。
 ただし、プレイヤー2の操作はアップライトで、テキストが反転している。 cannonb078u6yel, Nomax / The tECHIDNA
-
-$end
-
-$info=ripoff
-$mame
-[バグ]
-
-- 0.87u3のベクタードライバの更新から、BGMのサンプルがきちんと再生されない。 ripoff097gre, BSR
 
 $end
 
@@ -4346,9 +4330,6 @@ $mame
 
 - ビデオROMチェックで全てBADと報告される。 cuebrckj0102u5gre, Reip
 
-
-- クレジット設定を変えても、常に2コイン5クレジットになっている。 cuebrckj0104u2gra, Luigi30
-
 $end
 
 $info=mia
@@ -4997,20 +4978,6 @@ $mame
 - カクテルモードの2P画面が化けている。
 また、1Pに戻っても画面が反転したままで戻らない。
 ゲームオーバー後は元に戻る。 jackrabt056gre, Karasu / stephh
-
-$end
-
-$info=futspy
-$mame
-[バグ]
-
-- F2を押すとICテストをパスしない。 futspy0101u1gre1, Kold666
-
-
-- タイトル画面で3機の飛行機と船が表示された後、実機では画面が黄色く光るが、MAMEでは再現されない。 futspy0101u1gre2, Kold666
-
-
-- MAMEのカラーバーが間違っている。実機では同じ大きさで表示される。 futspy0101u1gre3, Kold666
 
 $end
 
@@ -6468,14 +6435,6 @@ $mame
 [バグ]
 
 - 1面で奥のレイヤーと手前のレイヤーでプライオリティの不具合がある。 drgnunit0106u2gre, Kekule
-
-$end
-
-$info=jjsquawk
-$mame
-[バグ]
-
-- DIPスイッチテストで、画面反転を有効にすると表示されている文字が全部ぐちゃぐちゃになる。 jjsquawk0106u1gre, cpukett
 
 $end
 

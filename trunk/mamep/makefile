@@ -348,7 +348,7 @@ endif
 # compile and linking flags
 #-------------------------------------------------
 
-CFLAGS = -std=gnu89 -Isrc -Isrc/includes -Isrc/zlib -Iextra/include -Isrc/$(MAMEOS) -I$(OBJ)/layout
+CFLAGS = -std=gnu89 -Isrc -Isrc/includes -Isrc/zlib -Isrc/$(MAMEOS) -I$(OBJ)/layout
 
 ifneq ($(W_ERROR),)
     CFLAGS += -Werror

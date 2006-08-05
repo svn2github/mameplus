@@ -29,6 +29,8 @@
 #ifndef NONAMELESSUNION
 #define NONAMELESSUNION 
 #endif
+
+#define snwprintf _snwprintf
 #endif
 
 #define WIN32_LEAN_AND_MEAN

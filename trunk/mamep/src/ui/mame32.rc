@@ -663,7 +663,7 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,90,113,10,0,HIDC_D3D_FILTER
     COMBOBOX        IDC_D3D_VERSION,10,106,112,180,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "DirectDraw",IDC_DXTEXT,4,128,124,30
+    GROUPBOX        "DirectDraw",IDC_DXTEXT2,4,128,124,30
     CONTROL         "Stretch using hardware",IDC_HWSTRETCH,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,141,113,10,0,HIDC_HWSTRETCH
     GROUPBOX        "Visual Effects",IDC_STATIC,4,159,124,30
