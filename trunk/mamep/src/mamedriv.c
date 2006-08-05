@@ -36,6 +36,7 @@ const game_driver * const drivers[] =
 
 #else	/* DRIVER_RECURSIVE */
 
+#ifndef NEOCPSMAME
 	DRIVER( pong )		/* (c) 1972 Atari */
 	DRIVER( monaco )	/* (c) 1979 SEGA */
 
@@ -2246,6 +2247,7 @@ V-V                           TP-027
 	/*  6/1991 Quiz Sangokushi - see below among "Mitchell" games */
 	/* 10/1991 Block Block - see below among "Mitchell" games */
 	/*  6/1995 Street Fighter - the Movie - see below among "Incredible Technologies" games */
+#endif /* NEOCPSMAME */
 
 
 	/* Capcom CPS1 games */
@@ -2387,7 +2389,9 @@ V-V                           TP-027
 	DRIVER( sfzch )		/* 1995  Street Fighter Zero (CPS Changer) */
 	DRIVER( sfach )		/* 1995  Street Fighter Alpha (Publicity CPS Changer) */
 
+#ifndef NEOCPSMAME
 	DRIVER( fcrash )	/* bootleg of Final Fight */
+#endif /* NEOCPSMAME */
 
 	/* Capcom CPS2 games */
 	/* list completed by CPS2Shock */
@@ -2586,6 +2590,7 @@ V-V                           TP-027
 						/* 22/12/2003 Hyper Street Fighter 2 (Capcom, Japan) */
 						/* 02/02/2004 Hyper Street Fighter 2 (Capcom, Asia) */
 
+#ifndef NEOCPSMAME
 	/* Capcom CPS3 games */
 	DRIVER( warzard )	/* 10/1996 Warzard */
 	DRIVER( sfiii )		/* 02/1997 Street Fighter III - New Generation */
@@ -5033,6 +5038,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	/* Electrocoin on early SNK hardware - gambling game remove once it works */
 	DRIVER( dmndrby )	/* G4001 'DD' (c) 1986 */
 	DRIVER( dmndrbya )	/* G4001 'DD' (c) 1986 */
+#endif /* NEOCPSMAME */
 
 	/* Neo Geo games */
 	/* the four digits number is the game ID stored at address 0x0108 of the program ROM */
@@ -5352,6 +5358,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
     DRIVER( pnyaad )
 #endif /* USE_NEOGEO_DECRYPTED */
 	
+#ifndef NEOCPSMAME
 	/* Hyper NeoGeo 64 uses a 3 digit rom code? */
 
  	DRIVER( hng64 )
@@ -7216,5 +7223,6 @@ Other Sun games
 	DRIVER( sb2003 )	/* (c) 2003 Limenko */
 	DRIVER( sb2003a )	/* (c) 2003 Limenko */
 	DRIVER( legendoh )	/* (c) 2003 Limenko */
+#endif /* NEOCPSMAME */
 
 #endif	/* DRIVER_RECURSIVE */

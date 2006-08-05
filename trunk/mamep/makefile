@@ -22,10 +22,13 @@ include config.def
 # build rules will be included from $(TARGET).mak
 #-------------------------------------------------
 
+ifneq ($(NEOCPSMAME),)
+TARGET = neocpsmame
+else
 ifeq ($(TARGET),)
 TARGET = mame
 endif
-
+endif
 
 
 #-------------------------------------------------
@@ -342,6 +345,9 @@ ifneq ($(USE_SHOW_INPUT_LOG),)
     DEFS += -DUSE_SHOW_INPUT_LOG
 endif
 
+ifneq ($(NEOCPSMAME),)
+    DEFS += -DNEOCPSMAME
+endif
 
 
 #-------------------------------------------------
