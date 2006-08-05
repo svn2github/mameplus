@@ -9275,7 +9275,7 @@ DRIVER_INIT( samsho5 )
 
 DRIVER_INIT( samsho5b )
 {
-	kof97pla_s1_decrypt();
+	neogeo_bootleg_sx_decrypt(1);
 	samsh5bl_px_decrypt();
 	samsh5bl_cx_decrypt();
 	samsh5bl_vx_decrypt();

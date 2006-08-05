@@ -1000,7 +1000,7 @@ void samsh5bl_px_decrypt( void )
 	free( buf );
 }
 
-static void samsh5bl_cx_decrypt( void )
+void samsh5bl_cx_decrypt( void )
 {
 	int cx_size = memory_region_length( REGION_GFX3 );
 	UINT8 *rom = memory_region( REGION_GFX3 );
@@ -1015,7 +1015,7 @@ static void samsh5bl_cx_decrypt( void )
 	free( buf );
 }
 
-static void samsh5bl_vx_decrypt( void )
+void samsh5bl_vx_decrypt( void )
 {
 	int vx_size = memory_region_length( REGION_SOUND1 );
 	UINT8 *rom = memory_region( REGION_SOUND1 );
