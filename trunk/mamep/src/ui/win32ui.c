@@ -76,7 +76,7 @@
 #include "windows/config.h"
 #include "windows/window.h"
 #ifdef UI_COLOR_PALETTE
-#include "paletteEdit.h"
+#include "paletteedit.h"
 #endif /* UI_COLOR_PALETTE */
 #include "translate.h"
 #ifdef IMAGE_MENU

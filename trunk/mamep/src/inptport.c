@@ -99,9 +99,7 @@
 #include "ui.h"
 #include <math.h>
 
-#ifdef NEW_RENDER
 #include "rendfont.h"
-#endif
 
 #ifdef MESS
 #include "inputx.h"

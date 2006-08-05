@@ -11,9 +11,11 @@
 
 #include "ui.h"
 #include "render.h"
+#include "rendfont.h"
 #include "cheat.h"
 #include "uimenu.h"
 #include "uitext.h"
+#include "datafile.h"
 #ifdef USE_SCALE_EFFECTS
 #include "osdscale.h"
 #include "video.h"
