@@ -1,8 +1,9 @@
 ###########################################################################
 #
-#   cpsmame.mak
+#   neocpsmame.mak
 #
-#   MAME target makefile
+#   NEOGEO & CPS1,2 driver-specific makefile
+#	Use make TARGET=NEOCPSMAME to build
 #
 #   Copyright (c) 1996-2006, Nicola Salmoria and the MAME Team.
 #   Visit http://mamedev.org for licensing and usage restrictions.
