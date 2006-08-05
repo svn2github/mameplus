@@ -1000,6 +1000,32 @@ void samsh5bl_px_decrypt( void )
 	free( buf );
 }
 
+static void samsh5bl_cx_decrypt( void )
+{
+	int cx_size = memory_region_length( REGION_GFX3 );
+	UINT8 *rom = memory_region( REGION_GFX3 );
+	UINT8 *buf = malloc( cx_size );
+	int i;
+
+	memcpy( buf, rom, cx_size );
+
+	for( i = 0; i < cx_size / 0x40; i++ ) {
+		memcpy( &rom[ i * 0x40 ], &buf[ (i ^ 1) * 0x40 ], 0x40 );
+	}
+	free( buf );
+}
+
+static void samsh5bl_vx_decrypt( void )
+{
+	int vx_size = memory_region_length( REGION_SOUND1 );
+	UINT8 *rom = memory_region( REGION_SOUND1 );
+	int i;
+
+	for( i = 0; i < vx_size; i++ ) {
+		rom[ i ] = BITSWAP8( rom[ i ], 0, 1, 5, 4, 3, 2, 6, 7 );
+	}
+}
+
 void kof96ep_px_decrypt(void)
 {
 	int i,j;
