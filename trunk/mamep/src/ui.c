@@ -72,8 +72,10 @@ struct _slider_state
     MACROS
 ***************************************************************************/
 
-#define UI_FONT_NAME			NULL
+#define UI_FONT_NAME				NULL
+#ifdef UI_COLOR_DISPLAY
 #define UI_TARGET_FONT_HEIGHT		ui_font_height
+#endif /* UI_COLOR_DISPLAY */
 #define UI_SCALE_TO_INT_X(x)		((int)((float)(x) * ui_screen_width + 0.5f))
 #define UI_SCALE_TO_INT_Y(y)		((int)((float)(y) * ui_screen_height + 0.5f))
 #define UI_UNSCALE_TO_FLOAT_X(x)	((float)(x) / (float)ui_screen_width)
@@ -193,7 +195,6 @@ static INT32 slider_yscale(INT32 newval, char *buffer, int arg);
 static INT32 slider_xoffset(INT32 newval, char *buffer, int arg);
 static INT32 slider_yoffset(INT32 newval, char *buffer, int arg);
 static INT32 slider_flicker(INT32 newval, char *buffer, int arg);
-
 
 
 
@@ -320,8 +321,6 @@ int ui_init(void)
 #else /* TRANS_UI */
 #ifdef UI_COLOR_DISPLAY
 	ui_bgcolor = SYSTEM_COLOR_BACKGROUND;
-#else /* UI_COLOR_DISPLAY */
-	ui_bgcolor = MENU_BACKCOLOR;
 #endif /* UI_COLOR_DISPLAY */
 #endif /* TRANS_UI */
 
@@ -378,11 +377,7 @@ int ui_display_startup_screens(int show_disclaimer, int show_warnings, int show_
 	for (state = -1; state < maxstate && !mame_is_scheduled_event_pending(); state++)
 	{
 		/* default to standard colors */
-#ifdef UI_COLOR_DISPLAY
 		messagebox_backcolor = UI_FILLCOLOR;
-#else /* UI_COLOR_DISPLAY */
-		messagebox_backcolor = MENU_BACKCOLOR;
-#endif /* UI_COLOR_DISPLAY */
 
 		/* pick the next state */
 		switch (state)
@@ -456,11 +451,7 @@ void ui_set_startup_text(const char *text, int force)
 
 	/* copy in the new text */
 	strncpy(messagebox_text, text, sizeof(messagebox_text));
-#ifdef UI_COLOR_DISPLAY
 	messagebox_backcolor = UI_FILLCOLOR;
-#else /* UI_COLOR_DISPLAY */
-	messagebox_backcolor = MENU_BACKCOLOR;
-#endif /* UI_COLOR_DISPLAY */
 
 	/* don't update more than 4 times/second */
 	if (force || (curtime - lastupdatetime) > osd_cycles_per_second() / 4)
@@ -1058,11 +1049,7 @@ void CLIB_DECL ui_popup(const char *text, ...)
 	/* extract the text */
 	va_start(arg,text);
 	vsprintf(messagebox_text, text, arg);
-#ifdef UI_COLOR_DISPLAY
 	messagebox_backcolor = UI_FILLCOLOR;
-#else /* UI_COLOR_DISPLAY */
-	messagebox_backcolor = MENU_BACKCOLOR;
-#endif /* UI_COLOR_DISPLAY */
 	va_end(arg);
 
 	/* set a timer */
@@ -1083,11 +1070,7 @@ void CLIB_DECL ui_popup_time(int seconds, const char *text, ...)
 	/* extract the text */
 	va_start(arg,text);
 	vsprintf(messagebox_text, text, arg);
-#ifdef UI_COLOR_DISPLAY
 	messagebox_backcolor = UI_FILLCOLOR;
-#else /* UI_COLOR_DISPLAY */
-	messagebox_backcolor = MENU_BACKCOLOR;
-#endif /* UI_COLOR_DISPLAY */
 	va_end(arg);
 
 	/* set a timer */
@@ -2459,9 +2442,15 @@ void ui_set_visible_area(int xmin, int ymin, int xmax, int ymax)
 
 static void build_bgtexture(void)
 {
+#ifdef UI_COLOR_DISPLAY
 	float r = (float)options.uicolortable[UI_FILLCOLOR][0];
 	float g = (float)options.uicolortable[UI_FILLCOLOR][1];
 	float b = (float)options.uicolortable[UI_FILLCOLOR][2];
+#else /* UI_COLOR_DISPLAY */
+	UINT8 r = 0x10;
+	UINT8 g = 0x10;
+	UINT8 b = 0x30;
+#endif /* UI_COLOR_DISPLAY */
 	UINT8 a = 0xff;
 	int i;
 

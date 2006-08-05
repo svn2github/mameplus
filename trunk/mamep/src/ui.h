@@ -23,21 +23,33 @@
 ***************************************************************************/
 
 /* preferred font height; use ui_get_line_height() to get actual height */
-//#define UI_TARGET_FONT_HEIGHT		(1.0f / 25.0f)
+#ifndef UI_COLOR_DISPLAY
+#define UI_TARGET_FONT_HEIGHT	(1.0f / 25.0f)
+#endif /* UI_COLOR_DISPLAY */
 
 /* width of lines drawn in the UI */
+#ifdef UI_COLOR_DISPLAY
 #define UI_LINE_WIDTH			(1.0f / (float)ui_screen_height)
+#else /* UI_COLOR_DISPLAY */
+#define UI_LINE_WIDTH			(1.0f / 500.0f)
+#endif /* UI_COLOR_DISPLAY */
 
 /* border between outlines and inner text on left/right and top/bottom sides */
+#ifdef UI_COLOR_DISPLAY
 #define UI_BOX_LR_BORDER		3
 #define UI_BOX_TB_BORDER		3
+#else /* UI_COLOR_DISPLAY */
+#define UI_BOX_LR_BORDER		(UI_TARGET_FONT_HEIGHT * 0.25f)
+#define UI_BOX_TB_BORDER		(UI_TARGET_FONT_HEIGHT * 0.25f)
+#endif /* UI_COLOR_DISPLAY */
 
 /* handy colors */
 #define ARGB_WHITE				MAKE_ARGB(0xff,0xff,0xff,0xff)
 #define ARGB_BLACK				MAKE_ARGB(0xff,0x00,0x00,0x00)
+#ifdef UI_COLOR_DISPLAY
 #define UI_FILLCOLOR			SYSTEM_COLOR_BACKGROUND
-#ifndef UI_COLOR_DISPLAY
-#define MENU_BACKCOLOR			MAKE_ARGB(0xe0,0x10,0x10,0x30)
+#else /* UI_COLOR_DISPLAY */
+#define UI_FILLCOLOR			MAKE_ARGB(0xe0,0x10,0x10,0x30)
 #endif /* UI_COLOR_DISPLAY */
 
 /* cancel return value for a UI handler */
@@ -78,11 +90,7 @@ enum
     MACROS
 ***************************************************************************/
 
-#ifdef UI_COLOR_DISPLAY
 #define ui_draw_message_window(text) ui_draw_text_box(text, JUSTIFY_LEFT, 0.5f, 0.5f, UI_FILLCOLOR)
-#else /* UI_COLOR_DISPLAY */
-#define ui_draw_message_window(text) ui_draw_text_box(text, JUSTIFY_LEFT, 0.5f, 0.5f, MENU_BACKCOLOR)
-#endif /* UI_COLOR_DISPLAY */
 
 
 

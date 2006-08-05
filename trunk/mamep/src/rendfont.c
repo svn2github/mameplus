@@ -38,7 +38,7 @@ struct _render_font_char
 	const char *		rawdata;			/* pointer to the raw data for this one */
 	mame_bitmap *		bitmap;				/* pointer to the bitmap containing the raw data */
 	render_texture *	texture;			/* pointer to a texture for rendering and sizing */
-	int			color;
+	int					color;
 };
 
 
