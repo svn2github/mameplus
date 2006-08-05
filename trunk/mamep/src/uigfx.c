@@ -272,7 +272,11 @@ static void palette_handler(ui_gfx_state *state)
 		x0 = boxbounds.x0 - (0.5f - 0.5f * (titlewidth + chwidth));
 
 	/* go ahead and draw the outer box now */
+#ifdef UI_COLOR_DISPLAY
 	ui_draw_outlined_box(boxbounds.x0 - x0, boxbounds.y0, boxbounds.x1 + x0, boxbounds.y1, UI_FILLCOLOR);
+#else /* UI_COLOR_DISPLAY */
+	ui_draw_outlined_box(boxbounds.x0 - x0, boxbounds.y0, boxbounds.x1 + x0, boxbounds.y1, MENU_BACKCOLOR);
+#endif /* UI_COLOR_DISPLAY */
 
 	/* draw the title */
 	x0 = 0.5f - 0.5f * titlewidth;
@@ -515,7 +519,11 @@ static void gfxset_handler(ui_gfx_state *state)
 		x0 = boxbounds.x0 - (0.5f - 0.5f * (titlewidth + chwidth));
 
 	/* go ahead and draw the outer box now */
+#ifdef UI_COLOR_DISPLAY
 	ui_draw_outlined_box(boxbounds.x0 - x0, boxbounds.y0, boxbounds.x1 + x0, boxbounds.y1, UI_FILLCOLOR);
+#else /* UI_COLOR_DISPLAY */
+	ui_draw_outlined_box(boxbounds.x0 - x0, boxbounds.y0, boxbounds.x1 + x0, boxbounds.y1, MENU_BACKCOLOR);
+#endif /* UI_COLOR_DISPLAY */
 
 	/* draw the title */
 	x0 = 0.5f - 0.5f * titlewidth;
@@ -899,7 +907,11 @@ static void tilemap_handler(ui_gfx_state *state)
 	}
 
 	/* go ahead and draw the outer box now */
+#ifdef UI_COLOR_DISPLAY
 	ui_draw_outlined_box(boxbounds.x0, boxbounds.y0, boxbounds.x1, boxbounds.y1, UI_FILLCOLOR);
+#else /* UI_COLOR_DISPLAY */
+	ui_draw_outlined_box(boxbounds.x0, boxbounds.y0, boxbounds.x1, boxbounds.y1, MENU_BACKCOLOR);
+#endif /* UI_COLOR_DISPLAY */
 
 	/* draw the title */
 	x0 = 0.5f - 0.5f * titlewidth;

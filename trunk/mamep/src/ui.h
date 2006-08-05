@@ -36,6 +36,9 @@
 #define ARGB_WHITE				MAKE_ARGB(0xff,0xff,0xff,0xff)
 #define ARGB_BLACK				MAKE_ARGB(0xff,0x00,0x00,0x00)
 #define UI_FILLCOLOR			SYSTEM_COLOR_BACKGROUND
+#ifndef UI_COLOR_DISPLAY
+#define MENU_BACKCOLOR			MAKE_ARGB(0xe0,0x10,0x10,0x30)
+#endif /* UI_COLOR_DISPLAY */
 
 /* cancel return value for a UI handler */
 #define UI_HANDLER_CANCEL		((UINT32)~0)
@@ -75,7 +78,11 @@ enum
     MACROS
 ***************************************************************************/
 
+#ifdef UI_COLOR_DISPLAY
 #define ui_draw_message_window(text) ui_draw_text_box(text, JUSTIFY_LEFT, 0.5f, 0.5f, UI_FILLCOLOR)
+#else /* UI_COLOR_DISPLAY */
+#define ui_draw_message_window(text) ui_draw_text_box(text, JUSTIFY_LEFT, 0.5f, 0.5f, MENU_BACKCOLOR)
+#endif /* UI_COLOR_DISPLAY */
 
 
 

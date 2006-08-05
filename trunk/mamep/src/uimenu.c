@@ -581,10 +581,25 @@ UINT32 ui_menu_ui_handler(UINT32 state)
 	menu_stack[menu_stack_index].state = (*menu_stack[menu_stack_index].handler)(menu_stack[menu_stack_index].state);
 
 	/* if the menus are to be hidden, return a cancel here */
+	if (state == SHORTCUT_MENU_CHEAT)
+	{
+		if (input_ui_pressed(IPT_UI_CHEAT) || menu_stack[menu_stack_index].handler == NULL)
+			return UI_HANDLER_CANCEL;
+	}
+	else
+#ifdef CMD_LIST
+	if (state == SHORTCUT_MENU_COMMAND)
+	{
+		if (input_ui_pressed(IPT_UI_COMMAND) || menu_stack[menu_stack_index].handler == NULL)
+			return UI_HANDLER_CANCEL;
+	}
+	else
+#endif /* CMD_LIST */
+
 	if (input_ui_pressed(IPT_UI_CONFIGURE) || menu_stack[menu_stack_index].handler == NULL)
 		return UI_HANDLER_CANCEL;
 
-	return 0;
+	return state;
 }
 
 

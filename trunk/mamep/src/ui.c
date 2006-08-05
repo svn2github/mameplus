@@ -378,7 +378,11 @@ int ui_display_startup_screens(int show_disclaimer, int show_warnings, int show_
 	for (state = -1; state < maxstate && !mame_is_scheduled_event_pending(); state++)
 	{
 		/* default to standard colors */
+#ifdef UI_COLOR_DISPLAY
 		messagebox_backcolor = UI_FILLCOLOR;
+#else /* UI_COLOR_DISPLAY */
+		messagebox_backcolor = MENU_BACKCOLOR;
+#endif /* UI_COLOR_DISPLAY */
 
 		/* pick the next state */
 		switch (state)
@@ -452,7 +456,11 @@ void ui_set_startup_text(const char *text, int force)
 
 	/* copy in the new text */
 	strncpy(messagebox_text, text, sizeof(messagebox_text));
+#ifdef UI_COLOR_DISPLAY
 	messagebox_backcolor = UI_FILLCOLOR;
+#else /* UI_COLOR_DISPLAY */
+	messagebox_backcolor = MENU_BACKCOLOR;
+#endif /* UI_COLOR_DISPLAY */
 
 	/* don't update more than 4 times/second */
 	if (force || (curtime - lastupdatetime) > osd_cycles_per_second() / 4)
@@ -1050,7 +1058,11 @@ void CLIB_DECL ui_popup(const char *text, ...)
 	/* extract the text */
 	va_start(arg,text);
 	vsprintf(messagebox_text, text, arg);
+#ifdef UI_COLOR_DISPLAY
 	messagebox_backcolor = UI_FILLCOLOR;
+#else /* UI_COLOR_DISPLAY */
+	messagebox_backcolor = MENU_BACKCOLOR;
+#endif /* UI_COLOR_DISPLAY */
 	va_end(arg);
 
 	/* set a timer */
@@ -1071,7 +1083,11 @@ void CLIB_DECL ui_popup_time(int seconds, const char *text, ...)
 	/* extract the text */
 	va_start(arg,text);
 	vsprintf(messagebox_text, text, arg);
+#ifdef UI_COLOR_DISPLAY
 	messagebox_backcolor = UI_FILLCOLOR;
+#else /* UI_COLOR_DISPLAY */
+	messagebox_backcolor = MENU_BACKCOLOR;
+#endif /* UI_COLOR_DISPLAY */
 	va_end(arg);
 
 	/* set a timer */
