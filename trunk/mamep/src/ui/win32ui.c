@@ -6693,9 +6693,14 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 	}
 #endif /* IMAGE_MENU */
 
-	dprintf("%d,%d,%d,%d", tpmp.rcExclude.left,tpmp.rcExclude.right,tpmp.rcExclude.top,tpmp.rcExclude.bottom);
-	//the menu should not overlap SSFRAME
-	TrackPopupMenuEx(hMenu,TPM_LEFTALIGN | TPM_RIGHTBUTTON,pt.x,pt.y,hMain,&tpmp);
+	if (GetShowScreenShot())
+	{
+		dprintf("%d,%d,%d,%d", tpmp.rcExclude.left,tpmp.rcExclude.right,tpmp.rcExclude.top,tpmp.rcExclude.bottom);
+		//the menu should not overlap SSFRAME
+		TrackPopupMenuEx(hMenu,TPM_LEFTALIGN | TPM_RIGHTBUTTON,pt.x,pt.y,hMain,&tpmp);
+	}
+	else
+		TrackPopupMenuEx(hMenu,TPM_LEFTALIGN | TPM_RIGHTBUTTON,pt.x,pt.y,hMain,NULL);
 
 #ifdef IMAGE_MENU
 	if (GetImageMenuStyle() > 0)
