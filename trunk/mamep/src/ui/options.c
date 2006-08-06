@@ -76,7 +76,7 @@ typedef struct
 	INT      folder_id;
 	BOOL     view;
 	BOOL     show_folderlist;
-	LPBITS   show_folder_flags;
+	LPBITS   hide_folder_flags;
 	f_flag   folder_flag;
 	BOOL     show_toolbar;
 	BOOL     show_statusbar;
@@ -1124,15 +1124,15 @@ BOOL GetShowFolderList(void)
 
 BOOL GetShowFolder(int folder)
 {
-	return TestBit(settings.show_folder_flags, folder);
+	return !TestBit(settings.hide_folder_flags, folder);
 }
 
 void SetShowFolder(int folder, BOOL show)
 {
-	if (show)
-		SetBit(settings.show_folder_flags, folder);
+	if (!show)
+		SetBit(settings.hide_folder_flags, folder);
 	else
-		ClearBit(settings.show_folder_flags, folder);
+		ClearBit(settings.hide_folder_flags, folder);
 }
 
 void SetShowStatusBar(BOOL val)
@@ -4763,7 +4763,7 @@ INLINE void _options_get_folder_hide(LPBITS *flags, const char *name)
 		DeleteBits(*flags);
 
 	*flags = NewBits(MAX_FOLDERS);
-	SetAllBits(*flags ,TRUE);
+	SetAllBits(*flags, FALSE);
 
 	if (stemp == NULL)
 		return;
@@ -4786,7 +4786,7 @@ INLINE void _options_get_folder_hide(LPBITS *flags, const char *name)
 		{
 			if (strcmp(g_folderData[i].short_name, buf) == 0)
 			{
-				ClearBit(*flags, g_folderData[i].m_nFolderId);
+				SetBit(*flags, g_folderData[i].m_nFolderId);
 				break;
 			}
 		}
@@ -4807,7 +4807,7 @@ INLINE void options_set_folder_hide(const char *name, LPBITS flags)
 
 	p = buf;
 	for (i = 0; i < MAX_FOLDERS; i++)
-		if (TestBit(flags, i) == FALSE)
+		if (TestBit(flags, i))
 		{
 			int j;
 

@@ -317,7 +317,7 @@ START_OPT_FUNC_WINUI
 	DEFINE_OPT_CSV(color,            custom_color)
 
 // FOLDER LIST HIDE OPTIONS
-	DEFINE_OPT(folder_hide,          show_folder_flags)
+	DEFINE_OPT(folder_hide,          hide_folder_flags)
 	DEFINE_OPT_STRUCT(folder_flag,   folder_flag)
 
 // GUI JOYSTICK OPTIONS
