@@ -179,7 +179,9 @@ const options_entry windows_opts[] =
 	{ "story_file",               "story.dat", OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* STORY_DATAFILE */
 	{ "mameinfo_file",            "mameinfo.dat", 0,              "mameinfo database name" },
+#ifdef USE_HISCORE
 	{ "hiscore_file",             "hiscore.dat", 0,               "high score database name" },
+#endif /* USE_HISCORE */
 
 	// misc options
 	{ NULL,                       NULL,       OPTION_HEADER,     "MISC OPTIONS" },

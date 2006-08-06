@@ -4841,6 +4841,8 @@ INLINE void options_free_folder_hide(LPBITS *flags)
 {
 	if (*flags)
 		DeleteBits(*flags);
+
+	*flags = NULL;
 }
 
 
