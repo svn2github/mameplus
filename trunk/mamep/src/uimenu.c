@@ -458,7 +458,7 @@ int ui_menu_generic_keys(UINT32 *selected, int num_items)
 	if (input_ui_pressed_repeat(IPT_UI_PAGE_UP,8))
 	{
 		*selected -= pan_lines;
-		if (*selected <0)
+		if (*selected < 0)
 			*selected = 0;
 	}
 

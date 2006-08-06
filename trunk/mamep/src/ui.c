@@ -316,13 +316,7 @@ int ui_init(void)
 	caption_timer = 0;
 #endif /* INP_CAPTION */
 
-#ifdef TRANS_UI
 	ui_bgcolor = UI_FILLCOLOR;
-#else /* TRANS_UI */
-#ifdef UI_COLOR_DISPLAY
-	ui_bgcolor = SYSTEM_COLOR_BACKGROUND;
-#endif /* UI_COLOR_DISPLAY */
-#endif /* TRANS_UI */
 
 	/* initialize the other UI bits */
 	ui_menu_init();
@@ -612,7 +606,6 @@ void ui_draw_text(const char *buf, int x, int y)
 {
 	ui_draw_text_full(buf, x, y, ui_screen_width - x, 0, 0, JUSTIFY_LEFT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, ui_bgcolor, NULL, NULL);
 }
-
 
 
 /*-------------------------------------------------
@@ -1802,7 +1795,6 @@ static UINT32 handler_ingame(UINT32 state)
 }
 
 
-
 /*-------------------------------------------------
     handler_slider - displays the current slider
     and calls the slider handler
@@ -1971,6 +1963,11 @@ static UINT32 handler_confirm_quit(UINT32 state)
 /***************************************************************************
     SLIDER CONTROLS
 ***************************************************************************/
+
+/*-------------------------------------------------
+    slider_init - initialize the list of slider
+    controls
+-------------------------------------------------*/
 
 static void slider_init(void)
 {
@@ -2334,9 +2331,11 @@ void add_fill(int x0, int y0, int x1, int y1, rgb_t color)
 	x1++;
 	y1++;
 
+#ifdef UI_COLOR_DISPLAY
 	if (color == UI_FILLCOLOR)
 		render_ui_add_quad(UI_UNSCALE_TO_FLOAT_X(x0), UI_UNSCALE_TO_FLOAT_Y(y0), UI_UNSCALE_TO_FLOAT_X(x1), UI_UNSCALE_TO_FLOAT_Y(y1), MAKE_ARGB(0xff, 0xff, 0xff, 0xff), bgtexture, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 	else
+#endif /* UI_COLOR_DISPLAY */
 		render_ui_add_rect(UI_UNSCALE_TO_FLOAT_X(x0), UI_UNSCALE_TO_FLOAT_Y(y0), UI_UNSCALE_TO_FLOAT_X(x1), UI_UNSCALE_TO_FLOAT_Y(y1), ui_get_rgb_color(color), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 }
 
