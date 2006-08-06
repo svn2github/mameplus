@@ -77,6 +77,8 @@ else
     ifneq ($(MSVC_BUILD),)
         COMPILER_SUFFIX = -vc
         VCONVDEFS =
+    else
+        CFLAGS += -Iextra/include
     endif
 endif
 
