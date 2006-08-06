@@ -9535,7 +9535,7 @@ M68KMAKE_OP(move, 32, pd, d)
 	_mov_m32bd_r32(REG_ESP, 8, REG_EAX);
 
 	DRC_EA_AX_PD_32();
-	_mov_m32bd_r32(REG_ESP, 8, REG_EAX);
+	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
 
 	_add_r32_imm(REG_EAX, 2);
 	_push_r32(REG_EAX);
@@ -9560,7 +9560,7 @@ M68KMAKE_OP(move, 32, pd, a)
 	_mov_m32bd_r32(REG_ESP, 8, REG_EAX);
 
 	DRC_EA_AX_PD_32();
-	_mov_m32bd_r32(REG_ESP, 8, REG_EAX);
+	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
 
 	_add_r32_imm(REG_EAX, 2);
 	_push_r32(REG_EAX);
@@ -9585,7 +9585,7 @@ M68KMAKE_OP(move, 32, pd, .)
 	_mov_m32bd_r32(REG_ESP, 8, REG_EAX);
 
 	DRC_EA_AX_PD_32();
-	_mov_m32bd_r32(REG_ESP, 8, REG_EAX);
+	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
 
 	_add_r32_imm(REG_EAX, 2);
 	_push_r32(REG_EAX);
