@@ -76,7 +76,7 @@ typedef struct
 	INT      folder_id;
 	BOOL     view;
 	BOOL     show_folderlist;
-	LPBITS   hide_folder_flags;
+	LPBITS   folder_hide;
 	f_flag   folder_flag;
 	BOOL     show_toolbar;
 	BOOL     show_statusbar;
@@ -1124,15 +1124,29 @@ BOOL GetShowFolderList(void)
 
 BOOL GetShowFolder(int folder)
 {
-	return !TestBit(settings.hide_folder_flags, folder);
+	if (settings.folder_hide == NULL)
+		return TRUE;
+
+	return !TestBit(settings.folder_hide, folder);
 }
 
 void SetShowFolder(int folder, BOOL show)
 {
 	if (!show)
-		SetBit(settings.hide_folder_flags, folder);
+	{
+		if (settings.folder_hide == NULL)
+		{
+			settings.folder_hide = NewBits(MAX_FOLDERS);
+			SetAllBits(settings.folder_hide, FALSE);
+		}
+
+		SetBit(settings.folder_hide, folder);
+	}
 	else
-		ClearBit(settings.hide_folder_flags, folder);
+	{
+		if (settings.folder_hide)
+			ClearBit(settings.folder_hide, folder);
+	}
 }
 
 void SetShowStatusBar(BOOL val)
@@ -4757,13 +4771,12 @@ INLINE void options_free_ui_key(KeySeq *ks)
 
 INLINE void _options_get_folder_hide(LPBITS *flags, const char *name)
 {
-	const char *stemp = options_get_string("folder_hide", FALSE);
+	const char *stemp = options_get_string(name, FALSE);
 
 	if (*flags)
 		DeleteBits(*flags);
 
-	*flags = NewBits(MAX_FOLDERS);
-	SetAllBits(*flags, FALSE);
+	*flags = NULL;
 
 	if (stemp == NULL)
 		return;
@@ -4786,6 +4799,12 @@ INLINE void _options_get_folder_hide(LPBITS *flags, const char *name)
 		{
 			if (strcmp(g_folderData[i].short_name, buf) == 0)
 			{
+				if (*flags == NULL)
+				{
+					*flags = NewBits(MAX_FOLDERS);
+					SetAllBits(*flags, FALSE);
+				}
+
 				SetBit(*flags, g_folderData[i].m_nFolderId);
 				break;
 			}
@@ -4826,7 +4845,7 @@ INLINE void options_set_folder_hide(const char *name, LPBITS flags)
 		}
 	*p = '\0';
 
-	options_set_string("folder_hide", buf);
+	options_set_string(name, buf);
 }
 
 INLINE void options_copy_folder_hide(const LPBITS src, LPBITS *dest)
@@ -4834,15 +4853,19 @@ INLINE void options_copy_folder_hide(const LPBITS src, LPBITS *dest)
 	if (*dest)
 		DeleteBits(*dest);
 
-	*dest = DuplicateBits(src);
+	if (src)
+		*dest = DuplicateBits(src);
+	else
+		*dest = NULL;
 }
 
 INLINE void options_free_folder_hide(LPBITS *flags)
 {
 	if (*flags)
+	{
 		DeleteBits(*flags);
-
-	*flags = NULL;
+		*flags = NULL;
+	}
 }
 
 
