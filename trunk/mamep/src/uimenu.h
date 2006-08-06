@@ -59,7 +59,7 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected);
 UINT32 ui_menu_ui_handler(UINT32 state);
 
 /* menu keyboard handling */
-int ui_menu_generic_keys(UINT32 *selected, int num_items);
+int ui_menu_generic_keys(int *selected, int num_items);
 
 /* menu stack management */
 void ui_menu_stack_reset(void);

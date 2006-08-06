@@ -414,7 +414,8 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected)
     keys for a menu
 -------------------------------------------------*/
 
-int ui_menu_generic_keys(UINT32 *selected, int num_items)
+// mamep: UINT32 changed to int for IPT_UI_PAGE_UP
+int ui_menu_generic_keys(int *selected, int num_items)
 {
 	static int counter = 0;
 	static int fast = 6;
@@ -455,6 +456,7 @@ int ui_menu_generic_keys(UINT32 *selected, int num_items)
 	}
 
 	/* pan-up goes to previous page */
+
 	if (input_ui_pressed_repeat(IPT_UI_PAGE_UP,8))
 	{
 		*selected -= pan_lines;
