@@ -245,7 +245,7 @@ static void palette_handler(ui_gfx_state *state)
 	int x, y, skip;
 
 	/* add a half character padding for the box */
-	chheight = ui_get_line_height();
+	chheight = (float)ui_get_line_height() / (float)ui_screen_height;
 	chwidth = render_font_get_char_width(ui_font, chheight, render_get_ui_aspect(), '0');
 	boxbounds.x0 = 0.0f + 0.5f * chwidth;
 	boxbounds.x1 = 1.0f - 0.5f * chwidth;
@@ -443,7 +443,7 @@ static void gfxset_handler(ui_gfx_state *state)
 	render_target_get_bounds(render_get_ui_target(), &targwidth, &targheight, NULL);
 
 	/* add a half character padding for the box */
-	chheight = ui_get_line_height();
+	chheight = (float)ui_get_line_height() / (float)ui_screen_height;
 	chwidth = render_font_get_char_width(ui_font, chheight, render_get_ui_aspect(), '0');
 	boxbounds.x0 = 0.0f + 0.5f * chwidth;
 	boxbounds.x1 = 1.0f - 0.5f * chwidth;
@@ -843,7 +843,7 @@ static void tilemap_handler(ui_gfx_state *state)
 		{ UINT32 temp = mapwidth; mapwidth = mapheight; mapheight = temp; }
 
 	/* add a half character padding for the box */
-	chheight = ui_get_line_height();
+	chheight = (float)ui_get_line_height() / (float)ui_screen_height;
 	chwidth = render_font_get_char_width(ui_font, chheight, render_get_ui_aspect(), '0');
 	boxbounds.x0 = 0.0f + 0.5f * chwidth;
 	boxbounds.x1 = 1.0f - 0.5f * chwidth;

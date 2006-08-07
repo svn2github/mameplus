@@ -589,12 +589,21 @@ int ui_get_string_width(const char *s)
 
 void ui_draw_outlined_box(float x0, float y0, float x1, float y1, rgb_t backcolor)
 {
+#if 0
 	float hw = UI_LINE_WIDTH * 0.5f;
 	render_ui_add_rect(x0, y0, x1, y1, backcolor, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 	render_ui_add_line(x0 + hw, y0 + hw, x1 - hw, y0 + hw, UI_LINE_WIDTH, ARGB_WHITE, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 	render_ui_add_line(x1 - hw, y0 + hw, x1 - hw, y1 - hw, UI_LINE_WIDTH, ARGB_WHITE, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 	render_ui_add_line(x1 - hw, y1 - hw, x0 + hw, y1 - hw, UI_LINE_WIDTH, ARGB_WHITE, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 	render_ui_add_line(x0 + hw, y1 - hw, x0 + hw, y0 + hw, UI_LINE_WIDTH, ARGB_WHITE, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+#else
+	int px0 = x0 * (float)ui_screen_width;
+	int py0 = y0 * (float)ui_screen_height;
+	int px1 = x1 * (float)ui_screen_width;
+	int py1 = y1 * (float)ui_screen_height;
+
+	add_filled_box_color(px0, py0, px1, py1, backcolor);
+#endif
 }
 
 
