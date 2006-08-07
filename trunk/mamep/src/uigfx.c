@@ -245,7 +245,7 @@ static void palette_handler(ui_gfx_state *state)
 	int x, y, skip;
 
 	/* add a half character padding for the box */
-	chheight = (float)ui_get_line_height() / (float)ui_screen_height;
+	chheight = ui_get_line_height() / (float)ui_screen_height;
 	chwidth = render_font_get_char_width(ui_font, chheight, render_get_ui_aspect(), '0');
 	boxbounds.x0 = 0.0f + 0.5f * chwidth;
 	boxbounds.x1 = 1.0f - 0.5f * chwidth;
@@ -267,7 +267,11 @@ static void palette_handler(ui_gfx_state *state)
 
 	/* figure out the title and expand the outer box to fit */
 	titlewidth = render_font_get_string_width(ui_font, chheight, render_get_ui_aspect(), title);
+#ifdef UI_COLOR_DISPLAY
+	x0 = UI_LINE_WIDTH * 3;
+#else /* UI_COLOR_DISPLAY */
 	x0 = 0.0f;
+#endif /* UI_COLOR_DISPLAY */
 	if (boxbounds.x1 - boxbounds.x0 < titlewidth + chwidth)
 		x0 = boxbounds.x0 - (0.5f - 0.5f * (titlewidth + chwidth));
 
@@ -443,7 +447,7 @@ static void gfxset_handler(ui_gfx_state *state)
 	render_target_get_bounds(render_get_ui_target(), &targwidth, &targheight, NULL);
 
 	/* add a half character padding for the box */
-	chheight = (float)ui_get_line_height() / (float)ui_screen_height;
+	chheight = ui_get_line_height() / (float)ui_screen_height;
 	chwidth = render_font_get_char_width(ui_font, chheight, render_get_ui_aspect(), '0');
 	boxbounds.x0 = 0.0f + 0.5f * chwidth;
 	boxbounds.x1 = 1.0f - 0.5f * chwidth;
@@ -510,7 +514,11 @@ static void gfxset_handler(ui_gfx_state *state)
 	for (x = 0; x < MAX_GFX_ELEMENTS && Machine->gfx[x] != NULL; x++) ;
 	sprintf(title, "GFX %d/%d %dx%d COLOR %X", state->gfxset.set, x - 1, gfx->width, gfx->height, state->gfxset.color[set]);
 	titlewidth = render_font_get_string_width(ui_font, chheight, render_get_ui_aspect(), title);
+#ifdef UI_COLOR_DISPLAY
+	x0 = UI_LINE_WIDTH * 3;
+#else /* UI_COLOR_DISPLAY */
 	x0 = 0.0f;
+#endif /* UI_COLOR_DISPLAY */
 	if (boxbounds.x1 - boxbounds.x0 < titlewidth + chwidth)
 		x0 = boxbounds.x0 - (0.5f - 0.5f * (titlewidth + chwidth));
 
@@ -843,7 +851,7 @@ static void tilemap_handler(ui_gfx_state *state)
 		{ UINT32 temp = mapwidth; mapwidth = mapheight; mapheight = temp; }
 
 	/* add a half character padding for the box */
-	chheight = (float)ui_get_line_height() / (float)ui_screen_height;
+	chheight = ui_get_line_height() / (float)ui_screen_height;
 	chwidth = render_font_get_char_width(ui_font, chheight, render_get_ui_aspect(), '0');
 	boxbounds.x0 = 0.0f + 0.5f * chwidth;
 	boxbounds.x1 = 1.0f - 0.5f * chwidth;
