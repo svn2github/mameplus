@@ -288,7 +288,11 @@ extern void set_pathlist(int file_type, const char *new_rawpath);
 extern int (*osd_display_loading_rom_message_)(const char *name, rom_load_data *romdata);
 
 // in windows/*.c
+#ifdef _MSC_VER
+#include "../options.h"
+#else
 #include "options.h"
+#endif /* _MSC_VER */
 extern const options_entry windows_opts[];
 
 // in windows/input.c
