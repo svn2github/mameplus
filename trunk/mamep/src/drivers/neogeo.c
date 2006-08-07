@@ -8354,6 +8354,27 @@ ROM_START( neo2500 ) /* Original Version - Encrypted GFX */
 	ROM_LOAD16_BYTE( "2500-c2.bin",   0x000001, 0x080000, CRC(9a0758d6) SHA1(ac1c147fe55c80082c9a68a86c30b516ff086cc4) ) /* Plane 2,3 */
 ROM_END
 
+ROM_START( sthoopcd )
+	ROM_REGION( 0x100000, REGION_CPU1, 0 )
+	ROM_LOAD16_WORD_SWAP( "079-p1ch.bin", 0x000000, 0x100000, CRC(16795f7f) SHA1(977a6c31ca6553e1cfa3402a5e541bab4c2244be) )
+
+	NEO_SFIX_128K( "079-s1ch.bin", CRC(c65a5fe8) SHA1(ec8e8c49994ce9286ea5160c2450912da0746fb0) )
+
+	NEO_BIOS_SOUND_64K( "079-m1.bin", CRC(1a5f08db) SHA1(3121ed568fba4c30794b00d326ddb0c750b7f4ee) )
+
+	ROM_REGION( 0x280000, REGION_SOUND1, 0 )
+	ROM_LOAD( "079-v1.bin", 0x000000, 0x200000, CRC(718a2400) SHA1(cefc5d0b302bd4a87ab1fa244ade4482c23c6806) )
+	ROM_LOAD( "079-v2.bin", 0x200000, 0x080000, CRC(b19884f8) SHA1(5fe910f2029da19ddab4dc95c2292d7fbb086741) )
+
+	NO_DELTAT_REGION
+
+	ROM_REGION( 0x800000, REGION_GFX3, 0 )
+	ROM_LOAD16_BYTE( "079-c1ch.bin", 0x000000, 0x200000, CRC(c3ebd902) SHA1(daae0ae972ecc0c19b2e6a439e5f2547286f190a) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "079-c2ch.bin", 0x000001, 0x200000, CRC(1a471f80) SHA1(725864d734ec9ab2933a46a6dc4d18dbc31fe2c7) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "079-c3ch.bin", 0x400000, 0x080000, CRC(4d490ecc) SHA1(8ced8f547799b613edd95acabd6f8cb28c41eab5) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "079-c4ch.bin", 0x400001, 0x080000, CRC(e223d27c) SHA1(2e195fea0d5808e90f154412b5e80b430e6341e2) ) /* Plane 2,3 */
+ROM_END
+
 /* news Decrypted */
 ROM_START( ct2k3ad ) /* this is a hack of kof2001 much like the various korean hacks / bootlegs of games */
 	ROM_REGION( 0x500000, REGION_CPU1, 0 )
@@ -10047,10 +10068,11 @@ GAMEB( 200?, frogfest, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Raste
 /* new */
 GAMEB( 2005, ltorb1,   neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Blastar", "Jonas Indiana and the Lost Temple of RA (20050717)" , 0 )
 GAMEB( 2002, neodemo,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Chaos", "Neo-Demo", 0 )
-GAMEB( 1995, fr2ch,    neogeo,   neogeo, neogeo, neogeo,  fr2ch,    ROT0, "Video System Co.",   "Idol Mahjong - final romance 2 (CD / bootleg)", 0 )
+GAMEB( 1995, fr2ch,    neogeo,   neogeo, neogeo, neogeo,  fr2ch,    ROT0, "hack / bootleg",   "Idol Mahjong - final romance 2 (CD to MVS Conversion)", 0 )
 GAMEB( 2006, cnbe,     neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "homebrew",   "Codename - Blut Engel (2006-01-19)", 0 )
 GAMEB( 2006, ngem2k,   neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "homebrew",   "NGEM2K (beta 2006-01-18)", 0 )
 GAMEB( 2004, neo2500,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Blastar", "Neo 2500 Demo", 0 )
+GAMEB( 1994, sthoopcd, strhoop,  neogeo, neogeo, neogeo,  neogeo,   ROT0, "hack / bootleg", "Street Hoop / Street Slam / Dunk Dream (CD to MVS Conversion)", 0 )
 /* new Decrypted */
 GAMEB( 2003, ct2k3ad,  kof2001,  neogeo, neogeo, neogeo,  neogeo,   ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg / set 2 fully decrypted)", 0 )
 GAMEB( 2003, cthd2k3d, kof2001,  neogeo, neogeo, neogeo,  neogeo,   ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg / set 1 fully decrypted)", 0 )

@@ -5322,6 +5322,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
     DRIVER( cnbe )
     DRIVER( ngem2k )
     DRIVER( neo2500 )
+    DRIVER( sthoopcd )
 	/* new Bootleg */
 	DRIVER( kof97pla )
 	DRIVER( mslug5b )
