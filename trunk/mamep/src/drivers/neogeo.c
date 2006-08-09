@@ -6298,13 +6298,12 @@ ROM_START( zupapad ) /* Decrypted GFX */
 
 	ROM_REGION( 0x1000000, REGION_GFX3, 0 )
 
-	ROM_LOAD16_BYTE( "070-c1d.bin", 0x0000000, 0x200000, CRC(2bf91ba1) SHA1(5eecbc5ec2c493d2ffd0e57012e0808d4349871f) )
-	ROM_LOAD16_BYTE( "070-c2d.bin", 0x0000001, 0x200000, CRC(8700a5b8) SHA1(bc1ff7e55309120c0ca2d8800b7b003dc3c5ed65) )
+	ROM_LOAD16_BYTE( "070-c1cd.bin", 0x0000000, 0x200000, CRC(2bf91ba1) SHA1(5eecbc5ec2c493d2ffd0e57012e0808d4349871f) )
+	ROM_LOAD16_BYTE( "070-c2cd.bin", 0x0000001, 0x200000, CRC(8700a5b8) SHA1(bc1ff7e55309120c0ca2d8800b7b003dc3c5ed65) )
 ROM_END
 
 ROM_START( sengok3d )
 	ROM_REGION( 0x200000, REGION_CPU1, 0 )
-//  ROM_LOAD16_WORD_SWAP( "261-p1.bin", 0x100000, 0x100000, CRC(5b557201) SHA1(d01421d1dc80fe7d2a46b9f79c0f344b3c81c1e7) ) this one is almost certainly bad
 	ROM_LOAD16_WORD_SWAP( "261-p1.bin", 0x100000, 0x100000, CRC(e0d4bc0a) SHA1(8df366097f224771ca6d1aa5c1691cd46776cd12) )
 	ROM_CONTINUE(                       0x000000, 0x100000 )
 
@@ -6381,7 +6380,6 @@ ROM_START( kof2001 )
 	/* The M1 ROM is encrypted, we load it here for reference and replace it with a decrypted version */
 	ROM_REGION( 0x40000, REGION_USER4, 0 )
 	ROM_LOAD( "265-262-m1.bin", 0x00000, 0x20000, CRC(1d5aab51) SHA1(52327c5bcad87770419057097cca20a3b187bec3) ) /* yes it really does have a strange name */
-//  NEO_BIOS_SOUND_128K( "262-m1d.bin",  CRC(73c1f5b0) SHA1(27975713e091ecc2a370061080d0920a3c4fde63) )
 	NEO_BIOS_SOUND_128K( "265-262_decrypted-m1.bin",   CRC(2fb0a8a5) SHA1(9878370ff8cef3e9c9f307ad64c29522dd625c8f) )
 
 	ROM_REGION( 0x1000000, REGION_SOUND1, 0 )
@@ -6418,7 +6416,6 @@ ROM_START( kof2001h )
 	/* The M1 ROM is encrypted, we load it here for reference and replace it with a decrypted version */
 	ROM_REGION( 0x40000, REGION_USER4, 0 )
 	ROM_LOAD( "265-262-m1.bin", 0x00000, 0x20000, CRC(1d5aab51) SHA1(52327c5bcad87770419057097cca20a3b187bec3) ) /* yes it really does have a strange name */
-//  NEO_BIOS_SOUND_128K( "262-m1d.bin",  CRC(73c1f5b0) SHA1(27975713e091ecc2a370061080d0920a3c4fde63) )
 	NEO_BIOS_SOUND_128K( "265-262_decrypted-m1.bin",  CRC(2fb0a8a5) SHA1(9878370ff8cef3e9c9f307ad64c29522dd625c8f) )
 
 	ROM_REGION( 0x1000000, REGION_SOUND1, 0 )
@@ -6583,8 +6580,8 @@ ROM_START( mslug4d )
 	ROM_LOAD16_BYTE( "263-c2d.bin", 0x0000001, 0x800000, CRC(5ab0d12b) SHA1(8a3d95dd2e9cc1b6dcf6a957fed43ee390248307) ) /* Plane 2,3 */
 	ROM_LOAD16_BYTE( "263-c3d.bin", 0x1000000, 0x800000, CRC(61af560c) SHA1(aa7bc45e03a6bbd18eb56d118d4932102ccb196a) ) /* Plane 0,1 */
 	ROM_LOAD16_BYTE( "263-c4d.bin", 0x1000001, 0x800000, CRC(f2c544fd) SHA1(179b064f81b49f5808d7a7a5bce28e95b09e5abe) ) /* Plane 2,3 */
-	ROM_LOAD16_BYTE( "263-c5d.bin", 0x2000000, 0x400000, CRC(3348dc5d) SHA1(a119e80aa2b36a7d8c7e8debd0eb13441a19adff) )
-	ROM_LOAD16_BYTE( "263-c6d.bin", 0x2000001, 0x400000, CRC(d90fc1a0) SHA1(0eaf5f658212c19a4cdbcdbff3b04389a2be76bb) )
+	ROM_LOAD16_BYTE( "263-c5cd.bin", 0x2000000, 0x400000, CRC(3348dc5d) SHA1(a119e80aa2b36a7d8c7e8debd0eb13441a19adff) )
+	ROM_LOAD16_BYTE( "263-c6cd.bin", 0x2000001, 0x400000, CRC(d90fc1a0) SHA1(0eaf5f658212c19a4cdbcdbff3b04389a2be76bb) )
 ROM_END
 
 ROM_START( ms4plus )
@@ -8443,8 +8440,8 @@ ROM_START( kof10thd )
 	NEO_BIOS_SOUND_128K( "kf10-m1.bin", CRC(f6fab859) SHA1(0184aa1394b9f9946d610278b53b846020dd88dc) )
 
 	ROM_REGION( 0x1000000, REGION_SOUND1, 0 )
-	ROM_LOAD( "265-v1d.bin", 0x000000, 0x800000, CRC(0fc9a58d) SHA1(9d79ef00e2c2abd9f29af5521c2fbe5798bf336f) )
-	ROM_LOAD( "265-v2d.bin", 0x800000, 0x800000, CRC(b8c475a4) SHA1(10caf9c69927a223445d2c4b147864c02ce520a8) )
+	ROM_LOAD( "265-v1.bin", 0x000000, 0x800000, CRC(15e8f3f5) SHA1(7c9e6426b9fa6db0158baa17a6485ffce057d889) )
+	ROM_LOAD( "265-v2.bin", 0x800000, 0x800000, CRC(da41d6f9) SHA1(a43021f1e58947dcbe3c8ca5283b20b649f0409d) )
 
 	NO_DELTAT_REGION
 
@@ -8492,14 +8489,14 @@ ROM_START( kof2003d )
 	NO_DELTAT_REGION
 
 	ROM_REGION( 0x4000000, REGION_GFX3, 0 )
-	ROM_LOAD16_BYTE( "271-c1d.bin", 0x0000000, 0x800000, CRC(e42fc226) SHA1(1cd9364993e141facdcdd53ec2277df7b275d8a7) )
-	ROM_LOAD16_BYTE( "271-c2d.bin", 0x0000001, 0x800000, CRC(1b5e3b58) SHA1(0eb254477a9479541291e43e415310852a0f0bed) )
-	ROM_LOAD16_BYTE( "271-c3d.bin", 0x1000000, 0x800000, CRC(d334fdd9) SHA1(1efe30b4f56a55e25ab518cf6999de797b5e407c) )
-	ROM_LOAD16_BYTE( "271-c4d.bin", 0x1000001, 0x800000, CRC(0d457699) SHA1(ec73d0c9fc7094d0ac6c0986a6e07cde25893e57) )
-	ROM_LOAD16_BYTE( "271-c5d.bin", 0x2000000, 0x800000, CRC(8a91aae4) SHA1(802f4baacf801646be1ef686e105b2e867a6a5df) )
-	ROM_LOAD16_BYTE( "271-c6d.bin", 0x2000001, 0x800000, CRC(9f8674b8) SHA1(65964f40b2227d020023fb436579927e65807dcd) )
-	ROM_LOAD16_BYTE( "271-c7d.bin", 0x3000000, 0x800000, CRC(8ee6b43c) SHA1(c78b749c7c8e1d8ab8335b96da03764cc8e9eb21) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "271-c8d.bin", 0x3000001, 0x800000, CRC(6d8d2d60) SHA1(841698eead0f7d422937ce2f2329e17c383d90a6) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "271-c1cd.bin", 0x0000000, 0x800000, CRC(e42fc226) SHA1(1cd9364993e141facdcdd53ec2277df7b275d8a7) )
+	ROM_LOAD16_BYTE( "271-c2cd.bin", 0x0000001, 0x800000, CRC(1b5e3b58) SHA1(0eb254477a9479541291e43e415310852a0f0bed) )
+	ROM_LOAD16_BYTE( "271-c3cd.bin", 0x1000000, 0x800000, CRC(d334fdd9) SHA1(1efe30b4f56a55e25ab518cf6999de797b5e407c) )
+	ROM_LOAD16_BYTE( "271-c4cd.bin", 0x1000001, 0x800000, CRC(0d457699) SHA1(ec73d0c9fc7094d0ac6c0986a6e07cde25893e57) )
+	ROM_LOAD16_BYTE( "271-c5cd.bin", 0x2000000, 0x800000, CRC(8a91aae4) SHA1(802f4baacf801646be1ef686e105b2e867a6a5df) )
+	ROM_LOAD16_BYTE( "271-c6cd.bin", 0x2000001, 0x800000, CRC(9f8674b8) SHA1(65964f40b2227d020023fb436579927e65807dcd) )
+	ROM_LOAD16_BYTE( "271-c7cd.bin", 0x3000000, 0x800000, CRC(8ee6b43c) SHA1(c78b749c7c8e1d8ab8335b96da03764cc8e9eb21) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "271-c8cd.bin", 0x3000001, 0x800000, CRC(6d8d2d60) SHA1(841698eead0f7d422937ce2f2329e17c383d90a6) ) /* Plane 2,3 */
 ROM_END
 
 ROM_START( kf2k3pcd ) /* Decrypted C ROMs Version - Encrypted Code & Sound */
@@ -8732,14 +8729,14 @@ ROM_START( svcd )
 
 	ROM_REGION( 0x4000000, REGION_GFX3, 0 )
 	/* Encrypted */
-	ROM_LOAD16_BYTE( "269-c1d.bin", 0x0000000, 0x800000, CRC(465d473b) SHA1(0b2be2b2657c2ae021ec91515d1d6306179751d5) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "269-c2d.bin", 0x0000001, 0x800000, CRC(3eb28f78) SHA1(df1b096fe95796db1515b69f74266ed13dd9ee56) ) /* Plane 2,3 */
-	ROM_LOAD16_BYTE( "269-c3d.bin", 0x1000000, 0x800000, CRC(f4d4ab2b) SHA1(a19788435173540469fe5d07429a83dde6d701a0) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "269-c4d.bin", 0x1000001, 0x800000, CRC(a69d523a) SHA1(98d8dac2e40f71b5b8426d3c77476a0a20783181) ) /* Plane 2,3 */
-	ROM_LOAD16_BYTE( "269-c5d.bin", 0x2000000, 0x800000, CRC(ba2a7892) SHA1(eed45e1330dcc9f610598dc53977bf3a81dd161a) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "269-c6d.bin", 0x2000001, 0x800000, CRC(37371ca1) SHA1(8aaa1b9ea34470085d9944c9ad64cfb0ffe09859) ) /* Plane 2,3 */
-	ROM_LOAD16_BYTE( "269-c7d.bin", 0x3000000, 0x800000, CRC(5595b6cc) SHA1(9d6cc70f435401355b885475ccc3864825887656) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "269-c8d.bin", 0x3000001, 0x800000, CRC(b17dfcf9) SHA1(46af296b12831ee40355f52d2c316f609557d6df) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "269-c1cd.bin", 0x0000000, 0x800000, CRC(465d473b) SHA1(0b2be2b2657c2ae021ec91515d1d6306179751d5) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "269-c2cd.bin", 0x0000001, 0x800000, CRC(3eb28f78) SHA1(df1b096fe95796db1515b69f74266ed13dd9ee56) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "269-c3cd.bin", 0x1000000, 0x800000, CRC(f4d4ab2b) SHA1(a19788435173540469fe5d07429a83dde6d701a0) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "269-c4cd.bin", 0x1000001, 0x800000, CRC(a69d523a) SHA1(98d8dac2e40f71b5b8426d3c77476a0a20783181) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "269-c5cd.bin", 0x2000000, 0x800000, CRC(ba2a7892) SHA1(eed45e1330dcc9f610598dc53977bf3a81dd161a) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "269-c6cd.bin", 0x2000001, 0x800000, CRC(37371ca1) SHA1(8aaa1b9ea34470085d9944c9ad64cfb0ffe09859) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "269-c7cd.bin", 0x3000000, 0x800000, CRC(5595b6cc) SHA1(9d6cc70f435401355b885475ccc3864825887656) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "269-c8cd.bin", 0x3000001, 0x800000, CRC(b17dfcf9) SHA1(46af296b12831ee40355f52d2c316f609557d6df) ) /* Plane 2,3 */
 ROM_END
 
 ROM_START( jckeygpd )
@@ -9581,6 +9578,12 @@ DRIVER_INIT( mslug5d )
 	init_gfxdec42();
 }
 
+DRIVER_INIT( kof10thd )
+{
+	neo_pcm2_swap(0);
+	init_neogeo();
+}
+
 DRIVER_INIT( svcd )
 {
 	svcchaos_px_decrypt();
@@ -10034,7 +10037,6 @@ GAMEB( 1999, ctomaday, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco
 GAMEB( 1999, ganryu,   neogeo,   neogeo, neogeo, neogeo,  ganryu,   ROT0, "Visco", "Ganryu / Musashi Ganryuki" , 0)	/* Encrypted GFX */
 GAMEB( 1999, ganryud,  ganryu,   neogeo, neogeo, neogeo,  gfxdec42, ROT0, "Visco", "Ganryu / Musashi Ganryuki (decrypted C)", 0 )
 GAMEB( 2000, bangbead, neogeo,   neogeo, neogeo, neogeo,  bangbead, ROT0, "Visco", "Bang Bead", 0 )
-//GAMEB( 2000, bangbedp, bangbead, neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Bang Bead (prototype)", 0 )
 
 /* Mega Enterprise */
 GAMEB( 2002, mslug4,   neogeo,   neogeo, neogeo, neogeo,  mslug4,   ROT0, "Mega", "Metal Slug 4", 0 )
@@ -10089,6 +10091,7 @@ GAMEB( 2001, jckeygpd, jockeygp, neogeo, neogeo, jockeygp,jckeygpd, ROT0, "Sun A
 GAME ( 2003, kf2k3pcd, kf2k3pcb,         neogeo, neogeo,  kf2k3pcd, ROT0, "SNK Playmore", "The King of Fighters 2003 (Japan, JAMMA PCB / decrypted C)" , 0 ) /* Encrypted Code & Sound */
 GAMEB( 2005, kogd,     kof97,    neogeo, neogeo, kog,     neogeo,   ROT0, "bootleg", "The King of gladiator (The King of Fighters '97 bootleg / fully decrypted)", 0 )
 GAMEB( 2003, pnyaad,   pnyaa,    neogeo, neogeo, neogeo,  pnyaad,   ROT0, "Aiky / Taito", "Pochi and Nyaa / Pochi tto Nyaa (decrypted C)" , 0 ) /* Encrypted Sound */
+GAMEB( 2000, bangbedp, bangbead, neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Bang Bead (prototype)", 0 )
 /* new Bootleg */
 GAMEB( 2003, kof97pla, kof97,    neogeo, neogeo, neogeo,  kof97pla, ROT0, "bootleg", "The King of Fighters '97 Plus 2003 (bootleg)", 0 )
 GAMEB( 2003, mslug5b,  mslug5,   neogeo, neogeo, neogeo,  mslug5b,  ROT0, "bootleg", "Metal Slug 5 (bootleg)", 0 )

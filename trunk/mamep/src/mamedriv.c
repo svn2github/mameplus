@@ -5246,7 +5246,6 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( kof2000n )	/* 0257 (c) 2000 SNK */
 				/* 0258 SNK vs. Capcom? */
 	DRIVER( bangbead )	/* 0259 (c) 2000 Visco */
-//	DRIVER( bangbedp )	/* 0259 (c) 2000 Visco */
 	DRIVER( nitd )		/* 0260 (c) 2000 Eleven / Gavaking */
 	DRIVER( sengoku3 )	/* 0261 (c) 2001 SNK */
 	DRIVER( kof2001 )	/* 0262 (c) 2001 Eolith / SNK */
@@ -5344,19 +5343,20 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( rotdd )		/* 0264 (c) 2002 Evoga */
 	DRIVER( kof2002d )	/* 0265 (c) 2002 Eolith / Playmore */
 	DRIVER( matrimd )	/* 0266 (c) 2002 Atlus */
-    DRIVER( ct2k3ad )
-    DRIVER( cthd2k3d )
-    DRIVER( kof10thd )
-    DRIVER( kof2003d )
-    DRIVER( mslug5d )
-    DRIVER( samsho5d )
-    DRIVER( samsh5sd )
-    DRIVER( lans2k4d )
-    DRIVER( svcd )
-    DRIVER( jckeygpd )
-    DRIVER( kf2k3pcd )
-    DRIVER( kogd )
-    DRIVER( pnyaad )
+		DRIVER( ct2k3ad )
+		DRIVER( cthd2k3d )
+		DRIVER( kof10thd )
+		DRIVER( kof2003d )
+		DRIVER( mslug5d )
+		DRIVER( samsho5d )
+		DRIVER( samsh5sd )
+		DRIVER( lans2k4d )
+		DRIVER( svcd )
+		DRIVER( jckeygpd )
+		DRIVER( kf2k3pcd )
+		DRIVER( kogd )
+		DRIVER( pnyaad )
+		DRIVER( bangbedp )	/* 0259 (c) 2000 Visco */
 #endif /* USE_NEOGEO_DECRYPTED */
 	
 #ifndef NEOCPSMAME
