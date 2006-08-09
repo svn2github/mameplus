@@ -5932,7 +5932,7 @@ ROM_END
 
 /* same data, diff. format roms, not encrypted, it could be a bootleg, not a prototype, since its identical
    when decrypted i'm disabling it for now */
-#if 0
+//#if 0
 ROM_START( bangbedp )
 	ROM_REGION( 0x200000, REGION_CPU1, 0 )
 	ROM_LOAD16_WORD_SWAP( "259-p1.bin", 0x100000, 0x100000, CRC(88a37f8b) SHA1(566db84850fad5e8fe822e8bba910a33e083b550) )
@@ -5955,7 +5955,7 @@ ROM_START( bangbedp )
 	ROM_LOAD16_BYTE( "259-c3p.bin", 0x400000, 0x100000, CRC(c8e52157) SHA1(f10f58e905c4cbaf182b20e63abe5364462133c5) ) /* Plane 0,1 */
 	ROM_LOAD16_BYTE( "259-c4p.bin", 0x400001, 0x100000, CRC(69fa8e60) SHA1(29c1fbdb79dedf1470683202e2cb3435732d9275) ) /* Plane 2,3 */
 ROM_END
-#endif
+//#endif
 
 ROM_START( nitd ) /* Original Version - Encrypted GFX */
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )
