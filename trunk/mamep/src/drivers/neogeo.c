@@ -10088,7 +10088,7 @@ GAMEB( 2003, samsh5sd, samsh5sp, neogeo, neogeo, neogeo,  samsh5sd, ROT0, "Yuki 
 GAMEB( 2004, lans2k4d, shocktr2, neogeo, neogeo, neogeo,  neogeo,   ROT0, "bootleg", "Lansquenet 2004 (Shock Troopers - 2nd Squad Bootleg / fully decrypted)", 0 )
 GAMEB( 2003, svcd,     svc,      neogeo, neogeo, neogeo,  svcd,     ROT0, "booleg", "SVC Chaos - SNK vs CAPCOM (MVS / decrypted C)",0 )
 GAMEB( 2001, jckeygpd, jockeygp, neogeo, neogeo, jockeygp,jckeygpd, ROT0, "Sun Amusement / BrezzaSoft", "Jockey Grand Prix (decrypted C)", 0 )
-GAME ( 2003, kf2k3pcd, kf2k3pcb,         neogeo, neogeo,  kf2k3pcd, ROT0, "SNK Playmore", "The King of Fighters 2003 (Japan, JAMMA PCB / decrypted C)" , 0 ) /* Encrypted Code & Sound */
+GAME ( 2003, kf2k3pcd, kf2k3pcb,         neogeo, neogeo,  kf2k3pcd, ROT0, "SNK Playmore", "The King of Fighters 2003 (Japan, JAMMA PCB / decrypted C&Bios)" , 0 ) /* Encrypted Code & Sound */
 GAMEB( 2005, kogd,     kof97,    neogeo, neogeo, kog,     neogeo,   ROT0, "bootleg", "The King of gladiator (The King of Fighters '97 bootleg / fully decrypted)", 0 )
 GAMEB( 2003, pnyaad,   pnyaa,    neogeo, neogeo, neogeo,  pnyaad,   ROT0, "Aiky / Taito", "Pochi and Nyaa / Pochi tto Nyaa (decrypted C)" , 0 ) /* Encrypted Sound */
 GAMEB( 2000, bangbedp, bangbead, neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Bang Bead (prototype)", 0 )
