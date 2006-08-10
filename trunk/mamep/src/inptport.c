@@ -109,11 +109,9 @@
 #include "neogeo.h"
 #endif /* USE_NEOGEO_HACKS */
 
-/*************************************
- *
- *  Constants
- *
- *************************************/
+/***************************************************************************
+    CONSTANTS
+***************************************************************************/
 
 #define DIGITAL_JOYSTICKS_PER_PLAYER	3
 
@@ -130,11 +128,9 @@
 
 
 
-/*************************************
- *
- *  Type definitions
- *
- *************************************/
+/***************************************************************************
+    TYPE DEFINITIONS
+***************************************************************************/
 
 typedef struct _analog_port_info analog_port_info;
 struct _analog_port_info
@@ -226,11 +222,9 @@ struct _input_port_init_params
 
 
 
-/*************************************
- *
- *  Macros
- *
- *************************************/
+/***************************************************************************
+    MACROS
+***************************************************************************/
 
 #define IS_ANALOG(in)				((in)->type >= __ipt_analog_start && (in)->type <= __ipt_analog_end)
 #define IS_DIGITAL_JOYSTICK(in)		((in)->type >= __ipt_digital_joystick_start && (in)->type <= __ipt_digital_joystick_end)
@@ -246,11 +240,9 @@ struct _input_port_init_params
 input_port_entry *input_ports_default;
 
 
-/*************************************
- *
- *  Local variables
- *
- *************************************/
+/***************************************************************************
+    GLOBAL VARIABLES
+***************************************************************************/
 
 /* current value of all the ports */
 static input_port_info port_info[MAX_INPUT_PORTS];
@@ -298,11 +290,9 @@ static void make_input_log(void);
 
 
 
-/*************************************
- *
- *  Port handler tables
- *
- *************************************/
+/***************************************************************************
+    PORT HANDLER TABLES
+***************************************************************************/
 
 static const read8_handler port_handler8[] =
 {
@@ -344,11 +334,9 @@ static const read32_handler port_handler32[] =
 
 
 
-/*************************************
- *
- *  Common shared strings
- *
- *************************************/
+/***************************************************************************
+    COMMON SHARED STRINGS
+***************************************************************************/
 
 const char *input_port_default_strings[] =
 {
@@ -464,11 +452,9 @@ const char *input_port_default_strings[] =
 
 
 
-/*************************************
- *
- *  Default input ports
- *
- *************************************/
+/***************************************************************************
+    DEFAULT INPUT PORTS
+***************************************************************************/
 
 #define INPUT_PORT_DIGITAL_DEF(player_,group_,type_,name_,seq_) \
 	{ IPT_##type_, group_, (player_ == 0) ? player_ : (player_) - 1, (player_ == 0) ? #type_ : ("P" #player_ "_" #type_), name_, seq_, SEQ_DEF_0, SEQ_DEF_0 },
@@ -1083,11 +1069,9 @@ static int default_ports_lookup[__ipt_max][MAX_PLAYERS];
 
 
 
-/*************************************
- *
- *  Function prototypes
- *
- *************************************/
+/***************************************************************************
+    FUNCTION PROTOTYPES
+***************************************************************************/
 
 static void input_port_load(int config_type, xml_data_node *parentnode);
 static void input_port_save(int config_type, xml_data_node *parentnode);
@@ -1097,6 +1081,10 @@ static void interpolate_analog_port(int port);
 
 static int auto_pressed(input_bit_info *info);
 
+
+/***************************************************************************
+    CORE IMPLEMENTATION
+***************************************************************************/
 
 /*************************************
  *

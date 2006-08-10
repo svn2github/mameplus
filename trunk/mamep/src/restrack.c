@@ -46,10 +46,9 @@ int resource_tracking_tag = 0;
 static callback_item *free_resources_callback_list;
 
 
+
 /***************************************************************************
-
-    Resource tracking code
-
+    CORE IMPLEMENTATION
 ***************************************************************************/
 
 /*-------------------------------------------------

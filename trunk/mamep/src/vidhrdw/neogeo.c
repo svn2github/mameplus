@@ -179,7 +179,6 @@ void neogeo_set_lower_resolution( void )
 		!strcmp(Machine->gamedrv->name,"kf10thep") ||
 		!strcmp(Machine->gamedrv->name,"kof2k4se") ||
 		!strcmp(Machine->gamedrv->name,"kf2k4pls") ||	// added
-		!strcmp(Machine->gamedrv->name,"ms5pcb") ||
 		!strcmp(Machine->gamedrv->name,"mslug5") ||
 		!strcmp(Machine->gamedrv->name,"ms5plus") ||
 		!strcmp(Machine->gamedrv->name,"svcpcb") ||
@@ -268,6 +267,7 @@ void neogeo_set_lower_resolution( void )
 		!strcmp(Machine->gamedrv->name,"mslug4") ||
 		!strcmp(Machine->gamedrv->name,"ms4plus") ||
 		!strcmp(Machine->gamedrv->name,"mslug4d") ||	// added
+		!strcmp(Machine->gamedrv->name,"ms5pcb") ||
 		!strcmp(Machine->gamedrv->name,"jockeygp") ||
 		!strcmp(Machine->gamedrv->name,"vliner") ||
 		!strcmp(Machine->gamedrv->name,"vlinero") ||
