@@ -4345,6 +4345,7 @@ static int MMO2LST(void)
 	OPENFILENAMEA OpenFileName;
 	char szFile[MAX_PATH]   = "\0";
 	char szCurDir[MAX_PATH] = "\1";
+	char buf[50];
 
 	sprintf(szFile, MAME32NAME "%s", ui_lang_info[options.langcode].shortname);
 	strcpy(szFile, strlower(szFile));
@@ -4411,7 +4412,8 @@ static int MMO2LST(void)
 	    }
 	fclose(fp);
 
-	SendMessage(hStatusBar, SB_SETTEXT, (WPARAM)0, (LPARAM)(void *)_Unicode(_UI("File Created!")));
+	sprintf(buf, "File: %s Created!", szFile);
+	SendMessage(hStatusBar, SB_SETTEXT, (WPARAM)0, (LPARAM)(void *)_Unicode(_UI(buf)));
 	}
 			bIsTrue = TRUE;
 			}
