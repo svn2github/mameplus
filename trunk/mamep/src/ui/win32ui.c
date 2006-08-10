@@ -240,7 +240,6 @@ enum
 	FILETYPE_WAVE_FILES,
 	FILETYPE_MNG_FILES,
 	FILETYPE_IMAGE_FILES,
-	FILETYPE_LST_FILES,
 	FILETYPE_MAX
 };
 
@@ -825,13 +824,6 @@ static struct
 		NULL,
 		GetBgDir,
 		"png"
-	},
-	{
-		MAME32NAME " game list files (*.lst)\0*.lst;\0All files (*.*)\0*.*\0",
-		NULL,
-		"Select a game list file to export",
-		GetLastDir,
-		"lst"
 	},
 };
 
@@ -4349,23 +4341,63 @@ static void ResetListView()
 static int MMO2LST(void)
 {
 	int i;
-	FILE *file;
-	char filename[MAX_PATH];
-	*filename = 0;
+	BOOL bIsTrue = FALSE;
+	OPENFILENAMEA OpenFileName;
+	char szFile[MAX_PATH]   = "\0";
+	char szCurDir[MAX_PATH] = "\1";
 
-	sprintf(filename, MAME32NAME "%s", ui_lang_info[options.langcode].shortname);
-	strcpy(filename, strlower(filename));
+	sprintf(szFile, MAME32NAME "%s", ui_lang_info[options.langcode].shortname);
+	strcpy(szFile, strlower(szFile));
 
-	if (CommonFileDialog(TRUE, filename, FILETYPE_LST_FILES))
+	// Save current directory (avoids mame file creation further failure)
+	if ( GetCurrentDirectoryA(MAX_PATH, szCurDir) > MAX_PATH )
 	{
-		file = fopen(filename, "wt");
-		if (file == NULL)
-		{
-			//fprintf(stderr, "error: create file %s\n", filename);
-			fclose(file);
-			return 2;
-		}
+		// If path is too large than Null
+		szCurDir[0] = 0;
+	}
 
+	OpenFileName.lStructSize       = sizeof(OPENFILENAME);
+	OpenFileName.hwndOwner         = hMain;
+	OpenFileName.hInstance         = 0;
+	OpenFileName.lpstrFilter       = "game list files (*.lst)\0*.lst;\0All files (*.*)\0*.*\0";
+	OpenFileName.lpstrCustomFilter = NULL;
+	OpenFileName.nMaxCustFilter    = 0;
+	OpenFileName.nFilterIndex      = 1;
+	OpenFileName.lpstrFile         = szFile;
+	OpenFileName.nMaxFile          = sizeof(szFile);
+	OpenFileName.lpstrFileTitle    = NULL;
+	OpenFileName.nMaxFileTitle     = 0;
+	OpenFileName.lpstrInitialDir   = NULL;
+	OpenFileName.lpstrTitle        = _UI("Select a game list file to export");
+	OpenFileName.nFileOffset       = 0;
+	OpenFileName.nFileExtension    = 0;
+	OpenFileName.lpstrDefExt       = ".lst";
+	OpenFileName.lCustData         = 0;
+	OpenFileName.lpfnHook          = NULL;
+	OpenFileName.lpTemplateName    = NULL;
+	OpenFileName.Flags             = OFN_EXPLORER | OFN_HIDEREADONLY | OFN_PATHMUSTEXIST;
+
+		while( !bIsTrue )
+		{
+			if ( GetOpenFileNameA(&OpenFileName) )
+			{
+				if ( GetFileAttributesA(szFile) != -1 )
+				{
+					if ( MessageBoxA(GetMainWindow(), _UI("File already exists, overwrite?") , MAME32NAME, MB_OKCANCEL | MB_ICONEXCLAMATION) != IDOK )
+						continue;
+					else
+						bIsTrue = TRUE;
+
+					SetFileAttributesA(szFile, FILE_ATTRIBUTE_NORMAL);
+				}
+
+	FILE *fp = fopen(szFile, "wt");
+	if (fp == NULL)
+	{
+		MessageBoxA(GetMainWindow(), "Error : unable to access file", MAME32NAME, MB_OK | MB_ICONERROR);
+	}
+	else
+	{
 	    for (i = 0; drivers[i]; i++)
 	    {
 		    const char *lst = _LST(drivers[i]->description);
@@ -4374,12 +4406,22 @@ static int MMO2LST(void)
 		    if (readings == drivers[i]->description)
 			    readings = lst;
     
-		    fprintf(file, "%s\t%s\t%s\t%s\n",
+		    fprintf(fp, "%s\t%s\t%s\t%s\n",
 			    drivers[i]->name, lst, readings, drivers[i]->manufacturer);
 	    }
-    
-	    fclose(file);
+	fclose(fp);
+
+	SendMessage(hStatusBar, SB_SETTEXT, (WPARAM)0, (LPARAM)(void *)_Unicode(_UI("File Created!")));
 	}
+			bIsTrue = TRUE;
+			}
+			else
+				break;
+		}
+
+		// Restore current file path
+		if ( szCurDir[0] != 0 )
+			SetCurrentDirectoryA(szCurDir);
 	return 0;
 }
 
