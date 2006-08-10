@@ -4345,7 +4345,7 @@ static int MMO2LST(void)
 	OPENFILENAMEA OpenFileName;
 	char szFile[MAX_PATH]   = "\0";
 	char szCurDir[MAX_PATH] = "\1";
-	char buf[50];
+	char buf[256];
 
 	sprintf(szFile, MAME32NAME "%s", ui_lang_info[options.langcode].shortname);
 	strcpy(szFile, strlower(szFile));
