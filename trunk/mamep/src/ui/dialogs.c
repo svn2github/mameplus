@@ -614,7 +614,7 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 	{
 	case WM_INITDIALOG:
 	{
-	    TREEFOLDER **folders;
+		TREEFOLDER **folders;
 		int num_folders;
 		int i;
 		TVINSERTSTRUCT tvis;
@@ -646,9 +646,9 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 		// insert custom folders into our tree view
 		for (i=0;i<num_folders;i++)
 		{
-		    if (folders[i]->m_dwFlags & F_CUSTOM)
+			if (folders[i]->m_dwFlags & F_CUSTOM)
 			{
-			    HTREEITEM hti;
+				HTREEITEM hti;
 				int jj;
 
 				if (folders[i]->m_nParent == -1)
@@ -671,10 +671,10 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 					/* look for children of this custom folder */
 					for (jj=0;jj<num_folders;jj++)
 					{
-					    if (folders[jj]->m_nParent == i)
+						if (folders[jj]->m_nParent == i)
 						{
-						    HTREEITEM hti_child;
-						    tvis.hParent = hti;
+							HTREEITEM hti_child;
+							tvis.hParent = hti;
 							tvis.hInsertAfter = TVI_SORT;
 							tvi.mask = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
 							tvi.pszText = _Unicode(folders[jj]->m_lpTitle);
@@ -682,9 +682,9 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 							tvi.iImage = GetTreeViewIconIndex(folders[jj]->m_nIconId);
 							tvi.iSelectedImage = 0;
 #if !defined(NONAMELESSUNION)
-					        tvis.item = tvi;
+							tvis.item = tvi;
 #else
-					        tvis.DUMMYUNIONNAME.item = tvi;
+							tvis.DUMMYUNIONNAME.item = tvi;
 #endif							
 							hti_child = TreeView_InsertItem(GetDlgItem(hDlg,IDC_CUSTOM_TREE),&tvis);
 							if (folders[jj] == default_selection)

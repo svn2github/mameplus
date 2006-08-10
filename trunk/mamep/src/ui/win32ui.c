@@ -7762,13 +7762,11 @@ void SwitchFullScreenMode(void)
 
 		// Show the window maximized
 		if( GetWindowState() == SW_MAXIMIZE )
-/*
 		{
 			ShowWindow(hMain, SW_NORMAL);
 			ShowWindow(hMain, SW_MAXIMIZE);
 		}
 		else
-*/
 			ShowWindow(hMain, SW_RESTORE);
 
 		SetRunFullScreen(FALSE);

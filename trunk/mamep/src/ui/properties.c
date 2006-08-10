@@ -200,7 +200,7 @@ static int  g_nSampleRateIndex = 0;
 static int  g_nVolumeIndex     = 0;
 static int  g_nPriorityIndex   = 0;
 static int  g_nGammaIndex      = 0;
-static int  g_nContrastIndex      = 0;
+static int  g_nContrastIndex   = 0;
 static int  g_nBrightIndex = 0;
 static int  g_nPauseBrightIndex = 0;
 static int  g_nBeamIndex       = 0;
@@ -208,7 +208,7 @@ static int  g_nFlickerIndex    = 0;
 static int  g_nRotateIndex     = 0;
 static int  g_nScreenIndex     = 0;
 static int  g_nInputIndex      = 0;
-static int  g_nPrescaleIndex      = 0;
+static int  g_nPrescaleIndex   = 0;
 static int  g_nFullScreenGammaIndex = 0;
 static int  g_nFullScreenBrightnessIndex = 0;
 static int  g_nFullScreenContrastIndex = 0;
@@ -229,7 +229,7 @@ static BOOL g_bAnalogCheckState[65]; // 8 Joysticks  * 8 Axes each
 static int  g_nScaleEffectIndex= 0;
 #endif /* USE_SCALE_EFFECTS */
 #ifdef TRANS_UI
-static int  g_nUITransparencyIndex  = 0;
+static int  g_nUITransparencyIndex = 0;
 #endif /* TRANS_UI */
 
 static HICON g_hIcon = NULL;
