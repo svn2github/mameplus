@@ -1869,9 +1869,9 @@ static void ApplyMenuStyle(HINSTANCE hInst, HWND hwnd, HMENU menuHandle)
 static void ChangeMenuStyle(int id)
 {
 	if (id)
-			SetImageMenuStyle(id - ID_STYLE_NONE);
+		SetImageMenuStyle(id - ID_STYLE_NONE);
 
-		CheckMenuRadioItem(GetMenu(hMain), ID_STYLE_NONE, ID_STYLE_NONE + MENU_STYLE_MAX, ID_STYLE_NONE + GetImageMenuStyle(), MF_BYCOMMAND);
+	CheckMenuRadioItem(GetMenu(hMain), ID_STYLE_NONE, ID_STYLE_NONE + MENU_STYLE_MAX, ID_STYLE_NONE + GetImageMenuStyle(), MF_BYCOMMAND);
 	ApplyMenuStyle(hInst, hMain, GetMenu(hMain));
 }
 #endif /* IMAGE_MENU */
@@ -4335,96 +4335,54 @@ static void ResetListView()
 	SetWindowRedraw(hwndList, TRUE);
 
 	UpdateStatusBar();
-
 }
 
 static int MMO2LST(void)
 {
 	int i;
-	BOOL bIsTrue = FALSE;
-	OPENFILENAMEA OpenFileName;
-	char szFile[MAX_PATH]   = "\0";
-	char szCurDir[MAX_PATH] = "\1";
+	OPENFILENAMEA ofn;
+	char szFile[MAX_PATH] = "\0";
 	char buf[256];
-	FILE *fp;
+	FILE* fp = NULL;
 
 	sprintf(szFile, MAME32NAME "%s", ui_lang_info[options.langcode].shortname);
 	strcpy(szFile, strlower(szFile));
 
-	// Save current directory (avoids mame file creation further failure)
-	if ( GetCurrentDirectoryA(MAX_PATH, szCurDir) > MAX_PATH )
-	{
-		// If path is too large than Null
-		szCurDir[0] = 0;
-	}
+	memset(&ofn, 0, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner   = hMain;
+	ofn.lpstrFilter = "game list files (*.lst)\0*.lst;\0All files (*.*)\0*.*\0";
+	ofn.lpstrFile   = szFile;
+	ofn.nMaxFile    = sizeof(szFile);
+	ofn.lpstrTitle  = _UI("Export a game list file");
+	ofn.lpstrDefExt = "lst";
+	ofn.Flags       = OFN_NOCHANGEDIR | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
 
-	OpenFileName.lStructSize       = sizeof(OPENFILENAME);
-	OpenFileName.hwndOwner         = hMain;
-	OpenFileName.hInstance         = 0;
-	OpenFileName.lpstrFilter       = "game list files (*.lst)\0*.lst;\0All files (*.*)\0*.*\0";
-	OpenFileName.lpstrCustomFilter = NULL;
-	OpenFileName.nMaxCustFilter    = 0;
-	OpenFileName.nFilterIndex      = 1;
-	OpenFileName.lpstrFile         = szFile;
-	OpenFileName.nMaxFile          = sizeof(szFile);
-	OpenFileName.lpstrFileTitle    = NULL;
-	OpenFileName.nMaxFileTitle     = 0;
-	OpenFileName.lpstrInitialDir   = NULL;
-	OpenFileName.lpstrTitle        = _UI("Select a game list file to export");
-	OpenFileName.nFileOffset       = 0;
-	OpenFileName.nFileExtension    = 0;
-	OpenFileName.lpstrDefExt       = ".lst";
-	OpenFileName.lCustData         = 0;
-	OpenFileName.lpfnHook          = NULL;
-	OpenFileName.lpTemplateName    = NULL;
-	OpenFileName.Flags             = OFN_EXPLORER | OFN_HIDEREADONLY | OFN_PATHMUSTEXIST;
-
-		while( !bIsTrue )
-		{
-			if ( GetOpenFileNameA(&OpenFileName) )
-			{
-				if ( GetFileAttributesA(szFile) != -1 )
-				{
-					if ( MessageBoxA(GetMainWindow(), _UI("File already exists, overwrite?") , MAME32NAME, MB_OKCANCEL | MB_ICONEXCLAMATION) != IDOK )
-						continue;
-					else
-						bIsTrue = TRUE;
-
-					SetFileAttributesA(szFile, FILE_ATTRIBUTE_NORMAL);
-				}
+	if (GetSaveFileNameA(&ofn) == 0)
+		return 1;
 
 	fp = fopen(szFile, "wt");
 	if (fp == NULL)
 	{
-		MessageBoxA(GetMainWindow(), "Error : unable to access file", MAME32NAME, MB_OK | MB_ICONERROR);
+		sprintf(buf, "Could not create '%s'", szFile);
+		SetStatusBarText(0, _UI(buf));
+		return 1;
 	}
-	else
+
+	for (i = 0; drivers[i]; i++)
 	{
-	    for (i = 0; drivers[i]; i++)
-	    {
-		    const char *lst = _LST(drivers[i]->description);
-		    const char *readings = _READINGS(drivers[i]->description);
-    
-		    if (readings == drivers[i]->description)
-			    readings = lst;
-    
-		    fprintf(fp, "%s\t%s\t%s\t%s\n",
-			    drivers[i]->name, lst, readings, drivers[i]->manufacturer);
-	    }
+		const char *lst = _LST(drivers[i]->description);
+		const char *readings = _READINGS(drivers[i]->description);
+
+		if (readings == drivers[i]->description)
+			readings = lst;
+
+		fprintf(fp, "%s\t%s\t%s\t%s\n", drivers[i]->name, lst, readings, drivers[i]->manufacturer);
+	}
 	fclose(fp);
 
-	sprintf(buf, "File: %s Created!", szFile);
-	SendMessage(hStatusBar, SB_SETTEXT, (WPARAM)0, (LPARAM)(void *)_Unicode(_UI(buf)));
-	}
-			bIsTrue = TRUE;
-			}
-			else
-				break;
-		}
-
-		// Restore current file path
-		if ( szCurDir[0] != 0 )
-			SetCurrentDirectoryA(szCurDir);
+	sprintf(buf, "'%s' created", szFile);
+	SetStatusBarText(0, _UI(buf));
 	return 0;
 }
 
@@ -7732,7 +7690,7 @@ void SwitchFullScreenMode(void)
 {
 	LONG lMainStyle;
 	int i;
-	
+
 	if (GetRunFullScreen())
 	{
 		// Return to normal
