@@ -175,6 +175,7 @@ hexpool	ヘックスプール	へっくすぷーる	Shinkai
 trvchlng	トリビアチャレンジ	とりびあ_2_ちゃれんじ	Joyland (Senko License)
 luctoday	ラッキートゥデイ	らっきーとぅでい	Sigma
 chewing	チューイングガム	ちゅーいんぐがむ	unknown
+catacomb	カタコンブ	かたこんぶ	MTM Games
 rockclim	ロッククライマー	ろっくくらいまー	Taito
 scramble	スクランブル	すくらんぶる	Konami
 scrambls	スクランブル (Stern)	すくらんぶる	[Konami] (Stern license)
@@ -508,6 +509,7 @@ galaga	ギャラガ (Namco rev B)	ぎゃらが	Namco
 galagao	ギャラガ (Namco)	ぎゃらが	Namco
 galagamw	ギャラガ (Midway set 1)	ぎゃらが	[Namco] (Midway license)
 galagamk	ギャラガ (Midway set 2)	ぎゃらが	[Namco] (Midway license)
+galagamf	ギャラガ (Midway set 1 with fast shoot hack)	ぎゃらが	[Namco] (Midway license)
 gallag	ギャラガ / Gallag	ぎゃらが	bootleg
 gatsbee	ギャラガ / Gatsbee	ぎゃらが	hack
 digdug	ディグダグ (rev 2)	でぃぐだぐ_1	Namco
@@ -562,7 +564,7 @@ paclandm	パックランド (Midway)	ぱっくらんど	[Namco] (Bally Midway license)
 drgnbstr	ドラゴンバスター	どらごんばすたー	Namco
 skykid	スカイキッド (new ver)	すかいきっど_1	Namco
 skykido	スカイキッド (old ver)	すかいきっど_1	Namco
-skykidd	スカイキッド (60A1 ver)	すかいきっど_1	Namco
+skykidd	スカイキッド (CUS60 ver)	すかいきっど_1	Namco
 baraduke	バラデューク (set 1)	ばらでゅーく	Namco
 baraduka	バラデューク (set 2)	ばらでゅーく	Namco
 metrocrs	メトロクロス (set 1)	めとろくろす	Namco
@@ -2218,6 +2220,7 @@ ddsomur1	ダンジョンズ&ドラゴンズ -シャドーオーバーミスタラ (USA版 960209)	だんじ
 ddsomjr1	ダンジョンズ&ドラゴンズ -シャドーオーバーミスタラ (日本版 960206)	だんじょんずあんどどらごんず_2しゃどーおーばーみすたら	Capcom
 ddsomj	ダンジョンズ&ドラゴンズ -シャドーオーバーミスタラ (日本版 960619)	だんじょんずあんどどらごんず_2しゃどーおーばーみすたら	Capcom
 ddsoma	ダンジョンズ&ドラゴンズ -シャドーオーバーミスタラ (アジア版 960619)	だんじょんずあんどどらごんず_2しゃどーおーばーみすたら	Capcom
+ddsomb	ダンジョンズ&ドラゴンズ -シャドーオーバーミスタラ (ブラジル版 960223)	だんじょんずあんどどらごんず_2しゃどーおーばーみすたら	Capcom
 sfa2	ストリートファイターZERO2 / Street Fighter Alpha 2 (USA版 960306)	すとりーとふぁいたー_6ぜろ_2_1	Capcom
 sfz2j	ストリートファイターZERO2 (日本版 960227)	すとりーとふぁいたー_6ぜろ_2_1	Capcom
 sfz2a	ストリートファイターZERO2 (アジア版 960227)	すとりーとふぁいたー_6ぜろ_2_1	Capcom
@@ -2644,7 +2647,8 @@ astrob1	アストロブラスター (ver 1)	あすとろぶらすたー	Sega
 005	005	だぶるおーふぁいぶ	Sega
 monsterb	モンスターバッシュ	もんすたーばっしゅ	Sega
 monster2	モンスターバッシュ (2 board ver)	もんすたーばっしゅ	Sega
-spaceod	スペースオデッセイ	すぺーすおでっせい	Sega
+spaceod	スペースオデッセイ (ver 2)	すぺーすおでっせい	Sega
+spaceod2	スペースオデッセイ (ver 1)	すぺーすおでっせい	Sega
 pignewt	ピッグニュートン (ver C)	ぴっぐにゅーとん	Sega
 pignewta	ピッグニュートン (ver A)	ぴっぐにゅーとん	Sega
 sindbadm	シンドバッド・ミステリー	しんどばっどみすてりー	Sega
@@ -2717,7 +2721,8 @@ tokisens	時の戦士	ときのせんし	Sega
 wbml	ワンダーボーイ モンスターランド (日本版 new ver)	わんだーぼーい_2もんすたーらんど	Sega / Westone
 wbmljo	ワンダーボーイ モンスターランド (日本版 old ver)	わんだーぼーい_2もんすたーらんど	Sega / Westone
 wbmljb	ワンダーボーイ モンスターランド (日本版 not encrypted)	わんだーぼーい_2もんすたーらんど	bootleg
-wbmlb	ワンダーボーイ モンスターランド	わんだーぼーい_2もんすたーらんど	bootleg
+wbmlb	ワンダーボーイ モンスターランド (英語版) (海賊版)	わんだーぼーい_2もんすたーらんど	bootleg
+wbmlbg	ワンダーボーイ モンスターランド (Galaxy Electronics) (英語版) (海賊版)	わんだーぼーい_2もんすたーらんど	bootleg
 dakkochn	脱子ちゃん雀荘	だっこちゃんはうす	Sega
 ufosensi	UFO戦士ようこちゃん	ゆーふぉーせんしようこちゃん	Sega
 ufosensb	UFO戦士ようこちゃん (not encrypted)	ゆーふぉーせんしようこちゃん	bootleg
@@ -2749,17 +2754,18 @@ endurob2	エンデューロレーサー (海賊版 set 2)	えんでゅーろれーさー	bootleg
 endurobl	エンデューロレーサー (海賊版 set 1)	えんでゅーろれーさー	bootleg
 hangon	ハングオン	はんぐおん_1	Sega
 sharrier	スペースハリアー (rev A 8751 317-5163A)	すぺーすはりあー_1	Sega
-sharrirb	スペースハリアー (8751 317-5163)	すぺーすはりあー_1	Sega
+sharrir1	スペースハリアー (8751 315-5163)	すぺーすはりあー_1	Sega
 shangupb	スーパーハングオン (Hang-On upgrade) (海賊版)	すーぱーはんぐおん	bootleg
 aliensy1	エイリアンシンドローム (set 1 System16A FD1089A 317-0033)	えいりあんしんどろーむ	Sega
 aliensy2	エイリアンシンドローム (set 2 System16A FD1089A 317-0033)	えいりあんしんどろーむ	Sega
 bodyslam	ダンプ松本 / Body Slam (8751 317-unknown)	だんぷまつもと	Sega
 dumpmtmt	ダンプ松本 (日本版 8751 317-unknown)	だんぷまつもと	Sega
 mjleague	メジャーリーグ	めじゃーりーぐ	Sega
-quartet	カルテット (8751 317-unknown)	かるてっと_1	Sega
-quartetj	カルテット (日本版 8751 317-unknown)	かるてっと_1	Sega
-quartet2	カルテット2 (8751 317-unknown)	かるてっと_2	Sega
-quartt2j	カルテット2 (日本版 8751 317-unknown)	かるてっと_2	Sega
+quartet	カルテット (rev A 8751 317-unknown)	かるてっと_1	Sega
+quartet1	カルテット (8751 317-unknown)	かるてっと_1	Sega
+quart21	カルテット2 (8751 317-unknown)	かるてっと_2	Sega
+quart2	カルテット2 (unprotected)	かるてっと_2	Sega
+aceattaa	エースアタッカー (System16A FD1094 317-0060)	えーすあたっかー	Sega
 afighter	アクションファイター (FD1089A 317-0018)	あくしょんふぁいたー	Sega
 alexkidd	アレックスキッド ザ ロストスターズ (set 2 unprotected)	あれっくすきっどざろすとすたーず	Sega
 alexkid1	アレックスキッド ザ ロストスターズ (set 1 FD1089A 317-unknown)	あれっくすきっどざろすとすたーず	Sega
@@ -2773,7 +2779,7 @@ tetris	テトリス (日本版 set 4 System16A FD1094 317-0093)	てとりす_1_2せが	Sega
 tetris3	テトリス (日本版 set 3 System16A FD1094 317-0093a)	てとりす_1_2せが	Sega
 timesca1	タイムスキャナー (set 1 System16A FD1089B 317-0024)	たいむすきゃなー	Sega
 wb31	ワンダーボーイIII モンスターレア (set 1 System16A FD1094 317-0084)	わんだーぼーい_3	Sega / Westone
-aceattac	エースアタッカー (FD1094 317-0060)	えーすあたっかー	Sega
+aceattac	エースアタッカー (FD1094 317-unknown)	えーすあたっかー	Sega
 aliensyn	エイリアンシンドローム (set 4 System16B unprotected)	えいりあんしんどろーむ	Sega
 aliensy3	エイリアンシンドローム (set 3 System16B FD1089A 317-0033)	えいりあんしんどろーむ	Sega
 altbeast	獣王記 / Altered Beast (set 7 8751 317-0078)	じゅうおうき	Sega
@@ -2880,22 +2886,22 @@ wwallyja	ウォーリーをさがせ！ (日本版 rev A FD1094 317-0197A)	うぉーりーをさがせ
 astormbl	エイリアンストーム (海賊版)	えいりあんすとーむ	bootleg
 shdancbl	シャドーダンサー -影の舞 (海賊版)	しゃどーだんさー	bootleg
 mwalkbl	マイケル・ジャクソンズ ムーンウォーカー (海賊版)	まいけるじゃくそんずむーんうぉーかー	bootleg
-outrun	アウトラン (set 3)	あうとらん_1	Sega
-outrun2	アウトラン (set 2)	あうとらん_1	Sega
-outrun1	アウトラン (set 1 Deluxe?)	あうとらん_1	Sega
+outrun	アウトラン (standard/upright rev B)	あうとらん_1	Sega
+outrun2	アウトラン (standard/upright rev A)	あうとらん_1	Sega
+outrun1	アウトラン (deluxe)	あうとらん_1	Sega
 outrunb	アウトラン (海賊版)	あうとらん_1	bootleg
-toutrun	ターボアウトラン (set 3 upgrade kit FD1094 317-0118)	たーぼあうとらん	Sega
-toutrun2	ターボアウトラン (set 2 upright FD1094 317-unknown)	たーぼあうとらん	Sega
-toutrun1	ターボアウトラン (set 1 FD1094 317-unknown)	たーぼあうとらん	Sega
+toutrun	ターボアウトラン (Out Run upgrade FD1094 317-0118)	たーぼあうとらん	Sega
+toutrun2	ターボアウトラン (upright FD1094 317-unknown)	たーぼあうとらん	Sega
+toutrun1	ターボアウトラン (FD1094 317-unknown)	たーぼあうとらん	Sega
 shangon	スーパーハングオン (set 4 68000)	すーぱーはんぐおん	Sega
-shangon3	スーパーハングオン (set 3 FD1089B 317-0034)	すーぱーはんぐおん	Sega
-shangon2	スーパーハングオン (set 2 FD1089B 317-0034)	すーぱーはんぐおん	Sega
-shangon1	スーパーハングオン (set 1 FD1089B 317-0034)	すーぱーはんぐおん	Sega
+shangon3	スーパーハングオン (sitdown/upright FD1089B 317-0034)	すーぱーはんぐおん	Sega
+shangon2	スーパーハングオン (mini ride-on rev A FD1089B 317-0034)	すーぱーはんぐおん	Sega
+shangon1	スーパーハングオン (mini ride-on? FD1089B 317-0034)	すーぱーはんぐおん	Sega
 shangnle	リミテッドエディション ハングオン	りみてっどえでぃしょんはんぐおん	Sega
 aburner	アフターバーナー (日本版)	あふたーばーなー_1	Sega
 aburner2	アフターバーナーII	あふたーばーなー_2	Sega
-thndrbld	サンダーブレード (FD1094 317-0056)	さんだーぶれーど	Sega
-thndrbdj	サンダーブレード (日本版)	さんだーぶれーど	Sega
+thndrbld	サンダーブレード (upright FD1094 317-0056)	さんだーぶれーど	Sega
+thndrbd1	サンダーブレード (deluxe/standing unprotected)	さんだーぶれーど	Sega
 loffire	ライン オブ ファイヤー -爆弾野郎 (海外版 FD1094 317-0136)	らいんおぶふぁいやー	Sega
 loffireu	ライン オブ ファイヤー -爆弾野郎 (USA版 FD1094 317-0135)	らいんおぶふぁいやー	Sega
 loffirej	ライン オブ ファイヤー -爆弾野郎 (日本版 FD1094 317-0134)	らいんおぶふぁいやー	Sega
@@ -3045,15 +3051,15 @@ manxtt	マンクスTT スーパーバイク	まんくすてぃーてぃーすーぱーばいく	Sega
 srallyc	セガラリー・チャンピオンシップ	せがらりー_1ちゃんぴおんしっぷ	Sega
 vf2	バーチャファイター2 (ver 2.1)	ばーちゃふぁいたー_2	Sega
 vf2b	バーチャファイター2 (ver B)	ばーちゃふぁいたー_2	Sega
-vf2o	バーチャファイター2 (original)	ばーちゃふぁいたー_2	Sega
+vf2o	バーチャファイター2	ばーちゃふぁいたー_2	Sega
 vcop2	バーチャコップ2	ばーちゃこっぷ_2	Sega
 dynamcop	ダイナマイト刑事2 -カリブの海賊編 / Dynamite Cop (Model 2A)	だいなまいとでか_2	Sega
 dyndeka2	ダイナマイト刑事2 -カリブの海賊編 (日本版 Model 2A)	だいなまいとでか_2	Sega
 doaa	デッドオアアライブ (Model 2A)	でっどおああらいぶ_1	Sega
 zeroguna	ゼロガンナー (Model 2A)	ぜろがんなー	Psikyo
 pltkidsa	パイロットキッズ (Model 2A)	ぱいろっときっず	Psikyo
-vstriker	バーチャストライカー	ばーちゃすとらいかー_1	Sega
-vstrikra	バーチャストライカー (rev A)	ばーちゃすとらいかー_1	Sega
+vstriker	バーチャストライカー (rev A)	ばーちゃすとらいかー_1	Sega
+vstrikro	バーチャストライカー	ばーちゃすとらいかー_1	Sega
 fvipers	ファイティングバイパーズ	ふぁいてぃんぐばいぱーず_1	Sega
 gunblade	ガンブレードNY -Special Air Assault Force	がんぶれーどにゅーよーく	Sega
 indy500	インディ500	いんでぃふぁいぶはんどれっど	Sega
@@ -3302,6 +3308,7 @@ wexpresc	ウェスタンエクスプレス (海賊版 set 2)	うぇすたんえくすぷれす	bootleg
 pcktgal	ポケットギャル (日本版)	ぽけっとぎゃる_1	Data East Corporation
 pcktgalb	ポケットギャル (海賊版)	ぽけっとぎゃる_1	bootleg
 pcktgal2	ポケットギャル / Pocket Gal 2 (海外版?)	ぽけっとぎゃる_1	Data East Corporation
+pokechmp	ポケチャンプ	ぽけちゃんぷ	DGRM
 spool3	ポケットギャル / Super Pool III (海外版?)	ぽけっとぎゃる_1	Data East Corporation
 spool3i	ポケットギャル / Super Pool III (I-Vics)	ぽけっとぎゃる_1	Data East Corporation (I-Vics license)
 battlera	ならず者戦闘部隊ブラッディウルフ / Battle Rangers (海外版)	ならずものせんとうぶたいぶらっでぃうるふ	Data East Corporation
@@ -3835,7 +3842,10 @@ winspikj	ウイニングスパイク (ver JAA)	ういにんぐすぱいく	Konami
 soccerss	サッカースーパースターズ (ver EAA)	さっかーすーぱーすたーず	Konami
 soccersj	サッカースーパースターズ (ver JAA)	さっかーすーぱーすたーず	Konami
 soccersa	サッカースーパースターズ (ver AAA)	さっかーすーぱーすたーず	Konami
-vsnetscr	ヴァーサスネットサッカー (ver UAB)	ばーさす_1ねっとさっかー	Konami
+vsnetscr	ヴァーサスネットサッカー (ver EAB)	ばーさす_1ねっとさっかー	Konami
+vsnetseb	ヴァーサスネットサッカー (ver EAB)	ばーさす_1ねっとさっかー	Konami
+vsnetscu	ヴァーサスネットサッカー (ver UAB)	ばーさす_1ねっとさっかー	Konami
+vsnetsca	ヴァーサスネットサッカー (ver AAA)	ばーさす_1ねっとさっかー	Konami
 vsnetscj	ヴァーサスネットサッカー (ver JAB)	ばーさす_1ねっとさっかー	Konami
 rungun2	スラムダンク2 -Konami Basketball Championship 1996 / Run and Gun 2 (ver UAA)	すらむだんく_2	Konami
 slamdnk2	スラムダンク2 -Konami Basketball Championship 1996 (ver JAA)	すらむだんく_2	Konami
@@ -4003,6 +4013,7 @@ quantump	クァンタム (prototype)	くぁんたむ	Atari
 bwidow	ブラックウィドウ	ぶらっくうぃどう	Atari
 starwars	スター・ウォーズ (rev 2)	すたーうぉーず_4	Atari
 starwar1	スター・ウォーズ (rev 1)	すたーうぉーず_4	Atari
+tomcatsw	トムキャット (Star Wars hardware prototype)	とむきゃっと	Atari
 mhavoc	メイジャーハヴォック (rev 3)	めいじゃーはぼっく	Atari
 mhavoc2	メイジャーハヴォック (rev 2)	めいじゃーはぼっく	Atari
 mhavocp	メイジャーハヴォック (prototype)	めいじゃーはぼっく	Atari
@@ -4030,8 +4041,12 @@ foodf	フードファイト (rev 3)	ふーどふぁいと	Atari
 foodf2	フードファイト (rev 2)	ふーどふぁいと	Atari
 foodfc	フードファイト (cocktail)	ふーどふぁいと	Atari
 ccastles	クリスタルキャッスルズ (ver 4)	くりすたるきゃっするず	Atari
+ccastleg	クリスタルキャッスルズ (ドイツ版 ver 3)	くりすたるきゃっするず	Atari
+ccastlep	クリスタルキャッスルズ (スペイン版 ver 3)	くりすたるきゃっするず	Atari
+ccastlef	クリスタルキャッスルズ (フランス版 ver 3)	くりすたるきゃっするず	Atari
 ccastle3	クリスタルキャッスルズ (ver 3)	くりすたるきゃっするず	Atari
 ccastle2	クリスタルキャッスルズ (ver 2)	くりすたるきゃっするず	Atari
+ccastle1	クリスタルキャッスルズ (ver 1)	くりすたるきゃっするず	Atari
 cloak	クローク&ダガー (rev 5)	くろーくあんどだがー	Atari
 cloaksp	クローク&ダガー (スペイン版)	くろーくあんどだがー	Atari
 cloakfr	クローク&ダガー (フランス版)	くろーくあんどだがー	Atari
@@ -4608,10 +4623,11 @@ syscheck	ネオシステムチェック (ver 1.0b)	ねおしすてむちぇっく	Blastar
 frogfest	フロッグフィースト	ふろっぐふぃーすと	Rastersoft
 ltorb1	ジョーンズ・インディアナ・アンド・ザ･ロスト・テンプル・オブ・RA (20050717)	じょーんずいんでぃあなあんどざろすとてんぷるおぶあーるえー	Blastar
 neodemo	ネオデモ	ねおでも	Chaos
-fr2ch	アイドル麻雀ファイナルロマンス2 (CD版) (海賊版)	あいどるまーじゃんふぁいなるろまんす_2	Video System Co.
+fr2ch	アイドル麻雀ファイナルロマンス2 (CD to MVS Conversion)	あいどるまーじゃんふぁいなるろまんす_2	hack / bootleg
 cnbe	コードネーム -Blut Engel (2006-01-19)	こーどねーむ	homebrew
 ngem2k	エヌジーエーエム2K (ベータ版 2006-01-18)	えぬじーいーえむつーさうざん	homebrew
 neo2500	ネオ2500 デモ	ねお2500でも	Blastar
+sthoopcd	ダンクドリーム (CD to MVS Conversion)	だんくどりーむ_1	hack / bootleg
 kof97pla	ザ・キング・オブ・ファイターズ '97 / The King of Fighters '97 Plus (海賊版)	ざきんぐおぶふぁいたーず_04_2_1997	bootleg
 mslug5b	メタルスラッグ5 (海賊版)	めたるすらっぐ_5	bootleg
 roadedge	ラウンドトリップRV (rev B)	らうんどとりっぷあーるぶい	SNK
@@ -5030,6 +5046,7 @@ senkyua	戦球 (日本版 set 2)	せんきゅう	Seibu Kaihatsu
 batlball	戦球 / Battle Balls (ドイツ版)	せんきゅう	Seibu Kaihatsu (Tuning License)
 batlbala	戦球 / Battle Balls (アジア版)	せんきゅう	Seibu Kaihatsu (Metrotainment License)
 viprp1	バイパーフェイズ1 (日本版 new ver)	ばいぱーふぇいず1	Seibu Kaihatsu
+viprp1j	バイパーフェイズ1 (日本版 new ver)	ばいぱーふぇいず1	Seibu Kaihatsu
 viprp1s	バイパーフェイズ1 (スイス版 new ver)	ばいぱーふぇいず1	Seibu Kaihatsu
 viprp1o	バイパーフェイズ1 (日本版)	ばいぱーふぇいず1	Seibu Kaihatsu
 viprp1ot	バイパーフェイズ1 (ドイツ版)	ばいぱーふぇいず1	Seibu Kaihatsu (Tuning License)
@@ -5101,7 +5118,8 @@ homerun	燃えろ！！プロ野球 ホームラン競争	もえろぷろやきゅうほーむらんきょうそう
 bigrun	ビッグラン -The Supreme 4WD Challenge (11th Rallye ver)	びっぐらん	Jaleco
 cischeat	シスコヒート	しすこひーと	Jaleco
 f1gpstar	グランプリスター	ぐらんぷりすたー	Jaleco
-armchmp2	アームチャンプス II	あーむちゃんぷす_2	Jaleco
+armchmp2	アームチャンプス II (Ver2.6)	あーむちゃんぷす_2	Jaleco
+armchm2o	アームチャンプス II (ver1.7)	あーむちゃんぷす_2	Jaleco
 wildplt	ワイルドパイロット	わいるどぱいろっと	Jaleco
 f1gpstr2	F-1グランプリスターII	えふわんぐらんぷりすたー2	Jaleco
 scudhamm	スカッドハンマー	すかっどはんまー	Jaleco
@@ -5313,7 +5331,8 @@ airbustj	エア・バスター -Trouble Specialty Raid Unit (日本版)	えあばすたー	Kanek
 galpanic	ギャルズパニック (set 1)	ぎゃるずぱにっく_1	Kaneko
 galpanib	ギャルズパニック (set 2)	ぎゃるずぱにっく_1	Kaneko
 galpania	ギャルズパニック (set 3)	ぎゃるずぱにっく_1	Kaneko
-galpani2	ギャルズパニックII (日本版?)	ぎゃるずぱにっく_2	Kaneko
+galpani2	ギャルズパニックII (アジア版)	ぎゃるずぱにっく_2	Kaneko
+galpan2t	ギャルズパニックII (台湾版)	ぎゃるずぱにっく_2	Kaneko
 gpan2qiz	ギャルズパニックII -クイズバージョン (日本版)	ぎゃるずぱにっく_2	Kaneko
 jchan	ジャッキー・チェン -ザ・クンフーマスター	じゃっきーちぇん_1	Kaneko
 jchan2	ジャッキー・チェン イン フィスツオブファイヤー -成龍伝説	じゃっきーちぇん_2	Kaneko
@@ -6140,11 +6159,13 @@ pbchmp95	ウィッチ / Pinball Champ '95 (海賊版?)	うぃっち	Veltmeijer Automaten
 cardline	カードライン	かーどらいん	Veltmeijer
 bmcbowl	滾球の星	こんきゅうのほし	BMC
 pitboss	ピットボス	ぴっとぼす	Merit
+casino5	カジノ5	かじのふぁいぶ	Merit
 trvwhzho	トリビア? ウィズ (horizontal question set 1)	とりびあ_2_うぃず_hq1	Merit
 trvwhzha	トリビア? ウィズ (horizontal question set 2)	とりびあ_2_うぃず_hq2	Merit
 trvwhzve	トリビア? ウィズ (vertical question set 1)	とりびあ_2_うぃず_vq1	Merit
 trvwhzva	トリビア? ウィズ (vertical question set 2)	とりびあ_2_うぃず_vq2	Merit
 trvwhzii	トリビア? ウィズ (edition 2)	とりびあ_2_うぃず_ed2	Merit
+trvwziii	トリビア? ウィズ (edition 3)	とりびあ_2_うぃず_ed3	Merit
 trvwhziv	トリビア? ウィズ (edition 4)	とりびあ_2_うぃず_ed4	Merit
 tictac	チクタクトリビア	ちくたくとりびあ	Merit
 phrcraze	フレーズクレーズ	ふれーずくれーず	Merit
@@ -6161,8 +6182,8 @@ poizone	ポイゾーン	ぽいぞーん	Eterna
 ssfindo	シーシーファインドアウト	しーしーふぁいんどあうと	Icarus
 ppcar	パンパンカー	ぱんぱんかー	Icarus
 monzagp	モンツァGP	もんつぁじーぴー	Leante Games (Olympia?)
-dambust	ダムバスターズ (set 2)	だむばすたーず	GAT
-dambustr	ダムバスターズ (set 1)	だむばすたーず	GAT
+dambust	ダムバスターズ (UK版)	だむばすたーず	South West Research
+dambustr	ダムバスターズ (USA版)	だむばすたーず	South West Research
 gunpey	グンペイ	ぐんぺい	Banpresto
 spaceg	スペースゲリラ	すぺーすげりら	Omori
 wldarrow	ワイルドアロー	わいるどあろー	Meyco Games
@@ -6232,7 +6253,7 @@ sexyboom	セクシーブーン	せくしーぶーん	Sang Ho Soft
 sfkick	スーパーフリーキック	すーぱーふりーきっく	HEC
 spinkick	スピンキック	すぴんきっく	HEC
 7mezzo	セッテ エ メッツォ	せってえめっつぉ	Unknown
-magicfly	マジックフライ	まじっくふらい	P&amp;A Games
-sb2003	スーパーバブル2003 (set 1)	すーぱーばぶる2003	Limenko
-sb2003a	スーパーバブル2003 (set 2)	すーぱーばぶる2003	Limenko
+magicfly	マジックフライ (ver 0.3)	まじっくふらい	P&amp;A Games
+sb2003	スーパーバブル2003 (海外版)	すーぱーばぶる2003	Limenko
+sb2003a	スーパーバブル2003 (アジア版)	すーぱーばぶる2003	Limenko
 legendoh	レジェンドオブヒーローズ	れじぇんどおぶひーろーず	Limenko
