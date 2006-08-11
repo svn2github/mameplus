@@ -134,7 +134,6 @@ static win_draw_callbacks draw;
 //  PROTOTYPES
 //============================================================
 
-static void winwindow_exit(void);
 static void winwindow_video_window_destroy(win_window_info *window);
 static void draw_video_contents(win_window_info *window, HDC dc, int update);
 
@@ -264,7 +263,7 @@ int winwindow_init(void)
 //  (main thread)
 //============================================================
 
-static void winwindow_exit(void)
+void winwindow_exit(void)
 {
 	assert(GetCurrentThreadId() == main_threadid);
 

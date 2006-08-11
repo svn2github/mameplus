@@ -7201,9 +7201,9 @@ int osd_display_loading_rom_message(const char *name,rom_load_data *romdata)
 	else
 	{
 		if (name)
-			fprintf(stdout, _WINDOWS("loading %-12s\r"), name);
+			fprintf(stdout, _WINDOWS("loading %-32s\r"), name);
 		else
-			fprintf(stdout, "%30s\r", "");
+			fprintf(stdout, "        %-32s\r", "");
 		fflush (stdout);
 		retval = 0;
 	}
@@ -7314,6 +7314,9 @@ int UpdateLoadProgress(const char* name, const rom_load_data *romdata)
 
 	if (name == NULL && romdata->errors > 0)
 	{
+		winwindow_exit();
+		ShowCursor(TRUE);
+
 		while (GetMessage(&Msg, NULL, 0, 0))
 		{
 			if (!IsDialogMessage(hWndLoad, &Msg))

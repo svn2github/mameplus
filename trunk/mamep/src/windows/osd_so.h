@@ -213,6 +213,9 @@ extern SHAREDOBJ_DATA struct neogeo_bios_info neogeo_bios[NEOGEO_BIOS_MAX];
 // in windows/input.c
 extern SHAREDOBJ_DATA const int win_key_trans_table[][4];
 
+// in windows/window.c
+extern SHAREDOBJ_FUNC(void) winwindow_exit(void);
+
 // in windows/winmain.c
 extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 
@@ -220,7 +223,7 @@ extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 extern SHAREDOBJ_FUNCPTR(int)  (*osd_display_loading_rom_message_)(const char *name, rom_load_data *romdata);
 extern SHAREDOBJ_FUNC(void)    set_pathlist(int file_type, const char *new_rawpath);
 
-// in windows/*.c
+// in windows/config.c
 extern SHAREDOBJ_DATA const options_entry windows_opts[];
 
 #ifdef MALLOC_DEBUG
@@ -248,6 +251,12 @@ extern const char *mameinfo_filename;
 #include "osdscale.h"
 #endif /* USE_SCALE_EFFECTS */
 
+// in windows/input.c
+extern const int win_key_trans_table[][4];
+
+// in windows/window.c
+extern SHAREDOBJ_FUNC(void) winwindow_exit(void);
+
 // in windows/winmain.c
 extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 
@@ -255,12 +264,9 @@ extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 extern int (*osd_display_loading_rom_message_)(const char *name, rom_load_data *romdata);
 extern void set_pathlist(int file_type, const char *new_rawpath);
 
-// in windows/*.c
+// in windows/config.c
 #include "../options.h"
 extern const options_entry windows_opts[];
-
-// in windows/input.c
-extern const int win_key_trans_table[][4];
 
 #endif /* _MSC_VER */
 
@@ -280,6 +286,12 @@ extern const char *mameinfo_filename;
 #include "osdscale.h"
 #endif /* USE_SCALE_EFFECTS */
 
+// in windows/input.c
+extern const int win_key_trans_table[][4];
+
+// in windows/window.c
+extern SHAREDOBJ_FUNC(void) winwindow_exit(void);
+
 // in windows/winmain.c
 extern int main_(int argc, char **argv);
 
@@ -287,16 +299,13 @@ extern int main_(int argc, char **argv);
 extern void set_pathlist(int file_type, const char *new_rawpath);
 extern int (*osd_display_loading_rom_message_)(const char *name, rom_load_data *romdata);
 
-// in windows/*.c
+// in windows/config.c
 #ifdef _MSC_VER
 #include "../options.h"
 #else
 #include "options.h"
 #endif /* _MSC_VER */
 extern const options_entry windows_opts[];
-
-// in windows/input.c
-extern const int win_key_trans_table[][4];
 
 #endif /* !DONT_USE_DLL */
 
