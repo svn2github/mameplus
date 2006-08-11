@@ -658,12 +658,12 @@ BEGIN
     GROUPBOX        "Video output method",IDC_STATIC,4,45,124,30
     COMBOBOX        IDC_VIDEO_MODE,10,57,112,180,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "Direct3D",IDC_DXTEXT,4,77,124,50
+    GROUPBOX        "Direct3D",IDC_D3D_TEXT,4,77,124,50
     CONTROL         "Enable Bilinear Filtering",IDC_D3D_FILTER,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,90,113,10,0,HIDC_D3D_FILTER
     COMBOBOX        IDC_D3D_VERSION,10,106,112,180,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "DirectDraw",IDC_DXTEXT2,4,128,124,30
+    GROUPBOX        "DirectDraw",IDC_DDRAW_TEXT,4,128,124,30
     CONTROL         "Stretch using hardware",IDC_HWSTRETCH,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,141,113,10,0,HIDC_HWSTRETCH
     GROUPBOX        "Visual Effects",IDC_STATIC,4,159,124,30
@@ -681,8 +681,8 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_TABSTOP,137,71,118,10,0,HIDC_TRIPLE_BUFFER
     CONTROL         "Switch resolutions to fit",IDC_SWITCHRES,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,137,84,118,10,0,HIDC_SWITCHRES
-    GROUPBOX        "Prescale screen",IDC_STATIC,131,97,124,30
-    CONTROL         "PrescaleSlider",IDC_PRESCALE,"msctls_trackbar32",TBS_BOTH | 
+    GROUPBOX        "Scale screen",IDC_PRESCALETEXT,131,97,124,30
+    CONTROL         "Slider1",IDC_PRESCALE,"msctls_trackbar32",TBS_BOTH | 
                     TBS_NOTICKS | WS_TABSTOP,137,111,94,10,0,HIDC_PRESCALE
     CTEXT           "1.00",IDC_PRESCALEDISP,235,111,17,10,SS_CENTERIMAGE | NOT WS_GROUP
     GROUPBOX        "Full screen gamma",IDC_FSGAMMATEXT,131,128,124,30,NOT WS_GROUP
@@ -804,9 +804,7 @@ BEGIN
                     TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,10,164,105,10
     CTEXT           "200",IDC_TRANSPARENCYDISP,120,164,20,10,NOT WS_GROUP
 #endif /* TRANS_UI */
-    GROUPBOX        "",IDC_STATIC,147,45,108,69,WS_DISABLED
-    CONTROL         "Use additional artwork",IDC_ARTWORK,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,153,45,98,10,0,HIDC_ARTWORK
+    GROUPBOX        "Artwork options",IDC_STATIC,147,45,108,69
     CONTROL         "Backdrops",IDC_BACKDROPS,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,153,58,100,10,0,HIDC_BACKDROPS
     CONTROL         "Bezels",IDC_BEZELS,"Button",BS_AUTOCHECKBOX | 

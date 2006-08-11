@@ -200,7 +200,6 @@
 #define IDC_PROP_CLONEOF                1080
 #define IDC_FSCONTRASTDISP              1081
 #define IDC_VERSION                     1082
-#define IDC_ARTWORK                     1083
 #define IDC_FSGAMMA                     1084
 #define IDC_GAMMADISP                   1085
 #define IDC_FSGAMMADISP                 1086
@@ -292,13 +291,14 @@
 #define IDC_PAUSEBRIGHT                 1180
 #define IDC_PAUSEBRIGHTDISP             1181
 #define IDC_HIGH_PRIORITY               1182
-#define IDC_D3D_FILTER                  1184
-#define IDC_AUDIO_LATENCY               1186
-#define IDC_D3D_VERSION                 1187
-#define IDC_DXTEXT                      1188
-#define IDC_FSBRIGHTNESS                1189
-#define IDC_FSBRIGHTNESSDISP            1190
-#define IDC_DXTEXT2                     1191
+#define IDC_D3D_FILTER                  1183
+#define IDC_AUDIO_LATENCY               1184
+#define IDC_D3D_VERSION                 1185
+#define IDC_FSBRIGHTNESS                1186
+#define IDC_FSBRIGHTNESSDISP            1187
+#define IDC_D3D_TEXT                    1188
+#define IDC_DDRAW_TEXT                  1189
+#define IDC_PRESCALETEXT                1190
 
 #define IDC_AUDIO_LATENCY_DISP          1192
 #define IDC_BIOS                        1204

@@ -222,7 +222,6 @@ static int  g_nPedalIndex = 0;
 static int  g_nDialIndex = 0;
 static int  g_nTrackballIndex = 0;
 static int  g_nLightgunIndex = 0;
-static BOOL g_bUseArtwork      = FALSE;
 static int  g_nVideoIndex = 0;
 static int  g_nD3DVersionIndex = 0;
 static BOOL g_bAnalogCheckState[65]; // 8 Joysticks  * 8 Axes each
@@ -285,7 +284,6 @@ static DWORD dwHelpIDs[] =
 	
 	IDC_A2D,                HIDC_A2D,
 	IDC_ANTIALIAS,          HIDC_ANTIALIAS,
-	IDC_ARTWORK,            HIDC_ARTWORK,
 	IDC_ARTWORK_CROP,       HIDC_ARTWORK_CROP,
 	IDC_ASPECTRATIOD,       HIDC_ASPECTRATIOD,
 	IDC_ASPECTRATION,       HIDC_ASPECTRATION,
@@ -2310,6 +2308,7 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_TRIPLE_BUFFER),          ddraw || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_PRESCALE),               ddraw || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_PRESCALEDISP),           ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_PRESCALETEXT),           ddraw || d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_HWSTRETCH),              ddraw && DirectDraw_HasHWStretch());
 	EnableWindow(GetDlgItem(hWnd, IDC_SWITCHRES),              !in_window && (ddraw || d3d));
 	EnableWindow(GetDlgItem(hWnd, IDC_SYNCREFRESH),            ddraw || d3d);
@@ -2332,11 +2331,11 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_SCREEN),                 (ddraw || d3d) && multimon);
 	EnableWindow(GetDlgItem(hWnd, IDC_SCREENTEXT),             (ddraw || d3d) && multimon);
 
-	EnableWindow(GetDlgItem(hWnd, IDC_DXTEXT),                 ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_DXTEXT2),                 ddraw || d3d);
-
 	EnableWindow(GetDlgItem(hWnd, IDC_D3D_FILTER),             d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_D3D_VERSION),            d3d);
+
+	EnableWindow(GetDlgItem(hWnd, IDC_D3D_TEXT),               d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_DDRAW_TEXT),             ddraw);
 
 	//Switchres and D3D or ddraw enable the per screen parameters
 
@@ -2352,6 +2351,7 @@ static void SetPropEnabledControls(HWND hWnd)
 #endif /* TRANS_UI */
 
 	/* Artwork options */
+/*
 	hCtrl = GetDlgItem(hWnd, IDC_ARTWORK);
 
 	useart = Button_GetCheck(hCtrl);
@@ -2361,6 +2361,7 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_BEZELS),                 useart);
 	EnableWindow(GetDlgItem(hWnd, IDC_OVERLAYS),               useart);
 	EnableWindow(GetDlgItem(hWnd, IDC_ARTMISCTEXT),            useart);
+*/
 
 	/* Joystick options */
 	joystick_attached = DIJoystick.Available();
@@ -2871,23 +2872,6 @@ static void AssignLightgun(HWND hWnd)
 		pGameOpts->lightgun_device = mame_strdup(ptr);
 }
 
-static void AssignView(HWND hWnd)
-{
-	if (g_bUseArtwork)
-	{
-		if (pGameOpts->view && mame_stricmp(pGameOpts->view, "standard") == 0)
-		{
-			FreeIfAllocated(&pGameOpts->view);
-			pGameOpts->view = mame_strdup("auto");	// fixme
-		}
-	}
-	else
-	{
-		FreeIfAllocated(&pGameOpts->view);
-		pGameOpts->view = mame_strdup("standard");
-	}
-}
-
 #define AssignDefaultBios(i) \
 static void AssignDefaultBios##i(HWND hWnd) \
 { \
@@ -3125,9 +3109,6 @@ static void ResetDataMap(void)
 			g_nLightgunIndex = i;
 	}
 
-	g_bUseArtwork = 0;
-	if (pGameOpts->view && mame_stricmp(pGameOpts->view, "standard"))
-		g_bUseArtwork = 1;
 }
 
 /* Build the control mapping by adding all needed information to the DataMap */
@@ -3243,7 +3224,6 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_AUDIO_LATENCY_DISP, DM_NONE,  CT_NONE,   NULL, DM_INT, &pGameOpts->audio_latency, 0, 0, 0);
 
 	/* misc artwork options */
-	DataMapAdd(IDC_ARTWORK,       DM_BOOL, CT_BUTTON,   &g_bUseArtwork,            DM_STRING,&pGameOpts->view,   0, 0, AssignView);
 	DataMapAdd(IDC_BACKDROPS,     DM_BOOL, CT_BUTTON,   &pGameOpts->use_backdrops, DM_BOOL, &pGameOpts->use_backdrops,     0, 0, 0);
 	DataMapAdd(IDC_OVERLAYS,      DM_BOOL, CT_BUTTON,   &pGameOpts->use_overlays,  DM_BOOL, &pGameOpts->use_overlays,      0, 0, 0);
 	DataMapAdd(IDC_BEZELS,        DM_BOOL, CT_BUTTON,   &pGameOpts->use_bezels,    DM_BOOL, &pGameOpts->use_bezels,        0, 0, 0);
