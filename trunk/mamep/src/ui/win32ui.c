@@ -4346,6 +4346,7 @@ static int MMO2LST(void)
 	char szFile[MAX_PATH]   = "\0";
 	char szCurDir[MAX_PATH] = "\1";
 	char buf[256];
+	FILE *fp;
 
 	sprintf(szFile, MAME32NAME "%s", ui_lang_info[options.langcode].shortname);
 	strcpy(szFile, strlower(szFile));
@@ -4392,7 +4393,7 @@ static int MMO2LST(void)
 					SetFileAttributesA(szFile, FILE_ATTRIBUTE_NORMAL);
 				}
 
-	FILE *fp = fopen(szFile, "wt");
+	fp = fopen(szFile, "wt");
 	if (fp == NULL)
 	{
 		MessageBoxA(GetMainWindow(), "Error : unable to access file", MAME32NAME, MB_OK | MB_ICONERROR);
