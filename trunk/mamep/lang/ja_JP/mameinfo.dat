@@ -2,7 +2,7 @@
 #                                        #
 #     Mameinfo.dat日本語版 v0.107u2      #
 #                                        #
-#             August 5, 2006             #
+#             August 9, 2006             #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,10 +12,31 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：826 翻訳済：803
-# 追加項目：327 合計：1153
+# Tester報告：827 翻訳済：805
+# 追加項目：327 合計：1154
 #
 
+
+$info=blueprnt
+$mame
+[バグ]
+
+- blueprint.cのゲームでF4を押してグラフィックを表示させ、2番目のバンクに切り替えようとするとクラッシュする。
+デバッグビルドとMAME32だけで起こる。 blueprnt0107u2red, Roberto Fresca / Twist
+
+$end
+
+$info=saturn
+$mame
+[バグ]
+
+- blueprint.cのゲームでF4を押してグラフィックを表示させ、2番目のバンクに切り替えようとするとクラッシュする。
+デバッグビルドとMAME32だけで起こる。 blueprnt0107u2red, Roberto Fresca / Twist
+
+
+- プレイヤー1のスタートボタンを押すと、画面左下が化ける。 saturn0104u3gre, etabeta /  Twisty
+
+$end
 
 $info=actfancr
 $mame
@@ -2539,14 +2560,6 @@ Namcoのプロテクトチップ関係の問題で乱数生成がうまくいっていないと思われる。 burn
 
 $end
 
-$info=finallap
-$mame
-[バグ]
-
-- アクセル、ブレーキ、シフトが動作しない。 finallap097u2yel, fostar
-
-$end
-
 $info=kyukaidk
 $mame
 [バグ]
@@ -3271,6 +3284,18 @@ $mame
 
 - イニシャル入力画面が表示されるとき、
 ハイスコア一覧が下からスクロールしてくるが、ゲーム中のスプライトの後ろに表示されてしまう。 sharrier336rc2gre, Charvel
+
+$end
+
+$info=pignewt
+$mame
+[バグ]
+
+- カクテルモードでは背景が描画されない。 pignewt0106u3gre, Machone
+
+
+- 一番下のUnknownのDIPスイッチはカクテルモードの設定。
+また、カクテルモードにすると背景が表示されない。 pignewt0106u3gra, Machone / Canim
 
 $end
 
@@ -4329,20 +4354,6 @@ $mame
 [バグ]
 
 - ビデオROMチェックで全てBADと報告される。 cuebrckj0102u5gre, Reip
-
-$end
-
-$info=mia
-$mame
-[バグ]
-
-- I/Oチェックにプレイヤー1の入力が表示されない。 mia0106u5gre, cpukett
-
-
-- エンディングの捕虜がヘリから出てくるシーンで、
-人の影が赤く表示されている。
-ただし、別ドライバのmiajでも起きているので、
-もしかしたらバグではないかもしれない。 mia055gre, Gmitra
 
 $end
 
@@ -5443,6 +5454,14 @@ DIP設定も変更できない。 brkthru091u1gra, Thenasty / stephh
 
 $end
 
+$info=zoar
+$mame
+[バグ]
+
+- アップライト筐体のDIP設定が動作しない。常にカクテルモード。 zoar095u5gra, Thenasty
+
+$end
+
 $info=robocop2
 $mame
 [バグ]
@@ -5533,6 +5552,14 @@ $mame
 [バグ]
 
 - サービスモードのスイッチテストで、Video Freezeに割り当てられているキーがない。 hiimpact0106gra, cpukett
+
+$end
+
+$info=finallap
+$mame
+[バグ]
+
+- アクセル、ブレーキ、シフトが動作しない。 finallap097u2gra, fostar
 
 $end
 
@@ -5627,15 +5654,6 @@ $mame
 
 - コイン投入数の増加に伴う、自機増えエラーについて。
 本家リンクを参照。 astrob137b16gra, stephh
-
-$end
-
-$info=pignewt
-$mame
-[バグ]
-
-- 一番下のUnknownのDIPスイッチはカクテルモードの設定。
-また、カクテルモードにすると背景が表示されない。 pignewt0106u3gra, Machone / Canim
 
 $end
 
@@ -5752,6 +5770,20 @@ MAMEのもともとのコントロール設定との対応は次の通り：
 
 $end
 
+$info=mia
+$mame
+[バグ]
+
+- I/Oチェックでプレイヤー1の入力が表示されない。miajでは動作する。 mia0106u5gra, cpukett
+
+
+- エンディングの捕虜がヘリから出てくるシーンで、
+人の影が赤く表示されている。
+ただし、別ドライバのmiajでも起きているので、
+もしかしたらバグではないかもしれない。 mia055gre, Gmitra
+
+$end
+
 $info=gunfight
 $mame
 [バグ]
@@ -5858,14 +5890,6 @@ $mame
 [バグ]
 
 - ラウンド2と3を告げる画面で、前のラウンドのグラフィックが残ってしまう。 toggle37b4gre, Frotz
-
-$end
-
-$info=saturn
-$mame
-[バグ]
-
-- プレイヤー1のスタートボタンを押すと、画面左下が化ける。 saturn0104u3gre, etabeta /  Twisty
 
 $end
 
