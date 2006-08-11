@@ -153,6 +153,10 @@ typedef struct
 //
 // PER-WINDOW VIDEO OPTIONS
 //
+	char*	screen;
+	char*	aspect;
+	char*	resolution;
+	char*	view;
 	char*	screen0;
 	char*	aspect0;
 	char*	resolution0;
@@ -193,7 +197,6 @@ typedef struct
 //
 // ARTWORK OPTIONS
 //
-	BOOL	artwork;
 	BOOL	artwork_crop;
 	BOOL	use_backdrops;
 	BOOL	use_overlays;

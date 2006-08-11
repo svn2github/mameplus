@@ -222,6 +222,7 @@ static int  g_nPedalIndex = 0;
 static int  g_nDialIndex = 0;
 static int  g_nTrackballIndex = 0;
 static int  g_nLightgunIndex = 0;
+static BOOL g_bUseArtwork      = FALSE;
 static int  g_nVideoIndex = 0;
 static int  g_nD3DVersionIndex = 0;
 static BOOL g_bAnalogCheckState[65]; // 8 Joysticks  * 8 Axes each
@@ -2870,6 +2871,23 @@ static void AssignLightgun(HWND hWnd)
 		pGameOpts->lightgun_device = mame_strdup(ptr);
 }
 
+static void AssignView(HWND hWnd)
+{
+	if (g_bUseArtwork)
+	{
+		if (pGameOpts->view && mame_stricmp(pGameOpts->view, "standard") == 0)
+		{
+			FreeIfAllocated(&pGameOpts->view);
+			pGameOpts->view = mame_strdup("auto");	// fixme
+		}
+	}
+	else
+	{
+		FreeIfAllocated(&pGameOpts->view);
+		pGameOpts->view = mame_strdup("standard");
+	}
+}
+
 #define AssignDefaultBios(i) \
 static void AssignDefaultBios##i(HWND hWnd) \
 { \
@@ -3107,6 +3125,9 @@ static void ResetDataMap(void)
 			g_nLightgunIndex = i;
 	}
 
+	g_bUseArtwork = 0;
+	if (pGameOpts->view && mame_stricmp(pGameOpts->view, "standard"))
+		g_bUseArtwork = 1;
 }
 
 /* Build the control mapping by adding all needed information to the DataMap */
@@ -3222,11 +3243,11 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_AUDIO_LATENCY_DISP, DM_NONE,  CT_NONE,   NULL, DM_INT, &pGameOpts->audio_latency, 0, 0, 0);
 
 	/* misc artwork options */
-	DataMapAdd(IDC_ARTWORK,       DM_BOOL, CT_BUTTON,   &pGameOpts->artwork,   DM_BOOL, &pGameOpts->artwork,   0, 0, 0);
-	DataMapAdd(IDC_BACKDROPS,     DM_BOOL, CT_BUTTON,   &pGameOpts->use_backdrops,     DM_BOOL, &pGameOpts->use_backdrops,     0, 0, 0);
-	DataMapAdd(IDC_OVERLAYS,      DM_BOOL, CT_BUTTON,   &pGameOpts->use_overlays,      DM_BOOL, &pGameOpts->use_overlays,      0, 0, 0);
-	DataMapAdd(IDC_BEZELS,        DM_BOOL, CT_BUTTON,   &pGameOpts->use_bezels,        DM_BOOL, &pGameOpts->use_bezels,        0, 0, 0);
-	DataMapAdd(IDC_ARTWORK_CROP,  DM_BOOL, CT_BUTTON,   &pGameOpts->artwork_crop,      DM_BOOL, &pGameOpts->artwork_crop,      0, 0, 0);
+	DataMapAdd(IDC_ARTWORK,       DM_BOOL, CT_BUTTON,   &g_bUseArtwork,            DM_STRING,&pGameOpts->view,   0, 0, AssignView);
+	DataMapAdd(IDC_BACKDROPS,     DM_BOOL, CT_BUTTON,   &pGameOpts->use_backdrops, DM_BOOL, &pGameOpts->use_backdrops,     0, 0, 0);
+	DataMapAdd(IDC_OVERLAYS,      DM_BOOL, CT_BUTTON,   &pGameOpts->use_overlays,  DM_BOOL, &pGameOpts->use_overlays,      0, 0, 0);
+	DataMapAdd(IDC_BEZELS,        DM_BOOL, CT_BUTTON,   &pGameOpts->use_bezels,    DM_BOOL, &pGameOpts->use_bezels,        0, 0, 0);
+	DataMapAdd(IDC_ARTWORK_CROP,  DM_BOOL, CT_BUTTON,   &pGameOpts->artwork_crop,  DM_BOOL, &pGameOpts->artwork_crop,      0, 0, 0);
 
 	/* misc */
 	DataMapAdd(IDC_CHEAT,         DM_BOOL, CT_BUTTON,   &pGameOpts->cheat,         DM_BOOL, &pGameOpts->cheat,         0, 0, 0);

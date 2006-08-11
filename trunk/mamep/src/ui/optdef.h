@@ -141,6 +141,10 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(bool,                 filter)
 
 // PER-WINDOW VIDEO OPTIONS
+	DEFINE_OPT(string_allow_null,    screen)
+	DEFINE_OPT(aspect,               aspect)
+	DEFINE_OPT(resolution,           resolution)
+	DEFINE_OPT(string_allow_null,    view)
 	DEFINE_OPT(string_allow_null,    screen0)
 	DEFINE_OPT(aspect,               aspect0)
 	DEFINE_OPT(resolution,           resolution0)
@@ -176,7 +180,6 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(flicker,              flicker)
 
 // ARTWORK OPTIONS
-	DEFINE_OPT(bool,                 artwork)
 	DEFINE_OPT(bool,                 artwork_crop);
 	DEFINE_OPT(bool,                 use_backdrops)
 	DEFINE_OPT(bool,                 use_overlays)
