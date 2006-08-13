@@ -155,6 +155,7 @@ bakutotu	爆突机铳艇	爆突机铳艇	Namco
 baluba	Baluba-louk 传说	Baluba-louk 传说	Able Corp, Ltd.
 bananadr	麻雀 香蕉之梦 [BET] (日版 891124)	麻雀 香蕉之梦 [BET] (日版 891124)	Digital Soft
 bangbead	碰碰球	碰碰球	Visco
+bangbedp	碰碰球 (工程版)	碰碰球 (工程版)	Visco
 basebal2	棒球季节 II	棒球季节 II	Cinematronics
 batcir	战斗回路 (欧洲版 970319)	战斗回路 (欧洲版 970319)	Capcom
 batcira	战斗回路 (亚洲版 970319)	战斗回路 (亚洲版 970319)	Capcom
@@ -290,6 +291,7 @@ captcomj	名将 (日版 911202)	名将 (日版 911202)	Capcom
 captcomm	名将 (世界版 911014)	名将 (世界版 911014)	Capcom
 captcomu	名将 (美版 910928)	名将 (美版 910928)	Capcom
 cawing	雌虎战机 / 美国海军 / Carrier Air Wing (世界版 901012)	雌虎战机 / 美国海军 / Carrier Air Wing (世界版 901012)	Capcom
+cawingr1	雌虎战机 / 美国海军 / Carrier Air Wing (世界版 901009)	雌虎战机 / 美国海军 / Carrier Air Wing (世界版 901009)	Capcom
 cawingj	雌虎战机 / 美国海军 / Carrier Air Wing (日版 901012)	雌虎战机 / 美国海军 / Carrier Air Wing (日版 901012)	Capcom
 cawingu	雌虎战机 / 美国海军 / Carrier Air Wing (美版 901012)	雌虎战机 / 美国海军 / Carrier Air Wing (美版 901012)	Capcom
 cbasebal	Capcom 棒球 (日版)	Capcom 棒球 (日版)	Capcom
@@ -397,6 +399,9 @@ csilver	Captain Silver (日版)	Captain Silver (日版)	Data East Corporation
 cstlevna	对决:恶魔城 Dracula	对决:恶魔城 Dracula	Konami
 ct2k3sp	卧虎藏龙 风云 2003 超级加强 (盗版)	卧虎藏龙 风云 2003 超级加强 (盗版)	bootleg
 cthd2003	卧虎藏龙 2003 (set 1)	卧虎藏龙 2003 (set 1)	bootleg
+cthd2k3a	卧虎藏龙 2003 (set 2)	卧虎藏龙 2003 (set 2)	bootleg
+cthd2k3d	卧虎藏龙 2003 (set 1 / 完全解密)	卧虎藏龙 2003 (set 1 / 完全解密)	bootleg
+ct2k3ad	卧虎藏龙 2003 (set 2 / 完全解密)	卧虎藏龙 2003 (set 2 / 完全解密)	bootleg
 ctomaday	番茄超人	番茄超人	Visco
 ctribe	战斗部落 (美版)	战斗部落 (美版)	Technos
 ctribeb	战斗部落 (盗版)	战斗部落 (盗版)	bootleg
@@ -460,10 +465,12 @@ ddragonb	双截龙 (盗版)	双截龙 (盗版)	bootleg
 ddragonu	双截龙 (美版)	双截龙 (美版)	[Technos] (Taito America license)
 ddsom	龙与地下城 2: 暗黑秘影 (欧洲版 960619)	龙与地下城 2: 暗黑秘影 (欧洲版 960619)	Capcom
 ddsoma	龙与地下城 2: 暗黑秘影 (亚洲版 960619)	龙与地下城 2: 暗黑秘影 (亚洲版 960619)	Capcom
+ddsomb	龙与地下城 2: 暗黑秘影 (巴西版 960223)	龙与地下城 2: 暗黑秘影 (巴西版 960223)	Capcom
 ddsomj	龙与地下城 2: 暗黑秘影 (日版 960619)	龙与地下城 2: 暗黑秘影 (日版 960619)	Capcom
 ddsomjr1	龙与地下城 2: 暗黑秘影 (日版 960206)	龙与地下城 2: 暗黑秘影 (日版 960206)	Capcom
 ddsomr1	龙与地下城 2: 暗黑秘影 (欧洲版 960223)	龙与地下城 2: 暗黑秘影 (欧洲版 960223)	Capcom
 ddsomr2	龙与地下城 2: 暗黑秘影 (欧洲版 960209)	龙与地下城 2: 暗黑秘影 (欧洲版 960209)	Capcom
+ddsomr3	龙与地下城 2: 暗黑秘影 (欧洲版 960208)	龙与地下城 2: 暗黑秘影 (欧洲版 960208)	Capcom
 ddsomu	龙与地下城 2: 暗黑秘影 (美版 960619)	龙与地下城 2: 暗黑秘影 (美版 960619)	Capcom
 ddsomur1	龙与地下城 2: 暗黑秘影 (美版 960209)	龙与地下城 2: 暗黑秘影 (美版 960209)	Capcom
 ddtod	龙与地下城: 毁灭之塔 (欧洲版 940412)	龙与地下城: 毁灭之塔 (欧洲版 940412)	Capcom
@@ -501,7 +508,9 @@ digdugb	挖金子 (set 2)	挖金子 (set 2)	Namco
 diggerma	挖地先生	挖地先生	Unknown
 dimahoo	Great 魔法大作战 / 大魔法 (美版 000121)	Great 魔法大作战 / 大魔法 (美版 000121)	Eighting/Raizing, distributed by Capcom
 dino	恐龙时代 / Cadillacs - 恐龙新世纪 (世界版 930201)	恐龙时代 / Cadillacs - 恐龙新世纪 (世界版 930201)	Capcom
+dinob	恐龙时代 / Cadillacs - 恐龙新世纪 (盗版)	恐龙时代 / Cadillacs - 恐龙新世纪 (hack)	hack
 dinoh	恐龙时代 / Cadillacs - 恐龙新世纪 (hack)	恐龙时代 / Cadillacs - 恐龙新世纪 (hack)	hack
+dinohb	恐龙时代 / Cadillacs - 恐龙新世纪 (盗版)	恐龙时代 / Cadillacs - 恐龙新世纪 (盗版)	hack
 dinoj	恐龙时代 / Cadillacs - 恐龙新世纪 (日版 930201)	恐龙时代 / Cadillacs - 恐龙新世纪 (日版 930201)	Capcom
 dinorex	大恐龙格斗技传说 (世界版)	大恐龙格斗技传说 (世界版)	Taito Corporation Japan
 dinorexj	大恐龙格斗技传说 (日版)	大恐龙格斗技传说 (日版)	Taito Corporation
@@ -576,6 +585,7 @@ dynwarj	吞食天地 (日版)	吞食天地 (日版)	Capcom
 dzigzag	挖金子 / Zig Zag (Dig Dug hardware)	挖金子 / Zig Zag (Dig Dug hardware)	bootleg
 earthjkr	国联防卫军: 地球王牌 (日版)	国联防卫军: 地球王牌 (日版)	Visco
 ecofghta	环保战士 (亚洲版 931203)	环保战士 (亚洲版 931203)	Capcom
+ecofghtu	环保战士 (美版 931203)	环保战士 (美版 931203)	Capcom
 ecofghtr	环保战士 (世界版 931203)	环保战士 (世界版 931203)	Capcom
 edf	E.D.F.- 地球保卫战	E.D.F.- 地球保卫战	Jaleco
 edrandy	The Cliffhanger - Edward Randy (世界版 revision 2)	The Cliffhanger - Edward Randy (世界版 revision 2)	Data East Corporation
@@ -962,6 +972,7 @@ jgakuen	私立公平学园 (日版 971117)	私立公平学园 (日版 971117)	Capcom
 jigkmgri	地狱小和尚 (日版)	地狱小和尚 (日版)	Taito Corporation
 jitsupro	实力!! 职业棒球 (日版)	实力!! 职业棒球 (日版)	Jaleco
 jockeygp	赌塞大赛	赌塞大赛	Sun Amusement / BrezzaSoft
+jckeygpd	赌塞大赛 (解密 C)	赌塞大赛 (解密 C)	Sun Amusement / BrezzaSoft
 joemac	战斗原始人 (日版)	战斗原始人 (日版)	Data East Corporation
 jogakuen	麻雀女学园 (日版)	麻雀女学园 (日版)	Windom
 jojo	JoJo 的奇妙冒险	JoJo 的奇妙冒险	Capcom
@@ -1010,10 +1021,12 @@ kf2k2mp	拳皇 2002 - 终极挑战 魔法加强版 (盗版)	拳皇 2002 - 终极挑战 魔法加强版 (
 kf2k2mp2	拳皇 2002 - 终极挑战 魔法加强版 II (盗版)	拳皇 2002 - 终极挑战 魔法加强版 II (盗版)	bootleg
 kf2k2pla	拳皇 2002 - 终极挑战 风云再起加强版 (set 2, 盗版)	拳皇 2002 - 终极挑战 风云再起加强版 (set 2, 盗版)	bootleg
 kf2k2plb	拳皇 2002 - 终极挑战 加强版 (set 3, 盗版)	拳皇 2002 - 终极挑战 加强版 (set 3, 盗版)	bootleg
+kf2k2plb	拳皇 2002 - 终极挑战 超级 (set 4, 盗版)	拳皇 2002 - 终极挑战 超级 (set 4, 盗版)	bootleg
 kf2k2pls	拳皇 2002 - 终极挑战 风云再起 (set 1, 盗版)	拳皇 2002 - 终极挑战 风云再起 (set 1, 盗版)	bootleg
 kf2k3bl	拳皇 2003 (盗版, set 1)	拳皇 2003 (盗版, set 1)	bootleg
 kf2k3bla	拳皇 2003 (盗版, set 2)	拳皇 2003 (盗版, set 2)	bootleg
 kf2k3pcb	拳皇 2003 (日版, JAMMA PCB)	拳皇 2003 (日版, JAMMA PCB)	SNK Playmore
+kf2k3pcd	拳皇 2003 (日版, JAMMA PCB / 解密 C)	拳皇 2003 (日版, JAMMA PCB / 解密 C)	SNK Playmore
 kf2k3pl	拳皇 2004 EX 英雄 (盗版)	拳皇 2004 EX 英雄 (盗版)	bootleg
 kf2k3upl	拳皇 2004 EX 风云加强 (盗版)	拳皇 2004 EX 风云加强 (盗版)	bootleg
 kf2k5uni	拳皇 10 周年 - 所有队伍的战斗 2005 独特版 (盗版)	拳皇 10 周年 - 所有队伍的战斗 2005 独特版 (盗版)	bootleg
@@ -1054,7 +1067,8 @@ kodb	龙王战士 (盗版)	龙王战士 (盗版)	bootleg
 kodj	龙王战士 (日版 910805)	龙王战士 (日版 910805)	Capcom
 kodu	龙王战士 (美版 910910)	龙王战士 (美版 910910)	Capcom
 kodure	子连狼 (日版)	子连狼 (日版)	Nichibutsu
-kof10th	拳皇 10 周年 - 所有队伍的战斗 (修改 / 盗版)	拳皇 10 周年 - 所有队伍的战斗 (修改 / 盗版)	bootleg
+kof10th	拳皇 10 周年 - 所有队伍的战斗 (盗版)	拳皇 10 周年 - 所有队伍的战斗 (盗版)	bootleg
+kof10thd	拳皇 10 周年 - 所有队伍的战斗 (盗版 / 完全解密)	拳皇 10 周年 - 所有队伍的战斗 (盗版 / 完全解密)	bootleg
 kof2000	拳皇 2000	拳皇 2000	SNK
 kof2000d	拳皇 2000 (解密 C)	拳皇 2000 (解密 C)	SNK
 kof2000n	拳皇 2000 (未加密)	拳皇 2000 (未加密)	SNK
@@ -1065,7 +1079,9 @@ kof2002	拳皇 2002 - 终极挑战	拳皇 2002 - 终极挑战	Eolith / Playmore
 kof2002b	拳皇 2002 - 终极挑战 (盗版)	拳皇 2002 - 终极挑战 (盗版)	bootleg
 kof2002d	拳皇 2002 - 终极挑战 (解密 C)	拳皇 2002 - 终极挑战 (解密 C)	Eolith / Playmore
 kof2003	拳皇 2003 (世界版 / 美版, MVS)	拳皇 2003 (世界版 / 美版, MVS)	SNK Playmore
-kof2k4se	拳皇 特别版 2004 (修改 / 盗版)	拳皇 特别版 2004 (修改 / 盗版)	bootleg
+kof2003d	拳皇 2003 (解密 C)	拳皇 2003 (解密 C)	SNK Playmore
+kof2k4se	拳皇 特别版 2004 (盗版)	拳皇 特别版 2004 (盗版)	bootleg
+kf2k4pls	拳皇 特别版 2004 加强版 (盗版)	拳皇 特别版 2004 加强版 (盗版)	bootleg
 kof94	拳皇 '94	拳皇 '94	SNK
 kof95	拳皇 '95 (set 1)	拳皇 '95 (set 1)	SNK
 kof95a	拳皇 '95 (set 2)	拳皇 '95 (set 2)	SNK
@@ -1075,6 +1091,7 @@ kof96h	拳皇 '96 (set 2)	拳皇 '96 (set 2)	SNK
 kof97	拳皇 '97 (set 1)	拳皇 '97 (set 1)	SNK
 kof97a	拳皇 '97 (set 2)	拳皇 '97 (set 2)	SNK
 kof97pls	拳皇 '97 风云再起加强版 (盗版)	拳皇 '97 风云再起加强版 (盗版)	bootleg
+kof97pla	拳皇 '97 重出江湖 加强版 2003 (盗版)	拳皇 '97 重出江湖 加强版 2003 (盗版)	bootleg
 kof98	拳皇 '98 - 梦战斗未结束	拳皇 '98 - 梦战斗未结束	SNK
 kof98k	拳皇 '98 - 梦战斗未结束 (韩文基板)	拳皇 '98 - 梦战斗未结束 (韩文基板)	SNK
 kof98n	拳皇 '98 - 梦战斗未结束 (未加密)	拳皇 '98 - 梦战斗未结束 (未加密)	SNK
@@ -1085,6 +1102,7 @@ kof99e	拳皇 '99 - 千年之战 (earlier)	拳皇 '99 - 千年之战 (earlier)	SNK
 kof99n	拳皇 '99 - 千年之战 (未加密)	拳皇 '99 - 千年之战 (未加密)	SNK
 kof99p	拳皇 '99 - 千年之战 (工程版)	拳皇 '99 - 千年之战 (工程版)	SNK
 kog	格斗之王 (盗版)	格斗之王 (盗版)	bootleg
+kogd	格斗之王 (盗版 / 完全解密)	格斗之王 (盗版 / 完全解密)	bootleg
 koikois2	超级 Real 花札 恋恋 2 (日版)	超级 Real 花札 恋恋 2 (日版)	Visco
 koinomp	麻雀 恋爱的魔力 (日版)	麻雀 恋爱的魔力 (日版)	Nichibutsu
 korokoro	Koro Koro 问答 (日版)	Koro Koro 问答 (日版)	Takumi
@@ -1093,15 +1111,15 @@ kotm	魔兽之王 (set 1)	魔兽之王 (set 1)	SNK
 kotm2	魔兽之王 2	魔兽之王 2	SNK
 kotmh	魔兽之王 (set 2)	魔兽之王 (set 2)	SNK
 kouyakyu	高校棒球	高校棒球	Alpha Denshi Co.
-kov	三国战记 (ver. 117)	三国战记 (ver. 117)	IGS
-kov115	三国战记 (ver. 115)	三国战记 (ver. 115)	IGS
-kov2	三国战记 2	三国战记 2	IGS
-kov2106	三国战记 2 (106)	三国战记 2 (106)	IGS
-kov2p	三国战记 2 Plus - 飞龙在天	三国战记 2 Plus - 飞龙在天	IGS
-kovj	三国战记 (ver. 100, 日本语 Board)	三国战记 (ver. 100, 日本语 Board)	IGS
-kovplus	三国战记 Plus (ver. 119)	三国战记 Plus (ver. 119)	IGS
-kovplusa	三国战记 Plus (alt ver. 119)	三国战记 Plus (alt ver. 119)	IGS
-kovsh	三国战记 - 风云再起 (ver. 322)	三国战记 - 风云再起 (ver. 322)	IGS
+kov	三国战纪 (ver. 117)	三国战纪 (ver. 117)	IGS
+kov115	三国战纪 (ver. 115)	三国战纪 (ver. 115)	IGS
+kov2	三国战纪 2	三国战纪 2	IGS
+kov2106	三国战纪 2 (106)	三国战纪 2 (106)	IGS
+kov2p	三国战纪 2 Plus - 飞龙在天	三国战纪 2 Plus - 飞龙在天	IGS
+kovj	三国战纪 (ver. 100, 日本语 Board)	三国战纪 (ver. 100, 日本语 Board)	IGS
+kovplus	三国战纪 Plus (ver. 119)	三国战纪 Plus (ver. 119)	IGS
+kovplusa	三国战纪 Plus (alt ver. 119)	三国战纪 Plus (alt ver. 119)	IGS
+kovsh	三国战纪 - 风云再起 (ver. 322)	三国战纪 - 风云再起 (ver. 322)	IGS
 ktiger	究极虎 (日版)	究极虎 (日版)	[Toaplan] Taito Corporation
 ktiger2	究极虎 2 (Ver 2.1J 1995/11/30)	究极虎 2 (Ver 2.1J 1995/11/30)	Taito Corporation
 kuhga	空牙 - 行动代号 'Vapor Trail' (日版 revision 3)	空牙 - 行动代号 'Vapor Trail' (日版 revision 3)	Data East Corporation
@@ -1218,6 +1236,7 @@ marukin	超级麻将(日版 901017)	超级麻将(日版 901017)	Yuga
 marukodq	小丸子问答	小丸子问答	Takara
 marvland	Marvel Land (美版)	Marvel Land (美版)	Namco
 marvlanj	Marvel Land (日版)	Marvel Land (日版)	Namco
+martmast	形意拳	形意拳	IGS
 masao	Mario 兄弟 / Masao	Mario 兄弟 / Masao	bootleg
 masterw	Master of Weapon (世界版)	Master of Weapon (世界版)	Taito Corporation Japan
 matmania	激情时刻 / Mat Mania	激情时刻 / Mat Mania	Technos (Taito America license)
@@ -1391,14 +1410,18 @@ mshvsfu	超级漫画英雄 对 街霸 (美版 970827)	超级漫画英雄 对 街霸 (美版 970827)	Ca
 mshvsfu1	超级漫画英雄 对 街霸 (美版 970625)	超级漫画英雄 对 街霸 (美版 970625)	Capcom
 msjiken	麻雀 杀人事件 (日版 881017)	麻雀 杀人事件 (日版 881017)	Nichibutsu
 mslider	Monster Slider (日版)	Monster Slider (日版)	Visco / Datt Japan
+ms5pcb	合金弹头 5 (JAMMA PCB)	合金弹头 5 (JAMMA PCB)	SNK Playmore
 mslug	合金弹头 - 超级战车-001	合金弹头 - 超级战车-001	Nazca
 mslug2	合金弹头 2 - 超级战车-001/II	合金弹头 2 - 超级战车-001/II	SNK
 mslug3	合金弹头 3	合金弹头 3	SNK
 mslug3d	合金弹头 3 (解密 C)	合金弹头 3 (解密 C)	SNK
 mslug3n	合金弹头 3 (未加密 P)	合金弹头 3 (未加密 P)	SNK
+mslug3b6	合金弹头 6 (盗版)	合金弹头 6 (盗版)	bootleg
 mslug4	合金弹头 4	合金弹头 4	Mega
 mslug4d	合金弹头 4 (解密 C)	合金弹头 4 (解密 C)	Mega
 mslug5	合金弹头 5	合金弹头 5	SNK Playmore
+mslug5d	合金弹头 5 (解密 C)	合金弹头 5 (解密 C)	SNK Playmore
+mslug5b	合金弹头 5 (盗版)	合金弹头 5 (盗版)	bootleg
 mslugx	合金弹头 X - 超级战车-001	合金弹头 X - 超级战车-001	SNK
 mspacmab	小精灵: Ms. 吃豆 (盗版)	小精灵: Ms. 吃豆 (盗版)	bootleg
 mspacman	小精灵: Ms. 吃豆	小精灵: Ms. 吃豆	Midway
@@ -1538,6 +1561,7 @@ ojankohs	雀子高中 (日版)	雀子高中 (日版)	V-System Co.
 ojankoy	雀子馆 (日版)	雀子馆 (日版)	V-System Co.
 ojousan	Ojousan (日版 871204)	Ojousan (日版 871204)	Nichibutsu
 olds	西游释厄传 Super (韩国版 101)	西游释厄传 Super (韩国版 101)	IGS
+olds100	西游释厄传 Super (100)	西游释厄传 Super (100)	IGS
 olds100a	西游释厄传 Super (100 alt)	西游释厄传 Super (100 alt)	IGS
 omegaf	Omega 战机	Omega 战机	UPL
 omegafs	Omega 战机 特别版	Omega 战机 特别版	UPL
@@ -1691,6 +1715,8 @@ plumppop	Plump Pop (日版)	Plump Pop (日版)	Taito Corporation
 pnickj	魔法方块 (日版 940608)	魔法方块 (日版 940608)	Compile (Capcom license)
 pnicku	魔法方块 (美版 940608)	魔法方块 (美版 940608)	Compile (Capcom license)
 pnyaa	宠物方块	宠物方块	Aiky / Taito
+pnyaad	宠物方块 (解密 C)	宠物方块 (解密 C)	Aiky / Taito
+poknight	扑克之夜	扑克之夜	JMK
 pollux	双子座之星 (set 1)	双子座之星 (set 1)	Dooyong
 polluxa	双子座之星 (set 2)	双子座之星 (set 2)	Dooyong
 pompingw	魔法气泡 (日版)	魔法气泡 (日版)	Mitchell
@@ -1755,10 +1781,10 @@ puzldama	对战 解迷球 (Ver JAA)	对战 解迷球 (Ver JAA)	Konami
 puzloopj	环绕球 (日版)	环绕球 (日版)	Mitchell
 puzloopk	环绕球 (韩国版)	环绕球 (韩国版)	Mitchell
 puzloopu	环绕球 (美版)	环绕球 (美版)	Mitchell
-puzlstar	解谜星	解谜星	IGS
+puzlstar	魔幻星座	魔幻星座	IGS
 puzzldpr	解谜气泡 R	解谜气泡 R	Taito (Visco license)
 puzzledp	解谜气泡	解谜气泡	Taito (Visco license)
-puzzli2	解谜星 2 Super	解谜星 2 Super	IGS
+puzzli2	魔幻星座 2 超级	魔幻星座 2 超级	IGS
 puzzloop	环绕球 (欧洲版)	环绕球 (欧洲版)	Mitchell
 puzznic	Puzznic (日版)	Puzznic (日版)	Taito Corporation Japan
 pwheelsj	四驱赛车 (日版)	四驱赛车 (日版)	Taito Corporation
@@ -1951,6 +1977,7 @@ samesame	鲛! 鲛! 鲛!	鲛! 鲛! 鲛!	Toaplan
 samsh5sh	侍魂 V 特别版 / 侍魂 Zero 特别版 (set 2)	侍魂 V 特别版 / 侍魂 Zero 特别版 (set 2)	Yuki Enterprise / SNK Playmore
 samsh5sn	侍魂 V 特别版 / 侍魂 Zero 特别版 (set 3)	侍魂 V 特别版 / 侍魂 Zero 特别版 (set 3)	Yuki Enterprise / SNK Playmore
 samsh5sp	侍魂 V 特别版 / 侍魂 Zero 特别版 (set 1)	侍魂 V 特别版 / 侍魂 Zero 特别版 (set 1)	Yuki Enterprise / SNK Playmore
+samsh5sd	侍魂 V 特别版 / 侍魂 Zero 特别版 (解密 C)	侍魂 V 特别版 / 侍魂 Zero 特别版 (解密 C)	Yuki Enterprise / SNK Playmore
 samsho	侍魂	侍魂	SNK
 samsho2	侍魂 II / 真侍魂 - 霸王丸地狱变	侍魂 II / 真侍魂 - 霸王丸地狱变	SNK
 samsho3	侍魂 III - 斩红郎无双剑 (set 1)	侍魂 III - 斩红郎无双剑 (set 1)	SNK
@@ -1959,6 +1986,7 @@ samsho4	侍魂 IV - 天草降临	侍魂 IV - 天草降临	SNK
 samsho5	侍魂 V / 侍魂 Zero (set 1)	侍魂 V / 侍魂 Zero (set 1)	Yuki Enterprise / SNK Playmore
 samsho5b	侍魂 V / 侍魂 Zero (盗版)	侍魂 V / 侍魂 Zero (盗版)	bootleg
 samsho5h	侍魂 V / 侍魂 Zero (set 2)	侍魂 V / 侍魂 Zero (set 2)	Yuki Enterprise / SNK Playmore
+samsho5d	侍魂 V / 侍魂 Zero (解密 C)	侍魂 V / 侍魂 Zero (解密 C)	Yuki Enterprise / SNK Playmore
 samurai	武士	武士	Sega
 samuraia	战国 Ace (世界版)	战国 Ace (世界版)	Psikyo
 sandscra	沙漠之蝎 (set 2)	沙漠之蝎 (set 2)	Face
@@ -2029,6 +2057,8 @@ sf2m4	街头霸王 II - 四大天王 (M4)	街头霸王 II - 四大天王 (M4)	hack
 sf2m5	街头霸王 II - 四大天王 (M5)	街头霸王 II - 四大天王 (M5)	hack
 sf2m6	降龙 (set 2)	降龙 (set 2)	hack
 sf2m7	街头霸王 II - 四大天王 (M7)	街头霸王 II - 四大天王 (M7)	hack
+sf2m8	街头霸王 II - 四大天王 (M8)	街头霸王 II - 四大天王 (M8)	hack
+sf2m13	街头霸王 II - 四大天王 (M13)	街头霸王 II - 四大天王 (M13)	hack
 sf2rb	街头霸王 II' - 四大天王 (彩虹版 set 1)	街头霸王 II' - 四大天王 (彩虹版 set 1)	hack
 sf2rb2	街头霸王 II' - 四大天王 (彩虹版 set 2)	街头霸王 II' - 四大天王 (彩虹版 set 2)	hack
 sf2red	街头霸王 II' - 四大天王 (赤色波动)	街头霸王 II' - 四大天王 (赤色波动)	hack
@@ -2126,6 +2156,8 @@ shippumd	疾风魔法大作战 - 王国大赏 (日版)	疾风魔法大作战 - 王国大赏 (日版)	Raizi
 shiryu2	出击飞龙 2 (日版 991213)	出击飞龙 2 (日版 991213)	Capcom
 shisen	四川省 女子寮编 (日版)	四川省 女子寮编 (日版)	Tamtex
 shocktr2	突击骑兵 / 震惊骑兵 - 第二纵队	突击骑兵 / 震惊骑兵 - 第二纵队	Saurus
+lans2004	雇佣兵 (盗版)	雇佣兵 (盗版)	bootleg
+lans2k4d	雇佣兵 (盗版 / 完全解密)	雇佣兵 (盗版 / 完全解密)	bootleg
 shocktra	突击骑兵 / 震惊骑兵 (set 2)	突击骑兵 / 震惊骑兵 (set 2)	Saurus
 shocktro	突击骑兵 / 震惊骑兵 (set 1)	突击骑兵 / 震惊骑兵 (set 1)	Saurus
 shootoub	Shoot Out (韩国版 盗版)	Shoot Out (韩国版 盗版)	bootleg
@@ -2317,6 +2349,7 @@ streetsj	Street Smart (日版 version 1)	Street Smart (日版 version 1)	SNK
 streetsm	Street Smart (美版 version 2)	Street Smart (美版 version 2)	SNK
 streetsw	Street Smart (世界版 version 1)	Street Smart (世界版 version 1)	SNK
 strhoop	街头篮球	街头篮球	Data East Corporation
+sthoopcd	街头篮球 (CD转MVS版)	街头篮球 (CD转MVS版)	hack / bootleg
 strider	出击飞龙 (美版 set 1)	出击飞龙 (美版 set 1)	Capcom
 strider2	出击飞龙 2 (美版 991213)	出击飞龙 2 (美版 991213)	Capcom
 striderj	出击飞龙 (日版 set 1)	出击飞龙 (日版 set 1)	Capcom
@@ -2339,11 +2372,13 @@ suprmatk	小精灵: 吃豆女士 / Super Missile Attack	小精灵: 吃豆女士 / Super Missil
 suprslam	灌篮高手 / 篮球飞人	灌篮高手 / 篮球飞人	Banpresto / Toei Animation
 survarts	死亡艺术 (美版)	死亡艺术 (美版)	Sammy
 svc	Svc混沌: Snk 对 Capcom (MVS)	Svc混沌: Snk 对 Capcom (MVS)	Playmore
+svcd	Svc混沌: Snk 对 Capcom (MVS / 解密 C)	Svc混沌: Snk 对 Capcom (MVS / 解密 C)	Playmore
 svcboot	Svc混沌: Snk 对 Capcom (盗版)	Svc混沌: Snk 对 Capcom (盗版)	bootleg
 svcpcb	Svc混沌: Snk 对 Capcom (JAMMA PCB)	Svc混沌: Snk 对 Capcom (JAMMA PCB)	Playmore
-svcplus	Svc混沌: Snk 对 Capcom 加强 (修改 / 盗版 set 1)	Svc混沌: Snk 对 Capcom 加强 (修改 / 盗版 set 1)	bootleg
-svcplusa	Svc混沌: Snk 对 Capcom 加强 (修改 / 盗版 set 2)	Svc混沌: Snk 对 Capcom 加强 (修改 / 盗版 set 2)	bootleg
-svcsplus	Svc混沌: Snk 对 Capcom 超级加强 (修改 / 盗版)	Svc混沌: Snk 对 Capcom 超级加强 (修改 / 盗版)	bootleg
+svcpcba	Svc混沌: Snk 对 Capcom (JAMMA PCB, set 2)	Svc混沌: Snk 对 Capcom (JAMMA PCB, set 2)	Playmore
+svcplus	Svc混沌: Snk 对 Capcom 加强 (盗版 set 1)	Svc混沌: Snk 对 Capcom 加强 (盗版 set 1)	bootleg
+svcplusa	Svc混沌: Snk 对 Capcom 加强 (盗版 set 2)	Svc混沌: Snk 对 Capcom 加强 (盗版 set 2)	bootleg
+svcsplus	Svc混沌: Snk 对 Capcom 超级加强 (盗版)	Svc混沌: Snk 对 Capcom 超级加强 (盗版)	bootleg
 svolley	超级排球 (日版)	超级排球 (日版)	V-System Co.
 svolleyk	超级排球 (韩国版)	超级排球 (韩国版)	V-System Co.
 svolleyu	超级排球 (美版)	超级排球 (美版)	V-System Co. (Data East license)
@@ -2532,7 +2567,8 @@ undoukai	运动会 (日版)	运动会 (日版)	Taito Corporation
 undrfire	Under Fire (世界版)	Under Fire (世界版)	Taito Corporation Japan
 uniwars	银河帝国的反击 / UniWar S	银河帝国的反击 / UniWar S	Irem
 unsquad	战区 88 / 联合国空战队 (美版)	战区 88 / 联合国空战队 (美版)	Capcom
-uopoko	小猫钓鱼 (日版)	小猫钓鱼 (日版)	Cave (Jaleco license)
+uopoko	小猫钓鱼 (国际版)	小猫钓鱼 (国际版)	Cave (Jaleco license)
+uopokoj	小猫钓鱼 (日版)	小猫钓鱼 (日版)	Cave (Jaleco license)
 utoukond	奥特曼斗魂传说 (日本版)	奥特曼斗魂传说 (日本版)	Banpresto + Tsuburaya Prod.
 valkyrie	Valkyrie 传说 (日版)	Valkyrie 传说 (日版)	Namco
 vampj	恶魔战士: 午夜斗士 (日版 940705)	恶魔战士: 午夜斗士 (日版 940705)	Capcom
@@ -2655,6 +2691,7 @@ wldcourt	世界球场	世界球场	Namco
 wndrmomo	神奇女孩	神奇女孩	Namco
 wndrplnt	不思议的星球 (日版)	不思议的星球 (日版)	Data East Corporation
 wof	吞食天地 II 赤壁之战 / Warriors of Fate (世界版 921002)	吞食天地 II 赤壁之战 / Warriors of Fate (世界版 921002)	Capcom
+wofb	吞食天地 II 赤壁之战 (盗版)	吞食天地 II 赤壁之战 (盗版)	Capcom
 wof3js	三剑圣	三剑圣	hack
 wof3sj	三圣剑 (set 1)	三圣剑 (set 1)	hack
 wof3sja	三圣剑 (set 2)	三圣剑 (set 2)	hack
@@ -2736,7 +2773,7 @@ zigzag	挖金子 / Zig Zag (Galaxian hardware, set 1)	挖金子 / Zig Zag (Galaxian ha
 zigzag2	挖金子 / Zig Zag (Galaxian hardware, set 2)	挖金子 / Zig Zag (Galaxian hardware, set 2)	LAX
 zingzip	真真急炮	真真急炮	Allumer + Tecmo
 zintrckb	生物泡泡 (hack / 盗版)	生物泡泡 (hack / 盗版)	hack / bootleg
-zintrkcd	生物泡泡 (CD to MVS Conversion)	生物泡泡 (CD to MVS Conversion)	Razoola
+zintrkcd	生物泡泡 (CD转MVS版)	生物泡泡 (CD转MVS版)	Razoola
 zoar	X 任务 / 避难所	X 任务 / 避难所	Data East USA
 zunkyou	Zunzun 教的野心 (日版)	Zunzun 教的野心 (日版)	Sega
 zupapa	星星大作战!	星星大作战!	SNK

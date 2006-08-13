@@ -9373,32 +9373,32 @@ GAME( 1991, captcomj, captcomm, cps1,     captcomm, cps1,     ROT0,   "Capcom", 
 GAME( 1991, knights,  0,        cps1,     knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (World 911127)", 0 )				// "ETC"
 GAME( 1991, knightsu, knights,  cps1,     knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (US 911127)", 0 )
 GAME( 1991, knightsj, knights,  cps1,     knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (Japan 911127)", 0 )
-GAME( 1991, knightsh, knights,  cps1,     knightsh, cps1,     ROT0,   "hack",   "Knights of the Round (hack)", 0 )
+GAME( 1991, knightsh, knights,  cps1,     knightsh, cps1,     ROT0,   "hack / bootleg",   "Knights of the Round (hack)", 0 )
 GAME( 1991, knightsb, knights,  cps1,     knights,  cps1,     ROT0,   "bootleg",  "Knights of the Round (bootleg)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1992, sf2ce,    0,        sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (World 920313)", 0 )	// "ETC"
 GAME( 1992, sf2ceua,  sf2ce,    sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (US 920313)", 0 )
 GAME( 1992, sf2ceub,  sf2ce,    sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (US 920513)", 0 )
 GAME( 1992, sf2ceuc,  sf2ce,    sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (US 920803)", 0 )
 GAME( 1992, sf2cej,   sf2ce,    sf2,      sf2j,     cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (Japan 920513)", 0 )
-GAME( 1992, sf2rb,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (Rainbow set 1)", 0 )	// 920322 - based on World version
-GAME( 1992, sf2rb2,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (Rainbow set 2)", 0 )	// 920322 - based on World version
-GAME( 1992, sf2red,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (Red Wave)", 0 )		// 920313 - based on World version
-GAME( 1992, sf2v004,  sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II! - Champion Edition (V004)", 0 )		// "102092" !!! - based on (heavily modified) World version
-GAME( 1992, sf2accp2, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (Accelerator Pt.II)", 0 )  // 920313 - based on USA version
-GAME( 1992, sf2m1,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (M1)", GAME_NOT_WORKING )
-GAME( 1992, sf2m2,    sf2ce,    sf2,      sf2,      sf2m2,    ROT0,   "hack","Street Fighter II' - Champion Edition (M2)", 0 )
-GAME( 1992, sf2m3,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (M3)", GAME_NOT_WORKING )
-GAME( 1992, sf2m4,    sf2ce,    sf2,      sf2j,     cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (M4)", 0 )
-GAME( 1992, sf2m5,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (M5)", 0 )
-GAME( 1992, sf2m6,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (Subdue the Dragon set 2)", 0 )
-GAME( 1992, sf2m7,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (M7)", 0 )
-GAME( 1992, sf2m8,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (M8)", GAME_NOT_WORKING )
-GAME( 1992, sf2m13,   sf2ce,    sf2,      sf2j,     sf2m13,   ROT0,   "hack","Street Fighter II' - Champion Edition (M13)", 0 )
-GAME( 1999, sf2ceh,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (Hispanic 990804)", 0 )
-GAME( 1992, sf2tlona, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (Slay the Dragon set 1)", 0 )
-GAME( 1992, sf2tlonb, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (Slay the Dragon set 2)", 0 )
-GAME( 1992, sf2yyc,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (YYC)", 0 )
-GAME( 1992, sf2koryu, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack","Street Fighter II' - Champion Edition (Subdue the Dragon set 1)", 0 )	// title should use Chinese Reading instead of Japanese
+GAME( 1992, sf2rb,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (Rainbow set 1)", 0 )	// 920322 - based on World version
+GAME( 1992, sf2rb2,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (Rainbow set 2)", 0 )	// 920322 - based on World version
+GAME( 1992, sf2red,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (Red Wave)", 0 )		// 920313 - based on World version
+GAME( 1992, sf2v004,  sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II! - Champion Edition (V004)", 0 )		// "102092" !!! - based on (heavily modified) World version
+GAME( 1992, sf2accp2, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (Accelerator Pt.II)", 0 )  // 920313 - based on USA version
+GAME( 1992, sf2m1,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (M1)", GAME_NOT_WORKING )
+GAME( 1992, sf2m2,    sf2ce,    sf2,      sf2,      sf2m2,    ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (M2)", 0 )
+GAME( 1992, sf2m3,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (M3)", GAME_NOT_WORKING )
+GAME( 1992, sf2m4,    sf2ce,    sf2,      sf2j,     cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (M4)", 0 )
+GAME( 1992, sf2m5,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (M5)", 0 )
+GAME( 1992, sf2m6,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (Subdue the Dragon set 2)", 0 )
+GAME( 1992, sf2m7,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (M7)", 0 )
+GAME( 1992, sf2m8,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (M8)", GAME_NOT_WORKING )
+GAME( 1992, sf2m13,   sf2ce,    sf2,      sf2j,     sf2m13,   ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (M13)", 0 )
+GAME( 1999, sf2ceh,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (Hispanic 990804)", 0 )
+GAME( 1992, sf2tlona, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (Slay the Dragon set 1)", 0 )
+GAME( 1992, sf2tlonb, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (Slay the Dragon set 2)", 0 )
+GAME( 1992, sf2yyc,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (YYC)", 0 )
+GAME( 1992, sf2koryu, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (Subdue the Dragon set 1)", 0 )	// title should use Chinese Reading instead of Japanese
 GAME( 1992, varth,    0,        cps1,     varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (World 920714)" , 0)		// "ETC"
 GAME( 1992, varthr1,  varth,    cps1,     varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (World 920612)" , 0)		// "ETC"
 GAME( 1992, varthu,   varth,    cps1,     varth,    cps1,     ROT270, "Capcom (Romstar license)", "Varth - Operation Thunderstorm (US 920612)", 0 )
@@ -9417,21 +9417,21 @@ GAME( 1992, wof,      0,        qsound,   wof,      wof,      ROT0,   "Capcom", 
 GAME( 1992, wofa,     wof,      qsound,   wof,      wof,      ROT0,   "Capcom", "Sangokushi II (Asia 921005)", 0 )					// World "warning"
 GAME( 1992, wofu,     wof,      qsound,   wof,      wof,      ROT0,   "Capcom", "Warriors of Fate (US 921031)", 0 )					// World "warning"
 GAME( 1992, wofj,     wof,      qsound,   wof,      wof,      ROT0,   "Capcom", "Tenchi wo Kurau II - Sekiheki no Tatakai (Japan 921031)", 0 )
-GAME( 1999, wofh,     wof,      qsound,   wofh,     wofh,     ROT0,   "hack",  "Legend of Three Kingdoms' Heroes (set 1)", GAME_IMPERFECT_SOUND )
-GAME( 1999, wofha,    wof,      qsound,   wofh,     wofh,     ROT0,   "hack",  "Legend of Three Kingdoms' Heroes (set 2)", GAME_IMPERFECT_SOUND )
-GAME( 1997, wof3js,   wof,      qsound,   wof3js,   wof3js,   ROT0,   "hack",  "Three Sword Masters", 0 )
-GAME( 1997, wof3sj,   wof,      qsound,   wofh,     wof3sj,   ROT0,   "hack",  "Three Holy Swords (set 1)", GAME_IMPERFECT_SOUND )
-GAME( 1997, wof3sja,  wof,      qsound,   wofh,     wof3sj,   ROT0,   "hack",  "Three Holy Swords (set 2)", GAME_IMPERFECT_SOUND )
-GAME( 1995, wofsj,    wof,      qsound,   wofsj,    wof3sj,   ROT0,   "hack",  "Holy Sword Three Kingdoms (set 1)", GAME_IMPERFECT_SOUND )
-GAME( 1995, wofsja,   wof,      qsound,   wofsj,    wof3sj,   ROT0,   "hack",  "Holy Sword Three Kingdoms (set 2)", GAME_IMPERFECT_SOUND )
-GAME( 1995, wofsjb,   wof,      qsound,   wof,      wofsjb,   ROT0,   "hack",  "Holy Sword Three Kingdoms (set 3)", GAME_UNEMULATED_PROTECTION )
+GAME( 1999, wofh,     wof,      qsound,   wofh,     wofh,     ROT0,   "hack / bootleg",  "Legend of Three Kingdoms' Heroes (bootleg, set 1)", GAME_IMPERFECT_SOUND )
+GAME( 1999, wofha,    wof,      qsound,   wofh,     wofh,     ROT0,   "hack / bootleg",  "Legend of Three Kingdoms' Heroes (bootleg, set 2)", GAME_IMPERFECT_SOUND )
+GAME( 1997, wof3js,   wof,      qsound,   wof3js,   wof3js,   ROT0,   "hack / bootleg",  "Three Sword Masters (bootleg)", 0 )
+GAME( 1997, wof3sj,   wof,      qsound,   wofh,     wof3sj,   ROT0,   "hack / bootleg",  "Three Holy Swords (bootleg, set 1)", GAME_IMPERFECT_SOUND )
+GAME( 1997, wof3sja,  wof,      qsound,   wofh,     wof3sj,   ROT0,   "hack / bootleg",  "Three Holy Swords (bootleg, set 2)", GAME_IMPERFECT_SOUND )
+GAME( 1995, wofsj,    wof,      qsound,   wofsj,    wof3sj,   ROT0,   "hack / bootleg",  "Holy Sword Three Kingdoms (bootleg, set 1)", GAME_IMPERFECT_SOUND )
+GAME( 1995, wofsja,   wof,      qsound,   wofsj,    wof3sj,   ROT0,   "hack / bootleg",  "Holy Sword Three Kingdoms (bootleg, set 2)", GAME_IMPERFECT_SOUND )
+GAME( 1995, wofsjb,   wof,      qsound,   wof,      wofsjb,   ROT0,   "hack / bootleg",  "Holy Sword Three Kingdoms (bootleg, set 3)", GAME_UNEMULATED_PROTECTION )
 GAME( 1992, wofb,     wof,      qsound,   wof,      wof,      ROT0,   "bootleg","Warriors of Fate (bootleg)", GAME_NOT_WORKING )
 GAME( 1993, dino,     0,        qsound,   dino,     dino,     ROT0,   "Capcom", "Cadillacs and Dinosaurs (World 930201)", 0 )			// "ETC"
 GAME( 1993, dinou,    dino,     qsound,   dino,     dino ,    ROT0,   "Capcom", "Cadillacs and Dinosaurs (US 930201)", 0 )
 GAME( 1993, dinoj,    dino,     qsound,   dino,     dino ,    ROT0,   "Capcom", "Cadillacs Kyouryuu-Shinseiki (Japan 930201)", 0 )
-GAME( 1993, dinoh,    dino,     qsound,   dinoh,    dinoh,    ROT0,   "hack",   "Cadillacs and Dinosaurs (hack set 1)", 0 )
-GAME( 1993, dinoha,   dino,     qsound,   dinoh,    dino,     ROT0,   "hack",   "Cadillacs and Dinosaurs (hack set 2)", GAME_NOT_WORKING )
-GAME( 1997, dinohb,   dino,     qsound,   dinoh,    dinohb,   ROT0,   "hack",   "Cadillacs and Dinosaurs (hack set 3)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, dinoh,    dino,     qsound,   dinoh,    dinoh,    ROT0,   "hack / bootleg",   "Cadillacs and Dinosaurs (bootleg, set 1)", 0 )
+GAME( 1993, dinoha,   dino,     qsound,   dinoh,    dino,     ROT0,   "hack / bootleg",   "Cadillacs and Dinosaurs (bootleg, set 2)", GAME_NOT_WORKING )
+GAME( 1997, dinohb,   dino,     qsound,   dinoh,    dinohb,   ROT0,   "hack / bootleg",   "Cadillacs and Dinosaurs (bootleg, set 3)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1993, dinob,    dino,     qsound,   dino,     dinohb,   ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1993, punisher, 0,        qsound,   punisher, punisher, ROT0,   "Capcom", "The Punisher (World 930422)", 0 )					// "ETC"
 GAME( 1993, punishru, punisher, qsound,   punisher, punisher, ROT0,   "Capcom", "The Punisher (US 930422)", 0 )
