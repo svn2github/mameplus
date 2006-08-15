@@ -8276,25 +8276,25 @@ ROM_END
 
 ROM_START( fr2ch ) /* CD to MVS Conversion */
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )
-	ROM_LOAD16_WORD_SWAP( "098-p1ch.bin", 0x000000, 0x080000, CRC(9AA8CEE0) )
+	ROM_LOAD16_WORD_SWAP( "098-p1ch.bin", 0x000000, 0x080000, CRC(9AA8CEE0) SHA1(b2201f16d8fde4eaae9dbc754d019e7b381ecc06) )
 
-	NEO_SFIX_128K( "098-s1ch.bin", CRC(764ac7aa) )
+	NEO_SFIX_128K( "098-s1ch.bin", CRC(764ac7aa) SHA1(cc40ad276e63084ebf3c3ee224083762a47c3cf8) )
 
-	NEO_BIOS_SOUND_64K( "098-m1ch.bin", CRC(A455FA31) )
+	NEO_BIOS_SOUND_64K( "098-m1ch.bin", CRC(a455fa31) SHA1(82ccc5e2e5869a46da7533ed10ac5eab549a0063) )
 
 	ROM_REGION( 0x100000, REGION_SOUND1, 0 )
-	ROM_LOAD( "098-v1ch.bin", 0x00000, 0x100000, CRC(92E175F0) )
-	
+	ROM_LOAD( "098-v1ch.bin", 0x000000, 0x100000, CRC(92e175f0) SHA1(788a9cce9028f16d6734bff163beb1a19305b8be) )
+
 	NO_DELTAT_REGION
 
 	ROM_REGION( 0x600000, REGION_GFX3, 0 )
 	/* Encrypted */
-	ROM_LOAD16_BYTE( "098-c1ch.bin", 0x000000, 0x100000, CRC(6158CF4A) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "098-c2ch.bin", 0x000001, 0x100000, CRC(93A809A3) ) /* Plane 2,3 */
-	ROM_LOAD16_BYTE( "098-c3ch.bin", 0x200000, 0x100000, CRC(FAFA3381) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "098-c4ch.bin", 0x200001, 0x100000, CRC(9895E23F) ) /* Plane 2,3 */
-	ROM_LOAD16_BYTE( "098-c5ch.bin", 0x400000, 0x100000, CRC(EEAAA818) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "098-c6ch.bin", 0x400001, 0x100000, CRC(F3D9A190) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "098-c1ch.bin", 0x000000, 0x100000, CRC(6158CF4A) SHA1(8e34b65f2cdfccaa6eeb40fef1ab3453eab92f46) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "098-c2ch.bin", 0x000001, 0x100000, CRC(93A809A3) SHA1(9b680b8b758cfc77f01d7211b67343a90462b3f3) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "098-c3ch.bin", 0x200000, 0x100000, CRC(FAFA3381) SHA1(0c4f20c4d5f57c1dad50b914f9d1299a9d882b42) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "098-c4ch.bin", 0x200001, 0x100000, CRC(9895E23F) SHA1(565b5fbe07f65fb48d0bde769d3245a6ac747774) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "098-c5ch.bin", 0x400000, 0x100000, CRC(EEAAA818) SHA1(434c13852153d7bebe138611a836d9bf07d1d4cf) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "098-c6ch.bin", 0x400001, 0x100000, CRC(F3D9A190) SHA1(44932122e044d23234235cb3899f6e1e63970983) ) /* Plane 2,3 */
 ROM_END
 
 ROM_START( cnbe ) /* Original Version - Encrypted GFX */
@@ -9627,9 +9627,12 @@ DRIVER_INIT( samsh5sd )
 	init_gfxdec42();
 }
 
-static WRITE16_HANDLER( pvc_prot_w )
+//============================================================
+// Idol Mahjong - final romance 2 (CD to MVS Conversion)
+//============================================================
+static WRITE16_HANDLER( fr2ch_cx_hack_w )
 {
-	int i,n;
+	int i, n;
 	UINT8 *src = memory_region( REGION_GFX3 );
 	if (offset == 1) {
 		for (i = 0; i < 0x200000; i++) {
@@ -9645,50 +9648,52 @@ void fr2ch_cx_hack( void )
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x200000, 0x2fffff, 0, 0, fr2ch_cx_hack_w);
 }
 
-void fr2ch_paches( void )
+void fr2ch_patches( void )
 {
-	UINT8 *mem8 = memory_region(REGION_CPU1);
-	UINT16 *mem16 = (UINT16*)memory_region(REGION_CPU1);
-	UINT8 *sdata = memory_region(REGION_GFX1);
+	UINT16 *src = (UINT16*)memory_region( REGION_CPU1 );
+	UINT8 *rom = memory_region( REGION_CPU1 );
+	UINT8 *dst = memory_region( REGION_GFX1 );
 
-	// change jsr to C004DA (rts)
-	mem16[0x01AF8/2] = 0x04DA; // C00552 (Not used?)
-	mem16[0x01BF6/2] = 0x04DA; // C0056A (fixes crash)
-	mem16[0x01ED8/2] = 0x04DA; // C00570 (Not used?)
-	mem16[0x1C384/2] = 0x04DA; // C00552 (fixes crash)
-
-	// 0x001C06 - this routine can cause a loop/freeze
-	mem16[0x01C06/2] = 0x4E75;
-
-	// can cause bugs
-	// Move text for credit + coin info (Thanks to Kanyero)
-	memcpy (sdata + 0x20000, sdata + 0x20600, 0x140);
-
-	// Patch out neogeo intro (Moving S causes garbage)
-	mem16[0x00112/2] = 0x0180;
-	mem16[0x00114/2] = 0x0100;
-
-	// optional
-	// Hack in the proper identification (see setup menu [F2])
-	unsigned char data[16] = {
+	int i;
+	UINT8 data[16] = { 
 		0x49, 0x46, 0x41, 0x4E, 0x20, 0x4C, 0x4F, 0x52,
 		0x41, 0x4D, 0x43, 0x4E, 0x20, 0x45, 0x20, 0x32
 	};
 
-	for (int i = 0; i < 0x10; i++)
-		mem8[0x3A6 + i] = mem8[0x61E + i] = mem8[0x896 + i] = data[i];
+	// change jsr to C004DA
+	src[0x01AF8 >> 1] = 0x04DA; // C00552 (Not used?)
+	src[0x01BF6 >> 1] = 0x04DA; // C0056A (fixes crash)
+	src[0x01ED8 >> 1] = 0x04DA; // C00570 (Not used?)
+	src[0x1C384 >> 1] = 0x04DA; // C00552 (fixes crash) 
 
-	for (int i = 0; i < 0x20; i+=4)
-		mem16[(0x40 + i + 2)/2] = 0x0426;
+	// 0x001C06 - this routine can cause a loop/freeze
+	src[0x01C06 >> 1] = 0x4E75; 
+
+	// Move text for credit + coin info (Thanks to Kanyero)
+	memcpy(dst, dst + 0x600, 0x140);
+
+	// Patch out neogeo intro (Moving S causes garbage)
+	src[0x00112 >> 1] = 0x0180; 
+	src[0x00114 >> 1] = 0x0180; 
+
+	// Hack in the proper identification (see setup menu [F2])
+	for (i = 0; i < 0x10; i++)
+	{
+		rom[0x3A6 + i] = rom[0x61E + i] = rom[0x896 + i] = data[i];
+	}
+	for (i = 0; i < 0x20; i += 4)
+	{
+		src[(0x40 + i + 2) >> 1] = 0x0426;
+	}
 
 	// Album Fix
-	mem16[0x1C382/2] = 0x0008; // C00552
-	mem16[0x1C384/2] = 0x0000;
-	mem16[0x80000/2] = 0x33FC;
-	mem16[0x80002/2] = 0x0001;
-	mem16[0x80004/2] = 0x0020;
-	mem16[0x80006/2] = 0x0002;
-	mem16[0x80008/2] = 0x4E75;
+	src[0x1C382 >> 1] = 0x0008; // C00552
+	src[0x1C384 >> 1] = 0x0000;
+	src[0x80000 >> 1] = 0x33FC;
+	src[0x80002 >> 1] = 0x0001;
+	src[0x80004 >> 1] = 0x0020;
+	src[0x80006 >> 1] = 0x0002;
+	src[0x80008 >> 1] = 0x4E75;
 }
 
 DRIVER_INIT( fr2ch )
