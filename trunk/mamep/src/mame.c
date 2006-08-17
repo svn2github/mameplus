@@ -733,6 +733,7 @@ void CLIB_DECL fatalerror(const char *text, ...)
 
 void CLIB_DECL popmessage(const char *text, ...)
 {
+	extern void CLIB_DECL ui_popup(const char *text, ...) ATTR_PRINTF(1,2);
 	va_list arg;
 
 	/* dump to the buffer */
@@ -1064,6 +1065,7 @@ static void init_machine(void)
 	sndintrf_init();
 	fileio_init();
 	config_init();
+	output_init();
 	state_init();
 	state_save_allow_registration(TRUE);
 	drawgfx_init();
@@ -1282,7 +1284,7 @@ static void handle_save(void)
 		/* if more than a second has passed, we're probably screwed */
 		if (sub_mame_times(mame_timer_get_time(), saveload_schedule_time).seconds > 0)
 		{
-			ui_popup("Unable to save due to pending anonymous timers. See error.log for details.");
+			popmessage(_("Unable to save due to pending anonymous timers. See error.log for details."));
 			goto cancel;
 		}
 		return;
@@ -1297,7 +1299,7 @@ static void handle_save(void)
 		/* write the save state */
 		if (state_save_save_begin(file) != 0)
 		{
-			ui_popup("Error: Unable to save state due to illegal registrations. See error.log for details.");
+			popmessage(_("Error: Unable to save state due to illegal registrations. See error.log for details."));
 			mame_fclose(file);
 			goto cancel;
 		}
@@ -1329,12 +1331,12 @@ static void handle_save(void)
 
 		/* pop a warning if the game doesn't support saves */
 		if (!(Machine->gamedrv->flags & GAME_SUPPORTS_SAVE))
-			ui_popup("State successfully saved.\nWarning: Save states are not officially supported for this game.");
+			popmessage(_("State successfully saved.\nWarning: Save states are not officially supported for this game."));
 		else
-			ui_popup("State successfully saved.");
+			popmessage(_("State successfully saved."));
 	}
 	else
-		ui_popup("Error: Failed to save state");
+		popmessage(_("Error: Failed to save state"));
 
 cancel:
 	/* unschedule the save */
@@ -1366,7 +1368,7 @@ static void handle_load(void)
 		/* if more than a second has passed, we're probably screwed */
 		if (sub_mame_times(mame_timer_get_time(), saveload_schedule_time).seconds > 0)
 		{
-			ui_popup("Unable to load due to pending anonymous timers. See error.log for details.");
+			popmessage(_("Unable to load due to pending anonymous timers. See error.log for details."));
 			goto cancel;
 		}
 		return;
@@ -1407,14 +1409,14 @@ static void handle_load(void)
 
 			/* finish and close */
 			state_save_load_finish();
-			ui_popup(_("State successfully loaded."));
+			popmessage(_("State successfully loaded."));
 		}
 		else
-			ui_popup("Error: Failed to load state");
+			popmessage(_("Error: Failed to load state"));
 		mame_fclose(file);
 	}
 	else
-		ui_popup("Error: Failed to load state");
+		popmessage(_("Error: Failed to load state"));
 
 cancel:
 	/* unschedule the load */

@@ -4915,15 +4915,15 @@ static int DoSearchMenuClassic(int selection, int startNew)
 		UpdateSearch(search);
 
 		if(willHaveResults || !startNew)
-			ui_popup(_("%d results found"), search->numResults);
+			popmessage(_("%d results found"), search->numResults);
 		else
-			ui_popup(_("saved all memory regions"));
+			popmessage(_("saved all memory regions"));
 
 		if(search->numResults == 1)
 		{
 			AddCheatFromFirstResult(search);
 
-			ui_popup(_("1 result found, added to list"));
+			popmessage(_("1 result found, added to list"));
 		}
 	}
 
@@ -5292,13 +5292,13 @@ static int DoSearchMenu(int selection, int startNew)
 
 					UpdateSearch(search);
 
-					ui_popup(_("%d results found"), search->numResults);
+					popmessage(_("%d results found"), search->numResults);
 
 					if(search->numResults == 1)
 					{
 						AddCheatFromFirstResult(search);
 
-						ui_popup(_("1 result found, added to list"));
+						popmessage(_("1 result found, added to list"));
 					}
 					break;
 
@@ -5310,7 +5310,7 @@ static int DoSearchMenu(int selection, int startNew)
 
 					UpdateSearch(search);
 
-					ui_popup(_("saved all memory regions"));
+					popmessage(_("saved all memory regions"));
 					break;
 			}
 		}
@@ -8433,7 +8433,7 @@ static void HandleLocalCommandCheat(UINT32 type, UINT32 address, UINT32 data, UI
 
 				case kCustomLocation_RefreshRate:
 				{
-extern void set_refresh_rate(int scrnum, float refresh);
+					extern void set_refresh_rate(int scrnum, float refresh);
 
 					double	refresh = data;
 
@@ -10052,7 +10052,7 @@ static void cheat_periodicAction(CheatAction * action)
 	{
 		case kType_NormalOrDelay:
 		{
-			if(action->frameTimer >= (parameter * Machine->refresh_rate[0]))
+			if(action->frameTimer >= (parameter * Machine->screen[0].refresh))
 			{
 				action->frameTimer = 0;
 
@@ -10098,7 +10098,7 @@ static void cheat_periodicAction(CheatAction * action)
 
 				if(currentValue != action->lastValue)
 				{
-					action->frameTimer = parameter * Machine->refresh_rate[0];
+					action->frameTimer = parameter * Machine->screen[0].refresh;
 
 					action->flags |= kActionFlag_WasModified;
 				}

@@ -136,7 +136,6 @@ void ui_draw_text_full(const char *origs, int x, int y, int wrapwidth, int offse
 void ui_draw_text_box(const char *text, int justify, float xpos, float ypos, rgb_t backcolor);
 
 /* display a temporary message at the bottom of the screen */
-void CLIB_DECL ui_popup(const char *text, ...) ATTR_PRINTF(1,2);
 void CLIB_DECL ui_popup_time(int seconds, const char *text, ...) ATTR_PRINTF(2,3);
 
 /* get/set whether or not the FPS is displayed */

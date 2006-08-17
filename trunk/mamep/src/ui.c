@@ -1458,7 +1458,7 @@ skip_comment:
 			}
 			if (next_caption_timer == 0)
 			{
-				next_caption_timer = 5 * Machine->refresh_rate[0];	// 5sec.
+				next_caption_timer = 5 * Machine->screen[0].refresh;	// 5sec.
 			}
 
 			strcpy(next_caption, &read_buf[i]);
@@ -1736,7 +1736,7 @@ static UINT32 handler_ingame(UINT32 state)
 
 	/* handle a save snapshot request */
 	if (input_ui_pressed(IPT_UI_SNAPSHOT))
-		snapshot_save_all_screens();
+		video_save_active_screen_snapshots();
 
 #ifdef INP_CAPTION
 	draw_caption();
@@ -1794,7 +1794,18 @@ static UINT32 handler_ingame(UINT32 state)
 
 	/* toggle movie recording */
 	if (input_ui_pressed(IPT_UI_RECORD_MOVIE))
-		record_movie_toggle();
+	{
+		if (video_is_movie_active())
+		{
+			video_movie_begin_recording(NULL);
+			popmessage("REC START");
+		}
+		else
+		{
+			video_movie_end_recording();
+			popmessage("REC STOP");
+		}
+	}
 
 	/* toggle profiler display */
 	if (input_ui_pressed(IPT_UI_SHOW_PROFILER))
@@ -1903,9 +1914,9 @@ static UINT32 handler_load_save(UINT32 state)
 	{
 		/* display a popup indicating things were cancelled */
 		if (state == LOADSAVE_SAVE)
-			ui_popup(_("Save cancelled"));
+			popmessage(_("Save cancelled"));
 		else
-			ui_popup(_("Load cancelled"));
+			popmessage(_("Load cancelled"));
 
 		/* reset the state */
 		mame_pause(FALSE);
@@ -1931,12 +1942,12 @@ static UINT32 handler_load_save(UINT32 state)
 	sprintf(filename, "%s-%c", Machine->gamedrv->name, file);
 	if (state == LOADSAVE_SAVE)
 	{
-		ui_popup(_("Save to position %c"), file);
+		popmessage(_("Save to position %c"), file);
 		mame_schedule_save(filename);
 	}
 	else
 	{
-		ui_popup(_("Load from position %c"), file);
+		popmessage(_("Load from position %c"), file);
 		mame_schedule_load(filename);
 	}
 
@@ -2202,7 +2213,7 @@ static INT32 slider_refresh(INT32 newval, char *buffer, int arg)
 	if (buffer != NULL)
 	{
 		screen_state *state = &Machine->screen[arg];
-		configure_screen(arg, state->width, state->height, &state->visarea, Machine->drv->screen[arg].defstate.refresh + (float)newval * 0.001f);
+		video_screen_configure(arg, state->width, state->height, &state->visarea, Machine->drv->screen[arg].defstate.refresh + (float)newval * 0.001f);
 		sprintf(buffer, "Screen %d %s %.3f", arg, ui_getstring(UI_refresh_rate), Machine->screen[arg].refresh);
 	}
 	return floor((Machine->screen[arg].refresh - Machine->drv->screen[arg].defstate.refresh) * 1000.0f + 0.5f);

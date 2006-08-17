@@ -259,7 +259,7 @@ VIDEO_UPDATE( tnk3 )
 void athena_draw_sprites( mame_bitmap *bitmap, int xscroll, int yscroll )
 {
 	const gfx_element *gfx = Machine->gfx[2];
-	rectangle *clip = &Machine->visible_area[0];
+	rectangle *clip = &Machine->screen[0].visarea;
 
 	int tile_number, attributes, color, sx, sy;
 	int offs;

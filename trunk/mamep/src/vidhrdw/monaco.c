@@ -49,7 +49,7 @@ static int build_led_font(void)
 
 static void draw_computer( mame_bitmap *bitmap )
 {
-	const rectangle *clip = &Machine->visible_area[0];
+	const rectangle *clip = &Machine->screen[0].visarea;
 	int i;
 
 	for( i=0; i<NUM_COMPUTER_CARS; i++ )
@@ -83,13 +83,13 @@ static void draw_pool( mame_bitmap *bitmap )
 		0,0, /* flip */
 		monaco_gfx.pool_x,
 		monaco_gfx.pool_y,
-		&Machine->visible_area[0],
+		&Machine->screen[0].visarea,
 		TRANSPARENCY_PEN,0 );
 }
 
 static void draw_player( mame_bitmap *bitmap )
 {
-	const rectangle *clip = &Machine->visible_area[0];
+	const rectangle *clip = &Machine->screen[0].visarea;
 	int gfx;
 	int tile;
 
@@ -168,7 +168,7 @@ static void draw_strip( mame_bitmap *bitmap, int sy, int x0, int x1, int xpos, i
 
 static void DrawSmoothZone( mame_bitmap *bitmap, int xpos )
 {
-	const rectangle *clip = &Machine->visible_area[0];
+	const rectangle *clip = &Machine->screen[0].visarea;
 
 	const UINT8 data[14] =
 	{
@@ -224,7 +224,7 @@ static void DrawSmoothZone( mame_bitmap *bitmap, int xpos )
 
 static void DrawSlipZone( mame_bitmap *bitmap, int xpos )
 {
-	const rectangle *clip = &Machine->visible_area[0];
+	const rectangle *clip = &Machine->screen[0].visarea;
 
 	const UINT8 data[14] =
 	{
@@ -279,7 +279,7 @@ static void DrawSlipZone( mame_bitmap *bitmap, int xpos )
 }
 
 static void DrawGravelZone( mame_bitmap *bitmap, int xpos ){
-	const rectangle *clip = &Machine->visible_area[0];
+	const rectangle *clip = &Machine->screen[0].visarea;
 
 	const UINT8 data[14] = {
 		GFX_SHRUB,GFX_SHRUB,GFX_SHRUB,
@@ -360,7 +360,7 @@ static void DrawGravelZone( mame_bitmap *bitmap, int xpos ){
 
 static void DrawBridgeZone( mame_bitmap *bitmap, int xpos )
 {
-	const rectangle *clip = &Machine->visible_area[0];
+	const rectangle *clip = &Machine->screen[0].visarea;
 	const gfx_element *gfx1 = Machine->gfx[GFX_BRIDGE1];
 	const gfx_element *gfx2 = Machine->gfx[GFX_BRIDGE2];
 
@@ -408,8 +408,8 @@ static void DrawTunnelZone( mame_bitmap *bitmap, int xpos )
 
 static void DrawTunnelWall( mame_bitmap *bitmap, int xpos )
 {
-	const rectangle *clip = &Machine->visible_area[0];
-	rectangle clip2 = Machine->visible_area[0];
+	const rectangle *clip = &Machine->screen[0].visarea;
+	rectangle clip2 = Machine->screen[0].visarea;
 	const gfx_element *gfx = Machine->gfx[GFX_TUNNEL];
 	int top_inset = monaco_gfx.top_inset - 16;
 	int bottom_inset = monaco_gfx.bottom_inset - 16;
@@ -535,7 +535,7 @@ static void draw_background( mame_bitmap *bitmap )
 
 static void draw_text( mame_bitmap *bitmap )
 {
-	const rectangle *clip = &Machine->visible_area[0];
+	const rectangle *clip = &Machine->screen[0].visarea;
 	int sx = (SCREEN_WIDTH-8)/2;
 	int sy = (SCREEN_HEIGHT-128)/2;
 

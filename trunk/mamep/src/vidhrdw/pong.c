@@ -176,15 +176,15 @@ VIDEO_UPDATE( pong )
 			score2 = 0;
 			if(	!serve_timer )                                                 /* SU 059 */
 			{
-				/* monoflop (NE555/G4) with a 330 kOhms resistor and 4.7 ÊF capacitor */
+				/* monoflop (NE555/G4) with a 330 kOhms resistor and 4.7 F capacitor */
 				timer_set(TIME_IN_USEC(1.2*330000.0*4.7), 0, serve_timer_cb);  /* SU 059 */
 				serve_timer = 1;	                                           /* SU 059 */
 			}
 		}
 	}
 
-	copybitmap(bitmap,tmpbitmap,0,0,0,0,&Machine->visible_area[0],TRANSPARENCY_NONE,0);
-	fillbitmap(tmpbitmap, Machine->pens[0], &Machine->visible_area[0]);
+	copybitmap(bitmap,tmpbitmap,0,0,0,0,&Machine->screen[0].visarea,TRANSPARENCY_NONE,0);
+	fillbitmap(tmpbitmap, Machine->pens[0], &Machine->screen[0].visarea);
 
 	/* reset the VPAD timers */
 	vpad1_timer = 0;
@@ -724,7 +724,7 @@ INTERRUPT_GEN( pong_vh_scanline )
 						 */
 						if( ATRACT && !score_sound_timer )                                  /* SU 059 */
 						{
-							/* monoflop (NE555/G4) with a 220 kOhms resistor and 1.0 ÊF capacitor */
+							/* monoflop (NE555/G4) with a 220 kOhms resistor and 1.0 F capacitor */
 							timer_set(TIME_IN_USEC(1.2*220000.0*1.0), 0, score_timer_cb);   /* SU 059 */
 							score_sound_timer = 1;                                          /* SU 059 */
 							pong_score_sound = 1;
@@ -749,7 +749,7 @@ INTERRUPT_GEN( pong_vh_scanline )
 						}
  						if ( !serve_timer )                                                 /* SU 059 */
 						{
-							/* monoflop (NE555/G4) with a 330 kOhms resistor and 4.7 ÊF capacitor */
+							/* monoflop (NE555/G4) with a 330 kOhms resistor and 4.7 F capacitor */
 							timer_set(TIME_IN_USEC(1.2*330000.0*4.7), 0, serve_timer_cb);   /* SU 059 */
 							serve_timer = 1;                                                /* SU 059 */
 						}
