@@ -246,11 +246,6 @@ typedef struct
 	char*	dial_device;
 	char*	trackball_device;
 	char*	lightgun_device;
-//
-// OUTPUT DEVICE OPTIONS
-//
-	BOOL	keyboard_leds;
-	char*	led_mode;
 } options_type;
 
 // List of artwork types to display in the screen shot area

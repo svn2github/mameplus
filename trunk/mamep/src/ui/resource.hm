@@ -50,8 +50,6 @@
 #define HIDC_KEEPASPECT                 0x809a0474    // IDD_PROP_DISPLAY [Englisch (USA)]
 #define HIDC_LANGUAGECHECK              0x80b204d1    // IDD_LANGUAGE [Englisch (USA)]
 #define HIDC_LANGUAGEEDIT               0x80b204d4    // IDD_LANGUAGE [Englisch (USA)]
-#define HIDC_LEDMODE                    0x809d04c6    // IDD_PROP_INPUT [Englisch (USA)]
-#define HIDC_LEDS                       0x809d03fc    // IDD_PROP_INPUT [Englisch (USA)]
 #define HIDC_LIGHTGUN                   0x806a048d    // IDD_PROP_INPUT [Englisch (USA)]
 #define HIDC_LIGHTGUNDEVICE             0x806a04d6    // IDD_PROP_CONTROLLER [Englisch (USA)]
 #define HIDC_LOG                        0x809e03f7    // IDD_PROP_MISC [Englisch (USA)]

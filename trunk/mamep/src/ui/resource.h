@@ -138,7 +138,6 @@
 #define IDC_BACKDROPS                   1017
 #define IDC_ARTWORK_CROP                1018
 #define IDC_OVERLAYS                    1019
-#define IDC_LEDS                        1020
 #define IDC_BEZELS                      1021
 #define IDC_GAMMA                       1023
 #define IDC_BRIGHTCORRECT               1024
@@ -316,7 +315,6 @@
 #define IDC_RELOAD                      1219
 #define IDC_DUAL_LIGHTGUN               1220
 #define IDC_NOOFFSET_CLONES             1221
-#define IDC_LEDMODE                     1222
 #define IDC_HISTORY_TAB                 1223
 #define IDC_GAME_CAPTION                1224
 #define IDC_SCREENSHOT_BORDERSIZE       1225
