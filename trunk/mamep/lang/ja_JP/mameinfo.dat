@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.107u2      #
+#     Mameinfo.dat日本語版 v0.107u3      #
 #                                        #
-#             August 9, 2006             #
+#            August 15, 2006             #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,29 +12,24 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：827 翻訳済：805
-# 追加項目：327 合計：1154
+# Tester報告：829 翻訳済：811
+# 追加項目：327 合計：1156
 #
 
 
-$info=blueprnt
+$info=gotya
 $mame
 [バグ]
 
-- blueprint.cのゲームでF4を押してグラフィックを表示させ、2番目のバンクに切り替えようとするとクラッシュする。
-デバッグビルドとMAME32だけで起こる。 blueprnt0107u2red, Roberto Fresca / Twist
+- 面の切り替え時に表示がうまく動作していない。2面になっても1面の迷路がずれて表示される。 gotya0107u3yel, robiza / Twist
 
 $end
 
-$info=saturn
+$info=tceptor
 $mame
 [バグ]
 
-- blueprint.cのゲームでF4を押してグラフィックを表示させ、2番目のバンクに切り替えようとするとクラッシュする。
-デバッグビルドとMAME32だけで起こる。 blueprnt0107u2red, Roberto Fresca / Twist
-
-
-- プレイヤー1のスタートボタンを押すと、画面左下が化ける。 saturn0104u3gre, etabeta /  Twisty
+- 解説画面でクレジットを入れると、前の画面の文字が一部残る。 tceptor0107u3gre, F1ReB4LL
 
 $end
 
@@ -1089,14 +1084,6 @@ $mame
 
 $end
 
-$info=thoop
-$mame
-[バグ]
-
-- 4面で最初のコンティニューをすると画面が黒くなってプレイが続けられなくなる。 thoop0103u3yel, Layne /  Scuore
-
-$end
-
 $info=raiga
 $mame
 [バグ]
@@ -1345,14 +1332,6 @@ $mame
 [バグ]
 
 - デフォルトのNVRAM設定がおかしい。特にLap数とコイン/クレジットの設定。またサービスモードでLapカウンタの設定を1に戻すことができない。 groundfx069gre, Kale
-
-$end
-
-$info=gunbustr
-$mame
-[バグ]
-
-- BGMと効果音がおかしくなっている。0.90から。 gunbustr0106gre, cpukett
 
 $end
 
@@ -1922,6 +1901,10 @@ $mame
 - 画面最上部に余分なグラフィックが表示される。 tapper0102gre1, Haze / Old Wolf
 
 
+- ボーナス面で、缶をシャッフルする前にテーブルをたたく音がしない。また、ゲーム全体の音がずれていたり、おかしくなっている。
+0.98u1より発生。 tapper0102gre2, Old Wolf / BSR
+
+
 - 最初の2面で、上二段の客の目が血走っている。0.98u1から起きている。 tapper0102gre3, BSR
 
 $end
@@ -2182,6 +2165,9 @@ $mame
 
 - 一部の面で画面の一番下のラインに本来一番上にあるラインが表示される。
 背景が激しく動くシーンでよくわかる。 jdreddp060gre_1, Smitdogg
+
+
+- マンホールと後ろ側を歩く女の人のプライオリティがおかしい。 jdreddp060gre_2, DCisTHEbest
 
 
 - 下水道のリフトに乗ると、リフトの床が消える。 jdreddp0102gre2, RansAckeR
@@ -2915,6 +2901,14 @@ $mame
 
 $end
 
+$info=pc_smb3
+$mame
+[バグ]
+
+- タイトル画面で、地面のチェックパターンが上下にゆれる。 pc_smb3071u2gre, Reznor007
+
+$end
+
 $info=pc_smb
 $mame
 [バグ]
@@ -3284,18 +3278,6 @@ $mame
 
 - イニシャル入力画面が表示されるとき、
 ハイスコア一覧が下からスクロールしてくるが、ゲーム中のスプライトの後ろに表示されてしまう。 sharrier336rc2gre, Charvel
-
-$end
-
-$info=pignewt
-$mame
-[バグ]
-
-- カクテルモードでは背景が描画されない。 pignewt0106u3gre, Machone
-
-
-- 一番下のUnknownのDIPスイッチはカクテルモードの設定。
-また、カクテルモードにすると背景が表示されない。 pignewt0106u3gra, Machone / Canim
 
 $end
 
@@ -4201,6 +4183,9 @@ $mame
 
 - Taito Z：サウンドが左スピーカーからしか出ない。 aquajack059gre, Firewave / Nerox91 / Thenasty
 
+
+- [Possible] レーススタートまで片方のスピーカからしか音がしない。また、ボタン3の定義がない。 contcirc095u6gre, Twisty
+
 $end
 
 $info=spacegun
@@ -4272,20 +4257,6 @@ $mame
 [バグ]
 
 - プレイヤーが消えずに画面に残ることがある。 gridiron079gre, ThrowingMuse
-
-$end
-
-$info=tempest
-$mame
-[情報]
-
-- マウスのコントロールが反転していると言う人がいるが、そんなことはない。
-実際、レベル選択の画面ではマウスを右に動かすとブロックも右に動くので間違いない。
-
-
-[バグ]
-
-- ワープ中にポーズをかけても、星の点滅は止まらない。 tempest0104u2gre, Twisty / asmodius
 
 $end
 
@@ -5665,15 +5636,6 @@ $mame
 
 $end
 
-$info=baluba
-$mame
-[バグ]
-
-- 筐体設定をアップライトにすると、2Pは1Pの入力になる。
-カクテルにすると、両方のプレイヤーが2Pの入力を使う。 baluba36b16gra, TriggerFin
-
-$end
-
 $info=usclssic
 $mame
 [バグ]
@@ -5890,6 +5852,14 @@ $mame
 [バグ]
 
 - ラウンド2と3を告げる画面で、前のラウンドのグラフィックが残ってしまう。 toggle37b4gre, Frotz
+
+$end
+
+$info=saturn
+$mame
+[バグ]
+
+- プレイヤー1のスタートボタンを押すと、画面左下が化ける。 saturn0104u3gre, etabeta /  Twisty
 
 $end
 
@@ -6451,6 +6421,15 @@ $mame
 
 - 最後のボスを倒したときに拡大処理が必要。
 多分他のC2ゲームも要ると思う。 zunkyou37b9gre, YMI
+
+$end
+
+$info=baluba
+$mame
+[バグ]
+
+- 筐体設定をアップライトにすると、2Pは1Pの入力になる。
+カクテルにすると、両方のプレイヤーが2Pの入力を使う。 baluba36b16gra, TriggerFin / stephh
 
 $end
 
@@ -7862,6 +7841,15 @@ $mame
 [情報]
 
 - サウンドを追加するにはZ180サウンドCPUの内部ROMを吸い出す必要あり。
+
+$end
+
+$info=tempest
+$mame
+[情報]
+
+- マウスのコントロールが反転していると言う人がいるが、そんなことはない。
+実際、レベル選択の画面ではマウスを右に動かすとブロックも右に動くので間違いない。
 
 $end
 
