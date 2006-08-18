@@ -2467,7 +2467,7 @@ static void update_playback_record(int portnum, UINT32 portvalue)
 			Machine->playback_file = NULL;
 			options.playback = NULL;
 
-			ui_popup(_("End of playback"));
+			popmessage(_("End of playback"));
 
 #ifdef AUTO_PAUSE_PLAYBACK
 			if (options.auto_pause_playback)

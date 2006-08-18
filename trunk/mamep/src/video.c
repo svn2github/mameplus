@@ -1047,7 +1047,7 @@ void video_init_scale_effect(void)
 			scale_depth = (scale_depth == 15) ? 32 : 15;
 			if (scale_check(scale_depth))
 			{
-				ui_popup(_("scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled."),
+				popmessage(_("scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled."),
 					scale_desc(scale_effect.effect));
 
 				scale_exit();
