@@ -93,7 +93,6 @@ void CreateDumpingFolders(int parent_index);
 #ifdef MISC_FOLDER
 void CreateBIOSFolders(int parent_index);
 void CreateFPSFolders(int parent_index);
-void CreateAspectFolders(int parent_index);
 void CreateResolutionFolders(int parent_index);
 void CreateControlFolders(int parent_index);
 void CreateSaveStateFolders(int parent_index);
@@ -126,7 +125,6 @@ enum
 	FOLDER_VECTOR,
 #ifdef MISC_FOLDER
 	FOLDER_RESOLUTION,
-	FOLDER_ASPECT,
 	FOLDER_FPS,
 	FOLDER_CONTROL,
  	FOLDER_DUALMON,

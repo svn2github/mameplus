@@ -246,8 +246,6 @@ START_OPT_FUNC_WINUI
 #endif /* USE_VIEW_PCBINFO */
 
 // INTERFACE OPTIONS
-	DEFINE_OPT(string_allow_null,    save_version)
-	DEFINE_OPT(bool,                 reset_gui)
 	DEFINE_OPT(bool,                 game_check)
 	DEFINE_OPT(bool,                 joygui)
 	DEFINE_OPT(bool,                 keygui)

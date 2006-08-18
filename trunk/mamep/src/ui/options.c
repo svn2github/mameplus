@@ -71,8 +71,6 @@ typedef struct
 
 typedef struct
 {
-	char     *save_version;
-	BOOL     reset_gui;
 	INT      folder_id;
 	BOOL     view;
 	BOOL     show_folderlist;
@@ -864,7 +862,10 @@ void SetDefaultBios(int bios_index, const char *value)
 
 void ResetGUI(void)
 {
-	settings.reset_gui = TRUE;
+	FreeSettings(&settings);
+	CopySettings(&backup.settings, &settings);
+	SetLangcode(settings.langcode);
+	SetUseLangList(UseLangList());
 }
 
 int GetLangcode(void)
@@ -2964,41 +2965,6 @@ static void LoadOptions(void)
 	options_load_winui_config();
 	SetLangcode(settings.langcode);
 	SetUseLangList(UseLangList());
-
-#if 0
-	if (!settings.reset_gui)
-	{
-		static char oldInfoMsg[400] = 
-MAME32NAME " has detected outdated configuration data.\n\n\
-The detected configuration data is from Version %s of " MAME32NAME ".\n\
-The current version is %s. It is recommended that the\n\
-configuration is set to the new defaults.\n\n\
-Would you like to use the new configuration?";
-
-		char *current_version;
-		const char *save_version = settings.save_version;
-
-		current_version = GetVersionString();
-
-		if (save_version && *save_version && strcmp(save_version, current_version) != 0)
-		{
-			char msg[400];
-			sprintf(msg,_UI(oldInfoMsg), save_version, current_version);
-			if (MessageBox(0, _Unicode(msg), _Unicode(_UI("Version Mismatch")), MB_YESNO | MB_ICONQUESTION) == IDYES)
-				settings.reset_gui = TRUE;
-		}
-	}
-#endif
-
-	if (settings.reset_gui)
-	{
-		FreeSettings(&settings);
-		CopySettings(&backup.settings, &settings);
-		SetLangcode(settings.langcode);
-		SetUseLangList(UseLangList());
-	}
-
-	settings.reset_gui = FALSE;
 }
 
 
@@ -3020,8 +2986,6 @@ const options_entry winui_opts[] =
 #endif /* USE_VIEW_PCBINFO */
 
 	{ NULL,                          NULL,                         OPTION_HEADER,     "INTERFACE OPTIONS"},
-	{ "save_version",                NULL,                         0,                 "save version"},
-	{ "reset_gui",                   "0",                          OPTION_BOOLEAN,    "enable version mismatch warning"},
 	{ "game_check",                  "1",                          OPTION_BOOLEAN,    "search for new games"},
 	{ "joygui",                      "0",                          OPTION_BOOLEAN,    "allow game selection by a joystick"},
 	{ "keygui",                      "0",                          OPTION_BOOLEAN,    "allow game selection by a keyboard"},
@@ -3399,9 +3363,6 @@ static int options_load_winui_config(void)
 	options_set_datalist(options_winui);
 	options_set_winui(&backup.settings);
 
-	FreeIfAllocated(&settings.save_version);
-	settings.save_version = strdup("(unknown)");
-
 	retval = options_parse_ini_file(file);
 	options_get_winui(&settings);
 
@@ -3544,9 +3505,6 @@ static int options_save_winui_config(void)
 
 	if (!(file = fopen(filename, "wt")))
 		return -1;
-
-	FreeIfAllocated(&settings.save_version);
-	settings.save_version = strdup(GetVersionString());
 
 	options_set_datalist(options_winui);
 	options_set_winui(&settings);
