@@ -1809,6 +1809,8 @@ static void PropToOptions(HWND hWnd, options_type *o)
 				strcat(digital, _String(buffer));
 			}
 		}
+		if (!strlen(digital))
+			strcpy(digital,"none");
 		if (mame_stricmp (digital,o->digital) != 0)
 		{
 			// save the new setting
