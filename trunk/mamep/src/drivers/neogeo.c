@@ -9655,7 +9655,7 @@ void fr2ch_patches( void )
 	UINT8 *dst = memory_region( REGION_GFX1 );
 
 	int i;
-	UINT8 data[16] = { 
+	UINT8 data[16] = {
 		0x49, 0x46, 0x41, 0x4E, 0x20, 0x4C, 0x4F, 0x52,
 		0x41, 0x4D, 0x43, 0x4E, 0x20, 0x45, 0x20, 0x32
 	};
@@ -9667,15 +9667,17 @@ void fr2ch_patches( void )
 	src[0x1C384 >> 1] = 0x04DA; // C00552 (fixes crash) 
 
 	// 0x001C06 - this routine can cause a loop/freeze
-	src[0x01C06 >> 1] = 0x4E75; 
+	src[0x01C06 >> 1] = 0x4E75;
 
+	// can cause bugs
 	// Move text for credit + coin info (Thanks to Kanyero)
 	memcpy(dst, dst + 0x600, 0x140);
 
 	// Patch out neogeo intro (Moving S causes garbage)
-	src[0x00112 >> 1] = 0x0180; 
-	src[0x00114 >> 1] = 0x0180; 
+	src[0x00112 >> 1] = 0x0180;
+	src[0x00114 >> 1] = 0x0180;
 
+	// optional
 	// Hack in the proper identification (see setup menu [F2])
 	for (i = 0; i < 0x10; i++)
 	{
