@@ -256,7 +256,7 @@ const options_entry windows_opts[] =
 	{ "prescale",                 "1",        0,                 "scale screen rendering by this amount in software" },
 	{ "effect",                   "none",     0,                 "name of a PNG file to use for visual effects, or 'none'" },
 #ifdef USE_SCALE_EFFECTS
-	{ "scale_effect",             "none", 0,                 "SaI scale effect" },
+	{ "scale_effect",             "none",     0,                 "image enhancement effect" },
 #endif /* USE_SCALE_EFFECTS */
 	{ "pause_brightness",         "0.65",     0,                 "amount to scale the screen brightness when paused" },
 	{ "waitvsync",                "0",        OPTION_BOOLEAN,    "enable waiting for the start of VBLANK before flipping screens; reduces tearing effects" },

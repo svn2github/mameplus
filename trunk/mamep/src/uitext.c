@@ -242,7 +242,7 @@ static const char *mame_default_text[] =
 	"Flip Y",
 
 #ifdef USE_SCALE_EFFECTS
-	"Scale Effect",
+	"Image Enhancement",
 #endif /* USE_SCALE_EFFECTS */
 
 	/* autofire stuff */
