@@ -5209,6 +5209,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( miexchng )	/* 0231 (c) 1997 Face */
 	DRIVER( kof97 )		/* 0232 (c) 1997 SNK */
 	DRIVER( kof97a )	/* 0232 (c) 1997 SNK */
+	DRIVER( kof97pla )
 	DRIVER( kof97pls )	/* bootleg of kof97 */
 	DRIVER( kog )		/* bootleg of kof97 */
 	DRIVER( magdrop3 )	/* 0233 (c) 1997 Data East Corporation */
@@ -5285,6 +5286,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( pnyaa )		/* 0267 (c) 2003 Aiky / Taito */
 	DRIVER( ms5pcb )	/* 0268 (c) 2003 Playmore */
 	DRIVER( mslug5 )	/* 0268 (c) 2003 Playmore */
+	DRIVER( mslug5b )
 	DRIVER( ms5plus )	/* bootleg */
 	DRIVER( svcpcb )	/* 0269 (c) 2003 Playmore / Capcom - JAMMA PCB */
 	DRIVER( svcpcba )	/* 0269 (c) 2003 Playmore / Capcom - JAMMA PCB */
@@ -5314,28 +5316,25 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	/* Nor does Digger Man */
 	DRIVER( diggerma )  /* No Game ID (unlicensed), (c) 2000 Kyle Hodgetts, prototype */
 
-	DRIVER( beast )
 	DRIVER( columnsn )
 	DRIVER( poknight )
+	DRIVER( fr2ch )
+	DRIVER( sthoopcd )
+
+#ifdef USE_NEOGEO_DECRYPTED
+	/* demo */
+	DRIVER( neodemo )
+	DRIVER( neo2500 )
+	DRIVER( syscheck )	/* FFFF (c) 2004 Blastar */
 	DRIVER( neonopon )	/* xxxx (c) 2002 Blastar */
 	DRIVER( neopong )	/* xxxx (c) 2002 Neodev */
 	DRIVER( npong10 )	/* xxxx (c) 2002 Neodev */
-	DRIVER( syscheck )	/* FFFF (c) 2004 Blastar */
+	DRIVER( ngem2k )
+	DRIVER( cnbe )
 	DRIVER( frogfest )	/* 0202 (c) 2005 Rastersoft */
+	DRIVER( ltorb1 )
+	DRIVER( beast )
 
-    /* new */
-    DRIVER( ltorb1 )
-    DRIVER( neodemo )
-    DRIVER( fr2ch )
-    DRIVER( cnbe )
-    DRIVER( ngem2k )
-    DRIVER( neo2500 )
-    DRIVER( sthoopcd )
-	/* new Bootleg */
-	DRIVER( kof97pla )
-	DRIVER( mslug5b )
-
-#ifdef USE_NEOGEO_DECRYPTED
 	/* decrypted junk */
 	DRIVER( zupapad )	/* 0070 Zupapa - released in 2001, 1994 prototype probably exists */
 	DRIVER( kof99d )	/* 0251 (c) 1999 SNK */
@@ -5352,20 +5351,20 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( rotdd )		/* 0264 (c) 2002 Evoga */
 	DRIVER( kof2002d )	/* 0265 (c) 2002 Eolith / Playmore */
 	DRIVER( matrimd )	/* 0266 (c) 2002 Atlus */
-		DRIVER( ct2k3ad )
-		DRIVER( cthd2k3d )
-		DRIVER( kof10thd )
-		DRIVER( kof2003d )
-		DRIVER( mslug5d )
-		DRIVER( samsho5d )
-		DRIVER( samsh5sd )
-		DRIVER( lans2k4d )
-		DRIVER( svcd )
-		DRIVER( jckeygpd )
-		DRIVER( kf2k3pcd )
-		DRIVER( kogd )
-		DRIVER( pnyaad )
-		DRIVER( bangbedp )	/* 0259 (c) 2000 Visco */
+	DRIVER( ct2k3ad )
+	DRIVER( cthd2k3d )
+	DRIVER( kof10thd )
+	DRIVER( kof2003d )
+	DRIVER( mslug5d )
+	DRIVER( samsho5d )
+	DRIVER( samsh5sd )
+	DRIVER( lans2k4d )
+	DRIVER( svcd )
+	DRIVER( jckeygpd )
+	DRIVER( kf2k3pcd )
+	DRIVER( kogd )
+	DRIVER( pnyaad )
+	DRIVER( bangbedp )	/* 0259 (c) 2000 Visco */
 #endif /* USE_NEOGEO_DECRYPTED */
 	
 #ifndef NEOCPSMAME
