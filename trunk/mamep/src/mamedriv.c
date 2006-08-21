@@ -37,7 +37,6 @@ const game_driver * const drivers[] =
 #else	/* DRIVER_RECURSIVE */
 
 #ifndef NEOCPSMAME
-	DRIVER( pong )		/* (c) 1972 Atari */
 	DRIVER( monaco )	/* (c) 1979 SEGA */
 
 	/* "Pacman hardware" games */
@@ -5325,8 +5324,8 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( fr2ch )
 	DRIVER( sthoopcd )
 
-#ifdef USE_NEOGEO_DECRYPTED
-	/* demo */
+#ifdef USE_NEOGEO_LAMER
+	/* demo junk */
 	DRIVER( neodemo )
 	DRIVER( neo2500 )
 	DRIVER( syscheck )	/* FFFF (c) 2004 Blastar */
@@ -5369,7 +5368,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( kogd )
 	DRIVER( pnyaad )
 	DRIVER( bangbedp )	/* 0259 (c) 2000 Visco */
-#endif /* USE_NEOGEO_DECRYPTED */
+#endif /* USE_NEOGEO_LAMER */
 	
 #ifndef NEOCPSMAME
 	/* Hyper NeoGeo 64 uses a 3 digit rom code? */

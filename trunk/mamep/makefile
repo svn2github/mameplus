@@ -270,10 +270,6 @@ ifneq ($(X86_VOODOO_DRC),)
 DEFS += -DVOODOO_DRC
 endif
 
-ifneq ($(USE_HISCORE),)
-DEFS += -DUSE_HISCORE
-endif
-
 ifneq ($(USE_SCALE_EFFECTS),)
 DEFS += -DUSE_SCALE_EFFECTS
 endif
@@ -316,8 +312,12 @@ ifneq ($(USE_NEOGEO_HACKS),)
     DEFS+= -DUSE_NEOGEO_HACKS
 endif
 
-ifneq ($(USE_NEOGEO_DECRYPTED),)
-    DEFS+= -DUSE_NEOGEO_DECRYPTED
+ifneq ($(USE_NEOGEO_LAMER),)
+    DEFS+= -DUSE_NEOGEO_LAMER
+endif
+
+ifneq ($(USE_HISCORE),)
+DEFS += -DUSE_HISCORE
 endif
 
 ifneq ($(SHOW_UNAVAILABLE_FOLDER),)
