@@ -326,6 +326,7 @@ DRVLIBS = \
 	$(OBJ)/technos.a \
 	$(OBJ)/tehkan.a \
 	$(OBJ)/thepit.a \
+	$(OBJ)/tiamc1.a \
 	$(OBJ)/toaplan.a \
 	$(OBJ)/tong.a \
 	$(OBJ)/unico.a \
@@ -1337,6 +1338,9 @@ $(OBJ)/tehkan.a: \
 $(OBJ)/thepit.a: \
 	$(OBJ)/drivers/thepit.o $(OBJ)/vidhrdw/thepit.o \
 	$(OBJ)/drivers/timelimt.o $(OBJ)/vidhrdw/timelimt.o \
+
+$(OBJ)/tiamc1.a: \
+	$(OBJ)/drivers/tiamc1.o $(OBJ)/vidhrdw/tiamc1.o \
 
 $(OBJ)/toaplan.a: \
 	$(OBJ)/drivers/mjsister.o $(OBJ)/vidhrdw/mjsister.o \

@@ -428,7 +428,7 @@ const char *osd_get_fps_text(const performance_info *performance)
 
 	// if we're paused, display less info
 	if (mame_is_paused())
-		dest += sprintf(dest, _WINDOWS("Paused"));
+		dest += sprintf(dest, _WINDOWS("frame:%d Paused"), cpu_getcurrentframe());
 	else
 	{
 #ifdef INP_CAPTION

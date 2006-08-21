@@ -213,4 +213,6 @@ INLINE void xml_encode_string(const unsigned char *s, unsigned char *buffer, int
 	*d++ = 0;
 }
 
+const char *xml_normalize_string(const char *string);
+
 #endif	/* __XMLFILE_H__ */
