@@ -9882,32 +9882,24 @@ GAMEB( 1999, kof99a,   kof99,    neogeo, neogeo, neogeo,  kof99,    ROT0, "SNK",
 GAMEB( 1999, kof99e,   kof99,    neogeo, neogeo, neogeo,  kof99,    ROT0, "SNK", "The King of Fighters '99 - Millennium Battle (earlier)" , 0) /* Encrypted Code & GFX */
 GAMEB( 1999, kof99n,   kof99,    neogeo, neogeo, neogeo,  kof99n,   ROT0, "SNK", "The King of Fighters '99 - Millennium Battle (not encrypted)" , 0)	/* Encrypted GFX */
 GAMEB( 1999, kof99p,   kof99,    neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "The King of Fighters '99 - Millennium Battle (prototype)", 0 )
-GAMEB( 1999, kof99d,   kof99,    neogeo, neogeo, neogeo,  kof99d,   ROT0, "SNK", "The King of Fighters '99 - Millennium Battle (decrypted C)", 0 )
 GAMEB( 1999, garou,    neogeo,   neogeo, neogeo, neogeo,  garou,    ROT0, "SNK", "Garou - Mark of the Wolves (set 1)" , 0) /* Encrypted Code & GFX */
 GAMEB( 1999, garouo,   garou,    neogeo, neogeo, neogeo,  garouo,   ROT0, "SNK", "Garou - Mark of the Wolves (set 2)" , 0) /* Encrypted Code & GFX */
 GAMEB( 1999, garoup,   garou,    neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Garou - Mark of the Wolves (prototype)", 0 )
-GAMEB( 1999, garoud,   garou,    neogeo, neogeo, neogeo,  garoud,   ROT0, "SNK", "Garou - Mark of the Wolves (decrypted C)", 0 )
 GAMEB( 2000, mslug3,   neogeo,   neogeo, neogeo, neogeo,  mslug3,   ROT0, "SNK", "Metal Slug 3" , 0) /* Encrypted Code & GFX */
 GAMEB( 2000, mslug3n,  mslug3,   neogeo, neogeo, neogeo,  mslug3n,  ROT0, "SNK", "Metal Slug 3 (not encrypted)" , 0) /* Encrypted GFX */
-GAMEB( 2000, mslug3d,  mslug3,   neogeo, neogeo, neogeo,  mslug3d,  ROT0, "SNK", "Metal Slug 3 (decrypted C)", 0 )
 GAMEB( 2005, mslug3b6, mslug3,   neogeo, neogeo, neogeo,  mslug3b6, ROT0, "bootleg", "Metal Slug 6 (Metal Slug 3 bootleg)", 0 ) /* real Metal Slug 6 is an Atomiswave HW game, see atomswav.c ;-) */
 GAMEB( 2000, kof2000,  neogeo,   neogeo, neogeo, neogeo,  kof2000,  ROT0, "SNK", "The King of Fighters 2000" , 0) /* Encrypted Code & GFX */
 GAMEB( 2000, kof2000n, kof2000,  neogeo, neogeo, neogeo,  kof2000n, ROT0, "SNK", "The King of Fighters 2000 (not encrypted)" , 0) /* Encrypted GFX */
-GAMEB( 2000, kof2000d, kof2000,  neogeo, neogeo, neogeo,  kof2000d, ROT0, "SNK", "The King of Fighters 2000 (decrypted C)", 0 )
 GAMEB( 2001, zupapa,   neogeo,   neogeo, neogeo, neogeo,  zupapa,   ROT0, "SNK", "Zupapa!" , 0)	/* Encrypted GFX */
-GAMEB( 2001, zupapad,  zupapa,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Zupapa! (custom decrypted C)", 0 )
 GAMEB( 2001, sengoku3, neogeo,   neogeo, neogeo, neogeo,  sengoku3, ROT0, "SNK", "Sengoku 3" , 0)	/* Encrypted GFX */
-GAMEB( 2001, sengok3d, sengoku3, neogeo, neogeo, neogeo,  gfxdec42, ROT0, "SNK", "Sengoku 3 (decrypted C)", 0 )
 GAMEB( 2001, kof2001,  neogeo,   neogeo, neogeo, neogeo,  kof2001,  ROT0, "Eolith / SNK", "The King of Fighters 2001 (set 1)" , 0) /* Encrypted GFX */
 GAMEB( 2001, kof2001h, kof2001,  neogeo, neogeo, neogeo,  kof2001,  ROT0, "Eolith / SNK", "The King of Fighters 2001 (set 2)" , 0) /* Encrypted GFX */
-GAMEB( 2001, kof2001d, kof2001,  neogeo, neogeo, neogeo,  gfxdec52, ROT0, "Eolith / SNK", "The King of Fighters 2001 (decrypted C)", 0 )
 GAMEB( 2003, cthd2003, kof2001,  neogeo, neogeo, neogeo,  cthd2003, ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg)", 0 ) /* Protected Hack / Bootleg of kof2001 */
 GAMEB( 2003, cthd2k3a, kof2001,  neogeo, neogeo, neogeo,  cthd2k3a, ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg, set 2)", 0 ) /* Protected Hack / Bootleg of kof2001 */
 GAMEB( 2003, ct2k3sp,  kof2001,  neogeo, neogeo, neogeo,  ct2k3sp,  ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 Super Plus (The King of Fighters 2001 bootleg)", 0 ) /* Protected Hack / Bootleg of kof2001 */
 GAMEB( 2002, kf2k1pls, kof2001,  neogeo, neogeo, neogeo,  kf2k1pls, ROT0, "bootleg", "The King of Fighters 2001 Plus (set 1, bootleg)", 0 )
 GAMEB( 2002, kf2k1pa,  kof2001,  neogeo, neogeo, neogeo,  kf2k1pa,  ROT0, "bootleg", "The King of Fighters 2001 Plus (set 2, bootleg)", 0 )
 GAMEB( 2002, kof2002,  neogeo,   neogeo, neogeo, neogeo,  kof2002,  ROT0, "Eolith / Playmore", "The King of Fighters 2002" , 0) /* Encrypted GFX */
-GAMEB( 2002, kof2002d, kof2002,	 neogeo, neogeo, neogeo,  kof2002d, ROT0, "Eolith / Playmore", "The King of Fighters 2002 (decrypted C)", 0 )
 GAMEB( 2002, kof2002b, kof2002,  neogeo, neogeo, neogeo,  kof2002b, ROT0, "bootleg", "The King of Fighters 2002 (bootleg)", 0 )
 GAMEB( 2002, kf2k2pls, kof2002,  neogeo, neogeo, neogeo,  kf2k2pls, ROT0, "bootleg", "The King of Fighters 2002 Plus (set 1, bootleg)" , 0) /* Encrypted GFX */
 GAMEB( 2002, kf2k2pla, kof2002,  neogeo, neogeo, neogeo,  kf2k2pls, ROT0, "bootleg", "The King of Fighters 2002 Plus (set 2, bootleg)" , 0) /* Encrypted GFX */
@@ -9965,8 +9957,6 @@ GAMEB( 1996, overtop,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "ADK",
 GAMEB( 1996, ninjamas, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "ADK / SNK",        "Ninja Master's - haoh-ninpo-cho", 0 )
 GAMEB( 1996, twinspri, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "ADK",              "Twinkle Star Sprites", 0 )
 GAMEB( 1996, zintrckb, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "hack / bootleg",   "Zintrick / Oshidashi Zentrix (hack / bootleg)", 0 )
-GAMEB( 1996, zintrkcd, zintrckb, neogeo, neogeo, neogeo,  neogeo,   ROT0, "Razoola",          "Zintrick / Oshidashi Zentrix (CD to MVS Conversion)", 0 )
-
 
 /* Aicom */
 GAMEB( 1994, janshin,  neogeo,   neogeo, neogeo, mjneogeo,mjneogeo, ROT0, "Aicom", "Jyanshin Densetsu - Quest of Jongmaster", 0 )
@@ -9984,7 +9974,6 @@ GAMEB( 1997, magdrop3, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Data 
 
 /* Eleven */
 GAMEB( 2000, nitd,     neogeo,   neogeo, neogeo, neogeo,  nitd,     ROT0, "Eleven / Gavaking", "Nightmare in the Dark", 0 ) /* Encrypted GFX */
-GAMEB( 2000, nitdd,    nitd,     neogeo, neogeo, neogeo,  gfxdec42, ROT0, "Eleven / Gavaking", "Nightmare in the Dark (decrypted C)", 0 )
 
 /* Face */
 GAMEB( 1994, gururin,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Face", "Gururin", 0 )
@@ -10008,7 +9997,6 @@ GAMEB( 1994, zedblade, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "NMK",
 
 /* Psikyo */
 GAMEB( 1999, s1945p,   neogeo,   neogeo, neogeo, neogeo,  s1945p,   ROT0, "Psikyo", "Strikers 1945 Plus", 0 )	/* Encrypted GFX */
-GAMEB( 1999, s1945pd,  s1945p,   neogeo, neogeo, neogeo,  gfxdec42, ROT0, "Psikyo", "Strikers 1945 Plus (decrypted C)", 0 )
 
 /* Sammy */
 GAMEB( 1992, viewpoin, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Sammy", "Viewpoint", 0 )
@@ -10048,7 +10036,6 @@ GAMEB( 1996, tws96,    neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Tecmo
 /* Yumekobo */
 GAMEB( 1998, blazstar, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Yumekobo", "Blazing Star", 0 )
 GAMEB( 1999, preisle2, neogeo,   neogeo, neogeo, neogeo,  preisle2, ROT0, "Yumekobo", "Prehistoric Isle 2", 0 ) /* Encrypted GFX */
-GAMEB( 1999, preisl2d, preisle2, neogeo, neogeo, neogeo,  gfxdec42, ROT0, "Yumekobo", "Prehistoric Isle 2 (decrypted C)", 0 )
 
 /* Viccom */
 GAMEB( 1994, fightfev, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Viccom", "Fight Fever (set 1)", 0 )
@@ -10072,7 +10059,6 @@ GAMEB( 1998, breakrev, breakers, neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco
 GAMEB( 1998, flipshot, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Battle Flip Shot", 0 )
 GAMEB( 1999, ctomaday, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco", "Captain Tomaday", 0 )
 GAMEB( 1999, ganryu,   neogeo,   neogeo, neogeo, neogeo,  ganryu,   ROT0, "Visco", "Ganryu / Musashi Ganryuki" , 0)	/* Encrypted GFX */
-GAMEB( 1999, ganryud,  ganryu,   neogeo, neogeo, neogeo,  gfxdec42, ROT0, "Visco", "Ganryu / Musashi Ganryuki (decrypted C)", 0 )
 GAMEB( 2000, bangbead, neogeo,   neogeo, neogeo, neogeo,  bangbead, ROT0, "Visco", "Bang Bead", 0 )
 
 /* Mega Enterprise */
@@ -10081,7 +10067,6 @@ GAMEB( 2002, ms4plus,  mslug4,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "bootl
 
 /* Evoga */
 GAMEB( 2002, rotd,     neogeo,	 neogeo, neogeo, neogeo,  rotd,	    ROT0, "Evoga / Playmore", "Rage of the Dragons", 0 )
-GAMEB( 2002, rotdd,    rotd,     neogeo, neogeo, neogeo,  rotdd,    ROT0, "Evoga / Playmore", "Rage of the Dragons (decrypted C)", 0 )
 
 /* Atlus */
 GAMEB( 2002, matrim,   neogeo,   neogeo, neogeo, neogeo,  matrim,   ROT0, "Noise Factory / Atlus", "Matrimelee / Shin Gouketsuji Ichizoku Toukon", 0 )
@@ -10096,6 +10081,7 @@ GAMEB( 2001, vlinero,  vliner,   neogeo, neogeo, vliner,  vliner,   ROT0, "Dyna 
 GAMEB( 2000, diggerma, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Kyle Hodgetts", "Digger Man (prototype)", 0 )
 
 /* homebrew */
+GAMEB( 1999, preisl2d, preisle2, neogeo, neogeo, neogeo,  gfxdec42, ROT0, "Yumekobo", "Prehistoric Isle 2 (decrypted C)", 0 )
 GAMEB( 1989, beast,    neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Psygnosis", "Shadow of the Beast (Neo Demo)", GAME_NO_SOUND )
 GAMEB( 1990, columnsn, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Sega", "Columns (Neo-Geo)", GAME_NO_SOUND )
 GAMEB( 200?, poknight, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "JMK", "Poker Night", GAME_NO_SOUND )
@@ -10104,15 +10090,28 @@ GAMEB( 2002, neopong,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Neode
 GAMEB( 2002, npong10,  neopong,  neogeo, neogeo, neogeo,  neogeo,   ROT0, "Neodev", "Neo Pong (v1.0)", 0 )
 GAMEB( 200?, syscheck, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Blastar", "Neo System Check (ver 1.0b)", 0 )
 GAMEB( 200?, frogfest, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Rastersoft", "Frog Feast", GAME_NO_SOUND )
-/* new */
 GAMEB( 2005, ltorb1,   neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Blastar", "Jonas Indiana and the Lost Temple of RA (20050717)" , 0 )
 GAMEB( 2002, neodemo,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Chaos", "Neo-Demo", 0 )
 GAMEB( 1995, fr2ch,    neogeo,   neogeo, neogeo, neogeo,  fr2ch,    ROT0, "hack / bootleg",   "Idol Mahjong - final romance 2 (CD to MVS Conversion)", 0 )
 GAMEB( 2006, cnbe,     neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "homebrew",   "Codename - Blut Engel (2006-01-19)", 0 )
 GAMEB( 2006, ngem2k,   neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "homebrew",   "NGEM2K (beta 2006-01-18)", 0 )
 GAMEB( 2004, neo2500,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Blastar", "Neo 2500 Demo", 0 )
+GAMEB( 1996, zintrkcd, zintrckb, neogeo, neogeo, neogeo,  neogeo,   ROT0, "Razoola",          "Zintrick / Oshidashi Zentrix (CD to MVS Conversion)", 0 )
 GAMEB( 1994, sthoopcd, strhoop,  neogeo, neogeo, neogeo,  neogeo,   ROT0, "hack / bootleg", "Street Hoop / Street Slam / Dunk Dream (CD to MVS Conversion)", 0 )
-/* new Decrypted */
+
+/* Decrypted */
+GAMEB( 1999, kof99d,   kof99,    neogeo, neogeo, neogeo,  kof99d,   ROT0, "SNK", "The King of Fighters '99 - Millennium Battle (decrypted C)", 0 )
+GAMEB( 1999, garoud,   garou,    neogeo, neogeo, neogeo,  garoud,   ROT0, "SNK", "Garou - Mark of the Wolves (decrypted C)", 0 )
+GAMEB( 2000, mslug3d,  mslug3,   neogeo, neogeo, neogeo,  mslug3d,  ROT0, "SNK", "Metal Slug 3 (decrypted C)", 0 )
+GAMEB( 2000, kof2000d, kof2000,  neogeo, neogeo, neogeo,  kof2000d, ROT0, "SNK", "The King of Fighters 2000 (decrypted C)", 0 )
+GAMEB( 2001, zupapad,  zupapa,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Zupapa! (custom decrypted C)", 0 )
+GAMEB( 2001, sengok3d, sengoku3, neogeo, neogeo, neogeo,  gfxdec42, ROT0, "SNK", "Sengoku 3 (decrypted C)", 0 )
+GAMEB( 2001, kof2001d, kof2001,  neogeo, neogeo, neogeo,  gfxdec52, ROT0, "Eolith / SNK", "The King of Fighters 2001 (decrypted C)", 0 )
+GAMEB( 2002, kof2002d, kof2002,	 neogeo, neogeo, neogeo,  kof2002d, ROT0, "Eolith / Playmore", "The King of Fighters 2002 (decrypted C)", 0 )
+GAMEB( 2000, nitdd,    nitd,     neogeo, neogeo, neogeo,  gfxdec42, ROT0, "Eleven / Gavaking", "Nightmare in the Dark (decrypted C)", 0 )
+GAMEB( 1999, s1945pd,  s1945p,   neogeo, neogeo, neogeo,  gfxdec42, ROT0, "Psikyo", "Strikers 1945 Plus (decrypted C)", 0 )
+GAMEB( 1999, ganryud,  ganryu,   neogeo, neogeo, neogeo,  gfxdec42, ROT0, "Visco", "Ganryu / Musashi Ganryuki (decrypted C)", 0 )
+GAMEB( 2002, rotdd,    rotd,     neogeo, neogeo, neogeo,  rotdd,    ROT0, "Evoga / Playmore", "Rage of the Dragons (decrypted C)", 0 )
 GAMEB( 2003, ct2k3ad,  kof2001,  neogeo, neogeo, neogeo,  neogeo,   ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg / set 2 fully decrypted)", 0 )
 GAMEB( 2003, cthd2k3d, kof2001,  neogeo, neogeo, neogeo,  neogeo,   ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg / set 1 fully decrypted)", 0 )
 GAMEB( 2004, kof10thd, kof2002,  neogeo, neogeo, neogeo,  neogeo,   ROT0, "bootleg", "The King of Fighters 10th Anniversary - All Team Battle (The King of Fighters 2002 bootleg / Fully Decrypted)", 0 ) // fake SNK copyright

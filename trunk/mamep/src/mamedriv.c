@@ -5318,7 +5318,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 
 	/* Nor does Digger Man */
 	DRIVER( diggerma )  /* No Game ID (unlicensed), (c) 2000 Kyle Hodgetts, prototype */
-
+	DRIVER( frogfest )	/* 0202 (c) 2005 Rastersoft */
 	DRIVER( columnsn )
 	DRIVER( poknight )
 	DRIVER( fr2ch )
@@ -5334,7 +5334,6 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( npong10 )	/* xxxx (c) 2002 Neodev */
 	DRIVER( ngem2k )
 	DRIVER( cnbe )
-	DRIVER( frogfest )	/* 0202 (c) 2005 Rastersoft */
 	DRIVER( ltorb1 )
 	DRIVER( beast )
 
