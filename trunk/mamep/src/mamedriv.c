@@ -5326,7 +5326,8 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( fr2ch )
 	DRIVER( sthoopcd )
 
-	/* homebrew */
+#ifdef USE_NEOGEO_LAMER
+	/* homebrew & demo junk */
 	DRIVER( frogfest )	/* 0202 (c) 2005 Rastersoft */
 	DRIVER( columnsn )
 	DRIVER( poknight )
@@ -5341,7 +5342,6 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( ltorb1 )
 	DRIVER( beast )
 
-#ifdef USE_NEOGEO_LAMER
 	/* decrypted junk */
 	DRIVER( zupapad )	/* 0070 Zupapa - released in 2001, 1994 prototype probably exists */
 	DRIVER( kof99d )	/* 0251 (c) 1999 SNK */
