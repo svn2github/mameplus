@@ -315,6 +315,14 @@ INT_PTR CALLBACK GameAuditDialogProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lPa
 	case WM_INITDIALOG:
 		TranslateDialog(hDlg, lParam, TRUE);
 
+#ifdef TREE_SHEET
+		if (GetShowTreeSheet())
+		{
+			extern void ModifyPropertySheetForTreeSheet(HWND);
+			ModifyPropertySheetForTreeSheet(hDlg);
+		}
+#endif /* TREE_SHEET */
+
 		FlushFileCaches();
 		hAudit = hDlg;
 		Static_SetText(GetDlgItem(hDlg, IDC_PROP_TITLE), GameInfoTitle(rom_index));

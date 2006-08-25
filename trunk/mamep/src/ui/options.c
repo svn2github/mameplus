@@ -185,6 +185,11 @@ typedef struct
 #ifdef USE_SHOW_SPLASH_SCREEN
 	BOOL     display_splash_screen;
 #endif /* USE_SHOW_SPLASH_SCREEN */
+
+#ifdef TREE_SHEET
+	BOOL     show_tree_sheet;
+#endif /* TREE_SHEET */
+
 //
 // PATH AND DIRECTORY OPTIONS
 //
@@ -1468,6 +1473,18 @@ BOOL GetDisplaySplashScreen (void)
 	return settings.display_splash_screen;
 }
 #endif /* USE_SHOW_SPLASH_SCREEN */
+
+#ifdef TREE_SHEET
+void SetShowTreeSheet(BOOL val)
+{
+	settings.show_tree_sheet = val;
+}
+
+BOOL GetShowTreeSheet(void)
+{
+	return settings.show_tree_sheet;
+}
+#endif /* TREE_SHEET */
 
 const char* GetRomDirs(void)
 {
@@ -3001,6 +3018,9 @@ const options_entry winui_opts[] =
 #ifdef USE_SHOW_SPLASH_SCREEN
 	{ "display_splash_screen",       "0",                          OPTION_BOOLEAN,    "display splash screen on start"},
 #endif /* USE_SHOW_SPLASH_SCREEN */
+#ifdef TREE_SHEET
+	{ "show_tree_sheet",             "0",                          OPTION_BOOLEAN,    "use tree sheet style"},
+#endif /* TREE_SHEET */
 
 	{ NULL,                          NULL,                         OPTION_HEADER,     "GENERAL OPTIONS"},
 #ifdef MESS

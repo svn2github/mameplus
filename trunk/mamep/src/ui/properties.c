@@ -166,6 +166,11 @@ static void InitializeJoyidUI(HWND hWnd);
 #ifdef TRANS_UI
 static void TransparencySelectionChange(HWND hwnd);
 #endif /* TRANS_UI */
+#ifdef TREE_SHEET
+static  void MovePropertySheetChildWindows(HWND hWnd, int nDx, int nDy);
+static  HTREEITEM GetSheetPageTreeItem(int nPage);
+static  int GetSheetPageTreeCurSelText(LPWSTR lpszText, int iBufSize);
+#endif /* TREE_SHEET */
 static void PropToOptions(HWND hWnd, options_type *o);
 static void OptionsToProp(HWND hWnd, options_type *o);
 static void SetPropEnabledControls(HWND hWnd);
@@ -229,6 +234,21 @@ static int  g_nScaleEffectIndex= 0;
 #ifdef TRANS_UI
 static int  g_nUITransparencyIndex = 0;
 #endif /* TRANS_UI */
+
+#ifdef TREE_SHEET
+#define SHEET_TREE_WIDTH 180
+static int g_nFirstInitPropertySheet = 0;
+static RECT rcTabCtrl;
+static RECT rcTabCaption;
+static RECT rcSheetSnap;
+static HBITMAP hSheetBitmap = NULL;
+static BOOL bUseScreenShot = FALSE;
+static int nCaptionHeight;
+static HWND hSheetTreeCtrl = NULL;
+static HINSTANCE hSheetInstance = 0;
+static WNDPROC pfnOldSheetProc = NULL;
+static  BOOL bPageTreeSelChangedActive = FALSE;
+#endif /* TREE_SHEET */
 
 static HICON g_hIcon = NULL;
 
@@ -521,6 +541,14 @@ void InitDefaultPropertyPage(HINSTANCE hInst, HWND hWnd)
 	pshead.DUMMYUNIONNAME.pszIcon     = MAKEINTRESOURCE(IDI_MAME32_ICON);
 	pshead.DUMMYUNIONNAME3.ppsp       = pspage;
 
+#ifdef TREE_SHEET
+	if (GetShowTreeSheet())
+	{
+		g_nFirstInitPropertySheet = 1;
+		hSheetInstance = hInst;
+	}
+#endif /* TREE_SHEET */
+
 	/* Create the Property sheet and display it */
 	if (PropertySheet(&pshead) == -1)
 	{
@@ -604,6 +632,14 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIco
 	pshead.DUMMYUNIONNAME2.nStartPage = start_page;
 	pshead.DUMMYUNIONNAME.pszIcon     = MAKEINTRESOURCE(IDI_MAME32_ICON);
 	pshead.DUMMYUNIONNAME3.ppsp       = pspage;
+
+#ifdef TREE_SHEET
+	if (GetShowTreeSheet())
+	{
+		g_nFirstInitPropertySheet = 1;
+		hSheetInstance = hInst;
+	}
+#endif /* TREE_SHEET */
 
 	/* Create the Property sheet and display it */
 	if (PropertySheet(&pshead) == -1)
@@ -1134,6 +1170,538 @@ static LPWSTR GameInfoSource(int nIndex)
 	return _Unicode(GetDriverFilename(nIndex));
 }
 
+#ifdef TREE_SHEET
+static void UpdateSheetCaption(HWND hWnd)
+{
+	PAINTSTRUCT ps;
+	HDC         hDC;
+	HRGN        hRgn;
+	HBRUSH      hBrush;
+	RECT        rect, rc;
+	int         i, iWidth, iR, iG, iB, iSR, iSG, iSB, iER, iEG, iEB;
+	WCHAR       szText[256];
+
+	// Gradation color
+	iSR = 18; iSG = 61; iSB = 179;
+	iER = 16; iEG = 47; iEB = 132;
+
+	memcpy(&rect, &rcTabCaption, sizeof(RECT));
+
+	iWidth = rect.right - rect.left;
+	if (iWidth == 0)
+		return;
+
+	BeginPaint (hWnd, &ps);
+	hDC = ps.hdc;
+
+	hRgn = CreateRectRgn(rect.left, rect.top, rect.right, rect.bottom);
+	SelectClipRgn(hDC, hRgn);
+
+	rc.left = rect.left;
+	rc.top = rect.top;
+	rc.right = rect.left + 1;
+	rc.bottom = rect.bottom;
+
+	for (i = 0; i < iWidth; i++)
+	{
+		iR = iSR + ((iER - iSR) * i) / iWidth;
+		iG = iSG + ((iEG - iSG) * i) / iWidth;
+		iB = iSB + ((iEB - iSB) * i) / iWidth;
+
+		hBrush = CreateSolidBrush(RGB(iR,iG,iB));
+
+		FillRect(hDC, &rc, hBrush);
+		DeleteObject(hBrush);
+
+		rc.left++;
+		rc.right++;
+	}
+
+	i = GetSheetPageTreeCurSelText(szText, sizeof(szText));
+	if (i > 0)
+	{
+		HFONT hFontCaption, hOldFont;
+
+		hFontCaption = CreateFont(14, 0,				// height, width
+								0, 						// angle of escapement
+								0,						// base-line orientation angle
+								FW_BOLD,				// font weight
+								0, 0, 0, 				// italic, underline, strikeout
+								DEFAULT_CHARSET,		// character set identifier
+								OUT_DEFAULT_PRECIS,		// output precision
+								CLIP_DEFAULT_PRECIS,	// clipping precision
+								ANTIALIASED_QUALITY,	// output quality
+								FF_DONTCARE,			// pitch and family
+								(LPTSTR)"Tahoma");		// typeface name
+
+		if (hFontCaption)
+		{
+			hOldFont = (HFONT)SelectObject(hDC, hFontCaption);
+
+			SetTextColor(hDC, RGB(255,255,255));
+			SetBkMode(hDC, TRANSPARENT);
+
+			memcpy(&rc, &rect, sizeof(RECT));
+			rc.left += 5;
+
+			DrawText(hDC, (LPCTSTR)szText, lstrlen((LPTSTR)szText), &rc, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
+
+			SelectObject(hDC, hOldFont);
+			DeleteObject(hFontCaption);
+		}
+	}
+
+	SelectClipRgn(hDC, NULL);
+	DeleteObject(hRgn);
+
+	memcpy(&rect, &rcSheetSnap, sizeof(RECT));
+	// Snapshot region
+	hRgn = CreateRectRgn(rect.left, rect.top, rect.right, rect.bottom);
+	SelectClipRgn(hDC, hRgn);
+
+	if (hSheetBitmap != NULL) 
+	{
+		HDC hMemDC;
+		HBITMAP hOldBitmap;
+		int iWidth, iHeight, iSnapWidth, iSnapHeight, iDrawWidth, iDrawHeight;
+
+		if (bUseScreenShot == TRUE)
+		{
+			iSnapWidth = GetScreenShotWidth();
+			iSnapHeight = GetScreenShotHeight();
+		}
+		else
+		{
+			BITMAP bmpInfo;
+
+			GetObject(hSheetBitmap, sizeof(BITMAP), &bmpInfo);
+			iSnapWidth = bmpInfo.bmWidth;
+			iSnapHeight = bmpInfo.bmHeight;
+		}
+
+		iWidth = rect.right - rect.left;
+		iHeight = rect.bottom - rect.top;
+
+		if (iWidth && iHeight)
+		{
+			int iXOffs, iYOffs;
+			double dXRatio, dYRatio;
+
+			dXRatio = (double)iWidth  / (double)iSnapWidth;
+			dYRatio = (double)iHeight / (double)iSnapHeight;
+
+			if (dXRatio > dYRatio)
+			{
+				iDrawWidth = (int)((iSnapWidth * dYRatio) + 0.5);
+				iDrawHeight = (int)((iSnapHeight * dYRatio) + 0.5);
+			}
+			else
+			{
+				iDrawWidth = (int)((iSnapWidth * dXRatio) + 0.5);
+				iDrawHeight = (int)((iSnapHeight * dXRatio) + 0.5);
+			}
+
+			iXOffs = (iWidth - iDrawWidth)  / 2;
+			iYOffs = (iHeight - iDrawHeight) / 2;
+
+			hMemDC = CreateCompatibleDC(hDC);
+
+			hOldBitmap = SelectObject(hMemDC, hSheetBitmap);
+	
+			SetStretchBltMode(hDC, STRETCH_HALFTONE);
+			StretchBlt(hDC,
+					rect.left+iXOffs, rect.top+iYOffs,
+					iDrawWidth, iDrawHeight,
+					hMemDC, 0, 0,
+					iSnapWidth, iSnapHeight, SRCCOPY);
+
+			SelectObject(hMemDC, hOldBitmap);
+			DeleteDC(hMemDC);
+		}
+	}
+	else
+	{
+		hBrush = CreateSolidBrush(RGB(220,220,220));
+		FillRect(hDC, &rect, hBrush);
+		DeleteObject(hBrush);
+	}
+
+	SelectClipRgn(hDC, NULL);
+	DeleteObject(hRgn);
+
+	EndPaint (hWnd, &ps);
+
+	return;
+}
+
+static LRESULT CALLBACK NewSheetWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
+{
+	BOOL bHandled = FALSE;
+
+	switch (Msg)
+	{
+	case WM_PAINT:
+		UpdateSheetCaption(hWnd);
+		bHandled = TRUE;
+		break;
+
+	case WM_NOTIFY:
+		switch (((NMHDR *)lParam)->code)
+		{
+		case TVN_SELCHANGINGA:
+		case TVN_SELCHANGINGW:
+			if ((bPageTreeSelChangedActive == FALSE) && (g_nFirstInitPropertySheet == 0))
+			{
+				int nPage;
+				TVITEM item;
+				NMTREEVIEW* pTvn = (NMTREEVIEW*)lParam;
+
+				bPageTreeSelChangedActive = TRUE;
+				item.hItem = pTvn->itemNew.hItem;
+				item.mask = TVIF_PARAM;
+				SendMessage(hSheetTreeCtrl, TVM_GETITEM, 0, (LPARAM)&item);
+
+				nPage = (int)item.lParam;
+				if (nPage >= 0)
+				{
+					SendMessage(hWnd, PSM_SETCURSEL, nPage, 0);
+				}
+
+				bPageTreeSelChangedActive = FALSE;
+				bHandled = TRUE;
+			}
+			break;
+		case TVN_SELCHANGEDA:
+		case TVN_SELCHANGEDW:
+			InvalidateRect(hWnd, &rcTabCaption, FALSE);
+			bHandled = TRUE;
+			break;
+		}
+		break;
+
+	case WM_DESTROY:
+		if (hSheetTreeCtrl != NULL)
+		{
+			DestroyWindow(hSheetTreeCtrl);
+			hSheetTreeCtrl = NULL;
+		}
+
+		if (hSheetBitmap != NULL)
+		{
+			if (bUseScreenShot == FALSE)
+				DeleteObject(hSheetBitmap);
+			hSheetBitmap = NULL;
+		}
+		bUseScreenShot = FALSE;
+
+		if (pfnOldSheetProc)
+			SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)pfnOldSheetProc);
+		break;
+	}
+
+	if ((bHandled == FALSE) && pfnOldSheetProc)
+		return CallWindowProc(pfnOldSheetProc, hWnd, Msg, wParam, lParam);
+
+	return 0;
+}
+
+static void AdjustChildWindows(HWND hWnd)
+{
+	char szClass[128];
+	DWORD dwStyle;
+
+	GetClassName(hWnd, _Unicode(szClass), sizeof(szClass));
+	if (!strcmp(szClass, "Button"))
+	{
+		dwStyle = GetWindowLong(hWnd, GWL_STYLE);
+		if (((dwStyle & BS_GROUPBOX) == BS_GROUPBOX) && (dwStyle & WS_TABSTOP))
+		{
+			SetWindowLong(hWnd, GWL_STYLE, (dwStyle & ~WS_TABSTOP));
+		}
+	}
+}
+
+static void AdjustPropertySheetChildWindows(HWND hWnd)
+{
+	HWND hChild = GetWindow(hWnd, GW_CHILD);
+	while (hChild)
+	{
+		hChild = GetNextWindow(hChild, GW_HWNDNEXT);
+	}
+}
+
+static void MovePropertySheetChildWindows(HWND hWnd, int nDx, int nDy)
+{
+	HWND hChild = GetWindow(hWnd, GW_CHILD);
+	RECT rcChild;
+	char szText[256];
+
+	while (hChild)
+	{
+		GetWindowText(hChild, _Unicode(szText), sizeof(szText));
+
+		GetWindowRect(hChild, &rcChild);
+		OffsetRect(&rcChild, nDx, nDy);
+
+		ScreenToClient(hWnd, (LPPOINT)&rcChild);
+		ScreenToClient(hWnd, ((LPPOINT)&rcChild)+1);
+
+		AdjustChildWindows(hChild);
+
+		MoveWindow(hChild, rcChild.left, rcChild.top,
+				rcChild.right - rcChild.left, rcChild.bottom - rcChild.top, TRUE);
+
+		hChild = GetNextWindow(hChild, GW_HWNDNEXT);
+	}
+}
+
+static HTREEITEM GetSheetPageTreeItem(int nPage)
+{
+	HTREEITEM hItem;
+	TVITEM    item;
+	int       nTreePage;
+
+	if (hSheetTreeCtrl == NULL)
+		return NULL;
+
+	hItem = (HTREEITEM)(int)SendMessage(hSheetTreeCtrl, TVM_GETNEXTITEM, TVGN_ROOT, (LPARAM)NULL);
+	while (hItem)
+	{
+		item.hItem = hItem;
+		item.mask = TVIF_PARAM;
+		SendMessage(hSheetTreeCtrl, TVM_GETITEM, 0, (LPARAM)&item);
+
+		nTreePage = (int)item.lParam;
+
+		if (nTreePage == nPage)
+			return hItem;
+
+		hItem = (HTREEITEM)(int)SendMessage(hSheetTreeCtrl, TVM_GETNEXTITEM, TVGN_NEXT, (LPARAM)hItem);
+	}
+
+	return NULL;
+}
+
+static int GetSheetPageTreeCurSelText(LPWSTR lpszText, int iBufSize)
+{
+	HTREEITEM hItem;
+	TVITEM item;
+
+	lpszText[0] = 0;
+
+	if (hSheetTreeCtrl == NULL)
+		return -1;
+
+	hItem = (HTREEITEM)(int)SendMessage(hSheetTreeCtrl, TVM_GETNEXTITEM, TVGN_CARET, 0);
+
+	if (hItem == NULL)
+		return -1;
+
+	item.hItem      = hItem;
+	item.mask  	    = TVIF_TEXT;
+	item.pszText    = (LPTSTR)lpszText;
+	item.cchTextMax = iBufSize;
+
+	SendMessage(hSheetTreeCtrl, TVM_GETITEM, 0, (LPARAM)&item);
+
+	return wcslen(lpszText);
+}
+
+void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
+{
+	HWND      hWnd, hTabWnd;
+	DWORD     tabStyle;
+	int       i, nPage, nPageCount;
+	RECT      rectSheet, rectTree;
+	HTREEITEM hItem;
+	LONG_PTR  prevProc;
+
+	if (g_nFirstInitPropertySheet == 0)
+	{
+		AdjustPropertySheetChildWindows(hPageDlg);
+		return;
+	}
+
+	hWnd = GetParent(hPageDlg);
+	if (!hWnd)
+		return;
+
+	prevProc = GetWindowLongPtr(hWnd, GWLP_WNDPROC);
+	pfnOldSheetProc = (WNDPROC)prevProc;
+	SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)NewSheetWndProc);
+
+	hTabWnd = PropSheet_GetTabControl(hWnd);
+
+	if (!hTabWnd)
+		return;
+
+	tabStyle = (GetWindowLong(hTabWnd, GWL_STYLE) & ~TCS_MULTILINE);
+	SetWindowLong(hTabWnd, GWL_STYLE, tabStyle | TCS_SINGLELINE);
+
+	ShowWindow(hTabWnd, SW_HIDE);
+	EnableWindow(hTabWnd, FALSE);
+
+	GetWindowRect(hTabWnd, &rcTabCtrl);
+	ScreenToClient(hTabWnd, (LPPOINT)&rcTabCtrl);
+	ScreenToClient(hTabWnd, ((LPPOINT)&rcTabCtrl)+1);
+
+	GetWindowRect(hWnd, &rectSheet);
+	rectSheet.right += SHEET_TREE_WIDTH + 5;
+	SetWindowPos(hWnd, HWND_TOP,
+			-1, -1,
+			rectSheet.right - rectSheet.left, rectSheet.bottom - rectSheet.top,
+			SWP_NOZORDER | SWP_NOMOVE);
+	CenterWindow(hWnd);
+
+	MovePropertySheetChildWindows(hWnd, SHEET_TREE_WIDTH+5, 0);
+
+	if (hSheetTreeCtrl != NULL)
+	{
+		DestroyWindow(hSheetTreeCtrl);
+		hSheetTreeCtrl = NULL;
+	}
+
+	TCITEM item;
+	HWND hTempTab;
+
+	hTempTab = CreateWindowEx(0, TEXT("SysTabControl32"), NULL,
+						WS_CHILD|WS_VISIBLE|WS_CLIPSIBLINGS,
+						rectTree.left, rectTree.top,
+						rectTree.right - rectTree.left, rectTree.bottom - rectTree.top,
+						hWnd, (HMENU)0x1234, hSheetInstance, NULL);
+
+	item.mask    = TCIF_TEXT;
+	item.iImage  = 0;
+	item.lParam  = 0;
+	item.pszText = (LPTSTR)"";
+	SendMessage(hTempTab, TCM_INSERTITEM, 0, (LPARAM)&item);
+
+	SendMessage(hTempTab, TCM_GETITEMRECT, 0, (LPARAM)&rcTabCaption);
+	nCaptionHeight = (rcTabCaption.bottom - rcTabCaption.top);
+
+	rcTabCaption.left   = rcTabCtrl.left + SHEET_TREE_WIDTH + 5;
+	rcTabCaption.top    = 4;
+	rcTabCaption.right  = rcTabCaption.left + (rcTabCtrl.right - rcTabCtrl.left);
+	rcTabCaption.bottom = rcTabCaption.top + nCaptionHeight;
+
+	DestroyWindow(hTempTab);
+
+	i = (int)((SHEET_TREE_WIDTH * 3) / 4 + 0.5);
+
+	rcSheetSnap.left   = rcTabCtrl.left + 4;
+	rcSheetSnap.top    = (rcTabCtrl.bottom - i);
+	rcSheetSnap.right  = rcTabCtrl.left + SHEET_TREE_WIDTH;
+	rcSheetSnap.bottom = rcTabCtrl.bottom;
+
+	if ((g_nGame == GLOBAL_OPTIONS) || (g_nGame == FOLDER_OPTIONS))
+	{
+		hSheetBitmap = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_ABOUT));
+		bUseScreenShot = FALSE;
+	}
+	else
+	{
+		if (!ScreenShotLoaded())
+			LoadScreenShot(g_nGame, NULL, TAB_SCREENSHOT);
+
+		if (ScreenShotLoaded())
+		{
+			hSheetBitmap = GetScreenShotHandle();
+			bUseScreenShot = TRUE;
+		}
+		else
+		{
+			hSheetBitmap = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_ABOUT));
+			bUseScreenShot = FALSE;
+		}
+	}
+
+	rectTree.left   = rcTabCtrl.left + 4;
+	rectTree.top    = rcTabCtrl.top  + 5;
+	rectTree.right  = rcTabCtrl.left + SHEET_TREE_WIDTH;
+	rectTree.bottom = (rcTabCtrl.bottom - i) - 5;
+
+	hSheetTreeCtrl = CreateWindowEx(WS_EX_CLIENTEDGE | WS_EX_NOPARENTNOTIFY,
+							TEXT("SysTreeView32"), TEXT("PageTree"),
+							WS_TABSTOP|WS_CHILD | WS_VISIBLE | TVS_SHOWSELALWAYS | TVS_TRACKSELECT | TVS_HASLINES | TVS_LINESATROOT | TVS_HASBUTTONS,
+							rectTree.left, rectTree.top,
+							rectTree.right - rectTree.left, rectTree.bottom - rectTree.top,
+							hWnd, (HMENU)0x7EEE, hSheetInstance, NULL);
+
+	if (hSheetTreeCtrl == NULL)
+	{
+		char temp[100];
+		DWORD dwError = GetLastError();
+		sprintf(temp, _UI("PropertySheet TreeCtrl Creation Error %d %X"), (int)dwError, (int)dwError);
+		MessageBox(hWnd, _Unicode(temp), _Unicode(_UI("Error")), IDOK);
+	}
+
+	SendMessage(hSheetTreeCtrl, TVM_DELETEITEM, 0, (LPARAM)TVI_ROOT);
+
+	nPageCount = SendMessage(hTabWnd, TCM_GETITEMCOUNT, 0, 0L);
+
+	for (nPage = 0; nPage < nPageCount; ++nPage)
+	{
+		WCHAR          szText[256];
+		TCITEM         ti;
+		TVINSERTSTRUCT tvis;
+		LPTVITEM       lpTvItem;
+
+		// Get title and image of the page
+		memset(&ti, 0, sizeof(TCITEM));
+		ti.mask       = TCIF_TEXT|TCIF_IMAGE;
+		ti.cchTextMax = sizeof(szText);
+		ti.pszText    = (LPTSTR)szText;
+
+		SendMessage(hTabWnd, TCM_GETITEM, nPage, (LPARAM)&ti);
+
+#if (_WIN32_IE >= 0x0400)
+		lpTvItem = &tvis.DUMMYUNIONNAME.item;
+#else
+		lpTvItem = &tvis.item;
+#endif
+		// Create an item in the tree for the page
+		tvis.hParent             = TVI_ROOT;
+		tvis.hInsertAfter        = TVI_LAST;
+		lpTvItem->mask           = TVIF_TEXT;
+		lpTvItem->pszText        = (LPTSTR)szText;
+		lpTvItem->iImage         = 0;
+		lpTvItem->iSelectedImage = 0;
+		lpTvItem->state          = 0;
+		lpTvItem->stateMask      = 0;
+		lpTvItem->lParam         = (LPARAM)NULL;
+
+		// insert Item
+		hItem = (HTREEITEM)(int)SendMessage(hSheetTreeCtrl, TVM_INSERTITEM, 0, (LPARAM)&tvis);
+
+		if (hItem)
+		{
+			TVITEM item;
+
+			item.hItem          = hItem;
+			item.mask           = TVIF_PARAM;
+			item.pszText        = NULL;
+			item.iImage         = 0;
+			item.iSelectedImage = 0;
+			item.state          = 0;
+			item.stateMask      = 0;
+			item.lParam         = nPage;
+
+			SendMessage(hSheetTreeCtrl, TVM_SETITEM, 0, (LPARAM)&item);
+		}
+	}
+
+	nPage = SendMessage(hTabWnd, TCM_GETCURSEL, 0, 0);
+	if (nPage != -1)
+	{
+		hItem = GetSheetPageTreeItem(nPage);
+		if (hItem)
+			SendMessage(hSheetTreeCtrl, TVM_SELECTITEM, TVGN_CARET, (LPARAM)hItem);
+	}
+
+	g_nFirstInitPropertySheet = 0;
+}
+#endif /* TREE_SHEET */
+
 static int CALLBACK PropSheetCallbackProc(HWND hDlg, UINT Msg, LPARAM lParam)
 {
 	switch (Msg)
@@ -1156,6 +1724,12 @@ INT_PTR CALLBACK GamePropertiesDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LP
 			SendDlgItemMessage(hDlg, IDC_GAME_ICON, STM_SETICON, (WPARAM) g_hIcon, 0);
 
 		TranslateDialog(hDlg, lParam, TRUE);
+
+#ifdef TREE_SHEET
+		if (GetShowTreeSheet())
+			ModifyPropertySheetForTreeSheet(hDlg);
+#endif /* TREE_SHEET */
+
 #if defined(USE_SINGLELINE_TABCONTROL)
 		{
 			HWND hWnd = PropSheet_GetTabControl(GetParent(hDlg));
@@ -1607,6 +2181,11 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 	case WM_INITDIALOG:
 		TranslateDialog(hDlg, lParam, TRUE);
 
+#ifdef TREE_SHEET
+		if (GetShowTreeSheet())
+			ModifyPropertySheetForTreeSheet(hDlg);
+#endif /* TREE_SHEET */
+
 		/* Fill in the Game info at the top of the sheet */
 		Static_SetText(GetDlgItem(hDlg, IDC_PROP_TITLE), GameInfoTitle(g_nGame));
 		InitializeOptions(hDlg);
@@ -1779,12 +2358,12 @@ static void PropToOptions(HWND hWnd, options_type *o)
 		BOOL bFirst = TRUE;
 		memset(digital,0,sizeof(digital));
 		// Get the number of items in the control
-		for(nCount=0;nCount < ListView_GetItemCount(hCtrl);nCount++)
+		for (nCount = 0; nCount < ListView_GetItemCount(hCtrl); nCount++)
 		{
 			if( ListView_GetCheckState(hCtrl,nCount) )
 			{
 				//Get The JoyId
-				ListView_GetItemText(hCtrl, nCount,2, buffer, sizeof(buffer));
+				ListView_GetItemText(hCtrl, nCount, 2, buffer, sizeof(buffer));
 				joyId = atoi(_String(buffer));
 				if( oldJoyId != joyId) 
 				{
@@ -1802,7 +2381,7 @@ static void PropToOptions(HWND hWnd, options_type *o)
 					strcat(digital, _String(buffer));
 				}
 				//Get The AxisId
-				ListView_GetItemText(hCtrl, nCount,3, buffer, sizeof(buffer));
+				ListView_GetItemText(hCtrl, nCount, 3, buffer, sizeof(buffer));
 				axisId = atoi(_String(buffer));
 				strcat(digital,"a");
 				strcat(digital, _String(buffer));
@@ -2085,7 +2664,7 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 		int axisId = 0;
 		memset(digital,0,200);
 		// Get the number of items in the control
-		for(nCount=0;nCount < ListView_GetItemCount(hCtrl);nCount++)
+		for (nCount = 0; nCount < ListView_GetItemCount(hCtrl); nCount++)
 		{
 			//Get The JoyId
 			ListView_GetItemText(hCtrl, nCount,2, buffer, sizeof(buffer));
@@ -4127,13 +4706,13 @@ static void InitializeAnalogAxesUI(HWND hwnd)
 		DIJoystick.init();
 		memset(&item,0,sizeof(item) );
 		item.mask = LVIF_TEXT;
-		for( i=0;i<DIJoystick_GetNumPhysicalJoysticks();i++)
+		for (i = 0; i < DIJoystick_GetNumPhysicalJoysticks(); i++)
 		{
 			item.iItem = iEntryCounter;
 			item.pszText = _Unicode(DIJoystick_GetPhysicalJoystickName(i));
 			item.cchTextMax = lstrlen(item.pszText);
 
-			for( j=0;j<DIJoystick_GetNumPhysicalJoystickAxes(i);j++)
+			for (j = 0; j < DIJoystick_GetNumPhysicalJoystickAxes(i); j++)
 			{
 				ListView_InsertItem(hCtrl,&item );
 				ListView_SetItemText(hCtrl,iEntryCounter,1, _Unicode(DIJoystick_GetPhysicalJoystickAxisName(i,j)));
@@ -4428,7 +5007,7 @@ static void InitializeJoyidUI(HWND hWnd)
 		hCtrl = GetDlgItem(hWnd, IDC_JOYID1 + i);
 		if (hCtrl)
 		{
-			for (j = 0;j < DIJoystick_GetNumPhysicalJoysticks(); j++)
+			for (j = 0; j < DIJoystick_GetNumPhysicalJoysticks(); j++)
 			{
 				sprintf(buf, _UI("ID:%d"), j + 1);
 				ComboBox_AddStringA(hCtrl, buf);

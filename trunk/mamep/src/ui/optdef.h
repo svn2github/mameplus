@@ -261,6 +261,9 @@ START_OPT_FUNC_WINUI
 #ifdef USE_SHOW_SPLASH_SCREEN
 	DEFINE_OPT(bool,                 display_splash_screen)
 #endif /* USE_SHOW_SPLASH_SCREEN */
+#ifdef TREE_SHEET
+	DEFINE_OPT(bool,                 show_tree_sheet)
+#endif /* TREE_SHEET */
 
 // GENERAL OPTIONS
 #ifdef MESS

@@ -716,6 +716,48 @@ void FreeIfAllocated(char **s)
 	*s = NULL;
 }
 
+
+#ifdef TREE_SHEET
+void CenterWindow(HWND hWnd)
+{
+	HWND hWndParent;
+	RECT rcCenter, rcWnd;
+	int iWndWidth, iWndHeight, iScrWidth, iScrHeight, xLeft, yTop;
+
+	hWndParent = GetParent(hWnd);
+	GetWindowRect(hWnd, &rcWnd);
+
+	iWndWidth  = rcWnd.right - rcWnd.left;
+	iWndHeight = rcWnd.bottom - rcWnd.top;
+
+	if (hWndParent != NULL)
+	{
+		GetWindowRect(hWndParent, &rcCenter);
+	}
+	else
+	{
+		rcCenter.left = 0;
+		rcCenter.top = 0;
+		rcCenter.right = GetSystemMetrics(SM_CXFULLSCREEN);
+		rcCenter.bottom = GetSystemMetrics(SM_CYFULLSCREEN);
+	}
+
+	iScrWidth  = rcCenter.right - rcCenter.left;
+	iScrHeight = rcCenter.bottom - rcCenter.top;
+
+	xLeft = rcCenter.left;
+	yTop = rcCenter.top;
+
+	if (iScrWidth > iWndWidth)
+		xLeft += ((iScrWidth - iWndWidth) / 2);
+	if (iScrHeight > iWndHeight)
+		yTop += ((iScrHeight - iWndHeight) / 2);
+
+	// map screen coordinates to child coordinates
+	SetWindowPos(hWnd, HWND_TOP, xLeft, yTop, -1, -1, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+}
+#endif /* TREE_SHEET */
+
 /***************************************************************************
 	Internal functions
  ***************************************************************************/

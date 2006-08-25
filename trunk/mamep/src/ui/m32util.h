@@ -63,4 +63,8 @@ void SetCorePathList(int file_type,const char *s);
 
 void FreeIfAllocated(char **s);
 
+#ifdef TREE_SHEET
+void CenterWindow(HWND hWnd);
+#endif /* TREE_SHEET */
+
 #endif /* MAME32UTIL_H */

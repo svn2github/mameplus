@@ -31,7 +31,7 @@ TMPOBJS = \
 	$(OBJ)/ui/dxdecode.o \
 	$(OBJ)/ui/picker.o \
 	$(OBJ)/ui/properties.o \
-    $(OBJ)/ui/tabview.o \
+	$(OBJ)/ui/tabview.o \
 	$(OBJ)/ui/help.o \
 	$(OBJ)/ui/history.o \
 	$(OBJ)/ui/dialogs.o \
@@ -201,4 +201,9 @@ endif
 ifneq ($(USE_IMAGE_MENU),)
 DEFS += -DIMAGE_MENU
 RCDEFS += -DIMAGE_MENU
+endif
+
+ifneq ($(USE_TREE_SHEET),)
+DEFS += -DTREE_SHEET
+RCDEFS += -DTREE_SHEET
 endif

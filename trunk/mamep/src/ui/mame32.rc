@@ -1024,6 +1024,10 @@ BEGIN
                     SS_CENTERIMAGE
     PUSHBUTTON      "Set Screenshot Border Color",IDC_SCREENSHOT_BORDERCOLOR,
                     249,178,176,14
+#ifdef TREE_SHEET
+    CONTROL         "Use tree sheet style",IDC_SHOW_TREE_SHEET,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,249,200,100,10
+#endif /* TREE_SHEET */
     DEFPUSHBUTTON   "&OK",IDOK,156,227,60,14
     PUSHBUTTON      "&Cancel",IDCANCEL,224,227,60,14
 END

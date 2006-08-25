@@ -181,6 +181,9 @@ INT_PTR CALLBACK InterfaceDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 #ifdef USE_SHOW_SPLASH_SCREEN
 		Button_SetCheck(GetDlgItem(hDlg,IDC_DISPLAY_SPLASH_SCREEN),GetDisplaySplashScreen());
 #endif /* USE_SHOW_SPLASH_SCREEN */
+#ifdef TREE_SHEET
+		Button_SetCheck(GetDlgItem(hDlg,IDC_SHOW_TREE_SHEET),GetShowTreeSheet());
+#endif /* TREE_SHEET */
 
 		Button_SetCheck(GetDlgItem(hDlg,IDC_HIDE_MOUSE),GetHideMouseOnStartup());
 
@@ -304,7 +307,10 @@ INT_PTR CALLBACK InterfaceDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 #ifdef USE_SHOW_SPLASH_SCREEN
 			SetDisplaySplashScreen(Button_GetCheck(GetDlgItem(hDlg, IDC_DISPLAY_SPLASH_SCREEN)));
 #endif /* USE_SHOW_SPLASH_SCREEN */
-			
+#ifdef TREE_SHEET
+			SetShowTreeSheet(Button_GetCheck(GetDlgItem(hDlg, IDC_SHOW_TREE_SHEET)));
+#endif /* TREE_SHEET */
+
 			SetHideMouseOnStartup(Button_GetCheck(GetDlgItem(hDlg,IDC_HIDE_MOUSE)));
 
 			if( Button_GetCheck(GetDlgItem(hDlg,IDC_RESET_PLAYCOUNT ) ) )

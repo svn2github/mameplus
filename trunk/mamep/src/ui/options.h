@@ -449,6 +449,11 @@ void SetDisplaySplashScreen(BOOL val);
 BOOL GetDisplaySplashScreen(void);
 #endif /* USE_SHOW_SPLASH_SCREEN */
 
+#ifdef TREE_SHEET
+void SetShowTreeSheet(BOOL val);
+BOOL GetShowTreeSheet(void);
+#endif /* TREE_SHEET */
+
 int GetRomAuditResults(int driver_index);
 void SetRomAuditResults(int driver_index, int audit_results);
 
