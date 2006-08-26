@@ -22,11 +22,15 @@ include config.def
 # build rules will be included from $(TARGET).mak
 #-------------------------------------------------
 
+ifneq ($(HAZEMD),)
+TARGET = hazemd
+else
 ifneq ($(NEOCPSMAME),)
 TARGET = neocpsmame
 else
 ifeq ($(TARGET),)
 TARGET = mame
+endif
 endif
 endif
 
@@ -347,6 +351,10 @@ endif
 
 ifneq ($(NEOCPSMAME),)
     DEFS += -DNEOCPSMAME
+endif
+
+ifneq ($(HAZEMD),)
+    DEFS += -DHAZEMD
 endif
 
 

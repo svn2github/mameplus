@@ -1947,7 +1947,11 @@ void SetMainTitle(void)
 	char buffer[100];
 
 	sscanf(build_version,"%s",version);
+#ifdef HAZEMD
+	sprintf(buffer,"%s Plus! %s","HazeMD",version);
+#else
 	sprintf(buffer,"%s Plus! %s",MAME32NAME,version);
+#endif /*HAZEMD */
 	SetWindowText(hMain,_Unicode(buffer));
 }
 
