@@ -11,4 +11,8 @@
 
 ***************************************************************************/
 
+#ifndef HAZEMD
 char build_version[] = "0.108u1 ("__DATE__")";
+#else
+char build_version[] = "0.04a (from 0.108u1) ("__DATE__")";
+#endif

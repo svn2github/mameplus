@@ -3016,10 +3016,10 @@ const options_entry winui_opts[] =
 	{ "offset_clones",               "1",                          OPTION_BOOLEAN,    "no offset for clones missing parent in view"},
 	{ "game_caption",                "1",                          OPTION_BOOLEAN,    "show game caption"},
 #ifdef USE_SHOW_SPLASH_SCREEN
-	{ "display_splash_screen",       "0",                          OPTION_BOOLEAN,    "display splash screen on start"},
+	{ "display_splash_screen",       "1",                          OPTION_BOOLEAN,    "display splash screen on start"},
 #endif /* USE_SHOW_SPLASH_SCREEN */
 #ifdef TREE_SHEET
-	{ "show_tree_sheet",             "0",                          OPTION_BOOLEAN,    "use tree sheet style"},
+	{ "show_tree_sheet",             "1",                          OPTION_BOOLEAN,    "use tree sheet style"},
 #endif /* TREE_SHEET */
 
 	{ NULL,                          NULL,                         OPTION_HEADER,     "GENERAL OPTIONS"},

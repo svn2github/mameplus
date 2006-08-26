@@ -37,11 +37,19 @@
 #include "win32ui.h"
 
 #if !defined(MAME32NAME)
+#ifndef HAZEMD
 #define MAME32NAME "MAME32"
+#else
+#define MAME32NAME "HazeMD"
+#endif
 #endif
 	
 #if !defined(TEXT_MAME32NAME)
+#ifndef HAZEMD
 #define TEXT_MAME32NAME TEXT("MAME32")
+#else
+#define TEXT_MAME32NAME TEXT("HazeMD")
+#endif
 #endif
 
 #if !defined(MAMENAME)

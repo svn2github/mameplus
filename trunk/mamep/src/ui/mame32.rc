@@ -346,7 +346,11 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
+#ifndef HAZEMD
 IDI_MAME32_ICON         ICON    DISCARDABLE     "res\\mame32.ico"
+#else
+IDI_MAME32_ICON         ICON    DISCARDABLE     "res\\megadrv.ico"
+#endif
 IDI_WIN_ROMS            ICON    DISCARDABLE     "res\\win_roms.ico"
 IDI_WIN_NOROMS          ICON    DISCARDABLE     "res\\win_noro.ico"
 IDI_WIN_UNKNOWN         ICON    DISCARDABLE     "res\\win_unkn.ico"
@@ -1025,8 +1029,8 @@ BEGIN
     PUSHBUTTON      "Set Screenshot Border Color",IDC_SCREENSHOT_BORDERCOLOR,
                     249,178,176,14
 #ifdef TREE_SHEET
-    CONTROL         "Use tree sheet style",IDC_SHOW_TREE_SHEET,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,249,200,100,10
+    CONTROL         "Use TreeView in property pages",IDC_SHOW_TREE_SHEET,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,249,200,176,10
 #endif /* TREE_SHEET */
     DEFPUSHBUTTON   "&OK",IDOK,156,227,60,14
     PUSHBUTTON      "&Cancel",IDCANCEL,224,227,60,14
@@ -1405,7 +1409,11 @@ END
 // Bitmap
 //
 
+#ifndef HAZEMD
 IDB_ABOUT               BITMAP  DISCARDABLE     "res\\about.bmp"
+#else
+IDB_ABOUT               BITMAP  DISCARDABLE     "res\\abouthazemd.bmp"
+#endif
 IDB_TOOLBAR_US          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
 IDB_TOOLBAR_JP          BITMAP  DISCARDABLE     "res\\toolbarj.bmp"
 IDB_TOOLBAR_TW          BITMAP  DISCARDABLE     "res\\toolbarc.bmp"

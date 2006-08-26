@@ -31,7 +31,7 @@ TMPOBJS = \
 	$(OBJ)/ui/dxdecode.o \
 	$(OBJ)/ui/picker.o \
 	$(OBJ)/ui/properties.o \
-	$(OBJ)/ui/tabview.o \
+    $(OBJ)/ui/tabview.o \
 	$(OBJ)/ui/help.o \
 	$(OBJ)/ui/history.o \
 	$(OBJ)/ui/dialogs.o \
@@ -178,6 +178,10 @@ endif
 
 ifneq ($(USE_VOLUME_AUTO_ADJUST),)
 RCDEFS += -DUSE_VOLUME_AUTO_ADJUST
+endif
+
+ifneq ($(HAZEMD),)
+RCDEFS += -DHAZEMD
 endif
 
 #####################################################################
