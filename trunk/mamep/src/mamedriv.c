@@ -5323,8 +5323,11 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 
 	/* CD to MVS Conversion */
 	DRIVER( zintrkcd )	/* 0211 hack - CD to MVS Conversion by Razoola */
+	DRIVER( fr2ch )
+	DRIVER( sthoopcd )
 
-	/* homebrew */
+#ifdef USE_NEOGEO_LAMER
+	/* homebrew & demo junk */
 	DRIVER( frogfest )	/* 0202 (c) 2005 Rastersoft */
 	DRIVER( columnsn )
 	DRIVER( poknight )
@@ -5339,10 +5342,6 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( ltorb1 )
 	DRIVER( beast )
 
-#ifdef USE_NEOGEO_DEPRECATED
-	/* CD to MVS Conversion */
-	DRIVER( fr2ch )
-	DRIVER( sthoopcd )
 	/* decrypted junk */
 	DRIVER( zupapad )	/* 0070 Zupapa - released in 2001, 1994 prototype probably exists */
 	DRIVER( kof99d )	/* 0251 (c) 1999 SNK */
@@ -5373,7 +5372,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( kogd )	/* Bootleg */
 	DRIVER( pnyaad )	/* 0267 (c) 2003 Aiky / Taito */
 	DRIVER( bangbedp )	/* 0259 (c) 2000 Visco */
-#endif /* USE_NEOGEO_DEPRECATED */
+#endif /* USE_NEOGEO_LAMER */
 	
 #ifndef NEOCPSMAME
 	/* Hyper NeoGeo 64 uses a 3 digit rom code? */
