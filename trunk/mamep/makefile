@@ -316,8 +316,8 @@ ifneq ($(USE_NEOGEO_HACKS),)
     DEFS+= -DUSE_NEOGEO_HACKS
 endif
 
-ifneq ($(USE_NEOGEO_LAMER),)
-    DEFS+= -DUSE_NEOGEO_LAMER
+ifneq ($(USE_NEOGEO_DEPRECATED),)
+    DEFS+= -DUSE_NEOGEO_DEPRECATED
 endif
 
 ifneq ($(USE_HISCORE),)
