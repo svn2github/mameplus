@@ -609,7 +609,7 @@ BEGIN
                     TBS_NOTICKS | WS_TABSTOP,137,188,94,10,0,HIDC_CONTRAST
     CTEXT           "1.00",IDC_CONTRASTDISP,235,188,17,10,SS_CENTERIMAGE | NOT WS_GROUP
     PUSHBUTTON      "Reset",IDC_PROP_RESET,4,225,117,14,0,0,HIDC_PROP_RESET
-    PUSHBUTTON      "Restore Default Settings",IDC_USE_DEFAULT,134,225,117,14,
+    PUSHBUTTON      "Restore Default Settings",IDC_USE_DEFAULT,138,225,117,14,
                     0,0,HIDC_USE_DEFAULT
 END
 
@@ -702,7 +702,7 @@ BEGIN
                     TBS_NOTICKS | WS_TABSTOP,137,204,94,10,0,HIDC_FSCONTRAST
     CTEXT           "2.00",IDC_FSCONTRASTDISP,235,204,17,10,SS_CENTERIMAGE | NOT WS_GROUP
     PUSHBUTTON      "Reset",IDC_PROP_RESET,4,225,117,14,0,0,HIDC_PROP_RESET
-    PUSHBUTTON      "Restore Default Settings",IDC_USE_DEFAULT,134,225,117,14,
+    PUSHBUTTON      "Restore Default Settings",IDC_USE_DEFAULT,138,225,117,14,
                     0,0,HIDC_USE_DEFAULT
 END
 
@@ -960,80 +960,68 @@ BEGIN
     PUSHBUTTON      "&Cancel",IDCANCEL,145,175,50,14
 END
 
-IDD_INTERFACE_OPTIONS DIALOGEX 0, 0, 440, 249
+IDD_INTERFACE_OPTIONS DIALOGEX 0, 0, 440, 250
 STYLE DS_MODALFRAME | DS_3DLOOK | WS_POPUP | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_CONTEXTHELP
 CAPTION "Interface Options"
 FONT 8, "MS Sans Serif"
 BEGIN
-    GROUPBOX        "Interface Options",IDC_STATIC,5,7,230,141
+    GROUPBOX        "Custom Options",IDC_STATIC,5,7,230,155
     CONTROL         "&Search for new games on start",IDC_START_GAME_CHECK,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,20,215,10,0,
                     HIDC_START_GAME_CHECK
     CONTROL         "Allow game selection by a &joystick (requires restart)",
-                    IDC_JOY_GUI,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,34,
-                    215,10,0,HIDC_JOY_GUI
+                    IDC_JOY_GUI,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    14,34,215,10,0,HIDC_JOY_GUI
     CONTROL         "Allow game selection by custom &key sequences",
-                    IDC_KEY_GUI,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,48,
-                    215,10
+                    IDC_KEY_GUI,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,48,215,10
     CONTROL         "Select &random background image on start",IDC_RANDOM_BG,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,14,62,215,10,0,
-                    HIDC_RANDOM_BG
+                    BS_AUTOCHECKBOX | WS_TABSTOP,14,62,215,10,0,HIDC_RANDOM_BG
     CONTROL         "&Broadcast selected game to all windows",IDC_BROADCAST,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,76,215,10,0,
-                    HIDC_BROADCAST
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,76,215,10,0,HIDC_BROADCAST
     CONTROL         "Hide &mouse cursor (requires restart)",IDC_HIDE_MOUSE,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,90,215,10,0,
-                    HIDC_HIDE_MOUSE
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,90,215,10,0,HIDC_HIDE_MOUSE
     CONTROL         "Inheritable Filters",IDC_FILTER_INHERIT,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,14,104,215,10
-    CONTROL         "No offset for clones missing parent in view",
-                    IDC_NOOFFSET_CLONES,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,14,118,215,10
+    CONTROL         "No offset for clones missing parent in view",IDC_NOOFFSET_CLONES,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,118,215,10
 #ifdef USE_SHOW_SPLASH_SCREEN
     CONTROL         "Display splash screen on start",IDC_DISPLAY_SPLASH_SCREEN,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,14,132,215,10
 #endif /* USE_SHOW_SPLASH_SCREEN */
-    GROUPBOX        "",IDC_STATIC,5,151,230,35,WS_DISABLED
-    CONTROL         "Use various icon for Not Working game",IDC_BROKEN_ICON,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,14,151,205,10
-    PUSHBUTTON      "Set Game List Not Working Color",IDC_EDIT_BROKEN_COLOR,14,165,212,14
-    GROUPBOX        "Show History on Tab",IDC_STATIC,5,189,230,32
-    COMBOBOX        IDC_HISTORY_TAB,65,201,110,100,CBS_DROPDOWNLIST | 
-                    WS_VSCROLL | WS_TABSTOP
-    GROUPBOX        "Emulation",IDC_STATIC,240,7,194,28
-    CONTROL         "Show Game Ca&ption",IDC_GAME_CAPTION,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,249,20,180,10,0,
-                    HIDC_GAME_CAPTION
-    GROUPBOX        "Bookkeeping",IDC_STATIC,240,39,194,41
-    CONTROL         "Reset all Playcounts",IDC_RESET_PLAYCOUNT,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,249,50,180,10
-    CONTROL         "Reset all Play Times",IDC_RESET_PLAYTIME,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,249,65,180,10
-    GROUPBOX        "Screenshot Area",IDC_STATIC,240,84,194,137
-    CONTROL         "S&tretch screenshot larger than natural size",
-                    IDC_STRETCH_SCREENSHOT_LARGER,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,249,96,180,10,0,
-                    HIDC_STRETCH_SCREENSHOT_LARGER
-    GROUPBOX        "Screenshot Cycletime in Seconds",IDC_CYCLETIME,249,110,176,
-                    28
-    CONTROL         "Slider1",IDC_CYCLETIMESEC,"msctls_trackbar32",TBS_BOTH | 
-                    TBS_NOTICKS | WS_TABSTOP,258,123,135,10,0,
-                    HIDC_CYCLETIMESEC
-    CTEXT           "60",IDC_CYCLETIMESECTXT,402,123,14,10,SS_CENTERIMAGE
-    GROUPBOX        "Screenshot Bordersize",IDC_STATIC,249,142,176,28
-    CONTROL         "Slider1",IDC_SCREENSHOT_BORDERSIZE,"msctls_trackbar32",
-                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,258,155,135,10
-    CTEXT           "100",IDC_SCREENSHOT_BORDERSIZETXT,402,155,14,10,
-                    SS_CENTERIMAGE
-    PUSHBUTTON      "Set Screenshot Border Color",IDC_SCREENSHOT_BORDERCOLOR,
-                    249,178,176,14
 #ifdef TREE_SHEET
     CONTROL         "Use TreeView in property pages",IDC_SHOW_TREE_SHEET,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,249,200,176,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,14,146,215,10
 #endif /* TREE_SHEET */
-    DEFPUSHBUTTON   "&OK",IDOK,156,227,60,14
-    PUSHBUTTON      "&Cancel",IDCANCEL,224,227,60,14
+    GROUPBOX        "",IDC_STATIC,5,164,230,35,WS_DISABLED
+    CONTROL         "Use various icon for Not Working game",IDC_BROKEN_ICON,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,14,164,205,10
+    PUSHBUTTON      "Set Game List Not Working Color",IDC_EDIT_BROKEN_COLOR,14,178,212,14
+    GROUPBOX        "Emulation",IDC_STATIC,240,7,194,28
+    CONTROL         "Show Game Ca&ption",IDC_GAME_CAPTION,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,249,20,180,10,0,HIDC_GAME_CAPTION
+    GROUPBOX        "Bookkeeping",IDC_STATIC,240,37,194,41
+    CONTROL         "Reset all Playcounts",IDC_RESET_PLAYCOUNT,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,249,48,180,10
+    CONTROL         "Reset all Play Times",IDC_RESET_PLAYTIME,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,249,62,180,10
+    GROUPBOX        "Screenshot Area",IDC_STATIC,240,80,194,143
+    CONTROL         "S&tretch screenshot larger than natural size",
+                    IDC_STRETCH_SCREENSHOT_LARGER,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,249,90,180,10,0,HIDC_STRETCH_SCREENSHOT_LARGER
+    GROUPBOX        "Screenshot Cycletime in Seconds",IDC_CYCLETIME,249,104,176,28
+    CONTROL         "Slider1",IDC_CYCLETIMESEC,"msctls_trackbar32",TBS_BOTH | 
+                    TBS_NOTICKS | WS_TABSTOP,258,117,135,10,0,HIDC_CYCLETIMESEC
+    CTEXT           "60",IDC_CYCLETIMESECTXT,402,117,14,10,SS_CENTERIMAGE
+    GROUPBOX        "Screenshot Bordersize",IDC_STATIC,249,135,176,28
+    CONTROL         "Slider1",IDC_SCREENSHOT_BORDERSIZE,"msctls_trackbar32",
+                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,258,148,135,10
+    CTEXT           "100",IDC_SCREENSHOT_BORDERSIZETXT,402,148,14,10,SS_CENTERIMAGE
+    PUSHBUTTON      "Set Screenshot Border Color",IDC_SCREENSHOT_BORDERCOLOR,249,169,176,14
+    GROUPBOX        "Show History on Tab",IDC_STATIC,249,185,176,32
+    COMBOBOX        IDC_HISTORY_TAB,277,197,120,100,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    DEFPUSHBUTTON   "&OK",IDOK,156,229,60,14
+    PUSHBUTTON      "&Cancel",IDCANCEL,224,229,60,14
 END
 
 #ifdef UI_COLOR_PALETTE
