@@ -2371,7 +2371,7 @@ V-V                           TP-027
 	DRIVER( dinoj )		/* 01/02/1993 (c) 1993 (Japan) (CPS1 + QSound) */
 	DRIVER( dinob )		/* bootleg */
 	DRIVER( dinoh )		/* hack */
-//	DRIVER( dinoha )	/* hack */ roms not available?
+	DRIVER( dinoha )	/* hack */
 	DRIVER( dinohb )	/* hack */
 	DRIVER( punisher )	/* 22/04/1993 (c) 1993 (World) (CPS1 + QSound) */
 	DRIVER( punishru )	/* 22/04/1993 (c) 1993 (US)    (CPS1 + QSound) */
