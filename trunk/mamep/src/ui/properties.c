@@ -1178,12 +1178,16 @@ static void UpdateSheetCaption(HWND hWnd)
 	HRGN        hRgn;
 	HBRUSH      hBrush;
 	RECT        rect, rc;
-	int         i, iWidth, iR, iG, iB, iSR, iSG, iSB, iER, iEG, iEB;
+	int         i, iWidth;
+	BYTE        bR, bG, bB, bSR, bSG, bSB, bER, bEG, bEB;
+	DWORD       dwLColor, dwRColor;
 	WCHAR       szText[256];
 
 	// Gradation color
-	iSR = 18; iSG = 61; iSB = 179;
-	iER = 16; iEG = 47; iEB = 132;
+	dwLColor = GetSysColor(COLOR_ACTIVECAPTION);
+	dwRColor = GetSysColor(COLOR_GRADIENTACTIVECAPTION);
+	bSR = GetRValue(dwLColor); bSG = GetGValue(dwLColor); bSB = GetBValue(dwLColor);
+	bER = GetRValue(dwRColor); bEG = GetGValue(dwRColor); bEB = GetBValue(dwRColor);
 
 	memcpy(&rect, &rcTabCaption, sizeof(RECT));
 
@@ -1204,11 +1208,11 @@ static void UpdateSheetCaption(HWND hWnd)
 
 	for (i = 0; i < iWidth; i++)
 	{
-		iR = iSR + ((iER - iSR) * i) / iWidth;
-		iG = iSG + ((iEG - iSG) * i) / iWidth;
-		iB = iSB + ((iEB - iSB) * i) / iWidth;
+		bR = bSR + ((bER - bSR) * i) / iWidth;
+		bG = bSG + ((bEG - bSG) * i) / iWidth;
+		bB = bSB + ((bEB - bSB) * i) / iWidth;
 
-		hBrush = CreateSolidBrush(RGB(iR,iG,iB));
+		hBrush = CreateSolidBrush(RGB(bR,bG,bB));
 
 		FillRect(hDC, &rc, hBrush);
 		DeleteObject(hBrush);
@@ -1238,7 +1242,7 @@ static void UpdateSheetCaption(HWND hWnd)
 		{
 			hOldFont = (HFONT)SelectObject(hDC, hFontCaption);
 
-			SetTextColor(hDC, RGB(255,255,255));
+			SetTextColor(hDC, GetSysColor(COLOR_CAPTIONTEXT));
 			SetBkMode(hDC, TRANSPARENT);
 
 			memcpy(&rc, &rect, sizeof(RECT));
