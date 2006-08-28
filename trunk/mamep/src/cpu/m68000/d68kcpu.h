@@ -349,6 +349,7 @@ extern link_info m68kdrc_link_make_cc;
 #define CALLBACK_RESET_INSTR  m68kdrc_cpu.reset_instr_callback
 #define CALLBACK_CMPILD_INSTR m68kdrc_cpu.cmpild_instr_callback
 #define CALLBACK_RTE_INSTR    m68kdrc_cpu.rte_instr_callback
+#define CALLBACK_TAS_INSTR    m68kdrc_cpu.tas_instr_callback
 #define CALLBACK_PC_CHANGED   m68kdrc_cpu.pc_changed_callback
 #define CALLBACK_SET_FC       m68kdrc_cpu.set_fc_callback
 #define CALLBACK_INSTR_HOOK   m68kdrc_cpu.instr_hook_callback
@@ -454,10 +455,17 @@ extern link_info m68kdrc_link_make_cc;
 
 #if M68K_RTE_HAS_CALLBACK
 	extern void m68kdrc_call_rte_callback(void);
-	#define m68kdrc_rte_callback()	_call(m68kdrc_call_rte_callback);
+	#define m68kdrc_rte_callback()	_call(m68kdrc_call_rte_callback)
 #else
 	#define m68kdrc_rte_callback()
 #endif /* M68K_RTE_HAS_CALLBACK */
+
+#if M68K_TAS_HAS_CALLBACK
+	extern int m68kdrc_call_tas_callback(void);
+	#define m68kdrc_tas_callback()	_call(m68kdrc_call_tas_callback)
+#else
+	#define m68kdrc_tas_callback()
+#endif /* M68K_TAS_HAS_CALLBACK */
 
 #if M68K_INSTRUCTION_HOOK
 	#if M68K_INSTRUCTION_HOOK == OPT_SPECIFY_HANDLER
@@ -1194,6 +1202,7 @@ typedef struct
 	void (*reset_instr_callback)(void);               /* Called when a RESET instruction is encountered */
 	void (*cmpild_instr_callback)(unsigned int, int); /* Called when a CMPI.L #v, Dn instruction is encountered */
 	void (*rte_instr_callback)(void);                 /* Called when a RTE instruction is encountered */
+	int  (*tas_instr_callback)(void);                 /* Called when a TAS instruction is encountered, allows / disallows writeback */
 	void (*pc_changed_callback)(unsigned int new_pc); /* Called when the PC changes by a large amount */
 	void (*set_fc_callback)(unsigned int new_fc);     /* Called when the CPU function code changes */
 	void (*instr_hook_callback)(void);                /* Called every instruction cycle prior to execution */

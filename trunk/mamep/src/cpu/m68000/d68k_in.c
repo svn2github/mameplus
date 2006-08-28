@@ -15012,6 +15012,9 @@ M68KMAKE_OP(tas, 8, ., d)
 
 M68KMAKE_OP(tas, 8, ., .)
 {
+	link_info link1;
+	link_info link2;
+
 	M68KMAKE_CODE_VERIFY(2);
 
 	_sub_r32_imm(REG_ESP, 4);
@@ -15032,7 +15035,23 @@ M68KMAKE_OP(tas, 8, ., .)
 
 	_or_r32_imm(REG_EAX, 0x80);
 	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+
+	/* The Genesis/Megadrive games Gargoyles and Ex-Mutants need the TAS writeback
+       disabled in order to function properly.  Some Amiga software may also rely
+       on this, but only when accessing specific addresses so additional functionality
+       will be needed. */
+
+	m68kdrc_tas_callback();
+	_sub_r32_imm(REG_EAX, 1);
+	_jcc_near_link(COND_NZ, &link1);
+
 	m68kdrc_write_8();
+	_jmp_near_link(&link2);
+
+_resolve_link(&link1);
+	_add_r32_imm(REG_ESP, 8);
+
+_resolve_link(&link2);
 }
 
 

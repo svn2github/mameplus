@@ -100,6 +100,16 @@ static const char* copyright_notice =
 	#define m68ki_rte_callback()
 #endif /* M68K_RTE_HAS_CALLBACK */
 
+#if M68K_TAS_HAS_CALLBACK
+	#if M68K_TAS_HAS_CALLBACK == OPT_SPECIFY_HANDLER
+		#define m68ki_tas_callback() M68K_TAS_CALLBACK()
+	#else
+		#define m68ki_tas_callback() CALLBACK_TAS_INSTR()
+	#endif
+#else
+	#define m68ki_tas_callback()
+#endif /* M68K_TAS_HAS_CALLBACK */
+
 #if M68K_MONITOR_PC
 	#if M68K_MONITOR_PC == OPT_SPECIFY_HANDLER
 		#define m68ki_pc_changed(A) M68K_SET_PC_CALLBACK(ADDRESS_68K(A))
@@ -158,6 +168,13 @@ void m68kdrc_call_rte_callback(void)
 	m68ki_rte_callback();
 }
 #endif /* M68K_RTE_HAS_CALLBACK */
+
+#if M68K_TAS_HAS_CALLBACK
+int m68kdrc_call_tas_callback(void)
+{
+	return m68ki_tas_callback();
+}
+#endif /* M68K_TAS_HAS_CALLBACK */
 
 #if M68K_MONITOR_PC
 void m68kdrc_call_pc_changed_callback(unsigned int new_pc)
@@ -1339,6 +1356,7 @@ void m68kdrc_init(void)
 	m68k_set_reset_instr_callback(NULL);
 	m68k_set_cmpild_instr_callback(NULL);
 	m68k_set_rte_instr_callback(NULL);
+	m68k_set_tas_instr_callback(NULL);
 	m68k_set_pc_changed_callback(NULL);
 	m68k_set_fc_callback(NULL);
 	m68k_set_instr_hook_callback(NULL);

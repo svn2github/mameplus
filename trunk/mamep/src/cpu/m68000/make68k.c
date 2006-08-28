@@ -244,6 +244,7 @@ int	DisOp;
 #define REG_RESET_CALLBACK	"R_RESET_CALLBACK"
 #define REG_CMPILD_CALLBACK	"R_CMPILD_CALLBACK"
 #define REG_RTE_CALLBACK	"R_RTE_CALLBACK"
+#define REG_TAS_CALLBACK	"R_TAS_CALLBACK"
 
 
 /* 68010 Regs */
@@ -275,6 +276,7 @@ int  Opcount		= 0;
 int  TimingCycles	= 0;
 int  AccessType		= NORMAL;
 int  ppro		= 0;
+char *CheckTASCallback = NULL;
 
 
 
@@ -1314,6 +1316,21 @@ void Memory_Write(char Size,int AReg,int DReg,const char *Flags,int Mask)
 		fprintf(fp, "\t\t push  EDI\n");
 	}
 
+	if (CheckTASCallback)
+	{
+		fprintf(fp, "\t\t mov  eax,dword [%s]\n", REG_TAS_CALLBACK);
+		fprintf(fp, "\t\t test eax,eax\n");
+		fprintf(fp, "\t\t jz   near %s_END_CB\n", CheckTASCallback);
+
+		/* Callback for TAS */
+		fprintf(fp, "\t\t call  eax\n");
+
+		fprintf(fp, "\t\t sub   eax,byte 1\n");
+		fprintf(fp, "\t\t jnz   near %s_WRITE_SKIP\n", CheckTASCallback);
+
+		fprintf(fp, "%s_END_CB\n", CheckTASCallback);
+	}
+
 #ifdef FASTCALL
 
 	fprintf(fp, "\t\t mov   %s,%s\n",FASTCALL_SECOND_REG,regnameslong[DReg]);
@@ -1376,6 +1393,8 @@ void Memory_Write(char Size,int AReg,int DReg,const char *Flags,int Mask)
 	fprintf(fp, "\t\t lea   esp,[esp+8]\n");
 #endif
 
+	if (CheckTASCallback)
+		fprintf(fp, "%s_WRITE_SKIP\n", CheckTASCallback);
 
 
 	/* Restore registers */
@@ -4925,6 +4944,10 @@ void tas(void)
 			{
 				if (OpcodeArray[BaseCode] == -2)
 				{
+					char cb_label[256];
+
+					sprintf(cb_label, "OP%d_%4.4x",CPU,BaseCode);
+
 					Align();
 					fprintf(fp, "%s:\n",GenerateLabel(BaseCode,0));
 
@@ -4940,7 +4963,10 @@ void tas(void)
 					SetFlags(SizeBYTE,EAX,TRUE,FALSE,TRUE);
 					fprintf(fp, "\t\t or    al,128\n");
 
+					CheckTASCallback = cb_label;
 					EffectiveAddressWrite(Dest,SizeBYTE,ECX,EAX,"----S-B",FALSE);
+					CheckTASCallback = NULL;
+
 					Completed();
 				}
 				OpcodeArray[Opcode] = BaseCode ;
@@ -8171,6 +8197,7 @@ void CodeSegmentEnd(void)
 	fprintf(fp, "R_RESET_CALLBACK\t DD 0\t\t\t ; Reset Callback\n");
 	fprintf(fp, "R_CMPILD_CALLBACK\t DD 0\t\t\t ; cmpil instr Callback\n");
 	fprintf(fp, "R_RTE_CALLBACK\t DD 0\t\t\t ; rte instr Callback\n");
+	fprintf(fp, "R_TAS_CALLBACK\t DD 0\t\t\t ; tas instr Callback\n");
 
 	fprintf(fp, "R_SFC\t DD 0\t\t\t ; Source Function Call\n");
 	fprintf(fp, "R_DFC\t DD 0\t\t\t ; Destination Function Call\n");

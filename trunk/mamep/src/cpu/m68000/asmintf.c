@@ -106,6 +106,7 @@ typedef struct
 	void (*reset_callback)(void);
 	void (*cmpild_instr_callback)(unsigned int, int);
 	void (*rte_instr_callback)(void);
+	int (*tas_instr_callback)(void);
 
 	UINT32 sfc;              /* Source Function Code. (68010) */
 	UINT32 dfc;              /* Destination Function Code. (68010) */
@@ -600,6 +601,7 @@ static void m68000_init(int index, int clock, const void *config, int (*irqcallb
 	M68000_regs.reset_callback = 0;
 	M68000_regs.cmpild_instr_callback = 0;
 	M68000_regs.rte_instr_callback = 0;
+	M68000_regs.tas_instr_callback = 0;
 	M68000_regs.irq_callback = irqcallback;
 }
 
@@ -608,11 +610,13 @@ static void m68000_reset(void)
 	void (*resetc)(void);
 	void (*cmpic)(unsigned int, int);
 	void (*rtec)(void);
+	int (*tasc)(void);
 	int (*irqc)(int irqline);
 
 	resetc = M68000_regs.reset_callback;
 	cmpic = M68000_regs.cmpild_instr_callback;
 	rtec = M68000_regs.rte_instr_callback;
+	tasc = M68000_regs.tas_instr_callback;
 	irqc = M68000_regs.irq_callback;
 
 	a68k_memory_intf = M68000_regs.Memory_Interface;
@@ -624,6 +628,7 @@ static void m68000_reset(void)
 	M68000_regs.reset_callback = resetc;
 	M68000_regs.cmpild_instr_callback = cmpic;
 	M68000_regs.rte_instr_callback = rtec;
+	M68000_regs.tas_instr_callback = tasc;
 	M68000_regs.irq_callback = irqc;
 
 	M68000_regs.a[7] = M68000_regs.isp = (( READOP(0) << 16 ) | READOP(2));
@@ -809,6 +814,7 @@ static void m68008_init(int index, int clock, const void *config, int (*irqcallb
 	M68000_regs.reset_callback = 0;
 	M68000_regs.cmpild_instr_callback = 0;
 	M68000_regs.rte_instr_callback = 0;
+	M68000_regs.tas_instr_callback = 0;
 	M68000_regs.irq_callback = irqcallback;
 }
 
@@ -817,11 +823,13 @@ static void m68008_reset(void)
 	void (*resetc)(void);
 	void (*cmpic)(unsigned int, int);
 	void (*rtec)(void);
+	int (*tasc)(void);
 	int (*irqc)(int irqline);
 
 	resetc = M68000_regs.reset_callback;
 	cmpic = M68000_regs.cmpild_instr_callback;
 	rtec = M68000_regs.rte_instr_callback;
+	tasc = M68000_regs.tas_instr_callback;
 	irqc = M68000_regs.irq_callback;
 
 	a68k_memory_intf = M68000_regs.Memory_Interface;
@@ -833,6 +841,7 @@ static void m68008_reset(void)
 	M68000_regs.reset_callback = resetc;
 	M68000_regs.cmpild_instr_callback = cmpic;
 	M68000_regs.rte_instr_callback = rtec;
+	M68000_regs.tas_instr_callback = tasc;
 	M68000_regs.irq_callback = irqc;
 
 	M68000_regs.a[7] = M68000_regs.isp = (( READOP(0) << 16 ) | READOP(2));
@@ -896,6 +905,7 @@ static void m68010_init(int index, int clock, const void *config, int (*irqcallb
 	M68010_regs.reset_callback = 0;
 	M68010_regs.cmpild_instr_callback = 0;
 	M68010_regs.rte_instr_callback = 0;
+	M68010_regs.tas_instr_callback = 0;
 	M68010_regs.irq_callback = irqcallback;
 }
 
@@ -904,11 +914,13 @@ static void m68010_reset(void)
 	void (*resetc)(void);
 	void (*cmpic)(unsigned int, int);
 	void (*rtec)(void);
+	int (*tasc)(void);
 	int (*irqc)(int irqline);
 
 	resetc = M68010_regs.reset_callback;
 	cmpic = M68010_regs.cmpild_instr_callback;
 	rtec = M68010_regs.rte_instr_callback;
+	tasc = M68010_regs.tas_instr_callback;
 	irqc = M68010_regs.irq_callback;
 
 	a68k_memory_intf = M68010_regs.Memory_Interface;
@@ -920,6 +932,7 @@ static void m68010_reset(void)
 	M68010_regs.reset_callback = resetc;
 	M68010_regs.cmpild_instr_callback = cmpic;
 	M68010_regs.rte_instr_callback = rtec;
+	M68010_regs.tas_instr_callback = tasc;
 	M68010_regs.irq_callback = irqc;
 
 	M68010_regs.a[7] = M68010_regs.isp = (( READOP(0) << 16 ) | READOP(2));
@@ -1092,6 +1105,7 @@ static void m68020_init(int index, int clock, const void *config, int (*irqcallb
 	M68020_regs.reset_callback = 0;
 	M68020_regs.cmpild_instr_callback = 0;
 	M68020_regs.rte_instr_callback = 0;
+	M68020_regs.tas_instr_callback = 0;
 	M68020_regs.irq_callback = irqcallback;
 }
 
@@ -1100,11 +1114,13 @@ static void m68k32_reset_common(void)
 	void (*resetc)(void);
 	void (*cmpic)(unsigned int, int);
 	void (*rtec)(void);
+	int (*tasc)(void);
 	int (*irqc)(int irqline);
 
 	resetc = M68020_regs.reset_callback;
 	cmpic = M68020_regs.cmpild_instr_callback;
 	rtec = M68020_regs.rte_instr_callback;
+	tasc = M68020_regs.tas_instr_callback;
 	irqc = M68020_regs.irq_callback;
 
 	memset(&M68020_regs,0,sizeof(M68020_regs));
@@ -1112,6 +1128,7 @@ static void m68k32_reset_common(void)
 	M68020_regs.reset_callback = resetc;
 	M68020_regs.cmpild_instr_callback = cmpic;
 	M68020_regs.rte_instr_callback = rtec;
+	M68020_regs.tas_instr_callback = tasc;
 	M68020_regs.irq_callback = irqc;
 
 	M68020_regs.a[7] = M68020_regs.isp = (( READOP(0) << 16 ) | READOP(2));
@@ -1283,6 +1300,7 @@ static void m68ec020_init(int index, int clock, const void *config, int (*irqcal
 	M68020_regs.reset_callback = 0;
 	M68020_regs.cmpild_instr_callback = 0;
 	M68020_regs.rte_instr_callback = 0;
+	M68020_regs.tas_instr_callback = 0;
 	M68020_regs.irq_callback = irqcallback;
 }
 
@@ -1366,6 +1384,7 @@ static void m68000_set_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_PTR_M68K_RESET_CALLBACK:		M68000_regs.reset_callback = info->f;		break;
 		case CPUINFO_PTR_M68K_CMPILD_CALLBACK:		M68000_regs.cmpild_instr_callback = (void (*)(unsigned int,int))info->f;		break;
 		case CPUINFO_PTR_M68K_RTE_CALLBACK:		M68000_regs.rte_instr_callback = info->f;		break;
+		case CPUINFO_PTR_M68K_TAS_CALLBACK:		M68000_regs.tas_instr_callback = (int (*)(void))(info->f);		break;
 	}
 }
 
