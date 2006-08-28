@@ -366,7 +366,7 @@ static struct CPS1config cps1_config_table[]=
 	{"dinoj",   QSOUND_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
 	{"cawingb", CPS_B_16, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 12 },
 	{"dinoh",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
-	{"dinoha",  QSOUND_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
+	{"dinoha",  NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
 	{"dinohb",  QSOUND_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
 	{"dinob",   QSOUND_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
 	{"knightsh",NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 3 },
@@ -493,6 +493,12 @@ static MACHINE_RESET( cps )
 		rom[0xe5332/2] = 0x6014;
 	}
 	if (strcmp(gamename, "dinoh" )==0)
+	{
+		/* Patch out Q-Sound test */
+		UINT16 *rom = (UINT16 *)memory_region(REGION_CPU1);	
+		rom[0xaacf4/2] = 0x4e71;
+	}
+	if (strcmp(gamename, "dinoha" )==0)
 	{
 		/* Patch out Q-Sound test */
 		UINT16 *rom = (UINT16 *)memory_region(REGION_CPU1);	

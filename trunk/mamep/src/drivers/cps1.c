@@ -7842,8 +7842,10 @@ ROM_END
 
 ROM_START( dinoha )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
-	ROM_LOAD16_WORD_SWAP( "kl2-l2.800",  0x000000, 0x100000, CRC(c6ae7338) )
-	ROM_LOAD16_WORD_SWAP( "kl2-r1.800",  0x100000, 0x100000, CRC(4c70dca7) )
+	ROM_LOAD16_WORD_SWAP( "kl2-r1.800",  0x080000, 0x080000, CRC(4c70dca7) SHA1(2e7a10c90924e0f87903eddb04313f61233a998f) )
+	ROM_CONTINUE(               0x000000, 0x080000 )
+	ROM_LOAD16_WORD_SWAP( "kl2-l2.800",  0x180000, 0x080000, CRC(c6ae7338) SHA1(4b8543cf1ac89ae95fe63e6d81c87d2bda52da69) )
+	ROM_CONTINUE(               0x100000, 0x080000 )
 
 	ROM_REGION( 0x400000, REGION_GFX1, 0 )
 	ROMX_LOAD( "cd-a.160",   0x000000, 0x80000, CRC(7e4f9fb3) SHA1(b985d925e0fb799cdf0a671e4800961d9872cd8f), ROM_GROUPWORD | ROM_SKIP(6) )
@@ -9430,7 +9432,7 @@ GAME( 1993, dino,     0,        qsound,   dino,     dino,     ROT0,   "Capcom", 
 GAME( 1993, dinou,    dino,     qsound,   dino,     dino ,    ROT0,   "Capcom", "Cadillacs and Dinosaurs (US 930201)", 0 )
 GAME( 1993, dinoj,    dino,     qsound,   dino,     dino ,    ROT0,   "Capcom", "Cadillacs Kyouryuu-Shinseiki (Japan 930201)", 0 )
 GAME( 1993, dinoh,    dino,     qsound,   dinoh,    dinoh,    ROT0,   "hack / bootleg",   "Cadillacs and Dinosaurs (bootleg, set 1)", 0 )
-GAME( 1993, dinoha,   dino,     qsound,   dinoh,    dino,     ROT0,   "hack / bootleg",   "Cadillacs and Dinosaurs (bootleg, set 2)", GAME_NOT_WORKING )
+GAME( 1993, dinoha,   dino,     qsound,   dinoh,    dinoh,    ROT0,   "hack / bootleg",   "Cadillacs and Dinosaurs (bootleg, set 2)", 0 )
 GAME( 1997, dinohb,   dino,     qsound,   dinoh,    dinohb,   ROT0,   "hack / bootleg",   "Cadillacs and Dinosaurs (bootleg, set 3)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1993, dinob,    dino,     qsound,   dino,     dinohb,   ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1993, punisher, 0,        qsound,   punisher, punisher, ROT0,   "Capcom", "The Punisher (World 930422)", 0 )					// "ETC"
