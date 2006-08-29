@@ -28,7 +28,7 @@
 /* step 2: define the drivers[] array */
 #undef DRIVER
 #define DRIVER(NAME) &driver_##NAME,
-const game_driver * const drivers[] =
+const game_driver * const hazemddrivers[] =
 {
 #include "hazemddriv.c"
 	0	/* end of array */
@@ -1776,10 +1776,10 @@ const game_driver * const drivers[] =
 	DRIVER( gg_baku )
 
 	/* System E */
-	DRIVER( hangonjr )
-	DRIVER( transfrm )
-	DRIVER( ridleofp )
-	DRIVER( tetrisse )
+//	DRIVER( hangonjr )
+//	DRIVER( transfrm )
+//	DRIVER( ridleofp )
+//	DRIVER( tetrisse )
 
 	/* for testing only */
 //	DRIVER( megatech )

@@ -11629,6 +11629,7 @@ DRIVER_INIT( g_12i1 )
 	init_megadriv();
 }
 
+#if 0
 READ16_HANDLER ( topshoot_ram_r )
 {
 	UINT16 *topshoot_ram = (UINT16*)memory_region(REGION_CPU1)+(0x200000/2);
@@ -11663,7 +11664,7 @@ DRIVER_INIT( topshoot )
 
 	init_megadriv();
 }
-
+#endif
 
 READ16_HANDLER( dte_extra_r )
 {
@@ -13903,7 +13904,7 @@ GAME( 1900, g_yasec,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Un
 GAME( 1900, 32x_bios,    0,        _32x,        megadriv,    _32x,    ROT0,   "Unsorted", "32X Bios", GAME_NOT_WORKING|NOT_A_DRIVER )
 GAME( 1900, 32x_knuk,    32x_bios, _32x,        megadriv,    _32x, ROT0,   "Unsorted", "Knuckles Chaotix", GAME_NOT_WORKING )
 
-
+#if 0
 ROM_START( topshoot ) /* Top Shooter (c)1995 Sun Mixing */
 	ROM_REGION( 0x400000, REGION_CPU1, 0 )
 	ROM_LOAD16_BYTE( "tc574000ad_u11_2.bin", 0x000000, 0x080000, CRC(b235c4d9) SHA1(fbb308a5f6e769f3277824cb6a3b50c308969ac2) )
@@ -13911,5 +13912,5 @@ ROM_START( topshoot ) /* Top Shooter (c)1995 Sun Mixing */
 ROM_END
 
 GAME( 1995, topshoot,        0,        megadriv,    megadriv,    topshoot, ROT0,   "Sun Mixing", "Top Shooter (Arcade)", 0 )
-
+#endif
 

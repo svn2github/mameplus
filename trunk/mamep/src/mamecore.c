@@ -122,3 +122,22 @@ char *mame_strdup(const char *str)
 	}
 	return cpy;
 }
+
+
+char *mame_strtrim(const char *str)
+{
+	char *s = mame_strdup(str);
+	char *start = str;
+	char *end = start + strlen(start);
+
+	/* strip spaces, move to mamecore.c */
+	while (*start && isspace(*start))
+		start++;
+	while (end > start && isspace(end[-1]))
+		end--;
+	
+	memmove(s, start, end - start);
+	s[end - start] = 0;
+	
+	return s;
+}

@@ -15,8 +15,9 @@
 # list of drivers
 #-------------------------------------------------
 
-COREOBJS += $(OBJ)/mamedriv.o
-
+COREOBJS += $(OBJ)/mamedriv.o \
+            $(OBJ)/plusdriv.o \
+            $(OBJ)/hazemddriv.o
 
 
 #-------------------------------------------------
@@ -1129,6 +1130,8 @@ $(OBJ)/sega.a: \
 	$(OBJ)/vidhrdw/segaic16.o \
 	$(OBJ)/vidhrdw/segaic24.o \
 	$(OBJ)/vidhrdw/stvvdp1.o $(OBJ)/vidhrdw/stvvdp2.o \
+	$(OBJ)/drivers/megadriv.o \
+	$(OBJ)/drivers/sms.o \
 
 $(OBJ)/seibu.a: \
 	$(OBJ)/drivers/cshooter.o \

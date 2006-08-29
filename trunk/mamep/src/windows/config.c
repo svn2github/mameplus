@@ -118,7 +118,7 @@ const options_entry windows_opts[] =
 
 	// frontend commands
 	{ "listxml;lx",               NULL,       OPTION_COMMAND,    "all available info on driver in XML format" },
-	{ "listgames",                NULL,   OPTION_COMMAND,    "year, manufacturer and full name" },
+	{ "listgames",                NULL,       OPTION_COMMAND,    "year, manufacturer and full name" },
 	{ "listfull;ll",              NULL,       OPTION_COMMAND,    "short name, full name" },
 	{ "listsource;ls",            NULL,       OPTION_COMMAND,    "driver sourcefile" },
 	{ "listclones;lc",            NULL,       OPTION_COMMAND,    "show clones" },
@@ -137,6 +137,7 @@ const options_entry windows_opts[] =
 	{ NULL,                       NULL,       OPTION_HEADER,     "CONFIGURATION OPTIONS" },
 	{ "readconfig;rc",            "1",        OPTION_BOOLEAN,    "enable loading of configuration files" },
 	{ "skip_gameinfo",            "0",        OPTION_BOOLEAN,    "skip displaying the information screen at startup" },
+	{ "drivers",                  NULL,       0,                 ""},
 
 	// file and directory options
 	{ NULL,                       NULL,       OPTION_HEADER,     "PATH AND DIRECTORY OPTIONS" },
@@ -530,11 +531,6 @@ int cli_frontend_init(int argc, char **argv)
 	// parse the simple commmands before we go any further
 	execute_simple_commands();
 
-	// find out what game we might be referring to
-	gamename = options_get_string("", FALSE);
-	if (gamename != NULL)
-		drvnum = driver_get_index(extract_base_name(gamename, basename, ARRAY_LENGTH(basename)));
-
 	// load mame.ini from current dir
 	set_pathlist(FILETYPE_INI, ".");
 
@@ -549,6 +545,39 @@ int cli_frontend_init(int argc, char **argv)
 #ifdef MAME_DEBUG
 	parse_ini_file("debug.ini");
 #endif
+
+	char *p = strtok (options_get_string("drivers", FALSE),",");
+	static char *s;
+	while (p)
+	{
+		s = mame_strtrim(p);
+		if (s[0])
+		{
+			if (mame_stricmp(s, "mame") == 0)
+			{
+				drivers = mamedrivers;
+				break;	// TODO: combine drivers instead of assign, remove break here
+			}
+			else if (mame_stricmp(s, "plus") == 0)
+			{
+				drivers = plusdrivers;
+				break;	// TODO: combine drivers instead of assign, remove break here
+			}
+			else if (mame_stricmp(s, "hazemd") == 0)
+			{
+				drivers = hazemddrivers;
+				break;	// TODO: combine drivers instead of assign, remove break here
+			}
+		}
+		free(s);
+		
+		p = strtok (NULL, ",");
+	}
+
+	// find out what game we might be referring to
+	gamename = options_get_string("", FALSE);
+	if (gamename != NULL)
+		drvnum = driver_get_index(extract_base_name(gamename, basename, ARRAY_LENGTH(basename)));
 
 	// if we have a valid game driver, parse game-specific INI files
 	if (drvnum != -1)

@@ -586,7 +586,10 @@ game_driver driver_##NAME =					\
     GLOBAL VARIABLES
 ***************************************************************************/
 
-extern const game_driver * const drivers[];
+extern const game_driver ** drivers;
+extern const game_driver * const mamedrivers[];
+extern const game_driver * const plusdrivers[];
+extern const game_driver * const hazemddrivers[];
 
 
 

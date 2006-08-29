@@ -405,6 +405,10 @@
 #define IDC_TRANSPARENCYDISP            1363 // TRANS_UI
 #define IDC_PROP_INPUT                  1364
 
+#define IDC_DRV_MAME                    1365
+#define IDC_DRV_PLUS                    1366
+#define IDC_DRV_HAZEMD                  1367
+
 #define ID_FILE_EXIT                    40001
 #define ID_ABOUT                        40003
 #define ID_FILE_PLAY                    40004

@@ -22,7 +22,10 @@
 #ifndef _MSC_VER
 
 #include "driver.h"
-extern SHAREDOBJ_DATA const game_driver * const drivers[];
+extern SHAREDOBJ_DATA const game_driver ** drivers;
+extern SHAREDOBJ_DATA const game_driver * const mamedrivers[];
+extern SHAREDOBJ_DATA const game_driver * const plusdrivers[];
+extern SHAREDOBJ_DATA const game_driver * const hazemddrivers[];
 extern SHAREDOBJ_FUNC(const game_driver *) driver_get_clone(const game_driver *driver);
 
 #include "audit.h"

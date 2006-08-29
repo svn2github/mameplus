@@ -1941,7 +1941,7 @@ ROM_END
 
 
 
-
+#if 0
 ROM_START( megatech )
 	ROM_REGION( 0x20000, REGION_USER1, 0 )
 	/* Bios */
@@ -1963,6 +1963,7 @@ ROM_START( mt_astro )
 	ROM_REGION( 0x400000, REGION_USER3, 0 ) /* z80 Code */
 //	ROM_LOAD( "ep13817.ic2", 0x000000, 0x020000, CRC(299cbb74) SHA1(901697a3535ad70190647f34ad5b30b695d54542) )
 ROM_END
+#endif
 
 static DRIVER_INIT( codemast )
 {
@@ -2160,10 +2161,9 @@ GAME( 1996, gg_baku,         0,        sms,    gg,    standagg, ROT0,   "Sega", 
 
 
 
-
+#if 0
 GAME( 199?, megatech,        0,        sms,    sms,    mtc, ROT0,   "Sega", "(Megatech) (Bios Test)", NOT_A_DRIVER )
 GAME( 199?, mt_astro,        megatech,        sms,    sms,    mtc, ROT0,   "Sega", "Astro Warrior (Megatech) (Bios Test)", 0 )
-
 
 /* Sega System E */
 
@@ -2834,3 +2834,4 @@ GAME( 1985, hangonjr, 0,        systeme, hangonjr, hangonjr, ROT0,  "Sega", "Han
 GAME( 1986, transfrm, 0,        systeme, transfrm, segasyse, ROT0,  "Sega", "Transformer (Arcade)", 0 )
 GAME( 1986, ridleofp, 0,        systeme, ridleofp, ridleofp, ROT90, "Sega / Nasco", "Riddle of Pythagoras (Japan) (Arcade)", 0 )
 GAME( 1988, tetrisse, 0,        systeme, tetrisse, segasyse, ROT0,  "Sega", "Tetris (Japan, System E) (Arcade)", 0 )
+#endif

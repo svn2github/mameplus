@@ -398,6 +398,7 @@ char *mame_strdup(const char *str);
 #undef strdup
 #define strdup !MUST_USE_MAME_STRDUP_INSTEAD!
 
+char *mame_strtrim(const char *str);
 
 /* compute the intersection of two rectangles */
 INLINE void sect_rect(rectangle *dst, const rectangle *src)

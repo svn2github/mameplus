@@ -1978,6 +1978,9 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	init_resource_tracking();
 	begin_resource_tracking();
 
+	//assign drivers here
+	drivers = mamedrivers;
+
 	// Count the number of games
 	game_count = 0;
 	while (drivers[game_count] != 0)

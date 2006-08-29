@@ -15,8 +15,8 @@
 # list of drivers
 #-------------------------------------------------
 
-COREOBJS += $(OBJ)/hazemddriv.o
-
+COREOBJS += $(OBJ)/hazemddriv.o \
+	    $(OBJ)/hazesmsdriv.o
 
 
 #-------------------------------------------------
