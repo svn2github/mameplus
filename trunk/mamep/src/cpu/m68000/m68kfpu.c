@@ -706,7 +706,7 @@ static void fmovem(UINT16 w2)
 static void fbcc16(void)
 {
 	INT32 offset;
-	int condition = REG_IR & 0x3f;
+	int condition = REG_IR & 0x1f;
 
 	offset = (INT16)(OPER_I_16());
 
@@ -723,7 +723,7 @@ static void fbcc16(void)
 static void fbcc32(void)
 {
 	INT32 offset;
-	int condition = REG_IR & 0x3f;
+	int condition = REG_IR & 0x1f;
 
 	offset = OPER_I_32();
 

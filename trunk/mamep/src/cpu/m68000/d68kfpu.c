@@ -41,7 +41,7 @@ static void SET_CONDITION_CODES(fp_reg *p)
 	}
 }
 
-static int TEST_COND_LS(void)
+static int TEST_COND_LT(void)
 {
 	int n = (REG68K_FPSR & FPCC_N) != 0;
 	int z = (REG68K_FPSR & FPCC_Z) != 0;
@@ -107,7 +107,7 @@ static void TEST_CONDITION(int condition)
 			return;
 
 		case 0x14:	// Less Than
-			_call(TEST_COND_LS);
+			_call(TEST_COND_LT);
 			return;
 
 		case 0x15:	// Less Than or Equal
@@ -506,8 +506,8 @@ static void DRC_WRITE_EA_64(UINT64 *p)
 	{
 		case 2:		// (An)
 		{
-			_push_m32abs(&ptr[0]);
 			DRC_EA_AY_AI_32();
+			_push_m32abs(&ptr[0]);
 			_add_r32_imm(REG_EAX, 4);
 			_push_r32(REG_EAX);
 
@@ -541,8 +541,8 @@ static void DRC_WRITE_EA_64(UINT64 *p)
 		}
 		case 5:		// (d16, An)
 		{
-			_push_m32abs(&ptr[0]);
 			DRC_EA_AY_DI_32();
+			_push_m32abs(&ptr[0]);
 			_add_r32_imm(REG_EAX, 4);
 			_push_r32(REG_EAX);
 
@@ -806,7 +806,16 @@ static void fpgen_rm_reg(UINT16 w2)
 		}
 		case 0x38:		// FCMP
 		{
-			res.f = REG68K_FP[dst].f - source;
+			_push_imm(&REG68K_FP[dst].f);
+			_push_imm(&res.f);
+			_call(m68kdrc_fmove);
+			_add_r32_imm(REG_ESP, 8);
+
+			_push_imm(&source);
+			_push_imm(&res.f);
+			_call(m68kdrc_fsub);
+			_add_r32_imm(REG_ESP, 8);
+
 			_push_imm(&res);
 			_call(SET_CONDITION_CODES);
 			_add_r32_imm(REG_ESP, 4);
@@ -815,7 +824,11 @@ static void fpgen_rm_reg(UINT16 w2)
 		}
 		case 0x3a:		// FTST
 		{
-			res.f = source;
+			_push_imm(&source);
+			_push_imm(&res.f);
+			_call(m68kdrc_fmove);
+			_add_r32_imm(REG_ESP, 8);
+
 			_push_imm(&res);
 			_call(SET_CONDITION_CODES);
 			_add_r32_imm(REG_ESP, 4);
@@ -985,7 +998,7 @@ static void fmovem(UINT16 w2)
 static void fbcc16(void)
 {
 	INT32 offset;
-	int condition = REG68K_IR & 0x3f;
+	int condition = REG68K_IR & 0x1f;
 	link_info link1;
 
 	offset = (INT16)(OPER_I_16());
@@ -1004,7 +1017,7 @@ _resolve_link(&link1);
 static void fbcc32(void)
 {
 	INT32 offset;
-	int condition = REG68K_IR & 0x3f;
+	int condition = REG68K_IR & 0x1f;
 	link_info link1;
 
 	offset = OPER_I_32();

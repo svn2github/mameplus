@@ -1806,6 +1806,25 @@ static void d68040_fpu(void)
 	}
 }
 
+static void d68040_fbcc(void)
+{
+	static const char *fpu_cc[32] = 
+	{
+		"f",     "eq",    "ogt",   "oge",   "ogt",   "ole",   "ogl",   "or",
+		"un",    "ueq",   "ugt",   "uge",   "ult",   "ule",   "ne",    "t",
+		"sf",    "seq",   "gt",    "ge",    "lt",    "le",    "gl",    "gle",
+		"ngle",  "ngl",   "nlt",   "nle",   "nge",   "ngt",   "sne",   "st"
+	};
+
+	uint temp_pc = g_cpu_pc;
+	LIMIT_CPU_TYPES(M68040_PLUS);
+
+	if (g_cpu_ir & 0x0040)
+		sprintf(g_dasm_str, "fb%-2s.l  $%x;", fpu_cc[g_cpu_ir & 0x1f], temp_pc + read_imm_32());
+	else
+		sprintf(g_dasm_str, "fb%-2s.w  $%x;", fpu_cc[g_cpu_ir & 0x1f], temp_pc + make_int_16(read_imm_16()));
+}
+
 static void d68000_jmp(void)
 {
 	sprintf(g_dasm_str, "jmp     %s", get_ea_mode_str_32(g_cpu_ir));
@@ -3192,6 +3211,7 @@ static opcode_struct g_opcode_info[] =
 	{d68000_ext_16       , 0xfff8, 0x4880, 0x000},
 	{d68000_ext_32       , 0xfff8, 0x48c0, 0x000},
 	{d68040_fpu          , 0xffc0, 0xf200, 0x000},
+	{d68040_fbcc         , 0xff80, 0xf280, 0x000},
 	{d68000_illegal      , 0xffff, 0x4afc, 0x000},
 	{d68000_jmp          , 0xffc0, 0x4ec0, 0x27b},
 	{d68000_jsr          , 0xffc0, 0x4e80, 0x27b},
