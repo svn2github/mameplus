@@ -16,8 +16,8 @@
 # list of drivers
 #-------------------------------------------------
 
-COREOBJS += $(OBJ)/mamedriv.o
-
+COREOBJS += $(OBJ)/mamedriv.o \
+            $(OBJ)/plusdriv.o
 
 
 #-------------------------------------------------

@@ -28,7 +28,7 @@
 /* step 2: define the drivers[] array */
 #undef DRIVER
 #define DRIVER(NAME) &driver_##NAME,
-const game_driver ** drivers;
+const game_driver ** drivers = NULL;
 const game_driver * const mamedrivers[] =
 {
 #include "mamedriv.c"

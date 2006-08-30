@@ -487,6 +487,20 @@ static struct
 };
 #endif /* UI_COLOR_DISPLAY */
 
+static struct
+{
+	const char *name;
+	const game_driver** driver;
+} drivers_table[] =
+{
+	{"mame",	mamedrivers},
+	{"plus",	plusdrivers},
+#ifndef NEOCPSMAME
+	{"hazemd",	hazemddrivers},
+#endif /* NEOCPSMAME */
+	{0}
+};
+
 #ifdef MESS
 #include "configms.h"
 #endif
@@ -546,27 +560,38 @@ int cli_frontend_init(int argc, char **argv)
 	parse_ini_file("debug.ini");
 #endif
 
-	char *p = strtok (options_get_string("drivers", FALSE),",");
+	int i, c;
+	char *drv_option = options_get_string("drivers", FALSE);
+	if (!drv_option)
+		// default to mamedrivers
+		drv_option = drivers_table[0].name;
+	char *p = strtok (drv_option,",");
 	static char *s;
+	
 	while (p)
 	{
-		s = mame_strtrim(p);
+		s = mame_strtrim(p);	//get individual driver name
 		if (s[0])
 		{
-			if (mame_stricmp(s, "mame") == 0)
+			for (i=0; drivers_table[i].name; i++)
 			{
-				drivers = mamedrivers;
-				break;	// TODO: combine drivers instead of assign, remove break here
-			}
-			else if (mame_stricmp(s, "plus") == 0)
-			{
-				drivers = plusdrivers;
-				break;	// TODO: combine drivers instead of assign, remove break here
-			}
-			else if (mame_stricmp(s, "hazemd") == 0)
-			{
-				drivers = hazemddrivers;
-				break;	// TODO: combine drivers instead of assign, remove break here
+				if (mame_stricmp(s, drivers_table[i].name) == 0)
+				{
+					int prev_drv_count, add_drv_count;
+					for (c=0; drivers && drivers[c]; c++);
+					prev_drv_count = c;
+					for (c=0; drivers_table[i].driver && drivers_table[i].driver[c]; c++);
+					add_drv_count = c;
+
+					// realloc drivers[]
+					drivers = realloc (drivers, (prev_drv_count + add_drv_count + 1) * sizeof(game_driver*));
+					// need free(drivers)?
+					if (drivers)
+						// need assert here
+						drivers [prev_drv_count + add_drv_count] = 0;	//end of drivers sign
+					// append drivers data
+					memcpy (drivers + prev_drv_count, drivers_table[i].driver, add_drv_count * sizeof(game_driver*));
+				}
 			}
 		}
 		free(s);
