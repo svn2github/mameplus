@@ -703,8 +703,8 @@ $(OBJ)/cpu/m68000/m68kmake$(EXE): $(OBJ)/cpu/m68000/m68kmake.o $(OSDBGOBJS)
 $(OBJ)/cpu/m68000/d68kmake$(EXE): $(OBJ)/cpu/m68000/d68kmake.o $(OSDBGOBJS)
 
 # rule to ensure we build the header before building the core CPU file
-$(OBJ)/cpu/m68000/m68kcpu.o: $(M68000_GENERATED_HEADERS)
-$(OBJ)/cpu/m68000/d68kcpu.o: $(M68000DRC_GENERATED_HEADERS)
+$(OBJ)/cpu/m68000/m68kcpu.o: $(M68000_GENERATED_HEADERS) src/cpu/m68000/m68kfpu.c
+$(OBJ)/cpu/m68000/d68kcpu.o: $(M68000DRC_GENERATED_HEADERS) src/cpu/m68000/d68kfpu.c
 
 # ASM core support
 ifneq ($(filter M68000 M68008,$(CPUS)),)

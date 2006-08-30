@@ -834,7 +834,7 @@ static void check_stack(uint32 sp)
 	if (!old_sp)
 		old_sp = sp;
 	else if (old_sp != sp)
-		fatalerror("%08x: wrong sp", REG68K_PC);
+		fatalerror("%08x: wrong sp", REG68K_PPC);
 }
 
 void m68kdrc_flag_str_mark_dirty(char *str)

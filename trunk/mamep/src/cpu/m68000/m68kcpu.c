@@ -1027,7 +1027,17 @@ void m68k_state_register(const char *type, int index)
 
 void m68kfpu_state_register(const char *type, int index)
 {
-	state_save_register_item_array(type, index, REG_FP);
+	char name[20];
+	int reg;
+
+	for (reg = 0; reg < ARRAY_LENGTH(REG_FP); reg++)
+	{
+		sprintf(name, "%sfpu[%d].i", type, reg);
+		state_save_register_item(name, index, REG_FP[reg].i);
+		sprintf(name, "%sfpu[%d].f", type, reg);
+		state_save_register_item(name, index, REG_FP[reg].f);
+	}
+
 	state_save_register_item(type, index, REG_FPCR);
 	state_save_register_item(type, index, REG_FPSR);
 	state_save_register_item(type, index, REG_FPIAR);

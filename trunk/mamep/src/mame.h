@@ -229,9 +229,9 @@ struct _global_options
 #ifdef AUTO_PAUSE_PLAYBACK
 	int			auto_pause_playback;	/* 1 for automatic pause when playback is finished */
 #endif /* AUTO_PAUSE_PLAYBACK */
-#if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020)
+#if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 	int m68k_core;			/* ks hcmame s switch m68k core */
-#endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020) */
+#endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 #ifdef TRANS_UI
 	int			use_transui;	/* 1 to use transparent background for UI text */
 	int			ui_transparency;	/* transparency of UI background */

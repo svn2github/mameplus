@@ -352,8 +352,8 @@ static void WRITE_EA_64(int ea, UINT64 data)
 		case 2:		// (An)
 		{
 			UINT32 ea = REG_A[reg];
-			m68ki_write_32(ea, (UINT32)(data >> 32));
-			m68ki_write_32(ea, (UINT32)(data));
+			m68ki_write_32(ea+0, (UINT32)(data >> 32));
+			m68ki_write_32(ea+4, (UINT32)(data));
 			break;
 		}
 		case 4:		// -(An)
