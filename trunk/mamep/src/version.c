@@ -11,8 +11,4 @@
 
 ***************************************************************************/
 
-#ifndef HAZEMD
-char build_version[] = "0.108u1 ("__DATE__")";
-#else
-char build_version[] = "0.05a (from MAME 0.108u1) ("__DATE__")";
-#endif
+char build_version[] = "0.108u2 ("__DATE__")";

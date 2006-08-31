@@ -44,7 +44,6 @@ const game_driver * const plusdrivers[] =
 	DRIVER( knightsb )	/* bootleg */
 	DRIVER( sf2m8 )		/* hack */
 	DRIVER( sf2m13 )	/* hack */
-	DRIVER( sf2ceh )	/* hack, Hispanic 990804 */
 	DRIVER( sf2tlona )	/* hack, Tu Long set 1 */
 	DRIVER( sf2tlonb )	/* hack, Tu Long set 2 */
 	DRIVER( wofb )		/* bootleg */
@@ -60,7 +59,6 @@ const game_driver * const plusdrivers[] =
 	DRIVER( dinoh )		/* hack */
 	DRIVER( dinoha )	/* hack */
 	DRIVER( dinohb )	/* hack */
-	DRIVER( pnicku )
 	DRIVER( sfzch )		/* 1995  Street Fighter Zero (CPS Changer) */
 	DRIVER( sfach )		/* 1995  Street Fighter Alpha (Publicity CPS Changer) */
 

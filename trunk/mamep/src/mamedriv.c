@@ -4234,6 +4234,10 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( ultraman )	/* GX910 (c) 1991 Banpresto/Bandai */
 	DRIVER( hexion )	/* GX122 (c) 1992 */
 	DRIVER( lethalen )	/* GX191 (c) 1992 */
+	DRIVER( lethalua )	/* GX191 (c) 1992 */
+	DRIVER( lethalux )	/* GX191 (c) 1992 */
+	DRIVER( letheab )	/* GX191 (c) 1992 */
+	DRIVER( letheae )	/* GX191 (c) 1992 */
 	DRIVER( lethalej )	/* GX191 (c) 1992 */
 
 	/* Konami "Nemesis hardware" games */
@@ -7128,6 +7132,7 @@ Other Sun games
 	DRIVER( fortecar )
 	DRIVER( jackpool )	/* (c) 1997 Electronic Projects */
 	DRIVER( murogem )	/* ??? */
+	DRIVER( murogema )	/* ??? */
 	DRIVER( quizmstr )	/* (c) 1985 Coinmaster */
 	DRIVER( trailblz )	/* (c) 1987 Coinmaster */
 	DRIVER( supnudg2 )	/* (c) 1989 Coinmaster */
@@ -7159,6 +7164,7 @@ Other Sun games
 	DRIVER( sb2003 )	/* (c) 2003 Limenko */
 	DRIVER( sb2003a )	/* (c) 2003 Limenko */
 	DRIVER( legendoh )	/* (c) 2003 Limenko */
+	DRIVER( carrera )	/* (c) 19?? BS Electronics */
 #endif /* NEOCPSMAME */
 
 #endif	/* DRIVER_RECURSIVE */
