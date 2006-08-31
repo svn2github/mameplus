@@ -138,7 +138,7 @@ const options_entry windows_opts[] =
 	{ NULL,                       NULL,       OPTION_HEADER,     "CONFIGURATION OPTIONS" },
 	{ "readconfig;rc",            "1",        OPTION_BOOLEAN,    "enable loading of configuration files" },
 	{ "skip_gameinfo",            "0",        OPTION_BOOLEAN,    "skip displaying the information screen at startup" },
-	{ "driver_config",            "mame, plus", 0,                 ""},
+	{ "driver_config",            "mame, plus", 0,               ""},
 
 	// file and directory options
 	{ NULL,                       NULL,       OPTION_HEADER,     "PATH AND DIRECTORY OPTIONS" },
