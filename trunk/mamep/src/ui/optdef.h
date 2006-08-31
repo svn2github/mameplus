@@ -30,6 +30,7 @@ START_OPT_FUNC_CORE
 #ifdef USE_HISCORE
 	DEFINE_OPT(string,               hiscore_file);
 #endif /* USE_HISCORE */
+	DEFINE_OPT(string,               drivers);
 
 #ifdef UI_COLOR_DISPLAY
 // CORE PALETTE OPTIONS

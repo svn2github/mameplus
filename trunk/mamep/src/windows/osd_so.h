@@ -228,6 +228,7 @@ extern SHAREDOBJ_FUNC(void)    set_pathlist(int file_type, const char *new_rawpa
 
 // in windows/config.c
 extern SHAREDOBJ_DATA const options_entry windows_opts[];
+extern SHAREDOBJ_FUNC(void) assign_drivers(char * drv_option);
 
 #ifdef MALLOC_DEBUG
 // in windows/winalloc.c
@@ -270,6 +271,7 @@ extern void set_pathlist(int file_type, const char *new_rawpath);
 // in windows/config.c
 #include "../options.h"
 extern const options_entry windows_opts[];
+extern void assign_drivers(char * drv_option);
 
 #endif /* _MSC_VER */
 
@@ -309,6 +311,7 @@ extern int (*osd_display_loading_rom_message_)(const char *name, rom_load_data *
 #include "options.h"
 #endif /* _MSC_VER */
 extern const options_entry windows_opts[];
+extern void assign_drivers(char * drv_option);
 
 #endif /* !DONT_USE_DLL */
 

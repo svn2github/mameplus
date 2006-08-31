@@ -1978,8 +1978,10 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	init_resource_tracking();
 	begin_resource_tracking();
 
-	//assign drivers here
-	drivers = mamedrivers;
+	dprintf("about to init options");
+	// fixme: options handling need update, assign_drivers() before using drivers[]
+	OptionsInit();
+	dprintf("options loaded");
 
 	// Count the number of games
 	game_count = 0;
@@ -2043,9 +2045,6 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 			return FALSE;
 	}
 
-	dprintf("about to init options");
-	OptionsInit();
-	dprintf("options loaded");
 
 #ifdef USE_SHOW_SPLASH_SCREEN
 	// Display splash screen window

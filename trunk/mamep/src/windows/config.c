@@ -86,6 +86,7 @@ static void parse_ini_file(const char *name);
 static void execute_simple_commands(void);
 static void execute_commands(const char *argv0);
 static void display_help(void);
+void assign_drivers(char * drv_option);
 static void extract_options(const game_driver *driver, machine_config *drv);
 static void setup_language(void);
 static void setup_playback(const char *filename, const game_driver *driver);
@@ -137,7 +138,7 @@ const options_entry windows_opts[] =
 	{ NULL,                       NULL,       OPTION_HEADER,     "CONFIGURATION OPTIONS" },
 	{ "readconfig;rc",            "1",        OPTION_BOOLEAN,    "enable loading of configuration files" },
 	{ "skip_gameinfo",            "0",        OPTION_BOOLEAN,    "skip displaying the information screen at startup" },
-	{ "drivers",                  NULL,       0,                 ""},
+	{ "driver_config",            "mame, plus", 0,                 ""},
 
 	// file and directory options
 	{ NULL,                       NULL,       OPTION_HEADER,     "PATH AND DIRECTORY OPTIONS" },
@@ -487,19 +488,6 @@ static struct
 };
 #endif /* UI_COLOR_DISPLAY */
 
-static struct
-{
-	const char *name;
-	const game_driver** driver;
-} drivers_table[] =
-{
-	{"mame",	mamedrivers},
-	{"plus",	plusdrivers},
-#ifndef NEOCPSMAME
-	{"hazemd",	hazemddrivers},
-#endif /* NEOCPSMAME */
-	{0}
-};
 
 #ifdef MESS
 #include "configms.h"
@@ -560,44 +548,7 @@ int cli_frontend_init(int argc, char **argv)
 	parse_ini_file("debug.ini");
 #endif
 
-	int i, c;
-	char *drv_option = options_get_string("drivers", FALSE);
-	if (!drv_option)
-		// default to mamedrivers
-		drv_option = drivers_table[0].name;
-	char *p = strtok (drv_option,",");
-	static char *s;
-	
-	while (p)
-	{
-		s = mame_strtrim(p);	//get individual driver name
-		if (s[0])
-		{
-			for (i=0; drivers_table[i].name; i++)
-			{
-				if (mame_stricmp(s, drivers_table[i].name) == 0)
-				{
-					int prev_drv_count, add_drv_count;
-					for (c=0; drivers && drivers[c]; c++);
-					prev_drv_count = c;
-					for (c=0; drivers_table[i].driver && drivers_table[i].driver[c]; c++);
-					add_drv_count = c;
-
-					// realloc drivers[]
-					drivers = realloc (drivers, (prev_drv_count + add_drv_count + 1) * sizeof(game_driver*));
-					// need free(drivers)?
-					if (drivers)
-						// need assert here
-						drivers [prev_drv_count + add_drv_count] = 0;	//end of drivers sign
-					// append drivers data
-					memcpy (drivers + prev_drv_count, drivers_table[i].driver, add_drv_count * sizeof(game_driver*));
-				}
-			}
-		}
-		free(s);
-		
-		p = strtok (NULL, ",");
-	}
+	assign_drivers(options_get_string("driver_config", FALSE));
 
 	// find out what game we might be referring to
 	gamename = options_get_string("", FALSE);
@@ -886,6 +837,60 @@ static void display_help(void)
 }
 
 
+void assign_drivers(char * drv_option)
+{
+	static const struct
+	{
+		const char *name;
+		const game_driver** driver;
+	} drivers_table[] =
+	{
+		{"mame",	mamedrivers},
+		{"plus",	plusdrivers},
+	#ifndef NEOCPSMAME
+		{"hazemd",	hazemddrivers},
+	#endif /* NEOCPSMAME */
+		{0}
+	};
+	
+	int i, c;
+	if (!drv_option)
+		// default to mamedrivers
+		drv_option = drivers_table[0].name;
+	char *p = strtok (drv_option,",");
+	static char *s;
+	
+	while (p)
+	{
+		s = mame_strtrim(p);	//get individual driver name
+		if (s[0])
+		{
+			for (i=0; drivers_table[i].name; i++)
+			{
+				if (mame_stricmp(s, drivers_table[i].name) == 0)
+				{
+					int prev_drv_count, add_drv_count;
+					for (c=0; drivers && drivers[c]; c++);
+					prev_drv_count = c;
+					for (c=0; drivers_table[i].driver && drivers_table[i].driver[c]; c++);
+					add_drv_count = c;
+
+					// realloc drivers[]
+					drivers = realloc (drivers, (prev_drv_count + add_drv_count + 1) * sizeof(game_driver*));
+					// need free(drivers)?
+					if (drivers)
+						// need assert here
+						drivers [prev_drv_count + add_drv_count] = 0;	//end of drivers sign
+					// append drivers data
+					memcpy (drivers + prev_drv_count, drivers_table[i].driver, add_drv_count * sizeof(game_driver*));
+				}
+			}
+		}
+		free(s);
+		
+		p = strtok (NULL, ",");
+	}
+}
 
 //============================================================
 //  extract_options

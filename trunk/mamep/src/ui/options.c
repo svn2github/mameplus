@@ -237,6 +237,7 @@ typedef struct
 #ifdef USE_HISCORE
 	char*	hiscore_file;
 #endif /* USE_HISCORE */
+	char*	driver_config;
 //
 // CORE PALETTE OPTIONS
 //
@@ -2979,11 +2980,11 @@ static void LoadDefaultOptions(void)
 static void LoadOptions(void)
 {
 	LoadDefaultOptions();
+	assign_drivers(settings.driver_config);
 	options_load_winui_config();
 	SetLangcode(settings.langcode);
 	SetUseLangList(UseLangList());
 }
-
 
 //============================================================
 
