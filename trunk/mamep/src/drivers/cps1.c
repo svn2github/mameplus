@@ -7047,38 +7047,6 @@ ROM_START( sf2tlonb )
 	ROM_LOAD( "s92_19.bin",    0x20000, 0x20000, CRC(beade53f) SHA1(277c397dc12752719ec6b47d2224750bd1c07f79) )
 ROM_END
 
-ROM_START( sf2ceh )
-	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
-	ROM_LOAD16_WORD_SWAP( "sf2ceh.23",    0x000000, 0x80000, CRC(25dc14c8) SHA1(fc7b5de3a50d7d9ee977091bab5f82f824e386f2) )
-	ROM_LOAD16_WORD_SWAP( "sf2ceh.22",    0x080000, 0x80000, CRC(1c9dd91c) SHA1(66fbd10958d3b9f027bc3ba85c99b649cf866ab7) )
-	ROM_LOAD16_WORD_SWAP( "s92_21a.bin",  0x100000, 0x80000, CRC(925a7877) SHA1(1960dca35f0ca6f2b399a9fccfbc0132ac6425d1) )
-
-	ROM_REGION( 0x600000, REGION_GFX1, 0 )
-	ROMX_LOAD( "s92_01.bin",   0x000000, 0x80000, CRC(03b0d852) SHA1(f370f25c96ad2b94f8c53d6b7139100285a25bef) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_02.bin",   0x000002, 0x80000, CRC(840289ec) SHA1(2fb42a242f60ba7e74009b5a90eb26e035ba1e82) , ROM_GROUPWORD | ROM_SKIP(6) ) /* sf2.03 */
-	ROMX_LOAD( "s92_03.bin",   0x000004, 0x80000, CRC(cdb5f027) SHA1(4c7d944fef200fdfcaf57758b901b5511188ed2e) , ROM_GROUPWORD | ROM_SKIP(6) ) /* sf2.02 */
-	ROMX_LOAD( "s92_04.bin",   0x000006, 0x80000, CRC(e2799472) SHA1(27d3796429338d82a8de246a0ea06dd487a87768) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_05.bin",   0x200000, 0x80000, CRC(ba8a2761) SHA1(4b696d66c51611e43522bed752654314e76d33b6) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_06.bin",   0x200002, 0x80000, CRC(e584bfb5) SHA1(ebdf1f5e2638eed3a65dda82b1ed9151a355f4c9) , ROM_GROUPWORD | ROM_SKIP(6) ) /* sf2.07 */
-	ROMX_LOAD( "s92_07.bin",   0x200004, 0x80000, CRC(21e3f87d) SHA1(4a4961bb68c3a1ce15f9d393d9c03ecb2466cc29) , ROM_GROUPWORD | ROM_SKIP(6) ) /* sf2.06 */
-	ROMX_LOAD( "s92_08.bin",   0x200006, 0x80000, CRC(befc47df) SHA1(520390420da3a0271ba90b0a933e65143265e5cf) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_10.bin",   0x400000, 0x80000, CRC(960687d5) SHA1(2868c31121b1c7564e9767b9a19cdbf655c7ed1d) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_11.bin",   0x400002, 0x80000, CRC(978ecd18) SHA1(648a59706b93c84b4206a968ecbdc3e834c476f6) , ROM_GROUPWORD | ROM_SKIP(6) ) /* sf2.11 */
-	ROMX_LOAD( "s92_12.bin",   0x400004, 0x80000, CRC(d6ec9a0a) SHA1(ed6143f8737013b6ef1684e37c05e037e7a80dae) , ROM_GROUPWORD | ROM_SKIP(6) ) /* sf2.12 */
-	ROMX_LOAD( "s92_13.bin",   0x400006, 0x80000, CRC(ed2c67f6) SHA1(0083c0ffaf6fe7659ff0cf822be4346cd6e61329) , ROM_GROUPWORD | ROM_SKIP(6) )
-
-	ROM_REGION( 0x8000, REGION_GFX2, 0 )
-	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
-
-	ROM_REGION( 0x18000, REGION_CPU2, 0 ) /* 64k for the audio CPU (+banks) */
-	ROM_LOAD( "s92_09.bin",    0x00000, 0x08000, CRC(08f6b60e) SHA1(8258fcaca4ac419312531eec67079b97f471179c) )
-	ROM_CONTINUE(              0x10000, 0x08000 )
-
-	ROM_REGION( 0x40000, REGION_SOUND1, 0 )	/* Samples */
-	ROM_LOAD( "s92_18.bin",    0x00000, 0x20000, CRC(7f162009) SHA1(346bf42992b4c36c593e21901e22c87ae4a7d86d) )
-	ROM_LOAD( "s92_19.bin",    0x20000, 0x20000, CRC(beade53f) SHA1(277c397dc12752719ec6b47d2224750bd1c07f79) )
-ROM_END
-
 ROM_START( varth )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_BYTE( "vae_30b.rom",  0x00000, 0x20000, CRC(adb8d391) SHA1(5e7160509e0315eb32cc390ddd7e4ef7a4a1a70a) )
@@ -8302,41 +8270,6 @@ ROM_START( pnickj )
 	ROM_LOAD( "pnij25.bin",   0x20000, 0x20000, CRC(22109aaa) SHA1(cf21e75674d81b2daae2083d02f9f4b6e52722c6) )
 ROM_END
 
-ROM_START( pnicku )
-	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
-	ROM_LOAD16_BYTE( "pnij36.bin",   0x00000, 0x20000, CRC(2d4ffb2b) SHA1(6e49cf89a36834fd1de8b4b860fe66f3d7d67a84) )
-	ROM_LOAD16_BYTE( "pniu42.bin",   0x00001, 0x20000, CRC(22d20227) SHA1(a103c9b1f6134c529405bd258da9f601c1459c47) )
-
-	ROM_REGION( 0x200000, REGION_GFX1, 0 )
-	ROMX_LOAD( "pnij09.bin",   0x000000, 0x20000, CRC(48177b0a) SHA1(eba5de6cd9bb0c4ad76a13bddc9cdeb2e4380122) , ROM_SKIP(7) )
-	ROMX_LOAD( "pnij01.bin",   0x000001, 0x20000, CRC(01a0f311) SHA1(9bcd8716f90ccd410543ffcdc5c2916077b8d4c3) , ROM_SKIP(7) )
-	ROMX_LOAD( "pnij13.bin",   0x000002, 0x20000, CRC(406451b0) SHA1(5a7a7fecba7de8b8cf4a284b2ae7adae901623f6) , ROM_SKIP(7) )
-	ROMX_LOAD( "pnij05.bin",   0x000003, 0x20000, CRC(8c515dc0) SHA1(aa1e13cf9e7cf0458bb5c4332b1ea73034f9a874) , ROM_SKIP(7) )
-	ROMX_LOAD( "pnij26.bin",   0x000004, 0x20000, CRC(e2af981e) SHA1(3c2b28b4a4d457aa94a760dfca0181a9f050c319) , ROM_SKIP(7) )
-	ROMX_LOAD( "pnij18.bin",   0x000005, 0x20000, CRC(f17a0e56) SHA1(7c89aca230f176e12f995892f9d1bce22c57fbdf) , ROM_SKIP(7) )
-	ROMX_LOAD( "pnij38.bin",   0x000006, 0x20000, CRC(eb75bd8c) SHA1(2129460e06eb64019fc5f7eab6334ff43229b995) , ROM_SKIP(7) )
-	ROMX_LOAD( "pnij32.bin",   0x000007, 0x20000, CRC(84560bef) SHA1(9e94ae434b50ecf82781080e11d0c4741e992d0d) , ROM_SKIP(7) )
-	ROMX_LOAD( "pnij10.bin",   0x100000, 0x20000, CRC(c2acc171) SHA1(7c86db3f2acca1252d403c5f12c871d0357fa109) , ROM_SKIP(7) )
-	ROMX_LOAD( "pnij02.bin",   0x100001, 0x20000, CRC(0e21fc33) SHA1(c4a29d45c4257c8871038d3c9b13140e874db0c1) , ROM_SKIP(7) )
-	ROMX_LOAD( "pnij14.bin",   0x100002, 0x20000, CRC(7fe59b19) SHA1(a273b8b8fbfd5d31d25479a9ede09ce35e1cc873) , ROM_SKIP(7) )
-	ROMX_LOAD( "pnij06.bin",   0x100003, 0x20000, CRC(79f4bfe3) SHA1(bc17cc1c8535e3d202588893713926b6c06f92fd) , ROM_SKIP(7) )
-	ROMX_LOAD( "pnij27.bin",   0x100004, 0x20000, CRC(83d5cb0e) SHA1(44c93fa5eedcafc8dc6d88ee827c6cadc9c671f0) , ROM_SKIP(7) )
-	ROMX_LOAD( "pnij19.bin",   0x100005, 0x20000, CRC(af08b230) SHA1(a3b5b3013012efa1860699648518f8d8031c5f30) , ROM_SKIP(7) )
-	ROMX_LOAD( "pnij39.bin",   0x100006, 0x20000, CRC(70fbe579) SHA1(b5b7ed5588ecd884b20dd50bfc5385a9af03c5d8) , ROM_SKIP(7) )
-	ROMX_LOAD( "pnij33.bin",   0x100007, 0x20000, CRC(3ed2c680) SHA1(0afe84d8d89f8d45afc79f6172337e622e29a8a2) , ROM_SKIP(7) )
-
-	ROM_REGION( 0x8000, REGION_GFX2, 0 )
-	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
-
-	ROM_REGION( 0x18000, REGION_CPU2, 0 ) /* 64k for the audio CPU (+banks) */
-	ROM_LOAD( "pnij17.bin",    0x00000, 0x08000, CRC(e86f787a) SHA1(de04cbe89c655faf04afe169bfd9913049ccc4a8) )
-	ROM_CONTINUE(              0x10000, 0x08000 )
-
-	ROM_REGION( 0x40000, REGION_SOUND1, 0 )	/* Samples */
-	ROM_LOAD( "pnij24.bin",   0x00000, 0x20000, CRC(5092257d) SHA1(95dc9d10940653b2fb37baf5c1ed27145b02104e) )
-	ROM_LOAD( "pnij25.bin",   0x20000, 0x20000, CRC(22109aaa) SHA1(cf21e75674d81b2daae2083d02f9f4b6e52722c6) )
-ROM_END
-
 ROM_START( qad )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_BYTE( "qdu_36a.rom",  0x00000, 0x20000, CRC(de9c24a0) SHA1(458962943e8d97d1f4e5a15ac1c8d3bcaa32918b) )
@@ -9396,7 +9329,6 @@ GAME( 1992, sf2m6,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bo
 GAME( 1992, sf2m7,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (M7)", 0 )
 GAME( 1992, sf2m8,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (M8)", GAME_NOT_WORKING )
 GAME( 1992, sf2m13,   sf2ce,    sf2,      sf2j,     sf2m13,   ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (M13)", 0 )
-GAME( 1999, sf2ceh,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (Hispanic 990804)", 0 )
 GAME( 1992, sf2tlona, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (Slay the Dragon set 1)", 0 )
 GAME( 1992, sf2tlonb, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (Slay the Dragon set 2)", 0 )
 GAME( 1992, sf2yyc,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "hack / bootleg","Street Fighter II' - Champion Edition (YYC)", 0 )
@@ -9445,7 +9377,6 @@ GAME( 1993, mbombrd,  slammast, qsound,   slammast, slammast, ROT0,   "Capcom", 
 GAME( 1993, mbombrdj, slammast, qsound,   slammast, slammast, ROT0,   "Capcom", "Muscle Bomber Duo - Heat Up Warriors (Japan 931206)", 0 )
 
 GAME( 1994, pnickj,   0,        cps1,     pnickj,   cps1,     ROT0,   "Compile (Capcom license)", "Pnickies (Japan 940608)", 0 )
-GAME( 1994, pnicku,   pnickj,   cps1,     pnickj,   cps1,     ROT0,   "Compile (Capcom license)", "Pnickies (US 940608)", 0 )
 /* Japanese version of Pang 3 is encrypted, Euro version is not */
 GAME( 1995, pang3,    0,        pang3,    pang3,    cps1,     ROT0,   "Mitchell", "Pang! 3 (Euro 950511)", 0 )
 GAME( 1995, pang3j,   pang3,    pang3,    pang3,    pang3,    ROT0,   "Mitchell", "Pang! 3 (Japan 950511)", 0 )
