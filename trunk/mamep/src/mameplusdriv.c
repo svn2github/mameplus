@@ -59,7 +59,7 @@ const game_driver * const plusdrivers[] =
 	DRIVER( sfach )		/* 1995  Street Fighter Alpha (Publicity CPS Changer) */
 
 	DRIVER( kof96ep )	/* 0214 bootleg */
-	DRIVER( kof97pla )
+	DRIVER( kof97pla )	/* 0232 (c) 2003 bootleg */
 	DRIVER( kf2k1pls )	/* 0262 (c) 2001 bootleg */
 	DRIVER( kf2k1pa )	/* 0262 (c) 2001 bootleg */
 	DRIVER( cthd2k3a )	/* bootleg of kof2001*/
@@ -76,7 +76,6 @@ const game_driver * const plusdrivers[] =
 #ifdef USE_NEOGEO_DEPRECATED
 	/* CD to MVS Conversion */
 	DRIVER( fr2ch )
-	DRIVER( sthoopcd )
 #endif /* USE_NEOGEO_DEPRECATED */
 
 #endif	/* DRIVER_RECURSIVE */
