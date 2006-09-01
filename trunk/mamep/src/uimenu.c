@@ -1140,10 +1140,10 @@ static UINT32 menu_game_info(UINT32 state)
 
 static UINT32 menu_cheat(UINT32 state)
 {
-	int result = cheat_menu(state);
 	if ((state & ((1 << 8) - 1)) == 0)
 		return ui_menu_stack_pop();
-	return result;
+
+	return cheat_menu(state);
 }
 
 

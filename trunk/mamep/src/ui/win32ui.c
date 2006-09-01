@@ -3363,10 +3363,20 @@ static HWND InitToolbar(HWND hParent)
 	                       0,
 	                       sizeof(TBBUTTON));
 
+	RECT rect;
+	int idx;
+	int iPosX, iPosY, iHeight;
+
+	// get Edit Control position
+	idx = SendMessage(hToolBar, TB_BUTTONCOUNT, (WPARAM)0, (LPARAM)0) - 1;
+	SendMessage(hToolBar, TB_GETITEMRECT, (WPARAM)idx, (LPARAM)&rect);
+	iPosX = rect.right + 10;
+	iPosY = rect.top + 1;
+	iHeight = rect.bottom - rect.top - 2;
+
 	// create Edit Control
-	HWND hEdit= CreateWindowEx( 0L, _Unicode("Edit"), _Unicode(_UI(SEARCH_PROMPT)), WS_CHILD | WS_BORDER | WS_VISIBLE | ES_LEFT, 
-								260, 1, 200, 20, hParent, (HMENU) ID_TOOLBAR_EDIT, hInst, 0 );
-	SetParent (hEdit, hToolBar);
+	CreateWindowEx( 0L, TEXT("Edit"), _Unicode(_UI(SEARCH_PROMPT)), WS_CHILD | WS_BORDER | WS_VISIBLE | ES_LEFT, 
+					iPosX, iPosY, 200, iHeight, hToolBar, (HMENU)ID_TOOLBAR_EDIT, hInst, 0 );
 
 	return hToolBar;
 }
