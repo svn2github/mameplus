@@ -243,6 +243,12 @@ extern SHAREDOBJ_FUNC(void)  CLIB_DECL free(void *memory);
 #include "mamecore.h"
 #include "mame.h"
 
+// in drivers.c
+extern const game_driver ** drivers;
+extern const game_driver * const mamedrivers[];
+extern const game_driver * const plusdrivers[];
+extern const game_driver * const hazemddrivers[];
+
 // in datafile.c
 extern const char *lang_directory;
 extern const char *history_filename;
@@ -278,6 +284,12 @@ extern void assign_drivers(char * drv_option);
 #else /* !DONT_USE_DLL */
 #include "mamecore.h"
 #include "mame.h"
+
+// in drivers.c
+extern const game_driver ** drivers;
+extern const game_driver * const mamedrivers[];
+extern const game_driver * const plusdrivers[];
+extern const game_driver * const hazemddrivers[];
 
 // in datafile.c
 extern const char *lang_directory;
