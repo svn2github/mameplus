@@ -237,7 +237,6 @@ typedef struct
 #ifdef USE_HISCORE
 	char*	hiscore_file;
 #endif /* USE_HISCORE */
-	char*	driver_config;
 //
 // CORE PALETTE OPTIONS
 //

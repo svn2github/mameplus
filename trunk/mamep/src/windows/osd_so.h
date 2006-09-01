@@ -22,10 +22,19 @@
 #ifndef _MSC_VER
 
 #include "driver.h"
+#ifndef DRIVER_SWITCH
+extern SHAREDOBJ_DATA const game_driver * const drivers[];
+#else /* DRIVER_SWITCH */
 extern SHAREDOBJ_DATA const game_driver ** drivers;
 extern SHAREDOBJ_DATA const game_driver * const mamedrivers[];
 extern SHAREDOBJ_DATA const game_driver * const plusdrivers[];
+extern SHAREDOBJ_DATA const game_driver * const homebrewdrivers[];
+extern SHAREDOBJ_DATA const game_driver * const neoddrivers[];
+#ifndef NEOCPSMAME
+extern SHAREDOBJ_DATA const game_driver * const noncpudrivers[];
 extern SHAREDOBJ_DATA const game_driver * const hazemddrivers[];
+#endif /* NEOCPSMAME */
+#endif /* DRIVER_SWITCH */
 extern SHAREDOBJ_FUNC(const game_driver *) driver_get_clone(const game_driver *driver);
 
 #include "audit.h"
@@ -82,6 +91,7 @@ extern SHAREDOBJ_FUNC(int)    mame_validitychecks(int game);
 extern SHAREDOBJ_FUNC(int)		mame_stricmp(const char *s1, const char *s2);
 extern SHAREDOBJ_FUNC(int)		mame_strnicmp(const char *s1, const char *s2, size_t n);
 extern SHAREDOBJ_FUNC(char *)	mame_strdup(const char *str);
+extern SHAREDOBJ_FUNC(char *)	mame_strtrim(const char *str);
 
 #include "osdepend.h"
 extern SHAREDOBJ_FUNC(void) logerror(const char *text,...);
@@ -228,7 +238,9 @@ extern SHAREDOBJ_FUNC(void)    set_pathlist(int file_type, const char *new_rawpa
 
 // in windows/config.c
 extern SHAREDOBJ_DATA const options_entry windows_opts[];
+#ifdef DRIVER_SWITCH
 extern SHAREDOBJ_FUNC(void) assign_drivers(char * drv_option);
+#endif /* DRIVER_SWITCH */
 
 #ifdef MALLOC_DEBUG
 // in windows/winalloc.c
@@ -244,10 +256,17 @@ extern SHAREDOBJ_FUNC(void)  CLIB_DECL free(void *memory);
 #include "mame.h"
 
 // in drivers.c
+#ifndef DRIVER_SWITCH
 extern const game_driver ** drivers;
 extern const game_driver * const mamedrivers[];
 extern const game_driver * const plusdrivers[];
+extern const game_driver * const homebrewdrivers[];
+extern const game_driver * const neoddrivers[];
+#ifndef NEOCPSMAME
+extern const game_driver * const noncpudrivers[];
 extern const game_driver * const hazemddrivers[];
+#endif /* NEOCPSMAME */
+#endif /* DRIVER_SWITCH */
 
 // in datafile.c
 extern const char *lang_directory;
@@ -277,7 +296,9 @@ extern void set_pathlist(int file_type, const char *new_rawpath);
 // in windows/config.c
 #include "../options.h"
 extern const options_entry windows_opts[];
+#ifdef DRIVER_SWITCH
 extern void assign_drivers(char * drv_option);
+#endif /* DRIVER_SWITCH */
 
 #endif /* _MSC_VER */
 
@@ -286,10 +307,17 @@ extern void assign_drivers(char * drv_option);
 #include "mame.h"
 
 // in drivers.c
+#ifndef DRIVER_SWITCH
 extern const game_driver ** drivers;
 extern const game_driver * const mamedrivers[];
 extern const game_driver * const plusdrivers[];
+extern const game_driver * const homebrewdrivers[];
+extern const game_driver * const neoddrivers[];
+#ifndef NEOCPSMAME
+extern const game_driver * const noncpudrivers[];
 extern const game_driver * const hazemddrivers[];
+#endif /* NEOCPSMAME */
+#endif /* DRIVER_SWITCH */
 
 // in datafile.c
 extern const char *lang_directory;
@@ -323,7 +351,9 @@ extern int (*osd_display_loading_rom_message_)(const char *name, rom_load_data *
 #include "options.h"
 #endif /* _MSC_VER */
 extern const options_entry windows_opts[];
+#ifdef DRIVER_SWITCH
 extern void assign_drivers(char * drv_option);
+#endif /* DRIVER_SWITCH */
 
 #endif /* !DONT_USE_DLL */
 

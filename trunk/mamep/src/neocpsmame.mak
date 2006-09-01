@@ -16,8 +16,12 @@
 # list of drivers
 #-------------------------------------------------
 
-COREOBJS += $(OBJ)/mamedriv.o \
-            $(OBJ)/plusdriv.o
+COREOBJS += $(OBJ)/mamedriv.o
+ifneq ($(USE_DRIVER_SWITCH),)
+COREOBJS += $(OBJ)/mameplusdriv.o \
+            $(OBJ)/mamehbdriv.o \
+            $(OBJ)/mameneoddriv.o
+endif
 
 
 #-------------------------------------------------

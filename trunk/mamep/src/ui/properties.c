@@ -423,6 +423,25 @@ static struct ComboBoxDevices
 
 #define NUMDEVICES (sizeof(g_ComboBoxDevice) / sizeof(g_ComboBoxDevice[0]))
 
+#ifdef DRIVER_SWITCH
+static const struct
+{
+	const char *name;
+	const UINT ctrl;
+} drivers_table[] =
+{
+	{"mame",	IDC_DRV_MAME},
+	{"plus",	IDC_DRV_PLUS},
+	{"homebrew",IDC_DRV_HOMEBREW},
+	{"neod",	IDC_DRV_NEOD},
+#ifndef NEOCPSMAME
+	{"noncpu",	IDC_DRV_NONCPU},
+	{"hazemd",	IDC_DRV_HAZEMD},
+#endif /* NEOCPSMAME */
+	{0}
+};
+#endif /* DRIVER_SWITCH */
+
 /***************************************************************
  * Public functions
  ***************************************************************/
@@ -2203,6 +2222,13 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 		else
 			EnableWindow(GetDlgItem(hDlg, IDC_USE_DEFAULT), (g_bUseDefaults) ? FALSE : TRUE);
 
+#ifdef DRIVER_SWITCH
+		int i;
+		for (i=0; drivers_table[i].name; i++)
+			ShowWindow(GetDlgItem(hDlg, drivers_table[i].ctrl), IS_GLOBAL ? SW_SHOW : SW_HIDE);
+		ShowWindow(GetDlgItem(hDlg, IDC_DRV_TEXT), IS_GLOBAL ? SW_SHOW : SW_HIDE);
+#endif /* DRIVER_SWITCH */
+
 		EnableWindow(GetDlgItem(hDlg, IDC_PROP_RESET), g_bReset);
 		ShowWindow(hDlg, SW_SHOW);
 
@@ -2252,7 +2278,7 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 /* Read controls that are not handled in the DataMap */
 static void PropToOptions(HWND hWnd, options_type *o)
 {
-	HWND hCtrl;
+	HWND hCtrl = NULL;
 	HWND hCtrl2;
 	int  nIndex;
 
@@ -2261,6 +2287,30 @@ static void PropToOptions(HWND hWnd, options_type *o)
 	else
 	if (IS_FOLDER)
 		SetFolderUsesDefaults(g_pFolder,g_bUseDefaults);
+
+#ifdef DRIVER_SWITCH
+	if (IS_GLOBAL)
+	{
+		char buffer[200];
+		buffer[0] = '\0';
+		int i;
+		for (i=0; drivers_table[i].name; i++)
+		{
+			hCtrl = GetDlgItem(hWnd, drivers_table[i].ctrl);
+			if (hCtrl && Button_GetCheck(hCtrl))
+			{
+				if (buffer[0])
+					strcat(buffer, ",");
+				strcat(buffer, drivers_table[i].name);
+			}
+		}
+		if (hCtrl)
+		{
+			FreeIfAllocated(&o->driver_config);
+			o->driver_config = strdup(buffer);
+		}
+	}
+#endif /* DRIVER_SWITCH */
 
 	/* resolution size */
 	hCtrl = GetDlgItem(hWnd, IDC_SIZES);
@@ -2418,6 +2468,27 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 	int  r = 0;
 
 	g_bInternalSet = TRUE;
+
+#ifdef DRIVER_SWITCH
+	int i;
+	for (i=0; drivers_table[i].name; i++)
+	{
+		strcpy (buf, o->driver_config);
+		char *p = strtok (buf, ",");
+		char *s;
+		Button_SetCheck(GetDlgItem(hWnd, drivers_table[i].ctrl), FALSE);
+		while (p)
+		{
+			s = mame_strtrim(p);
+			if (s[0] && !mame_stricmp(s, drivers_table[i].name))
+			{
+				Button_SetCheck(GetDlgItem(hWnd, drivers_table[i].ctrl), TRUE);
+			}
+			free(s);
+			p = strtok (NULL, ",");
+		}
+	}
+#endif /* DRIVER_SWITCH */
 
 	/* video */
 
@@ -3781,6 +3852,11 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_HIGH_PRIORITY, DM_INT,  CT_SLIDER,   &g_nPriorityIndex,         DM_INT,  &pGameOpts->priority,      0, 0, AssignPriority);
 	DataMapAdd(IDC_HIGH_PRIORITYTXT,DM_NONE,CT_NONE,    NULL,                      DM_INT,  &pGameOpts->priority,      0, 0, 0);
 	DataMapAdd(IDC_SKIP_GAME_INFO,DM_BOOL,CT_BUTTON,    &pGameOpts->skip_gameinfo, DM_BOOL, &pGameOpts->skip_gameinfo, 0, 0, 0);
+#ifdef DRIVER_SWITCH
+	int i;
+	for (i=0; drivers_table[i].name; i++)
+		DataMapAdd(drivers_table[i].ctrl,      DM_NONE, CT_NONE,     &pGameOpts->driver_config, DM_STRING,&pGameOpts->driver_config,0, 0, 0);
+#endif /* DRIVER_SWITCH */
 	DataMapAdd(IDC_BIOS,          DM_INT,  CT_COMBOBOX, &g_nBiosIndex,             DM_STRING, &pGameOpts->bios,        0, 0, AssignBios);
 	DataMapAdd(IDC_ENABLE_AUTOSAVE, DM_BOOL, CT_BUTTON, &pGameOpts->autosave,      DM_BOOL, &pGameOpts->autosave,      0, 0, 0);
 	DataMapAdd(IDC_CONFIRM_QUIT,  DM_BOOL, CT_BUTTON,   &pGameOpts->confirm_quit,  DM_BOOL, &pGameOpts->confirm_quit,  0, 0, 0);

@@ -349,6 +349,10 @@ ifneq ($(USE_SHOW_INPUT_LOG),)
     DEFS += -DUSE_SHOW_INPUT_LOG
 endif
 
+ifneq ($(USE_DRIVER_SWITCH),)
+    DEFS += -DDRIVER_SWITCH
+endif
+
 ifneq ($(NEOCPSMAME),)
     DEFS += -DNEOCPSMAME
 endif

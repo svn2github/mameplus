@@ -30,7 +30,6 @@ START_OPT_FUNC_CORE
 #ifdef USE_HISCORE
 	DEFINE_OPT(string,               hiscore_file);
 #endif /* USE_HISCORE */
-	DEFINE_OPT(string,               driver_config);
 
 #ifdef UI_COLOR_DISPLAY
 // CORE PALETTE OPTIONS
@@ -69,6 +68,9 @@ START_OPT_FUNC_DRIVER
 // CONFIGURATION OPTIONS
 	DEFINE_OPT(bool,                 readconfig)
 	DEFINE_OPT(bool,                 skip_gameinfo)
+#ifdef DRIVER_SWITCH
+	DEFINE_OPT(string_allow_null,    driver_config)
+#endif /* DRIVER_SWITCH */
 // MISC OPTIONS
 	DEFINE_OPT(string,               bios)
 	DEFINE_OPT(bool,                 cheat)

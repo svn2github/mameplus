@@ -86,7 +86,9 @@ static void parse_ini_file(const char *name);
 static void execute_simple_commands(void);
 static void execute_commands(const char *argv0);
 static void display_help(void);
+#ifdef DRIVER_SWITCH
 void assign_drivers(char * drv_option);
+#endif /* DRIVER_SWITCH */
 static void extract_options(const game_driver *driver, machine_config *drv);
 static void setup_language(void);
 static void setup_playback(const char *filename, const game_driver *driver);
@@ -138,7 +140,9 @@ const options_entry windows_opts[] =
 	{ NULL,                       NULL,       OPTION_HEADER,     "CONFIGURATION OPTIONS" },
 	{ "readconfig;rc",            "1",        OPTION_BOOLEAN,    "enable loading of configuration files" },
 	{ "skip_gameinfo",            "0",        OPTION_BOOLEAN,    "skip displaying the information screen at startup" },
-	{ "driver_config",            "mame, plus", 0,               ""},
+#ifdef DRIVER_SWITCH
+	{ "driver_config",            "mame,plus",0,                 "switch drivers"},
+#endif /* DRIVER_SWITCH */
 
 	// file and directory options
 	{ NULL,                       NULL,       OPTION_HEADER,     "PATH AND DIRECTORY OPTIONS" },
@@ -549,8 +553,9 @@ int cli_frontend_init(int argc, char **argv)
 	parse_ini_file("debug.ini");
 #endif
 
+#ifdef DRIVER_SWITCH
 	assign_drivers(options_get_string("driver_config", FALSE));
-
+#endif /* DRIVER_SWITCH */
 	// find out what game we might be referring to
 	gamename = options_get_string("", FALSE);
 	if (gamename != NULL)
@@ -673,6 +678,10 @@ void cli_frontend_exit(void)
 	if (options.language_file != NULL)
 		mame_fclose(options.language_file);
 	options.language_file = NULL;
+
+#ifdef DRIVER_SWITCH
+	free(drivers);
+#endif /* DRIVER_SWITCH */
 
 	// free the options that we added previously
 	options_free_entries();
@@ -837,7 +846,7 @@ static void display_help(void)
 #endif
 }
 
-
+#ifdef DRIVER_SWITCH
 void assign_drivers(char * drv_option)
 {
 	static const struct
@@ -848,7 +857,10 @@ void assign_drivers(char * drv_option)
 	{
 		{"mame",	mamedrivers},
 		{"plus",	plusdrivers},
+	    {"homebrew",homebrewdrivers},
+	    {"neod",	neoddrivers},
 	#ifndef NEOCPSMAME
+	    {"noncpu",	noncpudrivers},
 		{"hazemd",	hazemddrivers},
 	#endif /* NEOCPSMAME */
 		{0}
@@ -878,12 +890,14 @@ void assign_drivers(char * drv_option)
 
 					// realloc drivers[]
 					drivers = realloc (drivers, (prev_drv_count + add_drv_count + 1) * sizeof(game_driver*));
-					// need free(drivers)?
 					if (drivers)
+					{
 						// need assert here
-						drivers [prev_drv_count + add_drv_count] = 0;	//end of drivers sign
-					// append drivers data
-					memcpy (drivers + prev_drv_count, drivers_table[i].driver, add_drv_count * sizeof(game_driver*));
+						// append end of drivers sign
+						drivers [prev_drv_count + add_drv_count] = 0;
+						// append drivers data
+						memcpy (drivers + prev_drv_count, drivers_table[i].driver, add_drv_count * sizeof(game_driver*));
+					}
 				}
 			}
 		}
@@ -892,6 +906,7 @@ void assign_drivers(char * drv_option)
 		p = strtok (NULL, ",");
 	}
 }
+#endif /* DRIVER_SWITCH */
 
 //============================================================
 //  extract_options

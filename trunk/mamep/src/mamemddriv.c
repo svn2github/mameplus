@@ -23,14 +23,14 @@
 
 /* step 1: declare all external references */
 #define DRIVER(NAME) extern game_driver driver_##NAME;
-#include "hazemddriv.c"
+#include "mamemddriv.c"
 
 /* step 2: define the drivers[] array */
 #undef DRIVER
 #define DRIVER(NAME) &driver_##NAME,
 const game_driver * const hazemddrivers[] =
 {
-#include "hazemddriv.c"
+#include "mamemddriv.c"
 	0	/* end of array */
 };
 

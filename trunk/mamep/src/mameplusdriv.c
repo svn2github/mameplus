@@ -23,22 +23,18 @@
 
 /* step 1: declare all external references */
 #define DRIVER(NAME) extern game_driver driver_##NAME;
-#include "plusdriv.c"
+#include "mameplusdriv.c"
 
 /* step 2: define the drivers[] array */
 #undef DRIVER
 #define DRIVER(NAME) &driver_##NAME,
 const game_driver * const plusdrivers[] =
 {
-#include "plusdriv.c"
+#include "mameplusdriv.c"
 	0	/* end of array */
 };
 
 #else	/* DRIVER_RECURSIVE */
-
-#ifndef NEOCPSMAME
-	DRIVER( monaco )	/* (c) 1979 SEGA */
-#endif /* NEOCPSMAME */
 
 	DRIVER( knightsh )	/* hack */
 	DRIVER( knightsb )	/* bootleg */
@@ -62,10 +58,6 @@ const game_driver * const plusdrivers[] =
 	DRIVER( sfzch )		/* 1995  Street Fighter Zero (CPS Changer) */
 	DRIVER( sfach )		/* 1995  Street Fighter Alpha (Publicity CPS Changer) */
 
-#ifndef NEOCPSMAME
-	DRIVER( vantris )	/* (c) 1998 Norbert Kehrer */
-#endif /* NEOCPSMAME */
-
 	DRIVER( kof96ep )	/* 0214 bootleg */
 	DRIVER( kof97pla )
 	DRIVER( kf2k1pls )	/* 0262 (c) 2001 bootleg */
@@ -81,56 +73,10 @@ const game_driver * const plusdrivers[] =
 	/* CD to MVS Conversion */
 	DRIVER( zintrkcd )	/* 0211 hack - CD to MVS Conversion by Razoola */
 
-	/* homebrew */
-	DRIVER( frogfest )	/* 0202 (c) 2005 Rastersoft */
-	DRIVER( columnsn )
-	DRIVER( poknight )
-	DRIVER( neodemo )
-	DRIVER( neo2500 )
-	DRIVER( syscheck )	/* FFFF (c) 2004 Blastar */
-	DRIVER( neonopon )	/* xxxx (c) 2002 Blastar */
-	DRIVER( neopong )	/* xxxx (c) 2002 Neodev */
-	DRIVER( npong10 )	/* xxxx (c) 2002 Neodev */
-	DRIVER( ngem2k )
-	DRIVER( cnbe )
-	DRIVER( ltorb1 )
-	DRIVER( beast )
-
-
 #ifdef USE_NEOGEO_DEPRECATED
 	/* CD to MVS Conversion */
 	DRIVER( fr2ch )
 	DRIVER( sthoopcd )
-	/* decrypted junk */
-	DRIVER( zupapad )	/* 0070 Zupapa - released in 2001, 1994 prototype probably exists */
-	DRIVER( kof99d )	/* 0251 (c) 1999 SNK */
-	DRIVER( ganryud )	/* 0252 (c) 1999 Visco */
-	DRIVER( garoud )	/* 0253 (c) 1999 SNK */
-	DRIVER( s1945pd )	/* 0254 (c) 1999 Psikyo */
-	DRIVER( preisl2d )	/* 0255 (c) 1999 Yumekobo */
-	DRIVER( mslug3d )	/* 0256 (c) 2000 SNK */
-	DRIVER( kof2000d )	/* 0257 (c) 2000 SNK */
-	DRIVER( nitdd )		/* 0260 (c) 2000 Eleven / Gavaking */
-	DRIVER( sengok3d )	/* 0261 (c) 2001 SNK */
-	DRIVER( kof2001d )	/* 0262 (c) 2001 Eolith / SNK */
-	DRIVER( mslug4d )	/* 0263 (c) 2002 Mega Enterprise */
-	DRIVER( rotdd )		/* 0264 (c) 2002 Evoga */
-	DRIVER( kof2002d )	/* 0265 (c) 2002 Eolith / Playmore */
-	DRIVER( matrimd )	/* 0266 (c) 2002 Atlus */
-	DRIVER( ct2k3ad )	/* Bootleg */
-	DRIVER( cthd2k3d )	/* Bootleg */
-	DRIVER( kof10thd )	/* Bootleg */
-	DRIVER( kof2003d )	/* 0271 (c) 2003 Playmore */
-	DRIVER( mslug5d )	/* 0268 (c) 2003 Playmore */
-	DRIVER( samsho5d )	/* 0270 (c) 2003 Playmore */
-	DRIVER( samsh5sd )	/* 0272 (c) 2003 Playmore */
-	DRIVER( lans2k4d )	/* Bootleg */
-	DRIVER( svcd )	/* 0269 (c) 2003 Playmore / Capcom */
-	DRIVER( jckeygpd )
-	DRIVER( kf2k3pcd )	/* 0271 (c) 2003 Playmore - JAMMA PCB */
-	DRIVER( kogd )	/* Bootleg */
-	DRIVER( pnyaad )	/* 0267 (c) 2003 Aiky / Taito */
-	DRIVER( bangbedp )	/* 0259 (c) 2000 Visco */
 #endif /* USE_NEOGEO_DEPRECATED */
 
 #endif	/* DRIVER_RECURSIVE */

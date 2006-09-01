@@ -69,6 +69,9 @@ typedef struct
 //
 	BOOL	readconfig;
 	BOOL	skip_gameinfo;
+#ifdef DRIVER_SWITCH
+	char*	driver_config;
+#endif /* DRIVER_SWITCH */
 //
 // MISC OPTIONS
 //

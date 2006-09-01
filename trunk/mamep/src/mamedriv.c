@@ -28,8 +28,12 @@
 /* step 2: define the drivers[] array */
 #undef DRIVER
 #define DRIVER(NAME) &driver_##NAME,
+#ifndef DRIVER_SWITCH
+const game_driver * const drivers[] =
+#else /* DRIVER_SWITCH */
 const game_driver ** drivers = NULL;
 const game_driver * const mamedrivers[] =
+#endif /* DRIVER_SWITCH */
 {
 #include "mamedriv.c"
 	0	/* end of array */

@@ -1978,11 +1978,12 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	init_resource_tracking();
 	begin_resource_tracking();
 
+#ifdef DRIVER_SWITCH
 	options_free_entries();
 	options_add_entries(windows_opts);
 	set_pathlist(FILETYPE_INI, ".");
 
-	mame_file * file = mame_fopen("mame.ini", NULL, FILETYPE_INI, 0);
+	mame_file * file = mame_fopen(CONFIGNAME ".ini", NULL, FILETYPE_INI, 0);
 	if (file)
 	{
 		options_parse_ini_file(file);
@@ -1990,6 +1991,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	}
 
 	assign_drivers(options_get_string("driver_config", FALSE));
+#endif /* DRIVER_SWITCH */
 
 	// Count the number of games
 	game_count = 0;
@@ -2431,6 +2433,10 @@ static void Win32UI_exit()
 	OptionsExit();
 
 	HelpExit();
+
+#ifdef DRIVER_SWITCH
+	free(drivers);
+#endif /* DRIVER_SWITCH */
 
 	end_resource_tracking();
 	exit_resource_tracking();

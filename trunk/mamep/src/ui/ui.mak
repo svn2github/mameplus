@@ -180,8 +180,16 @@ ifneq ($(USE_VOLUME_AUTO_ADJUST),)
 RCDEFS += -DUSE_VOLUME_AUTO_ADJUST
 endif
 
+ifneq ($(USE_DRIVER_SWITCH),)
+RCDEFS += -DDRIVER_SWITCH
+endif
+
 ifneq ($(HAZEMD),)
 RCDEFS += -DHAZEMD
+endif
+
+ifneq ($(NEOCPSMAME),)
+RCDEFS += -DNEOCPSMAME
 endif
 
 #####################################################################
