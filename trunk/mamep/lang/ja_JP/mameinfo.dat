@@ -2,7 +2,7 @@
 #                                        #
 #     Mameinfo.dat日本語版 v0.108u1      #
 #                                        #
-#            August 25, 2006             #
+#            August 30, 2006             #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,10 +12,84 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：796 翻訳済：779
-# 追加項目：326 合計：1122
+# Tester報告：799 翻訳済：784
+# 追加項目：326 合計：1125
 #
 
+
+$info=attckufo
+$mame
+[バグ]
+
+- -nosoundで起動するとMAMEが次のエラーを出してクラッシュする:
+
+Attempted to malloc zero bytes (src/sndhrdw/attckufo.c:252) attckufo0108u1red, Firewave
+
+$end
+
+$info=deadang
+$mame
+[バグ]
+
+- 以下のエラーが出て起動しない：
+
+Fatal error: Video buffers spriteram but spriteram_size is 0 (src/video.c:380) deadang0108u1red, Firewave / Mamesick
+
+$end
+
+$info=sadari
+$mame
+[バグ]
+
+- 以下のエラーが出て起動しない：
+
+Fatal error: Video buffers spriteram but spriteram_size is 0 (src/video.c:380) dooyong0108u1red, Firewave
+
+$end
+
+$info=primella
+$mame
+[バグ]
+
+- 以下のエラーが出て起動しない：
+
+Fatal error: Video buffers spriteram but spriteram_size is 0 (src/video.c:380) dooyong0108u1red, Firewave
+
+$end
+
+$info=gundl94
+$mame
+[バグ]
+
+- 以下のエラーが出て起動しない：
+
+Fatal error: Video buffers spriteram but spriteram_size is 0 (src/video.c:380) dooyong0108u1red, Firewave
+
+$end
+
+$info=missile
+$mame
+[バグ]
+
+- ステートをロードしようとするとMAMEが固まる。 loadstate0108u1red, Furewave
+
+$end
+
+$info=cloud9
+$mame
+[バグ]
+
+- ステートをロードしようとするとMAMEが固まる。 loadstate0108u1red, Furewave
+
+$end
+
+$info=ccastles
+$mame
+[バグ]
+
+- ステートをロードしようとするとMAMEが固まる。 loadstate0108u1red, Furewave
+
+$end
 
 $info=gwarrior
 $mame
@@ -26,7 +100,7 @@ $mame
 
 [バグ]
 
-- ゲーム開始時にキャラクタを選択すると、それ以降サウンドが固まってしまう。 gwarrior0108u1yel,  NewRisingSun
+- ゲーム開始時にキャラクタを選択すると、それ以降サウンドが固まってしまう。 gwarrior0108u1yel, NewRisingSun
 
 $end
 
@@ -576,6 +650,14 @@ $mame
 
 $end
 
+$info=dynwar
+$mame
+[バグ]
+
+- 海外版も日本版のグラフィックROMを使用しているが、違うものではないだろうか。Guru氏の情報にもダンプ済みとはなっていない。表示不具合はスコア集計画面でよく起きている。 dynwar067gre, big_lenny_c / Smitdogg
+
+$end
+
 $info=ghouls
 $mame
 [バグ]
@@ -589,7 +671,7 @@ $mame
 [バグ]
 
 - エンディングのテキストが他のグラフィックに隠れてしまう。
-「Captain Hog」で試すと確実に起こる。 pang337b15gre, Gickpaw / Pi
+「Captain Hog」で試すと確実に起こる。 pang337b15gre, Gickpaw / Pi / robiza
 
 $end
 
@@ -1340,14 +1422,6 @@ $mame
 わかりやすいのは、場札8枚のうち、下段右端の2枚が毎回牡丹になるところ。
 また、牡丹はプレイしている間、手札としては一度も配られてこなかった。
 さらに、場札の上段左から2枚目は必ず「雨」。2枚目の引き札は、必ず「菊」になる。 hanaawas37b6gre, Fujix (まるち/　きむ)
-
-$end
-
-$info=harddriv
-$mame
-[バグ]
-
-- リセット後にサウンドが出なくなる。 harddriv070u1yel, Smitdogg / BarnacleEd
 
 $end
 
@@ -4465,19 +4539,6 @@ $mame
 
 $end
 
-$info=toobin
-$mame
-[情報]
-
-- デモモードでのサウンドはEEPROMで制御されているので、テストモードで設定する。(Aaron Giles)
-
-
-[バグ]
-
-- リセットすると起動できない。MAME0.69aから。 toobin081u7red, M.A.S.H.
-
-$end
-
 $info=topspeed
 $mame
 [バグ]
@@ -4504,6 +4565,9 @@ $mame
 - 新しくゲームを始めて、 
 2番目の敵の軍団（ピンク色の逆三角のやつ）が画面の外へ飛んでいくと、
 左右関係なく画面左側にスプライトが残ってしまう。 m66037b15gre, Gmitra / DCisTHEbest
+
+
+- 0.79からサウンドが出ていない。 m660_0108yel, WhosAsking / Robbbert
 
 $end
 
@@ -7807,6 +7871,14 @@ $mame
 [情報]
 
 - テストモードに入るには起動中に1Pスタートを押し続ける。
+
+$end
+
+$info=toobin
+$mame
+[情報]
+
+- デモモードでのサウンドはEEPROMで制御されているので、テストモードで設定する。(Aaron Giles)
 
 $end
 
