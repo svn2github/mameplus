@@ -1978,10 +1978,18 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	init_resource_tracking();
 	begin_resource_tracking();
 
-	dprintf("about to init options");
-	// fixme: options handling need update, assign_drivers() before using drivers[]
-	OptionsInit();
-	dprintf("options loaded");
+	options_free_entries();
+	options_add_entries(windows_opts);
+	set_pathlist(FILETYPE_INI, ".");
+
+	mame_file * file = mame_fopen("mame.ini", NULL, FILETYPE_INI, 0);
+	if (file)
+	{
+		options_parse_ini_file(file);
+		mame_fclose(file);
+	}
+
+	assign_drivers(options_get_string("driver_config", FALSE));
 
 	// Count the number of games
 	game_count = 0;
@@ -2045,6 +2053,9 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 			return FALSE;
 	}
 
+	dprintf("about to init options");
+	OptionsInit();
+	dprintf("options loaded");
 
 #ifdef USE_SHOW_SPLASH_SCREEN
 	// Display splash screen window

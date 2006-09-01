@@ -2980,7 +2980,6 @@ static void LoadDefaultOptions(void)
 static void LoadOptions(void)
 {
 	LoadDefaultOptions();
-	assign_drivers(settings.driver_config);
 	options_load_winui_config();
 	SetLangcode(settings.langcode);
 	SetUseLangList(UseLangList());
