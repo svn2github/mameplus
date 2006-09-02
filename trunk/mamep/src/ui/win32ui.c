@@ -1990,7 +1990,9 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 		mame_fclose(file);
 	}
 
-	assign_drivers(options_get_string("driver_config", FALSE));
+	assign_drivers();
+
+	options_free_entries();
 #endif /* DRIVER_SWITCH */
 
 	// Count the number of games

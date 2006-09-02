@@ -10087,6 +10087,7 @@ GAMEB( 2001, kof2001d, kof2001,  neogeo, neogeo, neogeo,  gfxdec52, ROT0, "Eolit
 GAMEB( 2002, kof2002d, kof2002,	 neogeo, neogeo, neogeo,  kof2002d, ROT0, "Eolith / Playmore", "The King of Fighters 2002 (decrypted C)", 0 )
 GAMEB( 2000, nitdd,    nitd,     neogeo, neogeo, neogeo,  gfxdec42, ROT0, "Eleven / Gavaking", "Nightmare in the Dark (decrypted C)", 0 )
 GAMEB( 1999, s1945pd,  s1945p,   neogeo, neogeo, neogeo,  gfxdec42, ROT0, "Psikyo", "Strikers 1945 Plus (decrypted C)", 0 )
+GAMEB( 1999, preisl2d, preisle2, neogeo, neogeo, neogeo,  gfxdec42, ROT0, "Yumekobo", "Prehistoric Isle 2 (decrypted C)", 0 )
 GAMEB( 1999, ganryud,  ganryu,   neogeo, neogeo, neogeo,  gfxdec42, ROT0, "Visco", "Ganryu / Musashi Ganryuki (decrypted C)", 0 )
 GAMEB( 2002, rotdd,    rotd,     neogeo, neogeo, neogeo,  rotdd,    ROT0, "Evoga / Playmore", "Rage of the Dragons (decrypted C)", 0 )
 GAMEB( 2003, ct2k3ad,  kof2001,  neogeo, neogeo, neogeo,  neogeo,   ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg / set 2 fully decrypted)", 0 )

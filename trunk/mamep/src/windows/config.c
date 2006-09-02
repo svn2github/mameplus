@@ -87,7 +87,7 @@ static void execute_simple_commands(void);
 static void execute_commands(const char *argv0);
 static void display_help(void);
 #ifdef DRIVER_SWITCH
-void assign_drivers(char * drv_option);
+void assign_drivers(void);
 #endif /* DRIVER_SWITCH */
 static void extract_options(const game_driver *driver, machine_config *drv);
 static void setup_language(void);
@@ -554,8 +554,9 @@ int cli_frontend_init(int argc, char **argv)
 #endif
 
 #ifdef DRIVER_SWITCH
-	assign_drivers(options_get_string("driver_config", FALSE));
+	assign_drivers();
 #endif /* DRIVER_SWITCH */
+
 	// find out what game we might be referring to
 	gamename = options_get_string("", FALSE);
 	if (gamename != NULL)
@@ -847,64 +848,88 @@ static void display_help(void)
 }
 
 #ifdef DRIVER_SWITCH
-void assign_drivers(char * drv_option)
+void assign_drivers(void)
 {
 	static const struct
 	{
 		const char *name;
-		const game_driver** driver;
+		const game_driver * const *driver;
 	} drivers_table[] =
 	{
-		{"mame",	mamedrivers},
-		{"plus",	plusdrivers},
-	    {"homebrew",homebrewdrivers},
-	    {"neod",	neoddrivers},
+		{ "mame",	mamedrivers },
+		{ "plus",	plusdrivers },
+		{ "homebrew",	homebrewdrivers },
+		{ "neod",	neoddrivers },
 	#ifndef NEOCPSMAME
-	    {"noncpu",	noncpudrivers},
-		{"hazemd",	hazemddrivers},
+		{ "noncpu",	noncpudrivers },
+		{ "hazemd",	hazemddrivers },
 	#endif /* NEOCPSMAME */
-		{0}
+		{ NULL }
 	};
-	
-	int i, c;
-	if (!drv_option)
-		// default to mamedrivers
-		drv_option = drivers_table[0].name;
-	char *p = strtok (drv_option,",");
-	static char *s;
-	
-	while (p)
-	{
-		s = mame_strtrim(p);	//get individual driver name
-		if (s[0])
-		{
-			for (i=0; drivers_table[i].name; i++)
-			{
-				if (mame_stricmp(s, drivers_table[i].name) == 0)
-				{
-					int prev_drv_count, add_drv_count;
-					for (c=0; drivers && drivers[c]; c++);
-					prev_drv_count = c;
-					for (c=0; drivers_table[i].driver && drivers_table[i].driver[c]; c++);
-					add_drv_count = c;
 
-					// realloc drivers[]
-					drivers = realloc (drivers, (prev_drv_count + add_drv_count + 1) * sizeof(game_driver*));
-					if (drivers)
-					{
-						// need assert here
-						// append end of drivers sign
-						drivers [prev_drv_count + add_drv_count] = 0;
-						// append drivers data
-						memcpy (drivers + prev_drv_count, drivers_table[i].driver, add_drv_count * sizeof(game_driver*));
-					}
+	const char *drv_option = options_get_string("driver_config", FALSE);
+	UINT32 enabled = 0;
+	int i, n;
+
+	if (drv_option)
+	{
+		char *temp = mame_strdup(drv_option);
+		if (temp)
+		{
+			char *p = strtok(temp, ",");
+
+			while (p)
+			{
+				char *s = mame_strtrim(p);	//get individual driver name
+				if (s[0])
+				{
+					for (i = 0; drivers_table[i].name; i++)
+						if (mame_stricmp(s, drivers_table[i].name) == 0)
+						{
+							enabled |= 1 << i;
+							break;
+						}
+
+					if (!drivers_table[i].name)
+						fprintf(stderr, _WINDOWS("Illegal value for %s = %s\n"), "driver_config", s);
 				}
+				free(s);
+
+				p = strtok(NULL, ",");
 			}
+
+			free(temp);
 		}
-		free(s);
-		
-		p = strtok (NULL, ",");
 	}
+
+	if (enabled == 0)
+		enabled = 1;	// default to mamedrivers
+
+	n = 0;
+	for (i = 0; drivers_table[i].name; i++)
+		if (enabled & (1 << i))
+		{
+			int c;
+
+			for (c = 0; drivers_table[i].driver[c]; c++)
+				n++;
+		}
+
+	if (drivers)
+		free(drivers);
+	drivers = malloc((n + 1) * sizeof (game_driver*));
+
+	n = 0;
+	for (i = 0; drivers_table[i].name; i++)
+		if (enabled & (1 << i))
+		{
+			int c;
+
+			for (c = 0; drivers_table[i].driver[c]; c++)
+				drivers[n++] = drivers_table[i].driver[c];
+		}
+
+	drivers[n] = NULL;
 }
 #endif /* DRIVER_SWITCH */
 
