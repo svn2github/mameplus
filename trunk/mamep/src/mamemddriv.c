@@ -28,7 +28,11 @@
 /* step 2: define the drivers[] array */
 #undef DRIVER
 #define DRIVER(NAME) &driver_##NAME,
+#ifdef HAZEMD
+const game_driver * const drivers[] =
+#else /*HAZEMD */
 const game_driver * const hazemddrivers[] =
+#endif /*HAZEMD */
 {
 #include "mamemddriv.c"
 	0	/* end of array */
