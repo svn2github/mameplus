@@ -39,6 +39,7 @@ const game_driver * const hazemddrivers[] =
 
 	DRIVER( g_12i1 )
 	DRIVER( g_4in1 )
+	DRIVER( g_10in1 )
 	//DRIVER( g_indy )
 	DRIVER( g_sbea )
 	DRIVER( g_fcr )
@@ -1653,6 +1654,16 @@ const game_driver * const hazemddrivers[] =
 	DRIVER( g_rtk5c )
 	DRIVER( g_sanret )
 	DRIVER( g_tighun )
+	DRIVER( g_princ2 )
+
+	DRIVER( g_megamd )
+	DRIVER( g_aworg )
+	DRIVER( g_teddy )
+	DRIVER( g_robobt )
+	DRIVER( g_medalc )
+	DRIVER( g_riddle )
+	DRIVER( g_kisssh )
+	DRIVER( g_rist00 )
 
 	DRIVER( radicav1 )
 	DRIVER( radicasf )
@@ -1674,6 +1685,11 @@ const game_driver * const hazemddrivers[] =
 	DRIVER( g_xinqia )
 	DRIVER( g_yang )
 	DRIVER( g_yasec )
+
+	DRIVER( g_pockm )
+	DRIVER( g_pockma )
+	DRIVER( g_pockm2 )
+	DRIVER( g_mulan )
 
 	/* Master System Games */
 	DRIVER( s_cosmic )
