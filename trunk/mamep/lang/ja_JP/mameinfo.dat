@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.108u1      #
+#     Mameinfo.dat日本語版 v0.108u2      #
 #                                        #
-#            August 30, 2006             #
+#           September 1, 2006            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,7 +12,7 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：799 翻訳済：784
+# Tester報告：799 翻訳済：783
 # 追加項目：326 合計：1125
 #
 
@@ -24,70 +24,6 @@ $mame
 - -nosoundで起動するとMAMEが次のエラーを出してクラッシュする:
 
 Attempted to malloc zero bytes (src/sndhrdw/attckufo.c:252) attckufo0108u1red, Firewave
-
-$end
-
-$info=deadang
-$mame
-[バグ]
-
-- 以下のエラーが出て起動しない：
-
-Fatal error: Video buffers spriteram but spriteram_size is 0 (src/video.c:380) deadang0108u1red, Firewave / Mamesick
-
-$end
-
-$info=sadari
-$mame
-[バグ]
-
-- 以下のエラーが出て起動しない：
-
-Fatal error: Video buffers spriteram but spriteram_size is 0 (src/video.c:380) dooyong0108u1red, Firewave
-
-$end
-
-$info=primella
-$mame
-[バグ]
-
-- 以下のエラーが出て起動しない：
-
-Fatal error: Video buffers spriteram but spriteram_size is 0 (src/video.c:380) dooyong0108u1red, Firewave
-
-$end
-
-$info=gundl94
-$mame
-[バグ]
-
-- 以下のエラーが出て起動しない：
-
-Fatal error: Video buffers spriteram but spriteram_size is 0 (src/video.c:380) dooyong0108u1red, Firewave
-
-$end
-
-$info=missile
-$mame
-[バグ]
-
-- ステートをロードしようとするとMAMEが固まる。 loadstate0108u1red, Furewave
-
-$end
-
-$info=cloud9
-$mame
-[バグ]
-
-- ステートをロードしようとするとMAMEが固まる。 loadstate0108u1red, Furewave
-
-$end
-
-$info=ccastles
-$mame
-[バグ]
-
-- ステートをロードしようとするとMAMEが固まる。 loadstate0108u1red, Furewave
 
 $end
 
@@ -328,12 +264,6 @@ $mame
 
 - 葉っぱを食べるとノイズ音が聞こえるが、本当はランダムな音階の音になる。
 何回かリセットした後、初めの1、2回だけ正常に動作することもある。 botanic080u1gre, Pi
-
-
-- DIPスイッチに間違いあり。
-たとえば残ライフを2～5に設定できるが、ゲームでは3（2か4を選んだとき）か5（3か5を選んだとき）にしかならない。
-
-コイン設定、言語設定、フリープレイ設定も正しく動作していない。 botanic080u1gra, Pi
 
 $end
 
@@ -663,15 +593,6 @@ $mame
 [バグ]
 
 - 1面のボス手前、前半クリア時の背景が表示されない。その他表示系の不具合多数。 ghouls097u4yel, Kold666
-
-$end
-
-$info=pang3
-$mame
-[バグ]
-
-- エンディングのテキストが他のグラフィックに隠れてしまう。
-「Captain Hog」で試すと確実に起こる。 pang337b15gre, Gickpaw / Pi / robiza
 
 $end
 

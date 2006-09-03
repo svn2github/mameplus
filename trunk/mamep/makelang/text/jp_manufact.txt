@@ -42,7 +42,7 @@ Alpha Denshi
 Alpha Denshi Co.
 アルファ電子工業
 
-# Pong
+# Fast Freddie
 Atari
 アタリ
 
@@ -422,7 +422,7 @@ Sanritsu
 Saurus
 ザウルス
 
-# Monaco GP
+# Ali Baba and 40 Thieves
 Sega
 セガ
 
@@ -582,7 +582,7 @@ Unico
 Universal
 ユニバーサル
 
-# Digger Man
+# Intersecti
 Unknown
 不明
 
@@ -746,6 +746,10 @@ American Sammy
 Amstar
 
 
+# Zero (set 2)
+Amtec
+
+
 # Minesweeper
 Amutech
 
@@ -794,6 +798,10 @@ BMC
 BROOKS
 
 
+# Carrera (Version 6.7)
+BS Electronics
+
+
 # Jump Shot
 Bally Midway
 
@@ -820,10 +828,6 @@ Barko Corp.
 
 # Many Block
 Bee-Oh
-
-
-# Neo No Panepon (beta)
-Blastar
 
 
 # Super Glob (Pac-Man hardware) German
@@ -920,6 +924,10 @@ D. R. Korea
 
 # Tetris (D.R. Korea)
 D.R. Korea
+
+
+# Poke Champ
+DGRM
 
 
 # Pipeline
@@ -1086,6 +1094,10 @@ Enerdyne Technologies Inc.
 Enerdyne Technologies, Inc.
 
 
+# Swinging Singles
+Ent. Ent. Ltd
+
+
 # Noah's Ark
 Enter-Tech
 
@@ -1142,10 +1154,6 @@ G.E.I.
 GAPS Inc.
 
 
-# Dambusters (set 2)
-GAT
-
-
 # Abscam
 GL
 
@@ -1196,6 +1204,10 @@ Grand Products
 
 # Trivia (UK Version 5.07)
 Grayhound Electronics
+
+
+# Super Crash (bootleg of Head On)
+Gremlim
 
 
 # Trivia (Version 1.03a)
@@ -1286,10 +1298,6 @@ Island Design
 Italian bootleg
 
 
-# Poker Night
-JMK
-
-
 # Jatre Specter (set 1)
 Jatre
 
@@ -1346,6 +1354,14 @@ Komax
 Kural TWT
 
 
+# Digger Man (prototype)
+Kyle Hodgetts
+
+
+# Ripper Ribbit (Version 2.8.4)
+LAI Games
+
+
 # Zig Zag (Galaxian hardware, set 1)
 LAX
 
@@ -1356,6 +1372,10 @@ Leante Games
 
 # Space War (Leijac)
 Leijac
+
+
+# Astro Laser
+Leisure Time Electronics Inc.
 
 
 # Super Baseball Double Play Home Run Derby
@@ -1372,6 +1392,10 @@ Limenko
 
 # Star Wars Trilogy (ver A)
 LucasArts
+
+
+# Catacomb
+MTM Games
 
 
 # Mahjong Gakuensai (Japan)
@@ -1418,7 +1442,7 @@ Microhard
 Micronet
 
 
-# F-15 Strike Eagle (rev. 2.1)
+# F-15 Strike Eagle (rev. 2.2 02/25/91)
 Microprose
 
 
@@ -1466,10 +1490,6 @@ Mondial Games
 Mylstar
 
 
-# Vantris (Vanguard hardware)
-N.Kehrer
-
-
 # Pirates
 NIX
 
@@ -1488,10 +1508,6 @@ Nakanihon
 
 # Red Corsair
 Nakasawa
-
-
-# Neo Pong (v1.1)
-Neodev
 
 
 # Mahjong Housoukyoku Honbanchuu (Japan)
@@ -1562,7 +1578,7 @@ Outer Limits
 P & P Marketing
 
 
-# Magic Fly
+# Magic Fly (Ver 0.3)
 P&A Games
 
 
@@ -1626,10 +1642,6 @@ Proma
 Promat
 
 
-# Shadow of the Beast (Neo Demo)
-Psygnosis
-
-
 # Heaven's Gate
 RACDYM
 
@@ -1648,14 +1660,6 @@ RamTek
 
 # Tickee Tickats
 Raster Elite
-
-
-# Frog Feast
-Rastersoft
-
-
-# Zintrick / Oshidashi Zentrix (CD to MVS Conversion)
-Razoola
 
 
 # Astro Fire
@@ -1782,6 +1786,10 @@ Soft
 Soft Design
 
 
+# Dambusters (UK)
+South West Research
+
+
 # Evil Stone
 Spacy Industrial, Ltd.
 
@@ -1851,7 +1859,7 @@ TV Game Gruenberg
 
 
 # Ameisenbaer (German)
-TV-Tuning 2000
+TV-Tuning
 
 
 # Tiger Heli (US)
@@ -1888,6 +1896,10 @@ Tecno Soft
 
 # Mr. TNT
 Telko
+
+
+# Konek-Gorbunok
+Terminal
 
 
 # Galaxian Test ROM
@@ -2042,10 +2054,6 @@ World Game
 World Games Inc
 
 
-# Swinging Singles
-Yachiyo
-
-
 # Spectrum 2000 (Euro)
 Yonatech
 
@@ -2080,6 +2088,10 @@ Zenitone-Microsec Ltd
 
 # Invader's Revenge
 Zenitone-Microsec Ltd.
+
+
+# Reaktor (Track & Field Conversion)
+Zilec
 
 
 # Wizz Quiz (version 4)
