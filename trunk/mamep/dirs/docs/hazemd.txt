@@ -1,0 +1,138 @@
+Haze Megadrive Emu 0.07a
+------------------------
+
+Added some preliminary 6-button code, hooked it up for a few games which can
+benefit from it.
+
+Added some more parent/clone relationships
+
+Added a couple more sets.
+
+
+Haze Megadrive Emu 0.06a
+------------------------
+
+Based on MAME 0.108u2
+
+Attempted to fix the Streets of Rage 2 crashing with a patch to streams.c.
+It appears to request generation of too many samples, if this happens a warning
+message now appears on the command line.  Let me know if this actually fixes your
+crashing problems.  It's not an ideal solution, and may cause a slight audio
+glitch, but if it fixes the crashing it will have to do until I can find something
+better.
+
+Added Backupram to the Dragon Slayer Games (remember, BackupRAM is handlded on a
+case by case basis, there is no generic header based support in this emulator.)
+
+Added some extra unlicensed sets (Pocket Monsters etc.)  No idea if they're 100%
+playable, I'm just using some rom patches to get them booting for now.
+
+I'm working on 6-button support, the code isn't in the current build but I
+currently have it working with SSF2, but for some reason UMK3 and Bruce Lee don't
+work with it.  Does anybody know which other games make use of the 6-button pad?
+
+
+Haze Megadrive Emu 0.05a
+------------------------
+
+Added some extra sets, mostly unlicensed titles, many don't work because they're
+protected and I haven't looked at the protection
+
+Also replaced the following sets
+NHL 94 (UE) [!]
+James Pond II - Codename RoboCod (UE) [!]
+
+with real dumps, these are byteswapped compared to the roms used by the all
+standard Genesis emulators, but this byteswapped format is correct, if you look
+in MAME you'll see that practically every single program rom 68k game is like
+this.  Also preserved the rom label information from the carts.  Thanks to Chris
+Hardy.
+
+I view using correct dumps as important, regardless of if they function in other
+emulators or not, I also view preserving the rom labels and cartridge information
+as equally important.
+
+Nothing to write home about, no real improvements to the Genesis or SMS emulation,
+although I may look into trying some things to improve the timing soon, time
+permitting.
+
+
+Haze Megadrive Emu 0.04a
+------------------------
+
+Added a callback to the 68k TAS instruction, this allows Gargoyles and Ex-Mutants
+to work again and is cleaner than the previous solution of simply hacking out the
+TAS writeback in all cases.
+
+Also added a couple more parent-clone relationships.
+
+Haze Megadrive Emu 0.03a
+------------------------
+
+Based on MAME 0.108
+
+Nothing new with MD emulation, maybe stopped some crashes.
+
+Started adding some SMS support in an attempt to improve the Sega System E drivers
+for MAME.  Hang On Jr. now runs with less glitches, for example, the scoreboard after
+Game Over now displays properly (although I still don't think the roadside objects /
+background priority 'problem' is a real bug, probably just a limitation of the hardware)
+
+A handful of SMS and Game Gear games are also supported for testing purposes, however
+the SMS emulation is highly prelminary so many SMS games don't currently work.
+
+Again this should be considered more of a 'current progress' backup than anything else,
+however you're welcome to enjoy it.
+
+Haze Megadrive Emu 0.02a
+------------------------
+
+Fixed some potential crash bugs
+
+Haze Megadrive Emu 0.01a
+------------------------
+
+Based on Mame 0.107u3 sources
+
+hazemd.exe is a standard build
+hazemdd.exe is a debug build
+
+both are command line builds, not mame32 based.
+If somebody wants to do a Mame32 Port I have no objections.
+
+This is just a test build, more of a personal backup.
+
+The gamelist metadata is mostly incomplete
+
+There are many issues, and it really needs a cleanup and a rewrite with the
+knowledge gained from working on it.
+
+Reasons you might want to use this:
+
+1. It runs Sun Mixing's Super Bubble Bobble (actually maybe this should be in the
+   other list..)
+2. It runs Dino Dini's Soccer Properly
+3. It runs the Realtec titles
+4. The Star Wars scroller text is present in Monster World 4 (but backup ram
+   isn't, yet)
+5. You can probably use MAME's INP recording to record some cool replays
+6. You can use MAME's cheat engine
+7. It's based on MAME, you can modify it very easily
+8. The MAME debugger (although there seems to be a small bug in the .107
+releases causing the scanline counters to fail when in the debugger)
+
+Reasons you might not want to use this:
+
+1. Emulation is incomplete, while most games work several have glitches
+2. No support for more than 2 players, 6-button pads etc.
+3. Bugs, there are bound to be some
+4. No Save States
+5. No 32X / Sega CD support
+6. Backup RAM support is missing in most games (it's handled manually based on what is in the carts, not what is in the headers)
+7. It's much slower than the other Megadrive emus out there
+8. Gens and Kega are for the most part better emulators.
+
+The eventual goal is to get this to a standard I'm happy with so that it can be
+used for emulation of the Megadrive based Arcade systems in MAME.  As things stand
+I'm far from happy with it, many things need doing, especially real HV & DMA timing
+

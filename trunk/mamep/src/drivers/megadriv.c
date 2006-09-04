@@ -1,5 +1,3 @@
-// no 6 button support yet
-#define construct_ipt_megadri6 construct_ipt_megadriv
 
 /*
 
@@ -1408,6 +1406,68 @@ WRITE8_HANDLER( megadriv_z80_YM2612_write )
 	}
 }
 
+mame_timer *io_timeout[2];
+int io_stage[2];
+
+static void io_timeout0_timer_callback(int num)
+{
+	io_stage[0] = -1;
+}
+
+static void io_timeout1_timer_callback(int num)
+{
+	io_stage[1] = -1;
+}
+
+
+void init_megadri6_io(void)
+{
+	io_timeout[0] = timer_alloc(io_timeout0_timer_callback);
+	io_stage[0] = -1;
+
+	io_timeout[1] = timer_alloc(io_timeout1_timer_callback);
+	io_stage[1] = -1;
+
+}
+
+/* pointers to our io data read/write functions */
+UINT8 (*megadrive_io_read_data_port_ptr)(int offset);
+void (*megadrive_io_write_data_port_ptr)(int offset, UINT16 data);
+
+INPUT_PORTS_START( megadri6 )
+	PORT_START /* Joypad 1 (6 button + start + mode) NOT READ DIRECTLY */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(1)
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(1)
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(1)
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(1)
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1) PORT_NAME("P1 A") // a
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1) PORT_NAME("P1 B") // b
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1) PORT_NAME("P1 C") // c
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(1) PORT_NAME("P1 START") // start
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_PLAYER(1) PORT_NAME("P1 X") // x
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_PLAYER(1) PORT_NAME("P1 Y") // y
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_BUTTON7 ) PORT_PLAYER(1) PORT_NAME("P1 Z") // z
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_BUTTON8 ) PORT_PLAYER(1) PORT_NAME("P1 MODE") // mode
+
+
+	PORT_START /* Joypad 1 (6 button + start + mode) NOT READ DIRECTLY */
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(2)
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(2)
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(2)
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(2)
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2) PORT_NAME("P2 A") // a
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2) PORT_NAME("P2 B") // b
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2) PORT_NAME("P2 C") // c
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(2) PORT_NAME("P2 START") // start
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_PLAYER(2) PORT_NAME("P2 X") // x
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_PLAYER(2) PORT_NAME("P2 Y") // y
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_BUTTON7 ) PORT_PLAYER(2) PORT_NAME("P2 Z") // z
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_BUTTON8 ) PORT_PLAYER(2) PORT_NAME("P2 MODE") // mode
+
+	PORT_START /* Buttons on Genesis Console */
+	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_SERVICE1 ) PORT_NAME("Reset Button") PORT_IMPULSE(1) // reset, resets 68k (and..?)
+INPUT_PORTS_END
+
 /*
 
     A10001h = A0         Version register
@@ -1453,24 +1513,30 @@ INPUT_PORTS_START( megadriv )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(1)
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(1)
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(1)
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1)
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1)
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1)
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(1)
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1) PORT_NAME("P1 A") // a
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1) PORT_NAME("P1 B") // b
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1) PORT_NAME("P1 C") // c
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(1) PORT_NAME("P1 START") // start
 
 	PORT_START /* Joypad 1 (3 button + start) NOT READ DIRECTLY */
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(2)
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(2)
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(2)
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(2)
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2)
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(2)
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2) PORT_NAME("P2 A") // a
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2) PORT_NAME("P2 B") // b
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2) PORT_NAME("P2 C") // c
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(2) PORT_NAME("P2 START") // start
 
 	PORT_START /* Buttons on Genesis Console */
 	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_SERVICE1 ) PORT_NAME("Reset Button") PORT_IMPULSE(1) // reset, resets 68k (and..?)
 INPUT_PORTS_END
+
+#define MODE_BUTTON(player) ( (readinputport(player) & 0x800) >> 11 )
+#define Z_BUTTON(player) ( (readinputport(player) & 0x400) >> 10 )
+#define Y_BUTTON(player) ( (readinputport(player) & 0x200) >> 9 )
+#define X_BUTTON(player) ( (readinputport(player) & 0x100) >> 8 )
+
 
 #define START_BUTTON(player) ( (readinputport(player) & 0x80) >> 7 )
 #define C_BUTTON(player)     ( (readinputport(player) & 0x40) >> 6 )
@@ -1497,9 +1563,87 @@ void megadrive_init_io(void)
 	megadrive_io_tx_regs[0] = 0xff;
 	megadrive_io_tx_regs[1] = 0xff;
 	megadrive_io_tx_regs[2] = 0xff;
+
+	if (Machine->gamedrv->construct_ipt==construct_ipt_megadri6)
+		init_megadri6_io();
 }
 
-UINT8 megadrive_io_read_data_port(int portnum)
+/************* 6 button version **************************/
+UINT8 megadrive_io_read_data_port_6button(int portnum)
+{
+	UINT8 retdata;
+
+
+	if (megadrive_io_data_regs[portnum]&0x40)
+	{
+		if (io_stage[portnum]==2)
+		{
+			retdata = ( megadrive_io_data_regs[portnum] & 0x80) |
+			          (1 <<6) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x20)?(megadrive_io_data_regs[portnum]&0x20):(C_BUTTON(portnum)<<5)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x10)?(megadrive_io_data_regs[portnum]&0x10):(B_BUTTON(portnum)<<4)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x08)?(megadrive_io_data_regs[portnum]&0x08):(MODE_BUTTON(portnum)<<3)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x04)?(megadrive_io_data_regs[portnum]&0x04):(X_BUTTON(portnum)<<2)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x02)?(megadrive_io_data_regs[portnum]&0x02):(Y_BUTTON(portnum)<<1)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x01)?(megadrive_io_data_regs[portnum]&0x01):(Z_BUTTON(portnum)<<0));
+		}
+		else
+		{
+			retdata = ( megadrive_io_data_regs[portnum] & 0x80) |
+			          (1 << 6) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x20)?(megadrive_io_data_regs[portnum]&0x20):(C_BUTTON(portnum)<<5)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x10)?(megadrive_io_data_regs[portnum]&0x10):(B_BUTTON(portnum)<<4)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x08)?(megadrive_io_data_regs[portnum]&0x08):(RIGHT_BUTTON(portnum)<<3)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x04)?(megadrive_io_data_regs[portnum]&0x04):(LEFT_BUTTON(portnum)<<2)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x02)?(megadrive_io_data_regs[portnum]&0x02):(DOWN_BUTTON(portnum)<<1)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x01)?(megadrive_io_data_regs[portnum]&0x01):(UP_BUTTON(portnum)<<0));
+		}
+	}
+	else
+	{
+		if (io_stage[portnum]==1)
+		{
+			retdata = ( megadrive_io_data_regs[portnum] & 0x80) |
+			          ( 0<<6 ) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x20)?(megadrive_io_data_regs[portnum]&0x20):(START_BUTTON(portnum)<<5)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x10)?(megadrive_io_data_regs[portnum]&0x10):(A_BUTTON(portnum)<<4)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x08)?(megadrive_io_data_regs[portnum]&0x08):(0<<3)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x04)?(megadrive_io_data_regs[portnum]&0x04):(0<<2)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x02)?(megadrive_io_data_regs[portnum]&0x02):(0<<1)) |
+	                  ((megadrive_io_ctrl_regs[portnum]&0x01)?(megadrive_io_data_regs[portnum]&0x01):(0<<0));
+		}
+		else if (io_stage[portnum]==2)
+		{
+			retdata = ( megadrive_io_data_regs[portnum] & 0x80) |
+			          ( 0<<6 ) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x20)?(megadrive_io_data_regs[portnum]&0x20):(START_BUTTON(portnum)<<5)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x10)?(megadrive_io_data_regs[portnum]&0x10):(A_BUTTON(portnum)<<4)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x08)?(megadrive_io_data_regs[portnum]&0x08):(1<<3)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x04)?(megadrive_io_data_regs[portnum]&0x04):(1<<2)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x02)?(megadrive_io_data_regs[portnum]&0x02):(1<<1)) |
+	                  ((megadrive_io_ctrl_regs[portnum]&0x01)?(megadrive_io_data_regs[portnum]&0x01):(1<<0));
+		}
+		else
+		{
+			retdata = ( megadrive_io_data_regs[portnum] & 0x80) |
+			          ( 0<<6 ) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x20)?(megadrive_io_data_regs[portnum]&0x20):(START_BUTTON(portnum)<<5)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x10)?(megadrive_io_data_regs[portnum]&0x10):(A_BUTTON(portnum)<<4)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x08)?(megadrive_io_data_regs[portnum]&0x08):(0<<3)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x04)?(megadrive_io_data_regs[portnum]&0x04):(0<<2)) |
+			          ((megadrive_io_ctrl_regs[portnum]&0x02)?(megadrive_io_data_regs[portnum]&0x02):(DOWN_BUTTON(portnum)<<1)) |
+	                  ((megadrive_io_ctrl_regs[portnum]&0x01)?(megadrive_io_data_regs[portnum]&0x01):(UP_BUTTON(portnum)<<0));
+		}
+	}
+
+//	printf("read io data port stage %d port %d %02x\n",io_stage[portnum],portnum,retdata);
+
+
+	return retdata|(retdata<<8);
+}
+/************* end 6 button version ********************************************/
+
+UINT8 megadrive_io_read_data_port_3button(int portnum)
 {
 	UINT8 retdata;
 
@@ -1527,10 +1671,9 @@ UINT8 megadrive_io_read_data_port(int portnum)
 		          ((megadrive_io_ctrl_regs[portnum]&0x01)?(megadrive_io_data_regs[portnum]&0x01):(UP_BUTTON(portnum)<<0));
 	}
 
-	//printf("read io data port %d %02x\n",portnum,retdata);
 
 
-	return retdata|(retdata<<8);
+	return retdata;
 }
 
 UINT8 megadrive_io_read_ctrl_port(int portnum)
@@ -1596,7 +1739,8 @@ READ16_HANDLER( megadriv_68k_io_read )
 		case 0x1:
 		case 0x2:
 		case 0x3:
-			retdata = megadrive_io_read_data_port(offset-1);
+//			retdata = megadrive_io_read_data_port(offset-1);
+			retdata = megadrive_io_read_data_port_ptr(offset-1);
 			break;
 
 		case 0x4:
@@ -1624,12 +1768,35 @@ READ16_HANDLER( megadriv_68k_io_read )
 	return retdata | (retdata<<8);
 }
 
-void megadrive_io_write_data_port(int portnum, UINT16 data)
+
+void megadrive_io_write_data_port_3button(int portnum, UINT16 data)
 {
 	megadrive_io_data_regs[portnum] = data;
 	//printf("Writing IO Data Register #%d data %04x\n",portnum,data);
 
 }
+
+
+/******************************6 button version*****************************/
+
+void megadrive_io_write_data_port_6button(int portnum, UINT16 data)
+{
+	if (megadrive_io_ctrl_regs[portnum]&0x40)
+	{
+		if (((megadrive_io_data_regs[portnum]&0x40)==0x00) && ((data&0x40) == 0x40))
+		{
+			io_stage[portnum]++;
+			timer_adjust(io_timeout[portnum],  TIME_IN_CYCLES(8192,0), 0, 0);
+		}
+
+	}
+
+	megadrive_io_data_regs[portnum] = data;
+	//printf("Writing IO Data Register #%d data %04x\n",portnum,data);
+
+}
+
+/***************************end 6 button version ****************************/
 
 void megadrive_io_write_ctrl_port(int portnum, UINT16 data)
 {
@@ -1652,6 +1819,8 @@ void megadrive_io_write_sctrl_port(int portnum, UINT16 data)
 
 }
 
+
+
 WRITE16_HANDLER( megadriv_68k_io_write )
 {
 //	printf("IO Write #%02x data %04x mem_mask %04x\n",offset,data,mem_mask);
@@ -1668,7 +1837,8 @@ WRITE16_HANDLER( megadriv_68k_io_write )
 		case 0x1:
 		case 0x2:
 		case 0x3:
-			megadrive_io_write_data_port(offset-1,data);
+//			megadrive_io_write_data_port(offset-1,data);
+			megadrive_io_write_data_port_ptr(offset-1,data);
 			break;
 
 		case 0x4:
@@ -4243,6 +4413,18 @@ void megadriv_init_common(void)
 
 	cpunum_set_info_fct(0, CPUINFO_PTR_M68K_TAS_CALLBACK, (void *)megadriv_tas_callback);
 
+	if (Machine->gamedrv->construct_ipt==construct_ipt_megadri6)
+	{
+		megadrive_io_read_data_port_ptr	= megadrive_io_read_data_port_6button;
+		megadrive_io_write_data_port_ptr = megadrive_io_write_data_port_6button;
+		printf("6 button game\n");
+	}
+	else
+	{
+		megadrive_io_read_data_port_ptr	= megadrive_io_read_data_port_3button;
+		megadrive_io_write_data_port_ptr = megadrive_io_write_data_port_3button;
+		printf("3 button game\n");
+	}
 }
 
 
@@ -8043,8 +8225,16 @@ ROM_END
 
 ROM_START( g_10in1 )
 	ROM_REGION( 0x1400000, REGION_CPU1, 0 ) /* 68000 Code */
+	/* this should be 0x400000 in size! */
 	ROM_LOAD( "g_10in1.bin", 0x400000, 0x100000, BAD_DUMP CRC(4fa3f82b) SHA1(04edbd35fe4916f61b516016b492352d96a8de7f) )
-ROM_END
+	/* these should be part of the rom, but are missing
+	  -- which versions of these games is unknown, probably pirate ones with SEGA logos and strings removed-- */
+	ROM_LOAD( "g_cill.bin", 0x000000, 0x080000, CRC(ba4e9fd0) SHA1(4ac3687634a5acc55ac7f156c6de9749158713e4) ) // doesn't boot until you reset, probably wrong verison
+	ROM_LOAD( "g_flin.bin", 0x580000, 0x080000, CRC(7c982c59) SHA1(5541579ffaee1570da8bdd6b2c20da2e395065b0) )
+	ROM_LOAD( "g_sor.bin",  0x600000, 0x080000, CRC(4052e845) SHA1(731cdf182fe647e4977477ba4dd2e2b46b9b878a) )
+	ROM_LOAD( "g_chq2.bin", 0x680000, 0x080000, CRC(f39e4bf2) SHA1(47c8c173980749aca075b9b3278c0df89a21303f) )
+	ROM_LOAD( "g_turt.bin", 0x700000, 0x100000, CRC(679c41de) SHA1(f440dfa689f65e782a150c1686ab90d7e5cc6355) ) // or the other turtles game?
+ ROM_END
 
 ROM_START( g_cwcs )
 	ROM_REGION( 0x400000, REGION_CPU1, 0 ) /* 68000 Code */
@@ -11260,6 +11450,64 @@ ROM_START( g_rist00 )
 ROM_END
 
 
+ROM_START( g_pcdrum )
+	ROM_REGION( 0x400000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD( "g_pcdrum.bin", 0x000000, 0x200000,   CRC(8838a25d) SHA1(780a81fe6dd2fb9575ccdc506e7dbee13213d01d) )
+ROM_END
+ROM_START( g_tek3s )
+	ROM_REGION( 0x400000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD( "g_tek3s.bin", 0x000000, 0x200000,  CRC(7fcae658) SHA1(99349bfe7966d65a4e782615aad9aa688905ad41) )
+ROM_END
+ROM_START( g_kof98p )
+	ROM_REGION( 0x400000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD( "g_kof98p.bin", 0x000000, 0x200000,  CRC(c79e1074) SHA1(6eb3a12e082ce4074e88ad3cb2b3c51f9a72225c) )
+ROM_END
+ROM_START( g_lion2p )
+	ROM_REGION( 0x400000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD( "g_lion2p.bin", 0x000000, 0x200000,  CRC(721b4981) SHA1(70eb5b423948e5a124de4d5d24c14b2c64bfb282) )
+ROM_END
+ROM_START( g_sdk99 )
+	ROM_REGION( 0x400000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD( "g_sdk99.bin", 0x000000, 0x200000,  CRC(8e7d9177) SHA1(91f6b10ada917e6dfdafdd5ad9d476723498a7a4) )
+ROM_END
+ROM_START( g_skk99 )
+	ROM_REGION( 0x400000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD( "g_skk99.bin", 0x000000, 0x200000,  CRC(413dfee2) SHA1(6973598d77a755beafff31ce85595f9610f8afa5) )
+ROM_END
+ROM_START( g_smw )
+	ROM_REGION( 0x400000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD( "g_smw.bin", 0x000000, 0x200000,  CRC(cf540ba6) SHA1(517c3a6b091c2c4e8505112a84bae2871243e92c) )
+ROM_END
+ROM_START( g_smwp )
+	ROM_REGION( 0x400000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD( "g_smwp.bin", 0x000000, 0x200000,  CRC(97c2695e) SHA1(ff6661d39b2bad26f460e16106ca369421388596) )
+ROM_END
+ROM_START( g_mk5p )
+	ROM_REGION( 0x400000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD( "g_mk5p.bin", 0x000000, 0x200000,  CRC(41203006) SHA1(a558ad8de61c4d21c35d4dbaaede85d771e84f33) )
+ROM_END
+ROM_START( g_3in1a )
+	ROM_REGION( 0x400000, REGION_CPU1, 0 ) /* 68000 Code */ // no menu??
+	ROM_LOAD( "g_3in1a.bin", 0x000000, 0x200000,  CRC(a8fd28d7) SHA1(a0dd99783667af20589d473a2054d4bbd62d943e) )
+ROM_END
+ROM_START( g_3in1b )
+	ROM_REGION( 0x400000, REGION_CPU1, 0 ) /* 68000 Code */ // no menu??
+	ROM_LOAD( "g_3in1b.bin", 0x000000, 0x100000,  CRC(13c96154) SHA1(fd7255c2abdf90698f779a039ea1e560ca19639a) )
+ROM_END
+ROM_START( g_cches )
+	ROM_REGION( 0x400000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD( "g_cches.bin", 0x000000, 0x080000,  CRC(475215a0) SHA1(3907bf058493e7b9db9720493030f0284797908c) )
+ROM_END
+ROM_START( g_conqs )
+	ROM_REGION( 0x400000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD( "g_conqs.bin", 0x000000, 0x200000,  CRC(ea57b668) SHA1(7040e96c053f29c75cf0524ddb168a83d0fb526f) )
+ROM_END
+ROM_START( g_conqt )
+	ROM_REGION( 0x400000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD( "g_conqt.bin", 0x000000, 0x200000,  CRC(b23c4166) SHA1(534bf8f951ee30d47df18202246245b998c0eced) )
+ROM_END
+
+
 
 ROM_START( ssf2ghw )
 	ROM_REGION( 0x1400000, REGION_CPU1, 0 ) /* 68000 Code */
@@ -11676,7 +11924,7 @@ DRIVER_INIT( topshoot )
 
 	init_megadriv();
 }
-#endif
+#endif /* HAZEMD */
 
 READ16_HANDLER( dte_extra_r )
 {
@@ -11859,8 +12107,8 @@ DRIVER_INIT( g_mulan )
 	+more?
 
 	*/
-	ROM[0x01ED0/2] = 0xE000;
-	ROM[0x02540/2] = 0xE000;
+//	ROM[0x01ED0/2] = 0xE000;
+//	ROM[0x02540/2] = 0xE000;
 
 
 	ROM[0x06036/2] = 0xE000;
@@ -11960,10 +12208,10 @@ GAME( 1994, g_col3,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Seg
 GAME( 1994, g_col3j,  g_col3,   megadriv,    megadriv,    megadrij, ROT0,   "Sega", "Columns III - Taiketsu! Columns World (J) [!]", 0 )
 
 // Comix Zone has a 1 line raster error
-GAME( 1995, g_comx,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Sega", "Comix Zone (U) [!]", 0 )
-GAME( 1995, g_comixe, g_comx,   megadpal,    megadriv,    megadrie, ROT0,   "Sega", "Comix Zone (E) (M4) [!]", 0 )
-GAME( 1995, g_comixj, g_comx,   megadriv,    megadriv,    megadrij, ROT0,   "Sega", "Comix Zone (J) [!]", 0 )
-GAME( 1995, g_comixb, g_comx,   megadriv,    megadriv,    megadriv, ROT0,   "Sega", "Comix Zone (Beta)", 0 )
+GAME( 1995, g_comx,   0,        megadriv,    megadri6,    megadriv, ROT0,   "Sega", "Comix Zone (U) [!]", 0 )
+GAME( 1995, g_comixe, g_comx,   megadpal,    megadri6,    megadrie, ROT0,   "Sega", "Comix Zone (E) (M4) [!]", 0 )
+GAME( 1995, g_comixj, g_comx,   megadriv,    megadri6,    megadrij, ROT0,   "Sega", "Comix Zone (J) [!]", 0 )
+GAME( 1995, g_comixb, g_comx,   megadriv,    megadri6,    megadriv, ROT0,   "Sega", "Comix Zone (Beta)", 0 )
 
 // raster abuse ;-)
 GAME( 1994, g_cont,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Konami", "Contra - Hard Corps (U) [!]", 0 )
@@ -12076,8 +12324,8 @@ GAME( 1993, g_hsh,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Dat
 GAME( 1994, g_captha, g_hsh,    megadpal,    megadriv,    megadrie, ROT0,   "Data East / Codemasters", "Capt'n Havoc (E) [!]", 0 )
 
 // Ronaldinho 98 is a cheap glitchy hack of International Superstar Soccer.  ISS has single line raster error after scoring a goal
-GAME( 1996, g_iss,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Konami / Factor 5", "International Superstar Soccer Deluxe (E) [!]", 0 )
-GAME( 1998, g_ron98b, g_iss,    megadriv,    megadriv,    megadriv, ROT0,   "bootleg", "Ronaldinho 98 (B) [c][!]", 0 )
+GAME( 1996, g_iss,    0,        megadpal,    megadri6,    megadrie, ROT0,   "Konami / Factor 5", "International Superstar Soccer Deluxe (E) [!]", 0 )
+GAME( 1998, g_ron98b, g_iss,    megadriv,    megadri6,    megadriv, ROT0,   "bootleg", "Ronaldinho 98 (B) [c][!]", 0 )
 
 GAME( 1993, g_bond,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Domark", "James Bond 007 - The Duel (UE) [!]", 0 )
 GAME( 1993, g_jbondw, g_bond,   megadriv,    megadriv,    megadriv, ROT0,   "Domark", "James Bond 007 - The Duel (W)", 0 )
@@ -12221,10 +12469,10 @@ GAME( 1993, g_sshi2b, g_shi3,   megadriv,    megadriv,    megadrij, ROT0,   "Seg
 GAME( 1995, g_skid,   0,        megadpal,    megadriv,    megadrie, ROT0,   "Codemasters / Acid", "Super Skidmarks (E) (J-Cart) [!]", 0 )
 GAME( 1995, g_skida,  g_skid,   megadpal,    megadriv,    megadrie, ROT0,   "Codemasters / Acid", "Super Skidmarks (E) [a1]", 0 )
 
-GAME( 1993, g_ranx,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Sega / Gau", "Ranger-X (U) [!]", 0 )
-GAME( 1993, g_ranxe,  g_ranx,   megadpal,    megadriv,    megadrie, ROT0,   "Sega / Gau", "Ranger-X (E) [!]", 0 )
-GAME( 1993, g_exranz, g_ranx,   megadriv,    megadriv,    megadrij, ROT0,   "Sega / Gau", "Ex-Ranza (J) [!]", 0 )
-GAME( 1993, g_exrnzb, g_ranx,   megadriv,    megadriv,    megadrij, ROT0,   "Sega / Gau", "Ex-Ranza (Beta)", 0 )
+GAME( 1993, g_ranx,   0,        megadriv,    megadri6,    megadriv, ROT0,   "Sega / Gau", "Ranger-X (U) [!]", 0 )
+GAME( 1993, g_ranxe,  g_ranx,   megadpal,    megadri6,    megadrie, ROT0,   "Sega / Gau", "Ranger-X (E) [!]", 0 )
+GAME( 1993, g_exranz, g_ranx,   megadriv,    megadri6,    megadrij, ROT0,   "Sega / Gau", "Ex-Ranza (J) [!]", 0 )
+GAME( 1993, g_exrnzb, g_ranx,   megadriv,    megadri6,    megadrij, ROT0,   "Sega / Gau", "Ex-Ranza (Beta)", 0 )
 
 
 // the road rash series are sensitive to timing
@@ -12384,6 +12632,8 @@ GAME( 1992, g_wille,  g_will,   megadpal,    megadriv,    megadrie, ROT0,   "Dis
 GAME( 1992, g_willb,  g_will,   megadriv,    megadriv,    megadriv, ROT0,   "Disney / Sega", "World of Illusion Starring Mickey Mouse & Donald Duck (Beta)", 0 )
 GAME( 1992, g_micdo,  g_will,   megadriv,    megadriv,    megadrij, ROT0,   "Disney / Sega", "I Love Mickey & Donald - Fushigi na Magic Box (J)", 0 )
 
+GAME( 1996, g_xper,   0,        megadriv,    megadri6,    megadriv, ROT0,   "Sega", "X-perts (U) [!]", 0 )
+
 // This has a special maths DSP in the cart.  The internal ROM of the DSP is not dumped, this does not work
 GAME( 199?, g_virr,   0,        megadriv,   megadriv,     megadriv, ROT0,   "Sega", "Virtua Racing (U) [!]", GAME_NOT_WORKING )
 GAME( 199?, g_virraj, g_virr,   megadriv,   megadriv,     megadrij, ROT0,   "Sega", "Virtua Racing (J) [!]", GAME_NOT_WORKING )
@@ -12489,6 +12739,8 @@ GAME( 1994, g_rx3,    0,        megadriv,    megadriv,    g_rx3,    ROT0,   "unk
 GAME( 1994, g_lio3,   0,        megadriv,    megadriv,    g_lio3,   ROT0,   "unknown", "Lion King 3 (Unl)", GAME_NOT_WORKING )
 
 /********************************* Not Fully Sorted ****************************************/
+GAME( 1900, g_2020,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Super Baseball 2020 (UE) [!]", 0 )
+GAME( 1900, g_2020j,  g_2020,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Super Baseball 2020 (J) [!]", 0 )
 
 GAME( 1900, g_aate,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Andre Agassi Tennis (U) (REV00) [!]", 0 )
 GAME( 1900, g_aatee,  g_aate,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Andre Agassi Tennis (E) (REV01) [c][!]", 0 )
@@ -12560,11 +12812,14 @@ GAME( 1900, g_bnza,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Uns
 GAME( 1900, g_bnza00, g_bnza,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Bonanza Bros. (JE) (REV00) [!]", 0 )
 GAME( 1900, g_bnza01, g_bnza,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Bonanza Bros. (JE) (REV01) [!]", 0 )
 
-GAME( 1900, g_boog,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Boogerman (U) [!]", 0 )
-GAME( 1900, g_booge,  g_boog,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Boogerman (E) [!]", 0 )
+GAME( 1900, g_boog,   0,        megadriv,    megadri6,    megadriv, ROT0,   "Unsorted", "Boogerman (U) [!]", 0 )
+GAME( 1900, g_booge,  g_boog,   megadpal,    megadri6,    megadrie, ROT0,   "Unsorted", "Boogerman (E) [!]", 0 )
 
 GAME( 1900, g_boxl,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Boxing Legends of the Ring (U) [!]", 0 )
 GAME( 1900, g_chav2,  g_boxl,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Chavez II (U) [!]", 0 )
+
+GAME( 1900, g_brpw,   0,        megadriv,    megadri6,    megadriv, ROT0,   "Unsorted", "Brutal - Paws of Fury (U) [!]", 0 )
+GAME( 1900, g_brutle, g_brpw,   megadpal,    megadri6,    megadrie, ROT0,   "Unsorted", "Brutal - Paws of Fury (E)", 0 )
 
 GAME( 1900, g_burf,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Burning Force (U) [!]", 0 )
 GAME( 1900, g_burnfj, g_burf,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Burning Force (J) [!]", 0 )
@@ -12600,10 +12855,10 @@ GAME( 1900, g_ejime,  g_ejim,   megadpal,    megadriv,    megadrie, ROT0,   "Uns
 GAME( 1900, g_jim2,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Earthworm Jim 2 (U) [!]", 0 )
 GAME( 1900, g_ejim2e, g_jim2,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Earthworm Jim 2 (E) [!]", 0 )
 
-GAME( 1900, g_etch,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Eternal Champions (U) [!]", 0 )
-GAME( 1900, g_echmpe, g_etch,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Eternal Champions (E) [!]", 0 )
-GAME( 1900, g_echmpj, g_etch,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Eternal Champions (J) [c][!]", 0 )
-GAME( 1900, g_etchmb, g_etch,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Eternal Champions (Beta)", 0 )
+GAME( 1900, g_etch,   0,        megadriv,    megadri6,    megadriv, ROT0,   "Unsorted", "Eternal Champions (U) [!]", 0 )
+GAME( 1900, g_echmpe, g_etch,   megadpal,    megadri6,    megadrie, ROT0,   "Unsorted", "Eternal Champions (E) [!]", 0 )
+GAME( 1900, g_echmpj, g_etch,   megadriv,    megadri6,    megadrij, ROT0,   "Unsorted", "Eternal Champions (J) [c][!]", 0 )
+GAME( 1900, g_etchmb, g_etch,   megadriv,    megadri6,    megadriv, ROT0,   "Unsorted", "Eternal Champions (Beta)", 0 )
 
 GAME( 1900, g_exil,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Exile (U) [!]", 0 )
 GAME( 1900, g_xzr,    g_exil,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "XZR (J) [!]", 0 )
@@ -12613,6 +12868,12 @@ GAME( 1900, g_exosb,  g_exos,   megadriv,    megadriv,    megadriv, ROT0,   "Uns
 
 GAME( 1900, g_fand,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Codemasters", "Fantastic Dizzy (UE) (M5) [c][!]", 0 )
 GAME( 1900, g_fanda,  g_fand,   megadriv,    megadriv,    megadriv, ROT0,   "Codemasters", "Fantastic Dizzy (UE) (M5) [a1]", 0 )
+
+GAME( 1900, g_fi95,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Electronic Arts", "FIFA Soccer 95 (UE) [!]", 0 )
+GAME( 1900, g_fut98,  g_fi95,   megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "Futbol Argentino 98 - Pasion de Multitudes (Unl)", 0 )
+
+GAME( 1900, g_fi96,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Electronic Arts", "FIFA Soccer 96 (UE) (M6) [!]", 0 )
+GAME( 1900, g_fi99r,  g_fi96,   megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "FIFA Soccer 99 (R) [!]", 0 )
 
 GAME( 1996, g_fi97,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Electronic Arts", "FIFA Soccer 97 Gold Edition (UE) (M6) [!]", 0 )
 GAME( 2000, g_f2000g, g_fi97,   megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "FIFA Soccer 2000 Gold Edition (Unl) (M6) [!]", 0 )
@@ -12664,12 +12925,13 @@ GAME( 1900, g_jparke, g_jpar,   megadpal,    megadriv,    megadrie, ROT0,   "Uns
 GAME( 1900, g_jparkj, g_jpar,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Jurassic Park (J) [!]", 0 )
 GAME( 1900, g_jparkb, g_jpar,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Jurassic Park (Beta)", 0 )
 
+GAME( 1900, g_jltf,   0,        megadriv,    megadri6,    megadriv, ROT0,   "Unsorted", "Justice League Task Force (W) [!]", 0 )
 
 GAME( 1900, g_kawa,   0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Kawasaki Superbike Challenge (UE) [!]", 0 )
 GAME( 1900, g_kawab,  g_kawa,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Kawasaki Superbike Challenge (Beta)", 0 )
 
-GAME( 1900, g_ksfh,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Krusty's Super Funhouse (UE) (REV01) [!]", 0 )
-GAME( 1900, g_ksfh00, g_ksfh,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Krusty's Super Funhouse (UE) (REV00) [!]", 0 )
+GAME( 1900, g_ksfh,   0,        megadriv,    megadri6,    megadriv, ROT0,   "Unsorted", "Krusty's Super Funhouse (UE) (REV01) [!]", 0 )
+GAME( 1900, g_ksfh00, g_ksfh,   megadriv,    megadri6,    megadriv, ROT0,   "Unsorted", "Krusty's Super Funhouse (UE) (REV00) [!]", 0 )
 
 GAME( 1900, g_lbat,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Last Battle (UE) [!]", 0 )
 GAME( 1900, g_hokuto, g_lbat,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Hokuto no Ken (J) [!]", 0 )
@@ -12686,18 +12948,18 @@ GAME( 1900, g_licrue, g_ligh,   megadpal,    megadriv,    megadrie, ROT0,   "Uns
 GAME( 1900, g_licruj, g_ligh,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Light Crusader (J) [!]", 0 )
 GAME( 1900, g_licruk, g_ligh,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Light Crusader (K) [!]", 0 )
 
-GAME( 1900, g_lost,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Lost Vikings, The (U) [!]", 0 )
-GAME( 1900, g_lostve, g_lost,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Lost Vikings, The (E)", 0 )
-GAME( 1900, g_lostvb, g_lost,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Lost Vikings, The (Beta)", 0 )
+GAME( 1900, g_lost,   0,        megadriv,    megadri6,    megadriv, ROT0,   "Unsorted", "Lost Vikings, The (U) [!]", 0 )
+GAME( 1900, g_lostve, g_lost,   megadpal,    megadri6,    megadrie, ROT0,   "Unsorted", "Lost Vikings, The (E)", 0 )
+GAME( 1900, g_lostvb, g_lost,   megadriv,    megadri6,    megadriv, ROT0,   "Unsorted", "Lost Vikings, The (Beta)", 0 )
 
 GAME( 1900, g_mmf,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Marko's Magic Football (U) [!]", 0 )
 GAME( 1900, g_mmftbe, g_mmf,    megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Marko's Magic Football (E) (M4) [!]", 0 )
 GAME( 1900, g_mmfb,   g_mmf,    megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Marko's Magic Football (Beta) (M4)", 0 )
 
-GAME( 1900, g_mk,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mortal Kombat (UE) (REV01) [c][!]", 0 )
-GAME( 1900, g_mk00,   g_mk,     megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mortal Kombat (W) (REV00) [!]", 0 )
+GAME( 1900, g_mk,     0,        megadriv,    megadri6,    megadriv, ROT0,   "Unsorted", "Mortal Kombat (UE) (REV01) [c][!]", 0 )
+GAME( 1900, g_mk00,   g_mk,     megadriv,    megadri6,    megadriv, ROT0,   "Unsorted", "Mortal Kombat (W) (REV00) [!]", 0 )
 
-GAME( 1900, g_mk2,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mortal Kombat II (W) [!]", 0 )
+GAME( 1900, g_mk2,    0,        megadriv,    megadri6,    megadriv, ROT0,   "Unsorted", "Mortal Kombat II (W) [!]", 0 )
 
 GAME( 1900, g_mk3,    0,        megadriv,    megadri6,    megadriv, ROT0,   "Unsorted", "Mortal Kombat 3 (U) [!]", 0 )
 GAME( 1900, g_mk3e,   g_mk3,    megadpal,    megadri6,    megadrie, ROT0,   "Unsorted", "Mortal Kombat 3 (E) [!]", 0 )
@@ -12712,6 +12974,9 @@ GAME( 1900, g_talmit, g_marv,   megadpal,    megadriv,    megadrie, ROT0,   "Uns
 GAME( 1900, g_mjmw,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Michael Jackson's Moonwalker (W) (REV01) [!]", 0 )
 GAME( 1900, g_mwlk00, g_mjmw,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Michael Jackson's Moonwalker (W) (REV00) [!]", 0 )
 
+GAME( 1900, g_mono,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Monopoly (U) [c][!]", 0 )
+GAME( 1900, g_monob,  g_mono,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Monopoly (Beta)", 0 )
+
 GAME( 1900, g_mush,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "M.U.S.H.A (U) [!]", 0 )
 GAME( 1900, g_mushaj, g_mush,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Musha Aleste - Full Metal Fighter Ellinor (J) [!]", 0 )
 
@@ -12724,6 +12989,10 @@ GAME( 1900, g_ogol,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Uns
 GAME( 1900, g_olgole, g_ogol,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Olympic Gold - Barcelona 92 (E) (M8) [c][!]", 0 )
 GAME( 1900, g_olgolj, g_ogol,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Olympic Gold - Barcelona 92 (J) (M8) [c][!]", 0 )
 GAME( 1900, g_olgolu, g_ogol,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Olympic Gold - Barcelona 92 (U) (M8) [a1][c][!]", 0 )
+
+GAME( 1900, g_otti,   0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Ottifants, The (E) (M5) [!]", 0 )
+GAME( 1900, g_ottifb, g_otti,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Ottifants, The (Beta)", 0 )
+
 
 GAME( 1900, g_pga,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "PGA Tour Golf (UE) (REV02) [!]", 0 )
 GAME( 1900, g_pgat01, g_pga,    megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "PGA Tour Golf (UE) (REV01) [!]", 0 )
@@ -12780,6 +13049,15 @@ GAME( 1900, g_dari2a, g_sagia,  megadriv,    megadriv,    megadrij, ROT0,   "Uns
 GAME( 1900, g_sswo,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Saint Sword (U) [c][!]", 0 )
 GAME( 1900, g_sswoj,  g_sswo,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Saint Sword (J) [c][!]", 0 )
 
+// doesn't need 6 buttons, but they can be used..
+GAME( 1900, g_snsm,   0,        megadriv,    megadri6,    megadriv, ROT0,   "Unsorted", "Saturday Night Slam Masters (U) [!]", 0 )
+GAME( 1900, g_snsme,  g_snsm,   megadpal,    megadri6,    megadrie, ROT0,   "Unsorted", "Saturday Night Slam Masters (E)", 0 )
+
+GAME( 1900, g_shaq,   0,        megadriv,    megadri6,    megadriv, ROT0,   "Unsorted", "Shaq Fu (UE) [!]", 0 )
+
+GAME( 1900, g_sbls,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Shadow Blasters (U) [c][!]", 0 )
+GAME( 1900, g_shiten, g_sbls,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Shiten Myooh (J) [c][!]", 0 )
+
 GAME( 1900, g_soldf,  0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Soldiers of Fortune (U) [c][!]", 0 )
 GAME( 1900, g_chao,   g_soldf,  megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Chaos Engine, The (E) [!]", 0 )
 GAME( 1900, g_cengb,  g_soldf,  megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Chaos Engine, The (Beta)", 0 )
@@ -12813,6 +13091,9 @@ GAME( 1900, g_valsdj, g_sydval, megadriv,    megadriv,    megadrij, ROT0,   "Uns
 GAME( 1900, g_sylv,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Sylvester & Tweety in Cagey Capers (UE) [!]", 0 )
 GAME( 1900, g_sylvb,  g_sylv,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Sylvester & Tweety in Cagey Capers (Beta)", 0 )
 
+GAME( 1900, g_targ,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Target Earth (U) [!]", 0 )
+GAME( 1900, g_asl,    g_targ,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Assault Suits Leynos (J) [!]", 0 )
+
 GAME( 1900, g_turt,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Teenage Mutant Ninja Turtles - The Hyperstone Heist (U) [!]", 0 )
 GAME( 1900, g_tmntj,  g_turt,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Teenage Mutant Ninja Turtles - Return of the Shredder (J) [!]", 0 )
 GAME( 1900, g_tmhte,  g_turt,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Teenage Mutant Hero Turtles - The Hyperstone Heist (E)", 0 )
@@ -12843,11 +13124,25 @@ GAME( 1900, g_crudeb, g_2cd,    megadriv,    megadriv,    megadrij, ROT0,   "Uns
 GAME( 1900, g_uqix,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Taito", "Ultimate Qix (U) [!]", 0 )
 GAME( 1900, g_volf,   g_uqix,   megadriv,    megadriv,    megadrij, ROT0,   "Taito", "Volfied (J) [!]", 0 )
 
+GAME( 1900, g_vf2,    0,        megadriv,    megadri6,    megadriv, ROT0,   "Unsorted", "Virtua Fighter 2 (UE) [!]", 0 )
+
+// should this be 6-button? it doesn't detect it correctly..
+GAME( 1900, g_vrtr,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "VR Troopers (UE) [!]", 0 )
+
+GAME( 1900, g_weap,   0,        megadriv,    megadri6,    megadriv, ROT0,   "Unsorted", "Weaponlord (U) [!]", 0 )
+
 GAME( 1900, g_wwcse,  0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Where in the World is Carmen Sandiego (E) (M5)", 0 )
 GAME( 1900, g_wwics,  g_wwcse,  megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Where in the World is Carmen Sandiego (B) (M2) [!]", 0 )
 
 GAME( 1900, g_wtics,  0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Where in Time is Carmen Sandiego (B) [!]", 0 )
 GAME( 1900, g_wticsa, g_wtics,  megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Where in Time is Carmen Sandiego (UE) (M5) [!]", 0 )
+
+GAME( 1900, g_wars,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Warsong (U) [!]", 0 )
+GAME( 1900, g_langr,  g_wars,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Langrisser (J) [!]", 0 )
+
+GAME( 1900, g_lngr2a, 0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Langrisser II (J) (REV00) [!]", 0 )
+GAME( 1900, g_lngr2c, g_lngr2a, megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Langrisser II (J) (REV02) [!]", 0 )
+GAME( 1900, g_lng201, g_lngr2a, megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Langrisser II (J) (REV01)", 0 )
 
 GAME( 1900, g_wimb,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Wimbledon Championship Tennis (U) [!]", 0 )
 GAME( 1900, g_wimbp,  g_wimb,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Wimbledon Championship Tennis (U) (Prototype) [!]", 0 )
@@ -12856,11 +13151,19 @@ GAME( 1900, g_wimbe,  g_wimb,   megadpal,    megadriv,    megadrie, ROT0,   "Uns
 GAME( 1900, g_wwar,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Wrestle War (JE) [c][!]", 0 )
 GAME( 1900, g_wwarb,  g_wwar,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Wrestle War (Beta)", 0 )
 
-GAME( 1900, g_wmar,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "WWF Wrestlemania Arcade (U) [!]", 0 )
-GAME( 1900, g_wfwaal, g_wmar,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "WWF Wrestlemania Arcade (Alpha) [!]", 0 )
+GAME( 1900, g_wmar,   0,        megadriv,    megadri6,    megadriv, ROT0,   "Unsorted", "WWF Wrestlemania Arcade (U) [!]", 0 )
+GAME( 1900, g_wfwaal, g_wmar,   megadriv,    megadri6,    megadriv, ROT0,   "Unsorted", "WWF Wrestlemania Arcade (Alpha) [!]", 0 )
 
-GAME( 1900, g_yuyu,   0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Yuu Yuu Hakusho - Makyou Toitsusen (J) [!]", 0 )
-GAME( 1900, g_yuyub,  g_yuyu,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Yuu Yuu Hakusho - Sunset Fighters (B) [!]", 0 )
+GAME( 1900, g_xmen,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "X-Men (U) [!]", 0 )
+GAME( 1900, g_xmene,  g_xmen,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "X-Men (E) [!]", 0 )
+
+GAME( 1900, g_xme2,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "X-Men 2 - Clone Wars (UE) [!]", 0 )
+
+GAME( 1900, g_yuyu,   0,        megadriv,    megadri6,    megadrij, ROT0,   "Unsorted", "Yuu Yuu Hakusho - Makyou Toitsusen (J) [!]", 0 )
+GAME( 1900, g_yuyub,  g_yuyu,   megadriv,    megadri6,    megadriv, ROT0,   "Unsorted", "Yuu Yuu Hakusho - Sunset Fighters (B) [!]", 0 )
+
+GAME( 1900, g_ys3,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Ys III - Wanderers from Ys (U) [!]", 0 )
+GAME( 1900, g_ys3j,   g_ys3,    megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Ys III - Wanderers from Ys (J) [!]", 0 )
 
 GAME( 1900, g_zany,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Zany Golf (UE) (REV00) [c][!]", 0 )
 GAME( 1900, g_zany01, g_zany,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Zany Golf (UE) (REV01))", 0 )
@@ -12882,25 +13185,53 @@ GAME( 1994, g_spirit, 0,        megadriv,    megadriv,    megadriv, ROT0,   "Wis
 GAME( 199?, g_divine, 0,        megadriv,    megadriv,    megadriv, ROT0,   "Unknown", "Divine Sealing (Unl) [!]", 0 )
 
 /********************************* Unsorted Koei ****************************************/
+GAME( 199?, g_uw,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Koei", "Uncharted Waters (U) [!]", 0 )
+GAME( 1900, g_daikou, g_uw,     megadriv,    megadriv,    megadrij, ROT0,   "Koei", "Daikoukai Jidai (J) [c][!]", 0 )
 
-GAME( 1900, g_daikou, 0,        megadriv,    megadriv,    megadrij, ROT0,   "Koei", "Daikoukai Jidai (J) [c][!]", 0 )
+GAME( 1900, g_uwnh,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Koei", "Uncharted Waters - New Horizons (U) [!]", 0 )
+GAME( 1900, g_daik2,  g_uwnh,   megadriv,    megadriv,    megadrij, ROT0,   "Koei", "Daikoukai Jidai II (J)", 0 )
+
 GAME( 1900, g_gemfi,  0,        megadriv,    megadriv,    megadriv, ROT0,   "Koei", "GemFire (U) [!]", 0 )
+GAME( 1900, g_roybld, g_gemfi,  megadriv,    megadriv,    megadrij, ROT0,   "Koei", "Royal Blood (J) [!]", 0 )
+
 GAME( 1900, g_nobu,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Koei", "Nobunaga's Ambition (U) [!]", 0 )
+GAME( 1900, g_nobzen, g_nobu,   megadriv,    megadriv,    megadrij, ROT0,   "Koei", "Nobunaga no Yabou - Zenkokuban (J) [!]", 0 )
+
+GAME( 1900, g_pto,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Koei", "P.T.O. Pacific Theater of Operations (U) [!]", 0 )
+GAME( 1900, g_teitok, g_pto,    megadriv,    megadriv,    megadrij, ROT0,   "Koei", "Teitoku no Ketsudan (J) [c][!]", 0 )
+
+
 GAME( 1900, g_opeu,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Koei", "Operation Europe - Path to Victory 1939-1945 (U) [!]", 0 )
+GAME( 1900, g_europa, g_opeu,   megadriv,    megadriv,    megadrij, ROT0,   "Koei", "Europa Sensen (J) [!]", 0 )
+
+// english
 GAME( 1993, g_librty, 0,        megadriv,    megadriv,    megadriv, ROT0,   "Koei", "Liberty or Death (U) [!]", 0 )
-GAME( 199?, g_uw,          0,        megadriv,    megadriv,    megadriv, ROT0,   "Koei", "Uncharted Waters (U) [!]", 0 )
-GAME( 1900, g_roybld,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Koei", "Royal Blood (J) [!]", 0 )
+GAME( 1900, g_geng,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Koei", "Genghis Khan II - Clan of the Gray Wolf (U) [!]", 0 )
+
+// japanese
+GAME( 1900, g_nobbus, 0,        megadriv,    megadriv,    megadrij, ROT0,   "Koei", "Nobunaga no Yabou - Bushou Fuuunsoku (J) [!]", 0 )
+GAME( 1900, g_noblor, 0,        megadriv,    megadriv,    megadrij, ROT0,   "Koei", "Nobunaga no Yabou Haouden - Lord of Darkness (J) [!]", 0 )
+GAME( 1900, g_taikou, 0,        megadriv,    megadriv,    megadrij, ROT0,   "Koei", "Taikou Risshiden (J) [!]", 0 )
+GAME( 1900, g_aoki,   0,        megadriv,    megadriv,    megadrij, ROT0,   "Koei", "Aoki Ookami to Shiroki Meshika - Genchou Hishi (J) [!]", 0 )
+
+
 
 /********************************* Not At All Sorted ****************************************/
 
 GAME( 1900, g_gley,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Gley Lancer (J)", 0 )
-GAME( 1900, g_rkni,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Rocket Knight Adventures (U) [!]", 0 )
 GAME( 1900, g_srr,     0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Snake Rattle 'n' Roll (E) [c][!]", 0 )
 GAME( 1900, g_tazm,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Taz-Mania (W) [!]", 0 )
 GAME( 1900, g_coss,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Cosmic Spacehead (E) (M4) [c][!]", 0 )
 GAME( 1900, g_paca,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pac-Attack (U) [!]", 0 )
+
 GAME( 1900, g_jbok,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Jungle Book, The (U) [!]", 0 )
+GAME( 1900, g_jbooke,  g_jbok,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Jungle Book, The (E) [!]", 0 )
+
 GAME( 1900, g_fant,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Fantasia (JU) (REV01) [!]", 0 )
+GAME( 1900, g_fante,   g_fant,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Fantasia (E) [!]", 0 )
+GAME( 1900, g_fant00,  g_fant,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Fantasia (U) (REV00) [!]", 0 )
+
+
 GAME( 1900, g_dcap,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Decap Attack (UE) [!]", 0 )
 GAME( 1998, g_jpa2,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Jurassic Park 2 - The Lost World (U) [!]", 0 )
 GAME( 1900, g_jimp,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Jim Power - The Arcade Game (Beta)", 0 )
@@ -12912,9 +13243,9 @@ GAME( 1900, g_f98,     0,        megadpal,    megadriv,    megadrie, ROT0,   "Un
 GAME( 1900, g_maui,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Donald in Maui Mallard (E) [!]", 0 )
 
 GAME( 1900, g_sgp2,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Ayrton Senna's Super Monaco GP II (U) [!]", 0 )
+GAME( 1900, g_smgp2a,  g_sgp2,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Ayrton Senna's Super Monaco GP II (JE) [!]", 0 )
 
 GAME( 1900, g_batf,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Batman Forever (W) [!]", 0 )
-GAME( 1900, g_chk2,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Chuck II - Son of Chuck (U) [!]", 0 )
 
 GAME( 1900, g_gtwi,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Gadget Twins, The (U) [!]", 0 )
 GAME( 1900, g_lgal,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Legend of Galahad, The (UE) [!]", 0 )
@@ -12922,26 +13253,38 @@ GAME( 1900, g_lion,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Un
 
 
 GAME( 1900, g_pano,    0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Panorama Cotton (J) [c][!]", 0 )
-GAME( 1900, g_poca,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pocahontas (U) [!]", 0 )
 GAME( 1900, g_puls,    0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Pulseman (J) [c][!]", 0 )
 GAME( 1900, g_redz,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Red Zone (UE) [!]", 0 )
 GAME( 1900, g_skit,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Skitchin' (UE) [!]", 0 )
 
-GAME( 1900, g_sfz,     0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Super Fantasy Zone (J) [!]", 0 )
+GAME( 1900, g_sfze,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Super Fantasy Zone (E) [!]", 0 )
+GAME( 1900, g_sfz,     g_sfze,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Super Fantasy Zone (J) [!]", 0 )
+
 GAME( 1900, g_sho,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Super Hang-On (W) (REV01) [!]", 0 )
+GAME( 1900, g_sho00,   g_sho,    megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Super Hang-On (W) (REV00) [!]", 0 )
+
+
 GAME( 1900, g_stb,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Super Thunder Blade (W) (REV01) [!]", 0 )
-GAME( 1900, g_vf2,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Virtua Fighter 2 (UE) [!]", 0 )
-GAME( 1900, g_wizl,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Wiz 'n' Liz - The Frantic Wabbit Wescue (U) [!]", 0 )
-GAME( 1900, g_ztks,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Zero the Kamikaze Squirrel (U) [!]", 0 )
+GAME( 1900, g_stb00,   g_stb,    megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Super Thunder Blade (W) (REV00) [!]", 0 )
+
+
 
 GAME( 1900, g_pino,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pinocchio (U) [!]", 0 )
+GAME( 1900, g_pinnoe,  g_pino,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Pinocchio (E)", 0 )
+
 GAME( 1900, g_puyo,    0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Puyo Puyo (J) [!]", 0 )
+
 GAME( 1900, g_seaq,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "SeaQuest DSV (U) [!]", 0 )
+GAME( 1900, g_seaqe,   g_seaq,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "SeaQuest DSV (E)", 0 )
+
+
 GAME( 1900, g_tale,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Tale Spin (UE) [!]", 0 )
 
 GAME( 1900, g_balz,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Ballz (UE) [!]", 0 )
 GAME( 1900, g_bonk,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Bonkers (UE) [!]", 0 )
+
 GAME( 1900, g_mars,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Marsupilami (U) (M5) [!]", 0 )
+GAME( 1900, g_marsue,  g_mars,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Marsupilami (E) (M5) [!]", 0 )
 
 GAME( 1900, g_fdma,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Flavio's DMA Test (PD)", 0 )
 
@@ -12949,7 +13292,9 @@ GAME( 1900, g_3nin,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Un
 GAME( 1900, g_haun,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Haunting Starring Polterguy (UE) [!]", 0 )
 GAME( 1900, g_mfli,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Misadventures of Flink, The (E) [!]", 0 )
 
-GAME( 1900, g_rwoo,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Risky Woods (UE) [!]", 0 )
+GAME( 1900, g_rwoo,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Electronic Arts", "Risky Woods (UE) [!]", 0 )
+GAME( 1900, g_draxos,  g_rwoo,   megadriv,    megadriv,    megadrij, ROT0,   "Electronic Arts", "Draxos (J) [!]", 0 )
+
 GAME( 1900, g_lot,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Lotus Turbo Challenge (UE) [!]", 0 )
 GAME( 1900, g_lot2,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Lotus II RECS (UE) [!]", 0 )
 GAME( 1900, g_stra,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Street Racer (E) [c][!]", 0 )
@@ -12959,14 +13304,23 @@ GAME( 1900, g_gdog,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Un
 GAME( 1900, g_gaia,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Gaiares (JU) [!]", 0 )
 GAME( 1900, g_elem,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Elemental Master (U) [!]", 0 )
 GAME( 1900, g_mano,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Man Overboard! - S.S. Lucifer (E) [c][!]", 0 )
+
 GAME( 1900, g_daze,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Daze Before Christmas, The (E) [!]", 0 )
+GAME( 1900, g_dazeb,   g_daze,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Daze Before Christmas, The (Beta)", 0 )
+
+
 GAME( 1900, g_jwws,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Jimmy White's Whirlwind Snooker (E) [c][!]", 0 )
 
 
 GAME( 1900, g_busq,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Bubble and Squeak (U) [!].zip", 0 )
+
 GAME( 1900, g_olan,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Outlander (U) [!]", 0 )
-GAME( 1900, g_shar,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Space Harrier II (UE) [!]", 0 )
+GAME( 1900, g_outlnb,  g_olan,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Outlander (Beta)", 0 )
+
+
 GAME( 1900, g_pidw,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pirates of Dark Water, The (U) [!]", 0 )
+GAME( 1900, g_pirdwu,  g_pidw,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pirates of Dark Water, The (UE)", 0 )
+
 GAME( 1900, g_bbrb,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Beauty and the Beast - Roar of the Beast (U) [!]", 0 )
 GAME( 1900, g_bbbq,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Beauty and the Beast - Belle's Quest (U) [!]", 0 )
 GAME( 1900, g_tanr,    0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Tanto R (J) [!]", 0 )
@@ -12974,28 +13328,32 @@ GAME( 1900, g_rop,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Un
 GAME( 1900, g_ps96,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Pete Sampras Tennis 96 (E) [c][!]", 0 )
 GAME( 1900, g_toug,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Toughman Contest (UE) [!]", 0 )
 GAME( 1900, g_spir,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Spirou (E) [!]", 0 )
+
 GAME( 1900, g_strk,    0,        megadriv,    megadriv,    g_strk, ROT0,   "Unsorted", "Striker (E) (M5) [!]", 0 )
-GAME( 1900, g_wcs2,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "World Championship Soccer II (U) [!]", 0 )
+GAME( 1900, g_strikb,  g_strk,   megadriv,    megadriv,    g_strk, ROT0,   "Unsorted", "Striker (Beta)", 0 )
 
 
 
 
-GAME( 1900, g_orun,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "OutRun (W) [!]", 0 )
+
+
 GAME( 1900, g_chee,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Cheese Cat-Astrophe Starring Speedy Gonzales (E) (M4) [!]", 0 )
-GAME( 1900, g_nbah,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NBA Hang Time (U) [!]", 0 )
-GAME( 1900, g_stol,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Stormlord (U) [!]", 0 )
+
+
 GAME( 1900, g_td2,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Test Drive II - The Duel (U) [!]", 0 )
 GAME( 1900, g_tout,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Turbo Outrun (JE) [c][!]", 0 )
-GAME( 1900, g_sprk,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Sparkster (U) [!]", 0 )
 GAME( 1900, g_garf,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Garfield - Caught in the Act (UE) [!]", 0 )
 GAME( 1900, g_drev,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Dragon's Revenge (UE) [!]", 0 )
 
 GAME( 1900, g_afav,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Addams Family Values (E) (M3) [!]", 0 )
 GAME( 1900, g_arie,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Ariel - The Little Mermaid (UE) [!]", 0 )
+
 GAME( 1900, g_arro,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Arrow Flash (UE) [!]", 0 )
+GAME( 1900, g_arrowj,  g_arro,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Arrow Flash (J) [!]", 0 )
 
 GAME( 1900, g_blma,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Blaster Master 2 (U) [c][!]", 0 )
-GAME( 1900, g_brpw,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Brutal - Paws of Fury (U) [!]", 0 )
+GAME( 1900, g_blam2b,  g_blma,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Blaster Master 2 (Beta)", 0 )
+
 GAME( 1900, g_bubs,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Bubsy in Claws Encounters of the Furred Kind (UE) [!]", 0 )
 GAME( 1900, g_bub2,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Bubsy II (UE) [!]", 0 )
 GAME( 1900, g_bbny,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Bugs Bunny in Double Trouble (U) [!]", 0 )
@@ -13004,23 +13362,42 @@ GAME( 1900, g_cano,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Un
 GAME( 1900, g_cpoo,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Championship Pool (U) [!]", 0 )
 
 GAME( 1900, g_chq2,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Chase HQ II (U) [!]", 0 )
+GAME( 1900, g_suphq,   g_chq2,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Super HQ (J) [!]", 0 )
+
 GAME( 1900, g_cool,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Cool Spot (U) [!]", 0 )
+GAME( 1900, g_coole,   g_cool,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Cool Spot (E) [!]", 0 )
+GAME( 1900, g_spotb,   g_cool,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Cool Spot (Beta)", 0 )
+
+
 GAME( 1900, g_dicv,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Dick Vitale's Awesome Baby! College Hoops (U) [!]", 0 )
+
 GAME( 1900, g_taz2,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Escape From Mars Starring Taz (U) [!]", 0 )
+GAME( 1900, g_taz2e,   g_taz2,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Escape From Mars Starring Taz (E) [!]", 0 )
 
 
 GAME( 1900, g_huni,    0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Heavy Unit (J) [!]", 0 )
-GAME( 1900, g_hell,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Hellfire (U) [!]", 0 )
 GAME( 1900, g_hook,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Hook (U) [c][!]", 0 )
 GAME( 1900, g_huma,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Humans, The (U) [!]", 0 )
 GAME( 1900, g_jpra,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Jurassic Park - Rampage Edition (UE) [!]", 0 )
 GAME( 1900, g_mhat,    0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Magical Hat no Buttobi Turbo! Daibouken (J) [!]", 0 )
 GAME( 1900, g_nutz,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Mr. Nutz (E) [!]", 0 )
+
 GAME( 1900, g_ooze,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Ooze, The (JU) [!]", 0 )
+GAME( 1900, g_oozee,   g_ooze,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Ooze, The (E) [!]", 0 )
+
+
 GAME( 1900, g_2040,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Phantom 2040 (U) [!]", 0 )
+GAME( 1900, g_2040e,   g_2040,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Phantom 2040 (E) [!]", 0 )
+
 GAME( 1900, g_krew,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Skeleton Krew (U) [!]", 0 )
+GAME( 1900, g_skrewe,  g_krew,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Skeleton Krew (E)", 0 )
+
 GAME( 1900, g_skik,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Super Kick Off (E) [c][!]", 0 )
+
+
 GAME( 1900, g_term,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Terminator, The (U) [!]", 0 )
+GAME( 1900, g_terme,   g_term,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Terminator, The (E) [c][!]", 0 )
+
 GAME( 1900, g_wolv,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Wolverine Adamantium Rage (UE) [!]", 0 )
 
 GAME( 1900, g_real,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "AAAHH!!! Real Monsters (UE) [!]", 0 )
@@ -13029,44 +13406,55 @@ GAME( 1900, g_batr,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Un
 GAME( 1900, g_btoa,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Battletoads (W) [!]", 0 )
 GAME( 1900, g_che2,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Chester Cheetah 2 - Wild Wild Quest (U) [!]", 0 )
 GAME( 1900, g_che,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Chester Cheetah (U) [c][!]", 0 )
-GAME( 1900, g_chuk,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Chuck Rock (U) [c][!]", 0 )
 
 GAME( 1900, g_clay,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Clay Fighter (U) [!]", 0 )
+
 GAME( 1900, g_daff,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Daffy Duck in Hollywood (E) (M5) [!]", 0 )
+GAME( 1900, g_daffyb,  g_daff,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Daffy Duck in Hollywood (Beta)", 0 )
+
 GAME( 1900, g_davi,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Davis Cup World Tour Tennis (UE) [!]", 0 )
 GAME( 1900, g_desd,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Desert Demolition (UE) [!]", 0 )
 GAME( 1900, g_dstr,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Desert Strike - Return to the Gulf (UE) [!]", 0 )
-GAME( 1900, g_djby,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "DJ Boy (U) [!]", 0 )
 GAME( 1900, g_dtro,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Doom Troopers - The Mutant Chronicles (U) [c][!]", 0 )
 GAME( 1900, g_e_sw,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "ESPN SpeedWorld (U) [c][!]", 0 )
 
 
 GAME( 1900, g_f1ce,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "F1 World Championship Edition (E) [!]", 0 )
+GAME( 1900, g_f1wceb,  g_f1ce,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "F1 World Championship Edition (Beta)", 0 )
+
 GAME( 1900, g_flic,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Flicky (UE) [!]", 0 )
 GAME( 1900, g_hurr,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Hurricanes (E) [!]", 0 )
 GAME( 1900, g_izzy,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Izzy's Quest for the Olympic Rings (UE) [!]", 0 )
+
 GAME( 1900, g_jstr,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Jungle Strike (UE) [!]", 0 )
+GAME( 1900, g_jstrj,   g_jstr,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Jungle Strike (J) [!]", 0 )
+GAME( 1900, g_jstrkb,  g_jstr,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Jungle Strike (Beta)", 0 )
 
 GAME( 1900, g_lawn,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Lawnmower Man, The (UE) [!]", 0 )
+
 GAME( 1900, g_lem2,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Lemmings 2 - The Tribes (U) [!]", 0 )
+GAME( 1900, g_lem2e,   g_lem2,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Lemmings 2 - The Tribes (E) [!]", 0 )
 
 GAME( 1900, g_megp,    0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Megapanel (J) [c][!]", 0 )
+
+GAME( 1900, g_mmpr,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mighty Morphin Power Rangers (U) [!]", 0 )
+GAME( 1900, g_mmpre,   g_mmpr,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Mighty Morphin Power Rangers (E) [!]", 0 )
+
 GAME( 1900, g_mmpm,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mighty Morphin Power Rangers - The Movie (U) [!]", 0 )
+GAME( 1900, g_mmprme,  g_mmpm,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Mighty Morphin Power Rangers - The Movie (E) [!]", 0 )
+
 GAME( 1900, g_nh98,    0,        megadriv,    megadriv,    g_nh98, ROT0,   "Unsorted", "NHL 98 (U) [c][!]", 0 )
 
-GAME( 1900, g_otti,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Ottifants, The (E) (M5) [!]", 0 )
-GAME( 1900, g_pink,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pink Goes to Hollywood (U) [!]", 0 )
-GAME( 1900, g_pitf,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pitfall - The Mayan Adventure (U) [!]", 0 )
-GAME( 1900, g_radr,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Radical Rex (U) [!]", 0 )
+
+
 GAME( 1900, g_s_sa,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Spider-Man and Venom - Separation Anxiety (U) [!]", 0 )
 
 GAME( 1900, g_tick,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Tick, The (U) [!]", 0 )
-GAME( 1900, g_tomj,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Tom and Jerry - Frantic Antics (U) (1994) [!]", 0 )
+
 GAME( 1900, g_uded,    0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Undead Line (J) [!]", 0 )
 GAME( 1900, g_ustr,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Urban Strike (UE) [!]", 0 )
 GAME( 1900, g_muth,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mutant League Hockey (UE) [!]", 0 )
 
-GAME( 1900, g_sbea,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Shadow of the Beast (UE) [!]", 0 )
 
 GAME( 1900, g_btdd,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Battletoads and Double Dragon (U) [c][!]", 0 )
 GAME( 1900, g_chak,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Chakan - The Forever Man (UE) [!]", 0 )
@@ -13080,30 +13468,42 @@ GAME( 1900, g_demo,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Un
 GAME( 1900, g_dick,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Dick Tracy (W) [c][!]", 0 )
 GAME( 1900, g_dora,    0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Doraemon - Yume Dorobouto 7 Nin No Gozansu (J) [!]", 0 )
 GAME( 1900, g_dn3d,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Duke Nukem 3D (B) [!]", 0 )
+
 GAME( 1900, g_elvi,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "El Viento (U) [!]", 0 )
+GAME( 1900, g_elvinj,  g_elvi,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "El Viento (J) [!]", 0 )
+
 GAME( 1900, g_fzon,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Final Zone (JU) [!]", 0 )
-GAME( 1900, g_flin,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Flintstones, The (U) [c][!]", 0 )
 
 GAME( 1900, g_glos,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Generations Lost (UE) [!]", 0 )
+
 GAME( 1900, g_home,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Home Alone (U) [!]", 0 )
+GAME( 1900, g_homeab,  g_home,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Home Alone (Beta)", 0 )
+
 GAME( 1900, g_hom2,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Home Alone 2 - Lost in New York (U) [!]", 0 )
+
 GAME( 1900, g_immo,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Immortal, The (UE) [!]", 0 )
-GAME( 1900, g_icd,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Incredible Crash Dummies, The (UE) [c][!]", 0 )
+GAME( 1900, g_immorj,  g_immo,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Immortal, The (J) [!]", 0 )
+
 GAME( 1900, g_hulk,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Incredible Hulk, The (UE) [!]", 0 )
 GAME( 1900, g_junc,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Junction (JU) [!]", 0 )
 
+GAME( 1900, g_icd,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Incredible Crash Dummies, The (UE) [c][!]", 0 )
+GAME( 1900, g_icdb,    g_icd,    megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Incredible Crash Dummies, The (Beta)", 0 )
+
 GAME( 1900, g_fran,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mary Shelley's Frankenstein (U) [!]", 0 )
-GAME( 1900, g_mfpl,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Minnesota Fats Pool Legend (U) [!]", 0 )
 GAME( 1900, g_onsl,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Onslaught (U) [c][!]", 0 )
 GAME( 1900, g_peng,    0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Pengo (J) [!]", 0 )
 GAME( 1900, g_rain,    0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Rainbow Islands - The Story of Bubble Bobble 2 (J) [c][!]", 0 )
-GAME( 1900, g_rens,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Ren and Stimpy Show, The - Stimpy's Invention (U) [!]", 0 )
 
 GAME( 1900, g_btnm,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Simpsons, The - Bart's Nightmare (UE) (REV02) [!]", 0 )
 GAME( 1900, g_smf,     0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Smurfs, The (E) (M5) [!]", 0 )
 GAME( 1900, g_smf2,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Smurfs 2, The (E) (M4) [!]", 0 )
 GAME( 1900, g_s_mc,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Spider-Man and Venom - Maximum Carnage (W) [!]", 0 )
+
 GAME( 1900, g_sgat,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Stargate (UE) [!]", 0 )
+GAME( 1900, g_sgatb,   g_sgat,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Stargate (Beta)", 0 )
+
+
 GAME( 1900, g_tfh,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Task Force Harrier EX (U) [!]", 0 )
 
 GAME( 1900, g_tf3,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Thunder Force III (JU) [!]", 0 )
@@ -13111,10 +13511,9 @@ GAME( 1900, g_tf3,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Un
 
 GAME( 1900, g_tter,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Trampoline Terror! (U) [!]", 0 )
 GAME( 1900, g_unis,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Universal Soldier (U) [!]", 0 )
-GAME( 1900, g_vrtr,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "VR Troopers (UE) [!]", 0 )
+
+
 GAME( 1900, g_wayn,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Wayne's World (U) [c][!]", 0 )
-GAME( 1900, g_weap,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Weaponlord (U) [!]", 0 )
-GAME( 1900, g_xme2,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "X-Men 2 - Clone Wars (UE) [!]", 0 )
 GAME( 1900, g_yogi,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Yogi Bear's Cartoon Capers (E) [!]", 0 )
 
 GAME( 1900, g_soff,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Super Off Road (U) [!]", 0 )
@@ -13129,54 +13528,72 @@ GAME( 1900, g_fido,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Un
 GAME( 1900, g_tnnb,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "TNN Bass Tournament of Champions (U) (REV01) [!]", 0 )
 GAME( 1900, g_tnno,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "TNN Outdoors Bass Tournament '96 (U) [!]", 0 )
 GAME( 1900, g_sscc,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Sesame Street Counting Cafe (U) [!]", 0 )
-GAME( 1900, g_xper,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "X-perts (U) [!]", 0 )
 
 GAME( 1900, g_batj,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Batman - Revenge of the Joker (U) [!]", 0 )
-GAME( 1900, g_bat,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Batman (U) [!]", 0 )
 GAME( 1900, g_bsqu,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Battle Squadron (UE) [!]", 0 )
-GAME( 1900, g_crkd,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Crack Down (U) [!]", 0 )
-GAME( 1900, g_dune,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Dune - The Battle for Arrakis (U) [!]", 0 )
 GAME( 1900, g_earn,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Earnest Evans (U) [!]", 0 )
+
 GAME( 1900, g_f117,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "F-117 Night Storm (UE) [!]", 0 )
+GAME( 1900, g_f117j,   g_f117,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "F-117 Stealth - Operation Night Storm (J) [!]", 0 )
+
+
 GAME( 1900, g_frog,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Frogger (U) [!]", 0 )
+
 GAME( 1900, g_gloc,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "G-LOC Air Battle (W) [c][!]", 0 )
+GAME( 1900, g_glocb,   g_gloc,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "G-LOC Air Battle (Beta)", 0 )
 
 GAME( 1900, g_gshi,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Gunship (E) [c][!]", 0 )
 
 GAME( 1900, g_last,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Last Action Hero (U) [!]", 0 )
-GAME( 1900, g_mmpr,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mighty Morphin Power Rangers (U) [!]", 0 )
+
 GAME( 1900, g_mpac,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Ms. Pac-Man (U) [!]", 0 )
+
 GAME( 1900, g_ncir,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Nightmare Circus (B) [!]", 0 )
+GAME( 1900, g_ncircb,  g_ncir,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Nightmare Circus (Beta)", 0 )
+
+
 GAME( 1900, g_pacm,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pac-Mania (U) [!]", 0 )
 
 GAME( 1900, g_pdri,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Power Drive (E) (M5) [!]", 0 )
 GAME( 1900, g_sbe2,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Shadow of the Beast 2 (UE) [!]", 0 )
-GAME( 1900, g_shaq,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Shaq Fu (UE) [!]", 0 )
-GAME( 1900, g_bart,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Simpsons, The - Bart vs The Space Mutants (UE) (REV01) [!]", 0 )
+
+
 GAME( 1900, g_si91,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Space Invaders 91 (U) [c][!]", 0 )
+GAME( 1900, g_si90,    g_si91,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Space Invaders 90 (J) [c][!]", 0 )
+
 GAME( 1900, g_s_ar,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Spider-Man and X-Men - Arcade's Revenge (UE) [!]", 0 )
-GAME( 1900, g_ssri,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Sunset Riders (U) [!]", 0 )
 GAME( 1900, g_sstv,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Super Smash TV (UE) [!]", 0 )
-GAME( 1900, g_targ,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Target Earth (U) [!]", 0 )
+
 GAME( 1900, g_sold,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Sol-Deace (U) [!]", 0 )
 
 GAME( 1900, g_ter2,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Terminator 2 - Judgment Day (UE) [!]", 0 )
+
 GAME( 1900, g_tf2,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Thunder Force II (U) [!]", 0 )
+GAME( 1900, g_tf2md,   g_tf2,    megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Thunder Force II MD (J) [!]", 0 )
+
+
 GAME( 1900, g_toys,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Toys (U) [!]", 0 )
 GAME( 1900, g_true,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "True Lies (W) [!]", 0 )
-GAME( 1900, g_uwnh,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Uncharted Waters - New Horizons (U) [!]", 0 )
+
 GAME( 1900, g_view,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Viewpoint (U) [!]", 0 )
-GAME( 1900, g_wagh,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Williams Arcade's Greatest Hits (U) [!]", 0 )
+GAME( 1900, g_viewpb,  g_view,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Viewpoint (Beta)", 0 )
+
+
+
 GAME( 1900, g_worm,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Worms (E) [!]", 0 )
+GAME( 1900, g_wormp,   g_worm,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Worms (E) (Prototype) [c][!]", 0 )
+
+
 GAME( 1900, g_xen2,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Xenon 2 - Megablast (E) [c][!]", 0 )
+
 GAME( 1900, g_zoop,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Zoop (U) [!]", 0 )
+GAME( 1900, g_zoope,   g_zoop,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Zoop (E) [!]", 0 )
 
 GAME( 1900, g_arta,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Art Alive! (W) [!]", 0 )
-GAME( 1900, g_asl,     g_targ,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Assault Suits Leynos (J) [!]", 0 )
 GAME( 1900, g_arca,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Arcade Classics (U) [!]", 0 )
 GAME( 1900, g_aahh,    0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Aah! Harimanada (J) [!]", 0 ) // sumo wrestling
 GAME( 1900, g_awsp,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "AWS Pro Moves Soccer (U) [!]", 0 )
-GAME( 1900, g_bttf,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Back to the Future Part III (U) [!]", 0 )
+
 
 GAME( 1900, g_suj,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Barkley Shut Up and Jam! (UE) [!]", 0 )
 GAME( 1900, g_sail,    0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Bishoujo Senshi Sailor Moon (J) [!]", 0 )
@@ -13193,27 +13610,27 @@ GAME( 1900, g_drs,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Un
 GAME( 1900, g_hire,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Dinosaurs for Hire (U) [!]", 0 )
 GAME( 1900, g_dblc,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Double Clutch (E) [c][!]", 0 )
 GAME( 1900, g_elim,    0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Eliminate Down (J) [!]", 0 )
-GAME( 1900, g_eswa,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "ESWAT Cyber Police - City Under Siege (U) [!]", 0 )
 GAME( 1900, g_ecs,     0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "European Club Soccer (E) [!]", 0 )
 GAME( 1900, g_must,    0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Fire Mustang (J) [c][!]", 0 )
 
 GAME( 1900, g_goof,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Goofy's Hysterical History Tour (U) [!]", 0 )
 
 GAME( 1900, g_dodg,    0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Honoo no Toukyuuji Dodge Danpei (J) [!]", 0 )
-GAME( 1900, g_indl,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Indiana Jones and the Last Crusade (U) [c][!]", 0 )
 
 GAME( 1900, g_jcte,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Sega / System Sacom", "Jennifer Capriati Tennis (U) [!]", 0 )
 GAME( 1900, g_gste,    g_jcte,   megadpal,    megadriv,    megadrie, ROT0,   "Sega / System Sacom", "Grand Slam Tennis (E) [!]", 0 )
 GAME( 1900, g_gstenj,  g_jcte,   megadriv,    megadriv,    megadrij, ROT0,   "Sega / System Sacom", "Grand Slam Tennis (J) [!]", 0 )
 
-GAME( 1900, g_jltf,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Justice League Task Force (W) [!]", 0 )
 GAME( 1900, g_taru,    0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Magical Taruruuto-Kun (J) [!]", 0 )
 
 GAME( 1900, g_osom,    0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Osomatsu-kun - Hachamecha Gekijou (J) [c][!]", 0 )
 GAME( 1900, g_scob,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Scooby Doo Mystery (U) [!]", 0 )
+
 GAME( 1900, g_srun,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Shadowrun (U) [!]", 0 )
+GAME( 1900, g_shrunj,  g_srun,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Shadowrun (J) [!]", 0 )
+
+
 GAME( 1900, g_snow,    0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Snow Bros. - Nick & Tom (J) [c][!]", 0 )
-GAME( 1900, g_spb2,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Speed Ball 2 - Brutal Deluxe (U) [c][!]", 0 )
 GAME( 1900, g_s_kp,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Spider-Man vs The Kingpin (W) [!]", 0 )
 
 GAME( 1900, g_sbat,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Super Battleship (U) [!]", 0 )
@@ -13236,63 +13653,85 @@ GAME( 1900, g_fcr,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Un
 GAME( 1900, g_pre2,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Predator 2 (UE) [!]", 0 )
 
 GAME( 1900, g_pm97,     0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Premier Manager 97 (E) [!]", 0 )
+
 GAME( 1900, g_pman,     0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Premier Manager (E) [!]", 0 )
+
 GAME( 1900, g_prim,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Primal Rage (UE) [!]", 0 )
 
 GAME( 1900, g_pwbl,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Powerball (U) [c][!]", 0 )
+GAME( 1900, g_wresbl,   g_pwbl,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Wrestleball (J) [c][!]", 0 )
+
+
 GAME( 1900, g_ram3,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Rambo III (W) (REV01) [!]", 0 )
+GAME( 1900, g_ram300,   g_ram3,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Rambo III (W) (REV00) [!]", 0 )
+
+
 GAME( 1900, g_revx,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Revolution X (UE) [!]", 0 )
-GAME( 1900, g_rbls,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Road Blasters (U) [!]", 0 )
+
 GAME( 1900, g_rrr,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Rock n' Roll Racing (U) [!]", 0 )
-GAME( 1900, g_rth2,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Rolling Thunder 2 (U) [c][!]", 0 )
-GAME( 1900, g_rth3,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Rolling Thunder 3 (U) [c][!]", 0 )
-GAME( 1900, g_snsm,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Saturday Night Slam Masters (U) [!]", 0 )
+
 GAME( 1900, g_sdan,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Shadow Dancer - The Secret of Shinobi (W) [c][!]", 0 )
 
-GAME( 1900, g_s2de,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Shanghai 2 - Dragon's Eye (U) [!]", 0 )
+
 GAME( 1900, g_sbt,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Super Battle Tank - War in the Gulf (U) [!]", 0 )
-GAME( 1900, g_2020,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Super Baseball 2020 (UE) [!]", 0 )
+
+
 GAME( 1900, g_faer,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Faery Tale Adventure, The (UE) [!]", 0 )
 
 GAME( 1900, g_gain,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Gain Ground (UE) [c][!]", 0 )
 GAME( 1900, g_0tol,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Zero Tolerance (UE) [!]", 0 )
-GAME( 1900, g_yidy,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Young Indiana Jones - Instrument of Chaos (U) [!]", 0 )
-GAME( 1900, g_wher,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "World Heroes (U) [!]", 0 )
+
 GAME( 1900, g_whip,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Whip Rush 2222 AD (U) [!]", 0 )
-GAME( 1900, g_ward,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Wardner (U) [!]", 0 )
+
 GAME( 1900, g_vbar,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Virtual Bart (W) [!]", 0 )
 
 GAME( 1900, g_twih,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Twin Hawk (JE) [!]", 0 )
 
 GAME( 1900, g_twic,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Twin Cobra (U) [!]", 0 )
+GAME( 1900, g_kyuuky,   g_twic,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Kyuukyou Tiger (J) [!]", 0 )
+
+
 GAME( 1900, g_turr,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Turrican (U) [c][!]", 0 )
 GAME( 1900, g_trux,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Truxton (W) [!]", 0 )
 GAME( 1900, g_tp96,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Triple Play '96 (U) [c][!]", 0 )
 GAME( 1900, g_tpgo,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Triple Play Gold (U) [c][!]", 0 )
-GAME( 1900, g_todd,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Todd's Adventures in Slime World (U) [!]", 0 )
+
+
 GAME( 1900, g_tkil,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Time Killers (U) [!]", 0 )
-GAME( 1900, g_tfox,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Thunder Fox (U) [c][!]", 0 )
+GAME( 1900, g_tkille,   g_tkil,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Time Killers (E) [!]", 0 )
+
+
+
 GAME( 1900, g_tetr,     0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Tetris (J) [!]", 0 )
 GAME( 1900, g_synd,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Syndicate (UE) [!]", 0 )
 
 GAME( 1900, g_pins,     0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Power Instinct (J) [!]", 0 )
-GAME( 1900, g_pifg,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pit Fighter (W) (Oct 1991) [!]", 0 )
 GAME( 1900, g_pac2,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pac-Man 2 - The New Adventures (U) [!]", 0 )
 GAME( 1900, g_nbd,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Ninja Burai Densetsu (J) [!]", 0 )
 GAME( 1900, g_ko3,      0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Kick Off 3 - European Challenge (E) [!]", 0 )
+
+
 GAME( 1900, g_kgk,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Ka-Ge-Ki - Fists of Steel (U) [!]", 0 )
-GAME( 1900, g_ksal,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "King Salmon - The Big Catch (U) [c][!]", 0 )
-GAME( 1900, g_lvsc,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Lakers vs Celtics and the NBA Playoffs (UE) [!]", 0 )
+GAME( 1900, g_kageki,   g_kgk,    megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Ka-Ge-Ki (J) [!]", 0 )
+
+
+
 GAME( 1900, g_wbdt,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "We're Back! - A Dinosaur's Tale (U) [!]", 0 )
 GAME( 1900, g_comc,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Combat Cars (UE) [!]", 0 )
 
 GAME( 1900, g_688a,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "688 Attack Sub (UE) [!]", 0 )
+
 GAME( 1900, g_adiv,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Air Diver (U) [!]", 0 )
+GAME( 1900, g_adivej,   g_adiv,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Air Diver (J) [!]", 0 )
+
+
 GAME( 1900, g_asto,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Alien Storm (W) [!]", 0 )
 GAME( 1900, g_agla,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "American Gladiators (U) [!]", 0 )
 GAME( 1900, g_arch,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Arch Rivals (UE) [!]", 0 )
 GAME( 1900, g_aptg,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Arnold Palmer Tournament Golf (UE) [!]", 0 )
+
 GAME( 1900, g_atpt,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "ATP Tour Championship Tennis (U) [!]", 0 )
+GAME( 1900, g_atpte,    g_atpt,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "ATP Tour Championship Tennis (E)", 0 )
 
 GAME( 1900, g_arug,     0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Australian Rugby League (E) [!]", 0 )
 GAME( 1900, g_bjak,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Ball Jacks (JE) [c][!]", 0 )
@@ -13313,47 +13752,80 @@ GAME( 1900, g_bimi,     0,        megadriv,    megadriv,    megadriv, ROT0,   "U
 GAME( 1900, g_bwbw,     0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Boogie Woogie Bowling (J) [!]", 0 )
 GAME( 1900, g_bh95,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Brett Hull Hockey '95 (U) [!]", 0 )
 
-GAME( 1900, g_bvsb,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Bulls vs Blazers and the NBA Playoffs (UE) [!]", 0 )
-GAME( 1900, g_bvsl,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Bulls vs Lakers and the NBA Playoffs (UE) [!]", 0 )
+
+GAME( 1990, g_lvsc,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Electronic Arts", "Lakers vs Celtics and the NBA Playoffs (UE) [!]", 0 )
+
+GAME( 1993, g_bvsb,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Electronic Arts", "Bulls vs Blazers and the NBA Playoffs (UE) [!]", 0 )
+GAME( 1993, g_npbb,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Electronic Arts", "NBA Playoff - Bulls vs Blazers (J) [!]", 0 )
+
+GAME( 1991, g_bvsl,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Electronic Arts", "Bulls vs Lakers and the NBA Playoffs (UE) [!]", 0 )
+GAME( 1993, g_npbl,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Electronic Arts", "NBA Pro Basketball - Bulls vs Lakers (J) [!]", 0 )
+
 GAME( 1900, g_cada,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Cadash (JU) [c][!]", 0 )
 GAME( 1900, g_caes,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Caesars Palace (U) [!]", 0 )
 GAME( 1900, g_crjb,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Cal Ripken Jr. Baseball (U) [c][!]", 0 )
 GAME( 1900, g_c50,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Caliber Fifty (U) [!]", 0 )
 GAME( 1900, g_cgam,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "California Games (UE) [!]", 0 )
+
+
 GAME( 1900, g_capa,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Captain America and the Avengers (U) [!]", 0 )
+GAME( 1900, g_capamb,   g_capa,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Captain America and the Avengers (Beta)", 0 )
+GAME( 1900, g_capame,   g_capa,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Captain America and the Avengers (E)", 0 )
 
 
 GAME( 1900, g_chik,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Chiki Chiki Boys (UE) [!]", 0 )
+GAME( 1900, g_chikij,   g_chik,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Chiki Chiki Boys (J) [!]", 0 )
+
+
 GAME( 1900, g_clue,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Clue (U) [!]", 0 )
 GAME( 1900, g_cuty,     0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Cuty Suzuki no Ringside Angel (J) [!]", 0 )
 GAME( 1900, g_ddwe,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "D&D - Warriors of the Eternal Sun (UE) [!]", 0 )
+
 GAME( 1900, g_dlnd,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Dino Land (U) [!]", 0 )
+GAME( 1900, g_dinolj,   g_dlnd,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Dino Land (J) [!]", 0 )
+
+
 GAME( 1900, g_e_bt,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "ESPN Baseball Tonight (U) [!]", 0 )
+
 GAME( 1900, g_e_hn,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "ESPN National Hockey Night (U) [c][!]", 0 )
+GAME( 1900, g_e_nhb,    g_e_hn,    megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "ESPN National Hockey Night (Beta)", 0 )
 
 GAME( 1900, g_e_sn,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "ESPN Sunday Night NFL (U) [!]", 0 )
+
 GAME( 1900, g_ehrd,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Evander Holyfield's Real Deal Boxing (JU) [!]", 0 )
-GAME( 1900, g_f15s,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "F-15 Strike Eagle II (U) [!]", 0 )
+
 GAME( 1900, g_feud,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Family Feud (U) [!]", 0 )
 GAME( 1900, g_fatl,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Fatal Labyrinth (JU) [!]", 0 )
 GAME( 1900, g_frgp,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Ferrari Grand Prix Challenge (U) [!]", 0 )
 GAME( 1900, g_fifa,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "FIFA International Soccer (UE) (M4) [!]", 0 )
-GAME( 1900, g_fi95,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "FIFA Soccer 95 (UE) [!]", 0 )
-GAME( 1900, g_fi96,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "FIFA Soccer 96 (UE) (M6) [!]", 0 )
+
+
 
 GAME( 1900, g_gfko,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "George Foreman's KO Boxing (U) [!]", 0 )
+
 GAME( 1900, g_grwl,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Growl (U) [!]", 0 )
+GAME( 1900, g_runark,   g_grwl,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Runark (J) [!]", 0 )
+
+
 GAME( 1900, g_hnov,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Heavy Nova (U) [!]", 0 )
 GAME( 1900, g_hice,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Hit The Ice (U) [c][!]", 0 )
 GAME( 1900, g_jnpg,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Jack Nicklaus' Power Challenge Golf (UE) [!]", 0 )
-GAME( 1900, g_ktm2,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "King of the Monsters 2 (U) [!]", 0 )
+
 GAME( 1900, g_ktm,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "King of the Monsters (U) [!]", 0 )
+GAME( 1900, g_kotme,    g_ktm,    megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "King of the Monsters (E) [!]", 0 )
+
 GAME( 1900, g_klax,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Klax (UE) [!]", 0 )
+GAME( 1900, g_klaxj,    g_klax,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Klax (J) [c][!]", 0 )
+
+GAME( 1900, g_ktm2,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "King of the Monsters 2 (U) [!]", 0 )
 
 GAME( 1900, g_mamr,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mario Andretti Racing (UE) [!]", 0 )
+
 GAME( 1900, g_mamo,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Master of Monsters (U) [!]", 0 )
+GAME( 1900, g_momonj,   g_mamo,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Master of Monsters (J) [!]", 0 )
+
+
 GAME( 1900, g_mbmb,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mega Bomberman (UE) [!]", 0 )
-GAME( 1900, g_njte,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NBA Jam Tournament Edition (W) (REV01) [!]", 0 )
 GAME( 1900, g_nl98,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NBA Live 98 (U) [!]", 0 )
 GAME( 1900, g_tnzs,     0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "New Zealand Story, The (J) [!]", 0 )
 GAME( 1900, g_noes,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "No Escape (U) [!]", 0 )
@@ -13362,35 +13834,56 @@ GAME( 1900, g_papb,     0,        megadriv,    megadriv,    megadriv, ROT0,   "U
 
 GAME( 1900, g_pap2,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Paperboy II (U) [!]", 0 )
 GAME( 1900, g_pop2,     0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Populous II - Two Tribes (E) [!]", 0 )
+
 GAME( 1900, g_quad,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Quad Challenge (U) [c][!]", 0 )
+GAME( 1900, g_mtrx,     g_quad,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "MegaTraX (J) [c][!]", 0 )
+
 GAME( 1900, g_risk,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Risk (U) [!]", 0 )
+
 GAME( 1900, g_rise,     0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Rise of the Robots (E) [!]", 0 )
+
 GAME( 1900, g_shov,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Shove It! - The Warehouse Game (U) [!]", 0 )
-GAME( 1900, g_side,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Side Pocket (JU) [!]", 0 )
+GAME( 1900, g_sokoba,   g_shov,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Sokoban (J) [!]", 0 )
+
+
 GAME( 1900, g_std9,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Star Trek - Deep Space 9 - Crossroads of Time (U) [!]", 0 )
+GAME( 1900, g_stds9e,   g_std9,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Star Trek - Deep Space 9 - Crossroads of Time (E)", 0 )
+
+
 GAME( 1900, g_stng,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Star Trek - The Next Generation (U) (REV01) [!]", 0 )
+GAME( 1900, g_stng00,   g_stng,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Star Trek - The Next Generation (U) (REV00) [!]", 0 )
+
 GAME( 1900, g_t2ar,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "T2 - The Arcade Game (UE) (REV01) [!]", 0 )
+GAME( 1900, g_t2arcb,   g_t2ar,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "T2 - The Arcade Game (Beta)", 0 )
+
+
 GAME( 1900, g_vali,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Valis (U) [!]", 0 )
+GAME( 1900, g_valj,     g_vali,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Valis (J) [!]", 0 )
+
 GAME( 1900, g_val3,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Valis III (U) [!]", 0 )
+GAME( 1900, g_val3j,    g_val3,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Valis III (J) [!]", 0 )
+
 GAME( 1900, g_vpin,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Virtual Pinball (UE) [!]", 0 )
 
 GAME( 1900, g_nl97,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NBA Live 97 (UE) [!]", 0 )
 GAME( 1900, g_nl96,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NBA Live 96 (UE) [!]", 0 )
 GAME( 1900, g_nl95,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NBA Live 95 (UE) [!]", 0 )
-GAME( 1900, g_njam,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NBA Jam (UE) (REV01) [!]", 0 )
 GAME( 1900, g_nasc,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NBA All-Star Challenge (UE) [!]", 0 )
 GAME( 1900, g_nact,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NBA Action (U) [!]", 0 )
 GAME( 1900, g_na95,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NBA Action '95 (UE) [!]", 0 )
-GAME( 1900, g_npbb,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NBA Playoff - Bulls vs Blazers (J) [!]", 0 )
+
 GAME( 1900, g_nba9,     0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "NBA Pro Basketball '94 (J) [!]", 0 )
 
-GAME( 1900, g_npbl,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NBA Pro Basketball - Bulls vs Lakers (J) [!]", 0 )
+
 GAME( 1900, g_nbs9,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NBA Showdown 94 (UE) [!]", 0 )
 GAME( 1900, g_nccf,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NCAA College Football (U) [!]", 0 )
 GAME( 1900, g_ncff,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NCAA Final Four College Basketball (U) [!]", 0 )
 GAME( 1900, g_nfl8,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NFL 98 (U) [!]", 0 )
 GAME( 1900, g_nfl5,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NFL '95 (U) [!]", 0 )
+
 GAME( 1900, g_nfl4,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NFL Football '94 Starring Joe Montana (U) [!]", 0 )
+GAME( 1900, g_nfl94j,   g_nfl4,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "NFL Football '94 Starring Joe Montana (J) [!]", 0 )
+
 GAME( 1900, g_nfpt,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NFL Prime Time (U) [!]", 0 )
 GAME( 1900, g_nqc6,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NFL Quarterback Club 96 (UE) [!]", 0 )
 GAME( 1900, g_nqc,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NFL Quarterback Club (W) [!]", 0 )
@@ -13400,18 +13893,19 @@ GAME( 1900, g_nh9e,      0,        megadpal,    megadriv,    megadrie, ROT0,   "
 GAME( 1900, g_nh96,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NHL 96 (UE) [!]", 0 )
 GAME( 1900, g_nh97,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NHL 97 (UE) [!]", 0 )
 GAME( 1900, g_nash,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NHL All-Star Hockey '95 (U) [!]", 0 )
-GAME( 1900, g_nhlh,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NHL Hockey (U) [!]", 0 )
 GAME( 1900, g_nhlp,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NHLPA Hockey '93 (UE) (REV01) [!]", 0 )
 GAME( 1900, g_olsg,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Olympic Summer Games Atlanta 96 (UE) [!]", 0 )
-GAME( 1900, g_olwg,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Olympic Winter Games - Lillehammer 94 (U) [c][!]", 0 )
 
-GAME( 1900, g_patb,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pat Riley Basketball (U) [!]", 0 )
-GAME( 1900, g_pele,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pele! (UE) [!]", 0 )
-GAME( 1900, g_pelw,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pele's World Tournament Soccer (UE) [!]", 0 )
+GAME( 1990, g_patb,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Sega", "Pat Riley Basketball (U) [!]", 0 )
+GAME( 1900, g_pele,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Accolate", "Pele! (UE) [!]", 0 )
+GAME( 1900, g_pelw,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Sport Accolate", "Pele's World Tournament Soccer (UE) [!]", 0 )
 GAME( 1900, g_pst,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pete Sampras Tennis (UE) (REV00) (J-Cart) [c][!]", 0 )
 GAME( 1900, g_pgae,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "PGA European Tour (UE) [!]", 0 )
 GAME( 1900, g_rb3,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "RBI Baseball 3 (U) [c][!]", 0 )
+
 GAME( 1900, g_rb4,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "RBI Baseball 4 (U) [!]", 0 )
+GAME( 1900, g_rbi4b,     g_rb4,    megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "RBI Baseball 4 (Beta)", 0 )
+
 GAME( 1900, g_rb93,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "RBI Baseball 93 (U) [!]", 0 )
 GAME( 1900, g_rb94,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "RBI Baseball 94 (UE) [!]", 0 )
 GAME( 1900, g_rcvm,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Roger Clemens' MVP Baseball (U) [!]", 0 )
@@ -13420,20 +13914,28 @@ GAME( 1900, g_rcvm,      0,        megadriv,    megadriv,    megadriv, ROT0,   "
 GAME( 1900, g_rw93,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Rugby World Cup 1995 (UE) (M3) [!]", 0 )
 GAME( 1900, g_swcr,      0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Shane Warne Cricket (E) [c][!]", 0 )
 GAME( 1900, g_shi,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Super High Impact (UE) [!]", 0 )
+
 GAME( 1900, g_srba,      0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Super Real Basketball (E) [c][!]", 0 )
+GAME( 1900, g_srealj,    g_srba,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Super Real Basketball (J) [c][!]", 0 )
+
+
 GAME( 1900, g_svol,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Super Volleyball (U) [c][!]", 0 )
+GAME( 1900, g_svolua,    g_svol,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Super Volleyball (U) [a1][!]", 0 )
+
+
 GAME( 1900, g_ws96,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "World Series Baseball '96 (U) [!]", 0 )
 GAME( 1900, g_ws95,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "World Series Baseball '95 (U) [!]", 0 )
 GAME( 1900, g_wsb,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "World Series Baseball (U) [!]", 0 )
 GAME( 1900, g_wts,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "World Trophy Soccer (U) [!]", 0 )
 
 GAME( 1900, g_wfsw,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "WWF Super Wrestlemania (UE) [!]", 0 )
-GAME( 1900, g_ys3,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Ys III - Wanderers from Ys (U) [!]", 0 )
 GAME( 1900, g_ma95,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Madden NFL 95 (UE) [!]", 0 )
 GAME( 1900, g_ma96,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Madden NFL 96 (UE) [!]", 0 )
 GAME( 1900, g_ma97,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Madden NFL 97 (UE) [!]", 0 )
 GAME( 1900, g_ma98,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Madden NFL 98 (U) [c][!]", 0 )
 GAME( 1900, g_ma94,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "John Madden NFL 94 (UE) [c][!]", 0 )
+
+
 GAME( 1900, g_ma93,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "John Madden Football '93 (UE) [c][!]", 0 )
 
 
@@ -13441,7 +13943,10 @@ GAME( 1900, g_ma92,      0,        megadriv,    megadriv,    megadriv, ROT0,   "
 GAME( 1900, g_ma3c,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "John Madden Football '93 - Championship Edition (U) [!]", 0 )
 GAME( 1900, g_ma,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "John Madden Football (UE) [!]", 0 )
 GAME( 1900, g_jmof,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Joe Montana Football (JU) [!]", 0 )
+
 GAME( 1900, g_jms2,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Joe Montana Sports Talk Football 2 (W) (REV01) [!]", 0 )
+GAME( 1900, g_jmons2,    g_jms2,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Joe Montana Sports Talk Football 2 (W) (REV00) [!]", 0 )
+
 GAME( 1900, g_jms,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Joe Montana Sports Talk Football (UE) [!]", 0 )
 GAME( 1900, g_hb94,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "HardBall '94 (UE) [!]", 0 )
 GAME( 1900, g_hb3,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "HardBall III (U) [!]", 0 )
@@ -13461,11 +13966,16 @@ GAME( 1900, g_drbb,      0,        megadriv,    megadriv,    megadrij, ROT0,   "
 GAME( 1900, g_drsc,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "David Robinson's Supreme Court (U) [!]", 0 )
 GAME( 1900, g_dc3d,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Devil's Course 3-D Golf (J) [!]", 0 )
 GAME( 1900, g_drib,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Double Dribble - The Playoff Edition (U) [!]", 0 )
+
 GAME( 1900, g_dbzj,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Dragon Ball Z - Buyuu Retsuden (J) [!]", 0 )
-GAME( 1900, g_dbzf,      0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Dragon Ball Z - L'Appel du Destin (F) [!]", 0 )
+GAME( 1900, g_dbzf,      g_dbzj,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Dragon Ball Z - L'Appel du Destin (F) [!]", 0 )
+
 GAME( 1900, g_deye,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Dragon's Eye - Shanghai 3 (J) [!]", 0 )
 
-GAME( 1900, g_eaho,      0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "EA Hockey (E) [!]", 0 )
+// really clones?
+GAME( 1900, g_nhlh,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NHL Hockey (U) [!]", 0 )
+GAME( 1900, g_eaho,      g_nhlh,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "EA Hockey (E) [!]", 0 )
+GAME( 1900, g_prho,      g_nhlh,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Pro Hockey (J) [!]", 0 )
 
 GAME( 1900, g_f1c,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "F1 Circus MD (J) [!]", 0 )
 GAME( 1900, g_f1gp,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "F1 Grand Prix - Nakajima Satoru (J) [!]", 0 )
@@ -13473,26 +13983,22 @@ GAME( 1900, g_f1h,       0,        megadriv,    megadriv,    megadrij, ROT0,   "
 GAME( 1900, g_f1sl,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "F1 Super License - Nakajima Satoru (J) [!]", 0 )
 GAME( 1900, g_f1wc,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "F1 World Championship (U) [!]", 0 )
 GAME( 1900, g_fas1,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Fastest 1 (J) [!]", 0 )
-GAME( 1900, g_fatm,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Fatman (J) [c][!]", 0 )
-GAME( 1900, g_fmas,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Fighting Masters (U) [!]", 0 )
+
 
 GAME( 1900, g_fblo,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Final Blow (J) [c][!]", 0 )
 GAME( 1900, g_fpro,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Fire Pro Wrestling Gaiden (J) [c][!]", 0 )
 GAME( 1900, g_fore,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Foreman For Real (W) [!]", 0 )
-GAME( 1900, g_fw,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Forgotten Worlds (W) (REV01) [!]", 0 )
 GAME( 1900, g_fung,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Fun-N-Games (U) [c][!]", 0 )
-GAME( 1900, g_geng,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Genghis Khan II - Clan of the Gray Wolf (U) [!]", 0 )
 GAME( 1900, g_gws,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Great Waldo Search, The (U) [!]", 0 )
-GAME( 1900, g_hydu,      0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Hyper Dunk - The Playoff Edition (E) [!]", 0 )
 GAME( 1900, g_imgi,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "IMG International Tour Tennis (UE) [!]", 0 )
 
-GAME( 1900, g_insx,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Insector X (U) [!]", 0 )
+
 GAME( 1900, g_intr,      0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "International Rugby (E) [c][!]", 0 )
 GAME( 1900, g_ishi,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Ishido - The Way of the Stones (U) [c][!]", 0 )
 GAME( 1900, g_jlcs,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "J. League Champion Soccer (J) [!]", 0 )
 GAME( 1900, g_jlp2,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "J. League Pro Striker 2 (J) [!]", 0 )
 GAME( 1900, g_jlpp,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "J. League Pro Striker - Perfect Edition (J) [c][!]", 0 )
-GAME( 1900, g_jlp,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "J. League Pro Striker (J) (REV03) [c][!]", 0 )
+
 GAME( 1900, g_jlpf,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "J. League Pro Striker Final Stage (J) [c][!]", 0 )
 GAME( 1900, g_jbdb,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "James Buster Douglas Knock Out Boxing (UE) [c][!]", 0 )
 GAME( 1900, g_jamm,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Jammit (U) [!]", 0 )
@@ -13503,65 +14009,75 @@ GAME( 1900, g_jeop,      0,        megadriv,    megadriv,    megadriv, ROT0,   "
 GAME( 1900, g_jeod,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Jeopardy! Deluxe (U) [c][!]", 0 )
 GAME( 1900, g_jeos,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Jeopardy! Sports Edition (U) [!]", 0 )
 GAME( 1900, g_jgpf,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Jerry Glanville's Pigskin Footbrawl (U) [!]", 0 )
-GAME( 1900, g_jewl,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Jewel Master (UE) [!]", 0 )
 GAME( 1900, g_jmac,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Joe & Mac Caveman Ninja (U) [!]", 0 )
-GAME( 1900, g_jb11,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Jordan vs Bird - Super One-on-One (UE) (REV01) [!]", 0 )
 
 
 
 GAME( 1900, g_kbou,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "King's Bounty (UE) [!]", 0 )
 
-GAME( 1900, g_lhx,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "LHX Attack Chopper (UE) [!]", 0 )
 GAME( 1900, g_msbu,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Magic School Bus, The (U) [!]", 0 )
 GAME( 1900, g_mhy,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Mamono Hunter Yohko - Makai Kara no Tenkosei (J) [!]", 0 )
 GAME( 1900, g_mmad,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Marble Madness (UE) [!]", 0 )
 GAME( 1900, g_mlem,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mario Lemieux Hockey (UE) [!]", 0 )
 GAME( 1900, g_mowe,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Master of Weapon (J) [!]", 0 )
 GAME( 1900, g_math,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Math Blaster - Episode 1 (U) [!]", 0 )
-GAME( 1900, g_mswi,      0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Mega SWIV (E) [p1][!]", 0 )
-GAME( 1900, g_mtrx,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "MegaTraX (J) [c][!]", 0 )
+
+GAME( 1900, g_mswive,    0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Mega SWIV (E)", 0 )
+GAME( 1900, g_mswi,      g_mswive, megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Mega SWIV (E) [p1][!]", 0 )
+
+
 GAME( 1900, g_merc,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mercs (W) [!]", 0 )
 GAME( 1900, g_mult,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mickey's Ultimate Challenge (U) [!]", 0 )
-GAME( 1900, g_midr,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Midnight Resistance (U) [!]", 0 )
-GAME( 1900, g_m29,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mig-29 Fighter Pilot (U) [!]", 0 )
 GAME( 1900, g_mmg,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Might and Magic - Gates to Another World (UE) (REV01) [!]", 0 )
-GAME( 1900, g_mike,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mike Ditka Power Football (U) [!]", 0 )
 GAME( 1900, g_mlbb,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "MLBPA Baseball (U) [!]", 0 )
 
 GAME( 1900, g_mlbs,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "MLBPA Sports Talk Baseball (U) [!]", 0 )
-GAME( 1900, g_mono,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Monopoly (U) [c][!]", 0 )
+
 GAME( 1900, g_mahb,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Muhammad Ali Heavyweight Boxing (U) [c][!]", 0 )
-GAME( 1900, g_mysd,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mystic Defender (W) (REV01) [!]", 0 )
+GAME( 1900, g_mahbb,     g_mahb,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Muhammad Ali Heavyweight Boxing (Beta)", 0 )
+GAME( 1900, g_mahbe,     g_mahb,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Muhammad Ali Heavyweight Boxing (E)", 0 )
+
 
 GAME( 1900, g_nhir,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Newman-Haas IndyCar Racing (W) [!]", 0 )
-GAME( 1900, g_pto,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "P.T.O. Pacific Theater of Operations (U) [!]", 0 )
-GAME( 1900, g_pbgl,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pebble Beach Golf Links (U) [!]", 0 )
 
 GAME( 1900, g_path,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Power Athlete (J) [!]", 0 )
-GAME( 1900, g_prho,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Pro Hockey (J) [!]", 0 )
+
 GAME( 1900, g_prqu,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pro Quarterback (U) [c][!]", 0 )
 GAME( 1900, g_ramp,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Rampart (U) [!]", 0 )
-GAME( 1900, g_rast,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Rastan Saga II (U) [!]", 0 )
 GAME( 1900, g_rsbt,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Richard Scarry's Busytown (U) [!]", 0 )
+
 GAME( 1900, g_rmmw,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Rockman Megaworld (J) [!]", 0 )
+GAME( 1900, g_rkmnja,    g_rmmw,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Rockman Megaworld (J) [a1][!]", 0 )
+
 GAME( 1900, g_robw,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Rocky and Bullwinkle, The Adventures of (U) [!]", 0 )
 
 
 
-GAME( 1900, g_sbls,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Shadow Blasters (U) [c][!]", 0 )
+
+
 GAME( 1900, g_sdnk,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Slam Dunk - Shikyou Gekitotsu! (J) [!]", 0 )
+
 GAME( 1900, g_sspo,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Slaughter Sport (U) [c][!]", 0 )
+GAME( 1900, g_fatm,      g_sspo,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Fatman (J) [c][!]", 0 )
+
 GAME( 1900, g_scon,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Star Control (U) [c][!]", 0 )
-GAME( 1900, g_sfli,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Starflight (UE) (REV01) [!]", 0 )
 GAME( 1900, g_ssma,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Street Smart (JU) [!]", 0 )
 
 GAME( 1900, g_sumc,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Summer Challenge (U) [!]", 0 )
 GAME( 1900, g_sl,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Super League (J) [!]", 0 )
 GAME( 1900, g_sl91,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Super League 91 (J) [!]", 0 )
 GAME( 1900, g_smas,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Super Masters Golf (J) [!]", 0 )
+
 GAME( 1900, g_swso,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Sword of Sodan (UE) [!]", 0 )
+GAME( 1900, g_swsoj,     g_swso,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Sword of Sodan (J) [!]", 0 )
+
 GAME( 1900, g_swve,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Sword of Vermilion (UE) [!]", 0 )
-GAME( 1900, g_tusa,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Team USA Basketball (UE) [c][!]", 0 )
+GAME( 1900, g_swvej,     g_swve,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Sword of Vermilion (J) [c][!]", 0 )
+
+GAME( 1900, g_tusa,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Electronic Arts", "Team USA Basketball (UE) [c][!]", 0 )
+GAME( 1900, g_dtusa,     g_tusa,   megadriv,    megadriv,    megadrij, ROT0,   "Electronic Arts", "Dream Team USA (J) [!]", 0 )
+
+
 GAME( 1900, g_tcls,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Techno Clash (UE) [!]", 0 )
 
 GAME( 1900, g_tcop,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Technocop (U) [!]", 0 )
@@ -13584,16 +14100,24 @@ GAME( 1900, g_toxi,      0,        megadriv,    megadriv,    megadriv, ROT0,   "
 GAME( 1900, g_tanf,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Troy Aikman NFL Football (U) [!]", 0 )
 GAME( 1900, g_uman,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Ultraman (J) [!]", 0 )
 GAME( 1900, g_ur95,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Unnecessary Roughness 95 (U) [!]", 0 )
-GAME( 1900, g_vapt,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Vapor Trail (U) [!]", 0 )
+
+GAME( 1900, g_vapt,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Vapor Trail (U) [!]", 0 )
+GAME( 1900, g_kuuga,  g_vapt,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Kuuga - Operation Vapor Trail (J) [!]", 0 )
+
 
 GAME( 1900, g_wack,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Wacky Worlds (U) [!]", 0 )
-GAME( 1900, g_wars,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Warsong (U) [!]", 0 )
 GAME( 1900, g_wgas,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Wayne Gretzsky NHLPA All-Stars (UE) [!]", 0 )
 GAME( 1900, g_wfor,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Wheel of Fortune (U) [!]", 0 )
+
 GAME( 1900, g_winc,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Winter Challenge (UE) [!]", 0 )
+GAME( 1900, g_wchalb,    g_winc,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Winter Challenge (Beta)", 0 )
+
 GAME( 1900, g_wb3,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Wonder Boy III - Monster Lair (JE) [c][!]", 0 )
 
 GAME( 1900, g_wbmw,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Wonder Boy in Monster World (UE) [!]", 0 )
+GAME( 1900, g_turma,     g_wbmw,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Turma da Monica na Terra Dos Monstros (B) [!]", 0 )
+
+
 GAME( 1900, g_wcl,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "World Class Leaderboard Golf (U) [c][!]", 0 )
 GAME( 1900, g_wc94,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "World Cup USA 94 (UE) [!]", 0 )
 
@@ -13604,11 +14128,13 @@ GAME( 1900, g_10in1,      0,        megadriv,    megadriv,    g_12i1, ROT0,   "U
 GAME( 1900, g_cwcs,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Champions World Class Soccer (W) (M4) [!]", 0 )
 GAME( 1900, g_cbwl,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Championship Bowling (U) [!]", 0 )
 GAME( 1900, g_cpam,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Championship Pro-Am (U) [c][!]", 0 )
-GAME( 1900, g_cdor,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Centurion - Defender of Rome (UE) [!]", 0 )
+GAME( 1900, g_cdor,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Electronic Arts", "Centurion - Defender of Rome (UE) [!]", 0 )
+
+// golf game
 GAME( 1900, g_chi,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Chi Chi's Pro Challenge (U) [!]", 0 )
 GAME( 1900, g_bglf,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Battle Golfer Yui (J) [c][!]", 0 )
+
 GAME( 1900, g_baha,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Bahamut Senki (J) [c][!]", 0 )
-GAME( 1900, g_aoki,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Aoki Ookami to Shiroki Meshika - Genchou Hishi (J) [!]", 0 )
 GAME( 1900, g_advdai,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Advanced Daisenryaku (J) (REV01) [!]", 0 )
 GAME( 1900, g_blueal,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Blue Almanac (J) [!]", 0 )
 GAME( 1900, g_chibi,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Chibi Maruko-Chan - Wakuwaku Shopping (J) [c][!]", 0 )
@@ -13619,10 +14145,9 @@ GAME( 1900, g_crayon,      0,        megadriv,    megadriv,    megadrij, ROT0,  
 
 
 
-GAME( 1900, g_draxos,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Draxos (J) [!]", 0 )
-GAME( 1900, g_eadoub,      0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "EA Sports Double Header (E) [!]", 0 )
-GAME( 1900, g_europa,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Europa Sensen (J) [!]", 0 )
-GAME( 1900, g_fushig,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Fushigi no Umi no Nadia (J) [c][!]", 0 )
+
+GAME( 1900, g_eadoub,      0,        megadpal,    megadriv,    megadrie, ROT0,   "Electronic Arts", "EA Sports Double Header (E) [!]", 0 )
+GAME( 1900, g_fushig,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Namco", "Fushigi no Umi no Nadia (J) [c][!]", 0 )
 GAME( 1900, g_ftbhb,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Frank Thomas Big Hurt Baseball (UE) [!]", 0 )
 
 GAME( 1900, g_ghwor,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Greatest Heavyweights of the Ring (U) [!]", 0 )
@@ -13634,9 +14159,8 @@ GAME( 1900, g_janout,      0,        megadriv,    megadriv,    megadrij, ROT0,  
 
 GAME( 1900, g_kishi,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Kishi Densetsu (J) [!]", 0 )
 GAME( 1900, g_kyuuk,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Kyuukai Douchuuki (J) [c][!]", 0 )
-GAME( 1900, g_langr,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Langrisser (J) [!]", 0 )
-GAME( 1900, g_lngr2a,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Langrisser II (J) (REV00) [!]", 0 )
-GAME( 1900, g_lngr2c,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Langrisser II (J) (REV02) [!]", 0 )
+
+
 GAME( 1900, g_m1tank,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "M-1 Abrams Battle Tank (UE) (REV01) [!]", 0 )
 GAME( 1900, g_madou,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Madou Monogatari I (J) [!]", 0 )
 
@@ -13650,12 +14174,8 @@ GAME( 1900, g_mpiano,      0,        megadriv,    megadriv,    megadriv, ROT0,  
 GAME( 1900, g_monwr4,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Monster World IV (J) [!]", 0 )
 
 
-GAME( 1900, g_mlfoot,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mutant League Football (UE) [!]", 0 )
 GAME( 1900, g_new3dg,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "New 3D Golf Simulation Harukanaru Augusta (J) [!]", 0 )
 GAME( 1900, g_nikkan,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Nikkan Sports Pro Yakyuu Van (J) [!]", 0 )
-GAME( 1900, g_nobbus,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Nobunaga no Yabou - Bushou Fuuunsoku (J) [!]", 0 )
-GAME( 1900, g_nobzen,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Nobunaga no Yabou - Zenkokuban (J) [!]", 0 )
-GAME( 1900, g_noblor,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Nobunaga no Yabou Haouden - Lord of Darkness (J) [!]", 0 )
 GAME( 1900, g_patlab,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Patlabor (J) [c][!]", 0 )
 GAME( 1900, g_psyobl,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Psy-O-Blade Moving Adventure (J) [!]", 0 )
 GAME( 1900, g_ransei,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Ransei no Hasha (J) [!]", 0 )
@@ -13664,222 +14184,295 @@ GAME( 1900, g_ransei,      0,        megadriv,    megadriv,    megadrij, ROT0,  
 GAME( 1900, g_renthe,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Rent A Hero (J) [!]", 0 )
 GAME( 1900, g_sangor,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Sangokushi Retsuden - Ransei no Eiyuu Tachi (J) [!]", 0 )
 GAME( 1900, g_shikin,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Shi Kin Joh (J) [!]", 0 )
-GAME( 1900, g_shiten,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Shiten Myooh (J) [c][!]", 0 )
 GAME( 1900, g_shogi,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Shogi no Hoshi (J) [!]", 0 )
 
 
 GAME( 1900, g_shura,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Shura no Mon (J) [!]", 0 )
 GAME( 1900, g_slapf,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Slap Fight (J) [c][!]", 0 )
-GAME( 1900, g_sorckd,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Sorcerer's Kingdom (U) (REV01) [!]", 0 )
-GAME( 1900, g_stalon,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Steel Talons (UE) [!]", 0 )
+
 GAME( 1900, g_supdai,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Super Daisenryaku (J) (REV00) [!]", 0 )
 GAME( 1900, g_surgin,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Surging Aura (J) [!]", 0 )
 
 GAME( 1900, g_taiga,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Taiga Drama Taiheiki (J) [!]", 0 )
-GAME( 1900, g_taikou,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Taikou Risshiden (J) [!]", 0 )
-GAME( 1900, g_teitok,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Teitoku no Ketsudan (J) [c][!]", 0 )
 GAME( 1900, g_telmj,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Tel Tel Mahjong (J) [c][!]", 0 )
 GAME( 1900, g_telstd,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Tel Tel Stadium (J) [!]", 0 )
 GAME( 1900, g_tpglf2,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Top Pro Golf 2 (J) [!]", 0 )
 GAME( 1900, g_tpglf,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Top Pro Golf (J) [!]", 0 )
 GAME( 1900, g_twintl,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Twinkle Tale (J) [!]", 0 )
 
-GAME( 1900, g_verytx,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Verytex (J) [c][!]", 0 )
+GAME( 1900, g_verytx,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Verytex (J) [c][!]", 0 )
 GAME( 1900, g_vix357,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Vixen 357 (J) [!]", 0 )
+
+// golf game
 GAME( 1900, g_waiala,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Waialae no Kiseki (J) [!]", 0 )
-GAME( 1900, g_warps,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Warpspeed (U) [!]", 0 )
+
+
+GAME( 1900, g_warps,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Accolade", "Warpspeed (U) [!]", 0 )
+
 GAME( 1900, g_wboy5,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Wonder Boy V - Monster World III (J) [!]", 0 )
 GAME( 1900, g_wonlib,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Wonder Library (J) [!]", GAME_NOT_WORKING ) // what is this? megadrive, mega cd?, accesses extra regs, extra ram etc.
-GAME( 1900, g_wresbl,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Wrestleball (J) [c][!]", 0 )
+
 GAME( 1900, g_xdaze,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "X Dazedly Ray (J) [!]", 0 )
-GAME( 1900, g_xmen,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "X-Men (U) [!]", 0 )
+
 GAME( 1900, g_yuyuga,      0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Yuu Yuu Hakusho Gaiden (J) [!]", 0 )
 GAME( 1991, g_zanya,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Wolfteam", "Zan Yasha Enbuden (J) [!]", 0 )
 
 
 GAME( 1900, g_aresha,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "A Ressha de Gyoukou MD (J) [!]", 0 )
-GAME( 1900, g_adivej,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Air Diver (J) [!]", 0 )
 
 
 GAME( 1900, g_chouya,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Chou Yakyuu Miracle Nine (J) [!]", 0 )
-GAME( 1900, g_chikij,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Chiki Chiki Boys (J) [!]", 0 )
-GAME( 1900, g_coole,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Cool Spot (E) [!]", 0 )
 
-GAME( 1900, g_dtusa,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Dream Team USA (J) [!]", 0 )
 GAME( 1900, g_dynab2,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Dyna Brothers 2 (J) [!]", 0 )
-GAME( 1900, g_taz2e,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Escape From Mars Starring Taz (E) [!]", 0 )
-GAME( 1900, g_f15e,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "F-15 Strike Eagle II (E) [!]", 0 )
+
+GAME( 1900, g_f15s,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "F-15 Strike Eagle II (U) [!]", 0 )
+GAME( 1900, g_f15e,     g_f15s,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "F-15 Strike Eagle II (E) [!]", 0 )
+GAME( 1900, g_f15b,     g_f15s,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "F-15 Strike Eagle II (Beta)", 0 )
 
 GAME( 1900, g_gamblr,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Gambler Jiko Chuushinha - Katayama Masayuki no Mahjong Doujou (J) [!]", 0 )
 
-GAME( 1900, g_immorj,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Immortal, The (J) [!]", 0 )
-GAME( 1900, g_jmons2,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Joe Montana Sports Talk Football 2 (W) (REV00) [!]", 0 )
 GAME( 1900, g_madj,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "John Madden Football (J) [!]", 0 )
-GAME( 1900, g_jbooke,       0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Jungle Book, The (E) [!]", 0 )
 
-GAME( 1900, g_jstrj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Jungle Strike (J) [!]", 0 )
+
+
 GAME( 1900, g_kingcj,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "King Colossus (J) [!]", 0 )
-GAME( 1900, g_klaxj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Klax (J) [c][!]", 0 )
-GAME( 1900, g_kujaku,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Kujaku Ou 2 (J) [!]", 0 )
-GAME( 1900, g_kuuga,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Kuuga - Operation Vapor Trail (J) [!]", 0 )
-GAME( 1900, g_kyuuky,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Kyuukyou Tiger (J) [!]", 0 )
 
-GAME( 1900, g_lem2e,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Lemmings 2 - The Tribes (E) [!]", 0 )
+
+
 GAME( 1900, g_lordmo,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Lord Monarch (J) [!]", 0 )
-GAME( 1900, g_marsue,       0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Marsupilami (E) (M5) [!]", 0 )
+
 
 GAME( 1900, g_mbmba,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mega Bomberman (UE) [a1][!]", 0 )
-GAME( 1900, g_mmprme,       0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Mighty Morphin Power Rangers - The Movie (E) [!]", 0 )
-GAME( 1900, g_mmpre,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Mighty Morphin Power Rangers (E) [!]", 0 )
-GAME( 1900, g_nbahte,       0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "NBA Hang Time (E) [!]", 0 )
-GAME( 1900, g_nbajj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "NBA Jam (J) [!]", 0 )
 
-GAME( 1900, g_nbaj00,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NBA Jam (UE) (REV00) [!]", 0 )
-GAME( 1900, g_nbajt0,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NBA Jam Tournament Edition (W) (REV00) [!]", 0 )
-GAME( 1900, g_nigel,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Nigel Mansell's World Championship (U) [!]", 0 )
-GAME( 1900, g_oozee,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Ooze, The (E) [!]", 0 )
-GAME( 1900, g_orunj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "OutRun (J) [!]", 0 )
-GAME( 1900, g_2040e,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Phantom 2040 (E) [!]", 0 )
-GAME( 1900, g_pitfe,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Pitfall - The Mayan Adventure (E) [!]", 0 )
-GAME( 1900, g_pifia,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pit Fighter (UE) (Jun 1991) [!]", 0 )
-GAME( 1900, g_pocae,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Pocahontas (E) [!]", 0 )
 
-GAME( 1900, g_renste,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Ren and Stimpy Show, The - Stimpy's Invention (E) [!]", 0 )
-GAME( 1900, g_runark,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Runark (J) [!]", 0 )
-GAME( 1900, g_sidepe,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Side Pocket (E) [!]", 0 )
 
-GAME( 1900, g_bart00,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Simpsons, The - Bart vs The Space Mutants (UE) (REV00) [!]", 0 )
+
+GAME( 1900, g_njam,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NBA Jam (UE) (REV01) [!]", 0 )
+GAME( 1900, g_nbaj00,  g_njam,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NBA Jam (UE) (REV00) [!]", 0 )
+GAME( 1900, g_nbajj,   g_njam,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "NBA Jam (J) [!]", 0 )
+
+GAME( 1900, g_njte,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NBA Jam Tournament Edition (W) (REV01) [!]", 0 )
+GAME( 1900, g_nbajt0,  g_njte,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NBA Jam Tournament Edition (W) (REV00) [!]", 0 )
+
+GAME( 1900, g_nbah,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NBA Hang Time (U) [!]", 0 )
+GAME( 1900, g_nbahte,  g_nbah,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "NBA Hang Time (E) [!]", 0 )
+
+GAME( 1900, g_nigel,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Nigel Mansell's World Championship (U) [!]", 0 )
+GAME( 1900, g_nigwce,  g_nigel,  megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Nigel Mansell's World Championship (E)", 0 )
+
+GAME( 1900, g_orun,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "OutRun (W) [!]", 0 )
+GAME( 1900, g_orunj,   g_orun,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "OutRun (J) [!]", 0 )
+
+
+GAME( 1900, g_pitf,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pitfall - The Mayan Adventure (U) [!]", 0 )
+GAME( 1900, g_pitfe,   g_pitf,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Pitfall - The Mayan Adventure (E) [!]", 0 )
+
+GAME( 1900, g_pifg,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pit Fighter (W) (Oct 1991) [!]", 0 )
+GAME( 1900, g_pifia,   g_pifg,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pit Fighter (UE) (Jun 1991) [!]", 0 )
+
+GAME( 1900, g_poca,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pocahontas (U) [!]", 0 )
+GAME( 1900, g_pocae,   g_poca,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Pocahontas (E) [!]", 0 )
+
+
+GAME( 1900, g_rens,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Ren and Stimpy Show, The - Stimpy's Invention (U) [!]", 0 )
+GAME( 1900, g_renstb,  g_rens,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Ren and Stimpy Show, The - Stimpy's Invention (Beta))", 0 )
+GAME( 1900, g_renste,  g_rens,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Ren and Stimpy Show, The - Stimpy's Invention (E) [!]", 0 )
+
+GAME( 1900, g_side,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Side Pocket (JU) [!]", 0 )
+GAME( 1900, g_sidepe,  g_side,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Side Pocket (E) [!]", 0 )
+
+GAME( 1900, g_mfpl,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Minnesota Fats Pool Legend (U) [!]", 0 )
+
+
+GAME( 1900, g_bart,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Simpsons, The - Bart vs The Space Mutants (UE) (REV01) [!]", 0 )
+GAME( 1900, g_bart00,  g_bart,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Simpsons, The - Bart vs The Space Mutants (UE) (REV00) [!]", 0 )
+
 GAME( 1900, g_sorcer,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Sorcerian (J) [!]", 0 )
 
-GAME( 1900, g_si90,          0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Space Invaders 90 (J) [c][!]", 0 )
-GAME( 1900, g_suphq,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Super HQ (J) [!]", 0 )
 
-GAME( 1900, g_terme,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Terminator, The (E) [c][!]", 0 )
-GAME( 1900, g_tf2md,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Thunder Force II MD (J) [!]", 0 )
-GAME( 1900, g_wardj,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Wardner no Mori Special (J) [!]", 0 )
+
+GAME( 1900, g_ward,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Wardner (U) [!]", 0 )
+GAME( 1900, g_wardj,    g_ward,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Wardner no Mori Special (J) [!]", 0 )
+
 GAME( 1900, g_whipj,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Whip Rush 2222 AD (J) [!]", 0 )
-GAME( 1900, g_wizlie,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Wiz 'n' Liz - The Frantic Wabbit Wescue (E) [!]", 0 )
 
+GAME( 1900, g_wizl,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Wiz 'n' Liz - The Frantic Wabbit Wescue (U) [!]", 0 )
+GAME( 1900, g_wizlie,  g_wizl,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Wiz 'n' Liz - The Frantic Wabbit Wescue (E) [!]", 0 )
 
-GAME( 1900, g_zoope,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Zoop (E) [!]", 0 )
-GAME( 1900, g_ztkse,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Zero the Kamikaze Squirrel (E) [!]", 0 )
+GAME( 1900, g_ztks,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Zero the Kamikaze Squirrel (U) [!]", 0 )
+GAME( 1900, g_ztkse,   g_ztks,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Zero the Kamikaze Squirrel (E) [!]", 0 )
 
-GAME( 1900, g_arrowj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Arrow Flash (J) [!]", 0 )
-GAME( 1900, g_smgp2a,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Ayrton Senna's Super Monaco GP II (JE) [!]", 0 )
-GAME( 1900, g_bttfe,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Back to the Future Part III (E) [!]", 0 )
-GAME( 1900, g_batmnj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Batman (J) [!]", 0 )
+GAME( 1900, g_bttf,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Back to the Future Part III (U) [!]", 0 )
+GAME( 1900, g_bttfe,   g_bttf,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Back to the Future Part III (E) [!]", 0 )
+
 GAME( 1900, g_beaswr,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Beast Warriors (J) [!]", 0 )
-GAME( 1900, g_chk2e,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Chuck II - Son of Chuck (E) [c][!]", 0 )
-GAME( 1900, g_chk2j,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Chuck II - Son of Chuck (J) [!]", 0 )
-GAME( 1900, g_chkrke,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Chuck Rock (E) [c][!]", 0 )
 
-GAME( 1900, g_crkde,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Crack Down (E) [!]", 0 )
-GAME( 1900, g_crkdj,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Crack Down (J) [!]", 0 )
-GAME( 1900, g_dinolj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Dino Land (J) [!]", 0 )
-GAME( 1900, g_djboye,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "DJ Boy (E) [!]", 0 )
-GAME( 1900, g_djboyj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "DJ Boy (J) [!]", 0 )
+GAME( 1900, g_chuk,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Chuck Rock (U) [c][!]", 0 )
+GAME( 1900, g_chkrke,  g_chuk,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Chuck Rock (E) [c][!]", 0 )
 
-GAME( 1900, g_elvinj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "El Viento (J) [!]", 0 )
+GAME( 1900, g_chk2,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Chuck II - Son of Chuck (U) [!]", 0 )
+GAME( 1900, g_chk2b,   g_chk2,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Chuck II - Son of Chuck (Beta)", 0 )
+GAME( 1900, g_chk2e,   g_chk2,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Chuck II - Son of Chuck (E) [c][!]", 0 )
+GAME( 1900, g_chk2j,   g_chk2,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Chuck II - Son of Chuck (J) [!]", 0 )
+
+
+GAME( 1900, g_crkd,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Crack Down (U) [!]", 0 )
+GAME( 1900, g_crkde,   g_crkd,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Crack Down (E) [!]", 0 )
+GAME( 1900, g_crkdj,   g_crkd,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Crack Down (J) [!]", 0 )
+
+GAME( 1900, g_djby,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "DJ Boy (U) [!]", 0 )
+GAME( 1900, g_djboye,  g_djby,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "DJ Boy (E) [!]", 0 )
+GAME( 1900, g_djboyj,  g_djby,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "DJ Boy (J) [!]", 0 )
+
+
 GAME( 1900, g_elemj,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Elemental Master (J) [!]", 0 )
-GAME( 1900, g_eswatj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "ESWAT Cyber Police (J) [!]", 0 )
+
+GAME( 1900, g_eswa,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "ESWAT Cyber Police - City Under Siege (U) [!]", 0 )
+GAME( 1900, g_eswatj,  g_eswa,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "ESWAT Cyber Police (J) [!]", 0 )
 
 
-GAME( 1900, g_ys3j,          0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Ys III - Wanderers from Ys (J) [!]", 0 )
-GAME( 1900, g_xmene,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "X-Men (E) [!]", 0 )
-GAME( 1900, g_wormp,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Worms (E) (Prototype) [c][!]", 0 )
-GAME( 1900, g_wheroj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "World Heroes (J) [!]", 0 )
+GAME( 1900, g_wher,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "World Heroes (U) [!]", 0 )
+GAME( 1900, g_wheroj,   g_wher,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "World Heroes (J) [!]", 0 )
 
 
-GAME( 1900, g_val3j,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Valis III (J) [!]", 0 )
-GAME( 1900, g_valj,          0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Valis (J) [!]", 0 )
 GAME( 1900, g_uzuke,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Uzu Keobukseon (K) [!]", 0 )
 
 GAME( 1900, g_f1wlce,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "F1 World Championship (E) [!]", 0 )
-GAME( 1900, g_f117j,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "F-117 Stealth - Operation Night Storm (J) [!]", 0 )
-GAME( 1900, g_fante,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Fantasia (E) [!]", 0 )
-GAME( 1900, g_fant00,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Fantasia (U) (REV00) [!]", 0 )
 GAME( 1900, g_ferias,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Ferias Frustradas do Pica-Pau (B) [!]", 0 )
-GAME( 1900, g_fi99r,          0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "FIFA Soccer 99 (R) [!]", 0 )
-GAME( 1900, g_fghmsj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Fighting Masters (J) [!]", 0 )
 
+GAME( 1900, g_fmas,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Fighting Masters (U) [!]", 0 )
+GAME( 1900, g_fghmsj,  g_fmas,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Fighting Masters (J) [!]", 0 )
 
-GAME( 1900, g_flinte,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Flintstones, The (E) [c][!]", 0 )
-GAME( 1900, g_flintj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Flintstones, The (J) [c][!]", 0 )
-GAME( 1900, g_fw00,          0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Forgotten Worlds (W) (REV00) [!]", 0 )
+GAME( 1900, g_flin,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Flintstones, The (U) [c][!]", 0 )
+GAME( 1900, g_flinte,  g_flin,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Flintstones, The (E) [c][!]", 0 )
+GAME( 1900, g_flintj,  g_flin,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Flintstones, The (J) [c][!]", 0 )
+
+GAME( 1900, g_fw,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Forgotten Worlds (W) (REV01) [!]", 0 )
+GAME( 1900, g_fw00,    g_fw,     megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Forgotten Worlds (W) (REV00) [!]", 0 )
+
 GAME( 1900, g_ggrouj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Gain Ground (J) [!]", 0 )
 GAME( 1900, g_gfkobe,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "George Foreman's KO Boxing (E) [!]", 0 )
 GAME( 1900, g_ghwj,          0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Greatest Heavyweights of the Ring (J) [c][!]", 0 )
 
-GAME( 1900, g_helfij,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Hellfire (J) [!]", 0 )
+GAME( 1900, g_hell,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Hellfire (U) [!]", 0 )
+GAME( 1900, g_helfij,  g_hell,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Hellfire (J) [!]", 0 )
+GAME( 1900, g_helfie,  g_hell,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Hellfire (E)", 0 )
+
+
 GAME( 1900, g_hybrip,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Hybrid Front, The (J) (Prototype) [!]", 0 )
-GAME( 1900, g_hdunkj,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Hyper Dunk - The Playoff Edition (J) [!]", 0 )
-GAME( 1900, g_indlce,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Indiana Jones and the Last Crusade (E) [c][!]", 0 )
-GAME( 1900, g_insxj,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Insector X (J) [!]", 0 )
-GAME( 1900, g_jlps00,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "J. League Pro Striker (J) (REV00) [c][!]", 0 )
 
-GAME( 1900, g_jewlj,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Jewel Master (J) [c][!]", 0 )
-GAME( 1900, g_jb11j,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Jordan vs Bird - Super One-on-One (J) [!]", 0 )
-GAME( 1900, g_jb1100,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Jordan vs Bird - Super One-on-One (UE) (REV00) [!]", 0 )
-GAME( 1900, g_kageki,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Ka-Ge-Ki (J) [!]", 0 )
-GAME( 1900, g_kotme,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "King of the Monsters (E) [!]", 0 )
-GAME( 1900, g_ksalmj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "King Salmon - The Big Catch (J) [c][!]", 0 )
-GAME( 1900, g_lhxj,          0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "LHX Attack Chopper (J) [!]", 0 )
+GAME( 1900, g_hydu,      0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Hyper Dunk - The Playoff Edition (E) [!]", 0 )
+GAME( 1900, g_hdunkb,    g_hydu,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Hyper Dunk - The Playoff Edition (Beta)", 0 )
+GAME( 1900, g_hdunkj,    g_hydu,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Hyper Dunk - The Playoff Edition (J) [!]", 0 )
 
-GAME( 1900, g_momonj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Master of Monsters (J) [!]", 0 )
+GAME( 1900, g_indl,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Indiana Jones and the Last Crusade (U) [c][!]", 0 )
+GAME( 1900, g_indlce,    g_indl,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Indiana Jones and the Last Crusade (E) [c][!]", 0 )
 
-GAME( 1900, g_midrej,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Midnight Resistance (J) [!]", 0 )
-GAME( 1900, g_mig29e,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Mig-29 Fighter Pilot (E) [!]", 0 )
-GAME( 1900, g_mdpfua,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mike Ditka Power Football (U) [a1][!]", 0 )
-GAME( 1900, g_mutlfj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Mutant League Football (J) [!]", 0 )
-GAME( 1900, g_mysd00,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mystic Defender (W) (REV00) [!]", 0 )
-GAME( 1900, g_nfl94j,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "NFL Football '94 Starring Joe Montana (J) [!]", 0 )
+GAME( 1900, g_insx,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Insector X (U) [!]", 0 )
+GAME( 1900, g_insxj,     g_insx,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Insector X (J) [!]", 0 )
 
-GAME( 1900, g_olwge,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Olympic Winter Games - Lillehammer 94 (E) [c][!]", 0 )
-GAME( 1900, g_olwgj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Olympic Winter Games - Lillehammer 94 (J) [c][!]", 0 )
+GAME( 1900, g_jlp,       0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "J. League Pro Striker (J) (REV03) [c][!]", 0 )
+GAME( 1900, g_jlps00,    g_jlp,    megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "J. League Pro Striker (J) (REV00) [c][!]", 0 )
 
-GAME( 1900, g_shbeaj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Shadow of the Beast (J) [!]", 0 )
-GAME( 1900, g_shrunj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Shadowrun (J) [!]", 0 )
 
-GAME( 1900, g_showd,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Show do Milhao (B) [!]", 0 )
-GAME( 1900, g_showd2,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Show do Milhao Volume 2 (B) [!]", 0 )
-GAME( 1900, g_shwd2a,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Show do Milhao Volume 2 (B) [a1][!]", 0 )
-GAME( 1900, g_sokoba,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Sokoban (J) [!]", 0 )
-GAME( 1900, g_sorkin,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Sorcer Kingdom (J) [c][!]", 0 )
-GAME( 1900, g_shar2j,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Space Harrier II (J) [!]", 0 )
-GAME( 1900, g_sparke,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Sparkster (E) [!]", 0 )
+GAME( 1900, g_jewl,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Jewel Master (UE) [!]", 0 )
+GAME( 1900, g_jewlj,     g_jewl,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Jewel Master (J) [c][!]", 0 )
 
-GAME( 1900, g_sparkj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Sparkster (J) [!]", 0 )
-GAME( 1900, g_sbal2e,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Speed Ball 2 - Brutal Deluxe (E) [!]", 0 )
-GAME( 1900, g_starcj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Star Cruiser (J) [!]", 0 )
-GAME( 1900, g_stng00,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Star Trek - The Next Generation (U) (REV00) [!]", 0 )
-GAME( 1900, g_strf00,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Starflight (UE) (REV00) [!]", 0 )
-GAME( 1900, g_stalj,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Steel Talons (J) [!]", 0 )
-GAME( 1900, g_slordj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Stormlord (J) [!]", 0 )
+GAME( 1900, g_jb11,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Jordan vs Bird - Super One-on-One (UE) (REV01) [!]", 0 )
+GAME( 1900, g_jb11j,     g_jb11,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Jordan vs Bird - Super One-on-One (J) [!]", 0 )
+GAME( 1900, g_jb1100,    g_jb11,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Jordan vs Bird - Super One-on-One (UE) (REV00) [!]", 0 )
 
-GAME( 1900, g_ssride,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Sunset Riders (E) [!]", 0 )
-GAME( 1900, g_2020j,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Super Baseball 2020 (J) [!]", 0 )
-GAME( 1900, g_sfze,          0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Super Fantasy Zone (E) [!]", 0 )
-GAME( 1900, g_sho00,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Super Hang-On (W) (REV00) [!]", 0 )
+GAME( 1900, g_ksal,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "King Salmon - The Big Catch (U) [c][!]", 0 )
+GAME( 1900, g_ksalmj,    g_ksal,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "King Salmon - The Big Catch (J) [c][!]", 0 )
 
-GAME( 1900, g_srealj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Super Real Basketball (J) [c][!]", 0 )
-GAME( 1900, g_stb00,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Super Thunder Blade (W) (REV00) [!]", 0 )
-GAME( 1900, g_svolua,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Super Volleyball (U) [a1][!]", 0 )
-GAME( 1900, g_swsoj,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Sword of Sodan (J) [!]", 0 )
-GAME( 1900, g_swvej,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Sword of Vermilion (J) [c][!]", 0 )
+GAME( 1900, g_lhx,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "LHX Attack Chopper (UE) [!]", 0 )
+GAME( 1900, g_lhxj,      g_lhx,    megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "LHX Attack Chopper (J) [!]", 0 )
+
+GAME( 1900, g_midr,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Midnight Resistance (U) [!]", 0 )
+GAME( 1900, g_midrej,    g_midr,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Midnight Resistance (J) [!]", 0 )
+
+GAME( 1900, g_m29,       0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mig-29 Fighter Pilot (U) [!]", 0 )
+GAME( 1900, g_mig29e,    g_m29,    megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Mig-29 Fighter Pilot (E) [!]", 0 )
+
+GAME( 1900, g_mike,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mike Ditka Power Football (U) [!]", 0 )
+GAME( 1900, g_mdpfua,    g_mike,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mike Ditka Power Football (U) [a1][!]", 0 )
+
+GAME( 1900, g_mlfoot,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mutant League Football (UE) [!]", 0 )
+GAME( 1900, g_mutlfj,    g_mlfoot, megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Mutant League Football (J) [!]", 0 )
+
+GAME( 1900, g_mysd,      0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mystic Defender (W) (REV01) [!]", 0 )
+GAME( 1900, g_mysd00,    g_mysd,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Mystic Defender (W) (REV00) [!]", 0 )
+GAME( 1900, g_kujaku,    g_mysd,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Kujaku Ou 2 (J) [!]", 0 )
+
+
+
+GAME( 1900, g_olwg,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Olympic Winter Games - Lillehammer 94 (U) [c][!]", 0 )
+GAME( 1900, g_olwge,   g_olwg,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Olympic Winter Games - Lillehammer 94 (E) [c][!]", 0 )
+GAME( 1900, g_olwgj,   g_olwg,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Olympic Winter Games - Lillehammer 94 (J) [c][!]", 0 )
+
+GAME( 1900, g_sbea,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Shadow of the Beast (UE) [!]", 0 )
+GAME( 1900, g_shbeaj,  g_sbea,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Shadow of the Beast (J) [!]", 0 )
+
+GAME( 1900, g_showd,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Show do Milhao (B) [!]", 0 )
+
+GAME( 1900, g_showd2,  0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Show do Milhao Volume 2 (B) [!]", 0 )
+GAME( 1900, g_shwd2a,  g_showd2, megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Show do Milhao Volume 2 (B) [a1][!]", 0 )
+
+GAME( 1900, g_sorckd,  0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Sorcerer's Kingdom (U) (REV01) [!]", 0 )
+GAME( 1900, g_sork00,  g_sorckd, megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Sorcerer's Kingdom (U) (REV00)", 0 )
+GAME( 1900, g_sorkin,  g_sorckd, megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Sorcer Kingdom (J) [c][!]", 0 )
+
+
+GAME( 1900, g_shar,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Space Harrier II (UE) [!]", 0 )
+GAME( 1900, g_shar2j,  g_shar,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Space Harrier II (J) [!]", 0 )
+
+GAME( 1900, g_sprk,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Sparkster (U) [!]", 0 )
+GAME( 1900, g_sparke,  g_sprk,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Sparkster (E) [!]", 0 )
+GAME( 1900, g_sparkj,  g_sprk,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Sparkster (J) [!]", 0 )
+
+
+GAME( 1900, g_starcj,  0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Star Cruiser (J) [!]", 0 )
+
+GAME( 1900, g_spb2,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Speed Ball 2 - Brutal Deluxe (U) [c][!]", 0 )
+GAME( 1900, g_sbal2e,  g_spb2,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Speed Ball 2 - Brutal Deluxe (E) [!]", 0 )
+
+GAME( 1900, g_stalon,  0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Steel Talons (UE) [!]", 0 )
+GAME( 1900, g_stalj,   g_stalon, megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Steel Talons (J) [!]", 0 )
+
+GAME( 1900, g_stol,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Stormlord (U) [!]", 0 )
+GAME( 1900, g_slordj,  g_stol,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Stormlord (J) [!]", 0 )
+
+GAME( 1900, g_sfli,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Starflight (UE) (REV01) [!]", 0 )
+GAME( 1900, g_strf00,  g_sfli,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Starflight (UE) (REV00) [!]", 0 )
+
+GAME( 1900, g_ssri,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Sunset Riders (U) [!]", 0 )
+GAME( 1900, g_ssride,  g_ssri,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Sunset Riders (E) [!]", 0 )
+
 
 GAME( 1900, g_pachin,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Pachinko Canyon (J) [!]", 0 )
 GAME( 1900, g_pboyj,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Paperboy (J) [!]", 0 )
-GAME( 1900, g_pblbej,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Pebble Beach no Hatou (J) [!]", 0 )
 GAME( 1900, g_pste03,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Pete Sampras Tennis (E) (REV03) (J-Cart) [!]", 0 )
-GAME( 1900, g_ram300,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Rambo III (W) (REV00) [!]", 0 )
-GAME( 1900, g_rastj,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Rastan Saga II (J) [!]", 0 )
-GAME( 1900, g_roadbj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Road Blasters (J) [!]", 0 )
+
+GAME( 1900, g_rast,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Rastan Saga II (U) [!]", 0 )
+GAME( 1900, g_rastj,    g_rast,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Rastan Saga II (J) [!]", 0 )
+
+GAME( 1900, g_rbls,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Road Blasters (U) [!]", 0 )
+GAME( 1900, g_roadbj,   g_rbls,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Road Blasters (J) [!]", 0 )
+
+
 GAME( 1900, g_rnrre,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Rock n' Roll Racing (E) [!]", 0 )
-GAME( 1900, g_rkadve,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Rocket Knight Adventures (E) [!]", 0 )
-GAME( 1900, g_rkadvj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Rocket Knight Adventures (J) [!]", 0 )
-GAME( 1900, g_rkmnja,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Rockman Megaworld (J) [a1][!]", 0 )
-GAME( 1900, g_rthn2e,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Rolling Thunder 2 (E) [c][!]", 0 )
-GAME( 1900, g_rthn2j,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Rolling Thunder 2 (J) [c][!]", 0 )
+
+GAME( 1900, g_rkni,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Rocket Knight Adventures (U) [!]", 0 )
+GAME( 1900, g_rkadve,  g_rkni,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Rocket Knight Adventures (E) [!]", 0 )
+GAME( 1900, g_rkadvj,  g_rkni,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Rocket Knight Adventures (J) [!]", 0 )
+
+
+GAME( 1900, g_rth2,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Rolling Thunder 2 (U) [c][!]", 0 )
+GAME( 1900, g_rthn2e,   g_rth2,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Rolling Thunder 2 (E) [c][!]", 0 )
+GAME( 1900, g_rthn2j,   g_rth2,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Rolling Thunder 2 (J) [c][!]", 0 )
+
+GAME( 1900, g_rth3,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Rolling Thunder 3 (U) [c][!]", 0 )
+
 
 GAME( 1900, g_tfhxj,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Task Force Harrier EX (J) [!]", 0 )
 GAME( 1900, g_tsbwlj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Tecmo Super Bowl (J) [!]", 0 )
@@ -13888,144 +14481,143 @@ GAME( 1900, g_tsbw2j,        0,        megadriv,    megadriv,    megadrij, ROT0,
 GAME( 1900, g_tsnbaj,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Tecmo Super NBA Basketball (J) [!]", 0 )
 
 GAME( 1900, g_telerb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Telebradesco Residencia (B) [!]", 0 )
-GAME( 1900, g_tfoxj,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Thunder Fox (J) [c][!]", 0 )
 
-GAME( 1900, g_tkille,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Time Killers (E) [!]", 0 )
-GAME( 1900, g_toddj,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Todd's Adventures in Slime World (J) [!]", 0 )
-GAME( 1900, g_tajua,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Tom and Jerry - Frantic Antics (U) (1993) [!]", 0 )
-GAME( 1900, g_turma,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Turma da Monica na Terra Dos Monstros (B) [!]", 0 )
+GAME( 1900, g_tfox,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Thunder Fox (U) [c][!]", 0 )
+GAME( 1900, g_tfoxj,    g_tfox,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Thunder Fox (J) [c][!]", 0 )
 
+
+GAME( 1900, g_todd,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Todd's Adventures in Slime World (U) [!]", 0 )
+GAME( 1900, g_toddj,    g_todd,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Todd's Adventures in Slime World (J) [!]", 0 )
+
+GAME( 1900, g_tomj,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Tom and Jerry - Frantic Antics (U) (1994) [!]", 0 )
+GAME( 1900, g_tajua,   g_tomj,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Tom and Jerry - Frantic Antics (U) (1993) [!]", 0 )
 
 GAME( 1900, g_16tile,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "16 Tiles Mahjong (Unl)", 0 )
 GAME( 1900, g_777cas,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "777 Casino (Unl)", 0 )
 
-GAME( 1900, g_atpte,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "ATP Tour Championship Tennis (E)", 0 )
-GAME( 1900, g_babyb1,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Baby's Day Out (Beta 1)", 0 )
+
 GAME( 1900, g_babyb2,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Baby's Day Out (Beta 2)", 0 )
+GAME( 1900, g_babyb1,        g_babyb2, megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Baby's Day Out (Beta 1)", 0 )
+
+
 GAME( 1900, g_barbvb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Barbie Vacation Adventure (Beta)", 0 )
-GAME( 1900, g_batme,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Batman (E)", 0 )
+
+GAME( 1900, g_bat,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Batman (U) [!]", 0 )
+GAME( 1900, g_batmnj,  g_bat,    megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Batman (J) [!]", 0 )
+GAME( 1900, g_batme,   g_bat,    megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Batman (E)", 0 )
 
 GAME( 1900, g_bzerot,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Beyond Zero Tolerance (Beta)", 0 )
-GAME( 1900, g_blam2b,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Blaster Master 2 (Beta)", 0 )
-GAME( 1900, g_blocb2,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Blockbuster World Video Game Championship II (U)", 0 )
-GAME( 1900, g_blcrb,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Brian Lara Cricket (Beta)", 0 )
-GAME( 1900, g_brutle,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Brutal - Paws of Fury (E)", 0 )
-
-GAME( 1900, g_capamb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Captain America and the Avengers (Beta)", 0 )
-GAME( 1900, g_capame,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Captain America and the Avengers (E)", 0 )
+GAME( 1900, g_blocb2,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Blockbuster World Video Game Championship II (U)", GAME_NOT_WORKING ) // eeprom
 
 
 
-GAME( 1900, g_chk2b,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Chuck II - Son of Chuck (Beta)", 0 )
 GAME( 1900, g_chuck,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Chuck's Excellent Art Tool Animator (U)", 0 )
 
 
 
 GAME( 1900, g_comacb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Combat Aces (Beta)", 0 )
 GAME( 1900, g_congob,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Congo - The Game (Beta)", 0 )
-GAME( 1900, g_spotb,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Cool Spot (Beta)", 0 )
-GAME( 1900, g_daffyb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Daffy Duck in Hollywood (Beta)", 0 )
-GAME( 1900, g_daik2,         0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Daikoukai Jidai II (J)", 0 )
+
 
 GAME( 1900, g_dwctb1,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Davis Cup World Tour Tennis 2 (Beta 1)", 0 )
 GAME( 1900, g_dwctb2,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Davis Cup World Tour Tennis 2 (Beta 2)", 0 )
 GAME( 1900, g_dwctb,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Davis Cup World Tour Tennis (Beta)", 0 )
-GAME( 1900, g_dazeb,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Daze Before Christmas, The (Beta)", 0 )
 GAME( 1900, g_demomb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Demolition Man (Beta)", 0 )
 GAME( 1900, g_dmahtw,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Devilish Mahjong Tower (Unl)", 0 )
 GAME( 1900, g_dialq,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Dial Q o Mawase! (Unl)", 0 )
 GAME( 1900, g_domino,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Domino (Unl)", 0 )
 GAME( 1900, g_dominu,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Dominus (Beta)", 0 )
 
+GAME( 1900, g_dune,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Dune - The Battle for Arrakis (U) [!]", 0 )
+GAME( 1900, g_duneg,   g_dune,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Dune - Der Kampf um den Wuestenplaneten (G)", 0 )
+GAME( 1900, g_dunee,   g_dune,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Dune - The Battle for Arrakis (E)", 0 )
 
-GAME( 1900, g_duneg,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Dune - Der Kampf um den Wuestenplaneten (G)", 0 )
-GAME( 1900, g_dunee,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Dune - The Battle for Arrakis (E)", 0 )
+
 GAME( 1900, g_dynabr,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Dyna Brothers (J) (REV01)", 0 )
 GAME( 1900, g_elfwor,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Elf Wor (Unl)", 0 )
-GAME( 1900, g_e_nhb,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "ESPN National Hockey Night (Beta)", 0 )
 
-GAME( 1900, g_f1wceb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "F1 World Championship Edition (Beta)", 0 )
-GAME( 1900, g_f15b,          0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "F-15 Strike Eagle II (Beta)", 0 )
-GAME( 1900, g_fengsh,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Fengshen Yingjiechuan (Ch)", 0 )
+
+
+
+
+GAME( 1900, g_fengsh,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Fengshen Yingjiechuan (Ch)", 0 )
+GAME( 1900, g_unkch,    g_fengsh, megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Unknown Chinese Game 1 (Ch)", 0 )
+
+
 GAME( 1900, g_fergpb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Ferrari Grand Prix Challenge (Beta)", 0 )
 GAME( 1900, g_funnge,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Fun-N-Games (E)", 0 )
-GAME( 1900, g_fut98,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Futbol Argentino 98 - Pasion de Multitudes (Unl)", 0 )
 
 GAME( 1900, g_ghunt,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Ghost Hunter (Unl)", 0 )
-GAME( 1900, g_glocb,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "G-LOC Air Battle (Beta)", 0 )
-GAME( 1900, g_helfie,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Hellfire (E)", 0 )
 GAME( 1900, g_herc2,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Hercules 2 (Unl)", 0 )
-GAME( 1900, g_homeab,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Home Alone (Beta)", 0 )
-GAME( 1900, g_hdunkb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Hyper Dunk - The Playoff Edition (Beta)", 0 )
-GAME( 1900, g_icdb,          0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Incredible Crash Dummies, The (Beta)", 0 )
+
 
 GAME( 1900, g_iraq03,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Iraq War 2003 (Unl)", 0 )
 GAME( 1900, g_icftd,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "It Came From The Desert (Beta)", 0 )
-GAME( 1900, g_jstrkb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Jungle Strike (Beta)", 0 )
 
-GAME( 1900, g_lng201,        0,        megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Langrisser II (J) (REV01)", 0 )
+
 GAME( 1900, g_linkdr,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Link Dragon (Unl)", 0 )
 
 GAME( 1900, g_lotu2b,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Lotus II RECS (Beta)", 0 )
 
 
-GAME( 1900, g_mswive,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Mega SWIV (E)", 0 )
+
 GAME( 1900, g_megme,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Megaman - The Wily Wars (E)", 0 )
 GAME( 1900, g_mima3b,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Might and Magic III - Isles of Terra (Beta)", 0 )
-GAME( 1900, g_monob,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Monopoly (Beta)", 0 )
-GAME( 1900, g_mahbb,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Muhammad Ali Heavyweight Boxing (Beta)", 0 )
 
-GAME( 1900, g_mahbe,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Muhammad Ali Heavyweight Boxing (E)", 0 )
+
 GAME( 1900, g_nba94b,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NBA Showdown 94 (Beta)", 0 )
 GAME( 1900, g_nhl96e,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "NHL 96 Elitserien (E)", 0 )
 GAME( 1900, g_nhlp00,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "NHLPA Hockey '93 (UE) (REV00)", 0 )
-GAME( 1900, g_nigwce,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Nigel Mansell's World Championship (E)", 0 )
-GAME( 1900, g_ncircb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Nightmare Circus (Beta)", 0 )
 GAME( 1900, g_ngaidb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Ninja Gaiden (Beta)", 0 )
-GAME( 1900, g_ottifb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Ottifants, The (Beta)", 0 )
-GAME( 1900, g_outlnb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Outlander (Beta)", 0 )
 
-GAME( 1900, g_pblbee,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Pebble Beach Golf Links (E)", 0 )
-GAME( 1900, g_pinkb,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pink Goes to Hollywood (Beta)", 0 )
-GAME( 1900, g_pinnoe,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Pinocchio (E)", 0 )
-GAME( 1900, g_pirdwu,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pirates of Dark Water, The (UE)", 0 )
+GAME( 1900, g_pbgl,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pebble Beach Golf Links (U) [!]", 0 )
+GAME( 1900, g_pblbee,  g_pbgl,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Pebble Beach Golf Links (E)", 0 )
+GAME( 1900, g_pblbej,  g_pbgl,   megadriv,    megadriv,    megadrij, ROT0,   "Unsorted", "Pebble Beach no Hatou (J) [!]", 0 )
+
+GAME( 1900, g_pink,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pink Goes to Hollywood (U) [!]", 0 )
+GAME( 1900, g_pinkb,   g_pink,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pink Goes to Hollywood (Beta)", 0 )
+
 GAME( 1900, g_pgmah,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pretty Girl Mahjongg (Ch)", 0 )
 
-GAME( 1900, g_rrexe,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Radical Rex (E)", 0 )
-GAME( 1900, g_rbi4b,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "RBI Baseball 4 (Beta)", 0 )
-GAME( 1900, g_renstb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Ren and Stimpy Show, The - Stimpy's Invention (Beta))", 0 )
 
-GAME( 1900, g_snsme,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Saturday Night Slam Masters (E)", 0 )
+GAME( 1900, g_radr,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Radical Rex (U) [!]", 0 )
+GAME( 1900, g_rrexe,   g_radr,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Radical Rex (E)", 0 )
+
+
+
 GAME( 1900, g_scrabb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Scrabble (Beta)", 0 )
-GAME( 1900, g_seaqe,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "SeaQuest DSV (E)", 0 )
-GAME( 1900, g_shan2b,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Shanghai 2 - Dragon's Eye (Beta)", 0 )
-GAME( 1900, g_skrewe,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Skeleton Krew (E)", 0 )
+
+GAME( 1900, g_s2de,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Shanghai 2 - Dragon's Eye (U) [!]", 0 )
+GAME( 1900, g_shan2b,   g_s2de,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Shanghai 2 - Dragon's Eye (Beta)", 0 )
+
 GAME( 1900, g_smous,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Smart Mouse (Unl)", 0 )
 GAME( 1900, g_soncrk,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Sonic and Crackers (Beta)", 0 )
-GAME( 1900, g_sork00,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Sorcerer's Kingdom (U) (REV00)", 0 )
-GAME( 1900, g_stds9e,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Star Trek - Deep Space 9 - Crossroads of Time (E)", 0 )
-GAME( 1900, g_sgatb,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Stargate (Beta)", 0 )
-GAME( 1900, g_strikb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Striker (Beta)", 0 )
 GAME( 1900, g_sleage,        0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Super League (E)", 0 )
-GAME( 1900, g_t2arcb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "T2 - The Arcade Game (Beta)", 0 )
-GAME( 1900, g_taiwan,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Taiwan Tycoon (Unl)", 0 )
 GAME( 1900, g_tpgola,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Triple Play Gold (U) [a1]", 0 )
 
 
-GAME( 1900, g_unkch,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Unknown Chinese Game 1 (Ch)", 0 )
-GAME( 1900, g_viewpb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Viewpoint (Beta)", 0 )
-GAME( 1900, g_vf2t2,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Virtua Fighter 2 vs Tekken 2 (Unl)", 0 )
 GAME( 1900, g_wacrac,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Wacky Races (Beta)", 0 )
+
 GAME( 1900, g_watrb,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Waterworld (Beta)", 0 )
 
-GAME( 1900, g_waghe,         0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Williams Arcade's Greatest Hits (E)", 0 )
-GAME( 1900, g_wchalb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Winter Challenge (Beta)", 0 )
-GAME( 1900, g_wcs2b,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "World Championship Soccer II (Beta)", 0 )
 
-GAME( 1900, g_yindyb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Young Indiana Jones - Instrument of Chaos (Beta)", 0 )
+GAME( 1900, g_wagh,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Williams Arcade's Greatest Hits (U) [!]", 0 )
+GAME( 1900, g_waghe,   g_wagh,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Williams Arcade's Greatest Hits (E)", 0 )
+
+
+GAME( 1900, g_wcs2,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "World Championship Soccer II (U) [!]", 0 )
+GAME( 1900, g_wcs2b,   g_wcs2,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "World Championship Soccer II (Beta)", 0 )
+
+GAME( 1900, g_yidy,     0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Young Indiana Jones - Instrument of Chaos (U) [!]", 0 )
+GAME( 1900, g_yindyb,   g_yidy,   megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Young Indiana Jones - Instrument of Chaos (Beta)", 0 )
+
 GAME( 1900, g_yindcb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Young Indiana Jones Chronicles (Beta)", 0 )
 
 GAME( 1900, g_zombhb,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Zombie High (U) (Prototype)", 0 )
+
+GAME( 1900, g_blcr,     0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Brian Lara Cricket (E) [c][!]", 0 ) // sound is sensitive to timing
+GAME( 1900, g_blcrb,    g_blcr,   megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Brian Lara Cricket (Beta)", 0 )
+GAME( 1900, g_princ2,  0,        megadriv,    megadriv,    megadriv, ROT0,   "Psygnosis", "Prince of Persia 2 (Prototype)", 0 )
 
 
 GAME( 1900, g_chaoji,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Chaoji Dafuweng (Unl) [!]", 0 )
@@ -14041,24 +14633,42 @@ GAME( 1900, g_rtk5c,         0,        megadriv,    megadriv,    megadriv, ROT0,
 GAME( 1900, g_sanret,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Sangokushi Retsuden (Ch)", 0 )
 GAME( 1900, g_tighun,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Tiger Hunter Hero Novel (Ch)", 0 )
 
-GAME( 1900, g_blcr,     0,        megadpal,    megadriv,    megadrie, ROT0,   "Unsorted", "Brian Lara Cricket (E) [c][!]", 0 ) // sound is sensitive to timing
 
+GAME( 1900, g_taiwan,        0,        megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "Taiwan Tycoon (Unl)", 0 )
+
+GAME( 1900, g_vf2t2,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "Virtua Fighter 2 vs Tekken 2 (Unl)", 0 )
 
 GAME( 1900, g_topfig,  0,        megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "Top Fighter 2000 MK VIII (Unl) [!]", GAME_NOT_WORKING ) // protection
 GAME( 1900, g_mk5sz,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "MK 5 - Mortal Combat - SubZero (Unl) [!]", 0 )
 GAME( 1900, g_kof98,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "King of Fighters '98, The (Unl) [!]", GAME_NOT_WORKING )
-GAME( 1900, g_lionk2,  0,        megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "Lion King II, The (Unl) [!]", GAME_NOT_WORKING )
-GAME( 1900, g_soulb,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Soul Blade (Unl) [!]", GAME_NOT_WORKING )
-GAME( 1900, g_xinqi,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Xin Qi Gai Wang Zi (Ch)", 0 )
-GAME( 1900, g_xinqia,  0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Xin Qi Gai Wang Zi (Ch) [a1]", 0 )
-GAME( 1900, g_yang,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Yang Warrior Family, The (Ch)", 0 )
-GAME( 1900, g_yasec,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Ya-Se Chuan Shuo (Ch)", GAME_NOT_WORKING )
-GAME( 1900, g_princ2,  0,        megadriv,    megadriv,    megadriv, ROT0,   "Psygnosis", "Prince of Persia 2 (Prototype)", 0 )
+GAME( 1900, g_kof98p,  g_kof98,  megadriv,    megadriv,    g_mulan,  ROT0,   "Unknown (Unlicensed)", "King of Fighters '98, The (Unl) [p1][!]", 0 )
 
-GAME( 1900, g_pockm,  0,        megadriv,    megadriv,    g_pockm, ROT0,   "Unknown (Unlicensed)", "Pocket Monsters (Unl) [!]", 0 )
-GAME( 1900, g_pockma, g_pockm,  megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "Pocket Monsters (Unl) [a1][!]", 0 )
-GAME( 1900, g_pockm2, 0,        megadriv,    megadriv,    g_pockm2, ROT0,   "Unknown (Unlicensed)", "Pocket Monsters 2 (Unl) [!]", 0 )
-GAME( 1900, g_mulan,  0,        megadriv,    megadriv,    g_mulan, ROT0,   "Unknown (Unlicensed)", "Mulan (Unl) [!]", 0 )
+GAME( 1900, g_lionk2,  0,        megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "Lion King II, The (Unl) [!]", GAME_NOT_WORKING )
+GAME( 1900, g_lion2p,  g_lionk2, megadriv,    megadriv,    g_mulan,  ROT0,   "Unknown (Unlicensed)", "Lion King II, The (Unl) [p1][!]", 0 )
+
+GAME( 1900, g_soulb,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "Soul Blade (Unl) [!]", GAME_NOT_WORKING )
+GAME( 1900, g_xinqi,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "Xin Qi Gai Wang Zi (Ch)", 0 )
+GAME( 1900, g_xinqia,  0,        megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "Xin Qi Gai Wang Zi (Ch) [a1]", 0 )
+GAME( 1900, g_yang,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "Yang Warrior Family, The (Ch)", 0 )
+GAME( 1900, g_yasec,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "Ya-Se Chuan Shuo (Ch)", GAME_NOT_WORKING )
+GAME( 1900, g_pockm,   0,        megadriv,    megadriv,    g_pockm,  ROT0,   "Unknown (Unlicensed)", "Pocket Monsters (Unl) [!]", 0 )
+GAME( 1900, g_pockma,  g_pockm,  megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "Pocket Monsters (Unl) [a1][!]", 0 )
+GAME( 1900, g_pockm2,  0,        megadriv,    megadriv,    g_pockm2, ROT0,   "Unknown (Unlicensed)", "Pocket Monsters 2 (Unl) [!]", 0 )
+GAME( 1900, g_mulan,   0,        megadriv,    megadriv,    g_mulan,  ROT0,   "Unknown (Unlicensed)", "Mulan (Unl) [!]", 0 )
+
+GAME( 1900, g_pcdrum,   0,        megadriv,    megadriv,    g_mulan,  ROT0,   "Unknown (Unlicensed)", "Pokemon Crazy Drummer (Unl)", 0 )
+GAME( 1900, g_tek3s,   0,        megadriv,    megadriv,    g_mulan,  ROT0,   "Unknown (Unlicensed)", "Tekken 3 Special (Unl)", 0 )
+GAME( 1900, g_sdk99,   0,        megadriv,    megadriv,    g_mulan,  ROT0,   "Unknown (Unlicensed)", "Super Donkey Kong 99 (Unl) [!]", 0 )
+GAME( 1900, g_skk99,   g_sdk99,  megadriv,    megadriv,    g_mulan,  ROT0,   "Unknown (Unlicensed)", "Super King Kong 99 (Unl) [!]", GAME_NOT_WORKING ) // protected version
+GAME( 1900, g_smw,   0,        megadriv,    megadriv,    g_mulan,  ROT0,   "Unknown (Unlicensed)", "Super Mario World (Unl) [!]", 0 )
+GAME( 1900, g_smwp,   0,        megadriv,    megadriv,    g_mulan,  ROT0,   "Unknown (Unlicensed)", "Super Mario World (Unl) [p1][!]", 0 )
+GAME( 1900, g_mk5p,   0,        megadriv,    megadriv,    g_mulan,  ROT0,   "Unknown (Unlicensed)", "MK 5 - Mortal Combat - SubZero (Unl) [p1][!]", 0 )
+GAME( 1900, g_3in1a,   0,        megadriv,    megadriv,    g_mulan,  ROT0,   "Unknown (Unlicensed)", "3-in-1 Flashback - World Champ. Soccer - Tecmo World Cup 92 [p1][!]", GAME_NOT_WORKING ) // no menu, hardwired?
+GAME( 1900, g_3in1b,   0,        megadriv,    megadriv,    g_mulan,  ROT0,   "Unknown (Unlicensed)", "3-in-1 Road Rash - Ms. Pac-Man - Block Out [p1][!]", GAME_NOT_WORKING ) // no menu, hardwired?
+GAME( 1900, g_cches,   0,        megadriv,    megadriv,    g_mulan,  ROT0,   "Unknown (Unlicensed)", "Chinese Chess (Unl)", 0 )
+GAME( 1900, g_conqs,   0,        megadriv,    megadriv,    g_mulan,  ROT0,   "Unknown (Unlicensed)", "Conquering the World III (Ch-Simple)", 0 )
+GAME( 1900, g_conqt,   0,        megadriv,    megadriv,    g_mulan,  ROT0,   "Unknown (Unlicensed)", "Conquering the World III (Ch-Trad)", 0 )
+
 
 
 
@@ -14084,5 +14694,4 @@ ROM_START( topshoot ) /* Top Shooter (c)1995 Sun Mixing */
 ROM_END
 
 GAME( 1995, topshoot,        0,        megadriv,    megadriv,    topshoot, ROT0,   "Sun Mixing", "Top Shooter (Arcade)", 0 )
-#endif
-
+#endif /* HAZEMD */

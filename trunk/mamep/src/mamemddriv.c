@@ -1695,6 +1695,25 @@ const game_driver * const hazemddrivers[] =
 	DRIVER( g_pockm2 )
 	DRIVER( g_mulan )
 
+	DRIVER( g_pcdrum )
+	DRIVER( g_tek3s )
+	DRIVER( g_kof98p )
+	DRIVER( g_lion2p )
+	DRIVER( g_sdk99 )
+	DRIVER( g_skk99 )
+
+	DRIVER( g_smw )
+	DRIVER( g_smwp )
+	DRIVER( g_mk5p )
+
+	DRIVER( g_3in1a )
+
+	DRIVER( g_3in1b )
+
+	DRIVER( g_cches )
+	DRIVER( g_conqs )
+	DRIVER( g_conqt )
+
 	/* Master System Games */
 	DRIVER( s_cosmic )
 	DRIVER( s_micro )
@@ -1795,11 +1814,13 @@ const game_driver * const hazemddrivers[] =
 	DRIVER( gg_cols )
 	DRIVER( gg_baku )
 
+#ifdef HAZEMD
 	/* System E */
-//	DRIVER( hangonjr )
-//	DRIVER( transfrm )
-//	DRIVER( ridleofp )
-//	DRIVER( tetrisse )
+	DRIVER( hangonjr )
+	DRIVER( transfrm )
+	DRIVER( ridleofp )
+	DRIVER( tetrisse )
+#endif /* HAZEMD */
 
 	/* for testing only */
 //	DRIVER( megatech )
