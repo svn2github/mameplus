@@ -117,6 +117,7 @@ typedef struct
 	BOOL	sleep;
 	BOOL	rdtsc;
 	int	priority;
+	BOOL	multithreading;
 //
 // VIDEO OPTIONS
 //

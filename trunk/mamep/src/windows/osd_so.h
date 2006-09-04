@@ -173,8 +173,11 @@ extern SHAREDOBJ_FUNC(int)          options_parse_ini_file(mame_file *inifile);
 extern SHAREDOBJ_FUNC(int)          options_output_command_line_marked(char *buf);
 extern SHAREDOBJ_FUNC(void)         options_output_xml_file(FILE *xmlfile);
 extern SHAREDOBJ_FUNC(void)         options_output_ini_file(FILE *inifile);
+extern SHAREDOBJ_FUNC(void)         options_output_ini_mame_file(mame_file *inifile);
 extern SHAREDOBJ_FUNC(void)         options_output_xml_file_marked(FILE *xmlfile);
 extern SHAREDOBJ_FUNC(void)         options_output_ini_file_marked(FILE *inifile);
+extern SHAREDOBJ_FUNC(void)         options_output_ini_mame_file_marked(mame_file *inifile);
+
 extern SHAREDOBJ_FUNC(void)         options_output_help(FILE *output);
 extern SHAREDOBJ_FUNC(const char *) options_get_string(const char * name, int report_error);
 extern SHAREDOBJ_FUNC(int)          options_get_bool(const char * name, int report_error);

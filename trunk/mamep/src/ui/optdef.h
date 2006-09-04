@@ -111,6 +111,7 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(bool,                 sleep)
 	DEFINE_OPT(bool,                 rdtsc)
 	DEFINE_OPT(priority,             priority)
+	DEFINE_OPT(bool,                 multithreading)
 
 // VIDEO OPTIONS
 	DEFINE_OPT(video,                video)

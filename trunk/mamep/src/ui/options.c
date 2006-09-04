@@ -3280,12 +3280,12 @@ static void options_free_entry_winui(void)
 
 static int options_load_default_config(void)
 {
-	char filename[_MAX_PATH];
+	const char *filename;
 	mame_file *file;
 	int retval = 0;
 
 	SetCorePathList(FILETYPE_INI, get_base_config_directory());
-	strcpy(filename, MAME_INI);
+	filename = strlower(MAME_INI);
 
 	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 0)))
 		return 0;
@@ -3395,23 +3395,24 @@ static int options_load_winui_config(void)
 
 static int options_save_default_config(void)
 {
-	char filename[_MAX_PATH];
-	FILE *file;
+	const char *filename;
+	mame_file *file;
 
 	validate_driver_option(&global);
 
-	strcpy(filename, strlower(MAME_INI));
+	SetCorePathList(FILETYPE_INI, get_base_config_directory());
+	filename = strlower(MAME_INI);
 
-	if (!(file = fopen(filename, "wt")))
+	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 1)))
 		return -1;
 
 	options_set_datalist(options_cli);
 	options_set_core(&settings);
 	options_set_driver(&global);
 
-	options_output_ini_file(file);
+	options_output_ini_mame_file(file);
 
-	fclose(file);
+	mame_fclose(file);
 
 	return 0;
 }
@@ -3419,8 +3420,7 @@ static int options_save_default_config(void)
 static int options_save_driver_config(int driver_index)
 {
 	char filename[_MAX_PATH];
-	FILE *file;
-	const char *inipath = GetIniDir();
+	mame_file *file;
 	options_type *parent;
 	int alt_index = driver_variables[driver_index].alt_index;
 
@@ -3434,10 +3434,6 @@ static int options_save_driver_config(int driver_index)
 	if (parent == NULL)
 		return 0;
 
-	sprintf(filename, "%s\\%s.ini", inipath, strlower(drivers[driver_index]->name));
-
-	mkdir(inipath);
-
 #ifdef USE_IPS
 	// HACK: DO NOT INHERIT IPS CONFIGURATION
 	if (driver_variables[driver_index].use_default && !driver_options[driver_index].ips)
@@ -3445,11 +3441,16 @@ static int options_save_driver_config(int driver_index)
 	if (driver_variables[driver_index].use_default)
 #endif /* USE_IPS */
 	{
+		sprintf(filename, "%s\\%s.ini", settings.inipath, strlower(drivers[driver_index]->name));
 		unlink(filename);
 		return 0;
 	}
 
-	if (!(file = fopen(filename, "wt")))
+	mkdir(settings.inipath);
+	SetCorePathList(FILETYPE_INI, settings.inipath);
+	sprintf(filename, "%s.ini", strlower(drivers[driver_index]->name));
+
+	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 1)))
 		return -1;
 
 	options_set_datalist(options_cli);
@@ -3457,9 +3458,9 @@ static int options_save_driver_config(int driver_index)
 
 	options_clear_output_mark();
 	options_set_mark_driver(&driver_options[driver_index], parent);
-	options_output_ini_file_marked(file);
+	options_output_ini_mame_file_marked(file);
 
-	fclose(file);
+	mame_fclose(file);
 
 	return 0;
 }
@@ -3467,8 +3468,8 @@ static int options_save_driver_config(int driver_index)
 static int options_save_alt_config(alt_options_type *alt_option)
 {
 	char filename[_MAX_PATH];
-	FILE *file;
-	const char *inipath = GetIniDir();
+	char basename[_MAX_PATH];
+	mame_file *file;
 	options_type *parent;
 	int len;
 
@@ -3477,15 +3478,10 @@ static int options_save_alt_config(alt_options_type *alt_option)
 
 	parent = update_alt_use_default(alt_option);
 
-	sprintf(filename, "%s\\%s", inipath, strlower(alt_option->name));
-
-	len = strlen(filename);
-	if (len > 2 && stricmp(filename + (len - 2), ".c") == 0)
-		filename[len - 2] = '\0';
-
-	strcat(filename, ".ini");
-
-	mkdir(inipath);
+	strcpy(basename, strlower(alt_option->name));
+	len = strlen(basename);
+	if (len > 2 && stricmp(basename + (len - 2), ".c") == 0)
+		basename[len - 2] = '\0';
 
 #ifdef USE_IPS
 	// HACK: DO NOT INHERIT IPS CONFIGURATION
@@ -3494,11 +3490,16 @@ static int options_save_alt_config(alt_options_type *alt_option)
 	if (alt_option->variable->use_default && !alt_option->has_bios)
 #endif /* USE_IPS */
 	{
+		sprintf(filename, "%s\\%s.ini", settings.inipath, basename);
 		unlink(filename);
 		return 0;
 	}
 
-	if (!(file = fopen(filename, "wt")))
+	mkdir(settings.inipath);
+	SetCorePathList(FILETYPE_INI, settings.inipath);
+	sprintf(filename, "%s.ini", basename);
+
+	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 1)))
 		return -1;
 
 	options_set_datalist(options_cli);
@@ -3506,32 +3507,32 @@ static int options_save_alt_config(alt_options_type *alt_option)
 
 	options_clear_output_mark();
 	options_set_mark_driver(alt_option->option, parent);
-	options_output_ini_file_marked(file);
+	options_output_ini_mame_file_marked(file);
 
-	fclose(file);
+	mame_fclose(file);
 
 	return 0;
 }
 
 static int options_save_winui_config(void)
 {
-	FILE *file;
-	char filename[_MAX_PATH];
-	const char *inipath = GetIniDir();
+	const char *filename;
+	mame_file *file;
 
-	mkdir(inipath);
-	sprintf(filename, "%s\\%s", inipath, strlower(WINUI_INI));
+	mkdir(settings.inipath);
+	SetCorePathList(FILETYPE_INI, settings.inipath);
+	filename = strlower(WINUI_INI);
 
-	if (!(file = fopen(filename, "wt")))
+	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 1)))
 		return -1;
 
 	options_set_datalist(options_winui);
 	options_set_winui(&settings);
 	options_set_driver_flag_opts();
 
-	options_output_ini_file(file);
+	options_output_ini_mame_file(file);
 
-	fclose(file);
+	mame_fclose(file);
 
 	return 0;
 }

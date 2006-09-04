@@ -446,17 +446,7 @@ int options_output_command_line_marked(char *buf)
 			{
 				if (data->data != NULL)
 				{
-					const char *temp = data->data;
-					int has_space = FALSE;
-
-					for (temp = data->data; *temp != 0; temp++)
-						if (isspace(*temp))
-						{
-							has_space = TRUE;
-							break;
-						}
-
-					if (has_space)
+					if (strchr(data->data, ' ') || strchr(data->data, '#'))
 					{
 						if (buf)
 							sprintf(buf, "-%s \"%s\" ", data->names[0], data->data);
@@ -509,7 +499,7 @@ void options_output_ini_file(FILE *inifile)
 		{
 			if (data->data == NULL)
 				fprintf(inifile, "# %-23s <NULL> (not set)\n", data->names[0]);
-			else if (strchr(data->data, ' '))
+			else if (strchr(data->data, ' ') || strchr(data->data, '#'))
 				fprintf(inifile, "%-25s \"%s\"\n", data->names[0], data->data);
 			else
 				fprintf(inifile, "%-25s %s\n", data->names[0], data->data);
@@ -537,10 +527,12 @@ void options_output_ini_file_marked(FILE *inifile)
 		/* otherwise, output entries for all non-deprecated and non-command items */
 		else if (data->mark && (data->flags & (OPTION_DEPRECATED | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
 		{
-			if (data->data != NULL)
-				fprintf(inifile, "%-26s %s\n", data->names[0], data->data);
+			if (data->data == NULL)
+				fprintf(inifile, "# %-23s <NULL> (not set)\n", data->names[0]);
+			else if (strchr(data->data, ' ') || strchr(data->data, '#'))
+				fprintf(inifile, "%-25s \"%s\"\n", data->names[0], data->data);
 			else
-				fprintf(inifile, "# %-24s <NULL> (not set)\n", data->names[0]);
+				fprintf(inifile, "%-25s %s\n", data->names[0], data->data);
 		}
 	}
 }
@@ -567,7 +559,37 @@ void options_output_ini_mame_file(mame_file *inifile)
 		{
 			if (data->data == NULL)
 				mame_fprintf(inifile, "# %-23s <NULL> (not set)\n", data->names[0]);
-			else if (strchr(data->data, ' '))
+			else if (strchr(data->data, ' ') || strchr(data->data, '#'))
+				mame_fprintf(inifile, "%-25s \"%s\"\n", data->names[0], data->data);
+			else
+				mame_fprintf(inifile, "%-25s %s\n", data->names[0], data->data);
+		}
+	}
+}
+
+
+/*-------------------------------------------------
+    options_output_ini_mame_file_marked - output the
+    current marked state to an INI file
+-------------------------------------------------*/
+
+void options_output_ini_mame_file_marked(mame_file *inifile)
+{
+	options_data *data;
+
+	/* loop over all items */
+	for (data = datalist; data != NULL; data = data->next)
+	{
+		/* header: just print */
+		if ((data->flags & OPTION_HEADER) != 0)
+			mame_fprintf(inifile, "\n#\n# %s\n#\n", data->description);
+
+		/* otherwise, output entries for all non-deprecated and non-command items */
+		else if (data->mark && (data->flags & (OPTION_DEPRECATED | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
+		{
+			if (data->data == NULL)
+				mame_fprintf(inifile, "# %-23s <NULL> (not set)\n", data->names[0]);
+			else if (strchr(data->data, ' ') || strchr(data->data, '#'))
 				mame_fprintf(inifile, "%-25s \"%s\"\n", data->names[0], data->data);
 			else
 				mame_fprintf(inifile, "%-25s %s\n", data->names[0], data->data);
