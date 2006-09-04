@@ -20,6 +20,7 @@
  *************************************/
 
 void dummy_get_info(UINT32 state, union cpuinfo *info);
+void gensync_get_info(UINT32 state, union cpuinfo *info);
 void z80_get_info(UINT32 state, union cpuinfo *info);
 void z180_get_info(UINT32 state, union cpuinfo *info);
 void i8080_get_info(UINT32 state, union cpuinfo *info);
@@ -266,6 +267,9 @@ static const struct
 } cpuintrf_map[] =
 {
 	{ CPU_DUMMY, dummy_get_info },
+#if (HAS_GENSYNC)
+	{ CPU_GENSYNC, gensync_get_info },
+#endif
 #if (HAS_Z80)
 	{ CPU_Z80, z80_get_info },
 #endif

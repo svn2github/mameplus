@@ -11,6 +11,20 @@
 
 
 #-------------------------------------------------
+# Generic Video Synchronization CPU
+#-------------------------------------------------
+
+CPUDEFS += -DHAS_GENSYNC=$(if $(filter GENSYNC,$(CPUS)),1,0)
+
+ifneq ($(filter GENSYNC,$(CPUS)),)
+OBJDIRS += $(OBJ)/cpu/gensync
+CPUOBJS += $(OBJ)/cpu/gensync/gensync.o
+DBGOBJS += $(OBJ)/cpu/gensync/gensyncd.o
+$(OBJ)/cpu/gensync/gensync.o: gensync.c gensyncd.c gensync.h
+endif
+
+
+#-------------------------------------------------
 # Acorn ARM series
 #-------------------------------------------------
 

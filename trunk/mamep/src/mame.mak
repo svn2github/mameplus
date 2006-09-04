@@ -1435,6 +1435,7 @@ $(OBJ)/zaccaria.a: \
 #-------------------------------------------------
 
 $(OBJ)/misc.a: \
+	$(OBJ)/drivers/pong.o $(OBJ)/sndhrdw/pong.o $(OBJ)/vidhrdw/pong.o \
 	$(OBJ)/drivers/monaco.o $(OBJ)/vidhrdw/monaco.o \
 	$(OBJ)/drivers/1945kiii.o \
 	$(OBJ)/drivers/4enraya.o $(OBJ)/vidhrdw/4enraya.o \

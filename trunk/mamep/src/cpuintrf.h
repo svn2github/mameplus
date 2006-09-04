@@ -30,6 +30,7 @@
 enum
 {
 	CPU_DUMMY,
+	CPU_GENSYNC,
 	CPU_Z80,
 	CPU_Z180,
 	CPU_8080,

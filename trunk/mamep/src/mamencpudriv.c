@@ -36,6 +36,7 @@ const game_driver * const noncpudrivers[] =
 
 #else	/* DRIVER_RECURSIVE */
 
+	DRIVER( pong )		/* (c) 1972 Atari */
 	DRIVER( monaco )	/* (c) 1979 SEGA */
 
 #endif	/* DRIVER_RECURSIVE */
