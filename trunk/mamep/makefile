@@ -24,6 +24,7 @@ include config.def
 
 ifneq ($(HAZEMD),)
 TARGET = hazemd
+USE_DRIVER_SWITCH=
 else
 ifneq ($(NEOCPSMAME),)
 TARGET = neocpsmame

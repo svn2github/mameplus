@@ -260,6 +260,8 @@ extern SHAREDOBJ_FUNC(void)  CLIB_DECL free(void *memory);
 
 // in drivers.c
 #ifndef DRIVER_SWITCH
+extern const game_driver * const drivers[];
+#else /* DRIVER_SWITCH */
 extern const game_driver ** drivers;
 extern const game_driver * const mamedrivers[];
 extern const game_driver * const plusdrivers[];
@@ -311,6 +313,8 @@ extern void assign_drivers(void);
 
 // in drivers.c
 #ifndef DRIVER_SWITCH
+extern const game_driver * const drivers[];
+#else /* DRIVER_SWITCH */
 extern const game_driver ** drivers;
 extern const game_driver * const mamedrivers[];
 extern const game_driver * const plusdrivers[];

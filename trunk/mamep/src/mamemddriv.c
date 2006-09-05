@@ -1814,7 +1814,7 @@ const game_driver * const hazemddrivers[] =
 	DRIVER( gg_cols )
 	DRIVER( gg_baku )
 
-#ifdef HAZEMD
+#if 0
 	/* System E */
 	DRIVER( hangonjr )
 	DRIVER( transfrm )
