@@ -61,7 +61,6 @@ COREOBJS = \
 	$(OBJ)/uitext.o \
 	$(OBJ)/unzip.o \
 	$(OBJ)/validity.o \
-	$(OBJ)/version.o \
 	$(OBJ)/video.o \
 	$(OBJ)/xmlfile.o \
 	$(OBJ)/sound/filter.o \
@@ -73,6 +72,12 @@ COREOBJS = \
 	$(OBJ)/sndhrdw/generic.o \
 	$(OBJ)/vidhrdw/generic.o \
 	$(OBJ)/vidhrdw/vector.o \
+
+ifdef HAZEMD
+COREOBJS += $(OBJ)/versionmd.o
+else
+COREOBJS += $(OBJ)/version.o
+endif
 
 ifdef USE_HISCORE
 COREOBJS += $(OBJ)/hiscore.o

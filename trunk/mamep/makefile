@@ -587,7 +587,11 @@ else
 endif
 
 # always recompile the version string
+ifneq ($(HAZEMD),)
+	$(CC) $(CDEFS) $(CFLAGS) -c src/versionmd.c -o $(OBJ)/versionmd.o
+else
 	$(CC) $(CDEFS) $(CFLAGS) -c src/version.c -o $(OBJ)/version.o
+endif
 	@echo Linking $@...
 
 ifneq ($(NO_DLL),)
