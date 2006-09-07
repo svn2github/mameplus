@@ -1131,7 +1131,7 @@ Game search %d%% complete
 
 
 # ui/mame32.rc: 598
-Gamma Correction
+Gamma correction
 
 
 # ui/mame32.rc: 509

@@ -1115,7 +1115,7 @@ Game search %d%% complete
 ÉQÅ[ÉÄÇÃåüçı %d%% äÆóπ
 
 # ui/mame32.rc: 598
-Gamma Correction
+Gamma correction
 ÉKÉìÉ}ílï‚ê≥
 
 # ui/mame32.rc: 509
@@ -2464,6 +2464,18 @@ type a keyword
 
 # ui/mame32.rc: 805
 Artwork options
+
+
+# ui/mame32.rc: 0
+Homebrew
+
+
+# ui/mame32.rc: 0
+Neogeo Decrypted
+
+
+# ui/mame32.rc: 0
+Non-CPU
 
 
 # ui/mame32.rc: 688
