@@ -25,11 +25,8 @@
 #include "video.h"
 #include "render.h"
 #include "rendutil.h"
-
-#ifdef NEW_DEBUGGER
 #include "debug/debugcpu.h"
 #include "debug/debugcon.h"
-#endif
 
 
 
@@ -974,7 +971,7 @@ static void extract_options(const game_driver *driver, machine_config *drv)
 	options.vector_flicker = options_get_float("flicker", TRUE);
 
 	// sound options
-	options.samplerate = options_get_bool("sound", TRUE) ? options_get_int("samplerate", TRUE) : 0;
+	options.samplerate = options_get_bool("sound", TRUE) ? options_get_int_range("samplerate", TRUE, 1000, 1000000) : 0;
 	options.use_samples = options_get_bool("samples", TRUE);
 	attenuation = options_get_int("volume", TRUE);
 #ifdef USE_VOLUME_AUTO_ADJUST
@@ -1069,11 +1066,9 @@ static void extract_options(const game_driver *driver, machine_config *drv)
 }
 #ifdef MAME_DEBUG
 	options.mame_debug = options_get_bool("debug", TRUE);
-#ifdef NEW_DEBUGGER
 	stemp = options_get_string("debugscript", TRUE);
 	if (stemp != NULL)
 		debug_source_script(stemp);
-#endif
 #endif
 
 {

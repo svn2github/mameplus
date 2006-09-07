@@ -1,3 +1,15 @@
+# ui/mame32.rc: 0
+Homebrew
+
+
+# ui/mame32.rc: 0
+Neogeo Decrypted
+
+
+# ui/mame32.rc: 0
+Non-CPU
+
+
 # ui/mame32.rc: 417
                                 
 

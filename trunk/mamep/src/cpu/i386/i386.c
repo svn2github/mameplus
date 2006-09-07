@@ -14,7 +14,7 @@
 #include "i386.h"
 #include "i386intf.h"
 
-#if defined(MAME_DEBUG) && defined(NEW_DEBUGGER)
+#ifdef MAME_DEBUG
 #include "debug/debugcpu.h"
 #endif
 
@@ -409,7 +409,7 @@ static void I386OP(decode_two_byte)(void)
 
 /*************************************************************************/
 
-#if defined(MAME_DEBUG) && defined(NEW_DEBUGGER)
+#ifdef MAME_DEBUG
 
 static UINT64 i386_debug_segbase(UINT32 ref, UINT32 params, UINT64 *param)
 {
@@ -451,7 +451,7 @@ static void i386_debug_setup(void)
 	symtable_add_function(global_symtable, "seglimit", 0, 1, 1, i386_debug_seglimit);
 }
 
-#endif /* defined(MAME_DEBUG) && defined(NEW_DEBUGGER) */
+#endif /* defined(MAME_DEBUG) */
 
 /*************************************************************************/
 
@@ -879,7 +879,7 @@ void i386_get_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_PTR_REGISTER_LAYOUT:				info->p = i386_reg_layout;		break;
 		case CPUINFO_PTR_WINDOW_LAYOUT:					info->p = i386_win_layout;		break;
 		case CPUINFO_PTR_TRANSLATE:						info->translate = translate_address_cb;	break;
-#if defined(MAME_DEBUG) && defined(NEW_DEBUGGER)
+#ifdef MAME_DEBUG
 		case CPUINFO_PTR_DEBUG_SETUP_COMMANDS:			info->setup_commands = i386_debug_setup; break;
 #endif
 

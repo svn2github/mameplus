@@ -87,7 +87,7 @@
 #include "render.h"
 #include "ui.h"
 
-#if defined(MAME_DEBUG) && defined(NEW_DEBUGGER)
+#ifdef MAME_DEBUG
 #include "debug/debugcon.h"
 #endif
 
@@ -139,11 +139,9 @@ struct _callback_item
 ***************************************************************************/
 
 /* the active machine */
+static machine_config internal_drv;
 static running_machine active_machine;
 running_machine *Machine;
-
-/* the active game driver */
-static machine_config internal_drv;
 
 /* various game options filled in by the OSD */
 global_options options;
@@ -865,6 +863,13 @@ static void create_machine(int game)
 	Machine->record_file = options.record;
 	Machine->playback_file = options.playback;
 	Machine->debug_mode = options.mame_debug;
+
+	/* allocate the driver data */
+	if (internal_drv.driver_data_size != 0)
+	{
+		Machine->driver_data = auto_malloc(internal_drv.driver_data_size);
+		memset(Machine->driver_data, 0, internal_drv.driver_data_size);
+	}
 
 	/* determine the color depth */
 	Machine->color_depth = 16;

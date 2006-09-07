@@ -820,7 +820,7 @@ BEGIN
     COMBOBOX        IDC_M68K_CORE,153,160,97,40,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
 #endif // ks hcmame s switch m68k core
 #ifdef DRIVER_SWITCH
-    GROUPBOX        "Switch drivers",IDC_DRV_TEXT,4,181,251,39
+    GROUPBOX        "Driver options",IDC_DRV_TEXT,4,181,251,39
     CONTROL         "MAME",IDC_DRV_MAME,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,10,192,70,10
     CONTROL         "MAME Plus!",IDC_DRV_PLUS,"Button",BS_AUTOCHECKBOX | 

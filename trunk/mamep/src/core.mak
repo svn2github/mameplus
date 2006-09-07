@@ -128,10 +128,7 @@ $(OBJ)/video.o:		$(OBJ)/layout/snap.lh
 
 ifdef DEBUG
 COREOBJS += \
-	$(OBJ)/profiler.o
-
-ifdef NEW_DEBUGGER
-COREOBJS += \
+	$(OBJ)/profiler.o \
 	$(OBJ)/debug/debugcmd.o \
 	$(OBJ)/debug/debugcmt.o \
 	$(OBJ)/debug/debugcon.o \
@@ -140,11 +137,6 @@ COREOBJS += \
 	$(OBJ)/debug/debugvw.o \
 	$(OBJ)/debug/express.o \
 	$(OBJ)/debug/textbuf.o
-else
-COREOBJS += \
-	$(OBJ)/debug/mamedbg.o \
-	$(OBJ)/debug/window.o
-endif
 endif
 
 
@@ -153,4 +145,4 @@ endif
 # set of tool targets
 #-------------------------------------------------
 
-TOOLS += romcmp$(EXE) chdman$(EXE) jedutil$(EXE)
+TOOLS += romcmp$(EXE) chdman$(EXE) jedutil$(EXE) file2str$(EXE)
