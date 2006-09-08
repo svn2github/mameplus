@@ -394,6 +394,10 @@ Arranges icons in a grid
 Artwork
 アートワーク
 
+# ui/mame32.rc: 805
+Artwork options
+アートワークオプション
+
 # ui/mame32.rc: 1141
 Aspect ratio
 アスペクト比
@@ -1115,7 +1119,7 @@ Game search %d%% complete
 ゲームの検索 %d%% 完了
 
 # ui/mame32.rc: 598
-Gamma correction
+Gamma Correction
 ガンマ値補正
 
 # ui/mame32.rc: 509
@@ -2461,10 +2465,6 @@ the next time MAME32 is run.\n\n
 # ui/win32ui.h: 20
 type a keyword
 キーワードを入力
-
-# ui/mame32.rc: 805
-Artwork options
-
 
 # ui/mame32.rc: 0
 Homebrew
