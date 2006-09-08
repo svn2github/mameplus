@@ -2,7 +2,7 @@
 #                                        #
 #     Mameinfo.dat日本語版 v0.108u2      #
 #                                        #
-#           September 1, 2006            #
+#           September 5, 2006            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,18 +12,16 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：799 翻訳済：783
-# 追加項目：326 合計：1125
+# Tester報告：801 翻訳済：787
+# 追加項目：326 合計：1127
 #
 
 
-$info=attckufo
+$info=czeroize
 $mame
 [バグ]
 
-- -nosoundで起動するとMAMEが次のエラーを出してクラッシュする:
-
-Attempted to malloc zero bytes (src/sndhrdw/attckufo.c:252) attckufo0108u1red, Firewave
+- 画面が化けてプレイできない。0.106から。 czeroize0108u2yel, ponzicar
 
 $end
 
@@ -742,6 +740,14 @@ $mame
 
 $end
 
+$info=shackled
+$mame
+[バグ]
+
+- どのボタンを押してもコンティニュー機能が動作しない。 shackled083yel, Twisty / TriggerFin
+
+$end
+
 $info=hvysmsh
 $mame
 [バグ]
@@ -771,14 +777,6 @@ $mame
 [バグ]
 
 - ボス戦になるとBGMが止まる。効果音は再生される。 nslasher0103u2yel, hammad / Kold666
-
-$end
-
-$info=shackled
-$mame
-[バグ]
-
-- どのボタンを押してもコンティニュー機能が動作しない。 shackled083yel, Twisty / TriggerFin
 
 $end
 
@@ -2108,7 +2106,7 @@ $info=gunmast
 $mame
 [バグ]
 
-- Leoの面でゲームがフリーズする。 gunmast099u9red, Layne / Twisty / cpukett
+- Leoの面でゲームがフリーズする。 gunmast099u9red, Layne / Twisty / cpukett / sjyune
 
 $end
 
@@ -2408,7 +2406,7 @@ $info=gratia
 $mame
 [バグ]
 
-- アトラクトモードでタイトル画面後に落ちる。YMF271コアが新しくなってから。 gratia099u4red, sjyune
+- アトラクトモードでタイトル画面後に落ちる。YMF271コアが新しくなってから。 gratia099u4red, sjyune / Firewave
 
 $end
 
@@ -2761,6 +2759,9 @@ $mame
 [バグ]
 
 - 1面クリア後、BGMがフェードアウトを繰り返す。 macross2079u1gre, Kold666 / AWJ
+
+
+- [Possilbe] 巨大戦艦とウェポンのプライオリティが変わったが、これは正しい？ macross2_0108gre, Kekule
 
 $end
 
