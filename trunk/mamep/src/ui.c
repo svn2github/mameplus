@@ -2395,19 +2395,19 @@ static void add_filled_box_color(int x1, int y1, int x2, int y2, rgb_t color)
 	add_line(x1 + 2, y1 + 2, x2 - 2, y1 + 2, SYSTEM_COLOR_FRAMEDARK);
 
 	/* bottom edge */
-	add_line(x1 + 3, y2 - 2, x2 - 2, y2 - 2, SYSTEM_COLOR_FRAMELIGHT);
+	add_line(x1 + 2, y2 - 2, x2 - 2, y2 - 2, SYSTEM_COLOR_FRAMELIGHT);
 	add_line(x1 + 1, y2 - 1, x2 - 1, y2 - 1, SYSTEM_COLOR_FRAMEMEDIUM);
 	add_line(x1,     y2,     x2,     y2,     SYSTEM_COLOR_FRAMEDARK);
 
 	/* left edge */
-	add_line(x1,     y1 + 1, x1,     y2 - 1, SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x1 + 1, y1 + 2, x1 + 1, y2 - 2, SYSTEM_COLOR_FRAMEMEDIUM);
+	add_line(x1,     y1 + 1, x1,     y2,     SYSTEM_COLOR_FRAMELIGHT);
+	add_line(x1 + 1, y1 + 2, x1 + 1, y2 - 1, SYSTEM_COLOR_FRAMEMEDIUM);
 	add_line(x1 + 2, y1 + 3, x1 + 2, y2 - 2, SYSTEM_COLOR_FRAMEDARK);
 
 	/* right edge */
-	add_line(x2 - 2, y1 + 3, x2 - 2, y2 - 3, SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x2 - 1, y1 + 2, x2 - 1, y2 - 2, SYSTEM_COLOR_FRAMEMEDIUM);
-	add_line(x2,     y1 + 1, x2,     y2 - 1, SYSTEM_COLOR_FRAMEDARK);
+	add_line(x2 - 2, y1 + 2, x2 - 2, y2 - 1, SYSTEM_COLOR_FRAMELIGHT);
+	add_line(x2 - 1, y1 + 1, x2 - 1, y2,     SYSTEM_COLOR_FRAMEMEDIUM);
+	add_line(x2,     y1,     x2,     y2 + 1, SYSTEM_COLOR_FRAMEDARK);
 #else /* UI_COLOR_DISPLAY */
 	add_fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, color);
 
