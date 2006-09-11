@@ -1,3 +1,40 @@
+Haze Megadrive Emu 0.08a
+------------------------
+
+Many fixes in this update are thanks to 'notaz' posting comments on the site.
+---
+
+Fixed IRQ6 pending (required by Warlock to avoid GFX corruption caused by bad DMA)
+(thanks notaz)
+
+Improved protection emulation in
+
+Elf Wor - title now displayed, doesn't lock up, but I can't pass level 1?
+Mahjong Lover - boots instead of showing unhappy girl
+Lion King 2 - parent set boots
+KOF98 - boots, but still has remaining issues
+Smart Mouse - no longer fades out after a few seconds of play
+Squirrel King - fixed graphics on player select screen, oh what original names
+ for this highly original game ;-)
+(thanks notaz)
+
+Added hack to allow Virtua Racing to show its 2d graphics
+(thanks notaz)
+
+Fixed some parent / clone relationships for the Megadrive games.  Added a few
+extra sets.
+
+Added the rest of the SMS sets.  There have been no improvements to SMS emulation
+yet, but this will make testing / updating the driver easier.
+
+Added a 'region' dipswitch.  If you change the region from the default a reset
+(Shift+F3) is required.  Please don't change a PAL game to NTSC or vice versa
+due to some bug (in MAME?) it causes the DAC samples to be played incorrectly.
+
+Changed sound output from Mono to Stereo.  The Megadrive could output Stereo
+sounds.
+
+
 Haze Megadrive Emu 0.07a
 ------------------------
 
