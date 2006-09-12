@@ -11986,6 +11986,7 @@ DRIVER_INIT( g_12i1 )
 	init_megadriv();
 }
 
+#ifdef HAZEMD
 READ16_HANDLER ( topshoot_ram_r )
 {
 	UINT16 *topshoot_ram = (UINT16*)memory_region(REGION_CPU1)+(0x200000/2);
@@ -12020,6 +12021,7 @@ DRIVER_INIT( topshoot )
 
 	init_megadriv();
 }
+#endif /* HAZEMD */
 
 
 READ16_HANDLER( dte_extra_r )

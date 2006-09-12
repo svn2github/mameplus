@@ -2210,7 +2210,7 @@ DRIVER( s_zilli )
 	DRIVER( gg_cols )
 	DRIVER( gg_baku )
 
-#if HAZEMD
+#ifdef HAZEMD
 	/* System E */
 	DRIVER( hangonjr )
 	DRIVER( transfrm )
