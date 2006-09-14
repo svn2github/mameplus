@@ -1975,11 +1975,14 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 		}
 		break;
 
-#ifdef MESS
 	default:
+#ifdef MESS
 		if (MessPropertiesCommand(g_nGame, hDlg, wNotifyCode, wID, &changed))
 			break;
 #endif
+
+		if (wNotifyCode == BN_CLICKED)
+			changed = TRUE;
 	}
 	if (changed == TRUE)
 	{
