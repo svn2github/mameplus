@@ -27,7 +27,7 @@
 
 #ifdef _MSC_VER
 #ifndef NONAMELESSUNION
-#define NONAMELESSUNION 
+#define NONAMELESSUNION
 #endif
 
 #define snwprintf _snwprintf
@@ -2004,18 +2004,18 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	icon_index = malloc(sizeof(int) * game_count);
 	if (!icon_index)
 		return FALSE;
-	ZeroMemory(icon_index,sizeof(int) * game_count);
+	ZeroMemory(icon_index, sizeof(int) * game_count);
 
 	/* sorted list of drivers by name */
 	sorted_drivers = (driver_data_type *) malloc(sizeof(driver_data_type) * game_count);
 	if (!sorted_drivers)
 		return FALSE;
-	for (i=0;i<game_count;i++)
+	for (i=0; i<game_count; i++)
 	{
 		sorted_drivers[i].name = drivers[i]->name;
 		sorted_drivers[i].index = i;
 	}
-	qsort(sorted_drivers,game_count,sizeof(driver_data_type),DriverDataCompareFunc );
+	qsort(sorted_drivers, game_count, sizeof(driver_data_type), DriverDataCompareFunc);
 
 	/* initialize cpu information */
 	cpuintrf_init();
@@ -2284,14 +2284,14 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 #endif /* IMAGE_MENU */
 
 	if (GetHideMouseOnStartup())
-	{    
+	{
 		/*  For some reason the mouse is centered when a game is exited, which of
 			course causes a WM_MOUSEMOVE event that shows the mouse. So we center
 			it now, before the startup coords are initilized, and that way the mouse
 			will still be hidden when exiting from a game (i hope) :)
-		*/      
-		SetCursorPos(GetSystemMetrics(SM_CXSCREEN)/2,GetSystemMetrics(SM_CYSCREEN)/2);
-		
+		*/
+		SetCursorPos(GetSystemMetrics(SM_CXSCREEN)/2, GetSystemMetrics(SM_CYSCREEN)/2);
+
 		// Then hide it
 		ShowCursor(FALSE);
 	}
@@ -3384,7 +3384,7 @@ static HWND InitToolbar(HWND hParent)
 
 	// create Edit Control
 	CreateWindowEx( 0L, TEXT("Edit"), _Unicode(_UI(SEARCH_PROMPT)), WS_CHILD | WS_BORDER | WS_VISIBLE | ES_LEFT, 
-					iPosX, iPosY, 200, iHeight, hToolBar, (HMENU)ID_TOOLBAR_EDIT, hInst, 0 );
+					iPosX, iPosY, 200, iHeight, hToolBar, (HMENU)ID_TOOLBAR_EDIT, hInst, NULL );
 
 	return hToolBar;
 }

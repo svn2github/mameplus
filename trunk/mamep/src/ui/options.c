@@ -2980,6 +2980,8 @@ static void LoadOptions(void)
 {
 	LoadDefaultOptions();
 	options_load_winui_config();
+
+	lang_directory = strdup(GetLangDir());
 	SetLangcode(settings.langcode);
 	SetUseLangList(UseLangList());
 }

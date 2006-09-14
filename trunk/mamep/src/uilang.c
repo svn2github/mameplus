@@ -105,7 +105,11 @@ static void load_mmo(int msgcat)
 	if (!mmo_filename[msgcat].filename)
 		return;
 
-	sprintf(filename, "lang\\%s\\%s.mmo", ui_lang_info[current_lang].name, mmo_filename[msgcat].filename);
+	if (!lang_directory)
+		lang_directory = "lang";
+
+	sprintf(filename, "%s\\%s\\%s.mmo", 
+		lang_directory, ui_lang_info[current_lang].name, mmo_filename[msgcat].filename);
 
 	if ((fp = fopen(filename, "rb")) == NULL)
 		goto mmo_readerr;
