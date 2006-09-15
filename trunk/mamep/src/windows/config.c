@@ -168,13 +168,14 @@ const options_entry windows_opts[] =
 	{ "snapshot_directory",       "snap",     0,                 "directory to save screenshots" },
 	{ "diff_directory",           "diff",     0,                 "directory to save hard drive image difference files" },
 	{ "ctrlrpath;ctrlr_directory","ctrlr",    0,                 "path to controller definitions" },
+	{ "translation_directory",    "lang",     0,                 "directory for translation table data" },
 	{ "comment_directory",        "comments", 0,                 "directory to save debugger comments" },
 #ifdef USE_IPS
 	{ "ips_directory",            "ips",      0,                 "directory for ips files" },
 #else /* USE_IPS */
 	{ "ips_directory",            "ips",      OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* USE_IPS */
-	{ "lang_directory",           "lang",     0,                 "directory for localized data files" },
+	{ "localized_directory",      "lang",     0,                 "directory for localized data files" },
 	{ "cheat_file",               "cheat.dat",0,                 "cheat filename" },
 	{ "history_file",             "history.dat", 0,              "history database name" },
 #ifdef STORY_DATAFILE
@@ -854,6 +855,7 @@ void assign_drivers(void)
 	} drivers_table[] =
 	{
 		{ "mame",	mamedrivers },
+#ifndef TINY_NAME
 		{ "plus",	plusdrivers },
 		{ "homebrew",	homebrewdrivers },
 		{ "neod",	neoddrivers },
@@ -861,13 +863,15 @@ void assign_drivers(void)
 		{ "noncpu",	noncpudrivers },
 		{ "hazemd",	hazemddrivers },
 	#endif /* NEOCPSMAME */
+#endif /* !TINY_NAME */
 		{ NULL }
 	};
 
-	const char *drv_option = options_get_string("driver_config", FALSE);
 	UINT32 enabled = 0;
 	int i, n;
 
+#ifndef TINY_NAME
+	const char *drv_option = options_get_string("driver_config", FALSE);
 	if (drv_option)
 	{
 		char *temp = mame_strdup(drv_option);
@@ -898,6 +902,7 @@ void assign_drivers(void)
 			free(temp);
 		}
 	}
+#endif /* !TINY_NAME */
 
 	if (enabled == 0)
 		enabled = 1;	// default to mamedrivers

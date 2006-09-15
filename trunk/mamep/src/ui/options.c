@@ -223,11 +223,12 @@ typedef struct
 	char*	snapshot_directory;
 	char*	diff_directory;
 	char*	ctrlrpath;
+	char*	translation_directory;
 	char*	comment_directory;
 #ifdef USE_IPS
 	char*	ips_directory;
 #endif /* USE_IPS */
-	char*	lang_directory;
+	char*	localized_directory;
 	char*	cheat_file;
 	char*	history_file;
 #ifdef STORY_DATAFILE
@@ -1749,6 +1750,23 @@ void SetDiffDir(const char* path)
 		settings.diff_directory = strdup(path);
 }
 
+const char* GetTranslationDir(void)
+{
+	return settings.translation_directory;
+}
+
+void SetTranslationDir(const char* path)
+{
+	FreeIfAllocated(&settings.translation_directory);
+
+	if (path != NULL)
+	{
+		settings.translation_directory = strdup(path);
+
+		SetCorePathList(FILETYPE_TRANSLATION, settings.translation_directory);
+	}
+}
+
 const char* GetCommentDir(void)
 {
 	return settings.comment_directory;
@@ -1777,17 +1795,17 @@ void SetPatchDir(const char *path)
 }
 #endif /* USE_IPS */
 
-const char* GetLangDir(void)
+const char* GetLocalizedDir(void)
 {
-	return settings.lang_directory;
+	return settings.localized_directory;
 }
 
-void SetLangDir(const char* path)
+void SetLocalizedDir(const char* path)
 {
-	FreeIfAllocated(&settings.lang_directory);
+	FreeIfAllocated(&settings.localized_directory);
 
 	if (path != NULL)
-		settings.lang_directory = strdup(path);
+		settings.localized_directory = strdup(path);
 }
 
 const char* GetIconsDir(void)
@@ -2981,7 +2999,7 @@ static void LoadOptions(void)
 	LoadDefaultOptions();
 	options_load_winui_config();
 
-	lang_directory = strdup(GetLangDir());
+	SetCorePathList(FILETYPE_TRANSLATION, settings.translation_directory);
 	SetLangcode(settings.langcode);
 	SetUseLangList(UseLangList());
 }

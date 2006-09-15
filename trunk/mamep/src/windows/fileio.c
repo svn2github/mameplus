@@ -54,7 +54,7 @@
 //============================================================
 
 // from datafile.c
-extern const char *lang_directory;
+extern const char *localized_directory;
 extern const char *history_filename;
 #ifdef STORY_DATAFILE
 extern const char *story_filename;
@@ -130,6 +130,7 @@ static const struct
 	{ FILETYPE_SCREENSHOT,	"snapshot_directory" },
 	{ FILETYPE_MOVIE,		"snapshot_directory" },
 	{ FILETYPE_CTRLR,		"ctrlrpath" },
+	{ FILETYPE_TRANSLATION,	"translation_directory" },
 	{ FILETYPE_INI,			"inipath" },
 	{ FILETYPE_COMMENT,		"comment_directory" },
 #ifdef USE_IPS
@@ -850,7 +851,7 @@ void set_pathlist(int file_type, const char *new_rawpath)
 
 void setup_datafile(void)
 {
-	lang_directory= options_get_string("lang_directory", TRUE);
+	localized_directory = options_get_string("localized_directory", TRUE);
 
 	cheatfile = options_get_string("cheat_file", TRUE);
 	history_filename = options_get_string("history_file", TRUE);

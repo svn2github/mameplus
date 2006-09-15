@@ -830,3 +830,7 @@ int CLIB_DECL main(int argc,char **argv)
 	return 0;
 }
 
+char *lang_message(int msgcat, const char *str)
+{
+	return (char *)str;
+}

@@ -52,8 +52,8 @@ LPCWSTR GetGameHistory(int driver_index)
 
 	historyBuf[0] = '\0';
 
-	FreeIfAllocated((char **)&lang_directory);
-	lang_directory = strdup(GetLangDir());
+	FreeIfAllocated((char **)&localized_directory);
+	localized_directory = strdup(GetLocalizedDir());
 
 	FreeIfAllocated((char **)&history_filename);
 	history_filename = strdup(GetHistoryFile());
@@ -108,8 +108,8 @@ LPCWSTR GetGameStory(int driver_index)
 
 	historyBuf[0] = '\0';
 
-	FreeIfAllocated((char **)&lang_directory);
-	lang_directory = strdup(GetLangDir());
+	FreeIfAllocated((char **)&localized_directory);
+	localized_directory = strdup(GetLocalizedDir());
 
 #ifdef STORY_DATAFILE
 	FreeIfAllocated((char **)&story_filename);

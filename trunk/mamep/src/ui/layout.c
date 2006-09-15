@@ -107,7 +107,8 @@ const DIRECTORYINFO g_directoryInfo[] =
 	{ "ROMs",                  GetRomDirs,         SetRomDirs,         TRUE,  DIRDLG_ROMS },
 	{ "Samples",               GetSampleDirs,      SetSampleDirs,      TRUE,  DIRDLG_SAMPLES },
 	{ "Ini Files",             GetIniDir,          SetIniDir,          FALSE, DIRDLG_INI },
-	{ "Language Files",        GetLangDir,         SetLangDir,         FALSE, 0 },
+	{ "Translation Files",     GetTranslationDir,  SetTranslationDir,  FALSE, 0 },
+	{ "Localized Files",       GetLocalizedDir,    SetLocalizedDir,    FALSE, 0 },
 #ifdef USE_IPS
 	{ "IPS Files",             GetPatchDir,        SetPatchDir,        FALSE, 0 },
 #endif /* USE_IPS */

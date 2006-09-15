@@ -1,4 +1,5 @@
 #include "osd_so.h"
+#include "fileio.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -94,10 +95,10 @@ void assign_msg_catategory(int msgcat, const char *name)
 static void load_mmo(int msgcat)
 {
 	struct mmo *p = &mmo_table[current_lang][msgcat];
-	char filename[1024];
-	int i;
+	mame_file *file;
 	int str_size;
-	FILE *fp;
+	int size;
+	int i;
 
 	if (p->status != MMO_NOT_LOADED)
 		return;
@@ -105,36 +106,34 @@ static void load_mmo(int msgcat)
 	if (!mmo_filename[msgcat].filename)
 		return;
 
-	if (!lang_directory)
-		lang_directory = "lang";
-
-	sprintf(filename, "%s\\%s\\%s.mmo", 
-		lang_directory, ui_lang_info[current_lang].name, mmo_filename[msgcat].filename);
-
-	if ((fp = fopen(filename, "rb")) == NULL)
+	file = mame_fopen(ui_lang_info[current_lang].name, mmo_filename[msgcat].filename, FILETYPE_TRANSLATION, 0);
+	if (!file)
 		goto mmo_readerr;
 
-	if (fread(&p->num_mmo, sizeof p->num_mmo, 1, fp) != 1)
+	size = sizeof p->num_mmo;
+	if (mame_fread(file, &p->num_mmo, size) != size)
 		goto mmo_readerr;
 
 	p->mmo_index = malloc(p->num_mmo * sizeof p->mmo_index[0]);
 	if (!p->mmo_index)
 		goto mmo_readerr;
 
-	if (fread(p->mmo_index, p->num_mmo * sizeof p->mmo_index[0], 1, fp) != 1)
+	size = p->num_mmo * sizeof p->mmo_index[0];
+	if (mame_fread(file, p->mmo_index, size) != size)
 		goto mmo_readerr;
 
-	if (fread(&str_size, sizeof str_size, 1, fp) != 1)
+	size = sizeof str_size;
+	if (mame_fread(file, &str_size, size) != size)
 		goto mmo_readerr;
 
 	p->mmo_str = malloc(str_size);
 	if (!p->mmo_str)
 		goto mmo_readerr;
 
-	if (fread(p->mmo_str, str_size, 1, fp) != 1)
+	if (mame_fread(file, p->mmo_str, str_size) != str_size)
 		goto mmo_readerr;
 
-	fclose(fp);
+	mame_fclose(file);
 
 	for (i = 0; i < p->num_mmo; i++)
 	{
@@ -157,8 +156,8 @@ mmo_readerr:
 		free(p->mmo_index);
 		p->mmo_index = NULL;
 	}
-	if (fp)
-		fclose(fp);
+	if (file)
+		mame_fclose(file);
 
 	p->status = MMO_NOT_FOUND;
 }

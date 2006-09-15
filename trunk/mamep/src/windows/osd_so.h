@@ -73,7 +73,7 @@ extern SHAREDOBJ_FUNC(int) load_driver_mameinfo (const game_driver *drv, char *b
 extern SHAREDOBJ_FUNC(int) load_driver_drivinfo (const game_driver *drv, char *buffer, int bufsize);
 extern SHAREDOBJ_FUNC(int) load_driver_statistics (char *buffer, int bufsize);
 
-extern SHAREDOBJ_DATA const char *lang_directory;
+extern SHAREDOBJ_DATA const char *localized_directory;
 extern SHAREDOBJ_DATA const char *history_filename;
 #ifdef STORY_DATAFILE
 extern SHAREDOBJ_DATA const char *story_filename;
@@ -274,7 +274,7 @@ extern const game_driver * const hazemddrivers[];
 #endif /* DRIVER_SWITCH */
 
 // in datafile.c
-extern const char *lang_directory;
+extern const char *localized_directory;
 extern const char *history_filename;
 #ifdef STORY_DATAFILE
 extern const char *story_filename;
@@ -327,7 +327,7 @@ extern const game_driver * const hazemddrivers[];
 #endif /* DRIVER_SWITCH */
 
 // in datafile.c
-extern const char *lang_directory;
+extern const char *localized_directory;
 extern const char *history_filename;
 #ifdef STORY_DATAFILE
 extern const char *story_filename;

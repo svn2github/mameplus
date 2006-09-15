@@ -16,11 +16,12 @@ START_OPT_FUNC_CORE
 	DEFINE_OPT(string,               snapshot_directory);
 	DEFINE_OPT(string,               diff_directory);
 	DEFINE_OPT(string,               ctrlrpath);
+	DEFINE_OPT(string,               translation_directory);
 	DEFINE_OPT(string,               comment_directory);
 #ifdef USE_IPS
 	DEFINE_OPT(string,               ips_directory);
 #endif /* USE_IPS */
-	DEFINE_OPT(string,               lang_directory);
+	DEFINE_OPT(string,               localized_directory);
 	DEFINE_OPT(string,               cheat_file);
 	DEFINE_OPT(string,               history_file);
 #ifdef STORY_DATAFILE

@@ -180,6 +180,7 @@ mame_file *mame_fopen_error(const char *gamename, const char *filename, int file
 		case FILETYPE_IPS:
 #endif /* USE_IPS */
 		case FILETYPE_FONT:
+		case FILETYPE_TRANSLATION:
 			if (openforwrite)
 			{
 				logerror("mame_fopen: type %02x write not supported\n", filetype);
@@ -225,6 +226,7 @@ mame_file *mame_fopen_error(const char *gamename, const char *filename, int file
 		/* generic multi-directory files */
 		case FILETYPE_SAMPLE:
 		case FILETYPE_ARTWORK:
+		case FILETYPE_TRANSLATION:
 			return generic_fopen(filetype, gamename, filename, 0, openforwrite ? FILEFLAG_OPENWRITE : FILEFLAG_OPENREAD, error);
 
 		/* ROM files */
@@ -971,6 +973,10 @@ static const char *get_extension_for_filetype(int filetype)
 
 		case FILETYPE_LANGUAGE:		/* language files */
 			extension = "lng";
+			break;
+
+		case FILETYPE_TRANSLATION:	/* translation table */
+			extension = "mmo";
 			break;
 
 		case FILETYPE_CTRLR:		/* controller files */

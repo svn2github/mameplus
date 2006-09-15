@@ -8,6 +8,10 @@
 
 static const char *stat_versions[] =
 {
+	"0.108u4    September 14th 2006",
+	"0.108u3    September  7th 2006",
+	"0.108u2    August    31st 2006",
+	"0.108u1    August    24th 2006",
 	"0.108      August    20th 2006",
 	"0.107u4    August    17th 2006",
 	"0.107u3    August    10th 2006",
@@ -347,6 +351,10 @@ static const char *stat_versions[] =
 
 static const char *stat_history[] =
 {
+	"0.108u4    876    6266  +8",
+	"0.108u3    876    6258  +6",
+	"0.108u2    875    6252  +6",
+	"0.108u1    874    6246  +4",
 	"0.108      874    6242  +5",
 	"0.107u4    873    6237  +4",
 	"0.107u3    873    6233  +10",
@@ -686,7 +694,7 @@ static const char *stat_newgames[] =
 	"2003:   36      + 1109",
 	"2004:   65      +  675",
 	"2005:   70      +  563",
-	"2006:   23      +  299",
+	"2006:   25      +  323",
 	0
 };
 
@@ -757,7 +765,7 @@ const char *mameinfo_filename = NULL;
 const char *command_filename = NULL;
 #endif /* CMD_LIST */
 
-const char *lang_directory = NULL;
+const char *localized_directory = NULL;
 
 #define FILE_MERGED	1
 #define FILE_ROOT	2
@@ -1957,11 +1965,11 @@ static int load_datafile (const game_driver *drv, char *buffer, int bufsize,
 
 	if (where != FILE_ROOT)
 	{
-		if (!lang_directory)
-			lang_directory = "lang";
+		if (!localized_directory)
+			localized_directory = "lang";
 
 		sprintf(filename, "%s\\%s\\",
-	        	lang_directory,
+	        	localized_directory,
 			ui_lang_info[options.langcode].name);
 	}
 
@@ -3320,8 +3328,8 @@ static int find_command (const game_driver *drv)
 	if (!command_filename)
 		command_filename = "command.dat";
 
-	if (!lang_directory)
-		lang_directory = "lang";
+	if (!localized_directory)
+		localized_directory = "lang";
 
 	if (menu_filename)
 		free(menu_filename);
@@ -3336,7 +3344,7 @@ static int find_command (const game_driver *drv)
 		if (where != FILE_ROOT)
 		{
 			sprintf(filename, "%s\\%s\\",
-		        	lang_directory,
+		        	localized_directory,
 				ui_lang_info[options.langcode].name);
 		}
 

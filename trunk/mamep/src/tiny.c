@@ -13,7 +13,12 @@
 
 extern game_driver TINY_NAME;
 
+#ifndef DRIVER_SWITCH
 const game_driver * const drivers[] =
+#else /* DRIVER_SWITCH */
+const game_driver ** drivers = NULL;
+const game_driver * const mamedrivers[] =
+#endif /* DRIVER_SWITCH */
 {
 	TINY_POINTER,
 	0	/* end of array */

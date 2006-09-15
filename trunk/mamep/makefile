@@ -631,7 +631,7 @@ file2str$(EXE): $(OBJ)/file2str.o $(OSDBGOBJS)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $^ $(LIBS) -o $@
 
-romcmp$(EXE): $(OBJ)/romcmp.o $(OBJ)/unzip.o $(OBJ)/mamecore.o $(OBJ)/uilang.o $(VCOBJS) $(ZLIB) $(OSDBGOBJS)
+romcmp$(EXE): $(OBJ)/romcmp.o $(OBJ)/unzip.o $(VCOBJS) $(ZLIB) $(OSDBGOBJS)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $^ $(LIBS) -o $@
 

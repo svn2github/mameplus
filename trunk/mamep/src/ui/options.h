@@ -526,6 +526,9 @@ void SetDiffDir(const char* path);
 const char* GetCtrlrDir(void);
 void SetCtrlrDir(const char* path);
 
+const char *GetTranslationDir(void);
+void SetTranslationDir(const char *path);
+
 const char* GetCommentDir(void);
 void SetCommentDir(const char* path);
 
@@ -534,8 +537,8 @@ const char *GetPatchDir(void);
 void SetPatchDir(const char *path);
 #endif /* USE_IPS */
 
-const char *GetLangDir(void);
-void SetLangDir(const char *path);
+const char *GetLocalizedDir(void);
+void SetLocalizedDir(const char *path);
 
 const char* GetCheatFile(void);
 void SetCheatFile(const char*);
