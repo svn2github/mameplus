@@ -10,7 +10,7 @@ Bootleg
 Italian bootleg
 이탈리아 해적판
 
-# Digger Man
+# Intersecti
 Unknown
 알수없음
 
@@ -162,6 +162,10 @@ American Sammy
 Amstar
 
 
+# Zero (set 2)
+Amtec
+
+
 # Minesweeper
 Amutech
 
@@ -198,7 +202,7 @@ Ashby Computers and Graphics LTD.
 Associated Overseas MFR, Inc
 
 
-# Pong
+# Fast Freddie
 Atari
 
 
@@ -224,6 +228,10 @@ BMC
 
 # Mahjong Nanpa Story (Japan 890713)
 BROOKS
+
+
+# Carrera (Version 6.7)
+BS Electronics
 
 
 # Jump Shot
@@ -256,10 +264,6 @@ Barko Corp.
 
 # Many Block
 Bee-Oh
-
-
-# Neo No Panepon (beta)
-Blastar
 
 
 # The Crystal of Kings
@@ -376,6 +380,10 @@ D. R. Korea
 
 # Tetris (D.R. Korea)
 D.R. Korea
+
+
+# Poke Champ
+DGRM
 
 
 # Pipeline
@@ -606,6 +614,10 @@ Enerdyne Technologies, Inc.
 Enix
 
 
+# Swinging Singles
+Ent. Ent. Ltd
+
+
 # Noah's Ark
 Enter-Tech
 
@@ -698,10 +710,6 @@ G.E.I.
 GAPS Inc.
 
 
-# Dambusters (set 2)
-GAT
-
-
 # Abscam
 GL
 
@@ -768,6 +776,10 @@ Graphic Techno
 
 # Trivia (UK Version 5.07)
 Grayhound Electronics
+
+
+# Super Crash (bootleg of Head On)
+Gremlim
 
 
 # Moon Cresta (Gremlin)
@@ -894,10 +906,6 @@ Irem America
 Island Design
 
 
-# Poker Night
-JMK
-
-
 # Check Man (Japan)
 Jaleco
 
@@ -994,8 +1002,16 @@ Kural Samno Electric
 Kural TWT
 
 
+# Digger Man (prototype)
+Kyle Hodgetts
+
+
 # '99: The Last War (Kyugo)
 Kyugo
+
+
+# Ripper Ribbit (Version 2.8.4)
+LAI Games
 
 
 # Zig Zag (Galaxian hardware, set 1)
@@ -1008,6 +1024,10 @@ Leante Games
 
 # Space War (Leijac)
 Leijac
+
+
+# Astro Laser
+Leisure Time Electronics Inc.
 
 
 # Super Baseball Double Play Home Run Derby
@@ -1032,6 +1052,10 @@ MIKI SYOUJI
 
 # Medal Mahjong Pachi-Slot Tengoku [BET] (Japan)
 MIKI SYOUJI/AV JAPAN
+
+
+# Catacomb
+MTM Games
 
 
 # Wakakusamonogatari Mahjong Yonshimai (Japan)
@@ -1094,7 +1118,7 @@ Microhard
 Micronet
 
 
-# F-15 Strike Eagle (rev. 2.1)
+# F-15 Strike Eagle (rev. 2.2 02/25/91)
 Microprose
 
 
@@ -1150,10 +1174,6 @@ Monolith Corp.
 Mylstar
 
 
-# Vantris (Vanguard hardware)
-N.Kehrer
-
-
 # Pirates
 NIX
 
@@ -1188,10 +1208,6 @@ Nasco Japan
 
 # Neo Turf Masters / Big Tournament Golf
 Nazca
-
-
-# Neo Pong (v1.1)
-Neodev
 
 
 # Moon Cresta (Nichibutsu)
@@ -1306,7 +1322,7 @@ Outer Limits
 P & P Marketing
 
 
-# Magic Fly
+# Magic Fly (Ver 0.3)
 P&A Games
 
 
@@ -1374,10 +1390,6 @@ Promat
 Psikyo
 
 
-# Shadow of the Beast (Neo Demo)
-Psygnosis
-
-
 # Heaven's Gate
 RACDYM
 
@@ -1412,14 +1424,6 @@ Rare LTD.
 
 # Tickee Tickats
 Raster Elite
-
-
-# Frog Feast
-Rastersoft
-
-
-# Zintrick / Oshidashi Zentrix (CD to MVS Conversion)
-Razoola
 
 
 # Astro Fire
@@ -1506,7 +1510,7 @@ Sculptured Software Inc.
 Seatongrove Ltd
 
 
-# Monaco GP
+# Ali Baba and 40 Thieves
 Sega
 
 
@@ -1596,6 +1600,10 @@ Soft
 
 # Jolly Card (Croatia)
 Soft Design
+
+
+# Dambusters (UK)
+South West Research
 
 
 # Mosaic
@@ -1711,7 +1719,7 @@ TV Game Gruenberg
 
 
 # Ameisenbaer (German)
-TV-Tuning 2000
+TV-Tuning
 
 
 # Cabal (US set 1)
@@ -1816,6 +1824,10 @@ Tekunon Kougyou
 
 # Mr. TNT
 Telko
+
+
+# Konek-Gorbunok
+Terminal
 
 
 # Galaxian Test ROM
@@ -2018,10 +2030,6 @@ World Game
 World Games Inc
 
 
-# Swinging Singles
-Yachiyo
-
-
 # Space Stranger
 Yachiyo Electronics, Ltd.
 
@@ -2080,6 +2088,10 @@ Zenitone-Microsec Ltd
 
 # Invader's Revenge
 Zenitone-Microsec Ltd.
+
+
+# Reaktor (Track & Field Conversion)
+Zilec
 
 
 # Wizz Quiz (version 4)

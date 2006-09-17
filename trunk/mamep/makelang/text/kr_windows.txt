@@ -1,52 +1,48 @@
-# windows/input.c: 1711
+# windows/input.c: 1608
          all -- all axes on all joysticks are digital\n
          전체 -- 모든 조이스틱의 모든 축이 디지탈 입력\n
 
-# windows/input.c: 1717
+# windows/input.c: 1614
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
          j1,j2a2 -- 조이스틱1의 모든 축과 조이스틱2의 축2가 디지탈 입력\n
 
-# windows/input.c: 1715
+# windows/input.c: 1612
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
          j1a5a6 -- 조이스틱1의 축 5, 6이 디지탈 입력\n
 
-# windows/input.c: 1712
+# windows/input.c: 1609
          j<N> -- all axes on joystick <N> are digital\n
          j<N> -- 조이스틱<N>의 모든 축이 디지탈 입력\n
 
-# windows/input.c: 1713
+# windows/input.c: 1610
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
          j<N>a<M> -- 조이스틱<N>의 축 <M>이 디지탈 입력\n
 
-# windows/input.c: 1710
+# windows/input.c: 1607
          none -- no axes on any joysticks are digital\n
          없음 -- 조이스틱상의 어떤 축도 디지탈 입력이 아님\n
 
-# windows/config.c: 683
+# windows/config.c: 843
         MAME -createconfig to create a mame.ini\n\n
         MAME -createconfig mame.ini 파일 생성\n\n
 
-# windows/config.c: 682
+# windows/config.c: 842
         MAME -showconfig   for a list of configuration options\n
         MAME -showconfig   설정 옵션의 리스트\n
 
-# windows/config.c: 681
+# windows/config.c: 841
         MAME -showusage    for a brief list of options\n
         MAME -showusage    옵션들의 간결한 리스트\n
 
-# windows/input.c: 1714
+# windows/input.c: 1611
     Multiple axes can be specified for one joystick:\n
     하나의 조이스틱에 여러개의 축 지정이 가능:\n
 
-# windows/input.c: 1716
+# windows/input.c: 1613
     Multiple joysticks can be specified separated by commas:\n
     여러개의 조이스틱을 콤마로 구분해 지정 가능:\n
 
-# windows/wind3old.c: 576
- (%.2lfMB video memory available)
- (%.2lfMB 비디오 메모리 사용가능)
-
-# windows/input.c: 2163
+# windows/input.c: 2071
  - digital
  - 디지탈
 
@@ -58,399 +54,199 @@
  NO GOOD DUMP KNOWN
  정상적으로 덤프된 롬 없음
 
-# windows/fronthlp.c: 757, 868
+# windows/fronthlp.c: 758, 870
 %d %s found, %d were OK.\n
 %d %s 찾음, %d 개 상태좋음.\n
 
-# windows/input.c: 2096
+# windows/input.c: 2004
 %s Button %d
 %s 버튼 %d
-
-# windows/wind3old.c: 1550
-%s surface created: %s (%s)\n
-%s 표면 생성됨: %s (%s)\n
 
 # windows/fronthlp.c: 99
 (BAD) 
 (불량)
 
-# windows/videoold.c: 242
-(dd) stretch video using the hardware
-(dd) 하드웨어기능으로 화면 늘리기
-
-# windows/video.c: 571 windows/videoold.c: 356
+# windows/video.c: 476
 (primary)
 (주요)
 
-# windows/video.c: 360 windows/videoold.c: 648
+# windows/video.c: 273
 Average FPS: %f (%d frames)\n
 평균 FPS: %f (%d 프레임)\n
 
-# windows/wind3old.c: 2565 windows/winddold.c: 1506, 1810
-Avg Flip = %d
-평균 Flip = %d
-
-# windows/wind3old.c: 938 windows/winddold.c: 636
-Best mode = %dx%dx%d @ %d Hz\n
-최적 모드 = %dx%dx%d @ %d Hz\n
-
-# windows/wind3old.c: 940 windows/winddold.c: 638
-Best mode = %dx%dx%d @ default Hz\n
-최적 모드 = %dx%dx%d @ 기본값 Hz\n
-
-# windows/winddold.c: 940
-Blit surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
-Blit 표면 생성됨: %dx%dx%d (R=%08x G=%08x B=%08x)\n
-
-# windows/wind3old.c: 1554
-Blit surface created: %s\n
-Blit 표면 생성됨: %s\n
-
-# windows/wind3old.c: 707
-Blitter initialisation complete (%.2lfMB video memory free)\n
-Blitter 초기화 완료 (%.2lfMB 비디오 메모리 이용가능)\n
-
-# windows/config.c: 229
+# windows/config.c: 128
 CRC-32s
 CRC-32s
 
-# windows/wind3old.c: 316
-Direct3D: Error: RGB effects (multiply & add mode) not supported\n
-Direct3D: 오류: RGB 효과 (multiply & add 모드)가 지원안됨\n
-
-# windows/input.c: 1242
+# windows/input.c: 1150
 DirectInput: Using DirectInput %d\n
 DirectInput: %d DirectInput 사용 \n
 
-# windows/sound.c: 609
+# windows/sound.c: 589
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: 주 버퍼: %d Hz, %d 비트, %d 체널\n
 
-# windows/fronthlp.c: 901
+# windows/fronthlp.c: 903
 ERROR     %s\n
 오류     %s\n
 
-# windows/videoold.c: 350
-ERROR: Failed to get display monitor information\n
-오류: 화면 모니터 정보 불러오기 실패\n
-
-# windows/videoold.c: 575
-ERROR: Unable to find a monitor
-오류: 모니터를 찾을 수 없음
-
-# windows/wind3old.c: 652
-Error creating Direct3D7 device: %08x\n
-Direct3D7 장치 생성 오류: %08x\n
-
-# windows/wind3old.c: 561
-Error creating Direct3D7: %08x\n
-Direct3D7 생성 오류: %08x\n
-
-# windows/wind3old.c: 554
-Error creating DirectDraw7: %08x\n
-DirectDraw7 생성 오류: %08x\n
-
-# windows/winddold.c: 311
-Error creating DirectDraw: %08x\n
-DirectDraw 생성 오류: %08x\n
-
-# windows/sound.c: 624
+# windows/sound.c: 604
 Error creating DirectSound buffer: %08x\n
 DirectSound 버퍼 생성 오류: %08x\n
 
-# windows/sound.c: 483
+# windows/sound.c: 463
 Error creating DirectSound: %08x\n
 DirectSound 생성 오류: %08x\n
 
-# windows/wind3old.c: 1169
-Error creating RGB effects surface: %08x\n
-RGB 효과 표면 생성 오류: %08x\n
-
-# windows/wind3old.c: 1099
-Error creating back surface: %08x\n
-배경 표면 생성 오류: %08x\n
-
-# windows/wind3old.c: 1394 windows/winddold.c: 924
-Error creating blit surface: %08x\n
-blit 표면 생성 오류: %08x\n
-
-# windows/wind3old.c: 1632 windows/winddold.c: 1013
-Error creating clipper: %08x\n
-clipper 생성 오류: %08x\n
-
-# windows/wind3old.c: 1495
-Error creating preprocess surface: %08x\n
-표면 선처리 작업 생성 오류: %08x\n
-
-# windows/sound.c: 590
+# windows/sound.c: 570
 Error creating primary buffer: %08x\n
 주 버퍼 생성 오류: %08x\n
 
-# windows/wind3old.c: 1049 windows/winddold.c: 706
-Error creating primary surface: %08x\n
-주 표면 생성 오류: %08x\n
-
-# windows/wind3old.c: 1515 windows/winddold.c: 796
-Error creating scale surface: %08x\n
-scale 표면 생성 오류: %08x\n
-
-# windows/wind3old.c: 1198, 1206
-Error creating scanline surface[%d]: %08x\n
-스캔라인 표면[%d] 생성 오류: %08x\n
-
-# windows/wind3old.c: 1418
-Error creating texture surface: %08x\n
-텍스쳐 표면 생성 오류: %08x\n
-
-# windows/winddold.c: 168
-Error enumerating display adapters with DirectDraw: %08x\n
-DirectDraw 화면 아답터 산출 오류: %08x\n
-
-# windows/wind3old.c: 933 windows/winddold.c: 630
-Error enumerating modes: %08x\n
-열거 모드 실패: %08x\n
-
-# windows/winddold.c: 326
-Error getting DirectDraw capabilities: %08x\n
-DirectDraw 가능기능 가져오기 실패: %08x\n
-
-# windows/sound.c: 492
+# windows/sound.c: 472
 Error getting DirectSound capabilities: %08x\n
 DirectSound 가능기능 가져오기 실패: %08x\n
 
-# windows/wind3old.c: 1110 windows/winddold.c: 742
-Error getting attached back surface: %08x\n
-부착된 배경 표면 가져오기 실패: %08x\n
-
-# windows/wind3old.c: 1527, 1536 windows/winddold.c: 932
-Error getting blit surface desc: %08x\n
-blit 표면 가져오기 실패: %08x\n
-
-# windows/wind3old.c: 914, 960 windows/winddold.c: 608, 662
-Error getting display mode: %08x\n
-화면 표시 모드 가져오기 실패: %08x\n
-
-# windows/sound.c: 606
+# windows/sound.c: 586
 Error getting primary format: %08x\n
 주 유형 가져오기 실패: %08x\n
 
-# windows/wind3old.c: 1057 windows/winddold.c: 714
-Error getting primary surface desc: %08x\n
-주 표면 가져오기 실패: %08x\n
-
-# windows/winddold.c: 804
-Error getting scale surface desc: %08x\n
-scale 표면 가져오기 실패: %08x\n
-
-# windows/wind3old.c: 544
-Error importing DirectDrawCreateEx() function\n
-DirectDrawCreateEx() function 가져오기 실패\n
-
-# windows/wind3old.c: 537
-Error importing ddraw.dll\n
-ddraw.dll 가져오기 실패\n
-
-# windows/wind3old.c: 617 windows/winddold.c: 302
-Error initialising software scale effects\n
-소프트웨어 scale 효과 초기화 실패\n
-
-# windows/sound.c: 632
+# windows/sound.c: 612
 Error locking stream buffer: %08x\n
 스트림 버퍼 잠금 실패: %08x\n
 
-# windows/sound.c: 537
+# windows/sound.c: 517
 Error playing: %08x\n
 실행 오류: %08x\n
 
-# windows/sound.c: 500
+# windows/sound.c: 480
 Error setting DirectSound cooperative level: %08x\n
 DirectSound 보조레벨 설정 실패: %08x\n
 
-# windows/wind3old.c: 1640 windows/winddold.c: 1021
-Error setting clipper hwnd: %08x\n
-clipper hwnd 설정 실패: %08x\n
-
-# windows/wind3old.c: 1648 windows/winddold.c: 1029
-Error setting clipper on primary surface: %08x\n
-주 표면 clipper 설정 실패: %08x\n
-
-# windows/wind3old.c: 629 windows/winddold.c: 341
-Error setting cooperative level: %08x\n
-보조레벨 설정 실패: %08x\n
-
-# windows/wind3old.c: 1614 windows/winddold.c: 995
-Error setting gamma ramp: %08x\n
-감마 ramp 설정 실패: %08x\n
-
-# windows/wind3old.c: 949 windows/winddold.c: 651
-Error setting mode: %08x\n
-모드 설정 실패: %08x\n
-
-# windows/sound.c: 598
+# windows/sound.c: 578
 Error setting primary format: %08x\n
 주 유형 설정 실패: %08x\n
 
-# windows/wind3old.c: 259
-Error: 3D hardware can't render scanlines (no support for multi-texturing)\n
-오류: 3D 하드웨어가 스캔라인을 랜더링 할수 없습니다 (멀티택스춰 지원안됨)\n
-
-# windows/wind3old.c: 1483
-Error: feedback or prescale effects not supported.\n
-오류: 피드백 또는 프리스케일 효과가 지원안됨.\n
-
-# windows/wind3old.c: 1344
-Error: required texture size too large (max: %ix%i, need %ix%i)\n
-오류: 필요한 텍스쳐 크기가 너무 큽니다 (최대: %ix%i, 요구 %ix%i)\n
-
-# windows/windold.c: 268, 334
-Failed to get monitor info
-모니터 정보 얻기 실패
-
-# windows/config.c: 902
+# windows/config.c: 1142
 Failed to open file for playback
 재생할 파일 열기 실패
 
-# windows/config.c: 936
+# windows/config.c: 1176
 Failed to open file for recording
 기록할 파일 열기 실패
 
-# windows/input.c: 2683
+# windows/input.c: 2591
 Fast Forward
 빨리 감기
 
-# windows/config.c: 684
+# windows/config.c: 844
 For usage instructions, please consult the file windows.txt\n
 사용 설명은 windows.txt파일을 참고하세요\n
 
-# windows/windold.c: 682
-Full Screen\tAlt+Enter
-전체화면\tAlt+Enter
-
-# windows/fronthlp.c: 551, 622
+# windows/fronthlp.c: 551, 623
 Game \"%s\" not supported!\n
 게임 \"%s\" 는 지원되지 않습니다\n
 
-# windows/winddold.c: 334
-Hardware stretching supported\n
-하드웨어 늘리기 지원됨\n
-
-# windows/wind3old.c: 573
-Initialising DirectDraw & Direct3D 7 blitter
-DirectDraw & Direct3D 7 blitter 초기화중
-
-# windows/input.c: 319
-Input device options
-입력장치 옵션
-
-# windows/input.c: 2163
+# windows/input.c: 2071
 Input:  Axis %d (%s)%s\n
 입력: 축 %d (%s)%s\n
 
-# windows/input.c: 2026
+# windows/input.c: 1934
 Input: %s: %s\n
 입력: %s: %s\n
 
-# windows/input.c: 936
+# windows/input.c: 843
 Input: Autoenabling joysticks due to presence of a %s\n
 입력: %s 유무에 따라 조이스틱 자동 사용\n
 
-# windows/input.c: 943
+# windows/input.c: 850
 Input: Autoenabling lightguns due to presence of a %s\n
 입력: %s 유무에 따라 라이트건 자동 사용\n
 
-# windows/input.c: 929
+# windows/input.c: 836
 Input: Autoenabling mice due to presence of a %s\n
 입력: %s 유무에 따라 마우스 자동 사용\n
 
-# windows/input.c: 1971
+# windows/input.c: 1879
 Input: Joystick %d axis %d is now %s\n
 입력: 조이스틱 %d 축 %d 이 %s 로 설정됨\n
 
-# windows/input.c: 2147
+# windows/input.c: 2055
 Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 입력: 조이스틱 %d: %s (%d 축, %d 버튼, %d POV)\n
 
-# windows/input.c: 1314
+# windows/input.c: 1222
 Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 입력: 키보드=%d  마우스=%d  조이스틱=%d  라이트건=%d\n
 
-# windows/input.c: 3260
+# windows/input.c: 2928
 Input: Using RAWMOUSE for Mouse input\n
 입력: 마우스 입력에 RAWMOUSE 사용\n
 
-# windows/input.c: 1316
+# windows/input.c: 1224
 Input: \"%s\" controller support enabled\n
 입력: \"%s\" 콘트롤러 지원 사용\n
 
-# windows/input.c: 2168, 2201
+# windows/input.c: 2076, 2109
 J%d %s
 J%d %s
 
-# windows/input.c: 2177
+# windows/input.c: 2085
 J%d %s +
 J%d %s +
 
-# windows/input.c: 2173
+# windows/input.c: 2081
 J%d %s -
 J%d %s -
 
-# windows/input.c: 2222
+# windows/input.c: 2130
 J%d %s D
 J%d %s 하
 
-# windows/input.c: 2226
+# windows/input.c: 2134
 J%d %s L
 J%d %s 좌
 
-# windows/input.c: 2230
+# windows/input.c: 2138
 J%d %s R
 J%d %s 우
 
-# windows/input.c: 2218
+# windows/input.c: 2126
 J%d %s U
 J%d %s 상
 
-# windows/fronthlp.c: 902
+# windows/fronthlp.c: 904
 KNOWN     %s\n
 알려짐     %s\n
 
-# windows/input.c: 327
-LED mode (ps/2|usb)
-LED 모드 (ps/2|usb)
-
-# windows/input.c: 2135
+# windows/input.c: 2043
 Lightgun %d 
 라이트건 %d
 
-# windows/input.c: 2518
+# windows/input.c: 2426
 Lightgun not supported in windowed mode
 라이트건은 창모드에서 지원되지 않습니다.
 
-# windows/input.c: 2133
+# windows/input.c: 2041
 Lightgun on Mouse %d 
 라이트건 모드 마우스 %d
 
-# windows/config.c: 677
+# windows/config.c: 837
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 
-# windows/blit.c: 164
+# windows/blit.c: 159
 MMX not supported\n
 MMX 지원되지 않음\n
 
-# windows/blit.c: 162
+# windows/blit.c: 157
 MMX supported\n
 MMX 지원됨\n
 
-# windows/wind3old.c: 1550
-Managed texture
-텍스쳐 관리
-
-# windows/input.c: 2023
+# windows/input.c: 1931
 Mouse 
 마우스
 
-# windows/input.c: 2021
+# windows/input.c: 1929
 Mouse %d 
 마우스 %d
 
@@ -470,571 +266,351 @@ Name:     Description:\n
 Name:    Clone of:\n
 이름:    부모롬 이름:\n
 
-# windows/config.c: 266
+# windows/config.c: 422
 OSD bar color (dark)
 OSD 바 색상 (어두운)
 
-# windows/config.c: 267
+# windows/config.c: 423
 OSD bar color (default)
 OSD 바 색상 (기본)
 
-# windows/config.c: 265
+# windows/config.c: 421
 OSD bar color (light)
 OSD 바 색상 (밝은)
 
-# windows/config.c: 264
+# windows/config.c: 420
 OSD bar color (medium)
 OSD 바 색상 (중간)
 
-# windows/fileio.c: 305
+# windows/fileio.c: 263
 Out of memory in variable expansion!
 변형 확장에서 메모리 부족!
 
-# windows/fileio.c: 372
+# windows/fileio.c: 330
 Out of memory!
 메모리 부족!
 
-# windows/fronthlp.c: 904
+# windows/fronthlp.c: 906
 PARTKNOWN %s\n
 부분 알려짐 %s\n
 
-# windows/wind3old.c: 1559
-Pre-process texture surface created: %s\n
-선작업 텍스쳐 표면 생성: %s\n
-
-# windows/winddold.c: 726
-Primary surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
-주 표면 생성됨: %dx%dx%d (R=%08x G=%08x B=%08x)\n
-
-# windows/wind3old.c: 1074
-Primary surface created: %s (%s)\n
-주 표면 생성됨: %s (%s)\n
-
-# windows/wind3old.c: 1177
-RGB effects surface created: %s\n
-RGB 효과 표면 생성됨: %s\n
-
-# windows/wind4old.c: 813
-RGB pattern has a wrong filesize (expected %i bytes, found %i)\n
-RGB 패턴 파일 크기가 잘못됨 (예상 %i 바이트, 확인 %i)\n
-
-# windows/winddold.c: 1437, 1513, 1817
-Recreating surfaces\n
-표면 재 생성\n
-
-# windows/wind3old.c: 1067
-Rendering to an off-screen surface and using blt()\n
-화면 밖 표면에 렌더링하고 blt()사용\n
-
-# windows/wind3old.c: 2226, 2585
-Restoring surfaces\n
-표면 복구\n
-
-# windows/blit.c: 160
+# windows/blit.c: 155
 SSE supported\n
 SSE 지원됨\n
 
-# windows/blit.c: 158
+# windows/blit.c: 153
 SSE2 supported\n
 SSE2 지원됨\n
 
-# windows/config.c: 135 windows/videoold.c: 264
-SaI scale effect
-SaI scale 효과
-
-# windows/winddold.c: 810
-Scale surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
-scale 표면 생성됨: %dx%dx%d (R=%08x G=%08x B=%08x)\n
-
-# windows/wind3old.c: 1214
-Scanline surface[%i] created: %s\n
-스캔라인 표면[%i] 생성됨: %s\n
-
-# windows/sound.c: 226
+# windows/sound.c: 207
 Sound buffer: overflows=%d underflows=%d\n
 사운드 버퍼: 오버플로=%d 언더플로=%d\n
 
-# windows/sound.c: 222
+# windows/sound.c: 203
 Sound: buffer overflows=%d underflows=%d\n
 사운드: 버퍼 오버플로우=%d 언더플로우=%d\n
 
-# windows/input.c: 2075
+# windows/input.c: 1983
 Stick %d %s +
 스틱 %d %s +
 
-# windows/input.c: 2068
+# windows/input.c: 1976
 Stick %d %s -
 스틱 %d %s -
 
-# windows/input.c: 2077
+# windows/input.c: 1985
 Stick %s +
 스틱 %s +
 
-# windows/input.c: 2070
+# windows/input.c: 1978
 Stick %s -
 스틱 %s -
 
-# windows/input.c: 2041
+# windows/input.c: 1949
 Stick%sX+
 스틱%sX+
 
-# windows/input.c: 2039
+# windows/input.c: 1947
 Stick%sX-
 스틱%sX-
 
-# windows/input.c: 2045
+# windows/input.c: 1953
 Stick%sY+
 스틱%sY+
 
-# windows/input.c: 2043
+# windows/input.c: 1951
 Stick%sY-
 스틱%sY-
 
-# windows/input.c: 2049
+# windows/input.c: 1957
 Stick%sZ+
 스틱%sZ+
 
-# windows/input.c: 2047
+# windows/input.c: 1955
 Stick%sZ-
 스틱%sZ-
-
-# windows/wind3old.c: 1550
-Texture
-텍스쳐
 
 # windows/fronthlp.c: 556
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
 드라이버가 필요한 롬 목록입니다 \"%s\".\n이름            크기 체크섬\n
 
-# windows/input.c: 2665
+# windows/input.c: 2573
 Toggle fullscreen
 전체화면 전환
 
-# windows/fronthlp.c: 903
+# windows/fronthlp.c: 905
 UNKNOWN   %s\n
 미확인   %s\n
 
-# windows/wind3old.c: 2577
-Unable to blt RGB effect to back_surface: %08x\n
-RGB 효과를 back_surface에 blit 할수 없음: %08x\n
-
-# windows/wind3old.c: 2545
-Unable to blt back_surface to primary_surface: %08x\n
-back_surface를 primary_surface에 blit 할수 없음: %08x\n
-
-# windows/wind3old.c: 2175
-Unable to blt blit_surface to texture_surface: %08x\n
-blit_surface를 texture_surface에 blit 할수 없음: %08x\n
-
-# windows/wind3old.c: 2153
-Unable to blt scale_surface to texture_surface: %08x\n
-scale_surface를 texture_surface에 blit 할수 없음: %08x\n
-
-# windows/winddold.c: 1478
-Unable to blt target_surface: %08x\n
-target_surface를 blit 할수 없음: %08x\n
-
-# windows/input.c: 2946, 2953
+# windows/ledutil.c: 566, 572
 Unable to close the keyboard device. (error %d)\n
 키보드 장치 닫기 실패 (오류 %d)\n
 
-# windows/wind4old.c: 805
-Unable to find RGB effects pattern\n
-RGB 효과 패턴을 찾을 수 없음\n
-
-# windows/wind3old.c: 2013, 2103, 2124 windows/winddold.c: 1281, 1353
-Unable to lock blit_surface: %08x\n
-blit_surface 잠금 실패: %08x\n
-
-# windows/winddold.c: 1646, 1753
-Unable to lock target_surface: %08x\n
-target_surface 잠금 실패: %08x\n
-
-# windows/input.c: 2897, 2907
+# windows/ledutil.c: 530, 538
 Unable to open the keyboard device. (error %d)\n
 키보드 장치 열기 실패 (오류 %d)\n
 
-# windows/wind3old.c: 2506
-Unable to render to back_surface: %08x\n
-back_surface로 렌더링 할 수 없음: %08x\n
-
-# windows/wind3old.c: 2394
-Unable to render to preprocess texture: %08x\n
-preprocess texture로 렌더링 할 수 없음: %08x\n
-
-# windows/config.c: 680
+# windows/config.c: 840
 Usage:  MAME gamename [options]\n\n
 사용:  MAME 게임명 [옵션]\n\n
 
-# windows/wind3old.c: 621
-Using %s pre-scale effect\n
-%s pre-scale 효과 사용\n
-
-# windows/video.c: 948 windows/winddold.c: 356
+# windows/video.c: 856
 Using %s scale effect\n
 %s 크기조절 효과 사용\n
 
-# windows/wind3old.c: 1069
-Using a %s buffer and pageflipping\n
-%s 버퍼, 페이지 뒤집기 사용\n
-
-# windows/videoold.c: 354
-Video: Enumerating display monitors... Found: %s %s\n
-비디오: 모니터 확인...발견: %s %s\n
-
-# windows/videoold.c: 580
-Video: Screen name not specified, using primary display monitor\n
-비디오: 스크린 이름이 지정안됨, 기본 모니터를 사용\n
-
-# windows/videoold.c: 583
-Video: Using %s as specified\n
-비디오: %s를 사용\n
-
-# windows/videoold.c: 578
-WARNING: Screen %s not found, using primary display monitor\n
-주의: 화면 %s 를 찾을 수 없습니다, 주 모니터를 사용합니다\n
-
-# windows/wind3old.c: 1592 windows/winddold.c: 973
-Warning: could not create gamma control to change brightness: %08x\n
-주의: 밝기 변경을 위한 감마 제어를 생성할 수 없음: %08x\n
-
-# windows/windold.c: 564
-Warning: hardware-accelerated blitting-effects selected, but currently disabled\n         use the -direct3d option to enable hardware acceleration\n
-주의: 하드웨어 가속 blitting 효과가 선택되었지만 현재 중단되었습니다\n         하드웨어 가속을 사용하려면 -direct3d 옵션을 사용하십시오\n
-
-# windows/windold.c: 558
-Warning: non-hardware-accelerated blitting-effects engine enabled\n         use the -d3deffect option to enable hardware acceleration\n
-주의: 비하드웨어 가속 blitting 효과가 사용중입니다\n         하드웨어 가속을 사용하려면 -d3deffect 옵션을 사용하십시오\n
-
-# windows/wind3old.c: 1452
-Warning: required texture size too large for prescale, disabling prescale\n
-주의: 필요한 텍스쳐 크기가 prescale하기에 너무 큽니다,prescale을 끄십시오\n
-
-# windows/winddold.c: 756
-Warning: scale effect %s is disabled.\n
-주의: scale 효과 %s 가 사용중이 아닙니다.\n
-
-# windows/wind4old.c: 196
-Windows Direct3D 2D video options
-윈도우 Direct3D 2D 비디오 옵션
-
-# windows/fronthlp.c: 748, 859
+# windows/fronthlp.c: 749, 861
 \"%8s\" not found!\n
 \"%8s\" 가 없음!\n
 
-# windows/fronthlp.c: 750, 861
+# windows/fronthlp.c: 751, 863
 \"%8s\" not supported!\n
 \"%8s\" 지원되지 않음!\n
 
-# windows/config.c: 465
+# windows/config.c: 621
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" 는 대체로 다음과 같은 지원 게임과\n일치합니다. (최적맞춤 우선):\n\n
 
-# windows/videoold.c: 261 windows/wind4old.c: 207
-additional customised settings (undocumented)
-추가 사용자 설정
-
-# windows/config.c: 133
-additional pause brightness
-추가 정지화면 밝기
-
-# windows/config.c: 224
+# windows/config.c: 123
 all available info on driver in XML format
 이용가능한 모든 드라이버 정보(XML)
 
-# windows/input.c: 1969
+# windows/input.c: 1877
 analog
 아날로그
 
-# windows/input.c: 1250
+# windows/input.c: 1158
 analog joystick
 아날로그 조이스틱
 
-# windows/videoold.c: 248
-attempt to match the game's refresh rate
-게임의 재생빈도에 맞춤
-
-# windows/config.c: 176
+# windows/config.c: 204
 automatic pause when playback is finished
 재생이 끝나면 자동으로 정지
 
-# windows/config.c: 274
+# windows/config.c: 430
 button color (aqua)
 버튼 색상 (바다색)
 
-# windows/config.c: 271
+# windows/config.c: 427
 button color (blue)
 버튼 색상 (파랑)
 
-# windows/config.c: 270
+# windows/config.c: 426
 button color (green)
 버튼 색상 (녹색)
 
-# windows/config.c: 277
+# windows/config.c: 433
 button color (lime)
 버튼 색상 (오랜지색)
 
-# windows/config.c: 276
+# windows/config.c: 432
 button color (navy)
 버튼 색상 (남색)
 
-# windows/config.c: 273
+# windows/config.c: 429
 button color (pink)
 버튼 색상 (분홍)
 
-# windows/config.c: 272
+# windows/config.c: 428
 button color (purple)
 버튼 색상 (자주)
 
-# windows/config.c: 268
+# windows/config.c: 424
 button color (red)
 버튼 색상 (빨강)
 
-# windows/config.c: 275
+# windows/config.c: 431
 button color (silver)
 버튼 색상 (은색)
 
-# windows/config.c: 269
+# windows/config.c: 425
 button color (yellow)
 버튼 색상 (노랑)
 
-# windows/config.c: 182
+# windows/config.c: 210
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 m68k 코어 변경 (0:C, 1:DRC, 2:ASM+DRC)
 
-# windows/fileio.c: 136
+# windows/config.c: 181
 cheat filename
 치트 파일이름
 
-# windows/config.c: 237
+# windows/config.c: 133
 compare files with known MAME roms
 알려진 MAME 롬과 비교
 
-# windows/config.c: 238
+# windows/config.c: 134
 compare files with known MAME roms (brief)
 알려진 MAME 롬과 비교 (간단하게)
 
-# windows/config.c: 218
+# windows/config.c: 118
 create the default configuration file
 기본 설정 파일을 생성
 
-# windows/config.c: 278
+# windows/config.c: 434
 cursor color
 커서 색상
 
-# windows/videoold.c: 260 windows/wind4old.c: 206
-customised blitting effects preset
-사용자 blitting 효과 프리셋
-
-# windows/input.c: 346, 1253
+# windows/input.c: 1161
 dial
 다이얼
 
-# windows/input.c: 309, 352, 1756, 1969
+# windows/config.c: 392 windows/input.c: 1653, 1877
 digital
 디지탈
 
-# windows/fileio.c: 131
+# windows/config.c: 176
 directory for ips files
 ips 파일 디렉토리
 
-# windows/fileio.c: 135
+# windows/config.c: 180
 directory for localized data files
 지역화된 데이터 파일 디렉토리
 
-# windows/fileio.c: 119
+# windows/config.c: 162
 directory to save configurations
 설정 저장 디렉토리
 
-# windows/fileio.c: 123
+# windows/config.c: 167
 directory to save hiscores
 고득점 저장 디렉토리
 
-# windows/fileio.c: 122
+# windows/config.c: 165
 directory to save input device logs
 입력 장치 로그 저장 디렉토리
 
-# windows/fileio.c: 121
+# windows/config.c: 164
 directory to save memory card contents
 메모리카드 목차 저장 디렉토리
 
-# windows/fileio.c: 120
+# windows/config.c: 163
 directory to save nvram contents
 nvram 목차 저장 디렉토리
 
-# windows/fileio.c: 124
+# windows/config.c: 169
 directory to save states
 상태 저장 디렉토리
 
-# windows/config.c: 206
+# windows/config.c: 236
 display additional diagnostic information
 추가 진단 정보 표시
 
-# windows/wind3old.c: 1069
-double
-두배
-
-# windows/config.c: 227
+# windows/config.c: 126
 driver sourcefile
 드라이버 소스파일
 
-# windows/videoold.c: 245
-emulate win_old_scanlines
-win_old_scanlines 에뮬레이트
-
-# windows/input.c: 300, 343
+# windows/config.c: 395
 enable (keyboard|mouse|joystick) if a paddle control is present
 핸들 기능이 있을시 (키보드|마우스|조이스틱)활성화
 
-# windows/input.c: 346
-enable (keyboard|mouse|joystick|lightgun) if a dial control is present
-다이얼 기능이 있을시 (키보드|마우스|조이스틱)활성화
-
-# windows/input.c: 348
-enable (keyboard|mouse|joystick|lightgun) if a lightgun control is present
-라이트건 기능이 있을시 (키보드|마우스|조이스틱)활성화
-
-# windows/input.c: 350
-enable (keyboard|mouse|joystick|lightgun) if a mouse control is present
-마우스 기능이 있을시 (키보드|마우스|조이스틱)활성화
-
-# windows/input.c: 345
-enable (keyboard|mouse|joystick|lightgun) if a pedal control is present
-페달 기능이 있을시 (키보드|마우스|조이스틱)활성화
-
-# windows/input.c: 347
-enable (keyboard|mouse|joystick|lightgun) if a trackball control is present
-트랙복 기능이 있을시 (키보드|마우스|조이스틱)활성화
-
-# windows/input.c: 344
-enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is present
-아날로그 조이스틱 기능이 있을시 (키보드|마우스|조이스틱)활성화
-
-# windows/videoold.c: 253 windows/wind4old.c: 199
-enable bilinear filtering
-비등방성 필터링 활성화
-
-# windows/input.c: 269
+# windows/config.c: 388
 enable dual lightgun input
 듀얼 라이트건 입력 활성화
 
-# windows/input.c: 267
+# windows/config.c: 386
 enable joystick input
 조이스틱 입력 활성화
 
-# windows/input.c: 272, 326
-enable keyboard LED emulation
-키보드 LED 에뮬레이션 활성화
-
-# windows/input.c: 268
+# windows/config.c: 387
 enable lightgun input
 라이트건 입력 활성화
 
-# windows/input.c: 266, 320
+# windows/config.c: 385
 enable mouse input
 마우스 입력 활성화
 
-# windows/input.c: 277, 331
+# windows/config.c: 362
 enable pointing stick input
 포인트 스틱 입력 활성화
 
-# windows/videoold.c: 257 windows/wind4old.c: 203
-enable rotation of effects for rotated games
-회전된 게임에 회전된 효과 활성화
-
-# windows/input.c: 271, 325
+# windows/config.c: 390
 enable steadykey support
 스태디키 지원 활성화
 
-# windows/config.c: 248
+# windows/config.c: 408
 enable/disable local language game list
 지역 언어 게임 목록 활성화/비활성화
 
-# windows/config.c: 151
+# windows/config.c: 352
 enable/disable volume auto adjust
 볼륨 자동조절 활성화/비활성화
 
-# windows/videoold.c: 247
-enforce aspect ratio
-강제 화면 비율
-
-# windows/videoold.c: 407
-error: invalid value for cleanstretch: %s\n
-오류: 잘못된 깨끗한 늘리기 값: %s\n
-
-# windows/wind4old.c: 298
-error: invalid value for d3dprescale: %s\n
-오류: 잘못된 d3dprescale 값: %s\n
-
-# windows/config.c: 881
+# windows/config.c: 1121
 error: invalid value for language: %s\nUse %s\n
 오류: 잘못된 언어 값: %s\nUse %s\n
 
-# windows/config.c: 973
+# windows/config.c: 1213
 error: invalid value for palette: %s\n
 오류: 잘못된 팔레트 값: %s\n
 
-# windows/videoold.c: 255 windows/wind4old.c: 201
-feedback strength
-피드백 강도
-
-# windows/config.c: 128
+# windows/config.c: 279
 flip screen left-right
 좌우 화면반전
 
-# windows/config.c: 129
+# windows/config.c: 280
 flip screen upside-down
 상하 화면반전
 
-# windows/config.c: 257
+# windows/config.c: 413
 font blank color
 글자 빈칸 색상
 
-# windows/config.c: 258
+# windows/config.c: 414
 font normal color
 보통 글자 색상
 
-# windows/config.c: 259
+# windows/config.c: 415
 font special color
 특수 글자 색상
 
-# windows/videoold.c: 251 windows/wind4old.c: 197
-force specific zoom level
-강제 지정 확대 레벨
-
-# windows/input.c: 1969
+# windows/input.c: 1877
 invalid
 잘못됨
 
-# windows/config.c: 170
+# windows/config.c: 198
 ips datfile name
 ips 데이타 파일명
 
-# windows/fronthlp.c: 717, 827
+# windows/fronthlp.c: 718, 829
 is bad\n
 가 잘못됨\n
 
-# windows/fronthlp.c: 727, 837
+# windows/fronthlp.c: 728, 839
 is best available\n
 가 최적으로 사용가능\n
 
-# windows/fronthlp.c: 722, 832
+# windows/fronthlp.c: 723, 834
 is good\n
 가 좋음\n
 
-# windows/fronthlp.c: 732, 842
+# windows/fronthlp.c: 733, 844
 is missing optional files\n
 부가 파일 부족\n
 
-# windows/input.c: 322, 1251, 1630, 1725
+# windows/input.c: 1159, 1527, 1622
 lightgun
 라이트건
 
-# windows/config.c: 234
-list optional samples for a driver
-드라이버의 추가 샘플 목록
-
-# windows/config.c: 233
+# windows/config.c: 129
 list required roms for a driver
 드라이버의 필요 롬 목록
 
@@ -1042,227 +618,171 @@ list required roms for a driver
 loading %-12s\r
 로딩 %-12s\r
 
-# windows/fileio.c: 850
+# windows/fileio.c: 808
 loading %-32s\r
 불러오는중 %-32s\r
 
-# windows/input.c: 309, 352
+# windows/config.c: 392
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 조이스틱 혹은 축을 디지탈로 표시 (없음|모두|j<N>*|j<N>a<M>[,...])
 
-# windows/input.c: 274, 328
+# windows/config.c: 391
 minimal analog value for digital input
 디지털 입력을 위한 최소 아날로그 값
 
-# windows/input.c: 270, 324
+# windows/config.c: 389
 offscreen shots reload
 화면 밖에서 재장전
 
-# windows/input.c: 343, 1249
+# windows/input.c: 1157
 paddle
 핸들
 
-# windows/fileio.c: 115, 117
+# windows/config.c: 158, 160
 path to ini files
 ini 파일 경로
 
-# windows/fileio.c: 113
+# windows/config.c: 156
 path to samplesets
 샘플 세트 경로
 
-# windows/input.c: 345, 1252
+# windows/input.c: 1160
 pedal
 페달
 
-# windows/config.c: 197
+# windows/config.c: 227
 playback an input file
 리플레이 파일 재생
 
-# windows/input.c: 275, 329
+# windows/config.c: 360
 preconfigure for specified controller
 특정 입력기를 위한 기본 설정
 
-# windows/videoold.c: 258 windows/wind4old.c: 204
-prescale effect
-prescale 효과
-
-# windows/config.c: 174
+# windows/config.c: 202
 quit game with confirmation
 게임 종료시 확인
 
-# windows/config.c: 198
+# windows/config.c: 228
 record an input file
 리플레이 파일 기록
 
-# windows/config.c: 235
+# windows/config.c: 131
 report romsets that have problems
 문제가 있는 롬세트 보고
 
-# windows/config.c: 236
+# windows/config.c: 132
 report samplesets that have problems
 문제가 있는 셈플세트 보고
 
-# windows/fronthlp.c: 746, 757
+# windows/fronthlp.c: 747, 758
 romset
 롬 세트
 
-# windows/fronthlp.c: 708
+# windows/fronthlp.c: 709
 romset %s 
 롬 세트 %s 
 
-# windows/fronthlp.c: 857
+# windows/fronthlp.c: 859
 sampleset
 샘플세트
 
-# windows/fronthlp.c: 821
+# windows/fronthlp.c: 823
 sampleset %s 
 샘플세트 %s 
 
-# windows/fronthlp.c: 868
+# windows/fronthlp.c: 870
 samplesets
 샘플세트
 
-# windows/config.c: 156
-save sound in wav file
-사운드를 wav파일로 저장
-
-# windows/wind3old.c: 1565
-scale effects surface created: %s\n
-scale 효과 표면 생성됨: %s\n
-
-# windows/videoold.c: 256 windows/wind4old.c: 202
-scanline intensity
-스캔라인 밀도
-
-# windows/config.c: 247
+# windows/config.c: 407
 select translation language
 번역 언어 선택
 
-# windows/config.c: 155
+# windows/config.c: 356
 set audio latency (increase to reduce glitches)
 오디오 레이턴시 설정 (증가시 잡음감소)
 
-# windows/input.c: 282, 334
+# windows/config.c: 367
 set joystick ID (Player1)
 조이스틱 ID 설정 (플레이어1)
 
-# windows/input.c: 283, 335
+# windows/config.c: 368
 set joystick ID (Player2)
 조이스틱 ID 설정 (플레이어2)
 
-# windows/input.c: 284, 336
+# windows/config.c: 369
 set joystick ID (Player3)
 조이스틱 ID 설정 (플레이어3)
 
-# windows/input.c: 285, 337
+# windows/config.c: 370
 set joystick ID (Player4)
 조이스틱 ID 설정 (플레이어4)
 
-# windows/input.c: 286, 338
+# windows/config.c: 371
 set joystick ID (Player5)
 조이스틱 ID 설정 (플레이어5)
 
-# windows/input.c: 287, 339
+# windows/config.c: 372
 set joystick ID (Player6)
 조이스틱 ID 설정 (플레이어6)
 
-# windows/input.c: 288, 340
+# windows/config.c: 373
 set joystick ID (Player7)
 조이스틱 ID 설정 (플레이어7)
 
-# windows/input.c: 289, 341
+# windows/config.c: 374
 set joystick ID (Player8)
 조이스틱 ID 설정 (플레이어8)
 
-# windows/videoold.c: 244
-set specific monitor refresh rate
-특정 모니터 재생빈도 설정
-
-# windows/config.c: 226
+# windows/config.c: 125
 short name, full name
 짧은 이름, 전체 이름
 
-# windows/config.c: 228
+# windows/config.c: 127
 show clones
 클론 표시
 
-# windows/config.c: 119
+# windows/config.c: 114
 show help message
 도움말 표시
 
-# windows/config.c: 220
+# windows/config.c: 120
 show this help
 이 도움말을 보임
 
-# windows/config.c: 146, 737 
+# windows/config.c: 347, 977
 sound
 사운드
 
-# windows/videoold.c: 249
-specify the blitting effect
-blitting 효과를 지정
-
-# windows/videoold.c: 259 windows/wind4old.c: 205
-specify the blitting effects
-blitting 효과를 지정
-
-# windows/videoold.c: 228
-specify which screen to use
-사용할 화면을 지정
-
-# windows/videoold.c: 243
-stretch to integer ratios
-정수 비율로 늘리기
-
-# windows/videoold.c: 246
-switch color depths to best fit
-최적 깊이로 색상 전환
-
-# windows/input.c: 347, 1254
+# windows/input.c: 1162
 trackball
 트랙볼
 
-# windows/config.c: 188
+# windows/config.c: 216
 transparency of UI background [0 - 255]
 UI 배경의 투명도 지정 [0 - 255]
 
-# windows/wind3old.c: 1069
-triple
-삼중
-
-# windows/videoold.c: 252 windows/wind4old.c: 198
-use DirectX texture management
-DirectX 텍스쳐 관리기능 사용
-
-# windows/config.c: 187
+# windows/config.c: 215
 use transparent background for UI text
 UI 의 텍스트를 투명하게 사용함
 
-# windows/config.c: 260
+# windows/config.c: 416
 window background color
 창 배경 색상
 
-# windows/config.c: 263
+# windows/config.c: 419
 window frame color (dark)
 창 프레임 색상 (어두운)
 
-# windows/config.c: 262
+# windows/config.c: 418
 window frame color (light)
 창 프레임 색상 (밝은)
 
-# windows/config.c: 261
+# windows/config.c: 417
 window frame color (medium)
 창 프레임 색상 (보통)
 
-# windows/config.c: 225
+# windows/config.c: 124
 year, manufacturer and full name
 제작년도, 제작사와 전체 이름
-
-# windows/wind3old.c: 305
-Direct3D: Error: RGB effects (multiply mode) not supported\n
-
-
-# windows/wind3old.c: 270
-Direct3D: Warning: using fall-back method for scanline blending.\n
-
 
