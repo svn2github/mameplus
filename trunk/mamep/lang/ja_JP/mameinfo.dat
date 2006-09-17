@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.107u4      #
+#     Mameinfo.dat日本語版 v0.108u4      #
 #                                        #
-#            August 18, 2006             #
+#           September 17, 2006           #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,51 +12,156 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：832 翻訳済：814
-# 追加項目：326 合計：1158
+# Tester報告：811 翻訳済：798
+# 追加項目：326 合計：1137
 #
 
 
-$info=gotya
+$info=spcewars
 $mame
 [バグ]
 
-- 面の切り替え時に表示がうまく動作していない。2面になっても1面の迷路がずれて表示される。 gotya0107u3yel, robiza / Twist
+- ゲームがランダムに再起動したり動作がおかしくなったりする。大抵は2面で起こる。 spcewars0108u3red, Robbbert
+
+
+[TIPS]
+
+- ゲーム中で流れる曲は以下の通り：
+
+500UFO：UFO
+
+1UP時：ビューティフルネーム
+
+MISS：私ばかよねー
+
+GameOver：葬送行進曲
+
+花火打ち上げ：幸せなら手を叩こう
+
+1面クリア時：エーゲ海の真珠
+
+2面クリア時：こげよマイケル
+
+3面クリア時：てんとうむしのサンバ
+
+4面クリア時：青春時代
+
+(by GON / Field93@野原いっぱい)
 
 $end
 
-$info=hayaosi1
+$info=bonzeadv
 $mame
 [バグ]
 
-- ゲーム名が「Hayaoshi Quiz Ohzaketteisen」なのは間違い。 hayaosi1_0107u3ora, J.J.Boy
+- 3面よりあとでやられると、間違った場所から再スタートになりゲームが固まる。 bonzeadv0108u3yel, maxholz / sjyune
+
+
+- 1面の裏ルートでやられると、真っ黒なところから再スタートしてはまる。 bonzeadv0107red, Kold666
 
 $end
 
-$info=punchout
+$info=3wonders
 $mame
 [バグ]
 
-- 上モニターのIDカードと下モニターのキャラクタの髪の色は同じになる。 punchout0107u3gre, Kold666
+- チャリオットで、残プレイヤー数とINSERT COINの文字の間に、変な点が表示される。 3wonders0108u4gre1, Layne
 
 
-- 実機ではタイトルロゴやテキストの色が上下で違う。 spnchout0102u2gre, MaximRecoil / Red Raphael
+- ネームエントリーのところにゴミグラフィックが表示される。 3wonders0108u4gre2, Layne
+
+
+- 「Midnight Wanderers(日本版：ROOSTERS)」で、
+「Terror Twins」が紹介されるときに、白いブロックが現われる。 3wonders236b16gre, Frotz / DCisTHEbest / Kale / Twisty
 
 $end
 
-$info=tceptor
+$info=ssf2xj
 $mame
 [バグ]
 
-- 解説画面でクレジットを入れると、前の画面の文字が一部残る。 tceptor0107u3gre, F1ReB4LL
+- ランダムにクラッシュする。 ssf2xj0108u3red, ooo98 / Haze
+
+
+- ごく稀に画面全体が化けることがある。一回のプレイで一回起こるくらいで、1フレームが完全に化ける。
+実機でも起こるかどうかは不明だが、SSF2Tの実機では起きていないと思う。 ssf2xj067gre, Smitdogg
 
 $end
 
-$info=turbo
+$info=czeroize
 $mame
 [バグ]
 
-- タイマーの減り方が速すぎる。 turbo0107u3yel, Paratech
+- 画面が化けてプレイできない。0.106から。 czeroize0108u2yel, ponzicar / robiza
+
+$end
+
+$info=sb2003
+$mame
+[バグ]
+
+- 入力が効かず、5キーと6キーでコインを入れることもできない。
+.nvファイルが無いときは正常に動作する。 sb2003_108u3gra, Nathan G / stephh
+
+$end
+
+$info=mf_bdash
+$mame
+[バグ]
+
+- レイアウトのデジタル数字が正しく表示されない。 mf_bdash0108u4gre, stephh
+
+$end
+
+$info=gwarrior
+$mame
+[情報]
+
+- 画面が明るいのはオリジナル通り。ガンマを0.5程度に下げると正しい表示になる。
+
+
+[バグ]
+
+- ゲーム開始時にキャラクタを選択すると、それ以降サウンドが固まってしまう。 gwarrior0108u1yel, NewRisingSun
+
+$end
+
+$info=toutrun
+$mame
+[バグ]
+
+- [Possilbe] ゲーム中以外の画面に、ゲーム中の画面が下側に残って表示される。 toutrun0108u2gre, Kekule
+
+$end
+
+$info=wintbob
+$mame
+[情報]
+
+- 68000CPUのクロックを16MHｚにすると表示ずれは修正されるが、
+Haze氏によれば、16MHｚでは当時にしては高すぎるかもしれないので、
+実際の基板を探して調べる必要があるとのこと。
+
+
+[バグ]
+
+- 31面以降で、灰色の敵がファイアを吐くとゲームがリセットする。 wiintbob0108u4red, Layne / robiza
+
+$end
+
+$info=shtngmst
+$mame
+[バグ]
+
+- 2面以降ではまだプロテクト関係の問題が残っている。 shtngmst0108u4ora, Haze
+
+$end
+
+$info=ashura
+$mame
+[バグ]
+
+- コンティニュー画面のテキストが表示されない。表示が無いだけで、コインを入れてコンティニューはできる。日本版のみで発生。 ashura0108u3yel, ponzicar
 
 $end
 
@@ -235,14 +340,6 @@ $mame
 
 $end
 
-$info=bonzeadv
-$mame
-[バグ]
-
-- 1面の裏ルートでやられると、真っ黒なところから再スタートしてはまる。 bonzeadv0107red, Kold666
-
-$end
-
 $info=pitfight
 $mame
 [バグ]
@@ -284,12 +381,6 @@ $mame
 
 - 葉っぱを食べるとノイズ音が聞こえるが、本当はランダムな音階の音になる。
 何回かリセットした後、初めの1、2回だけ正常に動作することもある。 botanic080u1gre, Pi
-
-
-- DIPスイッチに間違いあり。
-たとえば残ライフを2～5に設定できるが、ゲームでは3（2か4を選んだとき）か5（3か5を選んだとき）にしかならない。
-
-コイン設定、言語設定、フリープレイ設定も正しく動作していない。 botanic080u1gra, Pi
 
 $end
 
@@ -597,12 +688,19 @@ $mame
 
 $end
 
-$info=3wonders
+$info=cawing
 $mame
 [バグ]
 
-- 「Midnight Wanderers(日本版：ROOSTERS)」で、
-「Terror Twins」が紹介されるときに、白いブロックが現われる。 3wonders236b16gre, Frotz / DCisTHEbest / Kale / Twisty
+- 海外版のデモ画面で、テキストが化けている。 cawing0105u1gre,
+
+$end
+
+$info=dynwar
+$mame
+[バグ]
+
+- 海外版も日本版のグラフィックROMを使用しているが、違うものではないだろうか。Guru氏の情報にもダンプ済みとはなっていない。表示不具合はスコア集計画面でよく起きている。 dynwar067gre, big_lenny_c / Smitdogg
 
 $end
 
@@ -611,15 +709,6 @@ $mame
 [バグ]
 
 - 1面のボス手前、前半クリア時の背景が表示されない。その他表示系の不具合多数。 ghouls097u4yel, Kold666
-
-$end
-
-$info=pang3
-$mame
-[バグ]
-
-- エンディングのテキストが他のグラフィックに隠れてしまう。
-「Captain Hog」で試すと確実に起こる。 pang337b15gre, Gickpaw / Pi
 
 $end
 
@@ -769,6 +858,14 @@ $mame
 
 $end
 
+$info=shackled
+$mame
+[バグ]
+
+- どのボタンを押してもコンティニュー機能が動作しない。 shackled083yel, Twisty / TriggerFin
+
+$end
+
 $info=hvysmsh
 $mame
 [バグ]
@@ -798,14 +895,6 @@ $mame
 [バグ]
 
 - ボス戦になるとBGMが止まる。効果音は再生される。 nslasher0103u2yel, hammad / Kold666
-
-$end
-
-$info=shackled
-$mame
-[バグ]
-
-- どのボタンを押してもコンティニュー機能が動作しない。 shackled083yel, Twisty / TriggerFin
 
 $end
 
@@ -1119,15 +1208,6 @@ $mame
 
 $end
 
-$info=ryukendn
-$mame
-[バグ]
-
-- 最初の面の途中あたり(土管のところ)で、
-青い敵の表示がおかしい。 ryukendn237b2gre, YMI / Taucher0815
-
-$end
-
 $info=bosco
 $mame
 [バグ]
@@ -1374,14 +1454,6 @@ $mame
 
 $end
 
-$info=harddriv
-$mame
-[バグ]
-
-- リセット後にサウンドが出なくなる。 harddriv070u1yel, Smitdogg / BarnacleEd
-
-$end
-
 $info=hnayayoi
 $mame
 [バグ]
@@ -1423,22 +1495,6 @@ $mame
 
 
 グラディウス4で、モニタタイプのDIPを15KHｚにすると、3Dグラフィックは縮小されるが、2Dタイルマップは24KHｚのときのサイズのまま。 hornet0104u2ora, AWJ / Luigi30
-
-$end
-
-$info=shufshot
-$mame
-[バグ]
-
-- チケットが出るときにキーボードLEDが点滅しない。 itech32c083gre, Do Run Run
-
-$end
-
-$info=wcbowl
-$mame
-[バグ]
-
-- チケットが出るときにキーボードLEDが点滅しない。 itech32c083gre, Do Run Run
 
 $end
 
@@ -2160,7 +2216,7 @@ $info=gunmast
 $mame
 [バグ]
 
-- Leoの面でゲームがフリーズする。 gunmast099u9red, Layne / Twisty / cpukett
+- Leoの面でゲームがフリーズする。 gunmast099u9red, Layne / Twisty / cpukett / sjyune
 
 $end
 
@@ -2460,7 +2516,7 @@ $info=gratia
 $mame
 [バグ]
 
-- アトラクトモードでタイトル画面後に落ちる。YMF271コアが新しくなってから。 gratia099u4red, sjyune
+- アトラクトモードでタイトル画面後に落ちる。YMF271コアが新しくなってから。 gratia099u4red, sjyune / Firewave
 
 $end
 
@@ -2779,27 +2835,6 @@ vsgradus: 星が自機の手前に表示される。 vsnes37b11gre, Sports Dude / The tECHIDNA
 
 $end
 
-$info=darius2
-$mame
-[バグ]
-
-- グラフィックが正しく消去されない。
-デモ画面で2機がワープして画面下部分に尾を引くところで、
-これが表示されている間にコインを入れるとゲーム中残ったままになる。 darius2056gre, Smitdogg
-
-
-[TIPS]
-
-- 面セレクトコマンド：
-
-1) サービススイッチ(9キー)を押しながらリセット
-
-2) 1Pスタートx3　サービス　1Pスタート
-
-(by Mhk)
-
-$end
-
 $info=ninjaw
 $mame
 [バグ]
@@ -2834,6 +2869,9 @@ $mame
 [バグ]
 
 - 1面クリア後、BGMがフェードアウトを繰り返す。 macross2079u1gre, Kold666 / AWJ
+
+
+- [Possilbe] 巨大戦艦とウェポンのプライオリティが変わったが、これは正しい？ macross2_0108gre, Kekule
 
 $end
 
@@ -2880,14 +2918,6 @@ $mame
 [バグ]
 
 - ゲーム終了時、マップが表示された後に“volume error”が出てリセットがかかる。 overdriv37b13gre, Sports Dude
-
-$end
-
-$info=mbrush
-$mame
-[バグ]
-
-- 1面をクリアすることが不可能。全部塗りつぶしても2面にすすまない。これは海賊版だが、以前はきちんと動作していた。 mbrush067gre, fuzzywzhe / Rattydog / Smitdogg
 
 $end
 
@@ -2965,14 +2995,6 @@ $mame
 [バグ]
 
 - マップモードとVS画面のBGMがリピートされる。 powerina37b4gre, Takuma Sakazaki
-
-$end
-
-$info=prehisle
-$mame
-[バグ]
-
-- 恐竜と植物の間にプライオリティ不具合あり。 prehisle0104u5gre, Alpha8 /  Vas Crabb
 
 $end
 
@@ -3070,6 +3092,17 @@ $mame
 
 $end
 
+$info=punchout
+$mame
+[バグ]
+
+- 実機ではタイトルロゴやテキストの色が上下で違う。 spnchout0102u2gre, MaximRecoil / Red Raphael
+
+
+- 上モニターのIDカードと下モニターのキャラクタの髪の色は同じになる。 punchout0107u3gre, Kold666
+
+$end
+
 $info=quantum
 $mame
 [バグ]
@@ -3110,18 +3143,6 @@ $mame
 
 $end
 
-$info=retofinv
-$mame
-[バグ]
-
-- 敵にやられて「Player 1 Ready」と表示されるときに、
-その後ろに青いグラフィック化けが現れる。 retofinv060gre, Smitdogg
-
-
-- 起動しても黒画面しか表示されず動作しない。 retofinv094u5red, MAMEjong
-
-$end
-
 $info=nibbler
 $mame
 [バグ]
@@ -3134,7 +3155,7 @@ $info=nitrobal
 $mame
 [バグ]
 
-- プライオリティ問題あり。最初の扉を開けて次のエリアに進んだところなど。またテキストレイヤーも化けて表示される。 nitrobal068gre, Firewave
+- プライオリティ問題あり。最初の扉を開けて次のエリアに進んだところなど。またテキストレイヤーも化けて表示される。 nitrobal068gre, Firewave / robiza
 
 $end
 
@@ -3384,6 +3405,9 @@ $mame
 カラーコードにかかわらずタイルマップが64色を使うようにするレジスタがあるはず。 blandia0102u5gre, Reip
 
 
+- 0.103からキャラクタの色がおかしくなっている。 blandia0107u4gre, Mamesick
+
+
 - Irrianaの面で、スクロールしていくと背景グラフィックが途切れる。ラスタスクロールすると思われる。 blandia057gre_1, Nomax / Reip
 
 
@@ -3542,9 +3566,6 @@ $info=shangha3
 $mame
 [バグ]
 
-- ゲーム全体の速度が速い。 shangha3237b7gre, Fujix (walk)
-
-
 - shangha3.cファイル内で
 
 > 牌を取った時に現れる「100」の点数表示に使われている拡大処理が、
@@ -3653,6 +3674,9 @@ $info=getstarb
 $mame
 [バグ]
 
+- レーザー銃アイテムを取ると、キャラクタの位置からずれてレーザーが発射される。 getstarb36b3gre, YMI
+
+
 - どんな点数を出しても、ハイスコアにネームエントリーできない。 getstarb37b1gre, YMI
 
 $end
@@ -3742,14 +3766,6 @@ $mame
 [バグ]
 
 - 各面のゴールのときに、仲間が非現実的な反応をする(新しい面のスタート時もある)。 srumbler236b3gre, YMI
-
-$end
-
-$info=twineag2
-$mame
-[バグ]
-
-- 面クリア時のアナウンサーの顔などいろいろな物がずれている。 twineag2083gre, Kala / TriggerFin
 
 $end
 
@@ -3904,25 +3920,6 @@ $mame
 [バグ]
 
 - BGMにブツブツとノイズが混じる。またテンポも変。 tetrist059gre, Kale
-
-$end
-
-$info=liquidk
-$mame
-[バグ]
-
-- 画面の左端におかしなラインが1ドット分現れる。0.101で修正されてから起こるようになった。 liquidk0103u2gre, Layne
-
-
-[TIPS]
-
-- 面セレクトコマンド：
-
-1) サービススイッチ(9キー)を押しながらリセット
-
-2) 1Pスタートx3　サービス　1Pスタート
-
-(by Mhk)
 
 $end
 
@@ -4253,6 +4250,14 @@ $mame
 
 $end
 
+$info=tceptor
+$mame
+[バグ]
+
+- 解説画面でクレジットを入れると、前の画面の文字が一部残る。 tceptor0107u3gre, F1ReB4LL
+
+$end
+
 $info=fstarfrc
 $mame
 [バグ]
@@ -4335,7 +4340,7 @@ $mame
 
 - ボムとショットに別々に割り当てられているキーを押しても、
 ひとつのキーで両方とも撃ててしまう。
-blswhstlのみで起きて、detatwinでは起きない。 blswhstl056gra, Jpikachu
+blswhstlのみで起きて、detatwinでは起きない。 blswhstl056gra, Jpikachu / Canim
 
 $end
 
@@ -4516,24 +4521,11 @@ $mame
 
 $end
 
-$info=toobin
-$mame
-[情報]
-
-- デモモードでのサウンドはEEPROMで制御されているので、テストモードで設定する。(Aaron Giles)
-
-
-[バグ]
-
-- リセットすると起動できない。MAME0.69aから。 toobin081u7red, M.A.S.H.
-
-$end
-
 $info=topspeed
 $mame
 [バグ]
 
-- トンネルの中か、橋の下を走ってるときにしか、エンジン音が鳴らない。またターボの音は一切出ない。 topspeed061gre, Nerox91
+- トンネルの中か、橋の下を走ってるときにしか、エンジン音が鳴らない。またターボの音は一切出ない。 topspeed061gre, Nerox91 / RansAckeR
 
 $end
 
@@ -4555,6 +4547,17 @@ $mame
 - 新しくゲームを始めて、 
 2番目の敵の軍団（ピンク色の逆三角のやつ）が画面の外へ飛んでいくと、
 左右関係なく画面左側にスプライトが残ってしまう。 m66037b15gre, Gmitra / DCisTHEbest
+
+
+- 0.79からサウンドが出ていない。 m660_0108yel, WhosAsking / Robbbert
+
+$end
+
+$info=turbo
+$mame
+[バグ]
+
+- タイマーの減り方が速すぎる。 turbo0107u3yel, Paratech
 
 $end
 
@@ -5048,6 +5051,14 @@ $mame
 
 $end
 
+$info=hayaosi1
+$mame
+[バグ]
+
+- ゲーム名が「Hayaoshi Quiz Ohzaketteisen」なのは間違い。 hayaosi1_0107u3ora, J.J.Boy
+
+$end
+
 $info=fantasy
 $mame
 [バグ]
@@ -5070,6 +5081,26 @@ $mame
 [バグ]
 
 - 背景の星空は奥行きがあるようにそれぞれ速度をずらして描画される。MAMEでは一枚の面がスクロールするだけになっている。 exerizrb0102u1ora, Kold666
+
+$end
+
+$info=sformula
+$mame
+[バグ]
+
+- 実機との比較テスト：
+
+
+1) 車のアニメーションが他のグラフィックのように反転しない。
+
+2) 予選を通過すると、F1のアニメーションが出るがMAMEでは何ピクセルか高い位置に表示される。F1カーが完全に描画されていないので、背景が見えてしまう
+
+3) コンティニュー画面でレーサーが下ではなく上方向に動いていく。このため足のグラフィックが無いのがわかる。
+
+4) サーキットのマップがレース中に表示されるが、縦のラインが一部欠けている
+
+
+以上のバグは画面反転を有効にしたときのみ現れる。 sformula0101u2ora, Kold666
 
 $end
 
@@ -5233,39 +5264,6 @@ $mame
 タイトーのようなメーカーで、これがないのはかなり変だ。
 
 その他、ボス選での表示化け、表示位置ずれ、コンティニュー画面などなどいろいろ。 kurikina055ora, Kale
-
-$end
-
-$info=spcewars
-$mame
-[バグ]
-
-- 弾を喰らったときなどの音量が小さすぎる。 spcewars36rc2ora, Fujix/The tECHNIDNA
-
-
-[TIPS]
-
-- ゲーム中で流れる曲は以下の通り：
-
-500UFO：UFO
-
-1UP時：ビューティフルネーム
-
-MISS：私ばかよねー
-
-GameOver：葬送行進曲
-
-花火打ち上げ：幸せなら手を叩こう
-
-1面クリア時：エーゲ海の真珠
-
-2面クリア時：こげよマイケル
-
-3面クリア時：てんとうむしのサンバ
-
-4面クリア時：青春時代
-
-(by GON / Field93@野原いっぱい)
 
 $end
 
@@ -5620,6 +5618,15 @@ $mame
 
 $end
 
+$info=astrob1
+$mame
+[バグ]
+
+- コイン投入数の増加に伴う、自機増えエラーについて。
+本家リンクを参照。 astrob137b16gra, stephh
+
+$end
+
 $info=startrek
 $mame
 [バグ]
@@ -5635,15 +5642,6 @@ $mame
 
 - カクテルモードのDIPが効かない。
 またプレイヤー2の操作が分かれていない。 tacscan36rc2gra, Frotz
-
-$end
-
-$info=astrob1
-$mame
-[バグ]
-
-- コイン投入数の増加に伴う、自機増えエラーについて。
-本家リンクを参照。 astrob137b16gra, stephh
 
 $end
 
@@ -5944,15 +5942,6 @@ $mame
 [TIPS]
 
 - 合計で1997クレジット以上投入されるとタイトル画面左側に女の子と犬が表示され、各ゲームにスペシャルチームが一つずつ追加される。
-
-$end
-
-$info=ssf2xj
-$mame
-[バグ]
-
-- ごく稀に画面全体が化けることがある。一回のプレイで一回起こるくらいで、1フレームが完全に化ける。
-実機でも起こるかどうかは不明だが、SSF2Tの実機では起きていないと思う。 ssf2xj067gre, Smitdogg
 
 $end
 
@@ -7417,14 +7406,6 @@ F2キーはテストモード。F1+F2キーでブックキーピングと設定モードになる。
 
 $end
 
-$info=gwarrior
-$mame
-[情報]
-
-- 画面が明るいのはオリジナル通り。ガンマを0.5程度に下げると正しい表示になる。
-
-$end
-
 $info=nemesis
 $mame
 [情報]
@@ -7833,6 +7814,14 @@ $mame
 
 $end
 
+$info=toobin
+$mame
+[情報]
+
+- デモモードでのサウンドはEEPROMで制御されているので、テストモードで設定する。(Aaron Giles)
+
+$end
+
 $info=tshoot
 $mame
 [情報]
@@ -7922,16 +7911,6 @@ $mame
 [情報]
 
 - サウンドを追加するにはZ180サウンドCPUの内部ROMを吸い出す必要あり。
-
-$end
-
-$info=wintbob
-$mame
-[情報]
-
-- 68000CPUのクロックを16MHｚにすると表示ずれは修正されるが、
-Haze氏によれば、16MHｚでは当時にしては高すぎるかもしれないので、
-実際の基板を探して調べる必要があるとのこと。
 
 $end
 
@@ -8418,6 +8397,20 @@ $mame
 
 $end
 
+$info=darius2
+$mame
+[TIPS]
+
+- 面セレクトコマンド：
+
+1) サービススイッチ(9キー)を押しながらリセット
+
+2) 1Pスタートx3　サービス　1Pスタート
+
+(by Mhk)
+
+$end
+
 $info=digdug
 $mame
 [TIPS]
@@ -8687,6 +8680,20 @@ $mame
 [TIPS]
 
 - スクリーンエディタとラウンドセレクトのコマンド：
+
+1) サービススイッチ(9キー)を押しながらリセット
+
+2) 1Pスタートx3　サービス　1Pスタート
+
+(by Mhk)
+
+$end
+
+$info=liquidk
+$mame
+[TIPS]
+
+- 面セレクトコマンド：
 
 1) サービススイッチ(9キー)を押しながらリセット
 
