@@ -1,48 +1,48 @@
-# windows/input.c: 1608
+# windows/input.c: 1602
          all -- all axes on all joysticks are digital\n
 
 
-# windows/input.c: 1614
+# windows/input.c: 1608
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
 
 
-# windows/input.c: 1612
+# windows/input.c: 1606
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
 
 
-# windows/input.c: 1609
+# windows/input.c: 1603
          j<N> -- all axes on joystick <N> are digital\n
 
 
-# windows/input.c: 1610
+# windows/input.c: 1604
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
 
 
-# windows/input.c: 1607
+# windows/input.c: 1601
          none -- no axes on any joysticks are digital\n
 
 
-# windows/config.c: 843
+# windows/config.c: 841
         MAME -createconfig to create a mame.ini\n\n
 
 
-# windows/config.c: 842
+# windows/config.c: 840
         MAME -showconfig   for a list of configuration options\n
 
 
-# windows/config.c: 841
+# windows/config.c: 839
         MAME -showusage    for a brief list of options\n
 
 
-# windows/input.c: 1611
+# windows/input.c: 1605
     Multiple axes can be specified for one joystick:\n
 
 
-# windows/input.c: 1613
+# windows/input.c: 1607
     Multiple joysticks can be specified separated by commas:\n
 
 
-# windows/input.c: 2071
+# windows/input.c: 2065
  - digital
 
 
@@ -58,7 +58,7 @@
 %d %s found, %d were OK.\n
 
 
-# windows/input.c: 2004
+# windows/input.c: 1998
 %s Button %d
 
 
@@ -66,15 +66,15 @@
 (BAD) 
 
 
-# windows/video.c: 476
+# windows/video.c: 473
 (primary)
 
 
-# windows/video.c: 273
+# windows/video.c: 270
 Average FPS: %f (%d frames)\n
 
 
-# windows/config.c: 128
+# windows/config.c: 125
 CRC-32s
 
 
@@ -134,11 +134,11 @@ Failed to open file for playback
 Failed to open file for recording
 
 
-# windows/input.c: 2591
+# windows/input.c: 2585
 Fast Forward
 
 
-# windows/config.c: 844
+# windows/config.c: 842
 For usage instructions, please consult the file windows.txt\n
 
 
@@ -146,11 +146,11 @@ For usage instructions, please consult the file windows.txt\n
 Game \"%s\" not supported!\n
 
 
-# windows/input.c: 2071
+# windows/input.c: 2065
 Input:  Axis %d (%s)%s\n
 
 
-# windows/input.c: 1934
+# windows/input.c: 1928
 Input: %s: %s\n
 
 
@@ -166,11 +166,11 @@ Input: Autoenabling lightguns due to presence of a %s\n
 Input: Autoenabling mice due to presence of a %s\n
 
 
-# windows/input.c: 1879
+# windows/input.c: 1873
 Input: Joystick %d axis %d is now %s\n
 
 
-# windows/input.c: 2055
+# windows/input.c: 2049
 Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 
 
@@ -178,7 +178,7 @@ Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 
 
-# windows/input.c: 2928
+# windows/input.c: 2922
 Input: Using RAWMOUSE for Mouse input\n
 
 
@@ -186,31 +186,31 @@ Input: Using RAWMOUSE for Mouse input\n
 Input: \"%s\" controller support enabled\n
 
 
-# windows/input.c: 2076, 2109
+# windows/input.c: 2070, 2103
 J%d %s
 
 
-# windows/input.c: 2085
+# windows/input.c: 2079
 J%d %s +
 
 
-# windows/input.c: 2081
+# windows/input.c: 2075
 J%d %s -
 
 
-# windows/input.c: 2130
+# windows/input.c: 2124
 J%d %s D
 
 
-# windows/input.c: 2134
+# windows/input.c: 2128
 J%d %s L
 
 
-# windows/input.c: 2138
+# windows/input.c: 2132
 J%d %s R
 
 
-# windows/input.c: 2126
+# windows/input.c: 2120
 J%d %s U
 
 
@@ -218,19 +218,19 @@ J%d %s U
 KNOWN     %s\n
 
 
-# windows/input.c: 2043
+# windows/input.c: 2037
 Lightgun %d 
 
 
-# windows/input.c: 2426
+# windows/input.c: 2420
 Lightgun not supported in windowed mode
 
 
-# windows/input.c: 2041
+# windows/input.c: 2035
 Lightgun on Mouse %d 
 
 
-# windows/config.c: 837
+# windows/config.c: 835
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 
 
@@ -242,11 +242,11 @@ MMX not supported\n
 MMX supported\n
 
 
-# windows/input.c: 1931
+# windows/input.c: 1925
 Mouse 
 
 
-# windows/input.c: 1929
+# windows/input.c: 1923
 Mouse %d 
 
 
@@ -266,27 +266,27 @@ Name:     Description:\n
 Name:    Clone of:\n
 
 
-# windows/config.c: 422
+# windows/config.c: 420
 OSD bar color (dark)
 
 
-# windows/config.c: 423
+# windows/config.c: 421
 OSD bar color (default)
 
 
-# windows/config.c: 421
+# windows/config.c: 419
 OSD bar color (light)
 
 
-# windows/config.c: 420
+# windows/config.c: 418
 OSD bar color (medium)
 
 
-# windows/fileio.c: 263
+# windows/fileio.c: 264
 Out of memory in variable expansion!
 
 
-# windows/fileio.c: 330
+# windows/fileio.c: 331
 Out of memory!
 
 
@@ -310,43 +310,43 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 
 
-# windows/input.c: 1983
+# windows/input.c: 1977
 Stick %d %s +
 
 
-# windows/input.c: 1976
+# windows/input.c: 1970
 Stick %d %s -
 
 
-# windows/input.c: 1985
+# windows/input.c: 1979
 Stick %s +
 
 
-# windows/input.c: 1978
+# windows/input.c: 1972
 Stick %s -
 
 
-# windows/input.c: 1949
+# windows/input.c: 1943
 Stick%sX+
 
 
-# windows/input.c: 1947
+# windows/input.c: 1941
 Stick%sX-
 
 
-# windows/input.c: 1953
+# windows/input.c: 1947
 Stick%sY+
 
 
-# windows/input.c: 1951
+# windows/input.c: 1945
 Stick%sY-
 
 
-# windows/input.c: 1957
+# windows/input.c: 1951
 Stick%sZ+
 
 
-# windows/input.c: 1955
+# windows/input.c: 1949
 Stick%sZ-
 
 
@@ -354,7 +354,7 @@ Stick%sZ-
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
 
 
-# windows/input.c: 2573
+# windows/input.c: 2567
 Toggle fullscreen
 
 
@@ -370,11 +370,11 @@ Unable to close the keyboard device. (error %d)\n
 Unable to open the keyboard device. (error %d)\n
 
 
-# windows/config.c: 840
+# windows/config.c: 838
 Usage:  MAME gamename [options]\n\n
 
 
-# windows/video.c: 856
+# windows/video.c: 853
 Using %s scale effect\n
 
 
@@ -386,15 +386,15 @@ Using %s scale effect\n
 \"%8s\" not supported!\n
 
 
-# windows/config.c: 621
+# windows/config.c: 619
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 
 
-# windows/config.c: 123
+# windows/config.c: 120
 all available info on driver in XML format
 
 
-# windows/input.c: 1877
+# windows/input.c: 1871
 analog
 
 
@@ -402,71 +402,71 @@ analog
 analog joystick
 
 
-# windows/config.c: 204
+# windows/config.c: 202
 automatic pause when playback is finished
 
 
-# windows/config.c: 430
+# windows/config.c: 428
 button color (aqua)
 
 
-# windows/config.c: 427
+# windows/config.c: 425
 button color (blue)
 
 
-# windows/config.c: 426
+# windows/config.c: 424
 button color (green)
 
 
-# windows/config.c: 433
+# windows/config.c: 431
 button color (lime)
 
 
-# windows/config.c: 432
+# windows/config.c: 430
 button color (navy)
 
 
-# windows/config.c: 429
+# windows/config.c: 427
 button color (pink)
 
 
-# windows/config.c: 428
+# windows/config.c: 426
 button color (purple)
 
 
-# windows/config.c: 424
+# windows/config.c: 422
 button color (red)
 
 
-# windows/config.c: 431
+# windows/config.c: 429
 button color (silver)
 
 
-# windows/config.c: 425
+# windows/config.c: 423
 button color (yellow)
 
 
-# windows/config.c: 210
+# windows/config.c: 208
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 
 
-# windows/config.c: 181
+# windows/config.c: 179
 cheat filename
 
 
-# windows/config.c: 133
+# windows/config.c: 130
 compare files with known MAME roms
 
 
-# windows/config.c: 134
+# windows/config.c: 131
 compare files with known MAME roms (brief)
 
 
-# windows/config.c: 118
+# windows/config.c: 115
 create the default configuration file
 
 
-# windows/config.c: 434
+# windows/config.c: 432
 cursor color
 
 
@@ -474,83 +474,83 @@ cursor color
 dial
 
 
-# windows/config.c: 392 windows/input.c: 1653, 1877
+# windows/config.c: 390 windows/input.c: 1647, 1871
 digital
 
 
-# windows/config.c: 176
+# windows/config.c: 174
 directory for ips files
 
 
-# windows/config.c: 180
+# windows/config.c: 178
 directory for localized data files
 
 
-# windows/config.c: 162
+# windows/config.c: 159
 directory to save configurations
 
 
-# windows/config.c: 167
+# windows/config.c: 164
 directory to save hiscores
 
 
-# windows/config.c: 165
+# windows/config.c: 162
 directory to save input device logs
 
 
-# windows/config.c: 164
+# windows/config.c: 161
 directory to save memory card contents
 
 
-# windows/config.c: 163
+# windows/config.c: 160
 directory to save nvram contents
 
 
-# windows/config.c: 169
+# windows/config.c: 166
 directory to save states
 
 
-# windows/config.c: 236
+# windows/config.c: 234
 display additional diagnostic information
 
 
-# windows/config.c: 126
+# windows/config.c: 123
 driver sourcefile
 
 
-# windows/config.c: 395
+# windows/config.c: 393
 enable (keyboard|mouse|joystick) if a paddle control is present
 
 
-# windows/config.c: 388
+# windows/config.c: 386
 enable dual lightgun input
 
 
-# windows/config.c: 386
+# windows/config.c: 384
 enable joystick input
 
 
-# windows/config.c: 387
+# windows/config.c: 385
 enable lightgun input
 
 
-# windows/config.c: 385
+# windows/config.c: 383
 enable mouse input
 
 
-# windows/config.c: 362
+# windows/config.c: 360
 enable pointing stick input
 
 
-# windows/config.c: 390
+# windows/config.c: 388
 enable steadykey support
 
 
-# windows/config.c: 408
+# windows/config.c: 406
 enable/disable local language game list
 
 
-# windows/config.c: 352
+# windows/config.c: 350
 enable/disable volume auto adjust
 
 
@@ -562,31 +562,31 @@ error: invalid value for language: %s\nUse %s\n
 error: invalid value for palette: %s\n
 
 
-# windows/config.c: 279
+# windows/config.c: 277
 flip screen left-right
 
 
-# windows/config.c: 280
+# windows/config.c: 278
 flip screen upside-down
 
 
-# windows/config.c: 413
+# windows/config.c: 411
 font blank color
 
 
-# windows/config.c: 414
+# windows/config.c: 412
 font normal color
 
 
-# windows/config.c: 415
+# windows/config.c: 413
 font special color
 
 
-# windows/input.c: 1877
+# windows/input.c: 1871
 invalid
 
 
-# windows/config.c: 198
+# windows/config.c: 196
 ips datfile name
 
 
@@ -606,11 +606,11 @@ is good\n
 is missing optional files\n
 
 
-# windows/input.c: 1159, 1527, 1622
+# windows/input.c: 1159, 1521, 1616
 lightgun
 
 
-# windows/config.c: 129
+# windows/config.c: 126
 list required roms for a driver
 
 
@@ -618,19 +618,19 @@ list required roms for a driver
 loading %-12s\r
 
 
-# windows/fileio.c: 808
+# windows/fileio.c: 809
 loading %-32s\r
 
 
-# windows/config.c: 392
+# windows/config.c: 390
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 
 
-# windows/config.c: 391
+# windows/config.c: 389
 minimal analog value for digital input
 
 
-# windows/config.c: 389
+# windows/config.c: 387
 offscreen shots reload
 
 
@@ -638,11 +638,11 @@ offscreen shots reload
 paddle
 
 
-# windows/config.c: 158, 160
+# windows/config.c: 155, 157
 path to ini files
 
 
-# windows/config.c: 156
+# windows/config.c: 153
 path to samplesets
 
 
@@ -650,27 +650,27 @@ path to samplesets
 pedal
 
 
-# windows/config.c: 227
+# windows/config.c: 225
 playback an input file
 
 
-# windows/config.c: 360
+# windows/config.c: 358
 preconfigure for specified controller
 
 
-# windows/config.c: 202
+# windows/config.c: 200
 quit game with confirmation
 
 
-# windows/config.c: 228
+# windows/config.c: 226
 record an input file
 
 
-# windows/config.c: 131
+# windows/config.c: 128
 report romsets that have problems
 
 
-# windows/config.c: 132
+# windows/config.c: 129
 report samplesets that have problems
 
 
@@ -694,63 +694,63 @@ sampleset %s
 samplesets
 
 
-# windows/config.c: 407
+# windows/config.c: 405
 select translation language
 
 
-# windows/config.c: 356
+# windows/config.c: 354
 set audio latency (increase to reduce glitches)
 
 
-# windows/config.c: 367
+# windows/config.c: 365
 set joystick ID (Player1)
 
 
-# windows/config.c: 368
+# windows/config.c: 366
 set joystick ID (Player2)
 
 
-# windows/config.c: 369
+# windows/config.c: 367
 set joystick ID (Player3)
 
 
-# windows/config.c: 370
+# windows/config.c: 368
 set joystick ID (Player4)
 
 
-# windows/config.c: 371
+# windows/config.c: 369
 set joystick ID (Player5)
 
 
-# windows/config.c: 372
+# windows/config.c: 370
 set joystick ID (Player6)
 
 
-# windows/config.c: 373
+# windows/config.c: 371
 set joystick ID (Player7)
 
 
-# windows/config.c: 374
+# windows/config.c: 372
 set joystick ID (Player8)
 
 
-# windows/config.c: 125
+# windows/config.c: 122
 short name, full name
 
 
-# windows/config.c: 127
+# windows/config.c: 124
 show clones
 
 
-# windows/config.c: 114
+# windows/config.c: 111
 show help message
 
 
-# windows/config.c: 120
+# windows/config.c: 117
 show this help
 
 
-# windows/config.c: 347, 977
+# windows/config.c: 345, 979
 sound
 
 
@@ -758,31 +758,31 @@ sound
 trackball
 
 
-# windows/config.c: 216
+# windows/config.c: 214
 transparency of UI background [0 - 255]
 
 
-# windows/config.c: 215
+# windows/config.c: 213
 use transparent background for UI text
 
 
-# windows/config.c: 416
+# windows/config.c: 414
 window background color
 
 
-# windows/config.c: 419
+# windows/config.c: 417
 window frame color (dark)
 
 
-# windows/config.c: 418
+# windows/config.c: 416
 window frame color (light)
 
 
-# windows/config.c: 417
+# windows/config.c: 415
 window frame color (medium)
 
 
-# windows/config.c: 124
+# windows/config.c: 121
 year, manufacturer and full name
 
 

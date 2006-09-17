@@ -1,16 +1,16 @@
-# datafile.c: 3116
+# datafile.c: 3124
           DIAL:  %4d\n
 
 
-# datafile.c: 3122
+# datafile.c: 3130
          OTHER:  %4d\n
 
 
-# datafile.c: 3120
+# datafile.c: 3128
          PEDAL:  %4d\n
 
 
-# datafile.c: 3115
+# datafile.c: 3123
         PADDLE:  %4d\n
 
 
@@ -18,35 +18,35 @@
        FOUND: %s\n
 
 
-# datafile.c: 3109
+# datafile.c: 3117
        JOY2WAY:  %4d\n
 
 
-# datafile.c: 3110
+# datafile.c: 3118
        JOY4WAY:  %4d\n
 
 
-# datafile.c: 3111
+# datafile.c: 3119
        JOY8WAY:  %4d\n
 
 
-# datafile.c: 3118
+# datafile.c: 3126
       AD STICK:  %4d\n
 
 
-# datafile.c: 3119
+# datafile.c: 3127
       LIGHTGUN:  %4d\n
 
 
-# datafile.c: 3103
+# datafile.c: 3111
      PLAYERS %d:  %4d\n
 
 
-# datafile.c: 3117
+# datafile.c: 3125
      TRACKBALL:  %4d\n
 
 
-# datafile.c: 3131
+# datafile.c: 3139
     BUTTONS%3d:  %4d\n
 
 
@@ -54,7 +54,7 @@
     EXPECTED: %s\n
 
 
-# datafile.c: 3137
+# datafile.c: 3145
     NO BUTTONS:  %4d\n
 
 
@@ -62,43 +62,43 @@
    FOUND: 
 
 
-# datafile.c: 2941
+# datafile.c: 2949
  %4d HARDDISK\n
 
 
-# datafile.c: 2937
+# datafile.c: 2945
  %4d HORIZONTAL + %4d\n %4d VERTICAL   + %4d\n
 
 
-# datafile.c: 2933
+# datafile.c: 2941
  %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
 
 
-# datafile.c: 2935
+# datafile.c: 2943
  %4d RASTER     + %4d\n %4d VECTOR     + %4d\n
 
 
-# datafile.c: 2939
+# datafile.c: 2947
  %4d STEREO     + %4d\n
 
 
-# datafile.c: 3112
+# datafile.c: 3120
  DOUBLEJOY2WAY:  %4d\n
 
 
-# datafile.c: 3113
+# datafile.c: 3121
  DOUBLEJOY4WAY:  %4d\n
 
 
-# datafile.c: 3114
+# datafile.c: 3122
  DOUBLEJOY8WAY:  %4d\n
 
 
-# datafile.c: 3042
+# datafile.c: 3050
  GAMES WITH  %d CPUs: %4d\n
 
 
-# datafile.c: 3073
+# datafile.c: 3081
  GAMES WITH  %d SNDINTRF: %4d\n
 
 
@@ -110,7 +110,7 @@
 %-12s NOT FOUND (NO GOOD DUMP KNOWN)\n
 
 
-# romload.c: 263, 896
+# romload.c: 263, 906
 %-12s NOT FOUND\n
 
 
@@ -118,11 +118,11 @@
 %-12s ROM NEEDS REDUMP\n
 
 
-# romload.c: 894, 933, 947
+# romload.c: 904, 943, 957
 %-12s UNSUPPORTED CHD VERSION\n
 
 
-# romload.c: 356, 911
+# romload.c: 356, 921
 %-12s WRONG CHECKSUMS:\n
 
 
@@ -130,11 +130,11 @@
 %-12s WRONG LENGTH (expected: %08x found: %08x)\n
 
 
-# romload.c: 935
+# romload.c: 945
 %-12s: CAN'T CREATE DIFF FILE\n
 
 
-# romload.c: 949
+# romload.c: 959
 %-12s: CAN'T OPEN DIFF FILE\n
 
 
@@ -358,7 +358,7 @@
 24 Bit
 
 
-# datafile.c: 3143
+# datafile.c: 3151
 24-BIT DISPLAY : %3d  + %3d\n
 
 
@@ -570,6 +570,10 @@ ALL CHANNELS
 ALL CPUS
 
 
+# layout/mpu4.lay: 406
+AWP Simulated Video (No Artwork)
+
+
 # cheat.c: 3167 uitext.c: 191
 Activation Key
 
@@ -702,6 +706,10 @@ BCD
 BIOS
 
 
+# ui.c: 2367
+Beam Width
+
+
 # drivers/metro.c: 2359 drivers/nbmj8891.c: 2410 drivers/pacman.c: 2742
 Beginner
 
@@ -802,7 +810,7 @@ Cheats
 Chi
 
 
-# drivers/afega.c: 800 drivers/nmk16.c: 2667 drivers/pgm.c: 820, 914, 1006, 1097, 1193, 1384 drivers/ssv.c: 2950 drivers/toaplan2.c: 2707, 2760, 2888
+# drivers/afega.c: 800 drivers/nmk16.c: 2667 drivers/pgm.c: 820, 914, 1006, 1097, 1193, 1384 drivers/ssv.c: 2955 drivers/toaplan2.c: 2707, 2760, 2888
 China
 
 
@@ -874,7 +882,7 @@ Coin Chutes
 Coin Chutes?
 
 
-# drivers/airbustr.c: 466 drivers/asteroid.c: 414 drivers/asuka.c: 838 drivers/bloodbro.c: 163, 253, 344 drivers/cabal.c: 348 drivers/exidy.c: 368 drivers/galpanic.c: 593, 704, 773 drivers/holeland.c: 121, 188 drivers/m62.c: 633, 686, 736, 788, 840, 892, 944, 994, 1044, 1097, 1148, 1198 drivers/m72.c: 988, 1060, 1131, 1201, 1271, 1338, 1409, 1476, 1544, 1617, 1699, 1787, 1869, 1954 drivers/m90.c: 220, 265, 323, 368, 443, 513, 585, 630 drivers/m92.h: 77, 93, 109, 125 drivers/mcatadv.c: 341 drivers/midzeus.c: 1230 drivers/mpatrol.c: 153 drivers/playch10.c: 650 drivers/playmark.c: 450, 598, 695, 791 drivers/powerbal.c: 263 drivers/raiden.c: 158 drivers/rallyx.c: 644 drivers/shisen.c: 158 drivers/sshangha.c: 245 drivers/system18.c: 1325 drivers/tagteam.c: 228 drivers/taito_l.c: 1958 drivers/travrusa.c: 157, 187 drivers/troangel.c: 108 drivers/vigilant.c: 268, 358 drivers/welltris.c: 566 drivers/wilytowr.c: 406 drivers/yard.c: 133
+# drivers/airbustr.c: 468 drivers/asteroid.c: 414 drivers/asuka.c: 838 drivers/bloodbro.c: 163, 253, 344 drivers/cabal.c: 348 drivers/exidy.c: 368 drivers/galpanic.c: 593, 704, 773 drivers/holeland.c: 121, 188 drivers/m62.c: 633, 686, 736, 788, 840, 892, 944, 994, 1044, 1097, 1148, 1198 drivers/m72.c: 988, 1060, 1131, 1201, 1271, 1338, 1409, 1476, 1544, 1617, 1699, 1787, 1869, 1954 drivers/m90.c: 220, 265, 323, 368, 443, 513, 585, 630 drivers/m92.h: 77, 93, 109, 125 drivers/mcatadv.c: 341 drivers/midzeus.c: 1230 drivers/mpatrol.c: 153 drivers/playch10.c: 650 drivers/playmark.c: 450, 598, 695, 791 drivers/powerbal.c: 263 drivers/raiden.c: 158 drivers/rallyx.c: 644 drivers/shisen.c: 158 drivers/sshangha.c: 245 drivers/system18.c: 1325 drivers/tagteam.c: 228 drivers/taito_l.c: 1958 drivers/travrusa.c: 157, 187 drivers/troangel.c: 108 drivers/vigilant.c: 268, 358 drivers/welltris.c: 566 drivers/wilytowr.c: 406 drivers/yard.c: 133
 Coin Mode
 
 
@@ -978,7 +986,7 @@ Could not load controller file %s.cfg
 Could not read MAME save file header
 
 
-# drivers/aerofgt.c: 1023, 1110 drivers/bbusters.c: 580 drivers/bwing.c: 292 drivers/cischeat.c: 1193 drivers/crshrace.c: 381, 537 drivers/ddenlovr.c: 4450 drivers/f1gp.c: 307, 412 drivers/kaneko16.c: 1208, 1304 drivers/midtunit.c: 347, 450, 553 drivers/midwunit.c: 388, 567 drivers/midxunit.c: 112 drivers/midyunit.c: 239, 702 drivers/psikyo.c: 644, 764, 1002, 1206, 1304, 1493 drivers/seta.c: 3526, 3851, 4172, 4341 drivers/ssv.c: 2949 drivers/st0016.c: 455 drivers/stv.c: 2479 drivers/suprslam.c: 274 drivers/tail2nos.c: 207 drivers/taotaido.c: 306
+# drivers/aerofgt.c: 1023, 1110 drivers/bbusters.c: 580 drivers/bwing.c: 292 drivers/cischeat.c: 1193 drivers/crshrace.c: 381, 537 drivers/ddenlovr.c: 4450 drivers/f1gp.c: 307, 412 drivers/kaneko16.c: 1208, 1304 drivers/midtunit.c: 347, 450, 553 drivers/midwunit.c: 388, 567 drivers/midxunit.c: 112 drivers/midyunit.c: 239, 702 drivers/psikyo.c: 644, 764, 1002, 1206, 1304, 1493 drivers/seta.c: 3526, 3851, 4172, 4341 drivers/ssv.c: 2954 drivers/st0016.c: 455 drivers/stv.c: 2479 drivers/suprslam.c: 274 drivers/tail2nos.c: 207 drivers/taotaido.c: 306
 Country
 
 
@@ -1018,7 +1026,7 @@ Data Shift
 Decimal
 
 
-# video.c: 392
+# video.c: 389
 Decoding (%d%%)
 
 
@@ -1050,7 +1058,7 @@ Demo Sounds
 Description
 
 
-# drivers/ssv.c: 2771 inptport.c: 884 
+# drivers/ssv.c: 2776 inptport.c: 884 
 Dial
 
 
@@ -1138,7 +1146,7 @@ Dip Switches
 Disable All Coins
 
 
-# drivers/blockade.c: 311 drivers/hyperspt.c: 260, 361 drivers/junofrst.c: 334 drivers/lvcards.c: 337, 415 drivers/metro.c: 2385 drivers/midvunit.c: 829 drivers/mpu4.c: 2027, 2030, 2033, 2036 drivers/nemesis.c: 840, 1441, 1535, 1552, 1649, 1746, 1834 drivers/pacman.c: 1206, 1268 drivers/rallyx.c: 591 drivers/rocnrope.c: 129 drivers/seattle.c: 2444 drivers/trackfld.c: 436, 531 drivers/tutankhm.c: 337 drivers/twin16.c: 378 uitext.c: 184
+# drivers/blockade.c: 311 drivers/hyperspt.c: 260, 361 drivers/junofrst.c: 334 drivers/lvcards.c: 337, 415 drivers/metro.c: 2385 drivers/midvunit.c: 829 drivers/mpu4.c: 2112, 2115, 2118, 2121, 2186, 2189, 2192, 2195, 2265, 2268, 2271, 2274 drivers/nemesis.c: 840, 1441, 1535, 1552, 1649, 1746, 1834 drivers/pacman.c: 1206, 1268 drivers/rallyx.c: 591 drivers/rocnrope.c: 129 drivers/seattle.c: 2444 drivers/trackfld.c: 436, 531 drivers/tutankhm.c: 337 drivers/twin16.c: 378 uitext.c: 184
 Disabled
 
 
@@ -1290,15 +1298,15 @@ Error loading memory card
 Error: 
 
 
-# mame.c: 1415, 1419
+# mame.c: 1420, 1424
 Error: Failed to load state
 
 
-# mame.c: 1339
+# mame.c: 1344
 Error: Failed to save state
 
 
-# mame.c: 1302
+# mame.c: 1307
 Error: Unable to save state due to illegal registrations. See error.log for details.
 
 
@@ -1318,7 +1326,7 @@ Expert
 Failed to allocate %d bytes (%s:%d)
 
 
-# cheat.c: 6532 debug/mamedbg.c: 790 drivers/4enraya.c: 119 drivers/8080bw.c: 724, 816 drivers/alpha68k.c: 1570, 1624 drivers/amidar.c: 186 drivers/angelkds.c: 480 drivers/bestleag.c: 279 drivers/bigstrkb.c: 160 drivers/brkthru.c: 233, 236, 278, 281 drivers/cninja.c: 727 drivers/cps1.c: 1088, 1358 drivers/darius.c: 677, 715, 753 drivers/ddragon3.c: 424 drivers/deniam.c: 277 drivers/epos.c: 151, 154, 160 drivers/fuukifg3.c: 354 drivers/gameplan.c: 399, 850 drivers/jcross.c: 189 drivers/karnov.c: 461 drivers/m62.c: 617, 668, 719, 769, 821, 873, 927, 1027, 1080 drivers/mcr.c: 1133 drivers/megaplay.c: 224 drivers/metro.c: 2632, 2938, 3236, 3535 drivers/ninjaw.c: 544 drivers/nmg5.c: 237 drivers/nmk16.c: 2739 drivers/phoenix.c: 324 drivers/quizdna.c: 153, 241, 343 drivers/rohga.c: 445, 513 drivers/safarir.c: 189 drivers/segas16a.c: 1291 drivers/segas16b.c: 2507 drivers/shisen.c: 142 drivers/sidepckt.c: 231 drivers/slapfght.c: 534 drivers/ssv.c: 2572 drivers/suprridr.c: 251 drivers/system1.c: 888, 1829 drivers/system16.c: 1795 drivers/taito_f2.c: 3104 drivers/taito_l.c: 1839, 1992 drivers/taito_z.c: 2384, 2453 drivers/tecmo16.c: 207 drivers/thepit.c: 276, 331, 372 drivers/trackfld.c: 588, 599 drivers/vigilant.c: 240 drivers/vsnes.c: 1072, 1474, 1698, 1756, 1782 drivers/wallc.c: 188 drivers/warriorb.c: 345 drivers/wc90.c: 250 drivers/wc90b.c: 267 drivers/xain.c: 399 drivers/yamato.c: 381 drivers/zac2650.c: 73, 123 drivers/zerozone.c: 148 uitext.c: 218
+# cheat.c: 6532 drivers/4enraya.c: 119 drivers/8080bw.c: 724, 816 drivers/alpha68k.c: 1570, 1624 drivers/amidar.c: 186 drivers/angelkds.c: 480 drivers/bestleag.c: 279 drivers/bigstrkb.c: 160 drivers/brkthru.c: 233, 236, 278, 281 drivers/cninja.c: 727 drivers/cps1.c: 1088, 1358 drivers/darius.c: 677, 715, 753 drivers/ddragon3.c: 424 drivers/deniam.c: 277 drivers/epos.c: 151, 154, 160 drivers/fuukifg3.c: 354 drivers/gameplan.c: 399, 850 drivers/jcross.c: 189 drivers/karnov.c: 461 drivers/m62.c: 617, 668, 719, 769, 821, 873, 927, 1027, 1080 drivers/mcr.c: 1133 drivers/megaplay.c: 224 drivers/metro.c: 2632, 2938, 3236, 3535 drivers/ninjaw.c: 544 drivers/nmg5.c: 237 drivers/nmk16.c: 2739 drivers/phoenix.c: 324 drivers/quizdna.c: 153, 241, 343 drivers/rohga.c: 445, 513 drivers/safarir.c: 189 drivers/segas16a.c: 1291 drivers/segas16b.c: 2507 drivers/shisen.c: 142 drivers/sidepckt.c: 231 drivers/slapfght.c: 534 drivers/ssv.c: 2577 drivers/suprridr.c: 251 drivers/system1.c: 888, 1829 drivers/system16.c: 1795 drivers/taito_f2.c: 3104 drivers/taito_l.c: 1839, 1992 drivers/taito_z.c: 2384, 2453 drivers/tecmo16.c: 207 drivers/thepit.c: 276, 331, 372 drivers/trackfld.c: 588, 599 drivers/vigilant.c: 240 drivers/vsnes.c: 1072, 1474, 1698, 1756, 1782 drivers/wallc.c: 188 drivers/warriorb.c: 345 drivers/wc90.c: 250 drivers/wc90b.c: 267 drivers/xain.c: 399 drivers/yamato.c: 381 drivers/zac2650.c: 73, 123 drivers/zerozone.c: 148 uitext.c: 218
 Fast
 
 
@@ -1378,11 +1386,11 @@ Free
 Free Play
 
 
-# drivers/1942.c: 213 drivers/1943.c: 147 drivers/40love.c: 1081 drivers/aerofgt.c: 742 drivers/airbustr.c: 495 drivers/alpha68k.c: 1164, 1490, 1543, 1595, 1650, 1676, 1776 drivers/atetris.c: 227, 253 drivers/baraduke.c: 254, 327 drivers/battlex.c: 115 drivers/bbusters.c: 469, 556 drivers/bionicc.c: 226 drivers/blktiger.c: 208 drivers/bwing.c: 289 drivers/compgolf.c: 134 drivers/cps1.c: 510, 679, 760, 853, 937, 1016, 1203, 1293, 1374, 1466, 1570, 1665, 1755, 1837, 1920, 2014, 2076, 2201, 2304, 2412, 2531, 2640, 2732, 2825, 2879, 2939, 2992, 3037, 3090, 3142, 3196, 3239, 3340, 3440, 3541, 3634, 3688 drivers/dec8.c: 1243, 1674 drivers/docastle.c: 359 drivers/exedexes.c: 137 drivers/fcrash.c: 262 drivers/flstory.c: 524 drivers/funkybee.c: 113, 163, 213 drivers/funkyjet.c: 221, 299 drivers/galaga.c: 1006, 1082, 1153, 1227, 1357, 1596, 1655 drivers/gunsmoke.c: 191 drivers/hal21.c: 418 drivers/higemaru.c: 80 drivers/ikki.c: 119 drivers/jcross.c: 195 drivers/karnov.c: 593 drivers/kingobox.c: 289, 375 drivers/kyugo.c: 235, 266, 303, 334, 364, 394, 424 drivers/ladybug.c: 164, 437 drivers/laserbat.c: 376 drivers/legionna.c: 828, 916 drivers/lsasquad.c: 321, 475 drivers/mainsnk.c: 195 drivers/mappy.c: 981, 1114, 1245, 1306, 1374 drivers/markham.c: 151 drivers/marvins.c: 269, 358, 449 drivers/midtunit.c: 339 drivers/midvunit.c: 580 drivers/mitchell.c: 617 drivers/ms32.c: 751, 821, 888 drivers/mugsmash.c: 297, 379 drivers/munchmo.c: 200 drivers/mwarr.c: 209 drivers/namcond1.c: 110 drivers/namcos1.c: 599, 639, 661, 698, 760, 782, 796, 869, 879, 901, 911 drivers/namcos12.c: 1486 drivers/namcos86.c: 569, 659, 729, 807, 886, 965 drivers/neogeo.c: 935, 1083 drivers/nycaptor.c: 721 drivers/ohmygod.c: 292 drivers/onetwo.c: 143 drivers/pacland.c: 331 drivers/pandoras.c: 287 drivers/prehisle.c: 156 drivers/pturn.c: 420 drivers/rollrace.c: 150 drivers/rungun.c: 384 drivers/sauro.c: 247 drivers/scobra.c: 643 drivers/seta2.c: 552 drivers/sf.c: 337, 515, 653 drivers/sgladiat.c: 284 drivers/shootout.c: 167 drivers/sidearms.c: 248 drivers/skykid.c: 167, 246 drivers/snk.c: 2954, 3010, 3067, 3124, 3181, 3252, 3339, 3393, 3451, 3479, 3539, 3610, 3666, 3743, 3808, 3913, 4037, 4178 drivers/snk68.c: 259, 406, 443, 594 drivers/sonson.c: 195 drivers/ssrj.c: 134 drivers/starwars.c: 258, 335 drivers/statriv2.c: 439 drivers/strnskil.c: 177, 265 drivers/superqix.c: 605, 743 drivers/suprnova.c: 556, 631 drivers/tceptor.c: 367, 423 drivers/tmnt.c: 1930, 2016, 2216 drivers/toypop.c: 408, 493 drivers/tsamurai.c: 470, 663 drivers/tumbleb.c: 1034 drivers/vastar.c: 233 drivers/zaccaria.c: 410, 519 drivers/zn.c: 3106 drivers/zodiack.c: 222
+# drivers/1942.c: 213 drivers/1943.c: 147 drivers/40love.c: 1081 drivers/aerofgt.c: 742 drivers/airbustr.c: 499 drivers/alpha68k.c: 1164, 1490, 1543, 1595, 1650, 1676, 1776 drivers/atetris.c: 227, 253 drivers/baraduke.c: 254, 327 drivers/battlex.c: 115 drivers/bbusters.c: 469, 556 drivers/bionicc.c: 226 drivers/blktiger.c: 208 drivers/bwing.c: 289 drivers/compgolf.c: 134 drivers/cps1.c: 510, 679, 760, 853, 937, 1016, 1203, 1293, 1374, 1466, 1570, 1665, 1755, 1837, 1920, 2014, 2076, 2201, 2304, 2412, 2531, 2640, 2732, 2825, 2879, 2939, 2992, 3037, 3090, 3142, 3196, 3239, 3340, 3440, 3541, 3634, 3688 drivers/dec8.c: 1243, 1674 drivers/docastle.c: 359 drivers/exedexes.c: 137 drivers/fcrash.c: 262 drivers/findout.c: 284 drivers/flstory.c: 524 drivers/funkybee.c: 113, 163, 213 drivers/funkyjet.c: 221, 299 drivers/galaga.c: 1006, 1082, 1153, 1227, 1357, 1596, 1655 drivers/gunsmoke.c: 191 drivers/hal21.c: 418 drivers/higemaru.c: 80 drivers/ikki.c: 119 drivers/jcross.c: 195 drivers/karnov.c: 593 drivers/kingobox.c: 289, 375 drivers/kyugo.c: 235, 266, 303, 334, 364, 394, 424 drivers/ladybug.c: 164, 437 drivers/laserbat.c: 376 drivers/legionna.c: 828, 916 drivers/lsasquad.c: 321, 475 drivers/mainsnk.c: 195 drivers/mappy.c: 981, 1114, 1245, 1306, 1374 drivers/markham.c: 151 drivers/marvins.c: 269, 358, 449 drivers/midtunit.c: 339 drivers/midvunit.c: 580 drivers/mitchell.c: 617 drivers/ms32.c: 751, 821, 888 drivers/mugsmash.c: 297, 379 drivers/munchmo.c: 200 drivers/mwarr.c: 209 drivers/namcond1.c: 110 drivers/namcos1.c: 599, 639, 661, 698, 760, 782, 796, 869, 879, 901, 911 drivers/namcos12.c: 1486 drivers/namcos86.c: 569, 659, 729, 807, 886, 965 drivers/neogeo.c: 935, 1083 drivers/nycaptor.c: 721 drivers/ohmygod.c: 292 drivers/onetwo.c: 143 drivers/pacland.c: 331 drivers/pandoras.c: 287 drivers/prehisle.c: 156 drivers/pturn.c: 420 drivers/rollrace.c: 150 drivers/rungun.c: 384 drivers/sauro.c: 247 drivers/scobra.c: 643 drivers/seta2.c: 552 drivers/sf.c: 337, 515, 653 drivers/sgladiat.c: 284 drivers/shootout.c: 167 drivers/sidearms.c: 248 drivers/skykid.c: 167, 246 drivers/snk.c: 2954, 3010, 3067, 3124, 3181, 3252, 3339, 3393, 3451, 3479, 3539, 3610, 3666, 3743, 3808, 3913, 4037, 4178 drivers/snk68.c: 259, 406, 443, 594 drivers/sonson.c: 195 drivers/ssrj.c: 134 drivers/starwars.c: 258, 335 drivers/statriv2.c: 439 drivers/strnskil.c: 177, 265 drivers/superqix.c: 605, 743 drivers/suprnova.c: 556, 631 drivers/tceptor.c: 367, 423 drivers/tmnt.c: 1930, 2016, 2216 drivers/toypop.c: 408, 493 drivers/tsamurai.c: 470, 663 drivers/tumbleb.c: 1034 drivers/vastar.c: 233 drivers/zaccaria.c: 410, 519 drivers/zn.c: 3106 drivers/zodiack.c: 222
 Freeze
 
 
-# inptport.c: 410 uilang.c: 13
+# inptport.c: 410 uilang.c: 14
 French
 
 
@@ -1394,11 +1402,11 @@ Full
 Full Output
 
 
-# datafile.c: 2187
+# datafile.c: 2195
 GAME: 
 
 
-# drivers/bublbobl.c: 606 drivers/cps1.c: 623, 705, 786, 869, 953, 1038, 1131, 1216, 1306, 1387, 1583, 1678, 1768, 1850, 1933, 2027, 2123, 2214, 2317, 2425, 2544, 2653, 2745, 2838, 3353, 3453, 3554, 3647, 3801, 3914 drivers/fcrash.c: 275 drivers/macs.c: 244 drivers/missile.c: 837 drivers/pacman.c: 1376 drivers/turbo.c: 927 drivers/vegas.c: 2040
+# drivers/bublbobl.c: 606 drivers/cps1.c: 623, 705, 786, 869, 953, 1038, 1131, 1216, 1306, 1387, 1583, 1678, 1768, 1850, 1933, 2027, 2123, 2214, 2317, 2425, 2544, 2653, 2745, 2838, 3353, 3453, 3554, 3647, 3801, 3914 drivers/fcrash.c: 275 drivers/macs.c: 244 drivers/missile.c: 837 drivers/pacman.c: 1376 drivers/turbo.c: 910 drivers/vegas.c: 2040
 Game
 
 
@@ -1450,7 +1458,7 @@ General
 General Help
 
 
-# inptport.c: 409 uilang.c: 16
+# inptport.c: 409 uilang.c: 17
 German
 
 
@@ -1460,6 +1468,10 @@ Germany
 
 # cheat.c: 935
 Get
+
+
+# drivers/royalmah.c: 1429 
+Gray
 
 
 # cheat.c: 1050, 4609
@@ -1474,11 +1486,11 @@ Greater Or Equal
 Greater or Equal
 
 
-# datafile.c: 3145
+# datafile.c: 3153
 HI/TRUE BITMAP : %3d  + %3d\n
 
 
-# datafile.c: 3149
+# datafile.c: 3157
 HIGHLIGHTS     : %3d  + %3d\n
 
 
@@ -1578,7 +1590,15 @@ Hong Kong
 Hopper Reset
 
 
-# drivers/findout.c: 216, 264 drivers/gameplan.c: 565, 710 drivers/jack.c: 684 drivers/thepit.c: 550 
+# ui.c: 2318
+Horiz position
+
+
+# ui.c: 2284
+Horiz stretch
+
+
+# drivers/findout.c: 236, 266 drivers/gameplan.c: 565, 710 drivers/jack.c: 684 drivers/thepit.c: 550 
 Horizontal
 
 
@@ -1590,15 +1610,15 @@ Horizontally
 IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
 
 
-# datafile.c: 2954
+# datafile.c: 2962
 IMPERFECT COLORS   : %3d  %3d\n
 
 
-# datafile.c: 2950
+# datafile.c: 2958
 IMPERFECT GRAPHICS : %3d  %3d\n
 
 
-# datafile.c: 2958
+# datafile.c: 2966
 IMPERFECT SOUND    : %3d  %3d\n
 
 
@@ -1702,7 +1722,7 @@ Infinite Time PL1
 Infinite Time PL2
 
 
-# mame.c: 1132
+# mame.c: 1137
 Initializing...
 
 
@@ -1742,7 +1762,7 @@ Invincibility PL2
 Invulnerability
 
 
-# inptport.c: 411 uilang.c: 15
+# inptport.c: 411 uilang.c: 16
 Italian
 
 
@@ -1754,7 +1774,7 @@ Italy
 Japan
 
 
-# inptport.c: 408 uilang.c: 9
+# inptport.c: 408 uilang.c: 10
 Japanese
 
 
@@ -1766,7 +1786,7 @@ Joystick
 Kan
 
 
-# drivers/ddenlovr.c: 3628, 3855 drivers/ltcasino.c: 566 drivers/rbmk.c: 132 drivers/ssv.c: 1469, 1585, 1867 inptport.c: 983 
+# drivers/ddenlovr.c: 3628, 3855 drivers/ltcasino.c: 566 drivers/rbmk.c: 132 drivers/ssv.c: 1474, 1590, 1872 inptport.c: 983 
 Keyboard
 
 
@@ -1950,11 +1970,11 @@ Low
 MAME Statistics
 
 
-# mame.c: 181
+# mame.c: 179
 MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n
 
 
-# datafile.c: 2179
+# datafile.c: 2187
 MAMEInfo:\n
 
 
@@ -2126,11 +2146,11 @@ Mouse Y 8
 NA
 
 
-# datafile.c: 2960
+# datafile.c: 2968
 NO COCKTAIL        : %3d  %3d\n
 
 
-# datafile.c: 2962
+# datafile.c: 2970
 NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 
 
@@ -2138,11 +2158,11 @@ NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 NO MATCH\n
 
 
-# datafile.c: 2956
+# datafile.c: 2964
 NO SOUND           : %3d  %3d\n
 
 
-# datafile.c: 2946
+# datafile.c: 2954
 NON-WORKING        : %3d  %3d\n
 
 
@@ -2194,10 +2214,6 @@ Normal/Delay
 Not Equal
 
 
-# debug/mamedbg.c: 4277 
-Not found
-
-
 # cheat.c: 2879
 Null
 
@@ -2246,7 +2262,7 @@ Operation
 Options
 
 
-# drivers/findout.c: 215 
+# drivers/findout.c: 235 
 Orientation
 
 
@@ -3602,11 +3618,11 @@ Paddle V 8
 Pause
 
 
-# drivers/cardline.c: 161 drivers/cherrym.c: 200 drivers/csk.c: 283, 368, 443, 513 drivers/ddenlovr.c: 4032, 4583 drivers/funworld.c: 482, 516, 540, 574 drivers/neogeo.c: 1254 drivers/rcasino.c: 215 drivers/royalmah.c: 742, 940, 1115, 1290, 1637 drivers/vroulet.c: 146
+# drivers/cardline.c: 161 drivers/cherrym.c: 200 drivers/csk.c: 283, 368, 443, 513 drivers/ddenlovr.c: 4032, 4583 drivers/findout.c: 289 drivers/funworld.c: 482, 516, 540, 574 drivers/neogeo.c: 1254 drivers/rcasino.c: 215 drivers/royalmah.c: 742, 940, 1115, 1290, 1637 drivers/vroulet.c: 146
 Payout
 
 
-# drivers/turbo.c: 985 
+# drivers/turbo.c: 968 
 Pedal
 
 
@@ -3694,11 +3710,15 @@ Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continu
 REC START
 
 
+# ui.c: 1806
+REC STOP
+
+
 # cheat.c: 5038
 RHS
 
 
-# datafile.c: 2964
+# datafile.c: 2972
 ROM NEEDS REDUMP   : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 
 
@@ -3742,7 +3762,7 @@ Relative Address
 Reload Database
 
 
-# drivers/arcadia.c: 228 drivers/djmain.c: 499 drivers/hanaroku.c: 158 drivers/laserbat.c: 265, 344, 418 drivers/murogem.c: 125 drivers/playch10.c: 472 drivers/sengokmj.c: 237 drivers/trvquest.c: 141 
+# drivers/arcadia.c: 228 drivers/astrocde.c: 597 drivers/djmain.c: 499 drivers/hanaroku.c: 158 drivers/laserbat.c: 265, 344, 418 drivers/murogem.c: 125 drivers/playch10.c: 472 drivers/sengokmj.c: 237 drivers/trvquest.c: 141 
 Reset
 
 
@@ -3814,7 +3834,7 @@ Rotate View
 Rotation
 
 
-# datafile.c: 3147
+# datafile.c: 3155
 SHADOWS        : %3d  + %3d\n
 
 
@@ -3850,12 +3870,16 @@ Save cancelled
 Save to position %c
 
 
-# drivers/findout.c: 263 drivers/turbo.c: 924 png.c: 431 
+# drivers/findout.c: 265 drivers/turbo.c: 907 png.c: 431 
 Screen
 
 
 # uitext.c: 238
 Screen #
+
+
+# ui.c: 2217, 2234, 2251, 2267, 2284, 2301, 2318, 2335
+Screen %d %s %.3f
 
 
 # layout/darius.lay: 21, 27, 33 layout/dualhovu.lay: 15, 21 layout/dualhsxs.lay: 15, 21 layout/dualhuov.lay: 15, 21 layout/rocknms.lay: 16, 22 layout/triphsxs.lay: 21, 27, 33
@@ -3874,7 +3898,7 @@ Screen Resolution
 Screen flipping in cocktail mode is not supported.
 
 
-# datafile.c: 2215
+# datafile.c: 2223
 Screen flipping in cocktail mode is not supported.\n
 
 
@@ -3894,7 +3918,7 @@ Search not initialized
 Second Bonus
 
 
-# cheat.c: 2859, 2933 drivers/bfm_sc2.c: 2138, 2249, 2363 drivers/bwidow.c: 628 drivers/maxaflex.c: 276 drivers/megaplay.c: 73 drivers/megatech.c: 112 drivers/nbmj8688.c: 2758 drivers/trackfld.c: 665
+# cheat.c: 2859, 2933 drivers/bfm_sc2.c: 2138, 2249, 2363 drivers/bwidow.c: 628 drivers/maxaflex.c: 276 drivers/megaplay.c: 73 drivers/megatech.c: 112 drivers/mpu4.c: 2090 drivers/nbmj8688.c: 2758 drivers/trackfld.c: 665
 Select
 
 
@@ -4050,7 +4074,7 @@ Size
 Skip Bytes
 
 
-# cheat.c: 6534 drivers/4enraya.c: 118 drivers/8080bw.c: 723, 815 drivers/amidar.c: 185 drivers/angelkds.c: 478 drivers/bestleag.c: 277 drivers/bigstrkb.c: 158 drivers/brkthru.c: 232, 235, 277, 280 drivers/btime.c: 792 drivers/cninja.c: 725 drivers/cps1.c: 1086, 1357 drivers/deniam.c: 275 drivers/epos.c: 150, 153, 159 drivers/fuukifg3.c: 352 drivers/gameplan.c: 398, 849 drivers/jcross.c: 187 drivers/m62.c: 616, 666, 717, 768, 820, 872, 926, 1025, 1078 drivers/mcr.c: 1134 drivers/megaplay.c: 222 drivers/metro.c: 3234 drivers/nmg5.c: 238 drivers/nmk16.c: 2737 drivers/phoenix.c: 321 drivers/portrait.c: 200 drivers/quizdna.c: 151, 239, 341 drivers/rohga.c: 443, 511 drivers/safarir.c: 188 drivers/segas16a.c: 1290 drivers/segas16b.c: 2506 drivers/sf.c: 332, 510, 648 drivers/shisen.c: 140 drivers/sidepckt.c: 229 drivers/solomon.c: 167 drivers/suprridr.c: 249 drivers/system1.c: 1828 drivers/system16.c: 1794 drivers/taito_z.c: 2382, 2451 drivers/tecmo16.c: 209 drivers/thepit.c: 275, 330, 371 drivers/trackfld.c: 598 drivers/vigilant.c: 239 drivers/vsnes.c: 1070, 1781 drivers/wallc.c: 186 drivers/wilytowr.c: 461 drivers/xain.c: 397 drivers/yamato.c: 380 drivers/zac2650.c: 72, 122 uitext.c: 220
+# cheat.c: 6534 drivers/4enraya.c: 118 drivers/8080bw.c: 723, 815 drivers/amidar.c: 185 drivers/angelkds.c: 478 drivers/bestleag.c: 277 drivers/bigstrkb.c: 158 drivers/brkthru.c: 232, 235, 277, 280 drivers/btime.c: 792 drivers/cninja.c: 725 drivers/cps1.c: 1086, 1357 drivers/deniam.c: 275 drivers/epos.c: 150, 153, 159 drivers/fuukifg3.c: 352 drivers/gameplan.c: 398, 849 drivers/jcross.c: 187 drivers/m62.c: 616, 666, 717, 768, 820, 872, 926, 1025, 1078 drivers/mcr.c: 1134 drivers/megaplay.c: 222 drivers/metro.c: 3234 drivers/nmg5.c: 238 drivers/nmk16.c: 2737 drivers/phoenix.c: 321 drivers/portrait.c: 200 drivers/quizdna.c: 151, 239, 341 drivers/rohga.c: 443, 511 drivers/safarir.c: 188 drivers/segas16a.c: 1290 drivers/segas16b.c: 2506 drivers/sf.c: 332, 510, 648 drivers/shisen.c: 140 drivers/sidepckt.c: 229 drivers/solomon.c: 153 drivers/suprridr.c: 249 drivers/system1.c: 1828 drivers/system16.c: 1794 drivers/taito_z.c: 2382, 2451 drivers/tecmo16.c: 209 drivers/thepit.c: 275, 330, 371 drivers/trackfld.c: 598 drivers/vigilant.c: 239 drivers/vsnes.c: 1070, 1781 drivers/wallc.c: 186 drivers/wilytowr.c: 461 drivers/xain.c: 397 drivers/yamato.c: 380 drivers/zac2650.c: 72, 122 uitext.c: 220
 Slow
 
 
@@ -4066,7 +4090,7 @@ Soft Reset
 Sound
 
 
-# inptport.c: 412 uilang.c: 14
+# inptport.c: 412 uilang.c: 15
 Spanish
 
 
@@ -4090,15 +4114,15 @@ Start a New Cheat Search
 State
 
 
-# mame.c: 1412
+# mame.c: 1417
 State successfully loaded.
 
 
-# mame.c: 1336
+# mame.c: 1341
 State successfully saved.
 
 
-# mame.c: 1334
+# mame.c: 1339
 State successfully saved.\nWarning: Save states are not officially supported for this game.
 
 
@@ -4118,7 +4142,7 @@ Status (bits or flags)
 Stereo
 
 
-# drivers/bmcbowl.c: 371 drivers/holeland.c: 145, 213 drivers/pgm.c: 802, 899, 989, 1081, 1177, 1268 drivers/popper.c: 277 drivers/toaplan2.c: 2078 drivers/turbo.c: 922
+# drivers/bmcbowl.c: 371 drivers/holeland.c: 145, 213 drivers/pgm.c: 802, 899, 989, 1081, 1177, 1268 drivers/popper.c: 277 drivers/toaplan2.c: 2078 drivers/turbo.c: 905
 Stop
 
 
@@ -4142,7 +4166,7 @@ Swap
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.
 
 
-# datafile.c: 2194
+# datafile.c: 2202
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n
 
 
@@ -4182,7 +4206,7 @@ Text Label
 The colors are completely wrong.
 
 
-# datafile.c: 2203
+# datafile.c: 2211
 The colors are completely wrong.\n
 
 
@@ -4190,7 +4214,7 @@ The colors are completely wrong.\n
 The colors aren't 100% accurate.
 
 
-# datafile.c: 2206
+# datafile.c: 2214
 The colors aren't 100% accurate.\n
 
 
@@ -4202,7 +4226,7 @@ The format of this zipfile is not supported, please recompress it
 The game has protection which isn't fully emulated.
 
 
-# datafile.c: 2197
+# datafile.c: 2205
 The game has protection which isn't fully emulated.\n
 
 
@@ -4210,7 +4234,7 @@ The game has protection which isn't fully emulated.\n
 The game lacks sound.
 
 
-# datafile.c: 2209
+# datafile.c: 2217
 The game lacks sound.\n
 
 
@@ -4218,7 +4242,7 @@ The game lacks sound.\n
 The sound emulation isn't 100% accurate.
 
 
-# datafile.c: 2212
+# datafile.c: 2220
 The sound emulation isn't 100% accurate.\n
 
 
@@ -4226,7 +4250,7 @@ The sound emulation isn't 100% accurate.\n
 The video emulation isn't 100% accurate.
 
 
-# datafile.c: 2200
+# datafile.c: 2208
 The video emulation isn't 100% accurate.\n
 
 
@@ -4450,7 +4474,7 @@ UI Zoom In
 UI Zoom Out
 
 
-# datafile.c: 2948
+# datafile.c: 2956
 UNEMULATED PROTEC. : %3d  %3d\n
 
 
@@ -4458,7 +4482,7 @@ UNEMULATED PROTEC. : %3d  %3d\n
 UNKNOWN
 
 
-# drivers/bbusters.c: 583 drivers/taotaido.c: 307 drivers/toaplan1.c: 597, 666, 735, 1185, 1260, 1330, 1405, 1494 uilang.c: 8
+# drivers/bbusters.c: 583 drivers/taotaido.c: 307 drivers/toaplan1.c: 597, 666, 735, 1185, 1260, 1330, 1405, 1494 uilang.c: 9
 US
 
 
@@ -4470,23 +4494,23 @@ USA
 Unable to extend malloc tracking array to %d slots
 
 
-# mame.c: 1371
+# mame.c: 1376
 Unable to load due to pending anonymous timers. See error.log for details.
 
 
-# mame.c: 1287
+# mame.c: 1292
 Unable to save due to pending anonymous timers. See error.log for details.
 
 
-# mame.c: 1150
+# mame.c: 1155
 Unable to start machine emulation
 
 
-# mame.c: 1152
+# mame.c: 1157
 Unable to start sound emulation
 
 
-# mame.c: 1154
+# mame.c: 1159
 Unable to start video emulation
 
 
@@ -4498,7 +4522,7 @@ Unknown
 Unlimited
 
 
-# drivers/actfancr.c: 207, 231, 237, 240, 287, 314, 317, 320 drivers/aeroboto.c: 162, 191, 194, 197 drivers/megasys1.c: 1612 drivers/seta.c: 3733, 3736 drivers/seta2.c: 552, 555 drivers/ssv.c: 1181 inptport.c: 445
+# drivers/actfancr.c: 207, 231, 237, 240, 287, 314, 317, 320 drivers/aeroboto.c: 162, 191, 194, 197 drivers/aliens.c: 180, 183, 186, 202, 206 drivers/megasys1.c: 1612 drivers/seta.c: 3733, 3736 drivers/seta2.c: 552, 555 drivers/ssv.c: 1186 inptport.c: 445
 Unused
 
 
@@ -4638,6 +4662,10 @@ User Interface
 User Select
 
 
+# layout/mpu4.lay: 1221
+VFD Display Output Only
+
+
 # layout/bfm_sc2.lay: 29
 VFD Only (%d:%d)
 
@@ -4658,7 +4686,15 @@ Vector Game
 Version
 
 
-# drivers/findout.c: 217, 265 drivers/gameplan.c: 566, 711 drivers/jack.c: 685 drivers/thepit.c: 549 
+# ui.c: 2335
+Vert position
+
+
+# ui.c: 2301
+Vert stretch
+
+
+# drivers/findout.c: 237, 267 drivers/gameplan.c: 566, 711 drivers/jack.c: 685 drivers/thepit.c: 549 
 Vertical
 
 
@@ -4694,7 +4730,7 @@ Video Options
 View Last Results
 
 
-# drivers/cps1.c: 3771 drivers/ms32.c: 736, 809, 874 drivers/pgm.c: 796, 893, 983, 1075, 1171, 1262 drivers/ssv.c: 1677, 1862 drivers/tetrisp2.c: 674, 736
+# drivers/cps1.c: 3771 drivers/ms32.c: 736, 809, 874 drivers/pgm.c: 796, 893, 983, 1075, 1171, 1262 drivers/ssv.c: 1682, 1867 drivers/tetrisp2.c: 674, 736
 Voice
 
 
@@ -4714,7 +4750,7 @@ Volume Up
 WARNING: the game might not run correctly.
 
 
-# datafile.c: 2952
+# datafile.c: 2960
 WRONG COLORS       : %3d  %3d\n
 
 
@@ -4810,99 +4846,99 @@ Zoom = %d
 Zoom Auto
 
 
-# datafile.c: 3080
+# datafile.c: 3088
 \n    SNDINTRF:  (1)  (2)  (3)  (4)\n\n
 
 
-# datafile.c: 3092
+# datafile.c: 3100
 \n    TOTAL: %4d\n
 
 
-# datafile.c: 3063
+# datafile.c: 3071
 \n   TOTAL: %4d\n
 
 
-# datafile.c: 2296, 2314
+# datafile.c: 2304, 2322
 \nORIGINAL:\n
 
 
-# datafile.c: 2236
+# datafile.c: 2244
 \nROM REGION:\n
 
 
-# datafile.c: 3007
+# datafile.c: 3015
 \nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d MB (UNCOMPRESSED)\n%d MB + %d MB MERGED\n
 
 
-# datafile.c: 2342
+# datafile.c: 2350
 \nSOURCE: %s\n
 
 
-# datafile.c: 2151
+# datafile.c: 2159
 \nStory:\n
 
 
-# datafile.c: 3178
+# datafile.c: 3186
 \nWARNING: FPS number too high!\n
 
 
-# datafile.c: 2931
+# datafile.c: 2939
 \n\n %4d GAMES (ALL)\n %4d ORIGINALS  + %4d CLNS\n %4d NEOGEO     + %4d\n
 
 
-# datafile.c: 3097
+# datafile.c: 3105
 \n\nCABINET INPUT CONTROL: (ALL)\n\n
 
 
-# datafile.c: 2300, 2318
+# datafile.c: 2308, 2326
 \n\nCLONES:\n
 
 
-# datafile.c: 3037
+# datafile.c: 3045
 \n\nCPU HARDWARE (ORIGINAL GAMES)\n\n
 
 
-# datafile.c: 3154
+# datafile.c: 3162
 \n\nFRAMES PER SECOND (%d): (ALL)\n\n
 
 
-# datafile.c: 2945
+# datafile.c: 2953
 \n\nGAME INFO FLAGS   : ORIG CLNS\n\n
 
 
-# datafile.c: 3277
+# datafile.c: 3285
 \n\nMAME VERSIONS (%3d)\n\n
 
 
-# datafile.c: 3238
+# datafile.c: 3246
 \n\nRESOLUTION & PALETTESIZE: (ALL)\n    (%d)          (%d)\n\n
 
 
-# datafile.c: 3009
+# datafile.c: 3017
 \n\nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d KB (UNCOMPRESSED)\n%d KB + %d KB MERGED\n
 
 
-# datafile.c: 3068
+# datafile.c: 3076
 \n\nSOUND SYSTEM (ORIGINAL GAMES)\n\n
 
 
-# datafile.c: 3015
+# datafile.c: 3023
 \n\nTYPICAL ROMSET SIZE (ALL)\n
 
 
-# datafile.c: 3267
+# datafile.c: 3275
 \n\nVERSION - DRIVERS - SUPPORT:\n\n
 
 
-# datafile.c: 3142
+# datafile.c: 3150
 \n\nVIDEO NEEDS... : ORIG   CLNS\n\n
 
 
-# datafile.c: 3027
+# datafile.c: 3035
 \n\nYEAR    NEW GAMES\n\n
 
 
-# datafile.c: 2971
+# datafile.c: 2979
 \n\nYEAR: ORIG  CLNS NEOGEO  ALL\n\n
 
 
@@ -4946,7 +4982,7 @@ enabled
 font\\fontname.fnt
 
 
-# memory.c: 3142 
+# memory.c: 3143 
 invalid
 
 
@@ -4998,7 +5034,7 @@ s%d
 saved all memory regions
 
 
-# video.c: 1061
+# video.c: 1054
 scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
 
 

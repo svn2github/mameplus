@@ -18,7 +18,7 @@ Japanese game list by 俺、ぶろん
 %dx%d (V)
 %dx%d (V)
 
-# ui/properties.c: 4650
+# ui/properties.c: 4653
 %li bit
 %li ビット
 
@@ -181,6 +181,10 @@ MAME32について(&A)
 # ui/mame32.rc: 88, 245, 258
 &Marquee
 マーキー(&M)
+
+# ui/mame32.rc: 116
+&Menu Style
+メニュースタイル (&M)
 
 # ui/mame32.rc: 169
 &New Game Changes
@@ -378,7 +382,7 @@ Allows filtering out games from a folder
 Analog deadzone
 アナログ変換の割合
 
-# ui/properties.c: 4616
+# ui/properties.c: 4619
 Anti-clockwise
 反時計回り
 
@@ -390,7 +394,7 @@ Arrange &Icons
 Arranges icons in a grid
 アイコンを等間隔に整列します
 
-# ui/layout.c: 121
+# ui/layout.c: 122
 Artwork
 アートワーク
 
@@ -418,15 +422,15 @@ Audit ROM and samples sets
 Audit complete.\n
 チェック終了\n
 
-# ui/properties.c: 4536, 4637, 4728
+# ui/properties.c: 4539, 4640, 4731
 Auto
 自動
 
-# ui/properties.c: 4619
+# ui/properties.c: 4622
 Auto anti-clockwise
 自動的に反時計回り
 
-# ui/properties.c: 4618
+# ui/properties.c: 4621
 Auto clockwise
 自動的に時計回り
 
@@ -450,15 +454,15 @@ Available
 Available fields:
 利用可能\フィールド:
 
-# ui/properties.c: 4771
+# ui/properties.c: 4774
 Axis
 軸
 
-# ui/properties.c: 4781
+# ui/properties.c: 4784
 AxisId
 軸ID
 
-# ui/layout.c: 59, 86 ui/mame32.rc: 822, 1163
+# ui/layout.c: 59, 86 ui/mame32.rc: 839, 1163
 BIOS
 BIOS
 
@@ -470,13 +474,17 @@ BIOS がありません
 Backdrops
 バックドロップ
 
-# ui/layout.c: 132
+# ui/layout.c: 133
 Background Images
 背景画像
 
 # ui/treeview.c: 1104, 1105
 Bad Dump
 吸出し不良
+
+# ui/mame32.rc: 120
+Basic
+基本
 
 # ui/mame32.rc: 859
 Beam width
@@ -590,11 +598,11 @@ C&lones
 CPU
 CPU
 
-# ui/dialogs.c: 211 ui/options.c: 427
+# ui/dialogs.c: 211 ui/options.c: 428
 Cabinet
 筐体
 
-# ui/layout.c: 124
+# ui/layout.c: 125
 Cabinets
 筐体
 
@@ -626,7 +634,7 @@ Checking...
 Christopher Kirmse and Michael Soderstrom
 Christopher Kirmse and Michael Soderstrom
 
-# ui/properties.c: 4615
+# ui/properties.c: 4618
 Clockwise
 時計回り
 
@@ -654,11 +662,11 @@ Colors aren't 100% accurate
 Colors:
 色数:
 
-# ui/layout.c: 133
+# ui/layout.c: 134
 Comment Files
 コメントファイル
 
-# ui/layout.c: 114
+# ui/layout.c: 115
 Config
 設定ファイル
 
@@ -690,11 +698,11 @@ Contrast Correction
 Control &Panel
 コンパネ(&P)
 
-# ui/dialogs.c: 217 ui/options.c: 430
+# ui/dialogs.c: 217 ui/options.c: 431
 Control Panel
 コンパネ
 
-# ui/layout.c: 127
+# ui/layout.c: 128
 Control Panels
 コントロールパネル
 
@@ -706,7 +714,7 @@ Control Type
 Control Type:
 コントロール:
 
-# ui/layout.c: 129
+# ui/layout.c: 130
 Controller Files
 コントローラ定義ファイル
 
@@ -766,7 +774,7 @@ Customize interface options.
 Customize which columns are used in the game list
 ゲームリストに用いる表\示項目を設定します
 
-# ui/properties.c: 4614
+# ui/properties.c: 4617
 Default
 デフォルト
 
@@ -794,7 +802,7 @@ Depth:
 Description
 ゲーム
 
-# ui/mame32.rc: 457, 559 ui/options.c: 461 ui/win32ui.c: 704
+# ui/mame32.rc: 457, 559 ui/options.c: 462 ui/win32ui.c: 704
 Details
 詳細
 
@@ -829,6 +837,10 @@ Directory does not exist, continue anyway?
 # ui/directories.c: 845, 887
 Directory name:
 フォルダ名:
+
+# ui/mame32.rc: 118 
+Disabled
+無効
 
 # ui/mame32.rc: 567
 Display
@@ -914,7 +926,7 @@ Double Joystick 8-Way
 Draw antialiased vectors
 アンチエイリアス
 
-# ui/properties.c: 4592
+# ui/properties.c: 4595
 Draw every frame
 フレームスキップなし
 
@@ -922,7 +934,7 @@ Draw every frame
 Driver
 ドライバ
 
-# ui/mame32.rc: 826
+# ui/mame32.rc: 823
 Driver options
 ドライバーオプション
 
@@ -1014,7 +1026,7 @@ Error while saving custom file %s
 Exit the application
 アプリケーションを終了します
 
-# ui/layout.c: 134
+# ui/layout.c: 135
 External Folder List
 外部フォルダリスト
 
@@ -1046,11 +1058,11 @@ Flip screen left-right
 Flip screen upside-down
 上下反転
 
-# ui/dialogs.c: 209 ui/options.c: 426
+# ui/dialogs.c: 209 ui/options.c: 427
 Flyer
 広告ポスター
 
-# ui/layout.c: 123
+# ui/layout.c: 124
 Flyers
 広告ポスター
 
@@ -1142,11 +1154,15 @@ Global vector options\nCustom options used by all games in the Vector
 Go to Microsoft's DirectX Web Page
 Microsoft's DirectX Webページを表\示
 
-# ui/options.c: 462, 3057 ui/win32ui.c: 705
+# ui/mame32.rc: 121
+Gray
+グレー
+
+# ui/options.c: 463, 3077 ui/win32ui.c: 705
 Grouped
 グループ化
 
-# ui/layout.c: 130
+# ui/layout.c: 131
 Hard Drive Difference
 ハードディスク差分ファイル
 
@@ -1158,13 +1174,17 @@ Help
 Hide &mouse cursor (requires restart)
 マウスカーソ\ルを隠す(要再起動)(&M)
 
-# ui/layout.c: 116
+# ui/layout.c: 117
 High Scores
 ハイスコア
 
-# ui/options.c: 432, 435
+# ui/options.c: 433, 436
 History
 ゲームの歴史
+
+# ui/mame32.rc: 828
+Homebrew
+自家製
 
 # ui/treeview.c: 1016, 1017
 Horizontal
@@ -1174,11 +1194,11 @@ Horizontal
 How cheats work
 チートの使用方法を説明します
 
-# ui/layout.c: 112
+# ui/layout.c: 113
 IPS Files
 IPSファイル
 
-# ui/layout.c: 131
+# ui/layout.c: 132
 Icons
 アイコン
 
@@ -1218,7 +1238,7 @@ Inheritable Filters
 Ini Files
 INIファイル
 
-# ui/layout.c: 119
+# ui/layout.c: 120
 Input Files (*.inp)
 再生ファイル (*.inp)
 
@@ -1242,7 +1262,7 @@ Joy 4-Way
 Joy 8-Way
 8方向スティック
 
-# ui/properties.c: 420, 4766
+# ui/properties.c: 420, 4769
 Joystick
 ジョイスティック
 
@@ -1262,7 +1282,7 @@ Joystick 4-Way
 Joystick 8-Way
 ８方向スティック
 
-# ui/properties.c: 4776
+# ui/properties.c: 4779
 JoystickId
 ジョイスティックID
 
@@ -1274,11 +1294,7 @@ Keyboard
 L&arge Icons
 大きなアイコン(&A)
 
-# ui/layout.c: 110
-Language Files
-言語ファイル
-
-# ui/options.c: 458 ui/win32ui.c: 701
+# ui/options.c: 459 ui/win32ui.c: 701
 Large Icons
 大きなアイコン
 
@@ -1294,7 +1310,7 @@ Lightgun device
 Line &Up Icons
 アイコンの整列(&U)
 
-# ui/options.c: 460 ui/win32ui.c: 703
+# ui/options.c: 461 ui/win32ui.c: 703
 List
 リスト
 
@@ -1309,6 +1325,10 @@ Loading %s
 # ui/mame32.rc: 1598
 Localize GUI and MAME core.
 GUIとMAMEコアの言語を切り替えます
+
+# ui/layout.c: 111
+Localized Files
+ローカライズ版のファイル
 
 # ui/mame32.rc: 819
 M68000 CPU Core
@@ -1330,7 +1350,7 @@ MAME ステートファイル (*.sta)
 MAME32 PCB Info: %s [%s]
 MAME32 PCB情報: %s [%s]
 
-# ui/options.c: 520
+# ui/options.c: 521
 MAME32 has changed *.ini file directory.\n\nWould you like to migrate old configurations to the new directory?
 MAME32は *.iniファイルディレクトリを変更しました。\n\n古い設定を新しいディレクトリに移動しますか？
 
@@ -1342,7 +1362,7 @@ MAME32 version by
 MAME32 will now reset the selected\n
 MAME32 は選択された項目をリセットし\n
 
-# ui/mame32.rc: 399, 423, 434, 466, 486, 509, 548, 567, 618, 655, 711, 772, 849, 877, 904, 941, 966, 983, 1047, 1075, 1090, 1127, 1163, 1202 ui/options.c: 3072 ui/translate.c: 103
+# ui/mame32.rc: 399, 423, 434, 466, 486, 509, 548, 567, 618, 655, 711, 772, 849, 877, 904, 941, 966, 983, 1047, 1075, 1090, 1127, 1163, 1202 ui/options.c: 3092 ui/translate.c: 103
 MS Sans Serif
 ＭＳ Ｐゴシック
 
@@ -1354,15 +1374,15 @@ Manufactured:
 Manufacturer
 製造元
 
-# ui/dialogs.c: 213 ui/options.c: 428
+# ui/dialogs.c: 213 ui/options.c: 429
 Marquee
 マーキー
 
-# ui/layout.c: 125
+# ui/layout.c: 126
 Marquees
 マーキー
 
-# ui/layout.c: 122 
+# ui/layout.c: 123 
 Memory Card
 メモリカード
 
@@ -1394,13 +1414,17 @@ Move Item
 Move Up
 上に移動
 
-# ui/layout.c: 128
+# ui/layout.c: 129
 NVRAM
 NVRAMファイル
 
 # ui/win32ui.c: 852 
 Name
 名前
+
+# ui/mame32.rc: 830
+Neogeo Decrypted
+ネオジオ暗号解除
 
 # ui/mame32.rc: 1512
 New game changes
@@ -1430,11 +1454,15 @@ No Selection
 No offset for clones missing parent in view
 親セットが無いクローンをインデントしない
 
+# ui/mame32.rc: 835
+Non-CPU
+CPU未使用
+
 # ui/mame32.rc: 913
 Non-Wor&king
 動作不可(&K)
 
-# ui/dialogs.c: 221 ui/properties.c: 3532, 4617, 4871, 5110 
+# ui/dialogs.c: 221 ui/properties.c: 3535, 4620, 4874, 5113 
 None
 なし
 
@@ -1478,6 +1506,18 @@ OSD バー (デフォルト)
 OSD bar (light)
 OSD バー (明)
 
+# ui/mame32.rc: 123
+Office 2003
+オフィス2003
+
+# ui/mame32.rc: 124
+Office 2007
+オフィス2007
+
+# ui/mame32.rc: 122
+Office XP
+オフィスXP
+
 # ui/mame32.rc: 742
 Offscreen shots reload
 画面外をショットを再ロード
@@ -1506,7 +1546,7 @@ P&layback Input...
 PCB Info
 PCB情報
 
-# ui/layout.c: 136
+# ui/layout.c: 137
 PCB Info Files
 PCB情報ファイル
 
@@ -1538,7 +1578,7 @@ Pedal
 Pedal device
 ペダルディバイス
 
-# ui/options.c: 3153 ui/win32ui.c: 860
+# ui/options.c: 3173 ui/win32ui.c: 860
 Play Time
 プレイ時間
 
@@ -1666,7 +1706,7 @@ Refresh game list
 Refresh:
 リフレッシュ:
 
-# ui/options.c: 1543
+# ui/options.c: 1544
 Reload configurations
 設定の再読み込み
 
@@ -1773,6 +1813,10 @@ Save sound in wav file
 # ui/mame32.rc: 1512
 Save video in specified mng file
 動画を指定したMNGファイルに保存します
+
+# ui/mame32.rc: 688
+Scale screen
+プリスケール
 
 # ui/mame32.rc: 1127, 1138
 Screen
@@ -2002,47 +2046,47 @@ Show these fields in this order:
 Size:
 サイズ:
 
-# ui/properties.c: 4593
+# ui/properties.c: 4596
 Skip 1 of 12 frames
 12フレームに1回スキップ
 
-# ui/properties.c: 4602
+# ui/properties.c: 4605
 Skip 10 of 12 frames
 12フレームに10回スキップ
 
-# ui/properties.c: 4603
+# ui/properties.c: 4606
 Skip 11 of 12 frames
 12フレームに11回スキップ
 
-# ui/properties.c: 4594
+# ui/properties.c: 4597
 Skip 2 of 12 frames
 12フレームに2回スキップ
 
-# ui/properties.c: 4595
+# ui/properties.c: 4598
 Skip 3 of 12 frames
 12フレームに3回スキップ
 
-# ui/properties.c: 4596
+# ui/properties.c: 4599
 Skip 4 of 12 frames
 12フレームに4回スキップ
 
-# ui/properties.c: 4597
+# ui/properties.c: 4600
 Skip 5 of 12 frames
 12フレームに5回スキップ
 
-# ui/properties.c: 4598
+# ui/properties.c: 4601
 Skip 6 of 12 frames
 12フレームに6回スキップ
 
-# ui/properties.c: 4599
+# ui/properties.c: 4602
 Skip 7 of 12 frames
 12フレームに7回スキップ
 
-# ui/properties.c: 4600
+# ui/properties.c: 4603
 Skip 8 of 12 frames
 12フレームに8回スキップ
 
-# ui/properties.c: 4601
+# ui/properties.c: 4604
 Skip 9 of 12 frames
 12フレームに9回スキップ
 
@@ -2054,15 +2098,15 @@ Skip game info
 Sleep when possible
 アイドル時にCPUを開放
 
-# ui/options.c: 459 ui/win32ui.c: 702
+# ui/options.c: 460 ui/win32ui.c: 702
 Small Icons
 小さなアイコン
 
-# ui/dialogs.c: 207 ui/options.c: 425
+# ui/dialogs.c: 207 ui/options.c: 426
 Snapshot
 スクリーンショット
 
-# ui/layout.c: 118
+# ui/layout.c: 119
 Snapshots
 スクリーンショット
 
@@ -2126,7 +2170,7 @@ Sounds (*.wav)
 St&ory
 ストーリー(&O)
 
-# ui/properties.c: 3331, 3336, 3339, 3581, 3584, 4821, 4844 
+# ui/properties.c: 3334, 3339, 3342, 3584, 3587, 4824, 4847 
 Standard
 標準
 
@@ -2134,7 +2178,7 @@ Standard
 Start out maximized
 ウィンドウ最大化
 
-# ui/layout.c: 120
+# ui/layout.c: 121
 State
 ゲームステート
 
@@ -2146,7 +2190,7 @@ Status:
 Stereo
 ステレオ
 
-# ui/options.c: 433
+# ui/options.c: 434
 Story
 ストーリー
 
@@ -2198,11 +2242,11 @@ Thread priority
 Throttle
 速度制限を有効
 
-# ui/dialogs.c: 215 ui/options.c: 429
+# ui/dialogs.c: 215 ui/options.c: 430
 Title
 タイトル画面
 
-# ui/layout.c: 126
+# ui/layout.c: 127
 Titles
 タイトル画面
 
@@ -2274,6 +2318,10 @@ Translate into Spanish
 Translate into Traditional Chinese
 言語を中国語(台湾)に切り替えます
 
+# ui/layout.c: 110
+Translation Files
+翻訳用ファイル
+
 # ui/mame32.rc: 799
 Transparent in-game UI
 ゲーム中のUIを透過する
@@ -2342,7 +2390,7 @@ Use various icon for Not Working game
 Use volume auto adjust
 自動音量調整機能\を使用
 
-# ui/layout.c: 71 ui/mame32.rc: 849 ui/options.c: 780, 2698 ui/properties.c: 622 ui/treeview.c: 306 ui/win32ui.c: 5371
+# ui/layout.c: 71 ui/mame32.rc: 849 ui/options.c: 781, 2716 ui/properties.c: 622 ui/treeview.c: 306 ui/win32ui.c: 5371
 Vector
 ベクタ
 
@@ -2361,6 +2409,10 @@ Vertical
 # ui/properties.c: 1076
 Video emulation isn't 100% accurate
 画像の再現が不完全
+
+# ui/mame32.rc: 662
+Video output method
+画面描画方式
 
 # ui/win32ui.c: 815
 Videos (*.mng)
@@ -2465,24 +2517,4 @@ the next time MAME32 is run.\n\n
 # ui/win32ui.h: 20
 type a keyword
 キーワードを入力
-
-# ui/mame32.rc: 0
-Homebrew
-
-
-# ui/mame32.rc: 0
-Neogeo Decrypted
-
-
-# ui/mame32.rc: 0
-Non-CPU
-
-
-# ui/mame32.rc: 688
-Scale screen
-
-
-# ui/mame32.rc: 662
-Video output method
-
 

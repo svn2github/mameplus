@@ -1,15 +1,3 @@
-# ui/mame32.rc: 0
-Homebrew
-
-
-# ui/mame32.rc: 0
-Neogeo Decrypted
-
-
-# ui/mame32.rc: 0
-Non-CPU
-
-
 # ui/mame32.rc: 417
                                 
 
@@ -30,7 +18,7 @@ Non-CPU
 %dx%d (V)
 
 
-# ui/properties.c: 4650
+# ui/properties.c: 4653
 %li bit
 
 
@@ -192,6 +180,10 @@ Non-CPU
 
 # ui/mame32.rc: 88, 245, 258
 &Marquee
+
+
+# ui/mame32.rc: 116
+&Menu Style
 
 
 # ui/mame32.rc: 169
@@ -390,7 +382,7 @@ Allows filtering out games from a folder
 Analog deadzone
 
 
-# ui/properties.c: 4616
+# ui/properties.c: 4619
 Anti-clockwise
 
 
@@ -402,7 +394,7 @@ Arrange &Icons
 Arranges icons in a grid
 
 
-# ui/layout.c: 121
+# ui/layout.c: 122
 Artwork
 
 
@@ -430,15 +422,15 @@ Audit ROM and samples sets
 Audit complete.\n
 
 
-# ui/properties.c: 4536, 4637, 4728
+# ui/properties.c: 4539, 4640, 4731
 Auto
 
 
-# ui/properties.c: 4619
+# ui/properties.c: 4622
 Auto anti-clockwise
 
 
-# ui/properties.c: 4618
+# ui/properties.c: 4621
 Auto clockwise
 
 
@@ -462,15 +454,15 @@ Available
 Available fields:
 
 
-# ui/properties.c: 4771
+# ui/properties.c: 4774
 Axis
 
 
-# ui/properties.c: 4781
+# ui/properties.c: 4784
 AxisId
 
 
-# ui/layout.c: 59, 86 ui/mame32.rc: 822, 1163
+# ui/layout.c: 59, 86 ui/mame32.rc: 839, 1163
 BIOS
 
 
@@ -482,12 +474,16 @@ BIOS missing
 Backdrops
 
 
-# ui/layout.c: 132
+# ui/layout.c: 133
 Background Images
 
 
 # ui/treeview.c: 1104, 1105
 Bad Dump
+
+
+# ui/mame32.rc: 120
+Basic
 
 
 # ui/mame32.rc: 859
@@ -602,11 +598,11 @@ C&lones
 CPU
 
 
-# ui/dialogs.c: 211 ui/options.c: 427
+# ui/dialogs.c: 211 ui/options.c: 428
 Cabinet
 
 
-# ui/layout.c: 124
+# ui/layout.c: 125
 Cabinets
 
 
@@ -638,7 +634,7 @@ Checking...
 Christopher Kirmse and Michael Soderstrom
 
 
-# ui/properties.c: 4615
+# ui/properties.c: 4618
 Clockwise
 
 
@@ -666,11 +662,11 @@ Colors aren't 100% accurate
 Colors:
 
 
-# ui/layout.c: 133
+# ui/layout.c: 134
 Comment Files
 
 
-# ui/layout.c: 114
+# ui/layout.c: 115
 Config
 
 
@@ -702,11 +698,11 @@ Contrast Correction
 Control &Panel
 
 
-# ui/dialogs.c: 217 ui/options.c: 430
+# ui/dialogs.c: 217 ui/options.c: 431
 Control Panel
 
 
-# ui/layout.c: 127
+# ui/layout.c: 128
 Control Panels
 
 
@@ -718,7 +714,7 @@ Control Type
 Control Type:
 
 
-# ui/layout.c: 129
+# ui/layout.c: 130
 Controller Files
 
 
@@ -778,7 +774,7 @@ Customize interface options.
 Customize which columns are used in the game list
 
 
-# ui/properties.c: 4614
+# ui/properties.c: 4617
 Default
 
 
@@ -806,7 +802,7 @@ Depth:
 Description
 
 
-# ui/mame32.rc: 457, 559 ui/options.c: 461 ui/win32ui.c: 704
+# ui/mame32.rc: 457, 559 ui/options.c: 462 ui/win32ui.c: 704
 Details
 
 
@@ -840,6 +836,10 @@ Directory does not exist, continue anyway?
 
 # ui/directories.c: 845, 887
 Directory name:
+
+
+# ui/mame32.rc: 118 
+Disabled
 
 
 # ui/mame32.rc: 567
@@ -926,7 +926,7 @@ Double Joystick 8-Way
 Draw antialiased vectors
 
 
-# ui/properties.c: 4592
+# ui/properties.c: 4595
 Draw every frame
 
 
@@ -934,7 +934,7 @@ Draw every frame
 Driver
 
 
-# ui/mame32.rc: 826
+# ui/mame32.rc: 823
 Driver options
 
 
@@ -1026,7 +1026,7 @@ Error while saving custom file %s
 Exit the application
 
 
-# ui/layout.c: 134
+# ui/layout.c: 135
 External Folder List
 
 
@@ -1058,11 +1058,11 @@ Flip screen left-right
 Flip screen upside-down
 
 
-# ui/dialogs.c: 209 ui/options.c: 426
+# ui/dialogs.c: 209 ui/options.c: 427
 Flyer
 
 
-# ui/layout.c: 123
+# ui/layout.c: 124
 Flyers
 
 
@@ -1154,11 +1154,15 @@ Global vector options\nCustom options used by all games in the Vector
 Go to Microsoft's DirectX Web Page
 
 
-# ui/options.c: 462, 3057 ui/win32ui.c: 705
+# ui/mame32.rc: 121
+Gray
+
+
+# ui/options.c: 463, 3077 ui/win32ui.c: 705
 Grouped
 
 
-# ui/layout.c: 130
+# ui/layout.c: 131
 Hard Drive Difference
 
 
@@ -1170,12 +1174,16 @@ Help
 Hide &mouse cursor (requires restart)
 
 
-# ui/layout.c: 116
+# ui/layout.c: 117
 High Scores
 
 
-# ui/options.c: 432, 435
+# ui/options.c: 433, 436
 History
+
+
+# ui/mame32.rc: 828
+Homebrew
 
 
 # ui/treeview.c: 1016, 1017
@@ -1186,11 +1194,11 @@ Horizontal
 How cheats work
 
 
-# ui/layout.c: 112
+# ui/layout.c: 113
 IPS Files
 
 
-# ui/layout.c: 131
+# ui/layout.c: 132
 Icons
 
 
@@ -1230,7 +1238,7 @@ Inheritable Filters
 Ini Files
 
 
-# ui/layout.c: 119
+# ui/layout.c: 120
 Input Files (*.inp)
 
 
@@ -1254,7 +1262,7 @@ Joy 4-Way
 Joy 8-Way
 
 
-# ui/properties.c: 420, 4766
+# ui/properties.c: 420, 4769
 Joystick
 
 
@@ -1274,7 +1282,7 @@ Joystick 4-Way
 Joystick 8-Way
 
 
-# ui/properties.c: 4776
+# ui/properties.c: 4779
 JoystickId
 
 
@@ -1286,11 +1294,7 @@ Keyboard
 L&arge Icons
 
 
-# ui/layout.c: 110
-Language Files
-
-
-# ui/options.c: 458 ui/win32ui.c: 701
+# ui/options.c: 459 ui/win32ui.c: 701
 Large Icons
 
 
@@ -1306,7 +1310,7 @@ Lightgun device
 Line &Up Icons
 
 
-# ui/options.c: 460 ui/win32ui.c: 703
+# ui/options.c: 461 ui/win32ui.c: 703
 List
 
 
@@ -1320,6 +1324,10 @@ Loading %s
 
 # ui/mame32.rc: 1598
 Localize GUI and MAME core.
+
+
+# ui/layout.c: 111
+Localized Files
 
 
 # ui/mame32.rc: 819
@@ -1342,7 +1350,7 @@ MAME savestate files (*.sta)
 MAME32 PCB Info: %s [%s]
 
 
-# ui/options.c: 520
+# ui/options.c: 521
 MAME32 has changed *.ini file directory.\n\nWould you like to migrate old configurations to the new directory?
 
 
@@ -1354,7 +1362,7 @@ MAME32 version by
 MAME32 will now reset the selected\n
 
 
-# ui/mame32.rc: 399, 423, 434, 466, 486, 509, 548, 567, 618, 655, 711, 772, 849, 877, 904, 941, 966, 983, 1047, 1075, 1090, 1127, 1163, 1202 ui/options.c: 3072 ui/translate.c: 103
+# ui/mame32.rc: 399, 423, 434, 466, 486, 509, 548, 567, 618, 655, 711, 772, 849, 877, 904, 941, 966, 983, 1047, 1075, 1090, 1127, 1163, 1202 ui/options.c: 3092 ui/translate.c: 103
 MS Sans Serif
 
 
@@ -1366,15 +1374,15 @@ Manufactured:
 Manufacturer
 
 
-# ui/dialogs.c: 213 ui/options.c: 428
+# ui/dialogs.c: 213 ui/options.c: 429
 Marquee
 
 
-# ui/layout.c: 125
+# ui/layout.c: 126
 Marquees
 
 
-# ui/layout.c: 122 
+# ui/layout.c: 123 
 Memory Card
 
 
@@ -1406,12 +1414,16 @@ Move Item
 Move Up
 
 
-# ui/layout.c: 128
+# ui/layout.c: 129
 NVRAM
 
 
 # ui/win32ui.c: 852 
 Name
+
+
+# ui/mame32.rc: 830
+Neogeo Decrypted
 
 
 # ui/mame32.rc: 1512
@@ -1442,11 +1454,15 @@ No Selection
 No offset for clones missing parent in view
 
 
+# ui/mame32.rc: 835
+Non-CPU
+
+
 # ui/mame32.rc: 913
 Non-Wor&king
 
 
-# ui/dialogs.c: 221 ui/properties.c: 3532, 4617, 4871, 5110 
+# ui/dialogs.c: 221 ui/properties.c: 3535, 4620, 4874, 5113 
 None
 
 
@@ -1490,6 +1506,18 @@ OSD bar (default)
 OSD bar (light)
 
 
+# ui/mame32.rc: 123
+Office 2003
+
+
+# ui/mame32.rc: 124
+Office 2007
+
+
+# ui/mame32.rc: 122
+Office XP
+
+
 # ui/mame32.rc: 742
 Offscreen shots reload
 
@@ -1518,7 +1546,7 @@ P&layback Input...
 PCB Info
 
 
-# ui/layout.c: 136
+# ui/layout.c: 137
 PCB Info Files
 
 
@@ -1550,7 +1578,7 @@ Pedal
 Pedal device
 
 
-# ui/options.c: 3153 ui/win32ui.c: 860
+# ui/options.c: 3173 ui/win32ui.c: 860
 Play Time
 
 
@@ -1678,7 +1706,7 @@ Refresh game list
 Refresh:
 
 
-# ui/options.c: 1543
+# ui/options.c: 1544
 Reload configurations
 
 
@@ -2018,47 +2046,47 @@ Show these fields in this order:
 Size:
 
 
-# ui/properties.c: 4593
+# ui/properties.c: 4596
 Skip 1 of 12 frames
 
 
-# ui/properties.c: 4602
+# ui/properties.c: 4605
 Skip 10 of 12 frames
 
 
-# ui/properties.c: 4603
+# ui/properties.c: 4606
 Skip 11 of 12 frames
 
 
-# ui/properties.c: 4594
+# ui/properties.c: 4597
 Skip 2 of 12 frames
 
 
-# ui/properties.c: 4595
+# ui/properties.c: 4598
 Skip 3 of 12 frames
 
 
-# ui/properties.c: 4596
+# ui/properties.c: 4599
 Skip 4 of 12 frames
 
 
-# ui/properties.c: 4597
+# ui/properties.c: 4600
 Skip 5 of 12 frames
 
 
-# ui/properties.c: 4598
+# ui/properties.c: 4601
 Skip 6 of 12 frames
 
 
-# ui/properties.c: 4599
+# ui/properties.c: 4602
 Skip 7 of 12 frames
 
 
-# ui/properties.c: 4600
+# ui/properties.c: 4603
 Skip 8 of 12 frames
 
 
-# ui/properties.c: 4601
+# ui/properties.c: 4604
 Skip 9 of 12 frames
 
 
@@ -2070,15 +2098,15 @@ Skip game info
 Sleep when possible
 
 
-# ui/options.c: 459 ui/win32ui.c: 702
+# ui/options.c: 460 ui/win32ui.c: 702
 Small Icons
 
 
-# ui/dialogs.c: 207 ui/options.c: 425
+# ui/dialogs.c: 207 ui/options.c: 426
 Snapshot
 
 
-# ui/layout.c: 118
+# ui/layout.c: 119
 Snapshots
 
 
@@ -2142,7 +2170,7 @@ Sounds (*.wav)
 St&ory
 
 
-# ui/properties.c: 3331, 3336, 3339, 3581, 3584, 4821, 4844 
+# ui/properties.c: 3334, 3339, 3342, 3584, 3587, 4824, 4847 
 Standard
 
 
@@ -2150,7 +2178,7 @@ Standard
 Start out maximized
 
 
-# ui/layout.c: 120
+# ui/layout.c: 121
 State
 
 
@@ -2162,7 +2190,7 @@ Status:
 Stereo
 
 
-# ui/options.c: 433
+# ui/options.c: 434
 Story
 
 
@@ -2214,11 +2242,11 @@ Thread priority
 Throttle
 
 
-# ui/dialogs.c: 215 ui/options.c: 429
+# ui/dialogs.c: 215 ui/options.c: 430
 Title
 
 
-# ui/layout.c: 126
+# ui/layout.c: 127
 Titles
 
 
@@ -2290,6 +2318,10 @@ Translate into Spanish
 Translate into Traditional Chinese
 
 
+# ui/layout.c: 110
+Translation Files
+
+
 # ui/mame32.rc: 799
 Transparent in-game UI
 
@@ -2358,7 +2390,7 @@ Use various icon for Not Working game
 Use volume auto adjust
 
 
-# ui/layout.c: 71 ui/mame32.rc: 849 ui/options.c: 780, 2698 ui/properties.c: 622 ui/treeview.c: 306 ui/win32ui.c: 5371
+# ui/layout.c: 71 ui/mame32.rc: 849 ui/options.c: 781, 2716 ui/properties.c: 622 ui/treeview.c: 306 ui/win32ui.c: 5371
 Vector
 
 

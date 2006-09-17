@@ -1,48 +1,48 @@
-# windows/input.c: 1608
+# windows/input.c: 1602
          all -- all axes on all joysticks are digital\n
          all -- 全てのジョイスティックの全ての軸をデジタルにします\n
 
-# windows/input.c: 1614
+# windows/input.c: 1608
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
          j1,j2a2 -- 全てのジョイスティック1の軸とジョイスティック2の軸2をデジタルにします\n
 
-# windows/input.c: 1612
+# windows/input.c: 1606
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
          j1a5a6 -- ジョイスティック1の軸5と6をデジタルにします\n
 
-# windows/input.c: 1609
+# windows/input.c: 1603
          j<N> -- all axes on joystick <N> are digital\n
          j<N> -- ジョイスティック<N>の全ての軸をデジタルにします\n
 
-# windows/input.c: 1610
+# windows/input.c: 1604
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
          j<N>a<M> -- ジョイスティック<N>の軸<M>をデジタルにします\n
 
-# windows/input.c: 1607
+# windows/input.c: 1601
          none -- no axes on any joysticks are digital\n
          none -- 全てのジョイスティックの軸をデジタルにしません\n
 
-# windows/config.c: 843
+# windows/config.c: 841
         MAME -createconfig to create a mame.ini\n\n
         MAME -createconfig 設定ファイルmame.iniを作成します\n
 
-# windows/config.c: 842
+# windows/config.c: 840
         MAME -showconfig   for a list of configuration options\n
         MAME -showconfig   設定オプションの一覧を表\示します\n
 
-# windows/config.c: 841
+# windows/config.c: 839
         MAME -showusage    for a brief list of options\n
         MAME -showusage    対応しているオプションの一覧を表\示します\n
 
-# windows/input.c: 1611
+# windows/input.c: 1605
     Multiple axes can be specified for one joystick:\n
     一つのジョイスティックの複数の軸を指定する事が出来ます:\n
 
-# windows/input.c: 1613
+# windows/input.c: 1607
     Multiple joysticks can be specified separated by commas:\n
     コンマで区切る事で複数のジョイスティック指定する事が出来ます:\n
 
-# windows/input.c: 2071
+# windows/input.c: 2065
  - digital
  - デジタル
 
@@ -58,7 +58,7 @@
 %d %s found, %d were OK.\n
 %d個の%sが見つかり、%d個は正常です。\n
 
-# windows/input.c: 2004
+# windows/input.c: 1998
 %s Button %d
 %s ボタン %d
 
@@ -66,15 +66,15 @@
 (BAD) 
 (異常) 
 
-# windows/video.c: 476
+# windows/video.c: 473
 (primary)
 (プライマリ)
 
-# windows/video.c: 273
+# windows/video.c: 270
 Average FPS: %f (%d frames)\n
 平均FPS: %f (%d フレーム)\n
 
-# windows/config.c: 128
+# windows/config.c: 125
 CRC-32s
 CRC-32
 
@@ -134,11 +134,11 @@ Failed to open file for playback
 Failed to open file for recording
 入力を保存するファイルが作成できません
 
-# windows/input.c: 2591
+# windows/input.c: 2585
 Fast Forward
 早送り
 
-# windows/config.c: 844
+# windows/config.c: 842
 For usage instructions, please consult the file windows.txt\n
 使い方の説明については、対応する windows.txt ファイルを参照して下さい\n
 
@@ -146,11 +146,11 @@ For usage instructions, please consult the file windows.txt\n
 Game \"%s\" not supported!\n
 「%s」というゲームには対応していません！\n
 
-# windows/input.c: 2071
+# windows/input.c: 2065
 Input:  Axis %d (%s)%s\n
 入力:  軸%d (%s)%s\n
 
-# windows/input.c: 1934
+# windows/input.c: 1928
 Input: %s: %s\n
 入力: %s: %s\n
 
@@ -166,11 +166,11 @@ Input: Autoenabling lightguns due to presence of a %s\n
 Input: Autoenabling mice due to presence of a %s\n
 入力: %sが存在するためマウスを自動的に有効にします\n
 
-# windows/input.c: 1879
+# windows/input.c: 1873
 Input: Joystick %d axis %d is now %s\n
 入力: ジョイスティック%d 軸%d は%sです\n
 
-# windows/input.c: 2055
+# windows/input.c: 2049
 Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 入力: ジョイスティック%d: %s (%d個の軸、%d個のボタン、%d個の視点)\n
 
@@ -178,7 +178,7 @@ Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 入力: キーボード=%d  マウス=%d  ジョイスティック=%d  光線銃=%d\n
 
-# windows/input.c: 2928
+# windows/input.c: 2922
 Input: Using RAWMOUSE for Mouse input\n
 入力: マウスの入力にRAWMOUSEを使用します\n
 
@@ -186,31 +186,31 @@ Input: Using RAWMOUSE for Mouse input\n
 Input: \"%s\" controller support enabled\n
 入力: コントローラ「%s」のサポートが有効です\n
 
-# windows/input.c: 2076, 2109
+# windows/input.c: 2070, 2103
 J%d %s
 J%d %s
 
-# windows/input.c: 2085
+# windows/input.c: 2079
 J%d %s +
 J%d %s +
 
-# windows/input.c: 2081
+# windows/input.c: 2075
 J%d %s -
 J%d %s -
 
-# windows/input.c: 2130
+# windows/input.c: 2124
 J%d %s D
 J%d %s 下
 
-# windows/input.c: 2134
+# windows/input.c: 2128
 J%d %s L
 J%d %s 左
 
-# windows/input.c: 2138
+# windows/input.c: 2132
 J%d %s R
 J%d %s 右
 
-# windows/input.c: 2126
+# windows/input.c: 2120
 J%d %s U
 J%d %s 上
 
@@ -218,19 +218,19 @@ J%d %s 上
 KNOWN     %s\n
 判明      %s\n
 
-# windows/input.c: 2043
+# windows/input.c: 2037
 Lightgun %d 
 光線銃 %d 
 
-# windows/input.c: 2426
+# windows/input.c: 2420
 Lightgun not supported in windowed mode
 ウインドウモードでは光線銃はサポートされません
 
-# windows/input.c: 2041
+# windows/input.c: 2035
 Lightgun on Mouse %d 
 マウス %d の光線銃
 
-# windows/config.c: 837
+# windows/config.c: 835
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 
@@ -242,11 +242,11 @@ MMXがサポートされていません\n
 MMX supported\n
 MMXがサポートされています\n
 
-# windows/input.c: 1931
+# windows/input.c: 1925
 Mouse 
 マウス
 
-# windows/input.c: 1929
+# windows/input.c: 1923
 Mouse %d 
 マウス%d
 
@@ -266,27 +266,27 @@ Name:     Description:\n
 Name:    Clone of:\n
 名前:    クローン:\n
 
-# windows/config.c: 422
+# windows/config.c: 420
 OSD bar color (dark)
 OSD バー (暗)
 
-# windows/config.c: 423
+# windows/config.c: 421
 OSD bar color (default)
 OSD バー (デフォルト)
 
-# windows/config.c: 421
+# windows/config.c: 419
 OSD bar color (light)
 OSD バー (明)
 
-# windows/config.c: 420
+# windows/config.c: 418
 OSD bar color (medium)
 OSD バー
 
-# windows/fileio.c: 263
+# windows/fileio.c: 264
 Out of memory in variable expansion!
 変数展開のメモリが足りません!
 
-# windows/fileio.c: 330
+# windows/fileio.c: 331
 Out of memory!
 メモリが足りません!
 
@@ -310,43 +310,43 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 サウンド: バッファ オーバフロー=%d アンダーフロー=%d\n
 
-# windows/input.c: 1983
+# windows/input.c: 1977
 Stick %d %s +
 スティック %d %s +
 
-# windows/input.c: 1976
+# windows/input.c: 1970
 Stick %d %s -
 スティック %d %s -
 
-# windows/input.c: 1985
+# windows/input.c: 1979
 Stick %s +
 スティック %s +
 
-# windows/input.c: 1978
+# windows/input.c: 1972
 Stick %s -
 スティック %s -
 
-# windows/input.c: 1949
+# windows/input.c: 1943
 Stick%sX+
 スティック%sX+
 
-# windows/input.c: 1947
+# windows/input.c: 1941
 Stick%sX-
 スティック%sX-
 
-# windows/input.c: 1953
+# windows/input.c: 1947
 Stick%sY+
 スティック%sY+
 
-# windows/input.c: 1951
+# windows/input.c: 1945
 Stick%sY-
 スティック%sY-
 
-# windows/input.c: 1957
+# windows/input.c: 1951
 Stick%sZ+
 スティック%sZ+
 
-# windows/input.c: 1955
+# windows/input.c: 1949
 Stick%sZ-
 スティック%sZ-
 
@@ -354,7 +354,7 @@ Stick%sZ-
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
 これはドライバ「%s」に必要なROMのリストです。\n名前          サイズ チェックサム\n
 
-# windows/input.c: 2573
+# windows/input.c: 2567
 Toggle fullscreen
 フルスクリーン切り替え
 
@@ -370,11 +370,11 @@ Unable to close the keyboard device. (error %d)\n
 Unable to open the keyboard device. (error %d)\n
 キーボードディバイスがオープン出来ません。(エラー %d)\n
 
-# windows/config.c: 840
+# windows/config.c: 838
 Usage:  MAME gamename [options]\n\n
 使用法:  MAME ゲーム名 [オプション]\n\n
 
-# windows/video.c: 856
+# windows/video.c: 853
 Using %s scale effect\n
 スケールエフェクト %s を使用します\n
 
@@ -386,15 +386,15 @@ Using %s scale effect\n
 \"%8s\" not supported!\n
 「%8s」には対応していません!\n
 
-# windows/config.c: 621
+# windows/config.c: 619
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n「%s」に似たゲームは下記の通りです\nサポートされているゲーム (似ているもの順):\n\n
 
-# windows/config.c: 123
+# windows/config.c: 120
 all available info on driver in XML format
 存在する全てのドライバ情報をXML形式で出力
 
-# windows/input.c: 1877
+# windows/input.c: 1871
 analog
 アナログ
 
@@ -402,71 +402,71 @@ analog
 analog joystick
 アナログジョイスティック
 
-# windows/config.c: 204
+# windows/config.c: 202
 automatic pause when playback is finished
 再生終了時に自動停止
 
-# windows/config.c: 430
+# windows/config.c: 428
 button color (aqua)
 ボタン (S 0r 7)
 
-# windows/config.c: 427
+# windows/config.c: 425
 button color (blue)
 ボタン (D or 4)
 
-# windows/config.c: 426
+# windows/config.c: 424
 button color (green)
 ボタン (C or 3)
 
-# windows/config.c: 433
+# windows/config.c: 431
 button color (lime)
 ボタン (10)
 
-# windows/config.c: 432
+# windows/config.c: 430
 button color (navy)
 ボタン (9)
 
-# windows/config.c: 429
+# windows/config.c: 427
 button color (pink)
 ボタン (P or 6)
 
-# windows/config.c: 428
+# windows/config.c: 426
 button color (purple)
 ボタン (K or 5)
 
-# windows/config.c: 424
+# windows/config.c: 422
 button color (red)
 ボタン (A or 1)
 
-# windows/config.c: 431
+# windows/config.c: 429
 button color (silver)
 ボタン (8)
 
-# windows/config.c: 425
+# windows/config.c: 423
 button color (yellow)
 ボタン (B or 2)
 
-# windows/config.c: 210
+# windows/config.c: 208
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 M68Kコアを変更 (0:C、1:DRC、2:ASM+DRC)
 
-# windows/config.c: 181
+# windows/config.c: 179
 cheat filename
 チートファイルの名前
 
-# windows/config.c: 133
+# windows/config.c: 130
 compare files with known MAME roms
 ファイルを既知のMAME romと比較する
 
-# windows/config.c: 134
+# windows/config.c: 131
 compare files with known MAME roms (brief)
 ファイルを既知のMAME romと比較する (大まかに)
 
-# windows/config.c: 118
+# windows/config.c: 115
 create the default configuration file
 デフォルト設定ファイルを作成
 
-# windows/config.c: 434
+# windows/config.c: 432
 cursor color
 カーソ\ル
 
@@ -474,83 +474,83 @@ cursor color
 dial
 ダイアル
 
-# windows/config.c: 392 windows/input.c: 1653, 1877
+# windows/config.c: 390 windows/input.c: 1647, 1871
 digital
 デジタル
 
-# windows/config.c: 176
+# windows/config.c: 174
 directory for ips files
 IPSファイルのディレクトリ
 
-# windows/config.c: 180
+# windows/config.c: 178
 directory for localized data files
 ローカライズされたデータファイルを保存するパスを指定
 
-# windows/config.c: 162
+# windows/config.c: 159
 directory to save configurations
 ゲームの設定を保存するパスを指定
 
-# windows/config.c: 167
+# windows/config.c: 164
 directory to save hiscores
 ゲームのハイスコアを保存するパスを指定
 
-# windows/config.c: 165
+# windows/config.c: 162
 directory to save input device logs
 キー入力記録を保存するパスを指定
 
-# windows/config.c: 164
+# windows/config.c: 161
 directory to save memory card contents
 メモリーカードの内容を保存するパスを指定
 
-# windows/config.c: 163
+# windows/config.c: 160
 directory to save nvram contents
 NVRAMの内容を保存するパスを指定
 
-# windows/config.c: 169
+# windows/config.c: 166
 directory to save states
 ステートサーブデータを保存するパスを指定
 
-# windows/config.c: 236
+# windows/config.c: 234
 display additional diagnostic information
 起動時に診断用の情報を表\示
 
-# windows/config.c: 126
+# windows/config.c: 123
 driver sourcefile
 ドライバのソ\ースファイル名を表\示
 
-# windows/config.c: 395
+# windows/config.c: 393
 enable (keyboard|mouse|joystick) if a paddle control is present
 パドルが存在するときに有効 (keyboard|mouse|joystick)
 
-# windows/config.c: 388
+# windows/config.c: 386
 enable dual lightgun input
 デュアル光線銃を使用
 
-# windows/config.c: 386
+# windows/config.c: 384
 enable joystick input
 ジョイスティックを使用
 
-# windows/config.c: 387
+# windows/config.c: 385
 enable lightgun input
 光線銃を使用
 
-# windows/config.c: 385
+# windows/config.c: 383
 enable mouse input
 マウスまたはトラックボールを使用
 
-# windows/config.c: 362
+# windows/config.c: 360
 enable pointing stick input
 スティック型マウスを使用
 
-# windows/config.c: 390
+# windows/config.c: 388
 enable steadykey support
 ボタンの同時押し認識を容易にする
 
-# windows/config.c: 408
+# windows/config.c: 406
 enable/disable local language game list
 ローカライズされたゲームリストを有効
 
-# windows/config.c: 352
+# windows/config.c: 350
 enable/disable volume auto adjust
 自動音量調整機能\を有効
 
@@ -562,31 +562,31 @@ error: invalid value for language: %s\nUse %s\n
 error: invalid value for palette: %s\n
 エラー: 不正なパレット指定: %s\n
 
-# windows/config.c: 279
+# windows/config.c: 277
 flip screen left-right
 左右反転
 
-# windows/config.c: 280
+# windows/config.c: 278
 flip screen upside-down
 上下反転
 
-# windows/config.c: 413
+# windows/config.c: 411
 font blank color
 フォント (空白)
 
-# windows/config.c: 414
+# windows/config.c: 412
 font normal color
 フォント (通常)
 
-# windows/config.c: 415
+# windows/config.c: 413
 font special color
 フォント (特殊)
 
-# windows/input.c: 1877
+# windows/input.c: 1871
 invalid
 不正
 
-# windows/config.c: 198
+# windows/config.c: 196
 ips datfile name
 IPSデータファイル名
 
@@ -606,11 +606,11 @@ is good\n
 is missing optional files\n
 は不足しています(オプション)
 
-# windows/input.c: 1159, 1527, 1622
+# windows/input.c: 1159, 1521, 1616
 lightgun
 光線銃
 
-# windows/config.c: 129
+# windows/config.c: 126
 list required roms for a driver
 ドライバに必要なROMのリスト
 
@@ -618,19 +618,19 @@ list required roms for a driver
 loading %-12s\r
 %-12s 読み込み中\r
 
-# windows/fileio.c: 808
+# windows/fileio.c: 809
 loading %-32s\r
 読み込み中 %-32s\r
 
-# windows/config.c: 392
+# windows/config.c: 390
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 特定のジョイスティックや軸をデジタルに設定 (none|all|j<N>*|j<N>a<M>[,...])
 
-# windows/config.c: 391
+# windows/config.c: 389
 minimal analog value for digital input
 デジタル入力変換時のアナログ最小値
 
-# windows/config.c: 389
+# windows/config.c: 387
 offscreen shots reload
 画面外のショットを割り当てる
 
@@ -638,11 +638,11 @@ offscreen shots reload
 paddle
 パドル
 
-# windows/config.c: 158, 160
+# windows/config.c: 155, 157
 path to ini files
 iniファイルへのパスを指定
 
-# windows/config.c: 156
+# windows/config.c: 153
 path to samplesets
 サンプルファイルへのパスを指定
 
@@ -650,27 +650,27 @@ path to samplesets
 pedal
 ペダル
 
-# windows/config.c: 227
+# windows/config.c: 225
 playback an input file
 入力の再現するファイル名
 
-# windows/config.c: 360
+# windows/config.c: 358
 preconfigure for specified controller
 コントローラの指定
 
-# windows/config.c: 202
+# windows/config.c: 200
 quit game with confirmation
 ゲーム終了時に確認する
 
-# windows/config.c: 228
+# windows/config.c: 226
 record an input file
 入力を保存するファイル名
 
-# windows/config.c: 131
+# windows/config.c: 128
 report romsets that have problems
 問題のあるROMファイルを報告
 
-# windows/config.c: 132
+# windows/config.c: 129
 report samplesets that have problems
 問題のあるサンプルファイルを報告
 
@@ -694,63 +694,63 @@ sampleset %s
 samplesets
 サンプルセット
 
-# windows/config.c: 407
+# windows/config.c: 405
 select translation language
 使用する言語を選択
 
-# windows/config.c: 356
+# windows/config.c: 354
 set audio latency (increase to reduce glitches)
 オーディオのレイテンシを指定
 
-# windows/config.c: 367
+# windows/config.c: 365
 set joystick ID (Player1)
 ジョイスティックIDを指定 (プレイヤー1)
 
-# windows/config.c: 368
+# windows/config.c: 366
 set joystick ID (Player2)
 ジョイスティックIDを指定 (プレイヤー2)
 
-# windows/config.c: 369
+# windows/config.c: 367
 set joystick ID (Player3)
 ジョイスティックIDを指定 (プレイヤー3)
 
-# windows/config.c: 370
+# windows/config.c: 368
 set joystick ID (Player4)
 ジョイスティックIDを指定 (プレイヤー4)
 
-# windows/config.c: 371
+# windows/config.c: 369
 set joystick ID (Player5)
 ジョイスティックIDを指定 (プレイヤー5)
 
-# windows/config.c: 372
+# windows/config.c: 370
 set joystick ID (Player6)
 ジョイスティックIDを指定 (プレイヤー6)
 
-# windows/config.c: 373
+# windows/config.c: 371
 set joystick ID (Player7)
 ジョイスティックIDを指定 (プレイヤー7)
 
-# windows/config.c: 374
+# windows/config.c: 372
 set joystick ID (Player8)
 ジョイスティックIDを指定 (プレイヤー8)
 
-# windows/config.c: 125
+# windows/config.c: 122
 short name, full name
 ゲームディレクトリ名＋ゲームのフルネームを表\示
 
-# windows/config.c: 127
+# windows/config.c: 124
 show clones
 ゲームのクローン版を表\示
 
-# windows/config.c: 114
+# windows/config.c: 111
 show help message
 ヘルプの表\示
 
-# windows/config.c: 120
+# windows/config.c: 117
 show this help
 このヘルプを表\示
 
-# windows/config.c: 347, 977
+# windows/config.c: 345, 979
 sound
 音源
 
@@ -758,31 +758,31 @@ sound
 trackball
 トラックボール
 
-# windows/config.c: 216
+# windows/config.c: 214
 transparency of UI background [0 - 255]
 UIの背景の透明度 [0 - 255]
 
-# windows/config.c: 215
+# windows/config.c: 213
 use transparent background for UI text
 UIテキストの背景を半透明にする
 
-# windows/config.c: 416
+# windows/config.c: 414
 window background color
 ウィンドウ 背景色
 
-# windows/config.c: 419
+# windows/config.c: 417
 window frame color (dark)
 ウィンドウ フレーム (暗)
 
-# windows/config.c: 418
+# windows/config.c: 416
 window frame color (light)
 ウィンドウ フレーム (明)
 
-# windows/config.c: 417
+# windows/config.c: 415
 window frame color (medium)
 ウィンドウ フレーム
 
-# windows/config.c: 124
+# windows/config.c: 121
 year, manufacturer and full name
 サポートゲーム、製造年、メーカーのリストを表\示
 
