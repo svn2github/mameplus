@@ -272,7 +272,7 @@ static void hiscore_periodic (int param)
 
 
 /* call hiscore_close when done playing game */
-void hiscore_close (void)
+void hiscore_close (running_machine *machine)
 {
 	if (state.hiscores_have_been_loaded) hiscore_save();
 	hiscore_free();
@@ -373,5 +373,5 @@ void hiscore_init (running_machine *machine, const char *name)
 	timer = timer_alloc(hiscore_periodic);
 	timer_adjust(timer, TIME_IN_HZ(60), 0, TIME_IN_HZ(60));
 
-	add_exit_callback(hiscore_close);
+	add_exit_callback(machine, hiscore_close);
 }
