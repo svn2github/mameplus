@@ -69,7 +69,7 @@ sub MakeBackup
 
 sub MakeManufacture
 {
-	open (IN, "$dir/$mameexe -listgames|") || die "$!";
+	open (IN, "$dir/$mameexe -driver_config all -listgames|") || die "$!";
 	while (<IN>)
 	{
 		# Make a reasonable name out of the one found in the driver array */

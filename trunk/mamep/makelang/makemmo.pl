@@ -76,7 +76,7 @@ sub MakeListFiles
 
 	my $entries = 0;
 
-	open (IN, "$dir/$mameexe -ll|") || die "$!";
+	open (IN, "$dir/$mameexe -driver_config all -ll|") || die "$!";
 	while (<IN>)
 	{
 		next unless /(.*[^\s])\s+"(.*)"/;

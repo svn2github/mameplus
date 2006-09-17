@@ -884,6 +884,12 @@ void assign_drivers(void)
 				char *s = mame_strtrim(p);	//get individual driver name
 				if (s[0])
 				{
+					if (mame_stricmp(s, "all") == 0)
+					{
+						enabled = (UINT32)-1;
+						break;
+					}
+
 					for (i = 0; drivers_table[i].name; i++)
 						if (mame_stricmp(s, drivers_table[i].name) == 0)
 						{

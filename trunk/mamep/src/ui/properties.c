@@ -432,7 +432,7 @@ static const struct
 {
 	{"mame",	IDC_DRV_MAME},
 	{"plus",	IDC_DRV_PLUS},
-	{"homebrew",IDC_DRV_HOMEBREW},
+	{"homebrew",	IDC_DRV_HOMEBREW},
 	{"neod",	IDC_DRV_NEOD},
 #ifndef NEOCPSMAME
 	{"noncpu",	IDC_DRV_NONCPU},
@@ -2226,10 +2226,14 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 			EnableWindow(GetDlgItem(hDlg, IDC_USE_DEFAULT), (g_bUseDefaults) ? FALSE : TRUE);
 
 #ifdef DRIVER_SWITCH
-		int i;
-		for (i=0; drivers_table[i].name; i++)
-			ShowWindow(GetDlgItem(hDlg, drivers_table[i].ctrl), IS_GLOBAL ? SW_SHOW : SW_HIDE);
-		ShowWindow(GetDlgItem(hDlg, IDC_DRV_TEXT), IS_GLOBAL ? SW_SHOW : SW_HIDE);
+		{
+			int i;
+
+			for (i = 0; drivers_table[i].name; i++)
+				ShowWindow(GetDlgItem(hDlg, drivers_table[i].ctrl), IS_GLOBAL ? SW_SHOW : SW_HIDE);
+
+			ShowWindow(GetDlgItem(hDlg, IDC_DRV_TEXT), IS_GLOBAL ? SW_SHOW : SW_HIDE);
+		}
 #endif /* DRIVER_SWITCH */
 
 		EnableWindow(GetDlgItem(hDlg, IDC_PROP_RESET), g_bReset);
@@ -2295,9 +2299,12 @@ static void PropToOptions(HWND hWnd, options_type *o)
 	if (IS_GLOBAL)
 	{
 		char buffer[200];
-		buffer[0] = '\0';
+		int all_enable = 1;
 		int i;
-		for (i=0; drivers_table[i].name; i++)
+
+		buffer[0] = '\0';
+
+		for (i = 0; drivers_table[i].name; i++)
 		{
 			hCtrl = GetDlgItem(hWnd, drivers_table[i].ctrl);
 			if (hCtrl && Button_GetCheck(hCtrl))
@@ -2306,11 +2313,18 @@ static void PropToOptions(HWND hWnd, options_type *o)
 					strcat(buffer, ",");
 				strcat(buffer, drivers_table[i].name);
 			}
+			else
+				all_enable = 0;
 		}
-		if (hCtrl)
+
+		if (buffer[0])
 		{
 			FreeIfAllocated(&o->driver_config);
-			o->driver_config = strdup(buffer);
+
+			if (all_enable)
+				o->driver_config = strdup("all");
+			else
+				o->driver_config = strdup(buffer);
 		}
 	}
 #endif /* DRIVER_SWITCH */
@@ -2473,23 +2487,51 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 	g_bInternalSet = TRUE;
 
 #ifdef DRIVER_SWITCH
-	int i;
-	for (i=0; drivers_table[i].name; i++)
 	{
-		strcpy (buf, o->driver_config);
-		char *p = strtok (buf, ",");
-		char *s;
-		Button_SetCheck(GetDlgItem(hWnd, drivers_table[i].ctrl), FALSE);
-		while (p)
+		char *temp = mame_strdup(o->driver_config);
+		UINT32 enabled = 0;
+		int i;
+
+		if (temp)
 		{
-			s = mame_strtrim(p);
-			if (s[0] && !mame_stricmp(s, drivers_table[i].name))
+			int i;
+
+			char *p = strtok(temp, ",");
+
+			while (p)
 			{
-				Button_SetCheck(GetDlgItem(hWnd, drivers_table[i].ctrl), TRUE);
+				char *s = mame_strtrim(p);	//get individual driver name
+				if (s[0])
+				{
+					if (mame_stricmp(s, "all") == 0)
+					{
+						enabled = (UINT32)-1;
+						break;
+					}
+
+					for (i = 0; drivers_table[i].name; i++)
+						if (mame_stricmp(s, drivers_table[i].name) == 0)
+						{
+							enabled |= 1 << i;
+							break;
+						}
+
+					if (!drivers_table[i].name)
+						fprintf(stderr, _WINDOWS("Illegal value for %s = %s\n"), "driver_config", s);
+				}
+				free(s);
+
+				p = strtok(NULL, ",");
 			}
-			free(s);
-			p = strtok (NULL, ",");
+
+			free(temp);
 		}
+
+		if (enabled == 0)
+			enabled = 1;	// default to mamedrivers
+
+		for (i = 0; drivers_table[i].name; i++)
+			Button_SetCheck(GetDlgItem(hWnd, drivers_table[i].ctrl), enabled & (1 << i));
 	}
 #endif /* DRIVER_SWITCH */
 
