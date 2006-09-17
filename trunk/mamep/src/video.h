@@ -82,7 +82,7 @@ struct _performance_info
 /* ----- screen rendering and management ----- */
 
 /* core initialization */
-int video_init(void);
+int video_init(running_machine *machine);
 
 #ifdef USE_SCALE_EFFECTS
 void video_init_scale_effect(void);

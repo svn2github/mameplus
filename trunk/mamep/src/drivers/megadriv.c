@@ -384,7 +384,7 @@ void write_cram_value(int offset, int data)
 	  	r = ((data >> 1)&0x07);
 		g = ((data >> 5)&0x07);
 		b = ((data >> 9)&0x07);
-		palette_set_color(offset,r<<5,g<<5,b<<5);
+		palette_set_color(Machine, offset,r<<5,g<<5,b<<5);
 		megadrive_vdp_palette_lookup[offset] = (b<<2) | (g<<7) | (r<<12);
 		megadrive_vdp_palette_lookup_shadow[offset] = (b<<1) | (g<<6) | (r<<11);
 		megadrive_vdp_palette_lookup_highlight[offset] = ((b|0x08)<<1) | ((g|0x08)<<6) | ((r|0x08)<<11);
@@ -575,7 +575,7 @@ UINT16 get_word_from_68k_mem(UINT32 source)
 	else
 	{
 		printf("DMA Read unmapped %06x\n",source);
-		return mame_rand();
+		return mame_rand(Machine);
 	}
 
 }
@@ -957,7 +957,7 @@ UINT16 megadriv_vdp_data_port_r(void)
 {
 	UINT16 retdata=0;
 
-	//return mame_rand();
+	//return mame_rand(Machine);
 
 	megadrive_vdp_command_pending = 0;
 
@@ -971,12 +971,12 @@ UINT16 megadriv_vdp_data_port_r(void)
 
 		case 0x0001:
 			logerror("Attempting to READ from DATA PORT in VRAM WRITE MODE\n");
-			retdata = mame_rand();
+			retdata = mame_rand(Machine);
 			break;
 
 		case 0x0003:
 			logerror("Attempting to READ from DATA PORT in CRAM WRITE MODE\n");
-			retdata = mame_rand();
+			retdata = mame_rand(Machine);
 			break;
 
 		case 0x0004:
@@ -997,7 +997,7 @@ UINT16 megadriv_vdp_data_port_r(void)
 
 		default:
 			logerror("Attempting to READ from DATA PORT in #UNDEFINED# MODE\n");
-			retdata = mame_rand();
+			retdata = mame_rand(Machine);
 			break;
 	}
 
@@ -1304,7 +1304,7 @@ READ16_HANDLER( megadriv_vdp_r )
 		case 0x06:
 		//	if ((!ACCESSING_MSB) || (!ACCESSING_LSB)) printf("8-bit VDP read control port access, offset %04x mem_mask %04x\n",offset,mem_mask);
 			retvalue = megadriv_vdp_ctrl_port_r();
-		//	retvalue = mame_rand();
+		//	retvalue = mame_rand(Machine);
 		//	printf("%06x: Read Control Port at scanline %d hpos %d (return %04x)\n",activecpu_get_pc(),genesis_scanline_counter, get_hposition(),retvalue);
 			break;
 
@@ -1314,7 +1314,7 @@ READ16_HANDLER( megadriv_vdp_r )
 		case 0x0e:
 		//	if ((!ACCESSING_MSB) || (!ACCESSING_LSB)) printf("8-bit VDP read HV counter port access, offset %04x mem_mask %04x\n",offset,mem_mask);
 			retvalue = megadriv_read_hv_counters();
-		//	retvalue = mame_rand();
+		//	retvalue = mame_rand(Machine);
 		//	printf("%06x: Read HV counters at scanline %d hpos %d (return %04x)\n",activecpu_get_pc(),genesis_scanline_counter, get_hposition(),retvalue);
 			break;
 
@@ -1733,7 +1733,7 @@ READ16_HANDLER( megadriv_68k_io_read )
           D0 : Bit 0 of version number
       */
 
-	//return (mame_rand()&0x0f0f)|0xf0f0;//0x0000;
+	//return (mame_rand(Machine)&0x0f0f)|0xf0f0;//0x0000;
 	switch (offset)
 	{
 		case 0:
@@ -1944,7 +1944,7 @@ READ16_HANDLER( megadriv_68k_read_z80_ram )
 	else
 	{
 		logerror("%06x: 68000 attempting to access Z80 (read) address space without bus\n", activecpu_get_pc());
-		return mame_rand();
+		return mame_rand(Machine);
 	}
 }
 
@@ -1986,7 +1986,7 @@ READ16_HANDLER( megadriv_68k_check_z80_bus )
 	   the value is never zero.  Time Killers is the most fussy, and doesn't like the
 	   read_next_instruction function from system16, so I just return a random value
 	   in the unused bits */
-	UINT16 nextvalue = mame_rand();//read_next_instruction()&0xff00;
+	UINT16 nextvalue = mame_rand(Machine);//read_next_instruction()&0xff00;
 
 
 	/* Check if the 68k has the z80 bus */
@@ -2199,7 +2199,7 @@ WRITE8_HANDLER( z80_write_68k_banked_data )
 READ8_HANDLER( megadriv_z80_vdp_read )
 {
 	printf("megadriv_z80_vdp_read %02x\n",offset);
-	return mame_rand();
+	return mame_rand(Machine);
 }
 
 READ8_HANDLER( megadriv_z80_unmapped_read )
@@ -2235,7 +2235,7 @@ ADDRESS_MAP_END
 
 READ16_HANDLER( _32x_reg_r )
 {
-	return mame_rand();
+	return mame_rand(Machine);
 }
 
 UINT16 _32x_68k_comms[0x8];
@@ -3684,7 +3684,7 @@ void genesis_render_videobuffer_to_screenbuffer(int scanline)
 
 				case 0xa000: // shadow set, highlight set - not possible
 				case 0xe000: // shadow set, highlight set, normal set, not possible
-					lineptr[x] = megadrive_vdp_palette_lookup_highlight[mame_rand()&0x3f];
+					lineptr[x] = megadrive_vdp_palette_lookup_highlight[mame_rand(Machine)&0x3f];
 					break;
 
 
@@ -4365,7 +4365,7 @@ static NVRAM_HANDLER( megadriv )
 			{
 				int x;
 				for (x=0;x<megadriv_backupram_length/2;x++)
-					megadriv_backupram[x]=0xffff;//mame_rand(); // dino dini's needs 0xff or game rules are broken
+					megadriv_backupram[x]=0xffff;//mame_rand(machine); // dino dini's needs 0xff or game rules are broken
 			}
 		}
 	}
@@ -11666,32 +11666,32 @@ void init_backupram(int backupram_base, int length)
 
 DRIVER_INIT( g_strk )
 {
-	init_megadrie();
+	init_megadrie(machine);
 	init_backupram(0x200000,0x10000);
 }
 
 DRIVER_INIT( g_hb95 )
 {
-	init_megadriv();
+	init_megadriv(machine);
 	init_backupram(0x300000,0x10000);
 }
 
 DRIVER_INIT( g_dino )
 {
-	init_megadrie();
+	init_megadrie(machine);
 	init_backupram(0x200000,0x2000);
 }
 
 DRIVER_INIT( g_buck )
 {
-	init_megadriv();
+	init_megadriv(machine);
 	init_backupram(0x200000,0x10000);
 }
 
 
 DRIVER_INIT( g_nh98 )
 {
-	init_megadriv();
+	init_megadriv(machine);
 	init_backupram(0x200000,0x10000);
 }
 
@@ -11699,13 +11699,13 @@ DRIVER_INIT( g_nh98 )
 
 DRIVER_INIT( g_wrom2 )
 {
-	init_megadriv();
+	init_megadriv(machine);
 	init_backupram(0x200000,0x2000);
 }
 
 DRIVER_INIT( g_caeno2 )
 {
-	init_megadrij();
+	init_megadrij(machine);
 	init_backupram(0x200000,0x2000);
 }
 
@@ -11713,19 +11713,19 @@ DRIVER_INIT( g_caeno2 )
 
 DRIVER_INIT( megadrie_backup_0x200000_0x4000 )
 {
-	init_megadrie();
+	init_megadrie(machine);
 	init_backupram(0x200000,0x4000);
 }
 
 DRIVER_INIT( megadriv_backup_0x200000_0x4000 )
 {
-	init_megadriv();
+	init_megadriv(machine);
 	init_backupram(0x200000,0x4000);
 }
 
 DRIVER_INIT( megadrij_backup_0x200000_0x4000 )
 {
-	init_megadrij();
+	init_megadrij(machine);
 	init_backupram(0x200000,0x4000);
 }
 
@@ -11787,37 +11787,37 @@ void init_sks3_backupram(int backupram_base, int length)
 
 DRIVER_INIT( g_sks3 )
 {
-	init_megadriv();
+	init_megadriv(machine);
 	init_sks3_backupram(0x200000,0x400);
 }
 
 DRIVER_INIT( g_sks3e)
 {
-	init_megadrie();
+	init_megadrie(machine);
 	init_sks3_backupram(0x200000,0x400);
 }
 
 DRIVER_INIT( g_sks3j )
 {
-	init_megadrij();
+	init_megadrij(machine);
 	init_sks3_backupram(0x200000,0x400);
 }
 
 DRIVER_INIT( g_pst4 )
 {
-	init_megadriv();
+	init_megadriv(machine);
 	init_sks3_backupram(0x200000,0x4000);
 }
 
 DRIVER_INIT( g_pst4j )
 {
-	init_megadrij();
+	init_megadrij(machine);
 	init_sks3_backupram(0x200000,0x4000);
 }
 
 DRIVER_INIT( g_gameno )
 {
-	init_megadrij();
+	init_megadrij(machine);
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x000000, 0x3fffff, 0, 0, MRA16_BANK5);
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x000000, 0x3fffff, 0, 0, MWA16_BANK5);
 
@@ -11831,7 +11831,7 @@ DRIVER_INIT( _32x )
 {
 	memory_set_bankptr( 2, memory_region( REGION_USER1 ) );
 	memory_set_bankptr( 4, memory_region( REGION_USER1 ) );
-	init_megadriv();
+	init_megadriv(machine);
 }
 
 static int squirrel_king_extra;
@@ -11847,7 +11847,7 @@ WRITE16_HANDLER( squirrel_king_extra_w )
 
 DRIVER_INIT( g_squi )
 {
-	init_megadriv();
+	init_megadriv(machine);
 
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400000, 0x400007, 0, 0, squirrel_king_extra_r);
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400000, 0x400007, 0, 0, squirrel_king_extra_w);
@@ -11870,7 +11870,7 @@ READ16_HANDLER( bugl_extra_r )
 
 DRIVER_INIT( g_sbub )
 {
-	init_megadriv();
+	init_megadriv(machine);
 
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400000, 0x400001, 0, 0, sbub_extra1_r);
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400002, 0x400003, 0, 0, sbub_extra2_r);
@@ -11889,7 +11889,7 @@ READ16_HANDLER( rx3_extra_r )
 
 DRIVER_INIT( g_smb2 )
 {
-	init_megadriv();
+	init_megadriv(machine);
 
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0xA13000, 0xA13001, 0, 0, smb2_extra_r);
 
@@ -11897,13 +11897,13 @@ DRIVER_INIT( g_smb2 )
 
 DRIVER_INIT( g_bugl )
 {
-	init_megadriv();
+	init_megadriv(machine);
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0xA13000, 0xA13001, 0, 0, bugl_extra_r);
 }
 
 DRIVER_INIT( g_rx3 )
 {
-	init_megadriv();
+	init_megadriv(machine);
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0xA13000, 0xA13001, 0, 0, rx3_extra_r);
 
 
@@ -11949,7 +11949,7 @@ DRIVER_INIT( g_ssf2 )
 	UINT8 *ROM = memory_region(REGION_CPU1);
 	memcpy(ROM + 0x00000, ROM + 0x400000, 0x400000); /* copy 1st 4meg (it checksums this before writing bank regs)*/
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0xA130F0, 0xA130FF, 0, 0, megadriv_ssf2_bank_w);
-	init_megadriv();
+	init_megadriv(machine);
 }
 
 DRIVER_INIT( g_ssf2e )
@@ -11957,7 +11957,7 @@ DRIVER_INIT( g_ssf2e )
 	UINT8 *ROM = memory_region(REGION_CPU1);
 	memcpy(ROM + 0x00000, ROM + 0x400000, 0x400000); /* copy 1st 4meg (it checksums this before writing bank regs)*/
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0xA130F0, 0xA130FF, 0, 0, megadriv_ssf2_bank_w);
-	init_megadrie();
+	init_megadrie(machine);
 }
 
 DRIVER_INIT( g_ssf2j )
@@ -11965,7 +11965,7 @@ DRIVER_INIT( g_ssf2j )
 	UINT8 *ROM = memory_region(REGION_CPU1);
 	memcpy(ROM + 0x00000, ROM + 0x400000, 0x400000); /* copy 1st 4meg (it checksums this before writing bank regs)*/
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0xA130F0, 0xA130FF, 0, 0, megadriv_ssf2_bank_w);
-	init_megadrij();
+	init_megadrij(machine);
 }
 
 
@@ -11983,7 +11983,7 @@ DRIVER_INIT( g_12i1 )
 	memcpy(ROM + 0x00000, ROM + 0x400000, 0x400000); /* default rom */
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0xA13000, 0xA1303f, 0, 0, g_12i1_bank_w);
 
-	init_megadriv();
+	init_megadriv(machine);
 }
 
 #ifdef HAZEMD
@@ -12004,7 +12004,7 @@ WRITE16_HANDLER( topshoot_ram_w )
 READ16_HANDLER( topshoot_unk_r )
 {
 	megadrive_ram[0x4004>>1] = 0x20; // coins or bet? .. maybe the MCU puts the inputs direct in RAM.
-	return mame_rand();
+	return mame_rand(Machine);
 }
 
 DRIVER_INIT( topshoot )
@@ -12019,7 +12019,7 @@ DRIVER_INIT( topshoot )
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400004, 0x400005, 0, 0, topshoot_unk_r);
 //	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0xa10000, 0xa1001f, 0, 0, topshoot_unk_r);
 
-	init_megadriv();
+	init_megadriv(machine);
 }
 #endif /* HAZEMD */
 
@@ -12027,7 +12027,7 @@ DRIVER_INIT( topshoot )
 READ16_HANDLER( dte_extra_r )
 {
 	//printf("extra r\n");
-	return mame_rand();
+	return mame_rand(Machine);
 }
 
 int realtek_bank_addr=0;
@@ -12088,7 +12088,7 @@ DRIVER_INIT( g_dte )
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x402000, 0x402001, 0, 0, realtec_402000_w);
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x404000, 0x404001, 0, 0, realtec_404000_w);
 
-	init_megadriv();
+	init_megadriv(machine);
 }
 
 READ16_HANDLER( lio3_extra_r )
@@ -12113,7 +12113,7 @@ READ16_HANDLER( lio3_extra3_r )
 READ16_HANDLER( lio3_extra4_r )
 {
 	printf("read unknown\n");
-	return mame_rand();
+	return mame_rand(Machine);
 }
 
 DRIVER_INIT ( g_lio3 )
@@ -12126,7 +12126,7 @@ DRIVER_INIT ( g_lio3 )
 
 
 
-	init_megadriv();
+	init_megadriv(machine);
 }
 
 UINT16 lion2_prot1_data, lion2_prot2_data;
@@ -12158,7 +12158,7 @@ DRIVER_INIT( g_lionk2 )
 	memory_install_write16_handler(0,ADDRESS_SPACE_PROGRAM, 0x400004, 0x400005, 0, 0, lion2_prot2_w );
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400006, 0x400007, 0, 0, lion2_prot2_r );
 
-	init_megadriv();
+	init_megadriv(machine);
 
 }
 
@@ -12193,7 +12193,7 @@ DRIVER_INIT( g_elfwor )
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400002, 0x400003, 0, 0, elfwor_0x400002_r );
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400006, 0x400007, 0, 0, elfwor_0x400006_r );
 
-	init_megadriv();
+	init_megadriv(machine);
 }
 
 
@@ -12210,13 +12210,13 @@ READ16_HANDLER( radicav1_bank_select )
 DRIVER_INIT( radicav1 )
 {
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0xa13000, 0xa1307f, 0, 0, radicav1_bank_select );
-	init_megadriv();
+	init_megadriv(machine);
 }
 
 DRIVER_INIT( radicasf )
 {
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0xa13000, 0xa1307f, 0, 0, radicav1_bank_select );
-	init_megadrie();
+	init_megadrie(machine);
 }
 
 READ16_HANDLER( mjlovr_prot_1_r )
@@ -12234,7 +12234,7 @@ DRIVER_INIT( g_mjlovr )
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400000, 0x400001, 0, 0, mjlovr_prot_1_r );
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x401000, 0x401001, 0, 0, mjlovr_prot_2_r );
 
-	init_megadriv();
+	init_megadriv(machine);
 }
 
 
@@ -12264,7 +12264,7 @@ DRIVER_INIT( g_pockm )
 	ROM[0x0dd49c/2] = 0x6002;
 
 
-	init_megadriv();
+	init_megadriv(machine);
 
 }
 
@@ -12286,7 +12286,7 @@ DRIVER_INIT( g_pockm2 )
 	ROM[0x7E300/2] = 0x60FE;
 
 
-	init_megadriv();
+	init_megadriv(machine);
 
 }
 
@@ -12304,7 +12304,7 @@ DRIVER_INIT( g_mulan )
 
 	ROM[0x06036/2] = 0xE000;
 
-	init_megadriv();
+	init_megadriv(machine);
 }
 
 
@@ -12341,7 +12341,7 @@ DRIVER_INIT( g_kof98 )
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x4a8820, 0x4a8821, 0, 0, g_kof98_0a_r );
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x4f8820, 0x4f8821, 0, 0, g_kof98_00_r );
 
-	init_megadriv();
+	init_megadriv(machine);
 }
 
 
@@ -12362,7 +12362,7 @@ READ16_HANDLER( smous_prot_r )
 DRIVER_INIT( g_smous )
 {
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400000, 0x400007, 0, 0, smous_prot_r );
-	init_megadriv();
+	init_megadriv(machine);
 }
 
 UINT16 virrac_unk[0x010000];
@@ -12390,7 +12390,7 @@ DRIVER_INIT( g_virrac  )
 
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x30fe02, 0x30fe03, 0, 0, virrac_status_r );
 
-	init_megadriv();
+	init_megadriv(machine);
 
 
 }

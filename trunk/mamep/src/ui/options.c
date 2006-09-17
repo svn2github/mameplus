@@ -537,7 +537,7 @@ void OptionsInit()
 	memset(&backup, 0, sizeof (backup));
 
 	num_drivers = GetNumGames();
-	code_init();
+	code_init(NULL);
 
 	options_free_entries();
 

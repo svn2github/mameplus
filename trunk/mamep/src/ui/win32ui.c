@@ -2018,10 +2018,10 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	qsort(sorted_drivers, game_count, sizeof(driver_data_type), DriverDataCompareFunc);
 
 	/* initialize cpu information */
-	cpuintrf_init();
+	cpuintrf_init(NULL);
 
 	/* initialize sound information */
-	sndintrf_init();
+	sndintrf_init(NULL);
 
 	wndclass.style         = CS_HREDRAW | CS_VREDRAW;
 	wndclass.lpfnWndProc   = MameWindowProc;
@@ -7308,7 +7308,7 @@ int UpdateLoadProgress(const char* name, const rom_load_data *romdata)
 
 	if (name == NULL && romdata->errors > 0)
 	{
-		winwindow_exit();
+		winwindow_exit(NULL);
 		ShowCursor(TRUE);
 
 		while (GetMessage(&Msg, NULL, 0, 0))

@@ -137,7 +137,7 @@ VIDEO_START( pong )
 
 	pong_hit_detector();
 
-	if( video_start_generic_bitmapped() )
+	if( video_start_generic_bitmapped(machine) )
 		return 1;
 
 	return 0;

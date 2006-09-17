@@ -190,7 +190,7 @@ INLINE const char *CLIB_DECL menu_string_pool_add(const char *format, ...)
     ui_menu_init - initialize the menu system
 -------------------------------------------------*/
 
-void ui_menu_init(void)
+void ui_menu_init(running_machine *machine)
 {
 	ui_menu_stack_reset();
 }
@@ -1212,7 +1212,7 @@ static UINT32 menu_memory_card(UINT32 state)
 		/* handle eject */
 		else if (selected == ejectindex)
 		{
-			memcard_eject();
+			memcard_eject(Machine);
 			popmessage("%s", ui_getstring(UI_cardejected));
 		}
 
@@ -1463,7 +1463,7 @@ static UINT32 menu_video(UINT32 state)
 static UINT32 menu_reset_game(UINT32 state)
 {
 	/* request a reset */
-	mame_schedule_soft_reset();
+	mame_schedule_soft_reset(Machine);
 
 	/* reset the menu stack */
 	ui_menu_stack_reset();
@@ -1765,11 +1765,11 @@ static UINT32 menu_document_contents(UINT32 state)
 
 		if (bufptr)
 		{
-			int game_paused = mame_is_paused();
+			int game_paused = mame_is_paused(Machine);
 
 			/* Disable sound to prevent strange sound*/
 			if (!game_paused)
-				mame_pause(TRUE);
+				mame_pause(Machine, TRUE);
 
 			if ((dattype == UI_history && (load_driver_history(Machine->gamedrv, bufptr, bufsize) == 0))
 #ifdef STORY_DATAFILE
@@ -1798,7 +1798,7 @@ static UINT32 menu_document_contents(UINT32 state)
 			}
 
 			if (!game_paused)
-				mame_pause(FALSE);
+				mame_pause(Machine, FALSE);
 		}
 	}
 
@@ -1958,11 +1958,11 @@ static UINT32 menu_command_contents(UINT32 state)
 
 		if (bufptr)
 		{
-			int game_paused = mame_is_paused();
+			int game_paused = mame_is_paused(Machine);
 
 			/* Disable sound to prevent strange sound*/
 			if (!game_paused)
-				mame_pause(TRUE);
+				mame_pause(Machine, TRUE);
 
 			if (load_driver_command_ex(Machine->gamedrv, bufptr, bufsize, selected) == 0)
 			{
@@ -1990,7 +1990,7 @@ static UINT32 menu_command_contents(UINT32 state)
 			}
 
 			if (!game_paused)
-				mame_pause(FALSE);
+				mame_pause(Machine, FALSE);
 		}
 	}
 

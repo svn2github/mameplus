@@ -60,7 +60,7 @@ extern SHAREDOBJ_FUNC(int) hash_data_has_info(const char* d, unsigned int info);
 extern SHAREDOBJ_FUNC(int) hash_data_is_equal(const char* d1, const char* d2, unsigned int functions);
 
 #include "cpuintrf.h"
-extern SHAREDOBJ_FUNC(void)        cpuintrf_init(void);
+extern SHAREDOBJ_FUNC(void)        cpuintrf_init(running_machine *machine);
 extern SHAREDOBJ_FUNC(const char *)cputype_get_info_string(int cpunum, UINT32 state);
 extern SHAREDOBJ_FUNC(const char *)cputype_shortname(int cputype);
 
@@ -148,7 +148,7 @@ extern SHAREDOBJ_FUNC(int)  png_write_datastream(mame_file *fp, png_info *p);
 extern SHAREDOBJ_FUNC(int)  png_write_bitmap(mame_file *fp, mame_bitmap *bitmap);
 
 #include "../input.h"
-SHAREDOBJ_FUNC(int)  code_init(void);
+SHAREDOBJ_FUNC(int)  code_init(running_machine *machine);
 SHAREDOBJ_FUNC(void) seq_copy(input_seq *seqdst, const input_seq *seqsrc);
 SHAREDOBJ_FUNC(int)  string_to_seq(const char *string, input_seq *seq);
 
@@ -156,7 +156,7 @@ SHAREDOBJ_FUNC(int)  string_to_seq(const char *string, input_seq *seq);
 SHAREDOBJ_FUNC(input_port_entry *) input_port_allocate(void (*construct_ipt)(input_port_init_params *), input_port_entry *memory);
 
 #include "sndintrf.h"
-extern SHAREDOBJ_FUNC(void)         sndintrf_init(void);
+extern SHAREDOBJ_FUNC(void)         sndintrf_init(running_machine *machine);
 extern SHAREDOBJ_FUNC(const char *) sndtype_shortname(int sndnum);
 extern SHAREDOBJ_FUNC(const char *) sndtype_get_info_string(int sndnum, UINT32 state);
 extern SHAREDOBJ_FUNC(int)          sndtype_clock(int sndnum);
@@ -230,7 +230,7 @@ extern SHAREDOBJ_DATA struct neogeo_bios_info neogeo_bios[NEOGEO_BIOS_MAX];
 extern SHAREDOBJ_DATA const int win_key_trans_table[][4];
 
 // in windows/window.c
-extern SHAREDOBJ_FUNC(void) winwindow_exit(void);
+extern SHAREDOBJ_FUNC(void) winwindow_exit(running_machine *machine);
 
 // in windows/winmain.c
 extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
@@ -289,7 +289,7 @@ extern const char *mameinfo_filename;
 extern const int win_key_trans_table[][4];
 
 // in windows/window.c
-extern SHAREDOBJ_FUNC(void) winwindow_exit(void);
+extern SHAREDOBJ_FUNC(void) winwindow_exit(running_machine *machine);
 
 // in windows/winmain.c
 extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
@@ -342,7 +342,7 @@ extern const char *mameinfo_filename;
 extern const int win_key_trans_table[][4];
 
 // in windows/window.c
-extern SHAREDOBJ_FUNC(void) winwindow_exit(void);
+extern SHAREDOBJ_FUNC(void) winwindow_exit(running_machine *machine);
 
 // in windows/winmain.c
 extern int main_(int argc, char **argv);

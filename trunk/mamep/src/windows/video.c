@@ -73,9 +73,6 @@
 int video_orientation;
 win_video_config video_config;
 
-// from mame.c
-extern UINT8 exit_pending;
-
 
 
 //============================================================
@@ -146,7 +143,7 @@ static int cur_scale_ysize;
 //  PROTOTYPES
 //============================================================
 
-static void video_exit(void);
+static void video_exit(running_machine *machine);
 static void init_monitors(void);
 static BOOL CALLBACK monitor_enum_callback(HMONITOR handle, HDC dc, LPRECT rect, LPARAM data);
 static win_monitor_info *pick_monitor(int index);
@@ -181,7 +178,7 @@ INLINE int effective_frameskip(void)
 
 INLINE int effective_throttle(void)
 {
-	return !video_config.fastforward && (video_config.throttle || mame_is_paused() || ui_is_menu_active() || ui_is_slider_active());
+	return !video_config.fastforward && (video_config.throttle || mame_is_paused(Machine) || ui_is_menu_active() || ui_is_slider_active());
 }
 
 
@@ -190,13 +187,13 @@ INLINE int effective_throttle(void)
 //  winvideo_init
 //============================================================
 
-int winvideo_init(void)
+int winvideo_init(running_machine *machine)
 {
 	const char *stemp;
 	int index;
 
 	// ensure we get called on the way out
-	add_exit_callback(video_exit);
+	add_exit_callback(machine, video_exit);
 
 	// extract data from the options
 	extract_video_config();
@@ -205,7 +202,7 @@ int winvideo_init(void)
 	init_monitors();
 
 	// initialize the window system so we can make windows
-	if (winwindow_init())
+	if (winwindow_init(machine))
 		goto error;
 
 	// create the windows
@@ -242,7 +239,7 @@ error:
 //  video_exit
 //============================================================
 
-static void video_exit(void)
+static void video_exit(running_machine *machine)
 {
 	// free the overlay effect
 	if (effect_bitmap != NULL)
@@ -398,7 +395,7 @@ int osd_update(mame_time emutime)
 		update_autoframeskip();
 
 	// don't confirm quit
-	if (exit_pending)
+	if (mame_is_exit_pending(Machine))
 		options.confirm_quit = 0;
 
 	// poll the joystick values here
@@ -425,7 +422,7 @@ const char *osd_get_fps_text(const performance_info *performance)
 	char *dest = buffer;
 
 	// if we're paused, display less info
-	if (mame_is_paused())
+	if (mame_is_paused(Machine))
 		dest += sprintf(dest, _WINDOWS("frame:%d Paused"), cpu_getcurrentframe());
 	else
 	{
@@ -578,7 +575,7 @@ static void update_throttle(mame_time emutime)
 	cycles_t target, curr, cps, diffcycles;
 	int allowed_to_sleep;
 	subseconds_t subsecs_per_cycle;
-	int paused = mame_is_paused();
+	int paused = mame_is_paused(Machine);
 
 	// if we're only syncing to the refresh, bail now
 	if (video_config.syncrefresh)
@@ -688,7 +685,7 @@ static void update_fps(mame_time emutime)
 				video_screen_save_snapshot(fp, 0);
 				mame_fclose(fp);
 			}
-			mame_schedule_exit();
+			mame_schedule_exit(Machine);
 		}
 		fps_end_time = curr;
 	}
@@ -703,7 +700,7 @@ static void update_fps(mame_time emutime)
 static void update_autoframeskip(void)
 {
 	// skip if paused
-	if (mame_is_paused())
+	if (mame_is_paused(Machine))
 		return;
 
 	// don't adjust frameskip if we're paused or if the debugger was

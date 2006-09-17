@@ -34,7 +34,9 @@
 
 extern int win_use_mouse;
 
-void win_pause_input(int pause);
+int wininput_init(running_machine *machine);
+
+void win_pause_input(running_machine *machine, int pause);
 void wininput_poll(void);
 
 BOOL win_raw_mouse_update(HANDLE in_device_handle);

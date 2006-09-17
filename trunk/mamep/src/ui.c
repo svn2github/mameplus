@@ -162,7 +162,7 @@ static void display_input_log(void);
     FUNCTION PROTOTYPES
 ***************************************************************************/
 
-static void ui_exit(void);
+static void ui_exit(running_machine *machine);
 
 /* text generators */
 static int sprintf_font_warning(char *buffer);
@@ -197,8 +197,8 @@ static INT32 slider_yoffset(INT32 newval, char *buffer, int arg);
 static INT32 slider_flicker(INT32 newval, char *buffer, int arg);
 static INT32 slider_beam(INT32 newval, char *buffer, int arg);
 
-static void build_bgtexture(void);
-static void free_bgtexture(void);
+static void build_bgtexture(running_machine *machine);
+static void free_bgtexture(running_machine *machine);
 
 #define add_line(x0,y0,x1,y1,color)	render_ui_add_line(UI_UNSCALE_TO_FLOAT_X(x0), UI_UNSCALE_TO_FLOAT_Y(y0), UI_UNSCALE_TO_FLOAT_X(x1), UI_UNSCALE_TO_FLOAT_Y(y1), UI_LINE_WIDTH, ui_get_rgb_color(color), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA))
 #define add_char(x,y,ch,color)		render_ui_add_char(UI_UNSCALE_TO_FLOAT_X(x), UI_UNSCALE_TO_FLOAT_Y(y), UI_TARGET_FONT_HEIGHT, render_get_ui_aspect(), ui_get_rgb_color(color), ui_font, ch)
@@ -261,16 +261,16 @@ INLINE rgb_t ui_get_rgb_color(rgb_t color)
     ui_init - set up the user interface
 -------------------------------------------------*/
 
-int ui_init(void)
+int ui_init(running_machine *machine)
 {
 	/* make sure we clean up after ourselves */
-	add_exit_callback(ui_exit);
+	add_exit_callback(machine, ui_exit);
 
 	/* load the localization file */
 	if (uistring_init() != 0)
 		fatalerror("uistring_init failed");
 
-	build_bgtexture();
+	build_bgtexture(machine);
 	ui_font = render_font_alloc("ui.bdf");
 	if (uifont_need_font_warning())
 	{
@@ -318,8 +318,8 @@ int ui_init(void)
 	ui_bgcolor = UI_FILLCOLOR;
 
 	/* initialize the other UI bits */
-	ui_menu_init();
-	ui_gfx_init();
+	ui_menu_init(machine);
+	ui_gfx_init(machine);
 
 	/* reset globals */
 	single_step = FALSE;
@@ -332,7 +332,7 @@ int ui_init(void)
     ui_exit - clean up ourselves on exit
 -------------------------------------------------*/
 
-static void ui_exit(void)
+static void ui_exit(running_machine *machine)
 {
 	/* free the font */
 	if (ui_font != NULL)
@@ -367,7 +367,7 @@ int ui_display_startup_screens(int show_disclaimer, int show_warnings, int show_
 
 	/* loop over states */
 	ui_set_handler(handler_ingame, 0);
-	for (state = -1; state < maxstate && !mame_is_scheduled_event_pending(); state++)
+	for (state = -1; state < maxstate && !mame_is_scheduled_event_pending(Machine); state++)
 	{
 		/* default to standard colors */
 		messagebox_backcolor = UI_FILLCOLOR;
@@ -415,7 +415,7 @@ int ui_display_startup_screens(int show_disclaimer, int show_warnings, int show_
 		while (code_read_async() != CODE_NONE) ;
 
 		/* loop while we have a handler */
-		while (ui_handler_callback != handler_ingame && !mame_is_scheduled_event_pending())
+		while (ui_handler_callback != handler_ingame && !mame_is_scheduled_event_pending(Machine))
 			video_frame_update();
 
 		/* clear the handler and force an update */
@@ -466,7 +466,7 @@ void ui_update_and_render(void)
 	render_container_empty(render_container_get_ui());
 
 	/* if we're paused, dim the whole screen */
-	if (mame_get_phase() >= MAME_PHASE_RESET && (single_step || mame_is_paused()))
+	if (mame_get_phase(Machine) >= MAME_PHASE_RESET && (single_step || mame_is_paused(Machine)))
 	{
 		int alpha = (1.0f - options.pause_bright) * 255.0f;
 		if (alpha > 255)
@@ -1622,7 +1622,7 @@ static UINT32 handler_messagebox_ok(UINT32 state)
 	/* if the user cancels, exit out completely */
 	if (res == 2)
 	{
-		mame_schedule_exit();
+		mame_schedule_exit(Machine);
 		state = UI_HANDLER_CANCEL;
 	}
 
@@ -1647,7 +1647,7 @@ static UINT32 handler_messagebox_selectkey(UINT32 state)
 	/* if the user cancels, exit out completely */
 	if (res == 2)
 	{
-		mame_schedule_exit();
+		mame_schedule_exit(Machine);
 		state = UI_HANDLER_CANCEL;
 	}
 
@@ -1669,12 +1669,12 @@ static UINT32 handler_messagebox_selectkey(UINT32 state)
 
 static UINT32 handler_ingame(UINT32 state)
 {
-	int is_paused = mame_is_paused();
+	int is_paused = mame_is_paused(Machine);
 
 	/* if we're single-stepping, pause now */
 	if (single_step)
 	{
-		mame_pause(TRUE);
+		mame_pause(Machine, TRUE);
 		single_step = FALSE;
 	}
 
@@ -1708,29 +1708,29 @@ static UINT32 handler_ingame(UINT32 state)
 
 	/* handle a reset request */
 	if (input_ui_pressed(IPT_UI_RESET_MACHINE))
-		mame_schedule_hard_reset();
+		mame_schedule_hard_reset(Machine);
 	if (input_ui_pressed(IPT_UI_SOFT_RESET))
-		mame_schedule_soft_reset();
+		mame_schedule_soft_reset(Machine);
 
 	/* handle a request to display graphics/palette */
 	if (input_ui_pressed(IPT_UI_SHOW_GFX))
 	{
 		if (!is_paused)
-			mame_pause(TRUE);
+			mame_pause(Machine, TRUE);
 		return ui_set_handler(ui_gfx_ui_handler, is_paused);
 	}
 
 	/* handle a save state request */
 	if (input_ui_pressed(IPT_UI_SAVE_STATE))
 	{
-		mame_pause(TRUE);
+		mame_pause(Machine, TRUE);
 		return ui_set_handler(handler_load_save, LOADSAVE_SAVE);
 	}
 
 	/* handle a load state request */
 	if (input_ui_pressed(IPT_UI_LOAD_STATE))
 	{
-		mame_pause(TRUE);
+		mame_pause(Machine, TRUE);
 		return ui_set_handler(handler_load_save, LOADSAVE_LOAD);
 	}
 
@@ -1749,10 +1749,10 @@ static UINT32 handler_ingame(UINT32 state)
 		if (is_paused && (code_pressed(KEYCODE_LSHIFT) || code_pressed(KEYCODE_RSHIFT)))
 		{
 			single_step = TRUE;
-			mame_pause(FALSE);
+			mame_pause(Machine, FALSE);
 		}
 		else
-			mame_pause(!mame_is_paused());
+			mame_pause(Machine, !mame_is_paused(Machine));
 	}
 
 
@@ -1919,7 +1919,7 @@ static UINT32 handler_load_save(UINT32 state)
 			popmessage(_("Load cancelled"));
 
 		/* reset the state */
-		mame_pause(FALSE);
+		mame_pause(Machine, FALSE);
 		return UI_HANDLER_CANCEL;
 	}
 
@@ -1943,16 +1943,16 @@ static UINT32 handler_load_save(UINT32 state)
 	if (state == LOADSAVE_SAVE)
 	{
 		popmessage(_("Save to position %c"), file);
-		mame_schedule_save(filename);
+		mame_schedule_save(Machine, filename);
 	}
 	else
 	{
 		popmessage(_("Load from position %c"), file);
-		mame_schedule_load(filename);
+		mame_schedule_load(Machine, filename);
 	}
 
 	/* remove the pause and reset the state */
-	mame_pause(FALSE);
+	mame_pause(Machine, FALSE);
 	return UI_HANDLER_CANCEL;
 }
 
@@ -1967,7 +1967,7 @@ static UINT32 handler_confirm_quit(UINT32 state)
 
 	if (!options.confirm_quit)
 	{
-		mame_schedule_exit();
+		mame_schedule_exit(Machine);
 		return UI_HANDLER_CANCEL;
 	}
 
@@ -1975,7 +1975,7 @@ static UINT32 handler_confirm_quit(UINT32 state)
 
 	if (input_ui_pressed(IPT_UI_SELECT))
 	{
-		mame_schedule_exit();
+		mame_schedule_exit(Machine);
 		return UI_HANDLER_CANCEL;
 	}
 
@@ -2483,7 +2483,7 @@ void ui_set_visible_area(int xmin, int ymin, int xmax, int ymax)
 	ui_font_height = height / (float)ui_screen_height;
 }
 
-static void build_bgtexture(void)
+static void build_bgtexture(running_machine *machine)
 {
 #ifdef UI_COLOR_DISPLAY
 	float r = (float)options.uicolortable[UI_FILLCOLOR][0];
@@ -2519,10 +2519,10 @@ static void build_bgtexture(void)
 	}
 
 	bgtexture = render_texture_alloc(bgbitmap, NULL, NULL, TEXFORMAT_ARGB32, render_texture_hq_scale, NULL);
-	add_exit_callback(free_bgtexture);
+	add_exit_callback(machine, free_bgtexture);
 }
 
-static void free_bgtexture(void)
+static void free_bgtexture(running_machine *machine)
 {
 	bitmap_free(bgbitmap);
 	bgbitmap = NULL;

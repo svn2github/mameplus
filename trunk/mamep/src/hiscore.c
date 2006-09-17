@@ -283,7 +283,7 @@ void hiscore_close (void)
 /* public API */
 
 /* call hiscore_open once after loading a game */
-void hiscore_init (const char *name)
+void hiscore_init (running_machine *machine, const char *name)
 {
 	memory_range *mem_range = state.mem_range;
 	mame_file *f;

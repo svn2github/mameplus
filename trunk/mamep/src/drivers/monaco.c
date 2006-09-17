@@ -1212,7 +1212,7 @@ ROM_START( monaco )
  */
 ROM_END
 
-void init_monaco( void )
+static DRIVER_INIT( monaco )
 {
 	int i;
 	const double dy_table[5] =

@@ -8549,20 +8549,20 @@ ROM_END
 static DRIVER_INIT( wof )
 {
 	wof_decode();
-	init_cps1();
+	init_cps1(machine);
 }
 
 static DRIVER_INIT( dino )
 {
 	dino_decode();
-	init_cps1();
+	init_cps1(machine);
 }
 
 static DRIVER_INIT( dinoh )
 {	
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x800180, 0x800181, 0, 0, dinoh_sound_command_w);
 	dino_decode();	
-	init_cps1();
+	init_cps1(machine);
 }
 
 static DRIVER_INIT( dinohb )
@@ -8614,7 +8614,7 @@ static DRIVER_INIT( dinohb )
 	mem8[0xaaa6d] = 0x00;
 
 	dino_decode();
-	init_cps1();
+	init_cps1(machine);
 }
 
 static DRIVER_INIT( wofh )
@@ -8742,7 +8742,7 @@ static DRIVER_INIT( wofh )
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x880000, 0x880001, 0, 0, input_port_4_word_r); /* Input ports */
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x880006, 0x88000f, 0, 0, input_port_0_word_r); /* Input ports */
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x880006, 0x880007, 0, 0, cps1_output_w); /* Output ports */
-	init_cps1();
+	init_cps1(machine);
 }
 
 static DRIVER_INIT( wof3js )
@@ -8763,7 +8763,7 @@ static DRIVER_INIT( wof3js )
 	mem8[0x5A5A] = 0x11;
 	mem8[0x5A5B] = 0x00;
 	wof_decode();
-	init_cps1();
+	init_cps1(machine);
 }
 
 static DRIVER_INIT( wof3sj )
@@ -8884,7 +8884,7 @@ static DRIVER_INIT( wof3sj )
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x880000, 0x880001, 0, 0, input_port_4_word_r); /* Input ports */
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x880008, 0x88000f, 0, 0, input_port_0_word_r); /* Input ports */
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x880008, 0x880009, 0, 0, cps1_output_w); /* Output ports */
-	init_cps1();
+	init_cps1(machine);
 }
 
 static DRIVER_INIT( wofsjb )
@@ -8952,7 +8952,7 @@ static DRIVER_INIT( wofsjb )
 	mem8[0x72B8] = 0x00;
 	mem8[0x72B9] = 0x0C;
 	wof_decode();
-	init_cps1();
+	init_cps1(machine);
 }
 
 static DRIVER_INIT( sf2m2 )
@@ -8961,7 +8961,7 @@ static DRIVER_INIT( sf2m2 )
 	// Patch protection? check
 	mem8[0xC0670] = 0x71;
 	mem8[0xC0671] = 0x4E;
-	init_cps1();
+	init_cps1(machine);
 }
 
 static DRIVER_INIT( sf2m13 )
@@ -8990,7 +8990,7 @@ static DRIVER_INIT( sf2m13 )
 	rom[0x21d1c/2] = 0x823c;
 	rom[0x21d2a/2] = 0x822d;
 
-	init_cps1();
+	init_cps1(machine);
 }
 
 static DRIVER_INIT( kodb )
@@ -9203,19 +9203,19 @@ static DRIVER_INIT( kodb )
 	mem8[0x7A134] = 0x80;
 	mem8[0x7A136] = 0x6A;
 	mem8[0x7A137] = 0x1;
-	init_cps1();
+	init_cps1(machine);
 }
 
 static DRIVER_INIT( punisher )
 {
 	punisher_decode();
-	init_cps1();
+	init_cps1(machine);
 }
 
 static DRIVER_INIT( slammast )
 {
 	slammast_decode();
-	init_cps1();
+	init_cps1(machine);
 }
 
 static DRIVER_INIT( pang3 )
@@ -9239,7 +9239,7 @@ static DRIVER_INIT( pang3 )
 		rom[A/2] = dst;
 	}
 
-	init_cps1();
+	init_cps1(machine);
 }
 
 

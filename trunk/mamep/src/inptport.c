@@ -1092,7 +1092,7 @@ static int auto_pressed(input_bit_info *info);
  *
  *************************************/
 
-int input_port_init(void (*construct_ipt)(input_port_init_params *))
+int input_port_init(running_machine *machine, void (*construct_ipt)(input_port_init_params *))
 {
 	int ipnum, player;
 
@@ -3152,7 +3152,7 @@ void input_port_set_changed_callback(int port, UINT32 mask, void (*callback)(voi
 	input_port_info *portinfo = &port_info[port];
 	changed_callback_info *cbinfo;
 
-	assert_always(mame_get_phase() == MAME_PHASE_INIT, "Can only call input_port_set_changed_callback() at init time!");
+	assert_always(mame_get_phase(Machine) == MAME_PHASE_INIT, "Can only call input_port_set_changed_callback() at init time!");
 	assert_always((port >= 0) && (port < MAX_INPUT_PORTS), "Invalid port number passed to input_port_set_changed_callback()!");
 
 	cbinfo = auto_malloc(sizeof(*cbinfo));
