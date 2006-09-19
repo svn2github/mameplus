@@ -10109,4 +10109,4 @@ GAMEB( 2000, bangbedp, bangbead, neogeo, neogeo, neogeo,  neogeo,   ROT0, "Visco
 
 /* new Bootleg */
 GAMEB( 2003, kof97pla, kof97,    neogeo, neogeo, neogeo,  kof97pla, ROT0, "bootleg", "The King of Fighters '97 Plus 2003 (bootleg / hack)", 0 )
-GAMEB( 2003, mslug5b,  mslug5,   neogeo, neogeo, neogeo,  mslug5b,  ROT0, "bootleg", "Metal Slug 5 (bootleg / hack)", 0 )
+GAMEB( 2003, mslug5b,  mslug5,   neogeo, neogeo, neogeo,  mslug5b,  ROT0, "bootleg", "Metal Slug 5 (bootleg)", 0 )
