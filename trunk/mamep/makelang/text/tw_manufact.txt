@@ -2,7 +2,7 @@
 <unknown>
 <未知的>
 
-# Digger Man
+# Intersecti
 Unknown
 未知的
 
@@ -86,8 +86,16 @@ Absolute Entertainment Inc.
 Academysoft-Elory
 
 
-# Acclaim PSX
+# NBA Jam Extreme
 Acclaim
+
+
+# Warpspeed (U) [!]
+Accolade
+
+
+# Pele! (UE) [!]
+Accolate
 
 
 # Imago
@@ -154,6 +162,10 @@ American Sammy
 Amstar
 
 
+# Zero (set 2)
+Amtec
+
+
 # Minesweeper
 Amutech
 
@@ -162,7 +174,7 @@ Amutech
 Apple
 
 
-# Arcadia System BIOS
+# SportTime Table Hockey (Arcadia, V 2.1)
 Arcadia Systems
 
 
@@ -190,7 +202,7 @@ Ashby Computers and Graphics LTD.
 Associated Overseas MFR, Inc
 
 
-# Pong
+# Fast Freddie
 Atari
 
 
@@ -202,7 +214,7 @@ Atari Games
 Athena
 
 
-# Atlus PSX
+# Power Instinct 3 - Groove On Fight (J 970416 V1.001)
 Atlus
 
 
@@ -218,6 +230,10 @@ BMC
 BROOKS
 
 
+# Carrera (Version 6.7)
+BS Electronics
+
+
 # Jump Shot
 Bally Midway
 
@@ -230,7 +246,7 @@ Bandai
 Banpresto
 
 
-# MPU4 Video Firmware
+# The Crystal Maze: Team Challenge (SWP)
 Barcrest
 
 
@@ -250,16 +266,28 @@ Barko Corp.
 Bee-Oh
 
 
-# Neo No Panepon (beta)
+# Neo 2500 Demo
 Blastar
+
+
+# Big Boy
+Bonanza
 
 
 # Super Glob (Pac-Man hardware) German
 Bootleg
 
 
-# Crystal System BIOS
+# The Crystal of Kings
 Brezzasoft
+
+
+# Gargoyles (U) [!]
+Buena Vista Interactive
+
+
+# Wild Snake (U) (Prototype) [!]
+Bullet-Proof Software
 
 
 # Herbie at the Olympics (DK conversion)
@@ -310,6 +338,10 @@ Century II
 Century?
 
 
+# Neo-Demo
+Chaos
+
+
 # Funny Mouse
 Chuo Co. Ltd
 
@@ -320,6 +352,10 @@ Cinematronics
 
 # Fred Flintstones' Memory Match
 Coastal Amusements
+
+
+# Micro Machines (UE) [c][!]
+Codemasters
 
 
 # Quizmaster
@@ -340,6 +376,10 @@ Compile
 
 # Battle of Atlantis (set 1)
 Comsoft
+
+
+# Corporation (E) [c][!]
+Core
 
 
 # SWAT
@@ -372,6 +412,10 @@ D. R. Korea
 
 # Tetris (D.R. Korea)
 D.R. Korea
+
+
+# Poke Champ
+DGRM
 
 
 # Pipeline
@@ -410,6 +454,10 @@ Data East Pinball
 Data East USA
 
 
+# Flashback - The Quest for Identity (U) [!]
+Delphine
+
+
 # Logic Pro (Japan)
 Deniam
 
@@ -430,12 +478,32 @@ Digital Soft
 Digitrex Techstar
 
 
-# Double Point
+# Dino Dini's Soccer (E)
+Dino Dini
+
+
+# Great Circus Mystery, The - Starring Mickey & Minnie (U) [!]
+Disney
+
+
+# Connect 4
+Dolbeck Systems
+
+
+# Blood Shot (E) (M4) [!]
+Domark
+
+
+# Double Point (Dong Bang Electron, bootleg?)
 Dong Bang Electron
 
 
 # Pang Pang
 Dong Gue La Mi Ltd.
+
+
+# Pasha Pasha 2
+Dong Sung
 
 
 # Got-cha Mini Game Festival
@@ -538,10 +606,6 @@ Ed
 Eighting
 
 
-# PS Arcade 95
-Eighting/Raizing
-
-
 # Space Force (set 2)
 Elcon
 
@@ -600,6 +664,10 @@ Enerdyne Technologies, Inc.
 
 # Act Raiser (Nintendo Super System)
 Enix
+
+
+# Swinging Singles
+Ent. Ent. Ltd
 
 
 # Noah's Ark
@@ -662,6 +730,10 @@ Face
 Face?
 
 
+# Mega Bomberman - 8 Player Demo (Unl)
+Factor 5
+
+
 # Frogger (Falcon bootleg)
 Falcon
 
@@ -686,16 +758,12 @@ Fun World
 Fuuki
 
 
-# Selection (Version 40.02TMB)
+# Selection (Version 40.02TMB) set 1
 G.E.I.
 
 
 # Flame Gunner
 GAPS Inc.
-
-
-# Dambusters (set 2)
-GAT
 
 
 # Abscam
@@ -714,7 +782,7 @@ GMS
 GREEN SOFT
 
 
-# Xor World (prototype)
+# Master Boy (Spanish, PCB Rev A)
 Gaelco
 
 
@@ -742,6 +810,10 @@ GameTek
 Gameace
 
 
+# (Game Gear) Tesserae  [!]
+Gametek
+
+
 # Puckman Pockimon
 Genie
 
@@ -766,6 +838,10 @@ Graphic Techno
 Grayhound Electronics
 
 
+# Super Crash (bootleg of Head On)
+Gremlim
+
+
 # Moon Cresta (Gremlin)
 Gremlin
 
@@ -780,6 +856,10 @@ H.A.R. Management
 
 # Double Cheese
 HAR
+
+
+# Super Free Kick
+HEC
 
 
 # Laser Base (set 1)
@@ -830,7 +910,7 @@ Human Amusement
 Human Inc.
 
 
-# Multi Amenity Cassette System BIOS
+# Kisekae Mahjong
 I'Max
 
 
@@ -962,6 +1042,10 @@ Kitronix
 Kiwako
 
 
+# Aerobiz Supersonic (U) [!]
+Koei
+
+
 # Flower
 Komax
 
@@ -990,8 +1074,16 @@ Kural Samno Electric
 Kural TWT
 
 
+# Digger Man (prototype)
+Kyle Hodgetts
+
+
 # '99: The Last War (Kyugo)
 Kyugo
+
+
+# Ripper Ribbit (Version 2.8.4)
+LAI Games
 
 
 # Zig Zag (Galaxian hardware, set 1)
@@ -1004,6 +1096,10 @@ Leante Games
 
 # Space War (Leijac)
 Leijac
+
+
+# Astro Laser
+Leisure Time Electronics Inc.
 
 
 # Super Baseball Double Play Home Run Derby
@@ -1028,6 +1124,10 @@ MIKI SYOUJI
 
 # Medal Mahjong Pachi-Slot Tengoku [BET] (Japan)
 MIKI SYOUJI/AV JAPAN
+
+
+# Catacomb
+MTM Games
 
 
 # Wakakusamonogatari Mahjong Yonshimai (Japan)
@@ -1090,7 +1190,7 @@ Microhard
 Micronet
 
 
-# F-15 Strike Eagle (rev. 2.1)
+# F-15 Strike Eagle (rev. 2.2 02/25/91)
 Microprose
 
 
@@ -1150,6 +1250,10 @@ Mylstar
 N.Kehrer
 
 
+# Gynoug (J) [!]
+NCS
+
+
 # Pirates
 NIX
 
@@ -1164,6 +1268,10 @@ NTC
 
 # Quiz Channel Question (Ver 1.00) (Japan)
 Nakanihon
+
+
+# Red Corsair
+Nakasawa
 
 
 # PuckMan (Japan set 1, Probably Bootleg)
@@ -1298,6 +1406,10 @@ Outer Limits
 P & P Marketing
 
 
+# Magic Fly (Ver 0.3)
+P&A Games
+
+
 # Bowl-O-Rama
 P&P Marketing
 
@@ -1330,8 +1442,12 @@ Paradise Co. Ltd.
 Petaco S.A.
 
 
-# Turtle Ship (Japan)
+# Turtle Ship (North America)
 Philko
+
+
+# PlayMan Poker (Germany)
+PlayMan?
 
 
 # Super Slam (set 1)
@@ -1348,6 +1464,10 @@ Playtronic SRL
 
 # News (set 1)
 Poby
+
+
+# Pagemaster, The (U) [!]
+Probe
 
 
 # Ozon I
@@ -1372,6 +1492,10 @@ RACDYM
 
 # Kyukyoku no Hito [BET] (Japan 880824)
 ROLLER TRON
+
+
+# Radica: Volume 1 (Sonic the Hedgehog, Altered Beast, Golden Axe, Dr. Robotnik's Mean Bean Machine, Kid Chameleon, Flicky) (US)
+Radica Games
 
 
 # Azurian Attack
@@ -1406,8 +1530,8 @@ Raster Elite
 Rastersoft
 
 
-# Zintrick / Oshidashi Zentrix (CD to MVS Conversion)
-Razoola
+# Earth Defend, The (Unl) [!]
+Realtec
 
 
 # Astro Fire
@@ -1454,6 +1578,14 @@ SNK of America
 SPHINX
 
 
+# Fishing Maniac 3
+Saero Entertainment
+
+
+# Devilish - The Next Possession (U) [c][!]
+Sage's Creation
+
+
 # Elan Doree - Legend of Dragon (JUET 980922 V1.006)
 Sai-Mate
 
@@ -1468,6 +1600,10 @@ Sammy Industries
 
 # Extreme Downhill (v1.5)
 Sammy Industries Japan
+
+
+# Puzzle Star (Sang Ho Soft)
+Sang Ho Soft
 
 
 # Dream Shopper
@@ -1486,7 +1622,7 @@ Sculptured Software Inc.
 Seatongrove Ltd
 
 
-# Monaco GP
+# Ali Baba and 40 Thieves
 Sega
 
 
@@ -1516,6 +1652,10 @@ Semicom
 
 # Special Forces
 Senko Industries
+
+
+# Sensible Soccer - International Edition (E) (M4) [!]
+Sensible Software
 
 
 # Sente Diagnostic Cartridge
@@ -1566,6 +1706,10 @@ Sigma Enterprises Inc.
 Signatron USA
 
 
+# OutRun 2019 (U) [!]
+Sims
+
+
 # Erotictac/Tactic
 Sisteme
 
@@ -1578,12 +1722,24 @@ Soft
 Soft Design
 
 
+# (Game Gear) Gear Works  [!]
+Sony
+
+
+# Dambusters (UK)
+South West Research
+
+
 # Mosaic
 Space
 
 
 # Evil Stone
 Spacy Industrial, Ltd.
+
+
+# Pele's World Tournament Soccer (UE) [!]
+Sport Accolate
 
 
 # Rad Racer (PlayChoice-10)
@@ -1691,7 +1847,7 @@ TV Game Gruenberg
 
 
 # Ameisenbaer (German)
-TV-Tuning 2000
+TV-Tuning
 
 
 # Cabal (US set 1)
@@ -1786,6 +1942,10 @@ Tecmo
 Tecno Soft
 
 
+# Thunder Force IV (J) [!]
+Tecnosoft
+
+
 # Swimmer (set 1)
 Tehkan
 
@@ -1798,12 +1958,28 @@ Tekunon Kougyou
 Telko
 
 
+# Hard Drivin' (W) [!]
+Tengen
+
+
+# Konek-Gorbunok
+Terminal
+
+
 # Galaxian Test ROM
 Test ROM
 
 
 # Lethal Justice
 The Game Room
+
+
+# Trivia Madness
+Thunderhead Inc.
+
+
+# Journey From Darkness - Strider Returns (U) [c][!]
+Tiertex
 
 
 # Area 51 (Time Warner License)
@@ -1828,6 +2004,10 @@ Topis Corp
 
 # Radiant Silvergun (JUET 980523 V1.000)
 Treasure
+
+
+# Warlock (UE) [!]
+Trimark
 
 
 # MTV Rock-N-Roll Trivia (Part 2)
@@ -1870,6 +2050,10 @@ Universal Video Spiel
 Uniwang
 
 
+# 12-in-1 (Unl)
+Unsorted
+
+
 # Rabio Lepus (Japan)
 V-System Co.
 
@@ -1902,6 +2086,10 @@ Veltmeijer Automaten
 Venture Line
 
 
+# Socket (U) [!]
+Vic Tokai
+
+
 # Fight Fever (set 1)
 Viccom
 
@@ -1928,6 +2116,10 @@ Video System Co.
 
 # Griffon
 Videotron
+
+
+# Spot Goes to Hollywood (U) (REV01) [!]
+Virgin
 
 
 # Galmedes (Japan)
@@ -1978,6 +2170,14 @@ Wing
 Wintechno
 
 
+# Bible Adventures (Unl) [!]
+Wisdom Tree
+
+
+# Zan Yasha Enbuden (J) [!]
+Wolfteam
+
+
 # King of Boxer (English)
 Woodplace
 
@@ -1992,10 +2192,6 @@ World Game
 
 # Kyros
 World Games Inc
-
-
-# Swinging Singles
-Yachiyo
 
 
 # Space Stranger
@@ -2058,6 +2254,10 @@ Zenitone-Microsec Ltd
 Zenitone-Microsec Ltd.
 
 
+# Reaktor (Track & Field Conversion)
+Zilec
+
+
 # Wizz Quiz (version 4)
 Zilec - Zenitone
 
@@ -2074,7 +2274,15 @@ Zilec Games
 Zilec-Zenitone
 
 
+# Sub-Terrania (U) [!]
+Zyrinx
+
+
 # X-Files
 dgPIX Entertainment Inc.
+
+
+# NGEM2K (beta 2006-01-18)
+homebrew
 
 
