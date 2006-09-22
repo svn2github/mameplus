@@ -880,6 +880,7 @@ static void save_frame_with(mame_file *fp, int scrnum, int (*write_handler)(mame
 {
 	const render_primitive_list *primlist;
 	INT32 width, height;
+	int error;
 
 	assert(scrnum >= 0 && scrnum < MAX_SCREENS);
 
@@ -906,7 +907,7 @@ static void save_frame_with(mame_file *fp, int scrnum, int (*write_handler)(mame
 	osd_lock_release(primlist->lock);
 
 	/* now do the actual work */
-	(*write_handler)(fp, snap_bitmap);
+	error = (*write_handler)(fp, snap_bitmap);
 }
 
 

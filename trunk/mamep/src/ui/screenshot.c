@@ -444,7 +444,7 @@ static int png_read_bitmap(LPVOID mfile, HGLOBAL *phDIB, HPALETTE *pPAL)
 	UINT32 i;
 	int bytespp;
 	
-	if (!png_read_file(mfile, &p))
+	if (png_read_file(mfile, &p) != PNGERR_NONE)
 		return 0;
 
 	if (p.color_type != 3 && p.color_type != 2)

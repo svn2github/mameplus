@@ -148,7 +148,7 @@ UINT GetDepth(HWND hWnd)
 	return nBPP;
 }
 
-BOOL OnNT()
+BOOL OnNT(void)
 {
 	OSVERSIONINFO version_info;
 	static int result = -1;
@@ -345,10 +345,16 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			machine_config drv;
 			const input_port_entry *input_ports;
 			int speakernum, num_speakers;
+
+dprintf("drivers_info[%d]", ndriver);
+if (ndriver == 6021)
+dprintf("6021: %s", gamedrv->name);
+
 			gameinfo->isClone = ((clone_of = driver_get_clone(gamedrv)) != NULL && (clone_of->flags & NOT_A_DRIVER) == 0);
 			gameinfo->isBroken = ((gamedrv->flags & GAME_NOT_WORKING) != 0);
 			gameinfo->supportsSaveState = ((gamedrv->flags & GAME_SUPPORTS_SAVE) != 0);
 			gameinfo->isHarddisk = FALSE;
+
 			for (region = rom_first_region(gamedrv); region; region = rom_next_region(region))
 				if (ROMREGION_ISDISKDATA(region))
 				{

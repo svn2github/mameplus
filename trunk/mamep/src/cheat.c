@@ -862,7 +862,6 @@ typedef struct MenuItemInfoStruct	MenuItemInfoStruct;
 
 /**** Exported Globals *******************************************************/
 
-int			he_did_cheat = 0;
 const char	* cheatfile = NULL;
 
 /**** Local Globals **********************************************************/
@@ -1213,6 +1212,7 @@ static void		HandleLocalCommandCheat(UINT32 type, UINT32 address, UINT32 data, U
 static void		LoadCheatFile(char * fileName);
 static void		LoadCheatDatabase(void);
 static void		DisposeCheatDatabase(void);
+static void		ReloadCheatDatabase(void);
 
 static void		SaveCheat(CheatEntry * entry);
 static void		DoAutoSaveCheats(void);
@@ -1343,7 +1343,7 @@ static int ReadKeyAsync(int flush)
 				return '0' + (code - KEYCODE_0);
 			}
 		}
-		else if((code >= KEYCODE_0_PAD) && (code <= KEYCODE_0_PAD))
+		else if((code >= KEYCODE_0_PAD) && (code <= KEYCODE_9_PAD))
 		{
 			return '0' + (code - KEYCODE_0_PAD);
 		}
@@ -1695,6 +1695,12 @@ static UINT32 DoEditHexField(UINT32 data)
 {
 	INT8	key;
 
+	if(code_pressed_memory(KEYCODE_BACKSPACE))
+	{
+		data >>= 4;
+		return data;
+	}
+
 	key = ReadHexInput();
 
 	if(key != -1)
@@ -1763,8 +1769,6 @@ static INT32 DoEditDecField(INT32 data, INT32 min, INT32 max)
 
 void cheat_init(running_machine *machine)
 {
-	he_did_cheat =			0;
-
 	cheatList =				NULL;
 	cheatListLength =		0;
 
@@ -2018,6 +2022,9 @@ UINT32 cheat_menu(UINT32 state)
 				break;
 		}
 	}
+
+	if(input_ui_pressed(IPT_UI_RELOAD_CHEAT))
+		ReloadCheatDatabase();
 
 	if(input_ui_pressed(IPT_UI_CANCEL))
 		sel = -1;
@@ -2315,25 +2322,32 @@ static INT32 UserSelectValueMenu(int selection, CheatEntry * entry)
 	// get a key
 	keyValue = ReadHexInput();
 
+	if((keyValue != -1) && TEST_FIELD(action->type, UserSelectBCD) && ((keyValue < 0 ) || (keyValue > 9)))
+		keyValue = -1;
+
 	// if we got a key
 	if(keyValue != -1)
 	{
 		// add it
-		if(TEST_FIELD(action->type, UserSelectBCD))
+		value <<= 4;
+
+		switch(EXTRACT_FIELD(action->type, BytesUsed))
 		{
-			if(value < 10)
-			{
-				value *= 10;
-				value &= 0xFF;
-				value += keyValue;
-			}
+			case 0: // 8 bit
+				value &= 0xF0;
+				break;
+			case 1: // 16 bit
+				value &= 0xFFF0;
+				break;
+			case 2: // 24 bit
+				value &= 0xFFFFF0;
+				break;
+			case 3: // 32 bit
+				value &= 0xFFFFFFF0;
+				break;
 		}
-		else
-		{
-			value <<= 4;
-			value &= 0xF0;
-			value |= keyValue & 0x0F;
-		}
+
+		value |= keyValue & 0x0F;
 
 		delta = 0;
 		forceUpdate = 1;
@@ -2479,6 +2493,7 @@ static int EnableDisableCheatMenu(int selection, int firstTime, int shortcut)
 			if((traverse->flags & kCheatFlag_OneShot) && !traverse->selection)
 			{
 				traverse->selection = 1;
+				traverse->actionList[traverse->selection].flags |= kActionFlag_OperationDone;
 			}
 
 			if(traverse->selection && (traverse->selection < traverse->actionListLength))
@@ -2649,6 +2664,8 @@ static int EnableDisableCheatMenu(int selection, int firstTime, int shortcut)
 				{
 					if(entry->selection <= 0)
 						entry->selection = entry->actionListLength - 1;
+
+					entry->actionList[entry->selection].flags |= kActionFlag_OperationDone;
 				}
 				else
 				{
@@ -2709,6 +2726,7 @@ static int EnableDisableCheatMenu(int selection, int firstTime, int shortcut)
 						if(entry->selection >= entry->actionListLength)
 							entry->selection = 0;
 					}
+					entry->actionList[entry->selection].flags |= kActionFlag_OperationDone;
 				}
 				else
 				{
@@ -2835,6 +2853,9 @@ static int EnableDisableCheatMenu(int selection, int firstTime, int shortcut)
 			SaveCheat(entry);
 		}
 	}
+
+	if(input_ui_pressed(IPT_UI_RELOAD_CHEAT))
+		ReloadCheatDatabase();
 
 	/* Cancel pops us up a menu level */
 	if(input_ui_pressed(IPT_UI_CANCEL))
@@ -3441,7 +3462,10 @@ static int EditCheatMenu(CheatEntry * entry, int selection)
 				{
 					// do range minimum field
 
-					sprintf(extendDataBuf[i], "%.2X", (traverse->extendData >> 8) & 0xFF);
+					if(!EXTRACT_FIELD(traverse->type, BytesUsed))
+						sprintf(extendDataBuf[i], "%.2X", (traverse->extendData >> 8) & 0xFF);
+					else
+						sprintf(extendDataBuf[i], "%.4X", (traverse->extendData >> 16) & 0xFFFF);
 
 					menuItemInfo[total].subcheat = i;
 					menuItemInfo[total].fieldType = kType_RangeMinimum;
@@ -3454,12 +3478,20 @@ static int EditCheatMenu(CheatEntry * entry, int selection)
 				{
 					// do range maximum field
 
-					sprintf(extendDataBuf[i] + 3, "%.2X", (traverse->extendData >> 0) & 0xFF);
+					if(!EXTRACT_FIELD(traverse->type, BytesUsed))
+					{
+						sprintf(extendDataBuf[i] + 3, "%.2X", (traverse->extendData >> 0) & 0xFF);
+						menuSubItem[total] = extendDataBuf[i] + 3;
+					}
+					else
+					{
+						sprintf(extendDataBuf[i] + 7, "%.4X", (traverse->extendData >> 0) & 0xFFFF);
+						menuSubItem[total] = extendDataBuf[i] + 7;
+					}
 
 					menuItemInfo[total].subcheat = i;
 					menuItemInfo[total].fieldType = kType_RangeMaximum;
-					menuItem[total] = "Range Maximum";
-					menuSubItem[total] = extendDataBuf[i] + 3;
+					menuItem[total] = _("Range Maximum");
 
 					total++;
 				}
@@ -3543,20 +3575,21 @@ static int EditCheatMenu(CheatEntry * entry, int selection)
 
 							total++;
 						}
-
-						{
-							// do prefill field
-
-							menuItemInfo[total].subcheat = i;
-							menuItemInfo[total].fieldType = kType_Prefill;
-							menuItem[total] = _("Prefill");
-							menuSubItem[total] = _(kPrefillNames[EXTRACT_FIELD(traverse->type, Prefill)]);
-
-							total++;
-						}
 					}
 
-					if(i > 0)
+					if(userSelect || isSelect)
+					{
+						// do prefill field
+
+						menuItemInfo[total].subcheat = i;
+						menuItemInfo[total].fieldType = kType_Prefill;
+						menuItem[total] = _("Prefill");
+						menuSubItem[total] = kPrefillNames[EXTRACT_FIELD(traverse->type, Prefill)];
+
+						total++;
+					}
+
+					if(userSelect && i > 0)
 					{
 						// do copy previous value field
 
@@ -3913,11 +3946,17 @@ static int EditCheatMenu(CheatEntry * entry, int selection)
 				break;
 
 			case kType_RangeMinimum:
-				action->extendData = (action->extendData & 0xFFFF00FF) | ((action->extendData - 0x00000100) & 0x0000FF00);
+				if(!EXTRACT_FIELD(action->type, BytesUsed))
+					action->extendData = (action->extendData & 0xFFFF00FF) | ((action->extendData - 0x00000100) & 0x0000FF00);
+				else
+					action->extendData = (action->extendData & 0x0000FFFF) | ((action->extendData - 0x00010000) & 0xFFFF0000);
 				break;
 
 			case kType_RangeMaximum:
-				action->extendData = (action->extendData & 0xFFFFFF00) | ((action->extendData - 0x00000001) & 0x000000FF);
+				if(!EXTRACT_FIELD(action->type, BytesUsed))
+					action->extendData = (action->extendData & 0xFFFFFF00) | ((action->extendData - 0x00000001) & 0x000000FF);
+				else
+					action->extendData = (action->extendData & 0xFFFF0000) | ((action->extendData - 0x00000001) & 0x0000FFFF);
 				break;
 
 			case kType_AddressIndex:
@@ -3954,7 +3993,11 @@ static int EditCheatMenu(CheatEntry * entry, int selection)
 				break;
 
 			case kType_Prefill:
-				TOGGLE_MASK_FIELD(action->type, Prefill);
+			{
+				UINT32	prefill = (EXTRACT_FIELD(action->type, Prefill) - 1) & 3;
+
+				SET_FIELD(action->type, Prefill, prefill);
+			}
 				break;
 
 			case kType_CopyPrevious:
@@ -4191,11 +4234,17 @@ static int EditCheatMenu(CheatEntry * entry, int selection)
 				break;
 
 			case kType_RangeMinimum:
-				action->extendData = (action->extendData & 0xFFFF00FF) | ((action->extendData + 0x00000100) & 0x0000FF00);
+				if(!EXTRACT_FIELD(action->type, BytesUsed))
+					action->extendData = (action->extendData & 0xFFFF00FF) | ((action->extendData + 0x00000100) & 0x0000FF00);
+				else
+					action->extendData = (action->extendData & 0x0000FFFF) | ((action->extendData + 0x00010000) & 0xFFFF0000);
 				break;
 
 			case kType_RangeMaximum:
-				action->extendData = (action->extendData & 0xFFFFFF00) | ((action->extendData + 0x00000001) & 0x000000FF);
+				if(!EXTRACT_FIELD(action->type, BytesUsed))
+					action->extendData = (action->extendData & 0xFFFFFF00) | ((action->extendData + 0x00000001) & 0x000000FF);
+				else
+					action->extendData = (action->extendData & 0xFFFF0000) | ((action->extendData + 0x00000001) & 0x0000FFFF);
 				break;
 
 			case kType_AddressIndex:
@@ -4232,7 +4281,11 @@ static int EditCheatMenu(CheatEntry * entry, int selection)
 				break;
 
 			case kType_Prefill:
-				TOGGLE_MASK_FIELD(action->type, Prefill);
+			{
+				UINT32	prefill = (EXTRACT_FIELD(action->type, Prefill) + 1) & 3;
+
+				SET_FIELD(action->type, Prefill, prefill);
+			}
 				break;
 
 			case kType_CopyPrevious:
@@ -4511,11 +4564,20 @@ static int EditCheatMenu(CheatEntry * entry, int selection)
 			{
 				UINT32	temp;
 
-				temp = (action->extendData >> 8) & 0xFF;
+				if(!TEST_FIELD(action->type, BytesUsed))
+				{
+					temp = (action->extendData >> 8) & 0xFF;
+					temp = DoEditHexField(temp) & 0xFF;
 
-				temp = DoEditHexField(temp) & 0xFF;
+					action->extendData = (action->extendData & 0xFF) | ((temp << 8) & 0xFF00);
+				}
+				else
+				{
+					temp = (action->extendData >> 16) & 0xFFFF;
+					temp = DoEditHexField(temp) & 0xFFFF;
 
-				action->extendData = (action->extendData & 0x00FF) | ((temp << 8) & 0xFF00);
+					action->extendData = (action->extendData & 0x0000FFFF) | ((temp << 16) & 0xFFFF0000);
+				}
 			}
 			break;
 
@@ -4523,11 +4585,20 @@ static int EditCheatMenu(CheatEntry * entry, int selection)
 			{
 				UINT32	temp;
 
-				temp = action->extendData & 0xFF;
+				if(!TEST_FIELD(action->type, BytesUsed))
+				{
+					temp = action->extendData & 0xFF;
+					temp = DoEditHexField(temp) & 0xFF;
 
-				temp = DoEditHexField(temp) & 0xFF;
+					action->extendData = (action->extendData & 0xFF00) | (temp & 0x00FF);
+				}
+				else
+				{
+					temp = action->extendData & 0xFFFF;
+					temp = DoEditHexField(temp) & 0xFFFF;
 
-				action->extendData = (action->extendData & 0xFF00) | (temp & 0x00FF);
+					action->extendData = (action->extendData & 0xFFFF0000) | (temp & 0x0000FFFF);
+				}
 			}
 			break;
 
@@ -4846,7 +4917,12 @@ static int DoSearchMenuClassic(int selection, int startNew)
 				search->bytes =			kSearchSize_8Bit;
 				search->lhs =			kSearchOperand_Current;
 				search->rhs =			kSearchOperand_Value;
-				search->comparison =	kSearchComparison_NearTo;
+
+				if(ShiftKeyPressed())
+					search->comparison = kSearchComparison_EqualTo;
+				else
+					search->comparison = kSearchComparison_NearTo;
+
 				search->value =			search->oldOptions.value;
 
 				doSearch = 1;
@@ -5485,6 +5561,9 @@ static int AddEditCheatMenu(int selection)
 			submenuChoice = 1;
 		}
 	}
+
+	if(input_ui_pressed(IPT_UI_RELOAD_CHEAT))
+		ReloadCheatDatabase();
 
 	if(input_ui_pressed(IPT_UI_CANCEL))
 		sel = -1;
@@ -6994,10 +7073,7 @@ static int SelectOptions(int selection)
 				break;
 
 			case kMenu_ReloadCheatDatabase:
-				DisposeCheatDatabase();
-				LoadCheatDatabase();
-
-				ui_popup_time(1, _("cheat database reloaded"));
+				ReloadCheatDatabase();
 				break;
 
 			case kMenu_SelectSearchRegions:
@@ -8679,6 +8755,11 @@ static void DisposeCheatDatabase(void)
 {
 	int	i;
 
+	for(i = 0; i < cheatListLength; i++)
+	{
+		TempDeactivateCheat(&cheatList[i]);
+	}
+
 	if(cheatList)
 	{
 		for(i = 0; i < cheatListLength; i++)
@@ -8691,6 +8772,14 @@ static void DisposeCheatDatabase(void)
 		cheatList = NULL;
 		cheatListLength = 0;
 	}
+}
+
+static void ReloadCheatDatabase(void)
+{
+	DisposeCheatDatabase();
+	LoadCheatDatabase();
+
+	ui_popup_time(1, _("Cheat Database reloaded"));
 }
 
 static void SaveCheat(CheatEntry * entry)
@@ -9633,12 +9722,16 @@ static UINT32 ReadData(CheatAction * action)
 			UINT8	addressBytes = (parameter & 0x3) + 1;
 			CPUInfo	* info = GetCPUInfo(cpu);
 
-			address = DoCPURead(cpu, action->address, addressBytes, CPUNeedsSwap(parameter) ^ swapBytes);
+			address = DoCPURead(cpu, action->address, addressBytes, CPUNeedsSwap(cpu) ^ swapBytes);
 			if(info)
 				address = DoShift(address, info->addressShift);
-			address += offset;
 
-			return DoCPURead(cpu, address, bytes, CPUNeedsSwap(parameter) ^ swapBytes);
+			if(address)
+			{
+				address += offset;
+
+				return DoCPURead(cpu, address, bytes, CPUNeedsSwap(cpu) ^ swapBytes);
+			}
 		}
 		break;
 
@@ -9731,9 +9824,13 @@ static void WriteData(CheatAction * action, UINT32 data)
 			address = DoCPURead(cpu, action->address, addressBytes, CPUNeedsSwap(cpu) ^ swapBytes);
 			if(info)
 				address = DoShift(address, info->addressShift);
-			address += offset;
 
-			DoCPUWrite(data, cpu, address, bytes, CPUNeedsSwap(cpu) ^ swapBytes);
+			if(address)
+			{
+				address += offset;
+
+				DoCPUWrite(data, cpu, address, bytes, CPUNeedsSwap(cpu) ^ swapBytes);
+			}
 		}
 		break;
 
@@ -9777,7 +9874,10 @@ static void WatchCheatEntry(CheatEntry * entry, UINT8 associate)
 
 	for(i = 0; i < entry->actionListLength; i++)
 	{
-		AddActionWatch(&entry->actionList[i], associateEntry);
+
+			if(!i || (i && (entry->actionList[i].address != entry->actionList[i-1].address)))
+				AddActionWatch(&entry->actionList[i], associateEntry);
+
 	}
 }
 
@@ -9796,7 +9896,6 @@ static void AddActionWatch(CheatAction * action, CheatEntry * entry)
 		info->linkedCheat =		entry;
 		info->numElements =		1;
 		info->skip =			0;
-		info->linkedCheat =		entry;
 
 		if(EXTRACT_FIELD(action->type, Type) == kType_Watch)
 		{
@@ -9812,8 +9911,8 @@ static void AddActionWatch(CheatAction * action, CheatEntry * entry)
 
 			if(action->extendData != 0xFFFFFFFF)
 			{
-				info->x += (action->extendData >> 16) & 0xFFFF;
-				info->y += (action->extendData >>  0) & 0xFFFF;
+				info->x = (float)((action->extendData >> 16) & 0xFFFF)/100;
+				info->y = (float)((action->extendData >>  0) & 0xFFFF)/100;
 			}
 
 			if(	(typeParameter & 0x04) &&
@@ -9845,7 +9944,10 @@ static void RemoveAssociatedWatches(CheatEntry * entry)
 static void ResetAction(CheatAction * action)
 {
 	action->frameTimer = 0;
-	action->lastValue = ReadData(action);
+
+	if(!(action->flags & kActionFlag_LastValueGood))
+		action->lastValue = ReadData(action);
+
 	action->flags &= ~kActionFlag_StateMask;
 	action->flags |= kActionFlag_LastValueGood;
 }
@@ -9865,8 +9967,6 @@ static void ActivateCheat(CheatEntry * entry)
 	}
 
 	entry->flags |= kCheatFlag_Active;
-
-	he_did_cheat = 1;
 }
 
 static void DeactivateCheat(CheatEntry * entry)
@@ -9978,12 +10078,25 @@ static void cheat_periodicOperation(CheatAction * action)
 
 			temp = ReadData(action);
 
-			if(	(temp < ((action->extendData >> 8) & 0xFF)) ||
-				(temp > ((action->extendData >> 0) & 0xFF)))
+			if(!TEST_FIELD(action->type, BytesUsed))
 			{
-				temp = action->data;
-
-				WriteData(action, temp);
+				// 8 bit
+				if(	(temp < ((action->extendData >> 8) & 0xFF)) ||
+					(temp > ((action->extendData >> 0) & 0xFF)))
+				{
+					temp = action->data;
+					WriteData(action, temp);
+				}
+			}
+			else
+			{
+				// 16 bit (or 24, 32 bit...)
+				if(	(temp < ((action->extendData >> 16) & 0xFFFF)) ||
+					(temp > ((action->extendData >> 0) & 0xFFFF)))
+				{
+					temp = action->data;
+					WriteData(action, temp);
+				}
 			}
 		}
 		break;
@@ -10094,7 +10207,8 @@ static void cheat_periodicAction(CheatAction * action)
 			}
 			else
 			{
-				UINT8	currentValue = ReadData(action);
+
+				UINT32	currentValue = ReadData(action);
 
 				if(currentValue != action->lastValue)
 				{
@@ -10110,7 +10224,8 @@ static void cheat_periodicAction(CheatAction * action)
 
 		case kType_IgnoreIfDecrementing:
 		{
-			UINT8	currentValue = ReadData(action);
+
+			UINT32	currentValue = ReadData(action);
 
 			if(currentValue != (action->lastValue - parameter))
 			{
@@ -10155,6 +10270,8 @@ static void cheat_periodicEntry(CheatEntry * entry)
 
 							if(entry->selection >= entry->actionListLength)
 								entry->selection = 0;
+
+							ActivateCheat(entry);
 						}
 					}
 					else
