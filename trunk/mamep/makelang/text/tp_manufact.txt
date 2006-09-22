@@ -250,8 +250,8 @@ Bee-Oh
 Blastar
 
 
-# Big Boy
-Bonanza
+# Golden Poker Double Up
+Bonanza Enterprises, Ltd
 
 
 # Super Glob (Pac-Man hardware) German
@@ -338,8 +338,12 @@ Coastal Amusements
 Codemasters
 
 
-# Quizmaster
+# Trail Blazer
 Coinmaster
+
+
+# Joker Poker
+Coinmaster-Gaming, Ltd
 
 
 # Gulf War II
@@ -418,7 +422,7 @@ Danbi & F2 System
 Data Amusement
 
 
-# Suikoenbu (J 950314 V2.001)
+# Suikoenbu / Outlaws of the Lost Dynasty (JUETL 950314 V2.001)
 Data East
 
 
@@ -556,6 +560,10 @@ ESD
 
 # Tugboat
 ETM
+
+
+# Shooting Master (EVG)
+EVG
 
 
 # King of Dynast Gear (version 1.8)
@@ -736,10 +744,6 @@ Fun World
 
 # Go Go! Mile Smile
 Fuuki
-
-
-# Selection (Version 40.02TMB) set 1
-G.E.I.
 
 
 # Flame Gunner
@@ -1092,6 +1096,10 @@ Leprechaun
 
 # Battle Bubble (v2.00)
 Limenko
+
+
+# Quizmaster (German)
+Loewen Spielautomaten
 
 
 # Star Wars Trilogy (ver A)

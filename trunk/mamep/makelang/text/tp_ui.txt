@@ -18,7 +18,7 @@
 %dx%d (V)
 
 
-# ui/properties.c: 4653
+# ui/properties.c: 4695
 %li bit
 
 
@@ -382,7 +382,7 @@ Allows filtering out games from a folder
 Analog deadzone
 
 
-# ui/properties.c: 4619
+# ui/properties.c: 4661
 Anti-clockwise
 
 
@@ -422,15 +422,15 @@ Audit ROM and samples sets
 Audit complete.\n
 
 
-# ui/properties.c: 4539, 4640, 4731
+# ui/properties.c: 4581, 4682, 4773
 Auto
 
 
-# ui/properties.c: 4622
+# ui/properties.c: 4664
 Auto anti-clockwise
 
 
-# ui/properties.c: 4621
+# ui/properties.c: 4663
 Auto clockwise
 
 
@@ -454,11 +454,11 @@ Available
 Available fields:
 
 
-# ui/properties.c: 4774
+# ui/properties.c: 4816
 Axis
 
 
-# ui/properties.c: 4784
+# ui/properties.c: 4826
 AxisId
 
 
@@ -634,7 +634,7 @@ Checking...
 Christopher Kirmse and Michael Soderstrom
 
 
-# ui/properties.c: 4618
+# ui/properties.c: 4660
 Clockwise
 
 
@@ -758,6 +758,10 @@ Cursor
 Custom
 
 
+# ui/mame32.rc: 986
+Custom Options
+
+
 # ui/mame32.rc: 130, 211
 Customi&ze Fields...
 
@@ -774,7 +778,7 @@ Customize interface options.
 Customize which columns are used in the game list
 
 
-# ui/properties.c: 4617
+# ui/properties.c: 4659
 Default
 
 
@@ -926,7 +930,7 @@ Double Joystick 8-Way
 Draw antialiased vectors
 
 
-# ui/properties.c: 4595
+# ui/properties.c: 4637
 Draw every frame
 
 
@@ -1026,8 +1030,16 @@ Error while saving custom file %s
 Exit the application
 
 
+# ui/win32ui.c: 4392
+Export a game list file
+
+
 # ui/layout.c: 135
 External Folder List
+
+
+# ui/options.c: 3098
+FOLDER LIST HIDE OPTIONS
 
 
 # ui/layout.c: 74
@@ -1096,6 +1108,18 @@ Full screen contrast
 
 # ui/mame32.rc: 692
 Full screen gamma
+
+
+# ui/options.c: 3044
+GENERAL OPTIONS
+
+
+# ui/options.c: 3102
+GUI JOYSTICK OPTIONS
+
+
+# ui/options.c: 3117
+GUI KEYBOARD OPTIONS
 
 
 # ui/mame32.rc: 904
@@ -1194,6 +1218,10 @@ Horizontal
 How cheats work
 
 
+# ui/options.c: 3024
+INTERFACE OPTIONS
+
+
 # ui/layout.c: 113
 IPS Files
 
@@ -1262,7 +1290,7 @@ Joy 4-Way
 Joy 8-Way
 
 
-# ui/properties.c: 420, 4769
+# ui/properties.c: 420, 4811
 Joystick
 
 
@@ -1282,7 +1310,7 @@ Joystick 4-Way
 Joystick 8-Way
 
 
-# ui/properties.c: 4779
+# ui/properties.c: 4821
 JoystickId
 
 
@@ -1292,6 +1320,14 @@ Keyboard
 
 # ui/mame32.rc: 98
 L&arge Icons
+
+
+# ui/options.c: 3090
+LIST FONT OPTIONS
+
+
+# ui/options.c: 3076
+LISTVIEW OPTIONS
 
 
 # ui/options.c: 459 ui/win32ui.c: 701
@@ -1462,7 +1498,7 @@ Non-CPU
 Non-Wor&king
 
 
-# ui/dialogs.c: 221 ui/properties.c: 3535, 4620, 4874, 5113 
+# ui/dialogs.c: 221 ui/properties.c: 3577, 4662, 4916, 5155 
 None
 
 
@@ -1540,6 +1576,10 @@ Overlays
 
 # ui/mame32.rc: 55
 P&layback Input...
+
+
+# ui/options.c: 3011 
+PATH AND DIRECTORY OPTIONS
 
 
 # ui/mame32.rc: 1202
@@ -2046,47 +2086,47 @@ Show these fields in this order:
 Size:
 
 
-# ui/properties.c: 4596
+# ui/properties.c: 4638
 Skip 1 of 12 frames
 
 
-# ui/properties.c: 4605
+# ui/properties.c: 4647
 Skip 10 of 12 frames
 
 
-# ui/properties.c: 4606
+# ui/properties.c: 4648
 Skip 11 of 12 frames
 
 
-# ui/properties.c: 4597
+# ui/properties.c: 4639
 Skip 2 of 12 frames
 
 
-# ui/properties.c: 4598
+# ui/properties.c: 4640
 Skip 3 of 12 frames
 
 
-# ui/properties.c: 4599
+# ui/properties.c: 4641
 Skip 4 of 12 frames
 
 
-# ui/properties.c: 4600
+# ui/properties.c: 4642
 Skip 5 of 12 frames
 
 
-# ui/properties.c: 4601
+# ui/properties.c: 4643
 Skip 6 of 12 frames
 
 
-# ui/properties.c: 4602
+# ui/properties.c: 4644
 Skip 7 of 12 frames
 
 
-# ui/properties.c: 4603
+# ui/properties.c: 4645
 Skip 8 of 12 frames
 
 
-# ui/properties.c: 4604
+# ui/properties.c: 4646
 Skip 9 of 12 frames
 
 
@@ -2170,7 +2210,7 @@ Sounds (*.wav)
 St&ory
 
 
-# ui/properties.c: 3334, 3339, 3342, 3584, 3587, 4824, 4847 
+# ui/properties.c: 3376, 3381, 3384, 3626, 3629, 4866, 4889 
 Standard
 
 
@@ -2378,6 +2418,10 @@ Use Local Language Game List
 Use RDTSC timing system
 
 
+# ui/mame32.rc: 1010
+Use TreeView in property pages
+
+
 # ui/mame32.rc: 629
 Use samples
 
@@ -2432,6 +2476,10 @@ Volume attenuation
 
 # ui/win32ui.c: 7303
 WARNING: the game might not run correctly.
+
+
+# ui/options.c: 3069
+WINDOW POSITION OPTIONS
 
 
 # ui/mame32.rc: 680
@@ -2500,6 +2548,10 @@ by &Type
 
 # ui/mame32.rc: 111
 by &Year
+
+
+# ui/win32ui.c: 4389
+game list files (*.lst)
 
 
 # ui/dialogs.c: 124
