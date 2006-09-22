@@ -7319,7 +7319,7 @@ static void ResizeCheatList(UINT32 newLength)
 		if(!cheatList && (newLength != 0))
 		{
 			logerror("ResizeCheatList: out of memory resizing cheat list\n");
-			ui_popup_time(2, "out of memory while loading cheat database");
+			ui_popup_time(2, _("out of memory while loading cheat database"));
 
 			cheatListLength = 0;
 
@@ -7350,7 +7350,7 @@ static void ResizeCheatListNoDispose(UINT32 newLength)
 		if(!cheatList && (newLength != 0))
 		{
 			logerror("ResizeCheatListNoDispose: out of memory resizing cheat list\n");
-			ui_popup_time(2, "out of memory while loading cheat database");
+			ui_popup_time(2, _("out of memory while loading cheat database"));
 
 			cheatListLength = 0;
 
@@ -7449,7 +7449,7 @@ static void ResizeCheatActionList(CheatEntry * entry, UINT32 newLength)
 		if(!entry->actionList && (newLength != 0))
 		{
 			logerror("ResizeCheatActionList: out of memory resizing cheat action list\n");
-			ui_popup_time(2, "out of memory while loading cheat database");
+			ui_popup_time(2, _("out of memory while loading cheat database"));
 
 			entry->actionListLength = 0;
 
@@ -7473,7 +7473,7 @@ static void ResizeCheatActionListNoDispose(CheatEntry * entry, UINT32 newLength)
 		if(!entry->actionList && (newLength != 0))
 		{
 			logerror("ResizeCheatActionList: out of memory resizing cheat action list\n");
-			ui_popup_time(2, "out of memory while loading cheat database");
+			ui_popup_time(2, _("out of memory while loading cheat database"));
 
 			entry->actionListLength = 0;
 
@@ -7551,7 +7551,7 @@ static void ResizeWatchList(UINT32 newLength)
 		if(!watchList && (newLength != 0))
 		{
 			logerror("ResizeWatchList: out of memory resizing watch list\n");
-			ui_popup_time(2, "out of memory while adding watch");
+			ui_popup_time(2, _("out of memory while adding watch"));
 
 			watchListLength = 0;
 
@@ -7582,7 +7582,7 @@ static void ResizeWatchListNoDispose(UINT32 newLength)
 		if(!watchList && (newLength != 0))
 		{
 			logerror("ResizeWatchList: out of memory resizing watch list\n");
-			ui_popup_time(2, "out of memory while adding watch");
+			ui_popup_time(2, _("out of memory while adding watch"));
 
 			watchListLength = 0;
 
@@ -7753,7 +7753,7 @@ static void ResizeSearchList(UINT32 newLength)
 		if(!searchList && (newLength != 0))
 		{
 			logerror("ResizeSearchList: out of memory resizing search list\n");
-			ui_popup_time(2, "out of memory while adding search");
+			ui_popup_time(2, _("out of memory while adding search"));
 
 			searchListLength = 0;
 
@@ -7784,7 +7784,7 @@ static void ResizeSearchListNoDispose(UINT32 newLength)
 		if(!searchList && (newLength != 0))
 		{
 			logerror("ResizeSearchList: out of memory resizing search list\n");
-			ui_popup_time(2, "out of memory while adding search");
+			ui_popup_time(2, _("out of memory while adding search"));
 
 			searchListLength = 0;
 

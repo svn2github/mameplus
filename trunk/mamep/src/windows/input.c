@@ -1522,7 +1522,7 @@ static void parse_analog_select(int type, const char *option)
 		analog_type[type] = SELECT_TYPE_LIGHTGUN;
 	else
 	{
-		fprintf(stderr, "Invalid %s value %s; reverting to keyboard\n", option, stemp);
+		fprintf(stderr, _WINDOWS("Invalid %s value %s; reverting to keyboard\n"), option, stemp);
 		analog_type[type] = SELECT_TYPE_KEYBOARD;
 	}
 }
@@ -1597,15 +1597,15 @@ static void parse_digital(const char *option)
 	return;
 
 usage:
-	fprintf(stderr, "Invalid %s value %s; reverting to all -- valid values are:\n", option, soriginal);
-	fprintf(stderr, "         none -- no axes on any joysticks are digital\n");
-	fprintf(stderr, "         all -- all axes on all joysticks are digital\n");
-	fprintf(stderr, "         j<N> -- all axes on joystick <N> are digital\n");
-	fprintf(stderr, "         j<N>a<M> -- axis <M> on joystick <N> is digital\n");
-	fprintf(stderr, "    Multiple axes can be specified for one joystick:\n");
-	fprintf(stderr, "         j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n");
-	fprintf(stderr, "    Multiple joysticks can be specified separated by commas:\n");
-	fprintf(stderr, "         j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n");
+	fprintf(stderr, _WINDOWS("Invalid %s value %s; reverting to all -- valid values are:\n"), option, soriginal);
+	fprintf(stderr, _WINDOWS("         none -- no axes on any joysticks are digital\n"));
+	fprintf(stderr, _WINDOWS("         all -- all axes on all joysticks are digital\n"));
+	fprintf(stderr, _WINDOWS("         j<N> -- all axes on joystick <N> are digital\n"));
+	fprintf(stderr, _WINDOWS("         j<N>a<M> -- axis <M> on joystick <N> is digital\n"));
+	fprintf(stderr, _WINDOWS("    Multiple axes can be specified for one joystick:\n"));
+	fprintf(stderr, _WINDOWS("         j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n"));
+	fprintf(stderr, _WINDOWS("    Multiple joysticks can be specified separated by commas:\n"));
+	fprintf(stderr, _WINDOWS("         j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n"));
 }
 
 static void extract_input_config(void)

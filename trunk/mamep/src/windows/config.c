@@ -616,8 +616,8 @@ int cli_frontend_init(int argc, char **argv)
 	if (drvnum == -1)
 	{
 		int matches[10];
-		fprintf(stderr, "\n\"%s\" approximately matches the following\n"
-				"supported " GAMESNOUN " (best match first):\n\n", basename);
+		fprintf(stderr, _WINDOWS("\n\"%s\" approximately matches the following\n"
+				"supported " GAMESNOUN " (best match first):\n\n"), basename);
 		driver_get_approx_matches(basename, ARRAY_LENGTH(matches), matches);
 		for (drvnum = 0; drvnum < ARRAY_LENGTH(matches); drvnum++)
 			if (matches[drvnum] != -1)
@@ -731,7 +731,7 @@ static void execute_simple_commands(void)
 	// showusage?
 	if (options_get_bool("showusage", FALSE))
 	{
-		printf("Usage: mame [game] [options]\n\nOptions:\n");
+		printf(_WINDOWS("Usage: mame [game] [options]\n\nOptions:\n"));
 		options_output_help(stdout);
 		exit(0);
 	}
@@ -791,7 +791,7 @@ static void execute_commands(const char *argv0)
 		// error if unable to create the file
 		if (file == NULL)
 		{
-			fprintf(stderr, "Unable to create file %s\n", basename);
+			fprintf(stderr, _WINDOWS("Unable to create file %s\n"), basename);
 			exit(1);
 		}
 
@@ -1145,7 +1145,7 @@ static void setup_playback(const char *filename, const game_driver *driver)
 
 	// open the playback file
 	options.playback = mame_fopen(filename, 0, FILETYPE_INPUTLOG, 0);
-	assert_always(options.playback != NULL, "Failed to open file for playback");
+	assert_always(options.playback != NULL, _WINDOWS("Failed to open file for playback"));
 
 #ifdef INP_CAPTION
 	options.caption = mame_fopen(filename, 0, FILETYPE_INPCAPTION, 0);
@@ -1160,11 +1160,11 @@ static void setup_playback(const char *filename, const game_driver *driver)
 
 	// else verify the header against the current game
 	else if (strcmp(driver->name, inp_header.name) != 0)
-		fatalerror("Input file is for " GAMENOUN " '%s', not for current " GAMENOUN " '%s'\n", inp_header.name, driver->name);
+		fatalerror(_WINDOWS("Input file is for " GAMENOUN " '%s', not for current " GAMENOUN " '%s'\n"), inp_header.name, driver->name);
 
 	// otherwise, print a message indicating what's happening
 	else
-		printf("Playing back previously recorded " GAMENOUN " %s\n", driver->name);
+		printf(_WINDOWS("Playing back previously recorded " GAMENOUN " %s\n"), driver->name);
 }
 
 

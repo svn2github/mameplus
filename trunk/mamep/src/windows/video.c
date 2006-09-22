@@ -264,7 +264,7 @@ static void video_exit(running_machine *machine)
 	if (fps_frames_displayed != 0)
 	{
 		cycles_t cps = osd_cycles_per_second();
-		printf("Average FPS: %f (%d frames)\n", (double)cps / (fps_end_time - fps_start_time) * fps_frames_displayed, fps_frames_displayed);
+		printf(_WINDOWS("Average FPS: %f (%d frames)\n"), (double)cps / (fps_end_time - fps_start_time) * fps_frames_displayed, fps_frames_displayed);
 	}
 }
 
@@ -467,7 +467,7 @@ static void init_monitors(void)
 	{
 		win_monitor_info *monitor;
 		for (monitor = win_monitor_list; monitor != NULL; monitor = monitor->next)
-			verbose_printf("Video: Monitor %p = \"%s\" %s\n", monitor->handle, monitor->info.szDevice, (monitor == primary_monitor) ? "(primary)" : "");
+			verbose_printf(_WINDOWS("Video: Monitor %p = \"%s\" %s\n"), monitor->handle, monitor->info.szDevice, (monitor == primary_monitor) ? "(primary)" : "");
 	}
 }
 
@@ -899,11 +899,11 @@ static void extract_video_config(void)
 	{
 		video_config.mode = VIDEO_MODE_NONE;
 		if (video_config.framestorun == 0)
-			fprintf(stderr, "Warning: -video none doesn't make much sense without -frames_to_run\n");
+			fprintf(stderr, _WINDOWS("Warning: -video none doesn't make much sense without -frames_to_run\n"));
 	}
 	else
 	{
-		fprintf(stderr, "Invalid video value %s; reverting to gdi\n", stemp);
+		fprintf(stderr, _WINDOWS("Invalid video value %s; reverting to gdi\n"), stemp);
 		video_config.mode = VIDEO_MODE_GDI;
 	}
 	video_config.waitvsync     = options_get_bool("waitvsync", TRUE);
@@ -954,7 +954,7 @@ static void load_effect_overlay(const char *filename)
 	effect_bitmap = render_load_png(NULL, tempstr, NULL, NULL);
 	if (effect_bitmap == NULL)
 	{
-		fprintf(stderr, "Unable to load PNG file '%s'\n", tempstr);
+		fprintf(stderr, _WINDOWS("Unable to load PNG file '%s'\n"), tempstr);
 		free(tempstr);
 		return;
 	}
@@ -986,7 +986,7 @@ static float get_aspect(const char *name, int report_error)
 		data = defdata;
 	}
 	if (sscanf(data, "%d:%d", &num, &den) != 2 && report_error)
-		fprintf(stderr, "Illegal aspect ratio value for %s = %s\n", name, data);
+		fprintf(stderr, _WINDOWS("Illegal aspect ratio value for %s = %s\n"), name, data);
 	return (float)num / (float)den;
 }
 
@@ -1009,5 +1009,5 @@ static void get_resolution(const char *name, win_window_config *config, int repo
 		data = defdata;
 	}
 	if (sscanf(data, "%dx%d@%d", &config->width, &config->height, &config->refresh) < 2 && report_error)
-		fprintf(stderr, "Illegal resolution value for %s = %s\n", name, data);
+		fprintf(stderr, _WINDOWS("Illegal resolution value for %s = %s\n"), name, data);
 }

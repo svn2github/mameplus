@@ -310,7 +310,7 @@ int options_parse_command_line(int argc, char **argv)
 		data = find_entry_data(optionname, TRUE);
 		if (data == NULL)
 		{
-			fprintf(stderr, "Error: unknown option: %s\n", argv[arg]);
+			fprintf(stderr, _("Error: unknown option: %s\n"), argv[arg]);
 			return 1;
 		}
 		if ((data->flags & OPTION_DEPRECATED) != 0)
@@ -325,7 +325,7 @@ int options_parse_command_line(int argc, char **argv)
 			newdata = argv[++arg];
 		else
 		{
-			fprintf(stderr, "Error: option %s expected a parameter\n", argv[arg]);
+			fprintf(stderr, _("Error: option %s expected a parameter\n"), argv[arg]);
 			return 1;
 		}
 
@@ -371,7 +371,7 @@ int options_parse_ini_file(mame_file *inifile)
 		/* if we hit the end early, print a warning and continue */
 		if (*temp == 0)
 		{
-			fprintf(stderr, "Warning: invalid line in INI: %s", giant_string_buffer);
+			fprintf(stderr, _("Warning: invalid line in INI: %s"), giant_string_buffer);
 			continue;
 		}
 
@@ -393,7 +393,7 @@ int options_parse_ini_file(mame_file *inifile)
 		data = find_entry_data(optionname, FALSE);
 		if (data == NULL)
 		{
-			fprintf(stderr, "Warning: unknown option in INI: %s\n", optionname);
+			fprintf(stderr, _("Warning: unknown option in INI: %s\n"), optionname);
 			continue;
 		}
 		if ((data->flags & OPTION_DEPRECATED) != 0)
@@ -652,7 +652,7 @@ int options_get_bool(const char *name, int report_error)
 			sscanf(data->data, "%d", &value);
 		}
 		if (report_error)
-			fprintf(stderr, "Illegal boolean value for %s; reverting to %d\n", (data == NULL) ? "??" : data->names[0], value);
+			fprintf(stderr, _("Illegal boolean value for %s; reverting to %d\n"), (data == NULL) ? "??" : data->names[0], value);
 	}
 	return value;
 }
@@ -676,7 +676,7 @@ int options_get_int(const char *name, int report_error)
 			sscanf(data->data, "%d", &value);
 		}
 		if (report_error)
-			fprintf(stderr, "Illegal integer value for %s; reverting to %d\n", (data == NULL) ? "??" : data->names[0], value);
+			fprintf(stderr, _("Illegal integer value for %s; reverting to %d\n"), (data == NULL) ? "??" : data->names[0], value);
 	}
 	return value;
 }
@@ -700,7 +700,7 @@ float options_get_float(const char *name, int report_error)
 			sscanf(data->data, "%f", &value);
 		}
 		if (report_error)
-			fprintf(stderr, "Illegal float value for %s; reverting to %f\n", (data == NULL) ? "??" : data->names[0], (double)value);
+			fprintf(stderr, _("Illegal float value for %s; reverting to %f\n"), (data == NULL) ? "??" : data->names[0], (double)value);
 	}
 	return value;
 }
@@ -725,14 +725,14 @@ int options_get_int_range(const char *name, int report_error, int minval, int ma
 			value = options_get_int(name, FALSE);
 		}
 		if (report_error)
-			fprintf(stderr, "Illegal integer value for %s; reverting to %d\n", (data == NULL) ? "??" : data->names[0], value);
+			fprintf(stderr, _("Illegal integer value for %s; reverting to %d\n"), (data == NULL) ? "??" : data->names[0], value);
 	}
 	else if (value < minval || value > maxval)
 	{
 		options_set_string(name, data->defdata);
 		value = options_get_int(name, FALSE);
 		if (report_error)
-			fprintf(stderr, "Invalid %s value (must be between %d and %d); reverting to %d\n", (data == NULL) ? "??" : data->names[0], minval, maxval, value);
+			fprintf(stderr, _("Invalid %s value (must be between %d and %d); reverting to %d\n"), (data == NULL) ? "??" : data->names[0], minval, maxval, value);
 	}
 
 	return value;
@@ -758,14 +758,14 @@ float options_get_float_range(const char *name, int report_error, float minval, 
 			value = options_get_float(name, FALSE);
 		}
 		if (report_error)
-			fprintf(stderr, "Illegal float value for %s; reverting to %f\n", (data == NULL) ? "??" : data->names[0], (double)value);
+			fprintf(stderr, _("Illegal float value for %s; reverting to %f\n"), (data == NULL) ? "??" : data->names[0], (double)value);
 	}
 	else if (value < minval || value > maxval)
 	{
 		options_set_string(name, data->defdata);
 		value = options_get_float(name, FALSE);
 		if (report_error)
-			fprintf(stderr, "Invalid %s value (must be between %f and %f); reverting to %f\n", (data == NULL) ? "??" : data->names[0], (double)minval, (double)maxval, (double)value);
+			fprintf(stderr, _("Invalid %s value (must be between %f and %f); reverting to %f\n"), (data == NULL) ? "??" : data->names[0], (double)minval, (double)maxval, (double)value);
 	}
 	return value;
 }
