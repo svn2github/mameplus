@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.108u4      #
+#     Mameinfo.dat日本語版 v0.108u5      #
 #                                        #
-#           September 17, 2006           #
+#           September 22, 2006           #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,10 +12,18 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：811 翻訳済：798
-# 追加項目：326 合計：1137
+# Tester報告：815 翻訳済：804
+# 追加項目：326 合計：1141
 #
 
+
+$info=invadpt2
+$mame
+[バグ]
+
+- 面クリア時のSOSやENGINE TROUBLEのシーンの音が出ていない。0.94までは正常。 invadpt2_0108u4gre, Robbbert
+
+$end
 
 $info=spcewars
 $mame
@@ -105,14 +113,6 @@ $mame
 
 $end
 
-$info=mf_bdash
-$mame
-[バグ]
-
-- レイアウトのデジタル数字が正しく表示されない。 mf_bdash0108u4gre, stephh
-
-$end
-
 $info=gwarrior
 $mame
 [情報]
@@ -162,6 +162,27 @@ $mame
 [バグ]
 
 - コンティニュー画面のテキストが表示されない。表示が無いだけで、コインを入れてコンティニューはできる。日本版のみで発生。 ashura0108u3yel, ponzicar
+
+$end
+
+$info=silentd
+$mame
+[バグ]
+
+- タイトルシーンで爆発のグラフィックが画面に残る。 silentd0108u5gre, Twist
+
+
+- ラインスクロールのシーンでスピードが大きく落ちる。ラスボスシーンでよくわかる。
+CPU速度を200%にしても効果がない。 silentd0108u5yel, Twist
+
+
+- 以下のDIPスイッチが動作しない：
+
+- "Regain Power ON/OFF" 常にOFF
+
+- "Power-Up Bonus ON/OFF" 常にON
+
+- "Invulnerability ON/OFF" 常にOFF silentd080u1gra, Mamesick
 
 $end
 
@@ -2500,7 +2521,7 @@ $mame
 
 - アトラクトモードの隕石がぶつかるシーンで、地面が表示されていない。
 本来は煙が起きて岩の部分が上に動く。
-0.59、0.60、0.76では正常に動作。 moo083gre, Thenasty
+0.59、0.60、0.76では正常に動作。 moo083gre, Thenasty / Robiza
 
 $end
 
@@ -3928,7 +3949,7 @@ $mame
 [バグ]
 
 - ごく希に、Tアイテムを取って蝶が現れている間、画面の一番下に化けグラフィックが出る。
-めったに起きない。 ssi0104u3gre, Iaspis / Twisty
+めったに起きない。 ssi0104u3gre, Iaspis / Twisty / robiza
 
 
 - ボーナスステージで、UFOの爆発の色がおかしいようだ。 ssi237b2gre, YMI
@@ -4553,14 +4574,6 @@ $mame
 
 $end
 
-$info=turbo
-$mame
-[バグ]
-
-- タイマーの減り方が速すぎる。 turbo0107u3yel, Paratech
-
-$end
-
 $info=vulcan
 $mame
 [バグ]
@@ -4872,14 +4885,6 @@ $mame
 [バグ]
 
 - 0.95u3でAaron氏がWilliamsドライバを書き直したときから、画面の下に色のついたバーが現れる。 blaster0100u1gre, MASH
-
-$end
-
-$info=colony7
-$mame
-[バグ]
-
-- コイン入力2を押すとゲームがリセットする。 colony7078u6yel, Thenasty
 
 $end
 
@@ -5692,20 +5697,6 @@ $mame
 [バグ]
 
 - チルトスイッチが割り当てられているが、入力テストには出てこない。 jjparads0106u1gra, cpukett
-
-$end
-
-$info=silentd
-$mame
-[バグ]
-
-- 以下のDIPスイッチが動作しない：
-
-- "Regain Power ON/OFF" 常にOFF
-
-- "Power-Up Bonus ON/OFF" 常にON
-
-- "Invulnerability ON/OFF" 常にOFF silentd080u1gra, Mamesick
 
 $end
 

@@ -659,7 +659,8 @@ sws92g	ƒX[ƒp[ƒ[ƒ‹ƒhƒXƒ^ƒWƒAƒ€'92 -Œƒ“¬”Å (“ú–{”Å)	‚·[‚Ï[‚í[‚é‚Ç‚·‚½‚¶‚ ‚Ş
 suzuk8h2	ƒXƒYƒJƒGƒCƒgƒAƒ[ƒY2 (ŠCŠO”Å)	‚·‚¸‚©‚¦‚¢‚Æ‚ ‚í[‚¸2	Namco
 sws93	ƒX[ƒp[ƒ[ƒ‹ƒhƒXƒ^ƒWƒAƒ€'93 -Œƒ“¬”Å (“ú–{”Å)	‚·[‚Ï[‚í[‚é‚Ç‚·‚½‚¶‚ ‚Ş_393	Namco
 speedrcr	ƒ}ƒbƒnGoGoGo / Speed Racer	‚Ü‚Á‚Í‚²[‚²[‚²[	Namco
-finalapr	ƒtƒ@ƒCƒiƒ‹ƒ‰ƒbƒvR (rev B)	‚Ó‚Ÿ‚¢‚È‚é‚ç‚Á‚Õ_4‚ [‚é	Namco
+finalapr	ƒtƒ@ƒCƒiƒ‹ƒ‰ƒbƒvR (“ú–{”Å rev C)	‚Ó‚Ÿ‚¢‚È‚é‚ç‚Á‚Õ_4‚ [‚é	Namco
+finalapb	ƒtƒ@ƒCƒiƒ‹ƒ‰ƒbƒvR (rev B)	‚Ó‚Ÿ‚¢‚È‚é‚ç‚Á‚Õ_4‚ [‚é	Namco
 finalapo	ƒtƒ@ƒCƒiƒ‹ƒ‰ƒbƒvR	‚Ó‚Ÿ‚¢‚È‚é‚ç‚Á‚Õ_4‚ [‚é	Namco
 bkrtmaq	”š—ôƒNƒCƒY–‚Q‘å–`Œ¯ (“ú–{”Å)	‚Î‚­‚ê‚Â‚­‚¢‚¸‚Ü‚«‚ã[‚¾‚¢‚Ú‚¤‚¯‚ñ	Namco
 cgangpzl	ƒRƒYƒ‚ƒMƒƒƒ“ƒOEƒUEƒpƒYƒ‹ (USA”Å)	‚±‚¸‚à‚¬‚á‚ñ‚®‚´‚Ï‚¸‚é	Namco
@@ -936,6 +937,7 @@ nss_lwep	ƒŠ[ƒTƒ‹EƒEƒFƒ|ƒ“ (Nintendo Super System)	‚è[‚³‚é‚¤‚¥‚Û‚ñ	Ocean
 nss_smw	ƒX[ƒp[ƒ}ƒŠƒIƒ[ƒ‹ƒh (Nintendo Super System)	‚·[‚Ï[‚Ü‚è‚¨_4‚í[‚é‚Ç	Nintendo
 nss_fzer	F-ZERO (Nintendo Super System)	‚¦‚Ó‚º‚ë	Nintendo
 nss_sten	ƒX[ƒp[ƒeƒjƒX ƒ[ƒ‹ƒhƒT[ƒLƒbƒg / Super Tennis (Nintendo Super System)	‚·[‚Ï[‚Ä‚É‚·‚í[‚é‚Ç‚³[‚«‚Á‚Æ	Nintendo
+kinstb	ƒLƒ‰[EƒCƒ“ƒXƒeƒBƒ“ƒNƒg (SNES) (ŠC‘¯”Å)	‚«‚ç[‚¢‚ñ‚·‚Ä‚¡‚ñ‚­‚Æ_1	bootleg
 seawolf	ƒV[ƒEƒ‹ƒt	‚µ[‚¤‚é‚Ó_1	Midway
 gunfight	ƒKƒ“ƒtƒ@ƒCƒg	‚ª‚ñ‚Ó‚Ÿ‚¢‚Æ	Midway
 tornbase	ƒgƒ‹ƒl[ƒhƒx[ƒXƒ{[ƒ‹	‚Æ‚é‚Ë[‚Ç‚×[‚·‚Ú[‚é	Midway
@@ -1140,9 +1142,10 @@ olibochu	ƒpƒ“ƒ`ƒ“ƒOƒLƒbƒh / Oli-Boo-Chu	‚Ï‚ñ‚¿‚ñ‚®‚«‚Á‚Ç	Irem + GDI
 mpatrol	ƒ€[ƒ“ƒpƒgƒ[ƒ‹	‚Ş[‚ñ‚Ï‚Æ‚ë[‚é	Irem
 mpatrolw	ƒ€[ƒ“ƒpƒgƒ[ƒ‹ (Williams)	‚Ş[‚ñ‚Ï‚Æ‚ë[‚é	Irem (Williams license)
 troangel	ƒgƒƒsƒJƒ‹ƒGƒ“ƒWƒFƒ‹	‚Æ‚ë‚Ò‚©‚é‚¦‚ñ‚¶‚¥‚é	Irem
-yard	10ƒ„[ƒhƒtƒ@ƒCƒg (“ú–{”Å)	‚Ä‚ñ‚â[‚Ç‚Ó‚Ÿ‚¢‚Æ	Irem
-vsyard	VS.10ƒ„[ƒhƒtƒ@ƒCƒg (ŠCŠO”Å 11/05/84)	‚Î[‚³‚·‚Ä‚ñ‚â[‚Ç‚Ó‚Ÿ‚¢‚Æ	Irem
-vsyard2	VS.10ƒ„[ƒhƒtƒ@ƒCƒg (“ú–{”Å)	‚Î[‚³‚·‚Ä‚ñ‚â[‚Ç‚Ó‚Ÿ‚¢‚Æ	Irem
+10yard	10ƒ„[ƒhƒtƒ@ƒCƒg (ŠCŠO”Å)	‚Ä‚ñ‚â[‚Ç‚Ó‚Ÿ‚¢‚Æ	Irem
+10yardj	10ƒ„[ƒhƒtƒ@ƒCƒg (“ú–{”Å)	‚Ä‚ñ‚â[‚Ç‚Ó‚Ÿ‚¢‚Æ	Irem
+vs10yard	VS.10ƒ„[ƒhƒtƒ@ƒCƒg (ŠCŠO”Å 11/05/84)	‚Î[‚³‚·‚Ä‚ñ‚â[‚Ç‚Ó‚Ÿ‚¢‚Æ	Irem
+vs10yarj	VS.10ƒ„[ƒhƒtƒ@ƒCƒg (“ú–{”Å)	‚Î[‚³‚·‚Ä‚ñ‚â[‚Ç‚Ó‚Ÿ‚¢‚Æ	Irem
 travrusa	ƒWƒbƒs[ƒŒ[ƒX	‚¶‚Á‚Ò[‚ê[‚·	Irem
 motorace	ƒWƒbƒs[ƒŒ[ƒX / MotoRace USA	‚¶‚Á‚Ò[‚ê[‚·	Irem (Williams license)
 shtrider	ƒVƒ‡ƒbƒgƒ‰ƒCƒ_[	‚µ‚å‚Á‚Æ‚ç‚¢‚¾[	Seibu Kaihatsu
@@ -1424,7 +1427,7 @@ arknoiuo	ƒAƒ‹ƒJƒmƒCƒh (USA”Å older)	‚ ‚é‚©‚Ì‚¢‚Ç_1	Taito America Corporation (Ro
 arknoidj	ƒAƒ‹ƒJƒmƒCƒh (“ú–{”Å)	‚ ‚é‚©‚Ì‚¢‚Ç_1	Taito Corporation
 arkmcubl	ƒAƒ‹ƒJƒmƒCƒh (ŠC‘¯”Å with MCU)	‚ ‚é‚©‚Ì‚¢‚Ç_1	bootleg
 ark1ball	ƒAƒ‹ƒJƒmƒCƒh (ŠC‘¯”Å with MCU harder)	‚ ‚é‚©‚Ì‚¢‚Ç_1	bootleg
-arkangc	ƒAƒ‹ƒJƒmƒCƒh (Game Corporation) (ŠC‘¯”Å@set 1)	‚ ‚é‚©‚Ì‚¢‚Ç_1	bootleg
+arkangc	ƒAƒ‹ƒJƒmƒCƒh (Game Corporation) (ŠC‘¯”Å set 1)	‚ ‚é‚©‚Ì‚¢‚Ç_1	bootleg
 arkangc2	ƒAƒ‹ƒJƒmƒCƒh (Game Corporation) (ŠC‘¯”Å set 2)	‚ ‚é‚©‚Ì‚¢‚Ç_1	bootleg
 arkblock	ƒAƒ‹ƒJƒmƒCƒh / Block (Game Corporation) (ŠC‘¯”Å set 1)	‚ ‚é‚©‚Ì‚¢‚Ç_1	bootleg
 arkbloc2	ƒAƒ‹ƒJƒmƒCƒh / Block (Game Corporation) (ŠC‘¯”Å set 2)	‚ ‚é‚©‚Ì‚¢‚Ç_1	bootleg
@@ -1880,7 +1883,7 @@ tornado2	ƒfƒBƒtƒFƒ“ƒ_[ / Tornado (ŠC‘¯”Å set 2)	‚Å‚¡‚Ó‚¥‚ñ‚¾[	Jeutel
 zero	ƒfƒBƒtƒFƒ“ƒ_[ / Zero	‚Å‚¡‚Ó‚¥‚ñ‚¾[	Jeutel
 zero2	ƒfƒBƒtƒFƒ“ƒ_[ / Zero (set 2)	‚Å‚¡‚Ó‚¥‚ñ‚¾[	Amtec
 defcmnd	ƒfƒBƒtƒFƒ“ƒ_[ / Defense Command (set 1)	‚Å‚¡‚Ó‚¥‚ñ‚¾[	bootleg
-defence	ƒfƒBƒtƒFƒ“ƒ_[ / Defense Command	‚Å‚¡‚Ó‚¥‚ñ‚¾[	Outer Limits
+defence	ƒfƒBƒtƒFƒ“ƒ_[ / Defence Command	‚Å‚¡‚Ó‚¥‚ñ‚¾[	Outer Limits
 startrkd	ƒfƒBƒtƒFƒ“ƒ_[ / Star Trek (ŠC‘¯”Å)	‚Å‚¡‚Ó‚¥‚ñ‚¾[	bootleg
 mayday	ƒƒCƒfƒC (set 1)	‚ß‚¢‚Å‚¢	<unknown>
 maydaya	ƒƒCƒfƒC (set 2)	‚ß‚¢‚Å‚¢	<unknown>
@@ -2383,6 +2386,7 @@ dunkmnic	ƒ_ƒ“ƒNƒ}ƒjƒA (DM1/VER.C)	‚¾‚ñ‚­‚Ü‚É‚ 	Namco
 xevi3dg	ƒ[ƒrƒEƒX 3D^G (XV31/VER.A)	‚º‚Ñ‚¤‚·‚·‚è[‚Å‚¡[‚¶[	Namco
 primglex	JƒŠ[ƒOƒTƒbƒJ[ ƒvƒ‰ƒCƒ€ƒS[ƒ‹EX (PG1/VER.A)	‚¶‚¥‚¢‚è[‚®‚³‚Á‚©[_2‚Õ‚ç‚¢‚Ş‚²[‚é‚¢[‚¦‚Á‚­‚·	Namco
 danceyes	ƒ_ƒ“ƒVƒ“ƒOƒAƒC (DC1/VER.A)	‚¾‚ñ‚µ‚ñ‚®‚ ‚¢	Namco
+pocketrc	ƒ|ƒPƒbƒgƒŒ[ƒT[ (PKR1/VER.B)	‚Û‚¯‚Á‚Æ‚ê[‚³[	Namco
 starswep	ƒXƒ^[ƒXƒC[ƒv (STP1/VER.A)	‚·‚½[‚·‚¢[‚Õ	Axela/Namco
 myangel3	qˆç‚ÄƒNƒCƒY ƒ}ƒCƒGƒ“ƒWƒFƒ‹3 -ƒ}ƒCƒŠƒgƒ‹ƒyƒbƒg (KQT1/VER.A)	‚±‚»‚¾‚Ä‚­‚¢‚¸‚Ü‚¢‚¦‚ñ‚¶‚¥‚é_3	Namco
 ptblnk2a	ƒKƒ“ƒoƒ@[ƒ‹ / Point Blank 2 (GNB3/VER.A)	‚ª‚ñ‚Î‚Ÿ[‚é	Namco
@@ -2502,6 +2506,7 @@ wcbowl	ƒ[ƒ‹ƒhƒNƒ‰ƒXƒ{ƒEƒŠƒ“ƒO (ver 1.66)	‚í[‚é‚Ç‚­‚ç‚·‚Ú‚¤‚è‚ñ‚®_1	Incredible
 wcbwl165	ƒ[ƒ‹ƒhƒNƒ‰ƒXƒ{ƒEƒŠƒ“ƒO (ver 1.65)	‚í[‚é‚Ç‚­‚ç‚·‚Ú‚¤‚è‚ñ‚®_1	Incredible Technologies
 wcbwl161	ƒ[ƒ‹ƒhƒNƒ‰ƒXƒ{ƒEƒŠƒ“ƒO (ver 1.61)	‚í[‚é‚Ç‚­‚ç‚·‚Ú‚¤‚è‚ñ‚®_1	Incredible Technologies
 wcbwl140	ƒ[ƒ‹ƒhƒNƒ‰ƒXƒ{ƒEƒŠƒ“ƒO ƒg[ƒiƒƒ“ƒg (ver 1.40)	‚í[‚é‚Ç‚­‚ç‚·‚Ú‚¤‚è‚ñ‚®_2‚Æ[‚È‚ß‚ñ‚Æ	Incredible Technologies
+wcbwl15	ƒ[ƒ‹ƒhƒNƒ‰ƒXƒ{ƒEƒŠƒ“ƒO (ver 1.5)	‚í[‚é‚Ç‚­‚ç‚·‚Ú‚¤‚è‚ñ‚®_1	Incredible Technologies
 wcbwl12	ƒ[ƒ‹ƒhƒNƒ‰ƒXƒ{ƒEƒŠƒ“ƒO (ver 1.2)	‚í[‚é‚Ç‚­‚ç‚·‚Ú‚¤‚è‚ñ‚®_1	Incredible Technologies
 sftm	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ ƒUEƒ€[ƒr[ (ver 1.12)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_5‚´‚Ş[‚Ñ[	Capcom/Incredible Technologies
 sftm110	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ ƒUEƒ€[ƒr[ (ver 1.10)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_5‚´‚Ş[‚Ñ[	Capcom/Incredible Technologies
@@ -2878,7 +2883,7 @@ outrunb	ƒAƒEƒgƒ‰ƒ“ (ŠC‘¯”Å)	‚ ‚¤‚Æ‚ç‚ñ_1	bootleg
 toutrun	ƒ^[ƒ{ƒAƒEƒgƒ‰ƒ“ (Out Run upgrade FD1094 317-0118)	‚½[‚Ú‚ ‚¤‚Æ‚ç‚ñ	Sega
 toutrun2	ƒ^[ƒ{ƒAƒEƒgƒ‰ƒ“ (upright FD1094 317-unknown)	‚½[‚Ú‚ ‚¤‚Æ‚ç‚ñ	Sega
 toutrun1	ƒ^[ƒ{ƒAƒEƒgƒ‰ƒ“ (FD1094 317-unknown)	‚½[‚Ú‚ ‚¤‚Æ‚ç‚ñ	Sega
-shangon	ƒX[ƒp[ƒnƒ“ƒOƒIƒ“ (set 4 68000)	‚·[‚Ï[‚Í‚ñ‚®‚¨‚ñ	Sega
+shangon	ƒX[ƒp[ƒnƒ“ƒOƒIƒ“ (sitdown/upright unprotected)	‚·[‚Ï[‚Í‚ñ‚®‚¨‚ñ	Sega
 shangon3	ƒX[ƒp[ƒnƒ“ƒOƒIƒ“ (sitdown/upright FD1089B 317-0034)	‚·[‚Ï[‚Í‚ñ‚®‚¨‚ñ	Sega
 shangon2	ƒX[ƒp[ƒnƒ“ƒOƒIƒ“ (mini ride-on rev A FD1089B 317-0034)	‚·[‚Ï[‚Í‚ñ‚®‚¨‚ñ	Sega
 shangon1	ƒX[ƒp[ƒnƒ“ƒOƒIƒ“ (mini ride-on? FD1089B 317-0034)	‚·[‚Ï[‚Í‚ñ‚®‚¨‚ñ	Sega
@@ -2907,8 +2912,9 @@ gforce2j	ƒMƒƒƒ‰ƒNƒV[ƒtƒH[ƒXII (“ú–{”Å)	‚¬‚á‚ç‚­‚µ[‚Ó‚§[‚·2	Sega
 gloc	G-LOC -Air Battle (USA”Å)	‚¶[‚ë‚Á‚­	Sega
 glocr360	G-LOC R360 -Air Battle	‚¶[‚ë‚Á‚­	Sega
 strkfgtr	ƒXƒgƒ‰ƒCƒNƒtƒ@ƒCƒ^[ (“ú–{”Å)	‚·‚Æ‚ç‚¢‚­‚Ó‚Ÿ‚¢‚½[	Sega
-pdrift	ƒpƒ[ƒhƒŠƒtƒg (ŠCŠO”Å)	‚Ï‚í[‚Ç‚è‚Ó‚Æ	Sega
-pdrifta	ƒpƒ[ƒhƒŠƒtƒg (ŠCŠO”Å earlier)	‚Ï‚í[‚Ç‚è‚Ó‚Æ	Sega
+pdrift	ƒpƒ[ƒhƒŠƒtƒg (ŠCŠO”Å rev A)	‚Ï‚í[‚Ç‚è‚Ó‚Æ	Sega
+pdrifta	ƒpƒ[ƒhƒŠƒtƒg (ŠCŠO”Å)	‚Ï‚í[‚Ç‚è‚Ó‚Æ	Sega
+pdrifte	ƒpƒ[ƒhƒŠƒtƒg (ŠCŠO”Å earlier)	‚Ï‚í[‚Ç‚è‚Ó‚Æ	Sega
 pdriftj	ƒpƒ[ƒhƒŠƒtƒg (“ú–{”Å)	‚Ï‚í[‚Ç‚è‚Ó‚Æ	Sega
 rchase	ƒŒ[ƒ‹ƒ`ƒFƒCƒX (“ú–{”Å)	‚ê[‚é‚¿‚¥‚¢‚·	Sega
 hotrod	ƒzƒbƒgƒƒbƒh (ŠCŠO”Å 3 players turbo set 1)	‚Ù‚Á‚Æ‚ë‚Á‚Ç	Sega
@@ -3007,14 +3013,14 @@ puyosun	‚Õ‚æ‚Õ‚æSUN (“ú–{”Å 961115 ver 0.001)	‚Õ‚æ‚Õ‚æ_3‚³‚ñ	Compile
 rsgun	ƒŒƒCƒfƒBƒAƒ“ƒgƒVƒ‹ƒo[ƒKƒ“ (“ú–{ / USA / ‰¢B / ‘ä˜p”Å 980523 ver 1.000)	‚ê‚¢‚Å‚¡‚ ‚ñ‚Æ‚µ‚é‚Î[‚ª‚ñ	Treasure
 sandor	2“x‚ ‚é‚±‚Æ‚ÍƒTƒ“ƒhƒA[ƒ‹ (“ú–{”Å 951114 ver 1.000)	‚É‚Ç‚ ‚é‚±‚Æ‚Í‚³‚ñ‚Ç‚ [‚é	Sega
 thunt	2“x‚ ‚é‚±‚Æ‚ÍƒTƒ“ƒhƒA[ƒ‹ / Treasure Hunt (“ú–{ / USA / ‰¢B / ‘ä˜p”Å 970901 ver 2.00E)	‚É‚Ç‚ ‚é‚±‚Æ‚Í‚³‚ñ‚Ç‚ [‚é	Sega (Deniam license?)
-sassisu	‘Îíƒ^ƒ“ƒgƒA[ƒ‹ ƒTƒV‚Á‚·II (“ú–{”Å 980216 ver 1.000)	‚½‚¢‚¹‚ñ‚½‚ñ‚Æ‚ [‚é‚³‚µ‚Á‚·	Sega
+sasissu	‘Îíƒ^ƒ“ƒgƒA[ƒ‹ ƒTƒV‚Á‚·II (“ú–{”Å 980216 ver 1.000)	‚½‚¢‚¹‚ñ‚½‚ñ‚Æ‚ [‚é‚³‚µ‚Á‚·	Sega
 seabass	ƒV[ƒoƒXEƒtƒBƒbƒVƒ“ƒO (“ú–{ / USA / ‰¢B / ‘ä˜p”Å 971110 ver 0.001)	‚µ[‚Î‚·‚Ó‚¡‚Á‚µ‚ñ‚®	A wave inc. (Able license)
 shanhigw	ãŠC –œ—¢‚Ì’·é (“ú–{ / USA / ‰¢B”Å 950623 ver 1.005)	‚µ‚á‚ñ‚Í‚¢_4‚Î‚ñ‚è‚Ì‚¿‚å‚¤‚¶‚å‚¤	Sunsoft / Activision
 shienryu	‡‰Š—´ (“ú–{ / USA / ‰¢B / ‘ä˜p”Å 961226 ver 1.000)	‚µ‚¦‚ñ‚è‚ã‚¤	Warashi
 smleague	ƒtƒ@ƒCƒiƒ‹ƒA[ƒ` / Super Major League (USA”Å 960108 ver 1.000)	‚Ó‚Ÿ‚¢‚È‚é‚ [‚¿	Sega
 sokyugrt	‘“âug˜@‘à (“ú–{ / USA / ‰¢B / ‘ä˜p”Å 960821 ver 1.000)	‚»‚¤‚«‚ã‚¤‚®‚ê‚ñ‚½‚¢	Raizing / 8ing
 sss	ƒXƒeƒB[ƒvEƒXƒ[ƒvEƒXƒ‰ƒCƒ_[ƒY (“ú–{ / USA / ‰¢B / ‘ä˜p”Å 981110 ver 1.000)	‚·‚Ä‚¡[‚Õ‚·‚ë[‚Õ‚·‚ç‚¢‚¾[‚¸	Capcom / Cave / Victor
-suikoenb	…Ÿõ‰‰• (“ú–{”Å 950314 ver 2.001)	‚·‚¢‚±‚¦‚ñ‚Ô	Data East
+suikoenb	…Ÿõ‰‰• (“ú–{ / USA / ‰¢B / ‘ä˜p / ƒ‰ƒeƒ“”Å 950314 ver 2.001)	‚·‚¢‚±‚¦‚ñ‚Ô	Data East
 twcup98	ƒeƒNƒ‚ƒ[ƒ‹ƒhƒJƒbƒv '98 (“ú–{ / USA / ‰¢B / ‘ä˜p”Å 980410 ver 1.000)	‚Ä‚­‚à‚í[‚é‚Ç‚©‚Á‚Õ_498	Tecmo
 vfkids	ƒo[ƒ`ƒƒƒtƒ@ƒCƒ^[ ƒLƒbƒY (“ú–{ / USA / ‰¢B / ‘ä˜p”Å 960319 ver 0.000)	‚Î[‚¿‚á‚Ó‚Ÿ‚¢‚½[_4‚«‚Á‚¸	Sega
 vfremix	ƒo[ƒ`ƒƒƒtƒ@ƒCƒ^[ ƒŠƒ~ƒbƒNƒX (“ú–{ / USA / ‰¢B / ‘ä˜p / ƒuƒ‰ƒWƒ‹ / ŠØ‘ / ƒAƒWƒA / ƒ‰ƒeƒ“”Å 950428 ver 1.000)	‚Î[‚¿‚á‚Ó‚Ÿ‚¢‚½[_1_2‚è‚İ‚Á‚­‚·	Sega
@@ -3593,7 +3599,8 @@ contra	°“l—… / Contra (USA”Å)	‚±‚ñ‚Æ‚ç_1	Konami
 contrab	°“l—… / Contra (USA”Å) (ŠC‘¯”Å)	‚±‚ñ‚Æ‚ç_1	bootleg
 contraj	°“l—… (“ú–{”Å)	‚±‚ñ‚Æ‚ç_1	Konami
 contrajb	°“l—… (“ú–{”Å) (ŠC‘¯”Å)	‚±‚ñ‚Æ‚ç_1	bootleg
-gryzor	°“l—… / Gryzor (‰¢B”Å)	‚±‚ñ‚Æ‚ç_1	Konami
+gryzor	°“l—… / Gryzor (set 1)	‚±‚ñ‚Æ‚ç_1	Konami
+gryzora	°“l—… / Gryzor (set 2)	‚±‚ñ‚Æ‚ç_1	Konami
 combasc	ƒRƒ“ƒoƒbƒgƒXƒN[ƒ‹ (joystick)	‚±‚ñ‚Î‚Á‚Æ‚·‚­[‚é	Konami
 combasct	ƒRƒ“ƒoƒbƒgƒXƒN[ƒ‹ (trackball)	‚±‚ñ‚Î‚Á‚Æ‚·‚­[‚é	Konami
 combascj	ƒRƒ“ƒoƒbƒgƒXƒN[ƒ‹ (“ú–{”Å trackball)	‚±‚ñ‚Î‚Á‚Æ‚·‚­[‚é	Konami
@@ -3689,7 +3696,7 @@ lethalua	ƒŠ[ƒTƒ‹ƒGƒ“ƒtƒH[ƒT[ƒY (ver unknown USA”Å 08/17/92 21:38)	‚è[‚³‚é‚¦‚
 lethalux	ƒŠ[ƒTƒ‹ƒGƒ“ƒtƒH[ƒT[ƒY (ver unknown USA”Å 08/06/92 15:11 hacked/proto?)	‚è[‚³‚é‚¦‚ñ‚Ó‚§[‚³[‚¸_1	Konami
 letheab	ƒŠ[ƒTƒ‹ƒGƒ“ƒtƒH[ƒT[ƒY (ver EAB 10/14/92 19:53)	‚è[‚³‚é‚¦‚ñ‚Ó‚§[‚³[‚¸_1	Konami
 letheae	ƒŠ[ƒTƒ‹ƒGƒ“ƒtƒH[ƒT[ƒY (ver EAE 11/19/92 16:24)	‚è[‚³‚é‚¦‚ñ‚Ó‚§[‚³[‚¸_1	Konami
-lethalej	ƒŠ[ƒTƒ‹ƒGƒ“ƒtƒH[ƒT[ƒY (ver JAD)	‚è[‚³‚é‚¦‚ñ‚Ó‚§[‚³[‚¸_1	Konami
+lethalej	ƒŠ[ƒTƒ‹ƒGƒ“ƒtƒH[ƒT[ƒY (ver JAD 12/04/92 17:16)	‚è[‚³‚é‚¦‚ñ‚Ó‚§[‚³[‚¸_1	Konami
 nemesis	ƒOƒ‰ƒfƒBƒEƒX / Nemesis	‚®‚ç‚Å‚¡‚¤‚·_1	Konami
 nemesuk	ƒOƒ‰ƒfƒBƒEƒX / Nemesis (ŠCŠO”Å?)	‚®‚ç‚Å‚¡‚¤‚·_1	Konami
 konamigt	RF2 <ƒŒƒbƒhƒtƒ@ƒCƒ^[2> / Konami GT	‚ [‚é‚¦‚Ó2	Konami
@@ -3729,7 +3736,7 @@ tmntua	T.M.N.T. -ƒX[ƒp[‹T”EÒ / Teenage Mutant Ninja Turtles (USA”Å 4 players 
 tmht	T.M.N.T. -ƒX[ƒp[‹T”EÒ / Teenage Mutant Hero Turtles (UK”Å 4 players)	‚Ä‚¡[‚¦‚Ş‚¦‚Ê‚Ä‚¡[_1	Konami
 tmntj	T.M.N.T. -ƒX[ƒp[‹T”EÒ (“ú–{”Å 4 players)	‚Ä‚¡[‚¦‚Ş‚¦‚Ê‚Ä‚¡[_1	Konami
 tmht2p	T.M.N.T. -ƒX[ƒp[‹T”EÒ / Teenage Mutant Hero Turtles (UK”Å 2 players set 1)	‚Ä‚¡[‚¦‚Ş‚¦‚Ê‚Ä‚¡[_1	Konami
-tmht2pa	T.M.N.T. -ƒX[ƒp[‹T”EÒ / Teenage Mutant Ninja Turtles (UK”Å 2 players set 2)	‚Ä‚¡[‚¦‚Ş‚¦‚Ê‚Ä‚¡[_1	Konami
+tmht2pa	T.M.N.T. -ƒX[ƒp[‹T”EÒ / Teenage Mutant Hero Turtles (UK”Å 2 players set 2)	‚Ä‚¡[‚¦‚Ş‚¦‚Ê‚Ä‚¡[_1	Konami
 tmnt2pj	T.M.N.T. -ƒX[ƒp[‹T”EÒ (“ú–{”Å 2 players)	‚Ä‚¡[‚¦‚Ş‚¦‚Ê‚Ä‚¡[_1	Konami
 tmnt2po	T.M.N.T. -ƒX[ƒp[‹T”EÒ / Teenage Mutant Ninja Turtles (ƒIƒZƒAƒjƒA”Å 2 players)	‚Ä‚¡[‚¦‚Ş‚¦‚Ê‚Ä‚¡[_1	Konami
 punkshot	ƒpƒ“ƒNƒVƒ‡ƒbƒg (USA”Å 4 players)	‚Ï‚ñ‚­‚µ‚å‚Á‚Æ	Konami
@@ -3744,7 +3751,7 @@ glfgreat	ƒSƒ‹ƒtƒBƒ“ƒOƒOƒŒƒCƒc	‚²‚é‚Ó‚¡‚ñ‚®‚®‚ê‚¢‚Â_1	Konami
 glfgretj	ƒSƒ‹ƒtƒBƒ“ƒOƒOƒŒƒCƒc (“ú–{”Å)	‚²‚é‚Ó‚¡‚ñ‚®‚®‚ê‚¢‚Â_1	Konami
 tmnt2	T.M.N.T. -ƒ^[ƒgƒ‹ƒYƒCƒ“ƒ^ƒCƒ€ (4 players ver UAA)	‚Ä‚¡[‚¦‚Ş‚¦‚Ê‚Ä‚¡[_2	Konami
 tmnt2a	T.M.N.T. -ƒ^[ƒgƒ‹ƒYƒCƒ“ƒ^ƒCƒ€ (4 players ver ADA)	‚Ä‚¡[‚¦‚Ş‚¦‚Ê‚Ä‚¡[_2	Konami
-tmht22pe	T.M.N.T. -ƒ^[ƒgƒ‹ƒYƒCƒ“ƒ^ƒCƒ€ (2 players ver EBA)	‚Ä‚¡[‚¦‚Ş‚¦‚Ê‚Ä‚¡[_2	Konami
+tmht22pe	T.M.N.T. -ƒ^[ƒgƒ‹ƒYƒCƒ“ƒ^ƒCƒ€ / Teenage Mutant Hero Turtles - Turtles in Time (2 players ver EBA)	‚Ä‚¡[‚¦‚Ş‚¦‚Ê‚Ä‚¡[_2	Konami
 tmnt22pu	T.M.N.T. -ƒ^[ƒgƒ‹ƒYƒCƒ“ƒ^ƒCƒ€ (2 players ver UDA)	‚Ä‚¡[‚¦‚Ş‚¦‚Ê‚Ä‚¡[_2	Konami
 ssriders	ƒTƒ“ƒZƒbƒgƒ‰ƒCƒ_[ƒY (4 players ver EAC)	‚³‚ñ‚¹‚Á‚Æ‚ç‚¢‚¾[‚¸	Konami
 ssrdrebd	ƒTƒ“ƒZƒbƒgƒ‰ƒCƒ_[ƒY (2 players ver EBD)	‚³‚ñ‚¹‚Á‚Æ‚ç‚¢‚¾[‚¸	Konami
@@ -3838,7 +3845,7 @@ winspikj	ƒEƒCƒjƒ“ƒOƒXƒpƒCƒN (ver JAA)	‚¤‚¢‚É‚ñ‚®‚·‚Ï‚¢‚­	Konami
 soccerss	ƒTƒbƒJ[ƒX[ƒp[ƒXƒ^[ƒY (ver EAA)	‚³‚Á‚©[‚·[‚Ï[‚·‚½[‚¸	Konami
 soccersj	ƒTƒbƒJ[ƒX[ƒp[ƒXƒ^[ƒY (ver JAA)	‚³‚Á‚©[‚·[‚Ï[‚·‚½[‚¸	Konami
 soccersa	ƒTƒbƒJ[ƒX[ƒp[ƒXƒ^[ƒY (ver AAA)	‚³‚Á‚©[‚·[‚Ï[‚·‚½[‚¸	Konami
-vsnetscr	ƒ”ƒ@[ƒTƒXƒlƒbƒgƒTƒbƒJ[ (ver EAB)	‚Î[‚³‚·_1‚Ë‚Á‚Æ‚³‚Á‚©[	Konami
+vsnetscr	ƒ”ƒ@[ƒTƒXƒlƒbƒgƒTƒbƒJ[ (ver EAD)	‚Î[‚³‚·_1‚Ë‚Á‚Æ‚³‚Á‚©[	Konami
 vsnetseb	ƒ”ƒ@[ƒTƒXƒlƒbƒgƒTƒbƒJ[ (ver EAB)	‚Î[‚³‚·_1‚Ë‚Á‚Æ‚³‚Á‚©[	Konami
 vsnetscu	ƒ”ƒ@[ƒTƒXƒlƒbƒgƒTƒbƒJ[ (ver UAB)	‚Î[‚³‚·_1‚Ë‚Á‚Æ‚³‚Á‚©[	Konami
 vsnetsca	ƒ”ƒ@[ƒTƒXƒlƒbƒgƒTƒbƒJ[ (ver AAA)	‚Î[‚³‚·_1‚Ë‚Á‚Æ‚³‚Á‚©[	Konami
@@ -4574,24 +4581,24 @@ kof2k4se	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters Special Edit
 matrim	V‹ŒŒ›ˆê‘° “¬¥ -Matrimelee	‚µ‚ñ‚²‚¤‚¯‚Â‚¶‚¢‚¿‚¼‚­‚Æ‚¤‚±‚ñ	Noise Factory / Atlus
 pnyaa	ƒ|ƒ`ƒb‚Æ‚É‚á`	‚Û‚¿‚Á‚Æ‚É‚á[	Aiky / Taito
 ms5pcb	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO5 (JAMMA PCB)	‚ß‚½‚é‚·‚ç‚Á‚®_5	SNK Playmore
-mslug5	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO5	‚ß‚½‚é‚·‚ç‚Á‚®_5	SNK Playmore
-ms5plus	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO5 / Metal Slug 5 Plus (ŠC‘¯”Å / ƒnƒbƒN)	‚ß‚½‚é‚·‚ç‚Á‚®_5	bootleg
-svcpcb	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ	Playmore
-svcpcba	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB set 2)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ	Playmore
-svc	SNK VS. CAPCOM -SVC CHAOS (MVS)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ	Playmore
-svcboot	SNK VS. CAPCOM -SVC CHAOS (MVS) (ŠC‘¯”Å)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ	bootleg
-svcplus	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Plus (ŠC‘¯”Å / ƒnƒbƒN set1)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ	bootleg
-svcplusa	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Plus (ŠC‘¯”Å / ƒnƒbƒN set 2)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ	bootleg
-svcsplus	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Super Plus (ŠC‘¯”Å / ƒnƒbƒN)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ	bootleg
+mslug5	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO5	‚ß‚½‚é‚·‚ç‚Á‚®_5_1	SNK Playmore
+ms5plus	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO5 / Metal Slug 5 Plus (ŠC‘¯”Å / ƒnƒbƒN)	‚ß‚½‚é‚·‚ç‚Á‚®_5_2	bootleg
+svcpcb	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ_1	Playmore
+svcpcba	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB set 2)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ_1	Playmore
+svc	SNK VS. CAPCOM -SVC CHAOS (MVS)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ_1	Playmore
+svcboot	SNK VS. CAPCOM -SVC CHAOS (MVS) (ŠC‘¯”Å)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ_1	bootleg
+svcplus	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Plus (ŠC‘¯”Å / ƒnƒbƒN set 1)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ_2	bootleg
+svcplusa	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Plus (ŠC‘¯”Å / ƒnƒbƒN set 2)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ_2	bootleg
+svcsplus	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Super Plus (ŠC‘¯”Å / ƒnƒbƒN)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ_2	bootleg
 samsho5	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ë (set 1)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_1‚º‚ë	Yuki Enterprise / SNK Playmore
 samsho5h	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ë (set 2)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_1‚º‚ë	Yuki Enterprise / SNK Playmore
 samsho5b	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ë (ŠC‘¯”Å)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_1‚º‚ë	bootleg
 kf2k3pcb	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 (“ú–{”Å JAMMA PCB)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_1_2003	SNK Playmore
 kof2003	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 (ŠCŠO / USA”Å MVS)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_1_2003	SNK Playmore
 kf2k3bl	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 (ŠC‘¯”Å set 1)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_1_2003	bootleg
-kf2k3bla	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 (ŠC‘¯”Å set 2)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_2003	bootleg
+kf2k3bla	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 (ŠC‘¯”Å set 2)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_1_2003	bootleg
 kf2k3pl	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 / The King of Fighters 2004 Plus / Hero (ŠC‘¯”Å / ƒnƒbƒN)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_2_2003	bootleg
-kf2k3upl	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 / The King of Fighters 2004 Ultra Plus (ŠC‘¯”Å / ƒnƒbƒN)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_1_2003	bootleg
+kf2k3upl	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 / The King of Fighters 2004 Ultra Plus (ŠC‘¯”Å / ƒnƒbƒN)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_2_2003	bootleg
 samsh5sp	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ëƒXƒyƒVƒƒƒ‹ (set 1 uncensored)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_2‚º‚ë‚·‚Ø‚µ‚á‚é	Yuki Enterprise / SNK Playmore
 samsh5sh	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ëƒXƒyƒVƒƒƒ‹ (set 2 censored)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_2‚º‚ë‚·‚Ø‚µ‚á‚é	Yuki Enterprise / SNK Playmore
 samsh5sn	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ëƒXƒyƒVƒƒƒ‹ (set 3 less censored)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_2‚º‚ë‚·‚Ø‚µ‚á‚é	Yuki Enterprise / SNK Playmore
@@ -5216,6 +5223,7 @@ s1945	ƒXƒgƒ‰ƒCƒJ[ƒY1945	‚·‚Æ‚ç‚¢‚©[‚¸_1_11945	Psikyo
 s1945a	ƒXƒgƒ‰ƒCƒJ[ƒY1945 (alt)	‚·‚Æ‚ç‚¢‚©[‚¸_1_11945	Psikyo
 s1945j	ƒXƒgƒ‰ƒCƒJ[ƒY1945 (“ú–{”Å)	‚·‚Æ‚ç‚¢‚©[‚¸_1_11945	Psikyo
 s1945jn	ƒXƒgƒ‰ƒCƒJ[ƒY1945 (“ú–{”Å unprotected)	‚·‚Æ‚ç‚¢‚©[‚¸_1_11945	Psikyo
+s1945k	ƒXƒgƒ‰ƒCƒJ[ƒY1945 (ŠØ‘”Å)	‚·‚Æ‚ç‚¢‚©[‚¸_1_11945	Psikyo
 tengai	í‘ƒuƒŒ[ƒh -í‘ƒG[ƒX ƒGƒsƒ\[ƒhII	‚¹‚ñ‚²‚­‚Ô‚ê[‚Ç	Psikyo
 s1945ii	ƒXƒgƒ‰ƒCƒJ[ƒY1945 II	‚·‚Æ‚ç‚¢‚©[‚¸_1_219452	Psikyo
 soldivid	ƒ\ƒ‹ƒfƒBƒoƒCƒh -ƒUEƒ\[ƒhƒIƒuƒ_[ƒNƒlƒX	‚»‚é‚Å‚¡‚Î‚¢‚Ç	Psikyo
@@ -5262,7 +5270,7 @@ mastboyi	ƒ}ƒXƒ^[ƒ{[ƒC (ƒCƒ^ƒŠƒA”Å PCB rev A)	‚Ü‚·‚½[‚Ú[‚¢	Gaelco
 xorworld	Xorƒ[ƒ‹ƒh (prototype)	‚¦‚Á‚­‚·‚¨[‚ [‚é‚í[‚é‚Ç	Gaelco
 bigkarnk	ƒrƒbƒOƒJƒ‹ƒiƒbƒN	‚Ñ‚Á‚®‚©‚é‚È‚Á‚­	Gaelco
 splash	ƒXƒvƒ‰ƒbƒVƒ…I (ŠCŠO”Å ver 1.2)	‚·‚Õ‚ç‚Á‚µ‚ã	Gaelco
-splash10	ƒXƒvƒ‰ƒbƒVƒ…I (ŠCŠO”Å ver. 1.0)	‚·‚Õ‚ç‚Á‚µ‚ã	Gaelco
+splash10	ƒXƒvƒ‰ƒbƒVƒ…I (ŠCŠO”Å ver 1.0)	‚·‚Õ‚ç‚Á‚µ‚ã	Gaelco
 paintlad	ƒXƒvƒ‰ƒbƒVƒ…I / Painted Lady (USA”Å ver 1.3)	‚·‚Õ‚ç‚Á‚µ‚ã	Gaelco
 roldfrog	ƒUEƒŠƒ^[ƒ“EƒIƒuEƒŒƒfƒB[ƒtƒƒbƒO	‚´‚è‚½[‚ñ‚¨‚Ô‚ê‚Å‚¡[‚Ó‚ë‚Á‚®	Microhard
 roldfrga	ƒUEƒŠƒ^[ƒ“EƒIƒuEƒŒƒfƒB[ƒtƒƒbƒO (set 2)	‚´‚è‚½[‚ñ‚¨‚Ô‚ê‚Å‚¡[‚Ó‚ë‚Á‚®	Microhard
@@ -5618,7 +5626,7 @@ tgtball	ƒ^[ƒQƒbƒgƒ{[ƒ‹ (Nude)	‚½[‚°‚Á‚Æ‚Ú[‚é	Yun Sung
 tgtballa	ƒ^[ƒQƒbƒgƒ{[ƒ‹	‚½[‚°‚Á‚Æ‚Ú[‚é	Yun Sung
 torus	ƒg[ƒ‰ƒX	‚Æ[‚ç‚·	Yun Sung
 madball	ƒ}ƒbƒhƒ{[ƒ‹ V2.0	‚Ü‚Á‚Ç‚Ú[‚é‚Î[‚¶‚å‚ñ2.0	Yun Sung
-madballn	ƒ}ƒbƒhƒ{[ƒ‹ V2.0 (ƒnƒbƒN? With Nudity)	‚Ü‚Á‚Ç‚Ú[‚é‚Î[‚¶‚å‚ñ2.0	Yun Sung
+madballn	ƒ}ƒbƒhƒ{[ƒ‹ V2.0 (with nudity)	‚Ü‚Á‚Ç‚Ú[‚é‚Î[‚¶‚å‚ñ2.0	Yun Sung
 cannball	ƒLƒƒƒmƒ“ƒ{[ƒ‹	‚«‚á‚Ì‚ñ‚Ú[‚é	Yun Sung / Soft Vision
 magix	ƒ}ƒWƒbƒNƒX	‚Ü‚¶‚Á‚­‚·_1	Yun Sung
 rocktris	ƒƒbƒNƒgƒŠƒX	‚ë‚Á‚­‚Æ‚è‚·	Yun Sung
@@ -5984,11 +5992,12 @@ gt103a3	ƒgƒŠƒrƒA (ver 1.03a alt 3)	‚Æ‚è‚Ñ‚ _1_103AA3	Greyhound Electronics
 gt103asx	ƒgƒŠƒrƒA (ver 1.03a sex questions)	‚Æ‚è‚Ñ‚ _1_103ASXQ	Greyhound Electronics
 gt103aa	ƒgƒŠƒrƒA (ver 1.03a alt questions 1)	‚Æ‚è‚Ñ‚ _1_103AAQ1	Greyhound Electronics
 gt103ab	ƒgƒŠƒrƒA (ver 1.03a alt questions 2)	‚Æ‚è‚Ñ‚ _1_103AAQ2	Greyhound Electronics
+reelfun	ƒŠƒAƒ‹ƒtƒ@ƒ“ (ver 7.01)	‚è‚ ‚é‚Ó‚Ÿ‚ñ	Grayhound Electronics
 findout	ƒtƒ@ƒCƒ“ƒhƒAƒEƒg (ver 4.04)	‚Ó‚Ÿ‚¢‚ñ‚Ç‚ ‚¤‚Æ	Elettronolo
 quiz	ƒNƒCƒY (rev 2)	‚­‚¢‚¸	Italian bootleg
-quiz211	ƒNƒCƒY (rev 2.1)	‚­‚¢‚¸	Elettronolo
-gs4002	ƒZƒŒƒNƒVƒ‡ƒ“ (ver 40.02TMB set 1)	‚¹‚ê‚­‚µ‚å‚ñ	G.E.I.
-gs4002a	ƒZƒŒƒNƒVƒ‡ƒ“ (ver 40.02TMB set 2)	‚¹‚ê‚­‚µ‚å‚ñ	G.E.I.
+quiz211	ƒNƒCƒY (rev 2.11)	‚­‚¢‚¸	Elettronolo
+gs4002	ƒZƒŒƒNƒVƒ‡ƒ“ (ver 40.02TMB set 1)	‚¹‚ê‚­‚µ‚å‚ñ	Greyhound Electronics
+gs4002a	ƒZƒŒƒNƒVƒ‡ƒ“ (ver 40.02TMB set 2)	‚¹‚ê‚­‚µ‚å‚ñ	Greyhound Electronics
 gepoker	ƒ|[ƒJ[ (ver 50.02 ICB)	‚Û[‚©[	Greyhound Electronics
 gepoker1	ƒ|[ƒJ[ (ver 50.08 IAM)	‚Û[‚©[	Greyhound Electronics
 gepoker2	ƒ|[ƒJ[ (ver 50.02 ICB set 2)	‚Û[‚©[	Greyhound Electronics
@@ -6237,7 +6246,9 @@ sb2003a	ƒX[ƒp[ƒoƒuƒ‹2003 (ƒAƒWƒA”Å)	‚·[‚Ï[‚Î‚Ô‚é2003	Limenko
 legendoh	ƒŒƒWƒFƒ“ƒhƒIƒuƒq[ƒ[ƒY	‚ê‚¶‚¥‚ñ‚Ç‚¨‚Ô‚Ğ[‚ë[‚¸	Limenko
 carrera	ƒJƒŒƒ‰ (ver 6.7)	‚©‚ê‚ç	BS Electronics
 pmpoker	ƒvƒŒƒCƒ}ƒ“ƒ|[ƒJ[ (ƒhƒCƒc”Å)	‚Õ‚ê‚¢‚Ü‚ñ‚Û[‚©[	PlayMan?
-bigboy	ƒrƒbƒOƒ{[ƒC	‚Ñ‚Á‚®‚Ú[‚¢	Bonanza
+goldnpkr	ƒvƒŒƒCƒ}ƒ“ƒ|[ƒJ[ / Golden Poker Double Up	‚Õ‚ê‚¢‚Ü‚ñ‚Û[‚©[	Bonanza Enterprises, Ltd
+jokerpkr	ƒvƒŒƒCƒ}ƒ“ƒ|[ƒJ[ / Joker Poker	‚Õ‚ê‚¢‚Ü‚ñ‚Û[‚©[	Coinmaster-Gaming, Ltd
+pottnpkr	ƒvƒŒƒCƒ}ƒ“ƒ|[ƒJ[ / Jack Potten's Poker	‚Õ‚ê‚¢‚Ü‚ñ‚Û[‚©[	Unknown
 knightsh	ƒiƒCƒc ƒIƒu ƒU ƒ‰ƒEƒ“ƒh -‰~‘ì‚Ì‹Rm (ƒnƒbƒN)	‚È‚¢‚Â‚¨‚Ô‚´‚ç‚¤‚ñ‚Ç	hack / bootleg
 knightsb	ƒiƒCƒc ƒIƒu ƒU ƒ‰ƒEƒ“ƒh -‰~‘ì‚Ì‹Rm (ŠC‘¯”Å)	‚È‚¢‚Â‚¨‚Ô‚´‚ç‚¤‚ñ‚Ç	bootleg
 sf2m8	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II' -ƒ`ƒƒƒ“ƒsƒIƒ“ƒGƒfƒBƒVƒ‡ƒ“ (M8)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_2_2‚¾‚Á‚µ‚ã	hack / bootleg
@@ -6269,7 +6280,7 @@ kf2k2plb	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Plus (Š
 kf2k2plc	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 2002 Super (ŠC‘¯”Å / ƒnƒbƒN set 4)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
 kf2k4pls	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters Special Edition 2004 Plus (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
 matrimbl	V‹ŒŒ›ˆê‘° “¬¥ -Matrimelee (ŠC‘¯”Å)	‚µ‚ñ‚²‚¤‚¯‚Â‚¶‚¢‚¿‚¼‚­‚Æ‚¤‚±‚ñ	bootleg
-mslug5b	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO5 (ŠC‘¯”Å / ƒnƒbƒN)	‚ß‚½‚é‚·‚ç‚Á‚®_5	bootleg
+mslug5b	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO5 (ŠC‘¯”Å)	‚ß‚½‚é‚·‚ç‚Á‚®_5_1	bootleg
 zintrkcd	‰Ÿ‚µo‚µƒWƒ“ƒgƒŠƒbƒN (CD to MVS Conversion)	‚¨‚µ‚¾‚µ‚¶‚ñ‚Æ‚è‚Á‚­	hack
 vantris	ƒ”ƒ@ƒ“ƒgƒŠƒX (Vanguard hardware)	‚Î‚ñ‚Æ‚è‚·	N.Kehrer
 frogfest	ƒtƒƒbƒOƒtƒB[ƒXƒg	‚Ó‚ë‚Á‚®‚Ó‚¡[‚·‚Æ	Rastersoft
@@ -6304,11 +6315,11 @@ ct2k3ad	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2001 / Crouching Tiger Hidden Dragon 2003
 cthd2k3d	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2001 / Crouching Tiger Hidden Dragon 2003 (fully decrypted) (ŠC‘¯”Å set 1)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_08_3_2001	bootleg
 kof10thd	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2002 / The King of Fighters 10th Anniversary (fully decrypted) (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_09_2_2002	bootleg
 kof2003d	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 (decrypted P&C)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_1_2003	SNK Playmore
-mslug5d	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO5 (fully decrypted)	‚ß‚½‚é‚·‚ç‚Á‚®_5	SNK / Playmore
+mslug5d	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO5 (fully decrypted)	‚ß‚½‚é‚·‚ç‚Á‚®_5_1	SNK / Playmore
 samsho5d	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ë (decrypted C)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_1‚º‚ë	Yuki Enterprise / SNK Playmore
 samsh5sd	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ëƒXƒyƒVƒƒƒ‹ (decrypted C)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_2‚º‚ë‚·‚Ø‚µ‚á‚é	Yuki Enterprise / SNK Playmore
 lans2k4d	ƒVƒ‡ƒbƒNƒgƒ‹[ƒp[ƒY ƒZƒJƒ“ƒhƒXƒJƒbƒh / Lansquenet 2004 (fully decrypted) (ŠC‘¯”Å)	‚µ‚å‚Á‚­‚Æ‚é[‚Ï[‚¸_2‚¹‚©‚ñ‚Ç‚·‚©‚Á‚Ç	bootleg
-svcd	SNK VS. CAPCOM -SVC CHAOS (MVS decrypted C)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ	bootleg
+svcd	SNK VS. CAPCOM -SVC CHAOS (MVS decrypted C)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ_1	bootleg
 jckeygpd	ƒWƒ‡ƒbƒL[ƒOƒ‰ƒ“ƒvƒŠ (decrypted C)	‚¶‚å‚Á‚«[‚®‚ç‚ñ‚Õ‚è	Sun Amusement / BrezzaSoft
 kf2k3pcd	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 (“ú–{”Å JAMMA PCB decrypted C&Bios)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_1_2003	SNK Playmore
 kogd	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY '97 / King of Gladiator (fully decrypted) (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_04_2_1997	bootleg
