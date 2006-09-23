@@ -16,6 +16,7 @@
 #include "d3dintf.h"
 
 // MAME includes
+#include "osd_so.h"
 #include "mame.h"
 
 #include "winmain.h"
