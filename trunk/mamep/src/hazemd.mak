@@ -62,6 +62,10 @@ DRVLIBS = \
 
 $(OBJ)/misc.a: \
 	$(OBJ)/drivers/megadriv.o \
+	$(OBJ)/drivers/md_games.o \
+	$(OBJ)/drivers/md_arcad.o \
+	$(OBJ)/drivers/md_gamul.o \
+	$(OBJ)/drivers/md_gam32.o \
 	$(OBJ)/drivers/sms.o \
 
 #-------------------------------------------------

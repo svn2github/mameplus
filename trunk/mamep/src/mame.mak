@@ -1137,6 +1137,10 @@ $(OBJ)/sega.a: \
 	$(OBJ)/vidhrdw/segaic24.o \
 	$(OBJ)/vidhrdw/stvvdp1.o $(OBJ)/vidhrdw/stvvdp2.o \
 	$(OBJ)/drivers/megadriv.o \
+	$(OBJ)/drivers/md_games.o \
+	$(OBJ)/drivers/md_arcad.o \
+	$(OBJ)/drivers/md_gamul.o \
+	$(OBJ)/drivers/md_gam32.o \
 	$(OBJ)/drivers/sms.o \
 
 $(OBJ)/seibu.a: \

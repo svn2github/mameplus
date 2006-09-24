@@ -41,6 +41,9 @@ const game_driver * const hazemddrivers[] =
 #else	/* DRIVER_RECURSIVE */
 	/* Sort this when the main driver is sorted */
 
+
+
+
 	DRIVER( g_12i1 )
 	DRIVER( g_4in1 )
 	DRIVER( g_10in1 )
@@ -61,6 +64,7 @@ const game_driver * const hazemddrivers[] =
 	DRIVER( g_mic2 )
 	DRIVER( g_mic9 )
 	DRIVER( g_micm )
+	DRIVER( g_mimmx )
 	DRIVER( g_gf2 )
 	DRIVER( g_str2 )
 	DRIVER( g_lio3 )
@@ -1715,6 +1719,11 @@ const game_driver * const hazemddrivers[] =
 	DRIVER( g_cches )
 	DRIVER( g_conqs )
 	DRIVER( g_conqt )
+
+	DRIVER( g_chifi3 )
+	DRIVER( g_kaiju )
+	DRIVER( g_kof99 )
+	DRIVER( g_sdk993 )
 
 DRIVER( g_svolx )
 DRIVER( g_tcupx )
