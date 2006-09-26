@@ -1,3 +1,46 @@
+Haze Megadrive Emu 0.11a
+------------------------
+
+Made the 'Arcade' bootleg of the Genesis version of Super Street Fighter 2 work.
+This version takes coins and plays like an arcade game, (takes coins, reads dips)
+but is based on the Japanese Genesis release of the game.  Probably made either
+because it was low-cost, or because nobody had found a way to bootleg CPS2 at the
+time.  (set name ssf2ghw )
+
+Thanks to stephh for the help with this one.
+
+Haze Megadrive Emu 0.10a
+------------------------
+
+Fixed a silly sprite bug introduced in 0.09a
+
+Haze Megadrive Emu 0.09a
+------------------------
+
+Nothing major, I have no time these days.
+
+Based on MAME 0.108u5
+
+Improved protection emulation in some unlicensed carts
+
+Lion King 3
+Chinese Fighter 3
+Top Fighter 2000
+Super King Kong 99
+King of Fighters 99
+Pokemon Stadium
+ + more
+
+Some of these appear to work fine now (Lion King 3, Pokemon Stadium) others still have
+issues (Chinese Fighter 3, Top Fighter 2000)
+
+
+Hooked up backupram in several games [ShimaPong]
+
+Changed way sprite masking works, fixes Mercs L1 boss (sound still problematic in this game tho)
+
+Reorganized files a bit
+
 Haze Megadrive Emu 0.08a
 ------------------------
 

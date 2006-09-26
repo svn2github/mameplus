@@ -5,6 +5,7 @@ extern DRIVER_INIT( _32x );
 
 extern void construct_ipt_megadriv(input_port_init_params *param);
 extern void construct_ipt_megadri6(input_port_init_params *param);
+extern void construct_ipt_ssf2ghw(input_port_init_params *param);
 
 MACHINE_DRIVER_EXTERN(megadriv);
 MACHINE_DRIVER_EXTERN(megadpal);
