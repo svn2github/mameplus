@@ -8,6 +8,7 @@
 //============================================================
 
 // standard windows headers
+#define _WIN32_WINNT 0x0400
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <mmsystem.h>
@@ -261,6 +262,21 @@ int osd_is_bad_read_ptr(const void *ptr, size_t size)
 }
 
 
+
+//============================================================
+//  osd_break_into_debugger
+//============================================================
+
+void osd_break_into_debugger(const char *message)
+{
+	if (IsDebuggerPresent())
+	{
+		OutputDebugString(message);
+		DebugBreak();
+	}
+}
+
+
 //============================================================
 //  osd_lock_alloc
 //============================================================
@@ -467,7 +483,7 @@ static LONG CALLBACK exception_filter(struct _EXCEPTION_POINTERS *info)
 
 	// if we're hitting this recursively, just exit
 	if (already_hit)
-		return EXCEPTION_EXECUTE_HANDLER;
+		ExitProcess(100);
 	already_hit = 1;
 
 	// find our man
@@ -578,12 +594,10 @@ static LONG CALLBACK exception_filter(struct _EXCEPTION_POINTERS *info)
 	}
 #endif
 
-	logerror("shutting down after exception\n");
-
 	cli_frontend_exit();
 
 	// exit
-	return EXCEPTION_EXECUTE_HANDLER;
+	ExitProcess(100);
 }
 
 
