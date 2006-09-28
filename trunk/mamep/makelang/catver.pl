@@ -1,7 +1,7 @@
 # Convert catver.ini to extra folder format
 # http://www.catver.com/
 
-$dir = '..';
+$dir = '../dirs';
 
 $textdir = "text";
 $folderdir = "$dir/folders";

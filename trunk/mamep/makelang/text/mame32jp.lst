@@ -2897,7 +2897,7 @@ loffireu	ライン オブ ファイヤー -爆弾野郎 (USA版 FD1094 317-0135)	らいんおぶふぁ
 loffirej	ライン オブ ファイヤー -爆弾野郎 (日本版 FD1094 317-0134)	らいんおぶふぁいやー	Sega
 rachero	レーシングヒーロー (FD1094 317-0144)	れーしんぐひーろー	Sega
 abcop	A.B.コップ <エアーバイクコップ> (FD1094 317-0169b)	えあーばいくこっぷ	Sega
-gprider	GPライダー (set 2 FD1094 317-0163)	じーぴーらいだー	Sega
+gprider	GPライダー (海外版 set 2 FD1094 317-0163)	じーぴーらいだー	Sega
 gprider1	GPライダー (USA版 set 1 FD1094 317-0162)	じーぴーらいだー	Sega
 smgp	スーパーモナコGP (海外版 set 8 rev B 'Twin' FD1094 317-0126a)	すーぱーもなこじーぴー	Sega
 smgp6	スーパーモナコGP (海外版 set 7 rev A FD1094 317-0126a)	すーぱーもなこじーぴー	Sega
@@ -3249,7 +3249,8 @@ astrof3	アストロファイター (set 3)	あすとろふぁいたー	Data East
 abattle	アストロファイター / Astro Battle (set 1)	あすとろふぁいたー	Sidam
 abattle2	アストロファイター / Astro Battle (set 2)	あすとろふぁいたー	Sidam
 afire	アストロファイター / Astro Fire	あすとろふぁいたー	Rene Pierre
-acombat	アストロファイター / Astro Combat	あすとろふぁいたー	bootleg
+acombat	アストロファイター / Astro Combat (newer cb)	あすとろふぁいたー	bootleg
+acombato	アストロファイター / Astro Combat (older pz)	あすとろふぁいたー	bootleg
 sstarbtl	アストロファイター / Super Star Battle	あすとろふぁいたー	bootleg
 tomahawk	トマホーク777 (rev 1)	とまほーく777	Data East
 tomahaw5	トマホーク777 (rev 5)	とまほーく777	Data East
@@ -5253,6 +5254,7 @@ bcruzm12	バトルクルーザー M-12	ばとるくるーざーM12	Sigma Enterprises Inc.
 hopprobo	ホッパーロボ	ほっぱーろぼ	Sega
 wanted	ウォンテッド	うぉんてっど	Sigma Enterprises Inc.
 funkybee	ファンキービー	ふぁんきーびー	Orca
+funkbeeb	ファンキービー (harder) (海賊版)	ふぁんきーびー	bootleg
 skylancr	スカイランサー	すかいらんさー	Orca
 skylance	スカイランサー (Esco Trading Co license)	すかいらんさー	Orca (Esco Trading Co license)
 zodiack	ゾディアック	ぞでぃあっく	Orca (Esco Trading Co)
@@ -5992,7 +5994,7 @@ gt103a3	トリビア (ver 1.03a alt 3)	とりびあ_1_103AA3	Greyhound Electronics
 gt103asx	トリビア (ver 1.03a sex questions)	とりびあ_1_103ASXQ	Greyhound Electronics
 gt103aa	トリビア (ver 1.03a alt questions 1)	とりびあ_1_103AAQ1	Greyhound Electronics
 gt103ab	トリビア (ver 1.03a alt questions 2)	とりびあ_1_103AAQ2	Greyhound Electronics
-reelfun	リアルファン (ver 7.01)	りあるふぁん	Grayhound Electronics
+reelfun	リールファン (ver 7.01)	りーるふぁん	Grayhound Electronics
 findout	ファインドアウト (ver 4.04)	ふぁいんどあうと	Elettronolo
 quiz	クイズ (rev 2)	くいず	Italian bootleg
 quiz211	クイズ (rev 2.11)	くいず	Elettronolo
@@ -6246,9 +6248,9 @@ sb2003a	スーパーバブル2003 (アジア版)	すーぱーばぶる2003	Limenko
 legendoh	レジェンドオブヒーローズ	れじぇんどおぶひーろーず	Limenko
 carrera	カレラ (ver 6.7)	かれら	BS Electronics
 pmpoker	プレイマンポーカー (ドイツ版)	ぷれいまんぽーかー	PlayMan?
-goldnpkr	プレイマンポーカー / Golden Poker Double Up	ぷれいまんぽーかー	Bonanza Enterprises, Ltd
-jokerpkr	プレイマンポーカー / Joker Poker	ぷれいまんぽーかー	Coinmaster-Gaming, Ltd
-pottnpkr	プレイマンポーカー / Jack Potten's Poker	ぷれいまんぽーかー	Unknown
+goldnpkr	ゴールデンポーカーダブルアップ	ごーるでんぽーかーだぶるあっぷ	Bonanza Enterprises, Ltd
+jokerpkr	ジョーカーポーカー	じょーかーぽーかー	Coinmaster-Gaming, Ltd
+pottnpkr	ジャックポッテンズポーカー	じゃっくぽってんずぽーかー	Unknown
 knightsh	ナイツ オブ ザ ラウンド -円卓の騎士 (ハック)	ないつおぶざらうんど	hack / bootleg
 knightsb	ナイツ オブ ザ ラウンド -円卓の騎士 (海賊版)	ないつおぶざらうんど	bootleg
 sf2m8	ストリートファイターII' -チャンピオンエディション (M8)	すとりーとふぁいたー_2_2だっしゅ	hack / bootleg
