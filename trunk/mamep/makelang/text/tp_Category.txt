@@ -410,211 +410,211 @@ Shooter / Flying Horizontal *Mature*
 Shooter / Flying Vertical
 
 
-# 4772
+# 4773
 Shooter / Flying Vertical *Mature*
 
 
-# 4775
+# 4776
 Shooter / Gallery
 
 
-# 5137
+# 5139
 Shooter / Gallery *Mature*
 
 
-# 5140
+# 5142
 Shooter / Gun
 
 
-# 5275
+# 5277
 Shooter / Misc.
 
 
-# 5293
+# 5295
 Shooter / Misc. Horizontal
 
 
-# 5316
+# 5318
 Shooter / Misc. Vertical
 
 
-# 5336
+# 5338
 Shooter / Versus
 
 
-# 5349
+# 5351
 Shooter / Walking
 
 
-# 5454
+# 5456
 Sport / Wrestling
 
 
-# 5504
+# 5506
 Sports
 
 
-# 5528
+# 5530
 Sports / Armwrestling
 
 
-# 5533
+# 5535
 Sports / Baseball
 
 
-# 5612
+# 5614
 Sports / Basketball
 
 
-# 5663
+# 5665
 Sports / Bowling
 
 
-# 5696
+# 5698
 Sports / Boxing
 
 
-# 5732
+# 5734
 Sports / Bull Fighting
 
 
-# 5736
+# 5738
 Sports / Darts
 
 
-# 5743
+# 5745
 Sports / Dodgeball
 
 
-# 5748
+# 5750
 Sports / Fishing
 
 
-# 5756
+# 5758
 Sports / Football Amer.
 
 
-# 5805
+# 5807
 Sports / Football Rugby
 
 
-# 5810
+# 5812
 Sports / Golf
 
 
-# 5905
+# 5907
 Sports / Handball
 
 
-# 5909
+# 5911
 Sports / Hang Gliding
 
 
-# 5915
+# 5917
 Sports / Hockey
 
 
-# 5931
+# 5933
 Sports / Horse Racing
 
 
-# 5945
+# 5947
 Sports / Horseshoes
 
 
-# 5950
+# 5952
 Sports / Multiplay
 
 
-# 5958
+# 5960
 Sports / Ping pong
 
 
-# 5963
+# 5965
 Sports / Pool
 
 
-# 6000
+# 6002
 Sports / Pool *Mature*
 
 
-# 6014
+# 6016
 Sports / Shuffleboard
 
 
-# 6020
+# 6022
 Sports / Skateboarding
 
 
-# 6029
+# 6031
 Sports / Skiing
 
 
-# 6051
+# 6053
 Sports / SkyDiving
 
 
-# 6055
+# 6057
 Sports / Soccer
 
 
-# 6155
+# 6157
 Sports / Sumo
 
 
-# 6158
+# 6160
 Sports / Swimming
 
 
-# 6169
+# 6171
 Sports / Tennis
 
 
-# 6200
+# 6202
 Sports / Track & Field
 
 
-# 6237
+# 6239
 Sports / VolleyBall
 
 
-# 6263
+# 6265
 Tabletop
 
 
-# 6269
+# 6271
 Tabletop *Mature*
 
 
-# 6272
+# 6274
 Tabletop / Hanafuda
 
 
-# 6280
+# 6282
 Tabletop / Hanafuda *Mature*
 
 
-# 6299
+# 6301
 Tabletop / Mahjong
 
 
-# 6324
+# 6326
 Tabletop / Mahjong *Mature*
 
 
-# 6543
+# 6545
 Tabletop / Othello
 
 
-# 6549
+# 6551
 Tabletop / Othello *Mature*
 
 
-# 6552
+# 6554
 Tabletop / Renju
 
 
-# 6556
+# 6558
 Tabletop / Shougi
 
 

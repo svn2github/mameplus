@@ -2,9 +2,18 @@
 # http://www.catver.com/
 
 $dir = '..';
+$mameexe = 'mamep';
 
 $textdir = "text";
 $folderdir = "$dir/folders";
+
+%EXTRA = (
+	'plus' => 'Plus!',
+	'homebrew' => 'home-brew',
+	'neod' => 'Neogeo decrypted',
+	'noncpu' => 'Non-CPU',
+	'hazemd' => 'HazeMD'
+);
 
 open (IN, "$textdir/catver.ini") || die "$!";
 $filename = '';
@@ -87,16 +96,19 @@ __HEAD__
 
 	if ($filename eq "VerAdded")
 	{
-		if (open (EXTRA, "extra.txt"))
+		foreach my $tag (keys %EXTRA)
 		{
-			print OUT "[Plus!]\n";
+			print OUT "[$EXTRA{$tag}]\n";
+
+			open (EXTRA, "$dir/$mameexe -driver_config $tag -ll|") || die "$!";
 			while (<EXTRA>)
 			{
-				s/^[\s]+//;
-				s/\s.*//;
-				print OUT;
+				next unless /(.*[^\s])\s+"(.*)"/;
+				print OUT "$1\n";
 			}
 			close (EXTRA);
+
+			print OUT "\n";
 		}
 	}
 	close (OUT);

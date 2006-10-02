@@ -124,7 +124,7 @@ const options_entry windows_opts[] =
 	{ "listclones;lc",            NULL,       OPTION_COMMAND,    "show clones" },
 	{ "listcrc",                  NULL,       OPTION_COMMAND,    "CRC-32s" },
 	{ "listroms",                 NULL,       OPTION_COMMAND,    "list required roms for a driver" },
-	{ "listsamples",              NULL,       OPTION_COMMAND,    "list     OPTIONal samples for a driver" },
+	{ "listsamples",              NULL,       OPTION_COMMAND,    "list optional samples for a driver" },
 	{ "verifyroms",               NULL,       OPTION_COMMAND,    "report romsets that have problems" },
 	{ "verifysamples",            NULL,       OPTION_COMMAND,    "report samplesets that have problems" },
 	{ "romident",                 NULL,       OPTION_COMMAND,    "compare files with known MAME roms" },
@@ -288,7 +288,7 @@ const options_entry windows_opts[] =
 
 	// per-window options
 	{ NULL,                       NULL,       OPTION_HEADER,     "PER-WINDOW VIDEO OPTIONS" },
-	{ "screen",                   "auto",     0,                 "explicit name of the first screen; 'auto' here will try to make a best guess" },
+	{ "screen",                   "auto",     0,                 "explicit name of all screen; 'auto' here will try to make a best guess" },
 	{ "aspect;screen_aspect",     "auto",     0,                 "aspect ratio for all screens; 'auto' here will try to make a best guess" },
 	{ "resolution;r",             "auto",     0,                 "preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'" },
 	{ "view",                     "auto",     0,                 "preferred view for all screens" },

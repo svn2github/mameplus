@@ -66,17 +66,405 @@
 (BAD) 
 (異常) 
 
-# windows/video.c: 473
+# windows/config.c: 239, 240
+(debugger-only command)
+(デバッガ用コマンド)
+
+# windows/config.c: 176, 184, 198, 204, 210, 216, 217, 352, 362, 374, 375, 376, 377, 378, 379, 380, 381, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455
+(disabled by compiling option)
+(コンパイル時に無効化)
+
+# windows/video.c: 470
 (primary)
 (プライマリ)
 
-# windows/video.c: 270
+# windows/config.c: 337
+ARTWORK OPTIONS
+アートワーク設定
+
+# windows/config.c: 392
+AUTOMATIC DEVICE SELECTION OPTIONS
+自動デバイス選択設定
+
+# windows/video.c: 267
 Average FPS: %f (%d frames)\n
 平均FPS: %f (%d フレーム)\n
+
+# windows/config.c: 137
+CONFIGURATION OPTIONS
+コンフィグ設定
+
+# windows/config.c: 404
+CORE LANGUAGE OPTIONS
+コアの言語設定
+
+# windows/config.c: 409
+CORE PALETTE OPTIONS
+コアのパレット設定
 
 # windows/config.c: 125
 CRC-32s
 CRC-32
+
+# windows/config.c: 231
+DEBUGGING OPTIONS
+デバッガ設定
+
+# windows/config.c: 285
+DIRECT3D-SPECIFIC OPTIONS
+Direct3D固有設定
+
+# windows/config.c: 281
+DIRECTDRAW-SPECIFIC OPTIONS
+DirectDraw固有設定
+
+# windows/drawd3d.c: 1063
+Device %s currently in an unsupported mode\n
+デバイス「%s」は現在サポートされていないモードです\n
+
+# windows/drawd3d.c: 1036
+Direct3D: Configuring adapter #%d = %s\n
+Direct3D: アダプタ#%dを%sに設定しています\n
+
+# windows/drawd3d.c: 661
+Direct3D: Device created at %dx%d\n
+Direct3D: デバイスを%dx%dで作成しました\n
+
+# windows/drawd3d.c: 543, 1928
+Direct3D: Error %08X during device begin_scene call\n
+Direct3D: デバイスのbegin_scene呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawd3d.c: 1515, 1977
+Direct3D: Error %08X during device draw_primitive call\n
+Direct3D: デバイスのdraw_primitive呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawd3d.c: 572, 1981
+Direct3D: Error %08X during device end_scene call\n
+Direct3D: デバイスのend_scene呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawd3d.c: 1921
+Direct3D: Error %08X during device get_render_target call\n
+Direct3D: デバイスのget_render_target呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawd3d.c: 578
+Direct3D: Error %08X during device present call\n
+Direct3D: デバイスのpresent呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawd3d.c: 287, 294, 301, 308
+Direct3D: Error %08X during device set_render_state call\n
+Direct3D: デバイスのset_render_state呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawd3d.c: 1923, 1985
+Direct3D: Error %08X during device set_render_target call\n
+Direct3D: デバイスのset_render_target呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawd3d.c: 1487, 1975
+Direct3D: Error %08X during device set_stream_source call\n
+Direct3D: デバイスのset_stream_source呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawd3d.c: 219, 1934
+Direct3D: Error %08X during device set_texture call\n
+Direct3D: デバイスのset_texture呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawd3d.c: 231, 233, 245, 247, 259
+Direct3D: Error %08X during device set_texture_stage_state call\n
+Direct3D: デバイスのset_texture_stage_state呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawd3d.c: 1909
+Direct3D: Error %08X during device stretct_rect call\n
+Direct3D: デバイスのstretct_rect呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawd3d.c: 832, 834, 836, 838, 842, 856, 870, 884, 910, 934, 948, 961, 968
+Direct3D: Error %08X during get_caps_dword call\n
+Direct3D: get_caps_dword呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawd3d.c: 1888
+Direct3D: Error %08X during texture get_surface_level call\n
+Direct3D: テクスチャのget_surface_level呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawd3d.c: 1864
+Direct3D: Error %08X during texture unlock_rect call\n
+Direct3D: テクスチャのunlock_rect呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawd3d.c: 1938
+Direct3D: Error %08X during vertex buffer lock call\n
+Direct3D: 頂点バッファのlock呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawd3d.c: 1482, 1970
+Direct3D: Error %08X during vertex buffer unlock call\n
+Direct3D: 頂点バッファのunlock呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawd3d.c: 897
+Direct3D: Error - Device does not support dest alpha blending with inverted source alpha\n
+Direct3D: エラー: デバイスは反転したソ\ースアルファとのアルファブレンドをサポートしていません\n
+
+# windows/drawd3d.c: 892
+Direct3D: Error - Device does not support dest alpha blending with one\n
+Direct3D: エラー: デバイスはアルファブレンド係数1をサポートしていません\n
+
+# windows/drawd3d.c: 887
+Direct3D: Error - Device does not support dest alpha blending with zero\n
+Direct3D: エラー: デバイスはアルファブレンド係数0をサポートしていません\n
+
+# windows/drawd3d.c: 845
+Direct3D: Error - Device does not support immediate presentations\n
+Direct3D: エラー: デバイスは垂直同期を待たないプレゼンテーション処理をサポートしていません\n
+
+# windows/drawd3d.c: 850
+Direct3D: Error - Device does not support per-refresh presentations\n
+Direct3D: エラー: デバイスは垂直同期を待つプレゼンテーション処理をサポートしていません\n
+
+# windows/drawd3d.c: 878
+Direct3D: Error - Device does not support source alpha blending with destination color\n
+Direct3D: エラー: デバイスは色指定されたアルファブレンドをサポートしていません\n
+
+# windows/drawd3d.c: 873
+Direct3D: Error - Device does not support source alpha blending with source alpha\n
+Direct3D: エラー: デバイスはソ\ースアルファで指定されたアルファブレンドをサポートしていません\n
+
+# windows/drawd3d.c: 904
+Direct3D: Error - Device does not support texture alpha\n
+Direct3D: エラー: デバイスはテクスチャのアルファをサポートしていません\n
+
+# windows/d3d8intf.c: 101
+Direct3D: Error attempting to initialize Direct3D8\n
+Direct3D: Direct3D8の初期化中にエラーが発生しました\n
+
+# windows/d3d9intf.c: 99
+Direct3D: Error attempting to initialize Direct3D9\n
+Direct3D: Direct3D9の初期化中にエラーが発生しました\n
+
+# windows/drawd3d.c: 1205
+Direct3D: Mode selected = %4dx%4d@%3dHz\n
+Direct3D: 選択されたモードは%4dx%4d@%3dHz\n
+
+# windows/drawd3d.c: 1149
+Direct3D: Selecting video mode...\n
+Direct3D: 描画モードを選択中です...\n
+
+# windows/d3d8intf.c: 83
+Direct3D: Unable to access d3d8.dll\n
+Direct3D: d3d8.dllにアクセス出来ません\n
+
+# windows/d3d9intf.c: 81
+Direct3D: Unable to access d3d9.dll\n
+Direct3D: d3d9.dllにアクセス出来ません\n
+
+# windows/d3d8intf.c: 91
+Direct3D: Unable to find Direct3DCreate8\n
+Direct3D: Direct3DCreate8を見つける事が出来ません\n
+
+# windows/d3d9intf.c: 89
+Direct3D: Unable to find Direct3DCreate9\n
+Direct3D: Direct3DCreate9を見つける事が出来ません\n
+
+# windows/d3d8intf.c: 114
+Direct3D: Using Direct3D 8\n
+Direct3D: Direct3D 8を使用しています\n
+
+# windows/d3d9intf.c: 112
+Direct3D: Using Direct3D 9\n
+Direct3D: Direct3D 9を使用しています\n
+
+# windows/drawd3d.c: 970
+Direct3D: Using StretchRect for prescaling\n
+Direct3D: プリスケールにStretchRectを使用しています\n
+
+# windows/drawd3d.c: 964
+Direct3D: Using dynamic textures\n
+Direct3D: ダイナミックテクスチャを使用しています\n
+
+# windows/drawd3d.c: 918
+Direct3D: Warning - Device does not support bilinear texture filtering for magnification\n
+Direct3D: 警告: デバイスはテクスチャの拡大にバイリニアフィルタをサポートしていません\n
+
+# windows/drawd3d.c: 928
+Direct3D: Warning - Device does not support bilinear texture filtering for minification\n
+Direct3D: 警告: デバイスはテクスチャの縮小にバイリニアフィルタをサポートしていません\n
+
+# windows/drawd3d.c: 864
+Direct3D: Warning - Device does not support hardware rasterization\n
+Direct3D: 警告: デバイスはハードウェアによるラスタライズをサポートしていません\n
+
+# windows/drawd3d.c: 913
+Direct3D: Warning - Device does not support point-sample texture filtering for magnification\n
+Direct3D: 警告: デバイスはテクスチャの拡大にポイントサンプルフィルタリングをサポートしていません\n
+
+# windows/drawd3d.c: 923
+Direct3D: Warning - Device does not support point-sample texture filtering for minification\n
+Direct3D: 警告: デバイスはテクスチャの縮小にポイントサンプルフィルタリングをサポートしていません\n
+
+# windows/drawd3d.c: 859
+Direct3D: Warning - Device does not support queued rendering after a page flip\n
+Direct3D: 警告: デバイスはページフリップ後の描画コマンドキューをサポートしていません\n
+
+# windows/drawd3d.c: 937
+Direct3D: Warning - Device does not support texture clamping\n
+Direct3D: 警告: デバイスはテクスチャのアドレス固定をサポートしていません\n
+
+# windows/drawd3d.c: 951
+Direct3D: Warning - Device does not support texture modulation\n
+Direct3D: 警告: デバイスはテクスチャの乗算をサポートしていません\n
+
+# windows/drawd3d.c: 942
+Direct3D: Warning - Device does not support texture wrapping\n
+Direct3D: 警告: デバイスはテクスチャのテクスチャの貼\り付けをサポートしていません\n
+
+# windows/drawd3d.c: 677
+Direct3D: Warning - device does not support full screen gamma correction.\n
+Direct3D: 警告: デバイスはフルスクリーンでのガンマ補正をサポートしていません\n
+
+# windows/drawd3d.c: 1576
+Direct3D: adjusting prescale from %dx%d to %dx%d\n
+Direct3D: %dx%dから%dx%dにプリスケールを調整しました\n
+
+# windows/drawd3d.c: 1006
+Direct3D: failed to recreate resources for device; failing permanently\n
+Direct3D: デバイスのリソ\ース再生成が失敗しました。
+
+# windows/drawd3d.c: 993
+Direct3D: resetting device\n
+Direct3D: デバイスをリセットしています\n
+
+# windows/drawdd.c: 789
+DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
+DirectDraw: %sバッファを作成しました: %dx%dx%d (R=%08X G=%08X B=%08X)\n
+
+# windows/drawdd.c: 1126
+DirectDraw: Configuring device %s\n
+DirectDraw: デバイス%sを設定中\n
+
+# windows/drawdd.c: 616
+DirectDraw: Error %08X attempting to set gamma correction.\n
+DirectDraw: ガンマ補正の設定でエラー%08Xが発生しました\n
+
+# windows/drawdd.c: 495
+DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
+DirectDraw: 描画モードを%dx%d@%dに設定でエラー%08Xが発生しました\n
+
+# windows/drawdd.c: 1086
+DirectDraw: Error %08X blitting to the screen\n
+DirectDraw: 画面への描画でエラー%08Xが発生しました\n
+
+# windows/drawdd.c: 1053, 1062, 1071, 1080
+DirectDraw: Error %08X clearing the screen\n
+DirectDraw: 画面の消去でエラー%08Xが発生しました\n
+
+# windows/drawdd.c: 774
+DirectDraw: Error %08X creating %s surface\n
+DirectDraw: %sバッファの作成でエラー%08Xが発生しました\n
+
+# windows/drawdd.c: 815
+DirectDraw: Error %08X creating clipper\n
+DirectDraw: クリッパーの作成でエラー%08Xが発生しました\n
+
+# windows/drawdd.c: 460, 1115
+DirectDraw: Error %08X during DirectDrawCreateEx call\n
+DirectDraw: DirectDrawCreateEx呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawdd.c: 1212
+DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
+DirectDraw: 呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawdd.c: 1324
+DirectDraw: Error %08X during EnumDisplayModes call\n
+DirectDraw: EnumDisplayModes呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawdd.c: 716
+DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
+DirectDraw: IDirectDraw7_GetCaps呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawdd.c: 485
+DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
+DirectDraw: IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW)呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawdd.c: 479
+DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
+DirectDraw: IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW)呼び出しでエラー%08Xが発生しました\n
+
+# windows/drawdd.c: 782
+DirectDraw: Error %08X getting %s surface desciption\n
+DirectDraw: %sバッファの詳細を取得でエラー%08Xが発生しました\n
+
+# windows/drawdd.c: 544
+DirectDraw: Error %08X getting attached back surface\n
+DirectDraw: 割り当てられた裏画面バッファの取得でエラー%08Xが発生しました\n
+
+# windows/drawdd.c: 1134
+DirectDraw: Error %08X getting current display mode\n
+DirectDraw: 現在の画面モード取得でエラー%08Xが発生しました\n
+
+# windows/drawdd.c: 353
+DirectDraw: Error %08X locking blit surface\n
+DirectDraw: blitバッファのロックでエラー%08Xが発生しました\n
+
+# windows/drawdd.c: 823
+DirectDraw: Error %08X setting clipper hwnd\n
+DirectDraw: ウィンドウのクリッパー設定でエラー%08Xが発生しました\n
+
+# windows/drawdd.c: 831
+DirectDraw: Error %08X setting clipper on primary surface\n
+DirectDraw: primaryバッファのクリッパー設定でエラー%08Xが発生しました\n
+
+# windows/drawdd.c: 426
+DirectDraw: Error %08X unlocking blit surface\n
+DirectDraw: blitバッファのアンロックでエラー%08Xが発生しました\n
+
+# windows/drawdd.c: 432, 1092
+DirectDraw: Error %08X waiting for VBLANK\n
+DirectDraw: VBLANK待ちでエラー%08Xが発生しました\n
+
+# windows/drawdd.c: 468
+DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
+DirectDraw: エラー: デバイスはDirectDraw描画に必要最小限の要件をサポートしていません\n
+
+# windows/drawdd.c: 347
+DirectDraw: Lost surfaces; deleting and retrying next frame\n
+DirectDraw: バッファの消失。次のフレームに削除してやり直します\n
+
+# windows/drawdd.c: 1325
+DirectDraw: Mode selected = %4dx%4d@%3dHz\n
+DirectDraw: 選択されたモードは%4dx%4d@%3dHz\n
+
+# windows/drawdd.c: 927
+DirectDraw: New blit size = %dx%d\n
+DirectDraw: 新しいバッファサイズは%dx%d\n
+
+# windows/drawdd.c: 1322
+DirectDraw: Selecting video mode...\n
+DirectDraw: 描画モードを選択中です...\n
+
+# windows/drawdd.c: 196
+DirectDraw: Unable to access ddraw.dll\n
+DirectDraw: ddraw.dllにアクセス出来ません\n
+
+# windows/drawdd.c: 204
+DirectDraw: Unable to find DirectDrawCreateEx\n
+DirectDraw: DirectDrawCreateExを見つける事が出来ません\n
+
+# windows/drawdd.c: 214
+DirectDraw: Unable to find DirectDrawEnumerateExA\n
+DirectDraw: DirectDrawEnumerateExAを見つける事が出来ません\n
+
+# windows/drawdd.c: 382, 418, 1168
+DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
+DirectDraw: 不明な画面モード: R=%08X G=%08X B=%08X\n
+
+# windows/drawdd.c: 227
+DirectDraw: Using DirectDraw 7\n
+DirectDraw: DirectDraw 7を使用します\n
+
+# windows/drawdd.c: 723
+DirectDraw: Warning - Device does not support hardware stretching\n
+DirectDraw: 警告: デバイスはハードウェア拡大表\示をサポートしていません\n
+
+# windows/drawdd.c: 472
+DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
+DirectDraw: 警告: デバイスはDirectDraw描画にあまり適していないかも知れません\n
+
+# windows/drawdd.c: 599
+DirectDraw: Warning - device does not support full screen gamma correction.\n
+DirectDraw: 警告: デバイスはフルスクリーンのガンマ補正をサポートしていません。\n
 
 # windows/input.c: 1150
 DirectInput: Using DirectInput %d\n
@@ -102,9 +490,25 @@ DirectSoundの作成が出来ません: %08x\n
 Error creating primary buffer: %08x\n
 サウンドバッファが作成出来ません: %08x\n
 
+# windows/drawd3d.c: 711
+Error creating vertex buffer (%08X)
+頂点バッファの作成でエラーが発生しました(%08X)
+
 # windows/sound.c: 472
 Error getting DirectSound capabilities: %08x\n
 DirectSoundの情報が取得出来ません: %08x\n
+
+# windows/drawd3d.c: 1033
+Error getting identifier for adapter #%d\n
+アダプタ#%dの識別情報の取得でエラーが発生しました\n
+
+# windows/drawdd.c: 1123
+Error getting identifier for device\n
+デバイスの識別情報の取得でエラーが発生しました\n
+
+# windows/drawd3d.c: 1042
+Error getting mode for adapter #%d\n
+アダプタ#%dのモードの取得でエラーが発生しました\n
 
 # windows/sound.c: 586
 Error getting primary format: %08x\n
@@ -126,11 +530,31 @@ DirectSoundの初期化に失敗しました: %08x\n
 Error setting primary format: %08x\n
 サウンドバッファの設定が出来ません: %08x\n
 
-# windows/config.c: 1142
+# windows/drawd3d.c: 719
+Error setting vertex shader (%08X)
+頂点シェーダの設定でエラーが発生しました(%08X)\n
+
+# windows/drawd3d.c: 612
+Error: A8R8G8B8 format textures not supported\n
+エラー: A8R8G8B8形式のテクスチャがサポートされていません\n
+
+# windows/drawd3d.c: 602
+Error: Device does not meet minimum requirements for Direct3D rendering\n
+エラー: デバイスはDirect3D描画に必要最小限の要件をサポートしていません\n
+
+# windows/drawd3d.c: 632
+Error: unable to configure a screen texture format\n
+エラー: 画面テクスチャ形式の設定が出来ません\n
+
+# windows/config.c: 317
+FULL SCREEN OPTIONS
+フルスクリーン設定
+
+# windows/config.c: 1148
 Failed to open file for playback
 再生ファイルが読み込めません
 
-# windows/config.c: 1176
+# windows/config.c: 1182
 Failed to open file for recording
 入力を保存するファイルが作成できません
 
@@ -145,6 +569,26 @@ For usage instructions, please consult the file windows.txt\n
 # windows/fronthlp.c: 551, 623
 Game \"%s\" not supported!\n
 「%s」というゲームには対応していません！\n
+
+# windows/config.c: 357
+INPUT DEVICE OPTIONS
+入力デバイス設定
+
+# windows/video.c: 989
+Illegal aspect ratio value for %s = %s\n
+%sの値%sは不正なアスペクト比です\n
+
+# windows/video.c: 1012
+Illegal resolution value for %s = %s\n
+%sの値%sは不正な解像度です\n
+
+# windows/config.c: 901, 1023, 1034, 1048
+Illegal value for %s = %s\n
+%sの値%sは不正です\n
+
+# windows/config.c: 1163
+Input file is for game '%s', not for current game '%s'\n
+ゲーム「%s」の入力ファイルは選択されたゲーム「%s」の物ではありません\n
 
 # windows/input.c: 2065
 Input:  Axis %d (%s)%s\n
@@ -185,6 +629,18 @@ Input: Using RAWMOUSE for Mouse input\n
 # windows/input.c: 1224
 Input: \"%s\" controller support enabled\n
 入力: コントローラ「%s」のサポートが有効です\n
+
+# windows/input.c: 1600
+Invalid %s value %s; reverting to all -- valid values are:\n
+%sの値%sは不正です。全の値を復元します。有効な値:\n
+
+# windows/input.c: 1525
+Invalid %s value %s; reverting to keyboard\n
+%sの値%sは不正です。キーボードに復元します\n
+
+# windows/video.c: 906
+Invalid video value %s; reverting to gdi\n
+ビデオの値%sは不正です。GDIに復元します\n
 
 # windows/input.c: 2070, 2103
 J%d %s
@@ -233,6 +689,14 @@ Lightgun on Mouse %d
 # windows/config.c: 835
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
+
+# windows/window.c: 606
+MAME: %s [%s] - Screen %d
+MAME: %s「%s」- 画面%d
+
+# windows/config.c: 192
+MISC OPTIONS
+その他の設定
 
 # windows/blit.c: 159
 MMX not supported\n
@@ -294,6 +758,30 @@ Out of memory!
 PARTKNOWN %s\n
 一部判明  %s\n
 
+# windows/config.c: 145
+PATH AND DIRECTORY OPTIONS
+パスとディレクトリ設定
+
+# windows/config.c: 290
+PER-WINDOW VIDEO OPTIONS
+ウィンドウ毎の画面設定
+
+# windows/config.c: 244
+PERFORMANCE OPTIONS
+パフォーマンス設定
+
+# windows/config.c: 1167
+Playing back previously recorded game %s\n
+以前に記録されたゲーム「%s」を再生します\n
+
+# windows/drawd3d.c: 1086
+Proposed video mode not supported on device %s\n
+指定された画面モードはデバイス%sではサポートされていません\n
+
+# windows/config.c: 344
+SOUND OPTIONS
+音声設定
+
 # windows/blit.c: 155
 SSE supported\n
 SSEがサポートされています\n
@@ -301,6 +789,10 @@ SSEがサポートされています\n
 # windows/blit.c: 153
 SSE2 supported\n
 SSE2がサポートされています\n
+
+# windows/config.c: 222
+STATE/PLAYBACK OPTIONS
+ステート/再生設定
 
 # windows/sound.c: 207
 Sound buffer: overflows=%d underflows=%d\n
@@ -350,6 +842,10 @@ Stick%sZ+
 Stick%sZ-
 スティック%sZ-
 
+# windows/drawd3d.c: 1713
+Texture too big! (wanted: %dx%d, max is %dx%d)\n
+テクスチャが大きすぎます!(要求: %dx%d、最大: %dx%d)\n
+
 # windows/fronthlp.c: 556
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
 これはドライバ「%s」に必要なROMのリストです。\n名前          サイズ チェックサム\n
@@ -362,21 +858,69 @@ Toggle fullscreen
 UNKNOWN   %s\n
 不明      %s\n
 
-# windows/ledutil.c: 566, 572
+# windows/ledutil.c: 567, 573
 Unable to close the keyboard device. (error %d)\n
 キーボードディバイスがクローズ出来ません。(エラー %d)\n
 
-# windows/ledutil.c: 530, 538
+# windows/config.c: 794
+Unable to create file %s\n
+ファイル%sが作成出来ません\n
+
+# windows/drawd3d.c: 658
+Unable to create the Direct3D device (%08X)\n
+Direct3Dデバイスを作成出来ません(%08X)\n
+
+# windows/drawd3d.c: 390, 451
+Unable to initialize Direct3D.\n
+Direct3Dを初期化出来ません。\n
+
+# windows/drawdd.c: 270
+Unable to initialize DirectDraw.\n
+DirectDrawを初期化出来ません\n
+
+# windows/video.c: 957
+Unable to load PNG file '%s'\n
+PNGファイル「%s」を読み込めません\n
+
+# windows/ledutil.c: 531, 539
 Unable to open the keyboard device. (error %d)\n
 キーボードディバイスがオープン出来ません。(エラー %d)\n
+
+# windows/drawd3d.c: 1839
+Unknown texture blendmode=%d format=%d\n
+不明なテクスチャブレンドモード=%d 形式=%d\n
 
 # windows/config.c: 838
 Usage:  MAME gamename [options]\n\n
 使用法:  MAME ゲーム名 [オプション]\n\n
 
-# windows/video.c: 853
+# windows/config.c: 734
+Usage: mame [game] [options]\n\nOptions:\n
+使用法: mame [ゲーム名] [オプション]\n\\オプション:\n
+
+# windows/video.c: 850
 Using %s scale effect\n
 スケールエフェクト %s を使用します\n
+
+# windows/config.c: 331
+VECTOR RENDERING OPTIONS
+ベクタ描画設定
+
+# windows/config.c: 271
+VIDEO ROTATION OPTIONS
+画面回転設定
+
+# windows/video.c: 470
+Video: Monitor %p = \"%s\" %s\n
+ビデオ: モニタ %p = 「%s」%s\n
+
+# windows/video.c: 902
+Warning: -video none doesn't make much sense without -frames_to_run\n
+警告: -frames_to_run無しでの-video noneは意味がありません\n
+
+# windows/drawd3d.c: 606
+Warning: Device may not perform well for Direct3D rendering\n
+警告: デバイスのDirect3D描画パフォーマンスはあまり良くありません\n
 
 # windows/fronthlp.c: 749, 861
 \"%8s\" not found!\n
@@ -394,6 +938,10 @@ Using %s scale effect\n
 all available info on driver in XML format
 存在する全てのドライバ情報をXML形式で出力
 
+# windows/config.c: 266
+amount to scale the screen brightness when paused
+ポーズ時の画面の明るさ
+
 # windows/input.c: 1871
 analog
 アナログ
@@ -402,9 +950,41 @@ analog
 analog joystick
 アナログジョイスティック
 
+# windows/config.c: 292
+aspect ratio for all screens; 'auto' here will try to make a best guess
+全ての画面のアスペクト比。「auto」は最適な設定を試みます
+
+# windows/config.c: 297
+aspect ratio of the first screen; 'auto' here will try to make a best guess
+１画面目のアスペクト比。「auto」は最適な設定を試みます
+
+# windows/config.c: 312
+aspect ratio of the fourth screen; 'auto' here will try to make a best guess
+４画面目のアスペクト比。「auto」は最適な設定を試みます
+
+# windows/config.c: 302
+aspect ratio of the second screen; 'auto' here will try to make a best guess
+２画面目のアスペクト比。「auto」は最適な設定を試みます
+
+# windows/config.c: 307
+aspect ratio of the third screen; 'auto' here will try to make a best guess
+３画面目のアスペクト比。「auto」は最適な設定を試みます
+
 # windows/config.c: 202
 automatic pause when playback is finished
 再生終了時に自動停止
+
+# windows/config.c: 275
+automatically rotate screen clockwise 90 degrees if vertical
+垂直型画面の場合は自動で時計回りに90度回転します
+
+# windows/config.c: 276
+automatically rotate screen counterclockwise 90 degrees if vertical
+垂直型画面の場合は自動で反時計回りに90度回転します
+
+# windows/config.c: 320
+brightness value in full screen mode
+フルスクリーン画面での明るさ
 
 # windows/config.c: 428
 button color (aqua)
@@ -462,13 +1042,41 @@ compare files with known MAME roms
 compare files with known MAME roms (brief)
 ファイルを既知のMAME romと比較する (大まかに)
 
+# windows/config.c: 260
+constrain to the proper aspect ratio
+適切なアスペクト比に制限します
+
+# windows/config.c: 321
+contrast value in full screen mode
+フルスクリーン画面の値を制限します
+
 # windows/config.c: 115
 create the default configuration file
 デフォルト設定ファイルを作成
 
+# windows/config.c: 338
+crop artwork to game screen size
+アートワークをゲーム画面サイズでカットします
+
 # windows/config.c: 432
 cursor color
 カーソ\ル
+
+# windows/config.c: 326
+default game screen brightness correction
+デフォルトのゲーム画面の明るさ訂正値
+
+# windows/config.c: 327
+default game screen contrast correction
+デフォルトのゲーム画面のコントラスト値
+
+# windows/config.c: 328
+default game screen gamma correction
+デフォルトのゲーム画面のガンマ補正値
+
+# windows/config.c: 259
+default to maximized windows; otherwise, windows will be minimized
+デフォルトでウィンドウを最大化。無効な場合はウィンドウは最小化されます
 
 # windows/input.c: 1161
 dial
@@ -486,9 +1094,21 @@ IPSファイルのディレクトリ
 directory for localized data files
 ローカライズされたデータファイルを保存するパスを指定
 
+# windows/config.c: 171
+directory for translation table data
+翻訳テーブルデータのディレクトリを指定
+
 # windows/config.c: 159
 directory to save configurations
 ゲームの設定を保存するパスを指定
+
+# windows/config.c: 172
+directory to save debugger comments
+デバッガのコメントそ保存するディレクトリを指定
+
+# windows/config.c: 169
+directory to save hard drive image difference files
+ハードディスクへの差分データを保存するディレクトリを指定
 
 # windows/config.c: 164
 directory to save hiscores
@@ -506,6 +1126,10 @@ directory to save memory card contents
 directory to save nvram contents
 NVRAMの内容を保存するパスを指定
 
+# windows/config.c: 168
+directory to save screenshots
+スクリーンショットを保存するディレクトリを指定
+
 # windows/config.c: 166
 directory to save states
 ステートサーブデータを保存するパスを指定
@@ -514,17 +1138,73 @@ directory to save states
 display additional diagnostic information
 起動時に診断用の情報を表\示
 
+# windows/config.c: 116
+display running parameters
+実行中のパラメータを表\示
+
 # windows/config.c: 123
 driver sourcefile
 ドライバのソ\ースファイル名を表\示
+
+# windows/config.c: 396
+enable (keyboard|mouse|joystick) if a dial control is present
+ダイヤルを使用する場合に(keyboard|mouse|joystick)を有効
+
+# windows/config.c: 398
+enable (keyboard|mouse|joystick) if a lightgun control is present
+光線中を使用する場合に(keyboard|mouse|joystick)を有効
+
+# windows/config.c: 400
+enable (keyboard|mouse|joystick) if a mouse control is present
+マウスを使用する場合に(keyboard|mouse|joystick)を有効
 
 # windows/config.c: 393
 enable (keyboard|mouse|joystick) if a paddle control is present
 パドルが存在するときに有効 (keyboard|mouse|joystick)
 
+# windows/config.c: 395
+enable (keyboard|mouse|joystick) if a pedal control is present
+ペダルを使用する場合に(keyboard|mouse|joystick)を有効
+
+# windows/config.c: 397
+enable (keyboard|mouse|joystick) if a trackball control is present
+トラックボールを使用する場合に(keyboard|mouse|joystick)を有効
+
+# windows/config.c: 394
+enable (keyboard|mouse|joystick) if an analog joystick control is present
+アナログスティックを使用する場合に(keyboard|mouse|joystick)を有効
+
+# windows/config.c: 245
+enable automatic frameskip selection
+フレームスキップの自動調整を有効
+
+# windows/config.c: 224
+enable automatic restore at startup, and automatic save at exit time
+起動時に自動的にステートを読み込み、終了時に自動的に保存します
+
+# windows/config.c: 339
+enable backdrops if artwork is enabled and available
+アートワークが使用可能\な場合にバックドロップを有効
+
+# windows/config.c: 341
+enable bezels if artwork is enabled and available
+アートワークが使用可能\な場合にベゼルを有効
+
+# windows/config.c: 287
+enable bilinear filtering on screen output
+画面の出力にバイリニアフィルタを有効
+
+# windows/config.c: 194
+enable cheat subsystem
+チートシステムを有効
+
 # windows/config.c: 386
 enable dual lightgun input
 デュアル光線銃を使用
+
+# windows/config.c: 282
+enable hardware stretching
+ハードウェア拡大表\示を有効
 
 # windows/config.c: 384
 enable joystick input
@@ -534,17 +1214,69 @@ enable joystick input
 enable lightgun input
 光線銃を使用
 
+# windows/config.c: 138
+enable loading of configuration files
+設定ファイルの読み込みを有効
+
 # windows/config.c: 383
 enable mouse input
 マウスまたはトラックボールを使用
+
+# windows/config.c: 252
+enable multithreading; this enables rendering and blitting on a separate thread
+マルチスレッドを有効。これは描画処理でのスレッド分割を有効にします
+
+# windows/config.c: 340
+enable overlays if artwork is enabled and available
+アートワークが使用可能\な場合にオーバレイを有効
 
 # windows/config.c: 360
 enable pointing stick input
 スティック型マウスを使用
 
+# windows/config.c: 319
+enable resolution switching
+解像度の切り替えを有効
+
+# windows/config.c: 249
+enable sleeping, which gives time back to other applications when idle
+スリープを有効。アイドル時にCPU時間を他のアプリケーションに開放する
+
+# windows/config.c: 345
+enable sound output
+サウンドを有効
+
 # windows/config.c: 388
 enable steadykey support
 ボタンの同時押し認識を容易にする
+
+# windows/config.c: 347
+enable the use of external samples if available
+存在する場合、外部サンプルファイルを有効にする
+
+# windows/config.c: 248
+enable throttling to keep game running in sync with real time
+ゲームの実行速度を実時間と同期する為に速度制限を有効にする
+
+# windows/config.c: 318
+enable triple buffering
+トリプルバッファリングを有効
+
+# windows/config.c: 268
+enable using the start of VBLANK for throttling instead of the game time
+速度制限をゲームの実時間の代わりにVBLANK開始で行う
+
+# windows/config.c: 267
+enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
+画面反転の前にVBLANK開始を待つ。画面のちらつきが減少します
+
+# windows/config.c: 258
+enable window mode; otherwise, full screen mode is assumed
+ウィンドウモードを有効。無効な場合は当然フルスクリーンです
+
+# windows/config.c: 236
+enable/disable debugger
+デバッガの有効・無効
 
 # windows/config.c: 406
 enable/disable local language game list
@@ -554,13 +1286,33 @@ enable/disable local language game list
 enable/disable volume auto adjust
 自動音量調整機能\を有効
 
-# windows/config.c: 1121
+# windows/config.c: 1127
 error: invalid value for language: %s\nUse %s\n
 エラー: 不正な言語指定: %s\n%sを使用します\n
 
-# windows/config.c: 1213
+# windows/config.c: 1219
 error: invalid value for palette: %s\n
 エラー: 不正なパレット指定: %s\n
+
+#
+explicit name of all screen; 'auto' here will try to make a best guess
+明示的に全ての画面の名前を指定。「auto」は最適な設定を試みます
+
+# windows/config.c: 291, 296
+explicit name of the first screen; 'auto' here will try to make a best guess
+明示的に１画面目の名前を指定。「auto」は最適な設定を試みます
+
+# windows/config.c: 311
+explicit name of the fourth screen; 'auto' here will try to make a best guess
+明示的に４画面目の名前を指定。「auto」は最適な設定を試みます
+
+# windows/config.c: 301
+explicit name of the second screen; 'auto' here will try to make a best guess
+明示的に２画面目の名前を指定。「auto」は最適な設定を試みます
+
+# windows/config.c: 306
+explicit name of the third screen; 'auto' here will try to make a best guess
+明示的に４画面目の名前を指定。「auto」は最適な設定を試みます
 
 # windows/config.c: 277
 flip screen left-right
@@ -581,6 +1333,30 @@ font normal color
 # windows/config.c: 413
 font special color
 フォント (特殊)
+
+# windows/video.c: 426
+frame:%d Paused
+フレーム:%d ポーズ
+
+# windows/config.c: 322
+gamma value in full screen mode
+フルスクリーンのガンマ補正値
+
+# windows/config.c: 232
+generate an error.log file
+error.logファイルを生成
+
+# windows/config.c: 188
+high score database name
+ハイスコアデータベースのファイル名
+
+# windows/config.c: 180
+history database name
+ヒストリーデータベースのファイル名
+
+# windows/config.c: 219
+in-game ui text lines [16 - 64 or auto]
+ゲーム中のUIテキストの行数指定[16から64またはauto]
 
 # windows/input.c: 1871
 invalid
@@ -610,6 +1386,14 @@ is missing optional files\n
 lightgun
 光線銃
 
+# windows/config.c: 133
+list available devices
+存在するデバイスのリストを表\示
+
+# windows/config.c: 127
+list optional samples for a driver
+ドライバの外部サンプルのリストを表\示
+
 # windows/config.c: 126
 list required roms for a driver
 ドライバに必要なROMのリスト
@@ -622,6 +1406,10 @@ loading %-12s\r
 loading %-32s\r
 読み込み中 %-32s\r
 
+# windows/config.c: 186
+mameinfo database name
+MAMEINFOデータベースのファイル名
+
 # windows/config.c: 390
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 特定のジョイスティックや軸をデジタルに設定 (none|all|j<N>*|j<N>a<M>[,...])
@@ -630,13 +1418,53 @@ mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 minimal analog value for digital input
 デジタル入力変換時のアナログ最小値
 
+# windows/config.c: 262
+name of a PNG file to use for visual effects, or 'none'
+視覚効果で使用するPNGファイル名、または「none」
+
+# windows/config.c: 247
+number of frames to run before automatically exiting
+自動終了するまでに実行するフレーム数を指定
+
+# windows/config.c: 257
+number of screens to create; usually, you want just one
+生成する画面の数を指定。通常は１です
+
 # windows/config.c: 387
 offscreen shots reload
 画面外のショットを割り当てる
 
+# windows/config.c: 227
+optional filename to write a MNG movie of the current session
+指定したファイル名で現在のセッションをMNGムービーに記録
+
+# windows/config.c: 228
+optional filename to write a WAV file of the current session
+指定したファイル名で現在のセッションをWAVサウンドに記録
+
+# windows/config.c: 233
+output error.log data to the system debugger
+error.logデータをシステムデバッガに出力
+
 # windows/input.c: 1157
 paddle
 パドル
+
+# windows/config.c: 147
+path to ROMsets and hard disk images
+ROMセットとハードディスクイメージのパスを指定
+
+# windows/config.c: 167
+path to artwork files
+アートワークのパスを指定
+
+# windows/config.c: 170
+path to controller definitions
+コントローラ定義のパスを指定
+
+# windows/config.c: 151
+path to hash files
+ハッシュのパスを指定
 
 # windows/config.c: 155, 157
 path to ini files
@@ -650,6 +1478,10 @@ path to samplesets
 pedal
 ペダル
 
+# windows/config.c: 112
+perform driver validation on all game drivers
+全てのゲームドライバで妥当性チェックを実行
+
 # windows/config.c: 225
 playback an input file
 入力の再現するファイル名
@@ -657,6 +1489,46 @@ playback an input file
 # windows/config.c: 358
 preconfigure for specified controller
 コントローラの指定
+
+# windows/config.c: 293
+preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
+全ての画面の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
+
+# windows/config.c: 298
+preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
+１画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
+
+# windows/config.c: 313
+preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
+４画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
+
+# windows/config.c: 303
+preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
+２画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
+
+# windows/config.c: 308
+preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
+３画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
+
+# windows/config.c: 294
+preferred view for all screens
+全ての画面のビューを指定
+
+# windows/config.c: 299
+preferred view for the first screen
+１画面目のビューを指定
+
+# windows/config.c: 314
+preferred view for the fourth screen
+４画面目のビューを指定
+
+# windows/config.c: 304
+preferred view for the second screen
+２画面目のビューを指定
+
+# windows/config.c: 309
+preferred view for the third screen
+３画面目のビューを指定
 
 # windows/config.c: 200
 quit game with confirmation
@@ -682,6 +1554,18 @@ ROMセット
 romset %s 
 ROMセット%s
 
+# windows/config.c: 273
+rotate screen clockwise 90 degrees
+時計回りに90度回転
+
+# windows/config.c: 274
+rotate screen counterclockwise 90 degrees
+反時計回りに90度回転
+
+# windows/config.c: 272
+rotate the game screen according to the game's orientation needs it
+必要に応じてゲームの画面向きに従いゲーム画面を回転する
+
 # windows/fronthlp.c: 859
 sampleset
 サンプルセット
@@ -694,6 +1578,22 @@ sampleset %s
 samplesets
 サンプルセット
 
+# windows/config.c: 223
+saved state to load
+保存したステートを読み込む
+
+# windows/config.c: 261
+scale screen rendering by this amount in software
+指定した割合でソ\フトウェアによる画面描画スケーリングを実行
+
+# windows/config.c: 237
+script for debugger
+デバッガ用のスクリプト
+
+# windows/config.c: 193
+select the system BIOS to use
+使用するシステムBIOSを選択する
+
 # windows/config.c: 405
 select translation language
 使用する言語を選択
@@ -701,6 +1601,10 @@ select translation language
 # windows/config.c: 354
 set audio latency (increase to reduce glitches)
 オーディオのレイテンシを指定
+
+# windows/config.c: 246
+set frameskip to fixed value, 0-12 (autoframeskip must be disabled)
+フレームスキップを固定値に設定。0から12(自動フレームスキップは無効化されます)
 
 # windows/config.c: 365
 set joystick ID (Player1)
@@ -734,6 +1638,18 @@ set joystick ID (Player7)
 set joystick ID (Player8)
 ジョイスティックIDを指定 (プレイヤー8)
 
+# windows/config.c: 346
+set sound output sample rate
+出力するサウンドのサンプルレートを設定
+
+# windows/config.c: 333
+set vector beam width
+ベクタのビーム幅を設定
+
+# windows/config.c: 334
+set vector flicker effect
+ベクタのフリッカエフェクトを設定
+
 # windows/config.c: 122
 short name, full name
 ゲームディレクトリ名＋ゲームのフルネームを表\示
@@ -750,9 +1666,29 @@ show help message
 show this help
 このヘルプを表\示
 
-# windows/config.c: 345, 979
+# windows/config.c: 139
+skip displaying the information screen at startup
+起動時の情報表\示画面をスキップする
+
+# windows/config.c: 345, 985
 sound
 音源
+
+# windows/config.c: 348
+sound volume in decibels (-32 min, 0 max)
+サウンドの音量をデシベルで指定(最小は-32、最大は0)
+
+# windows/config.c: 286
+specify the preferred Direct3D version (8 or 9)
+優先されるDirect3Dのバージョンを指定
+
+# windows/config.c: 182
+story database name
+ストーリデータベースのファイル名
+
+# windows/config.c: 251
+thread priority for the main game thread; range from -15 to 1
+メインのゲームスレッドのプライオリティを指定。-15から1の範囲で指定
 
 # windows/input.c: 1162
 trackball
@@ -762,9 +1698,25 @@ trackball
 transparency of UI background [0 - 255]
 UIの背景の透明度 [0 - 255]
 
+# windows/config.c: 1071
+unable to open log file
+ログファイルが開けません
+
+# windows/config.c: 332
+use antialiasing when drawing vectors
+ベクタの描画にアンチエイリアスを使用
+
+# windows/config.c: 250
+use the RDTSC instruction for timing; faster but may result in uneven performance
+タイミングにRDTSC命令を使用。高速ですがパフォーマンス結果にばらつきがあります
+
 # windows/config.c: 213
 use transparent background for UI text
 UIテキストの背景を半透明にする
+
+# windows/config.c: 256
+video output method: gdi, ddraw, or d3d
+ビデオ描画方法: gdi、ddrawまたはd3d
 
 # windows/config.c: 414
 window background color

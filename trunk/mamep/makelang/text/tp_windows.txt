@@ -1383,7 +1383,7 @@ lightgun
 
 
 # windows/config.c: 127
-list     OPTIONal samples for a driver
+list optional samples for a driver
 
 
 # windows/config.c: 133
@@ -1732,5 +1732,9 @@ window frame color (medium)
 
 # windows/config.c: 121
 year, manufacturer and full name
+
+
+#
+explicit name of all screen; 'auto' here will try to make a best guess
 
 

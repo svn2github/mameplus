@@ -18,7 +18,7 @@ Japanese game list by 俺、ぶろん
 %dx%d (V)
 %dx%d (V)
 
-# ui/properties.c: 4653
+# ui/properties.c: 4695
 %li bit
 %li ビット
 
@@ -382,7 +382,7 @@ Allows filtering out games from a folder
 Analog deadzone
 アナログ変換の割合
 
-# ui/properties.c: 4619
+# ui/properties.c: 4661
 Anti-clockwise
 反時計回り
 
@@ -422,15 +422,15 @@ Audit ROM and samples sets
 Audit complete.\n
 チェック終了\n
 
-# ui/properties.c: 4539, 4640, 4731
+# ui/properties.c: 4581, 4682, 4773
 Auto
 自動
 
-# ui/properties.c: 4622
+# ui/properties.c: 4664
 Auto anti-clockwise
 自動的に反時計回り
 
-# ui/properties.c: 4621
+# ui/properties.c: 4663
 Auto clockwise
 自動的に時計回り
 
@@ -454,11 +454,11 @@ Available
 Available fields:
 利用可能\フィールド:
 
-# ui/properties.c: 4774
+# ui/properties.c: 4816
 Axis
 軸
 
-# ui/properties.c: 4784
+# ui/properties.c: 4826
 AxisId
 軸ID
 
@@ -634,7 +634,7 @@ Checking...
 Christopher Kirmse and Michael Soderstrom
 Christopher Kirmse and Michael Soderstrom
 
-# ui/properties.c: 4618
+# ui/properties.c: 4660
 Clockwise
 時計回り
 
@@ -758,6 +758,10 @@ Cursor
 Custom
 カスタム
 
+# ui/mame32.rc: 986
+Custom Options
+カスタムオプション
+
 # ui/mame32.rc: 130, 211
 Customi&ze Fields...
 フィールド項目(&Z)...
@@ -774,7 +778,7 @@ Customize interface options.
 Customize which columns are used in the game list
 ゲームリストに用いる表\示項目を設定します
 
-# ui/properties.c: 4617
+# ui/properties.c: 4659
 Default
 デフォルト
 
@@ -926,7 +930,7 @@ Double Joystick 8-Way
 Draw antialiased vectors
 アンチエイリアス
 
-# ui/properties.c: 4595
+# ui/properties.c: 4637
 Draw every frame
 フレームスキップなし
 
@@ -1026,9 +1030,17 @@ Error while saving custom file %s
 Exit the application
 アプリケーションを終了します
 
+# ui/win32ui.c: 4392
+Export a game list file
+ゲームリストを出力
+
 # ui/layout.c: 135
 External Folder List
 外部フォルダリスト
+
+# ui/options.c: 3098
+FOLDER LIST HIDE OPTIONS
+フォルダリスト非表\示設定
 
 # ui/layout.c: 74
 FPS
@@ -1097,6 +1109,18 @@ Full screen contrast
 # ui/mame32.rc: 692
 Full screen gamma
 フルスクリーンのガンマ値
+
+# ui/options.c: 3044
+GENERAL OPTIONS
+一般設定
+
+# ui/options.c: 3102
+GUI JOYSTICK OPTIONS
+GUIジョイスティック設定
+
+# ui/options.c: 3117
+GUI KEYBOARD OPTIONS
+GUIキーボード設定
 
 # ui/mame32.rc: 904
 Game Filters
@@ -1194,6 +1218,10 @@ Horizontal
 How cheats work
 チートの使用方法を説明します
 
+# ui/options.c: 3024
+INTERFACE OPTIONS
+インターフェイス設定
+
 # ui/layout.c: 113
 IPS Files
 IPSファイル
@@ -1262,7 +1290,7 @@ Joy 4-Way
 Joy 8-Way
 8方向スティック
 
-# ui/properties.c: 420, 4769
+# ui/properties.c: 420, 4811
 Joystick
 ジョイスティック
 
@@ -1282,7 +1310,7 @@ Joystick 4-Way
 Joystick 8-Way
 ８方向スティック
 
-# ui/properties.c: 4779
+# ui/properties.c: 4821
 JoystickId
 ジョイスティックID
 
@@ -1293,6 +1321,14 @@ Keyboard
 # ui/mame32.rc: 98
 L&arge Icons
 大きなアイコン(&A)
+
+# ui/options.c: 3090
+LIST FONT OPTIONS
+リストフォント設定
+
+# ui/options.c: 3076
+LISTVIEW OPTIONS
+リストビュー設定
 
 # ui/options.c: 459 ui/win32ui.c: 701
 Large Icons
@@ -1462,7 +1498,7 @@ CPU未使用
 Non-Wor&king
 動作不可(&K)
 
-# ui/dialogs.c: 221 ui/properties.c: 3535, 4620, 4874, 5113 
+# ui/dialogs.c: 221 ui/properties.c: 3577, 4662, 4916, 5155 
 None
 なし
 
@@ -1541,6 +1577,10 @@ Overlays
 # ui/mame32.rc: 55
 P&layback Input...
 入力の再現(&L)...
+
+# ui/options.c: 3011 
+PATH AND DIRECTORY OPTIONS
+パスとディレクトリ設定
 
 # ui/mame32.rc: 1202
 PCB Info
@@ -2046,47 +2086,47 @@ Show these fields in this order:
 Size:
 サイズ:
 
-# ui/properties.c: 4596
+# ui/properties.c: 4638
 Skip 1 of 12 frames
 12フレームに1回スキップ
 
-# ui/properties.c: 4605
+# ui/properties.c: 4647
 Skip 10 of 12 frames
 12フレームに10回スキップ
 
-# ui/properties.c: 4606
+# ui/properties.c: 4648
 Skip 11 of 12 frames
 12フレームに11回スキップ
 
-# ui/properties.c: 4597
+# ui/properties.c: 4639
 Skip 2 of 12 frames
 12フレームに2回スキップ
 
-# ui/properties.c: 4598
+# ui/properties.c: 4640
 Skip 3 of 12 frames
 12フレームに3回スキップ
 
-# ui/properties.c: 4599
+# ui/properties.c: 4641
 Skip 4 of 12 frames
 12フレームに4回スキップ
 
-# ui/properties.c: 4600
+# ui/properties.c: 4642
 Skip 5 of 12 frames
 12フレームに5回スキップ
 
-# ui/properties.c: 4601
+# ui/properties.c: 4643
 Skip 6 of 12 frames
 12フレームに6回スキップ
 
-# ui/properties.c: 4602
+# ui/properties.c: 4644
 Skip 7 of 12 frames
 12フレームに7回スキップ
 
-# ui/properties.c: 4603
+# ui/properties.c: 4645
 Skip 8 of 12 frames
 12フレームに8回スキップ
 
-# ui/properties.c: 4604
+# ui/properties.c: 4646
 Skip 9 of 12 frames
 12フレームに9回スキップ
 
@@ -2170,7 +2210,7 @@ Sounds (*.wav)
 St&ory
 ストーリー(&O)
 
-# ui/properties.c: 3334, 3339, 3342, 3584, 3587, 4824, 4847 
+# ui/properties.c: 3376, 3381, 3384, 3626, 3629, 4866, 4889 
 Standard
 標準
 
@@ -2378,6 +2418,10 @@ Use Local Language Game List
 Use RDTSC timing system
 タイマにRDTSCを使用
 
+# ui/mame32.rc: 1010
+Use TreeView in property pages
+プロパティページにツリービューを使用
+
 # ui/mame32.rc: 629
 Use samples
 サンプルを使用
@@ -2433,6 +2477,10 @@ Volume attenuation
 # ui/win32ui.c: 7303
 WARNING: the game might not run correctly.
 警告: このゲームは正常に実行出来ません。
+
+# ui/options.c: 3069
+WINDOW POSITION OPTIONS
+ウィンドウ位置設定
 
 # ui/mame32.rc: 680
 Wait for vertical sync
@@ -2501,6 +2549,10 @@ by &Type
 # ui/mame32.rc: 111
 by &Year
 製造年(&Y)
+
+# ui/win32ui.c: 4389
+game list files (*.lst)
+ゲームリスト (*.lst)
 
 # ui/dialogs.c: 124
 items to the original, installation\n
