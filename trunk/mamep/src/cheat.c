@@ -862,6 +862,9 @@ typedef struct MenuItemInfoStruct	MenuItemInfoStruct;
 
 /**** Exported Globals *******************************************************/
 
+#ifdef USE_HISCORE
+int			he_did_cheat = 0;
+#endif /* USE_HISCORE */
 const char	* cheatfile = NULL;
 
 /**** Local Globals **********************************************************/
@@ -1769,6 +1772,10 @@ static INT32 DoEditDecField(INT32 data, INT32 min, INT32 max)
 
 void cheat_init(running_machine *machine)
 {
+#ifdef USE_HISCORE
+	he_did_cheat =			0;
+#endif /* USE_HISCORE */
+
 	cheatList =				NULL;
 	cheatListLength =		0;
 
@@ -9967,6 +9974,10 @@ static void ActivateCheat(CheatEntry * entry)
 	}
 
 	entry->flags |= kCheatFlag_Active;
+
+#ifdef USE_HISCORE
+	he_did_cheat = 1;
+#endif /* USE_HISCORE */
 }
 
 static void DeactivateCheat(CheatEntry * entry)
