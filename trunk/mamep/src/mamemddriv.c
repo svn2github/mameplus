@@ -42,7 +42,8 @@ const game_driver * const hazemddrivers[] =
 	/* Sort this when the main driver is sorted */
 
 
-
+	DRIVER( g_redclf )
+	DRIVER( g_cf3p )
 
 	DRIVER( g_12i1 )
 	DRIVER( g_4in1 )

@@ -1200,6 +1200,11 @@ ROM_START( g_chifi3 )
 	ROM_LOAD( "g_chifi3.bin", 0x400000, 0x200000,  CRC(e833bc6e) SHA1(ecca9d2d21c8e27fc7584d53f557fdd8b4cbffa7) )
 ROM_END
 
+ROM_START( g_cf3p )
+	ROM_REGION( 0x1400000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD( "g_cf3p.bin", 0x000000, 0x200000,  CRC(6f98247d) SHA1(cc212b1564dc7c73ffdc55f9fde3269a83fee399) )
+ROM_END
+
 ROM_START( g_kaiju )
 	ROM_REGION( 0x1400000, REGION_CPU1, 0 ) /* 68000 Code */
 	/* Special Banking */
@@ -1219,7 +1224,42 @@ ROM_START( g_sdk993 )
 ROM_END
 
 
+ROM_START( g_redclf )
+	ROM_REGION( 0x1400000, REGION_CPU1, 0 ) /* 68000 Code */
+	/* what is an 'mdx' file?? */
+	ROM_LOAD( "g_redclf.mdx", 0x400000, 0x200005,  CRC(44463492) SHA1(244334583fde808a56059c0b0eef77742c18274d) )
+ROM_END
 
+READ16_HANDLER( redclif_prot_r )
+{
+	return -0x56 << 8;
+}
+
+READ16_HANDLER( redclif_prot2_r )
+{
+	return 0x55 << 8;
+}
+
+DRIVER_INIT( g_redclf )
+{
+	UINT8 *ROM = memory_region(REGION_CPU1);
+	int x;
+
+	for (x=0x400000;x<0x400000+0x200005;x++)
+	{
+		ROM[x] ^= 0x40;
+	}
+	memcpy(ROM + 0x00000, ROM + 0x400004, 0x200000); /* default rom */
+
+	init_megadriv(machine);
+
+	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400000, 0x400001, 0, 0, redclif_prot2_r );
+	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400004, 0x400005, 0, 0, redclif_prot_r );
+
+}
+
+
+GAME( 1995, g_redclf,  0,        megadriv,    megadriv,    g_redclf, ROT0,   "Unknown (Unlicensed)", "Romance of the Three Kingdoms, The Battle of Red Cliffs (Unl)", 0 )
 
 GAME( 1995, g_bible,  0,        megadriv,    megadriv,    megadriv, ROT0,   "Wisdom Tree", "Bible Adventures (Unl) [!]", 0 )
 GAME( 1994, g_joshua, 0,        megadriv,    megadriv,    megadriv, ROT0,   "Wisdom Tree", "Joshua & the Battle of Jericho (Unl) [!]", 0 )
@@ -1340,5 +1380,7 @@ GAME( 1900, g_unkch,    g_fengsh, megadriv,    megadriv,    megadriv, ROT0,   "U
 GAME( 1900, g_pgmah,         0,        megadriv,    megadriv,    megadriv, ROT0,   "Unsorted", "Pretty Girl Mahjongg (Ch)", 0 )
 
 GAME( 1900, g_chifi3,  0,  megadriv,    megadriv,    g_chifi3,  ROT0,   "Unknown (Unlicensed)", "Chinese Fighter III (Unl)", GAME_UNEMULATED_PROTECTION ) // almost ok.. maybe still some problems
+GAME( 1900, g_cf3p,    0,  megadriv,    megadriv,    megadriv,  ROT0,   "Unknown (Unlicensed)", "Chinese Fighter III (Unl) (bootleg version)", 0 )
+
 GAME( 1900, g_kaiju,   0,  megadriv,    megadriv,    g_kaiju,  ROT0,   "Unknown (Unlicensed)", "Pokemon Stadium (Unl)", 0 )
 GAME( 1900, g_kof99,   0,  megadriv,    megadriv,    g_kof99,  ROT0,   "Unknown (Unlicensed)", "The King of Fighters 99 (Unl)", 0 )

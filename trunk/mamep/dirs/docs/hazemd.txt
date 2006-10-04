@@ -1,3 +1,13 @@
+Haze Megadrive Emu 0.12a
+------------------------
+
+Added support for another Chinese Fighter 3 set (unprotected)
+and 'Romance of the Three Kingdoms, The Battle of Red Cliffs (Unl)' which must
+be one of the worst beat 'em ups I've ever seen, worse than even Atari's GOTH ;-)
+
+No other changes (I've been investigating some of the other issues but thus far
+have been unable to find a fix that doesn't break other games)
+
 Haze Megadrive Emu 0.11a
 ------------------------
 

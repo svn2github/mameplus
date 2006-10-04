@@ -6693,14 +6693,6 @@ ROM_START( g_ssf2j )
 	ROM_LOAD( "g_ssf2j.bin", 0x400000, 0x500000, CRC(d8eeb2bd) SHA1(24c8634f59a481118f8350125fa6e00d33e04c95) )
 ROM_END
 
-ROM_START( ssf2ghw )
-	ROM_REGION( 0x1400000, REGION_CPU1, 0 ) /* 68000 Code */
-	/* Special Case, custom PCB, linear ROM mapping of 5meg */
-	ROM_LOAD16_BYTE( "rom_a", 0x000000, 0x200000,  CRC(59726521) SHA1(3120bac17f56c01ffb9d3f9e31efa0263e3774af) )
-	ROM_LOAD16_BYTE( "rom_b", 0x000001, 0x200000,  CRC(7dad5540) SHA1(9279068b2218d239fdd557dd959ac70e74853178) )
-	ROM_LOAD16_BYTE( "rom_c", 0x400000, 0x080000,  CRC(deb48624) SHA1(39ffa7de7b808e0b95cb039bb381705d77420933) )
-	ROM_LOAD16_BYTE( "rom_d", 0x400001, 0x080000,  CRC(b99f6a5b) SHA1(adbe28a7522024bc66328ac86fecf9ded3310e8e) )
-ROM_END
 
 
 ROM_START( g_indy )
@@ -7052,25 +7044,6 @@ DRIVER_INIT( g_ssf2j )
 	init_megadrij(machine);
 }
 
-READ16_HANDLER( ssf2ghw_dsw_r )
-{
-	static const char *dswname[3] = { "DSWA", "DSWB", "DSWC" };
-	return readinputportbytag(dswname[offset]);
-}
-
-DRIVER_INIT( ssf2ghw )
-{
-	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0xA130F0, 0xA130FF, 0, 0, MWA16_NOP); // custom banking is disabled (!)
-	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400000, 0x5fffff, 0, 0, MRA16_BANK5);
-	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400000, 0x5fffff, 0, 0, MWA16_ROM);
-
-	memory_set_bankptr( 5, memory_region( REGION_CPU1 )+0x400000 );
-
-	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x770070, 0x770075, 0, 0, ssf2ghw_dsw_r );
-
-	init_megadrij(machine);
-
-}
 
 READ16_HANDLER( radicav1_bank_select )
 {
@@ -7578,7 +7551,6 @@ GAME( 1993, g_subtb2, g_subt,   megadriv,    megadriv,    megadriv, ROT0,   "Zyr
 GAME( 1994, g_ssf2,   0,        megadriv,    megadri6,    g_ssf2,   ROT0,   "Capcom", "Super Street Fighter II - The New Challengers (U) [c][!]", 0 )
 GAME( 1994, g_ssf2e,  g_ssf2,   megadpal,    megadri6,    g_ssf2e,  ROT0,   "Capcom", "Super Street Fighter II - The New Challengers (E) [c][!]", 0 )
 GAME( 1994, g_ssf2j,  g_ssf2,   megadriv,    megadri6,    g_ssf2j,  ROT0,   "Capcom", "Super Street Fighter II - The New Challengers (J) [c][!]", 0 )
-GAME( 1994, ssf2ghw,  g_ssf2,   megadriv,    ssf2ghw,     ssf2ghw,  ROT0,   "Capcom", "Super Street Fighter II - The New Challengers (J) (Arcade bootleg)", 0 )
 
 GAME( 1992, g_lighfr, 0,        megadriv,    megadriv,    megadriv, ROT0,   "Tecnosoft", "Lightening Force - Quest for the Darkstar (U) [c][!]", 0 )
 GAME( 1992, g_tf4,    g_lighfr, megadriv,    megadriv,    megadrij, ROT0,   "Tecnosoft", "Thunder Force IV (J) [!]", 0 )

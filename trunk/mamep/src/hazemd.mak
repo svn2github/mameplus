@@ -66,6 +66,7 @@ $(OBJ)/misc.a: \
 	$(OBJ)/drivers/md_arcad.o \
 	$(OBJ)/drivers/md_gamul.o \
 	$(OBJ)/drivers/md_gam32.o \
+	$(OBJ)/drivers/ssf2md.o \
 	$(OBJ)/drivers/sms.o \
 
 #-------------------------------------------------
