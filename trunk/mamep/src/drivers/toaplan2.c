@@ -53,8 +53,7 @@ Supported games:
     kingdmgp - might be a bootleg / hack, some of the tiles needed for the credits screen have been
                stripped out, doesn't seem very professional, since its rare and should probably only
                have a different graphics rom its nearly impossible for us to verify, a lot of boards
-               being sold as 'Kingdom Grand Prix' are infact conversions using Neill Corlett's
-               ghastly hack
+               being sold as 'Kingdom Grand Prix' are infact conversions using Neill Corlett's hack
 
                ** update the above two look like genuine Korean release
           ??      boards, Raizing probably just missed a few things
@@ -3377,11 +3376,10 @@ static MACHINE_DRIVER_START( ghox )
 	MDRV_VIDEO_UPDATE(toaplan2_0)
 
 	/* sound hardware */
-	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
+	MDRV_SPEAKER_STANDARD_MONO("mono")
 
 	MDRV_SOUND_ADD(YM2151, 27000000/8)
-	MDRV_SOUND_ROUTE(0, "left", 0.5)
-	MDRV_SOUND_ROUTE(1, "right", 0.5)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_DRIVER_END
 
 
@@ -3415,16 +3413,14 @@ static MACHINE_DRIVER_START( dogyuun )
 	MDRV_VIDEO_UPDATE(dogyuun_1)
 
 	/* sound hardware */
-	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
+	MDRV_SPEAKER_STANDARD_MONO("mono")
 
 	MDRV_SOUND_ADD(YM2151, 27000000/8)
-	MDRV_SOUND_ROUTE(0, "left", 0.45)
-	MDRV_SOUND_ROUTE(1, "right", 0.45)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
 	MDRV_SOUND_ADD(OKIM6295, 27000000/10/132)
 	MDRV_SOUND_CONFIG(okim6295_interface_region_1)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.45)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.45)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_DRIVER_END
 
 
@@ -3458,16 +3454,14 @@ static MACHINE_DRIVER_START( kbash )
 	MDRV_VIDEO_UPDATE(toaplan2_0)
 
 	/* sound hardware */
-	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
+	MDRV_SPEAKER_STANDARD_MONO("mono")
 
 	MDRV_SOUND_ADD(YM2151, 27000000/8)
-	MDRV_SOUND_ROUTE(0, "left", 0.45)
-	MDRV_SOUND_ROUTE(1, "right", 0.45)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
 	MDRV_SOUND_ADD(OKIM6295, 32000000/32/132)
 	MDRV_SOUND_CONFIG(okim6295_interface_region_1)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.45)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.45)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_DRIVER_END
 
 
@@ -3494,17 +3488,15 @@ static MACHINE_DRIVER_START( kbash2 )
 	MDRV_VIDEO_UPDATE(toaplan2_0)
 
 	/* sound hardware */
-	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
+	MDRV_SPEAKER_STANDARD_MONO("mono")
 
 	MDRV_SOUND_ADD(OKIM6295, 16000000/16/132)
 	MDRV_SOUND_CONFIG(okim6295_interface_region_1)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.45)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.45)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
 	MDRV_SOUND_ADD(OKIM6295, 16000000/16/132)
 	MDRV_SOUND_CONFIG(okim6295_interface_region_2)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.45)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.45)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_DRIVER_END
 
 
@@ -3532,16 +3524,14 @@ static MACHINE_DRIVER_START( truxton2 )
 	MDRV_VIDEO_UPDATE(truxton2_0)
 
 	/* sound hardware */
-	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
+	MDRV_SPEAKER_STANDARD_MONO("mono")
 
 	MDRV_SOUND_ADD(YM2151, 27000000/8)
-	MDRV_SOUND_ROUTE(0, "left", 0.5)
-	MDRV_SOUND_ROUTE(1, "right", 0.5)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
 	MDRV_SOUND_ADD(OKIM6295, 27000000/10/132)
 	MDRV_SOUND_CONFIG(okim6295_interface_region_1)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.5)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.5)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_DRIVER_END
 
 
@@ -3685,16 +3675,14 @@ static MACHINE_DRIVER_START( fixeight )
 	MDRV_VIDEO_UPDATE(truxton2_0)
 
 	/* sound hardware */
-	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
+	MDRV_SPEAKER_STANDARD_MONO("mono")
 
 	MDRV_SOUND_ADD(YM2151, 27000000/8)
-	MDRV_SOUND_ROUTE(0, "left", 0.45)
-	MDRV_SOUND_ROUTE(1, "right", 0.45)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
 	MDRV_SOUND_ADD(OKIM6295, 32000000/32/132)
 	MDRV_SOUND_CONFIG(okim6295_interface_region_1)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.45)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.45)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_DRIVER_END
 
 
@@ -3721,12 +3709,11 @@ static MACHINE_DRIVER_START( fixeighb )
 	MDRV_VIDEO_UPDATE(truxton2_0)
 
 	/* sound hardware */
-	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
+	MDRV_SPEAKER_STANDARD_MONO("mono")
 
 	MDRV_SOUND_ADD(OKIM6295, 14000000/16/165)
 	MDRV_SOUND_CONFIG(okim6295_interface_region_1)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 1.0)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 1.0)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_DRIVER_END
 
 
@@ -3760,11 +3747,10 @@ static MACHINE_DRIVER_START( vfive )
 	MDRV_VIDEO_UPDATE(toaplan2_0)
 
 	/* sound hardware */
-	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
+	MDRV_SPEAKER_STANDARD_MONO("mono")
 
 	MDRV_SOUND_ADD(YM2151, 27000000/8)
-	MDRV_SOUND_ROUTE(0, "left", 0.5)
-	MDRV_SOUND_ROUTE(1, "right", 0.5)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_DRIVER_END
 
 
@@ -3798,16 +3784,14 @@ static MACHINE_DRIVER_START( batsugun )
 	MDRV_VIDEO_UPDATE(batsugun_1)
 
 	/* sound hardware */
-	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
+	MDRV_SPEAKER_STANDARD_MONO("mono")
 
 	MDRV_SOUND_ADD(YM2151, 27000000/8)
-	MDRV_SOUND_ROUTE(0, "left", 0.25)
-	MDRV_SOUND_ROUTE(1, "right", 0.25)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
 	MDRV_SOUND_ADD(OKIM6295, 32000000/8/165)
 	MDRV_SOUND_CONFIG(okim6295_interface_region_1)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.25)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.25)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_DRIVER_END
 
 
@@ -3835,16 +3819,14 @@ static MACHINE_DRIVER_START( snowbro2 )
 	MDRV_VIDEO_UPDATE(toaplan2_0)
 
 	/* sound hardware */
-	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
+	MDRV_SPEAKER_STANDARD_MONO("mono")
 
 	MDRV_SOUND_ADD(YM2151, 27000000/8)
-	MDRV_SOUND_ROUTE(0, "left", 0.45)
-	MDRV_SOUND_ROUTE(1, "right", 0.45)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
 	MDRV_SOUND_ADD(OKIM6295, 27000000/10/132)
 	MDRV_SOUND_CONFIG(okim6295_interface_region_1)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.45)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.45)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_DRIVER_END
 
 
@@ -3876,16 +3858,14 @@ static MACHINE_DRIVER_START( mahoudai )
 	MDRV_VIDEO_UPDATE(mahoudai_0)
 
 	/* sound hardware */
-	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
+	MDRV_SPEAKER_STANDARD_MONO("mono")
 
 	MDRV_SOUND_ADD(YM2151, 27000000/8)
-	MDRV_SOUND_ROUTE(0, "left", 0.95)
-	MDRV_SOUND_ROUTE(1, "right", 0.95)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
 	MDRV_SOUND_ADD(OKIM6295, 32000000/32/132)
 	MDRV_SOUND_CONFIG(okim6295_interface_region_1)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.95)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.95)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_DRIVER_END
 
 
@@ -3917,16 +3897,14 @@ static MACHINE_DRIVER_START( shippumd )
 	MDRV_VIDEO_UPDATE(truxton2_0)
 
 	/* sound hardware */
-	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
+	MDRV_SPEAKER_STANDARD_MONO("mono")
 
 	MDRV_SOUND_ADD(YM2151, 27000000/8)
-	MDRV_SOUND_ROUTE(0, "left", 0.45)
-	MDRV_SOUND_ROUTE(1, "right", 0.45)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono",1.0)
 
 	MDRV_SOUND_ADD(OKIM6295, 32000000/32/132)
 	MDRV_SOUND_CONFIG(okim6295_interface_region_1)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.45)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.45)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_DRIVER_END
 
 
@@ -3958,16 +3936,14 @@ static MACHINE_DRIVER_START( battleg )
 	MDRV_VIDEO_UPDATE(truxton2_0)
 
 	/* sound hardware */
-	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
+	MDRV_SPEAKER_STANDARD_MONO("mono")
 
 	MDRV_SOUND_ADD(YM2151, 32000000/8)
-	MDRV_SOUND_ROUTE(0, "left", 0.45)
-	MDRV_SOUND_ROUTE(1, "right", 0.45)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
 	MDRV_SOUND_ADD(OKIM6295, 32000000/16/132)
 	MDRV_SOUND_CONFIG(okim6295_interface_region_1)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.45)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.45)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_DRIVER_END
 
 
@@ -4000,21 +3976,18 @@ static MACHINE_DRIVER_START( batrider )
 	MDRV_VIDEO_UPDATE(batrider_0)
 
 	/* sound hardware */
-	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
+	MDRV_SPEAKER_STANDARD_MONO("mono")
 
 	MDRV_SOUND_ADD(YM2151, 32000000/8)
-	MDRV_SOUND_ROUTE(0, "left", 0.5)
-	MDRV_SOUND_ROUTE(1, "right", 0.5)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
 	MDRV_SOUND_ADD(OKIM6295, 32000000/10/132)
 	MDRV_SOUND_CONFIG(okim6295_interface_region_1)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.5)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.5)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
 	MDRV_SOUND_ADD(OKIM6295, 32000000/10/165)
 	MDRV_SOUND_CONFIG(okim6295_interface_region_2)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.5)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.5)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( bbakraid )

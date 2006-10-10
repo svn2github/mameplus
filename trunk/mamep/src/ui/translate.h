@@ -19,6 +19,7 @@ int ComboBox_AddStringA(HWND hwndCtl, LPCSTR lpsz);
 int ComboBox_InsertStringA(HWND hwndCtl, int nIndex, LPCSTR lpsz);
 int ComboBox_FindStringA(HWND hwndCtl, int indexStart, LPCSTR lpszFind);
 int ComboBox_GetLBTextA(HWND hwndCtl, int nIndex, LPSTR lpszBuffer);
+int ComboBox_GetLBTextLenA(HWND hwndCtl, int nIndex);
 int ComboBox_GetTextA(HWND hwndCtl, LPSTR lpch, int cchMax);
 BOOL ComboBox_SetTextA(HWND hwndCtl, LPCSTR lpsz);
 

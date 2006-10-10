@@ -1,16 +1,16 @@
-# datafile.c: 3126
+# datafile.c: 3124
           DIAL:  %4d\n
                 ダイアル:  %4d\n
 
-# datafile.c: 3132
+# datafile.c: 3130
          OTHER:  %4d\n
                   その他:  %4d\n
 
-# datafile.c: 3130
+# datafile.c: 3128
          PEDAL:  %4d\n
                   ペダル:  %4d\n
 
-# datafile.c: 3125
+# datafile.c: 3123
         PADDLE:  %4d\n
                   パドル:  %4d\n
 
@@ -18,35 +18,35 @@
        FOUND: %s\n
 見つかった物: %s\n
 
-# datafile.c: 3119
+# datafile.c: 3117
        JOY2WAY:  %4d\n
         ２方向スティック:  %4d\n
 
-# datafile.c: 3120
+# datafile.c: 3118
        JOY4WAY:  %4d\n
         ４方向スティック:  %4d\n
 
-# datafile.c: 3121
+# datafile.c: 3119
        JOY8WAY:  %4d\n
         ８方向スティック:  %4d\n
 
-# datafile.c: 3128
+# datafile.c: 3126
       AD STICK:  %4d\n
       アナログスティック:  %4d\n
 
-# datafile.c: 3129
+# datafile.c: 3127
       LIGHTGUN:  %4d\n
                   光線銃:  %4d\n
 
-# datafile.c: 3113
+# datafile.c: 3111
      PLAYERS %d:  %4d\n
             %d プレイヤー:  %4d\n
 
-# datafile.c: 3127
+# datafile.c: 3125
      TRACKBALL:  %4d\n
                 トラック:  %4d\n
 
-# datafile.c: 3141
+# datafile.c: 3139
     BUTTONS%3d:  %4d\n
                ボタン%3d:  %4d\n
 
@@ -54,163 +54,67 @@
     EXPECTED: %s\n
     正常な物: %s\n
 
-# datafile.c: 3147
+# datafile.c: 3145
     NO BUTTONS:  %4d\n
             ボタン未使用:  %4d\n
 
-# audit.c: 460, 497
-   FOUND: 
-見つかった物: 
+# audit.c: 296
+   FOUND: %s\n
+見つかった物: %s\n
 
-# datafile.c: 2951
+# datafile.c: 2949
  %4d HARDDISK\n
  %4d ハードディスク\n
 
-# datafile.c: 2947
+# datafile.c: 2945
  %4d HORIZONTAL + %4d\n %4d VERTICAL   + %4d\n
  %4d 横型       + %4d\n %4d 縦型       + %4d\n
 
-# datafile.c: 2943
+# datafile.c: 2941
  %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
  %4d PLAYCHOICE + %4d\n %4d デコカセ   + %4d\n %4d CVS        + %4d\n
 
-# datafile.c: 2945
+# datafile.c: 2943
  %4d RASTER     + %4d\n %4d VECTOR     + %4d\n
  %4d ラスタ     + %4d\n %4d ベクタ     + %4d\n
 
-# datafile.c: 2949
+# datafile.c: 2947
  %4d STEREO     + %4d\n
  %4d ステレオ   + %4d\n
 
-# datafile.c: 3122
+# audit.c: 270
+ (%d bytes)
+ (%d バイト)
+
+# datafile.c: 3120
  DOUBLEJOY2WAY:  %4d\n
 ２方向デュアルスティック:  %4d\n
 
-# datafile.c: 3123
+# datafile.c: 3121
  DOUBLEJOY4WAY:  %4d\n
 ４方向デュアルスティック:  %4d\n
 
-# datafile.c: 3124
+# datafile.c: 3122
  DOUBLEJOY8WAY:  %4d\n
 ８方向デュアルスティック:  %4d\n
 
-# datafile.c: 3052
+# datafile.c: 3050
  GAMES WITH  %d CPUs: %4d\n
  %d個のCPU使用ゲーム: %4d\n
 
-# datafile.c: 3083
+# datafile.c: 3081
  GAMES WITH  %d SNDINTRF: %4d\n
  %d個の音源使用ゲーム: %4d\n
 
-# romload.c: 349
-%-12s NO GOOD DUMP KNOWN\n
-%-12s 正常なダンプは存在しません\n
-
-# romload.c: 256
-%-12s NOT FOUND (NO GOOD DUMP KNOWN)\n
-%-12s 見つかりません (正常なCRCは不明です)\n
-
-# romload.c: 263, 906
-%-12s NOT FOUND\n
-%-12s 見つかりません\n
-
-# romload.c: 365
-%-12s ROM NEEDS REDUMP\n
-%-12s 再ダンプが必要です\n
-
-# romload.c: 904, 943, 957
-%-12s UNSUPPORTED CHD VERSION\n
-%-12s サポートされていないCHDバージョンです\n
-
-# romload.c: 356, 921
-%-12s WRONG CHECKSUMS:\n
-%-12s チェックサムの異常:\n
-
-# romload.c: 342
-%-12s WRONG LENGTH (expected: %08x found: %08x)\n
-%-12s 長さが違います (正常なサイズ: %08x 見つかったサイズ: %08x)\n
-
-# romload.c: 945
-%-12s: CAN'T CREATE DIFF FILE\n
-%-12s: DIFFファイルが作成出来ません\n
-
-# romload.c: 959
-%-12s: CAN'T OPEN DIFF FILE\n
-%-12s: DIFFファイルが開けません\n
-
-# audit.c: 453
-%-8s: %-12s %7d bytes FOUND BUT NO GOOD DUMP KNOWN\n
-%-8s: %-12s %7d バイト 見つかりましたが正常なROMは不明です\n
-
-# audit.c: 457
-%-8s: %-12s %7d bytes INCORRECT CHECKSUM:\n
-%-8s: %-12s %7d バイト チェックサムの異常:\n
-
-# audit.c: 470
-%-8s: %-12s %7d bytes INCORRECT LENGTH: %8d\n
-%-8s: %-12s %7d バイト ファイルサイズの異常: %8d\n
-
-# audit.c: 439
-%-8s: %-12s %7d bytes NOT FOUND (BIOS)\n
-%-8s: %-12s %7d バイト 見つかりません (BIOS)\n
-
-# audit.c: 434
-%-8s: %-12s %7d bytes NOT FOUND (shared with parent)\n
-%-8s: %-12s %7d バイト 見つかりません (親と共有)\n
-
-# audit.c: 449
-%-8s: %-12s %7d bytes NOT FOUND - NO GOOD DUMP KNOWN\n
-%-8s: %-12s %7d バイト 見つかりません (正常なCRCは不明です)\n
-
-# audit.c: 444
-%-8s: %-12s %7d bytes NOT FOUND BUT OPTIONAL\n
-%-8s: %-12s %7d バイト 見つかりませんがオプションです\n
-
-# audit.c: 429
-%-8s: %-12s %7d bytes NOT FOUND\n
-%-8s: %-12s %7d バイト 見つかりません\n
-
-# audit.c: 476
-%-8s: %-12s %7d bytes ROM GOOD\n
-%-8s: %-12s %7d バイト 正常\n
-
-# audit.c: 463
-%-8s: %-12s %7d bytes ROM NEEDS REDUMP\n
-%-8s: %-12s %7d バイト 再ダンプが必要です\n
-
-# audit.c: 504
-%-8s: %-12s FOUND BUT NO GOOD DUMP KNOWN\n
-%-8s: %-12s 見つかりましたが正常なROMは不明です\n
-
-# audit.c: 483
-%-8s: %-12s GOOD\n
-%-8s: %-12s 正常\n
-
-# audit.c: 494
-%-8s: %-12s INCORRECT CHECKSUM:\n
-%-8s: %-12s チェックサムの異常:\n
-
-# audit.c: 500
-%-8s: %-12s NO GOOD DUMP KNOWN\n
-%-8s: %-12s 正常なダンプは存在しません\n
-
-# audit.c: 489
-%-8s: %-12s NOT FOUND\n
-%-8s: %-12s 見つかりません\n
-
-# audit.c: 628
-%-8s: %s NOT FOUND\n
-%-8s: %s 見つかりません\n
-
-# cheat.c: 8100
+# cheat.c: 8107
 %.8X-%.8X MEMORY
 %.8X-%.8X メモリ
 
-# cheat.c: 2827, 5519
+# cheat.c: 2834, 5526
 %d cheats saved
 %d個のチートを保存しました
 
-# cheat.c: 4994, 5371
+# cheat.c: 5001, 5378
 %d results found
 %d個の結果が見つかりました
 
@@ -226,7 +130,7 @@
 %s Inc
 %s 減少
 
-# cheat.c: 2794, 2809
+# cheat.c: 2801, 2816
 %s activated
 %sを有効にしました
 
@@ -258,11 +162,11 @@
 (more)
 (続く)
 
-# cheat.c: 2399, 3146, 3163, 3178, 3196, 5148, 5458, 6183 uitext.c: 42
+# cheat.c: 2406, 3153, 3170, 3185, 3203, 5155, 5465, 6190 uitext.c: 42
 (none)
 (なし)
 
-# cheat.c: 937
+# cheat.c: 940
 ---> <ENTER> To Edit <---
 ---> <選択キー> で修正 <---
 
@@ -306,11 +210,11 @@
 1 Player Start
 1プレイヤー スタート
 
-# cheat.c: 5002, 5377
+# cheat.c: 5009, 5384
 1 result found, added to list
 1個の結果が見つかりました、リストに追加します
 
-# cheat.c: 2966, 6125
+# cheat.c: 2973, 6132
 16 Bit
 16ビット
 
@@ -354,11 +258,11 @@
 2 Players Start
 2プレイヤー スタート
 
-# cheat.c: 2967, 6126
+# cheat.c: 2974, 6133
 24 Bit
 24ビット
 
-# datafile.c: 3153
+# datafile.c: 3151
 24-BIT DISPLAY : %3d  + %3d\n
 24ビット表\示   : %3d  + %3d\n
 
@@ -386,7 +290,7 @@
 3 Players Start
 3プレイヤー スタート
 
-# cheat.c: 2968, 6127
+# cheat.c: 2975, 6134
 32 Bit
 32ビット
 
@@ -446,7 +350,7 @@
 7 Players Start
 7プレイヤー スタート
 
-# cheat.c: 2965, 6124
+# cheat.c: 2972, 6131
 8 Bit
 8ビット
 
@@ -570,15 +474,15 @@ ALL CHANNELS
 ALL CPUS
 全CPU
 
-# layout/mpu4.lay: 410
+# layout/mpu4.lay: 409
 AWP Simulated Video (No Artwork)
 AWPビデオシミュレーション (アートワークではありません）
 
-# cheat.c: 3188 uitext.c: 191
+# cheat.c: 3195 uitext.c: 191
 Activation Key
 有効化キー
 
-# cheat.c: 2905
+# cheat.c: 2912
 Add
 加算
 
@@ -586,7 +490,7 @@ Add
 Add Cheat
 チートを追加
 
-# cheat.c: 6217
+# cheat.c: 6224
 Add Value
 値を追加
 
@@ -594,7 +498,7 @@ Add Value
 Add/Edit a Cheat
 チートを追加/編集する
 
-# cheat.c: 2894, 3423
+# cheat.c: 2901, 3430
 Add/Subtract
 加算/減算
 
@@ -602,27 +506,27 @@ Add/Subtract
 Adder %d Output Only (%d:%d)
 加算器%dの出力のみ表\示 (%d:%d)
 
-# cheat.c: 1111, 3751, 6154 uitext.c: 44
+# cheat.c: 1114, 3758, 6161 uitext.c: 44
 Address
 アドレス
 
-# cheat.c: 3710
+# cheat.c: 3717
 Address Index
 アドレスのインデックス
 
-# cheat.c: 6223
+# cheat.c: 6230
 Address Shift
 アドレスシフト
 
-# cheat.c: 3685
+# cheat.c: 3692
 Address Size
 アドレスのサイズ
 
-# cheat.c: 6994 drivers/mcr68.c: 795 
+# cheat.c: 7001 drivers/mcr68.c: 795 
 Advanced
 拡張形式
 
-# cheat.c: 6615 uitext.c: 222
+# cheat.c: 6622 uitext.c: 222
 All Memory
 全てのメモリ
 
@@ -638,7 +542,7 @@ Allow Continue
 Alternate
 別版
 
-# cheat.c: 933
+# cheat.c: 936
 Always have
 常にある
 
@@ -670,7 +574,7 @@ Attempted to malloc zero bytes (%s:%d)
 Auto
 自動
 
-# cheat.c: 7001
+# cheat.c: 7008
 Auto Save Cheats
 チートの自動保存
 
@@ -694,11 +598,11 @@ Autofire Setting
 Automatic
 自動
 
-# cheat.c: 8072
+# cheat.c: 8079
 BANK%.2d
 バンク%.2d
 
-# cheat.c: 3573
+# cheat.c: 3580
 BCD
 BCD
 
@@ -706,7 +610,7 @@ BCD
 BIOS
 BIOS
 
-# ui.c: 2367
+# ui.c: 2409
 Beam Width
 ビーム幅
 
@@ -722,11 +626,11 @@ Bet
 Bill 1
 紙幣の確認 1
 
-# cheat.c: 1119 uitext.c: 209
+# cheat.c: 1122 uitext.c: 209
 Binary
 2進
 
-# cheat.c: 974
+# cheat.c: 977
 Bit
 ビット
 
@@ -758,7 +662,7 @@ Brightness
 Button 1
 ボタン 1
 
-# cheat.c: 3610
+# cheat.c: 3617
 Byte Length
 バイト長
 
@@ -766,11 +670,11 @@ Byte Length
 COMM Setting
 COMMセッティング
 
-# cheat.c: 3649, 3674, 5140, 6159 uitext.c: 43
+# cheat.c: 3656, 3681, 5147, 6166 uitext.c: 43
 CPU
 CPU
 
-# cheat.c: 8087
+# cheat.c: 8094
 CPU%.2d 
 CPU%.2d 
 
@@ -786,7 +690,7 @@ Cabinet Type
 Calibrate Joysticks
 ジョイスティックの調整
 
-# drivers/getrivia.c: 243 drivers/pmpoker.c: 581, 681 drivers/segac2.c: 1199 
+# drivers/getrivia.c: 288 drivers/pmpoker.c: 581, 681 drivers/segac2.c: 1199 
 Cancel
 キャンセル
 
@@ -802,7 +706,7 @@ Center
 Cheat
 チート (ゲームの改造)
 
-# cheat.c: 8782
+# cheat.c: 8790
 Cheat Database reloaded
 チートデータを読み込みました
 
@@ -818,15 +722,15 @@ Cheats
 Chi
 チー
 
-# drivers/afega.c: 800 drivers/nmk16.c: 2667 drivers/pgm.c: 820, 914, 1006, 1097, 1193, 1384 drivers/ssv.c: 2955 drivers/toaplan2.c: 2707, 2760, 2888
+# drivers/afega.c: 801 drivers/nmk16.c: 2667 drivers/pgm.c: 918, 1012, 1104, 1195, 1291, 1482 drivers/ssv.c: 2955 drivers/toaplan2.c: 2706, 2759, 2887
 China
 中国
 
-# cheat.c: 6994 drivers/st0016.c: 397
+# cheat.c: 7001 drivers/st0016.c: 397
 Classic
 従来形式
 
-# cheat.c: 2912 drivers/gladiatr.c: 531
+# cheat.c: 2919 drivers/gladiatr.c: 531
 Clear
 クリア
 
@@ -890,7 +794,7 @@ Coin Chutes
 Coin Chutes?
 コイン投入数?
 
-# drivers/airbustr.c: 463 drivers/asteroid.c: 421 drivers/asuka.c: 838 drivers/bloodbro.c: 163, 253, 344 drivers/cabal.c: 348 drivers/exidy.c: 368 drivers/galpanic.c: 593, 704, 773 drivers/holeland.c: 121, 188 drivers/m62.c: 633, 686, 736, 788, 840, 892, 944, 994, 1044, 1097, 1148, 1198 drivers/m72.c: 988, 1060, 1131, 1201, 1271, 1338, 1409, 1476, 1544, 1617, 1699, 1787, 1869, 1954 drivers/m90.c: 220, 265, 323, 368, 443, 513, 585, 630 drivers/m92.h: 77, 93, 109, 125 drivers/mcatadv.c: 341 drivers/midzeus.c: 1225 drivers/mpatrol.c: 153 drivers/playch10.c: 650 drivers/playmark.c: 450, 598, 695, 791 drivers/powerbal.c: 263 drivers/raiden.c: 158 drivers/rallyx.c: 644 drivers/shisen.c: 158 drivers/sshangha.c: 245 drivers/system18.c: 1325 drivers/tagteam.c: 228 drivers/taito_l.c: 1954 drivers/travrusa.c: 157, 187 drivers/troangel.c: 108 drivers/vigilant.c: 268, 358 drivers/welltris.c: 566 drivers/wilytowr.c: 406 drivers/yard.c: 133
+# drivers/airbustr.c: 463 drivers/asteroid.c: 421 drivers/asuka.c: 838 drivers/bloodbro.c: 163, 253, 344 drivers/cabal.c: 348 drivers/exidy.c: 368 drivers/galpanic.c: 593, 704, 773 drivers/holeland.c: 121, 188 drivers/m62.c: 635, 688, 738, 790, 842, 894, 946, 996, 1046, 1099, 1150, 1200 drivers/m72.c: 988, 1060, 1131, 1201, 1271, 1338, 1409, 1476, 1544, 1617, 1699, 1787, 1869, 1954 drivers/m90.c: 220, 265, 323, 368, 443, 513, 585, 630 drivers/m92.h: 77, 93, 109, 125 drivers/mcatadv.c: 341 drivers/midzeus.c: 1225 drivers/mpatrol.c: 153 drivers/playch10.c: 650 drivers/playmark.c: 450, 598, 695, 791 drivers/powerbal.c: 263 drivers/raiden.c: 158 drivers/rallyx.c: 644 drivers/shisen.c: 158 drivers/sshangha.c: 245 drivers/system18.c: 1325 drivers/tagteam.c: 228 drivers/taito_l.c: 1954 drivers/travrusa.c: 157, 187 drivers/troangel.c: 108 drivers/vigilant.c: 268, 358 drivers/welltris.c: 566 drivers/wilytowr.c: 406 drivers/yard.c: 133
 Coin Mode
 コインモード
 
@@ -898,7 +802,7 @@ Coin Mode
 Coin Slot
 コインスロット
 
-# drivers/alpha68k.c: 1635 drivers/armedf.c: 555 drivers/bbusters.c: 455, 526 drivers/boogwing.c: 178 drivers/buggychl.c: 329 drivers/cps1.c: 1440, 2158, 2261, 2515, 2624, 3297 drivers/cshooter.c: 434 drivers/deco32.c: 1320 drivers/flstory.c: 424 drivers/freekick.c: 521 drivers/galaxian.c: 2805 drivers/itech8.c: 1601 drivers/lkage.c: 247 drivers/lordgun.c: 345 drivers/m92.h: 77, 93, 109, 125 drivers/nycaptor.c: 741 drivers/sslam.c: 545 drivers/suprslam.c: 231
+# drivers/alpha68k.c: 1635 drivers/armedf.c: 555 drivers/bbusters.c: 455, 526 drivers/boogwing.c: 178 drivers/buggychl.c: 329 drivers/cps1.c: 1665, 2383, 2486, 2740, 2849, 3525 drivers/cshooter.c: 434 drivers/deco32.c: 1320 drivers/flstory.c: 424 drivers/freekick.c: 521 drivers/galaxian.c: 2805 drivers/itech8.c: 1601 drivers/lkage.c: 247 drivers/lordgun.c: 345 drivers/m92.h: 77, 93, 109, 125 drivers/nycaptor.c: 741 drivers/sslam.c: 545 drivers/suprslam.c: 231
 Coin Slots
 コインスロット
 
@@ -914,7 +818,7 @@ Coinout Sensor
 Collect
 回収
 
-# layout/avalnche.lay: 26 layout/bzone.lay: 14 layout/circus.lay: 26 layout/clowns.lay: 26 layout/copsnrob.lay: 18 layout/deadeye.lay: 30 layout/geebee.lay: 72 layout/gypsyjug.lay: 34 layout/ho20ffff.lay: 10 layout/ho2eff2e.lay: 10 layout/ho4f893d.lay: 11 layout/ho88ffff.lay: 10 layout/hoa0a0ff.lay: 10 layout/hoffe457.lay: 10 layout/hoffff20.lay: 10 layout/invad2ct.lay: 46 layout/invaders.lay: 22 layout/invrvnge.lay: 18 layout/lazercmd.lay: 30 layout/sbrkout.lay: 34 layout/solarq.lay: 18 layout/sos.lay: 18 layout/starcas.lay: 22 layout/tinv2650.lay: 22 layout/voffff20.lay: 10
+# layout/avalnche.lay: 26 layout/bzone.lay: 14 layout/circus.lay: 26 layout/clowns.lay: 26 layout/copsnrob.lay: 18 layout/deadeye.lay: 34 layout/geebee.lay: 76 layout/gypsyjug.lay: 38 layout/ho20ffff.lay: 10 layout/ho2eff2e.lay: 10 layout/ho4f893d.lay: 11 layout/ho88ffff.lay: 10 layout/hoa0a0ff.lay: 10 layout/hoffe457.lay: 10 layout/hoffff20.lay: 10 layout/invad2ct.lay: 46 layout/invaders.lay: 22 layout/invrvnge.lay: 18 layout/lazercmd.lay: 30 layout/sbrkout.lay: 34 layout/solarq.lay: 18 layout/sos.lay: 18 layout/starcas.lay: 22 layout/tinv2650.lay: 22 layout/voffff20.lay: 10
 Color Overlay
 カラーオーバレイ
 
@@ -922,7 +826,7 @@ Color Overlay
 Command List not available
 コマンドリストがありません
 
-# cheat.c: 2879, 2952, 3173
+# cheat.c: 2886, 2959, 3180
 Comment
 コメント
 
@@ -930,7 +834,7 @@ Comment
 Common
 共通
 
-# cheat.c: 5110
+# cheat.c: 5117
 Comparison
 比較
 
@@ -942,11 +846,11 @@ Config Menu
 Configure Watchpoints
 ウォッチポイントの設定
 
-# drivers/drgnmst.c: 254 drivers/ksayakyu.c: 171 drivers/merit.c: 524 drivers/metro.c: 2572 drivers/nemesis.c: 1588 drivers/seta.c: 3335 drivers/tmnt.c: 1876, 1962
+# drivers/drgnmst.c: 254 drivers/ksayakyu.c: 171 drivers/merit.c: 530 drivers/metro.c: 2572 drivers/nemesis.c: 1588 drivers/seta.c: 3335 drivers/tmnt.c: 1876, 1962
 Continue
 継続
 
-# drivers/toaplan2.c: 2222, 2555, 2629
+# drivers/toaplan2.c: 2221, 2554, 2628
 Continue Mode
 コンティニューモード
 
@@ -986,11 +890,11 @@ Controller
 Controls
 コントロール
 
-# cheat.c: 3598
+# cheat.c: 3605
 Copy Previous Value
 前回の値をコピー
 
-# config.c: 130, 134
+# config.c: 135, 139
 Could not load controller file %s.cfg
 コントローラファイル%s.cfgが読み込めません
 
@@ -1010,11 +914,11 @@ Create New Card
 Crop to Screen
 画面外をカット
 
-# cheat.c: 1040
+# cheat.c: 1043
 Current Data
 現在のデータ
 
-# cheat.c: 2943 drivers/tickee.c: 205 sound/custom.c: 76 
+# cheat.c: 2950 drivers/tickee.c: 205 sound/custom.c: 76 
 Custom
 カスタム
 
@@ -1026,15 +930,15 @@ Custom Buttons
 DIAL
 ダイアル
 
-# cheat.c: 3527
+# cheat.c: 3534
 Data
 データ
 
-# cheat.c: 6228
+# cheat.c: 6235
 Data Shift
 データシフト
 
-# cheat.c: 1118 uitext.c: 208
+# cheat.c: 1121 uitext.c: 208
 Decimal
 10進
 
@@ -1046,7 +950,7 @@ Decoding (%d%%)
 Decoding Graphics
 グラフィックのデコード中
 
-# drivers/asuka.c: 707, 749, 791 drivers/bwing.c: 337 drivers/cps1.c: 845, 929 drivers/fgoal.c: 313 drivers/mcr68.c: 669 drivers/ms32.c: 1103, 1108 drivers/wwfsstar.c: 290 
+# drivers/asuka.c: 707, 749, 791 drivers/bwing.c: 337 drivers/cps1.c: 998, 1082 drivers/fgoal.c: 313 drivers/mcr68.c: 669 drivers/ms32.c: 1103, 1108 drivers/wwfsstar.c: 290 
 Default
 デフォルト
 
@@ -1054,7 +958,7 @@ Default
 Default Search Speed
 標準の検索速度
 
-# cheat.c: 3276
+# cheat.c: 3283
 Delay
 ディレイ
 
@@ -1138,11 +1042,11 @@ Dial V 8
 Difficulty
 難易度
 
-# drivers/cps1.c: 2380 drivers/pipedrm.c: 439 drivers/speedbal.c: 125
+# drivers/cps1.c: 2605 drivers/pipedrm.c: 439 drivers/speedbal.c: 125
 Difficulty 1
 難易度 1
 
-# drivers/cps1.c: 2389 drivers/hcastle.c: 165 drivers/pipedrm.c: 444 drivers/speedbal.c: 130
+# drivers/cps1.c: 2614 drivers/hcastle.c: 165 drivers/pipedrm.c: 444 drivers/speedbal.c: 130
 Difficulty 2
 難易度 2
 
@@ -1158,15 +1062,15 @@ Dip Switches
 Disable All Coins
 すべてのコインを無効
 
-# drivers/blockade.c: 311 drivers/hyperspt.c: 260, 361 drivers/junofrst.c: 334 drivers/lvcards.c: 337, 415 drivers/metro.c: 2385 drivers/midvunit.c: 829 drivers/mpu4.c: 2137, 2140, 2143, 2146, 2211, 2214, 2217, 2220, 2290, 2293, 2296, 2299 drivers/nemesis.c: 840, 1441, 1535, 1552, 1649, 1746, 1834 drivers/pacman.c: 1206, 1268 drivers/rallyx.c: 591 drivers/rocnrope.c: 129 drivers/seattle.c: 2444 drivers/trackfld.c: 436, 531 drivers/tutankhm.c: 337 drivers/twin16.c: 378 uitext.c: 184
+# drivers/blockade.c: 311 drivers/hyperspt.c: 260, 361 drivers/junofrst.c: 334 drivers/lvcards.c: 337, 415 drivers/metro.c: 2385 drivers/midvunit.c: 829 drivers/mpu4.c: 2071, 2074, 2077, 2080, 2145, 2148, 2151, 2154, 2222, 2225, 2228, 2231 drivers/nemesis.c: 840, 1441, 1535, 1552, 1649, 1746, 1834 drivers/pacman.c: 1206, 1268 drivers/rallyx.c: 591 drivers/rocnrope.c: 129 drivers/seattle.c: 2444 drivers/trackfld.c: 436, 531 drivers/tutankhm.c: 337 drivers/twin16.c: 378 uitext.c: 184
 Disabled
 無効
 
-# cheat.c: 6187 uitext.c: 200
+# cheat.c: 6194 uitext.c: 200
 Display Type
 表\示形式
 
-# cheat.c: 5155
+# cheat.c: 5162
 Do Search
 検索実行
 
@@ -1182,11 +1086,11 @@ Door Interlock
 Double Up
 ダブルアップ
 
-# cheat.c: 929
+# cheat.c: 932
 Drain all Energy Now! PL1
 今すぐ全てのエネルギーを消費! PL1
 
-# cheat.c: 930
+# cheat.c: 933
 Drain all Energy Now! PL2
 今すぐ全てのエネルギーを消費! PL2
 
@@ -1218,17 +1122,17 @@ Dual Side-by-Side (Gapless)
 Dual Under-Over (Gapless)
 2画面 下上 (繋ぎ目なし)
 
-# cheat.c: 2953
+# cheat.c: 2960
 EEPROM
 EEPROM
 
-# romload.c: 405 
+# romload.c: 409 
 ERROR: required files are missing, the game cannot be run.
 エラー: 必要なファイルがありません。ゲームは実行できません。
 
-# audit.c: 459, 496
-EXPECTED: 
-    正常な物:     
+# audit.c: 294
+EXPECTED: %s\n
+正常な物: %s\n
 
 # inptport.c: 415
 Easier
@@ -1246,7 +1150,7 @@ Easy
 Edit Cheat
 チート編集
 
-# drivers/djmain.c: 499 drivers/toaplan2.c: 2842
+# drivers/djmain.c: 499 drivers/toaplan2.c: 2841
 Effect
 エフェクト
 
@@ -1254,11 +1158,11 @@ Effect
 Eject Current Card
 現在のカードを取り出し
 
-# cheat.c: 6168
+# cheat.c: 6175
 Element Size
 要素サイズ
 
-# cheat.c: 6207
+# cheat.c: 6214
 Elements Per Line
 1行あたりの要素数
 
@@ -1270,7 +1174,7 @@ Enable/Disable a Cheat
 End of playback
 再生終了
 
-# cheat.c: 3622
+# cheat.c: 3629
 Endianness
 バイトの並び順
 
@@ -1286,7 +1190,7 @@ England
 English
 英語
 
-# cheat.c: 1050, 4678, 4688
+# cheat.c: 1053, 4685, 4695
 Equal
 等しい
 
@@ -1298,10 +1202,6 @@ Error
 Error creating memory card
 メモリーカード作成エラー
 
-# unzip.c: 32
-Error in zipfile %s\n%s\n
-zipファイルのエラー %s\n%s\n
-
 # uitext.c: 165
 Error loading memory card
 メモリーカード読み込みエラー
@@ -1310,27 +1210,27 @@ Error loading memory card
 Error: 
 エラー: 
 
-# mame.c: 1523, 1527
+# mame.c: 1551, 1555
 Error: Failed to load state
 エラー: ステートの読み込みが失敗しました
 
-# mame.c: 1446
+# mame.c: 1473
 Error: Failed to save state
 エラー: ステートの保存が失敗しました
 
-# mame.c: 1409
+# mame.c: 1436
 Error: Unable to save state due to illegal registrations. See error.log for details.
 エラー: 不正な登録のためステートを保存する事が出来ません。詳細はerror.logをご覧下さい。
 
-# ui.c: 1425
+# ui.c: 1467
 Error: illegal caption file
 エラー: 不正なキャプションファイルです
 
-# options.c: 328
+# options.c: 329
 Error: option %s expected a parameter\n
 Error: オプション「%s」には引数が必要です\n
 
-# options.c: 313
+# options.c: 314
 Error: unknown option: %s\n
 Error: オプション「%s」はありません\n
 
@@ -1346,19 +1246,19 @@ Expert
 Failed to allocate %d bytes (%s:%d)
 %dバイトのmallocが失敗しました(%s:%d)
 
-# cheat.c: 6611 drivers/4enraya.c: 119 drivers/8080bw.c: 810, 902 drivers/alpha68k.c: 1570, 1624 drivers/amidar.c: 186 drivers/angelkds.c: 480 drivers/bestleag.c: 279 drivers/bigstrkb.c: 160 drivers/brkthru.c: 233, 236, 278, 281 drivers/cninja.c: 727 drivers/cps1.c: 1088, 1358 drivers/darius.c: 677, 715, 753 drivers/ddragon3.c: 424 drivers/deniam.c: 277 drivers/epos.c: 151, 154, 160 drivers/fuukifg3.c: 346 drivers/gameplan.c: 399, 850 drivers/jcross.c: 189 drivers/karnov.c: 461 drivers/m62.c: 617, 668, 719, 769, 821, 873, 927, 1027, 1080 drivers/mcr.c: 1133 drivers/megaplay.c: 224 drivers/metro.c: 2632, 2938, 3236, 3535 drivers/ninjaw.c: 544 drivers/nmg5.c: 237 drivers/nmk16.c: 2739 drivers/phoenix.c: 324 drivers/quizdna.c: 153, 241, 343 drivers/rohga.c: 445, 513 drivers/safarir.c: 189 drivers/segas16a.c: 1291 drivers/segas16b.c: 2507 drivers/shisen.c: 142 drivers/sidepckt.c: 231 drivers/slapfght.c: 534 drivers/ssv.c: 2577 drivers/suprridr.c: 251 drivers/system1.c: 965, 1956 drivers/system16.c: 1795 drivers/taito_f2.c: 3104 drivers/taito_l.c: 1835, 1988 drivers/taito_z.c: 2384, 2453 drivers/tecmo16.c: 207 drivers/thepit.c: 276, 331, 372 drivers/trackfld.c: 588, 599 drivers/vigilant.c: 240 drivers/vsnes.c: 1072, 1474, 1698, 1756, 1782 drivers/wallc.c: 188 drivers/warriorb.c: 345 drivers/wc90.c: 250 drivers/wc90b.c: 267 drivers/xain.c: 399 drivers/yamato.c: 381 drivers/zac2650.c: 73, 123 drivers/zerozone.c: 148 uitext.c: 218
+# cheat.c: 6618 drivers/4enraya.c: 119 drivers/8080bw.c: 859, 951 drivers/alpha68k.c: 1570, 1624 drivers/amidar.c: 186 drivers/angelkds.c: 480 drivers/bestleag.c: 279 drivers/bigstrkb.c: 160 drivers/brkthru.c: 233, 236, 278, 281 drivers/cninja.c: 727 drivers/cps1.c: 1280, 1583 drivers/darius.c: 677, 715, 753 drivers/ddragon3.c: 424 drivers/deniam.c: 277 drivers/epos.c: 151, 154, 160 drivers/fuukifg3.c: 346 drivers/gameplan.c: 399, 850 drivers/jcross.c: 189 drivers/karnov.c: 461 drivers/m62.c: 619, 670, 721, 771, 823, 875, 929, 1029, 1082 drivers/mcr.c: 1133 drivers/megaplay.c: 224 drivers/metro.c: 2632, 2938, 3236, 3535 drivers/ninjaw.c: 544 drivers/nmg5.c: 237 drivers/nmk16.c: 2739 drivers/phoenix.c: 324 drivers/quizdna.c: 153, 241, 343 drivers/rohga.c: 445, 513 drivers/safarir.c: 189 drivers/segas16a.c: 1291 drivers/segas16b.c: 2507 drivers/shisen.c: 142 drivers/sidepckt.c: 231 drivers/slapfght.c: 534 drivers/ssv.c: 2577 drivers/suprridr.c: 251 drivers/system1.c: 965, 1956 drivers/system16.c: 1795 drivers/taito_f2.c: 3104 drivers/taito_l.c: 1835, 1988 drivers/taito_z.c: 2384, 2453 drivers/tecmo16.c: 207 drivers/thepit.c: 276, 331, 372 drivers/trackfld.c: 588, 599 drivers/vigilant.c: 240 drivers/vsnes.c: 1072, 1474, 1698, 1756, 1782 drivers/wallc.c: 188 drivers/warriorb.c: 345 drivers/wc90.c: 250 drivers/wc90b.c: 267 drivers/xain.c: 399 drivers/yamato.c: 381 drivers/zac2650.c: 73, 123 drivers/zerozone.c: 148 uitext.c: 218
 Fast
 速い
 
-# mamecore.h: 204
+# mamecore.h: 205
 Fatal error: %s (%s:%d)
 致命的なエラー: %s (%s:%d)
 
-# mamecore.h: 201
+# mamecore.h: 202
 Fatal error: %s\nCaused by assert: %s:%d: %s
 致命的なエラー: %s\nアサートの結果: %s:%d: %s
 
-# cheat.c: 936
+# cheat.c: 939
 Finish this
 これを終了
 
@@ -1366,7 +1266,7 @@ Finish this
 First Bonus
 ボーナス初回
 
-# cheat.c: 1042
+# cheat.c: 1045
 First Data
 最初のデータ
 
@@ -1382,7 +1282,7 @@ X軸反転
 Flip Y
 Y軸反転
 
-# cheat.c: 2895
+# cheat.c: 2902
 Force Range
 範囲を強制
 
@@ -1398,7 +1298,7 @@ Frameskip Dec
 Frameskip Inc
 フレームスキップ数増加
 
-# drivers/lockon.c: 257 drivers/lvcards.c: 326 drivers/pgm.c: 799, 896, 986, 1078, 1174, 1265 drivers/segas16a.c: 1243 drivers/segas16b.c: 2459 drivers/taito_z.c: 1981, 2052
+# drivers/lockon.c: 257 drivers/lvcards.c: 326 drivers/pgm.c: 897, 994, 1084, 1176, 1272, 1363 drivers/segas16a.c: 1243 drivers/segas16b.c: 2459 drivers/taito_z.c: 1981, 2052
 Free
 フリー
 
@@ -1406,7 +1306,7 @@ Free
 Free Play
 フリープレイ
 
-# drivers/1942.c: 213 drivers/1943.c: 147 drivers/40love.c: 1081 drivers/aerofgt.c: 742 drivers/airbustr.c: 494 drivers/alpha68k.c: 1164, 1490, 1543, 1595, 1650, 1676, 1776 drivers/atetris.c: 227, 253 drivers/baraduke.c: 254, 327 drivers/battlex.c: 115 drivers/bbusters.c: 469, 556 drivers/bionicc.c: 226 drivers/blktiger.c: 208 drivers/bwing.c: 289 drivers/compgolf.c: 134 drivers/cps1.c: 510, 679, 760, 853, 937, 1016, 1203, 1293, 1374, 1466, 1570, 1665, 1755, 1837, 1920, 2014, 2076, 2201, 2304, 2412, 2531, 2640, 2732, 2825, 2879, 2939, 2992, 3037, 3090, 3142, 3196, 3239, 3340, 3440, 3541, 3634, 3688 drivers/dec8.c: 1243, 1674 drivers/docastle.c: 359 drivers/exedexes.c: 137 drivers/fcrash.c: 262 drivers/findout.c: 377 drivers/flstory.c: 524 drivers/funkybee.c: 113, 163, 213 drivers/funkyjet.c: 221, 299 drivers/galaga.c: 1006, 1082, 1153, 1227, 1357, 1596, 1655 drivers/gunsmoke.c: 191 drivers/hal21.c: 418 drivers/higemaru.c: 80 drivers/ikki.c: 119 drivers/jcross.c: 195 drivers/karnov.c: 593 drivers/kingobox.c: 289, 375 drivers/kyugo.c: 235, 266, 303, 334, 364, 394, 424 drivers/ladybug.c: 164, 437 drivers/laserbat.c: 376 drivers/legionna.c: 818, 906 drivers/lsasquad.c: 321, 475 drivers/mainsnk.c: 195 drivers/mappy.c: 981, 1114, 1245, 1306, 1374 drivers/markham.c: 151 drivers/marvins.c: 269, 358, 449 drivers/midtunit.c: 339 drivers/midvunit.c: 580 drivers/mitchell.c: 617 drivers/ms32.c: 751, 821, 888 drivers/mugsmash.c: 297, 379 drivers/munchmo.c: 200 drivers/mwarr.c: 209 drivers/namcond1.c: 110 drivers/namcos1.c: 599, 639, 661, 698, 760, 782, 796, 869, 879, 901, 911 drivers/namcos12.c: 1486 drivers/namcos86.c: 569, 659, 729, 807, 886, 965 drivers/neogeo.c: 935, 1083 drivers/nycaptor.c: 721 drivers/ohmygod.c: 292 drivers/onetwo.c: 143 drivers/pacland.c: 331 drivers/pandoras.c: 287 drivers/prehisle.c: 156 drivers/pturn.c: 420 drivers/rollrace.c: 150 drivers/rungun.c: 384 drivers/sauro.c: 247 drivers/scobra.c: 643 drivers/seta2.c: 552 drivers/sf.c: 337, 515, 653 drivers/sgladiat.c: 284 drivers/shootout.c: 167 drivers/sidearms.c: 248 drivers/skykid.c: 167, 246 drivers/snk.c: 2954, 3010, 3067, 3124, 3181, 3252, 3339, 3393, 3451, 3479, 3539, 3610, 3666, 3743, 3808, 3913, 4037, 4178 drivers/snk68.c: 259, 406, 443, 594 drivers/sonson.c: 195 drivers/ssrj.c: 134 drivers/starwars.c: 260, 337 drivers/statriv2.c: 434 drivers/strnskil.c: 177, 265 drivers/superqix.c: 605, 743 drivers/suprnova.c: 556, 631 drivers/tceptor.c: 367, 423 drivers/tmnt.c: 1930, 2016, 2216 drivers/toypop.c: 408, 493 drivers/tsamurai.c: 470, 663 drivers/tumbleb.c: 1034 drivers/vastar.c: 233 drivers/zaccaria.c: 410, 519 drivers/zn.c: 3106 drivers/zodiack.c: 222
+# drivers/1942.c: 213 drivers/1943.c: 147 drivers/40love.c: 1081 drivers/aerofgt.c: 742 drivers/airbustr.c: 494 drivers/alpha68k.c: 1164, 1490, 1543, 1595, 1650, 1676, 1776 drivers/atetris.c: 227, 253 drivers/baraduke.c: 254, 327 drivers/battlex.c: 115 drivers/bbusters.c: 469, 556 drivers/bionicc.c: 226 drivers/blktiger.c: 208 drivers/bwing.c: 289 drivers/compgolf.c: 134 drivers/cps1.c: 670, 838, 956, 1006, 1090, 1161, 1259, 1428, 1518, 1599, 1691, 1795, 1890, 1980, 2062, 2145, 2239, 2301, 2426, 2529, 2637, 2756, 2865, 2957, 3050, 3107, 3167, 3220, 3265, 3318, 3370, 3424, 3467, 3568, 3668, 3772, 3871, 3931 drivers/dec8.c: 1243, 1674 drivers/docastle.c: 359 drivers/exedexes.c: 137 drivers/fcrash.c: 286 drivers/findout.c: 420 drivers/flstory.c: 524 drivers/funkybee.c: 146, 207 drivers/funkyjet.c: 221, 299 drivers/galaga.c: 1006, 1082, 1153, 1227, 1357, 1596, 1655 drivers/gunsmoke.c: 191 drivers/hal21.c: 418 drivers/higemaru.c: 80 drivers/ikki.c: 119 drivers/jcross.c: 195 drivers/karnov.c: 593 drivers/kingobox.c: 289, 375 drivers/kyugo.c: 235, 266, 303, 334, 364, 394, 424 drivers/ladybug.c: 164, 437 drivers/laserbat.c: 376 drivers/legionna.c: 818, 906 drivers/lsasquad.c: 321, 475 drivers/mainsnk.c: 195 drivers/mappy.c: 981, 1114, 1245, 1306, 1374 drivers/markham.c: 151 drivers/marvins.c: 269, 358, 449 drivers/midtunit.c: 339 drivers/midvunit.c: 580 drivers/mitchell.c: 617 drivers/ms32.c: 751, 821, 888 drivers/mugsmash.c: 297, 379 drivers/munchmo.c: 200 drivers/mwarr.c: 209 drivers/namcond1.c: 110 drivers/namcos1.c: 599, 639, 661, 698, 760, 782, 796, 869, 879, 901, 911 drivers/namcos12.c: 1486 drivers/namcos86.c: 569, 659, 729, 807, 886, 965 drivers/neogeo.c: 935, 1083 drivers/nycaptor.c: 721 drivers/ohmygod.c: 292 drivers/onetwo.c: 143 drivers/pacland.c: 331 drivers/pandoras.c: 287 drivers/prehisle.c: 156 drivers/pturn.c: 420 drivers/rollrace.c: 150 drivers/rungun.c: 384 drivers/sauro.c: 247 drivers/scobra.c: 643 drivers/seta2.c: 552 drivers/sf.c: 337, 515, 653 drivers/sgladiat.c: 284 drivers/shootout.c: 167 drivers/sidearms.c: 248 drivers/skykid.c: 167, 246 drivers/snk.c: 2954, 3010, 3067, 3124, 3181, 3252, 3339, 3393, 3451, 3479, 3539, 3610, 3666, 3743, 3808, 3913, 4037, 4178 drivers/snk68.c: 259, 406, 443, 594 drivers/sonson.c: 195 drivers/ssrj.c: 134 drivers/starwars.c: 260, 337 drivers/statriv2.c: 434 drivers/strnskil.c: 177, 265 drivers/superqix.c: 605, 743 drivers/suprnova.c: 556, 631 drivers/tceptor.c: 367, 423 drivers/tmnt.c: 1930, 2016, 2216 drivers/toypop.c: 408, 493 drivers/tsamurai.c: 470, 663 drivers/tumbleb.c: 1034 drivers/vastar.c: 233 drivers/zaccaria.c: 410, 519 drivers/zn.c: 3106 drivers/zodiack.c: 222
 Freeze
 動きを止める
 
@@ -1422,11 +1322,11 @@ Full
 Full Output
 全て表\示
 
-# datafile.c: 2197
+# datafile.c: 2195
 GAME: 
 ゲーム: 
 
-# drivers/bublbobl.c: 606 drivers/cps1.c: 623, 705, 786, 869, 953, 1038, 1131, 1216, 1306, 1387, 1583, 1678, 1768, 1850, 1933, 2027, 2123, 2214, 2317, 2425, 2544, 2653, 2745, 2838, 3353, 3453, 3554, 3647, 3801, 3914 drivers/fcrash.c: 275 drivers/macs.c: 244 drivers/missile.c: 837 drivers/pacman.c: 1376 drivers/turbo.c: 900 drivers/vegas.c: 2040
+# drivers/bublbobl.c: 606 drivers/cps1.c: 732, 814, 1022, 1106, 1141, 1227, 1441, 1531, 1612, 1808, 1903, 1993, 2075, 2158, 2252, 2348, 2439, 2542, 2650, 2769, 2878, 2970, 3063, 3581, 3681, 3785, 3884, 4044, 4157 drivers/fcrash.c: 299 drivers/macs.c: 244 drivers/missile.c: 837 drivers/pacman.c: 1376 drivers/turbo.c: 900 drivers/vegas.c: 2040
 Game
 ゲーム名
 
@@ -1486,7 +1386,7 @@ German
 Germany
 ドイツ
 
-# cheat.c: 934
+# cheat.c: 937
 Get
 得る
 
@@ -1494,23 +1394,23 @@ Get
 Gray
 グレー
 
-# cheat.c: 1049, 4680
+# cheat.c: 1052, 4687
 Greater
 大きい
 
-# cheat.c: 1052
+# cheat.c: 1055
 Greater Or Equal
 以上
 
-# cheat.c: 4682
+# cheat.c: 4689
 Greater or Equal
 以上
 
-# datafile.c: 3155
+# datafile.c: 3153
 HI/TRUE BITMAP : %3d  + %3d\n
 RGBダイレクト  : %3d  + %3d\n
 
-# datafile.c: 3159
+# datafile.c: 3157
 HIGHLIGHTS     : %3d  + %3d\n
 ハイライト使用 : %3d  + %3d\n
 
@@ -1534,7 +1434,7 @@ Help
 Help not available yet
 ヘルプはまだありません
 
-# cheat.c: 1117 uitext.c: 207
+# cheat.c: 1120 uitext.c: 207
 Hex
 16進
 
@@ -1602,7 +1502,7 @@ Hold 5
 Home
 家庭用
 
-# drivers/aerofgt.c: 1114 drivers/cave.c: 1678 drivers/ddenlovr.c: 4610 drivers/f1gp.c: 312 drivers/nmk16.c: 2666 drivers/pgm.c: 918, 1009, 1098, 1197, 1388 drivers/psikyo.c: 648, 768, 1006, 1210 drivers/toaplan1.c: 1187, 1262, 1332, 1407, 1496 drivers/toaplan2.c: 2092, 2257, 2271, 2319, 2471, 2533, 2595, 2665, 2709, 2762, 2913
+# drivers/aerofgt.c: 1114 drivers/cave.c: 1678 drivers/ddenlovr.c: 4610 drivers/f1gp.c: 312 drivers/nmk16.c: 2666 drivers/pgm.c: 1016, 1107, 1196, 1295, 1486 drivers/psikyo.c: 648, 768, 1006, 1210 drivers/toaplan1.c: 1187, 1262, 1332, 1407, 1496 drivers/toaplan2.c: 2091, 2256, 2270, 2318, 2470, 2532, 2594, 2664, 2708, 2761, 2912
 Hong Kong
 香港
 
@@ -1610,19 +1510,19 @@ Hong Kong
 Hopper Reset
 ホッパーリセット
 
-# ui.c: 2318
+# ui.c: 2360
 Horiz position
 水平位置
 
-# ui.c: 2284
+# ui.c: 2326
 Horiz stretch
 水平拡大
 
-# drivers/findout.c: 263, 293, 323 drivers/gameplan.c: 565, 710 drivers/jack.c: 684 drivers/thepit.c: 550 
+# drivers/findout.c: 280, 310, 340 drivers/gameplan.c: 565, 710 drivers/jack.c: 684 drivers/thepit.c: 550 
 Horizontal
 水平
 
-# drivers/afega.c: 309, 386, 466
+# drivers/afega.c: 310, 387, 467
 Horizontally
 水平
 
@@ -1630,39 +1530,47 @@ Horizontally
 IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
 「%s」を合法的に遊ぶ権利がなければESCを押してください。
 
-# datafile.c: 2964
+# datafile.c: 2962
 IMPERFECT COLORS   : %3d  %3d\n
 色の再現が不完全   : %3d  %3d\n
 
-# datafile.c: 2960
+# datafile.c: 2958
 IMPERFECT GRAPHICS : %3d  %3d\n
 画像の再現が不完全 : %3d  %3d\n
 
-# datafile.c: 2968
+# datafile.c: 2966
 IMPERFECT SOUND    : %3d  %3d\n
 音の再現が不完全   : %3d  %3d\n
+
+# audit.c: 292
+INCORRECT CHECKSUM:\n
+チェックサムの異常:\n
+
+# audit.c: 301
+INCORRECT LENGTH: %d bytes\n
+ファイルサイズの異常: %d バイト\n
 
 # drivers/travrusa.c: 90, 90 uitext.c: 41
 INVALID
 無効
 
-# cheat.c: 2877
+# cheat.c: 2884
 Ignore Decrement
 減少無視
 
-# cheat.c: 3288
+# cheat.c: 3295
 Ignore Decrement By
 この値まで減少を無視
 
-# options.c: 655
+# options.c: 668
 Illegal boolean value for %s; reverting to %d\n
 「%s」は不正な論理値です。%dに戻します。\n
 
-# options.c: 703, 761
+# options.c: 716, 774
 Illegal float value for %s; reverting to %f\n
 「%s」は不正な実数値です。%fに戻します。\n
 
-# options.c: 679, 728
+# options.c: 692, 741
 Illegal integer value for %s; reverting to %d\n
 「%s」は不正な整数値です。%dに戻します。\n
 
@@ -1670,7 +1578,7 @@ Illegal integer value for %s; reverting to %d\n
 Image Enhancement
 画像イメージの向上
 
-# cheat.c: 1054
+# cheat.c: 1057
 Increased By Value
 値によって増加
 
@@ -1678,83 +1586,83 @@ Increased By Value
 Individual
 個別
 
-# cheat.c: 932 inptport.c: 442
+# cheat.c: 935 inptport.c: 442
 Infinite
 無制限
 
-# cheat.c: 918
+# cheat.c: 921
 Infinite Ammo
 爆弾無制限
 
-# cheat.c: 919
+# cheat.c: 922
 Infinite Ammo PL1
 爆弾無制限 PL1
 
-# cheat.c: 920
+# cheat.c: 923
 Infinite Ammo PL2
 爆弾無制限 PL2
 
-# cheat.c: 921
+# cheat.c: 924
 Infinite Bombs
 ボム無制限
 
-# cheat.c: 922
+# cheat.c: 925
 Infinite Bombs PL1
 ボム無制限 PL1
 
-# cheat.c: 923
+# cheat.c: 926
 Infinite Bombs PL2
 ボム無制限 PL2
 
-# cheat.c: 913
+# cheat.c: 916
 Infinite Energy
 エネルギー無制限
 
-# cheat.c: 914
+# cheat.c: 917
 Infinite Energy PL1
 エネルギー無制限 PL1
 
-# cheat.c: 915
+# cheat.c: 918
 Infinite Energy PL2
 エネルギー無制限 PL2
 
-# cheat.c: 904 drivers/cinemat.c: 924 drivers/clshroad.c: 218 drivers/galaxian.c: 3142 drivers/ginganin.c: 231 drivers/hal21.c: 417 drivers/jack.c: 652 drivers/prehisle.c: 157 drivers/vicdual.c: 535, 912
+# cheat.c: 907 drivers/cinemat.c: 924 drivers/clshroad.c: 218 drivers/galaxian.c: 3142 drivers/ginganin.c: 231 drivers/hal21.c: 417 drivers/jack.c: 652 drivers/prehisle.c: 157 drivers/vicdual.c: 535, 912
 Infinite Lives
 ライフ無制限
 
-# cheat.c: 905
+# cheat.c: 908
 Infinite Lives PL1
 ライフ無制限 PL1
 
-# cheat.c: 906
+# cheat.c: 909
 Infinite Lives PL2
 ライフ無制限 PL2
 
-# cheat.c: 924
+# cheat.c: 927
 Infinite Smart Bombs
 スマートボム無制限
 
-# cheat.c: 925
+# cheat.c: 928
 Infinite Smart Bombs PL1
 スマートボム無制限 PL1
 
-# cheat.c: 926
+# cheat.c: 929
 Infinite Smart Bombs PL2
 スマートボム無制限 PL2
 
-# cheat.c: 907 drivers/vsnes.c: 857
+# cheat.c: 910 drivers/vsnes.c: 857
 Infinite Time
 時間無制限
 
-# cheat.c: 908
+# cheat.c: 911
 Infinite Time PL1
 時間無制限 PL1
 
-# cheat.c: 909
+# cheat.c: 912
 Infinite Time PL2
 時間無制限 PL2
 
-# mame.c: 1236
+# mame.c: 1262
 Initializing...
 初期化中...
 
@@ -1774,11 +1682,11 @@ Insert
 International
 インターナショナル
 
-# options.c: 735
+# options.c: 748
 Invalid %s value (must be between %d and %d); reverting to %d\n
 「%s」は不正な値です(%dから%dの間でなければなりません)。%dに戻します。\n
 
-# options.c: 768
+# options.c: 781
 Invalid %s value (must be between %f and %f); reverting to %f\n
 「%s」は不正な値です(%fから%fの間でなければなりません)。%fに戻します。\n
 
@@ -1786,19 +1694,19 @@ Invalid %s value (must be between %f and %f); reverting to %f\n
 Inverted
 反転
 
-# cheat.c: 910 drivers/bwing.c: 266 drivers/cop01.c: 345 drivers/liberate.c: 313 drivers/runaway.c: 236
+# cheat.c: 913 drivers/bwing.c: 266 drivers/cop01.c: 345 drivers/liberate.c: 313 drivers/runaway.c: 236
 Invincibility
 無敵
 
-# cheat.c: 911
+# cheat.c: 914
 Invincibility PL1
 無敵 PL1
 
-# cheat.c: 912
+# cheat.c: 915
 Invincibility PL2
 無敵 PL2
 
-# drivers/equites.c: 563 drivers/fantland.c: 380, 454, 569 drivers/m72.c: 1001, 1073, 1144, 1214, 1350 drivers/namcos1.c: 695 drivers/namcos86.c: 804, 883 drivers/oneshot.c: 273 drivers/seicross.c: 351 drivers/snowbros.c: 512, 586 drivers/system1.c: 2359 drivers/toaplan1.c: 584, 653, 722, 791, 861, 944, 1028, 1105, 1173, 1248, 1318, 1393, 1482 drivers/toaplan2.c: 2119, 2184, 2241, 2305, 2344, 2452, 2512, 2574, 2648, 2694, 2747, 3017, 3133 drivers/yard.c: 145
+# drivers/cps1.c: 911, 1253 drivers/equites.c: 563 drivers/fantland.c: 380, 454, 569 drivers/m72.c: 1001, 1073, 1144, 1214, 1350 drivers/namcos1.c: 695 drivers/namcos86.c: 804, 883 drivers/oneshot.c: 273 drivers/seicross.c: 351 drivers/snowbros.c: 512, 586 drivers/system1.c: 2359 drivers/toaplan1.c: 584, 653, 722, 791, 861, 944, 1028, 1105, 1173, 1248, 1318, 1393, 1482 drivers/toaplan2.c: 2118, 2183, 2240, 2304, 2343, 2451, 2511, 2573, 2647, 2693, 2746, 3016, 3132 drivers/yard.c: 145
 Invulnerability
 耐久力
 
@@ -1830,7 +1738,7 @@ Kan
 Keyboard
 キーボード
 
-# drivers/aerofgt.c: 1113 drivers/cave.c: 1680 drivers/crshrace.c: 385, 541 drivers/f1gp.c: 311 drivers/nmk16.c: 2664 drivers/pgm.c: 819, 917, 1008, 1106, 1196, 1387 drivers/psikyo.c: 647, 767, 1005, 1209 drivers/stv.c: 2484 drivers/taotaido.c: 311 drivers/toaplan1.c: 1188, 1263, 1333, 1408, 1497 drivers/toaplan2.c: 2091, 2138, 2256, 2269, 2318, 2469, 2531, 2593, 2664
+# drivers/aerofgt.c: 1113 drivers/cave.c: 1680 drivers/crshrace.c: 385, 541 drivers/f1gp.c: 311 drivers/nmk16.c: 2664 drivers/pgm.c: 917, 1015, 1106, 1204, 1294, 1485 drivers/psikyo.c: 647, 767, 1005, 1209 drivers/stv.c: 2484 drivers/taotaido.c: 311 drivers/toaplan1.c: 1188, 1263, 1333, 1408, 1497 drivers/toaplan2.c: 2090, 2137, 2255, 2268, 2317, 2468, 2530, 2592, 2663
 Korea
 韓国
 
@@ -1842,7 +1750,7 @@ LCD%d Pixel Aspect (%d:%d)
 LCD%d Standard (%d:%d)
 液晶%d 標準 (%d:%d)
 
-# cheat.c: 5106
+# cheat.c: 5113
 LHS
 LHS
 
@@ -1850,7 +1758,7 @@ LHS
 Label
 ラベル
 
-# cheat.c: 6172 uitext.c: 201
+# cheat.c: 6179 uitext.c: 201
 Label Type
 ラベルタイプ
 
@@ -1870,19 +1778,19 @@ Language
 Left Half
 左半分
 
-# cheat.c: 6164
+# cheat.c: 6171
 Length
 長さ
 
-# cheat.c: 1048, 4679 drivers/cninja.c: 737 drivers/compgolf.c: 124 drivers/dec0.c: 606 drivers/drtomy.c: 213, 216 drivers/warriorb.c: 386
+# cheat.c: 1051, 4686 drivers/cninja.c: 737 drivers/compgolf.c: 124 drivers/dec0.c: 606 drivers/drtomy.c: 213, 216 drivers/warriorb.c: 386
 Less
 小さい
 
-# cheat.c: 1051
+# cheat.c: 1054
 Less Or Equal
 以下
 
-# cheat.c: 4681
+# cheat.c: 4688
 Less or Equal
 以下
 
@@ -1978,11 +1886,11 @@ Load Selected Card
 Load State
 プレイ状態の復帰
 
-# ui.c: 1919
+# ui.c: 1961
 Load cancelled
 読み込みを中止しました
 
-# ui.c: 1950
+# ui.c: 1992
 Load from position %c
 %c から読み込みました
 
@@ -1994,11 +1902,11 @@ Loading (%d%%)
 Loading Complete
 読み込み完了
 
-# cheat.c: 3633
+# cheat.c: 3640
 Location
 位置
 
-# cheat.c: 935
+# cheat.c: 938
 Lose
 負け
 
@@ -2014,7 +1922,7 @@ MAMEの統計データ
 MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n
 MAMEはエミュレータです: いくつかのアーケードマシンをほぼ忠実に再現します。しか\nし、ハードウェアが要求するROMイメージと呼ばれるソ\フトウェアがなければ動作しま\nせん。ROMは他の商用ソ\フトウェアと同様に著作物であるため、あなたが所持していな\nいアーケードマシンのROMを使用することは違法になります。言うまでもなくMAMEと一\n緒に配布してはいけません。ROMと一緒にMAMEを配布することは著作権の侵害であり、\n直ちにゲームメーカーに報告され、然るべき法的措置がとられるでしょう。\n
 
-# datafile.c: 2189
+# datafile.c: 2187
 MAMEInfo:\n
 MAME情報:\n
 
@@ -2038,11 +1946,11 @@ MAME情報が見つかりません
 Manufacturer
 製造元
 
-# cheat.c: 2942
+# cheat.c: 2949
 Mapped Memory
 割り当て済みメモリ
 
-# cheat.c: 3410
+# cheat.c: 3417
 Mask
 マスク
 
@@ -2062,11 +1970,11 @@ Max
 Max Players
 最大プレイヤー数
 
-# cheat.c: 3452
+# cheat.c: 3459
 Maximum Boundary
 最大境界
 
-# cheat.c: 6612 inptport.c: 418 uitext.c: 219
+# cheat.c: 6619 inptport.c: 418 uitext.c: 219
 Medium
 普通
 
@@ -2090,15 +1998,15 @@ Memory card ejected
 Memory card loaded
 メモリーカードを読み込みました
 
-# cheat.c: 3439
+# cheat.c: 3446
 Minimum Boundary
 最小境界
 
-# cheat.c: 3551
+# cheat.c: 3558
 Minimum Displayed Value
 最小表\示値
 
-# cheat.c: 3562
+# cheat.c: 3569
 Minimum Value
 最小値
 
@@ -2190,31 +2098,59 @@ Move User Interface
 NA
 なし
 
-# datafile.c: 2970
+# audit.c: 278
+NEEDS REDUMP\n
+再ダンプが必要です\n
+
+# datafile.c: 2968
 NO COCKTAIL        : %3d  %3d\n
 カクテル未サポート : %3d  %3d\n
 
-# datafile.c: 2972
+# datafile.c: 2970
 NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 正常なダンプが不明 : %3d  %3d\n(%3d ROM、全%dゲーム)\n
 
-# romcmp.c: 496 
+# audit.c: 283
+NO GOOD DUMP KNOWN\n
+正常なダンプは不明です\n
+
+# romcmp.c: 503 
 NO MATCH\n
 マッチしません\n
 
-# datafile.c: 2966
+# datafile.c: 2964
 NO SOUND           : %3d  %3d\n
 サウンド無し       : %3d  %3d\n
 
-# datafile.c: 2956
+# datafile.c: 2954
 NON-WORKING        : %3d  %3d\n
 動作不可           : %3d  %3d\n
 
-# cheat.c: 3141, 3158, 5144 uitext.c: 189
+# audit.c: 323
+NOT FOUND (BIOS)\n
+見つかりません (BIOS)\n
+
+# audit.c: 319
+NOT FOUND (shared with parent)\n
+見つかりません (親と共有)\n
+
+# audit.c: 309
+NOT FOUND - NO GOOD DUMP KNOWN\n
+見つかりません (正常なダンプは不明です)\n
+
+# audit.c: 314
+NOT FOUND BUT OPTIONAL\n
+見つかりませんがオプションです\n
+
+# audit.c: 305
+NOT FOUND\n
+見つかりません\n
+
+# cheat.c: 3148, 3165, 5151 uitext.c: 189
 Name
 名前
 
-# cheat.c: 1055
+# cheat.c: 1058
 Near To
 近い
 
@@ -2242,23 +2178,23 @@ No
 No previous values saved
 前回の値が保存されていません
 
-# cheat.c: 1110, 2917 inptport.c: 450 sound/custom.c: 77 uimenu.c: 2047 
+# cheat.c: 1113, 2924 inptport.c: 450 sound/custom.c: 77 uimenu.c: 2047 
 None
 なし
 
-# cheat.c: 2925, 2940 drivers/metro.c: 2775 inptport.c: 417
+# cheat.c: 2932, 2947 drivers/metro.c: 2775 inptport.c: 417
 Normal
 標準
 
-# cheat.c: 2875
+# cheat.c: 2882
 Normal/Delay
 標準/ディレイ
 
-# cheat.c: 1053, 4683, 4689
+# cheat.c: 1056, 4690, 4696
 Not Equal
 異なる
 
-# cheat.c: 2900
+# cheat.c: 2907
 Null
 なし
 
@@ -2269,10 +2205,6 @@ Number of bytes
 # uitext.c: 40
 OK
 OK
-
-# romload.c: 249
-OPTIONAL %-12s NOT FOUND\n
-オプションの%-12s 見つかりません\n
 
 # inptport.c: 343 uitext.c: 38, 249
 Off
@@ -2286,7 +2218,7 @@ ON
 On Screen Display
 オンスクリーンディスプレイ
 
-# cheat.c: 3252 sound/discrete.h: 3299
+# cheat.c: 3259 sound/discrete.h: 3299
 One Shot
 一回のみ
 
@@ -2298,7 +2230,7 @@ One match found - added to list
 One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.
 このゲーム用のROMまたはCHDが正しくありません。このゲームは正しく実行できないかも知れません。
 
-# cheat.c: 3383
+# cheat.c: 3390
 Operation
 操作
 
@@ -2306,7 +2238,7 @@ Operation
 Options
 オプション
 
-# drivers/findout.c: 292 
+# drivers/findout.c: 309 
 Orientation
 画面の向き
 
@@ -2317,10 +2249,6 @@ Other Controls
 # uitext.c: 30
 Otherwise, type OK or move the joystick left then right to continue
 そうでなければ、続けるためにOKとタイプするか、ジョイスティックを左、右と入力して下さい
-
-# audit.c: 467
-Out of memory reading ROM %s\n
-ROMを読み込み中にメモリ不足になりました %s\n
 
 # uitext.c: 59
 Overclock
@@ -3662,7 +3590,7 @@ Paddle V 8
 Pause
 一時停止
 
-# drivers/cardline.c: 161 drivers/cherrym.c: 200 drivers/csk.c: 283, 368, 443, 513 drivers/ddenlovr.c: 4020, 4571 drivers/findout.c: 379 drivers/funworld.c: 482, 516, 540, 574 drivers/neogeo.c: 1254 drivers/pmpoker.c: 488, 588, 688 drivers/rcasino.c: 215 drivers/royalmah.c: 742, 940, 1115, 1290, 1637 drivers/vroulet.c: 146
+# drivers/cardline.c: 161 drivers/cherrym.c: 200 drivers/csk.c: 283, 368, 443, 513 drivers/ddenlovr.c: 4020, 4571 drivers/findout.c: 422 drivers/funworld.c: 482, 516, 540, 574 drivers/getrivia.c: 276 drivers/neogeo.c: 1254 drivers/pmpoker.c: 488, 588, 688 drivers/rcasino.c: 215 drivers/royalmah.c: 742, 940, 1115, 1290, 1637 drivers/vroulet.c: 146
 Payout
 払い出し
 
@@ -3674,7 +3602,7 @@ Pedal
 Pixel Aspect (%d:%d)
 アスペクト比 (%d:%d)
 
-# drivers/astrocde.c: 298 drivers/bottom9.c: 235 drivers/deniam.c: 274 drivers/destroyr.c: 209 drivers/firetrk.c: 592, 660, 743 drivers/galpanic.c: 845 drivers/skyraid.c: 143 drivers/snk.c: 4039, 4180 drivers/sprint2.c: 334, 406 drivers/sprint4.c: 324 drivers/sprint8.c: 330, 465 drivers/sspeedr.c: 162 drivers/starshp1.c: 282 drivers/suprslam.c: 262 drivers/tank8.c: 274 drivers/triplhnt.c: 161 drivers/wolfpack.c: 224 
+# drivers/astrocde.c: 298 drivers/bottom9.c: 235 drivers/deniam.c: 274 drivers/destroyr.c: 209 drivers/firetrk.c: 592, 660, 743 drivers/galpanic.c: 845 drivers/skyraid.c: 143 drivers/snk.c: 4039, 4180 drivers/sprint2.c: 334, 406 drivers/sprint4.c: 324 drivers/sprint8.c: 330, 465 drivers/sspeedr.c: 164 drivers/starshp1.c: 282 drivers/suprslam.c: 262 drivers/tank8.c: 274 drivers/triplhnt.c: 161 drivers/wolfpack.c: 224 
 Play Time
 プレイ時間
 
@@ -3722,7 +3650,7 @@ Players
 Pon
 ポン
 
-# cheat.c: 3586
+# cheat.c: 3593
 Prefill
 事前に埋める
 
@@ -3734,7 +3662,7 @@ Press Any Key
 Press Select Key/Button
 決定キー/ボタンを押してください
 
-# cheat.c: 1041
+# cheat.c: 1044
 Previous Data
 前回のデータ
 
@@ -3746,31 +3674,31 @@ Previous Game
 Previous values already restored
 前回の値は既に復帰済みです
 
-# ui.c: 1964
+# ui.c: 2006
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 このゲームを終了しますか？\n\n終了する場合は決定キー/ボタンを、\n続ける場合はキャンセルキー/ボタンを押して下さい。
 
-# ui.c: 1801
+# ui.c: 1843
 REC START
 録画開始
 
-# ui.c: 1806
+# ui.c: 1848
 REC STOP
 録画停止
 
-# cheat.c: 5114
+# cheat.c: 5121
 RHS
 RHS
 
-# datafile.c: 2974
+# datafile.c: 2972
 ROM NEEDS REDUMP   : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 再ダンプが必要     : %3d  %3d\n(%3d ROM、全%dゲーム)\n
 
-# cheat.c: 3494
+# cheat.c: 3501
 Range Maximum
 範囲最大
 
-# cheat.c: 3472
+# cheat.c: 3479
 Range Minimum
 範囲最小
 
@@ -3790,7 +3718,7 @@ Red
 Refresh rate
 リフレッシュレート
 
-# cheat.c: 2941, 3661 drivers/pgm.c: 815, 826 inptport.c: 398
+# cheat.c: 2948, 3668 drivers/pgm.c: 913, 924 inptport.c: 398
 Region
 領域
 
@@ -3798,7 +3726,7 @@ Region
 Relative
 相対
 
-# cheat.c: 2944
+# cheat.c: 2951
 Relative Address
 相対アドレス
 
@@ -3826,7 +3754,7 @@ Restoration successful
 Restore Previous Results
 前回の結果に戻す
 
-# cheat.c: 3263
+# cheat.c: 3270
 Restore Previous Value
 前回の値に戻す
 
@@ -3878,7 +3806,7 @@ Rotate View
 Rotation
 回転
 
-# datafile.c: 3157
+# datafile.c: 3155
 SHADOWS        : %3d  + %3d\n
 影使用         : %3d  + %3d\n
 
@@ -3886,7 +3814,7 @@ SHADOWS        : %3d  + %3d\n
 Same
 同じ
 
-# sound/samples.c: 552 
+# sound/samples.c: 566 
 Samples
 サンプル
 
@@ -3894,7 +3822,7 @@ Samples
 Save Cheat
 チート保存
 
-# cheat.c: 5159
+# cheat.c: 5166
 Save Memory
 メモリに保存
 
@@ -3906,15 +3834,15 @@ Save Snapshot
 Save State
 プレイ状態の保存
 
-# ui.c: 1917
+# ui.c: 1959
 Save cancelled
 保存を中止しました
 
-# ui.c: 1945
+# ui.c: 1987
 Save to position %c
 %c に保存しました
 
-# drivers/findout.c: 262, 322 drivers/turbo.c: 897 
+# drivers/findout.c: 279, 339 drivers/turbo.c: 897 
 Screen
 画面
 
@@ -3922,7 +3850,7 @@ Screen
 Screen #
 画面 #
 
-# ui.c: 2217, 2234, 2251, 2267, 2284, 2301, 2318, 2335
+# ui.c: 2259, 2276, 2293, 2309, 2326, 2343, 2360, 2377
 Screen %d %s %.3f
 画面%d %s %.3f
 
@@ -3942,15 +3870,15 @@ Screen Resolution
 Screen flipping in cocktail mode is not supported.
 カクテルモードの画面反転に対応していません。
 
-# datafile.c: 2225
+# datafile.c: 2223
 Screen flipping in cocktail mode is not supported.\n
 カクテルモードの画面反転に対応していません。\n
 
-# cheat.c: 6993
+# cheat.c: 7000
 Search Dialog Style
 検索ダイアログ形式
 
-# cheat.c: 6644
+# cheat.c: 6651
 Search Speed
 検索速度
 
@@ -3962,7 +3890,7 @@ Search not initialized
 Second Bonus
 ボーナス2回目
 
-# cheat.c: 2880, 2954 drivers/bfm_sc2.c: 2138, 2249, 2363 drivers/bwidow.c: 640 drivers/maxaflex.c: 275 drivers/megaplay.c: 73 drivers/megatech.c: 112 drivers/mpu4.c: 2115 drivers/nbmj8688.c: 2758 drivers/trackfld.c: 665
+# cheat.c: 2887, 2961 drivers/bfm_sc2.c: 2138, 2249, 2363 drivers/bwidow.c: 640 drivers/maxaflex.c: 275 drivers/megaplay.c: 73 drivers/megatech.c: 112 drivers/mpu4.c: 2049 drivers/nbmj8688.c: 2758 drivers/trackfld.c: 665
 Select
 選択
 
@@ -3970,15 +3898,15 @@ Select
 Select Memory Areas
 メモリ領域を選択
 
-# cheat.c: 927
+# cheat.c: 930
 Select Score PL1
 スコア選択 PL1
 
-# cheat.c: 928
+# cheat.c: 931
 Select Score PL2
 スコア選択 PL2
 
-# cheat.c: 6985
+# cheat.c: 6992
 Select Search
 検索領域を選択
 
@@ -3986,19 +3914,19 @@ Select Search
 Select a value
 値の選択
 
-# cheat.c: 917
+# cheat.c: 920
 Select current level
 現在のレベルを選択
 
-# cheat.c: 916
+# cheat.c: 919
 Select next level
 次のレベルを選択
 
-# ui.c: 1910
+# ui.c: 1952
 Select position to load from
 読み込むファイル(0-9,A-Z)を押してください
 
-# ui.c: 1908
+# ui.c: 1950
 Select position to save to
 保存するファイル(0-9,A-Z)を押してください
 
@@ -4006,7 +3934,7 @@ Select position to save to
 Sensitivity
 感度
 
-# drivers/djmain.c: 499 drivers/pgm.c: 771 drivers/wallc.c: 190 inptport.c: 833
+# drivers/djmain.c: 499 drivers/pgm.c: 869 drivers/wallc.c: 190 inptport.c: 833
 Service
 サービス
 
@@ -4034,15 +3962,15 @@ Service Mode
 Service Mode/Free Play
 サービスモード/フリープレイ
 
-# cheat.c: 2911 drivers/arcadia.c: 229 drivers/trackfld.c: 655 uitext.c: 194
+# cheat.c: 2918 drivers/arcadia.c: 229 drivers/trackfld.c: 655 uitext.c: 194
 Set
 セット
 
-# cheat.c: 3506
+# cheat.c: 3513
 Set/Clear
 セット/クリア
 
-# cheat.c: 2896
+# cheat.c: 2903
 Set/Clear Bits
 ビットのセット/クリア
 
@@ -4094,15 +4022,15 @@ Show Overlays
 Show Profiler
 プロファイラ表\示
 
-# cheat.c: 6997
+# cheat.c: 7004
 Show Search Labels
 検索ラベルの表\示
 
-# cheat.c: 5135
+# cheat.c: 5142
 Signed
 符号あり
 
-# layout/buckrog.lay: 9 layout/sspeedr.lay: 100 layout/subroc3d.lay: 9 layout/turbo.lay: 60
+# layout/buckrog.lay: 9 layout/sspeedr.lay: 70 layout/subroc3d.lay: 9 layout/turbo.lay: 60
 Simple LEDs
 シンプルなLED
 
@@ -4110,15 +4038,15 @@ Simple LEDs
 Single
 シングル
 
-# cheat.c: 5127
+# cheat.c: 5134
 Size
 サイズ
 
-# cheat.c: 6202
+# cheat.c: 6209
 Skip Bytes
 読み飛ばすバイト数
 
-# cheat.c: 6613 drivers/4enraya.c: 118 drivers/8080bw.c: 809, 901 drivers/amidar.c: 185 drivers/angelkds.c: 478 drivers/bestleag.c: 277 drivers/bigstrkb.c: 158 drivers/brkthru.c: 232, 235, 277, 280 drivers/btime.c: 792 drivers/cninja.c: 725 drivers/cps1.c: 1086, 1357 drivers/deniam.c: 275 drivers/epos.c: 150, 153, 159 drivers/fuukifg3.c: 344 drivers/gameplan.c: 398, 849 drivers/jcross.c: 187 drivers/m62.c: 616, 666, 717, 768, 820, 872, 926, 1025, 1078 drivers/mcr.c: 1134 drivers/megaplay.c: 222 drivers/metro.c: 3234 drivers/nmg5.c: 238 drivers/nmk16.c: 2737 drivers/phoenix.c: 321 drivers/portrait.c: 200 drivers/quizdna.c: 151, 239, 341 drivers/rohga.c: 443, 511 drivers/safarir.c: 188 drivers/segas16a.c: 1290 drivers/segas16b.c: 2506 drivers/sf.c: 332, 510, 648 drivers/shisen.c: 140 drivers/sidepckt.c: 229 drivers/solomon.c: 153 drivers/suprridr.c: 249 drivers/system1.c: 1955 drivers/system16.c: 1794 drivers/taito_z.c: 2382, 2451 drivers/tecmo16.c: 209 drivers/thepit.c: 275, 330, 371 drivers/trackfld.c: 598 drivers/vigilant.c: 239 drivers/vsnes.c: 1070, 1781 drivers/wallc.c: 186 drivers/wilytowr.c: 461 drivers/xain.c: 397 drivers/yamato.c: 380 drivers/zac2650.c: 72, 122 uitext.c: 220
+# cheat.c: 6620 drivers/4enraya.c: 118 drivers/8080bw.c: 858, 950 drivers/amidar.c: 185 drivers/angelkds.c: 478 drivers/bestleag.c: 277 drivers/bigstrkb.c: 158 drivers/brkthru.c: 232, 235, 277, 280 drivers/btime.c: 792 drivers/cninja.c: 725 drivers/cps1.c: 1278, 1582 drivers/deniam.c: 275 drivers/epos.c: 150, 153, 159 drivers/fuukifg3.c: 344 drivers/gameplan.c: 398, 849 drivers/jcross.c: 187 drivers/m62.c: 618, 668, 719, 770, 822, 874, 928, 1027, 1080 drivers/mcr.c: 1134 drivers/megaplay.c: 222 drivers/metro.c: 3234 drivers/nmg5.c: 238 drivers/nmk16.c: 2737 drivers/phoenix.c: 321 drivers/portrait.c: 200 drivers/quizdna.c: 151, 239, 341 drivers/rohga.c: 443, 511 drivers/safarir.c: 188 drivers/segas16a.c: 1290 drivers/segas16b.c: 2506 drivers/sf.c: 332, 510, 648 drivers/shisen.c: 140 drivers/sidepckt.c: 229 drivers/solomon.c: 153 drivers/suprridr.c: 249 drivers/system1.c: 1955 drivers/system16.c: 1794 drivers/taito_z.c: 2382, 2451 drivers/tecmo16.c: 209 drivers/thepit.c: 275, 330, 371 drivers/trackfld.c: 598 drivers/vigilant.c: 239 drivers/vsnes.c: 1070, 1781 drivers/wallc.c: 186 drivers/wilytowr.c: 461 drivers/xain.c: 397 drivers/yamato.c: 380 drivers/zac2650.c: 72, 122 uitext.c: 220
 Slow
 遅い
 
@@ -4138,7 +4066,7 @@ Sound
 Spanish
 スペイン語
 
-# drivers/getrivia.c: 244 drivers/lvcards.c: 383
+# drivers/getrivia.c: 289 drivers/lvcards.c: 383
 Stand
 そのまま
 
@@ -4158,15 +4086,15 @@ Start a New Cheat Search
 State
 ステート
 
-# mame.c: 1520
+# mame.c: 1548
 State successfully loaded.
 ステートを正常に読み込みました。
 
-# mame.c: 1443
+# mame.c: 1470
 State successfully saved.
 ステートを正常に保存しました。
 
-# mame.c: 1441
+# mame.c: 1468
 State successfully saved.\nWarning: Save states are not officially supported for this game.
 ステートを正常に保存しました。\n警告: このゲームはステートセーブを公式にサポートしていません。
 
@@ -4186,7 +4114,7 @@ Status (bits or flags)
 Stereo
 ステレオ
 
-# drivers/bmcbowl.c: 371 drivers/holeland.c: 145, 213 drivers/pgm.c: 802, 899, 989, 1081, 1177, 1268 drivers/popper.c: 277 drivers/toaplan2.c: 2078 drivers/turbo.c: 895
+# drivers/bmcbowl.c: 371 drivers/holeland.c: 145, 213 drivers/pgm.c: 900, 997, 1087, 1179, 1275, 1366 drivers/popper.c: 277 drivers/toaplan2.c: 2077 drivers/turbo.c: 895
 Stop
 停止
 
@@ -4194,15 +4122,15 @@ Stop
 Story not available
 ストーリーが見つかりません
 
-# cheat.c: 1112
+# cheat.c: 1115
 String
 文字列
 
-# cheat.c: 2906
+# cheat.c: 2913
 Subtract
 減算
 
-# cheat.c: 2926, 5131
+# cheat.c: 2933, 5138
 Swap
 交換
 
@@ -4210,11 +4138,11 @@ Swap
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.
 ※このゲームは全く動作しません。現状では正常に動作させる事は不可能\です。
 
-# datafile.c: 2204
+# datafile.c: 2202
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n
 ※このゲームは全く動作しません。現状では正常に動作させる事は不可能\です。\n
 
-# drivers/aerofgt.c: 1025, 1115 drivers/cave.c: 1679 drivers/f1gp.c: 313 drivers/midzeus.c: 1215 drivers/pgm.c: 915, 1005, 1096, 1192, 1385 drivers/psikyo.c: 649, 769, 1007, 1211 drivers/toaplan1.c: 1189, 1264, 1334, 1409, 1498 drivers/toaplan2.c: 2094, 2140, 2206, 2272, 2320, 2363, 2473, 2535, 2597, 2666, 2710, 2763
+# drivers/aerofgt.c: 1025, 1115 drivers/cave.c: 1679 drivers/f1gp.c: 313 drivers/midzeus.c: 1215 drivers/pgm.c: 1013, 1103, 1194, 1290, 1483 drivers/psikyo.c: 649, 769, 1007, 1211 drivers/toaplan1.c: 1189, 1264, 1334, 1409, 1498 drivers/toaplan2.c: 2093, 2139, 2205, 2271, 2319, 2362, 2472, 2534, 2596, 2665, 2709, 2762
 Taiwan
 台湾
 
@@ -4222,7 +4150,7 @@ Taiwan
 Take
 取得
 
-# drivers/neogeo.c: 991, 1035, 1091, 1168, 1217 drivers/toaplan1.c: 594, 663, 732, 1118, 1183, 1258, 1328, 1403, 1492 drivers/toaplan2.c: 2085, 2128, 2192, 2249, 2265, 2313, 2355, 2389, 2460, 2520, 2582, 2659, 2702, 2755, 2883, 2896, 2908 inptport.c: 1960
+# drivers/neogeo.c: 991, 1035, 1091, 1168, 1217 drivers/toaplan1.c: 594, 663, 732, 1118, 1183, 1258, 1328, 1403, 1492 drivers/toaplan2.c: 2084, 2127, 2191, 2248, 2264, 2312, 2354, 2388, 2459, 2519, 2581, 2658, 2701, 2754, 2882, 2895, 2907 inptport.c: 1960
 Territory
 地域
 
@@ -4230,7 +4158,7 @@ Territory
 Test
 テスト
 
-# drivers/8080bw.c: 1421, 2095, 2635, 2715 drivers/aleck64.c: 264 drivers/btime.c: 772 drivers/coinmstr.c: 267 drivers/ddenlovr.c: 3132 drivers/ertictac.c: 228 drivers/galpani3.c: 146 drivers/halleys.c: 1705 drivers/homedata.c: 957 drivers/hornet.c: 830 drivers/jchan.c: 730 drivers/laserbas.c: 117 drivers/macs.c: 256 drivers/megasys1.c: 1139, 1298 drivers/nwk-tr.c: 572 drivers/nycaptor.c: 612 drivers/ohmygod.c: 192 drivers/panicr.c: 245 drivers/quasar.c: 318 drivers/raiden2.c: 980, 1059, 1108 drivers/segas16a.c: 1469 drivers/segas16b.c: 2761 drivers/seicross.c: 188 drivers/snk.c: 3753, 3818 drivers/ssfindo.c: 555 drivers/st0016.c: 369, 458 drivers/suprnova.c: 622 drivers/system1.c: 2030, 2219 drivers/vegas.c: 2072
+# drivers/8080bw.c: 1491, 2165, 2705, 2785 drivers/aleck64.c: 264 drivers/btime.c: 772 drivers/coinmstr.c: 267 drivers/ddenlovr.c: 3132 drivers/ertictac.c: 228 drivers/galpani3.c: 146 drivers/halleys.c: 1705 drivers/homedata.c: 957 drivers/hornet.c: 830 drivers/jchan.c: 730 drivers/laserbas.c: 117 drivers/macs.c: 256 drivers/megasys1.c: 1139, 1298 drivers/nwk-tr.c: 572 drivers/nycaptor.c: 612 drivers/ohmygod.c: 192 drivers/panicr.c: 245 drivers/quasar.c: 318 drivers/raiden2.c: 980, 1059, 1108 drivers/segas16a.c: 1469 drivers/segas16b.c: 2761 drivers/seicross.c: 188 drivers/snk.c: 3753, 3818 drivers/ssfindo.c: 555 drivers/st0016.c: 369, 458 drivers/suprnova.c: 622 drivers/system1.c: 2030, 2219 drivers/vegas.c: 2072
 Test Mode
 テストモード
 
@@ -4242,7 +4170,7 @@ Test Switch
 Text
 テキスト
 
-# cheat.c: 6176
+# cheat.c: 6183
 Text Label
 テキストラベル
 
@@ -4250,7 +4178,7 @@ Text Label
 The colors are completely wrong.
 色が再現されません。
 
-# datafile.c: 2213
+# datafile.c: 2211
 The colors are completely wrong.\n
 色が再現されません。\n
 
@@ -4258,19 +4186,15 @@ The colors are completely wrong.\n
 The colors aren't 100% accurate.
 色の再現が不完全です。
 
-# datafile.c: 2216
+# datafile.c: 2214
 The colors aren't 100% accurate.\n
 色の再現が不完全です。\n
-
-# unzip.c: 24
-The format of this zipfile is not supported, please recompress it
-この形式のzipファイルには対応していません。再圧縮してください
 
 # uitext.c: 98
 The game has protection which isn't fully emulated.
 このゲームはプロテクトのためエミュレーションが不完全です。
 
-# datafile.c: 2207
+# datafile.c: 2205
 The game has protection which isn't fully emulated.\n
 このゲームはプロテクトのためエミュレーションが不完全です。\n
 
@@ -4278,7 +4202,7 @@ The game has protection which isn't fully emulated.\n
 The game lacks sound.
 サウンドが再生されません。
 
-# datafile.c: 2219
+# datafile.c: 2217
 The game lacks sound.\n
 サウンドが再生されません。\n
 
@@ -4286,7 +4210,7 @@ The game lacks sound.\n
 The sound emulation isn't 100% accurate.
 サウンドエミュレーションが不完全です。
 
-# datafile.c: 2222
+# datafile.c: 2220
 The sound emulation isn't 100% accurate.\n
 サウンドエミュレーションが不完全です。\n
 
@@ -4294,13 +4218,9 @@ The sound emulation isn't 100% accurate.\n
 The video emulation isn't 100% accurate.
 ビデオエミュレーションが不完全です。
 
-# datafile.c: 2210
+# datafile.c: 2208
 The video emulation isn't 100% accurate.\n
 ビデオエミュレーションが不完全です。\n
-
-# unzip.c: 22
-The zipfile seems to be corrupt, please check it
-このzipファイルは破損しているようです。チェックしてください
 
 # uitext.c: 90
 There are known problems with this game:
@@ -4326,11 +4246,11 @@ Tickets dispensed
 Tilt
 ティルト
 
-# drivers/8080bw.c: 1422, 1478, 1501, 1561, 1611, 2053, 2091, 2329, 2385, 2612, 2701 drivers/amspdwy.c: 181 drivers/cinemat.c: 361, 520 drivers/cps1.c: 3760, 3873 drivers/drtomy.c: 212 drivers/fitfight.c: 315, 453, 595 drivers/gomoku.c: 116 drivers/homedata.c: 873, 954 drivers/lazercmd.c: 554 drivers/m107.c: 275 drivers/m92.c: 958 drivers/megaplay.c: 244 drivers/megasys1.c: 1409, 2212 drivers/metlclsh.c: 225 drivers/metro.c: 2680, 2774 drivers/nbmj8688.c: 2166, 2240 drivers/pacman.c: 2143, 2244 drivers/paradise.c: 148, 216 drivers/pcktgal.c: 159 drivers/pktgaldx.c: 251 drivers/pokechmp.c: 203 drivers/punchout.c: 518, 589 drivers/realbrk.c: 279 drivers/segas16b.c: 2123 drivers/segaxbd.c: 797, 839, 931, 1012 drivers/snowbros.c: 1119, 1198 drivers/starfire.c: 218, 267 drivers/supbtime.c: 295 drivers/system1.c: 963, 1125, 1177 drivers/system16.c: 1033 drivers/taito_f2.c: 3299, 3396 drivers/taito_l.c: 1295, 1822, 1978, 1978 drivers/taitosj.c: 917, 1002, 1444 drivers/tattack.c: 100 drivers/troangel.c: 73 drivers/tubep.c: 613 drivers/tumbleb.c: 1247, 1377 drivers/vicdual.c: 280 drivers/vsnes.c: 860, 1380 drivers/wwfsstar.c: 288 drivers/zac2650.c: 171
+# drivers/8080bw.c: 1492, 1548, 1571, 1631, 1681, 2123, 2161, 2399, 2455, 2682, 2771 drivers/amspdwy.c: 181 drivers/cinemat.c: 361, 520 drivers/cps1.c: 4003, 4116 drivers/dkong.c: 1030 drivers/drtomy.c: 212 drivers/fitfight.c: 315, 453, 595 drivers/gomoku.c: 116 drivers/homedata.c: 873, 954 drivers/lazercmd.c: 534 drivers/m107.c: 275 drivers/m92.c: 958 drivers/megaplay.c: 244 drivers/megasys1.c: 1409, 2212 drivers/metlclsh.c: 225 drivers/metro.c: 2680, 2774 drivers/nbmj8688.c: 2166, 2240 drivers/pacman.c: 2143, 2244 drivers/paradise.c: 148, 216 drivers/pcktgal.c: 159 drivers/pktgaldx.c: 251 drivers/pokechmp.c: 203 drivers/punchout.c: 518, 589 drivers/realbrk.c: 279 drivers/segas16b.c: 2123 drivers/segaxbd.c: 797, 839, 931, 1012 drivers/snowbros.c: 1119, 1198 drivers/starfire.c: 218, 267 drivers/supbtime.c: 295 drivers/system1.c: 963, 1125, 1177 drivers/system16.c: 1033 drivers/taito_f2.c: 3299, 3396 drivers/taito_l.c: 1295, 1822, 1978, 1978 drivers/taitosj.c: 917, 1002, 1444 drivers/tattack.c: 100 drivers/troangel.c: 73 drivers/tubep.c: 613 drivers/tumbleb.c: 1247, 1377 drivers/vicdual.c: 280 drivers/vsnes.c: 860, 1380 drivers/wwfsstar.c: 288 drivers/zac2650.c: 171
 Time
 時間
 
-# drivers/chinagat.c: 438 drivers/ddragon.c: 791 drivers/fuukifg3.c: 343 drivers/jollyjgr.c: 176 drivers/m62.c: 716, 767, 819, 871 drivers/megaplay.c: 192 drivers/metro.c: 2774 drivers/quizdna.c: 150, 238, 340 drivers/segas16a.c: 999 drivers/segas16b.c: 1901 drivers/shisen.c: 139 drivers/st0016.c: 386 drivers/system16.c: 645 drivers/taito_f2.c: 2018, 3210 drivers/toaplan2.c: 2980, 3096 drivers/vsnes.c: 1472, 1780
+# drivers/chinagat.c: 438 drivers/ddragon.c: 791 drivers/fuukifg3.c: 343 drivers/jollyjgr.c: 176 drivers/m62.c: 718, 769, 821, 873 drivers/megaplay.c: 192 drivers/metro.c: 2774 drivers/quizdna.c: 150, 238, 340 drivers/segas16a.c: 999 drivers/segas16b.c: 1901 drivers/shisen.c: 139 drivers/st0016.c: 386 drivers/system16.c: 645 drivers/taito_f2.c: 2018, 3210 drivers/toaplan2.c: 2979, 3095 drivers/vsnes.c: 1472, 1780
 Timer
 時間
 
@@ -4442,7 +4362,7 @@ Triple Side-by-Side
 Triple Side-by-Side (Gapless)
 3画面 横並び (繋ぎ目なし)
 
-# cheat.c: 3214 drivers/lastduel.c: 420 
+# cheat.c: 3221 drivers/lastduel.c: 420 
 Type
 種別
 
@@ -4518,11 +4438,11 @@ UI ズームイン
 UI Zoom Out
 UI ズームアウト
 
-# datafile.c: 2958
+# datafile.c: 2956
 UNEMULATED PROTEC. : %3d  %3d\n
 プロテクト未対応   : %3d  %3d\n
 
-# cheat.c: 8104 drivers/ms32.c: 434 drivers/segahang.c: 542, 558 drivers/segaorun.c: 582, 791 romload.c: 285 vidhrdw/v9938.c: 69
+# cheat.c: 8111 drivers/ms32.c: 434 drivers/segahang.c: 542, 558 drivers/segaorun.c: 582, 791 romload.c: 285 vidhrdw/v9938.c: 69
 UNKNOWN
 不明
 
@@ -4538,23 +4458,23 @@ USA
 Unable to extend malloc tracking array to %d slots
 %dスロットにmallocトラッキングを拡張する事が出来ません
 
-# mame.c: 1479
+# mame.c: 1507
 Unable to load due to pending anonymous timers. See error.log for details.
 何かのタイマーが保留中のためステートを読み込むことが出来ません。詳細はerror.logをご覧下さい。
 
-# mame.c: 1394
+# mame.c: 1421
 Unable to save due to pending anonymous timers. See error.log for details.
 何かのタイマーが保留中のためステートを保存する事が出来ません。詳細はerror.logをご覧下さい。
 
-# mame.c: 1254
+# mame.c: 1280
 Unable to start machine emulation
 マシンのエミュレーションを開始する事が出来ません
 
-# mame.c: 1256
+# mame.c: 1282
 Unable to start sound emulation
 サウンドエミュレーションを開始する事が出来ません
 
-# mame.c: 1258
+# mame.c: 1284
 Unable to start video emulation
 ビデオエミュレーションを開始する事が出来ません。
 
@@ -4570,115 +4490,115 @@ Unlimited
 Unused
 未使用
 
-# cheat.c: 2956
+# cheat.c: 2963
 Unused (10)
 未使用 (10)
 
-# cheat.c: 2956
+# cheat.c: 2963
 Unused (11)
 未使用 (11)
 
-# cheat.c: 2956
+# cheat.c: 2963
 Unused (12)
 未使用 (12)
 
-# cheat.c: 2957
+# cheat.c: 2964
 Unused (13)
 未使用 (13)
 
-# cheat.c: 2957
+# cheat.c: 2964
 Unused (14)
 未使用 (14)
 
-# cheat.c: 2957
+# cheat.c: 2964
 Unused (15)
 未使用 (15)
 
-# cheat.c: 2957
+# cheat.c: 2964
 Unused (16)
 未使用 (16)
 
-# cheat.c: 2957
+# cheat.c: 2964
 Unused (17)
 未使用 (17)
 
-# cheat.c: 2958
+# cheat.c: 2965
 Unused (18)
 未使用 (18)
 
-# cheat.c: 2958
+# cheat.c: 2965
 Unused (19)
 未使用 (19)
 
-# cheat.c: 2958
+# cheat.c: 2965
 Unused (20)
 未使用 (20)
 
-# cheat.c: 2958
+# cheat.c: 2965
 Unused (21)
 未使用 (21)
 
-# cheat.c: 2958
+# cheat.c: 2965
 Unused (22)
 未使用 (22)
 
-# cheat.c: 2959
+# cheat.c: 2966
 Unused (23)
 未使用 (23)
 
-# cheat.c: 2959
+# cheat.c: 2966
 Unused (24)
 未使用 (24)
 
-# cheat.c: 2959
+# cheat.c: 2966
 Unused (25)
 未使用 (25)
 
-# cheat.c: 2959
+# cheat.c: 2966
 Unused (26)
 未使用 (26)
 
-# cheat.c: 2959
+# cheat.c: 2966
 Unused (27)
 未使用 (27)
 
-# cheat.c: 2960
+# cheat.c: 2967
 Unused (28)
 未使用 (28)
 
-# cheat.c: 2960
+# cheat.c: 2967
 Unused (29)
 未使用 (29)
 
-# cheat.c: 2960
+# cheat.c: 2967
 Unused (30)
 未使用 (30)
 
-# cheat.c: 2960
+# cheat.c: 2967
 Unused (31)
 未使用 (31)
 
-# cheat.c: 2897, 2955
+# cheat.c: 2904, 2962
 Unused (4)
 未使用 (4)
 
-# cheat.c: 2898, 2945, 2955
+# cheat.c: 2905, 2952, 2962
 Unused (5)
 未使用 (5)
 
-# cheat.c: 2899, 2946, 2955
+# cheat.c: 2906, 2953, 2962
 Unused (6)
 未使用 (6)
 
-# cheat.c: 2947, 2955
+# cheat.c: 2954, 2962
 Unused (7)
 未使用 (7)
 
-# cheat.c: 2956
+# cheat.c: 2963
 Unused (8)
 未使用 (8)
 
-# cheat.c: 2956
+# cheat.c: 2963
 Unused (9)
 未使用 (9)
 
@@ -4702,11 +4622,11 @@ Usage of emulators in conjunction with ROMs you don't own is forbidden by copyri
 User Interface
 ユーザインターフェイス
 
-# cheat.c: 3538
+# cheat.c: 3545
 User Select
 ユーザの選択
 
-# layout/mpu4.lay: 841
+# layout/mpu4.lay: 840
 VFD Display Output Only
 VFDの出力のみ表\示
 
@@ -4714,7 +4634,7 @@ VFDの出力のみ表\示
 VFD Only (%d:%d)
 VFDのみ (%d:%d)
 
-# cheat.c: 1043, 5118 uitext.c: 45
+# cheat.c: 1046, 5125 uitext.c: 45
 Value
 値
 
@@ -4730,19 +4650,19 @@ Vector Game
 Version
 バージョン
 
-# ui.c: 2335
+# ui.c: 2377
 Vert position
 垂直位置
 
-# ui.c: 2301
+# ui.c: 2343
 Vert stretch
 垂直拡大
 
-# drivers/findout.c: 264, 294, 324 drivers/gameplan.c: 566, 711 drivers/jack.c: 685 drivers/thepit.c: 549 
+# drivers/findout.c: 281, 311, 341 drivers/gameplan.c: 566, 711 drivers/jack.c: 685 drivers/thepit.c: 549 
 Vertical
 垂直
 
-# drivers/afega.c: 310, 387, 467
+# drivers/afega.c: 311, 388, 468
 Vertically
 垂直
 
@@ -4762,7 +4682,7 @@ Very High
 Very Low
 ベリーロー
 
-# cheat.c: 6614 drivers/cps1.c: 1356 drivers/m62.c: 925 drivers/rohga.c: 510 uitext.c: 221
+# cheat.c: 6621 drivers/cps1.c: 1581 drivers/m62.c: 927 drivers/rohga.c: 510 uitext.c: 221
 Very Slow
 とても遅い
 
@@ -4774,7 +4694,7 @@ Video Options
 View Last Results
 最後の結果を表\示する
 
-# drivers/cps1.c: 3771 drivers/ms32.c: 736, 809, 874 drivers/pgm.c: 796, 893, 983, 1075, 1171, 1262 drivers/ssv.c: 1682, 1867 drivers/tetrisp2.c: 674, 736
+# drivers/cps1.c: 4014 drivers/ms32.c: 736, 809, 874 drivers/pgm.c: 894, 991, 1081, 1173, 1269, 1360 drivers/ssv.c: 1682, 1867 drivers/tetrisp2.c: 674, 736
 Voice
 音声
 
@@ -4790,55 +4710,55 @@ Volume Down
 Volume Up
 音量を上げる
 
-# romload.c: 412 
+# romload.c: 416 
 WARNING: the game might not run correctly.
 警告: ゲームは正しく実行できません。
 
-# datafile.c: 2962
+# datafile.c: 2960
 WRONG COLORS       : %3d  %3d\n
 色が違う           : %3d  %3d\n
 
-# cheat.c: 2876
+# cheat.c: 2883
 Wait
 ウエイト
 
-# options.c: 374
+# options.c: 375
 Warning: invalid line in INI: %s
 警告: INIファイルに不正な行があります: %s
 
-# options.c: 396
+# options.c: 397
 Warning: unknown option in INI: %s\n
 警告: INIファイルに不明なオプションがあります: %s
 
-# cheat.c: 2878 uitext.c: 205
+# cheat.c: 2885 uitext.c: 205
 Watch
 ウォッチ
 
-# cheat.c: 7713
+# cheat.c: 7720
 Watch %.8X (%d)
 ウォッチ %.8X (%d)
 
-# cheat.c: 3349
+# cheat.c: 3356
 Watch Add Value
 ウォッチに値を追加
 
-# cheat.c: 3360
+# cheat.c: 3367
 Watch Format
 ウォッチの形式
 
-# cheat.c: 3371
+# cheat.c: 3378
 Watch Label
 ウォッチのラベル
 
-# cheat.c: 3329
+# cheat.c: 3336
 Watch Per Line
 1行あたりのウォッチ
 
-# cheat.c: 3303
+# cheat.c: 3310
 Watch Size
 ウォッチサイズ
 
-# cheat.c: 3316
+# cheat.c: 3323
 Watch Skip
 ウォッチスキップ
 
@@ -4846,7 +4766,7 @@ Watch Skip
 Watch Value
 ウォッチの値表\示
 
-# cheat.c: 931
+# cheat.c: 934
 Watch me for good answer
 正解を表\示
 
@@ -4862,7 +4782,7 @@ Watchpoints
 World
 世界共通
 
-# cheat.c: 2893
+# cheat.c: 2900
 Write
 書き込む
 
@@ -4870,7 +4790,7 @@ Write
 X Position
 X座標
 
-# cheat.c: 6233 machine/scudsp.c: 882
+# cheat.c: 6240 machine/scudsp.c: 882
 XOR
 XOR値
 
@@ -4881,10 +4801,6 @@ Y座標
 # inptport.c: 346 
 Yes
 はい
-
-# unzip.c: 23
-Your filesystem seems to be corrupt, please check it
-ファイルシステムが破損しているようです。チェックしてください
 
 # drivers/harddriv.c: 750
 Zoom
@@ -4898,103 +4814,103 @@ Zoom = %d
 Zoom Auto
 ズーム 自動
 
-# datafile.c: 3090
+# datafile.c: 3088
 \n    SNDINTRF:  (1)  (2)  (3)  (4)\n\n
 \n        音源:  (1)  (2)  (3)  (4)\n\n
 
-# datafile.c: 3102
+# datafile.c: 3100
 \n    TOTAL: %4d\n
 \n     合計: %4d\n
 
-# datafile.c: 3073
+# datafile.c: 3071
 \n   TOTAL: %4d\n
 \n    合計: %4d\n
 
-# datafile.c: 2306, 2324
+# datafile.c: 2304, 2322
 \nORIGINAL:\n
 \n原作:\n
 
-# datafile.c: 2246
+# datafile.c: 2244
 \nROM REGION:\n
 \nROMリージョン:\n
 
-# datafile.c: 3017
+# datafile.c: 3015
 \nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d MB (UNCOMPRESSED)\n%d MB + %d MB MERGED\n
 \nROMファイル: %d\n%d + %d マージされたROM\n\nファイルサイズ: %d KB (非圧縮)\n%d KB + %d KB マージ\n
 
-# datafile.c: 2352
+# datafile.c: 2350
 \nSOURCE: %s\n
 \nソ\ースファイル: %s\n
 
-# datafile.c: 2161
+# datafile.c: 2159
 \nStory:\n
 \nストーリー:\n
 
-# datafile.c: 3188
+# datafile.c: 3186
 \nWARNING: FPS number too high!\n
 \n警告: FPSの値が大きすぎます！\n
 
-# datafile.c: 2941
+# datafile.c: 2939
 \n\n %4d GAMES (ALL)\n %4d ORIGINALS  + %4d CLNS\n %4d NEOGEO     + %4d\n
 \n\n %4d ゲーム (全て)\n %4d 原作       + %4d クローン\n %4d ネオジオ   + %4d\n
 
-# datafile.c: 3107
+# datafile.c: 3105
 \n\nCABINET INPUT CONTROL: (ALL)\n\n
 \n\n筐体入力パネル: (全て)\n\n
 
-# datafile.c: 2310, 2328
+# datafile.c: 2308, 2326
 \n\nCLONES:\n
 \n\nクローン:\n
 
-# datafile.c: 3047
+# datafile.c: 3045
 \n\nCPU HARDWARE (ORIGINAL GAMES)\n\n
 \n\nCPUハードウェア (原作)\n\n
 
-# datafile.c: 3164
+# datafile.c: 3162
 \n\nFRAMES PER SECOND (%d): (ALL)\n\n
 \n\n秒あたりのフレーム数 (%d): (全て)\n\n
 
-# datafile.c: 2955
+# datafile.c: 2953
 \n\nGAME INFO FLAGS   : ORIG CLNS\n\n
 \n\nゲーム情報フラグ   : 原作 クローン\n\n
 
-# datafile.c: 3287
+# datafile.c: 3285
 \n\nMAME VERSIONS (%3d)\n\n
 \n\nMAME バージョン (%3d)\n\n
 
-# datafile.c: 3248
+# datafile.c: 3246
 \n\nRESOLUTION & PALETTESIZE: (ALL)\n    (%d)          (%d)\n\n
 \n\n解像度 & パレット数: (全て)\n    (%d)          (%d)\n\n
 
-# datafile.c: 3019
+# datafile.c: 3017
 \n\nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d KB (UNCOMPRESSED)\n%d KB + %d KB MERGED\n
 \n\nROMファイル: %d\n%d + %d マージされたROM\n\nファイルサイズ: %d KB (非圧縮)\n%d KB + %d KB マージ\n
 
-# datafile.c: 3078
+# datafile.c: 3076
 \n\nSOUND SYSTEM (ORIGINAL GAMES)\n\n
 \n\nサウンド システム (原作)\n\n
 
-# datafile.c: 3025
+# datafile.c: 3023
 \n\nTYPICAL ROMSET SIZE (ALL)\n
 \n\n標準的なROMセットサイズ (全て)\n
 
-# datafile.c: 3277
+# datafile.c: 3275
 \n\nVERSION - DRIVERS - SUPPORT:\n\n
 \n\nバージョン ドライバ サポート:\n\n
 
-# datafile.c: 3152
+# datafile.c: 3150
 \n\nVIDEO NEEDS... : ORIG   CLNS\n\n
 \n\n表\示に必要     : 原作   クローン\n\n
 
-# datafile.c: 3037
+# datafile.c: 3035
 \n\nYEAR    NEW GAMES\n\n
 \n\n年      新しいゲーム\n\n
 
-# datafile.c: 2981
+# datafile.c: 2979
 \n\nYEAR: ORIG  CLNS NEOGEO  ALL\n\n
 \n\n年: 原作 クローン ネオジオ 全て\n\n
 
-# cheat.c: 6909
+# cheat.c: 6916
 \tPlease Go To\n\thttp://cheat.retrogames.com/faq.htm\n\tFor Documentation\n
 \tヘルプについては\n\thttp://cheat.retrogames.com/faq.htm\n\tこちらを参照ください\n
 
@@ -5006,11 +4922,11 @@ Zoom Auto
 \xbb
 \x10
 
-# mamecore.h: 200 
+# mamecore.h: 201 
 assert: %s:%d: %s
 アサート: %s:%d: %s
 
-# cheat.c: 2550
+# cheat.c: 2557
 cheat database not found
 チートデータが見つかりません
 
@@ -5026,7 +4942,7 @@ disabled
 enabled
 有効
 
-# rendfont.c: 1368
+# rendfont.c: 1369
 font\\fontname.fnt
 font\\sjis_gothic.fnt
 
@@ -5042,11 +4958,11 @@ lightgun
 n/a
 なし
 
-# cheat.c: 5720
+# cheat.c: 5727
 no results for this region
 この領域には検索結果がありません
 
-# cheat.c: 5722
+# cheat.c: 5729
 no results found
 検索結果がありません
 
@@ -5054,7 +4970,7 @@ no results found
 not
 not
 
-# cheat.c: 2486
+# cheat.c: 2493
 null name
 名前なし
 
@@ -5062,15 +4978,15 @@ null name
 or
 or
 
-# cheat.c: 7756, 7787
+# cheat.c: 7763, 7794
 out of memory while adding search
 サーチの追加でメモリ不足です
 
-# cheat.c: 7554, 7585
+# cheat.c: 7561, 7592
 out of memory while adding watch
 ウォッチの追加でメモリ不足です
 
-# cheat.c: 7322, 7353, 7452, 7476
+# cheat.c: 7329, 7360, 7459, 7483
 out of memory while loading cheat database
 チートデータの読み込みでメモリ不足です
 
@@ -5082,7 +4998,7 @@ paddle
 pedal
 ペダル
 
-# cheat.c: 5892, 6749
+# cheat.c: 5899, 6756
 region invalidated - %d results remain
 不正な領域 - %d個の結果が残っています
 
@@ -5090,11 +5006,11 @@ region invalidated - %d results remain
 s%d
 画面%d
 
-# cheat.c: 4996, 5389
+# cheat.c: 5003, 5396
 saved all memory regions
 全てのメモリ領域を保存しました
 
-# video.c: 1055
+# video.c: 1062
 scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
 スケールエフェクト「%s」は15ビットカラー、32ビットカラー共にサポートされていません。スケールエフェクトを無効にします。
 
@@ -5106,11 +5022,11 @@ sound
 stereo
 ステレオ
 
-# cheat.c: 2543
+# cheat.c: 2550
 there are no cheats for this game
 このゲームのチートはありません
 
-# cheat.c: 2014
+# cheat.c: 2021
 there are no old values
 前回の結果はありません
 
@@ -5118,11 +5034,11 @@ there are no old values
 trackball
 トラックボール
 
-# cheat.c: 2555
+# cheat.c: 2562
 unzip it and place it in the MAME directory
 MAMEと同じフォルダにチートデータを置いてください
 
-# cheat.c: 2010
+# cheat.c: 2017
 values restored
 前回の結果に戻しました
 

@@ -22,15 +22,15 @@
          none -- no axes on any joysticks are digital\n
 
 
-# windows/config.c: 841
+# windows/config.c: 844
         MAME -createconfig to create a mame.ini\n\n
 
 
-# windows/config.c: 840
+# windows/config.c: 843
         MAME -showconfig   for a list of configuration options\n
 
 
-# windows/config.c: 839
+# windows/config.c: 842
         MAME -showusage    for a brief list of options\n
 
 
@@ -46,15 +46,15 @@
  - digital
 
 
-# windows/fronthlp.c: 589
+# windows/fronthlp.c: 595
  BAD
 
 
-# windows/fronthlp.c: 595
+# windows/fronthlp.c: 601
  NO GOOD DUMP KNOWN
 
 
-# windows/fronthlp.c: 758, 870
+# windows/fronthlp.c: 768, 865
 %d %s found, %d were OK.\n
 
 
@@ -62,15 +62,19 @@
 %s Button %d
 
 
+# windows/video.c: 433
+%s%2d%4d%%%4d/%d fps
+
+
 # windows/fronthlp.c: 99
 (BAD) 
 
 
-# windows/config.c: 239, 240
+# windows/config.c: 240, 241
 (debugger-only command)
 
 
-# windows/config.c: 176, 184, 198, 204, 210, 216, 217, 352, 362, 374, 375, 376, 377, 378, 379, 380, 381, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455
+# windows/config.c: 175, 183, 189, 199, 205, 211, 217, 218, 353, 363, 375, 376, 377, 378, 379, 380, 381, 382, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455, 456
 (disabled by compiling option)
 
 
@@ -78,11 +82,11 @@
 (primary)
 
 
-# windows/config.c: 337
+# windows/config.c: 338
 ARTWORK OPTIONS
 
 
-# windows/config.c: 392
+# windows/config.c: 393
 AUTOMATIC DEVICE SELECTION OPTIONS
 
 
@@ -90,31 +94,31 @@ AUTOMATIC DEVICE SELECTION OPTIONS
 Average FPS: %f (%d frames)\n
 
 
-# windows/config.c: 137
+# windows/config.c: 136
 CONFIGURATION OPTIONS
 
 
-# windows/config.c: 404
+# windows/config.c: 405
 CORE LANGUAGE OPTIONS
 
 
-# windows/config.c: 409
+# windows/config.c: 410
 CORE PALETTE OPTIONS
 
 
-# windows/config.c: 125
+# windows/config.c: 124
 CRC-32s
 
 
-# windows/config.c: 231
+# windows/config.c: 232
 DEBUGGING OPTIONS
 
 
-# windows/config.c: 285
+# windows/config.c: 286
 DIRECT3D-SPECIFIC OPTIONS
 
 
-# windows/config.c: 281
+# windows/config.c: 282
 DIRECTDRAW-SPECIFIC OPTIONS
 
 
@@ -226,11 +230,11 @@ Direct3D: Error - Device does not support source alpha blending with source alph
 Direct3D: Error - Device does not support texture alpha\n
 
 
-# windows/d3d8intf.c: 101
+# windows/d3d8intf.c: 102
 Direct3D: Error attempting to initialize Direct3D8\n
 
 
-# windows/d3d9intf.c: 99
+# windows/d3d9intf.c: 100
 Direct3D: Error attempting to initialize Direct3D9\n
 
 
@@ -242,27 +246,27 @@ Direct3D: Mode selected = %4dx%4d@%3dHz\n
 Direct3D: Selecting video mode...\n
 
 
-# windows/d3d8intf.c: 83
+# windows/d3d8intf.c: 84
 Direct3D: Unable to access d3d8.dll\n
 
 
-# windows/d3d9intf.c: 81
+# windows/d3d9intf.c: 82
 Direct3D: Unable to access d3d9.dll\n
 
 
-# windows/d3d8intf.c: 91
+# windows/d3d8intf.c: 92
 Direct3D: Unable to find Direct3DCreate8\n
 
 
-# windows/d3d9intf.c: 89
+# windows/d3d9intf.c: 90
 Direct3D: Unable to find Direct3DCreate9\n
 
 
-# windows/d3d8intf.c: 114
+# windows/d3d8intf.c: 115
 Direct3D: Using Direct3D 8\n
 
 
-# windows/d3d9intf.c: 112
+# windows/d3d9intf.c: 113
 Direct3D: Using Direct3D 9\n
 
 
@@ -474,7 +478,7 @@ DirectInput: Using DirectInput %d\n
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 
 
-# windows/fronthlp.c: 903
+# windows/fronthlp.c: 908
 ERROR     %s\n
 
 
@@ -546,15 +550,15 @@ Error: Device does not meet minimum requirements for Direct3D rendering\n
 Error: unable to configure a screen texture format\n
 
 
-# windows/config.c: 317
+# windows/config.c: 318
 FULL SCREEN OPTIONS
 
 
-# windows/config.c: 1148
+# windows/config.c: 1167
 Failed to open file for playback
 
 
-# windows/config.c: 1182
+# windows/config.c: 1215
 Failed to open file for recording
 
 
@@ -562,31 +566,35 @@ Failed to open file for recording
 Fast Forward
 
 
-# windows/config.c: 842
+# windows/config.c: 845
 For usage instructions, please consult the file windows.txt\n
 
 
-# windows/fronthlp.c: 551, 623
+# windows/config.c: 326
+GAME SCREEN OPTIONS
+
+
+# windows/fronthlp.c: 557, 633
 Game \"%s\" not supported!\n
 
 
-# windows/config.c: 357
+# windows/config.c: 358
 INPUT DEVICE OPTIONS
 
 
-# windows/video.c: 989
+# windows/video.c: 991
 Illegal aspect ratio value for %s = %s\n
 
 
-# windows/video.c: 1012
+# windows/video.c: 1014
 Illegal resolution value for %s = %s\n
 
 
-# windows/config.c: 901, 1023, 1034, 1048
+# windows/config.c: 904, 1026, 1037, 1051
 Illegal value for %s = %s\n
 
 
-# windows/config.c: 1163
+# windows/config.c: 1180
 Input file is for game '%s', not for current game '%s'\n
 
 
@@ -638,7 +646,7 @@ Invalid %s value %s; reverting to all -- valid values are:\n
 Invalid %s value %s; reverting to keyboard\n
 
 
-# windows/video.c: 906
+# windows/video.c: 908
 Invalid video value %s; reverting to gdi\n
 
 
@@ -670,7 +678,7 @@ J%d %s R
 J%d %s U
 
 
-# windows/fronthlp.c: 904
+# windows/fronthlp.c: 909
 KNOWN     %s\n
 
 
@@ -686,7 +694,7 @@ Lightgun not supported in windowed mode
 Lightgun on Mouse %d 
 
 
-# windows/config.c: 835
+# windows/config.c: 838
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 
 
@@ -694,7 +702,7 @@ M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nico
 MAME: %s [%s] - Screen %d
 
 
-# windows/config.c: 192
+# windows/config.c: 193
 MISC OPTIONS
 
 
@@ -722,55 +730,47 @@ NO MATCH\n
 NOT A ROM\n
 
 
-# windows/fronthlp.c: 378
+# windows/fronthlp.c: 380
 Name:     Description:\n
 
 
-# windows/fronthlp.c: 491
+# windows/fronthlp.c: 493
 Name:    Clone of:\n
 
 
-# windows/config.c: 420
+# windows/config.c: 421
 OSD bar color (dark)
 
 
-# windows/config.c: 421
+# windows/config.c: 422
 OSD bar color (default)
 
 
-# windows/config.c: 419
+# windows/config.c: 420
 OSD bar color (light)
 
 
-# windows/config.c: 418
+# windows/config.c: 419
 OSD bar color (medium)
 
 
-# windows/fileio.c: 264
-Out of memory in variable expansion!
-
-
-# windows/fileio.c: 331
-Out of memory!
-
-
-# windows/fronthlp.c: 906
+# windows/fronthlp.c: 911
 PARTKNOWN %s\n
 
 
-# windows/config.c: 145
+# windows/config.c: 144
 PATH AND DIRECTORY OPTIONS
 
 
-# windows/config.c: 290
+# windows/config.c: 291
 PER-WINDOW VIDEO OPTIONS
 
 
-# windows/config.c: 244
+# windows/config.c: 245
 PERFORMANCE OPTIONS
 
 
-# windows/config.c: 1167
+# windows/config.c: 1186
 Playing back previously recorded game %s\n
 
 
@@ -778,7 +778,7 @@ Playing back previously recorded game %s\n
 Proposed video mode not supported on device %s\n
 
 
-# windows/config.c: 344
+# windows/config.c: 345
 SOUND OPTIONS
 
 
@@ -790,7 +790,7 @@ SSE supported\n
 SSE2 supported\n
 
 
-# windows/config.c: 222
+# windows/config.c: 223
 STATE/PLAYBACK OPTIONS
 
 
@@ -846,7 +846,7 @@ Stick%sZ-
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 
 
-# windows/fronthlp.c: 556
+# windows/fronthlp.c: 562
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
 
 
@@ -854,7 +854,7 @@ This is the list of the ROMs required for driver \"%s\".\nName            Size C
 Toggle fullscreen
 
 
-# windows/fronthlp.c: 905
+# windows/fronthlp.c: 910
 UNKNOWN   %s\n
 
 
@@ -862,7 +862,7 @@ UNKNOWN   %s\n
 Unable to close the keyboard device. (error %d)\n
 
 
-# windows/config.c: 794
+# windows/config.c: 797
 Unable to create file %s\n
 
 
@@ -878,7 +878,7 @@ Unable to initialize Direct3D.\n
 Unable to initialize DirectDraw.\n
 
 
-# windows/video.c: 957
+# windows/video.c: 959
 Unable to load PNG file '%s'\n
 
 
@@ -890,23 +890,27 @@ Unable to open the keyboard device. (error %d)\n
 Unknown texture blendmode=%d format=%d\n
 
 
-# windows/config.c: 838
+# windows/config.c: 841
 Usage:  MAME gamename [options]\n\n
 
 
-# windows/config.c: 734
+# windows/config.c: 737
 Usage: mame [game] [options]\n\nOptions:\n
 
 
-# windows/video.c: 850
+# windows/video.c: 852
 Using %s scale effect\n
 
 
-# windows/config.c: 331
+# windows/config.c: 332
 VECTOR RENDERING OPTIONS
 
 
-# windows/config.c: 271
+# windows/config.c: 256
+VIDEO OPTIONS
+
+
+# windows/config.c: 272
 VIDEO ROTATION OPTIONS
 
 
@@ -914,7 +918,7 @@ VIDEO ROTATION OPTIONS
 Video: Monitor %p = \"%s\" %s\n
 
 
-# windows/video.c: 902
+# windows/video.c: 904
 Warning: -video none doesn't make much sense without -frames_to_run\n
 
 
@@ -922,23 +926,31 @@ Warning: -video none doesn't make much sense without -frames_to_run\n
 Warning: Device may not perform well for Direct3D rendering\n
 
 
-# windows/fronthlp.c: 749, 861
+# windows/fronthlp.c: 759, 856
 \"%8s\" not found!\n
 
 
-# windows/fronthlp.c: 751, 863
+# windows/fronthlp.c: 761, 858
 \"%8s\" not supported!\n
 
 
-# windows/config.c: 619
+# windows/video.c: 444
+\n %d partial updates
+
+
+# windows/video.c: 442
+\n %d vector updates
+
+
+# windows/config.c: 621
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 
 
-# windows/config.c: 120
+# windows/config.c: 119
 all available info on driver in XML format
 
 
-# windows/config.c: 266
+# windows/config.c: 267
 amount to scale the screen brightness when paused
 
 
@@ -950,131 +962,135 @@ analog
 analog joystick
 
 
-# windows/config.c: 292
+# windows/config.c: 293
 aspect ratio for all screens; 'auto' here will try to make a best guess
 
 
-# windows/config.c: 297
+# windows/config.c: 298
 aspect ratio of the first screen; 'auto' here will try to make a best guess
 
 
-# windows/config.c: 312
+# windows/config.c: 313
 aspect ratio of the fourth screen; 'auto' here will try to make a best guess
 
 
-# windows/config.c: 302
+# windows/config.c: 303
 aspect ratio of the second screen; 'auto' here will try to make a best guess
 
 
-# windows/config.c: 307
+# windows/config.c: 308
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 
 
-# windows/config.c: 202
+# windows/config.c: 220, 292, 293, 294, 295, 297, 298, 299, 300, 302, 303, 304, 305, 307, 308, 309, 310, 312, 313, 314, 315, 406, 1045, 1135, 1143 windows/video.c: 435, 535, 984, 986, 1007, 1009 windows/window.c: 838, 838, 842
+auto
+
+
+# windows/config.c: 203
 automatic pause when playback is finished
 
 
-# windows/config.c: 275
+# windows/config.c: 276
 automatically rotate screen clockwise 90 degrees if vertical
 
 
-# windows/config.c: 276
+# windows/config.c: 277
 automatically rotate screen counterclockwise 90 degrees if vertical
 
 
-# windows/config.c: 320
+# windows/config.c: 321
 brightness value in full screen mode
 
 
-# windows/config.c: 428
+# windows/config.c: 429
 button color (aqua)
 
 
-# windows/config.c: 425
+# windows/config.c: 426
 button color (blue)
 
 
-# windows/config.c: 424
+# windows/config.c: 425
 button color (green)
 
 
-# windows/config.c: 431
+# windows/config.c: 432
 button color (lime)
 
 
-# windows/config.c: 430
+# windows/config.c: 431
 button color (navy)
 
 
-# windows/config.c: 427
+# windows/config.c: 428
 button color (pink)
 
 
-# windows/config.c: 426
+# windows/config.c: 427
 button color (purple)
 
 
-# windows/config.c: 422
+# windows/config.c: 423
 button color (red)
 
 
-# windows/config.c: 429
+# windows/config.c: 430
 button color (silver)
 
 
-# windows/config.c: 423
+# windows/config.c: 424
 button color (yellow)
 
 
-# windows/config.c: 208
+# windows/config.c: 209
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 
 
-# windows/config.c: 179
+# windows/config.c: 178
 cheat filename
 
 
-# windows/config.c: 130
+# windows/config.c: 129
 compare files with known MAME roms
 
 
-# windows/config.c: 131
+# windows/config.c: 130
 compare files with known MAME roms (brief)
 
 
-# windows/config.c: 260
+# windows/config.c: 261
 constrain to the proper aspect ratio
 
 
-# windows/config.c: 321
+# windows/config.c: 322
 contrast value in full screen mode
 
 
-# windows/config.c: 115
+# windows/config.c: 114
 create the default configuration file
 
 
-# windows/config.c: 338
+# windows/config.c: 339
 crop artwork to game screen size
 
 
-# windows/config.c: 432
+# windows/config.c: 433
 cursor color
 
 
-# windows/config.c: 326
+# windows/config.c: 327
 default game screen brightness correction
 
 
-# windows/config.c: 327
+# windows/config.c: 328
 default game screen contrast correction
 
 
-# windows/config.c: 328
+# windows/config.c: 329
 default game screen gamma correction
 
 
-# windows/config.c: 259
+# windows/config.c: 260
 default to maximized windows; otherwise, windows will be minimized
 
 
@@ -1082,275 +1098,287 @@ default to maximized windows; otherwise, windows will be minimized
 dial
 
 
-# windows/config.c: 390 windows/input.c: 1647, 1871
+# windows/config.c: 391 windows/input.c: 1647, 1871
 digital
 
 
-# windows/config.c: 174
+# windows/config.c: 173
 directory for ips files
 
 
-# windows/config.c: 178
+# windows/config.c: 177
 directory for localized data files
 
 
-# windows/config.c: 171
+# windows/config.c: 170
 directory for translation table data
 
 
-# windows/config.c: 159
+# windows/config.c: 158
 directory to save configurations
 
 
-# windows/config.c: 172
+# windows/config.c: 171
 directory to save debugger comments
 
 
-# windows/config.c: 169
+# windows/config.c: 168
 directory to save hard drive image difference files
 
 
-# windows/config.c: 164
+# windows/config.c: 163
 directory to save hiscores
 
 
-# windows/config.c: 162
+# windows/config.c: 161
 directory to save input device logs
 
 
-# windows/config.c: 161
+# windows/config.c: 160
 directory to save memory card contents
 
 
-# windows/config.c: 160
+# windows/config.c: 159
 directory to save nvram contents
 
 
-# windows/config.c: 168
+# windows/config.c: 167
 directory to save screenshots
 
 
-# windows/config.c: 166
+# windows/config.c: 165
 directory to save states
 
 
-# windows/config.c: 234
+# windows/config.c: 235
 display additional diagnostic information
 
 
-# windows/config.c: 116
+# windows/config.c: 115
 display running parameters
 
 
-# windows/config.c: 123
+# windows/config.c: 122
 driver sourcefile
 
 
-# windows/config.c: 396
+# windows/config.c: 397
 enable (keyboard|mouse|joystick) if a dial control is present
 
 
-# windows/config.c: 398
+# windows/config.c: 399
 enable (keyboard|mouse|joystick) if a lightgun control is present
 
 
-# windows/config.c: 400
+# windows/config.c: 401
 enable (keyboard|mouse|joystick) if a mouse control is present
 
 
-# windows/config.c: 393
+# windows/config.c: 394
 enable (keyboard|mouse|joystick) if a paddle control is present
 
 
-# windows/config.c: 395
+# windows/config.c: 396
 enable (keyboard|mouse|joystick) if a pedal control is present
 
 
-# windows/config.c: 397
+# windows/config.c: 398
 enable (keyboard|mouse|joystick) if a trackball control is present
 
 
-# windows/config.c: 394
+# windows/config.c: 395
 enable (keyboard|mouse|joystick) if an analog joystick control is present
 
 
-# windows/config.c: 245
+# windows/config.c: 246
 enable automatic frameskip selection
 
 
-# windows/config.c: 224
+# windows/config.c: 225
 enable automatic restore at startup, and automatic save at exit time
 
 
-# windows/config.c: 339
+# windows/config.c: 340
 enable backdrops if artwork is enabled and available
 
 
-# windows/config.c: 341
+# windows/config.c: 342
 enable bezels if artwork is enabled and available
 
 
-# windows/config.c: 287
+# windows/config.c: 288
 enable bilinear filtering on screen output
 
 
-# windows/config.c: 194
+# windows/config.c: 195
 enable cheat subsystem
 
 
-# windows/config.c: 386
+# windows/config.c: 387
 enable dual lightgun input
 
 
-# windows/config.c: 282
+# windows/config.c: 283
 enable hardware stretching
 
 
-# windows/config.c: 384
+# windows/config.c: 385
 enable joystick input
 
 
-# windows/config.c: 385
+# windows/config.c: 386
 enable lightgun input
 
 
-# windows/config.c: 138
+# windows/config.c: 137
 enable loading of configuration files
 
 
-# windows/config.c: 383
+# windows/config.c: 384
 enable mouse input
 
 
-# windows/config.c: 252
+# windows/config.c: 253
 enable multithreading; this enables rendering and blitting on a separate thread
 
 
-# windows/config.c: 340
+# windows/config.c: 341
 enable overlays if artwork is enabled and available
 
 
-# windows/config.c: 360
+# windows/config.c: 361
 enable pointing stick input
 
 
-# windows/config.c: 319
+# windows/config.c: 320
 enable resolution switching
 
 
-# windows/config.c: 249
+# windows/config.c: 250
 enable sleeping, which gives time back to other applications when idle
 
 
-# windows/config.c: 345
+# windows/config.c: 346
 enable sound output
 
 
-# windows/config.c: 388
+# windows/config.c: 389
 enable steadykey support
 
 
-# windows/config.c: 347
+# windows/config.c: 348
 enable the use of external samples if available
 
 
-# windows/config.c: 248
+# windows/config.c: 249
 enable throttling to keep game running in sync with real time
 
 
-# windows/config.c: 318
+# windows/config.c: 319
 enable triple buffering
 
 
-# windows/config.c: 268
+# windows/config.c: 269
 enable using the start of VBLANK for throttling instead of the game time
 
 
-# windows/config.c: 267
+# windows/config.c: 268
 enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
 
 
-# windows/config.c: 258
+# windows/config.c: 259
 enable window mode; otherwise, full screen mode is assumed
 
 
-# windows/config.c: 236
+# windows/config.c: 237
 enable/disable debugger
 
 
-# windows/config.c: 406
+# windows/config.c: 407
 enable/disable local language game list
 
 
-# windows/config.c: 350
+# windows/config.c: 351
 enable/disable volume auto adjust
 
 
-# windows/config.c: 1127
+# windows/config.c: 1144
 error: invalid value for language: %s\nUse %s\n
 
 
-# windows/config.c: 1219
+# windows/config.c: 1252
 error: invalid value for palette: %s\n
 
 
-# windows/config.c: 291, 296
+# windows/config.c: 292
+explicit name of all screen; 'auto' here will try to make a best guess
+
+
+# windows/config.c: 297
 explicit name of the first screen; 'auto' here will try to make a best guess
 
 
-# windows/config.c: 311
+# windows/config.c: 312
 explicit name of the fourth screen; 'auto' here will try to make a best guess
 
 
-# windows/config.c: 301
+# windows/config.c: 302
 explicit name of the second screen; 'auto' here will try to make a best guess
 
 
-# windows/config.c: 306
+# windows/config.c: 307
 explicit name of the third screen; 'auto' here will try to make a best guess
 
 
-# windows/config.c: 277
+# windows/config.c: 278
 flip screen left-right
 
 
-# windows/config.c: 278
+# windows/config.c: 279
 flip screen upside-down
 
 
-# windows/config.c: 411
+# windows/config.c: 412
 font blank color
 
 
-# windows/config.c: 412
+# windows/config.c: 413
 font normal color
 
 
-# windows/config.c: 413
+# windows/config.c: 414
 font special color
+
+
+# windows/video.c: 430
+frame:%d %s%2d%4d%%%4d/%d fps
 
 
 # windows/video.c: 426
 frame:%d Paused
 
 
-# windows/config.c: 322
+# windows/video.c: 435
+fskp
+
+
+# windows/config.c: 323
 gamma value in full screen mode
 
 
-# windows/config.c: 232
+# windows/config.c: 233
 generate an error.log file
 
 
-# windows/config.c: 188
+# windows/config.c: 187
 high score database name
 
 
-# windows/config.c: 180
+# windows/config.c: 179
 history database name
 
 
-# windows/config.c: 219
+# windows/config.c: 220
 in-game ui text lines [16 - 64 or auto]
 
 
@@ -1358,87 +1386,75 @@ in-game ui text lines [16 - 64 or auto]
 invalid
 
 
-# windows/config.c: 196
+# windows/config.c: 197
 ips datfile name
 
 
-# windows/fronthlp.c: 718, 829
+# windows/fronthlp.c: 733, 830
 is bad\n
 
 
-# windows/fronthlp.c: 728, 839
+# windows/fronthlp.c: 743, 840
 is best available\n
 
 
-# windows/fronthlp.c: 723, 834
+# windows/fronthlp.c: 738, 835
 is good\n
-
-
-# windows/fronthlp.c: 733, 844
-is missing optional files\n
 
 
 # windows/input.c: 1159, 1521, 1616
 lightgun
 
 
-# windows/config.c: 127
-list optional samples for a driver
-
-
-# windows/config.c: 133
+# windows/config.c: 132
 list available devices
 
 
 # windows/config.c: 126
+list optional samples for a driver
+
+
+# windows/config.c: 125
 list required roms for a driver
 
 
-# windows/climain.c: 30
-loading %-12s\r
-
-
-# windows/fileio.c: 809
-loading %-32s\r
-
-
-# windows/config.c: 186
+# windows/config.c: 185
 mameinfo database name
 
 
-# windows/config.c: 390
+# windows/config.c: 391
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 
 
-# windows/config.c: 389
+# windows/config.c: 390
 minimal analog value for digital input
 
 
-# windows/config.c: 262
+# windows/config.c: 263
 name of a PNG file to use for visual effects, or 'none'
 
 
-# windows/config.c: 247
+# windows/config.c: 248
 number of frames to run before automatically exiting
 
 
-# windows/config.c: 257
+# windows/config.c: 258
 number of screens to create; usually, you want just one
 
 
-# windows/config.c: 387
+# windows/config.c: 388
 offscreen shots reload
 
 
-# windows/config.c: 227
+# windows/config.c: 228
 optional filename to write a MNG movie of the current session
 
 
-# windows/config.c: 228
+# windows/config.c: 229
 optional filename to write a WAV file of the current session
 
 
-# windows/config.c: 233
+# windows/config.c: 234
 output error.log data to the system debugger
 
 
@@ -1446,27 +1462,27 @@ output error.log data to the system debugger
 paddle
 
 
-# windows/config.c: 147
+# windows/config.c: 146
 path to ROMsets and hard disk images
 
 
-# windows/config.c: 167
+# windows/config.c: 166
 path to artwork files
 
 
-# windows/config.c: 170
+# windows/config.c: 169
 path to controller definitions
 
 
-# windows/config.c: 151
+# windows/config.c: 150
 path to hash files
 
 
-# windows/config.c: 155, 157
+# windows/config.c: 154, 156
 path to ini files
 
 
-# windows/config.c: 153
+# windows/config.c: 152
 path to samplesets
 
 
@@ -1474,215 +1490,215 @@ path to samplesets
 pedal
 
 
-# windows/config.c: 112
+# windows/config.c: 111
 perform driver validation on all game drivers
 
 
-# windows/config.c: 225
+# windows/config.c: 226
 playback an input file
 
 
-# windows/config.c: 358
+# windows/config.c: 359
 preconfigure for specified controller
 
 
-# windows/config.c: 293
+# windows/config.c: 294
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
 
 
-# windows/config.c: 298
+# windows/config.c: 299
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 
 
-# windows/config.c: 313
+# windows/config.c: 314
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 
 
-# windows/config.c: 303
+# windows/config.c: 304
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 
 
-# windows/config.c: 308
+# windows/config.c: 309
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 
 
-# windows/config.c: 294
+# windows/config.c: 295
 preferred view for all screens
 
 
-# windows/config.c: 299
+# windows/config.c: 300
 preferred view for the first screen
 
 
-# windows/config.c: 314
+# windows/config.c: 315
 preferred view for the fourth screen
 
 
-# windows/config.c: 304
+# windows/config.c: 305
 preferred view for the second screen
 
 
-# windows/config.c: 309
+# windows/config.c: 310
 preferred view for the third screen
 
 
-# windows/config.c: 200
+# windows/config.c: 201
 quit game with confirmation
 
 
-# windows/config.c: 226
+# windows/config.c: 227
 record an input file
 
 
-# windows/config.c: 128
+# windows/config.c: 127
 report romsets that have problems
 
 
-# windows/config.c: 129
+# windows/config.c: 128
 report samplesets that have problems
 
 
-# windows/fronthlp.c: 747, 758
+# windows/fronthlp.c: 757, 768
 romset
 
 
-# windows/fronthlp.c: 709
+# windows/fronthlp.c: 724
 romset %s 
 
 
-# windows/config.c: 273
+# windows/config.c: 274
 rotate screen clockwise 90 degrees
 
 
-# windows/config.c: 274
+# windows/config.c: 275
 rotate screen counterclockwise 90 degrees
 
 
-# windows/config.c: 272
+# windows/config.c: 273
 rotate the game screen according to the game's orientation needs it
 
 
-# windows/fronthlp.c: 859
+# windows/fronthlp.c: 854
 sampleset
 
 
-# windows/fronthlp.c: 823
+# windows/fronthlp.c: 824
 sampleset %s 
 
 
-# windows/fronthlp.c: 870
+# windows/fronthlp.c: 865
 samplesets
 
 
-# windows/config.c: 223
+# windows/config.c: 224
 saved state to load
 
 
-# windows/config.c: 261
+# windows/config.c: 262
 scale screen rendering by this amount in software
 
 
-# windows/config.c: 237
+# windows/config.c: 238
 script for debugger
 
 
-# windows/config.c: 193
+# windows/config.c: 194
 select the system BIOS to use
 
 
-# windows/config.c: 405
+# windows/config.c: 406
 select translation language
 
 
-# windows/config.c: 354
+# windows/config.c: 355
 set audio latency (increase to reduce glitches)
 
 
-# windows/config.c: 246
+# windows/config.c: 247
 set frameskip to fixed value, 0-12 (autoframeskip must be disabled)
 
 
-# windows/config.c: 365
+# windows/config.c: 366
 set joystick ID (Player1)
 
 
-# windows/config.c: 366
+# windows/config.c: 367
 set joystick ID (Player2)
 
 
-# windows/config.c: 367
+# windows/config.c: 368
 set joystick ID (Player3)
 
 
-# windows/config.c: 368
+# windows/config.c: 369
 set joystick ID (Player4)
 
 
-# windows/config.c: 369
+# windows/config.c: 370
 set joystick ID (Player5)
 
 
-# windows/config.c: 370
+# windows/config.c: 371
 set joystick ID (Player6)
 
 
-# windows/config.c: 371
+# windows/config.c: 372
 set joystick ID (Player7)
 
 
-# windows/config.c: 372
+# windows/config.c: 373
 set joystick ID (Player8)
 
 
-# windows/config.c: 346
+# windows/config.c: 347
 set sound output sample rate
 
 
-# windows/config.c: 333
+# windows/config.c: 334
 set vector beam width
 
 
-# windows/config.c: 334
+# windows/config.c: 335
 set vector flicker effect
 
 
-# windows/config.c: 122
+# windows/config.c: 121
 short name, full name
 
 
-# windows/config.c: 124
+# windows/config.c: 123
 show clones
 
 
-# windows/config.c: 111
+# windows/config.c: 110
 show help message
 
 
-# windows/config.c: 117
+# windows/config.c: 116
 show this help
 
 
-# windows/config.c: 139
+# windows/config.c: 138
 skip displaying the information screen at startup
 
 
-# windows/config.c: 345, 985
+# windows/config.c: 346, 988
 sound
 
 
-# windows/config.c: 348
+# windows/config.c: 349
 sound volume in decibels (-32 min, 0 max)
 
 
-# windows/config.c: 286
+# windows/config.c: 287
 specify the preferred Direct3D version (8 or 9)
 
 
-# windows/config.c: 182
+# windows/config.c: 181
 story database name
 
 
-# windows/config.c: 251
+# windows/config.c: 252
 thread priority for the main game thread; range from -15 to 1
 
 
@@ -1690,7 +1706,7 @@ thread priority for the main game thread; range from -15 to 1
 trackball
 
 
-# windows/config.c: 214
+# windows/config.c: 215
 transparency of UI background [0 - 255]
 
 
@@ -1698,43 +1714,39 @@ transparency of UI background [0 - 255]
 unable to open log file
 
 
-# windows/config.c: 332
+# windows/config.c: 333
 use antialiasing when drawing vectors
 
 
-# windows/config.c: 250
+# windows/config.c: 251
 use the RDTSC instruction for timing; faster but may result in uneven performance
 
 
-# windows/config.c: 213
+# windows/config.c: 214
 use transparent background for UI text
 
 
-# windows/config.c: 256
+# windows/config.c: 257
 video output method: gdi, ddraw, or d3d
 
 
-# windows/config.c: 414
+# windows/config.c: 415
 window background color
 
 
-# windows/config.c: 417
+# windows/config.c: 418
 window frame color (dark)
 
 
-# windows/config.c: 416
+# windows/config.c: 417
 window frame color (light)
 
 
-# windows/config.c: 415
+# windows/config.c: 416
 window frame color (medium)
 
 
-# windows/config.c: 121
+# windows/config.c: 120
 year, manufacturer and full name
-
-
-#
-explicit name of all screen; 'auto' here will try to make a best guess
 
 

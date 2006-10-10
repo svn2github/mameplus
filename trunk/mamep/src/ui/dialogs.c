@@ -797,6 +797,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			char buf[MAX_PATH];
 			const char *szDir=GetPcbinfoDir();
 			mame_file *mfile;
+			mame_file_error filerr;
 			long filelen;
 			const game_driver *clone_of = NULL;
 			char *PcbData;
@@ -845,15 +846,14 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 
 			sprintf(buf, "%s\\%s.txt", szDir, szGame);
 
-			mfile = mame_fopen(NULL, buf, FILETYPE_HISTORY, 0);
-
-			if (mfile == NULL)
+			filerr = mame_fopen(SEARCHPATH_DATAFILE, buf, OPEN_FLAG_READ, &mfile);
+			if (filerr != FILERR_NONE)
 			{
 				sprintf(buf, "%s\\pcb\\%s.txt", szDir, szGame);
-				mfile = mame_fopen(NULL, buf, FILETYPE_HISTORY, 0);
+				filerr = mame_fopen(SEARCHPATH_DATAFILE, buf, OPEN_FLAG_READ, &mfile);
 			}
 
-			if ( mfile != NULL )
+			if (filerr == FILERR_NONE)
 			{
 				filelen = (long)mame_fsize(mfile);
 

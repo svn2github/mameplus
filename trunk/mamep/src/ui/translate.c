@@ -602,6 +602,19 @@ int ComboBox_GetLBTextA(HWND hwndCtl, int nIndex, LPSTR lpszBuffer)
 	return ret;
 }
 
+int ComboBox_GetLBTextLenA(HWND hwndCtl, int nIndex)
+{
+	int ret;
+	static LPSTR buf;
+
+	if (buf)
+		free(buf);
+	buf = malloc((ComboBox_GetLBTextLenW(hwndCtl, nIndex) + 1) * sizeof (WCHAR));
+
+	ComboBox_GetLBTextA(hwndCtl, nIndex, buf);
+	return strlen(buf);
+}
+
 int ComboBox_GetTextA(HWND hwndCtl, LPSTR lpch, int cchMax)
 {
 	char *p;

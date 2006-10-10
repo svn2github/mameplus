@@ -38,12 +38,9 @@ extern SHAREDOBJ_DATA const game_driver * const hazemddrivers[];
 extern SHAREDOBJ_FUNC(const game_driver *) driver_get_clone(const game_driver *driver);
 
 #include "audit.h"
-extern SHAREDOBJ_FUNC(int) audit_roms(int game, audit_record **audit);
-extern SHAREDOBJ_FUNC(int) audit_verify_roms(int game,verify_printf_proc verify_printf);
-extern SHAREDOBJ_FUNC(int) audit_samples(int game, missing_sample **audit);
-extern SHAREDOBJ_FUNC(int) audit_verify_samples(int game,verify_printf_proc verify_printf);
-extern SHAREDOBJ_FUNC(int) audit_is_rom_used(const game_driver *gamedrv, const char* hash);
-extern SHAREDOBJ_FUNC(int) audit_has_missing_roms(int game);
+extern SHAREDOBJ_FUNC(int) audit_images(int game, UINT32 validation, audit_record **audit);
+extern SHAREDOBJ_FUNC(int) audit_samples(int game, audit_record **audit);
+extern SHAREDOBJ_FUNC(int) audit_summary(int game, int count, const audit_record *records, verify_printf_proc output);
 
 #include "palette.h"
 #include "romload.h"
@@ -103,49 +100,44 @@ extern SHAREDOBJ_FUNC(const char *) scale_desc(int effect);
 #endif /* USE_SCALE_EFFECTS */
 
 #include "fileio.h"
-extern SHAREDOBJ_FUNC(int)          mame_faccess(const char *filename, int filetype);
-extern SHAREDOBJ_FUNC(mame_file *)  mame_fopen(const char *gamename, const char *filename, int filetype, int openforwrite);
-extern SHAREDOBJ_FUNC(UINT32)       mame_fread(mame_file *file, void *buffer, UINT32 length);
-extern SHAREDOBJ_FUNC(UINT32)       mame_fwrite(mame_file *file, const void *buffer, UINT32 length);
-extern SHAREDOBJ_FUNC(UINT32)       mame_fread_swap(mame_file *file, void *buffer, UINT32 length);
-extern SHAREDOBJ_FUNC(UINT32)       mame_fwrite_swap(mame_file *file, const void *buffer, UINT32 length);
+extern SHAREDOBJ_FUNC(int)             mame_faccess(const char *filename, int filetype);
+extern SHAREDOBJ_FUNC(mame_file_error) mame_fopen(const char *searchpath, const char *filename, UINT32 openflags, mame_file **file);
+extern SHAREDOBJ_FUNC(UINT32)          mame_fread(mame_file *file, void *buffer, UINT32 length);
+extern SHAREDOBJ_FUNC(UINT32)          mame_fwrite(mame_file *file, const void *buffer, UINT32 length);
+extern SHAREDOBJ_FUNC(UINT32)          mame_fread_swap(mame_file *file, void *buffer, UINT32 length);
+extern SHAREDOBJ_FUNC(UINT32)          mame_fwrite_swap(mame_file *file, const void *buffer, UINT32 length);
 
-extern SHAREDOBJ_FUNC(int)          mame_fseek(mame_file *file, INT64 offset, int whence);
-extern SHAREDOBJ_FUNC(void)         mame_fclose(mame_file *file);
-extern SHAREDOBJ_FUNC(int)          mame_fchecksum(const char *gamename, const char *filename, unsigned int *length, char* hash);
-extern SHAREDOBJ_FUNC(UINT64)       mame_fsize(mame_file *file);
-extern SHAREDOBJ_FUNC(const char *) mame_fhash(mame_file *file);
-extern SHAREDOBJ_FUNC(int)          mame_fgetc(mame_file *file);
-extern SHAREDOBJ_FUNC(int)          mame_ungetc(int c, mame_file *file);
-extern SHAREDOBJ_FUNC(char *)       mame_fgets(char *s, int n, mame_file *file);
-extern SHAREDOBJ_FUNC(int)          mame_feof(mame_file *file);
-extern SHAREDOBJ_FUNC(UINT64)       mame_ftell(mame_file *file);
+extern SHAREDOBJ_FUNC(int)             mame_fseek(mame_file *file, INT64 offset, int whence);
+extern SHAREDOBJ_FUNC(void)            mame_fclose(mame_file *file);
+extern SHAREDOBJ_FUNC(int)             mame_fchecksum(const char *gamename, const char *filename, unsigned int *length, char* hash);
+extern SHAREDOBJ_FUNC(UINT64)          mame_fsize(mame_file *file);
+extern SHAREDOBJ_FUNC(const char *)    mame_fhash(mame_file *file, UINT32 functions);
+extern SHAREDOBJ_FUNC(int)             mame_fgetc(mame_file *file);
+extern SHAREDOBJ_FUNC(int)             mame_ungetc(int c, mame_file *file);
+extern SHAREDOBJ_FUNC(char *)          mame_fgets(char *s, int n, mame_file *file);
+extern SHAREDOBJ_FUNC(int)             mame_feof(mame_file *file);
+extern SHAREDOBJ_FUNC(UINT64)          mame_ftell(mame_file *file);
 
-extern SHAREDOBJ_FUNC(int)          mame_fputs(mame_file *f, const char *s);
-extern SHAREDOBJ_FUNC(int)          mame_vfprintf(mame_file *f, const char *fmt, va_list va);
+extern SHAREDOBJ_FUNC(int)             mame_fputs(mame_file *f, const char *s);
+extern SHAREDOBJ_FUNC(int)             mame_vfprintf(mame_file *f, const char *fmt, va_list va);
 
 #ifdef __GNUC__
-extern SHAREDOBJ_FUNC(int)          CLIB_DECL mame_fprintf(mame_file *f, const char *fmt, ...)
+extern SHAREDOBJ_FUNC(int)             CLIB_DECL mame_fprintf(mame_file *f, const char *fmt, ...)
       __attribute__ ((format (printf, 2, 3)));
 #else
-extern SHAREDOBJ_FUNC(int)          CLIB_DECL mame_fprintf(mame_file *f, const char *fmt, ...);
+extern SHAREDOBJ_FUNC(int)             CLIB_DECL mame_fprintf(mame_file *f, const char *fmt, ...);
 #endif /* __GNUC__ */
 
 #include "drawgfx.h"
 #include "png.h"
-extern SHAREDOBJ_FUNC(int)  png_verify_signature (mame_file *fp);
-extern SHAREDOBJ_FUNC(int)  png_inflate_image (png_info *p);
-extern SHAREDOBJ_FUNC(int)  png_read_file(mame_file *fp, png_info *p);
-extern SHAREDOBJ_FUNC(int)  png_read_info(mame_file *fp, png_info *p);
-extern SHAREDOBJ_FUNC(int)  png_expand_buffer_8bit (png_info *p);
-extern SHAREDOBJ_FUNC(void) png_delete_unused_colors (png_info *p);
-extern SHAREDOBJ_FUNC(int)  png_add_text (const char *keyword, const char *text);
-extern SHAREDOBJ_FUNC(int)  png_unfilter(png_info *p);
-extern SHAREDOBJ_FUNC(int)  png_filter(png_info *p);
-extern SHAREDOBJ_FUNC(int)  png_deflate_image(png_info *p);
-extern SHAREDOBJ_FUNC(int)  png_write_sig(mame_file *fp);
-extern SHAREDOBJ_FUNC(int)  png_write_datastream(mame_file *fp, png_info *p);
-extern SHAREDOBJ_FUNC(int)  png_write_bitmap(mame_file *fp, mame_bitmap *bitmap);
+extern SHAREDOBJ_FUNC(void)      png_free(png_info *pnginfo);
+
+extern SHAREDOBJ_FUNC(png_error) png_read_file(mame_file *fp, png_info *pnginfo);
+extern SHAREDOBJ_FUNC(png_error) png_expand_buffer_8bit(png_info *p);
+
+extern SHAREDOBJ_FUNC(png_error) png_add_text(const char *keyword, const char *text);
+extern SHAREDOBJ_FUNC(png_error) png_filter(png_info *p);
+extern SHAREDOBJ_FUNC(png_error) png_write_bitmap(mame_file *fp, mame_bitmap *bitmap);
 
 #include "../input.h"
 SHAREDOBJ_FUNC(int)  code_init(running_machine *machine);
@@ -203,9 +195,12 @@ extern SHAREDOBJ_FUNC(char *) auto_strdup(const char *str) ATTR_MALLOC;
 extern SHAREDOBJ_FUNC(char *) auto_strdup_allow_null(const char *str) ATTR_MALLOC;
 
 #include "unzip.h"
-extern SHAREDOBJ_FUNC(int)  load_zipped_file (int pathtype, int pathindex, const char *zipfile, const char *filename, unsigned char **buf, unsigned int *length);
-extern SHAREDOBJ_FUNC(int)  checksum_zipped_file (int pathtype, int pathindex, const char *zipfile, const char *filename, unsigned int *length, unsigned int *sum);
-extern SHAREDOBJ_FUNC(void) unzip_cache_clear(void);
+extern SHAREDOBJ_FUNC(zip_error)              zip_file_open(const char *filename, zip_file **zip);
+extern SHAREDOBJ_FUNC(void)                   zip_file_close(zip_file *zip);
+extern SHAREDOBJ_FUNC(void)                   zip_file_cache_clear(void);
+extern SHAREDOBJ_FUNC(const zip_file_header *)zip_file_first_file(zip_file *zip);
+extern SHAREDOBJ_FUNC(const zip_file_header *)zip_file_next_file(zip_file *zip);
+extern SHAREDOBJ_FUNC(zip_error)              zip_file_decompress(zip_file *zip, void *buffer, UINT32 length);
 
 extern SHAREDOBJ_DATA         struct ui_lang_info_t ui_lang_info[UI_LANG_MAX];
 extern SHAREDOBJ_FUNC(int)    lang_find_langname(const char *name);
@@ -234,10 +229,6 @@ extern SHAREDOBJ_FUNC(void) winwindow_exit(running_machine *machine);
 
 // in windows/winmain.c
 extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
-
-// in windows/fileio.c
-extern SHAREDOBJ_FUNCPTR(int)  (*osd_display_loading_rom_message_)(const char *name, rom_load_data *romdata);
-extern SHAREDOBJ_FUNC(void)    set_pathlist(int file_type, const char *new_rawpath);
 
 // in windows/config.c
 extern SHAREDOBJ_DATA const options_entry windows_opts[];
@@ -294,10 +285,6 @@ extern SHAREDOBJ_FUNC(void) winwindow_exit(running_machine *machine);
 // in windows/winmain.c
 extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 
-// in windows/fileio.c
-extern int (*osd_display_loading_rom_message_)(const char *name, rom_load_data *romdata);
-extern void set_pathlist(int file_type, const char *new_rawpath);
-
 // in windows/config.c
 #include "../options.h"
 extern const options_entry windows_opts[];
@@ -346,10 +333,6 @@ extern SHAREDOBJ_FUNC(void) winwindow_exit(running_machine *machine);
 
 // in windows/winmain.c
 extern int main_(int argc, char **argv);
-
-// in windows/fileio.c
-extern void set_pathlist(int file_type, const char *new_rawpath);
-extern int (*osd_display_loading_rom_message_)(const char *name, rom_load_data *romdata);
 
 // in windows/config.c
 #ifdef _MSC_VER

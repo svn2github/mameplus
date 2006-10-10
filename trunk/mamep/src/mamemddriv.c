@@ -76,7 +76,7 @@ const game_driver * const hazemddrivers[] =
 	DRIVER( g_bugl )
 	DRIVER( g_raid )
 	DRIVER( g_wbug )
-	DRIVER( ssf2ghw )
+	//DRIVER( ssf2ghw )
 	DRIVER( g_ssf2 )
 	DRIVER( g_quac )
 	DRIVER( g_smb2 )

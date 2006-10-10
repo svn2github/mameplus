@@ -264,10 +264,6 @@ ifneq ($(DEBUG),)
 DEFS += -DMAME_DEBUG
 endif
 
-ifneq ($(NEW_DEBUGGER),)
-DEFS += -DNEW_DEBUGGER
-endif
-
 ifneq ($(X86_VOODOO_DRC),)
 DEFS += -DVOODOO_DRC
 endif
@@ -631,7 +627,7 @@ file2str$(EXE): $(OBJ)/file2str.o $(OSDBGOBJS)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $^ $(LIBS) -o $@
 
-romcmp$(EXE): $(OBJ)/romcmp.o $(OBJ)/unzip.o $(VCOBJS) $(ZLIB) $(OSDBGOBJS)
+romcmp$(EXE): $(OBJ)/romcmp.o $(OBJ)/unzip.o $(OBJ)/mamecore.o $(VCOBJS) $(ZLIB) $(OSDBGOBJS)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $^ $(LIBS) -o $@
 

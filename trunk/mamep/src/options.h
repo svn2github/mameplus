@@ -22,10 +22,32 @@
     CONSTANTS
 ***************************************************************************/
 
-#define OPTION_BOOLEAN		0x0001			/* option is a boolean value */
-#define OPTION_DEPRECATED	0x0002			/* option is deprecated */
-#define OPTION_COMMAND		0x0004			/* option is a command */
-#define OPTION_HEADER		0x0008			/* text-only header */
+#define OPTION_BOOLEAN				0x0001			/* option is a boolean value */
+#define OPTION_DEPRECATED			0x0002			/* option is deprecated */
+#define OPTION_COMMAND				0x0004			/* option is a command */
+#define OPTION_HEADER				0x0008			/* text-only header */
+
+/* options defined and used by the core */
+#define OPTION_ROMPATH				"rompath"
+#define OPTION_DIFF_DIRECTORY		"diff_directory"
+#define OPTION_SAMPLEPATH			"samplepath"
+#define OPTION_ARTPATH				"artpath"
+#define OPTION_NVRAM_DIRECTORY		"nvram_directory"
+#define OPTION_CFG_DIRECTORY		"cfg_directory"
+#define OPTION_INPUT_DIRECTORY		"input_directory"
+#define OPTION_STATE_DIRECTORY		"state_directory"
+#define OPTION_MEMCARD_DIRECTORY	"memcard_directory"
+#define OPTION_SNAPSHOT_DIRECTORY	"snapshot_directory"
+#define OPTION_CTRLRPATH			"ctrlrpath"
+#define OPTION_INIPATH				"inipath"
+#define OPTION_COMMENT_DIRECTORY	"comment_directory"
+#ifdef USE_HISCORE
+#define OPTION_HISCORE_DIRECTORY	"hiscore_directory"
+#endif /* USE_HISCORE */
+#define OPTION_TRANSLATION_DIRECTORY	"translation_directory"
+#ifdef USE_IPS
+#define OPTION_IPS_DIRECTORY		"ips_directory"
+#endif /* USE_IPS */
 
 
 
@@ -70,6 +92,7 @@ void options_output_ini_mame_file_marked(mame_file *inifile);
 void options_output_help(FILE *output);
 
 const char *options_get_string(const char *name, int report_error);
+UINT32 options_get_seqid(const char *name);
 int options_get_bool(const char *name, int report_error);
 int options_get_int(const char *name, int report_error);
 float options_get_float(const char *name, int report_error);

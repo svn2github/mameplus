@@ -76,7 +76,7 @@ BOOL ScreenShotLoaded(void)
 static BOOL LoadSoftwareScreenShot(const struct GameDriver *drv, LPCSTR lpSoftwareName, int nType)
 {
 	char *s = alloca(strlen(drv->name) + 1 + strlen(lpSoftwareName) + 5);
-	sprintf(s, "%s/%s.png", drv->name, lpSoftwareName);
+	sprintf(s, "%s/%s", drv->name, lpSoftwareName);
 	return LoadDIB(s, &m_hDIB, &m_hPal, nType);
 }
 #endif /* MESS */
@@ -94,7 +94,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 {
 	BOOL loaded = FALSE;
 	const game_driver *clone_of = driver_get_clone(drivers[nGame]);
-	char buf [64];
+	char buf [MAX_PATH];
 
 	/* No need to reload the same one again */
 #ifndef MESS
@@ -204,53 +204,48 @@ void FreeScreenShot(void)
 	current_image_type = -1;
 }
 
-/* moved to m32util.c
-void SetCorePathList(int file_type,const char *s)
-{
-	// we have to pass in a malloc()'d string; core will free it later
-	set_pathlist(file_type,mame_strdup(s));
-}
-*/
-
 BOOL LoadDIB(LPCTSTR filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type)
 {
 	mame_file *mfile;
+	mame_file_error filerr;
 	BOOL success;
 	const char *zip_name = NULL;
+	const char *basedir = NULL;
+	char *fname;
 
 	switch (pic_type)
 	{
 	case TAB_SCREENSHOT :
-		SetCorePathList(FILETYPE_SCREENSHOT,GetImgDir());
+		basedir = GetImgDir();
 		zip_name = "snap";
 		break;
 	case TAB_FLYER :
-		SetCorePathList(FILETYPE_SCREENSHOT,GetFlyerDir());
+		basedir = GetFlyerDir();
 		zip_name = "flyers";
 		break;
 	case TAB_CABINET :
-		SetCorePathList(FILETYPE_SCREENSHOT,GetCabinetDir());
+		basedir = GetCabinetDir();
 		zip_name = "cabinets";
 		break;
 	case TAB_MARQUEE :
-		SetCorePathList(FILETYPE_SCREENSHOT,GetMarqueeDir());
+		basedir = GetMarqueeDir();
 		zip_name = "marquees";
 		break;
 	case TAB_TITLE :
-		SetCorePathList(FILETYPE_SCREENSHOT,GetTitlesDir());
+		basedir = GetTitlesDir();
 		zip_name = "titles";
 		break;
 	case TAB_CONTROL_PANEL :
-		SetCorePathList(FILETYPE_SCREENSHOT,GetControlPanelDir());
+		basedir = GetControlPanelDir();
 		zip_name = "cpanel";
 		break;
 	case BACKGROUND :
-		SetCorePathList(FILETYPE_SCREENSHOT,GetBgDir());
+		basedir = GetBgDir();
 		zip_name = "bkground";
 		break;
 #ifdef USE_IPS
 	case TAB_IPS :
-		SetCorePathList(FILETYPE_SCREENSHOT,GetPatchDir());
+		basedir = GetPatchDir();
 		zip_name = "ips";
 		break;
 #endif /* USE_IPS */
@@ -261,16 +256,19 @@ BOOL LoadDIB(LPCTSTR filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type)
 
 	// look for the raw file
 	dprintf("LoadDIB %s", filename);
-	mfile = mame_fopen(NULL,filename,FILETYPE_SCREENSHOT,0);
-	if (mfile == NULL)
+	fname = assemble_4_strings(basedir, "/", filename, ".png");
+	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &mfile);
+	free(fname);
+
+	if (filerr != FILERR_NONE)
 	{
 		// and look for the zip
-		mfile = mame_fopen(zip_name,filename,FILETYPE_SCREENSHOT,0);
+		fname = assemble_6_strings(basedir, "/", zip_name, "/", filename, ".png");
+		filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &mfile);
+		free(fname);
 	}
 
-	SetCorePathList(FILETYPE_SCREENSHOT, GetImgDir());
-
-	if (mfile == NULL)
+	if (filerr != FILERR_NONE)
 		return FALSE;
 
 	success = png_read_bitmap(mfile, phDIB, pPal);

@@ -427,21 +427,21 @@ const char *osd_get_fps_text(const performance_info *performance)
 	else
 	{
 #ifdef INP_CAPTION
-		dest += sprintf(dest, "frame:%d %s%2d%4d%%%4d/%d fps",
+		dest += sprintf(dest, _WINDOWS("frame:%d %s%2d%4d%%%4d/%d fps"),
 				cpu_getcurrentframe(),
 #else /* INP_CAPTION */
-		dest += sprintf(dest, "%s%2d%4d%%%4d/%d fps",
+		dest += sprintf(dest, _WINDOWS("%s%2d%4d%%%4d/%d fps"),
 #endif /* INP_CAPTION */
-				effective_autoframeskip() ? "auto" : "fskp", effective_frameskip(),
+				effective_autoframeskip() ? _WINDOWS("auto") : _WINDOWS("fskp"), effective_frameskip(),
 				(int)(performance->game_speed_percent + 0.5),
 				(int)(performance->frames_per_second + 0.5),
 				(int)(Machine->screen[0].refresh + 0.5));
 
 		/* for vector games, add the number of vector updates */
 		if (Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
-			dest += sprintf(dest, "\n %d vector updates", performance->vector_updates_last_second);
+			dest += sprintf(dest, _WINDOWS("\n %d vector updates"), performance->vector_updates_last_second);
 		else if (performance->partial_updates_this_frame > 1)
-			dest += sprintf(dest, "\n %d partial updates", performance->partial_updates_this_frame);
+			dest += sprintf(dest, _WINDOWS("\n %d partial updates"), performance->partial_updates_this_frame);
 	}
 
 	/* return a pointer to the static buffer */
@@ -673,14 +673,16 @@ static void update_fps(mame_time emutime)
 		fps_frames_displayed++;
 		if (fps_frames_displayed == video_config.framestorun)
 		{
-			char name[20];
+			mame_file_error filerr;
 			mame_file *fp;
+			char name[10];
 
 			// make a filename with an underscore prefix
 			sprintf(name, "_%.8s", Machine->gamedrv->name);
 
 			// write out the screenshot
-			if ((fp = mame_fopen(Machine->gamedrv->name, name, FILETYPE_SCREENSHOT, 1)) != NULL)
+			filerr = mame_fopen(SEARCHPATH_SCREENSHOT, name, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &fp);
+			if (filerr == FILERR_NONE)
 			{
 				video_screen_save_snapshot(fp, 0);
 				mame_fclose(fp);

@@ -37,6 +37,7 @@ struct _options_data
 	options_data *			next;				/* link to the next data */
 	const char *			names[MAX_ENTRY_NAMES]; /* array of possible names */
 	UINT32					flags;				/* flags from the entry */
+	UINT32					seqid;				/* sequence ID; bumped on each change */
 	const char *			data;				/* data for this item */
 	const char *			defdata;			/* default data for this item */
 	const char *			description;		/* description for this item */
@@ -492,7 +493,7 @@ void options_output_ini_file(FILE *inifile)
 	{
 		/* header: just print */
 		if ((data->flags & OPTION_HEADER) != 0)
-			fprintf(inifile, "\n#\n# %s\n#\n", data->description);
+			fprintf(inifile, "\n#\n# %s\n#\n", lang_message(UI_MSG_OSD0, data->description));
 
 		/* otherwise, output entries for all non-deprecated and non-command items */
 		else if ((data->flags & (OPTION_DEPRECATED | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
@@ -522,7 +523,7 @@ void options_output_ini_file_marked(FILE *inifile)
 	{
 		/* header: just print */
 		if ((data->flags & OPTION_HEADER) != 0)
-			fprintf(inifile, "\n#\n# %s\n#\n", data->description);
+			fprintf(inifile, "\n#\n# %s\n#\n", lang_message(UI_MSG_OSD0, data->description));
 
 		/* otherwise, output entries for all non-deprecated and non-command items */
 		else if (data->mark && (data->flags & (OPTION_DEPRECATED | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
@@ -552,7 +553,7 @@ void options_output_ini_mame_file(mame_file *inifile)
 	{
 		/* header: just print */
 		if ((data->flags & OPTION_HEADER) != 0)
-			mame_fprintf(inifile, "\n#\n# %s\n#\n", data->description);
+			mame_fprintf(inifile, "\n#\n# %s\n#\n", lang_message(UI_MSG_OSD0, data->description));
 
 		/* otherwise, output entries for all non-deprecated and non-command items */
 		else if ((data->flags & (OPTION_DEPRECATED | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
@@ -582,7 +583,7 @@ void options_output_ini_mame_file_marked(mame_file *inifile)
 	{
 		/* header: just print */
 		if ((data->flags & OPTION_HEADER) != 0)
-			mame_fprintf(inifile, "\n#\n# %s\n#\n", data->description);
+			mame_fprintf(inifile, "\n#\n# %s\n#\n", lang_message(UI_MSG_OSD0, data->description));
 
 		/* otherwise, output entries for all non-deprecated and non-command items */
 		else if (data->mark && (data->flags & (OPTION_DEPRECATED | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
@@ -612,11 +613,11 @@ void options_output_help(FILE *output)
 	{
 		/* header: just print */
 		if ((data->flags & OPTION_HEADER) != 0)
-			fprintf(output, "\n#\n# %s\n#\n", data->description);
+			fprintf(output, "\n#\n# %s\n#\n", lang_message(UI_MSG_OSD0, data->description));
 
 		/* otherwise, output entries for all non-deprecated items */
 		else if ((data->flags & OPTION_DEPRECATED) == 0 && data->description != NULL)
-			fprintf(output, "-%-20s%s\n", data->names[0], data->description);
+			fprintf(output, "-%-20s%s\n", data->names[0], lang_message(UI_MSG_OSD0, data->description));
 	}
 }
 
@@ -631,6 +632,18 @@ const char *options_get_string(const char *name, int report_error)
 	options_data *data = find_entry_data(name, FALSE);
 	assert(data != NULL);
 	return (data == NULL) ? "" : data->data;
+}
+
+
+/*-------------------------------------------------
+    options_get_seqid - return the seqid for an
+    entry
+-------------------------------------------------*/
+
+UINT32 options_get_seqid(const char *name)
+{
+	options_data *data = find_entry_data(name, FALSE);
+	return (data == NULL) ? 0 : data->seqid;
 }
 
 
@@ -902,6 +915,9 @@ static void update_data(options_data *data, const char *newdata)
 	if (data->data)
 		free((void *)data->data);
 	data->data = copy_string(datastart, dataend + 1);
+ 
+ 	/* bump the seqid */
+ 	data->seqid++;
 	data->mark = TRUE;
 }
 

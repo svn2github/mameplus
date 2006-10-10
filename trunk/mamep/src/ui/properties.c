@@ -3369,7 +3369,7 @@ static void AssignInput(HWND hWnd)
 
 	FreeIfAllocated(&pGameOpts->ctrlr);
 
-	new_length = ComboBox_GetLBTextLen(hWnd,g_nInputIndex);
+	new_length = ComboBox_GetLBTextLenA(hWnd,g_nInputIndex);
 	if (new_length == CB_ERR)
 	{
 		dprintf("error getting text len");
@@ -3377,7 +3377,7 @@ static void AssignInput(HWND hWnd)
 		return;
 	}
 	pGameOpts->ctrlr = (char *)malloc(new_length + 1);
-	ComboBox_GetLBTextA (hWnd, g_nInputIndex, pGameOpts->ctrlr);
+	ComboBox_GetLBTextA(hWnd, g_nInputIndex, pGameOpts->ctrlr);
 	if (strcmp(pGameOpts->ctrlr, _UI("Standard")) == 0)
 	{
 		FreeIfAllocated(&pGameOpts->ctrlr);
@@ -3566,14 +3566,14 @@ static void AssignEffect(HWND hWnd)
 
 	FreeIfAllocated(&pGameOpts->effect);
 
-	new_length = ComboBox_GetLBTextLen(hWnd,g_nEffectIndex);
+	new_length = ComboBox_GetLBTextLenA(hWnd,g_nEffectIndex);
 	if (new_length == CB_ERR)
 	{
 		dprintf("error getting text len");
 		return;
 	}
 	pGameOpts->effect = (char *)malloc(new_length + 1);
-	ComboBox_GetLBTextA (hWnd, g_nEffectIndex, pGameOpts->effect);
+	ComboBox_GetLBTextA(hWnd, g_nEffectIndex, pGameOpts->effect);
 	if (strcmp(pGameOpts->effect, _UI("None")) == 0)
 	{
 		FreeIfAllocated(&pGameOpts->effect);

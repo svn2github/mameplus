@@ -52,6 +52,12 @@
 #define snprintf _snprintf
 #endif
 
+// fixme
+#define SetRomPath(path) options_set_string(SEARCHPATH_ROM, path)
+#define SetImagePath(path) options_set_string(SEARCHPATH_IMAGE, path)
+#define SetSamplePath(path) options_set_string(SEARCHPATH_SAMPLE, path)
+#define SetTranslationPath(path) options_set_string(SEARCHPATH_TRANSLATION, path);
+
 
 /***************************************************************************
     Internal structures
@@ -580,11 +586,11 @@ void OptionsInit()
 
 	// have our mame core (file code) know about our rom path
 	// this leaks a little, but the win32 file core writes to this string
-	SetCorePathList(FILETYPE_ROM, settings.rompath);
-	SetCorePathList(FILETYPE_IMAGE, settings.rompath);
-	SetCorePathList(FILETYPE_SAMPLE, settings.samplepath);
+	SetRomPath(settings.rompath);
+	SetImagePath(settings.rompath);
+	SetSamplePath(settings.samplepath);
 #ifdef MESS
-	SetCorePathList(FILETYPE_HASH, settings.mess.hashdir);
+	SetHashPath(settings.mess.hashdir);
 #endif
 
 	generate_default_ctrlr();
@@ -1502,8 +1508,8 @@ void SetRomDirs(const char* paths)
 
 		// have our mame core (file code) know about it
 		// this leaks a little, but the win32 file core writes to this string
-		SetCorePathList(FILETYPE_ROM, settings.rompath);
-		SetCorePathList(FILETYPE_IMAGE, settings.rompath);
+		SetRomPath(settings.rompath);
+		SetImagePath(settings.rompath);
 	}
 }
 
@@ -1522,7 +1528,7 @@ void SetSampleDirs(const char* paths)
 		
 		// have our mame core (file code) know about it
 		// this leaks a little, but the win32 file core writes to this string
-		SetCorePathList(FILETYPE_SAMPLE, settings.samplepath);
+		SetSamplePath(settings.samplepath);
 	}
 }
 
@@ -1760,11 +1766,7 @@ void SetTranslationDir(const char* path)
 	FreeIfAllocated(&settings.translation_directory);
 
 	if (path != NULL)
-	{
 		settings.translation_directory = strdup(path);
-
-		SetCorePathList(FILETYPE_TRANSLATION, settings.translation_directory);
-	}
 }
 
 const char* GetCommentDir(void)
@@ -2800,27 +2802,33 @@ static void generate_default_ctrlr(void)
 		"</mameconfig>\n";
 	const char *ctrlrpath = GetCtrlrDir();
 	const char *ctrlr = backup.global.ctrlr;
-	char filename[_MAX_PATH];
-	FILE *fp;
+	mame_file *file;
+	mame_file_error filerr;
+	char *fname;
 	BOOL DoCreate;
 
-	SetCorePathList(FILETYPE_CTRLR, ctrlrpath);
-	DoCreate = !mame_faccess(ctrlr, FILETYPE_CTRLR);
+	fname = assemble_4_strings(ctrlrpath, "/", ctrlr, ".cfg");
+	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &file);
+	if (filerr == FILERR_NONE)
+		mame_fclose(file);
+
+	DoCreate = (filerr != FILERR_NONE);
 
 	dprintf("I %shave ctrlr %s", DoCreate ? "don't " : "", ctrlr);
 
-	if (!DoCreate)
-		return;
-
-	sprintf(filename, "%s\\%s.cfg", ctrlrpath, ctrlr);
-	_mkdir(ctrlrpath);
-
-	fp = fopen(filename, "wt");
-	if (fp)
+	if (DoCreate)
 	{
-		fputs(default_ctrlr, fp);
-		fclose(fp);
+		_mkdir(ctrlrpath);
+
+		filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
+		if (filerr == FILERR_NONE)
+		{
+			mame_fputs(file, default_ctrlr);
+			mame_fclose(file);
+		}
 	}
+
+	free(fname);
 }
 
 static options_type *update_driver_use_default(int driver_index)
@@ -2998,8 +3006,9 @@ static void LoadOptions(void)
 {
 	LoadDefaultOptions();
 	options_load_winui_config();
+	options_set_datalist(options_cli);
 
-	SetCorePathList(FILETYPE_TRANSLATION, settings.translation_directory);
+	SetTranslationPath(settings.translation_directory);
 	SetLangcode(settings.langcode);
 	SetUseLangList(UseLangList());
 }
@@ -3300,14 +3309,16 @@ static void options_free_entry_winui(void)
 
 static int options_load_default_config(void)
 {
-	const char *filename;
 	mame_file *file;
+	mame_file_error filerr;
+	char *fname;
 	int retval = 0;
 
-	SetCorePathList(FILETYPE_INI, get_base_config_directory());
-	filename = strlower(MAME_INI);
+	fname = assemble_3_strings(get_base_config_directory(), "/", MAME_INI);
+	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &file);
+	free(fname);
 
-	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 0)))
+	if (filerr != FILERR_NONE)
 		return 0;
 
 	options_set_datalist(options_cli);
@@ -3325,20 +3336,23 @@ static int options_load_default_config(void)
 
 static int options_load_driver_config(int driver_index)
 {
-	char filename[_MAX_PATH];
-	mame_file *file;
-	int retval;
 	int alt_index = driver_variables[driver_index].alt_index;
+	mame_file *file;
+	mame_file_error filerr;
+	char *fname;
+	int retval;
 
 	if (alt_index != -1)
 		return options_load_alt_config(&alt_options[alt_index]);
 
 	driver_variables[driver_index].options_loaded = TRUE;
 	driver_variables[driver_index].use_default = TRUE;
-	SetCorePathList(FILETYPE_INI, settings.inipath);
-	sprintf(filename, "%s.ini", drivers[driver_index]->name);
 
-	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 0)))
+	fname = assemble_4_strings(settings.inipath, "/", drivers[driver_index]->name, ".ini");
+	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &file);
+	free(fname);
+
+	if (filerr != FILERR_NONE)
 		return 0;
 
 	options_set_datalist(options_cli);
@@ -3356,22 +3370,24 @@ static int options_load_driver_config(int driver_index)
 
 static int options_load_alt_config(alt_options_type *alt_option)
 {
-	char filename[_MAX_PATH];
 	mame_file *file;
+	mame_file_error filerr;
+	char *fname;
 	int len;
 	int retval;
 
 	alt_option->variable->options_loaded = TRUE;
 	alt_option->variable->use_default = TRUE;
-	SetCorePathList(FILETYPE_INI, settings.inipath);
-	sprintf(filename, "%s", alt_option->name);
-	len = strlen(filename);
 
-	if (len > 2 && filename[len - 2] == '.' && filename[len - 1] == 'c')
-		filename[len - 2] = '\0';
-	strcat(filename, ".ini");
+	fname = assemble_4_strings(settings.inipath, "/", alt_option->name, ".ini");
+	len = strlen(fname);
+	if (len > 6 && fname[len - 6] == '.' && fname[len - 5] == 'c')
+		strcpy(fname + len - 6, ".ini");
 
-	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 0)))
+	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &file);
+	free(fname);
+
+	if (filerr != FILERR_NONE)
 		return 0;
 
 	options_set_datalist(options_cli);
@@ -3389,14 +3405,16 @@ static int options_load_alt_config(alt_options_type *alt_option)
 
 static int options_load_winui_config(void)
 {
-	const char *filename;
 	mame_file *file;
+	mame_file_error filerr;
+	char *fname;
 	int retval;
 
-	SetCorePathList(FILETYPE_INI, settings.inipath);
-	filename = strlower(WINUI_INI);
+	fname = assemble_3_strings(settings.inipath, "/", WINUI_INI);
+	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &file);
+	free(fname);
 
-	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 0)))
+	if (filerr != FILERR_NONE)
 		return 0;
 
 	options_set_datalist(options_winui);
@@ -3415,15 +3433,17 @@ static int options_load_winui_config(void)
 
 static int options_save_default_config(void)
 {
-	const char *filename;
 	mame_file *file;
+	mame_file_error filerr;
+	char *fname;
 
 	validate_driver_option(&global);
 
-	SetCorePathList(FILETYPE_INI, get_base_config_directory());
-	filename = strlower(MAME_INI);
+	fname = assemble_3_strings(get_base_config_directory(), "/", MAME_INI);
+	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
+	free(fname);
 
-	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 1)))
+	if (filerr != FILERR_NONE)
 		return -1;
 
 	options_set_datalist(options_cli);
@@ -3439,10 +3459,11 @@ static int options_save_default_config(void)
 
 static int options_save_driver_config(int driver_index)
 {
-	char filename[_MAX_PATH];
-	mame_file *file;
-	options_type *parent;
 	int alt_index = driver_variables[driver_index].alt_index;
+	mame_file *file;
+	mame_file_error filerr;
+	char *fname;
+	options_type *parent;
 
 	if (driver_variables[driver_index].options_loaded == FALSE)
 		return 0;
@@ -3454,6 +3475,8 @@ static int options_save_driver_config(int driver_index)
 	if (parent == NULL)
 		return 0;
 
+	fname = assemble_4_strings(settings.inipath, "/", strlower(drivers[driver_index]->name), ".ini");
+
 #ifdef USE_IPS
 	// HACK: DO NOT INHERIT IPS CONFIGURATION
 	if (driver_variables[driver_index].use_default && !driver_options[driver_index].ips)
@@ -3461,16 +3484,16 @@ static int options_save_driver_config(int driver_index)
 	if (driver_variables[driver_index].use_default)
 #endif /* USE_IPS */
 	{
-		sprintf(filename, "%s\\%s.ini", settings.inipath, strlower(drivers[driver_index]->name));
-		unlink(filename);
+		unlink(fname);
 		return 0;
 	}
 
 	mkdir(settings.inipath);
-	SetCorePathList(FILETYPE_INI, settings.inipath);
-	sprintf(filename, "%s.ini", strlower(drivers[driver_index]->name));
 
-	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 1)))
+	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
+	free(fname);
+
+	if (filerr != FILERR_NONE)
 		return -1;
 
 	options_set_datalist(options_cli);
@@ -3487,9 +3510,9 @@ static int options_save_driver_config(int driver_index)
 
 static int options_save_alt_config(alt_options_type *alt_option)
 {
-	char filename[_MAX_PATH];
-	char basename[_MAX_PATH];
 	mame_file *file;
+	mame_file_error filerr;
+	char *fname;
 	options_type *parent;
 	int len;
 
@@ -3498,10 +3521,10 @@ static int options_save_alt_config(alt_options_type *alt_option)
 
 	parent = update_alt_use_default(alt_option);
 
-	strcpy(basename, strlower(alt_option->name));
-	len = strlen(basename);
-	if (len > 2 && stricmp(basename + (len - 2), ".c") == 0)
-		basename[len - 2] = '\0';
+	fname = assemble_4_strings(settings.inipath, "/", strlower(alt_option->name), ".ini");
+	len = strlen(fname);
+	if (len > 6 && fname[len - 6] == '.' && fname[len - 5] == 'c')
+		strcpy(fname + len - 6, ".ini");
 
 #ifdef USE_IPS
 	// HACK: DO NOT INHERIT IPS CONFIGURATION
@@ -3510,16 +3533,16 @@ static int options_save_alt_config(alt_options_type *alt_option)
 	if (alt_option->variable->use_default && !alt_option->has_bios)
 #endif /* USE_IPS */
 	{
-		sprintf(filename, "%s\\%s.ini", settings.inipath, basename);
-		unlink(filename);
+		unlink(fname);
 		return 0;
 	}
 
 	mkdir(settings.inipath);
-	SetCorePathList(FILETYPE_INI, settings.inipath);
-	sprintf(filename, "%s.ini", basename);
 
-	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 1)))
+	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
+	free(fname);
+
+	if (filerr != FILERR_NONE)
 		return -1;
 
 	options_set_datalist(options_cli);
@@ -3536,14 +3559,16 @@ static int options_save_alt_config(alt_options_type *alt_option)
 
 static int options_save_winui_config(void)
 {
-	const char *filename;
 	mame_file *file;
+	mame_file_error filerr;
+	char *fname;
 
-	mkdir(settings.inipath);
-	SetCorePathList(FILETYPE_INI, settings.inipath);
-	filename = strlower(WINUI_INI);
 
-	if (!(file = mame_fopen(filename, NULL, FILETYPE_INI, 1)))
+	fname = assemble_3_strings(settings.inipath, "/", WINUI_INI);
+	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
+	free(fname);
+
+	if (filerr != FILERR_NONE)
 		return -1;
 
 	options_set_datalist(options_winui);

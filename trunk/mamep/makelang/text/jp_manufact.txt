@@ -1142,7 +1142,7 @@ Electronic Devices S.R.L.
 Electronic Projects
 
 
-# Twin Brats
+# Twin Brats (set 1)
 Elettronica Video-Games S.R.L.
 
 
@@ -1842,6 +1842,10 @@ Sculptured Software Inc.
 Seatongrove Ltd
 
 
+# NBA Action (U) [!]
+Sega Sports
+
+
 # Panic Road
 Seibu
 
@@ -2210,7 +2214,7 @@ Wing
 Wisdom Tree
 
 
-# Zan Yasha Enbuden (J) [!]
+# Zan - Yasha Enbukyoku / Zan Yasha Enbuden (J) [!]
 Wolfteam
 
 

@@ -95,7 +95,9 @@ void assign_msg_catategory(int msgcat, const char *name)
 static void load_mmo(int msgcat)
 {
 	struct mmo *p = &mmo_table[current_lang][msgcat];
+	mame_file_error filerr;
 	mame_file *file;
+	char *fname;
 	int str_size;
 	int size;
 	int i;
@@ -106,8 +108,11 @@ static void load_mmo(int msgcat)
 	if (!mmo_filename[msgcat].filename)
 		return;
 
-	file = mame_fopen(ui_lang_info[current_lang].name, mmo_filename[msgcat].filename, FILETYPE_TRANSLATION, 0);
-	if (!file)
+	fname = assemble_4_strings(ui_lang_info[current_lang].name, "/", mmo_filename[msgcat].filename, ".mmo");
+	filerr = mame_fopen(SEARCHPATH_TRANSLATION, fname, OPEN_FLAG_READ, &file);
+	free(fname);
+
+	if (filerr != FILERR_NONE)
 		goto mmo_readerr;
 
 	size = sizeof p->num_mmo;

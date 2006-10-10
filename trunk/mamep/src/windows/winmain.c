@@ -108,7 +108,6 @@ int main(int argc, char **argv)
 	int game_index;
 	char *ext;
 	int res = 0;
-	extern void free_pathlists(void);
 	HMODULE library;
 
 	// set up exception handling
@@ -169,8 +168,6 @@ int main(int argc, char **argv)
 
 	// close errorlog, input and playback
 	cli_frontend_exit();
-
-	free_pathlists();
 
 	ui_lang_shutdown();
 

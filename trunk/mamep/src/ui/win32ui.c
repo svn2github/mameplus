@@ -1156,8 +1156,6 @@ int WinMain_(HINSTANCE    hInstance,
 	assign_msg_catategory(UI_MSG_OSD0, "windows");
 	assign_msg_catategory(UI_MSG_OSD1, "ui");
 
-	osd_display_loading_rom_message_ = osd_display_loading_rom_message;
-
 	if (__argc != 1)
 	{
 		/* Rename main because gcc will use it instead of WinMain even with -mwindows */
@@ -1341,40 +1339,55 @@ HICON LoadIconFromFile(const char *iconname)
 	HICON       hIcon = 0;
 	struct stat file_stat;
 	char        tmpStr[MAX_PATH];
-	char        tmpIcoName[MAX_PATH];
-	const char* sDirName = GetImgDir();
-	PBYTE       bufferPtr;
-	UINT        bufferLen;
+	zip_file   *zip;
+	zip_error   ziperr;
 
 	sprintf(tmpStr, "%s/%s.ico", GetIconsDir(), iconname);
-	if (stat(tmpStr, &file_stat) != 0
-	|| (hIcon = ExtractIconA(hInst, tmpStr, 0)) == 0)
+	if (stat(tmpStr, &file_stat) == 0 && (hIcon = ExtractIconA(hInst, tmpStr, 0)) != 0)
+		return hIcon;
+
+	sprintf(tmpStr, "%s/%s.ico", GetImgDir(), iconname);
+	if (stat(tmpStr, &file_stat) == 0 && (hIcon = ExtractIconA(hInst, tmpStr, 0)) != 0)
+		return hIcon;
+
+	sprintf(tmpStr, "%s/icons.zip", GetIconsDir());
+	if (stat(tmpStr, &file_stat) != 0)
+		return NULL;
+
+	ziperr = zip_file_open(tmpStr, &zip);
+	if (ziperr != ZIPERR_NONE)
 	{
-		sprintf(tmpStr, "%s/%s.ico", sDirName, iconname);
-		if (stat(tmpStr, &file_stat) != 0
-		|| (hIcon = ExtractIconA(hInst, tmpStr, 0)) == 0)
+		const zip_file_header *entry;
+		char tmpIcoName[MAX_PATH];
+
+		sprintf(tmpIcoName, "%s.ico", iconname);
+
+		for (entry = zip_file_first_file(zip); entry; entry = zip_file_next_file(zip))
+			if (mame_stricmp(entry->filename, tmpIcoName) == 0)
+				break;
+
+		if (entry)
 		{
-			sprintf(tmpStr, "%s/icons.zip", GetIconsDir());
-			sprintf(tmpIcoName, "%s.ico", iconname);
-			if (stat(tmpStr, &file_stat) == 0)
+			UINT8 *data = (UINT8 *)malloc(entry->uncompressed_length);
+
+			if (data != NULL)
 			{
-				SetCorePathList(FILETYPE_SCREENSHOT, GetIconsDir());
-				if (load_zipped_file(FILETYPE_SCREENSHOT, 0, "icons.zip", tmpIcoName, &bufferPtr, &bufferLen) == 0)
-				{
-					hIcon = FormatICOInMemoryToHICON(bufferPtr, bufferLen);
-					free(bufferPtr);
-				}
+				ziperr = zip_file_decompress(zip, data, entry->uncompressed_length);
+				if (ziperr == ZIPERR_NONE)
+					hIcon = FormatICOInMemoryToHICON(data, entry->uncompressed_length);
+
+				free(data);
 			}
 		}
-	}
 
-	SetCorePathList(FILETYPE_SCREENSHOT, GetImgDir());
+		zip_file_close(zip);
+	}
 
 	return hIcon;
 }
 
 /* Return the number of games currently displayed */
-int GetNumGames()
+int GetNumGames(void)
 {
 	return game_count;
 }
@@ -1979,20 +1992,25 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	begin_resource_tracking();
 
 #ifdef DRIVER_SWITCH
-	options_free_entries();
-	options_add_entries(windows_opts);
-	set_pathlist(FILETYPE_INI, ".");
-
-	mame_file * file = mame_fopen(CONFIGNAME ".ini", NULL, FILETYPE_INI, 0);
-	if (file)
 	{
-		options_parse_ini_file(file);
-		mame_fclose(file);
+		mame_file *file;
+		mame_file_error filerr;
+
+		options_free_entries();
+		options_add_entries(windows_opts);
+		options_set_string(SEARCHPATH_INI, ".");
+
+		filerr = mame_fopen(SEARCHPATH_INI, CONFIGNAME, OPEN_FLAG_READ, &file);
+		if (filerr == FILERR_NONE)
+		{
+			options_parse_ini_file(file);
+			mame_fclose(file);
+		}
+
+		assign_drivers();
+
+		options_free_entries();
 	}
-
-	assign_drivers();
-
-	options_free_entries();
 #endif /* DRIVER_SWITCH */
 
 	// Count the number of games
@@ -2364,7 +2382,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	return TRUE;
 }
 
-static void Win32UI_exit()
+static void Win32UI_exit(void)
 {
 	DragAcceptFiles(hMain, FALSE);
 
@@ -2823,7 +2841,7 @@ static int HandleKeyboardGUIMessage(HWND hWnd, UINT message, UINT wParam, LONG l
 	return FALSE;	/* message not processed */
 }
 
-static BOOL PumpMessage()
+static BOOL PumpMessage(void)
 {
 	MSG msg;
 
@@ -3138,7 +3156,7 @@ static void ResizeWindow(HWND hParent, Resize *r)
 	memcpy(&r->rect, &parent_rect, sizeof(RECT));
 }
 
-static void ProgressBarShow()
+static void ProgressBarShow(void)
 {
 	RECT rect;
 	int  widths[2] = {150, -1};
@@ -3162,7 +3180,7 @@ static void ProgressBarShow()
 	bProgressShown = TRUE;
 }
 
-static void ProgressBarHide()
+static void ProgressBarHide(void)
 {
 	RECT rect;
 	int  widths[4];
@@ -3204,7 +3222,7 @@ static void ProgressBarHide()
 	bProgressShown = FALSE;
 }
 
-static void ResizeProgressBar()
+static void ResizeProgressBar(void)
 {
 	if (bProgressShown)
 	{
@@ -3232,7 +3250,7 @@ static void ProgressBarStepParam(int iGameIndex, int nGameCount)
 	SendMessage(hProgWnd, PBM_STEPIT, 0, 0);
 }
 
-static void ProgressBarStep()
+static void ProgressBarStep(void)
 {
 	ProgressBarStepParam(game_index, game_count);
 }
@@ -3453,7 +3471,7 @@ static LRESULT Statusbar_MenuSelect(HWND hwnd, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-static void UpdateStatusBar()
+static void UpdateStatusBar(void)
 {
 	LPTREEFOLDER lpFolder = GetCurrentFolder();
 	int 		 games_shown = 0;
@@ -3608,7 +3626,7 @@ static void UpdateHistory(void)
 }
 
 
-static void DisableSelection()
+static void DisableSelection(void)
 {
 	MENUITEMINFO	mmi;
 	HMENU			hMenu = GetMenu(hMain);
@@ -4139,7 +4157,7 @@ static void KeyboardKeyUp(int syskey, int vk_code, int special)
 	check_for_GUI_action();
 }
 
-static void PollGUIJoystick()
+static void PollGUIJoystick(void)
 {
 	// For the exec timer, will keep track of how long the button has been pressed  
 	static int exec_counter = 0;
@@ -4299,7 +4317,7 @@ static void SetView(int menu_id)
 	}
 }
 
-static void ResetListView()
+static void ResetListView(void)
 {
 	int 	i;
 	int 	current_game;
@@ -4421,7 +4439,7 @@ static int MMO2LST(void)
 	return 0;
 }
 
-static void UpdateGameList()
+static void UpdateGameList(void)
 {
 	int i;
 
@@ -5256,7 +5274,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 	return FALSE;
 }
 
-static void LoadBackgroundBitmap()
+static void LoadBackgroundBitmap(void)
 {
 	HGLOBAL hDIBbg;
 	char*	pFileName = 0;
@@ -5447,7 +5465,7 @@ static int GamePicker_CheckItemBroken(HWND hwndPicker, int nItem)
 }
 
 /* Initialize the Picker and List controls */
-static void InitListView()
+static void InitListView(void)
 {
 	LVBKIMAGEA bki;
 	char path[MAX_PATH];
@@ -5494,7 +5512,7 @@ static void InitListView()
 
 	ListView_SetTextBkColor(hwndList, CLR_NONE);
 	ListView_SetBkColor(hwndList, CLR_NONE);
-	sprintf(path, "%s\\bkground.png", GetBgDir() );
+	sprintf(path, "%s\\bkground", GetBgDir() );
 	bki.ulFlags = LVBKIF_SOURCE_URL | LVBKIF_STYLE_TILE;
 	bki.pszImage = path;
 	if( hBackground )	
@@ -6158,6 +6176,7 @@ static void MamePlayBackGame(const char *fname_playback)
 	if (*filename)
 	{
 		mame_file* pPlayBack;
+		mame_file_error filerr;
 		char drive[_MAX_DRIVE];
 		char dir[_MAX_DIR];
 		char bare_fname[_MAX_FNAME];
@@ -6169,13 +6188,15 @@ static void MamePlayBackGame(const char *fname_playback)
 		_splitpath(filename, drive, dir, bare_fname, ext);
 
 		sprintf(path,"%s%s",drive,dir);
-		sprintf(fname,"%s",bare_fname); // don't add extension for zip support.
+		sprintf(fname,"%s.inp",bare_fname);
 		if (path[strlen(path)-1] == '\\')
 			path[strlen(path)-1] = 0; // take off trailing back slash
 
-		SetCorePathList(FILETYPE_INPUTLOG, path);
-		pPlayBack = mame_fopen(fname,NULL,FILETYPE_INPUTLOG,0);
-		if (pPlayBack == NULL)
+		options_set_string(SEARCHPATH_INPUTLOG, path);
+		filerr = mame_fopen(SEARCHPATH_INPUTLOG, fname, OPEN_FLAG_READ, &pPlayBack);
+		options_set_string(SEARCHPATH_INPUTLOG, GetInpDir());
+
+		if (filerr != FILERR_NONE)
 		{
 			MameMessageBox(_UI("Could not open '%s' as a valid input file."), filename);
 			return;
@@ -6214,7 +6235,7 @@ static void MamePlayBackGame(const char *fname_playback)
 	}
 }
 
-static void MameLoadState()
+static void MameLoadState(void)
 {
 	int nGame;
 	char filename[MAX_PATH];
@@ -6231,6 +6252,7 @@ static void MameLoadState()
 	if (CommonFileDialog(FALSE, filename, FILETYPE_SAVESTATE_FILES))
 	{
 		mame_file* pSaveState;
+		mame_file_error filerr;
 		char drive[_MAX_DRIVE];
 		char dir[_MAX_DIR];
 		char ext[_MAX_EXT];
@@ -6245,7 +6267,7 @@ static void MameLoadState()
 
 		// parse path
 		sprintf(path,"%s%s",drive,dir);
-		sprintf(fname,"%s%s",bare_fname,ext);
+		sprintf(fname,"%s%s.sta",bare_fname,ext);
 		if (path[strlen(path)-1] == '\\')
 			path[strlen(path)-1] = 0; // take off trailing back slash
 
@@ -6264,18 +6286,19 @@ static void MameLoadState()
 			iPos = cPos ? cPos - bare_fname : strlen(bare_fname);
 			strncpy(romname, bare_fname, iPos );
 			romname[iPos] = '\0';
-			if( strcmp(selected_filename,romname) != 0 )
+			if (strcmp(selected_filename,romname) != 0)
 			{
 				MameMessageBox(_UI("'%s' is not a valid savestate file for game '%s'."), filename, selected_filename);
 				return;
 			}
-			SetCorePathList(FILETYPE_STATE, path);
+			options_set_string(SEARCHPATH_STATE, path);
 			state_fname = fname;
 		}
 #endif // MESS
 
-		pSaveState = mame_fopen(NULL,state_fname,FILETYPE_STATE,0);
-		if (pSaveState == NULL)
+		filerr = mame_fopen(SEARCHPATH_STATE, state_fname, OPEN_FLAG_READ, &pSaveState);
+		options_set_string(SEARCHPATH_STATE, GetStateDir());
+		if (filerr != FILERR_NONE)
 		{
 			MameMessageBox(_UI("Could not open '%s' as a valid savestate file."), filename);
 			return;
@@ -6308,7 +6331,7 @@ static void MameLoadState()
 	}
 }
 
-static void MamePlayRecordGame()
+static void MamePlayRecordGame(void)
 {
 	int  nGame;
 	char filename[MAX_PATH];
@@ -6339,7 +6362,7 @@ static void MamePlayRecordGame()
 	}
 }
 
-static void MamePlayGame()
+static void MamePlayGame(void)
 {
 	int nGame;
 
@@ -6351,7 +6374,7 @@ static void MamePlayGame()
 	MamePlayGameWithOptions(nGame);
 }
 
-static void MamePlayRecordWave()
+static void MamePlayRecordWave(void)
 {
 	int  nGame;
 	char filename[MAX_PATH];
@@ -6368,7 +6391,7 @@ static void MamePlayRecordWave()
 	}	
 }
 
-static void MamePlayRecordMNG()
+static void MamePlayRecordMNG(void)
 {
 	int  nGame;
 	char filename[MAX_PATH];
@@ -7181,28 +7204,6 @@ static LRESULT CALLBACK PictureWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 	}
 
 	return CallWindowProc(g_lpPictureWndProc, hWnd, uMsg, wParam, lParam);
-}
-
-// replaces function in src/windows/fileio.c:
-int osd_display_loading_rom_message(const char *name,rom_load_data *romdata)
-{
-	int retval;
-
-	if (use_gui_romloading)
-	{
-		retval = UpdateLoadProgress(name,romdata);
-	}
-	else
-	{
-		if (name)
-			fprintf(stdout, _WINDOWS("loading %-32s\r"), name);
-		else
-			fprintf(stdout, "        %-32s\r", "");
-		fflush (stdout);
-		retval = 0;
-	}
-
-	return retval;
 }
 
 static INT_PTR CALLBACK LoadProgressDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam)

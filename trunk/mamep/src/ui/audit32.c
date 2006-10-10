@@ -117,12 +117,10 @@ const char * GetAuditString(int audit_result)
 	{
 	case CORRECT :
 	case BEST_AVAILABLE :
-	case MISSING_OPTIONAL :
 		return _UI("Yes");
 
 	case NOTFOUND :
 	case INCORRECT :
-	case CLONE_NOTFOUND :
 		return _UI("No");
 		break;
 
@@ -143,13 +141,12 @@ BOOL IsAuditResultKnown(int audit_result)
 
 BOOL IsAuditResultYes(int audit_result)
 {
-	return audit_result == CORRECT || audit_result == BEST_AVAILABLE || 
-		audit_result == MISSING_OPTIONAL;
+	return audit_result == CORRECT || audit_result == BEST_AVAILABLE;
 }
 
 BOOL IsAuditResultNo(int audit_result)
 {
-	return audit_result == NOTFOUND || audit_result == INCORRECT || audit_result == CLONE_NOTFOUND;
+	return audit_result == NOTFOUND || audit_result == INCORRECT;
 }
 
 
@@ -157,52 +154,51 @@ BOOL IsAuditResultNo(int audit_result)
     Internal functions
  ***************************************************************************/
 
-// Verifies the ROM set while calling SetRomAuditResults
-int Mame32VerifyRomSet(int game)
+static int AuditDialogVerifyRomSet(int game, verify_printf_proc output)
 {
-	int iStatus;
 	options_type *game_options;
+	audit_record *audit;
+	int audit_records;
+	int iStatus;
 
 	// apply selecting BIOS
 	game_options = GetGameOptions(game);
 	options.bios = game_options->bios;
 
-	iStatus = audit_verify_roms(game, (verify_printf_proc)DummyPrintf);
+	audit_records = audit_images(game, AUDIT_VALIDATE_FAST, &audit);
+	iStatus = audit_summary(game, audit_records, audit, output);
+	if (audit_records > 0)
+		free(audit);
+
 	SetRomAuditResults(game, iStatus);
 	return iStatus;
+}
+
+static int AuditDialogVerifySampleSet(int game, verify_printf_proc output)
+{
+	audit_record *audit;
+	int audit_records;
+	int iStatus;
+
+	audit_records = audit_samples(game, &audit);
+	iStatus = audit_summary(game, audit_records, audit, output);
+	if (audit_records > 0)
+		free(audit);
+
+	SetSampleAuditResults(game, iStatus);
+	return iStatus;
+}
+
+// Verifies the ROM set while calling SetRomAuditResults
+int Mame32VerifyRomSet(int game)
+{
+	return AuditDialogVerifyRomSet(game, (verify_printf_proc)DummyPrintf);
 }
 
 // Verifies the Sample set while calling SetSampleAuditResults
 int Mame32VerifySampleSet(int game)
 {
-	int iStatus;
-	iStatus = audit_verify_samples(game, (verify_printf_proc)DummyPrintf);
-	SetSampleAuditResults(game, iStatus);
-	return iStatus;
-}
-
-// Verifies the ROM set and reports details while calling SetRomAuditResults
-static int AuditDialogVerifyRomSet(int game)
-{
-	int iStatus;
-	options_type *game_options;
-
-	// apply selecting BIOS
-	game_options = GetGameOptions(game);
-	options.bios = game_options->bios;
-
-	iStatus = audit_verify_roms(game, (verify_printf_proc)DetailsPrintf);
-	SetRomAuditResults(game, iStatus);
-	return iStatus;
-}
-
-// Verifies the Sample set and reports details while calling SetSampleAuditResults
-static int AuditDialogVerifySampleSet(int game)
-{
-	int iStatus;
-	iStatus = audit_verify_samples(game, (verify_printf_proc)DetailsPrintf);
-	SetSampleAuditResults(game, iStatus);
-	return iStatus;
+	return AuditDialogVerifySampleSet(game, (verify_printf_proc)DummyPrintf);
 }
 
 static DWORD WINAPI AuditThreadProc(LPVOID hDlg)
@@ -335,11 +331,11 @@ INT_PTR CALLBACK GameAuditDialogProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lPa
 			int iStatus;
 			LPCSTR lpStatus;
 
-			iStatus = AuditDialogVerifyRomSet(rom_index);
+			iStatus = AuditDialogVerifyRomSet(rom_index, (verify_printf_proc)DetailsPrintf);
 			lpStatus = DriverUsesRoms(rom_index) ? StatusString(iStatus) : _UI("None required");
 			SetWindowText(GetDlgItem(hDlg, IDC_PROP_ROMS), _Unicode(lpStatus));
 
-			iStatus = AuditDialogVerifySampleSet(rom_index);
+			iStatus = AuditDialogVerifySampleSet(rom_index, (verify_printf_proc)DetailsPrintf);
 			lpStatus = DriverUsesSamples(rom_index) ? StatusString(iStatus) : _UI("None required");
 			SetWindowText(GetDlgItem(hDlg, IDC_PROP_SAMPLES), _Unicode(lpStatus));
 		}
@@ -354,12 +350,11 @@ static void ProcessNextRom(void)
 	int retval;
 	char buffer[200];
 
-	retval = AuditDialogVerifyRomSet(rom_index);
+	retval = AuditDialogVerifyRomSet(rom_index, (verify_printf_proc)DetailsPrintf);
 	switch (retval)
 	{
 	case BEST_AVAILABLE: /* correct, incorrect or separate count? */
 	case CORRECT:
-	case MISSING_OPTIONAL:
 		roms_correct++;
 		sprintf(buffer, "%i", roms_correct);
 		SetDlgItemText(hAudit, IDC_ROMS_CORRECT, _Unicode(buffer));
@@ -394,7 +389,7 @@ static void ProcessNextSample()
 	int  retval;
 	char buffer[200];
 	
-	retval = AuditDialogVerifySampleSet(sample_index);
+	retval = AuditDialogVerifySampleSet(sample_index, (verify_printf_proc)DetailsPrintf);
 	
 	switch (retval)
 	{
@@ -459,7 +454,7 @@ static void CLIB_DECL DetailsPrintf(const char *fmt, ...)
 
 	va_start(marker, fmt);
 	
-	vsprintf(buffer, fmt, marker);
+	vsprintf(buffer, _(fmt), marker);
 	
 	va_end(marker);
 
@@ -486,17 +481,12 @@ static const char * StatusString(int iStatus)
 		ptr = _UI("Best available");
 		break;
 		
-	case CLONE_NOTFOUND:
 	case NOTFOUND:
 		ptr = _UI("Not found");
 		break;
 		
 	case INCORRECT:
 		ptr = _UI("Failed");
-		break;
-
-	case MISSING_OPTIONAL:
-		ptr = _UI("Missing optional");
 		break;
 	}
 

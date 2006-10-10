@@ -8,7 +8,9 @@
 
 static const char *stat_versions[] =
 {
-	"0.108u4    September 21st 2006",
+	"0.109u1    October    6th 2006",
+	"0.109      September 26th 2006",
+	"0.108u5    September 21st 2006",
 	"0.108u4    September 14th 2006",
 	"0.108u3    September  7th 2006",
 	"0.108u2    August    31st 2006",
@@ -352,6 +354,8 @@ static const char *stat_versions[] =
 
 static const char *stat_history[] =
 {
+	"0.109u1    879    6286  +7",
+	"0.109      877    6279  +2",
 	"0.108u5    877    6277  +11",
 	"0.108u4    876    6266  +8",
 	"0.108u3    876    6258  +6",
@@ -696,7 +700,7 @@ static const char *stat_newgames[] =
 	"2003:   36      + 1109",
 	"2004:   65      +  675",
 	"2005:   70      +  563",
-	"2006:   26      +  334",
+	"2006:   28      +  343",
 	0
 };
 
@@ -1356,9 +1360,7 @@ static void ParseClose(void)
 	/* If the file is open, time for fclose. */
 
 	if (fp)
-	{
 		mame_fclose(fp);
-	}
 
 	fp = NULL;
 }
@@ -1369,16 +1371,12 @@ static void ParseClose(void)
  ****************************************************************************/
 static UINT8 ParseOpen(const char *pszFilename)
 {
+	mame_file_error filerr;
+
 	/* Open file up in binary mode */
-
-	fp = mame_fopen (NULL, pszFilename, FILETYPE_HISTORY, 0);
-
-	/* If this is NULL, return FALSE. We can't open it */
-
-	if (NULL == fp)
-	{
+	filerr = mame_fopen(SEARCHPATH_DATAFILE, pszFilename, OPEN_FLAG_READ, &fp);
+	if (filerr != FILERR_NONE)
 		return(FALSE);
-	}
 
 	/* Otherwise, prepare! */
 

@@ -1244,7 +1244,7 @@ static void init_machine(running_machine *machine)
 
 #ifdef MESS
 	/* initialize the devices */
-	if (devices_init(machine->gamedrv))
+	if (devices_init(machine))
 		fatalerror("devices_init failed");
 #endif
 
@@ -1402,6 +1402,7 @@ static void saveload_init(running_machine *machine)
 static void handle_save(running_machine *machine)
 {
 	mame_private *mame = machine->mame_data;
+	mame_file_error filerr;
 	mame_file *file;
 
 	/* if no name, bail */
@@ -1424,8 +1425,8 @@ static void handle_save(running_machine *machine)
 	}
 
 	/* open the file */
-	file = mame_fopen(machine->gamedrv->name, mame->saveload_pending_file, FILETYPE_STATE, 1);
-	if (file)
+	filerr = mame_fopen(SEARCHPATH_STATE, mame->saveload_pending_file, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
+	if (filerr == FILERR_NONE)
 	{
 		int cpunum;
 
@@ -1486,6 +1487,7 @@ cancel:
 static void handle_load(running_machine *machine)
 {
 	mame_private *mame = machine->mame_data;
+	mame_file_error filerr;
 	mame_file *file;
 
 	/* if no name, bail */
@@ -1509,8 +1511,8 @@ static void handle_load(running_machine *machine)
 	}
 
 	/* open the file */
-	file = mame_fopen(machine->gamedrv->name, mame->saveload_pending_file, FILETYPE_STATE, 0);
-	if (file)
+	filerr = mame_fopen(SEARCHPATH_STATE, mame->saveload_pending_file, OPEN_FLAG_READ, &file);
+	if (filerr == FILERR_NONE)
 	{
 		/* start loading */
 		if (state_save_load_begin(file) == 0)

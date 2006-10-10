@@ -706,13 +706,7 @@ LPWSTR GetPatchDesc(const char *game_name, const char *patch_name)
 
 void FlushFileCaches(void)
 {
-	unzip_cache_clear();
-}
-
-void SetCorePathList(int file_type,const char *s)
-{
-	// we have to pass in a malloc()'d string; core will free it later
-	set_pathlist(file_type,mame_strdup(s));
+	zip_file_cache_clear();
 }
 
 void FreeIfAllocated(char **s)

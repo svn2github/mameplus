@@ -146,7 +146,7 @@ struct _rom_load_data
 	int				romsloaded;			/* current ROMs loaded count */
 	int				romstotal;			/* total number of ROMs to read */
 
-	void *			file;				/* current file */
+	mame_file *		file;				/* current file */
 #ifdef USE_IPS
 	void *			patch;				/* current ips */
 #endif /* USE_IPS */

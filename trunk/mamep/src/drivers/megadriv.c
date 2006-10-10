@@ -28,18 +28,18 @@ Figure out how sprite masking *really* works
 Add EEprom support in games that need it
 
 Known Issues:
-	Bass Masters Classic Pro Edition (U) [!] - Sega Logo is corrupt
-	Bram Stoker's Dracula (U) [!] - Doesn't Work (HV Timing)
-	Double Dragon 2 - The Revenge (J) [!] - Too Slow?
-	International Superstar Soccer Deluxe (E) [!] - Single line Raster Glitch
-	Lemmings (JU) (REV01) [!] - Rasters off by ~7-8 lines (strange case)
-	Mercs - Sometimes sound doesn't work..
+    Bass Masters Classic Pro Edition (U) [!] - Sega Logo is corrupt
+    Bram Stoker's Dracula (U) [!] - Doesn't Work (HV Timing)
+    Double Dragon 2 - The Revenge (J) [!] - Too Slow?
+    International Superstar Soccer Deluxe (E) [!] - Single line Raster Glitch
+    Lemmings (JU) (REV01) [!] - Rasters off by ~7-8 lines (strange case)
+    Mercs - Sometimes sound doesn't work..
 
-	Some beta games without proper sound programs seem to crash because the z80 crashes
+    Some beta games without proper sound programs seem to crash because the z80 crashes
 
 Known Non-Issues (confirmed on Real Genesis)
-	Castlevania - Bloodlines (U) [!] - Pause text is missing on upside down level
-	Blood Shot (E) (M4) [!] - corrupt texture in level 1 is correct...
+    Castlevania - Bloodlines (U) [!] - Pause text is missing on upside down level
+    Blood Shot (E) (M4) [!] - corrupt texture in level 1 is correct...
 */
 
 #include "driver.h"
@@ -69,7 +69,7 @@ int megadrive_vblank_flag = 0;
 int megadrive_irq6_pending = 0;
 int megadrive_irq4_pending = 0;
 
-inline UINT16 get_hposition(void);
+INLINE UINT16 get_hposition(void);
 
 UINT8* sprite_renderline;
 UINT8* highpri_renderline;
@@ -151,7 +151,7 @@ void megadriv_z80_bank_w(UINT16 data)
 		genz80.z80_bank_pos = 0;
 		genz80.z80_bank_addr = genz80.z80_bank_partial;
 		genz80.z80_bank_partial = 0;
-	//	logerror("z80 bank set to %08x\n",genz80.z80_bank_addr);
+	//  logerror("z80 bank set to %08x\n",genz80.z80_bank_addr);
 
 	}
 
@@ -350,11 +350,11 @@ void vdp_vram_write(UINT16 data)
 	MEGADRIV_VDP_VRAM(megadrive_vdp_address>>1) = data;
 
 	/* The VDP stores an Internal copy of any data written to the Sprite Attribute Table.
-	   This data is _NOT_ invalidated when the Sprite Base Address changes, thus allowing
-	   for some funky effects, as used by Castlevania Bloodlines Stage 6-3 */
+       This data is _NOT_ invalidated when the Sprite Base Address changes, thus allowing
+       for some funky effects, as used by Castlevania Bloodlines Stage 6-3 */
 	if (megadrive_vdp_address>=lowlimit && megadrive_vdp_address<highlimit)
 	{
-//		printf("spritebase is %04x-%04x vram address is %04x, write %04x\n",lowlimit, highlimit-1, megadrive_vdp_address, data);
+//      printf("spritebase is %04x-%04x vram address is %04x, write %04x\n",lowlimit, highlimit-1, megadrive_vdp_address, data);
 		megadrive_vdp_internal_sprite_attribute_table[(megadrive_vdp_address&(spritetable_size-1))>>1] = data;
 	}
 
@@ -417,7 +417,7 @@ void megadriv_vdp_data_port_w(int data)
  0101b : VSRAM write
  1000b : CRAM read
  */
-// 	logerror("write to vdp data port %04x with code %04x, write address %04x\n",data, megadrive_vdp_code, megadrive_vdp_address );
+//  logerror("write to vdp data port %04x with code %04x, write address %04x\n",data, megadrive_vdp_code, megadrive_vdp_address );
 
 	if (megadrive_vram_fill_pending)
 	{
@@ -454,9 +454,9 @@ void megadriv_vdp_data_port_w(int data)
 		megadrive_vdp_register[0x13] = 0;
 		megadrive_vdp_register[0x14] = 0;
 
-	//	megadrive_vdp_register[0x15] = (source>>1) & 0xff;
-	//	megadrive_vdp_register[0x16] = (source>>9) & 0xff;
-	//	megadrive_vdp_register[0x17] = (source>>17) & 0xff;
+	//  megadrive_vdp_register[0x15] = (source>>1) & 0xff;
+	//  megadrive_vdp_register[0x16] = (source>>9) & 0xff;
+	//  megadrive_vdp_register[0x17] = (source>>17) & 0xff;
 
 
 	}
@@ -506,8 +506,8 @@ void megadrive_vdp_set_register(int regnum, UINT8 value)
 	megadrive_vdp_register[regnum] = value;
 
 	/* We need special handling for the IRQ enable registers, some games turn
-	   off the irqs before they are taken, delaying them until the IRQ is turned
-	   back on */
+       off the irqs before they are taken, delaying them until the IRQ is turned
+       back on */
 
 	if (regnum == 0x00)
 	{
@@ -526,9 +526,9 @@ void megadrive_vdp_set_register(int regnum, UINT8 value)
 		}
 
 		/* ??? Fatal Rewind needs this but I'm not sure it's accurate behavior
-		   it causes flickering in roadrash */
-	//	megadrive_irq6_pending = 0;
-	//	megadrive_irq4_pending = 0;
+           it causes flickering in roadrash */
+	//  megadrive_irq6_pending = 0;
+	//  megadrive_irq4_pending = 0;
 
 	}
 
@@ -547,16 +547,16 @@ void megadrive_vdp_set_register(int regnum, UINT8 value)
 		}
 
 		/* ??? */
-	//	megadrive_irq6_pending = 0;
-	//	megadrive_irq4_pending = 0;
+	//  megadrive_irq6_pending = 0;
+	//  megadrive_irq4_pending = 0;
 
 	}
 
 
-//	if (regnum == 0x0a)
-//		printf("Set HINT Reload Register to %d on scanline %d\n",value, genesis_scanline_counter);
+//  if (regnum == 0x0a)
+//      printf("Set HINT Reload Register to %d on scanline %d\n",value, genesis_scanline_counter);
 
-//	printf("%06x Setting VDP Register #%02x to %02x\n",activecpu_get_pc(), regnum,value);
+//  printf("%06x Setting VDP Register #%02x to %02x\n",activecpu_get_pc(), regnum,value);
 }
 
 void update_megadrive_vdp_code_and_address(void)
@@ -577,8 +577,8 @@ UINT16 get_word_from_68k_mem(UINT32 source)
 	}
 	else if (( source >= 0xe00000 ) && ( source <= 0xffffff ))
 	{
-//		printf("dma\n");
-	//	return ((megadrive_ram[(source&0xffff)>>1]&0xff00)>>8)|((megadrive_ram[(source&0xffff)>>1]&0x00ff)<<8);
+//      printf("dma\n");
+	//  return ((megadrive_ram[(source&0xffff)>>1]&0xff00)>>8)|((megadrive_ram[(source&0xffff)>>1]&0x00ff)<<8);
 		return megadrive_ram[(source&0xffff)>>1];
 	}
 	else
@@ -735,7 +735,7 @@ void handle_dma_bits(void)
 		UINT16 length;
 		source = (MEGADRIVE_REG15_DMASOURCE1 | (MEGADRIVE_REG16_DMASOURCE2<<8) | ((MEGADRIVE_REG17_DMASOURCE3&0xff)<<16))<<1;
 		length = (MEGADRIVE_REG13_DMALENGTH1 | (MEGADRIVE_REG14_DMALENGTH2<<8))<<1;
-	//	printf("%06x 68k DMAtran set source %06x length %04x dest %04x enabled %01x code %02x %02x\n", activecpu_get_pc(), source, length, megadrive_vdp_address,MEGADRIVE_REG01_DMA_ENABLE, megadrive_vdp_code,MEGADRIVE_REG0F_AUTO_INC);
+	//  printf("%06x 68k DMAtran set source %06x length %04x dest %04x enabled %01x code %02x %02x\n", activecpu_get_pc(), source, length, megadrive_vdp_address,MEGADRIVE_REG01_DMA_ENABLE, megadrive_vdp_code,MEGADRIVE_REG0F_AUTO_INC);
 
 	}
 
@@ -860,7 +860,7 @@ void handle_dma_bits(void)
 
 void megadriv_vdp_ctrl_port_w(int data)
 {
-//	logerror("write to vdp control port %04x\n",data);
+//  logerror("write to vdp control port %04x\n",data);
 	megadrive_vram_fill_pending = 0; // ??
 
 	if (megadrive_vdp_command_pending)
@@ -910,12 +910,12 @@ WRITE16_HANDLER( megadriv_vdp_w )
 			if (!ACCESSING_MSB)
 			{
 				data = (data&0x00ff) | data<<8;
-			//	printf("8-bit write VDP data port access, offset %04x data %04x mem_mask %04x\n",offset,data,mem_mask);
+			//  printf("8-bit write VDP data port access, offset %04x data %04x mem_mask %04x\n",offset,data,mem_mask);
 			}
 			else if (!ACCESSING_LSB)
 			{
 				data = (data&0xff00) | data>>8;
-			//	printf("8-bit write VDP data port access, offset %04x data %04x mem_mask %04x\n",offset,data,mem_mask);
+			//  printf("8-bit write VDP data port access, offset %04x data %04x mem_mask %04x\n",offset,data,mem_mask);
 			}
 			megadriv_vdp_data_port_w(data);
 			break;
@@ -1010,9 +1010,9 @@ UINT16 megadriv_vdp_data_port_r(void)
 			break;
 	}
 
-//	printf("vdp_data_port_r %04x %04x %04x\n",megadrive_vdp_code, megadrive_vdp_address, retdata);
+//  printf("vdp_data_port_r %04x %04x %04x\n",megadrive_vdp_code, megadrive_vdp_address, retdata);
 
-//	logerror("Read VDP Data Port\n");
+//  logerror("Read VDP Data Port\n");
 	return retdata;
 }
 
@@ -1082,14 +1082,14 @@ PAL, 256x224
 UINT16 megadriv_vdp_ctrl_port_r(void)
 {
 	/* Battletoads is very fussy about the vblank flag
-	   it wants it to be 1. in scanline 224 */
+       it wants it to be 1. in scanline 224 */
 
 	/* Double Dragon 2 is very sensitive to hblank timing */
 	/* xperts is very fussy too */
 
 	/* Game no Kanzume Otokuyou (J) [!] is also fussy
-	  - it cares about the bits labeled always 0, always 1.. (!)
-	 */
+      - it cares about the bits labeled always 0, always 1.. (!)
+     */
 
 	/* Megalo Mania also fussy - cares about pending flag*/
 
@@ -1254,7 +1254,7 @@ UINT16 megadriv_read_hv_counters(void)
 	int vpos = genesis_scanline_counter;
 	UINT16 hpos = get_hposition();
 
-//	if (hpos>424) vpos++; // fixes dracula, breaks road rash
+//  if (hpos>424) vpos++; // fixes dracula, breaks road rash
 	if (hpos>460) vpos++; // when does vpos increase.. also on sms, check game gear manual..
 
 	/* shouldn't happen.. */
@@ -1311,20 +1311,20 @@ READ16_HANDLER( megadriv_vdp_r )
 
 		case 0x04:
 		case 0x06:
-		//	if ((!ACCESSING_MSB) || (!ACCESSING_LSB)) printf("8-bit VDP read control port access, offset %04x mem_mask %04x\n",offset,mem_mask);
+		//  if ((!ACCESSING_MSB) || (!ACCESSING_LSB)) printf("8-bit VDP read control port access, offset %04x mem_mask %04x\n",offset,mem_mask);
 			retvalue = megadriv_vdp_ctrl_port_r();
-		//	retvalue = mame_rand(Machine);
-		//	printf("%06x: Read Control Port at scanline %d hpos %d (return %04x)\n",activecpu_get_pc(),genesis_scanline_counter, get_hposition(),retvalue);
+		//  retvalue = mame_rand(Machine);
+		//  printf("%06x: Read Control Port at scanline %d hpos %d (return %04x)\n",activecpu_get_pc(),genesis_scanline_counter, get_hposition(),retvalue);
 			break;
 
 		case 0x08:
 		case 0x0a:
 		case 0x0c:
 		case 0x0e:
-		//	if ((!ACCESSING_MSB) || (!ACCESSING_LSB)) printf("8-bit VDP read HV counter port access, offset %04x mem_mask %04x\n",offset,mem_mask);
+		//  if ((!ACCESSING_MSB) || (!ACCESSING_LSB)) printf("8-bit VDP read HV counter port access, offset %04x mem_mask %04x\n",offset,mem_mask);
 			retvalue = megadriv_read_hv_counters();
-		//	retvalue = mame_rand(Machine);
-		//	printf("%06x: Read HV counters at scanline %d hpos %d (return %04x)\n",activecpu_get_pc(),genesis_scanline_counter, get_hposition(),retvalue);
+		//  retvalue = mame_rand(Machine);
+		//  printf("%06x: Read HV counters at scanline %d hpos %d (return %04x)\n",activecpu_get_pc(),genesis_scanline_counter, get_hposition(),retvalue);
 			break;
 
 		case 0x10:
@@ -1523,16 +1523,16 @@ INPUT_PORTS_START( ssf2ghw )
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
 
-//	PORT_START_TAG("RESET") /* Buttons on Genesis Console */
-//	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_SERVICE1 ) PORT_NAME("Reset Button") PORT_IMPULSE(1) // reset, resets 68k (and..?)
+//  PORT_START_TAG("RESET") /* Buttons on Genesis Console */
+//  PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_SERVICE1 ) PORT_NAME("Reset Button") PORT_IMPULSE(1) // reset, resets 68k (and..?)
 
-//	PORT_START_TAG("REGION") /* Buttons on Genesis Console */
-//	//* Region setting for Console */
-//	PORT_DIPNAME( 0x000f, 0x0000, DEF_STR( Region ) )
-//	PORT_DIPSETTING(      0x0000, "Use HazeMD Default Choice" )
-//	PORT_DIPSETTING(      0x0001, "US (NTSC, 60fps)" )
-//	PORT_DIPSETTING(      0x0002, "JAPAN (NTSC, 60fps)" )
-//	PORT_DIPSETTING(      0x0003, "EUROPE (PAL, 50fps)" )
+//  PORT_START_TAG("REGION") /* Buttons on Genesis Console */
+//  //* Region setting for Console */
+//  PORT_DIPNAME( 0x000f, 0x0000, DEF_STR( Region ) )
+//  PORT_DIPSETTING(      0x0000, "Use HazeMD Default Choice" )
+//  PORT_DIPSETTING(      0x0001, "US (NTSC, 60fps)" )
+//  PORT_DIPSETTING(      0x0002, "JAPAN (NTSC, 60fps)" )
+//  PORT_DIPSETTING(      0x0003, "EUROPE (PAL, 50fps)" )
 
 	PORT_START_TAG("DSWA")
 	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coinage ) )
@@ -1543,7 +1543,7 @@ INPUT_PORTS_START( ssf2ghw )
 	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
+//  PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
 
 	PORT_START_TAG("DSWB")
 	PORT_DIPNAME( 0x07, 0x03, DEF_STR( Difficulty ) )
@@ -1569,11 +1569,11 @@ INPUT_PORTS_START( ssf2ghw )
 	PORT_DIPSETTING(    0x07, "8" )
 	PORT_DIPSETTING(    0x06, "9" )
 	PORT_DIPSETTING(    0x05, "10 (Fastest)" )
-//	PORT_DIPSETTING(    0x04, "10 (Fastest)" )
-//	PORT_DIPSETTING(    0x03, "10 (Fastest)" )
-//	PORT_DIPSETTING(    0x02, "10 (Fastest)" )
-//	PORT_DIPSETTING(    0x01, "10 (Fastest)" )
-//	PORT_DIPSETTING(    0x00, "10 (Fastest)" )
+//  PORT_DIPSETTING(    0x04, "10 (Fastest)" )
+//  PORT_DIPSETTING(    0x03, "10 (Fastest)" )
+//  PORT_DIPSETTING(    0x02, "10 (Fastest)" )
+//  PORT_DIPSETTING(    0x01, "10 (Fastest)" )
+//  PORT_DIPSETTING(    0x00, "10 (Fastest)" )
 INPUT_PORTS_END
 
 
@@ -1761,7 +1761,7 @@ UINT8 megadrive_io_read_data_port_6button(int portnum)
 		}
 	}
 
-//	printf("read io data port stage %d port %d %02x\n",io_stage[portnum],portnum,retdata);
+//  printf("read io data port stage %d port %d %02x\n",io_stage[portnum],portnum,retdata);
 
 
 	return retdata|(retdata<<8);
@@ -1864,7 +1864,7 @@ READ16_HANDLER( megadriv_68k_io_read )
 		case 0x1:
 		case 0x2:
 		case 0x3:
-//			retdata = megadrive_io_read_data_port(offset-1);
+//          retdata = megadrive_io_read_data_port(offset-1);
 			retdata = megadrive_io_read_data_port_ptr(offset-1);
 			break;
 
@@ -1926,7 +1926,7 @@ void megadrive_io_write_data_port_6button(int portnum, UINT16 data)
 void megadrive_io_write_ctrl_port(int portnum, UINT16 data)
 {
 	megadrive_io_ctrl_regs[portnum] = data;
-//	printf("Setting IO Control Register #%d data %04x\n",portnum,data);
+//  printf("Setting IO Control Register #%d data %04x\n",portnum,data);
 }
 
 void megadrive_io_write_tx_port(int portnum, UINT16 data)
@@ -1948,7 +1948,7 @@ void megadrive_io_write_sctrl_port(int portnum, UINT16 data)
 
 WRITE16_HANDLER( megadriv_68k_io_write )
 {
-//	printf("IO Write #%02x data %04x mem_mask %04x\n",offset,data,mem_mask);
+//  printf("IO Write #%02x data %04x mem_mask %04x\n",offset,data,mem_mask);
 
 
 	switch (offset)
@@ -1962,7 +1962,7 @@ WRITE16_HANDLER( megadriv_68k_io_write )
 		case 0x1:
 		case 0x2:
 		case 0x3:
-//			megadrive_io_write_data_port(offset-1,data);
+//          megadrive_io_write_data_port(offset-1,data);
 			megadrive_io_write_data_port_ptr(offset-1,data);
 			break;
 
@@ -2009,14 +2009,14 @@ static ADDRESS_MAP_START( megadriv_readmem, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0xd00000 , 0xd0001f) AM_READ(megadriv_vdp_r) // the earth defend
 
 	/* these are fake - remove allocs in VIDEO_START to use these to view ram instead */
-//	AM_RANGE(0xb00000 , 0xb0ffff) AM_READ(MRA16_RAM) AM_BASE(&megadrive_vdp_vram)
-//	AM_RANGE(0xb10000 , 0xb1007f) AM_READ(MRA16_RAM) AM_BASE(&megadrive_vdp_vsram)
-//	AM_RANGE(0xb10100 , 0xb1017f) AM_READ(MRA16_RAM) AM_BASE(&megadrive_vdp_cram)
+//  AM_RANGE(0xb00000 , 0xb0ffff) AM_READ(MRA16_RAM) AM_BASE(&megadrive_vdp_vram)
+//  AM_RANGE(0xb10000 , 0xb1007f) AM_READ(MRA16_RAM) AM_BASE(&megadrive_vdp_vsram)
+//  AM_RANGE(0xb10100 , 0xb1017f) AM_READ(MRA16_RAM) AM_BASE(&megadrive_vdp_cram)
 
 
 
 	AM_RANGE(0xe00000 , 0xe0ffff) AM_READ(MRA16_RAM) AM_MIRROR(0x1f0000)
-//	AM_RANGE(0xff0000 , 0xffffff) AM_READ(MRA16_RAM)
+//  AM_RANGE(0xff0000 , 0xffffff) AM_READ(MRA16_RAM)
 	/*       0xe00000 - 0xffffff) == MAIN RAM (64kb, Mirrored, most games use ff0000 - ffffff) */
 
 ADDRESS_MAP_END
@@ -2091,12 +2091,12 @@ READ16_HANDLER( megadriv_68k_check_z80_bus )
 	UINT16 retvalue;
 
 	/* Double Dragon, Shadow of the Beast, Super Off Road, and Time Killers have buggy
-	   sound programs.  They request the bus, then have a loop which waits for the bus
-	   to be unavailable, checking for a 0 value due to bad coding.  The real hardware
-	   appears to return bits of the next instruction in the unused bits, thus meaning
-	   the value is never zero.  Time Killers is the most fussy, and doesn't like the
-	   read_next_instruction function from system16, so I just return a random value
-	   in the unused bits */
+       sound programs.  They request the bus, then have a loop which waits for the bus
+       to be unavailable, checking for a 0 value due to bad coding.  The real hardware
+       appears to return bits of the next instruction in the unused bits, thus meaning
+       the value is never zero.  Time Killers is the most fussy, and doesn't like the
+       read_next_instruction function from system16, so I just return a random value
+       in the unused bits */
 	UINT16 nextvalue = mame_rand(Machine);//read_next_instruction()&0xff00;
 
 
@@ -2124,7 +2124,7 @@ READ16_HANDLER( megadriv_68k_check_z80_bus )
 		if (genz80.z80_has_bus || genz80.z80_is_reset) retvalue = nextvalue | 0x0100;
 		else retvalue = (nextvalue & 0xfeff);
 
-	//	printf("%06x: 68000 check z80 Bus (word access) %04x %04x\n", activecpu_get_pc(),mem_mask, retvalue);
+	//  printf("%06x: 68000 check z80 Bus (word access) %04x %04x\n", activecpu_get_pc(),mem_mask, retvalue);
 		return retvalue;
 	}
 }
@@ -2281,7 +2281,7 @@ WRITE8_HANDLER( z80_write_68k_banked_data )
 	fulladdress = genz80.z80_bank_addr + offset;
 
 
-//	printf("z80_write_68k_banked_data %04x %02x\n",offset,data);
+//  printf("z80_write_68k_banked_data %04x %02x\n",offset,data);
 	if ((fulladdress >= 0x000000) && (fulladdress <= 0x3fffff)) // ROM Addresses
 	{
 
@@ -2461,9 +2461,9 @@ VIDEO_START(megadriv)
 
 	for (x=0;x<0x20;x++)
 		megadrive_vdp_register[x]=0;
-//	memset(megadrive_vdp_vram, 0xff, 0x10000);
-//	memset(megadrive_vdp_cram, 0xff, 0x80);
-//	memset(megadrive_vdp_vsram, 0xff, 0x80);
+//  memset(megadrive_vdp_vram, 0xff, 0x10000);
+//  memset(megadrive_vdp_cram, 0xff, 0x80);
+//  memset(megadrive_vdp_vsram, 0xff, 0x80);
 
 	memset(megadrive_vdp_vram, 0x00, 0x10000);
 	memset(megadrive_vdp_cram, 0x00, 0x80);
@@ -2494,12 +2494,12 @@ VIDEO_UPDATE(megadriv)
 	/* Copy our screen buffer here */
 	copybitmap(bitmap, render_bitmap, 0, 0, 0, 0, cliprect, TRANSPARENCY_NONE, 0);
 
-//	int xxx;
+//  int xxx;
 	/* reference */
 
-//	time_elapsed_since_crap = mame_timer_timeelapsed(frame_timer);
-//	xxx = MAME_TIME_TO_CYCLES(0,time_elapsed_since_crap);
-//	printf("update cycles %d, %08x %08x\n",xxx, (UINT32)(time_elapsed_since_crap.subseconds>>32),(UINT32)(time_elapsed_since_crap.subseconds&0xffffffff));
+//  time_elapsed_since_crap = mame_timer_timeelapsed(frame_timer);
+//  xxx = MAME_TIME_TO_CYCLES(0,time_elapsed_since_crap);
+//  printf("update cycles %d, %08x %08x\n",xxx, (UINT32)(time_elapsed_since_crap.subseconds>>32),(UINT32)(time_elapsed_since_crap.subseconds&0xffffffff));
 
 	return 0;
 }
@@ -2639,7 +2639,7 @@ void genesis_render_spriteline_to_spritebuffer(int scanline)
 				else pri = 0x40;
 
 				/* todo: fix me, I'm sure this isn't right but sprite 0 + other sprite seem to do something..
-				   maybe spritemask|=2 should be set for anything < 0x40 ?*/
+                   maybe spritemask|=2 should be set for anything < 0x40 ?*/
 				if (xpos==0x00) spritemask|=1;
 
 				//if (xpos==0x01) spritemask|=2;
@@ -3353,7 +3353,7 @@ void genesis_render_videoline_to_videobuffer(int scanline)
 
 		for (column=non_window_firstcol/16;column<non_window_lastcol/16;column++)
 		{	/* 20x 16x1 blocks */
-		//	int xx;
+		//  int xx;
 			int vcolumn;
 			int dpos;
 
@@ -3817,10 +3817,10 @@ void genesis_render_scanline(int scanline)
 	genesis_render_videobuffer_to_screenbuffer(scanline);
 }
 
-inline UINT16 get_hposition(void)
+INLINE UINT16 get_hposition(void)
 {
-//	static int lowest = 99999;
-//	static int highest = -99999;
+//  static int lowest = 99999;
+//  static int highest = -99999;
 
 	mame_time time_elapsed_since_scanline_timer;
 	UINT16 value4;
@@ -3836,8 +3836,8 @@ inline UINT16 get_hposition(void)
 		value4 = megadrive_max_hposition;
 	}
 
-//	if (value4>highest) highest = value4;
-//	if (value4<lowest) lowest = value4;
+//  if (value4>highest) highest = value4;
+//  if (value4<lowest) lowest = value4;
 
 	//printf("%d low %d high %d scancounter %d\n", value4, lowest, highest,genesis_scanline_counter);
 
@@ -4108,7 +4108,7 @@ inline UINT16 get_hposition(void)
 --xxxxx-------- cycles 126376, 003a88ad 660c25e6 counter 259
 --xxxxx-------- cycles 126864, 003ac288 821dfc88 counter 260
 --xxxxx-------- cycles 127352, 003afc63 9e2fd32a counter 261
-	 ---------- cycles 127840, 003b363e ba41aaaa (End of frame / start of next)
+     ---------- cycles 127840, 003b363e ba41aaaa (End of frame / start of next)
 */
 
 int irq4counter = -1;
@@ -4127,21 +4127,21 @@ static void render_timer_callback(int num)
 static void scanline_timer_callback(int num)
 {
 	/* This function is called at the very start of every scanline starting at the very
-	   top-left of the screen.  The first scanline is scanline 0 (we set scanline to -1 in
-	   VIDEO_EOF) */
+       top-left of the screen.  The first scanline is scanline 0 (we set scanline to -1 in
+       VIDEO_EOF) */
 
 	timer_set(TIME_NOW, 0, 0);
 	/* Compensate for some rounding errors
 
-	   When the counter reaches 261 we should have reached the end of the frame, however due
-	   to rounding errors in the timer calculation we're not quite there.  Let's assume we are
-	   still in the previous scanline for now.
-	*/
+       When the counter reaches 261 we should have reached the end of the frame, however due
+       to rounding errors in the timer calculation we're not quite there.  Let's assume we are
+       still in the previous scanline for now.
+    */
 
 	if (genesis_scanline_counter!=(megadrive_total_scanlines-1))
 	{
 		genesis_scanline_counter++;
-//		printf("scanline %d\n",genesis_scanline_counter);
+//      printf("scanline %d\n",genesis_scanline_counter);
 		timer_adjust(scanline_timer,  SUBSECONDS_TO_DOUBLE(1000000000000000000LL/megadriv_framerate/megadrive_total_scanlines), 0, 0);
 
 		timer_adjust(render_timer,  TIME_IN_USEC(1), 0, 0);
@@ -4150,7 +4150,7 @@ static void scanline_timer_callback(int num)
 
 		if (genesis_scanline_counter==megadrive_irq6_scanline )
 		{
-		//	printf("x %d",genesis_scanline_counter);
+		//  printf("x %d",genesis_scanline_counter);
 			timer_adjust(irq6_on_timer,  TIME_IN_USEC(6), 0, 0);
 			megadrive_irq6_pending = 1;
 			megadrive_vblank_flag = 1;
@@ -4162,7 +4162,7 @@ static void scanline_timer_callback(int num)
 		if (megadrive_vblank_flag>=236)
 			megadrive_vblank_flag = 0;
 
-	//	if (genesis_scanline_counter==0) irq4counter = MEGADRIVE_REG0A_HINT_VALUE;
+	//  if (genesis_scanline_counter==0) irq4counter = MEGADRIVE_REG0A_HINT_VALUE;
 		// irq4counter = MEGADRIVE_REG0A_HINT_VALUE;
 
 		if (genesis_scanline_counter<=224)
@@ -4218,7 +4218,7 @@ static void irq6_on_callback(int num)
 	//printf("irq6 active on %d\n",genesis_scanline_counter);
 
 	{
-//		megadrive_irq6_pending = 1;
+//      megadrive_irq6_pending = 1;
 		if (MEGADRIVE_REG01_IRQ6_ENABLE) cpunum_set_input_line(0,6,HOLD_LINE);
 	}
 }
@@ -4295,9 +4295,9 @@ MACHINE_RESET( megadriv_reset )
 	timer_adjust(frame_timer, TIME_NOW, 0, 0);
 	timer_adjust(scanline_timer,  TIME_NOW, 0, 0);
 
-//	set_refresh_rate(megadriv_framerate);
+//  set_refresh_rate(megadriv_framerate);
 	cpunum_set_clockscale(0, 0.9950f); /* Fatal Rewind is very fussy... */
-//	cpunum_set_clockscale(0, 0.3800f); /* Fatal Rewind is very fussy... */
+//  cpunum_set_clockscale(0, 0.3800f); /* Fatal Rewind is very fussy... */
 
 	memset(megadrive_ram,0x00,0x10000);
 
@@ -4327,7 +4327,7 @@ VIDEO_EOF(megadriv)
 	megadrive_sprite_collision=0;//? when to reset this ..
 	megadrive_imode = MEGADRIVE_REG0C_INTERLEAVE; // can't change mid-frame..
 	megadrive_imode_odd_frame^=1;
-//	cpunum_set_input_line(1,0,CLEAR_LINE); // if the z80 interrupt hasn't happened by now, clear it..
+//  cpunum_set_input_line(1,0,CLEAR_LINE); // if the z80 interrupt hasn't happened by now, clear it..
 
 	if (MD_RESET_BUTTON)  cpunum_set_input_line(0, INPUT_LINE_RESET, PULSE_LINE);
 
@@ -4395,7 +4395,7 @@ int megadrive_z80irq_hpos = 320;
 		case 2:scr_width = 320;break;// configure_screen(0, 320-1, megadrive_visible_scanlines-1,(double)megadriv_framerate); break; /* technically invalid, but used in rare cases */
 		case 3:scr_width = 320;break;// configure_screen(0, 320-1, megadrive_visible_scanlines-1,(double)megadriv_framerate); break;
 	}
-//	printf("my mode %02x", megadrive_vdp_register[0x0c]);
+//  printf("my mode %02x", megadrive_vdp_register[0x0c]);
 
 	visarea.min_x = 0;
 	visarea.max_x = scr_width-1;
@@ -4408,7 +4408,7 @@ int megadrive_z80irq_hpos = 320;
 {
 	UINT16 count = 0;
 	int y,x,yy,xx;
-//	printf("bb\n");
+//  printf("bb\n");
 
 	for (y=0;y<64;y++)
 	{
@@ -4450,7 +4450,7 @@ int megadrive_z80irq_hpos = 320;
 		int xxx;
 		UINT64 frametime;
 
-	//	/* reference */
+	//  /* reference */
 		frametime = 1000000000000000000LL/megadriv_framerate;
 
 		time_elapsed_since_crap = mame_timer_timeelapsed(frame_timer);
@@ -4574,7 +4574,7 @@ int genesis_int_callback (int irq)
 	if (irq==6)
 	{
 		megadrive_irq6_pending = 0;
-	//	printf("clear pending!\n");
+	//  printf("clear pending!\n");
 	}
 
 	return (0x60+irq*4)/4; // vector address
@@ -4612,8 +4612,8 @@ void megadriv_init_common(void)
 
 	{
 		/* only really useful on official games, ea games etc. don't bother
-		  some games specify a single address, (start 200001, end 200001)
-		  this usually means there is serial eeprom instead */
+          some games specify a single address, (start 200001, end 200001)
+          this usually means there is serial eeprom instead */
 		int i;
 		printf("DEBUG:: Header: Backup RAM string (ignore for games without)\n");
 		for (i=0;i<12;i++)

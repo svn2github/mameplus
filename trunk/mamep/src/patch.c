@@ -6,6 +6,7 @@
 #define UTF8_SIGNATURE	"\xef\xbb\xbf"
 #define IPS_SIGNATURE	"PATCH"
 #define IPS_TAG_EOF	"EOF"
+#define INDEX_EXT	".dat"
 #define IPS_EXT		".ips"
 #define CRC_STAG	"CRC("
 #define CRC_ETAG	")"
@@ -77,14 +78,19 @@ static UINT32 get_rom_total_length(const rom_entry *romp)
 static int load_ips_file(ips_chunk **p, const char *ips_dir, const char *ips_name, rom_load_data *romdata, UINT32 length)
 {
 	mame_file *file;
+	mame_file_error filerr;
+	char *fname;
 	UINT32 pos = 0;
 	UINT8 buffer[8];
 	int len;
 
 	logerror("IPS: load ips flie \"%s/%s\"\n", ips_dir, ips_name);
 
-	file = mame_fopen(ips_dir, ips_name, FILETYPE_IPS, 0);
-	if (file == NULL)
+	fname = assemble_4_strings(ips_dir, "/", ips_name, IPS_EXT);
+	filerr = mame_fopen(SEARCHPATH_IPS, fname, OPEN_FLAG_READ, &file);
+	free(fname);
+
+	if (filerr != FILERR_NONE)
 	{
 		sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
 			_("ERROR: %s/%s: open fail\n"), ips_dir, ips_name);
@@ -215,11 +221,17 @@ static int parse_ips_patch(ips_entry **ips_p, const char *patch_name, rom_load_d
 {
 	UINT8 buffer[1024];
 	mame_file *fpDat;
+	mame_file_error filerr;
+	char *fname;
 	int result = 0;
 
 	logerror("IPS: load ips \"%s\"\n", patch_name);
 
-	if ((fpDat = mame_fopen(Machine->gamedrv->name, patch_name, FILETYPE_PATCH, 0)) == NULL)
+	fname = assemble_4_strings(Machine->gamedrv->name, "/", patch_name, INDEX_EXT);
+	filerr = mame_fopen(SEARCHPATH_IPS, fname, OPEN_FLAG_READ, &fpDat);
+	free(fname);
+
+	if (filerr != FILERR_NONE)
 	{
 		sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
 			_("ERROR: %s: IPS file is not found\n"), patch_name);
@@ -299,14 +311,12 @@ static int parse_ips_patch(ips_entry **ips_p, const char *patch_name, rom_load_d
 			ips_p = &entry->next;
 
 			entry->rom_name = mame_strdup(rom_name);
-			entry->ips_name = malloc(strlen(ips_name) + sizeof (IPS_EXT));
+			entry->ips_name = mame_strdup(ips_name);
 			if (!entry->rom_name || !entry->ips_name)
 			{
 				strcat(romdata->errorbuf, _("ERROR: IPS: not enough memory\n"));
 				goto parse_ips_patch_fail;
 			}
-
-			sprintf(entry->ips_name, "%s%s", ips_name, IPS_EXT);
 
 			if (!load_ips_file(&entry->chunk, ips_dir, entry->ips_name, romdata, get_rom_total_length(current)))
 				goto parse_ips_patch_fail;

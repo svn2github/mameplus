@@ -52,7 +52,6 @@ int frontend_listdevices(FILE *output);
 #endif /* MESS */
 
 void set_pathlist(int file_type, const char *new_rawpath);
-void setup_datafile(void);
 
 #ifdef MESS
 extern const options_entry mess_opts[];
@@ -88,7 +87,7 @@ void assign_drivers(void);
 #endif /* DRIVER_SWITCH */
 static void extract_options(const game_driver *driver, machine_config *drv);
 static void setup_language(void);
-static void setup_playback(const char *filename, const game_driver *driver);
+static void setup_playback(const char *filename);
 static void setup_record(const char *filename, const game_driver *driver);
 #ifdef UI_COLOR_DISPLAY
 static void setup_palette(void);
@@ -186,6 +185,8 @@ const options_entry windows_opts[] =
 	{ "mameinfo_file",            "mameinfo.dat", 0,              "mameinfo database name" },
 #ifdef USE_HISCORE
 	{ "hiscore_file",             "hiscore.dat", 0,               "high score database name" },
+#else /* STORY_DATAFILE */
+	{ "hiscore_file",             "hiscore.dat",OPTION_DEPRECATED,"(disabled by compiling option)" },
 #endif /* USE_HISCORE */
 
 	// misc options
@@ -516,6 +517,7 @@ INLINE int is_directory_separator(char c)
 int cli_frontend_init(int argc, char **argv)
 {
 	const char *gamename;
+	const char *stemp;
 	machine_config drv;
 	char basename[20];
 	char buffer[512];
@@ -529,31 +531,39 @@ int cli_frontend_init(int argc, char **argv)
 	options_set_option_callback("", win_mess_driver_name_callback);
 #endif // MESS
 
+	// clear all core options
+	memset(&options, 0, sizeof(options));
+
 	// parse the command line first; if we fail here, we're screwed
 	if (options_parse_command_line(argc, argv))
 		exit(1);
 
+	// language options
+	setup_language();
+
 	// parse the simple commmands before we go any further
 	execute_simple_commands();
 
-	// load mame.ini from current dir
-	set_pathlist(FILETYPE_INI, ".");
-
 	// now parse the core set of INI files
-	parse_ini_file(CONFIGNAME ".ini");
-
-	// use inipath from configuration
-	set_pathlist(FILETYPE_INI, NULL);
-
+	options_set_string(SEARCHPATH_INI, ".");
+	parse_ini_file(CONFIGNAME);
 	parse_ini_file(extract_base_name(argv[0], buffer, ARRAY_LENGTH(buffer)));
-
 #ifdef MAME_DEBUG
-	parse_ini_file("debug.ini");
+	parse_ini_file("debug");
 #endif
+
+	// reparse the command line to ensure its options override all
+	// note that we re-fetch the gamename here as it will get overridden
+	options_parse_command_line(argc, argv);
+	setup_language();
 
 #ifdef DRIVER_SWITCH
 	assign_drivers();
 #endif /* DRIVER_SWITCH */
+
+	stemp = options_get_string("playback", TRUE);
+	if (stemp != NULL)
+		setup_playback(stemp);
 
 	// find out what game we might be referring to
 	gamename = options_get_string("", FALSE);
@@ -572,7 +582,7 @@ int cli_frontend_init(int argc, char **argv)
 
 		// parse vector.ini for vector games
 		if (drv.video_attributes & VIDEO_TYPE_VECTOR)
-			parse_ini_file("vector.ini");
+			parse_ini_file("vector");
 
 		// then parse sourcefile.ini
 		parse_ini_file(extract_base_name(driver->source_file, buffer, ARRAY_LENGTH(buffer)));
@@ -594,13 +604,8 @@ int cli_frontend_init(int argc, char **argv)
 	// reparse the command line to ensure its options override all
 	// note that we re-fetch the gamename here as it will get overridden
 	options_parse_command_line(argc, argv);
-	gamename = options_get_string("", FALSE);
-
-	// clear all core options
-	memset(&options, 0, sizeof(options));
-
-	// language options
 	setup_language();
+	gamename = options_get_string("", FALSE);
 
 	// execute any commands specified
 	execute_commands(argv[0]);
@@ -694,23 +699,24 @@ void cli_frontend_exit(void)
 
 static void parse_ini_file(const char *name)
 {
+	mame_file_error filerr;
 	mame_file *file;
+	char *fname;
 
 	// don't parse if it has been disabled
 	if (!options_get_bool("readconfig", FALSE))
 		return;
 
 	// open the file; if we fail, that's ok
-	file = mame_fopen(name, NULL, FILETYPE_INI, 0);
-	if (file == NULL)
+	fname = assemble_2_strings(name, ".ini");
+	filerr = mame_fopen(SEARCHPATH_INI, fname, OPEN_FLAG_READ, &file);
+	free(fname);
+	if (filerr != FILERR_NONE)
 		return;
 
 	// parse the file and close it
 	options_parse_ini_file(file);
 	mame_fclose(file);
-
-	// reset the INI path so it gets re-expanded next time
-	set_pathlist(FILETYPE_INI, NULL);
 }
 
 
@@ -1055,9 +1061,6 @@ static void extract_options(const game_driver *driver, machine_config *drv)
 #endif /* MESS */
 
 	// save states and input recording
-	stemp = options_get_string("playback", TRUE);
-	if (stemp != NULL)
-		setup_playback(stemp, driver);
 	stemp = options_get_string("record", TRUE);
 	if (stemp != NULL)
 		setup_record(stemp, driver);
@@ -1067,8 +1070,8 @@ static void extract_options(const game_driver *driver, machine_config *drv)
 	// debugging options
 	if (options_get_bool("log", TRUE))
 	{
-		options.logfile = mame_fopen(NULL, "error.log", FILETYPE_DEBUGLOG, TRUE);
-		assert_always(options.logfile != NULL, "unable to open log file");
+		mame_file_error filerr = mame_fopen(SEARCHPATH_DEBUGLOG, "error.log", OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &options.logfile);
+		assert_always(filerr == FILERR_NONE, "unable to open log file");
 	}
 	win_erroroslog = options_get_bool("oslog", TRUE);
 {
@@ -1084,7 +1087,26 @@ static void extract_options(const game_driver *driver, machine_config *drv)
 
 {
 	extern const char *cheatfile;
+	extern const char *localized_directory;
+	extern const char *history_filename;
+#ifdef STORY_DATAFILE
+	extern const char *story_filename;
+#endif /* STORY_DATAFILE */
+	extern const char *mameinfo_filename;
+#ifdef USE_HISCORE
+	extern const char *db_filename;
+#endif /* USE_HISCORE */
+
 	cheatfile = options_get_string("cheat_file", TRUE);
+	localized_directory = options_get_string("localized_directory", TRUE);
+	history_filename = options_get_string("history_file", TRUE);
+#ifdef STORY_DATAFILE
+	story_filename = options_get_string("story_file", TRUE);
+#endif /* STORY_DATAFILE */
+	mameinfo_filename = options_get_string("mameinfo_file", TRUE);
+#ifdef USE_HISCORE
+	db_filename = options_get_string("hiscore_file", TRUE);
+#endif /* USE_HISCORE */
 }
 
 	// need a decent default for debug width/height
@@ -1098,8 +1120,6 @@ static void extract_options(const game_driver *driver, machine_config *drv)
 	if (!options.mame_debug)
 		SetThreadPriority(GetCurrentThread(), options_get_int_range("priority", TRUE, -15, 1));
 
-	setup_datafile();
-
 #ifdef UI_COLOR_DISPLAY
 	setup_palette();
 #endif /* UI_COLOR_DISPLAY */
@@ -1108,7 +1128,7 @@ static void extract_options(const game_driver *driver, machine_config *drv)
 
 
 //============================================================
-//  setup_languag
+//  setup_language
 //============================================================
 
 static void setup_language(void)
@@ -1139,17 +1159,15 @@ static void setup_language(void)
 //  setup_playback
 //============================================================
 
-static void setup_playback(const char *filename, const game_driver *driver)
+static void setup_playback(const char *filename)
 {
+	const char *drvname = options_get_string("", FALSE);
+	mame_file_error filerr;
 	inp_header inp_header;
 
 	// open the playback file
-	options.playback = mame_fopen(filename, 0, FILETYPE_INPUTLOG, 0);
-	assert_always(options.playback != NULL, _WINDOWS("Failed to open file for playback"));
-
-#ifdef INP_CAPTION
-	options.caption = mame_fopen(filename, 0, FILETYPE_INPCAPTION, 0);
-#endif /* INP_CAPTION */
+ 	filerr = mame_fopen(SEARCHPATH_INPUTLOG, filename, OPEN_FLAG_READ, &options.playback);
+ 	assert_always(filerr == FILERR_NONE, "Failed to open file for playback");
 
 	// read playback header
 	mame_fread(options.playback, &inp_header, sizeof(inp_header));
@@ -1159,12 +1177,29 @@ static void setup_playback(const char *filename, const game_driver *driver)
 		mame_fseek(options.playback, 0, SEEK_SET);
 
 	// else verify the header against the current game
-	else if (strcmp(driver->name, inp_header.name) != 0)
-		fatalerror(_WINDOWS("Input file is for " GAMENOUN " '%s', not for current " GAMENOUN " '%s'\n"), inp_header.name, driver->name);
-
+	else if (drvname)
+	{
+		if (strcmp(drvname, inp_header.name) != 0)
+			fatalerror(_WINDOWS("Input file is for " GAMENOUN " '%s', not for current " GAMENOUN " '%s'\n"), inp_header.name, drvname);
+	}
 	// otherwise, print a message indicating what's happening
 	else
-		printf(_WINDOWS("Playing back previously recorded " GAMENOUN " %s\n"), driver->name);
+	{
+		options_set_string("", inp_header.name);
+		printf(_WINDOWS("Playing back previously recorded " GAMENOUN " %s\n"), inp_header.name);
+	}
+
+#ifdef INP_CAPTION
+	if (strlen(filename) > 4)
+	{
+		char *fname;
+
+		fname = mame_strdup(filename);
+		strcpy(fname + strlen(fname) - 4, ".cap");
+		mame_fopen(SEARCHPATH_INPUTLOG, fname, OPEN_FLAG_READ, &options.caption);
+		free(fname);
+	}
+#endif /* INP_CAPTION */
 }
 
 
@@ -1175,11 +1210,12 @@ static void setup_playback(const char *filename, const game_driver *driver)
 
 static void setup_record(const char *filename, const game_driver *driver)
 {
+	mame_file_error filerr;
 	inp_header inp_header;
 
 	// open the record file
-	options.record = mame_fopen(filename, 0, FILETYPE_INPUTLOG, 1);
-	assert_always(options.record != NULL, "Failed to open file for recording");
+	filerr = mame_fopen(SEARCHPATH_INPUTLOG, filename, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &options.record);
+	assert_always(filerr == FILERR_NONE, "Failed to open file for recording");
 
 	// create a header
 	memset(&inp_header, '\0', sizeof(inp_header));
