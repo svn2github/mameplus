@@ -196,10 +196,14 @@ static void hiscore_load (void)
 {
 	if (is_highscore_enabled())
 	{
-		mame_file *f = mame_fopen (Machine->gamedrv->name, 0, FILETYPE_HIGHSCORE, 0);
+		mame_file_error filerr;
+		mame_file *f;
+		char fname[256];
+		sprintf(fname, "%s.hi", Machine->gamedrv->name);
+		filerr = mame_fopen (SEARCHPATH_HISCORE, fname, OPEN_FLAG_READ, &f);
 		state.hiscores_have_been_loaded = 1;
 		LOG(("hiscore_load\n"));
-		if (f)
+		if (filerr == FILERR_NONE)
 		{
 			memory_range *mem_range = state.mem_range;
 			LOG(("loading...\n"));
@@ -227,9 +231,13 @@ static void hiscore_save (void)
 {
 	if (is_highscore_enabled())
 	{
-		mame_file *f = mame_fopen (Machine->gamedrv->name, 0, FILETYPE_HIGHSCORE, 1);
+		mame_file_error filerr;
+		mame_file *f;
+		char fname[256];
+		sprintf(fname, "%s.hi", Machine->gamedrv->name);
+		filerr = mame_fopen (SEARCHPATH_HISCORE, fname, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &f);
 		LOG(("hiscore_save\n"));
-		if (f)
+		if (filerr == FILERR_NONE)
 		{
 			memory_range *mem_range = state.mem_range;
 			LOG(("saving...\n"));
@@ -286,6 +294,7 @@ void hiscore_close (running_machine *machine)
 void hiscore_init (running_machine *machine, const char *name)
 {
 	memory_range *mem_range = state.mem_range;
+	mame_file_error filerr;
 	mame_file *f;
 
 	state.hiscores_have_been_loaded = 0;
@@ -310,8 +319,8 @@ void hiscore_init (running_machine *machine, const char *name)
 
 	LOG(("hiscore_open: '%s'\n", name));
 
-	f = mame_fopen (NULL, db_filename, FILETYPE_HIGHSCORE_DB, 0);
-	if (f)
+	filerr = mame_fopen (SEARCHPATH_HISCORE, db_filename, OPEN_FLAG_READ, &f);
+	if (filerr == FILERR_NONE)
 	{
 		char buffer[MAX_CONFIG_LINE_SIZE];
 		enum { FIND_NAME, FIND_DATA, FETCH_DATA } mode;
