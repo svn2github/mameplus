@@ -6266,7 +6266,7 @@ static void MameLoadState(void)
 
 		// parse path
 		sprintf(path,"%s%s",drive,dir);
-		sprintf(fname,"%s%s.sta",bare_fname,ext);
+		sprintf(fname,"%s.sta",bare_fname);
 		if (path[strlen(path)-1] == '\\')
 			path[strlen(path)-1] = 0; // take off trailing back slash
 
@@ -6312,16 +6312,8 @@ static void MameLoadState(void)
 #ifdef MESS
 		g_pSaveStateName = state_fname;
 #else
-		{
-			char *cPos;
-			cPos = strrchr(bare_fname, '-' );
-			cPos = cPos+1;
-			if( strlen(cPos) >0)
-			{
-				g_pSaveStateName = cPos;
-				override_savestate_directory = path;
-			}
-		}
+		g_pSaveStateName = state_fname;
+		override_savestate_directory = path;
 #endif
 
 		MamePlayGameWithOptions(nGame);

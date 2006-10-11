@@ -1981,7 +1981,7 @@ static UINT32 handler_load_save(UINT32 state)
 		return state;
 
 	/* display a popup indicating that the save will proceed */
-	sprintf(filename, "%s-%c", Machine->gamedrv->name, file);
+	sprintf(filename, "%s-%c.sta", Machine->gamedrv->name, file);
 	if (state == LOADSAVE_SAVE)
 	{
 		popmessage(_("Save to position %c"), file);
