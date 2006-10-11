@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.108u5      #
+#      Mameinfo.dat日本語版 v0.109       #
 #                                        #
-#           September 22, 2006           #
+#            October 4, 2006             #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：815 翻訳済：804
-# 追加項目：326 合計：1141
+# Tester報告：830 翻訳済：817
+# 追加項目：325 合計：1155
 #
 
 
@@ -69,6 +69,37 @@ $mame
 
 $end
 
+$info=topsecrt
+$mame
+[バグ]
+
+- 実機ではタイトルロゴの周り部分が少し明るく表示される。 topsecrt0109gre1, Kold666
+
+
+- 2面の終わり部分で、MAMEでは画面が真っ黒になるまで暗くなるが、実機では濃い青色で止まる。 topsecrt0109gre2, Kold666
+
+$end
+
+$info=carnevil
+$mame
+[バグ]
+
+- 「CHDの吸い出し不良フラグ」
+
+carnevilとmaceaのCHDはbad dumpのフラグが立っているが、ゲーム起動時などにその警告が出ない。 chdbaddump0109ora, RansAckeR
+
+$end
+
+$info=macea
+$mame
+[バグ]
+
+- 「CHDの吸い出し不良フラグ」
+
+carnevilとmaceaのCHDはbad dumpのフラグが立っているが、ゲーム起動時などにその警告が出ない。 chdbaddump0109ora, RansAckeR
+
+$end
+
 $info=3wonders
 $mame
 [バグ]
@@ -104,12 +135,71 @@ $mame
 
 $end
 
+$info=gypsyjug
+$mame
+[バグ]
+
+- ddrawで起動して、カラーオーバーレイを有効にしていると、画面の真ん中部分が表示されない。
+d3dでは問題ない。 ddrawcoloroverlay0109yel, Cyberonix / Twist
+
+$end
+
+$info=geebee
+$mame
+[バグ]
+
+- ddrawで起動して、カラーオーバーレイを有効にしていると、画面の真ん中部分が表示されない。
+d3dでは問題ない。 ddrawcoloroverlay0109yel, Cyberonix / Twist
+
+$end
+
+$info=deadeye
+$mame
+[バグ]
+
+- ddrawで起動して、カラーオーバーレイを有効にしていると、画面の真ん中部分が表示されない。
+d3dでは問題ない。 ddrawcoloroverlay0109yel, Cyberonix / Twist
+
+$end
+
+$info=rushatck
+$mame
+[バグ]
+
+- [possible] 効果音が遅れる。 rushatck0109gre, Withnail
+
+$end
+
+$info=drgnwrld
+$mame
+[バグ]
+
+- DIP設定で背景を風景表示にして、面クリアをすると化けた女性の表示になる。 drgnwrld0109yel, hammad
+
+$end
+
+$info=drgwrld3
+$mame
+[バグ]
+
+- コンティニュー時にコインをいれてすぐスタートボタンを押すと、画面にエラーが表示されて固まる。 drgwrld3_0109red, hammad / ponzicar
+
+$end
+
 $info=sb2003
 $mame
 [バグ]
 
 - 入力が効かず、5キーと6キーでコインを入れることもできない。
 .nvファイルが無いときは正常に動作する。 sb2003_108u3gra, Nathan G / stephh
+
+$end
+
+$info=mf_bdash
+$mame
+[バグ]
+
+- レイアウトのデジタル数字が正しく表示されない。 mf_bdash0108u4gre, stephh / Aaron Giles
 
 $end
 
@@ -186,22 +276,60 @@ CPU速度を200%にしても効果がない。 silentd0108u5yel, Twist
 
 $end
 
+$info=bbakraid
+$mame
+[バグ]
+
+- DIP設定で画面反転を有効にすると、テキストレイヤーが3つに分割されて表示される。 bbakraid0109gre, ionas
+
+
+[TIPS]
+
+- 隠し機体(5～7号機)：
+
+コイン投入後、↑↑↓↓←→←→ABをそれぞれ1秒以上置いて入力。
+
+
+- 隠し機体(8～9号機)：
+
+コイン投入後、↑↑↓↓←→←→BAとそれぞれ1秒以上置いて入力(カウントを10秒以上残す)。
+
+
+- 連続ボス戦：
+
+コイン投入後、ボタンCを押しながら↑↓↑↓←→←→BAそれぞれ1秒以上置いて入力。
+
+
+- ステージセレクト有効(DIP設定と同様)：
+
+コイン投入後、ボタンABを押しながらスタート。
+
+
+- 機体選択時のボタンにより性能が変わる。ボタンAはメインショット、Bはボンバー、Cはサイド、スタートボタンはスピードがそれぞれ強化される。
+
+
+- プレイ中コマンド(ボタンCをしばらく押した後)：
+
+　↑ …敵の点数・倍率・倍率の継続時間表示
+
+　↓ …破壊可能弾色変化
+
+　← …弾色変化
+
+　→ …針弾色変化
+
+　A …連射スピードアップ
+
+　B …連射スピードダウン
+
+$end
+
 $info=actfancr
 $mame
 [バグ]
 
 - デモ画面で、しばらくするとハイスコア一覧が表示されるが、
 イニシャル入力のときのようにアルファベット一覧も表示されてしまう。 actfancr36rc2gre, Lord Caos / DCisTHEbest / Pi
-
-$end
-
-$info=turbofrc
-$mame
-[バグ]
-
-- 3面にスプライトプライオリティ問題あり。
-この面のボスは最初の方から床の下にいるのだが、時々手前のオブジェクトに重なる。
-わかりやすいポイントは3ヶ所ある。 turbofrc37b1gre, Lord Caos
 
 $end
 
@@ -236,7 +364,7 @@ $info=twinactn
 $mame
 [バグ]
 
-- 3面ボスシーンで、背景の雲が切れる。ハック元のmustangでは起きない。 twinactn0105u2gre, Twisty / Haze
+- 3面ボスシーンで、背景の雲が切れる。ハック元のmustangでは起きない。 twinactn0105u2gre, Twisty / Haze / robiza
 
 $end
 
@@ -309,11 +437,6 @@ $end
 
 $info=arkanoid
 $mame
-[情報]
-
-- 68705がまだエミュレートされていないので、「arkbl2」海賊版セットが動作しない。
-
-
 [バグ]
 
 - 「tilt」のボタンを押すと、画面に「TILT」としばらく表示された後、「BAD HARDWARE」と表示される。
@@ -369,9 +492,6 @@ $mame
 
 
 - 起動時にクレジットが2つ勝手に入る。 pitfight0106u3ora, Roger Coltrane
-
-
-- 3つめのコイン入力が動作しない。筐体の写真によると、コインスロットは2つしかない。 pitfight0106u3gra, Roger Coltrane
 
 $end
 
@@ -8069,49 +8189,6 @@ $mame
 
 ゲームスタート後すぐに右端に行きブラスターを打ち続ける。
 最初のトーロイドが近づいたらザッパーを発射する。
-
-$end
-
-$info=bbakraid
-$mame
-[TIPS]
-
-- 隠し機体(5～7号機)：
-
-コイン投入後、↑↑↓↓←→←→ABをそれぞれ1秒以上置いて入力。
-
-
-- 隠し機体(8～9号機)：
-
-コイン投入後、↑↑↓↓←→←→BAとそれぞれ1秒以上置いて入力(カウントを10秒以上残す)。
-
-
-- 連続ボス戦：
-
-コイン投入後、ボタンCを押しながら↑↓↑↓←→←→BAそれぞれ1秒以上置いて入力。
-
-
-- ステージセレクト有効(DIP設定と同様)：
-
-コイン投入後、ボタンABを押しながらスタート。
-
-
-- 機体選択時のボタンにより性能が変わる。ボタンAはメインショット、Bはボンバー、Cはサイド、スタートボタンはスピードがそれぞれ強化される。
-
-
-- プレイ中コマンド(ボタンCをしばらく押した後)：
-
-　↑ …敵の点数・倍率・倍率の継続時間表示
-
-　↓ …破壊可能弾色変化
-
-　← …弾色変化
-
-　→ …針弾色変化
-
-　A …連射スピードアップ
-
-　B …連射スピードダウン
 
 $end
 
