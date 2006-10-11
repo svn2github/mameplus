@@ -6343,13 +6343,15 @@ static void MamePlayRecordGame(void)
 	{
 		char drive[_MAX_DRIVE];
 		char dir[_MAX_DIR];
+		char bare_fname[_MAX_FNAME];
 		char fname[_MAX_FNAME];
 		char ext[_MAX_EXT];
 		char path[MAX_PATH];
 
-		_splitpath(filename, drive, dir, fname, ext);
+		_splitpath(filename, drive, dir, bare_fname, ext);
 
 		sprintf(path,"%s%s",drive,dir);
+		sprintf(fname,"%s.inp",bare_fname);
 		if (path[strlen(path)-1] == '\\')
 			path[strlen(path)-1] = 0; // take off trailing back slash
 
