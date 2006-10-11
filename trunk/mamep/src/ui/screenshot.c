@@ -263,6 +263,14 @@ BOOL LoadDIB(LPCTSTR filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type)
 	if (filerr != FILERR_NONE)
 	{
 		// and look for the zip
+		fname = assemble_6_strings(basedir, "/", filename, "/", filename, ".png");
+		filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &mfile);
+		free(fname);
+	}
+
+	if (filerr != FILERR_NONE)
+	{
+		// and look for the zip
 		fname = assemble_6_strings(basedir, "/", zip_name, "/", filename, ".png");
 		filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &mfile);
 		free(fname);

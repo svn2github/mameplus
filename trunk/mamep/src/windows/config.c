@@ -538,14 +538,10 @@ int cli_frontend_init(int argc, char **argv)
 	if (options_parse_command_line(argc, argv))
 		exit(1);
 
-	// language options
-	setup_language();
-
 	// parse the simple commmands before we go any further
 	execute_simple_commands();
 
 	// now parse the core set of INI files
-	options_set_string(SEARCHPATH_INI, ".");
 	parse_ini_file(CONFIGNAME);
 	parse_ini_file(extract_base_name(argv[0], buffer, ARRAY_LENGTH(buffer)));
 #ifdef MAME_DEBUG
@@ -605,7 +601,6 @@ int cli_frontend_init(int argc, char **argv)
 	// note that we re-fetch the gamename here as it will get overridden
 	options_parse_command_line(argc, argv);
 	setup_language();
-	gamename = options_get_string("", FALSE);
 
 	// execute any commands specified
 	execute_commands(argv[0]);
@@ -709,7 +704,7 @@ static void parse_ini_file(const char *name)
 
 	// open the file; if we fail, that's ok
 	fname = assemble_2_strings(name, ".ini");
-	filerr = mame_fopen(SEARCHPATH_INI, fname, OPEN_FLAG_READ, &file);
+	filerr = mame_fopen(strcmp(CONFIGNAME, name) == 0 ? SEARCHPATH_RAW : SEARCHPATH_INI, fname, OPEN_FLAG_READ, &file);
 	free(fname);
 	if (filerr != FILERR_NONE)
 		return;
@@ -730,6 +725,7 @@ static void execute_simple_commands(void)
 	// help?
 	if (options_get_bool("help", FALSE))
 	{
+		setup_language();
 		display_help();
 		exit(0);
 	}
@@ -737,6 +733,7 @@ static void execute_simple_commands(void)
 	// showusage?
 	if (options_get_bool("showusage", FALSE))
 	{
+		setup_language();
 		printf(_WINDOWS("Usage: mame [game] [options]\n\nOptions:\n"));
 		options_output_help(stdout);
 		exit(0);

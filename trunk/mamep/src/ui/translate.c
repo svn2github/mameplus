@@ -604,7 +604,6 @@ int ComboBox_GetLBTextA(HWND hwndCtl, int nIndex, LPSTR lpszBuffer)
 
 int ComboBox_GetLBTextLenA(HWND hwndCtl, int nIndex)
 {
-	int ret;
 	static LPSTR buf;
 
 	if (buf)

@@ -1998,9 +1998,8 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 
 		options_free_entries();
 		options_add_entries(windows_opts);
-		options_set_string(SEARCHPATH_INI, ".");
 
-		filerr = mame_fopen(SEARCHPATH_INI, CONFIGNAME, OPEN_FLAG_READ, &file);
+		filerr = mame_fopen(SEARCHPATH_RAW, CONFIGNAME ".ini", OPEN_FLAG_READ, &file);
 		if (filerr == FILERR_NONE)
 		{
 			options_parse_ini_file(file);

@@ -627,11 +627,11 @@ static void CopySettings(const settings_type *source, settings_type *dest)
 
 static void FreeSettings(settings_type *p)
 {
-	options_set_datalist(options_cli);
-	options_free_string_core(p);
-
 	options_set_datalist(options_winui);
 	options_free_string_winui(p);
+
+	options_set_datalist(options_cli);
+	options_free_string_core(p);
 }
 
 void CopyGameOptions(const options_type *source, options_type *dest)
@@ -3006,7 +3006,6 @@ static void LoadOptions(void)
 {
 	LoadDefaultOptions();
 	options_load_winui_config();
-	options_set_datalist(options_cli);
 
 	SetTranslationPath(settings.translation_directory);
 	SetLangcode(settings.langcode);
@@ -3278,7 +3277,6 @@ static void options_create_entry_cli(void)
 	options_set_datalist(NULL);
 
 	options_add_entries(windows_opts);
-
 	options_cli = options_get_datalist();
 }
 
@@ -3288,7 +3286,6 @@ static void options_create_entry_winui(void)
 
 	options_add_entries(winui_opts);
 	options_add_driver_flag_opts();
-
 	options_winui = options_get_datalist();
 }
 
@@ -3297,6 +3294,8 @@ static void options_free_entry_cli(void)
 	options_set_datalist(options_cli);
 	options_free_entries();
 	options_cli = NULL;
+
+	options_set_datalist(NULL);
 }
 
 static void options_free_entry_winui(void)
@@ -3304,6 +3303,8 @@ static void options_free_entry_winui(void)
 	options_set_datalist(options_winui);
 	options_free_entries();
 	options_winui = NULL;
+
+	options_set_datalist(NULL);
 }
 
 
@@ -3427,6 +3428,8 @@ static int options_load_winui_config(void)
 
 	mame_fclose(file);
 
+	options_set_datalist(options_cli);
+
 	return retval;
 }
 
@@ -3453,6 +3456,8 @@ static int options_save_default_config(void)
 	options_output_ini_mame_file(file);
 
 	mame_fclose(file);
+
+	options_set_datalist(options_cli);
 
 	return 0;
 }
@@ -3579,6 +3584,8 @@ static int options_save_winui_config(void)
 
 	mame_fclose(file);
 
+	options_set_datalist(options_cli);
+
 	return 0;
 }
 
@@ -3626,11 +3633,11 @@ static void options_duplicate_winui(const settings_type *source, settings_type *
 
 static void options_duplicate_settings(const settings_type *source, settings_type *dest)
 {
-	options_set_datalist(options_cli);
-	options_duplicate_core(source, dest);
-
 	options_set_datalist(options_winui);
 	options_duplicate_winui(source, dest);
+
+	options_set_datalist(options_cli);
+	options_duplicate_core(source, dest);
 }
 
 
