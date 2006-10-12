@@ -710,6 +710,8 @@ int frontend_verifyroms(FILE *output)
 		res = audit_summary(drvindex, audit_records, audit, verify_printf);
 		if (audit_records > 0)
 			free(audit);
+		else
+			res = CORRECT;
 
 		/* if not found, count that and leave it at that */
 		if (res == NOTFOUND)
