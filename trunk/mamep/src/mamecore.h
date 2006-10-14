@@ -18,7 +18,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include "osd_cpu.h"
-
+#ifdef MAME_DEBUG
+#include "uilang.h"
+#endif
 
 
 /***************************************************************************
