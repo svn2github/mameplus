@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#      Mameinfo.dat日本語版 v0.109       #
+#     Mameinfo.dat日本語版 v0.109u1      #
 #                                        #
-#            October 4, 2006             #
+#            October 13, 2006            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,10 +12,31 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：830 翻訳済：817
-# 追加項目：325 合計：1155
+# Tester報告：812 翻訳済：797
+# 追加項目：325 合計：1137
 #
 
+
+$info=capbowl
+$mame
+[情報]
+
+- サービスモードに入るには、ハイスコア画面でF2キーを押す。
+
+
+[バグ]
+
+- 画面全体が紫色になっている。 capbowl0109u1yel, Iceman5000
+
+$end
+
+$info=gradius3
+$mame
+[バグ]
+
+- [possible] 画面オフセットか表示領域の問題がある。実機でも起こる？ gradius3_0109u1gre, robiza / Mamesick
+
+$end
 
 $info=invadpt2
 $mame
@@ -58,272 +79,6 @@ GameOver：葬送行進曲
 
 $end
 
-$info=bonzeadv
-$mame
-[バグ]
-
-- 3面よりあとでやられると、間違った場所から再スタートになりゲームが固まる。 bonzeadv0108u3yel, maxholz / sjyune
-
-
-- 1面の裏ルートでやられると、真っ黒なところから再スタートしてはまる。 bonzeadv0107red, Kold666
-
-$end
-
-$info=topsecrt
-$mame
-[バグ]
-
-- 実機ではタイトルロゴの周り部分が少し明るく表示される。 topsecrt0109gre1, Kold666
-
-
-- 2面の終わり部分で、MAMEでは画面が真っ黒になるまで暗くなるが、実機では濃い青色で止まる。 topsecrt0109gre2, Kold666
-
-$end
-
-$info=carnevil
-$mame
-[バグ]
-
-- 「CHDの吸い出し不良フラグ」
-
-carnevilとmaceaのCHDはbad dumpのフラグが立っているが、ゲーム起動時などにその警告が出ない。 chdbaddump0109ora, RansAckeR
-
-$end
-
-$info=macea
-$mame
-[バグ]
-
-- 「CHDの吸い出し不良フラグ」
-
-carnevilとmaceaのCHDはbad dumpのフラグが立っているが、ゲーム起動時などにその警告が出ない。 chdbaddump0109ora, RansAckeR
-
-$end
-
-$info=3wonders
-$mame
-[バグ]
-
-- チャリオットで、残プレイヤー数とINSERT COINの文字の間に、変な点が表示される。 3wonders0108u4gre1, Layne
-
-
-- ネームエントリーのところにゴミグラフィックが表示される。 3wonders0108u4gre2, Layne
-
-
-- 「Midnight Wanderers(日本版：ROOSTERS)」で、
-「Terror Twins」が紹介されるときに、白いブロックが現われる。 3wonders236b16gre, Frotz / DCisTHEbest / Kale / Twisty
-
-$end
-
-$info=ssf2xj
-$mame
-[バグ]
-
-- ランダムにクラッシュする。 ssf2xj0108u3red, ooo98 / Haze
-
-
-- ごく稀に画面全体が化けることがある。一回のプレイで一回起こるくらいで、1フレームが完全に化ける。
-実機でも起こるかどうかは不明だが、SSF2Tの実機では起きていないと思う。 ssf2xj067gre, Smitdogg
-
-$end
-
-$info=czeroize
-$mame
-[バグ]
-
-- 画面が化けてプレイできない。0.106から。 czeroize0108u2yel, ponzicar / robiza
-
-$end
-
-$info=gypsyjug
-$mame
-[バグ]
-
-- ddrawで起動して、カラーオーバーレイを有効にしていると、画面の真ん中部分が表示されない。
-d3dでは問題ない。 ddrawcoloroverlay0109yel, Cyberonix / Twist
-
-$end
-
-$info=geebee
-$mame
-[バグ]
-
-- ddrawで起動して、カラーオーバーレイを有効にしていると、画面の真ん中部分が表示されない。
-d3dでは問題ない。 ddrawcoloroverlay0109yel, Cyberonix / Twist
-
-$end
-
-$info=deadeye
-$mame
-[バグ]
-
-- ddrawで起動して、カラーオーバーレイを有効にしていると、画面の真ん中部分が表示されない。
-d3dでは問題ない。 ddrawcoloroverlay0109yel, Cyberonix / Twist
-
-$end
-
-$info=rushatck
-$mame
-[バグ]
-
-- [possible] 効果音が遅れる。 rushatck0109gre, Withnail
-
-$end
-
-$info=drgnwrld
-$mame
-[バグ]
-
-- DIP設定で背景を風景表示にして、面クリアをすると化けた女性の表示になる。 drgnwrld0109yel, hammad
-
-$end
-
-$info=drgwrld3
-$mame
-[バグ]
-
-- コンティニュー時にコインをいれてすぐスタートボタンを押すと、画面にエラーが表示されて固まる。 drgwrld3_0109red, hammad / ponzicar
-
-$end
-
-$info=sb2003
-$mame
-[バグ]
-
-- 入力が効かず、5キーと6キーでコインを入れることもできない。
-.nvファイルが無いときは正常に動作する。 sb2003_108u3gra, Nathan G / stephh
-
-$end
-
-$info=mf_bdash
-$mame
-[バグ]
-
-- レイアウトのデジタル数字が正しく表示されない。 mf_bdash0108u4gre, stephh / Aaron Giles
-
-$end
-
-$info=gwarrior
-$mame
-[情報]
-
-- 画面が明るいのはオリジナル通り。ガンマを0.5程度に下げると正しい表示になる。
-
-
-[バグ]
-
-- ゲーム開始時にキャラクタを選択すると、それ以降サウンドが固まってしまう。 gwarrior0108u1yel, NewRisingSun
-
-$end
-
-$info=toutrun
-$mame
-[バグ]
-
-- [Possilbe] ゲーム中以外の画面に、ゲーム中の画面が下側に残って表示される。 toutrun0108u2gre, Kekule
-
-$end
-
-$info=wintbob
-$mame
-[情報]
-
-- 68000CPUのクロックを16MHｚにすると表示ずれは修正されるが、
-Haze氏によれば、16MHｚでは当時にしては高すぎるかもしれないので、
-実際の基板を探して調べる必要があるとのこと。
-
-
-[バグ]
-
-- 31面以降で、灰色の敵がファイアを吐くとゲームがリセットする。 wiintbob0108u4red, Layne / robiza
-
-$end
-
-$info=shtngmst
-$mame
-[バグ]
-
-- 2面以降ではまだプロテクト関係の問題が残っている。 shtngmst0108u4ora, Haze
-
-$end
-
-$info=ashura
-$mame
-[バグ]
-
-- コンティニュー画面のテキストが表示されない。表示が無いだけで、コインを入れてコンティニューはできる。日本版のみで発生。 ashura0108u3yel, ponzicar
-
-$end
-
-$info=silentd
-$mame
-[バグ]
-
-- タイトルシーンで爆発のグラフィックが画面に残る。 silentd0108u5gre, Twist
-
-
-- ラインスクロールのシーンでスピードが大きく落ちる。ラスボスシーンでよくわかる。
-CPU速度を200%にしても効果がない。 silentd0108u5yel, Twist
-
-
-- 以下のDIPスイッチが動作しない：
-
-- "Regain Power ON/OFF" 常にOFF
-
-- "Power-Up Bonus ON/OFF" 常にON
-
-- "Invulnerability ON/OFF" 常にOFF silentd080u1gra, Mamesick
-
-$end
-
-$info=bbakraid
-$mame
-[バグ]
-
-- DIP設定で画面反転を有効にすると、テキストレイヤーが3つに分割されて表示される。 bbakraid0109gre, ionas
-
-
-[TIPS]
-
-- 隠し機体(5～7号機)：
-
-コイン投入後、↑↑↓↓←→←→ABをそれぞれ1秒以上置いて入力。
-
-
-- 隠し機体(8～9号機)：
-
-コイン投入後、↑↑↓↓←→←→BAとそれぞれ1秒以上置いて入力(カウントを10秒以上残す)。
-
-
-- 連続ボス戦：
-
-コイン投入後、ボタンCを押しながら↑↓↑↓←→←→BAそれぞれ1秒以上置いて入力。
-
-
-- ステージセレクト有効(DIP設定と同様)：
-
-コイン投入後、ボタンABを押しながらスタート。
-
-
-- 機体選択時のボタンにより性能が変わる。ボタンAはメインショット、Bはボンバー、Cはサイド、スタートボタンはスピードがそれぞれ強化される。
-
-
-- プレイ中コマンド(ボタンCをしばらく押した後)：
-
-　↑ …敵の点数・倍率・倍率の継続時間表示
-
-　↓ …破壊可能弾色変化
-
-　← …弾色変化
-
-　→ …針弾色変化
-
-　A …連射スピードアップ
-
-　B …連射スピードダウン
-
-$end
-
 $info=actfancr
 $mame
 [バグ]
@@ -360,14 +115,6 @@ $mame
 
 $end
 
-$info=twinactn
-$mame
-[バグ]
-
-- 3面ボスシーンで、背景の雲が切れる。ハック元のmustangでは起きない。 twinactn0105u2gre, Twisty / Haze / robiza
-
-$end
-
 $info=aliens
 $mame
 [バグ]
@@ -396,10 +143,6 @@ $mame
 [バグ]
 
 - ゲーム開始直後、捕虜5人が現るところで、キャラ化けが画面で timesold061gre, Pi
-
-
-- 「Age of Wars」の時代で、メインキャラが壁の上に表示される。
-本当はドアを通って入らなければならない。 timesold37b3gre, Lord Caos / cpukett
 
 $end
 
@@ -481,6 +224,17 @@ $mame
 
 
 - ゲームスタート後は正しくリセットされない。 gorf060gre, DCisTHEbest / Thenasty
+
+$end
+
+$info=bonzeadv
+$mame
+[バグ]
+
+- 1面の裏ルートでやられると、真っ黒なところから再スタートしてはまる。 bonzeadv0107red, Kold666 / JonteP
+
+
+- 3面よりあとでやられると、間違った場所から再スタートになりゲームが固まる。 bonzeadv0108u3yel, maxholz / sjyune
 
 $end
 
@@ -590,6 +344,17 @@ $mame
 どちらもサンプルセットが不完全。実際の基板で確認。
 Berzerkでは1UP時にAsteroidsに似た宇宙船のノイズが聞こえる。
 またFrenzyでは、ロボットの小さい声ややられた時の音が必要。 berzerkc070gre, Robbie D / Chad H / Karasu
+
+$end
+
+$info=topsecrt
+$mame
+[バグ]
+
+- 実機ではタイトルロゴの周り部分が少し明るく表示される。 topsecrt0109gre1, Kold666
+
+
+- 2面の終わり部分で、MAMEでは画面が真っ黒になるまで暗くなるが、実機では濃い青色で止まる。 topsecrt0109gre2, Kold666
 
 $end
 
@@ -829,6 +594,21 @@ $mame
 
 $end
 
+$info=3wonders
+$mame
+[バグ]
+
+- チャリオットで、残プレイヤー数とINSERT COINの文字の間に、変な点が表示される。 3wonders0108u4gre1, Layne
+
+
+- ネームエントリーのところにゴミグラフィックが表示される。 3wonders0108u4gre2, Layne
+
+
+- 「Midnight Wanderers(日本版：ROOSTERS)」で、
+「Terror Twins」が紹介されるときに、白いブロックが現われる。 3wonders236b16gre, Frotz / DCisTHEbest / Kale / Twisty
+
+$end
+
 $info=cawing
 $mame
 [バグ]
@@ -901,6 +681,18 @@ $mame
 [バグ]
 
 - 音が割れる。特に面の終わりの音など。 spf2t060gre, asmodius / Smitdogg
+
+$end
+
+$info=ssf2xj
+$mame
+[バグ]
+
+- ランダムにクラッシュする。 ssf2xj0108u3red, ooo98 / Haze
+
+
+- ごく稀に画面全体が化けることがある。一回のプレイで一回起こるくらいで、1フレームが完全に化ける。
+実機でも起こるかどうかは不明だが、SSF2Tの実機では起きていないと思う。 ssf2xj067gre, Smitdogg
 
 $end
 
@@ -1567,14 +1359,6 @@ Dithの最新サンプルセットには入っていて、サービスモードでは聞くことができる。 qbe
 
 $end
 
-$info=gradius3
-$mame
-[バグ]
-
-- 表示エリア変更後、スプライトレイヤーがずれている。 gradius30104u3gre, AWJ / Twisty
-
-$end
-
 $info=groundfx
 $mame
 [バグ]
@@ -1636,6 +1420,22 @@ $mame
 
 
 グラディウス4で、モニタタイプのDIPを15KHｚにすると、3Dグラフィックは縮小されるが、2Dタイルマップは24KHｚのときのサイズのまま。 hornet0104u2ora, AWJ / Luigi30
+
+$end
+
+$info=drgnwrld
+$mame
+[バグ]
+
+- DIP設定で背景を風景表示にして、面クリアをすると化けた女性の表示になる。 drgnwrld0109yel, hammad
+
+$end
+
+$info=drgwrld3
+$mame
+[バグ]
+
+- コンティニュー時にコインをいれてすぐスタートボタンを押すと、画面にエラーが表示されて固まる。 drgwrld3_0109red, hammad / ponzicar
 
 $end
 
@@ -1904,14 +1704,6 @@ $mame
 
 $end
 
-$info=spelunk2
-$mame
-[バグ]
-
-- 鍵や宝箱などが1ピクセル右にずれている。 spelunk2099u6gre, Stefan Lindberg
-
-$end
-
 $info=airduel
 $mame
 [バグ]
@@ -2094,6 +1886,14 @@ $mame
 リングのグラフィックが反対側に反転してしまう。
 リングアウトしていないのに、しているかのように表示される。
 6705MCUエミュレーションが不完全？ matmaniac37b14gre, Trojan / El Condor
+
+$end
+
+$info=mf_bdash
+$mame
+[バグ]
+
+- レイアウトのデジタル数字が正しく表示されない。 mf_bdash0108u4gre, stephh / Aaron Giles
 
 $end
 
@@ -2832,6 +2632,19 @@ $mame
 最初の敵2体にはヒットするが、
 そのあと2体には当らず、それにすぐやられてしまう。
 どうやら、デモのゲームスピードが合ってないようだ。 blkpnthr37b11gre, YMI
+
+$end
+
+$info=gwarrior
+$mame
+[情報]
+
+- 画面が明るいのはオリジナル通り。ガンマを0.5程度に下げると正しい表示になる。
+
+
+[バグ]
+
+- ゲーム開始時にキャラクタを選択すると、それ以降サウンドが固まってしまう。 gwarrior0108u1yel, NewRisingSun
 
 $end
 
@@ -3879,6 +3692,21 @@ $mame
 
 $end
 
+$info=wintbob
+$mame
+[情報]
+
+- 68000CPUのクロックを16MHｚにすると表示ずれは修正されるが、
+Haze氏によれば、16MHｚでは当時にしては高すぎるかもしれないので、
+実際の基板を探して調べる必要があるとのこと。
+
+
+[バグ]
+
+- 31面以降で、灰色の敵がファイアを吐くとゲームがリセットする。 wiintbob0108u4red, Layne / robiza
+
+$end
+
 $info=sonson
 $mame
 [バグ]
@@ -4053,6 +3881,31 @@ $mame
 画面が反転して「Game Over」と表示される。
 カクテルモードのような動作になる。
 37b16～0.55までで確認。 junglek055gre, Thenasty
+
+$end
+
+$info=ashura
+$mame
+[バグ]
+
+- コンティニュー画面のテキストが表示されない。表示が無いだけで、コインを入れてコンティニューはできる。日本版のみで発生。 ashura0108u3yel, ponzicar
+
+$end
+
+$info=silentd
+$mame
+[バグ]
+
+- タイトルシーンで爆発のグラフィックが画面に残る。 silentd0108u5gre, Twist
+
+
+- 以下のDIPスイッチが動作しない：
+
+- "Regain Power ON/OFF" 常にOFF
+
+- "Power-Up Bonus ON/OFF" 常にON
+
+- "Invulnerability ON/OFF" 常にOFF silentd080u1gra, Mamesick
 
 $end
 
@@ -4600,6 +4453,54 @@ $mame
 [バグ]
 
 - battlegaとbattlegcで、起動時のテストに失敗する。右キーを押していればパスする。 battlega097yel, Zaphod
+
+$end
+
+$info=bbakraid
+$mame
+[バグ]
+
+- DIP設定で画面反転を有効にすると、テキストレイヤーが3つに分割されて表示される。 bbakraid0109gre, ionas
+
+
+[TIPS]
+
+- 隠し機体(5～7号機)：
+
+コイン投入後、↑↑↓↓←→←→ABをそれぞれ1秒以上置いて入力。
+
+
+- 隠し機体(8～9号機)：
+
+コイン投入後、↑↑↓↓←→←→BAとそれぞれ1秒以上置いて入力(カウントを10秒以上残す)。
+
+
+- 連続ボス戦：
+
+コイン投入後、ボタンCを押しながら↑↓↑↓←→←→BAそれぞれ1秒以上置いて入力。
+
+
+- ステージセレクト有効(DIP設定と同様)：
+
+コイン投入後、ボタンABを押しながらスタート。
+
+
+- 機体選択時のボタンにより性能が変わる。ボタンAはメインショット、Bはボンバー、Cはサイド、スタートボタンはスピードがそれぞれ強化される。
+
+
+- プレイ中コマンド(ボタンCをしばらく押した後)：
+
+　↑ …敵の点数・倍率・倍率の継続時間表示
+
+　↓ …破壊可能弾色変化
+
+　← …弾色変化
+
+　→ …針弾色変化
+
+　A …連射スピードアップ
+
+　B …連射スピードダウン
 
 $end
 
@@ -5483,6 +5384,14 @@ $mame
 
 $end
 
+$info=shtngmst
+$mame
+[バグ]
+
+- 2面以降ではまだプロテクト関係の問題が残っている。 shtngmst0108u4ora, Haze
+
+$end
+
 $info=clowns
 $mame
 [バグ]
@@ -5505,7 +5414,7 @@ $mame
 
 - ゲームスタート時に難易度の違うゲームAとBを選べるが、これはIN1のbit7の入力で設定している。
 ところがDIPの難易度設定も同じものを参照している。
-画面に“SELECT A OR B GAME”と出るのに、DIP側で選択出来なくするのは変ではないだろうか。 jspecter074gra, dlfrance
+画面に“SELECT A OR B GAME”と出るのに、DIP側で選択出来なくするのは変ではないだろうか。 jspecter074gra, dlfrance / Robbbert
 
 $end
 
@@ -5629,6 +5538,15 @@ $mame
 
 - 銃のリロードができない。最近、MAMEがバージョンアップするたびに、画面外の部分がどんどん小さくなっていて、ついにどこを撃ってもリロードできなくなった。
 チートを使うしかない。 le2085u2gra, Karasu
+
+$end
+
+$info=sb2003
+$mame
+[バグ]
+
+- 入力が効かず、5キーと6キーでコインを入れることもできない。
+.nvファイルが無いときは正常に動作する。 sb2003_108u3gra, Nathan G / stephh
 
 $end
 
@@ -6175,6 +6093,14 @@ $mame
 
 $end
 
+$info=rushatck
+$mame
+[バグ]
+
+- [possible] 効果音が遅れる。 rushatck0109gre, Withnail
+
+$end
+
 $info=gstriker
 $mame
 [バグ]
@@ -6524,6 +6450,14 @@ $mame
 
 - 最後のボスを倒したときに拡大処理が必要。
 多分他のC2ゲームも要ると思う。 zunkyou37b9gre, YMI
+
+$end
+
+$info=toutrun
+$mame
+[バグ]
+
+- [Possilbe] ゲーム中以外の画面に、ゲーム中の画面が下側に残って表示される。 toutrun0108u2gre, Kekule
 
 $end
 
@@ -6976,14 +6910,6 @@ $mame
 [情報]
 
 - MAMEではYM2151だが、実機はYM3931が2つ。
-
-$end
-
-$info=capbowl
-$mame
-[情報]
-
-- サービスモードに入るには、ハイスコア画面でF2キーを押す。
 
 $end
 
