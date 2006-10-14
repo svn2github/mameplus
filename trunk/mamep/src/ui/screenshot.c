@@ -255,7 +255,6 @@ BOOL LoadDIB(LPCTSTR filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type)
 	}
 
 	// look for the raw file
-	dprintf("LoadDIB %s", filename);
 	fname = assemble_4_strings(basedir, "/", filename, ".png");
 	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &mfile);
 	free(fname);

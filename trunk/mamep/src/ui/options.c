@@ -2764,7 +2764,7 @@ static void unify_alt_options(void)
 		if (n == -1)
 			continue;
 
-		dprintf("Unify %s", drivers[i]->name);
+		//dprintf("Unify %s", drivers[i]->name);
 
 		driver_variables[i].alt_index = n;
 		alt_options[n].option = &driver_options[i];
@@ -3233,7 +3233,7 @@ static void options_get_driver_flag_opts(void)
 		for (j = 0; j < sizeof (driver_flag_names) / sizeof (*driver_flag_names); j++)
 		{
 			strcpy(p, driver_flag_names[j]);
-			*flags[j] = options_get_int(buf, FALSE);
+			*flags[j] = options_get_int(buf);
 		}
 	}
 }
@@ -3276,7 +3276,7 @@ static void options_create_entry_cli(void)
 {
 	options_set_datalist(NULL);
 
-	options_add_entries(windows_opts);
+	options_init(windows_opts);
 	options_cli = options_get_datalist();
 }
 
@@ -3643,7 +3643,7 @@ static void options_duplicate_settings(const settings_type *source, settings_typ
 
 //============================================================
 
-#define _options_get_bool(p,name)	do { *p = options_get_bool(name, FALSE); } while (0)
+#define _options_get_bool(p,name)	do { *p = options_get_bool(name); } while (0)
 #define options_copy_bool(src,dest)	do { *dest = src; } while (0)
 #define options_free_bool(p)
 #define _options_compare_bool(v1,v2)	do { if (v1 != v2) return TRUE; } while (0)
@@ -3654,7 +3654,7 @@ INLINE BOOL options_compare_bool(BOOL v1, BOOL v2)
 	return FALSE;
 }
 
-#define _options_get_int(p,name)	do { *p = options_get_int(name, FALSE); } while (0)
+#define _options_get_int(p,name)	do { *p = options_get_int(name); } while (0)
 #define options_copy_int(src,dest)	do { *dest = src; } while (0)
 #define options_free_int(p)
 #define _options_compare_int(v1,v2)	do { if (v1 != v2) return TRUE; } while (0)
@@ -3665,7 +3665,7 @@ INLINE BOOL options_compare_int(int v1, int v2)
 	return FALSE;
 }
 
-#define _options_get_float(p,name)	do { *p = options_get_float(name, FALSE); } while (0)
+#define _options_get_float(p,name)	do { *p = options_get_float(name); } while (0)
 #define options_copy_float(src,dest)	do { *dest = src; } while (0)
 #define options_free_float(p)
 #define _options_compare_float(v1,v2)	do { if (v1 != v2) return TRUE; } while (0)
@@ -3681,7 +3681,7 @@ INLINE BOOL options_compare_float(float v1, float v2)
 
 static void _options_get_csv_int(int *dest, int numitems, const char *name)
 {
-	const char *stemp = options_get_string(name, FALSE);
+	const char *stemp = options_get_string(name);
 	int array[CSV_ARRAY_MAX];
 	char buf[256];
 	char *p;
@@ -3771,7 +3771,7 @@ INLINE void options_copy_csv_int(const int *src, int *dest, int numitems)
 
 INLINE void _options_get_string_allow_null(char **p, const char *name)
 {
-	const char *stemp = options_get_string(name, FALSE);
+	const char *stemp = options_get_string(name);
 
 	FreeIfAllocated(p);
 	if (stemp)
@@ -3799,7 +3799,7 @@ INLINE BOOL options_compare_string_allow_null(const char *s1, const char *s2)
 
 INLINE void _options_get_string(char **p, const char *name)
 {
-	const char *stemp = options_get_string(name, FALSE);
+	const char *stemp = options_get_string(name);
 
 	if (stemp && *stemp)
 	{
@@ -3829,7 +3829,7 @@ INLINE BOOL options_compare_string(const char *s1, const char *s2)
 
 INLINE void _options_get_int_min(int *p, const char *name, int min)
 {
-	int val = options_get_int(name, FALSE);
+	int val = options_get_int(name);
 	if (val >= min)
 		*p = val;
 }
@@ -3844,7 +3844,7 @@ INLINE void _options_get_int_min(int *p, const char *name, int min)
 
 INLINE void _options_get_int_max(int *p, const char *name, int max)
 {
-	int val = options_get_int(name, FALSE);
+	int val = options_get_int(name);
 	if (val <= max)
 		*p = val;
 }
@@ -3859,7 +3859,7 @@ INLINE void _options_get_int_max(int *p, const char *name, int max)
 
 INLINE void _options_get_int_min_max(int *p, const char *name, int min, int max)
 {
-	int val = options_get_int(name, FALSE);
+	int val = options_get_int(name);
 	if (val >= min && val <= max)
 		*p = val;
 }
@@ -3874,7 +3874,7 @@ INLINE void _options_get_int_min_max(int *p, const char *name, int min, int max)
 
 INLINE void _options_get_int_positive(int *p, const char *name)
 {
-	int val = options_get_int(name, FALSE);
+	int val = options_get_int(name);
 	if (val >= 0)
 		*p = val;
 }
@@ -3890,7 +3890,7 @@ INLINE void _options_get_int_positive(int *p, const char *name)
 
 INLINE void _options_get_float_min(float *p, const char *name, float min)
 {
-	float val = options_get_float(name, FALSE);
+	float val = options_get_float(name);
 	if (val >= min)
 		*p = val;
 }
@@ -3905,7 +3905,7 @@ INLINE void _options_get_float_min(float *p, const char *name, float min)
 
 INLINE void _options_get_float_max(float *p, const char *name, float max)
 {
-	float val = options_get_float(name, FALSE);
+	float val = options_get_float(name);
 	if (val <= max)
 		*p = val;
 }
@@ -3920,7 +3920,7 @@ INLINE void _options_get_float_max(float *p, const char *name, float max)
 
 INLINE void _options_get_float_min_max(float *p, const char *name, float min, float max)
 {
-	float val = options_get_float(name, FALSE);
+	float val = options_get_float(name);
 	if (val >= min && val <= max)
 		*p = val;
 }
@@ -3986,7 +3986,7 @@ INLINE BOOL options_compare_ips(const char *s1, const char *s2)
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 INLINE void _options_get_m68k_core(int *p, const char *name)
 {
-	const char *stemp = options_get_string(name, FALSE);
+	const char *stemp = options_get_string(name);
 
 	if (stemp != NULL)
 	{
@@ -3998,7 +3998,7 @@ INLINE void _options_get_m68k_core(int *p, const char *name)
 			*p= 2;
 		else
 		{
-			int value = options_get_int("m68k_core", FALSE);
+			int value = options_get_int("m68k_core");
 
 			if (value >= 0 && value <= 2)
 				*p = value;
@@ -4046,7 +4046,7 @@ INLINE void options_set_m68k_core(const char *name, int value)
 
 INLINE void _options_get_ui_lines(int *p, const char *name)
 {
-	const char *stemp = options_get_string(name, FALSE);
+	const char *stemp = options_get_string(name);
 
 	if (stemp != NULL)
 	{
@@ -4054,7 +4054,7 @@ INLINE void _options_get_ui_lines(int *p, const char *name)
 			*p = 0;
 		else
 		{
-			int val = options_get_int(name, FALSE);
+			int val = options_get_int(name);
 
 			if (val == 0 || (val >= 16 && val <= 64))
 				*p = val;
@@ -4140,7 +4140,7 @@ INLINE void options_set_ui_lines(const char *name, int value)
 
 INLINE void _options_get_analog_select(char **p, const char *name)
 {
-	const char *stemp = options_get_string(name, FALSE);
+	const char *stemp = options_get_string(name);
 
 	if (stemp && *stemp)
 	{
@@ -4169,7 +4169,7 @@ INLINE void _options_get_analog_select(char **p, const char *name)
 
 INLINE void _options_get_digital(char **p, const char *name)
 {
-	const char *stemp = options_get_string(name, FALSE);
+	const char *stemp = options_get_string(name);
 
 	if (stemp && *stemp)
 	{
@@ -4252,7 +4252,7 @@ INLINE void _options_get_digital(char **p, const char *name)
 
 INLINE void _options_get_led_mode(char **p, const char *name)
 {
-	const char *stemp = options_get_string(name, FALSE);
+	const char *stemp = options_get_string(name);
 
 	if (stemp && *stemp)
 	{
@@ -4276,7 +4276,7 @@ INLINE void _options_get_led_mode(char **p, const char *name)
 
 INLINE void _options_get_video(char **p, const char *name)
 {
-	const char *stemp = options_get_string(name, FALSE);
+	const char *stemp = options_get_string(name);
 
 	if (stemp && *stemp)
 	{
@@ -4301,7 +4301,7 @@ INLINE void _options_get_video(char **p, const char *name)
 
 INLINE void _options_get_aspect(char **p, const char *name)
 {
-	const char *stemp = options_get_string(name, FALSE);
+	const char *stemp = options_get_string(name);
 
 	if (stemp && *stemp)
 	{
@@ -4327,7 +4327,7 @@ INLINE void _options_get_aspect(char **p, const char *name)
 
 INLINE void _options_get_resolution(char **p, const char *name)
 {
-	const char *stemp = options_get_string(name, FALSE);
+	const char *stemp = options_get_string(name);
 
 	if (stemp && *stemp)
 	{
@@ -4393,7 +4393,7 @@ INLINE void _options_get_resolution(char **p, const char *name)
 
 INLINE void _options_get_langcode(int *p, const char *name)
 {
-	const char *langname = options_get_string("language", FALSE);
+	const char *langname = options_get_string("language");
 	int langcode;
 
 	if (langname == NULL)
@@ -4419,7 +4419,7 @@ INLINE void options_set_langcode(const char *name, int langcode)
 #ifdef UI_COLOR_DISPLAY
 INLINE void _options_get_palette(char **p, const char *name)
 {
-	const char *stemp = options_get_string(name, FALSE);
+	const char *stemp = options_get_string(name);
 	int pal[3];
 	int i;
 
@@ -4463,7 +4463,7 @@ INLINE void _options_get_palette(char **p, const char *name)
 
 INLINE void _options_get_list_mode(int *view, const char *name)
 {
-	const char *stemp = options_get_string("list_mode", FALSE);
+	const char *stemp = options_get_string("list_mode");
 	int i;
 
 	if (stemp == NULL)
@@ -4486,7 +4486,7 @@ INLINE void _options_get_list_mode(int *view, const char *name)
 
 INLINE void _options_get_list_font(LOGFONTA *f, const char *name)
 {
-	const char *stemp = options_get_string("list_font", FALSE);
+	const char *stemp = options_get_string("list_font");
 	LONG temp[13];
 	char buf[256];
 	char *p;
@@ -4555,7 +4555,7 @@ INLINE void _options_get_list_font(LOGFONTA *f, const char *name)
 
 INLINE void _options_get_list_fontface(LOGFONTA *f, const char *name)
 {
-	const char *stemp = options_get_string("list_fontface", FALSE);
+	const char *stemp = options_get_string("list_fontface");
 
 	if (stemp == NULL || *stemp == '\0')
 		return;
@@ -4647,7 +4647,7 @@ INLINE void options_copy_list_fontface(const LOGFONTA *src, LOGFONTA *dest)
 
 INLINE void _options_get_ui_joy(int *array, const char *name)
 {
-	const char *stemp = options_get_string(name, FALSE);
+	const char *stemp = options_get_string(name);
 	char buf[256];
 	char *p;
 	int  i;
@@ -4760,7 +4760,7 @@ INLINE void options_set_ui_joy(const char *name, const int *array)
 
 INLINE void _options_get_ui_key(KeySeq *ks, const char *name)
 {
-	const char *stemp = options_get_string(name, FALSE);
+	const char *stemp = options_get_string(name);
 
 	FreeIfAllocated(&ks->seq_string);
 
@@ -4801,7 +4801,7 @@ INLINE void options_free_ui_key(KeySeq *ks)
 
 INLINE void _options_get_folder_hide(LPBITS *flags, const char *name)
 {
-	const char *stemp = options_get_string(name, FALSE);
+	const char *stemp = options_get_string(name);
 
 	if (*flags)
 		DeleteBits(*flags);
@@ -4903,7 +4903,7 @@ INLINE void options_free_folder_hide(LPBITS *flags)
 
 INLINE void _options_get_folder_flag(f_flag *flags, const char *name)
 {
-	const char *stemp = options_get_string(name, FALSE);
+	const char *stemp = options_get_string(name);
 
 	free_folder_flag(flags);
 

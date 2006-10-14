@@ -104,49 +104,48 @@ int audit_images(int game, UINT32 validation, audit_record **audit)
 			if (ROMREGION_ISROMDATA(region) || ROMREGION_ISDISKDATA(region))
 				records++;
 
-	/* if no records, just quit now */
-	if (records == 0)
-		return records;
-
-	/* allocate memory for the records */
-	*audit = malloc_or_die(sizeof(**audit) * records);
-	memset(*audit, 0, sizeof(**audit) * records);
-	record = *audit;
-
-	/* iterate over regions and ROMs */
-	for (region = rom_first_region(drivers[game]); region; region = rom_next_region(region))
-		for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
-		{
-			int shared = rom_used_by_parent(gamedrv, rom, NULL);
-
-			/* audit a file */
-			if (ROMREGION_ISROMDATA(region))
-			{
-#ifdef CHECK_SELECTED_BIOS_ONLY
-			if (!ROM_GETBIOS(rom) || (ROM_GETBIOS(rom) == (system_bios+1))) /* alternate bios sets */
-			{
-#endif /* CHECK_SELECTED_BIOS_ONLY */
-				if (audit_one_rom(rom, gamedrv, validation, record++) && !shared)
-					foundany = TRUE;
-#ifdef CHECK_SELECTED_BIOS_ONLY
-			}
-#endif /* CHECK_SELECTED_BIOS_ONLY */
-			}
-
-			/* audit a disk */
-			else if (ROMREGION_ISDISKDATA(region))
-			{
-				if (audit_one_disk(rom, gamedrv, validation, record++) && !shared)
-					foundany = TRUE;
-			}
-		}
-
-	/* if we found nothing, we don't have the set at all */
-	if (!foundany)
+	if (records > 0)
 	{
-		free(*audit);
-		*audit = NULL;
-		records = 0;
+		/* allocate memory for the records */
+		*audit = malloc_or_die(sizeof(**audit) * records);
+		memset(*audit, 0, sizeof(**audit) * records);
+		record = *audit;
+
+		/* iterate over regions and ROMs */
+		for (region = rom_first_region(drivers[game]); region; region = rom_next_region(region))
+			for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
+			{
+				int shared = rom_used_by_parent(gamedrv, rom, NULL);
+
+				/* audit a file */
+				if (ROMREGION_ISROMDATA(region))
+				{
+#ifdef CHECK_SELECTED_BIOS_ONLY
+					if (!ROM_GETBIOS(rom) || (ROM_GETBIOS(rom) == (system_bios+1))) /* alternate bios sets */
+					{
+#endif /* CHECK_SELECTED_BIOS_ONLY */
+					if (audit_one_rom(rom, gamedrv, validation, record++) && !shared)
+						foundany = TRUE;
+#ifdef CHECK_SELECTED_BIOS_ONLY
+					}
+#endif /* CHECK_SELECTED_BIOS_ONLY */
+				}
+
+				/* audit a disk */
+				else if (ROMREGION_ISDISKDATA(region))
+				{
+					if (audit_one_disk(rom, gamedrv, validation, record++) && !shared)
+						foundany = TRUE;
+				}
+			}
+
+		/* if we found nothing, we don't have the set at all */
+		if (!foundany)
+		{
+			free(*audit);
+			*audit = NULL;
+			records = 0;
+		}
 	}
 	return records;
 }
@@ -210,14 +209,14 @@ int audit_samples(int game, audit_record **audit)
 					char *fname;
 
 					/* attempt to access the file from the game driver name */
-					fname = assemble_3_strings(gamedrv->name, "/", intf->samplenames[sampnum]);
+					fname = assemble_3_strings(gamedrv->name, PATH_SEPARATOR, intf->samplenames[sampnum]);
 					filerr = mame_fopen(SEARCHPATH_SAMPLE, fname, OPEN_FLAG_READ, &file);
 					free(fname);
 
 					/* attempt to access the file from the shared driver name */
 					if (filerr != FILERR_NONE && sharedname != NULL)
 					{
-						fname = assemble_3_strings(sharedname, "/", intf->samplenames[sampnum]);
+						fname = assemble_3_strings(sharedname, PATH_SEPARATOR, intf->samplenames[sampnum]);
 						filerr = mame_fopen(SEARCHPATH_SAMPLE, fname, OPEN_FLAG_READ, &file);
 						free(fname);
 					}
@@ -378,7 +377,7 @@ static int audit_one_rom(const rom_entry *rom, const game_driver *gamedrv, UINT3
 		char *fname;
 
 		/* open the file if we can */
-		fname = assemble_3_strings(drv->name, "/", ROM_GETNAME(rom));
+		fname = assemble_3_strings(drv->name, PATH_SEPARATOR, ROM_GETNAME(rom));
 		if (has_crc)
 			filerr = mame_fopen_crc(SEARCHPATH_ROM, fname, crc, OPEN_FLAG_READ, &file);
 		else
@@ -566,7 +565,7 @@ static chd_interface_file *audit_chd_open(const char *filename, const char *mode
 		mame_file *file;
 		char *fname;
 
-		fname = assemble_3_strings(drv->name, "/", filename);
+		fname = assemble_3_strings(drv->name, PATH_SEPARATOR, filename);
 		filerr = mame_fopen(SEARCHPATH_IMAGE, fname, OPEN_FLAG_READ, &file);
 		free(fname);
 

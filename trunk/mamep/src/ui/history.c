@@ -52,17 +52,12 @@ LPCWSTR GetGameHistory(int driver_index)
 
 	historyBuf[0] = '\0';
 
-	FreeIfAllocated((char **)&localized_directory);
-	localized_directory = strdup(GetLocalizedDir());
-
-	FreeIfAllocated((char **)&history_filename);
-	history_filename = strdup(GetHistoryFile());
+	options_set_string(OPTION_LOCALIZED_DIRECTORY, GetLocalizedDir());
+	options_set_string(OPTION_HISTORY_FILE, GetHistoryFile());
 #ifdef STORY_DATAFILE
-	FreeIfAllocated((char **)&story_filename);
-	story_filename = strdup(GetStoryFile());
+	options_set_string(OPTION_STORY_FILE, GetStoryFile());
 #endif /* STORY_DATAFILE */
-	FreeIfAllocated((char **)&mameinfo_filename);
-	mameinfo_filename = strdup(GetMAMEInfoFile());
+	options_set_string(OPTION_MAMEINFO_FILE, GetMAMEInfoFile());
 
 	*dataBuf = 0;
 	if (load_driver_history(drivers[driver_index], dataBuf, sizeof(dataBuf)) == 0)
@@ -108,12 +103,9 @@ LPCWSTR GetGameStory(int driver_index)
 
 	historyBuf[0] = '\0';
 
-	FreeIfAllocated((char **)&localized_directory);
-	localized_directory = strdup(GetLocalizedDir());
-
+	options_set_string(OPTION_LOCALIZED_DIRECTORY, GetLocalizedDir());
 #ifdef STORY_DATAFILE
-	FreeIfAllocated((char **)&story_filename);
-	story_filename = strdup(GetStoryFile());
+	options_set_string(OPTION_STORY_FILE, GetStoryFile());
 #endif /* STORY_DATAFILE */
 
 	*dataBuf = 0;

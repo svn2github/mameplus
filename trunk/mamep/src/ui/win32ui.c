@@ -1996,8 +1996,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 		mame_file *file;
 		mame_file_error filerr;
 
-		options_free_entries();
-		options_add_entries(windows_opts);
+		options_init(windows_opts);
 
 		filerr = mame_fopen(SEARCHPATH_RAW, CONFIGNAME ".ini", OPEN_FLAG_READ, &file);
 		if (filerr == FILERR_NONE)
@@ -2007,7 +2006,6 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 		}
 
 		assign_drivers();
-
 		options_free_entries();
 	}
 #endif /* DRIVER_SWITCH */

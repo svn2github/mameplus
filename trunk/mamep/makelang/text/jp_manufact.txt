@@ -650,6 +650,10 @@ bootleg?
 hack
 ハック
 
+# NGEM2K (beta 2006-01-18)
+homebrew
+自家製
+
 # Chewing Gum
 unknown
 不明
@@ -898,6 +902,10 @@ Century?
 Chaos
 
 
+# Altair
+Cidelsa
+
+
 # Cerberus
 Cinematronics
 
@@ -984,6 +992,10 @@ Danbi & F2 System
 
 # Super Casino
 Data Amusement
+
+
+# Rock Duck (prototype?)
+Datel SAS
 
 
 # Flashback - The Quest for Identity (U) [!]
@@ -1364,6 +1376,10 @@ Island Design
 
 # Quiz (Revision 2)
 Italian bootleg
+
+
+# Major Havoc (Return to Vax)
+JMA
 
 
 # Poker Night
@@ -2292,9 +2308,5 @@ Zyrinx
 
 # X-Files
 dgPIX Entertainment Inc.
-
-
-# NGEM2K (beta 2006-01-18)
-homebrew
 
 

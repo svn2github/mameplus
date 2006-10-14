@@ -1,16 +1,16 @@
-# datafile.c: 3124
+# datafile.c: 2399
           DIAL:  %4d\n
                 ダイアル:  %4d\n
 
-# datafile.c: 3130
+# datafile.c: 2405
          OTHER:  %4d\n
                   その他:  %4d\n
 
-# datafile.c: 3128
+# datafile.c: 2403
          PEDAL:  %4d\n
                   ペダル:  %4d\n
 
-# datafile.c: 3123
+# datafile.c: 2398
         PADDLE:  %4d\n
                   パドル:  %4d\n
 
@@ -18,35 +18,35 @@
        FOUND: %s\n
 見つかった物: %s\n
 
-# datafile.c: 3117
+# datafile.c: 2392
        JOY2WAY:  %4d\n
         ２方向スティック:  %4d\n
 
-# datafile.c: 3118
+# datafile.c: 2393
        JOY4WAY:  %4d\n
         ４方向スティック:  %4d\n
 
-# datafile.c: 3119
+# datafile.c: 2394
        JOY8WAY:  %4d\n
         ８方向スティック:  %4d\n
 
-# datafile.c: 3126
+# datafile.c: 2401
       AD STICK:  %4d\n
       アナログスティック:  %4d\n
 
-# datafile.c: 3127
+# datafile.c: 2402
       LIGHTGUN:  %4d\n
                   光線銃:  %4d\n
 
-# datafile.c: 3111
+# datafile.c: 2386
      PLAYERS %d:  %4d\n
             %d プレイヤー:  %4d\n
 
-# datafile.c: 3125
+# datafile.c: 2400
      TRACKBALL:  %4d\n
                 トラック:  %4d\n
 
-# datafile.c: 3139
+# datafile.c: 2414
     BUTTONS%3d:  %4d\n
                ボタン%3d:  %4d\n
 
@@ -54,55 +54,55 @@
     EXPECTED: %s\n
     正常な物: %s\n
 
-# datafile.c: 3145
+# datafile.c: 2420
     NO BUTTONS:  %4d\n
             ボタン未使用:  %4d\n
 
-# audit.c: 296
+# audit.c: 302
    FOUND: %s\n
 見つかった物: %s\n
 
-# datafile.c: 2949
+# datafile.c: 2224
  %4d HARDDISK\n
  %4d ハードディスク\n
 
-# datafile.c: 2945
+# datafile.c: 2220
  %4d HORIZONTAL + %4d\n %4d VERTICAL   + %4d\n
  %4d 横型       + %4d\n %4d 縦型       + %4d\n
 
-# datafile.c: 2941
+# datafile.c: 2216
  %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
  %4d PLAYCHOICE + %4d\n %4d デコカセ   + %4d\n %4d CVS        + %4d\n
 
-# datafile.c: 2943
+# datafile.c: 2218
  %4d RASTER     + %4d\n %4d VECTOR     + %4d\n
  %4d ラスタ     + %4d\n %4d ベクタ     + %4d\n
 
-# datafile.c: 2947
+# datafile.c: 2222
  %4d STEREO     + %4d\n
  %4d ステレオ   + %4d\n
 
-# audit.c: 270
+# audit.c: 276
  (%d bytes)
  (%d バイト)
 
-# datafile.c: 3120
+# datafile.c: 2395
  DOUBLEJOY2WAY:  %4d\n
 ２方向デュアルスティック:  %4d\n
 
-# datafile.c: 3121
+# datafile.c: 2396
  DOUBLEJOY4WAY:  %4d\n
 ４方向デュアルスティック:  %4d\n
 
-# datafile.c: 3122
+# datafile.c: 2397
  DOUBLEJOY8WAY:  %4d\n
 ８方向デュアルスティック:  %4d\n
 
-# datafile.c: 3050
+# datafile.c: 2325
  GAMES WITH  %d CPUs: %4d\n
  %d個のCPU使用ゲーム: %4d\n
 
-# datafile.c: 3081
+# datafile.c: 2356
  GAMES WITH  %d SNDINTRF: %4d\n
  %d個の音源使用ゲーム: %4d\n
 
@@ -153,6 +153,10 @@
 # uitext.c: 170
 (Card may already exist)
 (カードを既に作成済みかも知れません)
+
+# options.c: 114, 122, 128, 133 
+(disabled by compiling option)
+(コンパイルオプションにより無効)
 
 # uitext.c: 158
 (locked)
@@ -262,7 +266,7 @@
 24 Bit
 24ビット
 
-# datafile.c: 3151
+# datafile.c: 2426
 24-BIT DISPLAY : %3d  + %3d\n
 24ビット表\示   : %3d  + %3d\n
 
@@ -618,7 +622,7 @@ Beam Width
 Beginner
 初心者
 
-# drivers/bmcbowl.c: 375 drivers/cardline.c: 151 drivers/cherrym.c: 181 drivers/lvcards.c: 218, 302 drivers/magic10.c: 216 drivers/pmpoker.c: 610, 710 drivers/sderby.c: 173
+# drivers/bmcbowl.c: 375 drivers/cardline.c: 151 drivers/cherrym.c: 181 drivers/lvcards.c: 218, 302 drivers/magic10.c: 216 drivers/pmpoker.c: 595, 685 drivers/sderby.c: 173
 Bet
 賭ける
 
@@ -670,6 +674,10 @@ Byte Length
 COMM Setting
 COMMセッティング
 
+# options.c: 87
+CORE PATH AND DIRECTORY OPTIONS
+コアのパス・ディレクトリ設定
+
 # cheat.c: 3656, 3681, 5147, 6166 uitext.c: 43
 CPU
 CPU
@@ -690,7 +698,7 @@ Cabinet Type
 Calibrate Joysticks
 ジョイスティックの調整
 
-# drivers/getrivia.c: 288 drivers/pmpoker.c: 581, 681 drivers/segac2.c: 1199 
+# drivers/getrivia.c: 288 drivers/pmpoker.c: 566, 656 drivers/segac2.c: 1199 
 Cancel
 キャンセル
 
@@ -706,7 +714,7 @@ Center
 Cheat
 チート (ゲームの改造)
 
-# cheat.c: 8790
+# cheat.c: 8792
 Cheat Database reloaded
 チートデータを読み込みました
 
@@ -1082,7 +1090,7 @@ Domestic
 Door Interlock
 ドア連動
 
-# drivers/cherrym.c: 179 drivers/nbmj8891.c: 1425 drivers/pmpoker.c: 579
+# drivers/cherrym.c: 179 drivers/nbmj8891.c: 1425 drivers/pmpoker.c: 564
 Double Up
 ダブルアップ
 
@@ -1130,7 +1138,7 @@ EEPROM
 ERROR: required files are missing, the game cannot be run.
 エラー: 必要なファイルがありません。ゲームは実行できません。
 
-# audit.c: 294
+# audit.c: 300
 EXPECTED: %s\n
 正常な物: %s\n
 
@@ -1142,7 +1150,7 @@ Easier
 Easiest
 最も簡単
 
-# inptport.c: 416
+# drivers/yunsun16.c: 452 inptport.c: 416
 Easy
 簡単
 
@@ -1226,11 +1234,11 @@ Error: Unable to save state due to illegal registrations. See error.log for deta
 Error: illegal caption file
 エラー: 不正なキャプションファイルです
 
-# options.c: 329
+# options.c: 471
 Error: option %s expected a parameter\n
 Error: オプション「%s」には引数が必要です\n
 
-# options.c: 314
+# options.c: 456
 Error: unknown option: %s\n
 Error: オプション「%s」はありません\n
 
@@ -1250,11 +1258,11 @@ Failed to allocate %d bytes (%s:%d)
 Fast
 速い
 
-# mamecore.h: 205
+# mamecore.h: 259
 Fatal error: %s (%s:%d)
 致命的なエラー: %s (%s:%d)
 
-# mamecore.h: 202
+# mamecore.h: 256
 Fatal error: %s\nCaused by assert: %s:%d: %s
 致命的なエラー: %s\nアサートの結果: %s:%d: %s
 
@@ -1322,11 +1330,11 @@ Full
 Full Output
 全て表\示
 
-# datafile.c: 2195
+# datafile.c: 1476
 GAME: 
 ゲーム: 
 
-# drivers/bublbobl.c: 606 drivers/cps1.c: 732, 814, 1022, 1106, 1141, 1227, 1441, 1531, 1612, 1808, 1903, 1993, 2075, 2158, 2252, 2348, 2439, 2542, 2650, 2769, 2878, 2970, 3063, 3581, 3681, 3785, 3884, 4044, 4157 drivers/fcrash.c: 299 drivers/macs.c: 244 drivers/missile.c: 837 drivers/pacman.c: 1376 drivers/turbo.c: 900 drivers/vegas.c: 2040
+# drivers/bublbobl.c: 606 drivers/cps1.c: 732, 814, 1022, 1106, 1141, 1227, 1441, 1531, 1612, 1808, 1903, 1993, 2075, 2158, 2252, 2348, 2439, 2542, 2650, 2769, 2878, 2970, 3063, 3581, 3681, 3785, 3884, 4044, 4157 drivers/fcrash.c: 299 drivers/macs.c: 244 drivers/missile.c: 837 drivers/pacman.c: 1376 drivers/turbo.c: 898 drivers/vegas.c: 2040
 Game
 ゲーム名
 
@@ -1406,11 +1414,11 @@ Greater Or Equal
 Greater or Equal
 以上
 
-# datafile.c: 3153
+# datafile.c: 2428
 HI/TRUE BITMAP : %3d  + %3d\n
 RGBダイレクト  : %3d  + %3d\n
 
-# datafile.c: 3157
+# datafile.c: 2432
 HIGHLIGHTS     : %3d  + %3d\n
 ハイライト使用 : %3d  + %3d\n
 
@@ -1478,23 +1486,23 @@ History not available
 Hit
 ヒット
 
-# drivers/funworld.c: 466, 524 drivers/ltcasino.c: 103, 475 drivers/lvcards.c: 212, 296 drivers/pmpoker.c: 597, 697
+# drivers/funworld.c: 466, 524 drivers/ltcasino.c: 103, 475 drivers/lvcards.c: 212, 296 drivers/pmpoker.c: 582, 672
 Hold 1
 ホールド 1
 
-# drivers/ltcasino.c: 104, 476 drivers/lvcards.c: 213, 297 drivers/pmpoker.c: 598, 698
+# drivers/ltcasino.c: 104, 476 drivers/lvcards.c: 213, 297 drivers/pmpoker.c: 583, 673
 Hold 2
 ホールド 2
 
-# drivers/funworld.c: 476, 534 drivers/ltcasino.c: 105, 477 drivers/lvcards.c: 214, 298 drivers/pmpoker.c: 599, 699
+# drivers/funworld.c: 476, 534 drivers/ltcasino.c: 105, 477 drivers/lvcards.c: 214, 298 drivers/pmpoker.c: 584, 674
 Hold 3
 ホールド 3
 
-# drivers/ltcasino.c: 106, 478 drivers/lvcards.c: 215, 299 drivers/pmpoker.c: 600, 700
+# drivers/ltcasino.c: 106, 478 drivers/lvcards.c: 215, 299 drivers/pmpoker.c: 585, 675
 Hold 4
 ホールド 4
 
-# drivers/ltcasino.c: 107, 479 drivers/lvcards.c: 216, 300 drivers/pmpoker.c: 601, 701
+# drivers/ltcasino.c: 107, 479 drivers/lvcards.c: 216, 300 drivers/pmpoker.c: 586, 676
 Hold 5
 ホールド 5
 
@@ -1530,23 +1538,23 @@ Horizontally
 IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
 「%s」を合法的に遊ぶ権利がなければESCを押してください。
 
-# datafile.c: 2962
+# datafile.c: 2237
 IMPERFECT COLORS   : %3d  %3d\n
 色の再現が不完全   : %3d  %3d\n
 
-# datafile.c: 2958
+# datafile.c: 2233
 IMPERFECT GRAPHICS : %3d  %3d\n
 画像の再現が不完全 : %3d  %3d\n
 
-# datafile.c: 2966
+# datafile.c: 2241
 IMPERFECT SOUND    : %3d  %3d\n
 音の再現が不完全   : %3d  %3d\n
 
-# audit.c: 292
+# audit.c: 298
 INCORRECT CHECKSUM:\n
 チェックサムの異常:\n
 
-# audit.c: 301
+# audit.c: 307
 INCORRECT LENGTH: %d bytes\n
 ファイルサイズの異常: %d バイト\n
 
@@ -1562,15 +1570,15 @@ Ignore Decrement
 Ignore Decrement By
 この値まで減少を無視
 
-# options.c: 668
+# options.c: 825
 Illegal boolean value for %s; reverting to %d\n
 「%s」は不正な論理値です。%dに戻します。\n
 
-# options.c: 716, 774
+# options.c: 879, 946
 Illegal float value for %s; reverting to %f\n
 「%s」は不正な実数値です。%fに戻します。\n
 
-# options.c: 692, 741
+# options.c: 852, 907
 Illegal integer value for %s; reverting to %d\n
 「%s」は不正な整数値です。%dに戻します。\n
 
@@ -1682,11 +1690,11 @@ Insert
 International
 インターナショナル
 
-# options.c: 748
+# options.c: 917
 Invalid %s value (must be between %d and %d); reverting to %d\n
 「%s」は不正な値です(%dから%dの間でなければなりません)。%dに戻します。\n
 
-# options.c: 781
+# options.c: 956
 Invalid %s value (must be between %f and %f); reverting to %f\n
 「%s」は不正な値です(%fから%fの間でなければなりません)。%fに戻します。\n
 
@@ -1922,7 +1930,7 @@ MAMEの統計データ
 MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n
 MAMEはエミュレータです: いくつかのアーケードマシンをほぼ忠実に再現します。しか\nし、ハードウェアが要求するROMイメージと呼ばれるソ\フトウェアがなければ動作しま\nせん。ROMは他の商用ソ\フトウェアと同様に著作物であるため、あなたが所持していな\nいアーケードマシンのROMを使用することは違法になります。言うまでもなくMAMEと一\n緒に配布してはいけません。ROMと一緒にMAMEを配布することは著作権の侵害であり、\n直ちにゲームメーカーに報告され、然るべき法的措置がとられるでしょう。\n
 
-# datafile.c: 2187
+# datafile.c: 1468
 MAMEInfo:\n
 MAME情報:\n
 
@@ -2098,19 +2106,19 @@ Move User Interface
 NA
 なし
 
-# audit.c: 278
+# audit.c: 284
 NEEDS REDUMP\n
 再ダンプが必要です\n
 
-# datafile.c: 2968
+# datafile.c: 2243
 NO COCKTAIL        : %3d  %3d\n
 カクテル未サポート : %3d  %3d\n
 
-# datafile.c: 2970
+# datafile.c: 2245
 NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 正常なダンプが不明 : %3d  %3d\n(%3d ROM、全%dゲーム)\n
 
-# audit.c: 283
+# audit.c: 289
 NO GOOD DUMP KNOWN\n
 正常なダンプは不明です\n
 
@@ -2118,31 +2126,31 @@ NO GOOD DUMP KNOWN\n
 NO MATCH\n
 マッチしません\n
 
-# datafile.c: 2964
+# datafile.c: 2239
 NO SOUND           : %3d  %3d\n
 サウンド無し       : %3d  %3d\n
 
-# datafile.c: 2954
+# datafile.c: 2229
 NON-WORKING        : %3d  %3d\n
 動作不可           : %3d  %3d\n
 
-# audit.c: 323
+# audit.c: 329
 NOT FOUND (BIOS)\n
 見つかりません (BIOS)\n
 
-# audit.c: 319
+# audit.c: 325
 NOT FOUND (shared with parent)\n
 見つかりません (親と共有)\n
 
-# audit.c: 309
+# audit.c: 315
 NOT FOUND - NO GOOD DUMP KNOWN\n
 見つかりません (正常なダンプは不明です)\n
 
-# audit.c: 314
+# audit.c: 320
 NOT FOUND BUT OPTIONAL\n
 見つかりませんがオプションです\n
 
-# audit.c: 305
+# audit.c: 311
 NOT FOUND\n
 見つかりません\n
 
@@ -2182,7 +2190,7 @@ No previous values saved
 None
 なし
 
-# cheat.c: 2932, 2947 drivers/metro.c: 2775 inptport.c: 417
+# cheat.c: 2932, 2947 drivers/metro.c: 2775 drivers/yunsun16.c: 452 inptport.c: 417
 Normal
 標準
 
@@ -3590,11 +3598,11 @@ Paddle V 8
 Pause
 一時停止
 
-# drivers/cardline.c: 161 drivers/cherrym.c: 200 drivers/csk.c: 283, 368, 443, 513 drivers/ddenlovr.c: 4020, 4571 drivers/findout.c: 422 drivers/funworld.c: 482, 516, 540, 574 drivers/getrivia.c: 276 drivers/neogeo.c: 1254 drivers/pmpoker.c: 488, 588, 688 drivers/rcasino.c: 215 drivers/royalmah.c: 742, 940, 1115, 1290, 1637 drivers/vroulet.c: 146
+# drivers/cardline.c: 161 drivers/cherrym.c: 200 drivers/csk.c: 283, 368, 443, 513 drivers/ddenlovr.c: 4020, 4571 drivers/findout.c: 422 drivers/funworld.c: 482, 516, 540, 574 drivers/getrivia.c: 276 drivers/neogeo.c: 1254 drivers/pmpoker.c: 483, 573, 663 drivers/rcasino.c: 215 drivers/royalmah.c: 742, 940, 1115, 1290, 1637 drivers/vroulet.c: 146
 Payout
 払い出し
 
-# drivers/turbo.c: 958 
+# drivers/turbo.c: 956 
 Pedal
 ペダル
 
@@ -3690,7 +3698,7 @@ REC STOP
 RHS
 RHS
 
-# datafile.c: 2972
+# datafile.c: 2247
 ROM NEEDS REDUMP   : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 再ダンプが必要     : %3d  %3d\n(%3d ROM、全%dゲーム)\n
 
@@ -3734,7 +3742,7 @@ Relative Address
 Reload Database
 データベース再読み込み
 
-# drivers/arcadia.c: 228 drivers/astrocde.c: 597 drivers/djmain.c: 499 drivers/hanaroku.c: 158 drivers/laserbat.c: 265, 344, 418 drivers/murogem.c: 125 drivers/playch10.c: 472 drivers/sengokmj.c: 237 drivers/trvquest.c: 141 
+# drivers/arcadia.c: 228 drivers/astrocde.c: 597 drivers/djmain.c: 499 drivers/hanaroku.c: 158 drivers/laserbat.c: 265, 344, 418 drivers/murogem.c: 126 drivers/playch10.c: 472 drivers/sengokmj.c: 237 drivers/trvquest.c: 141 
 Reset
 リセット
 
@@ -3806,7 +3814,7 @@ Rotate View
 Rotation
 回転
 
-# datafile.c: 3155
+# datafile.c: 2430
 SHADOWS        : %3d  + %3d\n
 影使用         : %3d  + %3d\n
 
@@ -3814,7 +3822,7 @@ SHADOWS        : %3d  + %3d\n
 Same
 同じ
 
-# sound/samples.c: 566 
+# sound/samples.c: 569 
 Samples
 サンプル
 
@@ -3842,7 +3850,7 @@ Save cancelled
 Save to position %c
 %c に保存しました
 
-# drivers/findout.c: 279, 339 drivers/turbo.c: 897 
+# drivers/findout.c: 279, 339 drivers/turbo.c: 895 
 Screen
 画面
 
@@ -3870,7 +3878,7 @@ Screen Resolution
 Screen flipping in cocktail mode is not supported.
 カクテルモードの画面反転に対応していません。
 
-# datafile.c: 2223
+# datafile.c: 1504
 Screen flipping in cocktail mode is not supported.\n
 カクテルモードの画面反転に対応していません。\n
 
@@ -3890,7 +3898,7 @@ Search not initialized
 Second Bonus
 ボーナス2回目
 
-# cheat.c: 2887, 2961 drivers/bfm_sc2.c: 2138, 2249, 2363 drivers/bwidow.c: 640 drivers/maxaflex.c: 275 drivers/megaplay.c: 73 drivers/megatech.c: 112 drivers/mpu4.c: 2049 drivers/nbmj8688.c: 2758 drivers/trackfld.c: 665
+# cheat.c: 2887, 2961 drivers/bfm_sc2.c: 2138, 2249, 2363 drivers/bwidow.c: 640 drivers/maxaflex.c: 277 drivers/megaplay.c: 73 drivers/megatech.c: 112 drivers/mpu4.c: 2049 drivers/nbmj8688.c: 2758 drivers/trackfld.c: 665
 Select
 選択
 
@@ -4114,7 +4122,7 @@ Status (bits or flags)
 Stereo
 ステレオ
 
-# drivers/bmcbowl.c: 371 drivers/holeland.c: 145, 213 drivers/pgm.c: 900, 997, 1087, 1179, 1275, 1366 drivers/popper.c: 277 drivers/toaplan2.c: 2077 drivers/turbo.c: 895
+# drivers/bmcbowl.c: 371 drivers/holeland.c: 145, 213 drivers/pgm.c: 900, 997, 1087, 1179, 1275, 1366 drivers/popper.c: 277 drivers/toaplan2.c: 2077 drivers/turbo.c: 893
 Stop
 停止
 
@@ -4138,7 +4146,7 @@ Swap
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.
 ※このゲームは全く動作しません。現状では正常に動作させる事は不可能\です。
 
-# datafile.c: 2202
+# datafile.c: 1483
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n
 ※このゲームは全く動作しません。現状では正常に動作させる事は不可能\です。\n
 
@@ -4178,7 +4186,7 @@ Text Label
 The colors are completely wrong.
 色が再現されません。
 
-# datafile.c: 2211
+# datafile.c: 1492
 The colors are completely wrong.\n
 色が再現されません。\n
 
@@ -4186,7 +4194,7 @@ The colors are completely wrong.\n
 The colors aren't 100% accurate.
 色の再現が不完全です。
 
-# datafile.c: 2214
+# datafile.c: 1495
 The colors aren't 100% accurate.\n
 色の再現が不完全です。\n
 
@@ -4194,7 +4202,7 @@ The colors aren't 100% accurate.\n
 The game has protection which isn't fully emulated.
 このゲームはプロテクトのためエミュレーションが不完全です。
 
-# datafile.c: 2205
+# datafile.c: 1486
 The game has protection which isn't fully emulated.\n
 このゲームはプロテクトのためエミュレーションが不完全です。\n
 
@@ -4202,7 +4210,7 @@ The game has protection which isn't fully emulated.\n
 The game lacks sound.
 サウンドが再生されません。
 
-# datafile.c: 2217
+# datafile.c: 1498
 The game lacks sound.\n
 サウンドが再生されません。\n
 
@@ -4210,7 +4218,7 @@ The game lacks sound.\n
 The sound emulation isn't 100% accurate.
 サウンドエミュレーションが不完全です。
 
-# datafile.c: 2220
+# datafile.c: 1501
 The sound emulation isn't 100% accurate.\n
 サウンドエミュレーションが不完全です。\n
 
@@ -4218,7 +4226,7 @@ The sound emulation isn't 100% accurate.\n
 The video emulation isn't 100% accurate.
 ビデオエミュレーションが不完全です。
 
-# datafile.c: 2208
+# datafile.c: 1489
 The video emulation isn't 100% accurate.\n
 ビデオエミュレーションが不完全です。\n
 
@@ -4438,7 +4446,7 @@ UI ズームイン
 UI Zoom Out
 UI ズームアウト
 
-# datafile.c: 2956
+# datafile.c: 2231
 UNEMULATED PROTEC. : %3d  %3d\n
 プロテクト未対応   : %3d  %3d\n
 
@@ -4714,7 +4722,7 @@ Volume Up
 WARNING: the game might not run correctly.
 警告: ゲームは正しく実行できません。
 
-# datafile.c: 2960
+# datafile.c: 2235
 WRONG COLORS       : %3d  %3d\n
 色が違う           : %3d  %3d\n
 
@@ -4722,11 +4730,11 @@ WRONG COLORS       : %3d  %3d\n
 Wait
 ウエイト
 
-# options.c: 375
+# options.c: 517
 Warning: invalid line in INI: %s
 警告: INIファイルに不正な行があります: %s
 
-# options.c: 397
+# options.c: 539
 Warning: unknown option in INI: %s\n
 警告: INIファイルに不明なオプションがあります: %s
 
@@ -4814,99 +4822,99 @@ Zoom = %d
 Zoom Auto
 ズーム 自動
 
-# datafile.c: 3088
+# datafile.c: 2363
 \n    SNDINTRF:  (1)  (2)  (3)  (4)\n\n
 \n        音源:  (1)  (2)  (3)  (4)\n\n
 
-# datafile.c: 3100
+# datafile.c: 2375
 \n    TOTAL: %4d\n
 \n     合計: %4d\n
 
-# datafile.c: 3071
+# datafile.c: 2346
 \n   TOTAL: %4d\n
 \n    合計: %4d\n
 
-# datafile.c: 2304, 2322
+# datafile.c: 1582, 1600
 \nORIGINAL:\n
 \n原作:\n
 
-# datafile.c: 2244
+# datafile.c: 1522
 \nROM REGION:\n
 \nROMリージョン:\n
 
-# datafile.c: 3015
+# datafile.c: 2290
 \nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d MB (UNCOMPRESSED)\n%d MB + %d MB MERGED\n
 \nROMファイル: %d\n%d + %d マージされたROM\n\nファイルサイズ: %d KB (非圧縮)\n%d KB + %d KB マージ\n
 
-# datafile.c: 2350
+# datafile.c: 1628
 \nSOURCE: %s\n
 \nソ\ースファイル: %s\n
 
-# datafile.c: 2159
+# datafile.c: 1440
 \nStory:\n
 \nストーリー:\n
 
-# datafile.c: 3186
+# datafile.c: 2461
 \nWARNING: FPS number too high!\n
 \n警告: FPSの値が大きすぎます！\n
 
-# datafile.c: 2939
+# datafile.c: 2214
 \n\n %4d GAMES (ALL)\n %4d ORIGINALS  + %4d CLNS\n %4d NEOGEO     + %4d\n
 \n\n %4d ゲーム (全て)\n %4d 原作       + %4d クローン\n %4d ネオジオ   + %4d\n
 
-# datafile.c: 3105
+# datafile.c: 2380
 \n\nCABINET INPUT CONTROL: (ALL)\n\n
 \n\n筐体入力パネル: (全て)\n\n
 
-# datafile.c: 2308, 2326
+# datafile.c: 1586, 1604
 \n\nCLONES:\n
 \n\nクローン:\n
 
-# datafile.c: 3045
+# datafile.c: 2320
 \n\nCPU HARDWARE (ORIGINAL GAMES)\n\n
 \n\nCPUハードウェア (原作)\n\n
 
-# datafile.c: 3162
+# datafile.c: 2437
 \n\nFRAMES PER SECOND (%d): (ALL)\n\n
 \n\n秒あたりのフレーム数 (%d): (全て)\n\n
 
-# datafile.c: 2953
+# datafile.c: 2228
 \n\nGAME INFO FLAGS   : ORIG CLNS\n\n
 \n\nゲーム情報フラグ   : 原作 クローン\n\n
 
-# datafile.c: 3285
+# datafile.c: 2560
 \n\nMAME VERSIONS (%3d)\n\n
 \n\nMAME バージョン (%3d)\n\n
 
-# datafile.c: 3246
+# datafile.c: 2521
 \n\nRESOLUTION & PALETTESIZE: (ALL)\n    (%d)          (%d)\n\n
 \n\n解像度 & パレット数: (全て)\n    (%d)          (%d)\n\n
 
-# datafile.c: 3017
+# datafile.c: 2292
 \n\nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d KB (UNCOMPRESSED)\n%d KB + %d KB MERGED\n
 \n\nROMファイル: %d\n%d + %d マージされたROM\n\nファイルサイズ: %d KB (非圧縮)\n%d KB + %d KB マージ\n
 
-# datafile.c: 3076
+# datafile.c: 2351
 \n\nSOUND SYSTEM (ORIGINAL GAMES)\n\n
 \n\nサウンド システム (原作)\n\n
 
-# datafile.c: 3023
+# datafile.c: 2298
 \n\nTYPICAL ROMSET SIZE (ALL)\n
 \n\n標準的なROMセットサイズ (全て)\n
 
-# datafile.c: 3275
+# datafile.c: 2550
 \n\nVERSION - DRIVERS - SUPPORT:\n\n
 \n\nバージョン ドライバ サポート:\n\n
 
-# datafile.c: 3150
+# datafile.c: 2425
 \n\nVIDEO NEEDS... : ORIG   CLNS\n\n
 \n\n表\示に必要     : 原作   クローン\n\n
 
-# datafile.c: 3035
+# datafile.c: 2310
 \n\nYEAR    NEW GAMES\n\n
 \n\n年      新しいゲーム\n\n
 
-# datafile.c: 2979
+# datafile.c: 2254
 \n\nYEAR: ORIG  CLNS NEOGEO  ALL\n\n
 \n\n年: 原作 クローン ネオジオ 全て\n\n
 
@@ -4922,7 +4930,7 @@ Zoom Auto
 \xbb
 \x10
 
-# mamecore.h: 201 
+# mamecore.h: 255 
 assert: %s:%d: %s
 アサート: %s:%d: %s
 
@@ -4930,9 +4938,65 @@ assert: %s:%d: %s
 cheat database not found
 チートデータが見つかりません
 
+# options.c: 117
+cheat filename
+チートファイルの名前
+
+# options.c: 126
+command list database name
+コマンドリストデータベースのファイル名
+
 # info.c: 90 
 dial
 ダイアル
+
+# options.c: 112
+directory for ips files
+IPSファイルのディレクトリ
+
+# options.c: 116
+directory for localized data files
+ローカライズされたデータファイルを保存するパスを指定
+
+# options.c: 109
+directory for translation table data
+翻訳テーブルデータのディレクトリを指定
+
+# options.c: 97
+directory to save configurations
+ゲームの設定を保存するパスを指定
+
+# options.c: 110
+directory to save debugger comments
+デバッガのコメントそ保存するディレクトリを指定
+
+# options.c: 107
+directory to save hard drive image difference files
+ハードディスクへの差分データを保存するディレクトリを指定
+
+# options.c: 102
+directory to save hiscores
+ゲームのハイスコアを保存するパスを指定
+
+# options.c: 100
+directory to save input device logs
+キー入力記録を保存するパスを指定
+
+# options.c: 99
+directory to save memory card contents
+メモリーカードの内容を保存するパスを指定
+
+# options.c: 98
+directory to save nvram contents
+NVRAMの内容を保存するパスを指定
+
+# options.c: 106
+directory to save screenshots
+スクリーンショットを保存するディレクトリを指定
+
+# options.c: 104
+directory to save states
+ステートサーブデータを保存するパスを指定
 
 # debug/debugcmd.c: 1066, 1250
 disabled
@@ -4946,6 +5010,14 @@ enabled
 font\\fontname.fnt
 font\\sjis_gothic.fnt
 
+# options.c: 131
+high score database name
+ハイスコアデータベースのファイル名
+
+# options.c: 118
+history database name
+ヒストリーデータベースのファイル名
+
 # memory.c: 3143 
 invalid
 不正
@@ -4953,6 +5025,10 @@ invalid
 # info.c: 90 
 lightgun
 光線銃
+
+# options.c: 124
+mameinfo database name
+MAMEINFOデータベースのファイル名
 
 # input.c: 999, 1299
 n/a
@@ -4994,6 +5070,30 @@ out of memory while loading cheat database
 paddle
 パドル
 
+# options.c: 89
+path to ROMsets and hard disk images
+ROMセットとハードディスクイメージのパスを指定
+
+# options.c: 105
+path to artwork files
+アートワークのパスを指定
+
+# options.c: 108
+path to controller definitions
+コントローラ定義のパスを指定
+
+# options.c: 93
+path to hash files
+ハッシュのパスを指定
+
+# options.c: 96
+path to ini files
+iniファイルへのパスを指定
+
+# options.c: 95
+path to samplesets
+サンプルファイルへのパスを指定
+
 # info.c: 90 
 pedal
 ペダル
@@ -5021,6 +5121,10 @@ sound
 # uitext.c: 48
 stereo
 ステレオ
+
+# options.c: 120
+story database name
+ストーリデータベースのファイル名
 
 # cheat.c: 2550
 there are no cheats for this game

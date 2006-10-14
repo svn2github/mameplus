@@ -326,6 +326,10 @@ Chaos
 Chuo Co. Ltd
 
 
+# Altair
+Cidelsa
+
+
 # Cerberus
 Cinematronics
 
@@ -436,6 +440,10 @@ Data East Pinball
 
 # Zoar
 Data East USA
+
+
+# Rock Duck (prototype?)
+Datel SAS
 
 
 # Flashback - The Quest for Identity (U) [!]
@@ -952,6 +960,10 @@ Island Design
 
 # Quiz (Revision 2)
 Italian bootleg
+
+
+# Major Havoc (Return to Vax)
+JMA
 
 
 # Poker Night

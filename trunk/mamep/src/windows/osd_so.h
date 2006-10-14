@@ -157,24 +157,24 @@ extern SHAREDOBJ_FUNC(int)          sndtype_clock(int sndnum);
 extern SHAREDOBJ_FUNC(int) state_save_check_file(mame_file *file, const char *gamename, int validate_signature, void (CLIB_DECL *errormsg)(const char *fmt, ...));
 
 #include "options.h"
+extern SHAREDOBJ_FUNC(void)         options_init(const options_entry *entrylist);
 extern SHAREDOBJ_FUNC(void)         options_add_entries(const options_entry *entrylist);
+extern SHAREDOBJ_FUNC(void)         options_set_option_default_value(const char *name, const char *defvalue);
+extern SHAREDOBJ_FUNC(void)         options_set_option_callback(const char *name, void (*callback)(const char *arg));
 extern SHAREDOBJ_FUNC(void)         options_free_entries(void);
 extern SHAREDOBJ_FUNC(int)          options_parse_command_line(int argc, char **argv);
-extern SHAREDOBJ_FUNC(int)          options_parse_xml_file(mame_file *xmlfile);
 extern SHAREDOBJ_FUNC(int)          options_parse_ini_file(mame_file *inifile);
 extern SHAREDOBJ_FUNC(int)          options_output_command_line_marked(char *buf);
-extern SHAREDOBJ_FUNC(void)         options_output_xml_file(FILE *xmlfile);
 extern SHAREDOBJ_FUNC(void)         options_output_ini_file(FILE *inifile);
 extern SHAREDOBJ_FUNC(void)         options_output_ini_mame_file(mame_file *inifile);
-extern SHAREDOBJ_FUNC(void)         options_output_xml_file_marked(FILE *xmlfile);
 extern SHAREDOBJ_FUNC(void)         options_output_ini_file_marked(FILE *inifile);
 extern SHAREDOBJ_FUNC(void)         options_output_ini_mame_file_marked(mame_file *inifile);
 
-extern SHAREDOBJ_FUNC(void)         options_output_help(FILE *output);
-extern SHAREDOBJ_FUNC(const char *) options_get_string(const char * name, int report_error);
-extern SHAREDOBJ_FUNC(int)          options_get_bool(const char * name, int report_error);
-extern SHAREDOBJ_FUNC(int)          options_get_int(const char * name, int report_error);
-extern SHAREDOBJ_FUNC(float)        options_get_float(const char * name, int report_error);
+extern SHAREDOBJ_FUNC(void)         options_output_help(void);
+extern SHAREDOBJ_FUNC(const char *) options_get_string(const char * name);
+extern SHAREDOBJ_FUNC(int)          options_get_bool(const char * name);
+extern SHAREDOBJ_FUNC(int)          options_get_int(const char * name);
+extern SHAREDOBJ_FUNC(float)        options_get_float(const char * name);
 extern SHAREDOBJ_FUNC(void)         options_set_string(const char * name, const char *value);
 extern SHAREDOBJ_FUNC(void)         options_set_bool(const char * name, int value);
 extern SHAREDOBJ_FUNC(void)         options_set_int(const char * name, int value);

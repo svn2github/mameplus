@@ -25,8 +25,6 @@ static mame_timer *timer;
 #define LOG(x)
 #endif
 
-const char *db_filename; //= "hiscore.dat"; /* high score definition file */
-
 
 struct _memory_range
 {
@@ -296,6 +294,7 @@ void hiscore_init (running_machine *machine, const char *name)
 	memory_range *mem_range = state.mem_range;
 	mame_file_error filerr;
 	mame_file *f;
+	const char *db_filename = options_get_string(OPTION_HISCORE_FILE);
 
 	state.hiscores_have_been_loaded = 0;
 

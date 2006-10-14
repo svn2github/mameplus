@@ -32,6 +32,8 @@ void *__cdecl _alloca(size_t);
 #define alloca	__builtin_alloca
 #endif
 
+#define PATH_SEPARATOR		"\\"
+
 #ifdef _MSC_VER
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf

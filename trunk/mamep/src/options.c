@@ -38,6 +38,7 @@ struct _options_data
 	const char *			names[MAX_ENTRY_NAMES]; /* array of possible names */
 	UINT32					flags;				/* flags from the entry */
 	UINT32					seqid;				/* sequence ID; bumped on each change */
+	int						error_reported;		/* have we reported an error on this option yet? */
 	const char *			data;				/* data for this item */
 	const char *			defdata;			/* default data for this item */
 	const char *			description;		/* description for this item */
@@ -51,8 +52,98 @@ struct _options_data
     GLOBAL VARIABLES
 ***************************************************************************/
 
+const char *option_unadorned[MAX_UNADORNED_OPTIONS] =
+{
+	"<UNADORNED0>",
+	"<UNADORNED1>",
+	"<UNADORNED2>",
+	"<UNADORNED3>",
+	"<UNADORNED4>",
+	"<UNADORNED5>",
+	"<UNADORNED6>",
+	"<UNADORNED7>",
+	"<UNADORNED8>",
+	"<UNADORNED9>",
+	"<UNADORNED10>",
+	"<UNADORNED11>",
+	"<UNADORNED12>",
+	"<UNADORNED13>",
+	"<UNADORNED14>",
+	"<UNADORNED15>"
+};
+
+
+
+/***************************************************************************
+    BUILT-IN (CORE) OPTIONS
+***************************************************************************/
+
+static const options_entry core_options[] =
+{
+	// unadorned options - only a single one supported at the moment
+	{ "<UNADORNED0>",              NULL,        0,                 NULL },
+
+	// file and directory options
+	{ NULL,                        NULL,        OPTION_HEADER,     "CORE PATH AND DIRECTORY OPTIONS" },
+#ifndef MESS
+	{ "rompath;rp",                "roms",      0,                 "path to ROMsets and hard disk images" },
+#else
+	{ "biospath;bp",               "bios",      0,                 "path to BIOS sets" },
+	{ "softwarepath;swp",          "software",  0,                 "path to software" },
+	{ "hash_directory;hash",       "hash",      0,                 "path to hash files" },
+#endif
+	{ "samplepath;sp",             "samples",   0,                 "path to samplesets" },
+	{ "inipath",                   "ini",       0,                 "path to ini files" },
+	{ "cfg_directory",             "cfg",       0,                 "directory to save configurations" },
+	{ "nvram_directory",           "nvram",     0,                 "directory to save nvram contents" },
+	{ "memcard_directory",         "memcard",   0,                 "directory to save memory card contents" },
+	{ "input_directory",           "inp",       0,                 "directory to save input device logs" },
+#ifdef USE_HISCORE
+	{ "hiscore_directory",         "hi",        0,                 "directory to save hiscores" },
+#endif /* USE_HISCORE */
+	{ "state_directory",           "sta",       0,                 "directory to save states" },
+	{ "artpath;artwork_directory", "artwork",   0,                 "path to artwork files" },
+	{ "snapshot_directory",        "snap",      0,                 "directory to save screenshots" },
+	{ "diff_directory",            "diff",      0,                 "directory to save hard drive image difference files" },
+	{ "ctrlrpath;ctrlr_directory", "ctrlr",     0,                 "path to controller definitions" },
+	{ "translation_directory",     "lang",      0,                 "directory for translation table data" },
+	{ "comment_directory",         "comments",  0,                 "directory to save debugger comments" },
+#ifdef USE_IPS
+	{ "ips_directory",             "ips",       0,                 "directory for ips files" },
+#else /* USE_IPS */
+	{ "ips_directory",             "ips",       OPTION_DEPRECATED, "(disabled by compiling option)" },
+#endif /* USE_IPS */
+	{ "localized_directory",       "lang",      0,                 "directory for localized data files" },
+	{ "cheat_file",                "cheat.dat", 0,                 "cheat filename" },
+	{ "history_file",              "history.dat",0,                "history database name" },
+#ifdef STORY_DATAFILE
+	{ "story_file",                "story.dat", 0,                 "story database name" },
+#else /* STORY_DATAFILE */
+	{ "story_file",                "story.dat", OPTION_DEPRECATED, "(disabled by compiling option)" },
+#endif /* STORY_DATAFILE */
+	{ "mameinfo_file",             "mameinfo.dat",0,               "mameinfo database name" },
+#ifdef CMD_LIST
+	{ "command_file",              "command.dat",0,                "command list database name" },
+#else /* CMD_LIST */
+	{ "command_file",              "command.dat",OPTION_DEPRECATED,"(disabled by compiling option)" },
+#endif /* CMD_LIST */
+#ifdef USE_HISCORE
+	{ "hiscore_file",              "hiscore.dat",0,                "high score database name" },
+#else /* STORY_DATAFILE */
+	{ "hiscore_file",              "hiscore.dat",OPTION_DEPRECATED,"(disabled by compiling option)" },
+#endif /* USE_HISCORE */
+
+	{ NULL }
+};
+
+
+
+/***************************************************************************
+    GLOBAL VARIABLES
+***************************************************************************/
+
 static options_data *		datalist;
-static options_data **		datalist_nextptr = &datalist;
+static options_data **		datalist_nextptr = NULL;
 
 
 
@@ -191,6 +282,32 @@ static int separate_names(const char *srcstring, const char *results[], int maxe
 
 
 /*-------------------------------------------------
+    options_init - initialize the options system
+-------------------------------------------------*/
+
+void options_init(const options_entry *entrylist)
+{
+	if (find_cache.current_entry == datalist)
+	{
+		if (find_cache.cache != NULL)
+			free(find_cache.cache);
+
+		find_cache.cache = NULL;
+		find_cache.current_entry = NULL;
+	}
+
+	/* free anything we currently have */
+	options_free_entries();
+	datalist_nextptr = &datalist;
+
+	/* add core options and optionally add options that are passed to us */
+	options_add_entries(core_options);
+	if (entrylist != NULL)
+		options_add_entries(entrylist);
+}
+
+
+/*-------------------------------------------------
     options_add_entries - add entries to the
     current options sets
 -------------------------------------------------*/
@@ -198,6 +315,8 @@ static int separate_names(const char *srcstring, const char *results[], int maxe
 void options_add_entries(const options_entry *entrylist)
 {
 	options_data *data;
+
+	assert_always(datalist_nextptr != NULL, "Missing call to options_init()!");
 
 	if (find_cache.current_entry == datalist)
 	{
@@ -220,7 +339,7 @@ void options_add_entries(const options_entry *entrylist)
 			separate_names(entrylist->name, data->names, ARRAY_LENGTH(data->names));
 		data->flags = entrylist->flags;
 		data->data = copy_string(entrylist->defvalue, NULL);
-		data->defdata = entrylist->defvalue;
+		data->defdata = copy_string(entrylist->defvalue, NULL);
 		data->description = entrylist->description;
 
 		/* fill it in and add to the end of the list */
@@ -231,18 +350,35 @@ void options_add_entries(const options_entry *entrylist)
 
 
 /*-------------------------------------------------
+    options_set_option_default_value - change the
+    default value of an option
+-------------------------------------------------*/
+
+void options_set_option_default_value(const char *name, const char *defvalue)
+{
+	options_data *data = find_entry_data(name, TRUE);
+	assert(data != NULL);
+
+	/* free the existing value and make a copy for the new one */
+	/* note that we assume this is called before any data is processed */
+	if (data->data != NULL)
+		free((void *)data->data);
+	if (data->defdata != NULL)
+		free((void *)data->defdata);
+	data->data = copy_string(defvalue, NULL);
+	data->defdata = copy_string(defvalue, NULL);
+}
+
+
+/*-------------------------------------------------
     options_set_option_callback - specifies a
     callback to be invoked when parsing options
 -------------------------------------------------*/
 
 void options_set_option_callback(const char *name, void (*callback)(const char *arg))
 {
-	options_data *data;
-
-	/* find our entry */
-	data = find_entry_data(name, TRUE);
-	assert(data);
-
+	options_data *data = find_entry_data(name, TRUE);
+	assert(data != NULL);
 	data->callback = callback;
 }
 
@@ -275,7 +411,9 @@ void options_free_entries(void)
 		for (i = 0; i < ARRAY_LENGTH(temp->names); i++)
 			if (temp->names[i] != NULL)
 				free((void *)temp->names[i]);
-		if (temp->data)
+		if (temp->defdata != NULL)
+			free((void *)temp->defdata);
+		if (temp->data != NULL)
 			free((void *)temp->data);
 		free(temp);
 	}
@@ -292,6 +430,7 @@ void options_free_entries(void)
 
 int options_parse_command_line(int argc, char **argv)
 {
+	int unadorned_index = 0;
 	int arg;
 
 	/* loop over commands, looking for options */
@@ -305,33 +444,36 @@ int options_parse_command_line(int argc, char **argv)
 		if (argv[arg][0] == '-')
 			optionname = &argv[arg][1];
 		else
-			optionname = "";
+		{
+			optionname = OPTION_UNADORNED(unadorned_index);
+			unadorned_index++;
+		}
 
 		/* find our entry */
 		data = find_entry_data(optionname, TRUE);
 		if (data == NULL)
 		{
-			fprintf(stderr, _("Error: unknown option: %s\n"), argv[arg]);
+			printf(_("Error: unknown option: %s\n"), argv[arg]);
 			return 1;
 		}
-		if ((data->flags & OPTION_DEPRECATED) != 0)
+		if ((data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL)) != 0)
 			continue;
 
 		/* get the data for this argument, special casing booleans */
 		if ((data->flags & (OPTION_BOOLEAN | OPTION_COMMAND)) != 0)
 			newdata = (strncmp(&argv[arg][1], "no", 2) == 0) ? "0" : "1";
-		else if (optionname[0] == 0)
+		else if (argv[arg][0] != '-')
 			newdata = argv[arg];
 		else if (arg + 1 < argc)
 			newdata = argv[++arg];
 		else
 		{
-			fprintf(stderr, _("Error: option %s expected a parameter\n"), argv[arg]);
+			printf(_("Error: option %s expected a parameter\n"), argv[arg]);
 			return 1;
 		}
 
 		/* invoke callback, if present */
-		if (data->callback)
+		if (data->callback != NULL)
 			(*data->callback)(newdata);
 
 		/* allocate a new copy of data for this */
@@ -372,7 +514,7 @@ int options_parse_ini_file(mame_file *inifile)
 		/* if we hit the end early, print a warning and continue */
 		if (*temp == 0)
 		{
-			fprintf(stderr, _("Warning: invalid line in INI: %s"), giant_string_buffer);
+			printf(_("Warning: invalid line in INI: %s"), giant_string_buffer);
 			continue;
 		}
 
@@ -394,7 +536,7 @@ int options_parse_ini_file(mame_file *inifile)
 		data = find_entry_data(optionname, FALSE);
 		if (data == NULL)
 		{
-			fprintf(stderr, _("Warning: unknown option in INI: %s\n"), optionname);
+			printf(_("Warning: unknown option in INI: %s\n"), optionname);
 			continue;
 		}
 		if ((data->flags & OPTION_DEPRECATED) != 0)
@@ -421,7 +563,7 @@ int options_output_command_line_marked(char *buf)
 	for (data = datalist; data != NULL; data = data->next)
 	{
 		/* output entries for all non-deprecated and non-command items */
-		if (data->mark && (data->flags & (OPTION_DEPRECATED | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
+		if (data->mark && (data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
 		{
 			int len = 2 + strlen(data->names[0]);
 
@@ -447,7 +589,7 @@ int options_output_command_line_marked(char *buf)
 			{
 				if (data->data != NULL)
 				{
-					if (strchr(data->data, ' ') || strchr(data->data, '#'))
+					if (strchr(data->data, ' ') != NULL || strchr(data->data, '#') != NULL)
 					{
 						if (buf)
 							sprintf(buf, "-%s \"%s\" ", data->names[0], data->data);
@@ -478,6 +620,20 @@ int options_output_command_line_marked(char *buf)
 	return total;
 }
 
+/*-------------------------------------------------
+    translate_description - translate description
+    by UI_MSG_MAME or UI_MSG_OSD0
+-------------------------------------------------*/
+
+static const char *translate_description(const options_data *data)
+{
+	const char *desc = _(data->description);
+
+	if (strcmp(data->description, desc) == 0)
+		return lang_message(UI_MSG_OSD0, desc);
+
+	return desc;
+}
 
 /*-------------------------------------------------
     options_output_ini_file - output the current
@@ -493,14 +649,14 @@ void options_output_ini_file(FILE *inifile)
 	{
 		/* header: just print */
 		if ((data->flags & OPTION_HEADER) != 0)
-			fprintf(inifile, "\n#\n# %s\n#\n", lang_message(UI_MSG_OSD0, data->description));
+			fprintf(inifile, "\n#\n# %s\n#\n", translate_description(data));
 
 		/* otherwise, output entries for all non-deprecated and non-command items */
-		else if ((data->flags & (OPTION_DEPRECATED | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
+		else if ((data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
 		{
 			if (data->data == NULL)
 				fprintf(inifile, "# %-23s <NULL> (not set)\n", data->names[0]);
-			else if (strchr(data->data, ' ') || strchr(data->data, '#'))
+			else if (strchr(data->data, ' ') != NULL || strchr(data->data, '#') != NULL)
 				fprintf(inifile, "%-25s \"%s\"\n", data->names[0], data->data);
 			else
 				fprintf(inifile, "%-25s %s\n", data->names[0], data->data);
@@ -523,14 +679,14 @@ void options_output_ini_file_marked(FILE *inifile)
 	{
 		/* header: just print */
 		if ((data->flags & OPTION_HEADER) != 0)
-			fprintf(inifile, "\n#\n# %s\n#\n", lang_message(UI_MSG_OSD0, data->description));
+			fprintf(inifile, "\n#\n# %s\n#\n", translate_description(data));
 
 		/* otherwise, output entries for all non-deprecated and non-command items */
-		else if (data->mark && (data->flags & (OPTION_DEPRECATED | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
+		else if (data->mark && (data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
 		{
 			if (data->data == NULL)
 				fprintf(inifile, "# %-23s <NULL> (not set)\n", data->names[0]);
-			else if (strchr(data->data, ' ') || strchr(data->data, '#'))
+			else if (strchr(data->data, ' ') != NULL || strchr(data->data, '#') != NULL)
 				fprintf(inifile, "%-25s \"%s\"\n", data->names[0], data->data);
 			else
 				fprintf(inifile, "%-25s %s\n", data->names[0], data->data);
@@ -553,14 +709,14 @@ void options_output_ini_mame_file(mame_file *inifile)
 	{
 		/* header: just print */
 		if ((data->flags & OPTION_HEADER) != 0)
-			mame_fprintf(inifile, "\n#\n# %s\n#\n", lang_message(UI_MSG_OSD0, data->description));
+			mame_fprintf(inifile, "\n#\n# %s\n#\n", translate_description(data));
 
 		/* otherwise, output entries for all non-deprecated and non-command items */
-		else if ((data->flags & (OPTION_DEPRECATED | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
+		else if ((data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
 		{
 			if (data->data == NULL)
 				mame_fprintf(inifile, "# %-23s <NULL> (not set)\n", data->names[0]);
-			else if (strchr(data->data, ' ') || strchr(data->data, '#'))
+			else if (strchr(data->data, ' ') != NULL || strchr(data->data, '#') != NULL)
 				mame_fprintf(inifile, "%-25s \"%s\"\n", data->names[0], data->data);
 			else
 				mame_fprintf(inifile, "%-25s %s\n", data->names[0], data->data);
@@ -583,14 +739,14 @@ void options_output_ini_mame_file_marked(mame_file *inifile)
 	{
 		/* header: just print */
 		if ((data->flags & OPTION_HEADER) != 0)
-			mame_fprintf(inifile, "\n#\n# %s\n#\n", lang_message(UI_MSG_OSD0, data->description));
+			mame_fprintf(inifile, "\n#\n# %s\n#\n", translate_description(data));
 
 		/* otherwise, output entries for all non-deprecated and non-command items */
-		else if (data->mark && (data->flags & (OPTION_DEPRECATED | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
+		else if (data->mark && (data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
 		{
 			if (data->data == NULL)
 				mame_fprintf(inifile, "# %-23s <NULL> (not set)\n", data->names[0]);
-			else if (strchr(data->data, ' ') || strchr(data->data, '#'))
+			else if (strchr(data->data, ' ') != NULL || strchr(data->data, '#') != NULL)
 				mame_fprintf(inifile, "%-25s \"%s\"\n", data->names[0], data->data);
 			else
 				mame_fprintf(inifile, "%-25s %s\n", data->names[0], data->data);
@@ -604,7 +760,7 @@ void options_output_ini_mame_file_marked(mame_file *inifile)
     a file
 -------------------------------------------------*/
 
-void options_output_help(FILE *output)
+void options_output_help(void)
 {
 	options_data *data;
 
@@ -613,11 +769,11 @@ void options_output_help(FILE *output)
 	{
 		/* header: just print */
 		if ((data->flags & OPTION_HEADER) != 0)
-			fprintf(output, "\n#\n# %s\n#\n", lang_message(UI_MSG_OSD0, data->description));
+			printf("\n#\n# %s\n#\n", translate_description(data));
 
 		/* otherwise, output entries for all non-deprecated items */
-		else if ((data->flags & OPTION_DEPRECATED) == 0 && data->description != NULL)
-			fprintf(output, "-%-20s%s\n", data->names[0], lang_message(UI_MSG_OSD0, data->description));
+		else if ((data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL)) == 0 && data->description != NULL)
+			printf("-%-20s%s\n", data->names[0], translate_description(data));
 	}
 }
 
@@ -627,7 +783,7 @@ void options_output_help(FILE *output)
     as a string
 -------------------------------------------------*/
 
-const char *options_get_string(const char *name, int report_error)
+const char *options_get_string(const char *name)
 {
 	options_data *data = find_entry_data(name, FALSE);
 	assert(data != NULL);
@@ -652,7 +808,7 @@ UINT32 options_get_seqid(const char *name)
     a boolean
 -------------------------------------------------*/
 
-int options_get_bool(const char *name, int report_error)
+int options_get_bool(const char *name)
 {
 	options_data *data = find_entry_data(name, FALSE);
 	int value = FALSE;
@@ -664,8 +820,11 @@ int options_get_bool(const char *name, int report_error)
 			options_set_string(name, data->defdata);
 			sscanf(data->data, "%d", &value);
 		}
-		if (report_error)
-			fprintf(stderr, _("Illegal boolean value for %s; reverting to %d\n"), (data == NULL) ? "??" : data->names[0], value);
+		if (!data->error_reported)
+		{
+			printf(_("Illegal boolean value for %s; reverting to %d\n"), (data == NULL) ? "??" : data->names[0], value);
+			data->error_reported = TRUE;
+		}
 	}
 	return value;
 }
@@ -676,7 +835,7 @@ int options_get_bool(const char *name, int report_error)
     an integer
 -------------------------------------------------*/
 
-int options_get_int(const char *name, int report_error)
+int options_get_int(const char *name)
 {
 	options_data *data = find_entry_data(name, FALSE);
 	int value = 0;
@@ -688,8 +847,11 @@ int options_get_int(const char *name, int report_error)
 			options_set_string(name, data->defdata);
 			sscanf(data->data, "%d", &value);
 		}
-		if (report_error)
-			fprintf(stderr, _("Illegal integer value for %s; reverting to %d\n"), (data == NULL) ? "??" : data->names[0], value);
+		if (!data->error_reported)
+		{
+			printf(_("Illegal integer value for %s; reverting to %d\n"), (data == NULL) ? "??" : data->names[0], value);
+			data->error_reported = TRUE;
+		}
 	}
 	return value;
 }
@@ -700,7 +862,7 @@ int options_get_int(const char *name, int report_error)
     a float
 -------------------------------------------------*/
 
-float options_get_float(const char *name, int report_error)
+float options_get_float(const char *name)
 {
 	options_data *data = find_entry_data(name, FALSE);
 	float value = 0;
@@ -712,8 +874,11 @@ float options_get_float(const char *name, int report_error)
 			options_set_string(name, data->defdata);
 			sscanf(data->data, "%f", &value);
 		}
-		if (report_error)
-			fprintf(stderr, _("Illegal float value for %s; reverting to %f\n"), (data == NULL) ? "??" : data->names[0], (double)value);
+		if (!data->error_reported)
+		{
+			printf(_("Illegal float value for %s; reverting to %f\n"), (data == NULL) ? "??" : data->names[0], (double)value);
+			data->error_reported = TRUE;
+		}
 	}
 	return value;
 }
@@ -725,7 +890,7 @@ float options_get_float(const char *name, int report_error)
     range
 -------------------------------------------------*/
 
-int options_get_int_range(const char *name, int report_error, int minval, int maxval)
+int options_get_int_range(const char *name, int minval, int maxval)
 {
 	options_data *data = find_entry_data(name, FALSE);
 	int value = 0;
@@ -735,17 +900,23 @@ int options_get_int_range(const char *name, int report_error, int minval, int ma
 		if (data != NULL && data->defdata != NULL)
 		{
 			options_set_string(name, data->defdata);
-			value = options_get_int(name, FALSE);
+			value = options_get_int(name);
 		}
-		if (report_error)
-			fprintf(stderr, _("Illegal integer value for %s; reverting to %d\n"), (data == NULL) ? "??" : data->names[0], value);
+		if (!data->error_reported)
+		{
+			printf(_("Illegal integer value for %s; reverting to %d\n"), (data == NULL) ? "??" : data->names[0], value);
+			data->error_reported = TRUE;
+		}
 	}
 	else if (value < minval || value > maxval)
 	{
 		options_set_string(name, data->defdata);
-		value = options_get_int(name, FALSE);
-		if (report_error)
-			fprintf(stderr, _("Invalid %s value (must be between %d and %d); reverting to %d\n"), (data == NULL) ? "??" : data->names[0], minval, maxval, value);
+		value = options_get_int(name);
+		if (!data->error_reported)
+		{
+			printf(_("Invalid %s value (must be between %d and %d); reverting to %d\n"), (data == NULL) ? "??" : data->names[0], minval, maxval, value);
+			data->error_reported = TRUE;
+		}
 	}
 
 	return value;
@@ -758,7 +929,7 @@ int options_get_int_range(const char *name, int report_error, int minval, int ma
     range
 -------------------------------------------------*/
 
-float options_get_float_range(const char *name, int report_error, float minval, float maxval)
+float options_get_float_range(const char *name, float minval, float maxval)
 {
 	options_data *data = find_entry_data(name, FALSE);
 	float value = 0;
@@ -768,17 +939,23 @@ float options_get_float_range(const char *name, int report_error, float minval, 
 		if (data != NULL && data->defdata != NULL)
 		{
 			options_set_string(name, data->defdata);
-			value = options_get_float(name, FALSE);
+			value = options_get_float(name);
 		}
-		if (report_error)
-			fprintf(stderr, _("Illegal float value for %s; reverting to %f\n"), (data == NULL) ? "??" : data->names[0], (double)value);
+		if (!data->error_reported)
+		{
+			printf(_("Illegal float value for %s; reverting to %f\n"), (data == NULL) ? "??" : data->names[0], (double)value);
+			data->error_reported = TRUE;
+		}
 	}
 	else if (value < minval || value > maxval)
 	{
 		options_set_string(name, data->defdata);
-		value = options_get_float(name, FALSE);
-		if (report_error)
-			fprintf(stderr, _("Invalid %s value (must be between %f and %f); reverting to %f\n"), (data == NULL) ? "??" : data->names[0], (double)minval, (double)maxval, (double)value);
+		value = options_get_float(name);
+		if (!data->error_reported)
+		{
+			printf(_("Invalid %s value (must be between %f and %f); reverting to %f\n"), (data == NULL) ? "??" : data->names[0], (double)minval, (double)maxval, (double)value);
+			data->error_reported = TRUE;
+		}
 	}
 	return value;
 }
@@ -848,8 +1025,10 @@ static options_data *find_entry_data(const char *string, int is_command_line)
 	struct find_cache_entry temp, *result;
 	int has_no_prefix;
 
+	assert_always(datalist_nextptr != NULL, "Missing call to options_init()!");
+
 	/* determine up front if we should look for "no" boolean options */
-	has_no_prefix = (is_command_line && strncmp(string, "no", 2) == 0);
+	has_no_prefix = (is_command_line && string[0] == 'n' && string[1] == 'o');
 
 	if (find_cache.current_entry != datalist)
 		generate_find_cache();
@@ -869,8 +1048,10 @@ static options_data *find_entry_data(const char *string, int is_command_line)
 	options_data *data;
 	int has_no_prefix;
 
+	assert_always(datalist_nextptr != NULL, "Missing call to options_init()!");
+
 	/* determine up front if we should look for "no" boolean options */
-	has_no_prefix = (is_command_line && strncmp(string, "no", 2) == 0);
+	has_no_prefix = (is_command_line && string[0] == 'n' && string[1] == 'o');
 
 	/* scan all entries */
 	for (data = datalist; data != NULL; data = data->next)
@@ -916,8 +1097,9 @@ static void update_data(options_data *data, const char *newdata)
 		free((void *)data->data);
 	data->data = copy_string(datastart, dataend + 1);
  
- 	/* bump the seqid */
+	/* bump the seqid and clear the error reporting */
  	data->seqid++;
+	data->error_reported = FALSE;
 	data->mark = TRUE;
 }
 

@@ -1510,7 +1510,7 @@ int win_is_mouse_captured(void)
 
 static void parse_analog_select(int type, const char *option)
 {
-	const char *stemp = options_get_string(option, TRUE);
+	const char *stemp = options_get_string(option);
 
 	if (strcmp(stemp, "keyboard") == 0)
 		analog_type[type] = SELECT_TYPE_KEYBOARD;
@@ -1530,7 +1530,7 @@ static void parse_analog_select(int type, const char *option)
 
 static void parse_digital(const char *option)
 {
-	const char *soriginal = options_get_string(option, TRUE);
+	const char *soriginal = options_get_string(option);
 	const char *stemp = soriginal;
 
 	if (strcmp(stemp, "none") == 0)
@@ -1611,16 +1611,16 @@ usage:
 static void extract_input_config(void)
 {
 	// extract boolean options
-	win_use_mouse = options_get_bool("mouse", TRUE);
-	use_joystick = options_get_bool("joystick", TRUE);
-	use_lightgun = options_get_bool("lightgun", TRUE);
-	use_lightgun_dual = options_get_bool("dual_lightgun", TRUE);
-	use_lightgun_reload = options_get_bool("offscreen_reload", TRUE);
-	steadykey = options_get_bool("steadykey", TRUE);
-	a2d_deadzone = options_get_float("a2d_deadzone", TRUE);
-	options.controller = options_get_string("ctrlr", TRUE);
+	win_use_mouse = options_get_bool("mouse");
+	use_joystick = options_get_bool("joystick");
+	use_lightgun = options_get_bool("lightgun");
+	use_lightgun_dual = options_get_bool("dual_lightgun");
+	use_lightgun_reload = options_get_bool("offscreen_reload");
+	steadykey = options_get_bool("steadykey");
+	a2d_deadzone = options_get_float("a2d_deadzone");
+	options.controller = options_get_string("ctrlr");
 #ifdef USE_JOY_MOUSE_MOVE
-	use_stickpoint = options_get_bool("stickpoint", TRUE);
+	use_stickpoint = options_get_bool("stickpoint");
 #endif /* USE_JOY_MOUSE_MOVE */
 #ifdef JOYSTICK_ID
 	{
@@ -1631,7 +1631,7 @@ static void extract_input_config(void)
 			char name[8];
 
 			sprintf(name, "joyid%d", i + 1);
-			joyid[i] = options_get_int(name, TRUE);
+			joyid[i] = options_get_int(name);
 		}
 	}
 #endif /* JOYSTICK_ID */
@@ -1717,24 +1717,6 @@ static int is_key_pressed(os_code keycode)
 		return currkey[dik];
 	else
 		return keyboard_state[0][dik];
-}
-
-
-
-//============================================================
-//  osd_readkey_unicode
-//============================================================
-
-int osd_readkey_unicode(int flush)
-{
-#if 0
-	if (flush) clear_keybuf();
-	if (keypressed())
-		return ureadkey(NULL);
-	else
-		return 0;
-#endif
-	return 0;
 }
 
 

@@ -257,10 +257,6 @@ struct _global_options
 	int			ui_lines;
 	int			autofiredelay[MAX_PLAYERS];	/* autofire delay */
 
-	int			debug_width;	/* requested width of debugger bitmap */
-	int			debug_height;	/* requested height of debugger bitmap */
-	int			debug_depth;	/* requested depth of debugger bitmap */
-
 	const char *controller;	/* controller-specific cfg to load */
 
 #ifdef MESS

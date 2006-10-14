@@ -76,7 +76,6 @@ struct _audit_record
 	char 			hash[HASH_BUF_SIZE];	/* actual hash information */
 };
 
-
 typedef void (CLIB_DECL *verify_printf_proc)(const char *fmt,...);
 
 

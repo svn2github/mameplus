@@ -1,16 +1,16 @@
-# datafile.c: 3124
+# datafile.c: 2399
           DIAL:  %4d\n
 
 
-# datafile.c: 3130
+# datafile.c: 2405
          OTHER:  %4d\n
 
 
-# datafile.c: 3128
+# datafile.c: 2403
          PEDAL:  %4d\n
 
 
-# datafile.c: 3123
+# datafile.c: 2398
         PADDLE:  %4d\n
 
 
@@ -18,35 +18,35 @@
        FOUND: %s\n
 
 
-# datafile.c: 3117
+# datafile.c: 2392
        JOY2WAY:  %4d\n
 
 
-# datafile.c: 3118
+# datafile.c: 2393
        JOY4WAY:  %4d\n
 
 
-# datafile.c: 3119
+# datafile.c: 2394
        JOY8WAY:  %4d\n
 
 
-# datafile.c: 3126
+# datafile.c: 2401
       AD STICK:  %4d\n
 
 
-# datafile.c: 3127
+# datafile.c: 2402
       LIGHTGUN:  %4d\n
 
 
-# datafile.c: 3111
+# datafile.c: 2386
      PLAYERS %d:  %4d\n
 
 
-# datafile.c: 3125
+# datafile.c: 2400
      TRACKBALL:  %4d\n
 
 
-# datafile.c: 3139
+# datafile.c: 2414
     BUTTONS%3d:  %4d\n
 
 
@@ -54,55 +54,55 @@
     EXPECTED: %s\n
 
 
-# datafile.c: 3145
+# datafile.c: 2420
     NO BUTTONS:  %4d\n
 
 
-# audit.c: 296
+# audit.c: 302
    FOUND: %s\n
 
 
-# datafile.c: 2949
+# datafile.c: 2224
  %4d HARDDISK\n
 
 
-# datafile.c: 2945
+# datafile.c: 2220
  %4d HORIZONTAL + %4d\n %4d VERTICAL   + %4d\n
 
 
-# datafile.c: 2941
+# datafile.c: 2216
  %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
 
 
-# datafile.c: 2943
+# datafile.c: 2218
  %4d RASTER     + %4d\n %4d VECTOR     + %4d\n
 
 
-# datafile.c: 2947
+# datafile.c: 2222
  %4d STEREO     + %4d\n
 
 
-# audit.c: 270
+# audit.c: 276
  (%d bytes)
 
 
-# datafile.c: 3120
+# datafile.c: 2395
  DOUBLEJOY2WAY:  %4d\n
 
 
-# datafile.c: 3121
+# datafile.c: 2396
  DOUBLEJOY4WAY:  %4d\n
 
 
-# datafile.c: 3122
+# datafile.c: 2397
  DOUBLEJOY8WAY:  %4d\n
 
 
-# datafile.c: 3050
+# datafile.c: 2325
  GAMES WITH  %d CPUs: %4d\n
 
 
-# datafile.c: 3081
+# datafile.c: 2356
  GAMES WITH  %d SNDINTRF: %4d\n
 
 
@@ -152,6 +152,10 @@
 
 # uitext.c: 170
 (Card may already exist)
+
+
+# options.c: 114, 122, 128, 133 
+(disabled by compiling option)
 
 
 # uitext.c: 158
@@ -262,7 +266,7 @@
 24 Bit
 
 
-# datafile.c: 3151
+# datafile.c: 2426
 24-BIT DISPLAY : %3d  + %3d\n
 
 
@@ -618,7 +622,7 @@ Beam Width
 Beginner
 
 
-# drivers/bmcbowl.c: 375 drivers/cardline.c: 151 drivers/cherrym.c: 181 drivers/lvcards.c: 218, 302 drivers/magic10.c: 216 drivers/pmpoker.c: 610, 710 drivers/sderby.c: 173
+# drivers/bmcbowl.c: 375 drivers/cardline.c: 151 drivers/cherrym.c: 181 drivers/lvcards.c: 218, 302 drivers/magic10.c: 216 drivers/pmpoker.c: 595, 685 drivers/sderby.c: 173
 Bet
 
 
@@ -670,6 +674,10 @@ Byte Length
 COMM Setting
 
 
+# options.c: 87
+CORE PATH AND DIRECTORY OPTIONS
+
+
 # cheat.c: 3656, 3681, 5147, 6166 uitext.c: 43
 CPU
 
@@ -690,7 +698,7 @@ Cabinet Type
 Calibrate Joysticks
 
 
-# drivers/getrivia.c: 288 drivers/pmpoker.c: 581, 681 drivers/segac2.c: 1199 
+# drivers/getrivia.c: 288 drivers/pmpoker.c: 566, 656 drivers/segac2.c: 1199 
 Cancel
 
 
@@ -706,7 +714,7 @@ Center
 Cheat
 
 
-# cheat.c: 8790
+# cheat.c: 8792
 Cheat Database reloaded
 
 
@@ -1082,7 +1090,7 @@ Domestic
 Door Interlock
 
 
-# drivers/cherrym.c: 179 drivers/nbmj8891.c: 1425 drivers/pmpoker.c: 579
+# drivers/cherrym.c: 179 drivers/nbmj8891.c: 1425 drivers/pmpoker.c: 564
 Double Up
 
 
@@ -1130,7 +1138,7 @@ EEPROM
 ERROR: required files are missing, the game cannot be run.
 
 
-# audit.c: 294
+# audit.c: 300
 EXPECTED: %s\n
 
 
@@ -1142,7 +1150,7 @@ Easier
 Easiest
 
 
-# inptport.c: 416
+# drivers/yunsun16.c: 452 inptport.c: 416
 Easy
 
 
@@ -1226,11 +1234,11 @@ Error: Unable to save state due to illegal registrations. See error.log for deta
 Error: illegal caption file
 
 
-# options.c: 329
+# options.c: 471
 Error: option %s expected a parameter\n
 
 
-# options.c: 314
+# options.c: 456
 Error: unknown option: %s\n
 
 
@@ -1250,11 +1258,11 @@ Failed to allocate %d bytes (%s:%d)
 Fast
 
 
-# mamecore.h: 205
+# mamecore.h: 259
 Fatal error: %s (%s:%d)
 
 
-# mamecore.h: 202
+# mamecore.h: 256
 Fatal error: %s\nCaused by assert: %s:%d: %s
 
 
@@ -1322,11 +1330,11 @@ Full
 Full Output
 
 
-# datafile.c: 2195
+# datafile.c: 1476
 GAME: 
 
 
-# drivers/bublbobl.c: 606 drivers/cps1.c: 732, 814, 1022, 1106, 1141, 1227, 1441, 1531, 1612, 1808, 1903, 1993, 2075, 2158, 2252, 2348, 2439, 2542, 2650, 2769, 2878, 2970, 3063, 3581, 3681, 3785, 3884, 4044, 4157 drivers/fcrash.c: 299 drivers/macs.c: 244 drivers/missile.c: 837 drivers/pacman.c: 1376 drivers/turbo.c: 900 drivers/vegas.c: 2040
+# drivers/bublbobl.c: 606 drivers/cps1.c: 732, 814, 1022, 1106, 1141, 1227, 1441, 1531, 1612, 1808, 1903, 1993, 2075, 2158, 2252, 2348, 2439, 2542, 2650, 2769, 2878, 2970, 3063, 3581, 3681, 3785, 3884, 4044, 4157 drivers/fcrash.c: 299 drivers/macs.c: 244 drivers/missile.c: 837 drivers/pacman.c: 1376 drivers/turbo.c: 898 drivers/vegas.c: 2040
 Game
 
 
@@ -1406,11 +1414,11 @@ Greater Or Equal
 Greater or Equal
 
 
-# datafile.c: 3153
+# datafile.c: 2428
 HI/TRUE BITMAP : %3d  + %3d\n
 
 
-# datafile.c: 3157
+# datafile.c: 2432
 HIGHLIGHTS     : %3d  + %3d\n
 
 
@@ -1478,23 +1486,23 @@ History not available
 Hit
 
 
-# drivers/funworld.c: 466, 524 drivers/ltcasino.c: 103, 475 drivers/lvcards.c: 212, 296 drivers/pmpoker.c: 597, 697
+# drivers/funworld.c: 466, 524 drivers/ltcasino.c: 103, 475 drivers/lvcards.c: 212, 296 drivers/pmpoker.c: 582, 672
 Hold 1
 
 
-# drivers/ltcasino.c: 104, 476 drivers/lvcards.c: 213, 297 drivers/pmpoker.c: 598, 698
+# drivers/ltcasino.c: 104, 476 drivers/lvcards.c: 213, 297 drivers/pmpoker.c: 583, 673
 Hold 2
 
 
-# drivers/funworld.c: 476, 534 drivers/ltcasino.c: 105, 477 drivers/lvcards.c: 214, 298 drivers/pmpoker.c: 599, 699
+# drivers/funworld.c: 476, 534 drivers/ltcasino.c: 105, 477 drivers/lvcards.c: 214, 298 drivers/pmpoker.c: 584, 674
 Hold 3
 
 
-# drivers/ltcasino.c: 106, 478 drivers/lvcards.c: 215, 299 drivers/pmpoker.c: 600, 700
+# drivers/ltcasino.c: 106, 478 drivers/lvcards.c: 215, 299 drivers/pmpoker.c: 585, 675
 Hold 4
 
 
-# drivers/ltcasino.c: 107, 479 drivers/lvcards.c: 216, 300 drivers/pmpoker.c: 601, 701
+# drivers/ltcasino.c: 107, 479 drivers/lvcards.c: 216, 300 drivers/pmpoker.c: 586, 676
 Hold 5
 
 
@@ -1530,23 +1538,23 @@ Horizontally
 IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
 
 
-# datafile.c: 2962
+# datafile.c: 2237
 IMPERFECT COLORS   : %3d  %3d\n
 
 
-# datafile.c: 2958
+# datafile.c: 2233
 IMPERFECT GRAPHICS : %3d  %3d\n
 
 
-# datafile.c: 2966
+# datafile.c: 2241
 IMPERFECT SOUND    : %3d  %3d\n
 
 
-# audit.c: 292
+# audit.c: 298
 INCORRECT CHECKSUM:\n
 
 
-# audit.c: 301
+# audit.c: 307
 INCORRECT LENGTH: %d bytes\n
 
 
@@ -1562,15 +1570,15 @@ Ignore Decrement
 Ignore Decrement By
 
 
-# options.c: 668
+# options.c: 825
 Illegal boolean value for %s; reverting to %d\n
 
 
-# options.c: 716, 774
+# options.c: 879, 946
 Illegal float value for %s; reverting to %f\n
 
 
-# options.c: 692, 741
+# options.c: 852, 907
 Illegal integer value for %s; reverting to %d\n
 
 
@@ -1682,11 +1690,11 @@ Insert
 International
 
 
-# options.c: 748
+# options.c: 917
 Invalid %s value (must be between %d and %d); reverting to %d\n
 
 
-# options.c: 781
+# options.c: 956
 Invalid %s value (must be between %f and %f); reverting to %f\n
 
 
@@ -1922,7 +1930,7 @@ MAME Statistics
 MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n
 
 
-# datafile.c: 2187
+# datafile.c: 1468
 MAMEInfo:\n
 
 
@@ -2098,19 +2106,19 @@ Move User Interface
 NA
 
 
-# audit.c: 278
+# audit.c: 284
 NEEDS REDUMP\n
 
 
-# datafile.c: 2968
+# datafile.c: 2243
 NO COCKTAIL        : %3d  %3d\n
 
 
-# datafile.c: 2970
+# datafile.c: 2245
 NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 
 
-# audit.c: 283
+# audit.c: 289
 NO GOOD DUMP KNOWN\n
 
 
@@ -2118,31 +2126,31 @@ NO GOOD DUMP KNOWN\n
 NO MATCH\n
 
 
-# datafile.c: 2964
+# datafile.c: 2239
 NO SOUND           : %3d  %3d\n
 
 
-# datafile.c: 2954
+# datafile.c: 2229
 NON-WORKING        : %3d  %3d\n
 
 
-# audit.c: 323
+# audit.c: 329
 NOT FOUND (BIOS)\n
 
 
-# audit.c: 319
+# audit.c: 325
 NOT FOUND (shared with parent)\n
 
 
-# audit.c: 309
+# audit.c: 315
 NOT FOUND - NO GOOD DUMP KNOWN\n
 
 
-# audit.c: 314
+# audit.c: 320
 NOT FOUND BUT OPTIONAL\n
 
 
-# audit.c: 305
+# audit.c: 311
 NOT FOUND\n
 
 
@@ -2182,7 +2190,7 @@ No previous values saved
 None
 
 
-# cheat.c: 2932, 2947 drivers/metro.c: 2775 inptport.c: 417
+# cheat.c: 2932, 2947 drivers/metro.c: 2775 drivers/yunsun16.c: 452 inptport.c: 417
 Normal
 
 
@@ -3590,11 +3598,11 @@ Paddle V 8
 Pause
 
 
-# drivers/cardline.c: 161 drivers/cherrym.c: 200 drivers/csk.c: 283, 368, 443, 513 drivers/ddenlovr.c: 4020, 4571 drivers/findout.c: 422 drivers/funworld.c: 482, 516, 540, 574 drivers/getrivia.c: 276 drivers/neogeo.c: 1254 drivers/pmpoker.c: 488, 588, 688 drivers/rcasino.c: 215 drivers/royalmah.c: 742, 940, 1115, 1290, 1637 drivers/vroulet.c: 146
+# drivers/cardline.c: 161 drivers/cherrym.c: 200 drivers/csk.c: 283, 368, 443, 513 drivers/ddenlovr.c: 4020, 4571 drivers/findout.c: 422 drivers/funworld.c: 482, 516, 540, 574 drivers/getrivia.c: 276 drivers/neogeo.c: 1254 drivers/pmpoker.c: 483, 573, 663 drivers/rcasino.c: 215 drivers/royalmah.c: 742, 940, 1115, 1290, 1637 drivers/vroulet.c: 146
 Payout
 
 
-# drivers/turbo.c: 958 
+# drivers/turbo.c: 956 
 Pedal
 
 
@@ -3690,7 +3698,7 @@ REC STOP
 RHS
 
 
-# datafile.c: 2972
+# datafile.c: 2247
 ROM NEEDS REDUMP   : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 
 
@@ -3734,7 +3742,7 @@ Relative Address
 Reload Database
 
 
-# drivers/arcadia.c: 228 drivers/astrocde.c: 597 drivers/djmain.c: 499 drivers/hanaroku.c: 158 drivers/laserbat.c: 265, 344, 418 drivers/murogem.c: 125 drivers/playch10.c: 472 drivers/sengokmj.c: 237 drivers/trvquest.c: 141 
+# drivers/arcadia.c: 228 drivers/astrocde.c: 597 drivers/djmain.c: 499 drivers/hanaroku.c: 158 drivers/laserbat.c: 265, 344, 418 drivers/murogem.c: 126 drivers/playch10.c: 472 drivers/sengokmj.c: 237 drivers/trvquest.c: 141 
 Reset
 
 
@@ -3806,7 +3814,7 @@ Rotate View
 Rotation
 
 
-# datafile.c: 3155
+# datafile.c: 2430
 SHADOWS        : %3d  + %3d\n
 
 
@@ -3814,7 +3822,7 @@ SHADOWS        : %3d  + %3d\n
 Same
 
 
-# sound/samples.c: 566 
+# sound/samples.c: 569 
 Samples
 
 
@@ -3842,7 +3850,7 @@ Save cancelled
 Save to position %c
 
 
-# drivers/findout.c: 279, 339 drivers/turbo.c: 897 
+# drivers/findout.c: 279, 339 drivers/turbo.c: 895 
 Screen
 
 
@@ -3870,7 +3878,7 @@ Screen Resolution
 Screen flipping in cocktail mode is not supported.
 
 
-# datafile.c: 2223
+# datafile.c: 1504
 Screen flipping in cocktail mode is not supported.\n
 
 
@@ -3890,7 +3898,7 @@ Search not initialized
 Second Bonus
 
 
-# cheat.c: 2887, 2961 drivers/bfm_sc2.c: 2138, 2249, 2363 drivers/bwidow.c: 640 drivers/maxaflex.c: 275 drivers/megaplay.c: 73 drivers/megatech.c: 112 drivers/mpu4.c: 2049 drivers/nbmj8688.c: 2758 drivers/trackfld.c: 665
+# cheat.c: 2887, 2961 drivers/bfm_sc2.c: 2138, 2249, 2363 drivers/bwidow.c: 640 drivers/maxaflex.c: 277 drivers/megaplay.c: 73 drivers/megatech.c: 112 drivers/mpu4.c: 2049 drivers/nbmj8688.c: 2758 drivers/trackfld.c: 665
 Select
 
 
@@ -4114,7 +4122,7 @@ Status (bits or flags)
 Stereo
 
 
-# drivers/bmcbowl.c: 371 drivers/holeland.c: 145, 213 drivers/pgm.c: 900, 997, 1087, 1179, 1275, 1366 drivers/popper.c: 277 drivers/toaplan2.c: 2077 drivers/turbo.c: 895
+# drivers/bmcbowl.c: 371 drivers/holeland.c: 145, 213 drivers/pgm.c: 900, 997, 1087, 1179, 1275, 1366 drivers/popper.c: 277 drivers/toaplan2.c: 2077 drivers/turbo.c: 893
 Stop
 
 
@@ -4138,7 +4146,7 @@ Swap
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.
 
 
-# datafile.c: 2202
+# datafile.c: 1483
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n
 
 
@@ -4178,7 +4186,7 @@ Text Label
 The colors are completely wrong.
 
 
-# datafile.c: 2211
+# datafile.c: 1492
 The colors are completely wrong.\n
 
 
@@ -4186,7 +4194,7 @@ The colors are completely wrong.\n
 The colors aren't 100% accurate.
 
 
-# datafile.c: 2214
+# datafile.c: 1495
 The colors aren't 100% accurate.\n
 
 
@@ -4194,7 +4202,7 @@ The colors aren't 100% accurate.\n
 The game has protection which isn't fully emulated.
 
 
-# datafile.c: 2205
+# datafile.c: 1486
 The game has protection which isn't fully emulated.\n
 
 
@@ -4202,7 +4210,7 @@ The game has protection which isn't fully emulated.\n
 The game lacks sound.
 
 
-# datafile.c: 2217
+# datafile.c: 1498
 The game lacks sound.\n
 
 
@@ -4210,7 +4218,7 @@ The game lacks sound.\n
 The sound emulation isn't 100% accurate.
 
 
-# datafile.c: 2220
+# datafile.c: 1501
 The sound emulation isn't 100% accurate.\n
 
 
@@ -4218,7 +4226,7 @@ The sound emulation isn't 100% accurate.\n
 The video emulation isn't 100% accurate.
 
 
-# datafile.c: 2208
+# datafile.c: 1489
 The video emulation isn't 100% accurate.\n
 
 
@@ -4438,7 +4446,7 @@ UI Zoom In
 UI Zoom Out
 
 
-# datafile.c: 2956
+# datafile.c: 2231
 UNEMULATED PROTEC. : %3d  %3d\n
 
 
@@ -4714,7 +4722,7 @@ Volume Up
 WARNING: the game might not run correctly.
 
 
-# datafile.c: 2960
+# datafile.c: 2235
 WRONG COLORS       : %3d  %3d\n
 
 
@@ -4722,11 +4730,11 @@ WRONG COLORS       : %3d  %3d\n
 Wait
 
 
-# options.c: 375
+# options.c: 517
 Warning: invalid line in INI: %s
 
 
-# options.c: 397
+# options.c: 539
 Warning: unknown option in INI: %s\n
 
 
@@ -4814,99 +4822,99 @@ Zoom = %d
 Zoom Auto
 
 
-# datafile.c: 3088
+# datafile.c: 2363
 \n    SNDINTRF:  (1)  (2)  (3)  (4)\n\n
 
 
-# datafile.c: 3100
+# datafile.c: 2375
 \n    TOTAL: %4d\n
 
 
-# datafile.c: 3071
+# datafile.c: 2346
 \n   TOTAL: %4d\n
 
 
-# datafile.c: 2304, 2322
+# datafile.c: 1582, 1600
 \nORIGINAL:\n
 
 
-# datafile.c: 2244
+# datafile.c: 1522
 \nROM REGION:\n
 
 
-# datafile.c: 3015
+# datafile.c: 2290
 \nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d MB (UNCOMPRESSED)\n%d MB + %d MB MERGED\n
 
 
-# datafile.c: 2350
+# datafile.c: 1628
 \nSOURCE: %s\n
 
 
-# datafile.c: 2159
+# datafile.c: 1440
 \nStory:\n
 
 
-# datafile.c: 3186
+# datafile.c: 2461
 \nWARNING: FPS number too high!\n
 
 
-# datafile.c: 2939
+# datafile.c: 2214
 \n\n %4d GAMES (ALL)\n %4d ORIGINALS  + %4d CLNS\n %4d NEOGEO     + %4d\n
 
 
-# datafile.c: 3105
+# datafile.c: 2380
 \n\nCABINET INPUT CONTROL: (ALL)\n\n
 
 
-# datafile.c: 2308, 2326
+# datafile.c: 1586, 1604
 \n\nCLONES:\n
 
 
-# datafile.c: 3045
+# datafile.c: 2320
 \n\nCPU HARDWARE (ORIGINAL GAMES)\n\n
 
 
-# datafile.c: 3162
+# datafile.c: 2437
 \n\nFRAMES PER SECOND (%d): (ALL)\n\n
 
 
-# datafile.c: 2953
+# datafile.c: 2228
 \n\nGAME INFO FLAGS   : ORIG CLNS\n\n
 
 
-# datafile.c: 3285
+# datafile.c: 2560
 \n\nMAME VERSIONS (%3d)\n\n
 
 
-# datafile.c: 3246
+# datafile.c: 2521
 \n\nRESOLUTION & PALETTESIZE: (ALL)\n    (%d)          (%d)\n\n
 
 
-# datafile.c: 3017
+# datafile.c: 2292
 \n\nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d KB (UNCOMPRESSED)\n%d KB + %d KB MERGED\n
 
 
-# datafile.c: 3076
+# datafile.c: 2351
 \n\nSOUND SYSTEM (ORIGINAL GAMES)\n\n
 
 
-# datafile.c: 3023
+# datafile.c: 2298
 \n\nTYPICAL ROMSET SIZE (ALL)\n
 
 
-# datafile.c: 3275
+# datafile.c: 2550
 \n\nVERSION - DRIVERS - SUPPORT:\n\n
 
 
-# datafile.c: 3150
+# datafile.c: 2425
 \n\nVIDEO NEEDS... : ORIG   CLNS\n\n
 
 
-# datafile.c: 3035
+# datafile.c: 2310
 \n\nYEAR    NEW GAMES\n\n
 
 
-# datafile.c: 2979
+# datafile.c: 2254
 \n\nYEAR: ORIG  CLNS NEOGEO  ALL\n\n
 
 
@@ -4922,7 +4930,7 @@ Zoom Auto
 \xbb
 
 
-# mamecore.h: 201 
+# mamecore.h: 255 
 assert: %s:%d: %s
 
 
@@ -4930,8 +4938,64 @@ assert: %s:%d: %s
 cheat database not found
 
 
+# options.c: 117
+cheat filename
+
+
+# options.c: 126
+command list database name
+
+
 # info.c: 90 
 dial
+
+
+# options.c: 112
+directory for ips files
+
+
+# options.c: 116
+directory for localized data files
+
+
+# options.c: 109
+directory for translation table data
+
+
+# options.c: 97
+directory to save configurations
+
+
+# options.c: 110
+directory to save debugger comments
+
+
+# options.c: 107
+directory to save hard drive image difference files
+
+
+# options.c: 102
+directory to save hiscores
+
+
+# options.c: 100
+directory to save input device logs
+
+
+# options.c: 99
+directory to save memory card contents
+
+
+# options.c: 98
+directory to save nvram contents
+
+
+# options.c: 106
+directory to save screenshots
+
+
+# options.c: 104
+directory to save states
 
 
 # debug/debugcmd.c: 1066, 1250
@@ -4946,12 +5010,24 @@ enabled
 font\\fontname.fnt
 
 
+# options.c: 131
+high score database name
+
+
+# options.c: 118
+history database name
+
+
 # memory.c: 3143 
 invalid
 
 
 # info.c: 90 
 lightgun
+
+
+# options.c: 124
+mameinfo database name
 
 
 # input.c: 999, 1299
@@ -4994,6 +5070,30 @@ out of memory while loading cheat database
 paddle
 
 
+# options.c: 89
+path to ROMsets and hard disk images
+
+
+# options.c: 105
+path to artwork files
+
+
+# options.c: 108
+path to controller definitions
+
+
+# options.c: 93
+path to hash files
+
+
+# options.c: 96
+path to ini files
+
+
+# options.c: 95
+path to samplesets
+
+
 # info.c: 90 
 pedal
 
@@ -5020,6 +5120,10 @@ sound
 
 # uitext.c: 48
 stereo
+
+
+# options.c: 120
+story database name
 
 
 # cheat.c: 2550
