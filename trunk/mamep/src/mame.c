@@ -1382,7 +1382,7 @@ static void saveload_init(running_machine *machine)
 
 		if (strlen(options.savegame) == 1)
 		{
-			sprintf(name, "%s-%c", machine->gamedrv->name, options.savegame[0]);
+			sprintf(name, "%s-%c.sta", machine->gamedrv->name, options.savegame[0]);
 			mame_schedule_load(machine, name);
 		}
 		else

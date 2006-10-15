@@ -320,7 +320,7 @@ static void             MamePlayRecordGame(void);
 static void             MamePlayBackGame(const char* fname_playback);
 static void             MamePlayRecordWave(void);
 static void             MamePlayRecordMNG(void);
-static void             MameLoadState(void);
+static void             MameLoadState(const char *fname_state);
 static BOOL             CommonFileDialogW(BOOL open_for_write, char *filename, int filetype);
 static BOOL             CommonFileDialogA(BOOL open_for_write, char *filename, int filetype);
 static BOOL             CommonFileDialog(BOOL open_for_write,char *filename, int filetype);
@@ -2716,6 +2716,7 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 		{
 			HDROP hDrop = (HDROP)wParam;
 			char fileName[MAX_PATH];
+			char ext[MAX_PATH];
 
 			if (OnNT())
 			{
@@ -2727,9 +2728,14 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 			}
 			DragFinish(hDrop);
 
+			_splitpath(fileName, NULL, NULL, NULL, ext);
+
 			DragAcceptFiles(hMain, FALSE);
 			SetForegroundWindow(hMain);
-			MamePlayBackGame(fileName);
+			if (!stricmp(ext, ".sta"))
+				MameLoadState(fileName);
+			else
+				MamePlayBackGame(fileName);
 			DragAcceptFiles(hMain, TRUE);
 
 		}
@@ -4699,7 +4705,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		return TRUE;
 
 	case ID_FILE_LOADSTATE :
-		MameLoadState();
+		MameLoadState(NULL);
 		return TRUE;
 
 	case ID_FILE_AUDIT:
@@ -6232,21 +6238,48 @@ static void MamePlayBackGame(const char *fname_playback)
 	}
 }
 
-static void MameLoadState(void)
+static void MameLoadState(const char *fname_state)
 {
-	int nGame;
+	int nGame = -1;
 	char filename[MAX_PATH];
 	char selected_filename[MAX_PATH];
 
-	*filename = 0;
-
-	nGame = Picker_GetSelectedItem(hwndList);
-	if (nGame != -1)
+	if (fname_state)
 	{
-		strcpy(filename, drivers[nGame]->name);
-		strcpy(selected_filename, drivers[nGame]->name);
+		char *cPos=0;
+		int  iPos=0;
+		int  i;
+		char bare_fname[_MAX_FNAME];
+
+		strcpy(filename, fname_state);
+
+		_splitpath(fname_state, NULL, NULL, bare_fname, NULL);
+		cPos = strchr(bare_fname, '-' );
+		iPos = cPos ? cPos - bare_fname : strlen(bare_fname);
+		strncpy(selected_filename, bare_fname, iPos );
+		selected_filename[iPos] = '\0';
+
+		for (i = 0; drivers[i] != 0; i++) // find game and play it
+			if (!strcmp(drivers[i]->name, selected_filename))
+			{
+				nGame = i;
+				break;
+			}
 	}
-	if (CommonFileDialog(FALSE, filename, FILETYPE_SAVESTATE_FILES))
+	else
+	{
+		*filename = 0;
+
+		nGame = Picker_GetSelectedItem(hwndList);
+		if (nGame != -1)
+		{
+			strcpy(filename, drivers[nGame]->name);
+			strcpy(selected_filename, drivers[nGame]->name);
+		}
+		if (CommonFileDialog(FALSE, filename, FILETYPE_SAVESTATE_FILES)) return;
+	}
+
+	if (*filename)
 	{
 		mame_file* pSaveState;
 		mame_file_error filerr;
