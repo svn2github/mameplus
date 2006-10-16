@@ -6192,7 +6192,7 @@ static void MamePlayBackGame(const char *fname_playback)
 
 		sprintf(path,"%s%s",drive,dir);
 		sprintf(fname,"%s.inp",bare_fname);
-		if (path[strlen(path)-1] == '\\')
+		if (path[strlen(path)-1] == PATH_SEPARATOR[0])
 			path[strlen(path)-1] = 0; // take off trailing back slash
 
 		options_set_string(SEARCHPATH_INPUTLOG, path);
@@ -6298,7 +6298,7 @@ static void MameLoadState(const char *fname_state)
 		// parse path
 		sprintf(path,"%s%s",drive,dir);
 		sprintf(fname,"%s.sta",bare_fname);
-		if (path[strlen(path)-1] == '\\')
+		if (path[strlen(path)-1] == PATH_SEPARATOR[0])
 			path[strlen(path)-1] = 0; // take off trailing back slash
 
 #ifdef MESS
@@ -6375,7 +6375,7 @@ static void MamePlayRecordGame(void)
 
 		sprintf(path,"%s%s",drive,dir);
 		sprintf(fname,"%s.inp",bare_fname);
-		if (path[strlen(path)-1] == '\\')
+		if (path[strlen(path)-1] == PATH_SEPARATOR[0])
 			path[strlen(path)-1] = 0; // take off trailing back slash
 
 		g_pRecordName = fname;

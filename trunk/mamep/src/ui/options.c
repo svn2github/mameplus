@@ -2783,7 +2783,7 @@ static const char *get_base_config_directory(void)
 	_splitpath(full, path, dir, NULL, NULL);
 	strcat(path, dir);
 
-	if (path[strlen(path) - 1] == '\\')
+	if (path[strlen(path) - 1] == PATH_SEPARATOR[0])
 		path[strlen(path) - 1] = '\0';
 
 	return path;

@@ -215,7 +215,7 @@ static char * FixSlash(char *s)
 	if (s)
 		len = strlen(s);
 
-	if (len && s[len - 1] == '\\')
+	if (len && s[len - 1] == PATH_SEPARATOR[0])
 		s[len - 1] = '\0';
 
 	return s;

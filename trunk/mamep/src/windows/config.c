@@ -1080,6 +1080,19 @@ static void setup_playback(const char *filename)
 	inp_header inp_header;
 
 	// open the playback file
+	filerr = FILERR_FAILURE;
+	if (mame_stricmp(filename + strlen(filename) - 4, ".zip") == 0)
+	{
+		char *fname = mame_strdup(filename);
+
+		if (fname)
+		{
+			strcpy(fname + strlen(fname) - 4, ".inp");
+			filerr = mame_fopen(SEARCHPATH_INPUTLOG, fname, OPEN_FLAG_READ, &options.playback);
+			free(fname);
+		}
+	}
+	if (filerr != FILERR_NONE)
  	filerr = mame_fopen(SEARCHPATH_INPUTLOG, filename, OPEN_FLAG_READ, &options.playback);
  	assert_always(filerr == FILERR_NONE, "Failed to open file for playback");
 
@@ -1106,12 +1119,14 @@ static void setup_playback(const char *filename)
 #ifdef INP_CAPTION
 	if (strlen(filename) > 4)
 	{
-		char *fname;
+		char *fname = mame_strdup(filename);
 
-		fname = mame_strdup(filename);
-		strcpy(fname + strlen(fname) - 4, ".cap");
-		mame_fopen(SEARCHPATH_INPUTLOG, fname, OPEN_FLAG_READ, &options.caption);
-		free(fname);
+		if (fname)
+		{
+			strcpy(fname + strlen(fname) - 4, ".cap");
+			mame_fopen(SEARCHPATH_INPUTLOG, fname, OPEN_FLAG_READ, &options.caption);
+			free(fname);
+		}
 	}
 #endif /* INP_CAPTION */
 }

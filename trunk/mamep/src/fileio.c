@@ -252,15 +252,13 @@ static mame_file_error fopen_internal(const char *searchpath, const char *filena
 				for (p = zipped_fullname; *p; p++)
 					if (*p == '.')
 						zipped_filename = p;
-					else if (*p == '/')
-						zipped_filename = p;
-					else if (*p == '\\')
+					else if (*p == PATH_SEPARATOR[0])
 						zipped_filename = p;
 
 				if (zipped_filename == NULL)
 					zipped_filename = p;
 
-				sprintf(zipped_filename, "/%s", dest);
+				sprintf(zipped_filename, PATH_SEPARATOR "%s", dest);
 				zipped_filename++;
 
 				filerr = fopen_attempt_zipped(zipped_fullname, zipped_filename, crc, openflags, *file);
