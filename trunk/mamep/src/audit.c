@@ -452,6 +452,7 @@ static int audit_one_rom(const rom_entry *rom, const game_driver *gamedrv, UINT3
 static int audit_one_disk(const rom_entry *rom, const game_driver *gamedrv, UINT32 validation, audit_record *record)
 {
 	void *source;
+	char filename[1024];
 
 	/* fill in the record basics */
 	record->type = AUDIT_FILE_DISK;
@@ -461,7 +462,8 @@ static int audit_one_disk(const rom_entry *rom, const game_driver *gamedrv, UINT
 	/* open the disk */
 	chd_gamedrv = gamedrv;
 	chd_set_interface(&audit_chd_interface);
-	source = chd_open(record->name, 0, NULL);
+	sprintf(filename, "%s.chd", record->name);
+	source = chd_open(filename, 0, NULL);
 
 	/* if we failed, report the error */
 	if (source == NULL)

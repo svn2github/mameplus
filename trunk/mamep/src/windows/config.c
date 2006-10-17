@@ -486,9 +486,6 @@ int cli_frontend_init(int argc, char **argv)
 	if (options_parse_command_line(argc, argv))
 		exit(1);
 
-	// parse the simple commmands before we go any further
-	execute_simple_commands();
-
 	// now parse the core set of INI files
 	parse_ini_file(CONFIGNAME);
 	parse_ini_file(extract_base_name(argv[0], buffer, ARRAY_LENGTH(buffer)));
@@ -504,6 +501,9 @@ int cli_frontend_init(int argc, char **argv)
 #ifdef DRIVER_SWITCH
 	assign_drivers();
 #endif /* DRIVER_SWITCH */
+
+	// parse the simple commmands before we go any further
+	execute_simple_commands();
 
 	stemp = options_get_string("playback");
 	if (stemp != NULL)
