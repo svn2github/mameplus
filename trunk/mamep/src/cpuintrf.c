@@ -180,6 +180,8 @@ void rsp_get_info(UINT32 state, union cpuinfo *info);
 void alpha8201_get_info(UINT32 state, union cpuinfo *info);
 void alpha8301_get_info(UINT32 state, union cpuinfo *info);
 void cdp1802_get_info(UINT32 state, union cpuinfo *info);
+void cop420_get_info(UINT32 state, union cpuinfo *info);
+void cop410_get_info(UINT32 state, union cpuinfo *info);
 
 #ifdef MESS
 void apexc_get_info(UINT32 state, union cpuinfo *info);
@@ -194,7 +196,6 @@ void tx0_8kw_get_info(UINT32 state, union cpuinfo *info);
 void z80gb_get_info(UINT32 state, union cpuinfo *info);
 void tms7000_get_info(UINT32 state, union cpuinfo *info);
 void tms7000_exl_get_info(UINT32 state, union cpuinfo *info);
-void cop411_get_info(UINT32 state, union cpuinfo *info);
 void sm8500_get_info(UINT32 state, union cpuinfo *info);
 void v30mz_get_info(UINT32 state, union cpuinfo *info);
 #endif /* MESS */
@@ -731,6 +732,12 @@ static const struct
 #if (HAS_CDP1802)
 	{ CPU_CDP1802, cdp1802_get_info },
 #endif
+#if (HAS_COP420)
+	{ CPU_COP420, cop420_get_info },
+#endif
+#if (HAS_COP410)
+	{ CPU_COP410, cop410_get_info },
+#endif
 
 #ifdef MESS
 #if (HAS_APEXC)
@@ -768,9 +775,6 @@ static const struct
 #endif
 #if (HAS_TMS7000_EXL)
 	{ CPU_TMS7000_EXL, tms7000_exl_get_info },
-#endif
-#if (HAS_COP411)
-	{ CPU_COP411, cop411_get_info },
 #endif
 #if (HAS_SM8500)
 	{ CPU_SM8500, sm8500_get_info },

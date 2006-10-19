@@ -90,8 +90,8 @@ timer?
 have i been using x/y consistently, ie non rotated or rotated origin?
     yes, seems to be best using xy raw (ie non-rotated)
 p2 ink doesn't always light up in test mode
-	after p1 ink pressed, p2 ink doesn't light up
-	this is correct behavior if DSW set as Upright mode
+    after p1 ink pressed, p2 ink doesn't light up
+    this is correct behavior if DSW set as Upright mode
 */
 
 #include "driver.h"
@@ -239,18 +239,18 @@ static WRITE8_HANDLER( marinedt_pd_w )
 
 /*
 upright
-marinedt_pf_w: 00	// upright
-marinedt_pf_w: 01	// ??
+marinedt_pf_w: 00   // upright
+marinedt_pf_w: 01   // ??
 
 cocktail
-marinedt_pf_w: 02	// cocktail
-marinedt_pf_w: 03	// ??
+marinedt_pf_w: 02   // cocktail
+marinedt_pf_w: 03   // ??
 
-marinedt_pf_w: 01	// upright
-marinedt_pf_w: 05	// flip sprite?
+marinedt_pf_w: 01   // upright
+marinedt_pf_w: 05   // flip sprite?
 
-marinedt_pf_w: 07	// cocktail
-marinedt_pf_w: 03	// non-flip sprite?
+marinedt_pf_w: 07   // cocktail
+marinedt_pf_w: 03   // non-flip sprite?
 */
 static WRITE8_HANDLER( marinedt_pf_w )
 {
@@ -262,14 +262,14 @@ static WRITE8_HANDLER( marinedt_pf_w )
 	//-------x ?? service mode (coin lockout??)
 
 	//if ((marinedt_pf & 0x07) != (data & 0x07))
-	//	printf("marinedt_pf_w: %02x\n", data & 0x07);
+	//  mame_printf_debug("marinedt_pf_w: %02x\n", data & 0x07);
 
 	if ((marinedt_pf & 0x02) != (data & 0x02))
 	{
 		if (data & 0x02)
-			printf("tile flip\n");
+			mame_printf_debug("tile flip\n");
 		else
-			printf("tile non-flip\n");
+			mame_printf_debug("tile non-flip\n");
 
 		if (data & 0x02)
 			tilemap_set_flip(tx_tilemap, TILEMAP_FLIPX | TILEMAP_FLIPY);

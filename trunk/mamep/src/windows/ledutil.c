@@ -536,7 +536,7 @@ static void output_mame_start(void)
 			if (hKbdDev == INVALID_HANDLE_VALUE)
 			{
 				error_number = GetLastError();
-				fprintf(stderr,"Unable to open the keyboard device. (error %d)\n", (UINT32)error_number);
+				fprintf(stderr, "Unable to open the keyboard device. (error %d)\n", (UINT32)error_number);
 				return;
 			}
 			break;

@@ -476,7 +476,7 @@ int cli_frontend_init(int argc, char **argv)
 	options_init(windows_opts);
 #ifdef MESS
 	options_add_entries(mess_opts);
-	options_set_option_callback("", win_mess_driver_name_callback);
+	options_set_option_callback(OPTION_UNADORNED(0), win_mess_driver_name_callback);
 #endif // MESS
 
 	// clear all core options
@@ -682,7 +682,7 @@ static void execute_simple_commands(void)
 	if (options_get_bool("showusage"))
 	{
 		setup_language();
-		printf(_WINDOWS("Usage: mame [game] [options]\n\nOptions:\n"));
+		mame_printf_info(_WINDOWS("Usage: mame [game] [options]\n\nOptions:\n"));
 		options_output_help();
 		exit(0);
 	}
@@ -783,14 +783,14 @@ static void execute_commands(const char *argv0)
 static void display_help(void)
 {
 #ifndef MESS
-	printf(_WINDOWS("M.A.M.E. v%s - Multiple Arcade Machine Emulator\n"
+	mame_printf_info(_WINDOWS("M.A.M.E. v%s - Multiple Arcade Machine Emulator\n"
 		   "Copyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n"),build_version);
-	printf("%s\n", _(mame_disclaimer));
-	printf(_WINDOWS("Usage:  MAME gamename [options]\n\n"));
-	printf(_WINDOWS("        MAME -showusage    for a brief list of options\n"));
-	printf(_WINDOWS("        MAME -showconfig   for a list of configuration options\n"));
-	printf(_WINDOWS("        MAME -createconfig to create a mame.ini\n\n"));
-	printf(_WINDOWS("For usage instructions, please consult the file windows.txt\n"));
+	mame_printf_info("%s\n", _(mame_disclaimer));
+	mame_printf_info(_WINDOWS("Usage:  MAME gamename [options]\n\n"));
+	mame_printf_info(_WINDOWS("        MAME -showusage    for a brief list of options\n"));
+	mame_printf_info(_WINDOWS("        MAME -showconfig   for a list of configuration options\n"));
+	mame_printf_info(_WINDOWS("        MAME -createconfig to create a mame.ini\n\n"));
+	mame_printf_info(_WINDOWS("For usage instructions, please consult the file windows.txt\n"));
 #else
 	showmessinfo();
 #endif
@@ -1113,7 +1113,7 @@ static void setup_playback(const char *filename)
 	else
 	{
 		options_set_string(OPTION_GAMENAME, inp_header.name);
-		printf(_WINDOWS("Playing back previously recorded " GAMENOUN " %s\n"), inp_header.name);
+		mame_printf_info(_WINDOWS("Playing back previously recorded " GAMENOUN " %s\n"), inp_header.name);
 	}
 
 #ifdef INP_CAPTION

@@ -225,28 +225,28 @@ static int validate_driver(int drivnum, const machine_config *drv)
 	/* (100 is arbitrary, but tries to avoid tiny.mak dependencies) */
 	if (total_drivers > 100 && !clone_of && strcmp(driver->parent, "0"))
 	{
-		printf("%s: %s is a non-existant clone\n", driver->source_file, driver->parent);
+		mame_printf_error("%s: %s is a non-existant clone\n", driver->source_file, driver->parent);
 		error = TRUE;
 	}
 
 	/* look for recursive cloning */
 	if (clone_of == driver)
 	{
-		printf("%s: %s is set as a clone of itself\n", driver->source_file, driver->name);
+		mame_printf_error("%s: %s is set as a clone of itself\n", driver->source_file, driver->name);
 		error = TRUE;
 	}
 
 	/* look for clones that are too deep */
 	if (clone_of != NULL && (clone_of = driver_get_clone(clone_of)) != NULL && (clone_of->flags & NOT_A_DRIVER) == 0)
 	{
-		printf("%s: %s is a clone of a clone\n", driver->source_file, driver->name);
+		mame_printf_error("%s: %s is a clone of a clone\n", driver->source_file, driver->name);
 		error = TRUE;
 	}
 
 	/* make sure the driver name is 8 chars or less */
 	if (strlen(driver->name) > 8)
 	{
-		printf("%s: %s driver name must be 8 characters or less\n", driver->source_file, driver->name);
+		mame_printf_error("%s: %s driver name must be 8 characters or less\n", driver->source_file, driver->name);
 		error = TRUE;
 	}
 
@@ -254,7 +254,7 @@ static int validate_driver(int drivnum, const machine_config *drv)
 	for (s = driver->year; *s; s++)
 		if (!isdigit(*s) && *s != '?' && *s != '+')
 		{
-			printf("%s: %s has an invalid year '%s'\n", driver->source_file, driver->name, driver->year);
+			mame_printf_error("%s: %s has an invalid year '%s'\n", driver->source_file, driver->name, driver->year);
 			error = TRUE;
 			break;
 		}
@@ -263,7 +263,7 @@ static int validate_driver(int drivnum, const machine_config *drv)
 	/* make sure sound-less drivers are flagged */
 	if ((driver->flags & NOT_A_DRIVER) == 0 && drv->sound[0].sound_type == 0 && (driver->flags & GAME_NO_SOUND) == 0 && strcmp(driver->name, "minivadr"))
 	{
-		printf("%s: %s missing GAME_NO_SOUND flag\n", driver->source_file, driver->name);
+		mame_printf_error("%s: %s missing GAME_NO_SOUND flag\n", driver->source_file, driver->name);
 		error = TRUE;
 	}
 #endif
@@ -276,7 +276,7 @@ static int validate_driver(int drivnum, const machine_config *drv)
 			const game_driver *match = drivers[entry - name_table->entry];
 			if (!strcmp(match->name, driver->name))
 			{
-				printf("%s: %s is a duplicate name (%s, %s)\n", driver->source_file, driver->name, match->source_file, match->name);
+				mame_printf_error("%s: %s is a duplicate name (%s, %s)\n", driver->source_file, driver->name, match->source_file, match->name);
 				error = TRUE;
 			}
 		}
@@ -289,7 +289,7 @@ static int validate_driver(int drivnum, const machine_config *drv)
 			const game_driver *match = drivers[entry - description_table->entry];
 			if (!strcmp(match->description, driver->description))
 			{
-				printf("%s: %s is a duplicate description (%s, %s)\n", driver->source_file, driver->description, match->source_file, match->name);
+				mame_printf_error("%s: %s is a duplicate description (%s, %s)\n", driver->source_file, driver->description, match->source_file, match->name);
 				error = TRUE;
 			}
 		}
@@ -305,7 +305,7 @@ static int validate_driver(int drivnum, const machine_config *drv)
 				const game_driver *match = drivers[entry - roms_table->entry];
 				if (match->rom == driver->rom)
 				{
-					printf("%s: %s uses the same ROM set as (%s, %s)\n", driver->source_file, driver->description, match->source_file, match->name);
+					mame_printf_error("%s: %s uses the same ROM set as (%s, %s)\n", driver->source_file, driver->description, match->source_file, match->name);
 					error = TRUE;
 				}
 			}
@@ -345,13 +345,13 @@ static int validate_roms(int drivnum, const machine_config *drv, UINT32 *region_
 
 			/* if we haven't seen any items since the last region, print a warning */
 			if (items_since_region == 0)
-				printf("%s: %s has empty ROM region (warning)\n", driver->source_file, driver->name);
+				mame_printf_warning("%s: %s has empty ROM region (warning)\n", driver->source_file, driver->name);
 			items_since_region = (ROMREGION_ISERASE(romp) || ROMREGION_ISDISPOSE(romp)) ? 1 : 0;
 
 			/* check for an invalid region */
 			if (type >= REGION_MAX || type <= REGION_INVALID)
 			{
-				printf("%s: %s has invalid ROM_REGION type %x\n", driver->source_file, driver->name, type);
+				mame_printf_error("%s: %s has invalid ROM_REGION type %x\n", driver->source_file, driver->name, type);
 				error = TRUE;
 				cur_region = -1;
 			}
@@ -359,7 +359,7 @@ static int validate_roms(int drivnum, const machine_config *drv, UINT32 *region_
 			/* check for a duplicate */
 			else if (region_length[type] != 0)
 			{
-				printf("%s: %s has duplicate ROM_REGION type %x\n", driver->source_file, driver->name, type);
+				mame_printf_error("%s: %s has duplicate ROM_REGION type %x\n", driver->source_file, driver->name, type);
 				error = TRUE;
 				cur_region = -1;
 			}
@@ -387,7 +387,7 @@ static int validate_roms(int drivnum, const machine_config *drv, UINT32 *region_
 			for (s = last_name; *s; s++)
 				if (tolower(*s) != *s)
 				{
-					printf("%s: %s has upper case ROM name %s\n", driver->source_file, driver->name, last_name);
+					mame_printf_error("%s: %s has upper case ROM name %s\n", driver->source_file, driver->name, last_name);
 					error = TRUE;
 					break;
 				}
@@ -396,7 +396,7 @@ static int validate_roms(int drivnum, const machine_config *drv, UINT32 *region_
 			hash = ROM_GETHASHDATA(romp);
 			if (!hash_verify_string(hash))
 			{
-				printf("%s: rom '%s' has an invalid hash string '%s'\n", driver->name, last_name, hash);
+				mame_printf_error("%s: rom '%s' has an invalid hash string '%s'\n", driver->name, last_name, hash);
 				error = TRUE;
 			}
 		}
@@ -408,7 +408,7 @@ static int validate_roms(int drivnum, const machine_config *drv, UINT32 *region_
 
 			if (ROM_GETOFFSET(romp) + ROM_GETLENGTH(romp) > region_length[cur_region])
 			{
-				printf("%s: %s has ROM %s extending past the defined memory region\n", driver->source_file, driver->name, last_name);
+				mame_printf_error("%s: %s has ROM %s extending past the defined memory region\n", driver->source_file, driver->name, last_name);
 				error = TRUE;
 			}
 		}
@@ -416,7 +416,7 @@ static int validate_roms(int drivnum, const machine_config *drv, UINT32 *region_
 
 	/* final check for empty regions */
 	if (items_since_region == 0)
-		printf("%s: %s has empty ROM region (warning)\n", driver->source_file, driver->name);
+		mame_printf_warning("%s: %s has empty ROM region (warning)\n", driver->source_file, driver->name);
 
 	return error;
 }
@@ -449,7 +449,7 @@ static int validate_cpu(int drivnum, const machine_config *drv, const UINT32 *re
 		/* checks to see if this driver is using a dummy CPU */
 		if (cputype_get_interface(cpu->cpu_type)->get_info == dummy_get_info)
 		{
-			printf("%s: %s uses non-present CPU\n", driver->source_file, driver->name);
+			mame_printf_error("%s: %s uses non-present CPU\n", driver->source_file, driver->name);
 			error = TRUE;
 			continue;
 		}
@@ -460,7 +460,7 @@ static int validate_cpu(int drivnum, const machine_config *drv, const UINT32 *re
 			|| !cputype_get_info_fct(cpu->cpu_type, CPUINFO_PTR_RESET)
 			|| !cputype_get_info_fct(cpu->cpu_type, CPUINFO_PTR_EXECUTE))
 		{
-			printf("%s: %s uses an incomplete CPU\n", driver->source_file, driver->name);
+			mame_printf_error("%s: %s uses an incomplete CPU\n", driver->source_file, driver->name);
 			error = TRUE;
 			continue;
 		}
@@ -485,7 +485,7 @@ static int validate_cpu(int drivnum, const machine_config *drv, const UINT32 *re
 			/* check to see that the same map is not used twice */
 			if (cpu->construct_map[spacenum][0] && cpu->construct_map[spacenum][0] != construct_map_0 && cpu->construct_map[spacenum][0] == cpu->construct_map[spacenum][1])
 			{
-				printf("%s: %s uses identical memory maps for CPU #%d spacenum %d\n", driver->source_file, driver->name, cpunum, spacenum);
+				mame_printf_error("%s: %s uses identical memory maps for CPU #%d spacenum %d\n", driver->source_file, driver->name, cpunum, spacenum);
 				error = TRUE;
 			}
 
@@ -509,7 +509,7 @@ static int validate_cpu(int drivnum, const machine_config *drv, const UINT32 *re
 			/* make sure we start with a proper entry */
 			if (!IS_AMENTRY_EXTENDED(map))
 			{
-				printf("%s: %s wrong MEMORY_READ_START for %s space\n", driver->source_file, driver->name, spacename[spacenum]);
+				mame_printf_error("%s: %s wrong MEMORY_READ_START for %s space\n", driver->source_file, driver->name, spacename[spacenum]);
 				error = TRUE;
 			}
 
@@ -521,7 +521,7 @@ static int validate_cpu(int drivnum, const machine_config *drv, const UINT32 *re
 				val = (val + 1) * 8;
 				if (val != databus_width)
 				{
-					printf("%s: %s cpu #%d uses wrong memory handlers for %s space! (width = %d, memory = %08x)\n", driver->source_file, driver->name, cpunum, spacename[spacenum], databus_width, AM_EXTENDED_FLAGS(map));
+					mame_printf_error("%s: %s cpu #%d uses wrong memory handlers for %s space! (width = %d, memory = %08x)\n", driver->source_file, driver->name, cpunum, spacename[spacenum], databus_width, AM_EXTENDED_FLAGS(map));
 					error = TRUE;
 				}
 			}
@@ -536,14 +536,14 @@ static int validate_cpu(int drivnum, const machine_config *drv, const UINT32 *re
 						/* look for inverted start/end pairs */
 						if (map->end < map->start)
 						{
-							printf("%s: %s wrong %s memory read handler start = %08x > end = %08x\n", driver->source_file, driver->name, spacename[spacenum], map->start, map->end);
+							mame_printf_error("%s: %s wrong %s memory read handler start = %08x > end = %08x\n", driver->source_file, driver->name, spacename[spacenum], map->start, map->end);
 							error = TRUE;
 						}
 
 						/* look for misaligned entries */
 						if ((SPACE_SHIFT(map->start) & (alignunit-1)) != 0 || (SPACE_SHIFT_END(map->end) & (alignunit-1)) != (alignunit-1))
 						{
-							printf("%s: %s wrong %s memory read handler start = %08x, end = %08x ALIGN = %d\n", driver->source_file, driver->name, spacename[spacenum], map->start, map->end, alignunit);
+							mame_printf_error("%s: %s wrong %s memory read handler start = %08x, end = %08x ALIGN = %d\n", driver->source_file, driver->name, spacename[spacenum], map->start, map->end, alignunit);
 							error = TRUE;
 						}
 
@@ -559,9 +559,9 @@ static int validate_cpu(int drivnum, const machine_config *drv, const UINT32 *re
 							if (region_length[map->region] && map->region_offs + (SPACE_SHIFT_END(map->end) - SPACE_SHIFT(map->start) + 1) > region_length[map->region] && map->share == 0 && !map->base)
 							{
 								if (region_length[map->region] == 0)
-									printf("%s: %s CPU %d space %d memory map entry %X-%X references non-existant region %d\n", driver->source_file, driver->name, cpunum, spacenum, map->start, map->end, map->region);
+									mame_printf_error("%s: %s CPU %d space %d memory map entry %X-%X references non-existant region %d\n", driver->source_file, driver->name, cpunum, spacenum, map->start, map->end, map->region);
 								else
-									printf("%s: %s CPU %d space %d memory map entry %X-%X extends beyond region %d size (%X)\n", driver->source_file, driver->name, cpunum, spacenum, map->start, map->end, map->region, region_length[map->region]);
+									mame_printf_error("%s: %s CPU %d space %d memory map entry %X-%X extends beyond region %d size (%X)\n", driver->source_file, driver->name, cpunum, spacenum, map->start, map->end, map->region, region_length[map->region]);
 								error = TRUE;
 							}
 					}
@@ -588,14 +588,14 @@ static int validate_display(int drivnum, const machine_config *drv)
 	/* check for empty palette */
 	if (drv->total_colors == 0 && !(drv->video_attributes & VIDEO_RGB_DIRECT))
 	{
-		printf("%s: %s has zero palette entries\n", driver->source_file, driver->name);
+		mame_printf_error("%s: %s has zero palette entries\n", driver->source_file, driver->name);
 		error = TRUE;
 	}
 
 	/* sanity check dimensions */
 	if ((drv->screen[0].defstate.width <= 0) || (drv->screen[0].defstate.height <= 0))
 	{
-		printf("%s: %s has invalid display dimensions\n", driver->source_file, driver->name);
+		mame_printf_error("%s: %s has invalid display dimensions\n", driver->source_file, driver->name);
 		error = TRUE;
 	}
 
@@ -607,7 +607,7 @@ static int validate_display(int drivnum, const machine_config *drv)
 			|| (drv->screen[0].defstate.visarea.max_x >= drv->screen[0].defstate.width)
 			|| (drv->screen[0].defstate.visarea.max_y >= drv->screen[0].defstate.height))
 		{
-			printf("%s: %s has an invalid display area\n", driver->source_file, driver->name);
+			mame_printf_error("%s: %s has an invalid display area\n", driver->source_file, driver->name);
 			error = TRUE;
 		}
 	}
@@ -660,7 +660,7 @@ static int validate_gfx(int drivnum, const machine_config *drv, const UINT32 *re
 			/* if not, this is an error */
 			if ((start + len) / 8 > avail)
 			{
-				printf("%s: %s has gfx[%d] extending past allocated memory\n", driver->source_file, driver->name, gfxnum);
+				mame_printf_error("%s: %s has gfx[%d] extending past allocated memory\n", driver->source_file, driver->name, gfxnum);
 				error = TRUE;
 			}
 		}
@@ -717,7 +717,7 @@ static int validate_inputs(int drivnum, const machine_config *drv, input_port_en
 		/* look for invalid (0) types which should be mapped to IPT_OTHER */
 		if (inp->type == IPT_INVALID)
 		{
-			printf("%s: %s has an input port with an invalid type (0); use IPT_OTHER instead\n", driver->source_file, driver->name);
+			mame_printf_error("%s: %s has an input port with an invalid type (0); use IPT_OTHER instead\n", driver->source_file, driver->name);
 			error = TRUE;
 		}
 
@@ -727,7 +727,7 @@ static int validate_inputs(int drivnum, const machine_config *drv, input_port_en
 			/* not allowed for dipswitches */
 			if (inp->type == IPT_DIPSWITCH_NAME || inp->type == IPT_DIPSWITCH_SETTING)
 			{
-				printf("%s: %s has a DIP switch name or setting with no name\n", driver->source_file, driver->name);
+				mame_printf_error("%s: %s has a DIP switch name or setting with no name\n", driver->source_file, driver->name);
 				error = TRUE;
 			}
 			last_strindex = -1;
@@ -737,7 +737,7 @@ static int validate_inputs(int drivnum, const machine_config *drv, input_port_en
 		/* check for empty string */
 		if (!inp->name[0] && !empty_string_found)
 		{
-			printf("%s: %s has an input with an empty string\n", driver->source_file, driver->name);
+			mame_printf_error("%s: %s has an input with an empty string\n", driver->source_file, driver->name);
 			error = TRUE;
 			empty_string_found = TRUE;
 		}
@@ -745,7 +745,7 @@ static int validate_inputs(int drivnum, const machine_config *drv, input_port_en
 		/* check for trailing spaces */
 		if (inp->name[0] && inp->name[strlen(inp->name) - 1] == ' ')
 		{
-			printf("%s: %s input '%s' has trailing spaces\n", driver->source_file, driver->name, inp->name);
+			mame_printf_error("%s: %s input '%s' has trailing spaces\n", driver->source_file, driver->name, inp->name);
 			error = TRUE;
 		}
 
@@ -761,7 +761,7 @@ static int validate_inputs(int drivnum, const machine_config *drv, input_port_en
 		/* check for strings that should be DEF_STR */
 		if (strindex != -1 && inp->name != input_port_default_strings[strindex])
 		{
-			printf("%s: %s must use DEF_STR( %s )\n", driver->source_file, driver->name, inp->name);
+			mame_printf_error("%s: %s must use DEF_STR( %s )\n", driver->source_file, driver->name, inp->name);
 			error = TRUE;
 		}
 
@@ -775,21 +775,21 @@ static int validate_inputs(int drivnum, const machine_config *drv, input_port_en
 			/* check for inverted off/on dispswitch order */
 			if (last_strindex == STR_On && strindex == STR_Off)
 			{
-				printf("%s: %s has inverted Off/On dipswitch order\n", driver->source_file, driver->name);
+				mame_printf_error("%s: %s has inverted Off/On dipswitch order\n", driver->source_file, driver->name);
 				error = TRUE;
 			}
 
 			/* check for inverted yes/no dispswitch order */
 			else if (last_strindex == STR_Yes && strindex == STR_No)
 			{
-				printf("%s: %s has inverted No/Yes dipswitch order\n", driver->source_file, driver->name);
+				mame_printf_error("%s: %s has inverted No/Yes dipswitch order\n", driver->source_file, driver->name);
 				error = TRUE;
 			}
 
 			/* check for inverted upright/cocktail dispswitch order */
 			else if (last_strindex == STR_Cocktail && strindex == STR_Upright)
 			{
-				printf("%s: %s has inverted Upright/Cocktail dipswitch order\n", driver->source_file, driver->name);
+				mame_printf_error("%s: %s has inverted Upright/Cocktail dipswitch order\n", driver->source_file, driver->name);
 				error = TRUE;
 			}
 
@@ -797,7 +797,7 @@ static int validate_inputs(int drivnum, const machine_config *drv, input_port_en
 			else if (last_strindex >= STR_9C_1C && last_strindex <= STR_1C_9C && strindex >= STR_9C_1C && strindex <= STR_1C_9C &&
 					 last_strindex >= strindex && !memcmp(&inp[-1].condition, &inp[0].condition, sizeof(inp[-1].condition)))
 			{
-				printf("%s: %s has unsorted coinage %s > %s\n", driver->source_file, driver->name, inp[-1].name, inp[0].name);
+				mame_printf_error("%s: %s has unsorted coinage %s > %s\n", driver->source_file, driver->name, inp[-1].name, inp[0].name);
 				error = TRUE;
 			}
 		}
@@ -809,7 +809,7 @@ static int validate_inputs(int drivnum, const machine_config *drv, input_port_en
 			if (last_dipname_entry->name == DEF_STR( Cabinet ) && strindex == STR_Upright &&
 				last_dipname_entry->default_value != inp->default_value)
 			{
-				printf("%s: %s Cabinet must default to Upright\n", driver->source_file, driver->name);
+				mame_printf_error("%s: %s Cabinet must default to Upright\n", driver->source_file, driver->name);
 				error = TRUE;
 			}
 
@@ -817,21 +817,21 @@ static int validate_inputs(int drivnum, const machine_config *drv, input_port_en
 			if (last_dipname_entry->name == DEF_STR( Demo_Sounds ) && strindex == STR_On &&
 				last_dipname_entry->default_value != inp->default_value)
 			{
-				printf("%s: %s Demo Sounds must default to On\n", driver->source_file, driver->name);
+				mame_printf_error("%s: %s Demo Sounds must default to On\n", driver->source_file, driver->name);
 				error = TRUE;
 			}
 
 			/* check for bad flip screen options */
 			if (last_dipname_entry->name == DEF_STR( Flip_Screen ) && (strindex == STR_Yes || strindex == STR_No))
 			{
-				printf("%s: %s has wrong Flip Screen option %s (must be Off/On)\n", driver->source_file, driver->name, inp->name);
+				mame_printf_error("%s: %s has wrong Flip Screen option %s (must be Off/On)\n", driver->source_file, driver->name, inp->name);
 				error = TRUE;
 			}
 
 			/* check for bad demo sounds options */
 			if (last_dipname_entry->name == DEF_STR( Demo_Sounds ) && (strindex == STR_Yes || strindex == STR_No))
 			{
-				printf("%s: %s has wrong Demo Sounds option %s (must be Off/On)\n", driver->source_file, driver->name, inp->name);
+				mame_printf_error("%s: %s has wrong Demo Sounds option %s (must be Off/On)\n", driver->source_file, driver->name, inp->name);
 				error = TRUE;
 			}
 		}
@@ -839,7 +839,7 @@ static int validate_inputs(int drivnum, const machine_config *drv, input_port_en
 		/* analog ports must have a valid sensitivity */
 		if (port_type_is_analog(inp->type) && inp->analog.sensitivity == 0)
 		{
-			printf("%s: %s has an analog port with zero sensitivity\n", driver->source_file, driver->name);
+			mame_printf_error("%s: %s has an analog port with zero sensitivity\n", driver->source_file, driver->name);
 			error = TRUE;
 		}
 
@@ -873,7 +873,7 @@ static int validate_sound(int drivnum, const machine_config *drv)
 		for (check = 0; check < MAX_SPEAKER && drv->speaker[check].tag; check++)
 			if (speaknum != check && drv->speaker[check].tag && !strcmp(drv->speaker[speaknum].tag, drv->speaker[check].tag))
 			{
-				printf("%s: %s has multiple speakers tagged as '%s'\n", driver->source_file, driver->name, drv->speaker[speaknum].tag);
+				mame_printf_error("%s: %s has multiple speakers tagged as '%s'\n", driver->source_file, driver->name, drv->speaker[speaknum].tag);
 				error = TRUE;
 			}
 
@@ -881,7 +881,7 @@ static int validate_sound(int drivnum, const machine_config *drv)
 		for (check = 0; check < MAX_SOUND && drv->sound[check].sound_type != SOUND_DUMMY; check++)
 			if (drv->sound[check].tag && !strcmp(drv->speaker[speaknum].tag, drv->sound[check].tag))
 			{
-				printf("%s: %s has both a speaker and a sound chip tagged as '%s'\n", driver->source_file, driver->name, drv->speaker[speaknum].tag);
+				mame_printf_error("%s: %s has both a speaker and a sound chip tagged as '%s'\n", driver->source_file, driver->name, drv->speaker[speaknum].tag);
 				error = TRUE;
 			}
 	}
@@ -911,7 +911,7 @@ static int validate_sound(int drivnum, const machine_config *drv)
 				/* if we didn't find one, it's an error */
 				if (check >= MAX_SOUND || drv->sound[check].sound_type == SOUND_DUMMY)
 				{
-					printf("%s: %s attempting to route sound to non-existant speaker '%s'\n", driver->source_file, driver->name, drv->sound[sndnum].route[routenum].target);
+					mame_printf_error("%s: %s attempting to route sound to non-existant speaker '%s'\n", driver->source_file, driver->name, drv->sound[sndnum].route[routenum].target);
 					error = TRUE;
 				}
 			}
@@ -952,16 +952,16 @@ int mame_validitychecks(int game)
 	/* basic system checks */
 	a = 0xff;
 	b = a + 1;
-	if (b > a)	{ printf("UINT8 must be 8 bits\n"); error = TRUE; }
+	if (b > a)	{ mame_printf_error("UINT8 must be 8 bits\n"); error = TRUE; }
 
-	if (sizeof(INT8)   != 1)	{ printf("INT8 must be 8 bits\n"); error = TRUE; }
-	if (sizeof(UINT8)  != 1)	{ printf("UINT8 must be 8 bits\n"); error = TRUE; }
-	if (sizeof(INT16)  != 2)	{ printf("INT16 must be 16 bits\n"); error = TRUE; }
-	if (sizeof(UINT16) != 2)	{ printf("UINT16 must be 16 bits\n"); error = TRUE; }
-	if (sizeof(INT32)  != 4)	{ printf("INT32 must be 32 bits\n"); error = TRUE; }
-	if (sizeof(UINT32) != 4)	{ printf("UINT32 must be 32 bits\n"); error = TRUE; }
-	if (sizeof(INT64)  != 8)	{ printf("INT64 must be 64 bits\n"); error = TRUE; }
-	if (sizeof(UINT64) != 8)	{ printf("UINT64 must be 64 bits\n"); error = TRUE; }
+	if (sizeof(INT8)   != 1)	{ mame_printf_error("INT8 must be 8 bits\n"); error = TRUE; }
+	if (sizeof(UINT8)  != 1)	{ mame_printf_error("UINT8 must be 8 bits\n"); error = TRUE; }
+	if (sizeof(INT16)  != 2)	{ mame_printf_error("INT16 must be 16 bits\n"); error = TRUE; }
+	if (sizeof(UINT16) != 2)	{ mame_printf_error("UINT16 must be 16 bits\n"); error = TRUE; }
+	if (sizeof(INT32)  != 4)	{ mame_printf_error("INT32 must be 32 bits\n"); error = TRUE; }
+	if (sizeof(UINT32) != 4)	{ mame_printf_error("UINT32 must be 32 bits\n"); error = TRUE; }
+	if (sizeof(INT64)  != 8)	{ mame_printf_error("INT64 must be 64 bits\n"); error = TRUE; }
+	if (sizeof(UINT64) != 8)	{ mame_printf_error("UINT64 must be 64 bits\n"); error = TRUE; }
 
 	/* make sure the CPU and sound interfaces are up and running */
 	cpuintrf_init(NULL);
@@ -1043,17 +1043,17 @@ int mame_validitychecks(int game)
 #endif /* MESS */
 
 #if (REPORT_TIMES)
-	printf("Prep:      %8dm\n", (int)(prep / 1000000));
-	printf("Expansion: %8dm\n", (int)(expansion / 1000000));
-	printf("Driver:    %8dm\n", (int)(driver_checks / 1000000));
-	printf("ROM:       %8dm\n", (int)(rom_checks / 1000000));
-	printf("CPU:       %8dm\n", (int)(cpu_checks / 1000000));
-	printf("Display:   %8dm\n", (int)(display_checks / 1000000));
-	printf("Graphics:  %8dm\n", (int)(gfx_checks / 1000000));
-	printf("Input:     %8dm\n", (int)(input_checks / 1000000));
-	printf("Sound:     %8dm\n", (int)(sound_checks / 1000000));
+	mame_printf_info("Prep:      %8dm\n", (int)(prep / 1000000));
+	mame_printf_info("Expansion: %8dm\n", (int)(expansion / 1000000));
+	mame_printf_info("Driver:    %8dm\n", (int)(driver_checks / 1000000));
+	mame_printf_info("ROM:       %8dm\n", (int)(rom_checks / 1000000));
+	mame_printf_info("CPU:       %8dm\n", (int)(cpu_checks / 1000000));
+	mame_printf_info("Display:   %8dm\n", (int)(display_checks / 1000000));
+	mame_printf_info("Graphics:  %8dm\n", (int)(gfx_checks / 1000000));
+	mame_printf_info("Input:     %8dm\n", (int)(input_checks / 1000000));
+	mame_printf_info("Sound:     %8dm\n", (int)(sound_checks / 1000000));
 #ifdef MESS
-	printf("MESS:      %8dm\n", (int)(mess_checks / 1000000));
+	mame_printf_info("MESS:      %8dm\n", (int)(mess_checks / 1000000));
 #endif
 #endif
 

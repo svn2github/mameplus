@@ -150,13 +150,13 @@ void win_blit_init(running_machine *machine)
 	}
 
 	if (use_sse2)
-		verbose_printf(_WINDOWS("SSE2 supported\n"));
+		verbose_printf(_WINDOWS("blit: SSE2 supported\n"));
 	else if (use_sse)
-		verbose_printf(_WINDOWS("SSE supported\n"));
+		verbose_printf(_WINDOWS("blit: SSE supported\n"));
 	else if (use_mmx)
-		verbose_printf(_WINDOWS("MMX supported\n"));
+		verbose_printf(_WINDOWS("blit: MMX supported\n"));
 	else
-		verbose_printf(_WINDOWS("MMX not supported\n"));
+		verbose_printf(_WINDOWS("blit: MMX not supported\n"));
 
 	add_exit_callback(win_blit_exit);
 }

@@ -188,7 +188,7 @@ CFLAGS += -DWIN95_MULTIMON
 endif
 
 # add the windows libaries
-LIBS += -lunicows -luser32 -lgdi32 -lddraw -ldsound -ldinput -ldxguid -lwinmm -ladvapi32
+LIBS += -lunicows -luser32 -lgdi32 -lddraw -ldsound -ldinput -ldxguid -lwinmm -ladvapi32 -lcomctl32
 CLILIBS =
 
 

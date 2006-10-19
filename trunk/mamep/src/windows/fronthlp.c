@@ -343,7 +343,7 @@ void romident(const char *name, FILE *output)
 	if (attr == INVALID_FILE_ATTRIBUTES)
 	{
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), 0, error, ARRAY_LENGTH(error), NULL);
-		_tprintf("%s: %s\n",name, error);
+		mame_printf_error("%s: %s\n",name, error);
 		return;
 	}
 
@@ -593,7 +593,7 @@ int frontend_listroms(FILE *output)
 			if (!hash_data_has_info(hash, HASH_INFO_NO_DUMP))
 			{
 				if (hash_data_has_info(hash, HASH_INFO_BAD_DUMP))
-					printf(_WINDOWS(" BAD"));
+					fprintf(output, _WINDOWS(" BAD"));
 
 				hash_data_print(hash, 0, hashbuf);
 				fprintf(output, " %s", hashbuf);
@@ -757,18 +757,17 @@ int frontend_verifyroms(FILE *output)
 	/* if we didn't get anything at all, display a generic end message */
 	if (correct + incorrect == 0)
 	{
-		printf ("%s ", _WINDOWS("romset") );
 		if (notfound > 0)
-			printf(_WINDOWS("\"%8s\" not found!\n"), gamename);
+			mame_printf_error(_WINDOWS("romset \"%8s\" not found!\n"), gamename);
 		else
-			printf(_WINDOWS("\"%8s\" not supported!\n"), gamename);
+			mame_printf_error(_WINDOWS("romset \"%8s\" not supported!\n"), gamename);
  		return 1;
 	}
 
 	/* otherwise, print a summary */
 	else
 	{
-		printf(_WINDOWS("%d %s found, %d were OK.\n"), correct+incorrect, _WINDOWS("romset"), correct);
+		mame_printf_error(_WINDOWS("%d romsets found, %d were OK.\n"), correct+incorrect, _WINDOWS("romset"), correct);
 		return (incorrect > 0) ? 2 : 0;
 	}
 }
@@ -854,18 +853,17 @@ int frontend_verifysamples(FILE *output)
 	/* if we didn't get anything at all, display a generic end message */
 	if (correct + incorrect == 0)
 	{
-		printf ("%s ", _WINDOWS("sampleset") );
 		if (notfound > 0)
-			printf(_WINDOWS("\"%8s\" not found!\n"), gamename);
+			mame_printf_error(_WINDOWS("sampleset \"%8s\" not found!\n"), gamename);
 		else
-			printf(_WINDOWS("\"%8s\" not supported!\n"), gamename);
- 		return 1;
+			mame_printf_error(_WINDOWS("sampleset \"%8s\" not supported!\n"), gamename);
+		return 1;
 	}
 
 	/* otherwise, print a summary */
 	else
 	{
-		printf(_WINDOWS("%d %s found, %d were OK.\n"), correct+incorrect, _WINDOWS("samplesets"), correct);
+		mame_printf_info(_WINDOWS("%d samplesets found, %d were OK.\n"), correct + incorrect, correct);
 		return (incorrect > 0) ? 2 : 0;
 	}
 }
