@@ -268,7 +268,10 @@ mame_file *nvram_fopen(running_machine *machine, UINT32 openflags)
 	char *fname;
 
 	fname = assemble_2_strings(machine->gamedrv->name, ".nv");
-	filerr = mame_fopen(SEARCHPATH_NVRAM, fname, openflags, &file);
+	if ( Machine->record_file || Machine->playback_file)
+		filerr = mame_fopen(SEARCHPATH_INPUTLOG, fname, openflags, &file);
+	else
+		filerr = mame_fopen(SEARCHPATH_NVRAM, fname, openflags, &file);
 	free(fname);
 
 	return (filerr == FILERR_NONE) ? file : NULL;
