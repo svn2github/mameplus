@@ -744,7 +744,7 @@ Could not open '%s' as a valid input file.
 
 # ui/win32ui.c: 6300
 Could not open '%s' as a valid savestate file.
-'%s'は正常はステートとして開けません。
+'%s'は正常なステートとして開けません。
 
 # ui/mame32.rc: 812
 Crop artwork

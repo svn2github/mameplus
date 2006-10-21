@@ -6265,6 +6265,11 @@ static void MameLoadState(const char *fname_state)
 				nGame = i;
 				break;
 			}
+		if (nGame == -1)
+		{
+			MameMessageBox(_UI("Could not open '%s' as a valid savestate file."), filename);
+			return;
+		}
 	}
 	else
 	{
