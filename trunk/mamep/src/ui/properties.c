@@ -1255,7 +1255,7 @@ static void UpdateSheetCaption(HWND hWnd)
 								CLIP_DEFAULT_PRECIS,	// clipping precision
 								ANTIALIASED_QUALITY,	// output quality
 								FF_DONTCARE,			// pitch and family
-								(LPTSTR)"Tahoma");		// typeface name
+								(LPTSTR)TEXT("Tahoma"));		// typeface name
 
 		if (hFontCaption)
 		{
@@ -1539,6 +1539,9 @@ void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 	HTREEITEM hItem;
 	LONG_PTR  prevProc;
 
+	TCITEM item;
+	HWND hTempTab;
+
 	if (g_nFirstInitPropertySheet == 0)
 	{
 		AdjustPropertySheetChildWindows(hPageDlg);
@@ -1584,9 +1587,6 @@ void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 		hSheetTreeCtrl = NULL;
 	}
 
-	TCITEM item;
-	HWND hTempTab;
-
 	hTempTab = CreateWindowEx(0, TEXT("SysTabControl32"), NULL,
 						WS_CHILD|WS_VISIBLE|WS_CLIPSIBLINGS,
 						rectTree.left, rectTree.top,
@@ -1596,7 +1596,7 @@ void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 	item.mask    = TCIF_TEXT;
 	item.iImage  = 0;
 	item.lParam  = 0;
-	item.pszText = (LPTSTR)"";
+	item.pszText = (LPTSTR)TEXT("");
 	SendMessage(hTempTab, TCM_INSERTITEM, 0, (LPARAM)&item);
 
 	SendMessage(hTempTab, TCM_GETITEMRECT, 0, (LPARAM)&rcTabCaption);
@@ -3898,9 +3898,11 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_HIGH_PRIORITYTXT,DM_NONE,CT_NONE,    NULL,                      DM_INT,  &pGameOpts->priority,      0, 0, 0);
 	DataMapAdd(IDC_SKIP_GAME_INFO,DM_BOOL,CT_BUTTON,    &pGameOpts->skip_gameinfo, DM_BOOL, &pGameOpts->skip_gameinfo, 0, 0, 0);
 #ifdef DRIVER_SWITCH
+	{
 	int i;
 	for (i=0; drivers_table[i].name; i++)
 		DataMapAdd(drivers_table[i].ctrl,      DM_NONE, CT_NONE,     &pGameOpts->driver_config, DM_STRING,&pGameOpts->driver_config,0, 0, 0);
+	}
 #endif /* DRIVER_SWITCH */
 	DataMapAdd(IDC_BIOS,          DM_INT,  CT_COMBOBOX, &g_nBiosIndex,             DM_STRING, &pGameOpts->bios,        0, 0, AssignBios);
 	DataMapAdd(IDC_ENABLE_AUTOSAVE, DM_BOOL, CT_BUTTON, &pGameOpts->autosave,      DM_BOOL, &pGameOpts->autosave,      0, 0, 0);
