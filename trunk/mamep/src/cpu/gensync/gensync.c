@@ -22,23 +22,6 @@
 #include "state.h"
 #include "gensync.h"
 
-/* Layout of the registers in the debugger */
-static UINT8 gensync_reg_layout[] = {
-	GS_1H, GS_2H, GS_4H, GS_8H, GS_16H,
-	GS_32H, GS_64H, GS_128H, GS_256H, GS_512H, -1,
-	GS_1V, GS_2V, GS_4V, GS_8V, GS_16V,
-	GS_32V, GS_64V, GS_128V, GS_256V, GS_512V, 0
-};
-
-/* Layout of the debugger windows x,y,w,h */
-static UINT8 gensync_win_layout[] = {
-     0, 0,80, 2,    /* register window (top rows) */
-     0, 3,24,19,    /* disassembler window (left colums) */
-    25, 3,55, 9,    /* memory #1 window (right, upper middle) */
-    25,13,55, 9,    /* memory #2 window (right, lower middle) */
-     0,23,80, 1,    /* command line window (bottom rows) */
-};
-
 typedef struct {
 	int pc;
 	int h_max, v_max, size;
@@ -292,8 +275,6 @@ void gensync_get_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_PTR_BURN:							info->burn = NULL;						break;
 		case CPUINFO_PTR_DISASSEMBLE:					info->disassemble = gensync_dasm;		break;
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &gensync_icount;			break;
-		case CPUINFO_PTR_REGISTER_LAYOUT:				info->p = gensync_reg_layout;			break;
-		case CPUINFO_PTR_WINDOW_LAYOUT:					info->p = gensync_win_layout;			break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
    		case CPUINFO_STR_NAME:							strcpy(info->s = cpuintrf_temp_str(), "GENSYNC"); break;

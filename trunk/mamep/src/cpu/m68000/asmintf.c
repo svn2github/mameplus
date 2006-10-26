@@ -124,27 +124,6 @@ typedef struct
 } a68k_cpu_context;
 
 
-static UINT8 M68K_layout[] = {
-	M68K_PC, M68K_ISP, -1,
-	M68K_SR, M68K_USP, -1,
-	M68K_D0, M68K_A0, -1,
-	M68K_D1, M68K_A1, -1,
-	M68K_D2, M68K_A2, -1,
-	M68K_D3, M68K_A3, -1,
-	M68K_D4, M68K_A4, -1,
-	M68K_D5, M68K_A5, -1,
-	M68K_D6, M68K_A6, -1,
-	M68K_D7, M68K_A7, 0
-};
-
-static UINT8 m68k_win_layout[] = {
-	48, 0,32,13,	/* register window (top right) */
-	 0, 0,47,13,	/* disassembler window (top left) */
-	 0,14,47, 8,	/* memory #1 window (left, middle) */
-	48,14,32, 8,	/* memory #2 window (right, middle) */
-	 0,23,80, 1 	/* command line window (bottom rows) */
-};
-
 #ifdef A68K0
 extern a68k_cpu_context M68000_regs;
 
@@ -1467,8 +1446,6 @@ void m68000asm_get_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_PTR_BURN:							info->burn = NULL;						break;
 		case CPUINFO_PTR_DISASSEMBLE_NEW:				info->disassemble_new = m68000_dasm;	break;
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &m68k_ICount;			break;
-		case CPUINFO_PTR_REGISTER_LAYOUT:				info->p = M68K_layout;					break;
-		case CPUINFO_PTR_WINDOW_LAYOUT:					info->p = m68k_win_layout;				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
 		case CPUINFO_STR_NAME:							strcpy(info->s = cpuintrf_temp_str(), "68000"); break;
@@ -1675,8 +1652,6 @@ void m68010asm_get_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_PTR_BURN:							info->burn = NULL;						break;
 		case CPUINFO_PTR_DISASSEMBLE_NEW:				info->disassemble_new = m68010_dasm;	break;
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &m68k_ICount;			break;
-		case CPUINFO_PTR_REGISTER_LAYOUT:				info->p = M68K_layout;					break;
-		case CPUINFO_PTR_WINDOW_LAYOUT:					info->p = m68k_win_layout;				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
 		case CPUINFO_STR_NAME:							strcpy(info->s = cpuintrf_temp_str(), "68010"); break;
@@ -1863,8 +1838,6 @@ void m68020asm_get_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_PTR_BURN:							info->burn = NULL;						break;
 		case CPUINFO_PTR_DISASSEMBLE_NEW:				info->disassemble_new = m68020_dasm;	break;
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &m68k_ICount;			break;
-		case CPUINFO_PTR_REGISTER_LAYOUT:				info->p = M68K_layout;					break;
-		case CPUINFO_PTR_WINDOW_LAYOUT:					info->p = m68k_win_layout;				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
 		case CPUINFO_STR_NAME:							strcpy(info->s = cpuintrf_temp_str(), "68020"); break;

@@ -378,7 +378,7 @@ static int audit_one_rom(const rom_entry *rom, const game_driver *gamedrv, UINT3
 
 		/* open the file if we can */
 		fname = assemble_3_strings(drv->name, PATH_SEPARATOR, ROM_GETNAME(rom));
-		if (has_crc)
+	    if (has_crc)
 			filerr = mame_fopen_crc(SEARCHPATH_ROM, fname, crc, OPEN_FLAG_READ, &file);
 		else
 			filerr = mame_fopen(SEARCHPATH_ROM, fname, OPEN_FLAG_READ, &file);
@@ -567,7 +567,7 @@ static chd_interface_file *audit_chd_open(const char *filename, const char *mode
 		mame_file *file;
 		char *fname;
 
-		fname = assemble_3_strings(drv->name, PATH_SEPARATOR, filename);
+		fname = assemble_4_strings(drv->name, PATH_SEPARATOR, filename, ".chd");
 		filerr = mame_fopen(SEARCHPATH_IMAGE, fname, OPEN_FLAG_READ, &file);
 		free(fname);
 
