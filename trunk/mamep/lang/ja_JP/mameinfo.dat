@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.109u2      #
+#     Mameinfo.dat日本語版 v0.109u3      #
 #                                        #
-#            October 18, 2006            #
+#            October 21, 2006            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,7 +12,7 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：817 翻訳済：802
+# Tester報告：817 翻訳済：803
 # 追加項目：325 合計：1142
 #
 
@@ -52,6 +52,14 @@ $mame
 [バグ]
 
 - [possible] 画面オフセットか表示領域の問題がある。実機でも起こる？ gradius3_0109u1gre, robiza / Mamesick
+
+$end
+
+$info=ncommand
+$mame
+[バグ]
+
+- 画面の上の部分が点滅する。 ncommand0109u3gre, KillerBee
 
 $end
 
@@ -1180,9 +1188,6 @@ $mame
 [バグ]
 
 - タイトル画面の左端に灰色部分が残る。 bosco080u1gre, Prophet
-
-
-- 4百万点以上取ると、ハイスコア欄が更新されなくなり3999000で止まる。 bosco059gre, SiKrAiKeN
 
 
 [TIPS]

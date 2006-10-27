@@ -115,13 +115,29 @@ MACHINE_RESET( neogeo )
 
 	mame_get_base_datetime(Machine, &systime);
 
-	pd4990a.seconds = ((systime.local_time.second/10)<<4) + (systime.local_time.second%10);
-	pd4990a.minutes = ((systime.local_time.minute/10)<<4) + (systime.local_time.minute%10);
-	pd4990a.hours = ((systime.local_time.hour/10)<<4) + (systime.local_time.hour%10);
-	pd4990a.days = ((systime.local_time.mday/10)<<4) + (systime.local_time.mday%10);
-	pd4990a.month = (systime.local_time.month + 1);
-	pd4990a.year = ((((systime.local_time.year - 1900) %100)/10)<<4) + ((systime.local_time.year - 1900)%10);
-	pd4990a.weekday = systime.local_time.weekday;
+	/* Disable Real Time Clock if the user selects to record or playback an .inp file   */
+	/* This is needed in order to playback correctly an .inp on several games,as these  */
+	/* use the RTC of the NEC pd4990a as pseudo-random number generator   -kal 8 apr 02 */
+	if( Machine->record_file != NULL || Machine->playback_file != NULL )
+	{
+		pd4990a.seconds = 0;
+		pd4990a.minutes = 0;
+		pd4990a.hours = 0;
+		pd4990a.days = 0;
+		pd4990a.month = 0;
+		pd4990a.year = 0;
+		pd4990a.weekday = 0;
+	}
+	else
+	{
+		pd4990a.seconds = ((systime.local_time.second/10)<<4) + (systime.local_time.second%10);
+		pd4990a.minutes = ((systime.local_time.minute/10)<<4) + (systime.local_time.minute%10);
+		pd4990a.hours = ((systime.local_time.hour/10)<<4) + (systime.local_time.hour%10);
+		pd4990a.days = ((systime.local_time.mday/10)<<4) + (systime.local_time.mday%10);
+		pd4990a.month = (systime.local_time.month + 1);
+		pd4990a.year = ((((systime.local_time.year - 1900) %100)/10)<<4) + ((systime.local_time.year - 1900)%10);
+		pd4990a.weekday = systime.local_time.weekday;
+	}
 
 	neogeo_rng = 0x2345;	/* seed for the protection RNG in KOF99 onwards */
 
