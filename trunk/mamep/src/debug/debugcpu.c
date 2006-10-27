@@ -693,9 +693,17 @@ static void set_cpu_reg(UINT32 ref, UINT64 value)
 
 void mame_debug_hook(void)
 {
+	static int last_cpunum = -1;
+	static int last_ic;
 	int cpunum = cpu_getactivecpu();
 	offs_t curpc = activecpu_get_pc();
 	debug_cpu_info *info = &debug_cpuinfo[cpunum];
+
+	/* skip recompiling */
+	if (last_cpunum == cpunum && last_ic == activecpu_get_icount())
+		return;
+	last_cpunum = cpunum;
+	last_ic = activecpu_get_icount();
 
 	/* update the history */
 	info->pc_history[info->pc_history_index++ % DEBUG_HISTORY_SIZE] = curpc;
