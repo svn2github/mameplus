@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.109u3      #
+#     Mameinfo.dat日本語版 v0.109u4      #
 #                                        #
-#            October 21, 2006            #
+#            October 29, 2006            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：817 翻訳済：803
-# 追加項目：325 合計：1142
+# Tester報告：818 翻訳済：803
+# 追加項目：325 合計：1143
 #
 
 
@@ -55,11 +55,44 @@ $mame
 
 $end
 
+$info=mario
+$mame
+[情報]
+
+- テストモードにするにはF2キーを押しつづける必要がある。
+
+
+[バグ]
+
+- 実機は電源投入時に音が出る。その直後に面スタートのBGMがかかる。 mario0109u4gre1, patman
+
+
+- 実機とMAMEでは色が異なる。
+例えばパイプは緑ではなく、茶色がかっている。またスコアのMARIOの文字ももっと明るい青色。 mario0109u4gre2, patman
+
+$end
+
+$info=galaga88
+$mame
+[バグ]
+
+- ゲームオーバーのときに表示されるヒット率の計算がおかしい場合がある。 galaga88_0109u4gre, Tafoid
+
+$end
+
 $info=ncommand
 $mame
 [バグ]
 
 - 画面の上の部分が点滅する。 ncommand0109u3gre, KillerBee
+
+$end
+
+$info=pacland
+$mame
+[バグ]
+
+- 実機ではクレジットを99まで投入できる。MAMEでは9まで。 pacland0109u4gre, Kold666
 
 $end
 
@@ -846,14 +879,6 @@ $mame
 [バグ]
 
 - どのボタンを押してもコンティニュー機能が動作しない。 shackled083yel, Twisty / TriggerFin
-
-$end
-
-$info=hvysmsh
-$mame
-[バグ]
-
-- VS画面が乱れる。103u3から。 hvysmsh0103u3gre, king_krm
 
 $end
 
@@ -1842,27 +1867,6 @@ $mame
 3) サービスキー(9キー)を押してグリッドを表示
 
 4) 上x4　下x1　左x6　2Pスタート を押す
-
-$end
-
-$info=mario
-$mame
-[情報]
-
-- テストモードにするにはF2キーを押しつづける必要がある。
-
-
-[バグ]
-
-- 1面手前のデモ画面で走る音が出てない。
-後半のデモではきちんと鳴っている。
-ところで「マサオ」はサンプルを全く使っていないが、これは正確？ mario058gre, Smitdogg
-
-
-- 4番目の氷のボーナス面で、床をパンチすると変なグラフィックが表示される。 mario060gre_1, [MK]
-
-
-- 4回目の氷のボーナス面で滑らない。 mario060gre_2, [MK]
 
 $end
 
