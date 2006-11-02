@@ -8927,6 +8927,9 @@ DRIVER_INIT( kof2000 )
 	kof2000_neogeo_gfx_decrypt(0x00);
 	init_neogeo(machine);
 	kof2000_install_protection();
+#ifdef AES
+	kof2000_AES_protection();
+#endif /* AES */
 }
 
 DRIVER_INIT( kof2000d )
@@ -8934,6 +8937,9 @@ DRIVER_INIT( kof2000d )
 	kof2000_decrypt_68k();
 	init_gfxdec50(machine);
 	kof2000_install_protection();
+#ifdef AES
+	kof2000_AES_protection();
+#endif /* AES */
 }
 
 DRIVER_INIT( kof2001 )
@@ -8963,12 +8969,18 @@ DRIVER_INIT( mslug4 )
 	kof2000_neogeo_gfx_decrypt(0x31);
 	init_neogeo(machine);
 	neo_pcm2_snk_1999(8);
+#ifdef AES
+	mslug4_AES_protection();
+#endif /* AES */
 }
 
 DRIVER_INIT( mslug4d )
 {
 	neo_pcm2_snk_1999(8);
 	init_neogeo(machine);
+#ifdef AES
+	mslug4_AES_protection();
+#endif /* AES */
 }
 
 DRIVER_INIT( ganryu )
@@ -9014,6 +9026,9 @@ DRIVER_INIT( kof2000n )
 	kof2000_neogeo_gfx_decrypt(0x00);
 	init_neogeo(machine);
 	//kof2000n_install_protection();
+#ifdef AES
+	kof2000_AES_protection();
+#endif /* AES */
 }
 
 DRIVER_INIT( bangbead )
@@ -9028,6 +9043,9 @@ DRIVER_INIT( nitd )
 	neogeo_fix_bank_type = 1;
 	kof99_neogeo_gfx_decrypt(0xff);
 	init_neogeo(machine);
+#ifdef AES
+	nitd_AES_protection();
+#endif /* AES */
 }
 
 DRIVER_INIT( zupapa )
@@ -9035,6 +9053,9 @@ DRIVER_INIT( zupapa )
 	neogeo_fix_bank_type = 1;
 	kof99_neogeo_gfx_decrypt(0xbd);
 	init_neogeo(machine);
+#ifdef AES
+	zupapa_AES_protection();
+#endif /* AES */
 }
 
 DRIVER_INIT( sengoku3 )
@@ -9042,6 +9063,9 @@ DRIVER_INIT( sengoku3 )
 	neogeo_fix_bank_type = 1;
 	kof99_neogeo_gfx_decrypt(0xfe);
 	init_neogeo(machine);
+#ifdef AES
+	sengoku3_AES_protection();
+#endif /* AES */
 }
 
 DRIVER_INIT ( kof98 )
@@ -9086,6 +9110,9 @@ DRIVER_INIT( rotd )
 	neogeo_fix_bank_type = 1;
 	kof2000_neogeo_gfx_decrypt(0x3f);
 	init_neogeo(machine);
+#ifdef AES
+	rotd_AES_protection();
+#endif /* AES */
 }
 
 DRIVER_INIT( rotdd )
@@ -9094,6 +9121,9 @@ DRIVER_INIT( rotdd )
 	neogeo_fix_bank_type = 1;
 	neogeo_sfix_decrypt();
 	init_neogeo(machine);
+#ifdef AES
+	rotd_AES_protection();
+#endif /* AES */
 } 
 
 DRIVER_INIT( kof2002 )
@@ -9159,6 +9189,9 @@ DRIVER_INIT( matrim )
 	neogeo_fix_bank_type = 2;
 	kof2000_neogeo_gfx_decrypt(0x6a);
 	init_neogeo(machine);
+#ifdef AES
+	matrim_AES_protection();
+#endif /* AES */
 }
 
 DRIVER_INIT( pnyaa )
@@ -9177,6 +9210,9 @@ DRIVER_INIT( mslug5 ) /* By HalRIN */
 	kof2000_neogeo_gfx_decrypt(0x19);
 	init_neogeo(machine);
 	install_pvc_protection();
+#ifdef AES
+	mslug5_AES_protection();
+#endif /* AES */
 }
 
 DRIVER_INIT( ms5pcb )
@@ -9189,6 +9225,9 @@ DRIVER_INIT( ms5pcb )
 	neo_pcm2_swap(2);
 	init_neogeo(machine);
 	install_pvc_protection();
+#ifdef AES
+	mslug5_AES_protection();
+#endif /* AES */
 }
 
 DRIVER_INIT( ms5plus )
@@ -9200,6 +9239,9 @@ DRIVER_INIT( ms5plus )
 	neogeo_fix_bank_type = 1;
 	init_neogeo(machine);
 	install_ms5plus_protection();
+#ifdef AES
+	mslug5_AES_protection();
+#endif /* AES */
 }
 
 DRIVER_INIT( svcpcb )
@@ -9380,6 +9422,9 @@ DRIVER_INIT( matrimd )
 	neogeo_fix_bank_type = 2;
 	neo_pcm2_swap(1);
 	init_neogeo(machine);
+#ifdef AES
+	matrim_AES_protection();
+#endif /* AES */
 }
 
 READ16_HANDLER( brza_sram16_2_r )
@@ -9455,6 +9500,9 @@ DRIVER_INIT( cthd2003 )
 	decrypt_cthd2003();
  	init_neogeo(machine);
 	patch_cthd2003();
+#ifdef AES
+	cthd2003_AES_protection();
+#endif /* AES */
 }
 
 DRIVER_INIT( cthd2k3a )
@@ -9462,6 +9510,9 @@ DRIVER_INIT( cthd2k3a )
 	cthd2k3a_px_decrypt();
 	decrypt_cthd2003();
  	init_neogeo(machine);
+#ifdef AES
+	cthd2003_AES_protection();
+#endif /* AES */
 }
 
 DRIVER_INIT ( ct2k3sp )
@@ -9469,6 +9520,9 @@ DRIVER_INIT ( ct2k3sp )
 	decrypt_ct2k3sp();
 	init_neogeo(machine);
 	patch_cthd2003();
+#ifdef AES
+	cthd2003_AES_protection();
+#endif /* AES */
 }
 
 DRIVER_INIT( kof2k4se )
@@ -9497,6 +9551,9 @@ DRIVER_INIT( matrimbl )
 {
 	decrypt_matrimbl();
 	init_neogeo(machine);
+#ifdef AES
+	matrim_AES_protection();
+#endif /* AES */
 }
 
 DRIVER_INIT( kf2k2plc )
@@ -9555,6 +9612,9 @@ DRIVER_INIT( mslug5d )
 {
 	neo_pcm2_swap(2);
 	init_gfxdec42(machine);
+#ifdef AES
+	mslug5_AES_protection();
+#endif /* AES */
 }
 
 DRIVER_INIT( kof10thd )
@@ -9703,7 +9763,54 @@ DRIVER_INIT( mslug5b )
 	neo_pcm2_swap(2);
 	init_neogeo(machine);
 	install_pvc_protection();
+#ifdef AES
+	mslug5_AES_protection();
+#endif /* AES */
 }
+
+#ifdef AES
+/**************** AES Patchs ****************/
+
+DRIVER_INIT( ms4plus )
+{
+	init_neogeo(machine);
+	mslug4_AES_protection();
+}
+
+DRIVER_INIT( zupapad )
+{
+	init_neogeo(machine);
+	zupapa_AES_protection();
+}
+
+DRIVER_INIT( sengo3d )
+{
+	neogeo_fix_bank_type = 0;
+	neogeo_sfix_decrypt();
+	init_neogeo(machine);
+	sengoku3_AES_protection();
+}
+
+DRIVER_INIT( nitdd )
+{
+	neogeo_fix_bank_type = 1;
+	neogeo_sfix_decrypt();
+	init_neogeo(machine);
+	nitd_AES_protection();
+}
+
+DRIVER_INIT( cthd2k3d )
+{
+	init_neogeo(machine);
+	cthd2003_AES_protection();
+}
+
+DRIVER_INIT( ct2k3ad )
+{
+	init_neogeo(machine);
+	cthd2003_AES_protection();
+}
+#endif /* AES */
 
 /******************************************************************************/
 
@@ -10042,7 +10149,12 @@ GAMEB( 2000, bangbead, neogeo,   neogeo, neogeo, neogeo,  bangbead, ROT0, "Visco
 
 /* Mega Enterprise */
 GAMEB( 2002, mslug4,   neogeo,   neogeo, neogeo, neogeo,  mslug4,   ROT0, "Mega", "Metal Slug 4", 0 )
+
+#ifdef AES
+GAMEB( 2002, ms4plus,  mslug4,   neogeo, neogeo, neogeo,  ms4plus,  ROT0, "bootleg", "Metal Slug 4 Plus (bootleg / hack)", 0 )
+#else
 GAMEB( 2002, ms4plus,  mslug4,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "bootleg", "Metal Slug 4 Plus (bootleg / hack)", 0 )
+#endif /* AES */
 
 /* Evoga */
 GAMEB( 2002, rotd,     neogeo,	 neogeo, neogeo, neogeo,  rotd,	    ROT0, "Evoga / Playmore", "Rage of the Dragons", 0 )
@@ -10081,18 +10193,38 @@ GAMEB( 1999, kof99d,   kof99,    neogeo, neogeo, neogeo,  kof99d,   ROT0, "SNK",
 GAMEB( 1999, garoud,   garou,    neogeo, neogeo, neogeo,  garoud,   ROT0, "SNK", "Garou - Mark of the Wolves (decrypted C)", 0 )
 GAMEB( 2000, mslug3d,  mslug3,   neogeo, neogeo, neogeo,  mslug3d,  ROT0, "SNK", "Metal Slug 3 (decrypted C)", 0 )
 GAMEB( 2000, kof2000d, kof2000,  neogeo, neogeo, neogeo,  kof2000d, ROT0, "SNK", "The King of Fighters 2000 (decrypted C)", 0 )
+
+#ifdef AES
+GAMEB( 2001, zupapad,  zupapa,   neogeo, neogeo, neogeo,  zupapad,  ROT0, "SNK", "Zupapa! (custom decrypted C)", 0 )
+GAMEB( 2001, sengok3d, sengoku3, neogeo, neogeo, neogeo,  sengo3d,  ROT0, "SNK", "Sengoku 3 (decrypted C)", 0 )
+#else
 GAMEB( 2001, zupapad,  zupapa,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "SNK", "Zupapa! (custom decrypted C)", 0 )
 GAMEB( 2001, sengok3d, sengoku3, neogeo, neogeo, neogeo,  gfxdec42, ROT0, "SNK", "Sengoku 3 (decrypted C)", 0 )
+#endif /* AES */
+
 GAMEB( 2001, kof2001d, kof2001,  neogeo, neogeo, neogeo,  gfxdec52, ROT0, "Eolith / SNK", "The King of Fighters 2001 (decrypted C)", 0 )
 GAMEB( 2002, kof2002d, kof2002,	 neogeo, neogeo, neogeo,  kof2002d, ROT0, "Eolith / Playmore", "The King of Fighters 2002 (decrypted C)", 0 )
+
+#ifdef AES
+GAMEB( 2000, nitdd,    nitd,     neogeo, neogeo, neogeo,  nitdd,    ROT0, "Eleven / Gavaking", "Nightmare in the Dark (decrypted C)", 0 )
+#else
 GAMEB( 2000, nitdd,    nitd,     neogeo, neogeo, neogeo,  gfxdec42, ROT0, "Eleven / Gavaking", "Nightmare in the Dark (decrypted C)", 0 )
+#endif /* AES */
+
 GAMEB( 1999, s1945pd,  s1945p,   neogeo, neogeo, neogeo,  gfxdec42, ROT0, "Psikyo", "Strikers 1945 Plus (decrypted C)", 0 )
 GAMEB( 1999, preisl2d, preisle2, neogeo, neogeo, neogeo,  gfxdec42, ROT0, "Yumekobo", "Prehistoric Isle 2 (decrypted C)", 0 )
 GAMEB( 1999, ganryud,  ganryu,   neogeo, neogeo, neogeo,  gfxdec42, ROT0, "Visco", "Ganryu / Musashi Ganryuki (decrypted C)", 0 )
 GAMEB( 2002, rotdd,    rotd,     neogeo, neogeo, neogeo,  rotdd,    ROT0, "Evoga / Playmore", "Rage of the Dragons (decrypted C)", 0 )
+
+#ifdef AES
+GAMEB( 2003, ct2k3ad,  kof2001,  neogeo, neogeo, neogeo,  ct2k3ad,  ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg / set 2 fully decrypted)", 0 )
+GAMEB( 2003, cthd2k3d, kof2001,  neogeo, neogeo, neogeo,  cthd2k3d, ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg / set 1 fully decrypted)", 0 )
+#else
 GAMEB( 2003, ct2k3ad,  kof2001,  neogeo, neogeo, neogeo,  neogeo,   ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg / set 2 fully decrypted)", 0 )
 GAMEB( 2003, cthd2k3d, kof2001,  neogeo, neogeo, neogeo,  neogeo,   ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg / set 1 fully decrypted)", 0 )
-GAMEB( 2004, kof10thd, kof2002,  neogeo, neogeo, neogeo,  neogeo,   ROT0, "bootleg", "The King of Fighters 10th Anniversary - All Team Battle (The King of Fighters 2002 bootleg / Fully Decrypted)", 0 ) // fake SNK copyright
+#endif /* AES */
+
+GAMEB( 2004, kof10thd, kof10th,  neogeo, neogeo, neogeo,  kof10thd, ROT0, "bootleg", "The King of Fighters 10th Anniversary - All Team Battle (The King of Fighters 2002 bootleg / Fully Decrypted)", 0 ) // fake SNK copyright
 GAMEB( 2003, kof2003d, kof2003,  neogeo, neogeo, neogeo,  kof2003d, ROT0, "SNK Playmore", "The King of Fighters 2003 (Decrypted P&C)" , 0) /* Encrypted Code & Sound */
 GAMEB( 2002, matrimd,  matrim,   neogeo, neogeo, neogeo,  matrimd,  ROT0, "Noise Factory / Atlus", "Matrimelee / Shin Gouketsuji Ichizoku Toukon (decrypted C)", 0 )
 GAMEB( 2002, mslug4d,  mslug4,   neogeo, neogeo, neogeo,  mslug4d,  ROT0, "Mega", "Metal Slug 4 (Custom Decrypted C)", 0 )

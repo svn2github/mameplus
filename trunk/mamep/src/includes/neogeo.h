@@ -94,6 +94,17 @@ void kof2000_install_protection(void);
 void install_kof98_protection(void);
 void install_pvc_protection(void);
 
+#ifdef AES
+void sengoku3_AES_protection(void);
+void kof2000_AES_protection(void);
+void mslug4_AES_protection(void);
+void nitd_AES_protection(void);
+void zupapa_AES_protection(void);
+void rotd_AES_protection(void);
+void matrim_AES_protection(void);
+void mslug5_AES_protection(void);
+#endif /* AES */
+
 /*----------- defined in machine/neoboot.c -----------*/
 
 void kog_px_decrypt(void);
@@ -134,6 +145,11 @@ void kf2k3pl_install_protection(void);
 void samsh5bl_px_decrypt( void );
 void samsh5bl_cx_decrypt( void );
 void samsh5bl_vx_decrypt( void );
+
+#ifdef AES
+void cthd2003_AES_protection(void);
+void kof10thu_decrypt_68K(void);
+#endif /* AES */
 
 /*----------- defined in vidhrdw/neogeo.c -----------*/
 

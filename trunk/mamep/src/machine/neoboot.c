@@ -1126,3 +1126,44 @@ void kof2002b_gfx_decrypt(UINT8 *src, int size)
 	}
 	free(dst);
 }
+
+#ifdef AES
+void cthd2003_AES_protection()
+{
+	// Thanks to IQ_132 for the patch
+	UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
+
+	// Game sets itself to MVS & English mode, patch this out
+	mem16[0xED00E/2] = 0x4E71;
+	mem16[0xED394/2] = 0x4E71;
+
+	// Fix for AES mode (stop loop that triggers Watchdog)
+	mem16[0xA2B7E/2] = 0x4E71;
+}
+
+/* The King of Fighters 10th Annyversary 2005 Unique Set 2 (bootleg of The King of Fighters 2002) */
+void kof10thu_decrypt_68K(void)
+{
+	INT32 i, j, ofst;
+	UINT8 *src = memory_region(REGION_CPU1);
+	UINT8 *dst = malloc(0x80);
+	UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
+
+	for (i = 0; i < 0x800000; i+=0x80) {
+		for (j = 0; j < 0x80; j+=2) {
+			ofst = BITSWAP8(j, 0, 3, 4, 5, 6, 1, 2, 7);
+			memcpy(dst + j, src + i + ofst, 2);
+		}
+		memcpy(src + i, dst, 0x80);
+	}
+	free(dst);
+
+	memcpy(src, src + 0x600000, 0x100000); // correct in Uni-Bios
+
+	// Thanks to IQ_132 for the patch
+	mem16[0xDF6B0/2] = 0x4e71;
+	mem16[0xDF6BC/2] = 0x4e71;
+	mem16[0xDF6BE/2] = 0x4e71;
+	mem16[0xDF6CA/2] = 0x4e71;
+}
+#endif /* AES */
