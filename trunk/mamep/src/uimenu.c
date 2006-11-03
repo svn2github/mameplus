@@ -530,7 +530,7 @@ UINT32 ui_menu_stack_pop(void)
 
 UINT32 ui_menu_ui_handler(UINT32 state)
 {
-	UINT32 new_state;
+	UINT32 newstate;
 
 	if (state == SHORTCUT_MENU_CHEAT)
 	{
@@ -581,8 +581,8 @@ UINT32 ui_menu_ui_handler(UINT32 state)
 		ui_menu_stack_push(menu_main, 0);
 
 	/* update the menu state */
-	new_state = (*menu_stack[menu_stack_index].handler)(menu_stack[menu_stack_index].state);
-	menu_stack[menu_stack_index].state = new_state;
+	newstate = (*menu_stack[menu_stack_index].handler)(menu_stack[menu_stack_index].state);
+	menu_stack[menu_stack_index].state = newstate;
 
 	/* if the menus are to be hidden, return a cancel here */
 	if (state == SHORTCUT_MENU_CHEAT)

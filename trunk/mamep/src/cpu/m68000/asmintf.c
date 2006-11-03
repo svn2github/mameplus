@@ -147,7 +147,8 @@ extern void CONVENTION M68020_RESET(void);
 #endif
 
 #ifdef MAME_DEBUG
-extern unsigned int m68k_disassemble_raw(char* str_buff, unsigned int pc, unsigned char* opdata, unsigned char* argdata, int length, unsigned int cpu_type);
+extern unsigned int m68k_disassemble_raw(char* str_buff, unsigned int pc, const unsigned char* opdata, const unsigned char* argdata, unsigned int cpu_type);
+
 #endif
 
 
@@ -756,15 +757,15 @@ static void m68000_set_irq_line(int irqline, int state)
 	}
 }
 
-static offs_t m68000_dasm(char *buffer, offs_t pc, UINT8 *oprom, UINT8 *opram, int bytes)
+static offs_t m68000_dasm(char *buffer, offs_t pc, const UINT8 *oprom, const UINT8 *opram)
 {
 	A68K_SET_PC_CALLBACK(pc);
 
 #ifdef MAME_DEBUG
 	m68k_memory_intf = a68k_memory_intf;
-	return m68k_disassemble_raw(buffer, pc, oprom, opram, bytes, M68K_CPU_TYPE_68000);
+	return m68k_disassemble_raw(buffer, pc, oprom, opram, M68K_CPU_TYPE_68000);
 #else
-	sprintf(buffer, "$%04X", cpu_readop16(pc) );
+	sprintf( buffer, "$%04X", (oprom[0] << 8) | oprom[1] );
 	return 2;
 #endif
 }
@@ -1444,7 +1445,7 @@ void m68000asm_get_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_PTR_EXIT:							info->exit = m68000_exit;				break;
 		case CPUINFO_PTR_EXECUTE:						info->execute = m68000_execute;			break;
 		case CPUINFO_PTR_BURN:							info->burn = NULL;						break;
-		case CPUINFO_PTR_DISASSEMBLE_NEW:				info->disassemble_new = m68000_dasm;	break;
+		case CPUINFO_PTR_DISASSEMBLE:					info->disassemble = m68000_dasm;		break;
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &m68k_ICount;			break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
