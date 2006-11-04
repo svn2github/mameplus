@@ -184,6 +184,7 @@ void decrypt_kof10th( void )
 	int i, j;
 	UINT8 *dst = malloc(0x900000);
 	UINT8 *src = memory_region( REGION_CPU1 );
+	UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
 
 	if (dst) {
 		memcpy(dst + 0x000000, src + 0x700000, 0x100000); // Correct (Verified in Uni-bios)
@@ -204,6 +205,11 @@ void decrypt_kof10th( void )
 	((UINT16*)src)[0x8bf4/2] = 0x4ef9; // Run code to change "S" data
 	((UINT16*)src)[0x8bf6/2] = 0x000d;
 	((UINT16*)src)[0x8bf8/2] = 0xf980;
+
+	// Thanks to IQ_132 for the patch
+	mem16[0x053162C/2] = 0x7425; // Fix System
+	mem16[0x053163A/2] = 0x8084; // Fix Region
+	mem16[0x0531648/2] = 0x3641; // Fix some dips
 }
 
 void decrypt_kf10thep(void)
@@ -234,6 +240,15 @@ void decrypt_kf10thep(void)
 		if (rom[i+0] == 0x4ef9 && rom[i+1] == 0x0000) rom[i+1] = 0x000F; // correct JMP in moved code
 	}
 	rom[0x00342/2] = 0x000f;
+
+	// Thanks to IQ_132 for the patch
+	rom[0x000126/2] = 0x0010; // Allow Region change
+	rom[0x000228/2] = 0x4E71; // Allow System change
+	rom[0x00022A/2] = 0x4E71;
+	rom[0x00022C/2] = 0x4E71;
+	rom[0x000234/2] = 0x4E71; // bne
+	rom[0x000236/2] = 0x4E71; // bne
+
 	free(dst);
 
 	for (i=0;i<0x20000;i++)
@@ -283,9 +298,17 @@ static void kf2k5uni_mx_decrypt( void )
 
 void decrypt_kf2k5uni(void)
 {
+	UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
+
 	kf2k5uni_px_decrypt();
 	kf2k5uni_sx_decrypt();
 	kf2k5uni_mx_decrypt();
+
+	// Thanks to IQ_132 for the patch
+	mem16[0xDF6B0/2] = 0x4e71;
+	mem16[0xDF6BC/2] = 0x4e71;
+	mem16[0xDF6BE/2] = 0x4e71;
+	mem16[0xDF6CA/2] = 0x4e71;
 }
 
 /* Kof2002 Magic Plus */
@@ -1127,7 +1150,6 @@ void kof2002b_gfx_decrypt(UINT8 *src, int size)
 	free(dst);
 }
 
-#ifdef AES
 void cthd2003_AES_protection()
 {
 	// Thanks to IQ_132 for the patch
@@ -1140,30 +1162,3 @@ void cthd2003_AES_protection()
 	// Fix for AES mode (stop loop that triggers Watchdog)
 	mem16[0xA2B7E/2] = 0x4E71;
 }
-
-/* The King of Fighters 10th Annyversary 2005 Unique Set 2 (bootleg of The King of Fighters 2002) */
-void kof10thu_decrypt_68K(void)
-{
-	INT32 i, j, ofst;
-	UINT8 *src = memory_region(REGION_CPU1);
-	UINT8 *dst = malloc(0x80);
-	UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
-
-	for (i = 0; i < 0x800000; i+=0x80) {
-		for (j = 0; j < 0x80; j+=2) {
-			ofst = BITSWAP8(j, 0, 3, 4, 5, 6, 1, 2, 7);
-			memcpy(dst + j, src + i + ofst, 2);
-		}
-		memcpy(src + i, dst, 0x80);
-	}
-	free(dst);
-
-	memcpy(src, src + 0x600000, 0x100000); // correct in Uni-Bios
-
-	// Thanks to IQ_132 for the patch
-	mem16[0xDF6B0/2] = 0x4e71;
-	mem16[0xDF6BC/2] = 0x4e71;
-	mem16[0xDF6BE/2] = 0x4e71;
-	mem16[0xDF6CA/2] = 0x4e71;
-}
-#endif /* AES */

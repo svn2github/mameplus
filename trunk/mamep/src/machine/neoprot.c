@@ -511,7 +511,6 @@ void install_pvc_protection( void )
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2fe000, 0x2fffff, 0, 0, pvc_prot_w);
 }
 
-#ifdef AES
 /************************ AES Protection************************
   To allow console mode
 ***************************************************************/
@@ -575,4 +574,3 @@ void kof2000_AES_protection(void)
 	UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
 	mem16[0xa226e >> 1] = 0x4e75;
 }
-#endif /* AES */
