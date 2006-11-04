@@ -255,14 +255,14 @@ BOOL LoadDIB(LPCTSTR filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type)
 	}
 
 	// look for the raw file
-	fname = assemble_4_strings(basedir, "/", filename, ".png");
+	fname = assemble_4_strings(basedir, PATH_SEPARATOR, filename, ".png");
 	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &mfile);
 	free(fname);
 
 	if (filerr != FILERR_NONE)
 	{
 		// and look for the zip
-		fname = assemble_6_strings(basedir, "/", filename, "/", filename, ".png");
+		fname = assemble_6_strings(basedir, PATH_SEPARATOR, filename, PATH_SEPARATOR, filename, ".png");
 		filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &mfile);
 		free(fname);
 	}
@@ -270,7 +270,7 @@ BOOL LoadDIB(LPCTSTR filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type)
 	if (filerr != FILERR_NONE)
 	{
 		// and look for the zip
-		fname = assemble_6_strings(basedir, "/", zip_name, "/", filename, ".png");
+		fname = assemble_6_strings(basedir, PATH_SEPARATOR, zip_name, PATH_SEPARATOR, filename, ".png");
 		filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &mfile);
 		free(fname);
 	}

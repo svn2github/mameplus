@@ -1336,52 +1336,50 @@ HICON FormatICOInMemoryToHICON(PBYTE ptrBuffer, UINT nBufferSize)
 
 HICON LoadIconFromFile(const char *iconname)
 {
-	HICON       hIcon = 0;
+	HICON hIcon = 0;
 	struct stat file_stat;
-	char        tmpStr[MAX_PATH];
-	zip_file   *zip;
-	zip_error   ziperr;
+	char tmpStr[MAX_PATH];
+	const zip_file_header *entry;
+	zip_file *zip;
+	zip_error ziperr;
 
-	sprintf(tmpStr, "%s/%s.ico", GetIconsDir(), iconname);
+	sprintf(tmpStr, "%s" PATH_SEPARATOR "%s.ico", GetIconsDir(), iconname);
 	if (stat(tmpStr, &file_stat) == 0 && (hIcon = ExtractIconA(hInst, tmpStr, 0)) != 0)
 		return hIcon;
 
-	sprintf(tmpStr, "%s/%s.ico", GetImgDir(), iconname);
+	sprintf(tmpStr, "%s" PATH_SEPARATOR "%s.ico", GetImgDir(), iconname);
 	if (stat(tmpStr, &file_stat) == 0 && (hIcon = ExtractIconA(hInst, tmpStr, 0)) != 0)
 		return hIcon;
 
-	sprintf(tmpStr, "%s/icons.zip", GetIconsDir());
+	sprintf(tmpStr, "%s" PATH_SEPARATOR "icons.zip", GetIconsDir());
 	if (stat(tmpStr, &file_stat) != 0)
 		return NULL;
 
 	ziperr = zip_file_open(tmpStr, &zip);
 	if (ziperr != ZIPERR_NONE)
+		return NULL;
+
+	sprintf(tmpStr, "%s.ico", iconname);
+
+	for (entry = zip_file_first_file(zip); entry; entry = zip_file_next_file(zip))
+		if (mame_stricmp(entry->filename, tmpStr) == 0)
+			break;
+
+	if (entry)
 	{
-		const zip_file_header *entry;
-		char tmpIcoName[MAX_PATH];
+		UINT8 *data = (UINT8 *)malloc(entry->uncompressed_length);
 
-		sprintf(tmpIcoName, "%s.ico", iconname);
-
-		for (entry = zip_file_first_file(zip); entry; entry = zip_file_next_file(zip))
-			if (mame_stricmp(entry->filename, tmpIcoName) == 0)
-				break;
-
-		if (entry)
+		if (data != NULL)
 		{
-			UINT8 *data = (UINT8 *)malloc(entry->uncompressed_length);
+			ziperr = zip_file_decompress(zip, data, entry->uncompressed_length);
+			if (ziperr == ZIPERR_NONE)
+				hIcon = FormatICOInMemoryToHICON(data, entry->uncompressed_length);
 
-			if (data != NULL)
-			{
-				ziperr = zip_file_decompress(zip, data, entry->uncompressed_length);
-				if (ziperr == ZIPERR_NONE)
-					hIcon = FormatICOInMemoryToHICON(data, entry->uncompressed_length);
-
-				free(data);
-			}
+			free(data);
 		}
-
-		zip_file_close(zip);
 	}
+
+	zip_file_close(zip);
 
 	return hIcon;
 }
@@ -3011,7 +3009,16 @@ static BOOL OnIdle(HWND hWnd)
 	}
 	if (bDoGameCheck)
 	{
-		bResetList |= GameCheck();
+		if (GameCheck())
+		{
+			/* we only reset the View if "available" is the selected folder
+			  as it doesn't affect the others*/
+			LPTREEFOLDER folder = GetSelectedFolder();
+
+			if (folder && folder->m_nFolderId == FOLDER_AVAILABLE)
+				bResetList = TRUE;
+		}
+
 		return idle_work;
 	}
 	// NPW 17-Jun-2003 - Commenting this out because it is redundant

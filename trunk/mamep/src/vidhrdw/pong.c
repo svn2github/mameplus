@@ -9,6 +9,10 @@
 #include "cpu/gensync/gensync.h"
 #include "vidhrdw/pong.h"
 
+#ifdef MAME_DEBUG
+#include "ui.h"
+#endif
+
 extern int pong_hit_sound;
 extern int pong_vblank_sound;
 extern int pong_score_sound;

@@ -2807,7 +2807,7 @@ static void generate_default_ctrlr(void)
 	char *fname;
 	BOOL DoCreate;
 
-	fname = assemble_4_strings(ctrlrpath, "/", ctrlr, ".cfg");
+	fname = assemble_4_strings(ctrlrpath, PATH_SEPARATOR, ctrlr, ".cfg");
 	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &file);
 	if (filerr == FILERR_NONE)
 		mame_fclose(file);
@@ -3315,7 +3315,7 @@ static int options_load_default_config(void)
 	char *fname;
 	int retval = 0;
 
-	fname = assemble_3_strings(get_base_config_directory(), "/", MAME_INI);
+	fname = assemble_3_strings(get_base_config_directory(), PATH_SEPARATOR, MAME_INI);
 	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &file);
 	free(fname);
 
@@ -3349,7 +3349,7 @@ static int options_load_driver_config(int driver_index)
 	driver_variables[driver_index].options_loaded = TRUE;
 	driver_variables[driver_index].use_default = TRUE;
 
-	fname = assemble_4_strings(settings.inipath, "/", drivers[driver_index]->name, ".ini");
+	fname = assemble_4_strings(settings.inipath, PATH_SEPARATOR, drivers[driver_index]->name, ".ini");
 	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &file);
 	free(fname);
 
@@ -3380,7 +3380,7 @@ static int options_load_alt_config(alt_options_type *alt_option)
 	alt_option->variable->options_loaded = TRUE;
 	alt_option->variable->use_default = TRUE;
 
-	fname = assemble_4_strings(settings.inipath, "/", alt_option->name, ".ini");
+	fname = assemble_4_strings(settings.inipath, PATH_SEPARATOR, alt_option->name, ".ini");
 	len = strlen(fname);
 	if (len > 6 && fname[len - 6] == '.' && fname[len - 5] == 'c')
 		strcpy(fname + len - 6, ".ini");
@@ -3411,7 +3411,7 @@ static int options_load_winui_config(void)
 	char *fname;
 	int retval;
 
-	fname = assemble_3_strings(settings.inipath, "/", WINUI_INI);
+	fname = assemble_3_strings(settings.inipath, PATH_SEPARATOR, WINUI_INI);
 	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &file);
 	free(fname);
 
@@ -3442,7 +3442,7 @@ static int options_save_default_config(void)
 
 	validate_driver_option(&global);
 
-	fname = assemble_3_strings(get_base_config_directory(), "/", MAME_INI);
+	fname = assemble_3_strings(get_base_config_directory(), PATH_SEPARATOR, MAME_INI);
 	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
 	free(fname);
 
@@ -3480,7 +3480,7 @@ static int options_save_driver_config(int driver_index)
 	if (parent == NULL)
 		return 0;
 
-	fname = assemble_4_strings(settings.inipath, "/", strlower(drivers[driver_index]->name), ".ini");
+	fname = assemble_4_strings(settings.inipath, PATH_SEPARATOR, strlower(drivers[driver_index]->name), ".ini");
 
 #ifdef USE_IPS
 	// HACK: DO NOT INHERIT IPS CONFIGURATION
@@ -3526,7 +3526,7 @@ static int options_save_alt_config(alt_options_type *alt_option)
 
 	parent = update_alt_use_default(alt_option);
 
-	fname = assemble_4_strings(settings.inipath, "/", strlower(alt_option->name), ".ini");
+	fname = assemble_4_strings(settings.inipath, PATH_SEPARATOR, strlower(alt_option->name), ".ini");
 	len = strlen(fname);
 	if (len > 6 && fname[len - 6] == '.' && fname[len - 5] == 'c')
 		strcpy(fname + len - 6, ".ini");
@@ -3569,7 +3569,7 @@ static int options_save_winui_config(void)
 	char *fname;
 
 
-	fname = assemble_3_strings(settings.inipath, "/", WINUI_INI);
+	fname = assemble_3_strings(settings.inipath, PATH_SEPARATOR, WINUI_INI);
 	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
 	free(fname);
 

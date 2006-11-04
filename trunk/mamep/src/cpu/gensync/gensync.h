@@ -4,7 +4,8 @@
 #include "cpuintrf.h"
 #include "osd_cpu.h"
 
-enum {
+enum
+{
 	GS_PC, GS_H, GS_V, GS_MAX_H, GS_MAX_V, GS_X, GS_Y,
 	GS_HBLANK, GS_HSYNC, GS_VBLANK, GS_VSYNC,
 	GS_HBLANK_START, GS_HSYNC_START, GS_HSYNC_END, GS_HBLANK_END,
@@ -24,4 +25,3 @@ extern unsigned gensyncd(char *dst, unsigned PC);
 #endif
 
 #endif	/* _GS_H */
-

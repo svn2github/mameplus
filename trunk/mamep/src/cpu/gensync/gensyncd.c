@@ -9,24 +9,24 @@ unsigned gensyncd(char *buffer, unsigned PC)
 	int vblank = activecpu_get_reg(GS_VBLANK);
 	int vsync = activecpu_get_reg(GS_VSYNC);
 
-	if( hblank )
+	if (hblank)
 	{
 		buffer += sprintf(buffer, " HB");
-		if( hsync )
+		if (hsync)
 			buffer += sprintf(buffer, " HS");
-    }
+	}
 	else
 		buffer += sprintf(buffer, " X:%03X", (UINT32)activecpu_get_reg(GS_X));	/* SU 078u2 */
 
-    if( vblank )
-    {
+	if (vblank)
+	{
 		buffer += sprintf(buffer, " VB");
-		if( vsync )
+		if (vsync)
 			buffer += sprintf(buffer, " VS");
-    }
+	}
 	else
 		buffer += sprintf(buffer, " Y:%03X", (UINT32)activecpu_get_reg(GS_Y));	/* SU 078u2 */
 
-    return 1;
+	return 1 | DASMFLAG_SUPPORTED;
 }
 
