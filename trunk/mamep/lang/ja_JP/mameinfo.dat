@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.109u4      #
+#     Mameinfo.dat日本語版 v0.109u5      #
 #                                        #
-#            October 29, 2006            #
+#            November 5, 2006            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：818 翻訳済：803
-# 追加項目：325 合計：1143
+# Tester報告：822 翻訳済：807
+# 追加項目：328 合計：1150
 #
 
 
@@ -44,6 +44,15 @@ $mame
 [バグ]
 
 - 左右の段の近くに見えない壁のようなものがあり、そこで跳ね返る。 circus0109u2gre, Zaphod
+
+$end
+
+$info=qbertqub
+$mame
+[バグ]
+
+- Q*bertのサウンドROMが使われているため、一部の音が出ない。
+面クリア時にトランポリンではねる声など。サウンドコードは29から31が鳴っていない。 qbertqub0109u4gre, sxevious
 
 $end
 
@@ -122,6 +131,24 @@ $mame
 [バグ]
 
 - 画面表示が下側にずれている。 rallyx0109u2gre, Tafoid
+
+$end
+
+$info=ballbros
+$mame
+[バグ]
+
+- デフォルトの画面が反転している。0.105から。 ballbros0109u5gre, twisty / Canim
+
+$end
+
+$info=gigandes
+$mame
+[バグ]
+
+- サービスモードの"4: Dip Switch"の画面が反転している。
+また画面の左上に紫色のゴミグラフィックが表示される。
+さらに、"2: Color Check"を選んでから"4: Dip Switch"を選ぶと余計な四角が表示される。 gigandes0109u5gre, twisty
 
 $end
 
@@ -242,22 +269,6 @@ $mame
 [バグ]
 
 - 3面ボス直前で、柱の部分に表示不具合あり。海賊版の方では正しく表示される。 gangwars067gre, Luja
-
-$end
-
-$info=skysoldr
-$mame
-[バグ]
-
-- ゲームオーバーの画面が化けている。 skysoldr060gre, Darkk / Pi
-
-$end
-
-$info=timesold
-$mame
-[バグ]
-
-- ゲーム開始直後、捕虜5人が現るところで、キャラ化けが画面で timesold061gre, Pi
 
 $end
 
@@ -5130,7 +5141,7 @@ $info=fantasy
 $mame
 [バグ]
 
-- World版のコンティニュー画面がドイツ語で表示される。 fantasy0105u3ora, cpukett / Twisty
+- World版のコンティニュー画面がドイツ語で表示される。 fantasy0105u3ora, cpukett / Twisty / Luigi30 / RansAckeR
 
 $end
 
@@ -7082,6 +7093,14 @@ $mame
 
 $end
 
+$info=darkhleg
+$mame
+[情報]
+
+- 初回起動時に一度初期化を行う必要がある。
+
+$end
+
 $info=defender
 $mame
 [情報]
@@ -7372,6 +7391,14 @@ $mame
 
 $end
 
+$info=konami80
+$mame
+[情報]
+
+- 初回起動時に一度初期化を行う必要がある。
+
+$end
+
 $info=kram
 $mame
 [情報]
@@ -7578,6 +7605,14 @@ $mame
 1) サービスモードに入る(F2)
 
 2) 上x4 右x1 下x1 左x2 を入力
+
+$end
+
+$info=pbballex
+$mame
+[情報]
+
+- 初回起動時に一度初期化を行う必要がある。
 
 $end
 
