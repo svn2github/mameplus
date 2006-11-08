@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.109u5      #
+#      Mameinfo.dat日本語版 v0.110       #
 #                                        #
-#            November 5, 2006            #
+#            November 7, 2006            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,7 +12,7 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：822 翻訳済：807
+# Tester報告：822 翻訳済：806
 # 追加項目：328 合計：1150
 #
 
@@ -5355,14 +5355,6 @@ $mame
 
 $end
 
-$info=astrof
-$mame
-[バグ]
-
-- 音量が低すぎる。 astrofc057ora, M.A.S.H.
-
-$end
-
 $info=m79amb
 $mame
 [バグ]
@@ -5565,14 +5557,6 @@ $mame
 [バグ]
 
 - 1番目と2番目のUnknownのDIPスイッチは難易度、3番目はサービスモード、4番目は未使用。I/Oチェックではコイン3はサービスコインとなっている。 finalizr0102u5gra, ShimaPong
-
-$end
-
-$info=irobot
-$mame
-[バグ]
-
-- サービスモードのジョイスティックテストで箱を塗りつぶすのがあるが、一番下のラインを塗りつぶすことができない。 irobot0106u1gra, cpukett
 
 $end
 
