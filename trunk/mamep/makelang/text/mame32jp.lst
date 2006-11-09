@@ -8,7 +8,7 @@ puckmod	パックマン (日本版 set 3)	ぱっくまん	Namco
 pacmod	パックマン (Midway harder)	ぱっくまん	[Namco] (Midway license)
 newpuc2	パックマン / Newpuc2	ぱっくまん	hack
 newpuc2b	パックマン / Newpuc2 (set 2)	ぱっくまん	hack
-newpuckx	パックマン / New Pack X	ぱっくまん	hack
+newpuckx	パックマン / New Puck X	ぱっくまん	hack
 pacheart	パックマン (Hearts)	ぱっくまん	hack
 hangly	パックマン / Hangly-Man (set 1)	ぱっくまん	hack
 hangly2	パックマン / Hangly-Man (set 2)	ぱっくまん	hack
@@ -109,7 +109,8 @@ uniwars	銀河帝国の逆襲 / UniWar S	ぎんがていこくのぎゃくしゅう	Irem
 gteikoku	銀河帝国の逆襲	ぎんがていこくのぎゃくしゅう	Irem
 gteikokb	銀河帝国の逆襲 (海賊版 set 1)	ぎんがていこくのぎゃくしゅう	bootleg
 gteikob2	銀河帝国の逆襲 (海賊版 set 2)	ぎんがていこくのぎゃくしゅう	bootleg
-spacbatt	銀河帝国の逆襲 / Space Battle	ぎんがていこくのぎゃくしゅう	bootleg
+spacbatt	銀河帝国の逆襲 / Space Battle (海賊版 set 1)	ぎんがていこくのぎゃくしゅう	bootleg
+spacbat2	銀河帝国の逆襲 / Space Battle (海賊版 set 2)	ぎんがていこくのぎゃくしゅう	bootleg
 skyraidr	銀河帝国の逆襲 / Sky Raiders	ぎんがていこくのぎゃくしゅう	bootleg
 batman2	フェニックス / Batman Part2	ふぇにっくす	bootleg
 warofbug	ウォー・オブ・ザ・バグズ・オア・モンスタラスマニューバーズ・イン・ア・マッシュルームメイズ	うぉーおぶざばぐずおあもんすたらすまにゅーばーずいんあまっしゅるーむめいず	Armenia
@@ -324,7 +325,7 @@ terrafu	テラフォース (USA版)	てらふぉーす	Nichibutsu USA
 kodure	子連れ狼 (日本版)	こづれおおかみ	Nichibutsu
 armedf	アームドF	あーむどふぉーめーしょん	Nichibutsu
 cclimbr2	クレイジークライマー2 (日本版)	くれいじーくらいまー_2	Nichibutsu
-cclmbr2a	クレイジークライマー2 (日本版 Harder)	くれいじーくらいまー_2	Nichibutsu
+cclmbr2a	クレイジークライマー2 (日本版 harder)	くれいじーくらいまー_2	Nichibutsu
 bigfghtr	戦え！ビッグファイター	たたかえびっぐふぁいたー	Nichibutsu
 hyhoo	早押し対戦クイズ ハイホー (日本版)	はやおしたいせんくいずはいほー_1	Nichibutsu
 hyhoo2	早押し対戦クイズ ハイホー2 (日本版)	はやおしたいせんくいずはいほー_2	Nichibutsu
@@ -1024,6 +1025,7 @@ sflush	ストレートフラッシュ	すとれーとふらっしゅ	Taito
 lazercmd	レーザーコマンド	れーざーこまんど	Meadows Games, Inc.
 bbonk	ビッグフット・ボンカーズ	びっぐふっとぼんかーず	Meadows Games, Inc.
 deadeye	デッドアイ	でっどあい	Meadows
+bowl3d	ボウリング3D	ぼうりんぐすりーでぃー	Meadows
 gypsyjug	ジプシージャグラー	じぷしーじゃぐらー	Meadows
 minferno	インフェルノ (S2650)	いんふぇるの	Meadows
 medlanes	メドウズレーン	めどうずれーん	Meadows Games, Inc.
@@ -2417,7 +2419,7 @@ pacapp2	パカパカパッション 2 (PKS1/VER.A)	ぱかぱかぱっしょん_2_1	Produce/Namco
 mrdrillr	ミスタードリラー (DRI1/VER.A2)	みすたーどりらー_1	Namco
 aquarush	アクアラッシュ (AQ1/VER.A1)	あくあらっしゅ	Namco
 pacappsp	パカパカパッション スペシャル (PSP1/VER.A)	ぱかぱかぱっしょん_2_2すぺしゃる	Produce/Namco
-golgo13	ゴルゴ13 (GLG1/VER.A)	ごるご13_1	Raizing/Namco
+golgo13	ゴルゴ13 (GLG1/VER.A)	ごるごさーてぃーん_1	Raizing/Namco
 g13knd	ゴルゴ13 奇跡の弾道 (GLS1/VER.A)	ごるごさーてぃーん_2きせきのだんどう	Raizing/Namco
 mrdrilr2	ミスタードリラー2 (DR21 ver A)	みすたーどりらー_2	Namco
 gjspace	雀スペース／撃牌砦　2GAMES in ONE (10011 ver A)	じゃんすぺーすげきとりでつーげーむずいんわん	Namco/Metro
@@ -2434,6 +2436,10 @@ btchamp	ビートザチャンプ (GV053 UAA01)	びーとざちゃんぷ	Konami
 weddingr	ウェディングラプソディ (GX624 JAA)	うぇでぃんぐらぷそでぃ	Konami
 nagano98	ハイパーオリンピックインナガノ / Nagano Winter Olympics '98 (GX720 EAA)	はいぱーおりんぴっく_3いんながの	Konami
 simpbowl	ザ・シンプソンズ ボウリング (GQ829 UAA)	ざしんぷそんずぼうりんぐ	Konami
+konam80s	コナミ 80'sアーケードギャラリー / Konami 80s AC Special (USA版 ver UAA)	こなみえいてぃーずあーけーどぎゃらりー	Konami
+konam80j	コナミ 80'sアーケードギャラリー (日本版 ver JAA)	こなみえいてぃーずあーけーどぎゃらりー	Konami
+darkhleg	ダークホースレジェンド (日本版 ver JAA)	だーくほーすれじぇんど	Konami
+pbballex	実況パワフルプロ野球EX (日本版 ver JAB)	じっきょうぱわふるぷろやきゅういーえっくす	Konami
 mgakuen	麻雀学園 -卒業編	まーじゃんがくえん_1	Yuga
 7toitsu	七対子 -一萬去ってまた一萬	ちーといつ	Yuga
 mgakuen2	麻雀学園2 -学園長の復讐	まーじゃんがくえん_2	Face
@@ -2652,7 +2658,7 @@ congo	ティップタップ / Congo Bongo	てぃっぷたっぷ	Sega
 tiptop	ティップタップ	てぃっぷたっぷ	Sega
 chboxing	チャンピオンボクシング	ちゃんぴおんぼくしんぐ	Sega
 chwrestl	チャンピオンプロレス	ちゃんぴおんぷろれす	Sega
-dokidoki	ドキドキペンギンランド	どきどきぺんぎんらんど	Sega
+dokidoki	どきどきペンギンランド	どきどきぺんぎんらんど	Sega
 starjack	スタージャッカー (Sega)	すたーじゃっかー	Sega
 starjacs	スタージャッカー (Stern)	すたーじゃっかー	Stern
 regulus	レグルス (new ver)	れぐるす	Sega
@@ -3150,6 +3156,7 @@ mt_shar2	スペースハリアーII (Mega-Tech)	すぺーすはりあー_2	Sega
 mt_stbld	スーパーサンダーブレード (Mega-Tech)	すーぱーさんだーぶれーど	Sega
 mt_ggolf	グレートゴルフ (Mega-Tech)	ぐれーとごるふ	Sega
 mt_gsocr	グレートサッカー (Mega-Tech)	ぐれーとさっかー	Sega
+mt_orun	アウトラン (Mega-Tech)	あうとらん	Sega
 mt_asyn	エイリアンシンドローム (Mega-Tech)	えいりあんしんどろーむ	Sega
 mt_shnbi	忍 (Mega-Tech)	しのび	Sega
 mt_aftrb	アフターバーナー (Mega-Tech)	あふたーばーなー_1	Sega
@@ -3161,10 +3168,12 @@ mt_tetri	テトリス (Mega-Tech)	てとりす_1_2せが	Sega
 mt_gng	大魔界村 / Ghouls'n Ghosts (Mega-Tech)	だいまかいむら	Capcom / Sega
 mt_shang	スーパーハングオン (Mega-Tech)	すーぱーはんぐおん	Sega
 mt_gaxe	ゴールデンアックス (Mega-Tech)	ごーるでんあっくす_1	Sega
+mt_fwrld	フォゴットンワールズ (Mega-Tech)	ふぉごっとんわーるず	Sega
 mt_mystd	孔雀王2 -幻影城 / Mystic Defender (Mega-Tech)	くじゃくおう2	Sega
 mt_revsh	ザ・スーパー忍 (Mega-Tech)	ざすーぱーしのび	Sega
 mt_parlg	パーラーゲームス (Mega-Tech)	ぱーらーげーむす	Sega
 mt_tgolf	アーノルド・パーマー トーナメントゴルフ (Mega-Tech)	あーのるどぱーまーとーなめんとごるふ	Sega
+mt_srbb	スーパーリアルバスケットボール (Mega-Tech)	すーぱーりあるばすけっとぼーる	Sega
 mt_tlbba	スーパーリーグ / Tommy Lasorda Baseball (Mega-Tech)	すーぱーりーぐ	Sega
 mt_cols	コラムス (Mega-Tech)	こらむす_1	Sega
 mt_eswat	サイバーポリス E-スワット -Enhanced Special Weapons and Tactics (Mega-Tech)	さいばーぽりすいーすわっと	Sega
@@ -4340,6 +4349,7 @@ hal21	ハル21	はる21	SNK
 hal21j	ハル21 (日本版)	はる21	SNK
 aso	ASO <Armored Scrum Object>	えーえすおー_1	SNK
 alphamis	ASO <Armored Scrum Object> / Alpha Mission	えーえすおー_1	SNK
+arian	ASO <Armored Scrum Object> / Arian Mission	えーえすおー_1	SNK
 tnk3	T.A.N.K / TNK III (USA版)	てぃーえーえぬけー	SNK
 tnk3j	T.A.N.K (日本版)	てぃーえーえぬけー	SNK
 athena	アテナ	あてな	SNK
@@ -5211,7 +5221,7 @@ crshrace	爆烈クラッシュレース (set 1)	ばくれつくらっしゅれーす	Video System Co.
 crshrac2	爆烈クラッシュレース (set 2)	ばくれつくらっしゅれーす	Video System Co.
 taotaido	タオ体道 (set 1)	たおたいどう	Video System Co.
 taotaida	タオ体道 (set 2)	たおたいどう	Video System Co.
-gstriker	グランドストライカー -ヒューマンカップ '93	ぐらんどすとらいかー	Human
+gstriker	グランドストライカー -ヒューマンカップ '93	ぐらんどすとらいかー_1	Human
 vgoalsoc	テクモVゴールサッカー	てくもぶいごーるさっかー	Tecmo
 vgoalsca	テクモVゴールサッカー (alt)	てくもぶいごーるさっかー	Tecmo
 twrldc94	テクモワールドカップ '94	てくもわーるどかっぷ_394	Tecmo
@@ -5394,7 +5404,7 @@ stg	S.T.G <ストライクガンナー>	えすてぃーじー	Athena / Tecmo
 pairlove	ペアーズラブ	ぺあーずらぶ	Athena
 blandia	ブランディア	ぶらんでぃあ	Allumer
 blandiap	ブランディア (prototype)	ぶらんでぃあ	Allumer
-blockcar	ブロックカーニバル / サンダー&ライトニング 2	ぶろっくかーにばるさんだーあんどらいとにんぐ2	Visco
+blockcar	ブロックカーニバル	ぶろっくかーにばる	Visco
 qzkklogy	クイズ&心理ゲーム クイズココロジー	くいずあんどしんりげーむくいずこころじー_1	Tecmo
 neobattl	SDガンダム ネオバトリング (日本版)	えすでぃーがんだむねおばとりんぐ	Banpresto / Sotsu Agency. Sunrise
 umanclub	ウルトラマン倶楽部 -戦え！ウルトラマン兄弟！！	うるとらまんくらぶ	Tsuburaya Prod. / Banpresto
@@ -5618,7 +5628,7 @@ batlbubl	バンバンボール / Battle Bubble (ver 2.00)	ばんばんぼーる	Limenko
 gakusai	麻雀学園祭 (日本版)	まーじゃんがくえんさい_1	MakeSoft
 gakusai2	麻雀学園祭2 (日本版)	まーじゃんがくえんさい_2	MakeSoft
 blzntrnd	ブレイジングトルネード	ぶれいじんぐとるねーど	Human Amusement
-gstrik2	グランドストライカー2 (日本版)	ぐらんどすとらいかー2	Human Amusement
+gstrik2	グランドストライカー2 (日本版)	ぐらんどすとらいかー_2	Human Amusement
 hyprduel	ハイパーデュエル (日本版 set 1)	はいぱーでゅえる	Technosoft
 hyprdelj	ハイパーデュエル (日本版 set 2)	はいぱーでゅえる	Technosoft
 magerror	マジカルエラーをさがせ！	まじかるえらーをさがせ	Technosoft / Jaleco
@@ -5780,15 +5790,15 @@ kovj	三國戦紀 (日本基板 ver 100)	さんごくせんき_1_1	IGS
 kovsh	三國戦紀 スーパーヒーローズ (ver 322)	さんごくせんき_1_2すーぱーひーろーず	IGS
 photoy2k	リアルアンドフェイク	りあるあんどふぇいく	IGS
 raf102j	リアルアンドフェイク (日本基板 ver 102)	りあるあんどふぇいく	IGS
-killbld	ザ・キリングブレード	ざきりんぐぶれーど	IGS
-killbldt	ザ・キリングブレード (中国基板)	ざきりんぐぶれーど	IGS
+killbld	傲剣狂刀	ごうけんきょうとう	IGS
+killbldt	傲剣狂刀 (中国基板)	ごうけんきょうとう	IGS
 puzlstar	パズルスター	ぱずるすたー	IGS
 olds	オリエンタルレジェンドスーパー スペシャル (韓国版 ver 101)	おりえんたるれじぇんど_2すーぱーすぺしゃる	IGS
 olds100	オリエンタルレジェンドスーパー スペシャル (ver 100)	おりえんたるれじぇんど_2すーぱーすぺしゃる	IGS
 olds100a	オリエンタルレジェンドスーパー スペシャル (ver 100 alt)	おりえんたるれじぇんど_2すーぱーすぺしゃる	IGS
-kov2	三國戦紀 武将争覇	さんごくせんき_2_1	IGS
-kov2106	三國戦紀 武将争覇 (106)	さんごくせんき_2_1	IGS
-kov2p	三國戦紀 武将争覇 プラス -Nine Dragons	さんごくせんき_2_2	IGS
+kov2	三國戦紀2	さんごくせんき_2_1	IGS
+kov2106	三國戦紀2 (106)	さんごくせんき_2_1	IGS
+kov2p	三國戦紀 武将争覇	さんごくせんき_2_2	IGS
 ddp2	怒首領蜂II	どどんぱち_2	IGS
 puzzli2	ぱづり2 スーパー	ぱづり_2すーぱー	IGS
 martmast	形意拳	しんいーけん	IGS
@@ -5999,6 +6009,7 @@ gt103a	トリビア (ver 1.03a)	とりびあ_1_103A	Greyhound Electronics
 gt103a1	トリビア (ver 1.03a alt 1)	とりびあ_1_103AA1	Greyhound Electronics
 gt103a2	トリビア (ver 1.03a alt 2)	とりびあ_1_103AA2	Greyhound Electronics
 gt103a3	トリビア (ver 1.03a alt 3)	とりびあ_1_103AA3	Greyhound Electronics
+gt103a4	トリビア (ver 1.03a alt 4)	とりびあ_1_103AA4	Greyhound Electronics
 gt103asx	トリビア (ver 1.03a sex questions)	とりびあ_1_103ASXQ	Greyhound Electronics
 gt103aa	トリビア (ver 1.03a alt questions 1)	とりびあ_1_103AAQ1	Greyhound Electronics
 gt103ab	トリビア (ver 1.03a alt questions 2)	とりびあ_1_103AAQ2	Greyhound Electronics
@@ -6006,6 +6017,8 @@ reelfun	リールファン (ver 7.01)	りーるふぁん	Grayhound Electronics
 findout	ファインドアウト (ver 4.04)	ふぁいんどあうと	Elettronolo
 quiz	クイズ (rev 2)	くいず	Italian bootleg
 quiz211	クイズ (rev 2.11)	くいず	Elettronolo
+m075	M075ポーカー (ver 16.03B)	えむおーせぶんてぃーふぁいぶぽーかー	Greyhound Electronics
+superbwl	スーパーボウル (ver 16.03B)	すーぱーぼうる	Greyhound Electronics
 gs4002	セレクション (ver 40.02TMB set 1)	せれくしょん	Greyhound Electronics
 gs4002a	セレクション (ver 40.02TMB set 2)	せれくしょん	Greyhound Electronics
 gepoker	ポーカー (ver 50.02 ICB)	ぽーかー	Greyhound Electronics
@@ -6014,6 +6027,8 @@ gepoker2	ポーカー (ver 50.02 ICB set 2)	ぽーかー	Greyhound Electronics
 gepoker3	ポーカー (ver 50.02 ICB set 3)	ぽーかー	Greyhound Electronics
 gt102c	トリビア (ver 1.02C)	とりびあ_1_102C	Greyhound Electronics
 gt102b	トリビア (ver 1.02B)	とりびあ_1_102B	Greyhound Electronics
+gt101c	トリビア (ver 1.01C)	とりびあ_1_101C	Greyhound Electronics
+gt101c1	トリビア (ver 1.01C alt questions 1)	とりびあ_1_101CAQ1	Greyhound Electronics
 gt102c1	トリビア (ver 1.02C alt questions 1)	とりびあ_1_102CAQ1	Greyhound Electronics
 gt102c2	トリビア (ver 1.02C alt questions 2)	とりびあ_1_102CAQ2	Greyhound Electronics
 gt102c3	トリビア (ver 1.02C alt questions 3)	とりびあ_1_102CAQ3	Greyhound Electronics
@@ -6109,7 +6124,7 @@ misncrft	ミッションクラフト (ver 2.4)	みっしょんくらふと	Sun
 hidnctch	ヒドゥンキャッチ (海外版 PCB ver 3.03)	ひどぅんきゃっち_1	Eolith
 puzzlekg	パズルキング -Dance & Puzzle	ぱずるきんぐ	Eolith
 hidctch2	ヒドゥンキャッチ2 (PCB ver 3.03)	ひどぅんきゃっち_2	Eolith
-nhidctch	ニューヒドゥンキャッチ (韓国版 PCB ver 3.02)	にゅーひどぅんきゃっち	Eolith
+nhidctch	ニューヒドゥンキャッチ (海外版 PCB ver 3.02)	にゅーひどぅんきゃっち	Eolith
 landbrk	ランドブレイカー (海外版 PCB ver 3.02)	らんどぶれいかー	Eolith
 landbrka	ランドブレイカー (海外版 PCB ver 3.03)	らんどぶれいかー	Eolith
 raccoon	ラクーンワールド	らくーんわーるど	Eolith
@@ -6264,6 +6279,8 @@ altair	アルタイル	あるたいる	Cidelsa
 destryer	デストロイヤー (Cidelsa)	ですとろいやー	Cidelsa
 draco	ドラコ	どらこ	Cidelsa
 rockduck	ロックダック (prototype?)	ろっくだっく	Datel SAS
+tetriunk	テトリス (Unknown Manufacturer)	てとりす_あんのうん	Unknown
+smstrv	トリビア (SMS)	とりびあ_えすえむえす	SMS MFG CORP
 knightsh	ナイツ オブ ザ ラウンド -円卓の騎士 (ハック)	ないつおぶざらうんど	hack / bootleg
 knightsb	ナイツ オブ ザ ラウンド -円卓の騎士 (海賊版)	ないつおぶざらうんど	bootleg
 sf2m8	ストリートファイターII' -チャンピオンエディション (M8)	すとりーとふぁいたー_2_2だっしゅ	hack / bootleg
