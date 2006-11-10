@@ -1858,12 +1858,12 @@ static void ApplyMenuStyle(HINSTANCE hInst, HWND hwnd, HMENU menuHandle)
 {
 	if (GetImageMenuStyle() > 0)
 	{
-		IMITEM imi;
+		IMITEMIMAGE imi;
 		int i;
 
 		ImageMenu_Create(hwnd, menuHandle, 1);
 
-		imi.mask = IMIF_LOADFROMRES|IMIF_ICON;
+		imi.mask = IMIMF_LOADFROMRES | IMIMF_ICON;
 		imi.hInst = hInst;
 
 	    for (i = 0; menu_icon_table[i].itemID; i++)
@@ -1873,7 +1873,7 @@ static void ApplyMenuStyle(HINSTANCE hInst, HWND hwnd, HMENU menuHandle)
 		    ImageMenu_SetItemImage(&imi);
 	    }
 
-		ImageMenu_SetStyle(hwnd, GetImageMenuStyle() - 1);
+		ImageMenu_SetStyle(GetImageMenuStyle() - 1);
 	}
 }
 
@@ -2632,10 +2632,7 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 				if( wndpl.flags & WPF_RESTORETOMAXIMIZED || state == SW_MAXIMIZE)
 					state = SW_MAXIMIZE;
 				else
-				{
 					state = SW_RESTORE;
-					ShowWindow(hWnd, SW_RESTORE);
-				}
 			}
 			ShowWindow(hWnd, SW_RESTORE);
 			for (i = 0; i < GetSplitterCount(); i++)
@@ -3896,7 +3893,7 @@ static void GamePicker_OnHeaderContextMenu(POINT pt, int nColumn)
 	if (GetImageMenuStyle() > 0)
 	{
 		ImageMenu_CreatePopup(hMain, hMenuLoad);
-		ImageMenu_SetStyle(hMain, GetImageMenuStyle());
+		ImageMenu_SetStyle(GetImageMenuStyle());
 	}
 #endif /* IMAGE_MENU */
 
@@ -3905,7 +3902,7 @@ static void GamePicker_OnHeaderContextMenu(POINT pt, int nColumn)
 
 #ifdef IMAGE_MENU
 	if (GetImageMenuStyle() > 0)
-		ImageMenu_Remove(hMenuLoad, 0);
+		ImageMenu_Remove(hMenuLoad);
 #endif /* IMAGE_MENU */
 
 	DestroyMenu(hMenuLoad);
@@ -6801,7 +6798,7 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 
 #ifdef IMAGE_MENU
 	if (GetImageMenuStyle() > 0)
-		ImageMenu_Remove(hMenu, 0);
+		ImageMenu_Remove(hMenu);
 #endif /* IMAGE_MENU */
 
 	DestroyMenu(hMenuLoad);
@@ -6833,7 +6830,7 @@ static BOOL HandleScreenShotContextMenu(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	if (GetImageMenuStyle() > 0)
 	{
 		ImageMenu_CreatePopup(hWnd, hMenuLoad);
-		ImageMenu_SetStyle(hWnd, GetImageMenuStyle());
+		ImageMenu_SetStyle(GetImageMenuStyle());
 	}
 #endif /* IMAGE_MENU */
 
@@ -6841,7 +6838,7 @@ static BOOL HandleScreenShotContextMenu(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 #ifdef IMAGE_MENU
 	if (GetImageMenuStyle() > 0)
-		ImageMenu_Remove(hMenuLoad, 0);
+		ImageMenu_Remove(hMenuLoad);
 #endif /* IMAGE_MENU */
 
 	DestroyMenu(hMenuLoad);

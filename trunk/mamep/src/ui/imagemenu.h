@@ -1,32 +1,26 @@
 //******************************************
 // Author:          Massimo Galbusera
-// Email:           kkezmg@gmail.com
+// Email:           kkez@winapizone.net
 // Website:         http://www.winapizone.net
-// File:            ImageMenu.h
-// Version:         1.0
-// Date:            7 February 2006
+// File:            ImageMenu.cpp
+// Version:         1.1
+// Created on:      7 February 2006
+// Last updated on: 2 October 2006
 // Compiled on:     MinGW
 // Compatible with: Window 98, ME, 2000, XP and 2003
 //
+//-------------------------------------------------------------
+// I don't have Visual c++ so i can't test this with that 
+// compiler. If you managed to compile it with it, please let me
+// know about it so i can add it to the supported compilers.
+//-------------------------------------------------------------
+//
 // You are free to use/modify this code but leave this header intact.
 // This file is public domain so you are free to use it any of
-// your applications (Freeware, Shareware, Commercial). All I ask is
-// that you let me know you're using this extension, so i can
-// add a link to your program to my website.
+// your applications (Freeware, Shareware, Commercial). All I ask:
+// please let me know you're using this extension, so i can
+// add a link to your program on my website.
 //******************************************
-
-#define IMIF_LOADFROMFILE               1
-#define IMIF_LOADFROMRES                2
-#define IMIF_ICON                       4
-#define IMIF_BITMAP                     8
-#define IMIF_NOIMAGE                    16
-
-#define MPF_TITLE                       1
-#define MPF_VERTICALTITLE               2
-#define MPF_BKGND                       4
-#define MPF_CUSTOMBKCOLOR               8
-#define MPF_HORZGRADIENT                16
-#define MPF_VERTGRADIENT                32
 
 #ifndef EXTERN_C
 #ifdef __cplusplus
@@ -36,30 +30,46 @@
 #endif  /* __cplusplus */ 
 #endif  /* ! EXTERN_C */
 
-#if (defined __cplusplus)
-typedef std::basic_string<TCHAR> tstring;
-#endif
 
-typedef struct tagMENUPROPS MENUPROPS;
+enum menuStyle {
+    BASIC,
+    GRAY,
+    OFFICE,
+    OFFICE2003,
+    OFFICE2007,
+    MENU_STYLE_MAX
+};
+enum imItemImageFlags { 
+    IMIMF_LOADFROMFILE = 1, 
+    IMIMF_LOADFROMRES = 2, 
+    IMIMF_ICON = 4, 
+    IMIMF_BITMAP = 8, 
+    IMIMF_NOIMAGE = 16,
+};
+enum imPropsFlags {
+    IMPF_TITLE = 1,
+    IMPF_VERTICALTITLE = 2,
+    IMPF_BKGND = 4,
+    IMPF_CUSTOMBKCOLOR = 8,
+    IMPF_HORZGRADIENT = 16,
+    IMPF_VERTGRADIENT = 32,
+};
+
+typedef struct tagMENUPROPS IMMENUPROPS;
 struct tagMENUPROPS
 {
     HMENU menuHandle;
     DWORD flags;
     //Title text props
-#if (defined __cplusplus)
-    tstring
-#else
-    LPTSTR
-#endif
- 	menuTitle;
+    TCHAR menuTitle[256];
     COLORREF textColor;
     //Title background colors
     COLORREF firstColor;
     COLORREF secondColor;
 };
 
-typedef struct tagIMITEM IMITEM;
-struct tagIMITEM
+typedef struct tagIMITEMIMAGE IMITEMIMAGE;
+struct tagIMITEMIMAGE
 {
     UINT mask;
     UINT itemID;
@@ -69,23 +79,17 @@ struct tagIMITEM
     HBITMAP normalBitmap;
 };
 
-enum menuStyle
-{
-	MENU_STYLE_BASIC = 0,
-	MENU_STYLE_GRAY,
-	MENU_STYLE_OFFICE,
-	MENU_STYLE_OFFICE2003,
-	MENU_STYLE_OFFICE2007,
-	MENU_STYLE_MAX
-};
+EXTERN_C BOOL ImageMenu_AddItem(HMENU itemMenu, HMENU itemSubMenu, HWND itemParentWnd, int itemPos, BOOL isMenuBarItem);
+EXTERN_C BOOL ImageMenu_Fill(HWND hwnd, HMENU menuHandle, BOOL isMenuBar);
 
 EXTERN_C BOOL ImageMenu_Create(HWND hwnd, HMENU hMenu, BOOL isMenuBar);
 EXTERN_C BOOL ImageMenu_CreatePopup(HWND hwnd, HMENU hMenu);
-EXTERN_C void ImageMenu_Remove(HMENU menu, int);
+EXTERN_C void ImageMenu_Remove(HMENU menu);
 
-EXTERN_C BOOL ImageMenu_SetItemImage(IMITEM* imi);
-EXTERN_C void ImageMenu_SetStyle(HWND hwnd, int newMenuStyle);
+EXTERN_C BOOL ImageMenu_SetItemImage(IMITEMIMAGE* imi);
+EXTERN_C void ImageMenu_SetStyle(int newMenuStyle);
 
-EXTERN_C void ImageMenu_SetMenuProps(MENUPROPS *mp);
+EXTERN_C void ImageMenu_SetMenuProps(IMMENUPROPS *mp);
 EXTERN_C void ImageMenu_SetMenuTitleProps(HMENU menuHandle, LPTSTR title, BOOL isVerticalTitle, COLORREF textColor);
 EXTERN_C void ImageMenu_SetMenuTitleBkProps(HMENU menuHandle, COLORREF firstColor, COLORREF secondColor, BOOL isGradient, BOOL isVerticalGradient);
+EXTERN_C void ImageMenu_RemoveMenuProps(HMENU menuHandle);

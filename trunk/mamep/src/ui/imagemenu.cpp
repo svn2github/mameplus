@@ -3,8 +3,9 @@
 // Email:           kkez@winapizone.net
 // Website:         http://www.winapizone.net
 // File:            ImageMenu.cpp
-// Version:         1.0
-// Date:            7 February 2006
+// Version:         1.1
+// Created on:      7 February 2006
+// Last updated on: 2 October 2006
 // Compiled on:     MinGW
 // Compatible with: Window 98, ME, 2000, XP and 2003
 //
@@ -20,6 +21,7 @@
 // please let me know you're using this extension, so i can
 // add a link to your program on my website.
 //******************************************
+
 #define WIN32_LEAN_AND_MEAN
 #define UNICODE
 #define _UNICODE
@@ -32,12 +34,12 @@
 #include <string>
 #include <vector>
 
-#define IsGradient(menuProp)			(menuProp.flags&MPF_HORZGRADIENT || menuProp.flags&MPF_VERTGRADIENT)
-#define IsVertGradient(menuProp)		(menuProp.flags&MPF_VERTGRADIENT)
-#define IsVertTitle(menuProp)			(menuProp.flags&MPF_VERTICALTITLE)
-#define IsCustomBkColor(menuProp)		(!IsGradient(menuProp) && menuProp.flags&MPF_CUSTOMBKCOLOR)
+#define IsGradient(menuProp)			(menuProp.flags&IMPF_HORZGRADIENT || menuProp.flags&IMPF_VERTGRADIENT)
+#define IsVertGradient(menuProp)		(menuProp.flags&IMPF_VERTGRADIENT)
+#define IsVertTitle(menuProp)			(menuProp.flags&IMPF_VERTICALTITLE)
+#define IsCustomBkColor(menuProp)		(!IsGradient(menuProp) && menuProp.flags&IMPF_CUSTOMBKCOLOR)
 
-#include "ImageMenu.h"
+#include "imagemenu.h"
 
 //Mingw headers' missing #defines
 #ifndef ODS_HOTLIGHT
@@ -47,12 +49,15 @@
 #define DT_HIDEPREFIX 0x00100000
 #endif
 
+#define ORIGINALPROCPROP        _T("ImageMenuOriginalProc")
 #define MENUTITLEHEIGHT         16
 #define COMMONTEXTFLAGS         DT_SINGLELINE|DT_VCENTER
 #define MENUBARITEMTEXTFLAGS    COMMONTEXTFLAGS|DT_CENTER
 #define MENUITEMTEXTFLAGS       COMMONTEXTFLAGS|DT_LEFT
 #define MENUACCTEXTFLAGS        COMMONTEXTFLAGS|DT_RIGHT
 
+typedef std::basic_string<TCHAR> tstring;
+typedef BOOL (*PFNGRADIENTFILL) (HDC, PTRIVERTEX, ULONG, PVOID, ULONG, ULONG);
 typedef struct tagIMAGEMENUITEM
 {
     //General values to identify the structure
@@ -70,7 +75,6 @@ typedef struct tagIMAGEMENUITEM
     HBITMAP normalBitmap;
     HICON normalIcon;
 } IMAGEMENUITEM;
-
 typedef struct tagMENUCOLOR
 {
     COLORREF borderColor;
@@ -110,20 +114,17 @@ enum drawSteps
 };
 
 std::vector<IMAGEMENUITEM>imageItems;
-std::vector<MENUPROPS>menuProps;
+std::vector<IMMENUPROPS>menuProps;
 
 //Options
-int menuStyle = MENU_STYLE_BASIC;
+int menuStyle = BASIC;
 
 //Other global variables
-//These variables let me know if i can draw 
-//the white bar that simulates a merge between
-//the menubar item and its submenu.
 int currentMenuBarItemWidth = 0; //Auto-explicative
-int menuDisplayed = 0; //Auto-explicative. When "menuDisplayed == 1 && isMenuBarItemSubMenu" i can draw the white bar
+int openMenus = 0; //Auto-explicative. When "openMenus == 1 && isMenuBarItemSubMenu" i can draw the white bar
 HMENU currentMenu = NULL; //Currently displayed menu. This handle is obtained in the WM_INITMENUPOPUP message handler.
 HMENU previousMenu = NULL; //Previously displayed menu.
-HHOOK hookProc = NULL; //Handle to the hook procedure.
+WNDPROC originalMenuProc = NULL; //The original menu window proc, directly from the #32768 class.
 
 //Add your own style!
 MENUSTYLE styleProps[] = { 
@@ -191,7 +192,7 @@ MENUSTYLE styleProps[] = {
         RGB(0,0,0), RGB(0,0,0), RGB(192,192,192), //text props
         TRUE, TRUE, TRUE
     },
-    
+    //Office 2007
     {
         { 0, GetSysColor(COLOR_BTNFACE), 0, FALSE,FALSE,FALSE },
         { RGB(255,189,105), RGB(255,245,204), RGB(255,223,132),TRUE,TRUE,TRUE },
@@ -209,11 +210,12 @@ MENUSTYLE styleProps[] = {
     },
 };
 
+
 int FindImageMenuItemStruct(UINT itemID)
 {
     for (int i = 0; i<imageItems.size(); i++)
     {
-        if (itemID == imageItems[i].itemID)
+        if (itemID == imageItems.at(i).itemID)
             return i;
     }
     return -1;
@@ -222,31 +224,57 @@ int FindMenuPropsStruct(HMENU thisMenu)
 {
     for (int i = 0; i<menuProps.size(); i++)
     {
-        if (thisMenu == menuProps[i].menuHandle)
+        if (thisMenu == menuProps.at(i).menuHandle)
             return i;
     }
+    
     return -1;
 }
 
 //This function walk the chain of submenus and parent menus
-//to find if the menu passed as parameter is a direct or
-//indirect child of a menu bar item.
+//to find if the menu passed as parameter is a submenu
+//of a menu bar item.
 BOOL IsMenuBarItemSubMenu(HMENU menuToCheck)
 {
     for(int i = 0; i<imageItems.size(); i++)
     {
-        if (imageItems[i].itemSubMenu == menuToCheck)
+        if (imageItems.at(i).itemSubMenu == menuToCheck)
         {
-            if (imageItems[i].isMenuBarItem)
+            if (imageItems.at(i).isMenuBarItem)
                 return TRUE;
             else
-                return IsMenuBarItemSubMenu(imageItems[i].itemMenu);
+                return IsMenuBarItemSubMenu(imageItems.at(i).itemMenu);
         }
     }
     
     return FALSE;
 }
 
+HFONT CreateBoldFont(HFONT startingFont)
+{
+    LOGFONT lf; 
+    GetObject(startingFont, sizeof(lf), &lf);
+    lf.lfWeight = FW_BOLD;
+    
+    DeleteObject(startingFont);
+    
+    return CreateFontIndirect(&lf);
+}
+HFONT CreateVerticalFont(HFONT startingFont)
+{
+    LOGFONT lf; 
+    GetObject(startingFont, sizeof(lf), &lf);
+    lf.lfEscapement = 900;
+    lf.lfOrientation = 900;
+    
+    //Windows 98/me requires a TrueType (TT) 
+    //font to create a vertical font.
+    lf.lfOutPrecision = OUT_TT_ONLY_PRECIS; 
+    
+    DeleteObject(startingFont);
+    
+    return CreateFontIndirect(&lf);
+}
 tstring GetMenuItemText(const tstring& menuCaption)
 {
     int tabPos = menuCaption.find_first_of( _T('\t') );
@@ -300,26 +328,56 @@ void SideFrameRect(HDC hdc, LPRECT pRc, COLORREF borderColor, BOOL sides[])
 }
 void GradientFillRect(HDC hdc, LPRECT rcGradient, COLORREF firstColor, COLORREF secondColor, BOOL isVertical = FALSE)
 {
-    TRIVERTEX  vert[2];
-    vert [0] .x      = rcGradient->left;
-    vert [0] .y      = rcGradient->top;
-    vert [0] .Red    = (COLOR16)GetRValue(firstColor) << 8;
-    vert [0] .Green  = (COLOR16)GetGValue(firstColor) << 8;
-    vert [0] .Blue   = (COLOR16)GetBValue(firstColor) << 8;
-    vert [0] .Alpha  = 0x0000;
-
-    vert [1] .x      = rcGradient->right;
-    vert [1] .y      = rcGradient->bottom; 
-    vert [1] .Red    = (COLOR16)GetRValue(secondColor) << 8;
-    vert [1] .Green  = (COLOR16)GetGValue(secondColor) << 8;
-    vert [1] .Blue   = (COLOR16)GetBValue(secondColor) << 8;
-    vert [1] .Alpha  = 0x0000;
+    //Manual GradientFill since the one in Windows 98/Me 
+    //is buggy and make ImageMenu crash, and i should load
+    //each time the GradientFill function on Windows XP.
+    //Why bothering if this function works good as well?
     
-    GRADIENT_RECT gradRect;
-    gradRect.UpperLeft  = 0;
-    gradRect.LowerRight = 1;
     
-    GradientFill(hdc, vert, 2, &gradRect, 1, isVertical ? GRADIENT_FILL_RECT_V : GRADIENT_FILL_RECT_H );
+    BYTE startRed = GetRValue(firstColor);
+    BYTE startGreen = GetGValue(firstColor);
+    BYTE startBlue = GetBValue(firstColor);
+    
+    BYTE endRed = GetRValue(secondColor);
+    BYTE endGreen  = GetGValue(secondColor);
+    BYTE endBlue = GetBValue(secondColor);
+    
+    HBRUSH endColor = CreateSolidBrush(secondColor);
+    FillRect(hdc, rcGradient, endColor);
+    DeleteObject(endColor);
+    
+    //Gradient line width/height
+    int dy = 2;
+    
+    int length = (isVertical ? rcGradient->bottom - rcGradient->top 
+        : rcGradient->right - rcGradient->left) - dy;
+    
+    for(int dn = 0; dn <= length; dn += dy)
+    {
+        BYTE currentRed = (BYTE)MulDiv(endRed-startRed, dn, length) + startRed;
+        BYTE currentGreen = (BYTE)MulDiv(endGreen-startGreen, dn, length) + startGreen;
+        BYTE currentBlue = (BYTE)MulDiv(endBlue-startBlue, dn, length) + startBlue;
+        
+        RECT currentRect = {0}; 
+        if(isVertical)
+        {
+            currentRect.left = rcGradient->left;
+            currentRect.top = rcGradient->top + dn;
+            currentRect.right = currentRect.left + rcGradient->right - rcGradient->left;
+            currentRect.bottom = currentRect.top + dy;
+        }
+        else
+        {
+            currentRect.left = rcGradient->left + dn;
+            currentRect.top = rcGradient->top;
+            currentRect.right = currentRect.left + dy;
+            currentRect.bottom = currentRect.top + rcGradient->bottom - rcGradient->top;
+        }
+        
+        HBRUSH currentColor = CreateSolidBrush( RGB(currentRed,currentGreen,currentBlue) );
+        FillRect(hdc, &currentRect, currentColor);
+        DeleteObject(currentColor);
+    }
 }
 
 void MenuStyle_DrawCheckBackground(HDC hdc, LPRECT rcDest, BOOL isSelected, BOOL isDisabled)
@@ -355,7 +413,7 @@ void MenuStyle_DrawCheckBackground(HDC hdc, LPRECT rcDest, BOOL isSelected, BOOL
         DeleteObject(bkgndBrush);
     }
 }
-void MenuStyle_DrawCheckmark(HDC hdc, LPRECT rcDest, BOOL isSelected, BOOL isDisabled)
+void MenuStyle_DrawCheckMark(HDC hdc, LPRECT rcDest, BOOL isSelected, BOOL isDisabled)
 {
     COLORREF checkmarkColor = 0;
     if (isDisabled)
@@ -392,6 +450,34 @@ void MenuStyle_DrawCheckmark(HDC hdc, LPRECT rcDest, BOOL isSelected, BOOL isDis
 	
 	SelectObject(hdc, oldPen);
 	DeleteObject(checkmPen);
+}
+void MenuStyle_DrawRadioCheckMark(HDC hdc, LPRECT rcDest, BOOL isSelected, BOOL isDisabled)
+{
+    COLORREF checkmarkColor = 0;
+    if (isDisabled)
+        checkmarkColor = styleProps[menuStyle].checkmarkDisColor;
+    else if (isSelected)
+        checkmarkColor = styleProps[menuStyle].checkmarkSelColor;
+    else
+        checkmarkColor = styleProps[menuStyle].checkmarkColor;
+    
+    //Border color...
+	HPEN radioPen = CreatePen(PS_SOLID, 0, checkmarkColor);
+	HPEN oldPen = (HPEN)SelectObject(hdc, radioPen);
+	
+	//...and background color (same color)
+	HBRUSH radioBrush = CreateSolidBrush(checkmarkColor);
+	HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, radioBrush);
+	
+	RECT rcCheckMark = *rcDest;
+    InflateRect(&rcCheckMark, -6,-6);
+	RoundRect(hdc, rcCheckMark.left, rcCheckMark.top, 
+        rcCheckMark.right, rcCheckMark.bottom, 8,8);
+	
+	SelectObject(hdc, oldPen);
+	SelectObject(hdc, oldBrush);
+	DeleteObject(radioPen);
+	DeleteObject(radioBrush);
 }
 void MenuStyle_DrawRect(HDC hdc, LPRECT pRc, int drawStep)
 {
@@ -451,14 +537,114 @@ void MenuStyle_DrawRect(HDC hdc, LPRECT pRc, int drawStep)
         }
     }
 }
+void MenuStyle_DrawTitle(HWND hwnd, HDC hdc)
+{
+    int mpIndex = FindMenuPropsStruct(currentMenu);
+    if (mpIndex == -1) return;
+    if (menuProps[mpIndex].menuTitle && 
+        !_tcscmp(menuProps[mpIndex].menuTitle, _T(""))) return;
+    
+    //Get menu window dimension
+    RECT windowRC; GetWindowRect(hwnd, &windowRC);
+    RECT rcTitle;
+    
+    if (IsVertTitle(menuProps[mpIndex]) )
+        SetRect(&rcTitle, 2,2, MENUTITLEHEIGHT+2, windowRC.bottom-windowRC.top-2);
+    else
+        SetRect(&rcTitle, 2,2, windowRC.right-windowRC.left-2, MENUTITLEHEIGHT);
+    
+    //Fill the whole non client area for the title
+    FillRect(hdc, &rcTitle, (HBRUSH)GetStockObject(WHITE_BRUSH));
+    
+    //Leave some space between the title and the items
+    if (IsVertTitle(menuProps[mpIndex]) )
+        rcTitle.right -= 1;
+    else
+        rcTitle.bottom -= 1;
+    
+    //Fill the text background
+    if (IsGradient(menuProps[mpIndex]))
+    {
+        GradientFillRect(hdc, &rcTitle, menuProps[mpIndex].firstColor, menuProps[mpIndex].secondColor, 
+            IsVertGradient(menuProps[mpIndex]) );
+    }
+    else
+    {
+        COLORREF fillColor;
+        
+        if (IsCustomBkColor(menuProps[mpIndex]) )
+            fillColor = menuProps[mpIndex].firstColor;
+        else //Fill the rect with default color
+            fillColor = RGB(20,60,230);
+        
+        HBRUSH titleBkBrush = CreateSolidBrush(fillColor);
+        FillRect(hdc, &rcTitle, titleBkBrush);
+        DeleteObject(titleBkBrush);
+    }
+    
+    HFONT normFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
+    DWORD drawtextFlags = 0;
+    
+    //Create a bold font
+    HFONT titleFont = CreateBoldFont(normFont);
+    
+    //If the title is vertical, create a vertical font.
+    if ( IsVertTitle(menuProps[mpIndex]) )
+    {
+        drawtextFlags = DT_BOTTOM;
+        titleFont = CreateVerticalFont(titleFont);
+    }
+    else
+        drawtextFlags = DT_CENTER|DT_VCENTER;
+    
+    //Draw the text
+    HFONT oldFont = (HFONT)SelectObject(hdc, titleFont);
+    SetBkMode(hdc, TRANSPARENT);
+    SetTextColor(hdc, menuProps[mpIndex].textColor);
+    DrawText(hdc, menuProps[mpIndex].menuTitle, _tcslen(menuProps[mpIndex].menuTitle), &rcTitle, DT_SINGLELINE|drawtextFlags);
+    
+    //...
+    SelectObject(hdc, oldFont);
+    DeleteObject(titleFont);
+}
+void MenuStyle_DrawBorder(HWND hwnd, HDC hdc)
+{
+    //Get menu window dimension and normalize the resulting rect.
+    RECT windowRC; GetWindowRect(hwnd, &windowRC);
+    windowRC.right -= windowRC.left; windowRC.left = 0;
+    windowRC.bottom -= windowRC.top; windowRC.top = 0;
+    
+    HBRUSH borderBrush = CreateSolidBrush(styleProps[menuStyle].menuBorderColor);
+    FrameRect(hdc, &windowRC, borderBrush);
+    DeleteObject(borderBrush);
+    
+    //When there's only the main menu (menuDisplayed == 1) and 
+    //the menu currently open is a child of the main menu bar,
+    //i draw a white bar whose width is the current menu bar item's width
+    if (openMenus == 1
+     && IsMenuBarItemSubMenu(currentMenu)
+     && styleProps[menuStyle].isMenuBarMergedWithSubmenu
+     && currentMenuBarItemWidth > 1)
+    {
+        RECT whiteBar = {1, 0, currentMenuBarItemWidth-1, 1};
+        FillRect(hdc, &whiteBar, (HBRUSH)GetStockObject(WHITE_BRUSH));
+    }
+}
 
 void ImageMenu_OnDrawItem(WPARAM wParam, LPARAM lParam, int i)
 {
     LPDRAWITEMSTRUCT lpdi = (LPDRAWITEMSTRUCT)lParam;
     
-    //Get menu text
-    TCHAR menuItemText[256];
-    GetMenuString(imageItems.at(i).itemMenu, imageItems.at(i).itemID, menuItemText, 256, MF_BYCOMMAND);
+    TCHAR menuItemText[256] = _T("");
+    
+    //Get menu text and flags
+    MENUITEMINFO mii = {0};
+    mii.cbSize = sizeof(MENUITEMINFO);
+    mii.fMask = MIIM_STRING|MIIM_FTYPE;
+    mii.dwTypeData = menuItemText;
+    mii.cch = 256;
+    GetMenuItemInfo(imageItems.at(i).itemMenu, imageItems.at(i).itemID, MF_BYCOMMAND, &mii);
+    
     tstring menuCaption = menuItemText;
     
     RECT rcText = lpdi->rcItem;
@@ -574,7 +760,7 @@ void ImageMenu_OnDrawItem(WPARAM wParam, LPARAM lParam, int i)
         DrawText(lpdi->hDC, menuAcc.c_str(), menuAcc.size(), &rcText, MENUACCTEXTFLAGS);
         
         //Menu item is checked
-        if ( lpdi->itemState & ODS_CHECKED )
+        if (lpdi->itemState & ODS_CHECKED)
         {
             RECT rcCheck = rcImage;
             InflateRect(&rcCheck, -1,-1);
@@ -588,14 +774,25 @@ void ImageMenu_OnDrawItem(WPARAM wParam, LPARAM lParam, int i)
             //Draw the checkmark only if the item doesn't have an image
             if (!imageItems.at(i).isImage)
             {
-                MenuStyle_DrawCheckmark(lpdi->hDC, &rcCheck, 
-                    lpdi->itemState & ODS_SELECTED, //Selected?
-                    lpdi->itemState & ODS_GRAYED); //Grayed?
+                //Is the item a radio item?
+                if (mii.fType & MFT_RADIOCHECK)
+                {
+                    MenuStyle_DrawRadioCheckMark(lpdi->hDC, &rcCheck, 
+                        lpdi->itemState & ODS_SELECTED, //Selected?
+                        lpdi->itemState & ODS_GRAYED); //Grayed?
+                }
+                //No? Normal checkmark
+                else
+                {
+                    MenuStyle_DrawCheckMark(lpdi->hDC, &rcCheck, 
+                        lpdi->itemState & ODS_SELECTED, //Selected?
+                        lpdi->itemState & ODS_GRAYED); //Grayed?
+                }
+                
+                //I don't need to draw anything else.
+                return;
+            }
             
-            //I don't need to draw anything else.
-            return;
-        }
-        
             //Else, keep drawing the image over the checkmark
         }
         
@@ -619,7 +816,7 @@ void ImageMenu_OnDrawItem(WPARAM wParam, LPARAM lParam, int i)
                     DrawIconEx(lpdi->hDC, rcImage.left, rcImage.top, imageItems.at(i).normalIcon, 16,16, 0, NULL, DI_NORMAL);
             }
             //Bitmap?
-            else if (imageItems[i].normalBitmap) 
+            else if (imageItems.at(i).normalBitmap) 
             {
                 //Item is grayed?
                 if (lpdi->itemState & ODS_GRAYED)
@@ -647,7 +844,7 @@ void ImageMenu_OnMeasureItem(WPARAM wParam, LPARAM lParam, int i)
     LPMEASUREITEMSTRUCT lpmi = (LPMEASUREITEMSTRUCT)lParam;
     
     //It's a separator?
-    if (imageItems[i].isSeparator)
+    if (imageItems.at(i).isSeparator)
     {
         lpmi->itemWidth = 0;
         lpmi->itemHeight = 3;
@@ -656,7 +853,7 @@ void ImageMenu_OnMeasureItem(WPARAM wParam, LPARAM lParam, int i)
     
     //Get menu text
     TCHAR menuItemText[256];
-    GetMenuString(imageItems[i].itemMenu, imageItems[i].itemID, menuItemText, 256, MF_BYCOMMAND);
+    GetMenuString(imageItems.at(i).itemMenu, imageItems.at(i).itemID, menuItemText, 256, MF_BYCOMMAND);
     
     RECT captionSize = {0,0,1,1};
     HDC hdc = GetDC(NULL);
@@ -671,7 +868,7 @@ void ImageMenu_OnMeasureItem(WPARAM wParam, LPARAM lParam, int i)
     ReleaseDC(NULL, hdc);
     
     //It's a menu bar item?
-    if (imageItems[i].isMenuBarItem)
+    if (imageItems.at(i).isMenuBarItem)
     {
         lpmi->itemWidth = captionSize.right+2;
         lpmi->itemHeight = captionSize.bottom+2;
@@ -686,130 +883,10 @@ void ImageMenu_OnMeasureItem(WPARAM wParam, LPARAM lParam, int i)
     }
 }
 
-HFONT CreateBoldFont(HFONT startingFont)
-{
-    LOGFONT lf; 
-    GetObject(startingFont, sizeof(lf), &lf);
-    lf.lfWeight = FW_BOLD;
-    
-    DeleteObject(startingFont);
-    
-    return CreateFontIndirect(&lf);
-}
-HFONT CreateVerticalFont(HFONT startingFont)
-{
-    LOGFONT lf; 
-    GetObject(startingFont, sizeof(lf), &lf);
-    lf.lfEscapement = 900;
-    lf.lfOrientation = 900;
-    
-    DeleteObject(startingFont);
-    
-    return CreateFontIndirect(&lf);
-}
-
-void DrawTitle(HWND hwnd, HDC hdc)
-{
-    int mpIndex = FindMenuPropsStruct(currentMenu);
-    if (mpIndex == -1 || menuProps[mpIndex].menuTitle.empty() )
-        return;
-    
-    //Get menu window dimension
-    RECT windowRC; GetWindowRect(hwnd, &windowRC);
-    RECT rcTitle;
-    
-    if (IsVertTitle(menuProps[mpIndex]) )
-        SetRect(&rcTitle, 2,2, MENUTITLEHEIGHT+2, windowRC.bottom-windowRC.top-2);
-    else
-        SetRect(&rcTitle, 2,2, windowRC.right-windowRC.left-2, MENUTITLEHEIGHT);
-    
-    //Fill the whole non client area for the title
-    FillRect(hdc, &rcTitle, (HBRUSH)GetStockObject(WHITE_BRUSH));
-    
-    //Leave some space between the title and the items
-    if (IsVertTitle(menuProps[mpIndex]) )
-        rcTitle.right -= 1;
-    else
-        rcTitle.bottom -= 1;
-    
-    //Fill the text background
-    if (IsGradient(menuProps[mpIndex]))
-    {
-        GradientFillRect(hdc, &rcTitle, menuProps[mpIndex].firstColor, menuProps[mpIndex].secondColor, 
-            IsVertGradient(menuProps[mpIndex]) );
-    }
-    else
-    {
-        COLORREF fillColor;
-        
-        if (IsCustomBkColor(menuProps[mpIndex]) )
-            fillColor = menuProps[mpIndex].firstColor;
-        else //Fill the rect with default color
-            fillColor = RGB(20,60,230);
-        
-        HBRUSH titleBkBrush = CreateSolidBrush(fillColor);
-        FillRect(hdc, &rcTitle, titleBkBrush);
-        DeleteObject(titleBkBrush);
-    }
-    
-    HFONT normFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
-    DWORD drawtextFlags = 0;
-    
-    //Create a bold font
-    HFONT titleFont = CreateBoldFont(normFont);
-    
-    //If the title is vertical, create a vertical font.
-    if ( IsVertTitle(menuProps[mpIndex]) )
-    {
-        drawtextFlags = DT_BOTTOM;
-        titleFont = CreateVerticalFont(titleFont);
-    }
-    else
-        drawtextFlags = DT_CENTER|DT_VCENTER;
-    
-    //Draw the text
-    HFONT oldFont = (HFONT)SelectObject(hdc, titleFont);
-    SetBkMode(hdc, TRANSPARENT);
-    SetTextColor(hdc, menuProps[mpIndex].textColor);
-    DrawText(hdc, menuProps[mpIndex].menuTitle.c_str(), menuProps[mpIndex].menuTitle.size(), &rcTitle, DT_SINGLELINE|drawtextFlags);
-    
-    //...
-    SelectObject(hdc, oldFont);
-    DeleteObject(titleFont);
-}
-void DrawBorder(HWND hwnd, HDC hdc)
-{
-    //Get menu window dimension and normalize the resulting rect.
-    RECT windowRC; GetWindowRect(hwnd, &windowRC);
-    windowRC.right -= windowRC.left; windowRC.left = 0;
-    windowRC.bottom -= windowRC.top; windowRC.top = 0;
-    
-    HBRUSH borderBrush = CreateSolidBrush(styleProps[menuStyle].menuBorderColor);
-    FrameRect(hdc, &windowRC, borderBrush);
-    DeleteObject(borderBrush);
-    
-    //When there's only the main menu (menuDisplayed == 1) and 
-    //the menu currently open is a child of the main menu bar,
-    //i draw a white bar whose width is the current menu bar item's width
-    if (menuDisplayed == 1 && IsMenuBarItemSubMenu(currentMenu) && styleProps[menuStyle].isMenuBarMergedWithSubmenu)
-    {
-        RECT whiteBar = {1, 0, currentMenuBarItemWidth-1, 1};
-        FillRect(hdc, &whiteBar, (HBRUSH)GetStockObject(WHITE_BRUSH));
-    }
-}
 LRESULT CALLBACK ImageMenu_MenuWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    WNDPROC originalProc = (WNDPROC)GetProp(hwnd, _T("ORIGINAL_PROC"));
-    
     switch(msg)
     {
-        case WM_DESTROY:
-        {
-            SetWindowLong(hwnd, GWL_WNDPROC, (LONG)originalProc);
-            RemoveProp(hwnd, _T("ORIGINAL_PROC"));
-        }
-        break;
-        
         //Taken from http://www.codeproject.com/cs/miscctrl/flatmenuform.asp?df=100&forumid=15651&select=935646#xx935646xx
         //This REDUCES/INCREASES the NON-CLIENT area by
         //increasing the window's width/height.
@@ -821,7 +898,9 @@ LRESULT CALLBACK ImageMenu_MenuWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARA
                 int mpIndex = FindMenuPropsStruct(currentMenu);
                 
                 //No title
-                if (mpIndex == -1 || menuProps[mpIndex].menuTitle.empty() )
+                if (mpIndex == -1 || 
+                    (menuProps[mpIndex].menuTitle && 
+                     !_tcscmp(menuProps[mpIndex].menuTitle, _T(""))))
                 {
                     pos->cx -= 2;
                     pos->cy -= 2;
@@ -845,7 +924,8 @@ LRESULT CALLBACK ImageMenu_MenuWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARA
                 //area, and thus is displayed to the left or to the top
                 //of its normal position. This restore its right position.
                 int mpIndex = FindMenuPropsStruct(previousMenu);
-                if (mpIndex != -1 && !menuProps[mpIndex].menuTitle.empty() )
+                if (mpIndex != -1 && menuProps[mpIndex].menuTitle && 
+                     _tcscmp(menuProps[mpIndex].menuTitle, _T("")) ) //Title not empty
                 {
                     if ( IsVertTitle(menuProps[mpIndex]) )
                         pos->x += MENUTITLEHEIGHT;
@@ -866,7 +946,9 @@ LRESULT CALLBACK ImageMenu_MenuWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARA
             nccs->rgrc->bottom += 2;
             
             int mpIndex = FindMenuPropsStruct(currentMenu);
-            if (mpIndex == -1 || menuProps[mpIndex].menuTitle.empty() )
+            if (mpIndex == -1 || 
+                (menuProps[mpIndex].menuTitle && 
+                !_tcscmp(menuProps[mpIndex].menuTitle, _T(""))) )
             {
                 nccs->rgrc->top -= 1;
                 nccs->rgrc->left -= 1;
@@ -887,15 +969,15 @@ LRESULT CALLBACK ImageMenu_MenuWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARA
         
         case WM_NCPAINT:
         {
-            CallWindowProc(originalProc, hwnd, msg, wParam, lParam);
+            CallWindowProc(originalMenuProc, hwnd, msg, wParam, lParam);
             HDC menuDC = GetWindowDC(hwnd);
             
             //Draw the title (if any)
-            DrawTitle(hwnd, menuDC);
+            MenuStyle_DrawTitle(hwnd, menuDC);
             
             //Draw the border
             if (styleProps[menuStyle].isMenuBorder)
-                DrawBorder(hwnd, menuDC);
+                MenuStyle_DrawBorder(hwnd, menuDC);
             
             ReleaseDC(hwnd, menuDC);
         }
@@ -903,54 +985,24 @@ LRESULT CALLBACK ImageMenu_MenuWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARA
         
         case WM_PRINT:
         {
-            LRESULT res = CallWindowProc(originalProc, hwnd, msg, wParam, lParam);        
+            LRESULT res = CallWindowProc(originalMenuProc, hwnd, msg, wParam, lParam);        
             HDC menuDC = (HDC)wParam;
             
             //Draw the title
-            DrawTitle(hwnd, menuDC);
+            MenuStyle_DrawTitle(hwnd, menuDC);
             
             //Draw the border
             if (styleProps[menuStyle].isMenuBorder)
-                DrawBorder(hwnd, menuDC);
+                MenuStyle_DrawBorder(hwnd, menuDC);
             return res;
         }
     }
     
-    return CallWindowProc(originalProc, hwnd, msg, wParam, lParam);
+    return CallWindowProc(originalMenuProc, hwnd, msg, wParam, lParam);
 }
-LRESULT CALLBACK ImageMenu_HookProc(int code, WPARAM wParam, LPARAM lParam)
-{
-    //code == HT_ACTION ==> i can process this message
-    //currentMenu != NULL ==> a menu is currently displayed
-    if (code == HC_ACTION && currentMenu)
-    {
-        CWPSTRUCT *cs = (CWPSTRUCT*)lParam;
-        
-        //Shouldn't be the window menu
-        if (currentMenu != GetSystemMenu(GetAncestor(cs->hwnd, GA_ROOTOWNER), FALSE))
-        {
-            //Check if it's a menu
-            TCHAR className[50];
-            GetClassName(cs->hwnd, className, 50);
-            if ( !_tcscmp(className, _T("#32768")) )
-            {
-                //If the menu window isn't already subclassed..
-                if ( (WNDPROC)GetWindowLong(cs->hwnd, GWL_WNDPROC) != ImageMenu_MenuWndProc )
-                {
-                    //...subclass it
-                    WNDPROC originalProc = (WNDPROC)SetWindowLong(cs->hwnd, GWL_WNDPROC, (LONG)ImageMenu_MenuWndProc);
-                    SetProp(cs->hwnd, _T("ORIGINAL_PROC"), (HANDLE)originalProc);
-                }
-            }
-        }
-    }
-    
-    return CallNextHookEx(NULL, code, wParam, lParam);
-}
-
 LRESULT CALLBACK ImageMenu_ParentProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    WNDPROC originalProc = (WNDPROC)GetProp(hwnd, _T("ORIGINAL_PROC"));
+    WNDPROC originalProc = (WNDPROC)GetProp(hwnd, ORIGINALPROCPROP);
     static std::vector<HMENU> menuPopups;
     
     switch(msg)
@@ -958,12 +1010,13 @@ LRESULT CALLBACK ImageMenu_ParentProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM
         case WM_INITMENUPOPUP:
         {
             HMENU thisMenu = (HMENU)wParam;
+            
             menuPopups.push_back(thisMenu);
             
             //Global variables
-            menuDisplayed           += 1;
-            currentMenu             = thisMenu;
-            previousMenu            = menuPopups.size() > 1 ? menuPopups.at( menuPopups.size()-2) : NULL;
+            openMenus       += 1;
+            currentMenu     = thisMenu;
+            previousMenu    = (menuPopups.size() > 1 ? menuPopups.at( menuPopups.size()-2) : NULL);
         }
         break;
         
@@ -974,25 +1027,24 @@ LRESULT CALLBACK ImageMenu_ParentProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM
             //is! So i need to check if along with the creation
             //of this menu, Windows sent a WM_INITMENUPOPUP.
             //This vector is also useful to get current and previous displayed menus.
-            std::vector<HMENU>::iterator menuPopupsIter = menuPopups.begin();
-            for ( ; *menuPopupsIter != NULL; menuPopupsIter++)
+            for (int i = 0; i<menuPopups.size(); i++)
             {
-                if ( HMENU(wParam) == *menuPopupsIter )
+                if ( HMENU(wParam) == menuPopups.at(i) )
                 {
                     //The previous menu is the last but one
                     //menu in the vector.
-                    menuDisplayed   -= 1;
-                    currentMenu         = *(menuPopupsIter-1);
-                    previousMenu        = NULL;
+                    openMenus       -= 1;
+                    currentMenu     = (i == 0 ? NULL : menuPopups.at(i-1));
+                    previousMenu    = (i <= 1 ? NULL : menuPopups.at(i-2));
                     
-                    menuPopups.erase(menuPopupsIter);
+                    menuPopups.erase( menuPopups.begin() +i );
                     
                     //Little hack: if a popupmenu from a main menu is destroyed, WM_UNINITMENUPOPUP
                     //is sent AFTER the parent menu (if it exists) is redrawn, so the border is drawn
                     //as the menu isn't a main menu cause menuDisplayed is not yet == 1. 
                     //(see DrawBorder() comments for more details)
                     HWND previousMenuHwnd = FindWindow(_T("#32768"), NULL);
-                    RedrawWindow(previousMenuHwnd, NULL,NULL, RDW_ERASE|RDW_FRAME|RDW_INVALIDATE|RDW_ERASENOW);
+                    RedrawWindow(previousMenuHwnd, NULL,NULL, RDW_ERASE|RDW_FRAME|RDW_INVALIDATE|RDW_UPDATENOW);
                     
                     break;
                 }
@@ -1021,15 +1073,14 @@ LRESULT CALLBACK ImageMenu_ParentProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM
         case WM_DESTROY:
         {
             //In reverse order, i delete the menuitems that have "itemParentWnd == hwnd".
-            std::vector<IMAGEMENUITEM>::iterator imiIter = imageItems.end();
-            for (int i = imageItems.size()-1; i>=0; i--, imiIter--)
+            for (int i = imageItems.size()-1; i>=0; i--)
             {
-                if(imiIter->itemParentWnd == hwnd)
+                if(imageItems.at(i).itemParentWnd == hwnd)
                 {
-                    DeleteObject(imiIter->normalBitmap);
-                    DestroyIcon(imiIter->normalIcon);
+                    DeleteObject(imageItems.at(i).normalBitmap);
+                    DestroyIcon(imageItems.at(i).normalIcon);
                     
-                    imageItems.erase(imiIter);
+                    imageItems.erase(imageItems.begin() + i);
                 }
             }
             
@@ -1038,11 +1089,7 @@ LRESULT CALLBACK ImageMenu_ParentProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM
             
             //Unsubclass main window
             SetWindowLong(hwnd, GWL_WNDPROC, (LONG)originalProc);
-            RemoveProp(hwnd, _T("ORIGINAL_PROC"));
-            
-            //Unhook, if there are no more items.
-            if (imageItems.size() == 0)
-                UnhookWindowsHookEx(hookProc);
+            RemoveProp(hwnd, ORIGINALPROCPROP);
         }
         break;
     }
@@ -1112,16 +1159,38 @@ BOOL ImageMenu_Fill(HWND hwnd, HMENU menuHandle, BOOL isMenuBar)
 
 BOOL ImageMenu_Create(HWND hwnd, HMENU menuHandle, BOOL isMenuBar)
 {
-    //Local hook to get all the menu window handles (class name: #32768)
-    if (hookProc == NULL)
-        hookProc = SetWindowsHookEx(WH_CALLWNDPROC, ImageMenu_HookProc, NULL, GetCurrentThreadId());
+    //Superclass menu class
+    if (originalMenuProc == NULL)
+    {
+        WNDCLASS wc = {0};
+        GetClassInfo(NULL, _T("#32768"), &wc);
+        
+        //Save original proc
+        originalMenuProc = wc.lpfnWndProc;
+        //Store our new window procedure
+        wc.lpfnWndProc = (WNDPROC)ImageMenu_MenuWndProc;
+        wc.hInstance = GetModuleHandle(NULL);
+        //Make sure classes doesn't conflict
+        wc.style &= ~CS_GLOBALCLASS;
+        
+        RegisterClass(&wc);
+    }
     
     //Subclass the main window to handle WM_DRAWITEM & WM_MEASUREITEM
     WNDPROC originalProc = (WNDPROC)GetWindowLong(hwnd, GWL_WNDPROC);
     if (originalProc != ImageMenu_ParentProc)
     {
-        SetWindowLong(hwnd, GWL_WNDPROC, (LONG)ImageMenu_ParentProc);
-        SetProp(hwnd, _T("ORIGINAL_PROC"), (HANDLE)originalProc);
+        //Windows ME(98?) with an UNICODE build returns a different
+        //WNDPROC pointer even if i already subclassed the parent window,
+        //(that is, originalProc and ImageMenu_ParentProc should point to
+        //the same procedure but they don't). Trying to subclass it 
+        //again using the old procedure (originalProc) makes imagemenu crash 
+        //after i call SetWindowLong, probably because they ARE the same 
+        //procedure even if their pointers doesn't coincide. And the subclass
+        //procedure will end up being caught in an infinite loop.
+        if ( !GetProp(hwnd, ORIGINALPROCPROP) )
+            if ( SetProp(hwnd, ORIGINALPROCPROP, (HANDLE)originalProc) )
+                SetWindowLong(hwnd, GWL_WNDPROC, (LONG)ImageMenu_ParentProc);
     }
     
     return ImageMenu_Fill(hwnd, menuHandle, isMenuBar);
@@ -1131,14 +1200,13 @@ BOOL ImageMenu_CreatePopup(HWND hwnd, HMENU menuHandle)
     //Popup menus do not have the menu bar
     return ImageMenu_Create(hwnd, menuHandle, FALSE);
 }
-void ImageMenu_Remove(HMENU menu, int test)
+void ImageMenu_Remove(HMENU menu)
 {
     //Reverse order to maintain index
     for (int i=imageItems.size()-1; i>=0; --i)
     {
         //When recursively deleting items, the index
-        //we're currently inspecting can point to nothing,
-        //i need to prevent crashes and STL exceptions!
+        //we're currently inspecting can point to nothing.
         if (i >= imageItems.size())
             continue;
         
@@ -1146,6 +1214,10 @@ void ImageMenu_Remove(HMENU menu, int test)
         {
             HMENU subMenu = imageItems.at(i).itemSubMenu;
             
+            //Remove the props associated with this menu
+            ImageMenu_RemoveMenuProps(imageItems.at(i).itemMenu);
+            
+            //Remove the images and the menu struct
             DeleteObject(imageItems.at(i).normalBitmap);
             DestroyIcon(imageItems.at(i).normalIcon);
             imageItems.erase(imageItems.begin() + i);
@@ -1153,25 +1225,25 @@ void ImageMenu_Remove(HMENU menu, int test)
             //Delete submenu after parent menu
             //item has been deleted. 
             if (subMenu)
-                ImageMenu_Remove(subMenu, test+1);
+                ImageMenu_Remove(subMenu);
         }
     }
 }
 
-BOOL ImageMenu_SetItemImage(IMITEM* imi)
+BOOL ImageMenu_SetItemImage(IMITEMIMAGE* imi)
 {
     int i = FindImageMenuItemStruct(imi->itemID);
     if (i == -1) return FALSE;
     
     //Bitmap...
-    if (imi->mask & IMIF_BITMAP)
+    if (imi->mask & IMIMF_BITMAP)
     {
         HBITMAP newBitmap = NULL;
         //...from resource
-        if (imi->mask & IMIF_LOADFROMRES)
+        if (imi->mask & IMIMF_LOADFROMRES)
             newBitmap = (HBITMAP)LoadImage(imi->hInst, imi->imageStr, IMAGE_BITMAP, 16,16,0);
          //...from file
-        else if (imi->mask & IMIF_LOADFROMFILE)
+        else if (imi->mask & IMIMF_LOADFROMFILE)
             newBitmap = (HBITMAP)LoadImage(NULL, imi->imageStr, IMAGE_BITMAP, 16,16, LR_LOADFROMFILE);
          //...from handle
         else
@@ -1179,21 +1251,21 @@ BOOL ImageMenu_SetItemImage(IMITEM* imi)
         
         if (newBitmap)
         {
-            if (imageItems[i].normalBitmap)
-                DeleteObject(imageItems[i].normalBitmap);
-            imageItems[i].normalBitmap = newBitmap;
+            if (imageItems.at(i).normalBitmap)
+                DeleteObject(imageItems.at(i).normalBitmap);
+            imageItems.at(i).normalBitmap = newBitmap;
         }
         else return FALSE;
     }
     //Icon...
-    else if (imi->mask & IMIF_ICON)
+    else if (imi->mask & IMIMF_ICON)
     {
         HICON newIcon = NULL;
         //...from resource
-        if (imi->mask & IMIF_LOADFROMRES)
+        if (imi->mask & IMIMF_LOADFROMRES)
             newIcon = (HICON)LoadImage(imi->hInst, imi->imageStr, IMAGE_ICON, 16,16,0);
          //...from file
-        else if (imi->mask & IMIF_LOADFROMFILE)
+        else if (imi->mask & IMIMF_LOADFROMFILE)
             newIcon = (HICON)LoadImage(NULL, imi->imageStr, IMAGE_ICON, 16,16, LR_LOADFROMFILE);
          //...from handle
         else
@@ -1201,44 +1273,44 @@ BOOL ImageMenu_SetItemImage(IMITEM* imi)
         
         if (newIcon)
         {
-            if (imageItems[i].normalIcon)
-                DestroyIcon(imageItems[i].normalIcon);
-            imageItems[i].normalIcon = newIcon;
+            if (imageItems.at(i).normalIcon)
+                DestroyIcon(imageItems.at(i).normalIcon);
+            imageItems.at(i).normalIcon = newIcon;
         }
         else return FALSE;
     }
-    else if (imi->mask & IMIF_NOIMAGE)
+    else if (imi->mask & IMIMF_NOIMAGE)
     {
-        DeleteObject(imageItems[i].normalBitmap);
-        DestroyIcon(imageItems[i].normalIcon);
+        DeleteObject(imageItems.at(i).normalBitmap);
+        DestroyIcon(imageItems.at(i).normalIcon);
     }
     else return FALSE;
     
-    if(imageItems[i].normalBitmap == NULL && imageItems[i].normalIcon == NULL)
-        imageItems[i].isImage = FALSE;
+    if(imageItems.at(i).normalBitmap == NULL && imageItems.at(i).normalIcon == NULL)
+        imageItems.at(i).isImage = FALSE;
     else
-       imageItems[i].isImage = TRUE;
+       imageItems.at(i).isImage = TRUE;
     
-    if(imageItems[i].normalBitmap)
-        imageItems[i].isIcon = FALSE;
-    else if (imageItems[i].normalIcon)
-        imageItems[i].isIcon = TRUE;
+    if(imageItems.at(i).normalBitmap)
+        imageItems.at(i).isIcon = FALSE;
+    else if (imageItems.at(i).normalIcon)
+        imageItems.at(i).isIcon = TRUE;
     
     return TRUE;
 }
-void ImageMenu_SetStyle(HWND hwnd, int newMenuStyle)
+void ImageMenu_SetStyle(int newMenuStyle)
 {
     menuStyle = newMenuStyle;
-    DrawMenuBar(hwnd);
 }
 
-void ImageMenu_SetMenuProps(MENUPROPS *mp)
+void ImageMenu_SetMenuProps(IMMENUPROPS *mp)
 {
     int mpIndex = FindMenuPropsStruct(mp->menuHandle);
     
     //Doesn't exist, add it.
     if (mpIndex == -1)
         menuProps.push_back(*mp);
+    //Else modify it
     else
     {
         menuProps[mpIndex].flags |= mp->flags;
@@ -1246,16 +1318,16 @@ void ImageMenu_SetMenuProps(MENUPROPS *mp)
         //Valid variables:
         // - menuTitle
         // - textColor
-        if (mp->flags & MPF_TITLE)
+        if (mp->flags & IMPF_TITLE && mp->menuTitle)
         {
-            menuProps[mpIndex].menuTitle = mp->menuTitle;
+            _tcsncpy(menuProps[mpIndex].menuTitle, mp->menuTitle, 256);
             menuProps[mpIndex].textColor = mp->textColor;
         }
         
         //Valid variables:
         // - firstColor
         // - secondColor
-        if (mp->flags & MPF_BKGND)
+        if (mp->flags & IMPF_BKGND)
         {
             menuProps[mpIndex].firstColor = mp->firstColor;
             menuProps[mpIndex].secondColor = mp->secondColor;
@@ -1264,21 +1336,29 @@ void ImageMenu_SetMenuProps(MENUPROPS *mp)
 }
 void ImageMenu_SetMenuTitleProps(HMENU menuHandle, LPTSTR title, BOOL isVerticalTitle, COLORREF textColor)
 {
-    MENUPROPS mp;
+    IMMENUPROPS mp;
     mp.menuHandle = menuHandle;
-    mp.flags = MPF_TITLE | (isVerticalTitle ? MPF_VERTICALTITLE : 0);
-    mp.menuTitle = title;
+    mp.flags = IMPF_TITLE | (isVerticalTitle ? IMPF_VERTICALTITLE : 0);
     mp.textColor = textColor;
+    
+    if (title)
+        _tcsncpy(mp.menuTitle, title, 256);
     
     ImageMenu_SetMenuProps(&mp);
 }
 void ImageMenu_SetMenuTitleBkProps(HMENU menuHandle, COLORREF firstColor, COLORREF secondColor, BOOL isGradient, BOOL isVerticalGradient)
 {
-    MENUPROPS mp;
+    IMMENUPROPS mp;
     mp.menuHandle = menuHandle;
-    mp.flags = MPF_BKGND| (isGradient ? (isVerticalGradient ? MPF_VERTGRADIENT : MPF_HORZGRADIENT) : 0);
+    mp.flags = IMPF_BKGND| (isGradient ? (isVerticalGradient ? IMPF_VERTGRADIENT : IMPF_HORZGRADIENT) : 0);
     mp.firstColor = firstColor;
     mp.secondColor = secondColor;
     
     ImageMenu_SetMenuProps(&mp);
+}
+void ImageMenu_RemoveMenuProps(HMENU menuHandle)
+{
+    int mpIndex = FindMenuPropsStruct(menuHandle);
+    if(mpIndex != -1)
+        menuProps.erase(menuProps.begin() + mpIndex);
 }
