@@ -154,6 +154,53 @@ BOOL IsAuditResultNo(int audit_result)
     Internal functions
  ***************************************************************************/
 
+static int audit_files(int game, const char *searchpath)
+{
+	const game_driver *gamedrv = drivers[game];
+	const game_driver *drv;
+	const rom_entry *region, *rom;
+	int foundany = FALSE;
+
+	region = rom_first_region(gamedrv);
+	if (region == NULL)
+		return foundany;
+
+	rom = rom_first_file(region);
+	if (rom == NULL)
+		return foundany;
+
+	/* find the file and checksum it, getting the file length along the way */
+	for (drv = gamedrv; drv != NULL; drv = driver_get_clone(drv))
+	{
+		mame_file_error filerr;
+		mame_file *file;
+		char *fname;
+
+		region = rom_first_region(drv);
+		if (region == NULL)
+			continue;
+
+		rom = rom_first_file(region);
+		if (rom == NULL)
+			continue;
+
+		/* open the file if we can */
+		fname = assemble_3_strings(drv->name, PATH_SEPARATOR, ROM_GETNAME(rom));
+		filerr = mame_fopen(searchpath, fname, OPEN_FLAG_READ, &file);
+		free(fname);
+
+		/* if we got it, extract the hash and length */
+		if (filerr == FILERR_NONE)
+		{
+			mame_fclose(file);
+			foundany = TRUE;
+			break;
+		}
+	}
+
+	return foundany;
+}
+
 static int AuditDialogVerifyRomSet(int game, verify_printf_proc output)
 {
 	options_type *game_options;
@@ -164,6 +211,15 @@ static int AuditDialogVerifyRomSet(int game, verify_printf_proc output)
 	// apply selecting BIOS
 	game_options = GetGameOptions(game);
 	options.bios = game_options->bios;
+
+	if (!audit_files(game, SEARCHPATH_ROM))
+	{
+		audit = NULL;
+		audit_records = 0;
+		iStatus = audit_summary(game, audit_records, audit, output);
+		SetRomAuditResults(game, iStatus);
+		return iStatus;
+	}
 
 	audit_records = audit_images(game, AUDIT_VALIDATE_FAST, &audit);
 	iStatus = audit_summary(game, audit_records, audit, output);
