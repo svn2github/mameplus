@@ -2064,7 +2064,7 @@ static void slider_init(void)
 		/* add CPU overclocking */
 		numitems = cpu_gettotalcpu();
 		for (item = 0; item < numitems; item++)
-			slider_config(&slider_list[slider_count++], 10, 1000, 2000, 1, slider_overclock, item);
+			slider_config(&slider_list[slider_count++], 50, 1000, 4000, 50, slider_overclock, item);
 
 		/* add refresh rate tweaker */
 		slider_config(&slider_list[slider_count++], -10000, 0, 10000, 1000, slider_refresh, 0);
