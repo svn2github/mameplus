@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#      Mameinfo.dat日本語版 v0.110       #
+#     Mameinfo.dat日本語版 v0.110u1      #
 #                                        #
-#            November 7, 2006            #
+#           November 11, 2006            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,55 +12,27 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：822 翻訳済：806
-# 追加項目：328 合計：1150
+# Tester報告：803 翻訳済：790
+# 追加項目：328 合計：1131
 #
 
 
-$info=pitfighb
+$info=gangwars
 $mame
 [バグ]
 
-- 起動時にROMエラー画面が一瞬表示される。 pitfighb0109u2gre, Tafoid
+- 0.66あたりから音楽のエミュレーションがおかしい。 gangwars0110u1gre, Augusto
+
+
+- 3面ボス直前で、柱の部分に表示不具合あり。海賊版の方では正しく表示される。 gangwars067gre, Luja
 
 $end
 
-$info=pitfight
+$info=sandscrp
 $mame
 [バグ]
 
-- 起動時にコインが2つか1つ投入される。 pitfight0109u2gre, Roger Coltrane / Tafoid
-
-
-- アトラクトモード中で、TYが紹介される場面が一瞬ちらつく。他のバージョノンは問題ない。 pitfight099gre, Roger Coltrane
-
-
-- 起動時にクレジットが2つ勝手に入る。 pitfight0106u3ora, Roger Coltrane
-
-$end
-
-$info=circus
-$mame
-[バグ]
-
-- 左右の段の近くに見えない壁のようなものがあり、そこで跳ね返る。 circus0109u2gre, Zaphod
-
-$end
-
-$info=qbertqub
-$mame
-[バグ]
-
-- Q*bertのサウンドROMが使われているため、一部の音が出ない。
-面クリア時にトランポリンではねる声など。サウンドコードは29から31が鳴っていない。 qbertqub0109u4gre, sxevious
-
-$end
-
-$info=gradius3
-$mame
-[バグ]
-
-- [possible] 画面オフセットか表示領域の問題がある。実機でも起こる？ gradius3_0109u1gre, robiza / Mamesick
+- 起動後は黒画面しか表示されない。F3キーでリセットすると動作する。v0.105から。 sandscrp0110u1yel, ionas
 
 $end
 
@@ -73,102 +45,10 @@ $mame
 
 [バグ]
 
+- 実機と比較すると、マリオや敵、パイプ、POWブロックなどがMAMEでは1ドット上に表示されている。 mario0110u1gre, BSR
+
+
 - 実機は電源投入時に音が出る。その直後に面スタートのBGMがかかる。 mario0109u4gre1, patman
-
-
-- 実機とMAMEでは色が異なる。
-例えばパイプは緑ではなく、茶色がかっている。またスコアのMARIOの文字ももっと明るい青色。 mario0109u4gre2, patman
-
-$end
-
-$info=galaga88
-$mame
-[バグ]
-
-- ゲームオーバーのときに表示されるヒット率の計算がおかしい場合がある。 galaga88_0109u4gre, Tafoid
-
-$end
-
-$info=ncommand
-$mame
-[バグ]
-
-- 画面の上の部分が点滅する。 ncommand0109u3gre, KillerBee
-
-$end
-
-$info=pacland
-$mame
-[バグ]
-
-- 実機ではクレジットを99まで投入できる。MAMEでは9まで。 pacland0109u4gre, Kold666
-
-$end
-
-$info=commsega
-$mame
-[バグ]
-
-- 画面表示が下側にずれている。 rallyx0109u2gre, Tafoid
-
-
-- いったん兵士をショットで撃ち殺すと、BGMが消える。SEも、軍人を撃つ音以外鳴らなくなる。
-自機がやられると元に戻る。
-起こるのは一番最初だけ。 commsega37b9gre, Fujix (Taka.K/ NAG)
-
-$end
-
-$info=locomotn
-$mame
-[バグ]
-
-- 画面表示が下側にずれている。 rallyx0109u2gre, Tafoid
-
-$end
-
-$info=tactcian
-$mame
-[バグ]
-
-- 画面表示が下側にずれている。 rallyx0109u2gre, Tafoid
-
-$end
-
-$info=ballbros
-$mame
-[バグ]
-
-- デフォルトの画面が反転している。0.105から。 ballbros0109u5gre, twisty / Canim
-
-$end
-
-$info=gigandes
-$mame
-[バグ]
-
-- サービスモードの"4: Dip Switch"の画面が反転している。
-また画面の左上に紫色のゴミグラフィックが表示される。
-さらに、"2: Color Check"を選んでから"4: Dip Switch"を選ぶと余計な四角が表示される。 gigandes0109u5gre, twisty
-
-$end
-
-$info=warriorb
-$mame
-[バグ]
-
-- 画面上部分の8ピクセルが表示されない。
-また、2画面の中央に1ピクセルの幅のゴミラインが表示される。 warriorb0109u2gre, twisty / KillerBee
-
-
-[TIPS]
-
-- 面セレクトコマンド：
-
-1) サービススイッチ(9キー)を押しながらリセット
-
-2) 1Pスタートx3　サービス　1Pスタート
-
-(by Mhk)
 
 $end
 
@@ -264,14 +144,6 @@ $mame
 
 $end
 
-$info=gangwars
-$mame
-[バグ]
-
-- 3面ボス直前で、柱の部分に表示不具合あり。海賊版の方では正しく表示される。 gangwars067gre, Luja
-
-$end
-
 $info=arcadecl
 $mame
 [バグ]
@@ -353,6 +225,20 @@ $mame
 
 
 - 3面よりあとでやられると、間違った場所から再スタートになりゲームが固まる。 bonzeadv0108u3yel, maxholz / sjyune
+
+$end
+
+$info=pitfight
+$mame
+[バグ]
+
+- 起動時にコインが2つか1つ投入される。 pitfight0109u2gre, Roger Coltrane / Tafoid
+
+
+- アトラクトモード中で、TYが紹介される場面が一瞬ちらつく。他のバージョノンは問題ない。 pitfight099gre, Roger Coltrane
+
+
+- 起動時にクレジットが2つ勝手に入る。 pitfight0106u3ora, Roger Coltrane
 
 $end
 
@@ -561,6 +447,14 @@ $mame
 [バグ]
 
 - ネームエントリー画面が右にクリップされる。 wotw36b1gre, MC68K / Pi
+
+$end
+
+$info=circus
+$mame
+[バグ]
+
+- 左右の段の近くに見えない壁のようなものがあり、そこで跳ね返る。 circus0109u2gre, Zaphod
 
 $end
 
@@ -1447,6 +1341,15 @@ $mame
 - coinop.orgの説明によると、
 鼻野郎がパワーアップするときに「Hello, I'm turned on」としゃべるはず。 
 Dithの最新サンプルセットには入っていて、サービスモードでは聞くことができる。 qbert37b14gre1, Kurushimi / The tECHIDNA / Randolph
+
+$end
+
+$info=qbertqub
+$mame
+[バグ]
+
+- Q*bertのサウンドROMが使われているため、一部の音が出ない。
+面クリア時にトランポリンではねる声など。サウンドコードは29から31が鳴っていない。 qbertqub0109u4gre, sxevious
 
 $end
 
@@ -2569,6 +2472,14 @@ $mame
 
 $end
 
+$info=galaga88
+$mame
+[バグ]
+
+- ゲームオーバーのときに表示されるヒット率の計算がおかしい場合がある。 galaga88_0109u4gre, Tafoid
+
+$end
+
 $info=tekken3
 $mame
 [バグ]
@@ -2772,6 +2683,14 @@ garouoでも起きる。 garoup058gre, devlin_wagner
 
 $end
 
+$info=ncommand
+$mame
+[バグ]
+
+- 画面の上の部分が点滅する。 ncommand0109u3gre, KillerBee
+
+$end
+
 $info=neocup98
 $mame
 [バグ]
@@ -2932,6 +2851,14 @@ $mame
 [バグ]
 
 - ゲーム終了時、マップが表示された後に“volume error”が出てリセットがかかる。 overdriv37b13gre, Sports Dude
+
+$end
+
+$info=pacland
+$mame
+[バグ]
+
+- 実機ではクレジットを99まで投入できる。MAMEでは9まで。 pacland0109u4gre, Kold666
 
 $end
 
@@ -3142,6 +3069,35 @@ $mame
 - 音楽のチャンネルの中に、しばらくするとずれ出すものがある。
 例えば、1面の真ん中あたりなど。
 親版のraidenでは起きない。 raidena058gre, Jonemaan / RansAckeR / Stefan Lindberg
+
+$end
+
+$info=commsega
+$mame
+[バグ]
+
+- いったん兵士をショットで撃ち殺すと、BGMが消える。SEも、軍人を撃つ音以外鳴らなくなる。
+自機がやられると元に戻る。
+起こるのは一番最初だけ。 commsega37b9gre, Fujix (Taka.K/ NAG)
+
+
+- 画面表示が下側にずれている。 rallyx0109u2gre, Tafoid
+
+$end
+
+$info=locomotn
+$mame
+[バグ]
+
+- 画面表示が下側にずれている。 rallyx0109u2gre, Tafoid
+
+$end
+
+$info=tactcian
+$mame
+[バグ]
+
+- 画面表示が下側にずれている。 rallyx0109u2gre, Tafoid
 
 $end
 
@@ -4210,6 +4166,16 @@ $mame
 
 $end
 
+$info=gigandes
+$mame
+[バグ]
+
+- サービスモードの"4: Dip Switch"の画面が反転している。
+また画面の左上に紫色のゴミグラフィックが表示される。
+さらに、"2: Color Check"を選んでから"4: Dip Switch"を選ぶと余計な四角が表示される。 gigandes0109u5gre, twisty
+
+$end
+
 $info=aquajack
 $mame
 [バグ]
@@ -4912,6 +4878,26 @@ $mame
 vsskykidは7面で色違いがおこる。テキストが灰色、ベースが真っ白。
 
 vssoccerはスペインチームの色が違っている。緑のはずだが灰色になっている。 vsnesc062gre, Kale
+
+$end
+
+$info=warriorb
+$mame
+[バグ]
+
+- 画面上部分の8ピクセルが表示されない。
+また、2画面の中央に1ピクセルの幅のゴミラインが表示される。 warriorb0109u2gre, twisty / KillerBee
+
+
+[TIPS]
+
+- 面セレクトコマンド：
+
+1) サービススイッチ(9キー)を押しながらリセット
+
+2) 1Pスタートx3　サービス　1Pスタート
+
+(by Mhk)
 
 $end
 
@@ -5877,6 +5863,14 @@ $mame
 
 $end
 
+$info=pitfighb
+$mame
+[バグ]
+
+- 起動時にROMエラー画面が一瞬表示される。 pitfighb0109u2gre, Tafoid
+
+$end
+
 $info=indytemp
 $mame
 [バグ]
@@ -6126,6 +6120,14 @@ $mame
 [バグ]
 
 - [possible] 効果音が遅れる。 rushatck0109gre, Withnail
+
+$end
+
+$info=gradius3
+$mame
+[バグ]
+
+- [possible] 画面オフセットか表示領域の問題がある。実機でも起こる？ gradius3_0109u1gre, robiza / Mamesick
 
 $end
 
