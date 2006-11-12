@@ -60,6 +60,7 @@ else
 
     ifeq ($(NO_DLL),)
         GUIOBJS += $(OBJ)/ui/m32main.o
+        OSOBJS += $(OBJ)/ui/win32ui.o
 
         # add resource file
         GUIOBJS += $(OBJ)/ui/mame32.res
