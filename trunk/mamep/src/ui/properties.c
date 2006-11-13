@@ -1587,6 +1587,8 @@ void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 		hSheetTreeCtrl = NULL;
 	}
 
+	memset(&rectTree, 0, sizeof(rectTree));
+
 	hTempTab = CreateWindowEx(0, TEXT("SysTabControl32"), NULL,
 						WS_CHILD|WS_VISIBLE|WS_CLIPSIBLINGS,
 						rectTree.left, rectTree.top,

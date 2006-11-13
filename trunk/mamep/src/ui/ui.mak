@@ -9,7 +9,11 @@ $(OBJ)/ui/%.o: src/ui/%.c
 ifneq ($(USE_IMAGE_MENU),)
 $(OBJ)/ui/%.o: src/ui/%.cpp
 	@echo Compiling $<...
+ifneq ($(MSVC_BUILD),)
+	$(CC) -mwindows -c $< -o $@
+else
 	@g++ -mwindows -c $< -o $@
+endif
 endif
 
 OBJDIRS += $(OBJ)/ui
