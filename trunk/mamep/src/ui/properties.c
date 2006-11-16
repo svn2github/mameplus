@@ -448,17 +448,17 @@ static const struct
 
 typedef HTHEME (WINAPI *OpenThemeProc)(HWND hwnd, LPCWSTR pszClassList);
 
-HMODULE hThemes;
 OpenThemeProc fnOpenTheme;
 FARPROC fnIsThemed;
 
 void PropertiesInit(void)
 {
-	hThemes = LoadLibraryA("uxtheme.dll");
+	HMODULE hThemes = LoadLibraryA("uxtheme.dll");
 
 	if (hThemes)
 	{
 		fnIsThemed = GetProcAddress(hThemes,"IsAppThemed");
+		FreeLibrary(hThemes);
 	}
 	bThemeActive = FALSE;
 }
@@ -1647,7 +1647,7 @@ void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 
 	hSheetTreeCtrl = CreateWindowEx(WS_EX_CLIENTEDGE | WS_EX_NOPARENTNOTIFY,
 							TEXT("SysTreeView32"), TEXT("PageTree"),
-							WS_TABSTOP|WS_CHILD | WS_VISIBLE | TVS_SHOWSELALWAYS | TVS_TRACKSELECT | TVS_HASLINES | TVS_LINESATROOT | TVS_HASBUTTONS,
+							WS_TABSTOP | WS_CHILD | WS_VISIBLE | TVS_SHOWSELALWAYS | TVS_TRACKSELECT | TVS_HASLINES | TVS_LINESATROOT | TVS_HASBUTTONS,
 							rectTree.left, rectTree.top,
 							rectTree.right - rectTree.left, rectTree.bottom - rectTree.top,
 							hWnd, (HMENU)0x7EEE, hSheetInstance, NULL);
@@ -2167,33 +2167,28 @@ static INT_PTR HandleGameOptionsCtlColor(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 	{
 
 		//	SetBkColor((HDC)wParam,GetSysColor(COLOR_3DFACE) );
-		if( hThemes )
+		if( fnIsThemed && fnIsThemed() )
 		{
-			if( fnIsThemed && fnIsThemed() )
-			{
-				HWND hWnd = PropSheet_GetTabControl(GetParent(hDlg));
-				// Set the background mode to transparent
-				SetBkMode((HDC)wParam, TRANSPARENT);
+			HWND hWnd = PropSheet_GetTabControl(GetParent(hDlg));
+			// Set the background mode to transparent
+			SetBkMode((HDC)wParam, TRANSPARENT);
 
-				// Get the controls window dimensions
-				GetWindowRect((HWND)lParam, &rc);
+			// Get the controls window dimensions
+			GetWindowRect((HWND)lParam, &rc);
 
-				// Map the coordinates to coordinates with the upper left corner of dialog control as base
-				MapWindowPoints(NULL, hWnd, (LPPOINT)(&rc), 2);
+			// Map the coordinates to coordinates with the upper left corner of dialog control as base
+			MapWindowPoints(NULL, hWnd, (LPPOINT)(&rc), 2);
 
-				// Adjust the position of the brush for this control (else we see the top left of the brush as background)
-				SetBrushOrgEx((HDC)wParam, -rc.left, -rc.top, NULL);
+			// Adjust the position of the brush for this control (else we see the top left of the brush as background)
+			SetBrushOrgEx((HDC)wParam, -rc.left, -rc.top, NULL);
 
-				// Return the brush
-				return (INT_PTR)(hBkBrush);
-			}
-			else
-			{
-				SetBkColor((HDC) wParam,GetSysColor(COLOR_3DFACE) );
-			}
+			// Return the brush
+			return (INT_PTR)(hBkBrush);
 		}
 		else
+		{
 			SetBkColor((HDC) wParam,GetSysColor(COLOR_3DFACE) );
+		}
 	}
 	else
 		SetBkColor((HDC)wParam,RGB(255,255,255) );
@@ -5055,16 +5050,15 @@ static void InitializeDefaultBIOSUI(HWND hwnd)
 void UpdateBackgroundBrush(HWND hwndTab)
 {
 	// Check if the application is themed
-	if (hThemes)
-	{
-		if(fnIsThemed)
-			bThemeActive = fnIsThemed();
-	}
+	if(fnIsThemed)
+		bThemeActive = fnIsThemed();
+
 	// Destroy old brush
 	if (hBkBrush)
+	{
 		DeleteObject(hBkBrush);
-
-	hBkBrush = NULL;
+		hBkBrush = NULL;
+	}
 
 	// Only do this if the theme is active
 	if (bThemeActive)
