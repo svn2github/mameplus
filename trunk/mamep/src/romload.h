@@ -15,6 +15,7 @@
 #define __ROMLOAD_H__
 
 #include "mamecore.h"
+#include "chd.h"
 
 
 
@@ -305,7 +306,7 @@ struct _rom_load_data
 ***************************************************************************/
 
 /* disk handling */
-chd_file *open_disk_image(const game_driver *gamedrv, const rom_entry *romp);
+chd_error open_disk_image(const game_driver *gamedrv, const rom_entry *romp, chd_file **image);
 chd_file *get_disk_handle(int diskindex);
 
 /* get bios number */

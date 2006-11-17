@@ -53,10 +53,6 @@ int frontend_listdevices(FILE *output);
 
 void set_pathlist(int file_type, const char *new_rawpath);
 
-#ifdef MESS
-extern const options_entry mess_opts[];
-#endif
-
 
 
 //============================================================
@@ -475,8 +471,7 @@ int cli_frontend_init(int argc, char **argv)
 	// initialize the options manager
 	options_init(windows_opts);
 #ifdef MESS
-	options_add_entries(mess_opts);
-	options_set_option_callback(OPTION_UNADORNED(0), win_mess_driver_name_callback);
+	win_mess_options_init();
 #endif // MESS
 
 	// clear all core options

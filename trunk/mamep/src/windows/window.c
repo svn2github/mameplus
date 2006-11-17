@@ -8,6 +8,7 @@
 //============================================================
 
 #define LOG_THREADS			0
+#define LOG_TEMP_PAUSE		0
 
 // Needed for RAW Input
 #undef _WIN32_WINNT
@@ -913,6 +914,8 @@ static void set_starting_view(int index, win_window_info *window, const char *vi
 
 void winwindow_ui_pause_from_main_thread(int pause)
 {
+	int old_temp_pause = ui_temp_pause;
+
 	assert(GetCurrentThreadId() == main_threadid);
 
 	// if we're pausing, increment the pause counter
@@ -945,6 +948,9 @@ void winwindow_ui_pause_from_main_thread(int pause)
 			}
 		}
 	}
+
+	if (LOG_TEMP_PAUSE)
+		logerror("winwindow_ui_pause_from_main_thread(): %d --> %d\n", old_temp_pause, ui_temp_pause);
 }
 
 

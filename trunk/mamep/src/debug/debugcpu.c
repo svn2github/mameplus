@@ -1410,6 +1410,11 @@ int debug_watchpoint_set(int cpunum, int spacenum, int type, offs_t address, off
 		debug_cpuinfo[cpunum].read_watchpoints++;
 	if (wp->type & WATCHPOINT_WRITE)
 		debug_cpuinfo[cpunum].write_watchpoints++;
+
+	/* force debug_get_memory_hooks() to be called */
+	cpuintrf_push_context(-1);
+	cpuintrf_pop_context();
+
 	return wp->index;
 }
 
@@ -1445,6 +1450,11 @@ int debug_watchpoint_clear(int wpnum)
 					if (wp->type & WATCHPOINT_WRITE)
 						debug_cpuinfo[cpunum].write_watchpoints--;
 					free(wp);
+
+					/* force debug_get_memory_hooks() to be called */
+					cpuintrf_push_context(-1);
+					cpuintrf_pop_context();
+
 					return 1;
 				}
 
@@ -1504,6 +1514,10 @@ int debug_hotspot_track(int cpunum, int numspots, int threshhold)
 		info->hotspot_count = numspots;
 		info->hotspot_threshhold = threshhold;
 	}
+
+	/* force debug_get_memory_hooks() to be called */
+	cpuintrf_push_context(-1);
+	cpuintrf_pop_context();
 
 	return 1;
 }

@@ -208,7 +208,7 @@ static void draw_sprites( mame_bitmap *bitmap, int demo )
 	const UINT16 *source = 0x1800+buffered_spriteram16 + 0x800 -4;
 	const UINT16 *finish = 0x1800+buffered_spriteram16;
 
-	while( source>=finish ){
+	for (; source >= finish; source -= 4) {
 		UINT16 attributes = source[3];
 		UINT16 code = source[0];
 
@@ -344,7 +344,6 @@ static void draw_sprites( mame_bitmap *bitmap, int demo )
 			draw_sprite( bitmap, pen_data, pal_data, xpos, ypos, width, height, flipx, flipy, (attributes&0x4000) );
 		}
 		count++;
-		source -= 4;
 	}
 }
 
