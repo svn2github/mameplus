@@ -1845,7 +1845,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 					break;
 				case IPT_JOYSTICK_UP:
 				case IPT_JOYSTICK_DOWN:
-					if (inp->four_way)
+					if (inp->way == 4)
 						y = 2;
 					else
 						y = 3;
@@ -1861,7 +1861,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 				case IPT_JOYSTICKRIGHT_DOWN:
 				case IPT_JOYSTICKLEFT_UP:
 				case IPT_JOYSTICKLEFT_DOWN:
-					if (inp->four_way)
+					if (inp->way == 4)
 						y = 5;
 					else
 						y = 6;

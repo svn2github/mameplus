@@ -1486,7 +1486,7 @@ void CreateControlFolders(int parent_index)
 			case IPT_JOYSTICK_UP:
 			case IPT_JOYSTICK_DOWN:
 
-					if (input->four_way)
+					if (input->way <= 4)
 						w = FOLDER_JOY4WAY;
 					else
 						w = FOLDER_JOY8WAY;
@@ -1506,7 +1506,7 @@ void CreateControlFolders(int parent_index)
 			case IPT_JOYSTICKLEFT_UP:
 			case IPT_JOYSTICKLEFT_DOWN:
 
-					if (input->four_way)
+					if (input->way <= 4)
 						w = FOLDER_DOUBLEJOY4WAY;
 					else
 						w = FOLDER_DOUBLEJOY8WAY;

@@ -3252,7 +3252,7 @@ static void make_input_log(void)
 				}
 
 				/* if this is a digital joystick type, apply 8-way rules */
-				if (port->four_way == 0)
+				if (port->way > 4)
 				switch(info->current)
 				{
 					case JOYDIR_DOWN_BIT | JOYDIR_LEFT_BIT:
