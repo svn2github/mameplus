@@ -2,11 +2,11 @@
                                 
 
 
-# ui/properties.c: 1025
+# ui/properties.c: 1045
 %d colors 
 
 
-# ui/win32ui.c: 255, 3491
+# ui/win32ui.c: 255, 3501
 %d games
 
 
@@ -18,35 +18,35 @@
 %dx%d (V)
 
 
-# ui/properties.c: 4695
+# ui/properties.c: 4714
 %li bit
 
 
-# ui/properties.c: 1001
+# ui/properties.c: 1021
 %s (%d player)
 
 
-# ui/properties.c: 1012
+# ui/properties.c: 1032
 %s (%d player, %d button)
 
 
-# ui/properties.c: 1010
+# ui/properties.c: 1030
 %s (%d player, %d buttons)
 
 
-# ui/properties.c: 998
+# ui/properties.c: 1018
 %s (%d players)
 
 
-# ui/properties.c: 1007
+# ui/properties.c: 1027
 %s (%d players, %d button)
 
 
-# ui/properties.c: 1004
+# ui/properties.c: 1024
 %s (%d players, %d buttons)
 
 
-# ui/properties.c: 1145
+# ui/properties.c: 1165
 %s\nThis is also global driver options in the %s
 
 
@@ -90,7 +90,7 @@
 &Cancel
 
 
-# ui/audit32.c: 426 ui/mame32.rc: 1205
+# ui/audit32.c: 482 ui/mame32.rc: 1205
 &Close
 
 
@@ -98,7 +98,7 @@
 &Contents\tF1
 
 
-# ui/audit32.c: 296
+# ui/audit32.c: 352
 &Continue
 
 
@@ -202,7 +202,7 @@
 &Palette Setting...
 
 
-# ui/audit32.c: 291 ui/mame32.rc: 437
+# ui/audit32.c: 347 ui/mame32.rc: 437
 &Pause
 
 
@@ -210,11 +210,11 @@
 &Picture Area\tAlt+P
 
 
-# ui/mame32.rc: 52, 180 ui/win32ui.c: 3635
+# ui/mame32.rc: 52, 180 ui/win32ui.c: 3645
 &Play
 
 
-# ui/win32ui.c: 254, 3672, 6817, 6845
+# ui/win32ui.c: 254, 3682, 6859, 6887
 &Play %s
 
 
@@ -290,7 +290,7 @@
 &Working
 
 
-# ui/win32ui.c: 6288
+# ui/win32ui.c: 6330
 '%s' is not a valid savestate file for game '%s'.
 
 
@@ -314,7 +314,7 @@ A sharing violation occurred.
 A&udit
 
 
-# ui/properties.c: 948 ui/treeview.c: 1421
+# ui/properties.c: 968 ui/treeview.c: 1423
 AD Stick
 
 
@@ -358,7 +358,7 @@ All
 All Games
 
 
-# ui/win32ui.c: 794, 801, 808, 815, 4404
+# ui/win32ui.c: 794, 801, 808, 815, 4414
 All files (*.*)
 
 
@@ -382,7 +382,7 @@ Allows filtering out games from a folder
 Analog deadzone
 
 
-# ui/properties.c: 4661
+# ui/properties.c: 4680
 Anti-clockwise
 
 
@@ -418,19 +418,19 @@ Audit
 Audit ROM and samples sets
 
 
-# ui/audit32.c: 425
+# ui/audit32.c: 481
 Audit complete.\n
 
 
-# ui/properties.c: 4581, 4682, 4773
+# ui/properties.c: 4600, 4701, 4792
 Auto
 
 
-# ui/properties.c: 4664
+# ui/properties.c: 4683
 Auto anti-clockwise
 
 
-# ui/properties.c: 4663
+# ui/properties.c: 4682
 Auto clockwise
 
 
@@ -454,11 +454,11 @@ Available
 Available fields:
 
 
-# ui/properties.c: 4816
+# ui/properties.c: 4835
 Axis
 
 
-# ui/properties.c: 4826
+# ui/properties.c: 4845
 AxisId
 
 
@@ -466,7 +466,7 @@ AxisId
 BIOS
 
 
-# ui/properties.c: 1101
+# ui/properties.c: 1121
 BIOS missing
 
 
@@ -490,7 +490,7 @@ Basic
 Beam width
 
 
-# ui/audit32.c: 481
+# ui/audit32.c: 537
 Best available
 
 
@@ -622,7 +622,7 @@ Categories
 Changing this item is not permitted
 
 
-# ui/audit32.c: 214, 223
+# ui/audit32.c: 270, 279
 Checking Game %s - %s
 
 
@@ -634,7 +634,7 @@ Checking...
 Christopher Kirmse and Michael Soderstrom
 
 
-# ui/properties.c: 4660
+# ui/properties.c: 4679
 Clockwise
 
 
@@ -650,11 +650,11 @@ Clone of:
 Clones
 
 
-# ui/properties.c: 1064
+# ui/properties.c: 1084
 Colors are completely wrong
 
 
-# ui/properties.c: 1070
+# ui/properties.c: 1090
 Colors aren't 100% accurate
 
 
@@ -738,11 +738,11 @@ Copyright (C) 1997-2006 The MAME Team
 Correct:
 
 
-# ui/win32ui.c: 6198
+# ui/win32ui.c: 6208
 Could not open '%s' as a valid input file.
 
 
-# ui/win32ui.c: 6300
+# ui/win32ui.c: 6274, 6342
 Could not open '%s' as a valid savestate file.
 
 
@@ -754,7 +754,7 @@ Crop artwork
 Cursor
 
 
-# ui/win32ui.c: 4473, 4501
+# ui/win32ui.c: 4483, 4511
 Custom
 
 
@@ -778,7 +778,7 @@ Customize interface options.
 Customize which columns are used in the game list
 
 
-# ui/properties.c: 4659
+# ui/properties.c: 4678
 Default
 
 
@@ -810,7 +810,7 @@ Description
 Details
 
 
-# ui/properties.c: 940 ui/treeview.c: 1423
+# ui/properties.c: 960 ui/treeview.c: 1425
 Dial
 
 
@@ -898,31 +898,39 @@ Displays program and copyright information
 Do you wish to continue?
 
 
-# ui/treeview.c: 1417
-Double Joy 2-Way
+# ui/treeview.c: 1421
+Double Joy 16-Way
 
 
 # ui/treeview.c: 1418
-Double Joy 4-Way
+Double Joy 2-Way
 
 
 # ui/treeview.c: 1419
+Double Joy 4-Way
+
+
+# ui/treeview.c: 1420
 Double Joy 8-Way
 
 
-# ui/properties.c: 876, 892, 893
+# ui/properties.c: 893, 918
+Double Joystick 16-Way
+
+
+# ui/properties.c: 886, 907, 908
 Double Joystick 2-Way
 
 
-# ui/properties.c: 872, 873, 896
+# ui/properties.c: 882, 883, 911
 Double Joystick 2-Way Vertical
 
 
-# ui/properties.c: 879, 899
+# ui/properties.c: 889, 914
 Double Joystick 4-Way
 
 
-# ui/properties.c: 881, 901
+# ui/properties.c: 895, 920
 Double Joystick 8-Way
 
 
@@ -930,7 +938,7 @@ Double Joystick 8-Way
 Draw antialiased vectors
 
 
-# ui/properties.c: 4637
+# ui/properties.c: 4656
 Draw every frame
 
 
@@ -958,7 +966,7 @@ Dumping Status
 E&xit
 
 
-# ui/win32ui.c: 7292
+# ui/win32ui.c: 7334
 ERROR: required files are missing, the game cannot be run.
 
 
@@ -1002,11 +1010,11 @@ Enable steadykey support
 Enforce aspect ratio
 
 
-# ui/audit32.c: 103 ui/properties.c: 578, 669, 1658
+# ui/audit32.c: 103 ui/properties.c: 578, 669, 1680
 Error
 
 
-# ui/treeview.c: 2671
+# ui/treeview.c: 2683
 Error finding custom file name to save
 
 
@@ -1014,15 +1022,15 @@ Error finding custom file name to save
 Error log (for developers)
 
 
-# ui/win32ui.c: 7387
+# ui/win32ui.c: 7429
 Error searching for custom folder
 
 
-# ui/treeview.c: 2600
+# ui/treeview.c: 2612
 Error while renaming custom file %s to %s
 
 
-# ui/treeview.c: 2742
+# ui/treeview.c: 2754
 Error while saving custom file %s
 
 
@@ -1030,7 +1038,7 @@ Error while saving custom file %s
 Exit the application
 
 
-# ui/win32ui.c: 4407
+# ui/win32ui.c: 4417
 Export a game list file
 
 
@@ -1046,11 +1054,11 @@ FOLDER LIST HIDE OPTIONS
 FPS
 
 
-# ui/audit32.c: 489
+# ui/audit32.c: 545
 Failed
 
 
-# ui/audit32.c: 230 ui/mame32.rc: 434
+# ui/audit32.c: 286 ui/mame32.rc: 434
 File Audit
 
 
@@ -1142,15 +1150,15 @@ Game filters
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 
 
-# ui/properties.c: 1082
+# ui/properties.c: 1102
 Game lacks sound
 
 
-# ui/properties.c: 1058
+# ui/properties.c: 1078
 Game protection isn't fully emulated
 
 
-# ui/win32ui.c: 3243
+# ui/win32ui.c: 3253
 Game search %d%% complete
 
 
@@ -1162,15 +1170,15 @@ Gamma Correction
 General
 
 
-# ui/properties.c: 1147
+# ui/properties.c: 1167
 Global driver options\nCustom options used by all games in the %s
 
 
-# ui/properties.c: 1127
+# ui/properties.c: 1147
 Global game options\nDefault options used by all games
 
 
-# ui/properties.c: 1130
+# ui/properties.c: 1150
 Global vector options\nCustom options used by all games in the Vector
 
 
@@ -1278,6 +1286,10 @@ Insert
 Interface Options
 
 
+# ui/treeview.c: 1416
+Joy 16-Way
+
+
 # ui/treeview.c: 1413
 Joy 2-Way
 
@@ -1290,27 +1302,31 @@ Joy 4-Way
 Joy 8-Way
 
 
-# ui/properties.c: 420, 4811
+# ui/properties.c: 420, 4830
 Joystick
 
 
-# ui/properties.c: 834, 835, 856
+# ui/properties.c: 845, 868
+Joystick 16-Way
+
+
+# ui/properties.c: 834, 835, 861
 Joystick 2-Way
 
 
-# ui/properties.c: 838, 852, 853
+# ui/properties.c: 838, 857, 858
 Joystick 2-Way Vertical
 
 
-# ui/properties.c: 841, 859
+# ui/properties.c: 841, 864
 Joystick 4-Way
 
 
-# ui/properties.c: 843, 861
+# ui/properties.c: 847, 870
 Joystick 8-Way
 
 
-# ui/properties.c: 4821
+# ui/properties.c: 4840
 JoystickId
 
 
@@ -1334,7 +1350,7 @@ LISTVIEW OPTIONS
 Large Icons
 
 
-# ui/layout.c: 79 ui/properties.c: 421, 952 ui/treeview.c: 1425
+# ui/layout.c: 79 ui/properties.c: 421, 972 ui/treeview.c: 1427
 Lightgun
 
 
@@ -1354,7 +1370,7 @@ List
 Loa&d Savestate...
 
 
-# ui/win32ui.c: 7209
+# ui/win32ui.c: 7251
 Loading %s
 
 
@@ -1462,7 +1478,7 @@ Neogeo Decrypted
 New game changes
 
 
-# ui/audit32.c: 124 ui/win32ui.c: 5396
+# ui/audit32.c: 124 ui/win32ui.c: 5406
 No
 
 
@@ -1478,7 +1494,7 @@ No Dump
 No PCB Info available for this game.
 
 
-# ui/win32ui.c: 3654
+# ui/win32ui.c: 3664
 No Selection
 
 
@@ -1494,11 +1510,11 @@ Non-CPU
 Non-Wor&king
 
 
-# ui/dialogs.c: 221 ui/properties.c: 3577, 4662, 4916, 5155 
+# ui/dialogs.c: 221 ui/properties.c: 3594, 4681, 4935, 5173 
 None
 
 
-# ui/audit32.c: 335, 339
+# ui/audit32.c: 391, 395
 None required
 
 
@@ -1506,11 +1522,11 @@ None required
 Not Working
 
 
-# ui/audit32.c: 485
+# ui/audit32.c: 541
 Not found
 
 
-# ui/properties.c: 1046
+# ui/properties.c: 1066
 Not working
 
 
@@ -1586,7 +1602,7 @@ PCB Info
 PCB Info Files
 
 
-# ui/properties.c: 937 ui/treeview.c: 1422
+# ui/properties.c: 957 ui/treeview.c: 1424
 Paddle
 
 
@@ -1598,7 +1614,7 @@ Paddle device
 Palette
 
 
-# ui/audit32.c: 477
+# ui/audit32.c: 533
 Passed
 
 
@@ -1606,7 +1622,7 @@ Passed
 Pause Brightness
 
 
-# ui/treeview.c: 1426
+# ui/treeview.c: 1428
 Pedal
 
 
@@ -1682,11 +1698,11 @@ Players 8
 Pr&operties
 
 
-# ui/win32ui.c: 3683, 6830, 6855
+# ui/win32ui.c: 3693, 6872, 6897
 Propert&ies for %s
 
 
-# ui/mame32.rc: 66, 199 ui/win32ui.c: 3642
+# ui/mame32.rc: 66, 199 ui/win32ui.c: 3652
 Propert&ies for Driver
 
 
@@ -1714,7 +1730,7 @@ ROM check:
 ROMs
 
 
-# ui/properties.c: 1103
+# ui/properties.c: 1123
 ROMs missing
 
 
@@ -1722,11 +1738,11 @@ ROMs missing
 Randomly select a game.
 
 
-# ui/layout.c: 70 ui/win32ui.c: 5388
+# ui/layout.c: 70 ui/win32ui.c: 5398
 Raster
 
 
-# ui/win32ui.c: 3424
+# ui/win32ui.c: 3434
 Ready
 
 
@@ -1858,11 +1874,11 @@ Scale screen
 Screen
 
 
-# ui/win32ui.c: 3202
+# ui/win32ui.c: 3212
 Screen flip support is missing
 
 
-# ui/properties.c: 1094
+# ui/properties.c: 1114
 Screen flipping is not supported
 
 
@@ -2082,47 +2098,47 @@ Show these fields in this order:
 Size:
 
 
-# ui/properties.c: 4638
+# ui/properties.c: 4657
 Skip 1 of 12 frames
 
 
-# ui/properties.c: 4647
+# ui/properties.c: 4666
 Skip 10 of 12 frames
 
 
-# ui/properties.c: 4648
+# ui/properties.c: 4667
 Skip 11 of 12 frames
 
 
-# ui/properties.c: 4639
+# ui/properties.c: 4658
 Skip 2 of 12 frames
 
 
-# ui/properties.c: 4640
+# ui/properties.c: 4659
 Skip 3 of 12 frames
 
 
-# ui/properties.c: 4641
+# ui/properties.c: 4660
 Skip 4 of 12 frames
 
 
-# ui/properties.c: 4642
+# ui/properties.c: 4661
 Skip 5 of 12 frames
 
 
-# ui/properties.c: 4643
+# ui/properties.c: 4662
 Skip 6 of 12 frames
 
 
-# ui/properties.c: 4644
+# ui/properties.c: 4663
 Skip 7 of 12 frames
 
 
-# ui/properties.c: 4645
+# ui/properties.c: 4664
 Skip 8 of 12 frames
 
 
-# ui/properties.c: 4646
+# ui/properties.c: 4665
 Skip 9 of 12 frames
 
 
@@ -2190,7 +2206,7 @@ Sort items by year
 Sound
 
 
-# ui/properties.c: 1088
+# ui/properties.c: 1108
 Sound emulation isn't 100% accurate
 
 
@@ -2206,7 +2222,7 @@ Sounds (*.wav)
 St&ory
 
 
-# ui/properties.c: 3376, 3381, 3384, 3626, 3629, 4866, 4889 
+# ui/properties.c: 3393, 3398, 3401, 3643, 3646, 4885, 4908 
 Standard
 
 
@@ -2234,7 +2250,7 @@ Story
 Stretch using hardware
 
 
-# ui/properties.c: 1180 ui/treeview.c: 1356, 1357
+# ui/properties.c: 1200 ui/treeview.c: 1356, 1357
 Supported
 
 
@@ -2298,7 +2314,7 @@ Toggle Screen Shot
 Total:
 
 
-# ui/layout.c: 78 ui/properties.c: 944 ui/treeview.c: 1424 ui/win32ui.c: 854
+# ui/layout.c: 78 ui/properties.c: 964 ui/treeview.c: 1426 ui/win32ui.c: 854
 Trackball
 
 
@@ -2378,11 +2394,11 @@ Type
 Unable to Load Riched32.dll
 
 
-# ui/treeview.c: 2611
+# ui/treeview.c: 2623
 Unable to add game to non-custom folder
 
 
-# ui/treeview.c: 2628
+# ui/treeview.c: 2640
 Unable to remove game from non-custom folder
 
 
@@ -2394,7 +2410,7 @@ Unavailable
 Unemulated Protection
 
 
-# ui/audit32.c: 472 ui/properties.c: 995, 1040
+# ui/audit32.c: 528 ui/properties.c: 1015, 1060
 Unknown
 
 
@@ -2402,7 +2418,7 @@ Unknown
 Unknown error.
 
 
-# ui/properties.c: 1182 ui/treeview.c: 1359, 1360
+# ui/properties.c: 1202 ui/treeview.c: 1359, 1360
 Unsupported
 
 
@@ -2430,7 +2446,7 @@ Use various icon for Not Working game
 Use volume auto adjust
 
 
-# ui/layout.c: 71 ui/mame32.rc: 849 ui/options.c: 787, 2718 ui/properties.c: 622 ui/treeview.c: 306 ui/win32ui.c: 5386
+# ui/layout.c: 71 ui/mame32.rc: 849 ui/options.c: 787, 2718 ui/properties.c: 622 ui/treeview.c: 306 ui/win32ui.c: 5396
 Vector
 
 
@@ -2446,7 +2462,7 @@ Vector (V)
 Vertical
 
 
-# ui/properties.c: 1076
+# ui/properties.c: 1096
 Video emulation isn't 100% accurate
 
 
@@ -2470,7 +2486,7 @@ Visual Effects
 Volume attenuation
 
 
-# ui/win32ui.c: 7295
+# ui/win32ui.c: 7337
 WARNING: the game might not run correctly.
 
 
@@ -2502,7 +2518,7 @@ Window frame (dark)
 Window frame (light)
 
 
-# ui/layout.c: 66 ui/properties.c: 1048
+# ui/layout.c: 66 ui/properties.c: 1068
 Working
 
 
@@ -2514,7 +2530,7 @@ Wrong Colors
 Year
 
 
-# ui/audit32.c: 120 ui/win32ui.c: 5394
+# ui/audit32.c: 120 ui/win32ui.c: 5404
 Yes
 
 
@@ -2546,7 +2562,7 @@ by &Type
 by &Year
 
 
-# ui/win32ui.c: 4404
+# ui/win32ui.c: 4414
 game list files (*.lst)
 
 

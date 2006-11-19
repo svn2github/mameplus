@@ -837,10 +837,15 @@ static LPWSTR GameInfoInput(int nIndex)
 				/* if already defined as vertical, make it 4 or 8 way */
 				else if (strcmp(control, _UI("Joystick 2-Way Vertical")) == 0)
 				{
-					if (input->way <= 4)
+					if (input->way == 4)
 						control = _UI("Joystick 4-Way");
 					else
-						control = _UI("Joystick 8-Way");
+					{
+						if (input->way == 16)
+							control = _UI("Joystick 16-Way");
+						else
+							control = _UI("Joystick 8-Way");
+					}
 				}
 				break;
 
@@ -855,10 +860,15 @@ static LPWSTR GameInfoInput(int nIndex)
 				/* if already defined as horiz, make it 4 or 8way */
 				else if (strcmp(control, _UI("Joystick 2-Way"))==0)
 				{
-					if (input->way <= 4)
+					if (input->way == 4)
 						control = _UI("Joystick 4-Way");
 					else
-						control = _UI("Joystick 8-Way");
+					{
+						if (input->way == 16)
+							control = _UI("Joystick 16-Way");
+						else
+							control = _UI("Joystick 8-Way");
+					}
 				}
 				break;
 
@@ -875,10 +885,15 @@ static LPWSTR GameInfoInput(int nIndex)
 				/* if already defined as horiz, make it 4 or 8 way */
 				else if (strcmp(control, _UI("Double Joystick 2-Way")) == 0)
 				{
-					if (input->way <= 4)
+					if (input->way == 4)
 						control = _UI("Double Joystick 4-Way");
 					else
-						control = _UI("Double Joystick 8-Way");
+					{
+						if (input->way == 16)
+							control = _UI("Double Joystick 16-Way");
+						else
+							control = _UI("Double Joystick 8-Way");
+					}
 				}
 				break;
 
@@ -895,10 +910,15 @@ static LPWSTR GameInfoInput(int nIndex)
 				/* if already defined as vertical, make it 4 or 8 way */
 				else if (strcmp(control, _UI("Double Joystick 2-Way Vertical")) == 0)
 				{
-					if (input->way <= 4)
+					if (input->way == 4)
 						control = _UI("Double Joystick 4-Way");
 					else
-						control = _UI("Double Joystick 8-Way");
+					{
+						if (input->way == 16)
+							control = _UI("Double Joystick 16-Way");
+						else
+							control = _UI("Double Joystick 8-Way");
+					}
 				}
 				break;
 

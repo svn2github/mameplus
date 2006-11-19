@@ -558,7 +558,7 @@ Tecmo
 Tehkan
 テーカン
 
-# Beam Invader
+# Beam Invader (set 1)
 Tekunon Kougyou
 テクノン工業
 
@@ -1818,6 +1818,10 @@ Ryoto Electric Co.
 SA
 
 
+# Trivia (sms)
+SMS MFG CORP
+
+
 # Safari Rally (Japan)
 SNK
 
@@ -2084,6 +2088,10 @@ Tiertex
 
 # Area 51 (Time Warner License)
 Time Warner
+
+
+# Fishin' Frenzy (prototype)
+Time Warner Interactive
 
 
 # Leprechaun

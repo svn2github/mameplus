@@ -1848,23 +1848,33 @@ int load_driver_statistics (char *buffer, int bufsize)
 					if (inp->way == 4)
 						y = 2;
 					else
-						y = 3;
+					{
+						if (inp->way == 16)
+							y = 4;
+						else
+							y = 3;
+					}
 					break;
 				case IPT_JOYSTICKRIGHT_LEFT:
 				case IPT_JOYSTICKRIGHT_RIGHT:
 				case IPT_JOYSTICKLEFT_LEFT:
 				case IPT_JOYSTICKLEFT_RIGHT:
 					if (!y)
-						y = 4;
+						y = 5;
 					break;
 				case IPT_JOYSTICKRIGHT_UP:
 				case IPT_JOYSTICKRIGHT_DOWN:
 				case IPT_JOYSTICKLEFT_UP:
 				case IPT_JOYSTICKLEFT_DOWN:
 					if (inp->way == 4)
-						y = 5;
-					else
 						y = 6;
+					else
+					{
+						if (inp->way == 16)
+							y = 8;
+						else
+							y = 7;
+					}
 					break;
 				case IPT_BUTTON1:
 					if (x<1) x = 1;
@@ -1939,7 +1949,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 
 		for (y = 0; y < sizeof (controltmp) / sizeof (*controltmp); y++)
 			if (controltmp[y])
-				control[y + 27]++;
+				control[y + 29]++;
 
 
 		/* Calc all Frames_Per_Second numbers */
@@ -2392,15 +2402,17 @@ int load_driver_statistics (char *buffer, int bufsize)
 	if (control[21]) { sprintf(name, _("       JOY2WAY:  %4d\n"), control[21]); strcat(buffer, name); }
 	if (control[22]) { sprintf(name, _("       JOY4WAY:  %4d\n"), control[22]); strcat(buffer, name); }
 	if (control[23]) { sprintf(name, _("       JOY8WAY:  %4d\n"), control[23]); strcat(buffer, name); }
-	if (control[24]) { sprintf(name, _(" DOUBLEJOY2WAY:  %4d\n"), control[24]); strcat(buffer, name); }
-	if (control[25]) { sprintf(name, _(" DOUBLEJOY4WAY:  %4d\n"), control[25]); strcat(buffer, name); }
-	if (control[26]) { sprintf(name, _(" DOUBLEJOY8WAY:  %4d\n"), control[26]); strcat(buffer, name); }
-	if (control[27]) { sprintf(name, _("        PADDLE:  %4d\n"), control[27]); strcat(buffer, name); }
-	if (control[28]) { sprintf(name, _("          DIAL:  %4d\n"), control[28]); strcat(buffer, name); }
-	if (control[29]) { sprintf(name, _("     TRACKBALL:  %4d\n"), control[29]); strcat(buffer, name); }
-	if (control[30]) { sprintf(name, _("      AD STICK:  %4d\n"), control[30]); strcat(buffer, name); }
-	if (control[31]) { sprintf(name, _("      LIGHTGUN:  %4d\n"), control[31]); strcat(buffer, name); }
-	if (control[32]) { sprintf(name, _("         PEDAL:  %4d\n"), control[32]); strcat(buffer, name); }
+	if (control[24]) { sprintf(name, _("      JOY16WAY:  %4d\n"), control[24]); strcat(buffer, name); }
+	if (control[25]) { sprintf(name, _(" DOUBLEJOY2WAY:  %4d\n"), control[25]); strcat(buffer, name); }
+	if (control[26]) { sprintf(name, _(" DOUBLEJOY4WAY:  %4d\n"), control[26]); strcat(buffer, name); }
+	if (control[27]) { sprintf(name, _(" DOUBLEJOY8WAY:  %4d\n"), control[27]); strcat(buffer, name); }
+	if (control[28]) { sprintf(name, _("DOUBLEJOY16WAY:  %4d\n"), control[28]); strcat(buffer, name); }
+	if (control[29]) { sprintf(name, _("        PADDLE:  %4d\n"), control[29]); strcat(buffer, name); }
+	if (control[30]) { sprintf(name, _("          DIAL:  %4d\n"), control[30]); strcat(buffer, name); }
+	if (control[31]) { sprintf(name, _("     TRACKBALL:  %4d\n"), control[31]); strcat(buffer, name); }
+	if (control[32]) { sprintf(name, _("      AD STICK:  %4d\n"), control[32]); strcat(buffer, name); }
+	if (control[33]) { sprintf(name, _("      LIGHTGUN:  %4d\n"), control[33]); strcat(buffer, name); }
+	if (control[34]) { sprintf(name, _("         PEDAL:  %4d\n"), control[34]); strcat(buffer, name); }
 
 	sprintf(name, _("         OTHER:  %4d\n"), noinput);
 	strcat(buffer, name);

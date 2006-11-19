@@ -1383,9 +1383,9 @@ void CreateControlFolders(int parent_index)
 		FOLDER_PLAYER5, FOLDER_PLAYER6, FOLDER_PLAYER7, FOLDER_PLAYER8,
 		FOLDER_BUTTON1, FOLDER_BUTTON2, FOLDER_BUTTON3, FOLDER_BUTTON4, FOLDER_BUTTON5,
 		FOLDER_BUTTON6, FOLDER_BUTTON7, FOLDER_BUTTON8, FOLDER_BUTTON9, FOLDER_BUTTON10,
-		FOLDER_JOY2WAY, FOLDER_JOY4WAY, FOLDER_JOY8WAY,
+		FOLDER_JOY2WAY, FOLDER_JOY4WAY, FOLDER_JOY8WAY, FOLDER_JOY16WAY,
 //		FOLDER_VJOY2WAY,
-		FOLDER_DOUBLEJOY2WAY, FOLDER_DOUBLEJOY4WAY, FOLDER_DOUBLEJOY8WAY,
+		FOLDER_DOUBLEJOY2WAY, FOLDER_DOUBLEJOY4WAY, FOLDER_DOUBLEJOY8WAY, FOLDER_DOUBLEJOY16WAY,
 //		FOLDER_VDOUBLEJOY2WAY,
 		FOLDER_ADSTICK, FOLDER_PADDLE, FOLDER_DIAL, FOLDER_TRACKBALL, FOLDER_LIGHTGUN, FOLDER_PEDAL,
 		FOLDER_MAX
@@ -1413,10 +1413,12 @@ void CreateControlFolders(int parent_index)
 		"Joy 2-Way",
 		"Joy 4-Way",
 		"Joy 8-Way",
+		"Joy 16-Way",
 //		"Joy 2-Way (V)",
 		"Double Joy 2-Way",
 		"Double Joy 4-Way",
 		"Double Joy 8-Way",
+		"Double Joy 16-Way",
 //		"Double Joy 2-Way (V)",
 		"AD Stick",
 		"Paddle",
@@ -1486,10 +1488,15 @@ void CreateControlFolders(int parent_index)
 			case IPT_JOYSTICK_UP:
 			case IPT_JOYSTICK_DOWN:
 
-					if (input->way <= 4)
+					if (input->way == 4)
 						w = FOLDER_JOY4WAY;
 					else
-						w = FOLDER_JOY8WAY;
+					{
+						if (input->way == 16)
+							w = FOLDER_JOY16WAY;
+						else
+							w = FOLDER_JOY8WAY;
+					}
 				break;
 
 			case IPT_JOYSTICKRIGHT_LEFT:
@@ -1506,10 +1513,15 @@ void CreateControlFolders(int parent_index)
 			case IPT_JOYSTICKLEFT_UP:
 			case IPT_JOYSTICKLEFT_DOWN:
 
-					if (input->way <= 4)
+					if (input->way == 4)
 						w = FOLDER_DOUBLEJOY4WAY;
 					else
-						w = FOLDER_DOUBLEJOY8WAY;
+					{
+						if (input->way == 16)
+							w = FOLDER_DOUBLEJOY16WAY;
+						else
+							w = FOLDER_DOUBLEJOY8WAY;
+					}
 				break;
 
 			case IPT_PADDLE:

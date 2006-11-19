@@ -2,11 +2,11 @@
                                 
 Japanese game list by 俺、ぶろん
 
-# ui/properties.c: 1025
+# ui/properties.c: 1045
 %d colors 
 %d 色 
 
-# ui/win32ui.c: 255, 3491
+# ui/win32ui.c: 255, 3501
 %d games
 %d ゲーム
 
@@ -18,35 +18,35 @@ Japanese game list by 俺、ぶろん
 %dx%d (V)
 %dx%d (V)
 
-# ui/properties.c: 4695
+# ui/properties.c: 4714
 %li bit
 %li ビット
 
-# ui/properties.c: 1001
+# ui/properties.c: 1021
 %s (%d player)
 %s (%d プレイヤー)
 
-# ui/properties.c: 1012
+# ui/properties.c: 1032
 %s (%d player, %d button)
 %s (%d プレイヤー、%d ボタン)
 
-# ui/properties.c: 1010
+# ui/properties.c: 1030
 %s (%d player, %d buttons)
 %s (%d プレイヤー、%d ボタン)
 
-# ui/properties.c: 998
+# ui/properties.c: 1018
 %s (%d players)
 %s (%d プレイヤー)
 
-# ui/properties.c: 1007
+# ui/properties.c: 1027
 %s (%d players, %d button)
 %s (%d プレイヤー、%d ボタン)
 
-# ui/properties.c: 1004
+# ui/properties.c: 1024
 %s (%d players, %d buttons)
 %s (%d プレイヤー、%d ボタン)
 
-# ui/properties.c: 1145
+# ui/properties.c: 1165
 %s\nThis is also global driver options in the %s
 %s\nそしてこれはドライバ%sのグローバルオプションです
 
@@ -90,7 +90,7 @@ MAME32について(&A)
 &Cancel
 キャンセル(&C)
 
-# ui/audit32.c: 426 ui/mame32.rc: 1205
+# ui/audit32.c: 482 ui/mame32.rc: 1205
 &Close
 閉じる(&C)
 
@@ -98,7 +98,7 @@ MAME32について(&A)
 &Contents\tF1
 ヘルプコンテンツ(&H)\tF1
 
-# ui/audit32.c: 296
+# ui/audit32.c: 352
 &Continue
 継続(&P)
 
@@ -202,7 +202,7 @@ MAME32について(&A)
 &Palette Setting...
 パレット設定(&P)...
 
-# ui/audit32.c: 291 ui/mame32.rc: 437
+# ui/audit32.c: 347 ui/mame32.rc: 437
 &Pause
 一時停止(&P)
 
@@ -210,11 +210,11 @@ MAME32について(&A)
 &Picture Area\tAlt+P
 画像エリア(&P)\tAlt+P
 
-# ui/mame32.rc: 52, 180 ui/win32ui.c: 3635
+# ui/mame32.rc: 52, 180 ui/win32ui.c: 3645
 &Play
 プレイ(&P)
 
-# ui/win32ui.c: 254, 3672, 6817, 6845
+# ui/win32ui.c: 254, 3682, 6859, 6887
 &Play %s
 プレイ(&P) %s
 
@@ -290,7 +290,7 @@ MAME32について(&A)
 &Working
 動作可(&W)
 
-# ui/win32ui.c: 6288
+# ui/win32ui.c: 6330
 '%s' is not a valid savestate file for game '%s'.
 '%s'はゲーム'%s'に適切なステートではありません。
 
@@ -314,7 +314,7 @@ A sharing violation occurred.
 A&udit
 監査(&U)
 
-# ui/properties.c: 948 ui/treeview.c: 1421
+# ui/properties.c: 968 ui/treeview.c: 1423
 AD Stick
 アナログスティック
 
@@ -358,7 +358,7 @@ All
 All Games
 全ゲーム
 
-# ui/win32ui.c: 794, 801, 808, 815, 4404
+# ui/win32ui.c: 794, 801, 808, 815, 4414
 All files (*.*)
 全てのファイル (*.*)
 
@@ -382,7 +382,7 @@ Allows filtering out games from a folder
 Analog deadzone
 アナログ変換の割合
 
-# ui/properties.c: 4661
+# ui/properties.c: 4680
 Anti-clockwise
 反時計回り
 
@@ -418,19 +418,19 @@ Audit
 Audit ROM and samples sets
 ロムファイルとサンプルファイルを監査します
 
-# ui/audit32.c: 425
+# ui/audit32.c: 481
 Audit complete.\n
 チェック終了\n
 
-# ui/properties.c: 4581, 4682, 4773
+# ui/properties.c: 4600, 4701, 4792
 Auto
 自動
 
-# ui/properties.c: 4664
+# ui/properties.c: 4683
 Auto anti-clockwise
 自動的に反時計回り
 
-# ui/properties.c: 4663
+# ui/properties.c: 4682
 Auto clockwise
 自動的に時計回り
 
@@ -454,11 +454,11 @@ Available
 Available fields:
 利用可能\フィールド:
 
-# ui/properties.c: 4816
+# ui/properties.c: 4835
 Axis
 軸
 
-# ui/properties.c: 4826
+# ui/properties.c: 4845
 AxisId
 軸ID
 
@@ -466,7 +466,7 @@ AxisId
 BIOS
 BIOS
 
-# ui/properties.c: 1101
+# ui/properties.c: 1121
 BIOS missing
 BIOS がありません
 
@@ -490,7 +490,7 @@ Basic
 Beam width
 ビーム
 
-# ui/audit32.c: 481
+# ui/audit32.c: 537
 Best available
 最良の状態です
 
@@ -622,7 +622,7 @@ Categories
 Changing this item is not permitted
 このアイテムの変更は許可されていません
 
-# ui/audit32.c: 214, 223
+# ui/audit32.c: 270, 279
 Checking Game %s - %s
 チェック中 ゲーム %s - %s
 
@@ -634,7 +634,7 @@ Checking...
 Christopher Kirmse and Michael Soderstrom
 Christopher Kirmse and Michael Soderstrom
 
-# ui/properties.c: 4660
+# ui/properties.c: 4679
 Clockwise
 時計回り
 
@@ -650,11 +650,11 @@ Clone of:
 Clones
 クローン
 
-# ui/properties.c: 1064
+# ui/properties.c: 1084
 Colors are completely wrong
 色が再現されない
 
-# ui/properties.c: 1070
+# ui/properties.c: 1090
 Colors aren't 100% accurate
 色の再現が不完全
 
@@ -738,11 +738,11 @@ Copyright (C) 1997-2006 The MAME Team
 Correct:
 正常:
 
-# ui/win32ui.c: 6198
+# ui/win32ui.c: 6208
 Could not open '%s' as a valid input file.
 「%s」を有効な再生ファイルとしてオープンできません
 
-# ui/win32ui.c: 6300
+# ui/win32ui.c: 6274, 6342
 Could not open '%s' as a valid savestate file.
 '%s'は正常なステートとして開けません。
 
@@ -754,7 +754,7 @@ Crop artwork
 Cursor
 カーソ\ル
 
-# ui/win32ui.c: 4473, 4501
+# ui/win32ui.c: 4483, 4511
 Custom
 カスタム
 
@@ -778,7 +778,7 @@ Customize interface options.
 Customize which columns are used in the game list
 ゲームリストに用いる表\示項目を設定します
 
-# ui/properties.c: 4659
+# ui/properties.c: 4678
 Default
 デフォルト
 
@@ -810,7 +810,7 @@ Description
 Details
 詳細
 
-# ui/properties.c: 940 ui/treeview.c: 1423
+# ui/properties.c: 960 ui/treeview.c: 1425
 Dial
 ダイヤル
 
@@ -898,31 +898,39 @@ Displays program and copyright information
 Do you wish to continue?
 続けますか？
 
-# ui/treeview.c: 1417
+# ui/treeview.c: 1421
+Double Joy 16-Way
+16方向デュアルスティック
+
+# ui/treeview.c: 1418
 Double Joy 2-Way
 2方向デュアルスティック
 
-# ui/treeview.c: 1418
+# ui/treeview.c: 1419
 Double Joy 4-Way
 4方向デュアルスティック
 
-# ui/treeview.c: 1419
+# ui/treeview.c: 1420
 Double Joy 8-Way
 8方向デュアルスティック
 
-# ui/properties.c: 876, 892, 893
+# ui/properties.c: 893, 918
+Double Joystick 16-Way
+16方向デュアルスティック
+
+# ui/properties.c: 886, 907, 908
 Double Joystick 2-Way
 ２方向デュアルスティック
 
-# ui/properties.c: 872, 873, 896
+# ui/properties.c: 882, 883, 911
 Double Joystick 2-Way Vertical
 ２方向デュアルスティック 縦
 
-# ui/properties.c: 879, 899
+# ui/properties.c: 889, 914
 Double Joystick 4-Way
 ４方向デュアルスティック
 
-# ui/properties.c: 881, 901
+# ui/properties.c: 895, 920
 Double Joystick 8-Way
 ８方向デュアルスティック
 
@@ -930,7 +938,7 @@ Double Joystick 8-Way
 Draw antialiased vectors
 アンチエイリアス
 
-# ui/properties.c: 4637
+# ui/properties.c: 4656
 Draw every frame
 フレームスキップなし
 
@@ -958,7 +966,7 @@ Dumping Status
 E&xit
 終了(&X)
 
-# ui/win32ui.c: 7292
+# ui/win32ui.c: 7334
 ERROR: required files are missing, the game cannot be run.
 エラー: 必要なファイルが不足しています。 このゲームは実行出来ません。
 
@@ -1002,11 +1010,11 @@ Enable steadykey support
 Enforce aspect ratio
 表\示比率を固定
 
-# ui/audit32.c: 103 ui/properties.c: 578, 669, 1658
+# ui/audit32.c: 103 ui/properties.c: 578, 669, 1680
 Error
 エラー
 
-# ui/treeview.c: 2671
+# ui/treeview.c: 2683
 Error finding custom file name to save
 保存するカスタムファイルが見つかりません
 
@@ -1014,15 +1022,15 @@ Error finding custom file name to save
 Error log (for developers)
 エラーログを出力(開発者向け)
 
-# ui/win32ui.c: 7387
+# ui/win32ui.c: 7429
 Error searching for custom folder
 カスタムフォルダが見つかりません
 
-# ui/treeview.c: 2600
+# ui/treeview.c: 2612
 Error while renaming custom file %s to %s
 カスタムファイルの名前を %s から %s への変更でエラーが発生しました
 
-# ui/treeview.c: 2742
+# ui/treeview.c: 2754
 Error while saving custom file %s
 カスタムファイル %s の保存でエラーが発生しました
 
@@ -1030,7 +1038,7 @@ Error while saving custom file %s
 Exit the application
 アプリケーションを終了します
 
-# ui/win32ui.c: 4407
+# ui/win32ui.c: 4417
 Export a game list file
 ゲームリストを出力
 
@@ -1046,11 +1054,11 @@ FOLDER LIST HIDE OPTIONS
 FPS
 FPS
 
-# ui/audit32.c: 489
+# ui/audit32.c: 545
 Failed
 異常です
 
-# ui/audit32.c: 230 ui/mame32.rc: 434
+# ui/audit32.c: 286 ui/mame32.rc: 434
 File Audit
 ファイル監査
 
@@ -1142,15 +1150,15 @@ Game filters
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 下記より選択された項目をリスト上非表\示にします
 
-# ui/properties.c: 1082
+# ui/properties.c: 1102
 Game lacks sound
 サウンドが未対応
 
-# ui/properties.c: 1058
+# ui/properties.c: 1078
 Game protection isn't fully emulated
 プロテクトのため動作が不完全
 
-# ui/win32ui.c: 3243
+# ui/win32ui.c: 3253
 Game search %d%% complete
 ゲームの検索 %d%% 完了
 
@@ -1162,15 +1170,15 @@ Gamma Correction
 General
 全般
 
-# ui/properties.c: 1147
+# ui/properties.c: 1167
 Global driver options\nCustom options used by all games in the %s
 グローバルドライバオプションです。\n%sの全ゲームのカスタム設定として使用されます。
 
-# ui/properties.c: 1127
+# ui/properties.c: 1147
 Global game options\nDefault options used by all games
 グローバルゲームオプションです。\n全ゲームのデフォルト設定として使用されます。
 
-# ui/properties.c: 1130
+# ui/properties.c: 1150
 Global vector options\nCustom options used by all games in the Vector
 グローバルベクタオプションです。\nベクタの全ゲームのカスタム設定として使用されます。
 
@@ -1278,6 +1286,10 @@ Insert
 Interface Options
 インターフェイスオプション
 
+# ui/treeview.c: 1416
+Joy 16-Way
+16方向スティック
+
 # ui/treeview.c: 1413
 Joy 2-Way
 2方向スティック
@@ -1290,27 +1302,31 @@ Joy 4-Way
 Joy 8-Way
 8方向スティック
 
-# ui/properties.c: 420, 4811
+# ui/properties.c: 420, 4830
 Joystick
 ジョイスティック
 
-# ui/properties.c: 834, 835, 856
+# ui/properties.c: 845, 868
+Joystick 16-Way
+16方向スティック
+
+# ui/properties.c: 834, 835, 861
 Joystick 2-Way
 ２方向スティック
 
-# ui/properties.c: 838, 852, 853
+# ui/properties.c: 838, 857, 858
 Joystick 2-Way Vertical
 ２方向スティック 縦
 
-# ui/properties.c: 841, 859
+# ui/properties.c: 841, 864
 Joystick 4-Way
 ４方向スティック
 
-# ui/properties.c: 843, 861
+# ui/properties.c: 847, 870
 Joystick 8-Way
 ８方向スティック
 
-# ui/properties.c: 4821
+# ui/properties.c: 4840
 JoystickId
 ジョイスティックID
 
@@ -1334,7 +1350,7 @@ LISTVIEW OPTIONS
 Large Icons
 大きなアイコン
 
-# ui/layout.c: 79 ui/properties.c: 421, 952 ui/treeview.c: 1425
+# ui/layout.c: 79 ui/properties.c: 421, 972 ui/treeview.c: 1427
 Lightgun
 光線銃
 
@@ -1354,7 +1370,7 @@ List
 Loa&d Savestate...
 ステートを読み込む(&D)...
 
-# ui/win32ui.c: 7209
+# ui/win32ui.c: 7251
 Loading %s
 ロード中 %s
 
@@ -1462,7 +1478,7 @@ Neogeo Decrypted
 New game changes
 新しいゲームの変更点を表\示します
 
-# ui/audit32.c: 124 ui/win32ui.c: 5396
+# ui/audit32.c: 124 ui/win32ui.c: 5406
 No
 いいえ
 
@@ -1478,7 +1494,7 @@ No Dump
 No PCB Info available for this game.
 このゲームにPCB情報がありません。
 
-# ui/win32ui.c: 3654
+# ui/win32ui.c: 3664
 No Selection
 選択されていません
 
@@ -1494,11 +1510,11 @@ CPU未使用
 Non-Wor&king
 動作不可(&K)
 
-# ui/dialogs.c: 221 ui/properties.c: 3577, 4662, 4916, 5155 
+# ui/dialogs.c: 221 ui/properties.c: 3594, 4681, 4935, 5173 
 None
 なし
 
-# ui/audit32.c: 335, 339
+# ui/audit32.c: 391, 395
 None required
 必要ありません
 
@@ -1506,11 +1522,11 @@ None required
 Not Working
 動作不可
 
-# ui/audit32.c: 485
+# ui/audit32.c: 541
 Not found
 見つかりません
 
-# ui/properties.c: 1046
+# ui/properties.c: 1066
 Not working
 動作不可
 
@@ -1586,7 +1602,7 @@ PCB情報
 PCB Info Files
 PCB情報ファイル
 
-# ui/properties.c: 937 ui/treeview.c: 1422
+# ui/properties.c: 957 ui/treeview.c: 1424
 Paddle
 パドル
 
@@ -1598,7 +1614,7 @@ Paddle device
 Palette
 パレット設定
 
-# ui/audit32.c: 477
+# ui/audit32.c: 533
 Passed
 正常です
 
@@ -1606,7 +1622,7 @@ Passed
 Pause Brightness
 ポーズ中の明るさ
 
-# ui/treeview.c: 1426
+# ui/treeview.c: 1428
 Pedal
 ペダル
 
@@ -1682,11 +1698,11 @@ Players 8
 Pr&operties
 プロパティ(&O)
 
-# ui/win32ui.c: 3683, 6830, 6855
+# ui/win32ui.c: 3693, 6872, 6897
 Propert&ies for %s
 %sのプロパティ(&I)
 
-# ui/mame32.rc: 66, 199 ui/win32ui.c: 3642
+# ui/mame32.rc: 66, 199 ui/win32ui.c: 3652
 Propert&ies for Driver
 ドライバのプロパティ(&i)
 
@@ -1714,7 +1730,7 @@ ROM check:
 ROMs
 ROM
 
-# ui/properties.c: 1103
+# ui/properties.c: 1123
 ROMs missing
 ROMが見つかりません
 
@@ -1722,11 +1738,11 @@ ROMが見つかりません
 Randomly select a game.
 ゲームをランダムに選択します
 
-# ui/layout.c: 70 ui/win32ui.c: 5388
+# ui/layout.c: 70 ui/win32ui.c: 5398
 Raster
 ラスタ
 
-# ui/win32ui.c: 3424
+# ui/win32ui.c: 3434
 Ready
 起動中
 
@@ -1858,11 +1874,11 @@ Scale screen
 Screen
 画面
 
-# ui/win32ui.c: 3202
+# ui/win32ui.c: 3212
 Screen flip support is missing
 カクテルモードの画面反転に未対応
 
-# ui/properties.c: 1094
+# ui/properties.c: 1114
 Screen flipping is not supported
 カクテルモードの画面反転に未対応
 
@@ -2082,47 +2098,47 @@ Show these fields in this order:
 Size:
 サイズ:
 
-# ui/properties.c: 4638
+# ui/properties.c: 4657
 Skip 1 of 12 frames
 12フレームに1回スキップ
 
-# ui/properties.c: 4647
+# ui/properties.c: 4666
 Skip 10 of 12 frames
 12フレームに10回スキップ
 
-# ui/properties.c: 4648
+# ui/properties.c: 4667
 Skip 11 of 12 frames
 12フレームに11回スキップ
 
-# ui/properties.c: 4639
+# ui/properties.c: 4658
 Skip 2 of 12 frames
 12フレームに2回スキップ
 
-# ui/properties.c: 4640
+# ui/properties.c: 4659
 Skip 3 of 12 frames
 12フレームに3回スキップ
 
-# ui/properties.c: 4641
+# ui/properties.c: 4660
 Skip 4 of 12 frames
 12フレームに4回スキップ
 
-# ui/properties.c: 4642
+# ui/properties.c: 4661
 Skip 5 of 12 frames
 12フレームに5回スキップ
 
-# ui/properties.c: 4643
+# ui/properties.c: 4662
 Skip 6 of 12 frames
 12フレームに6回スキップ
 
-# ui/properties.c: 4644
+# ui/properties.c: 4663
 Skip 7 of 12 frames
 12フレームに7回スキップ
 
-# ui/properties.c: 4645
+# ui/properties.c: 4664
 Skip 8 of 12 frames
 12フレームに8回スキップ
 
-# ui/properties.c: 4646
+# ui/properties.c: 4665
 Skip 9 of 12 frames
 12フレームに9回スキップ
 
@@ -2190,7 +2206,7 @@ Sort items by year
 Sound
 サウンド
 
-# ui/properties.c: 1088
+# ui/properties.c: 1108
 Sound emulation isn't 100% accurate
 音の再現が不完全
 
@@ -2206,7 +2222,7 @@ Sounds (*.wav)
 St&ory
 ストーリー(&O)
 
-# ui/properties.c: 3376, 3381, 3384, 3626, 3629, 4866, 4889 
+# ui/properties.c: 3393, 3398, 3401, 3643, 3646, 4885, 4908 
 Standard
 標準
 
@@ -2234,7 +2250,7 @@ Story
 Stretch using hardware
 ハードウェア拡大表\示
 
-# ui/properties.c: 1180 ui/treeview.c: 1356, 1357
+# ui/properties.c: 1200 ui/treeview.c: 1356, 1357
 Supported
 対応
 
@@ -2298,7 +2314,7 @@ Toggle Screen Shot
 Total:
 合計:
 
-# ui/layout.c: 78 ui/properties.c: 944 ui/treeview.c: 1424 ui/win32ui.c: 854
+# ui/layout.c: 78 ui/properties.c: 964 ui/treeview.c: 1426 ui/win32ui.c: 854
 Trackball
 トラックボール
 
@@ -2378,11 +2394,11 @@ Type
 Unable to Load Riched32.dll
 Riched32.dllが読み込めません
 
-# ui/treeview.c: 2611
+# ui/treeview.c: 2623
 Unable to add game to non-custom folder
 カスタムフォルダ以外にはゲームを追加出来ません
 
-# ui/treeview.c: 2628
+# ui/treeview.c: 2640
 Unable to remove game from non-custom folder
 カスタムフォルダ以外からゲームを削除出来ません
 
@@ -2394,7 +2410,7 @@ Unavailable
 Unemulated Protection
 プロテクトの再現が不完全
 
-# ui/audit32.c: 472 ui/properties.c: 995, 1040
+# ui/audit32.c: 528 ui/properties.c: 1015, 1060
 Unknown
 不明
 
@@ -2402,7 +2418,7 @@ Unknown
 Unknown error.
 原因不明のエラーが発生しました。
 
-# ui/properties.c: 1182 ui/treeview.c: 1359, 1360
+# ui/properties.c: 1202 ui/treeview.c: 1359, 1360
 Unsupported
 未対応
 
@@ -2430,7 +2446,7 @@ Use various icon for Not Working game
 Use volume auto adjust
 自動音量調整機能\を使用
 
-# ui/layout.c: 71 ui/mame32.rc: 849 ui/options.c: 787, 2718 ui/properties.c: 622 ui/treeview.c: 306 ui/win32ui.c: 5386
+# ui/layout.c: 71 ui/mame32.rc: 849 ui/options.c: 787, 2718 ui/properties.c: 622 ui/treeview.c: 306 ui/win32ui.c: 5396
 Vector
 ベクタ
 
@@ -2446,7 +2462,7 @@ Vector (V)
 Vertical
 縦型
 
-# ui/properties.c: 1076
+# ui/properties.c: 1096
 Video emulation isn't 100% accurate
 画像の再現が不完全
 
@@ -2470,7 +2486,7 @@ Visual Effects
 Volume attenuation
 ボリューム
 
-# ui/win32ui.c: 7295
+# ui/win32ui.c: 7337
 WARNING: the game might not run correctly.
 警告: このゲームは正常に実行出来ません。
 
@@ -2502,7 +2518,7 @@ Window frame (dark)
 Window frame (light)
 ウィンドウ フレーム (明)
 
-# ui/layout.c: 66 ui/properties.c: 1048
+# ui/layout.c: 66 ui/properties.c: 1068
 Working
 動作可
 
@@ -2514,7 +2530,7 @@ Wrong Colors
 Year
 製造年
 
-# ui/audit32.c: 120 ui/win32ui.c: 5394
+# ui/audit32.c: 120 ui/win32ui.c: 5404
 Yes
 はい
 
@@ -2546,7 +2562,7 @@ by &Type
 by &Year
 製造年(&Y)
 
-# ui/win32ui.c: 4404
+# ui/win32ui.c: 4414
 game list files (*.lst)
 ゲームリスト (*.lst)
 
