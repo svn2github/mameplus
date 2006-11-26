@@ -390,7 +390,7 @@ void stream_set_input(sound_stream *stream, int index, sound_stream *input_strea
  *
  *************************************/
 
-void stream_update(sound_stream *stream, int min_interval)
+void stream_update(sound_stream *stream)
 {
 	/* get current position based on the current time */
 	UINT32 target_frac = (stream->output[0].cur_out_pos << FRAC_BITS) + sound_scalebufferpos(stream->samples_per_frame_frac);
@@ -400,7 +400,7 @@ void stream_update(sound_stream *stream, int min_interval)
 	if (stream->new_sample_rate)
 		return;
 
-	VPRINTF(("stream_update(%p, %d)\n", stream, min_interval));
+	VPRINTF(("stream_update(%p)\n", stream, min_interval));
 	VPRINTF(("  cur_in_pos = %d, cur_out_pos = %d, target_sample = %d\n", stream->output[0].cur_in_pos, stream->output[0].cur_out_pos, target_sample));
 
 	/* compute how many samples we need to get to where we want to be */
@@ -466,7 +466,7 @@ int stream_get_outputs(sound_stream *stream)
 
 void stream_set_input_gain(sound_stream *stream, int input, float gain)
 {
-	stream_update(stream, 0);
+	stream_update(stream);
 	stream->input[input].gain = (int)(0x100 * gain);
 }
 
@@ -481,7 +481,7 @@ void stream_set_input_gain(sound_stream *stream, int input, float gain)
 
 void stream_set_output_gain(sound_stream *stream, int output, float gain)
 {
-	stream_update(stream, 0);
+	stream_update(stream);
 	stream->output[output].gain = (int)(0x100 * gain);
 }
 

@@ -1395,6 +1395,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( mysticri )	/* (c) 1992 Irem (World) */
 	DRIVER( gunhohki )	/* (c) 1992 Irem (Japan) */
 	DRIVER( majtitl2 )	/* (c) 1992 Irem (World) */
+	DRIVER( majtit2j )	/* (c) 1992 Irem (Japan) */
 	DRIVER( skingame )	/* (c) 1992 Irem America (US) */
 	DRIVER( skingam2 )	/* (c) 1992 Irem America (US) */
 	DRIVER( hook )		/* (c) 1992 Irem (World) */
@@ -2232,7 +2233,8 @@ V-V                           TP-027
 	DRIVER( avengers )	/*  2/1987 (c) 1987 (US) */
 	DRIVER( avenger2 )	/*  2/1987 (c) 1987 (US) */
 	DRIVER( buraiken )	/*  2/1987 (c) 1987 (Japan) */
-	DRIVER( bionicc )	/*  3/1987 (c) 1987 (US) */
+	DRIVER( bionicc )	/*  3/1987 (c) 1987 (Euro) */
+	DRIVER( bionicc1 )	/*  3/1987 (c) 1987 (US) */
 	DRIVER( bionicc2 )	/*  3/1987 (c) 1987 (US) */
 	DRIVER( topsecrt )	/*  3/1987 (c) 1987 (Japan) */
 	DRIVER( 1943 )		/*  6/1987 (c) 1987 (US) */
@@ -6126,6 +6128,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( squash )	/* (c) 1992 - Ref 922804/2 */
 	DRIVER( wrally )	/* (c) 1993 - Ref 930705 */
 	DRIVER( wrallya )	/* (c) 1993 - Ref 930705 */
+	DRIVER( wrallyb )	/* (c) 1993 - Ref 930217 */
 	DRIVER( glass )		/* (c) 1993 - Ref 931021 */
 	DRIVER( glass10 )	/* (c) 1993 - Ref 931021 */
 	DRIVER( glass10a )	/* (c) 1993 - Ref 931021 */

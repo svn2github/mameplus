@@ -23,11 +23,9 @@ typedef struct _callback_item callback_item;
 struct _callback_item
 {
 	callback_item *	next;
-	union
-	{
-		void		(*free_resources)(void);
-	} func;
+	void			(*free_resources)(void);
 };
+
 
 
 /***************************************************************************
@@ -95,13 +93,12 @@ void add_free_resources_callback(void (*callback)(void))
 	callback_item *cb, **cur;
 
 	cb = malloc_or_die(sizeof(*cb));
-	cb->func.free_resources = callback;
+	cb->free_resources = callback;
 	cb->next = NULL;
 
-	for (cur = &free_resources_callback_list; *cur; cur = &(*cur)->next) ;
+	for (cur = &free_resources_callback_list; *cur != NULL; cur = &(*cur)->next) ;
 	*cur = cb;
 }
-
 
 
 /*-------------------------------------------------
@@ -110,14 +107,13 @@ void add_free_resources_callback(void (*callback)(void))
 
 static void free_callback_list(callback_item **cb)
 {
-	while (*cb)
+	while (*cb != NULL)
 	{
 		callback_item *temp = *cb;
 		*cb = (*cb)->next;
 		free(temp);
 	}
 }
-
 
 
 /*-------------------------------------------------
@@ -220,7 +216,7 @@ void end_resource_tracking(void)
 
 	/* call everyone who tracks resources to let them know */
 	for (cb = free_resources_callback_list; cb; cb = cb->next)
-		(*cb->func.free_resources)();
+		(*cb->free_resources)();
 
 	/* decrement the tag counter */
 	resource_tracking_tag--;
@@ -250,7 +246,7 @@ void *_auto_malloc(size_t size, const char *file, int line)
 
 char *auto_strdup(const char *str)
 {
-	assert_always(str, "auto_strdup() requires non-NULL str");
+	assert_always(str != NULL, "auto_strdup() requires non-NULL str");
 	return strcpy(auto_malloc(strlen(str) + 1), str);
 }
 
@@ -262,6 +258,6 @@ char *auto_strdup(const char *str)
 
 char *auto_strdup_allow_null(const char *str)
 {
-	return str ? auto_strdup(str) : NULL;
+	return (str != NULL) ? auto_strdup(str) : NULL;
 }
 
