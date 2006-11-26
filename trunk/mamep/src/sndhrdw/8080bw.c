@@ -1661,7 +1661,7 @@ WRITE8_HANDLER( lupin3_sound_2_w )
 WRITE8_HANDLER( lupin3_tone_w )
 {
 	/* update the streams */
-	stream_update(lupin3_tone_stream, 0);
+	stream_update(lupin3_tone_stream);
 
 	lupin3_tone_step = 0;
 
@@ -1720,7 +1720,7 @@ struct CustomSound_interface ballbomb_custom_interface =
 WRITE8_HANDLER( ballbomb_tone_w )
 {
 	/* update the streams */
-	stream_update(ballbomb_tone_stream, 0);
+	stream_update(ballbomb_tone_stream);
 
 	ballbomb_tone_step = 0;
 	if (data && data != 0xff)
