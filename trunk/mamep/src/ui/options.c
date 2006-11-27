@@ -217,6 +217,7 @@ typedef struct
 	char*	rompath;
 	char*	samplepath;
 	char*	inipath;
+	char*	fontpath;
 	char*	cfg_directory;
 	char*	nvram_directory;
 	char*	memcard_directory;

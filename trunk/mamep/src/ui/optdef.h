@@ -4,6 +4,7 @@ START_OPT_FUNC_CORE
 	DEFINE_OPT(string,               rompath);
 	DEFINE_OPT(string,               samplepath);
 	DEFINE_OPT(string,               inipath);
+	DEFINE_OPT(string,               fontpath);
 	DEFINE_OPT(string,               cfg_directory);
 	DEFINE_OPT(string,               nvram_directory);
 	DEFINE_OPT(string,               memcard_directory);
