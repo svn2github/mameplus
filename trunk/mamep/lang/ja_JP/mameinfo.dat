@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.110u2      #
+#     Mameinfo.dat日本語版 v0.110u3      #
 #                                        #
-#           November 18, 2006            #
+#           November 26, 2006            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：807 翻訳済：792
-# 追加項目：328 合計：1135
+# Tester報告：809 翻訳済：794
+# 追加項目：328 合計：1137
 #
 
 
@@ -52,11 +52,44 @@ $mame
 
 $end
 
-$info=sandscrp
+$info=splndrbt
 $mame
 [バグ]
 
-- 起動後は黒画面しか表示されない。F3キーでリセットすると動作する。v0.105から。 sandscrp0110u1yel, ionas
+- BGMのドラム音が鳴っていない。 splndrbt0110u2_1, Kold666
+
+
+- 実機の背景表示は少しゆがんでいる。 splndrbt0110u2_2, Kold666
+
+
+- 実機でのセルフテストの背景は青色。MAMEでは黒い道路の形になっている。 splndrbt0103u2gre1, Kold666
+
+
+- 1面のアステロイドベルトを越えたところで、背景は黒色ではなく青色になる。
+面クリアの画面はMAMEと同様、黒で正しい。 splndrbt0103u2gre2, Kold666
+
+
+- アルファ電子製の80年代初頭のゲームは、「SOUND BOARD NO.59 MC 07」と書かれた共通のサウンドボードを使用している。
+EPROMはそれぞれ違うがPROMは同一。（MAMEでは同一のPROMを読み込むので正しい）。
+
+実は、正しいEPROMがあるゲームとでサウンドボードは入れ替えできる。BGMとSE、周波数はそれぞれ独立したポテンショメーターがある。
+
+周波数はMSM5232によるBGMテンポを決定する。MAMEは現在、最大周波数になっている。
+
+※本家に詳細あり splndrbt0103u2gre3, Kold666
+
+$end
+
+$info=simpbowl
+$mame
+[情報]
+
+- EEPROMをリセットするには、起動直後にF2キーを押し続ける。
+
+
+[バグ]
+
+- 初回起動時のEEPROM書き込み時にエラーが出て動作しない。 simpbowl0110u2yel, iceman2004cny / Tafoid
 
 $end
 
@@ -77,7 +110,7 @@ $mame
 
 [バグ]
 
-- キャラクタが1ピクセルずれて表示されるバグの修正により、今度はハイスコアなどが1ピクセル欠けてしまった。 mario0110u2gre, Machone
+- 実機と比較すると、マリオや敵、パイプ、POWブロックなどがMAMEでは1ドット上に表示されている。 mario0110u1gre, BSR
 
 
 - 実機は電源投入時に音が出る。その直後に面スタートのBGMがかかる。 mario0109u4gre1, patman
@@ -1016,28 +1049,6 @@ $mame
 
 $end
 
-$info=splndrbt
-$mame
-[バグ]
-
-- 実機でのセルフテストの背景は青色。MAMEでは黒い道路の形になっている。 splndrbt0103u2gre1, Kold666
-
-
-- 1面のアステロイドベルトを越えたところで、背景は黒色ではなく青色になる。
-面クリアの画面はMAMEと同様、黒で正しい。 splndrbt0103u2gre2, Kold666
-
-
-- アルファ電子製の80年代初頭のゲームは、「SOUND BOARD NO.59 MC 07」と書かれた共通のサウンドボードを使用している。
-EPROMはそれぞれ違うがPROMは同一。（MAMEでは同一のPROMを読み込むので正しい）。
-
-実は、正しいEPROMがあるゲームとでサウンドボードは入れ替えできる。BGMとSE、周波数はそれぞれ独立したポテンショメーターがある。
-
-周波数はMSM5232によるBGMテンポを決定する。MAMEは現在、最大周波数になっている。
-
-※本家に詳細あり splndrbt0103u2gre3, Kold666
-
-$end
-
 $info=mtrap
 $mame
 [情報]
@@ -1134,14 +1145,6 @@ $mame
 
 - レベル30以上で、危険のBGMになってブロックを減らしても通常のBGMに戻らない。
 また、プレイ中にいきなり“逆転パズル番長！”の声が聞こえることがある。 pbancho058gre, Ashuime
-
-$end
-
-$info=raiga
-$mame
-[バグ]
-
-- 0.101u1からサウンドに不具合がある。 raiga0104u4gre, ShimaPong
 
 $end
 
@@ -3362,7 +3365,7 @@ $info=orunners
 $mame
 [バグ]
 
-- テストモードでの設定が保存されない。 orunners0105u4gre, Scuore
+- テストモードでの設定が保存されない。 orunners0105u4gre, Scuore / robiza
 
 $end
 
@@ -7763,14 +7766,6 @@ $mame
 [情報]
 
 - 起動時に2Pのスタートボタンを押すとテストモードに入れる。
-
-$end
-
-$info=simpbowl
-$mame
-[情報]
-
-- EEPROMをリセットするには、起動直後にF2キーを押し続ける。
 
 $end
 
