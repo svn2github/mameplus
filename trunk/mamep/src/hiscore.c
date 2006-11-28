@@ -196,9 +196,10 @@ static void hiscore_load (void)
 	{
 		mame_file_error filerr;
 		mame_file *f;
-		char fname[256];
-		sprintf(fname, "%s.hi", Machine->gamedrv->name);
+		char *fname;
+		fname = assemble_2_strings(Machine->basename, ".hi");
 		filerr = mame_fopen (SEARCHPATH_HISCORE, fname, OPEN_FLAG_READ, &f);
+		free(fname);
 		state.hiscores_have_been_loaded = 1;
 		LOG(("hiscore_load\n"));
 		if (filerr == FILERR_NONE)
@@ -231,9 +232,10 @@ static void hiscore_save (void)
 	{
 		mame_file_error filerr;
 		mame_file *f;
-		char fname[256];
-		sprintf(fname, "%s.hi", Machine->gamedrv->name);
+		char *fname;
+		fname = assemble_2_strings(Machine->basename, ".hi");
 		filerr = mame_fopen (SEARCHPATH_HISCORE, fname, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &f);
+		free(fname);
 		LOG(("hiscore_save\n"));
 		if (filerr == FILERR_NONE)
 		{
@@ -318,7 +320,7 @@ void hiscore_init (running_machine *machine, const char *name)
 
 	LOG(("hiscore_open: '%s'\n", name));
 
-	filerr = mame_fopen (SEARCHPATH_HISCORE, db_filename, OPEN_FLAG_READ, &f);
+	filerr = mame_fopen (SEARCHPATH_HISCORE_DB, db_filename, OPEN_FLAG_READ, &f);
 	if (filerr == FILERR_NONE)
 	{
 		char buffer[MAX_CONFIG_LINE_SIZE];
