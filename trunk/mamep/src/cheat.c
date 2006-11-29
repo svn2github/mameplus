@@ -1885,19 +1885,22 @@ UINT32 cheat_menu(UINT32 state)
 	};
 
 	ui_menu_item	menu_item[kMenu_Max + 1];
-	INT32			sel;
 	UINT8			total;
 	static INT8		menu_fieldType[kMenu_Max + 1] = { 0 };
-	static INT32	submenu_choice = 0;
-	static int		firstEntry = 0;
-	static int		lastPstn = 0;
+
+	int sel = state & ((1 << 8) - 1);
+	int submenu_choice = (state  >> 8) & ((1 << 16) - 1);
+	int firstEntry = (state >> 30) & 1;
+	int shortcut = (state >> 31) & 1;
+
+	fullMenuPageHeight = ui_screen_height / ui_get_line_height() - 1;
 
 	memset(menu_item, 0, sizeof(menu_item));
 
 	cheatEngineWasActive = 1;
 
 	total = 0;
-	sel = lastPstn;
+	sel--;
 
 	if(submenu_choice)
 	{
@@ -1905,6 +1908,8 @@ UINT32 cheat_menu(UINT32 state)
 		{
 			case kMenu_EnableDisable:
 				submenu_choice = EnableDisableCheatMenu(submenu_choice, firstEntry, shortcut);
+				if (shortcut && submenu_choice == 0)
+					sel = -1;
 				break;
 
 			case kMenu_AddEdit:
@@ -2001,7 +2006,7 @@ UINT32 cheat_menu(UINT32 state)
 			case kMenu_Return:
 				submenu_choice = 0;
 				sel = -1;
-				lastPstn = 0;
+				//lastPstn = 0;
 				break;
 
 			case kMenu_RestoreSearch:
@@ -2025,17 +2030,17 @@ UINT32 cheat_menu(UINT32 state)
 	if(input_ui_pressed(IPT_UI_CANCEL))
 	{
 		/* ----- if cursor is now on the return item, adjust cursor keeper ----- */
-		if(menu_fieldType[sel] == kMenu_Return)
-			lastPstn = 0;
+		//if(menu_fieldType[sel] == kMenu_Return)
+		//	lastPstn = 0;
 
 		sel = -1;
 	}
 
 	/* ----- keep current cursor position ----- */
-	if(sel >= 0)
-		lastPstn = sel;
+	//if(sel >= 0)
+	//	lastPstn = sel;
 
-	return sel + 1;
+	return (sel + 1) | (submenu_choice << 8) | (firstEntry << 30) | (shortcut << 31);
 }
 
 static UINT32 DoShift(UINT32 input, INT8 shift)
@@ -2563,15 +2568,18 @@ static int EnableDisableCheatMenu(int selection, int firstTime, int shortcut)
 			menu_subitem[total] = NULL;
 			flagBuf[total++] = 0;
 
-			menu_item[total] = _("unzip it and place it in the " APPNAME " directory");
+			menu_item[total] = _("unzip it and place it in the MAME directory");
 			menu_subitem[total] = NULL;
 			flagBuf[total++] = 0;
 		}
 	}
-	if (shortcut)
-		menu_item[total] = ui_getstring(UI_returntogame);
-	else
-		menu_item[total] = ui_getstring(UI_returntoprior);	// return item
+
+	// return item
+ 	if (shortcut)
+ 		menu_item[total] = ui_getstring(UI_returntogame);
+ 	else
+ 		menu_item[total] = ui_getstring(UI_returntoprior);
+
 	menu_subitem[total] = NULL;
 	flagBuf[total++] = 0;
 
@@ -3529,7 +3537,7 @@ static int EditCheatMenu(CheatEntry * entry, int index, int selection)
 
 					menuItemInfo[total].subcheat = i;
 					menuItemInfo[total].fieldType = kType_RangeMinimum;
-					menuItem[total] = "Range Minimum";
+					menuItem[total] = _("Range Minimum");
 					menuSubItem[total] = extendDataBuf[i];
 
 					total++;
@@ -3633,7 +3641,7 @@ static int EditCheatMenu(CheatEntry * entry, int index, int selection)
 
 						menuItemInfo[total].subcheat = i;
 						menuItemInfo[total].fieldType = kType_UserSelectBCD;
-							menuItem[total] = _("BCD");
+						menuItem[total] = _("BCD");
 						menuSubItem[total] = ui_getstring(TEST_FIELD(traverse->type, UserSelectBCD) ? UI_on : UI_off);
 
 						total++;
@@ -4903,7 +4911,6 @@ static int DoSearchMenuClassic(int selection)
 	char			cpuBuffer[20];
 
 	INT8			total = 0;
-	static int		lastPos = 0;
 
 	SearchInfo		* search = GetCurrentSearch();
 
@@ -4913,8 +4920,6 @@ static int DoSearchMenuClassic(int selection)
 	static INT8		submenuChoice = 0;
 	static UINT8	doneSaveMemory = 0;
 	static UINT8	firstEntry = 0;
-
-	sel = lastPos;
 
 	/* ----- open sub-menu if selected ----- */
 	if(submenuChoice)
@@ -5254,7 +5259,7 @@ static int DoSearchMenuClassic(int selection)
 
 			case kMenu_Return:
 				sel = -1;
-				lastPos = 0;
+				//lastPos = 0;
 				break;
 
 			default:
@@ -5296,7 +5301,7 @@ static int DoSearchMenuClassic(int selection)
 	{
 		/* ----- if cursor is now on the return item, adjust cursor keeper ----- */
 		if(sel == kMenu_Return)
-			lastPos = 0;
+			//lastPos = 0;
 
 		sel = -1;
 	}
@@ -5319,8 +5324,8 @@ static int DoSearchMenuClassic(int selection)
 	}
 
 	/* ----- keep current cursor position ----- */
-	if(sel >= 0)
-		lastPos = sel;
+	//if(sel >= 0)
+	//	lastPos = sel;
 
 	return sel + 1;
 }
@@ -5890,7 +5895,7 @@ static int AddEditCheatMenu(int selection)
 //  if(input_ui_pressed(IPT_UI_CONFIGURE))
 //      sel = -2;
 
-	return (sel + 1) | (submenu_choice << 8) | (firstEntry << 30) | (shortcut << 31);
+	return sel + 1;
 }
 
 static int ViewSearchResults(int selection, int firstTime)

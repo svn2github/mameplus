@@ -598,7 +598,7 @@ C&lones
 CPU
 
 
-# ui/dialogs.c: 211 ui/options.c: 434
+# ui/dialogs.c: 211 ui/options.c: 435
 Cabinet
 
 
@@ -698,7 +698,7 @@ Contrast Correction
 Control &Panel
 
 
-# ui/dialogs.c: 217 ui/options.c: 437
+# ui/dialogs.c: 217 ui/options.c: 438
 Control Panel
 
 
@@ -806,7 +806,7 @@ Depth:
 Description
 
 
-# ui/mame32.rc: 457, 559 ui/options.c: 468 ui/win32ui.c: 704
+# ui/mame32.rc: 457, 559 ui/options.c: 469 ui/win32ui.c: 704
 Details
 
 
@@ -1046,7 +1046,7 @@ Export a game list file
 External Folder List
 
 
-# ui/options.c: 3106
+# ui/options.c: 3107
 FOLDER LIST HIDE OPTIONS
 
 
@@ -1078,7 +1078,7 @@ Flip screen left-right
 Flip screen upside-down
 
 
-# ui/dialogs.c: 209 ui/options.c: 433
+# ui/dialogs.c: 209 ui/options.c: 434
 Flyer
 
 
@@ -1118,15 +1118,15 @@ Full screen contrast
 Full screen gamma
 
 
-# ui/options.c: 3052
+# ui/options.c: 3053
 GENERAL OPTIONS
 
 
-# ui/options.c: 3110
+# ui/options.c: 3111
 GUI JOYSTICK OPTIONS
 
 
-# ui/options.c: 3125
+# ui/options.c: 3126
 GUI KEYBOARD OPTIONS
 
 
@@ -1190,7 +1190,7 @@ Go to Microsoft's DirectX Web Page
 Gray
 
 
-# ui/options.c: 469, 3085 ui/win32ui.c: 705
+# ui/options.c: 470, 3086 ui/win32ui.c: 705
 Grouped
 
 
@@ -1210,7 +1210,7 @@ Hide &mouse cursor (requires restart)
 High Scores
 
 
-# ui/options.c: 439, 442
+# ui/options.c: 440, 443
 History
 
 
@@ -1226,7 +1226,7 @@ Horizontal
 How cheats work
 
 
-# ui/options.c: 3032
+# ui/options.c: 3033
 INTERFACE OPTIONS
 
 
@@ -1338,15 +1338,15 @@ Keyboard
 L&arge Icons
 
 
-# ui/options.c: 3098
+# ui/options.c: 3099
 LIST FONT OPTIONS
 
 
-# ui/options.c: 3084
+# ui/options.c: 3085
 LISTVIEW OPTIONS
 
 
-# ui/options.c: 465 ui/win32ui.c: 701
+# ui/options.c: 466 ui/win32ui.c: 701
 Large Icons
 
 
@@ -1362,7 +1362,7 @@ Lightgun device
 Line &Up Icons
 
 
-# ui/options.c: 467 ui/win32ui.c: 703
+# ui/options.c: 468 ui/win32ui.c: 703
 List
 
 
@@ -1402,7 +1402,7 @@ MAME savestate files (*.sta)
 MAME32 PCB Info: %s [%s]
 
 
-# ui/options.c: 527
+# ui/options.c: 528
 MAME32 has changed *.ini file directory.\n\nWould you like to migrate old configurations to the new directory?
 
 
@@ -1414,7 +1414,7 @@ MAME32 version by
 MAME32 will now reset the selected\n
 
 
-# ui/mame32.rc: 399, 423, 434, 466, 486, 509, 548, 567, 618, 655, 711, 772, 849, 877, 904, 941, 966, 983, 1047, 1075, 1090, 1127, 1163, 1202 ui/options.c: 3100 ui/translate.c: 103
+# ui/mame32.rc: 399, 423, 434, 466, 486, 509, 548, 567, 618, 655, 711, 772, 849, 877, 904, 941, 966, 983, 1047, 1075, 1090, 1127, 1163, 1202 ui/options.c: 3101 ui/translate.c: 103
 MS Sans Serif
 
 
@@ -1426,7 +1426,7 @@ Manufactured:
 Manufacturer
 
 
-# ui/dialogs.c: 213 ui/options.c: 435
+# ui/dialogs.c: 213 ui/options.c: 436
 Marquee
 
 
@@ -1590,7 +1590,7 @@ Overlays
 P&layback Input...
 
 
-# ui/options.c: 3019
+# ui/options.c: 3020
 PATH AND DIRECTORY OPTIONS
 
 
@@ -1630,7 +1630,7 @@ Pedal
 Pedal device
 
 
-# ui/options.c: 3181 ui/win32ui.c: 860
+# ui/options.c: 3182 ui/win32ui.c: 860
 Play Time
 
 
@@ -1758,7 +1758,7 @@ Refresh game list
 Refresh:
 
 
-# ui/options.c: 1550
+# ui/options.c: 1551
 Reload configurations
 
 
@@ -2150,11 +2150,11 @@ Skip game info
 Sleep when possible
 
 
-# ui/options.c: 466 ui/win32ui.c: 702
+# ui/options.c: 467 ui/win32ui.c: 702
 Small Icons
 
 
-# ui/dialogs.c: 207 ui/options.c: 432
+# ui/dialogs.c: 207 ui/options.c: 433
 Snapshot
 
 
@@ -2242,7 +2242,7 @@ Status:
 Stereo
 
 
-# ui/options.c: 440
+# ui/options.c: 441
 Story
 
 
@@ -2294,7 +2294,7 @@ Thread priority
 Throttle
 
 
-# ui/dialogs.c: 215 ui/options.c: 436
+# ui/dialogs.c: 215 ui/options.c: 437
 Title
 
 
@@ -2446,7 +2446,7 @@ Use various icon for Not Working game
 Use volume auto adjust
 
 
-# ui/layout.c: 71 ui/mame32.rc: 849 ui/options.c: 787, 2718 ui/properties.c: 622 ui/treeview.c: 306 ui/win32ui.c: 5396
+# ui/layout.c: 71 ui/mame32.rc: 849 ui/options.c: 788, 2719 ui/properties.c: 622 ui/treeview.c: 306 ui/win32ui.c: 5396
 Vector
 
 
@@ -2490,7 +2490,7 @@ Volume attenuation
 WARNING: the game might not run correctly.
 
 
-# ui/options.c: 3077
+# ui/options.c: 3078
 WINDOW POSITION OPTIONS
 
 

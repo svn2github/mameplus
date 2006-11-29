@@ -598,7 +598,7 @@ C&lones
 CPU
 CPU
 
-# ui/dialogs.c: 211 ui/options.c: 434
+# ui/dialogs.c: 211 ui/options.c: 435
 Cabinet
 筐体
 
@@ -698,7 +698,7 @@ Contrast Correction
 Control &Panel
 コンパネ(&P)
 
-# ui/dialogs.c: 217 ui/options.c: 437
+# ui/dialogs.c: 217 ui/options.c: 438
 Control Panel
 コンパネ
 
@@ -806,7 +806,7 @@ Depth:
 Description
 ゲーム
 
-# ui/mame32.rc: 457, 559 ui/options.c: 468 ui/win32ui.c: 704
+# ui/mame32.rc: 457, 559 ui/options.c: 469 ui/win32ui.c: 704
 Details
 詳細
 
@@ -1046,7 +1046,7 @@ Export a game list file
 External Folder List
 外部フォルダリスト
 
-# ui/options.c: 3106
+# ui/options.c: 3107
 FOLDER LIST HIDE OPTIONS
 フォルダリスト非表\示設定
 
@@ -1078,7 +1078,7 @@ Flip screen left-right
 Flip screen upside-down
 上下反転
 
-# ui/dialogs.c: 209 ui/options.c: 433
+# ui/dialogs.c: 209 ui/options.c: 434
 Flyer
 広告ポスター
 
@@ -1118,15 +1118,15 @@ Full screen contrast
 Full screen gamma
 フルスクリーンのガンマ値
 
-# ui/options.c: 3052
+# ui/options.c: 3053
 GENERAL OPTIONS
 一般設定
 
-# ui/options.c: 3110
+# ui/options.c: 3111
 GUI JOYSTICK OPTIONS
 GUIジョイスティック設定
 
-# ui/options.c: 3125
+# ui/options.c: 3126
 GUI KEYBOARD OPTIONS
 GUIキーボード設定
 
@@ -1190,7 +1190,7 @@ Microsoft's DirectX Webページを表\示
 Gray
 グレー
 
-# ui/options.c: 469, 3085 ui/win32ui.c: 705
+# ui/options.c: 470, 3086 ui/win32ui.c: 705
 Grouped
 グループ化
 
@@ -1210,7 +1210,7 @@ Hide &mouse cursor (requires restart)
 High Scores
 ハイスコア
 
-# ui/options.c: 439, 442
+# ui/options.c: 440, 443
 History
 ゲームの歴史
 
@@ -1226,7 +1226,7 @@ Horizontal
 How cheats work
 チートの使用方法を説明します
 
-# ui/options.c: 3032
+# ui/options.c: 3033
 INTERFACE OPTIONS
 インターフェイス設定
 
@@ -1338,15 +1338,15 @@ Keyboard
 L&arge Icons
 大きなアイコン(&A)
 
-# ui/options.c: 3098
+# ui/options.c: 3099
 LIST FONT OPTIONS
 リストフォント設定
 
-# ui/options.c: 3084
+# ui/options.c: 3085
 LISTVIEW OPTIONS
 リストビュー設定
 
-# ui/options.c: 465 ui/win32ui.c: 701
+# ui/options.c: 466 ui/win32ui.c: 701
 Large Icons
 大きなアイコン
 
@@ -1362,7 +1362,7 @@ Lightgun device
 Line &Up Icons
 アイコンの整列(&U)
 
-# ui/options.c: 467 ui/win32ui.c: 703
+# ui/options.c: 468 ui/win32ui.c: 703
 List
 リスト
 
@@ -1402,7 +1402,7 @@ MAME ステートファイル (*.sta)
 MAME32 PCB Info: %s [%s]
 MAME32 PCB情報: %s [%s]
 
-# ui/options.c: 527
+# ui/options.c: 528
 MAME32 has changed *.ini file directory.\n\nWould you like to migrate old configurations to the new directory?
 MAME32は *.iniファイルディレクトリを変更しました。\n\n古い設定を新しいディレクトリに移動しますか？
 
@@ -1414,7 +1414,7 @@ MAME32 version by
 MAME32 will now reset the selected\n
 MAME32 は選択された項目をリセットし\n
 
-# ui/mame32.rc: 399, 423, 434, 466, 486, 509, 548, 567, 618, 655, 711, 772, 849, 877, 904, 941, 966, 983, 1047, 1075, 1090, 1127, 1163, 1202 ui/options.c: 3100 ui/translate.c: 103
+# ui/mame32.rc: 399, 423, 434, 466, 486, 509, 548, 567, 618, 655, 711, 772, 849, 877, 904, 941, 966, 983, 1047, 1075, 1090, 1127, 1163, 1202 ui/options.c: 3101 ui/translate.c: 103
 MS Sans Serif
 ＭＳ Ｐゴシック
 
@@ -1426,7 +1426,7 @@ Manufactured:
 Manufacturer
 製造元
 
-# ui/dialogs.c: 213 ui/options.c: 435
+# ui/dialogs.c: 213 ui/options.c: 436
 Marquee
 マーキー
 
@@ -1590,7 +1590,7 @@ Overlays
 P&layback Input...
 入力の再現(&L)...
 
-# ui/options.c: 3019
+# ui/options.c: 3020
 PATH AND DIRECTORY OPTIONS
 パスとディレクトリ設定
 
@@ -1630,7 +1630,7 @@ Pedal
 Pedal device
 ペダルディバイス
 
-# ui/options.c: 3181 ui/win32ui.c: 860
+# ui/options.c: 3182 ui/win32ui.c: 860
 Play Time
 プレイ時間
 
@@ -1758,7 +1758,7 @@ Refresh game list
 Refresh:
 リフレッシュ:
 
-# ui/options.c: 1550
+# ui/options.c: 1551
 Reload configurations
 設定の再読み込み
 
@@ -2150,11 +2150,11 @@ Skip game info
 Sleep when possible
 アイドル時にCPUを開放
 
-# ui/options.c: 466 ui/win32ui.c: 702
+# ui/options.c: 467 ui/win32ui.c: 702
 Small Icons
 小さなアイコン
 
-# ui/dialogs.c: 207 ui/options.c: 432
+# ui/dialogs.c: 207 ui/options.c: 433
 Snapshot
 スクリーンショット
 
@@ -2242,7 +2242,7 @@ Status:
 Stereo
 ステレオ
 
-# ui/options.c: 440
+# ui/options.c: 441
 Story
 ストーリー
 
@@ -2294,7 +2294,7 @@ Thread priority
 Throttle
 速度制限を有効
 
-# ui/dialogs.c: 215 ui/options.c: 436
+# ui/dialogs.c: 215 ui/options.c: 437
 Title
 タイトル画面
 
@@ -2446,7 +2446,7 @@ Use various icon for Not Working game
 Use volume auto adjust
 自動音量調整機能\を使用
 
-# ui/layout.c: 71 ui/mame32.rc: 849 ui/options.c: 787, 2718 ui/properties.c: 622 ui/treeview.c: 306 ui/win32ui.c: 5396
+# ui/layout.c: 71 ui/mame32.rc: 849 ui/options.c: 788, 2719 ui/properties.c: 622 ui/treeview.c: 306 ui/win32ui.c: 5396
 Vector
 ベクタ
 
@@ -2490,7 +2490,7 @@ Volume attenuation
 WARNING: the game might not run correctly.
 警告: このゲームは正常に実行出来ません。
 
-# ui/options.c: 3077
+# ui/options.c: 3078
 WINDOW POSITION OPTIONS
 ウィンドウ位置設定
 
