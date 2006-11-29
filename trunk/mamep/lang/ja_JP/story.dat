@@ -10,7 +10,7 @@
 #  hitory.dati‰ß‹ŽƒƒO’u‚«êj                            #
 #      http://history1.client.jp/                          #
 #                                                          #
-#@@@@@@@@@@@ @@@@@@@        (06.09.07)   #
+#@@@@@@@@@@@ @@@@@@@        (06.11.26)   #
 #**********************************************************#
 
 #‚P‚X‚S‚R -ƒ~ƒbƒhƒEƒFƒCŠCí-
@@ -23,6 +23,18 @@ $story
 
 
 [o“TF1943 ‹Æ–±—p”Ì‘£ƒ`ƒ‰ƒViƒJƒvƒRƒ“j]
+
+
+
+$end
+
+#‚P‚X‚S‚R‰ü -ƒ~ƒbƒhƒEƒFƒCŠCí-
+$info=1943kai 
+$story 
+¡‚©‚ç–ñ50”N‘OAŽž‘ã‚Í‘æ“ñŽŸ¢ŠE‘åí‚Ì^‚Á’¼’†B‘å“ú–{’é‘ŒR‚ÌˆÃ†‚Í‘S‚Ä‰ð“Ç‚µ‚Ä‚¢‚éB
+¡“úAƒ~ƒbƒhƒEƒFƒC“‡‚ªUŒ‚‚³‚ê‚é‚Ì‚à—\’è‚Ì‚¤‚¿‚¾B‚µ‚©‚µ‰ä‚ç‚ª‹ó•êhƒˆ[ƒNƒ^ƒEƒ“h‚ðUŒ‚‚µ‚½‚Ì‚Í­X‚â‚è‚·‚¬‚Ì‚æ‚¤‚¾B
+u‰´‚Í“ú–{ŒR‚ð‹–‚³‚È‚¢Ivƒ}ƒuƒ_ƒ`‚Ìƒgƒ~[‚Æ2l‚ÅãŠ¯‚ÌÃŽ~‚à•·‚©‚¸‚É”ò‚Ño‚µ‚½cB
+‚±‚ÌŠCí‚ÌŸ”s‚ÍAŒã‚Ìí‹µ‚ð‘å‚«‚­•Ï‚¦‚½‚ÆŒ¾‚í‚ê‚Ä‚¢‚éBhŒN‚É‘å˜a‚ª”j‰ó‚Å‚«‚é‚©Ih
 
 
 
@@ -212,9 +224,7 @@ $info=aburner
 $story
 ¼—ï199X”NA¢ŠE¨—Í‚ÍA‘‚ÆZ‘‚É2•ª‚³‚êA—âíó‘Ô‚ª‘±‚¢‚Ä‚¢‚½B
 A‘‚ÌŠCŒR‚É‚¢‚½ƒLƒ~‚É‹É”éŽi—ß‚ª‰º‚Á‚½B
-
 ‚»‚ÌŽi—ß‚Æ‚ÍA“G‘‚Ì—Ì‹ó‚ð‹­s“Ë”j‚µ‚ÄA‹É”é•ºŠí‚Ìî•ñƒfƒBƒXƒN‚ðŒR‚Ì”é–§Œ¤‹†Š‚É“Í‚¯‚é‚Æ‚¢‚¤‚±‚Æ‚Å‚ ‚Á‚½B
-
 ‰Ê‚½‚µ‚ÄƒLƒ~‚ÍA–h‰qü‚ð“Ë”j‚µ‚ÄA–³Ž–‚É–Ú“I’n‚É‚½‚Ç‚è‚Â‚¯‚é‚¾‚ë‚¤‚©AK‰^‚ð‹F‚éI
 
 
@@ -9147,9 +9157,10 @@ $story
 ƒXƒe[ƒVƒ‡ƒ“‚ÍƒƒCƒ“ƒRƒ“ƒsƒ…[ƒ^‚Ìuƒ|ƒ‰ƒbƒNƒXv‚É‚æ‚Á‚ÄA‚»‚Ì‚·‚×‚Ä‚ð§Œä‚³‚ê‚Ä‚¢‚éB
 uƒ|ƒ‰ƒbƒNƒXv‚Í‚ ‚ç‚ä‚él’q‚ð’´‚¦‚élH“ª”]‚Å‚ ‚éB
 ‚â‚ª‚Ä‚»‚ê‚ÍˆÓŽu‚ðŽ‚¿AŽ×ˆ«‚ÈŽvl‚ð‚»‚Ì‰ñ˜H‚É“WŠJ‚³‚¹A‚»‚µ‚Ä"”Þ"‚Íˆ«–‚‚Æ‚È‚Á‚½B
-‰äX‚ÍŒNuƒ|ƒ‰ƒbƒNƒXv‚Æí‚¤Ž–‚ð–½‚¸‚éB
-uƒ|ƒ‰ƒbƒNƒXv‚Ì‚à‚Æ‚ÖŒü‚©‚¦B
-\\‚»‚µ‚Ä"”Þ"‚ð”j‰ó‚¹‚æB
+
+‰äX‚ÍŒNuƒ|ƒ‰ƒbƒNƒXv‚Æí‚¤Ž–‚ð–½‚¸‚éBuƒ|ƒ‰ƒbƒNƒXv‚Ì‚à‚Æ‚ÖŒü‚©‚¦B
+
+\\‚»‚µ‚Ä"”Þ"‚ð”j‰ó‚¹‚æ\\\
 
 
 [o“TFƒ|ƒ‰ƒbƒNƒX ‹Æ–±—p”Ì‘£ƒ`ƒ‰ƒViƒAƒgƒ‰ƒX¥NTCj]
@@ -9717,6 +9728,35 @@ $story
 
 $end
 
+#ƒNƒCƒY ‚È‚È‚¢‚ëƒhƒŠ[ƒ€ƒX “øF’¬‚ÌŠïÕ
+$info=qndream
+$story
+‚ ‚é3ŒŽ‚ÌI‚í‚èA‘¾•½—m‚Ì¬‚³‚È’¬g“øF’¬h‚ÉŽU‚ç‚Î‚Á‚½••ˆó‚ÌƒNƒŠƒXƒ^ƒ‹B
+‚±‚ÌƒNƒŠƒXƒ^ƒ‹‚ª‚È‚¢‚Æ¢ŠE‚ð–Å‚Ú‚·–‚‰¤‚ª•œŠˆ‚·‚é‚Æ‚¢‚¤B
+
+
+ƒNƒŠƒXƒ^ƒ‹‚Í7‚Â‚ÉÓ‚¯A
+“øF’¬‚ÉZ‚Þ7l‚Ì—‚ÌŽq‚½‚¿‚Æ“¯‰»‚µ‚Ä‚µ‚Ü‚Á‚½B
+ƒNƒŠƒXƒ^ƒ‹‚Ì—Í‚ðŽæ‚è–ß‚·‚½‚ß‚É‚Í”Þ—‚½‚¿‚Æ‚ÌuS‚ÌŒ‹‚Ñ‚Â‚«v‚ª•K—v‚¾‚Æ‚¢‚¤B
+
+
+–‚‰¤‚ÌŠ®‘S•œŠˆ‚Ü‚Å‚ ‚ÆA6ƒ–ŒŽB
+
+
+‚±‚Ì¢ŠE‚ð”j–Å‚©‚ç‹~‚¤‚½‚ß‚É‘I‚Î‚ê‚½‚Ì‚Í
+‚±‚Ì¬‚³‚È’¬‚É‚·‚ÞgƒvƒŒƒCƒ„[h‚Å‚ ‚é‚ ‚È‚½B
+
+‚±‚Ì’¬‚©‚çŽn‚Ü‚é•¨Œê‚Í‚ ‚È‚½Ž©g‚ª‘I‚ÔŠïÕ‚ÌÏ‚Ýd‚Ë‚Å‘n‚ç‚ê‚Ä‚¢‚­‚Ì‚Å‚·B
+
+‚Í‚½‚µ‚ÄA‚ ‚È‚½‚Í¢ŠE‚ð”j–Å‚ÌŠë‹@‚©‚ç‹~‚¦‚é‚Ì‚Å‚µ‚å‚¤‚©H 
+
+
+[o“TFPS¥SS”Å ƒNƒCƒY ‚È‚È‚¢‚ëƒhƒŠ[ƒ€ƒX “øF’¬‚ÌŠïÕ ŒöŽ®HPiƒJƒvƒRƒ“j]
+
+
+
+$end
+
 #ƒNƒCƒYƒNƒGƒXƒg -•P‚Æ—EŽÒ‚Ì•¨Œê-
 $info=qzquest
 $story
@@ -10239,7 +10279,24 @@ $end
 $info=rvschool
 $story
 ¢‹I––‚Ì“ú–{‚ð“Ë”@P‚Á‚½A–³·•Ê‚Z¶—U‰ûŽ–ŒB
+
 ŒxŽ@‚àŽè‚ªo‚¹‚È‚¢‹­‘å‚È“G‚ð‘ŠŽè‚ÉA‚Â‚¢‚É¶“k’BŽ©g‚ª—§‚¿ã‚ª‚Á‚½I
+
+
+[o“TFŽ„—§ƒWƒƒƒXƒeƒBƒXŠw‰€ ŒöŽ®HPiƒJƒvƒRƒ“j]
+
+
+
+199X”NA“ú–{‚ÍŠï–­‚ÈŽ–Œ‚É—h‚ê“®‚¢‚Ä‚¢‚½B
+
+‚»‚ê‚ÍA‘S‘Še’n‚Ì‚Z‚ªŽŸX‚ÉPŒ‚‚³‚êA—U‰û‚³‚ê‚é‚Æ‚¢‚¤‚à‚Ì‚Å‚ ‚Á‚½B
+
+ŒxŽ@“™‚àŒµd‚ÈŒx”õ‘Ì§‚ðŽæ‚é‚ªA‚»‚ê‚ç‚ð‚ ‚´Î‚¤‚©‚Ì‚æ‚¤‚ÉŽŸX‚Æ”Æs‚ªŒJ‚è‚©‚¦‚³‚ê‚é‚Î‚©‚è‚Å‚ ‚Á‚½B
+
+‚Â‚¢‚ÉA¶“kŽ©g‚ªŽ–Œ‰ðŒˆ‚É—§‚¿ã‚ª‚Á‚½II 
+
+
+[o“TFPS”Å Ž„—§ƒWƒƒƒXƒeƒBƒXŠw‰€ ŒöŽ®HPiƒJƒvƒRƒ“j]
 
 
 
@@ -10259,8 +10316,11 @@ $end
 $info=robocop
 $story
 ‹ß–¢—ˆA”Æß‚Ì‘ƒŒA‚Æ‰»‚µ‚Ä‚µ‚Ü‚Á‚½‘å“s‰ïB
+
 ŒxŽ@Š¯ƒ}[ƒtƒB[‚Í•‹”C‘XA‚±‚ÌŠX‚É– ‰„‚·‚é”Æß‚Ì‹]µ‚Æ‚È‚Á‚Ä‚µ‚Ü‚Á‚½¥¥¥B
+
 ‚µ‚©‚µA‰ÈŠw‚Ìˆ‚ðW‚ß‚½‹Zp‚Æ—Í‚É‚æ‚è”Þ‚ÍƒTƒCƒ{[ƒOŒxŠ¯"ƒƒ{ƒRƒbƒv"‚Æ‚µ‚Ä‘h‚Á‚½‚Ì‚¾B
+
 ‚Í‚Ñ‚±‚é”Æß‘gD‚ð‰ó–Å‚µAŽs–¯‚É•½˜a‚ðŽæ‚è–ß‚·‚½‚ß‚ÉA"ƒƒ{ƒRƒbƒv"‚Ìí‚¢‚ªŽn‚Ü‚Á‚½¥¥¥¥¥¥B
 
 
@@ -10560,6 +10620,21 @@ $story
 
 
 [o“TFŽ¾•—–‚–@‘åìí ŒöŽ®HPiƒ‰ƒCƒWƒ“ƒO¥ƒGƒCƒeƒBƒ“ƒOj]
+
+
+
+$end
+
+#ƒVƒ…[ƒeƒBƒ“ƒOƒ}ƒXƒ^[
+$info=shtngmst
+$story
+‹É”é‚Ì‚¤‚¿‚ÉA‚»‚ÌŽdŽ–‚ÌˆË—Š‚ª•‘‚¢ž‚ñ‚¾Bƒˆ[ƒƒbƒp‚Ì–^‰¤‘‚ÌƒvƒŠƒ“ƒZƒXA
+ƒAƒCƒŠƒX•P‚ª”Æß‘gD‚É‚æ‚Á‚Ä—U‰û‚³‚ê‚½‚Æ‚¢‚¤B‹‘å‚È‘gD‚ðA‚Ð‚Æ‚è“G‚É‰ñ‚µA
+•P‚ð‹~o‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢BŽsŠX’nA‘qŒÉ‚Å‚ÌeŒ‚íAX‚âŠC‚Å‚Ìƒ`ƒFƒCƒX‚È‚Ç‚ðö‚è”²‚¯A
+‰Ê‚½‚µ‚Ä•P‚ð–³Ž–‹~o‚Å‚«‚é‚©I
+
+
+[o“TFƒVƒ…[ƒeƒBƒ“ƒOƒ}ƒXƒ^[ ‹Æ–±—p”Ì‘£ƒ`ƒ‰ƒViƒZƒKj]
 
 
 
@@ -11489,6 +11564,30 @@ $end
 #ƒXƒ^[ƒOƒ‰ƒfƒBƒGƒCƒ^[ -EPISODE:1 FINAL CLUSADE-
 $info=starglad
 $story
+Žž‚Í24¢‹I‚Ì’n‹…B
+
+‹ß”NAÚG‚ªŽn‚Ü‚Á‚½ˆÙ¯l‚Æ‚Ì–â‘è”­¶‚É”õ‚¦A’n‹…˜A–MŒR‚Å‚Í‘S‚­V‚µ‚¢ƒGƒlƒ‹ƒM[‚ðŠî‚É‚µ‚½•ºŠí‚ÌŠJ”­‚ªs‚í‚ê‚Ä‚¢‚½B
+
+‚»‚ÌƒGƒlƒ‹ƒM[‚Ì–¼‚Íuƒvƒ‰ƒYƒ}ƒpƒ[vB¡‚©‚ç6”N‘O‚É“VË•¨—ŠwŽÒƒGƒhƒ[ƒhEƒrƒ‹ƒVƒ…ƒ^ƒCƒ“‚É‚æ‚è‰ð–¾‚³‚ê‚½AlŠÔ‚ÌŽv”O‚É‚æ‚è”­¶‚³‚ê‚éA]—ˆ‚Ì•¨—Šw‚ð‰z‚¦‚½‹­—Í‚ÈƒGƒlƒ‹ƒM[‚Å‚ ‚éB
+
+‚µ‚©‚µA‚±‚ê‚çƒvƒ‰ƒYƒ}•ºŠí‚ÍA•“¹‚Ì’Bl‚â’´”\—ÍŽÒ‚È‚Ç‹­‚¢Žv”O‚ðŽ‚Â‚à‚Ì‚ªŽg—p‚·‚ê‚ÎA‚·‚³‚Ü‚¶‚¢ˆÐ—Í‚ð”­Šö‚·‚é‚ªA•’Ê‚ÌlŠÔ‚ªŽg—p‚µ‚Ä‚àAƒiƒCƒt‚É‚à—ò‚é‚æ‚¤‚ÈUŒ‚—Í‚µ‚©o‚¹‚È‚©‚Á‚½B
+‚±‚Ì‚½‚ßAƒvƒ‰ƒYƒ}•ºŠíŠJ”­Œv‰æ‚Í’†Ž~‚³‚ê‚½B
+
+‚»‚µ‚ÄAƒrƒ‹ƒVƒ…ƒ^ƒCƒ“”ŽŽm‚ª•ºŠíŠJ”­‚Ì‚½‚ß‚Él‘ÌŽÀŒ±‚ðs‚Á‚Ä‚¢‚½Ž–‚ª”­Šo‚µA”Þ‚Í‘¾—zŒnŠO‚É‚ ‚éA–¯˜f¯Aƒ[[ƒ^¯‚Ì‹O“¹ã‚ðŽü‰ñ‚·‚éIg“Æ–[‚ÉŽû—e‚³‚ê‚½B
+
+‚»‚ê‚©‚ç4”NŒãA“Ë”@ƒ[[ƒ^¯‚É‚ ‚é˜A–MŒR•”‘à‚ªu‘æŽl’é‘v‚Æ–¼æ‚é‚½‚Á‚½”l‚Ì‰½ŽÒ‚©‚É‚æ‚Á‚Ä‰ó–Å‚³‚¹‚ç‚ê‚½B
+”Þ‚ç‚ÍA‚³‚ç‚É’n‹…ª•ž‚Ì€”õ‚ª‚ ‚é‚±‚Æ‚ð‚°‚Ä‚«‚½B‚»‚Ì’ÊM‚ÉŒ»‚ê‚½c’é‚ÌŽp‚ðŒ©‚ÄAlX‚Í‹Áœ±‚µ‚½B‚»‚ê‚Í“Æ–[‚É“Š–‚³‚ê‚Ä‚¢‚½‚Í‚¸‚Ì“VË•¨—ŠwŽÒAƒrƒ‹ƒVƒ…ƒ^ƒCƒ“‚»‚Ìl‚¾‚Á‚½‚Ì‚Å‚ ‚éB
+
+”Þ‚ç‚É‘ÎR‚·‚é‚É‚Íƒvƒ‰ƒYƒ}•ºŠí‚ðŽg‚¤‚µ‚©‚È‚¢‚Æ”»’f‚µ‚½˜A–MŒR‚ÍAL‚­ˆê”Êl‚Ì’†‚©‚çŽv”O‚É—D‚ê‚½l•¨‚ðW‚ß‚½•”‘à‚ðì‚èA
+ƒ[[ƒ^¯‚É‚ ‚é“G‚Ì–{‹’‚ð’@‚­ìí‚Éo‚½B
+
+•”‘à‚ÌƒR[ƒhƒl[ƒ€‚ÍuƒXƒ^[ƒOƒ‰ƒfƒBƒGƒCƒ^[vB–]‚Ý‚Í”Þ‚ç‚É‘õ‚³‚ê‚½B
+
+
+[o“TFƒXƒ^[ƒOƒ‰ƒfƒBƒGƒCƒ^[ -EPISODE:1 FINAL CLUSADE- ŒöŽ®HP (ƒJƒvƒRƒ“)]
+
+
+
 Žv”O‚Ì—Í"ƒvƒ‰ƒYƒ}ƒpƒ["‚ð—˜—p‚µ‚½•ºŠí‚ÌŠJ”­ŽÒEƒrƒ‹ƒVƒ…ƒ^ƒCƒ“”ŽŽm‚ªA
 ”–¼‚Ì•”‰º‚ð‚Ð‚«‚¢‚Ä"‘æŽl’é‘"‚ð–¼æ‚èA’n‹…ª•ž‚Éæ‚èo‚µ‚½B
 ‚»‚Ì–ì–]‚ð‘jŽ~‚·‚×‚­A
@@ -12584,6 +12683,21 @@ $story
 
 
 [o“TFƒTƒ“ƒ_[ƒtƒHƒbƒNƒX ‹Æ–±—p”Ì‘£ƒ`ƒ‰ƒViƒ^ƒCƒg[j]
+
+
+
+$end
+
+#ƒTƒ“ƒ_[ƒ][ƒ“
+$info=thndzone
+$story
+í‚¤‚½‚ß‚É¶‚Ü‚ê‚Ä‚«‚½’j‚½‚¿‚É‚Æ‚Á‚Ä‚ÍAêŠ‚ªƒhƒR‚Å‚ ‚ë‚¤‚ÆA‘ŠŽè‚ªƒ_ƒŒ‚Å‚ ‚ë‚¤‚ÆA
+‚»‚ñ‚È‚±‚Æ‚ÍŠÖŒW‚È‚¢!?ˆÃ–ô‚·‚éƒeƒƒŠƒXƒgŒR’c‚Ì”é–§Šî’n‚É”ò‚Ñž‚Þ’j‚½‚¿‚É‚ÍA
+"í“¬(‚½‚½‚©‚¢)"‚¾‚¯‚ªƒCƒLƒKƒC‚¾Iƒuƒ`‰ó‚·‚±‚Æ‚ªƒ^ƒmƒVƒ~‚¾Ií“¬ŠJŽnI
+"‚¨Šy‚µ‚Ý(ƒVƒ‡[ƒ^ƒCƒ€)"‚Í‚±‚ê‚©‚ç‚¾!?
+
+
+[o“TFƒTƒ“ƒ_[ƒ][ƒ“ ‹Æ–±—p”Ì‘£ƒ`ƒ‰ƒViƒf[ƒ^ƒC[ƒXƒgj]
 
 
 
@@ -13709,6 +13823,9 @@ A`Z‚Ü‚Å‚É‹æØ‚ç‚ê‚é“GŠî’n‚ðis‚µAÅI–Ú“I‚Å‚ ‚éƒZƒNƒVƒ‡ƒ“Z‚ÌlH¶–½‘ÌƒGƒ‹ƒuƒ
 
 ‹Ù‹}Žw—ß\\"ƒoƒ‰ƒ“ƒO[ƒ‹’é‘‚Ì”é–§Šî’n‚ð”j‰ó‚¹‚æ!!"
 ‚±‚Ìd—v”C–±‚ðŒ©Ž–‚É‹s‚Å‚«‚é‚¾‚ë‚¤‚©H¥¥¥¥¥¥
+
+
+[o“TFƒZƒNƒVƒ‡ƒ“Z ‹Æ–±—p”Ì‘£ƒ`ƒ‰ƒViƒJƒvƒRƒ“j]
 
 
 
