@@ -1,10 +1,15 @@
 #ifdef START_OPT_FUNC_CORE
 START_OPT_FUNC_CORE
-// PATH AND DIRECTORY OPTIONS
+// CORE SEARCH PATH OPTIONS
+
 	DEFINE_OPT(string,               rompath);
 	DEFINE_OPT(string,               samplepath);
+	DEFINE_OPT(string,               artpath);
+	DEFINE_OPT(string,               ctrlrpath);
 	DEFINE_OPT(string,               inipath);
 	DEFINE_OPT(string,               fontpath);
+
+// CORE OUTPUT DIRECTORY OPTIONS
 	DEFINE_OPT(string,               cfg_directory);
 	DEFINE_OPT(string,               nvram_directory);
 	DEFINE_OPT(string,               memcard_directory);
@@ -13,16 +18,16 @@ START_OPT_FUNC_CORE
 	DEFINE_OPT(string,               hiscore_directory);
 #endif /* USE_HISCORE */
 	DEFINE_OPT(string,               state_directory);
-	DEFINE_OPT(string,               artpath);
 	DEFINE_OPT(string,               snapshot_directory);
 	DEFINE_OPT(string,               diff_directory);
-	DEFINE_OPT(string,               ctrlrpath);
 	DEFINE_OPT(string,               translation_directory);
 	DEFINE_OPT(string,               comment_directory);
 #ifdef USE_IPS
 	DEFINE_OPT(string,               ips_directory);
 #endif /* USE_IPS */
 	DEFINE_OPT(string,               localized_directory);
+
+// CORE FILENAME OPTIONS
 	DEFINE_OPT(string,               cheat_file);
 	DEFINE_OPT(string,               history_file);
 #ifdef STORY_DATAFILE
@@ -73,6 +78,7 @@ START_OPT_FUNC_DRIVER
 #ifdef DRIVER_SWITCH
 	DEFINE_OPT(string_allow_null,    driver_config)
 #endif /* DRIVER_SWITCH */
+
 // MISC OPTIONS
 	DEFINE_OPT(string,               bios)
 	DEFINE_OPT(bool,                 cheat)
