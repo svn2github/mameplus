@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.110u3      #
+#     Mameinfo.dat日本語版 v0.110u4      #
 #                                        #
-#           November 26, 2006            #
+#            December 3, 2006            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,10 +12,19 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：809 翻訳済：794
-# 追加項目：328 合計：1137
+# Tester報告：813 翻訳済：799
+# 追加項目：328 合計：1141
 #
 
+
+$info=invad2ct
+$mame
+[バグ]
+
+- UFOの音が出ないことがある。
+UFOそれぞれでSN76477チップを使うが、チップ0は動作していて、チップ1はしていない。 invad2ct0110u4gre, Robbbert
+
+$end
 
 $info=gangwars
 $mame
@@ -39,7 +48,7 @@ $mame
 
 [バグ]
 
-- BGMのテンポが実機よりも遅い。 circusc0110u2gre, Suutaroka /  Tafoid
+- BGMのテンポが実機よりも遅い。 circusc0110u2gre, Suutaroka /  Tafoid / Derrick Renaud
 
 $end
 
@@ -49,6 +58,18 @@ $mame
 
 - Set 2のROMが不良で起動時にエラーが出て動作しない。
 チェックをパスできないならば動作不可に設定したほうがいい。 freezea2_0110u2ora, Haze
+
+$end
+
+$info=freezeat
+$mame
+[バグ]
+
+- サービスモードで言語を英語に設定してMAMEを再起動したあと、アトラクトモードを動作させておく。
+最初のデモはBlumpy対Prissyのバトルで、15秒くらい経過するとサウンドが消える。
+
+もう一度サービスモードに入って音量を調節するか、リセットしないと音が出ない。
+音が出てない間はCPUの負荷が約2倍になる。 freezeat0110u4yel, Tafoid
 
 $end
 
@@ -114,6 +135,35 @@ $mame
 
 
 - 実機は電源投入時に音が出る。その直後に面スタートのBGMがかかる。 mario0109u4gre1, patman
+
+$end
+
+$info=hotsmash
+$mame
+[バグ]
+
+- 速度制限をONにしてコインを入れ、ゲームを始めようとすると固まる。 hotsmash0110u4red, Jason / Tafoid
+
+$end
+
+$info=toki
+$mame
+[バグ]
+
+- 背景タイルマップの画面上部2ピクセルがちらつく。1面の火山の煙など。 toki0110u4gre, robiza
+
+
+- 地面から現れる猿を倒したときの音が間違っている。
+また、16tジャンプの音もおかしい。 tokic060gre, Styxken / |Maccy| / Nick / BMF54123 / AS / Mamesick
+
+
+- 基板と比べると、起動時の“PUSH START BUTTON”の点滅がMAMEの方が速い。
+また1面の敵が飛んでくる速度もMAMEは速い。
+
+比較した基板は日本版の海賊版。 tokij0100u2gre, WhatIsIT
+
+
+- 画面一番上に1ピクセルの高さのスプライト化けがでる。 toki0104u7gre, Twisty / Mamesick
 
 $end
 
@@ -2836,7 +2886,7 @@ $info=macross2
 $mame
 [バグ]
 
-- 1面クリア後、BGMがフェードアウトを繰り返す。 macross2079u1gre, Kold666 / AWJ
+- 1面クリア後、BGMがフェードアウトを繰り返す。 macross2079u1gre, Kold666 / AWJ / twisty
 
 
 - [Possilbe] 巨大戦艦とウェポンのプライオリティが変わったが、これは正しい？ macross2_0108gre, Kekule
@@ -4586,24 +4636,6 @@ $mame
 [バグ]
 
 - 一定回数ゲームまたはコンティニューすると、それ以上コインを受け付けなくなる。多分39回。 snowbro2062gre, Thenasty / TriggerFin
-
-$end
-
-$info=toki
-$mame
-[バグ]
-
-- 地面から現れる猿を倒したときの音が間違っている。
-また、16tジャンプの音もおかしい。 tokic060gre, Styxken / |Maccy| / Nick / BMF54123 / AS / Mamesick
-
-
-- 基板と比べると、起動時の“PUSH START BUTTON”の点滅がMAMEの方が速い。
-また1面の敵が飛んでくる速度もMAMEは速い。
-
-比較した基板は日本版の海賊版。 tokij0100u2gre, WhatIsIT
-
-
-- 画面一番上に1ピクセルの高さのスプライト化けがでる。 toki0104u7gre, Twisty
 
 $end
 
