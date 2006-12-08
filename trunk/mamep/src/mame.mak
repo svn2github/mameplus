@@ -11,21 +11,6 @@
 
 
 #-------------------------------------------------
-# mamedriv.c is MAME-specific and contains the
-# list of drivers
-#-------------------------------------------------
-
-COREOBJS += $(OBJ)/mamedriv.o
-ifneq ($(USE_DRIVER_SWITCH),)
-COREOBJS += $(OBJ)/mameplusdriv.o \
-            $(OBJ)/mamencpudriv.o \
-            $(OBJ)/mamehbdriv.o \
-            $(OBJ)/mameneoddriv.o \
-            $(OBJ)/mamemddriv.o
-endif
-
-
-#-------------------------------------------------
 # specify available CPU cores; some of these are
 # only for MESS and so aren't included
 #-------------------------------------------------
@@ -260,8 +245,9 @@ SOUNDS += CDP1869
 
 
 #-------------------------------------------------
-# this is the list of driver libaries that
-# comprise MAME
+# this is the list of driver libraries that
+# comprise MAME plus mamedriv.o which contains
+# the list of drivers
 #-------------------------------------------------
 
 DRVLIBS = \
@@ -351,6 +337,14 @@ DRVLIBS = \
 	$(OBJ)/misc.a \
 	$(OBJ)/shared.a \
 
+DRVLIBS += $(OBJ)/mamedriv.o
+ifneq ($(USE_DRIVER_SWITCH),)
+DRVLIBS += $(OBJ)/mameplusdriv.o \
+            $(OBJ)/mamencpudriv.o \
+            $(OBJ)/mamehbdriv.o \
+            $(OBJ)/mameneoddriv.o \
+            $(OBJ)/mamemddriv.o
+endif
 
 
 #-------------------------------------------------
@@ -381,12 +375,14 @@ $(OBJ)/shared.a: \
 	$(OBJ)/machine/laserdsc.o \
 	$(OBJ)/machine/mc146818.o \
 	$(OBJ)/machine/nmk112.o \
+	$(OBJ)/machine/pc16552d.o \
 	$(OBJ)/machine/pci.o \
 	$(OBJ)/machine/pckeybrd.o \
 	$(OBJ)/machine/pcshare.o \
 	$(OBJ)/machine/pd4990a.o \
 	$(OBJ)/machine/pic8259.o \
 	$(OBJ)/machine/pit8253.o \
+	$(OBJ)/machine/rtc65271.o \
 	$(OBJ)/machine/scsicd.o \
 	$(OBJ)/machine/scsihd.o \
 	$(OBJ)/machine/segacrpt.o \
@@ -430,6 +426,7 @@ $(OBJ)/alpha.a: \
 	$(OBJ)/drivers/talbot.o \
 
 $(OBJ)/amiga.a: \
+	$(OBJ)/drivers/alg.o \
 	$(OBJ)/machine/amiga.o $(OBJ)/sndhrdw/amiga.o $(OBJ)/vidhrdw/amiga.o \
 	$(OBJ)/drivers/arcadia.o \
 	$(OBJ)/drivers/mquake.o \
@@ -806,6 +803,7 @@ $(OBJ)/konami.a: \
 	$(OBJ)/drivers/fastfred.o $(OBJ)/vidhrdw/fastfred.o \
 	$(OBJ)/drivers/fastlane.o $(OBJ)/vidhrdw/fastlane.o \
 	$(OBJ)/drivers/finalizr.o $(OBJ)/vidhrdw/finalizr.o \
+	$(OBJ)/drivers/firebeat.o \
 	$(OBJ)/drivers/flkatck.o $(OBJ)/vidhrdw/flkatck.o \
 	$(OBJ)/drivers/frogger.o \
 	$(OBJ)/drivers/gberet.o $(OBJ)/vidhrdw/gberet.o \
@@ -957,6 +955,7 @@ $(OBJ)/namco.a: \
 	$(OBJ)/vidhrdw/digdug.o \
 	$(OBJ)/machine/psx.o $(OBJ)/vidhrdw/psx.o \
 	$(OBJ)/machine/xevious.o $(OBJ)/vidhrdw/xevious.o \
+	$(OBJ)/drivers/dambustr.o \
 
 $(OBJ)/nasco.a: \
 	$(OBJ)/drivers/crgolf.o $(OBJ)/vidhrdw/crgolf.o \
@@ -1119,7 +1118,7 @@ $(OBJ)/sega.a: \
 	$(OBJ)/drivers/ssf2md.o \
 	$(OBJ)/drivers/sg1000a.o $(OBJ)/vidhrdw/tms9928a.o \
 	$(OBJ)/drivers/stactics.o $(OBJ)/machine/stactics.o $(OBJ)/vidhrdw/stactics.o \
-	$(OBJ)/drivers/stv.o $(OBJ)/drivers/stvhacks.o $(OBJ)/machine/stvcd.o \
+	$(OBJ)/drivers/stv.o $(OBJ)/drivers/stvinit.o $(OBJ)/machine/stvprot.o $(OBJ)/machine/stvcd.o \
 	$(OBJ)/drivers/suprloco.o $(OBJ)/vidhrdw/suprloco.o \
 	$(OBJ)/drivers/system1.o $(OBJ)/vidhrdw/system1.o \
 	$(OBJ)/drivers/system16.o $(OBJ)/machine/system16.o $(OBJ)/sndhrdw/system16.o $(OBJ)/vidhrdw/system16.o $(OBJ)/vidhrdw/sys16spr.o \
@@ -1467,7 +1466,6 @@ $(OBJ)/misc.a: \
 	$(OBJ)/drivers/coolpool.o \
 	$(OBJ)/drivers/crystal.o $(OBJ)/machine/ds1302.o $(OBJ)/vidhrdw/vrender0.o \
 	$(OBJ)/drivers/cybertnk.o \
-	$(OBJ)/drivers/dambustr.o \
 	$(OBJ)/drivers/dcheese.o $(OBJ)/vidhrdw/dcheese.o \
 	$(OBJ)/drivers/dgpix.o \
 	$(OBJ)/drivers/dorachan.o $(OBJ)/vidhrdw/dorachan.o \
@@ -1482,7 +1480,7 @@ $(OBJ)/misc.a: \
 	$(OBJ)/drivers/flower.o $(OBJ)/sndhrdw/flower.o $(OBJ)/vidhrdw/flower.o \
 	$(OBJ)/drivers/fortecar.o \
 	$(OBJ)/drivers/freekick.o $(OBJ)/vidhrdw/freekick.o \
-	$(OBJ)/drivers/funworld.o \
+	$(OBJ)/drivers/funworld.o $(OBJ)/vidhrdw/funworld.o \
 	$(OBJ)/drivers/go2000.o \
 	$(OBJ)/drivers/gotcha.o $(OBJ)/vidhrdw/gotcha.o \
 	$(OBJ)/drivers/gumbo.o $(OBJ)/vidhrdw/gumbo.o \
@@ -1590,6 +1588,8 @@ $(OBJ)/drivers/copsnrob.o:	$(OBJ)/layout/copsnrob.lh
 $(OBJ)/drivers/darius.o:	$(OBJ)/layout/darius.lh
 
 $(OBJ)/drivers/dlair.o:		$(OBJ)/layout/dlair.lh
+
+$(OBJ)/drivers/firebeat.o:	$(OBJ)/layout/firebeat.lh
 
 $(OBJ)/drivers/funworld.o:	$(OBJ)/layout/funworld.lh
 

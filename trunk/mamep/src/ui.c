@@ -2560,7 +2560,7 @@ static void build_bgtexture(running_machine *machine)
 		*(UINT32 *)bgbitmap->line[i] = MAKE_ARGB(a, (UINT8)(r * gradual), (UINT8)(g * gradual), (UINT8)(b * gradual));
 	}
 
-	bgtexture = render_texture_alloc(bgbitmap, NULL, NULL, TEXFORMAT_ARGB32, render_texture_hq_scale, NULL);
+	bgtexture = render_texture_alloc(bgbitmap, NULL, 0, TEXFORMAT_ARGB32, render_texture_hq_scale, NULL);
 	add_exit_callback(machine, free_bgtexture);
 }
 

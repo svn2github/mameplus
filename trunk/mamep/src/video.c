@@ -490,7 +490,7 @@ void video_screen_configure(int scrnum, int width, int height, const rectangle *
 			/* allocate new stuff */
 			info->bitmap[0] = bitmap_alloc_depth(curwidth, curheight, Machine->color_depth);
 			info->bitmap[1] = bitmap_alloc_depth(curwidth, curheight, Machine->color_depth);
-			info->texture = render_texture_alloc(info->bitmap[0], visarea, palette_get_adjusted_colors(Machine) + config->palette_base, info->format, NULL, NULL);
+			info->texture = render_texture_alloc(info->bitmap[0], visarea, config->palette_base, info->format, NULL, NULL);
 		}
 	}
 
@@ -811,10 +811,10 @@ void video_frame_update(void)
 							texture_set_scalebitmap(scrnum, &fixedvis);
 						else
 #endif /* USE_SCALE_EFFECTS */
-						render_texture_set_bitmap(screen->texture, bitmap, &fixedvis, palette_get_adjusted_colors(Machine) + Machine->drv->screen[scrnum].palette_base, screen->format);
+						render_texture_set_bitmap(screen->texture, bitmap, &fixedvis, Machine->drv->screen[scrnum].palette_base, screen->format);
 						screen->curbitmap = 1 - screen->curbitmap;
 					}
-					render_screen_add_quad(scrnum, 0.0f, 0.0f, 1.0f, 1.0f, MAKE_ARGB(0xff,0xff,0xff,0xff), screen->texture, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA) | PRIMFLAG_SCREENTEX(1));
+					render_screen_add_quad(scrnum, 0.0f, 0.0f, 1.0f, 1.0f, MAKE_ARGB(0xff,0xff,0xff,0xff), screen->texture, PRIMFLAG_BLENDMODE(BLENDMODE_NONE) | PRIMFLAG_SCREENTEX(1));
 				}
 			}
 
@@ -1134,7 +1134,7 @@ static void free_scalebitmap(void)
 			internal_screen_info *info = &scrinfo[scrnum];
 			int bank;
 
-			render_texture_set_bitmap(info->texture, info->bitmap[info->curbitmap], NULL, palette_get_adjusted_colors(Machine) + Machine->drv->screen[scrnum].palette_base, info->format);
+			render_texture_set_bitmap(info->texture, info->bitmap[info->curbitmap], NULL, Machine->drv->screen[scrnum].palette_base, info->format);
 
 			info->changed &= ~UPDATE_HAS_NOT_CHANGED;
 
@@ -1286,7 +1286,7 @@ static void texture_set_scalebitmap(int scrnum, const rectangle *visarea)
 	}
 	info->scale_dirty[curbank] = 0;
 
-	render_texture_set_bitmap(info->texture, dst, NULL, NULL, (scale_depth == 32) ? TEXFORMAT_RGB32 : TEXFORMAT_RGB15);
+	render_texture_set_bitmap(info->texture, dst, NULL, 0, (scale_depth == 32) ? TEXFORMAT_RGB32 : TEXFORMAT_RGB15);
 }
 #endif /* USE_SCALE_EFFECTS */
 
