@@ -250,7 +250,16 @@ SOUNDS += CDP1869
 # the list of drivers
 #-------------------------------------------------
 
-DRVLIBS = \
+DRVLIBS = $(OBJ)/mamedriv.o
+ifneq ($(USE_DRIVER_SWITCH),)
+DRVLIBS += $(OBJ)/mameplusdriv.o \
+            $(OBJ)/mamencpudriv.o \
+            $(OBJ)/mamehbdriv.o \
+            $(OBJ)/mameneoddriv.o \
+            $(OBJ)/mamemddriv.o
+endif
+
+DRVLIBS += \
 	$(OBJ)/alba.a \
 	$(OBJ)/alliedl.a \
 	$(OBJ)/alpha.a \
@@ -337,14 +346,6 @@ DRVLIBS = \
 	$(OBJ)/misc.a \
 	$(OBJ)/shared.a \
 
-DRVLIBS += $(OBJ)/mamedriv.o
-ifneq ($(USE_DRIVER_SWITCH),)
-DRVLIBS += $(OBJ)/mameplusdriv.o \
-            $(OBJ)/mamencpudriv.o \
-            $(OBJ)/mamehbdriv.o \
-            $(OBJ)/mameneoddriv.o \
-            $(OBJ)/mamemddriv.o
-endif
 
 
 #-------------------------------------------------
