@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.110u4      #
+#     Mameinfo.dat日本語版 v0.110u5      #
 #                                        #
-#            December 3, 2006            #
+#            December 9, 2006            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：813 翻訳済：799
-# 追加項目：328 合計：1141
+# Tester報告：815 翻訳済：802
+# 追加項目：328 合計：1143
 #
 
 
@@ -37,21 +37,6 @@ $mame
 
 $end
 
-$info=circusc
-$mame
-[情報]
-
-- 起動時に1Pスタートと2Pスタートキーを押しつづけると、
-テストモードに入れる。
-1Pスタートで次画面に進む。
-
-
-[バグ]
-
-- BGMのテンポが実機よりも遅い。 circusc0110u2gre, Suutaroka /  Tafoid / Derrick Renaud
-
-$end
-
 $info=freezea2
 $mame
 [バグ]
@@ -70,6 +55,15 @@ $mame
 
 もう一度サービスモードに入って音量を調節するか、リセットしないと音が出ない。
 音が出てない間はCPUの負荷が約2倍になる。 freezeat0110u4yel, Tafoid
+
+$end
+
+$info=bullfgtr
+$mame
+[バグ]
+
+- スプレンダーブラスト同様にBGMにドラム音が欠けている。
+ちなみに、基板からMSM5232を外すとドラムを含めてBGMが全て鳴らなくなる。 bullfgtr0110u5gre, Kold666
 
 $end
 
@@ -135,6 +129,24 @@ $mame
 
 
 - 実機は電源投入時に音が出る。その直後に面スタートのBGMがかかる。 mario0109u4gre1, patman
+
+$end
+
+$info=janptr96
+$mame
+[バグ]
+
+- DIPスイッチ“Maximum Bet”の修正：
+
+PORT_DIPNAME( 0xc0, 0xc0, "Maximum Bet" )
+
+PORT_DIPSETTING( 0x00, "20" )
+
+PORT_DIPSETTING( 0x40, "10" )
+
+PORT_DIPSETTING( 0x80, "5" )
+
+PORT_DIPSETTING( 0xc0, "1" ) janptr96_0110u4gra, J.J.Boy
 
 $end
 
@@ -540,9 +552,6 @@ $end
 $info=cannonb
 $mame
 [バグ]
-
-- スプライトが表示されない。 cannonb0104u8yel, Haze
-
 
 - 筐体設定のDIPスイッチ（カクテル・アップライト）が動作せず、常にカクテルモードになっている。
 ただし、プレイヤー2の操作はアップライトで、テキストが反転している。 cannonb078u6yel, Nomax / The tECHIDNA
@@ -2061,24 +2070,6 @@ $mame
 
 $end
 
-$info=64street
-$mame
-[バグ]
-
-- 背景のプライオリティ不具合あり。
-特に最終面でよくわかる。 64street057gre, fart_flower
-
-
-- 「megasys1.cゲーム」
-
-chimerab：アトラクトモード・操作説明画面が動作しない
-
-cybattlr：アトラクトモードでプレイ出来てしまう。
-
-64street：アトラクトモードでキャラクタが動かない。 megasys1c070u5gre, Y.M.I / [MK]
-
-$end
-
 $info=avspirit
 $mame
 [バグ]
@@ -2116,6 +2107,20 @@ $mame
 $end
 
 $info=cybattlr
+$mame
+[バグ]
+
+- 「megasys1.cゲーム」
+
+chimerab：アトラクトモード・操作説明画面が動作しない
+
+cybattlr：アトラクトモードでプレイ出来てしまう。
+
+64street：アトラクトモードでキャラクタが動かない。 megasys1c070u5gre, Y.M.I / [MK]
+
+$end
+
+$info=64street
 $mame
 [バグ]
 
@@ -2498,14 +2503,6 @@ $mame
 [バグ]
 
 - ゲーム中やキャラクタ選択画面で突然リセットする。 gfire20103red, russ h. / Twist
-
-$end
-
-$info=gratia
-$mame
-[バグ]
-
-- アトラクトモードでタイトル画面後に落ちる。YMF271コアが新しくなってから。 gratia099u4red, sjyune / Firewave
 
 $end
 
@@ -7056,6 +7053,16 @@ $mame
 
 
 - YM2151の音程は3.579545MHzが正しいが、曲の一部が早回しになる。
+
+$end
+
+$info=circusc
+$mame
+[情報]
+
+- 起動時に1Pスタートと2Pスタートキーを押しつづけると、
+テストモードに入れる。
+1Pスタートで次画面に進む。
 
 $end
 
