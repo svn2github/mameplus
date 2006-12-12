@@ -1,450 +1,512 @@
-0.110
+0.111
 -----
 
 
 MAMETesters Bugs Fixed
 ----------------------
-irobot0106u1gra [Luigi30]
-astrofc057ora [Luigi30]
+perfrman0110u5gre [Pierpaolo Prazzoli]
 
 
 
 Source Changes
 --------------
-Fixes auditting sets where all the roms in the clone are also in the 
-parent. [smf]
+Properly removes the "Autocenter Speed" from the UI when not used.
+[Derrick Renaud]
 
-Fixed assertions in 6809 and 6502 diassemblers caused by stricter
-checking introduced in u5. [Aaron Giles]
-
-Fixed crash when resetting PSX games. [smf, Aaron Giles]
-
-
-
-New clones added
-----------------
-Trivia (Version 1.01C Alt questions 1) [Brian Troha]
+Fixed decryption of some NeoGeo bootleg sets (specifically, kf2k2mp 
+and kf2k3upl) on platforms/compilers that don't implement memcpy as
+memmove. [Alex Jackson]
 
 
 
-New games marked as GAME_NOT_WORKING
-------------------------------------
-M075 Poker (Version 16.03B) [Brian Troha]
-Super Bowl (Version 16.03B) [Brian Troha]
-Trivia (sms) [Pierpaolo Prazzoli]
-
-
-
-0.109u5
+0.110u5
 -------
 
 
 MAMETesters Bugs Fixed
 ----------------------
-uicrash0108u5red [Nicola Salmoria]
+circusc0110u2gre [Derrick Renaud]
+circusc37b16ora [Derrick Renaud]
+64street057gre [Mamesick]
+cannonb0104u8Yel [Mamesick]
+gratia099u4red [Atari Ace]
 
 
 
 Source Changes
 --------------
-Fixed subtle bug in the UI menu handler that only manifested on
-mingw-based compiles. [Nicola Salmoria]
+Improvements to the Polygonet Commanders driver: [Andrew Gardner]
+ * Implemented various dsp56k opcodes
+ * Polygonet Commanders now gets past the memory tests
 
-Updated CHD locating behavior to accept CHDs referenced by the 
-parent of a clone if the hash matches, even if it has a different
-name. [smf]
+Fixed the background color in perfrman. [Pierpaolo Prazzoli]
 
-Improved flash emulation and added support for Fujitsu flash chips.
-Switches Konami games over to new flash chips. [smf]
+Merged in some MESS-specific PC support code. [Nathan Woods]
 
-Improved behavior of SCSI CD implementation for audio playback and
-TOC reading commands. [R. Belmont]
+Added mosaic effect to valtric. Yes, it looks as bad on real hardware
+as in MAME :) [Tomasz Slanina]
 
-Fixed priorities and the offset of layer 3 in fcrash. [robiza]
+Fixed colors in Honey Dolls. [David Haywood]
 
-Added save state support to the COP4xx core. [Aaron Giles]
+Added the final filtering stages to the sound, proper watchdog and 
+memory mirroring to the circusc driver. Also added PORT_DIPLOCATION 
+info and save state support. [Derrick Renaud]
 
-Changed the new disassembler and override callback prototypes to
-take const parameters and to remove the generally unused 'bytes'
-parameter. The disassemblers can now assume that the buffers contain
-enough bytes to hold the maximum instruction length as returned by
-the CPU core get_info callback. [Aaron Giles]
+Updated vconv.c to support preprocessor and assembly file output in
+MSVC builds. [Nathan Woods]
 
-Converted the following disassemblers to the new format, and added
-step in/out support where it was obvious: adsp21xx, alph8201, 
-arm, arm7, asap, ccpu, cdp1802, cop4x0, dsp32c, e132xs, g65816, 
-h6280, h83002, i8x41, i960, i8051, i8085, jaguar, m680x, m6805, 
-m37710, mc68hc11, pic16c5x, rsp, s2650, se3208, sh2, sharc, t11,
-tms32010, tms32025, tms32031, tms34010, upd7810, v60, v810, z180,
-and z8000. [Aaron Giles]
+Improved DIP switches for Honey Dolls and Twin Adventure. 
+[Brian Troha]
 
-Deprecated the old disassembler interfaces in favor of the new ones.
+Removed the "Autocenter Speed" menu entry for Analog Controls that do 
+not use it. [Derrick Renaud]
+
+Added a "Digital Speed" of 0 in the "Analog Controls" menu. This will 
+cause the control to only inc/decrement once per button press no 
+matter how long the button is pressed. Remember this is still scaled 
+by the "Sensitivity" setting. [Derrick Renaud]
+
+Scaled Windows mouse Z axis by 30 to make it usable. Most mice 
+inc/decrement by 120 for each wheel click. Some rare ones are 30. So 
+this means for most mice, using a Sensitivity setting of 25%, you 
+will get 1 inc/decrement for each wheel click. [Derrick Renaud]
+
+Cleaned up the cclimber driver, replacing hacks for cannonb with a
+separate video update callback. [Mamesick]
+
+Moved the ST-V protection related code into stvprot.c and added some 
+notes about the decathlete protection and renamed stvhacks to 
+stvinit, because it contains most of the inits as well as the 
+speedhacks. [David Haywood]
+
+Major funworld driver rewrite: [Roberto Fresca]
+ - Merged/splitted some machine drivers, memory maps and inputs.
+ - Unified get_bg_tile_info for all games.
+ - Mapped the input buttons in a better format (all games).
+ - Added proper color PROM decode routines.
+ - Splitted the driver to driver/vidhrdw.
+ - Corrected the screen size and visible area to magiccrd.
+ - Added the remaining 2 GFX planes to magiccrd; GFX are imperfect.
+ - Royalcrd: Added all inputs and DIP switches.
+ - Fixed jolycdcr gfx to 4bpp.
+ - Other fixes to get jolycdcr running.
+ - Managed royalcdb to work, using the 2nd half of program ROM.
+ - Managed jolycdit to work, but with imperfect graphics.
+ - Fixed CPU clock to 2MHz. in all remaining games.
+ - Fixed ay8910 frequency based on elephfam audio.
+ - Fixed ay8910 volume in all games to avoid clipping.
+ - Reworked jolycdcr, jolycdit inputs.
+ - Set jolycdat as bigdeal clone. 
+ - Added the bipolar PROM and GAL to jolycdit. 
+ - Added color PROMs to cuoreuno and elephfam sets. 
+ - Corrected jollycrd screen size and visible area.
+ - Hooked, wired and decoded the color prom in jollycrd sets.
+ - Wired and decoded the color prom in cuoreuno and elephfam sets.
+ - Wired and decoded the color prom in royalcrd.
+ - Hooked, wired and decoded the color prom in bigdeal sets.
+ - Decrypted jolycdit gfx roms.
+ - Decrypted jolycdae and managed the planes to show correct colors.
+
+Minor Unicode changes for the Windows code. [Nathan Woods]
+
+Added serial in/out support to the Amiga hardware. Added hooks for
+output pins and light pen positioning. Also fixed the horrible static 
+at startup in the debug build. [Aaron Giles]
+
+Reorganized the laserdisc support a bit to accommodate new players.
+Added Sony LDP-1450 support. [Aaron Giles]
+
+Added new render texture format TEXFORMAT_YUY16, which is used to
+hold 4:2:2 Y/Cb/Cr format pixels. Updated the Windows Direct3D code
+and the software renderers to use this format directly. [Aaron Giles]
+
+Added new render texture fromat TEXFORMAT_PALETTEA16, which is the
+same as TEXFORMAT_PALETTE16 but respects the alpha component of the
+palette entry. Updated the Windows Direct3D code and the software
+renderers to use this format. [Aaron Giles]
+
+Changed the render system to respect blendmodes for screen elements
+rather than hard-coding them. This allows individual VIDEO_UPDATE
+routines to do their own compositing. [Aaron Giles]
+
+Removed the illusion from the rendering system that you could pass in
+arbitrary palettes. The system palette is all that is supported.
 [Aaron Giles]
 
-Fixed subtle bug in subtable allocation in the memory system that
-caused the Eolith games to assert with the debugger. [Aaron Giles]
 
-Tweaked the disassembly view to detect if the disassembly for the
-current instruction has changed, and if so, recompute the entire 
-view. This provides more dynamic updating when system states change
-under certain CPUs. [Aaron Giles]
 
-Added new symbol 'curpc' for all CPUs which represents the value of
-the current instruction pointer, to avoid naming conflicts with the
-'pc' register in other contexts. Changed this to be the default
-value for the disassembly window in the Windows version of the
-debugger (OSD ports will need to do likewise). [Aaron Giles]
+New games added or promoted from NOT_WORKING status
+---------------------------------------------------
+Twin Adventure [David Haywood]
+Royal Card [Roberto Fresca]
 
 
 
 New clones added
 ----------------
-Trivia (Version 1.01C) [Brian Troha]
-Space Battle (bootleg set 2) [Brian Troha]
+Twins (set 2) [David Haywood]
+Jolly Card (Austria, encrypted) [Roberto Fresca]
+Royal Card (Slovakia, encrypted) [Roberto Fresca]
+Elephant Family (Italia, old) [Roberto Fresca]
+Phoenix (Centuri), Set 2 [Brian Troha]
 
 
 
 New games marked as GAME_NOT_WORKING
 ------------------------------------
-Tetris (Unknown Manufacturer) [David Haywood]
-Out Run (Mega-Tech) [Charles MacDonald, Brian Troha]
-Forgotten Worlds (Mega-Tech) [Charles MacDonald, Brian Troha]
-Super Real Basketball (Mega-Tech) [Charles MacDonald, Brian Troha]
+ParaParaParadise [Ville Linde]
+Keyboardmania 3rd Mix [Ville Linde]
+Mad Dog McCree [Andrea Turci, Aaron Giles]
+Who Shot Johnny Rock? [Andrea Turci, Aaron Giles]
+Mad Dog II: The Lost Gold [Andrea Turci, Aaron Giles]
+Space Pirates [Andrea Turci, Aaron Giles]
+Gallagher's Gallery [Andrea Turci, Aaron Giles]
+Crime Patrol [Andrea Turci, Aaron Giles]
+Crime Patrol 2: Drug Wars [Andrea Turci, Aaron Giles]
+The Last Bounty Hunter [Andrea Turci, Aaron Giles]
+Fast Draw Showdown [Andrea Turci, Aaron Giles]
+Platoon [Andrea Turci, Aaron Giles]
+Zorton Brothers (Los Justicieros) [Andrea Turci, Aaron Giles]
+Joker Card [Roberto Fresca]
 
 
 
-0.109u4
+0.110u4
 -------
 
 
 MAMETesters Bugs Fixed
 ----------------------
-hvysmsh0103u3gre [robiza]
+raiga0104u4yel [Mamesick]
 
 
 
 Source Changes
 --------------
-Added a COP410 core to the COP4xx collection. [Nathan Woods]
+SCSI CD emulation improvements: [Ville Linde]
+ - Added Play Audio (12) command
+ - Fixed track number and added MSF support to Read Sub-Channel 
+    command
 
-Improved banking in the alpha68k games. [robiza]
+Added workaround for broken MediaGX driver. [Ville Linde]
 
-Fixed memory leak when writing MNG files. [Buddabing]
+Reworked the SNES raster timing to use MDRV_SCREEN_RAW_PARAMS() and 
+friends. All but one of the "electronics tests" in the SNES 
+diagnostics cart now pass with flying colors. [R. Belmont]
 
-Fixed several audit bugs introduced with the rewrite. [Mamesick]
+Fixed Super Breakout layout. [Mr. Do]
 
-Fixed lamps in funworld/cardline drivers. [wolf676]
+CPS2 updates: [David Haywood]
+ - Added table for Jyangoku (from Guru). Note that GFX/Sound roms 
+    aren't dumped on this one.
+ - Removed old 'handcrafted' xors for games which we have CHDs for 
+    and replaced them with xors generated from MAME using the CHD.  
+    This means anyone with the CHD can easily generate the xors 
+    (using the code I've left in there) if they need to be able to 
+    run the games with a shorter startup time.
+ - Disabled the loading of the xors by default for all sets with a 
+    CHD. Now only the CHD is loaded, unless the #define is changed 
+    at the top in which case only the xors generated from the CHD 
+    are loaded.
 
-Normalized realtime clock accesses across drivers. Now ensure that
-realtime clocks are reset when recording/saving INP files.
+Added support for more than 4 mouse buttons on versions of Windows 
+that support it. Win98/Me with DX7+ or XP. It defaults to regular 4 
+buttons if not supported. [Derrick Renaud]
+
+Fixed the crosshairs in the PlayChoice-10 gun games that got 
+buggered in the conversion to multi-monitor support. [Derrick Renaud]
+
+Rewrote the Dragon's Lair driver from the schematics. Added new
+module machine/laserdsc.c which has laserdisc emulation for the
+PR-7280 and LD-V1000 laserdisc players. Full emulation of the
+laserdisc is pending support for CHD audio/video and high quality 
+rips, but you can operate the game and see the frame numbers that
+would be displayed. Added built-in layout to display the scores, 
+lives, and credit information. [Aaron Giles]
+
+Added some hacks to windows.mak to allow limping compilation under
+Windows Vista. To make these work set an environment variable called
+VISTA_MINGW_ROOT equal to the base of your mingw directory, and add
+%VISTA_MINGW_ROOT%\libexec\gcc\mingw32\3.4.2 to your PATH environment.
+There are still a few issues, but this will let you build with MSVC,
+and will compile most of the code with gcc (minus a couple of Windows
+OSD files). Hopefully the mingw folks will resolve these issues.
+[Aaron Giles]
+
+
+
+0.110u3
+-------
+
+
+MAMETesters Bugs Fixed
+----------------------
+sandscrp0110u1yel [Mamesick]
+
+
+
+Source Changes
+--------------
+Added raw decryption table to choko. Enabled the use of the large
+CHD-based tables by default. [David Haywood]
+
+Changed kram3 decryption to use external tables instead of hard-
+coded ones in the source. [Atari Ace]
+
+Konami driver updates: [Ville Linde]
+ * drivers/gticlub.c:
+   - Moved video hardware to vidhrdw/gticlub.c
+   - Hooked up sound emulation
+   - Added dual-screen support for Hang Pilot
+ * drivers/hornet.c:
+   - Added support for multiple K037122 chips
+   - Added dual-screen support for Silent Scope & Silent Scope 2
+ * drivers/nwk-tr.c:
+   - Added support for multiple K001604 chips
+   - Hooked up sound emulation
+ * vidhrdw/gticlub.c:
+   - Added texture-mapping and z-buffer to K001005 emulation
+ * general:
+   - Consolidated K056800 emulation (machine/konamiic.c)
+   - Improved Hang Pilot/NWK-TR gfx board emulation
+
+STV fixes: [Mariusz Wojcieszek]
+ - vdp2: fixed vertical scrolling for RGB bitmaps (fixes corrupted
+    gfx in batmanfr)
+ - vdp2: fixed vertical line scrolling for zoomed layers (fixes
+    corrupted backgrounds in astrass)
+ - stv:  added speedup for master sh2 in batmanfr
+
+Fixed bug in overflow handling and SUBC emulation in the TMS32010
+core. [Rainer Keuchel]
+
+Reverted Mario Bros. graphics offset since it caused issues 
+elsewhere. [Derrick Renaud]
+
+Enhanced chd.c to support hunk sizes up to 16MB, versus the previous
+64k limit. [Aaron Giles]
+
+Added hooks to chd.c to specify codec-specific configuration info.
+[Aaron Giles]
+
+Removed obsolete timing parameter from stream_update(). [Aaron Giles]
+
+Cleaned up cdrom.c. Removed audio implementation and relocated code
+into sound/cdda.c. Changed metadata format to be textual instead of
+binary (old metadata format is still supported). Removed external
+access to CHD positions; all accesses are now done at the physical
+LBA level and converted internally. [Aaron Giles]
+
+Added support for split CHD files. CHD files can be transparently
+split into multiple pieces and left that way during read access.
+Modifications to split files are always written to the last file.
+A new command chdman -split is now available to split an existing
+CHD file. [Aaron Giles]
+
+Added new option -fontpath to control where the font files are loaded
+from. [Aaron Giles]
+
+Added ability for options_add_entries() to override defaults 
+specified in the core. To do this, simply include an option in the
+list with the same name as the core option and provide a new default.
+This default will override the one specified in the core.
+[Aaron Giles]
+
+
+New clones added
+----------------
+World Rally (set 3 - 930217) [Kevin Eshbach]
+Bionic Commando (Euro) [Stefan Lindberg]
+
+
+
+0.110u2
+-------
+
+
+MAMETesters Bugs Fixed
+----------------------
+vulcan137b1gre [robiza, Mamesick]
+mario0110u1gre [Derrick Renaud]
+
+
+
+Source Changes
+--------------
+Fixed flags access in the i286 core. [Barry Rodewald]
+
+Updated MC146818 module to use new core date/time routines.
 [Nathan Woods]
 
-Updated documentation in pacman driver to reflect actual sync chain.
-Fixed sound frequencies for 2650 conversions. [Aaron Giles]
+Cleaned up disassemblers to remove stubs and ensure the disassemblers
+are not referenced except in debug builds. [Nathan Woods]
 
-Fixed bug in displaying disassembly of CPUs whose minimum instruction
-size was larger than their data bus size. [Aaron Giles]
+Added support for using CHDs to decrypt CPS2 games. This code is
+disabled for the moment, but will be enabled in the future. Only a 
+handful of games have complete tables so far. These tables are huge 
+(~4GB) and uncompressable until the encryption algorithm is 
+understood. [David Haywood]
 
-Added new debugger command 'history' which dumps the most recent
-instructions executed. [Aaron Giles]
+Fixed bug in the debugger that caused watchpoints to not be active
+until the next context switch. [smf]
 
-Improvements to the Looping driver: [Aaron Giles]
- * fixed clock speeds
- * proper video timing
- * fixed protection (game would reset; should never have been marked
-    'working' in the first place!)
- * various other driver cleanups
+Cleaned up the input definitions for n-way joysticks so they are
+more explicit. Added concept of a "16-way" joystick, which is a
+joystick that doesn't prevent simultaneous opposing directions from
+bring reported. [smf]
 
-Cleaned up tms99xx core debugging and converted to new disassembler
-syntax, adding step over/out support. [Aaron Giles]
+Major System 573 update: [smf]
+ * fixed PSX SIO control register behavior
+ * implemented several SCSI CD commands: START/STOP UNIT, PAUSE/
+    RESUME, READ SUB-CHANNEL, READ TOC
+ * added uPD4701 emulation
+ * fixed ATAPI reset, PIO, and command IDENTIFY PACKET DEVICE 
+ * hooked up controls for fishing, DRR, and Guitar Freaks games
+ * hooked up CDDA audio
+ * removed some unused bytes from the Konami 80's security chips
 
-Removed obsolete CPUINFO_PTR_REGISTER_LAYOUT and 
-CPUINFO_PTR_WINDOW_LAYOUT data items. [Aaron Giles]
+Fixed upside down service mode in the commando.c driver. [Canim]
+
+Added support for the Triple Hunt 8-track audio. [Derrick Renaud]
+
+Galaxian/Scramble driver reorganization: [Atari Ace]
+ * machine/scramble.c is broken up into two files, 
+    machine/galaxian.c and machine/scramble.c
+ * drivers/amidar.c, drivers/frogger.c, drivers/scobra.c get copies 
+    of some of the data structures they shared from other drivers 
+ * galaxian_base is made static and uses outside of the main driver
+    were rewritten
+ * cclimber_decode code from drivers/cclimber.c was separated into 
+    its own machine/cclimber.c file to allow mshuttle to share it 
+    without taking on other dependencies
+
+Added missing x-flipping support in Major Havoc. [Mathis Rosenhauer]
+
+Made some improvements to trivia madness driver. There still is 
+something wrong in the question roms banking. [Pierpaolo Prazzoli]
+
+More updates to the ST-V driver: [Mariusz Wojcieszek]
+ * vdp1: added shading for sprites (used by znpwfv, cotton, others)
+ * vdp1: fixed sprite clipping (fixes incorrect sprites in znpwfv)
+ * vdp1: fixed transparency on colour lookup table sprites (fixes bad
+          sprites in znpwfv)
+ * vdp2: fixed caching of RGB layer (fixes bad backgrounds on bosses 
+          in rsgun)
+ * vdp2: added additive blending for tilemaps and sprites (rsgun)
+ * vdp2: added vertical line scroll and linezoom (fixes diehard logo)
+ * stv:  improved speedups for diehard
+ * stv:  fixed speedups for znpwfv
+ * stv:  added preliminary save state support
+
+Significant cleanup of chd.c: [Aaron Giles]
+ * got rid of the horrible last_error concept; now all routines 
+    return an error directly
+ * fixed several issues in managing metadata 
+ * changed compression and verification routines to be client-driven 
+    rather than monolithic
+ * changed internal codec usage to be more flexible
+ * altered chdman and MAME to use the new interfaces
+ * added new -createraw command for creating raw data CHDs
+
+Fixed crash bug in romcmp when comparing ZIP files. [Aaron Giles]
 
 
 
 New games added or promoted from NOT_WORKING status
 ---------------------------------------------------
-Konami 80s Gallery [R. Belmont, smf]
-Dark Horse Legend [R. Belmont, smf]
-Powerful Pro Baseball EX [R. Belmont, smf]
-Bowling 3D [Pierpaolo Prazzoli]
+Fisherman's Bait * A Bass Challenge / Bass Angler [smf]
+Fisherman's Bait 2 * A Bass Challenge [smf]
+Fisherman's Bait * Marlin Challenge [smf]
+Dancing Stage / Dance Dance Revolution [smf]
+Guitar Freaks [smf]
+Dance Dance Revolution 2nd Mix [smf]
+Dance Dance Revolution 2nd Mix Link [smf]
 
 
 
 New clones added
 ----------------
-Trivia (Version 1.03a) (alt 4) [Brian Troha]
-Arian Mission [Brian Troha]
-
-
-
-0.109u3
--------
-
-
-MAMETesters Bugs Fixed
-----------------------
-ftroption0109u2ora [Aaron Giles]
-
-
-
-Source Changes
---------------
-Added missing InitCommonControls(), which caused the debugger UI
-to fail with recent updates. [Nathan Woods]
-
-Fixed dip switches and added second player controls for beaminv
-driver. [stephh]
-
-Major rewrite of the SHARC core: [Ville Linde]
- - Bit-accurate reciprocals
- - More accurate pipeline emulation
- - Fixed the problems with operation latencies
- - Regression tested a few floating-point operations for bit-accurate 
-    results
- - Improved DMA emulation
-This update will fix most (but not all) of the clipping problems in 
-Gradius 4 and NBA Play by Play.
-
-Updated cardline driver lamps and layout: [wolf676]
- - converted hardcoded fake lamps to new artwork system
- - added button lamps card1-5, collect, bet, start
- - added simple button lamps artwork "cardline.lay".
- - re-ordered buttons and added "collect" button
-
-Updated funworld driver lamps and layout: [wolf676]
- - added external credit in counter (mapped as coin 1 counter)
- - added external credit out counter (mapped as coin 8 counter)
- - added button lamps hold1-5, cancel, start
- - added simple button lamps artwork "funworld.lay".
-
-Added COP420 core for the Altair games. [Curt Coder]
-
-Increased the interleave in Xevious to fix synchronization issues.
-[robiza]
-
-Added new output control system. This system is designed to support
-multiple output streams, and should replace all instances of printf
-in the code. You can now call one of these functions:
-
-  mame_printf_error
-  mame_printf_warning
-  mame_printf_info
-  mame_printf_debug
-
-to output data. By default, these go to the console, but they can be
-overridden by the OSD layer to route wherever is appropriate.
-[Aaron Giles]
-
-Some additional Grand Champion cleanup. [Aaron Giles]
-
-
-
-New games added or promoted from NOT_WORKING status
----------------------------------------------------
-Cuore Uno (Italia) [Roberto Frecsa]
-Elephant Family (Italia) [Roberto Fresca]
-
-
-
-0.109u2
--------
-
-IMPORTANT NOTE TO OSD DEVELOPERS: As of this release, you are now
-required to make use of options.c to set core options. At a minimum,
-this requires calling options_init(NULL) before calling run_game().
-
-
-
-MAMETesters Bugs Fixed
-----------------------
-capbowl0109u1yel [Aaron Giles]
-
-
-
-Source Changes
---------------
-Improved DIP switches in the yunsun16 driver and added more
-documentation. [stephh]
-
-Improved timer accuracy and added save state support to the 
-6526 CIA module. [Nathan Woods]
-
-Fixed bug in memory map dumping code that caused wrong addresses
-to be dumped. [Wilbert Pol]
-
-Connected TMS5220 speech support to the Major Havoc: Return to Vax
-mod. [Jess Askey]
-
-Changed comment shortcut in disassembly windows to avoid clash with
-Ctrl+C for "Copy". [Nathan Woods]
-
-Added checking for register symbol names to ensure they aren't
-numeric (which prevents their identification by the expression
-parser). Changed the M4510 CPU symbols to avoid tripping this
-check. [Nathan Woods]
-
-Fixed crash in the Win32 debugger code with small window sizes.
-[Samuele Zannoli]
-
-Fixed assertion when auditing systems with no samples or ROMs.
-[Nathan Woods]
-
-Some pmpoker driver improvements: [Roberto Fresca]
- - Added service/settings mode to pmpoker.
- - Added PORT_IMPULSE to manage correct timings for most inputs 
-    in all games.
-
-Fixed "run to cursor" functionality for CPUs that had an address
-bus shift. [Andrew Gardner]
-
-Fixed bug that caused false positive ZIP filename matches.
-[Aaron Giles]
-
-Added PATH_SEPARATOR define so that platforms with non forward-slash
-path separators can get preassembled paths in their native format.
-[Aaron Giles]
-
-Some enhancements to the options manager: [Aaron Giles]
- * added a simpler options_init for startup
- * added support for internal options
- * added support for multiple unadorned options
- * moved core options definitions into the core options.c
-    (note that the default INI path no longer includes $HOME/.mame
-     since that is not cross-platform; *nix platforms will need to
-     explicitly override that default in their OSD code)
- * added accessor to set the default value of a given option
- * changed error reporting so that errors are tracked internally
-    and reported only once
-
-Improved documentation in osdepend.h to better describe some of the
-functions and provide a general overview of how things work. Removed 
-unused osd_readkey_unicode function. [Aaron Giles]
-
-Fixed bug in the bilinear software scaler that would read out of
-bounds on a bitmap. [Aaron Giles]
-
-Added supervisor DAC support to the Max-a-Flex driver. [Aaron Giles]
-
-Fixed clock speeds on Turbo/Buck Rogers. [Aaron Giles]
-
-Fixed -romident with ZIP files. [Aaron Giles]
-
-
-
-New games added or promoted from NOT_WORKING status
----------------------------------------------------
-Rock Duck [Roberto Fresca, Tomasz Slanina, David Haywood]
-
-
-
-New clones added
-----------------
-DonPachi (Hong Kong) [Arenzo Fabrice]
-Las Vegas, Nevada [Roberto Fresca]
+Hellfire (2P Ver., first edition) [Tirino73]
+Konami 80's AC Special (3 versions) [smf]
+Stratovox (bootleg) [Brian Troha]
 
 
 
 New games marked as GAME_NOT_WORKING
 ------------------------------------
-Destroyer (Cidelsa) [Curt Coder]
-Altair [Curt Coder]
-Draco [Curt Coder]
+Jyangokushi: Haoh no Saihai (Japan) [David Haywood]
 
 
 
-0.109u1
+0.110u1
 -------
-
-IMPORTANT NOTE TO OSD DEVELOPERS: The file I/O interface has changed
-significantly. It is now much simpler. Please read osdepend.h for
-full details on how the new OSD-defined functions work. In addition,
-you must now use the options.c to specify your search paths. If you
-are parsing standard command line options and INI files, this work
-is relatively straightforward. Otherwise, you can manually call
-options_set_string() for each of the search paths to configure them
-from whatever options store you are using.
-
 
 
 MAMETesters Bugs Fixed
 ----------------------
-silentd0108u5yel [Mamesick]
-gradius30104u3gre [Mamesick]
-spelunk2099u6gre [robzia]
-twinactn0105u2gre [robzia]
-czeroize0108u2yel [David Haywood]
-listrom0109red [Aaron Giles]
-chdbaddump0109ora [Aaron Giles]
-ddrawcoloroverlay0109yel [Aaron Giles]
-new_debugger0109ora [Aaron Giles]
-ronnamelength0109ora [krick]
-shtngmst0108u4ora [Pierpaolo Prazzoli]
+warriorb0109u2gre [Aaron Giles]
+ballbros0109u5gre [Aaron Giles]
 
 
 
 Source Changes
 --------------
-More findout.c/getrivia.c improvements: [wolf676]
- - added ticket dispenser to Trivia/Sexual Trivia
- - found last unknown dipswitch in Selection/Poker
- - added missing "Payout" button; payout hardware unknown 
- - added missing "Play / Raise" button and its lamp 9
- - added "Button 12 ?" to selection, function unknown
- - re-added PORT_IMPULSE(2) to poker games buttons because they do 
-    not like it if two or more buttons are held; trivia games still 
-    respond better without this
- - changed coin_lockout_global to coin_lockout_w(0) and 
-    coin_lockout_w(1) for 2 coin slots in selection; 
- - added missing lamps 11 (coin slot 2), 12 and 13 (unknown) 
-    to selection
+Numerous improvements to the cheat engine again. [ShimaPong]
+ * Operation
+  - Mounted copy prevous value.
+  - Defined link extension bit in type field.
+  - Improved one shot operation when restore previous value is 
+     available.
 
-Fixed crash in the MPU4 driver. [El Condor]
+ * Menu
+  - Major update for classic search menu.
+  - Arranged the cheat general menu a bit.
+  - Improved item display for selection type code on the code 
+     edit screen.
+  - Added entry index parameter to EditCheatMenu().
 
-Hooked up ARM ROM for kovsh, though it doesn't work yet. [ElSemi]
+ * Watchpoint
+  - Added watchpoint for ROM region.
+  - Improved adding watch from cheat list.
 
-Some fixes for the 8080bw driver: [Robert]
- - The correct samples are being used for lrescue, lrescuem, 
-    grescue, desterth 
- - Dipswitch corrections for superinv, invadrmr, sinvemag, 
-    spceking, spacewr3 
-- Remove extraneous beeping noise from indianbt 
+ * Activation key
+  - Added save activation key.
+  - Added 2nd activation key.
+  - Added show activation key message option.
 
-Converted all the toaplan2.c games to mono since the PCBs are JAMMA
-without external stereo connectors. [Corrado Tomaselli]
+ * Others
+  - Refined command code format.
 
-Added bounds checking to the qsound driver. [David Haywood]
+Added support for Fixed Interval Timer to the PPC403 core.
+[Ville Linde]
 
-Redesigned the OSD file I/O interfaces to be simpler and more
-straightforward. Also simplified the core's file I/O routines and
-included some functionality that was previously left to the OSD
-layer. [Aaron Giles]
+Polygonet Commanders update: [Andrew Gardner]
+ * Added more accurate host interface to dsp56k core
+ * Removed a bunch of hacks in plygonet.c
 
-Rewrote unzip.c to return richer errors and generally behave better.
+Added new field Machine->basename which is used to describe the path
+used for various file accesses. This is a helper for MESS, and should
+not have any user-visible changes. The file accesses affected are:
+configuration (cfg) files, snapshots, debugger comments, NVRAM,
+and memory cards. [Aaron Giles]
+
+Changed naming of screenshots. They are now created in separate
+folders per game, with numeric names 0000.png, 0001.png, etc.
 [Aaron Giles]
 
-Rewrote audit.c to simplify the code and not rely on extraneous
-functions that were in the old file I/O system. [Aaron Giles]
+Changed artwork layout loading to load either gamename/gamename.lay
+or gamename/default.lay. The latter is preferred, and allows for
+easier reuse of layouts between games. [Aaron Giles]
 
-Simplified the 68000 core generation logic to just produce one
-file. Hopefully this will cure some of the build issues with the
-core. [Aaron Giles]
+Fixed max instruction bytes for 68020+ CPUs to avoid assertion in
+new disassembler. [Aaron Giles]
+
+Added flip screen offsets needed with new video parameters in the
+pacman.c driver. [Aaron Giles]
 
 
 
 New games added or promoted from NOT_WORKING status
 ---------------------------------------------------
-Five a Side Soccer [Ville Linde]
-Super Street Fighter II - The New Challengers [David Haywood, stephh]
-Dynamic Shooting [Tomasz Slanina, Guru]
-Doki Doki Penguin Land [Tomasz Slanina, Guru]
-Shooting Gallery [Pierpaolo Prazzoli]
-
-
-
-New clones added
-----------------
-The Cliffhanger - Edward Randy (World) [Patrik Styrnell]
-Double Dragon 3 (Japan) [Corrado Tomaselli]
-Twin Brats (set 2) [Patrik Styrnell]
+Fishing Frenzy [Aaron Giles]
+Freeze (Atari) [Aaron Giles]
