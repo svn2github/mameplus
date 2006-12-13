@@ -2436,7 +2436,7 @@ startrgn	スタートリゴン (STT1 ver A)	すたーとりごん	Namco
 gamshara	銃武者羅 (10021 ver A)	がむしゃら	Mitchell
 cryptklr	ヘンリーエクスプローラーズ / Crypt Killer (GQ420 UAA)	へんりーえくすぷろーらーず	Konami
 kdeadeye	デッドアイ (GV054 UA01)	でっどあい	Konami
-pbball96	実況パワフルプロ野球'96 (日本版 GV017 1.03)	じっきょうぱわふるぷろやきゅう96	Konami
+pbball96	実況パワフルプロ野球'96 (日本版 GV017 1.03)	じっきょうぱわふるぷろやきゅう_196	Konami
 hyperath	ハイパーアスリート (日本版 GV021 1.00)	はいぱーあすりーと	Konami
 susume	進め！対戦ぱずるだま (日本版 GV027 1.20)	すすめたいせんぱずるだま	Konami
 btchamp	ビートザチャンプ (GV053 UAA01)	びーとざちゃんぷ	Konami
@@ -2444,19 +2444,19 @@ weddingr	ウェディングラプソディ (GX624 JAA)	うぇでぃんぐらぷそでぃ	Konami
 nagano98	ハイパーオリンピックインナガノ / Nagano Winter Olympics '98 (GX720 EAA)	はいぱーおりんぴっく_3いんながの	Konami
 simpbowl	ザ・シンプソンズ ボウリング (GQ829 UAA)	ざしんぷそんずぼうりんぐ	Konami
 darkhleg	ダークホースレジェンド (GX706 ver JAA)	だーくほーすれじぇんど	Konami
-fbaitbc	バスアングラー / Fisherman's Bait -A Bass Challenge (GE765 VER. UAB)	ばすあんぐらー_1	Konami
+fbaitbc	バスアングラー / Fisherman's Bait -A Bass Challenge (GE765 ver UAB)	ばすあんぐらー_1	Konami
 bassangl	バスアングラー (GE765 ver JAA)	ばすあんぐらー_1	Konami
-pbballex	実況パワフルプロ野球EX (日本版 ver JAB)	じっきょうぱわふるぷろやきゅういーえっくす	Konami
-konam80s	コナミ 80'sアーケードギャラリー / Konami 80's AC Special (USA版 ver UAA)	こなみえいてぃーずあーけーどぎゃらりー	Konami
+pbballex	実況パワフルプロ野球EX (GX802 ver JAB)	じっきょうぱわふるぷろやきゅう_2いーえっくす	Konami
+konam80s	コナミ 80'sアーケードギャラリー / Konami 80's AC Special (GC826 ver EAA)	こなみえいてぃーずあーけーどぎゃらりー	Konami
 konam80u	コナミ 80'sアーケードギャラリー / Konami 80's AC Special (GC826 ver UAA)	こなみえいてぃーずあーけーどぎゃらりー	Konami
-konam80j	コナミ 80'sアーケードギャラリー (日本版 ver JAA)	こなみえいてぃーずあーけーどぎゃらりー	Konami
+konam80j	コナミ 80'sアーケードギャラリー (GC826 ver JAA)	こなみえいてぃーずあーけーどぎゃらりー	Konami
 konam80a	コナミ 80'sアーケードギャラリー / Konami 80's AC Special (GC826 ver AAA)	こなみえいてぃーずあーけーどぎゃらりー	Konami
 konam80k	コナミ 80'sアーケードギャラリー / Konami 80's AC Special (GC826 ver KAA)	こなみえいてぃーずあーけーどぎゃらりー	Konami
 dstage	ダンスダンスレボリューション / Dancing Stage (GN845 ver EAA)	だんすだんすれぼりゅーしょん_1	Konami
 ddru	ダンスダンスレボリューション (GN845 ver UAA)	だんすだんすれぼりゅーしょん_1	Konami
 ddrj	ダンスダンスレボリューション (GC845 ver JBA)	だんすだんすれぼりゅーしょん_1	Konami
 ddra	ダンスダンスレボリューション (GN845 ver AAA)	だんすだんすれぼりゅーしょん_1	Konami
-fbait2bc	バスアングラー2 / Fisherman's Bait 2 - A Bass Challenge (GE865 Ver UAB)	ばすあんぐらー_2	Konami
+fbait2bc	バスアングラー2 / Fisherman's Bait 2 - A Bass Challenge (GE865 ver UAB)	ばすあんぐらー_2	Konami
 ddr2ndl	ダンスダンスレボリューション 2nd Mix Link (GE885 ver JAA)	だんすだんすれぼりゅーしょん_2_2せかんどみっくすりんく	Konami
 gtrfrks	ギターフリークス (GQ886 ver EAC)	ぎたーふりーくす	Konami
 gtrfrksu	ギターフリークス (GQ886 ver UAC)	ぎたーふりーくす	Konami
@@ -2466,7 +2466,7 @@ fbaitmc	フィッシャーマンズベイト -Marlin Challenge (GX889 ver EA)	ふぃっしゃーま
 fbaitmcu	フィッシャーマンズベイト -Marlin Challenge (GX889 ver UA)	ふぃっしゃーまんずべいと_1	Konami
 fbaitmcj	フィッシャーマンズベイト -Marlin Challenge (GX889 ver JA)	ふぃっしゃーまんずべいと_1	Konami
 fbaitmca	フィッシャーマンズベイト -Marlin Challenge (GX889 ver AA)	ふぃっしゃーまんずべいと_1	Konami
-ddr2nd	ダンスダンスレボリューション 2nd Mix (GN895 ver JAA)	だんすだんすれぼりゅーしょん_2_1 せかんどみっくす	Konami
+ddr2nd	ダンスダンスレボリューション 2nd Mix (GN895 ver JAA)	だんすだんすれぼりゅーしょん_2_1せかんどみっくす	Konami
 mgakuen	麻雀学園 -卒業編	まーじゃんがくえん_1	Yuga
 7toitsu	七対子 -一萬去ってまた一萬	ちーといつ	Yuga
 mgakuen2	麻雀学園2 -学園長の復讐	まーじゃんがくえん_2	Face
@@ -5806,11 +5806,11 @@ drgwrld3	中國龍 / Dragon World (海外版 V0300)	ちゅうごくりゅう_1	IGS
 lordgun	ロード・オブ・ガン (USA版)	ろーどおぶがん	IGS
 hfh	黄飛鴻	ふぁんふぇいほん	IGS
 tarzan	ターザン	たーざん	IGS
-orlegend	オリエンタルレジェンド (ver 126)	おりえんたるれじぇんど_1	IGS
-orlegnde	オリエンタルレジェンド (ver 112)	おりえんたるれじぇんど_1	IGS
-orlegndc	オリエンタルレジェンド (中国基板 ver 112)	おりえんたるれじぇんど_1	IGS
-orld111c	オリエンタルレジェンド (中国基板 ver 111)	おりえんたるれじぇんど_1	IGS
-orld105k	オリエンタルレジェンド (韓国基板 ver 105)	おりえんたるれじぇんど_1	IGS
+orlegend	西遊釈厄伝 (ver 126)	さいゆうしゃくやくでん_1	IGS
+orlegnde	西遊釈厄伝 (ver 112)	さいゆうしゃくやくでん_1	IGS
+orlegndc	西遊釈厄伝 (中国基板 ver 112)	さいゆうしゃくやくでん_1	IGS
+orld111c	西遊釈厄伝 (中国基板 ver 111)	さいゆうしゃくやくでん_1	IGS
+orld105k	西遊釈厄伝 (韓国基板 ver 105)	さいゆうしゃくやくでん_1	IGS
 drgw2	中國龍II / Dragon World II (海外版 ver 110X)	ちゅうごくりゅう_2	IGS
 drgw2c	中國龍II (中国版 ver 100C)	ちゅうごくりゅう_2	IGS
 drgw2j	中國龍II (日本版 ver 100J)	ちゅうごくりゅう_2	IGS
@@ -5827,9 +5827,9 @@ raf102j	リアルアンドフェイク (日本基板 ver 102)	りあるあんどふぇいく	IGS
 killbld	傲剣狂刀	ごうけんきょうとう	IGS
 killbldt	傲剣狂刀 (中国基板)	ごうけんきょうとう	IGS
 puzlstar	パズルスター	ぱずるすたー	IGS
-olds	オリエンタルレジェンドスーパー スペシャル (韓国版 ver 101)	おりえんたるれじぇんど_2すーぱーすぺしゃる	IGS
-olds100	オリエンタルレジェンドスーパー スペシャル (ver 100)	おりえんたるれじぇんど_2すーぱーすぺしゃる	IGS
-olds100a	オリエンタルレジェンドスーパー スペシャル (ver 100 alt)	おりえんたるれじぇんど_2すーぱーすぺしゃる	IGS
+olds	西遊釈厄伝SUPER (韓国版 ver 101)	さいゆうしゃくやくでん_2すーぱー	IGS
+olds100	西遊釈厄伝SUPER (ver 100)	さいゆうしゃくやくでん_2すーぱー	IGS
+olds100a	西遊釈厄伝SUPER (ver 100 alt)	さいゆうしゃくやくでん_2すーぱー	IGS
 kov2	三國戦紀2	さんごくせんき_2_1	IGS
 kov2106	三國戦紀2 (106)	さんごくせんき_2_1	IGS
 kov2p	三國戦紀 武将争覇	さんごくせんき_2_2	IGS
@@ -5956,12 +5956,12 @@ maddoga	マッドドッグマックリー (ver 1C board rev A)	まっどどっぐ_1まっくりー	Ame
 wsjr	フーショットジョニーロック? (ver 1.6)	ふーしょっとじょにーろっく	American Laser Games
 wsjr15	フーショットジョニーロック? (ver 1.5)	ふーしょっとじょにーろっく	American Laser Games
 maddog	マッドドッグマックリー (ver 2.04 board rev B)	まっどどっぐ_1まっくりー	American Laser Games
-maddog23	マッドドッグマックリー (ver 2.03 board rev B)	まっどどっぐ_1まっくりー	American Laser Games
-maddog2	マッドドッグII -The Lost Gold (ver 2.02)	まっどどっぐ_2	American Laser Games
+maddog2	マッドドッグII -The Lost Gold (ver 2.04)	まっどどっぐ_2	American Laser Games
+maddog22	マッドドッグII -The Lost Gold (ver 2.02)	まっどどっぐ_2	American Laser Games
 maddog21	マッドドッグII -The Lost Gold (ver 1.0)	まっどどっぐ_2	American Laser Games
 spacepir	スペースパイレーツ (ver 2.2)	すぺーすぱいれーつ	American Laser Games
-gallgall	ギャラハーズギャラリー (ver 2.2)	ぎゃらはーずぎゃらりー	American Laser Games
-crimepat	クライムパトロール (ver 1.4)	くらいむぱとろーる	American Laser Games
+gallgall	ガラッガーズギャラリー (ver 2.2)	がらっがーずぎゃらりー	American Laser Games
+crimepat	クライムパトロール (ver 1.4)	くらいむぱとろーる_1	American Laser Games
 crime211	クライムパトロール2 -Drug Wars (ver 1.1)	くらいむぱとろーる_2	American Laser Games
 crimep2	クライムパトロール2 -Drug Wars (ver 1.3)	くらいむぱとろーる_2	American Laser Games
 lastbh	ザ ラストバウンティハンター (ver 0.06)	ざらすとばうんてぃはんたー	American Laser Games
