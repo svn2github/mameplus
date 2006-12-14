@@ -144,16 +144,16 @@ static int GetGameNameIndex(const char *name)
 		int i;
 
 		sorted_drivers = (driver_data_type *)malloc(sizeof(driver_data_type) * num_games);
-		for (i=0;i<num_games;i++)
+		for (i = 0; i < num_games; i++)
 		{
 			sorted_drivers[i].name = drivers[i]->name;
 			sorted_drivers[i].index = i;
 		}
-		qsort(sorted_drivers,num_games,sizeof(driver_data_type),DriverDataCompareFunc);
+		qsort(sorted_drivers, num_games, sizeof(driver_data_type), DriverDataCompareFunc);
 	}
 
 	/* uses our sorted array of driver names to get the index in log time */
-	driver_index_info = bsearch(&key,sorted_drivers,num_games,sizeof(driver_data_type),
+	driver_index_info = bsearch(&key, sorted_drivers,num_games, sizeof(driver_data_type),
 	                            DriverDataCompareFunc);
 
 	if (driver_index_info == NULL)
@@ -194,12 +194,9 @@ static int GetSrcDriverIndex(const char *srcdriver)
 	{
 		/* initialize array of game names/indices */
 		int i;
-		num_games = 0;
-		while (drivers[num_games] != NULL)
-			num_games++;
 
 		sorted_srcdrivers = (srcdriver_data_type *)malloc(sizeof(srcdriver_data_type) * num_games);
-		for (i=0;i<num_games;i++)
+		for (i = 0; i < num_games; i++)
 		{
 			sorted_srcdrivers[i].srcdriver = drivers[i]->source_file+12;
 			sorted_srcdrivers[i].index = i;
@@ -207,14 +204,13 @@ static int GetSrcDriverIndex(const char *srcdriver)
 		qsort(sorted_srcdrivers,num_games,sizeof(srcdriver_data_type),SrcDriverDataCompareFunc);
 	}
 
-	srcdriver_index_info = bsearch(&key,sorted_srcdrivers,num_games,sizeof(srcdriver_data_type),
+	srcdriver_index_info = bsearch(&key, sorted_srcdrivers, num_games, sizeof(srcdriver_data_type),
 	                               SrcDriverDataCompareFunc);
 
 	if (srcdriver_index_info == NULL)
 		return -1;
 
 	return srcdriver_index_info->index;
-
 }
 
 
@@ -954,7 +950,7 @@ static int index_datafile_drivinfo (struct tDatafileIndex **_index)
 static int load_datafile_text (const game_driver *drv, char *buffer, int bufsize,
                                struct tDatafileIndex *idx, const char *tag)
 {
-	int     offset = 0;
+	int offset = 0;
 	int found = 0;
 	UINT32  token = TOKEN_SYMBOL;
 	UINT32  prev_token = TOKEN_SYMBOL;
@@ -2597,7 +2593,6 @@ int load_driver_statistics (char *buffer, int bufsize)
 	memset(sumsound, 0, sizeof sumsound);
 
 	return 0;
-
 }
 
 
