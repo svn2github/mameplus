@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.110u5      #
+#      Mameinfo.dat日本語版 v0.111       #
 #                                        #
-#            December 9, 2006            #
+#           December 12, 2006            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：815 翻訳済：802
-# 追加項目：328 合計：1143
+# Tester報告：816 翻訳済：803
+# 追加項目：328 合計：1144
 #
 
 
@@ -34,6 +34,9 @@ $mame
 
 
 - 3面ボス直前で、柱の部分に表示不具合あり。海賊版の方では正しく表示される。 gangwars067gre, Luja
+
+
+- [possible] 3面ボス手前の柱にあるプラカードがおかしい。海賊版では正しく表示される。 gangwars067gre2, Luja / RansAckeR
 
 $end
 
@@ -147,6 +150,14 @@ PORT_DIPSETTING( 0x40, "10" )
 PORT_DIPSETTING( 0x80, "5" )
 
 PORT_DIPSETTING( 0xc0, "1" ) janptr96_0110u4gra, J.J.Boy
+
+$end
+
+$info=perfrman
+$mame
+[バグ]
+
+- プレイヤーが動いてるとBGMの速度が上がる。 perfrman0110u5gre, Stefan Lindberg
 
 $end
 
@@ -413,14 +424,6 @@ $mame
 [バグ]
 
 - 赤い下矢印が化けている。上下の部分が逆。 bldwolf061gre, Kale
-
-$end
-
-$info=battlex
-$mame
-[バグ]
-
-- 音が鳴った後、とても高い音が鳴り続ける。 battlex061gre, Jonemaan
 
 $end
 
@@ -726,14 +729,6 @@ $mame
 [バグ]
 
 - 海外版のデモ画面で、テキストが化けている。 cawing0105u1gre,
-
-$end
-
-$info=dynwar
-$mame
-[バグ]
-
-- 海外版も日本版のグラフィックROMを使用しているが、違うものではないだろうか。Guru氏の情報にもダンプ済みとはなっていない。表示不具合はスコア集計画面でよく起きている。 dynwar067gre, big_lenny_c / Smitdogg
 
 $end
 
@@ -2219,17 +2214,6 @@ $mame
 [バグ]
 
 - 最初の面で背景のタイルマップがスクロールすると緑色の四角いタイルが表示される。 karatour061gre, Kale / Firewave
-
-$end
-
-$info=mhavoc
-$mame
-[バグ]
-
-- mhavoc.c全ゲーム：
-
-グラフィックの表示位置が違っているものがある。
-このバグ自体は新しいものではない。 mhavoc057gre, Smitdogg
 
 $end
 
@@ -6241,6 +6225,17 @@ $mame
 
 - テストモード内の「Player Inputs」の「Oil　Slick
 」ボタンを押すと、アートワークの「Missile」ランプが点灯する。逆に「Missile」を押すと「Oil Slick」のランプがつく。 spyhut061gre, Nerox91
+
+$end
+
+$info=mhavoc
+$mame
+[バグ]
+
+- mhavoc.c全ゲーム：
+
+グラフィックの表示位置が違っているものがある。
+このバグ自体は新しいものではない。 mhavoc057gre, Smitdogg
 
 $end
 
