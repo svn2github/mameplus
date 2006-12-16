@@ -93,7 +93,7 @@ static const options_entry core_options[] =
 	{ "samplepath;sp",               "samples",   0,                 "path to samplesets" },
 	{ "artpath;artwork_directory",   "artwork",   0,                 "path to artwork files" },
 	{ "ctrlrpath;ctrlr_directory",   "ctrlr",     0,                 "path to controller definitions" },
-	{ "inipath",                     ".;ini",     0,                 "path to ini files" },
+	{ "inipath",                     "ini",       0,                 "path to ini files" },
 	{ "fontpath",                    ".",         0,                 "path to font files" },
 
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE OUTPUT DIRECTORY OPTIONS" },
