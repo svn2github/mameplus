@@ -9108,6 +9108,8 @@ GAME( 1998, sfz3jr2,  sfa3,    cps2, ssf2,    cps2, ROT0,   "Capcom", "Street Fi
 GAME( 1998, sfz3a,    sfa3,    cps2, ssf2,    cps2, ROT0,   "Capcom", "Street Fighter Zero 3 (Asia 980904)", GAME_NOT_WORKING )
 GAME( 1998, sfz3ar1,  sfa3,    cps2, ssf2,    cps2, ROT0,   "Capcom", "Street Fighter Zero 3 (Asia 980701)", 0 )
 GAME( 1999, jyangoku, 0,       cps2, ssf2,    cps2_chd_256, ROT0,   "Capcom", "Jyangokushi: Haoh no Saihai (Japan)", GAME_NOT_WORKING )
+GAME( 2004, hsf2a,    0,       cps2, ssf2,    cps2, ROT0,   "Capcom", "Hyper Street Fighter II: The Anniversary Edition (Asia 040202)", GAME_NOT_WORKING )
+GAME( 2003, hsf2j,    hsf2a,   cps2, ssf2,    cps2, ROT0,   "Capcom", "Hyper Street Fighter II: The Anniversary Edition (Japan 031222)", GAME_NOT_WORKING )
 
 /* Games released on CPS-2 hardware by Takumi */
 
@@ -9154,8 +9156,6 @@ GAME( 1997, batcird,  batcir,  phoenix, batcir,  cps2, ROT0,   "hack", "Battle C
 GAME( 1997, vsavd,    vsav,    phoenix, ssf2,    cps2, ROT0,   "hack", "Vampire Savior: The Lord of Vampire (Phoenix Edition Euro 970519)", 0 )
 GAME( 1998, mvscud,   mvsc,    phoenix, ssf2,    cps2, ROT0,   "hack", "Marvel Vs. Capcom: Clash of Super Heroes (Phoenix Edition US 980123)", 0 )
 GAME( 1998, sfa3d,    sfa3,    phoenix, ssf2,    cps2, ROT0,   "hack", "Street Fighter Alpha 3 (Phoenix Edition US 980904)", 0 )
-GAME( 2004, hsf2a,    0,       cps2, ssf2,    cps2, ROT0,   "Capcom", "Hyper Street Fighter II: The Anniversary Edition (Asia 040202)", GAME_NOT_WORKING )
-GAME( 2003, hsf2j,    hsf2a,   cps2, ssf2,    cps2, ROT0,   "Capcom", "Hyper Street Fighter II: The Anniversary Edition (Japan 031222)", GAME_NOT_WORKING )
 GAME( 2004, hsf2ad,   hsf2a,   phoenix, ssf2,    cps2, ROT0,   "hack", "Hyper Street Fighter II: The Anniversary Edition (Phoenix Edition Asia 040202)", 0 )
 GAME( 1999, gwingjd,  gigawing,phoenix, 19xx,    cps2, ROT0,   "hack", "Giga Wing (Phoenix Edition Japan 990223)", 0 )
 GAME( 2000, 1944d,    1944,    phoenix, 19xx,    cps2, ROT0,   "hack", "1944: The Loop Master (Phoenix Edition US 000620)", GAME_IMPERFECT_GRAPHICS )

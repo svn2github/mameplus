@@ -57,6 +57,8 @@ const game_driver * const plusdrivers[] =
 	DRIVER( dinohb )	/* hack */
 	DRIVER( sfzch )		/* 1995  Street Fighter Zero (CPS Changer) */
 	DRIVER( sfach )		/* 1995  Street Fighter Alpha (Publicity CPS Changer) */
+	DRIVER( hsf2a )		/* 2004  Hyper Street Fighter II: The Anniversary Edition (Asia ) */
+	DRIVER( hsf2j )		/* 2003  Hyper Street Fighter II: The Anniversary Edition (Japan ) */
 
 	DRIVER( ddtodd )	/* 12/04/1994 (c) 1993 (Euro) Phoenix Edition */
 	DRIVER( avspd )		/* 20/05/1994 (c) 1994 (Euro) Phoenix Edition */
