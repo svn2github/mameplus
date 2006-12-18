@@ -58,6 +58,26 @@ const game_driver * const plusdrivers[] =
 	DRIVER( sfzch )		/* 1995  Street Fighter Zero (CPS Changer) */
 	DRIVER( sfach )		/* 1995  Street Fighter Alpha (Publicity CPS Changer) */
 
+	DRIVER( ddtodd )	/* 12/04/1994 (c) 1993 (Euro) Phoenix Edition */
+	DRIVER( avspd )		/* 20/05/1994 (c) 1994 (Euro) Phoenix Edition */
+	DRIVER( ringdstd )	/* 02/09/1994 (c) 1994 (Euro) Phoenix Edition */
+	DRIVER( xmcotad )	/* 05/01/1995 (c) 1994 (Euro) Phoenix Edition */
+	DRIVER( nwarrd )	/* 06/04/1995 (c) 1995 (US) Phoenix Edition */
+	DRIVER( sfad )		/* 27/07/1995 (c) 1995 (Euro) Phoenix Edition */
+	DRIVER( 19xxd )		/* 07/12/1995 (c) 1996 (US) Phoenix Edition */
+	DRIVER( ddsomud )	/* 19/06/1996 (c) 1996 (US) Phoenix Edition */
+	DRIVER( spf2xjd )	/* 31/05/1996 (c) 1996 (Japan) Phoenix Edition */
+	DRIVER( megamn2d )	/* 08/07/1996 (c) 1996 (US) Phoenix Edition */
+	DRIVER( sfz2aad )	/* 26/08/1996 (c) 1996 (Asia) Phoenix Edition */
+	DRIVER( xmvsfu1d )	/* 04/10/1996 (c) 1996 (US) Phoenix Edition */
+	DRIVER( batcird )	/* 19/03/1997 (c) 1997 (Euro) Phoenix Edition */
+	DRIVER( vsavd )		/* 19/05/1997 (c) 1997 (Euro) Phoenix Edition */
+	DRIVER( mvscud )	/* 23/01/1998 (c) 1998 (US) Phoenix Edition */
+	DRIVER( sfa3d )		/* 04/09/1998 (c) 1998 (US) Phoenix Edition */
+	DRIVER( gwingjd )	/* 23/02/1999 (c) 1999 Takumi (Japan) Phoenix Edition */
+	DRIVER( 1944d )		/* 20/06/2000 (c) 2000 Eighting/Raizing (US) Phoenix Edition */
+	DRIVER( hsf2ad )	/* 02/02/2004 (c) 2004 (Asia) Phoenix Edition */
+
 	DRIVER( kof96ep )	/* 0214 bootleg */
 	DRIVER( kof97pla )	/* 0232 (c) 2003 bootleg */
 	DRIVER( kf2k1pls )	/* 0262 (c) 2001 bootleg */
