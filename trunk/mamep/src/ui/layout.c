@@ -198,5 +198,7 @@ const char g_szMameInfoFileName[] = "mameinfo.dat";
 
 static BOOL FilterAvailable(int driver_index)
 {
+	if (!DriverUsesRoms(driver_index))
+		return TRUE;
 	return IsAuditResultYes(GetRomAuditResults(driver_index));
 }
