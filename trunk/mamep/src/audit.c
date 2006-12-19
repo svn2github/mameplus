@@ -248,7 +248,7 @@ int audit_samples(int game, audit_record **audit)
     list of audit records
 -------------------------------------------------*/
 
-int audit_summary(int game, int count, const audit_record *records, verify_printf_proc output)
+int audit_summary(int game, int count, const audit_record *records, int output)
 {
 	const game_driver *gamedrv = drivers[game];
 	int overall_status = CORRECT;
@@ -274,64 +274,64 @@ int audit_summary(int game, int count, const audit_record *records, verify_print
 			notfound++;
 
 		/* output the game name, file name, and length (if applicable) */
-		if (output != NULL)
+		if (output)
 		{
-			(*output)("%-8s: %s", gamedrv->name, record->name);
+			mame_printf_info("%-8s: %s", gamedrv->name, record->name);
 			if (record->explength > 0)
-				(*output)(" (%d bytes)", record->explength);
-			(*output)(" - ");
+				mame_printf_info(_(" (%d bytes)"), record->explength);
+			mame_printf_info(" - ");
 		}
 
 		/* use the substatus for finer details */
 		switch (record->substatus)
 		{
 			case SUBSTATUS_GOOD_NEEDS_REDUMP:
-				if (output != NULL) (*output)("NEEDS REDUMP\n");
+				if (output) mame_printf_info(_("NEEDS REDUMP\n"));
 				best_new_status = BEST_AVAILABLE;
 				break;
 
 			case SUBSTATUS_FOUND_NODUMP:
-				if (output != NULL) (*output)("NO GOOD DUMP KNOWN\n");
+				if (output) mame_printf_info(_("NO GOOD DUMP KNOWN\n"));
 				best_new_status = BEST_AVAILABLE;
 				break;
 
 			case SUBSTATUS_FOUND_BAD_CHECKSUM:
-				if (output != NULL)
+				if (output)
 				{
 					char hashbuf[512];
 
-					(*output)("INCORRECT CHECKSUM:\n");
+					mame_printf_info(_("INCORRECT CHECKSUM:\n"));
 					hash_data_print(record->exphash, 0, hashbuf);
-					(*output)("EXPECTED: %s\n", hashbuf);
+					mame_printf_info(_("EXPECTED: %s\n"), hashbuf);
 					hash_data_print(record->hash, 0, hashbuf);
-					(*output)("   FOUND: %s\n", hashbuf);
+					mame_printf_info(_("   FOUND: %s\n"), hashbuf);
 				}
 				break;
 
 			case SUBSTATUS_FOUND_WRONG_LENGTH:
-				if (output != NULL) (*output)("INCORRECT LENGTH: %d bytes\n", record->length);
+				if (output) mame_printf_info(_("INCORRECT LENGTH: %d bytes\n"), record->length);
 				break;
 
 			case SUBSTATUS_NOT_FOUND:
-				if (output != NULL) (*output)("NOT FOUND\n");
+				if (output) mame_printf_info(_("NOT FOUND\n"));
 				break;
 
 			case SUBSTATUS_NOT_FOUND_NODUMP:
-				if (output != NULL) (*output)("NOT FOUND - NO GOOD DUMP KNOWN\n");
+				if (output) mame_printf_info(_("NOT FOUND - NO GOOD DUMP KNOWN\n"));
 				best_new_status = BEST_AVAILABLE;
 				break;
 
 			case SUBSTATUS_NOT_FOUND_OPTIONAL:
-				if (output != NULL) (*output)("NOT FOUND BUT OPTIONAL\n");
+				if (output) mame_printf_info(_("NOT FOUND BUT OPTIONAL\n"));
 				best_new_status = BEST_AVAILABLE;
 				break;
 
 			case SUBSTATUS_NOT_FOUND_PARENT:
-				if (output != NULL) (*output)("NOT FOUND (shared with parent)\n");
+				if (output) mame_printf_info(_("NOT FOUND (shared with parent)\n"));
 				break;
 
 			case SUBSTATUS_NOT_FOUND_BIOS:
-				if (output != NULL) (*output)("NOT FOUND (BIOS)\n");
+				if (output) mame_printf_info(_("NOT FOUND (BIOS)\n"));
 				break;
 		}
 

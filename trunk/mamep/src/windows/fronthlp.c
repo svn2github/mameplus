@@ -708,7 +708,7 @@ int frontend_verifyroms(FILE *output)
 
 		/* audit the ROMs in this set */
 		audit_records = audit_images(drvindex, AUDIT_VALIDATE_FAST, &audit);
-		res = audit_summary(drvindex, audit_records, audit, verify_printf);
+		res = audit_summary(drvindex, audit_records, audit, TRUE);
 		if (audit_records > 0)
 			free(audit);
 		else
@@ -810,7 +810,7 @@ int frontend_verifysamples(FILE *output)
 
 		/* audit the samples in this set */
 		audit_records = audit_samples(drvindex, &audit);
-		res = audit_summary(drvindex, audit_records, audit, verify_printf);
+		res = audit_summary(drvindex, audit_records, audit, TRUE);
 		if (audit_records > 0)
 			free(audit);
 		else

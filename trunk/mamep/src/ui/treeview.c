@@ -37,7 +37,6 @@
 
 #include <io.h>
 #include "mame32.h"	// include this first
-#include "win32ui.h"
 #include "driver.h"
 #include "hash.h"
 #include "M32Util.h"
@@ -52,10 +51,13 @@
 #include "translate.h"
 
 #ifdef _MSC_VER
-#define snprintf _snprintf
 #if _MSC_VER > 1200
 #define HAS_DUMMYUNIONNAME
 #endif
+#endif
+
+#ifdef _MSC_VER
+#define snprintf _snprintf
 #endif
 
 #define MAX_EXTRA_FOLDERS 256
@@ -401,6 +403,7 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 			return TRUE;
 	}
 
+	//mamep: filter for search box control
 	if (wcslen(search_text) && _wcsicmp(search_text, _Unicode(_UI(SEARCH_PROMPT))))
 	{
 		if (MyStrStrI(_Unicode(drivers[nGame]->description), search_text) == NULL &&

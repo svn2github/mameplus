@@ -26,11 +26,9 @@
 #include <stdio.h>
 #include <richedit.h>
 
-#include "MAME32.h"
 #include "screenshot.h"
 #include "win32ui.h"
 
-#include <driver.h>
 #include <audit.h>
 #include <unzip.h>
 
@@ -38,11 +36,11 @@
 
 #include "bitmask.h"
 #include "options.h"
+#include "..\windows\config.h"
 #include "m32util.h"
 #include "audit32.h"
 #include "Properties.h"
 #include "translate.h"
-#include "M32Util.h"
 
 /***************************************************************************
     function prototypes
@@ -53,7 +51,6 @@ static INT_PTR CALLBACK AuditWindowProc(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 static void ProcessNextRom(void);
 static void ProcessNextSample(void);
 static void CLIB_DECL DetailsPrintf(const char *fmt, ...);
-static void CLIB_DECL DummyPrintf(const char *fmt, ...);
 static const char * StatusString(int iStatus);
 
 /***************************************************************************
@@ -100,35 +97,46 @@ void AuditDialog(HWND hParent)
 	}
 	else
 	{
-		MessageBox(GetMainWindow(),_Unicode(_UI("Unable to Load Riched32.dll")),TEXT("Error"),
-		           MB_OK | MB_ICONERROR);
+	    MessageBox(GetMainWindow(),_Unicode(_UI("Unable to Load Riched32.dll")),TEXT("Error"),
+				   MB_OK | MB_ICONERROR);
 	}
-
+	
 }
 
 void InitGameAudit(int gameIndex)
 {
+	int argc = 0;
+	char *args[2];
+	char **argv = args;
+	char pModule[_MAX_PATH];
+	char name[_MAX_PATH];
+	strcpy( name, drivers[gameIndex]->name );
+	GetModuleFileNameA(GetModuleHandle(NULL), pModule, _MAX_PATH);
+	argv[argc++] = pModule;
+	argv[argc++] = name;
 	rom_index = gameIndex;
+	cli_frontend_init(argc, argv );
 }
 
 const char * GetAuditString(int audit_result)
 {
 	switch (audit_result)
 	{
-	case CORRECT :
-	case BEST_AVAILABLE :
-		return _UI("Yes");
+		case CORRECT:
+		case BEST_AVAILABLE:
+			return _UI("Yes");
 
-	case NOTFOUND :
-	case INCORRECT :
-		return _UI("No");
-		break;
+		case INCORRECT:
+		case NOTFOUND:
+			return _UI("No");
+			break;
 
-	case UNKNOWN :
-		return "?";
+		case UNKNOWN:
+			return "?";
 
-	default:
-		dprintf("unknown audit value %i",audit_result);
+		default:
+			dprintf("unknown audit value %i",audit_result);
+			break;
 	}
 
 	return "?";
@@ -154,6 +162,15 @@ BOOL IsAuditResultNo(int audit_result)
     Internal functions
  ***************************************************************************/
 
+static void Mame32Output(void *param, const char *format, va_list argptr)
+{
+	char buffer[512];
+	vsnprintf(buffer, sizeof(buffer) / sizeof(buffer[0]), format, argptr);
+	DetailsPrintf("%s", buffer);
+}
+
+#if 0
+//fixme: from ZetaMame, buggy. delete "no good dump known" roms in zip => audit result: "not found"
 static int audit_files(int game, const char *searchpath)
 {
 	const game_driver *gamedrv = drivers[game];
@@ -200,18 +217,23 @@ static int audit_files(int game, const char *searchpath)
 
 	return foundany;
 }
+#endif
 
-static int AuditDialogVerifyRomSet(int game, verify_printf_proc output)
+// Verifies the ROM set while calling SetRomAuditResults
+int Mame32VerifyRomSet(int game)
 {
-	options_type *game_options;
+	int iStatus;
 	audit_record *audit;
 	int audit_records;
-	int iStatus;
+	output_callback prevcb;
+	void *prevparam;
+	options_type *game_options;
 
 	// apply selecting BIOS
 	game_options = GetGameOptions(game);
 	options.bios = game_options->bios;
 
+#if 0
 	if (!audit_files(game, SEARCHPATH_ROM))
 	{
 		audit = NULL;
@@ -220,9 +242,12 @@ static int AuditDialogVerifyRomSet(int game, verify_printf_proc output)
 		SetRomAuditResults(game, iStatus);
 		return iStatus;
 	}
+#endif
 
 	audit_records = audit_images(game, AUDIT_VALIDATE_FAST, &audit);
-	iStatus = audit_summary(game, audit_records, audit, output);
+	mame_set_output_channel(OUTPUT_CHANNEL_INFO, Mame32Output, NULL, &prevcb, &prevparam);
+	iStatus = audit_summary(game, audit_records, audit, TRUE);
+	mame_set_output_channel(OUTPUT_CHANNEL_INFO, prevcb, prevparam, NULL, NULL);
 	if (audit_records > 0)
 		free(audit);
 
@@ -230,31 +255,24 @@ static int AuditDialogVerifyRomSet(int game, verify_printf_proc output)
 	return iStatus;
 }
 
-static int AuditDialogVerifySampleSet(int game, verify_printf_proc output)
+// Verifies the Sample set while calling SetSampleAuditResults
+int Mame32VerifySampleSet(int game)
 {
+	int iStatus;
 	audit_record *audit;
 	int audit_records;
-	int iStatus;
+	output_callback prevcb;
+	void *prevparam;
 
-	audit_records = audit_samples(game, &audit);
-	iStatus = audit_summary(game, audit_records, audit, output);
+	audit_records = audit_images(game, AUDIT_VALIDATE_FAST, &audit);
+	mame_set_output_channel(OUTPUT_CHANNEL_INFO, Mame32Output, NULL, &prevcb, &prevparam);
+	iStatus = audit_summary(game, audit_records, audit, TRUE);
+	mame_set_output_channel(OUTPUT_CHANNEL_INFO, prevcb, prevparam, NULL, NULL);
 	if (audit_records > 0)
 		free(audit);
 
 	SetSampleAuditResults(game, iStatus);
 	return iStatus;
-}
-
-// Verifies the ROM set while calling SetRomAuditResults
-int Mame32VerifyRomSet(int game)
-{
-	return AuditDialogVerifyRomSet(game, (verify_printf_proc)DummyPrintf);
-}
-
-// Verifies the Sample set while calling SetSampleAuditResults
-int Mame32VerifySampleSet(int game)
-{
-	return AuditDialogVerifySampleSet(game, (verify_printf_proc)DummyPrintf);
 }
 
 static DWORD WINAPI AuditThreadProc(LPVOID hDlg)
@@ -311,7 +329,7 @@ static INT_PTR CALLBACK AuditWindowProc(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 		hEdit = GetDlgItem(hAudit, IDC_AUDIT_DETAILS);
 		if (hEdit != NULL)
 		{
-			SendMessage(hEdit, EM_SETBKGNDCOLOR, FALSE, GetSysColor(COLOR_BTNFACE) );
+			SendMessage( hEdit, EM_SETBKGNDCOLOR, FALSE, GetSysColor(COLOR_BTNFACE) );
 			//RS Standard is MAX_UINT, which seems not to be enough, so we use a higher Number...
 			SendMessage( hEdit, EM_EXLIMITTEXT, 0, MAX_TEXT );
 		}
@@ -327,7 +345,7 @@ static INT_PTR CALLBACK AuditWindowProc(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 		switch (LOWORD(wParam))
 		{
 		case IDCANCEL:
-			bPaused = FALSE;
+            bPaused = FALSE;
 			if (hThread)
 			{
 				bCancel = TRUE;
@@ -387,11 +405,11 @@ INT_PTR CALLBACK GameAuditDialogProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lPa
 			int iStatus;
 			LPCSTR lpStatus;
 
-			iStatus = AuditDialogVerifyRomSet(rom_index, (verify_printf_proc)DetailsPrintf);
+			iStatus = Mame32VerifyRomSet(rom_index);
 			lpStatus = DriverUsesRoms(rom_index) ? StatusString(iStatus) : _UI("None required");
 			SetWindowText(GetDlgItem(hDlg, IDC_PROP_ROMS), _Unicode(lpStatus));
 
-			iStatus = AuditDialogVerifySampleSet(rom_index, (verify_printf_proc)DetailsPrintf);
+			iStatus = Mame32VerifySampleSet(rom_index);
 			lpStatus = DriverUsesSamples(rom_index) ? StatusString(iStatus) : _UI("None required");
 			SetWindowText(GetDlgItem(hDlg, IDC_PROP_SAMPLES), _Unicode(lpStatus));
 		}
@@ -401,12 +419,12 @@ INT_PTR CALLBACK GameAuditDialogProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lPa
 	return 0;
 }
 
-static void ProcessNextRom(void)
+static void ProcessNextRom()
 {
 	int retval;
 	char buffer[200];
 
-	retval = AuditDialogVerifyRomSet(rom_index, (verify_printf_proc)DetailsPrintf);
+	retval = Mame32VerifyRomSet(rom_index);
 	switch (retval)
 	{
 	case BEST_AVAILABLE: /* correct, incorrect or separate count? */
@@ -445,7 +463,7 @@ static void ProcessNextSample()
 	int  retval;
 	char buffer[200];
 	
-	retval = AuditDialogVerifySampleSet(sample_index, (verify_printf_proc)DetailsPrintf);
+	retval = Mame32VerifySampleSet(sample_index);
 	
 	switch (retval)
 	{
@@ -484,10 +502,6 @@ static void ProcessNextSample()
 	}
 }
 
-static void CLIB_DECL DummyPrintf(const char *fmt, ...)
-{
-}
-
 static void CLIB_DECL DetailsPrintf(const char *fmt, ...)
 {
 	HWND	hEdit;
@@ -518,7 +532,7 @@ static void CLIB_DECL DetailsPrintf(const char *fmt, ...)
 
 	l = Edit_GetTextLength(hEdit);
 	Edit_SetSel(hEdit, l, l);
-	SendMessageW(hEdit, EM_REPLACESEL, FALSE, (LPARAM)(void *)_Unicode(s));
+	SendMessageW( hEdit, EM_REPLACESEL, FALSE, (LPARAM)(void *)_Unicode(s));
 }
 
 static const char * StatusString(int iStatus)
