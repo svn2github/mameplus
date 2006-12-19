@@ -105,17 +105,8 @@ void AuditDialog(HWND hParent)
 
 void InitGameAudit(int gameIndex)
 {
-	int argc = 0;
-	char *args[2];
-	char **argv = args;
-	char pModule[_MAX_PATH];
-	char name[_MAX_PATH];
-	strcpy( name, drivers[gameIndex]->name );
-	GetModuleFileNameA(GetModuleHandle(NULL), pModule, _MAX_PATH);
-	argv[argc++] = pModule;
-	argv[argc++] = name;
+	//mamep: DO NOT CALL cli_frontend_init(), or crash
 	rom_index = gameIndex;
-	cli_frontend_init(argc, argv );
 }
 
 const char * GetAuditString(int audit_result)

@@ -236,7 +236,6 @@
 		#ifdef DRIVER_SWITCH
 		extern SHAREDOBJ_FUNC(void) assign_drivers(void);
 		#endif /* DRIVER_SWITCH */
-		extern SHAREDOBJ_FUNC(int) cli_frontend_init (int argc, char **argv);
 
 		#ifdef MALLOC_DEBUG
 		// in windows/winalloc.c

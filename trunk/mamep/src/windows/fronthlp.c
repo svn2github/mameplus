@@ -711,8 +711,6 @@ int frontend_verifyroms(FILE *output)
 		res = audit_summary(drvindex, audit_records, audit, TRUE);
 		if (audit_records > 0)
 			free(audit);
-		else
-			res = CORRECT;
 
 		/* if not found, count that and leave it at that */
 		if (res == NOTFOUND)
@@ -767,7 +765,7 @@ int frontend_verifyroms(FILE *output)
 	/* otherwise, print a summary */
 	else
 	{
-		mame_printf_error(_WINDOWS("%d romsets found, %d were OK.\n"), correct+incorrect, _WINDOWS("romset"), correct);
+		mame_printf_error(_WINDOWS("%d romsets found, %d were OK.\n"), correct+incorrect, correct);
 		return (incorrect > 0) ? 2 : 0;
 	}
 }

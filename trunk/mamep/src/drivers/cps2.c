@@ -621,7 +621,7 @@ Known problems with this driver.
 
 #include "cps1.h"       /* External CPS1 definitions */
 
-#define USE_DECRYPTION_CHD_IF_PRESENT 1
+#define USE_DECRYPTION_CHD_IF_PRESENT 0
 #define GENERATE_XOR_FROM_CHD 0
 
 /*
