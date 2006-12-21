@@ -255,7 +255,7 @@ int Mame32VerifySampleSet(int game)
 	output_callback prevcb;
 	void *prevparam;
 
-	audit_records = audit_images(game, AUDIT_VALIDATE_FAST, &audit);
+	audit_records = audit_samples(game, &audit);
 	mame_set_output_channel(OUTPUT_CHANNEL_INFO, Mame32Output, NULL, &prevcb, &prevparam);
 	iStatus = audit_summary(game, audit_records, audit, TRUE);
 	mame_set_output_channel(OUTPUT_CHANNEL_INFO, prevcb, prevparam, NULL, NULL);
