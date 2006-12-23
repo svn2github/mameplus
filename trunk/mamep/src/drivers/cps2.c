@@ -775,7 +775,7 @@ WRITE16_HANDLER( cps2_eeprom_port_w )
 		cpunum_set_input_line(1, INPUT_LINE_RESET, (data & 0x0008) ? CLEAR_LINE : ASSERT_LINE);
 
 	coin_counter_w(0, data & 0x0001);
-	if(strncmp(Machine->gamedrv->name,"pzloop2",8)==0) // Puzz Loop 2 uses coin counter 2 input to switch between stick and paddle controls
+	if(strncmp(Machine->gamedrv->name,"pzloop2",8)==0 || strncmp(Machine->gamedrv->name,"pzloop2j",8)==0) // Puzz Loop 2 uses coin counter 2 input to switch between stick and paddle controls
 		readpaddle = data & 0x0002;
 	else
 		coin_counter_w(1, data & 0x0002);
