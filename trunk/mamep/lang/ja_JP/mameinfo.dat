@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#      Mameinfo.dat日本語版 v0.111       #
+#     Mameinfo.dat日本語版 v0.111u1      #
 #                                        #
-#           December 22, 2006            #
+#           December 28, 2006            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,254 +12,16 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：820 翻訳済：805
-# 追加項目：327 合計：1147
+# Tester報告：808 翻訳済：794
+# 追加項目：327 合計：1135
 #
 
-
-$info=invad2ct
-$mame
-[バグ]
-
-- UFOの音が出ないことがある。
-UFOそれぞれでSN76477チップを使うが、チップ0は動作していて、チップ1はしていない。 invad2ct0110u4gre, Robbbert
-
-$end
-
-$info=gangwars
-$mame
-[バグ]
-
-- 0.66あたりから音楽のエミュレーションがおかしい。 gangwars0110u1gre, Augusto
-
-
-- 3面ボス直前で、柱の部分に表示不具合あり。海賊版の方では正しく表示される。 gangwars067gre, Luja
-
-
-- [possible] 3面ボス手前の柱にあるプラカードがおかしい。海賊版では正しく表示される。 gangwars067gre2, Luja / RansAckeR
-
-$end
-
-$info=freezea2
-$mame
-[バグ]
-
-- Set 2のROMが不良で起動時にエラーが出て動作しない。
-チェックをパスできないならば動作不可に設定したほうがいい。 freezea2_0110u2ora, Haze
-
-$end
-
-$info=freezeat
-$mame
-[バグ]
-
-- サービスモードで言語を英語に設定してMAMEを再起動したあと、アトラクトモードを動作させておく。
-最初のデモはBlumpy対Prissyのバトルで、15秒くらい経過するとサウンドが消える。
-
-もう一度サービスモードに入って音量を調節するか、リセットしないと音が出ない。
-音が出てない間はCPUの負荷が約2倍になる。 freezeat0110u4yel, Tafoid
-
-$end
-
-$info=bullfgtr
-$mame
-[バグ]
-
-- スプレンダーブラスト同様にBGMのドラム音が欠けている。
-ちなみに、基板からMSM5232を外すとドラムを含めてBGMが全て鳴らなくなる。 bullfgtr0110u5gre, Kold666
-
-$end
-
-$info=splndrbt
-$mame
-[バグ]
-
-- BGMのドラム音が鳴っていない。 splndrbt0110u2_1, Kold666
-
-
-- 実機の背景表示は少しゆがんでいる。 splndrbt0110u2_2, Kold666
-
-
-- 実機でのセルフテストの背景は青色。MAMEでは黒い道路の形になっている。 splndrbt0103u2gre1, Kold666
-
-
-- 1面のアステロイドベルトを越えたところで、背景は黒色ではなく青色になる。
-面クリアの画面はMAMEと同様、黒で正しい。 splndrbt0103u2gre2, Kold666
-
-
-- アルファ電子製の80年代初頭のゲームは、「SOUND BOARD NO.59 MC 07」と書かれた共通のサウンドボードを使用している。
-EPROMはそれぞれ違うがPROMは同一。（MAMEでは同一のPROMを読み込むので正しい）。
-
-実は、正しいEPROMがあるゲームとでサウンドボードは入れ替えできる。BGMとSE、周波数はそれぞれ独立したポテンショメーターがある。
-
-周波数はMSM5232によるBGMテンポを決定する。MAMEは現在、最大周波数になっている。
-
-※本家に詳細あり splndrbt0103u2gre3, Kold666
-
-$end
-
-$info=gradius4
-$mame
-[バグ]
-
-- 1) 4面でLEDに73、または71と表示されるところがある。おそらくエラーが起きているはずだが、ゲーム自体は普通に動作する。
-
-2) 3面の背景の右上が時々表示されなくなる。 gradius4_0111gre, AWJ
-
-
-- 「24KHｚと15KHｚ表示の問題」
-
-
-グラディウス4で、モニタタイプのDIPを15KHｚにすると、3Dグラフィックは縮小されるが、2Dタイルマップは24KHｚのときのサイズのまま。 hornet0104u2ora, AWJ / Luigi30
-
-$end
-
-$info=simpbowl
-$mame
-[情報]
-
-- EEPROMをリセットするには、起動直後にF2キーを押し続ける。
-
-
-[バグ]
-
-- 初回起動時のEEPROM書き込み時にエラーが出て動作しない。 simpbowl0110u2yel, iceman2004cny / Tafoid
-
-$end
-
-$info=skybump
-$mame
-[バグ]
-
-- 壁の中に自機がはまって動けなくなる。 skybump0110u2yel, Kold666
-
-$end
-
-$info=mario
-$mame
-[情報]
-
-- テストモードにするにはF2キーを押しつづける必要がある。
-
-
-[バグ]
-
-- 実機と比較すると、マリオや敵、パイプ、POWブロックなどがMAMEでは1ドット上に表示されている。 mario0110u1gre, BSR
-
-
-- 実機は電源投入時に音が出る。その直後に面スタートのBGMがかかる。 mario0109u4gre1, patman
-
-$end
-
-$info=janptr96
-$mame
-[バグ]
-
-- DIPスイッチ“Maximum Bet”の修正：
-
-PORT_DIPNAME( 0xc0, 0xc0, "Maximum Bet" )
-
-PORT_DIPSETTING( 0x00, "20" )
-
-PORT_DIPSETTING( 0x40, "10" )
-
-PORT_DIPSETTING( 0x80, "5" )
-
-PORT_DIPSETTING( 0xc0, "1" ) janptr96_0110u4gra, J.J.Boy
-
-$end
-
-$info=mwalku
-$mame
-[バグ]
-
-- ゲーム中にクラッシュする。キーにエラーがあって、修正が提出されたが、まだ実装されていない。 mwalku0111red, Swossino / Haze
-
-$end
-
-$info=perfrman
-$mame
-[バグ]
-
-- プレイヤーが動いてるとBGMの速度が上がる。 perfrman0110u5gre, Stefan Lindberg
-
-$end
-
-$info=hotsmash
-$mame
-[バグ]
-
-- 速度制限をONにしてコインを入れ、ゲームを始めようとすると固まる。 hotsmash0110u4red, Jason / Tafoid
-
-$end
-
-$info=toki
-$mame
-[バグ]
-
-- 背景タイルマップの画面上部2ピクセルがちらつく。1面の火山の煙など。 toki0110u4gre, robiza
-
-
-- 地面から現れる猿を倒したときの音が間違っている。
-また、16tジャンプの音もおかしい。 tokic060gre, Styxken / |Maccy| / Nick / BMF54123 / AS / Mamesick
-
-
-- 基板と比べると、起動時の“PUSH START BUTTON”の点滅がMAMEの方が速い。
-また1面の敵が飛んでくる速度もMAMEは速い。
-
-比較した基板は日本版の海賊版。 tokij0100u2gre, WhatIsIT
-
-
-- 画面一番上に1ピクセルの高さのスプライト化けがでる。 toki0104u7gre, Twisty / Mamesick
-
-$end
-
-$info=troangel
-$mame
-[バグ]
-
-- タイトル画面の黒い四角は実機では表示されない。 troangel0111gre, Kold666 / Stefan Lindberg
-
-$end
 
 $info=invadpt2
 $mame
 [バグ]
 
 - 面クリア時のSOSやENGINE TROUBLEのシーンの音が出ていない。0.94までは正常。 invadpt2_0108u4gre, Robbbert
-
-$end
-
-$info=spcewars
-$mame
-[バグ]
-
-- ゲームがランダムに再起動したり動作がおかしくなったりする。大抵は2面で起こる。 spcewars0108u3red, Robbbert
-
-
-[TIPS]
-
-- ゲーム中で流れる曲は以下の通り：
-
-500UFO：UFO
-
-1UP時：ビューティフルネーム
-
-MISS：私ばかよねー
-
-GameOver：葬送行進曲
-
-花火打ち上げ：幸せなら手を叩こう
-
-1面クリア時：エーゲ海の真珠
-
-2面クリア時：こげよマイケル
-
-3面クリア時：てんとうむしのサンバ
-
-4面クリア時：青春時代
-
-(by GON / Field93@野原いっぱい)
 
 $end
 
@@ -311,6 +73,20 @@ $mame
 
 - 2人プレイの時、プレイヤーのスプライトに問題が起きる。
 これは、3次元表示の面で車に乗っているときに発生し、ゲームプレイに影響がある。 aliens36b16gre, Frotz
+
+$end
+
+$info=gangwars
+$mame
+[バグ]
+
+- 0.66あたりから音楽のエミュレーションがおかしい。 gangwars0110u1gre, Augusto
+
+
+- 3面ボス直前で、柱の部分に表示不具合あり。海賊版の方では正しく表示される。 gangwars067gre, Luja
+
+
+- [possible] 3面ボス手前の柱にあるプラカードがおかしい。海賊版では正しく表示される。 gangwars067gre2, Luja / RansAckeR
 
 $end
 
@@ -402,7 +178,7 @@ $info=pitfight
 $mame
 [バグ]
 
-- 起動時にコインが2つか1つ投入される。 pitfight0109u2gre, Roger Coltrane / Tafoid
+- 起動時にコインが2つか1つ投入される。 pitfight0109u2gre, Roger Coltrane / Tafoid / Augusto
 
 
 - アトラクトモード中で、TYが紹介される場面が一瞬ちらつく。他のバージョノンは問題ない。 pitfight099gre, Roger Coltrane
@@ -684,6 +460,18 @@ $mame
 - cojag.cバグ
 
 area51はリセット時にクラッシュ。またmaxforceはリセット時にエラー。 cojagc062red, luigi30 / Oxygen / Smitdogg
+
+$end
+
+$info=freezeat
+$mame
+[バグ]
+
+- サービスモードで言語を英語に設定してMAMEを再起動したあと、アトラクトモードを動作させておく。
+最初のデモはBlumpy対Prissyのバトルで、15秒くらい経過するとサウンドが消える。
+
+もう一度サービスモードに入って音量を調節するか、リセットしないと音が出ない。
+音が出てない間はCPUの負荷が約2倍になる。 freezeat0110u4yel, Tafoid
 
 $end
 
@@ -1135,6 +923,43 @@ $mame
 
 $end
 
+$info=bullfgtr
+$mame
+[バグ]
+
+- スプレンダーブラスト同様にBGMのドラム音が欠けている。
+ちなみに、基板からMSM5232を外すとドラムを含めてBGMが全て鳴らなくなる。 bullfgtr0110u5gre, Kold666
+
+$end
+
+$info=splndrbt
+$mame
+[バグ]
+
+- 実機でのセルフテストの背景は青色。MAMEでは黒い道路の形になっている。 splndrbt0103u2gre1, Kold666
+
+
+- 1面のアステロイドベルトを越えたところで、背景は黒色ではなく青色になる。
+面クリアの画面はMAMEと同様、黒で正しい。 splndrbt0103u2gre2, Kold666
+
+
+- アルファ電子製の80年代初頭のゲームは、「SOUND BOARD NO.59 MC 07」と書かれた共通のサウンドボードを使用している。
+EPROMはそれぞれ違うがPROMは同一。（MAMEでは同一のPROMを読み込むので正しい）。
+
+実は、正しいEPROMがあるゲームとでサウンドボードは入れ替えできる。BGMとSE、周波数はそれぞれ独立したポテンショメーターがある。
+
+周波数はMSM5232によるBGMテンポを決定する。MAMEは現在、最大周波数になっている。
+
+※本家に詳細あり splndrbt0103u2gre3, Kold666
+
+
+- BGMのドラム音が鳴っていない。 splndrbt0110u2_1, Kold666
+
+
+- 実機の背景表示は少しゆがんでいる。 splndrbt0110u2_2, Kold666
+
+$end
+
 $info=mtrap
 $mame
 [情報]
@@ -1346,14 +1171,6 @@ $mame
 
 $end
 
-$info=tst_galx
-$mame
-[バグ]
-
-- うまく動作しない。0.75では動作していた。 tst_galx0101u3, Luigi30 / Tafoid
-
-$end
-
 $info=fantasia
 $mame
 [バグ]
@@ -1519,6 +1336,22 @@ $mame
 
 $end
 
+$info=gradius4
+$mame
+[バグ]
+
+- 1) 4面でLEDに73、または71と表示されるところがある。おそらくエラーが起きているはずだが、ゲーム自体は普通に動作する。
+
+2) 3面の背景の右上が時々表示されなくなる。 gradius4_0111gre, AWJ
+
+
+- 「24KHｚと15KHｚ表示の問題」
+
+
+グラディウス4で、モニタタイプのDIPを15KHｚにすると、3Dグラフィックは縮小されるが、2Dタイルマップは24KHｚのときのサイズのまま。 hornet0104u2ora, AWJ / Luigi30
+
+$end
+
 $info=drgnwrld
 $mame
 [バグ]
@@ -1618,6 +1451,19 @@ $mame
 [バグ]
 
 - 競技をクリアするとクラッシュすることがある。 hyperath081red, _Iz- / Firewave
+
+$end
+
+$info=simpbowl
+$mame
+[情報]
+
+- EEPROMをリセットするには、起動直後にF2キーを押し続ける。
+
+
+[バグ]
+
+- 初回起動時のEEPROM書き込み時にエラーが出て動作しない。 simpbowl0110u2yel, iceman2004cny / Tafoid
 
 $end
 
@@ -1774,6 +1620,14 @@ Colecovision版を見る限り、最速時の自機速度は少し遅い。 loopingc37b14gre, PacDude
 
 $end
 
+$info=skybump
+$mame
+[バグ]
+
+- 壁の中に自機がはまって動けなくなる。 skybump0110u2yel, Kold666
+
+$end
+
 $info=dsoccr94
 $mame
 [バグ]
@@ -1883,6 +1737,22 @@ $mame
 3) サービスキー(9キー)を押してグリッドを表示
 
 4) 上x4　下x1　左x6　2Pスタート を押す
+
+$end
+
+$info=mario
+$mame
+[情報]
+
+- テストモードにするにはF2キーを押しつづける必要がある。
+
+
+[バグ]
+
+- 実機は電源投入時に音が出る。その直後に面スタートのBGMがかかる。 mario0109u4gre1, patman
+
+
+- 実機と比較すると、マリオや敵、パイプ、POWブロックなどがMAMEでは1ドット上に表示されている。 mario0110u1gre, BSR
 
 $end
 
@@ -2685,32 +2555,6 @@ $mame
 
 $end
 
-$info=gwarrior
-$mame
-[情報]
-
-- 画面が明るいのはオリジナル通り。ガンマを0.5程度に下げると正しい表示になる。
-
-
-[バグ]
-
-- ゲーム開始時にキャラクタを選択すると、それ以降サウンドが固まってしまう。 gwarrior0108u1yel, NewRisingSun
-
-$end
-
-$info=twinbee
-$mame
-[情報]
-
-- 画面が明るいのはオリジナル通り。ガンマを0.5程度に下げると正しい表示になる。
-
-
-[バグ]
-
-- ボイスが再生されない。 twinbee0105yel, NewRisingSun
-
-$end
-
 $info=2020bb
 $mame
 [バグ]
@@ -2844,14 +2688,6 @@ excitbkj: 日本版の方は色がおかしい。またネームエントリー画面で文字が表示されない
 3面の色がexcitebkと違う。5面の色が反転。
 
 vsgradus: 星が自機の手前に表示される。 vsnes37b11gre, Sports Dude / The tECHIDNA / gregf / labrat127 / Kurushimi / M.A.S.H. / Richter_X / BSR / John L.
-
-$end
-
-$info=ninjaw
-$mame
-[バグ]
-
-- アトラクトモードのデモプレイで、1、3、5面のとき忍者が黒い影で建物の裏側に表示される。 ninjaw0104u2gre, cpukett
 
 $end
 
@@ -3405,11 +3241,11 @@ $mame
 
 $end
 
-$info=orunners
+$info=mwalku
 $mame
 [バグ]
 
-- テストモードでの設定が保存されない。 orunners0105u4gre, Scuore / robiza
+- ゲーム中にクラッシュする。キーにエラーがあって、修正が提出されたが、まだ実装されていない。 mwalku0111red, Swossino / Haze
 
 $end
 
@@ -3659,14 +3495,6 @@ $mame
 
 $end
 
-$info=shootouj
-$mame
-[バグ]
-
-- エラーが出て起動しない。0.101u1の更新より。 shootouj0102red, Firewave
-
-$end
-
 $info=dyger
 $mame
 [バグ]
@@ -3727,6 +3555,14 @@ $mame
 
 
 - どんな点数を出しても、ハイスコアにネームエントリーできない。 getstarb37b1gre, YMI
+
+$end
+
+$info=perfrman
+$mame
+[バグ]
+
+- プレイヤーが動いてるとBGMの速度が上がる。 perfrman0110u5gre, Stefan Lindberg
 
 $end
 
@@ -3867,6 +3703,14 @@ $mame
 [バグ]
 
 - 画面が一瞬他のグラフィックに変わることがある。後の面に進むほどひどくなる。 superchs0101u5gre, Twisty
+
+$end
+
+$info=hotsmash
+$mame
+[バグ]
+
+- 速度制限をONにしてコインを入れ、ゲームを始めようとすると固まる。 hotsmash0110u4red, Jason / Tafoid
 
 $end
 
@@ -4633,6 +4477,18 @@ $mame
 
 $end
 
+$info=toki
+$mame
+[バグ]
+
+- 画面の表示エリアが実機とは異なる。スコア表示の部分がちょうど画面の上端になるのが正しい。 toki0111gre, Kold666
+
+
+- 地面から現れる猿を倒したときの音が間違っている。
+また、16tジャンプの音もおかしい。 tokic060gre, Styxken / |Maccy| / Nick / BMF54123 / AS / Mamesick
+
+$end
+
 $info=tokiu
 $mame
 [バグ]
@@ -4669,6 +4525,14 @@ $mame
 
 $end
 
+$info=troangel
+$mame
+[バグ]
+
+- タイトル画面の黒い四角は実機では表示されない。 troangel0111gre, Kold666 / Stefan Lindberg
+
+$end
+
 $info=m660
 $mame
 [バグ]
@@ -4676,9 +4540,6 @@ $mame
 - 新しくゲームを始めて、 
 2番目の敵の軍団（ピンク色の逆三角のやつ）が画面の外へ飛んでいくと、
 左右関係なく画面左側にスプライトが残ってしまう。 m66037b15gre, Gmitra / DCisTHEbest
-
-
-- 0.79からサウンドが出ていない。 m660_0108yel, WhosAsking / Robbbert
 
 $end
 
@@ -4749,17 +4610,6 @@ $mame
 
 - たしか37b12からだったと思うが、毎回起動時にテストモードで引っかかってしまう。
 一旦起動してしまえば普通に動作する。但し、リセットを除く。 victory37b16gre, Karasu
-
-$end
-
-$info=goonies
-$mame
-[バグ]
-
-- アトラクトモードで、画面全体が一瞬ジャンプする。 goonies0105u4gre, cpukett
-
-
-- 起動時の黒い画面が灰色になっている。0.53より。 vsnes_2055gre, Karasu / Smitdogg
 
 $end
 
@@ -5098,7 +4948,7 @@ $mame
 [バグ]
 
 - キャラクタを選択するとMAMEがフリーズする。
-フリープレイ設定時には、スタートキーを押すとフリーズする。 psyforce0105u5red, Suutaroka
+フリープレイ設定時には、スタートキーを押すとフリーズする。 psyforce0105u5red, Suutaroka / Speedfreak
 
 $end
 
@@ -5201,6 +5051,15 @@ $mame
 
 
 以上のバグは画面反転を有効にしたときのみ現れる。 sformula0101u2ora, Kold666
+
+$end
+
+$info=freezea2
+$mame
+[バグ]
+
+- Set 2のROMが不良で起動時にエラーが出て動作しない。
+チェックをパスできないならば動作不可に設定したほうがいい。 freezea2_0110u2ora, Haze
 
 $end
 
@@ -5474,16 +5333,6 @@ $mame
 
 $end
 
-$info=jspecter
-$mame
-[バグ]
-
-- ゲームスタート時に難易度の違うゲームAとBを選べるが、これはIN1のbit7の入力で設定している。
-ところがDIPの難易度設定も同じものを参照している。
-画面に“SELECT A OR B GAME”と出るのに、DIP側で選択出来なくするのは変ではないだろうか。 jspecter074gra, dlfrance / Robbbert
-
-$end
-
 $info=tomahawk
 $mame
 [バグ]
@@ -5703,6 +5552,24 @@ $mame
 
 $end
 
+$info=janptr96
+$mame
+[バグ]
+
+- DIPスイッチ“Maximum Bet”の修正：
+
+PORT_DIPNAME( 0xc0, 0xc0, "Maximum Bet" )
+
+PORT_DIPSETTING( 0x00, "20" )
+
+PORT_DIPSETTING( 0x40, "10" )
+
+PORT_DIPSETTING( 0x80, "5" )
+
+PORT_DIPSETTING( 0xc0, "1" ) janptr96_0110u4gra, J.J.Boy
+
+$end
+
 $info=hotshock
 $mame
 [バグ]
@@ -5831,15 +5698,6 @@ $mame
 [バグ]
 
 - ゲームタイマーが常に1秒進んだ状態。リセットすると2秒、もう一回すると3秒…とずれていく。 gunfight055gre, gregf / stephh
-
-$end
-
-$info=spcenctr
-$mame
-[バグ]
-
-- グラフィック不具合いろいろあり。
-最もわかりやすいのは画面右側のライン。 spcenctr36b16gre, Frotz
 
 $end
 
@@ -6775,6 +6633,14 @@ $mame
 
 $end
 
+$info=goonies
+$mame
+[バグ]
+
+- 起動時の黒い画面が灰色になっている。0.53より。 vsnes_2055gre, Karasu / Smitdogg
+
+$end
+
 $info=joust2
 $mame
 [情報]
@@ -7552,7 +7418,23 @@ F2キーはテストモード。F1+F2キーでブックキーピングと設定モードになる。
 
 $end
 
+$info=gwarrior
+$mame
+[情報]
+
+- 画面が明るいのはオリジナル通り。ガンマを0.5程度に下げると正しい表示になる。
+
+$end
+
 $info=nemesis
+$mame
+[情報]
+
+- 画面が明るいのはオリジナル通り。ガンマを0.5程度に下げると正しい表示になる。
+
+$end
+
+$info=twinbee
 $mame
 [情報]
 
@@ -9192,6 +9074,34 @@ $mame
 - スターノイド出現方法：
 
 プレイヤー2とプレイヤー3のスタートボタンを押しながら、プレイヤー4のスタートボタンを押す
+
+$end
+
+$info=spcewars
+$mame
+[TIPS]
+
+- ゲーム中で流れる曲は以下の通り：
+
+500UFO：UFO
+
+1UP時：ビューティフルネーム
+
+MISS：私ばかよねー
+
+GameOver：葬送行進曲
+
+花火打ち上げ：幸せなら手を叩こう
+
+1面クリア時：エーゲ海の真珠
+
+2面クリア時：こげよマイケル
+
+3面クリア時：てんとうむしのサンバ
+
+4面クリア時：青春時代
+
+(by GON / Field93@野原いっぱい)
 
 $end
 
