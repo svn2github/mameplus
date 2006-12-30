@@ -1,48 +1,48 @@
-# windows/input.c: 1602
+# windows/input.c: 1711
          all -- all axes on all joysticks are digital\n
 
 
-# windows/input.c: 1608
+# windows/input.c: 1717
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
 
 
-# windows/input.c: 1606
+# windows/input.c: 1715
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
 
 
-# windows/input.c: 1603
+# windows/input.c: 1712
          j<N> -- all axes on joystick <N> are digital\n
 
 
-# windows/input.c: 1604
+# windows/input.c: 1713
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
 
 
-# windows/input.c: 1601
+# windows/input.c: 1710
          none -- no axes on any joysticks are digital\n
 
 
-# windows/config.c: 787
+# windows/config.c: 788
         MAME -createconfig to create a mame.ini\n\n
 
 
-# windows/config.c: 786
+# windows/config.c: 787
         MAME -showconfig   for a list of configuration options\n
 
 
-# windows/config.c: 785
+# windows/config.c: 786
         MAME -showusage    for a brief list of options\n
 
 
-# windows/input.c: 1605
+# windows/input.c: 1714
     Multiple axes can be specified for one joystick:\n
 
 
-# windows/input.c: 1607
+# windows/input.c: 1716
     Multiple joysticks can be specified separated by commas:\n
 
 
-# windows/input.c: 2047
+# windows/input.c: 2156
  - digital
 
 
@@ -54,7 +54,7 @@
  NO GOOD DUMP KNOWN
 
 
-# windows/input.c: 1980
+# windows/input.c: 2089
 %s Button %d
 
 
@@ -118,111 +118,111 @@ DIRECT3D-SPECIFIC OPTIONS
 DIRECTDRAW-SPECIFIC OPTIONS
 
 
-# windows/drawd3d.c: 1063
+# windows/drawd3d.c: 1119
 Device %s currently in an unsupported mode\n
 
 
-# windows/drawd3d.c: 1036
+# windows/drawd3d.c: 1092
 Direct3D: Configuring adapter #%d = %s\n
 
 
-# windows/drawd3d.c: 661
+# windows/drawd3d.c: 717
 Direct3D: Device created at %dx%d\n
 
 
-# windows/drawd3d.c: 543, 1928
+# windows/drawd3d.c: 587, 2071
 Direct3D: Error %08X during device begin_scene call\n
 
 
-# windows/drawd3d.c: 1515, 1977
+# windows/drawd3d.c: 1571, 2120
 Direct3D: Error %08X during device draw_primitive call\n
 
 
-# windows/drawd3d.c: 572, 1981
+# windows/drawd3d.c: 616, 2124
 Direct3D: Error %08X during device end_scene call\n
 
 
-# windows/drawd3d.c: 1921
+# windows/drawd3d.c: 2064
 Direct3D: Error %08X during device get_render_target call\n
 
 
-# windows/drawd3d.c: 578
+# windows/drawd3d.c: 622
 Direct3D: Error %08X during device present call\n
 
 
-# windows/drawd3d.c: 287, 294, 301, 308
+# windows/drawd3d.c: 331, 338, 345, 352
 Direct3D: Error %08X during device set_render_state call\n
 
 
-# windows/drawd3d.c: 1923, 1985
+# windows/drawd3d.c: 2066, 2128
 Direct3D: Error %08X during device set_render_target call\n
 
 
-# windows/drawd3d.c: 1487, 1975
+# windows/drawd3d.c: 1543, 2118
 Direct3D: Error %08X during device set_stream_source call\n
 
 
-# windows/drawd3d.c: 219, 1934
+# windows/drawd3d.c: 263, 2077
 Direct3D: Error %08X during device set_texture call\n
 
 
-# windows/drawd3d.c: 231, 233, 245, 247, 259
+# windows/drawd3d.c: 275, 277, 289, 291, 303
 Direct3D: Error %08X during device set_texture_stage_state call\n
 
 
-# windows/drawd3d.c: 1909
+# windows/drawd3d.c: 2052
 Direct3D: Error %08X during device stretct_rect call\n
 
 
-# windows/drawd3d.c: 832, 834, 836, 838, 842, 856, 870, 884, 910, 934, 948, 961, 968
+# windows/drawd3d.c: 888, 890, 892, 894, 898, 912, 926, 940, 966, 990, 1004, 1017, 1024
 Direct3D: Error %08X during get_caps_dword call\n
 
 
-# windows/drawd3d.c: 1888
+# windows/drawd3d.c: 2031
 Direct3D: Error %08X during texture get_surface_level call\n
 
 
-# windows/drawd3d.c: 1864
+# windows/drawd3d.c: 2007
 Direct3D: Error %08X during texture unlock_rect call\n
 
 
-# windows/drawd3d.c: 1938
+# windows/drawd3d.c: 2081
 Direct3D: Error %08X during vertex buffer lock call\n
 
 
-# windows/drawd3d.c: 1482, 1970
+# windows/drawd3d.c: 1538, 2113
 Direct3D: Error %08X during vertex buffer unlock call\n
 
 
-# windows/drawd3d.c: 897
+# windows/drawd3d.c: 953
 Direct3D: Error - Device does not support dest alpha blending with inverted source alpha\n
 
 
-# windows/drawd3d.c: 892
+# windows/drawd3d.c: 948
 Direct3D: Error - Device does not support dest alpha blending with one\n
 
 
-# windows/drawd3d.c: 887
+# windows/drawd3d.c: 943
 Direct3D: Error - Device does not support dest alpha blending with zero\n
 
 
-# windows/drawd3d.c: 845
+# windows/drawd3d.c: 901
 Direct3D: Error - Device does not support immediate presentations\n
 
 
-# windows/drawd3d.c: 850
+# windows/drawd3d.c: 906
 Direct3D: Error - Device does not support per-refresh presentations\n
 
 
-# windows/drawd3d.c: 878
+# windows/drawd3d.c: 934
 Direct3D: Error - Device does not support source alpha blending with destination color\n
 
 
-# windows/drawd3d.c: 873
+# windows/drawd3d.c: 929
 Direct3D: Error - Device does not support source alpha blending with source alpha\n
 
 
-# windows/drawd3d.c: 904
+# windows/drawd3d.c: 960
 Direct3D: Error - Device does not support texture alpha\n
 
 
@@ -234,11 +234,11 @@ Direct3D: Error attempting to initialize Direct3D8\n
 Direct3D: Error attempting to initialize Direct3D9\n
 
 
-# windows/drawd3d.c: 1205
+# windows/drawd3d.c: 1261
 Direct3D: Mode selected = %4dx%4d@%3dHz\n
 
 
-# windows/drawd3d.c: 1149
+# windows/drawd3d.c: 1205
 Direct3D: Selecting video mode...\n
 
 
@@ -266,63 +266,63 @@ Direct3D: Using Direct3D 8\n
 Direct3D: Using Direct3D 9\n
 
 
-# windows/drawd3d.c: 970
+# windows/drawd3d.c: 1026
 Direct3D: Using StretchRect for prescaling\n
 
 
-# windows/drawd3d.c: 964
+# windows/drawd3d.c: 1020
 Direct3D: Using dynamic textures\n
 
 
-# windows/drawd3d.c: 918
+# windows/drawd3d.c: 974
 Direct3D: Warning - Device does not support bilinear texture filtering for magnification\n
 
 
-# windows/drawd3d.c: 928
+# windows/drawd3d.c: 984
 Direct3D: Warning - Device does not support bilinear texture filtering for minification\n
 
 
-# windows/drawd3d.c: 864
+# windows/drawd3d.c: 920
 Direct3D: Warning - Device does not support hardware rasterization\n
 
 
-# windows/drawd3d.c: 913
+# windows/drawd3d.c: 969
 Direct3D: Warning - Device does not support point-sample texture filtering for magnification\n
 
 
-# windows/drawd3d.c: 923
+# windows/drawd3d.c: 979
 Direct3D: Warning - Device does not support point-sample texture filtering for minification\n
 
 
-# windows/drawd3d.c: 859
+# windows/drawd3d.c: 915
 Direct3D: Warning - Device does not support queued rendering after a page flip\n
 
 
-# windows/drawd3d.c: 937
+# windows/drawd3d.c: 993
 Direct3D: Warning - Device does not support texture clamping\n
 
 
-# windows/drawd3d.c: 951
+# windows/drawd3d.c: 1007
 Direct3D: Warning - Device does not support texture modulation\n
 
 
-# windows/drawd3d.c: 942
+# windows/drawd3d.c: 998
 Direct3D: Warning - Device does not support texture wrapping\n
 
 
-# windows/drawd3d.c: 677
+# windows/drawd3d.c: 733
 Direct3D: Warning - device does not support full screen gamma correction.\n
 
 
-# windows/drawd3d.c: 1576
+# windows/drawd3d.c: 1642
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 
 
-# windows/drawd3d.c: 1006
+# windows/drawd3d.c: 1062
 Direct3D: failed to recreate resources for device; failing permanently\n
 
 
-# windows/drawd3d.c: 993
+# windows/drawd3d.c: 1049
 Direct3D: resetting device\n
 
 
@@ -466,7 +466,7 @@ DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 
 
-# windows/input.c: 1150
+# windows/input.c: 1257
 DirectInput: Using DirectInput %d\n
 
 
@@ -474,7 +474,7 @@ DirectInput: Using DirectInput %d\n
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 
 
-# windows/fronthlp.c: 909
+# windows/fronthlp.c: 907
 ERROR     %s\n
 
 
@@ -490,7 +490,7 @@ Error creating DirectSound: %08x\n
 Error creating primary buffer: %08x\n
 
 
-# windows/drawd3d.c: 711
+# windows/drawd3d.c: 767
 Error creating vertex buffer (%08X)
 
 
@@ -498,7 +498,7 @@ Error creating vertex buffer (%08X)
 Error getting DirectSound capabilities: %08x\n
 
 
-# windows/drawd3d.c: 1033
+# windows/drawd3d.c: 1089
 Error getting identifier for adapter #%d\n
 
 
@@ -506,7 +506,7 @@ Error getting identifier for adapter #%d\n
 Error getting identifier for device\n
 
 
-# windows/drawd3d.c: 1042
+# windows/drawd3d.c: 1098
 Error getting mode for adapter #%d\n
 
 
@@ -530,19 +530,19 @@ Error setting DirectSound cooperative level: %08x\n
 Error setting primary format: %08x\n
 
 
-# windows/drawd3d.c: 719
+# windows/drawd3d.c: 775
 Error setting vertex shader (%08X)
 
 
-# windows/drawd3d.c: 612
+# windows/drawd3d.c: 656
 Error: A8R8G8B8 format textures not supported\n
 
 
-# windows/drawd3d.c: 602
+# windows/drawd3d.c: 646
 Error: Device does not meet minimum requirements for Direct3D rendering\n
 
 
-# windows/drawd3d.c: 632
+# windows/drawd3d.c: 688
 Error: unable to configure a screen texture format\n
 
 
@@ -550,19 +550,19 @@ Error: unable to configure a screen texture format\n
 FULL SCREEN OPTIONS
 
 
-# windows/config.c: 1092
+# windows/config.c: 1093
 Failed to open file for playback
 
 
-# windows/config.c: 1142
+# windows/config.c: 1143
 Failed to open file for recording
 
 
-# windows/input.c: 2567
+# windows/input.c: 2679
 Fast Forward
 
 
-# windows/config.c: 788
+# windows/config.c: 789
 For usage instructions, please consult the file windows.txt\n
 
 
@@ -586,59 +586,59 @@ Illegal aspect ratio value for %s = %s\n
 Illegal resolution value for %s = %s\n
 
 
-# windows/config.c: 847, 969, 980, 994
+# windows/config.c: 848, 970, 981, 995
 Illegal value for %s = %s\n
 
 
-# windows/config.c: 1105
+# windows/config.c: 1106
 Input file is for game '%s', not for current game '%s'\n
 
 
-# windows/input.c: 2047
+# windows/input.c: 2156
 Input:  Axis %d (%s)%s\n
 
 
-# windows/input.c: 1910
+# windows/input.c: 2019
 Input: %s: %s\n
 
 
-# windows/input.c: 843
+# windows/input.c: 948
 Input: Autoenabling joysticks due to presence of a %s\n
 
 
-# windows/input.c: 850
+# windows/input.c: 955
 Input: Autoenabling lightguns due to presence of a %s\n
 
 
-# windows/input.c: 836
+# windows/input.c: 941
 Input: Autoenabling mice due to presence of a %s\n
 
 
-# windows/input.c: 1855
+# windows/input.c: 1964
 Input: Joystick %d axis %d is now %s\n
 
 
-# windows/input.c: 2031
+# windows/input.c: 2140
 Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 
 
-# windows/input.c: 1222
+# windows/input.c: 1331
 Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 
 
-# windows/input.c: 2904
+# windows/input.c: 3015
 Input: Using RAWMOUSE for Mouse input\n
 
 
-# windows/input.c: 1224
+# windows/input.c: 1333
 Input: \"%s\" controller support enabled\n
 
 
-# windows/input.c: 1600
+# windows/input.c: 1709
 Invalid %s value %s; reverting to all -- valid values are:\n
 
 
-# windows/input.c: 1525
+# windows/input.c: 1634
 Invalid %s value %s; reverting to keyboard\n
 
 
@@ -646,51 +646,51 @@ Invalid %s value %s; reverting to keyboard\n
 Invalid video value %s; reverting to gdi\n
 
 
-# windows/input.c: 2052, 2085
+# windows/input.c: 2161, 2194
 J%d %s
 
 
-# windows/input.c: 2061
+# windows/input.c: 2170
 J%d %s +
 
 
-# windows/input.c: 2057
+# windows/input.c: 2166
 J%d %s -
 
 
-# windows/input.c: 2106
+# windows/input.c: 2215
 J%d %s D
 
 
-# windows/input.c: 2110
+# windows/input.c: 2219
 J%d %s L
 
 
-# windows/input.c: 2114
+# windows/input.c: 2223
 J%d %s R
 
 
-# windows/input.c: 2102
+# windows/input.c: 2211
 J%d %s U
 
 
-# windows/fronthlp.c: 910
+# windows/fronthlp.c: 908
 KNOWN     %s\n
 
 
-# windows/input.c: 2019
+# windows/input.c: 2128
 Lightgun %d 
 
 
-# windows/input.c: 2402
+# windows/input.c: 2514
 Lightgun not supported in windowed mode
 
 
-# windows/input.c: 2017
+# windows/input.c: 2126
 Lightgun on Mouse %d 
 
 
-# windows/config.c: 781
+# windows/config.c: 782
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 
 
@@ -702,11 +702,11 @@ MAME: %s [%s] - Screen %d
 MISC OPTIONS
 
 
-# windows/input.c: 1907
+# windows/input.c: 2016
 Mouse 
 
 
-# windows/input.c: 1905
+# windows/input.c: 2014
 Mouse %d 
 
 
@@ -742,7 +742,7 @@ OSD bar color (light)
 OSD bar color (medium)
 
 
-# windows/fronthlp.c: 912
+# windows/fronthlp.c: 910
 PARTKNOWN %s\n
 
 
@@ -754,11 +754,11 @@ PER-WINDOW VIDEO OPTIONS
 PERFORMANCE OPTIONS
 
 
-# windows/config.c: 1111
+# windows/config.c: 1112
 Playing back previously recorded game %s\n
 
 
-# windows/drawd3d.c: 1086
+# windows/drawd3d.c: 1142
 Proposed video mode not supported on device %s\n
 
 
@@ -778,47 +778,47 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 
 
-# windows/input.c: 1959
+# windows/input.c: 2068
 Stick %d %s +
 
 
-# windows/input.c: 1952
+# windows/input.c: 2061
 Stick %d %s -
 
 
-# windows/input.c: 1961
+# windows/input.c: 2070
 Stick %s +
 
 
-# windows/input.c: 1954
+# windows/input.c: 2063
 Stick %s -
 
 
-# windows/input.c: 1925
+# windows/input.c: 2034
 Stick%sX+
 
 
-# windows/input.c: 1923
+# windows/input.c: 2032
 Stick%sX-
 
 
-# windows/input.c: 1929
+# windows/input.c: 2038
 Stick%sY+
 
 
-# windows/input.c: 1927
+# windows/input.c: 2036
 Stick%sY-
 
 
-# windows/input.c: 1933
+# windows/input.c: 2042
 Stick%sZ+
 
 
-# windows/input.c: 1931
+# windows/input.c: 2040
 Stick%sZ-
 
 
-# windows/drawd3d.c: 1713
+# windows/drawd3d.c: 1779
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 
 
@@ -826,11 +826,11 @@ Texture too big! (wanted: %dx%d, max is %dx%d)\n
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
 
 
-# windows/input.c: 2549
+# windows/input.c: 2661
 Toggle fullscreen
 
 
-# windows/fronthlp.c: 911
+# windows/fronthlp.c: 909
 UNKNOWN   %s\n
 
 
@@ -838,15 +838,15 @@ UNKNOWN   %s\n
 Unable to close the keyboard device. (error %d)\n
 
 
-# windows/config.c: 740
+# windows/config.c: 741
 Unable to create file %s\n
 
 
-# windows/drawd3d.c: 658
+# windows/drawd3d.c: 714
 Unable to create the Direct3D device (%08X)\n
 
 
-# windows/drawd3d.c: 390, 451
+# windows/drawd3d.c: 434, 495
 Unable to initialize Direct3D.\n
 
 
@@ -862,11 +862,11 @@ Unable to load PNG file '%s'\n
 Unable to open the keyboard device. (error %d)\n
 
 
-# windows/drawd3d.c: 1839
+# windows/drawd3d.c: 1982
 Unknown texture blendmode=%d format=%d\n
 
 
-# windows/config.c: 784
+# windows/config.c: 785
 Usage:  MAME gamename [options]\n\n
 
 
@@ -898,7 +898,7 @@ Video: Monitor %p = \"%s\" %s\n
 Warning: -video none doesn't make much sense without -frames_to_run\n
 
 
-# windows/drawd3d.c: 606
+# windows/drawd3d.c: 650
 Warning: Device may not perform well for Direct3D rendering\n
 
 
@@ -922,11 +922,11 @@ all available info on driver in XML format
 amount to scale the screen brightness when paused
 
 
-# windows/input.c: 1853
+# windows/input.c: 1962
 analog
 
 
-# windows/input.c: 1158
+# windows/input.c: 1265
 analog joystick
 
 
@@ -950,7 +950,7 @@ aspect ratio of the second screen; 'auto' here will try to make a best guess
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 
 
-# windows/config.c: 165, 237, 238, 239, 240, 242, 243, 244, 245, 247, 248, 249, 250, 252, 253, 254, 255, 257, 258, 259, 260, 351, 988, 1047, 1055 windows/video.c: 435, 535, 984, 986, 1007, 1009 windows/window.c: 839, 839, 843
+# windows/config.c: 165, 237, 238, 239, 240, 242, 243, 244, 245, 247, 248, 249, 250, 252, 253, 254, 255, 257, 258, 259, 260, 351, 989, 1048, 1056 windows/video.c: 435, 535, 984, 986, 1007, 1009 windows/window.c: 839, 839, 843
 auto
 
 
@@ -1058,11 +1058,11 @@ default game screen gamma correction
 default to maximized windows; otherwise, windows will be minimized
 
 
-# windows/input.c: 1161
+# windows/input.c: 1268
 dial
 
 
-# windows/config.c: 336 windows/input.c: 1647, 1853
+# windows/config.c: 336 windows/input.c: 1756, 1962
 digital
 
 
@@ -1218,11 +1218,11 @@ enable/disable local language game list
 enable/disable volume auto adjust
 
 
-# windows/config.c: 1056
+# windows/config.c: 1057
 error: invalid value for language: %s\nUse %s\n
 
 
-# windows/config.c: 1179
+# windows/config.c: 1180
 error: invalid value for palette: %s\n
 
 
@@ -1294,7 +1294,7 @@ image enhancement effect
 in-game ui text lines [16 - 64 or auto]
 
 
-# windows/input.c: 1853
+# windows/input.c: 1962
 invalid
 
 
@@ -1302,19 +1302,19 @@ invalid
 ips datfile name
 
 
-# windows/fronthlp.c: 736, 832
+# windows/fronthlp.c: 734, 830
 is bad\n
 
 
-# windows/fronthlp.c: 746, 842
+# windows/fronthlp.c: 744, 840
 is best available\n
 
 
-# windows/fronthlp.c: 741, 837
+# windows/fronthlp.c: 739, 835
 is good\n
 
 
-# windows/input.c: 1159, 1521, 1616
+# windows/input.c: 1266, 1630, 1725
 lightgun
 
 
@@ -1366,11 +1366,11 @@ optional filename to write a WAV file of the current session
 output error.log data to the system debugger
 
 
-# windows/input.c: 1157
+# windows/input.c: 1264
 paddle
 
 
-# windows/input.c: 1160
+# windows/input.c: 1267
 pedal
 
 
@@ -1442,11 +1442,7 @@ report romsets that have problems
 report samplesets that have problems
 
 
-# windows/fronthlp.c: 770
-romset
-
-
-# windows/fronthlp.c: 727
+# windows/fronthlp.c: 725
 romset %s 
 
 
@@ -1462,7 +1458,7 @@ rotate screen counterclockwise 90 degrees
 rotate the game screen according to the game's orientation needs it
 
 
-# windows/fronthlp.c: 826
+# windows/fronthlp.c: 824
 sampleset %s 
 
 
@@ -1558,7 +1554,7 @@ show this help
 skip displaying the information screen at startup
 
 
-# windows/config.c: 291, 931
+# windows/config.c: 291, 932
 sound
 
 
@@ -1574,7 +1570,7 @@ specify the preferred Direct3D version (8 or 9)
 thread priority for the main game thread; range from -15 to 1
 
 
-# windows/input.c: 1162
+# windows/input.c: 1269
 trackball
 
 
@@ -1582,7 +1578,7 @@ trackball
 transparency of UI background [0 - 255]
 
 
-# windows/config.c: 1014
+# windows/config.c: 1015
 unable to open log file
 
 

@@ -1673,15 +1673,15 @@ UINT32 cheat_menu(UINT32 state)
 	switch(EXTRACT_FIELD(cheatOptions, SearchBox))						// Search a Cheat
 	{
 		case kSearchBox_Minimum:
-			menu_item[total++].text = "Search a Cheat (Minimum Mode)";
+			menu_item[total++].text = _("Search a Cheat (Minimum Mode)");
 			break;
 
 		case kSearchBox_Classic:
-			menu_item[total++].text = "Search a Cheat (Classic Mode)";
+			menu_item[total++].text = _("Search a Cheat (Classic Mode)");
 			break;
 
 		case kSearchBox_Advanced:
-			menu_item[total++].text = "Search a Cheat (Advanced Mode)";
+			menu_item[total++].text = _("Search a Cheat (Advanced Mode)");
 			break;
 	}
 

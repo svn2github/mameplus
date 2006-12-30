@@ -750,6 +750,10 @@ Amenip Nova Games Ltd.
 Ameri
 
 
+# Mad Dog McCree v1C board rev.A
+American Laser Games
+
+
 # Krazy Bowl
 American Sammy
 
@@ -764,6 +768,10 @@ Amtec
 
 # Minesweeper
 Amutech
+
+
+# Live Quiz Show
+Andamiro
 
 
 # Otona no Mahjong (Japan 880628)
@@ -854,6 +862,10 @@ Bonanza Enterprises, Ltd
 Bootleg
 
 
+# Sky Lancer (Bordun International)
+Bordun International
+
+
 # The Crystal of Kings
 Brezzasoft
 
@@ -864,6 +876,10 @@ Buena Vista Interactive
 
 # Wild Snake (U) (Prototype) [!]
 Bullet-Proof Software
+
+
+# Cuore 1 (Italia)
+C.M.C.
 
 
 # Herbie at the Olympics (DK conversion)
@@ -1138,7 +1154,7 @@ Electrocoin
 Electronic Arts
 
 
-# Twins
+# Twins (set 1)
 Electronic Devices
 
 
@@ -1192,6 +1208,10 @@ Epos Corporation
 
 # Poizone
 Eterna
+
+
+# Royal Card (Slovakia, encrypted)
+Evona Electronic
 
 
 # Cross Pang
@@ -1350,7 +1370,7 @@ IGS
 Icarus
 
 
-# Magic Card II (Bulgaria)
+# Magic Card II (Bulgaria, bootleg)
 Impera
 
 
@@ -1404,6 +1424,10 @@ Jeutel
 
 # Trivia Challenge
 Joyland
+
+
+# Puzzle King (includes bootleg of Snow Bros.)
+K1 Soft
 
 
 # Diamond Run
@@ -1640,6 +1664,10 @@ Nova Games Ltd.
 
 # Zarya Vostoka
 Nova Games of Canada
+
+
+# Platoon V.?.? US
+Nova?
 
 
 # Rallys (bootleg?)
@@ -1986,6 +2014,10 @@ Sun a Electronics
 Sunn
 
 
+# Snow Brothers 3 - Magical Adventure
+Syrmex
+
+
 # Pairs (System Ten) (Japan 890826)
 System Ten
 
@@ -2170,6 +2202,10 @@ Veltmeijer Automaten
 Venture Line
 
 
+# Joker Card (Ver.A267BC, encrypted)
+Vesely Svet
+
+
 # Socket (U) [!]
 Vic Tokai
 
@@ -2220,6 +2256,10 @@ WSAC Systems?
 
 # Shienryu (JUET 961226 V1.000)
 Warashi
+
+
+# Zorton Brothers (Los Justicieros)
+Web Picmatic
 
 
 # Sukeban Jansi Ryuko (set 1, System 16A, FD1089B 317-5021)

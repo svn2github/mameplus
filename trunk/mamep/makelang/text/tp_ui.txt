@@ -10,11 +10,11 @@
 %d games
 
 
-# ui/treeview.c: 1281
+# ui/treeview.c: 1284
 %dx%d (H)
 
 
-# ui/treeview.c: 1275
+# ui/treeview.c: 1278
 %dx%d (V)
 
 
@@ -90,7 +90,7 @@
 &Cancel
 
 
-# ui/audit32.c: 482 ui/mame32.rc: 1205
+# ui/audit32.c: 491 ui/mame32.rc: 1205
 &Close
 
 
@@ -98,7 +98,7 @@
 &Contents\tF1
 
 
-# ui/audit32.c: 352
+# ui/audit32.c: 361
 &Continue
 
 
@@ -202,7 +202,7 @@
 &Palette Setting...
 
 
-# ui/audit32.c: 347 ui/mame32.rc: 437
+# ui/audit32.c: 356 ui/mame32.rc: 437
 &Pause
 
 
@@ -302,7 +302,7 @@
 <- Remove
 
 
-# ui/treeview.c: 542, 563, 1184
+# ui/treeview.c: 545, 566, 1187
 <unknown>
 
 
@@ -314,7 +314,7 @@ A sharing violation occurred.
 A&udit
 
 
-# ui/properties.c: 968 ui/treeview.c: 1423
+# ui/properties.c: 968 ui/treeview.c: 1426
 AD Stick
 
 
@@ -418,7 +418,7 @@ Audit
 Audit ROM and samples sets
 
 
-# ui/audit32.c: 481
+# ui/audit32.c: 490
 Audit complete.\n
 
 
@@ -478,7 +478,7 @@ Backdrops
 Background Images
 
 
-# ui/treeview.c: 1104, 1105
+# ui/treeview.c: 1107, 1108
 Bad Dump
 
 
@@ -490,7 +490,7 @@ Basic
 Beam width
 
 
-# ui/audit32.c: 537
+# ui/audit32.c: 542
 Best available
 
 
@@ -550,43 +550,43 @@ Button (P or 6)
 Button (S or 7)
 
 
-# ui/treeview.c: 1403
+# ui/treeview.c: 1406
 Button 1
 
 
-# ui/treeview.c: 1412
+# ui/treeview.c: 1415
 Buttons 10
 
 
-# ui/treeview.c: 1404
+# ui/treeview.c: 1407
 Buttons 2
 
 
-# ui/treeview.c: 1405
+# ui/treeview.c: 1408
 Buttons 3
 
 
-# ui/treeview.c: 1406
+# ui/treeview.c: 1409
 Buttons 4
 
 
-# ui/treeview.c: 1407
+# ui/treeview.c: 1410
 Buttons 5
 
 
-# ui/treeview.c: 1408
+# ui/treeview.c: 1411
 Buttons 6
 
 
-# ui/treeview.c: 1409
+# ui/treeview.c: 1412
 Buttons 7
 
 
-# ui/treeview.c: 1410
+# ui/treeview.c: 1413
 Buttons 8
 
 
-# ui/treeview.c: 1411
+# ui/treeview.c: 1414
 Buttons 9
 
 
@@ -622,7 +622,7 @@ Categories
 Changing this item is not permitted
 
 
-# ui/audit32.c: 270, 279
+# ui/audit32.c: 279, 288
 Checking Game %s - %s
 
 
@@ -810,7 +810,7 @@ Description
 Details
 
 
-# ui/properties.c: 960 ui/treeview.c: 1425
+# ui/properties.c: 960 ui/treeview.c: 1428
 Dial
 
 
@@ -898,19 +898,19 @@ Displays program and copyright information
 Do you wish to continue?
 
 
-# ui/treeview.c: 1421
+# ui/treeview.c: 1424
 Double Joy 16-Way
 
 
-# ui/treeview.c: 1418
+# ui/treeview.c: 1421
 Double Joy 2-Way
 
 
-# ui/treeview.c: 1419
+# ui/treeview.c: 1422
 Double Joy 4-Way
 
 
-# ui/treeview.c: 1420
+# ui/treeview.c: 1423
 Double Joy 8-Way
 
 
@@ -1010,11 +1010,11 @@ Enable steadykey support
 Enforce aspect ratio
 
 
-# ui/audit32.c: 103 ui/properties.c: 578, 669, 1680
+# ui/audit32.c: 100 ui/properties.c: 578, 669, 1680
 Error
 
 
-# ui/treeview.c: 2683
+# ui/treeview.c: 2686
 Error finding custom file name to save
 
 
@@ -1026,11 +1026,11 @@ Error log (for developers)
 Error searching for custom folder
 
 
-# ui/treeview.c: 2612
+# ui/treeview.c: 2615
 Error while renaming custom file %s to %s
 
 
-# ui/treeview.c: 2754
+# ui/treeview.c: 2757
 Error while saving custom file %s
 
 
@@ -1054,11 +1054,11 @@ FOLDER LIST HIDE OPTIONS
 FPS
 
 
-# ui/audit32.c: 545
+# ui/audit32.c: 550
 Failed
 
 
-# ui/audit32.c: 286 ui/mame32.rc: 434
+# ui/audit32.c: 295 ui/mame32.rc: 434
 File Audit
 
 
@@ -1218,7 +1218,7 @@ History
 Homebrew
 
 
-# ui/treeview.c: 1016, 1017
+# ui/treeview.c: 1019, 1020
 Horizontal
 
 
@@ -1250,15 +1250,15 @@ Image Files (*.png,*.bmp)
 Imperfect
 
 
-# ui/treeview.c: 1055
+# ui/treeview.c: 1058
 Imperfect Colors
 
 
-# ui/treeview.c: 1056
+# ui/treeview.c: 1059
 Imperfect Graphics
 
 
-# ui/treeview.c: 1058
+# ui/treeview.c: 1061
 Imperfect Sound
 
 
@@ -1286,19 +1286,19 @@ Insert
 Interface Options
 
 
-# ui/treeview.c: 1416
+# ui/treeview.c: 1419
 Joy 16-Way
 
 
-# ui/treeview.c: 1413
+# ui/treeview.c: 1416
 Joy 2-Way
 
 
-# ui/treeview.c: 1414
+# ui/treeview.c: 1417
 Joy 4-Way
 
 
-# ui/treeview.c: 1415
+# ui/treeview.c: 1418
 Joy 8-Way
 
 
@@ -1350,7 +1350,7 @@ LISTVIEW OPTIONS
 Large Icons
 
 
-# ui/layout.c: 79 ui/properties.c: 421, 972 ui/treeview.c: 1427
+# ui/layout.c: 79 ui/properties.c: 421, 972 ui/treeview.c: 1430
 Lightgun
 
 
@@ -1442,7 +1442,7 @@ Memory Card
 Miscellaneous
 
 
-# ui/treeview.c: 1057
+# ui/treeview.c: 1060
 Missing Sound
 
 
@@ -1478,15 +1478,15 @@ Neogeo Decrypted
 New game changes
 
 
-# ui/audit32.c: 124 ui/win32ui.c: 5406
+# ui/audit32.c: 122 ui/win32ui.c: 5406
 No
 
 
-# ui/treeview.c: 1059
+# ui/treeview.c: 1062
 No Cocktail
 
 
-# ui/treeview.c: 1107, 1108
+# ui/treeview.c: 1110, 1111
 No Dump
 
 
@@ -1514,7 +1514,7 @@ Non-Wor&king
 None
 
 
-# ui/audit32.c: 391, 395
+# ui/audit32.c: 400, 404
 None required
 
 
@@ -1522,7 +1522,7 @@ None required
 Not Working
 
 
-# ui/audit32.c: 541
+# ui/audit32.c: 546
 Not found
 
 
@@ -1602,7 +1602,7 @@ PCB Info
 PCB Info Files
 
 
-# ui/properties.c: 957 ui/treeview.c: 1424
+# ui/properties.c: 957 ui/treeview.c: 1427
 Paddle
 
 
@@ -1614,7 +1614,7 @@ Paddle device
 Palette
 
 
-# ui/audit32.c: 533
+# ui/audit32.c: 538
 Passed
 
 
@@ -1622,7 +1622,7 @@ Passed
 Pause Brightness
 
 
-# ui/treeview.c: 1428
+# ui/treeview.c: 1431
 Pedal
 
 
@@ -1662,35 +1662,35 @@ Playback a recorded game
 Playcount
 
 
-# ui/treeview.c: 1395
+# ui/treeview.c: 1398
 Player 1
 
 
-# ui/treeview.c: 1396
+# ui/treeview.c: 1399
 Players 2
 
 
-# ui/treeview.c: 1397
+# ui/treeview.c: 1400
 Players 3
 
 
-# ui/treeview.c: 1398
+# ui/treeview.c: 1401
 Players 4
 
 
-# ui/treeview.c: 1399
+# ui/treeview.c: 1402
 Players 5
 
 
-# ui/treeview.c: 1400
+# ui/treeview.c: 1403
 Players 6
 
 
-# ui/treeview.c: 1401
+# ui/treeview.c: 1404
 Players 7
 
 
-# ui/treeview.c: 1402
+# ui/treeview.c: 1405
 Players 8
 
 
@@ -2250,7 +2250,7 @@ Story
 Stretch using hardware
 
 
-# ui/properties.c: 1200 ui/treeview.c: 1356, 1357
+# ui/properties.c: 1200 ui/treeview.c: 1359, 1360
 Supported
 
 
@@ -2314,7 +2314,7 @@ Toggle Screen Shot
 Total:
 
 
-# ui/layout.c: 78 ui/properties.c: 964 ui/treeview.c: 1426 ui/win32ui.c: 854
+# ui/layout.c: 78 ui/properties.c: 964 ui/treeview.c: 1429 ui/win32ui.c: 854
 Trackball
 
 
@@ -2390,15 +2390,15 @@ Troubleshooting Documentation
 Type
 
 
-# ui/audit32.c: 103
+# ui/audit32.c: 100
 Unable to Load Riched32.dll
 
 
-# ui/treeview.c: 2623
+# ui/treeview.c: 2626
 Unable to add game to non-custom folder
 
 
-# ui/treeview.c: 2640
+# ui/treeview.c: 2643
 Unable to remove game from non-custom folder
 
 
@@ -2406,11 +2406,11 @@ Unable to remove game from non-custom folder
 Unavailable
 
 
-# ui/treeview.c: 1053
+# ui/treeview.c: 1056
 Unemulated Protection
 
 
-# ui/audit32.c: 528 ui/properties.c: 1015, 1060
+# ui/audit32.c: 533 ui/properties.c: 1015, 1060
 Unknown
 
 
@@ -2418,7 +2418,7 @@ Unknown
 Unknown error.
 
 
-# ui/properties.c: 1202 ui/treeview.c: 1359, 1360
+# ui/properties.c: 1202 ui/treeview.c: 1362, 1363
 Unsupported
 
 
@@ -2446,19 +2446,19 @@ Use various icon for Not Working game
 Use volume auto adjust
 
 
-# ui/layout.c: 71 ui/mame32.rc: 849 ui/options.c: 788, 2719 ui/properties.c: 622 ui/treeview.c: 306 ui/win32ui.c: 5396
+# ui/layout.c: 71 ui/mame32.rc: 849 ui/options.c: 788, 2719 ui/properties.c: 622 ui/treeview.c: 308 ui/win32ui.c: 5396
 Vector
 
 
-# ui/treeview.c: 1250, 1251
+# ui/treeview.c: 1253, 1254
 Vector (H)
 
 
-# ui/treeview.c: 1247, 1248
+# ui/treeview.c: 1250, 1251
 Vector (V)
 
 
-# ui/treeview.c: 1012, 1013
+# ui/treeview.c: 1015, 1016
 Vertical
 
 
@@ -2522,7 +2522,7 @@ Window frame (light)
 Working
 
 
-# ui/treeview.c: 1054
+# ui/treeview.c: 1057
 Wrong Colors
 
 
@@ -2530,7 +2530,7 @@ Wrong Colors
 Year
 
 
-# ui/audit32.c: 120 ui/win32ui.c: 5404
+# ui/audit32.c: 118 ui/win32ui.c: 5404
 Yes
 
 
