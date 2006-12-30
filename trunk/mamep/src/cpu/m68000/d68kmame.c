@@ -312,9 +312,9 @@ static void m68040_init(int index, int clock, const void *config, int (*irqcallb
 extern void m68kdrc_flag_str_mark_dirty(char *str);
 #endif
 
-extern void m68000c_get_info(UINT32 state, union cpuinfo *info);
+extern void m68000c_get_info(UINT32 state, cpuinfo *info);
 
-void m68000drc_get_info(UINT32 state, union cpuinfo *info)
+void m68000drc_get_info(UINT32 state, cpuinfo *info)
 {
 	switch (state)
 	{
@@ -337,9 +337,9 @@ void m68000drc_get_info(UINT32 state, union cpuinfo *info)
 }
 
 #if (HAS_M68008)
-extern void m68008c_get_info(UINT32 state, union cpuinfo *info);
+extern void m68008c_get_info(UINT32 state, cpuinfo *info);
 
-void m68008drc_get_info(UINT32 state, union cpuinfo *info)
+void m68008drc_get_info(UINT32 state, cpuinfo *info)
 {
 	switch (state)
 	{
@@ -369,9 +369,9 @@ void m68008drc_get_info(UINT32 state, union cpuinfo *info)
  * CPU-specific set_info
  **************************************************************************/
 
-extern void m68010c_get_info(UINT32 state, union cpuinfo *info);
+extern void m68010c_get_info(UINT32 state, cpuinfo *info);
 
-void m68010drc_get_info(UINT32 state, union cpuinfo *info)
+void m68010drc_get_info(UINT32 state, cpuinfo *info)
 {
 	switch (state)
 	{
@@ -402,9 +402,9 @@ void m68010drc_get_info(UINT32 state, union cpuinfo *info)
  * CPU-specific set_info
  **************************************************************************/
 
-extern void m68020c_get_info(UINT32 state, union cpuinfo *info);
+extern void m68020c_get_info(UINT32 state, cpuinfo *info);
 
-void m68020drc_get_info(UINT32 state, union cpuinfo *info)
+void m68020drc_get_info(UINT32 state, cpuinfo *info)
 {
 	switch (state)
 	{
@@ -431,9 +431,9 @@ void m68020drc_get_info(UINT32 state, union cpuinfo *info)
  * CPU-specific set_info
  **************************************************************************/
 
-extern void m68ec020c_get_info(UINT32 state, union cpuinfo *info);
+extern void m68ec020c_get_info(UINT32 state, cpuinfo *info);
 
-void m68ec020drc_get_info(UINT32 state, union cpuinfo *info)
+void m68ec020drc_get_info(UINT32 state, cpuinfo *info)
 {
 	switch (state)
 	{
@@ -461,9 +461,9 @@ void m68ec020drc_get_info(UINT32 state, union cpuinfo *info)
  * CPU-specific set_info
  **************************************************************************/
 
-extern void m68040c_get_info(UINT32 state, union cpuinfo *info);
+extern void m68040c_get_info(UINT32 state, cpuinfo *info);
 
-void m68040drc_get_info(UINT32 state, union cpuinfo *info)
+void m68040drc_get_info(UINT32 state, cpuinfo *info)
 {
 	switch (state)
 	{

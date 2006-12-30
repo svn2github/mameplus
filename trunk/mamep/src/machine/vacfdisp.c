@@ -367,7 +367,7 @@ UINT16 *vfd_set_outputs(int id)
 				else                        				vfds[id].outputs[cursor] &= ~0x0200;
 
 				//Flashing ? Set an unused pin as a control
-				if ( vfd_get_segments(id)[cursor] & 0x80 )	vfds[id].outputs[cursor] |=  0x40000;
+				if ( vfd_get_segments(id)[cursor] & 0x100 )	vfds[id].outputs[cursor] |=  0x40000;
 				else                        				vfds[id].outputs[cursor] &= ~0x40000;
 
 				if ( vfd_get_segments(id)[cursor] & 0x200 )	vfds[id].outputs[cursor] |=  0x0020;
@@ -904,4 +904,6 @@ void draw_14seg(mame_bitmap *bitmap,int vfd, int col_on, int col_off )
 {
 	draw_vfd(bitmap,vfd,14,col_on,col_off );
 }
+
+
 

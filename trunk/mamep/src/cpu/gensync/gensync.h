@@ -18,7 +18,7 @@ enum
 	GS_256V, GS_512V
 };
 
-extern void gensync_get_info(UINT32 state, union cpuinfo *info);
+extern void gensync_get_info(UINT32 state, cpuinfo *info);
 
 #ifdef MAME_DEBUG
 extern unsigned gensyncd(char *dst, unsigned PC);

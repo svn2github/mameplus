@@ -141,9 +141,6 @@ INLINE void m68kx_write_memory_32_pd(unsigned int address, unsigned int value)
 void m68k_set_encrypted_opcode_range(int cpunum, offs_t start, offs_t end);
 
 
-//ks hcmame switch m68k core	#ifdef A68K0
-//ks hcmame switch m68k core	#define M68K_EMULATE_010            OPT_OFF
-//ks hcmame switch m68k core	#else
 /* M68K Variants */
 #if HAS_M68008
 #define M68K_EMULATE_008            OPT_ON
@@ -157,12 +154,6 @@ void m68k_set_encrypted_opcode_range(int cpunum, offs_t start, offs_t end);
 #define M68K_EMULATE_010            OPT_OFF
 #endif
 
-//ks hcmame switch m68k core	#endif	// A68K0
-
-//ks hcmame switch m68k core	#ifdef A68K2
-//ks hcmame switch m68k core	#define M68K_EMULATE_EC020          OPT_OFF
-//ks hcmame switch m68k core	#define M68K_EMULATE_020            OPT_OFF
-//ks hcmame switch m68k core	#else
 #undef  M68K_EMULATE_010
 #define M68K_EMULATE_010            OPT_ON
 
@@ -177,8 +168,6 @@ void m68k_set_encrypted_opcode_range(int cpunum, offs_t start, offs_t end);
 #else
 #define M68K_EMULATE_020            OPT_OFF
 #endif
-
-//ks hcmame switch m68k core	#endif // A68K2
 
 #if HAS_M68040
 #define M68K_EMULATE_040			OPT_ON

@@ -463,10 +463,7 @@ void tms5110_process(void *chip, INT16 *buffer, unsigned int size)
         else
         {
             /* generate voiced samples here */
-            if (tms->pitch_count < sizeof(chirptable))
-                current_val = (chirptable[tms->pitch_count] * tms->current_energy) / 256;
-            else
-                current_val = 0x00;
+            current_val = (chirptable[tms->pitch_count%sizeof(chirptable)] * tms->current_energy) / 256;
         }
 
 
@@ -727,4 +724,6 @@ static unsigned int example_word_TEN[619]={
 /*16*/1,1,1,1
 };
 #endif
+
+
 

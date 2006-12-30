@@ -1250,8 +1250,9 @@ M68KMAKE_OP(adda, 16, ., a)
 M68KMAKE_OP(adda, 16, ., .)
 {
 	uint* r_dst = &AX;
+	uint src = MAKE_INT_16(M68KMAKE_GET_OPER_AY_16);
 
-	*r_dst = MASK_OUT_ABOVE_32(*r_dst + MAKE_INT_16(M68KMAKE_GET_OPER_AY_16));
+	*r_dst = MASK_OUT_ABOVE_32(*r_dst + src);
 }
 
 
@@ -9776,8 +9777,9 @@ M68KMAKE_OP(suba, 16, ., a)
 M68KMAKE_OP(suba, 16, ., .)
 {
 	uint* r_dst = &AX;
+	uint src = MAKE_INT_16(M68KMAKE_GET_OPER_AY_16);
 
-	*r_dst = MASK_OUT_ABOVE_32(*r_dst - MAKE_INT_16(M68KMAKE_GET_OPER_AY_16));
+	*r_dst = MASK_OUT_ABOVE_32(*r_dst - src);
 }
 
 

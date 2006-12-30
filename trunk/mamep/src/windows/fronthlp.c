@@ -756,16 +756,16 @@ int frontend_verifyroms(FILE *output)
 	if (correct + incorrect == 0)
 	{
 		if (notfound > 0)
-			mame_printf_error(_WINDOWS("romset \"%8s\" not found!\n"), gamename);
+			fprintf(output, _WINDOWS("romset \"%8s\" not found!\n"), gamename);
 		else
-			mame_printf_error(_WINDOWS("romset \"%8s\" not supported!\n"), gamename);
+			fprintf(output, _WINDOWS("romset \"%8s\" not supported!\n"), gamename);
  		return 1;
 	}
 
 	/* otherwise, print a summary */
 	else
 	{
-		mame_printf_error(_WINDOWS("%d romsets found, %d were OK.\n"), correct+incorrect, correct);
+		fprintf(output, _WINDOWS("%d romsets found, %d were OK.\n"), correct+incorrect, correct);
 		return (incorrect > 0) ? 2 : 0;
 	}
 }

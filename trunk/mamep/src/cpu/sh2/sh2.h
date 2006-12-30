@@ -70,7 +70,7 @@ struct sh2_config
   int is_slave;
 };
 
-extern void sh2_get_info(UINT32 state, union cpuinfo *info);
+extern void sh2_get_info(UINT32 state, cpuinfo *info);
 
 WRITE32_HANDLER( sh2_internal_w );
 READ32_HANDLER( sh2_internal_r );
@@ -80,4 +80,6 @@ extern unsigned DasmSH2( char *dst, unsigned pc, UINT16 opcode );
 #endif
 
 #endif /* _SH2_H */
+
+
 

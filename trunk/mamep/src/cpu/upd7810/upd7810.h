@@ -62,8 +62,8 @@ enum {
 #define UPD7810_INTF2		1
 #define UPD7810_INTFE1      4
 
-extern void upd7810_get_info(UINT32 state, union cpuinfo *info);
-extern void upd7807_get_info(UINT32 state, union cpuinfo *info);
+extern void upd7810_get_info(UINT32 state, cpuinfo *info);
+extern void upd7807_get_info(UINT32 state, cpuinfo *info);
 
 typedef struct {
 	PAIR	ppc;	/* previous program counter */
@@ -154,4 +154,6 @@ offs_t upd7807_dasm(char *buffer, offs_t pc, const UINT8 *oprom, const UINT8 *op
 #endif
 
 #endif
+
+
 

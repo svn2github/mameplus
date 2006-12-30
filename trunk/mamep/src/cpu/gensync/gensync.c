@@ -116,7 +116,7 @@ static offs_t gensync_dasm(char *buffer, offs_t pc, const UINT8 *oprom, const UI
  * Generic set_info
  **************************************************************************/
 
-static void gensync_set_info(UINT32 state, union cpuinfo *info)
+static void gensync_set_info(UINT32 state, cpuinfo *info)
 {
 	int h = gensync.pc % gensync.h_max;
 	int v = (gensync.pc / gensync.h_max) % gensync.v_max;
@@ -170,7 +170,7 @@ static void gensync_set_info(UINT32 state, union cpuinfo *info)
  * Generic get_info
  **************************************************************************/
 
-void gensync_get_info(UINT32 state, union cpuinfo *info)
+void gensync_get_info(UINT32 state, cpuinfo *info)
 {
 	int h, v;
 
@@ -280,44 +280,44 @@ void gensync_get_info(UINT32 state, union cpuinfo *info)
 	case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &gensync_icount;			break;
 
 	/* --- the following bits of info are returned as NULL-terminated strings --- */
-	case CPUINFO_STR_NAME:					strcpy(info->s = cpuintrf_temp_str(), "GENSYNC"); break;
-	case CPUINFO_STR_CORE_FAMILY:				strcpy(info->s = cpuintrf_temp_str(), "GENSYNC generic video synchronization"); break;
-	case CPUINFO_STR_CORE_VERSION:				strcpy(info->s = cpuintrf_temp_str(), "0.2"); break;
-	case CPUINFO_STR_CORE_FILE:				strcpy(info->s = cpuintrf_temp_str(), __FILE__); break;
-	case CPUINFO_STR_CORE_CREDITS:				strcpy(info->s = cpuintrf_temp_str(), "Copyright (c) 1999, The MAMEDEV team."); break;
+	case CPUINFO_STR_NAME:					strcpy(info->s, "GENSYNC"); break;
+	case CPUINFO_STR_CORE_FAMILY:				strcpy(info->s, "GENSYNC generic video synchronization"); break;
+	case CPUINFO_STR_CORE_VERSION:				strcpy(info->s, "0.2"); break;
+	case CPUINFO_STR_CORE_FILE:				strcpy(info->s, __FILE__); break;
+	case CPUINFO_STR_CORE_CREDITS:				strcpy(info->s, "Copyright (c) 1999, The MAMEDEV team."); break;
 
 
-	case CPUINFO_STR_FLAGS:					sprintf(info->s = cpuintrf_temp_str(), 	 "%4d:%4d", 	v, h); 			break;
+	case CPUINFO_STR_FLAGS:					sprintf(info->s, 	 "%4d:%4d", 	v, h); 			break;
 
-	case CPUINFO_STR_REGISTER + GS_PC: 			sprintf(info->s = cpuintrf_temp_str(),  "PC:%03X:%03X",h, v);  		break;
-	case CPUINFO_STR_REGISTER + GS_HBLANK_START: 		sprintf(info->s = cpuintrf_temp_str(),  "HBS:%03X", 	gensync.hblank_start); 	break;
-	case CPUINFO_STR_REGISTER + GS_HSYNC_START: 		sprintf(info->s = cpuintrf_temp_str(),  "HSS:%03X", 	gensync.hsync_start);  	break;
-	case CPUINFO_STR_REGISTER + GS_HSYNC_END: 		sprintf(info->s = cpuintrf_temp_str(),  "HSE:%03X", 	gensync.hsync_end);  	break;
-	case CPUINFO_STR_REGISTER + GS_HBLANK_END: 		sprintf(info->s = cpuintrf_temp_str(),  "HBE:%03X", 	gensync.hblank_end);  	break;
-	case CPUINFO_STR_REGISTER + GS_VBLANK_START: 		sprintf(info->s = cpuintrf_temp_str(),  "VBS:%03X", 	gensync.hblank_start); 	break;
-	case CPUINFO_STR_REGISTER + GS_VSYNC_START: 		sprintf(info->s = cpuintrf_temp_str(),  "VSS:%03X", 	gensync.hsync_start); 	break;
-	case CPUINFO_STR_REGISTER + GS_VSYNC_END: 		sprintf(info->s = cpuintrf_temp_str(),  "VSE:%03X", 	gensync.hsync_end);  	break;
-	case CPUINFO_STR_REGISTER + GS_VBLANK_END: 		sprintf(info->s = cpuintrf_temp_str(),  "VBE:%03X", 	gensync.hblank_end);  	break;
-	case CPUINFO_STR_REGISTER + GS_1H:			sprintf(info->s = cpuintrf_temp_str(),  "1H:%X", 	(h >> 0) & 1);  	break;
-	case CPUINFO_STR_REGISTER + GS_2H: 			sprintf(info->s = cpuintrf_temp_str(),  "2H:%X", 	(h >> 1) & 1);  	break;
-	case CPUINFO_STR_REGISTER + GS_4H: 			sprintf(info->s = cpuintrf_temp_str(),  "4H:%X", 	(h >> 2) & 1);  	break;
-	case CPUINFO_STR_REGISTER + GS_8H: 			sprintf(info->s = cpuintrf_temp_str(),  "8H:%X", 	(h >> 3) & 1);  	break;
-	case CPUINFO_STR_REGISTER + GS_16H: 			sprintf(info->s = cpuintrf_temp_str(),  "16H:%X", 	(h >> 4) & 1); 		break;
-	case CPUINFO_STR_REGISTER + GS_32H: 			sprintf(info->s = cpuintrf_temp_str(),  "32H:%X", 	(h >> 5) & 1);  	break;
-	case CPUINFO_STR_REGISTER + GS_64H: 			sprintf(info->s = cpuintrf_temp_str(),  "64H:%X", 	(h >> 6) & 1);  	break;
-	case CPUINFO_STR_REGISTER + GS_128H: 			sprintf(info->s = cpuintrf_temp_str(),  "128H:%X",	(h >> 7) & 1);  	break;
-	case CPUINFO_STR_REGISTER + GS_256H: 			sprintf(info->s = cpuintrf_temp_str(),  "256H:%X", 	(h >> 8) & 1);  	break;
-	case CPUINFO_STR_REGISTER + GS_512H: 			sprintf(info->s = cpuintrf_temp_str(),  "512H:%X", 	(h >> 9) & 1);  	break;
-	case CPUINFO_STR_REGISTER + GS_1V: 			sprintf(info->s = cpuintrf_temp_str(),  "1V:%X", 	(v >> 0) & 1);  	break;
-	case CPUINFO_STR_REGISTER + GS_2V: 			sprintf(info->s = cpuintrf_temp_str(),  "2V:%X", 	(v >> 1) & 1);  	break;
-	case CPUINFO_STR_REGISTER + GS_4V: 			sprintf(info->s = cpuintrf_temp_str(),  "4V:%X", 	(v >> 2) & 1);  	break;
-	case CPUINFO_STR_REGISTER + GS_8V: 			sprintf(info->s = cpuintrf_temp_str(),  "8V:%X", 	(v >> 3) & 1);  	break;
-	case CPUINFO_STR_REGISTER + GS_16V:			sprintf(info->s = cpuintrf_temp_str(),  "16V:%X", 	(v >> 4) & 1);  	break;
-	case CPUINFO_STR_REGISTER + GS_32V: 			sprintf(info->s = cpuintrf_temp_str(),  "32V:%X", 	(v >> 5) & 1);  	break;
-	case CPUINFO_STR_REGISTER + GS_64V: 			sprintf(info->s = cpuintrf_temp_str(),  "64V:%X", 	(v >> 6) & 1);  	break;
-	case CPUINFO_STR_REGISTER + GS_128V: 			sprintf(info->s = cpuintrf_temp_str(),  "128V:%X", 	(v >> 7) & 1);  	break;
-	case CPUINFO_STR_REGISTER + GS_256V: 			sprintf(info->s = cpuintrf_temp_str(),  "256V:%X", 	(v >> 8) & 1);  	break;
-	case CPUINFO_STR_REGISTER + GS_512V: 			sprintf(info->s = cpuintrf_temp_str(),  "512V:%X", 	(v >> 9) & 1);  	break;
+	case CPUINFO_STR_REGISTER + GS_PC: 			sprintf(info->s,  "PC:%03X:%03X",h, v);  		break;
+	case CPUINFO_STR_REGISTER + GS_HBLANK_START: 		sprintf(info->s,  "HBS:%03X", 	gensync.hblank_start); 	break;
+	case CPUINFO_STR_REGISTER + GS_HSYNC_START: 		sprintf(info->s,  "HSS:%03X", 	gensync.hsync_start);  	break;
+	case CPUINFO_STR_REGISTER + GS_HSYNC_END: 		sprintf(info->s,  "HSE:%03X", 	gensync.hsync_end);  	break;
+	case CPUINFO_STR_REGISTER + GS_HBLANK_END: 		sprintf(info->s,  "HBE:%03X", 	gensync.hblank_end);  	break;
+	case CPUINFO_STR_REGISTER + GS_VBLANK_START: 		sprintf(info->s,  "VBS:%03X", 	gensync.hblank_start); 	break;
+	case CPUINFO_STR_REGISTER + GS_VSYNC_START: 		sprintf(info->s,  "VSS:%03X", 	gensync.hsync_start); 	break;
+	case CPUINFO_STR_REGISTER + GS_VSYNC_END: 		sprintf(info->s,  "VSE:%03X", 	gensync.hsync_end);  	break;
+	case CPUINFO_STR_REGISTER + GS_VBLANK_END: 		sprintf(info->s,  "VBE:%03X", 	gensync.hblank_end);  	break;
+	case CPUINFO_STR_REGISTER + GS_1H:			sprintf(info->s,  "1H:%X", 	(h >> 0) & 1);  	break;
+	case CPUINFO_STR_REGISTER + GS_2H: 			sprintf(info->s,  "2H:%X", 	(h >> 1) & 1);  	break;
+	case CPUINFO_STR_REGISTER + GS_4H: 			sprintf(info->s,  "4H:%X", 	(h >> 2) & 1);  	break;
+	case CPUINFO_STR_REGISTER + GS_8H: 			sprintf(info->s,  "8H:%X", 	(h >> 3) & 1);  	break;
+	case CPUINFO_STR_REGISTER + GS_16H: 			sprintf(info->s,  "16H:%X", 	(h >> 4) & 1); 		break;
+	case CPUINFO_STR_REGISTER + GS_32H: 			sprintf(info->s,  "32H:%X", 	(h >> 5) & 1);  	break;
+	case CPUINFO_STR_REGISTER + GS_64H: 			sprintf(info->s,  "64H:%X", 	(h >> 6) & 1);  	break;
+	case CPUINFO_STR_REGISTER + GS_128H: 			sprintf(info->s,  "128H:%X",	(h >> 7) & 1);  	break;
+	case CPUINFO_STR_REGISTER + GS_256H: 			sprintf(info->s,  "256H:%X", 	(h >> 8) & 1);  	break;
+	case CPUINFO_STR_REGISTER + GS_512H: 			sprintf(info->s,  "512H:%X", 	(h >> 9) & 1);  	break;
+	case CPUINFO_STR_REGISTER + GS_1V: 			sprintf(info->s,  "1V:%X", 	(v >> 0) & 1);  	break;
+	case CPUINFO_STR_REGISTER + GS_2V: 			sprintf(info->s,  "2V:%X", 	(v >> 1) & 1);  	break;
+	case CPUINFO_STR_REGISTER + GS_4V: 			sprintf(info->s,  "4V:%X", 	(v >> 2) & 1);  	break;
+	case CPUINFO_STR_REGISTER + GS_8V: 			sprintf(info->s,  "8V:%X", 	(v >> 3) & 1);  	break;
+	case CPUINFO_STR_REGISTER + GS_16V:			sprintf(info->s,  "16V:%X", 	(v >> 4) & 1);  	break;
+	case CPUINFO_STR_REGISTER + GS_32V: 			sprintf(info->s,  "32V:%X", 	(v >> 5) & 1);  	break;
+	case CPUINFO_STR_REGISTER + GS_64V: 			sprintf(info->s,  "64V:%X", 	(v >> 6) & 1);  	break;
+	case CPUINFO_STR_REGISTER + GS_128V: 			sprintf(info->s,  "128V:%X", 	(v >> 7) & 1);  	break;
+	case CPUINFO_STR_REGISTER + GS_256V: 			sprintf(info->s,  "256V:%X", 	(v >> 8) & 1);  	break;
+	case CPUINFO_STR_REGISTER + GS_512V: 			sprintf(info->s,  "512V:%X", 	(v >> 9) & 1);  	break;
 	}
 }
 /* SU 078u2 */

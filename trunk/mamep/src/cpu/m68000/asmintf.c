@@ -11,17 +11,17 @@ struct m68k_memory_interface a68k_memory_intf;
 // otherwise they are declared by the C core.
 
 #if 0 //ks hcmame s switch m68k core
-#if (HAS_M68000)
+#if HAS_M68000
 #undef A68K0
 #define A68K0
 #endif
 
-#if (HAS_M68010)
+#if HAS_M68010
 #undef A68K1
 #define A68K1
 #endif
 
-#if (HAS_M68020)
+#if HAS_M68020
 #undef A68K2
 #define A68K2
 #endif
@@ -862,7 +862,7 @@ static offs_t m68008_dasm(char *buffer, offs_t pc, const UINT8 *oprom, const UIN
 
 #ifdef A68K1
 
-#if (HAS_M68010)
+#if HAS_M68010
 
 static void m68010_init(int index, int clock, const void *config, int (*irqcallback)(int))
 {
@@ -1077,7 +1077,7 @@ static offs_t m68010_dasm(char *buffer, offs_t pc, const UINT8 *oprom, const UIN
 
 #ifdef A68K2
 
-#if (HAS_M68020)
+#if HAS_M68020
 
 static void m68020_init(int index, int clock, const void *config, int (*irqcallback)(int))
 {
@@ -1320,7 +1320,7 @@ static offs_t m68ec020_dasm(char *buffer, offs_t pc, const UINT8 *oprom, const U
 
 #ifdef A68K0
 
-static void m68000_set_info(UINT32 state, union cpuinfo *info)
+static void m68000_set_info(UINT32 state, cpuinfo *info)
 {
 	switch (state)
 	{
@@ -1374,7 +1374,7 @@ static void m68000_set_info(UINT32 state, union cpuinfo *info)
  * Generic get_info
  **************************************************************************/
 
-void m68000asm_get_info(UINT32 state, union cpuinfo *info)
+void m68000asm_get_info(UINT32 state, cpuinfo *info)
 {
 	switch (state)
 	{
@@ -1449,14 +1449,14 @@ void m68000asm_get_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &m68k_ICount;			break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case CPUINFO_STR_NAME:							strcpy(info->s = cpuintrf_temp_str(), "68000"); break;
-		case CPUINFO_STR_CORE_FAMILY:					strcpy(info->s = cpuintrf_temp_str(), "Motorola 68K"); break;
-		case CPUINFO_STR_CORE_VERSION:					strcpy(info->s = cpuintrf_temp_str(), "0.16"); break;
-		case CPUINFO_STR_CORE_FILE:						strcpy(info->s = cpuintrf_temp_str(), __FILE__); break;
-		case CPUINFO_STR_CORE_CREDITS:					strcpy(info->s = cpuintrf_temp_str(), "Copyright 1998,99 Mike Coates, Darren Olafson. All rights reserved"); break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "68000"); break;
+		case CPUINFO_STR_CORE_FAMILY:					strcpy(info->s, "Motorola 68K"); break;
+		case CPUINFO_STR_CORE_VERSION:					strcpy(info->s, "0.16"); break;
+		case CPUINFO_STR_CORE_FILE:						strcpy(info->s, __FILE__); break;
+		case CPUINFO_STR_CORE_CREDITS:					strcpy(info->s, "Copyright 1998,99 Mike Coates, Darren Olafson. All rights reserved"); break;
 
 		case CPUINFO_STR_FLAGS:
-			sprintf(info->s = cpuintrf_temp_str(), "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c",
+			sprintf(info->s, "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c",
 				M68000_regs.sr & 0x8000 ? 'T':'.',
 				M68000_regs.sr & 0x4000 ? '?':'.',
 				M68000_regs.sr & 0x2000 ? 'S':'.',
@@ -1475,29 +1475,29 @@ void m68000asm_get_info(UINT32 state, union cpuinfo *info)
 				M68000_regs.sr & 0x0001 ? 'C':'.');
 			break;
 
-		case CPUINFO_STR_REGISTER + M68K_PC:			sprintf(info->s = cpuintrf_temp_str(), "PC :%06X", M68000_regs.pc); break;
-		case CPUINFO_STR_REGISTER + M68K_ISP:			sprintf(info->s = cpuintrf_temp_str(), "ISP:%08X", M68000_regs.isp); break;
-		case CPUINFO_STR_REGISTER + M68K_USP:			sprintf(info->s = cpuintrf_temp_str(), "USP:%08X", M68000_regs.usp); break;
-		case CPUINFO_STR_REGISTER + M68K_SR:			sprintf(info->s = cpuintrf_temp_str(), "SR :%08X", M68000_regs.sr); break;
-		case CPUINFO_STR_REGISTER + M68K_VBR:			sprintf(info->s = cpuintrf_temp_str(), "VBR:%08X", M68000_regs.vbr); break;
-		case CPUINFO_STR_REGISTER + M68K_SFC:			sprintf(info->s = cpuintrf_temp_str(), "SFC:%08X", M68000_regs.sfc); break;
-		case CPUINFO_STR_REGISTER + M68K_DFC:			sprintf(info->s = cpuintrf_temp_str(), "DFC:%08X", M68000_regs.dfc); break;
-		case CPUINFO_STR_REGISTER + M68K_D0:			sprintf(info->s = cpuintrf_temp_str(), "D0 :%08X", M68000_regs.d[0]); break;
-		case CPUINFO_STR_REGISTER + M68K_D1:			sprintf(info->s = cpuintrf_temp_str(), "D1 :%08X", M68000_regs.d[1]); break;
-		case CPUINFO_STR_REGISTER + M68K_D2:			sprintf(info->s = cpuintrf_temp_str(), "D2 :%08X", M68000_regs.d[2]); break;
-		case CPUINFO_STR_REGISTER + M68K_D3:			sprintf(info->s = cpuintrf_temp_str(), "D3 :%08X", M68000_regs.d[3]); break;
-		case CPUINFO_STR_REGISTER + M68K_D4:			sprintf(info->s = cpuintrf_temp_str(), "D4 :%08X", M68000_regs.d[4]); break;
-		case CPUINFO_STR_REGISTER + M68K_D5:			sprintf(info->s = cpuintrf_temp_str(), "D5 :%08X", M68000_regs.d[5]); break;
-		case CPUINFO_STR_REGISTER + M68K_D6:			sprintf(info->s = cpuintrf_temp_str(), "D6 :%08X", M68000_regs.d[6]); break;
-		case CPUINFO_STR_REGISTER + M68K_D7:			sprintf(info->s = cpuintrf_temp_str(), "D7 :%08X", M68000_regs.d[7]); break;
-		case CPUINFO_STR_REGISTER + M68K_A0:			sprintf(info->s = cpuintrf_temp_str(), "A0 :%08X", M68000_regs.a[0]); break;
-		case CPUINFO_STR_REGISTER + M68K_A1:			sprintf(info->s = cpuintrf_temp_str(), "A1 :%08X", M68000_regs.a[1]); break;
-		case CPUINFO_STR_REGISTER + M68K_A2:			sprintf(info->s = cpuintrf_temp_str(), "A2 :%08X", M68000_regs.a[2]); break;
-		case CPUINFO_STR_REGISTER + M68K_A3:			sprintf(info->s = cpuintrf_temp_str(), "A3 :%08X", M68000_regs.a[3]); break;
-		case CPUINFO_STR_REGISTER + M68K_A4:			sprintf(info->s = cpuintrf_temp_str(), "A4 :%08X", M68000_regs.a[4]); break;
-		case CPUINFO_STR_REGISTER + M68K_A5:			sprintf(info->s = cpuintrf_temp_str(), "A5 :%08X", M68000_regs.a[5]); break;
-		case CPUINFO_STR_REGISTER + M68K_A6:			sprintf(info->s = cpuintrf_temp_str(), "A6 :%08X", M68000_regs.a[6]); break;
-		case CPUINFO_STR_REGISTER + M68K_A7:			sprintf(info->s = cpuintrf_temp_str(), "A7 :%08X", M68000_regs.a[7]); break;
+		case CPUINFO_STR_REGISTER + M68K_PC:			sprintf(info->s, "PC :%06X", M68000_regs.pc); break;
+		case CPUINFO_STR_REGISTER + M68K_ISP:			sprintf(info->s, "ISP:%08X", M68000_regs.isp); break;
+		case CPUINFO_STR_REGISTER + M68K_USP:			sprintf(info->s, "USP:%08X", M68000_regs.usp); break;
+		case CPUINFO_STR_REGISTER + M68K_SR:			sprintf(info->s, "SR :%08X", M68000_regs.sr); break;
+		case CPUINFO_STR_REGISTER + M68K_VBR:			sprintf(info->s, "VBR:%08X", M68000_regs.vbr); break;
+		case CPUINFO_STR_REGISTER + M68K_SFC:			sprintf(info->s, "SFC:%08X", M68000_regs.sfc); break;
+		case CPUINFO_STR_REGISTER + M68K_DFC:			sprintf(info->s, "DFC:%08X", M68000_regs.dfc); break;
+		case CPUINFO_STR_REGISTER + M68K_D0:			sprintf(info->s, "D0 :%08X", M68000_regs.d[0]); break;
+		case CPUINFO_STR_REGISTER + M68K_D1:			sprintf(info->s, "D1 :%08X", M68000_regs.d[1]); break;
+		case CPUINFO_STR_REGISTER + M68K_D2:			sprintf(info->s, "D2 :%08X", M68000_regs.d[2]); break;
+		case CPUINFO_STR_REGISTER + M68K_D3:			sprintf(info->s, "D3 :%08X", M68000_regs.d[3]); break;
+		case CPUINFO_STR_REGISTER + M68K_D4:			sprintf(info->s, "D4 :%08X", M68000_regs.d[4]); break;
+		case CPUINFO_STR_REGISTER + M68K_D5:			sprintf(info->s, "D5 :%08X", M68000_regs.d[5]); break;
+		case CPUINFO_STR_REGISTER + M68K_D6:			sprintf(info->s, "D6 :%08X", M68000_regs.d[6]); break;
+		case CPUINFO_STR_REGISTER + M68K_D7:			sprintf(info->s, "D7 :%08X", M68000_regs.d[7]); break;
+		case CPUINFO_STR_REGISTER + M68K_A0:			sprintf(info->s, "A0 :%08X", M68000_regs.a[0]); break;
+		case CPUINFO_STR_REGISTER + M68K_A1:			sprintf(info->s, "A1 :%08X", M68000_regs.a[1]); break;
+		case CPUINFO_STR_REGISTER + M68K_A2:			sprintf(info->s, "A2 :%08X", M68000_regs.a[2]); break;
+		case CPUINFO_STR_REGISTER + M68K_A3:			sprintf(info->s, "A3 :%08X", M68000_regs.a[3]); break;
+		case CPUINFO_STR_REGISTER + M68K_A4:			sprintf(info->s, "A4 :%08X", M68000_regs.a[4]); break;
+		case CPUINFO_STR_REGISTER + M68K_A5:			sprintf(info->s, "A5 :%08X", M68000_regs.a[5]); break;
+		case CPUINFO_STR_REGISTER + M68K_A6:			sprintf(info->s, "A6 :%08X", M68000_regs.a[6]); break;
+		case CPUINFO_STR_REGISTER + M68K_A7:			sprintf(info->s, "A7 :%08X", M68000_regs.a[7]); break;
 	}
 }
 
@@ -1506,7 +1506,7 @@ void m68000asm_get_info(UINT32 state, union cpuinfo *info)
  * CPU-specific get_info
  **************************************************************************/
 
-void m68008asm_get_info(UINT32 state, union cpuinfo *info)
+void m68008asm_get_info(UINT32 state, cpuinfo *info)
 {
 	switch (state)
 	{
@@ -1515,7 +1515,7 @@ void m68008asm_get_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_PTR_INIT:							info->init = m68008_init;				break;
 		case CPUINFO_PTR_RESET:							info->reset = m68008_reset;				break;
 		case CPUINFO_PTR_DISASSEMBLE:					info->disassemble = m68008_dasm;		break;
-		case CPUINFO_STR_NAME:							strcpy(info->s = cpuintrf_temp_str(), "68008"); break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "68008"); break;
 		default:
 			m68000asm_get_info(state, info);
 	}
@@ -1528,12 +1528,12 @@ void m68008asm_get_info(UINT32 state, union cpuinfo *info)
 
 #ifdef A68K1
 
-#if (HAS_M68010)
+#if HAS_M68010
 /**************************************************************************
  * CPU-specific set_info
  **************************************************************************/
 
-static void m68010_set_info(UINT32 state, union cpuinfo *info)
+static void m68010_set_info(UINT32 state, cpuinfo *info)
 {
 	switch (state)
 	{
@@ -1580,7 +1580,7 @@ static void m68010_set_info(UINT32 state, union cpuinfo *info)
 	}
 }
 
-void m68010asm_get_info(UINT32 state, union cpuinfo *info)
+void m68010asm_get_info(UINT32 state, cpuinfo *info)
 {
 	switch (state)
 	{
@@ -1655,14 +1655,14 @@ void m68010asm_get_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &m68k_ICount;			break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case CPUINFO_STR_NAME:							strcpy(info->s = cpuintrf_temp_str(), "68010"); break;
-		case CPUINFO_STR_CORE_FAMILY:					strcpy(info->s = cpuintrf_temp_str(), "Motorola 68K"); break;
-		case CPUINFO_STR_CORE_VERSION:					strcpy(info->s = cpuintrf_temp_str(), "0.16"); break;
-		case CPUINFO_STR_CORE_FILE:						strcpy(info->s = cpuintrf_temp_str(), __FILE__); break;
-		case CPUINFO_STR_CORE_CREDITS:					strcpy(info->s = cpuintrf_temp_str(), "Copyright 1998,99 Mike Coates, Darren Olafson. All rights reserved"); break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "68010"); break;
+		case CPUINFO_STR_CORE_FAMILY:					strcpy(info->s, "Motorola 68K"); break;
+		case CPUINFO_STR_CORE_VERSION:					strcpy(info->s, "0.16"); break;
+		case CPUINFO_STR_CORE_FILE:						strcpy(info->s, __FILE__); break;
+		case CPUINFO_STR_CORE_CREDITS:					strcpy(info->s, "Copyright 1998,99 Mike Coates, Darren Olafson. All rights reserved"); break;
 
 		case CPUINFO_STR_FLAGS:
-			sprintf(info->s = cpuintrf_temp_str(), "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c",
+			sprintf(info->s, "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c",
 				M68010_regs.sr & 0x8000 ? 'T':'.',
 				M68010_regs.sr & 0x4000 ? '?':'.',
 				M68010_regs.sr & 0x2000 ? 'S':'.',
@@ -1681,29 +1681,29 @@ void m68010asm_get_info(UINT32 state, union cpuinfo *info)
 				M68010_regs.sr & 0x0001 ? 'C':'.');
 			break;
 
-		case CPUINFO_STR_REGISTER + M68K_PC:			sprintf(info->s = cpuintrf_temp_str(), "PC :%06X", M68010_regs.pc); break;
-		case CPUINFO_STR_REGISTER + M68K_ISP:			sprintf(info->s = cpuintrf_temp_str(), "ISP:%08X", M68010_regs.isp); break;
-		case CPUINFO_STR_REGISTER + M68K_USP:			sprintf(info->s = cpuintrf_temp_str(), "USP:%08X", M68010_regs.usp); break;
-		case CPUINFO_STR_REGISTER + M68K_SR:			sprintf(info->s = cpuintrf_temp_str(), "SR :%08X", M68010_regs.sr); break;
-		case CPUINFO_STR_REGISTER + M68K_VBR:			sprintf(info->s = cpuintrf_temp_str(), "VBR:%08X", M68010_regs.vbr); break;
-		case CPUINFO_STR_REGISTER + M68K_SFC:			sprintf(info->s = cpuintrf_temp_str(), "SFC:%08X", M68010_regs.sfc); break;
-		case CPUINFO_STR_REGISTER + M68K_DFC:			sprintf(info->s = cpuintrf_temp_str(), "DFC:%08X", M68010_regs.dfc); break;
-		case CPUINFO_STR_REGISTER + M68K_D0:			sprintf(info->s = cpuintrf_temp_str(), "D0 :%08X", M68010_regs.d[0]); break;
-		case CPUINFO_STR_REGISTER + M68K_D1:			sprintf(info->s = cpuintrf_temp_str(), "D1 :%08X", M68010_regs.d[1]); break;
-		case CPUINFO_STR_REGISTER + M68K_D2:			sprintf(info->s = cpuintrf_temp_str(), "D2 :%08X", M68010_regs.d[2]); break;
-		case CPUINFO_STR_REGISTER + M68K_D3:			sprintf(info->s = cpuintrf_temp_str(), "D3 :%08X", M68010_regs.d[3]); break;
-		case CPUINFO_STR_REGISTER + M68K_D4:			sprintf(info->s = cpuintrf_temp_str(), "D4 :%08X", M68010_regs.d[4]); break;
-		case CPUINFO_STR_REGISTER + M68K_D5:			sprintf(info->s = cpuintrf_temp_str(), "D5 :%08X", M68010_regs.d[5]); break;
-		case CPUINFO_STR_REGISTER + M68K_D6:			sprintf(info->s = cpuintrf_temp_str(), "D6 :%08X", M68010_regs.d[6]); break;
-		case CPUINFO_STR_REGISTER + M68K_D7:			sprintf(info->s = cpuintrf_temp_str(), "D7 :%08X", M68010_regs.d[7]); break;
-		case CPUINFO_STR_REGISTER + M68K_A0:			sprintf(info->s = cpuintrf_temp_str(), "A0 :%08X", M68010_regs.a[0]); break;
-		case CPUINFO_STR_REGISTER + M68K_A1:			sprintf(info->s = cpuintrf_temp_str(), "A1 :%08X", M68010_regs.a[1]); break;
-		case CPUINFO_STR_REGISTER + M68K_A2:			sprintf(info->s = cpuintrf_temp_str(), "A2 :%08X", M68010_regs.a[2]); break;
-		case CPUINFO_STR_REGISTER + M68K_A3:			sprintf(info->s = cpuintrf_temp_str(), "A3 :%08X", M68010_regs.a[3]); break;
-		case CPUINFO_STR_REGISTER + M68K_A4:			sprintf(info->s = cpuintrf_temp_str(), "A4 :%08X", M68010_regs.a[4]); break;
-		case CPUINFO_STR_REGISTER + M68K_A5:			sprintf(info->s = cpuintrf_temp_str(), "A5 :%08X", M68010_regs.a[5]); break;
-		case CPUINFO_STR_REGISTER + M68K_A6:			sprintf(info->s = cpuintrf_temp_str(), "A6 :%08X", M68010_regs.a[6]); break;
-		case CPUINFO_STR_REGISTER + M68K_A7:			sprintf(info->s = cpuintrf_temp_str(), "A7 :%08X", M68010_regs.a[7]); break;
+		case CPUINFO_STR_REGISTER + M68K_PC:			sprintf(info->s, "PC :%06X", M68010_regs.pc); break;
+		case CPUINFO_STR_REGISTER + M68K_ISP:			sprintf(info->s, "ISP:%08X", M68010_regs.isp); break;
+		case CPUINFO_STR_REGISTER + M68K_USP:			sprintf(info->s, "USP:%08X", M68010_regs.usp); break;
+		case CPUINFO_STR_REGISTER + M68K_SR:			sprintf(info->s, "SR :%08X", M68010_regs.sr); break;
+		case CPUINFO_STR_REGISTER + M68K_VBR:			sprintf(info->s, "VBR:%08X", M68010_regs.vbr); break;
+		case CPUINFO_STR_REGISTER + M68K_SFC:			sprintf(info->s, "SFC:%08X", M68010_regs.sfc); break;
+		case CPUINFO_STR_REGISTER + M68K_DFC:			sprintf(info->s, "DFC:%08X", M68010_regs.dfc); break;
+		case CPUINFO_STR_REGISTER + M68K_D0:			sprintf(info->s, "D0 :%08X", M68010_regs.d[0]); break;
+		case CPUINFO_STR_REGISTER + M68K_D1:			sprintf(info->s, "D1 :%08X", M68010_regs.d[1]); break;
+		case CPUINFO_STR_REGISTER + M68K_D2:			sprintf(info->s, "D2 :%08X", M68010_regs.d[2]); break;
+		case CPUINFO_STR_REGISTER + M68K_D3:			sprintf(info->s, "D3 :%08X", M68010_regs.d[3]); break;
+		case CPUINFO_STR_REGISTER + M68K_D4:			sprintf(info->s, "D4 :%08X", M68010_regs.d[4]); break;
+		case CPUINFO_STR_REGISTER + M68K_D5:			sprintf(info->s, "D5 :%08X", M68010_regs.d[5]); break;
+		case CPUINFO_STR_REGISTER + M68K_D6:			sprintf(info->s, "D6 :%08X", M68010_regs.d[6]); break;
+		case CPUINFO_STR_REGISTER + M68K_D7:			sprintf(info->s, "D7 :%08X", M68010_regs.d[7]); break;
+		case CPUINFO_STR_REGISTER + M68K_A0:			sprintf(info->s, "A0 :%08X", M68010_regs.a[0]); break;
+		case CPUINFO_STR_REGISTER + M68K_A1:			sprintf(info->s, "A1 :%08X", M68010_regs.a[1]); break;
+		case CPUINFO_STR_REGISTER + M68K_A2:			sprintf(info->s, "A2 :%08X", M68010_regs.a[2]); break;
+		case CPUINFO_STR_REGISTER + M68K_A3:			sprintf(info->s, "A3 :%08X", M68010_regs.a[3]); break;
+		case CPUINFO_STR_REGISTER + M68K_A4:			sprintf(info->s, "A4 :%08X", M68010_regs.a[4]); break;
+		case CPUINFO_STR_REGISTER + M68K_A5:			sprintf(info->s, "A5 :%08X", M68010_regs.a[5]); break;
+		case CPUINFO_STR_REGISTER + M68K_A6:			sprintf(info->s, "A6 :%08X", M68010_regs.a[6]); break;
+		case CPUINFO_STR_REGISTER + M68K_A7:			sprintf(info->s, "A7 :%08X", M68010_regs.a[7]); break;
 	}
 }
 
@@ -1714,12 +1714,12 @@ void m68010asm_get_info(UINT32 state, union cpuinfo *info)
 
 #ifdef A68K2
 
-#if (HAS_M68020)
+#if HAS_M68020
 /**************************************************************************
  * CPU-specific set_info
  **************************************************************************/
 
-static void m68020_set_info(UINT32 state, union cpuinfo *info)
+static void m68020_set_info(UINT32 state, cpuinfo *info)
 {
 	switch (state)
 	{
@@ -1766,7 +1766,7 @@ static void m68020_set_info(UINT32 state, union cpuinfo *info)
 	}
 }
 
-void m68020asm_get_info(UINT32 state, union cpuinfo *info)
+void m68020asm_get_info(UINT32 state, cpuinfo *info)
 {
 	switch (state)
 	{
@@ -1841,14 +1841,14 @@ void m68020asm_get_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &m68k_ICount;			break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case CPUINFO_STR_NAME:							strcpy(info->s = cpuintrf_temp_str(), "68020"); break;
-		case CPUINFO_STR_CORE_FAMILY:					strcpy(info->s = cpuintrf_temp_str(), "Motorola 68K"); break;
-		case CPUINFO_STR_CORE_VERSION:					strcpy(info->s = cpuintrf_temp_str(), "0.16"); break;
-		case CPUINFO_STR_CORE_FILE:						strcpy(info->s = cpuintrf_temp_str(), __FILE__); break;
-		case CPUINFO_STR_CORE_CREDITS:					strcpy(info->s = cpuintrf_temp_str(), "Copyright 1998,99 Mike Coates, Darren Olafson. All rights reserved"); break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "68020"); break;
+		case CPUINFO_STR_CORE_FAMILY:					strcpy(info->s, "Motorola 68K"); break;
+		case CPUINFO_STR_CORE_VERSION:					strcpy(info->s, "0.16"); break;
+		case CPUINFO_STR_CORE_FILE:						strcpy(info->s, __FILE__); break;
+		case CPUINFO_STR_CORE_CREDITS:					strcpy(info->s, "Copyright 1998,99 Mike Coates, Darren Olafson. All rights reserved"); break;
 
 		case CPUINFO_STR_FLAGS:
-			sprintf(info->s = cpuintrf_temp_str(), "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c",
+			sprintf(info->s, "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c",
 				M68020_regs.sr & 0x8000 ? 'T':'.',
 				M68020_regs.sr & 0x4000 ? '?':'.',
 				M68020_regs.sr & 0x2000 ? 'S':'.',
@@ -1867,29 +1867,29 @@ void m68020asm_get_info(UINT32 state, union cpuinfo *info)
 				M68020_regs.sr & 0x0001 ? 'C':'.');
 			break;
 
-		case CPUINFO_STR_REGISTER + M68K_PC:			sprintf(info->s = cpuintrf_temp_str(), "PC :%06X", M68020_regs.pc); break;
-		case CPUINFO_STR_REGISTER + M68K_ISP:			sprintf(info->s = cpuintrf_temp_str(), "ISP:%08X", M68020_regs.isp); break;
-		case CPUINFO_STR_REGISTER + M68K_USP:			sprintf(info->s = cpuintrf_temp_str(), "USP:%08X", M68020_regs.usp); break;
-		case CPUINFO_STR_REGISTER + M68K_SR:			sprintf(info->s = cpuintrf_temp_str(), "SR :%08X", M68020_regs.sr); break;
-		case CPUINFO_STR_REGISTER + M68K_VBR:			sprintf(info->s = cpuintrf_temp_str(), "VBR:%08X", M68020_regs.vbr); break;
-		case CPUINFO_STR_REGISTER + M68K_SFC:			sprintf(info->s = cpuintrf_temp_str(), "SFC:%08X", M68020_regs.sfc); break;
-		case CPUINFO_STR_REGISTER + M68K_DFC:			sprintf(info->s = cpuintrf_temp_str(), "DFC:%08X", M68020_regs.dfc); break;
-		case CPUINFO_STR_REGISTER + M68K_D0:			sprintf(info->s = cpuintrf_temp_str(), "D0 :%08X", M68020_regs.d[0]); break;
-		case CPUINFO_STR_REGISTER + M68K_D1:			sprintf(info->s = cpuintrf_temp_str(), "D1 :%08X", M68020_regs.d[1]); break;
-		case CPUINFO_STR_REGISTER + M68K_D2:			sprintf(info->s = cpuintrf_temp_str(), "D2 :%08X", M68020_regs.d[2]); break;
-		case CPUINFO_STR_REGISTER + M68K_D3:			sprintf(info->s = cpuintrf_temp_str(), "D3 :%08X", M68020_regs.d[3]); break;
-		case CPUINFO_STR_REGISTER + M68K_D4:			sprintf(info->s = cpuintrf_temp_str(), "D4 :%08X", M68020_regs.d[4]); break;
-		case CPUINFO_STR_REGISTER + M68K_D5:			sprintf(info->s = cpuintrf_temp_str(), "D5 :%08X", M68020_regs.d[5]); break;
-		case CPUINFO_STR_REGISTER + M68K_D6:			sprintf(info->s = cpuintrf_temp_str(), "D6 :%08X", M68020_regs.d[6]); break;
-		case CPUINFO_STR_REGISTER + M68K_D7:			sprintf(info->s = cpuintrf_temp_str(), "D7 :%08X", M68020_regs.d[7]); break;
-		case CPUINFO_STR_REGISTER + M68K_A0:			sprintf(info->s = cpuintrf_temp_str(), "A0 :%08X", M68020_regs.a[0]); break;
-		case CPUINFO_STR_REGISTER + M68K_A1:			sprintf(info->s = cpuintrf_temp_str(), "A1 :%08X", M68020_regs.a[1]); break;
-		case CPUINFO_STR_REGISTER + M68K_A2:			sprintf(info->s = cpuintrf_temp_str(), "A2 :%08X", M68020_regs.a[2]); break;
-		case CPUINFO_STR_REGISTER + M68K_A3:			sprintf(info->s = cpuintrf_temp_str(), "A3 :%08X", M68020_regs.a[3]); break;
-		case CPUINFO_STR_REGISTER + M68K_A4:			sprintf(info->s = cpuintrf_temp_str(), "A4 :%08X", M68020_regs.a[4]); break;
-		case CPUINFO_STR_REGISTER + M68K_A5:			sprintf(info->s = cpuintrf_temp_str(), "A5 :%08X", M68020_regs.a[5]); break;
-		case CPUINFO_STR_REGISTER + M68K_A6:			sprintf(info->s = cpuintrf_temp_str(), "A6 :%08X", M68020_regs.a[6]); break;
-		case CPUINFO_STR_REGISTER + M68K_A7:			sprintf(info->s = cpuintrf_temp_str(), "A7 :%08X", M68020_regs.a[7]); break;
+		case CPUINFO_STR_REGISTER + M68K_PC:			sprintf(info->s, "PC :%06X", M68020_regs.pc); break;
+		case CPUINFO_STR_REGISTER + M68K_ISP:			sprintf(info->s, "ISP:%08X", M68020_regs.isp); break;
+		case CPUINFO_STR_REGISTER + M68K_USP:			sprintf(info->s, "USP:%08X", M68020_regs.usp); break;
+		case CPUINFO_STR_REGISTER + M68K_SR:			sprintf(info->s, "SR :%08X", M68020_regs.sr); break;
+		case CPUINFO_STR_REGISTER + M68K_VBR:			sprintf(info->s, "VBR:%08X", M68020_regs.vbr); break;
+		case CPUINFO_STR_REGISTER + M68K_SFC:			sprintf(info->s, "SFC:%08X", M68020_regs.sfc); break;
+		case CPUINFO_STR_REGISTER + M68K_DFC:			sprintf(info->s, "DFC:%08X", M68020_regs.dfc); break;
+		case CPUINFO_STR_REGISTER + M68K_D0:			sprintf(info->s, "D0 :%08X", M68020_regs.d[0]); break;
+		case CPUINFO_STR_REGISTER + M68K_D1:			sprintf(info->s, "D1 :%08X", M68020_regs.d[1]); break;
+		case CPUINFO_STR_REGISTER + M68K_D2:			sprintf(info->s, "D2 :%08X", M68020_regs.d[2]); break;
+		case CPUINFO_STR_REGISTER + M68K_D3:			sprintf(info->s, "D3 :%08X", M68020_regs.d[3]); break;
+		case CPUINFO_STR_REGISTER + M68K_D4:			sprintf(info->s, "D4 :%08X", M68020_regs.d[4]); break;
+		case CPUINFO_STR_REGISTER + M68K_D5:			sprintf(info->s, "D5 :%08X", M68020_regs.d[5]); break;
+		case CPUINFO_STR_REGISTER + M68K_D6:			sprintf(info->s, "D6 :%08X", M68020_regs.d[6]); break;
+		case CPUINFO_STR_REGISTER + M68K_D7:			sprintf(info->s, "D7 :%08X", M68020_regs.d[7]); break;
+		case CPUINFO_STR_REGISTER + M68K_A0:			sprintf(info->s, "A0 :%08X", M68020_regs.a[0]); break;
+		case CPUINFO_STR_REGISTER + M68K_A1:			sprintf(info->s, "A1 :%08X", M68020_regs.a[1]); break;
+		case CPUINFO_STR_REGISTER + M68K_A2:			sprintf(info->s, "A2 :%08X", M68020_regs.a[2]); break;
+		case CPUINFO_STR_REGISTER + M68K_A3:			sprintf(info->s, "A3 :%08X", M68020_regs.a[3]); break;
+		case CPUINFO_STR_REGISTER + M68K_A4:			sprintf(info->s, "A4 :%08X", M68020_regs.a[4]); break;
+		case CPUINFO_STR_REGISTER + M68K_A5:			sprintf(info->s, "A5 :%08X", M68020_regs.a[5]); break;
+		case CPUINFO_STR_REGISTER + M68K_A6:			sprintf(info->s, "A6 :%08X", M68020_regs.a[6]); break;
+		case CPUINFO_STR_REGISTER + M68K_A7:			sprintf(info->s, "A7 :%08X", M68020_regs.a[7]); break;
 	}
 }
 #endif
@@ -1900,7 +1900,7 @@ void m68020asm_get_info(UINT32 state, union cpuinfo *info)
  * CPU-specific set_info
  **************************************************************************/
 
-void m68ec020asm_get_info(UINT32 state, union cpuinfo *info)
+void m68ec020asm_get_info(UINT32 state, cpuinfo *info)
 {
 	switch (state)
 	{
@@ -1913,7 +1913,7 @@ void m68ec020asm_get_info(UINT32 state, union cpuinfo *info)
 		case CPUINFO_PTR_DISASSEMBLE:					info->disassemble = m68ec020_dasm;		break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case CPUINFO_STR_NAME:							strcpy(info->s = cpuintrf_temp_str(), "68EC020"); break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "68EC020"); break;
 
 		default:
 			m68020asm_get_info(state, info);
@@ -1927,7 +1927,7 @@ void m68ec020asm_get_info(UINT32 state, union cpuinfo *info)
  * CPU-specific set_info
  **************************************************************************/
 
-void m68040asm_get_info(UINT32 state, union cpuinfo *info)
+void m68040asm_get_info(UINT32 state, cpuinfo *info)
 {
 	m68020asm_get_info(state, info);
 }

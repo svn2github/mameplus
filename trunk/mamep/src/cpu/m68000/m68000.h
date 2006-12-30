@@ -73,9 +73,9 @@ extern void m68000_memory_interface_set(int Entry,void * memory_routine);
 #define m68000c_ICount                   m68k_ICount
 
 //ks hcmame s switch m68k core
-void m68000c_get_info(UINT32 state, union cpuinfo *info);
-void m68000drc_get_info(UINT32 state, union cpuinfo *info);
-void m68000asm_get_info(UINT32 state, union cpuinfo *info);
+void m68000c_get_info(UINT32 state, cpuinfo *info);
+void m68000drc_get_info(UINT32 state, cpuinfo *info);
+void m68000asm_get_info(UINT32 state, cpuinfo *info);
 
 /****************************************************************************
  * M68008 section
@@ -94,9 +94,9 @@ void m68000asm_get_info(UINT32 state, union cpuinfo *info);
 #define m68008c_ICount                   m68k_ICount
 
 //ks hcmame s switch m68k core
-void m68008c_get_info(UINT32 state, union cpuinfo *info);
-void m68008drc_get_info(UINT32 state, union cpuinfo *info);
-void m68008asm_get_info(UINT32 state, union cpuinfo *info);
+void m68008c_get_info(UINT32 state, cpuinfo *info);
+void m68008drc_get_info(UINT32 state, cpuinfo *info);
+void m68008asm_get_info(UINT32 state, cpuinfo *info);
 #endif
 
 /****************************************************************************
@@ -116,9 +116,9 @@ void m68008asm_get_info(UINT32 state, union cpuinfo *info);
 #define m68010c_ICount                   m68k_ICount
 
 //ks hcmame s switch m68k core
-void m68010c_get_info(UINT32 state, union cpuinfo *info);
-void m68010drc_get_info(UINT32 state, union cpuinfo *info);
-void m68010asm_get_info(UINT32 state, union cpuinfo *info);
+void m68010c_get_info(UINT32 state, cpuinfo *info);
+void m68010drc_get_info(UINT32 state, cpuinfo *info);
+void m68010asm_get_info(UINT32 state, cpuinfo *info);
 #endif
 
 /****************************************************************************
@@ -138,9 +138,9 @@ void m68010asm_get_info(UINT32 state, union cpuinfo *info);
 #define m68ec020c_ICount                 m68k_ICount
 
 //ks hcmame s switch m68k core
-void m68ec020c_get_info(UINT32 state, union cpuinfo *info);
-void m68ec020drc_get_info(UINT32 state, union cpuinfo *info);
-void m68ec020asm_get_info(UINT32 state, union cpuinfo *info);
+void m68ec020c_get_info(UINT32 state, cpuinfo *info);
+void m68ec020drc_get_info(UINT32 state, cpuinfo *info);
+void m68ec020asm_get_info(UINT32 state, cpuinfo *info);
 #endif
 
 /****************************************************************************
@@ -160,9 +160,9 @@ void m68ec020asm_get_info(UINT32 state, union cpuinfo *info);
 #define m68020c_ICount                   m68k_ICount
 
 //ks hcmame s switch m68k core
-void m68020c_get_info(UINT32 state, union cpuinfo *info);
-void m68020drc_get_info(UINT32 state, union cpuinfo *info);
-void m68020asm_get_info(UINT32 state, union cpuinfo *info);
+void m68020c_get_info(UINT32 state, cpuinfo *info);
+void m68020drc_get_info(UINT32 state, cpuinfo *info);
+void m68020asm_get_info(UINT32 state, cpuinfo *info);
 #endif
 
 /****************************************************************************
@@ -179,7 +179,7 @@ void m68020asm_get_info(UINT32 state, union cpuinfo *info);
 #define MC68040_INT_ACK_AUTOVECTOR		MC68000_INT_ACK_AUTOVECTOR
 #define MC68040_INT_ACK_SPURIOUS		MC68000_INT_ACK_SPURIOUS
 
-void m68040_get_info(UINT32 state, union cpuinfo *info);
+void m68040_get_info(UINT32 state, cpuinfo *info);
 #endif
 
 // C Core header
