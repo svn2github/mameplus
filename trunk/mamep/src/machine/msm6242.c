@@ -11,6 +11,9 @@ READ8_HANDLER( msm6242_r )
 {
 	mame_system_time systime;
 
+	if (Machine->record_file != NULL || Machine->playback_file != NULL)
+		return 0;
+
 	mame_get_current_datetime(Machine, &systime);
 
 	switch(offset)
