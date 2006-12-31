@@ -2,7 +2,7 @@
 #                                        #
 #     Mameinfo.dat日本語版 v0.111u1      #
 #                                        #
-#           December 28, 2006            #
+#           December 31, 2006            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,10 +12,37 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：808 翻訳済：794
-# 追加項目：327 合計：1135
+# Tester報告：812 翻訳済：799
+# 追加項目：327 合計：1139
 #
 
+
+$info=airattck
+$mame
+[バグ]
+
+- 1面の戦車、3面の背景とのプライオリティ不具合あり。 airattck0111u1gre, robiza
+
+$end
+
+$info=raphero
+$mame
+[バグ]
+
+- 3面などでプライオリティ不具合あり。 raphero0111u1gre, robiza
+
+$end
+
+$info=tourtabl
+$mame
+[バグ]
+
+- OK画面の直後に以下のエラーでクラッシュする:
+
+
+Fatal error: Can only call add_reset_callback at init time! (src/mame.c:429) tourtabl0111u1red, Firewave
+
+$end
 
 $info=invadpt2
 $mame
@@ -608,18 +635,6 @@ $mame
 [バグ]
 
 - 音が割れる。特に面の終わりの音など。 spf2t060gre, asmodius / Smitdogg
-
-$end
-
-$info=ssf2xj
-$mame
-[バグ]
-
-- ランダムにクラッシュする。 ssf2xj0108u3red, ooo98 / Haze
-
-
-- ごく稀に画面全体が化けることがある。一回のプレイで一回起こるくらいで、1フレームが完全に化ける。
-実機でも起こるかどうかは不明だが、SSF2Tの実機では起きていないと思う。 ssf2xj067gre, Smitdogg
 
 $end
 
@@ -3249,6 +3264,14 @@ $mame
 
 $end
 
+$info=orunners
+$mame
+[バグ]
+
+- テストモードでの設定が保存されない。 orunners0105u4gre, Scuore / robiza
+
+$end
+
 $info=hangonjr
 $mame
 [バグ]
@@ -4529,7 +4552,7 @@ $info=troangel
 $mame
 [バグ]
 
-- タイトル画面の黒い四角は実機では表示されない。 troangel0111gre, Kold666 / Stefan Lindberg
+- タイトル画面の黒い四角は実機では表示されない。 troangel0111gre, Kold666 / Stefan Lindberg / robiza
 
 $end
 
@@ -5887,6 +5910,15 @@ $mame
 [TIPS]
 
 - 合計で1997クレジット以上投入されるとタイトル画面左側に女の子と犬が表示され、各ゲームにスペシャルチームが一つずつ追加される。
+
+$end
+
+$info=ssf2xj
+$mame
+[バグ]
+
+- ごく稀に画面全体が化けることがある。一回のプレイで一回起こるくらいで、1フレームが完全に化ける。
+実機でも起こるかどうかは不明だが、SSF2Tの実機では起きていないと思う。 ssf2xj067gre, Smitdogg
 
 $end
 
