@@ -1376,7 +1376,7 @@ Game Story
 
 # inptport.c: 433
 Game Time
-ゲームタイプ
+ゲーム時間
 
 # uitext.c: 57
 Gamma
