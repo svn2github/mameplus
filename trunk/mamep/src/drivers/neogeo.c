@@ -6349,20 +6349,21 @@ ROM_END
 
 ROM_START( frogfest )
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )
-	ROM_LOAD16_WORD_SWAP( "frog-p1.rom", 0x000000, 0x80000, CRC(db0417ec) SHA1(dff85b47749142b3e965b2a9b5b8857096e58464) )
+	ROM_LOAD16_WORD_SWAP( "frog_p1.rom", 0x000000, 0x80000, CRC(c26848da) SHA1(33737f8d2366b3a554ceb9ea2fcd85aaed75f344) )
 
-	NEO_SFIX_64K( "frog-s1.rom", CRC(29814a2c) SHA1(a7313fa1280a2a2340b1c8a0d522354d82496a68) )
+	NEO_SFIX_128K( "frog_s1.rom", CRC(88f4cd13) SHA1(7f3b28c903ecf90478f2dcddf790714d7363aa2b) )
 
-	NEO_BIOS_SOUND_64K( "nnp-m1.rom", CRC(7669de64) SHA1(caa170b561df4f68000beaad41d942c66a4a10ee) )
+	NEO_BIOS_SOUND_128K( "frog_m1.rom", CRC(c825b484) SHA1(7dea872ae39ef83981436aaf3c9b602ac8bec676) )
 
-	ROM_REGION( 0x080000, REGION_SOUND1, 0 )
-	ROM_LOAD( "nnp-v1.rom", 0x000000, 0x080000, CRC(504bf849) SHA1(13a184ec9e176371808938015111f8918cb4df7d) )
+	ROM_REGION( 0x200000, REGION_SOUND1, 0 )
+	ROM_LOAD( "frog_v1.rom", 0x000000, 0x100000, CRC(2639da11) SHA1(4309e46014d623066d427ce3473542c99f678f86) )
+	ROM_LOAD( "frog_v2.rom", 0x100000, 0x100000, CRC(e5eda58b) SHA1(ae203cfedf4b563da914939e0a4d7f4697070f82) )
 
 	NO_DELTAT_REGION
 
-	ROM_REGION( 0x200000, REGION_GFX3, 0 )
-	ROM_LOAD16_BYTE( "frog-c1.rom", 0x000000, 0x100000, CRC(22a65cea) SHA1(3fb8cb92cd8d40c2b24e2b54833fde4c7dc255a4) )
-	ROM_LOAD16_BYTE( "frog-c2.rom", 0x000001, 0x100000, CRC(63ddd657) SHA1(41fb6fdd66fcdf5fce42eb01c8a3e00e632f6347) )
+	ROM_REGION( 0x400000, REGION_GFX3, 0 )
+	ROM_LOAD16_BYTE( "frog_c1.rom", 0x000000, 0x100000, CRC(7b2f9fb3) SHA1(62deacf16c3b259422f962c9604b4efc2f32d91b) )
+	ROM_LOAD16_BYTE( "frog_c2.rom", 0x000001, 0x100000, CRC(a7f18a6f) SHA1(1a277c79eaacf09d12a4b7c88421e7a6d6153503) )
 ROM_END
 
 ROM_START( kof2001 )
@@ -10121,7 +10122,7 @@ GAMEB( 2002, neonopon, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Blast
 GAMEB( 2002, neopong,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Neodev", "Neo Pong (v1.1)", 0 )
 GAMEB( 2002, npong10,  neopong,  neogeo, neogeo, neogeo,  neogeo,   ROT0, "Neodev", "Neo Pong (v1.0)", 0 )
 GAMEB( 200?, syscheck, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Blastar", "Neo System Check (ver 1.0b)", 0 )
-GAMEB( 200?, frogfest, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Rastersoft", "Frog Feast", GAME_NO_SOUND )
+GAMEB( 2006, frogfest, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Rastersoft", "Frog Feast", 0 )
 GAMEB( 2005, ltorb1,   neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Blastar", "Jonas Indiana and the Lost Temple of RA (20050717)" , 0 )
 GAMEB( 2002, neodemo,  neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Chaos", "Neo-Demo", 0 )
 GAMEB( 1995, fr2ch,    neogeo,   neogeo, neogeo, neogeo,  fr2ch,    ROT0, "hack",   "Idol Mahjong - final romance 2 (CD to MVS Conversion)", 0 )
