@@ -9399,7 +9399,6 @@ static void HandleLocalCommandCheat(UINT32 type, UINT32 address, UINT32 data, UI
 				/* ----- refresh rate ----- */
 				case kCustomLocation_RefreshRate:
 				{
-					screen_state	*state = &Machine->screen[0];
 					double			refresh = data;
 
 					refresh /= 65536.0;
