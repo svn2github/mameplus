@@ -9250,7 +9250,6 @@ DRIVER_INIT( svcplus )
 {
 	svcplus_px_decrypt();
 	svcboot_cx_decrypt();
-//  svcplus_sx_decrypt();
 	neogeo_bootleg_sx_decrypt(1);
 	svcplus_px_hack();
 	init_neogeo(machine);
@@ -9267,7 +9266,6 @@ DRIVER_INIT( svcplusa )
 DRIVER_INIT( svcsplus )
 {
 	svcsplus_px_decrypt();
-//  svcsplus_sx_decrypt();
 	neogeo_bootleg_sx_decrypt(2);
 	svcboot_cx_decrypt();
 	svcsplus_px_hack();
@@ -9321,7 +9319,6 @@ DRIVER_INIT( kof2003 )
 
 DRIVER_INIT( kof2003b )
 {
-//  kof2003b_sx_decrypt();
 	neogeo_bootleg_sx_decrypt(1);
     init_neogeo(machine);
 	kof2003b_install_protection();
@@ -9330,7 +9327,6 @@ DRIVER_INIT( kof2003b )
 DRIVER_INIT( kof2k3pl )
 {
 	kof2k3pl_px_decrypt();
-	//decrypt_ms5plus_s1();
     neogeo_bootleg_sx_decrypt(1);
 	init_neogeo(machine);
 	kf2k3pl_install_protection();
@@ -9393,8 +9389,8 @@ DRIVER_INIT( matrimd )
 	neogeo_sfix_decrypt();
 	neogeo_fix_bank_type = 2;
 	neo_pcm2_swap(1);
-	init_neogeo(machine);
 	matrim_AES_protection();
+	init_neogeo(machine);
 }
 
 READ16_HANDLER( brza_sram16_2_r )
@@ -9448,8 +9444,8 @@ DRIVER_INIT( kog )
 DRIVER_INIT( kof10th )
 {
 	decrypt_kof10th();
-	init_neogeo(machine);
 	install_kof10th_protection();
+	init_neogeo(machine);
 }
 
 DRIVER_INIT( kf10thep )
@@ -9468,25 +9464,25 @@ DRIVER_INIT( kf2k5uni )
 DRIVER_INIT( cthd2003 )
 {
 	decrypt_cthd2003();
- 	init_neogeo(machine);
 	patch_cthd2003();
 	cthd2003_AES_protection();
+ 	init_neogeo(machine);
 }
 
 DRIVER_INIT( cthd2k3a )
 {
 	cthd2k3a_px_decrypt();
 	decrypt_cthd2003();
- 	init_neogeo(machine);
 	cthd2003_AES_protection();
+ 	init_neogeo(machine);
 }
 
 DRIVER_INIT ( ct2k3sp )
 {
 	decrypt_ct2k3sp();
-	init_neogeo(machine);
 	patch_cthd2003();
 	cthd2003_AES_protection();
+	init_neogeo(machine);
 }
 
 DRIVER_INIT( kof2k4se )
@@ -9514,8 +9510,8 @@ DRIVER_INIT( mslug3b6 )
 DRIVER_INIT( matrimbl )
 {
 	decrypt_matrimbl();
-	init_neogeo(machine);
 	matrim_AES_protection();
+	init_neogeo(machine);
 }
 
 DRIVER_INIT( kf2k2plc )
@@ -9551,13 +9547,13 @@ DRIVER_INIT( kf2k4pls )
 	init_neogeo(machine);
 }
 /* new decrypted */
-DRIVER_INIT( kof2003d ) // decrypted C
+DRIVER_INIT( kof2003d ) // decrypted C & decrypted P
 {
 	neo_pcm2_swap(5);
 	init_gfxdec50(machine);
 }
 
-DRIVER_INIT( kf2k3pcd ) // decrypted C
+DRIVER_INIT( kf2k3pcd ) // decrypted C & decrypted Bios
 {
 	kf2k3pcb_decrypt_68k();
 	kf2k3pcb_decrypt_s1data();
@@ -9570,20 +9566,20 @@ DRIVER_INIT( kf2k3pcd ) // decrypted C
 	memory_install_read16_handler( 0, ADDRESS_SPACE_PROGRAM, 0xc00000, 0xc7ffff, 0, 0, MRA16_BANK3 ); /* 512k bios */
 }
 
-DRIVER_INIT( mslug5d )
+DRIVER_INIT( mslug5d ) // decrypted C & decrypted P
 {
 	neo_pcm2_swap(2);
-	init_gfxdec42(machine);
 	mslug5_AES_protection();
+	init_gfxdec42(machine);
 }
 
-DRIVER_INIT( kof10thd )
+DRIVER_INIT( kof10thd ) // decrypted P
 {
 	neo_pcm2_swap(0);
 	init_neogeo(machine);
 }
 
-DRIVER_INIT( svcd )
+DRIVER_INIT( svcd ) // decrypted C
 {
 	svcchaos_px_decrypt();
 	neo_pcm2_swap(3);
@@ -9607,19 +9603,19 @@ DRIVER_INIT( kof97pla )
 DRIVER_INIT( pnyaad ) // decrypted C
 {
 	neo_pcm2_snk_1999(4);
-
 	neogeo_fix_bank_type = 1;
 	neogeo_sfix_decrypt();
+	init_gfxdec42(machine);
 }
 
-DRIVER_INIT( samsho5d )
+DRIVER_INIT( samsho5d ) // decrypted C
 {
 	samsho5_decrypt_68k();
 	neo_pcm2_swap(4);
 	init_gfxdec42(machine);
 }
 
-DRIVER_INIT( samsh5sd )
+DRIVER_INIT( samsh5sd ) // decrypted C
 {
 	samsh5p_decrypt_68k();
 	neo_pcm2_swap(6);
