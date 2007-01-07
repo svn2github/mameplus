@@ -642,19 +642,22 @@ int mame_fgetc(mame_file *file)
 			case TFT_UTF8:
 				readlen = mame_fread(file, utf8_buffer, sizeof(utf8_buffer));
 				charlen = uchar_from_utf8(&uchar, utf8_buffer, readlen / sizeof(utf8_buffer[0]));
-				mame_fseek(file, (charlen * sizeof(utf8_buffer[0])) - readlen, SEEK_CUR);
+				//mame_fseek(file, (charlen * sizeof(utf8_buffer[0])) - readlen, SEEK_CUR);
+				file->offset -= (readlen  - (charlen * sizeof(utf8_buffer[0])));
 				break;
 
 			case TFT_UTF16BE:
 				readlen = mame_fread(file, utf16_buffer, sizeof(utf16_buffer));
 				charlen = uchar_from_utf16be(&uchar, utf16_buffer, readlen / sizeof(utf16_buffer[0]));
-				mame_fseek(file, (charlen * sizeof(utf16_buffer[0])) - readlen, SEEK_CUR);
+				//mame_fseek(file, (charlen * sizeof(utf16_buffer[0])) - readlen, SEEK_CUR);
+				file->offset -= (readlen  - (charlen * sizeof(utf16_buffer[0])));
 				break;
 
 			case TFT_UTF16LE:
 				readlen = mame_fread(file, utf16_buffer, sizeof(utf16_buffer));
 				charlen = uchar_from_utf16le(&uchar, utf16_buffer, readlen / sizeof(utf16_buffer[0]));
-				mame_fseek(file, (charlen * sizeof(utf16_buffer[0])) - readlen, SEEK_CUR);
+				//mame_fseek(file, (charlen * sizeof(utf16_buffer[0])) - readlen, SEEK_CUR);
+				file->offset -= (readlen  - (charlen * sizeof(utf16_buffer[0])));
 				break;
 
 			case TFT_UTF32BE:
