@@ -630,12 +630,16 @@ int options_output_command_line_marked(char *buf)
 
 static const char *translate_description(const options_data *data)
 {
+#if 0
 	const char *desc = _(data->description);
 
 	if (strcmp(data->description, desc) == 0)
 		return lang_message(UI_MSG_OSD0, desc);
 
 	return desc;
+#else
+	return data->description;
+#endif
 }
 
 /*-------------------------------------------------
