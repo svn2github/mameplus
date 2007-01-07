@@ -11,6 +11,6 @@
 #ifndef DONT_USE_DLL
 int main(int argc, char *argv[])
 {
-	return main_(argc, argv);
+	return utf8_main(argc, argv);
 }
 #endif /* !DONT_USE_DLL */

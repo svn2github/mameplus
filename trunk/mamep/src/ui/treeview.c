@@ -1457,12 +1457,12 @@ void CreateControlFolders(int parent_index)
 		int p = 0;
 		int w = 0;
 
-		if (!drivers[i]->construct_ipt)
+		if (!drivers[i]->ipt)
 			continue;
 
 		begin_resource_tracking();
 
-		input = input_port_allocate(drivers[i]->construct_ipt, NULL);
+		input = input_port_allocate(drivers[i]->ipt, NULL);
 
 		while (input->type != IPT_END)
 		{

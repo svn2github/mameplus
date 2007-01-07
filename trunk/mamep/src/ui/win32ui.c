@@ -1160,7 +1160,7 @@ int WinMain_(HINSTANCE    hInstance,
 	{
 		/* Rename main because gcc will use it instead of WinMain even with -mwindows */
 //		extern int DECL_SPEC main_(int, char**);
-		exit(main_(__argc, __argv));
+		exit(utf8_main(__argc, __argv));
 	}
 	if (!Win32UI_init(hInstance, lpCmdLine, nCmdShow))
 		return 1;

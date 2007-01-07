@@ -817,7 +817,7 @@ static LPWSTR GameInfoInput(int nIndex)
 
 	begin_resource_tracking();
 
-	input = input_port_allocate(drivers[nIndex]->construct_ipt, NULL);
+	input = input_port_allocate(drivers[nIndex]->ipt, NULL);
 
 	while (input->type != IPT_END)
 	{

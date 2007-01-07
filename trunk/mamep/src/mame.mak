@@ -156,6 +156,20 @@ CPUS += CDP1802
 CPUS += COP420
 CPUS += COP410
 CPUS += TLCS90
+# CPUS += APEXC
+# CPUS += CP1610
+# CPUS += F8
+# CPUS += LH5801
+# CPUS += PDP1
+# CPUS += SATURN
+# CPUS += SC61860
+# CPUS += TX0_64KW
+# CPUS += TX0_8KW
+# CPUS += Z80GB
+# CPUS += TMS7000
+# CPUS += TMS7000_EXL
+# CPUS += SM8500
+# CPUS += V30MZ
 
 
 #-------------------------------------------------
@@ -881,6 +895,7 @@ $(OBJ)/meadows.a: \
 $(OBJ)/merit.a: \
 	$(OBJ)/drivers/couple.o \
 	$(OBJ)/drivers/merit.o \
+	$(OBJ)/drivers/meritm.o \
 
 $(OBJ)/metro.a: \
 	$(OBJ)/drivers/hyprduel.o $(OBJ)/vidhrdw/hyprduel.o \
@@ -912,6 +927,7 @@ $(OBJ)/midway.a: \
 	$(OBJ)/drivers/midzeus.o \
 	$(OBJ)/drivers/omegrace.o \
 	$(OBJ)/drivers/seattle.o \
+	$(OBJ)/drivers/tmaster.o \
 	$(OBJ)/drivers/vegas.o \
 	$(OBJ)/drivers/williams.o $(OBJ)/machine/williams.o $(OBJ)/sndhrdw/williams.o $(OBJ)/vidhrdw/williams.o \
 	$(OBJ)/machine/midwayic.o \
@@ -1293,7 +1309,7 @@ $(OBJ)/taito.a: \
 	$(OBJ)/drivers/taito_x.o $(OBJ)/machine/cchip.o \
 	$(OBJ)/drivers/taito_z.o $(OBJ)/vidhrdw/taito_z.o \
 	$(OBJ)/drivers/taitoair.o $(OBJ)/vidhrdw/taitoair.o \
-	$(OBJ)/drivers/taitojc.o \
+	$(OBJ)/drivers/taitojc.o $(OBJ)/vidhrdw/taitojc.o \
 	$(OBJ)/drivers/taitosj.o $(OBJ)/machine/taitosj.o $(OBJ)/vidhrdw/taitosj.o \
 	$(OBJ)/drivers/taitowlf.o \
 	$(OBJ)/drivers/tnzs.o $(OBJ)/machine/tnzs.o $(OBJ)/vidhrdw/tnzs.o \
@@ -1454,6 +1470,7 @@ $(OBJ)/misc.a: \
 	$(OBJ)/drivers/monaco.o $(OBJ)/vidhrdw/monaco.o \
 	$(OBJ)/drivers/1945kiii.o \
 	$(OBJ)/drivers/4enraya.o $(OBJ)/vidhrdw/4enraya.o \
+	$(OBJ)/drivers/adp.o \
 	$(OBJ)/drivers/afega.o $(OBJ)/vidhrdw/afega.o \
 	$(OBJ)/drivers/ambush.o $(OBJ)/vidhrdw/ambush.o \
 	$(OBJ)/drivers/ampoker.o \
@@ -1511,6 +1528,7 @@ $(OBJ)/misc.a: \
 	$(OBJ)/drivers/micro3d.o $(OBJ)/vidhrdw/micro3d.o \
 	$(OBJ)/drivers/midas.o \
 	$(OBJ)/drivers/mirax.o \
+	$(OBJ)/drivers/mjsiyoub.o \
 	$(OBJ)/drivers/mole.o $(OBJ)/vidhrdw/mole.o \
 	$(OBJ)/drivers/monzagp.o \
 	$(OBJ)/drivers/mosaic.o $(OBJ)/vidhrdw/mosaic.o \

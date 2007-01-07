@@ -2,7 +2,7 @@
 //
 //  input.c - Win32 implementation of MAME input routines
 //
-//  Copyright (c) 1996-2006, Nicola Salmoria and the MAME Team.
+//  Copyright (c) 1996-2007, Nicola Salmoria and the MAME Team.
 //  Visit http://mamedev.org for licensing and usage restrictions.
 //
 //============================================================
@@ -35,6 +35,7 @@
 #include "debugwin.h"
 #include "video.h"
 #include "ui.h"
+#include "strconv.h"
 
 
 //============================================================
@@ -1026,6 +1027,7 @@ static BOOL CALLBACK enum_mouse_callback(LPCDIDEVICEINSTANCE instance, LPVOID re
 {
 	DIPROPDWORD value;
 	HRESULT result;
+	char *utf8_instance_name;
 
 	// if we're not out of mice, log this one
 	if (mouse_count > MAX_MICE)
@@ -1042,7 +1044,9 @@ static BOOL CALLBACK enum_mouse_callback(LPCDIDEVICEINSTANCE instance, LPVOID re
 		mouse_device2[mouse_count] = NULL;
 
 	// remember the name
-	strcpy(mouse_name[mouse_count], instance->tszInstanceName);
+	utf8_instance_name = utf8_from_tstring(instance->tszInstanceName);
+	strcpy(mouse_name[mouse_count], utf8_instance_name);
+	free(utf8_instance_name);
 
 	// get the caps
 	mouse_caps[mouse_count].dwSize = STRUCTSIZE(DIDEVCAPS);
@@ -1154,6 +1158,7 @@ static BOOL CALLBACK enum_joystick_callback(LPCDIDEVICEINSTANCE instance, LPVOID
 	DIPROPDWORD value;
 	HRESULT result = DI_OK;
 	DWORD flags;
+	char *utf8_instance_name;
 
 	// if we're not out of mice, log this one
 	if (joystick_count >= MAX_JOYSTICKS)
@@ -1170,7 +1175,9 @@ static BOOL CALLBACK enum_joystick_callback(LPCDIDEVICEINSTANCE instance, LPVOID
 		joystick_device2[joystick_count] = NULL;
 
 	// remember the name
-	strcpy(joystick_name[joystick_count], instance->tszInstanceName);
+	utf8_instance_name = utf8_from_tstring(instance->tszInstanceName);
+	strcpy(joystick_name[joystick_count], utf8_instance_name);
+	free(utf8_instance_name);
 
 	// get the caps
 	joystick_caps[joystick_count].dwSize = STRUCTSIZE(DIDEVCAPS);
@@ -1260,7 +1267,7 @@ int wininput_init(running_machine *machine)
 	if (Machine != NULL && Machine->gamedrv != NULL)
 	{
 		begin_resource_tracking();
-		inp = input_port_allocate(Machine->gamedrv->construct_ipt, NULL);
+		inp = input_port_allocate(Machine->gamedrv->ipt, NULL);
 		autoselect_analog_devices(inp, IPT_PADDLE,     IPT_PADDLE_V,   0,             ANALOG_TYPE_PADDLE,   _WINDOWS("paddle"));
 		autoselect_analog_devices(inp, IPT_AD_STICK_X, IPT_AD_STICK_Y, IPT_AD_STICK_Z,ANALOG_TYPE_ADSTICK,  _WINDOWS("analog joystick"));
 		autoselect_analog_devices(inp, IPT_LIGHTGUN_X, IPT_LIGHTGUN_Y, 0,             ANALOG_TYPE_LIGHTGUN, _WINDOWS("lightgun"));
@@ -1854,7 +1861,7 @@ static void init_keycodes(void)
 			// if it worked, assume we have a valid key
 
 			// copy the name
-			char *namecopy = malloc(strlen(instance.tszName) + 1);
+			char *namecopy = utf8_from_tstring(instance.tszName);
 			if (namecopy)
 			{
 				input_code standardcode;
@@ -1885,7 +1892,7 @@ static void init_keycodes(void)
 				}
 
 				// fill in the key description
-				codelist[total_codes].name = strcpy(namecopy, instance.tszName);
+				codelist[total_codes].name = namecopy;
 				codelist[total_codes].oscode = code;
 				codelist[total_codes].inputcode = standardcode;
 				total_codes++;
@@ -2104,7 +2111,9 @@ static void init_joycodes(void)
 #endif /* USE_JOY_MOUSE_MOVE */
 				if (result == DI_OK)
 				{
-					sprintf(tempname, "%s %s", mousename, instance.tszName);
+					char *utf8_name = utf8_from_tstring(instance.tszName);
+					sprintf(tempname, "%s%s", mousename, utf8_name);
+					free(utf8_name);
 					add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSEBUTTON, button), CODE_OTHER_DIGITAL);
 				}
 #ifdef USE_JOY_MOUSE_MOVE
@@ -2153,21 +2162,22 @@ static void init_joycodes(void)
 			result = IDirectInputDevice_GetObjectInfo(joystick_device[stick], &instance, offsetof(DIJOYSTATE, lX) + axis * sizeof(LONG), DIPH_BYOFFSET);
 			if (result == DI_OK)
 			{
-				verbose_printf(_WINDOWS("Input:  Axis %d (%s)%s\n"), axis, instance.tszName, joystick_digital[stick][axis] ? " - digital" : "");
+				char *utf8_name = utf8_from_tstring(instance.tszName);
+				verbose_printf(_WINDOWS("Input:  Axis %d (%s)%s\n"), axis, utf8_name, joystick_digital[stick][axis] ? " - digital" : "");
 
 				// add analog axis
 				if (!joystick_digital[stick][axis])
 				{
-					sprintf(tempname, _WINDOWS("J%d %s"), stick + 1, instance.tszName);
+					sprintf(tempname, _WINDOWS("J%d %s"), stick + 1, utf8_name);
 					add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_JOYAXIS, axis), CODE_OTHER_ANALOG_ABSOLUTE);
 				}
 
 				// add negative value
-				sprintf(tempname, _WINDOWS("J%d %s -"), stick + 1, instance.tszName);
+				sprintf(tempname, _WINDOWS("J%d %s -"), stick + 1, utf8_name);
 				add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_AXIS_NEG, axis), CODE_OTHER_DIGITAL);
 
 				// add positive value
-				sprintf(tempname, _WINDOWS("J%d %s +"), stick + 1, instance.tszName);
+				sprintf(tempname, _WINDOWS("J%d %s +"), stick + 1, utf8_name);
 				add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_AXIS_POS, axis), CODE_OTHER_DIGITAL);
 
 				// get the axis range while we're here
@@ -2176,6 +2186,7 @@ static void init_joycodes(void)
 				joystick_range[stick][axis].diph.dwObj = offsetof(DIJOYSTATE, lX) + axis * sizeof(LONG);
 				joystick_range[stick][axis].diph.dwHow = DIPH_BYOFFSET;
 				result = IDirectInputDevice_GetProperty(joystick_device[stick], DIPROP_RANGE, &joystick_range[stick][axis].diph);
+				free(utf8_name);
 			}
 		}
 
@@ -2191,7 +2202,9 @@ static void init_joycodes(void)
 			if (result == DI_OK)
 			{
 				// make the name for this item
-				sprintf(tempname, _WINDOWS("J%d %s"), stick + 1, instance.tszName);
+				char *utf8_name = utf8_from_tstring(instance.tszName);
+				sprintf(tempname, _WINDOWS("J%d %s"), stick + 1, utf8_name);
+				free(utf8_name);
 				add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_BUTTON, button), CODE_OTHER_DIGITAL);
 			}
 		}
@@ -2207,21 +2220,25 @@ static void init_joycodes(void)
 			result = IDirectInputDevice_GetObjectInfo(joystick_device[stick], &instance, offsetof(DIJOYSTATE, rgdwPOV[pov]), DIPH_BYOFFSET);
 			if (result == DI_OK)
 			{
+				char *utf8_name = utf8_from_tstring(instance.tszName);
+
 				// add up direction
-				sprintf(tempname, _WINDOWS("J%d %s U"), stick + 1, instance.tszName);
+				sprintf(tempname, _WINDOWS("J%d %s U"), stick + 1, utf8_name);
 				add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_POV_UP, pov), CODE_OTHER_DIGITAL);
 
 				// add down direction
-				sprintf(tempname, _WINDOWS("J%d %s D"), stick + 1, instance.tszName);
+				sprintf(tempname, _WINDOWS("J%d %s D"), stick + 1, utf8_name);
 				add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_POV_DOWN, pov), CODE_OTHER_DIGITAL);
 
 				// add left direction
-				sprintf(tempname, _WINDOWS("J%d %s L"), stick + 1, instance.tszName);
+				sprintf(tempname, _WINDOWS("J%d %s L"), stick + 1, utf8_name);
 				add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_POV_LEFT, pov), CODE_OTHER_DIGITAL);
 
 				// add right direction
-				sprintf(tempname, _WINDOWS("J%d %s R"), stick + 1, instance.tszName);
+				sprintf(tempname, _WINDOWS("J%d %s R"), stick + 1, utf8_name);
 				add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_POV_RIGHT, pov), CODE_OTHER_DIGITAL);
+
+				free(utf8_name);
 			}
 		}
 	}

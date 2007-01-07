@@ -4,7 +4,7 @@
 
     MAME cheat system.
 
-    Copyright (c) 1996-2006, Nicola Salmoria and the MAME Team.
+    Copyright (c) 1996-2007, Nicola Salmoria and the MAME Team.
     Visit http://mamedev.org for licensing and usage restrictions.
 
 *********************************************************************/
@@ -1161,7 +1161,7 @@ static void old_style_menu(const char **items, const char **subitems, char *flag
 				item_list[menu_items].flags |= MENU_FLAG_RIGHT_ARROW;
 		}
 	}
-	ui_menu_draw(item_list, menu_items, selected);
+	ui_menu_draw(item_list, menu_items, selected, NULL);
 }
 
 /*-------------------------------------------------
@@ -1253,7 +1253,7 @@ static char * DoDynamicEditTextField(char * buf)
 		/* ----- backspace ----- */
 		if(buf)
 		{
-			UINT32	length = strlen(buf);
+			size_t	length = strlen(buf);
 
 			if(length > 0)
 			{
@@ -1276,7 +1276,7 @@ static char * DoDynamicEditTextField(char * buf)
 		{
 			if(buf)
 			{
-				UINT32	length = strlen(buf);
+				size_t	length = strlen(buf);
 
 				buf = realloc(buf, length + 2);
 
@@ -1303,7 +1303,7 @@ static char * DoDynamicEditTextField(char * buf)
 static void DoStaticEditTextField(char * buf, int size)
 {
 	char	code = osd_readkey_unicode(0) & 0xFF;
-	UINT32	length;
+	size_t	length;
 
 	if(!buf)
 		return;
@@ -1702,7 +1702,7 @@ UINT32 cheat_menu(UINT32 state)
 		sel = total - 1;
 
 	/* ----- print it ----- */
-	ui_menu_draw(menu_item, total, sel);
+	ui_menu_draw(menu_item, total, sel, NULL);
 
 	/********** KEY HANDLING **********/
 	if(UIPressedRepeatThrottle(IPT_UI_DOWN, kVerticalKeyRepeatRate))
@@ -1950,7 +1950,7 @@ static char * CreateStringCopy(char * buf)
 
 	if(buf)
 	{
-		UINT32	length = strlen(buf) + 1;
+		size_t	length = strlen(buf) + 1;
 
 		temp = malloc(length);
 
@@ -8571,7 +8571,7 @@ static void SetupCheatFromWatchAsWatch(CheatEntry * entry, WatchInfo * watch)
 	{
 		CheatAction	* action;
 		char		tempString[1024];
-		int			tempStringLength;
+		size_t		tempStringLength;
 
 		DisposeCheat(entry);
 		ResizeCheatActionList(entry, 1);
@@ -9813,7 +9813,7 @@ static void SaveCheat(CheatEntry * entry, int selection, int saveCode)
 				bufTraverse += sprintf(bufTraverse, "\n");
 
 				/* ----- write the normal cheat code ----- */
-				mame_fwrite(theFile, buf, strlen(buf));
+				mame_fwrite(theFile, buf, (UINT32)strlen(buf));
 			}
 			break;
 
@@ -9866,7 +9866,7 @@ static void SaveCheat(CheatEntry * entry, int selection, int saveCode)
 				}
 
 				/* ----- write the activation key code ----- */
-				mame_fwrite(theFile, buf, strlen(buf));
+				mame_fwrite(theFile, buf, (UINT32)strlen(buf));
 			}
 			break;
 
@@ -9874,7 +9874,7 @@ static void SaveCheat(CheatEntry * entry, int selection, int saveCode)
 			sprintf(buf, ":_command:%.8X\n", cheatOptions);
 
 			/* ----- write the command code ----- */
-			mame_fwrite(theFile, buf, strlen(buf));
+			mame_fwrite(theFile, buf, (UINT32)strlen(buf));
 			break;
 
 		default:

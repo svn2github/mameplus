@@ -146,7 +146,7 @@
 		SHAREDOBJ_FUNC(int)  string_to_seq(const char *string, input_seq *seq);
 
 		#include "inptport.h"
-		SHAREDOBJ_FUNC(input_port_entry *) input_port_allocate(void (*construct_ipt)(input_port_init_params *), input_port_entry *memory);
+		SHAREDOBJ_FUNC(input_port_entry *) input_port_allocate(const input_port_token *ipt, input_port_entry *memory);
 
 		#include "sndintrf.h"
 		extern SHAREDOBJ_FUNC(void)         sndintrf_init(running_machine *machine);
@@ -229,7 +229,7 @@
 		extern SHAREDOBJ_FUNC(void) winwindow_exit(running_machine *machine);
 
 		// in windows/winmain.c
-		extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
+		extern SHAREDOBJ_FUNC(int) utf8_main(int argc, char **argv);
 
 		// in windows/config.c
 		extern SHAREDOBJ_DATA const options_entry windows_opts[];
@@ -284,7 +284,7 @@
 		extern SHAREDOBJ_FUNC(void) winwindow_exit(running_machine *machine);
 
 		// in windows/winmain.c
-		extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
+		extern SHAREDOBJ_FUNC(int) utf8_main(int argc, char **argv);
 
 		// in windows/config.c
 		#include "../options.h"
@@ -333,7 +333,7 @@
 	extern SHAREDOBJ_FUNC(void) winwindow_exit(running_machine *machine);
 
 	// in windows/winmain.c
-	extern int main_(int argc, char **argv);
+	extern int utf8_main(int argc, char **argv);
 
 	// in windows/config.c
 	#ifdef _MSC_VER

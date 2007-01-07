@@ -1822,11 +1822,11 @@ int load_driver_statistics (char *buffer, int bufsize)
 		n = 0, x = 0, y = 0;
 		memset(controltmp, 0, sizeof controltmp);
 		
-		if (drivers[i]->construct_ipt)
+		if (drivers[i]->ipt)
 		{
 			begin_resource_tracking();
 		
-			inp = input_port_allocate(drivers[i]->construct_ipt, NULL);
+			inp = input_port_allocate(drivers[i]->ipt, NULL);
 			while (inp->type != IPT_END)
 			{
 				if (n < inp->player + 1)
