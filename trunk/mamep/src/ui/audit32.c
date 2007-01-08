@@ -160,14 +160,16 @@ static void Mame32Output(void *param, const char *format, va_list argptr)
 	DetailsPrintf("%s", buffer);
 }
 
-#if 0
-//fixme: from ZetaMame, buggy. delete "no good dump known" roms in zip => audit result: "not found"
-static int audit_files(int game, const char *searchpath)
+static int audit_files_simple(int game, const char *searchpath)
 {
 	const game_driver *gamedrv = drivers[game];
 	const game_driver *drv;
 	const rom_entry *region, *rom;
 	int foundany = FALSE;
+
+	// mamep: for some games do not use roms
+	if (!DriverUsesRoms(game))
+		return TRUE;
 
 	region = rom_first_region(gamedrv);
 	if (region == NULL)
@@ -178,7 +180,7 @@ static int audit_files(int game, const char *searchpath)
 		return foundany;
 
 	/* find the file and checksum it, getting the file length along the way */
-	for (drv = gamedrv; drv != NULL; drv = driver_get_clone(drv))
+	for (drv = gamedrv; drv != NULL; drv = GetDriverClone(drv))
 	{
 		mame_file_error filerr;
 		mame_file *file;
@@ -208,7 +210,6 @@ static int audit_files(int game, const char *searchpath)
 
 	return foundany;
 }
-#endif
 
 // Verifies the ROM set while calling SetRomAuditResults
 int Mame32VerifyRomSet(int game)
@@ -224,16 +225,15 @@ int Mame32VerifyRomSet(int game)
 	game_options = GetGameOptions(game);
 	options.bios = game_options->bios;
 
-#if 0
-	if (!audit_files(game, SEARCHPATH_ROM))
+	if (!audit_files_simple(game, SEARCHPATH_ROM))
 	{
+		// if rom can't be opened, easy return
 		audit = NULL;
 		audit_records = 0;
 		iStatus = audit_summary(game, audit_records, audit, output);
 		SetRomAuditResults(game, iStatus);
 		return iStatus;
 	}
-#endif
 
 	audit_records = audit_images(game, AUDIT_VALIDATE_FAST, &audit);
 	mame_set_output_channel(OUTPUT_CHANNEL_INFO, Mame32Output, NULL, &prevcb, &prevparam);
