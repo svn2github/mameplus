@@ -72,6 +72,10 @@ int GetDriverIndex(const game_driver *driver);
 int GetGameNameIndex(const char *name);
 int GetIndexFromSortedIndex(int sorted_index);
 
+// instead of driver_get_clone() in GUI
+int GetParentIndex(const game_driver *driver);
+const game_driver *GetDriverClone(const game_driver *driver);
+
 // sets text in part of the status bar on the main window
 void SetStatusBarText(int part_index, const char *message);
 void SetStatusBarTextW(int part_index, LPWSTR message);

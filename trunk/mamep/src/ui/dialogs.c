@@ -839,7 +839,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			ListView_GetItem(hWndList, &lvi);
 
 			nGame = lvi.lParam;
-			if ((clone_of = driver_get_clone(drivers[nGame]))&& !(clone_of->flags & NOT_A_DRIVER))
+			if ((clone_of = GetDriverClone(drivers[nGame]))&& !(clone_of->flags & NOT_A_DRIVER))
 				strcpy(szGame, clone_of->name);
 			else
 				strcpy(szGame, drivers[nGame]->name);

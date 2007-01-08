@@ -93,7 +93,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 #endif /* MESS */
 {
 	BOOL loaded = FALSE;
-	const game_driver *clone_of = driver_get_clone(drivers[nGame]);
+	const game_driver *clone_of = GetDriverClone(drivers[nGame]);
 	char buf [MAX_PATH];
 
 	/* No need to reload the same one again */
@@ -110,7 +110,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 	if (lpSoftwareName)
 	{
 		loaded = LoadSoftwareScreenShot(drivers[nGame], lpSoftwareName, nType);
-		if (!loaded && ((clone_of = driver_get_clone(drivers[nGame])) != NULL && !(clone_of->flags & NOT_A_DRIVER)))
+		if (!loaded && ((clone_of = GetDriverClone(drivers[nGame])) != NULL && !(clone_of->flags & NOT_A_DRIVER)))
 			loaded = LoadSoftwareScreenShot(clone_of, lpSoftwareName, nType);
 	}
 	if (!loaded)
@@ -144,7 +144,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 #endif /* USE_IPS */
 			sprintf(buf, "%s", clone_of->name);
 		loaded = LoadDIB(buf, &m_hDIB, &m_hPal, nType);
-		if (!loaded && driver_get_clone(clone_of))
+		if (!loaded && GetDriverClone(clone_of))
 		{
 #ifdef USE_IPS
 			if (lpIPSName)

@@ -443,7 +443,7 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 
 	// Filter out clones?
 	if (dwMask & F_CLONES
-	&&	( ( (clone_of = driver_get_clone(drivers[nGame]) ) != NULL) && ( (clone_of->flags & NOT_A_DRIVER) == 0)) )
+	&&	( ( (clone_of = GetDriverClone(drivers[nGame]) ) != NULL) && ( (clone_of->flags & NOT_A_DRIVER) == 0)) )
 		return TRUE;
 
 	for (i = 0; g_lpFilterList[i].m_dwFilterType; i++)
@@ -1208,10 +1208,10 @@ void CreateBIOSFolders(int parent_index)
 	for (jj = 0; jj < nGames; jj++)
 	{
 		if ( DriverIsClone(jj) )
-			drv = driver_get_clone(drivers[jj]);
+			drv = GetDriverClone(drivers[jj]);
 		else
 			drv = drivers[jj];
-		clone_of = driver_get_clone(drv);
+		clone_of = GetDriverClone(drv);
 
 		if (!clone_of || !clone_of->description)
 			continue;

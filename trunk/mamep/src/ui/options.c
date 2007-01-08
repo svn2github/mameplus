@@ -2680,8 +2680,8 @@ static void build_default_bios(void)
 			const game_driver *drv = drivers[i];
 			int n;
 
-			while (!(drv->flags & NOT_A_DRIVER) && driver_get_clone(drv))
-				drv = driver_get_clone(drv);
+			while (!(drv->flags & NOT_A_DRIVER) && GetDriverClone(drv))
+				drv = GetDriverClone(drv);
 
 			for (n = 0; n < MAX_SYSTEM_BIOS; n++)
 			{

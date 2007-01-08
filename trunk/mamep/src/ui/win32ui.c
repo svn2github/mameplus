@@ -1759,6 +1759,54 @@ int GetIndexFromSortedIndex(int sorted_index)
 	return sorted_drivers[sorted_index].index;
 }
 
+// instead of driver_get_clone() (from driver.c)
+#define DRIVER_LRU_SIZE 10
+static int driver_lru[DRIVER_LRU_SIZE];
+
+int GetParentIndex(const game_driver *driver)
+{
+	const char *name = driver->parent;
+	int lurnum, drvnum;
+
+	/* if no clone, easy out */
+	if (name == NULL || (name[0] == '0' && name[1] == 0))
+		return -1;
+
+	/* scan the LRU list first */
+	for (lurnum = 0; lurnum < DRIVER_LRU_SIZE; lurnum++)
+		if (mame_stricmp(drivers[driver_lru[lurnum]]->name, name) == 0)
+		{
+			/* if not first, swap with the head */
+			if (lurnum != 0)
+			{
+				int temp = driver_lru[0];
+				driver_lru[0] = driver_lru[lurnum];
+				driver_lru[lurnum] = temp;
+			}
+			return driver_lru[0];
+		}
+
+	/* scan for a match in the drivers */
+	drvnum = GetGameNameIndex(name);
+
+	if (drvnum >= 0)
+	{
+		memmove((void *)&driver_lru[1], (void *)&driver_lru[0], sizeof(driver_lru[0]) * (DRIVER_LRU_SIZE - 1));
+		driver_lru[0] = drvnum;
+		return drvnum;
+	}
+
+	/* shouldn't happen */
+	return -1;
+}
+
+const game_driver *GetDriverClone(const game_driver *driver)
+{
+	int index = GetParentIndex(driver);
+
+	return (index == -1) ? NULL : drivers[index];
+}
+
 /***************************************************************************
     Internal functions
  ***************************************************************************/
@@ -1861,7 +1909,7 @@ static void ApplyMenuStyle(HINSTANCE hInst, HWND hwnd, HMENU menuHandle)
 		IMITEMIMAGE imi;
 		int i;
 
-		ImageMenu_Create(hwnd, menuHandle, 1);
+		ImageMenu_Create(hwnd, menuHandle, TRUE);
 
 		imi.mask = IMIMF_LOADFROMRES | IMIMF_ICON;
 		imi.hInst = hInst;
@@ -3796,7 +3844,7 @@ static LPCSTR GetCloneParentName(int nItem)
 	const game_driver *clone_of = NULL;
 	if (DriverIsClone(nItem) == TRUE)
 	{
-		clone_of = driver_get_clone(drivers[nItem]);
+		clone_of = GetDriverClone(drivers[nItem]);
 		if( clone_of )
 			return  (UseLangList()) ? 
 					_LST(clone_of->description) : ModifyThe(clone_of->description);
@@ -5536,7 +5584,7 @@ static void InitListView(void)
 static void AddDriverIcon(int nItem,int default_icon_index)
 {
 	HICON hIcon = 0;
-	const game_driver *clone_of = driver_get_clone(drivers[nItem]);
+	const game_driver *clone_of = GetDriverClone(drivers[nItem]);
 
 	/* if already set to rom or clone icon, we've been here before */
 	if (icon_index[nItem] == 1 || icon_index[nItem] == 3)
@@ -5546,7 +5594,7 @@ static void AddDriverIcon(int nItem,int default_icon_index)
 	if (hIcon == NULL && clone_of != NULL)
 	{
 		hIcon = LoadIconFromFile((char *)drivers[nItem]->parent);
-		if (hIcon == NULL && driver_get_clone(clone_of) != NULL)
+		if (hIcon == NULL && GetDriverClone(clone_of) != NULL)
 			hIcon = LoadIconFromFile((char *)clone_of->parent);
 	}
 
@@ -7875,7 +7923,7 @@ BOOL SendIconToEmulationWindow(int nGameIndex)
 		//Check if clone, if so try parent icon first 
 		if( DriverIsClone(nGameIndex) ) 
 		{ 
-			if( ( clone_of = driver_get_clone(drivers[nGameIndex])) != NULL )
+			if( ( clone_of = GetDriverClone(drivers[nGameIndex])) != NULL )
 				hIcon = LoadIconFromFile(clone_of->name); 
 			if( hIcon == NULL) 
 			{ 
@@ -7956,29 +8004,29 @@ HWND GetGameWindow(void)
 
 void SendIconToProcess(LPPROCESS_INFORMATION pi, int nGameIndex)
 {
-	HICON hIcon; 
+	HICON hIcon;
 	const game_driver *clone_of = NULL;
-	hIcon = LoadIconFromFile(drivers[nGameIndex]->name); 
-	if( hIcon == NULL ) 
-	{ 
+	hIcon = LoadIconFromFile(drivers[nGameIndex]->name);
+	if (hIcon == NULL)
+	{
 		//Check if clone, if so try parent icon first 
-		if( DriverIsClone(nGameIndex) ) 
-		{ 
-			if( ( clone_of = driver_get_clone(drivers[nGameIndex])) != NULL )
-				hIcon = LoadIconFromFile(clone_of->name); 
-			if( hIcon == NULL) 
-			{ 
-				hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_MAME32_ICON)); 
-			} 
-		} 
-		else 
-		{ 
-			hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_MAME32_ICON)); 
-		} 
-	} 
-	WaitForInputIdle( pi->hProcess, INFINITE ); 
-	SendMessageToProcess( pi, WM_SETICON, ICON_SMALL, (LPARAM)hIcon ); 
-	SendMessageToProcess( pi, WM_SETICON, ICON_BIG, (LPARAM)hIcon ); 
+		if (DriverIsClone(nGameIndex))
+		{
+			if (( clone_of = GetDriverClone(drivers[nGameIndex])) != NULL)
+				hIcon = LoadIconFromFile(clone_of->name);
+			if (hIcon == NULL)
+			{
+				hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_MAME32_ICON));
+			}
+		}
+		else
+		{
+			hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_MAME32_ICON));
+		}
+	}
+	WaitForInputIdle( pi->hProcess, INFINITE );
+	SendMessageToProcess( pi, WM_SETICON, ICON_SMALL, (LPARAM)hIcon );
+	SendMessageToProcess( pi, WM_SETICON, ICON_BIG, (LPARAM)hIcon );
 }
 
 void SendMessageToProcess(LPPROCESS_INFORMATION lpProcessInformation, 

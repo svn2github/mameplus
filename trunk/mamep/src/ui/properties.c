@@ -1179,7 +1179,7 @@ static LPWSTR GameInfoCloneOf(int nIndex)
 
 	if (DriverIsClone(nIndex))
 	{
-		if( ( clone_of = driver_get_clone(drivers[nIndex])) != NULL )
+		if( ( clone_of = GetDriverClone(drivers[nIndex])) != NULL )
 		UseLangList()?
 		sprintf(buf, "%s [%s]",
 				ConvertAmpersandString(_LST(clone_of->description)),
