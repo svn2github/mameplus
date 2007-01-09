@@ -94,10 +94,6 @@ const game_driver * const plusdrivers[] =
 
 	/* CD to MVS Conversion */
 	DRIVER( zintrkcd )	/* 0211 hack - CD to MVS Conversion by Razoola */
-
-#ifdef USE_NEOGEO_DEPRECATED
-	/* CD to MVS Conversion */
 	DRIVER( fr2ch )
-#endif /* USE_NEOGEO_DEPRECATED */
 
 #endif	/* DRIVER_RECURSIVE */
