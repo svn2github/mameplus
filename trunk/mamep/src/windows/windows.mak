@@ -255,7 +255,6 @@ OSOBJS = \
 	$(OBJ)/$(MAMEOS)/fileio.o \
 	$(OBJ)/$(MAMEOS)/fronthlp.o \
 	$(OBJ)/$(MAMEOS)/input.o \
-	$(OBJ)/$(MAMEOS)/main.o \
 	$(OBJ)/$(MAMEOS)/output.o \
 	$(OBJ)/$(MAMEOS)/sound.o \
 	$(OBJ)/$(MAMEOS)/strconv.o \
