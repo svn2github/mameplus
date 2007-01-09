@@ -230,7 +230,7 @@ int Mame32VerifyRomSet(int game)
 		// if rom can't be opened, easy return
 		audit = NULL;
 		audit_records = 0;
-		iStatus = audit_summary(game, audit_records, audit, output);
+		iStatus = audit_summary(game, audit_records, audit, TRUE);
 		SetRomAuditResults(game, iStatus);
 		return iStatus;
 	}
