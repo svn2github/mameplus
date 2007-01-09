@@ -1127,7 +1127,8 @@ static int complete_create(win_window_info *window)
 	window->hwnd = CreateWindowEx(
 						window->fullscreen ? FULLSCREEN_STYLE_EX : WINDOW_STYLE_EX,
 						TEXT("MAME"),
-						t_title,
+						//t_title,
+						window->title,
 						window->fullscreen ? FULLSCREEN_STYLE : WINDOW_STYLE,
 						monitorbounds.left + 20, monitorbounds.top + 20,
 						monitorbounds.left + 100, monitorbounds.top + 100,
