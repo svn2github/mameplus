@@ -75,6 +75,7 @@ $(OBJ)/shared.a: \
 $(OBJ)/capcom.a: \
 	$(OBJ)/drivers/cps1.o $(OBJ)/vidhrdw/cps1.o \
 	$(OBJ)/drivers/cps2.o \
+	$(OBJ)/machine/cps2crpt.o \
 	$(OBJ)/machine/kabuki.o \
 
 $(OBJ)/neogeo.a: \

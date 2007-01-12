@@ -806,7 +806,7 @@ $(OBJ)/cpu/m68000/d68kops.c: $(OBJ)/cpu/m68000/d68kmake$(EXE) d68k_in.c
 	$(OBJ)/cpu/m68000/d68kmake$(EXE) $(OBJ)/cpu/m68000 src/cpu/m68000/d68k_in.c
 
 # rule to build the generator
-$(OBJ)/cpu/m68000/m68kmake$(EXE): $(OBJ)/cpu/m68000/m68kmake.o $(OSDBGOBJS)
+$(OBJ)/cpu/m68000/m68kmake$(EXE): $(OBJ)/cpu/m68000/m68kmake.o $(OSDCORELIB)
 $(OBJ)/cpu/m68000/d68kmake$(EXE): $(OBJ)/cpu/m68000/d68kmake.o $(OSDBGOBJS)
 
 # rule to ensure we build the header before building the core CPU file

@@ -228,6 +228,8 @@ enum
 	UI_flip_x,
 	UI_flip_y,
 
+	UI_configuration,
+
 #ifdef USE_SCALE_EFFECTS
 	UI_scaleeffect,
 #endif /* USE_SCALE_EFFECTS */

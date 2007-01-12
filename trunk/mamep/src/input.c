@@ -990,7 +990,7 @@ const char *code_name(input_code code)
 	/* a few special other codes */
 	switch (code)
 	{
-		case CODE_NONE : return _(DEF_STR( None ));
+		case CODE_NONE : return _("None");
 		case CODE_NOT : return _("not");
 		case CODE_OR : return _("or");
 	}
@@ -1325,7 +1325,7 @@ char *seq_name(const input_seq *seq, char *buffer, unsigned max)
 
 	/* if we ended up with nothing, say DEF_STR( None ), otherwise NULL-terminate */
 	if (dest == buffer && 4 + 1 <= max)
-		strcpy(dest, _(DEF_STR( None )));
+		strcpy(dest, _("None"));
 	else
 		*dest = 0;
 

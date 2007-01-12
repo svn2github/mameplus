@@ -241,6 +241,8 @@ static const char *mame_default_text[] =
 	"Flip X",
 	"Flip Y",
 
+	"Driver Configuration",
+
 #ifdef USE_SCALE_EFFECTS
 	"Image Enhancement",
 #endif /* USE_SCALE_EFFECTS */
@@ -253,7 +255,7 @@ static const char *mame_default_text[] =
 
 	/* centering */
 	"Center",
-	
+
 	NULL
 };
 

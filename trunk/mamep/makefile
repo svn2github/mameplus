@@ -456,6 +456,8 @@ CPULIB = $(OBJ)/libcpu.a
 
 SOUNDLIB = $(OBJ)/libsound.a
 
+OSDCORELIB = $(OBJ)/$(MAMEOS)/libocore.a
+
 
 
 #-------------------------------------------------
@@ -571,9 +573,9 @@ $(sort $(OBJDIRS)):
 #-------------------------------------------------
 
 ifneq ($(NO_DLL),)
-    $(EMULATOR): $(COREOBJS) $(OSOBJS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS)
+    $(EMULATOR): $(COREOBJS) $(OSOBJS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(OSDCORELIB)
 else
-    $(EMULATORDLL): $(COREOBJS) $(OSOBJS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS)
+    $(EMULATORDLL): $(COREOBJS) $(OSOBJS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(OSDCORELIB)
 endif
 
 # always recompile the version string
@@ -586,9 +588,9 @@ endif
 
 ifneq ($(NO_DLL),)
     ifneq ($(WINUI),)
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(WINDOWS_PROGRAM) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) -o $@ $(MAPFLAGS)
+	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(WINDOWS_PROGRAM) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(OSDCORELIB) -o $@ $(MAPFLAGS)
     else
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) -o $@ $(MAPFLAGS)
+	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(OSDCORELIB) -o $@ $(MAPFLAGS)
     endif
 
     ifneq ($(UPX),)
@@ -598,7 +600,7 @@ ifneq ($(NO_DLL),)
 else
     # build DLL
 	$(RM) $@
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) -shared -o $@ $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(MAPDLLFLAGS)
+	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) -shared -o $@ $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(OSDCORELIB) $(MAPDLLFLAGS)
     ifneq ($(UPX),)
 	upx -9 $@
     endif
@@ -620,21 +622,21 @@ else
     endif
 endif
 
-file2str$(EXE): $(OBJ)/file2str.o $(OSDBGOBJS)
+file2str$(EXE): $(OBJ)/file2str.o $(OSDBGOBJS) $(OSDCORELIB)
 	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $^ $(LIBS) -o $@
+	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
-romcmp$(EXE): $(OBJ)/romcmp.o $(OBJ)/unzip.o $(OBJ)/mamecore.o $(VCOBJS) $(ZLIB) $(OSTOOLOBJS) $(OSDBGOBJS)
+romcmp$(EXE): $(OBJ)/romcmp.o $(OBJ)/unzip.o $(OBJ)/mamecore.o $(VCOBJS) $(ZLIB) $(OSTOOLOBJS) $(OSDBGOBJS) $(OSDCORELIB)
 	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $^ $(LIBS) -o $@
+	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
-chdman$(EXE): $(OBJ)/chdman.o $(OBJ)/chd.o $(OBJ)/chdcd.o $(OBJ)/cdrom.o $(OBJ)/md5.o $(OBJ)/sha1.o $(OBJ)/version.o $(ZLIB) $(OSTOOLOBJS) $(OSDBGOBJS)
+chdman$(EXE): $(OBJ)/chdman.o $(OBJ)/chd.o $(OBJ)/chdcd.o $(OBJ)/cdrom.o $(OBJ)/md5.o $(OBJ)/sha1.o $(OBJ)/version.o $(ZLIB) $(OSTOOLOBJS) $(OSDBGOBJS) $(OSDCORELIB)
 	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $^ $(LIBS) -o $@
+	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
-jedutil$(EXE): $(OBJ)/jedutil.o $(OBJ)/jedparse.o $(OSDBGOBJS)
+jedutil$(EXE): $(OBJ)/jedutil.o $(OBJ)/jedparse.o $(OSDBGOBJS) $(OSDCORELIB)
 	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $^ $(LIBS) -o $@
+	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
 
 
@@ -649,6 +651,8 @@ $(CPULIB): $(DBGOBJS)
 endif
 
 $(SOUNDLIB): $(SOUNDOBJS)
+
+$(OSDCORELIB): $(OSDCOREOBJS)
 
 $(OBJ)/libexpat.a: $(OBJ)/expat/xmlparse.o $(OBJ)/expat/xmlrole.o $(OBJ)/expat/xmltok.o
 
@@ -689,4 +693,4 @@ $(OBJ)/%.a:
 
 %$(EXE):
 	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ $(LIBS) -o $@
+	$(LD) $(LDFLAGS) $(CONSOLE_PROGRAM) $^ $(LIBS) -o $@
