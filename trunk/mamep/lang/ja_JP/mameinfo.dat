@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.111u1      #
+#     Mameinfo.dat日本語版 v0.111u2      #
 #                                        #
-#           December 31, 2006            #
+#            January 8, 2007             #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：812 翻訳済：799
-# 追加項目：327 合計：1139
+# Tester報告：826 翻訳済：810
+# 追加項目：327 合計：1153
 #
 
 
@@ -21,7 +21,8 @@ $info=airattck
 $mame
 [バグ]
 
-- 1面の戦車、3面の背景とのプライオリティ不具合あり。 airattck0111u1gre, robiza
+- nmk16.cゲームでプライオリティ不具合がある。
+Reipが何年か前に修正しようとしたが複雑すぎて無理だったらしい。 nmk16_0111u1gre, robiza / Kold666
 
 $end
 
@@ -29,18 +30,83 @@ $info=raphero
 $mame
 [バグ]
 
-- 3面などでプライオリティ不具合あり。 raphero0111u1gre, robiza
+- nmk16.cゲームでプライオリティ不具合がある。
+Reipが何年か前に修正しようとしたが複雑すぎて無理だったらしい。 nmk16_0111u1gre, robiza / Kold666
 
 $end
 
-$info=tourtabl
+$info=mjifb
 $mame
 [バグ]
 
-- OK画面の直後に以下のエラーでクラッシュする:
+- UnknownになっているDIPスイッチの情報：
+
+3-2: F-RATEの切り替え
+
+3-4: バイバイボーナスの切り替え
+
+3-6: リーチ後のオートツモの切り替え
+
+3-7: 背景色の切り替え
+
+4-3: フリップフロップの切り替え
+
+4-6: アニメーションの有効・無効 mjifb0111u2gra, fitcat
 
 
-Fatal error: Can only call add_reset_callback at init time! (src/mame.c:429) tourtabl0111u1red, Firewave
+- DIPスイッチ3-6をONにして、オートツモを有効にしているとき、
+リーチ後最初のツモでゲームがクラッシュする。 mjifb0111u2red, fitcat
+
+$end
+
+$info=spacecr
+$mame
+[バグ]
+
+- 筐体設定のDIPが動作せず、画面反転設定が筐体設定として動作する。 spacecr0111u1gra, Speedfreak / Fujix
+
+
+- 発射のデモ時に、画面下部分のグラフィックが画面一番上に表示される。 spacecr069u3gre, Karasu
+
+$end
+
+$info=spaceskr
+$mame
+[バグ]
+
+- 筐体のDIP設定が反転している。
+アップライトにすると、プレイヤー2の時に画面が反転し、操作もP1とP2で分離する。 spaceskr0111u1gra, Speedfreak / Fujix
+
+$end
+
+$info=outzone
+$mame
+[バグ]
+
+- 6面の中間付近で、背景の一部が黒い四角になっている。 outzone0111u2gre, ArcadeNUT
+
+$end
+
+$info=hotchase
+$mame
+[バグ]
+
+- UnknownのDIPスイッチ2-7はアトラクトモードのサウンドON/OFF。 hotchase0111u2gra, Speedfreak
+
+
+- ゲーム速度が遅い。ゲーム内のタイマーで1秒進むのに、実際には2秒くらいかかっている。 hotchase060gre, Kale
+
+
+- 1面の最初でバリアが壊れる音がしているのに、バリア自体は変化しない。 hotchase060gre_, DCisTHEbest
+
+$end
+
+$info=raystorm
+$mame
+[バグ]
+
+- デモをそのまま走らせているとMAMEがフリーズする。
+raystorjでは起きない。 raystorm0111u1red, Speedfreak
 
 $end
 
@@ -320,7 +386,7 @@ $mame
 
 - プレイ中にコインを受け付けない。
 コンティニュー画面ではOK。
-また、サービスキーだけは動作する。 blktiger37b15gre, Bugfinder / fart_flower
+また、サービスキーだけは動作する。 blktiger37b15gre, Bugfinder / fart_flower / robiza
 
 $end
 
@@ -1364,14 +1430,6 @@ $mame
 
 
 グラディウス4で、モニタタイプのDIPを15KHｚにすると、3Dグラフィックは縮小されるが、2Dタイルマップは24KHｚのときのサイズのまま。 hornet0104u2ora, AWJ / Luigi30
-
-$end
-
-$info=drgnwrld
-$mame
-[バグ]
-
-- DIP設定で背景を風景表示にして、面クリアをすると化けた女性の表示になる。 drgnwrld0109yel, hammad
 
 $end
 
@@ -3264,14 +3322,6 @@ $mame
 
 $end
 
-$info=orunners
-$mame
-[バグ]
-
-- テストモードでの設定が保存されない。 orunners0105u4gre, Scuore / robiza
-
-$end
-
 $info=hangonjr
 $mame
 [バグ]
@@ -4270,11 +4320,11 @@ $mame
 - 横のガードレールに突っ込むと、車がコースの別なところにワープする。 f1dream061gre, Kale
 
 
-- マップ表示にプライオリティ不具合あり。
-トンネルや看板などが手前に表示されている。 f1dream061gre2, Kale
-
-
 - レース終了後のポイント計算が間違っている。 f1dream061gre3, Kale
+
+
+- マップ表示にプライオリティ不具合あり。
+トンネルや看板などが手前に表示されている。 f1dream061gre2, Kale / Mamesick
 
 $end
 
@@ -4503,9 +4553,6 @@ $end
 $info=toki
 $mame
 [バグ]
-
-- 画面の表示エリアが実機とは異なる。スコア表示の部分がちょうど画面の上端になるのが正しい。 toki0111gre, Kold666
-
 
 - 地面から現れる猿を倒したときの音が間違っている。
 また、16tジャンプの音もおかしい。 tokic060gre, Styxken / |Maccy| / Nick / BMF54123 / AS / Mamesick
@@ -4826,25 +4873,6 @@ wc90bのみで見られる。 wc90b056gre_1, Kale
 
 - wc90bの方は表示に問題がある。画面左と下の方の選手が欠ける。
 いつもこのようになるので、恐らくこの海賊版は不良品か? wc90b36b11gre, Bugfinder / mach
-
-$end
-
-$info=hotchase
-$mame
-[バグ]
-
-- ゲーム速度が遅い。ゲーム内のタイマーで1秒進むのに、実際には2秒くらいかかっている。 hotchase060gre, Kale
-
-
-- 1面の最初でバリアが壊れる音がしているのに、バリア自体は変化しない。 hotchase060gre_, DCisTHEbest
-
-$end
-
-$info=wecleman
-$mame
-[バグ]
-
-- 自車の右側に炎が表示されたままになる。 wecleman096u3gre, Iaspis
 
 $end
 
@@ -6506,14 +6534,6 @@ $mame
 [バグ]
 
 - このバージョンのみ、150発以上攻撃してもラスボスを倒せない。 wboyu061gre, Kale
-
-$end
-
-$info=spacecr
-$mame
-[バグ]
-
-- 発射のデモ時に、画面下部分のグラフィックが画面一番上に表示される。 spacecr069u3gre, Karasu
 
 $end
 
