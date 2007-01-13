@@ -1048,7 +1048,8 @@ static BOOL CALLBACK enum_mouse_callback(LPCDIDEVICEINSTANCE instance, LPVOID re
 	utf8_instance_name = utf8_from_tstring(instance->tszInstanceName);
 	if (utf8_instance_name == NULL)
 		goto cant_alloc_memory;
-	strcpy(mouse_name[mouse_count], utf8_instance_name);
+	//strcpy(mouse_name[mouse_count], utf8_instance_name);
+	strcpy(mouse_name[mouse_count], instance->tszInstanceName);
 	free(utf8_instance_name);
 
 	// get the caps
@@ -1182,7 +1183,8 @@ static BOOL CALLBACK enum_joystick_callback(LPCDIDEVICEINSTANCE instance, LPVOID
 	utf8_instance_name = utf8_from_tstring(instance->tszInstanceName);
 	if (utf8_instance_name == NULL)
 		goto cant_alloc_memory;
-	strcpy(joystick_name[joystick_count], utf8_instance_name);
+	//strcpy(joystick_name[joystick_count], utf8_instance_name);
+	strcpy(joystick_name[joystick_count], instance->tszInstanceName);
 	free(utf8_instance_name);
 
 	// get the caps
@@ -1870,7 +1872,8 @@ static void init_keycodes(void)
 			// if it worked, assume we have a valid key
 
 			// copy the name
-			char *namecopy = utf8_from_tstring(instance.tszName);
+			//char *namecopy = utf8_from_tstring(instance.tszName);
+			char *namecopy = malloc(strlen(instance.tszName) + 1);
 			if (namecopy != NULL)
 			{
 				input_code standardcode;
@@ -1901,7 +1904,8 @@ static void init_keycodes(void)
 				}
 
 				// fill in the key description
-				codelist[total_codes].name = namecopy;
+				//codelist[total_codes].name = namecopy;
+				codelist[total_codes].name = strcpy(namecopy, instance.tszName);
 				codelist[total_codes].oscode = code;
 				codelist[total_codes].inputcode = standardcode;
 				total_codes++;
@@ -2123,7 +2127,8 @@ static void init_joycodes(void)
 					char *utf8_name = utf8_from_tstring(instance.tszName);
 					if (utf8_name != NULL)
 					{
-						sprintf(tempname, "%s%s", mousename, utf8_name);
+						//sprintf(tempname, "%s%s", mousename, utf8_name);
+						sprintf(tempname, "%s%s", mousename, instance.tszName);
 						free(utf8_name);
 						add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSEBUTTON, button), CODE_OTHER_DIGITAL);
 					}
@@ -2177,21 +2182,25 @@ static void init_joycodes(void)
 				char *utf8_name = utf8_from_tstring(instance.tszName);
 				if (utf8_name != NULL)
 				{
-					verbose_printf("Input:  Axis %d (%s)%s\n", axis, utf8_name, joystick_digital[stick][axis] ? " - digital" : "");
+					//verbose_printf("Input:  Axis %d (%s)%s\n", axis, utf8_name, joystick_digital[stick][axis] ? " - digital" : "");
+					verbose_printf("Input:  Axis %d (%s)%s\n", axis, instance.tszName, joystick_digital[stick][axis] ? " - digital" : "");
 
 					// add analog axis
 					if (!joystick_digital[stick][axis])
 					{
-						sprintf(tempname, "J%d %s", stick + 1, utf8_name);
+						//sprintf(tempname, "J%d %s", stick + 1, utf8_name);
+						sprintf(tempname, "J%d %s", stick + 1, instance.tszName);
 						add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_JOYAXIS, axis), CODE_OTHER_ANALOG_ABSOLUTE);
 					}
 
 					// add negative value
-					sprintf(tempname, "J%d %s -", stick + 1, utf8_name);
+					//sprintf(tempname, "J%d %s -", stick + 1, utf8_name);
+					sprintf(tempname, "J%d %s -", stick + 1, instance.tszName);
 					add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_AXIS_NEG, axis), CODE_OTHER_DIGITAL);
 
 					// add positive value
-					sprintf(tempname, "J%d %s +", stick + 1, utf8_name);
+					//sprintf(tempname, "J%d %s +", stick + 1, utf8_name);
+					sprintf(tempname, "J%d %s +", stick + 1, instance.tszName);
 					add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_AXIS_POS, axis), CODE_OTHER_DIGITAL);
 
 					// get the axis range while we're here
@@ -2220,7 +2229,8 @@ static void init_joycodes(void)
 				char *utf8_name = utf8_from_tstring(instance.tszName);
 				if (utf8_name != NULL)
 				{
-					sprintf(tempname, "J%d %s", stick + 1, utf8_name);
+					//sprintf(tempname, "J%d %s", stick + 1, utf8_name);
+					sprintf(tempname, "J%d %s", stick + 1, instance.tszName);
 					free(utf8_name);
 					add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_BUTTON, button), CODE_OTHER_DIGITAL);
 				}
@@ -2242,19 +2252,23 @@ static void init_joycodes(void)
 				if (utf8_name != NULL)
 				{
 					// add up direction
-					sprintf(tempname, "J%d %s U", stick + 1, utf8_name);
+					//sprintf(tempname, "J%d %s U", stick + 1, utf8_name);
+					sprintf(tempname, "J%d %s U", stick + 1, instance.tszName);
 					add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_POV_UP, pov), CODE_OTHER_DIGITAL);
 
 					// add down direction
-					sprintf(tempname, "J%d %s D", stick + 1, utf8_name);
+					//sprintf(tempname, "J%d %s D", stick + 1, utf8_name);
+					sprintf(tempname, "J%d %s D", stick + 1, instance.tszName);
 					add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_POV_DOWN, pov), CODE_OTHER_DIGITAL);
 
 					// add left direction
-					sprintf(tempname, "J%d %s L", stick + 1, utf8_name);
+					//sprintf(tempname, "J%d %s L", stick + 1, utf8_name);
+					sprintf(tempname, "J%d %s L", stick + 1, instance.tszName);
 					add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_POV_LEFT, pov), CODE_OTHER_DIGITAL);
 
 					// add right direction
-					sprintf(tempname, "J%d %s R", stick + 1, utf8_name);
+					//sprintf(tempname, "J%d %s R", stick + 1, utf8_name);
+					sprintf(tempname, "J%d %s R", stick + 1, instance.tszName);
 					add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_POV_RIGHT, pov), CODE_OTHER_DIGITAL);
 
 					free(utf8_name);
