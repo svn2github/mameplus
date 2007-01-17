@@ -25,6 +25,8 @@
 /* preferred font height; use ui_get_line_height() to get actual height */
 #ifndef UI_COLOR_DISPLAY
 #define UI_TARGET_FONT_HEIGHT	(1.0f / 25.0f)
+#else /* UI_COLOR_DISPLAY */
+#define UI_TARGET_FONT_HEIGHT	ui_font_height
 #endif /* UI_COLOR_DISPLAY */
 
 /* width of lines drawn in the UI */

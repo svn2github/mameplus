@@ -73,9 +73,6 @@ struct _slider_state
 ***************************************************************************/
 
 #define UI_FONT_NAME				NULL
-#ifdef UI_COLOR_DISPLAY
-#define UI_TARGET_FONT_HEIGHT		ui_font_height
-#endif /* UI_COLOR_DISPLAY */
 #define UI_SCALE_TO_INT_X(x)		((int)((float)(x) * ui_screen_width + 0.5f))
 #define UI_SCALE_TO_INT_Y(y)		((int)((float)(y) * ui_screen_height + 0.5f))
 #define UI_UNSCALE_TO_FLOAT_X(x)	((float)(x) / (float)ui_screen_width)
@@ -111,7 +108,7 @@ static rgb_t ui_bgcolor;
 
 static render_font *ui_font;
 
-static float ui_font_height;
+float ui_font_height;
 int ui_screen_width, ui_screen_height;
 
 static int multiline_text_box_visible_lines;

@@ -4,7 +4,7 @@
 
     Internal MAME menus for the user interface.
 
-    Copyright (c) 1996-2006, Nicola Salmoria and the MAME Team.
+    Copyright (c) 1996-2007, Nicola Salmoria and the MAME Team.
     Visit http://mamedev.org for licensing and usage restrictions.
 
 *********************************************************************/
@@ -38,6 +38,20 @@
 
 #define MENU_TEXTCOLOR			ARGB_WHITE
 #define MENU_SELECTCOLOR		MAKE_ARGB(0xff,0xff,0xff,0x00)
+#define MENU_UNAVAILABLECOLOR	MAKE_ARGB(0xff,0x40,0x40,0x40)
+
+#define MAX_PHYSICAL_DIPS		10
+
+/* DIP switch rendering parameters */
+#define DIP_SWITCH_HEIGHT		0.05f
+#define DIP_SWITCH_SPACING		0.01
+#define SPACE_BETWEEN_BOXES		0.005f
+#define SINGLE_TOGGLE_SWITCH_FIELD_WIDTH 0.02f
+#define SINGLE_TOGGLE_SWITCH_WIDTH 0.015f
+/* make the switch 80% of the width space and 1/2 of the switch height */
+#define PERCENTAGE_OF_HALF_FIELD_USED 0.80f
+#define SINGLE_TOGGLE_SWITCH_HEIGHT ((DIP_SWITCH_HEIGHT / 2) * PERCENTAGE_OF_HALF_FIELD_USED)
+
 
 enum
 {
@@ -83,6 +97,16 @@ struct _input_item_data
 };
 
 
+typedef struct _dip_descriptor dip_descriptor;
+struct _dip_descriptor
+{
+	const char * 	dip_name;
+	UINT16			total_dip_mask;
+	UINT16			total_dip_settings;
+	UINT16 			selected_dip_feature_mask;
+};
+
+
 
 /***************************************************************************
     GLOBAL VARIABLES
@@ -96,6 +120,8 @@ static UINT32 menu_string_pool_offset;
 static char menu_string_pool[MENU_STRING_POOL_SIZE];
 
 static input_seq starting_seq;
+
+static dip_descriptor dip_switch_model[MAX_PHYSICAL_DIPS];
 
 
 static const char *input_format[] =
@@ -156,6 +182,12 @@ static void switches_menu_select_next(input_port_entry *in, int switch_entry);
 //static int switches_menu_compare_items(const void *i1, const void *i2);
 static void analog_menu_add_item(ui_menu_item *item, const input_port_entry *in, int append_string, int which_item);
 
+/* DIP switch helpers */
+static void dip_switch_build_model(input_port_entry *entry, int item_is_selected);
+static void dip_switch_draw_one(float dip_menu_x1, float dip_menu_y1, float dip_menu_x2, float dip_menu_y2, int model_index);
+static float dip_switch_get_extra_height(void);
+float dip_switch_get_extra_width(void);
+static void dip_switch_augment_menu(float x1, float y1, float x2, float y2);
 
 
 /***************************************************************************
@@ -181,6 +213,22 @@ INLINE const char *CLIB_DECL menu_string_pool_add(const char *format, ...)
 }
 
 
+/*-------------------------------------------------
+    get_num_dips - return the number of physical
+    DIP switches that are to be drawn
+-------------------------------------------------*/
+
+INLINE int get_num_dips(void)
+{
+	int num = 0;
+
+	while (dip_switch_model[num].dip_name != NULL && num++ < MAX_PHYSICAL_DIPS)
+		;
+
+	return num;
+}
+
+
 
 /***************************************************************************
     CORE IMPLEMENTATION
@@ -200,13 +248,12 @@ void ui_menu_init(running_machine *machine)
     ui_menu_draw - draw a menu
 -------------------------------------------------*/
 
-void ui_menu_draw(const ui_menu_item *items, int numitems, int selected)
+void ui_menu_draw(const ui_menu_item *items, int numitems, int selected, menu_augment_routines *augmentation_routines)
 {
 	const char *up_arrow = ui_getstring(UI_uparrow);
 	const char *down_arrow = ui_getstring(UI_downarrow);
 	const char *left_arrow = ui_getstring(UI_leftarrow);
-	const char *right_arrow = ui_getstring(UI_rightarrow);
-	const char *left_hilight = ui_getstring(UI_lefthilight);
+	const char *right_arrow = ui_getstring(UI_rightarrow);	const char *left_hilight = ui_getstring(UI_lefthilight);
 	const char *right_hilight = ui_getstring(UI_righthilight);
 
 	int left_hilight_width = ui_get_string_width(left_hilight);
@@ -215,9 +262,11 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected)
 	int right_arrow_width = ui_get_string_width(right_arrow);
 	int line_height = ui_get_line_height();
 	int gutter_width;
+	int x1, y1, x2, y2;
 
 	int effective_width, effective_left;
-	int visible_width, visible_height;
+	int visible_width, visible_main_menu_height;
+	int visible_augmented_menu_height = 0;
 	int visible_top, visible_left;
 	int selected_subitem_too_big = 0;
 	int visible_lines;
@@ -231,7 +280,7 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected)
 
 	/* compute the width and height of the full menu */
 	visible_width = 0;
-	visible_height = 0;
+	visible_main_menu_height = 0;
 	for (itemnum = 0; itemnum < numitems; itemnum++)
 	{
 		const ui_menu_item *item = &items[itemnum];
@@ -249,26 +298,47 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected)
 			visible_width = total_width;
 
 		/* track the height as well */
-		visible_height += line_height;
+		visible_main_menu_height += line_height;
 	}
+
+	/* if agumenting the menu, find out how much extra space is needed */
+	if (augmentation_routines != NULL)
+		visible_augmented_menu_height = (*augmentation_routines->get_augmentation_menu_height)();
+
+	/* note: we should also call augmentation_routines->get_augmentation_menu_width()
+     * to make sure that there is enough room to draw the DIPs in box space.
+     * The method is needs to be implemented (it's just stubbed now)
+     * which should not be too difficult
+     * using code like that used to draw the DIP switches.  One thought is to
+     * not draw the extended DIP menu at all if the width is insufficient.
+     * Another thought is to draw the extended menu and just put text in it
+     * indicating that "space insufficient to draw DIPs" */
+
 
 	/* if we are too wide or too tall, clamp it down */
 	if (visible_width + 2 * UI_BOX_LR_BORDER > ui_screen_width)
 		visible_width = ui_screen_width - 2 * UI_BOX_LR_BORDER;
-	if (visible_height + 2 * UI_BOX_TB_BORDER > ui_screen_height)
-		visible_height = ui_screen_height - 2 * UI_BOX_TB_BORDER;
-	visible_lines = visible_height / line_height;
-	visible_height = visible_lines * line_height;
+	/* if the menu and extra menu won't fit, take away part of the regular menu, it will scroll */
+	if ((visible_main_menu_height + visible_augmented_menu_height) + 2 * UI_BOX_TB_BORDER > ui_screen_height)
+		visible_main_menu_height = ui_screen_height - 2 * UI_BOX_TB_BORDER - visible_augmented_menu_height;
+
+	visible_lines = visible_main_menu_height / line_height;
+	visible_main_menu_height = visible_lines * line_height;
 
 	/* compute top/left of inner menu area by centering */
 	visible_left = (ui_screen_width - visible_width) / 2;
-	visible_top = (ui_screen_height - visible_height) / 2;
+	visible_top = (ui_screen_height - (visible_main_menu_height + visible_augmented_menu_height)) / 2;
 
 	/* first add us a box */
-	add_filled_box(	visible_left - UI_BOX_LR_BORDER,
-					visible_top - UI_BOX_TB_BORDER,
-					visible_left + visible_width - 1 + UI_BOX_LR_BORDER,
-					visible_top + visible_height - 1 + UI_BOX_TB_BORDER);
+	x1 = visible_left - UI_BOX_LR_BORDER;
+	y1 = visible_top - UI_BOX_TB_BORDER;
+	x2 = visible_left + visible_width -1 + UI_BOX_LR_BORDER;
+	y2 = visible_top + visible_main_menu_height -1 + UI_BOX_TB_BORDER;
+
+	add_filled_box(	x1,
+					y1,
+					x2,
+					y2);
 
 	/* determine the first visible line based on the current selection */
 	top_line = selected - visible_lines / 2;
@@ -395,7 +465,7 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected)
 		/* determine the target location */
 		target_x = visible_left + visible_width - target_width - UI_BOX_LR_BORDER;
 		target_y = line_y + line_height + UI_BOX_TB_BORDER;
-		if (target_y + target_height + UI_BOX_TB_BORDER > visible_height)
+		if (target_y + target_height + UI_BOX_TB_BORDER > visible_main_menu_height)
 			target_y = line_y - target_height - UI_BOX_TB_BORDER;
 
 		/* add a box around that */
@@ -406,6 +476,11 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected)
 		ui_draw_text_full(item->subtext, target_x, target_y, target_width, 0, target_height / ui_get_line_height(),
 					JUSTIFY_RIGHT, WRAP_WORD, DRAW_NORMAL, ARGB_WHITE, ARGB_BLACK, NULL, NULL);
 	}
+
+	/* If there is somthing special to add, do it by calling the passed routine */
+	if (augmentation_routines != NULL)
+		(*augmentation_routines->render_augmentation_menu)(x1, y1, x2, y2);
+
 }
 
 
@@ -666,9 +741,9 @@ do { \
 	/* add optional input-related menus */
 	if (has_dips)
 		ADD_MENU(UI_dipswitches, menu_switches, (IPT_DIPSWITCH_NAME << 16) | (IPT_DIPSWITCH_SETTING << 24));
-#ifdef MESS
 	if (has_configs)
 		ADD_MENU(UI_configuration, menu_switches, (IPT_CONFIG_NAME << 16) | (IPT_CONFIG_SETTING << 24));
+#ifdef MESS
 	if (has_categories)
 		ADD_MENU(UI_categories, menu_switches, (IPT_CATEGORY_NAME << 16) | (IPT_CATEGORY_SETTING << 24));
 #endif
@@ -722,7 +797,7 @@ do { \
 	ADD_MENU(UI_returntogame, NULL, 0);
 
 	/* draw the menu */
-	ui_menu_draw(item_list, menu_items, state);
+	ui_menu_draw(item_list, menu_items, state, NULL);
 
 	/* handle the keys */
 	if (ui_menu_generic_keys(&state, menu_items))
@@ -757,7 +832,7 @@ static UINT32 menu_input_groups(UINT32 state)
 	item_list[menu_items++].text = ui_getstring(UI_returntomain);
 
 	/* draw the menu */
-	ui_menu_draw(item_list, menu_items, state);
+	ui_menu_draw(item_list, menu_items, state, NULL);
 
 	/* handle the keys */
 	if (ui_menu_generic_keys(&state, menu_items))
@@ -819,7 +894,7 @@ static UINT32 menu_input(UINT32 state)
 	}
 
 	/* draw the menu */
-	ui_menu_draw(item_list, menu_items, selected);
+	ui_menu_draw(item_list, menu_items, selected, NULL);
 
 	/* if we're polling, read the sequence */
 	selected_item_data = item_list[selected].ref;
@@ -891,13 +966,26 @@ static UINT32 menu_switches(UINT32 state)
 	int menu_items = 0;
 	int changed = FALSE;
 
+	menu_augment_routines augment_with_dips;
+	augment_with_dips.get_augmentation_menu_width = dip_switch_get_extra_width;
+	augment_with_dips.get_augmentation_menu_height = dip_switch_get_extra_height;
+	augment_with_dips.render_augmentation_menu = dip_switch_augment_menu;
+
+
 	/* reset the menu */
 	memset(item_list, 0, sizeof(item_list));
+	/* reset the dip switch model */
+	memset(dip_switch_model, 0, sizeof(dip_switch_model));
 
 	/* loop over input ports and set up the current values */
 	for (in = Machine->input_ports; in->type != IPT_END; in++)
 		if (in->type == switch_name && input_port_active(in) && input_port_condition(in))
-			switches_menu_add_item(&item_list[menu_items++], in, switch_entry, in);
+		{
+			switches_menu_add_item(&item_list[menu_items], in, switch_entry, in);
+			if (in->type == IPT_DIPSWITCH_NAME)
+				dip_switch_build_model(in, menu_items == selected);
+			menu_items++;
+		}
 
 	/* sort the list */
 //  qsort(item_list, menu_items, sizeof(item_list[0]), switches_menu_compare_items);
@@ -906,8 +994,9 @@ static UINT32 menu_switches(UINT32 state)
 	/* add an item to return */
 	item_list[menu_items++].text = ui_getstring(UI_returntomain);
 
-	/* draw the menu */
-	ui_menu_draw(item_list, menu_items, selected);
+	/* go through the port map and create masks that are easy to use when drawing DIP graphics. */
+	/* draw the menu, augment the regular menue drawing with an additional box for DIPs */
+	ui_menu_draw(item_list, menu_items, selected, (dip_switch_model[0].dip_name) ? &augment_with_dips : NULL);
 
 	/* handle generic menu keys */
 	if (ui_menu_generic_keys(&selected, menu_items))
@@ -1010,7 +1099,7 @@ static UINT32 menu_analog(UINT32 state)
 	item_list[menu_items++].text = ui_getstring(UI_returntomain);
 
 	/* draw the menu */
-	ui_menu_draw(item_list, menu_items, state);
+	ui_menu_draw(item_list, menu_items, state, NULL);
 
 	/* handle generic menu keys */
 	if (ui_menu_generic_keys((int *) &state, menu_items))
@@ -1213,7 +1302,7 @@ static UINT32 menu_memory_card(UINT32 state)
 	item_list[menu_items++].text = ui_getstring(UI_returntomain);
 
 	/* draw the menu */
-	ui_menu_draw(item_list, menu_items, selected);
+	ui_menu_draw(item_list, menu_items, selected, NULL);
 
 	/* handle the keys */
 	if (ui_menu_generic_keys(&selected, menu_items))
@@ -1355,7 +1444,7 @@ static UINT32 menu_video(UINT32 state)
 		item_list[menu_items++].text = ui_getstring(UI_returntomain);
 
 		/* draw the menu */
-		ui_menu_draw(item_list, menu_items, selected);
+		ui_menu_draw(item_list, menu_items, selected, NULL);
 
 		/* handle the keys */
 		if (ui_menu_generic_keys(&selected, menu_items))
@@ -1430,7 +1519,7 @@ static UINT32 menu_video(UINT32 state)
 		item_list[menu_items++].text = ui_getstring(UI_returntoprior);
 
 		/* draw the menu */
-		ui_menu_draw(item_list, menu_items, selected);
+		ui_menu_draw(item_list, menu_items, selected, NULL);
 
 		/* handle the keys */
 		if (ui_menu_generic_keys(&selected, menu_items))
@@ -1603,7 +1692,7 @@ static UINT32 menu_custom_button(UINT32 state)
 	item_list[menu_items++].text = ui_getstring(UI_returntomain);
 
 	/* draw the menu */
-	ui_menu_draw(item_list, menu_items, selected);
+	ui_menu_draw(item_list, menu_items, selected, NULL);
 
 	/* handle generic menu keys */
 	if (ui_menu_generic_keys(&selected, menu_items))
@@ -1684,7 +1773,7 @@ static UINT32 menu_autofire(UINT32 state)
 	item_list[menu_items++].text = ui_getstring (UI_returntomain);
 
 	/* draw the menu */
-	ui_menu_draw(item_list, menu_items, selected);
+	ui_menu_draw(item_list, menu_items, selected, NULL);
 
 	if (ui_menu_generic_keys(&selected, menu_items))
 		return selected;
@@ -1746,7 +1835,7 @@ static UINT32 menu_documents(UINT32 state)
 	item_list[menu_items++].text = ui_getstring(UI_returntoprior);
 
 	/* draw the menu */
-	ui_menu_draw(item_list, menu_items, state);
+	ui_menu_draw(item_list, menu_items, state, NULL);
 
 	/* handle the keys */
 	if (ui_menu_generic_keys(&state, menu_items))
@@ -1910,7 +1999,7 @@ static UINT32 menu_command(UINT32 state)
 		item_list[menu_items++].text = menu_string_pool_add("\t%s",shortcut ? ui_getstring(UI_returntogame) : ui_getstring(UI_returntoprior));
 
 		/* draw the menu */
-		ui_menu_draw(item_list, menu_items, selected);
+		ui_menu_draw(item_list, menu_items, selected, NULL);
 
 		/* handle generic menu keys */
 		if (ui_menu_generic_keys(&selected, menu_items))
@@ -2088,7 +2177,7 @@ static UINT32 menu_scale_effect(UINT32 state)
 	item_list[menu_items++].text = ui_getstring(UI_returntomain);
 
 	/* draw the menu */
-	ui_menu_draw(item_list, menu_items, selected);
+	ui_menu_draw(item_list, menu_items, selected, NULL);
 
 	/* handle the keys */
 	if (ui_menu_generic_keys(&selected, menu_items))
@@ -2462,4 +2551,223 @@ static void analog_menu_add_item(ui_menu_item *item, const input_port_entry *in,
 		item->flags |= MENU_FLAG_LEFT_ARROW;
 	if (value < maxval)
 		item->flags |= MENU_FLAG_RIGHT_ARROW;
+}
+
+
+/*-------------------------------------------------
+    dip_switch_build_model - build up the model
+    for DIP switches
+-------------------------------------------------*/
+
+static void dip_switch_build_model(input_port_entry *entry, int item_is_selected)
+{
+	int dip_declaration_index = 0;
+	int value_mask_temp = entry->mask;
+	int value_mask_bit = 0;
+	int toggle_switch_mask;
+	int model_index = 0;
+	int toggle_num;
+
+	if (entry->diploc[dip_declaration_index].swname == NULL)
+		return;
+
+	/* get the entry in the model to work with */
+	do
+	{
+		/* use this entry if it's not used */
+		if (dip_switch_model[model_index].dip_name == NULL)
+		{
+			dip_switch_model[model_index].dip_name = entry->diploc[dip_declaration_index].swname;
+			break;
+		}
+
+		/* reuse this entry if the switch name matches */
+		if (!strcmp(entry->diploc[dip_declaration_index].swname, dip_switch_model[model_index].dip_name))
+			break;
+
+		// todo: add a check here to see if we go over the max dips and throw an error.
+	} while (++model_index < MAX_PHYSICAL_DIPS);
+
+	/* Create a mask depicting the number of toggles on the physical switch */
+	while (entry->diploc[dip_declaration_index].swname)
+	{
+		/* get the Nth DIP toggle number */
+		toggle_num = entry->diploc[dip_declaration_index].swnum;
+
+		/* get the Nth mask bit -
+         * should probably put a check here to avoid bad driver definitions
+         * which could put us into an infinite loop. */
+		while (!(value_mask_temp & 1))
+		{
+			value_mask_temp >>= 1;
+			++value_mask_bit;
+		}
+		/* clear out the lsb to keep it moving next iteration. */
+		value_mask_temp &= ~1;
+
+		toggle_switch_mask = 1 << (toggle_num - 1);
+
+		/* indicate the toggle exists in the switch */
+		dip_switch_model[model_index].total_dip_mask |= toggle_switch_mask;
+
+		/* if issolated bit is on, set the toggle on */
+		if ((1 << value_mask_bit) & entry->default_value)
+			dip_switch_model[model_index].total_dip_settings |= toggle_switch_mask;
+
+		/* indicate if the toggle is selected */
+		if (item_is_selected)
+			dip_switch_model[model_index].selected_dip_feature_mask |= toggle_switch_mask;
+
+		++dip_declaration_index;
+	}
+}
+
+
+/*-------------------------------------------------
+    dip_switch_draw_one - draw a single DIP
+    switch
+-------------------------------------------------*/
+
+static void dip_switch_draw_one(float dip_menu_x1, float dip_menu_y1, float dip_menu_x2, float dip_menu_y2, int model_index)
+{
+	int toggle_index;
+	int num_toggles = 0;
+	float segment_start_x;
+	float dip_field_y;
+	float y1_on, y2_on, y1_off, y2_off;
+	float switch_toggle_gap;
+	float name_width;
+
+	/* determine the number of toggles in the DIP */
+	for (toggle_index = 0; toggle_index < 16; toggle_index++)
+		if (dip_switch_model[model_index].total_dip_mask & (1 << toggle_index))
+			num_toggles = toggle_index + 1;
+
+	/* calculate the starting x coordinate so that the entire switch is centered */
+	dip_field_y = dip_menu_y1 + DIP_SWITCH_SPACING + (model_index * (DIP_SWITCH_SPACING + DIP_SWITCH_HEIGHT));
+
+	switch_toggle_gap = ((DIP_SWITCH_HEIGHT/2) - SINGLE_TOGGLE_SWITCH_HEIGHT)/2;
+
+ 	segment_start_x = dip_menu_x1 + (dip_menu_x2 - dip_menu_x1 - num_toggles * SINGLE_TOGGLE_SWITCH_FIELD_WIDTH) / 2;
+
+	y1_off = dip_field_y + UI_LINE_WIDTH + switch_toggle_gap;
+	y2_off = y1_off + SINGLE_TOGGLE_SWITCH_HEIGHT;
+
+	y1_on = dip_field_y + DIP_SWITCH_HEIGHT/2 + switch_toggle_gap;
+	y2_on = y1_on + SINGLE_TOGGLE_SWITCH_HEIGHT;
+
+	for (toggle_index = 0; toggle_index < num_toggles; toggle_index++)
+	{
+		int bit_mask, dip_on;
+		float dip_field_x1, x1, x2;
+
+		bit_mask = 1 << toggle_index;
+
+		/* draw the field for a single toggle on a DIP switch */
+		dip_field_x1 = segment_start_x + (SINGLE_TOGGLE_SWITCH_FIELD_WIDTH * toggle_index);
+
+		ui_draw_outlined_box(dip_field_x1,
+							 dip_field_y,
+							 dip_field_x1 + SINGLE_TOGGLE_SWITCH_FIELD_WIDTH,
+							 dip_field_y + DIP_SWITCH_HEIGHT,
+							 UI_FILLCOLOR);
+
+		x1 = dip_field_x1 + (SINGLE_TOGGLE_SWITCH_FIELD_WIDTH - SINGLE_TOGGLE_SWITCH_WIDTH) / 2;
+		x2 = x1 + SINGLE_TOGGLE_SWITCH_WIDTH;
+
+		/* see if the switch is actually used */
+		if (dip_switch_model[model_index].total_dip_mask & bit_mask)
+		{
+			/* yes, draw the switch position for a single toggle switch in a switch field */
+			int feature_field_selected = ((bit_mask & dip_switch_model[model_index].selected_dip_feature_mask) != 0);
+			dip_on = ((bit_mask & dip_switch_model[model_index].total_dip_settings) != 0);
+
+			render_ui_add_rect(x1, dip_on ? y1_on : y1_off,
+							   x2, dip_on ? y2_on : y2_off,
+							   feature_field_selected ? MENU_SELECTCOLOR : ARGB_WHITE,
+							   PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+		}
+		else
+		{
+			/* no, draw it grayed out */
+			render_ui_add_rect(x1, y1_off,
+							   x2, y2_on,
+							   MENU_UNAVAILABLECOLOR,
+							   PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+		}
+	}
+
+	/* add the dip switch name */
+	name_width = ui_get_string_width(dip_switch_model[model_index].dip_name) + ui_get_string_width(" ") / 2;
+	extern float ui_font_height;
+	ui_draw_text_full(	dip_switch_model[model_index].dip_name,
+						segment_start_x - name_width,
+						dip_field_y + (DIP_SWITCH_HEIGHT - ui_font_height)/2,
+						name_width,
+						0,
+						1,
+						JUSTIFY_LEFT,
+						WRAP_NEVER,
+						DRAW_NORMAL,
+						ARGB_WHITE,
+						PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA),
+						NULL ,
+						NULL);
+}
+
+
+/*-------------------------------------------------
+    dip_switch_get_extra_height - return the
+    extra menu height needed for DIP switches
+-------------------------------------------------*/
+
+static float dip_switch_get_extra_height(void)
+{
+	float num_dips = get_num_dips();
+	return (num_dips * (DIP_SWITCH_HEIGHT + DIP_SWITCH_SPACING)) + DIP_SWITCH_SPACING;
+}
+
+
+/*-------------------------------------------------
+    dip_switch_get_extra_width - return the
+    total menu width needed for DIP switches
+-------------------------------------------------*/
+
+/* this is currently not implemented but is left here
+ * for a enhancement to make sure that the allocated width in the main menu
+ * is sufficient to draw the DIPs.  The current thought is that if the
+ * space isn't sufficient, then don't draw the DIPs at all. */
+float dip_switch_get_extra_width(void)
+{
+	return 0.0f;
+}
+
+
+/*-------------------------------------------------
+    dip_switch_augment_menu - perform our
+    special rendering
+-------------------------------------------------*/
+
+static void dip_switch_augment_menu(float x1, float y1, float x2, float y2)
+{
+	int num_dips;
+	int dip_model_index;
+	float dip_menu_y1, dip_menu_y2;
+
+	/* how many dips does this game have? */
+	num_dips = get_num_dips();
+
+	dip_menu_y1 = y2 + SPACE_BETWEEN_BOXES;
+	dip_menu_y2 = dip_menu_y1 + dip_switch_get_extra_height();
+
+	/* draw extra menu area */
+	ui_draw_outlined_box(	x1,
+							dip_menu_y1,
+							x2,
+							dip_menu_y2,
+							UI_FILLCOLOR);
+
+	/* draw all the dip switches */
+	for (dip_model_index = 0; dip_model_index < num_dips; dip_model_index++)
+		dip_switch_draw_one(x1, dip_menu_y1, x2, dip_menu_y2, dip_model_index);
 }
