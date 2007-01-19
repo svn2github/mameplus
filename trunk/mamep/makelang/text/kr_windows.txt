@@ -1,84 +1,80 @@
-# windows/input.c: 1608
+# windows/input.c: 1711
          all -- all axes on all joysticks are digital\n
          전체 -- 모든 조이스틱의 모든 축이 디지탈 입력\n
 
-# windows/input.c: 1614
+# windows/input.c: 1717
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
          j1,j2a2 -- 조이스틱1의 모든 축과 조이스틱2의 축2가 디지탈 입력\n
 
-# windows/input.c: 1612
+# windows/input.c: 1715
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
          j1a5a6 -- 조이스틱1의 축 5, 6이 디지탈 입력\n
 
-# windows/input.c: 1609
+# windows/input.c: 1712
          j<N> -- all axes on joystick <N> are digital\n
          j<N> -- 조이스틱<N>의 모든 축이 디지탈 입력\n
 
-# windows/input.c: 1610
+# windows/input.c: 1713
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
          j<N>a<M> -- 조이스틱<N>의 축 <M>이 디지탈 입력\n
 
-# windows/input.c: 1607
+# windows/input.c: 1710
          none -- no axes on any joysticks are digital\n
          없음 -- 조이스틱상의 어떤 축도 디지탈 입력이 아님\n
 
-# windows/config.c: 843
+# windows/config.c: 788
         MAME -createconfig to create a mame.ini\n\n
         MAME -createconfig mame.ini 파일 생성\n\n
 
-# windows/config.c: 842
+# windows/config.c: 787
         MAME -showconfig   for a list of configuration options\n
         MAME -showconfig   설정 옵션의 리스트\n
 
-# windows/config.c: 841
+# windows/config.c: 786
         MAME -showusage    for a brief list of options\n
         MAME -showusage    옵션들의 간결한 리스트\n
 
-# windows/input.c: 1611
+# windows/input.c: 1714
     Multiple axes can be specified for one joystick:\n
     하나의 조이스틱에 여러개의 축 지정이 가능:\n
 
-# windows/input.c: 1613
+# windows/input.c: 1716
     Multiple joysticks can be specified separated by commas:\n
     여러개의 조이스틱을 콤마로 구분해 지정 가능:\n
 
-# windows/input.c: 2071
+# windows/input.c: 2156
  - digital
  - 디지탈
 
-# windows/fronthlp.c: 589
+# windows/fronthlp.c: 596
  BAD
  잘못된 롬
 
-# windows/fronthlp.c: 595
+# windows/fronthlp.c: 602
  NO GOOD DUMP KNOWN
  정상적으로 덤프된 롬 없음
 
-# windows/fronthlp.c: 758, 870
-%d %s found, %d were OK.\n
-%d %s 찾음, %d 개 상태좋음.\n
-
-# windows/input.c: 2004
+# windows/input.c: 2089
 %s Button %d
 %s 버튼 %d
 
-# windows/fronthlp.c: 99
+# windows/fronthlp.c: 107
 (BAD) 
 (불량)
 
-# windows/video.c: 476
+# windows/video.c: 470
 (primary)
 (주요)
 
-# windows/video.c: 273
+# windows/video.c: 267
 Average FPS: %f (%d frames)\n
 평균 FPS: %f (%d 프레임)\n
 
-# windows/config.c: 128
+# windows/config.c: 118
 CRC-32s
 CRC-32s
 
-# windows/input.c: 1150
+# windows/input.c: 1257
 DirectInput: Using DirectInput %d\n
 DirectInput: %d DirectInput 사용 \n
 
@@ -86,7 +82,7 @@ DirectInput: %d DirectInput 사용 \n
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: 주 버퍼: %d Hz, %d 비트, %d 체널\n
 
-# windows/fronthlp.c: 903
+# windows/fronthlp.c: 907
 ERROR     %s\n
 오류     %s\n
 
@@ -126,181 +122,157 @@ DirectSound 보조레벨 설정 실패: %08x\n
 Error setting primary format: %08x\n
 주 유형 설정 실패: %08x\n
 
-# windows/config.c: 1142
+# windows/config.c: 1093
 Failed to open file for playback
 재생할 파일 열기 실패
 
-# windows/config.c: 1176
+# windows/config.c: 1143
 Failed to open file for recording
 기록할 파일 열기 실패
 
-# windows/input.c: 2591
+# windows/input.c: 2679
 Fast Forward
 빨리 감기
 
-# windows/config.c: 844
+# windows/config.c: 789
 For usage instructions, please consult the file windows.txt\n
 사용 설명은 windows.txt파일을 참고하세요\n
 
-# windows/fronthlp.c: 551, 623
+# windows/fronthlp.c: 558, 634
 Game \"%s\" not supported!\n
 게임 \"%s\" 는 지원되지 않습니다\n
 
-# windows/input.c: 2071
+# windows/input.c: 2156
 Input:  Axis %d (%s)%s\n
 입력: 축 %d (%s)%s\n
 
-# windows/input.c: 1934
+# windows/input.c: 2019
 Input: %s: %s\n
 입력: %s: %s\n
 
-# windows/input.c: 843
+# windows/input.c: 948
 Input: Autoenabling joysticks due to presence of a %s\n
 입력: %s 유무에 따라 조이스틱 자동 사용\n
 
-# windows/input.c: 850
+# windows/input.c: 955
 Input: Autoenabling lightguns due to presence of a %s\n
 입력: %s 유무에 따라 라이트건 자동 사용\n
 
-# windows/input.c: 836
+# windows/input.c: 941
 Input: Autoenabling mice due to presence of a %s\n
 입력: %s 유무에 따라 마우스 자동 사용\n
 
-# windows/input.c: 1879
+# windows/input.c: 1964
 Input: Joystick %d axis %d is now %s\n
 입력: 조이스틱 %d 축 %d 이 %s 로 설정됨\n
 
-# windows/input.c: 2055
+# windows/input.c: 2140
 Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 입력: 조이스틱 %d: %s (%d 축, %d 버튼, %d POV)\n
 
-# windows/input.c: 1222
+# windows/input.c: 1331
 Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 입력: 키보드=%d  마우스=%d  조이스틱=%d  라이트건=%d\n
 
-# windows/input.c: 2928
+# windows/input.c: 3015
 Input: Using RAWMOUSE for Mouse input\n
 입력: 마우스 입력에 RAWMOUSE 사용\n
 
-# windows/input.c: 1224
+# windows/input.c: 1333
 Input: \"%s\" controller support enabled\n
 입력: \"%s\" 콘트롤러 지원 사용\n
 
-# windows/input.c: 2076, 2109
+# windows/input.c: 2161, 2194
 J%d %s
 J%d %s
 
-# windows/input.c: 2085
+# windows/input.c: 2170
 J%d %s +
 J%d %s +
 
-# windows/input.c: 2081
+# windows/input.c: 2166
 J%d %s -
 J%d %s -
 
-# windows/input.c: 2130
+# windows/input.c: 2215
 J%d %s D
 J%d %s 하
 
-# windows/input.c: 2134
+# windows/input.c: 2219
 J%d %s L
 J%d %s 좌
 
-# windows/input.c: 2138
+# windows/input.c: 2223
 J%d %s R
 J%d %s 우
 
-# windows/input.c: 2126
+# windows/input.c: 2211
 J%d %s U
 J%d %s 상
 
-# windows/fronthlp.c: 904
+# windows/fronthlp.c: 908
 KNOWN     %s\n
 알려짐     %s\n
 
-# windows/input.c: 2043
+# windows/input.c: 2128
 Lightgun %d 
 라이트건 %d
 
-# windows/input.c: 2426
+# windows/input.c: 2514
 Lightgun not supported in windowed mode
 라이트건은 창모드에서 지원되지 않습니다.
 
-# windows/input.c: 2041
+# windows/input.c: 2126
 Lightgun on Mouse %d 
 라이트건 모드 마우스 %d
 
-# windows/config.c: 837
+# windows/config.c: 782
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
 
-# windows/blit.c: 159
-MMX not supported\n
-MMX 지원되지 않음\n
-
-# windows/blit.c: 157
-MMX supported\n
-MMX 지원됨\n
-
-# windows/input.c: 1931
+# windows/input.c: 2016
 Mouse 
 마우스
 
-# windows/input.c: 1929
+# windows/input.c: 2014
 Mouse %d 
 마우스 %d
 
-# windows/fronthlp.c: 175
+# windows/fronthlp.c: 183
 NO MATCH\n
 맞지 않음\n
 
-# windows/fronthlp.c: 167
+# windows/fronthlp.c: 175
 NOT A ROM\n
 롬이 아님\n
 
-# windows/fronthlp.c: 378
+# windows/fronthlp.c: 381
 Name:     Description:\n
 이름:     설명:\n
 
-# windows/fronthlp.c: 491
+# windows/fronthlp.c: 494
 Name:    Clone of:\n
 이름:    부모롬 이름:\n
 
-# windows/config.c: 422
+# windows/config.c: 366
 OSD bar color (dark)
 OSD 바 색상 (어두운)
 
-# windows/config.c: 423
+# windows/config.c: 367
 OSD bar color (default)
 OSD 바 색상 (기본)
 
-# windows/config.c: 421
+# windows/config.c: 365
 OSD bar color (light)
 OSD 바 색상 (밝은)
 
-# windows/config.c: 420
+# windows/config.c: 364
 OSD bar color (medium)
 OSD 바 색상 (중간)
 
-# windows/fileio.c: 263
-Out of memory in variable expansion!
-변형 확장에서 메모리 부족!
-
-# windows/fileio.c: 330
-Out of memory!
-메모리 부족!
-
-# windows/fronthlp.c: 906
+# windows/fronthlp.c: 910
 PARTKNOWN %s\n
 부분 알려짐 %s\n
-
-# windows/blit.c: 155
-SSE supported\n
-SSE 지원됨\n
-
-# windows/blit.c: 153
-SSE2 supported\n
-SSE2 지원됨\n
 
 # windows/sound.c: 207
 Sound buffer: overflows=%d underflows=%d\n
@@ -310,479 +282,1339 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 사운드: 버퍼 오버플로우=%d 언더플로우=%d\n
 
-# windows/input.c: 1983
+# windows/input.c: 2068
 Stick %d %s +
 스틱 %d %s +
 
-# windows/input.c: 1976
+# windows/input.c: 2061
 Stick %d %s -
 스틱 %d %s -
 
-# windows/input.c: 1985
+# windows/input.c: 2070
 Stick %s +
 스틱 %s +
 
-# windows/input.c: 1978
+# windows/input.c: 2063
 Stick %s -
 스틱 %s -
 
-# windows/input.c: 1949
+# windows/input.c: 2034
 Stick%sX+
 스틱%sX+
 
-# windows/input.c: 1947
+# windows/input.c: 2032
 Stick%sX-
 스틱%sX-
 
-# windows/input.c: 1953
+# windows/input.c: 2038
 Stick%sY+
 스틱%sY+
 
-# windows/input.c: 1951
+# windows/input.c: 2036
 Stick%sY-
 스틱%sY-
 
-# windows/input.c: 1957
+# windows/input.c: 2042
 Stick%sZ+
 스틱%sZ+
 
-# windows/input.c: 1955
+# windows/input.c: 2040
 Stick%sZ-
 스틱%sZ-
 
-# windows/fronthlp.c: 556
+# windows/fronthlp.c: 563
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
 드라이버가 필요한 롬 목록입니다 \"%s\".\n이름            크기 체크섬\n
 
-# windows/input.c: 2573
+# windows/input.c: 2661
 Toggle fullscreen
 전체화면 전환
 
-# windows/fronthlp.c: 905
+# windows/fronthlp.c: 909
 UNKNOWN   %s\n
 미확인   %s\n
 
-# windows/ledutil.c: 566, 572
+# windows/ledutil.c: 567, 573
 Unable to close the keyboard device. (error %d)\n
 키보드 장치 닫기 실패 (오류 %d)\n
 
-# windows/ledutil.c: 530, 538
+# windows/ledutil.c: 531, 539
 Unable to open the keyboard device. (error %d)\n
 키보드 장치 열기 실패 (오류 %d)\n
 
-# windows/config.c: 840
+# windows/config.c: 785
 Usage:  MAME gamename [options]\n\n
 사용:  MAME 게임명 [옵션]\n\n
 
-# windows/video.c: 856
+# windows/video.c: 852
 Using %s scale effect\n
 %s 크기조절 효과 사용\n
 
-# windows/fronthlp.c: 749, 861
-\"%8s\" not found!\n
-\"%8s\" 가 없음!\n
-
-# windows/fronthlp.c: 751, 863
-\"%8s\" not supported!\n
-\"%8s\" 지원되지 않음!\n
-
-# windows/config.c: 621
+# windows/config.c: 562
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" 는 대체로 다음과 같은 지원 게임과\n일치합니다. (최적맞춤 우선):\n\n
 
-# windows/config.c: 123
+# windows/config.c: 113
 all available info on driver in XML format
 이용가능한 모든 드라이버 정보(XML)
 
-# windows/input.c: 1877
+# windows/input.c: 1962
 analog
 아날로그
 
-# windows/input.c: 1158
+# windows/input.c: 1265
 analog joystick
 아날로그 조이스틱
 
-# windows/config.c: 204
+# windows/config.c: 148
 automatic pause when playback is finished
 재생이 끝나면 자동으로 정지
 
-# windows/config.c: 430
+# windows/config.c: 374
 button color (aqua)
 버튼 색상 (바다색)
 
-# windows/config.c: 427
+# windows/config.c: 371
 button color (blue)
 버튼 색상 (파랑)
 
-# windows/config.c: 426
+# windows/config.c: 370
 button color (green)
 버튼 색상 (녹색)
 
-# windows/config.c: 433
+# windows/config.c: 377
 button color (lime)
 버튼 색상 (오랜지색)
 
-# windows/config.c: 432
+# windows/config.c: 376
 button color (navy)
 버튼 색상 (남색)
 
-# windows/config.c: 429
+# windows/config.c: 373
 button color (pink)
 버튼 색상 (분홍)
 
-# windows/config.c: 428
+# windows/config.c: 372
 button color (purple)
 버튼 색상 (자주)
 
-# windows/config.c: 424
+# windows/config.c: 368
 button color (red)
 버튼 색상 (빨강)
 
-# windows/config.c: 431
+# windows/config.c: 375
 button color (silver)
 버튼 색상 (은색)
 
-# windows/config.c: 425
+# windows/config.c: 369
 button color (yellow)
 버튼 색상 (노랑)
 
-# windows/config.c: 210
+# windows/config.c: 154
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 m68k 코어 변경 (0:C, 1:DRC, 2:ASM+DRC)
 
-# windows/config.c: 181
-cheat filename
-치트 파일이름
-
-# windows/config.c: 133
+# windows/config.c: 123
 compare files with known MAME roms
 알려진 MAME 롬과 비교
 
-# windows/config.c: 134
+# windows/config.c: 124
 compare files with known MAME roms (brief)
 알려진 MAME 롬과 비교 (간단하게)
 
-# windows/config.c: 118
+# windows/config.c: 108
 create the default configuration file
 기본 설정 파일을 생성
 
-# windows/config.c: 434
+# windows/config.c: 378
 cursor color
 커서 색상
 
-# windows/input.c: 1161
+# windows/input.c: 1268
 dial
 다이얼
 
-# windows/config.c: 392 windows/input.c: 1653, 1877
+# windows/config.c: 336 windows/input.c: 1756, 1962
 digital
 디지탈
 
-# windows/config.c: 176
-directory for ips files
-ips 파일 디렉토리
-
 # windows/config.c: 180
-directory for localized data files
-지역화된 데이터 파일 디렉토리
-
-# windows/config.c: 162
-directory to save configurations
-설정 저장 디렉토리
-
-# windows/config.c: 167
-directory to save hiscores
-고득점 저장 디렉토리
-
-# windows/config.c: 165
-directory to save input device logs
-입력 장치 로그 저장 디렉토리
-
-# windows/config.c: 164
-directory to save memory card contents
-메모리카드 목차 저장 디렉토리
-
-# windows/config.c: 163
-directory to save nvram contents
-nvram 목차 저장 디렉토리
-
-# windows/config.c: 169
-directory to save states
-상태 저장 디렉토리
-
-# windows/config.c: 236
 display additional diagnostic information
 추가 진단 정보 표시
 
-# windows/config.c: 126
+# windows/config.c: 116
 driver sourcefile
 드라이버 소스파일
 
-# windows/config.c: 395
+# windows/config.c: 339
 enable (keyboard|mouse|joystick) if a paddle control is present
 핸들 기능이 있을시 (키보드|마우스|조이스틱)활성화
 
-# windows/config.c: 388
+# windows/config.c: 332
 enable dual lightgun input
 듀얼 라이트건 입력 활성화
 
-# windows/config.c: 386
+# windows/config.c: 330
 enable joystick input
 조이스틱 입력 활성화
 
-# windows/config.c: 387
+# windows/config.c: 331
 enable lightgun input
 라이트건 입력 활성화
 
-# windows/config.c: 385
+# windows/config.c: 329
 enable mouse input
 마우스 입력 활성화
 
-# windows/config.c: 362
+# windows/config.c: 306
 enable pointing stick input
 포인트 스틱 입력 활성화
 
-# windows/config.c: 390
+# windows/config.c: 334
 enable steadykey support
 스태디키 지원 활성화
 
-# windows/config.c: 408
+# windows/config.c: 352
 enable/disable local language game list
 지역 언어 게임 목록 활성화/비활성화
 
-# windows/config.c: 352
+# windows/config.c: 296
 enable/disable volume auto adjust
 볼륨 자동조절 활성화/비활성화
 
-# windows/config.c: 1121
+# windows/config.c: 1057
 error: invalid value for language: %s\nUse %s\n
 오류: 잘못된 언어 값: %s\nUse %s\n
 
-# windows/config.c: 1213
+# windows/config.c: 1180
 error: invalid value for palette: %s\n
 오류: 잘못된 팔레트 값: %s\n
 
-# windows/config.c: 279
+# windows/config.c: 223
 flip screen left-right
 좌우 화면반전
 
-# windows/config.c: 280
+# windows/config.c: 224
 flip screen upside-down
 상하 화면반전
 
-# windows/config.c: 413
+# windows/config.c: 357
 font blank color
 글자 빈칸 색상
 
-# windows/config.c: 414
+# windows/config.c: 358
 font normal color
 보통 글자 색상
 
-# windows/config.c: 415
+# windows/config.c: 359
 font special color
 특수 글자 색상
 
-# windows/input.c: 1877
+# windows/input.c: 1962
 invalid
 잘못됨
 
-# windows/config.c: 198
+# windows/config.c: 142
 ips datfile name
 ips 데이타 파일명
 
-# windows/fronthlp.c: 718, 829
+# windows/fronthlp.c: 734, 830
 is bad\n
 가 잘못됨\n
 
-# windows/fronthlp.c: 728, 839
+# windows/fronthlp.c: 744, 840
 is best available\n
 가 최적으로 사용가능\n
 
-# windows/fronthlp.c: 723, 834
+# windows/fronthlp.c: 739, 835
 is good\n
 가 좋음\n
 
-# windows/fronthlp.c: 733, 844
-is missing optional files\n
-부가 파일 부족\n
-
-# windows/input.c: 1159, 1527, 1622
+# windows/input.c: 1266, 1630, 1725
 lightgun
 라이트건
 
-# windows/config.c: 129
+# windows/config.c: 119
 list required roms for a driver
 드라이버의 필요 롬 목록
 
-# windows/climain.c: 30
-loading %-12s\r
-로딩 %-12s\r
-
-# windows/fileio.c: 808
-loading %-32s\r
-불러오는중 %-32s\r
-
-# windows/config.c: 392
+# windows/config.c: 336
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 조이스틱 혹은 축을 디지탈로 표시 (없음|모두|j<N>*|j<N>a<M>[,...])
 
-# windows/config.c: 391
+# windows/config.c: 335
 minimal analog value for digital input
 디지털 입력을 위한 최소 아날로그 값
 
-# windows/config.c: 389
+# windows/config.c: 333
 offscreen shots reload
 화면 밖에서 재장전
 
-# windows/input.c: 1157
+# windows/input.c: 1264
 paddle
 핸들
 
-# windows/config.c: 158, 160
-path to ini files
-ini 파일 경로
-
-# windows/config.c: 156
-path to samplesets
-샘플 세트 경로
-
-# windows/input.c: 1160
+# windows/input.c: 1267
 pedal
 페달
 
-# windows/config.c: 227
+# windows/config.c: 171
 playback an input file
 리플레이 파일 재생
 
-# windows/config.c: 360
+# windows/config.c: 304
 preconfigure for specified controller
 특정 입력기를 위한 기본 설정
 
-# windows/config.c: 202
+# windows/config.c: 146
 quit game with confirmation
 게임 종료시 확인
 
-# windows/config.c: 228
+# windows/config.c: 172
 record an input file
 리플레이 파일 기록
 
-# windows/config.c: 131
+# windows/config.c: 121
 report romsets that have problems
 문제가 있는 롬세트 보고
 
-# windows/config.c: 132
+# windows/config.c: 122
 report samplesets that have problems
 문제가 있는 셈플세트 보고
 
-# windows/fronthlp.c: 747, 758
-romset
-롬 세트
-
-# windows/fronthlp.c: 709
+# windows/fronthlp.c: 725
 romset %s 
 롬 세트 %s 
 
-# windows/fronthlp.c: 859
-sampleset
-샘플세트
-
-# windows/fronthlp.c: 823
+# windows/fronthlp.c: 824
 sampleset %s 
 샘플세트 %s 
 
-# windows/fronthlp.c: 870
-samplesets
-샘플세트
-
-# windows/config.c: 407
+# windows/config.c: 351
 select translation language
 번역 언어 선택
 
-# windows/config.c: 356
+# windows/config.c: 300
 set audio latency (increase to reduce glitches)
 오디오 레이턴시 설정 (증가시 잡음감소)
 
-# windows/config.c: 367
+# windows/config.c: 311
 set joystick ID (Player1)
 조이스틱 ID 설정 (플레이어1)
 
-# windows/config.c: 368
+# windows/config.c: 312
 set joystick ID (Player2)
 조이스틱 ID 설정 (플레이어2)
 
-# windows/config.c: 369
+# windows/config.c: 313
 set joystick ID (Player3)
 조이스틱 ID 설정 (플레이어3)
 
-# windows/config.c: 370
+# windows/config.c: 314
 set joystick ID (Player4)
 조이스틱 ID 설정 (플레이어4)
 
-# windows/config.c: 371
+# windows/config.c: 315
 set joystick ID (Player5)
 조이스틱 ID 설정 (플레이어5)
 
-# windows/config.c: 372
+# windows/config.c: 316
 set joystick ID (Player6)
 조이스틱 ID 설정 (플레이어6)
 
-# windows/config.c: 373
+# windows/config.c: 317
 set joystick ID (Player7)
 조이스틱 ID 설정 (플레이어7)
 
-# windows/config.c: 374
+# windows/config.c: 318
 set joystick ID (Player8)
 조이스틱 ID 설정 (플레이어8)
 
-# windows/config.c: 125
+# windows/config.c: 115
 short name, full name
 짧은 이름, 전체 이름
 
-# windows/config.c: 127
+# windows/config.c: 117
 show clones
 클론 표시
 
-# windows/config.c: 114
+# windows/config.c: 104
 show help message
 도움말 표시
 
-# windows/config.c: 120
+# windows/config.c: 110
 show this help
 이 도움말을 보임
 
-# windows/config.c: 347, 977
+# windows/config.c: 291, 932
 sound
 사운드
 
-# windows/input.c: 1162
+# windows/input.c: 1269
 trackball
 트랙볼
 
-# windows/config.c: 216
+# windows/config.c: 160
 transparency of UI background [0 - 255]
 UI 배경의 투명도 지정 [0 - 255]
 
-# windows/config.c: 215
+# windows/config.c: 159
 use transparent background for UI text
 UI 의 텍스트를 투명하게 사용함
 
-# windows/config.c: 416
+# windows/config.c: 360
 window background color
 창 배경 색상
 
-# windows/config.c: 419
+# windows/config.c: 363
 window frame color (dark)
 창 프레임 색상 (어두운)
 
-# windows/config.c: 418
+# windows/config.c: 362
 window frame color (light)
 창 프레임 색상 (밝은)
 
-# windows/config.c: 417
+# windows/config.c: 361
 window frame color (medium)
 창 프레임 색상 (보통)
 
-# windows/config.c: 124
+# windows/config.c: 114
 year, manufacturer and full name
 제작년도, 제작사와 전체 이름
+
+# windows/video.c: 433
+%s%2d%4d%%%4d/%d fps
+
+
+# windows/config.c: 185, 186
+(debugger-only command)
+
+
+# windows/config.c: 144, 150, 156, 162, 163, 298, 308, 320, 321, 322, 323, 324, 325, 326, 327, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 399, 400, 401
+(disabled by compiling option)
+
+
+# windows/config.c: 283
+ARTWORK OPTIONS
+
+
+# windows/config.c: 338
+AUTOMATIC DEVICE SELECTION OPTIONS
+
+
+# windows/config.c: 130
+CONFIGURATION OPTIONS
+
+
+# windows/config.c: 350
+CORE LANGUAGE OPTIONS
+
+
+# windows/config.c: 355
+CORE PALETTE OPTIONS
+
+
+# windows/config.c: 177
+DEBUGGING OPTIONS
+
+
+# windows/config.c: 231
+DIRECT3D-SPECIFIC OPTIONS
+
+
+# windows/config.c: 227
+DIRECTDRAW-SPECIFIC OPTIONS
+
+
+# windows/drawd3d.c: 1119
+Device %s currently in an unsupported mode\n
+
+
+# windows/drawd3d.c: 1092
+Direct3D: Configuring adapter #%d = %s\n
+
+
+# windows/drawd3d.c: 717
+Direct3D: Device created at %dx%d\n
+
+
+# windows/drawd3d.c: 587, 2071
+Direct3D: Error %08X during device begin_scene call\n
+
+
+# windows/drawd3d.c: 1571, 2120
+Direct3D: Error %08X during device draw_primitive call\n
+
+
+# windows/drawd3d.c: 616, 2124
+Direct3D: Error %08X during device end_scene call\n
+
+
+# windows/drawd3d.c: 2064
+Direct3D: Error %08X during device get_render_target call\n
+
+
+# windows/drawd3d.c: 622
+Direct3D: Error %08X during device present call\n
+
+
+# windows/drawd3d.c: 331, 338, 345, 352
+Direct3D: Error %08X during device set_render_state call\n
+
+
+# windows/drawd3d.c: 2066, 2128
+Direct3D: Error %08X during device set_render_target call\n
+
+
+# windows/drawd3d.c: 1543, 2118
+Direct3D: Error %08X during device set_stream_source call\n
+
+
+# windows/drawd3d.c: 263, 2077
+Direct3D: Error %08X during device set_texture call\n
+
+
+# windows/drawd3d.c: 275, 277, 289, 291, 303
+Direct3D: Error %08X during device set_texture_stage_state call\n
+
+
+# windows/drawd3d.c: 2052
+Direct3D: Error %08X during device stretct_rect call\n
+
+
+# windows/drawd3d.c: 888, 890, 892, 894, 898, 912, 926, 940, 966, 990, 1004, 1017, 1024
+Direct3D: Error %08X during get_caps_dword call\n
+
+
+# windows/drawd3d.c: 2031
+Direct3D: Error %08X during texture get_surface_level call\n
+
+
+# windows/drawd3d.c: 2007
+Direct3D: Error %08X during texture unlock_rect call\n
+
+
+# windows/drawd3d.c: 2081
+Direct3D: Error %08X during vertex buffer lock call\n
+
+
+# windows/drawd3d.c: 1538, 2113
+Direct3D: Error %08X during vertex buffer unlock call\n
+
+
+# windows/drawd3d.c: 953
+Direct3D: Error - Device does not support dest alpha blending with inverted source alpha\n
+
+
+# windows/drawd3d.c: 948
+Direct3D: Error - Device does not support dest alpha blending with one\n
+
+
+# windows/drawd3d.c: 943
+Direct3D: Error - Device does not support dest alpha blending with zero\n
+
+
+# windows/drawd3d.c: 901
+Direct3D: Error - Device does not support immediate presentations\n
+
+
+# windows/drawd3d.c: 906
+Direct3D: Error - Device does not support per-refresh presentations\n
+
+
+# windows/drawd3d.c: 934
+Direct3D: Error - Device does not support source alpha blending with destination color\n
+
+
+# windows/drawd3d.c: 929
+Direct3D: Error - Device does not support source alpha blending with source alpha\n
+
+
+# windows/drawd3d.c: 960
+Direct3D: Error - Device does not support texture alpha\n
+
+
+# windows/d3d8intf.c: 102
+Direct3D: Error attempting to initialize Direct3D8\n
+
+
+# windows/d3d9intf.c: 100
+Direct3D: Error attempting to initialize Direct3D9\n
+
+
+# windows/drawd3d.c: 1261
+Direct3D: Mode selected = %4dx%4d@%3dHz\n
+
+
+# windows/drawd3d.c: 1205
+Direct3D: Selecting video mode...\n
+
+
+# windows/d3d8intf.c: 84
+Direct3D: Unable to access d3d8.dll\n
+
+
+# windows/d3d9intf.c: 82
+Direct3D: Unable to access d3d9.dll\n
+
+
+# windows/d3d8intf.c: 92
+Direct3D: Unable to find Direct3DCreate8\n
+
+
+# windows/d3d9intf.c: 90
+Direct3D: Unable to find Direct3DCreate9\n
+
+
+# windows/d3d8intf.c: 115
+Direct3D: Using Direct3D 8\n
+
+
+# windows/d3d9intf.c: 113
+Direct3D: Using Direct3D 9\n
+
+
+# windows/drawd3d.c: 1026
+Direct3D: Using StretchRect for prescaling\n
+
+
+# windows/drawd3d.c: 1020
+Direct3D: Using dynamic textures\n
+
+
+# windows/drawd3d.c: 974
+Direct3D: Warning - Device does not support bilinear texture filtering for magnification\n
+
+
+# windows/drawd3d.c: 984
+Direct3D: Warning - Device does not support bilinear texture filtering for minification\n
+
+
+# windows/drawd3d.c: 920
+Direct3D: Warning - Device does not support hardware rasterization\n
+
+
+# windows/drawd3d.c: 969
+Direct3D: Warning - Device does not support point-sample texture filtering for magnification\n
+
+
+# windows/drawd3d.c: 979
+Direct3D: Warning - Device does not support point-sample texture filtering for minification\n
+
+
+# windows/drawd3d.c: 915
+Direct3D: Warning - Device does not support queued rendering after a page flip\n
+
+
+# windows/drawd3d.c: 993
+Direct3D: Warning - Device does not support texture clamping\n
+
+
+# windows/drawd3d.c: 1007
+Direct3D: Warning - Device does not support texture modulation\n
+
+
+# windows/drawd3d.c: 998
+Direct3D: Warning - Device does not support texture wrapping\n
+
+
+# windows/drawd3d.c: 733
+Direct3D: Warning - device does not support full screen gamma correction.\n
+
+
+# windows/drawd3d.c: 1642
+Direct3D: adjusting prescale from %dx%d to %dx%d\n
+
+
+# windows/drawd3d.c: 1062
+Direct3D: failed to recreate resources for device; failing permanently\n
+
+
+# windows/drawd3d.c: 1049
+Direct3D: resetting device\n
+
+
+# windows/drawdd.c: 789
+DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
+
+
+# windows/drawdd.c: 1126
+DirectDraw: Configuring device %s\n
+
+
+# windows/drawdd.c: 616
+DirectDraw: Error %08X attempting to set gamma correction.\n
+
+
+# windows/drawdd.c: 495
+DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
+
+
+# windows/drawdd.c: 1086
+DirectDraw: Error %08X blitting to the screen\n
+
+
+# windows/drawdd.c: 1053, 1062, 1071, 1080
+DirectDraw: Error %08X clearing the screen\n
+
+
+# windows/drawdd.c: 774
+DirectDraw: Error %08X creating %s surface\n
+
+
+# windows/drawdd.c: 815
+DirectDraw: Error %08X creating clipper\n
+
+
+# windows/drawdd.c: 460, 1115
+DirectDraw: Error %08X during DirectDrawCreateEx call\n
+
+
+# windows/drawdd.c: 1212
+DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
+
+
+# windows/drawdd.c: 1324
+DirectDraw: Error %08X during EnumDisplayModes call\n
+
+
+# windows/drawdd.c: 716
+DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
+
+
+# windows/drawdd.c: 485
+DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
+
+
+# windows/drawdd.c: 479
+DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
+
+
+# windows/drawdd.c: 782
+DirectDraw: Error %08X getting %s surface desciption\n
+
+
+# windows/drawdd.c: 544
+DirectDraw: Error %08X getting attached back surface\n
+
+
+# windows/drawdd.c: 1134
+DirectDraw: Error %08X getting current display mode\n
+
+
+# windows/drawdd.c: 353
+DirectDraw: Error %08X locking blit surface\n
+
+
+# windows/drawdd.c: 823
+DirectDraw: Error %08X setting clipper hwnd\n
+
+
+# windows/drawdd.c: 831
+DirectDraw: Error %08X setting clipper on primary surface\n
+
+
+# windows/drawdd.c: 426
+DirectDraw: Error %08X unlocking blit surface\n
+
+
+# windows/drawdd.c: 432, 1092
+DirectDraw: Error %08X waiting for VBLANK\n
+
+
+# windows/drawdd.c: 468
+DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
+
+
+# windows/drawdd.c: 347
+DirectDraw: Lost surfaces; deleting and retrying next frame\n
+
+
+# windows/drawdd.c: 1325
+DirectDraw: Mode selected = %4dx%4d@%3dHz\n
+
+
+# windows/drawdd.c: 927
+DirectDraw: New blit size = %dx%d\n
+
+
+# windows/drawdd.c: 1322
+DirectDraw: Selecting video mode...\n
+
+
+# windows/drawdd.c: 196
+DirectDraw: Unable to access ddraw.dll\n
+
+
+# windows/drawdd.c: 204
+DirectDraw: Unable to find DirectDrawCreateEx\n
+
+
+# windows/drawdd.c: 214
+DirectDraw: Unable to find DirectDrawEnumerateExA\n
+
+
+# windows/drawdd.c: 382, 418, 1168
+DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
+
+
+# windows/drawdd.c: 227
+DirectDraw: Using DirectDraw 7\n
+
+
+# windows/drawdd.c: 723
+DirectDraw: Warning - Device does not support hardware stretching\n
+
+
+# windows/drawdd.c: 472
+DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
+
+
+# windows/drawdd.c: 599
+DirectDraw: Warning - device does not support full screen gamma correction.\n
+
+
+# windows/drawd3d.c: 767
+Error creating vertex buffer (%08X)
+
+
+# windows/drawd3d.c: 1089
+Error getting identifier for adapter #%d\n
+
+
+# windows/drawdd.c: 1123
+Error getting identifier for device\n
+
+
+# windows/drawd3d.c: 1098
+Error getting mode for adapter #%d\n
+
+
+# windows/drawd3d.c: 775
+Error setting vertex shader (%08X)
+
+
+# windows/drawd3d.c: 656
+Error: A8R8G8B8 format textures not supported\n
+
+
+# windows/drawd3d.c: 646
+Error: Device does not meet minimum requirements for Direct3D rendering\n
+
+
+# windows/drawd3d.c: 688
+Error: unable to configure a screen texture format\n
+
+
+# windows/config.c: 263
+FULL SCREEN OPTIONS
+
+
+# windows/config.c: 271
+GAME SCREEN OPTIONS
+
+
+# windows/config.c: 303
+INPUT DEVICE OPTIONS
+
+
+# windows/video.c: 991
+Illegal aspect ratio value for %s = %s\n
+
+
+# windows/video.c: 1014
+Illegal resolution value for %s = %s\n
+
+
+# windows/config.c: 848, 970, 981, 995
+Illegal value for %s = %s\n
+
+
+# windows/config.c: 1106
+Input file is for game '%s', not for current game '%s'\n
+
+
+# windows/input.c: 1709
+Invalid %s value %s; reverting to all -- valid values are:\n
+
+
+# windows/input.c: 1634
+Invalid %s value %s; reverting to keyboard\n
+
+
+# windows/video.c: 908
+Invalid video value %s; reverting to gdi\n
+
+
+# windows/window.c: 607
+MAME: %s [%s] - Screen %d
+
+
+# windows/config.c: 138
+MISC OPTIONS
+
+
+# windows/config.c: 236
+PER-WINDOW VIDEO OPTIONS
+
+
+# windows/config.c: 190
+PERFORMANCE OPTIONS
+
+
+# windows/config.c: 1112
+Playing back previously recorded game %s\n
+
+
+# windows/drawd3d.c: 1142
+Proposed video mode not supported on device %s\n
+
+
+# windows/config.c: 290
+SOUND OPTIONS
+
+
+# windows/config.c: 168
+STATE/PLAYBACK OPTIONS
+
+
+# windows/drawd3d.c: 1779
+Texture too big! (wanted: %dx%d, max is %dx%d)\n
+
+
+# windows/config.c: 741
+Unable to create file %s\n
+
+
+# windows/drawd3d.c: 714
+Unable to create the Direct3D device (%08X)\n
+
+
+# windows/drawd3d.c: 434, 495
+Unable to initialize Direct3D.\n
+
+
+# windows/drawdd.c: 270
+Unable to initialize DirectDraw.\n
+
+
+# windows/video.c: 959
+Unable to load PNG file '%s'\n
+
+
+# windows/drawd3d.c: 1982
+Unknown texture blendmode=%d format=%d\n
+
+
+# windows/config.c: 680
+Usage: mame [game] [options]\n\nOptions:\n
+
+
+# windows/config.c: 277
+VECTOR RENDERING OPTIONS
+
+
+# windows/config.c: 201
+VIDEO OPTIONS
+
+
+# windows/config.c: 217
+VIDEO ROTATION OPTIONS
+
+
+# windows/video.c: 470
+Video: Monitor %p = \"%s\" %s\n
+
+
+# windows/video.c: 904
+Warning: -video none doesn't make much sense without -frames_to_run\n
+
+
+# windows/drawd3d.c: 650
+Warning: Device may not perform well for Direct3D rendering\n
+
+
+# windows/video.c: 444
+\n %d partial updates
+
+
+# windows/video.c: 442
+\n %d vector updates
+
+
+# windows/config.c: 212
+amount to scale the screen brightness when paused
+
+
+# windows/config.c: 238
+aspect ratio for all screens; 'auto' here will try to make a best guess
+
+
+# windows/config.c: 243
+aspect ratio of the first screen; 'auto' here will try to make a best guess
+
+
+# windows/config.c: 258
+aspect ratio of the fourth screen; 'auto' here will try to make a best guess
+
+
+# windows/config.c: 248
+aspect ratio of the second screen; 'auto' here will try to make a best guess
+
+
+# windows/config.c: 253
+aspect ratio of the third screen; 'auto' here will try to make a best guess
+
+
+# windows/config.c: 165, 237, 238, 239, 240, 242, 243, 244, 245, 247, 248, 249, 250, 252, 253, 254, 255, 257, 258, 259, 260, 351, 989, 1048, 1056 windows/video.c: 435, 535, 984, 986, 1007, 1009 windows/window.c: 839, 839, 843
+auto
+
+
+# windows/config.c: 221
+automatically rotate screen clockwise 90 degrees if vertical
+
+
+# windows/config.c: 222
+automatically rotate screen counterclockwise 90 degrees if vertical
+
+
+# windows/config.c: 266
+brightness value in full screen mode
+
+
+# windows/config.c: 206
+constrain to the proper aspect ratio
+
+
+# windows/config.c: 267
+contrast value in full screen mode
+
+
+# windows/config.c: 284
+crop artwork to game screen size
+
+
+# windows/config.c: 272
+default game screen brightness correction
+
+
+# windows/config.c: 273
+default game screen contrast correction
+
+
+# windows/config.c: 274
+default game screen gamma correction
+
+
+# windows/config.c: 205
+default to maximized windows; otherwise, windows will be minimized
+
+
+# windows/config.c: 109
+display running parameters
+
+
+# windows/config.c: 342
+enable (keyboard|mouse|joystick) if a dial control is present
+
+
+# windows/config.c: 344
+enable (keyboard|mouse|joystick) if a lightgun control is present
+
+
+# windows/config.c: 346
+enable (keyboard|mouse|joystick) if a mouse control is present
+
+
+# windows/config.c: 341
+enable (keyboard|mouse|joystick) if a pedal control is present
+
+
+# windows/config.c: 343
+enable (keyboard|mouse|joystick) if a trackball control is present
+
+
+# windows/config.c: 340
+enable (keyboard|mouse|joystick) if an analog joystick control is present
+
+
+# windows/config.c: 191
+enable automatic frameskip selection
+
+
+# windows/config.c: 170
+enable automatic restore at startup, and automatic save at exit time
+
+
+# windows/config.c: 285
+enable backdrops if artwork is enabled and available
+
+
+# windows/config.c: 287
+enable bezels if artwork is enabled and available
+
+
+# windows/config.c: 233
+enable bilinear filtering on screen output
+
+
+# windows/config.c: 140
+enable cheat subsystem
+
+
+# windows/config.c: 228
+enable hardware stretching
+
+
+# windows/config.c: 131
+enable loading of configuration files
+
+
+# windows/config.c: 198
+enable multithreading; this enables rendering and blitting on a separate thread
+
+
+# windows/config.c: 286
+enable overlays if artwork is enabled and available
+
+
+# windows/config.c: 265
+enable resolution switching
+
+
+# windows/config.c: 195
+enable sleeping, which gives time back to other applications when idle
+
+
+# windows/config.c: 291
+enable sound output
+
+
+# windows/config.c: 293
+enable the use of external samples if available
+
+
+# windows/config.c: 194
+enable throttling to keep game running in sync with real time
+
+
+# windows/config.c: 264
+enable triple buffering
+
+
+# windows/config.c: 214
+enable using the start of VBLANK for throttling instead of the game time
+
+
+# windows/config.c: 213
+enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
+
+
+# windows/config.c: 204
+enable window mode; otherwise, full screen mode is assumed
+
+
+# windows/config.c: 182
+enable/disable debugger
+
+
+# windows/config.c: 237
+explicit name of all screen; 'auto' here will try to make a best guess
+
+
+# windows/config.c: 242
+explicit name of the first screen; 'auto' here will try to make a best guess
+
+
+# windows/config.c: 257
+explicit name of the fourth screen; 'auto' here will try to make a best guess
+
+
+# windows/config.c: 247
+explicit name of the second screen; 'auto' here will try to make a best guess
+
+
+# windows/config.c: 252
+explicit name of the third screen; 'auto' here will try to make a best guess
+
+
+# windows/video.c: 430
+frame:%d %s%2d%4d%%%4d/%d fps
+
+
+# windows/video.c: 426
+frame:%d Paused
+
+
+# windows/video.c: 435
+fskp
+
+
+# windows/config.c: 268
+gamma value in full screen mode
+
+
+# windows/config.c: 178
+generate an error.log file
+
+
+# windows/config.c: 210
+image enhancement effect
+
+
+# windows/config.c: 165
+in-game ui text lines [16 - 64 or auto]
+
+
+# windows/config.c: 126
+list available devices
+
+
+# windows/config.c: 120
+list optional samples for a driver
+
+
+# windows/config.c: 208
+name of a PNG file to use for visual effects, or 'none'
+
+
+# windows/config.c: 193
+number of frames to run before automatically exiting
+
+
+# windows/config.c: 203
+number of screens to create; usually, you want just one
+
+
+# windows/config.c: 173
+optional filename to write a MNG movie of the current session
+
+
+# windows/config.c: 174
+optional filename to write a WAV file of the current session
+
+
+# windows/config.c: 179
+output error.log data to the system debugger
+
+
+# windows/config.c: 105
+perform driver validation on all game drivers
+
+
+# windows/config.c: 239
+preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
+
+
+# windows/config.c: 244
+preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
+
+
+# windows/config.c: 259
+preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
+
+
+# windows/config.c: 249
+preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
+
+
+# windows/config.c: 254
+preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
+
+
+# windows/config.c: 240
+preferred view for all screens
+
+
+# windows/config.c: 245
+preferred view for the first screen
+
+
+# windows/config.c: 260
+preferred view for the fourth screen
+
+
+# windows/config.c: 250
+preferred view for the second screen
+
+
+# windows/config.c: 255
+preferred view for the third screen
+
+
+# windows/config.c: 219
+rotate screen clockwise 90 degrees
+
+
+# windows/config.c: 220
+rotate screen counterclockwise 90 degrees
+
+
+# windows/config.c: 218
+rotate the game screen according to the game's orientation needs it
+
+
+# windows/config.c: 169
+saved state to load
+
+
+# windows/config.c: 207
+scale screen rendering by this amount in software
+
+
+# windows/config.c: 183
+script for debugger
+
+
+# windows/config.c: 139
+select the system BIOS to use
+
+
+# windows/config.c: 192
+set frameskip to fixed value, 0-12 (autoframeskip must be disabled)
+
+
+# windows/config.c: 292
+set sound output sample rate
+
+
+# windows/config.c: 279
+set vector beam width
+
+
+# windows/config.c: 280
+set vector flicker effect
+
+
+# windows/config.c: 132
+skip displaying the information screen at startup
+
+
+# windows/config.c: 294
+sound volume in decibels (-32 min, 0 max)
+
+
+# windows/config.c: 232
+specify the preferred Direct3D version (8 or 9)
+
+
+# windows/config.c: 197
+thread priority for the main game thread; range from -15 to 1
+
+
+# windows/config.c: 1015
+unable to open log file
+
+
+# windows/config.c: 278
+use antialiasing when drawing vectors
+
+
+# windows/config.c: 196
+use the RDTSC instruction for timing; faster but may result in uneven performance
+
+
+# windows/config.c: 202
+video output method: gdi, ddraw, or d3d
+
 
