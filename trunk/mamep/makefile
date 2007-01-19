@@ -119,6 +119,10 @@ BUILD_ZLIB = 1
 # uncomment next line to generate a link map for exception handling in windows
 # MAP = 1
 
+# specify optimization level or leave commented to use the default
+# (default is OPTIMIZE = 3 normally, or OPTIMIZE = 0 with symbols)
+# OPTIMIZE = 3
+
 
 ###########################################################################
 ##################   END USER-CONFIGURABLE OPTIONS   ######################
@@ -138,6 +142,15 @@ X86_ASM_68000 =
 X86_ASM_68010 =
 X86_ASM_68020 =
 X86_M68K_DRC =
+endif
+
+# specify a default optimization level if none explicitly stated
+ifndef OPTIMIZE
+ifndef SYMBOLS
+OPTIMIZE = 3
+else
+OPTIMIZE = 0
+endif
 endif
 
 
@@ -365,13 +378,11 @@ else
     CFLAGS += -Wno-error
 endif
 
-ifneq ($(SYMBOLS),)
-    CFLAGS += -O0 -Wall -Wno-unused -g
-else
-    CFLAGS += -DNDEBUG \
-	$(ARCH) -O3 -fno-strict-aliasing \
-	-Wall \
-	-Wno-sign-compare \
+ifdef SYMBOLS
+CFLAGS += -g
+endif
+
+CFLAGS += -Wall \
 	-Wno-unused-functions \
 	-Wpointer-arith \
 	-Wbad-function-cast \
@@ -381,12 +392,17 @@ else
 #	-Wformat-security \
 	-Wwrite-strings \
 	-Wdeclaration-after-statement
+
+ifneq ($(OPTIMIZE),0)
+CFLAGS += -Werror -DNDEBUG $(ARCH) -fno-strict-aliasing
 endif
 
 ifneq ($(I686),)
 # If you have a trouble in I686 build, try to remove a comment.
 #    CFLAGS += -fno-builtin -fno-omit-frame-pointer 
 endif
+
+CFLAGS += -O$(OPTIMIZE)
 
 # extra options needed *only* for the osd files
 CFLAGSOSDEPEND = $(CFLAGS)

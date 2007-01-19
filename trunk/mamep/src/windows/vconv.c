@@ -67,9 +67,12 @@ static const translation_info gcc_translate[] =
 #ifdef ICC_BUILD
 	{ 0,		"-O3",					"/O3 /Qip /Qvec_report0" },
 #else
+	{ 0,		"-O1",					"/O2" },
+	{ 0,		"-O2",					"/O2" },
 	{ 0,		"-O3",					"/O2" },
 #endif
-	{ 0,		"-g",					"/RTC1 /MLd /ZI /Zi" },
+	{ 0,		"-Os",					"/O1" },
+	{ 0,		"-g",					"/Zi" },
 	{ VS2005,	"-fno-strict-aliasing",	"" },		// deprecated in VS2005
 	{ 0,		"-fno-strict-aliasing",	"/Oa" },
 	{ 0,		"-Werror",				"/WX" },

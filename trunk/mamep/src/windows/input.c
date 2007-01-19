@@ -2709,7 +2709,7 @@ void osd_customize_inputport_list(input_port_default_entry *defaults)
 			// alt-enter for fullscreen
 			case IPT_OSD_1:
 				idef->token = "TOGGLE_FULLSCREEN";
-				idef->name = _WINDOWS("Toggle fullscreen");
+				idef->name = _WINDOWS("Toggle Fullscreen");
 				seq_set_2(&idef->defaultseq, KEYCODE_LALT, KEYCODE_ENTER);
 				break;
 
@@ -2718,7 +2718,7 @@ void osd_customize_inputport_list(input_port_default_entry *defaults)
 				if (options.disable_normal_ui)
 				{
 					idef->token = "TOGGLE_MENUBAR";
-					idef->name = "Toggle menubar";
+					idef->name = "Toggle Menubar";
 					seq_set_1 (&idef->defaultseq, KEYCODE_SCRLOCK);
 				}
 				break;

@@ -78,8 +78,8 @@ static const char *mame_default_text[] =
 	"\x1a",
 	"\x1b",
 #else
-	"\xab",
-	"\xbb",
+	"\xc2\xab",
+	"\xc2\xbb",
 	"(more)",
 	"(more)",
 	"",
