@@ -997,6 +997,7 @@ void CreateSoundFolders(int parent_index)
 			 && drv.sound[n].sound_type != SOUND_FILTER_LOWPASS)
 			{
 				// sound type #'s are one-based, though that doesn't affect us here
+				if (map[drv.sound[n].sound_type])
 				AddGame(map[drv.sound[n].sound_type], i);
 			}
 		}
