@@ -2013,6 +2013,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 				if (clone) flags[18]++;
 			}
 
+#if 0
 			if (drv.video_attributes & VIDEO_NEEDS_6BITS_PER_GUN)
 			{
 	 			bitx++;
@@ -2024,6 +2025,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 	 			rgbd++;
 				if (clone) rgbdc++;
 			}
+#endif
 
 			if (drv.video_attributes & VIDEO_HAS_SHADOWS)
 			{

@@ -192,8 +192,8 @@
 		extern SHAREDOBJ_FUNC(void)   end_resource_tracking(void);
 		extern SHAREDOBJ_FUNC(void *) _auto_malloc(size_t size, const char *file, int line) ATTR_MALLOC;
 		extern SHAREDOBJ_FUNC(void *) _malloc_or_die(size_t size, const char *file, int line) ATTR_MALLOC;
-		extern SHAREDOBJ_FUNC(char *) auto_strdup(const char *str) ATTR_MALLOC;
-		extern SHAREDOBJ_FUNC(char *) auto_strdup_allow_null(const char *str) ATTR_MALLOC;
+		extern SHAREDOBJ_FUNC(char *) _auto_strdup(const char *str, const char *file, int line) ATTR_MALLOC;
+		extern SHAREDOBJ_FUNC(char *) _auto_strdup_allow_null(const char *str, const char *file, int line) ATTR_MALLOC;
 
 		#include "unzip.h"
 		extern SHAREDOBJ_FUNC(zip_error)              zip_file_open(const char *filename, zip_file **zip);
