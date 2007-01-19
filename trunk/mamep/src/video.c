@@ -1129,18 +1129,18 @@ static void allocate_scalebitmap(void)
 			{
 				info->scale_dirty[bank] = 1;
 
-				info->scale_bitmap[bank] = bitmap_alloc_depth(
+				info->scale_bitmap[bank] = bitmap_alloc_format(
 					Machine->screen[0].width * scale_xsize,
 					Machine->screen[0].height * scale_ysize,
-					scale_depth);
+					(scale_depth == 15) ? BITMAP_FORMAT_RGB15 : BITMAP_FORMAT_RGB32);
 
 				if (!use_work_bitmap)
 					continue;
 
-				info->work_bitmap[bank] = bitmap_alloc_depth(
+				info->work_bitmap[bank] = bitmap_alloc_format(
 					Machine->screen[0].width,
 					Machine->screen[0].height,
-					scale_depth);
+					(scale_depth == 15) ? BITMAP_FORMAT_RGB15 : BITMAP_FORMAT_RGB32);
 			}
 		}
 	}
@@ -1299,13 +1299,13 @@ static void texture_set_scalebitmap(int scrnum, const rectangle *visarea)
 	{
 		UINT32 *src32 = ((UINT32 *)target->line[visarea->min_y]) + visarea->min_x;
 		UINT32 *dst32 = ((UINT32 *)dst->line[visarea->min_y * scale_effect.ysize]) + visarea->min_x * scale_effect.xsize;
-		scale_perform_scale((UINT8 *)src32, (UINT8 *)dst32, target->rowbytes, dst->rowbytes, width, height, 32, info->scale_dirty[curbank], scalebank);
+		scale_perform_scale((UINT8 *)src32, (UINT8 *)dst32, target->rowpixels * 4, dst->rowpixels * 4, width, height, 32, info->scale_dirty[curbank], scalebank);
 	}
 	else
 	{
 		UINT16 *src16 = ((UINT16 *)target->line[visarea->min_y]) + visarea->min_x;
 		UINT16 *dst16 = ((UINT16 *)dst->line[visarea->min_y * scale_effect.ysize]) + visarea->min_x * scale_effect.xsize;
-		scale_perform_scale((UINT8 *)src16, (UINT8 *)dst16, target->rowbytes, dst->rowbytes, width, height, 15, info->scale_dirty[curbank], scalebank);
+		scale_perform_scale((UINT8 *)src16, (UINT8 *)dst16, target->rowpixels * 2, dst->rowpixels * 2, width, height, 15, info->scale_dirty[curbank], scalebank);
 	}
 	info->scale_dirty[curbank] = 0;
 
