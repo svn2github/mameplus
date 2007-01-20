@@ -170,7 +170,7 @@ static int audit_files_simple(int game, const char *searchpath)
 	// mamep: for some games do not use roms
 	if (!DriverUsesRoms(game))
 		return TRUE;
-
+#if 0
 	region = rom_first_region(gamedrv);
 	if (region == NULL)
 		return foundany;
@@ -178,6 +178,7 @@ static int audit_files_simple(int game, const char *searchpath)
 	rom = rom_first_file(region);
 	if (rom == NULL)
 		return foundany;
+#endif
 
 	/* find the file and checksum it, getting the file length along the way */
 	for (drv = gamedrv; drv != NULL; drv = GetDriverClone(drv))
