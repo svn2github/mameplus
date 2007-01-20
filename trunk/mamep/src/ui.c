@@ -1856,7 +1856,7 @@ static UINT32 handler_ingame(UINT32 state)
 
 	/* toggle crosshair display */
 	if (input_ui_pressed(IPT_UI_TOGGLE_CROSSHAIR))
-		drawgfx_toggle_crosshair();
+		video_crosshair_toggle();
 
 	return 0;
 }
@@ -2536,7 +2536,7 @@ static void build_bgtexture(running_machine *machine)
 	UINT8 a = 0xff;
 	int i;
 
-	bgbitmap = bitmap_alloc_depth(1, 1024, 32);
+	bgbitmap = bitmap_alloc(1, 1024);
 	if (!bgbitmap)
 		fatalerror("build_bgtexture failed");
 
