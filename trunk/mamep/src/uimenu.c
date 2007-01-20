@@ -2630,6 +2630,7 @@ static void dip_switch_build_model(input_port_entry *entry, int item_is_selected
 
 static void dip_switch_draw_one(float dip_menu_x1, float dip_menu_y1, float dip_menu_x2, float dip_menu_y2, int model_index)
 {
+	extern float ui_font_height;
 	int toggle_index;
 	int num_toggles = 0;
 	float segment_start_x;
@@ -2699,7 +2700,6 @@ static void dip_switch_draw_one(float dip_menu_x1, float dip_menu_y1, float dip_
 
 	/* add the dip switch name */
 	name_width = ui_get_string_width(dip_switch_model[model_index].dip_name) + ui_get_string_width(" ") / 2;
-	extern float ui_font_height;
 	ui_draw_text_full(	dip_switch_model[model_index].dip_name,
 						segment_start_x - name_width,
 						dip_field_y + (DIP_SWITCH_HEIGHT - ui_font_height)/2,
