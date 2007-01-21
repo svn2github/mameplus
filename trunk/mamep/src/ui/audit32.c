@@ -195,6 +195,11 @@ static int audit_files_simple(int game, const char *searchpath)
 		if (rom == NULL)
 			continue;
 
+		// mamep: bad dump or no dump roms
+		if (hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_BAD_DUMP) 
+			|| hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_NO_DUMP))
+			return TRUE;
+
 		/* open the file if we can */
 		fname = assemble_3_strings(drv->name, PATH_SEPARATOR, ROM_GETNAME(rom));
 		filerr = mame_fopen(searchpath, fname, OPEN_FLAG_READ, &file);

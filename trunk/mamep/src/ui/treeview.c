@@ -1100,7 +1100,7 @@ void CreateDumpingFolders(int parent_index)
 	int nGames = GetNumGames();
 	LPTREEFOLDER lpFolder = treeFolders[parent_index];
 	const rom_entry *region, *rom;
-	const char *name;
+//	const char *name;
 	const game_driver *gamedrv;
 
 	// create our two subfolders
@@ -1129,7 +1129,7 @@ void CreateDumpingFolders(int parent_index)
 			{
 				if (ROMREGION_ISROMDATA(region) || ROMREGION_ISDISKDATA(region) )
 				{
-					name = ROM_GETNAME(rom);
+//					name = ROM_GETNAME(rom);
 					if (hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_BAD_DUMP))				
 						bBadDump = TRUE;
 					if (hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_NO_DUMP))				
