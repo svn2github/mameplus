@@ -121,7 +121,7 @@ BUILD_ZLIB = 1
 
 # specify optimization level or leave commented to use the default
 # (default is OPTIMIZE = 3 normally, or OPTIMIZE = 0 with symbols)
-OPTIMIZE = 3
+# OPTIMIZE = 3
 
 
 ###########################################################################

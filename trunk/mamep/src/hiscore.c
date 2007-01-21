@@ -234,7 +234,7 @@ static void hiscore_save (void)
 		mame_file *f;
 		char *fname;
 		fname = assemble_2_strings(Machine->basename, ".hi");
-		filerr = mame_fopen (SEARCHPATH_HISCORE, fname, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &f);
+		filerr = mame_fopen (SEARCHPATH_HISCORE, fname, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &f);
 		free(fname);
 		LOG(("hiscore_save\n"));
 		if (filerr == FILERR_NONE)
