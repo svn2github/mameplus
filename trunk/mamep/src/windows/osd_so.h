@@ -237,6 +237,12 @@
 		extern SHAREDOBJ_FUNC(void) assign_drivers(void);
 		#endif /* DRIVER_SWITCH */
 
+		// in windows/strconv.c
+		extern SHAREDOBJ_FUNC(char*) astring_from_utf8(const char *s);
+		extern SHAREDOBJ_FUNC(char*) utf8_from_astring(const char *s);
+		extern SHAREDOBJ_FUNC(unsigned short*) wstring_from_utf8(const char *s);
+		extern SHAREDOBJ_FUNC(char*) utf8_from_wstring(const unsigned short *s);
+
 		#ifdef MALLOC_DEBUG
 		// in windows/winalloc.c
 		extern SHAREDOBJ_FUNC(void*) malloc_file_line(size_t size, const char *file, int line);

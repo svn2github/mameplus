@@ -1,6 +1,9 @@
 #####################################################################
 # make SUFFIX=32
 
+# remove main.o from OSDCOREOBJS
+OSDCOREOBJS := $(OSDCOREOBJS:$(OBJ)/$(MAMEOS)/main.o=)
+
 # use CFLAGSOSDEPEND
 $(OBJ)/ui/%.o: src/ui/%.c
 	@echo Compiling $<...

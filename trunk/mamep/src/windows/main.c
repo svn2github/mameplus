@@ -25,11 +25,7 @@ extern int utf8_main(int argc, char **argv);
 //============================================================
 
 #ifdef __GNUC__
-#ifdef WINUI
-int main_(int argc, char **a_argv)
-#else
 int main(int argc, char **a_argv)
-#endif
 #else // !__GNUC__
 int _tmain(int argc, TCHAR **argv)
 #endif // __GNUC__

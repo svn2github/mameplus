@@ -14,6 +14,7 @@
 // MAME headers
 #include "restrack.h"
 #include "strconv.h"
+#include "osd_so.h"
 #include "mame.h"
 #include "unicode.h"
 
