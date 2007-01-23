@@ -84,6 +84,7 @@
 		extern SHAREDOBJ_FUNC(void)	expand_machine_driver(void (*constructor)(machine_config *), machine_config *output);
 		extern SHAREDOBJ_FUNC(int)	mame_validitychecks(int game);
 		extern SHAREDOBJ_FUNC(void)	mame_set_output_channel(output_channel channel, output_callback callback, void *param, output_callback *prevcb, void **prevparam);
+		extern SHAREDOBJ_FUNC(void)	mame_null_output_callback(void *param, const char *format, va_list argptr);
 
 		#include "mamecore.h"
 		extern SHAREDOBJ_FUNC(int)		mame_stricmp(const char *s1, const char *s2);

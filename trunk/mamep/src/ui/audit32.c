@@ -160,6 +160,19 @@ static void Mame32Output(void *param, const char *format, va_list argptr)
 	DetailsPrintf("%s", buffer);
 }
 
+static int ProcessAuditResults(int game, audit_record *audit, int audit_records)
+{
+	output_callback prevcb;
+	void *prevparam;
+	int res;
+
+	mame_set_output_channel(OUTPUT_CHANNEL_INFO, Mame32Output, NULL, &prevcb, &prevparam);
+	res = audit_summary(game, audit_records, audit, TRUE);
+	mame_set_output_channel(OUTPUT_CHANNEL_INFO, prevcb ? prevcb : mame_null_output_callback, prevparam, NULL, NULL);
+
+	return res;
+}
+
 static int audit_files_simple(int game, const char *searchpath)
 {
 	const game_driver *gamedrv = drivers[game];
@@ -220,56 +233,50 @@ static int audit_files_simple(int game, const char *searchpath)
 // Verifies the ROM set while calling SetRomAuditResults
 int Mame32VerifyRomSet(int game)
 {
-	int iStatus;
 	audit_record *audit;
 	int audit_records;
-	output_callback prevcb;
-	void *prevparam;
 	options_type *game_options;
+	int res;
 
 	// apply selecting BIOS
 	game_options = GetGameOptions(game);
 	options.bios = game_options->bios;
 
+#if 0
 	if (!audit_files_simple(game, SEARCHPATH_ROM))
 	{
 		// if rom can't be opened, easy return
 		audit = NULL;
 		audit_records = 0;
-		iStatus = audit_summary(game, audit_records, audit, TRUE);
-		SetRomAuditResults(game, iStatus);
-		return iStatus;
+		res = audit_summary(game, audit_records, audit, TRUE);
+		SetRomAuditResults(game, res);
+		return res;
 	}
+#endif
 
 	audit_records = audit_images(game, AUDIT_VALIDATE_FAST, &audit);
-	mame_set_output_channel(OUTPUT_CHANNEL_INFO, Mame32Output, NULL, &prevcb, &prevparam);
-	iStatus = audit_summary(game, audit_records, audit, TRUE);
-	mame_set_output_channel(OUTPUT_CHANNEL_INFO, prevcb, prevparam, NULL, NULL);
+	res = ProcessAuditResults(game, audit, audit_records);
 	if (audit_records > 0)
 		free(audit);
 
-	SetRomAuditResults(game, iStatus);
-	return iStatus;
+	SetRomAuditResults(game, res);
+	return res;
 }
 
 // Verifies the Sample set while calling SetSampleAuditResults
 int Mame32VerifySampleSet(int game)
 {
-	int iStatus;
 	audit_record *audit;
 	int audit_records;
-	output_callback prevcb;
-	void *prevparam;
+	int res;
 
 	audit_records = audit_samples(game, &audit);
-	mame_set_output_channel(OUTPUT_CHANNEL_INFO, Mame32Output, NULL, &prevcb, &prevparam);
-	iStatus = audit_summary(game, audit_records, audit, TRUE);
-	mame_set_output_channel(OUTPUT_CHANNEL_INFO, prevcb, prevparam, NULL, NULL);
+	res = ProcessAuditResults(game, audit, audit_records);
 	if (audit_records > 0)
 		free(audit);
 
-	SetSampleAuditResults(game, iStatus);
-	return iStatus;
+	SetSampleAuditResults(game, res);
+	return res;
 }
 
 static DWORD WINAPI AuditThreadProc(LPVOID hDlg)
