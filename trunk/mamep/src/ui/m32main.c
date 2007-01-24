@@ -10,6 +10,9 @@
 
 ***************************************************************************/
 
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
 #ifndef DONT_USE_DLL
 #define SHAREDOBJ_IMPORT
 #endif /* DONT_USE_DLL */
@@ -22,11 +25,6 @@
 #define WinMainInDLL
 #endif /* _MSC_VER */
 #endif /* !DONT_USE_DLL */
-
-// import the main() from MAME, but rename it so we can call it indirectly
-#define main main_
-#include "windows/main.c"
-#undef main
 
 #ifdef WinMainInDLL
 SHAREDOBJ_FUNC(int) WinMain_(HINSTANCE    hInstance,

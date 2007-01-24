@@ -230,7 +230,7 @@
 		extern SHAREDOBJ_FUNC(void) winwindow_exit(running_machine *machine);
 
 		// in windows/winmain.c
-		extern SHAREDOBJ_FUNC(int) utf8_main(int argc, char **argv);
+		extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 
 		// in windows/config.c
 		extern SHAREDOBJ_DATA const options_entry windows_opts[];
@@ -291,7 +291,7 @@
 		extern SHAREDOBJ_FUNC(void) winwindow_exit(running_machine *machine);
 
 		// in windows/winmain.c
-		extern SHAREDOBJ_FUNC(int) utf8_main(int argc, char **argv);
+		extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 
 		// in windows/config.c
 		#include "../options.h"
@@ -340,7 +340,7 @@
 	extern SHAREDOBJ_FUNC(void) winwindow_exit(running_machine *machine);
 
 	// in windows/winmain.c
-	extern int utf8_main(int argc, char **argv);
+		extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 
 	// in windows/config.c
 	#ifdef _MSC_VER

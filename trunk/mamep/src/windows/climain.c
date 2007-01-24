@@ -6,10 +6,6 @@
 #include "osd_so.h"
 
 #ifndef DONT_USE_DLL
-#define main main_
-#include "windows/main.c"
-#undef main
-
 int main(int argc, char *argv[])
 {
 	return main_(argc, argv);

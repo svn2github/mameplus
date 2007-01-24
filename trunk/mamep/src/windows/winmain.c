@@ -97,6 +97,9 @@ static void stop_profiler(void);
 //============================================================
 //  utf8_main
 //============================================================
+#define main main_
+#include "windows/main.c"
+#undef main
 
 int utf8_main(int argc, char **argv)
 {
