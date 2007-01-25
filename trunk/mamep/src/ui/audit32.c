@@ -173,63 +173,6 @@ static int ProcessAuditResults(int game, audit_record *audit, int audit_records)
 	return res;
 }
 
-static int audit_files_simple(int game, const char *searchpath)
-{
-	const game_driver *gamedrv = drivers[game];
-	const game_driver *drv;
-	const rom_entry *region, *rom;
-	int foundany = FALSE;
-
-	// mamep: for some games do not use roms
-	if (!DriverUsesRoms(game))
-		return TRUE;
-#if 0
-	region = rom_first_region(gamedrv);
-	if (region == NULL)
-		return foundany;
-
-	rom = rom_first_file(region);
-	if (rom == NULL)
-		return foundany;
-#endif
-
-	/* find the file and checksum it, getting the file length along the way */
-	for (drv = gamedrv; drv != NULL; drv = GetDriverClone(drv))
-	{
-		mame_file_error filerr;
-		mame_file *file;
-		char *fname;
-
-		region = rom_first_region(drv);
-		if (region == NULL)
-			continue;
-
-		rom = rom_first_file(region);
-		if (rom == NULL)
-			continue;
-
-		// mamep: bad dump or no dump roms
-		if (hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_BAD_DUMP) 
-			|| hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_NO_DUMP))
-			return TRUE;
-
-		/* open the file if we can */
-		fname = assemble_3_strings(drv->name, PATH_SEPARATOR, ROM_GETNAME(rom));
-		filerr = mame_fopen(searchpath, fname, OPEN_FLAG_READ, &file);
-		free(fname);
-
-		/* if we got it, extract the hash and length */
-		if (filerr == FILERR_NONE)
-		{
-			mame_fclose(file);
-			foundany = TRUE;
-			break;
-		}
-	}
-
-	return foundany;
-}
-
 // Verifies the ROM set while calling SetRomAuditResults
 int Mame32VerifyRomSet(int game)
 {
@@ -241,18 +184,6 @@ int Mame32VerifyRomSet(int game)
 	// apply selecting BIOS
 	game_options = GetGameOptions(game);
 	options.bios = game_options->bios;
-
-#if 0
-	if (!audit_files_simple(game, SEARCHPATH_ROM))
-	{
-		// if rom can't be opened, easy return
-		audit = NULL;
-		audit_records = 0;
-		res = audit_summary(game, audit_records, audit, TRUE);
-		SetRomAuditResults(game, res);
-		return res;
-	}
-#endif
 
 	audit_records = audit_images(game, AUDIT_VALIDATE_FAST, &audit);
 	res = ProcessAuditResults(game, audit, audit_records);
