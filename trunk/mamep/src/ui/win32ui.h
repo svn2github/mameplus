@@ -41,11 +41,11 @@ extern const ICONDATA g_iconData[];
 HWND GetMainWindow(void);
 HWND GetTreeView(void);
 int GetNumGames(void);
-LPWSTR GetSearchText(void);
 void GetRealColumnOrder(int order[]);
 HICON LoadIconFromFile(const char *iconname);
 void UpdateScreenShot(void);
 void ResizePickerControls(HWND hWnd);
+LPWSTR GetSearchText(void);
 #ifdef USE_VIEW_PCBINFO
 void PaintBackgroundImage(HWND hWnd, HRGN hRgn, int x, int y);
 #endif /* USE_VIEW_PCBINFO */
@@ -69,12 +69,10 @@ int GetMinimumScreenShotWindowWidth(void);
 
 // we maintain an array of drivers sorted by name, useful all around
 int GetDriverIndex(const game_driver *driver);
+int GetParentIndex(const game_driver *driver);
+int GetParentRomSetIndex(const game_driver *driver);
 int GetGameNameIndex(const char *name);
 int GetIndexFromSortedIndex(int sorted_index);
-
-// instead of driver_get_clone() in GUI
-int GetParentIndex(const game_driver *driver);
-const game_driver *GetDriverClone(const game_driver *driver);
 
 // sets text in part of the status bar on the main window
 void SetStatusBarText(int part_index, const char *message);

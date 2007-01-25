@@ -73,10 +73,10 @@ BOOL ScreenShotLoaded(void)
 }
 
 #ifdef MESS
-static BOOL LoadSoftwareScreenShot(const struct GameDriver *drv, LPCSTR lpSoftwareName, int nType)
+static BOOL LoadSoftwareScreenShot(const game_driver *drv, LPCSTR lpSoftwareName, int nType)
 {
 	char *s = alloca(strlen(drv->name) + 1 + strlen(lpSoftwareName) + 5);
-	sprintf(s, "%s/%s", drv->name, lpSoftwareName);
+	sprintf(s, "%s/%s.png", drv->name, lpSoftwareName);
 	return LoadDIB(s, &m_hDIB, &m_hPal, nType);
 }
 #endif /* MESS */
@@ -93,7 +93,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 #endif /* MESS */
 {
 	BOOL loaded = FALSE;
-	const game_driver *clone_of = GetDriverClone(drivers[nGame]);
+	int nParentIndex = GetParentIndex(drivers[nGame]);
 	char buf [MAX_PATH];
 
 	/* No need to reload the same one again */
@@ -110,8 +110,10 @@ BOOL LoadScreenShot(int nGame, int nType)
 	if (lpSoftwareName)
 	{
 		loaded = LoadSoftwareScreenShot(drivers[nGame], lpSoftwareName, nType);
-		if (!loaded && ((clone_of = GetDriverClone(drivers[nGame])) != NULL && !(clone_of->flags & NOT_A_DRIVER)))
-			loaded = LoadSoftwareScreenShot(clone_of, lpSoftwareName, nType);
+		if (!loaded && DriverIsClone(nGame) == TRUE)
+		{
+			loaded = LoadSoftwareScreenShot(drivers[nParentIndex], lpSoftwareName, nType);
+		}
 	}
 	if (!loaded)
 #endif /* MESS */
@@ -132,26 +134,27 @@ BOOL LoadScreenShot(int nGame, int nType)
 	}
 
 	/* If not loaded, see if there is a clone and try that */
-	if (!loaded && clone_of != NULL)
+	if (!loaded && nParentIndex >= 0)
 	{
 #ifdef USE_IPS
 		if (lpIPSName)
 		{
-			sprintf(buf, "%s/%s", clone_of->name, lpIPSName);
+			sprintf(buf, "%s/%s", drivers[nParentIndex]->name, lpIPSName);
 			dprintf("found clone ipsname: %s", buf);
 		}
 		else
 #endif /* USE_IPS */
-			sprintf(buf, "%s", clone_of->name);
+		sprintf(buf, "%s", drivers[nParentIndex]->name);
 		loaded = LoadDIB(buf, &m_hDIB, &m_hPal, nType);
-		if (!loaded && GetDriverClone(clone_of))
+		nParentIndex = GetParentIndex(drivers[nParentIndex]);
+		if (!loaded && nParentIndex >= 0)
 		{
 #ifdef USE_IPS
 			if (lpIPSName)
-				sprintf(buf, "%s/%s", clone_of->parent, lpIPSName);
+				sprintf(buf, "%s/%s", drivers[nParentIndex]->parent, lpIPSName);
 			else
 #endif /* USE_IPS */
-				sprintf(buf, "%s", clone_of->parent);
+				sprintf(buf, "%s", drivers[nParentIndex]->parent);
 			loaded = LoadDIB(buf, &m_hDIB, &m_hPal, nType);
 		}
 	}

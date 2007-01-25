@@ -392,7 +392,6 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 	int i;
 	LPTREEFOLDER lpFolder = GetCurrentFolder();
 	LPTREEFOLDER lpParent = NULL;
-	const game_driver *clone_of = NULL;
 	LPCWSTR filter_text = GetFilterText();
 	LPCWSTR search_text = GetSearchText();
 	
@@ -442,8 +441,7 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 		return FALSE;
 
 	// Filter out clones?
-	if (dwMask & F_CLONES
-	&&	( ( (clone_of = GetDriverClone(drivers[nGame]) ) != NULL) && ( (clone_of->flags & NOT_A_DRIVER) == 0)) )
+	if (dwMask & F_CLONES && DriverIsClone(nGame))
 		return TRUE;
 
 	for (i = 0; g_lpFilterList[i].m_dwFilterType; i++)
@@ -454,6 +452,34 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 				return TRUE;
 		}
 	}
+	return FALSE;
+}
+
+/* Get the parent of game in this view */
+BOOL GetParentFound(int nGame)
+{
+	int nParentIndex = -1;
+	LPTREEFOLDER lpFolder = GetCurrentFolder();
+
+	if( lpFolder )
+	{
+		nParentIndex = GetParentIndex(drivers[nGame]);
+
+		/* return FALSE if no parent is there in this view */
+		if( nParentIndex == -1)
+			return FALSE;
+
+		/* return FALSE if the folder should be HIDDEN in this view */
+		if (TestBit(lpFolder->m_lpGameBits, nParentIndex) == 0)
+			return FALSE;
+
+		/* return FALSE if the game should be HIDDEN in this view */
+		if (GameFiltered(nParentIndex, lpFolder->m_dwFlags))
+			return FALSE;
+
+		return TRUE;
+	}
+
 	return FALSE;
 }
 
@@ -1200,7 +1226,7 @@ void CreateBIOSFolders(int parent_index)
 	int nGames = GetNumGames();
 	int start_folder = numFolders;
 	const game_driver *drv;
-	const game_driver *clone_of;
+	int nParentIndex = -1;
 	LPTREEFOLDER lpFolder = treeFolders[parent_index];
 
 	// no games in top level folder
@@ -1209,17 +1235,21 @@ void CreateBIOSFolders(int parent_index)
 	for (jj = 0; jj < nGames; jj++)
 	{
 		if ( DriverIsClone(jj) )
-			drv = GetDriverClone(drivers[jj]);
+		{
+			nParentIndex = GetParentIndex(drivers[jj]);
+			if (nParentIndex < 0) return;
+			drv = drivers[nParentIndex];
+		}
 		else
 			drv = drivers[jj];
-		clone_of = GetDriverClone(drv);
+		nParentIndex = GetParentIndex(drv);
 
-		if (!clone_of || !clone_of->description)
+		if (nParentIndex < 0 || !drivers[nParentIndex]->description)
 			continue;
 
 		for (i = numFolders-1; i >= start_folder; i--)
 		{
-			if (strcmp(treeFolders[i]->m_lpTitle, clone_of->description) == 0)
+			if (strcmp(treeFolders[i]->m_lpTitle, drivers[nParentIndex]->description) == 0)
 			{
 				AddGame(treeFolders[i],jj);
 				break;
@@ -1229,8 +1259,8 @@ void CreateBIOSFolders(int parent_index)
 		if (i == start_folder-1)
 		{
 			LPTREEFOLDER lpTemp;
-			lpTemp = NewFolder(clone_of->description, 0, FALSE, next_folder_id++, parent_index, IDI_BIOS,
-			                   GetFolderFlags(clone_of->description));
+			lpTemp = NewFolder(drivers[nParentIndex]->description, 0, FALSE, next_folder_id++, parent_index, IDI_BIOS,
+			                   GetFolderFlags(drivers[nParentIndex]->description));
 			AddFolder(lpTemp);
 			AddGame(lpTemp,jj);
 		}

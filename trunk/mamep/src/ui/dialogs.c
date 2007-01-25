@@ -799,7 +799,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			mame_file *mfile;
 			mame_file_error filerr;
 			long filelen;
-			const game_driver *clone_of = NULL;
+			int nParentIndex = -1;
 			char *PcbData;
 			LV_ITEM lvi;
 			HWND hWndList = GetDlgItem(GetMainWindow(), IDC_LIST);
@@ -839,8 +839,9 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			ListView_GetItem(hWndList, &lvi);
 
 			nGame = lvi.lParam;
-			if ((clone_of = GetDriverClone(drivers[nGame]))&& !(clone_of->flags & NOT_A_DRIVER))
-				strcpy(szGame, clone_of->name);
+			nParentIndex = GetParentRomSetIndex(drivers[nGame]);
+			if (nParentIndex >= 0)
+				strcpy(szGame, drivers[nParentIndex]->name);
 			else
 				strcpy(szGame, drivers[nGame]->name);
 
