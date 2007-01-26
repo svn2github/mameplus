@@ -3747,8 +3747,8 @@ GAMEB( 1995, decathlt,  stvbios, stvbios, stv, stv,  decathlt,  ROT0,   "Sega", 
 /* not working,black screen */
 GAMEB( 1999, ffreveng,  stvbios, stvbios, stv, stv,  ffreveng,  ROT0,   "Capcom",     				  "Final Fight Revenge (JUET 990714 V1.000)", GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
 /* CD games */
-GAMEB( 1995, sfish2,    0,       stvbios, stv, stv,  ic13,    ROT0,   "Sega",	     			  "Sport Fishing 2 (UET 951106 V1.10e)", GAME_NO_SOUND | GAME_NOT_WORKING )
-GAMEB( 1995, sfish2j,   sfish2,  stvbios, stv, stv,  ic13,    ROT0,   "Sega",	     			  "Sport Fishing 2 (J 951201 V1.100)", GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME ( 1995, sfish2,    0,       stv, stv,  ic13,      ROT0,   "Sega",	     			  "Sport Fishing 2 (UET 951106 V1.10e)", GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME ( 1995, sfish2j,   sfish2,  stv, stv,  ic13,      ROT0,   "Sega",	     			  "Sport Fishing 2 (J 951201 V1.100)", GAME_NO_SOUND | GAME_NOT_WORKING )
 
 /*
 This is the known list of undumped ST-V games:

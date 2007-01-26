@@ -2680,7 +2680,7 @@ static void build_default_bios(void)
 			const game_driver *drv = drivers[i];
 			int n;
 
-			while (GetParentRomSetIndex(drv) >= 0)
+			while (!(drv->flags & NOT_A_DRIVER) && GetParentIndex(drv) >= 0)
 				drv = drivers[GetParentIndex(drv)];
 
 			for (n = 0; n < MAX_SYSTEM_BIOS; n++)
