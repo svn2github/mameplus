@@ -2,7 +2,7 @@
 #                                        #
 #     Mameinfo.dat日本語版 v0.111u4      #
 #                                        #
-#            January 19, 2007            #
+#            January 21, 2007            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：850 翻訳済：834
-# 追加項目：327 合計：1177
+# Tester報告：857 翻訳済：840
+# 追加項目：327 合計：1184
 #
 
 
@@ -21,7 +21,7 @@ $info=pyramid
 $mame
 [バグ]
 
-- レイアウトエレメントが足りないというエラーが出て起動しない。 pyramid0111u4red, Firewave
+- レイアウトエレメントが足りないというエラーが出て起動しない。 pyramid0111u4red, Firewave / JWallace
 
 $end
 
@@ -88,6 +88,28 @@ $mame
 
 - ボイスの中に、途切れたり鳴らないものがある。
 代わりにブーっとなることもあり。 looping37b14gre, Kurushimi / RansAckeR
+
+$end
+
+$info=mhavoc
+$mame
+[バグ]
+
+- ソース書き直しから、3面の緑色のベクターが正しく表示されず、かわりに紫→白→赤→青→紫の順に点滅する。 mhavoc0111u4gre, ArcadeDude
+
+
+- mhavoc.c全ゲーム：
+
+グラフィックの表示位置が違っているものがある。
+このバグ自体は新しいものではない。 mhavoc057gre, Smitdogg
+
+$end
+
+$info=m4
+$mame
+[バグ]
+
+- DIPスイッチの情報。本家リンク参照。 m4_0111u4gra, gregf
 
 $end
 
@@ -166,6 +188,66 @@ $mame
 [バグ]
 
 - 5つめのUnknownのDIPスイッチはデモサウンドの切り替え。 bigtwin0111u4gra, Speedfreak
+
+$end
+
+$info=pushman
+$mame
+[バグ]
+
+- 画面反転のDIPスイッチが動作しない。 pushman0111u4gra, Speedfreak
+
+
+- 後半の面(特に5-1と5-2)で、タイルマップの問題があるが、
+ドライバ作者はチートのせいにしているようだ。
+
+タイルマップのROMの終わり部分2割が完全に空白(null bytes)なので、
+これは間違いなく吸い出し不良。 pushman058ora, Ashuime
+
+$end
+
+$info=quasar
+$mame
+[バグ]
+
+- 2人プレーゲームなのにプレイヤー3のスタートボタンがマッピングされている。 quasar0111u1gra, Speedfreak
+
+$end
+
+$info=raidena
+$mame
+[バグ]
+
+- 画面反転のDIPスイッチが動作しない。 raidena0111u4gra, Speedfreak
+
+
+- 音楽のチャンネルの中に、しばらくするとずれ出すものがある。
+例えば、1面の真ん中あたりなど。
+親版のraidenでは起きない。 raidena058gre, Jonemaan / RansAckeR / Stefan Lindberg
+
+$end
+
+$info=raidenk
+$mame
+[バグ]
+
+- 画面反転のDIPスイッチが動作しない。 raidena0111u4gra, Speedfreak
+
+$end
+
+$info=randent
+$mame
+[バグ]
+
+- 画面反転のDIPスイッチが動作しない。 raidena0111u4gra, Speedfreak
+
+$end
+
+$info=realbrk
+$mame
+[バグ]
+
+- 画面反転のDIPスイッチが動作しない。プレイヤー2のスタートボタンがマッピングされていない。 realbrk0111u4gra, Speedfreak
 
 $end
 
@@ -3144,16 +3226,6 @@ $mame
 
 $end
 
-$info=raidena
-$mame
-[バグ]
-
-- 音楽のチャンネルの中に、しばらくするとずれ出すものがある。
-例えば、1面の真ん中あたりなど。
-親版のraidenでは起きない。 raidena058gre, Jonemaan / RansAckeR / Stefan Lindberg
-
-$end
-
 $info=commsega
 $mame
 [バグ]
@@ -5434,18 +5506,6 @@ $mame
 
 $end
 
-$info=pushman
-$mame
-[バグ]
-
-- 後半の面(特に5-1と5-2)で、タイルマップの問題があるが、
-ドライバ作者はチートのせいにしているようだ。
-
-タイルマップのROMの終わり部分2割が完全に空白(null bytes)なので、
-これは間違いなく吸い出し不良。 pushman058ora, Ashuime
-
-$end
-
 $info=rollerg
 $mame
 [バグ]
@@ -6234,17 +6294,6 @@ $mame
 
 - テストモード内の「Player Inputs」の「Oil　Slick
 」ボタンを押すと、アートワークの「Missile」ランプが点灯する。逆に「Missile」を押すと「Oil Slick」のランプがつく。 spyhut061gre, Nerox91
-
-$end
-
-$info=mhavoc
-$mame
-[バグ]
-
-- mhavoc.c全ゲーム：
-
-グラフィックの表示位置が違っているものがある。
-このバグ自体は新しいものではない。 mhavoc057gre, Smitdogg
 
 $end
 
