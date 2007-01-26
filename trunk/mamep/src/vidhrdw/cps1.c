@@ -441,9 +441,9 @@ static struct CPS1config cps1_config_table[]=
 };
 
 static int cps_version;
-int scanline1;
-int scanline2;
-int scancalls;
+int cps1_scanline1;
+int cps1_scanline2;
+int cps1_scancalls;
 
 void cps_setversion(int v)
 {
@@ -592,11 +592,11 @@ WRITE16_HANDLER( cps1_output_w )
 	/* To mark scanlines for raster effects */
 	if(offset == 0x52/2)
 	{
-		scanline2 = (data & 0x1ff);
+		cps1_scanline2 = (data & 0x1ff);
 	}
 	if(offset == 0x50/2)
 	{
-		scanline1 = (data & 0x1ff);
+		cps1_scanline1 = (data & 0x1ff);
 	}
 
 
@@ -800,14 +800,14 @@ DRIVER_INIT( cps2_video )
 {
 	cps2_gfx_decode();
 
-	scanline1 = 262;
-	scanline2 = 262;
-	scancalls = 0;
+	cps1_scanline1 = 262;
+	cps1_scanline2 = 262;
+	cps1_scancalls = 0;
 }
 
 
 #if CPS1_DUMP_VIDEO
-void cps1_dump_video(void)
+static void cps1_dump_video(void)
 {
 	FILE *fp;
 	fp=fopen("SCROLL1.DMP", "w+b");
@@ -1147,7 +1147,7 @@ static void get_tile2_info(int tile_index)
 
 
 
-void cps1_update_transmasks(void)
+static void cps1_update_transmasks(void)
 {
 	int i;
 
@@ -1166,7 +1166,7 @@ void cps1_update_transmasks(void)
 	}
 }
 
-void cps1_create_empty_8x8_tile(void)
+static void cps1_create_empty_8x8_tile(void)
 {
 	/* for the 8x8 layer we can't use GFX_RAW so we need to create an empty tile
        so that the 'don't draw tile' kludges work */
@@ -1187,7 +1187,7 @@ void cps1_create_empty_8x8_tile(void)
 
 }
 
-VIDEO_START( cps )
+static VIDEO_START( cps )
 {
 	int i;
 
@@ -1355,7 +1355,7 @@ void cps1_build_palette(void)
 
 ***************************************************************************/
 
-void cps1_find_last_sprite(void)    /* Find the offset of last sprite */
+static void cps1_find_last_sprite(void)    /* Find the offset of last sprite */
 {
     int offset=0;
 	/* Locate the end of table marker */
@@ -1375,7 +1375,7 @@ void cps1_find_last_sprite(void)    /* Find the offset of last sprite */
 }
 
 
-void cps1_render_sprites(mame_bitmap *bitmap, const rectangle *cliprect)
+static void cps1_render_sprites(mame_bitmap *bitmap, const rectangle *cliprect)
 {
 #define DRAWSPRITE(CODE,COLOR,FLIPX,FLIPY,SX,SY)					\
 {																	\
@@ -1595,7 +1595,7 @@ static UINT16 *cps2_objbase(void)
 }
 
 
-void cps2_find_last_sprite(void)    /* Find the offset of last sprite */
+static void cps2_find_last_sprite(void)    /* Find the offset of last sprite */
 {
 	int offset=0;
 	UINT16 *base=cps2_buffered_obj;
@@ -1618,7 +1618,7 @@ void cps2_find_last_sprite(void)    /* Find the offset of last sprite */
 #undef DRAWSPRITE
 }
 
-void cps2_render_sprites(mame_bitmap *bitmap,const rectangle *cliprect,int *primasks)
+static void cps2_render_sprites(mame_bitmap *bitmap,const rectangle *cliprect,int *primasks)
 {
 #define DRAWSPRITE(CODE,COLOR,FLIPX,FLIPY,SX,SY)									\
 {																					\
@@ -1765,7 +1765,7 @@ void cps2_render_sprites(mame_bitmap *bitmap,const rectangle *cliprect,int *prim
 
 
 
-void cps1_render_stars(mame_bitmap *bitmap,const rectangle *cliprect)
+static void cps1_render_stars(mame_bitmap *bitmap,const rectangle *cliprect)
 {
 	int offs;
 	UINT8 *stars_rom = memory_region(REGION_GFX2);
@@ -1832,7 +1832,7 @@ void cps1_render_stars(mame_bitmap *bitmap,const rectangle *cliprect)
 }
 
 
-void cps1_render_layer(mame_bitmap *bitmap,const rectangle *cliprect,int layer,int primask)
+static void cps1_render_layer(mame_bitmap *bitmap,const rectangle *cliprect,int layer,int primask)
 {
 	switch (layer)
 	{
@@ -1847,7 +1847,7 @@ void cps1_render_layer(mame_bitmap *bitmap,const rectangle *cliprect,int layer,i
 	}
 }
 
-void cps1_render_high_layer(mame_bitmap *bitmap, const rectangle *cliprect, int layer)
+static void cps1_render_high_layer(mame_bitmap *bitmap, const rectangle *cliprect, int layer)
 {
 	switch (layer)
 	{

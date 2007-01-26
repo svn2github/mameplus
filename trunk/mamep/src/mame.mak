@@ -1417,6 +1417,7 @@ $(OBJ)/univers.a: \
 	$(OBJ)/drivers/ladybug.o $(OBJ)/vidhrdw/ladybug.o \
 	$(OBJ)/drivers/mrdo.o $(OBJ)/vidhrdw/mrdo.o \
 	$(OBJ)/drivers/redclash.o $(OBJ)/vidhrdw/redclash.o \
+	$(OBJ)/drivers/superdq.o
 
 $(OBJ)/upl.a: \
 	$(OBJ)/drivers/mnight.o $(OBJ)/vidhrdw/mnight.o \
@@ -1480,6 +1481,7 @@ $(OBJ)/misc.a: \
 	$(OBJ)/drivers/pong.o $(OBJ)/sndhrdw/pong.o $(OBJ)/vidhrdw/pong.o \
 	$(OBJ)/drivers/monaco.o $(OBJ)/vidhrdw/monaco.o \
 	$(OBJ)/drivers/1945kiii.o \
+	$(OBJ)/drivers/2mindril.o \
 	$(OBJ)/drivers/4enraya.o $(OBJ)/vidhrdw/4enraya.o \
 	$(OBJ)/drivers/adp.o \
 	$(OBJ)/drivers/afega.o $(OBJ)/vidhrdw/afega.o \
@@ -1626,7 +1628,8 @@ $(OBJ)/drivers/cardline.o:	$(OBJ)/layout/cardline.lh
 $(OBJ)/drivers/cinemat.o:	$(OBJ)/layout/solarq.lh \
 							$(OBJ)/layout/starcas.lh
 
-$(OBJ)/drivers/circus.o:	$(OBJ)/layout/circus.lh
+$(OBJ)/drivers/circus.o:	$(OBJ)/layout/circus.lh \
+							$(OBJ)/layout/crash.lh
 
 $(OBJ)/drivers/copsnrob.o:	$(OBJ)/layout/copsnrob.lh
 
@@ -1645,8 +1648,8 @@ $(OBJ)/drivers/maxaflex.o:	$(OBJ)/layout/maxaflex.lh
 $(OBJ)/drivers/mpu4.o:		$(OBJ)/layout/mpu4.lh \
 
 $(OBJ)/drivers/mw8080bw.o:	$(OBJ)/layout/clowns.lh \
-				$(OBJ)/layout/invaders.lh \
-				$(OBJ)/layout/invad2ct.lh
+							$(OBJ)/layout/invaders.lh \
+							$(OBJ)/layout/invad2ct.lh
 
 $(OBJ)/drivers/meadows.o:	$(OBJ)/layout/deadeye.lh \
 							$(OBJ)/layout/gypsyjug.lh

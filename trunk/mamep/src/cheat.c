@@ -569,6 +569,45 @@ static INT32				menuItemInfoLength = 0;
 
 static UINT32				cheatOptions = 2;
 
+static const char *   kCheatNameTemplates[] =
+{
+    "Infinite Credits",
+   "Infinite Time",
+   "Infinite Lives",
+   "Infinite Energy",
+   "Invincibility",
+   "Infinite Time PL1",
+   "Infinite Lives PL1",
+   "Infinite Energy PL1",
+   "Drain all Energy Now! PL1",
+   "Invincibility PL1",
+   "Infinite Time PL2",
+   "Infinite Lives PL2",
+   "Infinite Energy PL2",
+   "Drain all Energy Now! PL2",
+   "Invincibility PL2",
+   "Infinite Ammo",
+   "Infinite Bombs",
+   "Select starting level",
+   "Rapid Fire",
+   "Infinite Ammo PL1",
+   "Infinite Bombs PL1",
+   "Select Score PL1",
+   "Rapid Fire PL1",
+   "Infinite Ammo PL2",
+   "Infinite Bombs PL2",
+   "Select Score PL2",
+   "Rapid Fire PL2",
+   "Display the Correct Answer",
+   "Infinite ",
+   "Always have ",
+   "Get ",
+   "Lose ",
+   "Finish this ",
+   "---> <ENTER> To Edit <---",
+   "\0"
+};
+
 static CPUInfo rawCPUInfo =
 {
 	0,			// type
@@ -3047,6 +3086,7 @@ static int EditCheatMenu(CheatEntry * entry, int index, int selection)
 	static UINT8		editActive = 0;
 	UINT32				increment = 1;
 	UINT8				dirty = 0;
+	static INT32      currentNameTemplate = 0;
 
 	if(!entry)
 		return 0;
@@ -3710,6 +3750,23 @@ static int EditCheatMenu(CheatEntry * entry, int index, int selection)
 
 		switch(info->fieldType)
 		{
+	         case kType_Name:
+    	        currentNameTemplate--;
+
+        	    if(currentNameTemplate < 0)
+            	{
+	               currentNameTemplate = 0;
+
+	               while(kCheatNameTemplates[currentNameTemplate + 1][0])
+	               {
+    	              currentNameTemplate++;
+        	       }
+            	}
+
+	            entry->name = realloc(entry->name, strlen(kCheatNameTemplates[currentNameTemplate]) + 1);
+    	        strcpy(entry->name, kCheatNameTemplates[currentNameTemplate]);
+        	    break;
+
 			case kType_ActivationKey1:
 			case kType_ActivationKey2:
 				if(info->fieldType == kType_ActivationKey1)
@@ -4013,6 +4070,18 @@ static int EditCheatMenu(CheatEntry * entry, int index, int selection)
 
 		switch(info->fieldType)
 		{
+	         case kType_Name:
+    	        currentNameTemplate++;
+
+        	    if((currentNameTemplate < 0) || !kCheatNameTemplates[currentNameTemplate][0])
+            	{
+	               currentNameTemplate = 0;
+    	        }
+
+	            entry->name = realloc(entry->name, strlen(kCheatNameTemplates[currentNameTemplate]) + 1);
+    	        strcpy(entry->name, kCheatNameTemplates[currentNameTemplate]);
+        	    break;
+
 			case kType_ActivationKey1:
 			case kType_ActivationKey2:
 				if(info->fieldType == kType_ActivationKey1)

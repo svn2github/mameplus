@@ -186,6 +186,7 @@ OSDCOREOBJS = \
 	$(OBJ)/$(MAMEOS)/winmisc.o \
 	$(OBJ)/$(MAMEOS)/winsync.o \
 	$(OBJ)/$(MAMEOS)/wintime.o \
+	$(OBJ)/$(MAMEOS)/winutil.o \
 	$(OBJ)/$(MAMEOS)/winwork.o \
 
 

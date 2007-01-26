@@ -1471,6 +1471,7 @@ int bitmap_format_to_bpp(mame_bitmap_format format)
 		case BITMAP_FORMAT_YUY16:
 			return 16;
 
+		case BITMAP_FORMAT_INDEXED32:
 		case BITMAP_FORMAT_RGB32:
 		case BITMAP_FORMAT_ARGB32:
 			return 32;
@@ -1679,7 +1680,7 @@ static void crosshair_render(void)
 		if (ipt->analog.crossaxis != CROSSHAIR_AXIS_NONE)
 		{
 			float value = (float)(readinputport(portnum) - ipt->analog.min) / (float)(ipt->analog.max - ipt->analog.min);
-			value *= ipt->analog.crossscale;
+			value = (value - 0.5f) * ipt->analog.crossscale + 0.5f;
 			value += ipt->analog.crossoffset;
 
 			/* switch off the axis */
