@@ -1192,7 +1192,7 @@ void sms_render_tileline(int scanline, struct sms_vdp* chip)
 void sms_copy_to_renderbuffer(int scanline, struct sms_vdp* chip)
 {
 	int x;
-	UINT16* lineptr = chip->r_bitmap->line[scanline];
+	UINT16* lineptr = BITMAP_ADDR16(chip->r_bitmap, scanline, 0);
 
 	for (x=0;x<256;x++)
 	{
@@ -1335,7 +1335,7 @@ void show_tiles(struct sms_vdp* chip)
 			for (yy=0;yy<8;yy++)
 			{
 				int drawypos = y*8+yy;
-				UINT16* lineptr = chip->r_bitmap->line[drawypos];
+				UINT16* lineptr = BITMAP_ADDR16(chip->r_bitmap, drawypos, 0);
 
 				UINT32 gfxdata = (SMS_VDP_VRAM(count)<<24)|(SMS_VDP_VRAM(count+1)<<16)|(SMS_VDP_VRAM(count+2)<<8)|(SMS_VDP_VRAM(count+3)<<0);
 
@@ -1459,8 +1459,8 @@ VIDEO_UPDATE(sms)
 
 	for (y=0;y<224;y++)
 	{
-		UINT16* lineptr = bitmap->line[y];
-		UINT16* srcptr =  vdp1->r_bitmap->line[y];
+		UINT16* lineptr = BITMAP_ADDR16(bitmap, y, 0);
+		UINT16* srcptr =  BITMAP_ADDR16(vdp1->r_bitmap, y, 0);
 
 		for (x=0;x<256;x++)
 		{
@@ -4380,8 +4380,8 @@ VIDEO_UPDATE(systeme)
 
 	for (y=0;y<192;y++)
 	{
-		UINT16* lineptr = bitmap->line[y];
-		UINT16* srcptr =  vdp1->r_bitmap->line[y];
+		UINT16* lineptr = BITMAP_ADDR16(bitmap, y, 0);
+		UINT16* srcptr =  BITMAP_ADDR16(vdp1->r_bitmap, y, 0);
 
 		for (x=0;x<256;x++)
 		{
@@ -4392,8 +4392,8 @@ VIDEO_UPDATE(systeme)
 
 	for (y=0;y<192;y++)
 	{
-		UINT16* lineptr = bitmap->line[y];
-		UINT16* srcptr =  vdp2->r_bitmap->line[y];
+		UINT16* lineptr = BITMAP_ADDR16(bitmap, y, 0);
+		UINT16* srcptr =  BITMAP_ADDR16(vdp2->r_bitmap, y, 0);
 
 		for (x=0;x<256;x++)
 		{
