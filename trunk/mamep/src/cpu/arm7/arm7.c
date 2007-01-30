@@ -462,5 +462,3 @@ static char *Spec_DO( char *pBuf, UINT32 opcode, char *pConditionCode, char *pBu
 #endif
 #endif
 
-
-

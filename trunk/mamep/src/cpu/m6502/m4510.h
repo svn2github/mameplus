@@ -46,5 +46,3 @@ extern unsigned m4510_dasm(char *buffer, offs_t pc, const UINT8 *oprom, const UI
 #endif
 
 
-
-

@@ -539,5 +539,3 @@ void m4510_get_info(UINT32 state, cpuinfo *info)
 	}
 }
 
-
-

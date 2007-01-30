@@ -1048,5 +1048,3 @@ GAME( 1986, youma,    ninjemak, ninjemak, ninjemak, 0, ROT270, "Nichibutsu", "Yo
 GAME( 1986, youmab,   ninjemak, ninjemak, ninjemak, youmab, ROT270, "bootleg", "Youma Ninpou Chou (Game Electronics bootleg, set 1)", GAME_NOT_WORKING|GAME_SUPPORTS_SAVE ) // scrolling doesn't work
 GAME( 1986, youmab2,  ninjemak, ninjemak, ninjemak, youmab, ROT270, "bootleg", "Youma Ninpou Chou (Game Electronics bootleg, set 2)", GAME_NOT_WORKING|GAME_SUPPORTS_SAVE ) // scrolling doesn't work
 
-
-

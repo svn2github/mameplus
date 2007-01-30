@@ -36,5 +36,3 @@ extern unsigned z80_dasm(char *buffer, offs_t pc, const UINT8 *oprom, const UINT
 
 #endif
 
-
-

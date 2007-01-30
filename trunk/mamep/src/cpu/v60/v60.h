@@ -88,5 +88,3 @@ void v60_get_info(UINT32 state, cpuinfo *info);
 void v70_get_info(UINT32 state, cpuinfo *info);
 #endif
 
-
-

@@ -30,5 +30,3 @@ extern UINT8 *namco_wavedata;
 
 #endif
 
-
-

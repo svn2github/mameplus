@@ -3209,5 +3209,3 @@ void rm7000le_get_info(UINT32 state, cpuinfo *info)
 }
 #endif
 
-
-

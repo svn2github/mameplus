@@ -1033,5 +1033,3 @@ void sn76477_get_info(void *token, UINT32 state, sndinfo *info)
 	}
 }
 
-
-

@@ -923,5 +923,3 @@ void namco_cus30_get_info(void *token, UINT32 state, sndinfo *info)
 	}
 }
 
-
-

@@ -729,5 +729,3 @@ static unsigned int example_word_TEN[619]={
 };
 #endif
 
-
-

@@ -1950,5 +1950,3 @@ void SE3208_get_info(UINT32 state, cpuinfo *info)
 	}
 }
 
-
-

@@ -152,5 +152,3 @@ extern void spc700_get_info(UINT32 state, cpuinfo *info);
 
 #endif /* SPC700__HEADER */
 
-
-

@@ -1224,5 +1224,3 @@ GAME( 1989, twinfalc, 0,        whizz, 	  whizz,    whizz,    ROT0,   "Philko (P
 GAME( 1989, whizz,    twinfalc, whizz, 	  whizz,    whizz,    ROT0,   "Philko", "Whizz", 0 )
 
 
-
-

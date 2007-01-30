@@ -134,5 +134,3 @@ const static char interp_coeff[8] = {
 8, 8, 8, 4, 4, 2, 2, 1
 };
 
-
-

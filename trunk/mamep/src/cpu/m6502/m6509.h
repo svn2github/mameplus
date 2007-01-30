@@ -41,5 +41,3 @@ void m6509_get_info(UINT32 state, cpuinfo *info);
 #endif /* _M6509_H */
 
 
-
-

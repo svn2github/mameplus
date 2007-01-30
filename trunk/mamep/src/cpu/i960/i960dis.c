@@ -285,5 +285,3 @@ char *i960_disassemble(disassemble_t *diss)
 
 
 
-
-

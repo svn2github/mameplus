@@ -261,5 +261,3 @@ extern unsigned deco16_dasm(char *buffer, offs_t pc, const UINT8 *oprom, const U
 
 #endif /* _M6502_H */
 
-
-

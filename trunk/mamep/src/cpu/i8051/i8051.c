@@ -2537,5 +2537,3 @@ void i8752_get_info(UINT32 state, cpuinfo *info)
 	}
 }
 
-
-

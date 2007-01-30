@@ -155,5 +155,3 @@ offs_t upd7807_dasm(char *buffer, offs_t pc, const UINT8 *oprom, const UINT8 *op
 
 #endif
 
-
-

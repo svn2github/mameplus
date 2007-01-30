@@ -81,5 +81,3 @@ extern unsigned DasmSH2( char *dst, unsigned pc, UINT16 opcode );
 
 #endif /* _SH2_H */
 
-
-

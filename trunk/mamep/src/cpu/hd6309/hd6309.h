@@ -54,5 +54,3 @@ extern unsigned Dasm6309 (char *buffer, unsigned pc);
 
 #endif /* _HD6309_H */
 
-
-
