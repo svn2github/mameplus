@@ -422,6 +422,8 @@ const int win_key_trans_table[][4] =
 	{ KEYCODE_LWIN, 		DIK_LWIN,			VK_LWIN, 		0 },
 	{ KEYCODE_RWIN, 		DIK_RWIN,			VK_RWIN, 		0 },
 	{ KEYCODE_MENU, 		DIK_APPS,			VK_APPS, 		0 },
+	{ KEYCODE_PAUSE, 		DIK_PAUSE,			VK_PAUSE,		0 },
+	{ KEYCODE_CANCEL,		0,					VK_CANCEL,		0 },
 	{ KEYCODE_KANA,			DIK_KANA,			0x15,	 		0 },
 	{ KEYCODE_CONVERT,		DIK_CONVERT,		0x1c,			0 },
 	{ KEYCODE_NONCONVERT,	DIK_NOCONVERT,		0x1d,			0 },

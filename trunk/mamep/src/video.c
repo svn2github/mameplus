@@ -116,7 +116,6 @@ int scale_ysize;
 static void video_exit(running_machine *machine);
 static void allocate_graphics(const gfx_decode *gfxdecodeinfo);
 static void decode_graphics(const gfx_decode *gfxdecodeinfo);
-static void scale_vectorgames(int gfx_width, int gfx_height, int *width, int *height);
 static void init_buffered_spriteram(void);
 static void recompute_fps(int skipped_it);
 static void movie_record_frame(int scrnum);
@@ -160,7 +159,7 @@ int video_init(running_machine *machine)
 			video_screen_configure(scrnum, state->width, state->height, &state->visarea, state->refresh);
 
 			/* reset VBLANK timing */
-			info->vblank_time = time_zero;
+			info->vblank_time = sub_mame_times(time_zero, double_to_mame_time(Machine->screen[0].vblank));
 
 			/* register for save states */
 			state_save_register_item("video", scrnum, info->vblank_time.seconds);
@@ -199,12 +198,15 @@ int video_init(running_machine *machine)
 		fatalerror("tilemap_init failed");
 
 	/* create a render target for snapshots */
-	snap_bitmap = NULL;
-	snap_target = render_target_alloc(layout_snap, RENDER_CREATE_SINGLE_FILE | RENDER_CREATE_HIDDEN);
-	assert(snap_target != NULL);
-	if (snap_target == NULL)
-		return 1;
-	render_target_set_layer_config(snap_target, 0);
+	if (Machine->drv->screen[0].tag != NULL)
+	{
+		snap_bitmap = NULL;
+		snap_target = render_target_alloc(layout_snap, RENDER_CREATE_SINGLE_FILE | RENDER_CREATE_HIDDEN);
+		assert(snap_target != NULL);
+		if (snap_target == NULL)
+			return 1;
+		render_target_set_layer_config(snap_target, 0);
+	}
 
 	/* create crosshairs */
 	crosshair_init();
@@ -907,6 +909,10 @@ static void save_frame_with(mame_file *fp, int scrnum, png_error (*write_handler
 
 	assert(scrnum >= 0 && scrnum < MAX_SCREENS);
 
+	/* if no screens, do nothing */
+	if (snap_target == NULL)
+		return;
+
 	/* select the appropriate view in our dummy target */
 	render_target_set_view(snap_target, scrnum);
 
@@ -1188,8 +1194,8 @@ static void convert_palette_to_32(const mame_bitmap *src, mame_bitmap *dst, cons
 
 	for (y = visarea->min_y; y < visarea->max_y; y++)
 	{
-		UINT32 *dst32 = ((UINT32 *)dst->line[y]) + visarea->min_x;
-		UINT16 *src16 = ((UINT16 *)src->line[y]) + visarea->min_x;
+		UINT32 *dst32 = BITMAP_ADDR32(dst, y, visarea->min_x);
+		UINT16 *src16 = BITMAP_ADDR16(src, y, visarea->min_x);
 
 		for (x = visarea->min_x; x < visarea->max_x; x++)
 			*dst32++ = palette[*src16++];
@@ -1202,8 +1208,8 @@ static void convert_palette_to_15(const mame_bitmap *src, mame_bitmap *dst, cons
 
 	for (y = visarea->min_y; y < visarea->max_y; y++)
 	{
-		UINT16 *dst16 = ((UINT16 *)dst->line[y]) + visarea->min_x;
-		UINT16 *src16 = ((UINT16 *)src->line[y]) + visarea->min_x;
+		UINT16 *dst16 = BITMAP_ADDR16(dst, y, visarea->min_x);
+		UINT16 *src16 = BITMAP_ADDR16(src, y, visarea->min_x);
 
 		for (x = visarea->min_x; x < visarea->max_x; x++)
 		{
@@ -1219,8 +1225,8 @@ static void convert_15_to_32(const mame_bitmap *src, mame_bitmap *dst, const rec
 
 	for (y = visarea->min_y; y < visarea->max_y; y++)
 	{
-		UINT32 *dst32 = ((UINT32 *)dst->line[y]) + visarea->min_x;
-		UINT16 *src16 = ((UINT16 *)src->line[y]) + visarea->min_x;
+		UINT32 *dst32 = BITMAP_ADDR32(dst, y, visarea->min_x);
+		UINT16 *src16 = BITMAP_ADDR16(src, y, visarea->min_x);
 
 		for (x = visarea->min_x; x < visarea->max_x; x++)
 		{
@@ -1237,8 +1243,8 @@ static void convert_32_to_15(mame_bitmap *src, mame_bitmap *dst, const rectangle
 
 	for (y = visarea->min_y; y < visarea->max_y; y++)
 	{
-		UINT16 *dst16 = ((UINT16 *)dst->line[y]) + visarea->min_x;
-		UINT32 *src32 = ((UINT32 *)src->line[y]) + visarea->min_x;
+		UINT16 *dst16 = BITMAP_ADDR16(dst, y, visarea->min_x);
+		UINT32 *src32 = BITMAP_ADDR32(src, y, visarea->min_x);
 
 		for (x = visarea->min_x; x < visarea->max_x; x++)
 		{
@@ -1297,14 +1303,14 @@ static void texture_set_scalebitmap(int scrnum, const rectangle *visarea)
 	dst = info->scale_bitmap[curbank];
 	if (scale_depth == 32)
 	{
-		UINT32 *src32 = ((UINT32 *)target->line[visarea->min_y]) + visarea->min_x;
-		UINT32 *dst32 = ((UINT32 *)dst->line[visarea->min_y * scale_effect.ysize]) + visarea->min_x * scale_effect.xsize;
+		UINT32 *src32 = BITMAP_ADDR32(target, visarea->min_y, visarea->min_x);
+		UINT32 *dst32 = BITMAP_ADDR32(dst, visarea->min_y * scale_effect.ysize, visarea->min_x * scale_effect.xsize);
 		scale_perform_scale((UINT8 *)src32, (UINT8 *)dst32, target->rowpixels * 4, dst->rowpixels * 4, width, height, 32, info->scale_dirty[curbank], scalebank);
 	}
 	else
 	{
-		UINT16 *src16 = ((UINT16 *)target->line[visarea->min_y]) + visarea->min_x;
-		UINT16 *dst16 = ((UINT16 *)dst->line[visarea->min_y * scale_effect.ysize]) + visarea->min_x * scale_effect.xsize;
+		UINT16 *src16 = BITMAP_ADDR16(target, visarea->min_y, visarea->min_x);
+		UINT16 *dst16 = BITMAP_ADDR16(dst, visarea->min_y * scale_effect.ysize, visarea->min_x * scale_effect.xsize);
 		scale_perform_scale((UINT8 *)src16, (UINT8 *)dst16, target->rowpixels * 2, dst->rowpixels * 2, width, height, 15, info->scale_dirty[curbank], scalebank);
 	}
 	info->scale_dirty[curbank] = 0;
@@ -1359,8 +1365,7 @@ mame_bitmap *bitmap_alloc_core(int width, int height, mame_bitmap_format format,
 	bitmap = use_auto ? auto_malloc(sizeof(mame_bitmap)) : malloc(sizeof(mame_bitmap));
 	if (bitmap != NULL)
 	{
-		int i, rowlen, rdwidth, bitmapsize, linearraysize, pixelsize;
-		UINT8 *bm;
+		int bitmapbytes;
 
 		/* initialize the basic parameters */
 		bitmap->width = width;
@@ -1368,43 +1373,23 @@ mame_bitmap *bitmap_alloc_core(int width, int height, mame_bitmap_format format,
 		bitmap->bpp = bpp;
 		bitmap->format = format;
 
-		/* determine pixel size in bytes */
-		pixelsize = bpp / 8;
+		/* round the width to a multiple of 8 and add some padding */
+		bitmap->rowpixels = ((width + 7) & ~7) + BITMAP_SAFETY;
 
-		/* round the width to a multiple of 8 */
-		rdwidth = (width + 7) & ~7;
-		rowlen = rdwidth + 2 * BITMAP_SAFETY;
-		bitmap->rowpixels = rowlen;
-
-		/* now convert from pixels to bytes */
-		rowlen *= pixelsize;
-
-		/* determine total memory for bitmap and line arrays */
-		bitmapsize = (height + 2 * BITMAP_SAFETY) * rowlen;
-		linearraysize = (height + 2 * BITMAP_SAFETY) * sizeof(UINT8 *);
-
-		/* align to 16 bytes */
-		linearraysize = (linearraysize + 15) & ~15;
+		/* determine total memory for bitmap */
+		bitmapbytes = (height + 2 * BITMAP_SAFETY) * bitmap->rowpixels * (bitmap->bpp / 8);
 
 		/* allocate the bitmap data plus an array of line pointers */
-		bitmap->line = use_auto ? auto_malloc(linearraysize + bitmapsize) : malloc(linearraysize + bitmapsize);
-		if (bitmap->line == NULL)
+		bitmap->base = use_auto ? auto_malloc(bitmapbytes) : malloc(bitmapbytes);
+		if (bitmap->base == NULL)
 		{
-			if (!use_auto) free(bitmap);
+			free(bitmap);
 			return NULL;
 		}
+		memset(bitmap->base, 0, bitmapbytes);
 
-		/* clear ALL bitmap, including safety area, to avoid garbage on right */
-		bm = (UINT8 *)bitmap->line + linearraysize;
-		memset(bm, 0, (height + 2 * BITMAP_SAFETY) * rowlen);
-
-		/* initialize the line pointers */
-		for (i = 0; i < height + 2 * BITMAP_SAFETY; i++)
-			bitmap->line[i] = &bm[i * rowlen + BITMAP_SAFETY * pixelsize];
-
-		/* adjust for the safety rows */
-		bitmap->line += BITMAP_SAFETY;
-		bitmap->base = bitmap->line[0];
+		/* adjust the base to avoid safety rows */
+		bitmap->base = (UINT8 *)bitmap->base + (BITMAP_SAFETY * bitmap->rowpixels + BITMAP_SAFETY) * (bitmap->bpp / 8);
 	}
 
 	/* return the result */
@@ -1440,15 +1425,17 @@ mame_bitmap *auto_bitmap_alloc_format(int width, int height, mame_bitmap_format 
 
 void bitmap_free(mame_bitmap *bitmap)
 {
+	void *membase;
+
 	/* skip if NULL */
-	if (!bitmap)
+	if (bitmap == NULL)
 		return;
 
 	/* unadjust for the safety rows */
-	bitmap->line -= BITMAP_SAFETY;
+	membase = (UINT8 *)bitmap->base - (BITMAP_SAFETY * bitmap->rowpixels + BITMAP_SAFETY) * (bitmap->bpp / 8);
 
 	/* free the memory */
-	free(bitmap->line);
+	free(membase);
 	free(bitmap);
 }
 

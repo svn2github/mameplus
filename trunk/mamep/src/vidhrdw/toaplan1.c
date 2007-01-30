@@ -798,8 +798,8 @@ void toaplan1_sprite_mask
 
 			for( y=sy; y<ey; y++ )
 		{
-				unsigned short *dest = (unsigned short *)dest_bmp->line[y];
-				unsigned short *source = (unsigned short *)src_bmp->line[y];
+				UINT16 *dest = BITMAP_ADDR16(dest_bmp, y, 0);
+				UINT16 *source = BITMAP_ADDR16(src_bmp, y, 0);
 				int x;
 
 				for( x=sx; x<ex; x++ )
@@ -899,9 +899,9 @@ void toaplan1_sprite_copy
 
 			for( y=sy; y<ey; y++ )
 	{
-				unsigned short *dest = (unsigned short *)dest_bmp->line[y];
-				unsigned short *source = (unsigned short *)src_bmp->line[y];
-				unsigned short *look = (unsigned short *)look_bmp->line[y];
+				UINT16 *dest = BITMAP_ADDR16(dest_bmp, y, 0);
+				UINT16 *source = BITMAP_ADDR16(src_bmp, y, 0);
+				UINT16 *look = BITMAP_ADDR16(look_bmp, y, 0);
 				int x;
 
 				for( x=sx; x<ex; x++ )
@@ -979,37 +979,37 @@ void toaplan1_sprite_0_copy
 		if( sx < clip->min_x)
 		{ /* clip left */
 			sx = clip->min_x;
-	}
+		}
 		if( sy < clip->min_y )
 		{ /* clip top */
 			sy = clip->min_y;
-	}
+		}
 		if( ex > clip->max_x+1 )
 		{ /* clip right */
 			ex = clip->max_x + 1;
-	}
+		}
 		if( ey > clip->max_y+1 )
 		{ /* clip bottom */
 			ey = clip->max_y + 1;
-	}
+		}
 
 		if( ex>sx )
 		{ /* skip if inner loop doesn't draw anything */
 			int y;
 
 			for( y=sy; y<ey; y++ )
-	{
-				unsigned short *dest = (unsigned short *)dest_bmp->line[y];
-				unsigned short *look = (unsigned short *)look_bmp->line[y];
+			{
+				UINT16 *dest = BITMAP_ADDR16(dest_bmp, y, 0);
+				UINT16 *look = BITMAP_ADDR16(look_bmp, y, 0);
 				int x;
 
 				for( x=sx; x<ex; x++ )
-	{
+				{
 					if( look[x] != transparent_color )
 						dest[x] = transparent_color;
-	}
-	}
-	}
+				}
+			}
+		}
 	}
 }
 

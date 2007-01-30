@@ -11,7 +11,6 @@
 #include "chdcd.h"
 #include "md5.h"
 #include "sha1.h"
-#include "osd_so.h"
 #include <stdarg.h>
 #include <stdio.h>
 #include <time.h>
@@ -2244,7 +2243,7 @@ int CLIB_DECL main(int argc, char **argv)
 		{ "-setchs",		do_setchs, 0 },
 		{ "-split",			do_split, 0 },
 	};
-	//extern char build_version[];
+	extern char build_version[];
 	int i;
 
 	/* print the header */
