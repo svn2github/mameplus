@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.111u4      #
+#     Mameinfo.dat日本語版 v0.111u5      #
 #                                        #
-#            January 21, 2007            #
+#            January 26, 2007            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,26 +12,10 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：857 翻訳済：840
-# 追加項目：327 合計：1184
+# Tester報告：863 翻訳済：847
+# 追加項目：332 合計：1195
 #
 
-
-$info=pyramid
-$mame
-[バグ]
-
-- レイアウトエレメントが足りないというエラーが出て起動しない。 pyramid0111u4red, Firewave / JWallace
-
-$end
-
-$info=cobracom
-$mame
-[バグ]
-
-- サウンドバランスが悪く、効果音がほとんど聞こえない。日本版は少しまし。 cobracom0111u3ora, Speedfreak / Stefan Lindberg
-
-$end
 
 $info=oscar
 $mame
@@ -41,30 +25,19 @@ $mame
 
 $end
 
-$info=dragngun
-$mame
-[バグ]
-
-- Coin 2の定義がダブっている。またDIPスイッチの一番下のUnknownはデバッグモード。さらに、フリープレイのDIP設定が動作していない。 dragngun0111u3gra, Speedfreak
-
-
-- ラスボスの体力の減り方が異常に早い。体力が無くなると、座り込んでゲームが進まなくなる。 dragngun067yel, Darkk
-
-$end
-
-$info=lockload
-$mame
-[バグ]
-
-- ほとんどのボタン定義がダブっている。 lockload0111u3gra, Speedfreak
-
-$end
-
 $info=ertictac
 $mame
 [バグ]
 
 - 起動時にクラッシュする。0.111では動作する。 ertictac0111u4red, Tafoid
+
+$end
+
+$info=borntofi
+$mame
+[バグ]
+
+- 照準の表示方法を更新してから、実際に撃っている場所と照準が大きくずれる。 borntofi0111u4gre, twisty
 
 $end
 
@@ -118,6 +91,14 @@ $mame
 [バグ]
 
 - カクテルモードでプレイヤー2の画面が反転しない。 ninjakd2_0111u3gra, Speedfreak
+
+$end
+
+$info=acrobatm
+$mame
+[バグ]
+
+- P1 Button 3はあるが、P2のは無い。 acrobatm0111u4gra, Speedfreak
 
 $end
 
@@ -180,6 +161,14 @@ $mame
 [バグ]
 
 - 画面反転時に表示不具合がでる。 pipedrm0111u4gre, Speedfreak
+
+$end
+
+$info=pkscram
+$mame
+[バグ]
+
+- アトラクトモード中にフリーズする。0.109から。 pkscram0111u4red, Speedfreak / Tafoid
 
 $end
 
@@ -248,6 +237,20 @@ $mame
 [バグ]
 
 - 画面反転のDIPスイッチが動作しない。プレイヤー2のスタートボタンがマッピングされていない。 realbrk0111u4gra, Speedfreak
+
+$end
+
+$info=renegade
+$mame
+[情報]
+
+- テストモードにするには、スタートボタン1、2両方を押しながらリセット。
+
+
+[バグ]
+
+- 0.111u4から画面が真っ黒のままになる。
+コインを入れると音はする。 renegade0111u4red, r0ast3r
 
 $end
 
@@ -1029,6 +1032,14 @@ $mame
 [バグ]
 
 - どのボタンを押してもコンティニュー機能が動作しない。 shackled083yel, Twisty / TriggerFin
+
+$end
+
+$info=dragngun
+$mame
+[バグ]
+
+- ラスボスの体力の減り方が異常に早い。体力が無くなると、座り込んでゲームが進まなくなる。 dragngun067yel, Darkk
 
 $end
 
@@ -7293,6 +7304,14 @@ $mame
 
 $end
 
+$info=fhboxers
+$mame
+[情報]
+
+- 起動するにはF2キーでサービスモードに入り、“System Assignment”内の“Cabinet Type”を1Pに設定する。
+
+$end
+
 $info=fireshrk
 $mame
 [情報]
@@ -7334,6 +7353,17 @@ $mame
 [情報]
 
 - スタートボタンは、ポーション用のキーに使う。
+
+$end
+
+$info=gigawing
+$mame
+[情報]
+
+- アトラクトモードでのフェードアウト処理が遅くなるため、画面とサウンドがシンクロしない。
+
+
+- 背景と比べるとスプライトの描画が1フレームずれる。
 
 $end
 
@@ -7567,6 +7597,14 @@ $mame
 
 $end
 
+$info=msh
+$mame
+[情報]
+
+- シュマゴラスのカオスディメンション発動時の背景表示が不完全。
+
+$end
+
 $info=mspacman
 $mame
 [情報]
@@ -7701,6 +7739,14 @@ $mame
 
 $end
 
+$info=progear
+$mame
+[情報]
+
+- 実機よりも速度低下が頻繁に起こる。
+
+$end
+
 $info=qix
 $mame
 [情報]
@@ -7737,14 +7783,6 @@ $mame
 [情報]
 
 - サービスモードにするには、サービススイッチを押しながらリセット。
-
-$end
-
-$info=renegade
-$mame
-[情報]
-
-- テストモードにするには、スタートボタン1、2両方を押しながらリセット。
 
 $end
 
