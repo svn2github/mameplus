@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.111u5      #
+#     Mameinfo.dat日本語版 v0.111u6      #
 #                                        #
-#            January 26, 2007            #
+#            January 31, 2007            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,10 +12,27 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：863 翻訳済：847
-# 追加項目：332 合計：1195
+# Tester報告：880 翻訳済：868
+# 追加項目：334 合計：1214
 #
 
+
+$info=paperboy
+$mame
+[バグ]
+
+- POKEY（効果音）の音量が火曜日に進むと急に大きくなる。以前は起きていない。 paperboy0111u5gre, Machone
+
+$end
+
+$info=bnj
+$mame
+[バグ]
+
+- 実機の写真を見ると、縦方向の表示領域がMAMEよりも広い。
+240x240ではなく、240x256が正しいようだ。 bnj0111u5ora, Machone
+
+$end
 
 $info=oscar
 $mame
@@ -30,14 +47,6 @@ $mame
 [バグ]
 
 - 起動時にクラッシュする。0.111では動作する。 ertictac0111u4red, Tafoid
-
-$end
-
-$info=borntofi
-$mame
-[バグ]
-
-- 照準の表示方法を更新してから、実際に撃っている場所と照準が大きくずれる。 borntofi0111u4gre, twisty
 
 $end
 
@@ -91,14 +100,6 @@ $mame
 [バグ]
 
 - カクテルモードでプレイヤー2の画面が反転しない。 ninjakd2_0111u3gra, Speedfreak
-
-$end
-
-$info=acrobatm
-$mame
-[バグ]
-
-- P1 Button 3はあるが、P2のは無い。 acrobatm0111u4gra, Speedfreak
 
 $end
 
@@ -180,55 +181,11 @@ $mame
 
 $end
 
-$info=pushman
-$mame
-[バグ]
-
-- 画面反転のDIPスイッチが動作しない。 pushman0111u4gra, Speedfreak
-
-
-- 後半の面(特に5-1と5-2)で、タイルマップの問題があるが、
-ドライバ作者はチートのせいにしているようだ。
-
-タイルマップのROMの終わり部分2割が完全に空白(null bytes)なので、
-これは間違いなく吸い出し不良。 pushman058ora, Ashuime
-
-$end
-
 $info=quasar
 $mame
 [バグ]
 
 - 2人プレーゲームなのにプレイヤー3のスタートボタンがマッピングされている。 quasar0111u1gra, Speedfreak
-
-$end
-
-$info=raidena
-$mame
-[バグ]
-
-- 画面反転のDIPスイッチが動作しない。 raidena0111u4gra, Speedfreak
-
-
-- 音楽のチャンネルの中に、しばらくするとずれ出すものがある。
-例えば、1面の真ん中あたりなど。
-親版のraidenでは起きない。 raidena058gre, Jonemaan / RansAckeR / Stefan Lindberg
-
-$end
-
-$info=raidenk
-$mame
-[バグ]
-
-- 画面反転のDIPスイッチが動作しない。 raidena0111u4gra, Speedfreak
-
-$end
-
-$info=randent
-$mame
-[バグ]
-
-- 画面反転のDIPスイッチが動作しない。 raidena0111u4gra, Speedfreak
 
 $end
 
@@ -251,6 +208,63 @@ $mame
 
 - 0.111u4から画面が真っ黒のままになる。
 コインを入れると音はする。 renegade0111u4red, r0ast3r
+
+$end
+
+$info=rockrage
+$mame
+[バグ]
+
+- Coin 3はServiceキー。 rockrage0111u5gra, Speedfreak
+
+
+- 2番目と3番目のUnknownのDIPスイッチは、難易度の設定：
+
+OFF OFF: easy
+
+ON OFF: medium
+
+OFF ON: hard
+
+ON ON: hardest rockrage0111u6gra, Machone
+
+$end
+
+$info=nitrobal
+$mame
+[バグ]
+
+- 画面反転を有効にするとグラフィックがおかしくなる。 nitrobal0111u5gre, Speedfreak
+
+
+- プライオリティ問題あり。最初の扉を開けて次のエリアに進んだところなど。またテキストレイヤーも化けて表示される。 nitrobal068gre, Firewave / robiza
+
+$end
+
+$info=schmeisr
+$mame
+[バグ]
+
+- デモサウンドのDIP設定が逆。Tiltのキーがマッピングされていない。 schmeisr0111u5gra, Speedfreak
+
+$end
+
+$info=rollerg
+$mame
+[バグ]
+
+- コイン3はサービスキー。 rollerg0111u5gra, Speedfreak
+
+
+- YM3812が100%の音量でもほとんど聞こえない。 rollerg073ora, Richter_X
+
+$end
+
+$info=rotaryf
+$mame
+[バグ]
+
+- カクテルモードでプレイヤー2の画面が反転しない。 rotaryf0111u5gra, Speedfreak
 
 $end
 
@@ -278,12 +292,112 @@ $mame
 
 $end
 
+$info=rpunch
+$mame
+[バグ]
+
+- 画面反転を有効にすると、表示が化ける。 rpunch0111u5gra, Speedfreak
+
+$end
+
+$info=svolley
+$mame
+[バグ]
+
+- 画面反転を有効にすると、表示が化ける。 rpunch0111u5gra, Speedfreak
+
+$end
+
+$info=trckydoc
+$mame
+[バグ]
+
+- カクテルモードでプレイヤー2のスタート時に、画面の星がおかしく表示される。 trckydoc0111u5gre, Speedfreak
+
+$end
+
+$info=ad2083
+$mame
+[バグ]
+
+- 最初のUnknown DIPスイッチは筐体の設定。OFFがカクテル、ONがアップライト。
+また、カクテルモード時のプレイヤー2用操作が実装されていない。 ad2083_0111u5gra, Speedfreak
+
+$end
+
+$info=scorpion
+$mame
+[バグ]
+
+- 筐体のDIPスイッチ設定が動作しない。実はUnknownになっているのが筐体設定。 scorpion0111u5gra, Speedfreak
+
+$end
+
 $info=pairlove
 $mame
 [バグ]
 
 - サービスモードをONにしてF3リセットすると画面が真っ黒になる。
 裏ではサウンドテストのようなものが動作している。 pairlove0111u2yel, Speedfreak
+
+$end
+
+$info=penbros
+$mame
+[バグ]
+
+- ボタン3がマッピングされているが、入力テストには現われない。 penbros0111u5gra, Speedfreak
+
+$end
+
+$info=dokidoki
+$mame
+[バグ]
+
+- 下から2つ目のUnknown DIPスイッチはデモサウンドの有無。 dokidoki0111u5gra, Speedfreak
+
+$end
+
+$info=blocken
+$mame
+[バグ]
+
+- 画面反転を有効にすると表示がおかしくなる。 blocken0111u5gre, Speedfreak
+
+
+- デモプレイのとき、2秒おきくらいに動きが止まる。アイテム紹介などのところでは起きない。 blocken059gre_1, Kale
+
+
+- 最初だけ、どのコースを選んでもマップに道が表示されない。一勝すれば表示される。 blocken059gre_2, Kale
+
+
+- エンディングでスタッフクレジットの代わりに、セルテスト画面になってしまう。
+リセットしなければそのまま。 blocken137b8gre, YMI
+
+
+- 敵のボイスで完全に間違っているものがある。
+（紫の鳥が娘の声になっていたり、船ロボットが負けてるのに「I'm the champion」と言う） blocken337b8gre, YMI
+
+$end
+
+$info=kicker
+$mame
+[バグ]
+
+- サービスモードにカラーのテストパターンが表示されたままになる。 kicker0111u5gre, Speedfreak
+
+$end
+
+$info=subs
+$mame
+[情報]
+
+- 点滅する白い四角部分には実際には「Sonar」と表示される。
+
+
+[バグ]
+
+- プレイヤー2のソナーが左下に表示されている。0.106までは右下に正しく表示されていた。 subs0111u6yel, Mr. Do
 
 $end
 
@@ -1055,7 +1169,7 @@ $info=nslasher
 $mame
 [バグ]
 
-- ボス戦になるとBGMが止まる。効果音は再生される。 nslasher0103u2yel, hammad / Kold666
+- ボス戦のときや、2面などでランダムにBGMが止まる。またキャラクタ選択時の声も出ない。 nslasher0103u2yel, hammad / Kold666
 
 $end
 
@@ -2561,7 +2675,7 @@ $info=smashtv
 $mame
 [バグ]
 
-- F3キーでリセット後、画面の描画がおかしくなる。 smashtv098u1gre, Pr3tty F1y / nintendont
+- F3キーでリセット後、画面の描画がおかしくなる。 smashtv098u1gre, Pr3tty F1y / nintendont / nitrousoxide82
 
 $end
 
@@ -3237,6 +3351,16 @@ $mame
 
 $end
 
+$info=raidena
+$mame
+[バグ]
+
+- 音楽のチャンネルの中に、しばらくするとずれ出すものがある。
+例えば、1面の真ん中あたりなど。
+親版のraidenでは起きない。 raidena058gre, Jonemaan / RansAckeR / Stefan Lindberg
+
+$end
+
 $info=commsega
 $mame
 [バグ]
@@ -3283,14 +3407,6 @@ $mame
 [バグ]
 
 - 実機では、ミスをすると、蛇が完全に消えるまで長い爆発音が聞こえる。 nibbler0103u3gre, Kold666 / Derrick Renaud / Gyrovision
-
-$end
-
-$info=nitrobal
-$mame
-[バグ]
-
-- プライオリティ問題あり。最初の扉を開けて次のエリアに進んだところなど。またテキストレイヤーも化けて表示される。 nitrobal068gre, Firewave / robiza
 
 $end
 
@@ -3655,25 +3771,6 @@ $mame
 [バグ]
 
 - 実機と比較して、多くのスプライトが表示されていない。どの面でも赤いライバルが常に横で競っているがMAMEでは見あたらない。 sgladiat0102u5yel, Kold666
-
-$end
-
-$info=blocken
-$mame
-[バグ]
-
-- デモプレイのとき、2秒おきくらいに動きが止まる。アイテム紹介などのところでは起きない。 blocken059gre_1, Kale
-
-
-- 最初だけ、どのコースを選んでもマップに道が表示されない。一勝すれば表示される。 blocken059gre_2, Kale
-
-
-- エンディングでスタッフクレジットの代わりに、セルテスト画面になってしまう。
-リセットしなければそのまま。 blocken137b8gre, YMI
-
-
-- 敵のボイスで完全に間違っているものがある。
-（紫の鳥が娘の声になっていたり、船ロボットが負けてるのに「I'm the champion」と言う） blocken337b8gre, YMI
 
 $end
 
@@ -5517,11 +5614,15 @@ $mame
 
 $end
 
-$info=rollerg
+$info=pushman
 $mame
 [バグ]
 
-- YM3812が100%の音量でもほとんど聞こえない。 rollerg073ora, Richter_X
+- 後半の面(特に5-1と5-2)で、タイルマップの問題があるが、
+ドライバ作者はチートのせいにしているようだ。
+
+タイルマップのROMの終わり部分2割が完全に空白(null bytes)なので、
+これは間違いなく吸い出し不良。 pushman058ora, Ashuime
 
 $end
 
@@ -7972,6 +8073,14 @@ $mame
 
 $end
 
+$info=sss
+$mame
+[情報]
+
+- 起動するにはF2キーでサービスモードに入り、“System Assignment”内の“Cabinet Type”を1Pに設定する。
+
+$end
+
 $info=stactics
 $mame
 [情報]
@@ -8004,14 +8113,6 @@ $mame
 実機のバグ。
 
 （by Taka.K. / CB誌鉄人）
-
-$end
-
-$info=subs
-$mame
-[情報]
-
-- 点滅する白い四角部分には実際には「Sonar」と表示される。
 
 $end
 
@@ -8277,6 +8378,16 @@ $mame
 2) 1Pスタートx3　サービス　1Pスタート
 
 (by Mhk)
+
+$end
+
+$info=acrobatm
+$mame
+[TIPS]
+
+- エンディングを表示させる：
+
+デモプレイ中に、上、下、左、右、ショット、ボム、ショット、ボム、ボタン3x3回を素早く押す
 
 $end
 

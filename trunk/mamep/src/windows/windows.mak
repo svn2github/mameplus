@@ -205,7 +205,7 @@ CFLAGS += -DWIN95_MULTIMON
 endif
 
 # add the windows libaries
-LIBS += -luser32 -lgdi32 -lddraw -ldsound -ldinput -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi -lunicows
+LIBS += -lunicows -luser32 -lgdi32 -lddraw -ldsound -ldinput -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi
 CLILIBS =
 
 ifdef PTR64
