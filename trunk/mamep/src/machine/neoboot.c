@@ -22,7 +22,7 @@ void neogeo_bootleg_cx_decrypt( void )
 	int i;
 	int cx_size = memory_region_length( REGION_GFX3 );
 	UINT8 *rom = memory_region( REGION_GFX3 );
-	UINT8 *buf = malloc( cx_size );
+	UINT8 *buf = malloc_or_die( cx_size );
 
 	memcpy( buf, rom, cx_size );
 
@@ -41,7 +41,7 @@ void neogeo_bootleg_sx_decrypt( int value )
 
 	if (value == 1)
 	{
-		UINT8 *buf = malloc( sx_size );
+		UINT8 *buf = malloc_or_die( sx_size );
 		memcpy( buf, rom, sx_size );
 
 		for( i = 0; i < sx_size; i += 0x10 )
@@ -69,7 +69,7 @@ void kog_px_decrypt( void )
 {
 	/* the protection chip does some *very* strange things to the rom */
 	UINT8 *src = memory_region(REGION_CPU1);
-	UINT8 *dst = malloc( 0x600000 );
+	UINT8 *dst = malloc_or_die( 0x600000 );
 	UINT16 *rom = (UINT16 *)memory_region(REGION_CPU1);
 	int i;
 	static const unsigned int sec[] = { 0x3, 0x8, 0x7, 0xC, 0x1, 0xA, 0x6, 0xD };
@@ -182,11 +182,10 @@ void install_kof10th_protection ( void )
 void decrypt_kof10th( void )
 {
 	int i, j;
-	UINT8 *dst = malloc(0x900000);
+	UINT8 *dst = malloc_or_die(0x900000);
 	UINT8 *src = memory_region( REGION_CPU1 );
 	UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
 
-	if (dst) {
 		memcpy(dst + 0x000000, src + 0x700000, 0x100000); // Correct (Verified in Uni-bios)
 		memcpy(dst + 0x100000, src + 0x000000, 0x800000);
 
@@ -196,7 +195,6 @@ void decrypt_kof10th( void )
 		}
 
 		free(dst);
-	}
 
 	// Altera protection chip patches these over P ROM
 	((UINT16*)src)[0x0124/2] = 0x000d; // Enables XOR for RAM moves, forces SoftDIPs, and USA region
@@ -219,9 +217,9 @@ void decrypt_kf10thep(void)
 	UINT8  *src = memory_region(REGION_CPU1);
 	UINT16 *buf = (UINT16*)memory_region(REGION_USER4);
 	UINT8 *srom = (UINT8*)memory_region(REGION_GFX1);
-	UINT8 *sbuf = malloc(0x20000);
+	UINT8 *sbuf = malloc_or_die(0x20000);
 
-	UINT8 *dst = (UINT8*)malloc(0x200000);
+	UINT8 *dst = malloc_or_die(0x200000);
 
 	memcpy(dst,buf,0x200000);
 	memcpy(src+0x000000,dst+0x060000,0x20000);
@@ -262,7 +260,7 @@ static void kf2k5uni_px_decrypt( void )
 {
 	int i, j, ofst;
 	unsigned char *src = memory_region( REGION_CPU1 );
-	unsigned char *dst = (unsigned char*)malloc(0x80);
+	unsigned char *dst = malloc_or_die(0x80);
 
 	for (i = 0; i < 0x800000; i+=0x80)
 	{
@@ -318,7 +316,7 @@ void kf2k2mp_decrypt( void )
 	int i,j;
 
 	unsigned char *src = memory_region(REGION_CPU1);
-	unsigned char *dst = (unsigned char*)malloc(0x80);
+	unsigned char *dst = malloc_or_die(0x80);
 
 	memmove(src, src + 0x300000, 0x500000);
 
@@ -343,7 +341,7 @@ void kf2k2mp_decrypt( void )
 void kof2km2_px_decrypt( void )
 {
 	unsigned char *src = memory_region(REGION_CPU1);
-	unsigned char *dst = (unsigned char*)malloc(0x600000);
+	unsigned char *dst = malloc_or_die(0x600000);
 
 	memcpy (dst + 0x000000, src + 0x1C0000, 0x040000);
 	memcpy (dst + 0x040000, src + 0x140000, 0x080000);
@@ -362,7 +360,7 @@ static void cthd2003_neogeo_gfx_address_fix_do(int start, int end, int bit3shift
 	int i,j;
 	int tilesize=128;
 
-	UINT8* rom = (UINT8*)malloc(16*tilesize);	// 16 tiles buffer
+	UINT8* rom = malloc_or_die(16*tilesize);	// 16 tiles buffer
 	UINT8* realrom = memory_region(REGION_GFX3) + start*tilesize;
 
 	for (i = 0; i < (end-start)/16; i++) {
@@ -417,7 +415,7 @@ static void cthd2003_c(int pow)
 void decrypt_cthd2003(void)
 {
 	UINT8 *romdata = memory_region(REGION_GFX1);
-	UINT8*tmp = (UINT8*)malloc(8*128*128);
+	UINT8 *tmp = malloc_or_die(8*128*128);
 
 	memcpy(tmp+8*0*128, romdata+8*0*128, 8*32*128);
 	memcpy(tmp+8*32*128, romdata+8*64*128, 8*32*128);
@@ -498,7 +496,7 @@ static void ct2k3sp_sx_decrypt( void )
 {
 	int rom_size = memory_region_length( REGION_GFX1 );
 	UINT8 *rom = memory_region( REGION_GFX1 );
-	UINT8 *buf = malloc( rom_size );
+	UINT8 *buf = malloc_or_die( rom_size );
 	int i;
 	int ofst;
 
@@ -528,7 +526,7 @@ static void ct2k3sp_sx_decrypt( void )
 void decrypt_ct2k3sp(void)
 {
 	UINT8 *romdata = memory_region(REGION_CPU2)+0x10000;
-	UINT8*tmp = (UINT8*)malloc(8*128*128);
+	UINT8*tmp = malloc_or_die(8*128*128);
 	memcpy(tmp+8*0*128, romdata+8*0*128, 8*32*128);
 	memcpy(tmp+8*32*128, romdata+8*64*128, 8*32*128);
 	memcpy(tmp+8*64*128, romdata+8*32*128, 8*32*128);
@@ -591,11 +589,9 @@ void decrypt_matrimbl(void)
 void decrypt_kof2k4se_68k( void )
 {
 	UINT8 *src = memory_region(REGION_CPU1)+0x100000;
-	UINT8 *dst = malloc(0x400000);
+	UINT8 *dst = malloc_or_die(0x400000);
 	int i;
 	static const unsigned int sec[] = {0x300000,0x200000,0x100000,0x000000};
-	if (dst)
-	{
 		memcpy(dst,src,0x400000);
 
 		for(i = 0; i < 4; ++i)
@@ -603,7 +599,6 @@ void decrypt_kof2k4se_68k( void )
 		memcpy(src+i*0x100000,dst+sec[i],0x100000);
 		}
 			free(dst);
-	}
 }
 
 /* Lans2004 (bootleg of Shock Troopers 2) */
@@ -622,9 +617,9 @@ void lans2004_decrypt_68k( void )
 	int i;
 	UINT8 *src = memory_region( REGION_CPU1 );
 	UINT16 *rom = (UINT16*)memory_region( REGION_CPU1 );
-	UINT8 *dst = malloc(0x600000);
+	UINT8 *dst = malloc_or_die(0x600000);
 
-	if (dst) {
+	{
 		static const int sec[] = { 0x3, 0x8, 0x7, 0xC, 0x1, 0xA, 0x6, 0xD };
 
 		for (i = 0; i < 8; i++)
@@ -700,7 +695,7 @@ void svcboot_px_decrypt( void )
 	int i;
 	int size = memory_region_length( REGION_CPU1 );
 	UINT8 *src = memory_region( REGION_CPU1 );
-	UINT8 *dst = malloc( size );
+	UINT8 *dst = malloc_or_die( size );
 	int ofst;
 	for( i = 0; i < size / 0x100000; i++ ){
 		memcpy( &dst[ i * 0x100000 ], &src[ sec[ i ] * 0x100000 ], 0x100000 );
@@ -731,7 +726,7 @@ void svcboot_cx_decrypt( void )
 	int i;
 	int size = memory_region_length( REGION_GFX3 );
 	UINT8 *src = memory_region( REGION_GFX3 );
-	UINT8 *dst = malloc( size );
+	UINT8 *dst = malloc_or_die( size );
 	int ofst;
 	memcpy( dst, src, size );
 	for( i = 0; i < size / 0x80; i++ ){
@@ -756,7 +751,7 @@ void svcplus_px_decrypt( void )
 	};
 	int size = memory_region_length( REGION_CPU1 );
 	UINT8 *src = memory_region( REGION_CPU1 );
-	UINT8 *dst = malloc( size );
+	UINT8 *dst = malloc_or_die( size );
 	int i;
 	int ofst;
 	memcpy( dst, src, size );
@@ -799,7 +794,7 @@ void svcplusa_px_decrypt( void )
 	};
 	int size = memory_region_length( REGION_CPU1 );
 	UINT8 *src = memory_region( REGION_CPU1 );
-	UINT8 *dst = malloc( size );
+	UINT8 *dst = malloc_or_die( size );
 	memcpy( dst, src, size );
 	for( i = 0; i < 6; i++ ){
 		memcpy( &src[ i * 0x100000 ], &dst[ sec[ i ] * 0x100000 ], 0x100000 );
@@ -816,7 +811,7 @@ void svcsplus_px_decrypt( void )
 	};
 	int size = memory_region_length( REGION_CPU1 );
 	UINT8 *src = memory_region( REGION_CPU1 );
-	UINT8 *dst = malloc( size );
+	UINT8 *dst = malloc_or_die( size );
 	int i;
 	int ofst;
 	memcpy( dst, src, size );
@@ -916,7 +911,7 @@ void kof2003b_px_decrypt( void )
 
     int rom_size = 0x800000;
     UINT8 *rom = memory_region( REGION_CPU1 );
-    UINT8 *buf = malloc( rom_size );
+    UINT8 *buf = malloc_or_die( rom_size );
     memcpy( buf, rom, rom_size );
 
     for( i = 0; i < rom_size / 0x100000; i++ ){
@@ -938,7 +933,7 @@ void kof2003b_install_protection(void)
 
 void kof2k3pl_px_decrypt( void )
 {
-	UINT16*tmp = (UINT16*)malloc(0x100000);
+	UINT16*tmp = malloc_or_die(0x100000);
 	UINT16*rom = (UINT16*)memory_region( REGION_CPU1 );
 	int j;
 	int i;
@@ -1001,7 +996,7 @@ void samsh5bl_px_decrypt( void )
 {
 	int px_size = memory_region_length( REGION_CPU1 );
 	UINT8 *rom = memory_region( REGION_CPU1 );
-	UINT8 *buf = malloc( px_size );
+	UINT8 *buf = malloc_or_die( px_size );
 	int ofst;
 	int i;
 

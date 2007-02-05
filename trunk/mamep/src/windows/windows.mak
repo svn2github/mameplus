@@ -369,6 +369,6 @@ endif
 # generic rule for the resource compiler
 #-------------------------------------------------
 
-$(OBJ)/%.res: src/%.rc
+$(OBJ)/%.res: src/%.rc | $(OSPREBUILD)
 	@echo Compiling resources $<...
 	$(RC) $(RCDEFS) $(RCFLAGS) -o $@ -i $<
