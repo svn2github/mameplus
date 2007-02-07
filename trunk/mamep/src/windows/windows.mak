@@ -176,7 +176,7 @@ CURPATH = ./
 #-------------------------------------------------
 
 OSDCOREOBJS = \
-	$(OBJ)/$(MAMEOS)/main.o	\
+	$(OBJ)/$(MAMEOS)/osdmain.o \
 	$(OBJ)/$(MAMEOS)/strconv.o	\
 	$(OBJ)/$(MAMEOS)/windir.o \
 	$(OBJ)/$(MAMEOS)/winfile.o \

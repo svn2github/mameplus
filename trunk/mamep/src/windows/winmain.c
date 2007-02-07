@@ -99,7 +99,7 @@ static void stop_profiler(void);
 //  utf8_main
 //============================================================
 #define main main_
-#include "windows/main.c"
+#include "windows/osdmain.c"
 #undef main
 
 int utf8_main(int argc, char **argv)
@@ -126,7 +126,6 @@ int utf8_main(int argc, char **argv)
 	library = LoadLibrary(TEXT("kernel32.dll"));
 	if (library != NULL)
 		try_enter_critical_section = (try_enter_critical_section_ptr)GetProcAddress(library, "TryEnterCriticalSection");
-
 
 	strcpy(mapfile_name, argv[0]);
 	ext = strchr(mapfile_name, '.');
