@@ -2,7 +2,9 @@
 # make SUFFIX=32
 
 # remove main.o from OSDCOREOBJS
-OSDCOREOBJS := $(OSDCOREOBJS:$(OBJ)/$(MAMEOS)/main.o=)
+ifneq ($(NO_DLL),)
+OSDCOREOBJS := $(OSDCOREOBJS:$(OBJ)/$(MAMEOS)/osdmain.o=)
+endif
 
 # use CFLAGSOSDEPEND
 $(OBJ)/ui/%.o: src/ui/%.c
