@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.111u6      #
+#      Mameinfo.dat日本語版 v0.112       #
 #                                        #
-#            January 31, 2007            #
+#            February 5, 2007            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：880 翻訳済：868
-# 追加項目：334 合計：1214
+# Tester報告：881 翻訳済：869
+# 追加項目：338 合計：1219
 #
 
 
@@ -197,20 +197,6 @@ $mame
 
 $end
 
-$info=renegade
-$mame
-[情報]
-
-- テストモードにするには、スタートボタン1、2両方を押しながらリセット。
-
-
-[バグ]
-
-- 0.111u4から画面が真っ黒のままになる。
-コインを入れると音はする。 renegade0111u4red, r0ast3r
-
-$end
-
 $info=rockrage
 $mame
 [バグ]
@@ -385,19 +371,6 @@ $mame
 [バグ]
 
 - サービスモードにカラーのテストパターンが表示されたままになる。 kicker0111u5gre, Speedfreak
-
-$end
-
-$info=subs
-$mame
-[情報]
-
-- 点滅する白い四角部分には実際には「Sonar」と表示される。
-
-
-[バグ]
-
-- プレイヤー2のソナーが左下に表示されている。0.106までは右下に正しく表示されていた。 subs0111u6yel, Mr. Do
 
 $end
 
@@ -1010,18 +983,6 @@ $mame
 [バグ]
 
 - ゲームオーバー時などに「layer c000 contact MAMEDEV」と表示される。 qtono237b9yel, Fujix (ほしけん)
-
-$end
-
-$info=sf2
-$mame
-[バグ]
-
-- 実機ではガイルとダルシムを使うとマシンをリセットさせるバグ技があるが、
-MAMEのCコア、ASMコア、さらにCallusでも再現されない。
-
-このバグ自体は、CPS1ハードのエラーのせいか68000CPUのせいだと思うが、
-定かではない。 sf237b7gre, Jonemaan
 
 $end
 
@@ -2543,7 +2504,7 @@ $info=crusnusa
 $mame
 [バグ]
 
-- グランドキャニオンのステージでクラッシュすることがある。 crusnusa0100u3red, GARNER /  TknoMncr
+- グランドキャニオンのステージでクラッシュすることがある。 crusnusa0100u3red, GARNER /  TknoMncr / Fujix
 
 
 [TIPS]
@@ -5158,14 +5119,6 @@ $mame
 
 $end
 
-$info=blaster
-$mame
-[バグ]
-
-- 0.95u3でAaron氏がWilliamsドライバを書き直したときから、画面の下に色のついたバーが現れる。 blaster0100u1gre, MASH
-
-$end
-
 $info=sinistar
 $mame
 [情報]
@@ -7413,6 +7366,14 @@ $mame
 
 $end
 
+$info=findlove
+$mame
+[情報]
+
+-
+
+$end
+
 $info=fireshrk
 $mame
 [情報]
@@ -7717,6 +7678,14 @@ $mame
 
 $end
 
+$info=myfairld
+$mame
+[情報]
+
+-
+
+$end
+
 $info=mysticm
 $mame
 [情報]
@@ -7887,6 +7856,14 @@ $mame
 
 $end
 
+$info=renegade
+$mame
+[情報]
+
+- テストモードにするには、スタートボタン1、2両方を押しながらリセット。
+
+$end
+
 $info=rescue
 $mame
 [情報]
@@ -7971,6 +7948,14 @@ $mame
 [情報]
 
 - 「scion」は常にバックグラウンドにノイズがある。「scionc」の方はない。恐らくROM不良によるもの。
+
+$end
+
+$info=seabass
+$mame
+[情報]
+
+-
 
 $end
 
@@ -8116,6 +8101,14 @@ $mame
 
 $end
 
+$info=subs
+$mame
+[情報]
+
+- 点滅する白い四角部分には実際には「Sonar」と表示される。
+
+$end
+
 $info=tail2nos
 $mame
 [情報]
@@ -8236,6 +8229,14 @@ $mame
 [情報]
 
 - 初回起動時、フラッシュROMの更新に5分くらいかかる。
+
+$end
+
+$info=vmahjong
+$mame
+[情報]
+
+-
 
 $end
 
