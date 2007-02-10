@@ -611,8 +611,8 @@ int options_output_command_line_marked(char *buf)
 								sprintf(buf, "-%s %s ", data->names[0], stemp);
 							len += 1 + strlen(stemp);
 						}
+						free(stemp);
 					}
-					free(stemp);
 #else
 					if (strchr(data->data, ' ') != NULL || strchr(data->data, '#') != NULL)
 					{
