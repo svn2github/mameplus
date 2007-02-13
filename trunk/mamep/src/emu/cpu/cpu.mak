@@ -4,10 +4,14 @@
 #
 #   Rules for building CPU cores
 #
-#   Copyright (c) 1996-2006, Nicola Salmoria and the MAME Team.
+#   Copyright (c) 1996-2007, Nicola Salmoria and the MAME Team.
 #   Visit http://mamedev.org for licensing and usage restrictions.
 #
 ###########################################################################
+
+
+CPUSRC = $(EMUSRC)/cpu
+CPUOBJ = $(EMUOBJ)/cpu
 
 
 #-------------------------------------------------
@@ -17,11 +21,12 @@
 CPUDEFS += -DHAS_GENSYNC=$(if $(filter GENSYNC,$(CPUS)),1,0)
 
 ifneq ($(filter GENSYNC,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/gensync
-CPUOBJS += $(OBJ)/cpu/gensync/gensync.o
-DBGOBJS += $(OBJ)/cpu/gensync/gensyncd.o
-$(OBJ)/cpu/gensync/gensync.o: gensync.c gensyncd.c gensync.h
+OBJDIRS += $(CPUOBJ)/gensync
+CPUOBJS += $(CPUOBJ)/gensync/gensync.o
+DBGOBJS += $(CPUOBJ)/gensync/gensyncd.o
 endif
+
+$(CPUOBJ)/gensync/gensync.o: gensync.c gensyncd.c gensync.h
 
 
 #-------------------------------------------------
@@ -32,18 +37,23 @@ CPUDEFS += -DHAS_ARM=$(if $(filter ARM,$(CPUS)),1,0)
 CPUDEFS += -DHAS_ARM7=$(if $(filter ARM7,$(CPUS)),1,0)
 
 ifneq ($(filter ARM,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/arm
-CPUOBJS += $(OBJ)/cpu/arm/arm.o
-DBGOBJS += $(OBJ)/cpu/arm/armdasm.o
-$(OBJ)/cpu/arm/arm.o: arm.c arm.h
+OBJDIRS += $(CPUOBJ)/arm
+CPUOBJS += $(CPUOBJ)/arm/arm.o
+DBGOBJS += $(CPUOBJ)/arm/armdasm.o
 endif
 
 ifneq ($(filter ARM7,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/arm7
-CPUOBJS += $(OBJ)/cpu/arm7/arm7.o
-DBGOBJS += $(OBJ)/cpu/arm7/arm7dasm.o
-$(OBJ)/cpu/arm7/arm7.o: arm7.c arm7.h arm7exec.c
+OBJDIRS += $(CPUOBJ)/arm7
+CPUOBJS += $(CPUOBJ)/arm7/arm7.o
+DBGOBJS += $(CPUOBJ)/arm7/arm7dasm.o
 endif
+
+$(CPUOBJ)/arm/arm.o: 	$(CPUSRC)/arm/arm.c \
+						$(CPUSRC)/arm/arm.h
+
+$(CPUOBJ)/arm7/arm7.o:	$(CPUSRC)/arm7/arm7.c \
+						$(CPUSRC)/arm7/arm7.h \
+						$(CPUSRC)/arm7/arm7exec.c
 
 
 
@@ -54,11 +64,13 @@ endif
 CPUDEFS += -DHAS_SE3208=$(if $(filter SE3208,$(CPUS)),1,0)
 
 ifneq ($(filter SE3208,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/se3208
-CPUOBJS += $(OBJ)/cpu/se3208/se3208.o
-DBGOBJS += $(OBJ)/cpu/se3208/se3208dis.o
-$(OBJ)/cpu/se3208/se3208.o: se3208.c se3208.h se3208dis.c
+OBJDIRS += $(CPUOBJ)/se3208
+CPUOBJS += $(CPUOBJ)/se3208/se3208.o
+DBGOBJS += $(CPUOBJ)/se3208/se3208dis.o
 endif
+
+$(CPUOBJ)/se3208/se3208.o: 	$(CPUSRC)/se3208/se3208.c \
+							$(CPUSRC)/se3208/se3208.h
 
 
 
@@ -70,11 +82,13 @@ CPUDEFS += -DHAS_ALPHA8201=$(if $(filter ALPHA8201,$(CPUS)),1,0)
 CPUDEFS += -DHAS_ALPHA8301=$(if $(filter ALPHA8301,$(CPUS)),1,0)
 
 ifneq ($(filter ALPHA8201 ALPHA8301,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/alph8201
-CPUOBJS += $(OBJ)/cpu/alph8201/alph8201.o
-DBGOBJS += $(OBJ)/cpu/alph8201/8201dasm.o
-$(OBJ)/cpu/alph8201/alph8201.o: alph8201.c alph8201.h
+OBJDIRS += $(CPUOBJ)/alph8201
+CPUOBJS += $(CPUOBJ)/alph8201/alph8201.o
+DBGOBJS += $(CPUOBJ)/alph8201/8201dasm.o
 endif
+
+$(CPUOBJ)/alph8201/alph8201.o:	$(CPUSRC)/alph8201/alph8201.c \
+								$(CPUSRC)/alph8201/alph8201.h
 
 
 
@@ -90,11 +104,14 @@ CPUDEFS += -DHAS_ADSP2115=$(if $(filter ADSP2115,$(CPUS)),1,0)
 CPUDEFS += -DHAS_ADSP2181=$(if $(filter ADSP2181,$(CPUS)),1,0)
 
 ifneq ($(filter ADSP2100 ADSP2101 ADSP2104 ADSP2105 ADSP2115 ADSP2181,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/adsp2100
-CPUOBJS += $(OBJ)/cpu/adsp2100/adsp2100.o
-DBGOBJS += $(OBJ)/cpu/adsp2100/2100dasm.o
-$(OBJ)/cpu/adsp2100/adsp2100.o: adsp2100.c adsp2100.h 2100ops.c
+OBJDIRS += $(CPUOBJ)/adsp2100
+CPUOBJS += $(CPUOBJ)/adsp2100/adsp2100.o
+DBGOBJS += $(CPUOBJ)/adsp2100/2100dasm.o
 endif
+
+$(CPUOBJ)/adsp2100/adsp2100.o:	$(CPUSRC)/adsp2100/adsp2100.c \
+								$(CPUSRC)/adsp2100/adsp2100.h \
+								$(CPUSRC)/adsp2100/2100ops.c
 
 
 
@@ -105,11 +122,20 @@ endif
 CPUDEFS += -DHAS_ADSP21062=$(if $(filter ADSP21062,$(CPUS)),1,0)
 
 ifneq ($(filter ADSP21062,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/sharc
-CPUOBJS += $(OBJ)/cpu/sharc/sharc.o
-DBGOBJS += $(OBJ)/cpu/sharc/sharcdsm.o
-$(OBJ)/cpu/sharc/sharc.o: sharc.c sharc.h sharcops.c sharcops.h sharcdsm.c sharcdsm.h compute.c sharcdma.c sharcmem.c
+OBJDIRS += $(CPUOBJ)/sharc
+CPUOBJS += $(CPUOBJ)/sharc/sharc.o
+DBGOBJS += $(CPUOBJ)/sharc/sharcdsm.o
 endif
+
+$(CPUOBJ)/sharc/sharc.o:	$(CPUSRC)/sharc/sharc.c \
+							$(CPUSRC)/sharc/sharc.h \
+							$(CPUSRC)/sharc/sharcops.c \
+							$(CPUSRC)/sharc/sharcops.h \
+							$(CPUSRC)/sharc/sharcdsm.c \
+							$(CPUSRC)/sharc/sharcdsm.h \
+							$(CPUSRC)/sharc/compute.c \
+							$(CPUSRC)/sharc/sharcdma.c \
+							$(CPUSRC)/sharc/sharcmem.c
 
 
 
@@ -117,15 +143,16 @@ endif
 # APEXC
 #-------------------------------------------------
 
+CPUDEFS += -DHAS_APEXC=$(if $(filter APEXC,$(CPUS)),1,0)
+
 ifneq ($(filter APEXC,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/apexc
-CPUDEFS += -DHAS_APEXC=1
-CPUOBJS += $(OBJ)/cpu/apexc/apexc.o
-DBGOBJS += $(OBJ)/cpu/apexc/apexcdsm.o
-$(OBJ)/cpu/apexc/apexc.o: apexc.c apexc.h
-else
-CPUDEFS += -DHAS_APEXC=0
+OBJDIRS += $(CPUOBJ)/apexc
+CPUOBJS += $(CPUOBJ)/apexc/apexc.o
+DBGOBJS += $(CPUOBJ)/apexc/apexcdsm.o
 endif
+
+$(CPUOBJ)/apexc/apexc.o:	$(CPUSRC)/apexc/apexc.c \
+							$(CPUSRC)/apexc/apexc.h
 
 
 
@@ -136,11 +163,13 @@ endif
 CPUDEFS += -DHAS_DSP32C=$(if $(filter DSP32C,$(CPUS)),1,0)
 
 ifneq ($(filter DSP32C,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/dsp32
-CPUOBJS += $(OBJ)/cpu/dsp32/dsp32.o
-DBGOBJS += $(OBJ)/cpu/dsp32/dsp32dis.o
-$(OBJ)/cpu/dsp32/dsp32.o: dsp32.c dsp32.h
+OBJDIRS += $(CPUOBJ)/dsp32
+CPUOBJS += $(CPUOBJ)/dsp32/dsp32.o
+DBGOBJS += $(CPUOBJ)/dsp32/dsp32dis.o
 endif
+
+$(CPUOBJ)/dsp32/dsp32.o: 	$(CPUSRC)/dsp32/dsp32.c \
+							$(CPUSRC)/dsp32/dsp32.h
 
 
 
@@ -151,11 +180,13 @@ endif
 CPUDEFS += -DHAS_ASAP=$(if $(filter ASAP,$(CPUS)),1,0)
 
 ifneq ($(filter ASAP,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/asap
-CPUOBJS += $(OBJ)/cpu/asap/asap.o
-DBGOBJS += $(OBJ)/cpu/asap/asapdasm.o
-$(OBJ)/cpu/asap/asap.o: asap.c asap.h
+OBJDIRS += $(CPUOBJ)/asap
+CPUOBJS += $(CPUOBJ)/asap/asap.o
+DBGOBJS += $(CPUOBJ)/asap/asapdasm.o
 endif
+
+$(CPUOBJ)/asap/asap.o:	$(CPUSRC)/asap/asap.c \
+						$(CPUSRC)/asap/asap.h
 
 
 
@@ -166,11 +197,13 @@ endif
 CPUDEFS += -DHAS_JAGUAR=$(if $(filter JAGUAR,$(CPUS)),1,0)
 
 ifneq ($(filter JAGUAR,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/jaguar
-CPUOBJS += $(OBJ)/cpu/jaguar/jaguar.o
-DBGOBJS += $(OBJ)/cpu/jaguar/jagdasm.o
-$(OBJ)/cpu/jaguar/jaguar.o: jaguar.c jaguar.h
+OBJDIRS += $(CPUOBJ)/jaguar
+CPUOBJS += $(CPUOBJ)/jaguar/jaguar.o
+DBGOBJS += $(CPUOBJ)/jaguar/jagdasm.o
 endif
+
+$(CPUOBJ)/jaguar/jaguar.o:	$(CPUSRC)/jaguar/jaguar.c \
+							$(CPUSRC)/jaguar/jaguar.h
 
 
 
@@ -181,56 +214,45 @@ endif
 CPUDEFS += -DHAS_CDP1802=$(if $(filter CDP1802,$(CPUS)),1,0)
 
 ifneq ($(filter CDP1802,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/cdp1802
-CPUOBJS += $(OBJ)/cpu/cdp1802/cdp1802.o
-DBGOBJS += $(OBJ)/cpu/cdp1802/1802dasm.o
-$(OBJ)/cpu/cdp1802/cdp1802.o: cdp1802.c cdp1802.h 1802tbl.c
+OBJDIRS += $(CPUOBJ)/cdp1802
+CPUOBJS += $(CPUOBJ)/cdp1802/cdp1802.o
+DBGOBJS += $(CPUOBJ)/cdp1802/1802dasm.o
 endif
+
+$(CPUOBJ)/cdp1802/cdp1802.o:	$(CPUSRC)/cdp1802/cdp1802.c \
+								$(CPUSRC)/cdp1802/cdp1802.h \
+								$(CPUSRC)/cdp1802/1802tbl.c
 
 
 
 #-------------------------------------------------
-# National Semiconductor COP410
+# National Semiconductor COP4xx
 #-------------------------------------------------
 
 CPUDEFS += -DHAS_COP410=$(if $(filter COP410,$(CPUS)),1,0)
-
-ifneq ($(filter COP410,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/cop400
-CPUOBJS += $(OBJ)/cpu/cop400/cop410.o
-DBGOBJS += $(OBJ)/cpu/cop400/cop410ds.o
-$(OBJ)/cpu/cop400/cop410.o: cop410.c cop400.h 410ops.c
-endif
-
-
-
-#-------------------------------------------------
-# National Semiconductor COP411
-#-------------------------------------------------
-
 CPUDEFS += -DHAS_COP411=$(if $(filter COP411,$(CPUS)),1,0)
-
-ifneq ($(filter COP411,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/cop400
-CPUOBJS += $(OBJ)/cpu/cop400/cop410.o
-DBGOBJS += $(OBJ)/cpu/cop400/cop410ds.o
-$(OBJ)/cpu/cop400/cop410.o: cop410.c cop400.h 410ops.c
-endif
-
-
-
-#-------------------------------------------------
-# National Semiconductor COP420
-#-------------------------------------------------
-
 CPUDEFS += -DHAS_COP420=$(if $(filter COP420,$(CPUS)),1,0)
 
-ifneq ($(filter COP420,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/cop400
-CPUOBJS += $(OBJ)/cpu/cop400/cop420.o
-DBGOBJS += $(OBJ)/cpu/cop400/cop420ds.o
-$(OBJ)/cpu/cop400/cop420.o: cop420.c cop400.h 410ops.c 420ops.c
+ifneq ($(filter COP410 COP411,$(CPUS)),)
+OBJDIRS += $(CPUOBJ)/cop400
+CPUOBJS += $(CPUOBJ)/cop400/cop410.o
+DBGOBJS += $(CPUOBJ)/cop400/cop410ds.o
 endif
+
+ifneq ($(filter COP420,$(CPUS)),)
+OBJDIRS += $(CPUOBJ)/cop400
+CPUOBJS += $(CPUOBJ)/cop400/cop420.o
+DBGOBJS += $(CPUOBJ)/cop400/cop420ds.o
+endif
+
+$(CPUOBJ)/cop400/cop410.o:	$(CPUSRC)/cop400/cop410.c \
+							$(CPUSRC)/cop400/cop400.h \
+							$(CPUSRC)/cop400/410ops.c
+
+$(CPUOBJ)/cop400/cop420.o:	$(CPUSRC)/cop400/cop420.c \
+							$(CPUSRC)/cop400/cop400.h \
+							$(CPUSRC)/cop400/410ops.c \
+							$(CPUSRC)/cop400/420ops.c
 
 
 
@@ -238,15 +260,16 @@ endif
 # CP1610
 #-------------------------------------------------
 
+CPUDEFS += -DHAS_CP1610=$(if $(filter CP1610,$(CPUS)),1,0)
+
 ifneq ($(filter CP1610,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/cp1610
-CPUDEFS += -DHAS_CP1610=1
-CPUOBJS += $(OBJ)/cpu/cp1610/cp1610.o
-DBGOBJS += $(OBJ)/cpu/cp1610/1610dasm.o
-$(OBJ)/cpu/cp1610/cp1610.o: cp1610.c cp1610.h
-else
-CPUDEFS += -DHAS_CP1610=0
+OBJDIRS += $(CPUOBJ)/cp1610
+CPUOBJS += $(CPUOBJ)/cp1610/cp1610.o
+DBGOBJS += $(CPUOBJ)/cp1610/1610dasm.o
 endif
+
+$(CPUOBJ)/cp1610/cp1610.o:	$(CPUSRC)/cp1610/cp1610.c \
+							$(CPUSRC)/cp1610/cp1610.h
 
 
 
@@ -257,11 +280,13 @@ endif
 CPUDEFS += -DHAS_CCPU=$(if $(filter CCPU,$(CPUS)),1,0)
 
 ifneq ($(filter CCPU,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/ccpu
-CPUOBJS += $(OBJ)/cpu/ccpu/ccpu.o
-DBGOBJS += $(OBJ)/cpu/ccpu/ccpudasm.o
-$(OBJ)/cpu/ccpu/ccpu.o: ccpu.c ccpu.h
+OBJDIRS += $(CPUOBJ)/ccpu
+CPUOBJS += $(CPUOBJ)/ccpu/ccpu.o
+DBGOBJS += $(CPUOBJ)/ccpu/ccpudasm.o
 endif
+
+$(CPUOBJ)/ccpu/ccpu.o:	$(CPUSRC)/ccpu/ccpu.c \
+						$(CPUSRC)/ccpu/ccpu.h
 
 
 
@@ -272,11 +297,15 @@ endif
 CPUDEFS += -DHAS_T11=$(if $(filter T11,$(CPUS)),1,0)
 
 ifneq ($(filter T11,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/t11
-CPUOBJS += $(OBJ)/cpu/t11/t11.o
-DBGOBJS += $(OBJ)/cpu/t11/t11dasm.o
-$(OBJ)/cpu/t11/t11.o: t11.c t11.h t11ops.c t11table.c
+OBJDIRS += $(CPUOBJ)/t11
+CPUOBJS += $(CPUOBJ)/t11/t11.o
+DBGOBJS += $(CPUOBJ)/t11/t11dasm.o
 endif
+
+$(CPUOBJ)/t11/t11.o:	$(CPUSRC)/t11/t11.c \
+						$(CPUSRC)/t11/t11.h \
+						$(CPUSRC)/t11/t11ops.c \
+						$(CPUSRC)/t11/t11table.c
 
 
 
@@ -284,15 +313,16 @@ endif
 # F8
 #-------------------------------------------------
 
+CPUDEFS += -DHAS_F8=$(if $(filter F8,$(CPUS)),1,0)
+
 ifneq ($(filter F8,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/f8
-CPUDEFS += -DHAS_F8=1
-CPUOBJS += $(OBJ)/cpu/f8/f8.o
-DBGOBJS += $(OBJ)/cpu/f8/f8dasm.o
-$(OBJ)/cpu/f8/f8.o: f8.c f8.h
-else
-CPUDEFS += -DHAS_F8=0
+OBJDIRS += $(CPUOBJ)/f8
+CPUOBJS += $(CPUOBJ)/f8/f8.o
+DBGOBJS += $(CPUOBJ)/f8/f8dasm.o
 endif
+
+$(CPUOBJ)/f8/f8.o:	$(CPUSRC)/f8/f8.c \
+					$(CPUSRC)/f8/f8.h
 
 
 
@@ -303,21 +333,39 @@ endif
 CPUDEFS += -DHAS_G65816=$(if $(filter G65816,$(CPUS)),1,0)
 
 ifneq ($(filter G65816,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/g65816
-CPUOBJS += $(OBJ)/cpu/g65816/g65816.o
-CPUOBJS += $(OBJ)/cpu/g65816/g65816o0.o
-CPUOBJS += $(OBJ)/cpu/g65816/g65816o1.o
-CPUOBJS += $(OBJ)/cpu/g65816/g65816o2.o
-CPUOBJS += $(OBJ)/cpu/g65816/g65816o3.o
-CPUOBJS += $(OBJ)/cpu/g65816/g65816o4.o
-DBGOBJS += $(OBJ)/cpu/g65816/g65816ds.o
-$(OBJ)/cpu/g65816/g65816.o: g65816.c g65816.h g65816cm.h g65816op.h
-$(OBJ)/cpu/g65816/g65816o0.o: g65816o0.c g65816.h g65816cm.h g65816op.h
-$(OBJ)/cpu/g65816/g65816o1.o: g65816o1.c g65816.h g65816cm.h g65816op.h
-$(OBJ)/cpu/g65816/g65816o2.o: g65816o2.c g65816.h g65816cm.h g65816op.h
-$(OBJ)/cpu/g65816/g65816o3.o: g65816o3.c g65816.h g65816cm.h g65816op.h
-$(OBJ)/cpu/g65816/g65816o4.o: g65816o4.c g65816.h g65816cm.h g65816op.h
+OBJDIRS += $(CPUOBJ)/g65816
+CPUOBJS += \
+	$(CPUOBJ)/g65816/g65816.o \
+	$(CPUOBJ)/g65816/g65816o0.o \
+	$(CPUOBJ)/g65816/g65816o1.o \
+	$(CPUOBJ)/g65816/g65816o2.o \
+	$(CPUOBJ)/g65816/g65816o3.o \
+	$(CPUOBJ)/g65816/g65816o4.o
+DBGOBJS += $(CPUOBJ)/g65816/g65816ds.o
 endif
+
+G65816DEPS = \
+	$(CPUSRC)/g65816/g65816.h \
+	$(CPUSRC)/g65816/g65816cm.h \
+	$(CPUSRC)/g65816/g65816op.h
+
+$(CPUOBJ)/g65816/g65816.o:		$(CPUSRC)/g65816/g65816.c \
+								$(G65816DEPS)
+
+$(CPUOBJ)/g65816/g65816o0.o: 	$(CPUSRC)/g65816/g65816o0.c \
+								$(G65816DEPS)
+
+$(CPUOBJ)/g65816/g65816o1.o:	$(CPUSRC)/g65816/g65816o1.c \
+								$(G65816DEPS)
+
+$(CPUOBJ)/g65816/g65816o2.o:	$(CPUSRC)/g65816/g65816o2.c \
+								$(G65816DEPS)
+
+$(CPUOBJ)/g65816/g65816o3.o:	$(CPUSRC)/g65816/g65816o3.c \
+								$(G65816DEPS)
+
+$(CPUOBJ)/g65816/g65816o4.o:	$(CPUSRC)/g65816/g65816o4.c \
+								$(G65816DEPS)
 
 
 
@@ -328,11 +376,15 @@ endif
 CPUDEFS += -DHAS_HD6309=$(if $(filter HD6309,$(CPUS)),1,0)
 
 ifneq ($(filter HD6309,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/hd6309
-CPUOBJS += $(OBJ)/cpu/hd6309/hd6309.o
-DBGOBJS += $(OBJ)/cpu/hd6309/6309dasm.o
-$(OBJ)/cpu/hd6309/hd6309.o: hd6309.c hd6309.h 6309ops.c 6309tbl.c
+OBJDIRS += $(CPUOBJ)/hd6309
+CPUOBJS += $(CPUOBJ)/hd6309/hd6309.o
+DBGOBJS += $(CPUOBJ)/hd6309/6309dasm.o
 endif
+
+$(CPUOBJ)/hd6309/hd6309.o:	$(CPUSRC)/hd6309/hd6309.c \
+							$(CPUSRC)/hd6309/hd6309.h \
+							$(CPUSRC)/hd6309/6309ops.c \
+							$(CPUSRC)/hd6309/6309tbl.c
 
 
 
@@ -343,13 +395,19 @@ endif
 CPUDEFS += -DHAS_H83002=$(if $(filter H83002,$(CPUS)),1,0)
 
 ifneq ($(filter H83002,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/h83002
-CPUOBJS += $(OBJ)/cpu/h83002/h83002.o $(OBJ)/cpu/h83002/h8periph.o
-DBGOBJS += $(OBJ)/cpu/h83002/h8disasm.o
-$(OBJ)/cpu/h83002/h83002.o: h83002.c h83002.h h8priv.h
-$(OBJ)/cpu/h83002/h8disasm.o: h8disasm.c
-$(OBJ)/cpu/h83002/h8periph.o: h8periph.c h8priv.h
+OBJDIRS += $(CPUOBJ)/h83002
+CPUOBJS += $(CPUOBJ)/h83002/h83002.o $(CPUOBJ)/h83002/h8periph.o
+DBGOBJS += $(CPUOBJ)/h83002/h8disasm.o
 endif
+
+$(CPUOBJ)/h83002/h83002.o:		$(CPUSRC)/h83002/h83002.c \
+								$(CPUSRC)/h83002/h83002.h \
+								$(CPUSRC)/h83002/h8priv.h
+
+$(CPUOBJ)/h83002/h8disasm.o: 	$(CPUSRC)/h83002/h8disasm.c
+
+$(CPUOBJ)/h83002/h8periph.o:	$(CPUSRC)/h83002/h8periph.c \
+								$(CPUSRC)/h83002/h8priv.h
 
 
 
@@ -360,11 +418,13 @@ endif
 CPUDEFS += -DHAS_SH2=$(if $(filter SH2,$(CPUS)),1,0)
 
 ifneq ($(filter SH2,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/sh2
-CPUOBJS += $(OBJ)/cpu/sh2/sh2.o
-DBGOBJS += $(OBJ)/cpu/sh2/sh2dasm.o
-$(OBJ)/cpu/sh2/sh2.o: sh2.c sh2.h
+OBJDIRS += $(CPUOBJ)/sh2
+CPUOBJS += $(CPUOBJ)/sh2/sh2.o
+DBGOBJS += $(CPUOBJ)/sh2/sh2dasm.o
 endif
+
+$(CPUOBJ)/sh2/sh2.o:	$(CPUSRC)/sh2/sh2.c \
+						$(CPUSRC)/sh2/sh2.h
 
 
 
@@ -375,11 +435,15 @@ endif
 CPUDEFS += -DHAS_H6280=$(if $(filter H6280,$(CPUS)),1,0)
 
 ifneq ($(filter H6280,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/h6280
-CPUOBJS += $(OBJ)/cpu/h6280/h6280.o
-DBGOBJS += $(OBJ)/cpu/h6280/6280dasm.o
-$(OBJ)/cpu/h6280/h6280.o: h6280.c h6280.h h6280ops.h tblh6280.c
+OBJDIRS += $(CPUOBJ)/h6280
+CPUOBJS += $(CPUOBJ)/h6280/h6280.o
+DBGOBJS += $(CPUOBJ)/h6280/6280dasm.o
 endif
+
+$(CPUOBJ)/h6280/h6280.o:	$(CPUSRC)/h6280/h6280.c \
+							$(CPUSRC)/h6280/h6280.h \
+							$(CPUSRC)/h6280/h6280ops.h \
+							$(CPUSRC)/h6280/tblh6280.c
 
 
 
@@ -403,11 +467,13 @@ CPUDEFS += -DHAS_GMS30C2216=$(if $(filter GMS30C2216,$(CPUS)),1,0)
 CPUDEFS += -DHAS_GMS30C2232=$(if $(filter GMS30C2232,$(CPUS)),1,0)
 
 ifneq ($(filter E116T E116XT E116XS E116XSR E132N E132T E132XN E132XT E132XS E132XSR GMS30C2116 GMS30C2132 GMS30C2216 GMS30C2232,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/e132xs
-CPUOBJS += $(OBJ)/cpu/e132xs/e132xs.o
-DBGOBJS += $(OBJ)/cpu/e132xs/32xsdasm.o
-$(OBJ)/cpu/e132xs/e132xs.o: e132xs.c e132xs.h
+OBJDIRS += $(CPUOBJ)/e132xs
+CPUOBJS += $(CPUOBJ)/e132xs/e132xs.o
+DBGOBJS += $(CPUOBJ)/e132xs/32xsdasm.o
 endif
+
+$(CPUOBJ)/e132xs/e132xs.o:	$(CPUSRC)/e132xs/e132xs.c \
+							$(CPUSRC)/e132xs/e132xs.h
 
 
 
@@ -419,11 +485,15 @@ CPUDEFS += -DHAS_8080=$(if $(filter 8080,$(CPUS)),1,0)
 CPUDEFS += -DHAS_8085A=$(if $(filter 8085A,$(CPUS)),1,0)
 
 ifneq ($(filter 8080 8085A,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/i8085
-CPUOBJS += $(OBJ)/cpu/i8085/i8085.o
-DBGOBJS += $(OBJ)/cpu/i8085/8085dasm.o
-$(OBJ)/cpu/i8085/i8085.o: i8085.c i8085.h i8085cpu.h i8085daa.h
+OBJDIRS += $(CPUOBJ)/i8085
+CPUOBJS += $(CPUOBJ)/i8085/i8085.o
+DBGOBJS += $(CPUOBJ)/i8085/8085dasm.o
 endif
+
+$(CPUOBJ)/i8085/i8085.o:	$(CPUSRC)/i8085/i8085.c \
+							$(CPUSRC)/i8085/i8085.h \
+							$(CPUSRC)/i8085/i8085cpu.h \
+							$(CPUSRC)/i8085/i8085daa.h
 
 
 
@@ -437,11 +507,13 @@ CPUDEFS += -DHAS_I8048=$(if $(filter I8048,$(CPUS)),1,0)
 CPUDEFS += -DHAS_N7751=$(if $(filter N7751,$(CPUS)),1,0)
 
 ifneq ($(filter I8035 I8039 I8048 N7751,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/i8039
-CPUOBJS += $(OBJ)/cpu/i8039/i8039.o
-DBGOBJS += $(OBJ)/cpu/i8039/8039dasm.o
-$(OBJ)/cpu/i8039/i8039.o: i8039.c i8039.h
+OBJDIRS += $(CPUOBJ)/i8039
+CPUOBJS += $(CPUOBJ)/i8039/i8039.o
+DBGOBJS += $(CPUOBJ)/i8039/8039dasm.o
 endif
+
+$(CPUOBJ)/i8039/i8039.o:	$(CPUSRC)/i8039/i8039.c \
+							$(CPUSRC)/i8039/i8039.h
 
 
 
@@ -452,11 +524,13 @@ endif
 CPUDEFS += -DHAS_I8X41=$(if $(filter I8X41,$(CPUS)),1,0)
 
 ifneq ($(filter I8X41,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/i8x41
-CPUOBJS += $(OBJ)/cpu/i8x41/i8x41.o
-DBGOBJS += $(OBJ)/cpu/i8x41/8x41dasm.o
-$(OBJ)/cpu/i8x41/i8x41.o: i8x41.c i8x41.h
+OBJDIRS += $(CPUOBJ)/i8x41
+CPUOBJS += $(CPUOBJ)/i8x41/i8x41.o
+DBGOBJS += $(CPUOBJ)/i8x41/8x41dasm.o
 endif
+
+$(CPUOBJ)/i8x41/i8x41.o:	$(CPUSRC)/i8x41/i8x41.c \
+							$(CPUSRC)/i8x41/i8x41.h
 
 
 
@@ -470,11 +544,14 @@ CPUDEFS += -DHAS_I8751=$(if $(filter I8751,$(CPUS)),1,0)
 CPUDEFS += -DHAS_I8752=$(if $(filter I8752,$(CPUS)),1,0)
 
 ifneq ($(filter I8051 I8052 I8751 I8752,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/i8051
-CPUOBJS += $(OBJ)/cpu/i8051/i8051.o
-DBGOBJS += $(OBJ)/cpu/i8051/8051dasm.o
-$(OBJ)/cpu/i8051/i8051.o: i8051.c i8051.h i8051ops.c
+OBJDIRS += $(CPUOBJ)/i8051
+CPUOBJS += $(CPUOBJ)/i8051/i8051.o
+DBGOBJS += $(CPUOBJ)/i8051/8051dasm.o
 endif
+
+$(CPUOBJ)/i8051/i8051.o:	$(CPUSRC)/i8051/i8051.c \
+							$(CPUSRC)/i8051/i8051.h \
+							$(CPUSRC)/i8051/i8051ops.c
 
 
 
@@ -493,25 +570,54 @@ CPUDEFS += -DHAS_PENTIUM=$(if $(filter PENTIUM,$(CPUS)),1,0)
 CPUDEFS += -DHAS_MEDIAGX=$(if $(filter MEDIAGX,$(CPUS)),1,0)
 
 ifneq ($(filter I86 I88 I186 I188,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/i86
-CPUOBJS += $(OBJ)/cpu/i86/i86.o
-DBGOBJS += $(OBJ)/cpu/i386/i386dasm.o
-$(OBJ)/cpu/i86/i86.o: i86.c instr86.c instr186.c i86.h i86intf.h i186intf.h ea.h host.h modrm.h
+OBJDIRS += $(CPUOBJ)/i86
+CPUOBJS += $(CPUOBJ)/i86/i86.o
+DBGOBJS += $(CPUOBJ)/i386/i386dasm.o
 endif
+
 
 ifneq ($(filter I286,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/i86
-CPUOBJS += $(OBJ)/cpu/i86/i286.o
-DBGOBJS += $(OBJ)/cpu/i386/i386dasm.o
-$(OBJ)/cpu/i86/i86.o: i86.c instr286.c i86.h i286intf.h ea.h host.h modrm.h
+OBJDIRS += $(CPUOBJ)/i86
+CPUOBJS += $(CPUOBJ)/i86/i286.o
+DBGOBJS += $(CPUOBJ)/i386/i386dasm.o
 endif
 
+
 ifneq ($(filter I386 I486 PENTIUM MEDIAGX,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/i386
-CPUOBJS += $(OBJ)/cpu/i386/i386.o
-DBGOBJS += $(OBJ)/cpu/i386/i386dasm.o
-$(OBJ)/cpu/i386/i386.o: i386.c i386.h i386intf.h i386op16.c i386op32.c i386ops.c i486ops.c pentops.c x87ops.c i386ops.h cycles.h
+OBJDIRS += $(CPUOBJ)/i386
+CPUOBJS += $(CPUOBJ)/i386/i386.o
+DBGOBJS += $(CPUOBJ)/i386/i386dasm.o
 endif
+
+I86DEPS = \
+	$(CPUSRC)/i86/i86.h \
+	$(CPUSRC)/i86/ea.h \
+	$(CPUSRC)/i86/host.h \
+	$(CPUSRC)/i86/modrm.h
+
+$(CPUOBJ)/i86/i86.o:	$(CPUSRC)/i86/i86.c \
+						$(CPUSRC)/i86/instr86.c \
+						$(CPUSRC)/i86/instr186.c \
+						$(CPUSRC)/i86/i86intf.h \
+						$(CPUSRC)/i86/i186intf.h \
+						$(I86DEPS)
+
+$(CPUOBJ)/i86/i286.o:	$(CPUSRC)/i86/i86.c \
+						$(CPUSRC)/i86/instr286.c \
+						$(CPUSRC)/i86/i286intf.h \
+						$(I86DEPS)
+
+$(CPUOBJ)/i386/i386.o:	$(CPUSRC)/i386/i386.c \
+						$(CPUSRC)/i386/i386.h \
+						$(CPUSRC)/i386/i386intf.h \
+						$(CPUSRC)/i386/i386op16.c \
+						$(CPUSRC)/i386/i386op32.c \
+						$(CPUSRC)/i386/i386ops.c \
+						$(CPUSRC)/i386/i486ops.c \
+						$(CPUSRC)/i386/pentops.c \
+						$(CPUSRC)/i386/x87ops.c \
+						$(CPUSRC)/i386/i386ops.h \
+						$(CPUSRC)/i386/cycles.h
 
 
 
@@ -522,11 +628,13 @@ endif
 CPUDEFS += -DHAS_I960=$(if $(filter I960,$(CPUS)),1,0)
 
 ifneq ($(filter I960,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/i960
-CPUOBJS += $(OBJ)/cpu/i960/i960.o
-DBGOBJS += $(OBJ)/cpu/i960/i960dis.o
-$(OBJ)/cpu/i960/i960.o: i960.c i960.h
+OBJDIRS += $(CPUOBJ)/i960
+CPUOBJS += $(CPUOBJ)/i960/i960.o
+DBGOBJS += $(CPUOBJ)/i960/i960dis.o
 endif
+
+$(CPUOBJ)/i960/i960.o:	$(CPUSRC)/i960/i960.c \
+						$(CPUSRC)/i960/i960.h
 
 
 
@@ -537,11 +645,15 @@ endif
 CPUDEFS += -DHAS_KONAMI=$(if $(filter KONAMI,$(CPUS)),1,0)
 
 ifneq ($(filter KONAMI,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/konami
-CPUOBJS += $(OBJ)/cpu/konami/konami.o
-DBGOBJS += $(OBJ)/cpu/konami/knmidasm.o
-$(OBJ)/cpu/konami/konami.o: konami.c konami.h konamops.c konamtbl.c
+OBJDIRS += $(CPUOBJ)/konami
+CPUOBJS += $(CPUOBJ)/konami/konami.o
+DBGOBJS += $(CPUOBJ)/konami/knmidasm.o
 endif
+
+$(CPUOBJ)/konami/konami.o:	$(CPUSRC)/konami/konami.c \
+							$(CPUSRC)/konami/konami.h \
+							$(CPUSRC)/konami/konamops.c \
+							$(CPUSRC)/konami/konamtbl.c
 
 
 
@@ -549,15 +661,35 @@ endif
 # LH5801
 #-------------------------------------------------
 
+CPUDEFS += -DHAS_LH5801=$(if $(filter LH5801,$(CPUS)),1,0)
+
 ifneq ($(filter LH5801,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/lh5801
-CPUDEFS += -DHAS_LH5801=1
-CPUOBJS += $(OBJ)/cpu/lh5801/lh5801.o
-DBGOBJS += $(OBJ)/cpu/lh5801/5801dasm.o
-$(OBJ)/cpu/lh5801/lh5801.o: lh5801.c 5801tbl.c lh5801.h
-else
-CPUDEFS += -DHAS_LH5801=0
+OBJDIRS += $(CPUOBJ)/lh5801
+CPUOBJS += $(CPUOBJ)/lh5801/lh5801.o
+DBGOBJS += $(CPUOBJ)/lh5801/5801dasm.o
 endif
+
+$(CPUOBJ)/lh5801/lh5801.o:	$(CPUSRC)/lh5801/lh5801.c \
+							$(CPUSRC)/lh5801/5801tbl.c \
+							$(CPUSRC)/lh5801/lh5801.h
+
+
+
+#-------------------------------------------------
+# Fujitsu MB88xx
+#-------------------------------------------------
+
+CPUDEFS += -DHAS_MB8843=$(if $(filter MB8843,$(CPUS)),1,0)
+CPUDEFS += -DHAS_MB8844=$(if $(filter MB8844,$(CPUS)),1,0)
+
+ifneq ($(filter MB8843 MB8844,$(CPUS)),)
+OBJDIRS += $(CPUOBJ)/mb88xx
+CPUOBJS += $(CPUOBJ)/mb88xx/mb88xx.o
+DBGOBJS += $(CPUOBJ)/mb88xx/mb88dasm.o
+endif
+
+$(CPUOBJ)/mb88xx/mb88xx.o:	$(CPUSRC)/mb88xx/mb88xx.c \
+							$(CPUSRC)/mb88xx/mb88xx.h
 
 
 
@@ -572,11 +704,13 @@ CPUDEFS += -DHAS_PIC16C57=$(if $(filter PIC16C57,$(CPUS)),1,0)
 CPUDEFS += -DHAS_PIC16C58=$(if $(filter PIC16C58,$(CPUS)),1,0)
 
 ifneq ($(filter PIC16C54 PIC16C55 PIC16C56 PIC16C57 PIC16C58,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/pic16c5x
-CPUOBJS += $(OBJ)/cpu/pic16c5x/pic16c5x.o
-DBGOBJS += $(OBJ)/cpu/pic16c5x/16c5xdsm.o
-$(OBJ)/cpu/pic16c5x/pic16c5x.o: pic16c5x.c pic16c5x.h
+OBJDIRS += $(CPUOBJ)/pic16c5x
+CPUOBJS += $(CPUOBJ)/pic16c5x/pic16c5x.o
+DBGOBJS += $(CPUOBJ)/pic16c5x/16c5xdsm.o
 endif
+
+$(CPUOBJ)/pic16c5x/pic16c5x.o:	$(CPUSRC)/pic16c5x/pic16c5x.c \
+								$(CPUSRC)/pic16c5x/pic16c5x.h
 
 
 
@@ -587,11 +721,13 @@ endif
 CPUDEFS += -DHAS_R3000=$(if $(filter R3000,$(CPUS)),1,0)
 
 ifneq ($(filter R3000,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/r3000
-CPUOBJS += $(OBJ)/cpu/mips/r3000.o
-DBGOBJS += $(OBJ)/cpu/mips/r3kdasm.o
-$(OBJ)/cpu/mips/r3000.o: r3000.c r3000.h
+OBJDIRS += $(CPUOBJ)/r3000
+CPUOBJS += $(CPUOBJ)/mips/r3000.o
+DBGOBJS += $(CPUOBJ)/mips/r3kdasm.o
 endif
+
+$(CPUOBJ)/mips/r3000.o:	$(CPUSRC)/mips/r3000.c \
+						$(CPUSRC)/mips/r3000.h
 
 
 
@@ -607,16 +743,23 @@ CPUDEFS += -DHAS_QED5271=$(if $(filter QED5271,$(CPUS)),1,0)
 CPUDEFS += -DHAS_RM7000=$(if $(filter RM7000,$(CPUS)),1,0)
 
 ifneq ($(filter R4600 R4650 R4700 R5000 QED5271 RM7000,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/mips
+OBJDIRS += $(CPUOBJ)/mips
 ifdef X86_MIPS3_DRC
-CPUOBJS += $(OBJ)/cpu/mips/mips3drc.o
-$(OBJ)/cpu/mips/mips3drc.o: mips3drc.c mdrcold.c mips3.h
+CPUOBJS += $(CPUOBJ)/mips/mips3drc.o $(CPUOBJ)/x86drc.o
 else
-CPUOBJS += $(OBJ)/cpu/mips/mips3.o
-$(OBJ)/cpu/mips/mips3.o: mips3.c mips3.h
+CPUOBJS += $(CPUOBJ)/mips/mips3.o
 endif
-DBGOBJS += $(OBJ)/cpu/mips/mips3dsm.o
+DBGOBJS += $(CPUOBJ)/mips/mips3dsm.o
 endif
+
+$(CPUOBJ)/mips/mips3.o:		$(CPUSRC)/mips/mips3.c \
+							$(CPUSRC)/mips/mips3.h
+
+$(CPUOBJ)/mips/mips3drc.o:	$(CPUSRC)/mips/mips3drc.c \
+							$(CPUSRC)/mips/mdrcold.c \
+							$(CPUSRC)/mips/mips3.h \
+							$(CPUSRC)/x86drc.c \
+							$(CPUSRC)/x86drc.h
 
 
 
@@ -628,20 +771,38 @@ CPUDEFS += -DHAS_M37702=$(if $(filter M37702,$(CPUS)),1,0)
 CPUDEFS += -DHAS_M37710=$(if $(filter M37710,$(CPUS)),1,0)
 
 ifneq ($(filter M37702 M37710,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/m37710
-CPUOBJS += $(OBJ)/cpu/m37710/m37710.o
-CPUOBJS += $(OBJ)/cpu/m37710/m37710o0.o
-CPUOBJS += $(OBJ)/cpu/m37710/m37710o1.o
-CPUOBJS += $(OBJ)/cpu/m37710/m37710o2.o
-CPUOBJS += $(OBJ)/cpu/m37710/m37710o3.o
-CPUOBJS += $(OBJ)/cpu/m37710/m7700ds.o
-$(OBJ)/cpu/m37710/m37710.o: m37710.c m37710.h m37710o0.c m37710o1.c m37710o2.c m37710o3.c m37710op.h m7700ds.h
-$(OBJ)/cpu/m37710/m37710o0.o: m37710.h m37710o0.c m37710op.h m7700ds.h
-$(OBJ)/cpu/m37710/m37710o1.o: m37710.h m37710o1.c m37710op.h m7700ds.h
-$(OBJ)/cpu/m37710/m37710o2.o: m37710.h m37710o2.c m37710op.h m7700ds.h
-$(OBJ)/cpu/m37710/m37710o3.o: m37710.h m37710o3.c m37710op.h m7700ds.h
-$(OBJ)/cpu/m37710/m7700ds.o: m7700ds.c m7700ds.h
+OBJDIRS += $(CPUOBJ)/m37710
+CPUOBJS += \
+	$(CPUOBJ)/m37710/m37710.o \
+	$(CPUOBJ)/m37710/m37710o0.o \
+	$(CPUOBJ)/m37710/m37710o1.o \
+	$(CPUOBJ)/m37710/m37710o2.o \
+	$(CPUOBJ)/m37710/m37710o3.o
+DBGOBJS += $(CPUOBJ)/m37710/m7700ds.o
 endif
+
+M37710DEPS = \
+	$(CPUSRC)/m37710/m37710.h \
+	$(CPUSRC)/m37710/m37710op.h \
+	$(CPUSRC)/m37710/m7700ds.h
+
+$(CPUOBJ)/m37710/m37710.o:		$(CPUSRC)/m37710/m37710.c \
+								$(M37710DEPS)
+
+$(CPUOBJ)/m37710/m37710o0.o:	$(CPUSRC)/m37710/m37710o0.c \
+								$(M37710DEPS)
+
+$(CPUOBJ)/m37710/m37710o1.o:	$(CPUSRC)/m37710/m37710o1.c \
+								$(M37710DEPS)
+
+$(CPUOBJ)/m37710/m37710o2.o:	$(CPUSRC)/m37710/m37710o2.c \
+								$(M37710DEPS)
+
+$(CPUOBJ)/m37710/m37710o3.o:	$(CPUSRC)/m37710/m37710o3.c \
+								$(M37710DEPS)
+
+$(CPUOBJ)/m37710/m7700ds.o:		$(CPUSRC)/m37710/m7700ds.c \
+								$(CPUSRC)/m37710/m7700ds.h
 
 
 
@@ -663,31 +824,47 @@ CPUDEFS += -DHAS_DECO16=$(if $(filter DECO16,$(CPUS)),1,0)
 CPUDEFS += -DHAS_M4510=$(if $(filter M4510,$(CPUS)),1,0)
 
 ifneq ($(filter M6502 M65C02 M65SC02 M6510 M6510T M7501 M8502 N2A03 DECO16,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/m6502
-CPUOBJS += $(OBJ)/cpu/m6502/m6502.o
-DBGOBJS += $(OBJ)/cpu/m6502/6502dasm.o
-$(OBJ)/cpu/m6502/m6502.o: m6502.c m6502.h ops02.h t6502.c t65c02.c t65sc02.c t6510.c tdeco16.c
+OBJDIRS += $(CPUOBJ)/m6502
+CPUOBJS += $(CPUOBJ)/m6502/m6502.o
+DBGOBJS += $(CPUOBJ)/m6502/6502dasm.o
 endif
 
 ifneq ($(filter M65CE02,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/m6502
-CPUOBJS += $(OBJ)/cpu/m6502/m65ce02.o
-DBGOBJS += $(OBJ)/cpu/m6502/6502dasm.o
-$(OBJ)/cpu/m6502/m65ce02.o: m65ce02.c m65ce02.h opsce02.h t65ce02.c
+OBJDIRS += $(CPUOBJ)/m6502
+CPUOBJS += $(CPUOBJ)/m6502/m65ce02.o
+DBGOBJS += $(CPUOBJ)/m6502/6502dasm.o
 endif
 
 ifneq ($(filter M6509,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/m6502
-CPUOBJS += $(OBJ)/cpu/m6502/m6509.o
-DBGOBJS += $(OBJ)/cpu/m6502/6502dasm.o
-$(OBJ)/cpu/m6502/m6509.o: m6509.c m6509.h ops09.h t6509.c
+OBJDIRS += $(CPUOBJ)/m6502
+CPUOBJS += $(CPUOBJ)/m6502/m6509.o
+DBGOBJS += $(CPUOBJ)/m6502/6502dasm.o
 endif
 
 ifneq ($(filter M4510,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/m6502
-CPUOBJS += $(OBJ)/cpu/m6502/m4510.o
-DBGOBJS += $(OBJ)/cpu/m6502/6502dasm.o
+OBJDIRS += $(CPUOBJ)/m6502
+CPUOBJS += $(CPUOBJ)/m6502/m4510.o
+DBGOBJS += $(CPUOBJ)/m6502/6502dasm.o
 endif
+
+$(CPUOBJ)/m6502/m6502.o:	$(CPUSRC)/m6502/m6502.c \
+							$(CPUSRC)/m6502/m6502.h \
+							$(CPUSRC)/m6502/ops02.h \
+							$(CPUSRC)/m6502/t6502.c \
+							$(CPUSRC)/m6502/t65c02.c \
+							$(CPUSRC)/m6502/t65sc02.c \
+							$(CPUSRC)/m6502/t6510.c \
+							$(CPUSRC)/m6502/tdeco16.c
+
+$(CPUOBJ)/m6502/m65ce02.o:	$(CPUSRC)/m6502/m65ce02.c \
+							$(CPUSRC)/m6502/m65ce02.h \
+							$(CPUSRC)/m6502/opsce02.h \
+							$(CPUSRC)/m6502/t65ce02.c
+
+$(CPUOBJ)/m6502/m6509.o:	$(CPUSRC)/m6502/m6509.c \
+							$(CPUSRC)/m6502/m6509.h \
+							$(CPUSRC)/m6502/ops09.h \
+							$(CPUSRC)/m6502/t6509.c
 
 
 
@@ -704,11 +881,15 @@ CPUDEFS += -DHAS_HD63701=$(if $(filter HD63701,$(CPUS)),1,0)
 CPUDEFS += -DHAS_NSC8105=$(if $(filter NSC8105,$(CPUS)),1,0)
 
 ifneq ($(filter M6800 M6801 M6802 M6803 M6808 HD63701 NSC8105,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/m6800
-CPUOBJS += $(OBJ)/cpu/m6800/m6800.o
-DBGOBJS += $(OBJ)/cpu/m6800/6800dasm.o
-$(OBJ)/cpu/m6800/m6800.o: m6800.c m6800.h 6800ops.c 6800tbl.c
+OBJDIRS += $(CPUOBJ)/m6800
+CPUOBJS += $(CPUOBJ)/m6800/m6800.o
+DBGOBJS += $(CPUOBJ)/m6800/6800dasm.o
 endif
+
+$(CPUOBJ)/m6800/m6800.o:	$(CPUSRC)/m6800/m6800.c \
+							$(CPUSRC)/m6800/m6800.h \
+							$(CPUSRC)/m6800/6800ops.c \
+							$(CPUSRC)/m6800/6800tbl.c
 
 
 
@@ -721,11 +902,14 @@ CPUDEFS += -DHAS_M68705=$(if $(filter M68705,$(CPUS)),1,0)
 CPUDEFS += -DHAS_HD63705=$(if $(filter HD63705,$(CPUS)),1,0)
 
 ifneq ($(filter M6805 M68705 HD63705,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/m6805
-CPUOBJS += $(OBJ)/cpu/m6805/m6805.o
-DBGOBJS += $(OBJ)/cpu/m6805/6805dasm.o
-$(OBJ)/cpu/m6805/m6805.o: m6805.c m6805.h 6805ops.c
+OBJDIRS += $(CPUOBJ)/m6805
+CPUOBJS += $(CPUOBJ)/m6805/m6805.o
+DBGOBJS += $(CPUOBJ)/m6805/6805dasm.o
 endif
+
+$(CPUOBJ)/m6805/m6805.o:	$(CPUSRC)/m6805/m6805.c \
+							$(CPUSRC)/m6805/m6805.h \
+							$(CPUSRC)/m6805/6805ops.c
 
 
 
@@ -737,11 +921,15 @@ CPUDEFS += -DHAS_M6809=$(if $(filter M6809,$(CPUS)),1,0)
 CPUDEFS += -DHAS_M6809E=$(if $(filter M6809E,$(CPUS)),1,0)
 
 ifneq ($(filter M6809 M6809E,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/m6809
-CPUOBJS += $(OBJ)/cpu/m6809/m6809.o
-DBGOBJS += $(OBJ)/cpu/m6809/6809dasm.o
-$(OBJ)/cpu/m6809/m6809.o: m6809.c m6809.h 6809ops.c 6809tbl.c
+OBJDIRS += $(CPUOBJ)/m6809
+CPUOBJS += $(CPUOBJ)/m6809/m6809.o
+DBGOBJS += $(CPUOBJ)/m6809/6809dasm.o
 endif
+
+$(CPUOBJ)/m6809/m6809.o:	$(CPUSRC)/m6809/m6809.c \
+							$(CPUSRC)/m6809/m6809.h \
+							$(CPUSRC)/m6809/6809ops.c \
+							$(CPUSRC)/m6809/6809tbl.c
 
 
 
@@ -752,11 +940,13 @@ endif
 CPUDEFS += -DHAS_MC68HC11=$(if $(filter MC68HC11,$(CPUS)),1,0)
 
 ifneq ($(filter MC68HC11,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/mc68hc11
-CPUOBJS += $(OBJ)/cpu/mc68hc11/mc68hc11.o
-DBGOBJS += $(OBJ)/cpu/mc68hc11/hc11dasm.o
-$(OBJ)/cpu/mc68hc11/mc68hc11.o: mc68hc11.c hc11dasm.c
+OBJDIRS += $(CPUOBJ)/mc68hc11
+CPUOBJS += $(CPUOBJ)/mc68hc11/mc68hc11.o
+DBGOBJS += $(CPUOBJ)/mc68hc11/hc11dasm.o
 endif
+
+$(CPUOBJ)/mc68hc11/mc68hc11.o:	$(CPUSRC)/mc68hc11/mc68hc11.c \
+								$(CPUSRC)/mc68hc11/hc11dasm.c
 
 
 
@@ -772,52 +962,52 @@ CPUDEFS += -DHAS_M68020=$(if $(filter M68020,$(CPUS)),1,0)
 CPUDEFS += -DHAS_M68040=$(if $(filter M68040,$(CPUS)),1,0)
 
 ifneq ($(filter M68000 M68008 M68010 M68EC020 M68020 M68040,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/m68000
-CPUOBJS += $(OBJ)/cpu/m68000/m68kcpu.o $(OBJ)/cpu/m68000/m68kmame.o $(OBJ)/cpu/m68000/m68kops.o
+OBJDIRS += $(CPUOBJ)/m68000
+CPUOBJS += $(CPUOBJ)/m68000/m68kcpu.o $(CPUOBJ)/m68000/m68kmame.o $(CPUOBJ)/m68000/m68kops.o
 ifneq ($(X86_M68K_DRC),)
 CPUDEFS += -DHAS_M68000DRC=1
-CPUOBJS += $(OBJ)/cpu/m68000/d68kcpu.o $(OBJ)/cpu/m68000/d68kmame.o $(OBJ)/cpu/m68000/d68kops.o
+CPUOBJS += $(CPUOBJ)/m68000/d68kcpu.o $(CPUOBJ)/m68000/d68kmame.o $(CPUOBJ)/m68000/d68kops.o
 else
 CPUDEFS += -DHAS_M68000DRC=0
 endif
-DBGOBJS += $(OBJ)/cpu/m68000/m68kdasm.o
+DBGOBJS += $(CPUOBJ)/m68000/m68kdasm.o
 
 # when we compile source files we need to include generated files from the OBJ directory
-$(OBJ)/cpu/m68000/%.o: src/cpu/m68000/%.c
+$(CPUOBJ)/m68000/%.o: src/cpu/m68000/%.c
 	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGS) -I$(OBJ)/cpu/m68000 -c $< -o $@
+	$(CC) $(CDEFS) $(CFLAGS) -I$(CPUOBJ)/m68000 -c $< -o $@
 
 # when we compile generated files we need to include stuff from the src directory
-$(OBJ)/cpu/m68000/%.o: $(OBJ)/cpu/m68000/%.c
+$(CPUOBJ)/m68000/%.o: $(CPUOBJ)/m68000/%.c
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGS) -Isrc/cpu/m68000 -c $< -o $@
 
 # rule to link the generator
-$(OBJ)/cpu/m68000/%$(EXE): $(OBJ)/cpu/m68000/%.o
+$(CPUOBJ)/m68000/%$(EXE): $(CPUOBJ)/m68000/%.o
 	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ -o $@
 
 # rule to generate the C files
-$(OBJ)/cpu/m68000/m68kops.c: $(OBJ)/cpu/m68000/m68kmake$(EXE) m68k_in.c
+$(CPUOBJ)/m68000/m68kops.c: $(CPUOBJ)/m68000/m68kmake$(EXE) m68k_in.c
 	@echo Generating M68K source files...
-	$(OBJ)/cpu/m68000/m68kmake$(EXE) $(OBJ)/cpu/m68000 src/cpu/m68000/m68k_in.c
+	$(CPUOBJ)/m68000/m68kmake$(EXE) $(CPUOBJ)/m68000 src/cpu/m68000/m68k_in.c
 
-$(OBJ)/cpu/m68000/d68kops.c: $(OBJ)/cpu/m68000/d68kmake$(EXE) d68k_in.c
+$(CPUOBJ)/m68000/d68kops.c: $(CPUOBJ)/m68000/d68kmake$(EXE) d68k_in.c
 	@echo Generating M68K DRC source files...
-	$(OBJ)/cpu/m68000/d68kmake$(EXE) $(OBJ)/cpu/m68000 src/cpu/m68000/d68k_in.c
+	$(CPUOBJ)/m68000/d68kmake$(EXE) $(CPUOBJ)/m68000 src/cpu/m68000/d68k_in.c
 
 # rule to build the generator
-$(OBJ)/cpu/m68000/m68kmake$(EXE): $(OBJ)/cpu/m68000/m68kmake.o $(OSDCORELIB)
-$(OBJ)/cpu/m68000/d68kmake$(EXE): $(OBJ)/cpu/m68000/d68kmake.o $(OSDBGOBJS)
+$(CPUOBJ)/m68000/m68kmake$(EXE): $(CPUOBJ)/m68000/m68kmake.o $(OSDCORELIB)
+$(CPUOBJ)/m68000/d68kmake$(EXE): $(CPUOBJ)/m68000/d68kmake.o $(OSDBGOBJS)
 
 # rule to ensure we build the header before building the core CPU file
-$(OBJ)/cpu/m68000/m68kcpu.o: $(OBJ)/cpu/m68000/m68kops.c src/cpu/m68000/m68kfpu.c
-$(OBJ)/cpu/m68000/d68kcpu.o: $(OBJ)/cpu/m68000/d68kops.c src/cpu/m68000/d68kfpu.c
+$(CPUOBJ)/m68000/m68kcpu.o: $(CPUOBJ)/m68000/m68kops.c src/cpu/m68000/m68kfpu.c
+$(CPUOBJ)/m68000/d68kcpu.o: $(CPUOBJ)/m68000/d68kops.c src/cpu/m68000/d68kfpu.c
 
 # ASM core support
 ifneq ($(filter M68000 M68008,$(CPUS)),)
 ifneq ($(X86_ASM_68000),)
 CPUDEFS += -DHAS_M68000ASM=1
-CPUOBJS += $(OBJ)/cpu/m68000/asmintf.o $(OBJ)/cpu/m68000/68000.o
+CPUOBJS += $(CPUOBJ)/m68000/asmintf.o $(CPUOBJ)/m68000/68000.o
 ASMDEFS += -DA68K0
 else
 CPUDEFS += -DHAS_M68000ASM=0
@@ -826,7 +1016,7 @@ endif
 ifneq ($(filter M68010,$(CPUS)),)
 ifneq ($(X86_ASM_68010),)
 CPUDEFS += -DHAS_M68010ASM=1
-CPUOBJS += $(OBJ)/cpu/m68000/asmintf.o $(OBJ)/cpu/m68000/68010.o
+CPUOBJS += $(CPUOBJ)/m68000/asmintf.o $(CPUOBJ)/m68000/68010.o
 ASMDEFS += -DA68K1
 else
 CPUDEFS += -DHAS_M68010ASM=0
@@ -835,7 +1025,7 @@ endif
 ifneq ($(filter M68EC020 M68020,$(CPUS)),)
 ifneq ($(X86_ASM_68020),)
 CPUDEFS += -DHAS_M68020ASM=1
-CPUOBJS += $(OBJ)/cpu/m68000/asmintf.o $(OBJ)/cpu/m68000/68020.o
+CPUOBJS += $(CPUOBJ)/m68000/asmintf.o $(CPUOBJ)/m68000/68020.o
 ASMDEFS += -DA68K2
 ASMDEFS += -DA68KEM
 else
@@ -845,7 +1035,7 @@ endif
 ifneq ($(filter M68040,$(CPUS)),)
 ifneq ($(X86_ASM_68040),)
 CPUDEFS += -DHAS_M68040ASM=1
-CPUOBJS += $(OBJ)/cpu/m68000/asmintf.o $(OBJ)/cpu/m68000/68040.o
+CPUOBJS += $(CPUOBJ)/m68000/asmintf.o $(CPUOBJ)/m68000/68040.o
 ASMDEFS += -DA68K2
 ASMDEFS += -DA68KEM
 else
@@ -854,35 +1044,35 @@ endif
 endif
 
 # generate asm source files for the 68000/68020 emulators
-M68000ASM_GENERATED_STAMP = $(OBJ)/cpu/m68000/asm68k_stamp
+M68000ASM_GENERATED_STAMP = $(CPUOBJ)/m68000/asm68k_stamp
 
 $(M68000ASM_GENERATED_STAMP): src/cpu/m68000/make68k.c $(OSDBGOBJS)
 	@echo Compiling $<...
-	$(XCC) $(CDEFS) $(CFLAGS) $(CONSOLE_PROGRAM) -O0 -DDOS -o $(OBJ)/cpu/m68000/make68k$(EXE) $< $(OSDBGOBJS)
+	$(XCC) $(CDEFS) $(CFLAGS) $(CONSOLE_PROGRAM) -O0 -DDOS -o $(CPUOBJ)/m68000/make68k$(EXE) $< $(OSDBGOBJS)
 	@echo -n > $(M68000ASM_GENERATED_STAMP)
 
-$(OBJ)/cpu/m68000/68000.asm: $(M68000ASM_GENERATED_STAMP)
+$(CPUOBJ)/m68000/68000.asm: $(M68000ASM_GENERATED_STAMP)
 	@echo Generating $@...
-	@$(OBJ)/cpu/m68000/make68k$(EXE) $@ $(OBJ)/cpu/m68000/68000tab.asm 00 $(P6OPT)
+	@$(CPUOBJ)/m68000/make68k$(EXE) $@ $(CPUOBJ)/m68000/68000tab.asm 00 $(P6OPT)
 
-$(OBJ)/cpu/m68000/68010.asm: $(M68000ASM_GENERATED_STAMP)
+$(CPUOBJ)/m68000/68010.asm: $(M68000ASM_GENERATED_STAMP)
 	@echo Generating $@...
-	@$(OBJ)/cpu/m68000/make68k$(EXE) $@ $(OBJ)/cpu/m68000/68010tab.asm 10 $(P6OPT)
+	@$(CPUOBJ)/m68000/make68k$(EXE) $@ $(CPUOBJ)/m68000/68010tab.asm 10 $(P6OPT)
 
-$(OBJ)/cpu/m68000/68020.asm: $(M68000ASM_GENERATED_STAMP)
+$(CPUOBJ)/m68000/68020.asm: $(M68000ASM_GENERATED_STAMP)
 	@echo Generating $@...
-	@$(OBJ)/cpu/m68000/make68k$(EXE) $@ $(OBJ)/cpu/m68000/68020tab.asm 20 $(P6OPT)
+	@$(CPUOBJ)/m68000/make68k$(EXE) $@ $(CPUOBJ)/m68000/68020tab.asm 20 $(P6OPT)
 
 # generated asm files for the 68000 emulator
-$(OBJ)/cpu/m68000/68000.o:  $(OBJ)/cpu/m68000/68000.asm
+$(CPUOBJ)/m68000/68000.o:  $(CPUOBJ)/m68000/68000.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
 
-$(OBJ)/cpu/m68000/68010.o:  $(OBJ)/cpu/m68000/68010.asm
+$(CPUOBJ)/m68000/68010.o:  $(CPUOBJ)/m68000/68010.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
 
-$(OBJ)/cpu/m68000/68020.o:  $(OBJ)/cpu/m68000/68020.asm
+$(CPUOBJ)/m68000/68020.o:  $(CPUOBJ)/m68000/68020.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
 endif
@@ -896,11 +1086,14 @@ endif
 CPUDEFS += -DHAS_DSP56156=$(if $(filter DSP56156,$(CPUS)),1,0)
 
 ifneq ($(filter DSP56156,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/dsp56k
-CPUOBJS += $(OBJ)/cpu/dsp56k/dsp56k.o
-DBGOBJS += $(OBJ)/cpu/dsp56k/dsp56dsm.o
-$(OBJ)/cpu/dsp56k/dsp56k.o: dsp56k.c dsp56ops.c dsp56k.h
+OBJDIRS += $(CPUOBJ)/dsp56k
+CPUOBJS += $(CPUOBJ)/dsp56k/dsp56k.o
+DBGOBJS += $(CPUOBJ)/dsp56k/dsp56dsm.o
 endif
+
+$(CPUOBJ)/dsp56k/dsp56k.o:	$(CPUSRC)/dsp56k/dsp56k.c \
+							$(CPUSRC)/dsp56k/dsp56ops.c \
+							$(CPUSRC)/dsp56k/dsp56k.h
 
 
 
@@ -908,15 +1101,16 @@ endif
 # PDP-1
 #-------------------------------------------------
 
+CPUDEFS += -DHAS_PDP1=$(if $(filter PDP1,$(CPUS)),1,0)
+
 ifneq ($(filter PDP1,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/pdp1
-CPUDEFS += -DHAS_PDP1=1
-CPUOBJS += $(OBJ)/cpu/pdp1/pdp1.o
-DBGOBJS += $(OBJ)/cpu/pdp1/pdp1dasm.o
-$(OBJ)/cpu/pdp1/pdp1.o: pdp1.c pdp1.h
-else
-CPUDEFS += -DHAS_PDP1=0
+OBJDIRS += $(CPUOBJ)/pdp1
+CPUOBJS += $(CPUOBJ)/pdp1/pdp1.o
+DBGOBJS += $(CPUOBJ)/pdp1/pdp1dasm.o
 endif
+
+$(CPUOBJ)/pdp1/pdp1.o:	$(CPUSRC)/pdp1/pdp1.c \
+						$(CPUSRC)/pdp1/pdp1.h
 
 
 
@@ -927,18 +1121,37 @@ endif
 CPUDEFS += -DHAS_PPC403=$(if $(filter PPC403,$(CPUS)),1,0)
 CPUDEFS += -DHAS_PPC602=$(if $(filter PPC602,$(CPUS)),1,0)
 CPUDEFS += -DHAS_PPC603=$(if $(filter PPC603,$(CPUS)),1,0)
+CPUDEFS += -DHAS_MPC8240=$(if $(filter MPC8240,$(CPUS)),1,0)
 
-ifneq ($(filter PPC403 PPC602 PPC603,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/powerpc
+ifneq ($(filter PPC403 PPC602 PPC603 MPC8240,$(CPUS)),)
+OBJDIRS += $(CPUOBJ)/powerpc
 ifdef X86_PPC_DRC
-CPUOBJS += $(OBJ)/cpu/powerpc/ppcdrc.o
-$(OBJ)/cpu/powerpc/ppcdrc.o: ppcdrc.c ppc.h drc_ops.c drc_ops.h ppc_ops.c ppc_mem.c ppc403.c ppc602.c ppc603.c
+CPUOBJS += $(CPUOBJ)/powerpc/ppcdrc.o $(CPUOBJ)/x86drc.o
 else
-CPUOBJS += $(OBJ)/cpu/powerpc/ppc.o
-$(OBJ)/cpu/powerpc/ppc.o: ppc.c ppc.h ppc_ops.c ppc_ops.c ppc_mem.c ppc403.c ppc602.c ppc603.c
+CPUOBJS += $(CPUOBJ)/powerpc/ppc.o
 endif
-DBGOBJS += $(OBJ)/cpu/powerpc/ppc_dasm.o
+DBGOBJS += $(CPUOBJ)/powerpc/ppc_dasm.o
 endif
+
+$(CPUOBJ)/powerpc/ppc.o:	$(CPUSRC)/powerpc/ppc.c \
+							$(CPUSRC)/powerpc/ppc.h \
+							$(CPUSRC)/powerpc/ppc_ops.c \
+							$(CPUSRC)/powerpc/ppc_mem.c \
+							$(CPUSRC)/powerpc/ppc403.c \
+							$(CPUSRC)/powerpc/ppc602.c \
+							$(CPUSRC)/powerpc/ppc603.c
+
+$(CPUOBJ)/powerpc/ppcdrc.o:	$(CPUSRC)/powerpc/ppcdrc.c \
+							$(CPUSRC)/powerpc/ppc.h \
+							$(CPUSRC)/powerpc/drc_ops.c \
+							$(CPUSRC)/powerpc/drc_ops.h \
+							$(CPUSRC)/powerpc/ppc_ops.c \
+							$(CPUSRC)/powerpc/ppc_mem.c \
+							$(CPUSRC)/powerpc/ppc403.c \
+							$(CPUSRC)/powerpc/ppc602.c \
+							$(CPUSRC)/powerpc/ppc603.c \
+							$(CPUSRC)/x86drc.c \
+							$(CPUSRC)/x86drc.h
 
 
 
@@ -948,14 +1161,36 @@ endif
 
 CPUDEFS += -DHAS_V20=$(if $(filter V20,$(CPUS)),1,0)
 CPUDEFS += -DHAS_V30=$(if $(filter V30,$(CPUS)),1,0)
+CPUDEFS += -DHAS_V30MZ=$(if $(filter V30MZ,$(CPUS)),1,0)
 CPUDEFS += -DHAS_V33=$(if $(filter V33,$(CPUS)),1,0)
 
 ifneq ($(filter V20 V30 V33,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/nec
-CPUOBJS += $(OBJ)/cpu/nec/nec.o
-DBGOBJS += $(OBJ)/cpu/i386/i386dasm.o
-$(OBJ)/cpu/nec/nec.o: nec.c nec.h necintrf.h necea.h nechost.h necinstr.h necmodrm.h
+OBJDIRS += $(CPUOBJ)/nec
+CPUOBJS += $(CPUOBJ)/nec/nec.o
+DBGOBJS += $(CPUOBJ)/i386/i386dasm.o
 endif
+
+ifneq ($(filter V30MZ,$(CPUS)),)
+OBJDIRS += $(CPUOBJ)/v30mz
+CPUOBJS += $(CPUOBJ)/v30mz/v30mz.o
+DBGOBJS += $(CPUOBJ)/i386/i386dasm.o
+endif
+
+$(CPUOBJ)/nec/nec.o:	$(CPUSRC)/nec/nec.c \
+						$(CPUSRC)/nec/nec.h \
+						$(CPUSRC)/nec/necintrf.h \
+						$(CPUSRC)/nec/necea.h \
+						$(CPUSRC)/nec/nechost.h \
+						$(CPUSRC)/nec/necinstr.h \
+						$(CPUSRC)/nec/necmodrm.h
+
+$(CPUOBJ)/v30mz/v30mz.o:	$(CPUOBJ)/v30mz/v30mz.c \
+							$(CPUOBJ)/v30mz/v30mz.h \
+							$(CPUOBJ)/v30mz/necmodrm.h \
+							$(CPUOBJ)/v30mz/necinstr.h \
+							$(CPUOBJ)/v30mz/necea.h \
+							$(CPUOBJ)/v30mz/nechost.h \
+							$(CPUOBJ)/v30mz/necintrf.h
 
 
 
@@ -967,11 +1202,26 @@ CPUDEFS += -DHAS_V60=$(if $(filter V60,$(CPUS)),1,0)
 CPUDEFS += -DHAS_V70=$(if $(filter V70,$(CPUS)),1,0)
 
 ifneq ($(filter V60 V70,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/v60
-CPUOBJS += $(OBJ)/cpu/v60/v60.o
-DBGOBJS += $(OBJ)/cpu/v60/v60d.o
-$(OBJ)/cpu/v60/v60.o: am.c am1.c am2.c am3.c op12.c op2.c op3.c op4.c op5.c op6.c op7a.c optable.c v60.c v60.h v60d.c
+OBJDIRS += $(CPUOBJ)/v60
+CPUOBJS += $(CPUOBJ)/v60/v60.o
+DBGOBJS += $(CPUOBJ)/v60/v60d.o
 endif
+
+$(CPUOBJ)/v60/v60.o:	$(CPUSRC)/v60/am.c \
+						$(CPUSRC)/v60/am1.c \
+						$(CPUSRC)/v60/am2.c \
+						$(CPUSRC)/v60/am3.c \
+						$(CPUSRC)/v60/op12.c \
+						$(CPUSRC)/v60/op2.c \
+						$(CPUSRC)/v60/op3.c \
+						$(CPUSRC)/v60/op4.c \
+						$(CPUSRC)/v60/op5.c \
+						$(CPUSRC)/v60/op6.c \
+						$(CPUSRC)/v60/op7a.c \
+						$(CPUSRC)/v60/optable.c \
+						$(CPUSRC)/v60/v60.c \
+						$(CPUSRC)/v60/v60.h \
+						$(CPUSRC)/v60/v60d.c
 
 
 
@@ -982,11 +1232,13 @@ endif
 CPUDEFS += -DHAS_V810=$(if $(filter V810,$(CPUS)),1,0)
 
 ifneq ($(filter V810,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/v810
-CPUOBJS += $(OBJ)/cpu/v810/v810.o
-DBGOBJS += $(OBJ)/cpu/v810/v810dasm.o
-$(OBJ)/cpu/v810/v810.o: v810.c v810.h
+OBJDIRS += $(CPUOBJ)/v810
+CPUOBJS += $(CPUOBJ)/v810/v810.o
+DBGOBJS += $(CPUOBJ)/v810/v810dasm.o
 endif
+
+$(CPUOBJ)/v810/v810.o:	$(CPUSRC)/v810/v810.c \
+						$(CPUSRC)/v810/v810.h
 
 
 
@@ -998,11 +1250,15 @@ CPUDEFS += -DHAS_UPD7810=$(if $(filter UPD7810,$(CPUS)),1,0)
 CPUDEFS += -DHAS_UPD7807=$(if $(filter UPD7807,$(CPUS)),1,0)
 
 ifneq ($(filter UPD7810 UPD7807,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/upd7810
-CPUOBJS += $(OBJ)/cpu/upd7810/upd7810.o
-DBGOBJS += $(OBJ)/cpu/upd7810/7810dasm.o
-$(OBJ)/cpu/upd7810/upd7810.o: upd7810.c 7810tbl.c 7810ops.c upd7810.h
+OBJDIRS += $(CPUOBJ)/upd7810
+CPUOBJS += $(CPUOBJ)/upd7810/upd7810.o
+DBGOBJS += $(CPUOBJ)/upd7810/7810dasm.o
 endif
+
+$(CPUOBJ)/upd7810/upd7810.o:	$(CPUSRC)/upd7810/upd7810.c \
+								$(CPUSRC)/upd7810/7810tbl.c \
+								$(CPUSRC)/upd7810/7810ops.c \
+								$(CPUSRC)/upd7810/upd7810.h
 
 
 
@@ -1013,11 +1269,13 @@ endif
 CPUDEFS += -DHAS_RSP=$(if $(filter RSP,$(CPUS)),1,0)
 
 ifneq ($(filter RSP,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/rsp
-CPUOBJS += $(OBJ)/cpu/rsp/rsp.o
-DBGOBJS += $(OBJ)/cpu/rsp/rsp_dasm.o
-$(OBJ)/cpu/rsp/rsp.o: rsp.c rsp.h
+OBJDIRS += $(CPUOBJ)/rsp
+CPUOBJS += $(CPUOBJ)/rsp/rsp.o
+DBGOBJS += $(CPUOBJ)/rsp/rsp_dasm.o
 endif
+
+$(CPUOBJ)/rsp/rsp.o:	$(CPUSRC)/rsp/rsp.c \
+						$(CPUSRC)/rsp/rsp.h
 
 
 
@@ -1025,15 +1283,19 @@ endif
 # Saturn
 #-------------------------------------------------
 
+CPUDEFS += -DHAS_SATURN=$(if $(filter SATURN,$(CPUS)),1,0)
+
 ifneq ($(filter SATURN,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/saturn
-CPUDEFS += -DHAS_SATURN=1
-CPUOBJS += $(OBJ)/cpu/saturn/saturn.o
-DBGOBJS += $(OBJ)/cpu/saturn/saturnds.o
-$(OBJ)/cpu/saturn/saturn.o: saturn.c sattable.c satops.c saturn.h sat.h
-else
-CPUDEFS += -DHAS_SATURN=0
+OBJDIRS += $(CPUOBJ)/saturn
+CPUOBJS += $(CPUOBJ)/saturn/saturn.o
+DBGOBJS += $(CPUOBJ)/saturn/saturnds.o
 endif
+
+$(CPUOBJ)/saturn/saturn.o:	$(CPUSRC)/saturn/saturn.c \
+							$(CPUSRC)/saturn/sattable.c \
+							$(CPUSRC)/saturn/satops.c \
+							$(CPUSRC)/saturn/saturn.h \
+							$(CPUSRC)/saturn/sat.h
 
 
 
@@ -1044,11 +1306,14 @@ endif
 CPUDEFS += -DHAS_S2650=$(if $(filter S2650,$(CPUS)),1,0)
 
 ifneq ($(filter S2650,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/s2650
-CPUOBJS += $(OBJ)/cpu/s2650/s2650.o
-DBGOBJS += $(OBJ)/cpu/s2650/2650dasm.o
-$(OBJ)/cpu/s2650/s2650.o: s2650.c s2650.h s2650cpu.h
+OBJDIRS += $(CPUOBJ)/s2650
+CPUOBJS += $(CPUOBJ)/s2650/s2650.o
+DBGOBJS += $(CPUOBJ)/s2650/2650dasm.o
 endif
+
+$(CPUOBJ)/s2650/s2650.o:	$(CPUSRC)/s2650/s2650.c \
+							$(CPUSRC)/s2650/s2650.h \
+							$(CPUSRC)/s2650/s2650cpu.h
 
 
 
@@ -1056,15 +1321,18 @@ endif
 # SC61860
 #-------------------------------------------------
 
+CPUDEFS += -DHAS_SC61860=$(if $(filter SC61860,$(CPUS)),1,0)
+
 ifneq ($(filter SC61860,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/sc61860
-CPUDEFS += -DHAS_SC61860=1
-CPUOBJS += $(OBJ)/cpu/sc61860/sc61860.o
-DBGOBJS += $(OBJ)/cpu/sc61860/scdasm.o
-$(OBJ)/cpu/sc61860/sc61860.o: sc61860.h sc.h scops.c sctable.c
-else
-CPUDEFS += -DHAS_SC61860=0
+OBJDIRS += $(CPUOBJ)/sc61860
+CPUOBJS += $(CPUOBJ)/sc61860/sc61860.o
+DBGOBJS += $(CPUOBJ)/sc61860/scdasm.o
 endif
+
+$(CPUOBJ)/sc61860/sc61860.o:	$(CPUSRC)/sc61860/sc61860.h \
+								$(CPUSRC)/sc61860/sc.h \
+								$(CPUSRC)/sc61860/scops.c \
+								$(CPUSRC)/sc61860/sctable.c
 
 
 
@@ -1072,15 +1340,17 @@ endif
 # SM8500
 #-------------------------------------------------
 
+CPUDEFS += -DHAS_SM8500=$(if $(filter SM8500,$(CPUS)),1,0)
+
 ifneq ($(filter SM8500,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/sm8500
-CPUDEFS += -DHAS_SM8500=1
-CPUOBJS += $(OBJ)/cpu/sm8500/sm8500.o
-DBGOBJS += $(OBJ)/cpu/sm8500/sm8500d.o
-$(OBJ)/cpu/sm8500/sm8500.o: sm8500.c sm8500.h sm85ops.h
-else
-CPUDEFS += -DHAS_SM8500=0
+OBJDIRS += $(CPUOBJ)/sm8500
+CPUOBJS += $(CPUOBJ)/sm8500/sm8500.o
+DBGOBJS += $(CPUOBJ)/sm8500/sm8500d.o
 endif
+
+$(CPUOBJ)/sm8500/sm8500.o:	$(CPUSRC)/sm8500/sm8500.c \
+							$(CPUSRC)/sm8500/sm8500.h \
+							$(CPUSRC)/sm8500/sm85ops.h
 
 
 
@@ -1092,11 +1362,13 @@ CPUDEFS += -DHAS_SPC700=$(if $(filter SPC700,$(CPUS)),1,0)
 
 ifneq ($(filter SPC700,$(CPUS)),)
 SPCD = cpu/spc700
-OBJDIRS += $(OBJ)/cpu/spc700
-CPUOBJS += $(OBJ)/cpu/spc700/spc700.o
-DBGOBJS += $(OBJ)/cpu/spc700/spc700ds.o
-$(OBJ)/cpu/spc700/spc700.o: spc700.c spc700.h
+OBJDIRS += $(CPUOBJ)/spc700
+CPUOBJS += $(CPUOBJ)/spc700/spc700.o
+DBGOBJS += $(CPUOBJ)/spc700/spc700ds.o
 endif
+
+$(CPUOBJ)/spc700/spc700.o:	$(CPUSRC)/spc700/spc700.c \
+							$(CPUSRC)/spc700/spc700.h
 
 
 
@@ -1107,11 +1379,13 @@ endif
 CPUDEFS += -DHAS_PSXCPU=$(if $(filter PSXCPU,$(CPUS)),1,0)
 
 ifneq ($(filter PSXCPU,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/mips
-CPUOBJS += $(OBJ)/cpu/mips/psx.o
-DBGOBJS += $(OBJ)/cpu/mips/mipsdasm.o
-$(OBJ)/cpu/mips/psx.o: psx.c psx.h
+OBJDIRS += $(CPUOBJ)/mips
+CPUOBJS += $(CPUOBJ)/mips/psx.o
+DBGOBJS += $(CPUOBJ)/mips/mipsdasm.o
 endif
+
+$(CPUOBJ)/mips/psx.o:	$(CPUSRC)/mips/psx.c \
+						$(CPUSRC)/mips/psx.h
 
 
 
@@ -1119,27 +1393,20 @@ endif
 # Texas Instruments TMS7000 series
 #-------------------------------------------------
 
-ifneq ($(filter TMS7000,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/tms7000
-CPUDEFS += -DHAS_TMS7000=1
-CPUOBJS += $(OBJ)/cpu/tms7000/tms7000.o
-DBGOBJS += $(OBJ)/cpu/tms7000/7000dasm.o
-$(OBJ)/cpu/tms7000/tms7000.o:	tms7000.h tms7000.c
-$(OBJ)/cpu/tms7000/7000dasm.o:	tms7000.h 7000dasm.c
-else
-CPUDEFS += -DHAS_TMS7000=0
+CPUDEFS += -DHAS_TMS7000=$(if $(filter TMS7000,$(CPUS)),1,0)
+CPUDEFS += -DHAS_TMS7000_EXL=$(if $(filter TMS7000_EXL,$(CPUS)),1,0)
+
+ifneq ($(filter TMS7000 TMS7000_EXL,$(CPUS)),)
+OBJDIRS += $(CPUOBJ)/tms7000
+CPUOBJS += $(CPUOBJ)/tms7000/tms7000.o
+DBGOBJS += $(CPUOBJ)/tms7000/7000dasm.o
 endif
 
-ifneq ($(filter TMS7000_EXL,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/tms7000
-CPUDEFS += -DHAS_TMS7000_EXL=1
-CPUOBJS += $(OBJ)/cpu/tms7000/tms7000.o
-DBGOBJS += $(OBJ)/cpu/tms7000/7000dasm.o
-$(OBJ)/cpu/tms7000/tms7000.o:	tms7000.h tms7000.c
-$(OBJ)/cpu/tms7000/7000dasm.o:	tms7000.h 7000dasm.c
-else
-CPUDEFS += -DHAS_TMS7000_EXL=0
-endif
+$(CPUOBJ)/tms7000/tms7000.o:	$(CPUSRC)/tms7000/tms7000.h \
+								$(CPUSRC)/tms7000/tms7000.c
+
+$(CPUOBJ)/tms7000/7000dasm.o:	$(CPUSRC)/tms7000/tms7000.h \
+								$(CPUSRC)/tms7000/7000dasm.c
 
 
 
@@ -1159,32 +1426,48 @@ CPUDEFS += -DHAS_TMS99000=$(if $(filter TMS99000,$(CPUS)),1,0)
 CPUDEFS += -DHAS_TI990_10=$(if $(filter TMS99010,$(CPUS)),1,0)
 
 ifneq ($(filter TMS9900 TMS9940 TMS99000,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/tms9900
-CPUOBJS += $(OBJ)/cpu/tms9900/tms9900.o
-DBGOBJS += $(OBJ)/cpu/tms9900/9900dasm.o
-$(OBJ)/cpu/tms9900/tms9900.o: tms9900.c tms9900.h 99xxcore.h 9900stat.h
+OBJDIRS += $(CPUOBJ)/tms9900
+CPUOBJS += $(CPUOBJ)/tms9900/tms9900.o
+DBGOBJS += $(CPUOBJ)/tms9900/9900dasm.o
 endif
 
 ifneq ($(filter TMS9980 TMS9985 TMS9989,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/tms9900
-CPUOBJS += $(OBJ)/cpu/tms9900/tms9980a.o
-DBGOBJS += $(OBJ)/cpu/tms9900/9900dasm.o
-$(OBJ)/cpu/tms9900/tms9980a.o: tms9980a.c tms9900.h 99xxcore.h 99xxstat.h
+OBJDIRS += $(CPUOBJ)/tms9900
+CPUOBJS += $(CPUOBJ)/tms9900/tms9980a.o
+DBGOBJS += $(CPUOBJ)/tms9900/9900dasm.o
 endif
 
 ifneq ($(filter TMS9995 TMS99105A TMS99110A,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/tms9900
-CPUOBJS += $(OBJ)/cpu/tms9900/tms9995.o
-DBGOBJS += $(OBJ)/cpu/tms9900/9900dasm.o
-$(OBJ)/cpu/tms9900/tms9995.o: tms9995.c tms9900.h 99xxcore.h 99xxstat.h
+OBJDIRS += $(CPUOBJ)/tms9900
+CPUOBJS += $(CPUOBJ)/tms9900/tms9995.o
+DBGOBJS += $(CPUOBJ)/tms9900/9900dasm.o
 endif
 
 ifneq ($(filter TMS99010,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/tms9900
-CPUOBJS += $(OBJ)/cpu/tms9900/ti990_10.o
-DBGOBJS += $(OBJ)/cpu/tms9900/9900dasm.o
-$(OBJ)/cpu/tms9900/ti990_10.o: ti990_10.c tms9900.h 99xxcore.h 99xxstat.h
+OBJDIRS += $(CPUOBJ)/tms9900
+CPUOBJS += $(CPUOBJ)/tms9900/ti990_10.o
+DBGOBJS += $(CPUOBJ)/tms9900/9900dasm.o
 endif
+
+$(CPUOBJ)/tms9900/tms9900.o:	$(CPUSRC)/tms9900/tms9900.c \
+								$(CPUSRC)/tms9900/tms9900.h \
+								$(CPUSRC)/tms9900/99xxcore.h \
+								$(CPUSRC)/tms9900/9900stat.h
+
+$(CPUOBJ)/tms9900/tms9980a.o:	$(CPUSRC)/tms9900/tms9980a.c \
+								$(CPUSRC)/tms9900/tms9900.h \
+								$(CPUSRC)/tms9900/99xxcore.h \
+								$(CPUSRC)/tms9900/99xxstat.h
+
+$(CPUOBJ)/tms9900/tms9995.o:	$(CPUSRC)/tms9900/tms9995.c \
+								$(CPUSRC)/tms9900/tms9900.h \
+								$(CPUSRC)/tms9900/99xxcore.h \
+								$(CPUSRC)/tms9900/99xxstat.h
+
+$(CPUOBJ)/tms9900/ti990_10.o:	$(CPUSRC)/tms9900/ti990_10.c \
+								$(CPUSRC)/tms9900/tms9900.h \
+								$(CPUSRC)/tms9900/99xxcore.h \
+								$(CPUSRC)/tms9900/99xxstat.h
 
 
 
@@ -1196,11 +1479,16 @@ CPUDEFS += -DHAS_TMS34010=$(if $(filter TMS34010,$(CPUS)),1,0)
 CPUDEFS += -DHAS_TMS34020=$(if $(filter TMS34020,$(CPUS)),1,0)
 
 ifneq ($(filter TMS34010 TMS34020,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/tms34010
-CPUOBJS += $(OBJ)/cpu/tms34010/tms34010.o $(OBJ)/cpu/tms34010/34010fld.o
-DBGOBJS += $(OBJ)/cpu/tms34010/34010dsm.o
-$(OBJ)/cpu/tms34010/tms34010.o: tms34010.c tms34010.h 34010ops.c 34010gfx.c 34010tbl.c
+OBJDIRS += $(CPUOBJ)/tms34010
+CPUOBJS += $(CPUOBJ)/tms34010/tms34010.o $(CPUOBJ)/tms34010/34010fld.o
+DBGOBJS += $(CPUOBJ)/tms34010/34010dsm.o
 endif
+
+$(CPUOBJ)/tms34010/tms34010.o:	$(CPUSRC)/tms34010/tms34010.c \
+								$(CPUSRC)/tms34010/tms34010.h \
+								$(CPUSRC)/tms34010/34010ops.c \
+								$(CPUSRC)/tms34010/34010gfx.c \
+								$(CPUSRC)/tms34010/34010tbl.c
 
 
 
@@ -1211,11 +1499,13 @@ endif
 CPUDEFS += -DHAS_TMS32010=$(if $(filter TMS32010,$(CPUS)),1,0)
 
 ifneq ($(filter TMS32010,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/tms32010
-CPUOBJS += $(OBJ)/cpu/tms32010/tms32010.o
-DBGOBJS += $(OBJ)/cpu/tms32010/32010dsm.o
-$(OBJ)/cpu/tms32010/tms32010.o: tms32010.c tms32010.h
+OBJDIRS += $(CPUOBJ)/tms32010
+CPUOBJS += $(CPUOBJ)/tms32010/tms32010.o
+DBGOBJS += $(CPUOBJ)/tms32010/32010dsm.o
 endif
+
+$(CPUOBJ)/tms32010/tms32010.o:	$(CPUSRC)/tms32010/tms32010.c \
+								$(CPUSRC)/tms32010/tms32010.h
 
 
 
@@ -1227,11 +1517,13 @@ CPUDEFS += -DHAS_TMS32025=$(if $(filter TMS32025,$(CPUS)),1,0)
 CPUDEFS += -DHAS_TMS32026=$(if $(filter TMS32026,$(CPUS)),1,0)
 
 ifneq ($(filter TMS32025 TMS32026,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/tms32025
-CPUOBJS += $(OBJ)/cpu/tms32025/tms32025.o
-DBGOBJS += $(OBJ)/cpu/tms32025/32025dsm.o
-$(OBJ)/cpu/tms32025/tms32025.o: tms32025.c tms32025.h
+OBJDIRS += $(CPUOBJ)/tms32025
+CPUOBJS += $(CPUOBJ)/tms32025/tms32025.o
+DBGOBJS += $(CPUOBJ)/tms32025/32025dsm.o
 endif
+
+$(CPUOBJ)/tms32025/tms32025.o:	$(CPUSRC)/tms32025/tms32025.c \
+								$(CPUSRC)/tms32025/tms32025.h
 
 
 
@@ -1242,11 +1534,14 @@ endif
 CPUDEFS += -DHAS_TMS32031=$(if $(filter TMS32031,$(CPUS)),1,0)
 
 ifneq ($(filter TMS32031,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/tms32031
-CPUOBJS += $(OBJ)/cpu/tms32031/tms32031.o
-DBGOBJS += $(OBJ)/cpu/tms32031/dis32031.o
-$(OBJ)/cpu/tms32031/tms32031.o: tms32031.c tms32031.h 32031ops.c
+OBJDIRS += $(CPUOBJ)/tms32031
+CPUOBJS += $(CPUOBJ)/tms32031/tms32031.o
+DBGOBJS += $(CPUOBJ)/tms32031/dis32031.o
 endif
+
+$(CPUOBJ)/tms32031/tms32031.o:	$(CPUSRC)/tms32031/tms32031.c \
+								$(CPUSRC)/tms32031/tms32031.h \
+								$(CPUSRC)/tms32031/32031ops.c
 
 
 
@@ -1257,11 +1552,13 @@ endif
 CPUDEFS += -DHAS_TMS32051=$(if $(filter TMS32051,$(CPUS)),1,0)
 
 ifneq ($(filter TMS32051,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/tms32051
-CPUOBJS += $(OBJ)/cpu/tms32051/tms32051.o
-DBGOBJS += $(OBJ)/cpu/tms32051/dis32051.o
-$(OBJ)/cpu/tms32051/tms32051.o: tms32051.c tms32051.h
+OBJDIRS += $(CPUOBJ)/tms32051
+CPUOBJS += $(CPUOBJ)/tms32051/tms32051.o
+DBGOBJS += $(CPUOBJ)/tms32051/dis32051.o
 endif
+
+$(CPUOBJ)/tms32051/tms32051.o:	$(CPUSRC)/tms32051/tms32051.c \
+								$(CPUSRC)/tms32051/tms32051.h
 
 
 
@@ -1270,12 +1567,15 @@ endif
 #-------------------------------------------------
 
 CPUDEFS += -DHAS_TLCS90=$(if $(filter TLCS90,$(CPUS)),1,0)
+
 ifneq ($(filter TLCS90,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/tlcs90
-CPUOBJS += $(OBJ)/cpu/tlcs90/tlcs90.o
-#DBGOBJS += $(OBJ)/cpu/tlcs90/tlcs90.o
-$(OBJ)/cpu/tlcs90/tlcs90.o: tlcs90.c tlcs90.h
+OBJDIRS += $(CPUOBJ)/tlcs90
+CPUOBJS += $(CPUOBJ)/tlcs90/tlcs90.o
+#DBGOBJS += $(CPUOBJ)/tlcs90/tlcs90.o
 endif
+
+$(CPUOBJ)/tlcs90/tlcs90.o:	$(CPUSRC)/tlcs90/tlcs90.c \
+							$(CPUSRC)/tlcs90/tlcs90.h
 
 
 
@@ -1283,32 +1583,20 @@ endif
 # TX0
 #-------------------------------------------------
 
+CPUDEFS += -DHAS_TX0_64KW=$(if $(filter TX0,$(CPUS)),1,0)
+CPUDEFS += -DHAS_TX0_8KW=$(if $(filter TX0,$(CPUS)),1,0)
+
 ifneq ($(filter TX0,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/pdp1
-CPUDEFS += -DHAS_TX0_64KW=1 -DHAS_TX0_8KW=1
-CPUOBJS += $(OBJ)/cpu/pdp1/tx0.o
-DBGOBJS += $(OBJ)/cpu/pdp1/tx0dasm.o
-$(OBJ)/cpu/pdp1/tx0.o:		tx0.h tx0.c
-$(OBJ)/cpu/pdp1/tx0dasm.o:	tx0.h tx0dasm.c
-else
-CPUDEFS += -DHAS_TX0_64KW=0 -DHAS_TX0_8KW=0
+OBJDIRS += $(CPUOBJ)/pdp1
+CPUOBJS += $(CPUOBJ)/pdp1/tx0.o
+DBGOBJS += $(CPUOBJ)/pdp1/tx0dasm.o
 endif
 
+$(CPUOBJ)/pdp1/tx0.o:		$(CPUSRC)/pdp1/tx0.h \
+							$(CPUSRC)/pdp1/tx0.c
 
-
-#-------------------------------------------------
-# V30MZ
-#-------------------------------------------------
-
-ifneq ($(filter V30MZ,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/v30mz
-CPUDEFS += -DHAS_V30MZ=1
-CPUOBJS += $(OBJ)/cpu/v30mz/v30mz.o
-DBGOBJS += $(OBJ)/cpu/i386/i386dasm.o
-$(OBJ)/cpu/v30mz/v30mz.o:	v30mz.c v30mz.h necmodrm.h necinstr.h necea.h nechost.h necintrf.h
-else
-CPUDEFS += -DHAS_V30MZ=0
-endif
+$(CPUOBJ)/pdp1/tx0dasm.o:	$(CPUSRC)/pdp1/tx0.h \
+							$(CPUSRC)/pdp1/tx0dasm.c
 
 
 
@@ -1319,11 +1607,13 @@ endif
 CPUDEFS += -DHAS_Z80=$(if $(filter Z80,$(CPUS)),1,0)
 
 ifneq ($(filter Z80,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/z80
-CPUOBJS += $(OBJ)/cpu/z80/z80.o $(OBJ)/cpu/z80/z80daisy.o
-DBGOBJS += $(OBJ)/cpu/z80/z80dasm.o
-$(OBJ)/cpu/z80/z80.o: z80.c z80.h
+OBJDIRS += $(CPUOBJ)/z80
+CPUOBJS += $(CPUOBJ)/z80/z80.o $(CPUOBJ)/z80/z80daisy.o
+DBGOBJS += $(CPUOBJ)/z80/z80dasm.o
 endif
+
+$(CPUOBJ)/z80/z80.o:	$(CPUSRC)/z80/z80.c \
+						$(CPUSRC)/z80/z80.h
 
 
 
@@ -1334,11 +1624,22 @@ endif
 CPUDEFS += -DHAS_Z180=$(if $(filter Z180,$(CPUS)),1,0)
 
 ifneq ($(filter Z180,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/z180
-CPUOBJS += $(OBJ)/cpu/z180/z180.o $(OBJ)/cpu/z80/z80daisy.o
-DBGOBJS += $(OBJ)/cpu/z180/z180dasm.o
-$(OBJ)/cpu/z180/z180.o: z180.c z180.h z180daa.h z180op.c z180ops.h z180tbl.h z180cb.c z180dd.c z180ed.c z180fd.c z180xy.c
+OBJDIRS += $(CPUOBJ)/z180
+CPUOBJS += $(CPUOBJ)/z180/z180.o $(CPUOBJ)/z80/z80daisy.o
+DBGOBJS += $(CPUOBJ)/z180/z180dasm.o
 endif
+
+$(CPUOBJ)/z180/z180.o:	$(CPUSRC)/z180/z180.c \
+						$(CPUSRC)/z180/z180.h \
+						$(CPUSRC)/z180/z180daa.h \
+						$(CPUSRC)/z180/z180op.c \
+						$(CPUSRC)/z180/z180ops.h \
+						$(CPUSRC)/z180/z180tbl.h \
+						$(CPUSRC)/z180/z180cb.c \
+						$(CPUSRC)/z180/z180dd.c \
+						$(CPUSRC)/z180/z180ed.c \
+						$(CPUSRC)/z180/z180fd.c \
+						$(CPUSRC)/z180/z180xy.c
 
 
 
@@ -1347,12 +1648,19 @@ endif
 #-------------------------------------------------
 
 CPUDEFS += -DHAS_Z8000=$(if $(filter Z8000,$(CPUS)),1,0)
+
 ifneq ($(filter Z8000,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/z8000
-CPUOBJS += $(OBJ)/cpu/z8000/z8000.o
-DBGOBJS += $(OBJ)/cpu/z8000/8000dasm.o
-$(OBJ)/cpu/z8000/z8000.o: z8000.c z8000.h z8000cpu.h z8000dab.h z8000ops.c z8000tbl.c
+OBJDIRS += $(CPUOBJ)/z8000
+CPUOBJS += $(CPUOBJ)/z8000/z8000.o
+DBGOBJS += $(CPUOBJ)/z8000/8000dasm.o
 endif
+
+$(CPUOBJ)/z8000/z8000.o:	$(CPUSRC)/z8000/z8000.c \
+							$(CPUSRC)/z8000/z8000.h \
+							$(CPUSRC)/z8000/z8000cpu.h \
+							$(CPUSRC)/z8000/z8000dab.h \
+							$(CPUSRC)/z8000/z8000ops.c \
+							$(CPUSRC)/z8000/z8000tbl.c
 
 
 
@@ -1360,12 +1668,16 @@ endif
 # Game Boy Z-80
 #-------------------------------------------------
 
+CPUDEFS += -DHAS_Z80GB=$(if $(filter Z80GB,$(CPUS)),1,0)
+
 ifneq ($(filter Z80GB,$(CPUS)),)
-OBJDIRS += $(OBJ)/cpu/z80gb
-CPUDEFS += -DHAS_Z80GB=1
-CPUOBJS += $(OBJ)/cpu/z80gb/z80gb.o
-DBGOBJS += $(OBJ)/cpu/z80gb/z80gbd.o
-$(OBJ)/cpu/z80gb/z80gb.o: z80gb.c z80gb.h daa_tab.h opc_cb.h opc_main.h
-else
-CPUDEFS += -DHAS_Z80GB=0
+OBJDIRS += $(CPUOBJ)/z80gb
+CPUOBJS += $(CPUOBJ)/z80gb/z80gb.o
+DBGOBJS += $(CPUOBJ)/z80gb/z80gbd.o
 endif
+
+$(CPUOBJ)/z80gb/z80gb.o:	$(CPUSRC)/z80gb/z80gb.c \
+							$(CPUSRC)/z80gb/z80gb.h \
+							$(CPUSRC)/z80gb/daa_tab.h \
+							$(CPUSRC)/z80gb/opc_cb.h \
+							$(CPUSRC)/z80gb/opc_main.h

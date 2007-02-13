@@ -227,9 +227,9 @@ VIDEO_START( rallybik )
 
 VIDEO_START( toaplan1 )
 {
-	tmpbitmap1 = auto_bitmap_alloc(Machine->screen[0].width,Machine->screen[0].height);
-	tmpbitmap2 = auto_bitmap_alloc(Machine->screen[0].width,Machine->screen[0].height);
-	tmpbitmap3 = auto_bitmap_alloc(Machine->screen[0].width,Machine->screen[0].height);
+	tmpbitmap1 = auto_bitmap_alloc(Machine->screen[0].width,Machine->screen[0].height,Machine->screen[0].format);
+	tmpbitmap2 = auto_bitmap_alloc(Machine->screen[0].width,Machine->screen[0].height,Machine->screen[0].format);
+	tmpbitmap3 = auto_bitmap_alloc(Machine->screen[0].width,Machine->screen[0].height,Machine->screen[0].format);
 
 	spriteram16 = auto_malloc(TOAPLAN1_SPRITERAM_SIZE);
 	memset(spriteram16,0,TOAPLAN1_SPRITERAM_SIZE);

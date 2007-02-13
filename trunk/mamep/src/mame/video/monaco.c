@@ -1,7 +1,7 @@
 /* Monaco GP video hardware simulation */
 
 #include "driver.h"
-#include "vidhrdw/generic.h"
+#include "video/generic.h"
 #include "monaco.h"
 
 struct monaco_gfx monaco_gfx;

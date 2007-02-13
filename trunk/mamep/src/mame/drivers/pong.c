@@ -7,7 +7,7 @@
 
 #include "driver.h"
 #include "sndintrf.h"
-#include "vidhrdw/pong.h"
+#include "video/pong.h"
 
 extern struct SamplesSound_interface pong_samples_interface;
 

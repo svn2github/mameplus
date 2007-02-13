@@ -134,14 +134,14 @@
 		#include "png.h"
 		extern SHAREDOBJ_FUNC(void)      png_free(png_info *pnginfo);
 
-		extern SHAREDOBJ_FUNC(png_error) png_read_file(mame_file *fp, png_info *pnginfo);
+		extern SHAREDOBJ_FUNC(png_error) png_read_file(core_file *fp, png_info *pnginfo);
 		extern SHAREDOBJ_FUNC(png_error) png_expand_buffer_8bit(png_info *p);
 
-		extern SHAREDOBJ_FUNC(png_error) png_add_text(const char *keyword, const char *text);
+		extern SHAREDOBJ_FUNC(png_error) png_add_text(png_info *pnginfo, const char *keyword, const char *text);
 		extern SHAREDOBJ_FUNC(png_error) png_filter(png_info *p);
-		extern SHAREDOBJ_FUNC(png_error) png_write_bitmap(mame_file *fp, mame_bitmap *bitmap);
+		extern SHAREDOBJ_FUNC(png_error) png_write_bitmap(core_file *fp, png_info *info, bitmap_t *bitmap, int palette_length, const UINT32 *palette);
 
-		#include "../input.h"
+		#include "../../emu/input.h"
 		SHAREDOBJ_FUNC(int)  code_init(running_machine *machine);
 		SHAREDOBJ_FUNC(void) seq_copy(input_seq *seqdst, const input_seq *seqsrc);
 		SHAREDOBJ_FUNC(int)  string_to_seq(const char *string, input_seq *seq);

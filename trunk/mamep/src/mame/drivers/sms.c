@@ -390,7 +390,7 @@ void *start_vdp(int type)
 	memset(chip->sprite_renderline,0x00,256+32);
 
 	chip->writemode = 0;
-	chip->r_bitmap = auto_bitmap_alloc(Machine->screen[0].width,Machine->screen[0].height);
+	chip->r_bitmap = auto_bitmap_alloc(Machine->screen[0].width,Machine->screen[0].height,Machine->screen[0].format);
 
 	chip->sms_scanline_timer = timer_alloc_ptr(sms_scanline_timer_callback, chip);
 

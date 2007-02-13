@@ -7,7 +7,7 @@
 
 #include "driver.h"
 #include "cpu/gensync/gensync.h"
-#include "vidhrdw/pong.h"
+#include "video/pong.h"
 
 #ifdef MAME_DEBUG
 #include "ui.h"

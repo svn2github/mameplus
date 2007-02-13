@@ -303,7 +303,7 @@ static void draw_sprites( mame_bitmap *bitmap, int demo )
 			int flipy = attributes&0x0200;
 			int flipx = attributes&0x0100;
 
-			if( twin16_custom_vidhrdw ){
+			if( twin16_custom_video ){
 				pen_data = twin16_gfx_rom + 0x80000;
 			}
 			else {

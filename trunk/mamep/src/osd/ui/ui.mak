@@ -3,16 +3,16 @@
 
 # remove main.o from OSDCOREOBJS
 ifneq ($(NO_DLL),)
-OSDCOREOBJS := $(OSDCOREOBJS:$(OBJ)/$(MAMEOS)/osdmain.o=)
+OSDCOREOBJS := $(OSDCOREOBJS:$(OBJ)/osd/$(MAMEOS)/osdmain.o=)
 endif
 
 # use CFLAGSOSDEPEND
-$(OBJ)/ui/%.o: src/ui/%.c
+$(OBJ)/osd/ui/%.o: src/osd/ui/%.c
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -c $< -o $@
 
 ifneq ($(USE_IMAGE_MENU),)
-$(OBJ)/ui/%.o: src/ui/%.cpp
+$(OBJ)/osd/ui/%.o: src/osd/ui/%.cpp
 	@echo Compiling $<...
 ifneq ($(MSVC_BUILD),)
 	$(CC) -mwindows -c $< -o $@
@@ -21,63 +21,63 @@ else
 endif
 endif
 
-OBJDIRS += $(OBJ)/ui
+OBJDIRS += $(OBJ)/osd/ui
 
 # only OS specific output files and rules
 TMPOBJS = \
-	$(OBJ)/ui/m32util.o \
-	$(OBJ)/ui/directinput.o \
-	$(OBJ)/ui/dijoystick.o \
-	$(OBJ)/ui/directdraw.o \
-	$(OBJ)/ui/directories.o \
-	$(OBJ)/ui/audit32.o \
-	$(OBJ)/ui/columnedit.o \
-	$(OBJ)/ui/screenshot.o \
-	$(OBJ)/ui/treeview.o \
-	$(OBJ)/ui/splitters.o \
-	$(OBJ)/ui/bitmask.o \
-	$(OBJ)/ui/datamap.o \
-	$(OBJ)/ui/dxdecode.o \
-	$(OBJ)/ui/picker.o \
-	$(OBJ)/ui/properties.o \
-	$(OBJ)/ui/tabview.o \
-	$(OBJ)/ui/help.o \
-	$(OBJ)/ui/history.o \
-	$(OBJ)/ui/dialogs.o \
-	$(OBJ)/ui/win32ui.o \
-	$(OBJ)/ui/options.o \
-	$(OBJ)/ui/layout.o \
-	$(OBJ)/ui/translate.o
+	$(OBJ)/osd/ui/m32util.o \
+	$(OBJ)/osd/ui/directinput.o \
+	$(OBJ)/osd/ui/dijoystick.o \
+	$(OBJ)/osd/ui/directdraw.o \
+	$(OBJ)/osd/ui/directories.o \
+	$(OBJ)/osd/ui/audit32.o \
+	$(OBJ)/osd/ui/columnedit.o \
+	$(OBJ)/osd/ui/screenshot.o \
+	$(OBJ)/osd/ui/treeview.o \
+	$(OBJ)/osd/ui/splitters.o \
+	$(OBJ)/osd/ui/bitmask.o \
+	$(OBJ)/osd/ui/datamap.o \
+	$(OBJ)/osd/ui/dxdecode.o \
+	$(OBJ)/osd/ui/picker.o \
+	$(OBJ)/osd/ui/properties.o \
+	$(OBJ)/osd/ui/tabview.o \
+	$(OBJ)/osd/ui/help.o \
+	$(OBJ)/osd/ui/history.o \
+	$(OBJ)/osd/ui/dialogs.o \
+	$(OBJ)/osd/ui/win32ui.o \
+	$(OBJ)/osd/ui/options.o \
+	$(OBJ)/osd/ui/layout.o \
+	$(OBJ)/osd/ui/translate.o
 
 ifneq ($(USE_UI_COLOR_PALETTE),)
-    TMPOBJS += $(OBJ)/ui/paletteedit.o
+    TMPOBJS += $(OBJ)/osd/ui/paletteedit.o
 endif
 
 ifneq ($(USE_IMAGE_MENU),)
-    TMPOBJS += $(OBJ)/ui/imagemenu.o
+    TMPOBJS += $(OBJ)/osd/ui/imagemenu.o
 endif
 
-$(OBJ)/ui/ui.a: $(TMPOBJS)
+$(OBJ)/osd/ui/ui.a: $(TMPOBJS)
 
 ifeq ($(MSVC_BUILD),)
-    GUIOBJS += $(OBJ)/ui/m32main.o $(OBJ)/ui/ui.a
+    GUIOBJS += $(OBJ)/osd/ui/m32main.o $(OBJ)/ui/ui.a
 
     # add resource file
-    GUIOBJS += $(OBJ)/ui/mame32.res
+    GUIOBJS += $(OBJ)/osd/ui/mame32.res
 else
-    OSOBJS += $(OBJ)/ui/ui.a
+    OSOBJS += $(OBJ)/osd/ui/ui.a
 
     ifeq ($(NO_DLL),)
-        GUIOBJS += $(OBJ)/ui/m32main.o
-        OSOBJS += $(OBJ)/ui/win32ui.o
+        GUIOBJS += $(OBJ)/osd/ui/m32main.o
+        OSOBJS += $(OBJ)/osd/ui/win32ui.o
 
         # add resource file
-        GUIOBJS += $(OBJ)/ui/mame32.res
+        GUIOBJS += $(OBJ)/osd/ui/mame32.res
     else
-        OSOBJS += $(OBJ)/ui/m32main.o
+        OSOBJS += $(OBJ)/osd/ui/m32main.o
 
         # add resource file
-        OSOBJS += $(OBJ)/ui/mame32.res
+        OSOBJS += $(OBJ)/osd/ui/mame32.res
     endif
 endif
 
@@ -101,7 +101,7 @@ DEFS += \
 #####################################################################
 # Resources
 
-RCFLAGS += --include-dir src/ui
+RCFLAGS += --include-dir $(SRC)/osd/ui
 
 
 

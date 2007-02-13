@@ -4,7 +4,7 @@
 #
 #   Core makefile for building MAME and derivatives
 #
-#   Copyright (c) 1996-2006, Nicola Salmoria and the MAME Team.
+#   Copyright (c) 1996-2007, Nicola Salmoria and the MAME Team.
 #   Visit http://mamedev.org for licensing and usage restrictions.
 #
 ###########################################################################
@@ -16,11 +16,11 @@
 ###########################################################################
 
 
-include config.def
-
 #-------------------------------------------------
-# specify core target: mame, mess, tiny, etc.
-# build rules will be included from $(TARGET).mak
+# specify core target: mame, mess, etc.
+# specify subtarget: mame, mess, tiny, etc.
+# build rules will be included from 
+# $(TARGET)/$(SUBTARGET).mak
 #-------------------------------------------------
 
 ifneq ($(HAZEMD),)
@@ -34,6 +34,10 @@ ifeq ($(TARGET),)
 TARGET = mame
 endif
 endif
+endif
+
+ifndef SUBTARGET
+SUBTARGET = $(TARGET)
 endif
 
 
@@ -253,6 +257,8 @@ endif
 # some structures and thus they can't be linked against each other.
 OBJ = obj/$(NAME)
 
+SRC = src
+
 ifneq ($(NO_DLL),)
     EMULATOR = $(NAME)$(EXE)
 else
@@ -370,7 +376,16 @@ endif
 # compile and linking flags
 #-------------------------------------------------
 
-CFLAGS = -std=gnu89 -Isrc -Isrc/includes -Isrc/zlib -Isrc/$(MAMEOS) -I$(OBJ)/layout
+CFLAGS = \
+	-std=gnu89 \
+	-I$(SRC)/$(TARGET) \
+	-I$(SRC)/$(TARGET)/includes \
+	-I$(OBJ)/$(TARGET)/layout \
+	-I$(SRC)/emu \
+	-I$(OBJ)/emu/layout \
+	-I$(SRC)/lib/util \
+	-I$(SRC)/osd \
+	-I$(SRC)/osd/$(MAMEOS) \
 
 ifneq ($(W_ERROR),)
     CFLAGS += -Werror
@@ -428,28 +443,10 @@ endif
 
 
 #-------------------------------------------------
-# define the dependency search paths
-#-------------------------------------------------
-
-VPATH = src $(wildcard src/cpu/*)
-
-
-
-#-------------------------------------------------
 # define the standard object directories
 #-------------------------------------------------
 
-OBJDIRS = \
-	$(OBJ)/cpu \
-	$(OBJ)/sound \
-	$(OBJ)/debug \
-	$(OBJ)/tools \
-	$(OBJ)/drivers \
-	$(OBJ)/layout \
-	$(OBJ)/machine \
-	$(OBJ)/sndhrdw \
-	$(OBJ)/vidhrdw \
-	$(OBJ)/$(MAMEOS) \
+OBJDIRS = $(OBJ)
 
 ifneq ($(MESS),)
 OBJDIRS += 
@@ -467,12 +464,18 @@ endif
 # define standard libarires for CPU and sounds
 #-------------------------------------------------
 
-CPULIB = $(OBJ)/libcpu.a
+LIBEMU = $(OBJ)/libemu.a
+LIBCPU = $(OBJ)/libcpu.a
+LIBSOUND = $(OBJ)/libsound.a
+LIBUTIL = $(OBJ)/libutil.a
+LIBOCORE = $(OBJ)/libocore.a
+LIBOSD = $(OBJ)/libosd.a
 
-SOUNDLIB = $(OBJ)/libsound.a
-
-OSDCORELIB = $(OBJ)/$(MAMEOS)/libocore.a
-
+ifeq ($(HAZEMD),)
+    VERSIONOBJ = $(OBJ)/version.o
+else
+    VERSIONOBJ = $(OBJ)/versionmd.o
+endif
 
 
 #-------------------------------------------------
@@ -485,10 +488,8 @@ LIBS =
 
 # add expat XML library
 ifneq ($(BUILD_EXPAT),)
-CFLAGS += -Isrc/expat
-OBJDIRS += $(OBJ)/expat
+CFLAGS += -I$(SRC)/lib/expat
 EXPAT = $(OBJ)/libexpat.a
-#COREOBJS += $(EXPAT)
 else
 LIBS += -lexpat
 EXPAT =
@@ -496,10 +497,8 @@ endif
 
 # add ZLIB compression library
 ifneq ($(BUILD_ZLIB),)
-CFLAGS += -Isrc/zlib
-OBJDIRS += $(OBJ)/zlib
+CFLAGS += -I$(SRC)/lib/zlib
 ZLIB = $(OBJ)/libz.a
-#COREOBJS += $(ZLIB)
 else
 LIBS += -lz
 ZLIB =
@@ -512,7 +511,7 @@ endif
 # include files which define additional targets
 #-------------------------------------------------
 
-all: maketree emulator extra
+all: maketree emulator tools
 
 
 
@@ -521,13 +520,13 @@ all: maketree emulator extra
 #-------------------------------------------------
 
 # include OS-specific rules first
-include src/$(MAMEOS)/$(MAMEOS).mak
+include $(SRC)/osd/$(MAMEOS)/$(MAMEOS).mak
 
 # then the various core pieces
-include src/core.mak
-include src/$(TARGET).mak
-include src/cpu/cpu.mak
-include src/sound/sound.mak
+include $(SRC)/$(TARGET)/$(SUBTARGET).mak
+include $(SRC)/emu/emu.mak
+include $(SRC)/lib/lib.mak
+include $(SRC)/tools/tools.mak
 
 # combine the various definitions to one
 CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS)
@@ -560,7 +559,7 @@ endif
 
 emulator: maketree $(EMULATOR)
 
-extra: $(TOOLS)
+tools: maketree $(TOOLS)
 
 maketree: $(sort $(OBJDIRS))
 
@@ -588,16 +587,16 @@ $(sort $(OBJDIRS)):
 #-------------------------------------------------
 
 ifneq ($(NO_DLL),)
-    $(EMULATOR): $(COREOBJS) $(OSOBJS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(OSDCORELIB)
+    $(EMULATOR): $(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(LIBEMU)  $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
 else
-    $(EMULATORDLL): $(COREOBJS) $(OSOBJS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(OSDCORELIB)
+    $(EMULATORDLL): $(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(LIBEMU)  $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
 endif
 
 # always recompile the version string
 ifneq ($(HAZEMD),)
-	$(CC) $(CDEFS) $(CFLAGS) -c src/versionmd.c -o $(OBJ)/versionmd.o
+	$(CC) $(CDEFS) $(CFLAGS) -c $(SRC)/versionmd.c -o $(VERSIONOBJ)
 else
-	$(CC) $(CDEFS) $(CFLAGS) -c src/version.c -o $(OBJ)/version.o
+	$(CC) $(CDEFS) $(CFLAGS) -c $(SRC)/version.c -o $(VERSIONOBJ)
 endif
 	@echo Linking $@...
 
@@ -637,67 +636,29 @@ else
     endif
 endif
 
-file2str$(EXE): $(OBJ)/tools/file2str.o $(OSDCORELIB) $(OSDBGOBJS)
-	@echo Linking $@...
-	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
-
-romcmp$(EXE): $(OBJ)/tools/romcmp.o $(OBJ)/unzip.o $(OBJ)/mamecore.o $(ZLIB) $(OSDCORELIB) $(VCOBJS) $(OSTOOLOBJS) $(OSDBGOBJS)
-	@echo Linking $@...
-	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
-
-chdman$(EXE): $(OBJ)/tools/chdman.o $(OBJ)/chd.o $(OBJ)/tools/chdcd.o $(OBJ)/cdrom.o $(OBJ)/md5.o $(OBJ)/sha1.o $(OBJ)/version.o $(ZLIB) $(OSTOOLOBJS) $(OSDBGOBJS) $(OSDCORELIB)
-	@echo Linking $@...
-	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
-
-jedutil$(EXE): $(OBJ)/tools/jedutil.o $(OBJ)/jedparse.o $(OSDCORELIB) $(OSDBGOBJS)
-	@echo Linking $@...
-	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
-
-
-
-#-------------------------------------------------
-# library targets and dependencies
-#-------------------------------------------------
-
-$(CPULIB): $(CPUOBJS)
-
-ifneq ($(DEBUG),)
-$(CPULIB): $(DBGOBJS)
-endif
-
-$(SOUNDLIB): $(SOUNDOBJS)
-
-$(OSDCORELIB): $(OSDCOREOBJS)
-
-$(OBJ)/libexpat.a: $(OBJ)/expat/xmlparse.o $(OBJ)/expat/xmlrole.o $(OBJ)/expat/xmltok.o
-
-$(OBJ)/libz.a: $(OBJ)/zlib/adler32.o $(OBJ)/zlib/compress.o $(OBJ)/zlib/crc32.o $(OBJ)/zlib/deflate.o \
-				$(OBJ)/zlib/gzio.o $(OBJ)/zlib/inffast.o $(OBJ)/zlib/inflate.o $(OBJ)/zlib/infback.o \
-				$(OBJ)/zlib/inftrees.o $(OBJ)/zlib/trees.o $(OBJ)/zlib/uncompr.o $(OBJ)/zlib/zutil.o
-
 
 
 #-------------------------------------------------
 # generic rules
 #-------------------------------------------------
 
-$(OBJ)/$(MAMEOS)/%.o: src/$(MAMEOS)/%.c | $(OSPREBUILD)
+$(OBJ)/osd/$(MAMEOS)/%.o: $(SRC)/osd/$(MAMEOS)/%.c | $(OSPREBUILD)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -c $< -o $@
 
-$(OBJ)/%.o: src/%.c | $(OSPREBUILD)
+$(OBJ)/%.o: $(SRC)/%.c | $(OSPREBUILD)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
 
-$(OBJ)/%.pp: src/%.c | $(OSPREBUILD)
+$(OBJ)/%.pp: $(SRC)/%.c | $(OSPREBUILD)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGS) -E $< -o $@
 
-$(OBJ)/%.s: src/%.c | $(OSPREBUILD)
+$(OBJ)/%.s: $(SRC)/%.c | $(OSPREBUILD)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGS) -S $< -o $@
 
-$(OBJ)/%.lh: src/%.lay file2str$(EXE)
+$(OBJ)/%.lh: $(SRC)/%.lay file2str$(EXE)
 	@echo Converting $<...
 	@file2str$(EXE) $< $@ layout_$(basename $(notdir $<))
 

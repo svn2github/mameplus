@@ -6,7 +6,7 @@
 ****************************************************************************/
 
 #include "driver.h"
-#include "vidhrdw/pong.h"
+#include "video/pong.h"
 #include "sound/samples.h"
 
 /* HJB 99/11/22 corrected HIT_CLOCK and VBLANK_CLOCK */

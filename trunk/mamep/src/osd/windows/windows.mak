@@ -4,7 +4,7 @@
 #
 #   Windows-specific makefile
 #
-#   Copyright (c) 1996-2006, Nicola Salmoria and the MAME Team.
+#   Copyright (c) 1996-2007, Nicola Salmoria and the MAME Team.
 #   Visit http://mamedev.org for licensing and usage restrictions.
 #
 ###########################################################################
@@ -41,6 +41,17 @@
 ###########################################################################
 ##################   END USER-CONFIGURABLE OPTIONS   ######################
 ###########################################################################
+
+
+#-------------------------------------------------
+# object and source roots
+#-------------------------------------------------
+
+WINSRC = $(SRC)/osd/$(MAMEOS)
+WINOBJ = $(OBJ)/osd/$(MAMEOS)
+
+OBJDIRS += $(WINOBJ)
+
 
 
 #-------------------------------------------------
@@ -128,7 +139,7 @@ DEFS += -D_CRT_SECURE_NO_DEPRECATE -DXML_STATIC -Dinline=__inline -D__inline__=_
 # make msvcprep into a pre-build step
 OSPREBUILD = $(OBJ)/vconv.exe
 
-$(OBJ)/vconv.exe: $(OBJ)/windows/vconv.o
+$(OBJ)/vconv.exe: $(WINOBJ)/vconv.o
 	@echo Linking $@...
 ifdef PTR64
 	@link.exe /nologo $^ version.lib bufferoverflowu.lib /out:$@
@@ -136,7 +147,7 @@ else
 	@link.exe /nologo $^ version.lib /out:$@
 endif
 
-$(OBJ)/windows/vconv.o: src/windows/vconv.c
+$(WINOBJ)/vconv.o: $(WINSRC)/vconv.c
 	@echo Compiling $<...
 	@cl.exe /nologo /O1 -D_CRT_SECURE_NO_DEPRECATE -c $< /Fo$@
 
@@ -176,15 +187,23 @@ CURPATH = ./
 #-------------------------------------------------
 
 OSDCOREOBJS = \
-	$(OBJ)/$(MAMEOS)/osdmain.o \
-	$(OBJ)/$(MAMEOS)/strconv.o	\
-	$(OBJ)/$(MAMEOS)/windir.o \
-	$(OBJ)/$(MAMEOS)/winfile.o \
-	$(OBJ)/$(MAMEOS)/winmisc.o \
-	$(OBJ)/$(MAMEOS)/winsync.o \
-	$(OBJ)/$(MAMEOS)/wintime.o \
-	$(OBJ)/$(MAMEOS)/winutil.o \
-	$(OBJ)/$(MAMEOS)/winwork.o \
+	$(WINOBJ)/main.o	\
+	$(WINOBJ)/strconv.o	\
+	$(WINOBJ)/windir.o \
+	$(WINOBJ)/winfile.o \
+	$(WINOBJ)/winmisc.o \
+	$(WINOBJ)/winsync.o \
+	$(WINOBJ)/wintime.o \
+	$(WINOBJ)/winutil.o \
+	$(WINOBJ)/winwork.o \
+
+# if malloc debugging is enabled, include the necessary code
+ifneq ($(findstring MALLOC_DEBUG,$(DEFS)),)
+OSDCOREOBJS += \
+	$(WINOBJ)/winalloc.o
+endif
+
+$(LIBOCORE): $(OSDCOREOBJS)
 
 
 
@@ -193,7 +212,7 @@ OSDCOREOBJS = \
 #-------------------------------------------------
 
 # add our prefix files to the mix
-CFLAGS += -mwindows -include src/$(MAMEOS)/winprefix.h
+CFLAGS += -mwindows -include $(WINSRC)/winprefix.h
 CFLAGSOSDEPEND += -Wno-strict-aliasing
 
 ifneq ($(NO_FORCEINLINE),)
@@ -237,84 +256,83 @@ endif
 # Windows-specific objects
 #-------------------------------------------------
 
-OSOBJS = \
-	$(OBJ)/$(MAMEOS)/config.o \
-	$(OBJ)/$(MAMEOS)/d3d8intf.o \
-	$(OBJ)/$(MAMEOS)/d3d9intf.o \
-	$(OBJ)/$(MAMEOS)/drawd3d.o \
-	$(OBJ)/$(MAMEOS)/drawdd.o \
-	$(OBJ)/$(MAMEOS)/drawgdi.o \
-	$(OBJ)/$(MAMEOS)/drawnone.o \
-	$(OBJ)/$(MAMEOS)/fronthlp.o \
-	$(OBJ)/$(MAMEOS)/input.o \
-	$(OBJ)/$(MAMEOS)/output.o \
-	$(OBJ)/$(MAMEOS)/sound.o \
-	$(OBJ)/$(MAMEOS)/video.o \
-	$(OBJ)/$(MAMEOS)/window.o \
-	$(OBJ)/$(MAMEOS)/winmain.o
+OSDOBJS = \
+	$(WINOBJ)/config.o \
+	$(WINOBJ)/d3d8intf.o \
+	$(WINOBJ)/d3d9intf.o \
+	$(WINOBJ)/drawd3d.o \
+	$(WINOBJ)/drawdd.o \
+	$(WINOBJ)/drawgdi.o \
+	$(WINOBJ)/drawnone.o \
+	$(WINOBJ)/fronthlp.o \
+	$(WINOBJ)/input.o \
+	$(WINOBJ)/output.o \
+	$(WINOBJ)/sound.o \
+	$(WINOBJ)/video.o \
+	$(WINOBJ)/window.o \
+	$(WINOBJ)/winmain.o
 
-$(OBJ)/$(MAMEOS)/drawdd.o : rendersw.c
-
-$(OBJ)/$(MAMEOS)/drawgdi.o : rendersw.c
-
+# extra dependencies
+$(WINOBJ)/drawdd.o : 	$(SRC)/emu/rendersw.c
+$(WINOBJ)/drawgdi.o :	$(SRC)/emu/rendersw.c
 
 # extra targets and rules for the scale effects
 ifneq ($(USE_SCALE_EFFECTS),)
-OSOBJS += $(OBJ)/$(MAMEOS)/scale.o
+OSOBJS += $(WINOBJ)/scale.o
 
-OBJDIRS += $(OBJ)/$(MAMEOS)/scale
-OSOBJS += $(OBJ)/$(MAMEOS)/scale/superscale.o $(OBJ)/$(MAMEOS)/scale/eagle.o $(OBJ)/$(MAMEOS)/scale/2xsaimmx.o
-OSOBJS += $(OBJ)/$(MAMEOS)/scale/scale2x.o $(OBJ)/$(MAMEOS)/scale/scale3x.o
+OBJDIRS += $(WINOBJ)/scale
+OSOBJS += $(WINOBJ)/scale/superscale.o $(WINOBJ)/scale/eagle.o $(WINOBJ)/scale/2xsaimmx.o
+OSOBJS += $(WINOBJ)/scale/scale2x.o $(WINOBJ)/scale/scale3x.o
 
 ifneq ($(USE_MMX_INTERP_SCALE),)
 DEFS += -DUSE_MMX_INTERP_SCALE
-OSOBJS += $(OBJ)/$(MAMEOS)/scale/hlq_mmx.o
+OSOBJS += $(WINOBJ)/scale/hlq_mmx.o
 else
-OSOBJS += $(OBJ)/$(MAMEOS)/scale/hlq.o
+OSOBJS += $(WINOBJ)/scale/hlq.o
 endif
 
 ifneq ($(USE_4X_SCALE),)
 DEFS += -DUSE_4X_SCALE
 endif
 
-$(OBJ)/$(MAMEOS)/scale/superscale.o: src/$(MAMEOS)/scale/superscale.asm
+$(WINOBJ)/scale/superscale.o: src/$(MAMEOS)/scale/superscale.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
-$(OBJ)/$(MAMEOS)/scale/eagle.o: src/$(MAMEOS)/scale/eagle.asm
+$(WINOBJ)/scale/eagle.o: src/$(MAMEOS)/scale/eagle.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
-$(OBJ)/$(MAMEOS)/scale/2xsaimmx.o: src/$(MAMEOS)/scale/2xsaimmx.asm
+$(WINOBJ)/scale/2xsaimmx.o: src/$(MAMEOS)/scale/2xsaimmx.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
 
-$(OBJ)/$(MAMEOS)/scale/hlq.o: src/$(MAMEOS)/scale/hlq.c
+$(WINOBJ)/scale/hlq.o: src/$(MAMEOS)/scale/hlq.c
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -Wno-unused-variable -mno-mmx -UINTERP_MMX -c $< -o $@
 
-$(OBJ)/$(MAMEOS)/scale/hlq_mmx.o: src/$(MAMEOS)/scale/hlq.c
+$(WINOBJ)/scale/hlq_mmx.o: src/$(MAMEOS)/scale/hlq.c
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -Wno-unused-variable -mmmx -DINTERP_MMX -c $< -o $@
 endif
 
 OSOBJS += $(VCOBJS)
-CLIOBJS = $(OBJ)/$(MAMEOS)/climain.o
+CLIOBJS = $(WINOBJ)/climain.o
 
 # add debug-specific files
 ifneq ($(DEBUG),)
 OSOBJS += \
-	$(OBJ)/$(MAMEOS)/debugwin.o
+	$(WINOBJ)/debugwin.o
 endif
 
 # add resource file for dll
 ifeq ($DONT_USE_DLL,)
 # non-UI builds need a stub resource file
 ifeq ($(WINUI),)
-OSOBJS += $(OBJ)/$(MAMEOS)/mame.res
+OSOBJS += $(WINOBJ)/mame.res
 endif
 endif
 
 # add resource file
-CLIOBJS += $(OBJ)/$(MAMEOS)/mame.res
+CLIOBJS += $(WINOBJ)/mame.res
 
 
 
@@ -327,7 +345,7 @@ ifneq ($(DEBUG),)
 ifeq ($(WINUI),)
 DEFS += -DMALLOC_DEBUG
 LDFLAGS += -Wl,--allow-multiple-definition
-OSDCOREOBJS += $(OBJ)/$(MAMEOS)/winalloc.o
+OSDCOREOBJS += $(WINOBJ)/winalloc.o
 endif
 endif
 
@@ -344,7 +362,7 @@ endif
 
 ifneq ($(WINUI),)
 CFLAGS += -DWINUI=1
-include src/ui/ui.mak
+include $(WINSRC)/../ui/ui.mak
 endif
 
 
@@ -353,7 +371,7 @@ endif
 # rule for making the ledutil sample
 #-------------------------------------------------
 
-ledutil$(EXE): $(OBJ)/windows/ledutil.o $(OSDCORELIB)
+ledutil$(EXE): $(WINOBJ)/ledutil.o $(LIBOCORE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) -mwindows $(OSDBGLDFLAGS) $^ $(LIBS) -o $@
 
@@ -369,6 +387,6 @@ endif
 # generic rule for the resource compiler
 #-------------------------------------------------
 
-$(OBJ)/%.res: src/%.rc | $(OSPREBUILD)
+$(OBJ)/%.res: $(SRC)/%.rc | $(OSPREBUILD)
 	@echo Compiling resources $<...
 	$(RC) $(RCDEFS) $(RCFLAGS) -o $@ -i $<
