@@ -13,6 +13,7 @@
 #include <math.h>
 #include <zlib.h>
 #include "png.h"
+#include "osd_so.h"
 
 
 /***************************************************************************
@@ -39,6 +40,7 @@ struct _png_private
 };
 
 
+#if 0
 /* temporary */
 typedef UINT32 rgb_t;
 
@@ -51,6 +53,7 @@ INLINE UINT8 pal5bit(UINT8 bits)
 	bits &= 0x1f;
 	return (bits << 3) | (bits >> 2);
 }
+#endif
 
 
 /***************************************************************************

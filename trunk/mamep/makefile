@@ -591,9 +591,9 @@ $(sort $(OBJDIRS)):
 #-------------------------------------------------
 
 ifneq ($(NO_DLL),)
-    $(EMULATOR): $(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(LIBEMU)  $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
+    $(EMULATOR): $(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
 else
-    $(EMULATORDLL): $(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(LIBEMU)  $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
+    $(EMULATORDLL): $(VERSIONOBJ) $(DRVLIBS) $(OSDOBJS) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
 endif
 
 # always recompile the version string
@@ -606,9 +606,9 @@ endif
 
 ifneq ($(NO_DLL),)
     ifneq ($(WINUI),)
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(WINDOWS_PROGRAM) $(OBJS) $(COREOBJS) $(OSOBJS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(OSDCORELIB) $(LIBS) -o $@ $(MAPFLAGS)
+	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(WINDOWS_PROGRAM) -o $@ $^ $(LIBS) $(MAPFLAGS)
     else
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $(OBJS) $(COREOBJS) $(OSOBJS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(OSDCORELIB) $(LIBS) -o $@ $(MAPFLAGS)
+	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) -o $@ $^ $(LIBS) $(MAPFLAGS)
     endif
 
     ifneq ($(UPX),)
@@ -618,7 +618,7 @@ ifneq ($(NO_DLL),)
 else
     # build DLL
 	$(RM) $@
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) -shared -o $@ $(OBJS) $(COREOBJS) $(OSOBJS) $(CPULIB) $(SOUNDLIB) $(DRVLIBS) $(OSDBGOBJS) $(OSDCORELIB) $(LIBS) $(MAPDLLFLAGS)
+	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) -shared -o $@ $^ $(LIBS) $(MAPDLLFLAGS)
     ifneq ($(UPX),)
 	upx -9 $@
     endif

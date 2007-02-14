@@ -64,7 +64,7 @@ else
     RC = @i686-pc-mingw32-windres
 endif
 RCDEFS += -DNDEBUG -D_WIN32_IE=0x0400
-RCFLAGS += -O coff --include-dir src
+RCFLAGS += -O coff --include-dir src/osd
 
 
 
@@ -278,17 +278,17 @@ $(WINOBJ)/drawgdi.o :	$(SRC)/emu/rendersw.c
 
 # extra targets and rules for the scale effects
 ifneq ($(USE_SCALE_EFFECTS),)
-OSOBJS += $(WINOBJ)/scale.o
+OSDOBJS += $(WINOBJ)/scale.o
 
 OBJDIRS += $(WINOBJ)/scale
-OSOBJS += $(WINOBJ)/scale/superscale.o $(WINOBJ)/scale/eagle.o $(WINOBJ)/scale/2xsaimmx.o
-OSOBJS += $(WINOBJ)/scale/scale2x.o $(WINOBJ)/scale/scale3x.o
+OSDOBJS += $(WINOBJ)/scale/superscale.o $(WINOBJ)/scale/eagle.o $(WINOBJ)/scale/2xsaimmx.o
+OSDOBJS += $(WINOBJ)/scale/scale2x.o $(WINOBJ)/scale/scale3x.o
 
 ifneq ($(USE_MMX_INTERP_SCALE),)
 DEFS += -DUSE_MMX_INTERP_SCALE
-OSOBJS += $(WINOBJ)/scale/hlq_mmx.o
+OSDOBJS += $(WINOBJ)/scale/hlq_mmx.o
 else
-OSOBJS += $(WINOBJ)/scale/hlq.o
+OSDOBJS += $(WINOBJ)/scale/hlq.o
 endif
 
 ifneq ($(USE_4X_SCALE),)
@@ -331,6 +331,8 @@ OSOBJS += $(WINOBJ)/mame.res
 endif
 endif
 
+$(LIBOSD): $(OSDOBJS)
+
 # add resource file
 CLIOBJS += $(WINOBJ)/mame.res
 
@@ -345,7 +347,6 @@ ifneq ($(DEBUG),)
 ifeq ($(WINUI),)
 DEFS += -DMALLOC_DEBUG
 LDFLAGS += -Wl,--allow-multiple-definition
-OSDCOREOBJS += $(WINOBJ)/winalloc.o
 endif
 endif
 

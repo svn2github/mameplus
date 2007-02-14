@@ -1,6 +1,7 @@
 #ifndef __INTERP_INC
 #define __INTERP_INC
 
+#include "driver.h"
 #include "osd_cpu.h"
 
 //#define USE_INTERP_MASK_1

@@ -11,8 +11,8 @@
  ****************************************************************************/
 #include <assert.h>
 #include <ctype.h>
-#include "osd_cpu.h"
 #include "driver.h"
+#include "osd_cpu.h"
 #include "datafile.h"
 #include "hash.h"
 #include "statistics.h"

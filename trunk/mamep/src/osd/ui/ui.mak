@@ -63,7 +63,7 @@ endif
 $(GUIOBJ)/ui.a: $(TMPOBJS)
 
 ifeq ($(MSVC_BUILD),)
-    GUIOBJS += $(GUIOBJ)/m32main.o $(OBJ)/ui/ui.a
+    GUIOBJS += $(GUIOBJ)/m32main.o $(GUIOBJ)/ui.a
 
     # add resource file
     GUIOBJS += $(GUIOBJ)/mame32.res

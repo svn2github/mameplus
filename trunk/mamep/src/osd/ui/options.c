@@ -33,7 +33,7 @@
 
 #include "MAME32.h"	// include this first
 #include "driver.h"
-#include "../options.h"
+#include "../../emu/options.h"	// fixme
 #include "bitmask.h"
 #include "picker.h"
 #include "dijoystick.h"
