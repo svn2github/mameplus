@@ -801,6 +801,7 @@ static void render_font_char_expand(render_font *font, render_font_char *ch)
 	int x, y;
 	rgb_t color = MAKE_ARGB(0xff,0xff,0xff,0xff);
 
+#ifdef UI_COLOR_DISPLAY
 	if (ch->color)
 	{
 		color = MAKE_ARGB(
@@ -809,6 +810,7 @@ static void render_font_char_expand(render_font *font, render_font_char *ch)
 			options.uicolortable[ch->color][1],
 			options.uicolortable[ch->color][2]);
 	}
+#endif /* UI_COLOR_DISPLAY */
 
 	/* punt if nothing there */
 	if (ch->bmwidth == 0 || ch->bmheight == 0 || ch->rawdata == NULL)
@@ -907,7 +909,10 @@ static void render_font_char_expand(render_font *font, render_font_char *ch)
 
 INT32 render_font_get_pixel_height(render_font *font)
 {
-	return font->height;
+	if (font)
+		return font->height;
+
+	return 0;
 }
 
 
@@ -1956,13 +1961,4 @@ void convert_command_move(char *buf)
 				c++;
 		}
 	}
-}
-
-
-int render_font_get_pixel_height(const render_font *font)
-{
-	if (font)
-		return font->height;
-
-	return 0;
 }

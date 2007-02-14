@@ -26,7 +26,10 @@ CPUOBJS += $(CPUOBJ)/gensync/gensync.o
 DBGOBJS += $(CPUOBJ)/gensync/gensyncd.o
 endif
 
-$(CPUOBJ)/gensync/gensync.o: gensync.c gensyncd.c gensync.h
+$(CPUOBJ)/gensync/gensync.o: \
+	$(CPUSRC)/gensync/gensync.c \
+	$(CPUSRC)/gensync/gensyncd.c \
+	$(CPUSRC)/gensync/gensync.h
 
 
 #-------------------------------------------------
@@ -973,35 +976,35 @@ endif
 DBGOBJS += $(CPUOBJ)/m68000/m68kdasm.o
 
 # when we compile source files we need to include generated files from the OBJ directory
-$(CPUOBJ)/m68000/%.o: src/cpu/m68000/%.c
+$(CPUOBJ)/m68000/%.o: $(CPUSRC)/m68000/%.c
 	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGS) -I$(CPUOBJ)/m68000 -c $< -o $@
+	$(CC) $(CDEFS) $(CFLAGS) -I$(CPUOBJ)/m68000 -I$(CPUSRC) -c $< -o $@
 
 # when we compile generated files we need to include stuff from the src directory
 $(CPUOBJ)/m68000/%.o: $(CPUOBJ)/m68000/%.c
 	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGS) -Isrc/cpu/m68000 -c $< -o $@
+	$(CC) $(CDEFS) $(CFLAGS) -I$(CPUSRC)/m68000 -I$(CPUSRC) -c $< -o $@
 
 # rule to link the generator
 $(CPUOBJ)/m68000/%$(EXE): $(CPUOBJ)/m68000/%.o
 	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ -o $@
 
 # rule to generate the C files
-$(CPUOBJ)/m68000/m68kops.c: $(CPUOBJ)/m68000/m68kmake$(EXE) m68k_in.c
+$(CPUOBJ)/m68000/m68kops.c: $(CPUOBJ)/m68000/m68kmake$(EXE) $(CPUSRC)/m68000/m68k_in.c
 	@echo Generating M68K source files...
-	$(CPUOBJ)/m68000/m68kmake$(EXE) $(CPUOBJ)/m68000 src/cpu/m68000/m68k_in.c
+	$(CPUOBJ)/m68000/m68kmake$(EXE) $(CPUOBJ)/m68000 $(CPUSRC)/m68000/m68k_in.c
 
-$(CPUOBJ)/m68000/d68kops.c: $(CPUOBJ)/m68000/d68kmake$(EXE) d68k_in.c
+$(CPUOBJ)/m68000/d68kops.c: $(CPUOBJ)/m68000/d68kmake$(EXE) $(CPUSRC)/m68000/d68k_in.c
 	@echo Generating M68K DRC source files...
-	$(CPUOBJ)/m68000/d68kmake$(EXE) $(CPUOBJ)/m68000 src/cpu/m68000/d68k_in.c
+	$(CPUOBJ)/m68000/d68kmake$(EXE) $(CPUOBJ)/m68000 $(CPUSRC)/m68000/d68k_in.c
 
 # rule to build the generator
 $(CPUOBJ)/m68000/m68kmake$(EXE): $(CPUOBJ)/m68000/m68kmake.o $(OSDCORELIB)
 $(CPUOBJ)/m68000/d68kmake$(EXE): $(CPUOBJ)/m68000/d68kmake.o $(OSDBGOBJS)
 
 # rule to ensure we build the header before building the core CPU file
-$(CPUOBJ)/m68000/m68kcpu.o: $(CPUOBJ)/m68000/m68kops.c src/cpu/m68000/m68kfpu.c
-$(CPUOBJ)/m68000/d68kcpu.o: $(CPUOBJ)/m68000/d68kops.c src/cpu/m68000/d68kfpu.c
+$(CPUOBJ)/m68000/m68kcpu.o: $(CPUOBJ)/m68000/m68kops.c $(CPUSRC)/m68000/m68kfpu.c
+$(CPUOBJ)/m68000/d68kcpu.o: $(CPUOBJ)/m68000/d68kops.c $(CPUSRC)/m68000/d68kfpu.c
 
 # ASM core support
 ifneq ($(filter M68000 M68008,$(CPUS)),)
@@ -1046,7 +1049,7 @@ endif
 # generate asm source files for the 68000/68020 emulators
 M68000ASM_GENERATED_STAMP = $(CPUOBJ)/m68000/asm68k_stamp
 
-$(M68000ASM_GENERATED_STAMP): src/cpu/m68000/make68k.c $(OSDBGOBJS)
+$(M68000ASM_GENERATED_STAMP): $(CPUSRC)/m68000/make68k.c $(OSDBGOBJS)
 	@echo Compiling $<...
 	$(XCC) $(CDEFS) $(CFLAGS) $(CONSOLE_PROGRAM) -O0 -DDOS -o $(CPUOBJ)/m68000/make68k$(EXE) $< $(OSDBGOBJS)
 	@echo -n > $(M68000ASM_GENERATED_STAMP)
