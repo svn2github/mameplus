@@ -16,6 +16,8 @@
 ###########################################################################
 
 
+include config.def
+
 #-------------------------------------------------
 # specify core target: mame, mess, etc.
 # specify subtarget: mame, mess, tiny, etc.
@@ -24,11 +26,13 @@
 #-------------------------------------------------
 
 ifneq ($(HAZEMD),)
-TARGET = hazemd
+TARGET = mame
+SUBTARGET = hazemd
 USE_DRIVER_SWITCH=
 else
 ifneq ($(NEOCPSMAME),)
-TARGET = neocpsmame
+TARGET = mame
+SUBTARGET = neocpsmame
 else
 ifeq ($(TARGET),)
 TARGET = mame
@@ -237,18 +241,18 @@ ifneq ($(PM),)
     ARCH = -march=pentiumm
 endif
 
-NAME = $(PREFIX)$(TARGET)$(SUFFIX)$(ARCHSUFFIX)$(XEXTRA_SUFFIX)$(COMPILER_SUFFIX)
+NAME = $(PREFIX)$(SUBTARGET)$(SUFFIX)$(ARCHSUFFIX)$(XEXTRA_SUFFIX)$(COMPILER_SUFFIX)
 ifeq ($(NO_DLL),)
-    LIBNAME = $(PREFIX)$(TARGET)$(SUFFIX)$(ARCHSUFFIX)$(XEXTRA_SUFFIX)lib$(COMPILER_SUFFIX)
-    GUINAME = $(PREFIX)$(TARGET)$(SUFFIX)$(ARCHSUFFIX)$(XEXTRA_SUFFIX)gui$(COMPILER_SUFFIX)
+    LIBNAME = $(PREFIX)$(SUBTARGET)$(SUFFIX)$(ARCHSUFFIX)$(XEXTRA_SUFFIX)lib$(COMPILER_SUFFIX)
+    GUINAME = $(PREFIX)$(SUBTARGET)$(SUFFIX)$(ARCHSUFFIX)$(XEXTRA_SUFFIX)gui$(COMPILER_SUFFIX)
 endif
 
 # debug builds just get the 'd' suffix and nothing more
 ifneq ($(DEBUG),)
-    NAME = $(PREFIX)$(TARGET)$(SUFFIX)$(XEXTRA_SUFFIX)d
+    NAME = $(PREFIX)$(SUBTARGET)$(SUFFIX)$(XEXTRA_SUFFIX)d
     ifeq ($(NO_DLL),)
-        LIBNAME = $(PREFIX)$(TARGET)$(SUFFIX)$(XEXTRA_SUFFIX)libd
-        GUINAME = $(PREFIX)$(TARGET)$(SUFFIX)$(XEXTRA_SUFFIX)guid
+        LIBNAME = $(PREFIX)$(SUBTARGET)$(SUFFIX)$(XEXTRA_SUFFIX)libd
+        GUINAME = $(PREFIX)$(SUBTARGET)$(SUFFIX)$(XEXTRA_SUFFIX)guid
     endif
 endif
 

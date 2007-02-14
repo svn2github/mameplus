@@ -1155,7 +1155,7 @@ static void allocate_scalebitmap(void)
 			{
 				info->scale_dirty[bank] = 1;
 
-				info->scale_bitmap[bank] = bitmap_alloc_format(
+				info->scale_bitmap[bank] = bitmap_alloc(
 					Machine->screen[0].width * scale_xsize,
 					Machine->screen[0].height * scale_ysize,
 					(scale_depth == 15) ? BITMAP_FORMAT_RGB15 : BITMAP_FORMAT_RGB32);
@@ -1163,7 +1163,7 @@ static void allocate_scalebitmap(void)
 				if (!use_work_bitmap)
 					continue;
 
-				info->work_bitmap[bank] = bitmap_alloc_format(
+				info->work_bitmap[bank] = bitmap_alloc(
 					Machine->screen[0].width,
 					Machine->screen[0].height,
 					(scale_depth == 15) ? BITMAP_FORMAT_RGB15 : BITMAP_FORMAT_RGB32);

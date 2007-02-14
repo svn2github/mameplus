@@ -2600,7 +2600,7 @@ static void build_bgtexture(running_machine *machine)
 	UINT8 a = 0xff;
 	int i;
 
-	bgbitmap = bitmap_alloc_format(1, 1024, BITMAP_FORMAT_RGB32);
+	bgbitmap = bitmap_alloc(1, 1024, BITMAP_FORMAT_RGB32);
 	if (!bgbitmap)
 		fatalerror("build_bgtexture failed");
 

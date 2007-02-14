@@ -1,27 +1,31 @@
 ###########################################################################
 #
-#   neocpsmame.mak
+#   mame.mak
 #
-#   NEOGEO & CPS1,2 driver-specific makefile
-#	Use make TARGET=NEOCPSMAME to build
+#   MAME target makefile
 #
-#   Copyright (c) 1996-2006, Nicola Salmoria and the MAME Team.
+#   Copyright (c) 1996-2007, Nicola Salmoria and the MAME Team.
 #   Visit http://mamedev.org for licensing and usage restrictions.
 #
 ###########################################################################
 
 
-#-------------------------------------------------
-# driver.c is MAME-specific and contains the
-# list of drivers
-#-------------------------------------------------
+MAMESRC = $(SRC)/mame
+MAMEOBJ = $(OBJ)/mame
 
-COREOBJS += $(OBJ)/mamedriv.o
-ifneq ($(USE_DRIVER_SWITCH),)
-COREOBJS += $(OBJ)/mameplusdriv.o \
-            $(OBJ)/mamehbdriv.o \
-            $(OBJ)/mameneoddriv.o
-endif
+AUDIO = $(MAMEOBJ)/audio
+DRIVERS = $(MAMEOBJ)/drivers
+LAYOUT = $(MAMEOBJ)/layout
+MACHINE = $(MAMEOBJ)/machine
+VIDEO = $(MAMEOBJ)/video
+
+OBJDIRS += \
+	$(AUDIO) \
+	$(DRIVERS) \
+	$(LAYOUT) \
+	$(MACHINE) \
+	$(VIDEO) \
+
 
 
 #-------------------------------------------------
@@ -48,14 +52,24 @@ SOUNDS += YM2610B
 
 
 #-------------------------------------------------
-# this is the list of driver libaries that
-# comprise MAME
+# this is the list of driver libraries that
+# comprise MAME plus mamedriv.o which contains
+# the list of drivers
 #-------------------------------------------------
 
 DRVLIBS = \
-	$(OBJ)/capcom.a \
-	$(OBJ)/neogeo.a \
-	$(OBJ)/shared.a \
+	$(MAMEOBJ)/mamedriv.o
+
+ifneq ($(USE_DRIVER_SWITCH),)
+DRVLIBS += $(MAMEOBJ)/mameplusdriv.o \
+            $(MAMEOBJ)/mamehbdriv.o \
+            $(MAMEOBJ)/mameneoddriv.o
+endif
+
+DRVLIBS = \
+	$(MAMEOBJ)/capcom.a \
+	$(MAMEOBJ)/neogeo.a \
+	$(MAMEOBJ)/shared.a \
 
 
 
@@ -64,23 +78,23 @@ DRVLIBS = \
 # shared across a number of drivers
 #-------------------------------------------------
 
-$(OBJ)/shared.a: \
-	$(OBJ)/machine/pd4990a.o \
+$(MAMEOBJ)/shared.a: \
+	$(MACHINE)/pd4990a.o \
 
 
 #-------------------------------------------------
 # manufacturer-specific groupings for drivers
 #-------------------------------------------------
 
-$(OBJ)/capcom.a: \
-	$(OBJ)/drivers/cps1.o $(OBJ)/vidhrdw/cps1.o \
-	$(OBJ)/drivers/cps2.o \
-	$(OBJ)/machine/cps2crpt.o \
-	$(OBJ)/machine/kabuki.o \
+$(MAMEOBJ)/capcom.a: \
+	$(DRIVERS)/cps1.o $(VIDEO)/cps1.o \
+	$(DRIVERS)/cps2.o \
+	$(MACHINE)/cps2crpt.o \
+	$(MACHINE)/kabuki.o \
 
-$(OBJ)/neogeo.a: \
-	$(OBJ)/drivers/neogeo.o $(OBJ)/machine/neogeo.o $(OBJ)/vidhrdw/neogeo.o \
-	$(OBJ)/machine/neoboot.o \
-	$(OBJ)/machine/neocrypt.o \
-	$(OBJ)/machine/neoprot.o \
+$(MAMEOBJ)/neogeo.a: \
+	$(DRIVERS)/neogeo.o $(MACHINE)/neogeo.o $(VIDEO)/neogeo.o \
+	$(MACHINE)/neoboot.o \
+	$(MACHINE)/neocrypt.o \
+	$(MACHINE)/neoprot.o \
 

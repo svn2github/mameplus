@@ -295,21 +295,21 @@ ifneq ($(USE_4X_SCALE),)
 DEFS += -DUSE_4X_SCALE
 endif
 
-$(WINOBJ)/scale/superscale.o: src/$(MAMEOS)/scale/superscale.asm
+$(WINOBJ)/scale/superscale.o: $(WINSRC)/scale/superscale.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
-$(WINOBJ)/scale/eagle.o: src/$(MAMEOS)/scale/eagle.asm
+$(WINOBJ)/scale/eagle.o: $(WINSRC)/scale/eagle.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
-$(WINOBJ)/scale/2xsaimmx.o: src/$(MAMEOS)/scale/2xsaimmx.asm
+$(WINOBJ)/scale/2xsaimmx.o: $(WINSRC)/scale/2xsaimmx.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
 
-$(WINOBJ)/scale/hlq.o: src/$(MAMEOS)/scale/hlq.c
+$(WINOBJ)/scale/hlq.o: $(WINSRC)/scale/hlq.c
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -Wno-unused-variable -mno-mmx -UINTERP_MMX -c $< -o $@
 
-$(WINOBJ)/scale/hlq_mmx.o: src/$(MAMEOS)/scale/hlq.c
+$(WINOBJ)/scale/hlq_mmx.o: $(WINSRC)/scale/hlq.c
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -Wno-unused-variable -mmmx -DINTERP_MMX -c $< -o $@
 endif
