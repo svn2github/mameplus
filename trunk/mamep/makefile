@@ -382,6 +382,7 @@ endif
 
 CFLAGS = \
 	-std=gnu89 \
+	-I$(SRC) \
 	-I$(SRC)/$(TARGET) \
 	-I$(SRC)/$(TARGET)/includes \
 	-I$(OBJ)/$(TARGET)/layout \

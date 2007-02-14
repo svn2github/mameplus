@@ -969,7 +969,7 @@ OBJDIRS += $(CPUOBJ)/m68000
 CPUOBJS += $(CPUOBJ)/m68000/m68kcpu.o $(CPUOBJ)/m68000/m68kmame.o $(CPUOBJ)/m68000/m68kops.o
 ifneq ($(X86_M68K_DRC),)
 CPUDEFS += -DHAS_M68000DRC=1
-CPUOBJS += $(CPUOBJ)/m68000/d68kcpu.o $(CPUOBJ)/m68000/d68kmame.o $(CPUOBJ)/m68000/d68kops.o
+CPUOBJS += $(CPUOBJ)/m68000/d68kcpu.o $(CPUOBJ)/m68000/d68kmame.o $(CPUOBJ)/m68000/d68kops.o $(CPUOBJ)/x86drc.o
 else
 CPUDEFS += -DHAS_M68000DRC=0
 endif
@@ -1005,6 +1005,7 @@ $(CPUOBJ)/m68000/d68kmake$(EXE): $(CPUOBJ)/m68000/d68kmake.o $(OSDBGOBJS)
 # rule to ensure we build the header before building the core CPU file
 $(CPUOBJ)/m68000/m68kcpu.o: $(CPUOBJ)/m68000/m68kops.c $(CPUSRC)/m68000/m68kfpu.c
 $(CPUOBJ)/m68000/d68kcpu.o: $(CPUOBJ)/m68000/d68kops.c $(CPUSRC)/m68000/d68kfpu.c
+
 
 # ASM core support
 ifneq ($(filter M68000 M68008,$(CPUS)),)

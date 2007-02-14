@@ -281,7 +281,7 @@ BOOL LoadDIB(LPCTSTR filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type)
 	if (filerr != FILERR_NONE)
 		return FALSE;
 
-	success = png_read_bitmap(mfile, phDIB, pPal);
+	success = png_read_bitmap(mame_core_file(mfile), phDIB, pPal);
 
 	mame_fclose(mfile);
 

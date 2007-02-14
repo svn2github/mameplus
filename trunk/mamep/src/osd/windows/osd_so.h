@@ -122,6 +122,7 @@
 
 		extern SHAREDOBJ_FUNC(int)             mame_fputs(mame_file *f, const char *s);
 		extern SHAREDOBJ_FUNC(int)             mame_vfprintf(mame_file *f, const char *fmt, va_list va);
+		extern SHAREDOBJ_FUNC(core_file *)     mame_core_file(mame_file *file);
 
 		#ifdef __GNUC__
 		extern SHAREDOBJ_FUNC(int)             CLIB_DECL mame_fprintf(mame_file *f, const char *fmt, ...)
@@ -256,6 +257,7 @@
 	#else /* _MSC_VER */
 		#include "mamecore.h"
 		#include "mame.h"
+		#include "palette.h"
 
 		// in drivers.c
 		#ifndef DRIVER_SWITCH
@@ -294,7 +296,7 @@
 		extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 
 		// in windows/config.c
-		#include "../options.h"
+		#include "emu/options.h"
 		extern const options_entry windows_opts[];
 		#ifdef DRIVER_SWITCH
 		extern void assign_drivers(void);
@@ -345,7 +347,7 @@
 
 	// in windows/config.c
 	#ifdef _MSC_VER
-	#include "../options.h"
+	#include "emu/options.h"
 	#else
 	#include "options.h"
 	#endif /* _MSC_VER */
