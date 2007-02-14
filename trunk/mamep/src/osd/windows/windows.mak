@@ -203,6 +203,13 @@ OSDCOREOBJS += \
 	$(WINOBJ)/winalloc.o
 endif
 
+# remove main.o from OSDCOREOBJS
+ifneq ($(WINUI),)
+ifneq ($(NO_DLL),)
+OSDCOREOBJS := $(OSDCOREOBJS:$(WINOBJ)/main.o=)
+endif
+endif
+
 $(LIBOCORE): $(OSDCOREOBJS)
 
 

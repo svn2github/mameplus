@@ -6,11 +6,6 @@ GUIOBJ = $(OBJ)/osd/ui
 
 OBJDIRS += $(GUIOBJ)
 
-# remove main.o from OSDCOREOBJS
-ifneq ($(NO_DLL),)
-OSDCOREOBJS := $(OSDCOREOBJS:$(WINOBJ)/main.o=)
-endif
-
 # use CFLAGSOSDEPEND
 $(GUIOBJ)/%.o: $(GUISRC)/%.c
 	@echo Compiling $<...

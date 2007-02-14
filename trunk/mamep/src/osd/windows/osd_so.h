@@ -305,6 +305,7 @@
 #else /* !DONT_USE_DLL */
 	#include "mamecore.h"
 	#include "mame.h"
+	#include "palette.h"
 
 	// in drivers.c
 	#ifndef DRIVER_SWITCH

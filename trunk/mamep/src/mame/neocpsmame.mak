@@ -66,7 +66,7 @@ DRVLIBS += $(MAMEOBJ)/mameplusdriv.o \
             $(MAMEOBJ)/mameneoddriv.o
 endif
 
-DRVLIBS = \
+DRVLIBS += \
 	$(MAMEOBJ)/capcom.a \
 	$(MAMEOBJ)/neogeo.a \
 	$(MAMEOBJ)/shared.a \
