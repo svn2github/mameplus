@@ -295,6 +295,12 @@
 		// in windows/winmain.c
 		extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 
+		// in windows/strconv.c
+		extern char *astring_from_utf8(const char *s);
+		extern char *utf8_from_astring(const char *s);
+		extern unsigned short *wstring_from_utf8(const char *s);
+		extern char *utf8_from_wstring(const unsigned short *s);
+
 		// in windows/config.c
 		#include "emu/options.h"
 		extern const options_entry windows_opts[];
@@ -343,7 +349,13 @@
 	extern SHAREDOBJ_FUNC(void) winwindow_exit(running_machine *machine);
 
 	// in windows/winmain.c
-		extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
+	extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
+
+	// in windows/strconv.c
+	extern char *astring_from_utf8(const char *s);
+	extern char *utf8_from_astring(const char *s);
+	extern unsigned short *wstring_from_utf8(const char *s);
+	extern char *utf8_from_wstring(const unsigned short *s);
 
 	// in windows/config.c
 	#ifdef _MSC_VER
