@@ -42,7 +42,7 @@ struct ui_lang_info_t
 	const char *shortname;
 	const char *description;
 	int         codepage;
-	int         numchars;
+	UINT8         fontoverride[4];
 };
 
 

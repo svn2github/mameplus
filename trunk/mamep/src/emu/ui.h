@@ -16,6 +16,7 @@
 
 #include "mamecore.h"
 #include "render.h"
+#include "unicode.h"
 
 
 /***************************************************************************
@@ -23,27 +24,14 @@
 ***************************************************************************/
 
 /* preferred font height; use ui_get_line_height() to get actual height */
-#ifndef UI_COLOR_DISPLAY
 #define UI_TARGET_FONT_HEIGHT	(1.0f / 25.0f)
-#else /* UI_COLOR_DISPLAY */
-#define UI_TARGET_FONT_HEIGHT	ui_font_height
-#endif /* UI_COLOR_DISPLAY */
 
 /* width of lines drawn in the UI */
-#ifdef UI_COLOR_DISPLAY
-#define UI_LINE_WIDTH			(1.0f / (float)ui_screen_height)
-#else /* UI_COLOR_DISPLAY */
 #define UI_LINE_WIDTH			(1.0f / 500.0f)
-#endif /* UI_COLOR_DISPLAY */
 
 /* border between outlines and inner text on left/right and top/bottom sides */
-#ifdef UI_COLOR_DISPLAY
-#define UI_BOX_LR_BORDER		3
-#define UI_BOX_TB_BORDER		3
-#else /* UI_COLOR_DISPLAY */
 #define UI_BOX_LR_BORDER		(UI_TARGET_FONT_HEIGHT * 0.25f)
 #define UI_BOX_TB_BORDER		(UI_TARGET_FONT_HEIGHT * 0.25f)
-#endif /* UI_COLOR_DISPLAY */
 
 /* handy colors */
 #define ARGB_WHITE				MAKE_ARGB(0xff,0xff,0xff,0xff)
@@ -116,23 +104,23 @@ void ui_update_and_render(void);
 render_font *ui_get_font(void);
 
 /* returns the line height of the font used by the UI system */
-int ui_get_line_height(void);
+float ui_get_line_height(void);
 
 /* returns the width of a character or string in the UI font */
-int ui_get_char_width(UINT16 ch);
-int ui_get_string_width(const char *s);
+float ui_get_char_width(unicode_char ch);
+float ui_get_string_width(const char *s);
 
-void add_fill(int x0, int y0, int x1, int y1, rgb_t color);
-void add_filled_box(int x0, int y0, int x1, int y1);
+/* draw a box filled with a given color */
+void ui_draw_box(float x0, float y0, float x1, float y1, rgb_t backcolor);
 
 /* draw an outlined box filled with a given color */
 void ui_draw_outlined_box(float x0, float y0, float x1, float y1, rgb_t backcolor);
 
 /* simple text draw at the given coordinates */
-void ui_draw_text(const char *buf, int x, int y);
+void ui_draw_text(const char *buf, float x, float y);
 
 /* full-on text draw with all the options */
-void ui_draw_text_full(const char *origs, int x, int y, int wrapwidth, int offset, int maxlines, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, int *totalwidth, int *totalheight);
+void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int offset, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, float *totalwidth, float *totalheight);
 
 /* draw a multi-line message with a box around it */
 void ui_draw_text_box(const char *text, int justify, float xpos, float ypos, rgb_t backcolor);
@@ -155,9 +143,6 @@ int ui_is_slider_active(void);
 
 /* print the game info string into a buffer */
 int sprintf_game_info(char *buffer);
-
-/* called by the OSD layer to set the UI area of the screen */
-void ui_set_visible_area(int xmin, int ymin, int xmax, int ymax);
 
 void ui_auto_pause(void);
 

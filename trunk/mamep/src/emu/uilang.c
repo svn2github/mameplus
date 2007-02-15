@@ -4,20 +4,29 @@
 #include <stdlib.h>
 #include <string.h>
 
+extern const UINT8 uifontdata_cp932[];
+extern const UINT16 uifontmap_cp932[];
+extern const UINT8 uifontdata_cp936[];
+extern const UINT16 uifontmap_cp936[];
+extern const UINT8 uifontdata_cp949[];
+extern const UINT16 uifontmap_cp949[];
+extern const UINT8 uifontdata_cp950[];
+extern const UINT16 uifontmap_cp950[];
+
 struct ui_lang_info_t ui_lang_info[UI_LANG_MAX] =
 {
-	{  "en_US", "US", "English (US)",         1252, 0     },
-	{  "ja_JP", "JP", "Japanese",             932,  11520 },
-	{  "zh_CN", "CN", "Simplified Chinese",   936,  23940 },
-	{  "zh_TW", "TW", "Traditional Chinese",  950,  13973 },
-	{  "ko_KR", "KR", "Korean",               949,  22428 },
-	{  "fr_FR", "FR", "French",               1252, 0 },
-	{  "es_ES", "ES", "Spanish",              1252, 0 },
-	{  "it_IT", "IT", "Italian",              1252, 0 },
-	{  "de_DE", "DE", "German",               1252, 0 },
-	{  "pt_BR", "BR", "Portuguese (BRA)",     1252, 0 },
-	{  "pl_PL", "PL", "Polish",               1250, 0 },
-	{  "hu_HU", "HU", "Hungarian",            1250, 0 },
+	{  "en_US", "US", "English (United States)",1252, {} },
+	{  "ja_JP", "JP", "Japanese",				932,  { UI_LANG_ZH_TW, UI_LANG_KO_KR, UI_LANG_ZH_CN, UI_LANG_JA_JP } },
+	{  "zh_CN", "CN", "Chinese (PRC)",			936,  { UI_LANG_KO_KR, UI_LANG_ZH_TW, UI_LANG_JA_JP, UI_LANG_ZH_CN } },
+	{  "zh_TW", "TW", "Chinese (Taiwan)",		950,  { UI_LANG_KO_KR, UI_LANG_ZH_CN, UI_LANG_JA_JP, UI_LANG_ZH_TW } },
+	{  "ko_KR", "KR", "Korean",					949,  { UI_LANG_ZH_TW, UI_LANG_ZH_CN, UI_LANG_JA_JP, UI_LANG_KO_KR } },
+	{  "fr_FR", "FR", "French",					1252, {} },
+	{  "es_ES", "ES", "Spanish",				1252, {} },
+	{  "it_IT", "IT", "Italian",				1252, {} },
+	{  "de_DE", "DE", "German",					1252, {} },
+	{  "pt_BR", "BR", "Portuguese (Brazil)",	1252, {} },
+	{  "pl_PL", "PL", "Polish",					1250, {} },
+	{  "hu_HU", "HU", "Hungarian",				1250, {} },
 };
 
 static struct ui_lang_filename

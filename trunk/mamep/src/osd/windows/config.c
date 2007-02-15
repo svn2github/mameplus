@@ -161,10 +161,10 @@ const options_entry windows_opts[] =
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 #ifdef TRANS_UI
 	{ "use_trans_ui",             "1",    OPTION_BOOLEAN,    "use transparent background for UI text" },
-	{ "ui_transparency",          "192",  0,                 "transparency of UI background [0 - 255]" },
+	{ "ui_transparency",          "224",  0,                 "transparency of UI background [0 - 255]" },
 #else /* TRANS_UI */
 	{ "use_trans_ui",             "1",    OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "ui_transparency",          "192",  OPTION_DEPRECATED, "(disabled by compiling option)" },
+	{ "ui_transparency",          "224",  OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* TRANS_UI */
 	{ "ui_lines",                 "auto", 0,                 "in-game ui text lines [16 - 64 or auto]" },
 
@@ -362,7 +362,7 @@ const options_entry windows_opts[] =
 	{ "font_blank",               "0,0,0",       0,                 "font blank color" },
 	{ "font_normal",              "255,255,255", 0,                 "font normal color" },
 	{ "font_special",             "247,203,0",   0,                 "font special color" },
-	{ "system_background",        "0,0,128",     0,                 "window background color" },
+	{ "system_background",        "16,16,48",    0,                 "window background color" },
 	{ "system_framemedium",       "192,192,192", 0,                 "window frame color (medium)" },
 	{ "system_framelight",        "224,224,224", 0,                 "window frame color (light)" },
 	{ "system_framedark",         "128,128,128", 0,                 "window frame color (dark)" },
@@ -385,7 +385,7 @@ const options_entry windows_opts[] =
 	{ "font_blank",               "0,0,0",       OPTION_DEPRECATED, "(disabled by compiling option)" },
 	{ "font_normal",              "255,255,255", OPTION_DEPRECATED, "(disabled by compiling option)" },
 	{ "font_special",             "247,203,0",   OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "system_background",        "0,0,255",     OPTION_DEPRECATED, "(disabled by compiling option)" },
+	{ "system_background",        "16,16,48",    OPTION_DEPRECATED, "(disabled by compiling option)" },
 	{ "system_framemedium",       "192,192,192", OPTION_DEPRECATED, "(disabled by compiling option)" },
 	{ "system_framelight",        "224,224,224", OPTION_DEPRECATED, "(disabled by compiling option)" },
 	{ "system_framedark",         "128,128,128", OPTION_DEPRECATED, "(disabled by compiling option)" },
@@ -419,7 +419,7 @@ static struct
 	{ "font_blank",         FONT_COLOR_BLANK,         { 0,0,0 } },
 	{ "font_normal",        FONT_COLOR_NORMAL,        { 255,255,255 } },
 	{ "font_special",       FONT_COLOR_SPECIAL,       { 247,203,0 } },
-	{ "system_background",  SYSTEM_COLOR_BACKGROUND,  { 0,0,255 } },
+	{ "system_background",  SYSTEM_COLOR_BACKGROUND,  { 16,16,48 } },
 	{ "system_framemedium", SYSTEM_COLOR_FRAMEMEDIUM, { 192,192,192 } },
 	{ "system_framelight",  SYSTEM_COLOR_FRAMELIGHT,  { 224,224,224 } },
 	{ "system_framedark",   SYSTEM_COLOR_FRAMEDARK,   { 128,128,128 } },

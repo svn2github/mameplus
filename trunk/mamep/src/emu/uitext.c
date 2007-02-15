@@ -70,21 +70,12 @@ static const char *mame_default_text[] =
 #endif /* CMD_LIST */
 
 	/* special characters */
-#if 1 //#ifndef NEW_RENDER
-	"\x11",
-	"\x10",
-	"\x18",
-	"\x19",
-	"\x1a",
-	"\x1b",
-#else
 	"\xc2\xab",
 	"\xc2\xbb",
 	"(more)",
 	"(more)",
-	"",
-	"",
-#endif
+	"\x1a",
+	"\x1b",
 
 	/* known problems */
 	"There are known problems with this " GAMENOUN ":",

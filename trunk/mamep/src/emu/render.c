@@ -44,7 +44,6 @@
 #include "config.h"
 #include "output.h"
 #include "xmlfile.h"
-#include "ui.h"
 #include <math.h>
 
 
@@ -1095,10 +1094,6 @@ void render_target_set_bounds(render_target *target, INT32 width, INT32 height, 
 	target->bounds.x1 = (float)width;
 	target->bounds.y1 = (float)height;
 	target->pixel_aspect = pixel_aspect;
-
-	/* set the UI window size if we are the UI target */
-	if (target == render_get_ui_target())
-		ui_set_visible_area(0, 0, target->width - 1, target->height - 1);
 }
 
 

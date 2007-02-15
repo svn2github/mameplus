@@ -253,21 +253,22 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected, menu_au
 	const char *up_arrow = ui_getstring(UI_uparrow);
 	const char *down_arrow = ui_getstring(UI_downarrow);
 	const char *left_arrow = ui_getstring(UI_leftarrow);
-	const char *right_arrow = ui_getstring(UI_rightarrow);	const char *left_hilight = ui_getstring(UI_lefthilight);
+	const char *right_arrow = ui_getstring(UI_rightarrow);
+	const char *left_hilight = ui_getstring(UI_lefthilight);
 	const char *right_hilight = ui_getstring(UI_righthilight);
 
-	int left_hilight_width = ui_get_string_width(left_hilight);
-	int right_hilight_width = ui_get_string_width(right_hilight);
-	int left_arrow_width = ui_get_string_width(left_arrow);
-	int right_arrow_width = ui_get_string_width(right_arrow);
-	int line_height = ui_get_line_height();
-	int gutter_width;
-	int x1, y1, x2, y2;
+	float left_arrow_width = ui_get_string_width(left_arrow);
+	float right_arrow_width = ui_get_string_width(right_arrow);
+	float left_hilight_width = ui_get_string_width(left_hilight);
+	float right_hilight_width = ui_get_string_width(right_hilight);
+	float line_height = ui_get_line_height();
+	float gutter_width;
+	float x1, y1, x2, y2;
 
-	int effective_width, effective_left;
-	int visible_width, visible_main_menu_height;
-	int visible_augmented_menu_height = 0;
-	int visible_top, visible_left;
+	float effective_width, effective_left;
+	float visible_width, visible_main_menu_height;
+	float visible_augmented_menu_height = 0;
+	float visible_top, visible_left;
 	int selected_subitem_too_big = 0;
 	int visible_lines;
 	int top_line;
@@ -284,14 +285,14 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected, menu_au
 	for (itemnum = 0; itemnum < numitems; itemnum++)
 	{
 		const ui_menu_item *item = &items[itemnum];
-		int total_width;
+		float total_width;
 
 		/* compute width of left hand side */
 		total_width = gutter_width + ui_get_string_width(item->text) + gutter_width;
 
 		/* add in width of right hand side */
 		if (item->subtext)
-			total_width += 2 * gutter_width + ui_get_string_width(item->subtext);
+			total_width += 2.0f * gutter_width + ui_get_string_width(item->subtext);
 
 		/* track the maximum */
 		if (total_width > visible_width)
@@ -315,30 +316,35 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected, menu_au
      * indicating that "space insufficient to draw DIPs" */
 
 
-	/* if we are too wide or too tall, clamp it down */
-	if (visible_width + 2 * UI_BOX_LR_BORDER > ui_screen_width)
-		visible_width = ui_screen_width - 2 * UI_BOX_LR_BORDER;
-	/* if the menu and extra menu won't fit, take away part of the regular menu, it will scroll */
-	if ((visible_main_menu_height + visible_augmented_menu_height) + 2 * UI_BOX_TB_BORDER > ui_screen_height)
-		visible_main_menu_height = ui_screen_height - 2 * UI_BOX_TB_BORDER - visible_augmented_menu_height;
+	/* add a little bit of slop for rounding */
+	visible_width += 0.01f;
+	visible_main_menu_height += 0.01f;
 
-	visible_lines = visible_main_menu_height / line_height;
-	visible_main_menu_height = visible_lines * line_height;
+	/* if we are too wide or too tall, clamp it down */
+	if (visible_width + 2.0f * UI_BOX_LR_BORDER > 1.0f)
+		visible_width = 1.0f - 2.0f * UI_BOX_LR_BORDER;
+	/* if the menu and extra menu won't fit, take away part of the regular menu, it will scroll */
+	if ((visible_main_menu_height + visible_augmented_menu_height) + 2.0f * UI_BOX_TB_BORDER > 1.0f)
+		visible_main_menu_height = 1.0f - 2.0f * UI_BOX_TB_BORDER - visible_augmented_menu_height;
+
+	visible_lines = floor(visible_main_menu_height / line_height);
+	visible_main_menu_height = (float)visible_lines * line_height;
 
 	/* compute top/left of inner menu area by centering */
-	visible_left = (ui_screen_width - visible_width) / 2;
-	visible_top = (ui_screen_height - (visible_main_menu_height + visible_augmented_menu_height)) / 2;
+	visible_left = (1.0f - visible_width) * 0.5f;
+	visible_top = (1.0f - (visible_main_menu_height + visible_augmented_menu_height)) * 0.5f;
 
 	/* first add us a box */
 	x1 = visible_left - UI_BOX_LR_BORDER;
 	y1 = visible_top - UI_BOX_TB_BORDER;
-	x2 = visible_left + visible_width -1 + UI_BOX_LR_BORDER;
-	y2 = visible_top + visible_main_menu_height -1 + UI_BOX_TB_BORDER;
+	x2 = visible_left + visible_width + UI_BOX_LR_BORDER;
+	y2 = visible_top + visible_main_menu_height + UI_BOX_TB_BORDER;
 
-	add_filled_box(	x1,
+	ui_draw_outlined_box(	x1,
 					y1,
 					x2,
-					y2);
+					y2,
+					UI_FILLCOLOR);
 
 	/* determine the first visible line based on the current selection */
 	top_line = selected - visible_lines / 2;
@@ -348,13 +354,13 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected, menu_au
 		top_line = numitems - visible_lines;
 
 	/* determine effective positions taking into account the hilighting arrows */
-	effective_width = visible_width - 2 * gutter_width;
+	effective_width = visible_width - 2.0f * gutter_width;
 	effective_left = visible_left + gutter_width;
 
 	/* loop over visible lines */
 	for (linenum = 0; linenum < visible_lines; linenum++)
 	{
-		int line_y = visible_top + linenum * line_height;
+		float line_y = visible_top + (float)linenum * line_height;
 		int itemnum = top_line + linenum;
 		const ui_menu_item *item = &items[itemnum];
 		rgb_t itemfg = MENU_TEXTCOLOR;
@@ -362,26 +368,27 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected, menu_au
 		/* if we're selected, draw with a different background */
 		if (itemnum == selected)
 #ifdef UI_COLOR_DISPLAY
-			add_fill(visible_left, line_y,
-			         visible_left + visible_width - 1, line_y + ui_get_line_height() - 1,
-			         CURSOR_COLOR);
-#else
+			//mamep: draw a selected bar
+			ui_draw_box(	visible_left, line_y,
+							visible_left + visible_width, line_y + ui_get_line_height(),
+							MAKE_ARGB(120,60,120,240));//fixme:CURSOR_COLOR
+#else /* UI_COLOR_DISPLAY */
 			itemfg = MENU_SELECTCOLOR;
 #endif /* UI_COLOR_DISPLAY */
 
 		/* if we're on the top line, display the up arrow */
 		if (linenum == 0 && top_line != 0)
-			ui_draw_text_full(up_arrow, effective_left, line_y, effective_width, 0, 1,
+			ui_draw_text_full(up_arrow, effective_left, line_y, effective_width, 0,
 						JUSTIFY_CENTER, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 
 		/* if we're on the bottom line, display the down arrow */
 		else if (linenum == visible_lines - 1 && itemnum != numitems - 1)
-			ui_draw_text_full(down_arrow, effective_left, line_y, effective_width, 0, 1,
+			ui_draw_text_full(down_arrow, effective_left, line_y, effective_width, 0,
 						JUSTIFY_CENTER, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 
 		/* if we don't have a subitem, just draw the string centered */
 		else if (!item->subtext)
-			ui_draw_text_full(item->text, effective_left, line_y, effective_width, 0, 1,
+			ui_draw_text_full(item->text, effective_left, line_y, effective_width, 0,
 						JUSTIFY_CENTER, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 
 		/* otherwise, draw the item on the left and the subitem text on the right */
@@ -389,7 +396,7 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected, menu_au
 		{
 			int subitem_invert = item->flags & MENU_FLAG_INVERT;
 			const char *subitem_text = item->subtext;
-			int item_width, subitem_width;
+			float item_width, subitem_width;
 
 			rgb_t fgcolor = itemfg;
 			rgb_t bgcolor = ARGB_BLACK;
@@ -405,11 +412,11 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected, menu_au
 			}
 
 			/* draw the left-side text */
-			ui_draw_text_full(item->text, effective_left, line_y, effective_width, 0, 1,
+			ui_draw_text_full(item->text, effective_left, line_y, effective_width, 0,
 						JUSTIFY_LEFT, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, &item_width, NULL);
 
 			/* give 2 spaces worth of padding */
-			item_width += 2 * gutter_width;
+			item_width += 2.0f * gutter_width;
 
 			/* if the subitem doesn't fit here, display dots */
 			if (ui_get_string_width(subitem_text) > effective_width - item_width)
@@ -420,7 +427,7 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected, menu_au
 			}
 
 			/* draw the subitem right-justified */
-			ui_draw_text_full(subitem_text, effective_left + item_width, line_y, effective_width - item_width, 0, 1,
+			ui_draw_text_full(subitem_text, effective_left + item_width, line_y, effective_width - item_width, 0,
 #ifdef UI_COLOR_DISPLAY
 						JUSTIFY_RIGHT, WRAP_TRUNCATE, DRAW_NORMAL, fgcolor, bgcolor, &subitem_width, NULL);
 #else /* UI_COLOR_DISPLAY */
@@ -429,10 +436,10 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected, menu_au
 
 			/* apply arrows */
 			if (itemnum == selected && (item->flags & MENU_FLAG_LEFT_ARROW))
-				ui_draw_text_full(left_arrow, effective_left + effective_width - subitem_width - left_arrow_width, line_y, left_arrow_width, 0, 1,
+				ui_draw_text_full(left_arrow, effective_left + effective_width - subitem_width - left_arrow_width, line_y, left_arrow_width, 0,
 							JUSTIFY_LEFT, WRAP_NEVER, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 			if (itemnum == selected && (item->flags & MENU_FLAG_RIGHT_ARROW))
-				ui_draw_text_full(right_arrow, visible_left, line_y, visible_width, 0, 1,
+				ui_draw_text_full(right_arrow, visible_left, line_y, visible_width, 0,
 							JUSTIFY_RIGHT, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 		}
 
@@ -440,10 +447,10 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected, menu_au
 		/* draw the arrows for selected items */
 		if (itemnum == selected)
 		{
-			ui_draw_text_full(left_hilight, visible_left, line_y, visible_width, 0, 1,
+			ui_draw_text_full(left_hilight, visible_left, line_y, visible_width, 0,
 						JUSTIFY_LEFT, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 			if (!(item->flags & (MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW)))
-				ui_draw_text_full(right_hilight, visible_left, line_y, visible_width, 0, 1,
+				ui_draw_text_full(right_hilight, visible_left, line_y, visible_width, 0,
 							JUSTIFY_RIGHT, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 		}
 #endif /* !UI_COLOR_DISPLAY */
@@ -454,12 +461,12 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected, menu_au
 	{
 		const ui_menu_item *item = &items[selected];
 		int linenum = selected - top_line;
-		int line_y = visible_top + linenum * line_height;
-		int target_width, target_height;
-		int target_x, target_y;
+		float line_y = visible_top + (float)linenum * line_height;
+		float target_width, target_height;
+		float target_x, target_y;
 
 		/* compute the multi-line target width/height */
-		ui_draw_text_full(item->subtext, 0, 0, visible_width * 3 / 4, 0, 0,
+		ui_draw_text_full(item->subtext, 0, 0, visible_width * 0.75f, 0,
 					JUSTIFY_RIGHT, WRAP_WORD, DRAW_NONE, ARGB_WHITE, ARGB_BLACK, &target_width, &target_height);
 
 		/* determine the target location */
@@ -469,11 +476,11 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected, menu_au
 			target_y = line_y - target_height - UI_BOX_TB_BORDER;
 
 		/* add a box around that */
-		add_filled_box(	target_x - UI_BOX_LR_BORDER,
+		ui_draw_outlined_box(target_x - UI_BOX_LR_BORDER,
 						target_y - UI_BOX_TB_BORDER,
-						target_x + target_width - 1 + UI_BOX_LR_BORDER,
-						target_y + target_height - 1 + UI_BOX_TB_BORDER);
-		ui_draw_text_full(item->subtext, target_x, target_y, target_width, 0, target_height / ui_get_line_height(),
+						target_x + target_width  + UI_BOX_LR_BORDER,
+						target_y + target_height + UI_BOX_TB_BORDER, UI_FILLCOLOR);
+		ui_draw_text_full(item->subtext, target_x, target_y, target_width, 0,
 					JUSTIFY_RIGHT, WRAP_WORD, DRAW_NORMAL, ARGB_WHITE, ARGB_BLACK, NULL, NULL);
 	}
 
@@ -494,9 +501,10 @@ int ui_menu_generic_keys(int *selected, int num_items)
 {
 	static int counter = 0;
 	static int fast = 6;
-	int pan_lines;
+	int pan_lines = floor((1.0f - 2.0f * UI_BOX_TB_BORDER) / ui_get_line_height()) - 1;
 
-	pan_lines = ((ui_screen_height - 2 * UI_BOX_TB_BORDER) / ui_get_line_height()) - 3;
+	if (pan_lines > num_items)
+		pan_lines = num_items;
 
 	/* hitting cancel or selecting the last item returns to the previous menu */
 	if (input_ui_pressed(IPT_UI_CANCEL) || (*selected == num_items - 1 && input_ui_pressed(IPT_UI_SELECT)))
@@ -2701,12 +2709,12 @@ static void dip_switch_draw_one(float dip_menu_x1, float dip_menu_y1, float dip_
 
 	/* add the dip switch name */
 	name_width = ui_get_string_width(dip_switch_model[model_index].dip_name) + ui_get_string_width(" ") / 2;
+
 	ui_draw_text_full(	dip_switch_model[model_index].dip_name,
 						segment_start_x - name_width,
 						dip_field_y + (DIP_SWITCH_HEIGHT - ui_font_height)/2,
 						name_width,
 						0,
-						1,
 						JUSTIFY_LEFT,
 						WRAP_NEVER,
 						DRAW_NORMAL,

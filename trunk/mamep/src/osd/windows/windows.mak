@@ -231,6 +231,7 @@ CFLAGS += -DWIN95_MULTIMON
 endif
 
 # add the windows libaries
+// mamep: -lunicows MUST be in the first place
 LIBS += -lunicows -luser32 -lgdi32 -lddraw -ldsound -ldinput -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi
 CLILIBS =
 

@@ -44,6 +44,23 @@
 
 enum
 {
+	INPUT_TYPE_DIGITAL = 0,
+	INPUT_TYPE_ANALOG = 1,
+	INPUT_TYPE_ANALOG_DEC = 2,
+	INPUT_TYPE_ANALOG_INC = 3
+};
+
+enum
+{
+	ANALOG_ITEM_KEYSPEED = 0,
+	ANALOG_ITEM_CENTERSPEED,
+	ANALOG_ITEM_REVERSE,
+	ANALOG_ITEM_SENSITIVITY,
+	ANALOG_ITEM_COUNT
+};
+
+enum
+{
 	LOADSAVE_NONE,
 	LOADSAVE_LOAD,
 	LOADSAVE_SAVE
@@ -65,18 +82,6 @@ struct _slider_state
 	INT32			(*update)(INT32 newval, char *buffer, int arg); /* callback */
 	int				arg;				/* argument */
 };
-
-
-
-/***************************************************************************
-    MACROS
-***************************************************************************/
-
-#define UI_FONT_NAME				NULL
-#define UI_SCALE_TO_INT_X(x)		((int)((float)(x) * ui_screen_width + 0.5f))
-#define UI_SCALE_TO_INT_Y(y)		((int)((float)(y) * ui_screen_height + 0.5f))
-#define UI_UNSCALE_TO_FLOAT_X(x)	((float)(x) / (float)ui_screen_width)
-#define UI_UNSCALE_TO_FLOAT_Y(y)	((float)(y) / (float)ui_screen_height)
 
 
 
@@ -106,6 +111,7 @@ static mame_bitmap *bgbitmap;
 
 static rgb_t ui_bgcolor;
 
+/* font for rendering */
 static render_font *ui_font;
 
 float ui_font_height;
@@ -166,7 +172,6 @@ static void ui_exit(running_machine *machine);
 static int rescale_notifier(running_machine *machine, int width, int height);
 
 /* text generators */
-static int sprintf_font_warning(char *buffer);
 static int sprintf_disclaimer(char *buffer);
 static int sprintf_warnings(char *buffer);
 
@@ -182,7 +187,7 @@ static UINT32 handler_confirm_quit(UINT32 state);
 /* slider controls */
 static void slider_init(void);
 static void slider_display(const char *text, int minval, int maxval, int defval, int curval);
-static void slider_draw_bar(int leftx, int topy, int width, int height, float percentage, float default_percentage);
+static void slider_draw_bar(float leftx, float topy, float width, float height, float percentage, float default_percentage);
 static INT32 slider_volume(INT32 newval, char *buffer, int arg);
 static INT32 slider_mixervol(INT32 newval, char *buffer, int arg);
 static INT32 slider_adjuster(INT32 newval, char *buffer, int arg);
@@ -204,17 +209,6 @@ static INT32 slider_crossoffset(INT32 newval, char *buffer, int arg);
 
 static void build_bgtexture(running_machine *machine);
 static void free_bgtexture(running_machine *machine);
-
-#define add_line(x0,y0,x1,y1,color)	render_ui_add_line(UI_UNSCALE_TO_FLOAT_X(x0), UI_UNSCALE_TO_FLOAT_Y(y0), UI_UNSCALE_TO_FLOAT_X(x1), UI_UNSCALE_TO_FLOAT_Y(y1), UI_LINE_WIDTH, ui_get_rgb_color(color), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA))
-#define add_char(x,y,ch,color)		render_ui_add_char(UI_UNSCALE_TO_FLOAT_X(x), UI_UNSCALE_TO_FLOAT_Y(y), UI_TARGET_FONT_HEIGHT, render_get_ui_aspect(), ui_get_rgb_color(color), ui_font, ch)
-
-static void add_filled_box_color(int x1, int y1, int x2, int y2, rgb_t color);
-
-#ifdef USE_SHOW_INPUT_LOG
-static void add_filled_box_noedge(int x0, int y0, int x1, int y1);
-#endif /* USE_SHOW_INPUT_LOG */
-
-
 
 /***************************************************************************
     INLINE FUNCTIONS
@@ -276,26 +270,11 @@ int ui_init(running_machine *machine)
 		fatalerror("uistring_init failed");
 
 	build_bgtexture(machine);
+
+	/* allocate the font */
 	ui_font = render_font_alloc("ui.bdf");
-	if (uifont_need_font_warning())
-	{
-		options.langcode = UI_LANG_EN_US;
-		set_langcode(options.langcode);
-		fprintf(stderr, "error: loading local font file\nUse %s\n",
-			ui_lang_info[options.langcode].description);
 
-		/* re-load the localization file */
-		if (uistring_init() != 0)
-			fatalerror("uistring_init failed");
-	}
-
-	ui_set_visible_area(
-		Machine->screen[0].visarea.min_x,
-		Machine->screen[0].visarea.min_y,
-		Machine->screen[0].visarea.max_x,
-		Machine->screen[0].visarea.max_y);
-
-	{
+#ifdef UI_COLOR_DISPLAY
 		int i;
 
 		for (i = 0; i < MAX_COLORTABLE; i++)
@@ -304,7 +283,6 @@ int ui_init(running_machine *machine)
 				options.uicolortable[i][0],
 				options.uicolortable[i][1],
 				options.uicolortable[i][2]);
-	}
 
 #ifdef TRANS_UI
 	if (options.use_transui)
@@ -314,6 +292,7 @@ int ui_init(running_machine *machine)
 				options.uicolortable[UI_FILLCOLOR][1],
 				options.uicolortable[UI_FILLCOLOR][2]);
 #endif /* TRANS_UI */
+#endif /* UI_COLOR_DISPLAY */
 
 #ifdef INP_CAPTION
 	next_caption_frame = -1;
@@ -397,7 +376,7 @@ int ui_display_startup_screens(int show_disclaimer, int show_warnings, int show_
 
 	/* loop over states */
 	ui_set_handler(handler_ingame, 0);
-	for (state = -1; state < maxstate && !mame_is_scheduled_event_pending(Machine); state++)
+	for (state = 0; state < maxstate && !mame_is_scheduled_event_pending(Machine); state++)
 	{
 		/* default to standard colors */
 		messagebox_backcolor = UI_FILLCOLOR;
@@ -405,11 +384,6 @@ int ui_display_startup_screens(int show_disclaimer, int show_warnings, int show_
 		/* pick the next state */
 		switch (state)
 		{
-			case -1:
-				if (uifont_need_font_warning() && sprintf_font_warning(messagebox_text))
-					ui_set_handler(handler_messagebox_ok, 0);
-				break;
-
 			case 0:
 				if (show_disclaimer && sprintf_disclaimer(messagebox_text))
 					ui_set_handler(handler_messagebox_ok, 0);
@@ -548,9 +522,24 @@ render_font *ui_get_font(void)
     of a line
 -------------------------------------------------*/
 
-int ui_get_line_height(void)
+float ui_get_line_height(void)
 {
-	return UI_SCALE_TO_INT_Y(UI_TARGET_FONT_HEIGHT);
+	INT32 fontheight = render_font_get_pixel_height(ui_font);
+	INT32 targetwidth, targetheight;
+	float pixheight, targetaspect;
+	INT32 scale;
+
+	/* get info about the UI target */
+	render_target_get_bounds(render_get_ui_target(), &targetwidth, &targetheight, &targetaspect);
+
+	/* compute pixel height at the nominal size */
+	pixheight = UI_TARGET_FONT_HEIGHT * targetheight;
+	scale = floor(pixheight / fontheight);
+	if (scale == 0)
+		scale = 1;
+	pixheight = scale * fontheight;
+
+	return (float)pixheight / (float)targetheight;
 }
 
 
@@ -559,9 +548,9 @@ int ui_get_line_height(void)
     single character
 -------------------------------------------------*/
 
-int ui_get_char_width(UINT16 ch)
+float ui_get_char_width(unicode_char ch)
 {
-	return UI_SCALE_TO_INT_X(render_font_get_char_width(ui_font, UI_TARGET_FONT_HEIGHT, render_get_ui_aspect(), ch));
+	return render_font_get_char_width(ui_font, ui_get_line_height(), render_get_ui_aspect(), ch);
 }
 
 
@@ -570,36 +559,26 @@ int ui_get_char_width(UINT16 ch)
     character string
 -------------------------------------------------*/
 
-int ui_get_string_width(const char *s)
-#if 0
+float ui_get_string_width(const char *s)
 {
-	return UI_SCALE_TO_INT_X(render_font_get_string_width(ui_font, UI_TARGET_FONT_HEIGHT, render_get_ui_aspect(), s));
+	return render_font_get_utf8string_width(ui_font, ui_get_line_height(), render_get_ui_aspect(), s);
 }
-#else
+
+
+/*-------------------------------------------------
+    ui_draw_box - add primitives to draw
+    a box with the given background color
+-------------------------------------------------*/
+
+void ui_draw_box(float x0, float y0, float x1, float y1, rgb_t backcolor)
 {
-	int len = 0;
-
-	while (*s)
-	{
-		UINT16 code;
-		int increment;
-
-		increment = uifont_decodechar(s, &code);
 #ifdef UI_COLOR_DISPLAY
-		if (increment == 3)
-		{
-			s++;
-			continue;
-		}
+	if (backcolor == UI_FILLCOLOR)
+		render_ui_add_quad(x0, y0, x1, y1, MAKE_ARGB(0xff, 0xff, 0xff, 0xff), bgtexture, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+	else
 #endif /* UI_COLOR_DISPLAY */
-
-		len += ui_get_char_width(code);
-		s += increment;
-	}
-
-	return len;
+		render_ui_add_rect(x0, y0, x1, y1, backcolor, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 }
-#endif
 
 
 /*-------------------------------------------------
@@ -610,28 +589,13 @@ int ui_get_string_width(const char *s)
 
 void ui_draw_outlined_box(float x0, float y0, float x1, float y1, rgb_t backcolor)
 {
-#if 0
 	float hw = UI_LINE_WIDTH * 0.5f;
 
-#ifdef UI_COLOR_DISPLAY
-	if (backcolor == UI_FILLCOLOR)
-		render_ui_add_quad(x0, y0, x1, y1, MAKE_ARGB(0xff, 0xff, 0xff, 0xff), bgtexture, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-	else
-#endif /* UI_COLOR_DISPLAY */
-		render_ui_add_rect(x0, y0, x1, y1, backcolor, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-
+	ui_draw_box(x0, y0, x1, y1, backcolor);
 	render_ui_add_line(x0 + hw, y0 + hw, x1 - hw, y0 + hw, UI_LINE_WIDTH, ARGB_WHITE, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 	render_ui_add_line(x1 - hw, y0 + hw, x1 - hw, y1 - hw, UI_LINE_WIDTH, ARGB_WHITE, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 	render_ui_add_line(x1 - hw, y1 - hw, x0 + hw, y1 - hw, UI_LINE_WIDTH, ARGB_WHITE, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 	render_ui_add_line(x0 + hw, y1 - hw, x0 + hw, y0 + hw, UI_LINE_WIDTH, ARGB_WHITE, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-#else
-	int px0 = x0 * (float)ui_screen_width;
-	int py0 = y0 * (float)ui_screen_height;
-	int px1 = x1 * (float)ui_screen_width;
-	int py1 = y1 * (float)ui_screen_height;
-
-	add_filled_box_color(px0, py0, px1, py1, backcolor);
-#endif
 }
 
 
@@ -639,9 +603,9 @@ void ui_draw_outlined_box(float x0, float y0, float x1, float y1, rgb_t backcolo
     ui_draw_text - simple text renderer
 -------------------------------------------------*/
 
-void ui_draw_text(const char *buf, int x, int y)
+void ui_draw_text(const char *buf, float x, float y)
 {
-	ui_draw_text_full(buf, x, y, ui_screen_width - x, 0, 0, JUSTIFY_LEFT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, ui_bgcolor, NULL, NULL);
+	ui_draw_text_full(buf, x, y, 1.0f - x, 0, JUSTIFY_LEFT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, ARGB_BLACK, NULL, NULL);
 }
 
 
@@ -651,93 +615,101 @@ void ui_draw_text(const char *buf, int x, int y)
     and full size computation
 -------------------------------------------------*/
 
-void ui_draw_text_full(const char *origs, int x, int y, int wrapwidth, int offset, int maxlines, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, int *totalwidth, int *totalheight)
+void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int offset, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, float *totalwidth, float *totalheight)
 {
-	const unsigned char *s = (const unsigned char *)origs;
-	const unsigned char *linestart;
-	int cury = y;
-	int maxwidth = 0;
-	const unsigned char *uparrow = NULL;
+	float lineheight = ui_get_line_height();
+	const char *ends = origs + strlen(origs);
+	const char *s = origs;
+	const char *linestart;
+	float cury = y;
+	float maxwidth = 0;
+	const char *s_temp;
+	const char *up_arrow = NULL;
+	const char *down_arrow = ui_getstring(UI_downarrow);
 
+	//mamep: check if we are scrolling
 	if (offset)
-		uparrow = ui_getstring (UI_uparrow);
+		up_arrow = ui_getstring (UI_uparrow);
+	if (offset == multiline_text_box_target_lines - multiline_text_box_visible_lines)
+		down_arrow = NULL;
 
 	/* if we don't want wrapping, guarantee a huge wrapwidth */
 	if (wrap == WRAP_NEVER)
-		wrapwidth = 1 << 30;
+		wrapwidth = 1000000.0f;
 	if (wrapwidth <= 0)
 		return;
 
 	/* loop over lines */
-	while (*s)
+	while (*s != 0)
 	{
-		const unsigned char *lastspace = NULL;
+		const char *lastspace = NULL;
 		int line_justify = justify;
-		int lastspace_width = 0;
-		int curwidth = 0;
-		int curx = x;
-		const unsigned char *lastchar;
-		int lastchar_width = 0;
-		const unsigned char *lasttruncate;
-		int lasttruncate_width = 0;
-		int truncate_width = 3 * ui_get_char_width('.');
-		UINT16 code;
-		int increment;
-		const unsigned char *end;
-		int has_DBC = FALSE;
+		unicode_char schar;
+		int scharcount;
+		float lastspace_width = 0;
+		float curwidth = 0;
+		float curx = x;
+		int curline;
+
+		/* get the current character */
+		scharcount = uchar_from_utf8(&schar, s, ends - s);
+		if (scharcount == -1)
+			break;
 
 		/* if the line starts with a tab character, center it regardless */
-		if (*s == '\t')
+		if (schar == '\t')
 		{
-			s++;
+			s += scharcount;
 			line_justify = JUSTIFY_CENTER;
 		}
 
 		/* remember the starting position of the line */
 		linestart = s;
 
-		lastchar = linestart;
-		lasttruncate = linestart;
-
 		/* loop while we have characters and are less than the wrapwidth */
-		while (*s && curwidth <= wrapwidth)
+		while (*s != 0 && curwidth <= wrapwidth)
 		{
-			/* if we hit a newline, stop immediately */
-			if (*s == '\n')
+			/* get the current chcaracter */
+			scharcount = uchar_from_utf8(&schar, s, ends - s);
+			if (scharcount == -1)
 				break;
 
 			/* if we hit a space, remember the location and the width there */
-			if (*s == ' ' || has_DBC)
+			if (schar == ' ' ||
+				(0x3040 < schar && schar < 0x9FFF) ||
+				/*
+				Plane 0 (0000–FFFF): Basic Multilingual Plane (BMP)
+				
+				Hiragana (3040–309F) 
+				Katakana (30A0–30FF) 
+				Bopomofo (3100–312F) 
+				Hangul Compatibility Jamo (3130–318F) 
+				Kanbun (3190–319F) 
+				Bopomofo Extended (31A0–31BF) 
+				CJK Strokes (31C0–31EF) 
+				Katakana Phonetic Extensions (31F0–31FF) 
+				Enclosed CJK Letters and Months (3200–32FF) 
+				CJK Compatibility (3300–33FF) 
+				CJK Unified Ideographs Extension A (3400–4DBF) 
+				Yijing Hexagram Symbols (4DC0–4DFF) 
+				CJK Unified Ideographs (4E00–9FFF) 
+				*/
+				(0xAC00 < schar && schar < 0xD7AF) ||
+				//Hangul Syllables (AC00–D7AF)
+				(0xF900 < schar && schar < 0xFAFF))
+				//CJK Compatibility Ideographs (F900–FAFF) 
 			{
 				lastspace = s;
 				lastspace_width = curwidth;
-				has_DBC = FALSE;
 			}
 
-			lastchar = s;
-			lastchar_width = curwidth;
-
-			if (curwidth + truncate_width <= wrapwidth)
-			{
-				lasttruncate = s;
-				lasttruncate_width = curwidth;
-			}
-
-			increment = uifont_decodechar(s, &code);
-#ifdef UI_COLOR_DISPLAY
-			if (increment == 3)
-			{
-				s++;
-				continue;
-			}
-#endif /* UI_COLOR_DISPLAY */
-
-			if (code > 0x00ff)
-				has_DBC = TRUE;
+			/* if we hit a newline, stop immediately */
+			else if (schar == '\n')
+				break;
 
 			/* add the width of this character and advance */
-			curwidth += ui_get_char_width(code);
-			s += increment;
+			curwidth += ui_get_char_width(schar);
+			s += scharcount;
 		}
 
 		/* if we accumulated too much for the current width, we need to back off */
@@ -754,33 +726,61 @@ void ui_draw_text_full(const char *origs, int x, int y, int wrapwidth, int offse
 				}
 
 				/* if we didn't hit a space, back up one character */
-				else if (s > linestart && lastchar > linestart)
+				else if (s > linestart)
 				{
-					s = lastchar;
-					curwidth = lastchar_width;
+					/* get the previous character */
+					s = (const char *)utf8_previous_char(s);
+					scharcount = uchar_from_utf8(&schar, s, ends - s);
+					if (scharcount == -1)
+						break;
+
+					curwidth -= ui_get_char_width(schar);
 				}
 			}
 
 			/* if we're truncating, make sure we have enough space for the ... */
 			else if (wrap == WRAP_TRUNCATE)
 			{
-				s = lasttruncate;
-				curwidth = lasttruncate_width;
-			}
+				/* add in the width of the ... */
+				curwidth += 3.0f * ui_get_char_width('.');
 
-			while (s > linestart + 1)
-			{
-				if (s[-1] != ' ')
+				/* while we are above the wrap width, back up one character */
+				while (curwidth > wrapwidth && s > linestart)
+				{
+					/* get the previous character */
+					s = (const char *)utf8_previous_char(s);
+					scharcount = uchar_from_utf8(&schar, s, ends - s);
+					if (scharcount == -1)
 					break;
 
-				s--;
-				curwidth -= ui_get_char_width(' ');
+					curwidth -= ui_get_char_width(schar);
+				}
 			}
 		}
 
+		//mamep: add scrolling arrow
+		curline = (cury - y) / lineheight;
+
+		if (draw != DRAW_NONE
+			&&((curline == 0 && up_arrow)
+			|| (curline == multiline_text_box_visible_lines - 1 && down_arrow)))
+		{
+			if (curline == 0)
+				linestart = up_arrow;
+			else
+				linestart = down_arrow;
+			
+			curwidth = ui_get_string_width(linestart);
+			ends = linestart + strlen(linestart);
+			s_temp = ends;
+			line_justify = JUSTIFY_CENTER;
+		}
+		else
+			s_temp = s;
+		
 		/* align according to the justfication */
 		if (line_justify == JUSTIFY_CENTER)
-			curx += (wrapwidth - curwidth) / 2;
+			curx += (wrapwidth - curwidth) * 0.5f;
 		else if (line_justify == JUSTIFY_RIGHT)
 			curx += wrapwidth - curwidth;
 
@@ -788,87 +788,37 @@ void ui_draw_text_full(const char *origs, int x, int y, int wrapwidth, int offse
 		if (curwidth > maxwidth)
 			maxwidth = curwidth;
 
-		end = s;
-
-		if (offset == 0 && uparrow)
-		{
-			linestart = uparrow;
-			uparrow = NULL;
-
-			curwidth = ui_get_string_width(linestart);
-			end = linestart + strlen(linestart);
-
-			if (curwidth > maxwidth)
-				maxwidth = curwidth;
-
-			curx = x + (wrapwidth - curwidth) / 2;
-		}
-
-		if (maxlines == 1)
-		{
-			const unsigned char *check = s;
-
-			/* skip past any spaces at the beginning of the next line */
-			if (wrap == WRAP_TRUNCATE)
-			{
-				while (*check)
-				{
-					if (*check == '\n')
-						break;
-
-					check++;
-				}
-			}
-			else
-			{
-				if (*check == '\n')
-					check++;
-				else
-					while (*check && isspace(*check)) check++;
-			}
-
-			if (*check)
-			{
-				linestart = ui_getstring (UI_downarrow);
-				end = linestart + strlen(linestart);
-
-				curwidth = ui_get_string_width(linestart);
-				if (curwidth > maxwidth)
-					maxwidth = curwidth;
-
-				curx = x + (wrapwidth - curwidth) / 2;
-			}
-		}
-
 		/* if opaque, add a black box */
 		if (draw == DRAW_OPAQUE)
-			add_fill(curx, cury, curx + curwidth - 1, cury + ui_get_line_height() - 1, bgcolor);
+			ui_draw_box(curx, cury, curx + curwidth, cury + lineheight, bgcolor);
 
 		/* loop from the line start and add the characters */
-		while (offset == 0 && draw != DRAW_NONE && linestart < end)
+
+		while (linestart < s_temp)
 		{
-			increment = uifont_decodechar(linestart, &code);
-#ifdef UI_COLOR_DISPLAY
-			if (increment == 3)
+			/* get the current character */
+			unicode_char linechar;
+			int linecharcount = uchar_from_utf8(&linechar, linestart, ends - linestart);
+			if (linecharcount == -1)
+				break;
+
+			//mamep: consume the offset lines
+			if (offset == 0 && draw != DRAW_NONE)
 			{
-				linestart++;
-				continue;
+				render_ui_add_char(curx, cury, lineheight, render_get_ui_aspect(), fgcolor, ui_font, linechar);
+				curx += ui_get_char_width(linechar);
 			}
-#endif /* UI_COLOR_DISPLAY */
-
-			add_char(curx, cury, code, fgcolor);
-			curx += ui_get_char_width(code);
-			linestart += increment;
+			linestart += linecharcount;
 		}
-
+		
 		/* append ellipses if needed */
 		if (wrap == WRAP_TRUNCATE && *s != 0 && draw != DRAW_NONE)
 		{
-			add_char(curx, cury, '.', fgcolor);
+			render_ui_add_char(curx, cury, lineheight, render_get_ui_aspect(), fgcolor, ui_font, '.');
 			curx += ui_get_char_width('.');
-			add_char(curx, cury, '.', fgcolor);
+			render_ui_add_char(curx, cury, lineheight, render_get_ui_aspect(), fgcolor, ui_font, '.');
 			curx += ui_get_char_width('.');
-			add_char(curx, cury, '.', fgcolor);
+			render_ui_add_char(curx, cury, lineheight, render_get_ui_aspect(), fgcolor, ui_font, '.');
 			curx += ui_get_char_width('.');
 		}
 
@@ -876,26 +826,34 @@ void ui_draw_text_full(const char *origs, int x, int y, int wrapwidth, int offse
 		if (wrap != WRAP_WORD)
 			break;
 
-		if (offset)
+		//mamep: text scrolling
+		if (offset > 0)
 			offset--;
 		else
+		/* advance by a row */
 		{
-			/* advance by a row */
-			cury += ui_get_line_height();
-
-			if (maxlines)
-			{
-				maxlines--;
-				if (maxlines <= 0)
-					draw = DRAW_NONE;
-			}
+			cury += lineheight;
+			
+			//mamep: skip overflow text
+			if (draw != DRAW_NONE && cury + 2.0f * UI_BOX_TB_BORDER > 1.0f)
+				break;
 		}
-
+		
 		/* skip past any spaces at the beginning of the next line */
-		if (*s == '\n')
-			s++;
+		scharcount = uchar_from_utf8(&schar, s, ends - s);
+		if (scharcount == -1)
+			break;
+
+		if (schar == '\n')
+			s += scharcount;
 		else
-			while (*s && isspace(*s)) s++;
+			while (*s && isspace(schar))
+			{
+				s += scharcount;
+				scharcount = uchar_from_utf8(&schar, s, ends - s);
+				if (scharcount == -1)
+					break;
+			}
 	}
 
 	/* report the width and height of the resulting space */
@@ -911,58 +869,42 @@ void ui_draw_text_full(const char *origs, int x, int y, int wrapwidth, int offse
     message with a box around it
 -------------------------------------------------*/
 
-static void ui_draw_text_box_scroll(const char *text, int offset, int justify, float xpos, float ypos, rgb_t backcolor)
+void ui_draw_text_box_scroll(const char *text, int offset, int justify, float xpos, float ypos, rgb_t backcolor)
 {
-	int target_width, target_height;
-	int target_x, target_y;
-	int margin_x, margin_y;
+	float target_width, target_height;
+	float target_x, target_y;
 
 	/* compute the multi-line target width/height */
-	ui_draw_text_full(text, 0, 0, ui_screen_width - 2 * UI_BOX_LR_BORDER - 2, 0, 0,
+	ui_draw_text_full(text, 0, 0, 1.0f - 2.0f * UI_BOX_LR_BORDER, 0,
 				justify, WRAP_WORD, DRAW_NONE, ARGB_WHITE, ARGB_BLACK, &target_width, &target_height);
 
 	multiline_text_box_target_lines = target_height / ui_get_line_height();
-
-#ifdef UI_COLOR_DISPLAY
-	margin_x = ui_get_char_width(' ') / 2 + UI_BOX_LR_BORDER;
-	if (target_width + 2 * margin_x > ui_screen_width)
-		margin_x = (ui_screen_width - target_width) / 2;
-
-	margin_y = ui_get_line_height() / 2 + UI_BOX_TB_BORDER;
-#else /* UI_COLOR_DISPLAY */
-	margin_x = UI_BOX_LR_BORDER;
-	margin_y = UI_BOX_TB_BORDER;
-#endif /* UI_COLOR_DISPLAY */
-
-	if (target_height > ui_screen_height - 2 * margin_y)
-		target_height = ((ui_screen_height - 2 * margin_y) / ui_get_line_height()) * ui_get_line_height();
-
+	if (target_height > 1.0f - 2.0f * UI_BOX_TB_BORDER)
+		target_height = floor((1.0f - 2.0f * UI_BOX_TB_BORDER) / ui_get_line_height()) * ui_get_line_height();
 	multiline_text_box_visible_lines = target_height / ui_get_line_height();
 
 	/* determine the target location */
-	target_x = (int)(xpos * ui_screen_width) - target_width / 2;
-	target_y = (int)(ypos * ui_screen_height) - target_height / 2;
+	target_x = xpos - 0.5f * target_width;
+	target_y = ypos - 0.5f * target_height;
 
 	/* make sure we stay on-screen */
-	if (target_x < margin_x)
-		target_x = margin_x;
-	if (target_x + target_width + margin_x > ui_screen_width)
-		target_x = ui_screen_width - margin_x - target_width;
-	if (target_y < margin_y)
-		target_y = margin_y;
-	if (target_y + target_height + margin_y > ui_screen_height)
-		target_y = ui_screen_height - margin_y - target_height;
+	if (target_x < UI_BOX_LR_BORDER)
+		target_x = UI_BOX_LR_BORDER;
+	if (target_x + target_width + UI_BOX_LR_BORDER > 1.0f)
+		target_x = 1.0f - UI_BOX_LR_BORDER - target_width;
+	if (target_y < UI_BOX_TB_BORDER)
+		target_y = UI_BOX_TB_BORDER;
+	if (target_y + target_height + UI_BOX_TB_BORDER > 1.0f)
+		target_y = 1.0f - UI_BOX_TB_BORDER - target_height;
 
 	/* add a box around that */
-	add_filled_box_color(target_x - margin_x,
-	               target_y - margin_y,
-	               target_x + target_width - 1 + margin_x,
-	               target_y + target_height - 1 + margin_y, backcolor);
-
-	ui_draw_text_full(text, target_x, target_y, target_width, offset, multiline_text_box_visible_lines,
+	ui_draw_outlined_box(target_x - UI_BOX_LR_BORDER,
+					 target_y - UI_BOX_TB_BORDER,
+					 target_x + target_width + UI_BOX_LR_BORDER,
+					 target_y + target_height + UI_BOX_TB_BORDER, backcolor);
+	ui_draw_text_full(text, target_x, target_y, target_width, offset,
 				justify, WRAP_WORD, DRAW_NORMAL, ARGB_WHITE, ARGB_BLACK, NULL, NULL);
 }
-
 
 void ui_draw_text_box(const char *text, int justify, float xpos, float ypos, rgb_t backcolor)
 {
@@ -1067,6 +1009,7 @@ int ui_window_scroll_keys(void)
 
 	return 0;
 }
+
 
 /*-------------------------------------------------
     ui_popup - popup a message for a standard
@@ -1204,24 +1147,6 @@ int ui_is_slider_active(void)
 /***************************************************************************
     TEXT GENERATORS
 ***************************************************************************/
-
-/*-------------------------------------------------
-    sprintf_font_warning - print the warning
-    text about font to the given buffer
--------------------------------------------------*/
-
-static int sprintf_font_warning(char *buffer)
-{
-	static const char *font_warning_string =
-		"Local font file is not installed. "
-		"You must install CJK font into font directory first.\n\n"
-		"Please download from:\n"
-		"http://mameplus.emu-france.com/\n\n"
-		"Press ESC to exit, type OK to continue.";
-
-	strcpy(buffer, font_warning_string);
-	return strlen(buffer);
-}
 
 /*-------------------------------------------------
     sprintf_disclaimer - print the disclaimer
@@ -1390,7 +1315,7 @@ static void display_time(void)
 #ifdef USE_SHOW_INPUT_LOG
 static void display_input_log(void)
 {
-	add_filled_box_noedge(0, ui_screen_height - ui_get_line_height(), ui_screen_width - 1, ui_screen_height - 1);
+//	add_filled_box_noedge(0, ui_screen_height - ui_get_line_height(), ui_screen_width - 1, ui_screen_height - 1);
 	ui_draw_text(command_buffer, 0, ui_screen_height - ui_get_line_height());
 
 	if (--command_counter == 0)
@@ -1695,14 +1620,14 @@ static UINT32 handler_ingame(UINT32 state)
 
 	/* first draw the FPS counter */
 	if (showfps || osd_ticks() < showfps_end)
-		ui_draw_text_full(osd_get_fps_text(mame_get_performance_info()), 0, 0, ui_screen_width, 0, 0,
+		ui_draw_text_full(osd_get_fps_text(mame_get_performance_info()), 0.0f, 0.0f, 1.0f, 0,
 					JUSTIFY_RIGHT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, ui_bgcolor, NULL, NULL);
 	else
 		showfps_end = 0;
 
 	/* draw the profiler if visible */
 	if (show_profiler)
-		ui_draw_text_full(profiler_get_text(), 0, 0, ui_screen_width, 0, 0, JUSTIFY_LEFT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, ui_bgcolor, NULL, NULL);
+		ui_draw_text_full(profiler_get_text(), 0.0f, 0.0f, 1.0f, 0, JUSTIFY_LEFT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, ui_bgcolor, NULL, NULL);
 
 	/* let the cheat engine display its stuff */
 	if (options.cheat)
@@ -2114,36 +2039,31 @@ static void slider_display(const char *text, int minval, int maxval, int defval,
 {
 	float percentage = (float)(curval - minval) / (float)(maxval - minval);
 	float default_percentage = (float)(defval - minval) / (float)(maxval - minval);
-	int space_width = ui_get_char_width(' ');
-	int line_height = ui_get_line_height();
-	int text_height;
-	int ui_width = ui_screen_width;
-	int ui_height = ui_screen_height;
+	float space_width = ui_get_char_width(' ');
+	float line_height = ui_get_line_height();
+	float ui_width, ui_height;
+	float text_height;
 
 	/* leave a spaces' worth of room along the left/right sides, and a lines' worth on the top/bottom */
-	ui_width -= 2 * space_width;
-	ui_height -= 2 * line_height;
-
-#ifdef UI_COLOR_DISPLAY
-	line_height = line_height * 16 / 10;
-#endif /* UI_COLOR_DISPLAY */
+	ui_width = 1.0f - 2.0f * space_width;
+	ui_height = 1.0f - 2.0f * line_height;
 
 	/* determine the text height */
-	ui_draw_text_full(text, 0, 0, ui_width - 2 * UI_BOX_LR_BORDER, 0, 0,
+	ui_draw_text_full(text, 0, 0, ui_width - 2 * UI_BOX_LR_BORDER, 0,
 				JUSTIFY_CENTER, WRAP_WORD, DRAW_NONE, ARGB_WHITE, ARGB_BLACK, NULL, &text_height);
 
 	/* add a box around the whole area */
-	add_filled_box(	space_width,
+	ui_draw_outlined_box(	space_width,
 					line_height + ui_height - text_height - line_height - 2 * UI_BOX_TB_BORDER,
 					space_width + ui_width,
-					line_height + ui_height);
+					 line_height + ui_height, UI_FILLCOLOR);
 
 	/* draw the thermometer */
-	slider_draw_bar(2 * space_width, line_height + ui_height - UI_BOX_TB_BORDER - text_height - line_height*3/4,
-			ui_width - 2 * space_width, line_height*3/4, percentage, default_percentage);
+	slider_draw_bar(2.0f * space_width, line_height + ui_height - UI_BOX_TB_BORDER - text_height - line_height * 0.75f,
+			ui_width - 2.0f * space_width, line_height * 0.75f, percentage, default_percentage);
 
 	/* draw the actual text */
-	ui_draw_text_full(text, space_width + UI_BOX_LR_BORDER, line_height + ui_height - UI_BOX_TB_BORDER - text_height, ui_width - 2 * UI_BOX_LR_BORDER, 0, text_height / ui_get_line_height(),
+	ui_draw_text_full(text, space_width + UI_BOX_LR_BORDER, line_height + ui_height - UI_BOX_TB_BORDER - text_height, ui_width - 2.0f * UI_BOX_LR_BORDER, 0,
 				JUSTIFY_CENTER, WRAP_WORD, DRAW_NORMAL, ARGB_WHITE, ARGB_BLACK, NULL, &text_height);
 }
 
@@ -2152,44 +2072,27 @@ static void slider_display(const char *text, int minval, int maxval, int defval,
     slider_draw_bar - draw a slider thermometer
 -------------------------------------------------*/
 
-static void slider_draw_bar(int leftx, int topy, int width, int height, float percentage, float default_percentage)
+static void slider_draw_bar(float leftx, float topy, float width, float height, float percentage, float default_percentage)
 {
-	int current_x, default_x;
-	int bar_top, bar_bottom;
+	float current_x, default_x;
+	float bar_top, bar_bottom;
 
 	/* compute positions */
-	bar_top = topy + (height + 7)/8;
-	bar_bottom = topy + (height - 1) - (height + 7)/8;
-	default_x = leftx + (width - 1) * default_percentage;
-	current_x = leftx + (width - 1) * percentage;
+	bar_top = topy + 0.125f * height;
+	bar_bottom = topy + 0.875f * height;
+	default_x = leftx + width * default_percentage;
+	current_x = leftx + width * percentage;
+
+	/* fill in the percentage */
+	render_ui_add_rect(leftx, bar_top, current_x, bar_bottom, ARGB_WHITE, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 
 	/* draw the top and bottom lines */
-	add_line(leftx, bar_top, leftx + width - 1, bar_top, ARGB_WHITE);
-	add_line(leftx, bar_bottom, leftx + width - 1, bar_bottom, ARGB_WHITE);
-
-#ifdef UI_COLOR_DISPLAY
-	/* top of the bar */
-	add_line(leftx, bar_top + 1, current_x, bar_top + 1, OSDBAR_COLOR_FRAMEDARK);
-
-	/* left of the bar */
-	add_line(leftx, bar_top + 2, leftx, bar_bottom - 1, OSDBAR_COLOR_FRAMEDARK);
-
-	/* right of the bar */
-	add_line(current_x, bar_top+ 2, current_x, bar_bottom - 1, OSDBAR_COLOR_FRAMELIGHT);
-
-	/* fill in the percentage */
-	add_fill(leftx + 1, bar_top + 2, current_x - 1, bar_bottom - 1, OSDBAR_COLOR_FRAMEMEDIUM);
+	render_ui_add_line(leftx, bar_top, leftx + width, bar_top, UI_LINE_WIDTH, ARGB_WHITE, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+	render_ui_add_line(leftx, bar_bottom, leftx + width, bar_bottom, UI_LINE_WIDTH, ARGB_WHITE, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 
 	/* draw default marker */
-	add_line(default_x, bar_top - 1, default_x, bar_bottom + 1, OSDBAR_COLOR_DEFAULTBAR);
-#else /* UI_COLOR_DISPLAY */
-	/* draw default marker */
-	add_line(default_x, topy, default_x, bar_top, ARGB_WHITE);
-	add_line(default_x, bar_bottom, default_x, topy + height - 1, ARGB_WHITE);
-
-	/* fill in the percentage */
-	add_fill(leftx, bar_top + 1, current_x, bar_bottom - 1, ARGB_WHITE);
-#endif /* UI_COLOR_DISPLAY */
+	render_ui_add_line(default_x, topy, default_x, bar_top, UI_LINE_WIDTH, ARGB_WHITE, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+	render_ui_add_line(default_x, bar_bottom, default_x, topy + height, UI_LINE_WIDTH, ARGB_WHITE, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 }
 
 
@@ -2472,118 +2375,9 @@ static INT32 slider_crossoffset(INT32 newval, char *buffer, int arg)
 }
 #endif
 
-
-void add_fill(int x0, int y0, int x1, int y1, rgb_t color)
-{
-	x1++;
-	y1++;
-
-#ifdef UI_COLOR_DISPLAY
-	if (color == UI_FILLCOLOR)
-		render_ui_add_quad(UI_UNSCALE_TO_FLOAT_X(x0), UI_UNSCALE_TO_FLOAT_Y(y0), UI_UNSCALE_TO_FLOAT_X(x1), UI_UNSCALE_TO_FLOAT_Y(y1), MAKE_ARGB(0xff, 0xff, 0xff, 0xff), bgtexture, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-	else
-#endif /* UI_COLOR_DISPLAY */
-		render_ui_add_rect(UI_UNSCALE_TO_FLOAT_X(x0), UI_UNSCALE_TO_FLOAT_Y(y0), UI_UNSCALE_TO_FLOAT_X(x1), UI_UNSCALE_TO_FLOAT_Y(y1), ui_get_rgb_color(color), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-}
-
-
-static void add_filled_box_color(int x1, int y1, int x2, int y2, rgb_t color)
-{
-#ifdef UI_COLOR_DISPLAY
-	add_fill(x1 + 3, y1 + 3, x2 - 3, y2 - 3, color);
-
-	/* top edge */
-	add_line(x1,     y1,     x2,     y1,     SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x1 + 1, y1 + 1, x2 - 1, y1 + 1, SYSTEM_COLOR_FRAMEMEDIUM);
-	add_line(x1 + 2, y1 + 2, x2 - 2, y1 + 2, SYSTEM_COLOR_FRAMEDARK);
-
-	/* bottom edge */
-	add_line(x1 + 2, y2 - 2, x2 - 2, y2 - 2, SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x1 + 1, y2 - 1, x2 - 1, y2 - 1, SYSTEM_COLOR_FRAMEMEDIUM);
-	add_line(x1,     y2,     x2,     y2,     SYSTEM_COLOR_FRAMEDARK);
-
-	/* left edge */
-	add_line(x1,     y1 + 1, x1,     y2,     SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x1 + 1, y1 + 2, x1 + 1, y2 - 1, SYSTEM_COLOR_FRAMEMEDIUM);
-	add_line(x1 + 2, y1 + 3, x1 + 2, y2 - 2, SYSTEM_COLOR_FRAMEDARK);
-
-	/* right edge */
-	add_line(x2 - 2, y1 + 2, x2 - 2, y2 - 1, SYSTEM_COLOR_FRAMELIGHT);
-	add_line(x2 - 1, y1 + 1, x2 - 1, y2,     SYSTEM_COLOR_FRAMEMEDIUM);
-	add_line(x2,     y1,     x2,     y2 + 1, SYSTEM_COLOR_FRAMEDARK);
-#else /* UI_COLOR_DISPLAY */
-	add_fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, color);
-
-	add_line(x1, y1, x2, y1, ARGB_WHITE);
-	add_line(x2, y1, x2, y2, ARGB_WHITE);
-	add_line(x2, y2, x1, y2, ARGB_WHITE);
-	add_line(x1, y2, x1, y1, ARGB_WHITE);
-#endif /* UI_COLOR_DISPLAY */
-}
-
-
-void add_filled_box(int x0, int y0, int x1, int y1)
-{
-	add_filled_box_color(x0, y0, x1, y1, ui_bgcolor);
-}
-
-
 void ui_auto_pause(void)
 {
 	auto_pause = 1;
-}
-
-
-#ifdef USE_SHOW_INPUT_LOG
-static void add_filled_box_noedge(int x0, int y0, int x1, int y1)
-{
-#ifdef UI_COLOR_DISPLAY
-	add_fill(x0, y0, x1, y1, ui_bgcolor);
-#else /* UI_COLOR_DISPLAY */
-	add_fill(x0, y0, x1, y1, ARGB_BLACK);
-#endif /* UI_COLOR_DISPLAY */
-}
-#endif /* USE_SHOW_INPUT_LOG */
-
-
-/*************************************
- *
- *  Set the UI visible area
- *  (called by OSD layer, will go
- *  away with new rendering system)
- *
- *************************************/
-
-void ui_set_visible_area(int xmin, int ymin, int xmax, int ymax)
-{
-	float height;
-	int lines;
-
-	ui_screen_width = xmax - xmin + 1;
-	ui_screen_height = ymax - ymin + 1;
-
-	if (options.ui_lines)
-	{
-		ui_font_height = 1.0f / (float)options.ui_lines;
-		return;
-	}
-
-	height = render_font_get_pixel_height(ui_font);
-	lines = (float)ui_screen_height / height;
-
-	if (lines < 16)
-	{
-		ui_font_height = 1.0f / 20.0f;
-		return;
-	}
-
-	while (lines >= 40)
-	{
-		height *= 2.0f;
-		lines = (float)ui_screen_height / height;
-	}
-
-	ui_font_height = height / (float)ui_screen_height;
 }
 
 static void build_bgtexture(running_machine *machine)
@@ -2600,14 +2394,14 @@ static void build_bgtexture(running_machine *machine)
 	UINT8 a = 0xff;
 	int i;
 
-	bgbitmap = bitmap_alloc(1, 1024, BITMAP_FORMAT_RGB32);
-	if (!bgbitmap)
-		fatalerror("build_bgtexture failed");
-
 #ifdef TRANS_UI
 	if (options.use_transui)
 		a = options.ui_transparency;
 #endif /* TRANS_UI */
+
+	bgbitmap = bitmap_alloc(1, 1024, BITMAP_FORMAT_RGB32);
+	if (!bgbitmap)
+		fatalerror("build_bgtexture failed");
 
 	for (i = 0; i < bgbitmap->height; i++)
 	{
