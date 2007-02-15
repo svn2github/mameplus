@@ -1098,8 +1098,8 @@ static options_data *find_entry_data(const char *string, int is_command_line)
 
 static void update_data(options_data *data, const char *newdata)
 {
-	const char *dataend = newdata + strlen(newdata) - 1;
-	const char *datastart = newdata;
+	const unsigned char *dataend = newdata + strlen(newdata) - 1;
+	const unsigned char *datastart = newdata;
 
 	/* strip off leading/trailing spaces */
 	while (isspace(*datastart) && datastart <= dataend)

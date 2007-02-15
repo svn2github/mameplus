@@ -422,8 +422,8 @@ int  GetSplitterPos(int splitterId);
 void SetCustomColor(int iIndex, COLORREF uColor);
 COLORREF GetCustomColor(int iIndex);
 
-void SetListFont(LOGFONTA *font);
-void GetListFont(LOGFONTA *font);
+void SetListFont(LOGFONTW *font);
+void GetListFont(LOGFONTW *font);
 
 DWORD GetFolderFlags(const char *folderName);
 void  SetFolderFlags(const char *folderName, DWORD dwFlags);

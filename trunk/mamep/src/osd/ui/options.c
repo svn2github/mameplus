@@ -123,7 +123,7 @@ typedef struct
 	int      splitters[4];		/* NPW 5-Feb-2003 - I don't like hard coding this, but I don't have a choice */
 	COLORREF custom_color[16]; /* This is how many custom colors can be shown on the standard ColorPicker */
 	BOOL     use_broken_icon;
-	LOGFONTA list_logfont;
+	LOGFONTW list_logfont;
 	COLORREF font_color;
 	COLORREF clone_color;
 	COLORREF broken_color;
@@ -1267,14 +1267,14 @@ BOOL GetUseBrokenIcon(void)
 	return settings.use_broken_icon;
 }
 
-void SetListFont(LOGFONTA *font)
+void SetListFont(LOGFONTW *font)
 {
-	memcpy(&settings.list_logfont, font, sizeof(LOGFONTA));
+	settings.list_logfont = *font;
 }
 
-void GetListFont(LOGFONTA *font)
+void GetListFont(LOGFONTW *font)
 {
-	memcpy(font, &settings.list_logfont, sizeof(LOGFONTA));
+	*font = settings.list_logfont;
 }
 
 void SetListFontColor(COLORREF uColor)
@@ -3810,14 +3810,70 @@ INLINE BOOL options_compare_string(const char *s1, const char *s2)
 
 //============================================================
 
+INLINE const WCHAR *options_get_wstring(const char *name)
+{
+	const char *stemp = options_get_string(name);
+
+	if (stemp == NULL)
+		return NULL;
+	return wstring_from_utf8(stemp);
+}
+
+void options_set_wstring(const char *name, const WCHAR *value)
+{
+	char *utf8_value = NULL;
+
+	if (value)
+		utf8_value = utf8_from_wstring(value);
+
+	options_set_string(name, utf8_value);
+}
+
+INLINE void _options_get_wstring(WCHAR **p, const char *name)
+{
+	const char *stemp = options_get_string(name);
+
+	if (stemp && *stemp)
+	{
+		FreeIfAllocated((char **)p);
+		*p = wstring_from_utf8(stemp);
+	}
+}
+
+INLINE void options_copy_wstring(const WCHAR *src, WCHAR **dest)
+{
+	FreeIfAllocated((char **)dest);
+
+	if (src)
+	{
+		int len = lstrlen(src);
+
+		*dest = malloc((len + 1) * sizeof (**dest));
+		lstrcpy(*dest, src);
+	}
+}
+
+#define options_free_wstring	FreeIfAllocated
+
+#define _options_compare_wstring(s1,s2)		do { if (lstrcmp(s1, s2) != 0) return TRUE; } while (0)
+
+INLINE BOOL options_compare_wstring(const WCHAR *s1, const WCHAR *s2)
+{
+	_options_compare_wstring(s1, s2);
+	return FALSE;
+}
+
+
+//============================================================
+
 INLINE const char *options_get_mstring(const char *name)
 {
-	const char *value = options_get_string(name);
+	const char *stemp = options_get_string(name);
 
-	if (value == NULL)
+	if (stemp == NULL)
 		return NULL;
 
-	return astring_from_utf8(value);
+	return astring_from_utf8(stemp);
 }
 
 void options_set_mstring(const char *name, const char *value)
@@ -3832,12 +3888,12 @@ void options_set_mstring(const char *name, const char *value)
 
 INLINE void _options_get_mstring(char **p, const char *name)
 {
-	const char *stemp = options_get_mstring(name);
+	const char *stemp = options_get_string(name);
 
 	if (stemp && *stemp)
 	{
 		FreeIfAllocated(p);
-		*p = (char *)stemp;
+		*p = (char *)astring_from_utf8(stemp);
 	}
 }
 
@@ -3881,11 +3937,11 @@ INLINE BOOL options_compare_string_allow_null(const char *s1, const char *s2)
 
 INLINE void _options_get_mstring_allow_null(char **p, const char *name)
 {
-	const char *stemp = options_get_mstring(name);
+	const char *stemp = options_get_string(name);
 
 	FreeIfAllocated(p);
 	if (stemp)
-		*p = strdup(stemp);
+		*p = (char *)astring_from_utf8(stemp);
 }
 
 #define options_set_mstring_allow_null(name,value)	options_set_mstring(name,value)
@@ -4554,9 +4610,9 @@ INLINE void _options_get_list_mode(int *view, const char *name)
 
 //============================================================
 
-INLINE void _options_get_list_font(LOGFONTA *f, const char *name)
+INLINE void _options_get_list_font(LOGFONTW *f, const char *name)
 {
-	const char *stemp = options_get_mstring("list_font");
+	const char *stemp = options_get_string("list_font");
 	LONG temp[13];
 	char buf[256];
 	char *p;
@@ -4623,20 +4679,20 @@ INLINE void _options_get_list_font(LOGFONTA *f, const char *name)
 	f->lfPitchAndFamily = temp[12];
 }
 
-INLINE void _options_get_list_fontface(LOGFONTA *f, const char *name)
+INLINE void _options_get_list_fontface(LOGFONTW *f, const char *name)
 {
-	const char *stemp = options_get_mstring("list_fontface");
+	const WCHAR *stemp = options_get_wstring("list_fontface");
 
 	if (stemp == NULL || *stemp == '\0')
 		return;
 
-	if (strlen(stemp) + 1 > sizeof (f->lfFaceName))
+	if (lstrlen(stemp) + 1 > sizeof (f->lfFaceName))
 		return;
 
-	strcpy(f->lfFaceName, stemp);
+	lstrcpy(f->lfFaceName, stemp);
 }
 
-INLINE void options_set_list_font(const char *name, const LOGFONTA *f)
+INLINE void options_set_list_font(const char *name, const LOGFONTW *f)
 {
 	char buf[512];
 
@@ -4655,12 +4711,12 @@ INLINE void options_set_list_font(const char *name, const LOGFONTA *f)
 	             f->lfQuality,
 	             f->lfPitchAndFamily);
 
-	options_set_mstring("list_font", buf);
+	options_set_string("list_font", buf);
 }
 
-#define options_set_list_fontface(name,f)	options_set_mstring("list_fontface", (f)->lfFaceName)
+#define options_set_list_fontface(name,f)	options_set_wstring("list_fontface", (f)->lfFaceName)
 
-INLINE void options_copy_list_font(const LOGFONTA *src, LOGFONTA *dest)
+INLINE void options_copy_list_font(const LOGFONTW *src, LOGFONTW *dest)
 {
 	dest->lfHeight         = src->lfHeight;
 	dest->lfWidth          = src->lfWidth;
@@ -4677,9 +4733,9 @@ INLINE void options_copy_list_font(const LOGFONTA *src, LOGFONTA *dest)
 	dest->lfPitchAndFamily = src->lfPitchAndFamily;
 }
 
-INLINE void options_copy_list_fontface(const LOGFONTA *src, LOGFONTA *dest)
+INLINE void options_copy_list_fontface(const LOGFONTW *src, LOGFONTW *dest)
 {
-	strcpy(dest->lfFaceName, src->lfFaceName);
+	lstrcpy(dest->lfFaceName, src->lfFaceName);
 }
 
 #define options_free_list_font(p)

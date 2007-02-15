@@ -62,7 +62,7 @@ static HFONT hTranslateFont = NULL;
 static BOOL force_change_font = TRUE;
 static UINT ansi_codepage; 
 
-void GetTranslatedFont(LOGFONTA *logfont)
+void GetTranslatedFont(LOGFONTW *logfont)
 {
 	ZeroMemory (logfont, sizeof *logfont);
 
@@ -100,13 +100,13 @@ void GetTranslatedFont(LOGFONTA *logfont)
 		break;
 	}
 
-	lstrcpyA(logfont->lfFaceName, _UI("MS Sans Serif"));
+	lstrcpy(logfont->lfFaceName, _Unicode(_UI("MS Sans Serif")));
 }
 
 
 int InitTranslator(int langcode)
 {
-	LOGFONTA logfontA;
+	LOGFONTW logfont;
 
 	ansi_codepage = ui_lang_info[langcode].codepage;
 
@@ -115,8 +115,8 @@ int InitTranslator(int langcode)
 	if (hTranslateFont != NULL)
 		DeleteObject(hTranslateFont);
 
-	GetTranslatedFont(&logfontA);
-	hTranslateFont = TranslateCreateFont(&logfontA);
+	GetTranslatedFont(&logfont);
+	hTranslateFont = TranslateCreateFont(&logfont);
 
 	return langcode;
 }
@@ -330,15 +330,15 @@ static void TranslateTabControl(HWND hControl)
 
 static void translate_richedit20(HWND hControl)
 {
-	LOGFONTA logfontA;
+	LOGFONTW logfont;
 	CHARFORMAT2 cfm;
 
-	GetTranslatedFont(&logfontA);
+	GetTranslatedFont(&logfont);
 
 	cfm.cbSize = sizeof (cfm);
 	cfm.dwMask = CFM_CHARSET | CFM_FACE;
-	cfm.bCharSet = logfontA.lfCharSet;
-	lstrcpy(cfm.szFaceName, _Unicode(logfontA.lfFaceName));
+	cfm.bCharSet = logfont.lfCharSet;
+	lstrcpy(cfm.szFaceName, logfont.lfFaceName);
 
 	SendMessage(hControl, EM_SETCHARFORMAT, SCF_DEFAULT, (LPARAM)&cfm);
 }
@@ -528,15 +528,9 @@ char *_String(const LPWSTR ws)
 	return temp_string_pool[temp_string_pool_index++];
 }
 
-HFONT TranslateCreateFont(const LOGFONTA *lpLfA)
+HFONT TranslateCreateFont(const LOGFONTW *lpLf)
 {
-	LOGFONTW lfW;
-
-	memcpy(&lfW, lpLfA, sizeof lfW);
-
-	lstrcpyW(lfW.lfFaceName, _Unicode(lpLfA->lfFaceName));
-
-	return CreateFontIndirectW(&lfW);
+	return CreateFontIndirectW(lpLf);
 }
 
 LRESULT StatusBarSetTextW(HWND hStatusBar,WPARAM id,LPCWSTR str)

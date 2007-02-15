@@ -628,15 +628,15 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 		BOOL first_entry = TRUE;
 		HIMAGELIST treeview_icons = GetTreeViewIconList();
 		static HFONT hFont;
-		LOGFONTA logfontA;
+		LOGFONTW logfontW;
 
 		TranslateDialog(hDlg, lParam, TRUE);
 
 		if (hFont != NULL)
 			DeleteObject(hFont);
 
-		GetTranslatedFont(&logfontA);
-		hFont = TranslateCreateFont(&logfontA);
+		GetTranslatedFont(&logfontW);
+		hFont = TranslateCreateFont(&logfontW);
 
 		SetWindowFont(GetDlgItem(hDlg,IDC_CUSTOM_TREE), hFont, FALSE);
 
@@ -803,7 +803,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			char *PcbData;
 			LV_ITEM lvi;
 			HWND hWndList = GetDlgItem(GetMainWindow(), IDC_LIST);
-			LOGFONTA font;
+			LOGFONTW font;
 			HFONT hPcbFont;
 			HDC hDC;
 			RECT rect;
@@ -825,10 +825,10 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			font.lfClipPrecision = CLIP_DEFAULT_PRECIS;
 			font.lfQuality = DEFAULT_QUALITY;
 			font.lfPitchAndFamily = FIXED_PITCH;
-			strcpy(font.lfFaceName, "Courier New");
-//			strcpy(font.lfFaceName, "FixedSys");
+			lstrcpy(font.lfFaceName, TEXT("Courier New"));
+//			lstrcpy(font.lfFaceName, TEXT("FixedSys"));
 
-			hPcbFont = CreateFontIndirectA(&font);
+			hPcbFont = CreateFontIndirectW(&font);
 
 			lvi.iItem = ListView_GetNextItem(hWndList, -1, LVIS_SELECTED | LVIS_FOCUSED);
 			if (lvi.iItem == -1)

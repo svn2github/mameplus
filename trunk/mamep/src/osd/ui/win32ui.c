@@ -1824,7 +1824,7 @@ static void ChangeLanguage(int id)
 
 	if (id)
 	{
-		LOGFONTA logfont;
+		LOGFONTW logfont;
 
 		if (hFont != NULL)
 			DeleteObject(hFont);
@@ -2264,7 +2264,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 
 	/* Reset the font */
 	{
-		LOGFONTA logfont;
+		LOGFONTW logfont;
 
 		GetListFont(&logfont);
 		hFont = TranslateCreateFont(&logfont);
@@ -4542,8 +4542,8 @@ UINT_PTR CALLBACK CFHookProc(
 
 static void PickFont(void)
 {
-	LOGFONTA font;
-	CHOOSEFONTA cf;
+	LOGFONTW font;
+	CHOOSEFONTW cf;
 	HWND hWnd;
 
 	GetListFont(&font);
@@ -4555,7 +4555,7 @@ static void PickFont(void)
 	cf.lpfnHook = &CFHookProc;
 	cf.rgbColors   = GetListFontColor();
 	cf.Flags	   = CF_SCREENFONTS | CF_INITTOLOGFONTSTRUCT | CF_EFFECTS | CF_ENABLEHOOK;
-	if (!ChooseFontA(&cf))
+	if (!ChooseFontW(&cf))
 		return;
 
 	SetListFont(&font);

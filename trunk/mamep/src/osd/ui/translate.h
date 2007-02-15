@@ -1,11 +1,11 @@
 int      InitTranslator(int langcode);
-HFONT    TranslateCreateFont(const LOGFONTA*);
+HFONT    TranslateCreateFont(const LOGFONTW *);
 void     TranslateMenu(HMENU hMenu, int uiString);
 char    *TranslateMenuHelp(HMENU hMenu, UINT nIndex, int popup);
 void     TranslateControl(HWND hControl);
 void     TranslateDialog(HWND hDlg, LPARAM lParam, BOOL change_font);
 void     TranslateTreeFolders(HWND hWnd);
-void     GetTranslatedFont(LOGFONTA *logfont);
+void     GetTranslatedFont(LOGFONTW *);
 LRESULT  StatusBarSetTextA(HWND,WPARAM,LPCSTR);
 LRESULT  StatusBarSetTextW(HWND,WPARAM,LPCWSTR);
 
