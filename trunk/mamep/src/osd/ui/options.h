@@ -95,12 +95,12 @@ typedef struct
 //
 // STATE/PLAYBACK OPTIONS
 //
-	char*	state;
+	WCHAR*	state;
 	BOOL	autosave;
-	char*	playback;
-	char*	record;
-	char*	mngwrite;
-	char*	wavwrite;
+	WCHAR*	playback;
+	WCHAR*	record;
+	WCHAR*	mngwrite;
+	WCHAR*	wavwrite;
 //
 // DEBUGGING OPTIONS
 //
@@ -289,6 +289,9 @@ void OptionsExit(void);
 
 /* set multi-byte string that is encoded with UTF-8 internally */
 void options_set_mstring(const char *name, const char *value);
+
+/* set unicode string that is encoded with UTF-8 internally */
+void options_set_wstring(const char *name, const WCHAR *value);
 
 #ifdef UNICODE
 WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(void));

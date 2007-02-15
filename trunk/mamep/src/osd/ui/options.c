@@ -3844,16 +3844,16 @@ INLINE void options_copy_wstring(const WCHAR *src, WCHAR **dest)
 {
 	FreeIfAllocated((char **)dest);
 
-	if (src)
-	{
-		int len = lstrlen(src);
+	int len = lstrlen(src);
 
-		*dest = malloc((len + 1) * sizeof (**dest));
-		lstrcpy(*dest, src);
-	}
+	*dest = malloc((len + 1) * sizeof (**dest));
+	lstrcpy(*dest, src);
 }
 
-#define options_free_wstring	FreeIfAllocated
+INLINE void options_free_wstring(WCHAR **p)
+{
+	FreeIfAllocated((char **)p);
+}
 
 #define _options_compare_wstring(s1,s2)		do { if (lstrcmp(s1, s2) != 0) return TRUE; } while (0)
 
@@ -3929,6 +3929,42 @@ INLINE void options_copy_string_allow_null(const char *src, char **dest)
 INLINE BOOL options_compare_string_allow_null(const char *s1, const char *s2)
 {
 	_options_compare_string_allow_null(s1, s2);
+	return FALSE;
+}
+
+
+//============================================================
+
+INLINE void _options_get_wstring_allow_null(WCHAR **p, const char *name)
+{
+	const char *stemp = options_get_string(name);
+
+	FreeIfAllocated((char **)p);
+	if (stemp)
+		*p = wstring_from_utf8(stemp);
+}
+
+#define options_set_wstring_allow_null(name,value)	options_set_wstring(name,value)
+
+INLINE void options_copy_wstring_allow_null(const WCHAR *src, WCHAR **dest)
+{
+	FreeIfAllocated((char **)dest);
+
+	if (src)
+	{
+		int len = lstrlen(src);
+
+		*dest = malloc((len + 1) * sizeof (**dest));
+		lstrcpy(*dest, src);
+	}
+}
+
+#define options_free_wstring_allow_null			options_free_wstring
+#define _options_compare_wstring_allow_null(s1,s2)	do { if (s1 != s2) { if (!s1 || !s2) return TRUE; if (lstrcmp(s1, s2) != 0) return TRUE; } } while (0)
+
+INLINE BOOL options_compare_wstring_allow_null(const WCHAR *s1, const WCHAR *s2)
+{
+	_options_compare_wstring_allow_null(s1, s2);
 	return FALSE;
 }
 
@@ -4683,13 +4719,17 @@ INLINE void _options_get_list_fontface(LOGFONTW *f, const char *name)
 {
 	const WCHAR *stemp = options_get_wstring("list_fontface");
 
-	if (stemp == NULL || *stemp == '\0')
+	if (stemp == NULL)
 		return;
 
-	if (lstrlen(stemp) + 1 > sizeof (f->lfFaceName))
+	if (*stemp == '\0' || lstrlen(stemp) + 1 > sizeof (f->lfFaceName))
+	{
+		free((char *)stemp);
 		return;
+	}
 
 	lstrcpy(f->lfFaceName, stemp);
+	free((char *)stemp);
 }
 
 INLINE void options_set_list_font(const char *name, const LOGFONTW *f)

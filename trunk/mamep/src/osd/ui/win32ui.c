@@ -287,7 +287,7 @@ static void             UpdateStatusBar(void);
 static BOOL             PickerHitTest(HWND hWnd);
 static BOOL             TreeViewNotify(NMHDR *nm);
 
-static void             ResetBackground(const char *szFile);
+static void             ResetBackground(const WCHAR *szFile);
 static void             RandomSelectBackground(void);
 static void             LoadBackgroundBitmap(void);
 #ifndef USE_VIEW_PCBINFO
@@ -317,13 +317,13 @@ static void             ChangeLanguage(int id);
 static void             ChangeMenuStyle(int id);
 #endif /* IMAGE_MENU */
 static void             MamePlayRecordGame(void);
-static void             MamePlayBackGame(const char* fname_playback);
+static void             MamePlayBackGame(const WCHAR *fname_playback);
 static void             MamePlayRecordWave(void);
 static void             MamePlayRecordMNG(void);
-static void             MameLoadState(const char *fname_state);
-static BOOL             CommonFileDialogW(BOOL open_for_write, char *filename, int filetype);
-static BOOL             CommonFileDialogA(BOOL open_for_write, char *filename, int filetype);
-static BOOL             CommonFileDialog(BOOL open_for_write,char *filename, int filetype);
+static void             MameLoadState(const WCHAR *fname_state);
+static BOOL             CommonFileDialogW(BOOL open_for_write, WCHAR *filename, int filetype);
+static BOOL             CommonFileDialogA(BOOL open_for_write, WCHAR *filename, int filetype);
+static BOOL             CommonFileDialog(BOOL open_for_write, WCHAR *filename, int filetype);
 static void             MamePlayGame(void);
 static void             MamePlayGameWithOptions(int nGame);
 static INT_PTR CALLBACK LoadProgressDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam);
@@ -773,13 +773,13 @@ typedef struct
 } driver_data_type;
 static driver_data_type *sorted_drivers;
 
-static char * g_pRecordName = NULL;
-static char * g_pPlayBkName = NULL;
-static char * g_pSaveStateName = NULL;
-static char * g_pRecordWaveName = NULL;
-static char * g_pRecordMNGName = NULL;
-static char * override_playback_directory = NULL;
-static char * override_savestate_directory = NULL;
+static WCHAR * g_pRecordName = NULL;
+static WCHAR * g_pPlayBkName = NULL;
+static WCHAR * g_pSaveStateName = NULL;
+static WCHAR * g_pRecordWaveName = NULL;
+static WCHAR * g_pRecordMNGName = NULL;
+static WCHAR * override_playback_directory = NULL;
+static WCHAR * override_savestate_directory = NULL;
 
 static struct
 {
@@ -907,18 +907,18 @@ static BOOL WaitWithMessageLoop(HANDLE hEvent)
 static void override_options(void)
 {
 	if (override_playback_directory)
-		options_set_mstring("input_directory", override_playback_directory);
+		options_set_wstring("input_directory", override_playback_directory);
 
 	if (g_pSaveStateName)
-		options_set_mstring("state", g_pSaveStateName);
+		options_set_wstring("state", g_pSaveStateName);
 	if (g_pPlayBkName)
-		options_set_mstring("pb", g_pPlayBkName);
+		options_set_wstring("pb", g_pPlayBkName);
 	if (g_pRecordName)
-		options_set_mstring("rec", g_pRecordName);
+		options_set_wstring("rec", g_pRecordName);
 	if (g_pRecordMNGName)
-		options_set_mstring("mngwrite", g_pRecordMNGName);
+		options_set_wstring("mngwrite", g_pRecordMNGName);
 	if (g_pRecordWaveName)
-		options_set_mstring("wavwrite", g_pRecordWaveName);
+		options_set_wstring("wavwrite", g_pRecordWaveName);
 }
 
 static int RunMAME(int nGameIndex)
@@ -1910,51 +1910,55 @@ int CLIB_DECL DriverDataCompareFunc(const void *arg1,const void *arg2)
 	return strcmp( ((driver_data_type *)arg1)->name, ((driver_data_type *)arg2)->name );
 }
 
-static void ResetBackground(const char *szFile)
+static void ResetBackground(const WCHAR *szFile)
 {
-	char szDestFile[MAX_PATH];
+	WCHAR szDestFile[MAX_PATH];
 
 	/* The MAME core load the .png file first, so we only need replace this file */
-	sprintf(szDestFile, "%s\\bkground.png", GetBgDir());
-	SetFileAttributesA(szDestFile, FILE_ATTRIBUTE_NORMAL);
-	CopyFileA(szFile, szDestFile, FALSE);
+	lstrcpy(szDestFile, _Unicode(GetBgDir()));
+	lstrcat(szDestFile, TEXT("\\bkground.png"));
+	SetFileAttributes(szDestFile, FILE_ATTRIBUTE_NORMAL);
+	CopyFile(szFile, szDestFile, FALSE);
 }
 
 static void RandomSelectBackground(void)
 {
-	struct _finddata_t c_file;
+	struct _wfinddata_t c_file;
 	long hFile;
-	char szFile[MAX_PATH];
+	WCHAR szFile[MAX_PATH];
 	int count=0;
-	const char *szDir=GetBgDir();
-	char *buf=malloc(_MAX_FNAME * MAX_BGFILES);
+	const WCHAR *szDir = _Unicode(GetBgDir());
+	WCHAR *buf=malloc((_MAX_FNAME * MAX_BGFILES) * sizeof (*buf));
 
 	if (buf == NULL)
 		return;
 
-	sprintf(szFile, "%s\\*.bmp", szDir);
-	hFile = _findfirst(szFile, &c_file);
+	lstrcpy(szFile, szDir);
+	lstrcat(szFile, TEXT("\\*.bmp"));
+	hFile = _wfindfirst(szFile, &c_file);
 	if (hFile != -1L)
 	{
 		int Done = 0;
 		while (!Done && count < MAX_BGFILES)
 		{
-			memcpy(buf + count * _MAX_FNAME, c_file.name, _MAX_FNAME);
+			memcpy(buf + count * _MAX_FNAME, c_file.name, _MAX_FNAME * sizeof (*buf));
 			count++;
-			Done = _findnext(hFile, &c_file);
+			Done = _wfindnext(hFile, &c_file);
 		}
 		_findclose(hFile);
 	}
-	sprintf(szFile, "%s\\*.png", szDir);
-	hFile = _findfirst(szFile, &c_file);
+
+	lstrcpy(szFile, szDir);
+	lstrcat(szFile, TEXT("\\*.png"));
+	hFile = _wfindfirst(szFile, &c_file);
 	if (hFile != -1L)
 	{
 		int Done = 0;
 		while (!Done && count < MAX_BGFILES)
 		{
-			memcpy(buf + count * _MAX_FNAME, c_file.name, _MAX_FNAME);
+			memcpy(buf + count * _MAX_FNAME, c_file.name, _MAX_FNAME * sizeof (*buf));
 			count++;
-			Done = _findnext(hFile, &c_file);
+			Done = _wfindnext(hFile, &c_file);
 		}
 		_findclose(hFile);
 	}
@@ -1962,7 +1966,9 @@ static void RandomSelectBackground(void)
 	if (count)
 	{
 		srand( (unsigned)time( NULL ) );
-		sprintf(szFile, "%s\\%s", szDir, buf + (rand() % count) * _MAX_FNAME);
+		lstrcpy(szFile, szDir);
+		lstrcat(szFile, TEXT("\\"));
+		lstrcat(szFile, buf + (rand() % count) * _MAX_FNAME);
 		ResetBackground(szFile);
 	}
 
@@ -2727,24 +2733,24 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 	case WM_DROPFILES:
 		{
 			HDROP hDrop = (HDROP)wParam;
-			char fileName[MAX_PATH];
-			char ext[MAX_PATH];
+			WCHAR fileName[MAX_PATH];
+			WCHAR ext[MAX_PATH];
 
 			if (OnNT())
+				DragQueryFileW(hDrop, 0, fileName, MAX_PATH);
+			else
 			{
-				WCHAR fileNameW[MAX_PATH];
-				DragQueryFileW(hDrop, 0, fileNameW, MAX_PATH);
-				strcpy(fileName, _String((LPTSTR)fileNameW));
-			} else {
-				DragQueryFileA(hDrop, 0, fileName, MAX_PATH);
+				char fileNameA[MAX_PATH];
+				DragQueryFileA(hDrop, 0, fileNameA, MAX_PATH);
+				lstrcpy(fileName, _Unicode(fileNameA));
 			}
 			DragFinish(hDrop);
 
-			_splitpath(fileName, NULL, NULL, NULL, ext);
+			_wsplitpath(fileName, NULL, NULL, NULL, ext);
 
 			DragAcceptFiles(hMain, FALSE);
 			SetForegroundWindow(hMain);
-			if (!stricmp(ext, ".sta"))
+			if (!_wcsicmp(ext, TEXT(".sta")))
 				MameLoadState(fileName);
 			else
 				MamePlayBackGame(fileName);
@@ -5146,7 +5152,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 
 	case ID_OPTIONS_BG:
 		{
-			char filename[MAX_PATH];
+			WCHAR filename[MAX_PATH];
 			*filename = 0;
 
 			if (CommonFileDialog(FALSE, filename, FILETYPE_IMAGE_FILES))
@@ -5958,7 +5964,7 @@ static const char *GetLastDir(void)
 	return last_directory;
 }
 
-static BOOL CommonFileDialogW(BOOL open_for_write, char *filename, int filetype)
+static BOOL CommonFileDialogW(BOOL open_for_write, WCHAR *filename, int filetype)
 {
 	BOOL success;
 
@@ -5971,7 +5977,7 @@ static BOOL CommonFileDialogW(BOOL open_for_write, char *filename, int filetype)
 	WCHAR title[256];
 	WCHAR ext[256];
 
-	lstrcpy(fn, _Unicode(filename));
+	lstrcpy(fn, filename);
 
 	of.lStructSize       = sizeof(of);
 	of.hwndOwner         = hMain;
@@ -6041,15 +6047,12 @@ static BOOL CommonFileDialogW(BOOL open_for_write, char *filename, int filetype)
 	success = cfd(&of);
 	if (success)
 	{
-		strcpy(filename, _String(fn));
-		//dprintf("got filename %s nFileExtension %u\n",filename,_String(of.nFileExtension));
-		/*GetDirectory(filename,last_directory,sizeof(last_directory));*/
+		lstrcpy(filename, fn);
 	}
-
 	return success;
 }
 
-static BOOL CommonFileDialogA(BOOL open_for_write, char *filename, int filetype)
+static BOOL CommonFileDialogA(BOOL open_for_write, WCHAR *filename, int filetype)
 {
 	BOOL success;
 
@@ -6062,7 +6065,7 @@ static BOOL CommonFileDialogA(BOOL open_for_write, char *filename, int filetype)
 	char title[256];
 	char ext[256];
 
-	strcpy(fn, filename);
+	strcpy(fn, _String(filename));
 
 	of.lStructSize       = sizeof(of);
 	of.hwndOwner         = hMain;
@@ -6131,16 +6134,12 @@ static BOOL CommonFileDialogA(BOOL open_for_write, char *filename, int filetype)
 
 	success = cfd(&of);
 	if (success)
-	{
-		strcpy(filename, fn);
-		//dprintf("got filename %s nFileExtension %u\n",filename,_String(of.nFileExtension));
-		/*GetDirectory(filename,last_directory,sizeof(last_directory));*/
-	}
+		lstrcpy(filename, _Unicode(fn));
 
 	return success;
 }
 
-static BOOL CommonFileDialog(BOOL open_for_write, char *filename, int filetype)
+static BOOL CommonFileDialog(BOOL open_for_write, WCHAR *filename, int filetype)
 {
 	if (OnNT())
 		return CommonFileDialogW(open_for_write, filename, filetype);
@@ -6181,14 +6180,25 @@ static void MameMessageBox(const char *fmt, ...)
 	va_end(va);
 }
 
-static void MamePlayBackGame(const char *fname_playback)
+static void MameMessageBoxW(const WCHAR *fmt, ...)
+{
+	WCHAR buf[2048];
+	va_list va;
+
+	va_start(va, fmt);
+	vswprintf(buf, fmt, va);
+	MessageBox(GetMainWindow(), buf, TEXT_MAME32NAME, MB_OK | MB_ICONERROR);
+	va_end(va);
+}
+
+static void MamePlayBackGame(const WCHAR *fname_playback)
 {
 	int nGame = -1;
-	char filename[MAX_PATH];
+	WCHAR filename[MAX_PATH];
 
 	if (fname_playback)
 	{
-		strcpy(filename, fname_playback);
+		lstrcpy(filename, fname_playback);
 	}
 	else
 	{
@@ -6196,7 +6206,7 @@ static void MamePlayBackGame(const char *fname_playback)
 
 		nGame = Picker_GetSelectedItem(hwndList);
 		if (nGame != -1)
-			strcpy(filename, drivers[nGame]->name);
+			lstrcpy(filename, _Unicode(drivers[nGame]->name));
 
 		if (!CommonFileDialog(FALSE, filename, FILETYPE_INPUT_FILES)) return;
 	}
@@ -6205,24 +6215,29 @@ static void MamePlayBackGame(const char *fname_playback)
 	{
 		mame_file* pPlayBack;
 		mame_file_error filerr;
-		char drive[_MAX_DRIVE];
-		char dir[_MAX_DIR];
-		char bare_fname[_MAX_FNAME];
-		char ext[_MAX_EXT];
+		WCHAR drive[_MAX_DRIVE];
+		WCHAR dir[_MAX_DIR];
+		WCHAR bare_fname[_MAX_FNAME];
+		WCHAR ext[_MAX_EXT];
 
-		char path[MAX_PATH];
-		char fname[MAX_PATH];
+		WCHAR path[MAX_PATH];
+		WCHAR fname[MAX_PATH];
+		char *stemp;
 
-		_splitpath(filename, drive, dir, bare_fname, ext);
+		_wsplitpath(filename, drive, dir, bare_fname, ext);
 
-		sprintf(path,"%s%s",drive,dir);
-		sprintf(fname,"%s.inp",bare_fname);
-		if (path[strlen(path)-1] == PATH_SEPARATOR[0])
-			path[strlen(path)-1] = 0; // take off trailing back slash
+		lstrcpy(path, drive);
+		lstrcat(path, dir);
+		lstrcpy(fname, bare_fname);
+		lstrcat(fname, TEXT(".inp"));
+		if (path[lstrlen(path)-1] == TEXT(PATH_SEPARATOR[0]))
+			path[lstrlen(path)-1] = 0; // take off trailing back slash
 
-		options_set_mstring(SEARCHPATH_INPUTLOG, path);
-		filerr = mame_fopen(SEARCHPATH_INPUTLOG, fname, OPEN_FLAG_READ, &pPlayBack);
-		options_set_mstring(SEARCHPATH_INPUTLOG, GetInpDir());
+		options_set_wstring(SEARCHPATH_INPUTLOG, path);
+		stemp = utf8_from_wstring(fname);
+		filerr = mame_fopen(SEARCHPATH_INPUTLOG, stemp, OPEN_FLAG_READ, &pPlayBack);
+		free(stemp);
+		options_set_wstring(SEARCHPATH_INPUTLOG, _Unicode(GetInpDir()));
 
 		if (filerr != FILERR_NONE)
 		{
@@ -6263,36 +6278,38 @@ static void MamePlayBackGame(const char *fname_playback)
 	}
 }
 
-static void MameLoadState(const char *fname_state)
+static void MameLoadState(const WCHAR *fname_state)
 {
 	int nGame = -1;
-	char filename[MAX_PATH];
-	char selected_filename[MAX_PATH];
+	WCHAR filename[MAX_PATH];
+	WCHAR selected_filename[MAX_PATH];
 
 	if (fname_state)
 	{
-		char *cPos=0;
+		WCHAR *cPos=0;
 		int  iPos=0;
 		int  i;
-		char bare_fname[_MAX_FNAME];
+		WCHAR bare_fname[_MAX_FNAME];
+		char *selected_filenameA;
 
-		strcpy(filename, fname_state);
+		lstrcpy(filename, fname_state);
 
-		_splitpath(fname_state, NULL, NULL, bare_fname, NULL);
-		cPos = strchr(bare_fname, '-' );
-		iPos = cPos ? cPos - bare_fname : strlen(bare_fname);
-		strncpy(selected_filename, bare_fname, iPos );
+		_wsplitpath(fname_state, NULL, NULL, bare_fname, NULL);
+		cPos = wcschr(bare_fname, TEXT('-'));
+		iPos = cPos ? cPos - bare_fname : lstrlen(bare_fname);
+		wcsncpy(selected_filename, bare_fname, iPos );
 		selected_filename[iPos] = '\0';
+		selected_filenameA = _String(selected_filename);
 
 		for (i = 0; drivers[i] != 0; i++) // find game and play it
-			if (!strcmp(drivers[i]->name, selected_filename))
+			if (!strcmp(drivers[i]->name, selected_filenameA))
 			{
 				nGame = i;
 				break;
 			}
 		if (nGame == -1)
 		{
-			MameMessageBox(_UI("Could not open '%s' as a valid savestate file."), filename);
+			MameMessageBoxW(_Unicode(_UI("Could not open '%ls' as a valid savestate file.")), filename);
 			return;
 		}
 	}
@@ -6303,33 +6320,36 @@ static void MameLoadState(const char *fname_state)
 		nGame = Picker_GetSelectedItem(hwndList);
 		if (nGame != -1)
 		{
-			strcpy(filename, drivers[nGame]->name);
-			strcpy(selected_filename, drivers[nGame]->name);
+			lstrcpy(filename, _Unicode(drivers[nGame]->name));
+			lstrcpy(selected_filename, filename);
 		}
-		if (CommonFileDialog(FALSE, filename, FILETYPE_SAVESTATE_FILES)) return;
+		if (!CommonFileDialog(FALSE, filename, FILETYPE_SAVESTATE_FILES)) return;
 	}
 
 	if (*filename)
 	{
 		mame_file* pSaveState;
 		mame_file_error filerr;
-		char drive[_MAX_DRIVE];
-		char dir[_MAX_DIR];
-		char ext[_MAX_EXT];
+		WCHAR drive[_MAX_DRIVE];
+		WCHAR dir[_MAX_DIR];
+		WCHAR ext[_MAX_EXT];
 
-		char path[MAX_PATH];
-		char fname[MAX_PATH];
-		char bare_fname[_MAX_FNAME];
-		char *state_fname;
+		WCHAR path[MAX_PATH];
+		WCHAR fname[MAX_PATH];
+		WCHAR bare_fname[_MAX_FNAME];
+		WCHAR *state_fname;
+		char *stemp;
 		int rc;
 
-		_splitpath(filename, drive, dir, bare_fname, ext);
+		_wsplitpath(filename, drive, dir, bare_fname, ext);
 
 		// parse path
-		sprintf(path,"%s%s",drive,dir);
-		sprintf(fname,"%s.sta",bare_fname);
-		if (path[strlen(path)-1] == PATH_SEPARATOR[0])
-			path[strlen(path)-1] = 0; // take off trailing back slash
+		lstrcpy(path, drive);
+		lstrcat(path, dir);
+		lstrcpy(fname, bare_fname);
+		lstrcat(fname, TEXT(".sta"));
+		if (path[lstrlen(path)-1] == TEXT(PATH_SEPARATOR[0]))
+			path[lstrlen(path)-1] = 0; // take off trailing back slash
 
 #ifdef MESS
 		{
@@ -6338,34 +6358,38 @@ static void MameLoadState(const char *fname_state)
 		}
 #else // !MESS
 		{
-			char *cPos=0;
+			WCHAR *cPos=0;
 			int  iPos=0;
-			char romname[MAX_PATH];
+			WCHAR romname[MAX_PATH];
 
-			cPos = strchr(bare_fname, '-' );
-			iPos = cPos ? cPos - bare_fname : strlen(bare_fname);
-			strncpy(romname, bare_fname, iPos );
+			cPos = wcschr(bare_fname, '-' );
+			iPos = cPos ? cPos - bare_fname : lstrlen(bare_fname);
+			wcsncpy(romname, bare_fname, iPos );
 			romname[iPos] = '\0';
-			if (strcmp(selected_filename,romname) != 0)
+			if (lstrcmp(selected_filename,romname) != 0)
 			{
-				MameMessageBox(_UI("'%s' is not a valid savestate file for game '%s'."), filename, selected_filename);
+				MameMessageBoxW(_Unicode(_UI("'%ls' is not a valid savestate file for game '%ls'.")), filename, selected_filename);
 				return;
 			}
-			options_set_mstring(SEARCHPATH_STATE, path);
+			options_set_wstring(SEARCHPATH_STATE, path);
 			state_fname = fname;
 		}
 #endif // MESS
 
-		filerr = mame_fopen(SEARCHPATH_STATE, state_fname, OPEN_FLAG_READ, &pSaveState);
-		options_set_mstring(SEARCHPATH_STATE, GetStateDir());
+		stemp = utf8_from_wstring(state_fname);
+		filerr = mame_fopen(SEARCHPATH_STATE, stemp, OPEN_FLAG_READ, &pSaveState);
+		free(stemp);
+		options_set_wstring(SEARCHPATH_STATE, _Unicode(GetStateDir()));
 		if (filerr != FILERR_NONE)
 		{
-			MameMessageBox(_UI("Could not open '%s' as a valid savestate file."), filename);
+			MameMessageBoxW(_Unicode(_UI("Could not open '%ls' as a valid savestate file.")), filename);
 			return;
 		}
 
 		// call the MAME core function to check the save state file
-		rc = state_save_check_file(pSaveState, selected_filename, TRUE, MameMessageBox);
+		stemp = utf8_from_wstring(selected_filename);
+		rc = state_save_check_file(pSaveState, stemp, TRUE, MameMessageBox);
+		free(stemp);
 		mame_fclose(pSaveState);
 		if (rc)
 			return;
@@ -6386,27 +6410,29 @@ static void MameLoadState(const char *fname_state)
 static void MamePlayRecordGame(void)
 {
 	int  nGame;
-	char filename[MAX_PATH];
+	WCHAR filename[MAX_PATH];
 	*filename = 0;
 
 	nGame = Picker_GetSelectedItem(hwndList);
-	strcpy(filename, drivers[nGame]->name);
+	lstrcpy(filename, _Unicode(drivers[nGame]->name));
 
 	if (CommonFileDialog(TRUE, filename, FILETYPE_INPUT_FILES))
 	{
-		char drive[_MAX_DRIVE];
-		char dir[_MAX_DIR];
-		char bare_fname[_MAX_FNAME];
-		char fname[_MAX_FNAME];
-		char ext[_MAX_EXT];
-		char path[MAX_PATH];
+		WCHAR drive[_MAX_DRIVE];
+		WCHAR dir[_MAX_DIR];
+		WCHAR bare_fname[_MAX_FNAME];
+		WCHAR fname[_MAX_FNAME];
+		WCHAR ext[_MAX_EXT];
+		WCHAR path[MAX_PATH];
 
-		_splitpath(filename, drive, dir, bare_fname, ext);
+		_wsplitpath(filename, drive, dir, bare_fname, ext);
 
-		sprintf(path,"%s%s",drive,dir);
-		sprintf(fname,"%s.inp",bare_fname);
-		if (path[strlen(path)-1] == PATH_SEPARATOR[0])
-			path[strlen(path)-1] = 0; // take off trailing back slash
+		lstrcpy(path, drive);
+		lstrcat(path, dir);
+		lstrcpy(fname, bare_fname);
+		lstrcat(fname, TEXT(".inp"));
+		if (path[lstrlen(path)-1] == TEXT(PATH_SEPARATOR[0]))
+			path[lstrlen(path)-1] = 0; // take off trailing back slash
 
 		g_pRecordName = fname;
 		override_playback_directory = path;
@@ -6431,11 +6457,11 @@ static void MamePlayGame(void)
 static void MamePlayRecordWave(void)
 {
 	int  nGame;
-	char filename[MAX_PATH];
+	WCHAR filename[MAX_PATH];
 	*filename = 0;
 
 	nGame = Picker_GetSelectedItem(hwndList);
-	strcpy(filename, drivers[nGame]->name);
+	lstrcpy(filename, _Unicode(drivers[nGame]->name));
 
 	if (CommonFileDialog(TRUE, filename, FILETYPE_WAVE_FILES))
 	{
@@ -6448,11 +6474,11 @@ static void MamePlayRecordWave(void)
 static void MamePlayRecordMNG(void)
 {
 	int  nGame;
-	char filename[MAX_PATH];
+	WCHAR filename[MAX_PATH];
 	*filename = 0;
 
 	nGame = Picker_GetSelectedItem(hwndList);
-	strcpy(filename, drivers[nGame]->name);
+	lstrcpy(filename, _Unicode(drivers[nGame]->name));
 
 	if (CommonFileDialog(TRUE, filename, FILETYPE_MNG_FILES))
 	{

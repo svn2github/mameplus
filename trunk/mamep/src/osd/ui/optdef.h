@@ -99,12 +99,12 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(ui_lines,             ui_lines)
 
 // STATE/PLAYBACK OPTIONS
-	DEFINE_OPT(mstring_allow_null,   state)
+	DEFINE_OPT(wstring_allow_null,   state)
 	DEFINE_OPT(bool,                 autosave)
-	DEFINE_OPT(mstring_allow_null,   playback)
-	DEFINE_OPT(mstring_allow_null,   record)
-	DEFINE_OPT(mstring_allow_null,   mngwrite)
-	DEFINE_OPT(mstring_allow_null,   wavwrite)
+	DEFINE_OPT(wstring_allow_null,   playback)
+	DEFINE_OPT(wstring_allow_null,   record)
+	DEFINE_OPT(wstring_allow_null,   mngwrite)
+	DEFINE_OPT(wstring_allow_null,   wavwrite)
 
 // DEBUGGING OPTIONS
 	DEFINE_OPT(bool,                 log)
@@ -208,7 +208,7 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(audio_latency,        audio_latency)
 
 // INPUT DEVICE OPTIONS
-	DEFINE_OPT(mstring_allow_null,   ctrlr)
+	DEFINE_OPT(string_allow_null,    ctrlr)
 #ifdef USE_JOY_MOUSE_MOVE
 	DEFINE_OPT(bool,                 stickpoint)
 #endif /* USE_JOY_MOUSE_MOVE */
