@@ -2,40 +2,40 @@
 START_OPT_FUNC_CORE
 // CORE SEARCH PATH OPTIONS
 
-	DEFINE_OPT(string,               rompath);
-	DEFINE_OPT(string,               samplepath);
-	DEFINE_OPT(string,               artpath);
-	DEFINE_OPT(string,               ctrlrpath);
-	DEFINE_OPT(string,               inipath);
-	DEFINE_OPT(string,               fontpath);
+	DEFINE_OPT(mstring,              rompath);
+	DEFINE_OPT(mstring,              samplepath);
+	DEFINE_OPT(mstring,              artpath);
+	DEFINE_OPT(mstring,              ctrlrpath);
+	DEFINE_OPT(mstring,              inipath);
+	DEFINE_OPT(mstring,              fontpath);
 
 // CORE OUTPUT DIRECTORY OPTIONS
-	DEFINE_OPT(string,               cfg_directory);
-	DEFINE_OPT(string,               nvram_directory);
-	DEFINE_OPT(string,               memcard_directory);
-	DEFINE_OPT(string,               input_directory);
+	DEFINE_OPT(mstring,              cfg_directory);
+	DEFINE_OPT(mstring,              nvram_directory);
+	DEFINE_OPT(mstring,              memcard_directory);
+	DEFINE_OPT(mstring,              input_directory);
 #ifdef USE_HISCORE
-	DEFINE_OPT(string,               hiscore_directory);
+	DEFINE_OPT(mstring,              hiscore_directory);
 #endif /* USE_HISCORE */
-	DEFINE_OPT(string,               state_directory);
-	DEFINE_OPT(string,               snapshot_directory);
-	DEFINE_OPT(string,               diff_directory);
-	DEFINE_OPT(string,               translation_directory);
-	DEFINE_OPT(string,               comment_directory);
+	DEFINE_OPT(mstring,              state_directory);
+	DEFINE_OPT(mstring,              snapshot_directory);
+	DEFINE_OPT(mstring,              diff_directory);
+	DEFINE_OPT(mstring,              translation_directory);
+	DEFINE_OPT(mstring,              comment_directory);
 #ifdef USE_IPS
-	DEFINE_OPT(string,               ips_directory);
+	DEFINE_OPT(mstring,              ips_directory);
 #endif /* USE_IPS */
-	DEFINE_OPT(string,               localized_directory);
+	DEFINE_OPT(mstring,              localized_directory);
 
 // CORE FILENAME OPTIONS
-	DEFINE_OPT(string,               cheat_file);
-	DEFINE_OPT(string,               history_file);
+	DEFINE_OPT(mstring,              cheat_file);
+	DEFINE_OPT(mstring,              history_file);
 #ifdef STORY_DATAFILE
-	DEFINE_OPT(string,               story_file);
+	DEFINE_OPT(mstring,              story_file);
 #endif /* STORY_DATAFILE */
-	DEFINE_OPT(string,               mameinfo_file);
+	DEFINE_OPT(mstring,              mameinfo_file);
 #ifdef USE_HISCORE
-	DEFINE_OPT(string,               hiscore_file);
+	DEFINE_OPT(mstring,              hiscore_file);
 #endif /* USE_HISCORE */
 
 #ifdef UI_COLOR_DISPLAY
@@ -99,12 +99,12 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(ui_lines,             ui_lines)
 
 // STATE/PLAYBACK OPTIONS
-	DEFINE_OPT(string_allow_null,    state)
+	DEFINE_OPT(mstring_allow_null,   state)
 	DEFINE_OPT(bool,                 autosave)
-	DEFINE_OPT(string_allow_null,    playback)
-	DEFINE_OPT(string_allow_null,    record)
-	DEFINE_OPT(string_allow_null,    mngwrite)
-	DEFINE_OPT(string_allow_null,    wavwrite)
+	DEFINE_OPT(mstring_allow_null,   playback)
+	DEFINE_OPT(mstring_allow_null,   record)
+	DEFINE_OPT(mstring_allow_null,   mngwrite)
+	DEFINE_OPT(mstring_allow_null,   wavwrite)
 
 // DEBUGGING OPTIONS
 	DEFINE_OPT(bool,                 log)
@@ -208,7 +208,7 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(audio_latency,        audio_latency)
 
 // INPUT DEVICE OPTIONS
-	DEFINE_OPT(string_allow_null,    ctrlr)
+	DEFINE_OPT(mstring_allow_null,   ctrlr)
 #ifdef USE_JOY_MOUSE_MOVE
 	DEFINE_OPT(bool,                 stickpoint)
 #endif /* USE_JOY_MOUSE_MOVE */
@@ -245,16 +245,16 @@ END_OPT_FUNC_DRIVER
 #ifdef START_OPT_FUNC_WINUI
 START_OPT_FUNC_WINUI
 // PATH AND DIRECTORY OPTIONS
-	DEFINE_OPT(string,               flyer_directory)
-	DEFINE_OPT(string,               cabinet_directory)
-	DEFINE_OPT(string,               marquee_directory)
-	DEFINE_OPT(string,               title_directory)
-	DEFINE_OPT(string,               cpanel_directory)
-	DEFINE_OPT(string,               icon_directory)
-	DEFINE_OPT(string,               bkground_directory)
-	DEFINE_OPT(string,               folder_directory)
+	DEFINE_OPT(mstring,              flyer_directory)
+	DEFINE_OPT(mstring,              cabinet_directory)
+	DEFINE_OPT(mstring,              marquee_directory)
+	DEFINE_OPT(mstring,              title_directory)
+	DEFINE_OPT(mstring,              cpanel_directory)
+	DEFINE_OPT(mstring,              icon_directory)
+	DEFINE_OPT(mstring,              bkground_directory)
+	DEFINE_OPT(mstring,              folder_directory)
 #ifdef USE_VIEW_PCBINFO
-	DEFINE_OPT(string,               pcbinfo_directory)
+	DEFINE_OPT(mstring,              pcbinfo_directory)
 #endif /* USE_VIEW_PCBINFO */
 
 // INTERFACE OPTIONS

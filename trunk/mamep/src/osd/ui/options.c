@@ -33,7 +33,7 @@
 
 #include "MAME32.h"	// include this first
 #include "driver.h"
-#include "../../emu/options.h"	// fixme
+#include "emu/options.h"
 #include "bitmask.h"
 #include "picker.h"
 #include "dijoystick.h"
@@ -53,10 +53,10 @@
 #endif
 
 // fixme
-#define SetRomPath(path) options_set_string(SEARCHPATH_ROM, path)
-#define SetImagePath(path) options_set_string(SEARCHPATH_IMAGE, path)
-#define SetSamplePath(path) options_set_string(SEARCHPATH_SAMPLE, path)
-#define SetTranslationPath(path) options_set_string(SEARCHPATH_TRANSLATION, path);
+#define SetRomPath(path) options_set_mstring(SEARCHPATH_ROM, path)
+#define SetImagePath(path) options_set_mstring(SEARCHPATH_IMAGE, path)
+#define SetSamplePath(path) options_set_mstring(SEARCHPATH_SAMPLE, path)
+#define SetTranslationPath(path) options_set_mstring(SEARCHPATH_TRANSLATION, path);
 
 
 /***************************************************************************
@@ -3590,16 +3590,18 @@ static int options_save_winui_config(void)
 	return 0;
 }
 
-char *OptionsGetCommandLine(int driver_index, void (*override_callback)(void))
+WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(void))
 {
 	options_type *opt;
-	char pModule[_MAX_PATH];
+	WCHAR pModule[_MAX_PATH];
+	WCHAR *result;
+	WCHAR *wopts;
 	char *p;
 	int pModuleLen;
 	int len;
 
-	GetModuleFileNameA(GetModuleHandle(NULL), pModule, _MAX_PATH);
-	pModuleLen = strlen(pModule) + 10 + strlen(drivers[driver_index]->name);
+	GetModuleFileNameW(GetModuleHandle(NULL), pModule, _MAX_PATH);
+	pModuleLen = lstrlen(pModule) + 10 + strlen(drivers[driver_index]->name);
 
 	opt = GetGameOptions(driver_index);
 
@@ -3615,15 +3617,23 @@ char *OptionsGetCommandLine(int driver_index, void (*override_callback)(void))
 		override_callback();
 
 	len = options_output_command_line_marked(NULL);
+	p = malloc(len + 1);
+	options_output_command_line_marked(p);
+	wopts = wstring_from_utf8(p);
+	free(p);
+	len = lstrlen(wopts);
 
-	p = malloc(pModuleLen + len + 1);
-	sprintf(p, "\"%s\" %s -norc ", pModule, drivers[driver_index]->name);
-	options_output_command_line_marked(p + pModuleLen);
+	result = malloc((pModuleLen + len + 1) * sizeof *result);
+	wsprintf(result, TEXT("\"%s\" %s -norc "), pModule, _Unicode(drivers[driver_index]->name));
 
-	if (p[pModuleLen] == '\0')
-		p[pModuleLen - 1] = '\0';
+	if (len != 0)
+		lstrcat(result, wopts);
+	else
+		result[pModuleLen - 1] = '\0';
 
-	return p;
+	free(wopts);
+
+	return result;
 }
 
 
@@ -3770,6 +3780,74 @@ INLINE void options_copy_csv_int(const int *src, int *dest, int numitems)
 
 //============================================================
 
+INLINE void _options_get_string(char **p, const char *name)
+{
+	const char *stemp = options_get_string(name);
+
+	if (stemp && *stemp)
+	{
+		FreeIfAllocated(p);
+		*p = strdup(stemp);
+	}
+}
+
+INLINE void options_copy_string(const char *src, char **dest)
+{
+	FreeIfAllocated(dest);
+
+	*dest = strdup(src);
+}
+
+#define options_free_string			FreeIfAllocated
+#define _options_compare_string(s1,s2)		do { if (strcmp(s1, s2) != 0) return TRUE; } while (0)
+
+INLINE BOOL options_compare_string(const char *s1, const char *s2)
+{
+	_options_compare_string(s1, s2);
+	return FALSE;
+}
+
+
+//============================================================
+
+INLINE const char *options_get_mstring(const char *name)
+{
+	const char *value = options_get_string(name);
+
+	if (value == NULL)
+		return NULL;
+
+	return astring_from_utf8(value);
+}
+
+void options_set_mstring(const char *name, const char *value)
+{
+	char *utf8_value = NULL;
+
+	if (value)
+		utf8_value = utf8_from_astring(value);
+
+	options_set_string(name, utf8_value);
+}
+
+INLINE void _options_get_mstring(char **p, const char *name)
+{
+	const char *stemp = options_get_mstring(name);
+
+	if (stemp && *stemp)
+	{
+		FreeIfAllocated(p);
+		*p = (char *)stemp;
+	}
+}
+
+#define options_copy_mstring	options_copy_string
+#define options_free_mstring	FreeIfAllocated
+#define options_compare_mstring	options_compare_string
+
+
+//============================================================
+
 INLINE void _options_get_string_allow_null(char **p, const char *name)
 {
 	const char *stemp = options_get_string(name);
@@ -3798,32 +3876,23 @@ INLINE BOOL options_compare_string_allow_null(const char *s1, const char *s2)
 	return FALSE;
 }
 
-INLINE void _options_get_string(char **p, const char *name)
-{
-	const char *stemp = options_get_string(name);
 
-	if (stemp && *stemp)
-	{
-		FreeIfAllocated(p);
+//============================================================
+
+INLINE void _options_get_mstring_allow_null(char **p, const char *name)
+{
+	const char *stemp = options_get_mstring(name);
+
+	FreeIfAllocated(p);
+	if (stemp)
 		*p = strdup(stemp);
-	}
 }
 
-INLINE void options_copy_string(const char *src, char **dest)
-{
-	FreeIfAllocated(dest);
-
-	*dest = strdup(src);
-}
-
-#define options_free_string			FreeIfAllocated
-#define _options_compare_string(s1,s2)		do { if (strcmp(s1, s2) != 0) return TRUE; } while (0)
-
-INLINE BOOL options_compare_string(const char *s1, const char *s2)
-{
-	_options_compare_string(s1, s2);
-	return FALSE;
-}
+#define options_set_mstring_allow_null(name,value)	options_set_mstring(name,value)
+#define options_copy_mstring_allow_null			options_copy_string_allow_null
+#define options_free_mstring_allow_null			FreeIfAllocated
+#define _options_compare_mstring_allow_null		_options_compare_string_allow_null
+#define options_compare_mstring_allow_null		options_compare_string_allow_null
 
 
 //============================================================
@@ -3965,10 +4034,10 @@ INLINE void _options_get_float_min_max(float *p, const char *name, float min, fl
 //============================================================
 
 #ifdef USE_IPS
-#define _options_get_ips		_options_get_string_allow_null
-#define options_set_ips			options_set_string_allow_null
-#define options_copy_ips		options_copy_string_allow_null
-#define options_free_ips		options_free_string_allow_null
+#define _options_get_ips		_options_get_mstring_allow_null
+#define options_set_ips			options_set_mstring_allow_null
+#define options_copy_ips		options_copy_mstring_allow_null
+#define options_free_ips		options_free_mstring_allow_null
 #define _options_compare_ips(s1,s2)	do { ; } while (0)
 
 INLINE BOOL options_compare_ips(const char *s1, const char *s2)
@@ -4487,7 +4556,7 @@ INLINE void _options_get_list_mode(int *view, const char *name)
 
 INLINE void _options_get_list_font(LOGFONTA *f, const char *name)
 {
-	const char *stemp = options_get_string("list_font");
+	const char *stemp = options_get_mstring("list_font");
 	LONG temp[13];
 	char buf[256];
 	char *p;
@@ -4556,7 +4625,7 @@ INLINE void _options_get_list_font(LOGFONTA *f, const char *name)
 
 INLINE void _options_get_list_fontface(LOGFONTA *f, const char *name)
 {
-	const char *stemp = options_get_string("list_fontface");
+	const char *stemp = options_get_mstring("list_fontface");
 
 	if (stemp == NULL || *stemp == '\0')
 		return;
@@ -4586,10 +4655,10 @@ INLINE void options_set_list_font(const char *name, const LOGFONTA *f)
 	             f->lfQuality,
 	             f->lfPitchAndFamily);
 
-	options_set_string("list_font", buf);
+	options_set_mstring("list_font", buf);
 }
 
-#define options_set_list_fontface(name,f)	options_set_string("list_fontface", (f)->lfFaceName)
+#define options_set_list_fontface(name,f)	options_set_mstring("list_fontface", (f)->lfFaceName)
 
 INLINE void options_copy_list_font(const LOGFONTA *src, LOGFONTA *dest)
 {

@@ -594,26 +594,6 @@ int options_output_command_line_marked(char *buf)
 			{
 				if (data->data != NULL)
 				{
-#if 1
-					//FIX ME
-					char *stemp = astring_from_utf8(data->data);
-					if (stemp)
-					{
-						if (strchr(stemp, ' ') != NULL || strchr(stemp, '#') != NULL)
-						{
-							if (buf)
-								sprintf(buf, "-%s \"%s\" ", data->names[0], stemp);
-							len += 3 + strlen(stemp);
-						}
-						else
-						{
-							if (buf)
-								sprintf(buf, "-%s %s ", data->names[0], stemp);
-							len += 1 + strlen(stemp);
-						}
-						free(stemp);
-					}
-#else
 					if (strchr(data->data, ' ') != NULL || strchr(data->data, '#') != NULL)
 					{
 						if (buf)
@@ -626,7 +606,6 @@ int options_output_command_line_marked(char *buf)
 							sprintf(buf, "-%s %s ", data->names[0], data->data);
 						len += 1 + strlen(data->data);
 					}
-#endif
 				}
 			}
 

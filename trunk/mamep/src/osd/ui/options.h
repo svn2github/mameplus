@@ -287,7 +287,12 @@ enum
 void OptionsInit(void);
 void OptionsExit(void);
 
-char *OptionsGetCommandLine(int driver_index, void (*override_callback)(void));
+/* set multi-byte string that is encoded with UTF-8 internally */
+void options_set_mstring(const char *name, const char *value);
+
+#ifdef UNICODE
+WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(void));
+#endif
 
 void FreeGameOptions(options_type *o);
 void CopyGameOptions(const options_type *source, options_type *dest);

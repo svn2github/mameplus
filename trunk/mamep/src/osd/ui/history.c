@@ -52,12 +52,12 @@ LPCWSTR GetGameHistory(int driver_index)
 
 	historyBuf[0] = '\0';
 
-	options_set_string(OPTION_LOCALIZED_DIRECTORY, GetLocalizedDir());
-	options_set_string(OPTION_HISTORY_FILE, GetHistoryFile());
+	options_set_mstring(OPTION_LOCALIZED_DIRECTORY, GetLocalizedDir());
+	options_set_mstring(OPTION_HISTORY_FILE, GetHistoryFile());
 #ifdef STORY_DATAFILE
-	options_set_string(OPTION_STORY_FILE, GetStoryFile());
+	options_set_mstring(OPTION_STORY_FILE, GetStoryFile());
 #endif /* STORY_DATAFILE */
-	options_set_string(OPTION_MAMEINFO_FILE, GetMAMEInfoFile());
+	options_set_mstring(OPTION_MAMEINFO_FILE, GetMAMEInfoFile());
 
 	*dataBuf = 0;
 	if (load_driver_history(drivers[driver_index], dataBuf, sizeof(dataBuf)) == 0)
@@ -103,9 +103,9 @@ LPCWSTR GetGameStory(int driver_index)
 
 	historyBuf[0] = '\0';
 
-	options_set_string(OPTION_LOCALIZED_DIRECTORY, GetLocalizedDir());
+	options_set_mstring(OPTION_LOCALIZED_DIRECTORY, GetLocalizedDir());
 #ifdef STORY_DATAFILE
-	options_set_string(OPTION_STORY_FILE, GetStoryFile());
+	options_set_mstring(OPTION_STORY_FILE, GetStoryFile());
 #endif /* STORY_DATAFILE */
 
 	*dataBuf = 0;
