@@ -638,6 +638,17 @@ BOOL ComboBox_SetTextA(HWND hwndCtl, LPCSTR lpsz)
 
 
 
+static int wcmp(const void *p1, const void *p2)
+{
+	return lstrcmp(p1, p2);
+}
+
+WCHAR *w_lang_message(int msgcat, const WCHAR *str)
+{
+	return lang_messagew(msgcat, str, wcmp);
+}
+
+
 // temporary to keep compatibility
 
 struct mb_msg
@@ -653,11 +664,6 @@ static struct mb_msg *mb_msg_index;
 static int mb_msg_cmp(const void *p1, const void *p2)
 {
 	return ((struct mb_msg *)p1)->wstr - ((struct mb_msg *)p2)->wstr;
-}
-
-static int wcmp(const void *p1, const void *p2)
-{
-	return lstrcmp(p1, p2);
 }
 
 char *mb_lang_message(int msgcat, const char *str)

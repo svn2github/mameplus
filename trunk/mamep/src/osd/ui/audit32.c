@@ -50,8 +50,8 @@ static DWORD WINAPI AuditThreadProc(LPVOID hDlg);
 static INT_PTR CALLBACK AuditWindowProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam);
 static void ProcessNextRom(void);
 static void ProcessNextSample(void);
-static void CLIB_DECL DetailsPrintf(const char *fmt, ...);
-static const char * StatusString(int iStatus);
+static void CLIB_DECL DetailsPrintf(const WCHAR *fmt, ...);
+static const WCHAR *StatusString(int iStatus);
 
 /***************************************************************************
     Internal variables
@@ -97,7 +97,7 @@ void AuditDialog(HWND hParent)
 	}
 	else
 	{
-	    MessageBox(GetMainWindow(),_Unicode(_UI("Unable to Load Riched32.dll")),TEXT("Error"),
+	    MessageBox(GetMainWindow(), _UIW(TEXT("Unable to Load Riched32.dll")),TEXT("Error"),
 				   MB_OK | MB_ICONERROR);
 	}
 	
@@ -109,28 +109,28 @@ void InitGameAudit(int gameIndex)
 	rom_index = gameIndex;
 }
 
-const char * GetAuditString(int audit_result)
+const WCHAR *GetAuditString(int audit_result)
 {
 	switch (audit_result)
 	{
 		case CORRECT:
 		case BEST_AVAILABLE:
-			return _UI("Yes");
+			return _UIW(TEXT("Yes"));
 
 		case INCORRECT:
 		case NOTFOUND:
-			return _UI("No");
+			return _UIW(TEXT("No"));
 			break;
 
 		case UNKNOWN:
-			return "?";
+			return TEXT("?");
 
 		default:
 			dprintf("unknown audit value %i",audit_result);
 			break;
 	}
 
-	return "?";
+	return TEXT("?");
 }
 
 BOOL IsAuditResultKnown(int audit_result)
@@ -156,8 +156,10 @@ BOOL IsAuditResultNo(int audit_result)
 static void Mame32Output(void *param, const char *format, va_list argptr)
 {
 	char buffer[512];
+	char *s;
 	vsnprintf(buffer, sizeof(buffer) / sizeof(buffer[0]), format, argptr);
-	DetailsPrintf("%s", buffer);
+	s = ConvertToWindowsNewlines(buffer);
+	DetailsPrintf(TEXT("%s"), _UTF8Unicode(s));
 }
 
 static int ProcessAuditResults(int game, audit_record *audit, int audit_records)
@@ -212,7 +214,7 @@ int Mame32VerifySampleSet(int game)
 
 static DWORD WINAPI AuditThreadProc(LPVOID hDlg)
 {
-	char buffer[200];
+	WCHAR buffer[200];
 
 	while (!bCancel)
 	{
@@ -220,24 +222,25 @@ static DWORD WINAPI AuditThreadProc(LPVOID hDlg)
 		{
 			if (rom_index != -1)
 			{
-				sprintf(buffer, _UI("Checking Game %s - %s"),
-					drivers[rom_index]->name, UseLangList() ? _LST(drivers[rom_index]->description) : drivers[rom_index]->description);
-				SetWindowText(hDlg, _Unicode(buffer));
+				WCHAR *descw = _Unicode(drivers[rom_index]->description);
+				swprintf(buffer, _UIW(TEXT("Checking Game %s - %s")),
+					_Unicode(drivers[rom_index]->name), UseLangList() ? _LSTW(descw) : descw);
+				SetWindowText(hDlg, buffer);
 				ProcessNextRom();
 			}
 			else
 			{
 				if (sample_index != -1)
 				{
-					sprintf(buffer, _UI("Checking Game %s - %s"),
-						drivers[sample_index]->name, UseLangList() ? _LST(drivers[sample_index]->description) : drivers[sample_index]->description);
-					SetWindowText(hDlg, _Unicode(buffer));
+					WCHAR *descw = _Unicode(drivers[sample_index]->description);
+					swprintf(buffer, _UIW(TEXT("Checking Game %s - %s")),
+						_Unicode(drivers[sample_index]->name), UseLangList() ? _LSTW(descw) : descw);
+					SetWindowText(hDlg, buffer);
 					ProcessNextSample();
 				}
 				else
 				{
-					sprintf(buffer, "%s", _UI("File Audit"));
-					SetWindowText(hDlg, _Unicode(buffer));
+					SetWindowText(hDlg, _UIW(TEXT("File Audit")));
 					EnableWindow(GetDlgItem(hDlg, IDPAUSE), FALSE);
 					ExitThread(1);
 				}
@@ -280,7 +283,7 @@ static INT_PTR CALLBACK AuditWindowProc(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 		switch (LOWORD(wParam))
 		{
 		case IDCANCEL:
-            bPaused = FALSE;
+			bPaused = FALSE;
 			if (hThread)
 			{
 				bCancel = TRUE;
@@ -297,12 +300,12 @@ static INT_PTR CALLBACK AuditWindowProc(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 		case IDPAUSE:
 			if (bPaused)
 			{
-				SetDlgItemText(hAudit, IDPAUSE, _Unicode(_UI("&Pause")));
+				SetDlgItemText(hAudit, IDPAUSE, _UIW(TEXT("&Pause")));
 				bPaused = FALSE;
 			}
 			else
 			{
-				SetDlgItemText(hAudit, IDPAUSE, _Unicode(_UI("&Continue")));
+				SetDlgItemText(hAudit, IDPAUSE, _UIW(TEXT("&Continue")));
 				bPaused = TRUE;
 			}
 			break;
@@ -337,16 +340,16 @@ INT_PTR CALLBACK GameAuditDialogProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lPa
 	case WM_TIMER:
 		KillTimer(hDlg, 0);
 		{
+			const WCHAR *lpStatus;
 			int iStatus;
-			LPCSTR lpStatus;
 
 			iStatus = Mame32VerifyRomSet(rom_index);
-			lpStatus = DriverUsesRoms(rom_index) ? StatusString(iStatus) : _UI("None required");
-			SetWindowText(GetDlgItem(hDlg, IDC_PROP_ROMS), _Unicode(lpStatus));
+			lpStatus = DriverUsesRoms(rom_index) ? StatusString(iStatus) : _UIW(TEXT("None required"));
+			SetWindowText(GetDlgItem(hDlg, IDC_PROP_ROMS), lpStatus);
 
 			iStatus = Mame32VerifySampleSet(rom_index);
-			lpStatus = DriverUsesSamples(rom_index) ? StatusString(iStatus) : _UI("None required");
-			SetWindowText(GetDlgItem(hDlg, IDC_PROP_SAMPLES), _Unicode(lpStatus));
+			lpStatus = DriverUsesSamples(rom_index) ? StatusString(iStatus) : _UIW(TEXT("None required"));
+			SetWindowText(GetDlgItem(hDlg, IDC_PROP_SAMPLES), lpStatus);
 		}
 		ShowWindow(hDlg, SW_SHOW);
 		break;
@@ -357,7 +360,7 @@ INT_PTR CALLBACK GameAuditDialogProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lPa
 static void ProcessNextRom()
 {
 	int retval;
-	char buffer[200];
+	WCHAR buffer[200];
 
 	retval = Mame32VerifyRomSet(rom_index);
 	switch (retval)
@@ -365,10 +368,10 @@ static void ProcessNextRom()
 	case BEST_AVAILABLE: /* correct, incorrect or separate count? */
 	case CORRECT:
 		roms_correct++;
-		sprintf(buffer, "%i", roms_correct);
-		SetDlgItemText(hAudit, IDC_ROMS_CORRECT, _Unicode(buffer));
-		sprintf(buffer, "%i", roms_correct + roms_incorrect);
-		SetDlgItemText(hAudit, IDC_ROMS_TOTAL, _Unicode(buffer));
+		swprintf(buffer, TEXT("%i"), roms_correct);
+		SetDlgItemText(hAudit, IDC_ROMS_CORRECT, buffer);
+		swprintf(buffer, TEXT("%i"), roms_correct + roms_incorrect);
+		SetDlgItemText(hAudit, IDC_ROMS_TOTAL, buffer);
 		break;
 
 	case NOTFOUND:
@@ -376,10 +379,10 @@ static void ProcessNextRom()
 
 	case INCORRECT:
 		roms_incorrect++;
-		sprintf(buffer, "%i", roms_incorrect);
-		SetDlgItemText(hAudit, IDC_ROMS_INCORRECT, _Unicode(buffer));
-		sprintf(buffer, "%i", roms_correct + roms_incorrect);
-		SetDlgItemText(hAudit, IDC_ROMS_TOTAL, _Unicode(buffer));
+		swprintf(buffer, TEXT("%i"), roms_incorrect);
+		SetDlgItemText(hAudit, IDC_ROMS_INCORRECT, buffer);
+		swprintf(buffer, TEXT("%i"), roms_correct + roms_incorrect);
+		SetDlgItemText(hAudit, IDC_ROMS_TOTAL, buffer);
 		break;
 	}
 
@@ -396,7 +399,7 @@ static void ProcessNextRom()
 static void ProcessNextSample()
 {
 	int  retval;
-	char buffer[200];
+	WCHAR buffer[200];
 	
 	retval = Mame32VerifySampleSet(sample_index);
 	
@@ -406,10 +409,10 @@ static void ProcessNextSample()
 		if (DriverUsesSamples(sample_index))
 		{
 			samples_correct++;
-			sprintf(buffer, "%i", samples_correct);
-			SetDlgItemText(hAudit, IDC_SAMPLES_CORRECT, _Unicode(buffer));
-			sprintf(buffer, "%i", samples_correct + samples_incorrect);
-			SetDlgItemText(hAudit, IDC_SAMPLES_TOTAL, _Unicode(buffer));
+			swprintf(buffer, TEXT("%i"), samples_correct);
+			SetDlgItemText(hAudit, IDC_SAMPLES_CORRECT, buffer);
+			swprintf(buffer, TEXT("%i"), samples_correct + samples_incorrect);
+			SetDlgItemText(hAudit, IDC_SAMPLES_TOTAL, buffer);
 			break;
 		}
 
@@ -418,10 +421,10 @@ static void ProcessNextSample()
 			
 	case INCORRECT:
 		samples_incorrect++;
-		sprintf(buffer, "%i", samples_incorrect);
-		SetDlgItemText(hAudit, IDC_SAMPLES_INCORRECT, _Unicode(buffer));
-		sprintf(buffer, "%i", samples_correct + samples_incorrect);
-		SetDlgItemText(hAudit, IDC_SAMPLES_TOTAL, _Unicode(buffer));
+		swprintf(buffer, TEXT("%i"), samples_incorrect);
+		SetDlgItemText(hAudit, IDC_SAMPLES_INCORRECT, buffer);
+		swprintf(buffer, TEXT("%i"), samples_correct + samples_incorrect);
+		SetDlgItemText(hAudit, IDC_SAMPLES_TOTAL, buffer);
 		
 		break;
 	}
@@ -431,18 +434,17 @@ static void ProcessNextSample()
 	
 	if (sample_index == GetNumGames())
 	{
-		DetailsPrintf(_UI("Audit complete.\n"));
-		SetDlgItemText(hAudit, IDCANCEL, _Unicode(_UI("&Close")));
+		DetailsPrintf(_UIW(TEXT("Audit complete.\n")));
+		SetDlgItemText(hAudit, IDCANCEL, _UIW(TEXT("&Close")));
 		sample_index = -1;
 	}
 }
 
-static void CLIB_DECL DetailsPrintf(const char *fmt, ...)
+static void CLIB_DECL DetailsPrintf(const WCHAR *fmt, ...)
 {
 	HWND	hEdit;
 	va_list marker;
-	char	buffer[2000];
-	char * s;
+	WCHAR	buffer[2000];
 	long l;
 
 	//RS 20030613 Different Ids for Property Page and Dialog
@@ -459,39 +461,37 @@ static void CLIB_DECL DetailsPrintf(const char *fmt, ...)
 
 	va_start(marker, fmt);
 	
-	vsprintf(buffer, _(fmt), marker);
+	vswprintf(buffer, fmt, marker);
 	
 	va_end(marker);
 
-	s = ConvertToWindowsNewlines(buffer);
-
 	l = Edit_GetTextLength(hEdit);
 	Edit_SetSel(hEdit, l, l);
-	SendMessageW( hEdit, EM_REPLACESEL, FALSE, (LPARAM)(void *)_UTF8Unicode(s));
+	SendMessageW( hEdit, EM_REPLACESEL, FALSE, (LPARAM)buffer);
 }
 
-static const char * StatusString(int iStatus)
+static const WCHAR *StatusString(int iStatus)
 {
-	static const char *ptr;
+	static const WCHAR *ptr;
 
-	ptr = _UI("Unknown");
+	ptr = _UIW(TEXT("Unknown"));
 
 	switch (iStatus)
 	{
 	case CORRECT:
-		ptr = _UI("Passed");
+		ptr = _UIW(TEXT("Passed"));
 		break;
 		
 	case BEST_AVAILABLE:
-		ptr = _UI("Best available");
+		ptr = _UIW(TEXT("Best available"));
 		break;
 		
 	case NOTFOUND:
-		ptr = _UI("Not found");
+		ptr = _UIW(TEXT("Not found"));
 		break;
 		
 	case INCORRECT:
-		ptr = _UI("Failed");
+		ptr = _UIW(TEXT("Failed"));
 		break;
 	}
 

@@ -72,4 +72,11 @@
 #define _MANUFACT(str)	mb_lang_message(UI_MSG_MANUFACTURE, str)
 #define _WINDOWS(str)	mb_lang_message(UI_MSG_OSD0, str)
 #define _UI(str)	mb_lang_message(UI_MSG_UI, str)
+
+#define _W(str)		w_lang_message(UI_MSG_MAME, str)
+#define _LSTW(str)	w_lang_message(UI_MSG_LIST, str)
+#define _READINGSW(str)	w_lang_message(UI_MSG_READINGS, str)
+#define _MANUFACTW(str)	w_lang_message(UI_MSG_MANUFACTURE, str)
+#define _WINDOWSW(str)	w_lang_message(UI_MSG_OSD0, str)
+#define _UIW(str)	w_lang_message(UI_MSG_UI, str)
 #endif

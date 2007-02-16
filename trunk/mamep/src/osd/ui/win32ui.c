@@ -5398,13 +5398,13 @@ const char *GamePicker_GetItemString(HWND hwndPicker, int nItem, int nColumn)
 
 		case COLUMN_ROMS:
 			/* Has Roms */
-			s = GetAuditString(GetRomAuditResults(nItem));
+			s = _String(GetAuditString(GetRomAuditResults(nItem)));
 			break;
 
 		case COLUMN_SAMPLES:
 			/* Samples */
 			if (DriverUsesSamples(nItem))
-				s = GetAuditString(GetSampleAuditResults(nItem));
+				s = _String(GetAuditString(GetSampleAuditResults(nItem)));
 			break;
 
 		case COLUMN_DIRECTORY:

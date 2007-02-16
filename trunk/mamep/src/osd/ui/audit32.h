@@ -22,7 +22,7 @@ INT_PTR CALLBACK GameAuditDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 int Mame32VerifyRomSet(int game);
 int Mame32VerifySampleSet(int game);
 
-const char * GetAuditString(int audit_result);
+const WCHAR *GetAuditString(int audit_result);
 BOOL IsAuditResultKnown(int audit_result);
 BOOL IsAuditResultYes(int audit_result);
 BOOL IsAuditResultNo(int audit_result);
