@@ -1051,8 +1051,7 @@ static BOOL CALLBACK enum_mouse_callback(LPCDIDEVICEINSTANCE instance, LPVOID re
 	utf8_instance_name = utf8_from_tstring(instance->tszInstanceName);
 	if (utf8_instance_name == NULL)
 		goto cant_alloc_memory;
-	//strcpy(mouse_name[mouse_count], utf8_instance_name);
-	strcpy(mouse_name[mouse_count], instance->tszInstanceName);
+	strcpy(mouse_name[mouse_count], utf8_instance_name);
 	free(utf8_instance_name);
 
 	// get the caps

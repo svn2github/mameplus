@@ -60,6 +60,7 @@ struct mmo {
 
 static int current_lang = UI_LANG_EN_US;
 static struct mmo mmo_table[UI_LANG_MAX][UI_MSG_MAX];
+static char *mmo_utf8_string = NULL;
 
 
 int lang_find_langname(const char *name)
@@ -203,7 +204,18 @@ char *lang_message(int msgcat, const char *str)
 			q.id = str;
 			mmo = bsearch(&q, p->mmo_index, p->num_mmo, sizeof p->mmo_index[0], mmo_cmp);
 			if (mmo)
+			{
+				if (msgcat == 0)
+				{
+					if (mmo_utf8_string) free(mmo_utf8_string);
+					mmo_utf8_string = utf8_from_astring((char *)mmo->str);
+					if (mmo_utf8_string)
+						return mmo_utf8_string;
+					else
+						return (char *)str;
+				}
 				return (char *)mmo->str;
+			}
 			break;
 
 		default:
@@ -216,6 +228,12 @@ char *lang_message(int msgcat, const char *str)
 void ui_lang_shutdown(void)
 {
 	int i;
+
+	if (mmo_utf8_string)
+	{
+		free(mmo_utf8_string);
+		mmo_utf8_string = NULL;
+	}
 
 	for (i = 0; i < UI_MSG_MAX; i++)
 	{
