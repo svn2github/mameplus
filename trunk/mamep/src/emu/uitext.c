@@ -407,7 +407,7 @@ int uistring_init (void)
 	for (i = 0; default_text[i]; i++)
 	{
 		for (j = 0; default_text[i][j]; j++)
-			trans_text[str++] = auto_strdup(_(default_text[i][j]));
+			trans_text[str++] = _(default_text[i][j]);
 	}
 
 	/* indicate success */
