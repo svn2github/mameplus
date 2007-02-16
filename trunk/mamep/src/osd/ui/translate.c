@@ -635,3 +635,72 @@ BOOL ComboBox_SetTextA(HWND hwndCtl, LPCSTR lpsz)
 	return SetWindowTextW(hwndCtl, _Unicode(lpsz));
 
 }
+
+
+
+// temporary to keep compatibility
+
+struct mb_msg
+{
+	WCHAR *wstr;
+	char *mbstr;
+};
+
+static int mb_msg_langcode = -1;
+static int mb_msg_num;
+static int mb_msg_size;
+static struct mb_msg *mb_msg_index;
+
+static int mb_msg_cmp(const void *p1, const void *p2)
+{
+	return ((struct mb_msg *)p1)->wstr - ((struct mb_msg *)p2)->wstr;
+}
+
+char *mb_lang_message(int msgcat, const char *str)
+{
+	WCHAR *wstr = lang_messagew(msgcat, str);
+	struct mb_msg *p;
+	struct mb_msg temp;
+
+	if (!wstr)
+		return (char *)str;
+
+	if (mb_msg_langcode != GetLangcode())
+	{
+		int i;
+
+		for (i = 0; i < mb_msg_num; i++)
+			free(mb_msg_index[i].mbstr);
+
+		mb_msg_num = 0;
+	}
+
+	if (mb_msg_index == NULL)
+	{
+		mb_msg_size = 10;
+		mb_msg_index = malloc(mb_msg_size * sizeof (*mb_msg_index));
+		mb_msg_index[0].wstr = wstr;
+		mb_msg_index[0].mbstr = strdup(_String(wstr));
+		mb_msg_num = 1;
+
+		return mb_msg_index[0].mbstr;
+	}
+
+	temp.wstr = wstr;
+	p = (struct mb_msg *)bsearch(&temp, mb_msg_index, mb_msg_num, sizeof mb_msg_index[0], mb_msg_cmp);
+	if (p)
+		return p->mbstr;
+
+	if (mb_msg_num == mb_msg_size)
+	{
+		mb_msg_size += 10;
+		mb_msg_index = realloc(mb_msg_index, mb_msg_size * sizeof (*mb_msg_index));
+	}
+
+	temp.mbstr = strdup(_String(wstr));
+	mb_msg_index[mb_msg_num++] = temp;
+
+	qsort(mb_msg_index, mb_msg_num, sizeof mb_msg_index[0], mb_msg_cmp);
+
+	return temp.mbstr;
+}

@@ -59,5 +59,17 @@
 #define UI_MSG_UI	UI_MSG_OSD1
 #define UI_MSG_EXTRA	UI_MSG_OSD2
 
-#define _UI(str)	lang_message(UI_MSG_UI, str)
+#undef _
+#undef _LST
+#undef _READINGS
+#undef _MANUFACT
+#undef _WINDOWS
+#undef _UI
+
+#define _(str)		mb_lang_message(UI_MSG_MAME, str)
+#define _LST(str)	mb_lang_message(UI_MSG_LIST, str)
+#define _READINGS(str)	mb_lang_message(UI_MSG_READINGS, str)
+#define _MANUFACT(str)	mb_lang_message(UI_MSG_MANUFACTURE, str)
+#define _WINDOWS(str)	mb_lang_message(UI_MSG_OSD0, str)
+#define _UI(str)	mb_lang_message(UI_MSG_UI, str)
 #endif
