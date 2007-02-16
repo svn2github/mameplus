@@ -210,8 +210,7 @@
 		extern SHAREDOBJ_FUNC(int)    lang_find_codepage(int cp);
 		extern SHAREDOBJ_FUNC(void)   set_langcode(int langcode);
 		extern SHAREDOBJ_FUNC(void)   assign_msg_catategory(int msgcat, const char *name);
-		extern SHAREDOBJ_FUNC(char *) lang_message(int msgcat, const char *str);
-		extern SHAREDOBJ_FUNC(void *) lang_messagew(int msgcat, const char *str);
+		extern SHAREDOBJ_FUNC(void *) lang_messagew(int msgcat, const void *str, int (*cmpw)(const void *, const void *));
 		extern SHAREDOBJ_FUNC(void)   ui_lang_shutdown(void);
 
 

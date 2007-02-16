@@ -51,9 +51,10 @@ struct mmo_header
 
 struct mmo_data
 {
-	const unsigned char *id;
-	const void *wstr;
+	const unsigned char *uid;
 	const unsigned char *ustr;
+	const void *wid;
+	const void *wstr;
 };
 
 struct mmo {
@@ -141,7 +142,7 @@ static void load_mmo(int msgcat)
 	if (p->header.dummy)
 		goto mmo_readerr;
 
-	if (p->header.version != 1)
+	if (p->header.version != 2)
 		goto mmo_readerr;
 
 	p->mmo_index = malloc(p->header.num_msg * sizeof p->mmo_index[0]);
@@ -167,9 +168,10 @@ static void load_mmo(int msgcat)
 
 	for (i = 0; i < p->header.num_msg; i++)
 	{
-		p->mmo_index[i].id = p->mmo_str + (unsigned long)p->mmo_index[i].id;
-		p->mmo_index[i].wstr = p->mmo_str + (unsigned long)p->mmo_index[i].wstr;
+		p->mmo_index[i].uid = p->mmo_str + (unsigned long)p->mmo_index[i].uid;
 		p->mmo_index[i].ustr = p->mmo_str + (unsigned long)p->mmo_index[i].ustr;
+		p->mmo_index[i].wid = p->mmo_str + (unsigned long)p->mmo_index[i].wid;
+		p->mmo_index[i].wstr = p->mmo_str + (unsigned long)p->mmo_index[i].wstr;
 	}
 
 	p->status = MMO_READY;
@@ -193,9 +195,16 @@ mmo_readerr:
 	p->status = MMO_NOT_FOUND;
 }
 
-static int mmo_cmp(const void *a, const void *b)
+static int mmo_cmpu(const void *a, const void *b)
 {
-	return strcmp(((struct mmo_data *)a)->id, ((struct mmo_data *)b)->id);
+	return strcmp(((struct mmo_data *)a)->uid, ((struct mmo_data *)b)->uid);
+}
+
+static int (*mmocmp)(const void *, const void *);
+
+static int mmo_cmpw(const void *a, const void *b)
+{
+	return mmocmp(((struct mmo_data *)a)->wid, ((struct mmo_data *)b)->wid);
 }
 
 /*
@@ -217,8 +226,8 @@ char *lang_message(int msgcat, const char *str)
 				break;
 
 		case MMO_READY:
-			q.id = str;
-			mmo = bsearch(&q, p->mmo_index, p->header.num_msg, sizeof p->mmo_index[0], mmo_cmp);
+			q.uid = str;
+			mmo = bsearch(&q, p->mmo_index, p->header.num_msg, sizeof p->mmo_index[0], mmo_cmpu);
 			if (mmo)
 				return (char *)mmo->ustr;
 			break;
@@ -230,7 +239,7 @@ char *lang_message(int msgcat, const char *str)
 	return (char *)str;
 }
 
-void *lang_messagew(int msgcat, const char *str)
+void *lang_messagew(int msgcat, const void *str, int (*cmpw)(const void *, const void *))
 {
 	struct mmo *p = &mmo_table[current_lang][msgcat];
 	struct mmo_data q;
@@ -244,17 +253,18 @@ void *lang_messagew(int msgcat, const char *str)
 				break;
 
 		case MMO_READY:
-			q.id = str;
-			mmo = bsearch(&q, p->mmo_index, p->header.num_msg, sizeof p->mmo_index[0], mmo_cmp);
+			q.wid = str;
+			mmocmp = cmpw;
+			mmo = bsearch(&q, p->mmo_index, p->header.num_msg, sizeof p->mmo_index[0], mmo_cmpw);
 			if (mmo)
-				return (char *)mmo->wstr;
+				return (void *)mmo->wstr;
 			break;
 
 		default:
 			break;
 	}
 
-	return NULL;
+	return (void *)str;
 }
 
 void ui_lang_shutdown(void)

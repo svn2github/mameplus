@@ -1870,7 +1870,7 @@ static LPTREEFOLDER NewFolder(const char *lpTitle, UINT nCategoryID, BOOL bTrans
 
 		lpFolder->m_lpOriginalTitle = (LPSTR)malloc(strlen(lpTitle) + 1);
 		strcpy((char *)lpFolder->m_lpOriginalTitle,lpTitle);
-		lpTitle = lang_message(nCategoryID, lpTitle);
+		lpTitle = mb_lang_message(nCategoryID, lpTitle);
 	}
 	lpFolder->m_lpTitle = (LPSTR)malloc(strlen(lpTitle) + 1);
 	strcpy((char *)lpFolder->m_lpTitle,lpTitle);

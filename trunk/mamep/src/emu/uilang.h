@@ -54,7 +54,7 @@ extern int lang_find_codepage(int cp);
 extern void set_langcode(int langcode);
 extern void assign_msg_catategory(int msgcat, const char *name);
 extern char *lang_message(int msgcat, const char *str);
-extern void *lang_messagew(int msgcat, const char *str);
+extern void *lang_messagew(int msgcat, const void *str, int (*mmo_cmpw)(const void *a, const void *b));
 extern void ui_lang_shutdown(void);
 
 #endif

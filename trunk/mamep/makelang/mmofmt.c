@@ -16,14 +16,20 @@ struct mmo_header
 	int num_msg;
 };
 
-struct msgdata
+struct msgdatau
 {
 	const unsigned char *id;
-	const WCHAR *wstr;
-	const unsigned char *ustr;
+	const unsigned char *str;
 };
 
-static struct msgdata *msgtable;
+struct msgdataw
+{
+	const WCHAR *id;
+	const WCHAR *str;
+};
+
+static struct msgdatau *msgtableu;
+static struct msgdataw *msgtablew;
 static int num_msgtable;
 static int alloc_msgtable;
 
@@ -61,27 +67,38 @@ static unsigned char *utf8_from_wstring(const WCHAR *wstring)
 
 static int regist(const unsigned char *id, const unsigned char *str, int codepage)
 {
+	const WCHAR *wid = wstring_from_mbstring(id, codepage);
 	const WCHAR *wstr = wstring_from_mbstring(str, codepage);
 	const char *ustr = utf8_from_wstring(wstr);
 
 	if (num_msgtable + 1 > alloc_msgtable)
 	{
 		alloc_msgtable += BUFSIZE;
-		msgtable = (struct msgdata *)realloc(msgtable, sizeof (struct msgdata) * alloc_msgtable);
-		if (!msgtable)
+		msgtableu = (struct msgdatau *)realloc(msgtableu, sizeof (struct msgdatau) * alloc_msgtable);
+		if (!msgtableu)
+			return 1;
+		msgtablew = (struct msgdataw *)realloc(msgtablew, sizeof (struct msgdataw) * alloc_msgtable);
+		if (!msgtablew)
 			return 1;
 	}
-	msgtable[num_msgtable].id = id;
-	msgtable[num_msgtable].wstr = wstr;
-	msgtable[num_msgtable].ustr = ustr;
+
+	msgtableu[num_msgtable].id = id;
+	msgtableu[num_msgtable].str = ustr;
+	msgtablew[num_msgtable].id = wid;
+	msgtablew[num_msgtable].str = wstr;
 	num_msgtable++;
 
 	return 0;
 }
 
-static int cmp_msgdata(const void *a, const void *b)
+static int cmp_msgdatau(const void *a, const void *b)
 {
-	return strcmp(((struct msgdata *)a)->id, ((struct msgdata *)b)->id);
+	return strcmp(((struct msgdatau *)a)->id, ((struct msgdatau *)b)->id);
+}
+
+static int cmp_msgdataw(const void *a, const void *b)
+{
+	return lstrcmp(((struct msgdataw *)a)->id, ((struct msgdataw *)b)->id);
 }
 
 static int write_mmo(void)
@@ -91,31 +108,37 @@ static int write_mmo(void)
 	int offset = 0;
 
 	header.dummy = 0;
-	header.version = 1;
+	header.version = 2;
 	header.num_msg = num_msgtable;
 
 	// number of msgdata
 	if (fwrite(&header, sizeof header, 1, out) != 1)
 		return 1;
 
-	qsort(msgtable, num_msgtable, sizeof *msgtable, cmp_msgdata);
+	qsort(msgtableu, num_msgtable, sizeof *msgtableu, cmp_msgdatau);
+	qsort(msgtablew, num_msgtable, sizeof *msgtablew, cmp_msgdataw);
 
 	for (i = 0; i <num_msgtable; i++)
 	{
 		// offset of id
 		if (fwrite(&offset, sizeof offset, 1, out) != 1)
 			return 1;
-		offset += strlen(msgtable[i].id) + 1;
-
-		// offset of wstr
-		if (fwrite(&offset, sizeof offset, 1, out) != 1)
-			return 1;
-		offset += (lstrlen(msgtable[i].wstr) + 1) * sizeof (*msgtable[i].wstr);
+		offset += strlen(msgtableu[i].id) + 1;
 
 		// offset of ustr
 		if (fwrite(&offset, sizeof offset, 1, out) != 1)
 			return 1;
-		offset += strlen(msgtable[i].ustr) + 1;
+		offset += strlen(msgtableu[i].str) + 1;
+
+		// offset of wid
+		if (fwrite(&offset, sizeof offset, 1, out) != 1)
+			return 1;
+		offset += (lstrlen(msgtablew[i].id) + 1) * sizeof (*msgtablew[i].id);
+
+		// offset of wstr
+		if (fwrite(&offset, sizeof offset, 1, out) != 1)
+			return 1;
+		offset += (lstrlen(msgtablew[i].str) + 1) * sizeof (*msgtablew[i].str);
 	}
 
 	// total bytes of both id and str
@@ -125,11 +148,13 @@ static int write_mmo(void)
 	// string of both id and str
 	for (i = 0; i <num_msgtable; i++)
 	{
-		if (fwrite(msgtable[i].id, strlen(msgtable[i].id) + 1, 1, out) != 1)
+		if (fwrite(msgtableu[i].id, strlen(msgtableu[i].id) + 1, 1, out) != 1)
 			return 1;
-		if (fwrite(msgtable[i].wstr, (lstrlen(msgtable[i].wstr) + 1) * sizeof (*msgtable[i].wstr), 1, out) != 1)
+		if (fwrite(msgtableu[i].str, strlen(msgtableu[i].str) + 1, 1, out) != 1)
 			return 1;
-		if (fwrite(msgtable[i].ustr, strlen(msgtable[i].ustr) + 1, 1, out) != 1)
+		if (fwrite(msgtablew[i].id, (lstrlen(msgtablew[i].id) + 1) * sizeof (*msgtablew[i].id), 1, out) != 1)
+			return 1;
+		if (fwrite(msgtablew[i].str, (lstrlen(msgtablew[i].str) + 1) * sizeof (*msgtablew[i].str), 1, out) != 1)
 			return 1;
 	}
 
