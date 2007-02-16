@@ -467,7 +467,7 @@ static void CLIB_DECL DetailsPrintf(const char *fmt, ...)
 
 	l = Edit_GetTextLength(hEdit);
 	Edit_SetSel(hEdit, l, l);
-	SendMessageW( hEdit, EM_REPLACESEL, FALSE, (LPARAM)(void *)_Unicode(s));
+	SendMessageW( hEdit, EM_REPLACESEL, FALSE, (LPARAM)(void *)_UTF8Unicode(s));
 }
 
 static const char * StatusString(int iStatus)
