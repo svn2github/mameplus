@@ -1,938 +1,938 @@
 # windows/config.c: 683
         MAME -createconfig to create a mame.ini\n\n
-        MAME -createconfig åˆ›å»º mame.ini\n\n
+        MAME -createconfig ´´½¨ mame.ini\n\n
 
 # windows/config.c: 682
         MAME -showconfig   for a list of configuration options\n
-        MAME -showconfig   è¯¦ç»†åˆ—å‡ºé…ç½®é€‰é¡¹\n
+        MAME -showconfig   ÏêÏ¸ÁĞ³öÅäÖÃÑ¡Ïî\n
 
 # windows/config.c: 681
         MAME -showusage    for a brief list of options\n
-        MAME -showusage    ç®€è¦åˆ—å‡ºé€‰é¡¹\n
+        MAME -showusage    ¼òÒªÁĞ³öÑ¡Ïî\n
 
 # windows/wind3old.c: 576
  (%.2lfMB video memory available)
- (%.2lfMB å¯ç”¨æ˜¾å­˜)
+ (%.2lfMB ¿ÉÓÃÏÔ´æ)
 
 # windows/fronthlp.c: 757, 868
 %d %s found, %d were OK.\n
-æ‰¾åˆ° %d %sï¼Œæ­£ç¡® %dã€‚\n
+ÕÒµ½ %d %s£¬ÕıÈ· %d¡£\n
 
 # windows/input.c: 2096
 %s Button %d
-%s æŒ‰é’® %d
+%s °´Å¥ %d
 
 # windows/wind3old.c: 1550
 %s surface created: %s (%s)\n
-%s ç•Œé¢å·²åˆ›å»º: %s (%s)\n
+%s ½çÃæÒÑ´´½¨: %s (%s)\n
 
 # windows/fronthlp.c: 99
 (BAD) 
-(é”™è¯¯) 
+(´íÎó) 
 
 # windows/videoold.c: 242
 (dd) stretch video using the hardware
-(dd) ä½¿ç”¨ç¡¬ä»¶æ‹‰ä¼¸è§†é¢‘
+(dd) Ê¹ÓÃÓ²¼şÀ­ÉìÊÓÆµ
 
 # windows/video.c: 360 windows/videoold.c: 648
 Average FPS: %f (%d frames)\n
-å¹³å‡ FPS: %f (%d å¸§)\n
+Æ½¾ù FPS: %f (%d Ö¡)\n
 
 # windows/wind3old.c: 2565 windows/winddold.c: 1506, 1810
 Avg Flip = %d
-å¹³å‡ç¿»è½¬ = %d
+Æ½¾ù·­×ª = %d
 
 # windows/wind3old.c: 938 windows/winddold.c: 636
 Best mode = %dx%dx%d @ %d Hz\n
-æœ€ä½³æ¨¡å¼ = %dx%dx%d @ %d Hz\n
+×î¼ÑÄ£Ê½ = %dx%dx%d @ %d Hz\n
 
 # windows/wind3old.c: 940 windows/winddold.c: 638
 Best mode = %dx%dx%d @ default Hz\n
-æœ€ä½³æ¨¡å¼ = %dx%dx%d @ Hz (é»˜è®¤)\n
+×î¼ÑÄ£Ê½ = %dx%dx%d @ Hz (Ä¬ÈÏ)\n
 
 # windows/winddold.c: 940
 Blit surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
-æ˜ åƒç•Œé¢å·²åˆ›å»º: %dx%dx%d (R=%08x G=%08x B=%08x)\n
+Ó³Ïñ½çÃæÒÑ´´½¨: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 
 # windows/wind3old.c: 1554
 Blit surface created: %s\n
-æ˜ åƒç•Œé¢å·²åˆ›å»º: %s\n
+Ó³Ïñ½çÃæÒÑ´´½¨: %s\n
 
 # windows/wind3old.c: 707
 Blitter initialisation complete (%.2lfMB video memory free)\n
-æ˜ åƒåˆå§‹åŒ–å®Œæˆ (%.2lfMB å‰©ä½™æ˜¾å­˜)\n
+Ó³Ïñ³õÊ¼»¯Íê³É (%.2lfMB Ê£ÓàÏÔ´æ)\n
 
 # windows/fronthlp.c: 901
 ERROR     %s\n
-é”™è¯¯      %s\n
+´íÎó      %s\n
 
 # windows/wind3old.c: 652
 Error creating Direct3D7 device: %08x\n
-åˆ›å»º Direct3D7 è®¾å¤‡æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+´´½¨ Direct3D7 Éè±¸Ê±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 561
 Error creating Direct3D7: %08x\n
-åˆ›å»º Direct3D7 æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+´´½¨ Direct3D7 Ê±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 554
 Error creating DirectDraw7: %08x\n
-åˆ›å»º DirectDraw7 æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+´´½¨ DirectDraw7 Ê±·¢Éú´íÎó: %08x\n
 
 # windows/winddold.c: 311
 Error creating DirectDraw: %08x\n
-åˆ›å»º DirectDraw æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+´´½¨ DirectDraw Ê±·¢Éú´íÎó: %08x\n
 
 # windows/sound.c: 624
 Error creating DirectSound buffer: %08x\n
-åˆ›å»º DirectSound ç¼“å†²æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+´´½¨ DirectSound »º³åÊ±·¢Éú´íÎó: %08x\n
 
 # windows/sound.c: 483
 Error creating DirectSound: %08x\n
-åˆ›å»º DirectSound æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+´´½¨ DirectSound Ê±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 1169
 Error creating RGB effects surface: %08x\n
-åˆ›å»º RGB æ•ˆæœç•Œé¢æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+´´½¨ RGB Ğ§¹û½çÃæÊ±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 1099
 Error creating back surface: %08x\n
-åˆ›å»º back ç•Œé¢æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+´´½¨ back ½çÃæÊ±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 1394 windows/winddold.c: 924
 Error creating blit surface: %08x\n
-åˆ›å»ºæ˜ åƒç•Œé¢æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+´´½¨Ó³Ïñ½çÃæÊ±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 1632 windows/winddold.c: 1013
 Error creating clipper: %08x\n
-åˆ›å»º clipper æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+´´½¨ clipper Ê±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 1495
 Error creating preprocess surface: %08x\n
-åˆ›å»ºé¢„å¤„ç†ç•Œé¢æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+´´½¨Ô¤´¦Àí½çÃæÊ±·¢Éú´íÎó: %08x\n
 
 # windows/sound.c: 590
 Error creating primary buffer: %08x\n
-åˆ›å»ºä¸»ç¼“å†²æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+´´½¨Ö÷»º³åÊ±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 1049 windows/winddold.c: 706
 Error creating primary surface: %08x\n
-åˆ›å»ºä¸»ç•Œé¢æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+´´½¨Ö÷½çÃæÊ±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 1515 windows/winddold.c: 796
 Error creating scale surface: %08x\n
-åˆ›å»ºç¼©æ”¾ç•Œé¢æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+´´½¨Ëõ·Å½çÃæÊ±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 1198, 1206
 Error creating scanline surface[%d]: %08x\n
-åˆ›å»ºæ‰«æçº¿ç•Œé¢[%d]æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+´´½¨É¨ÃèÏß½çÃæ[%d]Ê±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 1418
 Error creating texture surface: %08x\n
-åˆ›å»ºçº¹ç†ç•Œé¢æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+´´½¨ÎÆÀí½çÃæÊ±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 933 windows/winddold.c: 630
 Error enumerating modes: %08x\n
-æšä¸¾æ¨¡å¼æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+Ã¶¾ÙÄ£Ê½Ê±·¢Éú´íÎó: %08x\n
 
 # windows/winddold.c: 326
 Error getting DirectDraw capabilities: %08x\n
-è·å– DirectDraw èƒ½åŠ›æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+»ñÈ¡ DirectDraw ÄÜÁ¦Ê±·¢Éú´íÎó: %08x\n
 
 # windows/sound.c: 492
 Error getting DirectSound capabilities: %08x\n
-è·å– DirectSound èƒ½åŠ›æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+»ñÈ¡ DirectSound ÄÜÁ¦Ê±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 1110 windows/winddold.c: 742
 Error getting attached back surface: %08x\n
-è·å– attached back ç•Œé¢æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+»ñÈ¡ attached back ½çÃæÊ±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 1527, 1536 windows/winddold.c: 932
 Error getting blit surface desc: %08x\n
-è·å–æ˜ åƒç•Œé¢æè¿°æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+»ñÈ¡Ó³Ïñ½çÃæÃèÊöÊ±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 914, 960 windows/winddold.c: 608, 662
 Error getting display mode: %08x\n
-è·å–æ˜¾ç¤ºæ¨¡å¼æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+»ñÈ¡ÏÔÊ¾Ä£Ê½Ê±·¢Éú´íÎó: %08x\n
 
 # windows/sound.c: 606
 Error getting primary format: %08x\n
-è·å– primary format æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+»ñÈ¡ primary format Ê±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 1057 windows/winddold.c: 714
 Error getting primary surface desc: %08x\n
-è·å–ä¸»ç•Œé¢æè¿°æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+»ñÈ¡Ö÷½çÃæÃèÊöÊ±·¢Éú´íÎó: %08x\n
 
 # windows/winddold.c: 804
 Error getting scale surface desc: %08x\n
-è·å–ç¼©æ”¾ç•Œé¢æè¿°æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+»ñÈ¡Ëõ·Å½çÃæÃèÊöÊ±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 544
 Error importing DirectDrawCreateEx() function\n
-å¯¼å…¥ DirectDrawCreateEx() å‡½æ•°æ—¶å‘ç”Ÿé”™è¯¯\n
+µ¼Èë DirectDrawCreateEx() º¯ÊıÊ±·¢Éú´íÎó\n
 
 # windows/wind3old.c: 537
 Error importing ddraw.dll\n
-å¯¼å…¥ ddraw.dll æ—¶å‘ç”Ÿé”™è¯¯\n
+µ¼Èë ddraw.dll Ê±·¢Éú´íÎó\n
 
 # windows/wind3old.c: 617 windows/winddold.c: 302
 Error initialising software scale effects\n
-åˆå§‹åŒ–è½¯ä»¶ç¼©æ”¾æ•ˆæœæ—¶å‘ç”Ÿé”™è¯¯\n
+³õÊ¼»¯Èí¼şËõ·ÅĞ§¹ûÊ±·¢Éú´íÎó\n
 
 # windows/sound.c: 632
 Error locking stream buffer: %08x\n
-é”å®šæµç¼“å†²æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+Ëø¶¨Á÷»º³åÊ±·¢Éú´íÎó: %08x\n
 
 # windows/sound.c: 537
 Error playing: %08x\n
-æ’­æ”¾æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+²¥·ÅÊ±·¢Éú´íÎó: %08x\n
 
 # windows/sound.c: 500
 Error setting DirectSound cooperative level: %08x\n
-è®¾ç½® DirectSound cooperative level æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+ÉèÖÃ DirectSound cooperative level Ê±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 1640 windows/winddold.c: 1021
 Error setting clipper hwnd: %08x\n
-è®¾ç½® clipper hwnd æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+ÉèÖÃ clipper hwnd Ê±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 1648 windows/winddold.c: 1029
 Error setting clipper on primary surface: %08x\n
-è®¾ç½®ä¸»ç•Œé¢çš„ clipper æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+ÉèÖÃÖ÷½çÃæµÄ clipper Ê±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 629 windows/winddold.c: 341
 Error setting cooperative level: %08x\n
-è®¾ç½® cooperative level æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+ÉèÖÃ cooperative level Ê±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 1614 windows/winddold.c: 995
 Error setting gamma ramp: %08x\n
-è®¾ç½®ç°åº¦ ramp æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+ÉèÖÃ»Ò¶È ramp Ê±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 949 windows/winddold.c: 651
 Error setting mode: %08x\n
-è®¾ç½®æ¨¡å¼æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+ÉèÖÃÄ£Ê½Ê±·¢Éú´íÎó: %08x\n
 
 # windows/sound.c: 598
 Error setting primary format: %08x\n
-è®¾ç½® primary format æ—¶å‘ç”Ÿé”™è¯¯: %08x\n
+ÉèÖÃ primary format Ê±·¢Éú´íÎó: %08x\n
 
 # windows/wind3old.c: 259
 Error: 3D hardware can't render scanlines (no support for multi-texturing)\n
-é”™è¯¯: 3D ç¡¬ä»¶ä¸èƒ½æ¸²æŸ“æ‰«æçº¿ (ä¸æ”¯æŒå¤šé‡çº¹ç†)\n
+´íÎó: 3D Ó²¼ş²»ÄÜäÖÈ¾É¨ÃèÏß (²»Ö§³Ö¶àÖØÎÆÀí)\n
 
 # windows/wind3old.c: 1344
 Error: required texture size too large (max: %ix%i, need %ix%i)\n
-é”™è¯¯: éœ€è¦çš„çº¹ç†å¤ªå¤§ (æœ€å¤§å€¼: %ix%iï¼Œéœ€è¦ %ix%i)\n
+´íÎó: ĞèÒªµÄÎÆÀíÌ«´ó (×î´óÖµ: %ix%i£¬ĞèÒª %ix%i)\n
 
 # windows/input.c: 2683
 Fast Forward
-å¿«è¿›
+¿ì½ø
 
 # windows/windold.c: 682
 Full Screen\tAlt+Enter
-å…¨å±å¹•\tAlt+Enter
+È«ÆÁÄ»\tAlt+Enter
 
 # windows/fronthlp.c: 551, 622
 Game \"%s\" not supported!\n
-æ¸¸æˆ \"%s\" æœªæ”¯æŒ!\n
+ÓÎÏ· \"%s\" Î´Ö§³Ö!\n
 
 # windows/winddold.c: 334
 Hardware stretching supported\n
-æ”¯æŒç¡¬ä»¶æ‹‰ä¼¸\n
+Ö§³ÖÓ²¼şÀ­Éì\n
 
 # windows/wind3old.c: 573
 Initialising DirectDraw & Direct3D 7 blitter
-æ­£åœ¨åˆå§‹åŒ– DirectDraw å’Œ Direct3D 7 æ˜ åƒ
+ÕıÔÚ³õÊ¼»¯ DirectDraw ºÍ Direct3D 7 Ó³Ïñ
 
 # windows/input.c: 319
 Input device options
-è¾“å…¥è®¾å¤‡é€‰é¡¹
+ÊäÈëÉè±¸Ñ¡Ïî
 
 # windows/input.c: 2222
 J%d %s D
-J%d %s ä¸‹
+J%d %s ÏÂ
 
 # windows/input.c: 2226
 J%d %s L
-J%d %s å·¦
+J%d %s ×ó
 
 # windows/input.c: 2230
 J%d %s R
-J%d %s å³
+J%d %s ÓÒ
 
 # windows/input.c: 2218
 J%d %s U
-J%d %s ä¸Š
+J%d %s ÉÏ
 
 # windows/fronthlp.c: 902
 KNOWN     %s\n
-å·²çŸ¥      %s\n
+ÒÑÖª      %s\n
 
 # windows/input.c: 327
 LED mode (ps/2|usb)
-LED æ¨¡å¼ (ps/2|usb)
+LED Ä£Ê½ (ps/2|usb)
 
 # windows/input.c: 2135
 Lightgun %d 
-å…‰æª %d
+¹âÇ¹ %d
 
 # windows/input.c: 2518
 Lightgun not supported in windowed mode
-çª—å£æ¨¡å¼ä¸‹ä¸æ”¯æŒå…‰æª
+´°¿ÚÄ£Ê½ÏÂ²»Ö§³Ö¹âÇ¹
 
 # windows/blit.c: 164
 MMX not supported\n
-ä¸æ”¯æŒ MMX\n
+²»Ö§³Ö MMX\n
 
 # windows/blit.c: 162
 MMX supported\n
-æ”¯æŒ MMX\n
+Ö§³Ö MMX\n
 
 # windows/wind3old.c: 1550
 Managed texture
-çº¹ç†ç®¡ç†
+ÎÆÀí¹ÜÀí
 
 # windows/input.c: 2023
 Mouse 
-é¼ æ ‡
+Êó±ê
 
 # windows/input.c: 2021
 Mouse %d 
-é¼ æ ‡ %d 
+Êó±ê %d 
 
 # windows/fronthlp.c: 175
 NO MATCH\n
-ä¸åŒ¹é…\n
+²»Æ¥Åä\n
 
 # windows/fronthlp.c: 167
 NOT A ROM\n
-ä¸æ˜¯ ROM\n
+²»ÊÇ ROM\n
 
 # windows/fronthlp.c: 378
 Name:     Description:\n
-åç§°:     æè¿°:\n
+Ãû³Æ:     ÃèÊö:\n
 
 # windows/fronthlp.c: 491
 Name:    Clone of:\n
-åç§°:    åŸä½œ:\n
+Ãû³Æ:    Ô­×÷:\n
 
 # windows/config.c: 266
 OSD bar color (dark)
-å±å¹•æ˜¾ç¤ºåˆ—é¢œè‰² (æš—)
+ÆÁÄ»ÏÔÊ¾ÁĞÑÕÉ« (°µ)
 
 # windows/config.c: 267
 OSD bar color (default)
-å±å¹•æ˜¾ç¤ºåˆ—é¢œè‰² (é»˜è®¤)
+ÆÁÄ»ÏÔÊ¾ÁĞÑÕÉ« (Ä¬ÈÏ)
 
 # windows/config.c: 265
 OSD bar color (light)
-å±å¹•æ˜¾ç¤ºåˆ—é¢œè‰² (æ˜)
+ÆÁÄ»ÏÔÊ¾ÁĞÑÕÉ« (Ã÷)
 
 # windows/config.c: 264
 OSD bar color (medium)
-å±å¹•æ˜¾ç¤ºåˆ—é¢œè‰² (ä¸­)
+ÆÁÄ»ÏÔÊ¾ÁĞÑÕÉ« (ÖĞ)
 
 # windows/fileio.c: 372
 Out of memory!
-å…§å­˜ä¸è¶³!
+ƒÈ´æ²»×ã!
 
 # windows/fronthlp.c: 904
 PARTKNOWN %s\n
-éƒ¨åˆ†å·²çŸ¥ %s\n
+²¿·ÖÒÑÖª %s\n
 
 # windows/wind3old.c: 1559
 Pre-process texture surface created: %s\n
-é¢„å¤„ç†çº¹ç†ç•Œé¢å·²åˆ›å»º: %s\n
+Ô¤´¦ÀíÎÆÀí½çÃæÒÑ´´½¨: %s\n
 
 # windows/winddold.c: 726
 Primary surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
-ä¸»ç•Œé¢å·²åˆ›å»º: %dx%dx%d (R=%08x G=%08x B=%08x)\n
+Ö÷½çÃæÒÑ´´½¨: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 
 # windows/wind3old.c: 1074
 Primary surface created: %s (%s)\n
-ä¸»ç•Œé¢å·²åˆ›å»º: %s (%s)\n
+Ö÷½çÃæÒÑ´´½¨: %s (%s)\n
 
 # windows/wind3old.c: 1177
 RGB effects surface created: %s\n
-RGB æ•ˆæœç•Œé¢å·²åˆ›å»º: %s\n
+RGB Ğ§¹û½çÃæÒÑ´´½¨: %s\n
 
 # windows/wind4old.c: 813
 RGB pattern has a wrong filesize (expected %i bytes, found %i)\n
-RGB æ¨¡å¼çš„æ–‡ä»¶å¤§å°é”™è¯¯ (åº”ä¸º %i å­—èŠ‚ï¼Œæ‰¾åˆ° %i)\n
+RGB Ä£Ê½µÄÎÄ¼ş´óĞ¡´íÎó (Ó¦Îª %i ×Ö½Ú£¬ÕÒµ½ %i)\n
 
 # windows/winddold.c: 1437, 1513, 1817
 Recreating surfaces\n
-é‡å»ºç•Œé¢\n
+ÖØ½¨½çÃæ\n
 
 # windows/wind3old.c: 1067
 Rendering to an off-screen surface and using blt()\n
-æ­£åœ¨æ¸²æŸ“åˆ°ç”»é¢å¤–ç•Œé¢å¹¶ä½¿ç”¨ blt()\n
+ÕıÔÚäÖÈ¾µ½»­ÃæÍâ½çÃæ²¢Ê¹ÓÃ blt()\n
 
 # windows/wind3old.c: 2226, 2585
 Restoring surfaces\n
-æ­£åœ¨è¿˜åŸç•Œé¢\n
+ÕıÔÚ»¹Ô­½çÃæ\n
 
 # windows/blit.c: 160
 SSE supported\n
-æ”¯æŒ SSE\n
+Ö§³Ö SSE\n
 
 # windows/blit.c: 158
 SSE2 supported\n
-æ”¯æŒ SSE2\n
+Ö§³Ö SSE2\n
 
 # windows/config.c: 135 windows/videoold.c: 264
 SaI scale effect
-SaI ç¼©æ”¾æ•ˆæœ
+SaI Ëõ·ÅĞ§¹û
 
 # windows/winddold.c: 810
 Scale surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
-ç¼©æ”¾ç•Œé¢å·²åˆ›å»º: %dx%dx%d (R=%08x G=%08x B=%08x)\n
+Ëõ·Å½çÃæÒÑ´´½¨: %dx%dx%d (R=%08x G=%08x B=%08x)\n
 
 # windows/wind3old.c: 1214
 Scanline surface[%i] created: %s\n
-æ‰«æçº¿ç•Œé¢[%i]å·²åˆ›å»º: %s\n
+É¨ÃèÏß½çÃæ[%i]ÒÑ´´½¨: %s\n
 
 # windows/sound.c: 226
 Sound buffer: overflows=%d underflows=%d\n
-å£°éŸ³ç¼“å†²: ä¸Šé™æº¢ä½=%d ä¸‹é™æº¢ä½=%d\n
+ÉùÒô»º³å: ÉÏÏŞÒçÎ»=%d ÏÂÏŞÒçÎ»=%d\n
 
 # windows/input.c: 2075
 Stick %d %s +
-æ¸¸æˆæ† %d %s +
+ÓÎÏ·¸Ë %d %s +
 
 # windows/input.c: 2068
 Stick %d %s -
-æ¸¸æˆæ† %d %s -
+ÓÎÏ·¸Ë %d %s -
 
 # windows/input.c: 2077
 Stick %s +
-æ¸¸æˆæ† %s +
+ÓÎÏ·¸Ë %s +
 
 # windows/input.c: 2070
 Stick %s -
-æ¸¸æˆæ† %s +
+ÓÎÏ·¸Ë %s +
 
 # windows/wind3old.c: 1550
 Texture
-çº¹ç†
+ÎÆÀí
 
 # windows/input.c: 2665
 Toggle fullscreen
-åˆ‡æ¢å…¨å±å¹•
+ÇĞ»»È«ÆÁÄ»
 
 # windows/fronthlp.c: 903
 UNKNOWN   %s\n
-æœªçŸ¥      %s\n
+Î´Öª      %s\n
 
 # windows/input.c: 2946, 2953
 Unable to close the keyboard device. (error %d)\n
-æ— æ³•å…³é—­é”®ç›˜è®¾å¤‡ã€‚(é”™è¯¯ %d)\n
+ÎŞ·¨¹Ø±Õ¼üÅÌÉè±¸¡£(´íÎó %d)\n
 
 # windows/wind3old.c: 2013, 2103, 2124 windows/winddold.c: 1281, 1353
 Unable to lock blit_surface: %08x\n
-æ— æ³•é”å®š blit_surface: %08x\n
+ÎŞ·¨Ëø¶¨ blit_surface: %08x\n
 
 # windows/winddold.c: 1646, 1753
 Unable to lock target_surface: %08x\n
-æ— æ³•é”å®š target_surface: %08x\n
+ÎŞ·¨Ëø¶¨ target_surface: %08x\n
 
 # windows/input.c: 2897, 2907
 Unable to open the keyboard device. (error %d)\n
-æ— æ³•æ‰“å¼€é”®ç›˜è®¾å¤‡ (é”™è¯¯ %d)\n
+ÎŞ·¨´ò¿ª¼üÅÌÉè±¸ (´íÎó %d)\n
 
 # windows/config.c: 680
 Usage:  MAME gamename [options]\n\n
-ä½¿ç”¨æ–¹æ³•:  MAME æ¸¸æˆå [é€‰é¡¹]\n\n
+Ê¹ÓÃ·½·¨:  MAME ÓÎÏ·Ãû [Ñ¡Ïî]\n\n
 
 # windows/wind3old.c: 621
 Using %s pre-scale effect\n
-æ­£åœ¨ä½¿ç”¨é¢„ç¼©æ”¾æ•ˆæœ %s\n
+ÕıÔÚÊ¹ÓÃÔ¤Ëõ·ÅĞ§¹û %s\n
 
 # windows/video.c: 948 windows/winddold.c: 356
 Using %s scale effect\n
-æ­£åœ¨ä½¿ç”¨ç¼©æ”¾æ•ˆæœ %s\n
+ÕıÔÚÊ¹ÓÃËõ·ÅĞ§¹û %s\n
 
 # windows/wind3old.c: 1069
 Using a %s buffer and pageflipping\n
-æ­£åœ¨ä½¿ç”¨ %s ç¼“å†²å’Œæ¢é¡µ\n
+ÕıÔÚÊ¹ÓÃ %s »º³åºÍ»»Ò³\n
 
 # windows/wind3old.c: 1592 windows/winddold.c: 973
 Warning: could not create gamma control to change brightness: %08x\n
-è­¦å‘Š: ä¸èƒ½åˆ›å»ºç°åº¦æ§ä»¶ä»¥æ›´æ”¹ç”»é¢äº®åº¦: %08x\n
+¾¯¸æ: ²»ÄÜ´´½¨»Ò¶È¿Ø¼şÒÔ¸ü¸Ä»­ÃæÁÁ¶È: %08x\n
 
 # windows/wind4old.c: 196
 Windows Direct3D 2D video options
-Windows Direct3D 2D è§†é¢‘é€‰é¡¹
+Windows Direct3D 2D ÊÓÆµÑ¡Ïî
 
 # windows/fronthlp.c: 748, 859
 \"%8s\" not found!\n
-\"%8s\" æœªæ‰¾åˆ°!\n
+\"%8s\" Î´ÕÒµ½!\n
 
 # windows/fronthlp.c: 750, 861
 \"%8s\" not supported!\n
-\"%8s\" æœªæ”¯æŒ!\n
+\"%8s\" Î´Ö§³Ö!\n
 
 # windows/config.c: 465
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
-\n\"%s\" å¯èƒ½åŒ¹é…ä»¥ä¸‹æ”¯æŒçš„æ¸¸æˆ (ç²¾ç¡®ä¼˜å…ˆ):\n\n
+\n\"%s\" ¿ÉÄÜÆ¥ÅäÒÔÏÂÖ§³ÖµÄÓÎÏ· (¾«È·ÓÅÏÈ):\n\n
 
 # windows/videoold.c: 261 windows/wind4old.c: 207
 additional customised settings (undocumented)
-é™„åŠ çš„è‡ªå®šä¹‰è®¾ç½®
+¸½¼ÓµÄ×Ô¶¨ÒåÉèÖÃ
 
 # windows/config.c: 133
 additional pause brightness
-é™„åŠ çš„æš‚åœç”»é¢äº®åº¦
+¸½¼ÓµÄÔİÍ£»­ÃæÁÁ¶È
 
 # windows/config.c: 224
 all available info on driver in XML format
-é©±åŠ¨çš„æ‰€æœ‰å¯ç”¨ä¿¡æ¯ (XML æ ¼å¼)
+Çı¶¯µÄËùÓĞ¿ÉÓÃĞÅÏ¢ (XML ¸ñÊ½)
 
 # windows/input.c: 1969
 analog
-æ¨¡æ‹Ÿå¼
+Ä£ÄâÊ½
 
 # windows/input.c: 1250
 analog joystick
-æ¨¡æ‹Ÿå¼æ¸¸æˆæ†
+Ä£ÄâÊ½ÓÎÏ·¸Ë
 
 # windows/videoold.c: 248
 attempt to match the game's refresh rate
-å°è¯•åŒ¹é…æ¸¸æˆåˆ·æ–°ç‡
+³¢ÊÔÆ¥ÅäÓÎÏ·Ë¢ĞÂÂÊ
 
 # windows/config.c: 176
 automatic pause when playback is finished
-æ’­æ”¾å®Œæˆæ—¶è‡ªåŠ¨æš‚åœ
+²¥·ÅÍê³ÉÊ±×Ô¶¯ÔİÍ£
 
 # windows/config.c: 274
 button color (aqua)
-æŒ‰é’®è‰² (é’)
+°´Å¥É« (Çà)
 
 # windows/config.c: 271
 button color (blue)
-æŒ‰é’®è‰² (è“)
+°´Å¥É« (À¶)
 
 # windows/config.c: 270
 button color (green)
-æŒ‰é’®è‰² (ç»¿)
+°´Å¥É« (ÂÌ)
 
 # windows/config.c: 277
 button color (lime)
-æŒ‰é’®è‰² (æ©™)
+°´Å¥É« (³È)
 
 # windows/config.c: 276
 button color (navy)
-æŒ‰é’®è‰² (æ·±è“)
+°´Å¥É« (ÉîÀ¶)
 
 # windows/config.c: 273
 button color (pink)
-æŒ‰é’®è‰² (ç²‰çº¢)
+°´Å¥É« (·Ûºì)
 
 # windows/config.c: 272
 button color (purple)
-æŒ‰é’®è‰² (ç´«)
+°´Å¥É« (×Ï)
 
 # windows/config.c: 268
 button color (red)
-æŒ‰é’®è‰² (çº¢)
+°´Å¥É« (ºì)
 
 # windows/config.c: 275
 button color (silver)
-æŒ‰é’®è‰² (é“¶)
+°´Å¥É« (Òø)
 
 # windows/config.c: 269
 button color (yellow)
-æŒ‰é’®è‰² (é»„)
+°´Å¥É« (»Æ)
 
 # windows/config.c: 182
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
-æ›´æ”¹ m68k æ ¸å¿ƒ (0:Cï¼Œ1:åŠ¨æ€é‡ç¼–è¯‘ï¼Œ2:æ±‡ç¼–+åŠ¨æ€é‡ç¼–è¯‘)
+¸ü¸Ä m68k ºËĞÄ (0:C£¬1:¶¯Ì¬ÖØ±àÒë£¬2:»ã±à+¶¯Ì¬ÖØ±àÒë)
 
 # windows/fileio.c: 136
 cheat filename
-ä½œå¼Šç æ•°æ®åº“æ–‡ä»¶å
+×÷±×ÂëÊı¾İ¿âÎÄ¼şÃû
 
 # windows/config.c: 237
 compare files with known MAME roms
-ä¸å·²çŸ¥çš„ MAME ROM æ¯”è¾ƒ
+ÓëÒÑÖªµÄ MAME ROM ±È½Ï
 
 # windows/config.c: 238
 compare files with known MAME roms (brief)
-ä¸å·²çŸ¥çš„ MAME ROM æ¯”è¾ƒ (ç®€æ˜)
+ÓëÒÑÖªµÄ MAME ROM ±È½Ï (¼òÃ÷)
 
 # windows/config.c: 218
 create the default configuration file
-åˆ›å»ºé»˜è®¤é…ç½®æ–‡ä»¶
+´´½¨Ä¬ÈÏÅäÖÃÎÄ¼ş
 
 # windows/config.c: 278
 cursor color
-å…‰æ ‡è‰²
+¹â±êÉ«
 
 # windows/videoold.c: 260 windows/wind4old.c: 206
 customised blitting effects preset
-è‡ªå®šä¹‰é¢„ç½®æ˜ åƒæ•ˆæœ
+×Ô¶¨ÒåÔ¤ÖÃÓ³ÏñĞ§¹û
 
 # windows/input.c: 309, 352, 1756, 1969
 digital
-æ•°å­—å¼
+Êı×ÖÊ½
 
 # windows/fileio.c: 119
 directory to save configurations
-ä¿å­˜é…ç½®çš„ç›®å½•
+±£´æÅäÖÃµÄÄ¿Â¼
 
 # windows/fileio.c: 123
 directory to save hiscores
-ä¿å­˜é«˜åˆ†è®°å½•çš„ç›®å½•
+±£´æ¸ß·Ö¼ÇÂ¼µÄÄ¿Â¼
 
 # windows/fileio.c: 122
 directory to save input device logs
-ä¿å­˜è¾“å…¥è®¾å¤‡è®°å½•çš„ç›®å½•
+±£´æÊäÈëÉè±¸¼ÇÂ¼µÄÄ¿Â¼
 
 # windows/fileio.c: 121
 directory to save memory card contents
-ä¿å­˜è®°å¿†å¡å†…å®¹çš„ç›®å½•
+±£´æ¼ÇÒä¿¨ÄÚÈİµÄÄ¿Â¼
 
 # windows/fileio.c: 120
 directory to save nvram contents
-ä¿å­˜ Nvram å†…å®¹çš„ç›®å½•
+±£´æ Nvram ÄÚÈİµÄÄ¿Â¼
 
 # windows/fileio.c: 124
 directory to save states
-ä¿å­˜æ¸¸æˆè¿›åº¦çš„ç›®å½•
+±£´æÓÎÏ·½ø¶ÈµÄÄ¿Â¼
 
 # windows/config.c: 206
 display additional diagnostic information
-æ˜¾ç¤ºé™„åŠ çš„è¯Šæ–­ä¿¡æ¯
+ÏÔÊ¾¸½¼ÓµÄÕï¶ÏĞÅÏ¢
 
 # windows/wind3old.c: 1069
 double
-åŒé‡
+Ë«ÖØ
 
 # windows/config.c: 227
 driver sourcefile
-é©±åŠ¨æºä»£ç æ–‡ä»¶
+Çı¶¯Ô´´úÂëÎÄ¼ş
 
 # windows/videoold.c: 245
 emulate win_old_scanlines
-æ¨¡æ‹Ÿ win_old_scanlines
+Ä£Äâ win_old_scanlines
 
 # windows/input.c: 269
 enable dual lightgun input
-å¯ç”¨åŒå…‰æªè¾“å…¥
+ÆôÓÃË«¹âÇ¹ÊäÈë
 
 # windows/input.c: 267
 enable joystick input
-å¯ç”¨æ¸¸æˆæ†è¾“å…¥
+ÆôÓÃÓÎÏ·¸ËÊäÈë
 
 # windows/input.c: 272, 326
 enable keyboard LED emulation
-å¯ç”¨é”®ç›˜ LED æ¨¡æ‹Ÿ
+ÆôÓÃ¼üÅÌ LED Ä£Äâ
 
 # windows/input.c: 268
 enable lightgun input
-å¯ç”¨å…‰æªè¾“å…¥
+ÆôÓÃ¹âÇ¹ÊäÈë
 
 # windows/input.c: 266, 320
 enable mouse input
-å¯ç”¨é¼ æ ‡è¾“å…¥
+ÆôÓÃÊó±êÊäÈë
 
 # windows/videoold.c: 257 windows/wind4old.c: 203
 enable rotation of effects for rotated games
-å¯ç”¨è‡ªåŠ¨æ•ˆæœæ—‹è½¬
+ÆôÓÃ×Ô¶¯Ğ§¹ûĞı×ª
 
 # windows/input.c: 271, 325
 enable steadykey support
-å¯ç”¨å¤šé”®åŒæ—¶è¾“å…¥æ”¯æŒ
+ÆôÓÃ¶à¼üÍ¬Ê±ÊäÈëÖ§³Ö
 
 # windows/config.c: 248
 enable/disable local language game list
-å¯ç”¨/ç¦ç”¨æœ¬åœ°è¯­è¨€æ¸¸æˆåˆ—è¡¨
+ÆôÓÃ/½ûÓÃ±¾µØÓïÑÔÓÎÏ·ÁĞ±í
 
 # windows/config.c: 151
 enable/disable volume auto adjust
-å¯ç”¨/ç¦ç”¨éŸ³é‡è‡ªåŠ¨è°ƒæ•´
+ÆôÓÃ/½ûÓÃÒôÁ¿×Ô¶¯µ÷Õû
 
 # windows/videoold.c: 247
 enforce aspect ratio
-å¼ºåˆ¶å¤–è§‚æ¯”ä¾‹
+Ç¿ÖÆÍâ¹Û±ÈÀı
 
 # windows/wind4old.c: 298
 error: invalid value for d3dprescale: %s\n
-é”™è¯¯: æ— æ•ˆçš„ d3dprescale å€¼: %s\n
+´íÎó: ÎŞĞ§µÄ d3dprescale Öµ: %s\n
 
 # windows/config.c: 881
 error: invalid value for language: %s\nUse %s\n
-é”™è¯¯: æ— æ•ˆçš„ language å€¼: %s\nä½¿ç”¨ %s\n
+´íÎó: ÎŞĞ§µÄ language Öµ: %s\nÊ¹ÓÃ %s\n
 
 # windows/config.c: 973
 error: invalid value for palette: %s\n
-é”™è¯¯: æ— æ•ˆçš„è‰²ç›˜å€¼: %s\n
+´íÎó: ÎŞĞ§µÄÉ«ÅÌÖµ: %s\n
 
 # windows/videoold.c: 255 windows/wind4old.c: 201
 feedback strength
-åé¦ˆå¼ºåº¦
+·´À¡Ç¿¶È
 
 # windows/config.c: 128
 flip screen left-right
-å·¦å³ç¿»è½¬ç”»é¢
+×óÓÒ·­×ª»­Ãæ
 
 # windows/config.c: 129
 flip screen upside-down
-ä¸Šä¸‹ç¿»è½¬ç”»é¢
+ÉÏÏÂ·­×ª»­Ãæ
 
 # windows/config.c: 257
 font blank color
-ç©ºç™½å­—ä½“è‰²
+¿Õ°××ÖÌåÉ«
 
 # windows/config.c: 258
 font normal color
-æ­£å¸¸å­—ä½“è‰²
+Õı³£×ÖÌåÉ«
 
 # windows/config.c: 259
 font special color
-ç‰¹æ®Šå­—ä½“è‰²
+ÌØÊâ×ÖÌåÉ«
 
 # windows/videoold.c: 251 windows/wind4old.c: 197
 force specific zoom level
-å¼ºåˆ¶æŒ‡å®šç¼©æ”¾ç­‰çº§
+Ç¿ÖÆÖ¸¶¨Ëõ·ÅµÈ¼¶
 
 # windows/input.c: 1969
 invalid
-æ— æ•ˆ
+ÎŞĞ§
 
 # windows/fronthlp.c: 717, 827
 is bad\n
-é”™è¯¯\n
+´íÎó\n
 
 # windows/fronthlp.c: 727, 837
 is best available\n
-å¤„äºæœ€ä½³å¯ç”¨çŠ¶æ€\n
+´¦ÓÚ×î¼Ñ¿ÉÓÃ×´Ì¬\n
 
 # windows/fronthlp.c: 722, 832
 is good\n
-æ­£ç¡®\n
+ÕıÈ·\n
 
 # windows/input.c: 322, 1251, 1630, 1725
 lightgun
-å…‰æª
+¹âÇ¹
 
 # windows/config.c: 234
 list optional samples for a driver
-åˆ—å‡ºæŒ‡å®šé©±åŠ¨å¯é€‰çš„é‡‡æ ·æ–‡ä»¶
+ÁĞ³öÖ¸¶¨Çı¶¯¿ÉÑ¡µÄ²ÉÑùÎÄ¼ş
 
 # windows/config.c: 233
 list required roms for a driver
-åˆ—å‡ºæŒ‡å®šé©±åŠ¨å¿…è¦çš„ ROM
+ÁĞ³öÖ¸¶¨Çı¶¯±ØÒªµÄ ROM
 
 # windows/climain.c: 30
 loading %-12s\r
-æ­£åœ¨è½½å…¥ %-12s\r
+ÕıÔÚÔØÈë %-12s\r
 
 # windows/input.c: 274, 328
 minimal analog value for digital input
-æ•°å­—å¼è¾“å…¥çš„æœ€å°æ„Ÿåº”å€¼
+Êı×ÖÊ½ÊäÈëµÄ×îĞ¡¸ĞÓ¦Öµ
 
 # windows/input.c: 270, 324
 offscreen shots reload
-ç”»é¢å¤–è£…å¼¹
+»­ÃæÍâ×°µ¯
 
 # windows/input.c: 343, 1249
 paddle
-æ“çºµæ†
+²Ù×İ¸Ë
 
 # windows/fileio.c: 115, 117
 path to ini files
-ini æ–‡ä»¶è·¯å¾„
+ini ÎÄ¼şÂ·¾¶
 
 # windows/fileio.c: 113
 path to samplesets
-é‡‡æ ·æ–‡ä»¶é›†çš„è·¯å¾„
+²ÉÑùÎÄ¼ş¼¯µÄÂ·¾¶
 
 # windows/input.c: 345, 1252
 pedal
-è¸æ¿
+Ì¤°å
 
 # windows/config.c: 197
 playback an input file
-æ’­æ”¾è¾“å…¥æŒ‡ä»¤æ–‡ä»¶
+²¥·ÅÊäÈëÖ¸ÁîÎÄ¼ş
 
 # windows/input.c: 275, 329
 preconfigure for specified controller
-æŒ‡å®šçš„æ§åˆ¶å™¨é¢„è®¾å€¼
+Ö¸¶¨µÄ¿ØÖÆÆ÷Ô¤ÉèÖµ
 
 # windows/videoold.c: 258 windows/wind4old.c: 204
 prescale effect
-é¢„ç¼©æ”¾æ•ˆæœ
+Ô¤Ëõ·ÅĞ§¹û
 
 # windows/config.c: 174
 quit game with confirmation
-é€€å‡ºæ¸¸æˆå‰ç¡®è®¤
+ÍË³öÓÎÏ·Ç°È·ÈÏ
 
 # windows/config.c: 198
 record an input file
-å½•åˆ¶è¾“å…¥æŒ‡ä»¤æ–‡ä»¶
+Â¼ÖÆÊäÈëÖ¸ÁîÎÄ¼ş
 
 # windows/config.c: 235
 report romsets that have problems
-æŠ¥å‘Šæœ‰é—®é¢˜çš„ ROM ç»„åˆ
+±¨¸æÓĞÎÊÌâµÄ ROM ×éºÏ
 
 # windows/config.c: 236
 report samplesets that have problems
-æŠ¥å‘Šæœ‰é—®é¢˜çš„é‡‡æ ·æ–‡ä»¶é›†
+±¨¸æÓĞÎÊÌâµÄ²ÉÑùÎÄ¼ş¼¯
 
 # windows/fronthlp.c: 746, 757
 romset
-ROM ç»„åˆ
+ROM ×éºÏ
 
 # windows/fronthlp.c: 708
 romset %s 
-ROM ç»„åˆ %s 
+ROM ×éºÏ %s 
 
 # windows/fronthlp.c: 857
 sampleset
-é‡‡æ ·æ–‡ä»¶é›†
+²ÉÑùÎÄ¼ş¼¯
 
 # windows/fronthlp.c: 821
 sampleset %s 
-é‡‡æ ·æ–‡ä»¶é›† %s 
+²ÉÑùÎÄ¼ş¼¯ %s 
 
 # windows/fronthlp.c: 868
 samplesets
-é‡‡æ ·æ–‡ä»¶é›†
+²ÉÑùÎÄ¼ş¼¯
 
 # windows/config.c: 156
 save sound in wav file
-å°†éŸ³é¢‘ä¿å­˜åˆ° Wav æ–‡ä»¶
+½«ÒôÆµ±£´æµ½ Wav ÎÄ¼ş
 
 # windows/wind3old.c: 1565
 scale effects surface created: %s\n
-ç¼©æ”¾æ•ˆæœç•Œé¢å·²åˆ›å»º: %s\n
+Ëõ·ÅĞ§¹û½çÃæÒÑ´´½¨: %s\n
 
 # windows/videoold.c: 256 windows/wind4old.c: 202
 scanline intensity
-æ‰«æçº¿é¥±å’Œåº¦
+É¨ÃèÏß±¥ºÍ¶È
 
 # windows/config.c: 247
 select translation language
-é€‰æ‹©ç¿»è¯‘è¯­è¨€
+Ñ¡Ôñ·­ÒëÓïÑÔ
 
 # windows/config.c: 155
 set audio latency (increase to reduce glitches)
-è®¾ç½®éŸ³é¢‘ç­‰å¾…æ—¶é—´(å¢åŠ å€¼ä»¥å‡å°‘å£°éŸ³ç ´æŸ)
+ÉèÖÃÒôÆµµÈ´ıÊ±¼ä(Ôö¼ÓÖµÒÔ¼õÉÙÉùÒôÆÆËğ)
 
 # windows/input.c: 282, 334
 set joystick ID (Player1)
-è®¾ç½®æ¸¸æˆæ† ID (P1)
+ÉèÖÃÓÎÏ·¸Ë ID (P1)
 
 # windows/input.c: 283, 335
 set joystick ID (Player2)
-è®¾ç½®æ¸¸æˆæ† ID (P2)
+ÉèÖÃÓÎÏ·¸Ë ID (P2)
 
 # windows/input.c: 284, 336
 set joystick ID (Player3)
-è®¾ç½®æ¸¸æˆæ† ID (P3)
+ÉèÖÃÓÎÏ·¸Ë ID (P3)
 
 # windows/input.c: 285, 337
 set joystick ID (Player4)
-è®¾ç½®æ¸¸æˆæ† ID (P4)
+ÉèÖÃÓÎÏ·¸Ë ID (P4)
 
 # windows/input.c: 286, 338
 set joystick ID (Player5)
-è®¾ç½®æ¸¸æˆæ† ID (P5)
+ÉèÖÃÓÎÏ·¸Ë ID (P5)
 
 # windows/input.c: 287, 339
 set joystick ID (Player6)
-è®¾ç½®æ¸¸æˆæ† ID (P6)
+ÉèÖÃÓÎÏ·¸Ë ID (P6)
 
 # windows/input.c: 288, 340
 set joystick ID (Player7)
-è®¾ç½®æ¸¸æˆæ† ID (P7)
+ÉèÖÃÓÎÏ·¸Ë ID (P7)
 
 # windows/input.c: 289, 341
 set joystick ID (Player8)
-è®¾ç½®æ¸¸æˆæ† ID (P8)
+ÉèÖÃÓÎÏ·¸Ë ID (P8)
 
 # windows/videoold.c: 244
 set specific monitor refresh rate
-è®¾ç½®æŒ‡å®šçš„æ˜¾ç¤ºå™¨åˆ·æ–°ç‡
+ÉèÖÃÖ¸¶¨µÄÏÔÊ¾Æ÷Ë¢ĞÂÂÊ
 
 # windows/config.c: 226
 short name, full name
-ç®€çŸ­åç§°ï¼Œå®Œæ•´åç§°
+¼ò¶ÌÃû³Æ£¬ÍêÕûÃû³Æ
 
 # windows/config.c: 228
 show clones
-æ˜¾ç¤ºå…‹éš†ç‰ˆ
+ÏÔÊ¾¿ËÂ¡°æ
 
 # windows/config.c: 119
 show help message
-æ˜¾ç¤ºå¸®åŠ©ä¿¡æ¯
+ÏÔÊ¾°ïÖúĞÅÏ¢
 
 # windows/config.c: 220
 show this help
-æ˜¾ç¤ºæœ¬å¸®åŠ©æ–‡æ¡£
+ÏÔÊ¾±¾°ïÖúÎÄµµ
 
 # windows/config.c: 146, 737 
 sound
-å£°éŸ³
+ÉùÒô
 
 # windows/videoold.c: 249
 specify the blitting effect
-æŒ‡å®šæ˜ åƒæ•ˆæœ
+Ö¸¶¨Ó³ÏñĞ§¹û
 
 # windows/videoold.c: 259 windows/wind4old.c: 205
 specify the blitting effects
-æŒ‡å®šæ˜ åƒæ•ˆæœ
+Ö¸¶¨Ó³ÏñĞ§¹û
 
 # windows/videoold.c: 228
 specify which screen to use
-æŒ‡å®šè¦ä½¿ç”¨çš„å±å¹•
+Ö¸¶¨ÒªÊ¹ÓÃµÄÆÁÄ»
 
 # windows/videoold.c: 243
 stretch to integer ratios
-æ•´æ•°å€æ‹‰ä¼¸
+ÕûÊı±¶À­Éì
 
 # windows/videoold.c: 246
 switch color depths to best fit
-åˆ‡æ¢åˆ°åˆé€‚çš„é¢œè‰²è´¨é‡
+ÇĞ»»µ½ºÏÊÊµÄÑÕÉ«ÖÊÁ¿
 
 # windows/input.c: 347, 1254
 trackball
-è½¨è¿¹çƒ
+¹ì¼£Çò
 
 # windows/config.c: 188
 transparency of UI background [0 - 255]
-èœå•èƒŒæ™¯é€æ˜åº¦ [0 - 255]
+²Ëµ¥±³¾°Í¸Ã÷¶È [0 - 255]
 
 # windows/wind3old.c: 1069
 triple
-ä¸‰é‡
+ÈıÖØ
 
 # windows/videoold.c: 252 windows/wind4old.c: 198
 use DirectX texture management
-ä½¿ç”¨ DirectX çº¹ç†ç®¡ç†
+Ê¹ÓÃ DirectX ÎÆÀí¹ÜÀí
 
 # windows/config.c: 187
 use transparent background for UI text
-èœå•æ–‡å­—ä½¿ç”¨é€æ˜èƒŒæ™¯
+²Ëµ¥ÎÄ×ÖÊ¹ÓÃÍ¸Ã÷±³¾°
 
 # windows/config.c: 260
 window background color
-çª—å£èƒŒæ™¯è‰²
+´°¿Ú±³¾°É«
 
 # windows/config.c: 263
 window frame color (dark)
-çª—å£è¾¹æ¡†è‰² (æš—)
+´°¿Ú±ß¿òÉ« (°µ)
 
 # windows/config.c: 262
 window frame color (light)
-çª—å£è¾¹æ¡†è‰² (äº®)
+´°¿Ú±ß¿òÉ« (ÁÁ)
 
 # windows/config.c: 261
 window frame color (medium)
-çª—å£è¾¹æ¡†è‰² (ä¸­)
+´°¿Ú±ß¿òÉ« (ÖĞ)
 
 # windows/config.c: 225
 year, manufacturer and full name
-å¹´ä»£ï¼Œåˆ¶é€ å•†å’Œæ¸¸æˆå
+Äê´ú£¬ÖÆÔìÉÌºÍÓÎÏ·Ãû
 
 # windows/input.c: 1711
          all -- all axes on all joysticks are digital\n

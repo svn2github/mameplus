@@ -41,9 +41,19 @@ static struct ui_lang_filename
 	{ "manufact", 1 }
 };
 
-struct mmo_data {
-	const char *id;
-	const char *str;
+
+struct mmo_header
+{
+	int dummy;
+	int version;
+	int num_msg;
+};
+
+struct mmo_data
+{
+	const unsigned char *id;
+	const void *wstr;
+	const unsigned char *ustr;
 };
 
 struct mmo {
@@ -53,7 +63,7 @@ struct mmo {
 		MMO_READY
 	} status;
 
-	int num_mmo;
+	struct mmo_header header;
 	struct mmo_data *mmo_index;
 	char *mmo_str;
 };
@@ -124,15 +134,21 @@ static void load_mmo(int msgcat)
 	if (filerr != FILERR_NONE)
 		goto mmo_readerr;
 
-	size = sizeof p->num_mmo;
-	if (mame_fread(file, &p->num_mmo, size) != size)
+	size = sizeof p->header;
+	if (mame_fread(file, &p->header, size) != size)
 		goto mmo_readerr;
 
-	p->mmo_index = malloc(p->num_mmo * sizeof p->mmo_index[0]);
+	if (p->header.dummy)
+		goto mmo_readerr;
+
+	if (p->header.version != 1)
+		goto mmo_readerr;
+
+	p->mmo_index = malloc(p->header.num_msg * sizeof p->mmo_index[0]);
 	if (!p->mmo_index)
 		goto mmo_readerr;
 
-	size = p->num_mmo * sizeof p->mmo_index[0];
+	size = p->header.num_msg * sizeof p->mmo_index[0];
 	if (mame_fread(file, p->mmo_index, size) != size)
 		goto mmo_readerr;
 
@@ -149,10 +165,11 @@ static void load_mmo(int msgcat)
 
 	mame_fclose(file);
 
-	for (i = 0; i < p->num_mmo; i++)
+	for (i = 0; i < p->header.num_msg; i++)
 	{
 		p->mmo_index[i].id = p->mmo_str + (unsigned long)p->mmo_index[i].id;
-		p->mmo_index[i].str = p->mmo_str + (unsigned long)p->mmo_index[i].str;
+		p->mmo_index[i].wstr = p->mmo_str + (unsigned long)p->mmo_index[i].wstr;
+		p->mmo_index[i].ustr = p->mmo_str + (unsigned long)p->mmo_index[i].ustr;
 	}
 
 	p->status = MMO_READY;
@@ -201,9 +218,9 @@ char *lang_message(int msgcat, const char *str)
 
 		case MMO_READY:
 			q.id = str;
-			mmo = bsearch(&q, p->mmo_index, p->num_mmo, sizeof p->mmo_index[0], mmo_cmp);
+			mmo = bsearch(&q, p->mmo_index, p->header.num_msg, sizeof p->mmo_index[0], mmo_cmp);
 			if (mmo)
-				return (char *)mmo->str;
+				return (char *)mmo->ustr;
 			break;
 
 		default:
@@ -211,6 +228,33 @@ char *lang_message(int msgcat, const char *str)
 	}
 
 	return (char *)str;
+}
+
+void *lang_messagew(int msgcat, const char *str)
+{
+	struct mmo *p = &mmo_table[current_lang][msgcat];
+	struct mmo_data q;
+	struct mmo_data *mmo;
+
+	switch (p->status)
+	{
+		case MMO_NOT_LOADED:
+			load_mmo(msgcat);
+			if (p->status != MMO_READY)
+				break;
+
+		case MMO_READY:
+			q.id = str;
+			mmo = bsearch(&q, p->mmo_index, p->header.num_msg, sizeof p->mmo_index[0], mmo_cmp);
+			if (mmo)
+				return (char *)mmo->wstr;
+			break;
+
+		default:
+			break;
+	}
+
+	return NULL;
 }
 
 void ui_lang_shutdown(void)

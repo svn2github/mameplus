@@ -1,62 +1,62 @@
 # windows/input.c: 1711
          all -- all axes on all joysticks are digital\n
-         all -- å…¨ã¦ã®ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å…¨ã¦ã®è»¸ã‚’ãƒ‡ã‚¸ã‚¿ãƒ«ã«ã—ã¾ã™\n
+         all -- ‘S‚Ä‚ÌƒWƒ‡ƒCƒXƒeƒBƒbƒN‚Ì‘S‚Ä‚Ì²‚ğƒfƒWƒ^ƒ‹‚É‚µ‚Ü‚·\n
 
 # windows/input.c: 1717
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
-         j1,j2a2 -- å…¨ã¦ã®ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯1ã®è»¸ã¨ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯2ã®è»¸2ã‚’ãƒ‡ã‚¸ã‚¿ãƒ«ã«ã—ã¾ã™\n
+         j1,j2a2 -- ‘S‚Ä‚ÌƒWƒ‡ƒCƒXƒeƒBƒbƒN1‚Ì²‚ÆƒWƒ‡ƒCƒXƒeƒBƒbƒN2‚Ì²2‚ğƒfƒWƒ^ƒ‹‚É‚µ‚Ü‚·\n
 
 # windows/input.c: 1715
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
-         j1a5a6 -- ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯1ã®è»¸5ã¨6ã‚’ãƒ‡ã‚¸ã‚¿ãƒ«ã«ã—ã¾ã™\n
+         j1a5a6 -- ƒWƒ‡ƒCƒXƒeƒBƒbƒN1‚Ì²5‚Æ6‚ğƒfƒWƒ^ƒ‹‚É‚µ‚Ü‚·\n
 
 # windows/input.c: 1712
          j<N> -- all axes on joystick <N> are digital\n
-         j<N> -- ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯<N>ã®å…¨ã¦ã®è»¸ã‚’ãƒ‡ã‚¸ã‚¿ãƒ«ã«ã—ã¾ã™\n
+         j<N> -- ƒWƒ‡ƒCƒXƒeƒBƒbƒN<N>‚Ì‘S‚Ä‚Ì²‚ğƒfƒWƒ^ƒ‹‚É‚µ‚Ü‚·\n
 
 # windows/input.c: 1713
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
-         j<N>a<M> -- ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯<N>ã®è»¸<M>ã‚’ãƒ‡ã‚¸ã‚¿ãƒ«ã«ã—ã¾ã™\n
+         j<N>a<M> -- ƒWƒ‡ƒCƒXƒeƒBƒbƒN<N>‚Ì²<M>‚ğƒfƒWƒ^ƒ‹‚É‚µ‚Ü‚·\n
 
 # windows/input.c: 1710
          none -- no axes on any joysticks are digital\n
-         none -- å…¨ã¦ã®ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®è»¸ã‚’ãƒ‡ã‚¸ã‚¿ãƒ«ã«ã—ã¾ã›ã‚“\n
+         none -- ‘S‚Ä‚ÌƒWƒ‡ƒCƒXƒeƒBƒbƒN‚Ì²‚ğƒfƒWƒ^ƒ‹‚É‚µ‚Ü‚¹‚ñ\n
 
 # windows/config.c: 788
         MAME -createconfig to create a mame.ini\n\n
-        MAME -createconfig è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«mame.iniã‚’ä½œæˆã—ã¾ã™\n
+        MAME -createconfig İ’èƒtƒ@ƒCƒ‹mame.ini‚ğì¬‚µ‚Ü‚·\n
 
 # windows/config.c: 787
         MAME -showconfig   for a list of configuration options\n
-        MAME -showconfig   è¨­å®šã‚ªãƒ—ã‚·ãƒ§ãƒ³ã®ä¸€è¦§ã‚’è¡¨\ç¤ºã—ã¾ã™\n
+        MAME -showconfig   İ’èƒIƒvƒVƒ‡ƒ“‚Ìˆê——‚ğ•\\¦‚µ‚Ü‚·\n
 
 # windows/config.c: 786
         MAME -showusage    for a brief list of options\n
-        MAME -showusage    å¯¾å¿œã—ã¦ã„ã‚‹ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã®ä¸€è¦§ã‚’è¡¨\ç¤ºã—ã¾ã™\n
+        MAME -showusage    ‘Î‰‚µ‚Ä‚¢‚éƒIƒvƒVƒ‡ƒ“‚Ìˆê——‚ğ•\\¦‚µ‚Ü‚·\n
 
 # windows/input.c: 1714
     Multiple axes can be specified for one joystick:\n
-    ä¸€ã¤ã®ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®è¤‡æ•°ã®è»¸ã‚’æŒ‡å®šã™ã‚‹äº‹ãŒå‡ºæ¥ã¾ã™:\n
+    ˆê‚Â‚ÌƒWƒ‡ƒCƒXƒeƒBƒbƒN‚Ì•¡”‚Ì²‚ğw’è‚·‚é–‚ªo—ˆ‚Ü‚·:\n
 
 # windows/input.c: 1716
     Multiple joysticks can be specified separated by commas:\n
-    ã‚³ãƒ³ãƒã§åŒºåˆ‡ã‚‹äº‹ã§è¤‡æ•°ã®ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯æŒ‡å®šã™ã‚‹äº‹ãŒå‡ºæ¥ã¾ã™:\n
+    ƒRƒ“ƒ}‚Å‹æØ‚é–‚Å•¡”‚ÌƒWƒ‡ƒCƒXƒeƒBƒbƒNw’è‚·‚é–‚ªo—ˆ‚Ü‚·:\n
 
 # windows/input.c: 2156
  - digital
- - ãƒ‡ã‚¸ã‚¿ãƒ«
+ - ƒfƒWƒ^ƒ‹
 
 # windows/fronthlp.c: 596
  BAD
- ä¸è‰¯
+ •s—Ç
 
 # windows/fronthlp.c: 602
  NO GOOD DUMP KNOWN
- æ­£å¸¸ãªãƒ€ãƒ³ãƒ—ã¯å­˜åœ¨ã—ã¾ã›ã‚“
+ ³í‚Èƒ_ƒ“ƒv‚Í‘¶İ‚µ‚Ü‚¹‚ñ
 
 # windows/input.c: 2089
 %s Button %d
-%s ãƒœã‚¿ãƒ³ %d
+%s ƒ{ƒ^ƒ“ %d
 
 # windows/video.c: 433
 %s%2d%4d%%%4d/%d fps
@@ -64,43 +64,43 @@
 
 # windows/fronthlp.c: 107
 (BAD) 
-(ç•°å¸¸) 
+(ˆÙí) 
 
 # windows/config.c: 185, 186
 (debugger-only command)
-(ãƒ‡ãƒãƒƒã‚¬ç”¨ã‚³ãƒãƒ³ãƒ‰)
+(ƒfƒoƒbƒK—pƒRƒ}ƒ“ƒh)
 
 # windows/config.c: 144, 150, 156, 162, 163, 298, 308, 320, 321, 322, 323, 324, 325, 326, 327, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 399, 400, 401
 (disabled by compiling option)
-(ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«æ™‚ã«ç„¡åŠ¹åŒ–)
+(ƒRƒ“ƒpƒCƒ‹‚É–³Œø‰»)
 
 # windows/video.c: 470
 (primary)
-(ãƒ—ãƒ©ã‚¤ãƒãƒª)
+(ƒvƒ‰ƒCƒ}ƒŠ)
 
 # windows/config.c: 283
 ARTWORK OPTIONS
-ã‚¢ãƒ¼ãƒˆãƒ¯ãƒ¼ã‚¯è¨­å®š
+ƒA[ƒgƒ[ƒNİ’è
 
 # windows/config.c: 338
 AUTOMATIC DEVICE SELECTION OPTIONS
-è‡ªå‹•ãƒ‡ãƒã‚¤ã‚¹é¸æŠè¨­å®š
+©“®ƒfƒoƒCƒX‘I‘ğİ’è
 
 # windows/video.c: 267
 Average FPS: %f (%d frames)\n
-å¹³å‡FPS: %f (%d ãƒ•ãƒ¬ãƒ¼ãƒ )\n
+•½‹ÏFPS: %f (%d ƒtƒŒ[ƒ€)\n
 
 # windows/config.c: 130
 CONFIGURATION OPTIONS
-ã‚³ãƒ³ãƒ•ã‚£ã‚°è¨­å®š
+ƒRƒ“ƒtƒBƒOİ’è
 
 # windows/config.c: 350
 CORE LANGUAGE OPTIONS
-ã‚³ã‚¢ã®è¨€èªè¨­å®š
+ƒRƒA‚ÌŒ¾Œêİ’è
 
 # windows/config.c: 355
 CORE PALETTE OPTIONS
-ã‚³ã‚¢ã®ãƒ‘ãƒ¬ãƒƒãƒˆè¨­å®š
+ƒRƒA‚ÌƒpƒŒƒbƒgİ’è
 
 # windows/config.c: 118
 CRC-32s
@@ -108,543 +108,543 @@ CRC-32
 
 # windows/config.c: 177
 DEBUGGING OPTIONS
-ãƒ‡ãƒãƒƒã‚¬è¨­å®š
+ƒfƒoƒbƒKİ’è
 
 # windows/config.c: 231
 DIRECT3D-SPECIFIC OPTIONS
-Direct3Då›ºæœ‰è¨­å®š
+Direct3DŒÅ—Lİ’è
 
 # windows/config.c: 227
 DIRECTDRAW-SPECIFIC OPTIONS
-DirectDrawå›ºæœ‰è¨­å®š
+DirectDrawŒÅ—Lİ’è
 
 # windows/drawd3d.c: 1119
 Device %s currently in an unsupported mode\n
-ãƒ‡ãƒã‚¤ã‚¹ã€Œ%sã€ã¯ç¾åœ¨ã‚µãƒãƒ¼ãƒˆã•ã‚Œã¦ã„ãªã„ãƒ¢ãƒ¼ãƒ‰ã§ã™\n
+ƒfƒoƒCƒXu%sv‚ÍŒ»İƒTƒ|[ƒg‚³‚ê‚Ä‚¢‚È‚¢ƒ‚[ƒh‚Å‚·\n
 
 # windows/drawd3d.c: 1092
 Direct3D: Configuring adapter #%d = %s\n
-Direct3D: ã‚¢ãƒ€ãƒ—ã‚¿#%dã‚’%sã«è¨­å®šã—ã¦ã„ã¾ã™\n
+Direct3D: ƒAƒ_ƒvƒ^#%d‚ğ%s‚Éİ’è‚µ‚Ä‚¢‚Ü‚·\n
 
 # windows/drawd3d.c: 717
 Direct3D: Device created at %dx%d\n
-Direct3D: ãƒ‡ãƒã‚¤ã‚¹ã‚’%dx%dã§ä½œæˆã—ã¾ã—ãŸ\n
+Direct3D: ƒfƒoƒCƒX‚ğ%dx%d‚Åì¬‚µ‚Ü‚µ‚½\n
 
 # windows/drawd3d.c: 587, 2071
 Direct3D: Error %08X during device begin_scene call\n
-Direct3D: ãƒ‡ãƒã‚¤ã‚¹ã®begin_sceneå‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+Direct3D: ƒfƒoƒCƒX‚Ìbegin_sceneŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawd3d.c: 1571, 2120
 Direct3D: Error %08X during device draw_primitive call\n
-Direct3D: ãƒ‡ãƒã‚¤ã‚¹ã®draw_primitiveå‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+Direct3D: ƒfƒoƒCƒX‚Ìdraw_primitiveŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawd3d.c: 616, 2124
 Direct3D: Error %08X during device end_scene call\n
-Direct3D: ãƒ‡ãƒã‚¤ã‚¹ã®end_sceneå‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+Direct3D: ƒfƒoƒCƒX‚Ìend_sceneŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawd3d.c: 2064
 Direct3D: Error %08X during device get_render_target call\n
-Direct3D: ãƒ‡ãƒã‚¤ã‚¹ã®get_render_targetå‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+Direct3D: ƒfƒoƒCƒX‚Ìget_render_targetŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawd3d.c: 622
 Direct3D: Error %08X during device present call\n
-Direct3D: ãƒ‡ãƒã‚¤ã‚¹ã®presentå‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+Direct3D: ƒfƒoƒCƒX‚ÌpresentŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawd3d.c: 331, 338, 345, 352
 Direct3D: Error %08X during device set_render_state call\n
-Direct3D: ãƒ‡ãƒã‚¤ã‚¹ã®set_render_stateå‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+Direct3D: ƒfƒoƒCƒX‚Ìset_render_stateŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawd3d.c: 2066, 2128
 Direct3D: Error %08X during device set_render_target call\n
-Direct3D: ãƒ‡ãƒã‚¤ã‚¹ã®set_render_targetå‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+Direct3D: ƒfƒoƒCƒX‚Ìset_render_targetŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawd3d.c: 1543, 2118
 Direct3D: Error %08X during device set_stream_source call\n
-Direct3D: ãƒ‡ãƒã‚¤ã‚¹ã®set_stream_sourceå‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+Direct3D: ƒfƒoƒCƒX‚Ìset_stream_sourceŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawd3d.c: 263, 2077
 Direct3D: Error %08X during device set_texture call\n
-Direct3D: ãƒ‡ãƒã‚¤ã‚¹ã®set_textureå‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+Direct3D: ƒfƒoƒCƒX‚Ìset_textureŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawd3d.c: 275, 277, 289, 291, 303
 Direct3D: Error %08X during device set_texture_stage_state call\n
-Direct3D: ãƒ‡ãƒã‚¤ã‚¹ã®set_texture_stage_stateå‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+Direct3D: ƒfƒoƒCƒX‚Ìset_texture_stage_stateŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawd3d.c: 2052
 Direct3D: Error %08X during device stretct_rect call\n
-Direct3D: ãƒ‡ãƒã‚¤ã‚¹ã®stretct_rectå‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+Direct3D: ƒfƒoƒCƒX‚Ìstretct_rectŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawd3d.c: 888, 890, 892, 894, 898, 912, 926, 940, 966, 990, 1004, 1017, 1024
 Direct3D: Error %08X during get_caps_dword call\n
-Direct3D: get_caps_dwordå‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+Direct3D: get_caps_dwordŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawd3d.c: 2031
 Direct3D: Error %08X during texture get_surface_level call\n
-Direct3D: ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®get_surface_levelå‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+Direct3D: ƒeƒNƒXƒ`ƒƒ‚Ìget_surface_levelŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawd3d.c: 2007
 Direct3D: Error %08X during texture unlock_rect call\n
-Direct3D: ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®unlock_rectå‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+Direct3D: ƒeƒNƒXƒ`ƒƒ‚Ìunlock_rectŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawd3d.c: 2081
 Direct3D: Error %08X during vertex buffer lock call\n
-Direct3D: é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®lockå‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+Direct3D: ’¸“_ƒoƒbƒtƒ@‚ÌlockŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawd3d.c: 1538, 2113
 Direct3D: Error %08X during vertex buffer unlock call\n
-Direct3D: é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®unlockå‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+Direct3D: ’¸“_ƒoƒbƒtƒ@‚ÌunlockŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawd3d.c: 953
 Direct3D: Error - Device does not support dest alpha blending with inverted source alpha\n
-Direct3D: ã‚¨ãƒ©ãƒ¼: ãƒ‡ãƒã‚¤ã‚¹ã¯åè»¢ã—ãŸã‚½\ãƒ¼ã‚¹ã‚¢ãƒ«ãƒ•ã‚¡ã¨ã®ã‚¢ãƒ«ãƒ•ã‚¡ãƒ–ãƒ¬ãƒ³ãƒ‰ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n
+Direct3D: ƒGƒ‰[: ƒfƒoƒCƒX‚Í”½“]‚µ‚½ƒ\\[ƒXƒAƒ‹ƒtƒ@‚Æ‚ÌƒAƒ‹ƒtƒ@ƒuƒŒƒ“ƒh‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/drawd3d.c: 948
 Direct3D: Error - Device does not support dest alpha blending with one\n
-Direct3D: ã‚¨ãƒ©ãƒ¼: ãƒ‡ãƒã‚¤ã‚¹ã¯ã‚¢ãƒ«ãƒ•ã‚¡ãƒ–ãƒ¬ãƒ³ãƒ‰ä¿‚æ•°1ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n
+Direct3D: ƒGƒ‰[: ƒfƒoƒCƒX‚ÍƒAƒ‹ƒtƒ@ƒuƒŒƒ“ƒhŒW”1‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/drawd3d.c: 943
 Direct3D: Error - Device does not support dest alpha blending with zero\n
-Direct3D: ã‚¨ãƒ©ãƒ¼: ãƒ‡ãƒã‚¤ã‚¹ã¯ã‚¢ãƒ«ãƒ•ã‚¡ãƒ–ãƒ¬ãƒ³ãƒ‰ä¿‚æ•°0ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n
+Direct3D: ƒGƒ‰[: ƒfƒoƒCƒX‚ÍƒAƒ‹ƒtƒ@ƒuƒŒƒ“ƒhŒW”0‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/drawd3d.c: 901
 Direct3D: Error - Device does not support immediate presentations\n
-Direct3D: ã‚¨ãƒ©ãƒ¼: ãƒ‡ãƒã‚¤ã‚¹ã¯å‚ç›´åŒæœŸã‚’å¾…ãŸãªã„ãƒ—ãƒ¬ã‚¼ãƒ³ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³å‡¦ç†ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n
+Direct3D: ƒGƒ‰[: ƒfƒoƒCƒX‚Í‚’¼“¯Šú‚ğ‘Ò‚½‚È‚¢ƒvƒŒƒ[ƒ“ƒe[ƒVƒ‡ƒ“ˆ—‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/drawd3d.c: 906
 Direct3D: Error - Device does not support per-refresh presentations\n
-Direct3D: ã‚¨ãƒ©ãƒ¼: ãƒ‡ãƒã‚¤ã‚¹ã¯å‚ç›´åŒæœŸã‚’å¾…ã¤ãƒ—ãƒ¬ã‚¼ãƒ³ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³å‡¦ç†ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n
+Direct3D: ƒGƒ‰[: ƒfƒoƒCƒX‚Í‚’¼“¯Šú‚ğ‘Ò‚ÂƒvƒŒƒ[ƒ“ƒe[ƒVƒ‡ƒ“ˆ—‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/drawd3d.c: 934
 Direct3D: Error - Device does not support source alpha blending with destination color\n
-Direct3D: ã‚¨ãƒ©ãƒ¼: ãƒ‡ãƒã‚¤ã‚¹ã¯è‰²æŒ‡å®šã•ã‚ŒãŸã‚¢ãƒ«ãƒ•ã‚¡ãƒ–ãƒ¬ãƒ³ãƒ‰ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n
+Direct3D: ƒGƒ‰[: ƒfƒoƒCƒX‚ÍFw’è‚³‚ê‚½ƒAƒ‹ƒtƒ@ƒuƒŒƒ“ƒh‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/drawd3d.c: 929
 Direct3D: Error - Device does not support source alpha blending with source alpha\n
-Direct3D: ã‚¨ãƒ©ãƒ¼: ãƒ‡ãƒã‚¤ã‚¹ã¯ã‚½\ãƒ¼ã‚¹ã‚¢ãƒ«ãƒ•ã‚¡ã§æŒ‡å®šã•ã‚ŒãŸã‚¢ãƒ«ãƒ•ã‚¡ãƒ–ãƒ¬ãƒ³ãƒ‰ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n
+Direct3D: ƒGƒ‰[: ƒfƒoƒCƒX‚Íƒ\\[ƒXƒAƒ‹ƒtƒ@‚Åw’è‚³‚ê‚½ƒAƒ‹ƒtƒ@ƒuƒŒƒ“ƒh‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/drawd3d.c: 960
 Direct3D: Error - Device does not support texture alpha\n
-Direct3D: ã‚¨ãƒ©ãƒ¼: ãƒ‡ãƒã‚¤ã‚¹ã¯ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ã‚¢ãƒ«ãƒ•ã‚¡ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n
+Direct3D: ƒGƒ‰[: ƒfƒoƒCƒX‚ÍƒeƒNƒXƒ`ƒƒ‚ÌƒAƒ‹ƒtƒ@‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/d3d8intf.c: 102
 Direct3D: Error attempting to initialize Direct3D8\n
-Direct3D: Direct3D8ã®åˆæœŸåŒ–ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+Direct3D: Direct3D8‚Ì‰Šú‰»’†‚ÉƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/d3d9intf.c: 100
 Direct3D: Error attempting to initialize Direct3D9\n
-Direct3D: Direct3D9ã®åˆæœŸåŒ–ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+Direct3D: Direct3D9‚Ì‰Šú‰»’†‚ÉƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawd3d.c: 1261
 Direct3D: Mode selected = %4dx%4d@%3dHz\n
-Direct3D: é¸æŠã•ã‚ŒãŸãƒ¢ãƒ¼ãƒ‰ã¯%4dx%4d@%3dHz\n
+Direct3D: ‘I‘ğ‚³‚ê‚½ƒ‚[ƒh‚Í%4dx%4d@%3dHz\n
 
 # windows/drawd3d.c: 1205
 Direct3D: Selecting video mode...\n
-Direct3D: æç”»ãƒ¢ãƒ¼ãƒ‰ã‚’é¸æŠä¸­ã§ã™...\n
+Direct3D: •`‰æƒ‚[ƒh‚ğ‘I‘ğ’†‚Å‚·...\n
 
 # windows/d3d8intf.c: 84
 Direct3D: Unable to access d3d8.dll\n
-Direct3D: d3d8.dllã«ã‚¢ã‚¯ã‚»ã‚¹å‡ºæ¥ã¾ã›ã‚“\n
+Direct3D: d3d8.dll‚ÉƒAƒNƒZƒXo—ˆ‚Ü‚¹‚ñ\n
 
 # windows/d3d9intf.c: 82
 Direct3D: Unable to access d3d9.dll\n
-Direct3D: d3d9.dllã«ã‚¢ã‚¯ã‚»ã‚¹å‡ºæ¥ã¾ã›ã‚“\n
+Direct3D: d3d9.dll‚ÉƒAƒNƒZƒXo—ˆ‚Ü‚¹‚ñ\n
 
 # windows/d3d8intf.c: 92
 Direct3D: Unable to find Direct3DCreate8\n
-Direct3D: Direct3DCreate8ã‚’è¦‹ã¤ã‘ã‚‹äº‹ãŒå‡ºæ¥ã¾ã›ã‚“\n
+Direct3D: Direct3DCreate8‚ğŒ©‚Â‚¯‚é–‚ªo—ˆ‚Ü‚¹‚ñ\n
 
 # windows/d3d9intf.c: 90
 Direct3D: Unable to find Direct3DCreate9\n
-Direct3D: Direct3DCreate9ã‚’è¦‹ã¤ã‘ã‚‹äº‹ãŒå‡ºæ¥ã¾ã›ã‚“\n
+Direct3D: Direct3DCreate9‚ğŒ©‚Â‚¯‚é–‚ªo—ˆ‚Ü‚¹‚ñ\n
 
 # windows/d3d8intf.c: 115
 Direct3D: Using Direct3D 8\n
-Direct3D: Direct3D 8ã‚’ä½¿ç”¨ã—ã¦ã„ã¾ã™\n
+Direct3D: Direct3D 8‚ğg—p‚µ‚Ä‚¢‚Ü‚·\n
 
 # windows/d3d9intf.c: 113
 Direct3D: Using Direct3D 9\n
-Direct3D: Direct3D 9ã‚’ä½¿ç”¨ã—ã¦ã„ã¾ã™\n
+Direct3D: Direct3D 9‚ğg—p‚µ‚Ä‚¢‚Ü‚·\n
 
 # windows/drawd3d.c: 1026
 Direct3D: Using StretchRect for prescaling\n
-Direct3D: ãƒ—ãƒªã‚¹ã‚±ãƒ¼ãƒ«ã«StretchRectã‚’ä½¿ç”¨ã—ã¦ã„ã¾ã™\n
+Direct3D: ƒvƒŠƒXƒP[ƒ‹‚ÉStretchRect‚ğg—p‚µ‚Ä‚¢‚Ü‚·\n
 
 # windows/drawd3d.c: 1020
 Direct3D: Using dynamic textures\n
-Direct3D: ãƒ€ã‚¤ãƒŠãƒŸãƒƒã‚¯ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ä½¿ç”¨ã—ã¦ã„ã¾ã™\n
+Direct3D: ƒ_ƒCƒiƒ~ƒbƒNƒeƒNƒXƒ`ƒƒ‚ğg—p‚µ‚Ä‚¢‚Ü‚·\n
 
 # windows/drawd3d.c: 974
 Direct3D: Warning - Device does not support bilinear texture filtering for magnification\n
-Direct3D: è­¦å‘Š: ãƒ‡ãƒã‚¤ã‚¹ã¯ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æ‹¡å¤§ã«ãƒã‚¤ãƒªãƒ‹ã‚¢ãƒ•ã‚£ãƒ«ã‚¿ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n
+Direct3D: Œx: ƒfƒoƒCƒX‚ÍƒeƒNƒXƒ`ƒƒ‚ÌŠg‘å‚ÉƒoƒCƒŠƒjƒAƒtƒBƒ‹ƒ^‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/drawd3d.c: 984
 Direct3D: Warning - Device does not support bilinear texture filtering for minification\n
-Direct3D: è­¦å‘Š: ãƒ‡ãƒã‚¤ã‚¹ã¯ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ç¸®å°ã«ãƒã‚¤ãƒªãƒ‹ã‚¢ãƒ•ã‚£ãƒ«ã‚¿ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n
+Direct3D: Œx: ƒfƒoƒCƒX‚ÍƒeƒNƒXƒ`ƒƒ‚Ìk¬‚ÉƒoƒCƒŠƒjƒAƒtƒBƒ‹ƒ^‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/drawd3d.c: 920
 Direct3D: Warning - Device does not support hardware rasterization\n
-Direct3D: è­¦å‘Š: ãƒ‡ãƒã‚¤ã‚¹ã¯ãƒãƒ¼ãƒ‰ã‚¦ã‚§ã‚¢ã«ã‚ˆã‚‹ãƒ©ã‚¹ã‚¿ãƒ©ã‚¤ã‚ºã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n
+Direct3D: Œx: ƒfƒoƒCƒX‚Íƒn[ƒhƒEƒFƒA‚É‚æ‚éƒ‰ƒXƒ^ƒ‰ƒCƒY‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/drawd3d.c: 969
 Direct3D: Warning - Device does not support point-sample texture filtering for magnification\n
-Direct3D: è­¦å‘Š: ãƒ‡ãƒã‚¤ã‚¹ã¯ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æ‹¡å¤§ã«ãƒã‚¤ãƒ³ãƒˆã‚µãƒ³ãƒ—ãƒ«ãƒ•ã‚£ãƒ«ã‚¿ãƒªãƒ³ã‚°ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n
+Direct3D: Œx: ƒfƒoƒCƒX‚ÍƒeƒNƒXƒ`ƒƒ‚ÌŠg‘å‚Éƒ|ƒCƒ“ƒgƒTƒ“ƒvƒ‹ƒtƒBƒ‹ƒ^ƒŠƒ“ƒO‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/drawd3d.c: 979
 Direct3D: Warning - Device does not support point-sample texture filtering for minification\n
-Direct3D: è­¦å‘Š: ãƒ‡ãƒã‚¤ã‚¹ã¯ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ç¸®å°ã«ãƒã‚¤ãƒ³ãƒˆã‚µãƒ³ãƒ—ãƒ«ãƒ•ã‚£ãƒ«ã‚¿ãƒªãƒ³ã‚°ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n
+Direct3D: Œx: ƒfƒoƒCƒX‚ÍƒeƒNƒXƒ`ƒƒ‚Ìk¬‚Éƒ|ƒCƒ“ƒgƒTƒ“ƒvƒ‹ƒtƒBƒ‹ƒ^ƒŠƒ“ƒO‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/drawd3d.c: 915
 Direct3D: Warning - Device does not support queued rendering after a page flip\n
-Direct3D: è­¦å‘Š: ãƒ‡ãƒã‚¤ã‚¹ã¯ãƒšãƒ¼ã‚¸ãƒ•ãƒªãƒƒãƒ—å¾Œã®æç”»ã‚³ãƒãƒ³ãƒ‰ã‚­ãƒ¥ãƒ¼ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n
+Direct3D: Œx: ƒfƒoƒCƒX‚Íƒy[ƒWƒtƒŠƒbƒvŒã‚Ì•`‰æƒRƒ}ƒ“ƒhƒLƒ…[‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/drawd3d.c: 993
 Direct3D: Warning - Device does not support texture clamping\n
-Direct3D: è­¦å‘Š: ãƒ‡ãƒã‚¤ã‚¹ã¯ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ã‚¢ãƒ‰ãƒ¬ã‚¹å›ºå®šã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n
+Direct3D: Œx: ƒfƒoƒCƒX‚ÍƒeƒNƒXƒ`ƒƒ‚ÌƒAƒhƒŒƒXŒÅ’è‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/drawd3d.c: 1007
 Direct3D: Warning - Device does not support texture modulation\n
-Direct3D: è­¦å‘Š: ãƒ‡ãƒã‚¤ã‚¹ã¯ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ä¹—ç®—ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n
+Direct3D: Œx: ƒfƒoƒCƒX‚ÍƒeƒNƒXƒ`ƒƒ‚ÌæZ‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/drawd3d.c: 998
 Direct3D: Warning - Device does not support texture wrapping\n
-Direct3D: è­¦å‘Š: ãƒ‡ãƒã‚¤ã‚¹ã¯ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è²¼\ã‚Šä»˜ã‘ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n
+Direct3D: Œx: ƒfƒoƒCƒX‚ÍƒeƒNƒXƒ`ƒƒ‚ÌƒeƒNƒXƒ`ƒƒ‚Ì“\\‚è•t‚¯‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/drawd3d.c: 733
 Direct3D: Warning - device does not support full screen gamma correction.\n
-Direct3D: è­¦å‘Š: ãƒ‡ãƒã‚¤ã‚¹ã¯ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã§ã®ã‚¬ãƒ³ãƒè£œæ­£ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n
+Direct3D: Œx: ƒfƒoƒCƒX‚Íƒtƒ‹ƒXƒNƒŠ[ƒ“‚Å‚ÌƒKƒ“ƒ}•â³‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/drawd3d.c: 1642
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
-Direct3D: %dx%dã‹ã‚‰%dx%dã«ãƒ—ãƒªã‚¹ã‚±ãƒ¼ãƒ«ã‚’èª¿æ•´ã—ã¾ã—ãŸ\n
+Direct3D: %dx%d‚©‚ç%dx%d‚ÉƒvƒŠƒXƒP[ƒ‹‚ğ’²®‚µ‚Ü‚µ‚½\n
 
 # windows/drawd3d.c: 1062
 Direct3D: failed to recreate resources for device; failing permanently\n
-Direct3D: ãƒ‡ãƒã‚¤ã‚¹ã®ãƒªã‚½\ãƒ¼ã‚¹å†ç”ŸæˆãŒå¤±æ•—ã—ã¾ã—ãŸã€‚
+Direct3D: ƒfƒoƒCƒX‚ÌƒŠƒ\\[ƒXÄ¶¬‚ª¸”s‚µ‚Ü‚µ‚½B
 
 # windows/drawd3d.c: 1049
 Direct3D: resetting device\n
-Direct3D: ãƒ‡ãƒã‚¤ã‚¹ã‚’ãƒªã‚»ãƒƒãƒˆã—ã¦ã„ã¾ã™\n
+Direct3D: ƒfƒoƒCƒX‚ğƒŠƒZƒbƒg‚µ‚Ä‚¢‚Ü‚·\n
 
 # windows/drawdd.c: 789
 DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
-DirectDraw: %sãƒãƒƒãƒ•ã‚¡ã‚’ä½œæˆã—ã¾ã—ãŸ: %dx%dx%d (R=%08X G=%08X B=%08X)\n
+DirectDraw: %sƒoƒbƒtƒ@‚ğì¬‚µ‚Ü‚µ‚½: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 
 # windows/drawdd.c: 1126
 DirectDraw: Configuring device %s\n
-DirectDraw: ãƒ‡ãƒã‚¤ã‚¹%sã‚’è¨­å®šä¸­\n
+DirectDraw: ƒfƒoƒCƒX%s‚ğİ’è’†\n
 
 # windows/drawdd.c: 616
 DirectDraw: Error %08X attempting to set gamma correction.\n
-DirectDraw: ã‚¬ãƒ³ãƒè£œæ­£ã®è¨­å®šã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+DirectDraw: ƒKƒ“ƒ}•â³‚Ìİ’è‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawdd.c: 495
 DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
-DirectDraw: æç”»ãƒ¢ãƒ¼ãƒ‰ã‚’%dx%d@%dã«è¨­å®šã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+DirectDraw: •`‰æƒ‚[ƒh‚ğ%dx%d@%d‚Éİ’è‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawdd.c: 1086
 DirectDraw: Error %08X blitting to the screen\n
-DirectDraw: ç”»é¢ã¸ã®æç”»ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+DirectDraw: ‰æ–Ê‚Ö‚Ì•`‰æ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawdd.c: 1053, 1062, 1071, 1080
 DirectDraw: Error %08X clearing the screen\n
-DirectDraw: ç”»é¢ã®æ¶ˆå»ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+DirectDraw: ‰æ–Ê‚ÌÁ‹‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawdd.c: 774
 DirectDraw: Error %08X creating %s surface\n
-DirectDraw: %sãƒãƒƒãƒ•ã‚¡ã®ä½œæˆã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+DirectDraw: %sƒoƒbƒtƒ@‚Ìì¬‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawdd.c: 815
 DirectDraw: Error %08X creating clipper\n
-DirectDraw: ã‚¯ãƒªãƒƒãƒ‘ãƒ¼ã®ä½œæˆã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+DirectDraw: ƒNƒŠƒbƒp[‚Ìì¬‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawdd.c: 460, 1115
 DirectDraw: Error %08X during DirectDrawCreateEx call\n
-DirectDraw: DirectDrawCreateExå‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+DirectDraw: DirectDrawCreateExŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawdd.c: 1212
 DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
-DirectDraw: å‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+DirectDraw: ŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawdd.c: 1324
 DirectDraw: Error %08X during EnumDisplayModes call\n
-DirectDraw: EnumDisplayModeså‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+DirectDraw: EnumDisplayModesŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawdd.c: 716
 DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
-DirectDraw: IDirectDraw7_GetCapså‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+DirectDraw: IDirectDraw7_GetCapsŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawdd.c: 485
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
-DirectDraw: IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW)å‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+DirectDraw: IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW)ŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawdd.c: 479
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
-DirectDraw: IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW)å‘¼ã³å‡ºã—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+DirectDraw: IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW)ŒÄ‚Ño‚µ‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawdd.c: 782
 DirectDraw: Error %08X getting %s surface desciption\n
-DirectDraw: %sãƒãƒƒãƒ•ã‚¡ã®è©³ç´°ã‚’å–å¾—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+DirectDraw: %sƒoƒbƒtƒ@‚ÌÚ×‚ğæ“¾‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawdd.c: 544
 DirectDraw: Error %08X getting attached back surface\n
-DirectDraw: å‰²ã‚Šå½“ã¦ã‚‰ã‚ŒãŸè£ç”»é¢ãƒãƒƒãƒ•ã‚¡ã®å–å¾—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+DirectDraw: Š„‚è“–‚Ä‚ç‚ê‚½— ‰æ–Êƒoƒbƒtƒ@‚Ìæ“¾‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawdd.c: 1134
 DirectDraw: Error %08X getting current display mode\n
-DirectDraw: ç¾åœ¨ã®ç”»é¢ãƒ¢ãƒ¼ãƒ‰å–å¾—ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+DirectDraw: Œ»İ‚Ì‰æ–Êƒ‚[ƒhæ“¾‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawdd.c: 353
 DirectDraw: Error %08X locking blit surface\n
-DirectDraw: blitãƒãƒƒãƒ•ã‚¡ã®ãƒ­ãƒƒã‚¯ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+DirectDraw: blitƒoƒbƒtƒ@‚ÌƒƒbƒN‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawdd.c: 823
 DirectDraw: Error %08X setting clipper hwnd\n
-DirectDraw: ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚¯ãƒªãƒƒãƒ‘ãƒ¼è¨­å®šã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+DirectDraw: ƒEƒBƒ“ƒhƒE‚ÌƒNƒŠƒbƒp[İ’è‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawdd.c: 831
 DirectDraw: Error %08X setting clipper on primary surface\n
-DirectDraw: primaryãƒãƒƒãƒ•ã‚¡ã®ã‚¯ãƒªãƒƒãƒ‘ãƒ¼è¨­å®šã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+DirectDraw: primaryƒoƒbƒtƒ@‚ÌƒNƒŠƒbƒp[İ’è‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawdd.c: 426
 DirectDraw: Error %08X unlocking blit surface\n
-DirectDraw: blitãƒãƒƒãƒ•ã‚¡ã®ã‚¢ãƒ³ãƒ­ãƒƒã‚¯ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+DirectDraw: blitƒoƒbƒtƒ@‚ÌƒAƒ“ƒƒbƒN‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawdd.c: 432, 1092
 DirectDraw: Error %08X waiting for VBLANK\n
-DirectDraw: VBLANKå¾…ã¡ã§ã‚¨ãƒ©ãƒ¼%08XãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+DirectDraw: VBLANK‘Ò‚¿‚ÅƒGƒ‰[%08X‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawdd.c: 468
 DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
-DirectDraw: ã‚¨ãƒ©ãƒ¼: ãƒ‡ãƒã‚¤ã‚¹ã¯DirectDrawæç”»ã«å¿…è¦æœ€å°é™ã®è¦ä»¶ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n
+DirectDraw: ƒGƒ‰[: ƒfƒoƒCƒX‚ÍDirectDraw•`‰æ‚É•K—vÅ¬ŒÀ‚Ì—vŒ‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/drawdd.c: 347
 DirectDraw: Lost surfaces; deleting and retrying next frame\n
-DirectDraw: ãƒãƒƒãƒ•ã‚¡ã®æ¶ˆå¤±ã€‚æ¬¡ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã«å‰Šé™¤ã—ã¦ã‚„ã‚Šç›´ã—ã¾ã™\n
+DirectDraw: ƒoƒbƒtƒ@‚ÌÁ¸BŸ‚ÌƒtƒŒ[ƒ€‚Éíœ‚µ‚Ä‚â‚è’¼‚µ‚Ü‚·\n
 
 # windows/drawdd.c: 1325
 DirectDraw: Mode selected = %4dx%4d@%3dHz\n
-DirectDraw: é¸æŠã•ã‚ŒãŸãƒ¢ãƒ¼ãƒ‰ã¯%4dx%4d@%3dHz\n
+DirectDraw: ‘I‘ğ‚³‚ê‚½ƒ‚[ƒh‚Í%4dx%4d@%3dHz\n
 
 # windows/drawdd.c: 927
 DirectDraw: New blit size = %dx%d\n
-DirectDraw: æ–°ã—ã„ãƒãƒƒãƒ•ã‚¡ã‚µã‚¤ã‚ºã¯%dx%d\n
+DirectDraw: V‚µ‚¢ƒoƒbƒtƒ@ƒTƒCƒY‚Í%dx%d\n
 
 # windows/drawdd.c: 1322
 DirectDraw: Selecting video mode...\n
-DirectDraw: æç”»ãƒ¢ãƒ¼ãƒ‰ã‚’é¸æŠä¸­ã§ã™...\n
+DirectDraw: •`‰æƒ‚[ƒh‚ğ‘I‘ğ’†‚Å‚·...\n
 
 # windows/drawdd.c: 196
 DirectDraw: Unable to access ddraw.dll\n
-DirectDraw: ddraw.dllã«ã‚¢ã‚¯ã‚»ã‚¹å‡ºæ¥ã¾ã›ã‚“\n
+DirectDraw: ddraw.dll‚ÉƒAƒNƒZƒXo—ˆ‚Ü‚¹‚ñ\n
 
 # windows/drawdd.c: 204
 DirectDraw: Unable to find DirectDrawCreateEx\n
-DirectDraw: DirectDrawCreateExã‚’è¦‹ã¤ã‘ã‚‹äº‹ãŒå‡ºæ¥ã¾ã›ã‚“\n
+DirectDraw: DirectDrawCreateEx‚ğŒ©‚Â‚¯‚é–‚ªo—ˆ‚Ü‚¹‚ñ\n
 
 # windows/drawdd.c: 214
 DirectDraw: Unable to find DirectDrawEnumerateExA\n
-DirectDraw: DirectDrawEnumerateExAã‚’è¦‹ã¤ã‘ã‚‹äº‹ãŒå‡ºæ¥ã¾ã›ã‚“\n
+DirectDraw: DirectDrawEnumerateExA‚ğŒ©‚Â‚¯‚é–‚ªo—ˆ‚Ü‚¹‚ñ\n
 
 # windows/drawdd.c: 382, 418, 1168
 DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
-DirectDraw: ä¸æ˜ãªç”»é¢ãƒ¢ãƒ¼ãƒ‰: R=%08X G=%08X B=%08X\n
+DirectDraw: •s–¾‚È‰æ–Êƒ‚[ƒh: R=%08X G=%08X B=%08X\n
 
 # windows/drawdd.c: 227
 DirectDraw: Using DirectDraw 7\n
-DirectDraw: DirectDraw 7ã‚’ä½¿ç”¨ã—ã¾ã™\n
+DirectDraw: DirectDraw 7‚ğg—p‚µ‚Ü‚·\n
 
 # windows/drawdd.c: 723
 DirectDraw: Warning - Device does not support hardware stretching\n
-DirectDraw: è­¦å‘Š: ãƒ‡ãƒã‚¤ã‚¹ã¯ãƒãƒ¼ãƒ‰ã‚¦ã‚§ã‚¢æ‹¡å¤§è¡¨\ç¤ºã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n
+DirectDraw: Œx: ƒfƒoƒCƒX‚Íƒn[ƒhƒEƒFƒAŠg‘å•\\¦‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/drawdd.c: 472
 DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
-DirectDraw: è­¦å‘Š: ãƒ‡ãƒã‚¤ã‚¹ã¯DirectDrawæç”»ã«ã‚ã¾ã‚Šé©ã—ã¦ã„ãªã„ã‹ã‚‚çŸ¥ã‚Œã¾ã›ã‚“\n
+DirectDraw: Œx: ƒfƒoƒCƒX‚ÍDirectDraw•`‰æ‚É‚ ‚Ü‚è“K‚µ‚Ä‚¢‚È‚¢‚©‚à’m‚ê‚Ü‚¹‚ñ\n
 
 # windows/drawdd.c: 599
 DirectDraw: Warning - device does not support full screen gamma correction.\n
-DirectDraw: è­¦å‘Š: ãƒ‡ãƒã‚¤ã‚¹ã¯ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã®ã‚¬ãƒ³ãƒè£œæ­£ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“ã€‚\n
+DirectDraw: Œx: ƒfƒoƒCƒX‚Íƒtƒ‹ƒXƒNƒŠ[ƒ“‚ÌƒKƒ“ƒ}•â³‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñB\n
 
 # windows/input.c: 1257
 DirectInput: Using DirectInput %d\n
-DirectInput: DirectInput %dã‚’ä½¿ç”¨ã—ã¾ã™\n
+DirectInput: DirectInput %d‚ğg—p‚µ‚Ü‚·\n
 
 # windows/sound.c: 589
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
-DirectSound: ã‚µã‚¦ãƒ³ãƒ‰ãƒãƒƒãƒ•ã‚¡: %d Hz, %d ãƒ“ãƒƒãƒˆ, %d ãƒãƒ£ãƒ³ãƒãƒ«\n
+DirectSound: ƒTƒEƒ“ƒhƒoƒbƒtƒ@: %d Hz, %d ƒrƒbƒg, %d ƒ`ƒƒƒ“ƒlƒ‹\n
 
 # windows/fronthlp.c: 907
 ERROR     %s\n
-ã‚¨ãƒ©ãƒ¼    %s\n
+ƒGƒ‰[    %s\n
 
 # windows/sound.c: 604
 Error creating DirectSound buffer: %08x\n
-DirectSoundãƒãƒƒãƒ•ã‚¡ä½œæˆãŒä½œæˆå‡ºæ¥ã¾ã›ã‚“: %08x\n
+DirectSoundƒoƒbƒtƒ@ì¬‚ªì¬o—ˆ‚Ü‚¹‚ñ: %08x\n
 
 # windows/sound.c: 463
 Error creating DirectSound: %08x\n
-DirectSoundã®ä½œæˆãŒå‡ºæ¥ã¾ã›ã‚“: %08x\n
+DirectSound‚Ìì¬‚ªo—ˆ‚Ü‚¹‚ñ: %08x\n
 
 # windows/sound.c: 570
 Error creating primary buffer: %08x\n
-ã‚µã‚¦ãƒ³ãƒ‰ãƒãƒƒãƒ•ã‚¡ãŒä½œæˆå‡ºæ¥ã¾ã›ã‚“: %08x\n
+ƒTƒEƒ“ƒhƒoƒbƒtƒ@‚ªì¬o—ˆ‚Ü‚¹‚ñ: %08x\n
 
 # windows/drawd3d.c: 767
 Error creating vertex buffer (%08X)
-é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®ä½œæˆã§ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ(%08X)
+’¸“_ƒoƒbƒtƒ@‚Ìì¬‚ÅƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½(%08X)
 
 # windows/sound.c: 472
 Error getting DirectSound capabilities: %08x\n
-DirectSoundã®æƒ…å ±ãŒå–å¾—å‡ºæ¥ã¾ã›ã‚“: %08x\n
+DirectSound‚Ìî•ñ‚ªæ“¾o—ˆ‚Ü‚¹‚ñ: %08x\n
 
 # windows/drawd3d.c: 1089
 Error getting identifier for adapter #%d\n
-ã‚¢ãƒ€ãƒ—ã‚¿#%dã®è­˜åˆ¥æƒ…å ±ã®å–å¾—ã§ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+ƒAƒ_ƒvƒ^#%d‚Ì¯•Êî•ñ‚Ìæ“¾‚ÅƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawdd.c: 1123
 Error getting identifier for device\n
-ãƒ‡ãƒã‚¤ã‚¹ã®è­˜åˆ¥æƒ…å ±ã®å–å¾—ã§ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+ƒfƒoƒCƒX‚Ì¯•Êî•ñ‚Ìæ“¾‚ÅƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/drawd3d.c: 1098
 Error getting mode for adapter #%d\n
-ã‚¢ãƒ€ãƒ—ã‚¿#%dã®ãƒ¢ãƒ¼ãƒ‰ã®å–å¾—ã§ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ\n
+ƒAƒ_ƒvƒ^#%d‚Ìƒ‚[ƒh‚Ìæ“¾‚ÅƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½\n
 
 # windows/sound.c: 586
 Error getting primary format: %08x\n
-ã‚µã‚¦ãƒ³ãƒ‰ãƒãƒƒãƒ•ã‚¡ã®è¨­å®šãŒèª­ã¿å‡ºã›ã¾ã›ã‚“: %08x\n
+ƒTƒEƒ“ƒhƒoƒbƒtƒ@‚Ìİ’è‚ª“Ç‚İo‚¹‚Ü‚¹‚ñ: %08x\n
 
 # windows/sound.c: 612
 Error locking stream buffer: %08x\n
-ã‚¹ãƒˆãƒªãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã®ãƒ­ãƒƒã‚¯ãŒå‡ºæ¥ã¾ã›ã‚“: %08x\n
+ƒXƒgƒŠ[ƒ€ƒoƒbƒtƒ@‚ÌƒƒbƒN‚ªo—ˆ‚Ü‚¹‚ñ: %08x\n
 
 # windows/sound.c: 517
 Error playing: %08x\n
-ã‚µã‚¦ãƒ³ãƒ‰ãŒå†ç”Ÿå‡ºæ¥ã¾ã›ã‚“: %08x\n
+ƒTƒEƒ“ƒh‚ªÄ¶o—ˆ‚Ü‚¹‚ñ: %08x\n
 
 # windows/sound.c: 480
 Error setting DirectSound cooperative level: %08x\n
-DirectSoundã®åˆæœŸåŒ–ã«å¤±æ•—ã—ã¾ã—ãŸ: %08x\n
+DirectSound‚Ì‰Šú‰»‚É¸”s‚µ‚Ü‚µ‚½: %08x\n
 
 # windows/sound.c: 578
 Error setting primary format: %08x\n
-ã‚µã‚¦ãƒ³ãƒ‰ãƒãƒƒãƒ•ã‚¡ã®è¨­å®šãŒå‡ºæ¥ã¾ã›ã‚“: %08x\n
+ƒTƒEƒ“ƒhƒoƒbƒtƒ@‚Ìİ’è‚ªo—ˆ‚Ü‚¹‚ñ: %08x\n
 
 # windows/drawd3d.c: 775
 Error setting vertex shader (%08X)
-é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ã®è¨­å®šã§ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ(%08X)\n
+’¸“_ƒVƒF[ƒ_‚Ìİ’è‚ÅƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½(%08X)\n
 
 # windows/drawd3d.c: 656
 Error: A8R8G8B8 format textures not supported\n
-ã‚¨ãƒ©ãƒ¼: A8R8G8B8å½¢å¼ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ãŒã‚µãƒãƒ¼ãƒˆã•ã‚Œã¦ã„ã¾ã›ã‚“\n
+ƒGƒ‰[: A8R8G8B8Œ`®‚ÌƒeƒNƒXƒ`ƒƒ‚ªƒTƒ|[ƒg‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/drawd3d.c: 646
 Error: Device does not meet minimum requirements for Direct3D rendering\n
-ã‚¨ãƒ©ãƒ¼: ãƒ‡ãƒã‚¤ã‚¹ã¯Direct3Dæç”»ã«å¿…è¦æœ€å°é™ã®è¦ä»¶ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n
+ƒGƒ‰[: ƒfƒoƒCƒX‚ÍDirect3D•`‰æ‚É•K—vÅ¬ŒÀ‚Ì—vŒ‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/drawd3d.c: 688
 Error: unable to configure a screen texture format\n
-ã‚¨ãƒ©ãƒ¼: ç”»é¢ãƒ†ã‚¯ã‚¹ãƒãƒ£å½¢å¼ã®è¨­å®šãŒå‡ºæ¥ã¾ã›ã‚“\n
+ƒGƒ‰[: ‰æ–ÊƒeƒNƒXƒ`ƒƒŒ`®‚Ìİ’è‚ªo—ˆ‚Ü‚¹‚ñ\n
 
 # windows/config.c: 263
 FULL SCREEN OPTIONS
-ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³è¨­å®š
+ƒtƒ‹ƒXƒNƒŠ[ƒ“İ’è
 
 # windows/config.c: 1093
 Failed to open file for playback
-å†ç”Ÿãƒ•ã‚¡ã‚¤ãƒ«ãŒèª­ã¿è¾¼ã‚ã¾ã›ã‚“
+Ä¶ƒtƒ@ƒCƒ‹‚ª“Ç‚İ‚ß‚Ü‚¹‚ñ
 
 # windows/config.c: 1143
 Failed to open file for recording
-å…¥åŠ›ã‚’ä¿å­˜ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ãŒä½œæˆã§ãã¾ã›ã‚“
+“ü—Í‚ğ•Û‘¶‚·‚éƒtƒ@ƒCƒ‹‚ªì¬‚Å‚«‚Ü‚¹‚ñ
 
 # windows/input.c: 2679
 Fast Forward
-æ—©é€ã‚Š
+‘‘—‚è
 
 # windows/config.c: 789
 For usage instructions, please consult the file windows.txt\n
-ä½¿ã„æ–¹ã®èª¬æ˜ã«ã¤ã„ã¦ã¯ã€å¯¾å¿œã™ã‚‹ windows.txt ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å‚ç…§ã—ã¦ä¸‹ã•ã„\n
+g‚¢•û‚Ìà–¾‚É‚Â‚¢‚Ä‚ÍA‘Î‰‚·‚é windows.txt ƒtƒ@ƒCƒ‹‚ğQÆ‚µ‚Ä‰º‚³‚¢\n
 
 # windows/config.c: 271
 GAME SCREEN OPTIONS
-ã‚²ãƒ¼ãƒ ç”»é¢è¨­å®š
+ƒQ[ƒ€‰æ–Êİ’è
 
 # windows/fronthlp.c: 558, 634
 Game \"%s\" not supported!\n
-ã€Œ%sã€ã¨ã„ã†ã‚²ãƒ¼ãƒ ã«ã¯å¯¾å¿œã—ã¦ã„ã¾ã›ã‚“ï¼\n
+u%sv‚Æ‚¢‚¤ƒQ[ƒ€‚É‚Í‘Î‰‚µ‚Ä‚¢‚Ü‚¹‚ñI\n
 
 # windows/config.c: 303
 INPUT DEVICE OPTIONS
-å…¥åŠ›ãƒ‡ãƒã‚¤ã‚¹è¨­å®š
+“ü—ÍƒfƒoƒCƒXİ’è
 
 # windows/video.c: 991
 Illegal aspect ratio value for %s = %s\n
-%sã®å€¤%sã¯ä¸æ­£ãªã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”ã§ã™\n
+%s‚Ì’l%s‚Í•s³‚ÈƒAƒXƒyƒNƒg”ä‚Å‚·\n
 
 # windows/video.c: 1014
 Illegal resolution value for %s = %s\n
-%sã®å€¤%sã¯ä¸æ­£ãªè§£åƒåº¦ã§ã™\n
+%s‚Ì’l%s‚Í•s³‚È‰ğ‘œ“x‚Å‚·\n
 
 # windows/config.c: 848, 970, 981, 995
 Illegal value for %s = %s\n
-%sã®å€¤%sã¯ä¸æ­£ã§ã™\n
+%s‚Ì’l%s‚Í•s³‚Å‚·\n
 
 # windows/config.c: 1106
 Input file is for game '%s', not for current game '%s'\n
-ã‚²ãƒ¼ãƒ ã€Œ%sã€ã®å…¥åŠ›ãƒ•ã‚¡ã‚¤ãƒ«ã¯é¸æŠã•ã‚ŒãŸã‚²ãƒ¼ãƒ ã€Œ%sã€ã®ç‰©ã§ã¯ã‚ã‚Šã¾ã›ã‚“\n
+ƒQ[ƒ€u%sv‚Ì“ü—Íƒtƒ@ƒCƒ‹‚Í‘I‘ğ‚³‚ê‚½ƒQ[ƒ€u%sv‚Ì•¨‚Å‚Í‚ ‚è‚Ü‚¹‚ñ\n
 
 # windows/input.c: 2156
 Input:  Axis %d (%s)%s\n
-å…¥åŠ›:  è»¸%d (%s)%s\n
+“ü—Í:  ²%d (%s)%s\n
 
 # windows/input.c: 2019
 Input: %s: %s\n
-å…¥åŠ›: %s: %s\n
+“ü—Í: %s: %s\n
 
 # windows/input.c: 948
 Input: Autoenabling joysticks due to presence of a %s\n
-å…¥åŠ›: %sãŒå­˜åœ¨ã™ã‚‹ãŸã‚ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã‚’è‡ªå‹•çš„ã«æœ‰åŠ¹ã«ã—ã¾ã™\n
+“ü—Í: %s‚ª‘¶İ‚·‚é‚½‚ßƒWƒ‡ƒCƒXƒeƒBƒbƒN‚ğ©“®“I‚É—LŒø‚É‚µ‚Ü‚·\n
 
 # windows/input.c: 955
 Input: Autoenabling lightguns due to presence of a %s\n
-å…¥åŠ›: %sãŒå­˜åœ¨ã™ã‚‹ãŸã‚å…‰ç·šéŠƒã‚’è‡ªå‹•çš„ã«æœ‰åŠ¹ã«ã—ã¾ã™\n
+“ü—Í: %s‚ª‘¶İ‚·‚é‚½‚ßŒõüe‚ğ©“®“I‚É—LŒø‚É‚µ‚Ü‚·\n
 
 # windows/input.c: 941
 Input: Autoenabling mice due to presence of a %s\n
-å…¥åŠ›: %sãŒå­˜åœ¨ã™ã‚‹ãŸã‚ãƒã‚¦ã‚¹ã‚’è‡ªå‹•çš„ã«æœ‰åŠ¹ã«ã—ã¾ã™\n
+“ü—Í: %s‚ª‘¶İ‚·‚é‚½‚ßƒ}ƒEƒX‚ğ©“®“I‚É—LŒø‚É‚µ‚Ü‚·\n
 
 # windows/input.c: 1964
 Input: Joystick %d axis %d is now %s\n
-å…¥åŠ›: ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯%d è»¸%d ã¯%sã§ã™\n
+“ü—Í: ƒWƒ‡ƒCƒXƒeƒBƒbƒN%d ²%d ‚Í%s‚Å‚·\n
 
 # windows/input.c: 2140
 Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
-å…¥åŠ›: ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯%d: %s (%då€‹ã®è»¸ã€%då€‹ã®ãƒœã‚¿ãƒ³ã€%då€‹ã®è¦–ç‚¹)\n
+“ü—Í: ƒWƒ‡ƒCƒXƒeƒBƒbƒN%d: %s (%dŒÂ‚Ì²A%dŒÂ‚Ìƒ{ƒ^ƒ“A%dŒÂ‚Ì‹“_)\n
 
 # windows/input.c: 1331
 Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
-å…¥åŠ›: ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰=%d  ãƒã‚¦ã‚¹=%d  ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯=%d  å…‰ç·šéŠƒ=%d\n
+“ü—Í: ƒL[ƒ{[ƒh=%d  ƒ}ƒEƒX=%d  ƒWƒ‡ƒCƒXƒeƒBƒbƒN=%d  Œõüe=%d\n
 
 # windows/input.c: 3015
 Input: Using RAWMOUSE for Mouse input\n
-å…¥åŠ›: ãƒã‚¦ã‚¹ã®å…¥åŠ›ã«RAWMOUSEã‚’ä½¿ç”¨ã—ã¾ã™\n
+“ü—Í: ƒ}ƒEƒX‚Ì“ü—Í‚ÉRAWMOUSE‚ğg—p‚µ‚Ü‚·\n
 
 # windows/input.c: 1333
 Input: \"%s\" controller support enabled\n
-å…¥åŠ›: ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ã€Œ%sã€ã®ã‚µãƒãƒ¼ãƒˆãŒæœ‰åŠ¹ã§ã™\n
+“ü—Í: ƒRƒ“ƒgƒ[ƒ‰u%sv‚ÌƒTƒ|[ƒg‚ª—LŒø‚Å‚·\n
 
 # windows/input.c: 1709
 Invalid %s value %s; reverting to all -- valid values are:\n
-%sã®å€¤%sã¯ä¸æ­£ã§ã™ã€‚å…¨ã®å€¤ã‚’å¾©å…ƒã—ã¾ã™ã€‚æœ‰åŠ¹ãªå€¤:\n
+%s‚Ì’l%s‚Í•s³‚Å‚·B‘S‚Ì’l‚ğ•œŒ³‚µ‚Ü‚·B—LŒø‚È’l:\n
 
 # windows/input.c: 1634
 Invalid %s value %s; reverting to keyboard\n
-%sã®å€¤%sã¯ä¸æ­£ã§ã™ã€‚ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã«å¾©å…ƒã—ã¾ã™\n
+%s‚Ì’l%s‚Í•s³‚Å‚·BƒL[ƒ{[ƒh‚É•œŒ³‚µ‚Ü‚·\n
 
 # windows/video.c: 908
 Invalid video value %s; reverting to gdi\n
-ãƒ“ãƒ‡ã‚ªã®å€¤%sã¯ä¸æ­£ã§ã™ã€‚GDIã«å¾©å…ƒã—ã¾ã™\n
+ƒrƒfƒI‚Ì’l%s‚Í•s³‚Å‚·BGDI‚É•œŒ³‚µ‚Ü‚·\n
 
 # windows/input.c: 2161, 2194
 J%d %s
@@ -660,35 +660,35 @@ J%d %s -
 
 # windows/input.c: 2215
 J%d %s D
-J%d %s ä¸‹
+J%d %s ‰º
 
 # windows/input.c: 2219
 J%d %s L
-J%d %s å·¦
+J%d %s ¶
 
 # windows/input.c: 2223
 J%d %s R
-J%d %s å³
+J%d %s ‰E
 
 # windows/input.c: 2211
 J%d %s U
-J%d %s ä¸Š
+J%d %s ã
 
 # windows/fronthlp.c: 908
 KNOWN     %s\n
-åˆ¤æ˜      %s\n
+”»–¾      %s\n
 
 # windows/input.c: 2128
 Lightgun %d 
-å…‰ç·šéŠƒ %d 
+Œõüe %d 
 
 # windows/input.c: 2514
 Lightgun not supported in windowed mode
-ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ¢ãƒ¼ãƒ‰ã§ã¯å…‰ç·šéŠƒã¯ã‚µãƒãƒ¼ãƒˆã•ã‚Œã¾ã›ã‚“
+ƒEƒCƒ“ƒhƒEƒ‚[ƒh‚Å‚ÍŒõüe‚ÍƒTƒ|[ƒg‚³‚ê‚Ü‚¹‚ñ
 
 # windows/input.c: 2126
 Lightgun on Mouse %d 
-ãƒã‚¦ã‚¹ %d ã®å…‰ç·šéŠƒ
+ƒ}ƒEƒX %d ‚ÌŒõüe
 
 # windows/config.c: 782
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nicola Salmoria and the MAME Team\n\n
@@ -696,583 +696,583 @@ M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2006 by Nico
 
 # windows/window.c: 607
 MAME: %s [%s] - Screen %d
-MAME: %sã€Œ%sã€- ç”»é¢%d
+MAME: %su%sv- ‰æ–Ê%d
 
 # windows/config.c: 138
 MISC OPTIONS
-ãã®ä»–ã®è¨­å®š
+‚»‚Ì‘¼‚Ìİ’è
 
 # windows/input.c: 2016
 Mouse 
-ãƒã‚¦ã‚¹
+ƒ}ƒEƒX
 
 # windows/input.c: 2014
 Mouse %d 
-ãƒã‚¦ã‚¹%d
+ƒ}ƒEƒX%d
 
 # windows/fronthlp.c: 183
 NO MATCH\n
-ãƒãƒƒãƒã—ã¾ã›ã‚“\n
+ƒ}ƒbƒ`‚µ‚Ü‚¹‚ñ\n
 
 # windows/fronthlp.c: 175
 NOT A ROM\n
-ROMã§ã¯ã‚ã‚Šã¾ã›ã‚“\n
+ROM‚Å‚Í‚ ‚è‚Ü‚¹‚ñ\n
 
 # windows/fronthlp.c: 381
 Name:     Description:\n
-åå‰:     è©³ç´°:\n
+–¼‘O:     Ú×:\n
 
 # windows/fronthlp.c: 494
 Name:    Clone of:\n
-åå‰:    ã‚¯ãƒ­ãƒ¼ãƒ³:\n
+–¼‘O:    ƒNƒ[ƒ“:\n
 
 # windows/config.c: 366
 OSD bar color (dark)
-OSD ãƒãƒ¼ (æš—)
+OSD ƒo[ (ˆÃ)
 
 # windows/config.c: 367
 OSD bar color (default)
-OSD ãƒãƒ¼ (ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ)
+OSD ƒo[ (ƒfƒtƒHƒ‹ƒg)
 
 # windows/config.c: 365
 OSD bar color (light)
-OSD ãƒãƒ¼ (æ˜)
+OSD ƒo[ (–¾)
 
 # windows/config.c: 364
 OSD bar color (medium)
-OSD ãƒãƒ¼
+OSD ƒo[
 
 # windows/fronthlp.c: 910
 PARTKNOWN %s\n
-ä¸€éƒ¨åˆ¤æ˜  %s\n
+ˆê•””»–¾  %s\n
 
 # windows/config.c: 236
 PER-WINDOW VIDEO OPTIONS
-ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦æ¯ã®ç”»é¢è¨­å®š
+ƒEƒBƒ“ƒhƒE–ˆ‚Ì‰æ–Êİ’è
 
 # windows/config.c: 190
 PERFORMANCE OPTIONS
-ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹è¨­å®š
+ƒpƒtƒH[ƒ}ƒ“ƒXİ’è
 
 # windows/config.c: 1112
 Playing back previously recorded game %s\n
-ä»¥å‰ã«è¨˜éŒ²ã•ã‚ŒãŸã‚²ãƒ¼ãƒ ã€Œ%sã€ã‚’å†ç”Ÿã—ã¾ã™\n
+ˆÈ‘O‚É‹L˜^‚³‚ê‚½ƒQ[ƒ€u%sv‚ğÄ¶‚µ‚Ü‚·\n
 
 # windows/drawd3d.c: 1142
 Proposed video mode not supported on device %s\n
-æŒ‡å®šã•ã‚ŒãŸç”»é¢ãƒ¢ãƒ¼ãƒ‰ã¯ãƒ‡ãƒã‚¤ã‚¹%sã§ã¯ã‚µãƒãƒ¼ãƒˆã•ã‚Œã¦ã„ã¾ã›ã‚“\n
+w’è‚³‚ê‚½‰æ–Êƒ‚[ƒh‚ÍƒfƒoƒCƒX%s‚Å‚ÍƒTƒ|[ƒg‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ\n
 
 # windows/config.c: 290
 SOUND OPTIONS
-éŸ³å£°è¨­å®š
+‰¹ºİ’è
 
 # windows/config.c: 168
 STATE/PLAYBACK OPTIONS
-ã‚¹ãƒ†ãƒ¼ãƒˆ/å†ç”Ÿè¨­å®š
+ƒXƒe[ƒg/Ä¶İ’è
 
 # windows/sound.c: 207
 Sound buffer: overflows=%d underflows=%d\n
-ã‚µã‚¦ãƒ³ãƒ‰ãƒãƒƒãƒ•ã‚¡: ã‚ªãƒ¼ãƒãƒ•ãƒ­ãƒ¼=%d ã‚¢ãƒ³ãƒ€ãƒ¼ãƒ•ãƒ­ãƒ¼=%d\n
+ƒTƒEƒ“ƒhƒoƒbƒtƒ@: ƒI[ƒoƒtƒ[=%d ƒAƒ“ƒ_[ƒtƒ[=%d\n
 
 # windows/sound.c: 203
 Sound: buffer overflows=%d underflows=%d\n
-ã‚µã‚¦ãƒ³ãƒ‰: ãƒãƒƒãƒ•ã‚¡ ã‚ªãƒ¼ãƒãƒ•ãƒ­ãƒ¼=%d ã‚¢ãƒ³ãƒ€ãƒ¼ãƒ•ãƒ­ãƒ¼=%d\n
+ƒTƒEƒ“ƒh: ƒoƒbƒtƒ@ ƒI[ƒoƒtƒ[=%d ƒAƒ“ƒ_[ƒtƒ[=%d\n
 
 # windows/input.c: 2068
 Stick %d %s +
-ã‚¹ãƒ†ã‚£ãƒƒã‚¯ %d %s +
+ƒXƒeƒBƒbƒN %d %s +
 
 # windows/input.c: 2061
 Stick %d %s -
-ã‚¹ãƒ†ã‚£ãƒƒã‚¯ %d %s -
+ƒXƒeƒBƒbƒN %d %s -
 
 # windows/input.c: 2070
 Stick %s +
-ã‚¹ãƒ†ã‚£ãƒƒã‚¯ %s +
+ƒXƒeƒBƒbƒN %s +
 
 # windows/input.c: 2063
 Stick %s -
-ã‚¹ãƒ†ã‚£ãƒƒã‚¯ %s -
+ƒXƒeƒBƒbƒN %s -
 
 # windows/input.c: 2034
 Stick%sX+
-ã‚¹ãƒ†ã‚£ãƒƒã‚¯%sX+
+ƒXƒeƒBƒbƒN%sX+
 
 # windows/input.c: 2032
 Stick%sX-
-ã‚¹ãƒ†ã‚£ãƒƒã‚¯%sX-
+ƒXƒeƒBƒbƒN%sX-
 
 # windows/input.c: 2038
 Stick%sY+
-ã‚¹ãƒ†ã‚£ãƒƒã‚¯%sY+
+ƒXƒeƒBƒbƒN%sY+
 
 # windows/input.c: 2036
 Stick%sY-
-ã‚¹ãƒ†ã‚£ãƒƒã‚¯%sY-
+ƒXƒeƒBƒbƒN%sY-
 
 # windows/input.c: 2042
 Stick%sZ+
-ã‚¹ãƒ†ã‚£ãƒƒã‚¯%sZ+
+ƒXƒeƒBƒbƒN%sZ+
 
 # windows/input.c: 2040
 Stick%sZ-
-ã‚¹ãƒ†ã‚£ãƒƒã‚¯%sZ-
+ƒXƒeƒBƒbƒN%sZ-
 
 # windows/drawd3d.c: 1779
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
-ãƒ†ã‚¯ã‚¹ãƒãƒ£ãŒå¤§ãã™ãã¾ã™!(è¦æ±‚: %dx%dã€æœ€å¤§: %dx%d)\n
+ƒeƒNƒXƒ`ƒƒ‚ª‘å‚«‚·‚¬‚Ü‚·!(—v‹: %dx%dAÅ‘å: %dx%d)\n
 
 # windows/fronthlp.c: 563
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
-ã“ã‚Œã¯ãƒ‰ãƒ©ã‚¤ãƒã€Œ%sã€ã«å¿…è¦ãªROMã®ãƒªã‚¹ãƒˆã§ã™ã€‚\nåå‰          ã‚µã‚¤ã‚º ãƒã‚§ãƒƒã‚¯ã‚µãƒ \n
+‚±‚ê‚Íƒhƒ‰ƒCƒou%sv‚É•K—v‚ÈROM‚ÌƒŠƒXƒg‚Å‚·B\n–¼‘O          ƒTƒCƒY ƒ`ƒFƒbƒNƒTƒ€\n
 
 # windows/input.c: 2661
 Toggle fullscreen
-ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆ
+ƒtƒ‹ƒXƒNƒŠ[ƒ“Ø‚è‘Ö‚¦
 
 # windows/fronthlp.c: 909
 UNKNOWN   %s\n
-ä¸æ˜      %s\n
+•s–¾      %s\n
 
 # windows/ledutil.c: 567, 573
 Unable to close the keyboard device. (error %d)\n
-ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ãƒ‡ã‚£ãƒã‚¤ã‚¹ãŒã‚¯ãƒ­ãƒ¼ã‚ºå‡ºæ¥ã¾ã›ã‚“ã€‚(ã‚¨ãƒ©ãƒ¼ %d)\n
+ƒL[ƒ{[ƒhƒfƒBƒoƒCƒX‚ªƒNƒ[ƒYo—ˆ‚Ü‚¹‚ñB(ƒGƒ‰[ %d)\n
 
 # windows/config.c: 741
 Unable to create file %s\n
-ãƒ•ã‚¡ã‚¤ãƒ«%sãŒä½œæˆå‡ºæ¥ã¾ã›ã‚“\n
+ƒtƒ@ƒCƒ‹%s‚ªì¬o—ˆ‚Ü‚¹‚ñ\n
 
 # windows/drawd3d.c: 714
 Unable to create the Direct3D device (%08X)\n
-Direct3Dãƒ‡ãƒã‚¤ã‚¹ã‚’ä½œæˆå‡ºæ¥ã¾ã›ã‚“(%08X)\n
+Direct3DƒfƒoƒCƒX‚ğì¬o—ˆ‚Ü‚¹‚ñ(%08X)\n
 
 # windows/drawd3d.c: 434, 495
 Unable to initialize Direct3D.\n
-Direct3Dã‚’åˆæœŸåŒ–å‡ºæ¥ã¾ã›ã‚“ã€‚\n
+Direct3D‚ğ‰Šú‰»o—ˆ‚Ü‚¹‚ñB\n
 
 # windows/drawdd.c: 270
 Unable to initialize DirectDraw.\n
-DirectDrawã‚’åˆæœŸåŒ–å‡ºæ¥ã¾ã›ã‚“\n
+DirectDraw‚ğ‰Šú‰»o—ˆ‚Ü‚¹‚ñ\n
 
 # windows/video.c: 959
 Unable to load PNG file '%s'\n
-PNGãƒ•ã‚¡ã‚¤ãƒ«ã€Œ%sã€ã‚’èª­ã¿è¾¼ã‚ã¾ã›ã‚“\n
+PNGƒtƒ@ƒCƒ‹u%sv‚ğ“Ç‚İ‚ß‚Ü‚¹‚ñ\n
 
 # windows/ledutil.c: 531, 539
 Unable to open the keyboard device. (error %d)\n
-ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ãƒ‡ã‚£ãƒã‚¤ã‚¹ãŒã‚ªãƒ¼ãƒ—ãƒ³å‡ºæ¥ã¾ã›ã‚“ã€‚(ã‚¨ãƒ©ãƒ¼ %d)\n
+ƒL[ƒ{[ƒhƒfƒBƒoƒCƒX‚ªƒI[ƒvƒ“o—ˆ‚Ü‚¹‚ñB(ƒGƒ‰[ %d)\n
 
 # windows/drawd3d.c: 1982
 Unknown texture blendmode=%d format=%d\n
-ä¸æ˜ãªãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ–ãƒ¬ãƒ³ãƒ‰ãƒ¢ãƒ¼ãƒ‰=%d å½¢å¼=%d\n
+•s–¾‚ÈƒeƒNƒXƒ`ƒƒƒuƒŒƒ“ƒhƒ‚[ƒh=%d Œ`®=%d\n
 
 # windows/config.c: 785
 Usage:  MAME gamename [options]\n\n
-ä½¿ç”¨æ³•:  MAME ã‚²ãƒ¼ãƒ å [ã‚ªãƒ—ã‚·ãƒ§ãƒ³]\n\n
+g—p–@:  MAME ƒQ[ƒ€–¼ [ƒIƒvƒVƒ‡ƒ“]\n\n
 
 # windows/config.c: 680
 Usage: mame [game] [options]\n\nOptions:\n
-ä½¿ç”¨æ³•: mame [ã‚²ãƒ¼ãƒ å] [ã‚ªãƒ—ã‚·ãƒ§ãƒ³]\n\nã‚ªãƒ—ã‚·ãƒ§ãƒ³:\n
+g—p–@: mame [ƒQ[ƒ€–¼] [ƒIƒvƒVƒ‡ƒ“]\n\nƒIƒvƒVƒ‡ƒ“:\n
 
 # windows/video.c: 852
 Using %s scale effect\n
-ã‚¹ã‚±ãƒ¼ãƒ«ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ %s ã‚’ä½¿ç”¨ã—ã¾ã™\n
+ƒXƒP[ƒ‹ƒGƒtƒFƒNƒg %s ‚ğg—p‚µ‚Ü‚·\n
 
 # windows/config.c: 277
 VECTOR RENDERING OPTIONS
-ãƒ™ã‚¯ã‚¿æç”»è¨­å®š
+ƒxƒNƒ^•`‰æİ’è
 
 # windows/config.c: 201
 VIDEO OPTIONS
-ãƒ“ãƒ‡ã‚ªè¨­å®š
+ƒrƒfƒIİ’è
 
 # windows/config.c: 217
 VIDEO ROTATION OPTIONS
-ç”»é¢å›è»¢è¨­å®š
+‰æ–Ê‰ñ“]İ’è
 
 # windows/video.c: 470
 Video: Monitor %p = \"%s\" %s\n
-ãƒ“ãƒ‡ã‚ª: ãƒ¢ãƒ‹ã‚¿ %p = ã€Œ%sã€%s\n
+ƒrƒfƒI: ƒ‚ƒjƒ^ %p = u%sv%s\n
 
 # windows/video.c: 904
 Warning: -video none doesn't make much sense without -frames_to_run\n
-è­¦å‘Š: -frames_to_runç„¡ã—ã§ã®-video noneã¯æ„å‘³ãŒã‚ã‚Šã¾ã›ã‚“\n
+Œx: -frames_to_run–³‚µ‚Å‚Ì-video none‚ÍˆÓ–¡‚ª‚ ‚è‚Ü‚¹‚ñ\n
 
 # windows/drawd3d.c: 650
 Warning: Device may not perform well for Direct3D rendering\n
-è­¦å‘Š: ãƒ‡ãƒã‚¤ã‚¹ã®Direct3Dæç”»ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ã¯ã‚ã¾ã‚Šè‰¯ãã‚ã‚Šã¾ã›ã‚“\n
+Œx: ƒfƒoƒCƒX‚ÌDirect3D•`‰æƒpƒtƒH[ƒ}ƒ“ƒX‚Í‚ ‚Ü‚è—Ç‚­‚ ‚è‚Ü‚¹‚ñ\n
 
 # windows/video.c: 444
 \n %d partial updates
-\n %d éƒ¨åˆ†æ›´æ–°
+\n %d •”•ªXV
 
 # windows/video.c: 442
 \n %d vector updates
-\n %d ãƒ™ã‚¯ã‚¿æ›´æ–°
+\n %d ƒxƒNƒ^XV
 
 # windows/config.c: 562
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
-\nã€Œ%sã€ã«ä¼¼ãŸã‚²ãƒ¼ãƒ ã¯ä¸‹è¨˜ã®é€šã‚Šã§ã™\nã‚µãƒãƒ¼ãƒˆã•ã‚Œã¦ã„ã‚‹ã‚²ãƒ¼ãƒ  (ä¼¼ã¦ã„ã‚‹ã‚‚ã®é †):\n\n
+\nu%sv‚É—‚½ƒQ[ƒ€‚Í‰º‹L‚Ì’Ê‚è‚Å‚·\nƒTƒ|[ƒg‚³‚ê‚Ä‚¢‚éƒQ[ƒ€ (—‚Ä‚¢‚é‚à‚Ì‡):\n\n
 
 # windows/config.c: 113
 all available info on driver in XML format
-å­˜åœ¨ã™ã‚‹å…¨ã¦ã®ãƒ‰ãƒ©ã‚¤ãƒæƒ…å ±ã‚’XMLå½¢å¼ã§å‡ºåŠ›
+‘¶İ‚·‚é‘S‚Ä‚Ìƒhƒ‰ƒCƒoî•ñ‚ğXMLŒ`®‚Åo—Í
 
 # windows/config.c: 212
 amount to scale the screen brightness when paused
-ãƒãƒ¼ã‚ºæ™‚ã®ç”»é¢ã®æ˜ã‚‹ã•
+ƒ|[ƒY‚Ì‰æ–Ê‚Ì–¾‚é‚³
 
 # windows/input.c: 1962
 analog
-ã‚¢ãƒŠãƒ­ã‚°
+ƒAƒiƒƒO
 
 # windows/input.c: 1265
 analog joystick
-ã‚¢ãƒŠãƒ­ã‚°ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯
+ƒAƒiƒƒOƒWƒ‡ƒCƒXƒeƒBƒbƒN
 
 # windows/config.c: 238
 aspect ratio for all screens; 'auto' here will try to make a best guess
-å…¨ã¦ã®ç”»é¢ã®ã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”ã€‚ã€Œautoã€ã¯æœ€é©ãªè¨­å®šã‚’è©¦ã¿ã¾ã™
+‘S‚Ä‚Ì‰æ–Ê‚ÌƒAƒXƒyƒNƒg”äBuautov‚ÍÅ“K‚Èİ’è‚ğ‚İ‚Ü‚·
 
 # windows/config.c: 243
 aspect ratio of the first screen; 'auto' here will try to make a best guess
-ï¼‘ç”»é¢ç›®ã®ã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”ã€‚ã€Œautoã€ã¯æœ€é©ãªè¨­å®šã‚’è©¦ã¿ã¾ã™
+‚P‰æ–Ê–Ú‚ÌƒAƒXƒyƒNƒg”äBuautov‚ÍÅ“K‚Èİ’è‚ğ‚İ‚Ü‚·
 
 # windows/config.c: 258
 aspect ratio of the fourth screen; 'auto' here will try to make a best guess
-ï¼”ç”»é¢ç›®ã®ã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”ã€‚ã€Œautoã€ã¯æœ€é©ãªè¨­å®šã‚’è©¦ã¿ã¾ã™
+‚S‰æ–Ê–Ú‚ÌƒAƒXƒyƒNƒg”äBuautov‚ÍÅ“K‚Èİ’è‚ğ‚İ‚Ü‚·
 
 # windows/config.c: 248
 aspect ratio of the second screen; 'auto' here will try to make a best guess
-ï¼’ç”»é¢ç›®ã®ã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”ã€‚ã€Œautoã€ã¯æœ€é©ãªè¨­å®šã‚’è©¦ã¿ã¾ã™
+‚Q‰æ–Ê–Ú‚ÌƒAƒXƒyƒNƒg”äBuautov‚ÍÅ“K‚Èİ’è‚ğ‚İ‚Ü‚·
 
 # windows/config.c: 253
 aspect ratio of the third screen; 'auto' here will try to make a best guess
-ï¼“ç”»é¢ç›®ã®ã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”ã€‚ã€Œautoã€ã¯æœ€é©ãªè¨­å®šã‚’è©¦ã¿ã¾ã™
+‚R‰æ–Ê–Ú‚ÌƒAƒXƒyƒNƒg”äBuautov‚ÍÅ“K‚Èİ’è‚ğ‚İ‚Ü‚·
 
 # windows/config.c: 165, 237, 238, 239, 240, 242, 243, 244, 245, 247, 248, 249, 250, 252, 253, 254, 255, 257, 258, 259, 260, 351, 989, 1048, 1056 windows/video.c: 435, 535, 984, 986, 1007, 1009 windows/window.c: 839, 839, 843
 auto
-è‡ªå‹•
+©“®
 
 # windows/config.c: 148
 automatic pause when playback is finished
-å†ç”Ÿçµ‚äº†æ™‚ã«è‡ªå‹•åœæ­¢
+Ä¶I—¹‚É©“®’â~
 
 # windows/config.c: 221
 automatically rotate screen clockwise 90 degrees if vertical
-å‚ç›´å‹ç”»é¢ã®å ´åˆã¯è‡ªå‹•ã§æ™‚è¨ˆå›ã‚Šã«90åº¦å›è»¢ã—ã¾ã™
+‚’¼Œ^‰æ–Ê‚Ìê‡‚Í©“®‚ÅŒv‰ñ‚è‚É90“x‰ñ“]‚µ‚Ü‚·
 
 # windows/config.c: 222
 automatically rotate screen counterclockwise 90 degrees if vertical
-å‚ç›´å‹ç”»é¢ã®å ´åˆã¯è‡ªå‹•ã§åæ™‚è¨ˆå›ã‚Šã«90åº¦å›è»¢ã—ã¾ã™
+‚’¼Œ^‰æ–Ê‚Ìê‡‚Í©“®‚Å”½Œv‰ñ‚è‚É90“x‰ñ“]‚µ‚Ü‚·
 
 # windows/config.c: 266
 brightness value in full screen mode
-ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ç”»é¢ã§ã®æ˜ã‚‹ã•
+ƒtƒ‹ƒXƒNƒŠ[ƒ“‰æ–Ê‚Å‚Ì–¾‚é‚³
 
 # windows/config.c: 374
 button color (aqua)
-ãƒœã‚¿ãƒ³ (S 0r 7)
+ƒ{ƒ^ƒ“ (S 0r 7)
 
 # windows/config.c: 371
 button color (blue)
-ãƒœã‚¿ãƒ³ (D or 4)
+ƒ{ƒ^ƒ“ (D or 4)
 
 # windows/config.c: 370
 button color (green)
-ãƒœã‚¿ãƒ³ (C or 3)
+ƒ{ƒ^ƒ“ (C or 3)
 
 # windows/config.c: 377
 button color (lime)
-ãƒœã‚¿ãƒ³ (10)
+ƒ{ƒ^ƒ“ (10)
 
 # windows/config.c: 376
 button color (navy)
-ãƒœã‚¿ãƒ³ (9)
+ƒ{ƒ^ƒ“ (9)
 
 # windows/config.c: 373
 button color (pink)
-ãƒœã‚¿ãƒ³ (P or 6)
+ƒ{ƒ^ƒ“ (P or 6)
 
 # windows/config.c: 372
 button color (purple)
-ãƒœã‚¿ãƒ³ (K or 5)
+ƒ{ƒ^ƒ“ (K or 5)
 
 # windows/config.c: 368
 button color (red)
-ãƒœã‚¿ãƒ³ (A or 1)
+ƒ{ƒ^ƒ“ (A or 1)
 
 # windows/config.c: 375
 button color (silver)
-ãƒœã‚¿ãƒ³ (8)
+ƒ{ƒ^ƒ“ (8)
 
 # windows/config.c: 369
 button color (yellow)
-ãƒœã‚¿ãƒ³ (B or 2)
+ƒ{ƒ^ƒ“ (B or 2)
 
 # windows/config.c: 154
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
-M68Kã‚³ã‚¢ã‚’å¤‰æ›´ (0:Cã€1:DRCã€2:ASM+DRC)
+M68KƒRƒA‚ğ•ÏX (0:CA1:DRCA2:ASM+DRC)
 
 # windows/config.c: 123
 compare files with known MAME roms
-ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æ—¢çŸ¥ã®MAME romã¨æ¯”è¼ƒã™ã‚‹
+ƒtƒ@ƒCƒ‹‚ğŠù’m‚ÌMAME rom‚Æ”äŠr‚·‚é
 
 # windows/config.c: 124
 compare files with known MAME roms (brief)
-ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æ—¢çŸ¥ã®MAME romã¨æ¯”è¼ƒã™ã‚‹ (å¤§ã¾ã‹ã«)
+ƒtƒ@ƒCƒ‹‚ğŠù’m‚ÌMAME rom‚Æ”äŠr‚·‚é (‘å‚Ü‚©‚É)
 
 # windows/config.c: 206
 constrain to the proper aspect ratio
-é©åˆ‡ãªã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”ã«åˆ¶é™ã—ã¾ã™
+“KØ‚ÈƒAƒXƒyƒNƒg”ä‚É§ŒÀ‚µ‚Ü‚·
 
 # windows/config.c: 267
 contrast value in full screen mode
-ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ç”»é¢ã®å€¤ã‚’åˆ¶é™ã—ã¾ã™
+ƒtƒ‹ƒXƒNƒŠ[ƒ“‰æ–Ê‚Ì’l‚ğ§ŒÀ‚µ‚Ü‚·
 
 # windows/config.c: 108
 create the default configuration file
-ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆè¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œæˆ
+ƒfƒtƒHƒ‹ƒgİ’èƒtƒ@ƒCƒ‹‚ğì¬
 
 # windows/config.c: 284
 crop artwork to game screen size
-ã‚¢ãƒ¼ãƒˆãƒ¯ãƒ¼ã‚¯ã‚’ã‚²ãƒ¼ãƒ ç”»é¢ã‚µã‚¤ã‚ºã§ã‚«ãƒƒãƒˆã—ã¾ã™
+ƒA[ƒgƒ[ƒN‚ğƒQ[ƒ€‰æ–ÊƒTƒCƒY‚ÅƒJƒbƒg‚µ‚Ü‚·
 
 # windows/config.c: 378
 cursor color
-ã‚«ãƒ¼ã‚½\ãƒ«
+ƒJ[ƒ\\ƒ‹
 
 # windows/config.c: 272
 default game screen brightness correction
-ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã‚²ãƒ¼ãƒ ç”»é¢ã®æ˜ã‚‹ã•è¨‚æ­£å€¤
+ƒfƒtƒHƒ‹ƒg‚ÌƒQ[ƒ€‰æ–Ê‚Ì–¾‚é‚³’ù³’l
 
 # windows/config.c: 273
 default game screen contrast correction
-ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã‚²ãƒ¼ãƒ ç”»é¢ã®ã‚³ãƒ³ãƒˆãƒ©ã‚¹ãƒˆå€¤
+ƒfƒtƒHƒ‹ƒg‚ÌƒQ[ƒ€‰æ–Ê‚ÌƒRƒ“ƒgƒ‰ƒXƒg’l
 
 # windows/config.c: 274
 default game screen gamma correction
-ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã‚²ãƒ¼ãƒ ç”»é¢ã®ã‚¬ãƒ³ãƒè£œæ­£å€¤
+ƒfƒtƒHƒ‹ƒg‚ÌƒQ[ƒ€‰æ–Ê‚ÌƒKƒ“ƒ}•â³’l
 
 # windows/config.c: 205
 default to maximized windows; otherwise, windows will be minimized
-ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’æœ€å¤§åŒ–ã€‚ç„¡åŠ¹ãªå ´åˆã¯ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã¯æœ€å°åŒ–ã•ã‚Œã¾ã™
+ƒfƒtƒHƒ‹ƒg‚ÅƒEƒBƒ“ƒhƒE‚ğÅ‘å‰»B–³Œø‚Èê‡‚ÍƒEƒBƒ“ƒhƒE‚ÍÅ¬‰»‚³‚ê‚Ü‚·
 
 # windows/input.c: 1268
 dial
-ãƒ€ã‚¤ã‚¢ãƒ«
+ƒ_ƒCƒAƒ‹
 
 # windows/config.c: 336 windows/input.c: 1756, 1962
 digital
-ãƒ‡ã‚¸ã‚¿ãƒ«
+ƒfƒWƒ^ƒ‹
 
 # windows/config.c: 180
 display additional diagnostic information
-èµ·å‹•æ™‚ã«è¨ºæ–­ç”¨ã®æƒ…å ±ã‚’è¡¨\ç¤º
+‹N“®‚Éf’f—p‚Ìî•ñ‚ğ•\\¦
 
 # windows/config.c: 109
 display running parameters
-å®Ÿè¡Œä¸­ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¡¨\ç¤º
+Às’†‚Ìƒpƒ‰ƒ[ƒ^‚ğ•\\¦
 
 # windows/config.c: 116
 driver sourcefile
-ãƒ‰ãƒ©ã‚¤ãƒã®ã‚½\ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«åã‚’è¡¨\ç¤º
+ƒhƒ‰ƒCƒo‚Ìƒ\\[ƒXƒtƒ@ƒCƒ‹–¼‚ğ•\\¦
 
 # windows/config.c: 342
 enable (keyboard|mouse|joystick) if a dial control is present
-ãƒ€ã‚¤ãƒ¤ãƒ«ã‚’ä½¿ç”¨ã™ã‚‹å ´åˆã«(keyboard|mouse|joystick)ã‚’æœ‰åŠ¹
+ƒ_ƒCƒ„ƒ‹‚ğg—p‚·‚éê‡‚É(keyboard|mouse|joystick)‚ğ—LŒø
 
 # windows/config.c: 344
 enable (keyboard|mouse|joystick) if a lightgun control is present
-å…‰ç·šä¸­ã‚’ä½¿ç”¨ã™ã‚‹å ´åˆã«(keyboard|mouse|joystick)ã‚’æœ‰åŠ¹
+Œõü’†‚ğg—p‚·‚éê‡‚É(keyboard|mouse|joystick)‚ğ—LŒø
 
 # windows/config.c: 346
 enable (keyboard|mouse|joystick) if a mouse control is present
-ãƒã‚¦ã‚¹ã‚’ä½¿ç”¨ã™ã‚‹å ´åˆã«(keyboard|mouse|joystick)ã‚’æœ‰åŠ¹
+ƒ}ƒEƒX‚ğg—p‚·‚éê‡‚É(keyboard|mouse|joystick)‚ğ—LŒø
 
 # windows/config.c: 339
 enable (keyboard|mouse|joystick) if a paddle control is present
-ãƒ‘ãƒ‰ãƒ«ãŒå­˜åœ¨ã™ã‚‹ã¨ãã«æœ‰åŠ¹ (keyboard|mouse|joystick)
+ƒpƒhƒ‹‚ª‘¶İ‚·‚é‚Æ‚«‚É—LŒø (keyboard|mouse|joystick)
 
 # windows/config.c: 341
 enable (keyboard|mouse|joystick) if a pedal control is present
-ãƒšãƒ€ãƒ«ã‚’ä½¿ç”¨ã™ã‚‹å ´åˆã«(keyboard|mouse|joystick)ã‚’æœ‰åŠ¹
+ƒyƒ_ƒ‹‚ğg—p‚·‚éê‡‚É(keyboard|mouse|joystick)‚ğ—LŒø
 
 # windows/config.c: 343
 enable (keyboard|mouse|joystick) if a trackball control is present
-ãƒˆãƒ©ãƒƒã‚¯ãƒœãƒ¼ãƒ«ã‚’ä½¿ç”¨ã™ã‚‹å ´åˆã«(keyboard|mouse|joystick)ã‚’æœ‰åŠ¹
+ƒgƒ‰ƒbƒNƒ{[ƒ‹‚ğg—p‚·‚éê‡‚É(keyboard|mouse|joystick)‚ğ—LŒø
 
 # windows/config.c: 340
 enable (keyboard|mouse|joystick) if an analog joystick control is present
-ã‚¢ãƒŠãƒ­ã‚°ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã‚’ä½¿ç”¨ã™ã‚‹å ´åˆã«(keyboard|mouse|joystick)ã‚’æœ‰åŠ¹
+ƒAƒiƒƒOƒXƒeƒBƒbƒN‚ğg—p‚·‚éê‡‚É(keyboard|mouse|joystick)‚ğ—LŒø
 
 # windows/config.c: 191
 enable automatic frameskip selection
-ãƒ•ãƒ¬ãƒ¼ãƒ ã‚¹ã‚­ãƒƒãƒ—ã®è‡ªå‹•èª¿æ•´ã‚’æœ‰åŠ¹
+ƒtƒŒ[ƒ€ƒXƒLƒbƒv‚Ì©“®’²®‚ğ—LŒø
 
 # windows/config.c: 170
 enable automatic restore at startup, and automatic save at exit time
-èµ·å‹•æ™‚ã«è‡ªå‹•çš„ã«ã‚¹ãƒ†ãƒ¼ãƒˆã‚’èª­ã¿è¾¼ã¿ã€çµ‚äº†æ™‚ã«è‡ªå‹•çš„ã«ä¿å­˜ã—ã¾ã™
+‹N“®‚É©“®“I‚ÉƒXƒe[ƒg‚ğ“Ç‚İ‚İAI—¹‚É©“®“I‚É•Û‘¶‚µ‚Ü‚·
 
 # windows/config.c: 285
 enable backdrops if artwork is enabled and available
-ã‚¢ãƒ¼ãƒˆãƒ¯ãƒ¼ã‚¯ãŒä½¿ç”¨å¯èƒ½\ãªå ´åˆã«ãƒãƒƒã‚¯ãƒ‰ãƒ­ãƒƒãƒ—ã‚’æœ‰åŠ¹
+ƒA[ƒgƒ[ƒN‚ªg—p‰Â”\\‚Èê‡‚ÉƒoƒbƒNƒhƒƒbƒv‚ğ—LŒø
 
 # windows/config.c: 287
 enable bezels if artwork is enabled and available
-ã‚¢ãƒ¼ãƒˆãƒ¯ãƒ¼ã‚¯ãŒä½¿ç”¨å¯èƒ½\ãªå ´åˆã«ãƒ™ã‚¼ãƒ«ã‚’æœ‰åŠ¹
+ƒA[ƒgƒ[ƒN‚ªg—p‰Â”\\‚Èê‡‚Éƒxƒ[ƒ‹‚ğ—LŒø
 
 # windows/config.c: 233
 enable bilinear filtering on screen output
-ç”»é¢ã®å‡ºåŠ›ã«ãƒã‚¤ãƒªãƒ‹ã‚¢ãƒ•ã‚£ãƒ«ã‚¿ã‚’æœ‰åŠ¹
+‰æ–Ê‚Ìo—Í‚ÉƒoƒCƒŠƒjƒAƒtƒBƒ‹ƒ^‚ğ—LŒø
 
 # windows/config.c: 140
 enable cheat subsystem
-ãƒãƒ¼ãƒˆã‚·ã‚¹ãƒ†ãƒ ã‚’æœ‰åŠ¹
+ƒ`[ƒgƒVƒXƒeƒ€‚ğ—LŒø
 
 # windows/config.c: 332
 enable dual lightgun input
-ãƒ‡ãƒ¥ã‚¢ãƒ«å…‰ç·šéŠƒã‚’ä½¿ç”¨
+ƒfƒ…ƒAƒ‹Œõüe‚ğg—p
 
 # windows/config.c: 228
 enable hardware stretching
-ãƒãƒ¼ãƒ‰ã‚¦ã‚§ã‚¢æ‹¡å¤§è¡¨\ç¤ºã‚’æœ‰åŠ¹
+ƒn[ƒhƒEƒFƒAŠg‘å•\\¦‚ğ—LŒø
 
 # windows/config.c: 330
 enable joystick input
-ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã‚’ä½¿ç”¨
+ƒWƒ‡ƒCƒXƒeƒBƒbƒN‚ğg—p
 
 # windows/config.c: 331
 enable lightgun input
-å…‰ç·šéŠƒã‚’ä½¿ç”¨
+Œõüe‚ğg—p
 
 # windows/config.c: 131
 enable loading of configuration files
-è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿ã‚’æœ‰åŠ¹
+İ’èƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ‚ğ—LŒø
 
 # windows/config.c: 329
 enable mouse input
-ãƒã‚¦ã‚¹ã¾ãŸã¯ãƒˆãƒ©ãƒƒã‚¯ãƒœãƒ¼ãƒ«ã‚’ä½¿ç”¨
+ƒ}ƒEƒX‚Ü‚½‚Íƒgƒ‰ƒbƒNƒ{[ƒ‹‚ğg—p
 
 # windows/config.c: 198
 enable multithreading; this enables rendering and blitting on a separate thread
-ãƒãƒ«ãƒã‚¹ãƒ¬ãƒƒãƒ‰ã‚’æœ‰åŠ¹ã€‚ã“ã‚Œã¯æç”»å‡¦ç†ã§ã®ã‚¹ãƒ¬ãƒƒãƒ‰åˆ†å‰²ã‚’æœ‰åŠ¹ã«ã—ã¾ã™
+ƒ}ƒ‹ƒ`ƒXƒŒƒbƒh‚ğ—LŒøB‚±‚ê‚Í•`‰æˆ—‚Å‚ÌƒXƒŒƒbƒh•ªŠ„‚ğ—LŒø‚É‚µ‚Ü‚·
 
 # windows/config.c: 286
 enable overlays if artwork is enabled and available
-ã‚¢ãƒ¼ãƒˆãƒ¯ãƒ¼ã‚¯ãŒä½¿ç”¨å¯èƒ½\ãªå ´åˆã«ã‚ªãƒ¼ãƒãƒ¬ã‚¤ã‚’æœ‰åŠ¹
+ƒA[ƒgƒ[ƒN‚ªg—p‰Â”\\‚Èê‡‚ÉƒI[ƒoƒŒƒC‚ğ—LŒø
 
 # windows/config.c: 306
 enable pointing stick input
-ã‚¹ãƒ†ã‚£ãƒƒã‚¯å‹ãƒã‚¦ã‚¹ã‚’ä½¿ç”¨
+ƒXƒeƒBƒbƒNŒ^ƒ}ƒEƒX‚ğg—p
 
 # windows/config.c: 265
 enable resolution switching
-è§£åƒåº¦ã®åˆ‡ã‚Šæ›¿ãˆã‚’æœ‰åŠ¹
+‰ğ‘œ“x‚ÌØ‚è‘Ö‚¦‚ğ—LŒø
 
 # windows/config.c: 195
 enable sleeping, which gives time back to other applications when idle
-ã‚¹ãƒªãƒ¼ãƒ—ã‚’æœ‰åŠ¹ã€‚ã‚¢ã‚¤ãƒ‰ãƒ«æ™‚ã«CPUæ™‚é–“ã‚’ä»–ã®ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã«é–‹æ”¾ã™ã‚‹
+ƒXƒŠ[ƒv‚ğ—LŒøBƒAƒCƒhƒ‹‚ÉCPUŠÔ‚ğ‘¼‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÉŠJ•ú‚·‚é
 
 # windows/config.c: 291
 enable sound output
-ã‚µã‚¦ãƒ³ãƒ‰ã‚’æœ‰åŠ¹
+ƒTƒEƒ“ƒh‚ğ—LŒø
 
 # windows/config.c: 334
 enable steadykey support
-ãƒœã‚¿ãƒ³ã®åŒæ™‚æŠ¼ã—èªè­˜ã‚’å®¹æ˜“ã«ã™ã‚‹
+ƒ{ƒ^ƒ“‚Ì“¯‰Ÿ‚µ”F¯‚ğ—eˆÕ‚É‚·‚é
 
 # windows/config.c: 293
 enable the use of external samples if available
-å­˜åœ¨ã™ã‚‹å ´åˆã€å¤–éƒ¨ã‚µãƒ³ãƒ—ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æœ‰åŠ¹ã«ã™ã‚‹
+‘¶İ‚·‚éê‡AŠO•”ƒTƒ“ƒvƒ‹ƒtƒ@ƒCƒ‹‚ğ—LŒø‚É‚·‚é
 
 # windows/config.c: 194
 enable throttling to keep game running in sync with real time
-ã‚²ãƒ¼ãƒ ã®å®Ÿè¡Œé€Ÿåº¦ã‚’å®Ÿæ™‚é–“ã¨åŒæœŸã™ã‚‹ç‚ºã«é€Ÿåº¦åˆ¶é™ã‚’æœ‰åŠ¹ã«ã™ã‚‹
+ƒQ[ƒ€‚ÌÀs‘¬“x‚ğÀŠÔ‚Æ“¯Šú‚·‚éˆ×‚É‘¬“x§ŒÀ‚ğ—LŒø‚É‚·‚é
 
 # windows/config.c: 264
 enable triple buffering
-ãƒˆãƒªãƒ—ãƒ«ãƒãƒƒãƒ•ã‚¡ãƒªãƒ³ã‚°ã‚’æœ‰åŠ¹
+ƒgƒŠƒvƒ‹ƒoƒbƒtƒ@ƒŠƒ“ƒO‚ğ—LŒø
 
 # windows/config.c: 214
 enable using the start of VBLANK for throttling instead of the game time
-é€Ÿåº¦åˆ¶é™ã‚’ã‚²ãƒ¼ãƒ ã®å®Ÿæ™‚é–“ã®ä»£ã‚ã‚Šã«VBLANKé–‹å§‹ã§è¡Œã†
+‘¬“x§ŒÀ‚ğƒQ[ƒ€‚ÌÀŠÔ‚Ì‘ã‚í‚è‚ÉVBLANKŠJn‚Ås‚¤
 
 # windows/config.c: 213
 enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
-ç”»é¢åè»¢ã®å‰ã«VBLANKé–‹å§‹ã‚’å¾…ã¤ã€‚ç”»é¢ã®ã¡ã‚‰ã¤ããŒæ¸›å°‘ã—ã¾ã™
+‰æ–Ê”½“]‚Ì‘O‚ÉVBLANKŠJn‚ğ‘Ò‚ÂB‰æ–Ê‚Ì‚¿‚ç‚Â‚«‚ªŒ¸­‚µ‚Ü‚·
 
 # windows/config.c: 204
 enable window mode; otherwise, full screen mode is assumed
-ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ¢ãƒ¼ãƒ‰ã‚’æœ‰åŠ¹ã€‚ç„¡åŠ¹ãªå ´åˆã¯å½“ç„¶ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã§ã™
+ƒEƒBƒ“ƒhƒEƒ‚[ƒh‚ğ—LŒøB–³Œø‚Èê‡‚Í“–‘Rƒtƒ‹ƒXƒNƒŠ[ƒ“‚Å‚·
 
 # windows/config.c: 182
 enable/disable debugger
-ãƒ‡ãƒãƒƒã‚¬ã®æœ‰åŠ¹ãƒ»ç„¡åŠ¹
+ƒfƒoƒbƒK‚Ì—LŒøE–³Œø
 
 # windows/config.c: 352
 enable/disable local language game list
-ãƒ­ãƒ¼ã‚«ãƒ©ã‚¤ã‚ºã•ã‚ŒãŸã‚²ãƒ¼ãƒ ãƒªã‚¹ãƒˆã‚’æœ‰åŠ¹
+ƒ[ƒJƒ‰ƒCƒY‚³‚ê‚½ƒQ[ƒ€ƒŠƒXƒg‚ğ—LŒø
 
 # windows/config.c: 296
 enable/disable volume auto adjust
-è‡ªå‹•éŸ³é‡èª¿æ•´æ©Ÿèƒ½\ã‚’æœ‰åŠ¹
+©“®‰¹—Ê’²®‹@”\\‚ğ—LŒø
 
 # windows/config.c: 1057
 error: invalid value for language: %s\nUse %s\n
-ã‚¨ãƒ©ãƒ¼: ä¸æ­£ãªè¨€èªæŒ‡å®š: %s\n%sã‚’ä½¿ç”¨ã—ã¾ã™\n
+ƒGƒ‰[: •s³‚ÈŒ¾Œêw’è: %s\n%s‚ğg—p‚µ‚Ü‚·\n
 
 # windows/config.c: 1180
 error: invalid value for palette: %s\n
-ã‚¨ãƒ©ãƒ¼: ä¸æ­£ãªãƒ‘ãƒ¬ãƒƒãƒˆæŒ‡å®š: %s\n
+ƒGƒ‰[: •s³‚ÈƒpƒŒƒbƒgw’è: %s\n
 
 # windows/config.c: 237
 explicit name of all screen; 'auto' here will try to make a best guess
-æ˜ç¤ºçš„ã«å…¨ã¦ã®ç”»é¢ã®åå‰ã‚’æŒ‡å®šã€‚ã€Œautoã€ã¯æœ€é©ãªè¨­å®šã‚’è©¦ã¿ã¾ã™
+–¾¦“I‚É‘S‚Ä‚Ì‰æ–Ê‚Ì–¼‘O‚ğw’èBuautov‚ÍÅ“K‚Èİ’è‚ğ‚İ‚Ü‚·
 
 # windows/config.c: 242
 explicit name of the first screen; 'auto' here will try to make a best guess
-æ˜ç¤ºçš„ã«ï¼‘ç”»é¢ç›®ã®åå‰ã‚’æŒ‡å®šã€‚ã€Œautoã€ã¯æœ€é©ãªè¨­å®šã‚’è©¦ã¿ã¾ã™
+–¾¦“I‚É‚P‰æ–Ê–Ú‚Ì–¼‘O‚ğw’èBuautov‚ÍÅ“K‚Èİ’è‚ğ‚İ‚Ü‚·
 
 # windows/config.c: 257
 explicit name of the fourth screen; 'auto' here will try to make a best guess
-æ˜ç¤ºçš„ã«ï¼”ç”»é¢ç›®ã®åå‰ã‚’æŒ‡å®šã€‚ã€Œautoã€ã¯æœ€é©ãªè¨­å®šã‚’è©¦ã¿ã¾ã™
+–¾¦“I‚É‚S‰æ–Ê–Ú‚Ì–¼‘O‚ğw’èBuautov‚ÍÅ“K‚Èİ’è‚ğ‚İ‚Ü‚·
 
 # windows/config.c: 247
 explicit name of the second screen; 'auto' here will try to make a best guess
-æ˜ç¤ºçš„ã«ï¼’ç”»é¢ç›®ã®åå‰ã‚’æŒ‡å®šã€‚ã€Œautoã€ã¯æœ€é©ãªè¨­å®šã‚’è©¦ã¿ã¾ã™
+–¾¦“I‚É‚Q‰æ–Ê–Ú‚Ì–¼‘O‚ğw’èBuautov‚ÍÅ“K‚Èİ’è‚ğ‚İ‚Ü‚·
 
 # windows/config.c: 252
 explicit name of the third screen; 'auto' here will try to make a best guess
-æ˜ç¤ºçš„ã«ï¼”ç”»é¢ç›®ã®åå‰ã‚’æŒ‡å®šã€‚ã€Œautoã€ã¯æœ€é©ãªè¨­å®šã‚’è©¦ã¿ã¾ã™
+–¾¦“I‚É‚S‰æ–Ê–Ú‚Ì–¼‘O‚ğw’èBuautov‚ÍÅ“K‚Èİ’è‚ğ‚İ‚Ü‚·
 
 # windows/config.c: 223
 flip screen left-right
-å·¦å³åè»¢
+¶‰E”½“]
 
 # windows/config.c: 224
 flip screen upside-down
-ä¸Šä¸‹åè»¢
+ã‰º”½“]
 
 # windows/config.c: 357
 font blank color
-ãƒ•ã‚©ãƒ³ãƒˆ (ç©ºç™½)
+ƒtƒHƒ“ƒg (‹ó”’)
 
 # windows/config.c: 358
 font normal color
-ãƒ•ã‚©ãƒ³ãƒˆ (é€šå¸¸)
+ƒtƒHƒ“ƒg (’Êí)
 
 # windows/config.c: 359
 font special color
-ãƒ•ã‚©ãƒ³ãƒˆ (ç‰¹æ®Š)
+ƒtƒHƒ“ƒg (“Áê)
 
 # windows/video.c: 430
 frame:%d %s%2d%4d%%%4d/%d fps
-ãƒ•ãƒ¬ãƒ¼ãƒ :%d %s%2d%4d%%%4d/%d FPS
+ƒtƒŒ[ƒ€:%d %s%2d%4d%%%4d/%d FPS
 
 # windows/video.c: 426
 frame:%d Paused
-ãƒ•ãƒ¬ãƒ¼ãƒ :%d ãƒãƒ¼ã‚º
+ƒtƒŒ[ƒ€:%d ƒ|[ƒY
 
 # windows/video.c: 435
 fskp
@@ -1280,341 +1280,341 @@ fskp
 
 # windows/config.c: 268
 gamma value in full screen mode
-ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã®ã‚¬ãƒ³ãƒè£œæ­£å€¤
+ƒtƒ‹ƒXƒNƒŠ[ƒ“‚ÌƒKƒ“ƒ}•â³’l
 
 # windows/config.c: 178
 generate an error.log file
-error.logãƒ•ã‚¡ã‚¤ãƒ«ã‚’ç”Ÿæˆ
+error.logƒtƒ@ƒCƒ‹‚ğ¶¬
 
 # windows/config.c: 210
 image enhancement effect
-ã‚¤ãƒ¡ãƒ¼ã‚¸ã‚’å‘ä¸Šã•ã›ã‚‹ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+ƒCƒ[ƒW‚ğŒüã‚³‚¹‚éƒGƒtƒFƒNƒg
 
 # windows/config.c: 165
 in-game ui text lines [16 - 64 or auto]
-ã‚²ãƒ¼ãƒ ä¸­ã®UIãƒ†ã‚­ã‚¹ãƒˆã®è¡Œæ•°æŒ‡å®š[16ã‹ã‚‰64ã¾ãŸã¯auto]
+ƒQ[ƒ€’†‚ÌUIƒeƒLƒXƒg‚Ìs”w’è[16‚©‚ç64‚Ü‚½‚Íauto]
 
 # windows/input.c: 1962
 invalid
-ä¸æ­£
+•s³
 
 # windows/config.c: 142
 ips datfile name
-IPSãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«å
+IPSƒf[ƒ^ƒtƒ@ƒCƒ‹–¼
 
 # windows/fronthlp.c: 734, 830
 is bad\n
-ã¯ç•°å¸¸ã§ã™\n
+‚ÍˆÙí‚Å‚·\n
 
 # windows/fronthlp.c: 744, 840
 is best available\n
-ã¯ç¾çŠ¶ã§ã¯æœ€è‰¯ãªçŠ¶æ…‹ã§ã™\n
+‚ÍŒ»ó‚Å‚ÍÅ—Ç‚Èó‘Ô‚Å‚·\n
 
 # windows/fronthlp.c: 739, 835
 is good\n
-ã¯æ­£å¸¸ã§ã™\n
+‚Í³í‚Å‚·\n
 
 # windows/input.c: 1266, 1630, 1725
 lightgun
-å…‰ç·šéŠƒ
+Œõüe
 
 # windows/config.c: 126
 list available devices
-å­˜åœ¨ã™ã‚‹ãƒ‡ãƒã‚¤ã‚¹ã®ãƒªã‚¹ãƒˆã‚’è¡¨\ç¤º
+‘¶İ‚·‚éƒfƒoƒCƒX‚ÌƒŠƒXƒg‚ğ•\\¦
 
 # windows/config.c: 120
 list optional samples for a driver
-ãƒ‰ãƒ©ã‚¤ãƒã®å¤–éƒ¨ã‚µãƒ³ãƒ—ãƒ«ã®ãƒªã‚¹ãƒˆã‚’è¡¨\ç¤º
+ƒhƒ‰ƒCƒo‚ÌŠO•”ƒTƒ“ƒvƒ‹‚ÌƒŠƒXƒg‚ğ•\\¦
 
 # windows/config.c: 119
 list required roms for a driver
-ãƒ‰ãƒ©ã‚¤ãƒã«å¿…è¦ãªROMã®ãƒªã‚¹ãƒˆ
+ƒhƒ‰ƒCƒo‚É•K—v‚ÈROM‚ÌƒŠƒXƒg
 
 # windows/config.c: 336
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
-ç‰¹å®šã®ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã‚„è»¸ã‚’ãƒ‡ã‚¸ã‚¿ãƒ«ã«è¨­å®š (none|all|j<N>*|j<N>a<M>[,...])
+“Á’è‚ÌƒWƒ‡ƒCƒXƒeƒBƒbƒN‚â²‚ğƒfƒWƒ^ƒ‹‚Éİ’è (none|all|j<N>*|j<N>a<M>[,...])
 
 # windows/config.c: 335
 minimal analog value for digital input
-ãƒ‡ã‚¸ã‚¿ãƒ«å…¥åŠ›å¤‰æ›æ™‚ã®ã‚¢ãƒŠãƒ­ã‚°æœ€å°å€¤
+ƒfƒWƒ^ƒ‹“ü—Í•ÏŠ·‚ÌƒAƒiƒƒOÅ¬’l
 
 # windows/config.c: 208
 name of a PNG file to use for visual effects, or 'none'
-è¦–è¦šåŠ¹æœã§ä½¿ç”¨ã™ã‚‹PNGãƒ•ã‚¡ã‚¤ãƒ«åã€ã¾ãŸã¯ã€Œnoneã€
+‹ŠoŒø‰Ê‚Åg—p‚·‚éPNGƒtƒ@ƒCƒ‹–¼A‚Ü‚½‚Íunonev
 
 # windows/config.c: 193
 number of frames to run before automatically exiting
-è‡ªå‹•çµ‚äº†ã™ã‚‹ã¾ã§ã«å®Ÿè¡Œã™ã‚‹ãƒ•ãƒ¬ãƒ¼ãƒ æ•°ã‚’æŒ‡å®š
+©“®I—¹‚·‚é‚Ü‚Å‚ÉÀs‚·‚éƒtƒŒ[ƒ€”‚ğw’è
 
 # windows/config.c: 203
 number of screens to create; usually, you want just one
-ç”Ÿæˆã™ã‚‹ç”»é¢ã®æ•°ã‚’æŒ‡å®šã€‚é€šå¸¸ã¯ï¼‘ã§ã™
+¶¬‚·‚é‰æ–Ê‚Ì”‚ğw’èB’Êí‚Í‚P‚Å‚·
 
 # windows/config.c: 333
 offscreen shots reload
-ç”»é¢å¤–ã®ã‚·ãƒ§ãƒƒãƒˆã‚’å‰²ã‚Šå½“ã¦ã‚‹
+‰æ–ÊŠO‚ÌƒVƒ‡ƒbƒg‚ğŠ„‚è“–‚Ä‚é
 
 # windows/config.c: 173
 optional filename to write a MNG movie of the current session
-æŒ‡å®šã—ãŸãƒ•ã‚¡ã‚¤ãƒ«åã§ç¾åœ¨ã®ã‚»ãƒƒã‚·ãƒ§ãƒ³ã‚’MNGãƒ ãƒ¼ãƒ“ãƒ¼ã«è¨˜éŒ²
+w’è‚µ‚½ƒtƒ@ƒCƒ‹–¼‚ÅŒ»İ‚ÌƒZƒbƒVƒ‡ƒ“‚ğMNGƒ€[ƒr[‚É‹L˜^
 
 # windows/config.c: 174
 optional filename to write a WAV file of the current session
-æŒ‡å®šã—ãŸãƒ•ã‚¡ã‚¤ãƒ«åã§ç¾åœ¨ã®ã‚»ãƒƒã‚·ãƒ§ãƒ³ã‚’WAVã‚µã‚¦ãƒ³ãƒ‰ã«è¨˜éŒ²
+w’è‚µ‚½ƒtƒ@ƒCƒ‹–¼‚ÅŒ»İ‚ÌƒZƒbƒVƒ‡ƒ“‚ğWAVƒTƒEƒ“ƒh‚É‹L˜^
 
 # windows/config.c: 179
 output error.log data to the system debugger
-error.logãƒ‡ãƒ¼ã‚¿ã‚’ã‚·ã‚¹ãƒ†ãƒ ãƒ‡ãƒãƒƒã‚¬ã«å‡ºåŠ›
+error.logƒf[ƒ^‚ğƒVƒXƒeƒ€ƒfƒoƒbƒK‚Éo—Í
 
 # windows/input.c: 1264
 paddle
-ãƒ‘ãƒ‰ãƒ«
+ƒpƒhƒ‹
 
 # windows/input.c: 1267
 pedal
-ãƒšãƒ€ãƒ«
+ƒyƒ_ƒ‹
 
 # windows/config.c: 105
 perform driver validation on all game drivers
-å…¨ã¦ã®ã‚²ãƒ¼ãƒ ãƒ‰ãƒ©ã‚¤ãƒã§å¦¥å½“æ€§ãƒã‚§ãƒƒã‚¯ã‚’å®Ÿè¡Œ
+‘S‚Ä‚ÌƒQ[ƒ€ƒhƒ‰ƒCƒo‚Å‘Ã“–«ƒ`ƒFƒbƒN‚ğÀs
 
 # windows/config.c: 171
 playback an input file
-å…¥åŠ›ã®å†ç¾ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«å
+“ü—Í‚ÌÄŒ»‚·‚éƒtƒ@ƒCƒ‹–¼
 
 # windows/config.c: 304
 preconfigure for specified controller
-ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ã®æŒ‡å®š
+ƒRƒ“ƒgƒ[ƒ‰‚Ìw’è
 
 # windows/config.c: 239
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
-å…¨ã¦ã®ç”»é¢ã®è§£åƒåº¦ã‚’æŒ‡å®šã€‚å½¢å¼ã¯<å¹…>x<é«˜ã•>[@<ãƒªãƒ•ãƒ¬ãƒƒã‚·ãƒ¥ãƒ¬ãƒ¼ãƒˆ>]ã¾ãŸã¯ã€Œautoã€
+‘S‚Ä‚Ì‰æ–Ê‚Ì‰ğ‘œ“x‚ğw’èBŒ`®‚Í<•>x<‚‚³>[@<ƒŠƒtƒŒƒbƒVƒ…ƒŒ[ƒg>]‚Ü‚½‚Íuautov
 
 # windows/config.c: 244
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-ï¼‘ç”»é¢ç›®ã®è§£åƒåº¦ã‚’æŒ‡å®šã€‚å½¢å¼ã¯<å¹…>x<é«˜ã•>[@<ãƒªãƒ•ãƒ¬ãƒƒã‚·ãƒ¥ãƒ¬ãƒ¼ãƒˆ>]ã¾ãŸã¯ã€Œautoã€
+‚P‰æ–Ê–Ú‚Ì‰ğ‘œ“x‚ğw’èBŒ`®‚Í<•>x<‚‚³>[@<ƒŠƒtƒŒƒbƒVƒ…ƒŒ[ƒg>]‚Ü‚½‚Íuautov
 
 # windows/config.c: 259
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-ï¼”ç”»é¢ç›®ã®è§£åƒåº¦ã‚’æŒ‡å®šã€‚å½¢å¼ã¯<å¹…>x<é«˜ã•>[@<ãƒªãƒ•ãƒ¬ãƒƒã‚·ãƒ¥ãƒ¬ãƒ¼ãƒˆ>]ã¾ãŸã¯ã€Œautoã€
+‚S‰æ–Ê–Ú‚Ì‰ğ‘œ“x‚ğw’èBŒ`®‚Í<•>x<‚‚³>[@<ƒŠƒtƒŒƒbƒVƒ…ƒŒ[ƒg>]‚Ü‚½‚Íuautov
 
 # windows/config.c: 249
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-ï¼’ç”»é¢ç›®ã®è§£åƒåº¦ã‚’æŒ‡å®šã€‚å½¢å¼ã¯<å¹…>x<é«˜ã•>[@<ãƒªãƒ•ãƒ¬ãƒƒã‚·ãƒ¥ãƒ¬ãƒ¼ãƒˆ>]ã¾ãŸã¯ã€Œautoã€
+‚Q‰æ–Ê–Ú‚Ì‰ğ‘œ“x‚ğw’èBŒ`®‚Í<•>x<‚‚³>[@<ƒŠƒtƒŒƒbƒVƒ…ƒŒ[ƒg>]‚Ü‚½‚Íuautov
 
 # windows/config.c: 254
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-ï¼“ç”»é¢ç›®ã®è§£åƒåº¦ã‚’æŒ‡å®šã€‚å½¢å¼ã¯<å¹…>x<é«˜ã•>[@<ãƒªãƒ•ãƒ¬ãƒƒã‚·ãƒ¥ãƒ¬ãƒ¼ãƒˆ>]ã¾ãŸã¯ã€Œautoã€
+‚R‰æ–Ê–Ú‚Ì‰ğ‘œ“x‚ğw’èBŒ`®‚Í<•>x<‚‚³>[@<ƒŠƒtƒŒƒbƒVƒ…ƒŒ[ƒg>]‚Ü‚½‚Íuautov
 
 # windows/config.c: 240
 preferred view for all screens
-å…¨ã¦ã®ç”»é¢ã®ãƒ“ãƒ¥ãƒ¼ã‚’æŒ‡å®š
+‘S‚Ä‚Ì‰æ–Ê‚Ìƒrƒ…[‚ğw’è
 
 # windows/config.c: 245
 preferred view for the first screen
-ï¼‘ç”»é¢ç›®ã®ãƒ“ãƒ¥ãƒ¼ã‚’æŒ‡å®š
+‚P‰æ–Ê–Ú‚Ìƒrƒ…[‚ğw’è
 
 # windows/config.c: 260
 preferred view for the fourth screen
-ï¼”ç”»é¢ç›®ã®ãƒ“ãƒ¥ãƒ¼ã‚’æŒ‡å®š
+‚S‰æ–Ê–Ú‚Ìƒrƒ…[‚ğw’è
 
 # windows/config.c: 250
 preferred view for the second screen
-ï¼’ç”»é¢ç›®ã®ãƒ“ãƒ¥ãƒ¼ã‚’æŒ‡å®š
+‚Q‰æ–Ê–Ú‚Ìƒrƒ…[‚ğw’è
 
 # windows/config.c: 255
 preferred view for the third screen
-ï¼“ç”»é¢ç›®ã®ãƒ“ãƒ¥ãƒ¼ã‚’æŒ‡å®š
+‚R‰æ–Ê–Ú‚Ìƒrƒ…[‚ğw’è
 
 # windows/config.c: 146
 quit game with confirmation
-ã‚²ãƒ¼ãƒ çµ‚äº†æ™‚ã«ç¢ºèªã™ã‚‹
+ƒQ[ƒ€I—¹‚ÉŠm”F‚·‚é
 
 # windows/config.c: 172
 record an input file
-å…¥åŠ›ã‚’ä¿å­˜ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«å
+“ü—Í‚ğ•Û‘¶‚·‚éƒtƒ@ƒCƒ‹–¼
 
 # windows/config.c: 121
 report romsets that have problems
-å•é¡Œã®ã‚ã‚‹ROMãƒ•ã‚¡ã‚¤ãƒ«ã‚’å ±å‘Š
+–â‘è‚Ì‚ ‚éROMƒtƒ@ƒCƒ‹‚ğ•ñ
 
 # windows/config.c: 122
 report samplesets that have problems
-å•é¡Œã®ã‚ã‚‹ã‚µãƒ³ãƒ—ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å ±å‘Š
+–â‘è‚Ì‚ ‚éƒTƒ“ƒvƒ‹ƒtƒ@ƒCƒ‹‚ğ•ñ
 
 # windows/fronthlp.c: 725
 romset %s 
-ROMã‚»ãƒƒãƒˆ%s
+ROMƒZƒbƒg%s
 
 # windows/config.c: 219
 rotate screen clockwise 90 degrees
-æ™‚è¨ˆå›ã‚Šã«90åº¦å›è»¢
+Œv‰ñ‚è‚É90“x‰ñ“]
 
 # windows/config.c: 220
 rotate screen counterclockwise 90 degrees
-åæ™‚è¨ˆå›ã‚Šã«90åº¦å›è»¢
+”½Œv‰ñ‚è‚É90“x‰ñ“]
 
 # windows/config.c: 218
 rotate the game screen according to the game's orientation needs it
-å¿…è¦ã«å¿œã˜ã¦ã‚²ãƒ¼ãƒ ã®ç”»é¢å‘ãã«å¾“ã„ã‚²ãƒ¼ãƒ ç”»é¢ã‚’å›è»¢ã™ã‚‹
+•K—v‚É‰‚¶‚ÄƒQ[ƒ€‚Ì‰æ–ÊŒü‚«‚É]‚¢ƒQ[ƒ€‰æ–Ê‚ğ‰ñ“]‚·‚é
 
 # windows/fronthlp.c: 824
 sampleset %s 
-ã‚µãƒ³ãƒ—ãƒ«ã‚»ãƒƒãƒˆ%s
+ƒTƒ“ƒvƒ‹ƒZƒbƒg%s
 
 # windows/config.c: 169
 saved state to load
-ä¿å­˜ã—ãŸã‚¹ãƒ†ãƒ¼ãƒˆã‚’èª­ã¿è¾¼ã‚€
+•Û‘¶‚µ‚½ƒXƒe[ƒg‚ğ“Ç‚İ‚Ş
 
 # windows/config.c: 207
 scale screen rendering by this amount in software
-æŒ‡å®šã—ãŸå‰²åˆã§ã‚½\ãƒ•ãƒˆã‚¦ã‚§ã‚¢ã«ã‚ˆã‚‹ç”»é¢æç”»ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°ã‚’å®Ÿè¡Œ
+w’è‚µ‚½Š„‡‚Åƒ\\ƒtƒgƒEƒFƒA‚É‚æ‚é‰æ–Ê•`‰æƒXƒP[ƒŠƒ“ƒO‚ğÀs
 
 # windows/config.c: 183
 script for debugger
-ãƒ‡ãƒãƒƒã‚¬ç”¨ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
+ƒfƒoƒbƒK—p‚ÌƒXƒNƒŠƒvƒg
 
 # windows/config.c: 139
 select the system BIOS to use
-ä½¿ç”¨ã™ã‚‹ã‚·ã‚¹ãƒ†ãƒ BIOSã‚’é¸æŠã™ã‚‹
+g—p‚·‚éƒVƒXƒeƒ€BIOS‚ğ‘I‘ğ‚·‚é
 
 # windows/config.c: 351
 select translation language
-ä½¿ç”¨ã™ã‚‹è¨€èªã‚’é¸æŠ
+g—p‚·‚éŒ¾Œê‚ğ‘I‘ğ
 
 # windows/config.c: 300
 set audio latency (increase to reduce glitches)
-ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªã®ãƒ¬ã‚¤ãƒ†ãƒ³ã‚·ã‚’æŒ‡å®š
+ƒI[ƒfƒBƒI‚ÌƒŒƒCƒeƒ“ƒV‚ğw’è
 
 # windows/config.c: 192
 set frameskip to fixed value, 0-12 (autoframeskip must be disabled)
-ãƒ•ãƒ¬ãƒ¼ãƒ ã‚¹ã‚­ãƒƒãƒ—ã‚’å›ºå®šå€¤ã«è¨­å®šã€‚0ã‹ã‚‰12(è‡ªå‹•ãƒ•ãƒ¬ãƒ¼ãƒ ã‚¹ã‚­ãƒƒãƒ—ã¯ç„¡åŠ¹åŒ–ã•ã‚Œã¾ã™)
+ƒtƒŒ[ƒ€ƒXƒLƒbƒv‚ğŒÅ’è’l‚Éİ’èB0‚©‚ç12(©“®ƒtƒŒ[ƒ€ƒXƒLƒbƒv‚Í–³Œø‰»‚³‚ê‚Ü‚·)
 
 # windows/config.c: 311
 set joystick ID (Player1)
-ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯IDã‚’æŒ‡å®š (ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼1)
+ƒWƒ‡ƒCƒXƒeƒBƒbƒNID‚ğw’è (ƒvƒŒƒCƒ„[1)
 
 # windows/config.c: 312
 set joystick ID (Player2)
-ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯IDã‚’æŒ‡å®š (ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼2)
+ƒWƒ‡ƒCƒXƒeƒBƒbƒNID‚ğw’è (ƒvƒŒƒCƒ„[2)
 
 # windows/config.c: 313
 set joystick ID (Player3)
-ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯IDã‚’æŒ‡å®š (ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼3)
+ƒWƒ‡ƒCƒXƒeƒBƒbƒNID‚ğw’è (ƒvƒŒƒCƒ„[3)
 
 # windows/config.c: 314
 set joystick ID (Player4)
-ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯IDã‚’æŒ‡å®š (ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼4)
+ƒWƒ‡ƒCƒXƒeƒBƒbƒNID‚ğw’è (ƒvƒŒƒCƒ„[4)
 
 # windows/config.c: 315
 set joystick ID (Player5)
-ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯IDã‚’æŒ‡å®š (ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼5)
+ƒWƒ‡ƒCƒXƒeƒBƒbƒNID‚ğw’è (ƒvƒŒƒCƒ„[5)
 
 # windows/config.c: 316
 set joystick ID (Player6)
-ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯IDã‚’æŒ‡å®š (ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼6)
+ƒWƒ‡ƒCƒXƒeƒBƒbƒNID‚ğw’è (ƒvƒŒƒCƒ„[6)
 
 # windows/config.c: 317
 set joystick ID (Player7)
-ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯IDã‚’æŒ‡å®š (ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼7)
+ƒWƒ‡ƒCƒXƒeƒBƒbƒNID‚ğw’è (ƒvƒŒƒCƒ„[7)
 
 # windows/config.c: 318
 set joystick ID (Player8)
-ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯IDã‚’æŒ‡å®š (ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼8)
+ƒWƒ‡ƒCƒXƒeƒBƒbƒNID‚ğw’è (ƒvƒŒƒCƒ„[8)
 
 # windows/config.c: 292
 set sound output sample rate
-å‡ºåŠ›ã™ã‚‹ã‚µã‚¦ãƒ³ãƒ‰ã®ã‚µãƒ³ãƒ—ãƒ«ãƒ¬ãƒ¼ãƒˆã‚’è¨­å®š
+o—Í‚·‚éƒTƒEƒ“ƒh‚ÌƒTƒ“ƒvƒ‹ƒŒ[ƒg‚ğİ’è
 
 # windows/config.c: 279
 set vector beam width
-ãƒ™ã‚¯ã‚¿ã®ãƒ“ãƒ¼ãƒ å¹…ã‚’è¨­å®š
+ƒxƒNƒ^‚Ìƒr[ƒ€•‚ğİ’è
 
 # windows/config.c: 280
 set vector flicker effect
-ãƒ™ã‚¯ã‚¿ã®ãƒ•ãƒªãƒƒã‚«ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’è¨­å®š
+ƒxƒNƒ^‚ÌƒtƒŠƒbƒJƒGƒtƒFƒNƒg‚ğİ’è
 
 # windows/config.c: 115
 short name, full name
-ã‚²ãƒ¼ãƒ ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåï¼‹ã‚²ãƒ¼ãƒ ã®ãƒ•ãƒ«ãƒãƒ¼ãƒ ã‚’è¡¨\ç¤º
+ƒQ[ƒ€ƒfƒBƒŒƒNƒgƒŠ–¼{ƒQ[ƒ€‚Ìƒtƒ‹ƒl[ƒ€‚ğ•\\¦
 
 # windows/config.c: 117
 show clones
-ã‚²ãƒ¼ãƒ ã®ã‚¯ãƒ­ãƒ¼ãƒ³ç‰ˆã‚’è¡¨\ç¤º
+ƒQ[ƒ€‚ÌƒNƒ[ƒ“”Å‚ğ•\\¦
 
 # windows/config.c: 104
 show help message
-ãƒ˜ãƒ«ãƒ—ã®è¡¨\ç¤º
+ƒwƒ‹ƒv‚Ì•\\¦
 
 # windows/config.c: 110
 show this help
-ã“ã®ãƒ˜ãƒ«ãƒ—ã‚’è¡¨\ç¤º
+‚±‚Ìƒwƒ‹ƒv‚ğ•\\¦
 
 # windows/config.c: 132
 skip displaying the information screen at startup
-èµ·å‹•æ™‚ã®æƒ…å ±è¡¨\ç¤ºç”»é¢ã‚’ã‚¹ã‚­ãƒƒãƒ—ã™ã‚‹
+‹N“®‚Ìî•ñ•\\¦‰æ–Ê‚ğƒXƒLƒbƒv‚·‚é
 
 # windows/config.c: 291, 932
 sound
-éŸ³æº
+‰¹Œ¹
 
 # windows/config.c: 294
 sound volume in decibels (-32 min, 0 max)
-ã‚µã‚¦ãƒ³ãƒ‰ã®éŸ³é‡ã‚’ãƒ‡ã‚·ãƒ™ãƒ«ã§æŒ‡å®š(æœ€å°ã¯-32ã€æœ€å¤§ã¯0)
+ƒTƒEƒ“ƒh‚Ì‰¹—Ê‚ğƒfƒVƒxƒ‹‚Åw’è(Å¬‚Í-32AÅ‘å‚Í0)
 
 # windows/config.c: 232
 specify the preferred Direct3D version (8 or 9)
-å„ªå…ˆã•ã‚Œã‚‹Direct3Dã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã‚’æŒ‡å®š
+—Dæ‚³‚ê‚éDirect3D‚Ìƒo[ƒWƒ‡ƒ“‚ğw’è
 
 # windows/config.c: 197
 thread priority for the main game thread; range from -15 to 1
-ãƒ¡ã‚¤ãƒ³ã®ã‚²ãƒ¼ãƒ ã‚¹ãƒ¬ãƒƒãƒ‰ã®ãƒ—ãƒ©ã‚¤ã‚ªãƒªãƒ†ã‚£ã‚’æŒ‡å®šã€‚-15ã‹ã‚‰1ã®ç¯„å›²ã§æŒ‡å®š
+ƒƒCƒ“‚ÌƒQ[ƒ€ƒXƒŒƒbƒh‚Ìƒvƒ‰ƒCƒIƒŠƒeƒB‚ğw’èB-15‚©‚ç1‚Ì”ÍˆÍ‚Åw’è
 
 # windows/input.c: 1269
 trackball
-ãƒˆãƒ©ãƒƒã‚¯ãƒœãƒ¼ãƒ«
+ƒgƒ‰ƒbƒNƒ{[ƒ‹
 
 # windows/config.c: 160
 transparency of UI background [0 - 255]
-UIã®èƒŒæ™¯ã®é€æ˜åº¦ [0 - 255]
+UI‚Ì”wŒi‚Ì“§–¾“x [0 - 255]
 
 # windows/config.c: 1015
 unable to open log file
-ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«ãŒé–‹ã‘ã¾ã›ã‚“
+ƒƒOƒtƒ@ƒCƒ‹‚ªŠJ‚¯‚Ü‚¹‚ñ
 
 # windows/config.c: 278
 use antialiasing when drawing vectors
-ãƒ™ã‚¯ã‚¿ã®æç”»ã«ã‚¢ãƒ³ãƒã‚¨ã‚¤ãƒªã‚¢ã‚¹ã‚’ä½¿ç”¨
+ƒxƒNƒ^‚Ì•`‰æ‚ÉƒAƒ“ƒ`ƒGƒCƒŠƒAƒX‚ğg—p
 
 # windows/config.c: 196
 use the RDTSC instruction for timing; faster but may result in uneven performance
-ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã«RDTSCå‘½ä»¤ã‚’ä½¿ç”¨ã€‚é«˜é€Ÿã§ã™ãŒãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹çµæœã«ã°ã‚‰ã¤ããŒã‚ã‚Šã¾ã™
+ƒ^ƒCƒ~ƒ“ƒO‚ÉRDTSC–½—ß‚ğg—pB‚‘¬‚Å‚·‚ªƒpƒtƒH[ƒ}ƒ“ƒXŒ‹‰Ê‚É‚Î‚ç‚Â‚«‚ª‚ ‚è‚Ü‚·
 
 # windows/config.c: 159
 use transparent background for UI text
-UIãƒ†ã‚­ã‚¹ãƒˆã®èƒŒæ™¯ã‚’åŠé€æ˜ã«ã™ã‚‹
+UIƒeƒLƒXƒg‚Ì”wŒi‚ğ”¼“§–¾‚É‚·‚é
 
 # windows/config.c: 202
 video output method: gdi, ddraw, or d3d
-ãƒ“ãƒ‡ã‚ªæç”»æ–¹æ³•: gdiã€ddrawã¾ãŸã¯d3d
+ƒrƒfƒI•`‰æ•û–@: gdiAddraw‚Ü‚½‚Íd3d
 
 # windows/config.c: 360
 window background color
-ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ èƒŒæ™¯è‰²
+ƒEƒBƒ“ƒhƒE ”wŒiF
 
 # windows/config.c: 363
 window frame color (dark)
-ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ ãƒ•ãƒ¬ãƒ¼ãƒ  (æš—)
+ƒEƒBƒ“ƒhƒE ƒtƒŒ[ƒ€ (ˆÃ)
 
 # windows/config.c: 362
 window frame color (light)
-ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ ãƒ•ãƒ¬ãƒ¼ãƒ  (æ˜)
+ƒEƒBƒ“ƒhƒE ƒtƒŒ[ƒ€ (–¾)
 
 # windows/config.c: 361
 window frame color (medium)
-ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ ãƒ•ãƒ¬ãƒ¼ãƒ 
+ƒEƒBƒ“ƒhƒE ƒtƒŒ[ƒ€
 
 # windows/config.c: 114
 year, manufacturer and full name
-ã‚µãƒãƒ¼ãƒˆã‚²ãƒ¼ãƒ ã€è£½é€ å¹´ã€ãƒ¡ãƒ¼ã‚«ãƒ¼ã®ãƒªã‚¹ãƒˆã‚’è¡¨\ç¤º
+ƒTƒ|[ƒgƒQ[ƒ€A»‘¢”NAƒ[ƒJ[‚ÌƒŠƒXƒg‚ğ•\\¦
 

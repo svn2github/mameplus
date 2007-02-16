@@ -1,3 +1,5 @@
+#define UNICODE
+#include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,10 +9,18 @@
 
 #define BUFSIZE 256
 
+struct mmo_header
+{
+	int dummy;
+	int version;
+	int num_msg;
+};
+
 struct msgdata
 {
 	const unsigned char *id;
-	const unsigned char *str;
+	const WCHAR *wstr;
+	const unsigned char *ustr;
 };
 
 static struct msgdata *msgtable;
@@ -23,8 +33,37 @@ static FILE *out;
 #define SKIP_SPACE(addr)	for (p = addr; *p != '\0'; p++)	if (*p != ' ' && *p != '\t') break;
 
 
-static int regist(const unsigned char *id, const unsigned char *str)
+static WCHAR *wstring_from_mbstring(const unsigned char *mbstring, int codepage)
 {
+	int char_count;
+	WCHAR *result;
+
+	char_count = MultiByteToWideChar(codepage, 0, mbstring, -1, NULL, 0);
+	result = (WCHAR *)malloc(char_count * sizeof(*result));
+	if (result != NULL)
+		MultiByteToWideChar(codepage, 0, mbstring, -1, result, char_count);
+
+	return result;
+}
+
+static unsigned char *utf8_from_wstring(const WCHAR *wstring)
+{
+	int char_count;
+	char *result;
+
+	char_count = WideCharToMultiByte(CP_UTF8, 0, wstring, -1, NULL, 0, NULL, NULL);
+	result = (char *)malloc(char_count * sizeof(*result));
+	if (result != NULL)
+		WideCharToMultiByte(CP_UTF8, 0, wstring, -1, result, char_count, NULL, NULL);
+
+	return result;
+}
+
+static int regist(const unsigned char *id, const unsigned char *str, int codepage)
+{
+	const WCHAR *wstr = wstring_from_mbstring(str, codepage);
+	const char *ustr = utf8_from_wstring(wstr);
+
 	if (num_msgtable + 1 > alloc_msgtable)
 	{
 		alloc_msgtable += BUFSIZE;
@@ -33,7 +72,8 @@ static int regist(const unsigned char *id, const unsigned char *str)
 			return 1;
 	}
 	msgtable[num_msgtable].id = id;
-	msgtable[num_msgtable].str = str;
+	msgtable[num_msgtable].wstr = wstr;
+	msgtable[num_msgtable].ustr = ustr;
 	num_msgtable++;
 
 	return 0;
@@ -46,14 +86,19 @@ static int cmp_msgdata(const void *a, const void *b)
 
 static int write_mmo(void)
 {
+	struct mmo_header header;
 	int i;
 	int offset = 0;
 
-	qsort(msgtable, num_msgtable, sizeof *msgtable, cmp_msgdata);
+	header.dummy = 0;
+	header.version = 1;
+	header.num_msg = num_msgtable;
 
 	// number of msgdata
-	if (fwrite(&num_msgtable, sizeof num_msgtable, 1, out) != 1)
+	if (fwrite(&header, sizeof header, 1, out) != 1)
 		return 1;
+
+	qsort(msgtable, num_msgtable, sizeof *msgtable, cmp_msgdata);
 
 	for (i = 0; i <num_msgtable; i++)
 	{
@@ -62,10 +107,15 @@ static int write_mmo(void)
 			return 1;
 		offset += strlen(msgtable[i].id) + 1;
 
-		// offset of str
+		// offset of wstr
 		if (fwrite(&offset, sizeof offset, 1, out) != 1)
 			return 1;
-		offset += strlen(msgtable[i].str) + 1;
+		offset += (lstrlen(msgtable[i].wstr) + 1) * sizeof (*msgtable[i].wstr);
+
+		// offset of ustr
+		if (fwrite(&offset, sizeof offset, 1, out) != 1)
+			return 1;
+		offset += strlen(msgtable[i].ustr) + 1;
 	}
 
 	// total bytes of both id and str
@@ -77,7 +127,9 @@ static int write_mmo(void)
 	{
 		if (fwrite(msgtable[i].id, strlen(msgtable[i].id) + 1, 1, out) != 1)
 			return 1;
-		if (fwrite(msgtable[i].str, strlen(msgtable[i].str) + 1, 1, out) != 1)
+		if (fwrite(msgtable[i].wstr, (lstrlen(msgtable[i].wstr) + 1) * sizeof (*msgtable[i].wstr), 1, out) != 1)
+			return 1;
+		if (fwrite(msgtable[i].ustr, strlen(msgtable[i].ustr) + 1, 1, out) != 1)
 			return 1;
 	}
 
@@ -239,7 +291,7 @@ static unsigned char *get_string(const unsigned char *str)
 	return ret;
 }
 
-static int do_generate(void)
+static int do_generate(int codepage)
 {
 	unsigned char *msgid = NULL;
 	unsigned char *msgstr = NULL;
@@ -327,7 +379,7 @@ static int do_generate(void)
 		if (msgid && msgstr)
 		{
 			//if (strcmp(msgid, msgstr))
-				if (regist(msgid, msgstr))
+				if (regist(msgid, msgstr, codepage))
 				{
 					fprintf(stderr, "Out of memory in line %d\n", line);
 					return 1;
@@ -346,7 +398,7 @@ static int do_generate(void)
 
 static void usage(void)
 {
-	fprintf(stderr, "usage: mmofmt input-file [-o output-file]\n");
+	fprintf(stderr, "usage: mmofmt [-o output-file] input-file codepage\n");
 	exit(1);
 }
 
@@ -354,6 +406,7 @@ int main(int argc, char **argv)
 {
 	char *infile = NULL;
 	char *outfile = NULL;
+	int codepage = 0;
 
 	while (*++argv)
 	{
@@ -370,13 +423,22 @@ int main(int argc, char **argv)
 			continue;
 		}
 
-		if (infile)
-			usage();
+		if (!infile)
+		{
+			infile = *argv;
+			continue;
+		}
 
-		infile = *argv;
+		if (!codepage)
+		{
+			codepage = atoi(*argv);
+			continue;
+		}
+
+		usage();
 	}
 
-	if (infile == NULL)
+	if (!infile || !codepage)
 		usage();
 
 	if (infile)
@@ -391,7 +453,7 @@ int main(int argc, char **argv)
 	else
 		in = stdin;
 
-	if (do_generate())
+	if (do_generate(codepage))
 		return 1;
 
 	if (!num_msgtable)

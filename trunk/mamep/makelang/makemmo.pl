@@ -49,8 +49,10 @@
 
 
 $lang = shift;
+$codepage = shift;
 
 exit 1 if $lang eq '';
+exit 1 if $codepage eq '';
 
 $dir = '..';
 $mameexe = 'mamep';
@@ -157,7 +159,7 @@ sub MakeListFiles
 	}
 	close (OUT);
 
-	system ("$format_cmd $podir/lst.po -o $modir/lst.$mo_ext");
+	system ($format_cmd, "$podir/lst.po", "-o", "$modir/lst.$mo_ext", $codepage);
 
 	if ($lang eq 'jp')
 	{
@@ -172,7 +174,7 @@ sub MakeListFiles
 		}
 		close (OUT);
 
-		system ("$format_cmd $podir/readings.po -o $modir/readings.$mo_ext");
+		system ($format_cmd, "$podir/readings.po", "-o", "$modir/readings.$mo_ext", $codepage);
 	}
 }
 
@@ -371,5 +373,5 @@ sub MakeMo
 	}
 	close (OUT);
 
-	system ("$format_cmd", "$podir/$target.po", '-o', "$modir/$target.$mo_ext");
+	system ("$format_cmd", "$podir/$target.po", '-o', "$modir/$target.$mo_ext", $codepage);
 }
