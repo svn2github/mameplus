@@ -606,7 +606,7 @@ int winwindow_video_window_create(int index, win_monitor_info *monitor, const wi
 		sprintf(buf, APPNAME ": %s [%s]", (options.use_lang_list ? _LST(Machine->gamedrv->description) : Machine->gamedrv->description), Machine->gamedrv->name);
 	else
 		sprintf(buf, _WINDOWS(APPNAME ": %s [%s] - Screen %d"), (options.use_lang_list ? _LST(Machine->gamedrv->description) : Machine->gamedrv->description), Machine->gamedrv->name, index);
-	MultiByteToWideChar(ui_lang_info[options.langcode].codepage, 0, buf, -1, window->title, sizeof window->title);
+	MultiByteToWideChar(CP_UTF8, 0, buf, -1, window->title, sizeof window->title);
 
 	// set the initial maximized state
 	window->startmaximized = options_get_bool("maximize");
