@@ -287,9 +287,6 @@ enum
 void OptionsInit(void);
 void OptionsExit(void);
 
-/* set multi-byte string that is encoded with UTF-8 internally */
-void options_set_mstring(const char *name, const char *value);
-
 /* set unicode string that is encoded with UTF-8 internally */
 void options_set_wstring(const char *name, const WCHAR *value);
 
@@ -481,8 +478,8 @@ int GetPlayTime(int driver_index);
 void GetTextPlayTime(int driver_index, char *buf);
 void ResetPlayTime(int driver_index);
 
-char* GetExecCommand(void);
-void SetExecCommand(char* cmd);
+WCHAR* GetExecCommand(void);
+void SetExecCommand(WCHAR* cmd);
 
 int GetExecWait(void);
 void SetExecWait(int wait);
@@ -495,76 +492,76 @@ void SetRunFullScreen(BOOL fullScreen);
 
 
 /*----------------------------------------*/
-const char* GetRomDirs(void);
-void SetRomDirs(const char* paths);
+const WCHAR* GetRomDirs(void);
+void SetRomDirs(const WCHAR* paths);
 
-const char* GetSampleDirs(void);
-void  SetSampleDirs(const char* paths);
+const WCHAR* GetSampleDirs(void);
+void  SetSampleDirs(const WCHAR* paths);
 
-const char* GetIniDir(void);
-void  SetIniDir(const char* path);
+const WCHAR* GetIniDir(void);
+void  SetIniDir(const WCHAR* path);
 
-const char* GetCfgDir(void);
-void SetCfgDir(const char* path);
+const WCHAR* GetCfgDir(void);
+void SetCfgDir(const WCHAR* path);
 
-const char* GetNvramDir(void);
-void SetNvramDir(const char* path);
+const WCHAR* GetNvramDir(void);
+void SetNvramDir(const WCHAR* path);
 
-const char* GetMemcardDir(void);
-void SetMemcardDir(const char* path);
+const WCHAR* GetMemcardDir(void);
+void SetMemcardDir(const WCHAR* path);
 
-const char* GetInpDir(void);
-void SetInpDir(const char* path);
+const WCHAR* GetInpDir(void);
+void SetInpDir(const WCHAR* path);
 
-const char* GetHiDir(void);
-void SetHiDir(const char* path);
+const WCHAR* GetHiDir(void);
+void SetHiDir(const WCHAR* path);
 
-const char* GetStateDir(void);
-void SetStateDir(const char* path);
+const WCHAR* GetStateDir(void);
+void SetStateDir(const WCHAR* path);
 
-const char* GetArtDir(void);
-void SetArtDir(const char* path);
+const WCHAR* GetArtDir(void);
+void SetArtDir(const WCHAR* path);
 
-const char* GetImgDir(void);
-void SetImgDir(const char* path);
+const WCHAR* GetImgDir(void);
+void SetImgDir(const WCHAR* path);
 
-const char* GetDiffDir(void);
-void SetDiffDir(const char* path);
+const WCHAR* GetDiffDir(void);
+void SetDiffDir(const WCHAR* path);
 
-const char* GetCtrlrDir(void);
-void SetCtrlrDir(const char* path);
+const WCHAR* GetCtrlrDir(void);
+void SetCtrlrDir(const WCHAR* path);
 
-const char *GetTranslationDir(void);
-void SetTranslationDir(const char *path);
+const WCHAR* GetTranslationDir(void);
+void SetTranslationDir(const WCHAR* path);
 
-const char* GetCommentDir(void);
-void SetCommentDir(const char* path);
+const WCHAR* GetCommentDir(void);
+void SetCommentDir(const WCHAR* path);
 
 #ifdef USE_IPS
-const char *GetPatchDir(void);
-void SetPatchDir(const char *path);
+const WCHAR* GetPatchDir(void);
+void SetPatchDir(const WCHAR* path);
 #endif /* USE_IPS */
 
-const char *GetLocalizedDir(void);
-void SetLocalizedDir(const char *path);
+const WCHAR* GetLocalizedDir(void);
+void SetLocalizedDir(const WCHAR* path);
 
-const char* GetCheatFile(void);
-void SetCheatFile(const char*);
+const WCHAR* GetCheatFile(void);
+void SetCheatFile(const WCHAR*);
 
-const char* GetHistoryFile(void);
-void SetHistoryFile(const char*);
+const WCHAR* GetHistoryFile(void);
+void SetHistoryFile(const WCHAR*);
 
 #ifdef STORY_DATAFILE
-const char* GetStoryFile(void);
-void SetStoryFile(const char*);
+const WCHAR* GetStoryFile(void);
+void SetStoryFile(const WCHAR*);
 
 #endif /* STORY_DATAFILE */
-const char* GetMAMEInfoFile(void);
-void SetMAMEInfoFile(const char*);
+const WCHAR* GetMAMEInfoFile(void);
+void SetMAMEInfoFile(const WCHAR*);
 
 #ifdef USE_HISCORE
-const char* GetHiscoreFile(void);
-void SetHiscoreFile(const char*);
+const WCHAR* GetHiscoreFile(void);
+void SetHiscoreFile(const WCHAR*);
 #endif /* USE_HISCORE */
 
 #ifdef UI_COLOR_PALETTE
@@ -585,33 +582,33 @@ void SetUseLangList(BOOL is_use);
 
 
 /*----------------------------------------*/
-const char* GetFlyerDir(void);
-void SetFlyerDir(const char* path);
+const WCHAR* GetFlyerDir(void);
+void SetFlyerDir(const WCHAR* path);
 
-const char* GetCabinetDir(void);
-void SetCabinetDir(const char* path);
+const WCHAR* GetCabinetDir(void);
+void SetCabinetDir(const WCHAR* path);
 
-const char* GetMarqueeDir(void);
-void SetMarqueeDir(const char* path);
+const WCHAR* GetMarqueeDir(void);
+void SetMarqueeDir(const WCHAR* path);
 
-const char* GetTitlesDir(void);
-void SetTitlesDir(const char* path);
+const WCHAR* GetTitlesDir(void);
+void SetTitlesDir(const WCHAR* path);
 
-const char * GetControlPanelDir(void);
-void SetControlPanelDir(const char *path);
+const WCHAR* GetControlPanelDir(void);
+void SetControlPanelDir(const WCHAR* path);
 
-const char *GetIconsDir(void);
-void SetIconsDir(const char *path);
+const WCHAR* GetIconsDir(void);
+void SetIconsDir(const WCHAR* path);
 
-const char *GetBgDir(void);
-void SetBgDir(const char *path);
+const WCHAR* GetBgDir(void);
+void SetBgDir(const WCHAR* path);
 
-const char *GetFolderDir(void);
-void SetFolderDir(const char *path);
+const WCHAR* GetFolderDir(void);
+void SetFolderDir(const WCHAR* path);
 
 #ifdef USE_VIEW_PCBINFO
-const char* GetPcbinfoDir(void);
-void SetPcbinfoDir(const char* path);
+const WCHAR* GetPcbinfoDir(void);
+void SetPcbinfoDir(const WCHAR* path);
 #endif /* USE_VIEW_PCBINFO */
 
 

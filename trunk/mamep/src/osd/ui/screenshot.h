@@ -22,13 +22,14 @@ typedef struct _mybitmapinfo
 
 #ifdef MESS
 extern BOOL LoadScreenShotEx(int nGame, LPCSTR lpSoftwareName, int nType);
-#endif /* MESS */
-
+#else /* !MESS */
 #ifdef USE_IPS
-extern BOOL LoadScreenShot(int nGame, const char* lpIPSName, int nType);
+extern BOOL LoadScreenShot(int nGame, const char *lpIPSName, int nType);
 #else /* USE_IPS */
 extern BOOL LoadScreenShot(int nGame, int nType);
 #endif /* USE_IPS */
+#endif /* MESS */
+
 extern HANDLE GetScreenShotHandle(void);
 extern int GetScreenShotWidth(void);
 extern int GetScreenShotHeight(void);
@@ -36,7 +37,7 @@ extern int GetScreenShotHeight(void);
 extern void FreeScreenShot(void);
 extern BOOL ScreenShotLoaded(void);
 
-extern BOOL LoadDIB(LPCSTR filename, HGLOBAL *phDIB, HPALETTE *pPal, BOOL flyer);
+extern BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, BOOL flyer);
 extern HBITMAP DIBToDDB(HDC hDC, HANDLE hDIB, LPMYBITMAPINFO desc);
 
 #endif

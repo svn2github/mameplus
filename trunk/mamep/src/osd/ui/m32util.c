@@ -127,9 +127,23 @@ void __cdecl dprintf(const char* fmt, ...)
 
 	va_start(va, fmt);
 
-	_vsnprintf(buf,sizeof(buf),fmt,va);
+	_vsnprintf(buf, sizeof (buf), fmt, va);
 
 	OutputDebugString(_Unicode(buf));
+
+	va_end(va);
+}
+
+void __cdecl dwprintf(const WCHAR* fmt, ...)
+{
+	WCHAR	buf[5000];
+	va_list va;
+
+	va_start(va, fmt);
+
+	_vsnwprintf(buf, sizeof (buf) / sizeof (*buf), fmt, va);
+
+	OutputDebugString(buf);
 
 	va_end(va);
 }
@@ -548,12 +562,12 @@ int GetPatchCount(const char *game_name, const char *patch_name)
 
 	if (game_name && patch_name)
 	{
-		struct _finddata_t c_file;
+		struct _wfinddata_t c_file;
 		long hFile;
-		char szFilename[MAX_PATH];
+		WCHAR szFilename[MAX_PATH];
 
-		sprintf(szFilename, "%s\\%s\\%s.dat", GetPatchDir(), game_name, patch_name);
-		hFile = _findfirst(szFilename, &c_file);
+		swprintf(szFilename, TEXT("%s\\%s\\%s.dat"), GetPatchDir(), _Unicode(game_name), _Unicode(patch_name));
+		hFile = _wfindfirst(szFilename, &c_file);
 		if (hFile != -1L)
 		{
 			int Done = 0;
@@ -561,7 +575,7 @@ int GetPatchCount(const char *game_name, const char *patch_name)
 			while (!Done)
 			{
 				Count++;
-				Done = _findnext(hFile, &c_file);
+				Done = _wfindnext(hFile, &c_file);
 			}
 			_findclose(hFile);
 		}
@@ -571,12 +585,12 @@ int GetPatchCount(const char *game_name, const char *patch_name)
 
 int GetPatchFilename(char *patch_name, const char *game_name, const int patch_index)
 {
-	struct _finddata_t c_file;
+	struct _wfinddata_t c_file;
 	long hFile;
-	char szFilename[MAX_PATH];
+	WCHAR szFilename[MAX_PATH];
 
-	sprintf(szFilename, "%s\\%s\\*.dat", GetPatchDir(), game_name);
-	hFile = _findfirst(szFilename, &c_file);
+	swprintf(szFilename, TEXT("%s\\%s\\*.dat"), GetPatchDir(), _Unicode(game_name));
+	hFile = _wfindfirst(szFilename, &c_file);
 	if (hFile != -1L)
 	{
 		int Done = 0;
@@ -586,12 +600,12 @@ int GetPatchFilename(char *patch_name, const char *game_name, const int patch_in
 		{
 			if (Count == patch_index)
 			{
-				strcpy(patch_name, c_file.name);
+				strcpy(patch_name, _String(c_file.name));
 				patch_name[strlen(patch_name)-4] = 0;	// To trim the ext ".dat"
 				break;
 			}
 			Count++;
-			Done = _findnext(hFile, &c_file);
+			Done = _wfindnext(hFile, &c_file);
 		}
 		_findclose(hFile);
 		return -1;
@@ -677,11 +691,11 @@ LPWSTR GetPatchDesc(const char *game_name, const char *patch_name)
 {
 	FILE *fp;
 	LPWSTR desc = NULL;
-	char szFilename[MAX_PATH];
+	WCHAR szFilename[MAX_PATH];
 
-	sprintf(szFilename, "%s\\%s\\%s.dat", GetPatchDir(), game_name, patch_name);
+	swprintf(szFilename, TEXT("%s\\%s\\%s.dat"), GetPatchDir(), _Unicode(game_name), _Unicode(patch_name));
 
-	if ((fp = fopen(szFilename, "r")) != NULL)
+	if ((fp = _wfopen(szFilename, TEXT("r"))) != NULL)
 	{
 		/* Get localized desc */
 		desc = GetPatchDescByLangcode(fp, GetLangcode());
@@ -710,6 +724,12 @@ void FreeIfAllocated(char **s)
 	*s = NULL;
 }
 
+void FreeIfAllocatedW(WCHAR **s)
+{
+	if (*s)
+		free(*s);
+	*s = NULL;
+}
 
 #ifdef TREE_SHEET
 void CenterWindow(HWND hWnd)

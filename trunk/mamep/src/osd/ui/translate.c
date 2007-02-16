@@ -495,7 +495,7 @@ LPWSTR _UTF8Unicode(const char *s)
 	return temp_string_pool[temp_string_pool_index++];
 }
 
-char *_String(const LPWSTR ws)
+char *_String(const WCHAR *ws)
 {
 	static char *temp_string_pool[TEMP_STRING_POOL_ENTRIES];
 	static int temp_string_pool_alloc_len[TEMP_STRING_POOL_ENTRIES];

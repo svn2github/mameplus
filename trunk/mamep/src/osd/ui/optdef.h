@@ -2,40 +2,40 @@
 START_OPT_FUNC_CORE
 // CORE SEARCH PATH OPTIONS
 
-	DEFINE_OPT(mstring,              rompath);
-	DEFINE_OPT(mstring,              samplepath);
-	DEFINE_OPT(mstring,              artpath);
-	DEFINE_OPT(mstring,              ctrlrpath);
-	DEFINE_OPT(mstring,              inipath);
-	DEFINE_OPT(mstring,              fontpath);
+	DEFINE_OPT(wstring,              rompath);
+	DEFINE_OPT(wstring,              samplepath);
+	DEFINE_OPT(wstring,              artpath);
+	DEFINE_OPT(wstring,              ctrlrpath);
+	DEFINE_OPT(wstring,              inipath);
+	DEFINE_OPT(wstring,              fontpath);
 
 // CORE OUTPUT DIRECTORY OPTIONS
-	DEFINE_OPT(mstring,              cfg_directory);
-	DEFINE_OPT(mstring,              nvram_directory);
-	DEFINE_OPT(mstring,              memcard_directory);
-	DEFINE_OPT(mstring,              input_directory);
+	DEFINE_OPT(wstring,              cfg_directory);
+	DEFINE_OPT(wstring,              nvram_directory);
+	DEFINE_OPT(wstring,              memcard_directory);
+	DEFINE_OPT(wstring,              input_directory);
 #ifdef USE_HISCORE
-	DEFINE_OPT(mstring,              hiscore_directory);
+	DEFINE_OPT(wstring,              hiscore_directory);
 #endif /* USE_HISCORE */
-	DEFINE_OPT(mstring,              state_directory);
-	DEFINE_OPT(mstring,              snapshot_directory);
-	DEFINE_OPT(mstring,              diff_directory);
-	DEFINE_OPT(mstring,              translation_directory);
-	DEFINE_OPT(mstring,              comment_directory);
+	DEFINE_OPT(wstring,              state_directory);
+	DEFINE_OPT(wstring,              snapshot_directory);
+	DEFINE_OPT(wstring,              diff_directory);
+	DEFINE_OPT(wstring,              translation_directory);
+	DEFINE_OPT(wstring,              comment_directory);
 #ifdef USE_IPS
-	DEFINE_OPT(mstring,              ips_directory);
+	DEFINE_OPT(wstring,              ips_directory);
 #endif /* USE_IPS */
-	DEFINE_OPT(mstring,              localized_directory);
+	DEFINE_OPT(wstring,              localized_directory);
 
 // CORE FILENAME OPTIONS
-	DEFINE_OPT(mstring,              cheat_file);
-	DEFINE_OPT(mstring,              history_file);
+	DEFINE_OPT(wstring,              cheat_file);
+	DEFINE_OPT(wstring,              history_file);
 #ifdef STORY_DATAFILE
-	DEFINE_OPT(mstring,              story_file);
+	DEFINE_OPT(wstring,              story_file);
 #endif /* STORY_DATAFILE */
-	DEFINE_OPT(mstring,              mameinfo_file);
+	DEFINE_OPT(wstring,              mameinfo_file);
 #ifdef USE_HISCORE
-	DEFINE_OPT(mstring,              hiscore_file);
+	DEFINE_OPT(wstring,              hiscore_file);
 #endif /* USE_HISCORE */
 
 #ifdef UI_COLOR_DISPLAY
@@ -245,16 +245,16 @@ END_OPT_FUNC_DRIVER
 #ifdef START_OPT_FUNC_WINUI
 START_OPT_FUNC_WINUI
 // PATH AND DIRECTORY OPTIONS
-	DEFINE_OPT(mstring,              flyer_directory)
-	DEFINE_OPT(mstring,              cabinet_directory)
-	DEFINE_OPT(mstring,              marquee_directory)
-	DEFINE_OPT(mstring,              title_directory)
-	DEFINE_OPT(mstring,              cpanel_directory)
-	DEFINE_OPT(mstring,              icon_directory)
-	DEFINE_OPT(mstring,              bkground_directory)
-	DEFINE_OPT(mstring,              folder_directory)
+	DEFINE_OPT(wstring,              flyer_directory)
+	DEFINE_OPT(wstring,              cabinet_directory)
+	DEFINE_OPT(wstring,              marquee_directory)
+	DEFINE_OPT(wstring,              title_directory)
+	DEFINE_OPT(wstring,              cpanel_directory)
+	DEFINE_OPT(wstring,              icon_directory)
+	DEFINE_OPT(wstring,              bkground_directory)
+	DEFINE_OPT(wstring,              folder_directory)
 #ifdef USE_VIEW_PCBINFO
-	DEFINE_OPT(mstring,              pcbinfo_directory)
+	DEFINE_OPT(wstring,              pcbinfo_directory)
 #endif /* USE_VIEW_PCBINFO */
 
 // INTERFACE OPTIONS
@@ -295,7 +295,7 @@ START_OPT_FUNC_WINUI
 #else /* STORY_DATAFILE */
 	DEFINE_OPT(int,                  history_tab)
 #endif /* STORY_DATAFILE */
-	DEFINE_OPT(string_allow_null,    exec_command)
+	DEFINE_OPT(wstring_allow_null,   exec_command)
 	DEFINE_OPT(int_positive,         exec_wait)
 	DEFINE_OPT(bool,                 hide_mouse)
 	DEFINE_OPT(bool,                 full_screen)

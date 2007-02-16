@@ -53,10 +53,10 @@
 #endif
 
 // fixme
-#define SetRomPath(path) options_set_mstring(SEARCHPATH_ROM, path)
-#define SetImagePath(path) options_set_mstring(SEARCHPATH_IMAGE, path)
-#define SetSamplePath(path) options_set_mstring(SEARCHPATH_SAMPLE, path)
-#define SetTranslationPath(path) options_set_mstring(SEARCHPATH_TRANSLATION, path);
+#define SetRomPath(path) options_set_wstring(SEARCHPATH_ROM, path)
+#define SetImagePath(path) options_set_wstring(SEARCHPATH_IMAGE, path)
+#define SetSamplePath(path) options_set_wstring(SEARCHPATH_SAMPLE, path)
+#define SetTranslationPath(path) options_set_wstring(SEARCHPATH_TRANSLATION, path);
 
 
 /***************************************************************************
@@ -183,7 +183,7 @@ typedef struct
 	int      ui_joy_history_down[4];
 	int      ui_joy_exec[4];
 
-	char*    exec_command;  // Command line to execute on ui_joy_exec   
+	WCHAR*   exec_command;  // Command line to execute on ui_joy_exec   
 	int      exec_wait;     // How long to wait before executing
 	BOOL     hide_mouse;    // Should mouse cursor be hidden on startup?
 	BOOL     full_screen;   // Should we fake fullscreen?
@@ -199,51 +199,51 @@ typedef struct
 //
 // PATH AND DIRECTORY OPTIONS
 //
-	char*    flyer_directory;
-	char*    cabinet_directory;
-	char*    marquee_directory;
-	char*	 title_directory;
-	char*	 cpanel_directory;
-	char*    icon_directory;
-	char*    bkground_directory;
-	char*    folder_directory;
+	WCHAR*	flyer_directory;
+	WCHAR*	cabinet_directory;
+	WCHAR*	marquee_directory;
+	WCHAR*	title_directory;
+	WCHAR*	cpanel_directory;
+	WCHAR*	icon_directory;
+	WCHAR*	bkground_directory;
+	WCHAR*	folder_directory;
 #ifdef USE_VIEW_PCBINFO
-	char*    pcbinfo_directory;
+	WCHAR*	pcbinfo_directory;
 #endif /* USE_VIEW_PCBINFO */
 //
 // PATH AND DIRECTORY OPTIONS
 //
 	/* directory and datafile */
-	char*	rompath;
-	char*	samplepath;
-	char*	inipath;
-	char*	fontpath;
-	char*	cfg_directory;
-	char*	nvram_directory;
-	char*	memcard_directory;
-	char*	input_directory;
+	WCHAR*	rompath;
+	WCHAR*	samplepath;
+	WCHAR*	inipath;
+	WCHAR*	fontpath;
+	WCHAR*	cfg_directory;
+	WCHAR*	nvram_directory;
+	WCHAR*	memcard_directory;
+	WCHAR*	input_directory;
 #ifdef USE_HISCORE
-	char*	hiscore_directory;
+	WCHAR*	hiscore_directory;
 #endif /* USE_HISCORE */
-	char*	state_directory;
-	char*	artpath;
-	char*	snapshot_directory;
-	char*	diff_directory;
-	char*	ctrlrpath;
-	char*	translation_directory;
-	char*	comment_directory;
+	WCHAR*	state_directory;
+	WCHAR*	artpath;
+	WCHAR*	snapshot_directory;
+	WCHAR*	diff_directory;
+	WCHAR*	ctrlrpath;
+	WCHAR*	translation_directory;
+	WCHAR*	comment_directory;
 #ifdef USE_IPS
-	char*	ips_directory;
+	WCHAR*	ips_directory;
 #endif /* USE_IPS */
-	char*	localized_directory;
-	char*	cheat_file;
-	char*	history_file;
+	WCHAR*	localized_directory;
+	WCHAR*	cheat_file;
+	WCHAR*	history_file;
 #ifdef STORY_DATAFILE
-	char*	story_file;
+	WCHAR*	story_file;
 #endif /* STORY_DATAFILE */
-	char*	mameinfo_file;
+	WCHAR*	mameinfo_file;
 #ifdef USE_HISCORE
-	char*	hiscore_file;
+	WCHAR*	hiscore_file;
 #endif /* USE_HISCORE */
 //
 // CORE PALETTE OPTIONS
@@ -1494,18 +1494,18 @@ BOOL GetShowTreeSheet(void)
 }
 #endif /* TREE_SHEET */
 
-const char* GetRomDirs(void)
+const WCHAR* GetRomDirs(void)
 {
 	return settings.rompath;
 }
 
-void SetRomDirs(const char* paths)
+void SetRomDirs(const WCHAR* paths)
 {
-	FreeIfAllocated(&settings.rompath);
+	FreeIfAllocatedW(&settings.rompath);
 
 	if (paths != NULL)
 	{
-		settings.rompath = strdup(paths);
+		settings.rompath = wcsdup(paths);
 
 		// have our mame core (file code) know about it
 		// this leaks a little, but the win32 file core writes to this string
@@ -1514,18 +1514,18 @@ void SetRomDirs(const char* paths)
 	}
 }
 
-const char* GetSampleDirs(void)
+const WCHAR* GetSampleDirs(void)
 {
 	return settings.samplepath;
 }
 
-void SetSampleDirs(const char* paths)
+void SetSampleDirs(const WCHAR* paths)
 {
-	FreeIfAllocated(&settings.samplepath);
+	FreeIfAllocatedW(&settings.samplepath);
 
 	if (paths != NULL)
 	{
-		settings.samplepath = strdup(paths);
+		settings.samplepath = wcsdup(paths);
 		
 		// have our mame core (file code) know about it
 		// this leaks a little, but the win32 file core writes to this string
@@ -1533,20 +1533,20 @@ void SetSampleDirs(const char* paths)
 	}
 }
 
-const char* GetIniDir(void)
+const WCHAR* GetIniDir(void)
 {
 	return settings.inipath;
 }
 
-void SetIniDir(const char* path)
+void SetIniDir(const WCHAR* path)
 {
-	if (!strcmp(path, settings.inipath))
+	if (!lstrcmp(path, settings.inipath))
 		return;
 
-	FreeIfAllocated(&settings.inipath);
+	FreeIfAllocatedW(&settings.inipath);
 
 	if (path != NULL)
-		settings.inipath = strdup(path);
+		settings.inipath = wcsdup(path);
 
 	if (MessageBox(0, _Unicode(reload_config_msg), TEXT("Reload configurations"), MB_YESNO | MB_ICONQUESTION) == IDNO)
 	{
@@ -1556,381 +1556,381 @@ void SetIniDir(const char* path)
 			LoadGameOptions(i);
 	}
 
-	_mkdir(path);
+	_wmkdir(path);
 }
 
-const char* GetCtrlrDir(void)
+const WCHAR* GetCtrlrDir(void)
 {
 	return settings.ctrlrpath;
 }
 
-void SetCtrlrDir(const char* path)
+void SetCtrlrDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.ctrlrpath);
+	FreeIfAllocatedW(&settings.ctrlrpath);
 
 	if (path != NULL)
-		settings.ctrlrpath = strdup(path);
+		settings.ctrlrpath = wcsdup(path);
 
 	generate_default_ctrlr();
 }
 
-const char* GetCfgDir(void)
+const WCHAR* GetCfgDir(void)
 {
 	return settings.cfg_directory;
 }
 
-void SetCfgDir(const char* path)
+void SetCfgDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.cfg_directory);
+	FreeIfAllocatedW(&settings.cfg_directory);
 
 	if (path != NULL)
-		settings.cfg_directory = strdup(path);
+		settings.cfg_directory = wcsdup(path);
 }
 
 #ifdef USE_HISCORE
-const char* GetHiDir(void)
+const WCHAR* GetHiDir(void)
 {
 	return settings.hiscore_directory;
 }
 
-void SetHiDir(const char* path)
+void SetHiDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.hiscore_directory);
+	FreeIfAllocatedW(&settings.hiscore_directory);
 
 	if (path != NULL)
-		settings.hiscore_directory = strdup(path);
+		settings.hiscore_directory = wcsdup(path);
 }
 #endif /* USE_HISCORE */
 
-const char* GetNvramDir(void)
+const WCHAR* GetNvramDir(void)
 {
 	return settings.nvram_directory;
 }
 
-void SetNvramDir(const char* path)
+void SetNvramDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.nvram_directory);
+	FreeIfAllocatedW(&settings.nvram_directory);
 
 	if (path != NULL)
-		settings.nvram_directory = strdup(path);
+		settings.nvram_directory = wcsdup(path);
 }
 
-const char* GetInpDir(void)
+const WCHAR* GetInpDir(void)
 {
 	return settings.input_directory;
 }
 
-void SetInpDir(const char* path)
+void SetInpDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.input_directory);
+	FreeIfAllocatedW(&settings.input_directory);
 
 	if (path != NULL)
-		settings.input_directory = strdup(path);
+		settings.input_directory = wcsdup(path);
 }
 
-const char* GetImgDir(void)
+const WCHAR* GetImgDir(void)
 {
 	return settings.snapshot_directory;
 }
 
-void SetImgDir(const char* path)
+void SetImgDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.snapshot_directory);
+	FreeIfAllocatedW(&settings.snapshot_directory);
 
 	if (path != NULL)
-		settings.snapshot_directory = strdup(path);
+		settings.snapshot_directory = wcsdup(path);
 }
 
-const char* GetStateDir(void)
+const WCHAR* GetStateDir(void)
 {
 	return settings.state_directory;
 }
 
-void SetStateDir(const char* path)
+void SetStateDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.state_directory);
+	FreeIfAllocatedW(&settings.state_directory);
 
 	if (path != NULL)
-		settings.state_directory = strdup(path);
+		settings.state_directory = wcsdup(path);
 }
 
-const char* GetArtDir(void)
+const WCHAR* GetArtDir(void)
 {
 	return settings.artpath;
 }
 
-void SetArtDir(const char* path)
+void SetArtDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.artpath);
+	FreeIfAllocatedW(&settings.artpath);
 
 	if (path != NULL)
-		settings.artpath = strdup(path);
+		settings.artpath = wcsdup(path);
 }
 
-const char* GetMemcardDir(void)
+const WCHAR* GetMemcardDir(void)
 {
 	return settings.memcard_directory;
 }
 
-void SetMemcardDir(const char* path)
+void SetMemcardDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.memcard_directory);
+	FreeIfAllocatedW(&settings.memcard_directory);
 
 	if (path != NULL)
-		settings.memcard_directory = strdup(path);
+		settings.memcard_directory = wcsdup(path);
 }
 
-const char* GetFlyerDir(void)
+const WCHAR* GetFlyerDir(void)
 {
 	return settings.flyer_directory;
 }
 
-void SetFlyerDir(const char* path)
+void SetFlyerDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.flyer_directory);
+	FreeIfAllocatedW(&settings.flyer_directory);
 
 	if (path != NULL)
-		settings.flyer_directory = strdup(path);
+		settings.flyer_directory = wcsdup(path);
 }
 
-const char* GetCabinetDir(void)
+const WCHAR* GetCabinetDir(void)
 {
 	return settings.cabinet_directory;
 }
 
-void SetCabinetDir(const char* path)
+void SetCabinetDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.cabinet_directory);
+	FreeIfAllocatedW(&settings.cabinet_directory);
 
 	if (path != NULL)
-		settings.cabinet_directory = strdup(path);
+		settings.cabinet_directory = wcsdup(path);
 }
 
-const char* GetMarqueeDir(void)
+const WCHAR* GetMarqueeDir(void)
 {
 	return settings.marquee_directory;
 }
 
-void SetMarqueeDir(const char* path)
+void SetMarqueeDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.marquee_directory);
+	FreeIfAllocatedW(&settings.marquee_directory);
 
 	if (path != NULL)
-		settings.marquee_directory = strdup(path);
+		settings.marquee_directory = wcsdup(path);
 }
 
-const char* GetTitlesDir(void)
+const WCHAR* GetTitlesDir(void)
 {
 	return settings.title_directory;
 }
 
-void SetTitlesDir(const char* path)
+void SetTitlesDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.title_directory);
+	FreeIfAllocatedW(&settings.title_directory);
 
 	if (path != NULL)
-		settings.title_directory = strdup(path);
+		settings.title_directory = wcsdup(path);
 }
 
-const char * GetControlPanelDir(void)
+const WCHAR* GetControlPanelDir(void)
 {
 	return settings.cpanel_directory;
 }
 
-void SetControlPanelDir(const char *path)
+void SetControlPanelDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.cpanel_directory);
+	FreeIfAllocatedW(&settings.cpanel_directory);
 	if (path != NULL)
-		settings.cpanel_directory = strdup(path);
+		settings.cpanel_directory = wcsdup(path);
 }
 
-const char* GetDiffDir(void)
+const WCHAR* GetDiffDir(void)
 {
 	return settings.diff_directory;
 }
 
-void SetDiffDir(const char* path)
+void SetDiffDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.diff_directory);
+	FreeIfAllocatedW(&settings.diff_directory);
 
 	if (path != NULL)
-		settings.diff_directory = strdup(path);
+		settings.diff_directory = wcsdup(path);
 }
 
-const char* GetTranslationDir(void)
+const WCHAR* GetTranslationDir(void)
 {
 	return settings.translation_directory;
 }
 
-void SetTranslationDir(const char* path)
+void SetTranslationDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.translation_directory);
+	FreeIfAllocatedW(&settings.translation_directory);
 
 	if (path != NULL)
-		settings.translation_directory = strdup(path);
+		settings.translation_directory = wcsdup(path);
 }
 
-const char* GetCommentDir(void)
+const WCHAR* GetCommentDir(void)
 {
 	return settings.comment_directory;
 }
 
-void SetCommentDir(const char* path)
+void SetCommentDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.comment_directory);
+	FreeIfAllocatedW(&settings.comment_directory);
 
 	if (path != NULL)
-		settings.comment_directory = strdup(path);
+		settings.comment_directory = wcsdup(path);
 }
 
 #ifdef USE_IPS
-const char *GetPatchDir(void)
+const WCHAR* GetPatchDir(void)
 {
 	return settings.ips_directory;
 }
 
-void SetPatchDir(const char *path)
+void SetPatchDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.ips_directory);
+	FreeIfAllocatedW(&settings.ips_directory);
 
 	if (path != NULL)
-		settings.ips_directory = strdup(path);
+		settings.ips_directory = wcsdup(path);
 }
 #endif /* USE_IPS */
 
-const char* GetLocalizedDir(void)
+const WCHAR* GetLocalizedDir(void)
 {
 	return settings.localized_directory;
 }
 
-void SetLocalizedDir(const char* path)
+void SetLocalizedDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.localized_directory);
+	FreeIfAllocatedW(&settings.localized_directory);
 
 	if (path != NULL)
-		settings.localized_directory = strdup(path);
+		settings.localized_directory = wcsdup(path);
 }
 
-const char* GetIconsDir(void)
+const WCHAR* GetIconsDir(void)
 {
 	return settings.icon_directory;
 }
 
-void SetIconsDir(const char* path)
+void SetIconsDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.icon_directory);
+	FreeIfAllocatedW(&settings.icon_directory);
 
 	if (path != NULL)
-		settings.icon_directory = strdup(path);
+		settings.icon_directory = wcsdup(path);
 }
 
-const char* GetBgDir(void)
+const WCHAR* GetBgDir(void)
 {
 	return settings.bkground_directory;
 }
 
-void SetBgDir(const char* path)
+void SetBgDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.bkground_directory);
+	FreeIfAllocatedW(&settings.bkground_directory);
 
 	if (path != NULL)
-		settings.bkground_directory = strdup(path);
+		settings.bkground_directory = wcsdup(path);
 }
 
-const char *GetFolderDir(void)
+const WCHAR* GetFolderDir(void)
 {
 	return settings.folder_directory;
 }
 
-void SetFolderDir(const char *path)
+void SetFolderDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.folder_directory);
+	FreeIfAllocatedW(&settings.folder_directory);
 
 	if (path != NULL)
-		settings.folder_directory = strdup(path);
+		settings.folder_directory = wcsdup(path);
 }
 
-const char* GetCheatFile(void)
+const WCHAR* GetCheatFile(void)
 {
 	return settings.cheat_file;
 }
 
-void SetCheatFile(const char* path)
+void SetCheatFile(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.cheat_file);
+	FreeIfAllocatedW(&settings.cheat_file);
 
 	if (path != NULL)
-		settings.cheat_file = strdup(path);
+		settings.cheat_file = wcsdup(path);
 }
 
-const char* GetHistoryFile(void)
+const WCHAR* GetHistoryFile(void)
 {
 	return settings.history_file;
 }
 
-void SetHistoryFile(const char* path)
+void SetHistoryFile(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.history_file);
+	FreeIfAllocatedW(&settings.history_file);
 
 	if (path != NULL)
-		settings.history_file = strdup(path);
+		settings.history_file = wcsdup(path);
 }
 
 #ifdef STORY_DATAFILE
-const char* GetStoryFile(void)
+const WCHAR* GetStoryFile(void)
 {
 	return settings.story_file;
 }
 
-void SetStoryFile(const char* path)
+void SetStoryFile(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.story_file);
+	FreeIfAllocatedW(&settings.story_file);
 
 	if (path != NULL)
-		settings.story_file = strdup(path);
+		settings.story_file = wcsdup(path);
 }
 #endif /* STORY_DATAFILE */
 
 #ifdef USE_VIEW_PCBINFO
-const char* GetPcbinfoDir(void)
+const WCHAR* GetPcbinfoDir(void)
 {
 	return settings.pcbinfo_directory;
 }
 
-void SetPcbinfoDir(const char* path)
+void SetPcbinfoDir(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.pcbinfo_directory);
+	FreeIfAllocatedW(&settings.pcbinfo_directory);
 
 	if (path != NULL)
-		settings.pcbinfo_directory = mame_strdup(path);
+		settings.pcbinfo_directory = wcsdup(path);
 }
 #endif /* USE_VIEW_PCBINFO */
 
-const char* GetMAMEInfoFile(void)
+const WCHAR* GetMAMEInfoFile(void)
 {
 	return settings.mameinfo_file;
 }
 
-void SetMAMEInfoFile(const char* path)
+void SetMAMEInfoFile(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.mameinfo_file);
+	FreeIfAllocatedW(&settings.mameinfo_file);
 
 	if (path != NULL)
-		settings.mameinfo_file = strdup(path);
+		settings.mameinfo_file = wcsdup(path);
 }
 
 #ifdef USE_HISCORE
-const char* GetHiscoreFile(void)
+const WCHAR* GetHiscoreFile(void)
 {
 	return settings.hiscore_file;
 }
 
-void SetHiscoreFile(const char* path)
+void SetHiscoreFile(const WCHAR* path)
 {
-	FreeIfAllocated(&settings.hiscore_file);
+	FreeIfAllocatedW(&settings.hiscore_file);
 
 	if (path != NULL)
-		settings.hiscore_file = strdup(path);
+		settings.hiscore_file = wcsdup(path);
 }
 #endif /* USE_HISCORE */
 
@@ -2413,9 +2413,9 @@ int GetUIJoyExec(int joycodeIndex)
 	return settings.ui_joy_exec[joycodeIndex];
 }
 
-char * GetExecCommand(void)
+WCHAR* GetExecCommand(void)
 {
-	static char empty = '\0';
+	static WCHAR empty = '\0';
 
 	if (settings.exec_command)
 		return settings.exec_command;
@@ -2423,9 +2423,12 @@ char * GetExecCommand(void)
 	return &empty;
 }
 
-void SetExecCommand(char *cmd)
+void SetExecCommand(WCHAR* cmd)
 {
-	settings.exec_command = cmd;
+	FreeIfAllocatedW(&settings.exec_command);
+
+	if (cmd != NULL && *cmd)
+		settings.exec_command = wcsdup(cmd);
 }
 
 int GetExecWait(void)
@@ -2774,18 +2777,18 @@ static void unify_alt_options(void)
 	}
 }
 
-static const char *get_base_config_directory(void)
+static const WCHAR *get_base_config_directory(void)
 {
-	char full[_MAX_PATH];
-	char dir[_MAX_DIR];
-	static char path[_MAX_PATH];
+	WCHAR full[_MAX_PATH];
+	WCHAR dir[_MAX_DIR];
+	static WCHAR path[_MAX_PATH];
 
-	GetModuleFileNameA(GetModuleHandle(NULL), full, _MAX_PATH);
-	_splitpath(full, path, dir, NULL, NULL);
-	strcat(path, dir);
+	GetModuleFileNameW(GetModuleHandle(NULL), full, _MAX_PATH);
+	_wsplitpath(full, path, dir, NULL, NULL);
+	lstrcat(path, dir);
 
-	if (path[strlen(path) - 1] == PATH_SEPARATOR[0])
-		path[strlen(path) - 1] = '\0';
+	if (path[lstrlen(path) - 1] == *TEXT(PATH_SEPARATOR))
+		path[lstrlen(path) - 1] = '\0';
 
 	return path;
 }
@@ -2801,15 +2804,21 @@ static void generate_default_ctrlr(void)
 		"\t\t-->\n"
 		"\t</system>\n"
 		"</mameconfig>\n";
-	const char *ctrlrpath = GetCtrlrDir();
+	const WCHAR *ctrlrpath = GetCtrlrDir();
 	const char *ctrlr = backup.global.ctrlr;
 	mame_file *file;
 	mame_file_error filerr;
-	char *fname;
+	WCHAR fname[MAX_PATH];
+	char *stemp;
 	BOOL DoCreate;
 
-	fname = assemble_4_strings(ctrlrpath, PATH_SEPARATOR, ctrlr, ".cfg");
-	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &file);
+	lstrcpy(fname, ctrlrpath);
+	lstrcat(fname, TEXT(PATH_SEPARATOR));
+	lstrcat(fname, _Unicode(ctrlr));
+	lstrcat(fname, TEXT(".cfg"));
+
+	stemp = utf8_from_wstring(fname);
+	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
 	if (filerr == FILERR_NONE)
 		mame_fclose(file);
 
@@ -2819,9 +2828,9 @@ static void generate_default_ctrlr(void)
 
 	if (DoCreate)
 	{
-		_mkdir(ctrlrpath);
+		_wmkdir(ctrlrpath);
 
-		filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
+		filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
 		if (filerr == FILERR_NONE)
 		{
 			mame_fputs(file, default_ctrlr);
@@ -2829,7 +2838,7 @@ static void generate_default_ctrlr(void)
 		}
 	}
 
-	free(fname);
+	free(stemp);
 }
 
 static options_type *update_driver_use_default(int driver_index)
@@ -3313,12 +3322,16 @@ static int options_load_default_config(void)
 {
 	mame_file *file;
 	mame_file_error filerr;
-	char *fname;
+	WCHAR fname[MAX_PATH];
+	char *stemp;
 	int retval = 0;
 
-	fname = assemble_3_strings(get_base_config_directory(), PATH_SEPARATOR, MAME_INI);
-	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &file);
-	free(fname);
+	lstrcpy(fname, get_base_config_directory());
+	lstrcat(fname, TEXT(PATH_SEPARATOR MAME_INI));
+
+	stemp = utf8_from_wstring(fname);
+	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
+	free(stemp);
 
 	if (filerr != FILERR_NONE)
 		return 0;
@@ -3341,7 +3354,8 @@ static int options_load_driver_config(int driver_index)
 	int alt_index = driver_variables[driver_index].alt_index;
 	mame_file *file;
 	mame_file_error filerr;
-	char *fname;
+	WCHAR fname[MAX_PATH];
+	char *stemp;
 	int retval;
 
 	if (alt_index != -1)
@@ -3350,9 +3364,14 @@ static int options_load_driver_config(int driver_index)
 	driver_variables[driver_index].options_loaded = TRUE;
 	driver_variables[driver_index].use_default = TRUE;
 
-	fname = assemble_4_strings(settings.inipath, PATH_SEPARATOR, drivers[driver_index]->name, ".ini");
-	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &file);
-	free(fname);
+	lstrcpy(fname, settings.inipath);
+	lstrcat(fname, TEXT(PATH_SEPARATOR));
+	lstrcat(fname, _Unicode(drivers[driver_index]->name));
+	lstrcat(fname, TEXT(".ini"));
+
+	stemp = utf8_from_wstring(fname);
+	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
+	free(stemp);
 
 	if (filerr != FILERR_NONE)
 		return 0;
@@ -3374,20 +3393,25 @@ static int options_load_alt_config(alt_options_type *alt_option)
 {
 	mame_file *file;
 	mame_file_error filerr;
-	char *fname;
+	WCHAR fname[MAX_PATH];
+	char *stemp;
 	int len;
 	int retval;
 
 	alt_option->variable->options_loaded = TRUE;
 	alt_option->variable->use_default = TRUE;
 
-	fname = assemble_4_strings(settings.inipath, PATH_SEPARATOR, alt_option->name, ".ini");
-	len = strlen(fname);
+	lstrcpy(fname, settings.inipath);
+	lstrcat(fname, TEXT(PATH_SEPARATOR));
+	lstrcat(fname, _Unicode(alt_option->name));
+	lstrcat(fname, TEXT(".ini"));
+	len = lstrlen(fname);
 	if (len > 6 && fname[len - 6] == '.' && fname[len - 5] == 'c')
-		strcpy(fname + len - 6, ".ini");
+		lstrcpy(fname + len - 6, TEXT(".ini"));
 
-	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &file);
-	free(fname);
+	stemp = utf8_from_wstring(fname);
+	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
+	free(stemp);
 
 	if (filerr != FILERR_NONE)
 		return 0;
@@ -3409,12 +3433,16 @@ static int options_load_winui_config(void)
 {
 	mame_file *file;
 	mame_file_error filerr;
-	char *fname;
+	WCHAR fname[MAX_PATH];
+	char *stemp;
 	int retval;
 
-	fname = assemble_3_strings(settings.inipath, PATH_SEPARATOR, WINUI_INI);
-	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &file);
-	free(fname);
+	lstrcpy(fname, settings.inipath);
+	lstrcat(fname, TEXT(PATH_SEPARATOR WINUI_INI));
+
+	stemp = utf8_from_wstring(fname);
+	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
+	free(stemp);
 
 	if (filerr != FILERR_NONE)
 		return 0;
@@ -3439,13 +3467,17 @@ static int options_save_default_config(void)
 {
 	mame_file *file;
 	mame_file_error filerr;
-	char *fname;
+	WCHAR fname[MAX_PATH];
+	char *stemp;
 
 	validate_driver_option(&global);
 
-	fname = assemble_3_strings(get_base_config_directory(), PATH_SEPARATOR, MAME_INI);
-	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
-	free(fname);
+	lstrcpy(fname, get_base_config_directory());
+	lstrcat(fname, TEXT(PATH_SEPARATOR MAME_INI));
+
+	stemp = utf8_from_wstring(fname);
+	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
+	free(stemp);
 
 	if (filerr != FILERR_NONE)
 		return -1;
@@ -3468,7 +3500,8 @@ static int options_save_driver_config(int driver_index)
 	int alt_index = driver_variables[driver_index].alt_index;
 	mame_file *file;
 	mame_file_error filerr;
-	char *fname;
+	WCHAR fname[MAX_PATH];
+	char *stemp;
 	options_type *parent;
 
 	if (driver_variables[driver_index].options_loaded == FALSE)
@@ -3481,7 +3514,10 @@ static int options_save_driver_config(int driver_index)
 	if (parent == NULL)
 		return 0;
 
-	fname = assemble_4_strings(settings.inipath, PATH_SEPARATOR, strlower(drivers[driver_index]->name), ".ini");
+	lstrcpy(fname, settings.inipath);
+	lstrcat(fname, TEXT(PATH_SEPARATOR));
+	lstrcat(fname, _Unicode(strlower(drivers[driver_index]->name)));
+	lstrcat(fname, TEXT(".ini"));
 
 #ifdef USE_IPS
 	// HACK: DO NOT INHERIT IPS CONFIGURATION
@@ -3490,14 +3526,15 @@ static int options_save_driver_config(int driver_index)
 	if (driver_variables[driver_index].use_default)
 #endif /* USE_IPS */
 	{
-		unlink(fname);
+		_wunlink(fname);
 		return 0;
 	}
 
-	mkdir(settings.inipath);
+	_wmkdir(settings.inipath);
 
-	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
-	free(fname);
+	stemp = utf8_from_wstring(fname);
+	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
+	free(stemp);
 
 	if (filerr != FILERR_NONE)
 		return -1;
@@ -3518,7 +3555,8 @@ static int options_save_alt_config(alt_options_type *alt_option)
 {
 	mame_file *file;
 	mame_file_error filerr;
-	char *fname;
+	WCHAR fname[MAX_PATH];
+	char *stemp;
 	options_type *parent;
 	int len;
 
@@ -3527,10 +3565,14 @@ static int options_save_alt_config(alt_options_type *alt_option)
 
 	parent = update_alt_use_default(alt_option);
 
-	fname = assemble_4_strings(settings.inipath, PATH_SEPARATOR, strlower(alt_option->name), ".ini");
-	len = strlen(fname);
+	lstrcpy(fname, settings.inipath);
+	lstrcat(fname, TEXT(PATH_SEPARATOR));
+	lstrcat(fname, _Unicode(strlower(alt_option->name)));
+	lstrcat(fname, TEXT(".ini"));
+
+	len = lstrlen(fname);
 	if (len > 6 && fname[len - 6] == '.' && fname[len - 5] == 'c')
-		strcpy(fname + len - 6, ".ini");
+		lstrcpy(fname + len - 6, TEXT(".ini"));
 
 #ifdef USE_IPS
 	// HACK: DO NOT INHERIT IPS CONFIGURATION
@@ -3539,14 +3581,15 @@ static int options_save_alt_config(alt_options_type *alt_option)
 	if (alt_option->variable->use_default && !alt_option->has_bios)
 #endif /* USE_IPS */
 	{
-		unlink(fname);
+		_wunlink(fname);
 		return 0;
 	}
 
-	mkdir(settings.inipath);
+	_wmkdir(settings.inipath);
 
-	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
-	free(fname);
+	stemp = utf8_from_wstring(fname);
+	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
+	free(stemp);
 
 	if (filerr != FILERR_NONE)
 		return -1;
@@ -3567,12 +3610,15 @@ static int options_save_winui_config(void)
 {
 	mame_file *file;
 	mame_file_error filerr;
-	char *fname;
+	WCHAR fname[MAX_PATH];
+	char *stemp;
 
+	lstrcpy(fname, settings.inipath);
+	lstrcat(fname, TEXT(PATH_SEPARATOR WINUI_INI));
 
-	fname = assemble_3_strings(settings.inipath, PATH_SEPARATOR, WINUI_INI);
-	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
-	free(fname);
+	stemp = utf8_from_wstring(fname);
+	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
+	free(stemp);
 
 	if (filerr != FILERR_NONE)
 		return -1;
@@ -3833,28 +3879,21 @@ INLINE void _options_get_wstring(WCHAR **p, const char *name)
 {
 	const char *stemp = options_get_string(name);
 
-	if (stemp && *stemp)
+	if (stemp &&*stemp)
 	{
-		FreeIfAllocated((char **)p);
+		FreeIfAllocatedW(p);
 		*p = wstring_from_utf8(stemp);
 	}
 }
 
 INLINE void options_copy_wstring(const WCHAR *src, WCHAR **dest)
 {
-	FreeIfAllocated((char **)dest);
+	FreeIfAllocatedW(dest);
 
-	int len = lstrlen(src);
-
-	*dest = malloc((len + 1) * sizeof (**dest));
-	lstrcpy(*dest, src);
+	*dest = wcsdup(src);
 }
 
-INLINE void options_free_wstring(WCHAR **p)
-{
-	FreeIfAllocated((char **)p);
-}
-
+#define options_free_wstring			FreeIfAllocatedW
 #define _options_compare_wstring(s1,s2)		do { if (lstrcmp(s1, s2) != 0) return TRUE; } while (0)
 
 INLINE BOOL options_compare_wstring(const WCHAR *s1, const WCHAR *s2)
@@ -3862,44 +3901,6 @@ INLINE BOOL options_compare_wstring(const WCHAR *s1, const WCHAR *s2)
 	_options_compare_wstring(s1, s2);
 	return FALSE;
 }
-
-
-//============================================================
-
-INLINE const char *options_get_mstring(const char *name)
-{
-	const char *stemp = options_get_string(name);
-
-	if (stemp == NULL)
-		return NULL;
-
-	return astring_from_utf8(stemp);
-}
-
-void options_set_mstring(const char *name, const char *value)
-{
-	char *utf8_value = NULL;
-
-	if (value)
-		utf8_value = utf8_from_astring(value);
-
-	options_set_string(name, utf8_value);
-}
-
-INLINE void _options_get_mstring(char **p, const char *name)
-{
-	const char *stemp = options_get_string(name);
-
-	if (stemp && *stemp)
-	{
-		FreeIfAllocated(p);
-		*p = (char *)astring_from_utf8(stemp);
-	}
-}
-
-#define options_copy_mstring	options_copy_string
-#define options_free_mstring	FreeIfAllocated
-#define options_compare_mstring	options_compare_string
 
 
 //============================================================
@@ -3939,7 +3940,7 @@ INLINE void _options_get_wstring_allow_null(WCHAR **p, const char *name)
 {
 	const char *stemp = options_get_string(name);
 
-	FreeIfAllocated((char **)p);
+	FreeIfAllocatedW(p);
 	if (stemp)
 		*p = wstring_from_utf8(stemp);
 }
@@ -3948,18 +3949,13 @@ INLINE void _options_get_wstring_allow_null(WCHAR **p, const char *name)
 
 INLINE void options_copy_wstring_allow_null(const WCHAR *src, WCHAR **dest)
 {
-	FreeIfAllocated((char **)dest);
+	FreeIfAllocatedW(dest);
 
 	if (src)
-	{
-		int len = lstrlen(src);
-
-		*dest = malloc((len + 1) * sizeof (**dest));
-		lstrcpy(*dest, src);
-	}
+		*dest = wcsdup(src);
 }
 
-#define options_free_wstring_allow_null			options_free_wstring
+#define options_free_wstring_allow_null			FreeIfAllocatedW
 #define _options_compare_wstring_allow_null(s1,s2)	do { if (s1 != s2) { if (!s1 || !s2) return TRUE; if (lstrcmp(s1, s2) != 0) return TRUE; } } while (0)
 
 INLINE BOOL options_compare_wstring_allow_null(const WCHAR *s1, const WCHAR *s2)
@@ -3967,24 +3963,6 @@ INLINE BOOL options_compare_wstring_allow_null(const WCHAR *s1, const WCHAR *s2)
 	_options_compare_wstring_allow_null(s1, s2);
 	return FALSE;
 }
-
-
-//============================================================
-
-INLINE void _options_get_mstring_allow_null(char **p, const char *name)
-{
-	const char *stemp = options_get_string(name);
-
-	FreeIfAllocated(p);
-	if (stemp)
-		*p = (char *)astring_from_utf8(stemp);
-}
-
-#define options_set_mstring_allow_null(name,value)	options_set_mstring(name,value)
-#define options_copy_mstring_allow_null			options_copy_string_allow_null
-#define options_free_mstring_allow_null			FreeIfAllocated
-#define _options_compare_mstring_allow_null		_options_compare_string_allow_null
-#define options_compare_mstring_allow_null		options_compare_string_allow_null
 
 
 //============================================================
@@ -4126,10 +4104,10 @@ INLINE void _options_get_float_min_max(float *p, const char *name, float min, fl
 //============================================================
 
 #ifdef USE_IPS
-#define _options_get_ips		_options_get_mstring_allow_null
-#define options_set_ips			options_set_mstring_allow_null
-#define options_copy_ips		options_copy_mstring_allow_null
-#define options_free_ips		options_free_mstring_allow_null
+#define _options_get_ips		_options_get_string_allow_null
+#define options_set_ips			options_set_string_allow_null
+#define options_copy_ips		options_copy_string_allow_null
+#define options_free_ips		options_free_string_allow_null
 #define _options_compare_ips(s1,s2)	do { ; } while (0)
 
 INLINE BOOL options_compare_ips(const char *s1, const char *s2)

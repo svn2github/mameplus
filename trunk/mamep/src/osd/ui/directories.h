@@ -29,11 +29,11 @@
 
 typedef struct
 {
-	LPCSTR   lpName;
-	LPCSTR   (*pfnGetTheseDirs)(void);
-	void     (*pfnSetTheseDirs)(LPCSTR lpDirs);
-	BOOL     bMulti;
-	int      nDirDlgFlags;
+	LPCSTR  	 lpName;
+	const WCHAR*	(*pfnGetTheseDirs)(void);
+	void		(*pfnSetTheseDirs)(const WCHAR* lpDirs);
+	BOOL		bMulti;
+	int		nDirDlgFlags;
 }
 DIRECTORYINFO;
 

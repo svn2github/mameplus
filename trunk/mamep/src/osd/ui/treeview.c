@@ -31,10 +31,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#ifdef _MSC_VER
 #include <direct.h>
-#endif
-
 #include <io.h>
 #include "mame32.h"	// include this first
 #include "driver.h"
@@ -2321,12 +2318,12 @@ static BOOL RegistExtraFolder(const char *name, LPEXFOLDERDATA *fExData, int msg
 
 static int InitExtraFolders(void)
 {
-	struct stat        stat_buffer;
+	struct _stat       stat_buffer;
 	struct _finddata_t files;
 	int                count = 0;
 	long               hLong;
-	char               curdir[MAX_PATH];
-	const char        *dir = GetFolderDir();
+	WCHAR              curdir[MAX_PATH];
+	const WCHAR       *dir = GetFolderDir();
 
 	memset(ExtraFolderData, 0, MAX_EXTRA_FOLDERS * sizeof(LPEXFOLDERDATA));
 
@@ -2334,16 +2331,14 @@ static int InitExtraFolders(void)
 	 * string
 	 */
 	if (dir[0] == '\0')
-		dir = ".";
+		dir = TEXT(".");
 
-	if (stat(dir, &stat_buffer) != 0)
-	{
-		_mkdir(dir);
-	}
+	if (_wstat(dir, &stat_buffer) != 0)
+		_wmkdir(dir);
 
-	_getcwd(curdir, MAX_PATH);
+	_wgetcwd(curdir, MAX_PATH);
 
-	_chdir(dir);
+	_wchdir(dir);
 
 	hLong = _findfirst("*", &files);
 
@@ -2408,7 +2403,7 @@ static int InitExtraFolders(void)
 			count++;
 	}
 
-	_chdir(curdir);
+	_wchdir(curdir);
 	return count;
 }
 
@@ -2456,7 +2451,7 @@ static void SetExtraIcons(char *name, int *id)
 BOOL TryAddExtraFolderAndChildren(int parent_index)
 {
 	FILE*   fp = NULL;
-	char    fname[MAX_PATH];
+	WCHAR   fname[MAX_PATH];
 	char    readbuf[256];
 	char*   p;
 	char*   name;
@@ -2470,11 +2465,9 @@ BOOL TryAddExtraFolderAndChildren(int parent_index)
 
 	/* "folder\title.ini" */
 
-	sprintf( fname, "%s\\%s.ini", 
-	GetFolderDir(), 
-	ExtraFolderData[id]->m_szTitle);
+	swprintf(fname, TEXT("%s\\%s.ini"), GetFolderDir(), _Unicode(ExtraFolderData[id]->m_szTitle));
 
-	fp = fopen(fname, "r");
+	fp = _wfopen(fname, TEXT("r"));
 	if (fp == NULL)
 		return FALSE;
 
@@ -2567,39 +2560,53 @@ void GetFolders(TREEFOLDER ***folders,int *num_folders)
 
 BOOL TryRenameCustomFolderIni(LPTREEFOLDER lpFolder,const char *old_name,const char *new_name)
 {
-	char filename[MAX_PATH];
-	char new_filename[MAX_PATH];
+	WCHAR filename[MAX_PATH];
+	WCHAR new_filename[MAX_PATH];
 	LPTREEFOLDER lpParent = NULL;
+	const WCHAR *old_namew = _Unicode(old_name);
+	const WCHAR *new_namew = _Unicode(new_name);
+	const WCHAR *ini_dirw = GetIniDir();
+
 	if (lpFolder->m_nParent >= 0)
 	{
 		//it is a custom SubFolder
-		lpParent = GetFolder( lpFolder->m_nParent );
-		if( lpParent )
+		lpParent = GetFolder(lpFolder->m_nParent);
+		if (lpParent)
 		{
-			snprintf(filename,sizeof(filename),"%s\\%s\\%s.ini",GetIniDir(),lpParent->m_lpTitle, old_name );
-			snprintf(new_filename,sizeof(new_filename),"%s\\%s\\%s.ini",GetIniDir(),lpParent->m_lpTitle, new_name );
-			MoveFileA(filename,new_filename);
+			snwprintf(filename, sizeof (filename) / sizeof (*filename),
+				TEXT("%s\\%s\\%s.ini"), ini_dirw, _Unicode(lpParent->m_lpTitle), old_namew);
+			snwprintf(new_filename, sizeof (new_filename) / sizeof (*new_filename),
+				TEXT("%s\\%s\\%s.ini"), ini_dirw, _Unicode(lpParent->m_lpTitle), new_namew);
+			MoveFile(filename, new_filename);
 		}
 	}
 	else
 	{
 		//Rename the File, if it exists
-		snprintf(filename,sizeof(filename),"%s\\%s.ini",GetIniDir(),old_name );
-		snprintf(new_filename,sizeof(new_filename),"%s\\%s.ini",GetIniDir(), new_name );
-		MoveFileA(filename,new_filename);
+		snwprintf(filename, sizeof (filename) / sizeof (*filename),
+			TEXT("%s\\%s.ini"), ini_dirw, old_namew);
+		snwprintf(new_filename, sizeof (new_filename) / sizeof (*new_filename),
+			TEXT("%s\\%s.ini"), ini_dirw, new_namew);
+		MoveFile(filename, new_filename);
+
 		//Rename the Directory, if it exists
-		snprintf(filename,sizeof(filename),"%s\\%s",GetIniDir(),old_name );
-		snprintf(new_filename,sizeof(new_filename),"%s\\%s",GetIniDir(), new_name );
-		MoveFileA(filename,new_filename);
+		snwprintf(filename, sizeof (filename) / sizeof (*filename),
+			TEXT("%s\\%s"), ini_dirw, old_namew);
+		snwprintf(new_filename, sizeof (new_filename) / sizeof (*new_filename),
+			TEXT("%s\\%s"), ini_dirw, new_namew);
+		MoveFile(filename, new_filename);
 	}
+
 	return TRUE;
 }
 
 BOOL TryRenameCustomFolder(LPTREEFOLDER lpFolder,const char *new_name)
 {
 	BOOL retval;
-	char filename[MAX_PATH];
-	char new_filename[MAX_PATH];
+	WCHAR filename[MAX_PATH];
+	WCHAR new_filename[MAX_PATH];
+	const WCHAR *new_namew = _Unicode(new_name);
+	const WCHAR *folder_dirw = GetFolderDir();
 	
 	if (lpFolder->m_nParent >= 0)
 	{
@@ -2628,17 +2635,18 @@ BOOL TryRenameCustomFolder(LPTREEFOLDER lpFolder,const char *new_name)
 	
 	// a parent extra folder was renamed, so rename the file
 
-	snprintf(new_filename,sizeof(new_filename),"%s\\%s.ini",GetFolderDir(),new_name);
-	snprintf(filename,sizeof(filename),"%s\\%s.ini",GetFolderDir(),lpFolder->m_lpTitle);
+	snwprintf(new_filename, sizeof (new_filename) / sizeof (*new_filename),
+		TEXT("%s\\%s.ini"), folder_dirw, new_namew);
+	snwprintf(filename, sizeof (filename) / sizeof (*filename),
+		TEXT("%s\\%s.ini"), folder_dirw, _Unicode(lpFolder->m_lpTitle));
 
-	retval = MoveFileA(filename,new_filename);
+	retval = MoveFile(filename, new_filename);
 
 	if (retval)
 	{
 		TryRenameCustomFolderIni(lpFolder, lpFolder->m_lpTitle, new_name);
 		free(lpFolder->m_lpTitle);
-		lpFolder->m_lpTitle = (char *)malloc(strlen(new_name) + 1);
-		strcpy(lpFolder->m_lpTitle,new_name);
+		lpFolder->m_lpTitle = strdup(new_name);
 	}
 	else
 	{
@@ -2686,13 +2694,14 @@ void RemoveFromCustomFolder(LPTREEFOLDER lpFolder,int driver_index)
 
 BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder)
 {
-	char fname[MAX_PATH];
+	WCHAR fname[MAX_PATH];
 	FILE *fp;
 	BOOL error = FALSE;
 	int i,j;
 
 	LPTREEFOLDER root_folder = NULL;
 	LPEXFOLDERDATA extra_folder = NULL;
+	const WCHAR *folder_dirw = GetFolderDir();
 
 	for (i=0;i<numExtraFolders;i++)
 	{
@@ -2719,9 +2728,10 @@ BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder)
 	}
 	/* "folder\title.ini" */
 
-	snprintf( fname, sizeof(fname), "%s\\%s.ini", GetFolderDir(), extra_folder->m_szTitle);
+	snwprintf(fname, sizeof (fname) / sizeof (*fname),
+		TEXT("%s\\%s.ini"), folder_dirw, _Unicode(extra_folder->m_szTitle));
 
-	fp = fopen(fname, "wt");
+	fp = _wfopen(fname, TEXT("wt"));
 	if (fp == NULL)
 	   error = TRUE;
 	else

@@ -4874,48 +4874,46 @@ static void InitializeDefaultInputUI(HWND hwnd)
 {
 	HWND hCtrl = GetDlgItem(hwnd, IDC_DEFAULT_INPUT);
 
-	WIN32_FIND_DATAA FindFileData;
+	WIN32_FIND_DATAW FindFileData;
 	HANDLE hFind;
-	char *ext;
-	char root[256];
-	char path[256];
+	WCHAR ext[MAX_PATH];
+	WCHAR root[MAX_PATH];
+	WCHAR path[MAX_PATH];
 
 	if (hCtrl)
 	{
 		ComboBox_AddStringA(hCtrl, _UI("Standard"));
 
-		sprintf (path, "%s\\*.*", GetCtrlrDir());
+		swprintf(path, TEXT("%s\\*.*"), GetCtrlrDir());
 
-		hFind = FindFirstFileA(path, &FindFileData);
+		hFind = FindFirstFileW(path, &FindFileData);
 
 		if (hFind != INVALID_HANDLE_VALUE)
 		{
 			do 
 			{
 				// copy the filename
-				strcpy (root,FindFileData.cFileName);
+				lstrcpy(root, FindFileData.cFileName);
 
 				// find the extension
-				ext = strrchr (root,'.');
-				if (ext)
+				_wsplitpath(FindFileData.cFileName, NULL, NULL, NULL, ext);
+
+				// check if it's a cfg file
+				if (wcsicmp(ext, TEXT(".cfg")) == 0)
 				{
-					// check if it's a cfg file
-					if (strcmp (ext, ".cfg") == 0)
-					{
-						// and strip off the extension
-						*ext = 0;
+					// and strip off the extension
+					FindFileData.cFileName[lstrlen(FindFileData.cFileName) - 4] = '\0';
 
-						if (mame_stricmp(root, "Standard") == 0)
-							continue;
+					if (wcsicmp(root, TEXT("Standard")) == 0)
+						continue;
 
-						// add it as an option
-						ComboBox_AddStringA(hCtrl, root);
-					}
+					// add it as an option
+					ComboBox_AddStringW(hCtrl, root);
 				}
 			}
-			while (FindNextFileA (hFind, &FindFileData) != 0);
+			while (FindNextFileW(hFind, &FindFileData) != 0);
 			
-			FindClose (hFind);
+			FindClose(hFind);
 		}
 	}
 }
@@ -4924,45 +4922,43 @@ static void InitializeEffectUI(HWND hwnd)
 {
 	HWND hCtrl = GetDlgItem(hwnd, IDC_EFFECT);
 
-	WIN32_FIND_DATAA FindFileData;
+	WIN32_FIND_DATAW FindFileData;
 	HANDLE hFind;
-	char *ext;
-	char root[256];
-	char path[256];
+	WCHAR ext[MAX_PATH];
+	WCHAR root[MAX_PATH];
+	WCHAR path[MAX_PATH];
 
 	if (hCtrl)
 	{
 		ComboBox_AddStringA(hCtrl, _UI("None"));
 
-		sprintf (path, "%s\\*.*", GetArtDir());
+		swprintf(path, TEXT("%s\\*.*"), GetArtDir());
 
-		hFind = FindFirstFileA(path, &FindFileData);
+		hFind = FindFirstFileW(path, &FindFileData);
 
 		if (hFind != INVALID_HANDLE_VALUE)
 		{
 			do 
 			{
 				// copy the filename
-				strcpy (root,FindFileData.cFileName);
+				lstrcpy(root, FindFileData.cFileName);
 
 				// find the extension
-				ext = strrchr (root,'.');
-				if (ext)
-				{
-					// check if it's a cfg file
-					if (strcmp (ext, ".png") == 0)
-					{
-						// and strip off the extension
-						*ext = 0;
+				_wsplitpath(FindFileData.cFileName, NULL, NULL, NULL, ext);
 
-						// add it as an option
-						ComboBox_AddStringA(hCtrl, root);
-					}
+				// check if it's a cfg file
+				if (wcsicmp(ext, TEXT(".png")) == 0)
+				{
+					// and strip off the extension
+					FindFileData.cFileName[lstrlen(FindFileData.cFileName) - 4] = '\0';
+
+					// add it as an option
+					ComboBox_AddStringW(hCtrl, root);
 				}
 			}
-			while (FindNextFileA (hFind, &FindFileData) != 0);
+			while (FindNextFileW(hFind, &FindFileData) != 0);
 			
-			FindClose (hFind);
+			FindClose(hFind);
 		}
 	}
 }

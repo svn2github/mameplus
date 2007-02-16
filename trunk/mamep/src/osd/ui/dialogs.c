@@ -793,9 +793,10 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 		case WM_INITDIALOG:
 		{
 			int  nGame;
-			char szGame[MAX_PATH];
-			char buf[MAX_PATH];
-			const char *szDir=GetPcbinfoDir();
+			WCHAR szGame[MAX_PATH];
+			WCHAR buf[MAX_PATH];
+			char *stemp;
+			const WCHAR *szDir = GetPcbinfoDir();
 			mame_file *mfile;
 			mame_file_error filerr;
 			long filelen;
@@ -841,17 +842,21 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			nGame = lvi.lParam;
 			nParentIndex = GetParentRomSetIndex(drivers[nGame]);
 			if (nParentIndex >= 0)
-				strcpy(szGame, drivers[nParentIndex]->name);
+				lstrcpy(szGame, _Unicode(drivers[nParentIndex]->name));
 			else
-				strcpy(szGame, drivers[nGame]->name);
+				lstrcpy(szGame, _Unicode(drivers[nGame]->name));
 
-			sprintf(buf, "%s\\%s.txt", szDir, szGame);
+			swprintf(buf, TEXT("%s\\%s.txt"), szDir, szGame);
 
-			filerr = mame_fopen(SEARCHPATH_DATAFILE, buf, OPEN_FLAG_READ, &mfile);
+			stemp = utf8_from_wstring(buf);
+			filerr = mame_fopen(SEARCHPATH_DATAFILE, stemp, OPEN_FLAG_READ, &mfile);
+			free(stemp);
 			if (filerr != FILERR_NONE)
 			{
-				sprintf(buf, "%s\\pcb\\%s.txt", szDir, szGame);
-				filerr = mame_fopen(SEARCHPATH_DATAFILE, buf, OPEN_FLAG_READ, &mfile);
+				swprintf(buf, TEXT("%s\\pcb\\%s.txt"), szDir, szGame);
+				stemp = utf8_from_wstring(buf);
+				filerr = mame_fopen(SEARCHPATH_DATAFILE, stemp, OPEN_FLAG_READ, &mfile);
+				free(stemp);
 			}
 
 			if (filerr == FILERR_NONE)
@@ -862,17 +867,19 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 
 				if ( PcbData != NULL )
 				{
+					char bufa[256];
+
 					mame_fread(mfile, PcbData, filelen);
 					
 					PcbData[filelen] = '\0';
 
-					sprintf(buf, 
-							_UI(MAME32NAME " PCB Info: %s [%s]"), 
-							ConvertAmpersandString(UseLangList() ?
-									_LST(drivers[nGame]->description) :
-									ModifyThe(drivers[nGame]->description)), 
-							drivers[nGame]->name);
-					SetWindowText(hDlg, _Unicode(buf));
+					sprintf(bufa, 
+						_UI(MAME32NAME " PCB Info: %s [%s]"), 
+						ConvertAmpersandString(UseLangList() ?
+							_LST(drivers[nGame]->description) :
+							ModifyThe(drivers[nGame]->description)), 
+						drivers[nGame]->name);
+					SetWindowText(hDlg, _Unicode(bufa));
 					SetWindowFont(GetDlgItem(hDlg, IDC_PCBINFO), hPcbFont, FALSE);
 					Edit_SetTextA(GetDlgItem(hDlg, IDC_PCBINFO), PcbData);
 

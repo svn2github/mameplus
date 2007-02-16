@@ -15,6 +15,7 @@
 
 extern void __cdecl ErrorMsg(const char* fmt, ...);
 extern void __cdecl dprintf(const char* fmt, ...);
+extern void __cdecl dwprintf(const WCHAR* fmt, ...);
 
 extern UINT GetDepth(HWND hWnd);
 
@@ -62,6 +63,7 @@ void FlushFileCaches(void);
 void SetCorePathList(int file_type,const char *s);
 
 void FreeIfAllocated(char **s);
+void FreeIfAllocatedW(WCHAR **s);
 
 #ifdef TREE_SHEET
 void CenterWindow(HWND hWnd);

@@ -9,7 +9,7 @@ void     GetTranslatedFont(LOGFONTW *);
 LRESULT  StatusBarSetTextA(HWND,WPARAM,LPCSTR);
 LRESULT  StatusBarSetTextW(HWND,WPARAM,LPCWSTR);
 
-char   *_String(const LPWSTR ws);
+char   *_String(const WCHAR *ws);
 LPWSTR  _Unicode(const char *s);
 LPWSTR  _UTF8Unicode(const char *s);
 

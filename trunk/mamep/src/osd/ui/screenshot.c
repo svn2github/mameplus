@@ -21,6 +21,7 @@
 ***************************************************************************/
 
 #define WIN32_LEAN_AND_MEAN
+#define UNICODE
 #include <windows.h>
 #include <stdlib.h>
 #include <io.h>
@@ -35,6 +36,7 @@
 #include "options.h"
 #include "m32util.h"
 #include "win32ui.h"
+#include "translate.h"
 
 /***************************************************************************
     function prototypes
@@ -86,7 +88,7 @@ static BOOL LoadSoftwareScreenShot(const game_driver *drv, LPCSTR lpSoftwareName
 BOOL LoadScreenShotEx(int nGame, LPCSTR lpSoftwareName, int nType)
 #else /* !MESS */
 #ifdef USE_IPS
-BOOL LoadScreenShot(int nGame, const char* lpIPSName, int nType)
+BOOL LoadScreenShot(int nGame, const char *lpIPSName, int nType)
 #else /* USE_IPS */
 BOOL LoadScreenShot(int nGame, int nType)
 #endif /* USE_IPS */
@@ -94,7 +96,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 {
 	BOOL loaded = FALSE;
 	int nParentIndex = GetParentIndex(drivers[nGame]);
-	char buf [MAX_PATH];
+	WCHAR buf [MAX_PATH];
 
 	/* No need to reload the same one again */
 #ifndef MESS
@@ -118,43 +120,52 @@ BOOL LoadScreenShot(int nGame, int nType)
 	if (!loaded)
 #endif /* MESS */
 	{
+		WCHAR *wdrv = _Unicode(drivers[nGame]->name);
+
 #ifdef USE_IPS
 		if (lpIPSName)
 		{
-			sprintf(buf, "%s/%s", drivers[nGame]->name, lpIPSName);
-			dprintf("found ipsname: %s", buf);
+			wsprintf(buf, TEXT("%s/%s"), wdrv, _Unicode(lpIPSName));
+			dwprintf(TEXT("found ipsname: %s"), buf);
 		}
 		else
 #endif /* USE_IPS */
 		{
-			sprintf(buf, "%s", drivers[nGame]->name);
-			dprintf("not found ipsname: %s", buf);
+			lstrcpy(buf, wdrv);
+			dwprintf(TEXT("not found ipsname: %s"), buf);
 		}
+
 		loaded = LoadDIB(buf, &m_hDIB, &m_hPal, nType);
 	}
 
 	/* If not loaded, see if there is a clone and try that */
 	if (!loaded && nParentIndex >= 0)
 	{
+		WCHAR *wdrv = _Unicode(drivers[nParentIndex]->name);
+
 #ifdef USE_IPS
 		if (lpIPSName)
 		{
-			sprintf(buf, "%s/%s", drivers[nParentIndex]->name, lpIPSName);
-			dprintf("found clone ipsname: %s", buf);
+			wsprintf(buf, TEXT("%s/%s"), wdrv, _Unicode(lpIPSName));
+			dwprintf(TEXT("found clone ipsname: %s"), buf);
 		}
 		else
 #endif /* USE_IPS */
-		sprintf(buf, "%s", drivers[nParentIndex]->name);
+			lstrcpy(buf, wdrv);
+
 		loaded = LoadDIB(buf, &m_hDIB, &m_hPal, nType);
 		nParentIndex = GetParentIndex(drivers[nParentIndex]);
 		if (!loaded && nParentIndex >= 0)
 		{
+			wdrv = _Unicode(drivers[nParentIndex]->parent);
+
 #ifdef USE_IPS
 			if (lpIPSName)
-				sprintf(buf, "%s/%s", drivers[nParentIndex]->parent, lpIPSName);
+				swprintf(buf, TEXT("%s/%s"), wdrv, _Unicode(lpIPSName));
 			else
 #endif /* USE_IPS */
-				sprintf(buf, "%s", drivers[nParentIndex]->parent);
+				lstrcpy(buf, wdrv);
+
 			loaded = LoadDIB(buf, &m_hDIB, &m_hPal, nType);
 		}
 	}
@@ -207,49 +218,51 @@ void FreeScreenShot(void)
 	current_image_type = -1;
 }
 
-BOOL LoadDIB(LPCTSTR filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type)
+BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type)
 {
 	mame_file *mfile;
 	mame_file_error filerr;
 	BOOL success;
-	const char *zip_name = NULL;
-	const char *basedir = NULL;
+	const WCHAR *zip_name = NULL;
+	const WCHAR *basedir = NULL;
 	char *fname;
+	char *utf8filename;
+	char *utf8basedir;
 
 	switch (pic_type)
 	{
 	case TAB_SCREENSHOT :
 		basedir = GetImgDir();
-		zip_name = "snap";
+		zip_name = TEXT("snap");
 		break;
 	case TAB_FLYER :
 		basedir = GetFlyerDir();
-		zip_name = "flyers";
+		zip_name = TEXT("flyers");
 		break;
 	case TAB_CABINET :
 		basedir = GetCabinetDir();
-		zip_name = "cabinets";
+		zip_name = TEXT("cabinets");
 		break;
 	case TAB_MARQUEE :
 		basedir = GetMarqueeDir();
-		zip_name = "marquees";
+		zip_name =TEXT( "marquees");
 		break;
 	case TAB_TITLE :
 		basedir = GetTitlesDir();
-		zip_name = "titles";
+		zip_name = TEXT("titles");
 		break;
 	case TAB_CONTROL_PANEL :
 		basedir = GetControlPanelDir();
-		zip_name = "cpanel";
+		zip_name = TEXT("cpanel");
 		break;
 	case BACKGROUND :
 		basedir = GetBgDir();
-		zip_name = "bkground";
+		zip_name = TEXT("bkground");
 		break;
 #ifdef USE_IPS
 	case TAB_IPS :
 		basedir = GetPatchDir();
-		zip_name = "ips";
+		zip_name = TEXT("ips");
 		break;
 #endif /* USE_IPS */
 	default :
@@ -257,15 +270,18 @@ BOOL LoadDIB(LPCTSTR filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type)
 		return FALSE;
 	}
 
+	utf8filename = utf8_from_wstring(filename);
+	utf8basedir = utf8_from_wstring(basedir);
+
 	// look for the raw file
-	fname = assemble_4_strings(basedir, PATH_SEPARATOR, filename, ".png");
+	fname = assemble_4_strings(utf8basedir, PATH_SEPARATOR, utf8filename, ".png");
 	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &mfile);
 	free(fname);
 
 	if (filerr != FILERR_NONE)
 	{
 		// and look for the zip
-		fname = assemble_6_strings(basedir, PATH_SEPARATOR, filename, PATH_SEPARATOR, filename, ".png");
+		fname = assemble_6_strings(utf8basedir, PATH_SEPARATOR, utf8filename, PATH_SEPARATOR, utf8filename, ".png");
 		filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &mfile);
 		free(fname);
 	}
@@ -273,10 +289,15 @@ BOOL LoadDIB(LPCTSTR filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type)
 	if (filerr != FILERR_NONE)
 	{
 		// and look for the zip
-		fname = assemble_6_strings(basedir, PATH_SEPARATOR, zip_name, PATH_SEPARATOR, filename, ".png");
+		char *utf8zip_name = utf8_from_wstring(zip_name);
+		fname = assemble_6_strings(utf8basedir, PATH_SEPARATOR, utf8zip_name, PATH_SEPARATOR, utf8filename, ".png");
 		filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &mfile);
 		free(fname);
+		free(utf8zip_name);
 	}
+
+	free(utf8filename);
+	free(utf8basedir);
 
 	if (filerr != FILERR_NONE)
 		return FALSE;

@@ -407,7 +407,7 @@ HWND GetGameWindow(LPPROCESS_INFORMATION lpProcessInformation);
 
 static BOOL CALLBACK EnumWindowCallBack(HWND hwnd, LPARAM lParam);
 
-static const char *GetLastDir(void);
+static const WCHAR *GetLastDir(void);
 
 /***************************************************************************
     External variables
@@ -746,7 +746,7 @@ static Resize main_resize = { {0, 0, 0, 0}, main_resize_items };
 static options_type playing_game_options;
 
 /* last directory for common file dialogs */
-static char last_directory[MAX_PATH];
+static WCHAR last_directory[MAX_PATH];
 
 /* system-wide window message sent out with an ATOM of the current game name
    each time it changes */
@@ -786,7 +786,7 @@ static struct
 	const char *filter;
 	const char *title_load;
 	const char *title_save;
-	const char *(*dir)(void);
+	const WCHAR *(*dir)(void);
 	const char *ext;
 } cfg_data[FILETYPE_MAX] =
 {
@@ -1337,49 +1337,56 @@ HICON FormatICOInMemoryToHICON(PBYTE ptrBuffer, UINT nBufferSize)
 HICON LoadIconFromFile(const char *iconname)
 {
 	HICON hIcon = 0;
-	struct stat file_stat;
-	char tmpStr[MAX_PATH];
+	struct _stat file_stat;
+	WCHAR *iconnamew = _Unicode(iconname);
+	WCHAR tmpStr[MAX_PATH];
+	char *stemp;
 	const zip_file_header *entry;
 	zip_file *zip;
 	zip_error ziperr;
 
-	sprintf(tmpStr, "%s" PATH_SEPARATOR "%s.ico", GetIconsDir(), iconname);
-	if (stat(tmpStr, &file_stat) == 0 && (hIcon = ExtractIconA(hInst, tmpStr, 0)) != 0)
+	swprintf(tmpStr, TEXT("%s" PATH_SEPARATOR "%s.ico"), GetIconsDir(), iconnamew);
+	if (_wstat(tmpStr, &file_stat) == 0 && (hIcon = ExtractIconW(hInst, tmpStr, 0)) != 0)
 		return hIcon;
 
-	sprintf(tmpStr, "%s" PATH_SEPARATOR "%s.ico", GetImgDir(), iconname);
-	if (stat(tmpStr, &file_stat) == 0 && (hIcon = ExtractIconA(hInst, tmpStr, 0)) != 0)
+	swprintf(tmpStr, TEXT("%s" PATH_SEPARATOR "%s.ico"), GetImgDir(), iconnamew);
+	if (_wstat(tmpStr, &file_stat) == 0 && (hIcon = ExtractIconW(hInst, tmpStr, 0)) != 0)
 		return hIcon;
 
-	sprintf(tmpStr, "%s" PATH_SEPARATOR "icons.zip", GetIconsDir());
-	if (stat(tmpStr, &file_stat) != 0)
+	swprintf(tmpStr, TEXT("%s" PATH_SEPARATOR "icons.zip"), GetIconsDir());
+	if (_wstat(tmpStr, &file_stat) != 0)
 		return NULL;
 
-	ziperr = zip_file_open(tmpStr, &zip);
-	if (ziperr != ZIPERR_NONE)
-		return NULL;
+	stemp = utf8_from_wstring(tmpStr);
+	ziperr = zip_file_open(stemp, &zip);
+	free(stemp);
 
-	sprintf(tmpStr, "%s.ico", iconname);
-
-	for (entry = zip_file_first_file(zip); entry; entry = zip_file_next_file(zip))
-		if (mame_stricmp(entry->filename, tmpStr) == 0)
-			break;
-
-	if (entry)
+	if (ziperr == ZIPERR_NONE)
 	{
-		UINT8 *data = (UINT8 *)malloc(entry->uncompressed_length);
+		char iconfile[256];
 
-		if (data != NULL)
+		sprintf(iconfile, "%s.ico", iconname);
+
+		for (entry = zip_file_first_file(zip); entry; entry = zip_file_next_file(zip))
+			if (mame_stricmp(entry->filename, iconfile) == 0)
+				break;
+
+		if (entry)
 		{
-			ziperr = zip_file_decompress(zip, data, entry->uncompressed_length);
-			if (ziperr == ZIPERR_NONE)
-				hIcon = FormatICOInMemoryToHICON(data, entry->uncompressed_length);
+			UINT8 *data = (UINT8 *)malloc(entry->uncompressed_length);
 
-			free(data);
+			if (data != NULL)
+			{
+				ziperr = zip_file_decompress(zip, data, entry->uncompressed_length);
+				if (ziperr == ZIPERR_NONE)
+					hIcon = FormatICOInMemoryToHICON(data, entry->uncompressed_length);
+
+				free(data);
+			}
 		}
-	}
 
-	zip_file_close(zip);
+		zip_file_close(zip);
+	}
 
 	return hIcon;
 }
@@ -1915,7 +1922,7 @@ static void ResetBackground(const WCHAR *szFile)
 	WCHAR szDestFile[MAX_PATH];
 
 	/* The MAME core load the .png file first, so we only need replace this file */
-	lstrcpy(szDestFile, _Unicode(GetBgDir()));
+	lstrcpy(szDestFile, GetBgDir());
 	lstrcat(szDestFile, TEXT("\\bkground.png"));
 	SetFileAttributes(szDestFile, FILE_ATTRIBUTE_NORMAL);
 	CopyFile(szFile, szDestFile, FALSE);
@@ -1927,7 +1934,7 @@ static void RandomSelectBackground(void)
 	long hFile;
 	WCHAR szFile[MAX_PATH];
 	int count=0;
-	const WCHAR *szDir = _Unicode(GetBgDir());
+	const WCHAR *szDir = GetBgDir();
 	WCHAR *buf=malloc((_MAX_FNAME * MAX_BGFILES) * sizeof (*buf));
 
 	if (buf == NULL)
@@ -2111,7 +2118,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 
 	HelpInit();
 
-	strcpy(last_directory,GetInpDir());
+	lstrcpy(last_directory, GetInpDir());
 	hMain = CreateDialog(hInstance, MAKEINTRESOURCE(IDD_MAIN), 0, NULL);
 	if (hMain == NULL)
 	{
@@ -2559,7 +2566,7 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 		if (i >= 0 && i < MAX_PATCHES && GetPatchFilename(patch_name, drivers[Picker_GetSelectedItem(hwndList)]->name, i))
 		{
 			FreeIfAllocated(&g_IPSMenuSelectName);
-			g_IPSMenuSelectName = mame_strdup(patch_name);
+			g_IPSMenuSelectName = strdup(patch_name);
 			dprintf("menusele: %d %s, updateSS", (int)(LOWORD(wParam)), patch_name);
 			UpdateScreenShot();
 		}
@@ -3592,7 +3599,7 @@ static void UpdateHistory(void)
 		{
 			WCHAR *p = NULL;
 			histText = GetPatchDesc(drivers[Picker_GetSelectedItem(hwndList)]->name, g_IPSMenuSelectName);
-			if((p = wcschr(histText,'/')))	// no category
+			if(histText && (p = wcschr(histText, '/')))	// no category
 				histText = p + 1;
 		}
 		else
@@ -3604,8 +3611,16 @@ static void UpdateHistory(void)
 #endif /* STORY_DATAFILE */
 				histText = GetGameHistory(Picker_GetSelectedItem(hwndList));
 
-		have_history = (histText && histText[0]) ? TRUE : FALSE;
-		Edit_SetText(GetDlgItem(hMain, IDC_HISTORY), histText);
+		if (histText && histText[0])
+		{
+			have_history = TRUE;
+			Edit_SetText(GetDlgItem(hMain, IDC_HISTORY), histText);
+		}
+		else
+		{
+			have_history = FALSE;
+			Edit_SetText(GetDlgItem(hMain, IDC_HISTORY), TEXT(""));
+		}
 	}
 
 	if (have_history && GetShowScreenShot() && NeedHistoryText())
@@ -4280,7 +4295,7 @@ static void PollGUIJoystick(void)
 		if (++exec_counter >= GetExecWait()) // Button has been pressed > exec timeout
 		{
 			PROCESS_INFORMATION pi;
-			STARTUPINFOA si;
+			STARTUPINFOW si;
 
 			// Reset counter
 			exec_counter = 0;
@@ -4290,7 +4305,7 @@ static void PollGUIJoystick(void)
 			si.dwFlags = STARTF_FORCEONFEEDBACK;
 			si.cb = sizeof(si);
 
-			CreateProcessA(NULL, GetExecCommand(), NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
+			CreateProcessW(NULL, GetExecCommand(), NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
 
 			// We will not wait for the process to finish cause it might be a background task
 			// The process won't get closed when MAME32 closes either.
@@ -4664,7 +4679,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 
 			if (pOpts->ips)
 			{
-				char *temp = mame_strdup(pOpts->ips);
+				char *temp = strdup(pOpts->ips);
 				char *token = NULL;
 
 				if (temp)
@@ -5310,7 +5325,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 static void LoadBackgroundBitmap(void)
 {
 	HGLOBAL hDIBbg;
-	char*	pFileName = 0;
+	WCHAR*	pFileName = 0;
 
 	if (hBackground)
 	{
@@ -5327,12 +5342,12 @@ static void LoadBackgroundBitmap(void)
 	/* Pick images based on number of colors avaliable. */
 	if (GetDepth(hwndList) <= 8)
 	{
-		pFileName = (char *)"bkgnd16";
+		pFileName = TEXT("bkgnd16");
 		/*nResource = IDB_BKGROUND16;*/
 	}
 	else
 	{
-		pFileName = (char *)"bkground";
+		pFileName = TEXT("bkground");
 		/*nResource = IDB_BKGROUND;*/
 	}
 
@@ -5500,8 +5515,8 @@ static int GamePicker_CheckItemBroken(HWND hwndPicker, int nItem)
 /* Initialize the Picker and List controls */
 static void InitListView(void)
 {
-	LVBKIMAGEA bki;
-	char path[MAX_PATH];
+	LVBKIMAGEW bki;
+	WCHAR path[MAX_PATH];
 
 	static const struct PickerCallbacks s_gameListCallbacks =
 	{
@@ -5545,7 +5560,7 @@ static void InitListView(void)
 
 	ListView_SetTextBkColor(hwndList, CLR_NONE);
 	ListView_SetBkColor(hwndList, CLR_NONE);
-	sprintf(path, "%s\\bkground", GetBgDir() );
+	swprintf(path, TEXT("%s\\bkground"), GetBgDir());
 	bki.ulFlags = LVBKIF_SOURCE_URL | LVBKIF_STYLE_TILE;
 	bki.pszImage = path;
 	if( hBackground )	
@@ -5959,7 +5974,7 @@ static void SetRandomPickItem()
 	}
 }
 
-static const char *GetLastDir(void)
+static const WCHAR *GetLastDir(void)
 {
 	return last_directory;
 }
@@ -6012,7 +6027,7 @@ static BOOL CommonFileDialogW(BOOL open_for_write, WCHAR *filename, int filetype
 
 	if (cfg_data[filetype].dir)
 	{
-		lstrcpy(dir, _Unicode(cfg_data[filetype].dir()));
+		lstrcpy(dir, cfg_data[filetype].dir());
 		of.lpstrInitialDir = dir;
 	}
 
@@ -6100,7 +6115,7 @@ static BOOL CommonFileDialogA(BOOL open_for_write, WCHAR *filename, int filetype
 
 	if (cfg_data[filetype].dir)
 	{
-		strcpy(dir, cfg_data[filetype].dir());
+		strcpy(dir, _String(cfg_data[filetype].dir()));
 		of.lpstrInitialDir = dir;
 	}
 
@@ -6237,7 +6252,7 @@ static void MamePlayBackGame(const WCHAR *fname_playback)
 		stemp = utf8_from_wstring(fname);
 		filerr = mame_fopen(SEARCHPATH_INPUTLOG, stemp, OPEN_FLAG_READ, &pPlayBack);
 		free(stemp);
-		options_set_wstring(SEARCHPATH_INPUTLOG, _Unicode(GetInpDir()));
+		options_set_wstring(SEARCHPATH_INPUTLOG, GetInpDir());
 
 		if (filerr != FILERR_NONE)
 		{
@@ -6309,7 +6324,7 @@ static void MameLoadState(const WCHAR *fname_state)
 			}
 		if (nGame == -1)
 		{
-			MameMessageBoxW(_Unicode(_UI("Could not open '%ls' as a valid savestate file.")), filename);
+			MameMessageBoxW(_Unicode(_UI("Could not open '%s' as a valid savestate file.")), filename);
 			return;
 		}
 	}
@@ -6368,7 +6383,7 @@ static void MameLoadState(const WCHAR *fname_state)
 			romname[iPos] = '\0';
 			if (lstrcmp(selected_filename,romname) != 0)
 			{
-				MameMessageBoxW(_Unicode(_UI("'%ls' is not a valid savestate file for game '%ls'.")), filename, selected_filename);
+				MameMessageBoxW(_Unicode(_UI("'%s' is not a valid savestate file for game '%s'.")), filename, selected_filename);
 				return;
 			}
 			options_set_wstring(SEARCHPATH_STATE, path);
@@ -6379,10 +6394,10 @@ static void MameLoadState(const WCHAR *fname_state)
 		stemp = utf8_from_wstring(state_fname);
 		filerr = mame_fopen(SEARCHPATH_STATE, stemp, OPEN_FLAG_READ, &pSaveState);
 		free(stemp);
-		options_set_wstring(SEARCHPATH_STATE, _Unicode(GetStateDir()));
+		options_set_wstring(SEARCHPATH_STATE, GetStateDir());
 		if (filerr != FILERR_NONE)
 		{
-			MameMessageBoxW(_Unicode(_UI("Could not open '%ls' as a valid savestate file.")), filename);
+			MameMessageBoxW(_Unicode(_UI("Could not open '%s' as a valid savestate file.")), filename);
 			return;
 		}
 
