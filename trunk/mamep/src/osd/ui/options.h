@@ -475,7 +475,7 @@ void ResetPlayCount(int driver_index);
 
 void IncrementPlayTime(int driver_index, int playtime);
 int GetPlayTime(int driver_index);
-void GetTextPlayTime(int driver_index, char *buf);
+void GetTextPlayTime(int driver_index, WCHAR *buf);
 void ResetPlayTime(int driver_index);
 
 WCHAR* GetExecCommand(void);

@@ -119,15 +119,15 @@ INT_PTR CALLBACK ResetDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 			resetUI 	  = Button_GetCheck(GetDlgItem(hDlg, IDC_RESET_UI));
 			if (resetFilters || resetGames || resetUI || resetDefaults)
 			{
-				char temp[200];
-				strcpy(temp, _UI(MAME32NAME " will now reset the selected\n"));
-				strcat(temp, _UI("items to the original, installation\n"));
-				strcat(temp, _UI("settings then exit.\n\n"));
-				strcat(temp, _UI("The new settings will take effect\n"));
-				strcat(temp, _UI("the next time "MAME32NAME " is run.\n\n"));
-				strcat(temp, _UI("Do you wish to continue?"));
+				WCHAR temp[1024];
+				lstrcpy(temp, _UIW(TEXT(MAME32NAME " will now reset the selected\n")));
+				lstrcat(temp, _UIW(TEXT("items to the original, installation\n")));
+				lstrcat(temp, _UIW(TEXT("settings then exit.\n\n")));
+				lstrcat(temp, _UIW(TEXT("The new settings will take effect\n")));
+				lstrcat(temp, _UIW(TEXT("the next time "MAME32NAME " is run.\n\n")));
+				lstrcat(temp, _UIW(TEXT("Do you wish to continue?")));
 
-				if (MessageBox(hDlg, _Unicode(temp), _Unicode(_UI("Restore Settings")), IDOK) == IDOK)
+				if (MessageBox(hDlg, temp, _UIW(TEXT("Restore Settings")), IDOK) == IDOK)
 				{
 					if (resetFilters)
 						ResetFilters();
@@ -204,32 +204,32 @@ INT_PTR CALLBACK InterfaceDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 						GetOffsetClones());
 		Button_SetCheck(GetDlgItem(hDlg,IDC_BROKEN_ICON),
 						!GetUseBrokenIcon());
-		ComboBox_AddStringA(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UI("Snapshot"));
+		ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("Snapshot")));
 		ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_SCREENSHOT);
-		ComboBox_AddStringA(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UI("Flyer"));
+		ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("Flyer")));
 		ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_FLYER);
-		ComboBox_AddStringA(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UI("Cabinet"));
+		ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("Cabinet")));
 		ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_CABINET);
-		ComboBox_AddStringA(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UI("Marquee"));
+		ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("Marquee")));
 		ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_MARQUEE);
-		ComboBox_AddStringA(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UI("Title"));
+		ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("Title")));
 		ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_TITLE);
-		ComboBox_AddStringA(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UI("Control Panel"));
+		ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("Control Panel")));
 		ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_CONTROL_PANEL);
-		ComboBox_AddStringA(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UI("All"));
+		ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("All")));
 		ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_ALL);
-		ComboBox_AddStringA(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UI("None"));
+		ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("None")));
 		ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_NONE);
 		if( GetHistoryTab() < MAX_TAB_TYPES )
 			ComboBox_SetCurSel(GetDlgItem(hDlg, IDC_HISTORY_TAB), GetHistoryTab());
 		else
 			ComboBox_SetCurSel(GetDlgItem(hDlg, IDC_HISTORY_TAB), GetHistoryTab()-TAB_SUBTRACT-(MAX_TAB_TYPES-TAB_HISTORY-1));
 
-		SendDlgItemMessageA(hDlg, IDC_SCREENSHOT_BORDERSIZE, TBM_SETRANGE,
+		SendDlgItemMessage(hDlg, IDC_SCREENSHOT_BORDERSIZE, TBM_SETRANGE,
 					(WPARAM)FALSE,
 					(LPARAM)MAKELONG(0, 100)); /* [0, 100] */
 		value = GetScreenshotBorderSize();
-		SendDlgItemMessageA(hDlg,IDC_SCREENSHOT_BORDERSIZE, TBM_SETPOS, TRUE, value);
+		SendDlgItemMessage(hDlg,IDC_SCREENSHOT_BORDERSIZE, TBM_SETPOS, TRUE, value);
 		itoa(value,tmp,10);
 		SendDlgItemMessageA(hDlg,IDC_SCREENSHOT_BORDERSIZETXT,WM_SETTEXT,0, (WPARAM)tmp);
 		//return TRUE;
@@ -392,7 +392,7 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 	static DWORD			dwFilters;
 	static DWORD			dwpFilters;
 	static LPFOLDERDATA		lpFilterRecord;
-	char strText[250];
+	WCHAR strText[250];
 	int 					i;
 
 	switch (Msg)
@@ -408,15 +408,15 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 
 		if (folder != NULL)
 		{
-			char tmp[80];
+			WCHAR tmp[80];
 			
 			Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_EDIT), g_FilterText);
 			Edit_SetSel(GetDlgItem(hDlg, IDC_FILTER_EDIT), 0, -1);
 			// Mask out non filter flags
 			dwFilters = folder->m_dwFlags & F_MASK;
 			// Display current folder name in dialog titlebar
-			snprintf(tmp,sizeof(tmp), _UI("Filters for %s Folder"),folder->m_lpTitle);
-			SetWindowText(hDlg, _Unicode(tmp));
+			snwprintf(tmp,sizeof(tmp), _UIW(TEXT("Filters for %s Folder")),folder->m_lpTitle);
+			SetWindowText(hDlg, tmp);
 			if ( GetFilterInherit() )
 			{
 				if( folder )
@@ -432,65 +432,65 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 						if( (dwpFilters & F_CLONES) && !(dwFilters & F_CLONES) )
 						{
 							/*Add a Specifier to the Checkbox to show it was inherited from the parent*/
-							Edit_GetTextA(GetDlgItem(hDlg, IDC_FILTER_CLONES), strText, 250);
-							strcat(strText, " (*)");
-							Edit_SetTextA(GetDlgItem(hDlg, IDC_FILTER_CLONES), strText);
+							Edit_GetText(GetDlgItem(hDlg, IDC_FILTER_CLONES), strText, 250);
+							lstrcat(strText, TEXT(" (*)"));
+							Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_CLONES), strText);
 							bShowExplanation = TRUE;
 						}
 						if( (dwpFilters & F_NONWORKING) && !(dwFilters & F_NONWORKING) )
 						{
 							/*Add a Specifier to the Checkbox to show it was inherited from the parent*/
-							Edit_GetTextA(GetDlgItem(hDlg, IDC_FILTER_NONWORKING), strText, 250);
-							strcat(strText, " (*)");
-							Edit_SetTextA(GetDlgItem(hDlg, IDC_FILTER_NONWORKING), strText);
+							Edit_GetText(GetDlgItem(hDlg, IDC_FILTER_NONWORKING), strText, 250);
+							lstrcat(strText, TEXT(" (*)"));
+							Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_NONWORKING), strText);
 							bShowExplanation = TRUE;
 						}
 						if( (dwpFilters & F_UNAVAILABLE) && !(dwFilters & F_UNAVAILABLE) )
 						{
 							/*Add a Specifier to the Checkbox to show it was inherited from the parent*/
-							Edit_GetTextA(GetDlgItem(hDlg, IDC_FILTER_UNAVAILABLE), strText, 250);
-							strcat(strText, " (*)");
-							Edit_SetTextA(GetDlgItem(hDlg, IDC_FILTER_UNAVAILABLE), strText);
+							Edit_GetText(GetDlgItem(hDlg, IDC_FILTER_UNAVAILABLE), strText, 250);
+							lstrcat(strText, TEXT(" (*)"));
+							Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_UNAVAILABLE), strText);
 							bShowExplanation = TRUE;
 						}
 						if( (dwpFilters & F_VECTOR) && !(dwFilters & F_VECTOR) )
 						{
 							/*Add a Specifier to the Checkbox to show it was inherited from the parent*/
-							Edit_GetTextA(GetDlgItem(hDlg, IDC_FILTER_VECTOR), strText, 250);
-							strcat(strText, " (*)");
-							Edit_SetTextA(GetDlgItem(hDlg, IDC_FILTER_VECTOR), strText);
+							Edit_GetText(GetDlgItem(hDlg, IDC_FILTER_VECTOR), strText, 250);
+							lstrcat(strText, TEXT(" (*)"));
+							Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_VECTOR), strText);
 							bShowExplanation = TRUE;
 						}
 						if( (dwpFilters & F_RASTER) && !(dwFilters & F_RASTER) )
 						{
 							/*Add a Specifier to the Checkbox to show it was inherited from the parent*/
-							Edit_GetTextA(GetDlgItem(hDlg, IDC_FILTER_RASTER), strText, 250);
-							strcat(strText, " (*)");
-							Edit_SetTextA(GetDlgItem(hDlg, IDC_FILTER_RASTER), strText);
+							Edit_GetText(GetDlgItem(hDlg, IDC_FILTER_RASTER), strText, 250);
+							lstrcat(strText, TEXT(" (*)"));
+							Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_RASTER), strText);
 							bShowExplanation = TRUE;
 						}
 						if( (dwpFilters & F_ORIGINALS) && !(dwFilters & F_ORIGINALS) )
 						{
 							/*Add a Specifier to the Checkbox to show it was inherited from the parent*/
-							Edit_GetTextA(GetDlgItem(hDlg, IDC_FILTER_ORIGINALS), strText, 250);
-							strcat(strText, " (*)");
-							Edit_SetTextA(GetDlgItem(hDlg, IDC_FILTER_ORIGINALS), strText);
+							Edit_GetText(GetDlgItem(hDlg, IDC_FILTER_ORIGINALS), strText, 250);
+							lstrcat(strText, TEXT(" (*)"));
+							Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_ORIGINALS), strText);
 							bShowExplanation = TRUE;
 						}
 						if( (dwpFilters & F_WORKING) && !(dwFilters & F_WORKING) )
 						{
 							/*Add a Specifier to the Checkbox to show it was inherited from the parent*/
-							Edit_GetTextA(GetDlgItem(hDlg, IDC_FILTER_WORKING), strText, 250);
-							strcat(strText, " (*)");
-							Edit_SetTextA(GetDlgItem(hDlg, IDC_FILTER_WORKING), strText);
+							Edit_GetText(GetDlgItem(hDlg, IDC_FILTER_WORKING), strText, 250);
+							lstrcat(strText, TEXT(" (*)"));
+							Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_WORKING), strText);
 							bShowExplanation = TRUE;
 						}
 						if( (dwpFilters & F_AVAILABLE) && !(dwFilters & F_AVAILABLE) )
 						{
 							/*Add a Specifier to the Checkbox to show it was inherited from the parent*/
-							Edit_GetTextA(GetDlgItem(hDlg, IDC_FILTER_AVAILABLE), strText, 250);
-							strcat(strText, " (*)");
-							Edit_SetTextA(GetDlgItem(hDlg, IDC_FILTER_AVAILABLE), strText);
+							Edit_GetText(GetDlgItem(hDlg, IDC_FILTER_AVAILABLE), strText, 250);
+							lstrcat(strText, TEXT(" (*)"));
+							Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_AVAILABLE), strText);
 							bShowExplanation = TRUE;
 						}
 						/*Do not or in the Values of the parent, so that the values of the folder still can be set*/
@@ -543,7 +543,7 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 			{
 				WCHAR buf[FILTERTEXT_LEN];
 				Edit_GetText(GetDlgItem(hDlg, IDC_FILTER_EDIT), buf, FILTERTEXT_LEN);
-				StrTrim(buf, _Unicode(" "));
+				StrTrim(buf, TEXT(" "));
 				wcsncpy(g_FilterText, buf, FILTERTEXT_LEN);
 			}
 			
@@ -711,8 +711,8 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 		}
 
 		SetWindowText(GetDlgItem(hDlg,IDC_CUSTOMFILE_GAME),
-		              _Unicode(UseLangList() ? _LST(drivers[driver_index]->description)
-		                                     : ModifyThe(drivers[driver_index]->description)));
+		              UseLangList() ? _LSTW(driversw[driver_index]->description)
+		                              : driversw[driver_index]->modify_the);
 
 		return TRUE;
 	}
@@ -752,11 +752,11 @@ INT_PTR CALLBACK DirectXDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 {
 	HWND hEdit;
 
-	const char *directx_help =
-		MAME32NAME " requires DirectX version 3 or later, which is a set of operating\r\n"
+	const WCHAR *directx_help =
+		TEXT(MAME32NAME " requires DirectX version 3 or later, which is a set of operating\r\n"
 		"system extensions by Microsoft for Windows 9x, NT and 2000.\r\n\r\n"
 		"Visit Microsoft's DirectX web page at http://www.microsoft.com/directx\r\n"
-		"download DirectX, install it, and then run " MAME32NAME " again.\r\n";
+		"download DirectX, install it, and then run " MAME32NAME " again.\r\n");
 
 	switch (Msg)
 	{
@@ -768,7 +768,7 @@ INT_PTR CALLBACK DirectXDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 		Edit_SetSel(hEdit, Edit_GetTextLength(hEdit), Edit_GetTextLength(hEdit));
 		else
 			Edit_SetSelA(hEdit, Edit_GetTextLengthA(hEdit), Edit_GetTextLengthA(hEdit));
-		Edit_ReplaceSel(hEdit, _Unicode(_UI(directx_help)));
+		Edit_ReplaceSel(hEdit, _UIW(directx_help));
 		return 1;
 
 	case WM_COMMAND:
@@ -842,9 +842,9 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			nGame = lvi.lParam;
 			nParentIndex = GetParentRomSetIndex(drivers[nGame]);
 			if (nParentIndex >= 0)
-				lstrcpy(szGame, _Unicode(drivers[nParentIndex]->name));
+				lstrcpy(szGame, driversw[nParentIndex]->name);
 			else
-				lstrcpy(szGame, _Unicode(drivers[nGame]->name));
+				lstrcpy(szGame, driversw[nGame]->name);
 
 			swprintf(buf, TEXT("%s\\%s.txt"), szDir, szGame);
 
@@ -867,19 +867,19 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 
 				if ( PcbData != NULL )
 				{
-					char bufa[256];
+					WCHAR buf[256];
 
 					mame_fread(mfile, PcbData, filelen);
 					
 					PcbData[filelen] = '\0';
 
-					sprintf(bufa, 
-						_UI(MAME32NAME " PCB Info: %s [%s]"), 
-						ConvertAmpersandString(UseLangList() ?
-							_LST(drivers[nGame]->description) :
-							ModifyThe(drivers[nGame]->description)), 
-						drivers[nGame]->name);
-					SetWindowText(hDlg, _Unicode(bufa));
+					swprintf(buf, 
+						_UIW(TEXT(MAME32NAME " PCB Info: %s [%s]")), 
+						ConvertAmpersandStringW(UseLangList() ?
+							_LSTW(driversw[nGame]->description) :
+							driversw[nGame]->modify_the), 
+						driversw[nGame]->name);
+					SetWindowText(hDlg, buf);
 					SetWindowFont(GetDlgItem(hDlg, IDC_PCBINFO), hPcbFont, FALSE);
 					Edit_SetTextA(GetDlgItem(hDlg, IDC_PCBINFO), PcbData);
 
@@ -918,7 +918,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			}
 			else
 			{
-				MessageBox(GetMainWindow(), _Unicode(_UI("No PCB Info available for this game.")), _Unicode(MAME32NAME), MB_OK | MB_ICONEXCLAMATION);
+				MessageBox(GetMainWindow(), _UIW(TEXT("No PCB Info available for this game.")), TEXT(MAME32NAME), MB_OK | MB_ICONEXCLAMATION);
 				EndDialog(hDlg, 0);
 			}
 

@@ -2073,7 +2073,7 @@ void IncrementPlayTime(int driver_index, int playtime)
 	driver_variables[driver_index].play_time += playtime;
 }
 
-void GetTextPlayTime(int driver_index, char *buf)
+void GetTextPlayTime(int driver_index, WCHAR *buf)
 {
 	int hour, minute, second;
 	int temp = driver_variables[driver_index].play_time;
@@ -2086,9 +2086,9 @@ void GetTextPlayTime(int driver_index, char *buf)
 	second = temp - 60*minute;
 
 	if (hour == 0)
-		sprintf(buf, "%d:%02d", minute, second );
+		swprintf(buf, TEXT("%d:%02d"), minute, second );
 	else
-		sprintf(buf, "%d:%02d:%02d", hour, minute, second );
+		swprintf(buf, TEXT("%d:%02d:%02d"), hour, minute, second );
 }
 
 

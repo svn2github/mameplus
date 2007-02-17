@@ -250,12 +250,16 @@ typedef BOOL (WINAPI *common_file_dialog_procA)(LPOPENFILENAMEA lpofn);
 /***************************************************************************
  externally defined global variables
  ***************************************************************************/
+
+struct _driverw **driversw;
+
 #if 0
 extern const char g_szPlayGameString[] = "&Play %s";
 extern const char g_szGameCountString[] = "%d games";
 extern const char *history_filename;
 extern const char *mameinfo_filename;
 #endif
+
 
 /***************************************************************************
     function prototypes
@@ -844,20 +848,20 @@ static HDC              hMemoryDC;
 #endif /* USE_SHOW_SPLASH_SCREEN */
 
 /* List view Column text */
-const char* column_names[COLUMN_MAX] =
+const WCHAR* column_names[COLUMN_MAX] =
 {
-	"Description",
-	"ROMs",
-	"Samples",
-	"Name",
-	"Type",
-	"Trackball",
-	"Playcount",
-	"Manufacturer",
-	"Year",
-	"Clone Of",
-	"Driver",
-	"Play Time"
+	TEXT("Description"),
+	TEXT("ROMs"),
+	TEXT("Samples"),
+	TEXT("Name"),
+	TEXT("Type"),
+	TEXT("Trackball"),
+	TEXT("Playcount"),
+	TEXT("Manufacturer"),
+	TEXT("Year"),
+	TEXT("Clone Of"),
+	TEXT("Driver"),
+	TEXT("Play Time")
 };
 
 /***************************************************************************
@@ -1787,26 +1791,107 @@ int GetIndexFromSortedIndex(int sorted_index)
     Internal functions
  ***************************************************************************/
 
-static char **game_readings;
+typedef struct
+{
+	int readings;
+	int description;
+} sort_index_t;
 
-static void build_game_readings(void)
+typedef struct
+{
+	const char *str;
+	int index;
+} sort_comapre_t;
+
+static sort_index_t *sort_index;
+
+
+static int sort_comapre_str(const void *p1, const void *p2)
+{
+	return stricmp(((const sort_comapre_t *)p1)->str, ((const sort_comapre_t *)p2)->str);
+}
+
+static void build_sort_index(void)
+{
+	sort_comapre_t *ptemp;
+	int i;
+
+	if (!sort_index)
+	{
+		sort_index = malloc(sizeof (*sort_index) * game_count);
+		assert(sort_index);
+	}
+
+	ptemp = malloc(sizeof (*ptemp) * game_count);
+	assert(ptemp);
+
+	memset(ptemp, 0, sizeof (*ptemp) * game_count);
+
+	// process description
+	for (i = 0; i < game_count; i++)
+	{
+		ptemp[i].index = i;
+		ptemp[i].str = ModifyThe(drivers[i]->description);
+	}
+
+	qsort(ptemp, game_count, sizeof (*ptemp), sort_comapre_str);
+
+	for (i = 0; i < game_count; i++)
+		sort_index[ptemp[i].index].description = i;
+
+	free(ptemp);
+}
+
+static void build_sort_readings(void)
+{
+	sort_comapre_t *ptemp;
+	int i;
+
+	ptemp = malloc(sizeof (*ptemp) * game_count);
+	assert(ptemp);
+
+	// process readings
+	for (i = 0; i < game_count; i++)
+	{
+		char *r;
+
+		r = _READINGS(drivers[i]->description);
+		if (r == drivers[i]->description)
+			r = _LST(drivers[i]->description);
+
+		ptemp[i].index = i;
+		ptemp[i].str = r;
+	}
+
+	qsort(ptemp, game_count, sizeof (*ptemp), sort_comapre_str);
+
+	for (i = 0; i < game_count; i++)
+		sort_index[ptemp[i].index].readings = i;
+
+	free(ptemp);
+}
+
+static void build_driversw(void)
 {
 	int i;
 
-	if (game_readings)
-		free (game_readings);
+	driversw = malloc(sizeof (*driversw) * (game_count + 1));
+	assert(driversw);
 
-	game_readings = malloc (sizeof (char *) * game_count);
-	if (!game_readings)
-		return;
-
+	driversw[game_count] = NULL;
 	for (i = 0; i < game_count; i++)
 	{
-		char *l,*r;
-		l = _LST(drivers[i]->description);
-		r = _READINGS(drivers[i]->description);
+		driversw[i] = malloc(sizeof *driversw[i]);
+		assert(driversw[i]);
 
-		game_readings[i] = (drivers[i]->description == r) ? l : r;
+		driversw[i]->name = wcsdup(_Unicode(drivers[i]->name));
+		driversw[i]->description = wcsdup(_Unicode(drivers[i]->description));
+		driversw[i]->modify_the = wcsdup(_Unicode(ModifyThe(drivers[i]->description)));
+		assert(driversw[i]->name && driversw[i]->description && driversw[i]->modify_the);
+
+		driversw[i]->manufacturer = wcsdup(_Unicode(drivers[i]->manufacturer));
+		driversw[i]->year = wcsdup(_Unicode(drivers[i]->year));
+		assert(driversw[i]->manufacturer && driversw[i]->year);
 	}
 }
 
@@ -1843,7 +1928,7 @@ static void ChangeLanguage(int id)
 		hFont = TranslateCreateFont(&logfont);
 	}
 
-	build_game_readings();
+	build_sort_readings();
 
 	if (id && hToolBar != NULL)
 	{
@@ -2043,6 +2128,9 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	while (drivers[game_count] != 0)
 		game_count++;
 
+	build_driversw();
+	build_sort_index();
+
 	/* custom per-game icons */
 	icon_index = malloc(sizeof(int) * game_count);
 	if (!icon_index)
@@ -2111,7 +2199,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 #endif /* USE_SHOW_SPLASH_SCREEN */
 
 	/* USE LANGUAGE LIST */
-	build_game_readings();
+	build_sort_readings();
 
 	g_mame32_message = RegisterWindowMessage(TEXT_MAME32NAME);
 	g_bDoBroadcast = GetBroadcast();
@@ -2478,6 +2566,9 @@ static void Win32UI_exit(void)
 	OptionsExit();
 
 	HelpExit();
+
+	free(sort_index);
+	free(driversw);
 
 #ifdef DRIVER_SWITCH
 	free(drivers);
@@ -3438,7 +3529,7 @@ static HWND InitToolbar(HWND hParent)
 	iHeight = rect.bottom - rect.top - 2;
 
 	// create Edit Control
-	CreateWindowEx( 0L, TEXT("Edit"), _Unicode(_UI(SEARCH_PROMPT)), WS_CHILD | WS_BORDER | WS_VISIBLE | ES_LEFT, 
+	CreateWindowEx( 0L, TEXT("Edit"), _UIW(TEXT(SEARCH_PROMPT)), WS_CHILD | WS_BORDER | WS_VISIBLE | ES_LEFT, 
 					iPosX, iPosY, 200, iHeight, hToolBar, (HMENU)ID_TOOLBAR_EDIT, hInst, NULL );
 
 	return hToolBar;
@@ -3461,7 +3552,7 @@ static HWND InitStatusBar(HWND hParent)
 
 	return CreateStatusWindow(WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS |
 	                          CCS_BOTTOM | SBARS_SIZEGRIP | SBT_TOOLTIPS,
-	                          _Unicode(_UI("Ready")),
+	                          _UIW(TEXT("Ready")),
 	                          hParent,
 	                          2);
 }
@@ -3680,14 +3771,14 @@ static void DisableSelection(void)
 	mmi.cbSize         = sizeof(mmi);
 	mmi.fMask          = MIIM_TYPE;
 	mmi.fType          = MFT_STRING;
-	mmi.dwTypeData     = _Unicode(_UI("&Play"));
+	mmi.dwTypeData     = _UIW(TEXT("&Play"));
 	mmi.cch            = lstrlen(mmi.dwTypeData);
 	SetMenuItemInfo(hMenu, ID_FILE_PLAY, FALSE, &mmi);
 
 	mmi.cbSize         = sizeof(mmi);
 	mmi.fMask          = MIIM_TYPE;
 	mmi.fType          = MFT_STRING;
-	mmi.dwTypeData     = _Unicode(_UI("Propert&ies for Driver"));
+	mmi.dwTypeData     = _UIW(TEXT("Propert&ies for Driver"));
 	mmi.cch            = lstrlen(mmi.dwTypeData);
 	SetMenuItemInfo(hMenu, ID_FOLDER_SOURCEPROPERTIES, FALSE, &mmi);
 
@@ -3711,29 +3802,29 @@ static void DisableSelection(void)
 
 static void EnableSelection(int nGame)
 {
-	char		buf[200];
+	WCHAR		buf[200];
 	const char *	pText;
 	MENUITEMINFO	mmi;
 	HMENU		hMenu = GetMenu(hMain);
 
 	
-	snprintf(buf, sizeof(buf) / sizeof(buf[0]), _UI("&Play %s"),
-	         ConvertAmpersandString(UseLangList() ?
-	                                _LST(drivers[nGame]->description) :
-	                                ModifyThe(drivers[nGame]->description)));
+	snwprintf(buf, sizeof(buf) / sizeof(buf[0]), _UIW(TEXT("&Play %s")),
+	         ConvertAmpersandStringW(UseLangList() ?
+	                                _LSTW(driversw[nGame]->description) :
+	                                driversw[nGame]->modify_the));
 	mmi.cbSize         = sizeof(mmi);
 	mmi.fMask          = MIIM_TYPE;
 	mmi.fType          = MFT_STRING;
-	mmi.dwTypeData     = _Unicode(buf);
+	mmi.dwTypeData     = buf;
 	mmi.cch            = lstrlen(mmi.dwTypeData);
 	SetMenuItemInfo(hMenu, ID_FILE_PLAY, FALSE, &mmi);
 
-	snprintf(buf, sizeof(buf) / sizeof(buf[0]), _UI("Propert&ies for %s"),
-	         GetDriverFilename(nGame));
+	snwprintf(buf, sizeof(buf) / sizeof(buf[0]), _UIW(TEXT("Propert&ies for %s")),
+	         _Unicode(GetDriverFilename(nGame)));
 	mmi.cbSize         = sizeof(mmi);
 	mmi.fMask          = MIIM_TYPE;
 	mmi.fType          = MFT_STRING;
-	mmi.dwTypeData     = _Unicode(buf);
+	mmi.dwTypeData     = buf;
 	mmi.cch            = lstrlen(mmi.dwTypeData);
 	SetMenuItemInfo(hMenu, ID_FOLDER_SOURCEPROPERTIES, FALSE, &mmi);
 
@@ -3829,7 +3920,7 @@ static void PaintBackgroundImage(HWND hWnd, HRGN hRgn, int x, int y)
 	ReleaseDC(hWnd, hDC);
 }
 
-static LPCSTR GetCloneParentName(int nItem)
+static WCHAR *GetCloneParentName(int nItem)
 {
 	int nParentIndex = -1;
 
@@ -3837,10 +3928,10 @@ static LPCSTR GetCloneParentName(int nItem)
 	{
 		nParentIndex = GetParentIndex(drivers[nItem]);
 		if (nParentIndex >= 0)
-			return  (UseLangList()) ? 
-				_LST(drivers[nParentIndex]->description) : ModifyThe(drivers[nParentIndex]->description);
+			return  UseLangList() ? 
+				_LSTW(driversw[nParentIndex]->description) : driversw[nParentIndex]->modify_the;
 	}
-	return "";
+	return TEXT("");
 }
 
 static BOOL PickerHitTest(HWND hWnd)
@@ -4865,8 +4956,8 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 			{
 			case EN_CHANGE:
 				//put search routine here first, add a 200ms timer later.
-				if ((!_wcsicmp(buf, _Unicode(_UI(SEARCH_PROMPT))) && !_wcsicmp(g_SearchText, _Unicode(""))) ||
-				    (!_wcsicmp(g_SearchText, _Unicode(_UI(SEARCH_PROMPT))) && !_wcsicmp(buf, _Unicode(""))))
+				if ((!_wcsicmp(buf, _UIW(TEXT(SEARCH_PROMPT))) && !_wcsicmp(g_SearchText, _Unicode(""))) ||
+				    (!_wcsicmp(g_SearchText, _UIW(TEXT(SEARCH_PROMPT))) && !_wcsicmp(buf, _Unicode(""))))
 				{
 					wcscpy(g_SearchText, buf);
 				}
@@ -4877,12 +4968,12 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 				}
 				break;
 			case EN_SETFOCUS:
-				if (!_wcsicmp(buf, _Unicode(_UI(SEARCH_PROMPT))))
+				if (!_wcsicmp(buf, _UIW(TEXT(SEARCH_PROMPT))))
 					SetWindowTextW(hwndCtl, _Unicode(""));
 				break;
 			case EN_KILLFOCUS:
 				if (wcslen(buf) == 0)
-					SetWindowTextW(hwndCtl, _Unicode(_UI(SEARCH_PROMPT)));
+					SetWindowTextW(hwndCtl, _UIW(TEXT(SEARCH_PROMPT)));
 				break;
 			}
 		}
@@ -5383,44 +5474,44 @@ int GamePicker_GetUseBrokenColor(void)
 	return !GetUseBrokenIcon();
 }
 
-const char *GamePicker_GetItemString(HWND hwndPicker, int nItem, int nColumn)
+const WCHAR *GamePicker_GetItemString(HWND hwndPicker, int nItem, int nColumn)
 {
-	const char *s = "";
+	const WCHAR *s = TEXT("");
 
 	switch(nColumn)
 	{
 		case COLUMN_GAMES:
 			/* Driver description */
 			s = UseLangList() ?
-				_LST(drivers[nItem]->description):
-				ModifyThe(drivers[nItem]->description);
+				_LSTW(driversw[nItem]->description):
+				driversw[nItem]->modify_the;
 			break;
 
 		case COLUMN_ROMS:
 			/* Has Roms */
-			s = _String(GetAuditString(GetRomAuditResults(nItem)));
+			s = GetAuditString(GetRomAuditResults(nItem));
 			break;
 
 		case COLUMN_SAMPLES:
 			/* Samples */
 			if (DriverUsesSamples(nItem))
-				s = _String(GetAuditString(GetSampleAuditResults(nItem)));
+				s = GetAuditString(GetSampleAuditResults(nItem));
 			break;
 
 		case COLUMN_DIRECTORY:
 			/* Driver name (directory) */
-			s = drivers[nItem]->name;
+			s = driversw[nItem]->name;
 			break;
 
 		case COLUMN_SRCDRIVERS:
 			/* Source drivers */
-			s = GetDriverFilename(nItem);
+			s = _Unicode(GetDriverFilename(nItem));
 			break;
 
 		case COLUMN_PLAYTIME:
 			/* total play time */
 			{
-				static char buf[100];
+				static WCHAR buf[100];
 
 				GetTextPlayTime(nItem, buf);
 				s = buf;
@@ -5434,25 +5525,25 @@ const char *GamePicker_GetItemString(HWND hwndPicker, int nItem, int nColumn)
 
 			/* Vector/Raster */
 			if (drv.video_attributes & VIDEO_TYPE_VECTOR)
-				s = _UI("Vector");
+				s = _UIW(TEXT("Vector"));
 			else
-				s = _UI("Raster");
+				s = _UIW(TEXT("Raster"));
 			break;
 		}
 		case COLUMN_TRACKBALL:
 			/* Trackball */
 			if (DriverUsesTrackball(nItem))
-				s = _UI("Yes");
+				s = _UIW(TEXT("Yes"));
 			else
-				s = _UI("No");
+				s = _UIW(TEXT("No"));
 			break;
 
 		case COLUMN_PLAYED:
 			/* times played */
 			{
-				static char buf[100];
+				static WCHAR buf[100];
 
-				sprintf(buf, "%i", GetPlayCount(nItem));
+				swprintf(buf, TEXT("%i"), GetPlayCount(nItem));
 				s = buf;
 			}
 			break;
@@ -5460,14 +5551,14 @@ const char *GamePicker_GetItemString(HWND hwndPicker, int nItem, int nColumn)
 		case COLUMN_MANUFACTURER:
 			/* Manufacturer */
 			if (UseLangList())
-				s = _MANUFACT(drivers[nItem]->manufacturer);
+				s = _MANUFACTW(driversw[nItem]->manufacturer);
 			else
-				s = (char *)drivers[nItem]->manufacturer;
+				s = driversw[nItem]->manufacturer;
 			break;
 
 		case COLUMN_YEAR:
 			/* Year */
-			s = drivers[nItem]->year;
+			s = driversw[nItem]->year;
 			break;
 
 		case COLUMN_CLONE:
@@ -5750,8 +5841,8 @@ static void CreateIcons(void)
 static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_subitem)
 {
 	int value;
-	const char *name1 = NULL;
-	const char *name2 = NULL;
+	const WCHAR *name1 = NULL;
+	const WCHAR *name2 = NULL;
 	int nTemp1, nTemp2;
 
 	machine_config drv1;
@@ -5777,11 +5868,11 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 		value = 0;
 
 		if (UseLangList())
-			value = stricmp(game_readings[index1], game_readings[index2]);
+			value = sort_index[index1].readings - sort_index[index2].readings;
 
 		if (value == 0)
-			value = stricmp(ModifyThe(drivers[index1]->description),
-			                ModifyThe(drivers[index2]->description));
+			value = sort_index[index1].description - sort_index[index2].description;
+
 		break;
 
 	case COLUMN_ROMS:
@@ -5927,7 +6018,7 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 		else if (name1 == NULL)
 			value = 1;
 		else
-			value = stricmp(name1, name2);
+			value = lstrcmpi(name1, name2);
 		break;
 
 	default :
@@ -6033,7 +6124,7 @@ static BOOL CommonFileDialogW(BOOL open_for_write, WCHAR *filename, int filetype
 
 	if (cfg_data[filetype].ext)
 	{
-		lstrcpy(ext, _Unicode(_UI(cfg_data[filetype].ext)));
+		lstrcpy(ext, _Unicode(cfg_data[filetype].ext));
 		of.lpstrDefExt = ext;
 	}
 
@@ -6184,14 +6275,14 @@ void SetStatusBarTextF(int part_index, const char *fmt, ...)
 	SetStatusBarText(part_index, buf);
 }
 
-static void MameMessageBox(const char *fmt, ...)
+static void MameMessageBoxUTF8(const char *fmt, ...)
 {
 	char buf[2048];
 	va_list va;
 
 	va_start(va, fmt);
 	vsprintf(buf, fmt, va);
-	MessageBox(GetMainWindow(), _Unicode(buf), TEXT_MAME32NAME, MB_OK | MB_ICONERROR);
+	MessageBox(GetMainWindow(), _UTF8Unicode(buf), TEXT_MAME32NAME, MB_OK | MB_ICONERROR);
 	va_end(va);
 }
 
@@ -6256,7 +6347,7 @@ static void MamePlayBackGame(const WCHAR *fname_playback)
 
 		if (filerr != FILERR_NONE)
 		{
-			MameMessageBoxW(_Unicode(_UI("Could not open '%s' as a valid input file.")), filename);
+			MameMessageBoxW(_UIW(TEXT("Could not open '%s' as a valid input file.")), filename);
 			return;
 		}
 
@@ -6324,7 +6415,7 @@ static void MameLoadState(const WCHAR *fname_state)
 			}
 		if (nGame == -1)
 		{
-			MameMessageBoxW(_Unicode(_UI("Could not open '%s' as a valid savestate file.")), filename);
+			MameMessageBoxW(_UIW(TEXT("Could not open '%s' as a valid savestate file.")), filename);
 			return;
 		}
 	}
@@ -6383,7 +6474,7 @@ static void MameLoadState(const WCHAR *fname_state)
 			romname[iPos] = '\0';
 			if (lstrcmp(selected_filename,romname) != 0)
 			{
-				MameMessageBoxW(_Unicode(_UI("'%s' is not a valid savestate file for game '%s'.")), filename, selected_filename);
+				MameMessageBoxW(_UIW(TEXT("'%s' is not a valid savestate file for game '%s'.")), filename, selected_filename);
 				return;
 			}
 			options_set_wstring(SEARCHPATH_STATE, path);
@@ -6397,13 +6488,13 @@ static void MameLoadState(const WCHAR *fname_state)
 		options_set_wstring(SEARCHPATH_STATE, GetStateDir());
 		if (filerr != FILERR_NONE)
 		{
-			MameMessageBoxW(_Unicode(_UI("Could not open '%s' as a valid savestate file.")), filename);
+			MameMessageBoxW(_UIW(TEXT("Could not open '%s' as a valid savestate file.")), filename);
 			return;
 		}
 
 		// call the MAME core function to check the save state file
 		stemp = utf8_from_wstring(selected_filename);
-		rc = state_save_check_file(pSaveState, stemp, TRUE, MameMessageBox);
+		rc = state_save_check_file(pSaveState, stemp, TRUE, MameMessageBoxUTF8);
 		free(stemp);
 		mame_fclose(pSaveState);
 		if (rc)
@@ -6844,7 +6935,7 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 	{
 		ImageMenu_CreatePopup(hMain, hMenu);
 
-		ImageMenu_SetMenuTitleProps(hMenu, _Unicode(ModifyThe(drivers[nGame]->description)), TRUE, RGB(255,255,255));
+		ImageMenu_SetMenuTitleProps(hMenu, driversw[nGame]->modify_the, TRUE, RGB(255,255,255));
 		ImageMenu_SetMenuTitleBkProps(hMenu, RGB(255,237,213), RGB(255,186,94), TRUE, TRUE);
 	}
 #endif /* IMAGE_MENU */
@@ -6910,7 +7001,7 @@ static BOOL HandleScreenShotContextMenu(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 static void UpdateMenu(HMENU hMenu)
 {
-	char			buf[200];
+	WCHAR		buf[200];
 	MENUITEMINFO	mItem;
 	int 			nGame = Picker_GetSelectedItem(hwndList);
 	LPTREEFOLDER lpFolder = GetCurrentFolder();
@@ -6918,26 +7009,26 @@ static void UpdateMenu(HMENU hMenu)
 
 	if (have_selection)
 	{
-		snprintf(buf, sizeof(buf), _UI("&Play %s"),
-		         ConvertAmpersandString(UseLangList() ?
-		                                _LST(drivers[nGame]->description) :
-		                                ModifyThe(drivers[nGame]->description)));
+		snwprintf(buf, sizeof (buf) / sizeof (buf[0]), _UIW(TEXT("&Play %s")),
+		         ConvertAmpersandStringW(UseLangList() ?
+		                                _LSTW(driversw[nGame]->description) :
+		                                driversw[nGame]->modify_the));
 
 		mItem.cbSize     = sizeof(mItem);
 		mItem.fMask      = MIIM_TYPE;
 		mItem.fType      = MFT_STRING;
-		mItem.dwTypeData = _Unicode(buf);
+		mItem.dwTypeData = buf;
 		mItem.cch        = lstrlen(mItem.dwTypeData);
 
 		SetMenuItemInfo(hMenu, ID_FILE_PLAY, FALSE, &mItem);
 
-		snprintf(buf, sizeof(buf) / sizeof(buf[0]), _UI("Propert&ies for %s"),
-		         GetDriverFilename(nGame));
+		snwprintf(buf, sizeof (buf) / sizeof (buf[0]), _UIW(TEXT("Propert&ies for %s")),
+		          _Unicode(GetDriverFilename(nGame)));
 
 		mItem.cbSize     = sizeof(mItem);
 		mItem.fMask      = MIIM_TYPE;
 		mItem.fType      = MFT_STRING;
-		mItem.dwTypeData = _Unicode(buf);
+		mItem.dwTypeData = buf;
 		mItem.cch        = lstrlen(mItem.dwTypeData);
 
 		SetMenuItemInfo(hMenu, ID_FOLDER_SOURCEPROPERTIES, FALSE, &mItem);
@@ -6946,22 +7037,22 @@ static void UpdateMenu(HMENU hMenu)
 	}
 	else
 	{
-		snprintf(buf, sizeof(buf), _UI("&Play %s"), "...");
+		snwprintf(buf, sizeof (buf) / sizeof (buf[0]), _UIW(TEXT("&Play %s")), TEXT("..."));
 
 		mItem.cbSize     = sizeof(mItem);
 		mItem.fMask      = MIIM_TYPE;
 		mItem.fType      = MFT_STRING;
-		mItem.dwTypeData = _Unicode(buf);
+		mItem.dwTypeData = buf;
 		mItem.cch        = lstrlen(mItem.dwTypeData);
 
 		SetMenuItemInfo(hMenu, ID_FILE_PLAY, FALSE, &mItem);
 
-		snprintf(buf, sizeof(buf) / sizeof(buf[0]), _UI("Propert&ies for %s"), "...");
+		snwprintf(buf, sizeof (buf) / sizeof (buf[0]), _UIW(TEXT("Propert&ies for %s")), TEXT("..."));
 
 		mItem.cbSize     = sizeof(mItem);
 		mItem.fMask      = MIIM_TYPE;
 		mItem.fType      = MFT_STRING;
-		mItem.dwTypeData = _Unicode(buf);
+		mItem.dwTypeData = buf;
 		mItem.cch        = lstrlen(mItem.dwTypeData);
 
 		SetMenuItemInfo(hMenu, ID_FOLDER_SOURCEPROPERTIES, FALSE, &mItem);
@@ -7393,10 +7484,10 @@ int UpdateLoadProgress(const char* name, const rom_load_data *romdata)
 			SetFocus(GetDlgItem(hWndLoad,IDOK));
 			if (romdata->errors)
 				SetWindowText(GetDlgItem(hWndLoad,IDC_ERROR_TEXT),
-							  _Unicode(_UI("ERROR: required files are missing, the game cannot be run.")));
+							  _UIW(TEXT("ERROR: required files are missing, the game cannot be run.")));
 			else
 				SetWindowText(GetDlgItem(hWndLoad,IDC_ERROR_TEXT),
-							  _Unicode(_UI("WARNING: the game might not run correctly.")));
+							  _UIW(TEXT("WARNING: the game might not run correctly.")));
 		}
 	}
 	else
@@ -7488,7 +7579,7 @@ void RemoveGameCustomFolder(int driver_index)
 			return;
 		}
 	}
-	MessageBox(GetMainWindow(), _Unicode(_UI("Error searching for custom folder")), TEXT_MAME32NAME, MB_OK | MB_ICONERROR);
+	MessageBox(GetMainWindow(), _UIW(TEXT("Error searching for custom folder")), TEXT_MAME32NAME, MB_OK | MB_ICONERROR);
 
 }
 

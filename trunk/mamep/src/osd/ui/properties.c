@@ -555,7 +555,7 @@ void InitDefaultPropertyPage(HINSTANCE hInst, HWND hWnd)
 	pshead.dwFlags                    = PSH_PROPSHEETPAGE | PSH_USEICONID | PSH_PROPTITLE | PSH_USECALLBACK;
 	pshead.pfnCallback                = PropSheetCallbackProc;
 	pshead.hInstance                  = hInst;
-	pshead.pszCaption                 = _Unicode(_UI("Default Game"));
+	pshead.pszCaption                 = _UIW(TEXT("Default Game"));
 	pshead.DUMMYUNIONNAME2.nStartPage = 0;
 	pshead.DUMMYUNIONNAME.pszIcon     = MAKEINTRESOURCE(IDI_MAME32_ICON);
 	pshead.DUMMYUNIONNAME3.ppsp       = pspage;
@@ -571,11 +571,11 @@ void InitDefaultPropertyPage(HINSTANCE hInst, HWND hWnd)
 	/* Create the Property sheet and display it */
 	if (PropertySheet(&pshead) == -1)
 	{
-		char temp[100];
+		WCHAR temp[100];
 		DWORD dwError = GetLastError();
 
-		sprintf(temp, _UI("Propery Sheet Error %d %X"), (int)dwError, (int)dwError);
-		MessageBox(0, _Unicode(temp), _Unicode(_UI("Error")), IDOK);
+		swprintf(temp, _UIW(TEXT("Propery Sheet Error %d %X")), (int)dwError, (int)dwError);
+		MessageBox(0, temp, _UIW(TEXT("Error")), IDOK);
 	}
 
 	free(pspage);
@@ -647,7 +647,7 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIco
 	//if (IS_FOLDER)
 		pshead.pszCaption             = _Unicode(_UI(folder));
 	else
-		pshead.pszCaption             = _Unicode(drivers[g_nGame]->name);
+		pshead.pszCaption             = driversw[g_nGame]->name;
 	pshead.DUMMYUNIONNAME2.nStartPage = start_page;
 	pshead.DUMMYUNIONNAME.pszIcon     = MAKEINTRESOURCE(IDI_MAME32_ICON);
 	pshead.DUMMYUNIONNAME3.ppsp       = pspage;
@@ -663,10 +663,10 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIco
 	/* Create the Property sheet and display it */
 	if (PropertySheet(&pshead) == -1)
 	{
-		char temp[100];
+		WCHAR temp[100];
 		DWORD dwError = GetLastError();
-		sprintf(temp, _UI("Propery Sheet Error %d %X"), (int)dwError, (int)dwError);
-		MessageBox(0, _Unicode(temp), _Unicode(_UI("Error")), IDOK);
+		swprintf(temp, _UIW(TEXT("Propery Sheet Error %d %X")), (int)dwError, (int)dwError);
+		MessageBox(0, temp, _UIW(TEXT("Error")), IDOK);
 	}
 
 	free(pspage);
@@ -680,42 +680,43 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIco
 static LPWSTR GameInfoCPU(int nIndex)
 {
 	int i;
-	char buf[1024];
+	static WCHAR buf[1024];
 	machine_config drv;
 	expand_machine_driver(drivers[nIndex]->drv, &drv);
 
-	ZeroMemory(buf, sizeof(buf));
+	buf[0] = '\0';
+
 	i = 0;
 	while (i < MAX_CPU && drv.cpu[i].cpu_type)
 	{
 		if (drv.cpu[i].cpu_clock >= 1000000)
-			sprintf(&buf[strlen(buf)], "%s %d.%06d MHz",
-					cputype_name(drv.cpu[i].cpu_type),
+			swprintf(&buf[lstrlen(buf)], TEXT("%s %d.%06d MHz"),
+					_Unicode(cputype_name(drv.cpu[i].cpu_type)),
 					drv.cpu[i].cpu_clock / 1000000,
 					drv.cpu[i].cpu_clock % 1000000);
 		else
-			sprintf(&buf[strlen(buf)], "%s %d.%03d kHz",
-					cputype_name(drv.cpu[i].cpu_type),
+			swprintf(&buf[lstrlen(buf)], TEXT("%s %d.%03d kHz"),
+					_Unicode(cputype_name(drv.cpu[i].cpu_type)),
 					drv.cpu[i].cpu_clock / 1000,
 					drv.cpu[i].cpu_clock % 1000);
 
-		strcat(buf, "\n");
+		lstrcat(buf, TEXT("\n"));
 
 		i++;
 	}
 
-	return _Unicode(buf);
+	return buf;
 }
 
 /* Build Sound system info string */
 static LPWSTR GameInfoSound(int nIndex)
 {
 	int i;
-	static char buf[1024];
+	static WCHAR buf[1024];
 	machine_config drv;
 	expand_machine_driver(drivers[nIndex]->drv,&drv);
 
-	buf[0] = 0;
+	buf[0] = '\0';
 
 	i = 0;
 	while (i < MAX_SOUND && drv.sound[i].sound_type)
@@ -737,32 +738,32 @@ static LPWSTR GameInfoSound(int nIndex)
 		}
 
 		if (count > 1)
-			sprintf(&buf[strlen(buf)],"%dx",count);
+			swprintf(&buf[lstrlen(buf)], TEXT("%dx"), count);
 
-		sprintf(&buf[strlen(buf)],"%s",sndtype_name(sound_type));
+		lstrcpy(&buf[lstrlen(buf)], _Unicode(sndtype_name(sound_type)));
 
 		if (clock)
 		{
 			if (clock >= 1000000)
-				sprintf(&buf[strlen(buf)]," %d.%06d MHz",
+				swprintf(&buf[lstrlen(buf)], TEXT(" %d.%06d MHz"),
 						clock / 1000000,
 						clock % 1000000);
 			else
-				sprintf(&buf[strlen(buf)]," %d.%03d kHz",
+				swprintf(&buf[lstrlen(buf)], TEXT(" %d.%03d kHz"),
 						clock / 1000,
 						clock % 1000);
 		}
 
-		strcat(buf,"\n");
+		lstrcat(buf, TEXT("\n"));
 	}
 
-	return _Unicode(buf);
+	return buf;
 }
 
 /* Build Display info string */
 static LPWSTR GameInfoScreen(int nIndex)
 {
-	char buf[1024];
+	static WCHAR buf[1024];
 	machine_config drv;
 
 	expand_machine_driver(drivers[nIndex]->drv, &drv);
@@ -771,12 +772,12 @@ static LPWSTR GameInfoScreen(int nIndex)
 	{
 		if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
 		{
-			sprintf(buf, _UI("Vector (V) %f Hz (%d colors)"),
+			swprintf(buf, _UIW(TEXT("Vector (V) %f Hz (%d colors)")),
 				drv.screen[0].defstate.refresh, drv.total_colors);
 		}
 		else
 		{
-			sprintf(buf, _UI("Vector (H) %f Hz (%d colors)"),
+			swprintf(buf, _UIW(TEXT("Vector (H) %f Hz (%d colors)")),
 				drv.screen[0].defstate.refresh, drv.total_colors);
 		}
 	}
@@ -784,35 +785,35 @@ static LPWSTR GameInfoScreen(int nIndex)
 	{
 		if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
 		{
-			sprintf(buf, _UI("%d x %d (V) %f Hz (%d colors)"),
+			swprintf(buf, _UIW(TEXT("%d x %d (V) %f Hz (%d colors)")),
 				drv.screen[0].defstate.visarea.max_y - drv.screen[0].defstate.visarea.min_y + 1,
 				drv.screen[0].defstate.visarea.max_x - drv.screen[0].defstate.visarea.min_x + 1,
 				drv.screen[0].defstate.refresh, drv.total_colors);
 		}
 		else
 		{
-			sprintf(buf, _UI("%d x %d (H) %f Hz (%d colors)"),
+			swprintf(buf, _UIW(TEXT("%d x %d (H) %f Hz (%d colors)")),
 				drv.screen[0].defstate.visarea.max_x - drv.screen[0].defstate.visarea.min_x + 1,
 				drv.screen[0].defstate.visarea.max_y - drv.screen[0].defstate.visarea.min_y + 1,
 				drv.screen[0].defstate.refresh, drv.total_colors);
 		}
 	}
-	return _Unicode(buf);
+	return buf;
 }
 
 #ifdef MISC_FOLDER
 /* Build input information string */
 static LPWSTR GameInfoInput(int nIndex)
 {
-	char buf[1024];
+	static WCHAR buf[1024];
 	const input_port_entry* input;
 	int nplayer = 0;
-	const char* control = 0;
+	const WCHAR *control = 0;
 	int nbutton = 0;
 #if 0 // no space
 	int ncoin = 0;
-	const char* service = 0;
-	const char* tilt = 0;
+	const WCHAR *service = 0;
+	const WCHAR *tilt = 0;
 #endif // no space
 
 	begin_resource_tracking();
@@ -831,20 +832,20 @@ static LPWSTR GameInfoInput(int nIndex)
 
 				/* if control not defined, start it off as horizontal 2-way */
 				if (!control)
-					control = _UI("Joystick 2-Way");
-				else if (strcmp(control, _UI("Joystick 2-Way")) == 0)
+					control = _UIW(TEXT("Joystick 2-Way"));
+				else if (lstrcmp(control, _UIW(TEXT("Joystick 2-Way"))) == 0)
 					;
 				/* if already defined as vertical, make it 4 or 8 way */
-				else if (strcmp(control, _UI("Joystick 2-Way Vertical")) == 0)
+				else if (lstrcmp(control, _UIW(TEXT("Joystick 2-Way Vertical"))) == 0)
 				{
 					if (input->way == 4)
-						control = _UI("Joystick 4-Way");
+						control = _UIW(TEXT("Joystick 4-Way"));
 					else
 					{
 						if (input->way == 16)
-							control = _UI("Joystick 16-Way");
+							control = _UIW(TEXT("Joystick 16-Way"));
 						else
-							control = _UI("Joystick 8-Way");
+							control = _UIW(TEXT("Joystick 8-Way"));
 					}
 				}
 				break;
@@ -854,20 +855,20 @@ static LPWSTR GameInfoInput(int nIndex)
 
 				/* if control not defined, start it off as vertical 2-way */
 				if (!control)
-					control = _UI("Joystick 2-Way Vertical");
-				else if (strcmp(control, _UI("Joystick 2-Way Vertical")) == 0)
+					control = _UIW(TEXT("Joystick 2-Way Vertical"));
+				else if (lstrcmp(control, _UIW(TEXT("Joystick 2-Way Vertical"))) == 0)
 					;
 				/* if already defined as horiz, make it 4 or 8way */
-				else if (strcmp(control, _UI("Joystick 2-Way"))==0)
+				else if (lstrcmp(control, _UIW(TEXT("Joystick 2-Way")))==0)
 				{
 					if (input->way == 4)
-						control = _UI("Joystick 4-Way");
+						control = _UIW(TEXT("Joystick 4-Way"));
 					else
 					{
 						if (input->way == 16)
-							control = _UI("Joystick 16-Way");
+							control = _UIW(TEXT("Joystick 16-Way"));
 						else
-							control = _UI("Joystick 8-Way");
+							control = _UIW(TEXT("Joystick 8-Way"));
 					}
 				}
 				break;
@@ -879,20 +880,20 @@ static LPWSTR GameInfoInput(int nIndex)
 
 				/* if control not defined, start it off as vertical 2way */
 				if (!control)
-					control = _UI("Double Joystick 2-Way Vertical");
-				else if (strcmp(control, _UI("Double Joystick 2-Way Vertical")) == 0)
+					control = _UIW(TEXT("Double Joystick 2-Way Vertical"));
+				else if (lstrcmp(control, _UIW(TEXT("Double Joystick 2-Way Vertical"))) == 0)
 					;
 				/* if already defined as horiz, make it 4 or 8 way */
-				else if (strcmp(control, _UI("Double Joystick 2-Way")) == 0)
+				else if (lstrcmp(control, _UIW(TEXT("Double Joystick 2-Way"))) == 0)
 				{
 					if (input->way == 4)
-						control = _UI("Double Joystick 4-Way");
+						control = _UIW(TEXT("Double Joystick 4-Way"));
 					else
 					{
 						if (input->way == 16)
-							control = _UI("Double Joystick 16-Way");
+							control = _UIW(TEXT("Double Joystick 16-Way"));
 						else
-							control = _UI("Double Joystick 8-Way");
+							control = _UIW(TEXT("Double Joystick 8-Way"));
 					}
 				}
 				break;
@@ -904,20 +905,20 @@ static LPWSTR GameInfoInput(int nIndex)
 
 				/* if control not defined, start it off as horiz 2-way */
 				if (!control)
-					control = _UI("Double Joystick 2-Way");
-				else if (strcmp(control, _UI("Double Joystick 2-Way")) == 0)
+					control = _UIW(TEXT("Double Joystick 2-Way"));
+				else if (lstrcmp(control, _UIW(TEXT("Double Joystick 2-Way"))) == 0)
 					;
 				/* if already defined as vertical, make it 4 or 8 way */
-				else if (strcmp(control, _UI("Double Joystick 2-Way Vertical")) == 0)
+				else if (lstrcmp(control, _UIW(TEXT("Double Joystick 2-Way Vertical"))) == 0)
 				{
 					if (input->way == 4)
-						control = _UI("Double Joystick 4-Way");
+						control = _UIW(TEXT("Double Joystick 4-Way"));
 					else
 					{
 						if (input->way == 16)
-							control = _UI("Double Joystick 16-Way");
+							control = _UIW(TEXT("Double Joystick 16-Way"));
 						else
-							control = _UI("Double Joystick 8-Way");
+							control = _UIW(TEXT("Double Joystick 8-Way"));
 					}
 				}
 				break;
@@ -954,22 +955,22 @@ static LPWSTR GameInfoInput(int nIndex)
 				break;
 
 			case IPT_PADDLE:
-				control = _UI("Paddle");
+				control = _UIW(TEXT("Paddle"));
 				break;
 			case IPT_DIAL:
-				control = _UI("Dial");
+				control = _UIW(TEXT("Dial"));
 				break;
 			case IPT_TRACKBALL_X:
 			case IPT_TRACKBALL_Y:
-				control = _UI("Trackball");
+				control = _UIW(TEXT("Trackball"));
 				break;
 			case IPT_AD_STICK_X:
 			case IPT_AD_STICK_Y:
-				control = _UI("AD Stick");
+				control = _UIW(TEXT("AD Stick"));
 				break;
 			case IPT_LIGHTGUN_X:
 			case IPT_LIGHTGUN_Y:
-				control = _UI("Lightgun");
+				control = _UIW(TEXT("Lightgun"));
 				break;
 #if 0 // no space
 			case IPT_COIN1:
@@ -1009,63 +1010,64 @@ static LPWSTR GameInfoInput(int nIndex)
 
 	end_resource_tracking();
 
-	if (control == NULL) control = "";
+	if (control == NULL) control = TEXT("");
 
 	if (nplayer<1)
-		sprintf(buf, _UI("Unknown"));
+		lstrcpy(buf, _UIW(TEXT("Unknown")));
 	else
 	if ((nbutton<1) && (nplayer>1))
-		sprintf(buf, _UI("%s (%d players)"), control, nplayer);
+		swprintf(buf, _UIW(TEXT("%s (%d players)")), control, nplayer);
 	else
 	if (nbutton<1)
-		sprintf(buf, _UI("%s (%d player)"), control, nplayer);
+		swprintf(buf, _UIW(TEXT("%s (%d player)")), control, nplayer);
 	else
 	if ((nplayer>1) && (nbutton>1))
-		sprintf(buf, _UI("%s (%d players, %d buttons)"), control, nplayer, nbutton);
+		swprintf(buf, _UIW(TEXT("%s (%d players, %d buttons)")), control, nplayer, nbutton);
 	else
 	if (nplayer>1)
-		sprintf(buf, _UI("%s (%d players, %d button)"), control, nplayer, nbutton);
+		swprintf(buf, _UIW(TEXT("%s (%d players, %d button)")), control, nplayer, nbutton);
 	else
 	if (nbutton>1)
-		sprintf(buf, _UI("%s (%d player, %d buttons)"), control, nplayer, nbutton);
+		swprintf(buf, _UIW(TEXT("%s (%d player, %d buttons)")), control, nplayer, nbutton);
 	else
-		sprintf(buf, _UI("%s (%d player, %d button)"), control, nplayer, nbutton);
+		swprintf(buf, _UIW(TEXT("%s (%d player, %d button)")), control, nplayer, nbutton);
 
-	return _Unicode(buf);
+	return buf;
 }
 #else /* MISC_FOLDER */
 /* Build color information string */
 static LPWSTR GameInfoColors(int nIndex)
 {
-	char buf[1024];
+	static WCHAR buf[1024];
 	machine_config drv;
 	expand_machine_driver(drivers[nIndex]->drv, &drv);
 
 	ZeroMemory(buf, sizeof(buf));
-	sprintf(buf, _UI("%d colors "), drv.total_colors);
+	swprintf(buf, _UIW(TEXT("%d colors ")), drv.total_colors);
 
-	return _Unicode(buf);
+	return buf;
 }
 #endif /* !MISC_FOLDER */
 
 /* Build game status string */
 LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus)
 {
-	char buffer[1024];
+	static WCHAR buffer[1024];
 	int audit_result = GetRomAuditResults(driver_index);
-	memset(buffer,0,sizeof(char)*1024);
+
+	buffer[0] = '\0';
 
 	if (bRomStatus && IsAuditResultKnown(audit_result) == FALSE)
 	{
-		strcpy(buffer, _UI("Unknown"));
+		lstrcpy(buffer, _UIW(TEXT("Unknown")));
 	}
 
 	else if (!bRomStatus || IsAuditResultYes(audit_result))
 	{
 		if (DriverIsBroken(driver_index))
-			strcpy(buffer, _UI("Not working"));
+			lstrcpy(buffer, _UIW(TEXT("Not working")));
 		else
-			strcpy(buffer, _UI("Working"));
+			lstrcpy(buffer, _UIW(TEXT("Working")));
 
 		//the Flags are checked in the order of "noticability"
 		//1) visible deficiencies
@@ -1073,106 +1075,99 @@ LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus)
 		//3) other deficiencies
 		if (drivers[driver_index]->flags & GAME_UNEMULATED_PROTECTION)
 		{
-			if (*buffer != '\0')
-				strcat(buffer, "\r\n");
-			strcat(buffer, _UI("Game protection isn't fully emulated"));
+			lstrcat(buffer, TEXT("\r\n"));
+			lstrcat(buffer, _UIW(TEXT("Game protection isn't fully emulated")));
 		}
 		if (drivers[driver_index]->flags & GAME_WRONG_COLORS)
 		{
-			if (*buffer != '\0')
-				strcat(buffer, "\r\n");
-			strcat(buffer, _UI("Colors are completely wrong"));
+			lstrcat(buffer, TEXT("\r\n"));
+			lstrcat(buffer, _UIW(TEXT("Colors are completely wrong")));
 		}
 		if (drivers[driver_index]->flags & GAME_IMPERFECT_COLORS)
 		{
-			if (*buffer != '\0')
-				strcat(buffer, "\r\n");
-			strcat(buffer, _UI("Colors aren't 100% accurate"));
+			lstrcat(buffer, TEXT("\r\n"));
+			lstrcat(buffer, _UIW(TEXT("Colors aren't 100% accurate")));
 		}
 		if (drivers[driver_index]->flags & GAME_IMPERFECT_GRAPHICS)
 		{
-			if (*buffer != '\0')
-				strcat(buffer, "\r\n");
-			strcat(buffer, _UI("Video emulation isn't 100% accurate"));
+			lstrcat(buffer, TEXT("\r\n"));
+			lstrcat(buffer, _UIW(TEXT("Video emulation isn't 100% accurate")));
 		}
 		if (drivers[driver_index]->flags & GAME_NO_SOUND)
 		{
-			if (*buffer != '\0')
-				strcat(buffer, "\r\n");
-			strcat(buffer, _UI("Game lacks sound"));
+			lstrcat(buffer, TEXT("\r\n"));
+			lstrcat(buffer, _UIW(TEXT("Game lacks sound")));
 		}
 		if (drivers[driver_index]->flags & GAME_IMPERFECT_SOUND)
 		{
-			if (*buffer != '\0')
-				strcat(buffer, "\r\n");
-			strcat(buffer, _UI("Sound emulation isn't 100% accurate"));
+			lstrcat(buffer, TEXT("\r\n"));
+			lstrcat(buffer, _UIW(TEXT("Sound emulation isn't 100% accurate")));
 		}
 		if (drivers[driver_index]->flags & GAME_NO_COCKTAIL)
 		{
-			if (*buffer != '\0')
-				strcat(buffer, "\r\n");
-			strcat(buffer, _UI("Screen flipping is not supported"));
+			lstrcat(buffer, TEXT("\r\n"));
+			lstrcat(buffer, _UIW(TEXT("Screen flipping is not supported")));
 		}
 	}
 	else
 	{
 			// audit result is no
 #ifdef MESS
-		strcpy(buffer, _UI("BIOS missing"));
+		return _UIW(TEXT("BIOS missing"));
 #else
-		strcpy(buffer, _UI("ROMs missing"));
+		return _UIW(TEXT("ROMs missing"));
 #endif
 	}
 
-	return _Unicode(buffer);
+	return buffer;
 }
 
 /* Build game manufacturer string */
 static LPWSTR GameInfoManufactured(int nIndex)
 {
-	char buffer[1024];
+	static WCHAR buffer[1024];
 
-	snprintf(buffer,sizeof(buffer),"%s %s",drivers[nIndex]->year,(UseLangList()?_MANUFACT(drivers[nIndex]->manufacturer):drivers[nIndex]->manufacturer));
-	return _Unicode(buffer);
+	snwprintf(buffer, sizeof (buffer) / sizeof (*buffer), TEXT("%s %s"), driversw[nIndex]->year, UseLangList()? _MANUFACTW(driversw[nIndex]->manufacturer) : driversw[nIndex]->manufacturer);
+	return buffer;
 }
 
 /* Build Game title string */
 LPWSTR GameInfoTitle(int nIndex)
 {
 	const char *folder = g_pFolder;
-	char desc[1024];
-	char info[1024];
+	static WCHAR desc[1024];
+	static WCHAR info[1024];
 
 	if (nIndex == GLOBAL_OPTIONS)
-		return _Unicode(_UI("Global game options\nDefault options used by all games"));
+		return _UIW(TEXT("Global game options\nDefault options used by all games"));
 
 	if (g_nPropertyMode == SOURCE_VECTOR)
-		return _Unicode(_UI("Global vector options\nCustom options used by all games in the Vector"));
+		return _UIW(TEXT("Global vector options\nCustom options used by all games in the Vector"));
 
 	if (nIndex != FOLDER_OPTIONS)
 	{
-		sprintf(desc, "%s [%s]",
-		        UseLangList() ? _LST(drivers[nIndex]->description) :
-		                        ModifyThe(drivers[nIndex]->description),
-			drivers[nIndex]->name);
+		swprintf(desc, TEXT("%s [%s]"),
+		        UseLangList() ? _LSTW(driversw[nIndex]->description) :
+		                        driversw[nIndex]->modify_the,
+			driversw[nIndex]->name);
 
 		folder = GetUnifiedFolder(nIndex);
 		if (!folder)
-			return _Unicode(desc);
+			return desc;
 	}
 
 	if (nIndex != FOLDER_OPTIONS)
-		sprintf(info, _UI("%s\nThis is also global driver options in the %s"), desc, folder);
+		swprintf(info, _UIW(TEXT("%s\nThis is also global driver options in the %s")), desc, _Unicode(folder));
 	else
-		sprintf(info, _UI("Global driver options\nCustom options used by all games in the %s"), folder);
+		swprintf(info, _UIW(TEXT("Global driver options\nCustom options used by all games in the %s")), _Unicode(folder));
 
-	return _Unicode(info);
+	return info;
 }
 
 /* Build game clone infromation string */
 static LPWSTR GameInfoCloneOf(int nIndex)
 {
-	char buf[1024];
+	static WCHAR buf[1024];
 	int nParentIndex= -1;
 
 	buf[0] = '\0';
@@ -1180,28 +1175,22 @@ static LPWSTR GameInfoCloneOf(int nIndex)
 	if (DriverIsClone(nIndex))
 	{
 		if ((nParentIndex = GetParentIndex(drivers[nIndex])) >= 0)
-			UseLangList()?
-			sprintf(buf, "%s [%s]",
-					ConvertAmpersandString(_LST(drivers[nParentIndex]->description)),
-					drivers[nParentIndex]->name):
-			sprintf(buf, "%s [%s]",
-					ConvertAmpersandString(ModifyThe(drivers[nParentIndex]->description)),
-					drivers[nParentIndex]->name);
+			swprintf(buf, TEXT("%s [%s]"),
+					ConvertAmpersandStringW(UseLangList()?
+						_LSTW(driversw[nParentIndex]->description):
+						driversw[nParentIndex]->modify_the),
+					driversw[nParentIndex]->name);
 	}
 
-	return _Unicode(buf);
+	return buf;
 }
 
 static LPWSTR GameInfoSaveState(int driver_index)
 {
-	char buf[1024];
-
 	if (drivers[driver_index]->flags & GAME_SUPPORTS_SAVE)
-		sprintf(buf, _UI("Supported"));
-	else
-		sprintf(buf, _UI("Unsupported"));
+		return _UIW(TEXT("Supported"));
 
-	return _Unicode(buf);
+	return _UIW(TEXT("Unsupported"));
 }
 
 static LPWSTR GameInfoSource(int nIndex)
@@ -1450,11 +1439,11 @@ static LRESULT CALLBACK NewSheetWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPAR
 
 static void AdjustChildWindows(HWND hWnd)
 {
-	char szClass[128];
+	WCHAR szClass[128];
 	DWORD dwStyle;
 
-	GetClassName(hWnd, _Unicode(szClass), sizeof(szClass));
-	if (!strcmp(szClass, "Button"))
+	GetClassName(hWnd, szClass, sizeof (szClass) / sizeof (*szClass));
+	if (!lstrcmp(szClass, TEXT("Button")))
 	{
 		dwStyle = GetWindowLong(hWnd, GWL_STYLE);
 		if (((dwStyle & BS_GROUPBOX) == BS_GROUPBOX) && (dwStyle & WS_TABSTOP))
@@ -1477,12 +1466,9 @@ static void MovePropertySheetChildWindows(HWND hWnd, int nDx, int nDy)
 {
 	HWND hChild = GetWindow(hWnd, GW_CHILD);
 	RECT rcChild;
-	char szText[256];
 
 	while (hChild)
 	{
-		GetWindowText(hChild, _Unicode(szText), sizeof(szText));
-
 		GetWindowRect(hChild, &rcChild);
 		OffsetRect(&rcChild, nDx, nDy);
 
@@ -1674,10 +1660,10 @@ void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 
 	if (hSheetTreeCtrl == NULL)
 	{
-		char temp[100];
+		WCHAR temp[100];
 		DWORD dwError = GetLastError();
-		sprintf(temp, _UI("PropertySheet TreeCtrl Creation Error %d %X"), (int)dwError, (int)dwError);
-		MessageBox(hWnd, _Unicode(temp), _Unicode(_UI("Error")), IDOK);
+		swprintf(temp, _UIW(TEXT("PropertySheet TreeCtrl Creation Error %d %X")), (int)dwError, (int)dwError);
+		MessageBox(hWnd, temp, _UIW(TEXT("Error")), IDOK);
 	}
 
 	SendMessage(hSheetTreeCtrl, TVM_DELETEITEM, 0, (LPARAM)TVI_ROOT);
@@ -4817,7 +4803,7 @@ static void InitializeAnalogAxesUI(HWND hwnd)
 {
 	int i=0, j=0, res = 0;
 	int iEntryCounter = 0;
-	char buf[256];
+	WCHAR buf[256];
 	LVITEM item;
 	LVCOLUMN column;
 	HWND hCtrl = GetDlgItem(hwnd, IDC_ANALOG_AXES);
@@ -4827,22 +4813,22 @@ static void InitializeAnalogAxesUI(HWND hwnd)
 		ListView_SetExtendedListViewStyle(hCtrl,LVS_EX_CHECKBOXES );
 		//add two Columns...
 		column.mask = LVCF_TEXT | LVCF_WIDTH |LVCF_SUBITEM;
-		column.pszText = _Unicode(_UI("Joystick"));
+		column.pszText = _UIW(TEXT("Joystick"));
 		column.cchTextMax = lstrlen(column.pszText);
 		column.iSubItem = 0;
 		column.cx = 100;
 		res = ListView_InsertColumn(hCtrl,0, &column );
-		column.pszText = _Unicode(_UI("Axis"));
+		column.pszText = _UIW(TEXT("Axis"));
 		column.cchTextMax = lstrlen(column.pszText);
 		column.iSubItem = 1;
 		column.cx = 100;
 		res = ListView_InsertColumn(hCtrl,1, &column );
-		column.pszText = _Unicode(_UI("JoystickId"));
+		column.pszText = _UIW(TEXT("JoystickId"));
 		column.cchTextMax = lstrlen(column.pszText);
 		column.iSubItem = 2;
 		column.cx = 70;
 		res = ListView_InsertColumn(hCtrl,2, &column );
-		column.pszText = _Unicode(_UI("AxisId"));
+		column.pszText = _UIW(TEXT("AxisId"));
 		column.cchTextMax = lstrlen(column.pszText);
 		column.iSubItem = 3;
 		column.cx = 50;
@@ -4860,10 +4846,10 @@ static void InitializeAnalogAxesUI(HWND hwnd)
 			{
 				ListView_InsertItem(hCtrl,&item );
 				ListView_SetItemText(hCtrl,iEntryCounter,1, _Unicode(DIJoystick_GetPhysicalJoystickAxisName(i,j)));
-				sprintf(buf, "%d", i);
-				ListView_SetItemText(hCtrl,iEntryCounter,2, _Unicode(buf));
-				sprintf(buf, "%d", j);
-				ListView_SetItemText(hCtrl,iEntryCounter++,3, _Unicode(buf));
+				swprintf(buf, TEXT("%d"), i);
+				ListView_SetItemText(hCtrl,iEntryCounter,2, buf);
+				swprintf(buf, TEXT("%d"), j);
+				ListView_SetItemText(hCtrl,iEntryCounter++,3, buf);
 				item.iItem = iEntryCounter;
 			}
 		}

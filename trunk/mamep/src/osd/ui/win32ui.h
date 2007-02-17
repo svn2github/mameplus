@@ -34,6 +34,18 @@ typedef struct
 	const char *icon_name;
 } ICONDATA;
 
+struct _driverw
+{
+	WCHAR *name;
+	WCHAR *description;
+	WCHAR *modify_the;
+	WCHAR *manufacturer;
+	WCHAR *year;
+};
+
+/* in win32ui.c */
+extern struct _driverw **driversw;
+
 /* in layout.c */
 extern const ICONDATA g_iconData[];
 
@@ -52,11 +64,9 @@ void PaintBackgroundImage(HWND hWnd, HRGN hRgn, int x, int y);
 
 void UpdateListView(void);
 
-// Move The in "The Title (notes)" to "Title, The (notes)"
-char * ModifyThe(const char *str);
-
 // Convert Ampersand so it can display in a static control
 char * ConvertAmpersandString(const char *s);
+LPWSTR ConvertAmpersandStringW(LPCWSTR s);
 
 // globalized for painting tree control
 HBITMAP GetBackgroundBitmap(void);

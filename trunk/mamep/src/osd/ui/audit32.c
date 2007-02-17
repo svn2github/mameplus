@@ -156,10 +156,8 @@ BOOL IsAuditResultNo(int audit_result)
 static void Mame32Output(void *param, const char *format, va_list argptr)
 {
 	char buffer[512];
-	char *s;
 	vsnprintf(buffer, sizeof(buffer) / sizeof(buffer[0]), format, argptr);
-	s = ConvertToWindowsNewlines(buffer);
-	DetailsPrintf(TEXT("%s"), _UTF8Unicode(s));
+	DetailsPrintf(TEXT("%s"), _UTF8Unicode(buffer));
 }
 
 static int ProcessAuditResults(int game, audit_record *audit, int audit_records)
@@ -222,9 +220,9 @@ static DWORD WINAPI AuditThreadProc(LPVOID hDlg)
 		{
 			if (rom_index != -1)
 			{
-				WCHAR *descw = _Unicode(drivers[rom_index]->description);
+				WCHAR *descw = driversw[rom_index]->description;
 				swprintf(buffer, _UIW(TEXT("Checking Game %s - %s")),
-					_Unicode(drivers[rom_index]->name), UseLangList() ? _LSTW(descw) : descw);
+					driversw[rom_index]->name, UseLangList() ? _LSTW(descw) : descw);
 				SetWindowText(hDlg, buffer);
 				ProcessNextRom();
 			}
@@ -232,9 +230,9 @@ static DWORD WINAPI AuditThreadProc(LPVOID hDlg)
 			{
 				if (sample_index != -1)
 				{
-					WCHAR *descw = _Unicode(drivers[sample_index]->description);
+					WCHAR *descw = driversw[sample_index]->description;
 					swprintf(buffer, _UIW(TEXT("Checking Game %s - %s")),
-						_Unicode(drivers[sample_index]->name), UseLangList() ? _LSTW(descw) : descw);
+						driversw[sample_index]->name, UseLangList() ? _LSTW(descw) : descw);
 					SetWindowText(hDlg, buffer);
 					ProcessNextSample();
 				}
@@ -445,6 +443,7 @@ static void CLIB_DECL DetailsPrintf(const WCHAR *fmt, ...)
 	HWND	hEdit;
 	va_list marker;
 	WCHAR	buffer[2000];
+	WCHAR   *s;
 	long l;
 
 	//RS 20030613 Different Ids for Property Page and Dialog
@@ -465,9 +464,11 @@ static void CLIB_DECL DetailsPrintf(const WCHAR *fmt, ...)
 	
 	va_end(marker);
 
+	s = ConvertToWindowsNewlinesW(buffer);
+
 	l = Edit_GetTextLength(hEdit);
 	Edit_SetSel(hEdit, l, l);
-	SendMessageW( hEdit, EM_REPLACESEL, FALSE, (LPARAM)buffer);
+	SendMessageW( hEdit, EM_REPLACESEL, FALSE, (LPARAM)s);
 }
 
 static const WCHAR *StatusString(int iStatus)

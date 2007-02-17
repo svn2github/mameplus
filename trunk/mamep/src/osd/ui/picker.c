@@ -26,7 +26,6 @@
 #include <wingdi.h>
 #include <time.h>
 #include <malloc.h>
-#include <tchar.h>
 
 #include "picker.h"
 #include "resource.h"
@@ -84,7 +83,7 @@ struct PickerInfo
 	int *pnColumnsShown;
 	int *pnColumnsOrder;
 	UINT_PTR nTimer;
-	const char **ppszColumnNames;
+	const WCHAR **ppszColumnNames;
 };
 
 
@@ -384,7 +383,7 @@ static void Picker_InternalResetColumnDisplay(HWND hWnd, BOOL bFirstTime)
 		if (shown[order[i]])
 		{
 			lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_SUBITEM | LVCF_TEXT;
-			lvc.pszText = _Unicode(_UI(pPickerInfo->ppszColumnNames[order[i]]));
+			lvc.pszText = _UIW(pPickerInfo->ppszColumnNames[order[i]]);
 			lvc.iSubItem = nColumn;
 			lvc.cx = widths[order[i]];
 			lvc.fmt = LVCFMT_LEFT;
@@ -718,22 +717,20 @@ void Picker_SetSelectedItem(HWND hWnd, int nItem)
 
 
 
-static const char *Picker_CallGetItemString(HWND hwndPicker,
-	int nItem, int nColumn, char *pszBuffer, UINT nBufferLength)
+static const WCHAR *Picker_CallGetItemString(HWND hwndPicker,
+	int nItem, int nColumn, WCHAR *pszBuffer, UINT nBufferLength)
 {
 	// this call wraps the pfnGetItemString callback to properly set up the
 	// buffers, and normalize the results
 	struct PickerInfo *pPickerInfo;
-	const char *s;
+	const WCHAR *s;
 
 	pPickerInfo = GetPickerInfo(hwndPicker);
 	pszBuffer[0] = '\0';
 	s = NULL;
 
 	if (pPickerInfo->pCallbacks->pfnGetItemString)
-	{
 		s = pPickerInfo->pCallbacks->pfnGetItemString(hwndPicker, nItem, nColumn);
-	}
 	if (!s)
 		s = pszBuffer;
 	return s;
@@ -819,8 +816,8 @@ static int CALLBACK Picker_CompareProc(LPARAM index1, LPARAM index2, LPARAM nPar
 	struct PickerInfo *pPickerInfo = pcpp->pPickerInfo;
 	BOOL bCallCompare = TRUE;
 	int nResult = 0, nParent1, nParent2;
-	char szBuffer1[256], szBuffer2[256];
-	const char *s1, *s2;
+	WCHAR szBuffer1[256], szBuffer2[256];
+	const WCHAR *s1, *s2;
 
 	if (pcpp->nViewMode == VIEW_GROUPED)
 	{
@@ -900,7 +897,7 @@ static int CALLBACK Picker_CompareProc(LPARAM index1, LPARAM index2, LPARAM nPar
 				szBuffer1, sizeof(szBuffer1) / sizeof(szBuffer1[0]));
 			s2 = Picker_CallGetItemString(pcpp->hwndPicker, index2, pcpp->nSortColumn,
 				szBuffer2, sizeof(szBuffer2) / sizeof(szBuffer2[0]));
-			nResult = stricmp(s1, s2);
+			nResult = lstrcmpi(s1, s2);
 		}
 
 		if (pcpp->bReverse)
@@ -1058,8 +1055,7 @@ BOOL Picker_HandleNotify(LPNMHDR lpNmHdr)
 		case LVN_GETDISPINFOW:
 			{
 				LV_DISPINFOW *pDispInfo;
-				char szBuffer[256];
-				const char *s;
+				WCHAR szBuffer[256];
 
 				pDispInfo = (LV_DISPINFOW *) lpNmHdr;
 				nItem = (int) pDispInfo->item.lParam;
@@ -1084,11 +1080,10 @@ BOOL Picker_HandleNotify(LPNMHDR lpNmHdr)
 				{
 					// retrieve item text
 					nColumn = Picker_GetRealColumnFromViewColumn(hWnd, pDispInfo->item.iSubItem);
-					strcpy(szBuffer, _String(pDispInfo->item.pszText));
+					lstrcpy(szBuffer, pDispInfo->item.pszText);
 
-					s = Picker_CallGetItemString(hWnd, nItem, nColumn, szBuffer, sizeof szBuffer);
+					pDispInfo->item.pszText = (WCHAR *)Picker_CallGetItemString(hWnd, nItem, nColumn, szBuffer, sizeof (szBuffer) / sizeof (szBuffer[0]));
 
-					pDispInfo->item.pszText = _Unicode(s);
 					bResult = TRUE;
 				}
 			}
@@ -1097,8 +1092,8 @@ BOOL Picker_HandleNotify(LPNMHDR lpNmHdr)
 		case LVN_GETDISPINFOA:
 			{
 				LV_DISPINFOA *pDispInfo;
-				char szBuffer[256];
-				const char *s;
+				WCHAR szBuffer[256];
+				const WCHAR *s;
 
 				pDispInfo = (LV_DISPINFOA *) lpNmHdr;
 				nItem = (int) pDispInfo->item.lParam;
@@ -1123,11 +1118,11 @@ BOOL Picker_HandleNotify(LPNMHDR lpNmHdr)
 				{
 					// retrieve item text
 					nColumn = Picker_GetRealColumnFromViewColumn(hWnd, pDispInfo->item.iSubItem);
-					strcpy(szBuffer, pDispInfo->item.pszText);
+					lstrcpy(szBuffer, _Unicode(pDispInfo->item.pszText));
 
-					s = Picker_CallGetItemString(hWnd, nItem, nColumn, szBuffer, sizeof szBuffer);
+					s = (Picker_CallGetItemString(hWnd, nItem, nColumn, szBuffer, sizeof (szBuffer) / sizeof (szBuffer[0])));
 
-					pDispInfo->item.pszText = (char *) s;
+					pDispInfo->item.pszText = _String(s);
 					bResult = TRUE;
 				}
 			}
@@ -1207,10 +1202,10 @@ int Picker_GetNumColumns(HWND hWnd)
 
 
 /* Add ... to Items in ListView if needed */
-static LPCTSTR MakeShortString(HDC hDC, LPCTSTR lpszLong, int nColumnLen, int nOffset)
+static const WCHAR* MakeShortString(HDC hDC, const WCHAR* lpszLong, int nColumnLen, int nOffset)
 {
-	static TCHAR szShort[MAX_PATH];
-	static TCHAR szThreeDots[4];
+	static WCHAR szShort[MAX_PATH];
+	static WCHAR szThreeDots[4];
 	int nStringLen = lstrlen(lpszLong);
 	int nAddLen;
 	SIZE size;
@@ -1220,7 +1215,7 @@ static LPCTSTR MakeShortString(HDC hDC, LPCTSTR lpszLong, int nColumnLen, int nO
 	if (nStringLen == 0 || size.cx + nOffset <= nColumnLen)
 		return lpszLong;
 
-	lstrcpy(szThreeDots, _Unicode("..."));
+	lstrcpy(szThreeDots, TEXT("..."));
 	GetTextExtentPoint32(hDC, szThreeDots, lstrlen(szThreeDots), &size);
 	nAddLen = size.cx;
 
@@ -1309,7 +1304,7 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 
 	/* Labels are offset by a certain amount */
 	/* This offset is related to the width of a space character */
-	lstrcpy(szBuff, _Unicode(" "));
+	lstrcpy(szBuff, TEXT(" "));
 	GetTextExtentPoint32(hDC, szBuff, 1 , &size);
 	offset = size.cx;
 
@@ -1626,7 +1621,7 @@ int Picker_GetColumnCount(HWND hwndPicker)
 
 
 
-const char **Picker_GetColumnNames(HWND hwndPicker)
+const WCHAR **Picker_GetColumnNames(HWND hwndPicker)
 {
 	struct PickerInfo *pPickerInfo;
 	pPickerInfo = GetPickerInfo(hwndPicker);
