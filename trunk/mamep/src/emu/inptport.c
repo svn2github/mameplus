@@ -2261,7 +2261,7 @@ input_port_entry *input_port_allocate(const input_port_token *ipt, input_port_en
 	int remove_neogeo_territory = 0;
 	int remove_neogeo_arcade = 0;
 
-	if (Machine && Machine->gamedrv && !mame_stricmp(Machine->gamedrv->source_file+12, "neogeo.c"))
+	if (Machine && Machine->gamedrv && !mame_stricmp(Machine->gamedrv->source_file+17, "neogeo.c"))
 	{
 		int system_bios = determine_bios_rom(Machine->gamedrv->bios);
 
@@ -3744,7 +3744,7 @@ static void make_input_log(void)
 	/* loop over all the buttons */
 	if (normal_buttons > 0)
 	{
-		int is_neogeo = !mame_stricmp(Machine->gamedrv->source_file+12, "neogeo.c");
+		int is_neogeo = !mame_stricmp(Machine->gamedrv->source_file+17, "neogeo.c");
 		static UINT16 old_btn = 0;
 		static UINT16 now_btn;
 		int is_pressed = 0;

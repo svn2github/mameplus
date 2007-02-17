@@ -1636,7 +1636,7 @@ static UINT32 menu_custom_button(UINT32 state)
 	int selected = state;
 	int menu_items = 0;
 	UINT16 *custom_item[MAX_PLAYERS * MAX_CUSTOM_BUTTONS];
-	int is_neogeo = !mame_stricmp(Machine->gamedrv->source_file+12, "neogeo.c");
+	int is_neogeo = !mame_stricmp(Machine->gamedrv->source_file+17, "neogeo.c");
 	int buttons = 0;
 	input_port_entry *in;
 	int i;

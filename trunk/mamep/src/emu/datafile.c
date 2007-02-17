@@ -198,7 +198,7 @@ static int GetSrcDriverIndex(const char *srcdriver)
 		sorted_srcdrivers = (srcdriver_data_type *)malloc(sizeof(srcdriver_data_type) * num_games);
 		for (i = 0; i < num_games; i++)
 		{
-			sorted_srcdrivers[i].srcdriver = drivers[i]->source_file+12;
+			sorted_srcdrivers[i].srcdriver = drivers[i]->source_file+17;
 			sorted_srcdrivers[i].index = i;
 		}
 		qsort(sorted_srcdrivers,num_games,sizeof(srcdriver_data_type),SrcDriverDataCompareFunc);
@@ -1621,7 +1621,7 @@ int load_driver_drivinfo (const game_driver *drv, char *buffer, int bufsize)
 	*buffer = 0;
 
 	/* Print source code file */
-	sprintf (buffer, _("\nSOURCE: %s\n"), drv->source_file+12);
+	sprintf (buffer, _("\nSOURCE: %s\n"), drv->source_file+17);
 
 	/* Try to open mameinfo datafile - driver section */
 	if (ParseOpen (options_get_string(OPTION_MAMEINFO_FILE)))
@@ -1771,25 +1771,25 @@ int load_driver_statistics (char *buffer, int bufsize)
 		}
 
 
-		if (!mame_stricmp (drivers[i]->source_file+12, "neogeo.c"))
+		if (!mame_stricmp (drivers[i]->source_file+17, "neogeo.c"))
 		{
 			neo++;
 			if (clone) neoc++;
 		}
 
-		if (!mame_stricmp (drivers[i]->source_file+12, "playch10.c"))
+		if (!mame_stricmp (drivers[i]->source_file+17, "playch10.c"))
 		{
 			pch++;
 			if (clone) pchc++;
 		}
 
-		if (!mame_stricmp (drivers[i]->source_file+12, "decocass.c"))
+		if (!mame_stricmp (drivers[i]->source_file+17, "decocass.c"))
 		{
 			deco++;
 			if (clone) decoc++;
 		}
 
-		if (!mame_stricmp (drivers[i]->source_file+12, "cvs.c"))
+		if (!mame_stricmp (drivers[i]->source_file+17, "cvs.c"))
 		{
 			cvs++;
 			if (clone) cvsc++;
@@ -1969,7 +1969,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 
 
 		/* Calc number of various info 'flags' in original and clone games */
-		if (mame_stricmp (drivers[i]->source_file+12, "neogeo.c"))
+		if (mame_stricmp (drivers[i]->source_file+17, "neogeo.c"))
 		{
 			if (drivers[i]->flags & GAME_NOT_WORKING)
 			{
@@ -2274,7 +2274,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 
 				if (clone_of && !(clone_of->flags & NOT_A_DRIVER))
 					cl++;
-				if (!mame_stricmp (drivers[i]->source_file+12, "neogeo.c"))
+				if (!mame_stricmp (drivers[i]->source_file+17, "neogeo.c"))
 				{
 					neo++;
 					if (clone_of && !(clone_of->flags & NOT_A_DRIVER))
