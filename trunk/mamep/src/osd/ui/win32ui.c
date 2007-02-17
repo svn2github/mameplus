@@ -6256,7 +6256,7 @@ static void MamePlayBackGame(const WCHAR *fname_playback)
 
 		if (filerr != FILERR_NONE)
 		{
-			MameMessageBox(_UI("Could not open '%s' as a valid input file."), filename);
+			MameMessageBoxW(_Unicode(_UI("Could not open '%s' as a valid input file.")), filename);
 			return;
 		}
 
