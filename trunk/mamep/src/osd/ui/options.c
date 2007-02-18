@@ -303,7 +303,7 @@ typedef struct
 
 typedef struct
 {
-	const char *name;
+	const WCHAR *name;
 	options_type *option;
 	driver_variables_type *variable;
 	BOOL has_bios;
@@ -328,8 +328,8 @@ struct _joycodes
     Internal function prototypes
  ***************************************************************************/
 
-static int   regist_alt_option(const char *name);
-static int   bsearch_alt_option(const char *name);
+static int   regist_alt_option(const WCHAR *name);
+static int   bsearch_alt_option(const WCHAR *name);
 static void  build_default_bios(void);
 static void  build_alt_options(void);
 static void  unify_alt_options(void);
@@ -671,7 +671,7 @@ BOOL GetGameUsesDefaults(int driver_index)
 	return driver_variables[driver_index].use_default;
 }
 
-BOOL GetFolderUsesDefaults(const char *name)
+BOOL GetFolderUsesDefaults(const WCHAR *name)
 {
 	int alt_index = bsearch_alt_option(name);
 
@@ -687,7 +687,7 @@ void SetGameUsesDefaults(int driver_index, BOOL use_defaults)
 	driver_variables[driver_index].use_default = use_defaults;
 }
 
-void SetFolderUsesDefaults(const char *name, BOOL use_defaults)
+void SetFolderUsesDefaults(const WCHAR *name, BOOL use_defaults)
 {
 	int alt_index = bsearch_alt_option(name);
 
@@ -696,7 +696,7 @@ void SetFolderUsesDefaults(const char *name, BOOL use_defaults)
 	alt_options[alt_index].variable->use_default = use_defaults;
 }
 
-const char *GetUnifiedFolder(int driver_index)
+const WCHAR *GetUnifiedFolder(int driver_index)
 {
 	assert (0 <= driver_index && driver_index < num_drivers);
 
@@ -706,7 +706,7 @@ const char *GetUnifiedFolder(int driver_index)
 	return alt_options[driver_variables[driver_index].alt_index].name;
 }
 
-int GetUnifiedDriver(const char *name)
+int GetUnifiedDriver(const WCHAR *name)
 {
 	int alt_index = bsearch_alt_option(name);
 
@@ -760,7 +760,7 @@ static options_type * GetAltOptions(alt_options_type *alt_option)
 	return alt_option->option;
 }
 
-BOOL FolderHasVector(const char *name)
+BOOL FolderHasVector(const WCHAR *name)
 {
 	int alt_index = bsearch_alt_option(name);
 
@@ -769,7 +769,7 @@ BOOL FolderHasVector(const char *name)
 	return alt_options[alt_index].need_vector_config;
 }
 
-options_type * GetFolderOptions(const char *name)
+options_type * GetFolderOptions(const WCHAR *name)
 {
 	int alt_index = bsearch_alt_option(name);
 
@@ -785,7 +785,7 @@ options_type * GetDefaultOptions(void)
 
 options_type* GetVectorOptions(void)
 {
-	return GetFolderOptions("Vector");
+	return GetFolderOptions(TEXT("Vector"));
 }
 
 options_type* GetSourceOptions(int driver_index)
@@ -2466,13 +2466,16 @@ char* GetVersionString(void)
 	return build_version;
 }
 
-void SetFolderFlags(const char *folderName, DWORD dwFlags)
+void SetFolderFlags(const WCHAR *folderName, DWORD dwFlags)
 {
-	set_folder_flag(&settings.folder_flag, folderName, dwFlags);
+	const char *s = _String(folderName);
+
+	set_folder_flag(&settings.folder_flag, s, dwFlags);
 }
 
-DWORD GetFolderFlags(const char *folderName)
+DWORD GetFolderFlags(const WCHAR *folderName)
 {
+	const char *s = _String(folderName);
 	int i;
 
 	if (settings.folder_flag.entry == NULL)
@@ -2480,7 +2483,7 @@ DWORD GetFolderFlags(const char *folderName)
 
 	for (i = 0; i < settings.folder_flag.num; i++)
 		if (settings.folder_flag.entry[i].name
-		 && strcmp(folderName, settings.folder_flag.entry[i].name) == 0)
+		 && strcmp(s, settings.folder_flag.entry[i].name) == 0)
 			return settings.folder_flag.entry[i].flags;
 
 	return 0;
@@ -2502,7 +2505,7 @@ void SaveGameOptions(int driver_index)
 		}
 }
 
-static void InvalidateGameOptionsInDriver(const char *name)
+static void InvalidateGameOptionsInDriver(const WCHAR *name)
 {
 	int i;
 
@@ -2511,7 +2514,7 @@ static void InvalidateGameOptionsInDriver(const char *name)
 		if (driver_variables[i].alt_index != -1)
 			continue;
 
-		if (strcmp(GetDriverFilename(i), name) == 0)
+		if (lstrcmp(GetDriverFilename(i), name) == 0)
 		{
 			driver_variables[i].use_default = TRUE;
 			driver_variables[i].options_loaded = FALSE;
@@ -2539,7 +2542,7 @@ static void SaveAltOptions(alt_options_type *alt_option)
 	InvalidateGameOptionsInDriver(alt_option->name);
 }
 
-void SaveFolderOptions(const char *name)
+void SaveFolderOptions(const WCHAR *name)
 {
 	int alt_index = bsearch_alt_option(name);
 
@@ -2599,7 +2602,7 @@ void SaveOptions(void)
     Internal functions
  ***************************************************************************/
 
-static int regist_alt_option(const char *name)
+static int regist_alt_option(const WCHAR *name)
 {
 	int s = 0;
 	int n = num_alt_options;
@@ -2612,7 +2615,7 @@ static int regist_alt_option(const char *name)
 		if (name == alt_options[s + n2].name)
 			return -1;
 
-		result = strcmp(name, alt_options[s + n2].name);
+		result = lstrcmp(name, alt_options[s + n2].name);
 		if (!result)
 		{
 			alt_options[s + n2].name = name;
@@ -2646,7 +2649,7 @@ static int regist_alt_option(const char *name)
 	return s;
 }
 
-static int bsearch_alt_option(const char *name)
+static int bsearch_alt_option(const WCHAR *name)
 {
 	int s = 0;
 	int n = num_alt_options;
@@ -2656,7 +2659,7 @@ static int bsearch_alt_option(const char *name)
 		int n2 = n / 2;
 		int result;
 
-		result = strcmp(name, alt_options[s + n2].name);
+		result = lstrcmp(name, alt_options[s + n2].name);
 		if (!result)
 			return s + n2;
 
@@ -2680,26 +2683,33 @@ static void build_default_bios(void)
 	{
 		if (drivers[i]->bios)
 		{
-			const game_driver *drv = drivers[i];
+			int driver_index = i;
 			int n;
 
-			while (!(drv->flags & NOT_A_DRIVER) && GetParentIndex(drv) >= 0)
-				drv = drivers[GetParentIndex(drv)];
+			while (!(drivers[driver_index]->flags & NOT_A_DRIVER))
+			{
+				int parent_index = GetParentIndex(drivers[driver_index]);
+
+				if (parent_index < 0)
+					break;
+
+				driver_index = parent_index;
+			}
 
 			for (n = 0; n < MAX_SYSTEM_BIOS; n++)
 			{
 				if (default_bios[n].drv == NULL)
 				{
-					int alt_index = bsearch_alt_option(GetFilename(drv->source_file));
+					int alt_index = bsearch_alt_option(GetFilename(driversw[driver_index]->source_file));
 
 					assert(0 <= alt_index && alt_index < num_alt_options);
 
-					default_bios[n].drv = drv;
+					default_bios[n].drv = drivers[driver_index];
 					default_bios[n].alt_option = &alt_options[alt_index];
 					default_bios[n].alt_option->has_bios = TRUE;
 					break;
 				}
-				else if (default_bios[n].drv == drv)
+				else if (default_bios[n].drv == drivers[driver_index])
 					break;
 			}
 		}
@@ -2719,7 +2729,7 @@ static void build_alt_options(void)
 	if (!alt_options)
 		exit(0);
 
-	regist_alt_option("Vector");
+	regist_alt_option(TEXT("Vector"));
 
 	for (i = 0; i < num_drivers; i++)
 		regist_alt_option(GetDriverFilename(i));
@@ -2746,7 +2756,7 @@ static void build_alt_options(void)
 
 	for (i = 0; i < num_drivers; i++)
 	{
-		const char *src = GetDriverFilename(i);
+		const WCHAR *src = GetDriverFilename(i);
 		int n = bsearch_alt_option(src);
 
 		if (!alt_options[n].need_vector_config && DriverIsVector(i))
@@ -2760,10 +2770,10 @@ static void unify_alt_options(void)
 
 	for (i = 0; i < num_drivers; i++)
 	{
-		char buf[16];
+		WCHAR buf[16];
 		int n;
 
-		sprintf(buf, "%s.c", drivers[i]->name);
+		swprintf(buf, TEXT("%s.c"), driversw[i]->name);
 		n = bsearch_alt_option(buf);
 		if (n == -1)
 			continue;
@@ -2894,7 +2904,7 @@ static options_type *update_alt_use_default(alt_options_type *alt_option)
 
 #ifdef USE_IPS
 	if (alt_option->variable->use_default && ips)
-		dprintf("%s: use_default with ips", alt_option->name);
+		dwprintf(TEXT("%s: use_default with ips"), alt_option->name);
 
 	alt_option->option->ips = ips;
 #endif /* USE_IPS */
@@ -3403,7 +3413,7 @@ static int options_load_alt_config(alt_options_type *alt_option)
 
 	lstrcpy(fname, settings.inipath);
 	lstrcat(fname, TEXT(PATH_SEPARATOR));
-	lstrcat(fname, _Unicode(alt_option->name));
+	lstrcat(fname, alt_option->name);
 	lstrcat(fname, TEXT(".ini"));
 	len = lstrlen(fname);
 	if (len > 6 && fname[len - 6] == '.' && fname[len - 5] == 'c')
@@ -3516,7 +3526,7 @@ static int options_save_driver_config(int driver_index)
 
 	lstrcpy(fname, settings.inipath);
 	lstrcat(fname, TEXT(PATH_SEPARATOR));
-	lstrcat(fname, _Unicode(strlower(drivers[driver_index]->name)));
+	lstrcat(fname, strlower(driversw[driver_index]->name));
 	lstrcat(fname, TEXT(".ini"));
 
 #ifdef USE_IPS
@@ -3567,7 +3577,7 @@ static int options_save_alt_config(alt_options_type *alt_option)
 
 	lstrcpy(fname, settings.inipath);
 	lstrcat(fname, TEXT(PATH_SEPARATOR));
-	lstrcat(fname, _Unicode(strlower(alt_option->name)));
+	lstrcat(fname, strlower(alt_option->name));
 	lstrcat(fname, TEXT(".ini"));
 
 	len = lstrlen(fname);

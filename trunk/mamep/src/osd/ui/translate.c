@@ -393,12 +393,12 @@ static void translate_tree_folder_items(HWND hWnd, HTREEITEM hti)
 
 		if (lpFolder->m_lpOriginalTitle)
 		{
-			char *translated;
-			char *p;
+			WCHAR *translated;
+			WCHAR *p;
 
-			translated = mb_lang_message(lpFolder->m_nCategoryID, lpFolder->m_lpOriginalTitle);
+			translated = w_lang_message(lpFolder->m_nCategoryID, lpFolder->m_lpOriginalTitle);
 
-			p = strdup(translated);
+			p = wcsdup(translated);
 			if (p)
 			{
 				free(lpFolder->m_lpTitle);
@@ -408,7 +408,7 @@ static void translate_tree_folder_items(HWND hWnd, HTREEITEM hti)
 			memset(&tvi, 0, sizeof tvi);
 			tvi.mask = TVIF_HANDLE | TVIF_TEXT;
 			tvi.hItem = hti;
-			tvi.pszText = _Unicode(lpFolder->m_lpTitle);
+			tvi.pszText = lpFolder->m_lpTitle;
 			TreeView_SetItem(hWnd, &tvi);
 		}
 

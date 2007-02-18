@@ -46,15 +46,15 @@
 
 typedef struct
 {
-	const char *m_lpTitle; // Folder Title
-	const char *short_name;  // for saving in the .ini
-	UINT        m_nFolderId; // ID
-	UINT        m_nIconId; // if >= 0, resource id of icon (IDI_xxx), otherwise index in image list
-	DWORD       m_dwUnset; // Excluded filters
-	DWORD       m_dwSet;   // Implied filters
-	void        (*m_pfnCreateFolders)(int parent_index); // Constructor for special folders
-	BOOL        (*m_pfnQuery)(int nDriver);              // Query function
-	BOOL        m_bExpectedResult;                       // Expected query result
+	const WCHAR *m_lpTitle; // Folder Title
+	const char  *short_name;  // for saving in the .ini
+	UINT         m_nFolderId; // ID
+	UINT         m_nIconId; // if >= 0, resource id of icon (IDI_xxx), otherwise index in image list
+	DWORD        m_dwUnset; // Excluded filters
+	DWORD        m_dwSet;   // Implied filters
+	void         (*m_pfnCreateFolders)(int parent_index); // Constructor for special folders
+	BOOL         (*m_pfnQuery)(int nDriver);              // Query function
+	BOOL         m_bExpectedResult;                       // Expected query result
 } FOLDERDATA, *LPFOLDERDATA;
 
 typedef struct
@@ -67,9 +67,9 @@ typedef struct
 
 typedef struct
 {
-	const char *title;
-	const char *root_icon;
-	const char *sub_icon;
+	const WCHAR *title;
+	const char  *root_icon;
+	const char  *sub_icon;
 } EXTFOLDER_TEMPLATE;
 
 /* in layout.c */
@@ -168,19 +168,19 @@ typedef enum
 
 typedef struct
 {
-    LPSTR       m_lpTitle;        // String contains the folder name
+    LPWSTR      m_lpTitle;        // String contains the folder name
     UINT        m_nCategoryID;    // category for translation
     UINT        m_nFolderId;      // Index / Folder ID number
     int         m_nParent;        // Parent folder index in treeFolders[]
     int         m_nIconId;        // negative icon index into the ImageList, or IDI_xxx resource id
     DWORD       m_dwFlags;        // Misc flags
     LPBITS      m_lpGameBits;     // Game bits, represent game indices
-    LPSTR       m_lpOriginalTitle;// String contains the original folder name
+    LPWSTR      m_lpOriginalTitle;// String contains the original folder name
 } TREEFOLDER, *LPTREEFOLDER;
 
 typedef struct
 {
-    char        m_szTitle[64];  // Folder Title
+    WCHAR       m_szTitle[64];  // Folder Title
     UINT        m_nFolderId;    // ID
     int         m_nParent;      // Parent Folder index in treeFolders[]
     DWORD       m_dwFlags;      // Flags - Customizable and Filters
@@ -222,7 +222,7 @@ void SetTreeIconSize(HWND hWnd, BOOL bLarge);
 BOOL GetTreeIconSize(void);
 
 void GetFolders(TREEFOLDER ***folders,int *num_folders);
-BOOL TryRenameCustomFolder(LPTREEFOLDER lpFolder,const char *new_name);
+BOOL TryRenameCustomFolder(LPTREEFOLDER lpFolder,const WCHAR *new_name);
 void AddToCustomFolder(LPTREEFOLDER lpFolder,int driver_index);
 void RemoveFromCustomFolder(LPTREEFOLDER lpFolder,int driver_index);
 

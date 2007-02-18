@@ -240,6 +240,7 @@ enum
 	FILETYPE_WAVE_FILES,
 	FILETYPE_MNG_FILES,
 	FILETYPE_IMAGE_FILES,
+	FILETYPE_GAMELIST_FILES,
 	FILETYPE_MAX
 };
 
@@ -828,6 +829,13 @@ static struct
 		NULL,
 		GetBgDir,
 		"png"
+	},
+	{
+		"Game List Files (*.lst)\0*.lst\0",
+		"Select a folder to save game list",
+		NULL,
+		GetTranslationDir,
+		"lst"
 	},
 };
 
@@ -1660,7 +1668,7 @@ static int modify_separator_len(const char *str)
 	return 0;
 }
 
-char *ModifyThe(const char *str)
+static char *ModifyThe(const char *str)
 {
 	static int  bufno = 0;
 	static char buffer[4][255];
@@ -1892,6 +1900,9 @@ static void build_driversw(void)
 		driversw[i]->manufacturer = wcsdup(_Unicode(drivers[i]->manufacturer));
 		driversw[i]->year = wcsdup(_Unicode(drivers[i]->year));
 		assert(driversw[i]->manufacturer && driversw[i]->year);
+
+		driversw[i]->source_file = wcsdup(_Unicode(drivers[i]->source_file));
+		assert(driversw[i]->source_file);
 	}
 }
 
@@ -2993,8 +3004,6 @@ static BOOL PumpMessage(void)
 
 static BOOL FolderCheck(void)
 {
-	
-	char *pDescription = NULL;
 	int nGameIndex = 0;
 	int i=0;
 	int iStep = 0;
@@ -3064,8 +3073,7 @@ static BOOL FolderCheck(void)
 			ProgressBarStepParam(i, nCount);
 	}
 	ProgressBarHide();
-	pDescription = UseLangList() ? _LST(drivers[Picker_GetSelectedItem(hwndList)]->description) : ModifyThe(drivers[Picker_GetSelectedItem(hwndList)]->description);
-	SetStatusBarText(0, pDescription);
+	SetStatusBarTextW(0, UseLangList() ? _LSTW(driversw[Picker_GetSelectedItem(hwndList)]->description) : driversw[Picker_GetSelectedItem(hwndList)]->modify_the);
 	UpdateStatusBar();
 	return TRUE;
 }
@@ -3117,7 +3125,6 @@ static BOOL OnIdle(HWND hWnd)
 	static int bFirstTime = TRUE;
 	static int bResetList = TRUE;
 
-	char *pDescription;
 	int driver_index;
 
 	if (bFirstTime)
@@ -3148,8 +3155,7 @@ static BOOL OnIdle(HWND hWnd)
 	// in case it's not found, get it back
 	driver_index = Picker_GetSelectedItem(hwndList);
 
-	pDescription = UseLangList() ? _LST(drivers[driver_index]->description) : ModifyThe(drivers[driver_index]->description);
-	SetStatusBarText(0, pDescription);
+	SetStatusBarTextW(0, UseLangList() ? _LSTW(driversw[driver_index]->description) : driversw[driver_index]->modify_the);
 	if (bResetList || (GetViewMode() == VIEW_LARGE_ICONS))
 	{
 		ResetWhichGamesInFolders();
@@ -3371,7 +3377,7 @@ static void ResizeProgressBar(void)
 
 static void ProgressBarStepParam(int iGameIndex, int nGameCount)
 {
-	SetStatusBarTextF(0, _UI("Game search %d%% complete"),
+	SetStatusBarTextFW(0, _UIW(TEXT("Game search %d%% complete")),
 	                  ((iGameIndex + 1) * 100) / nGameCount);
 	if (iGameIndex == 0)
 		ShowWindow(hProgWnd, SW_SHOW);
@@ -3619,7 +3625,7 @@ static void UpdateStatusBar(void)
 	}
 
 	/* Show number of games in the current 'View' in the status bar */
-	SetStatusBarTextF(2, _UI("%d games"), games_shown);
+	SetStatusBarTextFW(2, _UIW(TEXT("%d games")), games_shown);
 
 	i = Picker_GetSelectedItem(hwndList);
 
@@ -3790,9 +3796,9 @@ static void DisableSelection(void)
 	EnableMenuItem(hMenu, ID_VIEW_PCBINFO,		   MF_GRAYED);
 #endif /* USE_VIEW_PCBINFO */
 
-	SetStatusBarText(0, _UI("No Selection"));
-	SetStatusBarText(1, "");
-	SetStatusBarText(3, "");
+	SetStatusBarTextW(0, _UIW(TEXT("No Selection")));
+	SetStatusBarTextW(1, TEXT(""));
+	SetStatusBarTextW(3, TEXT(""));
 
 	have_selection = FALSE;
 
@@ -3803,13 +3809,13 @@ static void DisableSelection(void)
 static void EnableSelection(int nGame)
 {
 	WCHAR		buf[200];
-	const char *	pText;
+	const WCHAR *	pText;
 	MENUITEMINFO	mmi;
 	HMENU		hMenu = GetMenu(hMain);
 
 	
 	snwprintf(buf, sizeof(buf) / sizeof(buf[0]), _UIW(TEXT("&Play %s")),
-	         ConvertAmpersandStringW(UseLangList() ?
+	         ConvertAmpersandString(UseLangList() ?
 	                                _LSTW(driversw[nGame]->description) :
 	                                driversw[nGame]->modify_the));
 	mmi.cbSize         = sizeof(mmi);
@@ -3819,8 +3825,8 @@ static void EnableSelection(int nGame)
 	mmi.cch            = lstrlen(mmi.dwTypeData);
 	SetMenuItemInfo(hMenu, ID_FILE_PLAY, FALSE, &mmi);
 
-	snwprintf(buf, sizeof(buf) / sizeof(buf[0]), _UIW(TEXT("Propert&ies for %s")),
-	         _Unicode(GetDriverFilename(nGame)));
+	snwprintf(buf, sizeof(buf) / sizeof(buf[0]),
+		_UIW(TEXT("Propert&ies for %s")), GetDriverFilename(nGame));
 	mmi.cbSize         = sizeof(mmi);
 	mmi.fMask          = MIIM_TYPE;
 	mmi.fType          = MFT_STRING;
@@ -3829,12 +3835,12 @@ static void EnableSelection(int nGame)
 	SetMenuItemInfo(hMenu, ID_FOLDER_SOURCEPROPERTIES, FALSE, &mmi);
 
 	pText = UseLangList() ?
-		_LST(drivers[nGame]->description) :
-		ModifyThe(drivers[nGame]->description);
-	SetStatusBarText(0, pText);
+		_LSTW(driversw[nGame]->description) :
+		driversw[nGame]->modify_the;
+	SetStatusBarTextW(0, pText);
 	/* Add this game's status to the status bar */
 	SetStatusBarTextW(1, GameInfoStatus(nGame, FALSE));
-	SetStatusBarText(3, "");
+	SetStatusBarTextW(3, TEXT(""));
 
 	/* If doing updating game status and the game name is NOT pacman.... */
 
@@ -4001,7 +4007,7 @@ static BOOL TreeViewNotify(LPNMHDR nm)
 		if (ptvdi->item.pszText == NULL || lstrlen(ptvdi->item.pszText) == 0)
 			return FALSE;
 
-		return TryRenameCustomFolder(folder,_String(ptvdi->item.pszText));
+		return TryRenameCustomFolder(folder, ptvdi->item.pszText);
 	    }
 	}
 	return FALSE;
@@ -4040,30 +4046,7 @@ static void GamePicker_OnHeaderContextMenu(POINT pt, int nColumn)
 
 
 
-char* ConvertAmpersandString(const char *s)
-{
-	/* takes a string and changes any ampersands to double ampersands,
-	   for setting text of window controls that don't allow us to disable
-	   the ampersand underlining.
-	 */
-	/* returns a static buffer--use before calling again */
-
-	static char buf[200];
-	char *ptr;
-
-	ptr = buf;
-	while (*s)
-	{
-		if (*s == '&')
-			*ptr++ = *s;
-		*ptr++ = *s++;
-	}
-	*ptr = 0;
-
-	return buf;
-}
-
-LPWSTR ConvertAmpersandStringW(LPCWSTR s)
+LPWSTR ConvertAmpersandString(LPCWSTR s)
 {
 	static WCHAR buf[200];
 	LPWSTR ptr;
@@ -4529,51 +4512,44 @@ static void ResetListView(void)
 
 static int MMO2LST(void)
 {
-	int i;
-	OPENFILENAMEA ofn;
-	char szFile[MAX_PATH] = "\0";
-	char buf[256];
-	FILE* fp = NULL;
+	WCHAR filename[MAX_PATH];
 
-	sprintf(szFile, MAME32NAME "%s", ui_lang_info[options.langcode].shortname);
-	strcpy(szFile, strlower(szFile));
+	swprintf(filename, TEXT(MAME32NAME "%s"), _Unicode(ui_lang_info[options.langcode].shortname));
+	lstrcpy(filename, strlower(filename));
 
-	memset(&ofn, 0, sizeof(ofn));
-	ofn.lStructSize = sizeof(ofn);
-	ofn.hwndOwner   = hMain;
-	ofn.lpstrFilter = "game list files (*.lst)\0*.lst;\0All files (*.*)\0*.*\0";
-	ofn.lpstrFile   = szFile;
-	ofn.nMaxFile    = sizeof(szFile);
-	ofn.lpstrTitle  = _UI("Export a game list file");
-	ofn.lpstrDefExt = "lst";
-	ofn.Flags       = OFN_NOCHANGEDIR | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
-
-	if (GetSaveFileNameA(&ofn) == 0)
+	if (!CommonFileDialog(TRUE, filename, FILETYPE_GAMELIST_FILES))
 		return 1;
 
-	fp = fopen(szFile, "wt");
-	if (fp == NULL)
+	if (*filename)
 	{
-		sprintf(buf, "Could not create '%s'", szFile);
-		SetStatusBarText(0, _UI(buf));
-		return 1;
+		FILE* fp = NULL;
+		int i;
+
+		fp = _wfopen(filename, TEXT("wt"));
+		if (fp == NULL)
+		{
+			SetStatusBarTextFW(0, _UIW(TEXT("Could not create '%s'")), filename);
+			return 1;
+		}
+
+		for (i = 0; drivers[i]; i++)
+		{
+			const WCHAR *lst = _LSTW(driversw[i]->description);
+			const WCHAR *readings = _READINGSW(driversw[i]->description);
+
+			if (readings == driversw[i]->description)
+				readings = lst;
+
+			fprintf(fp, "%s\t%s\t%s\t%s\n", drivers[i]->name, _String(lst), _String(readings), drivers[i]->manufacturer);
+		}
+
+		fclose(fp);
+
+		SetStatusBarTextFW(0, _UIW(TEXT("'%s' created")), filename);
+		return 0;
 	}
 
-	for (i = 0; drivers[i]; i++)
-	{
-		const char *lst = _LST(drivers[i]->description);
-		const char *readings = _READINGS(drivers[i]->description);
-
-		if (readings == drivers[i]->description)
-			readings = lst;
-
-		fprintf(fp, "%s\t%s\t%s\t%s\n", drivers[i]->name, lst, readings, drivers[i]->manufacturer);
-	}
-	fclose(fp);
-
-	sprintf(buf, "'%s' created", szFile);
-	SetStatusBarText(0, _UI(buf));
-	return 0;
+	return 1;
 }
 
 static void UpdateGameList(BOOL bUpdateRomAudit, BOOL bUpdateSampleAudit)
@@ -5135,7 +5111,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 			LPTREEFOLDER lpFolder = GetSourceFolder(Picker_GetSelectedItem(hwndList));
 			int icon_id = GetTreeViewIconIndex(lpFolder->m_nIconId);
 			HICON hIcon = ImageList_GetIcon(NULL, icon_id, ILD_TRANSPARENT);
-			const char *name = lpFolder->m_lpTitle;
+			const WCHAR *name = lpFolder->m_lpTitle;
 
 			if (lpFolder->m_lpOriginalTitle)
 				name = lpFolder->m_lpOriginalTitle;
@@ -5152,7 +5128,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		if (!oldControl)
 		{
 			LPTREEFOLDER lpFolder = GetSelectedFolder();
-			const char *name = lpFolder->m_lpTitle;
+			const WCHAR *name = lpFolder->m_lpTitle;
 
 			if (lpFolder->m_lpOriginalTitle)
 				name = lpFolder->m_lpOriginalTitle;
@@ -5505,7 +5481,7 @@ const WCHAR *GamePicker_GetItemString(HWND hwndPicker, int nItem, int nColumn)
 
 		case COLUMN_SRCDRIVERS:
 			/* Source drivers */
-			s = _Unicode(GetDriverFilename(nItem));
+			s = GetDriverFilename(nItem);
 			break;
 
 		case COLUMN_PLAYTIME:
@@ -5950,18 +5926,18 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 		break;
 
 	case COLUMN_SRCDRIVERS:
-		if (stricmp(GetDriverFilename(index1), GetDriverFilename(index2)) == 0)
+		value = lstrcmpi(GetDriverFilename(index1), GetDriverFilename(index2));
+		if (value == 0)
 			return GamePicker_Compare(hwndPicker, index1, index2, COLUMN_GAMES);
 
-		value = stricmp(GetDriverFilename(index1), GetDriverFilename(index2));
 		break;
 
 	case COLUMN_PLAYTIME:
-	   value = GetPlayTime(index1) - GetPlayTime(index2);
-	   if (value == 0)
-		  return GamePicker_Compare(hwndPicker, index1, index2, COLUMN_GAMES);
+		value = GetPlayTime(index1) - GetPlayTime(index2);
+		if (value == 0)
+			return GamePicker_Compare(hwndPicker, index1, index2, COLUMN_GAMES);
 
-	   break;
+		break;
 
 	case COLUMN_TYPE:
 	{
@@ -6094,6 +6070,9 @@ static BOOL CommonFileDialogW(BOOL open_for_write, WCHAR *filename, int filetype
 	of.lpstrDefExt       = NULL;
 	of.Flags             = OFN_EXPLORER | OFN_NOCHANGEDIR | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
 
+	if (filetype == FILETYPE_GAMELIST_FILES)
+		of.Flags = OFN_NOCHANGEDIR | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
+
 	if (open_for_write)
 	{
 		cfd = GetSaveFileNameW;
@@ -6182,6 +6161,9 @@ static BOOL CommonFileDialogA(BOOL open_for_write, WCHAR *filename, int filetype
 	of.lpstrDefExt       = NULL;
 	of.Flags             = OFN_EXPLORER | OFN_NOCHANGEDIR | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
 
+	if (filetype == FILETYPE_GAMELIST_FILES)
+		of.Flags = OFN_NOCHANGEDIR | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
+
 	if (open_for_write)
 	{
 		cfd = GetSaveFileNameA;
@@ -6253,14 +6235,10 @@ static BOOL CommonFileDialog(BOOL open_for_write, WCHAR *filename, int filetype)
 		return CommonFileDialogA(open_for_write, filename, filetype);
 }
 
+#if 0
 void SetStatusBarText(int part_index, const char *message)
 {
 	StatusBarSetTextA(hStatusBar, part_index, message);
-}
-
-void SetStatusBarTextW(int part_index, LPWSTR message)
-{
-	StatusBarSetTextW(hStatusBar, part_index, message);
 }
 
 void SetStatusBarTextF(int part_index, const char *fmt, ...)
@@ -6273,6 +6251,25 @@ void SetStatusBarTextF(int part_index, const char *fmt, ...)
 	va_end(va);
 
 	SetStatusBarText(part_index, buf);
+}
+
+#endif
+
+void SetStatusBarTextW(int part_index, const WCHAR *message)
+{
+	StatusBarSetTextW(hStatusBar, part_index, message);
+}
+
+void SetStatusBarTextFW(int part_index, const WCHAR *fmt, ...)
+{
+	WCHAR buf[256];
+	va_list va;
+
+	va_start(va, fmt);
+	vswprintf(buf, fmt, va);
+	va_end(va);
+
+	SetStatusBarTextW(part_index, buf);
 }
 
 static void MameMessageBoxUTF8(const char *fmt, ...)
@@ -6884,7 +6881,7 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 
 				// patch_count--, add menu items in reversed order
 				if(!(wp = wcschr(wbuf,'/')))	// no category
-					InsertMenu(hMenu, 1, MF_BYPOSITION, ID_PLAY_PATCH + patch_count, ConvertAmpersandStringW(wbuf));
+					InsertMenu(hMenu, 1, MF_BYPOSITION, ID_PLAY_PATCH + patch_count, ConvertAmpersandString(wbuf));
 				else	// has category
 				{
 					*wp = '\0';
@@ -6904,11 +6901,11 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 					if(!hSubMenu)
 					{
 						hSubMenu = CreateMenu();
-						InsertMenu(hSubMenu, 0, MF_BYPOSITION, ID_PLAY_PATCH + patch_count, ConvertAmpersandStringW(wp + 1));
-						InsertMenu(hMenu, 1, MF_BYPOSITION | MF_POPUP, (UINT)hSubMenu, ConvertAmpersandStringW(wbuf));
+						InsertMenu(hSubMenu, 0, MF_BYPOSITION, ID_PLAY_PATCH + patch_count, ConvertAmpersandString(wp + 1));
+						InsertMenu(hMenu, 1, MF_BYPOSITION | MF_POPUP, (UINT)hSubMenu, ConvertAmpersandString(wbuf));
 					}
 					else
-						InsertMenu(hSubMenu, 0, MF_BYPOSITION, ID_PLAY_PATCH + patch_count, ConvertAmpersandStringW(wp + 1));
+						InsertMenu(hSubMenu, 0, MF_BYPOSITION, ID_PLAY_PATCH + patch_count, ConvertAmpersandString(wp + 1));
 				}
 
 				if (pOpts->ips != NULL)
@@ -7010,7 +7007,7 @@ static void UpdateMenu(HMENU hMenu)
 	if (have_selection)
 	{
 		snwprintf(buf, sizeof (buf) / sizeof (buf[0]), _UIW(TEXT("&Play %s")),
-		         ConvertAmpersandStringW(UseLangList() ?
+		         ConvertAmpersandString(UseLangList() ?
 		                                _LSTW(driversw[nGame]->description) :
 		                                driversw[nGame]->modify_the));
 
@@ -7022,8 +7019,8 @@ static void UpdateMenu(HMENU hMenu)
 
 		SetMenuItemInfo(hMenu, ID_FILE_PLAY, FALSE, &mItem);
 
-		snwprintf(buf, sizeof (buf) / sizeof (buf[0]), _UIW(TEXT("Propert&ies for %s")),
-		          _Unicode(GetDriverFilename(nGame)));
+		snwprintf(buf, sizeof (buf) / sizeof (buf[0]),
+			_UIW(TEXT("Propert&ies for %s")), GetDriverFilename(nGame));
 
 		mItem.cbSize     = sizeof(mItem);
 		mItem.fMask      = MIIM_TYPE;

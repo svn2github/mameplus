@@ -297,8 +297,8 @@ WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(void));
 void FreeGameOptions(options_type *o);
 void CopyGameOptions(const options_type *source, options_type *dest);
 
-BOOL FolderHasVector(const char *name);
-options_type* GetFolderOptions(const char *name);
+BOOL FolderHasVector(const WCHAR *name);
+options_type* GetFolderOptions(const WCHAR *name);
 options_type* GetDefaultOptions(void);
 options_type* GetVectorOptions(void);
 options_type* GetSourceOptions(int driver_index);
@@ -307,11 +307,11 @@ options_type* GetGameOptions(int driver_index);
 
 BOOL GetGameUsesDefaults(int driver_index);
 void SetGameUsesDefaults(int driver_index, BOOL use_defaults);
-BOOL GetFolderUsesDefaults(const char *name);
-void SetFolderUsesDefaults(const char *name, BOOL use_defaults);
+BOOL GetFolderUsesDefaults(const WCHAR *name);
+void SetFolderUsesDefaults(const WCHAR *name, BOOL use_defaults);
 
-const char *GetUnifiedFolder(int driver_index);
-int GetUnifiedDriver(const char *name);
+const WCHAR *GetUnifiedFolder(int driver_index);
+int GetUnifiedDriver(const WCHAR *name);
 
 const game_driver *GetSystemBiosInfo(int bios_index);
 const char *GetDefaultBios(int bios_index);
@@ -319,7 +319,7 @@ void SetDefaultBios(int bios_index, const char *value);
 
 void SaveOptions(void);
 void SaveDefaultOptions(void);
-void SaveFolderOptions(const char *name);
+void SaveFolderOptions(const WCHAR *name);
 void SaveGameOptions(int driver_index);
 
 void ResetGUI(void);
@@ -425,8 +425,8 @@ COLORREF GetCustomColor(int iIndex);
 void SetListFont(LOGFONTW *font);
 void GetListFont(LOGFONTW *font);
 
-DWORD GetFolderFlags(const char *folderName);
-void  SetFolderFlags(const char *folderName, DWORD dwFlags);
+DWORD GetFolderFlags(const WCHAR *folderName);
+void  SetFolderFlags(const WCHAR *folderName, DWORD dwFlags);
 
 void SetUseBrokenIcon(BOOL use_broken_icon);
 BOOL GetUseBrokenIcon(void);

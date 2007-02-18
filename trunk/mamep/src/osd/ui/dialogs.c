@@ -563,10 +563,10 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 			// put in the set filters
 			folder->m_dwFlags |= dwFilters;
 
-		    // Save the filters to the ini file
-		    SetFolderFlags(folder->m_lpOriginalTitle?
-				               folder->m_lpOriginalTitle:
-				               folder->m_lpTitle, dwFilters);
+			// Save the filters to the ini file
+			SetFolderFlags(folder->m_lpOriginalTitle?
+					folder->m_lpOriginalTitle:
+					folder->m_lpTitle, dwFilters);
 
 			EndDialog(hDlg, 1);
 			return TRUE;
@@ -662,7 +662,7 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 				    tvis.hParent = TVI_ROOT;
 					tvis.hInsertAfter = TVI_SORT;
 					tvi.mask = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
-					tvi.pszText = _Unicode(folders[i]->m_lpTitle);
+					tvi.pszText = folders[i]->m_lpTitle;
 					tvi.lParam = (LPARAM)folders[i];
 					tvi.iImage = GetTreeViewIconIndex(folders[i]->m_nIconId);
 					tvi.iSelectedImage = 0;
@@ -683,7 +683,7 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 							tvis.hParent = hti;
 							tvis.hInsertAfter = TVI_SORT;
 							tvi.mask = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
-							tvi.pszText = _Unicode(folders[jj]->m_lpTitle);
+							tvi.pszText = folders[jj]->m_lpTitle;
 							tvi.lParam = (LPARAM)folders[jj];
 							tvi.iImage = GetTreeViewIconIndex(folders[jj]->m_nIconId);
 							tvi.iSelectedImage = 0;
@@ -875,7 +875,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 
 					swprintf(buf, 
 						_UIW(TEXT(MAME32NAME " PCB Info: %s [%s]")), 
-						ConvertAmpersandStringW(UseLangList() ?
+						ConvertAmpersandString(UseLangList() ?
 							_LSTW(driversw[nGame]->description) :
 							driversw[nGame]->modify_the), 
 						driversw[nGame]->name);

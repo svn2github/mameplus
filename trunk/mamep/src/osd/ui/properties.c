@@ -195,7 +195,7 @@ static const bios_entry *g_biosinfo = NULL;
 static int  default_bios_index[MAX_SYSTEM_BIOS];
 
 static int  g_nGame            = 0;
-static const char *g_pFolder   = NULL;
+static const WCHAR *g_pFolder  = NULL;
 static int  g_nPropertyMode    = 0;
 static BOOL g_bInternalSet     = FALSE;
 static BOOL g_bUseDefaults     = FALSE;
@@ -581,12 +581,12 @@ void InitDefaultPropertyPage(HINSTANCE hInst, HWND hWnd)
 	free(pspage);
 }
 
-void InitPropertyPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIcon, const char *folder)
+void InitPropertyPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIcon, const WCHAR *folder)
 {
 	InitPropertyPageToPage(hInst, hWnd, game_num, hIcon, PROPERTIES_PAGE, folder);
 }
 
-void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIcon, int start_page, const char *folder)
+void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIcon, int start_page, const WCHAR *folder)
 {
 	PROPSHEETHEADER pshead;
 	PROPSHEETPAGE   *pspage;
@@ -619,7 +619,7 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIco
 	{
 		pGameOpts = GetFolderOptions(g_pFolder);
 		g_bUseDefaults = GetFolderUsesDefaults(g_pFolder);
-		if (!strcmp(g_pFolder, "Vector"))
+		if (!lstrcmp(g_pFolder, TEXT("Vector")))
 			g_nPropertyMode = SOURCE_VECTOR;
 		else
 			g_nPropertyMode = SOURCE_FOLDER;
@@ -645,7 +645,7 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIco
 	pshead.hInstance                  = hInst;
 	if (folder)
 	//if (IS_FOLDER)
-		pshead.pszCaption             = _Unicode(_UI(folder));
+		pshead.pszCaption             = _UIW(folder);
 	else
 		pshead.pszCaption             = driversw[g_nGame]->name;
 	pshead.DUMMYUNIONNAME2.nStartPage = start_page;
@@ -677,7 +677,7 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIco
  *********************************************************************/
 
 /* Build CPU info string */
-static LPWSTR GameInfoCPU(int nIndex)
+static LPCWSTR GameInfoCPU(int nIndex)
 {
 	int i;
 	static WCHAR buf[1024];
@@ -709,7 +709,7 @@ static LPWSTR GameInfoCPU(int nIndex)
 }
 
 /* Build Sound system info string */
-static LPWSTR GameInfoSound(int nIndex)
+static LPCWSTR GameInfoSound(int nIndex)
 {
 	int i;
 	static WCHAR buf[1024];
@@ -761,7 +761,7 @@ static LPWSTR GameInfoSound(int nIndex)
 }
 
 /* Build Display info string */
-static LPWSTR GameInfoScreen(int nIndex)
+static LPCWSTR GameInfoScreen(int nIndex)
 {
 	static WCHAR buf[1024];
 	machine_config drv;
@@ -803,7 +803,7 @@ static LPWSTR GameInfoScreen(int nIndex)
 
 #ifdef MISC_FOLDER
 /* Build input information string */
-static LPWSTR GameInfoInput(int nIndex)
+static LPCWSTR GameInfoInput(int nIndex)
 {
 	static WCHAR buf[1024];
 	const input_port_entry* input;
@@ -1036,7 +1036,7 @@ static LPWSTR GameInfoInput(int nIndex)
 }
 #else /* MISC_FOLDER */
 /* Build color information string */
-static LPWSTR GameInfoColors(int nIndex)
+static LPCWSTR GameInfoColors(int nIndex)
 {
 	static WCHAR buf[1024];
 	machine_config drv;
@@ -1123,7 +1123,7 @@ LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus)
 }
 
 /* Build game manufacturer string */
-static LPWSTR GameInfoManufactured(int nIndex)
+static LPCWSTR GameInfoManufactured(int nIndex)
 {
 	static WCHAR buffer[1024];
 
@@ -1134,7 +1134,7 @@ static LPWSTR GameInfoManufactured(int nIndex)
 /* Build Game title string */
 LPWSTR GameInfoTitle(int nIndex)
 {
-	const char *folder = g_pFolder;
+	const WCHAR *folder = g_pFolder;
 	static WCHAR desc[1024];
 	static WCHAR info[1024];
 
@@ -1157,15 +1157,15 @@ LPWSTR GameInfoTitle(int nIndex)
 	}
 
 	if (nIndex != FOLDER_OPTIONS)
-		swprintf(info, _UIW(TEXT("%s\nThis is also global driver options in the %s")), desc, _Unicode(folder));
+		swprintf(info, _UIW(TEXT("%s\nThis is also global driver options in the %s")), desc, folder);
 	else
-		swprintf(info, _UIW(TEXT("Global driver options\nCustom options used by all games in the %s")), _Unicode(folder));
+		swprintf(info, _UIW(TEXT("Global driver options\nCustom options used by all games in the %s")), folder);
 
 	return info;
 }
 
 /* Build game clone infromation string */
-static LPWSTR GameInfoCloneOf(int nIndex)
+static LPCWSTR GameInfoCloneOf(int nIndex)
 {
 	static WCHAR buf[1024];
 	int nParentIndex= -1;
@@ -1176,7 +1176,7 @@ static LPWSTR GameInfoCloneOf(int nIndex)
 	{
 		if ((nParentIndex = GetParentIndex(drivers[nIndex])) >= 0)
 			swprintf(buf, TEXT("%s [%s]"),
-					ConvertAmpersandStringW(UseLangList()?
+					ConvertAmpersandString(UseLangList()?
 						_LSTW(driversw[nParentIndex]->description):
 						driversw[nParentIndex]->modify_the),
 					driversw[nParentIndex]->name);
@@ -1185,7 +1185,7 @@ static LPWSTR GameInfoCloneOf(int nIndex)
 	return buf;
 }
 
-static LPWSTR GameInfoSaveState(int driver_index)
+static LPCWSTR GameInfoSaveState(int driver_index)
 {
 	if (drivers[driver_index]->flags & GAME_SUPPORTS_SAVE)
 		return _UIW(TEXT("Supported"));
@@ -1193,9 +1193,9 @@ static LPWSTR GameInfoSaveState(int driver_index)
 	return _UIW(TEXT("Unsupported"));
 }
 
-static LPWSTR GameInfoSource(int nIndex)
+static LPCWSTR GameInfoSource(int nIndex)
 {
-	return _Unicode(GetDriverFilename(nIndex));
+	return GetDriverFilename(nIndex);
 }
 
 #ifdef TREE_SHEET
@@ -3237,7 +3237,7 @@ static void SetPropEnabledControls(HWND hWnd)
 
 			if (drv)
 			{
-				Static_SetText(GetDlgItem(hWnd, IDC_BIOSTEXT1 + i), _Unicode(drv->description));
+				Static_SetText(GetDlgItem(hWnd, IDC_BIOSTEXT1 + i), driversw[GetDriverIndex(drv)]->description);
 
 				ShowWindow(GetDlgItem(hWnd,IDC_BIOSTEXT1 + i), SW_SHOW);
 				ShowWindow(GetDlgItem(hWnd,IDC_BIOS1 + i), SW_SHOW);
@@ -3694,7 +3694,7 @@ static void ResetDataMap(void)
 	else if (IS_FOLDER)
 	{
 		for (i = 0; drivers[i]; i++)
-			if (!strcmp(GetDriverFilename(i), g_pFolder) && drivers[i]->bios)
+			if (!lstrcmp(GetDriverFilename(i), g_pFolder) && drivers[i]->bios)
 			{
 				g_biosinfo = drivers[i]->bios;
 				break;

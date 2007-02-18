@@ -41,6 +41,7 @@ struct _driverw
 	WCHAR *modify_the;
 	WCHAR *manufacturer;
 	WCHAR *year;
+	WCHAR *source_file;
 };
 
 /* in win32ui.c */
@@ -65,8 +66,7 @@ void PaintBackgroundImage(HWND hWnd, HRGN hRgn, int x, int y);
 void UpdateListView(void);
 
 // Convert Ampersand so it can display in a static control
-char * ConvertAmpersandString(const char *s);
-LPWSTR ConvertAmpersandStringW(LPCWSTR s);
+LPWSTR ConvertAmpersandString(LPCWSTR s);
 
 // globalized for painting tree control
 HBITMAP GetBackgroundBitmap(void);
@@ -85,9 +85,8 @@ int GetGameNameIndex(const char *name);
 int GetIndexFromSortedIndex(int sorted_index);
 
 // sets text in part of the status bar on the main window
-void SetStatusBarText(int part_index, const char *message);
-void SetStatusBarTextW(int part_index, LPWSTR message);
-void SetStatusBarTextF(int part_index, const char *fmt, ...);
+void SetStatusBarTextW(int part_index, const WCHAR *message);
+void SetStatusBarTextFW(int part_index, const WCHAR *fmt, ...);
 
 BOOL MouseHasBeenMoved(void);
 #endif

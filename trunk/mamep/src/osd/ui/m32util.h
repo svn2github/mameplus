@@ -32,10 +32,10 @@ extern LONG GetCommonControlVersion(void);
 extern LPWSTR MyStrStrI(LPCWSTR pStr, LPCWSTR pSrch);
 extern char * ConvertToWindowsNewlines(const char *source);
 extern WCHAR * ConvertToWindowsNewlinesW(const WCHAR *source);
-extern const char * strlower(const char *s);
+extern const WCHAR * strlower(const WCHAR *s);
 
-extern const char * GetDriverFilename(int nIndex);
-extern const char * GetFilename(const char *filename);
+extern const WCHAR * GetDriverFilename(int nIndex);
+extern const WCHAR * GetFilename(const WCHAR *filename);
 
 
 BOOL DriverIsClone(int driver_index);

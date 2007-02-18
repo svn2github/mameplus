@@ -331,12 +331,12 @@ WCHAR * ConvertToWindowsNewlinesW(const WCHAR *source)
 	return buf;
 }
 
-const char * strlower(const char *s)
+const WCHAR * strlower(const WCHAR *s)
 {
-	static char buf[100 * 1024];
+	static WCHAR buf[100 * 1024];
 
-	strcpy(buf, s);
-	_strlwr(buf);
+	lstrcpy(buf, s);
+	_wcslwr(buf);
 
 	return buf;
 }
@@ -345,9 +345,9 @@ const char * strlower(const char *s)
  * This assumes their is a pathname passed to the function
  * like src\drivers\blah.c
  */
-const char * GetFilename(const char *filename)
+const WCHAR * GetFilename(const WCHAR *filename)
 {
-	const char *ptmp;
+	const WCHAR *ptmp;
 
 	for (ptmp = filename; *ptmp; ptmp++)
 	{
@@ -360,9 +360,9 @@ const char * GetFilename(const char *filename)
 	return filename;
 }
 
-const char * GetDriverFilename(int nIndex)
+const WCHAR * GetDriverFilename(int nIndex)
 {
-	return GetFilename(drivers[nIndex]->source_file);
+	return GetFilename(driversw[nIndex]->source_file);
 }
 
 static struct DriversInfo* GetDriversInfo(int driver_index)
