@@ -1839,7 +1839,7 @@ static void build_sort_index(void)
 	for (i = 0; i < game_count; i++)
 	{
 		ptemp[i].index = i;
-		ptemp[i].str = ModifyThe(drivers[i]->description);
+		ptemp[i].str = strdup(ModifyThe(drivers[i]->description));
 	}
 
 	qsort(ptemp, game_count, sizeof (*ptemp), sort_comapre_str);
@@ -1847,6 +1847,10 @@ static void build_sort_index(void)
 	for (i = 0; i < game_count; i++)
 		sort_index[ptemp[i].index].description = i;
 
+	for (i = 0; i < game_count; i++)
+	{
+		free((void *)ptemp[i].str);
+	}
 	free(ptemp);
 }
 
