@@ -241,7 +241,7 @@ static void UpdateDirectoryList(HWND hDlg)
 	nType = ComboBox_GetCurSel(hCombo);
 	if (IsMultiDir(nType))
 	{
-		Item.pszText = _Unicode(DIRLIST_NEWENTRYTEXT);
+		Item.pszText = TEXT(DIRLIST_NEWENTRYTEXT);
 		ListView_InsertItem(hList, &Item);
 		for (i = DirInfo_NumDir(g_pDirInfo, nType) - 1; 0 <= i; i--)
 		{
@@ -678,7 +678,7 @@ static BOOL Directories_OnEndLabelEditW(HWND hDlg, NMHDR* pNMHDR)
 
 	if (pItem->pszText != NULL)
 	{
-		struct stat file_stat;
+		struct _stat file_stat;
 
 		/* Don't allow empty entries. */
 		if (!lstrcmp(pItem->pszText, TEXT("")))
@@ -687,7 +687,7 @@ static BOOL Directories_OnEndLabelEditW(HWND hDlg, NMHDR* pNMHDR)
 		}
 
 		/* Check validity of edited directory. */
-		if (stat(_String(pItem->pszText), &file_stat) == 0
+		if (_wstat(pItem->pszText, &file_stat) == 0
 		&&	(file_stat.st_mode & S_IFDIR))
 		{
 			bResult = TRUE;

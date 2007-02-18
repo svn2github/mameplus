@@ -523,10 +523,10 @@ static struct ui_palette_assign ui_palette_tbl[] =
 #endif /* UI_COLOR_PALETTE */
 
 
-static char reload_config_msg[] =
-	MAME32NAME
+static WCHAR reload_config_msg[] =
+	TEXT(MAME32NAME
 	" has changed *.ini file directory.\n\n"
-	"Would you like to migrate old configurations to the new directory?";
+	"Would you like to migrate old configurations to the new directory?");
 
 
 /***************************************************************************
@@ -1547,7 +1547,7 @@ void SetIniDir(const WCHAR* path)
 	if (path != NULL)
 		settings.inipath = wcsdup(path);
 
-	if (MessageBox(0, _Unicode(reload_config_msg), TEXT("Reload configurations"), MB_YESNO | MB_ICONQUESTION) == IDNO)
+	if (MessageBox(0, reload_config_msg, TEXT("Reload configurations"), MB_YESNO | MB_ICONQUESTION) == IDNO)
 	{
 		int i;
 
@@ -3375,7 +3375,7 @@ static int options_load_driver_config(int driver_index)
 
 	lstrcpy(fname, settings.inipath);
 	lstrcat(fname, TEXT(PATH_SEPARATOR));
-	lstrcat(fname, _Unicode(drivers[driver_index]->name));
+	lstrcat(fname, driversw[driver_index]->name);
 	lstrcat(fname, TEXT(".ini"));
 
 	stemp = utf8_from_wstring(fname);
@@ -3679,7 +3679,7 @@ WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(void))
 	len = lstrlen(wopts);
 
 	result = malloc((pModuleLen + len + 1) * sizeof *result);
-	wsprintf(result, TEXT("\"%s\" %s -norc "), pModule, _Unicode(drivers[driver_index]->name));
+	wsprintf(result, TEXT("\"%s\" %s -norc "), pModule, driversw[driver_index]->name);
 
 	if (len != 0)
 		lstrcat(result, wopts);

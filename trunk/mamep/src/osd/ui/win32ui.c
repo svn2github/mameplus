@@ -2081,15 +2081,18 @@ static void RandomSelectBackground(void)
 void SetMainTitle(void)
 {
 	char version[50];
-	char buffer[100];
+	WCHAR buffer[100];
 
 	sscanf(build_version,"%s",version);
+	swprintf(buffer, TEXT("%s Plus! %s"),
 #ifdef HAZEMD
-	sprintf(buffer,"%s Plus! %s","HazeMD",version);
+		TEXT("HazeMD"),
 #else
-	sprintf(buffer,"%s Plus! %s",MAME32NAME,version);
+		TEXT(MAME32NAME),
 #endif /*HAZEMD */
-	SetWindowText(hMain,_Unicode(buffer));
+		_Unicode(version));
+
+	SetWindowText(hMain, buffer);
 }
 
 static void TabSelectionChanged(void)
@@ -4932,8 +4935,8 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 			{
 			case EN_CHANGE:
 				//put search routine here first, add a 200ms timer later.
-				if ((!_wcsicmp(buf, _UIW(TEXT(SEARCH_PROMPT))) && !_wcsicmp(g_SearchText, _Unicode(""))) ||
-				    (!_wcsicmp(g_SearchText, _UIW(TEXT(SEARCH_PROMPT))) && !_wcsicmp(buf, _Unicode(""))))
+				if ((!_wcsicmp(buf, _UIW(TEXT(SEARCH_PROMPT))) && !_wcsicmp(g_SearchText, TEXT(""))) ||
+				    (!_wcsicmp(g_SearchText, _UIW(TEXT(SEARCH_PROMPT))) && !_wcsicmp(buf, TEXT(""))))
 				{
 					wcscpy(g_SearchText, buf);
 				}
@@ -4945,7 +4948,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 				break;
 			case EN_SETFOCUS:
 				if (!_wcsicmp(buf, _UIW(TEXT(SEARCH_PROMPT))))
-					SetWindowTextW(hwndCtl, _Unicode(""));
+					SetWindowTextW(hwndCtl, TEXT(""));
 				break;
 			case EN_KILLFOCUS:
 				if (wcslen(buf) == 0)
@@ -5558,7 +5561,7 @@ static void GamePicker_EnteringItem(HWND hwndPicker, int nItem)
 	// printf("entering %s\n",drivers[nItem]->name);
 	if (g_bDoBroadcast == TRUE)
 	{
-		ATOM a = GlobalAddAtom(_Unicode(drivers[nItem]->description));
+		ATOM a = GlobalAddAtom(driversw[nItem]->description);
 		SendMessage(HWND_BROADCAST, g_mame32_message, a, a);
 		GlobalDeleteAtom(a);
 	}
@@ -6309,7 +6312,7 @@ static void MamePlayBackGame(const WCHAR *fname_playback)
 
 		nGame = Picker_GetSelectedItem(hwndList);
 		if (nGame != -1)
-			lstrcpy(filename, _Unicode(drivers[nGame]->name));
+			lstrcpy(filename, driversw[nGame]->name);
 
 		if (!CommonFileDialog(FALSE, filename, FILETYPE_INPUT_FILES)) return;
 	}
@@ -6393,7 +6396,6 @@ static void MameLoadState(const WCHAR *fname_state)
 		int  iPos=0;
 		int  i;
 		WCHAR bare_fname[_MAX_FNAME];
-		char *selected_filenameA;
 
 		lstrcpy(filename, fname_state);
 
@@ -6402,10 +6404,9 @@ static void MameLoadState(const WCHAR *fname_state)
 		iPos = cPos ? cPos - bare_fname : lstrlen(bare_fname);
 		wcsncpy(selected_filename, bare_fname, iPos );
 		selected_filename[iPos] = '\0';
-		selected_filenameA = _String(selected_filename);
 
 		for (i = 0; drivers[i] != 0; i++) // find game and play it
-			if (!strcmp(drivers[i]->name, selected_filenameA))
+			if (!lstrcmp(driversw[i]->name, selected_filename))
 			{
 				nGame = i;
 				break;
@@ -6423,7 +6424,7 @@ static void MameLoadState(const WCHAR *fname_state)
 		nGame = Picker_GetSelectedItem(hwndList);
 		if (nGame != -1)
 		{
-			lstrcpy(filename, _Unicode(drivers[nGame]->name));
+			lstrcpy(filename, driversw[nGame]->name);
 			lstrcpy(selected_filename, filename);
 		}
 		if (!CommonFileDialog(FALSE, filename, FILETYPE_SAVESTATE_FILES)) return;
@@ -6517,7 +6518,7 @@ static void MamePlayRecordGame(void)
 	*filename = 0;
 
 	nGame = Picker_GetSelectedItem(hwndList);
-	lstrcpy(filename, _Unicode(drivers[nGame]->name));
+	lstrcpy(filename, driversw[nGame]->name);
 
 	if (CommonFileDialog(TRUE, filename, FILETYPE_INPUT_FILES))
 	{
@@ -6564,7 +6565,7 @@ static void MamePlayRecordWave(void)
 	*filename = 0;
 
 	nGame = Picker_GetSelectedItem(hwndList);
-	lstrcpy(filename, _Unicode(drivers[nGame]->name));
+	lstrcpy(filename, driversw[nGame]->name);
 
 	if (CommonFileDialog(TRUE, filename, FILETYPE_WAVE_FILES))
 	{
@@ -6581,7 +6582,7 @@ static void MamePlayRecordMNG(void)
 	*filename = 0;
 
 	nGame = Picker_GetSelectedItem(hwndList);
-	lstrcpy(filename, _Unicode(drivers[nGame]->name));
+	lstrcpy(filename, driversw[nGame]->name);
 
 	if (CommonFileDialog(TRUE, filename, FILETYPE_MNG_FILES))
 	{
@@ -6874,10 +6875,10 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 
 				if (patch_desc && patch_desc[0])
 					//has lang specific ips desc, get the first line as display name
-					snwprintf(wbuf, ARRAY_LENGTH(wbuf), _Unicode("   %s"), wcstok(patch_desc, _Unicode("\r\n")));
+					snwprintf(wbuf, ARRAY_LENGTH(wbuf), TEXT("   %s"), wcstok(patch_desc, TEXT("\r\n")));
 				else
 					//otherwise, use .dat filename instead
-					snwprintf(wbuf, ARRAY_LENGTH(wbuf), _Unicode("   %s"), _Unicode(patch_filename));
+					snwprintf(wbuf, ARRAY_LENGTH(wbuf), TEXT("   %s"), _Unicode(patch_filename));
 
 				// patch_count--, add menu items in reversed order
 				if(!(wp = wcschr(wbuf,'/')))	// no category

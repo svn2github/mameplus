@@ -2424,7 +2424,7 @@ static void PropToOptions(HWND hWnd, options_type *o)
 	if (hCtrl)
 	{
 		int nCount;
-		WCHAR buffer[200];
+		char buffer[200];
 		char digital[200];
 		int oldJoyId = -1;
 		int joyId = 0;
@@ -2437,8 +2437,8 @@ static void PropToOptions(HWND hWnd, options_type *o)
 			if( ListView_GetCheckState(hCtrl,nCount) )
 			{
 				//Get The JoyId
-				ListView_GetItemText(hCtrl, nCount, 2, buffer, sizeof(buffer));
-				joyId = atoi(_String(buffer));
+				ListView_GetItemTextA(hCtrl, nCount, 2, buffer, sizeof(buffer));
+				joyId = atoi(buffer);
 				if( oldJoyId != joyId) 
 				{
 					oldJoyId = joyId;
@@ -2452,13 +2452,13 @@ static void PropToOptions(HWND hWnd, options_type *o)
 					{
 						strcat(digital, ",j");
 					}
-					strcat(digital, _String(buffer));
+					strcat(digital, buffer);
 				}
 				//Get The AxisId
-				ListView_GetItemText(hCtrl, nCount, 3, buffer, sizeof(buffer));
-				axisId = atoi(_String(buffer));
+				ListView_GetItemTextA(hCtrl, nCount, 3, buffer, sizeof(buffer));
+				axisId = atoi(buffer);
 				strcat(digital,"a");
-				strcat(digital, _String(buffer));
+				strcat(digital, buffer);
 			}
 		}
 		if (!strlen(digital))
@@ -2775,7 +2775,7 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 		int nCount;
 
 		/* Get the number of items in the control */
-		WCHAR buffer[200];
+		char buffer[200];
 		char digital[200];
 		char *pDest = NULL;
 		char *pDest2 = NULL;
@@ -2790,9 +2790,9 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 		for (nCount = 0; nCount < ListView_GetItemCount(hCtrl); nCount++)
 		{
 			//Get The JoyId
-			ListView_GetItemText(hCtrl, nCount,2, buffer, sizeof(buffer));
-			joyId = atoi(_String(buffer));
-			sprintf(digital,"j%s",_String(buffer));
+			ListView_GetItemTextA(hCtrl, nCount,2, buffer, sizeof(buffer));
+			joyId = atoi(buffer);
+			sprintf(digital,"j%s",buffer);
 			//First find the JoyId in the saved String
 			pDest = strstr (o->digital,digital);
 			result = pDest - o->digital + 1;
@@ -2805,9 +2805,9 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 					result2 = pDest2 - pDest + 1;
 				}
 				//Get The AxisId
-				ListView_GetItemText(hCtrl, nCount,3, buffer, sizeof(buffer));
-				axisId = atoi(_String(buffer));
-				sprintf(digital,"a%s",_String(buffer));
+				ListView_GetItemTextA(hCtrl, nCount,3, buffer, sizeof(buffer));
+				axisId = atoi(buffer);
+				sprintf(digital,"a%s",buffer);
 				//Now find the AxisId in the saved String
 				pDest3 = strstr (pDest,digital);
 				result3 = pDest3 - pDest + 1;

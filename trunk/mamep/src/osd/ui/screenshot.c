@@ -120,7 +120,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 	if (!loaded)
 #endif /* MESS */
 	{
-		WCHAR *wdrv = _Unicode(drivers[nGame]->name);
+		WCHAR *wdrv = driversw[nGame]->name;
 
 #ifdef USE_IPS
 		if (lpIPSName)
@@ -141,7 +141,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 	/* If not loaded, see if there is a clone and try that */
 	if (!loaded && nParentIndex >= 0)
 	{
-		WCHAR *wdrv = _Unicode(drivers[nParentIndex]->name);
+		WCHAR *wdrv = driversw[nParentIndex]->name;
 
 #ifdef USE_IPS
 		if (lpIPSName)
@@ -157,7 +157,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 		nParentIndex = GetParentIndex(drivers[nParentIndex]);
 		if (!loaded && nParentIndex >= 0)
 		{
-			wdrv = _Unicode(drivers[nParentIndex]->parent);
+			wdrv = driversw[nParentIndex]->name;
 
 #ifdef USE_IPS
 			if (lpIPSName)
