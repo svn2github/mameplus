@@ -7283,7 +7283,7 @@ ROM_START( gwingjd )
 	ROM_LOAD16_WORD_SWAP( "ggw.12m",   0x400000, 0x400000, CRC(4bee4e8f) SHA1(c440b5a38359ec3b8002f39690b79bf78703f5d0) )
 ROM_END
 
-ROM_START( hsf2ad )
+ROM_START( hsf2d )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "hs2ad.03", 0x000000, 0x80000, CRC(0153d371) SHA1(137f89b4ca41346abd8d1ef4a17605f6622b741e) )
 	ROM_LOAD16_WORD_SWAP( "hs2ad.04", 0x080000, 0x80000, CRC(0276b78a) SHA1(3f5502f77eb9889ca4658eb323579e05b35c9868) )
@@ -7896,6 +7896,6 @@ GAME( 1997, batcird,  batcir,  phoenix, batcir,  cps2, ROT0,   "hack", "Battle C
 GAME( 1997, vsavd,    vsav,    phoenix, ssf2,    cps2, ROT0,   "hack", "Vampire Savior: The Lord of Vampire (Phoenix Edition Euro 970519)", 0 )
 GAME( 1998, mvscud,   mvsc,    phoenix, ssf2,    cps2, ROT0,   "hack", "Marvel Vs. Capcom: Clash of Super Heroes (Phoenix Edition US 980123)", 0 )
 GAME( 1998, sfa3d,    sfa3,    phoenix, ssf2,    cps2, ROT0,   "hack", "Street Fighter Alpha 3 (Phoenix Edition US 980904)", 0 )
-GAME( 2004, hsf2ad,   hsf2,    phoenix, ssf2,    cps2, ROT0,   "hack", "Hyper Street Fighter II: The Anniversary Edition (Phoenix Edition Asia 040202)", 0 )
+GAME( 2004, hsf2d,    hsf2,    phoenix, ssf2,    cps2, ROT0,   "hack", "Hyper Street Fighter II: The Anniversary Edition (Phoenix Edition Asia 040202)", 0 )
 GAME( 1999, gwingjd,  gigawing,phoenix, 19xx,    cps2, ROT0,   "hack", "Giga Wing (Phoenix Edition Japan 990223)", 0 )
 GAME( 2000, 1944d,    1944,    phoenix, 19xx,    cps2, ROT0,   "hack", "1944: The Loop Master (Phoenix Edition US 000620)", GAME_IMPERFECT_GRAPHICS )
