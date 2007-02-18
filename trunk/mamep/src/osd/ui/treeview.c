@@ -1619,18 +1619,18 @@ static int compare_folder(const void *vp1, const void *vp2)
 
 	while (*s1 && *s2)
 	{
-		if (isdigit(*s1) && isdigit(*s2))
+		if (iswdigit(*s1) && iswdigit(*s2))
 		{
 			int i1 = 0;
 			int i2 = 0;
 
-			while (isdigit(*s1))
+			while (iswdigit(*s1))
 			{
 				i1 *= 10;
 				i1 += *s1++ - '0';
 			}
 
-			while (isdigit(*s2))
+			while (iswdigit(*s2))
 			{
 				i2 *= 10;
 				i2 += *s2++ - '0';
