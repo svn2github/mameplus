@@ -63,7 +63,7 @@
     public structures
  ***************************************************************************/
 
-#define ICON_MAX (sizeof(treeIconNames) / sizeof(treeIconNames[0]))
+#define ICON_MAX ARRAY_LENGTH(treeIconNames)
 
 /* Name used for user-defined custom icons */
 /* external *.ico file to look for. */
@@ -1085,7 +1085,7 @@ void CreateDeficiencyFolders(int parent_index)
 		GAME_NO_COCKTAIL,
 	};
 
-#define NUM_FLAGS	(sizeof (deficiency_flags) / sizeof (deficiency_flags[0]))
+#define NUM_FLAGS	ARRAY_LENGTH(deficiency_flags)
 
 	static const WCHAR *deficiency_names[NUM_FLAGS] =
 	{
@@ -2584,9 +2584,9 @@ static BOOL TryRenameCustomFolderIni(LPTREEFOLDER lpFolder,const WCHAR *old_name
 		lpParent = GetFolder(lpFolder->m_nParent);
 		if (lpParent)
 		{
-			snwprintf(filename, sizeof (filename) / sizeof (*filename),
+			snwprintf(filename, ARRAY_LENGTH(filename),
 				TEXT("%s\\%s\\%s.ini"), ini_dirw, lpParent->m_lpTitle, old_name);
-			snwprintf(new_filename, sizeof (new_filename) / sizeof (*new_filename),
+			snwprintf(new_filename, ARRAY_LENGTH(new_filename),
 				TEXT("%s\\%s\\%s.ini"), ini_dirw, lpParent->m_lpTitle, new_name);
 			MoveFile(filename, new_filename);
 		}
@@ -2594,16 +2594,16 @@ static BOOL TryRenameCustomFolderIni(LPTREEFOLDER lpFolder,const WCHAR *old_name
 	else
 	{
 		//Rename the File, if it exists
-		snwprintf(filename, sizeof (filename) / sizeof (*filename),
+		snwprintf(filename, ARRAY_LENGTH(filename),
 			TEXT("%s\\%s.ini"), ini_dirw, old_name);
-		snwprintf(new_filename, sizeof (new_filename) / sizeof (*new_filename),
+		snwprintf(new_filename, ARRAY_LENGTH(new_filename),
 			TEXT("%s\\%s.ini"), ini_dirw, new_name);
 		MoveFile(filename, new_filename);
 
 		//Rename the Directory, if it exists
-		snwprintf(filename, sizeof (filename) / sizeof (*filename),
+		snwprintf(filename, ARRAY_LENGTH(filename),
 			TEXT("%s\\%s"), ini_dirw, old_name);
-		snwprintf(new_filename, sizeof (new_filename) / sizeof (*new_filename),
+		snwprintf(new_filename, ARRAY_LENGTH(new_filename),
 			TEXT("%s\\%s"), ini_dirw, new_name);
 		MoveFile(filename, new_filename);
 	}
@@ -2644,9 +2644,9 @@ BOOL TryRenameCustomFolder(LPTREEFOLDER lpFolder,const WCHAR *new_name)
 	
 	// a parent extra folder was renamed, so rename the file
 
-	snwprintf(new_filename, sizeof (new_filename) / sizeof (*new_filename),
+	snwprintf(new_filename, ARRAY_LENGTH(new_filename),
 		TEXT("%s\\%s.ini"), folder_dirw, new_name);
-	snwprintf(filename, sizeof (filename) / sizeof (*filename),
+	snwprintf(filename, ARRAY_LENGTH(filename),
 		TEXT("%s\\%s.ini"), folder_dirw, lpFolder->m_lpTitle);
 
 	retval = MoveFile(filename, new_filename);
@@ -2660,7 +2660,8 @@ BOOL TryRenameCustomFolder(LPTREEFOLDER lpFolder,const WCHAR *new_name)
 	else
 	{
 		WCHAR buf[500];
-		snwprintf(buf, sizeof (buf) / sizeof (*buf), _UIW(TEXT("Error while renaming custom file %s to %s")),
+
+		snwprintf(buf, ARRAY_LENGTH(buf), _UIW(TEXT("Error while renaming custom file %s to %s")),
 				 filename, new_filename);
 		MessageBox(GetMainWindow(), buf, TEXT_MAME32NAME, MB_OK | MB_ICONERROR);
 	}
@@ -2737,7 +2738,7 @@ BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder)
 	}
 	/* "folder\title.ini" */
 
-	snwprintf(fname, sizeof (fname) / sizeof (*fname),
+	snwprintf(fname, ARRAY_LENGTH(fname),
 		TEXT("%s\\%s.ini"), folder_dirw, extra_folder->m_szTitle);
 
 	fp = _wfopen(fname, TEXT("wt"));
@@ -2803,7 +2804,8 @@ BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder)
 	if (error)
 	{
 		WCHAR buf[500];
-		snwprintf(buf, sizeof (buf) / sizeof (*buf),_UIW(TEXT("Error while saving custom file %s")), fname);
+
+		snwprintf(buf, ARRAY_LENGTH(buf), _UIW(TEXT("Error while saving custom file %s")), fname);
 		MessageBox(GetMainWindow(), buf, TEXT_MAME32NAME, MB_OK | MB_ICONERROR);
 	}
 	return !error;
@@ -2821,7 +2823,7 @@ int GetTreeViewIconIndex(int icon_id)
 	if (icon_id < 0)
 		return -icon_id;
 
-	for (i = 0; i < sizeof(treeIconNames) / sizeof(treeIconNames[0]); i++)
+	for (i = 0; i < ARRAY_LENGTH(treeIconNames); i++)
 	{
 		if (icon_id == treeIconNames[i].nResourceID)
 			return i;

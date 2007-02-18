@@ -127,7 +127,7 @@ void __cdecl dprintf(const char* fmt, ...)
 
 	va_start(va, fmt);
 
-	_vsnprintf(buf, sizeof (buf), fmt, va);
+	_vsnprintf(buf, ARRAY_LENGTH(buf), fmt, va);
 
 	OutputDebugString(_Unicode(buf));
 
@@ -141,7 +141,7 @@ void __cdecl dwprintf(const WCHAR* fmt, ...)
 
 	va_start(va, fmt);
 
-	_vsnwprintf(buf, sizeof (buf) / sizeof (*buf), fmt, va);
+	_vsnwprintf(buf, ARRAY_LENGTH(buf), fmt, va);
 
 	OutputDebugString(buf);
 
@@ -169,8 +169,8 @@ BOOL OnNT(void)
 
 	if (result == -1)
 	{
-	version_info.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-	GetVersionEx(&version_info);
+		version_info.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+		GetVersionEx(&version_info);
 		result = (version_info.dwPlatformId == VER_PLATFORM_WIN32_NT);
 	}
 
@@ -648,12 +648,12 @@ static LPWSTR GetPatchDescByLangcode(FILE *fp, int langcode)
 	{
 		char s[4096];
 
-		if (fgets(s, sizeof s, fp) != NULL)
+		if (fgets(s, ARRAY_LENGTH(s), fp) != NULL)
 		{
 			if (strncmp(langtag, s, strlen(langtag)) != 0)
 				continue;
 
-			while (fgets(s, sizeof s, fp) != NULL)
+			while (fgets(s, ARRAY_LENGTH(s), fp) != NULL)
 			{
 				char *p;
 

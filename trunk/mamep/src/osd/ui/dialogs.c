@@ -415,7 +415,7 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 			// Mask out non filter flags
 			dwFilters = folder->m_dwFlags & F_MASK;
 			// Display current folder name in dialog titlebar
-			snwprintf(tmp,sizeof(tmp), _UIW(TEXT("Filters for %s Folder")),folder->m_lpTitle);
+			snwprintf(tmp, ARRAY_LENGTH(tmp), _UIW(TEXT("Filters for %s Folder")),folder->m_lpTitle);
 			SetWindowText(hDlg, tmp);
 			if ( GetFilterInherit() )
 			{

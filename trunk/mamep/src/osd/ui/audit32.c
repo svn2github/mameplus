@@ -156,7 +156,8 @@ BOOL IsAuditResultNo(int audit_result)
 static void Mame32Output(void *param, const char *format, va_list argptr)
 {
 	char buffer[512];
-	vsnprintf(buffer, sizeof(buffer) / sizeof(buffer[0]), format, argptr);
+
+	vsnprintf(buffer, ARRAY_LENGTH(buffer), format, argptr);
 	DetailsPrintf(TEXT("%s"), _UTF8Unicode(buffer));
 }
 

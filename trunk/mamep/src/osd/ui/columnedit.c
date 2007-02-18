@@ -54,7 +54,7 @@ int DoExchangeItem(HWND hFrom, HWND hTo, int nMinItem)
 	lvi.iSubItem   = 0;
 	lvi.mask	   = LVIF_PARAM | LVIF_TEXT;
 	lvi.pszText    = buf;
-	lvi.cchTextMax = sizeof(buf);
+	lvi.cchTextMax = ARRAY_LENGTH(buf);
 	if (ListView_GetItem(hFrom, &lvi))
 	{
 		// Add this item to the Show and delete it from Available
@@ -89,7 +89,7 @@ void DoMoveItem( HWND hWnd, BOOL bDown)
 	lvi.iSubItem   = 0;
 	lvi.mask	   = LVIF_PARAM | LVIF_TEXT;
 	lvi.pszText    = buf;
-	lvi.cchTextMax = sizeof(buf);
+	lvi.cchTextMax = ARRAY_LENGTH(buf);
 	if (ListView_GetItem(hWnd, &lvi))
 	{
 		// Add this item to the Show and delete it from Available

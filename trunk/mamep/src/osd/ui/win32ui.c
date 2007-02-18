@@ -642,7 +642,7 @@ static GUISequence GUISequenceControl[]=
 };
 
 
-#define NUM_GUI_SEQUENCES (sizeof(GUISequenceControl) / sizeof(GUISequenceControl[0]))
+#define NUM_GUI_SEQUENCES ARRAY_LENGTH(GUISequenceControl)
 
 
 static UINT    lastColumnClick   = 0;
@@ -695,7 +695,7 @@ static TBBUTTON tbb[] =
 	{8, ID_HELP_CONTENTS,    TBSTATE_ENABLED, TBSTYLE_BUTTON,     {0, 0}, 0, 8}
 };
 
-#define NUM_TOOLBUTTONS (sizeof(tbb) / sizeof(tbb[0]))
+#define NUM_TOOLBUTTONS ARRAY_LENGTH(tbb)
 
 #define NUM_TOOLTIPS 8 + 1
 
@@ -1781,9 +1781,7 @@ int GetGameNameIndex(const char *name)
 	key.name = name;
 
 	// uses our sorted array of driver names to get the index in log time
-	driver_index_info = bsearch(&key,sorted_drivers,game_count,sizeof(driver_data_type),
-								DriverDataCompareFunc);
-
+	driver_index_info = bsearch(&key, sorted_drivers, game_count, sizeof(*sorted_drivers), DriverDataCompareFunc);
 	if (driver_index_info == NULL)
 		return -1;
 
@@ -2146,13 +2144,13 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	build_sort_index();
 
 	/* custom per-game icons */
-	icon_index = malloc(sizeof(int) * game_count);
+	icon_index = malloc(sizeof (*icon_index) * game_count);
 	if (!icon_index)
 		return FALSE;
-	ZeroMemory(icon_index, sizeof(int) * game_count);
+	ZeroMemory(icon_index, sizeof (*icon_index) * game_count);
 
 	/* sorted list of drivers by name */
-	sorted_drivers = (driver_data_type *) malloc(sizeof(driver_data_type) * game_count);
+	sorted_drivers = (driver_data_type *) malloc(sizeof (*sorted_drivers) * game_count);
 	if (!sorted_drivers)
 		return FALSE;
 	for (i=0; i<game_count; i++)
@@ -2160,7 +2158,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 		sorted_drivers[i].name = drivers[i]->name;
 		sorted_drivers[i].index = i;
 	}
-	qsort(sorted_drivers, game_count, sizeof(driver_data_type), DriverDataCompareFunc);
+	qsort(sorted_drivers, game_count, sizeof (*sorted_drivers), DriverDataCompareFunc);
 
 	/* initialize cpu information */
 	cpuintrf_init(NULL);
@@ -2891,7 +2889,7 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 			if (lpNmHdr->hwndFrom == hTreeView)
 				return TreeViewNotify(lpNmHdr);
 
-			GetClassNameA(lpNmHdr->hwndFrom, szClass, sizeof(szClass) / sizeof(szClass[0]));
+			GetClassNameA(lpNmHdr->hwndFrom, szClass, ARRAY_LENGTH(szClass));
 			if (!strcmp(szClass, "SysListView32"))
 				return Picker_HandleNotify(lpNmHdr);	
 			if (!strcmp(szClass, "SysTabControl32"))
@@ -2903,7 +2901,7 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 		{
 			LPDRAWITEMSTRUCT lpDis = (LPDRAWITEMSTRUCT)lParam;
 
-			GetClassNameA(lpDis->hwndItem, szClass, sizeof(szClass) / sizeof(szClass[0]));
+			GetClassNameA(lpDis->hwndItem, szClass, ARRAY_LENGTH(szClass));
 			if (!strcmp(szClass, "SysListView32"))
 				Picker_HandleDrawItem(GetDlgItem(hMain, lpDis->CtlID), lpDis);
 		}
@@ -3817,7 +3815,7 @@ static void EnableSelection(int nGame)
 	HMENU		hMenu = GetMenu(hMain);
 
 	
-	snwprintf(buf, sizeof(buf) / sizeof(buf[0]), _UIW(TEXT("&Play %s")),
+	snwprintf(buf, ARRAY_LENGTH(buf), _UIW(TEXT("&Play %s")),
 	         ConvertAmpersandString(UseLangList() ?
 	                                _LSTW(driversw[nGame]->description) :
 	                                driversw[nGame]->modify_the));
@@ -3828,7 +3826,7 @@ static void EnableSelection(int nGame)
 	mmi.cch            = lstrlen(mmi.dwTypeData);
 	SetMenuItemInfo(hMenu, ID_FILE_PLAY, FALSE, &mmi);
 
-	snwprintf(buf, sizeof(buf) / sizeof(buf[0]),
+	snwprintf(buf, ARRAY_LENGTH(buf),
 		_UIW(TEXT("Propert&ies for %s")), GetDriverFilename(nGame));
 	mmi.cbSize         = sizeof(mmi);
 	mmi.fMask          = MIIM_TYPE;
@@ -4668,7 +4666,7 @@ static void PickFont(void)
 		while(hWnd)
 		{
 			char szClass[128];
-			if (GetClassNameA(hWnd, szClass, sizeof(szClass) / sizeof(szClass[0])))
+			if (GetClassNameA(hWnd, szClass, ARRAY_LENGTH(szClass)))
 			{
 				if (!strcmp(szClass, "SysListView32"))
 				{
@@ -4930,7 +4928,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		{
 			WCHAR buf[256];
 
-			Edit_GetText(hwndCtl, buf, sizeof(buf));
+			Edit_GetText(hwndCtl, buf, ARRAY_LENGTH(buf));
 			switch (codeNotify)
 			{
 			case EN_CHANGE:
@@ -6594,7 +6592,7 @@ static void MamePlayRecordMNG(void)
 
 static void MamePlayGameWithOptions(int nGame)
 {
-	memcpy(&playing_game_options, GetGameOptions(nGame), sizeof(options_type));
+	memcpy(&playing_game_options, GetGameOptions(nGame), sizeof(playing_game_options));
 
 	/* Deal with options that can be disabled. */
 	EnablePlayOptions(nGame, &playing_game_options);
@@ -6685,7 +6683,7 @@ static void AdjustMetrics(void)
 	{
 		char szClass[128];
 
-		if (GetClassNameA(hWnd, szClass, sizeof(szClass) / sizeof(szClass[0])))
+		if (GetClassNameA(hWnd, szClass, ARRAY_LENGTH(szClass)))
 		{
 			if (!strcmp(szClass, "SysListView32"))
 			{
@@ -7007,7 +7005,7 @@ static void UpdateMenu(HMENU hMenu)
 
 	if (have_selection)
 	{
-		snwprintf(buf, sizeof (buf) / sizeof (buf[0]), _UIW(TEXT("&Play %s")),
+		snwprintf(buf, ARRAY_LENGTH(buf), _UIW(TEXT("&Play %s")),
 		         ConvertAmpersandString(UseLangList() ?
 		                                _LSTW(driversw[nGame]->description) :
 		                                driversw[nGame]->modify_the));
@@ -7020,7 +7018,7 @@ static void UpdateMenu(HMENU hMenu)
 
 		SetMenuItemInfo(hMenu, ID_FILE_PLAY, FALSE, &mItem);
 
-		snwprintf(buf, sizeof (buf) / sizeof (buf[0]),
+		snwprintf(buf, ARRAY_LENGTH(buf),
 			_UIW(TEXT("Propert&ies for %s")), GetDriverFilename(nGame));
 
 		mItem.cbSize     = sizeof(mItem);
@@ -7035,7 +7033,7 @@ static void UpdateMenu(HMENU hMenu)
 	}
 	else
 	{
-		snwprintf(buf, sizeof (buf) / sizeof (buf[0]), _UIW(TEXT("&Play %s")), TEXT("..."));
+		snwprintf(buf, ARRAY_LENGTH(buf), _UIW(TEXT("&Play %s")), TEXT("..."));
 
 		mItem.cbSize     = sizeof(mItem);
 		mItem.fMask      = MIIM_TYPE;
@@ -7045,7 +7043,7 @@ static void UpdateMenu(HMENU hMenu)
 
 		SetMenuItemInfo(hMenu, ID_FILE_PLAY, FALSE, &mItem);
 
-		snwprintf(buf, sizeof (buf) / sizeof (buf[0]), _UIW(TEXT("Propert&ies for %s")), TEXT("..."));
+		snwprintf(buf, ARRAY_LENGTH(buf), _UIW(TEXT("Propert&ies for %s")), TEXT("..."));
 
 		mItem.cbSize     = sizeof(mItem);
 		mItem.fMask      = MIIM_TYPE;
@@ -8078,7 +8076,7 @@ static BOOL CALLBACK EnumWindowCallBack(HWND hwnd, LPARAM lParam)
 	// has Zero-Length. Under Windows 98, sometimes the Client Window ( which doesn't 
 	// have a title ) is enumerated before the MainFrame 
 
-	GetWindowText(hwnd, buffer, sizeof(buffer));
+	GetWindowTextA(hwnd, buffer, ARRAY_LENGTH(buffer));
 	if (ProcessId  == ProcessIdGUI &&
 		 strncmp(buffer,MAMENAME,strlen(MAMENAME)) == 0 &&
 		 hwnd != hMain) 
@@ -8161,7 +8159,7 @@ static BOOL CALLBACK EnumWindowCallBack(HWND hwnd, LPARAM lParam)
 	// has Zero-Length. Under Windows 98, sometimes the Client Window ( which doesn't 
 	// have a title ) is enumerated before the MainFrame 
 
-	GetWindowTextA(hwnd, buffer, sizeof(buffer));
+	GetWindowTextA(hwnd, buffer, ARRAY_LENGTH(buffer));
 	if (ProcessId  == pfwhs->ProcessInfo->dwProcessId &&
 		 strncmp(buffer,MAMENAME,strlen(MAMENAME)) == 0) 
 	{ 

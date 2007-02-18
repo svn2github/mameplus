@@ -395,7 +395,7 @@ static struct ComboBoxVideo
 	{ TEXT("DirectDraw"),           "ddraw"  },
 	{ TEXT("Direct3D"),             "d3d"    },
 };
-#define NUMVIDEO (sizeof(g_ComboBoxVideo) / sizeof(g_ComboBoxVideo[0]))
+#define NUMVIDEO ARRAY_LENGTH(g_ComboBoxVideo)
 
 static struct ComboBoxD3DVersion
 {
@@ -407,7 +407,7 @@ static struct ComboBoxD3DVersion
 	{ TEXT("Version 8"),           8   },
 };
 
-#define NUMD3DVERSIONS (sizeof(g_ComboBoxD3DVersion) / sizeof(g_ComboBoxD3DVersion[0]))
+#define NUMD3DVERSIONS ARRAY_LENGTH(g_ComboBoxD3DVersion)
 
 static struct ComboBoxDevices
 {
@@ -421,7 +421,7 @@ static struct ComboBoxDevices
 	{ TEXT("Lightgun"),              "lightgun"  },
 };
 
-#define NUMDEVICES (sizeof(g_ComboBoxDevice) / sizeof(g_ComboBoxDevice[0]))
+#define NUMDEVICES ARRAY_LENGTH(g_ComboBoxDevice)
 
 #ifdef DRIVER_SWITCH
 static const struct
@@ -1127,7 +1127,7 @@ static LPCWSTR GameInfoManufactured(int nIndex)
 {
 	static WCHAR buffer[1024];
 
-	snwprintf(buffer, sizeof (buffer) / sizeof (*buffer), TEXT("%s %s"), driversw[nIndex]->year, UseLangList()? _MANUFACTW(driversw[nIndex]->manufacturer) : driversw[nIndex]->manufacturer);
+	snwprintf(buffer, ARRAY_LENGTH(buffer), TEXT("%s %s"), driversw[nIndex]->year, UseLangList()? _MANUFACTW(driversw[nIndex]->manufacturer) : driversw[nIndex]->manufacturer);
 	return buffer;
 }
 
@@ -1249,7 +1249,7 @@ static void UpdateSheetCaption(HWND hWnd)
 		rc.right++;
 	}
 
-	i = GetSheetPageTreeCurSelText(szText, sizeof(szText));
+	i = GetSheetPageTreeCurSelText(szText, ARRAY_LENGTH(szText));
 	if (i > 0)
 	{
 		HFONT hFontCaption, hOldFont;
@@ -1442,7 +1442,7 @@ static void AdjustChildWindows(HWND hWnd)
 	WCHAR szClass[128];
 	DWORD dwStyle;
 
-	GetClassName(hWnd, szClass, sizeof (szClass) / sizeof (*szClass));
+	GetClassName(hWnd, szClass, ARRAY_LENGTH(szClass));
 	if (!lstrcmp(szClass, TEXT("Button")))
 	{
 		dwStyle = GetWindowLong(hWnd, GWL_STYLE);
@@ -1680,7 +1680,7 @@ void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 		// Get title and image of the page
 		memset(&ti, 0, sizeof(TCITEM));
 		ti.mask       = TCIF_TEXT|TCIF_IMAGE;
-		ti.cchTextMax = sizeof(szText);
+		ti.cchTextMax = ARRAY_LENGTH(szText);
 		ti.pszText    = (LPTSTR)szText;
 
 		SendMessage(hTabWnd, TCM_GETITEM, nPage, (LPARAM)&ti);
@@ -2347,7 +2347,7 @@ static void PropToOptions(HWND hWnd, options_type *o)
 		{
 			int w, h;
 
-			ComboBox_GetTextA(hCtrl, buffer, sizeof(buffer)-1);
+			ComboBox_GetTextA(hCtrl, buffer, ARRAY_LENGTH(buffer)-1);
 			if (sscanf(buffer, "%d x %d", &w, &h) == 2)
 			{
 				sprintf(buffer, "%dx%d", w, h);
@@ -2403,10 +2403,10 @@ static void PropToOptions(HWND hWnd, options_type *o)
 		int d = 0;
 		char buffer[200];
 
-		Edit_GetTextA(hCtrl,buffer,sizeof(buffer));
+		Edit_GetTextA(hCtrl, buffer, ARRAY_LENGTH(buffer));
 		sscanf(buffer,"%d",&n);
 
-		Edit_GetTextA(hCtrl2,buffer,sizeof(buffer));
+		Edit_GetTextA(hCtrl2, buffer, ARRAY_LENGTH(buffer));
 		sscanf(buffer,"%d",&d);
 
 		if (n == 0 || d == 0)
@@ -2415,7 +2415,7 @@ static void PropToOptions(HWND hWnd, options_type *o)
 			d = 3;
 		}
 
-		snprintf(buffer,sizeof(buffer),"%d:%d",n,d);
+		snprintf(buffer, ARRAY_LENGTH(buffer), "%d:%d", n, d);
 		FreeIfAllocated(&o->aspect0);
 		o->aspect0 = mame_strdup(buffer);
 	}
@@ -2437,7 +2437,7 @@ static void PropToOptions(HWND hWnd, options_type *o)
 			if( ListView_GetCheckState(hCtrl,nCount) )
 			{
 				//Get The JoyId
-				ListView_GetItemTextA(hCtrl, nCount, 2, buffer, sizeof(buffer));
+				ListView_GetItemTextA(hCtrl, nCount, 2, buffer, ARRAY_LENGTH(buffer));
 				joyId = atoi(buffer);
 				if( oldJoyId != joyId) 
 				{
@@ -2455,7 +2455,7 @@ static void PropToOptions(HWND hWnd, options_type *o)
 					strcat(digital, buffer);
 				}
 				//Get The AxisId
-				ListView_GetItemTextA(hCtrl, nCount, 3, buffer, sizeof(buffer));
+				ListView_GetItemTextA(hCtrl, nCount, 3, buffer, ARRAY_LENGTH(buffer));
 				axisId = atoi(buffer);
 				strcat(digital,"a");
 				strcat(digital, buffer);
@@ -2668,28 +2668,28 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 	hCtrl = GetDlgItem(hWnd, IDC_FSGAMMADISP);
 	if (hCtrl)
 	{
-		snprintf(buf,sizeof(buf), "%03.2f", o->full_screen_gamma);
+		snprintf(buf, ARRAY_LENGTH(buf), "%03.2f", o->full_screen_gamma);
 		Static_SetTextA(hCtrl, buf);
 	}
 
 	hCtrl = GetDlgItem(hWnd, IDC_FSBRIGHTNESSDISP);
 	if (hCtrl)
 	{
-		snprintf(buf,sizeof(buf), "%03.2f", o->full_screen_brightness);
+		snprintf(buf, ARRAY_LENGTH(buf), "%03.2f", o->full_screen_brightness);
 		Static_SetTextA(hCtrl, buf);
 	}
 
 	hCtrl = GetDlgItem(hWnd, IDC_FSCONTRASTDISP);
 	if (hCtrl)
 	{
-		snprintf(buf,sizeof(buf), "%03.2f", o->full_screen_contrast);
+		snprintf(buf, ARRAY_LENGTH(buf), "%03.2f", o->full_screen_contrast);
 		Static_SetTextA(hCtrl, buf);
 	}
 
 	hCtrl = GetDlgItem(hWnd, IDC_NUMSCREENSDISP);
 	if (hCtrl)
 	{
-		snprintf(buf,sizeof(buf), "%d", o->numscreens);
+		snprintf(buf, ARRAY_LENGTH(buf), "%d", o->numscreens);
 		Static_SetTextA(hCtrl, buf);
 	}
 
@@ -2790,7 +2790,7 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 		for (nCount = 0; nCount < ListView_GetItemCount(hCtrl); nCount++)
 		{
 			//Get The JoyId
-			ListView_GetItemTextA(hCtrl, nCount,2, buffer, sizeof(buffer));
+			ListView_GetItemTextA(hCtrl, nCount,2, buffer, ARRAY_LENGTH(buffer));
 			joyId = atoi(buffer);
 			sprintf(digital,"j%s",buffer);
 			//First find the JoyId in the saved String
@@ -2805,7 +2805,7 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 					result2 = pDest2 - pDest + 1;
 				}
 				//Get The AxisId
-				ListView_GetItemTextA(hCtrl, nCount,3, buffer, sizeof(buffer));
+				ListView_GetItemTextA(hCtrl, nCount,3, buffer, ARRAY_LENGTH(buffer));
 				axisId = atoi(buffer);
 				sprintf(digital,"a%s",buffer);
 				//Now find the AxisId in the saved String
@@ -4271,7 +4271,7 @@ static void BeamSelectionChange(HWND hwnd)
 	dBeam = nValue / 20.0 + 1.0;
 
 	/* Set the static display to the new value */
-	snprintf(buf,sizeof(buf), "%03.2f", dBeam);
+	snprintf(buf, ARRAY_LENGTH(buf), "%03.2f", dBeam);
 	Static_SetTextA(GetDlgItem(hwnd, IDC_BEAMDISP), buf);
 }
 
@@ -4287,7 +4287,7 @@ static void NumScreensSelectionChange(HWND hwnd)
 	iNumScreens = nValue;
 
 	/* Set the static display to the new value */
-	snprintf(buf,sizeof(buf), "%d", iNumScreens);
+	snprintf(buf, ARRAY_LENGTH(buf), "%d", iNumScreens);
 	Static_SetTextA(GetDlgItem(hwnd, IDC_NUMSCREENSDISP), buf);
 
 }
@@ -4304,7 +4304,7 @@ static void FlickerSelectionChange(HWND hwnd)
 	dFlicker = nValue;
 
 	/* Set the static display to the new value */
-	snprintf(buf,sizeof(buf), "%03.2f", dFlicker);
+	snprintf(buf, ARRAY_LENGTH(buf), "%03.2f", dFlicker);
 	Static_SetTextA(GetDlgItem(hwnd, IDC_FLICKERDISP), buf);
 }
 
@@ -4321,7 +4321,7 @@ static void GammaSelectionChange(HWND hwnd)
 	dGamma = nValue / 20.0 + 0.1;
 
 	/* Set the static display to the new value */
-	snprintf(buf,sizeof(buf), "%03.2f", dGamma);
+	snprintf(buf, ARRAY_LENGTH(buf), "%03.2f", dGamma);
 	Static_SetTextA(GetDlgItem(hwnd,	IDC_GAMMADISP), buf);
 }
 
@@ -4338,7 +4338,7 @@ static void BrightCorrectSelectionChange(HWND hwnd)
 	dValue = nValue / 20.0 + 0.1;
 
 	/* Set the static display to the new value */
-	snprintf(buf,sizeof(buf), "%03.2f", dValue);
+	snprintf(buf, ARRAY_LENGTH(buf), "%03.2f", dValue);
 	Static_SetTextA(GetDlgItem(hwnd, IDC_BRIGHTCORRECTDISP), buf);
 }
 
@@ -4355,7 +4355,7 @@ static void ContrastSelectionChange(HWND hwnd)
 	dContrast = nValue / 20.0 + 0.1;
 
 	/* Set the static display to the new value */
-	snprintf(buf,sizeof(buf), "%03.2f", dContrast);
+	snprintf(buf, ARRAY_LENGTH(buf), "%03.2f", dContrast);
 	Static_SetTextA(GetDlgItem(hwnd, IDC_CONTRASTDISP), buf);
 }
 
@@ -4374,7 +4374,7 @@ static void PauseBrightSelectionChange(HWND hwnd)
 	dValue = nValue / 20.0 + 0.5;
 
 	/* Set the static display to the new value */
-	snprintf(buf,sizeof(buf), "%03.2f", dValue);
+	snprintf(buf, ARRAY_LENGTH(buf), "%03.2f", dValue);
 	Static_SetTextA(GetDlgItem(hwnd, IDC_PAUSEBRIGHTDISP), buf);
 }
 
@@ -4391,7 +4391,7 @@ static void FullScreenGammaSelectionChange(HWND hwnd)
 	dGamma = nValue / 20.0 + 0.1;
 
 	/* Set the static display to the new value */
-	snprintf(buf,sizeof(buf),"%03.2f", dGamma);
+	snprintf(buf, ARRAY_LENGTH(buf),"%03.2f", dGamma);
 	Static_SetTextA(GetDlgItem(hwnd, IDC_FSGAMMADISP), buf);
 }
 
@@ -4408,7 +4408,7 @@ static void FullScreenBrightnessSelectionChange(HWND hwnd)
 	dBrightness = nValue / 20.0 + 0.1;
 
 	/* Set the static display to the new value */
-	snprintf(buf,sizeof(buf),"%03.2f", dBrightness);
+	snprintf(buf, ARRAY_LENGTH(buf),"%03.2f", dBrightness);
 	Static_SetTextA(GetDlgItem(hwnd, IDC_FSBRIGHTNESSDISP), buf);
 }
 
@@ -4425,7 +4425,7 @@ static void FullScreenContrastSelectionChange(HWND hwnd)
 	dContrast = nValue / 20.0 + 0.1;
 
 	/* Set the static display to the new value */
-	snprintf(buf,sizeof(buf),"%03.2f", dContrast);
+	snprintf(buf, ARRAY_LENGTH(buf),"%03.2f", dContrast);
 	Static_SetTextA(GetDlgItem(hwnd, IDC_FSCONTRASTDISP), buf);
 }
 
@@ -4442,7 +4442,7 @@ static void A2DSelectionChange(HWND hwnd)
 	dA2D = nValue / 20.0;
 
 	/* Set the static display to the new value */
-	snprintf(buf,sizeof(buf), "%03.2f", dA2D);
+	snprintf(buf, ARRAY_LENGTH(buf), "%03.2f", dA2D);
 	Static_SetTextA(GetDlgItem(hwnd, IDC_A2DDISP), buf);
 }
 
@@ -4508,7 +4508,7 @@ static void VolumeSelectionChange(HWND hwnd)
 	nValue = SendDlgItemMessage(hwnd, IDC_VOLUME, TBM_GETPOS, 0, 0);
 
 	/* Set the static display to the new value */
-	snprintf(buf,sizeof(buf), "%ddB", nValue - 32);
+	snprintf(buf, ARRAY_LENGTH(buf), "%ddB", nValue - 32);
 	Static_SetTextA(GetDlgItem(hwnd, IDC_VOLUMEDISP), buf);
 }
 
@@ -4521,7 +4521,7 @@ static void AudioLatencySelectionChange(HWND hwnd)
 	value = SendDlgItemMessage(hwnd,IDC_AUDIO_LATENCY, TBM_GETPOS, 0, 0);
 
 	/* Set the static display to the new value */
-	snprintf(buffer,sizeof(buffer),"%i/5 ~ %i/5", value, value + 1);
+	snprintf(buffer, ARRAY_LENGTH(buffer),"%i/5 ~ %i/5", value, value + 1);
 	Static_SetTextA(GetDlgItem(hwnd,IDC_AUDIO_LATENCY_DISP),buffer);
 }
 
@@ -4534,7 +4534,7 @@ static void PrescaleSelectionChange(HWND hwnd)
 	value = SendDlgItemMessage(hwnd,IDC_PRESCALE, TBM_GETPOS, 0, 0);
 
 	/* Set the static display to the new value */
-	snprintf(buffer,sizeof(buffer),"%d",value);
+	snprintf(buffer, ARRAY_LENGTH(buffer),"%d",value);
 	Static_SetTextA(GetDlgItem(hwnd,IDC_PRESCALEDISP),buffer);
 
 }
@@ -4548,7 +4548,7 @@ static void ThreadPrioritySelectionChange(HWND hwnd)
 	value = SendDlgItemMessage(hwnd,IDC_HIGH_PRIORITY, TBM_GETPOS, 0, 0);
 
 	/* Set the static display to the new value */
-	snprintf(buffer,sizeof(buffer),"%i",value-15);
+	snprintf(buffer, ARRAY_LENGTH(buffer),"%i",value-15);
 	Static_SetTextA(GetDlgItem(hwnd,IDC_HIGH_PRIORITYTXT),buffer);
 
 }

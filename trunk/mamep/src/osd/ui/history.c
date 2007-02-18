@@ -60,7 +60,7 @@ LPCWSTR GetGameHistory(int driver_index)
 	options_set_wstring(OPTION_MAMEINFO_FILE, GetMAMEInfoFile());
 
 	*dataBuf = 0;
-	if (load_driver_history(drivers[driver_index], dataBuf, sizeof(dataBuf)) == 0)
+	if (load_driver_history(drivers[driver_index], dataBuf, ARRAY_LENGTH(dataBuf)) == 0)
 	{
 		p = ConvertToWindowsNewlines(dataBuf);
 		lstrcat(historyBuf, _UTF8Unicode(p));
@@ -70,7 +70,7 @@ LPCWSTR GetGameHistory(int driver_index)
 	if (!GetShowTab(TAB_STORY))
 	{
 		*dataBuf = 0;
-		if (load_driver_story(drivers[driver_index], dataBuf, sizeof(dataBuf)) == 0)
+		if (load_driver_story(drivers[driver_index], dataBuf, ARRAY_LENGTH(dataBuf)) == 0)
 		{
 			p = ConvertToWindowsNewlines(dataBuf);
 			lstrcat(historyBuf, _UTF8Unicode(p));
@@ -79,14 +79,14 @@ LPCWSTR GetGameHistory(int driver_index)
 #endif /* STORY_DATAFILE */
 
 	*dataBuf = 0;
-	if (load_driver_mameinfo(drivers[driver_index], dataBuf, sizeof(dataBuf)) == 0)
+	if (load_driver_mameinfo(drivers[driver_index], dataBuf, ARRAY_LENGTH(dataBuf)) == 0)
 	{
 		p = ConvertToWindowsNewlines(dataBuf);
 		lstrcat(historyBuf, _UTF8Unicode(p));
 	}
 
 	*dataBuf = 0;
-	if (load_driver_drivinfo(drivers[driver_index], dataBuf, sizeof(dataBuf)) == 0)
+	if (load_driver_drivinfo(drivers[driver_index], dataBuf, ARRAY_LENGTH(dataBuf)) == 0)
 	{
 		p = ConvertToWindowsNewlines(dataBuf);
 		lstrcat(historyBuf, _UTF8Unicode(p));
@@ -109,7 +109,7 @@ LPCWSTR GetGameStory(int driver_index)
 #endif /* STORY_DATAFILE */
 
 	*dataBuf = 0;
-	if (load_driver_story(drivers[driver_index], dataBuf, sizeof(dataBuf)) == 0)
+	if (load_driver_story(drivers[driver_index], dataBuf, ARRAY_LENGTH(dataBuf)) == 0)
 	{
 		p = ConvertToWindowsNewlines(dataBuf);
 		lstrcat(historyBuf, _UTF8Unicode(p));

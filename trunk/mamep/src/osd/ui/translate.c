@@ -142,7 +142,7 @@ static void TranslateMenuRecurse(HMENU hMenu)
 		mii.cbSize     = sizeof(MENUITEMINFO);
 		mii.fMask      = MIIM_ID | MIIM_STRING | MIIM_FTYPE;
 		mii.dwTypeData = buffer;
-		mii.cch        = sizeof(buffer) / sizeof(*buffer);
+		mii.cch        = ARRAY_LENGTH(buffer);
 		*buffer        = '\0';
 
 		if (!GetMenuItemInfo(hMenu, i, TRUE, &mii) || !mii.wID)
@@ -188,7 +188,7 @@ static void TranslateMenuRecurse(HMENU hMenu)
 
 		if (!MenuHelpStrings[id])
 		{
-			LoadString(GetModuleHandle(NULL), mii.wID, buffer, sizeof(buffer) / sizeof(*buffer));
+			LoadString(GetModuleHandle(NULL), mii.wID, buffer, ARRAY_LENGTH(buffer));
 			MenuHelpStrings[id] = wcsdup(buffer);
 		}
 
@@ -286,7 +286,7 @@ void TranslateControl(HWND hControl)
 	WCHAR  buffer[1024];
 	WCHAR *p;
 
-	GetWindowText(hControl, buffer, sizeof(buffer) / sizeof(*buffer));
+	GetWindowText(hControl, buffer, ARRAY_LENGTH(buffer));
 	p = _UIW(buffer);
 	if (p != buffer)
 	{
@@ -312,7 +312,7 @@ static void TranslateTabControl(HWND hControl)
 
 		tci.mask = TCIF_TEXT;
 		tci.pszText = buffer;
-		tci.cchTextMax = sizeof(buffer) /  sizeof(*buffer);
+		tci.cchTextMax = ARRAY_LENGTH(buffer);
 		TabCtrl_GetItem(hControl, i, &tci);
 
 		p = _UIW(buffer);
@@ -346,7 +346,7 @@ static BOOL CALLBACK translate_dialog_items(HWND hControl, LPARAM lParam)
 {
 	char  buffer[1024];
 
-	GetClassNameA(hControl, buffer, sizeof(buffer) / sizeof(*buffer));
+	GetClassNameA(hControl, buffer, ARRAY_LENGTH(buffer));
 	if (!strcmp(buffer, "Button") || !strcmp(buffer, "Static"))
 		TranslateControl(hControl);
 	else if (!strcmp(buffer, "SysTabControl32"))
@@ -553,7 +553,7 @@ void ListView_GetItemTextA(HWND hwndCtl, int nIndex, int isitem, LPSTR lpch, int
 
 	if (buf)
 		free(buf);
-	buf = malloc((cchMax + 1) * sizeof (WCHAR));
+	buf = malloc((cchMax + 1) * sizeof (*buf));
 	buf[0] = '\0';
 
 	ListView_GetItemText(hwndCtl, nIndex, isitem, buf, cchMax);
@@ -584,7 +584,7 @@ int ComboBox_GetLBTextA(HWND hwndCtl, int nIndex, LPSTR lpszBuffer)
 
 	if (buf)
 		free(buf);
-	buf = malloc((ComboBox_GetLBTextLenW(hwndCtl, nIndex) + 1) * sizeof (WCHAR));
+	buf = malloc((ComboBox_GetLBTextLenW(hwndCtl, nIndex) + 1) * sizeof (*buf));
 
 	ret = ComboBox_GetLBTextW(hwndCtl, nIndex, buf);
 	if (!ret)
@@ -600,7 +600,7 @@ int ComboBox_GetLBTextLenA(HWND hwndCtl, int nIndex)
 
 	if (buf)
 		free(buf);
-	buf = malloc((ComboBox_GetLBTextLenW(hwndCtl, nIndex) + 1) * sizeof (WCHAR));
+	buf = malloc((ComboBox_GetLBTextLenW(hwndCtl, nIndex) + 1) * sizeof (*buf));
 
 	ComboBox_GetLBTextA(hwndCtl, nIndex, buf);
 	return strlen(buf);
@@ -614,7 +614,7 @@ int ComboBox_GetTextA(HWND hwndCtl, LPSTR lpch, int cchMax)
 
 	if (buf)
 		free(buf);
-	buf = malloc((cchMax + 1) * sizeof (WCHAR));
+	buf = malloc((cchMax + 1) * sizeof (*buf));
 
 	ret = GetWindowTextW(hwndCtl, buf, cchMax);
 	buf[cchMax] = '\0';
@@ -690,7 +690,7 @@ dprintf("mb_lang_message: %s", str);
 	}
 
 	temp.wstr = wstr;
-	p = (struct mb_msg *)bsearch(&temp, mb_msg_index, mb_msg_num, sizeof mb_msg_index[0], mb_msg_cmp);
+	p = (struct mb_msg *)bsearch(&temp, mb_msg_index, mb_msg_num, sizeof (*mb_msg_index), mb_msg_cmp);
 	if (p)
 		return p->mbstr;
 
@@ -703,7 +703,7 @@ dprintf("mb_lang_message: %s", str);
 	temp.mbstr = strdup(_String(wstr));
 	mb_msg_index[mb_msg_num++] = temp;
 
-	qsort(mb_msg_index, mb_msg_num, sizeof mb_msg_index[0], mb_msg_cmp);
+	qsort(mb_msg_index, mb_msg_num, sizeof (*mb_msg_index), mb_msg_cmp);
 
 	return temp.mbstr;
 }

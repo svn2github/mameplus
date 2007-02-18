@@ -894,9 +894,9 @@ static int CALLBACK Picker_CompareProc(LPARAM index1, LPARAM index2, LPARAM nPar
 		{
 			// no default sort proc, just get the string and compare them
 			s1 = Picker_CallGetItemString(pcpp->hwndPicker, index1, pcpp->nSortColumn,
-				szBuffer1, sizeof(szBuffer1) / sizeof(szBuffer1[0]));
+				szBuffer1, ARRAY_LENGTH(szBuffer1));
 			s2 = Picker_CallGetItemString(pcpp->hwndPicker, index2, pcpp->nSortColumn,
-				szBuffer2, sizeof(szBuffer2) / sizeof(szBuffer2[0]));
+				szBuffer2, ARRAY_LENGTH(szBuffer2));
 			nResult = lstrcmpi(s1, s2);
 		}
 
@@ -1082,7 +1082,7 @@ BOOL Picker_HandleNotify(LPNMHDR lpNmHdr)
 					nColumn = Picker_GetRealColumnFromViewColumn(hWnd, pDispInfo->item.iSubItem);
 					lstrcpy(szBuffer, pDispInfo->item.pszText);
 
-					pDispInfo->item.pszText = (WCHAR *)Picker_CallGetItemString(hWnd, nItem, nColumn, szBuffer, sizeof (szBuffer) / sizeof (szBuffer[0]));
+					pDispInfo->item.pszText = (WCHAR *)Picker_CallGetItemString(hWnd, nItem, nColumn, szBuffer, ARRAY_LENGTH(szBuffer));
 
 					bResult = TRUE;
 				}
@@ -1120,7 +1120,7 @@ BOOL Picker_HandleNotify(LPNMHDR lpNmHdr)
 					nColumn = Picker_GetRealColumnFromViewColumn(hWnd, pDispInfo->item.iSubItem);
 					lstrcpy(szBuffer, _Unicode(pDispInfo->item.pszText));
 
-					s = (Picker_CallGetItemString(hWnd, nItem, nColumn, szBuffer, sizeof (szBuffer) / sizeof (szBuffer[0])));
+					s = (Picker_CallGetItemString(hWnd, nItem, nColumn, szBuffer, ARRAY_LENGTH(szBuffer)));
 
 					pDispInfo->item.pszText = _String(s);
 					bResult = TRUE;
@@ -1312,7 +1312,7 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 	lvi.iItem	   = nItem;
 	lvi.iSubItem   = order[0];
 	lvi.pszText	   = szBuff;
-	lvi.cchTextMax = sizeof(szBuff) / sizeof(szBuff[0]);
+	lvi.cchTextMax = ARRAY_LENGTH(szBuff);
 	lvi.stateMask  = 0xFFFF;	   /* get all state flags */
 	ListView_GetItem(hWnd, &lvi);
 
@@ -1553,7 +1553,7 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 		lvItem.iItem	  = nItem;
 		lvItem.iSubItem   = order[nColumn];
 		lvItem.pszText	  = szBuff;
-		lvItem.cchTextMax = sizeof(szBuff) / sizeof(szBuff[0]);
+		lvItem.cchTextMax = ARRAY_LENGTH(szBuff);
 
 		if (ListView_GetItem(hWnd, &lvItem) == FALSE)
 			continue;

@@ -563,10 +563,10 @@ void OptionsInit()
 	default_variables.alt_index = -1;
 
 	/* This allocation should be checked */
-	driver_options = (options_type *)malloc(num_drivers * sizeof(options_type));
-	driver_variables = (driver_variables_type *)malloc(num_drivers * sizeof(driver_variables_type));
+	driver_options = (options_type *)malloc(num_drivers * sizeof (*driver_options));
+	driver_variables = (driver_variables_type *)malloc(num_drivers * sizeof (*driver_variables));
 
-	memset(driver_options, 0, num_drivers * sizeof(options_type));
+	memset(driver_options, 0, num_drivers * sizeof (*driver_options));
 	for (i = 0; i < num_drivers; i++)
 		driver_variables[i] = default_variables;
 
@@ -2634,7 +2634,7 @@ static int regist_alt_option(const WCHAR *name)
 	if (num_alt_options == alt_options_len)
 	{
 		alt_options_len += ALLOC_FOLDERS;
-		alt_options = (alt_options_type *)realloc(alt_options, alt_options_len * sizeof (alt_options_type));
+		alt_options = (alt_options_type *)realloc(alt_options, alt_options_len * sizeof (*alt_options));
 
 		if (!alt_options)
 			exit(0);
@@ -2722,7 +2722,7 @@ static void build_alt_options(void)
 	driver_variables_type *pVars;
 	int i;
 
-	alt_options = (alt_options_type *)malloc(alt_options_len * sizeof (alt_options_type));
+	alt_options = (alt_options_type *)malloc(alt_options_len * sizeof (*alt_options));
 	num_alt_options = 0;
 
 	if (!alt_options)
@@ -2733,14 +2733,14 @@ static void build_alt_options(void)
 	for (i = 0; i < num_drivers; i++)
 		regist_alt_option(GetDriverFilename(i));
 
-	pOpts = (options_type *)malloc(num_alt_options * sizeof (options_type));
-	pVars = (driver_variables_type *)malloc(num_alt_options * sizeof (driver_variables_type));
+	pOpts = (options_type *)malloc(num_alt_options * sizeof (*pOpts));
+	pVars = (driver_variables_type *)malloc(num_alt_options * sizeof (*pVars));
 
 	if (!pOpts || !pVars)
 		exit(0);
 
-	memset(pOpts, 0, num_alt_options * sizeof (options_type));
-	memset(pVars, 0, num_alt_options * sizeof (driver_variables_type));
+	memset(pOpts, 0, num_alt_options * sizeof (*pOpts));
+	memset(pVars, 0, num_alt_options * sizeof (*pVars));
 
 	for (i = 0; i < num_alt_options; i++)
 	{
@@ -2939,7 +2939,7 @@ static void set_folder_flag(f_flag *flag, const char *folderName, DWORD dwFlags)
 
 	if (flag->entry == NULL)
 	{
-		flag->entry = malloc(ALLOC_FOLDERFLAG * sizeof(*flag->entry));
+		flag->entry = malloc(ALLOC_FOLDERFLAG * sizeof (*flag->entry));
 		if (!flag->entry)
 		{
 			dprintf("error: malloc failed in set_folder_flag\n");
@@ -2947,7 +2947,7 @@ static void set_folder_flag(f_flag *flag, const char *folderName, DWORD dwFlags)
 		}
 
 		flag->num = ALLOC_FOLDERFLAG;
-		memset(flag->entry, 0, flag->num * sizeof(*flag->entry));
+		memset(flag->entry, 0, flag->num * sizeof (*flag->entry));
 	}
 
 	for (i = 0; i < flag->num; i++)
@@ -2976,7 +2976,7 @@ static void set_folder_flag(f_flag *flag, const char *folderName, DWORD dwFlags)
 	{
 		f_flag_entry *tmp;
 
-		tmp = realloc(flag->entry, (flag->num + ALLOC_FOLDERFLAG) * sizeof(*tmp));
+		tmp = realloc(flag->entry, (flag->num + ALLOC_FOLDERFLAG) * sizeof (*tmp));
 		if (!tmp)
 		{
 			dprintf("error: realloc failed in set_folder_flag\n");
@@ -2984,7 +2984,7 @@ static void set_folder_flag(f_flag *flag, const char *folderName, DWORD dwFlags)
 		}
 
 		flag->entry = tmp;
-		memset(tmp + flag->num, 0, ALLOC_FOLDERFLAG * sizeof(*tmp));
+		memset(tmp + flag->num, 0, ALLOC_FOLDERFLAG * sizeof (*tmp));
 		flag->num += ALLOC_FOLDERFLAG;
 	}
 
@@ -3216,7 +3216,7 @@ static void options_add_driver_flag_opts(void)
 
 		driver_flag_opts[0].description = drivers[i]->description;
 
-		for (j = 0; j < sizeof (driver_flag_names) / sizeof (*driver_flag_names); j++)
+		for (j = 0; j < ARRAY_LENGTH(driver_flag_names); j++)
 		{
 
 			driver_flag_opts[j + 1].name = p;
@@ -3249,7 +3249,7 @@ static void options_get_driver_flag_opts(void)
 		strcpy(buf, drivers[i]->name);
 		p = buf + strlen(buf);
 
-		for (j = 0; j < sizeof (driver_flag_names) / sizeof (*driver_flag_names); j++)
+		for (j = 0; j < ARRAY_LENGTH(driver_flag_names); j++)
 		{
 			strcpy(p, driver_flag_names[j]);
 			*flags[j] = options_get_int(buf);
@@ -3276,7 +3276,7 @@ static void options_set_driver_flag_opts(void)
 		strcpy(buf, drivers[i]->name);
 		p = buf + strlen(buf);
 
-		for (j = 0; j < sizeof (driver_flag_names) / sizeof (*driver_flag_names); j++)
+		for (j = 0; j < ARRAY_LENGTH(driver_flag_names); j++)
 		{
 			strcpy(p, driver_flag_names[j]);
 			options_set_int(buf, *flags[j]);
@@ -3678,7 +3678,7 @@ WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(void))
 	free(p);
 	len = lstrlen(wopts);
 
-	result = malloc((pModuleLen + len + 1) * sizeof *result);
+	result = malloc((pModuleLen + len + 1) * sizeof (*result));
 	wsprintf(result, TEXT("\"%s\" %s -norc "), pModule, driversw[driver_index]->name);
 
 	if (len != 0)
@@ -4657,7 +4657,7 @@ INLINE void _options_get_list_font(LOGFONTW *f, const char *name)
 
 	temp[0] = atol(buf);
 
-	for (i = 1; i < sizeof (temp) / sizeof (*temp); i++)
+	for (i = 1; i < ARRAY_LENGTH(temp); i++)
 	{
 		while (*stemp == ' ')
 			stemp++;
@@ -4682,7 +4682,7 @@ INLINE void _options_get_list_font(LOGFONTW *f, const char *name)
 	if (*stemp != '\0')
 		return;
 
-	for (i = 5; i < sizeof (temp) / sizeof (*temp); i++)
+	for (i = 5; i < ARRAY_LENGTH(temp); i++)
 		if (temp[i] < 0 || temp[i] > 255)
 			return;
 
@@ -4709,14 +4709,14 @@ INLINE void _options_get_list_fontface(LOGFONTW *f, const char *name)
 	if (stemp == NULL)
 		return;
 
-	if (*stemp == '\0' || lstrlen(stemp) + 1 > sizeof (f->lfFaceName))
+	if (*stemp == '\0' || lstrlen(stemp) + 1 > ARRAY_LENGTH(f->lfFaceName))
 	{
-		free((char *)stemp);
+		free((void *)stemp);
 		return;
 	}
 
 	lstrcpy(f->lfFaceName, stemp);
-	free((char *)stemp);
+	free((void *)stemp);
 }
 
 INLINE void options_set_list_font(const char *name, const LOGFONTW *f)
@@ -5157,7 +5157,7 @@ INLINE void options_copy_folder_flag(const f_flag *src, f_flag *dest)
 #define START_OPT_FUNC_WINUI	static void options_get_winui(settings_type *p) {
 #define END_OPT_FUNC_WINUI	}
 #define DEFINE_OPT(type,name)	_options_get_##type((&p->name), #name);
-#define DEFINE_OPT_CSV(type,name)	_options_get_csv_##type((p->name), sizeof (p->name) / sizeof (*p->name), #name);
+#define DEFINE_OPT_CSV(type,name)	_options_get_csv_##type((p->name), ARRAY_LENGTH(p->name), #name);
 #define DEFINE_OPT_STRUCT		DEFINE_OPT
 #define DEFINE_OPT_ARRAY(type,name)	_options_get_##type((p->name), #name);
 #include "optdef.h"
@@ -5181,7 +5181,7 @@ INLINE void options_copy_folder_flag(const f_flag *src, f_flag *dest)
 #define START_OPT_FUNC_WINUI	static void options_set_winui(const settings_type *p) {
 #define END_OPT_FUNC_WINUI	}
 #define DEFINE_OPT(type,name)	options_set_##type(#name, (p->name));
-#define DEFINE_OPT_CSV(type,name)	options_set_csv_##type(#name, (p->name), sizeof (p->name) / sizeof (*p->name));
+#define DEFINE_OPT_CSV(type,name)	options_set_csv_##type(#name, (p->name), ARRAY_LENGTH(p->name));
 #define DEFINE_OPT_STRUCT(type,name)	options_set_##type(#name, (&p->name));
 #define DEFINE_OPT_ARRAY(type,name)	options_set_##type(#name, (p->name));
 #include "optdef.h"
@@ -5205,7 +5205,7 @@ INLINE void options_copy_folder_flag(const f_flag *src, f_flag *dest)
 #define START_OPT_FUNC_WINUI	static void options_free_string_winui(settings_type *p) {
 #define END_OPT_FUNC_WINUI	}
 #define DEFINE_OPT(type,name)	options_free_##type(&p->name);
-#define DEFINE_OPT_CSV(type,name)	options_free_csv_##type((p->name), sizeof (p->name) / sizeof (*p->name));
+#define DEFINE_OPT_CSV(type,name)	options_free_csv_##type((p->name), ARRAY_LENGTH(p->name));
 #define DEFINE_OPT_STRUCT		DEFINE_OPT
 #define DEFINE_OPT_ARRAY(type,name)	options_free_##type(p->name);
 #include "optdef.h"
@@ -5229,7 +5229,7 @@ INLINE void options_copy_folder_flag(const f_flag *src, f_flag *dest)
 #define START_OPT_FUNC_WINUI	static void options_duplicate_winui(const settings_type *source, settings_type *dest) {
 #define END_OPT_FUNC_WINUI	}
 #define DEFINE_OPT(type,name)	options_copy_##type((source->name), (&dest->name));
-#define DEFINE_OPT_CSV(type,name)	options_copy_csv_##type((source->name), (dest->name), sizeof (dest->name) / sizeof (*dest->name));
+#define DEFINE_OPT_CSV(type,name)	options_copy_csv_##type((source->name), (dest->name), ARRAY_LENGTH(dest->name));
 #define DEFINE_OPT_STRUCT(type,name)	options_copy_##type((&source->name), (&dest->name));
 #define DEFINE_OPT_ARRAY(type,name)	options_copy_##type((source->name), (dest->name));
 #include "optdef.h"

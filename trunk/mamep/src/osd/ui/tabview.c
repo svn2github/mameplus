@@ -186,7 +186,7 @@ void TabView_SetCurrentTab(HWND hwndTabView, int nTab)
 	}
 	else
 	{
-		snprintf(szBuffer, sizeof(szBuffer) / sizeof(szBuffer[0]),
+		snprintf(szBuffer, ARRAY_LENGTH(szBuffer),
 			"%d", nTab);
 		pszName = szBuffer;
 	}
