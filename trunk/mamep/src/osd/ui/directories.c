@@ -299,7 +299,7 @@ static BOOL Directories_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
 
 	for (i = nDirInfoCount - 1; i >= 0; i--)
 	{
-		ComboBox_InsertString(GetDlgItem(hDlg, IDC_DIR_COMBO), 0, _Unicode(_UI(g_directoryInfo[i].lpName)));
+		ComboBox_InsertString(GetDlgItem(hDlg, IDC_DIR_COMBO), 0, _UIW(g_directoryInfo[i].lpName));
 	}
 
 	ComboBox_SetCurSel(GetDlgItem(hDlg, IDC_DIR_COMBO), 0);
@@ -599,7 +599,7 @@ static BOOL Directories_OnEndLabelEditA(HWND hDlg, NMHDR* pNMHDR)
 		}
 		else
 		{
-			if (MessageBox(NULL, _Unicode(_UI("Directory does not exist, continue anyway?")), TEXT_MAME32NAME, MB_OKCANCEL) == IDOK)
+			if (MessageBox(NULL, _UIW(TEXT("Directory does not exist, continue anyway?")), TEXT_MAME32NAME, MB_OKCANCEL) == IDOK)
 				bResult = TRUE;
 		}
 	}
@@ -694,7 +694,7 @@ static BOOL Directories_OnEndLabelEditW(HWND hDlg, NMHDR* pNMHDR)
 		}
 		else
 		{
-			if (MessageBox(NULL, _Unicode(_UI("Directory does not exist, continue anyway?")), TEXT_MAME32NAME, MB_OKCANCEL) == IDOK)
+			if (MessageBox(NULL, _UIW(TEXT("Directory does not exist, continue anyway?")), TEXT_MAME32NAME, MB_OKCANCEL) == IDOK)
 				bResult = TRUE;
 		}
 	}
@@ -845,7 +845,7 @@ static BOOL BrowseForDirectoryA(HWND hwnd, const WCHAR* pStartDir, WCHAR* pResul
 	Info.hwndOwner		= hwnd;
 	Info.pidlRoot		= NULL;
 	Info.pszDisplayName = buf;
-	Info.lpszTitle		= _UI("Directory name:");
+	Info.lpszTitle		= _String(_UIW(TEXT("Directory name:")));
 	Info.ulFlags		= BIF_RETURNONLYFSDIRS;
 	Info.lpfn			= BrowseCallbackProc;
 	Info.lParam 		= (LPARAM)pStartDir;
@@ -887,7 +887,7 @@ static BOOL BrowseForDirectoryW(HWND hwnd, const WCHAR* pStartDir, WCHAR* pResul
 	Info.hwndOwner		= hwnd;
 	Info.pidlRoot		= NULL;
 	Info.pszDisplayName = buf;
-	Info.lpszTitle		= _Unicode(_UI("Directory name:"));
+	Info.lpszTitle		= _UIW(TEXT("Directory name:"));
 	Info.ulFlags		= BIF_RETURNONLYFSDIRS;
 	Info.lpfn			= BrowseCallbackProc;
 	Info.lParam 		= (LPARAM)startDir;

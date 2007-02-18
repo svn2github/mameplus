@@ -232,46 +232,46 @@ LONG GetCommonControlVersion()
 	return PACKVERSION(0,0);
 }
 
-void DisplayTextFile(HWND hWnd, const char *cName)
+void DisplayTextFile(HWND hWnd, const WCHAR *cName)
 {
 	HINSTANCE hErr;
-	const char	  *msg = 0;
+	const WCHAR *msg = 0;
 
-	hErr = ShellExecute(hWnd, NULL, _Unicode(cName), NULL, NULL, SW_SHOWNORMAL);
+	hErr = ShellExecute(hWnd, NULL, cName, NULL, NULL, SW_SHOWNORMAL);
 	if ((int)hErr > 32)
 		return;
 
 	switch((int)hErr)
 	{
 	case 0:
-		msg = _UI("The operating system is out of memory or resources.");
+		msg = _UIW(TEXT("The operating system is out of memory or resources."));
 		break;
 
 	case ERROR_FILE_NOT_FOUND:
-		msg = _UI("The specified file was not found."); 
+		msg = _UIW(TEXT("The specified file was not found.")); 
 		break;
 
 	case SE_ERR_NOASSOC :
-		msg = _UI("There is no application associated with the given filename extension.");
+		msg = _UIW(TEXT("There is no application associated with the given filename extension."));
 		break;
 
 	case SE_ERR_OOM :
-		msg = _UI("There was not enough memory to complete the operation.");
+		msg = _UIW(TEXT("There was not enough memory to complete the operation."));
 		break;
 
 	case SE_ERR_PNF :
-		msg = _UI("The specified path was not found.");
+		msg = _UIW(TEXT("The specified path was not found."));
 		break;
 
 	case SE_ERR_SHARE :
-		msg = _UI("A sharing violation occurred.");
+		msg = _UIW(TEXT("A sharing violation occurred."));
 		break;
 
 	default:
-		msg = _UI("Unknown error.");
+		msg = _UIW(TEXT("Unknown error."));
 	}
  
-	MessageBoxW(NULL, _Unicode(msg), _Unicode(cName), MB_OK); 
+	MessageBoxW(NULL, msg, cName, MB_OK); 
 }
 
 LPWSTR MyStrStrI(LPCWSTR pStr, LPCWSTR pSrch)

@@ -387,38 +387,38 @@ static DWORD dwHelpIDs[] =
 
 static struct ComboBoxVideo
 {
-	const char*	m_pText;
+	const WCHAR*	m_pText;
 	const char*	m_pData;
 } g_ComboBoxVideo[] = 
 {
-	{ "GDI",                  "gdi"    },
-	{ "DirectDraw",           "ddraw"  },
-	{ "Direct3D",             "d3d"    },
+	{ TEXT("GDI"),                  "gdi"    },
+	{ TEXT("DirectDraw"),           "ddraw"  },
+	{ TEXT("Direct3D"),             "d3d"    },
 };
 #define NUMVIDEO (sizeof(g_ComboBoxVideo) / sizeof(g_ComboBoxVideo[0]))
 
 static struct ComboBoxD3DVersion
 {
-	const char*	m_pText;
+	const WCHAR*	m_pText;
 	const int	m_pData;
 } g_ComboBoxD3DVersion[] = 
 {
-	{ "Version 9",           9   },
-	{ "Version 8",           8   },
+	{ TEXT("Version 9"),           9   },
+	{ TEXT("Version 8"),           8   },
 };
 
 #define NUMD3DVERSIONS (sizeof(g_ComboBoxD3DVersion) / sizeof(g_ComboBoxD3DVersion[0]))
 
 static struct ComboBoxDevices
 {
-	const char*	m_pText;
+	const WCHAR*	m_pText;
 	const char*	m_pData;
 } g_ComboBoxDevice[] = 
 {
-	{ "Keyboard",              "keyboard"  },
-	{ "Mouse",                 "mouse"     },
-	{ "Joystick",              "joystick"  },
-	{ "Lightgun",              "lightgun"  },
+	{ TEXT("Keyboard"),              "keyboard"  },
+	{ TEXT("Mouse"),                 "mouse"     },
+	{ TEXT("Joystick"),              "joystick"  },
+	{ TEXT("Lightgun"),              "lightgun"  },
 };
 
 #define NUMDEVICES (sizeof(g_ComboBoxDevice) / sizeof(g_ComboBoxDevice[0]))
@@ -2272,11 +2272,11 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 
 	case WM_HELP:
 		/* User clicked the ? from the upper right on a control */
-		HelpFunction(((LPHELPINFO)lParam)->hItemHandle, MAME32CONTEXTHELP, HH_TP_HELP_WM_HELP, GetHelpIDs());
+		HelpFunction(((LPHELPINFO)lParam)->hItemHandle, TEXT(MAME32CONTEXTHELP), HH_TP_HELP_WM_HELP, GetHelpIDs());
 		break;
 
 	case WM_CONTEXTMENU: 
-		HelpFunction((HWND)wParam, MAME32CONTEXTHELP, HH_TP_HELP_CONTEXTMENU, GetHelpIDs());
+		HelpFunction((HWND)wParam, TEXT(MAME32CONTEXTHELP), HH_TP_HELP_CONTEXTMENU, GetHelpIDs());
 		break; 
 
 	}
@@ -2520,7 +2520,7 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 						}
 
 					if (!drivers_table[i].name)
-						fprintf(stderr, _WINDOWS("Illegal value for %s = %s\n"), "driver_config", s);
+						dwprintf(_WINDOWSW(TEXT("Illegal value for %s = %s\n")), TEXT("driver_config"), _Unicode(s));
 				}
 				free(s);
 
@@ -3381,7 +3381,7 @@ static void AssignInput(HWND hWnd)
 	}
 	pGameOpts->ctrlr = (char *)malloc(new_length + 1);
 	ComboBox_GetLBTextA(hWnd, g_nInputIndex, pGameOpts->ctrlr);
-	if (strcmp(pGameOpts->ctrlr, _UI("Standard")) == 0)
+	if (lstrcmp(_Unicode(pGameOpts->ctrlr), _UIW(TEXT("Standard"))) == 0)
 	{
 		FreeIfAllocated(&pGameOpts->ctrlr);
 		pGameOpts->ctrlr = mame_strdup("Standard");
@@ -3577,7 +3577,7 @@ static void AssignEffect(HWND hWnd)
 	}
 	pGameOpts->effect = (char *)malloc(new_length + 1);
 	ComboBox_GetLBTextA(hWnd, g_nEffectIndex, pGameOpts->effect);
-	if (strcmp(pGameOpts->effect, _UI("None")) == 0)
+	if (lstrcmp(_Unicode(pGameOpts->effect), _UIW(TEXT("None"))) == 0)
 	{
 		FreeIfAllocated(&pGameOpts->effect);
 		pGameOpts->effect = mame_strdup("none");
@@ -4583,7 +4583,7 @@ static void UpdateDisplayModeUI(HWND hwnd, DWORD dwDepth, DWORD dwRefresh)
 	/* Remove all items in the list. */
 	ComboBox_ResetContent(hCtrl);
 
-	ComboBox_AddStringA(hCtrl, _UI("Auto"));
+	ComboBox_AddString(hCtrl, _UIW(TEXT("Auto")));
 
 	pDisplayModes = DirectDraw_GetDisplayModes();
 
@@ -4639,18 +4639,18 @@ static void InitializeSkippingUI(HWND hwnd)
 
 	if (hCtrl)
 	{
-		ComboBox_AddStringA(hCtrl, _UI("Draw every frame"));
-		ComboBox_AddStringA(hCtrl, _UI("Skip 1 of 12 frames"));
-		ComboBox_AddStringA(hCtrl, _UI("Skip 2 of 12 frames"));
-		ComboBox_AddStringA(hCtrl, _UI("Skip 3 of 12 frames"));
-		ComboBox_AddStringA(hCtrl, _UI("Skip 4 of 12 frames"));
-		ComboBox_AddStringA(hCtrl, _UI("Skip 5 of 12 frames"));
-		ComboBox_AddStringA(hCtrl, _UI("Skip 6 of 12 frames"));
-		ComboBox_AddStringA(hCtrl, _UI("Skip 7 of 12 frames"));
-		ComboBox_AddStringA(hCtrl, _UI("Skip 8 of 12 frames"));
-		ComboBox_AddStringA(hCtrl, _UI("Skip 9 of 12 frames"));
-		ComboBox_AddStringA(hCtrl, _UI("Skip 10 of 12 frames"));
-		ComboBox_AddStringA(hCtrl, _UI("Skip 11 of 12 frames"));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Draw every frame")));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 1 of 12 frames")));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 2 of 12 frames")));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 3 of 12 frames")));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 4 of 12 frames")));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 5 of 12 frames")));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 6 of 12 frames")));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 7 of 12 frames")));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 8 of 12 frames")));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 9 of 12 frames")));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 10 of 12 frames")));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 11 of 12 frames")));
 	}
 }
 
@@ -4661,12 +4661,12 @@ static void InitializeRotateUI(HWND hwnd)
 
 	if (hCtrl)
 	{
-		ComboBox_AddStringA(hCtrl, _UI("Default"));             // 0
-		ComboBox_AddStringA(hCtrl, _UI("Clockwise"));           // 1
-		ComboBox_AddStringA(hCtrl, _UI("Anti-clockwise"));      // 2
-		ComboBox_AddStringA(hCtrl, _UI("None"));                // 3
-		ComboBox_AddStringA(hCtrl, _UI("Auto clockwise"));      // 4
-		ComboBox_AddStringA(hCtrl, _UI("Auto anti-clockwise")); // 5
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Default")));             // 0
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Clockwise")));           // 1
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Anti-clockwise")));      // 2
+		ComboBox_AddString(hCtrl, _UIW(TEXT("None")));                // 3
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Auto clockwise")));      // 4
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Auto anti-clockwise"))); // 5
 	}
 }
 
@@ -4684,7 +4684,7 @@ static void InitializeResDepthUI(HWND hwnd)
 		/* Remove all items in the list. */
 		ComboBox_ResetContent(hCtrl);
 
-		ComboBox_AddStringA(hCtrl, _UI("Auto"));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Auto")));
 		ComboBox_SetItemData(hCtrl, nCount++, 0);
 
 		pDisplayModes = DirectDraw_GetDisplayModes();
@@ -4695,13 +4695,13 @@ static void InitializeResDepthUI(HWND hwnd)
 			||  pDisplayModes->m_Modes[i].m_dwBPP == 24
 			||  pDisplayModes->m_Modes[i].m_dwBPP == 32)
 			{
-				char buf[16];
+				WCHAR buf[16];
 
-				sprintf(buf, _UI("%li bit"), pDisplayModes->m_Modes[i].m_dwBPP);
+				swprintf(buf, _UIW(TEXT("%li bit")), pDisplayModes->m_Modes[i].m_dwBPP);
 
-				if (ComboBox_FindStringA(hCtrl, 0, buf) == CB_ERR)
+				if (ComboBox_FindString(hCtrl, 0, buf) == CB_ERR)
 				{
-					ComboBox_InsertStringA(hCtrl, nCount, buf);
+					ComboBox_InsertString(hCtrl, nCount, buf);
 					ComboBox_SetItemData(hCtrl, nCount++, pDisplayModes->m_Modes[i].m_dwBPP);
 				}
 			}
@@ -4720,7 +4720,7 @@ static void InitializeVideoUI(HWND hwnd)
 		int i;
 		for (i = 0; i < NUMVIDEO; i++)
 		{
-			ComboBox_InsertStringA(hCtrl, i, _UI(g_ComboBoxVideo[i].m_pText));
+			ComboBox_InsertString(hCtrl, i, _UIW(g_ComboBoxVideo[i].m_pText));
 			ComboBox_SetItemData( hCtrl, i, g_ComboBoxVideo[i].m_pData);
 		}
 	}
@@ -4738,7 +4738,7 @@ static void InitializeD3DVersionUI(HWND hwnd)
 		int i;
 		for (i = 0; i < NUMD3DVERSIONS; i++)
 		{
-			ComboBox_InsertStringA(hCtrl, i, g_ComboBoxD3DVersion[i].m_pText);
+			ComboBox_InsertString(hCtrl, i, g_ComboBoxD3DVersion[i].m_pText);
 			ComboBox_SetItemData( hCtrl, i, g_ComboBoxD3DVersion[i].m_pData);
 		}
 	}
@@ -4775,7 +4775,7 @@ static void InitializeRefreshUI(HWND hwnd)
 		/* Remove all items in the list. */
 		ComboBox_ResetContent(hCtrl);
 
-		ComboBox_AddStringA(hCtrl, _UI("Auto"));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Auto")));
 		ComboBox_SetItemData(hCtrl, nCount++, 0);
 
 		pDisplayModes = DirectDraw_GetDisplayModes();
@@ -4868,7 +4868,7 @@ static void InitializeDefaultInputUI(HWND hwnd)
 
 	if (hCtrl)
 	{
-		ComboBox_AddStringA(hCtrl, _UI("Standard"));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Standard")));
 
 		swprintf(path, TEXT("%s\\*.*"), GetCtrlrDir());
 
@@ -4916,7 +4916,7 @@ static void InitializeEffectUI(HWND hwnd)
 
 	if (hCtrl)
 	{
-		ComboBox_AddStringA(hCtrl, _UI("None"));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("None")));
 
 		swprintf(path, TEXT("%s\\*.*"), GetArtDir());
 
@@ -4964,7 +4964,7 @@ static void InitializeControllerMappingUI(HWND hwnd)
 	{
 		for (i = 0; i < NUMDEVICES; i++)
 		{
-			ComboBox_InsertStringA(hCtrl, i, _UI(g_ComboBoxDevice[i].m_pText));
+			ComboBox_InsertString(hCtrl, i, _UIW(g_ComboBoxDevice[i].m_pText));
 			ComboBox_SetItemData( hCtrl, i, g_ComboBoxDevice[i].m_pData);
 		}
 	}
@@ -4972,7 +4972,7 @@ static void InitializeControllerMappingUI(HWND hwnd)
 	{
 		for (i = 0; i < NUMDEVICES; i++)
 		{
-			ComboBox_InsertStringA(hCtrl1, i, _UI(g_ComboBoxDevice[i].m_pText));
+			ComboBox_InsertString(hCtrl1, i, _UIW(g_ComboBoxDevice[i].m_pText));
 			ComboBox_SetItemData( hCtrl1, i, g_ComboBoxDevice[i].m_pData);
 		}
 	}
@@ -4980,7 +4980,7 @@ static void InitializeControllerMappingUI(HWND hwnd)
 	{
 		for (i = 0; i < NUMDEVICES; i++)
 		{
-			ComboBox_InsertStringA(hCtrl2, i, _UI(g_ComboBoxDevice[i].m_pText));
+			ComboBox_InsertString(hCtrl2, i, _UIW(g_ComboBoxDevice[i].m_pText));
 			ComboBox_SetItemData( hCtrl2, i, g_ComboBoxDevice[i].m_pData);
 		}
 	}
@@ -4988,7 +4988,7 @@ static void InitializeControllerMappingUI(HWND hwnd)
 	{
 		for (i = 0; i < NUMDEVICES; i++)
 		{
-			ComboBox_InsertStringA(hCtrl3, i, _UI(g_ComboBoxDevice[i].m_pText));
+			ComboBox_InsertString(hCtrl3, i, _UIW(g_ComboBoxDevice[i].m_pText));
 			ComboBox_SetItemData( hCtrl3, i, g_ComboBoxDevice[i].m_pData);
 		}
 	}
@@ -4996,7 +4996,7 @@ static void InitializeControllerMappingUI(HWND hwnd)
 	{
 		for (i = 0; i < NUMDEVICES; i++)
 		{
-			ComboBox_InsertStringA(hCtrl4, i, _UI(g_ComboBoxDevice[i].m_pText));
+			ComboBox_InsertString(hCtrl4, i, _UIW(g_ComboBoxDevice[i].m_pText));
 			ComboBox_SetItemData( hCtrl4, i, g_ComboBoxDevice[i].m_pData);
 		}
 	}
@@ -5004,7 +5004,7 @@ static void InitializeControllerMappingUI(HWND hwnd)
 	{
 		for (i = 0; i < NUMDEVICES; i++)
 		{
-			ComboBox_InsertStringA(hCtrl5, i, _UI(g_ComboBoxDevice[i].m_pText));
+			ComboBox_InsertString(hCtrl5, i, _UIW(g_ComboBoxDevice[i].m_pText));
 			ComboBox_SetItemData( hCtrl5, i, g_ComboBoxDevice[i].m_pData);
 		}
 	}
@@ -5117,7 +5117,6 @@ static void InitializeJoyidUI(HWND hWnd)
 {
 	HWND hCtrl;
 	int i, j, num;
-	char buf[8];
 
 	if (DIJoystick.Available() == FALSE)
 		return;
@@ -5134,8 +5133,10 @@ static void InitializeJoyidUI(HWND hWnd)
 		{
 			for (j = 0; j < DIJoystick_GetNumPhysicalJoysticks(); j++)
 			{
-				sprintf(buf, _UI("ID:%d"), j + 1);
-				ComboBox_AddStringA(hCtrl, buf);
+				WCHAR buf[256];
+
+				swprintf(buf, _UIW(TEXT("ID:%d")), j + 1);
+				ComboBox_AddString(hCtrl, buf);
 			}
 		}
 	}
@@ -5152,10 +5153,10 @@ static void InitializeJoyidUI(HWND hWnd)
 	{
 		int i;
 
-		ComboBox_AddStringA(hCtrl,_UI("None"));
+		ComboBox_AddString(hCtrl,_UIW(TEXT("None")));
 
 		for (i = 1; scale_name(i); i++)
-			ComboBox_AddStringA(hCtrl,_UI(scale_desc(i)));
+			ComboBox_AddString(hCtrl,_UIW(_Unicode(scale_desc(i))));
 	}
 }
 #endif /* USE_SCALE_EFFECTS */

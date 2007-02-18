@@ -22,7 +22,7 @@ extern UINT GetDepth(HWND hWnd);
 extern BOOL OnNT(void);
 
 /* Open a text file */
-extern void DisplayTextFile(HWND hWnd, const char *cName);
+extern void DisplayTextFile(HWND hWnd, const WCHAR *cName);
 
 #define PACKVERSION(major,minor) MAKELONG(minor,major)
 

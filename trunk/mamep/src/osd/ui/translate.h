@@ -1,7 +1,7 @@
 int      InitTranslator(int langcode);
 HFONT    TranslateCreateFont(const LOGFONTW *);
 void     TranslateMenu(HMENU hMenu, int uiString);
-char    *TranslateMenuHelp(HMENU hMenu, UINT nIndex, int popup);
+WCHAR   *TranslateMenuHelp(HMENU hMenu, UINT nIndex, int popup);
 void     TranslateControl(HWND hControl);
 void     TranslateDialog(HWND hDlg, LPARAM lParam, BOOL change_font);
 void     TranslateTreeFolders(HWND hWnd);

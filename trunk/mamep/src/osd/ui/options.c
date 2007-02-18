@@ -428,21 +428,20 @@ static int  num_drivers = 0;
 // Screen shot Page tab control text
 // these must match the order of the options flags in options.h
 // (TAB_...)
-const char* image_tabs_long_name[MAX_TAB_TYPES] =
+const WCHAR* image_tabs_long_name[MAX_TAB_TYPES] =
 {
-	"Snapshot",
-	"Flyer",
-	"Cabinet",
-	"Marquee",
-	"Title",
-	"Control Panel",
+	TEXT("Snapshot"),
+	TEXT("Flyer"),
+	TEXT("Cabinet"),
+	TEXT("Marquee"),
+	TEXT("Title"),
+	TEXT("Control Panel"),
 #ifdef STORY_DATAFILE
-	"History",
-	"Story"
+	TEXT("History"),
+	TEXT("Story")
 #else /* STORY_DATAFILE */
-	"History"
+	TEXT("History")
 #endif /* STORY_DATAFILE */
-
 };
 
 const char* image_tabs_short_name[MAX_TAB_TYPES] =
@@ -935,7 +934,7 @@ void SetUseLangList(BOOL is_use)
     options.use_lang_list = is_use;
 }
 
-const char * GetImageTabLongName(int tab_index)
+const WCHAR * GetImageTabLongName(int tab_index)
 {
 	return image_tabs_long_name[tab_index];
 }

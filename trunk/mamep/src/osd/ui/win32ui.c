@@ -699,18 +699,18 @@ static TBBUTTON tbb[] =
 
 #define NUM_TOOLTIPS 8 + 1
 
-static char szTbStrings[NUM_TOOLTIPS + 1][30] =
+static WCHAR szTbStrings[NUM_TOOLTIPS + 1][30] =
 {
-	"Toggle Folder List",
-	"Toggle Screen Shot",
-	"Large Icons",
-	"Small Icons",
-	"List",
-	"Details",
-	"Grouped",
-	"About",
-	"Help",
-	"Use Local Language Game List"
+	TEXT("Toggle Folder List"),
+	TEXT("Toggle Screen Shot"),
+	TEXT("Large Icons"),
+	TEXT("Small Icons"),
+	TEXT("List"),
+	TEXT("Details"),
+	TEXT("Grouped"),
+	TEXT("About"),
+	TEXT("Help"),
+	TEXT("Use Local Language Game List")
 };
 
 static int CommandToString[] =
@@ -788,54 +788,54 @@ static WCHAR * override_savestate_directory = NULL;
 
 static struct
 {
-	const char *filter;
-	const char *title_load;
-	const char *title_save;
+	const WCHAR *filter;
+	const WCHAR *title_load;
+	const WCHAR *title_save;
 	const WCHAR *(*dir)(void);
-	const char *ext;
+	const WCHAR *ext;
 } cfg_data[FILETYPE_MAX] =
 {
 	{
-		MAMENAME " input files (*.inp,*.zip)\0*.inp;*.zip\0All files (*.*)\0*.*\0",
-		"Select a recorded file",
-		"Select a file to record",
+		TEXT(MAMENAME " input files (*.inp,*.zip)\0*.inp;*.zip\0All files (*.*)\0*.*\0"),
+		TEXT("Select a recorded file"),
+		TEXT("Select a file to record"),
 		GetInpDir,
-		"inp"
+		TEXT("inp")
 	},
 	{
-		MAMENAME " savestate files (*.sta)\0*.sta;\0All files (*.*)\0*.*\0",
-		"Select a savestate file",
+		TEXT(MAMENAME " savestate files (*.sta)\0*.sta;\0All files (*.*)\0*.*\0"),
+		TEXT("Select a savestate file"),
 		NULL,
 		GetStateDir,
-		"sta"
+		TEXT("sta")
 	},
 	{
-		"Sounds (*.wav)\0*.wav;\0All files (*.*)\0*.*\0",
+		TEXT("Sounds (*.wav)\0*.wav;\0All files (*.*)\0*.*\0"),
 		NULL,
-		"Select a sound file to record",
+		TEXT("Select a sound file to record"),
 		GetLastDir,
-		"wav"
+		TEXT("wav")
 	},
 	{
-		"Videos (*.mng)\0*.mng;\0All files (*.*)\0*.*\0",
+		TEXT("Videos (*.mng)\0*.mng;\0All files (*.*)\0*.*\0"),
 		NULL,
-		"Select a mng file to record",
+		TEXT("Select a mng file to record"),
 		GetLastDir,
-		"mng"
+		TEXT("mng")
 	},
 	{
-		"Image Files (*.png,*.bmp)\0*.png;*.bmp\0",
-		"Select a Background Image",
+		TEXT("Image Files (*.png,*.bmp)\0*.png;*.bmp\0"),
+		TEXT("Select a Background Image"),
 		NULL,
 		GetBgDir,
-		"png"
+		TEXT("png")
 	},
 	{
-		"Game List Files (*.lst)\0*.lst\0",
-		"Select a folder to save game list",
+		TEXT("Game List Files (*.lst)\0*.lst\0"),
+		TEXT("Select a folder to save game list"),
 		NULL,
 		GetTranslationDir,
-		"lst"
+		TEXT("lst")
 	},
 };
 
@@ -1807,7 +1807,7 @@ typedef struct
 
 typedef struct
 {
-	const char *str;
+	const WCHAR *str;
 	int index;
 } sort_comapre_t;
 
@@ -1816,7 +1816,7 @@ static sort_index_t *sort_index;
 
 static int sort_comapre_str(const void *p1, const void *p2)
 {
-	return stricmp(((const sort_comapre_t *)p1)->str, ((const sort_comapre_t *)p2)->str);
+	return wcsicmp(((const sort_comapre_t *)p1)->str, ((const sort_comapre_t *)p2)->str);
 }
 
 static void build_sort_index(void)
@@ -1839,7 +1839,7 @@ static void build_sort_index(void)
 	for (i = 0; i < game_count; i++)
 	{
 		ptemp[i].index = i;
-		ptemp[i].str = strdup(ModifyThe(drivers[i]->description));
+		ptemp[i].str = driversw[i]->modify_the;
 	}
 
 	qsort(ptemp, game_count, sizeof (*ptemp), sort_comapre_str);
@@ -1847,10 +1847,6 @@ static void build_sort_index(void)
 	for (i = 0; i < game_count; i++)
 		sort_index[ptemp[i].index].description = i;
 
-	for (i = 0; i < game_count; i++)
-	{
-		free((void *)ptemp[i].str);
-	}
 	free(ptemp);
 }
 
@@ -1865,11 +1861,11 @@ static void build_sort_readings(void)
 	// process readings
 	for (i = 0; i < game_count; i++)
 	{
-		char *r;
+		WCHAR *r;
 
-		r = _READINGS(drivers[i]->description);
-		if (r == drivers[i]->description)
-			r = _LST(drivers[i]->description);
+		r = _READINGSW(driversw[i]->description);
+		if (r == driversw[i]->description)
+			r = _LSTW(driversw[i]->description);
 
 		ptemp[i].index = i;
 		ptemp[i].str = r;
@@ -3420,7 +3416,7 @@ static void CopyToolTipTextW(LPTOOLTIPTEXTW lpttt)
 	int   i;
 	int   id = lpttt->hdr.idFrom;
 	int   iButton = lpttt->hdr.idFrom;
-	static char String[1024];
+	static WCHAR String[1024];
 	BOOL bConverted = FALSE;
 	//LPWSTR pDest = lpttt->lpszText;
 	/* Map command ID to string index */
@@ -3438,12 +3434,12 @@ static void CopyToolTipTextW(LPTOOLTIPTEXTW lpttt)
 		/* Check for valid parameter */
 		if (iButton > NUM_TOOLTIPS)
 		{
-			strcpy(String, _UI("Invalid Button Index"));
+			lstrcpy(String, _UIW(TEXT("Invalid Button Index")));
 		}
 		else
 		{
-			strcpy(String, (id==IDC_USE_LIST && GetLangcode()==UI_LANG_EN_US) ?
-			       "Modify 'The'" : _UI(szTbStrings[iButton]));
+			lstrcpy(String, (id==IDC_USE_LIST && GetLangcode()==UI_LANG_EN_US) ?
+			       _UIW(TEXT("Modify 'The'")) : _UIW(szTbStrings[iButton]));
 		}
 	}
 	else if (iButton <= 2 )
@@ -3451,15 +3447,15 @@ static void CopyToolTipTextW(LPTOOLTIPTEXTW lpttt)
 		//Statusbar
 		SendMessage(lpttt->hdr.hwndFrom, TTM_SETMAXTIPWIDTH, 0, 200);
 		if (iButton != 1)
-			SendMessage(hStatusBar, SB_GETTEXTA, (WPARAM)iButton, (LPARAM)(LPSTR) &String );
+			SendMessage(hStatusBar, SB_GETTEXTA, (WPARAM)iButton, (LPARAM)(LPSTR) &String);
 		else
 			//for first pane we get the Status directly, to get the line breaks
-			strcpy(String, _String(GameInfoStatus(Picker_GetSelectedItem(hwndList), FALSE)) );
+			lstrcpy(String, GameInfoStatus(Picker_GetSelectedItem(hwndList), FALSE));
 	}
 	else
-		strcpy(String, _UI("Invalid Button Index"));
+		lstrcpy(String, _UIW(TEXT("Invalid Button Index")));
 
-	lstrcpy(lpttt->lpszText, _Unicode(String));
+	lstrcpy(lpttt->lpszText, String);
 }
 
 static void CopyToolTipTextA(LPTOOLTIPTEXTA lpttt)
@@ -3486,12 +3482,12 @@ static void CopyToolTipTextA(LPTOOLTIPTEXTA lpttt)
 		/* Check for valid parameter */
 		if (iButton > NUM_TOOLTIPS)
 		{
-			strcpy(String, _UI("Invalid Button Index"));
+			strcpy(String, _String(_UIW(TEXT("Invalid Button Index"))));
 		}
 		else
 		{
 			strcpy(String, (id==IDC_USE_LIST && GetLangcode()==UI_LANG_EN_US) ?
-			       "Modify 'The'" : _UI(szTbStrings[iButton]));
+			       "Modify 'The'" : _String(_UIW(szTbStrings[iButton])));
 		}
 	}
 	else if (iButton <= 2 )
@@ -3499,13 +3495,13 @@ static void CopyToolTipTextA(LPTOOLTIPTEXTA lpttt)
 		//Statusbar
 		SendMessage(lpttt->hdr.hwndFrom, TTM_SETMAXTIPWIDTH, 0, 140);
 		if (iButton != 1)
-			SendMessage(hStatusBar, SB_GETTEXTA, (WPARAM)iButton, (LPARAM)(LPSTR) &String );
+			SendMessage(hStatusBar, SB_GETTEXTA, (WPARAM)iButton, (LPARAM)(LPSTR) &String);
 		else
 			//for first pane we get the Status directly, to get the line breaks
-			strcpy(String, _String(GameInfoStatus(Picker_GetSelectedItem(hwndList), FALSE)) );
+			strcpy(String, _String(GameInfoStatus(Picker_GetSelectedItem(hwndList), FALSE)));
 	}
 	else
-		strcpy(String, _UI("Invalid Button Index"));
+		strcpy(String, _String(_UIW(TEXT("Invalid Button Index"))));
 
 	strcpy(lpttt->lpszText, String);
 }
@@ -3602,8 +3598,8 @@ static LRESULT Statusbar_MenuSelect(HWND hwnd, WPARAM wParam, LPARAM lParam)
 				 hStatusBar, &nZero);
 	}
 #else
-	char *p = TranslateMenuHelp((HMENU)lParam, (UINT)LOWORD(wParam), HIWORD(wParam) & MF_POPUP);
-	StatusBarSetTextA(hStatusBar, 0, p);
+	WCHAR *p = TranslateMenuHelp((HMENU)lParam, (UINT)LOWORD(wParam), HIWORD(wParam) & MF_POPUP);
+	StatusBarSetTextW(hStatusBar, 0, p);
 #endif
 
 	return 0;
@@ -4592,7 +4588,7 @@ UINT_PTR CALLBACK CFHookProc(
 	switch (uiMsg)
 	{
 		case WM_INITDIALOG:
-			SendDlgItemMessageA(hdlg, cmb4, CB_ADDSTRING, 0, (LPARAM)(const void *)_UI("Custom"));
+			SendDlgItemMessage(hdlg, cmb4, CB_ADDSTRING, 0, (LPARAM)(const WCHAR *)_UIW(TEXT("Custom")));
 			iIndex = SendDlgItemMessage(hdlg, cmb4, CB_GETCOUNT, 0, 0);
 			cList = GetListFontColor();
 			SendDlgItemMessage(hdlg, cmb4, CB_SETITEMDATA,(WPARAM)iIndex-1,(LPARAM)cList );
@@ -4620,7 +4616,7 @@ UINT_PTR CALLBACK CFHookProc(
  							cList = GetListFontColor();
  							PickColor(&cList);
 							SendDlgItemMessage(hdlg, cmb4, CB_DELETESTRING, iIndex, 0);
-							SendDlgItemMessageA(hdlg, cmb4, CB_ADDSTRING, 0, (LPARAM)(const void *)_UI("Custom"));
+							SendDlgItemMessage(hdlg, cmb4, CB_ADDSTRING, 0, (LPARAM)(const WCHAR *)_UIW(TEXT("Custom")));
 							SendDlgItemMessage(hdlg, cmb4, CB_SETITEMDATA,(WPARAM)iIndex,(LPARAM)cList);
 							SendDlgItemMessage(hdlg, cmb4, CB_SETCURSEL,(WPARAM)iIndex,0 );
 							return TRUE;
@@ -6058,7 +6054,7 @@ static BOOL CommonFileDialogW(BOOL open_for_write, WCHAR *filename, int filetype
 	common_file_dialog_procW cfd;
 	WCHAR fn[MAX_PATH];
 	WCHAR *p, buf[256];
-	const char *s = NULL;
+	const WCHAR *s = NULL;
 	WCHAR dir[256];
 	WCHAR title[256];
 	WCHAR ext[256];
@@ -6083,7 +6079,7 @@ static BOOL CommonFileDialogW(BOOL open_for_write, WCHAR *filename, int filetype
 
 		if (cfg_data[filetype].title_save)
 		{
-			lstrcpy(title, _Unicode(_UI(cfg_data[filetype].title_save)));
+			lstrcpy(title, _UIW(cfg_data[filetype].title_save));
 			of.lpstrTitle = title;
 		}
 	}
@@ -6094,7 +6090,7 @@ static BOOL CommonFileDialogW(BOOL open_for_write, WCHAR *filename, int filetype
 
 		if (cfg_data[filetype].title_load)
 		{
-			lstrcpy(title, _Unicode(_UI(cfg_data[filetype].title_load)));
+			lstrcpy(title, _UIW(cfg_data[filetype].title_load));
 			of.lpstrTitle = title;
 		}
 	}
@@ -6107,14 +6103,14 @@ static BOOL CommonFileDialogW(BOOL open_for_write, WCHAR *filename, int filetype
 
 	if (cfg_data[filetype].ext)
 	{
-		lstrcpy(ext, _Unicode(cfg_data[filetype].ext));
+		lstrcpy(ext, cfg_data[filetype].ext);
 		of.lpstrDefExt = ext;
 	}
 
 	s = cfg_data[filetype].filter;
-	for (p = buf; *s; s += strlen(s) + 1)
+	for (p = buf; *s; s += lstrlen(s) + 1)
 	{
-		lstrcpy(p, _Unicode(_UI(s)));
+		lstrcpy(p, _UIW(s));
 		p += lstrlen(p) + 1;
 	}
 	*p = '\0';
@@ -6149,7 +6145,7 @@ static BOOL CommonFileDialogA(BOOL open_for_write, WCHAR *filename, int filetype
 	common_file_dialog_procA cfd;
 	char fn[MAX_PATH];
 	char *p, buf[256];
-	const char *s = NULL;
+	const WCHAR *s = NULL;
 	char dir[256];
 	char title[256];
 	char ext[256];
@@ -6174,7 +6170,7 @@ static BOOL CommonFileDialogA(BOOL open_for_write, WCHAR *filename, int filetype
 
 		if (cfg_data[filetype].title_save)
 		{
-			strcpy(title, _UI(cfg_data[filetype].title_save));
+			strcpy(title, _String(_UIW(cfg_data[filetype].title_save)));
 			of.lpstrTitle = title;
 		}
 	}
@@ -6185,7 +6181,7 @@ static BOOL CommonFileDialogA(BOOL open_for_write, WCHAR *filename, int filetype
 
 		if (cfg_data[filetype].title_load)
 		{
-			strcpy(title, _UI(cfg_data[filetype].title_load));
+			strcpy(title, _String(_UIW(cfg_data[filetype].title_load)));
 			of.lpstrTitle = title;
 		}
 	}
@@ -6198,14 +6194,14 @@ static BOOL CommonFileDialogA(BOOL open_for_write, WCHAR *filename, int filetype
 
 	if (cfg_data[filetype].ext)
 	{
-		strcpy(ext, _UI(cfg_data[filetype].ext));
+		strcpy(ext, _String(cfg_data[filetype].ext));
 		of.lpstrDefExt = ext;
 	}
 
 	s = cfg_data[filetype].filter;
-	for (p = buf; *s; s += strlen(s) + 1)
+	for (p = buf; *s; s += lstrlen(s) + 1)
 	{
-		strcpy(p, _UI(s));
+		strcpy(p, _String(_UIW(s)));
 		p += strlen(p) + 1;
 	}
 	*p = '\0';
@@ -7399,12 +7395,12 @@ static INT_PTR CALLBACK LoadProgressDialogProc(HWND hDlg, UINT Msg, WPARAM wPara
 	{
 	case WM_INITDIALOG :
 	{
-		char buf[256];
+		WCHAR buf[256];
 		
 		TranslateDialog(hDlg, lParam, TRUE);
-		sprintf(buf, _UI("Loading %s"), options.use_lang_list ?
-			_LST(Machine->gamedrv->description):Machine->gamedrv->description);
-		SetWindowText(hDlg, _Unicode(buf));
+		swprintf(buf, _UIW(TEXT("Loading %s")), options.use_lang_list ?
+			_LSTW(driversw[GetDriverIndex(Machine->gamedrv)]->description) : driversw[GetDriverIndex(Machine->gamedrv)]->modify_the);
+		SetWindowText(hDlg, buf);
 		
 		g_bCloseLoading = FALSE;
 		g_bAbortLoading = FALSE;

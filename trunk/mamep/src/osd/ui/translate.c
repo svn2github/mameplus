@@ -54,8 +54,8 @@ static struct {
 	UINT  uiString;
 } popstr[NUM_POPSTR];
 
-static char *MenuStrings[NUM_MENUA + NUM_MENUB];
-static char *MenuHelpStrings[NUM_MENUA + NUM_MENUB];
+static WCHAR *MenuStrings[NUM_MENUA + NUM_MENUB];
+static WCHAR *MenuHelpStrings[NUM_MENUA + NUM_MENUB];
 
 static HFONT hTranslateFont = NULL;
 
@@ -100,7 +100,7 @@ void GetTranslatedFont(LOGFONTW *logfont)
 		break;
 	}
 
-	lstrcpy(logfont->lfFaceName, _Unicode(_UI("MS Sans Serif")));
+	lstrcpy(logfont->lfFaceName, _UIW(TEXT("MS Sans Serif")));
 }
 
 
@@ -133,7 +133,7 @@ static void TranslateMenuRecurse(HMENU hMenu)
 	{
 		WCHAR         buffer[1024];
 		int           id;
-		char         *p;
+		WCHAR        *p;
 
 		hSubMenu = GetSubMenu(hMenu, i);
 		if (hSubMenu != NULL )
@@ -181,7 +181,7 @@ static void TranslateMenuRecurse(HMENU hMenu)
 
 		if (!MenuStrings[id])
 		{
-			MenuStrings[id] = strdup(_String(buffer));
+			MenuStrings[id] = wcsdup(buffer);
 			if (!MenuStrings[id])
 				continue;
 		}
@@ -189,17 +189,17 @@ static void TranslateMenuRecurse(HMENU hMenu)
 		if (!MenuHelpStrings[id])
 		{
 			LoadString(GetModuleHandle(NULL), mii.wID, buffer, sizeof(buffer) / sizeof(*buffer));
-			MenuHelpStrings[id] = strdup(_String(buffer));
+			MenuHelpStrings[id] = wcsdup(buffer);
 		}
 
-		p = _UI(MenuStrings[id]);
+		p = _UIW(MenuStrings[id]);
 
 		if (isMenuBarItem)
-			ModifyMenu(hMenu, i, MF_BYPOSITION, mii.wID, _Unicode(p));
+			ModifyMenu(hMenu, i, MF_BYPOSITION, mii.wID, p);
 
 		mii.cbSize     = sizeof(MENUITEMINFO);
 		mii.fMask      = MIIM_STRING | MIIM_FTYPE;
-		mii.dwTypeData = _Unicode(p);
+		mii.dwTypeData = p;
 		mii.cch        = lstrlen(mii.dwTypeData);
 
 		SetMenuItemInfo(hMenu, i, TRUE, &mii);
@@ -239,7 +239,7 @@ void TranslateMenu(HMENU hMenu, int uiString)
 }
 
 
-char  *TranslateMenuHelp(HMENU hMenu, UINT nIndex, int popup)
+WCHAR *TranslateMenuHelp(HMENU hMenu, UINT nIndex, int popup)
 {
 	int          id;
 
@@ -277,22 +277,21 @@ char  *TranslateMenuHelp(HMENU hMenu, UINT nIndex, int popup)
 	if (!MenuHelpStrings[id])
 		return NULL;
 
-	return _UI(MenuHelpStrings[id]);
+	return _UIW(MenuHelpStrings[id]);
 }
 
 
 void TranslateControl(HWND hControl)
 {
 	WCHAR  buffer[1024];
-	char  *p, *str;
+	WCHAR *p;
 
 	GetWindowText(hControl, buffer, sizeof(buffer) / sizeof(*buffer));
-	str = _String(buffer);
-	p = _UI(str);
-	if (strcmp(p, str))
+	p = _UIW(buffer);
+	if (p != buffer)
 	{
 		SetWindowFont(hControl, hTranslateFont, TRUE);
-		SetWindowText(hControl, _Unicode(p));
+		SetWindowText(hControl, p);
 	}
 	else if (force_change_font)
 		SetWindowFont(hControl, hTranslateFont, TRUE);
@@ -309,19 +308,18 @@ static void TranslateTabControl(HWND hControl)
 	{
 		TC_ITEM  tci;
 		WCHAR    buffer[1024];
-		char    *p, *str;
+		WCHAR    *p;
 
 		tci.mask = TCIF_TEXT;
 		tci.pszText = buffer;
 		tci.cchTextMax = sizeof(buffer) /  sizeof(*buffer);
 		TabCtrl_GetItem(hControl, i, &tci);
 
-		str = _String(buffer);
-		p = _UI(str);
-		if (strcmp(p, str))
+		p = _UIW(buffer);
+		if (p != buffer)
 		{
 			tci.mask = TCIF_TEXT;
-			tci.pszText = _Unicode(p);
+			tci.pszText = p;
 			TabCtrl_SetItem(hControl, i, &tci);
 		}
 	}
@@ -649,7 +647,7 @@ WCHAR *w_lang_message(int msgcat, const WCHAR *str)
 }
 
 
-// temporary to keep compatibility
+#if 0 // temporary to keep compatibility
 
 struct mb_msg
 {
@@ -678,6 +676,7 @@ char *mb_lang_message(int msgcat, const char *str)
 
 	if (wid == wstr)
 		return (char *)str;
+dprintf("mb_lang_message: %s", str);
 
 	if (mb_msg_index == NULL)
 	{
@@ -708,3 +707,4 @@ char *mb_lang_message(int msgcat, const char *str)
 
 	return temp.mbstr;
 }
+#endif

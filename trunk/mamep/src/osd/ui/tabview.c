@@ -296,7 +296,7 @@ void TabView_Reset(HWND hwndTabView)
 	{
 		if (!pTabViewInfo->pCallbacks->pfnGetShowTab || pTabViewInfo->pCallbacks->pfnGetShowTab(i))
 		{
-			tci.pszText = _Unicode(_UI(pTabViewInfo->pCallbacks->pfnGetTabLongName(i)));
+			tci.pszText = _UIW(pTabViewInfo->pCallbacks->pfnGetTabLongName(i));
 			TabCtrl_InsertItem(hwndTabView, i, &tci);
 		}
 	}

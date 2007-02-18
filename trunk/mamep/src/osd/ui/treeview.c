@@ -402,18 +402,18 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 	//mamep: filter for search box control
 	if (wcslen(search_text) && _wcsicmp(search_text, _UIW(TEXT(SEARCH_PROMPT))))
 	{
-		if (MyStrStrI(_Unicode(drivers[nGame]->description), search_text) == NULL &&
-			MyStrStrI(_Unicode(_LST(drivers[nGame]->description)), search_text) == NULL &&
-		    MyStrStrI(_Unicode(drivers[nGame]->name), search_text) == NULL)
+		if (MyStrStrI(driversw[nGame]->description, search_text) == NULL &&
+			MyStrStrI(_LSTW(driversw[nGame]->description), search_text) == NULL &&
+		    MyStrStrI(driversw[nGame]->name, search_text) == NULL)
 			return TRUE;
 	}
 
 	if (wcslen(filter_text))
 	{
-		if (MyStrStrI(_Unicode(UseLangList() ? _LST(drivers[nGame]->description) : drivers[nGame]->description), filter_text) == NULL &&
-		    MyStrStrI(_Unicode(drivers[nGame]->name), filter_text) == NULL && 
-		    MyStrStrI(_Unicode(drivers[nGame]->source_file), filter_text) == NULL && 
-		    MyStrStrI(_Unicode(UseLangList()? _MANUFACT(drivers[nGame]->manufacturer) : drivers[nGame]->manufacturer), filter_text) == NULL)
+		if (MyStrStrI(UseLangList() ? _LSTW(driversw[nGame]->description) : driversw[nGame]->description, filter_text) == NULL &&
+		    MyStrStrI(driversw[nGame]->name, filter_text) == NULL && 
+		    MyStrStrI(driversw[nGame]->source_file, filter_text) == NULL && 
+		    MyStrStrI(UseLangList()? _MANUFACTW(driversw[nGame]->manufacturer) : driversw[nGame]->manufacturer, filter_text) == NULL)
 			return TRUE;
 	}
 

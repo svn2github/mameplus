@@ -99,30 +99,30 @@ INT_PTR CALLBACK PaletteDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 /* Initialize the palette options */
 static void InitializePaletteUI(HWND hwnd)
 {
-	static const char *palette_names[MAX_COLORTABLE] =
+	static const WCHAR *palette_names[MAX_COLORTABLE] =
 	{
-		"Font (blank)",
-		"Font (normal)",
-		"Font (special)",
-		"Window background",
-		"Window frame",
-		"Window frame (light)",
-		"Window frame (dark)",
-		"OSD bar",
-		"OSD bar (light)",
-		"OSD bar (dark)",
-		"OSD bar (default)",
-		"Button (A or 1)",
-		"Button (B or 2)",
-		"Button (C or 3)",
-		"Button (D or 4)",
-		"Button (K or 5)",
-		"Button (P or 6)",
-		"Button (S or 7)",
-		"Button (8)",
-		"Button (9)",
-		"Button (10)",
-		"Cursor",
+		TEXT("Font (blank)"),
+		TEXT("Font (normal)"),
+		TEXT("Font (special)"),
+		TEXT("Window background"),
+		TEXT("Window frame"),
+		TEXT("Window frame (light)"),
+		TEXT("Window frame (dark)"),
+		TEXT("OSD bar"),
+		TEXT("OSD bar (light)"),
+		TEXT("OSD bar (dark)"),
+		TEXT("OSD bar (default)"),
+		TEXT("Button (A or 1)"),
+		TEXT("Button (B or 2)"),
+		TEXT("Button (C or 3)"),
+		TEXT("Button (D or 4)"),
+		TEXT("Button (K or 5)"),
+		TEXT("Button (P or 6)"),
+		TEXT("Button (S or 7)"),
+		TEXT("Button (8)"),
+		TEXT("Button (9)"),
+		TEXT("Button (10)"),
+		TEXT("Cursor"),
 	};
 
 	int i;
@@ -141,7 +141,7 @@ static void InitializePaletteUI(HWND hwnd)
 			palette_tmp[i][1] = (unsigned char)b;
 			palette_tmp[i][2] = (unsigned char)c;
 
-			ComboBox_AddString(hCtrl, _Unicode(_UI(palette_names[i])));
+			ComboBox_AddString(hCtrl, _UIW(palette_names[i]));
 		}
 	}
 

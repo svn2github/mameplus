@@ -331,7 +331,7 @@ void ResetGameOptions(int driver_index);
 /*----------------------------------------*/
 char * GetVersionString(void);
 
-const char * GetImageTabLongName(int tab_index);
+const WCHAR * GetImageTabLongName(int tab_index);
 const char * GetImageTabShortName(int tab_index);
 
 void SetViewMode(int val);

@@ -66,12 +66,14 @@
 #undef _WINDOWS
 #undef _UI
 
+#if 0
 #define _(str)		mb_lang_message(UI_MSG_MAME, str)
 #define _LST(str)	mb_lang_message(UI_MSG_LIST, str)
 #define _READINGS(str)	mb_lang_message(UI_MSG_READINGS, str)
 #define _MANUFACT(str)	mb_lang_message(UI_MSG_MANUFACTURE, str)
 #define _WINDOWS(str)	mb_lang_message(UI_MSG_OSD0, str)
 #define _UI(str)	mb_lang_message(UI_MSG_UI, str)
+#endif
 
 #define _W(str)		w_lang_message(UI_MSG_MAME, str)
 #define _LSTW(str)	w_lang_message(UI_MSG_LIST, str)

@@ -29,7 +29,7 @@
 
 typedef struct
 {
-	LPCSTR  	 lpName;
+	const WCHAR*	lpName;
 	const WCHAR*	(*pfnGetTheseDirs)(void);
 	void		(*pfnSetTheseDirs)(const WCHAR* lpDirs);
 	BOOL		bMulti;
