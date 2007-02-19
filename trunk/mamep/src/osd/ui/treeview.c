@@ -1351,8 +1351,8 @@ void CreateFPSFolders(int parent_index)
 	int nGames = GetNumGames();
 	int nFolder = numFolders;
 	LPTREEFOLDER lpFolder = treeFolders[parent_index];
-	LPTREEFOLDER map[50];
-	float fps[50];
+	LPTREEFOLDER map[60];
+	float fps[60];
 	int nFPS = 0;
 
 	// no games in top level folder
