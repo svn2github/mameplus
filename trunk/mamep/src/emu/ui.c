@@ -791,7 +791,7 @@ void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int
 				linestart = up_arrow;
 			else
 				linestart = down_arrow;
-			
+
 			curwidth = ui_get_string_width(linestart);
 			ends = linestart + strlen(linestart);
 			s_temp = ends;
@@ -855,12 +855,12 @@ void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int
 		/* advance by a row */
 		{
 			cury += lineheight;
-			
+
 			//mamep: skip overflow text
-			if (draw != DRAW_NONE && cury + 2.0f * UI_BOX_TB_BORDER > 1.0f)
+			if (draw != DRAW_NONE && curline == multiline_text_box_visible_lines - 1 && down_arrow)
 				break;
 		}
-		
+
 		/* skip past any spaces at the beginning of the next line */
 		scharcount = uchar_from_utf8(&schar, s, ends - s);
 		if (scharcount == -1)
