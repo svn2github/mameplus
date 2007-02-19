@@ -69,7 +69,7 @@ const char *DATAFILE_TAG_END = "$end";
 
 struct tDatafileIndex
 {
-	long offset;
+	UINT64 offset;
 	const game_driver *driver;
 };
 
@@ -83,7 +83,7 @@ static struct tDatafileIndex *driv_idx;
 #ifdef CMD_LIST
 struct tMenuIndex
 {
-	long offset;
+	UINT64 offset;
 	char *menuitem;
 };
 
@@ -98,7 +98,7 @@ static int mame32jp_wrap;
  *      private data for parsing functions
  ****************************************************************************/
 static mame_file *fp;				/* Our file pointer */
-static long dwFilePos;				/* file position */
+static UINT64 dwFilePos;				/* file position */
 static UINT8 bToken[MAX_TOKEN_LENGTH];		/* Our current token */
 
 /* an array of driver name/drivers array index sorted by driver name
@@ -220,10 +220,9 @@ static int GetSrcDriverIndex(const char *srcdriver)
  *
  *      Returns token, or TOKEN_INVALID if at end of file
  ****************************************************************************/
-static UINT32 GetNextToken(UINT8 **ppszTokenText, long *pdwPosition)
+static UINT32 GetNextToken(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 {
 	UINT32 dwLength;			/* Length of symbol */
-	long dwPos;				/* Temporary position */
 	UINT8 *pbTokenPtr = bToken;		/* Point to the beginning */
 	UINT8 bData;				/* Temporary data byte */
 #ifdef CMD_LIST
@@ -243,6 +242,7 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, long *pdwPosition)
 
 	while (1)
 	{
+		dwFilePos = mame_ftell(fp);
 		bData = mame_fgetc(fp);		/* Get next character */
 
 		/* If we're at the end of the file, bail out */
@@ -269,7 +269,7 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, long *pdwPosition)
 			{
 				*pbTokenPtr++ = bData;
 				*pbTokenPtr = '\0';
-				++dwFilePos;
+				dwFilePos = mame_ftell(fp);
 
 				if (',' == bData)
 					return(TOKEN_COMMA);
@@ -301,7 +301,7 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, long *pdwPosition)
 				       bData != '\r' &&
 				       mame_feof(fp) == 0)
 				{
-					++dwFilePos;
+					dwFilePos = mame_ftell(fp);
 					*pbTokenPtr++ = bData;	/* Store our byte */
 					++dwLength;
 					assert(dwLength < MAX_TOKEN_LENGTH);
@@ -314,7 +314,7 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, long *pdwPosition)
 
 				if (0 == mame_feof(fp))
 				{
-					mame_ungetc(bData, fp);
+					mame_fseek(fp, dwFilePos, SEEK_SET);
 				}
 
 				/* Null terminate the token */
@@ -334,14 +334,17 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, long *pdwPosition)
 
 			if (LF == bData)
 			{
+				UINT64 dwPos;
+
 				/* Unix style perhaps? */
 
 				bData = mame_fgetc(fp);		/* Peek ahead */
-				mame_ungetc(bData, fp);		/* Force a retrigger if subsequent LF's */
+				dwPos = mame_ftell(fp);
+				mame_fseek(fp, dwFilePos, SEEK_SET);	/* Force a retrigger if subsequent LF's */
 
 				if (LF == bData)		/* Two LF's in a row - it's a UNIX hard CR */
 				{
-					++dwFilePos;
+					dwFilePos = dwPos;
 					*pbTokenPtr++ = bData;	/* A real linefeed */
 					*pbTokenPtr = '\0';
 
@@ -355,7 +358,7 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, long *pdwPosition)
 			{
 				/* Figure out if it's Mac or MSDOS format */
 
-				++dwFilePos;
+				dwFilePos = mame_ftell(fp);
 				bData = mame_fgetc(fp);		/* Peek ahead */
 
 				/* We don't need to bother with EOF checking. It will be 0xff if */
@@ -368,7 +371,7 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, long *pdwPosition)
 
 					/* Stuff our character back upstream for successive CR's */
 
-					mame_ungetc(bData, fp);
+					mame_fseek(fp, dwFilePos, SEEK_SET);
 
 					*pbTokenPtr++ = bData;	/* A real carriage return (hard) */
 					*pbTokenPtr = '\0';
@@ -380,7 +383,7 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, long *pdwPosition)
 #ifdef CMD_LIST
 					if (mame32jp_wrap)
 					{
-						mame_ungetc(bData, fp);
+						mame_fseek(fp, dwFilePos, SEEK_SET);
 
 						*pbTokenPtr++ = bData;	/* A real carriage return (hard) */
 						*pbTokenPtr = '\0';
@@ -390,7 +393,9 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, long *pdwPosition)
 					else
 					{
 #endif /* CMD_LIST */
-						++dwFilePos;		/* Our file position to reset to */
+						UINT64 dwPos;
+
+						dwFilePos = mame_ftell(fp);	/* Our file position to reset to */
 						dwPos = dwFilePos;	/* Here so we can reposition things */
 
 						/* Look for a followup CR/LF */
@@ -419,8 +424,7 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, long *pdwPosition)
 						}
 						else
 						{
-					 	       --dwFilePos;
-							mame_ungetc(bData, fp);	/* Put the character back. No good */
+							mame_fseek(fp, dwFilePos, SEEK_SET);	/* Put the character back. No good */
 						}
 					}
 #ifdef CMD_LIST
@@ -428,15 +432,14 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, long *pdwPosition)
 #endif /* CMD_LIST */
 				else
 				{
-					--dwFilePos;
-					mame_ungetc(bData, fp);	/* Put the character back. No good */
+					mame_fseek(fp, dwFilePos, SEEK_SET);	/* Put the character back. No good */
 				}
 
 				/* Otherwise, fall through and keep parsing */
 			}
 		}
 
-		++dwFilePos;
+		dwFilePos = mame_ftell(fp);
 	}
 }
 
@@ -448,15 +451,15 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, long *pdwPosition)
  *
  *      Returns token, or TOKEN_INVALID if at end of file
  ****************************************************************************/
-static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, long *pdwPosition)
+static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 {
 	UINT32 dwLength;			/* Length of symbol */
-	long dwPos;				/* Temporary position */
 	UINT8 *pbTokenPtr = bToken;		/* Point to the beginning */
 	UINT8 bData;				/* Temporary data byte */
 
 	while (1)
 	{
+		dwFilePos = mame_ftell(fp);
 		bData = mame_fgetc(fp);		/* Get next character */
 
 		/* If we're at the end of the file, bail out */
@@ -480,7 +483,7 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, long *pdwPosition)
 			{
 				*pbTokenPtr++ = bData;
 				*pbTokenPtr = '\0';
-				++dwFilePos;
+				dwFilePos = mame_ftell(fp);
 
 				return(TOKEN_EQUALS);
 			}
@@ -501,7 +504,7 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, long *pdwPosition)
 				       bData != '\r' &&
 				       mame_feof(fp) == 0)
 				{
-					++dwFilePos;
+					dwFilePos = mame_ftell(fp);
 					*pbTokenPtr++ = bData;	/* Store our byte */
 					++dwLength;
 					assert(dwLength < MAX_TOKEN_LENGTH);
@@ -514,7 +517,7 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, long *pdwPosition)
 
 				if (0 == mame_feof(fp))
 				{
-					mame_ungetc(bData, fp);
+					mame_fseek(fp, dwFilePos, SEEK_SET);
 				}
 
 				/* Null terminate the token */
@@ -534,14 +537,17 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, long *pdwPosition)
 
 			if (LF == bData)
 			{
+				UINT64 dwPos;
+
 				/* Unix style perhaps? */
 
 				bData = mame_fgetc(fp);		/* Peek ahead */
-				mame_ungetc(bData, fp);		/* Force a retrigger if subsequent LF's */
+				dwPos = mame_ftell(fp);
+				mame_fseek(fp, dwFilePos, SEEK_SET);	/* Force a retrigger if subsequent LF's */
 
 				if (LF == bData)		/* Two LF's in a row - it's a UNIX hard CR */
 				{
-					++dwFilePos;
+					dwFilePos = dwPos;
 					*pbTokenPtr++ = bData;	/* A real linefeed */
 					*pbTokenPtr = '\0';
 
@@ -555,7 +561,7 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, long *pdwPosition)
 			{
 				/* Figure out if it's Mac or MSDOS format */
 
-				++dwFilePos;
+				dwFilePos = mame_ftell(fp);
 				bData = mame_fgetc(fp);		/* Peek ahead */
 
 				/* We don't need to bother with EOF checking. It will be 0xff if */
@@ -568,7 +574,7 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, long *pdwPosition)
 
 					/* Stuff our character back upstream for successive CR's */
 
-					mame_ungetc(bData, fp);
+					mame_fseek(fp, dwFilePos, SEEK_SET);
 
 					*pbTokenPtr++ = bData;	/* A real carriage return (hard) */
 					*pbTokenPtr = '\0';
@@ -579,7 +585,7 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, long *pdwPosition)
 				{
 					if (mame32jp_wrap)
 					{
-						mame_ungetc(bData, fp);
+						mame_fseek(fp, dwFilePos, SEEK_SET);
 
 						*pbTokenPtr++ = bData;	/* A real carriage return (hard) */
 						*pbTokenPtr = '\0';
@@ -588,7 +594,9 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, long *pdwPosition)
 					}
 					else
 					{
-						++dwFilePos;		/* Our file position to reset to */
+						UINT64 dwPos;
+
+						dwFilePos = mame_ftell(fp);	/* Our file position to reset to */
 						dwPos = dwFilePos;	/* Here so we can reposition things */
 
 						/* Look for a followup CR/LF */
@@ -617,22 +625,20 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, long *pdwPosition)
 						}
 						else
 						{
-								--dwFilePos;
-							mame_ungetc(bData, fp);	/* Put the character back. No good */
+							mame_fseek(fp, dwFilePos, SEEK_SET);	/* Put the character back. No good */
 						}
 					}
 				}
 				else
 				{
-					--dwFilePos;
-					mame_ungetc(bData, fp);	/* Put the character back. No good */
+					mame_fseek(fp, dwFilePos, SEEK_SET);	/* Put the character back. No good */
 				}
 
 				/* Otherwise, fall through and keep parsing */
 			}
 		}
 
-		++dwFilePos;
+		dwFilePos = mame_ftell(fp);
 	}
 }
 #endif /* CMD_LIST */
@@ -674,7 +680,7 @@ static UINT8 ParseOpen(const char *pszFilename)
 /****************************************************************************
  *      ParseSeek - Move the file position indicator
  ****************************************************************************/
-static UINT8 ParseSeek(long offset, int whence)
+static UINT8 ParseSeek(UINT64 offset, int whence)
 {
 	int result = mame_fseek(fp, offset, whence);
 
@@ -712,7 +718,7 @@ static int index_datafile (struct tDatafileIndex **_index)
 	/* loop through datafile */
         while (count < num_games && TOKEN_INVALID != token)
 	{
-		long tell;
+		UINT64 tell;
 		UINT8 *s;
 
 		token = GetNextToken (&s, &tell);
@@ -780,8 +786,8 @@ static int index_menuidx (const game_driver *drv, struct tDatafileIndex *d_idx, 
 	int m_count = 0;
 	UINT32 token = TOKEN_SYMBOL;
 
-	long tell;
-	long cmdtag_offset = 0;
+	UINT64 tell;
+	UINT64 cmdtag_offset = 0;
 	UINT8 *s;
 
 	mame32jp_wrap = 1;
@@ -888,7 +894,7 @@ static int index_datafile_drivinfo (struct tDatafileIndex **_index)
 	/* loop through datafile */
 	while (count < num_games && TOKEN_INVALID != token)
 	{
-		long tell;
+		UINT64 tell;
 		UINT8 *s;
 
 		token = GetNextToken (&s, &tell);
@@ -978,7 +984,7 @@ static int load_datafile_text (const game_driver *drv, char *buffer, int bufsize
 	{
 		UINT8 *s;
 		int len;
-		long tell;
+		UINT64 tell;
 
 		token = GetNextToken (&s, &tell);
 		if (TOKEN_INVALID == token) continue;
@@ -1073,7 +1079,7 @@ static int load_datafile_text_ex (char *buffer, int bufsize,
 	UINT32 	prev_token = TOKEN_SYMBOL;
 	UINT8 *s = NULL;
 	int len;
-	long tell;
+	UINT64 tell;
 
 	*buffer = '\0';
 
@@ -1180,7 +1186,7 @@ static int load_drivfile_text (const game_driver *drv, char *buffer, int bufsize
 	{
 		UINT8 *s;
 		int len;
-		long tell;
+		UINT64 tell;
 
 		token = GetNextToken (&s, &tell);
 		if (TOKEN_INVALID == token) continue;
