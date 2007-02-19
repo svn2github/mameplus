@@ -338,6 +338,7 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 
 				/* Unix style perhaps? */
 
+				dwFilePos = mame_ftell(fp);
 				bData = mame_fgetc(fp);		/* Peek ahead */
 				dwPos = mame_ftell(fp);
 				mame_fseek(fp, dwFilePos, SEEK_SET);	/* Force a retrigger if subsequent LF's */
@@ -383,7 +384,7 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 #ifdef CMD_LIST
 					if (mame32jp_wrap)
 					{
-						mame_fseek(fp, dwFilePos, SEEK_SET);
+						dwFilePos = mame_ftell(fp);
 
 						*pbTokenPtr++ = bData;	/* A real carriage return (hard) */
 						*pbTokenPtr = '\0';
@@ -438,8 +439,6 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 				/* Otherwise, fall through and keep parsing */
 			}
 		}
-
-		dwFilePos = mame_ftell(fp);
 	}
 }
 
@@ -541,6 +540,7 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 
 				/* Unix style perhaps? */
 
+				dwFilePos = mame_ftell(fp);
 				bData = mame_fgetc(fp);		/* Peek ahead */
 				dwPos = mame_ftell(fp);
 				mame_fseek(fp, dwFilePos, SEEK_SET);	/* Force a retrigger if subsequent LF's */
@@ -585,7 +585,7 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 				{
 					if (mame32jp_wrap)
 					{
-						mame_fseek(fp, dwFilePos, SEEK_SET);
+						dwFilePos = mame_ftell(fp);
 
 						*pbTokenPtr++ = bData;	/* A real carriage return (hard) */
 						*pbTokenPtr = '\0';
@@ -637,8 +637,6 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 				/* Otherwise, fall through and keep parsing */
 			}
 		}
-
-		dwFilePos = mame_ftell(fp);
 	}
 }
 #endif /* CMD_LIST */
