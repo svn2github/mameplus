@@ -701,7 +701,7 @@ void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int
 				(0x3040 < schar && schar < 0x9FFF) ||
 				/*
 				Plane 0 (0000–FFFF): Basic Multilingual Plane (BMP)
-				
+
 				Hiragana (3040E09F) 
 				Katakana (30A0E0FF) 
 				Bopomofo (3100E12F) 
@@ -745,6 +745,16 @@ void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int
 				{
 					s = lastspace;
 					curwidth = lastspace_width;
+
+					/* try to add one more char */
+					scharcount = uchar_from_utf8(&schar, s, ends - s);
+					if (scharcount != -1 && schar != ' '
+					 && (curwidth + ui_get_char_width(schar) < wrapwidth))
+					{
+						/* add the width of this character and advance */
+						curwidth += ui_get_char_width(schar);
+						s += scharcount;
+					}
 				}
 
 				/* if we didn't hit a space, back up one character */
@@ -799,7 +809,7 @@ void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int
 		}
 		else
 			s_temp = s;
-		
+
 		/* align according to the justfication */
 		if (line_justify == JUSTIFY_CENTER)
 			curx += (wrapwidth - curwidth) * 0.5f;
@@ -832,7 +842,7 @@ void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int
 			}
 			linestart += linecharcount;
 		}
-		
+
 		/* append ellipses if needed */
 		if (wrap == WRAP_TRUNCATE && *s != 0 && draw != DRAW_NONE)
 		{
@@ -869,7 +879,7 @@ void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int
 		if (schar == '\n')
 			s += scharcount;
 		else
-			while (*s && isspace(schar))
+			while (*s && (schar < 0x80) && isspace(schar))
 			{
 				s += scharcount;
 				scharcount = uchar_from_utf8(&schar, s, ends - s);
