@@ -476,6 +476,7 @@ $(MAMEOBJ)/amiga.a: \
 	$(DRIVERS)/alg.o \
 	$(MACHINE)/amiga.o $(AUDIO)/amiga.o $(VIDEO)/amiga.o \
 	$(DRIVERS)/arcadia.o \
+	$(DRIVERS)/cubocd32.o \
 	$(DRIVERS)/mquake.o \
 	$(DRIVERS)/upscope.o \
 
@@ -975,7 +976,7 @@ $(MAMEOBJ)/namco.a: \
 	$(DRIVERS)/20pacgal.o $(VIDEO)/20pacgal.o \
 	$(DRIVERS)/baraduke.o $(VIDEO)/baraduke.o \
 	$(DRIVERS)/dambustr.o \
-	$(DRIVERS)/galaga.o $(VIDEO)/galaga.o \
+	$(DRIVERS)/galaga.o $(AUDIO)/galaga.o $(VIDEO)/galaga.o \
 	$(DRIVERS)/galaxian.o $(MACHINE)/galaxian.o $(AUDIO)/galaxian.o $(VIDEO)/galaxian.o \
 	$(DRIVERS)/gaplus.o $(MACHINE)/gaplus.o $(VIDEO)/gaplus.o \
 	$(DRIVERS)/mappy.o $(VIDEO)/mappy.o \
@@ -1552,6 +1553,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/hotblock.o \
 	$(DRIVERS)/intrscti.o \
 	$(DRIVERS)/jackpool.o \
+	$(DRIVERS)/koikoi.o \
 	$(DRIVERS)/kyugo.o $(VIDEO)/kyugo.o \
 	$(DRIVERS)/ladyfrog.o $(VIDEO)/ladyfrog.o \
 	$(DRIVERS)/laserbas.o \

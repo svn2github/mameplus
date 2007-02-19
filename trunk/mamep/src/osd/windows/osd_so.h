@@ -86,11 +86,11 @@
 		extern SHAREDOBJ_FUNC(void)	mame_set_output_channel(output_channel channel, output_callback callback, void *param, output_callback *prevcb, void **prevparam);
 		extern SHAREDOBJ_FUNC(void)	mame_null_output_callback(void *param, const char *format, va_list argptr);
 
-		#include "mamecore.h"
-		extern SHAREDOBJ_FUNC(int)		mame_stricmp(const char *s1, const char *s2);
-		extern SHAREDOBJ_FUNC(int)		mame_strnicmp(const char *s1, const char *s2, size_t n);
-		extern SHAREDOBJ_FUNC(char *)	mame_strdup(const char *str);
-		extern SHAREDOBJ_FUNC(char *)	mame_strtrim(const char *str);
+		#include "corestr.h"
+		extern SHAREDOBJ_FUNC(int)    core_stricmp(const char *s1, const char *s2);
+		extern SHAREDOBJ_FUNC(int)    core_strnicmp(const char *s1, const char *s2, size_t n);
+		extern SHAREDOBJ_FUNC(char *) core_strdup(const char *str);
+		extern SHAREDOBJ_FUNC(char *) core_strtrim(const char *str);
 
 		#include "osdepend.h"
 		extern SHAREDOBJ_FUNC(void) logerror(const char *text,...);

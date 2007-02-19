@@ -12,13 +12,12 @@
 #include <windows.h>
 #include <d3d9.h>
 
-// interface header
-#include "d3dintf.h"
-
-// MAME includes
-#include "osd_so.h"
+// MAME headers
 #include "mame.h"
+#include "osd_so.h"
 
+// MAMEOS headers
+#include "d3dintf.h"
 #include "winmain.h"
 
 

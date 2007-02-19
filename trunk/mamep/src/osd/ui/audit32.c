@@ -158,7 +158,7 @@ static void Mame32Output(void *param, const char *format, va_list argptr)
 	char buffer[512];
 
 	vsnprintf(buffer, ARRAY_LENGTH(buffer), format, argptr);
-	DetailsPrintf(TEXT("%s"), _UTF8Unicode(buffer));
+	DetailsPrintf(TEXT("%s"), _UTF8Unicode(ConvertToWindowsNewlines(buffer)));
 }
 
 static int ProcessAuditResults(int game, audit_record *audit, int audit_records)
@@ -444,7 +444,6 @@ static void CLIB_DECL DetailsPrintf(const WCHAR *fmt, ...)
 	HWND	hEdit;
 	va_list marker;
 	WCHAR	buffer[2000];
-	WCHAR   *s;
 	long l;
 
 	//RS 20030613 Different Ids for Property Page and Dialog
@@ -465,11 +464,9 @@ static void CLIB_DECL DetailsPrintf(const WCHAR *fmt, ...)
 	
 	va_end(marker);
 
-	s = ConvertToWindowsNewlinesW(buffer);
-
 	l = Edit_GetTextLength(hEdit);
 	Edit_SetSel(hEdit, l, l);
-	SendMessageW( hEdit, EM_REPLACESEL, FALSE, (LPARAM)s);
+	SendMessageW( hEdit, EM_REPLACESEL, FALSE, (LPARAM)buffer);
 }
 
 static const WCHAR *StatusString(int iStatus)

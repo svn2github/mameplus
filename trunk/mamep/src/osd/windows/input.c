@@ -14,27 +14,29 @@
 // standard windows headers
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include <conio.h>
 #include <winioctl.h>
-#include <ctype.h>
-#include <stddef.h>
 #include <tchar.h>
 
 // undef WINNT for dinput.h to prevent duplicate definition
 #undef WINNT
 #include <dinput.h>
 
+// standard C headers
+#include <conio.h>
+#include <ctype.h>
+#include <stddef.h>
+
 // MAME headers
 #include "osdepend.h"
 #include "driver.h"
+#include "ui.h"
+
+// MAMEOS headers
 #include "winmain.h"
-#include "machine/generic.h"
 #include "window.h"
-#include "options.h"
 #include "input.h"
 #include "debugwin.h"
 #include "video.h"
-#include "ui.h"
 #include "strconv.h"
 
 

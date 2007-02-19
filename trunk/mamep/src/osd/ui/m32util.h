@@ -31,7 +31,6 @@ extern LONG GetCommonControlVersion(void);
 
 extern LPWSTR MyStrStrI(LPCWSTR pStr, LPCWSTR pSrch);
 extern char * ConvertToWindowsNewlines(const char *source);
-extern WCHAR * ConvertToWindowsNewlinesW(const WCHAR *source);
 extern const WCHAR * strlower(const WCHAR *s);
 
 extern const WCHAR * GetDriverFilename(int nIndex);

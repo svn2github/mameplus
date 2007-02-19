@@ -310,27 +310,6 @@ char * ConvertToWindowsNewlines(const char *source)
 	return buf;
 }
 
-WCHAR * ConvertToWindowsNewlinesW(const WCHAR *source)
-{
-	static WCHAR buf[100 * 1024];
-	WCHAR *dest;
-
-	dest = buf;
-	while (*source != 0)
-	{
-		if (*source == '\n')
-		{
-			*dest++ = '\r';
-			*dest++ = '\n';
-		}
-		else
-			*dest++ = *source;
-		source++;
-	}
-	*dest = 0;
-	return buf;
-}
-
 const WCHAR * strlower(const WCHAR *s)
 {
 	static WCHAR buf[100 * 1024];

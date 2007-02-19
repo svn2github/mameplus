@@ -18,6 +18,8 @@
 extern int he_did_cheat;
 #endif /* USE_HISCORE */
 
+#include "mamecore.h"
+
 void cheat_init(running_machine *machine);
 
 UINT32 cheat_menu(UINT32 state);
