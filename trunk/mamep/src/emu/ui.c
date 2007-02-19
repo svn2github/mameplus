@@ -242,7 +242,7 @@ INLINE void slider_config(slider_state *state, INT32 minval, INT32 defval, INT32
 }
 
 
-INLINE rgb_t ui_get_rgb_color(rgb_t color)
+rgb_t ui_get_rgb_color(rgb_t color)
 {
 	if (color < MAX_COLORTABLE)
 		return uifont_colortable[color];
@@ -702,19 +702,19 @@ void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int
 				/*
 				Plane 0 (0000–FFFF): Basic Multilingual Plane (BMP)
 				
-				Hiragana (3040–309F) 
-				Katakana (30A0–30FF) 
-				Bopomofo (3100–312F) 
-				Hangul Compatibility Jamo (3130–318F) 
-				Kanbun (3190–319F) 
-				Bopomofo Extended (31A0–31BF) 
-				CJK Strokes (31C0–31EF) 
-				Katakana Phonetic Extensions (31F0–31FF) 
-				Enclosed CJK Letters and Months (3200–32FF) 
-				CJK Compatibility (3300–33FF) 
-				CJK Unified Ideographs Extension A (3400–4DBF) 
-				Yijing Hexagram Symbols (4DC0–4DFF) 
-				CJK Unified Ideographs (4E00–9FFF) 
+				Hiragana (3040E09F) 
+				Katakana (30A0E0FF) 
+				Bopomofo (3100E12F) 
+				Hangul Compatibility Jamo (3130E18F) 
+				Kanbun (3190E19F) 
+				Bopomofo Extended (31A0E1BF) 
+				CJK Strokes (31C0E1EF) 
+				Katakana Phonetic Extensions (31F0E1FF) 
+				Enclosed CJK Letters and Months (3200E2FF) 
+				CJK Compatibility (3300E3FF) 
+				CJK Unified Ideographs Extension A (3400EDBF) 
+				Yijing Hexagram Symbols (4DC0EDFF) 
+				CJK Unified Ideographs (4E00EFFF) 
 				*/
 				(0xAC00 < schar && schar < 0xD7AF) ||
 				//Hangul Syllables (AC00–D7AF)

@@ -371,7 +371,7 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected, menu_au
 			//mamep: draw a selected bar
 			ui_draw_box(	visible_left, line_y,
 							visible_left + visible_width, line_y + ui_get_line_height(),
-							MAKE_ARGB(120,60,120,240));//fixme:CURSOR_COLOR
+							ui_get_rgb_color(CURSOR_COLOR));
 #else /* UI_COLOR_DISPLAY */
 			itemfg = MENU_SELECTCOLOR;
 #endif /* UI_COLOR_DISPLAY */
@@ -404,7 +404,7 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected, menu_au
 			if (subitem_invert)
 			{
 #ifdef UI_COLOR_DISPLAY
-				fgcolor = FONT_COLOR_SPECIAL;
+				fgcolor = ui_get_rgb_color(FONT_COLOR_SPECIAL);
 #else /* UI_COLOR_DISPLAY */
 				fgcolor = ARGB_BLACK;
 				bgcolor = itemfg;

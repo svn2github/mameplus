@@ -111,6 +111,8 @@ float ui_get_line_height(void);
 float ui_get_char_width(unicode_char ch);
 float ui_get_string_width(const char *s);
 
+rgb_t ui_get_rgb_color(rgb_t color);
+
 /* draw a box filled with a given color */
 void ui_draw_box(float x0, float y0, float x1, float y1, rgb_t backcolor);
 
