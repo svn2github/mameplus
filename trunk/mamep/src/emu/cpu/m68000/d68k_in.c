@@ -10213,6 +10213,11 @@ _resolve_link(&link1);
 		_mov_m32abs_r32(&REG68K_DFC, REG_EAX);
 		break;
 	case 0x002:			   /* CACR */
+		if(!CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
+		{
+			/* non 68040 can only set the lower 4 bits (C,CE,F,E) */
+			_and_r32_imm(REG_EAX, 0x0f);
+		}
 		_mov_m32abs_r32(&REG68K_CACR, REG_EAX);
 		break;
 	case 0x800:			   /* USP */

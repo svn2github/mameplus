@@ -92,7 +92,6 @@ const char* g_version = "3.3";
 #define FILENAME_INPUT      "d68k_in.c"
 #define FILENAME_PROTOTYPE  "d68kops.h"
 #define FILENAME_TABLE      "d68kops.c"
-#define FILENAME_OPS        "d68kopac.c"
 
 
 /* Identifier sequences recognized by this program */

@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include "d68k.h"
 #include "m68000.h"
-#include "state.h"
 
 /* global access */
 
@@ -18,9 +17,6 @@ void m68k_set_encrypted_opcode_range(int cpunum, offs_t start, offs_t end)
 	m68k_encrypted_opcode_end[cpunum] = end;
 }
 #endif //ks hcmame e switch m68k core
-
-
-//ks hcmame switch m68k core	#ifndef A68K0
 
 /****************************************************************************
  * 8-bit data memory interface
@@ -95,13 +91,9 @@ static const struct m68k_memory_interface interface_d16 =
 	writelong_d16
 };
 
-//ks hcmame switch m68k core	#endif // A68K0
-
 /****************************************************************************
  * 32-bit data memory interface
  ****************************************************************************/
-
-//ks hcmame switch m68k core	#ifndef A68K2
 
 /* potentially misaligned 16-bit reads with a 32-bit data bus (and 24-bit address bus) */
 static UINT16 readword_d32(offs_t address)
@@ -178,14 +170,10 @@ static const struct m68k_memory_interface interface_d32 =
 /* global access */
 struct m68k_memory_interface m68k_memory_intf;
 
-//ks hcmame switch m68k core	#endif // A68K2
-
 
 /****************************************************************************
  * 68000 section
  ****************************************************************************/
-
-//ks hcmame switch m68k core	#ifndef A68K0
 
 static void m68000_init(int index, int clock, const void *config, int (*irqcallback)(int))
 {
@@ -245,12 +233,6 @@ static void m68010_init(int index, int clock, const void *config, int (*irqcallb
 
 #endif /* HAS_M68010 */
 
-//ks hcmame switch m68k core	#endif // A68K0
-
-
-
-//ks hcmame switch m68k core	#ifndef A68K2
-
 /****************************************************************************
  * M68020 section
  ****************************************************************************/
@@ -268,7 +250,6 @@ static void m68020_init(int index, int clock, const void *config, int (*irqcallb
 /****************************************************************************
  * M680EC20 section
  ****************************************************************************/
-
 #if HAS_M68EC020
 
 static void m68ec020_init(int index, int clock, const void *config, int (*irqcallback)(int))
@@ -282,12 +263,9 @@ static void m68ec020_init(int index, int clock, const void *config, int (*irqcal
 
 #endif /* HAS_M68EC020 */
 
-//ks hcmame switch m68k core	#endif // A68K2
-
 /****************************************************************************
  * M68040 section
  ****************************************************************************/
-
 #if HAS_M68040
 
 static void m68040_init(int index, int clock, const void *config, int (*irqcallback)(int))
@@ -301,8 +279,6 @@ static void m68040_init(int index, int clock, const void *config, int (*irqcallb
 }
 #endif
 
-
-//ks hcmame switch m68k core	#ifndef A68K0
 
 /**************************************************************************
  * Generic get_info
@@ -393,11 +369,6 @@ void m68010drc_get_info(UINT32 state, cpuinfo *info)
 }
 #endif
 
-//ks hcmame switch m68k core	#endif	// A68K0
-
-
-//ks hcmame switch m68k core	#ifndef A68K2
-
 /**************************************************************************
  * CPU-specific set_info
  **************************************************************************/
@@ -484,5 +455,3 @@ void m68040drc_get_info(UINT32 state, cpuinfo *info)
 	}
 }
 #endif
-
-//ks hcmame switch m68k core	#endif	// A68K2
