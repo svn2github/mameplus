@@ -630,6 +630,11 @@ void ui_draw_text(const char *buf, float x, float y)
 	ui_draw_text_full(buf, x, y, 1.0f - x, 0, JUSTIFY_LEFT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, ARGB_BLACK, NULL, NULL);
 }
 
+void ui_draw_text_bk(const char *buf, float x, float y, int col)
+{
+	ui_draw_text_full(buf, x, y, 1.0f - x, 0, JUSTIFY_LEFT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, col, NULL, NULL);
+}
+
 
 /*-------------------------------------------------
     ui_draw_text_full - full featured text
@@ -1304,7 +1309,7 @@ static void display_time(void)
 #if DISPLAY_AMPM
 	char am_pm[] = "am";
 #endif /* DISPLAY_AMPM */
-	int width;
+	float width;
 	time_t ltime;
 	struct tm *today;
 
@@ -1326,23 +1331,23 @@ static void display_time(void)
 #else
 	sprintf(buf, "%02d:%02d:%02d", today->tm_hour, today->tm_min, today->tm_sec);
 #endif /* DISPLAY_AMPM */
-	width = ui_get_string_width(buf);
+	width = ui_get_string_width(buf) + UI_LINE_WIDTH * 2.0f;
 	switch(Show_Time_Position)
 	{
 		case 0:
-			ui_draw_text(buf, ui_screen_width - width, ui_screen_height - ui_get_line_height());
+			ui_draw_text_bk(buf, 1.0f - width, 1.0f - ui_get_line_height(), UI_FILLCOLOR);
 			break;
 
 		case 1:
-			ui_draw_text(buf, ui_screen_width - width, 0);
+			ui_draw_text_bk(buf, 1.0f - width, 0.0f, UI_FILLCOLOR);
 			break;
 
 		case 2:
-			ui_draw_text(buf, 0, 0);
+			ui_draw_text_bk(buf, 0.0f, 0.0f, UI_FILLCOLOR);
 			break;
 
 		case 3:
-			ui_draw_text(buf, 0, ui_screen_height - ui_get_line_height());
+			ui_draw_text_bk(buf, 0.0f, 1.0f - ui_get_line_height(), UI_FILLCOLOR);
 			break;
 	}
 }
@@ -1351,8 +1356,8 @@ static void display_time(void)
 #ifdef USE_SHOW_INPUT_LOG
 static void display_input_log(void)
 {
-//	add_filled_box_noedge(0, ui_screen_height - ui_get_line_height(), ui_screen_width - 1, ui_screen_height - 1);
-	ui_draw_text(command_buffer, 0, ui_screen_height - ui_get_line_height());
+	ui_draw_box(0.0f, 1.0f - ui_get_line_height(), 1.0f, 1.0f, UI_FILLCOLOR);
+	ui_draw_text_bk(command_buffer, 0.0f, 1.0f - ui_get_line_height(), 0);
 
 	if (--command_counter == 0)
 		memset(command_buffer, 0, COMMAND_LOG_BUFSIZE);

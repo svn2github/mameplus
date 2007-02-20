@@ -3640,9 +3640,9 @@ UINT32 get_crosshair_pos(int port_num, UINT8 player, UINT8 axis)
 INLINE void copy_command_buffer(char log)
 {
 	int i, len;
-	int space_width = ui_get_char_width(' ');
+	float space_width = ui_get_char_width('W');
 
-	#define MAX_COMMAND_LOG		(int)(ui_screen_width / space_width)
+	#define MAX_COMMAND_LOG		(!space_width ? 20 : (int)(1.0f / space_width))
 
 	len = strlen((char *)command_buffer);
 
