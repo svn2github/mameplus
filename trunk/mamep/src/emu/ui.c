@@ -649,6 +649,9 @@ void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int
 	const char *up_arrow = NULL;
 	const char *down_arrow = ui_getstring(UI_downarrow);
 
+	//mamep: control scrolling text
+	int curline = 0;
+
 	//mamep: check if we are scrolling
 	if (offset)
 		up_arrow = ui_getstring (UI_uparrow);
@@ -671,7 +674,6 @@ void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int
 		float lastspace_width = 0;
 		float curwidth = 0;
 		float curx = x;
-		int curline;
 
 		/* get the current character */
 		scharcount = uchar_from_utf8(&schar, s, ends - s);
@@ -791,11 +793,9 @@ void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int
 		}
 
 		//mamep: add scrolling arrow
-		curline = (cury - y) / lineheight;
-
 		if (draw != DRAW_NONE
-			&&((curline == 0 && up_arrow)
-			|| (curline == multiline_text_box_visible_lines - 1 && down_arrow)))
+		 && ((curline == 0 && up_arrow)
+		 ||  (curline == multiline_text_box_visible_lines - 1 && down_arrow)))
 		{
 			if (curline == 0)
 				linestart = up_arrow;
@@ -867,8 +867,12 @@ void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int
 			cury += lineheight;
 
 			//mamep: skip overflow text
-			if (draw != DRAW_NONE && curline == multiline_text_box_visible_lines - 1 && down_arrow)
+			if (draw != DRAW_NONE && curline == multiline_text_box_visible_lines - 1)
 				break;
+
+			//mamep: controll scrolling text
+			if (offset == 0)
+				curline++;
 		}
 
 		/* skip past any spaces at the beginning of the next line */
@@ -910,10 +914,10 @@ void ui_draw_text_box_scroll(const char *text, int offset, int justify, float xp
 	ui_draw_text_full(text, 0, 0, 1.0f - 2.0f * UI_BOX_LR_BORDER, 0,
 				justify, WRAP_WORD, DRAW_NONE, ARGB_WHITE, ARGB_BLACK, &target_width, &target_height);
 
-	multiline_text_box_target_lines = target_height / ui_get_line_height();
+	multiline_text_box_target_lines = round(target_height / ui_get_line_height());
 	if (target_height > 1.0f - 2.0f * UI_BOX_TB_BORDER)
 		target_height = floor((1.0f - 2.0f * UI_BOX_TB_BORDER) / ui_get_line_height()) * ui_get_line_height();
-	multiline_text_box_visible_lines = target_height / ui_get_line_height();
+	multiline_text_box_visible_lines = round(target_height / ui_get_line_height());
 
 	/* determine the target location */
 	target_x = xpos - 0.5f * target_width;
@@ -953,7 +957,7 @@ int ui_window_scroll_keys(void)
 	int do_scroll = FALSE;
 
 	max_scroll = multiline_text_box_target_lines - multiline_text_box_visible_lines;
-	pan_lines = multiline_text_box_visible_lines - 1;
+	pan_lines = multiline_text_box_visible_lines - 2;
 
 	if (scroll_reset)
 	{
