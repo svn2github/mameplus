@@ -204,7 +204,10 @@ static const UINT8 uifontdata6x8[256 * 8] =
 static const UINT8 uifontdata_cp1250[256 * 8] =
 {
 #include "font/cp1250.dat"
-//fixme: need a map
+};
+const UINT16 uifontmap_cp1250[] =
+{
+#include "font/cp1250.map"
 };
 
 // Western European Latin1, uifontdata12x8 for DBCS
@@ -376,17 +379,17 @@ render_font *render_font_alloc(const char *filename)
 
 	if (ui_lang_info[options.langcode].fontoverride[0] == 0) // DBCS not needed
 	{
-		const UINT8 *uifontdata = uifontdata6x8;
-
 		switch (options.langcode)
 		{
 		case UI_LANG_PL_PL:
 		case UI_LANG_HU_HU:
-			uifontdata = uifontdata_cp1250;	//fixme, not unicode, need a map
+			/* load the font data for unicode mapping first */
+			render_font_load_raw(font, uifontdata_cp1250, uifontmap_cp1250, 6, 8, 256);
 			break;
 		}
-		/* load the raw data instead */
-		render_font_load_raw(font, uifontdata, NULL, 6, 8, 256);
+
+		/* load the font data without mapping */
+		render_font_load_raw(font, uifontdata6x8, NULL, 6, 8, 256);
 	}
 	else
 	{
