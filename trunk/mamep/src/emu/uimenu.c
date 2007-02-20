@@ -273,6 +273,7 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected, menu_au
 	int visible_lines;
 	int top_line;
 	int itemnum, linenum;
+	rgb_t itembarfg = ui_get_rgb_color(CURSOR_COLOR);
 
 	/* the left/right gutters are the max of all stuff that might go in there */
 	gutter_width = MAX(left_hilight_width, right_hilight_width);
@@ -371,7 +372,10 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected, menu_au
 			//mamep: draw a selected bar
 			ui_draw_box(	visible_left, line_y,
 							visible_left + visible_width, line_y + ui_get_line_height(),
-							ui_get_rgb_color(CURSOR_COLOR));
+							MAKE_ARGB(	options.ui_transparency / 2,
+										RGB_RED(itembarfg),
+										RGB_GREEN(itembarfg),
+										RGB_BLUE(itembarfg)));
 #else /* UI_COLOR_DISPLAY */
 			itemfg = MENU_SELECTCOLOR;
 #endif /* UI_COLOR_DISPLAY */
