@@ -17,6 +17,7 @@
 	{
 		const unsigned char *glyph_str;
 		const int            glyph_code;
+		int                  glyph_str_len;
 	};
 #endif /* COMMAND_CONVERT_TEXT */
 

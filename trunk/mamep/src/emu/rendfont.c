@@ -13,6 +13,9 @@
 #include "rendutil.h"
 #include "zlib.h"
 
+//mamep: for ui_get_rgb_color()
+#include "ui.h"
+
 
 /***************************************************************************
     CONSTANTS
@@ -26,6 +29,7 @@
 #define CACHED_HEADER_SIZE		16
 #define CACHED_BDF_HASH_SIZE	1024
 
+#define COMMAND_UNICODE	(0xe000)
 #define COLOR_BUTTONS	(90)
 #define MAX_GLYPH_FONT	(150)
 
@@ -362,13 +366,19 @@ INLINE render_font_char *get_char(render_font *font, unicode_char chnum)
 render_font *render_font_alloc(const char *filename)
 {
 	render_font *font;
+	UINT16 cmd_map[MAX_GLYPH_FONT];
 	int i;
+
+	//mamep: build unicode translation map for command glyph
+	for (i = 0; i < MAX_GLYPH_FONT; i++)
+		cmd_map[i] = i + COMMAND_UNICODE;
 
 	/* allocate and clear memory */
 	font = malloc_or_die(sizeof(*font));
 	memset(font, 0, sizeof(*font));
 
 	/* attempt to load the cached version of the font first */
+	// fixme: load bdf version command glyph
 	if (filename != NULL && render_font_load_cached_bdf(font, filename) == 0)
 		return font;
 
@@ -390,6 +400,9 @@ render_font *render_font_alloc(const char *filename)
 
 		/* load the font data without mapping */
 		render_font_load_raw(font, uifontdata6x8, NULL, 6, 8, 256);
+
+		/* load the font data for command glyph */
+		render_font_load_raw(font, uifontdata12x8, cmd_map, 12, 8, MAX_GLYPH_FONT);
 	}
 	else
 	{
@@ -403,8 +416,11 @@ render_font *render_font_alloc(const char *filename)
 				break;
 			render_font_load_raw(font, datamap.data, datamap.map, 12, 12, datamap.length);
 		}
+
+		/* load the font data for command glyph */
+		render_font_load_raw(font, uifontdata12x12, cmd_map, 12, 12, MAX_GLYPH_FONT);
 	}
-	
+
 	return font;
 }
 
@@ -459,13 +475,7 @@ static void render_font_char_expand(render_font *font, render_font_char *ch)
 
 #ifdef UI_COLOR_DISPLAY
 	if (ch->color)
-	{
-		color = MAKE_ARGB(
-			0xff,
-			options.uicolortable[ch->color][0],
-			options.uicolortable[ch->color][1],
-			options.uicolortable[ch->color][2]);
-	}
+		color = ui_get_rgb_color(ch->color);
 #endif /* UI_COLOR_DISPLAY */
 
 	/* punt if nothing there */
@@ -506,10 +516,10 @@ static void render_font_char_expand(render_font *font, render_font_char *ch)
 				/* expand the four bits */
 				if (dest != NULL)
 				{
-					*dest++ = (bits & 8) ? MAKE_ARGB(0xff,0xff,0xff,0xff) : MAKE_ARGB(0x00,0xff,0xff,0xff);
-					*dest++ = (bits & 4) ? MAKE_ARGB(0xff,0xff,0xff,0xff) : MAKE_ARGB(0x00,0xff,0xff,0xff);
-					*dest++ = (bits & 2) ? MAKE_ARGB(0xff,0xff,0xff,0xff) : MAKE_ARGB(0x00,0xff,0xff,0xff);
-					*dest++ = (bits & 1) ? MAKE_ARGB(0xff,0xff,0xff,0xff) : MAKE_ARGB(0x00,0xff,0xff,0xff);
+					*dest++ = (bits & 8) ? color : MAKE_ARGB(0x00,0xff,0xff,0xff);
+					*dest++ = (bits & 4) ? color : MAKE_ARGB(0x00,0xff,0xff,0xff);
+					*dest++ = (bits & 2) ? color : MAKE_ARGB(0x00,0xff,0xff,0xff);
+					*dest++ = (bits & 1) ? color : MAKE_ARGB(0x00,0xff,0xff,0xff);
 				}
 			}
 
@@ -525,7 +535,7 @@ static void render_font_char_expand(render_font *font, render_font_char *ch)
 				if (accumbit == 7)
 					accum = *ptr++;
 				if (dest != NULL)
-					*dest++ = (accum & (1 << accumbit)) ? MAKE_ARGB(0xff,0xff,0xff,0xff) : MAKE_ARGB(0x00,0xff,0xff,0xff);
+					*dest++ = (accum & (1 << accumbit)) ? color : MAKE_ARGB(0x00,0xff,0xff,0xff);
 				accumbit = (accumbit - 1) & 7;
 			}
 		}
@@ -1159,14 +1169,16 @@ static int render_font_load_raw(render_font *font, const UINT8 *data, const UINT
 	/* iterate over characters */
 	for (charnum = 0; charnum < numchars; charnum++)
 	{
-//fixme #include "cmd_table.c"
+#ifdef COMMAND_UNICODE
+#include "cmd_table.c"
+#endif /* COMMAND_UNICODE */
+
+		render_font_char *ch;
 
 		if (map)
 			code = map[charnum];
 		else
 			code = charnum;
-
-		render_font_char *ch;
 
 		/* if we don't have a subtable yet, make one */
 		if (font->chars[code / 256] == NULL)
@@ -1183,10 +1195,12 @@ static int render_font_load_raw(render_font *font, const UINT8 *data, const UINT
 		ch->bmwidth = width;
 		ch->bmheight = height;
 		ch->rawdata = data;
-/* fixme
-		if (code >= 0 && code < COLOR_BUTTONS)
-			ch->color = color_table[code];
-*/
+
+#ifdef COMMAND_UNICODE
+		if (code >= COMMAND_UNICODE && code < COMMAND_UNICODE + COLOR_BUTTONS)
+			ch->color = color_table[code - COMMAND_UNICODE];
+#endif /* COMMAND_UNICODE */
+
 		/* advance to the next character */
 		data += ((width + 7) / 8) * height;
 	}
@@ -1194,73 +1208,97 @@ static int render_font_load_raw(render_font *font, const UINT8 *data, const UINT
 	return 0;
 }
 
-void convert_command_move(char *buf)
+void convert_command_move(char *s)
 {
-//fixme: assign to Unicode PUA U+E000
-#if 0
-	UINT8 *c = (UINT8 *)buf;
+	unicode_char uchar;
+	UINT8 buffer[1024];
+	int scharcount;
+	int len;
+	int i, j;
 
 #include "cmd_plus.c"
 
-	while (*c)
+	len = strlen(s);
+	for (i = j = 0; i < len; i += scharcount)
 	{
-		UINT16 code;
+		struct fix_command_t *fixcmd = NULL;
 
-		if (uifont_decodechar(c, &code) == 2)
+		scharcount = uchar_from_utf8(&uchar, s + i, len - i);
+		if (scharcount == -1)
+			break;
+
+		if (scharcount != 1)
+			goto process_next;
+
+		if (s[i]  == '\\' && s[i + 1] == 'n')
 		{
-			c += 2;
+			uchar = '\n';
+			goto process_next;
 		}
-		else
-		{
-			struct fix_command_t *fixcmd;
 
-			fixcmd = NULL;
+#ifdef COMMAND_CONVERT_TEXT
+		if (s[i] == COMMAND_CONVERT_TEXT)
+		{
+			struct fix_strings_t *fixtext = convert_text;
+
+			if (s[i]  == s[i + 1])
+			{
+				i++;
+				goto process_next;
+			}
+
+			while (fixtext->glyph_code)
+			{
+				if (!fixtext->glyph_str_len)
+					fixtext->glyph_str_len = strlen(fixtext->glyph_str);
+
+				if (strncmp(fixtext->glyph_str, s + i + 1, fixtext->glyph_str_len) == 0)
+				{
+					uchar = fixtext->glyph_code + COMMAND_UNICODE;
+					i += strlen(fixtext->glyph_str);
+					goto process_next;
+				}
+
+				fixtext++;
+			}
+		}
+#endif /* COMMAND_CONVERT_TEXT */
 
 #ifdef COMMAND_DEFAULT_TEXT
-			if (c[0] == COMMAND_DEFAULT_TEXT)
-				fixcmd = default_text;
+		if (s[i] == COMMAND_DEFAULT_TEXT)
+			fixcmd = default_text;
 #endif /* COMMAND_DEFAULT_TEXT */
 
 #ifdef COMMAND_EXPAND_TEXT
-			if (c[0] == COMMAND_EXPAND_TEXT)
-				fixcmd = expand_text;
+		if (s[i] == COMMAND_EXPAND_TEXT)
+			fixcmd = expand_text;
 #endif /* COMMAND_EXPAND_TEXT */
 
-			if (fixcmd)
+		if (fixcmd)
+		{
+			if (s[i]  == s[i + 1])
 			{
-				if (c[0] == c[1])
-				{
-					c[1] = NULL_SPACE1;
-					c += 2;
-					continue;
-				}
-
-				while (fixcmd->glyph_code)
-				{
-					if (c[1] == fixcmd->glyph_char)
-						break;
-
-					fixcmd++;
-				}
-
-				if (fixcmd->glyph_code)
-				{
-					c[0] = gc1 + (fixcmd->glyph_code / gsz);
-					c[1] = gc2 + (fixcmd->glyph_code % gsz);
-					c += 2;
-					continue;
-				}
+				i++;
+				goto process_next;
 			}
 
-			if (c[0] == '\\' && c[1] == 'n')
+			while (fixcmd->glyph_code)
 			{
-				c[0] = '\n';
-				c[1] = NULL_SPACE1;
-				c+=2;
+				if (s[i + 1] == fixcmd->glyph_char)
+				{
+					uchar = fixcmd->glyph_code + COMMAND_UNICODE;
+					i++;
+					goto process_next;
+				}
+
+				fixcmd++;
 			}
-			else
-				c++;
 		}
+
+process_next:
+		j += utf8_from_uchar(buffer + j, ARRAY_LENGTH(buffer) - j, uchar);
 	}
-#endif
+
+	buffer[j] = '\0';
+	strcpy(s, buffer);
 }
