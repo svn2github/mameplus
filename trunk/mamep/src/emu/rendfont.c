@@ -354,7 +354,7 @@ INLINE render_font_char *get_char(render_font *font, unicode_char chnum)
 
 			/* fix params for binary font */
 			font->format = FONT_FORMAT_BINARY;
-			font->height = ch->bmheight + 1;
+			font->height = ch->bmheight;
 			font->yoffs = 0;
 
 			/* get glyph bitmap */
@@ -366,7 +366,7 @@ INLINE render_font_char *get_char(render_font *font, unicode_char chnum)
 			font->yoffs = yoffs_save;
 
 			/* scale the font if needed */
-			if (font->height != ch->bmheight + 1)
+			if (font->height != 12 && font->height != ch->bmheight + 1)
 			{
 				mame_bitmap *bitmap = bitmap_alloc(font->height, font->height, BITMAP_FORMAT_ARGB32);
 
