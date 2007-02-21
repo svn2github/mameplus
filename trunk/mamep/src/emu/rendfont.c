@@ -1212,7 +1212,7 @@ void convert_command_glyph(char *s, int buflen)
 {
 	unicode_char uchar;
 	char *d;
-	int scharcount;
+	int ucharcount;
 	int len;
 	int i, j;
 
@@ -1226,15 +1226,15 @@ void convert_command_glyph(char *s, int buflen)
 	}
 
 	len = strlen(s);
-	for (i = j = 0; i < len; i += scharcount)
+	for (i = j = 0; i < len; )
 	{
 		struct fix_command_t *fixcmd = NULL;
 
-		scharcount = uchar_from_utf8(&uchar, s + i, len - i);
-		if (scharcount == -1)
+		ucharcount = uchar_from_utf8(&uchar, s + i, len - i);
+		if (ucharcount == -1)
 			break;
 
-		if (scharcount != 1)
+		if (ucharcount != 1)
 			goto process_next;
 
 		if (s[i]  == '\\' && s[i + 1] == 'n')
@@ -1303,7 +1303,13 @@ void convert_command_glyph(char *s, int buflen)
 		}
 
 process_next:
-		j += utf8_from_uchar(d + j, buflen - j - 1, uchar);
+		i += ucharcount;
+
+		ucharcount = utf8_from_uchar(d + j, buflen - j - 1, uchar);
+		if (ucharcount == -1)
+			break;
+
+		j += ucharcount;
 	}
 
 	d[j] = '\0';
