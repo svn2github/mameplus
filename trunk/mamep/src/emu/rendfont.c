@@ -344,7 +344,42 @@ INLINE render_font_char *get_char(render_font *font, unicode_char chnum)
 	/* if the character isn't generated yet, do it now */
 	ch = &chtable[chnum % 256];
 	if (ch->bitmap == NULL)
+	{
+		//fixme: use internal binary font data for command glyph
+		if (font->format != FONT_FORMAT_BINARY && chnum >= COMMAND_UNICODE && chnum < COMMAND_UNICODE + MAX_GLYPH_FONT)
+		{
+			int format_save = font->format;
+			int height_save = font->height;
+			int yoffs_save = font->yoffs;
+
+			/* fix params for binary font */
+			font->format = FONT_FORMAT_BINARY;
+			font->height = ch->bmheight + 1;
+			font->yoffs = 0;
+
+			/* get glyph bitmap */
+			render_font_char_expand(font, ch);
+
+			/* restore original params */
+			font->format = format_save;
+			font->height = height_save;
+			font->yoffs = yoffs_save;
+
+			/* scale the font if needed */
+			if (font->height != ch->bmheight + 1)
+			{
+				mame_bitmap *bitmap = bitmap_alloc(font->height, font->height, BITMAP_FORMAT_ARGB32);
+
+				render_texture_hq_scale(bitmap, ch->bitmap, NULL, NULL);
+				render_texture_free(ch->texture);
+				bitmap_free(ch->bitmap);
+				ch->bitmap = bitmap;
+				ch->texture = render_texture_alloc(ch->bitmap, NULL, 0, TEXFORMAT_ARGB32, render_texture_hq_scale, NULL);
+			}
+		}
+		else
 		render_font_char_expand(font, ch);
+	}
 
 	/* return the resulting character */
 	return ch;
@@ -380,7 +415,12 @@ render_font *render_font_alloc(const char *filename)
 	/* attempt to load the cached version of the font first */
 	// fixme: load bdf version command glyph
 	if (filename != NULL && render_font_load_cached_bdf(font, filename) == 0)
+	{
+		/* fixme: load the 12x12 font data for command glyph */
+		render_font_load_raw(font, uifontdata12x12, cmd_map, 12, 12, MAX_GLYPH_FONT);
+
 		return font;
+	}
 
 	/* if we failed, clean up and realloc */
 	render_font_free(font);
