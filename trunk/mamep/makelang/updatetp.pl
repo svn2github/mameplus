@@ -167,8 +167,8 @@ sub ReadSrcFiles
 {
 	my $dir = $_[0];
 
-	return if $dir eq "cpu/";
-	return if $dir eq "zlib/";
+	return if $dir eq "emu/cpu/";
+	return if $dir eq "lib/zlib/";
 
 	opendir (DIR, "$srcdir/$dir") || die "$srcdir/$dir: $!";
 	my @dirs = readdir (DIR);
@@ -242,7 +242,7 @@ sub ParseSrcFiles
 			next if /^#\s*include\s+/;
 
 			# ignore same macros in drivers/...
-			if ($file =~ /^drivers\//)
+			if ($file =~ /^mame\/drivers\//)
 			{
 				next if /^(GAME|GAMEX)/;
 				next if /^(ROM|ROMX)_LOAD/;
@@ -402,7 +402,7 @@ sub ParseSrcFiles
 				}
 
 				# translater credit
-				elsif ($file eq 'ui/mame32.rc' && $result =~ /^\s+$/)
+				elsif ($file eq 'osd/ui/mame32.rc' && $result =~ /^\s+$/)
 				{
 					$found{$result} .= ", $lines";
 				}
@@ -513,13 +513,13 @@ sub MakeSrc
 		my $text = $_;
 		my $ref = $SRC{$text};
 
-		while ($ref =~ /windows\/[^\s]+[\s,\d]+/)
+		while ($ref =~ /osd\/windows\/[^\s]+[\s,\d]+/)
 		{
 			$windows .= $&;
 			$ref = $` . $';
 		}
 
-		while ($ref =~ /ui\/[^\s]+[\s,\d]+/)
+		while ($ref =~ /osd\/ui\/[^\s]+[\s,\d]+/)
 		{
 			$ui .= $&;
 			$ref = $` . $';
@@ -534,7 +534,7 @@ sub MakeSrc
 			}
 
 			# Remove option strings (RC system related)
-			elsif ($windows ne '' && $ui =~ /^ui\/options.c: [\d]+ $/)
+			elsif ($windows ne '' && $ui =~ /^osd\/ui\/options.c: [\d]+ $/)
 			{
 				undef $ui;
 			}
