@@ -1208,15 +1208,22 @@ static int render_font_load_raw(render_font *font, const UINT8 *data, const UINT
 	return 0;
 }
 
-void convert_command_move(char *s)
+void convert_command_glyph(char *s, int buflen)
 {
 	unicode_char uchar;
-	UINT8 buffer[1024];
+	char *d;
 	int scharcount;
 	int len;
 	int i, j;
 
 #include "cmd_plus.c"
+
+	d = malloc(buflen * sizeof (*d));
+	if (d == NULL)
+	{
+		*s = '\0';
+		return;
+	}
 
 	len = strlen(s);
 	for (i = j = 0; i < len; i += scharcount)
@@ -1296,9 +1303,11 @@ void convert_command_move(char *s)
 		}
 
 process_next:
-		j += utf8_from_uchar(buffer + j, ARRAY_LENGTH(buffer) - j, uchar);
+		j += utf8_from_uchar(d + j, buflen - j - 1, uchar);
 	}
 
-	buffer[j] = '\0';
-	strcpy(s, buffer);
+	d[j] = '\0';
+
+	strcpy(s, d);
+	free(d);
 }

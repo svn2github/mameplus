@@ -3639,28 +3639,32 @@ UINT32 get_crosshair_pos(int port_num, UINT8 player, UINT8 axis)
 #ifdef USE_SHOW_INPUT_LOG
 INLINE void copy_command_buffer(char log)
 {
-	int i, len;
-	float space_width = ui_get_char_width('W');
+	int len;
 
-	#define MAX_COMMAND_LOG		(!space_width ? 20 : (int)(1.0f / space_width))
-
-	len = strlen((char *)command_buffer);
-
-	if (len >= MAX_COMMAND_LOG - 1)
+	len = strlen(command_buffer);
+	while (len >= ARRAY_LENGTH(command_buffer) - UTF8_CHAR_MAX - 1)
 	{
-		for (i = 0; i < MAX_COMMAND_LOG - 2; i++)
-			command_buffer[i] = command_buffer[i + 2];
+		unicode_char uchar;
+		int uwidth;
+		int i;
+
+		uwidth = uchar_from_utf8(&uchar, command_buffer, ARRAY_LENGTH(command_buffer));
+		if (uwidth == -1)
+		{
+			len = 0;
+			break;
+		}
+
+		len -= uwidth;
+		for (i = 0; i < len; i++)
+			command_buffer[i] = command_buffer[i + uwidth];
 	}
-
-	command_buffer[MAX_COMMAND_LOG - 2] = '\0';
-	command_buffer[MAX_COMMAND_LOG - 1] = '\0';
-
-	len = strlen((char *)command_buffer);
 
 	command_buffer[len++] = '_';
 	command_buffer[len++] = log;
+	command_buffer[len] = '\0';
 
-	convert_command_move(command_buffer);
+	convert_command_glyph(command_buffer, ARRAY_LENGTH(command_buffer));
 }
 
 static void make_input_log(void)

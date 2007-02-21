@@ -1696,7 +1696,7 @@ static UINT32 menu_custom_button(UINT32 state)
 
 			menu_string_pool[menu_string_pool_offset++] = '\0';
 
-			convert_command_move(s);
+			convert_command_glyph(s, menu_string_pool_offset - (s - menu_string_pool));
 			item_list[menu_items++].subtext = s;
 		}
 	}
@@ -2102,7 +2102,7 @@ static UINT32 menu_command_contents(UINT32 state)
 				last_selected = selected;
 				last_shortcut = shortcut;
 
-				convert_command_move(bufptr);
+				convert_command_glyph(bufptr, bufsize);
 
 				strcat(bufptr, "\n\t");
 				strcat(bufptr, ui_getstring(UI_lefthilight));

@@ -1356,14 +1356,47 @@ static void display_time(void)
 #ifdef USE_SHOW_INPUT_LOG
 static void display_input_log(void)
 {
+	float width;
+	unicode_char uchar;
+	int sz;
+	int i;
+
+	width = 0.0f;
+
+	for (i = 0; command_buffer[i]; i += sz)
+	{
+		sz = uchar_from_utf8(&uchar, command_buffer + i, ARRAY_LENGTH(command_buffer) - i);
+		if (sz == -1)
+		{
+			command_buffer[i] = '\0';
+			break;
+		}
+
+		width += ui_get_char_width(uchar);
+	}
+
+	for (i = 0; command_buffer[i]; i += sz)
+	{
+		if (width < 1.0f)
+			break;
+
+		sz = uchar_from_utf8(&uchar, command_buffer + i, ARRAY_LENGTH(command_buffer) - i);
+		if (sz == -1)
+		{
+			command_buffer[i] = '\0';
+			break;
+		}
+
+		width -= ui_get_char_width(uchar);
+	}
+
 	ui_draw_box(0.0f, 1.0f - ui_get_line_height(), 1.0f, 1.0f, UI_FILLCOLOR);
-	ui_draw_text_bk(command_buffer, 0.0f, 1.0f - ui_get_line_height(), 0);
+	ui_draw_text_bk(command_buffer + i, 0.0f, 1.0f - ui_get_line_height(), 0);
 
 	if (--command_counter == 0)
-		memset(command_buffer, 0, COMMAND_LOG_BUFSIZE);
+		memset(command_buffer, 0, sizeof command_buffer);
 }
 #endif /* USE_SHOW_INPUT_LOG */
-
 
 
 
