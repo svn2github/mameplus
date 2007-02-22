@@ -66,7 +66,7 @@ Banpresto
 Capcom
 カプコン
 
-# Giga Wing (US 990222)
+# Giga Wing (USA 990222)
 Capcom, supported by Takumi
 タクミ
 
@@ -90,7 +90,7 @@ Comad & 新日本システム
 Daiichi Denshi
 第一
 
-# Suikoenbu / Outlaws of the Lost Dynasty (JUETL 950314 V2.001)
+# Cobra Command
 Data East
 データイースト
 
@@ -386,7 +386,7 @@ Psikyo
 Raizing
 ライジング
 
-# Dimahoo (US 000121)
+# Dimahoo (USA 000121)
 Raizing, distributed by Capcom
 ライジング
 
@@ -690,6 +690,10 @@ ACE
 ACE International
 
 
+# Backgammon
+ADP
+
+
 # Omotesandou (Japan 890215)
 ANIME TEC
 
@@ -798,6 +802,10 @@ Art & Magic
 Artic
 
 
+# Tower & Shaft
+Aruze
+
+
 # Dingo (encrypted)
 Ashby Computers and Graphics LTD.
 
@@ -854,7 +862,7 @@ Bee-Oh
 Blastar
 
 
-# Golden Poker Double Up
+# Golden Poker Double Up (Big Boy)
 Bonanza Enterprises, Ltd
 
 
@@ -882,11 +890,15 @@ Bullet-Proof Software
 C.M.C.
 
 
+# Candy Puzzle (v1.0)
+CD Express
+
+
 # Herbie at the Olympics (DK conversion)
 CVS
 
 
-# Progear (US 010117)
+# Progear (USA 010117)
 Capcom, supported by Cave
 
 
@@ -1374,6 +1386,10 @@ Icarus
 Impera
 
 
+# Pango Fun (Italy)
+InfoCube
+
+
 # Jolly Card (Austria, Fun World, bootleg)
 Inter Games
 
@@ -1594,7 +1610,7 @@ Min Corp.
 Mirco
 
 
-# Mighty! Pang (Japan 001011)
+# Mighty! Pang (USA 001010)
 Mitchell, distributed by Capcom
 
 
@@ -1652,6 +1668,10 @@ Nics
 
 # Hot Blocks - Tetrix II
 Nics?
+
+
+# Monster Zero
+Nihon
 
 
 # Tri-Pool (Casino Tech)
@@ -1772,6 +1792,10 @@ Playtronic SRL
 
 # News (set 1)
 Poby
+
+
+# Thunder Heroes
+Primetek Investments
 
 
 # Pagemaster, The (U) [!]
@@ -1962,6 +1986,10 @@ Sisteme
 Soft
 
 
+# Disco Boy
+Soft Art Co.
+
+
 # Jolly Card (Croatia)
 Soft Design
 
@@ -1990,6 +2018,10 @@ Status
 Status Games
 
 
+# Cliff Hanger
+Stern Electronics
+
+
 # Pisces
 Subelectro
 
@@ -2012,6 +2044,10 @@ Sun a Electronics
 
 # Trivia Quest
 Sunn
+
+
+# Stelle e Cubi (Italy)
+Sure
 
 
 # Snow Brothers 3 - Magical Adventure
@@ -2238,6 +2274,10 @@ Virgin
 Vision
 
 
+# Alpha One (Vision Electronics / Kyle Hodgetts)
+Vision Electronics
+
+
 # Ambush (Volt Elec co-ltd)
 Volt Elec co-ltd
 
@@ -2320,6 +2360,10 @@ Zaccaria
 
 # Quasar
 Zelco
+
+
+# Deal 'Em (MPU4 Conversion Kit)
+Zenitone
 
 
 # Space Attack II
