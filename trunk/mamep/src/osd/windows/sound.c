@@ -462,7 +462,7 @@ static int dsound_init(void)
 	result = DirectSoundCreate(NULL, &dsound, NULL);
 	if (result != DS_OK)
 	{
-		fprintf(stderr, _WINDOWS("Error creating DirectSound: %08x\n"), (UINT32)result);
+		faprintf(stderr, _WINDOWS("Error creating DirectSound: %08x\n"), (UINT32)result);
 		goto cant_create_dsound;
 	}
 
@@ -471,7 +471,7 @@ static int dsound_init(void)
 	result = IDirectSound_GetCaps(dsound, &dsound_caps);
 	if (result != DS_OK)
 	{
-		fprintf(stderr, _WINDOWS("Error getting DirectSound capabilities: %08x\n"), (UINT32)result);
+		faprintf(stderr, _WINDOWS("Error getting DirectSound capabilities: %08x\n"), (UINT32)result);
 		goto cant_get_caps;
 	}
 
@@ -479,7 +479,7 @@ static int dsound_init(void)
 	result = IDirectSound_SetCooperativeLevel(dsound, win_window_list->hwnd, DSSCL_PRIORITY);
 	if (result != DS_OK)
 	{
-		fprintf(stderr, _WINDOWS("Error setting DirectSound cooperative level: %08x\n"), (UINT32)result);
+		faprintf(stderr, _WINDOWS("Error setting DirectSound cooperative level: %08x\n"), (UINT32)result);
 		goto cant_set_coop_level;
 	}
 
@@ -516,7 +516,7 @@ static int dsound_init(void)
 	result = IDirectSoundBuffer_Play(stream_buffer, 0, 0, DSBPLAY_LOOPING);
 	if (result != DS_OK)
 	{
-		fprintf(stderr, _WINDOWS("Error playing: %08x\n"), (UINT32)result);
+		faprintf(stderr, _WINDOWS("Error playing: %08x\n"), (UINT32)result);
 		goto cant_play;
 	}
 	return 0;
@@ -569,7 +569,7 @@ static int dsound_create_buffers(void)
 	result = IDirectSound_CreateSoundBuffer(dsound, &primary_desc, &primary_buffer, NULL);
 	if (result != DS_OK)
 	{
-		fprintf(stderr, _WINDOWS("Error creating primary buffer: %08x\n"), (UINT32)result);
+		faprintf(stderr, _WINDOWS("Error creating primary buffer: %08x\n"), (UINT32)result);
 		goto cant_create_primary;
 	}
 
@@ -577,7 +577,7 @@ static int dsound_create_buffers(void)
 	result = IDirectSoundBuffer_SetFormat(primary_buffer, &stream_format);
 	if (result != DS_OK)
 	{
-		fprintf(stderr, _WINDOWS("Error setting primary format: %08x\n"), (UINT32)result);
+		faprintf(stderr, _WINDOWS("Error setting primary format: %08x\n"), (UINT32)result);
 		goto cant_set_primary_format;
 	}
 
@@ -585,7 +585,7 @@ static int dsound_create_buffers(void)
 	result = IDirectSoundBuffer_GetFormat(primary_buffer, &primary_format, sizeof(primary_format), NULL);
 	if (result != DS_OK)
 	{
-		fprintf(stderr, _WINDOWS("Error getting primary format: %08x\n"), (UINT32)result);
+		faprintf(stderr, _WINDOWS("Error getting primary format: %08x\n"), (UINT32)result);
 		goto cant_get_primary_format;
 	}
 	verbose_printf(_WINDOWS("DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n"),
@@ -603,7 +603,7 @@ static int dsound_create_buffers(void)
 	result = IDirectSound_CreateSoundBuffer(dsound, &stream_desc, &stream_buffer, NULL);
 	if (result != DS_OK)
 	{
-		fprintf(stderr, _WINDOWS("Error creating DirectSound buffer: %08x\n"), (UINT32)result);
+		faprintf(stderr, _WINDOWS("Error creating DirectSound buffer: %08x\n"), (UINT32)result);
 		goto cant_create_buffer;
 	}
 
@@ -611,7 +611,7 @@ static int dsound_create_buffers(void)
 	result = IDirectSoundBuffer_Lock(stream_buffer, 0, stream_buffer_size, &buffer, &locked, NULL, NULL, 0);
 	if (result != DS_OK)
 	{
-		fprintf(stderr, _WINDOWS("Error locking stream buffer: %08x\n"), (UINT32)result);
+		faprintf(stderr, _WINDOWS("Error locking stream buffer: %08x\n"), (UINT32)result);
 		goto cant_lock_buffer;
 	}
 

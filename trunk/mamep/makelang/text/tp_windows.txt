@@ -34,11 +34,11 @@
  - digital
 
 
-# osd/windows/fronthlp.c: 627
+# osd/windows/fronthlp.c: 628
  BAD
 
 
-# osd/windows/fronthlp.c: 633
+# osd/windows/fronthlp.c: 634
  NO GOOD DUMP KNOWN
 
 
@@ -50,7 +50,7 @@
 %s%2d%4d%%%4d/%d fps
 
 
-# osd/windows/fronthlp.c: 111
+# osd/windows/fronthlp.c: 112
 (BAD) 
 
 
@@ -462,7 +462,7 @@ DirectInput: Using DirectInput %d\n
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 
 
-# osd/windows/fronthlp.c: 938
+# osd/windows/fronthlp.c: 944
 ERROR     %s\n
 
 
@@ -538,11 +538,11 @@ Error: unable to configure a screen texture format\n
 FULL SCREEN OPTIONS
 
 
-# osd/windows/config.c: 1095
+# osd/windows/config.c: 1096
 Failed to open file for playback
 
 
-# osd/windows/config.c: 1145
+# osd/windows/config.c: 1146
 Failed to open file for recording
 
 
@@ -554,7 +554,7 @@ Fast Forward
 GAME SCREEN OPTIONS
 
 
-# osd/windows/fronthlp.c: 589, 665
+# osd/windows/fronthlp.c: 590, 666
 Game \"%s\" not supported!\n
 
 
@@ -570,11 +570,11 @@ Illegal aspect ratio value for %s = %s\n
 Illegal resolution value for %s = %s\n
 
 
-# osd/windows/config.c: 850, 972, 983, 997
+# osd/windows/config.c: 851, 973, 984, 998
 Illegal value for %s = %s\n
 
 
-# osd/windows/config.c: 1108
+# osd/windows/config.c: 1109
 Input file is for game '%s', not for current game '%s'\n
 
 
@@ -658,7 +658,7 @@ J%d %s R
 J%d %s U
 
 
-# osd/windows/fronthlp.c: 939
+# osd/windows/fronthlp.c: 945
 KNOWN     %s\n
 
 
@@ -674,7 +674,7 @@ Lightgun not supported in windowed mode
 Lightgun on Mouse %d 
 
 
-# osd/windows/config.c: 784
+# osd/windows/config.c: 785
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
 
 
@@ -694,19 +694,19 @@ Mouse
 Mouse %d 
 
 
-# osd/windows/fronthlp.c: 187 
+# osd/windows/fronthlp.c: 188 
 NO MATCH\n
 
 
-# osd/windows/fronthlp.c: 179
+# osd/windows/fronthlp.c: 180
 NOT A ROM\n
 
 
-# osd/windows/fronthlp.c: 412
+# osd/windows/fronthlp.c: 413
 Name:     Description:\n
 
 
-# osd/windows/fronthlp.c: 525
+# osd/windows/fronthlp.c: 526
 Name:    Clone of:\n
 
 
@@ -726,7 +726,7 @@ OSD bar color (light)
 OSD bar color (medium)
 
 
-# osd/windows/fronthlp.c: 941
+# osd/windows/fronthlp.c: 947
 PARTKNOWN %s\n
 
 
@@ -738,7 +738,7 @@ PER-WINDOW VIDEO OPTIONS
 PERFORMANCE OPTIONS
 
 
-# osd/windows/config.c: 1114
+# osd/windows/config.c: 1115
 Playing back previously recorded game %s\n
 
 
@@ -806,11 +806,11 @@ Stick%sZ-
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 
 
-# osd/windows/fronthlp.c: 594
+# osd/windows/fronthlp.c: 595
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
 
 
-# osd/windows/fronthlp.c: 940
+# osd/windows/fronthlp.c: 946
 UNKNOWN   %s\n
 
 
@@ -818,7 +818,7 @@ UNKNOWN   %s\n
 Unable to close the keyboard device. (error %d)\n
 
 
-# osd/windows/config.c: 743
+# osd/windows/config.c: 744
 Unable to create file %s\n
 
 
@@ -846,11 +846,11 @@ Unable to open the keyboard device. (error %d)\n
 Unknown texture blendmode=%d format=%d\n
 
 
-# osd/windows/config.c: 787
+# osd/windows/config.c: 788
 Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the file windows.txt\n
 
 
-# osd/windows/config.c: 682
+# osd/windows/config.c: 683
 Usage: mame [game] [options]\n\nOptions:\n
 
 
@@ -930,7 +930,7 @@ aspect ratio of the second screen; 'auto' here will try to make a best guess
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 
 
-# osd/windows/config.c: 166, 238, 239, 240, 241, 243, 244, 245, 246, 248, 249, 250, 251, 253, 254, 255, 256, 258, 259, 260, 261, 353, 991, 1050, 1058 osd/windows/video.c: 434, 541, 1000, 1002, 1023, 1025 osd/windows/window.c: 840, 840, 844
+# osd/windows/config.c: 166, 238, 239, 240, 241, 243, 244, 245, 246, 248, 249, 250, 251, 253, 254, 255, 256, 258, 259, 260, 261, 353, 992, 1051, 1059 osd/windows/video.c: 434, 541, 1000, 1002, 1023, 1025 osd/windows/window.c: 840, 840, 844
 auto
 
 
@@ -1198,11 +1198,11 @@ enable/disable local language game list
 enable/disable volume auto adjust
 
 
-# osd/windows/config.c: 1059
+# osd/windows/config.c: 1060
 error: invalid value for language: %s\nUse %s\n
 
 
-# osd/windows/config.c: 1182
+# osd/windows/config.c: 1183
 error: invalid value for palette: %s\n
 
 
@@ -1282,15 +1282,15 @@ invalid
 ips datfile name
 
 
-# osd/windows/fronthlp.c: 765, 861
+# osd/windows/fronthlp.c: 771, 867
 is bad\n
 
 
-# osd/windows/fronthlp.c: 775, 871
+# osd/windows/fronthlp.c: 781, 877
 is best available\n
 
 
-# osd/windows/fronthlp.c: 770, 866
+# osd/windows/fronthlp.c: 776, 872
 is good\n
 
 
@@ -1422,7 +1422,7 @@ report romsets that have problems
 report samplesets that have problems
 
 
-# osd/windows/fronthlp.c: 756
+# osd/windows/fronthlp.c: 762
 romset %s 
 
 
@@ -1438,7 +1438,7 @@ rotate screen counterclockwise 90 degrees
 rotate the game screen according to the game's orientation needs it
 
 
-# osd/windows/fronthlp.c: 855
+# osd/windows/fronthlp.c: 861
 sampleset %s 
 
 
@@ -1534,7 +1534,7 @@ show this help
 skip displaying the information screen at startup
 
 
-# osd/windows/config.c: 292, 934
+# osd/windows/config.c: 292, 935
 sound
 
 
@@ -1558,7 +1558,7 @@ trackball
 transparency of UI background [0 - 255]
 
 
-# osd/windows/config.c: 1017
+# osd/windows/config.c: 1018
 unable to open log file
 
 

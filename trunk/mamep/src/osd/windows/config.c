@@ -561,12 +561,13 @@ int cli_frontend_init(int argc, char **argv)
 	if (drvnum == -1)
 	{
 		int matches[10];
-		fprintf(stderr, _WINDOWS("\n\"%s\" approximately matches the following\n"
+		faprintf(stderr, _WINDOWS("\n\"%s\" approximately matches the following\n"
 				"supported " GAMESNOUN " (best match first):\n\n"), basename);
 		driver_get_approx_matches(basename, ARRAY_LENGTH(matches), matches);
 		for (drvnum = 0; drvnum < ARRAY_LENGTH(matches); drvnum++)
 			if (matches[drvnum] != -1)
-				fprintf(stderr, "%-10s%s\n", drivers[matches[drvnum]]->name, drivers[matches[drvnum]]->description);
+				faprintf(stderr, "%-10s%s\n", drivers[matches[drvnum]]->name, options.use_lang_list ?
+					_LST(drivers[matches[drvnum]]->description) : drivers[matches[drvnum]]->description);
 		exit(1);
 	}
 
@@ -740,7 +741,7 @@ static void execute_commands(const char *argv0)
 		// error if unable to create the file
 		if (filerr)
 		{
-			fprintf(stderr, _WINDOWS("Unable to create file %s\n"), basename);
+			faprintf(stderr, _WINDOWS("Unable to create file %s\n"), basename);
 			exit(1);
 		}
 
@@ -847,7 +848,7 @@ void assign_drivers(void)
 						}
 
 					if (!drivers_table[i].name)
-						fprintf(stderr, _WINDOWS("Illegal value for %s = %s\n"), "driver_config", s);
+						faprintf(stderr, _WINDOWS("Illegal value for %s = %s\n"), "driver_config", s);
 				}
 				free(s);
 
@@ -969,7 +970,7 @@ static void extract_options(const game_driver *driver, machine_config *drv)
 
 			if (options.m68k_core < 0 || options.m68k_core > 2)
 			{
-				fprintf(stderr, _WINDOWS("Illegal value for %s = %s\n"), "m68k_core", stemp);
+				faprintf(stderr, _WINDOWS("Illegal value for %s = %s\n"), "m68k_core", stemp);
 				options.m68k_core = 0;
 			}
 		}
@@ -980,7 +981,7 @@ static void extract_options(const game_driver *driver, machine_config *drv)
 	options.ui_transparency = options_get_int("ui_transparency");
 	if (options.ui_transparency < 0 || options.ui_transparency > 255)
 	{
-		fprintf(stderr, _WINDOWS("Illegal value for %s = %s\n"), "ui_transparency", options_get_string("ui_transparency"));
+		faprintf(stderr, _WINDOWS("Illegal value for %s = %s\n"), "ui_transparency", options_get_string("ui_transparency"));
 		options.ui_transparency = 192;
 	}
 #endif /* TRANS_UI */
@@ -994,7 +995,7 @@ static void extract_options(const game_driver *driver, machine_config *drv)
 
 			if (options.ui_lines == 0 || (options.ui_lines < 16 || options.ui_lines > 64))
 			{
-				fprintf(stderr, _WINDOWS("Illegal value for %s = %s\n"), "ui_lines", stemp);
+				faprintf(stderr, _WINDOWS("Illegal value for %s = %s\n"), "ui_lines", stemp);
 				options.ui_lines = 0;
 			}
 		}
@@ -1056,7 +1057,7 @@ static void setup_language(void)
 		options.langcode = UI_LANG_EN_US;
 		set_langcode(options.langcode);
 		if (mame_stricmp(langname, "auto"))
-			fprintf(stderr, _WINDOWS("error: invalid value for language: %s\nUse %s\n"),
+			faprintf(stderr, _WINDOWS("error: invalid value for language: %s\nUse %s\n"),
 		                langname, ui_lang_info[options.langcode].description);
 	}
 
@@ -1179,7 +1180,7 @@ static void setup_palette(void)
 				pal[1] < 0 || pal[1] >= 256 ||
 				pal[2] < 0 || pal[2] >= 256 )
 			{
-				fprintf(stderr, _WINDOWS("error: invalid value for palette: %s\n"), value);
+				faprintf(stderr, _WINDOWS("error: invalid value for palette: %s\n"), value);
 				continue;
 			}
 

@@ -309,7 +309,7 @@ static void dump_wrong_and_correct_checksums(rom_load_data* romdata, const char*
 			if (wrong_functions & (1<<i))
 			{
 				sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
-					"\tInvalid %s checksum treated as 0 (check leading zeros)\n",
+					_("\tInvalid %s checksum treated as 0 (check leading zeros)\n"),
 					hash_function_name(1<<i));
 
 				romdata->warnings++;
@@ -924,7 +924,7 @@ static void process_disk_entries(rom_load_data *romdata, const rom_entry *romp)
 			}
 			else if (hash_data_has_info(ROM_GETHASHDATA(romp), HASH_INFO_BAD_DUMP))
 			{
-				sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)], "%s CHD NEEDS REDUMP\n", filename);
+				sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)], _("%s CHD NEEDS REDUMP\n"), filename);
 				romdata->warnings++;
 			}
 

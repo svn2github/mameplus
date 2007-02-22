@@ -90,6 +90,7 @@ static int check_for_double_click_start(int argc);
 static LONG CALLBACK exception_filter(struct _EXCEPTION_POINTERS *info);
 static const char *lookup_symbol(UINT32 address);
 static int get_code_base_size(UINT32 *base, UINT32 *size);
+static void win_mame_file_output_callback(void *param, const char *format, va_list argptr);
 
 static void start_profiler(void);
 static void stop_profiler(void);
@@ -138,6 +139,14 @@ int utf8_main(int argc, char **argv)
 
 	// set up language for windows
 	assign_msg_catategory(UI_MSG_OSD0, "windows");
+
+	mame_set_output_channel(OUTPUT_CHANNEL_ERROR, win_mame_file_output_callback, stderr, NULL, NULL);
+	mame_set_output_channel(OUTPUT_CHANNEL_WARNING, win_mame_file_output_callback, stderr, NULL, NULL);
+	mame_set_output_channel(OUTPUT_CHANNEL_INFO, win_mame_file_output_callback, stdout, NULL, NULL);
+#ifdef MAME_DEBUG
+	mame_set_output_channel(OUTPUT_CHANNEL_DEBUG, win_mame_file_output_callback, stdout, NULL, NULL);
+#endif
+	mame_set_output_channel(OUTPUT_CHANNEL_LOG, win_mame_file_output_callback, stderr, NULL, NULL);
 
 	// parse config and cmdline options
 	game_index = cli_frontend_init(argc, argv);
@@ -231,13 +240,58 @@ void CLIB_DECL verbose_printf(const char *text, ...)
 {
 	if (verbose)
 	{
+		char buf[5000];
+		CHAR *s;
 		va_list arg;
 
 		/* dump to the buffer */
 		va_start(arg, text);
-		vprintf(text, arg);
+		vsnprintf(buf, ARRAY_LENGTH(buf), text, arg);
+		s = astring_from_utf8(buf);
+		fputs(s, stdout);
+		free(s);
 		va_end(arg);
 	}
+}
+
+
+//============================================================
+//  faprintf
+//============================================================
+
+int CLIB_DECL faprintf(FILE *f, const char *fmt, ...)
+{
+	char buf[5000];
+	CHAR *s;
+	va_list arg;
+	int result;
+
+	/* dump to the buffer */
+	va_start(arg, fmt);
+	result = vsnprintf(buf, ARRAY_LENGTH(buf), fmt, arg);
+	s = astring_from_utf8(buf);
+	fputs(s, f);
+	free(s);
+	va_end(arg);
+
+	return result;
+}
+
+
+
+//============================================================
+//  win_mame_file_output_callback
+//============================================================
+
+static void win_mame_file_output_callback(void *param, const char *format, va_list argptr)
+{
+	char buf[5000];
+	CHAR *s;
+
+	vsnprintf(buf, ARRAY_LENGTH(buf), format, argptr);
+	s = astring_from_utf8(buf);
+	fputs(s, (FILE *)param);
+	free(s);
 }
 
 

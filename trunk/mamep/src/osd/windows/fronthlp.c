@@ -25,6 +25,7 @@
 #include "sound/samples.h"
 
 // MAMEOS headers
+#include "winmain.h"
 #include "strconv.h"
 
 /*
@@ -107,8 +108,8 @@ static void match_roms(const game_driver *driver, const char *hash, int length, 
 				if (output != NULL)
 				{
 					if (*found != 0)
-						fprintf(output, "             ");
-					fprintf(output, "= %s%-12s  %s\n",baddump ? _WINDOWS("(BAD) ") : "",ROM_GETNAME(rom),(options.use_lang_list ? _LST(driver->description) : driver->description));
+						faprintf(output, "             ");
+					faprintf(output, "= %s%-12s  %s\n",baddump ? _WINDOWS("(BAD) ") : "",ROM_GETNAME(rom),(options.use_lang_list ? _LST(driver->description) : driver->description));
 				}
 				(*found)++;
 			}
@@ -163,7 +164,7 @@ void identify_data(const char *name, const UINT8 *data, int length, FILE *output
 	/* output the name */
 	identfiles++;
 	if (output != NULL)
-		fprintf(output, "%s ", &name[i]);
+		faprintf(output, "%s ", &name[i]);
 
 	/* see if we can find a match in the ROMs */
 	for (i = 0; drivers[i]; i++)
@@ -176,7 +177,7 @@ void identify_data(const char *name, const UINT8 *data, int length, FILE *output
 		if ((length & (length - 1)) != 0)
 		{
 			if (output != NULL)
-				fprintf(output, _WINDOWS("NOT A ROM\n"));
+				faprintf(output, _WINDOWS("NOT A ROM\n"));
 			identnonroms++;
 		}
 
@@ -184,7 +185,7 @@ void identify_data(const char *name, const UINT8 *data, int length, FILE *output
 		else
 		{
 			if (output != NULL)
-				fprintf(output, _WINDOWS("NO MATCH\n"));
+				faprintf(output, _WINDOWS("NO MATCH\n"));
 			if (knownstatus == KNOWN_START)
 				knownstatus = KNOWN_NONE;
 			else if (knownstatus == KNOWN_ALL)
@@ -409,7 +410,7 @@ int frontend_listfull(FILE *output)
 		gamename = "*";
 
 	/* print the header */
-	fprintf(output, _WINDOWS("Name:     Description:\n"));
+	faprintf(output, _WINDOWS("Name:     Description:\n"));
 
 	/* iterate over drivers */
 	for (drvindex = 0; drivers[drvindex]; drvindex++)
@@ -417,27 +418,27 @@ int frontend_listfull(FILE *output)
 		{
 			char name[200];
 
-			fprintf(output, "%-10s", drivers[drvindex]->name);
+			faprintf(output, "%-10s", drivers[drvindex]->name);
 
 			if (options.use_lang_list)
 			{
 				strcpy(name, _LST(drivers[drvindex]->description));
-				fprintf(output, "\"%s\"\n", name);
+				faprintf(output, "\"%s\"\n", name);
 				continue;
 			}
 
 			namecopy(name,drivers[drvindex]->description);
-			fprintf(output, "\"%s",name);
+			faprintf(output, "\"%s",name);
 
 			/* print the additional description only if we are listing clones */
 			{
 				char *pdest = pdest = strstr(drivers[drvindex]->description, " (");
 
 				if (pdest != NULL && pdest > drivers[drvindex]->description)
-					fprintf(output, "%s", pdest);
+					faprintf(output, "%s", pdest);
 			}
 
-			fprintf(output, "\"\n");
+			faprintf(output, "\"\n");
 
 			count++;
 		}
@@ -461,27 +462,27 @@ int frontend_listgames(FILE *output)
 		{
 			char name[200];
 
-			fprintf(output, "%-5s%-36s ",drivers[drvindex]->year, (options.use_lang_list ? _MANUFACT(drivers[drvindex]->manufacturer) : drivers[drvindex]->manufacturer));
+			faprintf(output, "%-5s%-36s ",drivers[drvindex]->year, (options.use_lang_list ? _MANUFACT(drivers[drvindex]->manufacturer) : drivers[drvindex]->manufacturer));
 
 			if (options.use_lang_list)
 			{
 				strcpy(name, _LST(drivers[drvindex]->description));
-				fprintf(output, "\"%s\"\n", name);
+				faprintf(output, "\"%s\"\n", name);
 				continue;
 			}
 
 			namecopy(name,drivers[drvindex]->description);
-			fprintf(output, "\"%s",name);
+			faprintf(output, "\"%s",name);
 
 			/* print the additional description only if we are listing clones */
 			{
 				char *pdest = pdest = strstr(drivers[drvindex]->description, " (");
 
 				if (pdest != NULL && pdest > drivers[drvindex]->description)
-					fprintf(output, "%s", pdest);
+					faprintf(output, "%s", pdest);
 			}
 
-			fprintf(output, "\"\n");
+			faprintf(output, "\"\n");
 
 			count++;
 		}
@@ -503,7 +504,7 @@ int frontend_listsource(FILE *output)
 	for (drvindex = 0; drivers[drvindex]; drvindex++)
 		if (mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
-			fprintf(output, "%-8s %s\n", drivers[drvindex]->name, drivers[drvindex]->source_file);
+			faprintf(output, "%-8s %s\n", drivers[drvindex]->name, drivers[drvindex]->source_file);
 			count++;
 		}
 
@@ -522,7 +523,7 @@ int frontend_listclones(FILE *output)
 		gamename = "*";
 
 	/* print the header */
-	fprintf(output, _WINDOWS("Name:    Clone of:\n"));
+	faprintf(output, _WINDOWS("Name:    Clone of:\n"));
 
 	/* iterate over drivers */
 	for (drvindex = 0; drivers[drvindex]; drvindex++)
@@ -533,7 +534,7 @@ int frontend_listclones(FILE *output)
 		if (clone_of != NULL && (clone_of->flags & NOT_A_DRIVER) == 0)
 			if (mame_strwildcmp(gamename, drivers[drvindex]->name) == 0 || mame_strwildcmp(gamename, clone_of->name) == 0)
 			{
-				fprintf(output, "%-8s %-8s\n", drivers[drvindex]->name, clone_of->name);
+				faprintf(output, "%-8s %-8s\n", drivers[drvindex]->name, clone_of->name);
 				count++;
 			}
 	}
@@ -560,7 +561,7 @@ int frontend_listcrc(FILE *output)
 
 				/* if we have a CRC, display it */
 				if (hash_data_extract_printable_checksum(ROM_GETHASHDATA(rom), HASH_CRC, hashbuf))
-					fprintf(output, "%s %-12s %s\n", hashbuf, ROM_GETNAME(rom), (options.use_lang_list ? _LST(drivers[drvindex]->description) : drivers[drvindex]->description));
+					faprintf(output, "%s %-12s %s\n", hashbuf, ROM_GETNAME(rom), (options.use_lang_list ? _LST(drivers[drvindex]->description) : drivers[drvindex]->description));
 			}
 	}
 
@@ -586,12 +587,12 @@ int frontend_listroms(FILE *output)
 	/* error if not found */
 	if (*gamedrv == NULL)
 	{
-		fprintf(stderr, _WINDOWS("Game \"%s\" not supported!\n"), gamename);
+		faprintf(stderr, _WINDOWS("Game \"%s\" not supported!\n"), gamename);
 		return 1;
 	}
 
 	/* print the header */
-	fprintf(output, _WINDOWS("This is the list of the ROMs required for driver \"%s\".\n"
+	faprintf(output, _WINDOWS("This is the list of the ROMs required for driver \"%s\".\n"
 			"Name            Size Checksum\n"), gamename);
 
 	/* iterate over regions and then ROMs within the region */
@@ -612,11 +613,11 @@ int frontend_listroms(FILE *output)
 			}
 
 			/* start with the name */
-			fprintf(output, "%-12s ", name);
+			faprintf(output, "%-12s ", name);
 
 			/* output the length next */
 			if (length >= 0)
-				fprintf(output, "%7d", length);
+				faprintf(output, "%7d", length);
 			else
 				fprintf(output, "       ");
 
@@ -624,13 +625,13 @@ int frontend_listroms(FILE *output)
 			if (!hash_data_has_info(hash, HASH_INFO_NO_DUMP))
 			{
 				if (hash_data_has_info(hash, HASH_INFO_BAD_DUMP))
-					fprintf(output, _WINDOWS(" BAD"));
+					faprintf(output, _WINDOWS(" BAD"));
 
 				hash_data_print(hash, 0, hashbuf);
 				fprintf(output, " %s", hashbuf);
 			}
 			else
-				fprintf(output, _WINDOWS(" NO GOOD DUMP KNOWN"));
+				faprintf(output, _WINDOWS(" NO GOOD DUMP KNOWN"));
 
 			/* end with a CR */
 			fprintf(output, "\n");
@@ -662,7 +663,7 @@ int frontend_listsamples(FILE *output)
 	/* error if not found */
 	if (*gamedrv == NULL)
 	{
-		fprintf(stderr, _WINDOWS("Game \"%s\" not supported!\n"), gamename);
+		faprintf(stderr, _WINDOWS("Game \"%s\" not supported!\n"), gamename);
 		return 1;
 	}
 
@@ -693,11 +694,16 @@ int frontend_listsamples(FILE *output)
 
 void CLIB_DECL verify_printf(const char *fmt, ...)
 {
+	char buf[5000];
+	CHAR *s;
 	va_list arg;
 
 	/* dump to the buffer */
 	va_start(arg, fmt);
-	vfprintf(verify_file, _(fmt), arg);
+	vsnprintf(buf, ARRAY_LENGTH(buf), _(fmt), arg);
+	s = astring_from_utf8(buf);
+	fputs(s, verify_file);
+	free(s);
 	va_end(arg);
 }
 
@@ -753,7 +759,7 @@ int frontend_verifyroms(FILE *output)
 			const game_driver *clone_of;
 
 			/* output the name of the driver and its clone */
-			fprintf(output, _WINDOWS("romset %s "), drivers[drvindex]->name);
+			faprintf(output, _WINDOWS("romset %s "), drivers[drvindex]->name);
 			clone_of = driver_get_clone(drivers[drvindex]);
 			if (clone_of != NULL)
 				fprintf(output, "[%s] ", clone_of->name);
@@ -762,17 +768,17 @@ int frontend_verifyroms(FILE *output)
 			switch (res)
 			{
 				case INCORRECT:
-					fprintf(output, _WINDOWS("is bad\n"));
+					faprintf(output, _WINDOWS("is bad\n"));
 					incorrect++;
 					break;
 
 				case CORRECT:
-					fprintf(output, _WINDOWS("is good\n"));
+					faprintf(output, _WINDOWS("is good\n"));
 					correct++;
 					break;
 
 				case BEST_AVAILABLE:
-					fprintf(output, _WINDOWS("is best available\n"));
+					faprintf(output, _WINDOWS("is best available\n"));
 					correct++;
 					break;
 			}
@@ -787,16 +793,16 @@ int frontend_verifyroms(FILE *output)
 	if (correct + incorrect == 0)
 	{
 		if (notfound > 0)
-			fprintf(output, _WINDOWS("romset \"%8s\" not found!\n"), gamename);
+			faprintf(output, _WINDOWS("romset \"%8s\" not found!\n"), gamename);
 		else
-			fprintf(output, _WINDOWS("romset \"%8s\" not supported!\n"), gamename);
+			faprintf(output, _WINDOWS("romset \"%8s\" not supported!\n"), gamename);
  		return 1;
 	}
 
 	/* otherwise, print a summary */
 	else
 	{
-		fprintf(output, _WINDOWS("%d romsets found, %d were OK.\n"), correct+incorrect, correct);
+		faprintf(output, _WINDOWS("%d romsets found, %d were OK.\n"), correct+incorrect, correct);
 		return (incorrect > 0) ? 2 : 0;
 	}
 }
@@ -852,23 +858,23 @@ int frontend_verifysamples(FILE *output)
 		/* else display information about what we discovered */
 		else
 		{
-			fprintf(output, "sampleset %s ", drivers[drvindex]->name);
+			faprintf(output, _WINDOWS("sampleset %s "), drivers[drvindex]->name);
 
 			/* switch off of the result */
 			switch (res)
 			{
 				case INCORRECT:
-					fprintf(output, _WINDOWS("is bad\n"));
+					faprintf(output, _WINDOWS("is bad\n"));
 					incorrect++;
 					break;
 
 				case CORRECT:
-					fprintf(output, _WINDOWS("is good\n"));
+					faprintf(output, _WINDOWS("is good\n"));
 					correct++;
 					break;
 
 				case BEST_AVAILABLE:
-					fprintf(output, _WINDOWS("is best available\n"));
+					faprintf(output, _WINDOWS("is best available\n"));
 					correct++;
 					break;
 			}
@@ -935,10 +941,10 @@ int frontend_isknown(FILE *output)
 	/* switch off of the result to print a summary */
 	switch (knownstatus)
 	{
-		case KNOWN_START: fprintf(output, _WINDOWS("ERROR     %s\n"), gamename); break;
-		case KNOWN_ALL:   fprintf(output, _WINDOWS("KNOWN     %s\n"), gamename); break;
-		case KNOWN_NONE:  fprintf(output, _WINDOWS("UNKNOWN   %s\n"), gamename); break;
-		case KNOWN_SOME:  fprintf(output, _WINDOWS("PARTKNOWN %s\n"), gamename); break;
+		case KNOWN_START: faprintf(output, _WINDOWS("ERROR     %s\n"), gamename); break;
+		case KNOWN_ALL:   faprintf(output, _WINDOWS("KNOWN     %s\n"), gamename); break;
+		case KNOWN_NONE:  faprintf(output, _WINDOWS("UNKNOWN   %s\n"), gamename); break;
+		case KNOWN_SOME:  faprintf(output, _WINDOWS("PARTKNOWN %s\n"), gamename); break;
 	}
 
 	/* return the appropriate error code */

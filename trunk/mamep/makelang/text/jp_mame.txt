@@ -126,6 +126,10 @@
 %s Analog
 %s アナログ
 
+# emu/romload.c: 927
+%s CHD NEEDS REDUMP\n
+%s CHDは再ダンプが必要です\n
+
 # emu/uimenu.c: 131
 %s Dec
 %s 増加
@@ -134,6 +138,34 @@
 %s Inc
 %s 減少
 
+# emu/romload.c: 349
+%s NO GOOD DUMP KNOWN\n
+%s 正常なダンプは不明です\n
+
+# emu/romload.c: 256
+%s NOT FOUND (NO GOOD DUMP KNOWN)\n
+%s 見つかりません (正常なダンプは不明)\n
+
+# emu/romload.c: 263, 901
+%s NOT FOUND\n
+%s 見つかりません\n
+
+# emu/romload.c: 365
+%s ROM NEEDS REDUMP\n
+%s 再ダンプが必要です\n
+
+# emu/romload.c: 899, 948, 962
+%s UNSUPPORTED CHD VERSION\n
+%S サポートされていないCHDバージョンです\n
+
+# emu/romload.c: 356, 921
+%s WRONG CHECKSUMS:\n
+%s チェックサム異常:\n
+
+# emu/romload.c: 342
+%s WRONG LENGTH (expected: %08x found: %08x)\n
+%s サイズ異常です (正常な物: %08x 見つかった物: %08x)\n
+
 # emu/cheat.c: 2610
 %s activated
 %sを有効にしました
@@ -141,6 +173,14 @@
 # emu/state.c: 687
 %s'%s' is not a valid savestate file for game '%s'.
 %s'%s'はゲーム'%s'の保存ファイルではありません
+
+# emu/romload.c: 950
+%s: CAN'T CREATE DIFF FILE\n
+%s: DIFFファイルが作成出来ません\n
+
+# emu/romload.c: 964
+%s: CAN'T OPEN DIFF FILE\n
+%s: DIFFファイルが開けません\n
 
 # emu/state.c: 699
 %sIncompatible save file (signature %08x, expected %08x)
@@ -626,7 +666,7 @@ BCD
 BIOS
 BIOS
 
-# emu/ui.c: 2397
+# emu/ui.c: 2396
 Beam Width
 ビーム幅
 
@@ -1122,6 +1162,10 @@ Door Interlock
 Double Up
 ダブルアップ
 
+# emu/uitext.c: 235
+Driver Configuration
+ドライバ設定
+
 # emu/uitext.c: 66
 Driverinfo not available
 ドライバ情報が見つかりません
@@ -1254,7 +1298,7 @@ Error: Failed to save state
 Error: Unable to save state due to illegal registrations. See error.log for details.
 エラー: 不正な登録のためステートを保存する事が出来ません。詳細はerror.logをご覧下さい。
 
-# emu/ui.c: 1446
+# emu/ui.c: 1445
 Error: illegal caption file
 エラー: 不正なキャプションファイルです
 
@@ -1530,11 +1574,11 @@ Hong Kong
 Hopper Reset
 ホッパーリセット
 
-# emu/ui.c: 2348
+# emu/ui.c: 2347
 Horiz position
 水平位置
 
-# emu/ui.c: 2314
+# emu/ui.c: 2313
 Horiz stretch
 水平拡大
 
@@ -1842,11 +1886,11 @@ Load Selected Card
 Load State
 プレイ状態の復帰
 
-# emu/ui.c: 1961
+# emu/ui.c: 1960
 Load cancelled
 読み込みを中止しました
 
-# emu/ui.c: 1992
+# emu/ui.c: 1991
 Load from position %c
 %c から読み込みました
 
@@ -2161,6 +2205,10 @@ Number of bytes
 # emu/uitext.c: 40 
 OK
 OK
+
+# emu/romload.c: 249
+OPTIONAL %s NOT FOUND\n
+オプションの%s 見つかりません\n
 
 # emu/inptport.c: 349 emu/uitext.c: 38, 242
 Off
@@ -3630,15 +3678,15 @@ Previous Game
 Previous values already restored
 前回の値は既に復帰済みです
 
-# emu/ui.c: 2006
+# emu/ui.c: 2005
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 このゲームを終了しますか？\n\n終了する場合は決定キー/ボタンを、\n続ける場合はキャンセルキー/ボタンを押して下さい。
 
-# emu/ui.c: 1843
+# emu/ui.c: 1842
 REC START
 録画開始
 
-# emu/ui.c: 1848
+# emu/ui.c: 1847
 REC STOP
 録画停止
 
@@ -3790,11 +3838,11 @@ Save Snapshot
 Save State
 プレイ状態の保存
 
-# emu/ui.c: 1959
+# emu/ui.c: 1958
 Save cancelled
 保存を中止しました
 
-# emu/ui.c: 1987
+# emu/ui.c: 1986
 Save to position %c
 %c に保存しました
 
@@ -3806,7 +3854,7 @@ Screen
 Screen #
 画面 #
 
-# emu/ui.c: 2247, 2264, 2281, 2297, 2314, 2331, 2348, 2365
+# emu/ui.c: 2246, 2263, 2280, 2296, 2313, 2330, 2347, 2364
 Screen %d %s %.3f
 画面%d %s %.3f
 
@@ -3874,11 +3922,11 @@ Select Search
 Select a value
 値の選択
 
-# emu/ui.c: 1952
+# emu/ui.c: 1951
 Select position to load from
 読み込むファイル(0-9,A-Z)を押してください
 
-# emu/ui.c: 1950
+# emu/ui.c: 1949
 Select position to save to
 保存するファイル(0-9,A-Z)を押してください
 
@@ -4606,11 +4654,11 @@ Vector Game
 Version
 バージョン
 
-# emu/ui.c: 2365
+# emu/ui.c: 2364
 Vert position
 垂直位置
 
-# emu/ui.c: 2331
+# emu/ui.c: 2330
 Vert stretch
 垂直拡大
 
@@ -4861,6 +4909,10 @@ Zoom Auto
 # emu/datafile.c: 2266
 \n\nYEAR: ORIG  CLNS NEOGEO  ALL\n\n
 \n\n年: 原作 クローン ネオジオ 全て\n\n
+
+# emu/romload.c: 312
+\tInvalid %s checksum treated as 0 (check leading zeros)\n
+\t不正なチェックサム値%sを0として処理します (先頭のゼロを確認して下さい)\n
 
 # emu/mamecore.h: 173 
 assert: %s:%d: %s

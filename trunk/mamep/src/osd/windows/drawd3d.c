@@ -431,7 +431,7 @@ int drawd3d_init(win_draw_callbacks *callbacks)
 	// if we failed, note the error
 	if (d3dintf == NULL)
 	{
-		fprintf(stderr, _WINDOWS("Unable to initialize Direct3D.\n"));
+		faprintf(stderr, _WINDOWS("Unable to initialize Direct3D.\n"));
 		return 1;
 	}
 
@@ -492,7 +492,7 @@ static int drawd3d_window_init(win_window_info *window)
 
 error:
 	drawd3d_window_destroy(window);
-	fprintf(stderr, _WINDOWS("Unable to initialize Direct3D.\n"));
+	faprintf(stderr, _WINDOWS("Unable to initialize Direct3D.\n"));
 	return 1;
 }
 
@@ -643,17 +643,17 @@ static int device_create(win_window_info *window)
 	verify = device_verify_caps(d3d);
 	if (verify == 2)
 	{
-		fprintf(stderr, _WINDOWS("Error: Device does not meet minimum requirements for Direct3D rendering\n"));
+		faprintf(stderr, _WINDOWS("Error: Device does not meet minimum requirements for Direct3D rendering\n"));
 		return 1;
 	}
 	if (verify == 1)
-		fprintf(stderr, _WINDOWS("Warning: Device may not perform well for Direct3D rendering\n"));
+		faprintf(stderr, _WINDOWS("Warning: Device may not perform well for Direct3D rendering\n"));
 
 	// verify texture formats
 	result = (*d3dintf->d3d.check_device_format)(d3dintf, d3d->adapter, D3DDEVTYPE_HAL, d3d->pixformat, 0, D3DRTYPE_TEXTURE, D3DFMT_A8R8G8B8);
 	if (result != D3D_OK)
 	{
-		fprintf(stderr, _WINDOWS("Error: A8R8G8B8 format textures not supported\n"));
+		faprintf(stderr, _WINDOWS("Error: A8R8G8B8 format textures not supported\n"));
 		return 1;
 	}
 
@@ -685,7 +685,7 @@ try_again:
 		}
 		if (result != D3D_OK)
 		{
-			fprintf(stderr, _WINDOWS("Error: unable to configure a screen texture format\n"));
+			faprintf(stderr, _WINDOWS("Error: unable to configure a screen texture format\n"));
 			return 1;
 		}
 	}
@@ -711,7 +711,7 @@ try_again:
 					D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_FPU_PRESERVE, &d3d->presentation, &d3d->device);
 	if (result != D3D_OK)
 	{
-		fprintf(stderr, _WINDOWS("Unable to create the Direct3D device (%08X)\n"), (UINT32)result);
+		faprintf(stderr, _WINDOWS("Unable to create the Direct3D device (%08X)\n"), (UINT32)result);
 		return 1;
 	}
 	verbose_printf(_WINDOWS("Direct3D: Device created at %dx%d\n"), d3d->width, d3d->height);
@@ -730,7 +730,7 @@ try_again:
 		{
 			// warn if we can't do it
 			if (!d3d->gamma_supported)
-				fprintf(stderr, _WINDOWS("Direct3D: Warning - device does not support full screen gamma correction.\n"));
+				faprintf(stderr, _WINDOWS("Direct3D: Warning - device does not support full screen gamma correction.\n"));
 			else
 			{
 				D3DGAMMARAMP ramp;
@@ -764,7 +764,7 @@ static int device_create_resources(d3d_info *d3d)
 				VERTEX_FORMAT, D3DPOOL_DEFAULT, &d3d->vertexbuf);
 	if (result != D3D_OK)
 	{
-		fprintf(stderr, _WINDOWS("Error creating vertex buffer (%08X)"), (UINT32)result);
+		faprintf(stderr, _WINDOWS("Error creating vertex buffer (%08X)"), (UINT32)result);
 		return 1;
 	}
 
@@ -772,7 +772,7 @@ static int device_create_resources(d3d_info *d3d)
 	result = (*d3dintf->device.set_vertex_shader)(d3d->device, VERTEX_FORMAT);
 	if (result != D3D_OK)
 	{
-		fprintf(stderr, _WINDOWS("Error setting vertex shader (%08X)"), (UINT32)result);
+		faprintf(stderr, _WINDOWS("Error setting vertex shader (%08X)"), (UINT32)result);
 		return 1;
 	}
 
@@ -1086,7 +1086,7 @@ static int config_adapter_mode(win_window_info *window)
 	result = (*d3dintf->d3d.get_adapter_identifier)(d3dintf, d3d->adapter, 0, &identifier);
 	if (result != D3D_OK)
 	{
-		fprintf(stderr, _WINDOWS("Error getting identifier for adapter #%d\n"), d3d->adapter);
+		faprintf(stderr, _WINDOWS("Error getting identifier for adapter #%d\n"), d3d->adapter);
 		return 1;
 	}
 	verbose_printf(_WINDOWS("Direct3D: Configuring adapter #%d = %s\n"), d3d->adapter, identifier.Description);
@@ -1095,7 +1095,7 @@ static int config_adapter_mode(win_window_info *window)
 	result = (*d3dintf->d3d.get_adapter_display_mode)(d3dintf, d3d->adapter, &d3d->origmode);
 	if (result != D3D_OK)
 	{
-		fprintf(stderr, _WINDOWS("Error getting mode for adapter #%d\n"), d3d->adapter);
+		faprintf(stderr, _WINDOWS("Error getting mode for adapter #%d\n"), d3d->adapter);
 		return 1;
 	}
 
@@ -1116,7 +1116,7 @@ static int config_adapter_mode(win_window_info *window)
 		// make sure it's a pixel format we can get behind
 		if (d3d->pixformat != D3DFMT_X1R5G5B5 && d3d->pixformat != D3DFMT_R5G6B5 && d3d->pixformat != D3DFMT_X8R8G8B8)
 		{
-			fprintf(stderr, _WINDOWS("Device %s currently in an unsupported mode\n"), window->monitor->info.szDevice);
+			faprintf(stderr, _WINDOWS("Device %s currently in an unsupported mode\n"), window->monitor->info.szDevice);
 			return 1;
 		}
 	}
@@ -1139,7 +1139,7 @@ static int config_adapter_mode(win_window_info *window)
 	result = (*d3dintf->d3d.check_device_type)(d3dintf, d3d->adapter, D3DDEVTYPE_HAL, d3d->pixformat, d3d->pixformat, !window->fullscreen);
 	if (result != D3D_OK)
 	{
-		fprintf(stderr, _WINDOWS("Proposed video mode not supported on device %s\n"), window->monitor->info.szDevice);
+		faprintf(stderr, _WINDOWS("Proposed video mode not supported on device %s\n"), window->monitor->info.szDevice);
 		return 1;
 	}
 	return 0;
@@ -1776,7 +1776,7 @@ static void texture_compute_size(d3d_info *d3d, int texwidth, int texheight, tex
 	if (finalwidth > d3d->texture_max_width || finalheight > d3d->texture_max_height)
 	{
 		static int printed = FALSE;
-		if (!printed) fprintf(stderr, _WINDOWS("Texture too big! (wanted: %dx%d, max is %dx%d)\n"), finalwidth, finalheight, (int)d3d->texture_max_width, (int)d3d->texture_max_height);
+		if (!printed) faprintf(stderr, _WINDOWS("Texture too big! (wanted: %dx%d, max is %dx%d)\n"), finalwidth, finalheight, (int)d3d->texture_max_width, (int)d3d->texture_max_height);
 		printed = TRUE;
 	}
 
@@ -1990,7 +1990,7 @@ static void texture_set_data(d3d_info *d3d, texture_info *texture, const render_
 				break;
 
 			default:
-				fprintf(stderr, _WINDOWS("Unknown texture blendmode=%d format=%d\n"), PRIMFLAG_GET_BLENDMODE(flags), PRIMFLAG_GET_TEXFORMAT(flags));
+				faprintf(stderr, _WINDOWS("Unknown texture blendmode=%d format=%d\n"), PRIMFLAG_GET_BLENDMODE(flags), PRIMFLAG_GET_TEXFORMAT(flags));
 				break;
 		}
 

@@ -126,6 +126,10 @@
 %s Analog
 
 
+# emu/romload.c: 927
+%s CHD NEEDS REDUMP\n
+
+
 # emu/uimenu.c: 131
 %s Dec
 
@@ -134,12 +138,48 @@
 %s Inc
 
 
+# emu/romload.c: 349
+%s NO GOOD DUMP KNOWN\n
+
+
+# emu/romload.c: 256
+%s NOT FOUND (NO GOOD DUMP KNOWN)\n
+
+
+# emu/romload.c: 263, 901
+%s NOT FOUND\n
+
+
+# emu/romload.c: 365
+%s ROM NEEDS REDUMP\n
+
+
+# emu/romload.c: 899, 948, 962
+%s UNSUPPORTED CHD VERSION\n
+
+
+# emu/romload.c: 356, 921
+%s WRONG CHECKSUMS:\n
+
+
+# emu/romload.c: 342
+%s WRONG LENGTH (expected: %08x found: %08x)\n
+
+
 # emu/cheat.c: 2610
 %s activated
 
 
 # emu/state.c: 687
 %s'%s' is not a valid savestate file for game '%s'.
+
+
+# emu/romload.c: 950
+%s: CAN'T CREATE DIFF FILE\n
+
+
+# emu/romload.c: 964
+%s: CAN'T OPEN DIFF FILE\n
 
 
 # emu/state.c: 699
@@ -626,7 +666,7 @@ BCD
 BIOS
 
 
-# emu/ui.c: 2397
+# emu/ui.c: 2396
 Beam Width
 
 
@@ -1122,6 +1162,10 @@ Door Interlock
 Double Up
 
 
+# emu/uitext.c: 235
+Driver Configuration
+
+
 # emu/uitext.c: 66
 Driverinfo not available
 
@@ -1254,7 +1298,7 @@ Error: Failed to save state
 Error: Unable to save state due to illegal registrations. See error.log for details.
 
 
-# emu/ui.c: 1446
+# emu/ui.c: 1445
 Error: illegal caption file
 
 
@@ -1530,11 +1574,11 @@ Hong Kong
 Hopper Reset
 
 
-# emu/ui.c: 2348
+# emu/ui.c: 2347
 Horiz position
 
 
-# emu/ui.c: 2314
+# emu/ui.c: 2313
 Horiz stretch
 
 
@@ -1842,11 +1886,11 @@ Load Selected Card
 Load State
 
 
-# emu/ui.c: 1961
+# emu/ui.c: 1960
 Load cancelled
 
 
-# emu/ui.c: 1992
+# emu/ui.c: 1991
 Load from position %c
 
 
@@ -2160,6 +2204,10 @@ Number of bytes
 
 # emu/uitext.c: 40 
 OK
+
+
+# emu/romload.c: 249
+OPTIONAL %s NOT FOUND\n
 
 
 # emu/inptport.c: 349 emu/uitext.c: 38, 242
@@ -3630,15 +3678,15 @@ Previous Game
 Previous values already restored
 
 
-# emu/ui.c: 2006
+# emu/ui.c: 2005
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 
 
-# emu/ui.c: 1843
+# emu/ui.c: 1842
 REC START
 
 
-# emu/ui.c: 1848
+# emu/ui.c: 1847
 REC STOP
 
 
@@ -3790,11 +3838,11 @@ Save Snapshot
 Save State
 
 
-# emu/ui.c: 1959
+# emu/ui.c: 1958
 Save cancelled
 
 
-# emu/ui.c: 1987
+# emu/ui.c: 1986
 Save to position %c
 
 
@@ -3806,7 +3854,7 @@ Screen
 Screen #
 
 
-# emu/ui.c: 2247, 2264, 2281, 2297, 2314, 2331, 2348, 2365
+# emu/ui.c: 2246, 2263, 2280, 2296, 2313, 2330, 2347, 2364
 Screen %d %s %.3f
 
 
@@ -3874,11 +3922,11 @@ Select Search
 Select a value
 
 
-# emu/ui.c: 1952
+# emu/ui.c: 1951
 Select position to load from
 
 
-# emu/ui.c: 1950
+# emu/ui.c: 1949
 Select position to save to
 
 
@@ -4606,11 +4654,11 @@ Vector Game
 Version
 
 
-# emu/ui.c: 2365
+# emu/ui.c: 2364
 Vert position
 
 
-# emu/ui.c: 2331
+# emu/ui.c: 2330
 Vert stretch
 
 
@@ -4860,6 +4908,10 @@ Zoom Auto
 
 # emu/datafile.c: 2266
 \n\nYEAR: ORIG  CLNS NEOGEO  ALL\n\n
+
+
+# emu/romload.c: 312
+\tInvalid %s checksum treated as 0 (check leading zeros)\n
 
 
 # emu/mamecore.h: 173 

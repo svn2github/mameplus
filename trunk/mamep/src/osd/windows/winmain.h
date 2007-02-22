@@ -21,3 +21,4 @@
 // use if you want to print something with the verbose flag
 void CLIB_DECL verbose_printf(const char *text, ...) ATTR_PRINTF(1,2);
 
+int CLIB_DECL faprintf(FILE *f, const char *fmt, ...) ATTR_PRINTF(2,3);
