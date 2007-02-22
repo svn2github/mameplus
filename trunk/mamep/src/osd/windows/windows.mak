@@ -327,7 +327,7 @@ CLIOBJS = $(WINOBJ)/climain.o
 
 # add debug-specific files
 ifneq ($(DEBUG),)
-OSOBJS += \
+OSDOBJS += \
 	$(WINOBJ)/debugwin.o
 endif
 

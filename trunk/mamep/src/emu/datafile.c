@@ -1675,7 +1675,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 	const game_driver *clone_of = NULL;
 	const input_port_entry *inp;
 
-	char name[100];
+	char name[256];
 	char year[4];
 	int i, n, x, y;
 	int all = 0, cl = 0, vec = 0, vecc = 0, neo = 0, neoc = 0;
@@ -1690,8 +1690,8 @@ int load_driver_statistics (char *buffer, int bufsize)
 	static int numcpu[4][CPU_COUNT], numsnd[4][SOUND_COUNT], sumcpu[MAX_CPU+1], sumsound[MAX_SOUND+1];
 	static int resx[400], resy[400], resnum[400];
 	static int palett[300], palettnum[300], control[35];
-	static int fpsnum[50];
-	float fps[50];
+	static int fpsnum[60];
+	float fps[60];
 
 	*buffer = 0;
 
@@ -1954,7 +1954,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 
 		/* Calc all Frames_Per_Second numbers */
 		fps[0] = drv.screen[0].defstate.refresh;
-		for (n = 1; n < 50; n++)
+		for (n = 1; n < 60; n++)
 		{
 			if (fps[n] == fps[0])
 			{
@@ -2450,7 +2450,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 	/* FRAMES_PER_SECOND: Sort and print all fps */
 	sprintf(name,_("\n\nFRAMES PER SECOND (%d): (ALL)\n\n"), fpsnum[0]);
 	strcat(buffer, name);
-	for (y = 1; y < 50; y++)
+	for (y = 1; y < 60; y++)
 	{
 		fps[0] = 199;
 		for (n = 1; n < 50; n++)
@@ -2459,7 +2459,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 				fps[0] = fps[n];
 		}
 
-		for (n = 1; n < 50; n++)	/* Print fps and number*/
+		for (n = 1; n < 60; n++)	/* Print fps and number*/
 		{
 			if (fps[0] == fps[n])
 			{
@@ -2471,7 +2471,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 
 	}
 
-	if (fpsnum[0] > 48)
+	if (fpsnum[0] > 58)
 		strcat(buffer, "\nWARNING: FPS number too high!\n");
 
 
