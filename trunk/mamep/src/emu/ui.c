@@ -115,7 +115,6 @@ static rgb_t ui_bgcolor;
 static render_font *ui_font;
 
 float ui_font_height;
-int ui_screen_width, ui_screen_height;
 
 static int multiline_text_box_visible_lines;
 static int multiline_text_box_target_lines;

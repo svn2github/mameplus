@@ -150,6 +150,4 @@ int sprintf_game_info(char *buffer);
 void ui_auto_pause(void);
 
 int ui_window_scroll_keys(void);
-
-extern int ui_screen_width, ui_screen_height;
 #endif	/* __USRINTRF_H__ */

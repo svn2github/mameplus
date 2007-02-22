@@ -1156,16 +1156,16 @@ static void allocate_scalebitmap(void)
 				info->scale_dirty[bank] = 1;
 
 				info->scale_bitmap[bank] = bitmap_alloc(
-					Machine->screen[0].width * scale_xsize,
-					Machine->screen[0].height * scale_ysize,
+					Machine->screen[scrnum].width * scale_xsize,
+					Machine->screen[scrnum].height * scale_ysize,
 					(scale_depth == 15) ? BITMAP_FORMAT_RGB15 : BITMAP_FORMAT_RGB32);
 
 				if (!use_work_bitmap)
 					continue;
 
 				info->work_bitmap[bank] = bitmap_alloc(
-					Machine->screen[0].width,
-					Machine->screen[0].height,
+					Machine->screen[scrnum].width,
+					Machine->screen[scrnum].height,
 					(scale_depth == 15) ? BITMAP_FORMAT_RGB15 : BITMAP_FORMAT_RGB32);
 			}
 		}
@@ -1282,6 +1282,7 @@ static void texture_set_scalebitmap(int scrnum, const rectangle *visarea)
 	mame_bitmap *target = info->bitmap[curbank];
 	mame_bitmap *dst;
 	const rgb_t *palette;
+	rectangle fixedvis;
 	int width, height;
 
 	width = visarea->max_x - visarea->min_x;
@@ -1289,6 +1290,11 @@ static void texture_set_scalebitmap(int scrnum, const rectangle *visarea)
 
 	if (scale_xsize != scale_effect.xsize || scale_ysize != scale_effect.ysize)
 		allocate_scalebitmap();
+
+	fixedvis.min_x = 0;
+	fixedvis.min_y = 0;
+	fixedvis.max_x = width * scale_xsize;
+	fixedvis.max_y = height * scale_ysize;
 
 	switch (info->format)
 	{
@@ -1324,18 +1330,18 @@ static void texture_set_scalebitmap(int scrnum, const rectangle *visarea)
 	if (scale_depth == 32)
 	{
 		UINT32 *src32 = BITMAP_ADDR32(target, visarea->min_y, visarea->min_x);
-		UINT32 *dst32 = BITMAP_ADDR32(dst, visarea->min_y * scale_effect.ysize, visarea->min_x * scale_effect.xsize);
+		UINT32 *dst32 = BITMAP_ADDR32(dst, 0, 0);
 		scale_perform_scale((UINT8 *)src32, (UINT8 *)dst32, target->rowpixels * 4, dst->rowpixels * 4, width, height, 32, info->scale_dirty[curbank], scalebank);
 	}
 	else
 	{
 		UINT16 *src16 = BITMAP_ADDR16(target, visarea->min_y, visarea->min_x);
-		UINT16 *dst16 = BITMAP_ADDR16(dst, visarea->min_y * scale_effect.ysize, visarea->min_x * scale_effect.xsize);
+		UINT16 *dst16 = BITMAP_ADDR16(dst, 0, 0);
 		scale_perform_scale((UINT8 *)src16, (UINT8 *)dst16, target->rowpixels * 2, dst->rowpixels * 2, width, height, 15, info->scale_dirty[curbank], scalebank);
 	}
 	info->scale_dirty[curbank] = 0;
 
-	render_texture_set_bitmap(info->texture, dst, NULL, 0, (scale_depth == 32) ? TEXFORMAT_RGB32 : TEXFORMAT_RGB15);
+	render_texture_set_bitmap(info->texture, dst, &fixedvis, 0, (scale_depth == 32) ? TEXFORMAT_RGB32 : TEXFORMAT_RGB15);
 }
 #endif /* USE_SCALE_EFFECTS */
 

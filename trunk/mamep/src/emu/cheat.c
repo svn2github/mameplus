@@ -1616,7 +1616,7 @@ UINT32 cheat_menu(UINT32 state)
 	int firstEntry = (state >> 30) & 1;
 	int shortcut = (state >> 31) & 1;
 
-	fullMenuPageHeight = ui_screen_height / ui_get_line_height() - 1;
+	fullMenuPageHeight = (int)(1.0f / ui_get_line_height()) - 1;
 
 	/* ----- allocate memory for item list ----- */
 	memset(menu_item, 0, sizeof(menu_item));
