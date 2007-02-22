@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#      Mameinfo.dat日本語版 v0.112       #
+#     Mameinfo.dat日本語版 v0.112u1      #
 #                                        #
-#            February 5, 2007            #
+#           February 13, 2007            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,94 +12,39 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：881 翻訳済：869
-# 追加項目：338 合計：1219
+# Tester報告：845 翻訳済：830
+# 追加項目：338 合計：1183
 #
 
 
-$info=paperboy
+$info=toutrun
 $mame
 [バグ]
 
-- POKEY（効果音）の音量が火曜日に進むと急に大きくなる。以前は起きていない。 paperboy0111u5gre, Machone
+- ドライブゲームで左CTRLが反応せず、加速できない。 analog0112u1gra, maxholz / Derrick Renaud
+
+
+- [Possilbe] ゲーム中以外の画面に、ゲーム中の画面が下側に残って表示される。 toutrun0108u2gre, Kekule
 
 $end
 
-$info=bnj
+$info=gatsbee
 $mame
 [バグ]
 
-- 実機の写真を見ると、縦方向の表示領域がMAMEよりも広い。
-240x240ではなく、240x256が正しいようだ。 bnj0111u5ora, Machone
+- "CPU 54XX not found"とエラーが出る。 gatsbee0112u1gre, Firewave
 
 $end
 
-$info=oscar
+$info=pinbo
 $mame
 [バグ]
 
-- カクテルモードをONにして2人プレーにすると、プレイヤー2のときのキャラクタの動作がものすごく遅くなる。 oscar0111u3yel, Speedfreak
+- アサートが出る。
 
-$end
+assert: src/emu/cpuint.c:240: Machine->drv->cpu
 
-$info=ertictac
-$mame
-[バグ]
-
-- 起動時にクラッシュする。0.111では動作する。 ertictac0111u4red, Tafoid
-
-$end
-
-$info=gridlee
-$mame
-[バグ]
-
-- ゲームスタートでクラッシュ。 gridlee0111u3red, Tafoid
-
-$end
-
-$info=looping
-$mame
-[バグ]
-
-- カクテルモードの2P時、反転した画面が乱れている。 looping0111u3yel, Speedfreak
-
-
-- ゲームの第2部に入って、ターミナルを破壊したあと、効果音が再生されない。 looping0101u5, RansAckeR
-
-
-- ボイスの中に、途切れたり鳴らないものがある。
-代わりにブーっとなることもあり。 looping37b14gre, Kurushimi / RansAckeR
-
-$end
-
-$info=mhavoc
-$mame
-[バグ]
-
-- ソース書き直しから、3面の緑色のベクターが正しく表示されず、かわりに紫→白→赤→青→紫の順に点滅する。 mhavoc0111u4gre, ArcadeDude
-
-
-- mhavoc.c全ゲーム：
-
-グラフィックの表示位置が違っているものがある。
-このバグ自体は新しいものではない。 mhavoc057gre, Smitdogg
-
-$end
-
-$info=m4
-$mame
-[バグ]
-
-- DIPスイッチの情報。本家リンク参照。 m4_0111u4gra, gregf
-
-$end
-
-$info=ninjakd2
-$mame
-[バグ]
-
-- カクテルモードでプレイヤー2の画面が反転しない。 ninjakd2_0111u3gra, Speedfreak
+[cpunum].cpu_type != CPU_Z80 || line == INPUT_LINE_NMI pinbo0112u1gre, Firewave
 
 $end
 
@@ -107,329 +52,11 @@ $info=airattck
 $mame
 [バグ]
 
-- nmk16.cゲームでプライオリティ不具合がある。
-Reipが何年か前に修正しようとしたが複雑すぎて無理だったらしい。 nmk16_0111u1gre, robiza / Kold666
+- 音が出ない。 airattck0112u1yel, Iaspis
 
-$end
-
-$info=raphero
-$mame
-[バグ]
 
 - nmk16.cゲームでプライオリティ不具合がある。
 Reipが何年か前に修正しようとしたが複雑すぎて無理だったらしい。 nmk16_0111u1gre, robiza / Kold666
-
-$end
-
-$info=nova2001
-$mame
-[バグ]
-
-- 筐体をアップライトに設定して、入力テストをするとプレイヤー1の方向入力がプレイヤー2にも適用されている。ボタンは正しく動く。 nova2001_0111u3gra, Speekfreak
-
-$end
-
-$info=parodius
-$mame
-[バグ]
-
-- I/Oテストによるとコイン3はサービスキー。 parodius0111u3gra, Speedfreak
-
-$end
-
-$info=phoenix
-$mame
-[バグ]
-
-- カクテルモードに設定するとプレイヤー2の背景が表示されない。 pleiads0111u4gre, Speedfreak
-
-
-- ゲームオーバーになったあとのデモ画面で、
-3行あるうちの一番下の行が消えずに残ってしまう。 phoenix055gre, zaxxon1
-
-$end
-
-$info=hatris
-$mame
-[バグ]
-
-- 画面反転の設定をすると、全て左上にずれて表示される。 hatris0111u4gre, Speedfreak
-
-$end
-
-$info=pipedrm
-$mame
-[バグ]
-
-- 画面反転時に表示不具合がでる。 pipedrm0111u4gre, Speedfreak
-
-$end
-
-$info=pkscram
-$mame
-[バグ]
-
-- アトラクトモード中にフリーズする。0.109から。 pkscram0111u4red, Speedfreak / Tafoid
-
-$end
-
-$info=bigtwin
-$mame
-[バグ]
-
-- 5つめのUnknownのDIPスイッチはデモサウンドの切り替え。 bigtwin0111u4gra, Speedfreak
-
-$end
-
-$info=quasar
-$mame
-[バグ]
-
-- 2人プレーゲームなのにプレイヤー3のスタートボタンがマッピングされている。 quasar0111u1gra, Speedfreak
-
-$end
-
-$info=realbrk
-$mame
-[バグ]
-
-- 画面反転のDIPスイッチが動作しない。プレイヤー2のスタートボタンがマッピングされていない。 realbrk0111u4gra, Speedfreak
-
-$end
-
-$info=rockrage
-$mame
-[バグ]
-
-- Coin 3はServiceキー。 rockrage0111u5gra, Speedfreak
-
-
-- 2番目と3番目のUnknownのDIPスイッチは、難易度の設定：
-
-OFF OFF: easy
-
-ON OFF: medium
-
-OFF ON: hard
-
-ON ON: hardest rockrage0111u6gra, Machone
-
-$end
-
-$info=nitrobal
-$mame
-[バグ]
-
-- 画面反転を有効にするとグラフィックがおかしくなる。 nitrobal0111u5gre, Speedfreak
-
-
-- プライオリティ問題あり。最初の扉を開けて次のエリアに進んだところなど。またテキストレイヤーも化けて表示される。 nitrobal068gre, Firewave / robiza
-
-$end
-
-$info=schmeisr
-$mame
-[バグ]
-
-- デモサウンドのDIP設定が逆。Tiltのキーがマッピングされていない。 schmeisr0111u5gra, Speedfreak
-
-$end
-
-$info=rollerg
-$mame
-[バグ]
-
-- コイン3はサービスキー。 rollerg0111u5gra, Speedfreak
-
-
-- YM3812が100%の音量でもほとんど聞こえない。 rollerg073ora, Richter_X
-
-$end
-
-$info=rotaryf
-$mame
-[バグ]
-
-- カクテルモードでプレイヤー2の画面が反転しない。 rotaryf0111u5gra, Speedfreak
-
-$end
-
-$info=mjifb
-$mame
-[バグ]
-
-- UnknownになっているDIPスイッチの情報：
-
-3-2: F-RATEの切り替え
-
-3-4: バイバイボーナスの切り替え
-
-3-6: リーチ後のオートツモの切り替え
-
-3-7: 背景色の切り替え
-
-4-3: フリップフロップの切り替え
-
-4-6: アニメーションの有効・無効 mjifb0111u2gra, fitcat
-
-
-- DIPスイッチ3-6をONにして、オートツモを有効にしているとき、
-リーチ後最初のツモでゲームがクラッシュする。 mjifb0111u2red, fitcat
-
-$end
-
-$info=rpunch
-$mame
-[バグ]
-
-- 画面反転を有効にすると、表示が化ける。 rpunch0111u5gra, Speedfreak
-
-$end
-
-$info=svolley
-$mame
-[バグ]
-
-- 画面反転を有効にすると、表示が化ける。 rpunch0111u5gra, Speedfreak
-
-$end
-
-$info=trckydoc
-$mame
-[バグ]
-
-- カクテルモードでプレイヤー2のスタート時に、画面の星がおかしく表示される。 trckydoc0111u5gre, Speedfreak
-
-$end
-
-$info=ad2083
-$mame
-[バグ]
-
-- 最初のUnknown DIPスイッチは筐体の設定。OFFがカクテル、ONがアップライト。
-また、カクテルモード時のプレイヤー2用操作が実装されていない。 ad2083_0111u5gra, Speedfreak
-
-$end
-
-$info=scorpion
-$mame
-[バグ]
-
-- 筐体のDIPスイッチ設定が動作しない。実はUnknownになっているのが筐体設定。 scorpion0111u5gra, Speedfreak
-
-$end
-
-$info=pairlove
-$mame
-[バグ]
-
-- サービスモードをONにしてF3リセットすると画面が真っ黒になる。
-裏ではサウンドテストのようなものが動作している。 pairlove0111u2yel, Speedfreak
-
-$end
-
-$info=penbros
-$mame
-[バグ]
-
-- ボタン3がマッピングされているが、入力テストには現われない。 penbros0111u5gra, Speedfreak
-
-$end
-
-$info=dokidoki
-$mame
-[バグ]
-
-- 下から2つ目のUnknown DIPスイッチはデモサウンドの有無。 dokidoki0111u5gra, Speedfreak
-
-$end
-
-$info=blocken
-$mame
-[バグ]
-
-- 画面反転を有効にすると表示がおかしくなる。 blocken0111u5gre, Speedfreak
-
-
-- デモプレイのとき、2秒おきくらいに動きが止まる。アイテム紹介などのところでは起きない。 blocken059gre_1, Kale
-
-
-- 最初だけ、どのコースを選んでもマップに道が表示されない。一勝すれば表示される。 blocken059gre_2, Kale
-
-
-- エンディングでスタッフクレジットの代わりに、セルテスト画面になってしまう。
-リセットしなければそのまま。 blocken137b8gre, YMI
-
-
-- 敵のボイスで完全に間違っているものがある。
-（紫の鳥が娘の声になっていたり、船ロボットが負けてるのに「I'm the champion」と言う） blocken337b8gre, YMI
-
-$end
-
-$info=kicker
-$mame
-[バグ]
-
-- サービスモードにカラーのテストパターンが表示されたままになる。 kicker0111u5gre, Speedfreak
-
-$end
-
-$info=spacecr
-$mame
-[バグ]
-
-- 筐体設定のDIPが動作せず、画面反転設定が筐体設定として動作する。 spacecr0111u1gra, Speedfreak / Fujix
-
-
-- 発射のデモ時に、画面下部分のグラフィックが画面一番上に表示される。 spacecr069u3gre, Karasu
-
-$end
-
-$info=spaceskr
-$mame
-[バグ]
-
-- 筐体のDIP設定が反転している。
-アップライトにすると、プレイヤー2の時に画面が反転し、操作もP1とP2で分離する。 spaceskr0111u1gra, Speedfreak / Fujix
-
-$end
-
-$info=outzone
-$mame
-[バグ]
-
-- 6面の中間付近で、背景の一部が黒い四角になっている。 outzone0111u2gre, ArcadeNUT
-
-$end
-
-$info=hotchase
-$mame
-[バグ]
-
-- UnknownのDIPスイッチ2-7はアトラクトモードのサウンドON/OFF。 hotchase0111u2gra, Speedfreak / Machone
-
-
-- ゲーム速度が遅い。ゲーム内のタイマーで1秒進むのに、実際には2秒くらいかかっている。 hotchase060gre, Kale
-
-
-- 1面の最初でバリアが壊れる音がしているのに、バリア自体は変化しない。 hotchase060gre_, DCisTHEbest
-
-$end
-
-$info=raystorm
-$mame
-[バグ]
-
-- デモをそのまま走らせているとMAMEがフリーズする。
-raystorjでは起きない。 raystorm0111u1red, Speedfreak
-
-$end
-
-$info=invadpt2
-$mame
-[バグ]
-
-- 面クリア時のSOSやENGINE TROUBLEのシーンの音が出ていない。0.94までは正常。 invadpt2_0108u4gre, Robbbert
 
 $end
 
@@ -564,9 +191,6 @@ $mame
 
 [バグ]
 
-- ギャラクシアン面でゲームの動作がつっかかる。 gorf0102u5yel, ahofle
-
-
 - ゲームスタート後は正しくリセットされない。 gorf060gre, DCisTHEbest / Thenasty
 
 $end
@@ -593,6 +217,14 @@ $mame
 
 
 - 起動時にクレジットが2つ勝手に入る。 pitfight0106u3ora, Roger Coltrane
+
+$end
+
+$info=paperboy
+$mame
+[バグ]
+
+- POKEY（効果音）の音量が火曜日に進むと急に大きくなる。以前は起きていない。 paperboy0111u5gre, Machone
 
 $end
 
@@ -1102,6 +734,14 @@ $mame
 
 $end
 
+$info=oscar
+$mame
+[バグ]
+
+- カクテルモードをONにして2人プレーにすると、プレイヤー2のときのキャラクタの動作がものすごく遅くなる。 oscar0111u3yel, Speedfreak
+
+$end
+
 $info=shackled
 $mame
 [バグ]
@@ -1341,6 +981,14 @@ EPROMはそれぞれ違うがPROMは同一。（MAMEでは同一のPROMを読み込むので正しい）。
 
 
 - 実機の背景表示は少しゆがんでいる。 splndrbt0110u2_2, Kold666
+
+$end
+
+$info=ertictac
+$mame
+[バグ]
+
+- 起動時にクラッシュする。0.111では動作する。 ertictac0111u4red, Tafoid
 
 $end
 
@@ -1675,6 +1323,14 @@ $mame
 
 $end
 
+$info=gridlee
+$mame
+[バグ]
+
+- ゲームスタートでクラッシュ。 gridlee0111u3red, Tafoid
+
+$end
+
 $info=groundfx
 $mame
 [バグ]
@@ -1952,6 +1608,21 @@ $mame
 [バグ]
 
 - コイン投入後、ショットボタンを押しながらスタートすると面セレクトになるが、16以上（特に19か22）を選ぶと惑星の画面でリセットがかかり、クレジットが0になる。 liberatr061yel, Kirin
+
+$end
+
+$info=looping
+$mame
+[バグ]
+
+- ゲームの第2部に入って、ターミナルを破壊したあと、効果音が再生されない。 looping0101u5, RansAckeR
+
+
+- カクテルモードの2P時、反転した画面が乱れている。 looping0111u3yel, Speedfreak
+
+
+- ボイスの中に、途切れたり鳴らないものがある。
+代わりにブーっとなることもあり。 looping37b14gre, Kurushimi / RansAckeR
 
 $end
 
@@ -2435,6 +2106,20 @@ $mame
 
 $end
 
+$info=mhavoc
+$mame
+[バグ]
+
+- ソース書き直しから、3面の緑色のベクターが正しく表示されず、かわりに紫→白→赤→青→紫の順に点滅する。 mhavoc0111u4gre, ArcadeDude
+
+
+- mhavoc.c全ゲーム：
+
+グラフィックの表示位置が違っているものがある。
+このバグ自体は新しいものではない。 mhavoc057gre, Smitdogg
+
+$end
+
 $info=jdreddp
 $mame
 [バグ]
@@ -2705,6 +2390,16 @@ $mame
 [バグ]
 
 - ゲーム中やキャラクタ選択画面で突然リセットする。 gfire20103red, russ h. / Twist
+
+$end
+
+$info=metamrph
+$mame
+[バグ]
+
+- 1面のボス直前でクラッシュする。場合によってはタイトル画面が現われる前にクラッシュすることもある。
+
+おそらくアルファブレンディングの更新で起きている。敵を倒した時の色が以前とは異なっている。 metamrph0112red, Kekule / twisty / Mamesick
 
 $end
 
@@ -3058,6 +2753,15 @@ $mame
 
 $end
 
+$info=raphero
+$mame
+[バグ]
+
+- nmk16.cゲームでプライオリティ不具合がある。
+Reipが何年か前に修正しようとしたが複雑すぎて無理だったらしい。 nmk16_0111u1gre, robiza / Kold666
+
+$end
+
 $info=nycaptor
 $mame
 [バグ]
@@ -3129,6 +2833,42 @@ $mame
 
 6面以上プレイしてゲームオーバーになったあとなら、柱は正しいが画面全体が一部を除いてずれる。
 また、面が変わっても消えない茶色線も出てくる。 pandoras058gre, Smitdogg
+
+$end
+
+$info=phoenix
+$mame
+[バグ]
+
+- カクテルモードに設定するとプレイヤー2の背景が表示されない。 pleiads0111u4gre, Speedfreak
+
+
+- ゲームオーバーになったあとのデモ画面で、
+3行あるうちの一番下の行が消えずに残ってしまう。 phoenix055gre, zaxxon1
+
+$end
+
+$info=hatris
+$mame
+[バグ]
+
+- 画面反転の設定をすると、全て左上にずれて表示される。 hatris0111u4gre, Speedfreak
+
+$end
+
+$info=pipedrm
+$mame
+[バグ]
+
+- 画面反転時に表示不具合がでる。 pipedrm0111u4gre, Speedfreak
+
+$end
+
+$info=pkscram
+$mame
+[バグ]
+
+- アトラクトモード中にフリーズする。0.109から。 pkscram0111u4red, Speedfreak / Tafoid
 
 $end
 
@@ -3371,6 +3111,17 @@ $mame
 
 $end
 
+$info=nitrobal
+$mame
+[バグ]
+
+- 画面反転を有効にするとグラフィックがおかしくなる。 nitrobal0111u5gre, Speedfreak
+
+
+- プライオリティ問題あり。最初の扉を開けて次のエリアに進んだところなど。またテキストレイヤーも化けて表示される。 nitrobal068gre, Firewave / robiza
+
+$end
+
 $info=rohga
 $mame
 [バグ]
@@ -3394,6 +3145,46 @@ $mame
 [バグ]
 
 - イニシャル入力時、カーソルの表示位置と実際の位置がずれているため、別の文字が入力される。 rollrace37b12gre, SportsDude
+
+$end
+
+$info=speakres
+$mame
+[バグ]
+
+- 自機がやられたときの音がずっと鳴り続ける。 speakres0112yel, Taofid /  Gyrovision
+
+$end
+
+$info=mjifb
+$mame
+[バグ]
+
+- DIPスイッチ3-6をONにして、オートツモを有効にしているとき、
+リーチ後最初のツモでゲームがクラッシュする。 mjifb0111u2red, fitcat
+
+
+- UnknownになっているDIPスイッチの情報：
+
+3-2: F-RATEの切り替え
+
+3-4: バイバイボーナスの切り替え
+
+3-6: リーチ後のオートツモの切り替え
+
+3-7: 背景色の切り替え
+
+4-3: フリップフロップの切り替え
+
+4-6: アニメーションの有効・無効 mjifb0111u2gra, fitcat
+
+$end
+
+$info=trckydoc
+$mame
+[バグ]
+
+- カクテルモードでプレイヤー2のスタート時に、画面の星がおかしく表示される。 trckydoc0111u5gre, Speedfreak
 
 $end
 
@@ -3670,6 +3461,15 @@ $mame
 
 $end
 
+$info=pairlove
+$mame
+[バグ]
+
+- サービスモードをONにしてF3リセットすると画面が真っ黒になる。
+裏ではサウンドテストのようなものが動作している。 pairlove0111u2yel, Speedfreak
+
+$end
+
 $info=qzkklgy2
 $mame
 [バグ]
@@ -3732,6 +3532,28 @@ $mame
 [バグ]
 
 - 実機と比較して、多くのスプライトが表示されていない。どの面でも赤いライバルが常に横で競っているがMAMEでは見あたらない。 sgladiat0102u5yel, Kold666
+
+$end
+
+$info=blocken
+$mame
+[バグ]
+
+- 画面反転を有効にすると表示がおかしくなる。 blocken0111u5gre, Speedfreak
+
+
+- デモプレイのとき、2秒おきくらいに動きが止まる。アイテム紹介などのところでは起きない。 blocken059gre_1, Kale
+
+
+- 最初だけ、どのコースを選んでもマップに道が表示されない。一勝すれば表示される。 blocken059gre_2, Kale
+
+
+- エンディングでスタッフクレジットの代わりに、セルテスト画面になってしまう。
+リセットしなければそのまま。 blocken137b8gre, YMI
+
+
+- 敵のボイスで完全に間違っているものがある。
+（紫の鳥が娘の声になっていたり、船ロボットが負けてるのに「I'm the champion」と言う） blocken337b8gre, YMI
 
 $end
 
@@ -3803,6 +3625,14 @@ $mame
 
 $end
 
+$info=kicker
+$mame
+[バグ]
+
+- サービスモードにカラーのテストパターンが表示されたままになる。 kicker0111u5gre, Speedfreak
+
+$end
+
 $info=dyger
 $mame
 [バグ]
@@ -3816,6 +3646,14 @@ $mame
 [バグ]
 
 - ショット時のときどき1、2フレーム化ける。 sidepckt058gre, Gmitra
+
+$end
+
+$info=chainrec
+$mame
+[バグ]
+
+- デバッグビルド、またはgdbでスクリーンショットを撮ろうとするとクラッシュする。 chainrec0112red, Firewave
 
 $end
 
@@ -3966,6 +3804,14 @@ $mame
 [バグ]
 
 - 各面のゴールのときに、仲間が非現実的な反応をする(新しい面のスタート時もある)。 srumbler236b3gre, YMI
+
+$end
+
+$info=powerbls
+$mame
+[バグ]
+
+- デバッグビルドでクラッシュが起こる。またgdbでスクリーンショットを撮ろうとしてもクラッシュする。 powerbls0112red, Firewave
 
 $end
 
@@ -4643,6 +4489,14 @@ $mame
 
 $end
 
+$info=outzone
+$mame
+[バグ]
+
+- 6面の中間付近で、背景の一部が黒い四角になっている。 outzone0111u2gre, ArcadeNUT
+
+$end
+
 $info=truxton
 $mame
 [バグ]
@@ -5111,6 +4965,20 @@ wc90bのみで見られる。 wc90b056gre_1, Kale
 
 $end
 
+$info=hotchase
+$mame
+[バグ]
+
+- ゲーム速度が遅い。ゲーム内のタイマーで1秒進むのに、実際には2秒くらいかかっている。 hotchase060gre, Kale
+
+
+- UnknownのDIPスイッチ2-7はアトラクトモードのサウンドON/OFF。 hotchase0111u2gra, Speedfreak / Machone
+
+
+- 1面の最初でバリアが壊れる音がしているのに、バリア自体は変化しない。 hotchase060gre_, DCisTHEbest
+
+$end
+
 $info=welltris
 $mame
 [バグ]
@@ -5227,6 +5095,15 @@ $mame
 
 - キャラクタを選択するとMAMEがフリーズする。
 フリープレイ設定時には、スタートキーを押すとフリーズする。 psyforce0105u5red, Suutaroka / Speedfreak
+
+$end
+
+$info=raystorm
+$mame
+[バグ]
+
+- デモをそのまま走らせているとMAMEがフリーズする。
+raystorjでは起きない。 raystorm0111u1red, Speedfreak
 
 $end
 
@@ -5579,6 +5456,17 @@ $mame
 
 $end
 
+$info=rollerg
+$mame
+[バグ]
+
+- YM3812が100%の音量でもほとんど聞こえない。 rollerg073ora, Richter_X
+
+
+- コイン3はサービスキー。 rollerg0111u5gra, Speedfreak
+
+$end
+
 $info=shtngmst
 $mame
 [バグ]
@@ -5771,6 +5659,14 @@ $mame
 
 $end
 
+$info=ninjakd2
+$mame
+[バグ]
+
+- カクテルモードでプレイヤー2の画面が反転しない。 ninjakd2_0111u3gra, Speedfreak
+
+$end
+
 $info=tharrier
 $mame
 [バグ]
@@ -5814,6 +5710,73 @@ $mame
 
 $end
 
+$info=parodius
+$mame
+[バグ]
+
+- I/Oテストによるとコイン3はサービスキー。 parodius0111u3gra, Speedfreak
+
+$end
+
+$info=bigtwin
+$mame
+[バグ]
+
+- 5つめのUnknownのDIPスイッチはデモサウンドの切り替え。 bigtwin0111u4gra, Speedfreak
+
+$end
+
+$info=quasar
+$mame
+[バグ]
+
+- 2人プレーゲームなのにプレイヤー3のスタートボタンがマッピングされている。 quasar0111u1gra, Speedfreak
+
+$end
+
+$info=realbrk
+$mame
+[バグ]
+
+- 画面反転のDIPスイッチが動作しない。プレイヤー2のスタートボタンがマッピングされていない。 realbrk0111u4gra, Speedfreak
+
+$end
+
+$info=rockrage
+$mame
+[バグ]
+
+- Coin 3はServiceキー。 rockrage0111u5gra, Speedfreak
+
+
+- 2番目と3番目のUnknownのDIPスイッチは、難易度の設定：
+
+OFF OFF: easy
+
+ON OFF: medium
+
+OFF ON: hard
+
+ON ON: hardest rockrage0111u6gra, Machone
+
+$end
+
+$info=schmeisr
+$mame
+[バグ]
+
+- デモサウンドのDIP設定が逆。Tiltのキーがマッピングされていない。 schmeisr0111u5gra, Speedfreak
+
+$end
+
+$info=rotaryf
+$mame
+[バグ]
+
+- カクテルモードでプレイヤー2の画面が反転しない。 rotaryf0111u5gra, Speedfreak
+
+$end
+
 $info=janptr96
 $mame
 [バグ]
@@ -5832,11 +5795,44 @@ PORT_DIPSETTING( 0xc0, "1" ) janptr96_0110u4gra, J.J.Boy
 
 $end
 
+$info=rpunch
+$mame
+[バグ]
+
+- 画面反転を有効にすると、表示が化ける。 rpunch0111u5gra, Speedfreak
+
+$end
+
+$info=svolley
+$mame
+[バグ]
+
+- 画面反転を有効にすると、表示が化ける。 rpunch0111u5gra, Speedfreak
+
+$end
+
+$info=ad2083
+$mame
+[バグ]
+
+- 最初のUnknown DIPスイッチは筐体の設定。OFFがカクテル、ONがアップライト。
+また、カクテルモード時のプレイヤー2用操作が実装されていない。 ad2083_0111u5gra, Speedfreak
+
+$end
+
 $info=hotshock
 $mame
 [バグ]
 
 - カクテルモード用のプレイヤー2の操作が実装されていない。 hotshock0106u1gra, cpukett
+
+$end
+
+$info=scorpion
+$mame
+[バグ]
+
+- 筐体のDIPスイッチ設定が動作しない。実はUnknownになっているのが筐体設定。 scorpion0111u5gra, Speedfreak
 
 $end
 
@@ -5877,6 +5873,22 @@ $mame
 
 $end
 
+$info=penbros
+$mame
+[バグ]
+
+- ボタン3がマッピングされているが、入力テストには現われない。 penbros0111u5gra, Speedfreak
+
+$end
+
+$info=dokidoki
+$mame
+[バグ]
+
+- 下から2つ目のUnknown DIPスイッチはデモサウンドの有無。 dokidoki0111u5gra, Speedfreak
+
+$end
+
 $info=skyfox
 $mame
 [バグ]
@@ -5906,6 +5918,26 @@ $mame
 [バグ]
 
 - チルトスイッチが割り当てられているが、入力テストには出てこない。 jjparads0106u1gra, cpukett
+
+$end
+
+$info=spacecr
+$mame
+[バグ]
+
+- 筐体設定のDIPが動作せず、画面反転設定が筐体設定として動作する。 spacecr0111u1gra, Speedfreak / Fujix
+
+
+- 発射のデモ時に、画面下部分のグラフィックが画面一番上に表示される。 spacecr069u3gre, Karasu
+
+$end
+
+$info=spaceskr
+$mame
+[バグ]
+
+- 筐体のDIP設定が反転している。
+アップライトにすると、プレイヤー2の時に画面が反転し、操作もP1とP2で分離する。 spaceskr0111u1gra, Speedfreak / Fujix
 
 $end
 
@@ -6504,6 +6536,14 @@ $mame
 
 $end
 
+$info=nova2001
+$mame
+[バグ]
+
+- 筐体をアップライトに設定して、入力テストをするとプレイヤー1の方向入力がプレイヤー2にも適用されている。ボタンは正しく動く。 nova2001_0111u3gra, Speekfreak
+
+$end
+
 $info=shootbul
 $mame
 [バグ]
@@ -6628,14 +6668,6 @@ $mame
 
 - 最後のボスを倒したときに拡大処理が必要。
 多分他のC2ゲームも要ると思う。 zunkyou37b9gre, YMI
-
-$end
-
-$info=toutrun
-$mame
-[バグ]
-
-- [Possilbe] ゲーム中以外の画面に、ゲーム中の画面が下側に残って表示される。 toutrun0108u2gre, Kekule
 
 $end
 
@@ -7370,7 +7402,7 @@ $info=findlove
 $mame
 [情報]
 
--
+- 起動するにはF2キーでサービスモードに入り、“System Assignment”内の“Cabinet Type”を1Pに設定する。
 
 $end
 
@@ -7682,7 +7714,7 @@ $info=myfairld
 $mame
 [情報]
 
--
+- 起動するにはF2キーでサービスモードに入り、“System Assignment”内の“Cabinet Type”を1Pに設定する。
 
 $end
 
@@ -7955,7 +7987,7 @@ $info=seabass
 $mame
 [情報]
 
--
+- 起動するにはF2キーでサービスモードに入り、“System Assignment”内の“Cabinet Type”を1Pに設定する。
 
 $end
 
@@ -8236,7 +8268,7 @@ $info=vmahjong
 $mame
 [情報]
 
--
+- 起動するにはF2キーでサービスモードに入り、“System Assignment”内の“Cabinet Type”を1Pに設定する。
 
 $end
 
