@@ -42,6 +42,14 @@
  NO GOOD DUMP KNOWN
 
 
+# osd/windows/fronthlp.c: 805
+%d romsets found, %d were OK.\n
+
+
+# osd/windows/fronthlp.c: 901
+%d samplesets found, %d were OK.\n
+
+
 # osd/windows/input.c: 2120
 %s Button %d
 
@@ -1426,6 +1434,14 @@ report samplesets that have problems
 romset %s 
 
 
+# osd/windows/fronthlp.c: 796
+romset \"%8s\" not found!\n
+
+
+# osd/windows/fronthlp.c: 798
+romset \"%8s\" not supported!\n
+
+
 # osd/windows/config.c: 220
 rotate screen clockwise 90 degrees
 
@@ -1440,6 +1456,14 @@ rotate the game screen according to the game's orientation needs it
 
 # osd/windows/fronthlp.c: 861
 sampleset %s 
+
+
+# osd/windows/fronthlp.c: 892
+sampleset \"%8s\" not found!\n
+
+
+# osd/windows/fronthlp.c: 894
+sampleset \"%8s\" not supported!\n
 
 
 # osd/windows/config.c: 170

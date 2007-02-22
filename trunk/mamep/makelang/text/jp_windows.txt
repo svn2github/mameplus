@@ -42,6 +42,14 @@
  NO GOOD DUMP KNOWN
  正常なダンプは存在しません
 
+# osd/windows/fronthlp.c: 805
+%d romsets found, %d were OK.\n
+%dのロムセットが見つかり、%dがOKです。\n
+
+# osd/windows/fronthlp.c: 901
+%d samplesets found, %d were OK.\n
+%dのサンプルセットが見つかり、%dがOKです。\n
+
 # osd/windows/input.c: 2120
 %s Button %d
 %s ボタン %d
@@ -1426,6 +1434,14 @@ report samplesets that have problems
 romset %s 
 ROMセット%s
 
+# osd/windows/fronthlp.c: 796
+romset \"%8s\" not found!\n
+ロムセット「%8s」は見つかりません!\n
+
+# osd/windows/fronthlp.c: 798
+romset \"%8s\" not supported!\n
+ロムセット「%8s」は対応していません!\n
+
 # osd/windows/config.c: 220
 rotate screen clockwise 90 degrees
 時計回りに90度回転
@@ -1441,6 +1457,14 @@ rotate the game screen according to the game's orientation needs it
 # osd/windows/fronthlp.c: 861
 sampleset %s 
 サンプルセット%s
+
+# osd/windows/fronthlp.c: 892
+sampleset \"%8s\" not found!\n
+サンプルセット「%8s」は見つかりません!\n
+
+# osd/windows/fronthlp.c: 894
+sampleset \"%8s\" not supported!\n
+サンプルセット「%8s」は対応していません!\n
 
 # osd/windows/config.c: 170
 saved state to load
