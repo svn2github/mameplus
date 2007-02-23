@@ -1,6 +1,26 @@
 # Conquer
 <unknown>
+<未知的>
 
+# Super Glob (Pac-Man hardware) German
+Bootleg
+盜版
+
+# Intersecti
+Unknown
+未知的
+
+# Omega
+bootleg?
+盜版?
+
+# Puckman (Falcom?)
+hack
+hack
+
+# Chewing Gum
+unknown
+未知的
 
 # Sea Bass Fishing (JUET 971110 V0.001)
 A wave inc.
@@ -270,10 +290,6 @@ Blastar
 Bonanza Enterprises, Ltd
 
 
-# Super Glob (Pac-Man hardware) German
-Bootleg
-
-
 # Sky Lancer (Bordun International)
 Bordun International
 
@@ -292,6 +308,10 @@ Bullet-Proof Software
 
 # Cuore 1 (Italia)
 C.M.C.
+
+
+# Candy Puzzle (v1.0)
+CD Express
 
 
 # Herbie at the Olympics (DK conversion)
@@ -2126,10 +2146,6 @@ Universal Video Spiel
 Uniwang
 
 
-# Intersecti
-Unknown
-
-
 # 12-in-1 (Unl)
 Unsorted
 
@@ -2338,6 +2354,10 @@ Zaccaria
 Zelco
 
 
+# Deal 'Em (MPU4 Conversion Kit)
+Zenitone
+
+
 # Space Attack II
 Zenitone-Microsec Ltd
 
@@ -2374,23 +2394,11 @@ Zyrinx
 bootleg
 
 
-# Omega
-bootleg?
-
-
 # X-Files
 dgPIX Entertainment Inc.
 
 
-# Puckman (Falcom?)
-hack
-
-
 # NGEM2K (beta 2006-01-18)
 homebrew
-
-
-# Chewing Gum
-unknown
 
 

@@ -1,2584 +1,2576 @@
-# ui/properties.c: 1045
+# osd/ui/properties.c: 1046
 %d colors 
 %d 色 
 
-# ui/win32ui.c: 255, 3518
+# osd/ui/win32ui.c: 259, 3629
 %d games
 %d 個遊戲
 
-# ui/treeview.c: 1315
+# osd/ui/treeview.c: 1324
 %dx%d (H)
 %dx%d (橫)
 
-# ui/treeview.c: 1309
+# osd/ui/treeview.c: 1318
 %dx%d (V)
 %dx%d (縱)
 
-# ui/properties.c: 4714
+# osd/ui/properties.c: 4700
 %li bit
 %li 位元
 
-# ui/properties.c: 1021
+# osd/ui/properties.c: 1022
 %s (%d player)
 %s (%d 玩家)
 
-# ui/properties.c: 1032
+# osd/ui/properties.c: 1033
 %s (%d player, %d button)
 %s (%d 玩家, %d 按鈕)
 
-# ui/properties.c: 1030
+# osd/ui/properties.c: 1031
 %s (%d player, %d buttons)
 %s (%d 玩家, %d 按鈕)
 
-# ui/properties.c: 1018
+# osd/ui/properties.c: 1019
 %s (%d players)
 %s (%d 玩家)
 
-# ui/properties.c: 1027
+# osd/ui/properties.c: 1028
 %s (%d players, %d button)
 %s (%d 玩家, %d 按鈕)
 
-# ui/properties.c: 1024
+# osd/ui/properties.c: 1025
 %s (%d players, %d buttons)
 %s (%d 玩家, %d 按鈕)
 
-# ui/properties.c: 1165
+# osd/ui/properties.c: 1160
 %s\nThis is also global driver options in the %s
 %s\n這也是 %s 的通用驅動選項
 
-# ui/mame32.rc: 172
+# osd/ui/mame32.rc: 172
 &About
 關於(&A)
 
-# ui/mame32.rc: 44
+# osd/ui/mame32.rc: 44
 &About MAME32
 關於 MAME32(&A)
 
-# ui/mame32.rc: 64, 184
+# osd/ui/mame32.rc: 64, 184
 &Add to Custom Folder...
 加入到自訂資料夾(&A)...
 
-# ui/mame32.rc: 951
+# osd/ui/mame32.rc: 951
 &All games to use default options
 全部遊戲都使用預設選項(&A)
 
-# ui/mame32.rc: 228
+# osd/ui/mame32.rc: 228
 &Audit
 驗證(&A)
 
-# ui/mame32.rc: 69
+# osd/ui/mame32.rc: 69
 &Audit all games
 驗證全部遊戲(&A)
 
-# ui/mame32.rc: 145
+# osd/ui/mame32.rc: 145
 &Background Image...
 背景圖像(&B)...
 
-# ui/mame32.rc: 997
+# osd/ui/mame32.rc: 997
 &Broadcast selected game to all windows
 將選取的遊戲廣播到所有視窗(&B)
 
-# ui/mame32.rc: 87, 244, 257
+# osd/ui/mame32.rc: 87, 244, 257
 &Cabinet
 筐體圖(&C)
 
-# ui/mame32.rc: 438, 935, 960, 977, 1041, 1069
+# osd/ui/mame32.rc: 438, 935, 960, 977, 1041, 1069
 &Cancel
 取消(&C)
 
-# ui/audit32.c: 435 ui/mame32.rc: 1205
+# osd/ui/audit32.c: 437 osd/ui/mame32.rc: 1205
 &Close
 關閉(&C)
 
-# ui/mame32.rc: 166
+# osd/ui/mame32.rc: 166
 &Contents\tF1
 內容(&C)\tF1
 
-# ui/audit32.c: 305
+# osd/ui/audit32.c: 307
 &Continue
 繼續(&C)
 
-# ui/mame32.rc: 186, 220
+# osd/ui/mame32.rc: 186, 220
 &Custom Filters...
 自訂篩選程式(&C)...
 
-# ui/mame32.rc: 129
+# osd/ui/mame32.rc: 129
 &Custom Filters...\tCtrl+F
 自訂篩選程式(&C)...\tCtrl+F
 
-# ui/mame32.rc: 948
+# osd/ui/mame32.rc: 948
 &Default game options
 預設遊戲選項(&D)
 
-# ui/mame32.rc: 931
+# osd/ui/mame32.rc: 931
 &Description filter
 篩選描述(&D)
 
-# ui/mame32.rc: 101
+# osd/ui/mame32.rc: 101
 &Details
 詳細資料(&D)
 
-# ui/mame32.rc: 137
+# osd/ui/mame32.rc: 137
 &Directories...
 目錄(&D)...
 
-# ui/mame32.rc: 40
+# osd/ui/mame32.rc: 40
 &Exit
 結束(&E)
 
-# ui/mame32.rc: 146
+# osd/ui/mame32.rc: 146
 &Export Game List...
 匯出遊戲清單(&E)...
 
-# ui/mame32.rc: 38, 50
+# osd/ui/mame32.rc: 38, 50
 &File
 檔案(&F)
 
-# ui/mame32.rc: 86, 243, 256
+# osd/ui/mame32.rc: 86, 243, 256
 &Flyer
 廣告圖(&F)
 
-# ui/mame32.rc: 954
+# osd/ui/mame32.rc: 954
 &Folder 'filters'
 資料夾篩選程式(&F)
 
-# ui/mame32.rc: 81
+# osd/ui/mame32.rc: 81
 &Fullscreen\tF11
 全螢幕(&F)\tF11
 
-# ui/mame32.rc: 102
+# osd/ui/mame32.rc: 102
 &Grouped
 群組(&G)
 
-# ui/mame32.rc: 42, 164
+# osd/ui/mame32.rc: 42, 164
 &Help
 說明(&H)
 
-# ui/mame32.rc: 92, 249, 261
+# osd/ui/mame32.rc: 92, 249, 261
 &History
 歷史(&H)
 
-# ui/mame32.rc: 144
+# osd/ui/mame32.rc: 144
 &Interface Options...
 介面選項(&I)...
 
-# ui/mame32.rc: 148
+# osd/ui/mame32.rc: 148
 &Language
 語言(&L)
 
-# ui/mame32.rc: 100
+# osd/ui/mame32.rc: 100
 &List
 清單(&L)
 
-# ui/mame32.rc: 170
+# osd/ui/mame32.rc: 170
 &Mame Release Notes
 MAME 版本資訊(&M)
 
-# ui/mame32.rc: 88, 245, 258
+# osd/ui/mame32.rc: 88, 245, 258
 &Marquee
 標籤圖(&M)
 
-# ui/mame32.rc: 116
+# osd/ui/mame32.rc: 116
 &Menu Style
 選單樣式(&M)
 
-# ui/mame32.rc: 169
+# osd/ui/mame32.rc: 169
 &New Game Changes
 遊戲新增異動(&N)
 
-# ui/mame32.rc: 402, 934, 959, 976, 1040, 1068
+# osd/ui/mame32.rc: 402, 934, 959, 976, 1040, 1068
 &OK
 確定(&O)
 
-# ui/mame32.rc: 132
+# osd/ui/mame32.rc: 132
 &Options
 選項(&O)
 
-# ui/mame32.rc: 140
+# osd/ui/mame32.rc: 140
 &Palette Setting...
 色盤設定(&P)...
 
-# ui/audit32.c: 300 ui/mame32.rc: 437
+# osd/ui/audit32.c: 302 osd/ui/mame32.rc: 437
 &Pause
 暫停(&P)
 
-# ui/mame32.rc: 78
+# osd/ui/mame32.rc: 78
 &Picture Area\tAlt+P
 預覽圖(&P)\tAlt+P
 
-# ui/mame32.rc: 52, 180 ui/win32ui.c: 3662
+# osd/ui/mame32.rc: 52, 180 osd/ui/win32ui.c: 3781
 &Play
 執行(&P)
 
-# ui/win32ui.c: 254, 3699, 6880, 6908
+# osd/ui/win32ui.c: 258, 3818, 7008, 7036
 &Play %s
 執行 %s(&P)
 
-# ui/mame32.rc: 230
+# osd/ui/mame32.rc: 230
 &Properties
 內容(&P)
 
-# ui/mame32.rc: 919
+# osd/ui/mame32.rc: 919
 &Raster Graphics
 點陣圖形(&R)
 
-# ui/mame32.rc: 128
+# osd/ui/mame32.rc: 128
 &Refresh\tF5
 重新整理(&R)\tF5
 
-# ui/mame32.rc: 219
+# osd/ui/mame32.rc: 219
 &Rename
 重新命名(&R)
 
-# ui/mame32.rc: 143
+# osd/ui/mame32.rc: 143
 &Reset to Default...
 重設預設值(&R)...
 
-# ui/mame32.rc: 987
+# osd/ui/mame32.rc: 987
 &Search for new games on start
 啟動時搜尋新的遊戲(&S)
 
-# ui/mame32.rc: 62, 188
+# osd/ui/mame32.rc: 62, 188
 &Select Random Game
 隨機選取遊戲(&S)
 
-# ui/mame32.rc: 222
+# osd/ui/mame32.rc: 222
 &Show Folders
 顯示資料夾(&S)
 
-# ui/mame32.rc: 85, 242, 255
+# osd/ui/mame32.rc: 85, 242, 255
 &Snapshot
 遊戲圖(&S)
 
-# ui/mame32.rc: 76
+# osd/ui/mame32.rc: 76
 &Status bar\tAlt+S
 狀態列(&S)\tAlt+S
 
-# ui/mame32.rc: 89, 246, 259
+# osd/ui/mame32.rc: 89, 246, 259
 &Title
 標題圖(&T)
 
-# ui/mame32.rc: 75
+# osd/ui/mame32.rc: 75
 &Toolbar\tAlt+T
 工具列(&T)\tAlt+T
 
-# ui/mame32.rc: 167
+# osd/ui/mame32.rc: 167
 &Troubleshooting
 疑難排解(&T)
 
-# ui/mame32.rc: 916
+# osd/ui/mame32.rc: 916
 &Unavailable
 沒有遊戲(&U)
 
-# ui/mame32.rc: 945
+# osd/ui/mame32.rc: 945
 &User Interface (Fonts, Colors, Sizes)
 使用介面(字型、色彩、大小)(&U)
 
-# ui/mame32.rc: 908
+# osd/ui/mame32.rc: 908
 &Vector Graphics
 向量圖形(&V)
 
-# ui/mame32.rc: 73
+# osd/ui/mame32.rc: 73
 &View
 檢視(&V)
 
-# ui/mame32.rc: 925
+# osd/ui/mame32.rc: 925
 &Working
 可以執行(&W)
 
-# ui/win32ui.c: 6351
+# osd/ui/win32ui.c: 6473
 '%s' is not a valid savestate file for game '%s'.
-'%s' 不是有效的儲存狀態檔於遊戲 '%s'。
+'%s' 不是遊戲 '%s' 的有效儲存狀態檔。
 
-# ui/mame32.rc: 927
+# osd/ui/mame32.rc: 927
 (*) = inherited from parent folder
 (*) = 繼承自主資料夾的設定值
 
-# ui/mame32.rc: 495
+# osd/ui/mame32.rc: 495
 <- Remove
 <- 移除
 
-# ui/treeview.c: 571, 592, 1214
+# osd/ui/treeview.c: 568, 589, 1223
 <unknown>
 <未知的>
 
-# ui/m32util.c: 253
+# osd/ui/m32util.c: 267
 A sharing violation occurred.
 發生共用違規。
 
-# ui/mame32.rc: 197
+# osd/ui/mame32.rc: 197
 A&udit
 驗證(&U)
 
-# ui/properties.c: 968 ui/treeview.c: 1457
+# osd/ui/properties.c: 969 osd/ui/treeview.c: 1466
 AD Stick
 AD 搖桿
 
-# ui/mame32.rc: 1100
+# osd/ui/mame32.rc: 1100
 ADStick device
 AD 搖桿裝置
 
-# ui/win32ui.c: 706
+# osd/ui/win32ui.c: 711
 About
 關於
 
-# ui/mame32.rc: 399
+# osd/ui/mame32.rc: 399
 About MAME32
 關於 MAME32
 
-# ui/mame32.rc: 494
+# osd/ui/mame32.rc: 494
 Add ->
 加入 ->
 
-# ui/mame32.rc: 1075
+# osd/ui/mame32.rc: 1075
 Add Game To Custom Folder
 加入遊戲到自定資料夾
 
-# ui/mame32.rc: 1530
+# osd/ui/mame32.rc: 1530
 Add currently selected game to a custom folder
 加入目前選取的遊戲到自定資料夾
 
-# ui/mame32.rc: 411
+# osd/ui/mame32.rc: 411
 Additional MAME32 code by
 額外的 MAME32 編碼作者
 
-# ui/mame32.rc: 655
+# osd/ui/mame32.rc: 655
 Advanced
 進階
 
-# ui/dialogs.c: 219
+# osd/ui/dialogs.c: 219
 All
 全部
 
-# ui/layout.c: 50
+# osd/ui/layout.c: 50
 All Games
 全部遊戲
 
-# ui/win32ui.c: 794, 801, 808, 815, 4432
+# osd/ui/win32ui.c: 799, 806, 813, 820
 All files (*.*)
 所有檔案 (*.*)
 
-# ui/mame32.rc: 990
+# osd/ui/mame32.rc: 990
 Allow game selection by a &joystick (requires restart)
-允許\使用搖桿選擇遊戲(需重新啟動)(&J)
+允許\\\使用搖桿選擇遊戲(需重新啟動)(&J)
 
-# ui/mame32.rc: 993
+# osd/ui/mame32.rc: 993
 Allow game selection by custom &key sequences
-允許\使用自定鍵組合選擇遊戲(&K)
+允許\\\使用自定鍵組合選擇遊戲(&K)
 
-# ui/mame32.rc: 1512
+# osd/ui/mame32.rc: 1512
 Allow restoring options to 'sane' values.
-允許\將選項還原成預設的設定值。
+允許\\\將選項還原成預設的設定值。
 
-# ui/mame32.rc: 1530
+# osd/ui/mame32.rc: 1530
 Allows filtering out games from a folder
-允許\自資料夾篩選出遊戲
+允許\\\自資料夾篩選出遊戲
 
-# ui/mame32.rc: 721
+# osd/ui/mame32.rc: 721
 Analog deadzone
 數位輸入的最小類比值
 
-# ui/properties.c: 4680
+# osd/ui/properties.c: 4666
 Anti-clockwise
 逆時針
 
-# ui/mame32.rc: 104
+# osd/ui/mame32.rc: 104
 Arrange &Icons
 排列圖示(&I)
 
-# ui/mame32.rc: 1467, 1556
+# osd/ui/mame32.rc: 1467, 1556
 Arranges icons in a grid
 在格線上排列圖示
 
-# ui/layout.c: 122
+# osd/ui/layout.c: 122
 Artwork
 Artwork
 
-# ui/mame32.rc: 805
+# osd/ui/mame32.rc: 805
 Artwork options
 Artwork 圖片選項
 
-# ui/mame32.rc: 1141
+# osd/ui/mame32.rc: 1141
 Aspect ratio
 長寬比例
 
-# ui/mame32.rc: 643
+# osd/ui/mame32.rc: 643
 Audio latency
 音訊等待時間
 
-# ui/mame32.rc: 548
+# osd/ui/mame32.rc: 548
 Audit
 驗證
 
-# ui/mame32.rc: 1512, 1548, 1548
+# osd/ui/mame32.rc: 1512, 1548, 1548
 Audit ROM and samples sets
 驗證 ROM 與樣本檔的集合
 
-# ui/audit32.c: 434
+# osd/ui/audit32.c: 436
 Audit complete.\n
 驗證完成。\n
 
-# ui/properties.c: 4600, 4701, 4792
+# osd/ui/properties.c: 4586, 4687, 4778
 Auto
 自動
 
-# ui/properties.c: 4683
+# osd/ui/properties.c: 4669
 Auto anti-clockwise
 自動逆時針
 
-# ui/properties.c: 4682
+# osd/ui/properties.c: 4668
 Auto clockwise
 自動順時針
 
-# ui/mame32.rc: 794
+# osd/ui/mame32.rc: 794
 Auto pause when playback is finished
 輸入檔播放結束時自動暫停
 
-# ui/mame32.rc: 789
+# osd/ui/mame32.rc: 789
 Auto restore and save (only if available)
 自動在啟動時回存與結束時儲存
 
-# ui/mame32.rc: 594
+# osd/ui/mame32.rc: 594
 Automatic
 自動
 
-# ui/layout.c: 51
+# osd/ui/layout.c: 51
 Available
 擁有遊戲
 
-# ui/mame32.rc: 489
+# osd/ui/mame32.rc: 489
 Available fields:
 可用的欄位:
 
-# ui/properties.c: 4835
+# osd/ui/properties.c: 4821
 Axis
 軸
 
-# ui/properties.c: 4845
+# osd/ui/properties.c: 4831
 AxisId
 軸 ID
 
-# ui/layout.c: 59, 86 ui/mame32.rc: 839, 1163
+# osd/ui/layout.c: 59, 86 osd/ui/mame32.rc: 839, 1163
 BIOS
 BIOS
 
-# ui/properties.c: 1121
+# osd/ui/properties.c: 1116
 BIOS missing
 BIOS 遺失
 
-# ui/mame32.rc: 806
+# osd/ui/mame32.rc: 806
 Backdrops
 背景圖
 
-# ui/layout.c: 133
+# osd/ui/layout.c: 133
 Background Images
 背景圖像
 
-# ui/treeview.c: 1134, 1135
+# osd/ui/treeview.c: 1143, 1144
 Bad Dump
 錯誤 DUMP
 
-# ui/mame32.rc: 120
+# osd/ui/mame32.rc: 120
 Basic
 基本
 
-# ui/mame32.rc: 859
+# osd/ui/mame32.rc: 859
 Beam width
 光束寬度
 
-# ui/audit32.c: 486
+# osd/ui/audit32.c: 485
 Best available
 最佳的可用狀態
 
-# ui/mame32.rc: 808
+# osd/ui/mame32.rc: 808
 Bezels
 外框圖
 
-# ui/mame32.rc: 1020
+# osd/ui/mame32.rc: 1020
 Bookkeeping
 記錄
 
-# ui/mame32.rc: 602
+# osd/ui/mame32.rc: 602
 Brightness Correction
-亮度修正
+亮度值修正
 
-# ui/mame32.rc: 479
+# osd/ui/mame32.rc: 479
 Browse...
 瀏覽...
 
-# ui/paletteedit.c: 124
+# osd/ui/paletteedit.c: 124
 Button (10)
 按鈕 (10)
 
-# ui/paletteedit.c: 122
+# osd/ui/paletteedit.c: 122
 Button (8)
 按鈕 (8)
 
-# ui/paletteedit.c: 123
+# osd/ui/paletteedit.c: 123
 Button (9)
 按鈕 (9)
 
-# ui/paletteedit.c: 115
+# osd/ui/paletteedit.c: 115
 Button (A or 1)
 按鈕 (A 或 1)
 
-# ui/paletteedit.c: 116
+# osd/ui/paletteedit.c: 116
 Button (B or 2)
 按鈕 (B 或 2)
 
-# ui/paletteedit.c: 117
+# osd/ui/paletteedit.c: 117
 Button (C or 3)
 按鈕 (C 或 3)
 
-# ui/paletteedit.c: 118
+# osd/ui/paletteedit.c: 118
 Button (D or 4)
 按鈕 (D 或 4)
 
-# ui/paletteedit.c: 119
+# osd/ui/paletteedit.c: 119
 Button (K or 5)
 按鈕 (K 或 5)
 
-# ui/paletteedit.c: 120
+# osd/ui/paletteedit.c: 120
 Button (P or 6)
 按鈕 (P 或 6)
 
-# ui/paletteedit.c: 121
+# osd/ui/paletteedit.c: 121
 Button (S or 7)
 按鈕 (S 或 7)
 
-# ui/treeview.c: 1437
+# osd/ui/treeview.c: 1446
 Button 1
 按鈕數 1
 
-# ui/treeview.c: 1446
+# osd/ui/treeview.c: 1455
 Buttons 10
 按鈕數 10
 
-# ui/treeview.c: 1438
+# osd/ui/treeview.c: 1447
 Buttons 2
 按鈕數 2
 
-# ui/treeview.c: 1439
+# osd/ui/treeview.c: 1448
 Buttons 3
 按鈕數 3
 
-# ui/treeview.c: 1440
+# osd/ui/treeview.c: 1449
 Buttons 4
 按鈕數 4
 
-# ui/treeview.c: 1441
+# osd/ui/treeview.c: 1450
 Buttons 5
 按鈕數 5
 
-# ui/treeview.c: 1442
+# osd/ui/treeview.c: 1451
 Buttons 6
 按鈕數 6
 
-# ui/treeview.c: 1443
+# osd/ui/treeview.c: 1452
 Buttons 7
 按鈕數 7
 
-# ui/treeview.c: 1444
+# osd/ui/treeview.c: 1453
 Buttons 8
 按鈕數 8
 
-# ui/treeview.c: 1445
+# osd/ui/treeview.c: 1454
 Buttons 9
 按鈕數 9
 
-# ui/mame32.rc: 911
+# osd/ui/mame32.rc: 911
 C&lones
 仿製版(&L)
 
-# ui/layout.c: 61 
+# osd/ui/layout.c: 61
 CPU
 CPU
 
-# ui/dialogs.c: 211 ui/options.c: 435
+# osd/ui/dialogs.c: 211 osd/ui/options.c: 435
 Cabinet
 筐體圖
 
-# ui/layout.c: 125
+# osd/ui/layout.c: 125
 Cabinets
 筐體圖 (cabinets)
 
-# ui/mame32.rc: 478, 504, 1085
+# osd/ui/mame32.rc: 478, 504, 1085
 Cancel
 取消
 
-# ui/columnedit.c: 50
+# osd/ui/columnedit.c: 50
 Cannot Move Selected Item
 不能移動選取的項目
 
-# ui/mame32.rc: 944
+# osd/ui/mame32.rc: 944
 Categories
 類別
 
-# ui/columnedit.c: 257
+# osd/ui/columnedit.c: 257
 Changing this item is not permitted
-不允許\變更這個項目
+不允許\\\變更這個項目
 
-# ui/audit32.c: 223, 232
+# osd/ui/audit32.c: 225, 235
 Checking Game %s - %s
 正在檢查遊戲 %s - %s
 
-# ui/mame32.rc: 556, 558
+# osd/ui/mame32.rc: 556, 558
 Checking...
 正在檢查...
 
-# ui/mame32.rc: 320, 412
+# osd/ui/mame32.rc: 320, 412
 Christopher Kirmse and Michael Soderstrom
 Christopher Kirmse 與 Michael Soderstrom
 
-# ui/properties.c: 4679
+# osd/ui/properties.c: 4665
 Clockwise
 順時針
 
-# ui/win32ui.c: 858
+# osd/ui/win32ui.c: 870
 Clone Of
 原作
 
-# ui/mame32.rc: 542
+# osd/ui/mame32.rc: 542
 Clone of:
 原作:
 
-# ui/layout.c: 69
+# osd/ui/layout.c: 69
 Clones
 仿製版
 
-# ui/properties.c: 1084
+# osd/ui/properties.c: 1084
 Colors are completely wrong
 色彩是完全錯誤的
 
-# ui/properties.c: 1090
+# osd/ui/properties.c: 1089
 Colors aren't 100% accurate
 色彩尚未達到 100% 精確
 
-# ui/mame32.rc: 535
+# osd/ui/mame32.rc: 535
 Colors:
 色彩:
 
-# ui/layout.c: 134
+# osd/ui/layout.c: 134
 Comment Files
 註解檔
 
-# ui/layout.c: 115
+# osd/ui/layout.c: 115
 Config
 組態檔
 
-# ui/mame32.rc: 1459
+# osd/ui/mame32.rc: 1459
 Contains commands for displaying help
 包含顯示說明用的命令
 
-# ui/mame32.rc: 1459
+# osd/ui/mame32.rc: 1459
 Contains commands for manupulating the view
 包含處理檢視的命令
 
-# ui/mame32.rc: 1467
+# osd/ui/mame32.rc: 1467
 Contains commands for sorting by various columns
 包含在視窗中排列項目用的命令
 
-# ui/mame32.rc: 1459
+# osd/ui/mame32.rc: 1459
 Contains commands for user interface options
 包含使用介面選項的命令
 
-# ui/mame32.rc: 1459
+# osd/ui/mame32.rc: 1459
 Contains commands for working with the selected items
 包含用於操作選定項目的命令
 
-# ui/mame32.rc: 607
+# osd/ui/mame32.rc: 607
 Contrast Correction
 對比值修正
 
-# ui/mame32.rc: 90, 247, 260
+# osd/ui/mame32.rc: 90, 247, 260
 Control &Panel
 控制面版(&P)
 
-# ui/dialogs.c: 217 ui/options.c: 438
+# osd/ui/dialogs.c: 217 osd/ui/options.c: 438
 Control Panel
 控制面版
 
-# ui/layout.c: 128
+# osd/ui/layout.c: 128
 Control Panels
 控制面版圖 (cpanel)
 
-# ui/layout.c: 76
+# osd/ui/layout.c: 76
 Control Type
 控制類型
 
-# ui/mame32.rc: 532
+# osd/ui/mame32.rc: 532
 Control Type:
 控制類型:
 
-# ui/layout.c: 130
+# osd/ui/layout.c: 130
 Controller Files
 控制器設定檔
 
-# ui/mame32.rc: 747
+# osd/ui/mame32.rc: 747
 Controller ID layout
 控制器 ID 配置
 
-# ui/mame32.rc: 1090
+# osd/ui/mame32.rc: 1090
 Controller Mapping
 控制器對應
 
-# ui/mame32.rc: 711
+# osd/ui/mame32.rc: 711
 Controllers
 控制器
 
-# ui/mame32.rc: 406
+# osd/ui/mame32.rc: 406
 Copyright (C) 1997-2006 The MAME Team
 著作權 (C) 1997-2006 MAME 團隊
 
-# ui/mame32.rc: 441, 451
+# osd/ui/mame32.rc: 441, 451
 Correct:
 正確:
 
-# ui/win32ui.c: 6229
+# osd/ui/win32ui.c: 6348
 Could not open '%s' as a valid input file.
 無法開啟 '%s' 為有效的輸入檔。
 
-# ui/win32ui.c: 6295, 6363
+# osd/ui/win32ui.c: 6414, 6487
 Could not open '%s' as a valid savestate file.
-無法開啟 '%s' 為有效的儲存狀態檔。
+無法開啟 '%s' 為有效的輸入檔。
 
-# ui/mame32.rc: 812
+# osd/ui/mame32.rc: 812
 Crop artwork
 裁切 Artwork 圖片
 
-# ui/paletteedit.c: 125
+# osd/ui/paletteedit.c: 125
 Cursor
 游標
 
-# ui/win32ui.c: 4503, 4531
+# osd/ui/win32ui.c: 4592, 4620
 Custom
 自訂
 
-# ui/mame32.rc: 986
+# osd/ui/mame32.rc: 986
 Custom Options
 自訂選項
 
-# ui/mame32.rc: 130, 211
+# osd/ui/mame32.rc: 130, 211
 Customi&ze Fields...
 自訂欄位(&Z)...
 
-# ui/mame32.rc: 486
+# osd/ui/mame32.rc: 486
 Customize Fields
 自訂欄位
 
-# ui/mame32.rc: 1512
+# osd/ui/mame32.rc: 1512
 Customize interface options.
 自定介面選項。
 
-# ui/mame32.rc: 1467, 1530
+# osd/ui/mame32.rc: 1467, 1530
 Customize which columns are used in the game list
 自訂遊戲清單中所顯示的欄位
 
-# ui/properties.c: 4678
+# osd/ui/properties.c: 4664
 Default
 預設
 
-# ui/properties.c: 558
+# osd/ui/properties.c: 558
 Default Game
 預設遊戲
 
-# ui/mame32.rc: 138
+# osd/ui/mame32.rc: 138
 Default Game &Options...
 預設遊戲選項(&O)...
 
-# ui/mame32.rc: 726
+# osd/ui/mame32.rc: 726
 Default input layout
 預設輸入配置
 
-# ui/mame32.rc: 481
+# osd/ui/mame32.rc: 481
 Delete
 刪除
 
-# ui/mame32.rc: 1150
+# osd/ui/mame32.rc: 1150
 Depth:
 色深:
 
-# ui/win32ui.c: 849 
+# osd/ui/win32ui.c: 861
 Description
 描述
 
-# ui/mame32.rc: 457, 559 ui/options.c: 469 ui/win32ui.c: 704
+# osd/ui/mame32.rc: 457, 559 osd/ui/options.c: 468 osd/ui/win32ui.c: 709
 Details
 詳細資料
 
-# ui/properties.c: 960 ui/treeview.c: 1459
+# osd/ui/properties.c: 961 osd/ui/treeview.c: 1468
 Dial
 轉盤
 
-# ui/mame32.rc: 1106
+# osd/ui/mame32.rc: 1106
 Dial device
 方向盤裝置
 
-# ui/mame32.rc: 1115
+# osd/ui/mame32.rc: 1115
 Digital joystick axes
 數位搖桿或軸
 
-# ui/mame32.rc: 665 ui/properties.c: 396
+# osd/ui/mame32.rc: 665 osd/ui/properties.c: 396
 Direct3D
 Direct3D
 
-# ui/mame32.rc: 466
+# osd/ui/mame32.rc: 466
 Directories
 目錄
 
-# ui/mame32.rc: 472
+# osd/ui/mame32.rc: 472
 Directories:
 目錄:
 
-# ui/directories.c: 602, 697
+# osd/ui/directories.c: 602, 697
 Directory does not exist, continue anyway?
 目錄不存在，是否要繼續?
 
-# ui/directories.c: 845, 887
+# osd/ui/directories.c: 848, 890
 Directory name:
 目錄名稱:
 
-# ui/mame32.rc: 118 
+# osd/ui/mame32.rc: 118
 Disabled
 停用
 
-# ui/mame32.rc: 567
+# osd/ui/mame32.rc: 567
 Display
 顯示
 
-# ui/mame32.rc: 1512
+# osd/ui/mame32.rc: 1512
 Display help contents
 顯示說明內容
 
-# ui/mame32.rc: 1467, 1485
+# osd/ui/mame32.rc: 1467, 1485
 Display items by using large icons.
 使用大圖示顯示項目。
 
-# ui/mame32.rc: 1467, 1485
+# osd/ui/mame32.rc: 1467, 1485
 Display items by using small icons.
 使用小圖示顯示項目。
 
-# ui/mame32.rc: 1006
+# osd/ui/mame32.rc: 1006
 Display splash screen on start
 啟動時顯示宣告畫面
 
-# ui/mame32.rc: 1500
+# osd/ui/mame32.rc: 1500
 Display the driver properties of the selected game
 顯示選定遊戲的驅動內容
 
-# ui/mame32.rc: 1548
+# osd/ui/mame32.rc: 1548
 Display the properties of the currently selected folder
 顯示目前選定資料夾的內容
 
-# ui/mame32.rc: 1530
+# osd/ui/mame32.rc: 1530
 Display the properties of the selected items
 顯示選定項目的內容
 
-# ui/mame32.rc: 1467, 1485
+# osd/ui/mame32.rc: 1467, 1485
 Displays detailed information about each item in the window.
 顯示視窗中每個項目的詳細資訊。
 
-# ui/mame32.rc: 1485
+# osd/ui/mame32.rc: 1485
 Displays detailed information and group items in the window by parent.
 顯示詳細資訊並在視窗中將項目分組。
 
-# ui/mame32.rc: 1467, 1485
+# osd/ui/mame32.rc: 1467, 1485
 Displays items in a list.
 將項目顯示成清單。
 
-# ui/mame32.rc: 1485
+# osd/ui/mame32.rc: 1485
 Displays program and copyright information
 顯示程式資訊與著作權資訊
 
-# ui/dialogs.c: 128
+# osd/ui/dialogs.c: 128
 Do you wish to continue?
 是否要繼續?
 
-# ui/treeview.c: 1452
+# osd/ui/treeview.c: 1464
+Double Joy 16-Way
+16 方向雙搖桿
+
+# osd/ui/treeview.c: 1461
 Double Joy 2-Way
 2 方向雙搖桿
 
-# ui/treeview.c: 1453
+# osd/ui/treeview.c: 1462
 Double Joy 4-Way
 4 方向雙搖桿
 
-# ui/treeview.c: 1454
+# osd/ui/treeview.c: 1463
 Double Joy 8-Way
 8 方向雙搖桿
 
-# ui/properties.c: 886, 907, 908
+# osd/ui/properties.c: 894, 919
+Double Joystick 16-Way
+16 方向雙搖桿
+
+# osd/ui/properties.c: 887, 908, 909
 Double Joystick 2-Way
 2 方向雙搖桿
 
-# ui/properties.c: 882, 883, 911
+# osd/ui/properties.c: 883, 884, 912
 Double Joystick 2-Way Vertical
 垂直 2 方向雙搖桿
 
-# ui/properties.c: 889, 914
+# osd/ui/properties.c: 890, 915
 Double Joystick 4-Way
 4 方向雙搖桿
 
-# ui/properties.c: 895, 920
+# osd/ui/properties.c: 896, 921
 Double Joystick 8-Way
 8 方向雙搖桿
 
-# ui/mame32.rc: 856
+# osd/ui/mame32.rc: 856
 Draw antialiased vectors
 描繪反鋸齒向量圖形
 
-# ui/properties.c: 4656
+# osd/ui/properties.c: 4642
 Draw every frame
 描繪出全部畫面
 
-# ui/layout.c: 57 ui/win32ui.c: 859
+# osd/ui/layout.c: 57 osd/ui/win32ui.c: 871
 Driver
 驅動
 
-# ui/mame32.rc: 823
+# osd/ui/mame32.rc: 823
 Driver options
 驅動程式選項
 
-# ui/mame32.rc: 540
+# osd/ui/mame32.rc: 540
 Driver:
 驅動:
 
-# ui/mame32.rc: 744
+# osd/ui/mame32.rc: 744
 Dual lightgun
 雙光線槍
 
-# ui/layout.c: 65
+# osd/ui/layout.c: 65
 Dumping Status
 DUMP 狀況
 
-# ui/mame32.rc: 71
+# osd/ui/mame32.rc: 71
 E&xit
 結束(&X)
 
-# ui/win32ui.c: 7355
+# osd/ui/win32ui.c: 7483
 ERROR: required files are missing, the game cannot be run.
 錯誤: 必要的檔案遺失，遊戲無法執行。
 
-# ui/mame32.rc: 1017
+# osd/ui/mame32.rc: 1017
 Emulation
 模擬
 
-# ui/mame32.rc: 666
+# osd/ui/mame32.rc: 666
 Enable Bilinear Filtering
 啟用雙線過濾
 
-# ui/mame32.rc: 779
+# osd/ui/mame32.rc: 779
 Enable game cheats
 啟用遊戲作弊引擎
 
-# ui/mame32.rc: 718
+# osd/ui/mame32.rc: 718
 Enable joystick input
 啟用搖桿輸入
 
-# ui/mame32.rc: 740
+# osd/ui/mame32.rc: 740
 Enable lightgun input
 啟用光線槍輸入
 
-# ui/mame32.rc: 729
+# osd/ui/mame32.rc: 729
 Enable mouse input
 啟用滑鼠輸入
 
-# ui/mame32.rc: 736
+# osd/ui/mame32.rc: 736
 Enable pointing stick input
 啟用指標控制桿輸入
 
-# ui/mame32.rc: 626
+# osd/ui/mame32.rc: 626
 Enable sound and sound CPUs
 啟用聲音與聲音 CPU
 
-# ui/mame32.rc: 732
+# osd/ui/mame32.rc: 732
 Enable steadykey support
 啟用多鍵同時輸入支援
 
-# ui/mame32.rc: 578
+# osd/ui/mame32.rc: 578
 Enforce aspect ratio
 強制長寬比例
 
-# ui/audit32.c: 100 ui/properties.c: 578, 669, 1680
+# osd/ui/audit32.c: 100 osd/ui/properties.c: 578, 669, 1666
 Error
 錯誤
 
-# ui/treeview.c: 2717
+# osd/ui/treeview.c: 2736
 Error finding custom file name to save
 尋找自訂檔名儲存時發生錯誤
 
-# ui/mame32.rc: 781
+# osd/ui/mame32.rc: 781
 Error log (for developers)
 錯誤記錄(程式開發用)
 
-# ui/win32ui.c: 7450
+# osd/ui/win32ui.c: 7578
 Error searching for custom folder
 尋找自訂資料夾時發生錯誤
 
-# ui/treeview.c: 2646
+# osd/ui/treeview.c: 2664
 Error while renaming custom file %s to %s
 自訂檔案 %s 重新命名成 %s 時發生錯誤
 
-# ui/treeview.c: 2788
+# osd/ui/treeview.c: 2808
 Error while saving custom file %s
 儲存自訂檔案 %s 時發生錯誤\n\n注意: 無法編輯唯讀屬性的外部資料夾清單檔案。
 
-# ui/mame32.rc: 1485
+# osd/ui/mame32.rc: 1485
 Exit the application
 結束應用程式
 
-# ui/win32ui.c: 4435
-Export a game list file
-匯出遊戲清單檔案
-
-# ui/layout.c: 135
+# osd/ui/layout.c: 135
 External Folder List
 外部資料夾清單
 
-# ui/options.c: 3107
+# osd/ui/options.c: 3127
 FOLDER LIST HIDE OPTIONS
 資料夾清單隱藏選項
 
-# ui/layout.c: 74
+# osd/ui/layout.c: 74
 FPS
 FPS
 
-# ui/audit32.c: 494
+# osd/ui/audit32.c: 493
 Failed
 失敗
 
-# ui/audit32.c: 239 ui/mame32.rc: 434
+# osd/ui/audit32.c: 242 osd/ui/mame32.rc: 434
 File Audit
 檔案驗證
 
-# ui/dialogs.c: 418
+# osd/ui/dialogs.c: 418
 Filters for %s Folder
 篩選 %s 資料夾
 
-# ui/mame32.rc: 863
+# osd/ui/mame32.rc: 863
 Flicker
 閃爍度
 
-# ui/mame32.rc: 587
+# osd/ui/mame32.rc: 587
 Flip screen left-right
 左右翻轉畫面
 
-# ui/mame32.rc: 585
+# osd/ui/mame32.rc: 585
 Flip screen upside-down
 上下翻轉畫面
 
-# ui/dialogs.c: 209 ui/options.c: 434
+# osd/ui/dialogs.c: 209 osd/ui/options.c: 434
 Flyer
 廣告圖
 
-# ui/layout.c: 124
+# osd/ui/layout.c: 124
 Flyers
 廣告圖 (flyers)
 
-# ui/mame32.rc: 77
+# osd/ui/mame32.rc: 77
 Fold&er List\tAlt+D
 資料夾清單(&E)\tAlt+D
 
-# ui/paletteedit.c: 104
+# osd/ui/paletteedit.c: 104
 Font (blank)
 字型 (空白)
 
-# ui/paletteedit.c: 105
+# osd/ui/paletteedit.c: 105
 Font (normal)
 字型 (標準)
 
-# ui/paletteedit.c: 106
+# osd/ui/paletteedit.c: 106
 Font (special)
 字型 (特殊)
 
-# ui/mame32.rc: 593
+# osd/ui/mame32.rc: 593
 Frame skipping
 畫面省略
 
-# ui/mame32.rc: 696
+# osd/ui/mame32.rc: 696
 Full screen brightness
 全螢幕亮度值
 
-# ui/mame32.rc: 700
+# osd/ui/mame32.rc: 700
 Full screen contrast
 全螢幕對比值
 
-# ui/mame32.rc: 692
+# osd/ui/mame32.rc: 692
 Full screen gamma
 全螢幕 Gamma 值
 
-# ui/options.c: 3053
+# osd/ui/options.c: 3073
 GENERAL OPTIONS
 通用選項
 
-# ui/options.c: 3111
+# osd/ui/options.c: 3131
 GUI JOYSTICK OPTIONS
 GUI 搖桿選項
 
-# ui/options.c: 3126
+# osd/ui/options.c: 3146
 GUI KEYBOARD OPTIONS
 GUI 鍵盤選項
 
-# ui/mame32.rc: 904
+# osd/ui/mame32.rc: 904
 Game Filters
 遊戲篩選
 
-# ui/mame32.rc: 135
+# osd/ui/mame32.rc: 135
 Game List &Clone Color...
 仿製版遊戲清單色彩(&C)...
 
-# ui/mame32.rc: 134
+# osd/ui/mame32.rc: 134
 Game List &Font...
 遊戲清單字型(&F)...
 
-# ui/mame32.rc: 907
+# osd/ui/mame32.rc: 907
 Game filters
 遊戲篩選
 
-# ui/mame32.rc: 929
+# osd/ui/mame32.rc: 929
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 遊戲篩選程式能夠在各個資料夾中\n自訂隱藏所符合篩選條件的遊戲。
 
-# ui/properties.c: 1102
+# osd/ui/properties.c: 1099
 Game lacks sound
 遊戲缺少聲音
 
-# ui/properties.c: 1078
+# osd/ui/properties.c: 1079
 Game protection isn't fully emulated
 遊戲的保護尚未完全模擬
 
-# ui/win32ui.c: 3270
+# osd/ui/win32ui.c: 3381
 Game search %d%% complete
 完成 %d%% 遊戲搜尋
 
-# ui/mame32.rc: 598
+# osd/ui/mame32.rc: 598
 Gamma Correction
 Gamma 值修正
 
-# ui/mame32.rc: 509
+# osd/ui/mame32.rc: 509
 General
 一般
 
-# ui/properties.c: 1167
+# osd/ui/properties.c: 1162
 Global driver options\nCustom options used by all games in the %s
 通用驅動選項\n供 %s 全部遊戲使用的自訂選項
 
-# ui/properties.c: 1147
+# osd/ui/properties.c: 1142
 Global game options\nDefault options used by all games
 通用遊戲選項\n供全部遊戲使用的預設選項
 
-# ui/properties.c: 1150
+# osd/ui/properties.c: 1145
 Global vector options\nCustom options used by all games in the Vector
 通用向量選項\n供向量全部遊戲使用的自訂選項
 
-# ui/mame32.rc: 426
+# osd/ui/mame32.rc: 426
 Go to Microsoft's DirectX Web Page
 前往 Microsoft 的 DirectX 網頁
 
-# ui/mame32.rc: 121
+# osd/ui/mame32.rc: 121
 Gray
 灰色
 
-# ui/options.c: 470, 3086 ui/win32ui.c: 705
+# osd/ui/options.c: 469, 3106 osd/ui/win32ui.c: 710
 Grouped
 群組
 
-# ui/layout.c: 131
+# osd/ui/layout.c: 131
 Hard Drive Difference
 硬碟差異檔
 
-# ui/win32ui.c: 707
+# osd/ui/win32ui.c: 712
 Help
 說明
 
-# ui/mame32.rc: 999
+# osd/ui/mame32.rc: 999
 Hide &mouse cursor (requires restart)
 隱藏滑鼠指標(需重新啟動)(&M)
 
-# ui/layout.c: 117
+# osd/ui/layout.c: 117
 High Scores
 高分記錄
 
-# ui/options.c: 440, 443
+# osd/ui/options.c: 440, 443
 History
 歷史
 
-# ui/mame32.rc: 828
+# osd/ui/mame32.rc: 828
 Homebrew
 自製軟體
 
-# ui/treeview.c: 1046, 1047
+# osd/ui/treeview.c: 1055, 1056
 Horizontal
 水平
 
-# ui/mame32.rc: 1512
+# osd/ui/mame32.rc: 1512
 How cheats work
 如何使用作弊引擎
 
-# ui/options.c: 3033
+# osd/ui/options.c: 3053
 INTERFACE OPTIONS
 介面選項
 
-# ui/layout.c: 113
+# osd/ui/layout.c: 113
 IPS Files
 IPS 檔案
 
-# ui/layout.c: 132
+# osd/ui/layout.c: 132
 Icons
 圖示 (icons)
 
-# ui/mame32.rc: 676 
+# osd/ui/mame32.rc: 676
 Image Enhancement
 影像增強
 
-# ui/win32ui.c: 822
+# osd/ui/win32ui.c: 827
 Image Files (*.png,*.bmp)
 圖像檔案 (*.png,*.bmp)
 
-# ui/layout.c: 64
+# osd/ui/layout.c: 64
 Imperfect
 不完美
 
-# ui/treeview.c: 1085
+# osd/ui/treeview.c: 1094
 Imperfect Colors
 色彩不完美
 
-# ui/treeview.c: 1086
+# osd/ui/treeview.c: 1095
 Imperfect Graphics
 圖形不完美
 
-# ui/treeview.c: 1088
+# osd/ui/treeview.c: 1097
 Imperfect Sound
 聲音不完美
 
-# ui/mame32.rc: 443, 452
+# osd/ui/mame32.rc: 443, 452
 Incorrect:
 不正確:
 
-# ui/mame32.rc: 1001
+# osd/ui/mame32.rc: 1001
 Inheritable Filters
 繼承篩選程式的設定值
 
-# ui/layout.c: 109
+# osd/ui/layout.c: 109
 Ini Files
 INI 檔案
 
-# ui/layout.c: 120
+# osd/ui/layout.c: 120
 Input Files (*.inp)
 輸入檔 (*.inp)
 
-# ui/mame32.rc: 480
+# osd/ui/mame32.rc: 480
 Insert
 插入
 
-# ui/mame32.rc: 983
+# osd/ui/mame32.rc: 983
 Interface Options
 介面選項
 
-# ui/treeview.c: 1447
+# osd/ui/treeview.c: 1459
+Joy 16-Way
+16 方向搖桿
+
+# osd/ui/treeview.c: 1456
 Joy 2-Way
 2 方向搖桿
 
-# ui/treeview.c: 1448
+# osd/ui/treeview.c: 1457
 Joy 4-Way
 4 方向搖桿
 
-# ui/treeview.c: 1449
+# osd/ui/treeview.c: 1458
 Joy 8-Way
 8 方向搖桿
 
-# ui/properties.c: 420, 4830
+# osd/ui/properties.c: 420, 4816
 Joystick
 搖桿
 
-# ui/properties.c: 834, 835, 861
+# osd/ui/properties.c: 846, 869
+Joystick 16-Way
+16 方向搖桿
+
+# osd/ui/properties.c: 835, 836, 862
 Joystick 2-Way
 2 方向搖桿
 
-# ui/properties.c: 838, 857, 858
+# osd/ui/properties.c: 839, 858, 859
 Joystick 2-Way Vertical
 垂直 2 方向搖桿
 
-# ui/properties.c: 841, 864
+# osd/ui/properties.c: 842, 865
 Joystick 4-Way
 4 方向搖桿
 
-# ui/properties.c: 847, 870
+# osd/ui/properties.c: 848, 871
 Joystick 8-Way
 8 方向搖桿
 
-# ui/properties.c: 4840
+# osd/ui/properties.c: 4826
 JoystickId
 搖桿 ID
 
-# ui/properties.c: 418
+# osd/ui/properties.c: 418
 Keyboard
 鍵盤
 
-# ui/mame32.rc: 98
+# osd/ui/mame32.rc: 98
 L&arge Icons
 大圖示(&A)
 
-# ui/options.c: 3099
+# osd/ui/options.c: 3119
 LIST FONT OPTIONS
 清單字型選項
 
-# ui/options.c: 3085
+# osd/ui/options.c: 3105
 LISTVIEW OPTIONS
 清單檢視選項
 
-# ui/options.c: 466 ui/win32ui.c: 701
+# osd/ui/options.c: 465 osd/ui/win32ui.c: 706
 Large Icons
 大圖示
 
-# ui/layout.c: 79 ui/properties.c: 421, 972 ui/treeview.c: 1461
+# osd/ui/layout.c: 79 osd/ui/properties.c: 421, 973 osd/ui/treeview.c: 1470
 Lightgun
 光線槍
 
-# ui/mame32.rc: 1112
+# osd/ui/mame32.rc: 1112
 Lightgun device
 光線槍裝置
 
-# ui/mame32.rc: 113
+# osd/ui/mame32.rc: 113
 Line &Up Icons
 對齊圖示(&U)
 
-# ui/options.c: 468 ui/win32ui.c: 703
+# osd/ui/options.c: 467 osd/ui/win32ui.c: 708
 List
 清單
 
-# ui/mame32.rc: 60
+# osd/ui/mame32.rc: 60
 Loa&d Savestate...
 載入儲存狀態(&D)...
 
-# ui/win32ui.c: 7272
+# osd/ui/win32ui.c: 7400
 Loading %s
 正在載入 %s
 
-# ui/mame32.rc: 1598
+# osd/ui/mame32.rc: 1598
 Localize GUI and MAME core.
 當地化的圖形使用介面與 MAME 核心。
 
-# ui/layout.c: 111
+# osd/ui/layout.c: 111
 Localized Files
 本地化 DAT 檔案
 
-# ui/mame32.rc: 819
+# osd/ui/mame32.rc: 819
 M68000 CPU Core
 M68000 CPU 核心
 
-# ui/win32ui.c: 794
+# osd/ui/win32ui.c: 799
 MAME input files (*.inp,*.zip)
 MAME 輸入檔 (*.inp,*.zip)
 
-# ui/mame32.rc: 1512
+# osd/ui/mame32.rc: 1512
 MAME release notes
 MAME 版本資訊
 
-# ui/win32ui.c: 801
+# osd/ui/win32ui.c: 806
 MAME savestate files (*.sta)
 MAME 儲存狀態檔 (*.sta)
 
-# ui/dialogs.c: 870
+# osd/ui/dialogs.c: 877
 MAME32 PCB Info: %s [%s]
 MAME32 PCB 資訊: %s [%s]
 
-# ui/options.c: 528
+# osd/ui/options.c: 527
 MAME32 has changed *.ini file directory.\n\nWould you like to migrate old configurations to the new directory?
 MAME32 已經變更 INI 檔案目錄。\n\n您想要轉移舊設定到這個新的目錄嗎?
 
-# ui/mame32.rc: 408
+# osd/ui/mame32.rc: 408
 MAME32 version by
 MAME32 版本作者
 
-# ui/dialogs.c: 123
+# osd/ui/dialogs.c: 123
 MAME32 will now reset the selected\n
 MAME32 現在將會重設選取\n
 
-# ui/mame32.rc: 399, 423, 434, 466, 486, 509, 548, 567, 618, 655, 711, 772, 849, 877, 904, 941, 966, 983, 1047, 1075, 1090, 1127, 1163, 1202 ui/options.c: 3101 ui/translate.c: 103
+# osd/ui/mame32.rc: 399, 423, 434, 466, 486, 509, 548, 567, 618, 655, 711, 772, 849, 877, 904, 941, 966, 983, 1047, 1075, 1090, 1127, 1163, 1202 osd/ui/options.c: 3121 osd/ui/translate.c: 103
 MS Sans Serif
 新細明體
 
-# ui/mame32.rc: 516
+# osd/ui/mame32.rc: 516
 Manufactured:
 製造廠商:
 
-# ui/layout.c: 55 ui/win32ui.c: 856
+# osd/ui/layout.c: 55 osd/ui/win32ui.c: 868
 Manufacturer
 製造廠商
 
-# ui/dialogs.c: 213 ui/options.c: 436
+# osd/ui/dialogs.c: 213 osd/ui/options.c: 436
 Marquee
 標籤圖
 
-# ui/layout.c: 126
+# osd/ui/layout.c: 126
 Marquees
 標籤圖 (marquees)
 
-# ui/layout.c: 123 
+# osd/ui/layout.c: 123
 Memory Card
 記憶卡
 
-# ui/mame32.rc: 772
+# osd/ui/mame32.rc: 772
 Miscellaneous
 雜項
 
-# ui/treeview.c: 1087
+# osd/ui/treeview.c: 1096
 Missing Sound
 缺少聲音
 
-# ui/properties.c: 419
+# osd/ui/properties.c: 419
 Mouse
 滑鼠
 
-# ui/mame32.rc: 502
+# osd/ui/mame32.rc: 502
 Move Down
 下移
 
-# ui/columnedit.c: 50
+# osd/ui/columnedit.c: 50
 Move Item
 移動項目
 
-# ui/mame32.rc: 501
+# osd/ui/mame32.rc: 501
 Move Up
 上移
 
-# ui/layout.c: 129
+# osd/ui/layout.c: 129
 NVRAM
 NVRAM
 
-# ui/win32ui.c: 852 
+# osd/ui/win32ui.c: 864
 Name
 名稱
 
-# ui/mame32.rc: 830
+# osd/ui/mame32.rc: 830
 Neogeo Decrypted
 NeoGeo 解密版本
 
-# ui/mame32.rc: 1512
+# osd/ui/mame32.rc: 1512
 New game changes
 遊戲的新增異動
 
-# ui/audit32.c: 122 ui/win32ui.c: 5426
+# osd/ui/audit32.c: 122 osd/ui/win32ui.c: 5515
 No
 否
 
-# ui/treeview.c: 1089
+# osd/ui/treeview.c: 1098
 No Cocktail
 無檯面型
 
-# ui/treeview.c: 1137, 1138
+# osd/ui/treeview.c: 1146, 1147
 No Dump
 尚未 DUMP
 
-# ui/dialogs.c: 914
+# osd/ui/dialogs.c: 921
 No PCB Info available for this game.
 這個遊戲沒有可供查看的 PCB 資訊。
 
-# ui/win32ui.c: 3681
+# osd/ui/win32ui.c: 3800
 No Selection
 未選取遊戲
 
-# ui/mame32.rc: 1003
+# osd/ui/mame32.rc: 1003
 No offset for clones missing parent in view
 群組檢視中未列出原作的仿製版遊戲清單不後移
 
-# ui/mame32.rc: 835
+# osd/ui/mame32.rc: 835
 Non-CPU
 無 CPU
 
-# ui/mame32.rc: 913
+# osd/ui/mame32.rc: 913
 Non-Wor&king
 不可執行(&k)
 
-# ui/dialogs.c: 221 ui/properties.c: 3594, 4681, 4935, 5173 
+# osd/ui/dialogs.c: 221 osd/ui/properties.c: 3580, 4667, 4919, 5156 
 None
 無
 
-# ui/audit32.c: 344, 348
+# osd/ui/audit32.c: 346, 350
 None required
 不需要
 
-# ui/layout.c: 67
+# osd/ui/layout.c: 67
 Not Working
 不可執行
 
-# ui/audit32.c: 490
+# osd/ui/audit32.c: 489
 Not found
 找不到
 
-# ui/properties.c: 1066
+# osd/ui/properties.c: 1068
 Not working
 不可執行
 
-# ui/mame32.rc: 1134
+# osd/ui/mame32.rc: 1134
 Number of screens
 畫面數量
 
-# ui/mame32.rc: 477, 503, 1084 
+# osd/ui/mame32.rc: 477, 503, 1084
 OK
 確定
 
-# ui/paletteedit.c: 111
+# osd/ui/paletteedit.c: 111
 OSD bar
 參數調整列
 
-# ui/paletteedit.c: 113
+# osd/ui/paletteedit.c: 113
 OSD bar (dark)
 參數調整列 (暗)
 
-# ui/paletteedit.c: 114
+# osd/ui/paletteedit.c: 114
 OSD bar (default)
 參數調整列 (預設)
 
-# ui/paletteedit.c: 112
+# osd/ui/paletteedit.c: 112
 OSD bar (light)
 參數調整列 (明)
 
-# ui/mame32.rc: 742
+# osd/ui/mame32.rc: 742
 Offscreen shots reload
 射擊畫面外區域即重新載入
 
-# ui/mame32.rc: 922
+# osd/ui/mame32.rc: 922
 Ori&ginals
 原作版(&G)
 
-# ui/layout.c: 63
+# osd/ui/layout.c: 63
 Orientation
 方向
 
-# ui/layout.c: 68
+# osd/ui/layout.c: 68
 Originals
 原作版
 
-# ui/mame32.rc: 810
+# osd/ui/mame32.rc: 810
 Overlays
 覆疊圖
 
-# ui/mame32.rc: 55
+# osd/ui/mame32.rc: 55
 P&layback Input...
 播放輸入檔(&L)...
 
-# ui/options.c: 3020
+# osd/ui/options.c: 3040
 PATH AND DIRECTORY OPTIONS
 路徑及目錄選項
 
-# ui/mame32.rc: 1202
+# osd/ui/mame32.rc: 1202
 PCB Info
 PCB 資訊
 
-# ui/layout.c: 137
+# osd/ui/layout.c: 137
 PCB Info Files
 PCB 資訊檔
 
-# ui/properties.c: 957 ui/treeview.c: 1458
+# osd/ui/properties.c: 958 osd/ui/treeview.c: 1467
 Paddle
 操縱桿
 
-# ui/mame32.rc: 1097
+# osd/ui/mame32.rc: 1097
 Paddle device
 操縱桿裝置
 
-# ui/mame32.rc: 1047
+# osd/ui/mame32.rc: 1047
 Palette
 色盤
 
-# ui/audit32.c: 482
+# osd/ui/audit32.c: 481
 Passed
 通過
 
-# ui/mame32.rc: 589
+# osd/ui/mame32.rc: 589
 Pause Brightness
 暫停時亮度
 
-# ui/treeview.c: 1462
+# osd/ui/treeview.c: 1471
 Pedal
 踏板
 
-# ui/mame32.rc: 1103
+# osd/ui/mame32.rc: 1103
 Pedal device
 踏板裝置
 
-# ui/options.c: 3182 ui/win32ui.c: 860
+# osd/ui/options.c: 3202 osd/ui/win32ui.c: 872
 Play Time
 執行時間
 
-# ui/mame32.rc: 1507
+# osd/ui/mame32.rc: 1507
 Play a game starting with the given savestate
 以指定的儲存狀態開始執行遊戲
 
-# ui/mame32.rc: 54, 182
+# osd/ui/mame32.rc: 54, 182
 Play and &Record Input...
 執行並記錄輸入檔(&R)...
 
-# ui/mame32.rc: 58
+# osd/ui/mame32.rc: 58
 Play and Record &MNG Video...
 執行並錄製 MNG 視訊(&M)...
 
-# ui/mame32.rc: 57
+# osd/ui/mame32.rc: 57
 Play and Record &WAV Sound...
 執行並錄製 WAV 聲音(&M)...
 
-# ui/mame32.rc: 1485
+# osd/ui/mame32.rc: 1485
 Play currently selected game
 執行目前所選取的遊戲
 
-# ui/mame32.rc: 1512
+# osd/ui/mame32.rc: 1512
 Playback a recorded game
 播放已記錄的遊戲
 
-# ui/win32ui.c: 855
+# osd/ui/win32ui.c: 867
 Playcount
 執行次數
 
-# ui/treeview.c: 1429
+# osd/ui/treeview.c: 1438
 Player 1
 玩家數 1
 
-# ui/treeview.c: 1430
+# osd/ui/treeview.c: 1439
 Players 2
 玩家數 2
 
-# ui/treeview.c: 1431
+# osd/ui/treeview.c: 1440
 Players 3
 玩家數 3
 
-# ui/treeview.c: 1432
+# osd/ui/treeview.c: 1441
 Players 4
 玩家數 4
 
-# ui/treeview.c: 1433
+# osd/ui/treeview.c: 1442
 Players 5
 玩家數 5
 
-# ui/treeview.c: 1434
+# osd/ui/treeview.c: 1443
 Players 6
 玩家數 6
 
-# ui/treeview.c: 1435
+# osd/ui/treeview.c: 1444
 Players 7
 玩家數 7
 
-# ui/treeview.c: 1436
+# osd/ui/treeview.c: 1445
 Players 8
 玩家數 8
 
-# ui/mame32.rc: 67, 200
+# osd/ui/mame32.rc: 67, 200
 Pr&operties
 內容(&O)
 
-# ui/win32ui.c: 3710, 6893, 6918
+# osd/ui/win32ui.c: 3830, 7022, 7046
 Propert&ies for %s
 %s 內容(&I)
 
-# ui/mame32.rc: 66, 199 ui/win32ui.c: 3669
+# osd/ui/mame32.rc: 66, 199 osd/ui/win32ui.c: 3788
 Propert&ies for Driver
 驅動內容(&I)
 
-# ui/properties.c: 577, 668
+# osd/ui/properties.c: 577, 668
 Propery Sheet Error %d %X
 內容表錯誤 %d %X
 
-# ui/mame32.rc: 791
+# osd/ui/mame32.rc: 791
 Quit game with confirmation
 離開遊戲時先確認
 
-# ui/mame32.rc: 65, 185
+# osd/ui/mame32.rc: 65, 185
 R&emove From This Folder
 從這個資料夾中移除(&E)
 
-# ui/mame32.rc: 1053
+# osd/ui/mame32.rc: 1053
 RGB setting:
 RGB 設定:
 
-# ui/mame32.rc: 555
+# osd/ui/mame32.rc: 555
 ROM check:
 ROM 檢查:
 
-# ui/layout.c: 107 ui/mame32.rc: 442 ui/win32ui.c: 850
+# osd/ui/layout.c: 107 osd/ui/mame32.rc: 442 osd/ui/win32ui.c: 862
 ROMs
 ROM
 
-# ui/properties.c: 1123
+# osd/ui/properties.c: 1118
 ROMs missing
 ROM 檔遺失
 
-# ui/mame32.rc: 1530
+# osd/ui/mame32.rc: 1530
 Randomly select a game.
 隨機選取一個遊戲。
 
-# ui/layout.c: 70 ui/win32ui.c: 5418
+# osd/ui/layout.c: 70 osd/ui/win32ui.c: 5507
 Raster
 點陣
 
-# ui/win32ui.c: 3451
+# osd/ui/win32ui.c: 3562
 Ready
 準備完畢
 
-# ui/mame32.rc: 1512
+# osd/ui/mame32.rc: 1512
 Record a game for later playback
 記錄遊戲留待以後播放
 
-# ui/mame32.rc: 1467, 1556
+# osd/ui/mame32.rc: 1467, 1556
 Refresh game list
 重新整理遊戲清單
 
-# ui/mame32.rc: 1153
+# osd/ui/mame32.rc: 1153
 Refresh:
 頻率:
 
-# ui/options.c: 1551
+# osd/ui/options.c: 1552
 Reload configurations
 重新載入設定
 
-# ui/mame32.rc: 1530
+# osd/ui/mame32.rc: 1530
 Remove currently selected game from this folder
 從自定資料夾中移除目前選取的遊戲
 
-# ui/mame32.rc: 1530
+# osd/ui/mame32.rc: 1530
 Rename currently selected folder
 重新命名目前選取的資料夾
 
-# ui/mame32.rc: 190
+# osd/ui/mame32.rc: 190
 Rese&t Playcount
 重置執行次數(&T)
 
-# ui/mame32.rc: 611, 648, 704, 765, 842, 868, 1120, 1156, 1194
+# osd/ui/mame32.rc: 611, 648, 704, 765, 842, 868, 1120, 1156, 1194
 Reset
 重設
 
-# ui/mame32.rc: 941
+# osd/ui/mame32.rc: 941
 Reset Options
 重設選項
 
-# ui/mame32.rc: 191
+# osd/ui/mame32.rc: 191
 Reset Pla&y Time
 重置執行時間(&Y)
 
-# ui/mame32.rc: 1023
+# osd/ui/mame32.rc: 1023
 Reset all Play Times
 重置全部執行時間
 
-# ui/mame32.rc: 1021
+# osd/ui/mame32.rc: 1021
 Reset all Playcounts
 重置全部執行次數
 
-# ui/mame32.rc: 1530
+# osd/ui/mame32.rc: 1530
 Reset play time of currently selected game
 重置目前選取遊戲的執行時間
 
-# ui/mame32.rc: 1530
+# osd/ui/mame32.rc: 1530
 Reset playcount of currently selected game
 重置目前選取遊戲的執行次數
 
-# ui/layout.c: 73
+# osd/ui/layout.c: 73
 Resolution
 解析度
 
-# ui/mame32.rc: 612, 649, 705, 766, 843, 869, 1121, 1157, 1195
+# osd/ui/mame32.rc: 612, 649, 705, 766, 843, 869, 1121, 1157, 1195
 Restore Default Settings
 還原預設值
 
-# ui/dialogs.c: 130
+# osd/ui/dialogs.c: 130
 Restore Settings
 還原設定值
 
-# ui/mame32.rc: 582
+# osd/ui/mame32.rc: 582
 Rotation
 旋轉
 
-# ui/mame32.rc: 574
+# osd/ui/mame32.rc: 574
 Run in a window
 以視窗模式執行
 
-# ui/mame32.rc: 83, 240
+# osd/ui/mame32.rc: 83, 240
 S&how Pictures
 顯示圖片(&H)
 
-# ui/mame32.rc: 99
+# osd/ui/mame32.rc: 99
 S&mall Icons
 小圖示(&M)
 
-# ui/mame32.rc: 1026
+# osd/ui/mame32.rc: 1026
 S&tretch screenshot larger than natural size
 延展預覽圖至合適的大小(&T)
 
-# ui/mame32.rc: 557
+# osd/ui/mame32.rc: 557
 Sample check:
 樣本檔檢查:
 
-# ui/mame32.rc: 635
+# osd/ui/mame32.rc: 635
 Sample rate
 取樣頻率
 
-# ui/layout.c: 83, 108 ui/mame32.rc: 448 ui/win32ui.c: 851
+# osd/ui/layout.c: 83, 108 osd/ui/mame32.rc: 448 osd/ui/win32ui.c: 863
 Samples
 樣本檔
 
-# ui/layout.c: 75, 85
+# osd/ui/layout.c: 75, 85
 Save State
 儲存狀態
 
-# ui/mame32.rc: 538
+# osd/ui/mame32.rc: 538
 Save State:
 儲存狀態:
 
-# ui/mame32.rc: 1500
+# osd/ui/mame32.rc: 1500
 Save game list in specified lst file
 儲存遊戲清單到指定的 lst 檔案
 
-# ui/mame32.rc: 1512
+# osd/ui/mame32.rc: 1512
 Save sound in wav file
 儲存聲音到 wav 檔案
 
-# ui/mame32.rc: 1512
+# osd/ui/mame32.rc: 1512
 Save video in specified mng file
 儲存視訊到指定的 mng 檔案
 
-# ui/mame32.rc: 688
+# osd/ui/mame32.rc: 688
 Scale screen
 縮放畫面
 
-# ui/mame32.rc: 1127, 1138
+# osd/ui/mame32.rc: 1127, 1138
 Screen
 畫面
 
-# ui/win32ui.c: 3229
+# osd/ui/win32ui.c: 3340
 Screen flip support is missing
 尚未支援畫面翻轉
 
-# ui/properties.c: 1114
+# osd/ui/properties.c: 1109
 Screen flipping is not supported
 尚未支援畫面翻轉
 
-# ui/mame32.rc: 529
+# osd/ui/mame32.rc: 529
 Screen:
 畫面:
 
-# ui/mame32.rc: 1025
+# osd/ui/mame32.rc: 1025
 Screenshot Area
 預覽圖區域
 
-# ui/mame32.rc: 1033
+# osd/ui/mame32.rc: 1033
 Screenshot Bordersize
 預覽圖外框大小
 
-# ui/mame32.rc: 1029
+# osd/ui/mame32.rc: 1029
 Screenshot Cycletime in Seconds
 循環預覽圖秒數
 
-# ui/mame32.rc: 79
+# osd/ui/mame32.rc: 79
 Screenshot Ta&b\tAlt+B
 預覽圖索引標籤(&B)\tAlt+B
 
-# ui/mame32.rc: 995
+# osd/ui/mame32.rc: 995
 Select &random background image on start
 啟動時隨機選取背景圖像(&R)
 
-# ui/columnedit.c: 257
+# osd/ui/columnedit.c: 257
 Select Item
 選取項目
 
-# ui/win32ui.c: 823
+# osd/ui/win32ui.c: 828
 Select a Background Image
 選取一個背景圖像
 
-# ui/mame32.rc: 1500
+# osd/ui/mame32.rc: 1500
 Select a background image file
 選取背景圖像檔案
 
-# ui/win32ui.c: 796
+# osd/ui/win32ui.c: 801
 Select a file to record
 選取一個檔案供記錄
 
-# ui/win32ui.c: 817
+# osd/ui/win32ui.c: 822
 Select a mng file to record
 選取一個 mng 檔供錄製
 
-# ui/win32ui.c: 795
+# osd/ui/win32ui.c: 800
 Select a recorded file
 選取一個已記錄的檔案
 
-# ui/win32ui.c: 802
+# osd/ui/win32ui.c: 807
 Select a savestate file
 選取一個儲存狀態檔
 
-# ui/win32ui.c: 810
+# osd/ui/win32ui.c: 815
 Select a sound file to record
 選取一個聲音檔供錄製
 
-# ui/mame32.rc: 1530
+# osd/ui/mame32.rc: 1530
 Select fullscreen or window mode in GUI
 選取全螢幕或視窗模式的圖形使用介面
 
-# ui/mame32.rc: 1584
+# osd/ui/mame32.rc: 1584
 Select the cabinet image
 選取筐體圖
 
-# ui/mame32.rc: 1584
+# osd/ui/mame32.rc: 1584
 Select the control panel image
 選取控制器圖
 
-# ui/mame32.rc: 1584
+# osd/ui/mame32.rc: 1584
 Select the flyer image
 選取廣告圖
 
-# ui/mame32.rc: 1584
+# osd/ui/mame32.rc: 1584
 Select the history information
 選取歷史資訊
 
-# ui/mame32.rc: 1584
+# osd/ui/mame32.rc: 1584
 Select the marquee image
 選取標籤圖
 
-# ui/mame32.rc: 957
+# osd/ui/mame32.rc: 957
 Select the options to be restored to the default settings.  The options will be restored when MAME32 is run next.
 選取的選項將會還原為預設的設定值。在\n下次執行 MAME32 時便會還原這些選項。
 
-# ui/mame32.rc: 1584
+# osd/ui/mame32.rc: 1584
 Select the screen shot image
 選取遊戲圖
 
-# ui/mame32.rc: 1592
+# osd/ui/mame32.rc: 1592
 Select the story information
 選取故事資訊
 
-# ui/mame32.rc: 1584
+# osd/ui/mame32.rc: 1584
 Select the title image
 選取標題圖
 
-# ui/mame32.rc: 1016
+# osd/ui/mame32.rc: 1016
 Set Game List Not Working Color
 設定不可執行的遊戲清單色彩
 
-# ui/mame32.rc: 1037
+# osd/ui/mame32.rc: 1037
 Set Screenshot Border Color
 設定預覽圖外框色彩
 
-# ui/mame32.rc: 1485
+# osd/ui/mame32.rc: 1485
 Set default game options
 設定預設遊戲選項
 
-# ui/mame32.rc: 1485
+# osd/ui/mame32.rc: 1485
 Set directory configuration
 設定目錄組態
 
-# ui/mame32.rc: 1485
+# osd/ui/mame32.rc: 1485
 Set game list and folder list font
 設定遊戲清單與資料夾清單字型
 
-# ui/mame32.rc: 1498
+# osd/ui/mame32.rc: 1498
 Set in-game UI color palette
 設定遊戲中設定選單的色盤
 
-# ui/mame32.rc: 1485
+# osd/ui/mame32.rc: 1485
 Set list font color for clone games
 設定仿製版遊戲清單字型色彩
 
-# ui/mame32.rc: 1018
+# osd/ui/mame32.rc: 1018
 Show Game Ca&ption
 顯示遊戲視窗標題
 
-# ui/mame32.rc: 1038
+# osd/ui/mame32.rc: 1038
 Show History on Tab
 顯示歷史在索引標籤
 
-# ui/mame32.rc: 238
+# osd/ui/mame32.rc: 238
 Show Tab &Control
 顯示預覽圖索引標籤(&C)
 
-# ui/mame32.rc: 469
+# osd/ui/mame32.rc: 469
 Show directories for:
 顯示目錄類型:
 
-# ui/mame32.rc: 1546
+# osd/ui/mame32.rc: 1546
 Show game PCB information
 顯示遊戲 PCB 資訊
 
-# ui/mame32.rc: 1548
+# osd/ui/mame32.rc: 1548
 Show or hide folder
 顯示或隱藏資料夾
 
-# ui/mame32.rc: 1570
+# osd/ui/mame32.rc: 1570
 Show or hide the cabinet image
 顯示或隱藏筐體圖
 
-# ui/mame32.rc: 1570
+# osd/ui/mame32.rc: 1570
 Show or hide the control panel image
 顯示或隱藏控制器圖片
 
-# ui/mame32.rc: 1570
+# osd/ui/mame32.rc: 1570
 Show or hide the flyer image
 顯示或隱藏廣告圖
 
-# ui/mame32.rc: 1467, 1530
+# osd/ui/mame32.rc: 1467, 1530
 Show or hide the folder list
 顯示或隱藏資料夾清單
 
-# ui/mame32.rc: 1570
+# osd/ui/mame32.rc: 1570
 Show or hide the history information
 顯示或隱藏歷史資訊
 
-# ui/mame32.rc: 1570
+# osd/ui/mame32.rc: 1570
 Show or hide the marquee image
 顯示或隱藏標籤圖
 
-# ui/mame32.rc: 1512
+# osd/ui/mame32.rc: 1512
 Show or hide the picture area
 顯示或隱藏預覽圖
 
-# ui/mame32.rc: 1530, 1598
+# osd/ui/mame32.rc: 1530, 1598
 Show or hide the pictures
 顯示或隱藏圖片
 
-# ui/mame32.rc: 1570
+# osd/ui/mame32.rc: 1570
 Show or hide the screen shot image
 顯示或隱藏遊戲圖
 
-# ui/mame32.rc: 1530
+# osd/ui/mame32.rc: 1530
 Show or hide the screen shot tab
 顯示或隱藏預覽圖索引標籤
 
-# ui/mame32.rc: 1467, 1530
+# osd/ui/mame32.rc: 1467, 1530
 Show or hide the status bar
 顯示或隱藏狀態列
 
-# ui/mame32.rc: 1578
+# osd/ui/mame32.rc: 1578
 Show or hide the story information
 顯示或隱藏故事資訊
 
-# ui/mame32.rc: 1570
+# osd/ui/mame32.rc: 1570
 Show or hide the title image
 顯示或隱藏標題圖
 
-# ui/mame32.rc: 1467, 1530
+# osd/ui/mame32.rc: 1467, 1530
 Show or hide the toolbar
 顯示或隱藏工具列
 
-# ui/mame32.rc: 1050
+# osd/ui/mame32.rc: 1050
 Show palette for:
 顯示色盤類型:
 
-# ui/mame32.rc: 496
+# osd/ui/mame32.rc: 496
 Show these fields in this order:
 按照這個順序顯示欄位:
 
-# ui/mame32.rc: 1147
+# osd/ui/mame32.rc: 1147
 Size:
 大小:
 
-# ui/properties.c: 4657
+# osd/ui/properties.c: 4643
 Skip 1 of 12 frames
 每 12 畫面省略 1 個
 
-# ui/properties.c: 4666
+# osd/ui/properties.c: 4652
 Skip 10 of 12 frames
 每 12 畫面省略 10 個
 
-# ui/properties.c: 4667
+# osd/ui/properties.c: 4653
 Skip 11 of 12 frames
 每 12 畫面省略 11 個
 
-# ui/properties.c: 4658
+# osd/ui/properties.c: 4644
 Skip 2 of 12 frames
 每 12 畫面省略 2 個
 
-# ui/properties.c: 4659
+# osd/ui/properties.c: 4645
 Skip 3 of 12 frames
 每 12 畫面省略 3 個
 
-# ui/properties.c: 4660
+# osd/ui/properties.c: 4646
 Skip 4 of 12 frames
 每 12 畫面省略 4 個
 
-# ui/properties.c: 4661
+# osd/ui/properties.c: 4647
 Skip 5 of 12 frames
 每 12 畫面省略 5 個
 
-# ui/properties.c: 4662
+# osd/ui/properties.c: 4648
 Skip 6 of 12 frames
 每 12 畫面省略 6 個
 
-# ui/properties.c: 4663
+# osd/ui/properties.c: 4649
 Skip 7 of 12 frames
 每 12 畫面省略 7 個
 
-# ui/properties.c: 4664
+# osd/ui/properties.c: 4650
 Skip 8 of 12 frames
 每 12 畫面省略 8 個
 
-# ui/properties.c: 4665
+# osd/ui/properties.c: 4651
 Skip 9 of 12 frames
 每 12 畫面省略 9 個
 
-# ui/mame32.rc: 787
+# osd/ui/mame32.rc: 787
 Skip game info
 略過顯示遊戲資訊畫面
 
-# ui/mame32.rc: 783
+# osd/ui/mame32.rc: 783
 Sleep when possible
 適時釋放佔用中的系統資源
 
-# ui/options.c: 467 ui/win32ui.c: 702
+# osd/ui/options.c: 466 osd/ui/win32ui.c: 707
 Small Icons
 小圖示
 
-# ui/dialogs.c: 207 ui/options.c: 433
+# osd/ui/dialogs.c: 207 osd/ui/options.c: 433
 Snapshot
 遊戲圖
 
-# ui/layout.c: 119
+# osd/ui/layout.c: 119
 Snapshots
 遊戲圖 (snap)
 
-# ui/mame32.rc: 208
+# osd/ui/mame32.rc: 208
 Sort &Ascending
 遞增排序(&A)
 
-# ui/mame32.rc: 209
+# osd/ui/mame32.rc: 209
 Sort &Descending
 遞減排序(&D)
 
-# ui/mame32.rc: 1556
+# osd/ui/mame32.rc: 1556
 Sort column in ascending (A-Z) order
 以遞增 (A-Z) 順序排序欄位
 
-# ui/mame32.rc: 1556
+# osd/ui/mame32.rc: 1556
 Sort column in descending (Z-A) order
 以遞減(Z-A) 順序排序欄位
 
-# ui/mame32.rc: 1556
+# osd/ui/mame32.rc: 1556
 Sort items by game description
 依遊戲描述排列項目
 
-# ui/mame32.rc: 1556
+# osd/ui/mame32.rc: 1556
 Sort items by manufacturer
 依製造廠商排列項目
 
-# ui/mame32.rc: 1556
+# osd/ui/mame32.rc: 1556
 Sort items by name
 依名稱排列項目
 
-# ui/mame32.rc: 1556
+# osd/ui/mame32.rc: 1556
 Sort items by playcount
 依執行次數排列項目
 
-# ui/mame32.rc: 1556
+# osd/ui/mame32.rc: 1556
 Sort items by type
 依類型排列項目
 
-# ui/mame32.rc: 1556
+# osd/ui/mame32.rc: 1556
 Sort items by year
 依年代排列項目
 
-# ui/layout.c: 62 ui/mame32.rc: 618 
+# osd/ui/layout.c: 62 osd/ui/mame32.rc: 618
 Sound
 聲音
 
-# ui/properties.c: 1108
+# osd/ui/properties.c: 1104
 Sound emulation isn't 100% accurate
 聲音模擬尚未達到 100% 精確
 
-# ui/mame32.rc: 525
+# osd/ui/mame32.rc: 525
 Sound:
 聲音:
 
-# ui/win32ui.c: 808
+# osd/ui/win32ui.c: 813
 Sounds (*.wav)
 聲音檔 (*.wav)
 
-# ui/mame32.rc: 94, 251, 263
+# osd/ui/mame32.rc: 94, 251, 263
 St&ory
 故事(&O)
 
-# ui/properties.c: 3393, 3398, 3401, 3643, 3646, 4885, 4908 
+# osd/ui/properties.c: 3379, 3384, 3387, 3629, 3632, 4871, 4893 
 Standard
 標準
 
-# ui/mame32.rc: 576
+# osd/ui/mame32.rc: 576
 Start out maximized
 啟動時最大化
 
-# ui/layout.c: 121
+# osd/ui/layout.c: 121
 State
 狀態檔
 
-# ui/mame32.rc: 518
+# osd/ui/mame32.rc: 518
 Status:
 狀況:
 
-# ui/layout.c: 81
+# osd/ui/layout.c: 81
 Stereo
 立體聲
 
-# ui/options.c: 441
+# osd/ui/options.c: 441
 Story
 故事
 
-# ui/mame32.rc: 671
+# osd/ui/mame32.rc: 671
 Stretch using hardware
 使用硬體延展
 
-# ui/properties.c: 1200 ui/treeview.c: 1390, 1391
+# osd/ui/properties.c: 1191 osd/ui/treeview.c: 1399, 1400
 Supported
 已支援
 
-# ui/mame32.rc: 686
+# osd/ui/mame32.rc: 686
 Switch resolutions to fit
 切換至最符合的解析度
 
-# ui/mame32.rc: 682
+# osd/ui/mame32.rc: 682
 Sync to monitor refresh
 同步於顯示器的頻率
 
-# ui/dialogs.c: 126
+# osd/ui/dialogs.c: 126
 The new settings will take effect\n
 這些新的設定值將會在下次\n
 
-# ui/m32util.c: 233
+# osd/ui/m32util.c: 247
 The operating system is out of memory or resources.
 作業系統的記憶體或資源不足。
 
-# ui/m32util.c: 237
+# osd/ui/m32util.c: 251
 The specified file was not found.
 找不到指定的檔案。
 
-# ui/m32util.c: 249
+# osd/ui/m32util.c: 263
 The specified path was not found.
 找不到指定的路徑。
 
-# ui/m32util.c: 241
+# osd/ui/m32util.c: 255
 There is no application associated with the given filename extension.
 沒有應用程式與這個副檔名相關聯。
 
-# ui/m32util.c: 245
+# osd/ui/m32util.c: 259
 There was not enough memory to complete the operation.
 記憶體不足無法完成這項作業。
 
-# ui/mame32.rc: 814
+# osd/ui/mame32.rc: 814
 Thread priority
 執行緒優先權
 
-# ui/mame32.rc: 580
+# osd/ui/mame32.rc: 580
 Throttle
 限制速度
 
-# ui/dialogs.c: 215 ui/options.c: 437
+# osd/ui/dialogs.c: 215 osd/ui/options.c: 437
 Title
 標題圖
 
-# ui/layout.c: 127
+# osd/ui/layout.c: 127
 Titles
 標題圖 (titles)
 
-# ui/win32ui.c: 699
+# osd/ui/win32ui.c: 704
 Toggle Folder List
 切換資料夾清單
 
-# ui/win32ui.c: 700
+# osd/ui/win32ui.c: 705
 Toggle Screen Shot
 切換預覽圖
 
-# ui/mame32.rc: 444, 453
+# osd/ui/mame32.rc: 444, 453
 Total:
 總數:
 
-# ui/layout.c: 78 ui/properties.c: 964 ui/treeview.c: 1460 ui/win32ui.c: 854
+# osd/ui/layout.c: 78 osd/ui/properties.c: 965 osd/ui/treeview.c: 1469 osd/ui/win32ui.c: 866
 Trackball
 軌跡球
 
-# ui/mame32.rc: 1109
+# osd/ui/mame32.rc: 1109
 Trackball device
 軌跡球裝置
 
-# ui/mame32.rc: 1604
+# osd/ui/mame32.rc: 1604
 Translate into English (US)
 英文翻譯
 
-# ui/mame32.rc: 1604
+# osd/ui/mame32.rc: 1604
 Translate into French
 法文翻譯
 
-# ui/mame32.rc: 1604
+# osd/ui/mame32.rc: 1604
 Translate into German
 德文翻譯
 
-# ui/mame32.rc: 1604
+# osd/ui/mame32.rc: 1604
 Translate into Hungarian
 匈牙利文翻譯
 
-# ui/mame32.rc: 1604
+# osd/ui/mame32.rc: 1604
 Translate into Italian
 義大利文翻譯
 
-# ui/mame32.rc: 1604
+# osd/ui/mame32.rc: 1604
 Translate into Japanese
 日文翻譯
 
-# ui/mame32.rc: 1604
+# osd/ui/mame32.rc: 1604
 Translate into Korean
 韓文翻譯
 
-# ui/mame32.rc: 1604
+# osd/ui/mame32.rc: 1604
 Translate into Polish
 波蘭文翻譯
 
-# ui/mame32.rc: 1604
+# osd/ui/mame32.rc: 1604
 Translate into Portuguese (BRA)
 葡萄牙文翻譯
 
-# ui/mame32.rc: 1604
+# osd/ui/mame32.rc: 1604
 Translate into Simplified Chinese
 簡體中文翻譯
 
-# ui/mame32.rc: 1604
+# osd/ui/mame32.rc: 1604
 Translate into Spanish
 西班牙文翻譯
 
-# ui/mame32.rc: 1604
+# osd/ui/mame32.rc: 1604
 Translate into Traditional Chinese
 正體中文翻譯
 
-# ui/layout.c: 110
+# osd/ui/layout.c: 110
 Translation Files
 翻譯檔案
 
-# ui/mame32.rc: 799
+# osd/ui/mame32.rc: 799
 Transparent in-game UI
 半透明的遊戲中設定選單
 
-# ui/mame32.rc: 684
+# osd/ui/mame32.rc: 684
 Triple buffering
 三重緩衝
 
-# ui/mame32.rc: 1512
+# osd/ui/mame32.rc: 1512
 Troubleshooting Documentation
 疑難排解文件
 
-# ui/win32ui.c: 853
+# osd/ui/win32ui.c: 865
 Type
 類型
 
-# ui/audit32.c: 100
+# osd/ui/audit32.c: 100
 Unable to Load Riched32.dll
 無法載入 Riched32.dll
 
-# ui/treeview.c: 2657
+# osd/ui/treeview.c: 2675
 Unable to add game to non-custom folder
 無法加入遊戲到非自訂資料夾
 
-# ui/treeview.c: 2674
+# osd/ui/treeview.c: 2692
 Unable to remove game from non-custom folder
 無法從非自訂資料夾中移除遊戲
 
-# ui/layout.c: 53
+# osd/ui/layout.c: 53
 Unavailable
 沒有遊戲
 
-# ui/treeview.c: 1083
+# osd/ui/treeview.c: 1092
 Unemulated Protection
 未模擬保護
 
-# ui/audit32.c: 477 ui/properties.c: 1015, 1060
+# osd/ui/audit32.c: 476 osd/ui/properties.c: 1016, 1062
 Unknown
 未知的
 
-# ui/m32util.c: 257
+# osd/ui/m32util.c: 271
 Unknown error.
 未知的錯誤。
 
-# ui/properties.c: 1202 ui/treeview.c: 1393, 1394
+# osd/ui/properties.c: 1193 osd/ui/treeview.c: 1402, 1403
 Unsupported
 未支援
 
-# ui/win32ui.c: 708
+# osd/ui/win32ui.c: 713
 Use Local Language Game List
 使用中文遊戲清單
 
-# ui/mame32.rc: 785
+# osd/ui/mame32.rc: 785
 Use RDTSC timing system
 使用 RDTSC 時序系統
 
-# ui/mame32.rc: 1010
+# osd/ui/mame32.rc: 1010
 Use TreeView in property pages
 在屬性頁面中使用樹狀檢視
 
-# ui/mame32.rc: 629
+# osd/ui/mame32.rc: 629
 Use samples
 使用樣本檔
 
-# ui/mame32.rc: 1014
+# osd/ui/mame32.rc: 1014
 Use various icon for Not Working game
 使用不同圖示在不可執行的遊戲
 
-# ui/mame32.rc: 632
+# osd/ui/mame32.rc: 632
 Use volume auto adjust
 使用音量自動調整
 
-# ui/layout.c: 71 ui/mame32.rc: 849 ui/options.c: 788, 2719 ui/properties.c: 622 ui/treeview.c: 308 ui/win32ui.c: 5416
+# osd/ui/layout.c: 71 osd/ui/mame32.rc: 849 osd/ui/options.c: 787, 2733 osd/ui/properties.c: 622 osd/ui/treeview.c: 305 osd/ui/win32ui.c: 5505
 Vector
 向量
 
-# ui/treeview.c: 1284, 1285
+# osd/ui/treeview.c: 1293, 1294
 Vector (H)
 向量 (H)
 
-# ui/treeview.c: 1281, 1282
+# osd/ui/treeview.c: 1290, 1291
 Vector (V)
 向量 (V)
 
-# ui/treeview.c: 1042, 1043
+# osd/ui/treeview.c: 1051, 1052
 Vertical
 垂直
 
-# ui/properties.c: 1096
+# osd/ui/properties.c: 1094
 Video emulation isn't 100% accurate
 視訊模擬尚未達到 100% 精確
 
-# ui/mame32.rc: 662
+# osd/ui/mame32.rc: 662
 Video output method
 視訊輸出方式
 
-# ui/win32ui.c: 815
+# osd/ui/win32ui.c: 820
 Videos (*.mng)
 視訊檔 (*.mng)
 
-# ui/mame32.rc: 194
+# osd/ui/mame32.rc: 194
 View PC&B Info
 檢視 PCB 資訊(&B)
 
-# ui/mame32.rc: 673
+# osd/ui/mame32.rc: 673
 Visual Effects
 視覺效果
 
-# ui/mame32.rc: 639
+# osd/ui/mame32.rc: 639
 Volume attenuation
 音量衰減
 
-# ui/win32ui.c: 7358
+# osd/ui/win32ui.c: 7486
 WARNING: the game might not run correctly.
 警告: 這個遊戲可能無法正確執行。
 
-# ui/options.c: 3078
+# osd/ui/options.c: 3098
 WINDOW POSITION OPTIONS
 視窗位置選項
 
-# ui/mame32.rc: 680
+# osd/ui/mame32.rc: 680
 Wait for vertical sync
 等待垂直同步
 
-# ui/mame32.rc: 1512
+# osd/ui/mame32.rc: 1512
 What's new in MAME
 MAME 的新增異動
 
-# ui/paletteedit.c: 107
+# osd/ui/paletteedit.c: 107
 Window background
 視窗的背景色
 
-# ui/paletteedit.c: 108
+# osd/ui/paletteedit.c: 108
 Window frame
 視窗的邊框
 
-# ui/paletteedit.c: 110
+# osd/ui/paletteedit.c: 110
 Window frame (dark)
 視窗的邊框 (暗)
 
-# ui/paletteedit.c: 109
+# osd/ui/paletteedit.c: 109
 Window frame (light)
 視窗的邊框 (明)
 
-# ui/layout.c: 66 ui/properties.c: 1068
+# osd/ui/layout.c: 66 osd/ui/properties.c: 1070
 Working
 可以執行
 
-# ui/treeview.c: 1084
+# osd/ui/treeview.c: 1093
 Wrong Colors
 色彩錯誤
 
-# ui/layout.c: 56 ui/win32ui.c: 857
+# osd/ui/layout.c: 56 osd/ui/win32ui.c: 869
 Year
 年代
 
-# ui/audit32.c: 118 ui/win32ui.c: 5424
+# osd/ui/audit32.c: 118 osd/ui/win32ui.c: 5513
 Yes
 是
 
-# ui/mame32.rc: 416
+# osd/ui/mame32.rc: 416
 and John Hardy IV
 與 John Hardy IV
 
-# ui/mame32.rc: 106
+# osd/ui/mame32.rc: 106
 by &Description
 依描述(&D)
 
-# ui/mame32.rc: 108
+# osd/ui/mame32.rc: 108
 by &Manufacturer
 依製造廠商(&M)
 
-# ui/mame32.rc: 107
+# osd/ui/mame32.rc: 107
 by &Name
 依名稱(&N)
 
-# ui/mame32.rc: 109
+# osd/ui/mame32.rc: 109
 by &Playcount
 依執行次數(&P)
 
-# ui/mame32.rc: 110
+# osd/ui/mame32.rc: 110
 by &Type
 依類型(&T)
 
-# ui/mame32.rc: 111
+# osd/ui/mame32.rc: 111
 by &Year
 依年代(&Y)
 
-# ui/win32ui.c: 4432
-game list files (*.lst)
-遊戲清單檔案 (*.lst)
-
-# ui/dialogs.c: 124
+# osd/ui/dialogs.c: 124
 items to the original, installation\n
 的項目回到原始安裝設定值\n
 
-# ui/dialogs.c: 125
+# osd/ui/dialogs.c: 125
 settings then exit.\n\n
 ，然後結束程式。\n\n
 
-# ui/dialogs.c: 127
+# osd/ui/dialogs.c: 127
 the next time MAME32 is run.\n\n
 執行 MAME32 時生效。\n\n
 
-# ui/win32ui.h: 20
+# osd/ui/win32ui.h: 20
 type a keyword
 輸入關鍵字
 
-# ui/mame32.rc: 417
+# osd/ui/mame32.rc: 417
                                 
 
 
-# ui/treeview.c: 1455
-Double Joy 16-Way
-
-
-# ui/properties.c: 893, 918
-Double Joystick 16-Way
-
-
-# ui/treeview.c: 1450
-Joy 16-Way
-
-
-# ui/properties.c: 845, 868
-Joystick 16-Way
-
-
-# ui/mame32.rc: 123
+# osd/ui/mame32.rc: 123
 Office 2003
 
 
-# ui/mame32.rc: 124
+# osd/ui/mame32.rc: 124
 Office 2007
 
 
-# ui/mame32.rc: 122
+# osd/ui/mame32.rc: 122
 Office XP
 
 
