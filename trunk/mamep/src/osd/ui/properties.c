@@ -4888,7 +4888,7 @@ static void InitializeDefaultInputUI(HWND hwnd)
 				if (wcsicmp(ext, TEXT(".cfg")) == 0)
 				{
 					// and strip off the extension
-					FindFileData.cFileName[lstrlen(FindFileData.cFileName) - 4] = '\0';
+					root[lstrlen(root) - 4] = '\0';
 
 					if (wcsicmp(root, TEXT("Standard")) == 0)
 						continue;

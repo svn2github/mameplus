@@ -708,24 +708,24 @@ void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int
 				/*
 				Plane 0 (0000芳FFF): Basic Multilingual Plane (BMP)
 
-				Hiragana (3040・09F) 
-				Katakana (30A0・0FF) 
-				Bopomofo (3100・12F) 
-				Hangul Compatibility Jamo (3130・18F) 
-				Kanbun (3190・19F) 
-				Bopomofo Extended (31A0・1BF) 
-				CJK Strokes (31C0・1EF) 
-				Katakana Phonetic Extensions (31F0・1FF) 
-				Enclosed CJK Letters and Months (3200・2FF) 
-				CJK Compatibility (3300・3FF) 
-				CJK Unified Ideographs Extension A (3400・DBF) 
-				Yijing Hexagram Symbols (4DC0・DFF) 
-				CJK Unified Ideographs (4E00・FFF) 
+				Hiragana (3040-309F) 
+				Katakana (30A0-30FF) 
+				Bopomofo (3100-312F) 
+				Hangul Compatibility Jamo (3130-318F) 
+				Kanbun (3190-319F) 
+				Bopomofo Extended (31A0-31BF) 
+				CJK Strokes (31C0-31EF) 
+				Katakana Phonetic Extensions (31F0-31FF) 
+				Enclosed CJK Letters and Months (3200-32FF) 
+				CJK Compatibility (3300-33FF) 
+				CJK Unified Ideographs Extension A (3400-4DBF) 
+				Yijing Hexagram Symbols (4DC0-4DFF) 
+				CJK Unified Ideographs (4E00-9FFF) 
 				*/
 				(0xAC00 < schar && schar < 0xD7AF) ||
-				//Hangul Syllables (AC00縫7AF)
+				//Hangul Syllables (AC00-D7AF)
 				(0xF900 < schar && schar < 0xFAFF))
-				//CJK Compatibility Ideographs (F900芳AFF) 
+				//CJK Compatibility Ideographs (F900-FAFF) 
 			{
 				lastspace = s;
 				lastspace_width = curwidth;
