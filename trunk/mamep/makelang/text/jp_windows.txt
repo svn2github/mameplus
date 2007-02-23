@@ -44,11 +44,11 @@
 
 # osd/windows/fronthlp.c: 805
 %d romsets found, %d were OK.\n
-%dのロムセットが見つかり、%dがOKです。\n
+%d個のロムセットが見つかり、%d個がOKです。\n
 
 # osd/windows/fronthlp.c: 901
 %d samplesets found, %d were OK.\n
-%dのサンプルセットが見つかり、%dがOKです。\n
+%d個のサンプルセットが見つかり、%d個がOKです。\n
 
 # osd/windows/input.c: 2120
 %s Button %d
