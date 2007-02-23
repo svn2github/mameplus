@@ -292,10 +292,11 @@ int osd_get_physical_drive_geometry(const char *filename, UINT32 *cylinders, UIN
 
 int osd_uchar_from_osdchar(UINT32 *uchar, const char *osdchar, size_t count)
 {
+	UINT acp = get_osdcore_acp();
 	WCHAR wch;
 
-	count = MIN(count, IsDBCSLeadByte(*osdchar) ? 2 : 1);
-	if (MultiByteToWideChar(CP_ACP, 0, osdchar, (DWORD)count, &wch, 1) != 0)
+	count = MIN(count, IsDBCSLeadByteEx(acp, *osdchar) ? 2 : 1);
+	if (MultiByteToWideChar(acp, 0, osdchar, (DWORD)count, &wch, 1) != 0)
 		*uchar = wch;
 	else
 		*uchar = 0;

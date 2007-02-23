@@ -918,6 +918,8 @@ void SetLangcode(int langcode)
 
 	/* apply to options.langcode for datafile.c */
 	options.langcode = GetLangcode();
+	/* apply for osd core functions */
+	set_osdcore_acp(ui_lang_info[options.langcode].codepage);
 	InitTranslator(options.langcode);
 }
 

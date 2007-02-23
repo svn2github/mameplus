@@ -240,10 +240,12 @@
 		#endif /* DRIVER_SWITCH */
 
 		// in windows/strconv.c
-		extern SHAREDOBJ_FUNC(char*) astring_from_utf8(const char *s);
-		extern SHAREDOBJ_FUNC(char*) utf8_from_astring(const char *s);
+		extern SHAREDOBJ_FUNC(void)            set_osdcore_acp(int cp);
+		extern SHAREDOBJ_FUNC(int)             get_osdcore_acp(void);
+		extern SHAREDOBJ_FUNC(char*)           astring_from_utf8(const char *s);
+		extern SHAREDOBJ_FUNC(char*)           utf8_from_astring(const char *s);
 		extern SHAREDOBJ_FUNC(unsigned short*) wstring_from_utf8(const char *s);
-		extern SHAREDOBJ_FUNC(char*) utf8_from_wstring(const unsigned short *s);
+		extern SHAREDOBJ_FUNC(char*)           utf8_from_wstring(const unsigned short *s);
 
 		#ifdef MALLOC_DEBUG
 		// in windows/winalloc.c

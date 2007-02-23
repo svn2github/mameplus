@@ -18,6 +18,9 @@
 //  FUNCTION PROTOTYPES
 //============================================================
 
+void set_osdcore_acp(int cp);
+int get_osdcore_acp(void);
+
 CHAR *astring_from_utf8(const char *s) ATTR_MALLOC;
 char *utf8_from_astring(const CHAR *s) ATTR_MALLOC;
 

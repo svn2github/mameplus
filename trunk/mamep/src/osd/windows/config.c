@@ -1056,12 +1056,15 @@ static void setup_language(void)
 	{
 		options.langcode = UI_LANG_EN_US;
 		set_langcode(options.langcode);
+		set_osdcore_acp(ui_lang_info[options.langcode].codepage);
+
 		if (mame_stricmp(langname, "auto"))
 			faprintf(stderr, _WINDOWS("error: invalid value for language: %s\nUse %s\n"),
 		                langname, ui_lang_info[options.langcode].description);
 	}
 
 	set_langcode(options.langcode);
+	set_osdcore_acp(ui_lang_info[options.langcode].codepage);
 
 	options.use_lang_list = options_get_bool("use_lang_list");
 }
