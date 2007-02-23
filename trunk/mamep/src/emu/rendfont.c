@@ -404,6 +404,7 @@ render_font *render_font_alloc(const char *filename)
 	render_font *font;
 	UINT16 cmd_map[MAX_GLYPH_FONT];
 	int i;
+	char *filename_local;
 
 	//mamep: build unicode translation map for command glyph
 	for (i = 0; i < MAX_GLYPH_FONT; i++)
@@ -415,12 +416,27 @@ render_font *render_font_alloc(const char *filename)
 
 	/* attempt to load the cached version of the font first */
 	// fixme: load bdf version command glyph
-	if (filename != NULL && render_font_load_cached_bdf(font, filename) == 0)
+	filename_local = assemble_3_strings(ui_lang_info[options.langcode].name, "/", filename);
+	if (filename != NULL)
 	{
+		int loaded = 0;
+	 	if (render_font_load_cached_bdf(font, filename_local) == 0)
+			loaded++;
+		else
+		{
+			/* if we failed, clean up and realloc */
+			render_font_free(font);
+			font = malloc_or_die(sizeof(*font));
+			memset(font, 0, sizeof(*font));
+	 		if (render_font_load_cached_bdf(font, filename) == 0)
+	 			loaded++;
+		}
+
 		/* fixme: load the 12x12 font data for command glyph */
 		render_font_load_raw(font, uifontdata12x12, cmd_map, 12, 12, MAX_GLYPH_FONT);
 
-		return font;
+		if (loaded)
+			return font;
 	}
 
 	/* if we failed, clean up and realloc */
@@ -441,9 +457,6 @@ render_font *render_font_alloc(const char *filename)
 
 		/* load the font data without mapping */
 		render_font_load_raw(font, uifontdata6x8, NULL, 6, 8, 256);
-
-		/* load the font data for command glyph */
-		render_font_load_raw(font, uifontdata12x8, cmd_map, 12, 8, MAX_GLYPH_FONT);
 	}
 	else
 	{
@@ -457,10 +470,9 @@ render_font *render_font_alloc(const char *filename)
 				break;
 			render_font_load_raw(font, datamap.data, datamap.map, 12, 12, datamap.length);
 		}
-
-		/* load the font data for command glyph */
-		render_font_load_raw(font, uifontdata12x12, cmd_map, 12, 12, MAX_GLYPH_FONT);
 	}
+	/* load the font data for command glyph */
+	render_font_load_raw(font, uifontdata12x12, cmd_map, 12, 12, MAX_GLYPH_FONT);
 
 	return font;
 }
