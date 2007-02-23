@@ -77,6 +77,7 @@ const game_driver * const plusdrivers[] =
 	DRIVER( gwingjd )	/* 23/02/1999 (c) 1999 Takumi (Japan) Phoenix Edition */
 	DRIVER( 1944d )		/* 20/06/2000 (c) 2000 Eighting/Raizing (US) Phoenix Edition */
 	DRIVER( hsf2d )	/* 02/02/2004 (c) 2004 (Asia) Phoenix Edition */
+	DRIVER( dstlku1d )	/* 05/07/1994 (c) 1994 (Phoenix Edition, US 940705) */
 
 	DRIVER( kof96ep )	/* 0214 bootleg */
 	DRIVER( kof97pla )	/* 0232 (c) 2003 bootleg */
