@@ -2798,7 +2798,7 @@ static const WCHAR *get_base_config_directory(void)
 	_wsplitpath(full, path, dir, NULL, NULL);
 	lstrcat(path, dir);
 
-	if (path[lstrlen(path) - 1] == *TEXT(PATH_SEPARATOR))
+	if (path[lstrlen(path) - 1] == *PATH_SEPARATOR)
 		path[lstrlen(path) - 1] = '\0';
 
 	return path;

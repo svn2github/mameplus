@@ -215,7 +215,7 @@ static WCHAR* FixSlash(WCHAR* s)
 	if (s)
 		len = lstrlen(s);
 
-	if (len && s[len - 1] == *TEXT(PATH_SEPARATOR))
+	if (len && s[len - 1] == *PATH_SEPARATOR)
 		s[len - 1] = '\0';
 
 	return s;
