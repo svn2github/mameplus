@@ -6,15 +6,15 @@ Ball & Paddle
 Breakout
 突圍
 
-# 95
+# 98
 Breakout *Mature*
 突圍 *成人*
 
-# 105
+# 109
 Casino
 博奕
 
-# 179
+# 198
 Casino *Mature*
 博奕 *成人*
 
@@ -22,599 +22,607 @@ Casino *Mature*
 Category
 類型
 
-# 194
+# 213
 Climbing
 攀登
 
-# 211
+# 230
 Driving
 駕駛
 
-# 240
+# 259
 Driving / 1st Person
 駕駛 / 第一人稱
 
-# 300
+# 319
 Driving / Boat
 駕駛 / 船
 
-# 306
+# 325
 Driving / Plane
 駕駛 / 飛機
 
-# 311
+# 330
 Driving / Race
 駕駛 / 競賽
 
-# 369
+# 389
 Driving / Race (chase view)
 駕駛 / 競賽 (追逐視角)
 
-# 499
+# 523
 Driving / Race (chase view) Bike
 駕駛 / 競賽 (追逐視角) 機車
 
-# 532
+# 556
 Driving / Race 1st P Bike
 駕駛 / 競賽 機車 第一人稱
 
-# 539
+# 563
 Driving / Race 1st Person
 駕駛 / 競賽 第一人稱
 
-# 560
+# 584
 Driving / Race Bike
 駕駛 / 競賽 機車
 
-# 577
+# 601
 Driving / Race Track
 駕駛 / 競賽 賽道
 
-# 614
+# 638
 Fighter / 2.5D
 格鬥 / 2.5D
 
-# 869
+# 894
 Fighter / 2D
 格鬥 / 2D
 
-# 926
+# 952
 Fighter / 3D
 格鬥 / 3D
 
-# 936
+# 962
 Fighter / Field
 格鬥 / 競技場
 
-# 952
+# 978
 Fighter / Misc.
 格鬥 / 其它
 
-# 959
+# 985
 Fighter / Multiplay
 格鬥 / 多人
 
-# 963
+# 989
 Fighter / Third Person
 格鬥 / 第三人稱
 
-# 966
+# 992
 Fighter / Versus
 格鬥 / 對戰
 
-# 1468
+# 1497
 Fighter / Versus *Mature*
 格鬥 / 對戰 *成人*
 
-# 1472
+# 1501
 Fighter / Versus Co-op
 格鬥 / 協力對戰
 
-# 1491
+# 1520
 Fighter / Vertical
 格鬥 / 縱向
 
-# 1515
+# 1544
 Maze
 迷宮
 
-# 1768
+# 1798
 Maze *Mature*
 迷宮 / *成人*
 
-# 1771
+# 1802
 Maze / Digging
 迷宮 / 挖掘
 
-# 1804
+# 1835
 Maze / Digging *Mature*
 迷宮 / 挖掘 *成人*
 
-# 1807
+# 1838
 Maze / Driving
 迷宮 / 駕駛
 
-# 1833
+# 1864
 Maze / Fighter
 迷宮 / 格鬥
 
-# 1863
+# 1894
 Maze / Outline
 迷宮 / 框線
 
-# 1881
+# 1912
 Maze / Outline *Mature*
 迷宮 / 框線 *成人*
 
-# 1884
+# 1915
 Maze / Shooter Large
 迷宮 / 大畫面射擊
 
-# 1961
+# 1992
 Maze / Shooter Small
 迷宮 / 小畫面射擊
 
-# 2023
+# 2054
 Maze / Shooter Small *Mature*
 迷宮 / 小畫面射擊 *成人*
 
-# 2027
+# 2058
 Maze / Surround
 迷宮 / 環繞
 
-# 2041
+# 2072
 Mini-Games
 迷你遊戲
 
-# 2081
+# 2112
 Misc.
 其它
 
-# 2161
+# 2192
 Misc. *Mature*
 其它 *成人*
 
-# 2170
+# 2201
 Multiplay
 多人
 
-# 2203
+# 2239
 Multiplay *Mature*
 多人 *成人*
 
-# 2213
+# 2249
 Not Classified
 未分類
 
-# 2288
+# 2319
 Pinball
 彈珠檯
 
-# 2307
+# 2338
 Pinball *Mature*
 彈珠檯 *成人*
 
-# 2313
+# 2344
 Pinball / Pachinko *Mature*
 彈珠檯 / 柏青哥 *成人*
 
-# 2319
+# 2350
 Platform / Fighter
 平臺 / 格鬥
 
-# 2340
+# 2371
 Platform / Fighter Scrolling
 平臺 / 格鬥 捲軸
 
-# 2515
+# 2546
 Platform / Run Jump
 平臺 / 跑跳
 
-# 2745
+# 2783
 Platform / Run Jump *Mature*
 平臺 / 跑跳 *成人*
 
-# 2751
+# 2789
 Platform / Run Jump Scrolling
 平臺 / 跑跳 捲軸
 
-# 2827
+# 2865
 Platform / Shooter
 平臺 / 射擊
 
-# 2845
+# 2883
 Platform / Shooter Scrolling
 平臺 / 射擊 捲軸
 
-# 3050
+# 3090
 Puzzle
 益智
 
-# 3095
+# 3136
 Puzzle *Mature*
 益智 *成人*
 
-# 3101
+# 3142
 Puzzle / Cards
 益智 / 紙牌
 
-# 3104
+# 3145
 Puzzle / Cards *Mature*
 益智 / 紙牌 *成人*
 
-# 3116
+# 3157
 Puzzle / Drop
 益智 / 落下
 
-# 3243
+# 3285
 Puzzle / Drop *Mature*
 益智 / 落下 *成人*
 
-# 3261
+# 3303
 Puzzle / Match
 益智 / 符合
 
-# 3293
+# 3335
 Puzzle / Match *Mature*
 益智 / 符合 *成人*
 
-# 3323
+# 3366
 Puzzle / Maze
 益智 / 迷宮
 
-# 3337
+# 3381
 Puzzle / Outline
 益智 / 框線
 
-# 3352
+# 3396
 Puzzle / Outline *Mature*
 益智 / 框線 *成人*
 
-# 3379
+# 3424
 Puzzle / Sliding
 益智 / 滑動
 
-# 3390
+# 3435
 Puzzle / Sliding *Mature*
 益智 / 滑動 *成人*
 
-# 3396
+# 3441
 Puzzle / Toss
 益智 / 拋投
 
-# 3447
+# 3494
 Puzzle / Toss *Mature*
 益智 / 拋投 *成人*
 
-# 3457
+# 3504
 Quiz / Chinese
 問答 / 中文
 
-# 3461
+# 3508
 Quiz / English
 問答 / 英文
 
-# 3511
+# 3563
 Quiz / English *Mature*
 問答 / 英文 *成人*
 
-# 3527
+# 3579
 Quiz / French
 問答 / 法文
 
-# 3531
+# 3583
 Quiz / German
 問答 / 德文
 
-# 3535
+# 3587
 Quiz / Italian
 問答 / 義大利文
 
-# 3541
+# 3593
 Quiz / Japanese
 問答 / 日文
 
-# 3599
+# 3651
 Quiz / Japanese *Mature*
 問答 / 日文 *成人*
 
-# 3604
+# 3656
 Quiz / Korean
 問答 / 韓文
 
-# 3607
+# 3659
 Quiz / Music English
 問答 / 音樂 英文
 
-# 3611
+# 3663
 Quiz / Music Japanese
 問答 / 音樂 日文
 
-# 3615
+# 3667
 Quiz / Spanish
 問答 / 西班牙文
 
-# 3619
+# 3671
 Rhythm
 節奏
 
-# 3642
+# 3711
 Shooter / 1st Person
 射擊 / 第一人稱
 
-# 3658
+# 3727
 Shooter / 3rd Person
 射擊 / 第三人稱
 
-# 3700
+# 3769
 Shooter / Command
 射擊 / 指令
 
-# 3728
+# 3797
 Shooter / Driving
 射擊 / 駕駛
 
-# 3737
+# 3806
 Shooter / Driving (chase view)
 射擊 / 駕駛 (追逐視角)
 
-# 3779
+# 3848
 Shooter / Driving 1st Person
 射擊 / 駕駛 第一人稱
 
-# 3787
+# 3856
 Shooter / Driving Diagonal
 射擊 / 駕駛 斜向
 
-# 3792
+# 3861
 Shooter / Driving Horizontal
 射擊 / 駕駛 橫向
 
-# 3806
+# 3875
 Shooter / Driving Vertical
 射擊 / 駕駛 縱向
 
-# 3857
+# 3926
 Shooter / Field
 射擊 / 競技場
 
-# 3994
+# 4063
 Shooter / Field *Mature*
 射擊 / 競技場 *成人*
 
-# 4002
+# 4071
 Shooter / Flying
 射擊 / 飛行
 
-# 4054
+# 4123
 Shooter / Flying (chase view)
 射擊 / 飛行 (追逐視角)
 
-# 4088
+# 4157
 Shooter / Flying 1st Person
 射擊 / 飛行 第一人稱
 
-# 4124
+# 4193
 Shooter / Flying Diagonal
 射擊 / 飛行 斜向
 
-# 4133
+# 4202
 Shooter / Flying Horizontal
 射擊 / 飛行 橫向
 
-# 4347
+# 4418
 Shooter / Flying Horizontal *Mature*
 射擊 / 飛行 橫向 *成人*
 
-# 4350
+# 4421
 Shooter / Flying Vertical
 射擊 / 飛行 縱向
 
-# 4753
+# 4828
 Shooter / Flying Vertical *Mature*
 射擊 / 飛行 縱向 *成人*
 
-# 4756
+# 4831
 Shooter / Gallery
 射擊 / 固定靶場
 
-# 5117
+# 5198
 Shooter / Gallery *Mature*
 射擊 / 固定靶場 *成人*
 
-# 5120
+# 5201
 Shooter / Gun
 射擊 / 槍
 
-# 5254
+# 5356
 Shooter / Misc.
 射擊 / 其它
 
-# 5272
+# 5374
 Shooter / Misc. Horizontal
 射擊 / 其它 橫向
 
-# 5295
+# 5397
 Shooter / Misc. Vertical
 射擊 / 其它 縱向
 
-# 5315
+# 5417
 Shooter / Versus
 射擊 / 對戰
 
-# 5328
+# 5430
 Shooter / Walking
 射擊 / 步行
 
-# 5432
+# 5535
 Sport / Wrestling
 運動 / 摔角
 
-# 5482
+# 5585
 Sports
 運動
 
-# 5506
+# 5609
 Sports / Armwrestling
 運動 / 腕力
 
-# 5511
+# 5614
 Sports / Baseball
 運動 / 棒球
 
-# 5590
+# 5694
 Sports / Basketball
 運動 / 籃球
 
-# 5641
+# 5746
 Sports / Bowling
 運動 / 保齡球
 
-# 5673
+# 5780
 Sports / Boxing
 運動 / 拳擊
 
-# 5709
+# 5816
 Sports / Bull Fighting
 運動 / 鬥牛
 
-# 5713
+# 5820
 Sports / Darts
 運動 / 箭
 
-# 5720
+# 5827
 Sports / Dodgeball
 運動 / 躲避球
 
-# 5725
+# 5832
 Sports / Fishing
 運動 / 釣魚
 
-# 5733
+# 5848
 Sports / Football Amer.
 運動 / 美式橄欖球
 
-# 5781
+# 5898
 Sports / Football Rugby
 運動 / 英式橄欖球
 
-# 5786
+# 5903
 Sports / Golf
 運動 / 高爾夫
 
-# 5881
+# 5999
 Sports / Handball
 運動 / 手球
 
-# 5885
+# 6003
 Sports / Hang Gliding
 運動 / 懸掛滑翔
 
-# 5891
+# 6009
 Sports / Hockey
 運動 / 曲棍球
 
-# 5907
+# 6025
 Sports / Horse Racing
 運動 / 賽馬
 
-# 5921
+# 6040
 Sports / Horseshoes
 運動 / 蹄鐵
 
-# 5926
+# 6045
 Sports / Multiplay
 運動 / 多人
 
-# 5934
+# 6053
 Sports / Ping pong
 運動 / 乒乓球
 
-# 5939
+# 6058
 Sports / Pool
 運動 / 撞球
 
-# 5976
+# 6095
 Sports / Pool *Mature*
 運動 / 撞球 *成人*
 
-# 5989
+# 6109
 Sports / Shuffleboard
 運動 / 推圓盤
 
-# 5995
+# 6115
 Sports / Skateboarding
 運動 / 滑板
 
-# 6004
+# 6124
 Sports / Skiing
 運動 / 滑雪
 
-# 6026
+# 6146
 Sports / SkyDiving
 運動 / 跳傘
 
-# 6030
+# 6150
 Sports / Soccer
 運動 / 足球
 
-# 6130
+# 6252
 Sports / Sumo
 運動 / 相撲
 
-# 6133
+# 6255
 Sports / Swimming
 運動 / 游泳
 
-# 6144
+# 6266
 Sports / Tennis
 運動 / 網球
 
-# 6175
+# 6297
 Sports / Track & Field
 運動 / 賽道 & 競技場
 
-# 6212
+# 6334
 Sports / VolleyBall
 運動 / 排球
 
-# 6238
+# 6360
 Tabletop
 桌上
 
-# 6244
+# 6366
 Tabletop *Mature*
 桌上 *成人*
 
-# 6247
+# 6369
 Tabletop / Hanafuda
 桌上 / 花札
 
-# 6255
+# 6377
 Tabletop / Hanafuda *Mature*
 桌上 / 花札 *成人*
 
-# 6274
+# 6396
 Tabletop / Mahjong
 桌上 / 麻雀
 
-# 6299
+# 6421
 Tabletop / Mahjong *Mature*
 桌上 / 麻雀 *成人*
 
-# 6518
+# 6640
 Tabletop / Othello
 桌上 / 黑白棋
 
-# 6524
+# 6646
 Tabletop / Othello *Mature*
 桌上 / 黑白棋 *成人*
 
-# 6527
+# 6649
 Tabletop / Renju
 桌上 / 連珠
 
-# 6531
+# 6653
 Tabletop / Shougi
 桌上 / 將棋
+
+# 3682
+Rhythm / Dance
+
+
+# 3692
+Rhythm / Instruments
+
 
