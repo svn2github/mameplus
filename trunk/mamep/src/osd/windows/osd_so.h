@@ -298,6 +298,8 @@
 		extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 
 		// in windows/strconv.c
+		extern void set_osdcore_acp(int cp);
+		extern int get_osdcore_acp(void);
 		extern char *astring_from_utf8(const char *s);
 		extern char *utf8_from_astring(const char *s);
 		extern unsigned short *wstring_from_utf8(const char *s);
@@ -354,6 +356,8 @@
 	extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 
 	// in windows/strconv.c
+	extern void set_osdcore_acp(int cp);
+	extern int get_osdcore_acp(void);
 	extern char *astring_from_utf8(const char *s);
 	extern char *utf8_from_astring(const char *s);
 	extern unsigned short *wstring_from_utf8(const char *s);
