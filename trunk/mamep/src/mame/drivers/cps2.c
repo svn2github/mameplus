@@ -7909,7 +7909,7 @@ GAME( 1996, xmvsfu1d, xmvsf,   phoenix, ssf2,    cps2, ROT0,   "hack", "X-Men Vs
 GAME( 1997, batcird,  batcir,  phoenix, batcir,  cps2, ROT0,   "hack", "Battle Circuit (Euro 970319 Phoenix Edition)", 0 )
 GAME( 1997, vsavd,    vsav,    phoenix, ssf2,    cps2, ROT0,   "hack", "Vampire Savior: The Lord of Vampire (Euro 970519 Phoenix Edition)", 0 )
 GAME( 1998, mvscud,   mvsc,    phoenix, ssf2,    cps2, ROT0,   "hack", "Marvel Vs. Capcom: Clash of Super Heroes (USA 980123 Phoenix Edition)", 0 )
-GAME( 1998, sfa3d,    sfa3,    phoenix, ssf2,    cps2, ROT0,   "hack", "Street Fighter Alpha 3 (USA 980904)", 0 )
+GAME( 1998, sfa3d,    sfa3,    phoenix, ssf2,    cps2, ROT0,   "hack", "Street Fighter Alpha 3 (USA 980904 Phoenix Edition)", 0 )
 GAME( 2004, hsf2d,    hsf2,    phoenix, ssf2,    cps2, ROT0,   "hack", "Hyper Street Fighter II: The Anniversary Edition (Asia 040202 Phoenix Edition)", 0 )
 GAME( 1999, gwingjd,  gigawing,phoenix, 19xx,    cps2, ROT0,   "hack", "Giga Wing (Japan 990223 Phoenix Edition)", 0 )
 GAME( 2000, 1944d,    1944,    phoenix, 19xx,    cps2, ROT0,   "hack", "1944: The Loop Master (USA 000620 Phoenix Edition)", GAME_IMPERFECT_GRAPHICS )
