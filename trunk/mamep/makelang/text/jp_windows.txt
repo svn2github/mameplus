@@ -86,9 +86,17 @@ AUTOMATIC DEVICE SELECTION OPTIONS
 Average FPS: %f (%d frames)\n
 平均FPS: %f (%d フレーム)\n
 
+# osd/windows/config.c: 107
+CONFIGURATION COMMANDS
+設定コマンド
+
 # osd/windows/config.c: 131
 CONFIGURATION OPTIONS
 コンフィグ設定
+
+# osd/windows/config.c: 102
+CORE COMMANDS
+コアコマンド
 
 # osd/windows/config.c: 352
 CORE LANGUAGE OPTIONS
@@ -542,15 +550,19 @@ Error: Device does not meet minimum requirements for Direct3D rendering\n
 Error: unable to configure a screen texture format\n
 エラー: 画面テクスチャ形式の設定が出来ません\n
 
+# osd/windows/config.c: 113
+FRONTEND COMMANDS
+フロントエンドコマンド
+
 # osd/windows/config.c: 264
 FULL SCREEN OPTIONS
 フルスクリーン設定
 
-# osd/windows/config.c: 1096
+# osd/windows/config.c: 1099
 Failed to open file for playback
 再生ファイルが読み込めません
 
-# osd/windows/config.c: 1146
+# osd/windows/config.c: 1149
 Failed to open file for recording
 入力を保存するファイルが作成できません
 
@@ -582,7 +594,7 @@ Illegal resolution value for %s = %s\n
 Illegal value for %s = %s\n
 %sの値%sは不正です\n
 
-# osd/windows/config.c: 1109
+# osd/windows/config.c: 1112
 Input file is for game '%s', not for current game '%s'\n
 ゲーム「%s」の入力ファイルは選択されたゲーム「%s」の物ではありません\n
 
@@ -746,7 +758,7 @@ PER-WINDOW VIDEO OPTIONS
 PERFORMANCE OPTIONS
 パフォーマンス設定
 
-# osd/windows/config.c: 1115
+# osd/windows/config.c: 1118
 Playing back previously recorded game %s\n
 以前に記録されたゲーム「%s」を再生します\n
 
@@ -938,7 +950,7 @@ aspect ratio of the second screen; 'auto' here will try to make a best guess
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 ３画面目のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/config.c: 166, 238, 239, 240, 241, 243, 244, 245, 246, 248, 249, 250, 251, 253, 254, 255, 256, 258, 259, 260, 261, 353, 992, 1051, 1059 osd/windows/video.c: 434, 541, 1000, 1002, 1023, 1025 osd/windows/window.c: 840, 840, 844
+# osd/windows/config.c: 166, 238, 239, 240, 241, 243, 244, 245, 246, 248, 249, 250, 251, 253, 254, 255, 256, 258, 259, 260, 261, 353, 992, 1051, 1061 osd/windows/video.c: 434, 541, 1000, 1002, 1023, 1025 osd/windows/window.c: 840, 840, 844
 auto
 自動
 
@@ -1086,6 +1098,10 @@ enable (keyboard|mouse|joystick) if a paddle control is present
 enable (keyboard|mouse|joystick) if a pedal control is present
 ペダルを使用する場合に(keyboard|mouse|joystick)を有効
 
+# osd/windows/config.c: 346
+enable (keyboard|mouse|joystick) if a positional control is present
+座標コントロールが存在する場合に有効 (keyboard|mouse|joystick)
+
 # osd/windows/config.c: 344
 enable (keyboard|mouse|joystick) if a trackball control is present
 トラックボールを使用する場合に(keyboard|mouse|joystick)を有効
@@ -1206,11 +1222,11 @@ enable/disable local language game list
 enable/disable volume auto adjust
 自動音量調整機能\を有効
 
-# osd/windows/config.c: 1060
+# osd/windows/config.c: 1062
 error: invalid value for language: %s\nUse %s\n
 エラー: 不正な言語指定: %s\n%sを使用します\n
 
-# osd/windows/config.c: 1183
+# osd/windows/config.c: 1186
 error: invalid value for palette: %s\n
 エラー: 不正なパレット指定: %s\n
 
@@ -1569,6 +1585,10 @@ sound volume in decibels (-32 min, 0 max)
 # osd/windows/config.c: 233
 specify the preferred Direct3D version (8 or 9)
 優先されるDirect3Dのバージョンを指定
+
+# osd/windows/config.c: 135
+switch drivers
+使用するドライバの変更
 
 # osd/windows/config.c: 198
 thread priority for the main game thread; range from -15 to 1

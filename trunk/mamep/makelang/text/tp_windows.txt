@@ -86,8 +86,16 @@ AUTOMATIC DEVICE SELECTION OPTIONS
 Average FPS: %f (%d frames)\n
 
 
+# osd/windows/config.c: 107
+CONFIGURATION COMMANDS
+
+
 # osd/windows/config.c: 131
 CONFIGURATION OPTIONS
+
+
+# osd/windows/config.c: 102
+CORE COMMANDS
 
 
 # osd/windows/config.c: 352
@@ -542,15 +550,19 @@ Error: Device does not meet minimum requirements for Direct3D rendering\n
 Error: unable to configure a screen texture format\n
 
 
+# osd/windows/config.c: 113
+FRONTEND COMMANDS
+
+
 # osd/windows/config.c: 264
 FULL SCREEN OPTIONS
 
 
-# osd/windows/config.c: 1096
+# osd/windows/config.c: 1099
 Failed to open file for playback
 
 
-# osd/windows/config.c: 1146
+# osd/windows/config.c: 1149
 Failed to open file for recording
 
 
@@ -582,7 +594,7 @@ Illegal resolution value for %s = %s\n
 Illegal value for %s = %s\n
 
 
-# osd/windows/config.c: 1109
+# osd/windows/config.c: 1112
 Input file is for game '%s', not for current game '%s'\n
 
 
@@ -746,7 +758,7 @@ PER-WINDOW VIDEO OPTIONS
 PERFORMANCE OPTIONS
 
 
-# osd/windows/config.c: 1115
+# osd/windows/config.c: 1118
 Playing back previously recorded game %s\n
 
 
@@ -938,7 +950,7 @@ aspect ratio of the second screen; 'auto' here will try to make a best guess
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 
 
-# osd/windows/config.c: 166, 238, 239, 240, 241, 243, 244, 245, 246, 248, 249, 250, 251, 253, 254, 255, 256, 258, 259, 260, 261, 353, 992, 1051, 1059 osd/windows/video.c: 434, 541, 1000, 1002, 1023, 1025 osd/windows/window.c: 840, 840, 844
+# osd/windows/config.c: 166, 238, 239, 240, 241, 243, 244, 245, 246, 248, 249, 250, 251, 253, 254, 255, 256, 258, 259, 260, 261, 353, 992, 1051, 1061 osd/windows/video.c: 434, 541, 1000, 1002, 1023, 1025 osd/windows/window.c: 840, 840, 844
 auto
 
 
@@ -1086,6 +1098,10 @@ enable (keyboard|mouse|joystick) if a paddle control is present
 enable (keyboard|mouse|joystick) if a pedal control is present
 
 
+# osd/windows/config.c: 346
+enable (keyboard|mouse|joystick) if a positional control is present
+
+
 # osd/windows/config.c: 344
 enable (keyboard|mouse|joystick) if a trackball control is present
 
@@ -1206,11 +1222,11 @@ enable/disable local language game list
 enable/disable volume auto adjust
 
 
-# osd/windows/config.c: 1060
+# osd/windows/config.c: 1062
 error: invalid value for language: %s\nUse %s\n
 
 
-# osd/windows/config.c: 1183
+# osd/windows/config.c: 1186
 error: invalid value for palette: %s\n
 
 
@@ -1568,6 +1584,10 @@ sound volume in decibels (-32 min, 0 max)
 
 # osd/windows/config.c: 233
 specify the preferred Direct3D version (8 or 9)
+
+
+# osd/windows/config.c: 135
+switch drivers
 
 
 # osd/windows/config.c: 198

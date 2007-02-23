@@ -730,6 +730,14 @@ Byte Length
 COMM Setting
 
 
+# emu/options.c: 121
+CORE FILENAME OPTIONS
+
+
+# emu/options.c: 101
+CORE OUTPUT DIRECTORY OPTIONS
+
+
 # emu/options.c: 90
 CORE SEARCH PATH OPTIONS
 
@@ -1626,15 +1634,15 @@ Ignore Decrement
 Ignore Decrement By
 
 
-# emu/options.c: 836
+# emu/options.c: 832
 Illegal boolean value for %s; reverting to %d\n
 
 
-# emu/options.c: 894, 965
+# emu/options.c: 890, 961
 Illegal float value for %s; reverting to %f\n
 
 
-# emu/options.c: 865, 924
+# emu/options.c: 861, 920
 Illegal integer value for %s; reverting to %d\n
 
 
@@ -1682,11 +1690,11 @@ Insert
 International
 
 
-# emu/options.c: 934
+# emu/options.c: 930
 Invalid %s value (must be between %d and %d); reverting to %d\n
 
 
-# emu/options.c: 975
+# emu/options.c: 971
 Invalid %s value (must be between %f and %f); reverting to %f\n
 
 
@@ -4482,6 +4490,18 @@ Unable to start sound emulation
 Unable to start video emulation
 
 
+# emu/options.c: 822
+Unexpected boolean option %s queried\n
+
+
+# emu/options.c: 880, 951
+Unexpected float option %s queried\n
+
+
+# emu/options.c: 851, 910
+Unexpected integer option %s queried\n
+
+
 # emu/inptport.c: 452 lib/util/chd.c: 1556 mame/machine/laserdsc.c: 955 
 Unknown
 
@@ -5060,6 +5080,10 @@ path to artwork files
 
 # emu/options.c: 97
 path to controller definitions
+
+
+# emu/options.c: 99
+path to font files
 
 
 # emu/options.c: 93

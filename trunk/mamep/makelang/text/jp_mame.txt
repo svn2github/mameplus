@@ -156,7 +156,7 @@
 
 # emu/romload.c: 899, 948, 962
 %s UNSUPPORTED CHD VERSION\n
-%S サポートされていないCHDバージョンです\n
+%s サポートされていないCHDバージョンです\n
 
 # emu/romload.c: 356, 921
 %s WRONG CHECKSUMS:\n
@@ -729,6 +729,14 @@ Byte Length
 # mame/drivers/neogeo.c: 935, 1074
 COMM Setting
 COMMセッティング
+
+# emu/options.c: 121
+CORE FILENAME OPTIONS
+コアのファイル名設定
+
+# emu/options.c: 101
+CORE OUTPUT DIRECTORY OPTIONS
+コアの出力ディレクトリ設定
 
 # emu/options.c: 90
 CORE SEARCH PATH OPTIONS
@@ -1626,15 +1634,15 @@ Ignore Decrement
 Ignore Decrement By
 この値まで減少を無視
 
-# emu/options.c: 836
+# emu/options.c: 832
 Illegal boolean value for %s; reverting to %d\n
 「%s」は不正な論理値です。%dに戻します。\n
 
-# emu/options.c: 894, 965
+# emu/options.c: 890, 961
 Illegal float value for %s; reverting to %f\n
 「%s」は不正な実数値です。%fに戻します。\n
 
-# emu/options.c: 865, 924
+# emu/options.c: 861, 920
 Illegal integer value for %s; reverting to %d\n
 「%s」は不正な整数値です。%dに戻します。\n
 
@@ -1682,11 +1690,11 @@ Insert
 International
 インターナショナル
 
-# emu/options.c: 934
+# emu/options.c: 930
 Invalid %s value (must be between %d and %d); reverting to %d\n
 「%s」は不正な値です(%dから%dの間でなければなりません)。%dに戻します。\n
 
-# emu/options.c: 975
+# emu/options.c: 971
 Invalid %s value (must be between %f and %f); reverting to %f\n
 「%s」は不正な値です(%fから%fの間でなければなりません)。%fに戻します。\n
 
@@ -4482,6 +4490,18 @@ Unable to start sound emulation
 Unable to start video emulation
 ビデオエミュレーションを開始する事が出来ません。
 
+# emu/options.c: 822
+Unexpected boolean option %s queried\n
+論理値オプション%sが不正です\n
+
+# emu/options.c: 880, 951
+Unexpected float option %s queried\n
+実数値オプション%sが不正です\n
+
+# emu/options.c: 851, 910
+Unexpected integer option %s queried\n
+整数値オプション%sが不正です\n
+
 # emu/inptport.c: 452 lib/util/chd.c: 1556 mame/machine/laserdsc.c: 955 
 Unknown
 不明
@@ -5061,6 +5081,10 @@ path to artwork files
 # emu/options.c: 97
 path to controller definitions
 コントローラ定義のパスを指定
+
+# emu/options.c: 99
+path to font files
+フォントファイルへのパスを指定
 
 # emu/options.c: 93
 path to hash files

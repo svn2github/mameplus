@@ -1042,7 +1042,7 @@ Exit the application
 External Folder List
 外部フォルダリスト
 
-# osd/ui/options.c: 3125
+# osd/ui/options.c: 3127
 FOLDER LIST HIDE OPTIONS
 フォルダリスト非表\示設定
 
@@ -1114,15 +1114,15 @@ Full screen contrast
 Full screen gamma
 フルスクリーンのガンマ値
 
-# osd/ui/options.c: 3071
+# osd/ui/options.c: 3073
 GENERAL OPTIONS
 一般設定
 
-# osd/ui/options.c: 3129
+# osd/ui/options.c: 3131
 GUI JOYSTICK OPTIONS
 GUIジョイスティック設定
 
-# osd/ui/options.c: 3144
+# osd/ui/options.c: 3146
 GUI KEYBOARD OPTIONS
 GUIキーボード設定
 
@@ -1186,7 +1186,7 @@ Microsoft's DirectX Webページを表\示
 Gray
 グレー
 
-# osd/ui/options.c: 469, 3104 osd/ui/win32ui.c: 710
+# osd/ui/options.c: 469, 3106 osd/ui/win32ui.c: 710
 Grouped
 グループ化
 
@@ -1222,7 +1222,7 @@ Horizontal
 How cheats work
 チートの使用方法を説明します
 
-# osd/ui/options.c: 3051
+# osd/ui/options.c: 3053
 INTERFACE OPTIONS
 インターフェイス設定
 
@@ -1334,11 +1334,11 @@ Keyboard
 L&arge Icons
 大きなアイコン(&A)
 
-# osd/ui/options.c: 3117
+# osd/ui/options.c: 3119
 LIST FONT OPTIONS
 リストフォント設定
 
-# osd/ui/options.c: 3103
+# osd/ui/options.c: 3105
 LISTVIEW OPTIONS
 リストビュー設定
 
@@ -1410,7 +1410,7 @@ MAME32 version by
 MAME32 will now reset the selected\n
 MAME32 は選択された項目をリセットし\n
 
-# osd/ui/mame32.rc: 399, 423, 434, 466, 486, 509, 548, 567, 618, 655, 711, 772, 849, 877, 904, 941, 966, 983, 1047, 1075, 1090, 1127, 1163, 1202 osd/ui/options.c: 3119 osd/ui/translate.c: 103
+# osd/ui/mame32.rc: 399, 423, 434, 466, 486, 509, 548, 567, 618, 655, 711, 772, 849, 877, 904, 941, 966, 983, 1047, 1075, 1090, 1127, 1163, 1202 osd/ui/options.c: 3121 osd/ui/translate.c: 103
 MS Sans Serif
 ＭＳ Ｐゴシック
 
@@ -1586,7 +1586,7 @@ Overlays
 P&layback Input...
 入力の再現(&L)...
 
-# osd/ui/options.c: 3038
+# osd/ui/options.c: 3040
 PATH AND DIRECTORY OPTIONS
 パスとディレクトリ設定
 
@@ -1626,7 +1626,7 @@ Pedal
 Pedal device
 ペダルディバイス
 
-# osd/ui/options.c: 3200 osd/ui/win32ui.c: 872
+# osd/ui/options.c: 3202 osd/ui/win32ui.c: 872
 Play Time
 プレイ時間
 
@@ -1754,7 +1754,7 @@ Refresh game list
 Refresh:
 リフレッシュ:
 
-# osd/ui/options.c: 1550
+# osd/ui/options.c: 1552
 Reload configurations
 設定の再読み込み
 
@@ -2442,7 +2442,7 @@ Use various icon for Not Working game
 Use volume auto adjust
 自動音量調整機能\を使用
 
-# osd/ui/layout.c: 71 osd/ui/mame32.rc: 849 osd/ui/options.c: 787, 2731 osd/ui/properties.c: 622 osd/ui/treeview.c: 305 osd/ui/win32ui.c: 5505
+# osd/ui/layout.c: 71 osd/ui/mame32.rc: 849 osd/ui/options.c: 787, 2733 osd/ui/properties.c: 622 osd/ui/treeview.c: 305 osd/ui/win32ui.c: 5505
 Vector
 ベクタ
 
@@ -2486,7 +2486,7 @@ Volume attenuation
 WARNING: the game might not run correctly.
 警告: このゲームは正常に実行出来ません。
 
-# osd/ui/options.c: 3096
+# osd/ui/options.c: 3098
 WINDOW POSITION OPTIONS
 ウィンドウ位置設定
 

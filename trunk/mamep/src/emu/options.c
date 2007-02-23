@@ -632,16 +632,12 @@ int options_output_command_line_marked(char *buf)
 
 static const char *translate_description(const options_data *data)
 {
-#if 0
 	const char *desc = _(data->description);
 
-	if (strcmp(data->description, desc) == 0)
+	if (desc == data->description)
 		return lang_message(UI_MSG_OSD0, desc);
 
 	return desc;
-#else
-	return data->description;
-#endif
 }
 
 /*-------------------------------------------------
@@ -659,6 +655,10 @@ void options_output_ini_file(FILE *inifile)
 		/* header: just print */
 		if ((data->flags & OPTION_HEADER) != 0)
 			fprintf(inifile, "\n#\n# %s\n#\n", translate_description(data));
+
+		/* skip UNADORNED options */
+		else if (data->description == NULL)
+			;
 
 		/* otherwise, output entries for all non-deprecated and non-command items */
 		else if ((data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
@@ -690,6 +690,10 @@ void options_output_ini_file_marked(FILE *inifile)
 		if ((data->flags & OPTION_HEADER) != 0)
 			fprintf(inifile, "\n#\n# %s\n#\n", translate_description(data));
 
+		/* skip UNADORNED options */
+		else if (data->description == NULL)
+			;
+
 		/* otherwise, output entries for all non-deprecated and non-command items */
 		else if (data->mark && (data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
 		{
@@ -719,6 +723,10 @@ void options_output_ini_mame_file(mame_file *inifile)
 		/* header: just print */
 		if ((data->flags & OPTION_HEADER) != 0)
 			mame_fprintf(inifile, "\n#\n# %s\n#\n", translate_description(data));
+
+		/* skip UNADORNED options */
+		else if (data->description == NULL)
+			;
 
 		/* otherwise, output entries for all non-deprecated and non-command items */
 		else if ((data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
@@ -750,6 +758,10 @@ void options_output_ini_mame_file_marked(mame_file *inifile)
 		if ((data->flags & OPTION_HEADER) != 0)
 			mame_fprintf(inifile, "\n#\n# %s\n#\n", translate_description(data));
 
+		/* skip UNADORNED options */
+		else if (data->description == NULL)
+			;
+
 		/* otherwise, output entries for all non-deprecated and non-command items */
 		else if (data->mark && (data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
 		{
@@ -779,7 +791,6 @@ void options_output_help(void)
 		/* header: just print */
 		if ((data->flags & OPTION_HEADER) != 0)
 			mame_printf_info("\n#\n# %s\n#\n", translate_description(data));
-
 		/* otherwise, output entries for all non-deprecated items */
 		else if ((data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL)) == 0 && data->description != NULL)
 			mame_printf_info("-%-20s%s\n", data->names[0], translate_description(data));
