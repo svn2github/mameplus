@@ -404,7 +404,6 @@ render_font *render_font_alloc(const char *filename)
 	render_font *font;
 	UINT16 cmd_map[MAX_GLYPH_FONT];
 	int i;
-	char *filename_local;
 
 	//mamep: build unicode translation map for command glyph
 	for (i = 0; i < MAX_GLYPH_FONT; i++)
@@ -416,11 +415,12 @@ render_font *render_font_alloc(const char *filename)
 
 	/* attempt to load the cached version of the font first */
 	// fixme: load bdf version command glyph
-	filename_local = assemble_3_strings(ui_lang_info[options.langcode].name, "/", filename);
 	if (filename != NULL)
 	{
 		int loaded = 0;
-	 	if (render_font_load_cached_bdf(font, filename_local) == 0)
+		char *filename_local = assemble_3_strings(ui_lang_info[options.langcode].name, "/", filename);
+
+	 	if (filename_local != NULL && render_font_load_cached_bdf(font, filename_local) == 0)
 			loaded++;
 		else
 		{
@@ -431,6 +431,9 @@ render_font *render_font_alloc(const char *filename)
 	 		if (render_font_load_cached_bdf(font, filename) == 0)
 	 			loaded++;
 		}
+
+		if (filename_local)
+			free(filename_local);
 
 		/* fixme: load the 12x12 font data for command glyph */
 		render_font_load_raw(font, uifontdata12x12, cmd_map, 12, 12, MAX_GLYPH_FONT);
