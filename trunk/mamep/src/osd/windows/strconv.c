@@ -25,7 +25,7 @@
 //  LOCAL VARIABLES
 //============================================================
 
-static int ansi_codepage = CP_OEMCP; //CP_ACP;
+static int ansi_codepage = CP_ACP;
 
 
 //============================================================
@@ -35,7 +35,8 @@ static int ansi_codepage = CP_OEMCP; //CP_ACP;
 void set_osdcore_acp(int cp)
 {
 	// TODO: check specified cp is valid
-	ansi_codepage = cp;
+	//ansi_codepage = cp;
+	ansi_codepage = CP_OEMCP;
 }
 
 
