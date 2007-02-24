@@ -1,8 +1,8 @@
 #****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.112u1      #
+#     Mameinfo.dat日本語版 v0.112u2      #
 #                                        #
-#           February 13, 2007            #
+#           February 24, 2007            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,39 +12,40 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：845 翻訳済：830
-# 追加項目：338 合計：1183
+# Tester報告：849 翻訳済：835
+# 追加項目：338 合計：1187
 #
 
 
-$info=toutrun
+$info=minigolf
 $mame
 [バグ]
 
-- ドライブゲームで左CTRLが反応せず、加速できない。 analog0112u1gra, maxholz / Derrick Renaud
+- デジタルコントロールが正しく動作しない。
+特に、ボールを指定された方向kに一回だけ打ったあと、キー入力を受け付けない。
 
-
-- [Possilbe] ゲーム中以外の画面に、ゲーム中の画面が下側に残って表示される。 toutrun0108u2gre, Kekule
+テストメニューでは正しく反応する。 minigolf0112u2gra, twisty
 
 $end
 
-$info=gatsbee
+$info=legendoh
 $mame
 [バグ]
 
-- "CPU 54XX not found"とエラーが出る。 gatsbee0112u1gre, Firewave
+- タイトル画面以外ではコインをいれることができない。
+さらに、Push Startと表示されているときは、コインだけでなくスタートボタンも効かない。 legendoh0112u2gra, F1ReB4LL
 
 $end
 
-$info=pinbo
+$info=sb2003
 $mame
 [バグ]
 
-- アサートが出る。
+- ゲームを始めるとコイン入力とスタートボタンの入力を受け付けなくなる。コンティニューカウント中も続くのでコンティニューできない。 sb2003_0112u2gra, Firewave / etabeta
 
-assert: src/emu/cpuint.c:240: Machine->drv->cpu
 
-[cpunum].cpu_type != CPU_Z80 || line == INPUT_LINE_NMI pinbo0112u1gre, Firewave
+- 入力が効かず、5キーと6キーでコインを入れることもできない。
+.nvファイルが無いときは正常に動作する。 sb2003_108u3gra, Nathan G / stephh
 
 $end
 
@@ -57,6 +58,18 @@ $mame
 
 - nmk16.cゲームでプライオリティ不具合がある。
 Reipが何年か前に修正しようとしたが複雑すぎて無理だったらしい。 nmk16_0111u1gre, robiza / Kold666
+
+$end
+
+$info=elim2
+$mame
+[バグ]
+
+- [Possible] ベクター描画は以前、わざとラフになるように書き直されたが、TAFAなどのフライヤーと比べると、ラフすぎる模様。 elim2 _0112u2gre, Luigi30 / Twisty
+
+
+- ゲーム中に画面中央に青いドットが表示される。
+クローン版elim4では起きない。 elim2055gre, Fever
 
 $end
 
@@ -291,17 +304,6 @@ $mame
 [バグ]
 
 - ゲーム中にサウンドが途切れがち。 mechatt072u1yel, Nerox91
-
-$end
-
-$info=berzerk
-$mame
-[バグ]
-
-- berzerk, frezy：
-どちらもサンプルセットが不完全。実際の基板で確認。
-Berzerkでは1UP時にAsteroidsに似た宇宙船のノイズが聞こえる。
-またFrenzyでは、ロボットの小さい声ややられた時の音が必要。 berzerkc070gre, Robbie D / Chad H / Karasu
 
 $end
 
@@ -3251,15 +3253,6 @@ $mame
 
 $end
 
-$info=elim2
-$mame
-[バグ]
-
-- ゲーム中に画面中央に青いドットが表示される。
-クローン版elim4では起きない。 elim2055gre, Fever
-
-$end
-
 $info=zektor
 $mame
 [バグ]
@@ -3356,14 +3349,6 @@ $mame
 
 
 - アトラクトモード2周目以降、ハイスコア画面にドクロが残って表示される。 lghost098u1gre2, Karasu
-
-$end
-
-$info=mwalku
-$mame
-[バグ]
-
-- ゲーム中にクラッシュする。キーにエラーがあって、修正が提出されたが、まだ実装されていない。 mwalku0111red, Swossino / Haze
 
 $end
 
@@ -4702,14 +4687,6 @@ $mame
 
 $end
 
-$info=undrfire
-$mame
-[バグ]
-
-- 銃の照準が表示されない。 undrfire093gre, iceman2004cny
-
-$end
-
 $info=zeropnt
 $mame
 [バグ]
@@ -5587,15 +5564,6 @@ $mame
 
 - 銃のリロードができない。最近、MAMEがバージョンアップするたびに、画面外の部分がどんどん小さくなっていて、ついにどこを撃ってもリロードできなくなった。
 チートを使うしかない。 le2085u2gra, Karasu
-
-$end
-
-$info=sb2003
-$mame
-[バグ]
-
-- 入力が効かず、5キーと6キーでコインを入れることもできない。
-.nvファイルが無いときは正常に動作する。 sb2003_108u3gra, Nathan G / stephh
 
 $end
 
@@ -6668,6 +6636,14 @@ $mame
 
 - 最後のボスを倒したときに拡大処理が必要。
 多分他のC2ゲームも要ると思う。 zunkyou37b9gre, YMI
+
+$end
+
+$info=toutrun
+$mame
+[バグ]
+
+- [Possilbe] ゲーム中以外の画面に、ゲーム中の画面が下側に残って表示される。 toutrun0108u2gre, Kekule
 
 $end
 
