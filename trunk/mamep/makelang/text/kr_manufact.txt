@@ -70,6 +70,10 @@ ACE International
 ADK
 
 
+# Backgammon
+ADP
+
+
 # Omotesandou (Japan 890215)
 ANIME TEC
 
@@ -214,6 +218,10 @@ Art & Magic
 Artic
 
 
+# Tower & Shaft
+Aruze
+
+
 # Dingo (encrypted)
 Ashby Computers and Graphics LTD.
 
@@ -290,7 +298,7 @@ Bee-Oh
 Blastar
 
 
-# Golden Poker Double Up
+# Golden Poker Double Up (Big Boy)
 Bonanza Enterprises, Ltd
 
 
@@ -314,6 +322,10 @@ Bullet-Proof Software
 C.M.C.
 
 
+# Candy Puzzle (v1.0)
+CD Express
+
+
 # Herbie at the Olympics (DK conversion)
 CVS
 
@@ -322,11 +334,11 @@ CVS
 Capcom
 
 
-# Progear (US 010117)
+# Progear (USA 010117)
 Capcom, supported by Cave
 
 
-# Giga Wing (US 990222)
+# Giga Wing (USA 990222)
 Capcom, supported by Takumi
 
 
@@ -470,7 +482,7 @@ Danbi & F2 System
 Data Amusement
 
 
-# Suikoenbu / Outlaws of the Lost Dynasty (JUETL 950314 V2.001)
+# Cobra Command
 Data East
 
 
@@ -978,6 +990,10 @@ Impera
 Incredible Technologies
 
 
+# Pango Fun (Italy)
+InfoCube
+
+
 # Jolly Card (Austria, Fun World, bootleg)
 Inter Games
 
@@ -1274,7 +1290,7 @@ Mirco
 Mitchell
 
 
-# Mighty! Pang (Japan 001011)
+# Mighty! Pang (USA 001010)
 Mitchell, distributed by Capcom
 
 
@@ -1360,6 +1376,10 @@ Nics
 
 # Hot Blocks - Tetrix II
 Nics?
+
+
+# Monster Zero
+Nihon
 
 
 # Pocket Gal Deluxe (Japan v3.00)
@@ -1518,6 +1538,10 @@ Playtronic SRL
 Poby
 
 
+# Thunder Heroes
+Primetek Investments
+
+
 # Pagemaster, The (U) [!]
 Probe
 
@@ -1558,7 +1582,7 @@ Rait Electronics Ltd
 Raizing
 
 
-# Dimahoo (US 000121)
+# Dimahoo (USA 000121)
 Raizing, distributed by Capcom
 
 
@@ -1778,6 +1802,10 @@ Sisteme
 Soft
 
 
+# Disco Boy
+Soft Art Co.
+
+
 # Jolly Card (Croatia)
 Soft Design
 
@@ -1816,6 +1844,10 @@ Status Games
 
 # Armored Car (set 1)
 Stern
+
+
+# Cliff Hanger
+Stern Electronics
 
 
 # Pisces
@@ -1864,6 +1896,10 @@ Sunsoft
 
 # Othello Derby (Japan)
 Sunwise
+
+
+# Stelle e Cubi (Italy)
+Sure
 
 
 # Snow Brothers 3 - Magical Adventure
@@ -2202,6 +2238,10 @@ Visco
 Vision
 
 
+# Alpha One (Vision Electronics / Kyle Hodgetts)
+Vision Electronics
+
+
 # Ambush (Volt Elec co-ltd)
 Volt Elec co-ltd
 
@@ -2320,6 +2360,10 @@ Zaccaria
 
 # Quasar
 Zelco
+
+
+# Deal 'Em (MPU4 Conversion Kit)
+Zenitone
 
 
 # Space Attack II

@@ -1,7 +1,9 @@
 $lang_long = shift;
 $lang_short = shift;
+$codepage = shift;
 
 exit 1 if ($lang_long eq '' || $lang_short eq '');
+exit 1 if $codepage eq '';
 
 $langdir = "../lang/$lang_long";
 $textdir = "text";
@@ -28,5 +30,5 @@ foreach (sort @dirs)
 		next;
 	}
 
-	system ("$format_cmd", "$langdir/$basename.mmo", '-o', "$textdir/$lang_short" . "_$basename.txt");
+	system ("$format_cmd", "$langdir/$basename.mmo", '-o', "$textdir/$lang_short" . "_$basename.txt", $codepage);
 }

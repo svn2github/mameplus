@@ -1,32 +1,62 @@
+#define UNICODE
+#include <windows.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-struct mmo_data {
-	const char *id;
-	const char *str;
+struct mmo_header
+{
+	int dummy;
+	int version;
+	int num_msg;
 };
 
-static int num_mmo;
-static struct mmo_data *mmo_index;
-static char *mmo_str;
+struct mmo_data
+{
+	const unsigned char *uid;
+	const unsigned char *ustr;
+	const void *wid;
+	const void *wstr;
+};
 
+static struct mmo_header header;
+static struct mmo_data *mmo_index;
+
+
+static unsigned char *mb_from_wstring(const WCHAR *wstring, int codepage)
+{
+	int char_count;
+	char *result;
+
+	char_count = WideCharToMultiByte(codepage, 0, wstring, -1, NULL, 0, NULL, NULL);
+	result = (char *)malloc(char_count * sizeof(*result));
+	if (result != NULL)
+		WideCharToMultiByte(codepage, 0, wstring, -1, result, char_count, NULL, NULL);
+
+	return result;
+}
 
 static int load_mmo(const char *filename)
 {
 	int i;
 	int str_size;
+	char *mmo_str = NULL;
 	FILE *fp;
 
 	if ((fp = fopen(filename, "rb")) == NULL)
 		goto mmo_readerr;
 
-	if (fread(&num_mmo, sizeof num_mmo, 1, fp) != 1)
+	if (fread(&header, sizeof header, 1, fp) != 1)
 		goto mmo_readerr;
 
-	mmo_index = malloc(num_mmo * sizeof mmo_index[0]);
+	if (header.version != 2)
+		goto mmo_readerr;
+
+	mmo_index = malloc(header.num_msg * sizeof mmo_index[0]);
 	if (!mmo_index)
 		goto mmo_readerr;
 
-	if (fread(mmo_index, num_mmo * sizeof mmo_index[0], 1, fp) != 1)
+	if (fread(mmo_index, header.num_msg * sizeof mmo_index[0], 1, fp) != 1)
 		goto mmo_readerr;
 
 	if (fread(&str_size, sizeof str_size, 1, fp) != 1)
@@ -41,10 +71,12 @@ static int load_mmo(const char *filename)
 
 	fclose(fp);
 
-	for (i = 0; i < num_mmo; i++)
+	for (i = 0; i < header.num_msg; i++)
 	{
-		mmo_index[i].id = mmo_str + (unsigned long)mmo_index[i].id;
-		mmo_index[i].str = mmo_str + (unsigned long)mmo_index[i].str;
+		mmo_index[i].uid = mmo_str + (unsigned long)mmo_index[i].uid;
+		mmo_index[i].ustr = mmo_str + (unsigned long)mmo_index[i].ustr;
+		mmo_index[i].wid = mmo_str + (unsigned long)mmo_index[i].wid;
+		mmo_index[i].wstr = mmo_str + (unsigned long)mmo_index[i].wstr;
 	}
 
 	return 0;
@@ -117,23 +149,26 @@ static void print_escape_str(FILE *fp, const char *str)
 	}
 }
 
-static void dump_text(FILE *fp)
+static void dump_text(FILE *fp, int codepage)
 {
 	int i;
 
-	for (i = 0; i < num_mmo; i++)
+	for (i = 0; i < header.num_msg; i++)
 	{
+		const char *id = mb_from_wstring(mmo_index[i].wid, codepage);
+		const char *str = mb_from_wstring(mmo_index[i].wstr, codepage);
+
 		fprintf(fp, "#\n");
-		print_escape_str(fp, mmo_index[i].id);
+		print_escape_str(fp, id);
 		fprintf(fp, "\n");
-		print_escape_str(fp, mmo_index[i].str);
+		print_escape_str(fp, str);
 		fprintf(fp, "\n\n");
 	}
 }
 
 static void usage(void)
 {
-	fprintf(stderr, "usage: mmo2txt input-file [-o output-file]\n");
+	fprintf(stderr, "usage: mmo2txt [-o output-file] input-file codepage\n");
 	exit(1);
 }
 
@@ -142,6 +177,7 @@ int main(int argc, const char *argv[])
 	const char *infile = NULL;
 	const char *outfile = NULL;
 	FILE *out = stdout;
+	int codepage = 0;
 
 	while (*++argv)
 	{
@@ -163,19 +199,28 @@ int main(int argc, const char *argv[])
 			continue;
 		}
 
-		if (infile)
-			usage();
+		if (!infile)
+		{
+			infile = *argv;
+			continue;
+		}
 
-		infile = *argv;
+		if (!codepage)
+		{
+			codepage = atoi(*argv);
+			continue;
+		}
+
+		usage();
 	}
 
-	if (infile == NULL)
+	if (!infile || !codepage)
 		usage();
 
 	if (load_mmo(infile))
 		return 1;
 
-	dump_text(out);
+	dump_text(out, codepage);
 
 	return 0;
 }
