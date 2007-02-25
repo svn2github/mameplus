@@ -238,6 +238,7 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(analog_select,        dial_device)
 	DEFINE_OPT(analog_select,        trackball_device)
 	DEFINE_OPT(analog_select,        lightgun_device)
+	DEFINE_OPT(analog_select,        positional_device)
 
 END_OPT_FUNC_DRIVER
 #endif

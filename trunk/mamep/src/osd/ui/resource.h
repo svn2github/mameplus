@@ -328,14 +328,16 @@
 #define IDC_DIAL                        1237
 #define IDC_TRACKBALL                   1238
 #define IDC_LIGHTGUNDEVICE              1239
-#define IDC_ANALOG_AXES_TEXT            1240
-#define IDC_ANALOG_AXES                 1241
-#define IDC_HIGH_PRIORITY_TEXT          1242
+#define IDC_POSITIONALEVICE             1240
+#define IDC_ANALOG_AXES_TEXT            1241
+#define IDC_ANALOG_AXES                 1242
+#define IDC_HIGH_PRIORITY_TEXT          1243
 #define IDC_HIGH_PRIORITYTXT            1244
 #define IDC_DISPLAY_SPLASH_SCREEN       1245
 #define IDC_FSBRIGHTNESSTEXT            1246
 #define IDC_VIDEO_MODE                  1247
 #define IDC_SHOW_TREE_SHEET             1248 // USE_TREE_SHEET
+#define IDC_MULTITHREAD_RENDERING       1249
 
 #define ID_CONTEXT_SHOW_FOLDER_START    39000
 #define ID_CONTEXT_SHOW_FOLDER_END      39200

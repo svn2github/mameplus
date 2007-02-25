@@ -250,6 +250,7 @@ typedef struct
 	char*	dial_device;
 	char*	trackball_device;
 	char*	lightgun_device;
+	char*	positional_device;
 } options_type;
 
 // List of artwork types to display in the screen shot area

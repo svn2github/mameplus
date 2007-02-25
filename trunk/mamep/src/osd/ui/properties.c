@@ -225,6 +225,7 @@ static int  g_nPedalIndex = 0;
 static int  g_nDialIndex = 0;
 static int  g_nTrackballIndex = 0;
 static int  g_nLightgunIndex = 0;
+static int  g_nPositionalIndex = 0;
 static int  g_nVideoIndex = 0;
 static int  g_nD3DVersionIndex = 0;
 static BOOL g_bAnalogCheckState[65]; // 8 Joysticks  * 8 Axes each
@@ -382,6 +383,7 @@ static DWORD dwHelpIDs[] =
 	IDC_TRACKBALL,          HIDC_TRACKBALL,
 	IDC_LIGHTGUNDEVICE,     HIDC_LIGHTGUNDEVICE,
 	IDC_ENABLE_AUTOSAVE,    HIDC_ENABLE_AUTOSAVE,
+	IDC_MULTITHREAD_RENDERING, HIDC_MULTITHREAD_RENDERING,
 	0,                      0
 };
 
@@ -1883,6 +1885,7 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 			case IDC_DIAL:
 			case IDC_TRACKBALL:
 			case IDC_LIGHTGUNDEVICE:
+			case IDC_POSITIONALEVICE:
 				if (wNotifyCode == CBN_SELCHANGE)
 				{
 					changed = TRUE;
@@ -3540,6 +3543,14 @@ static void AssignLightgun(HWND hWnd)
 		pGameOpts->lightgun_device = mame_strdup(ptr);
 }
 
+static void AssignPositional(HWND hWnd)
+{
+	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nPositionalIndex);
+	FreeIfAllocated(&pGameOpts->positional_device);
+	if (ptr != NULL)
+		pGameOpts->positional_device = mame_strdup(ptr);
+}
+
 #define AssignDefaultBios(i) \
 static void AssignDefaultBios##i(HWND hWnd) \
 { \
@@ -3770,6 +3781,12 @@ static void ResetDataMap(void)
 		if (!mame_stricmp(pGameOpts->lightgun_device, g_ComboBoxDevice[i].m_pData))
 			g_nLightgunIndex = i;
 	}
+	g_nPositionalIndex = 0;
+	for (i = 0; i < NUMDEVICES; i++)
+	{
+		if (!mame_stricmp(pGameOpts->positional_device, g_ComboBoxDevice[i].m_pData))
+			g_nPositionalIndex = i;
+	}
 
 }
 
@@ -3849,6 +3866,7 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_DIAL,          DM_INT, CT_COMBOBOX,  &g_nDialIndex,             DM_STRING,&pGameOpts->dial_device,      0, 0, AssignDial);
 	DataMapAdd(IDC_TRACKBALL,     DM_INT, CT_COMBOBOX,  &g_nTrackballIndex,        DM_STRING,&pGameOpts->trackball_device, 0, 0, AssignTrackball);
 	DataMapAdd(IDC_LIGHTGUNDEVICE,DM_INT, CT_COMBOBOX,  &g_nLightgunIndex,         DM_STRING,&pGameOpts->lightgun_device,  0, 0, AssignLightgun);
+	DataMapAdd(IDC_POSITIONALEVICE,DM_INT, CT_COMBOBOX, &g_nPositionalIndex,       DM_STRING,&pGameOpts->positional_device,0, 0, AssignPositional);
 
 
 	/* core video */
@@ -3904,11 +3922,12 @@ static void BuildDataMap(void)
 	{
 	int i;
 	for (i=0; drivers_table[i].name; i++)
-		DataMapAdd(drivers_table[i].ctrl,      DM_NONE, CT_NONE,     &pGameOpts->driver_config, DM_STRING,&pGameOpts->driver_config,0, 0, 0);
+		DataMapAdd(drivers_table[i].ctrl,      DM_NONE, CT_NONE,     &pGameOpts->driver_config, DM_STRING,&pGameOpts->driver_config, 0, 0, 0);
 	}
 #endif /* DRIVER_SWITCH */
 	DataMapAdd(IDC_BIOS,          DM_INT,  CT_COMBOBOX, &g_nBiosIndex,             DM_STRING, &pGameOpts->bios,        0, 0, AssignBios);
 	DataMapAdd(IDC_ENABLE_AUTOSAVE, DM_BOOL, CT_BUTTON, &pGameOpts->autosave,      DM_BOOL, &pGameOpts->autosave,      0, 0, 0);
+	DataMapAdd(IDC_MULTITHREAD_RENDERING, DM_BOOL, CT_BUTTON, &pGameOpts->multithreading, DM_BOOL, &pGameOpts->multithreading, 0, 0, 0);
 	DataMapAdd(IDC_CONFIRM_QUIT,  DM_BOOL, CT_BUTTON,   &pGameOpts->confirm_quit,  DM_BOOL, &pGameOpts->confirm_quit,  0, 0, 0);
 #ifdef AUTO_PAUSE_PLAYBACK
 	DataMapAdd(IDC_AUTO_PAUSE_PLAYBACK,  DM_BOOL, CT_BUTTON,   &pGameOpts->auto_pause_playback,  DM_BOOL, &pGameOpts->auto_pause_playback,  0, 0, 0);
@@ -4959,6 +4978,7 @@ static void InitializeControllerMappingUI(HWND hwnd)
 	HWND hCtrl3 = GetDlgItem(hwnd,IDC_DIAL);
 	HWND hCtrl4 = GetDlgItem(hwnd,IDC_TRACKBALL);
 	HWND hCtrl5 = GetDlgItem(hwnd,IDC_LIGHTGUNDEVICE);
+	HWND hCtrl6 = GetDlgItem(hwnd,IDC_POSITIONALEVICE);
 
 	if (hCtrl)
 	{
@@ -5006,6 +5026,14 @@ static void InitializeControllerMappingUI(HWND hwnd)
 		{
 			ComboBox_InsertString(hCtrl5, i, _UIW(g_ComboBoxDevice[i].m_pText));
 			ComboBox_SetItemData( hCtrl5, i, g_ComboBoxDevice[i].m_pData);
+		}
+	}
+	if (hCtrl6)
+	{
+		for (i = 0; i < NUMDEVICES; i++)
+		{
+			ComboBox_InsertString(hCtrl6, i, _UIW(g_ComboBoxDevice[i].m_pText));
+			ComboBox_SetItemData( hCtrl6, i, g_ComboBoxDevice[i].m_pData);
 		}
 	}
 }
