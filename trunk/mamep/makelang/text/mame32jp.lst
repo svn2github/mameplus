@@ -821,7 +821,7 @@ spcfrcii	スペシャルフォーシズII	すぺしゃるふぉーしず_2	Senko Industries (Magic E
 8ballat2	エイトボールアクション (DKJr conversion)	えいとぼーるあくしょん	Seatongrove Ltd (Magic Eletronics USA licence)
 shootgal	シューティングギャラリー	しゅーてぃんぐぎゃらりー	Seatongrove Ltd (Zaccaria licence)
 drakton	ドラットン	どらっとん	Epos Corporation
-strtheat	ストリートヒート	すとりーとひーと	Epos Corporation
+strtheat	ストリートヒート -Cardinal Amusements	すとりーとひーと	Epos Corporation
 hunchbkd	ハンチバック (DK conversion)	はんちばっく	Century Electronics
 sbdk	スーパーバイク (DK conversion)	すーぱーばいく	Century Electronics
 herbiedk	ハービー・アット・ジ・オリンピックス (DK conversion)	はーびーあっとじおりんぴっくす	CVS
@@ -901,7 +901,7 @@ goonies	VS.グーニーズ	ばーさすぐーにーず	Konami
 hogalley	VS.ホーガンズアレイ	ばーさすほーがんずあれい	Nintendo
 iceclimb	VS.アイスクライマー	ばーさすあいすくらいまー	Nintendo
 iceclmbj	VS.アイスクライマー (日本版)	ばーさすあいすくらいまー	Nintendo
-ladygolf	VS.ゴルフ / Stroke & Match Golf (Ladies ver)	ばーさすごるふ	Nintendo
+ladygolf	VS.ゴルフ / Stroke & Match Golf (ladies ver)	ばーさすごるふ	Nintendo
 machridr	VS.マッハライダー (endurance course ver)	ばーさすまっはらいだー	Nintendo
 machridj	VS.マッハライダー (日本版 fighting course ver)	ばーさすまっはらいだー	Nintendo
 rbibb	VS.アタリR.B.I.ベースボール (set 1)	ばーさすあたりあーるびーあいべーすぼーる	Namco
@@ -910,8 +910,8 @@ suprmrio	VS.スーパーマリオブラザーズ	ばーさすすーぱーまりおぶらざーず	Nintendo
 suprmria	VS.スーパーマリオブラザーズ (alt)	ばーさすすーぱーまりおぶらざーず	Nintendo
 vsskykid	VS.スカイキッド / Super SkyKid	ばーさすすかいきっど	Namco
 tkoboxng	VS.ファミリーボクシング / T.K.O. Boxing	ばーさすふぁみりーぼくしんぐ	Namco LTD.
-smgolf	VS.ゴルフ / Stroke & Match Golf (Men ver)	ばーさすごるふ	Nintendo
-smgolfj	VS.ゴルフ / Stroke & Match Golf (日本版 Men ver)	ばーさすごるふ	Nintendo
+smgolf	VS.ゴルフ / Stroke & Match Golf (men ver)	ばーさすごるふ	Nintendo
+smgolfj	VS.ゴルフ / Stroke & Match Golf (日本版 men ver)	ばーさすごるふ	Nintendo
 vspinbal	VS.ピンボール	ばーさすぴんぼーる	Nintendo
 vspinblj	VS.ピンボール (日本版)	ばーさすぴんぼーる	Nintendo
 vsslalom	VS.スラローム	ばーさすすらろーむ	Rare LTD.
@@ -935,7 +935,7 @@ iceclmrj	VS.アイスクライマー デュアル (日本版)	ばーさすあいすくらいまーでゅある	
 vsgshoe	VS.ガムシュー	ばーさすがむしゅー	Nintendo
 supxevs	VS.スーパーゼビウス ガンプの謎	ばーさすすーぱーぜびうすがんぷのなぞ	Namco
 vsfdf	VS.フリーダムフォース	ばーさすふりーだむふぉーす	Sunsoft
-smgolfb	VS.ゴルフ / Stroke & Match Golf (Men ver set 2)	ばーさすごるふ	Nintendo
+smgolfb	VS.ゴルフ / Stroke & Match Golf (men ver set 2)	ばーさすごるふ	Nintendo
 vsbbaljb	VS.ベースボール (日本版 set 3)	ばーさすべーすぼーる	Nintendo of America
 nss_ssoc	スーパーフォーメーションサッカー / Super Soccer (Nintendo Super System)	すーぱーふぉーめーしょんさっかー	Human Inc.
 nss_actr	アクトレイザー (Nintendo Super System)	あくとれいざー	Enix
@@ -964,12 +964,12 @@ gmissile	ガイディッドミサイル	がいでぃっどみさいる	Midway
 m4	M-4	えむ4	Midway
 clowns	クラウンズ (rev 2)	くらうんず	Midway
 clowns1	クラウンズ (rev 1)	くらうんず	Midway
-einning	エクストライニング	えくすとらいにんぐ	Midway
+einning	ボールパークII / Extra Inning	ぼーるぱーく_2	Midway
 shuffle	シャッフルボード	しゃっふるぼーど	Midway
 dogpatch	ドッグパッチ	どっぐぱっち	Midway
 spcenctr	スペースエンカウンター	すぺーすえんかうんたー	Midway
 phantom2	ファントムII	ふぁんとむ2	Midway
-bowler	4プレイヤーボウリングアレー	ふぉーぷれいやーぼうりんぐあれー	Midway
+bowler	ボウリングアレー	ぼうりんぐあれー	Midway
 invaders	スペースインベーダー	すぺーすいんべーだー_1_1	Midway
 blueshrk	ブルーシャーク	ぶるーしゃーく	Midway
 invad2ct	スペースインベーダーII (Midway cocktail)	すぺーすいんべーだー_2	Midway
@@ -1149,7 +1149,7 @@ ipminvad	IPMインベーダー	あいぴーえむいんべーだー	Irem
 skychut	スカイシューター	すかいしゅーたー	Irem
 spacbeam	スペースビーム	すぺーすびーむ	Irem
 greenber	グリーンベレー (Irem)	ぐりーんべれーあいれむ	Irem
-headoni	ヘッドオン (Irem M-15 hardware)	へっどおん_1	Irem
+headoni	ヘッドオン (Irem M-15 Hardware)	へっどおん_1	Irem
 redalert	WW-III / Red Alert	わーるどうぉー3	Irem + GDI
 demoneye	デモンアイ-X	でもんあいえっくす	Irem
 olibochu	パンチングキッド / Oli-Boo-Chu	ぱんちんぐきっど	Irem + GDI
@@ -1285,7 +1285,7 @@ qberttst	Qバート (early test ver)	きゅーばーと	Gottlieb
 qbtrktst	Qバート Board Input Test Rom	きゅーばーと	Gottlieb
 insector	インセクター (prototype)	いんせくたー	Gottlieb
 tylz	タイルズ (prototype)	たいるず	Mylstar
-argusg	アーガス (Gottlieb prototype)	あーがす_g	Gottlieb
+argusg	アーガス (Gottlieb prototype)	あーがす	Gottlieb
 krull	銀河伝説クルール	ぎんがでんせつくるーる	Gottlieb
 kngtmare	ナイトメア (prototype)	ないとめあ	Gottlieb
 sqbert	Qバート / Faster Harder More Challenging Q*bert (prototype)	きゅーばーと	Mylstar
@@ -1797,7 +1797,7 @@ demonwl1	ホラーストーリー (Taito license)	ほらーすとーりー	Toaplan (Taito licens
 demonwl2	ホラーストーリー (first edition)	ほらーすとーりー	Toaplan
 fireshrk	鮫！鮫！鮫！ / Fire Shark	さめさめさめ	Toaplan
 samesame	鮫！鮫！鮫！	さめさめさめ	Toaplan
-samesam2	鮫！鮫！鮫！ (2P ver)	さめさめさめ	Toaplan
+samesam2	鮫！鮫！鮫！ (2p ver)	さめさめさめ	Toaplan
 outzone	アウトゾーン (set 1)	あうとぞーん	Toaplan
 outzonea	アウトゾーン (set 2)	あうとぞーん	Toaplan
 outzoneb	アウトゾーン (set 3 prototype?)	あうとぞーん	Toaplan
@@ -2093,7 +2093,7 @@ sf2rb	ストリートファイターII' -チャンピオンエディション (Rainbow set 1)	すとりー
 sf2rb2	ストリートファイターII' -チャンピオンエディション (Rainbow set 2)	すとりーとふぁいたー_2_2だっしゅ	hack / bootleg
 sf2red	ストリートファイターII' -チャンピオンエディション (Red Wave)	すとりーとふぁいたー_2_2だっしゅ	hack / bootleg
 sf2v004	ストリートファイターII' -チャンピオンエディション (V004)	すとりーとふぁいたー_2_2だっしゅ	hack / bootleg
-sf2accp2	ストリートファイターII' -チャンピオンエディション (Accelerator Pt.II)	すとりーとふぁいたー_2_2だっしゅ	hack / bootleg
+sf2accp2	ストリートファイターII' -チャンピオンエディション (Accelerator PtII)	すとりーとふぁいたー_2_2だっしゅ	hack / bootleg
 sf2m1	ストリートファイターII' -チャンピオンエディション (M1)	すとりーとふぁいたー_2_2だっしゅ	hack / bootleg
 sf2m2	ストリートファイターII' -チャンピオンエディション (M2)	すとりーとふぁいたー_2_2だっしゅ	hack / bootleg
 sf2m3	ストリートファイターII' -チャンピオンエディション (M3)	すとりーとふぁいたー_2_2だっしゅ	hack / bootleg
@@ -2806,12 +2806,12 @@ sharrir1	スペースハリアー (8751 315-5163)	すぺーすはりあー_1	Sega
 shangupb	スーパーハングオン (Hang-On upgrade) (海賊版)	すーぱーはんぐおん	bootleg
 aliensy1	エイリアンシンドローム (set 1 System16A FD1089A 317-0033)	えいりあんしんどろーむ	Sega
 aliensy2	エイリアンシンドローム (set 2 System16A FD1089A 317-0033)	えいりあんしんどろーむ	Sega
-bodyslam	ダンプ松本 / Body Slam (8751 317-unknown)	だんぷまつもと	Sega
+bodyslam	ダンプ松本 / Body Slam (8751 317-0015)	だんぷまつもと	Sega
 dumpmtmt	ダンプ松本 (日本版 8751 317-unknown)	だんぷまつもと	Sega
 mjleague	メジャーリーグ	めじゃーりーぐ	Sega
-quartet	カルテット (rev A 8751 317-unknown)	かるてっと_1	Sega
-quartet1	カルテット (8751 317-unknown)	かるてっと_1	Sega
-quart21	カルテット2 (8751 317-unknown)	かるてっと_2	Sega
+quartet	カルテット (rev A 8751 315-5194)	かるてっと_1	Sega
+quartet1	カルテット (8751 315-5194)	かるてっと_1	Sega
+quart21	カルテット2 (8751 317-0010)	かるてっと_2	Sega
 quart2	カルテット2 (unprotected)	かるてっと_2	Sega
 aceattaa	エースアタッカー (日本版 System16A FD1094 317-0060)	えーすあたっかー	Sega
 afighter	アクションファイター (FD1089A 317-0018)	あくしょんふぁいたー	Sega
@@ -2934,13 +2934,13 @@ wwallyja	ウォーリーをさがせ！ (日本版 rev A FD1094 317-0197A)	うぉーりーをさがせ
 astormbl	エイリアンストーム (海賊版)	えいりあんすとーむ	bootleg
 shdancbl	シャドーダンサー -影の舞 (海賊版)	しゃどーだんさー	bootleg
 mwalkbl	マイケル・ジャクソンズ ムーンウォーカー (海賊版)	まいけるじゃくそんずむーんうぉーかー	bootleg
-outrun	アウトラン (standard/upright rev B)	あうとらん_1	Sega
-outrun2	アウトラン (standard/upright rev A)	あうとらん_1	Sega
-outrun1	アウトラン (deluxe)	あうとらん_1	Sega
+outrun	アウトラン (sitdown/upright rev B)	あうとらん_1	Sega
+outrun2	アウトラン (sitdown/upright rev A)	あうとらん_1	Sega
+outrun1	アウトラン (deluxe sitdown)	あうとらん_1	Sega
 outrunb	アウトラン (海賊版)	あうとらん_1	bootleg
 toutrun	ターボアウトラン (Out Run upgrade FD1094 317-0118)	たーぼあうとらん	Sega
 toutrun2	ターボアウトラン (upright FD1094 317-unknown)	たーぼあうとらん	Sega
-toutrun1	ターボアウトラン (FD1094 317-unknown)	たーぼあうとらん	Sega
+toutrun1	ターボアウトラン (cockpit FD1094 317-unknown)	たーぼあうとらん	Sega
 shangon	スーパーハングオン (sitdown/upright unprotected)	すーぱーはんぐおん	Sega
 shangon3	スーパーハングオン (sitdown/upright FD1089B 317-0034)	すーぱーはんぐおん	Sega
 shangon2	スーパーハングオン (mini ride-on rev A FD1089B 317-0034)	すーぱーはんぐおん	Sega
@@ -2991,8 +2991,8 @@ sgmastj	ジャンボ尾崎のスーパーマスターズ (日本版 FD1094 317-0058-05b)	じゃんぼお
 roughrac	ラフレーサー (日本版 FD1094 317-0058-06b)	らふれーさー	Sega
 bnzabros	ボナンザブラザーズ (USA版 Floppy DS3-5000-07d?)	ぼなんざぶらざーず	Sega
 bnzabrsj	ボナンザブラザーズ (日本版 Floppy DS3-5000-07b)	ぼなんざぶらざーず	Sega
-qsww	クイズ宿題をわすれました！	くいずしゅくだいをわすれました	Sega
-dcclubfd	ダイナミックカントリークラブ (Floppy DS3-5000-09d FD1094 317-0058-09d)	だいなみっくかんとりーくらぶ	Sega
+qsww	クイズ宿題をわすれました！ (日本版 FD1094 317-0058-08b)	くいずしゅくだいをわすれました	Sega
+dcclubfd	ダイナミックカントリークラブ (FD1094 317-0058-09d)	だいなみっくかんとりーくらぶ	Sega
 dcclub	ダイナミックカントリークラブ	だいなみっくかんとりーくらぶ	Sega
 dcclubj	ダイナミックカントリークラブ (日本版)	だいなみっくかんとりーくらぶ	Sega
 mahmajn	所さんのまーまーじゃん	ところさんのまーまーじゃん_1	Sega
@@ -3121,8 +3121,8 @@ lastbrnx	ラストブロンクス -東京番外地 (海外版 rev A)	らすとぶろんくす	Sega
 lastbrnj	ラストブロンクス -東京番外地 (日本版 rev A)	らすとぶろんくす	Sega
 doa	デッドオアアライブ (Model 2B)	でっどおああらいぶ_1_1	Sega
 sgt24h	スーパーGT 24h	すーぱーじーてぃー24h	Jaleco
-von	電脳戦機バーチャロン (日本版)	でんのうせんきばーちゃろん_1	Sega
-vonusa	電脳戦機バーチャロン / Cyber Troopers Virtual-On (USA版)	でんのうせんきばーちゃろん_1	Sega
+von	電脳戦機バーチャロン (日本版 rev B)	でんのうせんきばーちゃろん_1	Sega
+vonusa	電脳戦機バーチャロン / Cyber Troopers Virtual-On (USA版 rev B)	でんのうせんきばーちゃろん_1	Sega
 dynabb	ダイナマイトベースボール97	だいなまいとべーすぼーる97	Sega
 zerogun	ゼロガンナー (Model 2B)	ぜろがんなー	Psikyo
 zerogunj	ゼロガンナー (日本版 Model 2B)	ぜろがんなー	Psikyo
@@ -3329,9 +3329,9 @@ yellowcb	イエローキャブ (海賊版)	いえろーきゃぶ	bootleg
 liberate	リバレーション	りばれーしょん	Data East Corporation
 dualaslt	リバレーション / Dual Assault	りばれーしょん	Data East USA
 liberatb	リバレーション (海賊版)	りばれーしょん	bootleg
-bwings	B-ウイング (日本版 new ver)	びーういんぐ	Data East Corporation
-bwingso	B-ウイング (日本版 old ver)	びーういんぐ	Data East Corporation
-bwingsa	B-ウイング (alt ver?)	びーういんぐ	Data East Corporation
+bwings	B-ウィング (日本版 new ver)	びーうぃんぐ	Data East Corporation
+bwingso	B-ウィング (日本版 old ver)	びーうぃんぐ	Data East Corporation
+bwingsa	B-ウィング (alt ver?)	びーうぃんぐ	Data East Corporation
 zaviga	ザビガ	ざびが	Data East Corporation
 zavigaj	ザビガ (日本版)	ざびが	Data East Corporation
 kchamp	空手道 / Karate Champ (USA版)	からてどう	Data East USA
@@ -3487,7 +3487,7 @@ chokchok	チョキー！チョキー！	ちょきーちょきー	SemiCom
 metlsavr	メタルセーバー	めたるせーばー	First Amusement
 bcstry	B.C.ストーリー (set 1)	びーしーすとーりー	SemiCom
 bcstrya	B.C.ストーリー (set 2)	びーしーすとーりー	SemiCom
-semibase	無限勝負 (SemiCom Baseball)	むはんすんぶ	SemiCom
+semibase	無限勝負 (SemiCom Baseball) (韓国版)	むはんすんぶ	SemiCom
 dquizgo	デートクイズゴーゴー (韓国版)	でーとくいずごーごー	SemiCom
 suprtrio	スーパートリオ	すーぱーとりお	Gameace
 lemmings	レミングス (USA版 prototype)	れみんぐす	Data East USA
@@ -5558,7 +5558,7 @@ srmp6	スーパーリアル麻雀PVI (日本版)	すーぱーりあるまーじゃん_6ぴーしっくす	Seta
 11beat	イレブンビート・ワールドトーナメント	いれぶんびーとわーるどとーなめんと	Hudson
 mtetrisc	マジカルテトリスチャレンジ featuring ミッキー (日本版 981009)	まじかるてとりすちゃれんじふぃーちゃりんぐみっきー	Capcom
 starsldr	スターソルジャー・バニシングアース	すたーそるじゃーばにしんぐあーす	Hudson/Seta
-vivdolls	ヴィヴィッドドールズ	びびっどどーるす	Visco
+vivdolls	ビビッドドールズ	びびっどどーるす	Visco
 srmvs	スーパーリアル麻雀VS	すーぱーりあるまーじゃん_8ぶいえす	Seta
 twrshaft	タワー&シャフト	たわーあんどしゃふと	Aruze
 powerins	豪血寺一族 (日本版)	ごうけつじ_1いちぞく_1	Atlus
@@ -5757,7 +5757,7 @@ gogomile	ススメ！！マイルスマイル / Go! Go! Mile Smile	すすめまいるすまいる	Fuuk
 gogomilj	ススメ！！マイルスマイル (日本版)	すすめまいるすまいる	Fuuki
 pbancho	逆転！！パズル番長 (日本版)	ぎゃくてんぱずるばんちょう	Fuuki
 asurabld	アシュラブレード -Sword of Dynasty (日本版)	あしゅらぶれーど	Fuuki
-asurabus	阿修羅ブラスター -Eternal Warriors (日本版)	あしゅらぶらすたー	Fuuki
+asurabus	アシュラバスター -Eternal Warriors (日本版)	あしゅらばすたー	Fuuki
 drgnmst	ドラゴンマスター	どらごんますたー	Unico
 burglarx	バーグラーX	ばーぐらーえっくす	Unico
 zeropnt	ゼロポイント (set 1)	ぜろぽいんと_1	Unico
@@ -6026,7 +6026,7 @@ haremchl	ハーレムチャレンジ	はーれむちゃれんじ	CD Express
 lsrquiz	レーザークイズ	れーざーくいず_1	CD Express
 lsrquiz2	レーザークイズ2 イタリー (ver 1.0)	れーざーくいず_2いたりー	CD Express
 mgprem11	マジックプレミアム (ver 1.1)	まじっくぷれみあむ	CD Express
-lasstixx	レーザースティック	れーざーすてぃっく	CD Express
+lasstixx	レーザースティックス	れーざーすてぃっくす	CD Express
 maddoga	マッドドッグマックリー (ver 1C board rev A)	まっどどっぐ_1まっくりー	American Laser Games
 wsjr	フーショットジョニーロック? (ver 1.6)	ふーしょっとじょにーろっく	American Laser Games
 wsjr15	フーショットジョニーロック? (ver 1.5)	ふーしょっとじょにーろっく	American Laser Games
@@ -6361,7 +6361,7 @@ pkscram	PKすくらんぶる	ぴーけーすくらんぶる	Cosmo Electronics Corporation
 jollycrd	ジョリーカード (オーストリア版)	じょりーかーど	TAB-Austria
 jolycdae	ジョリーカード (オーストリア版 encrypted)	じょりーかーど	TAB-Austria
 jolycdcr	ジョリーカード (クロアチア版)	じょりーかーど	Soft Design
-jolycdit	ジョリーカード (イタリア版 encrypted GFXs)	じょりーかーど	bootleg
+jolycdit	ジョリーカード (イタリア版 encrypted)	じょりーかーど	bootleg
 jolycdat	ジョリーカード (オーストリア版 Fun World)	じょりーかーど	Fun World
 jolycdab	ジョリーカード (オーストリア版 Fun World) (海賊版)	じょりーかーど	Inter Games
 bigdeal	ビッグディール (ハンガリー版 set 1)	びっぐでぃーる	Fun World
@@ -6428,8 +6428,8 @@ spinkick	スピンキック	すぴんきっく	HEC
 magicfly	マジックフライ (ver 0.3)	まじっくふらい	P&amp;A Games
 dynabomb	ダイナマイトボンバー (韓国版 rev 1.5)	だいなまいとぼんばー	Limenko
 legendoh	レジェンドオブヒーローズ	れじぇんどおぶひーろーず	Limenko
-sb2003	スーパーバブル2003 (海外版)	すーぱーばぶる2003	Limenko
-sb2003a	スーパーバブル2003 (アジア版)	すーぱーばぶる2003	Limenko
+sb2003	スーパーバブル2003 (海外版 ver 1.0)	すーぱーばぶる2003	Limenko
+sb2003a	スーパーバブル2003 (アジア版 ver 1.0)	すーぱーばぶる2003	Limenko
 carrera	カレラ (ver 6.7)	かれら	BS Electronics
 pmpoker	プレイマンポーカー (ドイツ版)	ぷれいまんぽーかー	PlayMan?
 goldnpkr	ゴールデンポーカーダブルアップ (big boy)	ごーるでんぽーかーだぶるあっぷ	Bonanza Enterprises, Ltd

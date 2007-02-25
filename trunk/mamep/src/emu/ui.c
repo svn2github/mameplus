@@ -274,6 +274,7 @@ int ui_init(running_machine *machine)
 	ui_font = render_font_alloc("ui.bdf");
 
 #ifdef UI_COLOR_DISPLAY
+	{
 		int i;
 
 		for (i = 0; i < MAX_COLORTABLE; i++)
@@ -282,6 +283,7 @@ int ui_init(running_machine *machine)
 				options.uicolortable[i][0],
 				options.uicolortable[i][1],
 				options.uicolortable[i][2]);
+	}
 
 #ifdef TRANS_UI
 	if (options.use_transui)
