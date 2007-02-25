@@ -16,7 +16,7 @@
 
 # emu/romload.c: 294
        FOUND: %s\n
-       找到: %s\n
+        找到: %s\n
 
 # emu/datafile.c: 2404
        JOY2WAY:  %4d\n
@@ -36,7 +36,7 @@
 
 # emu/datafile.c: 2407
       JOY16WAY:  %4d\n
-   16 方向搖桿:  %4d\n
+      16 方向搖桿:  %4d\n
 
 # emu/datafile.c: 2416
       LIGHTGUN:  %4d\n
@@ -56,7 +56,7 @@
 
 # emu/romload.c: 288
     EXPECTED: %s\n
-    需要: %s\n
+        需要: %s\n
 
 # emu/datafile.c: 2434
     NO BUTTONS:  %4d\n
@@ -64,7 +64,7 @@
 
 # emu/audit.c: 307
    FOUND: %s\n
-    找到: %s\n
+   找到: %s\n
 
 # emu/datafile.c: 2236
  %4d HARDDISK\n
@@ -76,7 +76,7 @@
 
 # emu/datafile.c: 2228
  %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
- %4d PLAYCHOICE + %4d\n %4d DECO 卡匣  + %4d\n %4d CVS        + %4d\n
+ %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
 
 # emu/datafile.c: 2230
  %4d RASTER     + %4d\n %4d VECTOR     + %4d\n
@@ -126,6 +126,10 @@
 %s Analog
 %s 類比控制
 
+# emu/romload.c: 927
+%s CHD NEEDS REDUMP\n
+%s CHD 需要重新 DUMP\n
+
 # emu/uimenu.c: 131
 %s Dec
 %s 減少
@@ -134,6 +138,34 @@
 %s Inc
 %s 增加
 
+# emu/romload.c: 349
+%s NO GOOD DUMP KNOWN\n
+%s 已知尚無正確的 DUMP
+
+# emu/romload.c: 256
+%s NOT FOUND (NO GOOD DUMP KNOWN)\n
+%s 找不到 (已知尚無正確的 DUMP)\n
+
+# emu/romload.c: 263, 901
+%s NOT FOUND\n
+%s 找不到\n
+
+# emu/romload.c: 365
+%s ROM NEEDS REDUMP\n
+%s ROM 需要重新 DUMP\n
+
+# emu/romload.c: 899, 948, 962
+%s UNSUPPORTED CHD VERSION\n
+%s 不支援的 CHD 版本\n
+
+# emu/romload.c: 356, 921
+%s WRONG CHECKSUMS:\n
+%s 錯誤的檢查碼:\n
+
+# emu/romload.c: 342
+%s WRONG LENGTH (expected: %08x found: %08x)\n
+%s 錯誤的長度 (需要: %08x 找到: %08x)\n
+
 # emu/cheat.c: 2610
 %s activated
 %s 已啟動
@@ -141,6 +173,14 @@
 # emu/state.c: 687
 %s'%s' is not a valid savestate file for game '%s'.
 %s'%s' 不是有效的儲存狀態檔於遊戲 '%s'。
+
+# emu/romload.c: 950
+%s: CAN'T CREATE DIFF FILE\n
+%s: 無法建立 DIFF 檔案\n
+
+# emu/romload.c: 964
+%s: CAN'T OPEN DIFF FILE\n
+%s: 無法開啟 DIFF 檔案\n
 
 # emu/state.c: 699
 %sIncompatible save file (signature %08x, expected %08x)
@@ -157,6 +197,10 @@
 # emu/uitext.c: 161
 (Card may already exist)
 (記憶卡可能已經存在)
+
+# emu/options.c: 117, 127, 133, 138 
+(disabled by compiling option)
+(由編譯選項停用)
 
 # emu/uitext.c: 149
 (locked)
@@ -484,11 +528,11 @@ Activation Key
 
 # emu/cheat.c: 3178
 Activation Key (1st)
-啟動鍵 (第一次)
+啟動鍵 (第一個)
 
 # emu/cheat.c: 3190
 Activation Key (2nd)
-啟動鍵 (第二次)
+啟動鍵 (第二個)
 
 # emu/cheat.c: 2896
 Add
@@ -544,7 +588,7 @@ All values saved
 
 # emu/inptport.c: 446
 Allow Continue
-允許\\\接關
+允許\接關
 
 # emu/inptport.c: 455
 Alternate
@@ -572,7 +616,7 @@ Asia
 
 # emu/restrack.c: 70
 Attempted to malloc zero bytes (%s:%d)
-嘗試記憶體分配零位元組 (%s:%d)
+試圖分配記憶體零個位元組 (%s:%d)
 
 # mame/drivers/bottom9.c: 272, 369 mame/drivers/btime.c: 726 mame/drivers/csk.c: 285, 445 mame/drivers/galaga.c: 1015, 1091 mame/drivers/pacman.c: 2785 mame/drivers/seta.c: 4660 
 Auto
@@ -588,7 +632,7 @@ Autocenter Speed
 
 # mame/drivers/neogeo.c: 935
 Autofire (in some games)
-連射功\\\能(用於部分遊戲)
+連射功\能(用於部分遊戲)
 
 # emu/uitext.c: 245
 Autofire Delay
@@ -638,10 +682,6 @@ Binary
 Bit
 位元
 
-# mame/drivers/lvcards.c: 209, 293 mame/drivers/royalmah.c: 1003, 1538 mame/drivers/vsnes.c: 1893, 1922
-Black
-黑
-
 # emu/inptport.c: 354
 Bonus Life
 獎勵分數
@@ -668,7 +708,15 @@ Byte Length
 
 # mame/drivers/neogeo.c: 935, 1074
 COMM Setting
-通訊設定
+COMM 通訊設定
+
+# emu/options.c: 121
+CORE FILENAME OPTIONS
+核心檔名選項
+
+# emu/options.c: 101
+CORE OUTPUT DIRECTORY OPTIONS
+核心輸出目錄選項
 
 # emu/options.c: 90
 CORE SEARCH PATH OPTIONS
@@ -710,6 +758,10 @@ Center
 Cheat
 作弊引擎
 
+# emu/cheat.c: 9776
+Cheat Database reloaded
+已重新載入作弊碼資料庫
+
 # emu/uitext.c: 186
 Cheat conflict found: disabling
 找到衝突的作弊碼: 正在停用
@@ -722,7 +774,7 @@ Cheats
 Chi
 吃
 
-# mame/drivers/afega.c: 801 mame/drivers/nmk16.c: 2702 mame/drivers/pgm.c: 915, 1009, 1101, 1192, 1288, 1479 mame/drivers/ssv.c: 2955 mame/drivers/toaplan2.c: 2706, 2759, 2887
+# mame/drivers/afega.c: 801 mame/drivers/nmk16.c: 2702 mame/drivers/pgm.c: 913, 1007, 1099, 1190, 1286, 1477 mame/drivers/ssv.c: 2955 mame/drivers/toaplan2.c: 2706, 2759, 2887
 China
 中國版
 
@@ -810,14 +862,6 @@ Coin Slots
 Coinage
 投幣數
 
-# mame/drivers/lvcards.c: 395
-Coinout Sensor
-退幣輸出感應器
-
-# mame/drivers/acefruit.c: 268 mame/drivers/bfm_sc2.c: 1756, 1901, 2069, 2228, 2728 mame/drivers/cardline.c: 124 mame/drivers/itech8.c: 1434 mame/drivers/magic10.c: 149, 217 mame/drivers/sderby.c: 174
-Collect
-回收
-
 # emu/layout/ho20ffff.lay: 10 emu/layout/ho2eff2e.lay: 10 emu/layout/ho4f893d.lay: 11 emu/layout/ho88ffff.lay: 10 emu/layout/hoa0a0ff.lay: 10 emu/layout/hoffe457.lay: 10 emu/layout/hoffff20.lay: 10 emu/layout/voffff20.lay: 10 mame/layout/avalnche.lay: 26 mame/layout/bzone.lay: 14 mame/layout/circus.lay: 26 mame/layout/clowns.lay: 26 mame/layout/copsnrob.lay: 18 mame/layout/crash.lay: 26 mame/layout/deadeye.lay: 34 mame/layout/geebee.lay: 76 mame/layout/gypsyjug.lay: 38 mame/layout/invad2ct.lay: 46 mame/layout/invaders.lay: 22 mame/layout/invrvnge.lay: 18 mame/layout/lazercmd.lay: 30 mame/layout/sbrkout.lay: 34 mame/layout/solarq.lay: 18 mame/layout/sos.lay: 18 mame/layout/starcas.lay: 22 mame/layout/tinv2650.lay: 22
 Color Overlay
 色彩覆疊
@@ -866,6 +910,10 @@ Continue Search
 Continues
 接關
 
+# emu/uitext.c: 56
+Contrast
+對比值
+
 # mame/drivers/taito_b.c: 1761 mame/drivers/taito_f2.c: 2862
 Control
 控制
@@ -876,7 +924,7 @@ Control Panel
 
 # mame/drivers/changela.c: 963 mame/drivers/nbmj8891.c: 1071, 1167 mame/drivers/taitosj.c: 1768 mame/drivers/tumbleb.c: 1547 
 Control Type
-控制器類型
+控制類型
 
 # emu/inptport.c: 441
 Controller
@@ -908,7 +956,7 @@ Create New Card
 
 # emu/uimenu.c: 1529
 Crop to Screen
-裁切成原始畫面
+裁切至原始畫面大小
 
 # emu/cheat.c: 5840
 Current Data
@@ -938,7 +986,7 @@ Data
 Data Shift
 資料移位
 
-# emu/cheat.c: 7661 mame/drivers/aerofgt.c: 579, 656 mame/drivers/cinemat.c: 919 mame/drivers/psikyo4.c: 578, 622, 697 mame/drivers/psikyosh.c: 656 
+# emu/cheat.c: 7661 mame/drivers/aerofgt.c: 579, 656 mame/drivers/cinemat.c: 919 mame/drivers/psikyo4.c: 578, 622, 697 mame/drivers/psikyosh.c: 653 
 Debug
 除錯
 
@@ -952,11 +1000,11 @@ Decoding (%d%%)
 
 # emu/uitext.c: 226
 Decoding Graphics
-解密圖形
+解碼圖形
 
 # mame/machine/cps2crpt.c: 686
 Decrypting %d%%
-正在解碼 %d%%
+正在解密 %d%%
 
 # mame/drivers/asuka.c: 707, 749, 791 mame/drivers/bwing.c: 337 mame/drivers/cps1.c: 996, 1080 mame/drivers/fgoal.c: 307 mame/drivers/mcr68.c: 669 mame/drivers/ms32.c: 1103, 1108 mame/drivers/wwfsstar.c: 290 
 Default
@@ -1094,6 +1142,10 @@ Door Interlock
 Double Up
 比倍
 
+# emu/uitext.c: 235
+Driver Configuration
+驅動設定
+
 # emu/uitext.c: 66
 Driverinfo not available
 沒有可供查看的 Driverinfo
@@ -1132,7 +1184,7 @@ ERROR: required files are missing, the game cannot be run.
 
 # emu/audit.c: 305
 EXPECTED: %s\n
-    需要: %s\n
+需要: %s\n
 
 # emu/inptport.c: 421
 Easier
@@ -1173,6 +1225,10 @@ Enable/Disable a Cheat
 # emu/inptport.c: 2845
 End of playback
 播放結束
+
+# emu/cheat.c: 3588
+Endianness
+Endianness
 
 # emu/uitext.c: 205
 Energy (greater or less)
@@ -1216,11 +1272,19 @@ Error: Failed to save state
 
 # emu/mame.c: 1619
 Error: Unable to save state due to illegal registrations. See error.log for details.
-錯誤: 無法儲存狀態，因為非法記錄。請查閱\\\ error.log 以取得詳細資料。
+錯誤: 無法儲存狀態，因為非法記錄。請查閱\ error.log 以取得詳細資料。
 
 # emu/ui.c: 1445
 Error: illegal caption file
 錯誤: 非法字幕檔
+
+# emu/options.c: 476
+Error: option %s expected a parameter\n
+錯誤: 選項 %s 需要參數\n
+
+# emu/options.c: 461
+Error: unknown option: %s\n
+錯誤: 未知的選項: %s\n
 
 # emu/inptport.c: 408
 Europe
@@ -1282,7 +1346,7 @@ Frameskip Dec
 Frameskip Inc
 增加畫面省略數
 
-# mame/drivers/lockon.c: 257 mame/drivers/lvcards.c: 326 mame/drivers/pgm.c: 894, 991, 1081, 1173, 1269, 1360 mame/drivers/segas16a.c: 1243 mame/drivers/segas16b.c: 2459 mame/drivers/taito_z.c: 1981, 2052
+# mame/drivers/lockon.c: 257 mame/drivers/lvcards.c: 326 mame/drivers/pgm.c: 892, 989, 1079, 1171, 1267, 1358 mame/drivers/segas16a.c: 1243 mame/drivers/segas16b.c: 2459 mame/drivers/taito_z.c: 1981, 2052
 Free
 免費執行
 
@@ -1330,10 +1394,6 @@ Game Information
 Game Mameinfo
 MAME 資訊
 
-# mame/drivers/gotcha.c: 209
-Game Selection
-遊戲選項
-
 # emu/inptport.c: 2336 mame/drivers/neogeo.c: 998, 1042, 1098, 1224
 Game Slots
 遊戲卡匣
@@ -1349,6 +1409,10 @@ Game Time
 # emu/uitext.c: 57
 Gamma
 Gamma 值
+
+# mame/drivers/midzeus.c: 1222 
+General
+一般
 
 # emu/uitext.c: 171
 General Help
@@ -1442,31 +1506,11 @@ Hispanic
 History not available
 沒有可供查看的歷史
 
-# mame/drivers/funworld.c: 970, 1033 mame/drivers/ltcasino.c: 100, 472 mame/drivers/lvcards.c: 212, 296 mame/drivers/pmpoker.c: 599, 689
-Hold 1
-保留 1
-
-# mame/drivers/ltcasino.c: 101, 473 mame/drivers/lvcards.c: 213, 297 mame/drivers/pmpoker.c: 600, 690
-Hold 2
-保留 2
-
-# mame/drivers/funworld.c: 1043 mame/drivers/ltcasino.c: 102, 474 mame/drivers/lvcards.c: 214, 298 mame/drivers/pmpoker.c: 601, 691
-Hold 3
-保留 3
-
-# mame/drivers/ltcasino.c: 103, 475 mame/drivers/lvcards.c: 215, 299 mame/drivers/pmpoker.c: 602, 692
-Hold 4
-保留 4
-
-# mame/drivers/ltcasino.c: 104, 476 mame/drivers/lvcards.c: 216, 300 mame/drivers/pmpoker.c: 603, 693
-Hold 5
-保留 5
-
 # mame/drivers/neogeo.c: 996, 1040, 1096, 1173, 1222
 Home
 家用機
 
-# mame/drivers/aerofgt.c: 1129 mame/drivers/cave.c: 1744 mame/drivers/ddenlovr.c: 4546 mame/drivers/f1gp.c: 312 mame/drivers/nmk16.c: 2701 mame/drivers/pgm.c: 1013, 1104, 1193, 1292, 1483 mame/drivers/psikyo.c: 648, 768, 1006, 1210 mame/drivers/toaplan1.c: 1188, 1263, 1333, 1408, 1497 mame/drivers/toaplan2.c: 2091, 2256, 2270, 2318, 2470, 2532, 2594, 2664, 2708, 2761, 2912
+# mame/drivers/aerofgt.c: 1129 mame/drivers/cave.c: 1744 mame/drivers/ddenlovr.c: 4546 mame/drivers/f1gp.c: 312 mame/drivers/nmk16.c: 2701 mame/drivers/pgm.c: 1011, 1102, 1191, 1290, 1481 mame/drivers/psikyo.c: 648, 768, 1006, 1210 mame/drivers/toaplan1.c: 1188, 1263, 1333, 1408, 1497 mame/drivers/toaplan2.c: 2091, 2256, 2270, 2318, 2470, 2532, 2594, 2664, 2708, 2761, 2912
 Hong Kong
 香港版
 
@@ -1502,6 +1546,14 @@ IMPERFECT GRAPHICS : %3d  %3d\n
 IMPERFECT SOUND    : %3d  %3d\n
 不完美的聲音       : %3d  %3d\n
 
+# emu/audit.c: 303
+INCORRECT CHECKSUM:\n
+不正確的檢查碼:\n
+
+# emu/audit.c: 312
+INCORRECT LENGTH: %d bytes\n
+不正確的長度: %d 位元組\n
+
 # emu/uitext.c: 41 mame/drivers/travrusa.c: 90, 90
 INVALID
 無效的
@@ -1513,6 +1565,18 @@ Ignore Decrement
 # emu/cheat.c: 3287
 Ignore Decrement By
 忽略減少為
+
+# emu/options.c: 832
+Illegal boolean value for %s; reverting to %d\n
+非法的布林值 %s; 還原成 %d\n
+
+# emu/options.c: 890, 961
+Illegal float value for %s; reverting to %f\n
+非法的浮動值 %s; 還原成 %f\n
+
+# emu/options.c: 861, 920
+Illegal integer value for %s; reverting to %d\n
+非法的整數值 %s; 還原成 %d\n
 
 # emu/uitext.c: 238 
 Image Enhancement
@@ -1550,13 +1614,17 @@ Input (general)
 Input (this game)
 輸入設定(本遊戲)
 
-# mame/drivers/funworld.c: 826, 1136 
-Insert
-插入
-
 # emu/inptport.c: 405
 International
 國際版
+
+# emu/options.c: 930
+Invalid %s value (must be between %d and %d); reverting to %d\n
+無效的 %s 值 (必須介於 %d 到 %d); 還原成 %d\n
+
+# emu/options.c: 971
+Invalid %s value (must be between %f and %f); reverting to %f\n
+無效的 %s 值 (必須介於 %f 到 %f); 還原成 %f\n
 
 # mame/drivers/ajax.c: 171 mame/drivers/taito_z.c: 2922, 2939, 2990, 3007
 Inverted
@@ -1598,7 +1666,7 @@ Kan
 Keyboard
 鍵盤
 
-# mame/drivers/aerofgt.c: 1128 mame/drivers/cave.c: 1746 mame/drivers/crshrace.c: 385, 541 mame/drivers/f1gp.c: 311 mame/drivers/nmk16.c: 2699 mame/drivers/pgm.c: 914, 1012, 1103, 1201, 1291, 1482 mame/drivers/psikyo.c: 647, 767, 1005, 1209 mame/drivers/stv.c: 2238 mame/drivers/taotaido.c: 311 mame/drivers/toaplan1.c: 1189, 1264, 1334, 1409, 1498 mame/drivers/toaplan2.c: 2090, 2137, 2255, 2268, 2317, 2468, 2530, 2592, 2663
+# mame/drivers/aerofgt.c: 1128 mame/drivers/cave.c: 1746 mame/drivers/crshrace.c: 385, 541 mame/drivers/f1gp.c: 311 mame/drivers/nmk16.c: 2699 mame/drivers/pgm.c: 912, 1010, 1101, 1199, 1289, 1480 mame/drivers/psikyo.c: 647, 767, 1005, 1209 mame/drivers/stv.c: 2238 mame/drivers/taotaido.c: 311 mame/drivers/toaplan1.c: 1189, 1264, 1334, 1409, 1498 mame/drivers/toaplan2.c: 2090, 2137, 2255, 2268, 2317, 2468, 2530, 2592, 2663
 Korea
 韓國版
 
@@ -1730,6 +1798,10 @@ Lightgun Y 7
 Lightgun Y 8
 光線槍 Y 8
 
+# emu/cheat.c: 3209
+Link Extension
+連結擴充
+
 # emu/inptport.c: 353
 Lives
 生命
@@ -1737,6 +1809,10 @@ Lives
 # emu/uitext.c: 203
 Lives (or another value)
 生命值 (或其它值)
+
+# emu/cheat.c: 7658
+Load Old Format Code
+載入舊格式編碼
 
 # emu/uitext.c: 153
 Load Selected Card
@@ -1776,7 +1852,7 @@ MAME 統計
 
 # emu/mame.c: 190
 MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n
-MAME 是一套模擬器︰ 或多或少忠實的重現了部分業務機台的性能，但是沒有軟體的硬體\n是毫無用處的，所以必須要有 ROM 映像檔配合執行，這種 ROM 檔跟其它任何一種商業軟\n體一樣都具有版權，因此如果您並不擁有原始機台而去使用它們，乃是違法的行為。不言\n而喻，這些 ROM 檔不能連同 MAME 一起散佈，將 MAME 和 ROM 映像檔一起散佈的行為已\n經違反了著作權法，應該盡速向這些作者回報，以便採取適當的法律措施。\n
+MAME 是一套模擬器︰ 或多或少忠實的重現了幾部業務機台的性能，但是沒有軟體的硬體\n是毫無用處的，所以必須要有 ROM 映像檔配合執行，這種 ROM 檔跟其它任何一種商業軟\n體一樣都具有版權，因此如果您並不擁有原始機台而去使用它們，乃是違法的行為。不言\n而喻，這些 ROM 檔不能連同 MAME 一起散佈，將 MAME 和 ROM 映像檔一起散佈的行為已\n經違反了著作權法，應該盡速向這些作者回報，以便採取適當的法律措施。\n
 
 # emu/datafile.c: 1468
 MAMEInfo:\n
@@ -1810,10 +1886,6 @@ Mapped Memory
 Mask
 遮罩
 
-# mame/drivers/asuka.c: 711, 753, 795 mame/drivers/cischeat.c: 1309 mame/drivers/gstriker.c: 431 mame/drivers/metro.c: 2366 mame/drivers/midvunit.c: 568
-Master
-主機台
-
 # emu/uitext.c: 215
 Matches found
 找到符合的
@@ -1837,10 +1909,6 @@ Medium
 # emu/uitext.c: 112 
 Memory Card
 記憶卡
-
-# mame/drivers/lvcards.c: 288 mame/drivers/macs.c: 250, 340 mame/drivers/vroulet.c: 138
-Memory Reset
-記憶體重新啟動
 
 # emu/uitext.c: 159
 Memory card created
@@ -1868,7 +1936,7 @@ Minimum Value
 
 # mame/drivers/astrocde.c: 311, 390 mame/drivers/jack.c: 683 mame/drivers/thepit.c: 548
 Monitor
-螢幕
+顯示器
 
 # emu/inptport.c: 450 mame/drivers/tx1.c: 955, 959
 Mono
@@ -1954,6 +2022,10 @@ Move User Interface
 NA
 NA
 
+# emu/audit.c: 289
+NEEDS REDUMP\n
+需要重新 DUMP\n
+
 # emu/datafile.c: 2255
 NO COCKTAIL        : %3d  %3d\n
 無檯面型           : %3d  %3d\n
@@ -1984,15 +2056,15 @@ NOT FOUND (BIOS)\n
 
 # emu/audit.c: 330
 NOT FOUND (shared with parent)\n
-找不到 (共用的主檔)\n
+找不到 (與原作版共用)\n
 
 # emu/audit.c: 320
 NOT FOUND - NO GOOD DUMP KNOWN\n
-找不到 - 已知尚無正確的 DUMP
+找不到 - 已知尚無正確的 DUMP\n
 
 # emu/audit.c: 325
 NOT FOUND BUT OPTIONAL\n
-找不到但可供選用
+找不到，但非必要\n
 
 # emu/audit.c: 316
 NOT FOUND\n
@@ -2016,11 +2088,11 @@ Nihongo
 
 # mame/drivers/popeye.c: 303, 387 mame/drivers/punchout.c: 556, 627
 Nintendo
-任天堂
+Nintendo
 
 # mame/drivers/popeye.c: 305, 389 mame/drivers/punchout.c: 557, 628
 Nintendo of America
-美國任天堂
+Nintendo of America
 
 # emu/inptport.c: 351 
 No
@@ -2057,6 +2129,10 @@ Number of bytes
 # emu/uitext.c: 40 
 OK
 確定
+
+# emu/romload.c: 249
+OPTIONAL %s NOT FOUND\n
+非必要的 %s 找不到\n
 
 # emu/inptport.c: 349 emu/uitext.c: 38, 242
 Off
@@ -2096,7 +2172,7 @@ Other Controls
 
 # emu/uitext.c: 30
 Otherwise, type OK or move the joystick left then right to continue
-否則，請鍵入 OK 或移動搖桿左、右兩方向繼續
+否則，請鍵入 OK 或移動搖桿的左右方向繼續
 
 # emu/uitext.c: 59
 Overclock
@@ -3438,10 +3514,6 @@ Paddle V 8
 Pause
 暫停
 
-# mame/drivers/turbo.c: 956 
-Pedal
-踏板
-
 # emu/layout/horizont.lay: 9 emu/layout/vertical.lay: 9
 Pixel Aspect (%d:%d)
 像素長寬 (%d:%d)
@@ -3494,6 +3566,10 @@ Players
 Pon
 碰
 
+# emu/cheat.c: 3561
+Prefill
+預填充
+
 # emu/uitext.c: 35
 Press Any Key
 請按任意鍵
@@ -3524,7 +3600,7 @@ REC START
 
 # emu/ui.c: 1847
 REC STOP
-停止錄音
+錄製停止
 
 # emu/cheat.c: 5976
 RHS
@@ -3550,15 +3626,11 @@ Reach
 Record Movie
 錄製影片
 
-# mame/drivers/drgnmst.c: 291 mame/drivers/exidy440.c: 1064 mame/drivers/fuukifg3.c: 400 mame/drivers/itech8.c: 1250 mame/drivers/kinst.c: 483 mame/drivers/lvcards.c: 208, 292 mame/drivers/powerins.c: 239 mame/drivers/relief.c: 250 mame/drivers/stfight.c: 366 mame/drivers/taito_z.c: 2935, 3003
-Red
-紅
-
 # emu/uitext.c: 225
 Refresh rate
-重新整理速率
+更新頻率
 
-# emu/cheat.c: 2932, 3619 emu/inptport.c: 404 mame/drivers/pgm.c: 910, 921
+# emu/cheat.c: 2932, 3619 emu/inptport.c: 404 mame/drivers/pgm.c: 908, 919
 Region
 區域
 
@@ -3588,7 +3660,7 @@ Resolution
 
 # emu/uitext.c: 219
 Restoration successful
-還原成功\\\
+還原成功\
 
 # emu/uitext.c: 169
 Restore Previous Results
@@ -3624,7 +3696,7 @@ Right Half
 
 # mame/layout/rocknms.lay: 29
 Rockn Megasession Custom
-Rockn Megasession 自訂畫面
+Rockn Megasession 自訂
 
 # mame/drivers/system24.c: 1887
 Ron
@@ -3724,15 +3796,15 @@ Search Speed
 
 # emu/cheat.c: 1723
 Search a Cheat (Advanced Mode)
-搜尋作弊碼(進階模式)
+搜尋作弊碼 (進階模式)
 
 # emu/cheat.c: 1719
 Search a Cheat (Classic Mode)
-搜尋作弊碼(傳統模式)
+搜尋作弊碼 (傳統模式)
 
 # emu/cheat.c: 1715
 Search a Cheat (Minimum Mode)
-搜尋作弊碼(迷你模式)
+搜尋作弊碼 (簡易模式)
 
 # emu/uitext.c: 216
 Search not initialized
@@ -3770,7 +3842,7 @@ Select position to save to
 Sensitivity
 感應度
 
-# emu/inptport.c: 839 mame/drivers/djmain.c: 499 mame/drivers/firebeat.c: 1692, 1722 mame/drivers/pgm.c: 866 mame/drivers/wallc.c: 187
+# emu/inptport.c: 839 mame/drivers/djmain.c: 499 mame/drivers/firebeat.c: 1692, 1722 mame/drivers/pgm.c: 864 mame/drivers/wallc.c: 187
 Service
 業務模式
 
@@ -3812,7 +3884,7 @@ Set/Clear Bits
 
 # emu/cheat.c: 7655
 Show Activation Key Message
-顯示啟用鍵訊息
+顯示啟動鍵訊息
 
 # emu/uimenu.c: 1511
 Show Backdrops
@@ -3930,10 +4002,6 @@ State successfully saved.
 State successfully saved.\nWarning: Save states are not officially supported for this game.
 狀態順利儲存。\n警告: 這個遊戲的儲存狀態尚未正式支援。
 
-# mame/drivers/csk.c: 370, 515 mame/drivers/goldstar.c: 117 mame/drivers/mjkjidai.c: 251
-Statistics
-統計
-
 # emu/uitext.c: 67
 Statistics not available
 沒有可供查看的統計
@@ -3946,7 +4014,7 @@ Status (bits or flags)
 Stereo
 立體聲
 
-# mame/drivers/bmcbowl.c: 371 mame/drivers/holeland.c: 145, 213 mame/drivers/pgm.c: 897, 994, 1084, 1176, 1272, 1363 mame/drivers/popper.c: 277 mame/drivers/toaplan2.c: 2077 mame/drivers/turbo.c: 893
+# mame/drivers/bmcbowl.c: 371 mame/drivers/holeland.c: 145, 213 mame/drivers/pgm.c: 895, 992, 1082, 1174, 1270, 1361 mame/drivers/popper.c: 277 mame/drivers/toaplan2.c: 2077 mame/drivers/turbo.c: 893
 Stop
 停止
 
@@ -3974,7 +4042,7 @@ THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't both
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n
 這個遊戲無法執行。您無法正確執行它，不用白忙。\n
 
-# mame/drivers/aerofgt.c: 1040, 1130 mame/drivers/cave.c: 1745 mame/drivers/f1gp.c: 313 mame/drivers/midzeus.c: 1213 mame/drivers/pgm.c: 1010, 1100, 1191, 1287, 1480 mame/drivers/psikyo.c: 649, 769, 1007, 1211 mame/drivers/toaplan1.c: 1190, 1265, 1335, 1410, 1499 mame/drivers/toaplan2.c: 2093, 2139, 2205, 2271, 2319, 2362, 2472, 2534, 2596, 2665, 2709, 2762
+# mame/drivers/aerofgt.c: 1040, 1130 mame/drivers/cave.c: 1745 mame/drivers/f1gp.c: 313 mame/drivers/midzeus.c: 1213 mame/drivers/pgm.c: 1008, 1098, 1189, 1285, 1478 mame/drivers/psikyo.c: 649, 769, 1007, 1211 mame/drivers/toaplan1.c: 1190, 1265, 1335, 1410, 1499 mame/drivers/toaplan2.c: 2093, 2139, 2205, 2271, 2319, 2362, 2472, 2534, 2596, 2665, 2709, 2762
 Taiwan
 台灣版
 
@@ -4094,10 +4162,6 @@ Timers (+/- some value)
 Title
 標題
 
-# mame/drivers/toaplan1.c: 803
-Toaplan
-東亞計畫
-
 # emu/uitext.c: 244
 Toggle
 切換
@@ -4200,7 +4264,7 @@ Type
 
 # emu/uitext.c: 92
 Type OK or move the joystick left then right to continue
-請鍵入 OK 或移動搖桿左、右兩方向繼續
+請鍵入 OK 或移動搖桿的左右方向繼續
 
 # emu/inptport.c: 1043
 UI Cancel
@@ -4240,7 +4304,7 @@ UI Page Up
 
 # emu/inptport.c: 1047
 UI Previous Group
-選單 前一組
+選單 上一組
 
 # emu/inptport.c: 1037
 UI Right
@@ -4288,15 +4352,15 @@ USA
 
 # emu/restrack.c: 146
 Unable to extend malloc tracking array to %d slots
-無法擴充記憶體分配追蹤陣列到 %d 位置
+無法擴充分配記憶體追蹤陣列到 %d 位置
 
 # emu/mame.c: 1690
 Unable to load due to pending anonymous timers. See error.log for details.
-無法載入，因為暫止匿名計時器。請查閱\\\ error.log 以取得詳細資料。
+無法載入，因為暫止匿名計時器。請查閱\ error.log 以取得詳細資料。
 
 # emu/mame.c: 1604
 Unable to save due to pending anonymous timers. See error.log for details.
-無法儲存，因為暫止匿名計時器。請查閱\\\ error.log 以取得詳細資料。
+無法儲存，因為暫止匿名計時器。請查閱\ error.log 以取得詳細資料。
 
 # emu/mame.c: 1463
 Unable to start machine emulation
@@ -4309,6 +4373,18 @@ Unable to start sound emulation
 # emu/mame.c: 1467
 Unable to start video emulation
 無法啟動視訊模擬
+
+# emu/options.c: 822
+Unexpected boolean option %s queried\n
+疑似非預期的布林選項 %s\n
+
+# emu/options.c: 880, 951
+Unexpected float option %s queried\n
+疑似非預期的浮動選項 %s\n
+
+# emu/options.c: 851, 910
+Unexpected integer option %s queried\n
+疑似非預期的整數選項 %s\n
 
 # emu/inptport.c: 452 lib/util/chd.c: 1556 mame/machine/laserdsc.c: 955 
 Unknown
@@ -4526,7 +4602,7 @@ Video Options
 View Last Results
 檢視最近的結果
 
-# mame/drivers/cps1.c: 4012 mame/drivers/ms32.c: 736, 809, 874 mame/drivers/pgm.c: 891, 988, 1078, 1170, 1266, 1357 mame/drivers/ssv.c: 1682, 1867 mame/drivers/tetrisp2.c: 674, 736
+# mame/drivers/cps1.c: 4012 mame/drivers/ms32.c: 736, 809, 874 mame/drivers/pgm.c: 889, 986, 1076, 1168, 1264, 1355 mame/drivers/ssv.c: 1682, 1867 mame/drivers/tetrisp2.c: 674, 736
 Voice
 語音
 
@@ -4553,6 +4629,14 @@ WRONG COLORS       : %3d  %3d\n
 # emu/cheat.c: 2867
 Wait
 等待
+
+# emu/options.c: 522
+Warning: invalid line in INI: %s
+警告: 無效的文字段落在 INI 檔: %s\n
+
+# emu/options.c: 544
+Warning: unknown option in INI: %s\n
+警告: 未知的選項在 INI 檔: %s\n
 
 # emu/cheat.c: 2869 emu/uitext.c: 196
 Watch
@@ -4612,7 +4696,7 @@ X 座標
 
 # emu/cheat.c: 7208 mame/machine/scudsp.c: 883
 XOR
-XOR 值
+XOR
 
 # emu/uitext.c: 195
 Y Position
@@ -4621,10 +4705,6 @@ Y 座標
 # emu/inptport.c: 352 
 Yes
 是
-
-# mame/drivers/harddriv.c: 750
-Zoom
-縮放
 
 # emu/uigfx.c: 990
 Zoom = %d
@@ -4700,7 +4780,7 @@ Zoom Auto
 
 # emu/datafile.c: 2535
 \n\nRESOLUTION & PALETTESIZE: (ALL)\n    (%d)          (%d)\n\n
-\n\n解析度和色盤大小       : (總計)\n   (%d)          (%d)\n\n
+\n\n解析度和色盤大小       : (總計)\n    (%d)          (%d)\n\n
 
 # emu/datafile.c: 2304
 \n\nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d KB (UNCOMPRESSED)\n%d KB + %d KB MERGED\n
@@ -4716,7 +4796,7 @@ Zoom Auto
 
 # emu/datafile.c: 2564
 \n\nVERSION - DRIVERS - SUPPORT:\n\n
-\n\n版本   -   驅動  -   支援:\n\n
+\n\n版本   -   驅動   -   支援:\n\n
 
 # emu/datafile.c: 2439
 \n\nVIDEO NEEDS... : ORIG   CLNS\n\n
@@ -4730,6 +4810,10 @@ Zoom Auto
 \n\nYEAR: ORIG  CLNS NEOGEO  ALL\n\n
 \n\n年代: 原作  仿製 NEOGEO  全部\n\n
 
+# emu/romload.c: 312
+\tInvalid %s checksum treated as 0 (check leading zeros)\n
+\t無效的 %s 檢查碼視為 0 (檢查前導零)\n
+
 # emu/mamecore.h: 173 
 assert: %s:%d: %s
 判斷: %s:%d: %s
@@ -4738,21 +4822,49 @@ assert: %s:%d: %s
 cheat database not found
 找不到作弊碼資料庫
 
+# emu/options.c: 122
+cheat filename
+作弊碼檔案名稱
+
+# emu/options.c: 131
+command list database name
+指令清單資料庫名稱
+
 # emu/info.c: 90 
 dial
-轉盤
+方向盤
 
 # emu/options.c: 115
 directory for ips files
 IPS 檔案的目錄
 
+# emu/options.c: 119
+directory for localized data files
+當地化語言資料檔案的目錄
+
+# emu/options.c: 112
+directory for translation table data
+翻譯資料的目錄
+
+# emu/options.c: 102
+directory to save configurations
+儲存組態檔的目錄
+
+# emu/options.c: 113
+directory to save debugger comments
+儲存除錯程式註解檔的目錄
+
+# emu/options.c: 111
+directory to save hard drive image difference files
+儲存硬碟映像差異檔的目錄
+
 # emu/options.c: 107
 directory to save hiscores
-儲存高分記錄檔的目錄
+儲存高分檔的目錄
 
 # emu/options.c: 105
 directory to save input device logs
-儲存輸入裝置日誌檔的目錄
+儲存輸入裝置記錄的目錄
 
 # emu/options.c: 104
 directory to save memory card contents
@@ -4764,11 +4876,11 @@ directory to save nvram contents
 
 # emu/options.c: 110
 directory to save screenshots
-儲存螢幕捉圖的目錄
+儲存畫面擷圖的目錄
 
 # emu/options.c: 109
 directory to save states
-設定儲存狀態的目錄
+儲存狀態檔案的目錄
 
 # emu/debug/debugcmd.c: 1069, 1253
 disabled
@@ -4778,6 +4890,14 @@ disabled
 enabled
 啟用
 
+# emu/options.c: 136
+high score database name
+高分檔資料庫名稱
+
+# emu/options.c: 123
+history database name
+歷史資料庫名稱
+
 # emu/memory.c: 3151 
 invalid
 無效的
@@ -4785,6 +4905,10 @@ invalid
 # emu/info.c: 90 
 lightgun
 光線槍
+
+# emu/options.c: 129
+mameinfo database name
+mameinfo 資料庫名稱
 
 # emu/input.c: 999, 1299
 n/a
@@ -4812,15 +4936,15 @@ or
 
 # emu/cheat.c: 8699, 8734
 out of memory while adding search
-當加入搜尋時用完記憶空間
+加入搜尋時記憶體不足
 
 # emu/cheat.c: 8471, 8504
 out of memory while adding watch
-當加入監視時用完記憶空間
+加入監視時記憶體不足
 
 # emu/cheat.c: 8189, 8223, 8345, 8373
 out of memory while loading cheat database
-載入作弊碼資料庫時耗盡記憶體
+載入作弊碼資料庫時記憶體不足
 
 # emu/info.c: 90 
 paddle
@@ -4828,23 +4952,31 @@ paddle
 
 # emu/options.c: 91
 path to ROMsets and hard disk images
-設定ROM 集合及硬碟映象檔的路徑
+ROM 集合和 CHD 檔案的路徑
 
 # emu/options.c: 96
 path to artwork files
-設定Artwork 檔案的路徑
+Artwork 檔案的路徑
 
 # emu/options.c: 97
 path to controller definitions
-設定控制器定義檔的路徑
+控制器定義檔的路徑
+
+# emu/options.c: 99
+path to font files
+字型檔的路徑
+
+# emu/options.c: 93
+path to hash files
+hash 檔案的路徑
 
 # emu/options.c: 98
 path to ini files
-設定 INI 檔案的路徑
+INI 檔路徑
 
 # emu/options.c: 95
 path to samplesets
-設定樣本集合的路徑
+樣本檔集合的路徑
 
 # emu/info.c: 90 
 pedal
@@ -4864,7 +4996,7 @@ saved all memory regions
 
 # emu/video.c: 1115
 scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
-縮放效果 \"%s\" 無法支援 16 位元及 32 位元的色深，故縮放效果已停用
+scale_effect \"%s\" 無法支援 15 位元和 32 位元的色深。目前 scale_effect 已停用。
 
 # emu/uitext.c: 47 mame/drivers/harddriv.c: 3191 mame/drivers/segas16b.c: 941, 1012 
 sound
@@ -4873,6 +5005,10 @@ sound
 # emu/uitext.c: 48 
 stereo
 立體聲
+
+# emu/options.c: 125
+story database name
+故事資料庫名稱
 
 # emu/cheat.c: 2340
 there are no cheats for this game
@@ -4894,56 +5030,16 @@ unzip it and place it in the MAME directory
 values restored
 值已還原
 
-# emu/romload.c: 927
-%s CHD NEEDS REDUMP\n
-
-
-# emu/romload.c: 349
-%s NO GOOD DUMP KNOWN\n
-
-
-# emu/romload.c: 256
-%s NOT FOUND (NO GOOD DUMP KNOWN)\n
-
-
-# emu/romload.c: 263, 901
-%s NOT FOUND\n
-
-
-# emu/romload.c: 365
-%s ROM NEEDS REDUMP\n
-
-
-# emu/romload.c: 899, 948, 962
-%s UNSUPPORTED CHD VERSION\n
-
-
-# emu/romload.c: 356, 921
-%s WRONG CHECKSUMS:\n
-
-
-# emu/romload.c: 342
-%s WRONG LENGTH (expected: %08x found: %08x)\n
-
-
-# emu/romload.c: 950
-%s: CAN'T CREATE DIFF FILE\n
-
-
-# emu/romload.c: 964
-%s: CAN'T OPEN DIFF FILE\n
-
-
-# emu/options.c: 117, 127, 133, 138 
-(disabled by compiling option)
-
-
 # mame/layout/bfm_sc2.lay: 27
 Adder,VFD and Lamp Matrix
 
 
 # mame/layout/gldncrwn.lay: 90 mame/layout/paradice.lay: 81 mame/layout/pokio.lay: 83 mame/layout/pyramid.lay: 72 mame/layout/quintoon.lay: 82 mame/layout/slots.lay: 91 mame/layout/sltblgpo.lay: 72 mame/layout/sltblgtk.lay: 90
 Adder,VFD and Lamps
+
+
+# mame/drivers/lvcards.c: 209, 293 mame/drivers/royalmah.c: 1003, 1538 mame/drivers/vsnes.c: 1893, 1922
+Black
 
 
 # mame/drivers/coinmstr.c: 185 
@@ -4954,44 +5050,20 @@ Bookkeeping
 Button Lamps
 
 
-# emu/options.c: 121
-CORE FILENAME OPTIONS
+# mame/drivers/lvcards.c: 395
+Coinout Sensor
 
 
-# emu/options.c: 101
-CORE OUTPUT DIRECTORY OPTIONS
-
-
-# emu/cheat.c: 9776
-Cheat Database reloaded
-
-
-# emu/uitext.c: 56
-Contrast
-
-
-# emu/uitext.c: 235
-Driver Configuration
+# mame/drivers/acefruit.c: 268 mame/drivers/bfm_sc2.c: 1756, 1901, 2069, 2228, 2728 mame/drivers/cardline.c: 124 mame/drivers/itech8.c: 1434 mame/drivers/magic10.c: 149, 217 mame/drivers/sderby.c: 174
+Collect
 
 
 # emu/layout/dualhuov.lay: 27
 Dual Under-Over
 
 
-# emu/cheat.c: 3588
-Endianness
-
-
-# emu/options.c: 476
-Error: option %s expected a parameter\n
-
-
-# emu/options.c: 461
-Error: unknown option: %s\n
-
-
-# mame/drivers/midzeus.c: 1222 
-General
+# mame/drivers/gotcha.c: 209
+Game Selection
 
 
 # mame/drivers/royalmah.c: 1539 
@@ -5002,56 +5074,44 @@ Gray
 Hit
 
 
+# mame/drivers/funworld.c: 970, 1033 mame/drivers/ltcasino.c: 100, 472 mame/drivers/lvcards.c: 212, 296 mame/drivers/pmpoker.c: 599, 689
+Hold 1
+
+
+# mame/drivers/ltcasino.c: 101, 473 mame/drivers/lvcards.c: 213, 297 mame/drivers/pmpoker.c: 600, 690
+Hold 2
+
+
+# mame/drivers/funworld.c: 1043 mame/drivers/ltcasino.c: 102, 474 mame/drivers/lvcards.c: 214, 298 mame/drivers/pmpoker.c: 601, 691
+Hold 3
+
+
+# mame/drivers/ltcasino.c: 103, 475 mame/drivers/lvcards.c: 215, 299 mame/drivers/pmpoker.c: 602, 692
+Hold 4
+
+
+# mame/drivers/ltcasino.c: 104, 476 mame/drivers/lvcards.c: 216, 300 mame/drivers/pmpoker.c: 603, 693
+Hold 5
+
+
 # mame/drivers/lvcards.c: 291, 374
 Hopper Reset
 
 
-# emu/audit.c: 303
-INCORRECT CHECKSUM:\n
+# mame/drivers/funworld.c: 826, 1136 
+Insert
 
 
-# emu/audit.c: 312
-INCORRECT LENGTH: %d bytes\n
+# mame/drivers/asuka.c: 711, 753, 795 mame/drivers/cischeat.c: 1309 mame/drivers/gstriker.c: 431 mame/drivers/metro.c: 2366 mame/drivers/midvunit.c: 568
+Master
 
 
-# emu/options.c: 847
-Illegal boolean value for %s; reverting to %d\n
-
-
-# emu/options.c: 905, 976
-Illegal float value for %s; reverting to %f\n
-
-
-# emu/options.c: 876, 935
-Illegal integer value for %s; reverting to %d\n
-
-
-# emu/options.c: 945
-Invalid %s value (must be between %d and %d); reverting to %d\n
-
-
-# emu/options.c: 986
-Invalid %s value (must be between %f and %f); reverting to %f\n
-
-
-# emu/cheat.c: 3209
-Link Extension
-
-
-# emu/cheat.c: 7658
-Load Old Format Code
+# mame/drivers/lvcards.c: 288 mame/drivers/macs.c: 250, 340 mame/drivers/vroulet.c: 138
+Memory Reset
 
 
 # emu/cheat.c: 7637 mame/drivers/tempest.c: 509
 Minimum
-
-
-# emu/audit.c: 289
-NEEDS REDUMP\n
-
-
-# emu/romload.c: 249
-OPTIONAL %s NOT FOUND\n
 
 
 # mame/drivers/findout.c: 309 
@@ -5062,8 +5122,12 @@ Orientation
 Payout
 
 
-# emu/cheat.c: 3561
-Prefill
+# mame/drivers/turbo.c: 956 
+Pedal
+
+
+# mame/drivers/drgnmst.c: 291 mame/drivers/exidy440.c: 1064 mame/drivers/fuukifg3.c: 400 mame/drivers/itech8.c: 1250 mame/drivers/kinst.c: 483 mame/drivers/lvcards.c: 208, 292 mame/drivers/powerins.c: 239 mame/drivers/relief.c: 250 mame/drivers/stfight.c: 366 mame/drivers/taito_z.c: 2935, 3003
+Red
 
 
 # mame/drivers/getrivia.c: 288 mame/drivers/lvcards.c: 383
@@ -5074,79 +5138,15 @@ Stand
 State
 
 
-# emu/options.c: 837
-Unexpected boolean option %s queried\n
+# mame/drivers/csk.c: 370, 515 mame/drivers/goldstar.c: 117 mame/drivers/mjkjidai.c: 251
+Statistics
 
 
-# emu/options.c: 895, 966
-Unexpected float option %s queried\n
+# mame/drivers/toaplan1.c: 803
+Toaplan
 
 
-# emu/options.c: 866, 925
-Unexpected integer option %s queried\n
-
-
-# emu/options.c: 522
-Warning: invalid line in INI: %s
-
-
-# emu/options.c: 544
-Warning: unknown option in INI: %s\n
-
-
-# emu/romload.c: 312
-\tInvalid %s checksum treated as 0 (check leading zeros)\n
-
-
-# emu/options.c: 122
-cheat filename
-
-
-# emu/options.c: 131
-command list database name
-
-
-# emu/options.c: 119
-directory for localized data files
-
-
-# emu/options.c: 112
-directory for translation table data
-
-
-# emu/options.c: 102
-directory to save configurations
-
-
-# emu/options.c: 113
-directory to save debugger comments
-
-
-# emu/options.c: 111
-directory to save hard drive image difference files
-
-
-# emu/options.c: 136
-high score database name
-
-
-# emu/options.c: 123
-history database name
-
-
-# emu/options.c: 129
-mameinfo database name
-
-
-# emu/options.c: 99
-path to font files
-
-
-# emu/options.c: 93
-path to hash files
-
-
-# emu/options.c: 125
-story database name
+# mame/drivers/harddriv.c: 750
+Zoom
 
 

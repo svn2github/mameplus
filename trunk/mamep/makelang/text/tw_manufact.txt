@@ -10,13 +10,17 @@ Bootleg
 Unknown
 ¥¼ª¾ªº
 
+# Magic Brush
+bootleg
+µsª©
+
 # Omega
 bootleg?
 µsª©?
 
 # Puckman (Falcom?)
 hack
-hack
+Hack
 
 # Chewing Gum
 unknown
@@ -2388,10 +2392,6 @@ Zilec-Zenitone
 
 # Sub-Terrania (U) [!]
 Zyrinx
-
-
-# Magic Brush
-bootleg
 
 
 # X-Files

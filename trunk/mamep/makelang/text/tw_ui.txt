@@ -8,11 +8,11 @@
 
 # osd/ui/treeview.c: 1324
 %dx%d (H)
-%dx%d (橫)
+%dx%d (H)
 
 # osd/ui/treeview.c: 1318
 %dx%d (V)
-%dx%d (縱)
+%dx%d (V)
 
 # osd/ui/properties.c: 4700
 %li bit
@@ -180,7 +180,7 @@ MAME 版本資訊(&M)
 
 # osd/ui/mame32.rc: 116
 &Menu Style
-選單樣式(&M)
+功\能表樣式(&M)
 
 # osd/ui/mame32.rc: 169
 &New Game Changes
@@ -360,19 +360,19 @@ All files (*.*)
 
 # osd/ui/mame32.rc: 990
 Allow game selection by a &joystick (requires restart)
-允許\\\使用搖桿選擇遊戲(需重新啟動)(&J)
+允許\使用搖桿選擇遊戲(需重新啟動)(&J)
 
 # osd/ui/mame32.rc: 993
 Allow game selection by custom &key sequences
-允許\\\使用自定鍵組合選擇遊戲(&K)
+允許\使用自定鍵組合選擇遊戲(&K)
 
 # osd/ui/mame32.rc: 1512
 Allow restoring options to 'sane' values.
-允許\\\將選項還原成預設的設定值。
+允許\將選項還原成預設的設定值。
 
 # osd/ui/mame32.rc: 1530
 Allows filtering out games from a folder
-允許\\\自資料夾篩選出遊戲
+允許\自資料夾篩選出遊戲
 
 # osd/ui/mame32.rc: 721
 Analog deadzone
@@ -616,7 +616,7 @@ Categories
 
 # osd/ui/columnedit.c: 257
 Changing this item is not permitted
-不允許\\\變更這個項目
+不允許\變更這個項目
 
 # osd/ui/audit32.c: 225, 235
 Checking Game %s - %s
@@ -692,15 +692,15 @@ Contrast Correction
 
 # osd/ui/mame32.rc: 90, 247, 260
 Control &Panel
-控制面版(&P)
+控制器(&P)
 
 # osd/ui/dialogs.c: 217 osd/ui/options.c: 438
 Control Panel
-控制面版
+控制器
 
 # osd/ui/layout.c: 128
 Control Panels
-控制面版圖 (cpanel)
+控制器圖片 (cpanel)
 
 # osd/ui/layout.c: 76
 Control Type
@@ -740,7 +740,7 @@ Could not open '%s' as a valid input file.
 
 # osd/ui/win32ui.c: 6414, 6487
 Could not open '%s' as a valid savestate file.
-無法開啟 '%s' 為有效的輸入檔。
+無法開啟 '%s' 為有效的儲存狀態檔。
 
 # osd/ui/mame32.rc: 812
 Crop artwork
@@ -808,7 +808,7 @@ Details
 
 # osd/ui/properties.c: 961 osd/ui/treeview.c: 1468
 Dial
-轉盤
+方向盤
 
 # osd/ui/mame32.rc: 1106
 Dial device
@@ -936,7 +936,7 @@ Draw antialiased vectors
 
 # osd/ui/properties.c: 4642
 Draw every frame
-描繪出全部畫面
+描繪出全部畫格
 
 # osd/ui/layout.c: 57 osd/ui/win32ui.c: 871
 Driver
@@ -944,7 +944,7 @@ Driver
 
 # osd/ui/mame32.rc: 823
 Driver options
-驅動程式選項
+驅動選項
 
 # osd/ui/mame32.rc: 540
 Driver:
@@ -1096,7 +1096,7 @@ Font (special)
 
 # osd/ui/mame32.rc: 593
 Frame skipping
-畫面省略
+畫格省略
 
 # osd/ui/mame32.rc: 696
 Full screen brightness
@@ -1112,7 +1112,7 @@ Full screen gamma
 
 # osd/ui/options.c: 3073
 GENERAL OPTIONS
-通用選項
+一般選項
 
 # osd/ui/options.c: 3131
 GUI JOYSTICK OPTIONS
@@ -1180,7 +1180,7 @@ Go to Microsoft's DirectX Web Page
 
 # osd/ui/mame32.rc: 121
 Gray
-灰色
+灰階
 
 # osd/ui/options.c: 469, 3106 osd/ui/win32ui.c: 710
 Grouped
@@ -1208,7 +1208,7 @@ History
 
 # osd/ui/mame32.rc: 828
 Homebrew
-自製軟體
+自製遊戲
 
 # osd/ui/treeview.c: 1055, 1056
 Horizontal
@@ -1336,7 +1336,7 @@ LIST FONT OPTIONS
 
 # osd/ui/options.c: 3105
 LISTVIEW OPTIONS
-清單檢視選項
+清單檢視模式選項
 
 # osd/ui/options.c: 465 osd/ui/win32ui.c: 706
 Large Icons
@@ -1372,7 +1372,7 @@ Localize GUI and MAME core.
 
 # osd/ui/layout.c: 111
 Localized Files
-本地化 DAT 檔案
+當地化 DAT 檔案
 
 # osd/ui/mame32.rc: 819
 M68000 CPU Core
@@ -1464,7 +1464,7 @@ Name
 
 # osd/ui/mame32.rc: 830
 Neogeo Decrypted
-NeoGeo 解密版本
+Neo-Geo 解密版
 
 # osd/ui/mame32.rc: 1512
 New game changes
@@ -1524,7 +1524,7 @@ Not working
 
 # osd/ui/mame32.rc: 1134
 Number of screens
-畫面數量
+畫面總數
 
 # osd/ui/mame32.rc: 477, 503, 1084
 OK
@@ -1736,7 +1736,7 @@ Refresh game list
 
 # osd/ui/mame32.rc: 1153
 Refresh:
-頻率:
+更新頻率:
 
 # osd/ui/options.c: 1552
 Reload configurations
@@ -2080,47 +2080,47 @@ Size:
 
 # osd/ui/properties.c: 4643
 Skip 1 of 12 frames
-每 12 畫面省略 1 個
+每 12 畫格省略 1 個
 
 # osd/ui/properties.c: 4652
 Skip 10 of 12 frames
-每 12 畫面省略 10 個
+每 12 畫格省略 10 個
 
 # osd/ui/properties.c: 4653
 Skip 11 of 12 frames
-每 12 畫面省略 11 個
+每 12 畫格省略 11 個
 
 # osd/ui/properties.c: 4644
 Skip 2 of 12 frames
-每 12 畫面省略 2 個
+每 12 畫格省略 2 個
 
 # osd/ui/properties.c: 4645
 Skip 3 of 12 frames
-每 12 畫面省略 3 個
+每 12 畫格省略 3 個
 
 # osd/ui/properties.c: 4646
 Skip 4 of 12 frames
-每 12 畫面省略 4 個
+每 12 畫格省略 4 個
 
 # osd/ui/properties.c: 4647
 Skip 5 of 12 frames
-每 12 畫面省略 5 個
+每 12 畫格省略 5 個
 
 # osd/ui/properties.c: 4648
 Skip 6 of 12 frames
-每 12 畫面省略 6 個
+每 12 畫格省略 6 個
 
 # osd/ui/properties.c: 4649
 Skip 7 of 12 frames
-每 12 畫面省略 7 個
+每 12 畫格省略 7 個
 
 # osd/ui/properties.c: 4650
 Skip 8 of 12 frames
-每 12 畫面省略 8 個
+每 12 畫格省略 8 個
 
 # osd/ui/properties.c: 4651
 Skip 9 of 12 frames
-每 12 畫面省略 9 個
+每 12 畫格省略 9 個
 
 # osd/ui/mame32.rc: 787
 Skip game info
@@ -2240,7 +2240,7 @@ Switch resolutions to fit
 
 # osd/ui/mame32.rc: 682
 Sync to monitor refresh
-同步於顯示器的頻率
+同步於顯示器的更新頻率
 
 # osd/ui/dialogs.c: 126
 The new settings will take effect\n
@@ -2348,7 +2348,7 @@ Translate into Spanish
 
 # osd/ui/mame32.rc: 1604
 Translate into Traditional Chinese
-正體中文翻譯
+繁體中文翻譯
 
 # osd/ui/layout.c: 110
 Translation Files
@@ -2412,7 +2412,7 @@ Use RDTSC timing system
 
 # osd/ui/mame32.rc: 1010
 Use TreeView in property pages
-在屬性頁面中使用樹狀檢視
+在內容頁中使用樹狀檢視
 
 # osd/ui/mame32.rc: 629
 Use samples

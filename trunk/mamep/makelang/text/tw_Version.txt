@@ -1,3 +1,15 @@
+# 7209
+HazeMD
+HazeMD
+
+# 9337
+Neogeo decrypted
+Neo-Geo 解密版
+
+# 9333
+Non-CPU
+無 CPU
+
 # 7154
 Plus!
 Plus!
@@ -5,6 +17,10 @@ Plus!
 # Title
 Version
 版本
+
+# 9317
+home-brew
+自製遊戲
 
 # 7
 .1
@@ -1332,21 +1348,5 @@ Version
 
 # 7150
 .99u9
-
-
-# 7209
-HazeMD
-
-
-# 9337
-Neogeo decrypted
-
-
-# 9333
-Non-CPU
-
-
-# 9317
-home-brew
 
 
