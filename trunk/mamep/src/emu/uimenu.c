@@ -1673,7 +1673,7 @@ static UINT32 menu_custom_button(UINT32 state)
 		if (b >= IPT_CUSTOM1 && b < IPT_CUSTOM1 + custom_buttons)
 		{
 			char colorbutton = is_neogeo ? 'A' : 'a';
-			char *s = &menu_string_pool[menu_string_pool_offset];
+			int menu_string_pool_start = menu_string_pool_offset;
 			int n = 1;
 
 			item_list[menu_items].text = _(input_port_name(in));
@@ -1684,7 +1684,7 @@ static UINT32 menu_custom_button(UINT32 state)
 			for (i = 0; i < MAX_NORMAL_BUTTONS; i++, n <<= 1)
 				if (*custom_item[menu_items] & n)
 				{
-					if (&menu_string_pool[menu_string_pool_offset] != s)
+					if (menu_string_pool_offset != menu_string_pool_start)
 					{
 						menu_string_pool[menu_string_pool_offset++] = '_';
 						menu_string_pool[menu_string_pool_offset++] = '+';
@@ -1696,8 +1696,10 @@ static UINT32 menu_custom_button(UINT32 state)
 
 			menu_string_pool[menu_string_pool_offset++] = '\0';
 
-			convert_command_glyph(s, menu_string_pool_offset - (s - menu_string_pool));
-			item_list[menu_items++].subtext = s;
+			convert_command_glyph(menu_string_pool + menu_string_pool_start, ARRAY_LENGTH(menu_string_pool) - menu_string_pool_start);
+			menu_string_pool_offset = menu_string_pool_start + strlen(&menu_string_pool[menu_string_pool_start]) + 1;
+
+			item_list[menu_items++].subtext = &menu_string_pool[menu_string_pool_start];
 		}
 	}
 
