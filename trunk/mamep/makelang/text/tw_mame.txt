@@ -122,6 +122,10 @@
 %d results found
 %d 結果找到
 
+# emu/cheat.c: 11628
+%s : %s selected
+%s : %s 已選取
+
 # emu/uimenu.c: 130
 %s Analog
 %s 類比控制
@@ -170,9 +174,17 @@
 %s activated
 %s 已啟動
 
+# emu/cheat.c: 11626, 11684
+%s disabled
+%s 已停用
+
+# emu/cheat.c: 11692
+%s enabled
+%s 已啟用
+
 # emu/state.c: 687
 %s'%s' is not a valid savestate file for game '%s'.
-%s'%s' 不是有效的儲存狀態檔於遊戲 '%s'。
+%s'%s' 不是遊戲 '%s' 的有效儲存狀態檔。
 
 # emu/romload.c: 950
 %s: CAN'T CREATE DIFF FILE\n
@@ -213,6 +225,10 @@
 # emu/cheat.c: 2215, 2725, 3144, 3159, 3171, 3183, 3195, 6003, 7163 emu/uitext.c: 42 tools/chdman.c: 742, 1488
 (none)
 (無)
+
+# emu/cheat.c: 607
+---> <ENTER> To Edit <---
+---> 按 <ENTER> 編輯 <---
 
 # emu/inptport.c: 376
 1 Coin/1 Credit
@@ -414,6 +430,22 @@
 9 Coins/1 Credit
 9 幣/1 局
 
+# emu/cheat.c: 9928
+:1st Activation Key (%s)\n
+:第一個啟動鍵 (%s)\n
+
+# emu/cheat.c: 9926
+:1st Activation Key for %s (%s)\n
+:第一個啟動鍵用於 %s (%s)\n
+
+# emu/cheat.c: 9936
+:2nd Activation Key (%s)\n
+:第二個啟動鍵 (%s)\n
+
+# emu/cheat.c: 9934
+:2nd Activation Key for %s (%s)\n
+:第二個啟動鍵用於 %s (%s)\n
+
 # emu/inptport.c: 944
 AD Stick X
 AD 搖桿 X
@@ -554,10 +586,6 @@ Add/Edit a Cheat
 Add/Subtract
 加/減
 
-# mame/layout/bfm_sc2.lay: 807
-Adder %d Output Only (%d:%d)
-只有加算機 %d 輸出 (%d:%d)
-
 # emu/cheat.c: 736, 3697, 7139 emu/uitext.c: 44
 Address
 位址
@@ -594,13 +622,13 @@ Allow Continue
 Alternate
 替代
 
+# emu/cheat.c: 603
+Always have 
+隨時有 
+
 # emu/uitext.c: 97
 Analog Controls
 類比控制
-
-# mame/drivers/aerofgt.c: 1126
-Any
-任意
 
 # mame/drivers/epos.c: 167 mame/drivers/lethal.c: 540, 588 mame/drivers/lordgun.c: 337 mame/drivers/neogeo.c: 997, 1041, 1097, 1174, 1223
 Arcade
@@ -654,11 +682,7 @@ BANK%.2d
 BCD
 BCD
 
-# mame/drivers/playch10.c: 469 
-BIOS
-BIOS
-
-# emu/ui.c: 2396
+# emu/ui.c: 2398
 Beam Width
 光束寬度
 
@@ -882,6 +906,10 @@ Common
 Comparison
 比對邏輯
 
+# emu/cheat.c: 5464
+Comparison Option
+對照選項
+
 # emu/inptport.c: 1011
 Config Menu
 設定選單
@@ -913,14 +941,6 @@ Continues
 # emu/uitext.c: 56
 Contrast
 對比值
-
-# mame/drivers/taito_b.c: 1761 mame/drivers/taito_f2.c: 2862
-Control
-控制
-
-# mame/drivers/brkthru.c: 237, 282 mame/drivers/metro.c: 2376 mame/drivers/st0016.c: 452 mame/drivers/tail2nos.c: 204 
-Control Panel
-控制器
 
 # mame/drivers/changela.c: 963 mame/drivers/nbmj8891.c: 1071, 1167 mame/drivers/taitosj.c: 1768 mame/drivers/tumbleb.c: 1547 
 Control Type
@@ -1000,7 +1020,7 @@ Decoding (%d%%)
 
 # emu/uitext.c: 226
 Decoding Graphics
-解碼圖形
+正在解碼圖形
 
 # mame/machine/cps2crpt.c: 686
 Decrypting %d%%
@@ -1126,6 +1146,10 @@ Disabled
 Display Type
 顯示類型
 
+# emu/cheat.c: 601
+Display the Correct Answer
+顯示正確解答
+
 # emu/cheat.c: 6008
 Do Search
 搜尋
@@ -1141,6 +1165,14 @@ Door Interlock
 # mame/drivers/cherrym.c: 176 mame/drivers/nbmj8891.c: 1425 mame/drivers/pmpoker.c: 581 mame/drivers/witch.c: 550
 Double Up
 比倍
+
+# emu/cheat.c: 582
+Drain all Energy Now! PL1
+立即消耗全部能量! PL1
+
+# emu/cheat.c: 587
+Drain all Energy Now! PL2
+立即消耗全部能量! PL2
 
 # emu/uitext.c: 235
 Driver Configuration
@@ -1169,6 +1201,10 @@ Dual Side-by-Side
 # emu/layout/dualhovu.lay: 54 emu/layout/dualhsxs.lay: 36 emu/layout/dualhuov.lay: 54
 Dual Side-by-Side (Gapless)
 雙畫面 並排 (無間隙)
+
+# emu/layout/dualhuov.lay: 27
+Dual Under-Over
+雙畫面 下上
 
 # emu/layout/dualhuov.lay: 36
 Dual Under-Over (Gapless)
@@ -1202,10 +1238,6 @@ Easy
 Edit Cheat
 編輯作弊碼
 
-# mame/drivers/djmain.c: 499 mame/drivers/toaplan2.c: 2841
-Effect
-效果
-
 # emu/uitext.c: 154
 Eject Current Card
 退出目前的記憶卡
@@ -1229,6 +1261,10 @@ End of playback
 # emu/cheat.c: 3588
 Endianness
 Endianness
+
+# emu/cheat.c: 5458
+Energy (Less or Greater)
+能量值 (減少或增加)
 
 # emu/uitext.c: 205
 Energy (greater or less)
@@ -1274,7 +1310,7 @@ Error: Failed to save state
 Error: Unable to save state due to illegal registrations. See error.log for details.
 錯誤: 無法儲存狀態，因為非法記錄。請查閱\ error.log 以取得詳細資料。
 
-# emu/ui.c: 1445
+# emu/ui.c: 1447
 Error: illegal caption file
 錯誤: 非法字幕檔
 
@@ -1309,6 +1345,10 @@ Fatal error: %s (%s:%d)
 # emu/mamecore.h: 174
 Fatal error: %s\nCaused by assert: %s:%d: %s
 嚴重錯誤: %s\n判斷原因: %s:%d: %s
+
+# emu/cheat.c: 606
+Finish this 
+終止這個 
 
 # mame/drivers/ninjakid.c: 293 mame/drivers/rocnrope.c: 164 mame/drivers/xxmissio.c: 204
 First Bonus
@@ -1361,10 +1401,6 @@ Freeze
 # emu/inptport.c: 416 emu/uilang.c: 23 
 French
 法文
-
-# mame/drivers/funybubl.c: 171 mame/drivers/metro.c: 2495, 2870 mame/drivers/skykid.c: 273 mame/drivers/warriorb.c: 406
-Full
-完全
 
 # emu/datafile.c: 1476
 GAME: 
@@ -1426,6 +1462,10 @@ German
 Germany
 德國版
 
+# emu/cheat.c: 604
+Get 
+取得 
+
 # emu/cheat.c: 4870, 5304, 5849
 Greater
 大於
@@ -1457,10 +1497,6 @@ Harder
 # emu/inptport.c: 427
 Hardest
 極難
-
-# mame/drivers/ddenlovr.c: 3028 mame/drivers/shanghai.c: 913 
-Help
-說明
 
 # emu/uitext.c: 187
 Help not available yet
@@ -1514,11 +1550,11 @@ Home
 Hong Kong
 香港版
 
-# emu/ui.c: 2347
+# emu/ui.c: 2349
 Horiz position
 水平位置
 
-# emu/ui.c: 2313
+# emu/ui.c: 2315
 Horiz stretch
 水平延展
 
@@ -1566,15 +1602,15 @@ Ignore Decrement
 Ignore Decrement By
 忽略減少為
 
-# emu/options.c: 832
+# emu/options.c: 847
 Illegal boolean value for %s; reverting to %d\n
 非法的布林值 %s; 還原成 %d\n
 
-# emu/options.c: 890, 961
+# emu/options.c: 905, 976
 Illegal float value for %s; reverting to %f\n
 非法的浮動值 %s; 還原成 %f\n
 
-# emu/options.c: 861, 920
+# emu/options.c: 876, 935
 Illegal integer value for %s; reverting to %d\n
 非法的整數值 %s; 還原成 %d\n
 
@@ -1586,21 +1622,81 @@ Image Enhancement
 Increased By Value
 增加值
 
-# mame/drivers/aerofgt.c: 745, 846, 924, 994, 1079 mame/drivers/alpha68k.c: 1637 mame/drivers/armedf.c: 557 mame/drivers/bbusters.c: 457, 528 mame/drivers/boogwing.c: 180 mame/drivers/cinemat.c: 710 mame/drivers/crshrace.c: 283, 461 mame/drivers/deco32.c: 1327 mame/drivers/itech8.c: 1603 mame/drivers/marinedt.c: 366 mame/drivers/mcr68.c: 738 mame/drivers/segac2.c: 1066 mame/drivers/segas18.c: 903, 959, 1015, 1069, 1135, 1152, 1196 mame/drivers/sslam.c: 580 mame/drivers/system18.c: 1328 mame/drivers/system24.c: 1470 mame/drivers/taotaido.c: 233
-Individual
-個別
-
 # emu/inptport.c: 448
 Infinite
 無限
+
+# emu/cheat.c: 602
+Infinite 
+無限 
+
+# emu/cheat.c: 589
+Infinite Ammo
+無限彈藥
+
+# emu/cheat.c: 593
+Infinite Ammo PL1
+無限彈藥 PL1
+
+# emu/cheat.c: 597
+Infinite Ammo PL2
+無限彈藥 PL2
+
+# emu/cheat.c: 590
+Infinite Bombs
+無限炸彈
+
+# emu/cheat.c: 594
+Infinite Bombs PL1
+無限炸彈 PL1
+
+# emu/cheat.c: 598
+Infinite Bombs PL2
+無限炸彈 PL2
+
+# emu/cheat.c: 574
+Infinite Credits
+無限局數
+
+# emu/cheat.c: 577
+Infinite Energy
+無限能量
+
+# emu/cheat.c: 581
+Infinite Energy PL1
+無限能量 PL1
+
+# emu/cheat.c: 586
+Infinite Energy PL2
+無限能量 PL2
 
 # emu/cheat.c: 576 mame/drivers/cinemat.c: 924 mame/drivers/clshroad.c: 218 mame/drivers/galaxian.c: 3105 mame/drivers/ginganin.c: 231 mame/drivers/hal21.c: 417 mame/drivers/jack.c: 652 mame/drivers/prehisle.c: 157 mame/drivers/superdq.c: 284 mame/drivers/vicdual.c: 535, 912
 Infinite Lives
 無限生命
 
+# emu/cheat.c: 580
+Infinite Lives PL1
+無限生命 PL1
+
+# emu/cheat.c: 585
+Infinite Lives PL2
+無限生命 PL2
+
 # emu/cheat.c: 575 mame/drivers/vsnes.c: 857
 Infinite Time
 無限時間
+
+# emu/cheat.c: 579
+Infinite Time PL1
+無限時間 PL1
+
+# emu/cheat.c: 584
+Infinite Time PL2
+無限時間 PL2
+
+# emu/cheat.c: 4878, 5418
+Initialize Memory
+初始化記憶體
 
 # emu/mame.c: 1445
 Initializing...
@@ -1618,11 +1714,11 @@ Input (this game)
 International
 國際版
 
-# emu/options.c: 930
+# emu/options.c: 945
 Invalid %s value (must be between %d and %d); reverting to %d\n
 無效的 %s 值 (必須介於 %d 到 %d); 還原成 %d\n
 
-# emu/options.c: 971
+# emu/options.c: 986
 Invalid %s value (must be between %f and %f); reverting to %f\n
 無效的 %s 值 (必須介於 %f 到 %f); 還原成 %f\n
 
@@ -1633,6 +1729,14 @@ Inverted
 # emu/cheat.c: 578 mame/drivers/bwing.c: 266 mame/drivers/cop01.c: 345 mame/drivers/liberate.c: 313 mame/drivers/runaway.c: 236
 Invincibility
 無敵
+
+# emu/cheat.c: 583
+Invincibility PL1
+無敵 PL1
+
+# emu/cheat.c: 588
+Invincibility PL2
+無敵 PL2
 
 # mame/drivers/cps1.c: 909, 1251 mame/drivers/equites.c: 563 mame/drivers/fantland.c: 380, 454, 569 mame/drivers/m72.c: 1001, 1073, 1144, 1214, 1350 mame/drivers/namcos1.c: 695 mame/drivers/namcos86.c: 804, 883 mame/drivers/oneshot.c: 273 mame/drivers/seicross.c: 351 mame/drivers/snowbros.c: 571, 645 mame/drivers/system1.c: 2359 mame/drivers/toaplan1.c: 585, 654, 723, 792, 862, 945, 1029, 1106, 1174, 1249, 1319, 1394, 1483 mame/drivers/toaplan2.c: 2118, 2183, 2240, 2304, 2343, 2451, 2511, 2573, 2647, 2693, 2746, 3016, 3132 mame/drivers/yard.c: 145
 Invulnerability
@@ -1661,6 +1765,10 @@ Joystick
 # mame/drivers/system24.c: 1885
 Kan
 槓
+
+# emu/cheat.c: 3275
+Keep
+保留
 
 # emu/inptport.c: 1007 mame/drivers/ddenlovr.c: 3552, 3779 mame/drivers/ltcasino.c: 563 mame/drivers/rbmk.c: 132 mame/drivers/ssv.c: 1474, 1590, 1872 
 Keyboard
@@ -1822,11 +1930,11 @@ Load Selected Card
 Load State
 載入狀態
 
-# emu/ui.c: 1960
+# emu/ui.c: 1962
 Load cancelled
 已取消載入
 
-# emu/ui.c: 1991
+# emu/ui.c: 1993
 Load from position %c
 載入位置 %c
 
@@ -1841,6 +1949,10 @@ Loading Complete
 # emu/cheat.c: 3596
 Location
 位置
+
+# emu/cheat.c: 605
+Lose 
+喪失 
 
 # emu/inptport.c: 430
 Low
@@ -1886,6 +1998,10 @@ Mapped Memory
 Mask
 遮罩
 
+# emu/cheat.c: 3478
+Match to Write
+符合寫入
+
 # emu/uitext.c: 215
 Matches found
 找到符合的
@@ -1921,6 +2037,10 @@ Memory card ejected
 # emu/uitext.c: 157
 Memory card loaded
 記憶卡載入完成
+
+# emu/cheat.c: 7637 mame/drivers/tempest.c: 509
+Minimum
+簡易
 
 # emu/cheat.c: 3418
 Minimum Boundary
@@ -2086,14 +2206,6 @@ Next Game
 Nihongo
 日文
 
-# mame/drivers/popeye.c: 303, 387 mame/drivers/punchout.c: 556, 627
-Nintendo
-Nintendo
-
-# mame/drivers/popeye.c: 305, 389 mame/drivers/punchout.c: 557, 628
-Nintendo of America
-Nintendo of America
-
 # emu/inptport.c: 351 
 No
 否
@@ -2102,7 +2214,7 @@ No
 No previous values saved
 沒有儲存上一次的值
 
-# emu/cheat.c: 735, 2908 emu/inptport.c: 456 emu/input.c: 993, 1328 emu/sound/custom.c: 84 emu/uimenu.c: 2176 
+# emu/cheat.c: 735, 2908 emu/inptport.c: 456 emu/input.c: 993, 1328 emu/sound/custom.c: 84 emu/uimenu.c: 2178 
 None
 無
 
@@ -2596,7 +2708,7 @@ P2 麻將 M
 
 # emu/inptport.c: 605
 P2 Mahjong N
-P2 Mahjong N
+P2 麻將 N
 
 # emu/inptport.c: 606
 P2 Mahjong O
@@ -2608,7 +2720,7 @@ P2 麻將 P
 
 # emu/inptport.c: 610
 P2 Mahjong Pon
-P2 Mahjong 碰
+P2 麻將 碰
 
 # emu/inptport.c: 608
 P2 Mahjong Q
@@ -2616,15 +2728,15 @@ P2 麻將 Q
 
 # emu/inptport.c: 612
 P2 Mahjong Reach
-P2 Mahjong 聽
+P2 麻將 聽
 
 # emu/inptport.c: 613
 P2 Mahjong Ron
-P2 Mahjong 胡
+P2 麻將 胡
 
 # emu/inptport.c: 616
 P2 Mahjong Score
-P2 Mahjong 得分
+P2 麻將 得分
 
 # emu/inptport.c: 620 mame/includes/nb1413m3.h: 219
 P2 Mahjong Small
@@ -3514,6 +3626,10 @@ Paddle V 8
 Pause
 暫停
 
+# mame/drivers/turbo.c: 956 
+Pedal
+踏板
+
 # emu/layout/horizont.lay: 9 emu/layout/vertical.lay: 9
 Pixel Aspect (%d:%d)
 像素長寬 (%d:%d)
@@ -3566,6 +3682,70 @@ Players
 Pon
 碰
 
+# emu/inptport.c: 890
+Positional
+定位器
+
+# emu/inptport.c: 891
+Positional 2
+定位器 2
+
+# emu/inptport.c: 892
+Positional 3
+定位器 3
+
+# emu/inptport.c: 893
+Positional 4
+定位器 4
+
+# emu/inptport.c: 894
+Positional 5
+定位器 5
+
+# emu/inptport.c: 895
+Positional 6
+定位器 6
+
+# emu/inptport.c: 896
+Positional 7
+定位器 7
+
+# emu/inptport.c: 897
+Positional 8
+定位器 8
+
+# emu/inptport.c: 899
+Positional V
+定位器 V
+
+# emu/inptport.c: 900
+Positional V 2
+定位器 V 2
+
+# emu/inptport.c: 901
+Positional V 3
+定位器 V 3
+
+# emu/inptport.c: 902
+Positional V 4
+定位器 V 4
+
+# emu/inptport.c: 903
+Positional V 5
+定位器 V 5
+
+# emu/inptport.c: 904
+Positional V 6
+定位器 V 6
+
+# emu/inptport.c: 905
+Positional V 7
+定位器 V 7
+
+# emu/inptport.c: 906
+Positional V 8
+定位器 V 8
+
 # emu/cheat.c: 3561
 Prefill
 預填充
@@ -3590,15 +3770,19 @@ Previous Game
 Previous values already restored
 已經還原上一次的值
 
-# emu/ui.c: 2005
+# emu/cheat.c: 2936
+Program Space
+程式容量
+
+# emu/ui.c: 2007
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 離開遊戲? \n\n按一下確定鍵離開遊戲， \n按一下取消鍵繼續執行。 
 
-# emu/ui.c: 1842
+# emu/ui.c: 1844
 REC START
 錄製開始
 
-# emu/ui.c: 1847
+# emu/ui.c: 1849
 REC STOP
 錄製停止
 
@@ -3617,6 +3801,18 @@ Range Maximum
 # emu/cheat.c: 3444
 Range Minimum
 最小範圍
+
+# emu/cheat.c: 592 mame/drivers/ssv.c: 2464 mame/drivers/toaplan2.c: 2285
+Rapid Fire
+快速射擊
+
+# emu/cheat.c: 596
+Rapid Fire PL1
+快速射擊 PL1
+
+# emu/cheat.c: 600
+Rapid Fire PL2
+快速射擊 PL2
 
 # mame/drivers/system24.c: 1886
 Reach
@@ -3722,10 +3918,6 @@ Rotation
 SHADOWS        : %3d  + %3d\n
 背投影         : %3d  + %3d\n
 
-# mame/drivers/aerofgt.c: 744, 845, 923, 993, 1078 mame/drivers/crshrace.c: 282, 460 mame/drivers/taotaido.c: 232
-Same
-相同
-
 # emu/sound/samples.c: 602 
 Samples
 樣本檔
@@ -3746,11 +3938,11 @@ Save Snapshot
 Save State
 儲存狀態
 
-# emu/ui.c: 1958
+# emu/ui.c: 1960
 Save cancelled
 已取消儲存
 
-# emu/ui.c: 1986
+# emu/ui.c: 1988
 Save to position %c
 儲存位置 %c
 
@@ -3762,7 +3954,7 @@ Screen
 Screen #
 畫面 #
 
-# emu/ui.c: 2246, 2263, 2280, 2296, 2313, 2330, 2347, 2364
+# emu/ui.c: 2248, 2265, 2282, 2298, 2315, 2332, 2349, 2366
 Screen %d %s %.3f
 畫面 %d %s %.3f
 
@@ -3822,6 +4014,14 @@ Select
 Select Memory Areas
 選擇記憶體區域
 
+# emu/cheat.c: 595
+Select Score PL1
+選擇分數 PL1
+
+# emu/cheat.c: 599
+Select Score PL2
+選擇分數 PL2
+
 # emu/cheat.c: 7630
 Select Search
 搜尋選擇
@@ -3830,13 +4030,17 @@ Select Search
 Select a value
 選擇一個值
 
-# emu/ui.c: 1951
+# emu/ui.c: 1953
 Select position to load from
 選擇要載入的位置
 
-# emu/ui.c: 1949
+# emu/ui.c: 1951
 Select position to save to
 選擇要儲存的位置
+
+# emu/cheat.c: 591
+Select starting level
+選擇開始等級
 
 # emu/uitext.c: 130
 Sensitivity
@@ -4006,6 +4210,10 @@ State successfully saved.\nWarning: Save states are not officially supported for
 Statistics not available
 沒有可供查看的統計
 
+# emu/cheat.c: 5461
+Status (Same or Different)
+狀態 (相同或差異)
+
 # emu/uitext.c: 206
 Status (bits or flags)
 狀態 (位元或標記)
@@ -4134,10 +4342,6 @@ There are working clones of this game. They are:
 Throttle
 限制速度
 
-# mame/drivers/segaxbd.c: 750
-Throttle Lever
-限制速度控制
-
 # emu/uitext.c: 147
 Tickets dispensed
 彩票分配數
@@ -4152,7 +4356,11 @@ Time
 
 # mame/drivers/chinagat.c: 438 mame/drivers/ddragon.c: 791 mame/drivers/fuukifg3.c: 408 mame/drivers/jollyjgr.c: 176 mame/drivers/m62.c: 718, 769, 821, 873 mame/drivers/megaplay.c: 192 mame/drivers/metro.c: 2774 mame/drivers/quizdna.c: 150, 238, 340 mame/drivers/segas16a.c: 999 mame/drivers/segas16b.c: 1901 mame/drivers/shisen.c: 139 mame/drivers/st0016.c: 386 mame/drivers/system16.c: 646 mame/drivers/taito_f2.c: 2018, 3210 mame/drivers/toaplan2.c: 2979, 3095 mame/drivers/vsnes.c: 1472, 1780
 Timer
-計時
+計時器
+
+# emu/cheat.c: 4830, 5455
+Timer (+ or -)
+計時器 (+ 或 -)
 
 # emu/uitext.c: 204
 Timers (+/- some value)
@@ -4374,15 +4582,15 @@ Unable to start sound emulation
 Unable to start video emulation
 無法啟動視訊模擬
 
-# emu/options.c: 822
+# emu/options.c: 837
 Unexpected boolean option %s queried\n
 疑似非預期的布林選項 %s\n
 
-# emu/options.c: 880, 951
+# emu/options.c: 895, 966
 Unexpected float option %s queried\n
 疑似非預期的浮動選項 %s\n
 
-# emu/options.c: 851, 910
+# emu/options.c: 866, 925
 Unexpected integer option %s queried\n
 疑似非預期的整數選項 %s\n
 
@@ -4478,6 +4686,10 @@ Unused (28)
 Unused (29)
 未使用 (29)
 
+# emu/cheat.c: 2946
+Unused (3)
+未使用 (3)
+
 # emu/cheat.c: 2951
 Unused (30)
 未使用 (30)
@@ -4509,6 +4721,10 @@ Unused (8)
 # emu/cheat.c: 2947
 Unused (9)
 未使用 (9)
+
+# emu/ui.c: 497
+Updating Artwork...
+正在更新 Artwork...
 
 # emu/inptport.c: 396
 Upright
@@ -4546,6 +4762,14 @@ VFD Only (%d:%d)
 Value
 值
 
+# emu/cheat.c: 5441
+Value (Equal)
+值 (相等)
+
+# emu/cheat.c: 5448
+Value (NearTo)
+值 (相近)
+
 # emu/uitext.c: 58
 Vector Flicker
 向量閃爍度
@@ -4558,11 +4782,11 @@ Vector Game
 Version
 版本
 
-# emu/ui.c: 2364
+# emu/ui.c: 2366
 Vert position
 垂直位置
 
-# emu/ui.c: 2330
+# emu/ui.c: 2332
 Vert stretch
 垂直延展
 
@@ -4690,6 +4914,10 @@ World
 Write
 寫入
 
+# emu/cheat.c: 2888
+Write If Match
+如果符合就寫入
+
 # emu/uitext.c: 194
 X Position
 X 座標
@@ -4814,6 +5042,10 @@ Zoom Auto
 \tInvalid %s checksum treated as 0 (check leading zeros)\n
 \t無效的 %s 檢查碼視為 0 (檢查前導零)\n
 
+# emu/cheat.c: 2646, 2796, 4666
+activation key saved
+啟動鍵已儲存
+
 # emu/mamecore.h: 173 
 assert: %s:%d: %s
 判斷: %s:%d: %s
@@ -4840,7 +5072,7 @@ IPS 檔案的目錄
 
 # emu/options.c: 119
 directory for localized data files
-當地化語言資料檔案的目錄
+當地化語言資料檔的目錄
 
 # emu/options.c: 112
 directory for translation table data
@@ -4880,7 +5112,7 @@ directory to save screenshots
 
 # emu/options.c: 109
 directory to save states
-儲存狀態檔案的目錄
+儲存狀態的目錄
 
 # emu/debug/debugcmd.c: 1069, 1253
 disabled
@@ -4913,6 +5145,10 @@ mameinfo 資料庫名稱
 # emu/input.c: 999, 1299
 n/a
 n/a
+
+# emu/cheat.c: 2649, 2799, 4669
+no activation key
+無啟動鍵
 
 # emu/cheat.c: 6637
 no results for this region
@@ -4972,7 +5208,7 @@ hash 檔案的路徑
 
 # emu/options.c: 98
 path to ini files
-INI 檔路徑
+INI 檔案的路徑
 
 # emu/options.c: 95
 path to samplesets
@@ -4997,6 +5233,10 @@ saved all memory regions
 # emu/video.c: 1115
 scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
 scale_effect \"%s\" 無法支援 15 位元和 32 位元的色深。目前 scale_effect 已停用。
+
+# emu/cheat.c: 11674
+set %s
+設定 %s
 
 # emu/uitext.c: 47 mame/drivers/harddriv.c: 3191 mame/drivers/segas16b.c: 941, 1012 
 sound
@@ -5030,6 +5270,10 @@ unzip it and place it in the MAME directory
 values restored
 值已還原
 
+# mame/layout/bfm_sc2.lay: 807
+Adder %d Output Only (%d:%d)
+
+
 # mame/layout/bfm_sc2.lay: 27
 Adder,VFD and Lamp Matrix
 
@@ -5038,115 +5282,7 @@ Adder,VFD and Lamp Matrix
 Adder,VFD and Lamps
 
 
-# mame/drivers/lvcards.c: 209, 293 mame/drivers/royalmah.c: 1003, 1538 mame/drivers/vsnes.c: 1893, 1922
-Black
-
-
-# mame/drivers/coinmstr.c: 185 
-Bookkeeping
-
-
 # mame/layout/cardline.lay: 83 mame/layout/funworld.lay: 73
 Button Lamps
-
-
-# mame/drivers/lvcards.c: 395
-Coinout Sensor
-
-
-# mame/drivers/acefruit.c: 268 mame/drivers/bfm_sc2.c: 1756, 1901, 2069, 2228, 2728 mame/drivers/cardline.c: 124 mame/drivers/itech8.c: 1434 mame/drivers/magic10.c: 149, 217 mame/drivers/sderby.c: 174
-Collect
-
-
-# emu/layout/dualhuov.lay: 27
-Dual Under-Over
-
-
-# mame/drivers/gotcha.c: 209
-Game Selection
-
-
-# mame/drivers/royalmah.c: 1539 
-Gray
-
-
-# mame/drivers/lvcards.c: 384
-Hit
-
-
-# mame/drivers/funworld.c: 970, 1033 mame/drivers/ltcasino.c: 100, 472 mame/drivers/lvcards.c: 212, 296 mame/drivers/pmpoker.c: 599, 689
-Hold 1
-
-
-# mame/drivers/ltcasino.c: 101, 473 mame/drivers/lvcards.c: 213, 297 mame/drivers/pmpoker.c: 600, 690
-Hold 2
-
-
-# mame/drivers/funworld.c: 1043 mame/drivers/ltcasino.c: 102, 474 mame/drivers/lvcards.c: 214, 298 mame/drivers/pmpoker.c: 601, 691
-Hold 3
-
-
-# mame/drivers/ltcasino.c: 103, 475 mame/drivers/lvcards.c: 215, 299 mame/drivers/pmpoker.c: 602, 692
-Hold 4
-
-
-# mame/drivers/ltcasino.c: 104, 476 mame/drivers/lvcards.c: 216, 300 mame/drivers/pmpoker.c: 603, 693
-Hold 5
-
-
-# mame/drivers/lvcards.c: 291, 374
-Hopper Reset
-
-
-# mame/drivers/funworld.c: 826, 1136 
-Insert
-
-
-# mame/drivers/asuka.c: 711, 753, 795 mame/drivers/cischeat.c: 1309 mame/drivers/gstriker.c: 431 mame/drivers/metro.c: 2366 mame/drivers/midvunit.c: 568
-Master
-
-
-# mame/drivers/lvcards.c: 288 mame/drivers/macs.c: 250, 340 mame/drivers/vroulet.c: 138
-Memory Reset
-
-
-# emu/cheat.c: 7637 mame/drivers/tempest.c: 509
-Minimum
-
-
-# mame/drivers/findout.c: 309 
-Orientation
-
-
-# mame/drivers/cardline.c: 140 mame/drivers/cherrym.c: 197 mame/drivers/csk.c: 283, 368, 443, 513 mame/drivers/ddenlovr.c: 3956, 4507 mame/drivers/findout.c: 422 mame/drivers/funworld.c: 839, 901, 925, 962, 986, 1025, 1049, 1087, 1149, 1173 mame/drivers/getrivia.c: 275 mame/drivers/neogeo.c: 1254 mame/drivers/pmpoker.c: 500, 590, 680 mame/drivers/rcasino.c: 212 mame/drivers/royalmah.c: 852, 1050, 1225, 1400, 1747, 1823, 2150 mame/drivers/vroulet.c: 143
-Payout
-
-
-# mame/drivers/turbo.c: 956 
-Pedal
-
-
-# mame/drivers/drgnmst.c: 291 mame/drivers/exidy440.c: 1064 mame/drivers/fuukifg3.c: 400 mame/drivers/itech8.c: 1250 mame/drivers/kinst.c: 483 mame/drivers/lvcards.c: 208, 292 mame/drivers/powerins.c: 239 mame/drivers/relief.c: 250 mame/drivers/stfight.c: 366 mame/drivers/taito_z.c: 2935, 3003
-Red
-
-
-# mame/drivers/getrivia.c: 288 mame/drivers/lvcards.c: 383
-Stand
-
-
-# mame/drivers/funworld.c: 814, 876, 938, 1062, 1124 
-State
-
-
-# mame/drivers/csk.c: 370, 515 mame/drivers/goldstar.c: 117 mame/drivers/mjkjidai.c: 251
-Statistics
-
-
-# mame/drivers/toaplan1.c: 803
-Toaplan
-
-
-# mame/drivers/harddriv.c: 750
-Zoom
 
 

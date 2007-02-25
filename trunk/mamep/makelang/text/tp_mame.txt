@@ -122,6 +122,10 @@
 %d results found
 
 
+# emu/cheat.c: 11628
+%s : %s selected
+
+
 # emu/uimenu.c: 130
 %s Analog
 
@@ -170,6 +174,14 @@
 %s activated
 
 
+# emu/cheat.c: 11626, 11684
+%s disabled
+
+
+# emu/cheat.c: 11692
+%s enabled
+
+
 # emu/state.c: 687
 %s'%s' is not a valid savestate file for game '%s'.
 
@@ -212,6 +224,10 @@
 
 # emu/cheat.c: 2215, 2725, 3144, 3159, 3171, 3183, 3195, 6003, 7163 emu/uitext.c: 42 tools/chdman.c: 742, 1488
 (none)
+
+
+# emu/cheat.c: 607
+---> <ENTER> To Edit <---
 
 
 # emu/inptport.c: 376
@@ -414,6 +430,22 @@
 9 Coins/1 Credit
 
 
+# emu/cheat.c: 9928
+:1st Activation Key (%s)\n
+
+
+# emu/cheat.c: 9926
+:1st Activation Key for %s (%s)\n
+
+
+# emu/cheat.c: 9936
+:2nd Activation Key (%s)\n
+
+
+# emu/cheat.c: 9934
+:2nd Activation Key for %s (%s)\n
+
+
 # emu/inptport.c: 944
 AD Stick X
 
@@ -602,12 +634,12 @@ Allow Continue
 Alternate
 
 
+# emu/cheat.c: 603
+Always have 
+
+
 # emu/uitext.c: 97
 Analog Controls
-
-
-# mame/drivers/aerofgt.c: 1126
-Any
 
 
 # mame/drivers/epos.c: 167 mame/drivers/lethal.c: 540, 588 mame/drivers/lordgun.c: 337 mame/drivers/neogeo.c: 997, 1041, 1097, 1174, 1223
@@ -662,11 +694,7 @@ BANK%.2d
 BCD
 
 
-# mame/drivers/playch10.c: 469 
-BIOS
-
-
-# emu/ui.c: 2396
+# emu/ui.c: 2398
 Beam Width
 
 
@@ -690,16 +718,8 @@ Binary
 Bit
 
 
-# mame/drivers/lvcards.c: 209, 293 mame/drivers/royalmah.c: 1003, 1538 mame/drivers/vsnes.c: 1893, 1922
-Black
-
-
 # emu/inptport.c: 354
 Bonus Life
-
-
-# mame/drivers/coinmstr.c: 185 
-Bookkeeping
 
 
 # emu/uitext.c: 102 mame/drivers/cardline.c: 136 mame/drivers/polyplay.c: 207
@@ -882,14 +902,6 @@ Coin Slots
 Coinage
 
 
-# mame/drivers/lvcards.c: 395
-Coinout Sensor
-
-
-# mame/drivers/acefruit.c: 268 mame/drivers/bfm_sc2.c: 1756, 1901, 2069, 2228, 2728 mame/drivers/cardline.c: 124 mame/drivers/itech8.c: 1434 mame/drivers/magic10.c: 149, 217 mame/drivers/sderby.c: 174
-Collect
-
-
 # emu/layout/ho20ffff.lay: 10 emu/layout/ho2eff2e.lay: 10 emu/layout/ho4f893d.lay: 11 emu/layout/ho88ffff.lay: 10 emu/layout/hoa0a0ff.lay: 10 emu/layout/hoffe457.lay: 10 emu/layout/hoffff20.lay: 10 emu/layout/voffff20.lay: 10 mame/layout/avalnche.lay: 26 mame/layout/bzone.lay: 14 mame/layout/circus.lay: 26 mame/layout/clowns.lay: 26 mame/layout/copsnrob.lay: 18 mame/layout/crash.lay: 26 mame/layout/deadeye.lay: 34 mame/layout/geebee.lay: 76 mame/layout/gypsyjug.lay: 38 mame/layout/invad2ct.lay: 46 mame/layout/invaders.lay: 22 mame/layout/invrvnge.lay: 18 mame/layout/lazercmd.lay: 30 mame/layout/sbrkout.lay: 34 mame/layout/solarq.lay: 18 mame/layout/sos.lay: 18 mame/layout/starcas.lay: 22 mame/layout/tinv2650.lay: 22
 Color Overlay
 
@@ -908,6 +920,10 @@ Common
 
 # emu/cheat.c: 4854, 4859, 4864, 4869, 5973
 Comparison
+
+
+# emu/cheat.c: 5464
+Comparison Option
 
 
 # emu/inptport.c: 1011
@@ -940,14 +956,6 @@ Continues
 
 # emu/uitext.c: 56
 Contrast
-
-
-# mame/drivers/taito_b.c: 1761 mame/drivers/taito_f2.c: 2862
-Control
-
-
-# mame/drivers/brkthru.c: 237, 282 mame/drivers/metro.c: 2376 mame/drivers/st0016.c: 452 mame/drivers/tail2nos.c: 204 
-Control Panel
 
 
 # mame/drivers/changela.c: 963 mame/drivers/nbmj8891.c: 1071, 1167 mame/drivers/taitosj.c: 1768 mame/drivers/tumbleb.c: 1547 
@@ -1154,6 +1162,10 @@ Disabled
 Display Type
 
 
+# emu/cheat.c: 601
+Display the Correct Answer
+
+
 # emu/cheat.c: 6008
 Do Search
 
@@ -1168,6 +1180,14 @@ Door Interlock
 
 # mame/drivers/cherrym.c: 176 mame/drivers/nbmj8891.c: 1425 mame/drivers/pmpoker.c: 581 mame/drivers/witch.c: 550
 Double Up
+
+
+# emu/cheat.c: 582
+Drain all Energy Now! PL1
+
+
+# emu/cheat.c: 587
+Drain all Energy Now! PL2
 
 
 # emu/uitext.c: 235
@@ -1234,10 +1254,6 @@ Easy
 Edit Cheat
 
 
-# mame/drivers/djmain.c: 499 mame/drivers/toaplan2.c: 2841
-Effect
-
-
 # emu/uitext.c: 154
 Eject Current Card
 
@@ -1260,6 +1276,10 @@ End of playback
 
 # emu/cheat.c: 3588
 Endianness
+
+
+# emu/cheat.c: 5458
+Energy (Less or Greater)
 
 
 # emu/uitext.c: 205
@@ -1306,7 +1326,7 @@ Error: Failed to save state
 Error: Unable to save state due to illegal registrations. See error.log for details.
 
 
-# emu/ui.c: 1445
+# emu/ui.c: 1447
 Error: illegal caption file
 
 
@@ -1340,6 +1360,10 @@ Fatal error: %s (%s:%d)
 
 # emu/mamecore.h: 174
 Fatal error: %s\nCaused by assert: %s:%d: %s
+
+
+# emu/cheat.c: 606
+Finish this 
 
 
 # mame/drivers/ninjakid.c: 293 mame/drivers/rocnrope.c: 164 mame/drivers/xxmissio.c: 204
@@ -1394,10 +1418,6 @@ Freeze
 French
 
 
-# mame/drivers/funybubl.c: 171 mame/drivers/metro.c: 2495, 2870 mame/drivers/skykid.c: 273 mame/drivers/warriorb.c: 406
-Full
-
-
 # emu/datafile.c: 1476
 GAME: 
 
@@ -1424,10 +1444,6 @@ Game Information
 
 # emu/uitext.c: 119
 Game Mameinfo
-
-
-# mame/drivers/gotcha.c: 209
-Game Selection
 
 
 # emu/inptport.c: 2336 mame/drivers/neogeo.c: 998, 1042, 1098, 1224
@@ -1462,8 +1478,8 @@ German
 Germany
 
 
-# mame/drivers/royalmah.c: 1539 
-Gray
+# emu/cheat.c: 604
+Get 
 
 
 # emu/cheat.c: 4870, 5304, 5849
@@ -1496,10 +1512,6 @@ Harder
 
 # emu/inptport.c: 427
 Hardest
-
-
-# mame/drivers/ddenlovr.c: 3028 mame/drivers/shanghai.c: 913 
-Help
 
 
 # emu/uitext.c: 187
@@ -1546,30 +1558,6 @@ Hispanic
 History not available
 
 
-# mame/drivers/lvcards.c: 384
-Hit
-
-
-# mame/drivers/funworld.c: 970, 1033 mame/drivers/ltcasino.c: 100, 472 mame/drivers/lvcards.c: 212, 296 mame/drivers/pmpoker.c: 599, 689
-Hold 1
-
-
-# mame/drivers/ltcasino.c: 101, 473 mame/drivers/lvcards.c: 213, 297 mame/drivers/pmpoker.c: 600, 690
-Hold 2
-
-
-# mame/drivers/funworld.c: 1043 mame/drivers/ltcasino.c: 102, 474 mame/drivers/lvcards.c: 214, 298 mame/drivers/pmpoker.c: 601, 691
-Hold 3
-
-
-# mame/drivers/ltcasino.c: 103, 475 mame/drivers/lvcards.c: 215, 299 mame/drivers/pmpoker.c: 602, 692
-Hold 4
-
-
-# mame/drivers/ltcasino.c: 104, 476 mame/drivers/lvcards.c: 216, 300 mame/drivers/pmpoker.c: 603, 693
-Hold 5
-
-
 # mame/drivers/neogeo.c: 996, 1040, 1096, 1173, 1222
 Home
 
@@ -1578,15 +1566,11 @@ Home
 Hong Kong
 
 
-# mame/drivers/lvcards.c: 291, 374
-Hopper Reset
-
-
-# emu/ui.c: 2347
+# emu/ui.c: 2349
 Horiz position
 
 
-# emu/ui.c: 2313
+# emu/ui.c: 2315
 Horiz stretch
 
 
@@ -1634,15 +1618,15 @@ Ignore Decrement
 Ignore Decrement By
 
 
-# emu/options.c: 832
+# emu/options.c: 847
 Illegal boolean value for %s; reverting to %d\n
 
 
-# emu/options.c: 890, 961
+# emu/options.c: 905, 976
 Illegal float value for %s; reverting to %f\n
 
 
-# emu/options.c: 861, 920
+# emu/options.c: 876, 935
 Illegal integer value for %s; reverting to %d\n
 
 
@@ -1654,20 +1638,80 @@ Image Enhancement
 Increased By Value
 
 
-# mame/drivers/aerofgt.c: 745, 846, 924, 994, 1079 mame/drivers/alpha68k.c: 1637 mame/drivers/armedf.c: 557 mame/drivers/bbusters.c: 457, 528 mame/drivers/boogwing.c: 180 mame/drivers/cinemat.c: 710 mame/drivers/crshrace.c: 283, 461 mame/drivers/deco32.c: 1327 mame/drivers/itech8.c: 1603 mame/drivers/marinedt.c: 366 mame/drivers/mcr68.c: 738 mame/drivers/segac2.c: 1066 mame/drivers/segas18.c: 903, 959, 1015, 1069, 1135, 1152, 1196 mame/drivers/sslam.c: 580 mame/drivers/system18.c: 1328 mame/drivers/system24.c: 1470 mame/drivers/taotaido.c: 233
-Individual
-
-
 # emu/inptport.c: 448
 Infinite
+
+
+# emu/cheat.c: 602
+Infinite 
+
+
+# emu/cheat.c: 589
+Infinite Ammo
+
+
+# emu/cheat.c: 593
+Infinite Ammo PL1
+
+
+# emu/cheat.c: 597
+Infinite Ammo PL2
+
+
+# emu/cheat.c: 590
+Infinite Bombs
+
+
+# emu/cheat.c: 594
+Infinite Bombs PL1
+
+
+# emu/cheat.c: 598
+Infinite Bombs PL2
+
+
+# emu/cheat.c: 574
+Infinite Credits
+
+
+# emu/cheat.c: 577
+Infinite Energy
+
+
+# emu/cheat.c: 581
+Infinite Energy PL1
+
+
+# emu/cheat.c: 586
+Infinite Energy PL2
 
 
 # emu/cheat.c: 576 mame/drivers/cinemat.c: 924 mame/drivers/clshroad.c: 218 mame/drivers/galaxian.c: 3105 mame/drivers/ginganin.c: 231 mame/drivers/hal21.c: 417 mame/drivers/jack.c: 652 mame/drivers/prehisle.c: 157 mame/drivers/superdq.c: 284 mame/drivers/vicdual.c: 535, 912
 Infinite Lives
 
 
+# emu/cheat.c: 580
+Infinite Lives PL1
+
+
+# emu/cheat.c: 585
+Infinite Lives PL2
+
+
 # emu/cheat.c: 575 mame/drivers/vsnes.c: 857
 Infinite Time
+
+
+# emu/cheat.c: 579
+Infinite Time PL1
+
+
+# emu/cheat.c: 584
+Infinite Time PL2
+
+
+# emu/cheat.c: 4878, 5418
+Initialize Memory
 
 
 # emu/mame.c: 1445
@@ -1682,19 +1726,15 @@ Input (general)
 Input (this game)
 
 
-# mame/drivers/funworld.c: 826, 1136 
-Insert
-
-
 # emu/inptport.c: 405
 International
 
 
-# emu/options.c: 930
+# emu/options.c: 945
 Invalid %s value (must be between %d and %d); reverting to %d\n
 
 
-# emu/options.c: 971
+# emu/options.c: 986
 Invalid %s value (must be between %f and %f); reverting to %f\n
 
 
@@ -1704,6 +1744,14 @@ Inverted
 
 # emu/cheat.c: 578 mame/drivers/bwing.c: 266 mame/drivers/cop01.c: 345 mame/drivers/liberate.c: 313 mame/drivers/runaway.c: 236
 Invincibility
+
+
+# emu/cheat.c: 583
+Invincibility PL1
+
+
+# emu/cheat.c: 588
+Invincibility PL2
 
 
 # mame/drivers/cps1.c: 909, 1251 mame/drivers/equites.c: 563 mame/drivers/fantland.c: 380, 454, 569 mame/drivers/m72.c: 1001, 1073, 1144, 1214, 1350 mame/drivers/namcos1.c: 695 mame/drivers/namcos86.c: 804, 883 mame/drivers/oneshot.c: 273 mame/drivers/seicross.c: 351 mame/drivers/snowbros.c: 571, 645 mame/drivers/system1.c: 2359 mame/drivers/toaplan1.c: 585, 654, 723, 792, 862, 945, 1029, 1106, 1174, 1249, 1319, 1394, 1483 mame/drivers/toaplan2.c: 2118, 2183, 2240, 2304, 2343, 2451, 2511, 2573, 2647, 2693, 2746, 3016, 3132 mame/drivers/yard.c: 145
@@ -1732,6 +1780,10 @@ Joystick
 
 # mame/drivers/system24.c: 1885
 Kan
+
+
+# emu/cheat.c: 3275
+Keep
 
 
 # emu/inptport.c: 1007 mame/drivers/ddenlovr.c: 3552, 3779 mame/drivers/ltcasino.c: 563 mame/drivers/rbmk.c: 132 mame/drivers/ssv.c: 1474, 1590, 1872 
@@ -1894,11 +1946,11 @@ Load Selected Card
 Load State
 
 
-# emu/ui.c: 1960
+# emu/ui.c: 1962
 Load cancelled
 
 
-# emu/ui.c: 1991
+# emu/ui.c: 1993
 Load from position %c
 
 
@@ -1912,6 +1964,10 @@ Loading Complete
 
 # emu/cheat.c: 3596
 Location
+
+
+# emu/cheat.c: 605
+Lose 
 
 
 # emu/inptport.c: 430
@@ -1958,8 +2014,8 @@ Mapped Memory
 Mask
 
 
-# mame/drivers/asuka.c: 711, 753, 795 mame/drivers/cischeat.c: 1309 mame/drivers/gstriker.c: 431 mame/drivers/metro.c: 2366 mame/drivers/midvunit.c: 568
-Master
+# emu/cheat.c: 3478
+Match to Write
 
 
 # emu/uitext.c: 215
@@ -1984,10 +2040,6 @@ Medium
 
 # emu/uitext.c: 112 
 Memory Card
-
-
-# mame/drivers/lvcards.c: 288 mame/drivers/macs.c: 250, 340 mame/drivers/vroulet.c: 138
-Memory Reset
 
 
 # emu/uitext.c: 159
@@ -2170,14 +2222,6 @@ Next Game
 Nihongo
 
 
-# mame/drivers/popeye.c: 303, 387 mame/drivers/punchout.c: 556, 627
-Nintendo
-
-
-# mame/drivers/popeye.c: 305, 389 mame/drivers/punchout.c: 557, 628
-Nintendo of America
-
-
 # emu/inptport.c: 351 
 No
 
@@ -2186,7 +2230,7 @@ No
 No previous values saved
 
 
-# emu/cheat.c: 735, 2908 emu/inptport.c: 456 emu/input.c: 993, 1328 emu/sound/custom.c: 84 emu/uimenu.c: 2176 
+# emu/cheat.c: 735, 2908 emu/inptport.c: 456 emu/input.c: 993, 1328 emu/sound/custom.c: 84 emu/uimenu.c: 2178 
 None
 
 
@@ -2248,10 +2292,6 @@ Operation
 
 # emu/uitext.c: 172 mame/drivers/fgoal.c: 303 
 Options
-
-
-# mame/drivers/findout.c: 309 
-Orientation
 
 
 # emu/uitext.c: 142
@@ -3602,10 +3642,6 @@ Paddle V 8
 Pause
 
 
-# mame/drivers/cardline.c: 140 mame/drivers/cherrym.c: 197 mame/drivers/csk.c: 283, 368, 443, 513 mame/drivers/ddenlovr.c: 3956, 4507 mame/drivers/findout.c: 422 mame/drivers/funworld.c: 839, 901, 925, 962, 986, 1025, 1049, 1087, 1149, 1173 mame/drivers/getrivia.c: 275 mame/drivers/neogeo.c: 1254 mame/drivers/pmpoker.c: 500, 590, 680 mame/drivers/rcasino.c: 212 mame/drivers/royalmah.c: 852, 1050, 1225, 1400, 1747, 1823, 2150 mame/drivers/vroulet.c: 143
-Payout
-
-
 # mame/drivers/turbo.c: 956 
 Pedal
 
@@ -3662,6 +3698,70 @@ Players
 Pon
 
 
+# emu/inptport.c: 890
+Positional
+
+
+# emu/inptport.c: 891
+Positional 2
+
+
+# emu/inptport.c: 892
+Positional 3
+
+
+# emu/inptport.c: 893
+Positional 4
+
+
+# emu/inptport.c: 894
+Positional 5
+
+
+# emu/inptport.c: 895
+Positional 6
+
+
+# emu/inptport.c: 896
+Positional 7
+
+
+# emu/inptport.c: 897
+Positional 8
+
+
+# emu/inptport.c: 899
+Positional V
+
+
+# emu/inptport.c: 900
+Positional V 2
+
+
+# emu/inptport.c: 901
+Positional V 3
+
+
+# emu/inptport.c: 902
+Positional V 4
+
+
+# emu/inptport.c: 903
+Positional V 5
+
+
+# emu/inptport.c: 904
+Positional V 6
+
+
+# emu/inptport.c: 905
+Positional V 7
+
+
+# emu/inptport.c: 906
+Positional V 8
+
+
 # emu/cheat.c: 3561
 Prefill
 
@@ -3686,15 +3786,19 @@ Previous Game
 Previous values already restored
 
 
-# emu/ui.c: 2005
+# emu/cheat.c: 2936
+Program Space
+
+
+# emu/ui.c: 2007
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 
 
-# emu/ui.c: 1842
+# emu/ui.c: 1844
 REC START
 
 
-# emu/ui.c: 1847
+# emu/ui.c: 1849
 REC STOP
 
 
@@ -3714,16 +3818,24 @@ Range Maximum
 Range Minimum
 
 
+# emu/cheat.c: 592 mame/drivers/ssv.c: 2464 mame/drivers/toaplan2.c: 2285
+Rapid Fire
+
+
+# emu/cheat.c: 596
+Rapid Fire PL1
+
+
+# emu/cheat.c: 600
+Rapid Fire PL2
+
+
 # mame/drivers/system24.c: 1886
 Reach
 
 
 # emu/inptport.c: 1021
 Record Movie
-
-
-# mame/drivers/drgnmst.c: 291 mame/drivers/exidy440.c: 1064 mame/drivers/fuukifg3.c: 400 mame/drivers/itech8.c: 1250 mame/drivers/kinst.c: 483 mame/drivers/lvcards.c: 208, 292 mame/drivers/powerins.c: 239 mame/drivers/relief.c: 250 mame/drivers/stfight.c: 366 mame/drivers/taito_z.c: 2935, 3003
-Red
 
 
 # emu/uitext.c: 225
@@ -3822,10 +3934,6 @@ Rotation
 SHADOWS        : %3d  + %3d\n
 
 
-# mame/drivers/aerofgt.c: 744, 845, 923, 993, 1078 mame/drivers/crshrace.c: 282, 460 mame/drivers/taotaido.c: 232
-Same
-
-
 # emu/sound/samples.c: 602 
 Samples
 
@@ -3846,11 +3954,11 @@ Save Snapshot
 Save State
 
 
-# emu/ui.c: 1958
+# emu/ui.c: 1960
 Save cancelled
 
 
-# emu/ui.c: 1986
+# emu/ui.c: 1988
 Save to position %c
 
 
@@ -3862,7 +3970,7 @@ Screen
 Screen #
 
 
-# emu/ui.c: 2246, 2263, 2280, 2296, 2313, 2330, 2347, 2364
+# emu/ui.c: 2248, 2265, 2282, 2298, 2315, 2332, 2349, 2366
 Screen %d %s %.3f
 
 
@@ -3922,6 +4030,14 @@ Select
 Select Memory Areas
 
 
+# emu/cheat.c: 595
+Select Score PL1
+
+
+# emu/cheat.c: 599
+Select Score PL2
+
+
 # emu/cheat.c: 7630
 Select Search
 
@@ -3930,12 +4046,16 @@ Select Search
 Select a value
 
 
-# emu/ui.c: 1951
+# emu/ui.c: 1953
 Select position to load from
 
 
-# emu/ui.c: 1949
+# emu/ui.c: 1951
 Select position to save to
+
+
+# emu/cheat.c: 591
+Select starting level
 
 
 # emu/uitext.c: 130
@@ -4078,10 +4198,6 @@ Sound
 Spanish
 
 
-# mame/drivers/getrivia.c: 288 mame/drivers/lvcards.c: 383
-Stand
-
-
 # emu/inptport.c: 453 
 Standard
 
@@ -4092,10 +4208,6 @@ Standard (%d:%d)
 
 # emu/uitext.c: 166
 Start a New Cheat Search
-
-
-# mame/drivers/funworld.c: 814, 876, 938, 1062, 1124 
-State
 
 
 # emu/mame.c: 1731
@@ -4110,12 +4222,12 @@ State successfully saved.
 State successfully saved.\nWarning: Save states are not officially supported for this game.
 
 
-# mame/drivers/csk.c: 370, 515 mame/drivers/goldstar.c: 117 mame/drivers/mjkjidai.c: 251
-Statistics
-
-
 # emu/uitext.c: 67
 Statistics not available
+
+
+# emu/cheat.c: 5461
+Status (Same or Different)
 
 
 # emu/uitext.c: 206
@@ -4246,10 +4358,6 @@ There are working clones of this game. They are:
 Throttle
 
 
-# mame/drivers/segaxbd.c: 750
-Throttle Lever
-
-
 # emu/uitext.c: 147
 Tickets dispensed
 
@@ -4266,16 +4374,16 @@ Time
 Timer
 
 
+# emu/cheat.c: 4830, 5455
+Timer (+ or -)
+
+
 # emu/uitext.c: 204
 Timers (+/- some value)
 
 
 # mame/drivers/bigevglf.c: 271 mame/drivers/chqflag.c: 307 mame/drivers/dynax.c: 2697 mame/drivers/gaiden.c: 623 mame/drivers/seta.c: 3322, 3555, 5333 mame/drivers/seta2.c: 660 mame/drivers/travrusa.c: 167 mame/drivers/yunsung8.c: 257 
 Title
-
-
-# mame/drivers/toaplan1.c: 803
-Toaplan
 
 
 # emu/uitext.c: 244
@@ -4490,15 +4598,15 @@ Unable to start sound emulation
 Unable to start video emulation
 
 
-# emu/options.c: 822
+# emu/options.c: 837
 Unexpected boolean option %s queried\n
 
 
-# emu/options.c: 880, 951
+# emu/options.c: 895, 966
 Unexpected float option %s queried\n
 
 
-# emu/options.c: 851, 910
+# emu/options.c: 866, 925
 Unexpected integer option %s queried\n
 
 
@@ -4594,6 +4702,10 @@ Unused (28)
 Unused (29)
 
 
+# emu/cheat.c: 2946
+Unused (3)
+
+
 # emu/cheat.c: 2951
 Unused (30)
 
@@ -4624,6 +4736,10 @@ Unused (8)
 
 # emu/cheat.c: 2947
 Unused (9)
+
+
+# emu/ui.c: 497
+Updating Artwork...
 
 
 # emu/inptport.c: 396
@@ -4662,6 +4778,14 @@ VFD Only (%d:%d)
 Value
 
 
+# emu/cheat.c: 5441
+Value (Equal)
+
+
+# emu/cheat.c: 5448
+Value (NearTo)
+
+
 # emu/uitext.c: 58
 Vector Flicker
 
@@ -4674,11 +4798,11 @@ Vector Game
 Version
 
 
-# emu/ui.c: 2364
+# emu/ui.c: 2366
 Vert position
 
 
-# emu/ui.c: 2330
+# emu/ui.c: 2332
 Vert stretch
 
 
@@ -4806,6 +4930,10 @@ World
 Write
 
 
+# emu/cheat.c: 2888
+Write If Match
+
+
 # emu/uitext.c: 194
 X Position
 
@@ -4820,10 +4948,6 @@ Y Position
 
 # emu/inptport.c: 352 
 Yes
-
-
-# mame/drivers/harddriv.c: 750
-Zoom
 
 
 # emu/uigfx.c: 990
@@ -4934,6 +5058,10 @@ Zoom Auto
 \tInvalid %s checksum treated as 0 (check leading zeros)\n
 
 
+# emu/cheat.c: 2646, 2796, 4666
+activation key saved
+
+
 # emu/mamecore.h: 173 
 assert: %s:%d: %s
 
@@ -5034,6 +5162,10 @@ mameinfo database name
 n/a
 
 
+# emu/cheat.c: 2649, 2799, 4669
+no activation key
+
+
 # emu/cheat.c: 6637
 no results for this region
 
@@ -5116,6 +5248,10 @@ saved all memory regions
 
 # emu/video.c: 1115
 scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
+
+
+# emu/cheat.c: 11674
+set %s
 
 
 # emu/uitext.c: 47 mame/drivers/harddriv.c: 3191 mame/drivers/segas16b.c: 941, 1012 

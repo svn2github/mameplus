@@ -318,6 +318,10 @@ Direct3D: Warning - Device does not support texture wrapping\n
 Direct3D: Warning - device does not support full screen gamma correction.\n
 
 
+# osd/windows/drawd3d.c: 670
+Direct3D: YUV format = %s\n
+
+
 # osd/windows/drawd3d.c: 1642
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 
@@ -828,6 +832,10 @@ Texture too big! (wanted: %dx%d, max is %dx%d)\n
 
 # osd/windows/fronthlp.c: 595
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
+
+
+# osd/windows/input.c: 2721
+Toggle Fullscreen
 
 
 # osd/windows/fronthlp.c: 946
@@ -1384,6 +1392,10 @@ perform driver validation on all game drivers
 
 # osd/windows/config.c: 172
 playback an input file
+
+
+# osd/windows/input.c: 1290
+positional
 
 
 # osd/windows/config.c: 305

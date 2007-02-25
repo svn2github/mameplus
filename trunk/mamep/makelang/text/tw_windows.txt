@@ -318,6 +318,10 @@ Direct3D: 警告 - 裝置不支援 texture wrapping\n
 Direct3D: Warning - device does not support full screen gamma correction.\n
 Direct3D: 警告 - 裝置不支援全螢幕 gamma 值修正。\n
 
+# osd/windows/drawd3d.c: 670
+Direct3D: YUV format = %s\n
+Direct3D: YUV 格式 = %s\n
+
 # osd/windows/drawd3d.c: 1642
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 Direct3D: 調整預縮放由 %dx%d 到 %dx%d\n
@@ -830,6 +834,10 @@ Texture too big! (wanted: %dx%d, max is %dx%d)\n
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
 這是用來驅動 \"%s\" 所需要的 ROM 清單。\n名稱            大小 檢查碼\n
 
+# osd/windows/input.c: 2721
+Toggle Fullscreen
+切換全螢幕
+
 # osd/windows/fronthlp.c: 946
 UNKNOWN   %s\n
 未知的    %s\n
@@ -1052,11 +1060,11 @@ default game screen contrast correction
 
 # osd/windows/config.c: 275
 default game screen gamma correction
-預設的遊戲畫面 gamma 值修正
+預設的遊戲畫面 Gamma 值修正
 
 # osd/windows/config.c: 206
 default to maximized windows; otherwise, windows will be minimized
-預設視窗最大化，否則將採用視窗最小化模式
+預設為視窗最大化; 否則將採用視窗最小化模式
 
 # osd/windows/input.c: 1288
 dial
@@ -1100,7 +1108,7 @@ enable (keyboard|mouse|joystick) if a pedal control is present
 
 # osd/windows/config.c: 346
 enable (keyboard|mouse|joystick) if a positional control is present
-啟用 (keyboard|mouse|joystick) 如果座標控制器存在
+啟用 (keyboard|mouse|joystick) 如果定位控制器存在
 
 # osd/windows/config.c: 344
 enable (keyboard|mouse|joystick) if a trackball control is present
@@ -1160,7 +1168,7 @@ enable mouse input
 
 # osd/windows/config.c: 199
 enable multithreading; this enables rendering and blitting on a separate thread
-啟用多執行緒; 可以使描繪和 blit 分開處理
+啟用多執行緒; 可以將描繪和 blit 分開處理
 
 # osd/windows/config.c: 287
 enable overlays if artwork is enabled and available
@@ -1168,7 +1176,7 @@ enable overlays if artwork is enabled and available
 
 # osd/windows/config.c: 307
 enable pointing stick input
-啟用指標控制桿輸入
+啟用指點桿輸入
 
 # osd/windows/config.c: 266
 enable resolution switching
@@ -1208,7 +1216,7 @@ enable waiting for the start of VBLANK before flipping screens; reduces tearing 
 
 # osd/windows/config.c: 205
 enable window mode; otherwise, full screen mode is assumed
-啟用視窗模式，否則將採用全螢幕模式
+啟用視窗模式; 否則將採用全螢幕模式
 
 # osd/windows/config.c: 183
 enable/disable debugger
@@ -1304,7 +1312,7 @@ invalid
 
 # osd/windows/config.c: 143
 ips datfile name
-ips 資料檔名稱
+IPS 資料檔名稱
 
 # osd/windows/fronthlp.c: 771, 867
 is bad\n
@@ -1344,7 +1352,7 @@ minimal analog value for digital input
 
 # osd/windows/config.c: 209
 name of a PNG file to use for visual effects, or 'none'
-設定要使用的視覺效果 PNG 檔名，或設為 [none]
+設定要使用的視覺效果 PNG 檔名，或設為 none
 
 # osd/windows/config.c: 194
 number of frames to run before automatically exiting
@@ -1352,7 +1360,7 @@ number of frames to run before automatically exiting
 
 # osd/windows/config.c: 204
 number of screens to create; usually, you want just one
-建立的畫面總數，通常設為一個
+要建立的畫面總數; 通常設為一個
 
 # osd/windows/config.c: 334
 offscreen shots reload
@@ -1385,6 +1393,10 @@ perform driver validation on all game drivers
 # osd/windows/config.c: 172
 playback an input file
 播放輸入檔
+
+# osd/windows/input.c: 1290
+positional
+定位器
 
 # osd/windows/config.c: 305
 preconfigure for specified controller
@@ -1612,7 +1624,7 @@ use antialiasing when drawing vectors
 
 # osd/windows/config.c: 197
 use the RDTSC instruction for timing; faster but may result in uneven performance
-使用 RDTSC 指令的計時器，較快速但也可能產生不平均的效能
+使用 RDTSC 指令的計時器; 比較快速但卻可能產生不平均的效能
 
 # osd/windows/config.c: 160
 use transparent background for UI text
