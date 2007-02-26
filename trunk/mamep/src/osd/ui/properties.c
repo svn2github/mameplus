@@ -133,7 +133,6 @@ static void PauseBrightSelectionChange(HWND hwnd);
 static void FullScreenGammaSelectionChange(HWND hwnd);
 static void FullScreenBrightnessSelectionChange(HWND hwnd);
 static void FullScreenContrastSelectionChange(HWND hwnd);
-static void A2DSelectionChange(HWND hwnd);
 static void ResDepthSelectionChange(HWND hWnd, HWND hWndCtrl);
 static void RefreshSelectionChange(HWND hWnd, HWND hWndCtrl);
 static void VolumeSelectionChange(HWND hwnd);
@@ -219,7 +218,6 @@ static int  g_nFullScreenBrightnessIndex = 0;
 static int  g_nFullScreenContrastIndex = 0;
 static int  g_nEffectIndex     = 0;
 static int  g_nBiosIndex       = 0;
-static int  g_nA2DIndex        = 0;
 static int  g_nPaddleIndex = 0;
 static int  g_nADStickIndex = 0;
 static int  g_nPedalIndex = 0;
@@ -301,8 +299,6 @@ BOOL PropSheetFilter_BIOS(void)
 /* Help IDs */
 static DWORD dwHelpIDs[] =
 {
-	
-	IDC_A2D,                HIDC_A2D,
 	IDC_ANTIALIAS,          HIDC_ANTIALIAS,
 	IDC_ARTWORK_CROP,       HIDC_ARTWORK_CROP,
 	IDC_ASPECTRATIOD,       HIDC_ASPECTRATIOD,
@@ -2748,14 +2744,6 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 		Static_SetTextA(hCtrl, buf);
 	}
 
-	/* Input */
-	hCtrl = GetDlgItem(hWnd, IDC_A2DDISP);
-	if (hCtrl)
-	{
-		sprintf(buf, "%03.2f", o->a2d_deadzone);
-		Static_SetTextA(hCtrl, buf);
-	}
-
 #ifdef TRANS_UI
 	hCtrl = GetDlgItem(hWnd, IDC_TRANSPARENCYDISP);
 	if (hCtrl)
@@ -3052,9 +3040,7 @@ static void SetPropEnabledControls(HWND hWnd)
 	joystick_attached = DIJoystick.Available();
 
 	Button_Enable(GetDlgItem(hWnd,IDC_JOYSTICK),               joystick_attached);
-	EnableWindow(GetDlgItem(hWnd, IDC_A2DTEXT),                joystick_attached);
-	EnableWindow(GetDlgItem(hWnd, IDC_A2DDISP),                joystick_attached);
-	EnableWindow(GetDlgItem(hWnd, IDC_A2D),                    joystick_attached);
+
 #ifdef JOYSTICK_ID
 	if (Button_GetCheck(GetDlgItem(hWnd, IDC_JOYSTICK)) && DIJoystick.Available())
 	{
@@ -3330,12 +3316,6 @@ static void AssignFlicker(HWND hWnd)
 {
 	pGameOpts->flicker = g_nFlickerIndex;
 }
-
-static void AssignA2D(HWND hWnd)
-{
-	pGameOpts->a2d_deadzone = g_nA2DIndex / 20.0;
-}
-
 
 static void AssignRotate(HWND hWnd)
 {
@@ -3632,7 +3612,6 @@ static void ResetDataMap(void)
 	g_nPauseBrightIndex     = (int)((pGameOpts->pause_brightness - 0.5) * 20.0 + 0.001);
 	g_nBeamIndex            = (int)((pGameOpts->beam             - 1.0) * 20.0 + 0.001);
 	g_nFlickerIndex         = (int)( pGameOpts->flicker);
-	g_nA2DIndex             = (int)( pGameOpts->a2d_deadzone            * 20.0 + 0.001);
 #ifdef TRANS_UI
 	g_nUITransparencyIndex  = (int)( pGameOpts->ui_transparency);
 #endif /* TRANS_UI */
@@ -3840,8 +3819,6 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_DEFAULT_INPUT, DM_INT,  CT_COMBOBOX, &g_nInputIndex,            DM_STRING, &pGameOpts->ctrlr,           0, 0, AssignInput);
 	DataMapAdd(IDC_USE_MOUSE,     DM_BOOL, CT_BUTTON,   &pGameOpts->mouse,         DM_BOOL,   &pGameOpts->mouse,           0, 0, 0);   
 	DataMapAdd(IDC_JOYSTICK,      DM_BOOL, CT_BUTTON,   &pGameOpts->joystick,      DM_BOOL,   &pGameOpts->joystick,        0, 0, 0);
-	DataMapAdd(IDC_A2D,           DM_INT,  CT_SLIDER,   &g_nA2DIndex,              DM_FLOAT,  &pGameOpts->a2d_deadzone,    0, 0, AssignA2D);
-	DataMapAdd(IDC_A2DDISP,       DM_NONE, CT_NONE,     NULL,                      DM_FLOAT,  &pGameOpts->a2d_deadzone,    0, 0, 0);
 	DataMapAdd(IDC_STEADYKEY,     DM_BOOL, CT_BUTTON,   &pGameOpts->steadykey,     DM_BOOL,   &pGameOpts->steadykey,       0, 0, 0);
 	DataMapAdd(IDC_LIGHTGUN,      DM_BOOL, CT_BUTTON,   &pGameOpts->lightgun,      DM_BOOL,   &pGameOpts->lightgun,        0, 0, 0);
 	DataMapAdd(IDC_DUAL_LIGHTGUN, DM_BOOL, CT_BUTTON,   &pGameOpts->dual_lightgun, DM_BOOL,   &pGameOpts->dual_lightgun,   0, 0, 0);
@@ -4156,10 +4133,6 @@ static void InitializeMisc(HWND hDlg)
 				(WPARAM)FALSE,
 				(LPARAM)MAKELONG(0, 38)); /* [0.10, 2.00] in .05 increments */
 
-	SendDlgItemMessage(hDlg, IDC_A2D, TBM_SETRANGE,
-				(WPARAM)FALSE,
-				(LPARAM)MAKELONG(0, 20)); /* [0.00, 1.00] in .05 increments */
-
 	SendDlgItemMessage(hDlg, IDC_FLICKER, TBM_SETRANGE,
 				(WPARAM)FALSE,
 				(LPARAM)MAKELONG(0, 100)); /* [0.0, 100.0] in 1.0 increments */
@@ -4246,11 +4219,6 @@ static void OptOnHScroll(HWND hwnd, HWND hwndCtl, UINT code, int pos)
 	if (hwndCtl == GetDlgItem(hwnd, IDC_VOLUME))
 	{
 		VolumeSelectionChange(hwnd);
-	}
-	else
-	if (hwndCtl == GetDlgItem(hwnd, IDC_A2D))
-	{
-		A2DSelectionChange(hwnd);
 	}
 	else
 	if (hwndCtl == GetDlgItem(hwnd, IDC_AUDIO_LATENCY))
@@ -4447,23 +4415,6 @@ static void FullScreenContrastSelectionChange(HWND hwnd)
 	/* Set the static display to the new value */
 	snprintf(buf, ARRAY_LENGTH(buf),"%03.2f", dContrast);
 	Static_SetTextA(GetDlgItem(hwnd, IDC_FSCONTRASTDISP), buf);
-}
-
-/* Handle changes to the A2D slider */
-static void A2DSelectionChange(HWND hwnd)
-{
-	char   buf[100];
-	UINT   nValue;
-	double dA2D;
-
-	/* Get the current value of the control */
-	nValue = SendDlgItemMessage(hwnd, IDC_A2D, TBM_GETPOS, 0, 0);
-
-	dA2D = nValue / 20.0;
-
-	/* Set the static display to the new value */
-	snprintf(buf, ARRAY_LENGTH(buf), "%03.2f", dA2D);
-	Static_SetTextA(GetDlgItem(hwnd, IDC_A2DDISP), buf);
 }
 
 /* Handle changes to the Color Depth drop down */

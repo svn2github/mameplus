@@ -220,7 +220,6 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(bool,                 dual_lightgun)
 	DEFINE_OPT(bool,                 offscreen_reload)
 	DEFINE_OPT(bool,                 steadykey)
-	DEFINE_OPT(float,                a2d_deadzone)
 	DEFINE_OPT(digital,              digital)
 
 // AUTOMATIC DEVICE SELECTION OPTIONS

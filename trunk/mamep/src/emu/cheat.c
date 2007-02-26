@@ -2793,10 +2793,10 @@ static int AddEditCheatMenu(int selection)
 				{
 					SaveCheat(entry, sel, 1);		// ctrl + save = save activation key
 
-					ui_popup_time(1, "activation key saved");
+					ui_popup_time(1, _("activation key saved"));
 				}
 				else
-					ui_popup_time(1, "no activation key");
+					ui_popup_time(1, _("no activation key"));
 			}
 			else
 				SaveCheat(entry, 0, 0);		// save current entry
@@ -4822,12 +4822,12 @@ static int DoSearchMenuMinimum(int selection)
 	switch(searchItem)
 	{
 		case kItem_Value:										// value
-			menuItem[total] = "Value";
+			menuItem[total] = _("Value");
 			menuSubItem[total++] = valueBuffer;
 			break;
 
 		case kItem_Timer:
-			menuItem[total] = "Timer (+ or -)";					// timer
+			menuItem[total] = _("Timer (+ or -)");					// timer
 
 			/* ----- if memory has been saved, set sub-item for timer ----- */
 			if(doneSaveMemory)
@@ -5415,7 +5415,7 @@ static int DoSearchMenuClassic(int selection)
 	if(!doneSaveMemory)
 		menuItem[total] = "Save Memory";
 	else
-		menuItem[total] = "Initialize Memory";
+		menuItem[total] = _("Initialize Memory");
 
 	menuSubItem[total++] = NULL;
 
@@ -5438,7 +5438,7 @@ static int DoSearchMenuClassic(int selection)
 	else
 		sprintf(valueBuffer, "%.*X (%d)", kSearchByteDigitsTable[search->bytes], search->oldOptions.value & kSearchByteMaskTable[search->bytes], search->oldOptions.value & kSearchByteMaskTable[search->bytes]);
 
-	menuItem[total] = "Value (Equal)";
+	menuItem[total] = _("Value (Equal)");
 
 	if(sel >= kMenu_ValueNearTo)
 		menuSubItem[total++] = " ";
@@ -5452,16 +5452,16 @@ static int DoSearchMenuClassic(int selection)
 	else
 		menuSubItem[total++] = " ";
 
-	menuItem[total] = "Timer (+ or -)";
+	menuItem[total] = _("Timer (+ or -)");
 	menuSubItem[total++] = " ";
 
-	menuItem[total] = "Energy (Less or Greater)";
+	menuItem[total] = _("Energy (Less or Greater)");
 	menuSubItem[total++] = " ";
 
-	menuItem[total] = "Status (Same or Different)";
+	menuItem[total] = _("Status (Same or Different)");
 	menuSubItem[total++] = " ";
 
-	menuItem[total] = "Comparison Option";
+	menuItem[total] = _("Comparison Option");
 	menuSubItem[total++] = " ";
 
 	menuItem[total] = "--------------------";
@@ -9923,17 +9923,17 @@ static void SaveCheat(CheatEntry * entry, int selection, int saveCode)
 				{
 					/* ----- 1st key ----- */
 					if(entry->name)
-						bufTraverse += sprintf(bufTraverse, ":1st Activation Key for %s (%s)\n", entry->name, code_name(entry->activationKey1));
+						bufTraverse += sprintf(bufTraverse, _(":1st Activation Key for %s (%s)\n"), entry->name, code_name(entry->activationKey1));
 					else
-						bufTraverse += sprintf(bufTraverse, ":1st Activation Key (%s)\n", code_name(entry->activationKey1));
+						bufTraverse += sprintf(bufTraverse, _(":1st Activation Key (%s)\n"), code_name(entry->activationKey1));
 				}
 				else
 				{
 					/* ----- 2nd key ----- */
 					if(entry->name)
-						bufTraverse += sprintf(bufTraverse, ":2nd Activation Key for %s (%s)\n", entry->name, code_name(entry->activationKey2));
+						bufTraverse += sprintf(bufTraverse, _(":2nd Activation Key for %s (%s)\n"), entry->name, code_name(entry->activationKey2));
 					else
-						bufTraverse += sprintf(bufTraverse, ":2nd Activation Key (%s)\n", code_name(entry->activationKey2));
+						bufTraverse += sprintf(bufTraverse, _(":2nd Activation Key (%s)\n"), code_name(entry->activationKey2));
 				}
 
 				/* ----- write the activation key code ----- */
@@ -11623,9 +11623,9 @@ static void cheat_periodicEntry(CheatEntry * entry)
 					if(TEST_FIELD(cheatOptions, ActivationKeyMessage))
 					{
 						if(!entry->selection)
-							ui_popup_time(1,"%s disabled", entry->name);
+							ui_popup_time(1,_("%s disabled"), entry->name);
 						else
-							ui_popup_time(1,"%s : %s selected", entry->name, entry->actionList[entry->selection].optionalName);
+							ui_popup_time(1,_("%s : %s selected"), entry->name, entry->actionList[entry->selection].optionalName);
 					}
 
 					entry->flags |= kCheatFlag_ActivationKeyPressed;		// set flag
@@ -11671,7 +11671,7 @@ static void cheat_periodicEntry(CheatEntry * entry)
 
 						/* ----- display description for one shot if needed ----- */
 						if(TEST_FIELD(cheatOptions, ActivationKeyMessage))
-							ui_popup_time(1,"set %s", entry->name);
+							ui_popup_time(1,_("set %s"), entry->name);
 					}
 					else
 					{
@@ -11681,7 +11681,7 @@ static void cheat_periodicEntry(CheatEntry * entry)
 
 							/* ----- display description for OFF if needed ----- */
 							if(TEST_FIELD(cheatOptions, ActivationKeyMessage))
-								ui_popup_time(1,"%s disabled", entry->name);
+								ui_popup_time(1,_("%s disabled"), entry->name);
 						}
 						else
 						{
@@ -11689,7 +11689,7 @@ static void cheat_periodicEntry(CheatEntry * entry)
 
 							/* ----- display description for ON if needed ----- */
 							if(TEST_FIELD(cheatOptions, ActivationKeyMessage))
-								ui_popup_time(1,"%s enabled", entry->name);
+								ui_popup_time(1,_("%s enabled"), entry->name);
 						}
 					}
 

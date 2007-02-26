@@ -171,7 +171,8 @@ static int					input_paused;
 static osd_ticks_t			last_poll;
 
 // Controller override options
-static float				a2d_deadzone;
+static float				joy_deadzone;
+static float				joy_saturation;
 static int					use_joystick;
 static int					use_lightgun;
 static int					use_lightgun_dual;
@@ -297,23 +298,29 @@ static pRegisterRawInputDevices _RegisterRawInputDevices;
 #define IS_JOYSTICK_CODE(code)		(((code) & 0x80000000) != 0)
 
 // joystick types
-#define CODETYPE_KEYBOARD			0
-#define CODETYPE_AXIS_NEG			1
-#define CODETYPE_AXIS_POS			2
-#define CODETYPE_POV_UP				3
-#define CODETYPE_POV_DOWN			4
-#define CODETYPE_POV_LEFT			5
-#define CODETYPE_POV_RIGHT			6
-#define CODETYPE_BUTTON				7
-#define CODETYPE_JOYAXIS			8
-#define CODETYPE_MOUSEAXIS			9
-#define CODETYPE_MOUSEBUTTON		10
-#define CODETYPE_GUNAXIS			11
-
+enum
+{
+	CODETYPE_KEYBOARD = 0,
+	CODETYPE_AXIS_NEG,
+	CODETYPE_AXIS_POS,
+	CODETYPE_POV_UP,
+	CODETYPE_POV_DOWN,
+	CODETYPE_POV_LEFT,
+	CODETYPE_POV_RIGHT,
+	CODETYPE_BUTTON,
+	CODETYPE_JOYAXIS,
+	CODETYPE_JOYAXIS_NEG,
+	CODETYPE_JOYAXIS_POS,
+	CODETYPE_MOUSEAXIS,
+	CODETYPE_MOUSE_NEG,
+	CODETYPE_MOUSE_POS,
+	CODETYPE_MOUSEBUTTON,
 #ifdef USE_JOY_MOUSE_MOVE
-#define CODETYPE_MOUSEAXIS_NEG		12
-#define CODETYPE_MOUSEAXIS_POS		13
+	CODETYPE_MOUSEAXIS_NEG,
+	CODETYPE_MOUSEAXIS_POS,
 #endif /* USE_JOY_MOUSE_MOVE */
+	CODETYPE_GUNAXIS
+};
 
 // master keyboard translation table
 const int win_key_trans_table[][4] =
@@ -497,8 +504,14 @@ static int joy_trans_table[][2] =
 	{ JOYCODE(0, CODETYPE_BUTTON, 30),	JOYCODE_1_BUTTON31 },
 	{ JOYCODE(0, CODETYPE_BUTTON, 31),	JOYCODE_1_BUTTON32 },
 	{ JOYCODE(0, CODETYPE_JOYAXIS, 0),	JOYCODE_1_ANALOG_X },
+	{ JOYCODE(0, CODETYPE_JOYAXIS_NEG, 0),	JOYCODE_1_ANALOG_X_NEG },
+	{ JOYCODE(0, CODETYPE_JOYAXIS_POS, 0),	JOYCODE_1_ANALOG_X_POS },
 	{ JOYCODE(0, CODETYPE_JOYAXIS, 1),	JOYCODE_1_ANALOG_Y },
+	{ JOYCODE(0, CODETYPE_JOYAXIS_NEG, 1),	JOYCODE_1_ANALOG_Y_NEG },
+	{ JOYCODE(0, CODETYPE_JOYAXIS_POS, 1),	JOYCODE_1_ANALOG_Y_POS },
 	{ JOYCODE(0, CODETYPE_JOYAXIS, 2),	JOYCODE_1_ANALOG_Z },
+	{ JOYCODE(0, CODETYPE_JOYAXIS_NEG, 2),	JOYCODE_1_ANALOG_Z_NEG },
+	{ JOYCODE(0, CODETYPE_JOYAXIS_POS, 2),	JOYCODE_1_ANALOG_Z_POS },
 
 	{ JOYCODE(1, CODETYPE_AXIS_NEG, 0),	JOYCODE_2_LEFT },
 	{ JOYCODE(1, CODETYPE_AXIS_POS, 0),	JOYCODE_2_RIGHT },
@@ -537,8 +550,14 @@ static int joy_trans_table[][2] =
 	{ JOYCODE(1, CODETYPE_BUTTON, 30),	JOYCODE_2_BUTTON31 },
 	{ JOYCODE(1, CODETYPE_BUTTON, 31),	JOYCODE_2_BUTTON32 },
 	{ JOYCODE(1, CODETYPE_JOYAXIS, 0),	JOYCODE_2_ANALOG_X },
+	{ JOYCODE(1, CODETYPE_JOYAXIS_NEG, 0),	JOYCODE_2_ANALOG_X_NEG },
+	{ JOYCODE(1, CODETYPE_JOYAXIS_POS, 0),	JOYCODE_2_ANALOG_X_POS },
 	{ JOYCODE(1, CODETYPE_JOYAXIS, 1),	JOYCODE_2_ANALOG_Y },
+	{ JOYCODE(1, CODETYPE_JOYAXIS_NEG, 1),	JOYCODE_2_ANALOG_Y_NEG },
+	{ JOYCODE(1, CODETYPE_JOYAXIS_POS, 1),	JOYCODE_2_ANALOG_Y_POS },
 	{ JOYCODE(1, CODETYPE_JOYAXIS, 2),	JOYCODE_2_ANALOG_Z },
+	{ JOYCODE(1, CODETYPE_JOYAXIS_NEG, 2),	JOYCODE_2_ANALOG_Z_NEG },
+	{ JOYCODE(1, CODETYPE_JOYAXIS_POS, 2),	JOYCODE_2_ANALOG_Z_POS },
 
 	{ JOYCODE(2, CODETYPE_AXIS_NEG, 0),	JOYCODE_3_LEFT },
 	{ JOYCODE(2, CODETYPE_AXIS_POS, 0),	JOYCODE_3_RIGHT },
@@ -577,8 +596,14 @@ static int joy_trans_table[][2] =
 	{ JOYCODE(2, CODETYPE_BUTTON, 30),	JOYCODE_3_BUTTON31 },
 	{ JOYCODE(2, CODETYPE_BUTTON, 31),	JOYCODE_3_BUTTON32 },
 	{ JOYCODE(2, CODETYPE_JOYAXIS, 0),	JOYCODE_3_ANALOG_X },
+	{ JOYCODE(2, CODETYPE_JOYAXIS_NEG, 0),	JOYCODE_3_ANALOG_X_NEG },
+	{ JOYCODE(2, CODETYPE_JOYAXIS_POS, 0),	JOYCODE_3_ANALOG_X_POS },
 	{ JOYCODE(2, CODETYPE_JOYAXIS, 1),	JOYCODE_3_ANALOG_Y },
+	{ JOYCODE(2, CODETYPE_JOYAXIS_NEG, 1),	JOYCODE_3_ANALOG_Y_NEG },
+	{ JOYCODE(2, CODETYPE_JOYAXIS_POS, 1),	JOYCODE_3_ANALOG_Y_POS },
 	{ JOYCODE(2, CODETYPE_JOYAXIS, 2),	JOYCODE_3_ANALOG_Z },
+	{ JOYCODE(2, CODETYPE_JOYAXIS_NEG, 2),	JOYCODE_3_ANALOG_Z_NEG },
+	{ JOYCODE(2, CODETYPE_JOYAXIS_POS, 2),	JOYCODE_3_ANALOG_Z_POS },
 
 	{ JOYCODE(3, CODETYPE_AXIS_NEG, 0),	JOYCODE_4_LEFT },
 	{ JOYCODE(3, CODETYPE_AXIS_POS, 0),	JOYCODE_4_RIGHT },
@@ -617,8 +642,14 @@ static int joy_trans_table[][2] =
 	{ JOYCODE(3, CODETYPE_BUTTON, 30),	JOYCODE_4_BUTTON31 },
 	{ JOYCODE(3, CODETYPE_BUTTON, 31),	JOYCODE_4_BUTTON32 },
 	{ JOYCODE(3, CODETYPE_JOYAXIS, 0),	JOYCODE_4_ANALOG_X },
+	{ JOYCODE(3, CODETYPE_JOYAXIS_NEG, 0),	JOYCODE_4_ANALOG_X_NEG },
+	{ JOYCODE(3, CODETYPE_JOYAXIS_POS, 0),	JOYCODE_4_ANALOG_X_POS },
 	{ JOYCODE(3, CODETYPE_JOYAXIS, 1),	JOYCODE_4_ANALOG_Y },
+	{ JOYCODE(3, CODETYPE_JOYAXIS_NEG, 1),	JOYCODE_4_ANALOG_Y_NEG },
+	{ JOYCODE(3, CODETYPE_JOYAXIS_POS, 1),	JOYCODE_4_ANALOG_Y_POS },
 	{ JOYCODE(3, CODETYPE_JOYAXIS, 2),	JOYCODE_4_ANALOG_Z },
+	{ JOYCODE(3, CODETYPE_JOYAXIS_NEG, 2),	JOYCODE_4_ANALOG_Z_NEG },
+	{ JOYCODE(3, CODETYPE_JOYAXIS_POS, 2),	JOYCODE_4_ANALOG_Z_POS },
 
 	{ JOYCODE(4, CODETYPE_AXIS_NEG, 0),	JOYCODE_5_LEFT },
 	{ JOYCODE(4, CODETYPE_AXIS_POS, 0),	JOYCODE_5_RIGHT },
@@ -657,8 +688,14 @@ static int joy_trans_table[][2] =
 	{ JOYCODE(4, CODETYPE_BUTTON, 30),	JOYCODE_5_BUTTON31 },
 	{ JOYCODE(4, CODETYPE_BUTTON, 31),	JOYCODE_5_BUTTON32 },
 	{ JOYCODE(4, CODETYPE_JOYAXIS, 0),	JOYCODE_5_ANALOG_X },
+	{ JOYCODE(4, CODETYPE_JOYAXIS_NEG, 0),	JOYCODE_5_ANALOG_X_NEG },
+	{ JOYCODE(4, CODETYPE_JOYAXIS_POS, 0),	JOYCODE_5_ANALOG_X_POS },
 	{ JOYCODE(4, CODETYPE_JOYAXIS, 1), 	JOYCODE_5_ANALOG_Y },
+	{ JOYCODE(4, CODETYPE_JOYAXIS_NEG, 1),	JOYCODE_5_ANALOG_Y_NEG },
+	{ JOYCODE(4, CODETYPE_JOYAXIS_POS, 1),	JOYCODE_5_ANALOG_Y_POS },
 	{ JOYCODE(4, CODETYPE_JOYAXIS, 2),	JOYCODE_5_ANALOG_Z },
+	{ JOYCODE(4, CODETYPE_JOYAXIS_NEG, 2),	JOYCODE_5_ANALOG_Z_NEG },
+	{ JOYCODE(4, CODETYPE_JOYAXIS_POS, 2),	JOYCODE_5_ANALOG_Z_POS },
 
 	{ JOYCODE(5, CODETYPE_AXIS_NEG, 0),	JOYCODE_6_LEFT },
 	{ JOYCODE(5, CODETYPE_AXIS_POS, 0),	JOYCODE_6_RIGHT },
@@ -697,8 +734,14 @@ static int joy_trans_table[][2] =
 	{ JOYCODE(5, CODETYPE_BUTTON, 30),	JOYCODE_6_BUTTON31 },
 	{ JOYCODE(5, CODETYPE_BUTTON, 31),	JOYCODE_6_BUTTON32 },
 	{ JOYCODE(5, CODETYPE_JOYAXIS, 0),	JOYCODE_6_ANALOG_X },
+	{ JOYCODE(5, CODETYPE_JOYAXIS_NEG, 0),	JOYCODE_6_ANALOG_X_NEG },
+	{ JOYCODE(5, CODETYPE_JOYAXIS_POS, 0),	JOYCODE_6_ANALOG_X_POS },
 	{ JOYCODE(5, CODETYPE_JOYAXIS, 1),	JOYCODE_6_ANALOG_Y },
+	{ JOYCODE(5, CODETYPE_JOYAXIS_NEG, 1),	JOYCODE_6_ANALOG_Y_NEG },
+	{ JOYCODE(5, CODETYPE_JOYAXIS_POS, 1),	JOYCODE_6_ANALOG_Y_POS },
 	{ JOYCODE(5, CODETYPE_JOYAXIS, 2),	JOYCODE_6_ANALOG_Z },
+	{ JOYCODE(5, CODETYPE_JOYAXIS_NEG, 2),	JOYCODE_6_ANALOG_Z_NEG },
+	{ JOYCODE(5, CODETYPE_JOYAXIS_POS, 2),	JOYCODE_6_ANALOG_Z_POS },
 
 	{ JOYCODE(6, CODETYPE_AXIS_NEG, 0),	JOYCODE_7_LEFT },
 	{ JOYCODE(6, CODETYPE_AXIS_POS, 0),	JOYCODE_7_RIGHT },
@@ -737,8 +780,14 @@ static int joy_trans_table[][2] =
 	{ JOYCODE(6, CODETYPE_BUTTON, 30),	JOYCODE_7_BUTTON31 },
 	{ JOYCODE(6, CODETYPE_BUTTON, 31),	JOYCODE_7_BUTTON32 },
 	{ JOYCODE(6, CODETYPE_JOYAXIS, 0),	JOYCODE_7_ANALOG_X },
+	{ JOYCODE(6, CODETYPE_JOYAXIS_NEG, 0),	JOYCODE_7_ANALOG_X_NEG },
+	{ JOYCODE(6, CODETYPE_JOYAXIS_POS, 0),	JOYCODE_7_ANALOG_X_POS },
 	{ JOYCODE(6, CODETYPE_JOYAXIS, 1),	JOYCODE_7_ANALOG_Y },
+	{ JOYCODE(6, CODETYPE_JOYAXIS_NEG, 1),	JOYCODE_7_ANALOG_Y_NEG },
+	{ JOYCODE(6, CODETYPE_JOYAXIS_POS, 1),	JOYCODE_7_ANALOG_Y_POS },
 	{ JOYCODE(6, CODETYPE_JOYAXIS, 2),	JOYCODE_7_ANALOG_Z },
+	{ JOYCODE(6, CODETYPE_JOYAXIS_NEG, 2),	JOYCODE_7_ANALOG_Z_NEG },
+	{ JOYCODE(6, CODETYPE_JOYAXIS_POS, 2),	JOYCODE_7_ANALOG_Z_POS },
 
 	{ JOYCODE(7, CODETYPE_AXIS_NEG, 0),	JOYCODE_8_LEFT },
 	{ JOYCODE(7, CODETYPE_AXIS_POS, 0),	JOYCODE_8_RIGHT },
@@ -777,8 +826,14 @@ static int joy_trans_table[][2] =
 	{ JOYCODE(7, CODETYPE_BUTTON, 30),	JOYCODE_8_BUTTON31 },
 	{ JOYCODE(7, CODETYPE_BUTTON, 31),	JOYCODE_8_BUTTON32 },
 	{ JOYCODE(7, CODETYPE_JOYAXIS, 0),	JOYCODE_8_ANALOG_X },
+	{ JOYCODE(7, CODETYPE_JOYAXIS_NEG, 0),	JOYCODE_8_ANALOG_X_NEG },
+	{ JOYCODE(7, CODETYPE_JOYAXIS_POS, 0),	JOYCODE_8_ANALOG_X_POS },
 	{ JOYCODE(7, CODETYPE_JOYAXIS, 1),	JOYCODE_8_ANALOG_Y },
+	{ JOYCODE(7, CODETYPE_JOYAXIS_NEG, 1),	JOYCODE_8_ANALOG_Y_NEG },
+	{ JOYCODE(7, CODETYPE_JOYAXIS_POS, 1),	JOYCODE_8_ANALOG_Y_POS },
 	{ JOYCODE(7, CODETYPE_JOYAXIS, 2),	JOYCODE_8_ANALOG_Z },
+	{ JOYCODE(7, CODETYPE_JOYAXIS_NEG, 2),	JOYCODE_8_ANALOG_Z_NEG },
+	{ JOYCODE(7, CODETYPE_JOYAXIS_POS, 2),	JOYCODE_8_ANALOG_Z_POS },
 
 #ifdef USE_JOY_MOUSE_MOVE
 	{ JOYCODE(0, CODETYPE_MOUSEAXIS_NEG, 0), MOUSECODE_1_LEFT },
@@ -794,6 +849,12 @@ static int joy_trans_table[][2] =
 	{ JOYCODE(0, CODETYPE_MOUSEAXIS, 0),	MOUSECODE_1_ANALOG_X },
 	{ JOYCODE(0, CODETYPE_MOUSEAXIS, 1),	MOUSECODE_1_ANALOG_Y },
 	{ JOYCODE(0, CODETYPE_MOUSEAXIS, 2),	MOUSECODE_1_ANALOG_Z },
+	{ JOYCODE(0, CODETYPE_MOUSE_NEG, 0),	MOUSECODE_1_X_NEG },
+	{ JOYCODE(0, CODETYPE_MOUSE_POS, 0),	MOUSECODE_1_X_POS },
+	{ JOYCODE(0, CODETYPE_MOUSE_NEG, 1),	MOUSECODE_1_Y_NEG },
+	{ JOYCODE(0, CODETYPE_MOUSE_POS, 1),	MOUSECODE_1_Y_POS },
+	{ JOYCODE(0, CODETYPE_MOUSE_NEG, 2),	MOUSECODE_1_Z_NEG },
+	{ JOYCODE(0, CODETYPE_MOUSE_POS, 2),	MOUSECODE_1_Z_POS },
 
 #ifdef USE_JOY_MOUSE_MOVE
 	{ JOYCODE(1, CODETYPE_MOUSEAXIS_NEG, 0), MOUSECODE_2_LEFT },
@@ -809,6 +870,12 @@ static int joy_trans_table[][2] =
 	{ JOYCODE(1, CODETYPE_MOUSEAXIS, 0),	MOUSECODE_2_ANALOG_X },
 	{ JOYCODE(1, CODETYPE_MOUSEAXIS, 1),	MOUSECODE_2_ANALOG_Y },
 	{ JOYCODE(1, CODETYPE_MOUSEAXIS, 2),	MOUSECODE_2_ANALOG_Z },
+	{ JOYCODE(1, CODETYPE_MOUSE_NEG, 0),	MOUSECODE_2_X_NEG },
+	{ JOYCODE(1, CODETYPE_MOUSE_POS, 0),	MOUSECODE_2_X_POS },
+	{ JOYCODE(1, CODETYPE_MOUSE_NEG, 1),	MOUSECODE_2_Y_NEG },
+	{ JOYCODE(1, CODETYPE_MOUSE_POS, 1),	MOUSECODE_2_Y_POS },
+	{ JOYCODE(1, CODETYPE_MOUSE_NEG, 2),	MOUSECODE_2_Z_NEG },
+	{ JOYCODE(1, CODETYPE_MOUSE_POS, 2),	MOUSECODE_2_Z_POS },
 
 #ifdef USE_JOY_MOUSE_MOVE
 	{ JOYCODE(2, CODETYPE_MOUSEAXIS_NEG, 0), MOUSECODE_3_LEFT },
@@ -824,6 +891,12 @@ static int joy_trans_table[][2] =
 	{ JOYCODE(2, CODETYPE_MOUSEAXIS, 0),	MOUSECODE_3_ANALOG_X },
 	{ JOYCODE(2, CODETYPE_MOUSEAXIS, 1),	MOUSECODE_3_ANALOG_Y },
 	{ JOYCODE(2, CODETYPE_MOUSEAXIS, 2),	MOUSECODE_3_ANALOG_Z },
+	{ JOYCODE(2, CODETYPE_MOUSE_NEG, 0),	MOUSECODE_3_X_NEG },
+	{ JOYCODE(2, CODETYPE_MOUSE_POS, 0),	MOUSECODE_3_X_POS },
+	{ JOYCODE(2, CODETYPE_MOUSE_NEG, 1),	MOUSECODE_3_Y_NEG },
+	{ JOYCODE(2, CODETYPE_MOUSE_POS, 1),	MOUSECODE_3_Y_POS },
+	{ JOYCODE(2, CODETYPE_MOUSE_NEG, 2),	MOUSECODE_3_Z_NEG },
+	{ JOYCODE(2, CODETYPE_MOUSE_POS, 2),	MOUSECODE_3_Z_POS },
 
 #ifdef USE_JOY_MOUSE_MOVE
 	{ JOYCODE(3, CODETYPE_MOUSEAXIS_NEG, 0), MOUSECODE_4_LEFT },
@@ -839,6 +912,12 @@ static int joy_trans_table[][2] =
 	{ JOYCODE(3, CODETYPE_MOUSEAXIS, 0),	MOUSECODE_4_ANALOG_X },
 	{ JOYCODE(3, CODETYPE_MOUSEAXIS, 1),	MOUSECODE_4_ANALOG_Y },
 	{ JOYCODE(3, CODETYPE_MOUSEAXIS, 2),	MOUSECODE_4_ANALOG_Z },
+	{ JOYCODE(3, CODETYPE_MOUSE_NEG, 0),	MOUSECODE_4_X_NEG },
+	{ JOYCODE(3, CODETYPE_MOUSE_POS, 0),	MOUSECODE_4_X_POS },
+	{ JOYCODE(3, CODETYPE_MOUSE_NEG, 1),	MOUSECODE_4_Y_NEG },
+	{ JOYCODE(3, CODETYPE_MOUSE_POS, 1),	MOUSECODE_4_Y_POS },
+	{ JOYCODE(3, CODETYPE_MOUSE_NEG, 2),	MOUSECODE_4_Z_NEG },
+	{ JOYCODE(3, CODETYPE_MOUSE_POS, 2),	MOUSECODE_4_Z_POS },
 
 #ifdef USE_JOY_MOUSE_MOVE
 	{ JOYCODE(4, CODETYPE_MOUSEAXIS_NEG, 0), MOUSECODE_5_LEFT },
@@ -854,6 +933,12 @@ static int joy_trans_table[][2] =
 	{ JOYCODE(4, CODETYPE_MOUSEAXIS, 0),	MOUSECODE_5_ANALOG_X },
 	{ JOYCODE(4, CODETYPE_MOUSEAXIS, 1),	MOUSECODE_5_ANALOG_Y },
 	{ JOYCODE(4, CODETYPE_MOUSEAXIS, 2),	MOUSECODE_5_ANALOG_Z },
+	{ JOYCODE(4, CODETYPE_MOUSE_NEG, 0),	MOUSECODE_5_X_NEG },
+	{ JOYCODE(4, CODETYPE_MOUSE_POS, 0),	MOUSECODE_5_X_POS },
+	{ JOYCODE(4, CODETYPE_MOUSE_NEG, 1),	MOUSECODE_5_Y_NEG },
+	{ JOYCODE(4, CODETYPE_MOUSE_POS, 1),	MOUSECODE_5_Y_POS },
+	{ JOYCODE(4, CODETYPE_MOUSE_NEG, 2),	MOUSECODE_5_Z_NEG },
+	{ JOYCODE(4, CODETYPE_MOUSE_POS, 2),	MOUSECODE_5_Z_POS },
 
 #ifdef USE_JOY_MOUSE_MOVE
 	{ JOYCODE(5, CODETYPE_MOUSEAXIS_NEG, 0), MOUSECODE_6_LEFT },
@@ -869,6 +954,12 @@ static int joy_trans_table[][2] =
 	{ JOYCODE(5, CODETYPE_MOUSEAXIS, 0),	MOUSECODE_6_ANALOG_X },
 	{ JOYCODE(5, CODETYPE_MOUSEAXIS, 1),	MOUSECODE_6_ANALOG_Y },
 	{ JOYCODE(5, CODETYPE_MOUSEAXIS, 2),	MOUSECODE_6_ANALOG_Z },
+	{ JOYCODE(5, CODETYPE_MOUSE_NEG, 0),	MOUSECODE_6_X_NEG },
+	{ JOYCODE(5, CODETYPE_MOUSE_POS, 0),	MOUSECODE_6_X_POS },
+	{ JOYCODE(5, CODETYPE_MOUSE_NEG, 1),	MOUSECODE_6_Y_NEG },
+	{ JOYCODE(5, CODETYPE_MOUSE_POS, 1),	MOUSECODE_6_Y_POS },
+	{ JOYCODE(5, CODETYPE_MOUSE_NEG, 2),	MOUSECODE_6_Z_NEG },
+	{ JOYCODE(5, CODETYPE_MOUSE_POS, 2),	MOUSECODE_6_Z_POS },
 
 #ifdef USE_JOY_MOUSE_MOVE
 	{ JOYCODE(6, CODETYPE_MOUSEAXIS_NEG, 0), MOUSECODE_7_LEFT },
@@ -884,6 +975,12 @@ static int joy_trans_table[][2] =
 	{ JOYCODE(6, CODETYPE_MOUSEAXIS, 0),	MOUSECODE_7_ANALOG_X },
 	{ JOYCODE(6, CODETYPE_MOUSEAXIS, 1),	MOUSECODE_7_ANALOG_Y },
 	{ JOYCODE(6, CODETYPE_MOUSEAXIS, 2),	MOUSECODE_7_ANALOG_Z },
+	{ JOYCODE(6, CODETYPE_MOUSE_NEG, 0),	MOUSECODE_7_X_NEG },
+	{ JOYCODE(6, CODETYPE_MOUSE_POS, 0),	MOUSECODE_7_X_POS },
+	{ JOYCODE(6, CODETYPE_MOUSE_NEG, 1),	MOUSECODE_7_Y_NEG },
+	{ JOYCODE(6, CODETYPE_MOUSE_POS, 1),	MOUSECODE_7_Y_POS },
+	{ JOYCODE(6, CODETYPE_MOUSE_NEG, 2),	MOUSECODE_7_Z_NEG },
+	{ JOYCODE(6, CODETYPE_MOUSE_POS, 2),	MOUSECODE_7_Z_POS },
 
 #ifdef USE_JOY_MOUSE_MOVE
 	{ JOYCODE(7, CODETYPE_MOUSEAXIS_NEG, 0), MOUSECODE_8_LEFT },
@@ -899,6 +996,12 @@ static int joy_trans_table[][2] =
 	{ JOYCODE(7, CODETYPE_MOUSEAXIS, 0),	MOUSECODE_8_ANALOG_X },
 	{ JOYCODE(7, CODETYPE_MOUSEAXIS, 1),	MOUSECODE_8_ANALOG_Y },
 	{ JOYCODE(7, CODETYPE_MOUSEAXIS, 2),	MOUSECODE_8_ANALOG_Z },
+	{ JOYCODE(7, CODETYPE_MOUSE_NEG, 0),	MOUSECODE_8_X_NEG },
+	{ JOYCODE(7, CODETYPE_MOUSE_POS, 0),	MOUSECODE_8_X_POS },
+	{ JOYCODE(7, CODETYPE_MOUSE_NEG, 1),	MOUSECODE_8_Y_NEG },
+	{ JOYCODE(7, CODETYPE_MOUSE_POS, 1),	MOUSECODE_8_Y_POS },
+	{ JOYCODE(7, CODETYPE_MOUSE_NEG, 2),	MOUSECODE_8_Z_NEG },
+	{ JOYCODE(7, CODETYPE_MOUSE_POS, 2),	MOUSECODE_8_Z_POS },
 
 	{ JOYCODE(0, CODETYPE_GUNAXIS, 0),		GUNCODE_1_ANALOG_X },
 	{ JOYCODE(0, CODETYPE_GUNAXIS, 1),		GUNCODE_1_ANALOG_Y },
@@ -970,6 +1073,25 @@ static void autoselect_analog_devices(const input_port_entry *inp, int type1, in
 
 
 //============================================================
+//  set_DI_Dword_Property
+//============================================================
+
+HRESULT set_DI_Dword_Property(LPDIRECTINPUTDEVICE pdev, REFGUID guidProperty, DWORD dwObject, DWORD dwHow, DWORD dwValue)
+{
+	DIPROPDWORD dipdw;
+
+	dipdw.diph.dwSize       = sizeof(dipdw);
+	dipdw.diph.dwHeaderSize = sizeof(dipdw.diph);
+	dipdw.diph.dwObj        = dwObject;
+	dipdw.diph.dwHow        = dwHow;
+	dipdw.dwData            = dwValue;
+
+	return IDirectInputDevice_SetProperty(pdev, guidProperty, &dipdw.diph);
+}
+
+
+
+//============================================================
 //  enum_keyboard_callback
 //============================================================
 
@@ -1031,7 +1153,6 @@ out_of_keyboards:
 
 static BOOL CALLBACK enum_mouse_callback(LPCDIDEVICEINSTANCE instance, LPVOID ref)
 {
-	DIPROPDWORD value;
 	HRESULT result;
 	char *utf8_instance_name;
 
@@ -1063,12 +1184,7 @@ static BOOL CALLBACK enum_mouse_callback(LPCDIDEVICEINSTANCE instance, LPVOID re
 		goto cant_get_caps;
 
 	// set relative mode
-	value.diph.dwSize = sizeof(DIPROPDWORD);
-	value.diph.dwHeaderSize = sizeof(value.diph);
-	value.diph.dwObj = 0;
-	value.diph.dwHow = DIPH_DEVICE;
-	value.dwData = DIPROPAXISMODE_REL;
-	result = IDirectInputDevice_SetProperty(mouse_device[mouse_count], DIPROP_AXISMODE, &value.diph);
+	result = set_DI_Dword_Property(mouse_device[mouse_count], DIPROP_AXISMODE, 0, DIPH_DEVICE, DIPROPAXISMODE_REL);
 	if (result != DI_OK)
 		goto cant_set_axis_mode;
 
@@ -1164,7 +1280,7 @@ setup_sys_mouse:
 
 static BOOL CALLBACK enum_joystick_callback(LPCDIDEVICEINSTANCE instance, LPVOID ref)
 {
-	DIPROPDWORD value;
+	DIPROPRANGE range;
 	HRESULT result = DI_OK;
 	DWORD flags;
 	char *utf8_instance_name;
@@ -1196,15 +1312,51 @@ static BOOL CALLBACK enum_joystick_callback(LPCDIDEVICEINSTANCE instance, LPVOID
 	if (result != DI_OK)
 		goto cant_get_caps;
 
+	/* the error reporting can be removed once we are sure the property setting works for all Win versions */
+
 	// set absolute mode
-	value.diph.dwSize = sizeof(DIPROPDWORD);
-	value.diph.dwHeaderSize = sizeof(value.diph);
-	value.diph.dwObj = 0;
-	value.diph.dwHow = DIPH_DEVICE;
-	value.dwData = DIPROPAXISMODE_ABS;
-	result = IDirectInputDevice_SetProperty(joystick_device[joystick_count], DIPROP_AXISMODE, &value.diph);
+	result = set_DI_Dword_Property(joystick_device[joystick_count], DIPROP_AXISMODE, 0, DIPH_DEVICE, DIPROPAXISMODE_ABS);
 	if (result != DI_OK)
+ 	{
+ 		faprintf(stderr, _WINDOWS("Can't set axis mode for Joystick %d - %s\n"), joystick_count, joystick_name[joystick_count]);
 		goto cant_set_axis_mode;
+	}
+
+	// set range
+	range.diph.dwSize = sizeof(range);
+	range.diph.dwHeaderSize = sizeof(range.diph);
+	range.diph.dwObj = 0;
+	range.diph.dwHow = DIPH_DEVICE;
+	range.lMin = ANALOG_VALUE_MIN;
+	range.lMax = ANALOG_VALUE_MAX;
+	result = IDirectInputDevice_SetProperty(joystick_device[joystick_count], DIPROP_RANGE, &range.diph);
+ 	if (result != DI_OK)
+ 	{
+ 		faprintf(stderr, _WINDOWS("Can't set range for Joystick %d - %s\n"), joystick_count, joystick_name[joystick_count]);
+		goto cant_set_range;
+	}
+
+	// set deadzone
+	if (joy_deadzone > 0 && joy_deadzone <= 1)
+	{
+		result = set_DI_Dword_Property(joystick_device[joystick_count], DIPROP_DEADZONE, 0, DIPH_DEVICE, 10000 * joy_deadzone);
+	 	if (result != DI_OK)
+	 	{
+	 		faprintf(stderr, _WINDOWS("Can't set deadzone for Joystick %d - %s\n"), joystick_count, joystick_name[joystick_count]);
+			goto cant_set_deadzone;
+		}
+	}
+
+	// set saturation
+	if (joy_saturation > joy_deadzone && joy_saturation < 1)
+	{
+		result = set_DI_Dword_Property(joystick_device[joystick_count], DIPROP_SATURATION, 0, DIPH_DEVICE, 10000 * joy_saturation);
+	 	if (result != DI_OK)
+	 	{
+	 		faprintf(stderr, _WINDOWS("Can't set saturation for Joystick %d - %s\n"), joystick_count, joystick_name[joystick_count]);
+			goto cant_set_saturation;
+		}
+	}
 
 	// attempt to set the data format
 	result = IDirectInputDevice_SetDataFormat(joystick_device[joystick_count], &c_dfDIJoystick);
@@ -1228,6 +1380,9 @@ static BOOL CALLBACK enum_joystick_callback(LPCDIDEVICEINSTANCE instance, LPVOID
 cant_set_coop_level:
 cant_set_format:
 cant_set_axis_mode:
+cant_set_range:
+cant_set_deadzone:
+cant_set_saturation:
 cant_get_caps:
 cant_alloc_memory:
 	if (joystick_device2[joystick_count])
@@ -1755,7 +1910,8 @@ static void extract_input_config(void)
 	use_lightgun_dual = options_get_bool("dual_lightgun");
 	use_lightgun_reload = options_get_bool("offscreen_reload");
 	steadykey = options_get_bool("steadykey");
-	a2d_deadzone = options_get_float("a2d_deadzone");
+	joy_deadzone = options_get_float("joy_deadzone");
+	joy_saturation = options_get_float("joy_saturation");
 	options.controller = options_get_string("ctrlr");
 #ifdef USE_JOY_MOUSE_MOVE
 	use_stickpoint = options_get_bool("stickpoint");
@@ -2052,10 +2208,27 @@ static void init_joycodes(void)
 		// add analog axes (fix me -- should enumerate these)
 		sprintf(tempname, "%sX", mousename);
 		add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSEAXIS, 0), CODE_OTHER_ANALOG_RELATIVE);
+		// add negative & positive digital values
+		sprintf(tempname, "%sX -", mousename);
+		add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSE_NEG, 0), CODE_OTHER_DIGITAL);
+		sprintf(tempname, "%sX +", mousename);
+		add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSE_POS, 0), CODE_OTHER_DIGITAL);
+
 		sprintf(tempname, "%sY", mousename);
 		add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSEAXIS, 1), CODE_OTHER_ANALOG_RELATIVE);
+		// add negative & positive digital values
+		sprintf(tempname, "%sY -", mousename);
+		add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSE_NEG, 1), CODE_OTHER_DIGITAL);
+		sprintf(tempname, "%sY +", mousename);
+		add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSE_POS, 1), CODE_OTHER_DIGITAL);
+
 		sprintf(tempname, "%sZ", mousename);
 		add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSEAXIS, 2), CODE_OTHER_ANALOG_RELATIVE);
+		// add negative & positive digital values
+		sprintf(tempname, "%sZ -", mousename);
+		add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSE_NEG, 2), CODE_OTHER_DIGITAL);
+		sprintf(tempname, "%sZ +", mousename);
+		add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSE_POS, 2), CODE_OTHER_DIGITAL);
 
 #ifdef USE_JOY_MOUSE_MOVE
 		if (win_use_raw_mouse)
@@ -2199,22 +2372,27 @@ static void init_joycodes(void)
 					{
 						sprintf(tempname, "J%d %s", stick + 1, utf8_name);
 						add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_JOYAXIS, axis), CODE_OTHER_ANALOG_ABSOLUTE);
+						// add negative & positive analog axis
+						sprintf(tempname, "J%d + %s", stick + 1, utf8_name);
+						add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_JOYAXIS_POS, axis), CODE_OTHER_ANALOG_ABSOLUTE);
+						sprintf(tempname, "J%d - %s", stick + 1, utf8_name);
+						add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_JOYAXIS_NEG, axis), CODE_OTHER_ANALOG_ABSOLUTE);
 					}
 
-					// add negative value
+					// add negative & positive digital values
 					sprintf(tempname, "J%d %s -", stick + 1, utf8_name);
 					add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_AXIS_NEG, axis), CODE_OTHER_DIGITAL);
-
-					// add positive value
 					sprintf(tempname, "J%d %s +", stick + 1, utf8_name);
 					add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_AXIS_POS, axis), CODE_OTHER_DIGITAL);
 
+/* this can be removed if no problems are found with the DX internal range */
 					// get the axis range while we're here
 					joystick_range[stick][axis].diph.dwSize = sizeof(DIPROPRANGE);
 					joystick_range[stick][axis].diph.dwHeaderSize = sizeof(joystick_range[stick][axis].diph);
 					joystick_range[stick][axis].diph.dwObj = offsetof(DIJOYSTATE, lX) + axis * sizeof(LONG);
 					joystick_range[stick][axis].diph.dwHow = DIPH_BYOFFSET;
 					result = IDirectInputDevice_GetProperty(joystick_device[stick], DIPROP_RANGE, &joystick_range[stick][axis].diph);
+
 					free(utf8_name);
 				}
 			}
@@ -2331,6 +2509,14 @@ static INT32 get_joycode_value(os_code joycode)
 #endif /* JOYSTICK_ID */
 
 		case CODETYPE_AXIS_POS:
+			return ((LONG *)&joystick_state[joynum].lX)[joyindex] > 0;
+
+		case CODETYPE_AXIS_NEG:
+			return ((LONG *)&joystick_state[joynum].lX)[joyindex] < 0;
+
+/* this can be removed if no problems are found with the DX internal deadzone */
+#if 0
+		case CODETYPE_AXIS_POS:
 		case CODETYPE_AXIS_NEG:
 		{
 #ifdef JOYSTICK_ID
@@ -2344,14 +2530,15 @@ static INT32 get_joycode_value(os_code joycode)
 #endif /* JOYSTICK_ID */
 			LONG middle = (top + bottom) / 2;
 
-			// watch for movement greater "a2d_deadzone" along either axis
+			// watch for movement greater "joy_deadzone" along either axis
 			// FIXME in the two-axis joystick case, we need to find out
 			// the angle. Anything else is unprecise.
 			if (codetype == CODETYPE_AXIS_POS)
-				return (val > middle + ((top - middle) * a2d_deadzone));
+				return (val > middle + ((top - middle) * joy_deadzone));
 			else
-				return (val < middle - ((middle - bottom) * a2d_deadzone));
+				return (val < middle - ((middle - bottom) * joy_deadzone));
 		}
+#endif
 
 		// anywhere from 0-45 (315) deg to 0+45 (45) deg
 		case CODETYPE_POV_UP:
@@ -2402,8 +2589,11 @@ static INT32 get_joycode_value(os_code joycode)
 					return 0;
 			}
 
+
 			if (use_stickpoint && !win_has_menu(win_window_list))
 			{
+				//fixme
+				float a2d_deadzone = 0.3f;
 				LONG val = ((LONG*)&mouse_state[joynum].lX)[joyindex];
 				LONG center = (a2d_deadzone > 0.0 ? (2 / a2d_deadzone) : 1);
 				LONG deadzone = 0;
@@ -2426,26 +2616,77 @@ static INT32 get_joycode_value(os_code joycode)
 
 		// analog joystick axis
 		case CODETYPE_JOYAXIS:
+		case CODETYPE_JOYAXIS_NEG:
+		case CODETYPE_JOYAXIS_POS:
 		{
 			if (joystick_type[joynum][joyindex] != AXIS_TYPE_ANALOG)
 				return ANALOG_VALUE_INVALID;
+
+			if (!use_joystick)
+				return 0;
 			else
+			{
+				/* scaling and deadzone are handled by DX */
+				LONG val = ((LONG *)&joystick_state[joynum].lX)[joyindex];
+				if (codetype == CODETYPE_JOYAXIS)
+					return val;
+
+				if (codetype ==  CODETYPE_JOYAXIS_NEG)
+					val = (val < 0) ? 0 - val : 0;
+				else
+					val = (val > 0) ? val : 0;
+
+				return val * 2 + ANALOG_VALUE_MIN;
+			}
+
+
+/* this can be removed if no problems are found with the DX internal scaling */
+#if 0
 			{
 				LONG val = ((LONG *)&joystick_state[joynum].lX)[joyindex];
 				LONG top = joystick_range[joynum][joyindex].lMax;
 				LONG bottom = joystick_range[joynum][joyindex].lMin;
+				LONG range, middle;
 
 				if (!use_joystick)
 					return 0;
-				val = (INT64)(val - bottom) * (INT64)(ANALOG_VALUE_MAX - ANALOG_VALUE_MIN) / (INT64)(top - bottom) + ANALOG_VALUE_MIN;
+
+				range = top - bottom;
+				middle = range / 2;
+
+				switch (codetype)
+				{
+					case CODETYPE_JOYAXIS:
+						val -= bottom;
+						break;
+
+					case CODETYPE_JOYAXIS_NEG:
+						val = middle - val;
+						range = middle - bottom;
+						break;
+
+					case CODETYPE_JOYAXIS_POS:
+						val -= middle;
+						range = top - middle;
+						break;
+				}
+				if (val < 0) val = 0;
+				val = (INT64)(val) * (INT64)(ANALOG_VALUE_MAX - ANALOG_VALUE_MIN) / (INT64)(range) + ANALOG_VALUE_MIN;
 				if (val < ANALOG_VALUE_MIN) val = ANALOG_VALUE_MIN;
 				if (val > ANALOG_VALUE_MAX) val = ANALOG_VALUE_MAX;
 				return val;
 			}
+#endif
 		}
 
 		// analog mouse axis
 		case CODETYPE_MOUSEAXIS:
+		// digital mouse direction
+		case CODETYPE_MOUSE_NEG:
+		case CODETYPE_MOUSE_POS:
+		{
+			LONG val = 0;
+
 			// if the mouse isn't yet active, make it so
 #ifdef USE_JOY_MOUSE_MOVE
 			if (!mouse_active && (win_use_mouse||use_stickpoint) && !win_has_menu(win_window_list))
@@ -2462,15 +2703,27 @@ static INT32 get_joycode_value(os_code joycode)
 
 			// return the latest mouse info
 			if (joyindex == 0)
-				return mouse_state[joynum].lX * 512;
+				val =  mouse_state[joynum].lX * 512;
 			if (joyindex == 1)
-				return mouse_state[joynum].lY * 512;
+				val =  mouse_state[joynum].lY * 512;
 			// Z axis on most mice is incremeted 120 for each change.
 			// But some are only 30 so we will scale for  +/- 1 increments on those
 			// 25% scaling will give  +/- 1 increments for most mice.
 			if (joyindex == 2)
-				return (mouse_state[joynum].lZ / 30) * 512;
-			return 0;
+				val =  (mouse_state[joynum].lZ / 30) * 512;
+
+			if (codetype == CODETYPE_MOUSEAXIS)
+			{
+				return val;
+			}
+			else
+			{
+				if (codetype == CODETYPE_MOUSE_POS)
+					return val > 0;
+				else
+					return val < 0;
+			}
+		}
 
 		// analog gun axis
 		case CODETYPE_GUNAXIS:

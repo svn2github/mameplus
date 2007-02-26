@@ -268,9 +268,6 @@
 #define IDC_ASPECTRATIOTEXT             1156
 #define IDC_JOY_GUI                     1157
 #define IDC_BROADCAST                   1158
-#define IDC_A2D                         1160
-#define IDC_A2DDISP                     1161
-#define IDC_A2DTEXT                     1162
 #define IDC_PLAY_GAME                   1164
 #define IDC_LIGHTGUN                    1165
 #define IDC_ASPECTRATIOTEXT2            1166

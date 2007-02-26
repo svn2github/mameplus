@@ -25,13 +25,14 @@
 // MAMEOS headers
 #include "window.h"
 #include "video.h"
-#include "osd_so.h"
+#include "sound.h"
 #include "input.h"
 #include "output.h"
 #include "config.h"
 #include "osdepend.h"
 #include "strconv.h"
 #include "winutil.h"
+#include "osd_so.h"
 
 #ifdef MESS
 #include "parallel.h"
@@ -45,7 +46,17 @@
 //  TYPE DEFINITIONS
 //============================================================
 
+#ifdef UNICODE
+#define UNICODE_POSTFIX "W"
+#else
+#define UNICODE_POSTFIX "A"
+#endif
+
 typedef BOOL (WINAPI *try_enter_critical_section_ptr)(LPCRITICAL_SECTION lpCriticalSection);
+
+typedef HANDLE (WINAPI *av_set_mm_thread_characteristics_ptr)(LPCTSTR TaskName, LPDWORD TaskIndex);
+typedef HANDLE (WINAPI *av_set_mm_max_thread_characteristics_ptr)(LPCTSTR FirstTask, LPCTSTR SecondTask, LPDWORD TaskIndex);
+typedef BOOL (WINAPI *av_revert_mm_thread_characteristics_ptr)(HANDLE AvrtHandle);
 
 struct _osd_lock
 {
@@ -71,6 +82,10 @@ int _CRT_glob = 0;
 
 static try_enter_critical_section_ptr try_enter_critical_section;
 
+static av_set_mm_thread_characteristics_ptr av_set_mm_thread_characteristics;
+static av_set_mm_max_thread_characteristics_ptr av_set_mm_max_thread_characteristics;
+static av_revert_mm_thread_characteristics_ptr av_revert_mm_thread_characteristics;
+
 static char mapfile_name[MAX_PATH];
 static LPTOP_LEVEL_EXCEPTION_FILTER pass_thru_filter;
 
@@ -86,6 +101,7 @@ static const TCHAR helpfile[] = TEXT("mess.chm");
 //  PROTOTYPES
 //============================================================
 
+static void soft_link_functions(void);
 static int check_for_double_click_start(int argc);
 static LONG CALLBACK exception_filter(struct _EXCEPTION_POINTERS *info);
 static const char *lookup_symbol(UINT32 address);
@@ -109,7 +125,6 @@ int utf8_main(int argc, char **argv)
 	int game_index;
 	char *ext;
 	int res = 0;
-	HMODULE library;
 
 	// initialize common controls
 	InitCommonControls();
@@ -123,12 +138,8 @@ int utf8_main(int argc, char **argv)
 		return 1;
 // #endif
 
-	// see if we can use TryEnterCriticalSection
-	try_enter_critical_section = NULL;
-	library = LoadLibrary(TEXT("kernel32.dll"));
-	if (library != NULL)
-		try_enter_critical_section = (try_enter_critical_section_ptr)GetProcAddress(library, "TryEnterCriticalSection");
-
+	// soft-link optional functions
+	soft_link_functions();
 
 	strcpy(mapfile_name, argv[0]);
 	ext = strchr(mapfile_name, '.');
@@ -154,8 +165,10 @@ int utf8_main(int argc, char **argv)
 	// have we decided on a game?
 	if (game_index != -1)
 	{
-		TIMECAPS caps;
+//      HANDLE mm_task = NULL;
+//      DWORD task_index = 0;
 		MMRESULT result;
+		TIMECAPS caps;
 
 		// crank up the multimedia timer resolution to its max
 		// this gives the system much finer timeslices
@@ -163,12 +176,20 @@ int utf8_main(int argc, char **argv)
 		if (result == TIMERR_NOERROR)
 			timeBeginPeriod(caps.wPeriodMin);
 
+		// set our multimedia tasks if we can
+//      if (av_set_mm_thread_characteristics != NULL)
+//          mm_task = (*av_set_mm_thread_characteristics)(TEXT("Playback"), &task_index);
+
 		start_profiler();
 
 		// run the game
 		res = run_game(game_index);
 
 		stop_profiler();
+
+		// turn off our multimedia tasks
+//      if (av_revert_mm_thread_characteristics != NULL)
+//          (*av_revert_mm_thread_characteristics)(mm_task);
 
 		// restore the timer resolution
 		if (result == TIMERR_NOERROR)
@@ -187,7 +208,6 @@ int utf8_main(int argc, char **argv)
 }
 
 
-
 //============================================================
 //  output_oslog
 //============================================================
@@ -198,7 +218,6 @@ static void output_oslog(running_machine *machine, const char *buffer)
 	if (win_erroroslog)
 		win_output_debug_string_utf8(buffer);
 }
-
 
 
 //============================================================
@@ -212,6 +231,9 @@ int osd_init(running_machine *machine)
 
 	if (result == 0)
 		result = winvideo_init(machine);
+
+	if (result == 0)
+		result = winsound_init(machine);
 
 	if (result == 0)
 		result = wininput_init(machine);
@@ -229,7 +251,6 @@ int osd_init(running_machine *machine)
 
 	return result;
 }
-
 
 
 //============================================================
@@ -292,6 +313,34 @@ static void win_mame_file_output_callback(void *param, const char *format, va_li
 	s = astring_from_utf8(buf);
 	fputs(s, (FILE *)param);
 	free(s);
+}
+
+
+//============================================================
+//  soft_link_functions
+//============================================================
+
+static void soft_link_functions(void)
+{
+	HMODULE library;
+
+	// see if we can use TryEnterCriticalSection
+	try_enter_critical_section = NULL;
+	library = LoadLibrary(TEXT("kernel32.dll"));
+	if (library != NULL)
+		try_enter_critical_section = (try_enter_critical_section_ptr)GetProcAddress(library, "TryEnterCriticalSection");
+
+	// see if we can use the multimedia scheduling functions in Vista
+	av_set_mm_thread_characteristics = NULL;
+	av_set_mm_max_thread_characteristics = NULL;
+	av_revert_mm_thread_characteristics = NULL;
+	library = LoadLibrary(TEXT("avrt.dll"));
+	if (library != NULL)
+	{
+		av_set_mm_thread_characteristics = (av_set_mm_thread_characteristics_ptr)GetProcAddress(library, "AvSetMmThreadCharacteristics" UNICODE_POSTFIX);
+		av_set_mm_max_thread_characteristics = (av_set_mm_max_thread_characteristics_ptr)GetProcAddress(library, "AvSetMmMaxThreadCharacteristics" UNICODE_POSTFIX);
+		av_revert_mm_thread_characteristics = (av_revert_mm_thread_characteristics_ptr)GetProcAddress(library, "AvRevertMmThreadCharacteristics");
+	}
 }
 
 

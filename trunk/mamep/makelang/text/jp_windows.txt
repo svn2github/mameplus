@@ -1,36 +1,36 @@
-# osd/windows/input.c: 1736
+# osd/windows/input.c: 1891
          all -- all axes on all joysticks are digital\n
          all -- ‘S‚Ä‚ÌƒWƒ‡ƒCƒXƒeƒBƒbƒN‚Ì‘S‚Ä‚Ì²‚ğƒfƒWƒ^ƒ‹‚É‚µ‚Ü‚·\n
 
-# osd/windows/input.c: 1742
+# osd/windows/input.c: 1897
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
          j1,j2a2 -- ‘S‚Ä‚ÌƒWƒ‡ƒCƒXƒeƒBƒbƒN1‚Ì²‚ÆƒWƒ‡ƒCƒXƒeƒBƒbƒN2‚Ì²2‚ğƒfƒWƒ^ƒ‹‚É‚µ‚Ü‚·\n
 
-# osd/windows/input.c: 1740
+# osd/windows/input.c: 1895
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
          j1a5a6 -- ƒWƒ‡ƒCƒXƒeƒBƒbƒN1‚Ì²5‚Æ6‚ğƒfƒWƒ^ƒ‹‚É‚µ‚Ü‚·\n
 
-# osd/windows/input.c: 1737
+# osd/windows/input.c: 1892
          j<N> -- all axes on joystick <N> are digital\n
          j<N> -- ƒWƒ‡ƒCƒXƒeƒBƒbƒN<N>‚Ì‘S‚Ä‚Ì²‚ğƒfƒWƒ^ƒ‹‚É‚µ‚Ü‚·\n
 
-# osd/windows/input.c: 1738
+# osd/windows/input.c: 1893
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
          j<N>a<M> -- ƒWƒ‡ƒCƒXƒeƒBƒbƒN<N>‚Ì²<M>‚ğƒfƒWƒ^ƒ‹‚É‚µ‚Ü‚·\n
 
-# osd/windows/input.c: 1735
+# osd/windows/input.c: 1890
          none -- no axes on any joysticks are digital\n
          none -- ‘S‚Ä‚ÌƒWƒ‡ƒCƒXƒeƒBƒbƒN‚Ì²‚ğƒfƒWƒ^ƒ‹‚É‚µ‚Ü‚¹‚ñ\n
 
-# osd/windows/input.c: 1739
+# osd/windows/input.c: 1894
     Multiple axes can be specified for one joystick:\n
     ˆê‚Â‚ÌƒWƒ‡ƒCƒXƒeƒBƒbƒN‚Ì•¡”‚Ì²‚ğw’è‚·‚é–‚ªo—ˆ‚Ü‚·:\n
 
-# osd/windows/input.c: 1741
+# osd/windows/input.c: 1896
     Multiple joysticks can be specified separated by commas:\n
     ƒRƒ“ƒ}‚Å‹æØ‚é–‚Å•¡”‚ÌƒWƒ‡ƒCƒXƒeƒBƒbƒNw’è‚·‚é–‚ªo—ˆ‚Ü‚·:\n
 
-# osd/windows/input.c: 2195
+# osd/windows/input.c: 2368
  - digital
  - ƒfƒWƒ^ƒ‹
 
@@ -50,11 +50,11 @@
 %d samplesets found, %d were OK.\n
 %dŒÂ‚ÌƒTƒ“ƒvƒ‹ƒZƒbƒg‚ªŒ©‚Â‚©‚èA%dŒÂ‚ªOK‚Å‚·B\n
 
-# osd/windows/input.c: 2120
+# osd/windows/input.c: 2293
 %s Button %d
 %s ƒ{ƒ^ƒ“ %d
 
-# osd/windows/video.c: 432
+# osd/windows/video.c: 433
 %s%2d%4d%%%4d/%d fps
 %s%2d%4d%%%4d/%d FPS
 
@@ -62,19 +62,19 @@
 (BAD) 
 (ˆÙí) 
 
-# osd/windows/config.c: 186, 187
+# osd/windows/config.c: 185, 186
 (debugger-only command)
 (ƒfƒoƒbƒK—pƒRƒ}ƒ“ƒh)
 
-# osd/windows/config.c: 145, 151, 157, 163, 164, 299, 309, 321, 322, 323, 324, 325, 326, 327, 328, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 399, 400, 401, 402, 403
+# osd/windows/config.c: 145, 151, 157, 163, 164, 298, 308, 320, 321, 322, 323, 324, 325, 326, 327, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389
 (disabled by compiling option)
 (ƒRƒ“ƒpƒCƒ‹‚É–³Œø‰»)
 
-# osd/windows/video.c: 473
+# osd/windows/video.c: 474
 (primary)
 (ƒvƒ‰ƒCƒ}ƒŠ)
 
-# osd/windows/config.c: 284
+# osd/windows/config.c: 283
 ARTWORK OPTIONS
 ƒA[ƒgƒ[ƒNİ’è
 
@@ -82,7 +82,7 @@ ARTWORK OPTIONS
 AUTOMATIC DEVICE SELECTION OPTIONS
 ©“®ƒfƒoƒCƒX‘I‘ğİ’è
 
-# osd/windows/video.c: 266
+# osd/windows/video.c: 267
 Average FPS: %f (%d frames)\n
 •½‹ÏFPS: %f (%d ƒtƒŒ[ƒ€)\n
 
@@ -110,15 +110,31 @@ CORE PALETTE OPTIONS
 CRC-32s
 CRC-32
 
-# osd/windows/config.c: 178
+# osd/windows/input.c: 1321
+Can't set axis mode for Joystick %d - %s\n
+ƒWƒ‡ƒCƒXƒeƒBƒbƒN%d - %s‚Ì²‚ğİ’èo—ˆ‚Ü‚¹‚ñ
+
+# osd/windows/input.c: 1345
+Can't set deadzone for Joystick %d - %s\n
+ƒWƒ‡ƒCƒXƒeƒBƒbƒN%d - %s‚Ì–³”½‰—Ìˆæ‚ğİ’èo—ˆ‚Ü‚¹‚ñ
+
+# osd/windows/input.c: 1335
+Can't set range for Joystick %d - %s\n
+ƒWƒ‡ƒCƒXƒeƒBƒbƒN%d - %s‚Ì”ÍˆÍ‚ğİ’èo—ˆ‚Ü‚¹‚ñ
+
+# osd/windows/input.c: 1356
+Can't set saturation for Joystick %d - %s\n
+ƒWƒ‡ƒCƒXƒeƒBƒbƒN%d - %s‚Ì–O˜a’l‚ğİ’èo—ˆ‚Ü‚¹‚ñ
+
+# osd/windows/config.c: 177
 DEBUGGING OPTIONS
 ƒfƒoƒbƒKİ’è
 
-# osd/windows/config.c: 232
+# osd/windows/config.c: 231
 DIRECT3D-SPECIFIC OPTIONS
 Direct3DŒÅ—Lİ’è
 
-# osd/windows/config.c: 228
+# osd/windows/config.c: 227
 DIRECTDRAW-SPECIFIC OPTIONS
 DirectDrawŒÅ—Lİ’è
 
@@ -318,6 +334,10 @@ Direct3D: Œx: ƒfƒoƒCƒX‚ÍƒeƒNƒXƒ`ƒƒ‚ÌƒeƒNƒXƒ`ƒƒ‚Ì“\\‚è•t‚¯‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚
 Direct3D: Warning - device does not support full screen gamma correction.\n
 Direct3D: Œx: ƒfƒoƒCƒX‚Íƒtƒ‹ƒXƒNƒŠ[ƒ“‚Å‚ÌƒKƒ“ƒ}•â³‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñ\n
 
+# osd/windows/drawd3d.c: 670
+Direct3D: YUV format = %s\n
+Direct3D: YUV Œ`® = %s\n
+
 # osd/windows/drawd3d.c: 1642
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 Direct3D: %dx%d‚©‚ç%dx%d‚ÉƒvƒŠƒXƒP[ƒ‹‚ğ’²®‚µ‚Ü‚µ‚½\n
@@ -470,11 +490,11 @@ DirectDraw: Œx: ƒfƒoƒCƒX‚ÍDirectDraw•`‰æ‚É‚ ‚Ü‚è“K‚µ‚Ä‚¢‚È‚¢‚©‚à’m‚ê‚Ü‚¹‚ñ\n
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: Œx: ƒfƒoƒCƒX‚Íƒtƒ‹ƒXƒNƒŠ[ƒ“‚ÌƒKƒ“ƒ}•â³‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚Ü‚¹‚ñB\n
 
-# osd/windows/input.c: 1277
+# osd/windows/input.c: 1432
 DirectInput: Using DirectInput %d\n
 DirectInput: DirectInput %d‚ğg—p‚µ‚Ü‚·\n
 
-# osd/windows/sound.c: 591
+# osd/windows/sound.c: 397
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: ƒTƒEƒ“ƒhƒoƒbƒtƒ@: %d Hz, %d ƒrƒbƒg, %d ƒ`ƒƒƒ“ƒlƒ‹\n
 
@@ -482,23 +502,23 @@ DirectSound: ƒTƒEƒ“ƒhƒoƒbƒtƒ@: %d Hz, %d ƒrƒbƒg, %d ƒ`ƒƒƒ“ƒlƒ‹\n
 ERROR     %s\n
 ƒGƒ‰[    %s\n
 
-# osd/windows/sound.c: 606
-Error creating DirectSound buffer: %08x\n
-DirectSoundƒoƒbƒtƒ@ì¬‚ªì¬o—ˆ‚Ü‚¹‚ñ: %08x\n
+# osd/windows/sound.c: 411
+Error creating DirectSound stream buffer: %08x\n
+DirectSound‚ÌƒXƒgƒŠ[ƒ€ƒoƒbƒtƒ@‚ğ¶¬o—ˆ‚Ü‚¹‚ñ: %08x\n
 
-# osd/windows/sound.c: 465
+# osd/windows/sound.c: 285
 Error creating DirectSound: %08x\n
 DirectSound‚Ìì¬‚ªo—ˆ‚Ü‚¹‚ñ: %08x\n
 
-# osd/windows/sound.c: 572
-Error creating primary buffer: %08x\n
-ƒTƒEƒ“ƒhƒoƒbƒtƒ@‚ªì¬o—ˆ‚Ü‚¹‚ñ: %08x\n
+# osd/windows/sound.c: 378
+Error creating primary DirectSound buffer: %08x\n
+DirectSound‚Ìƒvƒ‰ƒCƒ}ƒŠƒoƒbƒtƒ@‚ğ¶¬o—ˆ‚Ü‚¹‚ñ: %08x\n
 
 # osd/windows/drawd3d.c: 767
 Error creating vertex buffer (%08X)
 ’¸“_ƒoƒbƒtƒ@‚Ìì¬‚ÅƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½(%08X)
 
-# osd/windows/sound.c: 474
+# osd/windows/sound.c: 294
 Error getting DirectSound capabilities: %08x\n
 DirectSound‚Ìî•ñ‚ªæ“¾o—ˆ‚Ü‚¹‚ñ: %08x\n
 
@@ -514,25 +534,25 @@ Error getting identifier for device\n
 Error getting mode for adapter #%d\n
 ƒAƒ_ƒvƒ^#%d‚Ìƒ‚[ƒh‚Ìæ“¾‚ÅƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½\n
 
-# osd/windows/sound.c: 588
-Error getting primary format: %08x\n
-ƒTƒEƒ“ƒhƒoƒbƒtƒ@‚Ìİ’è‚ª“Ç‚İo‚¹‚Ü‚¹‚ñ: %08x\n
+# osd/windows/sound.c: 394
+Error getting primary DirectSound buffer format: %08x\n
+DirectSound‚Ìƒvƒ‰ƒCƒ}ƒŠƒoƒbƒtƒ@‚ÌŒ`®‚ªæ“¾o—ˆ‚Ü‚¹‚ñ: %08x\n
 
-# osd/windows/sound.c: 614
-Error locking stream buffer: %08x\n
-ƒXƒgƒŠ[ƒ€ƒoƒbƒtƒ@‚ÌƒƒbƒN‚ªo—ˆ‚Ü‚¹‚ñ: %08x\n
+# osd/windows/sound.c: 419
+Error locking DirectSound stream buffer: %08x\n
+DirectSound‚ÌƒXƒgƒŠ[ƒ€ƒoƒbƒtƒ@‚ğƒƒbƒNo—ˆ‚Ü‚¹‚ñ: %08x\n
 
-# osd/windows/sound.c: 519
+# osd/windows/sound.c: 332
 Error playing: %08x\n
 ƒTƒEƒ“ƒh‚ªÄ¶o—ˆ‚Ü‚¹‚ñ: %08x\n
 
-# osd/windows/sound.c: 482
+# osd/windows/sound.c: 302
 Error setting DirectSound cooperative level: %08x\n
 DirectSound‚Ì‰Šú‰»‚É¸”s‚µ‚Ü‚µ‚½: %08x\n
 
-# osd/windows/sound.c: 580
-Error setting primary format: %08x\n
-ƒTƒEƒ“ƒhƒoƒbƒtƒ@‚Ìİ’è‚ªo—ˆ‚Ü‚¹‚ñ: %08x\n
+# osd/windows/sound.c: 386
+Error setting primary DirectSound buffer format: %08x\n
+DirectSound‚Ìƒvƒ‰ƒCƒ}ƒŠƒoƒbƒtƒ@‚ÌŒ`®‚ªİ’èo—ˆ‚Ü‚¹‚ñ: %08x\n
 
 # osd/windows/drawd3d.c: 775
 Error setting vertex shader (%08X)
@@ -554,23 +574,23 @@ Error: unable to configure a screen texture format\n
 FRONTEND COMMANDS
 ƒtƒƒ“ƒgƒGƒ“ƒhƒRƒ}ƒ“ƒh
 
-# osd/windows/config.c: 264
+# osd/windows/config.c: 263
 FULL SCREEN OPTIONS
 ƒtƒ‹ƒXƒNƒŠ[ƒ“İ’è
 
-# osd/windows/config.c: 1099
+# osd/windows/config.c: 1063
 Failed to open file for playback
 Ä¶ƒtƒ@ƒCƒ‹‚ª“Ç‚İ‚ß‚Ü‚¹‚ñ
 
-# osd/windows/config.c: 1149
+# osd/windows/config.c: 1113
 Failed to open file for recording
 “ü—Í‚ğ•Û‘¶‚·‚éƒtƒ@ƒCƒ‹‚ªì¬‚Å‚«‚Ü‚¹‚ñ
 
-# osd/windows/input.c: 2739
+# osd/windows/input.c: 2992
 Fast Forward
 ‘‘—‚è
 
-# osd/windows/config.c: 272
+# osd/windows/config.c: 271
 GAME SCREEN OPTIONS
 ƒQ[ƒ€‰æ–Êİ’è
 
@@ -578,103 +598,103 @@ GAME SCREEN OPTIONS
 Game \"%s\" not supported!\n
 u%sv‚Æ‚¢‚¤ƒQ[ƒ€‚É‚Í‘Î‰‚µ‚Ä‚¢‚Ü‚¹‚ñI\n
 
-# osd/windows/config.c: 304
+# osd/windows/config.c: 303
 INPUT DEVICE OPTIONS
 “ü—ÍƒfƒoƒCƒXİ’è
 
-# osd/windows/video.c: 1007
+# osd/windows/video.c: 1118
 Illegal aspect ratio value for %s = %s\n
 %s‚Ì’l%s‚Í•s³‚ÈƒAƒXƒyƒNƒg”ä‚Å‚·\n
 
-# osd/windows/video.c: 1030
+# osd/windows/video.c: 1141
 Illegal resolution value for %s = %s\n
 %s‚Ì’l%s‚Í•s³‚È‰ğ‘œ“x‚Å‚·\n
 
-# osd/windows/config.c: 851, 973, 984, 998
+# osd/windows/config.c: 830, 952, 963
 Illegal value for %s = %s\n
 %s‚Ì’l%s‚Í•s³‚Å‚·\n
 
-# osd/windows/config.c: 1112
+# osd/windows/config.c: 1076
 Input file is for game '%s', not for current game '%s'\n
 ƒQ[ƒ€u%sv‚Ì“ü—Íƒtƒ@ƒCƒ‹‚Í‘I‘ğ‚³‚ê‚½ƒQ[ƒ€u%sv‚Ì•¨‚Å‚Í‚ ‚è‚Ü‚¹‚ñ\n
 
-# osd/windows/input.c: 2195
+# osd/windows/input.c: 2368
 Input:  Axis %d (%s)%s\n
 “ü—Í:  ²%d (%s)%s\n
 
-# osd/windows/input.c: 2050
+# osd/windows/input.c: 2206
 Input: %s: %s\n
 “ü—Í: %s: %s\n
 
-# osd/windows/input.c: 955
+# osd/windows/input.c: 1058
 Input: Autoenabling joysticks due to presence of a %s\n
 “ü—Í: %s‚ª‘¶İ‚·‚é‚½‚ßƒWƒ‡ƒCƒXƒeƒBƒbƒN‚ğ©“®“I‚É—LŒø‚É‚µ‚Ü‚·\n
 
-# osd/windows/input.c: 962
+# osd/windows/input.c: 1065
 Input: Autoenabling lightguns due to presence of a %s\n
 “ü—Í: %s‚ª‘¶İ‚·‚é‚½‚ßŒõüe‚ğ©“®“I‚É—LŒø‚É‚µ‚Ü‚·\n
 
-# osd/windows/input.c: 948
+# osd/windows/input.c: 1051
 Input: Autoenabling mice due to presence of a %s\n
 “ü—Í: %s‚ª‘¶İ‚·‚é‚½‚ßƒ}ƒEƒX‚ğ©“®“I‚É—LŒø‚É‚µ‚Ü‚·\n
 
-# osd/windows/input.c: 1995
+# osd/windows/input.c: 2151
 Input: Joystick %d axis %d is now %s\n
 “ü—Í: ƒWƒ‡ƒCƒXƒeƒBƒbƒN%d ²%d ‚Í%s‚Å‚·\n
 
-# osd/windows/input.c: 2176
+# osd/windows/input.c: 2349
 Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 “ü—Í: ƒWƒ‡ƒCƒXƒeƒBƒbƒN%d: %s (%dŒÂ‚Ì²A%dŒÂ‚Ìƒ{ƒ^ƒ“A%dŒÂ‚Ì‹“_)\n
 
-# osd/windows/input.c: 1352
+# osd/windows/input.c: 1507
 Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 “ü—Í: ƒL[ƒ{[ƒh=%d  ƒ}ƒEƒX=%d  ƒWƒ‡ƒCƒXƒeƒBƒbƒN=%d  Œõüe=%d\n
 
-# osd/windows/input.c: 3075
+# osd/windows/input.c: 3328
 Input: Using RAWMOUSE for Mouse input\n
 “ü—Í: ƒ}ƒEƒX‚Ì“ü—Í‚ÉRAWMOUSE‚ğg—p‚µ‚Ü‚·\n
 
-# osd/windows/input.c: 1354
+# osd/windows/input.c: 1509
 Input: \"%s\" controller support enabled\n
 “ü—Í: ƒRƒ“ƒgƒ[ƒ‰u%sv‚ÌƒTƒ|[ƒg‚ª—LŒø‚Å‚·\n
 
-# osd/windows/input.c: 1734
+# osd/windows/input.c: 1889
 Invalid %s value %s; reverting to all -- valid values are:\n
 %s‚Ì’l%s‚Í•s³‚Å‚·B‘S‚Ì’l‚ğ•œŒ³‚µ‚Ü‚·B—LŒø‚È’l:\n
 
-# osd/windows/input.c: 1655
+# osd/windows/input.c: 1810
 Invalid %s value %s; reverting to keyboard\n
 %s‚Ì’l%s‚Í•s³‚Å‚·BƒL[ƒ{[ƒh‚É•œŒ³‚µ‚Ü‚·\n
 
-# osd/windows/video.c: 924
+# osd/windows/video.c: 1035
 Invalid video value %s; reverting to gdi\n
 ƒrƒfƒI‚Ì’l%s‚Í•s³‚Å‚·BGDI‚É•œŒ³‚µ‚Ü‚·\n
 
-# osd/windows/input.c: 2200, 2238
+# osd/windows/input.c: 2373, 2416
 J%d %s
 J%d %s
 
-# osd/windows/input.c: 2209
+# osd/windows/input.c: 2385
 J%d %s +
 J%d %s +
 
-# osd/windows/input.c: 2205
+# osd/windows/input.c: 2383
 J%d %s -
 J%d %s -
 
-# osd/windows/input.c: 2264
+# osd/windows/input.c: 2442
 J%d %s D
 J%d %s ‰º
 
-# osd/windows/input.c: 2268
+# osd/windows/input.c: 2446
 J%d %s L
 J%d %s ¶
 
-# osd/windows/input.c: 2272
+# osd/windows/input.c: 2450
 J%d %s R
 J%d %s ‰E
 
-# osd/windows/input.c: 2260
+# osd/windows/input.c: 2438
 J%d %s U
 J%d %s ã
 
@@ -682,19 +702,19 @@ J%d %s ã
 KNOWN     %s\n
 ”»–¾      %s\n
 
-# osd/windows/input.c: 2164
+# osd/windows/input.c: 2337
 Lightgun %d 
 Œõüe %d 
 
-# osd/windows/input.c: 2574
+# osd/windows/input.c: 2827
 Lightgun not supported in windowed mode
 ƒEƒCƒ“ƒhƒEƒ‚[ƒh‚Å‚ÍŒõüe‚ÍƒTƒ|[ƒg‚³‚ê‚Ü‚¹‚ñ
 
-# osd/windows/input.c: 2162
+# osd/windows/input.c: 2335
 Lightgun on Mouse %d 
 ƒ}ƒEƒX %d ‚ÌŒõüe
 
-# osd/windows/config.c: 785
+# osd/windows/config.c: 764
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
 
@@ -706,11 +726,11 @@ MAME: %su%sv- ‰æ–Ê%d
 MISC OPTIONS
 ‚»‚Ì‘¼‚Ìİ’è
 
-# osd/windows/input.c: 2047
+# osd/windows/input.c: 2203
 Mouse 
 ƒ}ƒEƒX
 
-# osd/windows/input.c: 2045
+# osd/windows/input.c: 2201
 Mouse %d 
 ƒ}ƒEƒX%d
 
@@ -730,35 +750,19 @@ Name:     Description:\n
 Name:    Clone of:\n
 –¼‘O:    ƒNƒ[ƒ“:\n
 
-# osd/windows/config.c: 368
-OSD bar color (dark)
-OSD ƒo[ (ˆÃ)
-
-# osd/windows/config.c: 369
-OSD bar color (default)
-OSD ƒo[ (ƒfƒtƒHƒ‹ƒg)
-
-# osd/windows/config.c: 367
-OSD bar color (light)
-OSD ƒo[ (–¾)
-
-# osd/windows/config.c: 366
-OSD bar color (medium)
-OSD ƒo[
-
 # osd/windows/fronthlp.c: 947
 PARTKNOWN %s\n
 ˆê•””»–¾  %s\n
 
-# osd/windows/config.c: 237
+# osd/windows/config.c: 236
 PER-WINDOW VIDEO OPTIONS
 ƒEƒBƒ“ƒhƒE–ˆ‚Ì‰æ–Êİ’è
 
-# osd/windows/config.c: 191
+# osd/windows/config.c: 190
 PERFORMANCE OPTIONS
 ƒpƒtƒH[ƒ}ƒ“ƒXİ’è
 
-# osd/windows/config.c: 1118
+# osd/windows/config.c: 1082
 Playing back previously recorded game %s\n
 ˆÈ‘O‚É‹L˜^‚³‚ê‚½ƒQ[ƒ€u%sv‚ğÄ¶‚µ‚Ü‚·\n
 
@@ -766,59 +770,59 @@ Playing back previously recorded game %s\n
 Proposed video mode not supported on device %s\n
 w’è‚³‚ê‚½‰æ–Êƒ‚[ƒh‚ÍƒfƒoƒCƒX%s‚Å‚ÍƒTƒ|[ƒg‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ\n
 
-# osd/windows/config.c: 291
+# osd/windows/config.c: 290
 SOUND OPTIONS
 ‰¹ºİ’è
 
-# osd/windows/config.c: 169
+# osd/windows/config.c: 168
 STATE/PLAYBACK OPTIONS
 ƒXƒe[ƒg/Ä¶İ’è
 
-# osd/windows/sound.c: 209
+# osd/windows/sound.c: 148
 Sound buffer: overflows=%d underflows=%d\n
 ƒTƒEƒ“ƒhƒoƒbƒtƒ@: ƒI[ƒoƒtƒ[=%d ƒAƒ“ƒ_[ƒtƒ[=%d\n
 
-# osd/windows/sound.c: 205
+# osd/windows/sound.c: 144
 Sound: buffer overflows=%d underflows=%d\n
 ƒTƒEƒ“ƒh: ƒoƒbƒtƒ@ ƒI[ƒoƒtƒ[=%d ƒAƒ“ƒ_[ƒtƒ[=%d\n
 
-# osd/windows/input.c: 2099
+# osd/windows/input.c: 2272
 Stick %d %s +
 ƒXƒeƒBƒbƒN %d %s +
 
-# osd/windows/input.c: 2092
+# osd/windows/input.c: 2265
 Stick %d %s -
 ƒXƒeƒBƒbƒN %d %s -
 
-# osd/windows/input.c: 2101
+# osd/windows/input.c: 2274
 Stick %s +
 ƒXƒeƒBƒbƒN %s +
 
-# osd/windows/input.c: 2094
+# osd/windows/input.c: 2267
 Stick %s -
 ƒXƒeƒBƒbƒN %s -
 
-# osd/windows/input.c: 2065
+# osd/windows/input.c: 2238
 Stick%sX+
 ƒXƒeƒBƒbƒN%sX+
 
-# osd/windows/input.c: 2063
+# osd/windows/input.c: 2236
 Stick%sX-
 ƒXƒeƒBƒbƒN%sX-
 
-# osd/windows/input.c: 2069
+# osd/windows/input.c: 2242
 Stick%sY+
 ƒXƒeƒBƒbƒN%sY+
 
-# osd/windows/input.c: 2067
+# osd/windows/input.c: 2240
 Stick%sY-
 ƒXƒeƒBƒbƒN%sY-
 
-# osd/windows/input.c: 2073
+# osd/windows/input.c: 2246
 Stick%sZ+
 ƒXƒeƒBƒbƒN%sZ+
 
-# osd/windows/input.c: 2071
+# osd/windows/input.c: 2244
 Stick%sZ-
 ƒXƒeƒBƒbƒN%sZ-
 
@@ -830,6 +834,10 @@ Texture too big! (wanted: %dx%d, max is %dx%d)\n
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
 ‚±‚ê‚Íƒhƒ‰ƒCƒou%sv‚É•K—v‚ÈROM‚ÌƒŠƒXƒg‚Å‚·B\n–¼‘O          ƒTƒCƒY ƒ`ƒFƒbƒNƒTƒ€\n
 
+# osd/windows/input.c: 2974
+Toggle Fullscreen
+ƒtƒ‹ƒXƒNƒŠ[ƒ“Ø‚è‘Ö‚¦
+
 # osd/windows/fronthlp.c: 946
 UNKNOWN   %s\n
 •s–¾      %s\n
@@ -838,7 +846,7 @@ UNKNOWN   %s\n
 Unable to close the keyboard device. (error %d)\n
 ƒL[ƒ{[ƒhƒfƒBƒoƒCƒX‚ªƒNƒ[ƒYo—ˆ‚Ü‚¹‚ñB(ƒGƒ‰[ %d)\n
 
-# osd/windows/config.c: 744
+# osd/windows/config.c: 723
 Unable to create file %s\n
 ƒtƒ@ƒCƒ‹%s‚ªì¬o—ˆ‚Ü‚¹‚ñ\n
 
@@ -854,7 +862,7 @@ Direct3D‚ğ‰Šú‰»o—ˆ‚Ü‚¹‚ñB\n
 Unable to initialize DirectDraw.\n
 DirectDraw‚ğ‰Šú‰»o—ˆ‚Ü‚¹‚ñ\n
 
-# osd/windows/video.c: 975
+# osd/windows/video.c: 1086
 Unable to load PNG file '%s'\n
 PNGƒtƒ@ƒCƒ‹u%sv‚ğ“Ç‚İ‚ß‚Ü‚¹‚ñ\n
 
@@ -866,35 +874,35 @@ Unable to open the keyboard device. (error %d)\n
 Unknown texture blendmode=%d format=%d\n
 •s–¾‚ÈƒeƒNƒXƒ`ƒƒƒuƒŒƒ“ƒhƒ‚[ƒh=%d Œ`®=%d\n
 
-# osd/windows/config.c: 788
+# osd/windows/config.c: 767
 Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the file windows.txt\n
 g—p–@:  MAME ƒQ[ƒ€–¼ [ƒIƒvƒVƒ‡ƒ“]\n\n         MAME -showusage    ƒIƒvƒVƒ‡ƒ“‚ğŠÈ’P‚Éˆê——•\\¦\n         MAME -showconfig   ƒIƒvƒVƒ‡ƒ“‚Ìİ’è’l‚ğˆê——•\\¦\n         MAME -createconfig mame.ini‚ğ¶¬\n\nÚ‚µ‚¢g—p–@‚É‚Â‚¢‚Ä‚ÍAwindows.txt‚ğQÆ‰º‚³‚¢\n
 
-# osd/windows/config.c: 683
+# osd/windows/config.c: 662
 Usage: mame [game] [options]\n\nOptions:\n
 g—p–@: mame [ƒQ[ƒ€–¼] [ƒIƒvƒVƒ‡ƒ“]\n\nƒIƒvƒVƒ‡ƒ“:\n
 
-# osd/windows/video.c: 868
+# osd/windows/video.c: 979
 Using %s scale effect\n
 ƒXƒP[ƒ‹ƒGƒtƒFƒNƒg %s ‚ğg—p‚µ‚Ü‚·\n
 
-# osd/windows/config.c: 278
+# osd/windows/config.c: 277
 VECTOR RENDERING OPTIONS
 ƒxƒNƒ^•`‰æİ’è
 
-# osd/windows/config.c: 202
+# osd/windows/config.c: 201
 VIDEO OPTIONS
 ƒrƒfƒIİ’è
 
-# osd/windows/config.c: 218
+# osd/windows/config.c: 217
 VIDEO ROTATION OPTIONS
 ‰æ–Ê‰ñ“]İ’è
 
-# osd/windows/video.c: 473
+# osd/windows/video.c: 474
 Video: Monitor %p = \"%s\" %s\n
 ƒrƒfƒI: ƒ‚ƒjƒ^ %p = u%sv%s\n
 
-# osd/windows/video.c: 920
+# osd/windows/video.c: 1031
 Warning: -video none doesn't make much sense without -frames_to_run\n
 Œx: -frames_to_run–³‚µ‚Å‚Ì-video none‚ÍˆÓ–¡‚ª‚ ‚è‚Ü‚¹‚ñ\n
 
@@ -902,15 +910,15 @@ Warning: -video none doesn't make much sense without -frames_to_run\n
 Warning: Device may not perform well for Direct3D rendering\n
 Œx: ƒfƒoƒCƒX‚ÌDirect3D•`‰æƒpƒtƒH[ƒ}ƒ“ƒX‚Í‚ ‚Ü‚è—Ç‚­‚ ‚è‚Ü‚¹‚ñ\n
 
-# osd/windows/video.c: 443
+# osd/windows/video.c: 444
 \n %d partial updates
 \n %d •”•ªXV
 
-# osd/windows/video.c: 441
+# osd/windows/video.c: 442
 \n %d vector updates
 \n %d ƒxƒNƒ^XV
 
-# osd/windows/config.c: 564
+# osd/windows/config.c: 543
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \nu%sv‚É—‚½ƒQ[ƒ€‚Í‰º‹L‚Ì’Ê‚è‚Å‚·\nƒTƒ|[ƒg‚³‚ê‚Ä‚¢‚éƒQ[ƒ€ (—‚Ä‚¢‚é‚à‚Ì‡):\n\n
 
@@ -918,39 +926,39 @@ Warning: Device may not perform well for Direct3D rendering\n
 all available info on driver in XML format
 ‘¶İ‚·‚é‘S‚Ä‚Ìƒhƒ‰ƒCƒoî•ñ‚ğXMLŒ`®‚Åo—Í
 
-# osd/windows/config.c: 213
+# osd/windows/config.c: 212
 amount to scale the screen brightness when paused
 ƒ|[ƒY‚Ì‰æ–Ê‚Ì–¾‚é‚³
 
-# osd/windows/input.c: 1993
+# osd/windows/input.c: 2149
 analog
 ƒAƒiƒƒO
 
-# osd/windows/input.c: 1285
+# osd/windows/input.c: 1440
 analog joystick
 ƒAƒiƒƒOƒWƒ‡ƒCƒXƒeƒBƒbƒN
 
-# osd/windows/config.c: 239
+# osd/windows/config.c: 238
 aspect ratio for all screens; 'auto' here will try to make a best guess
 ‘S‚Ä‚Ì‰æ–Ê‚ÌƒAƒXƒyƒNƒg”äBuautov‚ÍÅ“K‚Èİ’è‚ğ‚İ‚Ü‚·
 
-# osd/windows/config.c: 244
+# osd/windows/config.c: 243
 aspect ratio of the first screen; 'auto' here will try to make a best guess
 ‚P‰æ–Ê–Ú‚ÌƒAƒXƒyƒNƒg”äBuautov‚ÍÅ“K‚Èİ’è‚ğ‚İ‚Ü‚·
 
-# osd/windows/config.c: 259
+# osd/windows/config.c: 258
 aspect ratio of the fourth screen; 'auto' here will try to make a best guess
 ‚S‰æ–Ê–Ú‚ÌƒAƒXƒyƒNƒg”äBuautov‚ÍÅ“K‚Èİ’è‚ğ‚İ‚Ü‚·
 
-# osd/windows/config.c: 249
+# osd/windows/config.c: 248
 aspect ratio of the second screen; 'auto' here will try to make a best guess
 ‚Q‰æ–Ê–Ú‚ÌƒAƒXƒyƒNƒg”äBuautov‚ÍÅ“K‚Èİ’è‚ğ‚İ‚Ü‚·
 
-# osd/windows/config.c: 254
+# osd/windows/config.c: 253
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 ‚R‰æ–Ê–Ú‚ÌƒAƒXƒyƒNƒg”äBuautov‚ÍÅ“K‚Èİ’è‚ğ‚İ‚Ü‚·
 
-# osd/windows/config.c: 166, 238, 239, 240, 241, 243, 244, 245, 246, 248, 249, 250, 251, 253, 254, 255, 256, 258, 259, 260, 261, 353, 992, 1051, 1061 osd/windows/video.c: 434, 541, 1000, 1002, 1023, 1025 osd/windows/window.c: 840, 840, 844
+# osd/windows/config.c: 237, 238, 239, 240, 242, 243, 244, 245, 247, 248, 249, 250, 252, 253, 254, 255, 257, 258, 259, 260, 353, 1015, 1025 osd/windows/video.c: 435, 542, 1111, 1113, 1134, 1136 osd/windows/window.c: 840, 840, 844
 auto
 ©“®
 
@@ -958,55 +966,55 @@ auto
 automatic pause when playback is finished
 Ä¶I—¹‚É©“®’â~
 
-# osd/windows/config.c: 222
+# osd/windows/config.c: 221
 automatically rotate screen clockwise 90 degrees if vertical
 ‚’¼Œ^‰æ–Ê‚Ìê‡‚Í©“®‚ÅŒv‰ñ‚è‚É90“x‰ñ“]‚µ‚Ü‚·
 
-# osd/windows/config.c: 223
+# osd/windows/config.c: 222
 automatically rotate screen counterclockwise 90 degrees if vertical
 ‚’¼Œ^‰æ–Ê‚Ìê‡‚Í©“®‚Å”½Œv‰ñ‚è‚É90“x‰ñ“]‚µ‚Ü‚·
 
-# osd/windows/config.c: 267
+# osd/windows/config.c: 266
 brightness value in full screen mode
 ƒtƒ‹ƒXƒNƒŠ[ƒ“‰æ–Ê‚Å‚Ì–¾‚é‚³
 
-# osd/windows/config.c: 376
+# osd/windows/config.c: 369
 button color (aqua)
 ƒ{ƒ^ƒ“ (S 0r 7)
 
-# osd/windows/config.c: 373
+# osd/windows/config.c: 366
 button color (blue)
 ƒ{ƒ^ƒ“ (D or 4)
 
-# osd/windows/config.c: 372
+# osd/windows/config.c: 365
 button color (green)
 ƒ{ƒ^ƒ“ (C or 3)
 
-# osd/windows/config.c: 379
+# osd/windows/config.c: 372
 button color (lime)
 ƒ{ƒ^ƒ“ (10)
 
-# osd/windows/config.c: 378
+# osd/windows/config.c: 371
 button color (navy)
 ƒ{ƒ^ƒ“ (9)
 
-# osd/windows/config.c: 375
+# osd/windows/config.c: 368
 button color (pink)
 ƒ{ƒ^ƒ“ (P or 6)
 
-# osd/windows/config.c: 374
+# osd/windows/config.c: 367
 button color (purple)
 ƒ{ƒ^ƒ“ (K or 5)
 
-# osd/windows/config.c: 370
+# osd/windows/config.c: 363
 button color (red)
 ƒ{ƒ^ƒ“ (A or 1)
 
-# osd/windows/config.c: 377
+# osd/windows/config.c: 370
 button color (silver)
 ƒ{ƒ^ƒ“ (8)
 
-# osd/windows/config.c: 371
+# osd/windows/config.c: 364
 button color (yellow)
 ƒ{ƒ^ƒ“ (B or 2)
 
@@ -1022,11 +1030,11 @@ compare files with known MAME roms
 compare files with known MAME roms (brief)
 ƒtƒ@ƒCƒ‹‚ğŠù’m‚ÌMAME rom‚Æ”äŠr‚·‚é (‘å‚Ü‚©‚É)
 
-# osd/windows/config.c: 207
+# osd/windows/config.c: 206
 constrain to the proper aspect ratio
 “KØ‚ÈƒAƒXƒyƒNƒg”ä‚É§ŒÀ‚µ‚Ü‚·
 
-# osd/windows/config.c: 268
+# osd/windows/config.c: 267
 contrast value in full screen mode
 ƒtƒ‹ƒXƒNƒŠ[ƒ“‰æ–Ê‚Ì’l‚ğ§ŒÀ‚µ‚Ü‚·
 
@@ -1034,39 +1042,39 @@ contrast value in full screen mode
 create the default configuration file
 ƒfƒtƒHƒ‹ƒgİ’èƒtƒ@ƒCƒ‹‚ğì¬
 
-# osd/windows/config.c: 285
+# osd/windows/config.c: 284
 crop artwork to game screen size
 ƒA[ƒgƒ[ƒN‚ğƒQ[ƒ€‰æ–ÊƒTƒCƒY‚ÅƒJƒbƒg‚µ‚Ü‚·
 
-# osd/windows/config.c: 380
+# osd/windows/config.c: 373
 cursor color
 ƒJ[ƒ\\ƒ‹
 
-# osd/windows/config.c: 273
+# osd/windows/config.c: 272
 default game screen brightness correction
 ƒfƒtƒHƒ‹ƒg‚ÌƒQ[ƒ€‰æ–Ê‚Ì–¾‚é‚³’ù³’l
 
-# osd/windows/config.c: 274
+# osd/windows/config.c: 273
 default game screen contrast correction
 ƒfƒtƒHƒ‹ƒg‚ÌƒQ[ƒ€‰æ–Ê‚ÌƒRƒ“ƒgƒ‰ƒXƒg’l
 
-# osd/windows/config.c: 275
+# osd/windows/config.c: 274
 default game screen gamma correction
 ƒfƒtƒHƒ‹ƒg‚ÌƒQ[ƒ€‰æ–Ê‚ÌƒKƒ“ƒ}•â³’l
 
-# osd/windows/config.c: 206
+# osd/windows/config.c: 205
 default to maximized windows; otherwise, windows will be minimized
 ƒfƒtƒHƒ‹ƒg‚ÅƒEƒBƒ“ƒhƒE‚ğÅ‘å‰»B–³Œø‚Èê‡‚ÍƒEƒBƒ“ƒhƒE‚ÍÅ¬‰»‚³‚ê‚Ü‚·
 
-# osd/windows/input.c: 1288
+# osd/windows/input.c: 1443
 dial
 ƒ_ƒCƒAƒ‹
 
-# osd/windows/config.c: 337 osd/windows/input.c: 1786, 1993
+# osd/windows/config.c: 337 osd/windows/input.c: 1942, 2149
 digital
 ƒfƒWƒ^ƒ‹
 
-# osd/windows/config.c: 181
+# osd/windows/config.c: 180
 display additional diagnostic information
 ‹N“®‚Éf’f—p‚Ìî•ñ‚ğ•\\¦
 
@@ -1110,23 +1118,23 @@ enable (keyboard|mouse|joystick) if a trackball control is present
 enable (keyboard|mouse|joystick) if an analog joystick control is present
 ƒAƒiƒƒOƒXƒeƒBƒbƒN‚ğg—p‚·‚éê‡‚É(keyboard|mouse|joystick)‚ğ—LŒø
 
-# osd/windows/config.c: 192
+# osd/windows/config.c: 191
 enable automatic frameskip selection
 ƒtƒŒ[ƒ€ƒXƒLƒbƒv‚Ì©“®’²®‚ğ—LŒø
 
-# osd/windows/config.c: 171
+# osd/windows/config.c: 170
 enable automatic restore at startup, and automatic save at exit time
 ‹N“®‚É©“®“I‚ÉƒXƒe[ƒg‚ğ“Ç‚İ‚İAI—¹‚É©“®“I‚É•Û‘¶‚µ‚Ü‚·
 
-# osd/windows/config.c: 286
+# osd/windows/config.c: 285
 enable backdrops if artwork is enabled and available
 ƒA[ƒgƒ[ƒN‚ªg—p‰Â”\\‚Èê‡‚ÉƒoƒbƒNƒhƒƒbƒv‚ğ—LŒø
 
-# osd/windows/config.c: 288
+# osd/windows/config.c: 287
 enable bezels if artwork is enabled and available
 ƒA[ƒgƒ[ƒN‚ªg—p‰Â”\\‚Èê‡‚Éƒxƒ[ƒ‹‚ğ—LŒø
 
-# osd/windows/config.c: 234
+# osd/windows/config.c: 233
 enable bilinear filtering on screen output
 ‰æ–Ê‚Ìo—Í‚ÉƒoƒCƒŠƒjƒAƒtƒBƒ‹ƒ^‚ğ—LŒø
 
@@ -1134,19 +1142,19 @@ enable bilinear filtering on screen output
 enable cheat subsystem
 ƒ`[ƒgƒVƒXƒeƒ€‚ğ—LŒø
 
-# osd/windows/config.c: 333
+# osd/windows/config.c: 332
 enable dual lightgun input
 ƒfƒ…ƒAƒ‹Œõüe‚ğg—p
 
-# osd/windows/config.c: 229
+# osd/windows/config.c: 228
 enable hardware stretching
 ƒn[ƒhƒEƒFƒAŠg‘å•\\¦‚ğ—LŒø
 
-# osd/windows/config.c: 331
+# osd/windows/config.c: 330
 enable joystick input
 ƒWƒ‡ƒCƒXƒeƒBƒbƒN‚ğg—p
 
-# osd/windows/config.c: 332
+# osd/windows/config.c: 331
 enable lightgun input
 Œõüe‚ğg—p
 
@@ -1154,63 +1162,63 @@ enable lightgun input
 enable loading of configuration files
 İ’èƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ‚ğ—LŒø
 
-# osd/windows/config.c: 330
+# osd/windows/config.c: 329
 enable mouse input
 ƒ}ƒEƒX‚Ü‚½‚Íƒgƒ‰ƒbƒNƒ{[ƒ‹‚ğg—p
 
-# osd/windows/config.c: 199
+# osd/windows/config.c: 198
 enable multithreading; this enables rendering and blitting on a separate thread
 ƒ}ƒ‹ƒ`ƒXƒŒƒbƒh‚ğ—LŒøB‚±‚ê‚Í•`‰æˆ—‚Å‚ÌƒXƒŒƒbƒh•ªŠ„‚ğ—LŒø‚É‚µ‚Ü‚·
 
-# osd/windows/config.c: 287
+# osd/windows/config.c: 286
 enable overlays if artwork is enabled and available
 ƒA[ƒgƒ[ƒN‚ªg—p‰Â”\\‚Èê‡‚ÉƒI[ƒoƒŒƒC‚ğ—LŒø
 
-# osd/windows/config.c: 307
+# osd/windows/config.c: 306
 enable pointing stick input
 ƒXƒeƒBƒbƒNŒ^ƒ}ƒEƒX‚ğg—p
 
-# osd/windows/config.c: 266
+# osd/windows/config.c: 265
 enable resolution switching
 ‰ğ‘œ“x‚ÌØ‚è‘Ö‚¦‚ğ—LŒø
 
-# osd/windows/config.c: 196
+# osd/windows/config.c: 195
 enable sleeping, which gives time back to other applications when idle
 ƒXƒŠ[ƒv‚ğ—LŒøBƒAƒCƒhƒ‹‚ÉCPUŠÔ‚ğ‘¼‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÉŠJ•ú‚·‚é
 
-# osd/windows/config.c: 292
+# osd/windows/config.c: 291
 enable sound output
 ƒTƒEƒ“ƒh‚ğ—LŒø
 
-# osd/windows/config.c: 335
+# osd/windows/config.c: 334
 enable steadykey support
 ƒ{ƒ^ƒ“‚Ì“¯‰Ÿ‚µ”F¯‚ğ—eˆÕ‚É‚·‚é
 
-# osd/windows/config.c: 294
+# osd/windows/config.c: 293
 enable the use of external samples if available
 ‘¶İ‚·‚éê‡AŠO•”ƒTƒ“ƒvƒ‹ƒtƒ@ƒCƒ‹‚ğ—LŒø‚É‚·‚é
 
-# osd/windows/config.c: 195
+# osd/windows/config.c: 194
 enable throttling to keep game running in sync with real time
 ƒQ[ƒ€‚ÌÀs‘¬“x‚ğÀŠÔ‚Æ“¯Šú‚·‚éˆ×‚É‘¬“x§ŒÀ‚ğ—LŒø‚É‚·‚é
 
-# osd/windows/config.c: 265
+# osd/windows/config.c: 264
 enable triple buffering
 ƒgƒŠƒvƒ‹ƒoƒbƒtƒ@ƒŠƒ“ƒO‚ğ—LŒø
 
-# osd/windows/config.c: 215
+# osd/windows/config.c: 214
 enable using the start of VBLANK for throttling instead of the game time
 ‘¬“x§ŒÀ‚ğƒQ[ƒ€‚ÌÀŠÔ‚Ì‘ã‚í‚è‚ÉVBLANKŠJn‚Ås‚¤
 
-# osd/windows/config.c: 214
+# osd/windows/config.c: 213
 enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
 ‰æ–Ê”½“]‚Ì‘O‚ÉVBLANKŠJn‚ğ‘Ò‚ÂB‰æ–Ê‚Ì‚¿‚ç‚Â‚«‚ªŒ¸­‚µ‚Ü‚·
 
-# osd/windows/config.c: 205
+# osd/windows/config.c: 204
 enable window mode; otherwise, full screen mode is assumed
 ƒEƒBƒ“ƒhƒEƒ‚[ƒh‚ğ—LŒøB–³Œø‚Èê‡‚Í“–‘Rƒtƒ‹ƒXƒNƒŠ[ƒ“‚Å‚·
 
-# osd/windows/config.c: 183
+# osd/windows/config.c: 182
 enable/disable debugger
 ƒfƒoƒbƒK‚Ì—LŒøE–³Œø
 
@@ -1218,43 +1226,43 @@ enable/disable debugger
 enable/disable local language game list
 ƒ[ƒJƒ‰ƒCƒY‚³‚ê‚½ƒQ[ƒ€ƒŠƒXƒg‚ğ—LŒø
 
-# osd/windows/config.c: 297
+# osd/windows/config.c: 296
 enable/disable volume auto adjust
 ©“®‰¹—Ê’²®‹@”\\‚ğ—LŒø
 
-# osd/windows/config.c: 1062
+# osd/windows/config.c: 1026
 error: invalid value for language: %s\nUse %s\n
 ƒGƒ‰[: •s³‚ÈŒ¾Œêw’è: %s\n%s‚ğg—p‚µ‚Ü‚·\n
 
-# osd/windows/config.c: 1186
+# osd/windows/config.c: 1150
 error: invalid value for palette: %s\n
 ƒGƒ‰[: •s³‚ÈƒpƒŒƒbƒgw’è: %s\n
 
-# osd/windows/config.c: 238
+# osd/windows/config.c: 237
 explicit name of all screen; 'auto' here will try to make a best guess
 –¾¦“I‚É‘S‚Ä‚Ì‰æ–Ê‚Ì–¼‘O‚ğw’èBuautov‚ÍÅ“K‚Èİ’è‚ğ‚İ‚Ü‚·
 
-# osd/windows/config.c: 243
+# osd/windows/config.c: 242
 explicit name of the first screen; 'auto' here will try to make a best guess
 –¾¦“I‚É‚P‰æ–Ê–Ú‚Ì–¼‘O‚ğw’èBuautov‚ÍÅ“K‚Èİ’è‚ğ‚İ‚Ü‚·
 
-# osd/windows/config.c: 258
+# osd/windows/config.c: 257
 explicit name of the fourth screen; 'auto' here will try to make a best guess
 –¾¦“I‚É‚S‰æ–Ê–Ú‚Ì–¼‘O‚ğw’èBuautov‚ÍÅ“K‚Èİ’è‚ğ‚İ‚Ü‚·
 
-# osd/windows/config.c: 248
+# osd/windows/config.c: 247
 explicit name of the second screen; 'auto' here will try to make a best guess
 –¾¦“I‚É‚Q‰æ–Ê–Ú‚Ì–¼‘O‚ğw’èBuautov‚ÍÅ“K‚Èİ’è‚ğ‚İ‚Ü‚·
 
-# osd/windows/config.c: 253
+# osd/windows/config.c: 252
 explicit name of the third screen; 'auto' here will try to make a best guess
 –¾¦“I‚É‚S‰æ–Ê–Ú‚Ì–¼‘O‚ğw’èBuautov‚ÍÅ“K‚Èİ’è‚ğ‚İ‚Ü‚·
 
-# osd/windows/config.c: 224
+# osd/windows/config.c: 223
 flip screen left-right
 ¶‰E”½“]
 
-# osd/windows/config.c: 225
+# osd/windows/config.c: 224
 flip screen upside-down
 ã‰º”½“]
 
@@ -1270,35 +1278,31 @@ font normal color
 font special color
 ƒtƒHƒ“ƒg (“Áê)
 
-# osd/windows/video.c: 429
+# osd/windows/video.c: 430
 frame:%d %s%2d%4d%%%4d/%d fps
 ƒtƒŒ[ƒ€:%d %s%2d%4d%%%4d/%d FPS
 
-# osd/windows/video.c: 425
+# osd/windows/video.c: 426
 frame:%d Paused
 ƒtƒŒ[ƒ€:%d ƒ|[ƒY
 
-# osd/windows/video.c: 434
+# osd/windows/video.c: 435
 fskp
 fskp
 
-# osd/windows/config.c: 269
+# osd/windows/config.c: 268
 gamma value in full screen mode
 ƒtƒ‹ƒXƒNƒŠ[ƒ“‚ÌƒKƒ“ƒ}•â³’l
 
-# osd/windows/config.c: 179
+# osd/windows/config.c: 178
 generate an error.log file
 error.logƒtƒ@ƒCƒ‹‚ğ¶¬
 
-# osd/windows/config.c: 211
+# osd/windows/config.c: 210
 image enhancement effect
 ƒCƒ[ƒW‚ğŒüã‚³‚¹‚éƒGƒtƒFƒNƒg
 
-# osd/windows/config.c: 166
-in-game ui text lines [16 - 64 or auto]
-ƒQ[ƒ€’†‚ÌUIƒeƒLƒXƒg‚Ìs”w’è[16‚©‚ç64‚Ü‚½‚Íauto]
-
-# osd/windows/input.c: 1993
+# osd/windows/input.c: 2149
 invalid
 •s³
 
@@ -1318,7 +1322,7 @@ is best available\n
 is good\n
 ‚Í³í‚Å‚·\n
 
-# osd/windows/input.c: 1286, 1651, 1754
+# osd/windows/input.c: 1441, 1806, 1909
 lightgun
 Œõüe
 
@@ -1338,43 +1342,39 @@ list required roms for a driver
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 “Á’è‚ÌƒWƒ‡ƒCƒXƒeƒBƒbƒN‚â²‚ğƒfƒWƒ^ƒ‹‚Éİ’è (none|all|j<N>*|j<N>a<M>[,...])
 
-# osd/windows/config.c: 336
-minimal analog value for digital input
-ƒfƒWƒ^ƒ‹“ü—Í•ÏŠ·‚ÌƒAƒiƒƒOÅ¬’l
-
-# osd/windows/config.c: 209
+# osd/windows/config.c: 208
 name of a PNG file to use for visual effects, or 'none'
 ‹ŠoŒø‰Ê‚Åg—p‚·‚éPNGƒtƒ@ƒCƒ‹–¼A‚Ü‚½‚Íunonev
 
-# osd/windows/config.c: 194
+# osd/windows/config.c: 193
 number of frames to run before automatically exiting
 ©“®I—¹‚·‚é‚Ü‚Å‚ÉÀs‚·‚éƒtƒŒ[ƒ€”‚ğw’è
 
-# osd/windows/config.c: 204
+# osd/windows/config.c: 203
 number of screens to create; usually, you want just one
 ¶¬‚·‚é‰æ–Ê‚Ì”‚ğw’èB’Êí‚Í‚P‚Å‚·
 
-# osd/windows/config.c: 334
+# osd/windows/config.c: 333
 offscreen shots reload
 ‰æ–ÊŠO‚ÌƒVƒ‡ƒbƒg‚ğŠ„‚è“–‚Ä‚é
 
-# osd/windows/config.c: 174
+# osd/windows/config.c: 173
 optional filename to write a MNG movie of the current session
 w’è‚µ‚½ƒtƒ@ƒCƒ‹–¼‚ÅŒ»İ‚ÌƒZƒbƒVƒ‡ƒ“‚ğMNGƒ€[ƒr[‚É‹L˜^
 
-# osd/windows/config.c: 175
+# osd/windows/config.c: 174
 optional filename to write a WAV file of the current session
 w’è‚µ‚½ƒtƒ@ƒCƒ‹–¼‚ÅŒ»İ‚ÌƒZƒbƒVƒ‡ƒ“‚ğWAVƒTƒEƒ“ƒh‚É‹L˜^
 
-# osd/windows/config.c: 180
+# osd/windows/config.c: 179
 output error.log data to the system debugger
 error.logƒf[ƒ^‚ğƒVƒXƒeƒ€ƒfƒoƒbƒK‚Éo—Í
 
-# osd/windows/input.c: 1284
+# osd/windows/input.c: 1439
 paddle
 ƒpƒhƒ‹
 
-# osd/windows/input.c: 1287
+# osd/windows/input.c: 1442
 pedal
 ƒyƒ_ƒ‹
 
@@ -1382,51 +1382,55 @@ pedal
 perform driver validation on all game drivers
 ‘S‚Ä‚ÌƒQ[ƒ€ƒhƒ‰ƒCƒo‚Å‘Ã“–«ƒ`ƒFƒbƒN‚ğÀs
 
-# osd/windows/config.c: 172
+# osd/windows/config.c: 171
 playback an input file
 “ü—Í‚ÌÄŒ»‚·‚éƒtƒ@ƒCƒ‹–¼
 
-# osd/windows/config.c: 305
+# osd/windows/input.c: 1445
+positional
+À•W
+
+# osd/windows/config.c: 304
 preconfigure for specified controller
 ƒRƒ“ƒgƒ[ƒ‰‚Ìw’è
 
-# osd/windows/config.c: 240
+# osd/windows/config.c: 239
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
 ‘S‚Ä‚Ì‰æ–Ê‚Ì‰ğ‘œ“x‚ğw’èBŒ`®‚Í<•>x<‚‚³>[@<ƒŠƒtƒŒƒbƒVƒ…ƒŒ[ƒg>]‚Ü‚½‚Íuautov
 
-# osd/windows/config.c: 245
+# osd/windows/config.c: 244
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 ‚P‰æ–Ê–Ú‚Ì‰ğ‘œ“x‚ğw’èBŒ`®‚Í<•>x<‚‚³>[@<ƒŠƒtƒŒƒbƒVƒ…ƒŒ[ƒg>]‚Ü‚½‚Íuautov
 
-# osd/windows/config.c: 260
+# osd/windows/config.c: 259
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 ‚S‰æ–Ê–Ú‚Ì‰ğ‘œ“x‚ğw’èBŒ`®‚Í<•>x<‚‚³>[@<ƒŠƒtƒŒƒbƒVƒ…ƒŒ[ƒg>]‚Ü‚½‚Íuautov
 
-# osd/windows/config.c: 250
+# osd/windows/config.c: 249
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 ‚Q‰æ–Ê–Ú‚Ì‰ğ‘œ“x‚ğw’èBŒ`®‚Í<•>x<‚‚³>[@<ƒŠƒtƒŒƒbƒVƒ…ƒŒ[ƒg>]‚Ü‚½‚Íuautov
 
-# osd/windows/config.c: 255
+# osd/windows/config.c: 254
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 ‚R‰æ–Ê–Ú‚Ì‰ğ‘œ“x‚ğw’èBŒ`®‚Í<•>x<‚‚³>[@<ƒŠƒtƒŒƒbƒVƒ…ƒŒ[ƒg>]‚Ü‚½‚Íuautov
 
-# osd/windows/config.c: 241
+# osd/windows/config.c: 240
 preferred view for all screens
 ‘S‚Ä‚Ì‰æ–Ê‚Ìƒrƒ…[‚ğw’è
 
-# osd/windows/config.c: 246
+# osd/windows/config.c: 245
 preferred view for the first screen
 ‚P‰æ–Ê–Ú‚Ìƒrƒ…[‚ğw’è
 
-# osd/windows/config.c: 261
+# osd/windows/config.c: 260
 preferred view for the fourth screen
 ‚S‰æ–Ê–Ú‚Ìƒrƒ…[‚ğw’è
 
-# osd/windows/config.c: 251
+# osd/windows/config.c: 250
 preferred view for the second screen
 ‚Q‰æ–Ê–Ú‚Ìƒrƒ…[‚ğw’è
 
-# osd/windows/config.c: 256
+# osd/windows/config.c: 255
 preferred view for the third screen
 ‚R‰æ–Ê–Ú‚Ìƒrƒ…[‚ğw’è
 
@@ -1434,7 +1438,7 @@ preferred view for the third screen
 quit game with confirmation
 ƒQ[ƒ€I—¹‚ÉŠm”F‚·‚é
 
-# osd/windows/config.c: 173
+# osd/windows/config.c: 172
 record an input file
 “ü—Í‚ğ•Û‘¶‚·‚éƒtƒ@ƒCƒ‹–¼
 
@@ -1458,15 +1462,15 @@ romset \"%8s\" not found!\n
 romset \"%8s\" not supported!\n
 ƒƒ€ƒZƒbƒgu%8sv‚Í‘Î‰‚µ‚Ä‚¢‚Ü‚¹‚ñ!\n
 
-# osd/windows/config.c: 220
+# osd/windows/config.c: 219
 rotate screen clockwise 90 degrees
 Œv‰ñ‚è‚É90“x‰ñ“]
 
-# osd/windows/config.c: 221
+# osd/windows/config.c: 220
 rotate screen counterclockwise 90 degrees
 ”½Œv‰ñ‚è‚É90“x‰ñ“]
 
-# osd/windows/config.c: 219
+# osd/windows/config.c: 218
 rotate the game screen according to the game's orientation needs it
 •K—v‚É‰‚¶‚ÄƒQ[ƒ€‚Ì‰æ–ÊŒü‚«‚É]‚¢ƒQ[ƒ€‰æ–Ê‚ğ‰ñ“]‚·‚é
 
@@ -1482,15 +1486,15 @@ sampleset \"%8s\" not found!\n
 sampleset \"%8s\" not supported!\n
 ƒTƒ“ƒvƒ‹ƒZƒbƒgu%8sv‚Í‘Î‰‚µ‚Ä‚¢‚Ü‚¹‚ñ!\n
 
-# osd/windows/config.c: 170
+# osd/windows/config.c: 169
 saved state to load
 •Û‘¶‚µ‚½ƒXƒe[ƒg‚ğ“Ç‚İ‚Ş
 
-# osd/windows/config.c: 208
+# osd/windows/config.c: 207
 scale screen rendering by this amount in software
 w’è‚µ‚½Š„‡‚Åƒ\\ƒtƒgƒEƒFƒA‚É‚æ‚é‰æ–Ê•`‰æƒXƒP[ƒŠƒ“ƒO‚ğÀs
 
-# osd/windows/config.c: 184
+# osd/windows/config.c: 183
 script for debugger
 ƒfƒoƒbƒK—p‚ÌƒXƒNƒŠƒvƒg
 
@@ -1502,55 +1506,55 @@ select the system BIOS to use
 select translation language
 g—p‚·‚éŒ¾Œê‚ğ‘I‘ğ
 
-# osd/windows/config.c: 301
+# osd/windows/config.c: 300
 set audio latency (increase to reduce glitches)
 ƒI[ƒfƒBƒI‚ÌƒŒƒCƒeƒ“ƒV‚ğw’è
 
-# osd/windows/config.c: 193
+# osd/windows/config.c: 192
 set frameskip to fixed value, 0-12 (autoframeskip must be disabled)
 ƒtƒŒ[ƒ€ƒXƒLƒbƒv‚ğŒÅ’è’l‚Éİ’èB0‚©‚ç12(©“®ƒtƒŒ[ƒ€ƒXƒLƒbƒv‚Í–³Œø‰»‚³‚ê‚Ü‚·)
 
-# osd/windows/config.c: 312
+# osd/windows/config.c: 311
 set joystick ID (Player1)
 ƒWƒ‡ƒCƒXƒeƒBƒbƒNID‚ğw’è (ƒvƒŒƒCƒ„[1)
 
-# osd/windows/config.c: 313
+# osd/windows/config.c: 312
 set joystick ID (Player2)
 ƒWƒ‡ƒCƒXƒeƒBƒbƒNID‚ğw’è (ƒvƒŒƒCƒ„[2)
 
-# osd/windows/config.c: 314
+# osd/windows/config.c: 313
 set joystick ID (Player3)
 ƒWƒ‡ƒCƒXƒeƒBƒbƒNID‚ğw’è (ƒvƒŒƒCƒ„[3)
 
-# osd/windows/config.c: 315
+# osd/windows/config.c: 314
 set joystick ID (Player4)
 ƒWƒ‡ƒCƒXƒeƒBƒbƒNID‚ğw’è (ƒvƒŒƒCƒ„[4)
 
-# osd/windows/config.c: 316
+# osd/windows/config.c: 315
 set joystick ID (Player5)
 ƒWƒ‡ƒCƒXƒeƒBƒbƒNID‚ğw’è (ƒvƒŒƒCƒ„[5)
 
-# osd/windows/config.c: 317
+# osd/windows/config.c: 316
 set joystick ID (Player6)
 ƒWƒ‡ƒCƒXƒeƒBƒbƒNID‚ğw’è (ƒvƒŒƒCƒ„[6)
 
-# osd/windows/config.c: 318
+# osd/windows/config.c: 317
 set joystick ID (Player7)
 ƒWƒ‡ƒCƒXƒeƒBƒbƒNID‚ğw’è (ƒvƒŒƒCƒ„[7)
 
-# osd/windows/config.c: 319
+# osd/windows/config.c: 318
 set joystick ID (Player8)
 ƒWƒ‡ƒCƒXƒeƒBƒbƒNID‚ğw’è (ƒvƒŒƒCƒ„[8)
 
-# osd/windows/config.c: 293
+# osd/windows/config.c: 292
 set sound output sample rate
 o—Í‚·‚éƒTƒEƒ“ƒh‚ÌƒTƒ“ƒvƒ‹ƒŒ[ƒg‚ğİ’è
 
-# osd/windows/config.c: 280
+# osd/windows/config.c: 279
 set vector beam width
 ƒxƒNƒ^‚Ìƒr[ƒ€•‚ğİ’è
 
-# osd/windows/config.c: 281
+# osd/windows/config.c: 280
 set vector flicker effect
 ƒxƒNƒ^‚ÌƒtƒŠƒbƒJƒGƒtƒFƒNƒg‚ğİ’è
 
@@ -1574,15 +1578,15 @@ show this help
 skip displaying the information screen at startup
 ‹N“®‚Ìî•ñ•\\¦‰æ–Ê‚ğƒXƒLƒbƒv‚·‚é
 
-# osd/windows/config.c: 292, 935
+# osd/windows/config.c: 291, 914
 sound
 ‰¹Œ¹
 
-# osd/windows/config.c: 295
+# osd/windows/config.c: 294
 sound volume in decibels (-32 min, 0 max)
 ƒTƒEƒ“ƒh‚Ì‰¹—Ê‚ğƒfƒVƒxƒ‹‚Åw’è(Å¬‚Í-32AÅ‘å‚Í0)
 
-# osd/windows/config.c: 233
+# osd/windows/config.c: 232
 specify the preferred Direct3D version (8 or 9)
 —Dæ‚³‚ê‚éDirect3D‚Ìƒo[ƒWƒ‡ƒ“‚ğw’è
 
@@ -1590,11 +1594,11 @@ specify the preferred Direct3D version (8 or 9)
 switch drivers
 g—p‚·‚éƒhƒ‰ƒCƒo‚Ì•ÏX
 
-# osd/windows/config.c: 198
+# osd/windows/config.c: 197
 thread priority for the main game thread; range from -15 to 1
 ƒƒCƒ“‚ÌƒQ[ƒ€ƒXƒŒƒbƒh‚Ìƒvƒ‰ƒCƒIƒŠƒeƒB‚ğw’èB-15‚©‚ç1‚Ì”ÍˆÍ‚Åw’è
 
-# osd/windows/input.c: 1289
+# osd/windows/input.c: 1444
 trackball
 ƒgƒ‰ƒbƒNƒ{[ƒ‹
 
@@ -1602,15 +1606,15 @@ trackball
 transparency of UI background [0 - 255]
 UI‚Ì”wŒi‚Ì“§–¾“x [0 - 255]
 
-# osd/windows/config.c: 1018
+# osd/windows/config.c: 982
 unable to open log file
 ƒƒOƒtƒ@ƒCƒ‹‚ªŠJ‚¯‚Ü‚¹‚ñ
 
-# osd/windows/config.c: 279
+# osd/windows/config.c: 278
 use antialiasing when drawing vectors
 ƒxƒNƒ^‚Ì•`‰æ‚ÉƒAƒ“ƒ`ƒGƒCƒŠƒAƒX‚ğg—p
 
-# osd/windows/config.c: 197
+# osd/windows/config.c: 196
 use the RDTSC instruction for timing; faster but may result in uneven performance
 ƒ^ƒCƒ~ƒ“ƒO‚ÉRDTSC–½—ß‚ğg—pB‚‘¬‚Å‚·‚ªƒpƒtƒH[ƒ}ƒ“ƒXŒ‹‰Ê‚É‚Î‚ç‚Â‚«‚ª‚ ‚è‚Ü‚·
 
@@ -1618,25 +1622,13 @@ use the RDTSC instruction for timing; faster but may result in uneven performanc
 use transparent background for UI text
 UIƒeƒLƒXƒg‚Ì”wŒi‚ğ”¼“§–¾‚É‚·‚é
 
-# osd/windows/config.c: 203
+# osd/windows/config.c: 202
 video output method: gdi, ddraw, or d3d
 ƒrƒfƒI•`‰æ•û–@: gdiAddraw‚Ü‚½‚Íd3d
 
 # osd/windows/config.c: 362
 window background color
 ƒEƒBƒ“ƒhƒE ”wŒiF
-
-# osd/windows/config.c: 365
-window frame color (dark)
-ƒEƒBƒ“ƒhƒE ƒtƒŒ[ƒ€ (ˆÃ)
-
-# osd/windows/config.c: 364
-window frame color (light)
-ƒEƒBƒ“ƒhƒE ƒtƒŒ[ƒ€ (–¾)
-
-# osd/windows/config.c: 363
-window frame color (medium)
-ƒEƒBƒ“ƒhƒE ƒtƒŒ[ƒ€
 
 # osd/windows/config.c: 115
 year, manufacturer and full name

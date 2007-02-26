@@ -718,11 +718,6 @@ BEGIN
     CONTROL         "Enable joystick input",IDC_JOYSTICK,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,10,45,115,10,0,
                     HIDC_JOYSTICK
-    GROUPBOX        "Analog deadzone",IDC_A2DTEXT,4,59,120,34
-    CONTROL         "IntensitySlider",IDC_A2D,"msctls_trackbar32",TBS_BOTH | 
-                    TBS_NOTICKS | WS_TABSTOP,10,75,90,10,0,HIDC_A2D
-    CTEXT           "0.3",IDC_A2DDISP,103,75,17,10,SS_CENTERIMAGE | NOT 
-                    WS_GROUP
     GROUPBOX        "Default input layout",IDC_STATIC,4,95,120,36
     COMBOBOX        IDC_DEFAULT_INPUT,10,109,108,53,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP,0,HIDC_DEFAULT_INPUT

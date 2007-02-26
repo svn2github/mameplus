@@ -667,7 +667,7 @@ static int device_create(win_window_info *window)
 		if (result != D3D_OK)
 			d3d->yuv_format = D3DFMT_A8R8G8B8;
 	}
-	verbose_printf("Direct3D: YUV format = %s\n", (d3d->yuv_format == D3DFMT_YUY2) ? "YUY2" : (d3d->yuv_format == D3DFMT_UYVY) ? "UYVY" : "RGB");
+	verbose_printf(_WINDOWS("Direct3D: YUV format = %s\n"), (d3d->yuv_format == D3DFMT_YUY2) ? "YUY2" : (d3d->yuv_format == D3DFMT_UYVY) ? "UYVY" : "RGB");
 
 try_again:
 	// try for XRGB first
