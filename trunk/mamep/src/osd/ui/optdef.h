@@ -44,13 +44,6 @@ START_OPT_FUNC_CORE
 	DEFINE_OPT(palette,              font_normal);
 	DEFINE_OPT(palette,              font_special);
 	DEFINE_OPT(palette,              system_background);
-	DEFINE_OPT(palette,              system_framemedium);
-	DEFINE_OPT(palette,              system_framelight);
-	DEFINE_OPT(palette,              system_framedark);
-	DEFINE_OPT(palette,              osdbar_framemedium);
-	DEFINE_OPT(palette,              osdbar_framelight);
-	DEFINE_OPT(palette,              osdbar_framedark);
-	DEFINE_OPT(palette,              osdbar_defaultbar);
 	DEFINE_OPT(palette,              button_red);
 	DEFINE_OPT(palette,              button_yellow);
 	DEFINE_OPT(palette,              button_green);
@@ -96,7 +89,6 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(bool,                 use_trans_ui)
 	DEFINE_OPT(ui_transparency,      ui_transparency)
 #endif /* TRANS_UI */
-	DEFINE_OPT(ui_lines,             ui_lines)
 
 // STATE/PLAYBACK OPTIONS
 	DEFINE_OPT(wstring_allow_null,   state)

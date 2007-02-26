@@ -704,7 +704,7 @@ void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int
 			if (scharcount == -1)
 				break;
 
-			/* if we hit a space, remember the location and the width there */
+			/* if we hit a space or DBCS character, remember the location and the width there */
 			if (schar == ' ' ||
 				(0x3040 < schar && schar < 0x9FFF) ||
 				/*

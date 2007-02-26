@@ -163,7 +163,6 @@ const options_entry windows_opts[] =
 	{ "use_trans_ui",             "1",    OPTION_DEPRECATED, "(disabled by compiling option)" },
 	{ "ui_transparency",          "224",  OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* TRANS_UI */
-	{ "ui_lines",                 "auto", 0,                 "in-game ui text lines [16 - 64 or auto]" },
 
 	// state/playback options
 	{ NULL,                       NULL,       OPTION_HEADER,     "STATE/PLAYBACK OPTIONS" },
@@ -360,13 +359,6 @@ const options_entry windows_opts[] =
 	{ "font_normal",              "255,255,255", 0,                 "font normal color" },
 	{ "font_special",             "247,203,0",   0,                 "font special color" },
 	{ "system_background",        "16,16,48",    0,                 "window background color" },
-	{ "system_framemedium",       "192,192,192", 0,                 "window frame color (medium)" },
-	{ "system_framelight",        "224,224,224", 0,                 "window frame color (light)" },
-	{ "system_framedark",         "128,128,128", 0,                 "window frame color (dark)" },
-	{ "osdbar_framemedium",       "192,192,192", 0,                 "OSD bar color (medium)" },
-	{ "osdbar_framelight",        "224,224,224", 0,                 "OSD bar color (light)" },
-	{ "osdbar_framedark",         "128,128,128", 0,                 "OSD bar color (dark)" },
-	{ "osdbar_defaultbar",        "60,120,240",  0,                 "OSD bar color (default)" },
 	{ "button_red",               "255,64,64",   0,                 "button color (red)" },
 	{ "button_yellow",            "255,238,0",   0,                 "button color (yellow)" },
 	{ "button_green",             "0,255,64",    0,                 "button color (green)" },
@@ -383,13 +375,6 @@ const options_entry windows_opts[] =
 	{ "font_normal",              "255,255,255", OPTION_DEPRECATED, "(disabled by compiling option)" },
 	{ "font_special",             "247,203,0",   OPTION_DEPRECATED, "(disabled by compiling option)" },
 	{ "system_background",        "16,16,48",    OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "system_framemedium",       "192,192,192", OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "system_framelight",        "224,224,224", OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "system_framedark",         "128,128,128", OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "osdbar_framemedium",       "192,192,192", OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "osdbar_framelight",        "224,224,224", OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "osdbar_framedark",         "128,128,128", OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "osdbar_defaultbar",        "60,120,240",  OPTION_DEPRECATED, "(disabled by compiling option)" },
 	{ "button_red",               "255,64,64",   OPTION_DEPRECATED, "(disabled by compiling option)" },
 	{ "button_yellow",            "255,238,0",   OPTION_DEPRECATED, "(disabled by compiling option)" },
 	{ "button_green",             "0,255,64",    OPTION_DEPRECATED, "(disabled by compiling option)" },
@@ -417,13 +402,6 @@ static struct
 	{ "font_normal",        FONT_COLOR_NORMAL,        { 255,255,255 } },
 	{ "font_special",       FONT_COLOR_SPECIAL,       { 247,203,0 } },
 	{ "system_background",  SYSTEM_COLOR_BACKGROUND,  { 16,16,48 } },
-	{ "system_framemedium", SYSTEM_COLOR_FRAMEMEDIUM, { 192,192,192 } },
-	{ "system_framelight",  SYSTEM_COLOR_FRAMELIGHT,  { 224,224,224 } },
-	{ "system_framedark",   SYSTEM_COLOR_FRAMEDARK,   { 128,128,128 } },
-	{ "osdbar_framemedium", OSDBAR_COLOR_FRAMEMEDIUM, { 192,192,192 } },
-	{ "osdbar_framelight",  OSDBAR_COLOR_FRAMELIGHT,  { 224,224,224 } },
-	{ "osdbar_framedark",   OSDBAR_COLOR_FRAMEDARK,   { 128,128,128 } },
-	{ "osdbar_defaultbar",  OSDBAR_COLOR_DEFAULTBAR,  { 60,120,240 } },
 	{ "button_red",         BUTTON_COLOR_RED,         { 255,64,64 } },
 	{ "button_yellow",      BUTTON_COLOR_YELLOW,      { 255,238,0 } },
 	{ "button_green",       BUTTON_COLOR_GREEN,       { 0,255,64 } },
@@ -985,21 +963,6 @@ static void extract_options(const game_driver *driver, machine_config *drv)
 		options.ui_transparency = 192;
 	}
 #endif /* TRANS_UI */
-	options.ui_lines = 0;
-	stemp = options_get_string("ui_lines");
-	if (stemp != NULL)
-	{
-		if (mame_stricmp(stemp, "auto") != 0)
-		{
-			options.ui_lines = options_get_int("ui_lines");
-
-			if (options.ui_lines == 0 || (options.ui_lines < 16 || options.ui_lines > 64))
-			{
-				faprintf(stderr, _WINDOWS("Illegal value for %s = %s\n"), "ui_lines", stemp);
-				options.ui_lines = 0;
-			}
-		}
-	}
 #ifdef MESS
 	win_mess_extract_options();
 #endif /* MESS */

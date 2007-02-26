@@ -255,13 +255,6 @@ typedef struct
 	char*    font_normal;
 	char*    font_special;
 	char*    system_background;
-	char*    system_framemedium;
-	char*    system_framelight;
-	char*    system_framedark;
-	char*    osdbar_framemedium;
-	char*    osdbar_framelight;
-	char*    osdbar_framedark;
-	char*    osdbar_defaultbar;
 	char*    button_red;
 	char*    button_yellow;
 	char*    button_green;
@@ -501,13 +494,6 @@ static struct ui_palette_assign ui_palette_tbl[] =
 	{ FONT_COLOR_NORMAL,  &settings.font_normal },
 	{ FONT_COLOR_SPECIAL,  &settings.font_special },
 	{ SYSTEM_COLOR_BACKGROUND,  &settings.system_background },
-	{ SYSTEM_COLOR_FRAMEMEDIUM,  &settings.system_framemedium },
-	{ SYSTEM_COLOR_FRAMELIGHT,  &settings.system_framelight },
-	{ SYSTEM_COLOR_FRAMEDARK,  &settings.system_framedark },
-	{ OSDBAR_COLOR_FRAMEMEDIUM,  &settings.osdbar_framemedium },
-	{ OSDBAR_COLOR_FRAMELIGHT,  &settings.osdbar_framelight },
-	{ OSDBAR_COLOR_FRAMEDARK,  &settings.osdbar_framedark },
-	{ OSDBAR_COLOR_DEFAULTBAR,  &settings.osdbar_defaultbar },
 	{ BUTTON_COLOR_RED,  &settings.button_red },
 	{ BUTTON_COLOR_YELLOW,  &settings.button_yellow },
 	{ BUTTON_COLOR_GREEN,  &settings.button_green },
@@ -4192,40 +4178,6 @@ INLINE void options_set_m68k_core(const char *name, int value)
 #define _options_compare_ui_transparency	_options_compare_int
 #define options_compare_ui_transparency		options_compare_int
 #endif /* TRANS_UI */
-
-
-//============================================================
-
-INLINE void _options_get_ui_lines(int *p, const char *name)
-{
-	const char *stemp = options_get_string(name);
-
-	if (stemp != NULL)
-	{
-		if (stricmp(stemp, "auto") == 0)
-			*p = 0;
-		else
-		{
-			int val = options_get_int(name);
-
-			if (val == 0 || (val >= 16 && val <= 64))
-				*p = val;
-		}
-	}
-}
-
-INLINE void options_set_ui_lines(const char *name, int value)
-{
-	if (value == 0)
-		options_set_string(name, "auto");
-	else
-		options_set_int(name, value);
-}
-
-#define options_copy_ui_lines		options_copy_int
-#define options_free_ui_lines		options_free_int
-#define _options_compare_ui_lines	_options_compare_int
-#define options_compare_ui_lines	options_compare_int
 
 
 //============================================================

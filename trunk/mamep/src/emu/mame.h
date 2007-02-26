@@ -292,7 +292,6 @@ struct _global_options
 #ifdef UI_COLOR_DISPLAY
 	UINT8		uicolortable[MAX_COLORTABLE][3];	/* palette options for UI */
 #endif /* UI_COLOR_DISPLAY */
-	int			ui_lines;
 	int			autofiredelay[MAX_PLAYERS];	/* autofire delay */
 
 	const char *controller;	/* controller-specific cfg to load */
