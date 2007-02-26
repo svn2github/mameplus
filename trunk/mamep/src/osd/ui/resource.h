@@ -13,18 +13,18 @@
 #define IDS_UI_STATUSBAR                82
 #define IDS_UI_FOLDERLIST               83
 #define IDS_UI_SCREENSHOT               84
-#define IDS_UI_SHOWPICTURES             86	// status bar (IDS_UI_TOOLBAR + 5)
 #define IDS_UI_SPACER1                  85
-#define IDS_UI_LARGEICONS               91
+#define IDS_UI_DETAILS                  86
 #define IDS_UI_SMALLICONS               87
-#define IDS_UI_LIST                     98
-#define IDS_UI_DETAILS                  88
+#define IDS_UI_LANGUAGE                 88	// status bar (IDS_UI_FONT + 12)
+#define IDS_UI_SHOWPICTURES             89	// status bar (IDS_UI_TOOLBAR + 8)
 #define IDS_UI_SPACER2                  90
-#define IDS_UI_ARRANGE                  96	// status bar (IDS_UI_TOOLBAR + 15)
+#define IDS_UI_LARGEICONS               91
 #define IDS_UI_LINEUPICONS              92
 #define IDS_UI_REFRESH                  93
 #define IDS_UI_CUSTOMIZE                94
-#define IDS_UI_LANGUAGE                 89	// status bar (IDS_UI_FONT + 13)
+#define IDS_UI_ARRANGE                  97	// status bar (IDS_UI_TOOLBAR + 16)
+#define IDS_UI_LIST                     98
 #define ID_TOOLBAR_EDIT                 99
 #define IDD_MAIN                        101
 #define IDA_TAB_KEYS                    106
