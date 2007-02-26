@@ -63,19 +63,19 @@ ifeq ($(MSVC_BUILD),)
     # add resource file
     GUIOBJS += $(GUIOBJ)/mame32.res
 else
-    OSOBJS += $(GUIOBJ)/ui.a
+    OSDOBJS += $(GUIOBJ)/ui.a
 
     ifeq ($(NO_DLL),)
         GUIOBJS += $(GUIOBJ)/m32main.o
-        OSOBJS += $(GUIOBJ)/win32ui.o
+        OSDOBJS += $(GUIOBJ)/win32ui.o
 
         # add resource file
         GUIOBJS += $(GUIOBJ)/mame32.res
     else
-        OSOBJS += $(GUIOBJ)/m32main.o
+        OSDOBJS += $(GUIOBJ)/m32main.o
 
         # add resource file
-        OSOBJS += $(GUIOBJ)/mame32.res
+        OSDOBJS += $(GUIOBJ)/mame32.res
     endif
 endif
 

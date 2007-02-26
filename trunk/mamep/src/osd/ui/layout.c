@@ -148,11 +148,11 @@ const SPLITTERINFO g_splitterInfo[] =
 
 const MAMEHELPINFO g_helpInfo[] =
 {
-	{ ID_HELP_CONTENTS,     TRUE,	TEXT(MAME32HELP "::/html/mame32_overview.htm") },
-	{ ID_HELP_WHATS_NEW32,	TRUE,	TEXT(MAME32HELP "::/html/mame32_changes.htm") },
-	{ ID_HELP_TROUBLE,      TRUE,	TEXT(MAME32HELP "::/html/mame32_support.htm") },
+	{ ID_HELP_CONTENTS,     TRUE,	TEXT(MAME32HELP) TEXT("::/html/mame32_overview.htm") },
+	{ ID_HELP_WHATS_NEW32,	TRUE,	TEXT(MAME32HELP) TEXT("::/html/mame32_changes.htm") },
+	{ ID_HELP_TROUBLE,      TRUE,	TEXT(MAME32HELP) TEXT("::/html/mame32_support.htm") },
 	{ ID_HELP_RELEASE,      FALSE,	TEXT("windows.txt") },
-	{ ID_HELP_WHATS_NEW,	TRUE,	TEXT(MAME32HELP "::/docs/whatsnew.txt") },
+	{ ID_HELP_WHATS_NEW,	TRUE,	TEXT(MAME32HELP) TEXT("::/docs/whatsnew.txt") },
 	{ -1 }
 };
 

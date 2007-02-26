@@ -30,6 +30,7 @@
 #include <math.h>
 #include <direct.h>
 #include <ctype.h>
+#include <io.h>
 
 #include "MAME32.h"	// include this first
 #include "driver.h"
@@ -396,8 +397,8 @@ static void  free_folder_flag(f_flag *flag);
 
 #define CSV_ARRAY_MAX		256
 
-#define WINUI_INI MAME32NAME "ui.ini"
-#define MAME_INI MAMENAME ".ini"
+#define TEXT_WINUI_INI TEXT_MAME32NAME TEXT("ui.ini")
+#define TEXT_MAME_INI TEXT(MAMENAME) TEXT(".ini")
 
 
 /***************************************************************************
@@ -524,9 +525,9 @@ static struct ui_palette_assign ui_palette_tbl[] =
 
 
 static WCHAR reload_config_msg[] =
-	TEXT(MAME32NAME
-	" has changed *.ini file directory.\n\n"
-	"Would you like to migrate old configurations to the new directory?");
+	TEXT_MAME32NAME
+	TEXT(" has changed *.ini file directory.\n\n")
+	TEXT("Would you like to migrate old configurations to the new directory?");
 
 
 /***************************************************************************
@@ -3338,7 +3339,7 @@ static int options_load_default_config(void)
 	int retval = 0;
 
 	lstrcpy(fname, get_base_config_directory());
-	lstrcat(fname, TEXT(PATH_SEPARATOR MAME_INI));
+	lstrcat(fname, TEXT(PATH_SEPARATOR) TEXT_MAME_INI);
 
 	stemp = utf8_from_wstring(fname);
 	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
@@ -3449,7 +3450,7 @@ static int options_load_winui_config(void)
 	int retval;
 
 	lstrcpy(fname, settings.inipath);
-	lstrcat(fname, TEXT(PATH_SEPARATOR WINUI_INI));
+	lstrcat(fname, TEXT(PATH_SEPARATOR) TEXT_WINUI_INI);
 
 	stemp = utf8_from_wstring(fname);
 	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
@@ -3484,7 +3485,7 @@ static int options_save_default_config(void)
 	validate_driver_option(&global);
 
 	lstrcpy(fname, get_base_config_directory());
-	lstrcat(fname, TEXT(PATH_SEPARATOR MAME_INI));
+	lstrcat(fname, TEXT(PATH_SEPARATOR) TEXT_MAME_INI);
 
 	stemp = utf8_from_wstring(fname);
 	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
@@ -3625,7 +3626,7 @@ static int options_save_winui_config(void)
 	char *stemp;
 
 	lstrcpy(fname, settings.inipath);
-	lstrcat(fname, TEXT(PATH_SEPARATOR WINUI_INI));
+	lstrcat(fname, TEXT(PATH_SEPARATOR) TEXT_WINUI_INI);
 
 	stemp = utf8_from_wstring(fname);
 	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);

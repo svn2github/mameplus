@@ -920,10 +920,10 @@ void ui_draw_text_box_scroll(const char *text, int offset, int justify, float xp
 	ui_draw_text_full(text, 0, 0, 1.0f - 2.0f * UI_BOX_LR_BORDER, 0,
 				justify, WRAP_WORD, DRAW_NONE, ARGB_WHITE, ARGB_BLACK, &target_width, &target_height);
 
-	multiline_text_box_target_lines = round(target_height / ui_get_line_height());
+	multiline_text_box_target_lines = (int)(target_height / ui_get_line_height() + 0.5f);
 	if (target_height > 1.0f - 2.0f * UI_BOX_TB_BORDER)
 		target_height = floor((1.0f - 2.0f * UI_BOX_TB_BORDER) / ui_get_line_height()) * ui_get_line_height();
-	multiline_text_box_visible_lines = round(target_height / ui_get_line_height());
+	multiline_text_box_visible_lines = (int)(target_height / ui_get_line_height() + 0.5f);
 
 	/* determine the target location */
 	target_x = xpos - 0.5f * target_width;

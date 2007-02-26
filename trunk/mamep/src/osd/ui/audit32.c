@@ -42,6 +42,11 @@
 #include "Properties.h"
 #include "translate.h"
 
+#ifdef _MSC_VER
+#define snprintf _snprintf
+#define snwprintf _snwprintf
+#endif
+
 /***************************************************************************
     function prototypes
  ***************************************************************************/

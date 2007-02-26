@@ -91,6 +91,7 @@ typedef HANDLE HTHEME;
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
+#define snwprintf _snwprintf
 #endif
 
 #define FOLDER_OPTIONS	-2

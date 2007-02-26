@@ -796,14 +796,14 @@ static struct
 } cfg_data[FILETYPE_MAX] =
 {
 	{
-		TEXT(MAMENAME " input files (*.inp,*.zip)\0*.inp;*.zip\0All files (*.*)\0*.*\0"),
+		TEXT(MAMENAME) TEXT(" input files (*.inp,*.zip)\0*.inp;*.zip\0All files (*.*)\0*.*\0"),
 		TEXT("Select a recorded file"),
 		TEXT("Select a file to record"),
 		GetInpDir,
 		TEXT("inp")
 	},
 	{
-		TEXT(MAMENAME " savestate files (*.sta)\0*.sta;\0All files (*.*)\0*.*\0"),
+		TEXT(MAMENAME) TEXT(" savestate files (*.sta)\0*.sta;\0All files (*.*)\0*.*\0"),
 		TEXT("Select a savestate file"),
 		NULL,
 		GetStateDir,
@@ -1357,15 +1357,15 @@ HICON LoadIconFromFile(const char *iconname)
 	zip_file *zip;
 	zip_error ziperr;
 
-	swprintf(tmpStr, TEXT("%s" PATH_SEPARATOR "%s.ico"), GetIconsDir(), iconnamew);
+	swprintf(tmpStr, TEXT("%s") TEXT(PATH_SEPARATOR) TEXT("%s.ico"), GetIconsDir(), iconnamew);
 	if (_wstat(tmpStr, &file_stat) == 0 && (hIcon = ExtractIconW(hInst, tmpStr, 0)) != 0)
 		return hIcon;
 
-	swprintf(tmpStr, TEXT("%s" PATH_SEPARATOR "%s.ico"), GetImgDir(), iconnamew);
+	swprintf(tmpStr, TEXT("%s") TEXT(PATH_SEPARATOR) TEXT("%s.ico"), GetImgDir(), iconnamew);
 	if (_wstat(tmpStr, &file_stat) == 0 && (hIcon = ExtractIconW(hInst, tmpStr, 0)) != 0)
 		return hIcon;
 
-	swprintf(tmpStr, TEXT("%s" PATH_SEPARATOR "icons.zip"), GetIconsDir());
+	swprintf(tmpStr, TEXT("%s") TEXT(PATH_SEPARATOR) TEXT("icons.zip"), GetIconsDir());
 	if (_wstat(tmpStr, &file_stat) != 0)
 		return NULL;
 
@@ -4515,7 +4515,7 @@ static int MMO2LST(void)
 {
 	WCHAR filename[MAX_PATH];
 
-	swprintf(filename, TEXT(MAME32NAME "%s"), _Unicode(ui_lang_info[options.langcode].shortname));
+	swprintf(filename, TEXT_MAME32NAME TEXT("%s"), _Unicode(ui_lang_info[options.langcode].shortname));
 	lstrcpy(filename, strlower(filename));
 
 	if (!CommonFileDialog(TRUE, filename, FILETYPE_GAMELIST_FILES))

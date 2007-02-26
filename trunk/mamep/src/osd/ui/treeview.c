@@ -55,6 +55,7 @@
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
+#define snwprintf _snwprintf
 #endif
 
 #define MAX_EXTRA_FOLDERS 256
@@ -1959,7 +1960,7 @@ BOOL InitFolders(void)
 
 	for (i = 0; i < numExtraFolders; i++)
 	{
-		if (_wcscmpi(ExtraFolderData[i]->m_szTitle, extFavorite.title) == 0)
+		if (_wcsicmp(ExtraFolderData[i]->m_szTitle, extFavorite.title) == 0)
 			doCreateFavorite = FALSE;
 	}
 
