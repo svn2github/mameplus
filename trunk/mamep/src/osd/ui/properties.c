@@ -4955,7 +4955,7 @@ static void InitializeEffectUI(HWND hwnd)
 				if (wcsicmp(ext, TEXT(".png")) == 0)
 				{
 					// and strip off the extension
-					FindFileData.cFileName[lstrlen(FindFileData.cFileName) - 4] = '\0';
+					root[lstrlen(root) - 4] = '\0';
 
 					// add it as an option
 					ComboBox_AddStringW(hCtrl, root);
