@@ -1018,6 +1018,10 @@ button color (silver)
 button color (yellow)
 
 
+# osd/windows/config.c: 335
+center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
+
+
 # osd/windows/config.c: 155
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 
@@ -1228,6 +1232,10 @@ enable/disable local language game list
 
 # osd/windows/config.c: 296
 enable/disable volume auto adjust
+
+
+# osd/windows/config.c: 336
+end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
 
 
 # osd/windows/config.c: 1026
