@@ -390,7 +390,7 @@ static void  free_folder_flag(f_flag *flag);
 
 #define CSV_ARRAY_MAX		256
 
-#define TEXT_WINUI_INI TEXT_MAME32NAME TEXT("ui.ini")
+#define TEXT_WINUI_INI TEXT(MAME32NAME "ui.ini")
 #define TEXT_MAME_INI TEXT(MAMENAME) TEXT(".ini")
 
 
@@ -511,9 +511,9 @@ static struct ui_palette_assign ui_palette_tbl[] =
 
 
 static WCHAR reload_config_msg[] =
-	TEXT_MAME32NAME
-	TEXT(" has changed *.ini file directory.\n\n")
-	TEXT("Would you like to migrate old configurations to the new directory?");
+	TEXT(MAME32NAME
+	" has changed *.ini file directory.\n\n"
+	"Would you like to migrate old configurations to the new directory?");
 
 
 /***************************************************************************

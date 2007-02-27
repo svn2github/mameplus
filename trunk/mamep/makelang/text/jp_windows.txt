@@ -116,7 +116,7 @@ Can't set axis mode for Joystick %d - %s\n
 
 # osd/windows/input.c: 1345
 Can't set deadzone for Joystick %d - %s\n
-ジョイスティック%d - %sの無反応領域を設定出来ません
+ジョイスティック%d - %sの内側しきい値を設定出来ません
 
 # osd/windows/input.c: 1335
 Can't set range for Joystick %d - %s\n
@@ -124,7 +124,7 @@ Can't set range for Joystick %d - %s\n
 
 # osd/windows/input.c: 1356
 Can't set saturation for Joystick %d - %s\n
-ジョイスティック%d - %sの飽和値を設定出来ません
+ジョイスティック%d - %sの外側しきい値を設定出来ません
 
 # osd/windows/config.c: 177
 DEBUGGING OPTIONS
@@ -1018,6 +1018,10 @@ button color (silver)
 button color (yellow)
 ボタン (B or 2)
 
+# osd/windows/config.c: 335
+center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
+ジョイスティックの入力を無視する領域の内側しきい値 (0.0 中央、1.0 外)
+
 # osd/windows/config.c: 155
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 M68Kコアを変更 (0:C、1:DRC、2:ASM+DRC)
@@ -1229,6 +1233,10 @@ enable/disable local language game list
 # osd/windows/config.c: 296
 enable/disable volume auto adjust
 自動音量調整機能\を有効
+
+# osd/windows/config.c: 336
+end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
+ジョイスティックの入力を無視する領域の外側しきい値 (0.0 中央、1.0 外)
 
 # osd/windows/config.c: 1026
 error: invalid value for language: %s\nUse %s\n

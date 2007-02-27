@@ -2,30 +2,6 @@
                                 
 
 
-# osd/ui/dialogs.c: 878
- PCB Info: %s [%s]
-
-
-# osd/ui/options.c: 514
- has changed *.ini file directory.\n\n
-
-
-# osd/ui/win32ui.c: 799
- input files (*.inp,*.zip)
-
-
-# osd/ui/dialogs.c: 128
- is run.\n\n
-
-
-# osd/ui/win32ui.c: 806
- savestate files (*.sta)
-
-
-# osd/ui/dialogs.c: 124
- will now reset the selected\n
-
-
 # osd/ui/properties.c: 1049
 %d colors 
 
@@ -1162,6 +1138,10 @@ Game List &Clone Color...
 Game List &Font...
 
 
+# osd/ui/win32ui.c: 834
+Game List Files (*.lst)
+
+
 # osd/ui/mame32.rc: 879
 Game filters
 
@@ -1414,12 +1394,32 @@ Localized Files
 M68000 CPU Core
 
 
+# osd/ui/win32ui.c: 799
+MAME input files (*.inp,*.zip)
+
+
 # osd/ui/mame32.rc: 1520
 MAME release notes
 
 
+# osd/ui/win32ui.c: 806
+MAME savestate files (*.sta)
+
+
+# osd/ui/dialogs.c: 878
+MAME32 PCB Info: %s [%s]
+
+
+# osd/ui/options.c: 514
+MAME32 has changed *.ini file directory.\n\nWould you like to migrate old configurations to the new directory?
+
+
 # osd/ui/mame32.rc: 408
 MAME32 version by
+
+
+# osd/ui/dialogs.c: 124
+MAME32 will now reset the selected\nitems to the original, installation\nsettings then exit.\n\n
 
 
 # osd/ui/mame32.rc: 399, 423, 434, 466, 486, 509, 548, 567, 618, 655, 711, 758, 821, 849, 876, 913, 938, 955, 1019, 1047, 1062, 1118, 1154, 1210 osd/ui/options.c: 3108 osd/ui/translate.c: 103
@@ -1918,6 +1918,10 @@ Select a background image file
 Select a file to record
 
 
+# osd/ui/win32ui.c: 835
+Select a folder to save game list
+
+
 # osd/ui/win32ui.c: 822
 Select a mng file to record
 
@@ -2259,7 +2263,7 @@ Sync to monitor refresh
 
 
 # osd/ui/dialogs.c: 127
-The new settings will take effect\n
+The new settings will take effect\nthe next time MAME32 is run.\n\n
 
 
 # osd/ui/m32util.c: 247
@@ -2506,10 +2510,6 @@ Window background
 Working
 
 
-# osd/ui/options.c: 516
-Would you like to migrate old configurations to the new directory?
-
-
 # osd/ui/treeview.c: 1094
 Wrong Colors
 
@@ -2548,18 +2548,6 @@ by &Type
 
 # osd/ui/mame32.rc: 111
 by &Year
-
-
-# osd/ui/dialogs.c: 125
-items to the original, installation\n
-
-
-# osd/ui/dialogs.c: 126
-settings then exit.\n\n
-
-
-# osd/ui/dialogs.c: 128
-the next time 
 
 
 # osd/ui/win32ui.h: 20
