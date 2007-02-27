@@ -643,7 +643,7 @@ void ui_draw_text_bk(const char *buf, float x, float y, int col)
     and full size computation
 -------------------------------------------------*/
 
-void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int offset, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, float *totalwidth, float *totalheight)
+void ui_draw_text_full_fontwith(const char *origs, float x, float y, float wrapwidth, int fixedwidth, int offset, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, float *totalwidth, float *totalheight)
 {
 	float lineheight = ui_get_line_height();
 	const char *ends = origs + strlen(origs);
@@ -657,6 +657,29 @@ void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int
 
 	//mamep: control scrolling text
 	int curline = 0;
+
+	//mamep: render as fixed with font
+	float fontwidth = 0.0f;
+	if (fixedwidth)
+	{
+		int scharcount;
+		int len = strlen(origs);
+		int n;
+
+		for (n = 0; len > 0; n += scharcount, len -= scharcount)
+		{
+			unicode_char schar;
+			float scharwidth;
+
+			scharcount = uchar_from_utf8(&schar, &origs[n], len);
+			if (scharcount == -1)
+				break;
+
+			scharwidth = ui_get_char_width(schar);
+			if (fontwidth < scharwidth)
+				fontwidth = scharwidth;
+		}
+	}
 
 	//mamep: check if we are scrolling
 	if (offset)
@@ -737,8 +760,12 @@ void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int
 			else if (schar == '\n')
 				break;
 
-			/* add the width of this character and advance */
-			curwidth += ui_get_char_width(schar);
+			//mamep: render as fixed with font
+			if (fixedwidth)
+				curwidth += fontwidth;
+			else
+				/* add the width of this character and advance */
+				curwidth += ui_get_char_width(schar);
 			s += scharcount;
 		}
 
@@ -756,12 +783,15 @@ void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int
 
 					/* try to add one more char */
 					scharcount = uchar_from_utf8(&schar, s, ends - s);
-					if (scharcount != -1 && schar != ' '
-					 && (curwidth + ui_get_char_width(schar) < wrapwidth))
+					if (scharcount != -1 && schar != ' ')
 					{
-						/* add the width of this character and advance */
-						curwidth += ui_get_char_width(schar);
-						s += scharcount;
+						if ((fixedwidth && (curwidth + fontwidth < wrapwidth)) ||
+						    (curwidth + ui_get_char_width(schar) < wrapwidth))
+						{
+							/* add the width of this character and advance */
+							curwidth += ui_get_char_width(schar);
+							s += scharcount;
+						}
 					}
 				}
 
@@ -774,7 +804,11 @@ void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int
 					if (scharcount == -1)
 						break;
 
-					curwidth -= ui_get_char_width(schar);
+					//mamep: render as fixed with font
+					if (fixedwidth)
+						curwidth -= fontwidth;
+					else
+						curwidth -= ui_get_char_width(schar);
 				}
 			}
 
@@ -843,8 +877,24 @@ void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int
 			//mamep: consume the offset lines
 			if (offset == 0 && draw != DRAW_NONE)
 			{
-				render_ui_add_char(curx, cury, lineheight, render_get_ui_aspect(), fgcolor, ui_font, linechar);
-				curx += ui_get_char_width(linechar);
+				//mamep: render as fixed with font
+				if (fixedwidth)
+				{
+					float width = fontwidth;
+					float xmargin;
+
+					if (linechar < 0x80)
+						width /= 2.0f;
+
+					xmargin = (width - ui_get_char_width(linechar)) / 2.0f;
+					render_ui_add_char(curx + xmargin, cury, lineheight, render_get_ui_aspect(), fgcolor, ui_font, linechar);
+					curx += width;
+				}
+				else
+				{
+					render_ui_add_char(curx, cury, lineheight, render_get_ui_aspect(), fgcolor, ui_font, linechar);
+					curx += ui_get_char_width(linechar);
+				}
 			}
 			linestart += linecharcount;
 		}
@@ -906,18 +956,24 @@ void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int
 }
 
 
+void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int offset, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, float *totalwidth, float *totalheight)
+{
+	ui_draw_text_full_fontwith(origs, x, y, wrapwidth, 0, offset, justify, wrap, draw, fgcolor, bgcolor, totalwidth, totalheight);
+}
+
+
 /*-------------------------------------------------
     ui_draw_text_box - draw a multiline text
     message with a box around it
 -------------------------------------------------*/
 
-void ui_draw_text_box_scroll(const char *text, int offset, int justify, float xpos, float ypos, rgb_t backcolor)
+void ui_draw_text_box_scroll_fontwith(const char *text, int offset, int justify, float xpos, float ypos, int fixedwith, rgb_t backcolor)
 {
 	float target_width, target_height;
 	float target_x, target_y;
 
 	/* compute the multi-line target width/height */
-	ui_draw_text_full(text, 0, 0, 1.0f - 2.0f * UI_BOX_LR_BORDER, 0,
+	ui_draw_text_full_fontwith(text, 0, 0, 1.0f - 2.0f * UI_BOX_LR_BORDER, fixedwith, 0,
 				justify, WRAP_WORD, DRAW_NONE, ARGB_WHITE, ARGB_BLACK, &target_width, &target_height);
 
 	multiline_text_box_target_lines = (int)(target_height / ui_get_line_height() + 0.5f);
@@ -944,13 +1000,26 @@ void ui_draw_text_box_scroll(const char *text, int offset, int justify, float xp
 					 target_y - UI_BOX_TB_BORDER,
 					 target_x + target_width + UI_BOX_LR_BORDER,
 					 target_y + target_height + UI_BOX_TB_BORDER, backcolor);
-	ui_draw_text_full(text, target_x, target_y, target_width, offset,
+	ui_draw_text_full_fontwith(text, target_x, target_y, target_width, fixedwith, offset,
 				justify, WRAP_WORD, DRAW_NORMAL, ARGB_WHITE, ARGB_BLACK, NULL, NULL);
 }
+
+
+void ui_draw_text_box_scroll(const char *text, int offset, int justify, float xpos, float ypos, rgb_t backcolor)
+{
+	ui_draw_text_box_scroll_fontwith(text, offset, justify, xpos, ypos, 0, backcolor);
+}
+
 
 void ui_draw_text_box(const char *text, int justify, float xpos, float ypos, rgb_t backcolor)
 {
 	ui_draw_text_box_scroll(text, message_window_scroll, justify, xpos, ypos, backcolor);
+}
+
+
+void ui_draw_text_box_fixed_width(const char *text, int justify, float xpos, float ypos, rgb_t backcolor)
+{
+	ui_draw_text_box_scroll_fontwith(text, message_window_scroll, justify, xpos, ypos, 1, backcolor);
 }
 
 

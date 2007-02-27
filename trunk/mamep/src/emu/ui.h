@@ -82,6 +82,7 @@ enum
 ***************************************************************************/
 
 #define ui_draw_message_window(text) ui_draw_text_box(text, JUSTIFY_LEFT, 0.5f, 0.5f, UI_FILLCOLOR)
+#define ui_draw_message_window_fixed_width(text) ui_draw_text_box_fixed_width(text, JUSTIFY_LEFT, 0.5f, 0.5f, UI_FILLCOLOR)
 
 
 
@@ -127,6 +128,7 @@ void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int
 
 /* draw a multi-line message with a box around it */
 void ui_draw_text_box(const char *text, int justify, float xpos, float ypos, rgb_t backcolor);
+void ui_draw_text_box_fixed_width(const char *text, int justify, float xpos, float ypos, rgb_t backcolor);
 
 /* display a temporary message at the bottom of the screen */
 void CLIB_DECL ui_popup_time(int seconds, const char *text, ...) ATTR_PRINTF(2,3);

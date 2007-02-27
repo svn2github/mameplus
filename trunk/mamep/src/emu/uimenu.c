@@ -2130,7 +2130,7 @@ static UINT32 menu_command_contents(UINT32 state)
 
 	/* draw the text */
 	if (bufptr)
-		ui_draw_message_window(bufptr);
+		ui_draw_message_window_fixed_width(bufptr);
 	else
 	{
 		char buf[80];
