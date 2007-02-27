@@ -637,6 +637,44 @@ void ui_draw_text_bk(const char *buf, float x, float y, int col)
 }
 
 
+//mamep: check DBCS character: is it enough to check only BMP?
+static int isdbcschar(unicode_char uchar)
+{
+	//	Plane 0 (0000-FFF): Basic Multilingual Plane (BMP)
+	if (uchar > 0x1000)
+		return 1;
+
+	//	Hiragana (3040-309F)
+	//	Katakana (30A0-30FF)
+	//	Bopomofo (3100-312F)
+	//	Hangul Compatibility Jamo (3130-318F)
+	//	Kanbun (3190-319F)
+	//	Bopomofo Extended (31A0-31BF)
+	//	CJK Strokes (31C0-31EF)
+	//	Katakana Phonetic Extensions (31F0-31FF)
+	//	Enclosed CJK Letters and Months (3200-32FF)
+	//	CJK Compatibility (3300-33FF)
+	//	CJK Unified Ideographs Extension A (3400-4DBF)
+	//	Yijing Hexagram Symbols (4DC0-4DFF)
+	//	CJK Unified Ideographs (4E00-9FFF)
+	if (0x3040 <= uchar && uchar < 0x9FFF)
+		return 1;
+
+	//Hangul Syllables (AC00-D7AF)
+	if (0xAC00 <= uchar && uchar < 0xD7AF)
+		return 1;
+
+	//CJK Compatibility Ideographs (F900-FAFF) 
+	if (0xF900 <= uchar && uchar < 0xFAFF)
+		return 1;
+
+	//command glyph (PUA U+E000)
+	if (COMMAND_UNICODE <= uchar && uchar < COMMAND_UNICODE + MAX_GLYPH_FONT)
+		return 1;
+
+	return 0;
+}
+
 /*-------------------------------------------------
     ui_draw_text_full - full featured text
     renderer with word wrapping, justification,
@@ -659,7 +697,9 @@ void ui_draw_text_full_fontwith(const char *origs, float x, float y, float wrapw
 	int curline = 0;
 
 	//mamep: render as fixed with font
-	float fontwidth = 0.0f;
+	float fontwidth_sb = 0.0f;
+	float fontwidth_db = 0.0f;
+
 	if (fixedwidth)
 	{
 		int scharcount;
@@ -676,9 +716,22 @@ void ui_draw_text_full_fontwith(const char *origs, float x, float y, float wrapw
 				break;
 
 			scharwidth = ui_get_char_width(schar);
-			if (fontwidth < scharwidth)
-				fontwidth = scharwidth;
+			if (isdbcschar(schar))
+			{
+				if (fontwidth_db < scharwidth)
+					fontwidth_db = scharwidth;
+			}
+			else
+			{
+				if (fontwidth_sb < scharwidth)
+					fontwidth_sb = scharwidth;
+			}
 		}
+
+		if (fontwidth_db < fontwidth_sb * 2.0f)
+			fontwidth_db = fontwidth_sb * 2.0f;
+		if (fontwidth_sb < fontwidth_db / 2.0f)
+			fontwidth_sb = fontwidth_db / 2.0f;
 	}
 
 	//mamep: check if we are scrolling
@@ -728,29 +781,7 @@ void ui_draw_text_full_fontwith(const char *origs, float x, float y, float wrapw
 				break;
 
 			/* if we hit a space or DBCS character, remember the location and the width there */
-			if (schar == ' ' ||
-				(0x3040 < schar && schar < 0x9FFF) ||
-				/*
-				Plane 0 (0000–FFFF): Basic Multilingual Plane (BMP)
-
-				Hiragana (3040-309F) 
-				Katakana (30A0-30FF) 
-				Bopomofo (3100-312F) 
-				Hangul Compatibility Jamo (3130-318F) 
-				Kanbun (3190-319F) 
-				Bopomofo Extended (31A0-31BF) 
-				CJK Strokes (31C0-31EF) 
-				Katakana Phonetic Extensions (31F0-31FF) 
-				Enclosed CJK Letters and Months (3200-32FF) 
-				CJK Compatibility (3300-33FF) 
-				CJK Unified Ideographs Extension A (3400-4DBF) 
-				Yijing Hexagram Symbols (4DC0-4DFF) 
-				CJK Unified Ideographs (4E00-9FFF) 
-				*/
-				(0xAC00 < schar && schar < 0xD7AF) ||
-				//Hangul Syllables (AC00-D7AF)
-				(0xF900 < schar && schar < 0xFAFF))
-				//CJK Compatibility Ideographs (F900-FAFF) 
+			if (schar == ' ' || isdbcschar(schar))
 			{
 				lastspace = s;
 				lastspace_width = curwidth;
@@ -762,10 +793,11 @@ void ui_draw_text_full_fontwith(const char *origs, float x, float y, float wrapw
 
 			//mamep: render as fixed with font
 			if (fixedwidth)
-				curwidth += fontwidth;
+				curwidth += isdbcschar(schar) ? fontwidth_db : fontwidth_sb;
 			else
 				/* add the width of this character and advance */
 				curwidth += ui_get_char_width(schar);
+
 			s += scharcount;
 		}
 
@@ -785,11 +817,18 @@ void ui_draw_text_full_fontwith(const char *origs, float x, float y, float wrapw
 					scharcount = uchar_from_utf8(&schar, s, ends - s);
 					if (scharcount != -1 && schar != ' ')
 					{
-						if ((fixedwidth && (curwidth + fontwidth < wrapwidth)) ||
-						    (curwidth + ui_get_char_width(schar) < wrapwidth))
+						float width;
+
+						//mamep: render as fixed with font
+						if (fixedwidth)
+							width = isdbcschar(schar) ? fontwidth_db : fontwidth_sb;
+						else
+							width = ui_get_char_width(schar);
+
+						if (curwidth + width < wrapwidth)
 						{
 							/* add the width of this character and advance */
-							curwidth += ui_get_char_width(schar);
+							curwidth += width;
 							s += scharcount;
 						}
 					}
@@ -806,7 +845,7 @@ void ui_draw_text_full_fontwith(const char *origs, float x, float y, float wrapw
 
 					//mamep: render as fixed with font
 					if (fixedwidth)
-						curwidth -= fontwidth;
+						curwidth -= isdbcschar(schar) ? fontwidth_db : fontwidth_sb;
 					else
 						curwidth -= ui_get_char_width(schar);
 				}
@@ -880,13 +919,9 @@ void ui_draw_text_full_fontwith(const char *origs, float x, float y, float wrapw
 				//mamep: render as fixed with font
 				if (fixedwidth)
 				{
-					float width = fontwidth;
-					float xmargin;
+					float width = isdbcschar(linechar) ? fontwidth_db : fontwidth_sb;
+					float xmargin = (width - ui_get_char_width(linechar)) / 2.0f;
 
-					if (linechar < 0x80)
-						width /= 2.0f;
-
-					xmargin = (width - ui_get_char_width(linechar)) / 2.0f;
 					render_ui_add_char(curx + xmargin, cury, lineheight, render_get_ui_aspect(), fgcolor, ui_font, linechar);
 					curx += width;
 				}

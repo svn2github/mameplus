@@ -29,10 +29,8 @@
 #define CACHED_HEADER_SIZE		16
 #define CACHED_BDF_HASH_SIZE	1024
 
-//mamep: command.dat symbols assigned to Unicode PUA U+E000
-#define COMMAND_UNICODE	(0xe000)
+//mamep: command.dat color symbols
 #define COLOR_BUTTONS	(90)
-#define MAX_GLYPH_FONT	(150)
 
 
 
