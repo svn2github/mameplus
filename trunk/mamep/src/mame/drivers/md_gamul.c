@@ -1259,7 +1259,7 @@ DRIVER_INIT( g_redclf )
 }
 
 
-GAME( 1995, g_redclf,  0,        megadriv,    megadriv,    g_redclf, ROT0,   "Unknown (Unlicensed)", "Romance of the Three Kingdoms, The Battle of Red Cliffs (Unl)", 0 )
+GAME( 1995, g_redclf,  0,        megadriv,    megadriv,    g_redclf, ROT0,   "Unknown (Unlicensed)", "The Romance of the Three Kingdoms Battle of Red Cliffs (Unl)", 0 )
 
 GAME( 1995, g_bible,  0,        megadriv,    megadriv,    megadriv, ROT0,   "Wisdom Tree", "Bible Adventures (Unl) [!]", 0 )
 GAME( 1994, g_joshua, 0,        megadriv,    megadriv,    megadriv, ROT0,   "Wisdom Tree", "Joshua & the Battle of Jericho (Unl) [!]", 0 )
@@ -1273,7 +1273,7 @@ GAME( 199?, g_act52a, g_act52,  megadriv,    megadriv,    megadriv, ROT0,   "unk
 GAME( 199?, g_sbub,   0,        megadriv,    megadriv,    g_sbub,   ROT0,   "Sun Mixing", "Super Bubble Bobble (Unl) [!]", 0 )
 
 // Realtec's games have custom banking
-GAME( 199?, g_dte,    0,        megadriv,    megadriv,    g_dte,    ROT0,   "Realtec", "Earth Defend, The (Unl) [!]", 0 )
+GAME( 199?, g_dte,    0,        megadriv,    megadriv,    g_dte,    ROT0,   "Realtec", "The Earth Defend (Unl) [!]", 0 )
 GAME( 1993, g_whac,   0,        megadriv,    megadriv,    g_dte,    ROT0,   "Realtec", "Whac-A-Critter / Mallet Legend (Unl) [!]", 0 )
 GAME( 1993, g_fwbb,   0,        megadriv,    megadriv,    g_dte,    ROT0,   "Realtec", "Funny World & Balloon Boy (Unl) [!]", 0 )
 
@@ -1313,11 +1313,11 @@ GAME( 1900, g_mk5sz,  0,        megadriv,    megadriv,    megadriv, ROT0,   "Unk
 GAME( 1900, g_mk5p,   g_mk5sz,  megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "MK 5 - Mortal Combat - SubZero (Unl) [p1][!]", 0 )
 
 
-GAME( 1900, g_kof98,   0,        megadriv,    megadriv,    g_kof98,  ROT0,   "Unknown (Unlicensed)", "King of Fighters '98, The (Unl) [!]", GAME_NOT_WORKING ) // protection
-GAME( 1900, g_kof98p,  g_kof98,  megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "King of Fighters '98, The (Unl) [p1][!]", 0 )
+GAME( 1900, g_kof98,   0,        megadriv,    megadriv,    g_kof98,  ROT0,   "Unknown (Unlicensed)", "The King of Fighters '98 (Unl) [!]", GAME_NOT_WORKING ) // protection
+GAME( 1900, g_kof98p,  g_kof98,  megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "The King of Fighters '98 (Unl) [p1][!]", 0 )
 
-GAME( 1900, g_lionk2,  0,        megadriv,    megadriv,    g_lionk2, ROT0,   "Unknown (Unlicensed)", "Lion King II, The (Unl) [!]", 0 )
-GAME( 1900, g_lion2p,  g_lionk2, megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "Lion King II, The (Unl) [p1][!]", 0 )
+GAME( 1900, g_lionk2,  0,        megadriv,    megadriv,    g_lionk2, ROT0,   "Unknown (Unlicensed)", "The Lion King II (Unl) [!]", 0 )
+GAME( 1900, g_lion2p,  g_lionk2, megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "The Lion King II (Unl) [p1][!]", 0 )
 
 GAME( 1900, g_soulb,   0,        megadriv,    megadriv,    g_soulb, ROT0,   "Unknown (Unlicensed)", "Soul Blade (Unl) [!]", 0 ) // protection
 
@@ -1325,7 +1325,7 @@ GAME( 1900, g_soulb,   0,        megadriv,    megadriv,    g_soulb, ROT0,   "Unk
 GAME( 1900, g_xinqi,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "Xin Qi Gai Wang Zi (Ch)", 0 )
 GAME( 1900, g_xinqia,  g_xinqi,  megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "Xin Qi Gai Wang Zi (Ch) [a1]", 0 )
 
-GAME( 1900, g_yang,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "Yang Warrior Family, The (Ch)", 0 )
+GAME( 1900, g_yang,    0,        megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "The Yang Warrior Family (Ch)", 0 )
 GAME( 1900, g_yasec,   0,        megadriv,    megadriv,    megadriv, ROT0,   "Unknown (Unlicensed)", "Ya-Se Chuan Shuo (Ch)", GAME_NOT_WORKING ) // messy..
 
 GAME( 1900, g_pockm,   0,        megadriv,    megadriv,    g_pockm,  ROT0,   "Unknown (Unlicensed)", "Pocket Monsters (Unl) [!]", 0 )

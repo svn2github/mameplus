@@ -3511,7 +3511,7 @@ GAME( 199?, s_bubbob,        0,        sms,    sms,    standard, ROT0,   "Sega",
 GAME( 199?, s_chuck,         0,        sms,    sms,    standard, ROT0,   "Sega", "(Master System) Chuck Rock  [!]", 0)
 GAME( 199?, s_chuck2,        0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Chuck Rock 2  [!]", 0)
 
-GAME( 199?, s_adams,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Addams Family, The  [!]", GAME_NOT_WORKING )
+GAME( 199?, s_adams,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) The Addams Family  [!]", GAME_NOT_WORKING )
 GAME( 199?, s_aburn,         0,        sms,    sms,    standard, ROT0,   "Sega", "(Master System) After Burner  [!]", 0)
 GAME( 199?, s_aladin,        0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Aladdin  [!]", 0)
 GAME( 199?, s_alexmi,        0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Alex Kidd in Miracle World  [!]", 0)
@@ -3523,19 +3523,19 @@ GAME( 199?, s_bean,          0,        sms,    sms,    standpal, ROT0,   "Sega",
 GAME( 199?, s_fzone,         0,        sms,    sms,    standard, ROT0,   "Sega", "(Master System) Fantasy Zone", 0)
 GAME( 199?, s_fzone2,        0,        sms,    sms,    standard, ROT0,   "Sega", "(Master System) Fantasy Zone 2 - The Tears of Opa-Opa  [!]", 0)
 GAME( 199?, s_fzone3,        0,        sms,    sms,    standard, ROT0,   "Sega", "(Master System) Fantasy Zone 3 - The Maze  [!]", 0)
-GAME( 199?, s_flint,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Flintstones, The  [!]", 0)
+GAME( 199?, s_flint,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) The Flintstones  [!]", 0)
 
 GAME( 199?, s_wb3dt,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Wonder Boy 3 - The Dragon's Trap  [!]", 0)
 GAME( 199?, s_woody,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Woody Pop (J) [!]", GAME_NOT_WORKING ) // input
 GAME( 199?, s_zool,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Zool  [!]", GAME_NOT_WORKING ) // locks up..
 GAME( 199?, s_smgpa,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Super Monaco GP  [a1][!]", 0)
 GAME( 199?, s_sor,           0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Streets of Rage  [!]", 0)
-GAME( 199?, s_lucky,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Lucky Dime Caper Starring Donald Duck, The  [!]", 0)
-GAME( 199?, s_lionk,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Lion King, The  [!]", 0)
+GAME( 199?, s_lucky,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) The Lucky Dime Caper Starring Donald Duck  [!]", 0)
+GAME( 199?, s_lionk,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) The Lion King  [!]", 0)
 GAME( 199?, s_lemm,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Lemmings  [!]", 0)
 GAME( 199?, s_jp2,           0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) James Pond 2 - Codename Robocod  [!]", GAME_NOT_WORKING ) // used to work..
 GAME( 199?, s_gpride,        0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) GP Rider  [!]", 0)
-GAME( 199?, s_jungbk,        0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Jungle Book, The  [!]", 0)
+GAME( 199?, s_jungbk,        0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) The Jungle Book  [!]", 0)
 GAME( 199?, s_gaunt,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Gauntlet  [!]", 0)
 GAME( 199?, s_gng,           0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Ghouls 'n Ghosts  [!]", 0)
 
@@ -3549,7 +3549,7 @@ GAME( 199?, s_strid,         0,        sms,    sms,    standpal, ROT0,   "Sega",
 GAME( 199?, s_ssi,           0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Super Space Invaders  [!]", 0)
 GAME( 199?, s_rrsh,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Road Rash  [!]", 0)
 GAME( 199?, s_psycho,        0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Psycho Fox  [!]", 0)
-GAME( 199?, s_tnzs,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) New Zealand Story, The  [!]", 0)
+GAME( 199?, s_tnzs,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) The New Zealand Story  [!]", 0)
 
 GAME( 199?, s_20em1,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) 20-em-1 (Brazil) [!]", 0)
 GAME( 199?, s_aceace,        0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Ace of Aces  [!]", GAME_NOT_WORKING ) // doesn't boot
@@ -3664,10 +3664,10 @@ GAME( 1900, s_chopjp,         0,        sms,    sms,    standpal, ROT0,   "Sega"
 GAME( 1900, s_chopl,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Choplifter (UE)", 0 )
 GAME( 1900, s_chouon,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Chouon Senshi Borgman (J)", 0 )
 GAME( 1900, s_chck2b,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Chuck Rock II - Son of Chuck (B)", 0 )
-GAME( 1900, s_circui,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Circuit, The (J)", 0 )
+GAME( 1900, s_circui,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) The Circuit (J)", 0 )
 GAME( 1900, s_cloudm,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Cloud Master (UE)", 0 )
 GAME( 1900, s_cmj,            0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Comical Machinegun Joe (J)", 0 )
-GAME( 1900, s_cybers,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Cyber Shinobi, The - Shinobi Part 2 (E)", 0 )
+GAME( 1900, s_cybers,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) The Cyber Shinobi - Shinobi Part 2 (E)", 0 )
 GAME( 1900, s_cyborg,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Cyborg Hunter (BUE)", 0 )
 GAME( 1900, s_daffy,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Daffy Duck in Hollywood (E) (M5)", 0 )
 GAME( 1900, s_danan,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Danan - The Jungle Fighter (E)", 0 )
@@ -3693,7 +3693,7 @@ GAME( 1900, s_enduro,         0,        sms,    sms,    standpal, ROT0,   "Sega"
 GAME( 1900, s_endurj,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Enduro Racer (J)", 0 )
 GAME( 1900, s_eswat,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) E-SWAT - City Under Siege (BUE) (Easy Version)", 0 )
 GAME( 1900, s_eswat1,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) E-SWAT - City Under Siege (BUE) (Hard Version)", 0 )
-GAME( 1900, s_exdzp,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Excellent Dizzy Collection, The (UE) (M3) (Proto)", 0 )
+GAME( 1900, s_exdzp,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) The Excellent Dizzy Collection (UE) (M3) (Proto)", 0 )
 
 
 
@@ -3708,7 +3708,7 @@ GAME( 1900, s_fbubbo,         0,        sms,    sms,    standpal, ROT0,   "Sega"
 GAME( 1900, s_fire,           0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Fire & Forget II (E)", 0 )
 GAME( 1900, s_fireic,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Fire & Ice (B)", 0 )
 
-GAME( 1900, s_flash,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Flash, The (E)", 0 )
+GAME( 1900, s_flash,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) The Flash (E)", 0 )
 GAME( 1900, s_forgot,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Forgotten Worlds (E)", 0 )
 GAME( 1900, s_pitpoj,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Fushigi no Oshiro Pit Pot (J)", 0 )
 GAME( 1900, s_gain,           0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Gain Ground (E)", 0 )
@@ -3764,8 +3764,8 @@ GAME( 1900, s_hookp,          0,        sms,    sms,    standpal, ROT0,   "Sega"
 GAME( 1900, s_hoshi,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Hoshi wo Sagasite (J)", 0 )
 
 GAME( 1900, s_imiss,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Impossible Mission (E)", 0 )
-GAME( 1900, s_icd,            0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Incredible Crash Dummies, The (E)", 0 )
-GAME( 1900, s_hulk,           0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Incredible Hulk, The (E)", 0 )
+GAME( 1900, s_icd,            0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) The Incredible Crash Dummies (E)", 0 )
+GAME( 1900, s_hulk,           0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) The Incredible Hulk (E)", 0 )
 GAME( 1900, s_indlc,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Indiana Jones and the Last Crusade (E)", 0 )
 GAME( 1900, s_007b,           0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) James Bond 007 - The Duel (B)", 0 )
 GAME( 1900, s_007,            0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) James Bond 007 - The Duel (E)", 0 )
@@ -3789,7 +3789,7 @@ GAME( 1900, s_lof,            0,        sms,    sms,    standpal, ROT0,   "Sega"
 GAME( 1900, s_lordsj,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Lord of Sword (J)", 0 )
 GAME( 1900, s_lords,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Lord of the Sword (UE)", 0 )
 GAME( 1900, s_loret,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Loretta no Shouzou (J)", 0 )
-GAME( 1900, s_luckp,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Lucky Dime Caper Starring Donald Duck, The (BE) (Proto)", 0 )
+GAME( 1900, s_luckp,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) The Lucky Dime Caper Starring Donald Duck (BE) (Proto)", 0 )
 GAME( 1900, s_mahsjp,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Mahjong Sengoku Jidai (J) (Proto)", 0 )
 GAME( 1900, s_mahsj,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Mahjong Sengoku Jidai (J)", 0 )
 GAME( 1900, s_makai,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Makai Retsuden (J)", 0 )
@@ -3820,11 +3820,11 @@ GAME( 1900, s_nekky,          0,        sms,    sms,    standpal, ROT0,   "Sega"
 
 GAME( 1900, s_ngaidp,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Ninja Gaiden (BE) (Proto)", 0 )
 GAME( 1900, s_ngaid,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Ninja Gaiden (BE)", 0 )
-GAME( 1900, s_ninjaj,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Ninja, The (J)", 0 )
-GAME( 1900, s_ninja,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Ninja, The (UE)", 0 )
+GAME( 1900, s_ninjaj,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) The Ninja (J)", 0 )
+GAME( 1900, s_ninja,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) The Ninja (UE)", 0 )
 GAME( 1900, s_opaopa,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Opa Opa (J)", 0 )
 GAME( 1900, s_opwolf,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Operation Wolf (E)", 0 )
-GAME( 1900, s_otti,           0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Ottifants, The (E) (M5)", 0 )
+GAME( 1900, s_otti,           0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) The Ottifants (E) (M5)", 0 )
 GAME( 1900, s_or3d,           0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Out Run 3-D (BE)", 0 )
 GAME( 1900, s_orun,           0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Out Run (UE)", 0 )
 GAME( 1900, s_orune,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Out Run Europa (E)", 0 )
@@ -3853,7 +3853,7 @@ GAME( 1900, s_pred2,          0,        sms,    sms,    standpal, ROT0,   "Sega"
 
 GAME( 1900, s_pop,            0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Prince of Persia (BE)", 0 )
 GAME( 1900, s_prow,           0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Pro Wrestling (UE)", 0 )
-GAME( 1900, s_proyak,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Pro Yakyuu Pennant Race, The (J)", 0 )
+GAME( 1900, s_proyak,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) The Pro Yakyuu Pennant Race (J)", 0 )
 GAME( 1900, s_promo3,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Promocao Especial M. System III Compact (B) (Promo)", 0 )
 GAME( 1900, s_psyc,           0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Psychic World (E)", 0 )
 GAME( 1900, s_putt,           0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Putt & Putter (BE)", 0 )
@@ -3898,12 +3898,12 @@ GAME( 1900, s_shangh,        0,        sms,    sms,    standpal, ROT0,   "Sega",
 GAME( 1900, s_shinoj,        0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Shinobi (J)", 0 )
 GAME( 1900, s_shino,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Shinobi (UE)", 0 )
 GAME( 1900, s_shgal,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Shooting Gallery (UE)", 0 )
-GAME( 1900, s_simpbw,        0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Simpsons, The - Bart vs. The World (E)", 0 )
+GAME( 1900, s_simpbw,        0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) The Simpsons - Bart vs. The World (E)", 0 )
 GAME( 1900, s_sitio,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Sitio do Picapau Amarelo (B)", 0 )
 GAME( 1900, s_slapsa,        0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Slap Shot (E) [a]", 0 )
 GAME( 1900, s_slaps,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Slap Shot (E)", 0 )
-GAME( 1900, s_smurf2,        0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Smurfs 2, The (E) (M4)", 0 )
-GAME( 1900, s_smurf,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Smurfs, The (E) (M4)", 0 )
+GAME( 1900, s_smurf2,        0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) The Smurfs 2 (E) (M4)", 0 )
+GAME( 1900, s_smurf,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) The Smurfs (E) (M4)", 0 )
 GAME( 1900, s_solomo,        0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Solomon no Kagi - Oujo Rihita no Namida (J)", 0 )
 
 GAME( 1900, s_sonbls,        0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Sonic Blast (B)", 0 )
@@ -3959,7 +3959,7 @@ GAME( 1900, s_tbbj,          0,        sms,    sms,    standpal, ROT0,   "Sega",
 GAME( 1900, s_tenace,        0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Tennis Ace (BE)", 0 )
 GAME( 1900, s_tensai,        0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Tensai Bakabon (J)", 0 )
 GAME( 1900, s_term2,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Terminator 2 - Judgment Day (E)", 0 )
-GAME( 1900, s_term,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Terminator, The (E)", 0 )
+GAME( 1900, s_term,          0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) The Terminator (E)", 0 )
 
 GAME( 1900, s_tbladj,        0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Thunder Blade (J)", 0 )
 GAME( 1900, s_tblad,         0,        sms,    sms,    standpal, ROT0,   "Sega", "(Master System) Thunder Blade (UE)", 0 )
