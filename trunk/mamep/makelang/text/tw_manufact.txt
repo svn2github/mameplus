@@ -22,6 +22,10 @@ bootleg?
 hack
 Hack
 
+# NGEM2K (beta 2006-01-18)
+homebrew
+自製遊戲
+
 # Chewing Gum
 unknown
 未知的
@@ -50,7 +54,7 @@ ABM Games
 AC
 
 
-# Starspinner (Dutch/Nederlands)
+# Sidewinder
 ACE
 
 
@@ -522,7 +526,7 @@ Digitrex Techstar
 Dino Dini
 
 
-# Great Circus Mystery, The - Starring Mickey & Minnie (U) [!]
+# The Great Circus Mystery - Starring Mickey & Minnie (U) [!]
 Disney
 
 
@@ -1538,7 +1542,7 @@ Poby
 Primetek Investments
 
 
-# Pagemaster, The (U) [!]
+# The Pagemaster (U) [!]
 Probe
 
 
@@ -1602,7 +1606,7 @@ Raster Elite
 Rastersoft
 
 
-# Earth Defend, The (Unl) [!]
+# The Earth Defend (Unl) [!]
 Realtec
 
 
@@ -2396,9 +2400,5 @@ Zyrinx
 
 # X-Files
 dgPIX Entertainment Inc.
-
-
-# NGEM2K (beta 2006-01-18)
-homebrew
 
 
