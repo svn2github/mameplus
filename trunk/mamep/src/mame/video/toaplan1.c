@@ -148,14 +148,13 @@ typedef struct
 	int ypos;
 } tile_struct;
 
-tile_struct *bg_list[4];
+static tile_struct *bg_list[4];
 
-tile_struct *tile_list[32];
-tile_struct *temp_list;
+static tile_struct *tile_list[32];
 static int max_list_size[32];
 static int tile_count[32];
 
-	mame_bitmap *tmpbitmap1;
+static	mame_bitmap *tmpbitmap1;
 static	mame_bitmap *tmpbitmap2;
 static	mame_bitmap *tmpbitmap3;
 
@@ -184,6 +183,8 @@ static int toaplan1_tile_buffers_alloc(void)
 		bg_list[i]=(tile_struct *)auto_malloc( 33 * 44 * sizeof(tile_struct));
 		memset(bg_list[i], 0, 33 * 44 * sizeof(tile_struct));
 	}
+
+	memset(&tile_list, 0, sizeof tile_list);
 
 	for (i=0; i<16; i++)
 	{
@@ -566,14 +567,14 @@ static void toaplan1_find_tiles( void )
 		layer_offsety[layer] = scrolly & 0x7;
 
 		for ( sy = 0; sy < 33; sy++ )
-	{
+		{
 			for ( sx = 0; sx <= 40; sx++ )
 			{
 				i = ((sy+offsety)&0x3f)*128 + ((sx+offsetx)&0x3f)*2;
 				tattr = t_info[i];
 				priority = (tattr >> 12);
 
-				tinfo = (tile_struct *)&(bg_list[layer][sy*41+sx]);
+				tinfo = &bg_list[layer][sy*41+sx];
 				tinfo->tile_num = t_info[i+1];
 				tinfo->priority = priority;
 				tinfo->color = tattr & 0x3f;
@@ -583,7 +584,7 @@ static void toaplan1_find_tiles( void )
 
 				if ( (priority) || (layer == 0) )	/* if priority 0 draw layer 0 only */
 				{
-					tinfo = (tile_struct *)&(tile_list[priority][tile_count[priority]]);
+					tinfo = &tile_list[priority][tile_count[priority]];
 					tinfo->tile_num = t_info[i+1];
 					if ( !((priority) && (tinfo->tile_num & 0x8000)) )
 //					if ( (tinfo->tile_num & 0x8000) == 0 )
@@ -650,10 +651,10 @@ static void toaplan1_find_sprites (void)
 			for ( dy = s_sizey; dy > 0; dy-- )
 			{
 				for ( dx = s_sizex; dx > 0; dx-- )
-	{
+				{
 					tile_struct *tinfo;
 
-					tinfo = (tile_struct *)&(tile_list[16][tile_count[16]]);
+					tinfo = &tile_list[16][tile_count[16]];
 					tinfo->priority = priority;
 					tinfo->tile_num = tchar;
 					tinfo->color = 0x80 | (tattr & 0x3f);
@@ -696,7 +697,7 @@ static void rallybik_find_sprites (void)
 
 			priority = (tattr>>8) & 0xc;
 			tchar = buffered_spriteram16[offs];
-			tinfo = (tile_struct *)&(tile_list[priority][tile_count[priority]]);
+			tinfo = &tile_list[priority][tile_count[priority]];
 			tinfo->tile_num = tchar & 0x7ff;
 			tinfo->color = 0x80 | (tattr&0x3f);
 			tinfo->color |= (tattr & 0x0100);
@@ -708,7 +709,7 @@ static void rallybik_find_sprites (void)
 			tile_count[priority]++;
 			if(tile_count[priority]==max_list_size[priority]){
 				logerror(" Tile buffer over flow !! %08x\n",priority);
-	}
+			}
 		}  // if tattr
 	}  // for sprite
 }
@@ -743,7 +744,7 @@ void toaplan1_sprite_mask
 		clip = &myclip;
 	}
 	if (0) //if (Machine->orientation & ORIENTATION_FLIP_X)
-		{
+	{
 		int temp;
 
 		sx = -sx;
@@ -757,7 +758,7 @@ void toaplan1_sprite_mask
 		clip = &myclip;
 	}
 	if (0) //if (Machine->orientation & ORIENTATION_FLIP_Y)
-			{
+	{
 		int temp;
 
 		sy = -sy;
@@ -769,7 +770,7 @@ void toaplan1_sprite_mask
 		myclip.min_y = dest_bmp->height-1 - clip->max_y;
 		myclip.max_y = dest_bmp->height-1 - temp;
 		clip = &myclip;
-			}
+	}
 
 	{
 		int ex = sx+src_bmp->width;
@@ -797,13 +798,13 @@ void toaplan1_sprite_mask
 			int y;
 
 			for( y=sy; y<ey; y++ )
-		{
+			{
 				UINT16 *dest = BITMAP_ADDR16(dest_bmp, y, 0);
 				UINT16 *source = BITMAP_ADDR16(src_bmp, y, 0);
 				int x;
 
 				for( x=sx; x<ex; x++ )
-			{
+				{
 					int c = source[x];
 					if( c != transparent_color )
 						dest[x] = transparent_color;
@@ -858,7 +859,7 @@ void toaplan1_sprite_copy
 		clip = &myclip;
 	}
 	if (0) //if (Machine->orientation & ORIENTATION_FLIP_Y)
-		{
+	{
 		int temp;
 
 		sy = -sy;
@@ -872,7 +873,7 @@ void toaplan1_sprite_copy
 		clip = &myclip;
 	}
 
-			{
+	{
 		int ex = sx+src_bmp->width;
 		int ey = sy+src_bmp->height;
 
@@ -891,25 +892,25 @@ void toaplan1_sprite_copy
 		if( ey > clip->max_y+1 )
 		{ /* clip bottom */
 			ey = clip->max_y + 1;
-	}
+		}
 
 		if( ex>sx )
 		{ /* skip if inner loop doesn't draw anything */
 			int y;
 
 			for( y=sy; y<ey; y++ )
-	{
+			{
 				UINT16 *dest = BITMAP_ADDR16(dest_bmp, y, 0);
 				UINT16 *source = BITMAP_ADDR16(src_bmp, y, 0);
 				UINT16 *look = BITMAP_ADDR16(look_bmp, y, 0);
 				int x;
 
 				for( x=sx; x<ex; x++ )
-		{
+				{
 					if( look[x] != transparent_color )
 						dest[x] = source[x];
-		}
-	}
+				}
+			}
 		}
 	}
 }
@@ -1053,7 +1054,7 @@ if( toaplan_dbg_priority != 0 ){
 
 	priority = toaplan_dbg_priority;
 	{
-		tinfo = (tile_struct *)&(tile_list[priority][0]);
+		tinfo = tile_list[priority];
 		pen = TRANSPARENCY_NONE;
 		for ( i = 0; i < tile_count[priority]; i++ ) /* draw only tiles in list */
 		{
@@ -1086,11 +1087,11 @@ if ( toaplan_dbg_sprite_only == 0 ){
 	{
 		int layer;
 
-		tinfo = (tile_struct *)&(tile_list[priority][0]);
+		tinfo = tile_list[priority];
 		layer = (tinfo->color >> 8);
 
 		if ( (layer == 0) && (priority >= 8 ) )
-	{
+		{
 			pen = TRANSPARENCY_NONE;
 		}
 		else{
@@ -1104,11 +1105,11 @@ if ( toaplan_dbg_sprite_only == 0 ){
 			if ( flip ){
 				xpos = (512 - tinfo->xpos) - 8 - (512 - Machine->screen[0].width);
 				ypos = (512 - tinfo->ypos) - 8 - (512 - Machine->screen[0].height);
-		}
+			}
 			else{
 				xpos = tinfo->xpos;
 				ypos = tinfo->ypos;
-	}
+			}
 
 			drawgfx(bitmap,Machine->gfx[0],
 				tinfo->tile_num,
@@ -1151,7 +1152,7 @@ static void zerowing_render (mame_bitmap *bitmap)
 	{
 		int layer;
 
-		tinfo = (tile_struct *)&(tile_list[priority][0]);
+		tinfo = tile_list[priority];
 		layer = (tinfo->color >> 8);
 		pen = TRANSPARENCY_PEN;
 
@@ -1221,11 +1222,11 @@ if( toaplan_dbg_priority != 0 ){
 	fillbitmap (bitmap, Machine->pens[0x120], &Machine->screen[0].visarea);
 	priority = toaplan_dbg_priority - 1;
 				{
-		tinfo = (tile_struct *)&(tile_list[priority][0]);
+		tinfo = tile_list[priority];
 		/* hack to fix black blobs in Demon's World sky */
 		pen = TRANSPARENCY_NONE;
 		for ( i = 0; i < tile_count[priority]; i++ ) /* draw only tiles in list */
-				{
+		{
 			drawgfx(bitmap,Machine->gfx[0],
 				tinfo->tile_num,
 				(tinfo->color&0x3f),
@@ -1233,8 +1234,8 @@ if( toaplan_dbg_priority != 0 ){
 				tinfo->xpos,tinfo->ypos,
 				&Machine->screen[0].visarea,pen,0);
 			tinfo++;
-				}
-			}
+		}
+}
 
 }else{
 
@@ -1249,10 +1250,10 @@ if( toaplan_dbg_priority != 0 ){
 
 	priority = 0;
 	while ( priority < 16 )			/* draw priority layers in order */
-				{
+	{
 		int layer;
 
-		tinfo = (tile_struct *)&(tile_list[priority][0]);
+		tinfo = tile_list[priority];
 		layer = (tinfo->color >> 8);
 
 		if ( priority == 1 )
@@ -1309,7 +1310,7 @@ static void rallybik_render (mame_bitmap *bitmap)
 	priority = 0;
 	while ( priority < 16 )			/* draw priority layers in order */
 	{
-		tinfo = (tile_struct *)&(tile_list[priority][0]);
+		tinfo = tile_list[priority];
 
 		if ( priority <= 1 )
 			pen = TRANSPARENCY_NONE;
@@ -1362,12 +1363,13 @@ static void toaplan1_sprite_render (mame_bitmap *bitmap)
 	tile_struct *tinfo;
 	tile_struct *tinfo_sp;
 	rectangle sp_rect;
+	rectangle clear_rect;
 
 	fillbitmap (tmpbitmap1, Machine->pens[0],&Machine->screen[0].visarea);
 
 	flip = 0;
 
-	tinfo_sp = (tile_struct *)&(tile_list[16][0]);
+	tinfo_sp = tile_list[16];
 	for ( i = 0; i < tile_count[16]; i++ )	/* draw sprite No. in order */
 	{
 		int	flipx,flipy;
@@ -1377,11 +1379,40 @@ static void toaplan1_sprite_render (mame_bitmap *bitmap)
 		sp_rect.max_x = tinfo_sp->xpos + 7;
 		sp_rect.max_y = tinfo_sp->ypos + 7;
 
+		clear_rect = Machine->screen[0].visarea;
+
+		if (clear_rect.min_x < sp_rect.min_x)
+			clear_rect.min_x = sp_rect.min_x;
+
+		if (clear_rect.min_y < sp_rect.min_y)
+			clear_rect.min_y = sp_rect.min_y;
+
+		if (clear_rect.max_x > sp_rect.max_x)
+		{
+			if (sp_rect.max_x > 0)
+				clear_rect.max_x = sp_rect.max_x;
+			else
+				clear_rect.max_x = 0;
+		}
+
+		if (clear_rect.max_y > sp_rect.max_y)
+		{
+			if (sp_rect.max_y > 0)
+				clear_rect.max_y = sp_rect.max_y;
+			else
+				clear_rect.max_y = 0;
+		}
+
+		if (clear_rect.min_x > clear_rect.max_x)
+			clear_rect.min_x = clear_rect.max_x;
+
+		if (clear_rect.min_y > clear_rect.max_y)
+			clear_rect.min_y = clear_rect.max_y;
 
 		flipx = (tinfo_sp->color & 0x0100);
 		flipy = (tinfo_sp->color & 0x0200);
 
-		fillbitmap (tmpbitmap2, Machine->pens[0], &sp_rect);
+		fillbitmap (tmpbitmap2, Machine->pens[0], &clear_rect);
 
 		drawgfx(tmpbitmap2,Machine->gfx[1],
 			tinfo_sp->tile_num,
@@ -1390,8 +1421,7 @@ static void toaplan1_sprite_render (mame_bitmap *bitmap)
 			tinfo_sp->xpos,tinfo_sp->ypos,
 			&Machine->screen[0].visarea,TRANSPARENCY_PEN,0
 		);
-
-		fillbitmap (tmpbitmap3, Machine->pens[0], &sp_rect);
+		fillbitmap (tmpbitmap3, Machine->pens[0], &clear_rect);
 
 		priority = tinfo_sp->priority;
 		{
@@ -1411,7 +1441,7 @@ static void toaplan1_sprite_render (mame_bitmap *bitmap)
 			ix3 = ((y+7)/8) * 41 + (x+7)/8;
 
 			if(	(ix0 >= 0) && (ix0 < 32*41) ){
-				tinfo = (tile_struct *)&(bg_list[j][ix0]);
+				tinfo = &bg_list[j][ix0];
 				if( tinfo->priority >= priority ){
 					drawgfx(tmpbitmap3,Machine->gfx[0],
 						tinfo->tile_num,
@@ -1424,7 +1454,7 @@ static void toaplan1_sprite_render (mame_bitmap *bitmap)
 				}
 			}
 			if(	(ix0 != ix1) && (ix1 >= 0) && (ix1 < 32*41) ){
-				tinfo = (tile_struct *)&(bg_list[j][ix1]);
+				tinfo = &bg_list[j][ix1];
 				if( tinfo->priority >= priority ){
 					drawgfx(tmpbitmap3,Machine->gfx[0],
 						tinfo->tile_num,
@@ -1437,7 +1467,7 @@ static void toaplan1_sprite_render (mame_bitmap *bitmap)
 				}
 			}
 			if(	(ix1 != ix2) && (ix2 >= 0) && (ix2 < 32*41) ){
-				tinfo = (tile_struct *)&(bg_list[j][ix2]);
+				tinfo = &bg_list[j][ix2];
 				if( tinfo->priority >= priority ){
 					drawgfx(tmpbitmap3,Machine->gfx[0],
 						tinfo->tile_num,
@@ -1450,7 +1480,7 @@ static void toaplan1_sprite_render (mame_bitmap *bitmap)
 				}
 			}
 			if( (ix2 != ix3) && (ix3 >= 0) && (ix3 < 32*41) ){
-				tinfo = (tile_struct *)&(bg_list[j][ix3]);
+				tinfo = &bg_list[j][ix3];
 				if( tinfo->priority >= priority ){
 					drawgfx(tmpbitmap3,Machine->gfx[0],
 						tinfo->tile_num,
@@ -1470,7 +1500,7 @@ static void toaplan1_sprite_render (mame_bitmap *bitmap)
 				tmpbitmap3,
 				&sp_rect
 			);
-			fillbitmap (tmpbitmap3, Machine->pens[0], &sp_rect);
+			fillbitmap (tmpbitmap3, Machine->pens[0], &clear_rect);
 			drawgfx(tmpbitmap3,Machine->gfx[1],
 				tinfo_sp->tile_num,
 				(tinfo_sp->color&0x3f),
