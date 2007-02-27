@@ -23,7 +23,7 @@
 ***************************************************************************/
 
 #define VERBOSE			(0)
-#define MAKE_WAVS		(1)
+#define MAKE_WAVS		(0)
 
 #if VERBOSE
 #define VPRINTF(x)		mame_printf_debug x
