@@ -238,6 +238,8 @@ typedef struct
 	BOOL	dual_lightgun;
 	BOOL	offscreen_reload;
 	BOOL	steadykey;
+	float	joy_deadzone;
+	float	joy_saturation;
 	char*	digital;
 //
 // AUTOMATIC DEVICE SELECTION OPTIONS

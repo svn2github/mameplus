@@ -268,6 +268,9 @@
 #define IDC_ASPECTRATIOTEXT             1156
 #define IDC_JOY_GUI                     1157
 #define IDC_BROADCAST                   1158
+#define IDC_JDZ                         1160
+#define IDC_JDZDISP                     1161
+#define IDC_JDZTEXT                     1162
 #define IDC_PLAY_GAME                   1164
 #define IDC_LIGHTGUN                    1165
 #define IDC_ASPECTRATIOTEXT2            1166
@@ -335,6 +338,9 @@
 #define IDC_VIDEO_MODE                  1247
 #define IDC_SHOW_TREE_SHEET             1248 // USE_TREE_SHEET
 #define IDC_MULTITHREAD_RENDERING       1249
+#define IDC_JSAT                        1250
+#define IDC_JSATDISP                    1251
+#define IDC_JSATTEXT                    1252
 
 #define ID_CONTEXT_SHOW_FOLDER_START    39000
 #define ID_CONTEXT_SHOW_FOLDER_END      39200

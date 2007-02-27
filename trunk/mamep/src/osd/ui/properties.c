@@ -133,6 +133,8 @@ static void PauseBrightSelectionChange(HWND hwnd);
 static void FullScreenGammaSelectionChange(HWND hwnd);
 static void FullScreenBrightnessSelectionChange(HWND hwnd);
 static void FullScreenContrastSelectionChange(HWND hwnd);
+static void JDZSelectionChange(HWND hwnd);
+static void JSATSelectionChange(HWND hwnd);
 static void ResDepthSelectionChange(HWND hWnd, HWND hWndCtrl);
 static void RefreshSelectionChange(HWND hWnd, HWND hWndCtrl);
 static void VolumeSelectionChange(HWND hwnd);
@@ -218,6 +220,8 @@ static int  g_nFullScreenBrightnessIndex = 0;
 static int  g_nFullScreenContrastIndex = 0;
 static int  g_nEffectIndex     = 0;
 static int  g_nBiosIndex       = 0;
+static int  g_nJDZIndex        = 0;
+static int  g_nJSATIndex        = 0;
 static int  g_nPaddleIndex = 0;
 static int  g_nADStickIndex = 0;
 static int  g_nPedalIndex = 0;
@@ -2744,6 +2748,21 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 		Static_SetTextA(hCtrl, buf);
 	}
 
+	/* Input */
+	hCtrl = GetDlgItem(hWnd, IDC_JDZDISP);
+	if (hCtrl)
+	{
+		sprintf(buf, "%03.2f", o->joy_deadzone);
+		Static_SetTextA(hCtrl, buf);
+	}
+
+	hCtrl = GetDlgItem(hWnd, IDC_JSATDISP);
+	if (hCtrl)
+	{
+		sprintf(buf, "%03.2f", o->joy_saturation);
+		Static_SetTextA(hCtrl, buf);
+	}
+
 #ifdef TRANS_UI
 	hCtrl = GetDlgItem(hWnd, IDC_TRANSPARENCYDISP);
 	if (hCtrl)
@@ -3040,7 +3059,12 @@ static void SetPropEnabledControls(HWND hWnd)
 	joystick_attached = DIJoystick.Available();
 
 	Button_Enable(GetDlgItem(hWnd,IDC_JOYSTICK),               joystick_attached);
-
+	EnableWindow(GetDlgItem(hWnd, IDC_JDZTEXT),                joystick_attached);
+	EnableWindow(GetDlgItem(hWnd, IDC_JDZDISP),                joystick_attached);
+	EnableWindow(GetDlgItem(hWnd, IDC_JDZ),                    joystick_attached);
+	EnableWindow(GetDlgItem(hWnd, IDC_JSATTEXT),               joystick_attached);
+	EnableWindow(GetDlgItem(hWnd, IDC_JSATDISP),               joystick_attached);
+	EnableWindow(GetDlgItem(hWnd, IDC_JSAT),                   joystick_attached);
 #ifdef JOYSTICK_ID
 	if (Button_GetCheck(GetDlgItem(hWnd, IDC_JOYSTICK)) && DIJoystick.Available())
 	{
@@ -3315,6 +3339,16 @@ static void AssignBeam(HWND hWnd)
 static void AssignFlicker(HWND hWnd)
 {
 	pGameOpts->flicker = g_nFlickerIndex;
+}
+
+static void AssignJDZ(HWND hWnd)
+{
+	pGameOpts->joy_deadzone = g_nJDZIndex / 20.0;
+}
+
+static void AssignJSAT(HWND hWnd)
+{
+	pGameOpts->joy_saturation = g_nJSATIndex / 20.0;
 }
 
 static void AssignRotate(HWND hWnd)
@@ -3612,6 +3646,8 @@ static void ResetDataMap(void)
 	g_nPauseBrightIndex     = (int)((pGameOpts->pause_brightness - 0.5) * 20.0 + 0.001);
 	g_nBeamIndex            = (int)((pGameOpts->beam             - 1.0) * 20.0 + 0.001);
 	g_nFlickerIndex         = (int)( pGameOpts->flicker);
+	g_nJDZIndex             = (int)( pGameOpts->joy_deadzone            * 20.0 + 0.001);
+	g_nJSATIndex            = (int)( pGameOpts->joy_saturation          * 20.0 + 0.001);
 #ifdef TRANS_UI
 	g_nUITransparencyIndex  = (int)( pGameOpts->ui_transparency);
 #endif /* TRANS_UI */
@@ -3819,6 +3855,10 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_DEFAULT_INPUT, DM_INT,  CT_COMBOBOX, &g_nInputIndex,            DM_STRING, &pGameOpts->ctrlr,           0, 0, AssignInput);
 	DataMapAdd(IDC_USE_MOUSE,     DM_BOOL, CT_BUTTON,   &pGameOpts->mouse,         DM_BOOL,   &pGameOpts->mouse,           0, 0, 0);   
 	DataMapAdd(IDC_JOYSTICK,      DM_BOOL, CT_BUTTON,   &pGameOpts->joystick,      DM_BOOL,   &pGameOpts->joystick,        0, 0, 0);
+	DataMapAdd(IDC_JDZ,           DM_INT,  CT_SLIDER,   &g_nJDZIndex,              DM_FLOAT,  &pGameOpts->joy_deadzone,    0, 0, AssignJDZ);
+	DataMapAdd(IDC_JDZDISP,       DM_NONE, CT_NONE,     NULL,                      DM_FLOAT,  &pGameOpts->joy_deadzone,    0, 0, 0);
+	DataMapAdd(IDC_JSAT,          DM_INT,  CT_SLIDER,   &g_nJSATIndex,             DM_FLOAT,  &pGameOpts->joy_saturation,  0, 0, AssignJSAT);
+	DataMapAdd(IDC_JSATDISP,      DM_NONE, CT_NONE,     NULL,                      DM_FLOAT,  &pGameOpts->joy_saturation,  0, 0, 0);
 	DataMapAdd(IDC_STEADYKEY,     DM_BOOL, CT_BUTTON,   &pGameOpts->steadykey,     DM_BOOL,   &pGameOpts->steadykey,       0, 0, 0);
 	DataMapAdd(IDC_LIGHTGUN,      DM_BOOL, CT_BUTTON,   &pGameOpts->lightgun,      DM_BOOL,   &pGameOpts->lightgun,        0, 0, 0);
 	DataMapAdd(IDC_DUAL_LIGHTGUN, DM_BOOL, CT_BUTTON,   &pGameOpts->dual_lightgun, DM_BOOL,   &pGameOpts->dual_lightgun,   0, 0, 0);
@@ -4133,6 +4173,14 @@ static void InitializeMisc(HWND hDlg)
 				(WPARAM)FALSE,
 				(LPARAM)MAKELONG(0, 38)); /* [0.10, 2.00] in .05 increments */
 
+	SendDlgItemMessage(hDlg, IDC_JDZ, TBM_SETRANGE,
+				(WPARAM)FALSE,
+				(LPARAM)MAKELONG(0, 20)); /* [0.00, 1.00] in .05 increments */
+
+	SendDlgItemMessage(hDlg, IDC_JSAT, TBM_SETRANGE,
+				(WPARAM)FALSE,
+				(LPARAM)MAKELONG(0, 20)); /* [0.00, 1.00] in .05 increments */
+
 	SendDlgItemMessage(hDlg, IDC_FLICKER, TBM_SETRANGE,
 				(WPARAM)FALSE,
 				(LPARAM)MAKELONG(0, 100)); /* [0.0, 100.0] in 1.0 increments */
@@ -4219,6 +4267,16 @@ static void OptOnHScroll(HWND hwnd, HWND hwndCtl, UINT code, int pos)
 	if (hwndCtl == GetDlgItem(hwnd, IDC_VOLUME))
 	{
 		VolumeSelectionChange(hwnd);
+	}
+	else
+	if (hwndCtl == GetDlgItem(hwnd, IDC_JDZ))
+	{
+		JDZSelectionChange(hwnd);
+	}
+	else
+	if (hwndCtl == GetDlgItem(hwnd, IDC_JSAT))
+	{
+		JSATSelectionChange(hwnd);
 	}
 	else
 	if (hwndCtl == GetDlgItem(hwnd, IDC_AUDIO_LATENCY))
@@ -4415,6 +4473,40 @@ static void FullScreenContrastSelectionChange(HWND hwnd)
 	/* Set the static display to the new value */
 	snprintf(buf, ARRAY_LENGTH(buf),"%03.2f", dContrast);
 	Static_SetTextA(GetDlgItem(hwnd, IDC_FSCONTRASTDISP), buf);
+}
+
+/* Handle changes to the Joystick deadzone slider */
+static void JDZSelectionChange(HWND hwnd)
+{
+	char   buf[100];
+	UINT   nValue;
+	double dJDZ;
+
+	/* Get the current value of the control */
+	nValue = SendDlgItemMessage(hwnd, IDC_JDZ, TBM_GETPOS, 0, 0);
+
+	dJDZ = nValue / 20.0;
+
+	/* Set the static display to the new value */
+	snprintf(buf, ARRAY_LENGTH(buf), "%03.2f", dJDZ);
+	Static_SetTextA(GetDlgItem(hwnd, IDC_JDZDISP), buf);
+}
+
+/* Handle changes to the Joystick saturation slider */
+static void JSATSelectionChange(HWND hwnd)
+{
+	char   buf[100];
+	UINT   nValue;
+	double dJSAT;
+
+	/* Get the current value of the control */
+	nValue = SendDlgItemMessage(hwnd, IDC_JSAT, TBM_GETPOS, 0, 0);
+
+	dJSAT = nValue / 20.0;
+
+	/* Set the static display to the new value */
+	snprintf(buf, ARRAY_LENGTH(buf), "%03.2f", dJSAT);
+	Static_SetTextA(GetDlgItem(hwnd, IDC_JSATDISP), buf);
 }
 
 /* Handle changes to the Color Depth drop down */
