@@ -15,9 +15,6 @@
 #include "render.h"
 #include "unicode.h"
 
-//mamep: command.dat symbols assigned to Unicode PUA U+E000
-#define COMMAND_UNICODE	(0xe000)
-#define MAX_GLYPH_FONT	(150)
 
 
 /***************************************************************************

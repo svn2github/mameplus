@@ -29,8 +29,10 @@
 #define CACHED_HEADER_SIZE		16
 #define CACHED_BDF_HASH_SIZE	1024
 
-//mamep: command.dat color symbols
+//mamep: command.dat symbols assigned to Unicode PUA U+E000
+#define COMMAND_UNICODE	(0xe000)
 #define COLOR_BUTTONS	(90)
+#define MAX_GLYPH_FONT	(150)
 
 
 
@@ -367,7 +369,8 @@ INLINE render_font_char *get_char(render_font *font, unicode_char chnum)
 			/* scale the font if needed */
 			if (font->height != 12 && font->height != ch->bmheight + 1)
 			{
-				mame_bitmap *bitmap = bitmap_alloc(font->height, font->height, BITMAP_FORMAT_ARGB32);
+				ch->bmwidth = ch->bmheight = ch->width = font->height;
+				mame_bitmap *bitmap = bitmap_alloc(ch->bmwidth, font->height, BITMAP_FORMAT_ARGB32);
 
 				render_texture_hq_scale(bitmap, ch->bitmap, NULL, NULL);
 				render_texture_free(ch->texture);

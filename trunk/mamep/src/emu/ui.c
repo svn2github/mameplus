@@ -643,7 +643,7 @@ static int isdbcschar(unicode_char uchar)
 	//	Plane 0 (0000-FFF): Basic Multilingual Plane (BMP)
 	if (uchar > 0x1000)
 		return 1;
-
+#if 0
 	//	Hiragana (3040-309F)
 	//	Katakana (30A0-30FF)
 	//	Bopomofo (3100-312F)
@@ -671,6 +671,7 @@ static int isdbcschar(unicode_char uchar)
 	//command glyph (PUA U+E000)
 	if (COMMAND_UNICODE <= uchar && uchar < COMMAND_UNICODE + MAX_GLYPH_FONT)
 		return 1;
+#endif
 
 	return 0;
 }
