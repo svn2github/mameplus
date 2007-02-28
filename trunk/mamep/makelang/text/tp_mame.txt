@@ -690,7 +690,7 @@ BCD
 BIOS
 
 
-# emu/ui.c: 2398
+# emu/ui.c: 2503
 Beam Width
 
 
@@ -1318,7 +1318,7 @@ Error: Failed to save state
 Error: Unable to save state due to illegal registrations. See error.log for details.
 
 
-# emu/ui.c: 1447
+# emu/ui.c: 1552
 Error: illegal caption file
 
 
@@ -1558,11 +1558,11 @@ Home
 Hong Kong
 
 
-# emu/ui.c: 2349
+# emu/ui.c: 2454
 Horiz position
 
 
-# emu/ui.c: 2315
+# emu/ui.c: 2420
 Horiz stretch
 
 
@@ -1874,11 +1874,11 @@ Load Selected Card
 Load State
 
 
-# emu/ui.c: 1962
+# emu/ui.c: 2067
 Load cancelled
 
 
-# emu/ui.c: 1993
+# emu/ui.c: 2098
 Load from position %c
 
 
@@ -3718,15 +3718,15 @@ Previous values already restored
 Program Space
 
 
-# emu/ui.c: 2007
+# emu/ui.c: 2112
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 
 
-# emu/ui.c: 1844
+# emu/ui.c: 1949
 REC START
 
 
-# emu/ui.c: 1849
+# emu/ui.c: 1954
 REC STOP
 
 
@@ -3874,11 +3874,11 @@ Save Snapshot
 Save State
 
 
-# emu/ui.c: 1960
+# emu/ui.c: 2065
 Save cancelled
 
 
-# emu/ui.c: 1988
+# emu/ui.c: 2093
 Save to position %c
 
 
@@ -3890,7 +3890,7 @@ Screen
 Screen #
 
 
-# emu/ui.c: 2248, 2265, 2282, 2298, 2315, 2332, 2349, 2366
+# emu/ui.c: 2353, 2370, 2387, 2403, 2420, 2437, 2454, 2471
 Screen %d %s %.3f
 
 
@@ -3958,11 +3958,11 @@ Select Search
 Select a value
 
 
-# emu/ui.c: 1953
+# emu/ui.c: 2058
 Select position to load from
 
 
-# emu/ui.c: 1951
+# emu/ui.c: 2056
 Select position to save to
 
 
@@ -4706,11 +4706,11 @@ Vector Game
 Version
 
 
-# emu/ui.c: 2366
+# emu/ui.c: 2471
 Vert position
 
 
-# emu/ui.c: 2332
+# emu/ui.c: 2437
 Vert stretch
 
 

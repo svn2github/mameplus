@@ -121,11 +121,11 @@ INT_PTR CALLBACK ResetDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 			if (resetFilters || resetGames || resetUI || resetDefaults)
 			{
 				WCHAR temp[1024];
-				lstrcpy(temp, _UIW(TEXT(MAME32NAME " will now reset the selected\n"
-					"items to the original, installation\n"
-					"settings then exit.\n\n")));
-				lstrcat(temp, _UIW(TEXT("The new settings will take effect\n"
-					"the next time " MAME32NAME " is run.\n\n")));
+				lstrcpy(temp, _UIW(TEXT(MAME32NAME) TEXT(" will now reset the selected\n")
+					TEXT("items to the original, installation\n")
+					TEXT("settings then exit.\n\n")));
+				lstrcat(temp, _UIW(TEXT("The new settings will take effect\n")
+					TEXT("the next time ") TEXT_MAME32NAME TEXT(" is run.\n\n")));
 				lstrcat(temp, _UIW(TEXT("Do you wish to continue?")));
 
 				if (MessageBox(hDlg, temp, _UIW(TEXT("Restore Settings")), IDOK) == IDOK)
@@ -754,10 +754,10 @@ INT_PTR CALLBACK DirectXDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 	HWND hEdit;
 
 	const WCHAR *directx_help =
-		TEXT(MAME32NAME " requires DirectX version 3 or later, which is a set of operating\r\n")
+		TEXT_MAME32NAME TEXT(" requires DirectX version 3 or later, which is a set of operating\r\n")
 		TEXT("system extensions by Microsoft for Windows 9x, NT and 2000.\r\n\r\n")
 		TEXT("Visit Microsoft's DirectX web page at http://www.microsoft.com/directx\r\n")
-		TEXT("download DirectX, install it, and then run " MAME32NAME " again.\r\n");
+		TEXT("download DirectX, install it, and then run ") TEXT_MAME32NAME TEXT(" again.\r\n");
 
 	switch (Msg)
 	{
@@ -875,7 +875,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 					PcbData[filelen] = '\0';
 
 					swprintf(buf, 
-						_UIW(TEXT(MAME32NAME " PCB Info: %s [%s]")), 
+						_UIW(TEXT_MAME32NAME TEXT(" PCB Info: %s [%s]")), 
 						ConvertAmpersandString(UseLangList() ?
 							_LSTW(driversw[nGame]->description) :
 							driversw[nGame]->modify_the), 

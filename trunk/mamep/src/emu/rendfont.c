@@ -369,12 +369,15 @@ INLINE render_font_char *get_char(render_font *font, unicode_char chnum)
 			/* scale the font if needed */
 			if (font->height != 12 && font->height != ch->bmheight + 1)
 			{
-				ch->bmwidth = ch->bmheight = ch->width = font->height;
-				mame_bitmap *bitmap = bitmap_alloc(ch->bmwidth, font->height, BITMAP_FORMAT_ARGB32);
+				mame_bitmap *bitmap;
 
+				ch->bmwidth = ch->bmheight = ch->width = font->height;
+				bitmap = bitmap_alloc(ch->bmwidth, font->height, BITMAP_FORMAT_ARGB32);
 				render_texture_hq_scale(bitmap, ch->bitmap, NULL, NULL);
+
 				render_texture_free(ch->texture);
 				bitmap_free(ch->bitmap);
+
 				ch->bitmap = bitmap;
 				ch->texture = render_texture_alloc(ch->bitmap, NULL, 0, TEXFORMAT_ARGB32, render_texture_hq_scale, NULL);
 			}

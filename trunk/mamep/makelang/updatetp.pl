@@ -306,8 +306,14 @@ sub ParseSrcFiles
 				}
 			}
 
+			# ignore TEXT_MAMENAME and TEXT_MAME32NAME defines
+			next if /^#\s*define\s+TEXT_(MAMENAME|MAME32NAME)\s+/;
+
 			# ignore MAMENAME and MAME32NAME defines
 			next if /^#\s*define\s+(MAMENAME|MAME32NAME)\s+/;
+
+			# convert TEXT_MAMENAME and TEXT_MAME32NAME
+			s/TEXT_(MAMENAME|MAME32NAME)/$1/g;
 
 			# convert MAMENAME and MAME32NAME
 			s/MAMENAME/"MAME"/g;
@@ -325,6 +331,9 @@ sub ParseSrcFiles
 
 			# convert HISTORYNAME
 			s/HISTORYNAME/"History"/g;
+
+			# remove macro TEXT("....")
+			s/TEXT\((\s*"[^"]*"\s*)\)/$1/g;
 
 			# find the quoted string
 			while (/(\\.|")/)
@@ -356,6 +365,9 @@ sub ParseSrcFiles
 							s/[\r\n]//g;
 							s/^\s*//;
 
+							# convert TEXT_MAMENAME and TEXT_MAME32NAME
+							s/TEXT_(MAMENAME|MAME32NAME)/$1/g;
+
 							# convert MAMENAME and MAME32NAME
 							s/MAMENAME/"MAME"/g;
 							s/MAME32NAME/"MAME32"/g;
@@ -372,6 +384,9 @@ sub ParseSrcFiles
 
 							# convert HISTORYNAME
 							s/HISTORYNAME/"History"/g;
+
+							# remove macro TEXT("....")
+							s/TEXT\((\s*"[^"]*"\s*)\)/$1/g;
 						}
 
 						last unless /^\s*"/;
