@@ -3056,15 +3056,18 @@ static void SetPropEnabledControls(HWND hWnd)
 */
 
 	/* Joystick options */
-	joystick_attached = DIJoystick.Available();
+	hCtrl = GetDlgItem(hWnd, IDC_JOYSTICK);
 
-	Button_Enable(GetDlgItem(hWnd,IDC_JOYSTICK),               joystick_attached);
+	joystick_attached = Button_GetCheck(hCtrl);
+
 	EnableWindow(GetDlgItem(hWnd, IDC_JDZTEXT),                joystick_attached);
 	EnableWindow(GetDlgItem(hWnd, IDC_JDZDISP),                joystick_attached);
 	EnableWindow(GetDlgItem(hWnd, IDC_JDZ),                    joystick_attached);
 	EnableWindow(GetDlgItem(hWnd, IDC_JSATTEXT),               joystick_attached);
 	EnableWindow(GetDlgItem(hWnd, IDC_JSATDISP),               joystick_attached);
 	EnableWindow(GetDlgItem(hWnd, IDC_JSAT),                   joystick_attached);
+	EnableWindow(GetDlgItem(hWnd, IDC_ANALOG_AXES),		         joystick_attached);
+	EnableWindow(GetDlgItem(hWnd, IDC_ANALOG_AXES_TEXT),       joystick_attached);
 #ifdef JOYSTICK_ID
 	if (Button_GetCheck(GetDlgItem(hWnd, IDC_JOYSTICK)) && DIJoystick.Available())
 	{
@@ -3105,8 +3108,7 @@ static void SetPropEnabledControls(HWND hWnd)
 		EnableWindow(GetDlgItem(hWnd, IDC_JOYID8TEXT), FALSE);
 	}
 #endif /* JOYSTICK_ID */
-	EnableWindow(GetDlgItem(hWnd, IDC_ANALOG_AXES),		joystick_attached);
-	EnableWindow(GetDlgItem(hWnd, IDC_ANALOG_AXES_TEXT),joystick_attached);
+
 	/* Trackball / Mouse options */
 	if (nIndex <= -1 || DriverUsesTrackball(nIndex) || DriverUsesLightGun(nIndex))
 	{

@@ -494,7 +494,7 @@ void ui_update_and_render(void)
 		display_rescale_message = FALSE;
 		if (allow_rescale == 0)
 			allow_rescale = 2;
-		ui_draw_text_box("Updating Artwork...", JUSTIFY_CENTER, 0.5f, 0.5f, messagebox_backcolor);
+		ui_draw_text_box(_("Updating Artwork..."), JUSTIFY_CENTER, 0.5f, 0.5f, messagebox_backcolor);
 	}
 
 	/* decrement the frame counter if it is non-zero */
