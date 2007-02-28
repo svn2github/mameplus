@@ -690,7 +690,7 @@ BCD
 BIOS
 BIOS
 
-# emu/ui.c: 2398
+# emu/ui.c: 2503
 Beam Width
 ビーム幅
 
@@ -1318,7 +1318,7 @@ Error: Failed to save state
 Error: Unable to save state due to illegal registrations. See error.log for details.
 エラー: 不正な登録のためステートを保存する事が出来ません。詳細はerror.logをご覧下さい。
 
-# emu/ui.c: 1447
+# emu/ui.c: 1552
 Error: illegal caption file
 エラー: 不正なキャプションファイルです
 
@@ -1558,11 +1558,11 @@ Home
 Hong Kong
 香港
 
-# emu/ui.c: 2349
+# emu/ui.c: 2454
 Horiz position
 水平位置
 
-# emu/ui.c: 2315
+# emu/ui.c: 2420
 Horiz stretch
 水平拡大
 
@@ -1874,11 +1874,11 @@ Load Selected Card
 Load State
 プレイ状態の復帰
 
-# emu/ui.c: 1962
+# emu/ui.c: 2067
 Load cancelled
 読み込みを中止しました
 
-# emu/ui.c: 1993
+# emu/ui.c: 2098
 Load from position %c
 %c から読み込みました
 
@@ -3718,15 +3718,15 @@ Previous values already restored
 Program Space
 プログラム領域
 
-# emu/ui.c: 2007
+# emu/ui.c: 2112
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 このゲームを終了しますか？\n\n終了する場合は決定キー/ボタンを、\n続ける場合はキャンセルキー/ボタンを押して下さい。
 
-# emu/ui.c: 1844
+# emu/ui.c: 1949
 REC START
 録画開始
 
-# emu/ui.c: 1849
+# emu/ui.c: 1954
 REC STOP
 録画停止
 
@@ -3874,11 +3874,11 @@ Save Snapshot
 Save State
 プレイ状態の保存
 
-# emu/ui.c: 1960
+# emu/ui.c: 2065
 Save cancelled
 保存を中止しました
 
-# emu/ui.c: 1988
+# emu/ui.c: 2093
 Save to position %c
 %c に保存しました
 
@@ -3890,7 +3890,7 @@ Screen
 Screen #
 画面 #
 
-# emu/ui.c: 2248, 2265, 2282, 2298, 2315, 2332, 2349, 2366
+# emu/ui.c: 2353, 2370, 2387, 2403, 2420, 2437, 2454, 2471
 Screen %d %s %.3f
 画面%d %s %.3f
 
@@ -3958,11 +3958,11 @@ Select Search
 Select a value
 値の選択
 
-# emu/ui.c: 1953
+# emu/ui.c: 2058
 Select position to load from
 読み込むファイル(0-9,A-Z)を押してください
 
-# emu/ui.c: 1951
+# emu/ui.c: 2056
 Select position to save to
 保存するファイル(0-9,A-Z)を押してください
 
@@ -4706,11 +4706,11 @@ Vector Game
 Version
 バージョン
 
-# emu/ui.c: 2366
+# emu/ui.c: 2471
 Vert position
 垂直位置
 
-# emu/ui.c: 2332
+# emu/ui.c: 2437
 Vert stretch
 垂直拡大
 
