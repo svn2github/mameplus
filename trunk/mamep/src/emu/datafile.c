@@ -671,6 +671,11 @@ static UINT8 ParseOpen(const char *pszFilename)
 	/* Otherwise, prepare! */
 
 	dwFilePos = 0;
+
+	/* identify text file type first */
+	mame_fgetc(fp);
+	mame_fseek(fp, dwFilePos, SEEK_SET);
+
 	return(TRUE);
 }
 
