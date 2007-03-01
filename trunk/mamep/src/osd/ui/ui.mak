@@ -72,10 +72,10 @@ else
         # add resource file
         GUIOBJS += $(GUIOBJ)/mame32.res
     else
-        OSDOBJS += $(GUIOBJ)/m32main.o
+        GUIOBJS += $(GUIOBJ)/m32main.o
 
         # add resource file
-        OSDOBJS += $(GUIOBJ)/mame32.res
+        GUIOBJS += $(GUIOBJ)/mame32.res
     endif
 endif
 
