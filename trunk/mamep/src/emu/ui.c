@@ -250,6 +250,57 @@ rgb_t ui_get_rgb_color(rgb_t color)
 }
 
 
+/*-------------------------------------------------
+    is_breakable_char - is a given unicode
+    character a possible line break?
+-------------------------------------------------*/
+
+INLINE int is_breakable_char(unicode_char ch)
+{
+	/* regular spaces and hyphens are breakable */
+	if (ch == ' ' || ch == '-')
+		return TRUE;
+
+	/* In the following character sets, any character is breakable:
+        Hiragana (3040-309F)
+        Katakana (30A0-30FF)
+        Bopomofo (3100-312F)
+        Hangul Compatibility Jamo (3130-318F)
+        Kanbun (3190-319F)
+        Bopomofo Extended (31A0-31BF)
+        CJK Strokes (31C0-31EF)
+        Katakana Phonetic Extensions (31F0-31FF)
+        Enclosed CJK Letters and Months (3200-32FF)
+        CJK Compatibility (3300-33FF)
+        CJK Unified Ideographs Extension A (3400-4DBF)
+        Yijing Hexagram Symbols (4DC0-4DFF)
+        CJK Unified Ideographs (4E00-9FFF) */
+	if (ch >= 0x3040 && ch <= 0x9fff)
+		return TRUE;
+
+	/* Hangul Syllables (AC00-D7AF) are breakable */
+	if (ch >= 0xac00 && ch <= 0xd7af)
+		return TRUE;
+
+	/* CJK Compatibility Ideographs (F900-FAFF) are breakable */
+	if (ch >= 0xf900 && ch <= 0xfaff)
+		return TRUE;
+
+	return FALSE;
+}
+
+
+//mamep: check double width character: is it enough to check only BMP?
+INLINE int is_double_size_char(unicode_char uchar)
+{
+	//	Plane 0 (0000-FFF): Basic Multilingual Plane (BMP)
+	if (uchar > 0x1000)
+		return 1;
+
+	return 0;
+}
+
+
 
 /***************************************************************************
     CORE IMPLEMENTATION
@@ -641,45 +692,6 @@ void ui_draw_text_bk(const char *buf, float x, float y, int col)
 }
 
 
-//mamep: check DBCS character: is it enough to check only BMP?
-static int isdbcschar(unicode_char uchar)
-{
-	//	Plane 0 (0000-FFF): Basic Multilingual Plane (BMP)
-	if (uchar > 0x1000)
-		return 1;
-#if 0
-	//	Hiragana (3040-309F)
-	//	Katakana (30A0-30FF)
-	//	Bopomofo (3100-312F)
-	//	Hangul Compatibility Jamo (3130-318F)
-	//	Kanbun (3190-319F)
-	//	Bopomofo Extended (31A0-31BF)
-	//	CJK Strokes (31C0-31EF)
-	//	Katakana Phonetic Extensions (31F0-31FF)
-	//	Enclosed CJK Letters and Months (3200-32FF)
-	//	CJK Compatibility (3300-33FF)
-	//	CJK Unified Ideographs Extension A (3400-4DBF)
-	//	Yijing Hexagram Symbols (4DC0-4DFF)
-	//	CJK Unified Ideographs (4E00-9FFF)
-	if (0x3040 <= uchar && uchar < 0x9FFF)
-		return 1;
-
-	//Hangul Syllables (AC00-D7AF)
-	if (0xAC00 <= uchar && uchar < 0xD7AF)
-		return 1;
-
-	//CJK Compatibility Ideographs (F900-FAFF) 
-	if (0xF900 <= uchar && uchar < 0xFAFF)
-		return 1;
-
-	//command glyph (PUA U+E000)
-	if (COMMAND_UNICODE <= uchar && uchar < COMMAND_UNICODE + MAX_GLYPH_FONT)
-		return 1;
-#endif
-
-	return 0;
-}
-
 /*-------------------------------------------------
     ui_draw_text_full - full featured text
     renderer with word wrapping, justification,
@@ -721,7 +733,7 @@ void ui_draw_text_full_fontwith(const char *origs, float x, float y, float wrapw
 				break;
 
 			scharwidth = ui_get_char_width(schar);
-			if (isdbcschar(schar))
+			if (is_double_size_char(schar))
 			{
 				if (fontwidth_db < scharwidth)
 					fontwidth_db = scharwidth;
@@ -754,11 +766,11 @@ void ui_draw_text_full_fontwith(const char *origs, float x, float y, float wrapw
 	/* loop over lines */
 	while (*s != 0)
 	{
-		const char *lastspace = NULL;
+		const char *lastbreak = NULL;
 		int line_justify = justify;
 		unicode_char schar;
 		int scharcount;
-		float lastspace_width = 0;
+		float lastbreak_width = 0;
 		float curwidth = 0;
 		float curx = x;
 
@@ -780,66 +792,58 @@ void ui_draw_text_full_fontwith(const char *origs, float x, float y, float wrapw
 		/* loop while we have characters and are less than the wrapwidth */
 		while (*s != 0 && curwidth <= wrapwidth)
 		{
+			float chwidth;
+
 			/* get the current chcaracter */
 			scharcount = uchar_from_utf8(&schar, s, ends - s);
 			if (scharcount == -1)
 				break;
 
-			/* if we hit a space or DBCS character, remember the location and the width there */
-			if (schar == ' ' || isdbcschar(schar))
-			{
-				lastspace = s;
-				lastspace_width = curwidth;
-			}
-
 			/* if we hit a newline, stop immediately */
-			else if (schar == '\n')
+			if (schar == '\n')
 				break;
 
 			//mamep: render as fixed with font
 			if (fixedwidth)
-				curwidth += isdbcschar(schar) ? fontwidth_db : fontwidth_sb;
+				chwidth = is_double_size_char(schar) ? fontwidth_db : fontwidth_sb;
 			else
-				/* add the width of this character and advance */
-				curwidth += ui_get_char_width(schar);
+				/* get the width of this character */
+				chwidth = ui_get_char_width(schar);
 
+			/* if we hit a space, remember the location and width *without* the space */
+			if (schar == ' ')
+			{
+				lastbreak = s;
+				lastbreak_width = curwidth;
+			}
+
+			/* add the width of this character and advance */
+			curwidth += chwidth;
 			s += scharcount;
+
+			/* if we hit any non-space breakable character, remember the location and width
+               *with* the breakable character */
+			if (schar != ' ' && is_breakable_char(schar) && curwidth <= wrapwidth)
+			{
+				lastbreak = s;
+				lastbreak_width = curwidth;
+			}
 		}
 
 		/* if we accumulated too much for the current width, we need to back off */
 		if (curwidth > wrapwidth)
 		{
-			/* if we're word wrapping, back up to the last space if we can */
+			/* if we're word wrapping, back up to the last break if we can */
 			if (wrap == WRAP_WORD)
 			{
-				/* if we hit a space, back up to there with the appropriate width */
-				if (lastspace)
+				/* if we hit a break, back up to there with the appropriate width */
+				if (lastbreak != NULL)
 				{
-					s = lastspace;
-					curwidth = lastspace_width;
-
-					/* try to add one more char */
-					scharcount = uchar_from_utf8(&schar, s, ends - s);
-					if (scharcount != -1 && schar != ' ')
-					{
-						float width;
-
-						//mamep: render as fixed with font
-						if (fixedwidth)
-							width = isdbcschar(schar) ? fontwidth_db : fontwidth_sb;
-						else
-							width = ui_get_char_width(schar);
-
-						if (curwidth + width < wrapwidth)
-						{
-							/* add the width of this character and advance */
-							curwidth += width;
-							s += scharcount;
-						}
-					}
+					s = lastbreak;
+					curwidth = lastbreak_width;
 				}
 
-				/* if we didn't hit a space, back up one character */
+				/* if we didn't hit a break, back up one character */
 				else if (s > linestart)
 				{
 					/* get the previous character */
@@ -850,7 +854,7 @@ void ui_draw_text_full_fontwith(const char *origs, float x, float y, float wrapw
 
 					//mamep: render as fixed with font
 					if (fixedwidth)
-						curwidth -= isdbcschar(schar) ? fontwidth_db : fontwidth_sb;
+						curwidth -= is_double_size_char(schar) ? fontwidth_db : fontwidth_sb;
 					else
 						curwidth -= ui_get_char_width(schar);
 				}
@@ -924,7 +928,7 @@ void ui_draw_text_full_fontwith(const char *origs, float x, float y, float wrapw
 				//mamep: render as fixed with font
 				if (fixedwidth)
 				{
-					float width = isdbcschar(linechar) ? fontwidth_db : fontwidth_sb;
+					float width = is_double_size_char(linechar) ? fontwidth_db : fontwidth_sb;
 					float xmargin = (width - ui_get_char_width(linechar)) / 2.0f;
 
 					render_ui_add_char(curx + xmargin, cury, lineheight, render_get_ui_aspect(), fgcolor, ui_font, linechar);
