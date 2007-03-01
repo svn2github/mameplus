@@ -82,3 +82,13 @@
 #define _WINDOWSW(str)	w_lang_message(UI_MSG_OSD0, str)
 #define _UIW(str)	w_lang_message(UI_MSG_UI, str)
 #endif
+
+
+#include <wchar.h>
+#define _wfindfirst	!win9x_doesnt_has_it!
+#define _wfindnext	!win9x_doesnt_has_it!
+#define _wmkdir 	!win9x_doesnt_has_it!
+#define _wstat  	!win9x_doesnt_has_it!
+#define _wunlink	!win9x_doesnt_has_it!
+#define _wfopen 	!win9x_doesnt_has_it!
+#define _wgetcwd()	!win9x_doesnt_has_it!

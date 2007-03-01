@@ -20,10 +20,14 @@
 
 #define WIN32_LEAN_AND_MEAN
 #define UNICODE
+
+#ifdef _MSC_VER
 #if _MSC_VER >= 1400
 // mamep:for VC2005
 #define _CRT_NON_CONFORMING_SWPRINTFS 
 #endif
+#endif
+
 #include <windows.h>
 #include <windowsx.h>
 #include <shellapi.h>
@@ -2335,44 +2339,40 @@ static BOOL RegistExtraFolder(const WCHAR *name, LPEXFOLDERDATA *fExData, int ms
 
 static int InitExtraFolders(void)
 {
-	struct _stat        stat_buffer;
-	struct _wfinddata_t files;
+	WIN32_FIND_DATAW    ffd;
+	HANDLE              hFile;
 	int                 count = 0;
-	long                hLong;
-	WCHAR               curdir[MAX_PATH];
+	WCHAR               path[MAX_PATH];
 	const WCHAR        *dir = GetFolderDir();
+	int                 done = FALSE;
 
 	memset(ExtraFolderData, 0, MAX_EXTRA_FOLDERS * sizeof(LPEXFOLDERDATA));
 
-	/* NPW 9-Feb-2003 - MSVC stat() doesn't like stat() called with an empty
-	 * string
-	 */
-	if (dir[0] == '\0')
-		dir = TEXT(".");
+	CreateDirectoryW(dir, NULL);
 
-	if (_wstat(dir, &stat_buffer) != 0)
-		_wmkdir(dir);
-
-	_wgetcwd(curdir, MAX_PATH);
-
-	_wchdir(dir);
-
-	hLong = _wfindfirst(TEXT("*"), &files);
+	lstrcpy(path, dir);
+	lstrcat(path, TEXT("\\*"));
+	hFile = FindFirstFileW(path, &ffd);
+	if (hFile == INVALID_HANDLE_VALUE)
+		done = TRUE;
 
 	memset(ExtraFolderIcons, 0, sizeof ExtraFolderIcons);
 	numExtraIcons = 0;
 
-	while (!_wfindnext(hLong, &files))
+	while (!done)
 	{
 		int rooticon, subicon;
 		FILE *fp;
 		char buf[256];
 
-		if ((files.attrib & _A_SUBDIR) != 0)
-			continue;
+		if ((ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0)
+			goto skip_it;
 
-		if ((fp = _wfopen(files.name, TEXT("r"))) == NULL)
-			continue;
+		lstrcpy(path, dir);
+		lstrcat(path, TEXT("\\"));
+		lstrcat(path, ffd.cFileName);
+		if ((fp = wfopen(path, TEXT("r"))) == NULL)
+			goto skip_it;
 
 		rooticon = 0;
 		subicon = 0;
@@ -2416,11 +2416,16 @@ static int InitExtraFolders(void)
 		}
 		fclose(fp);
 
-		if (RegistExtraFolder(files.name, &ExtraFolderData[count], UI_MSG_EXTRA + count, rooticon, subicon))
+		if (RegistExtraFolder(ffd.cFileName, &ExtraFolderData[count], UI_MSG_EXTRA + count, rooticon, subicon))
 			count++;
+
+skip_it:
+		done = !FindNextFileW(hFile, &ffd);
 	}
 
-	_wchdir(curdir);
+	if (hFile != INVALID_HANDLE_VALUE)
+		FindClose(hFile);
+
 	return count;
 }
 
@@ -2484,7 +2489,7 @@ BOOL TryAddExtraFolderAndChildren(int parent_index)
 
 	swprintf(fname, TEXT("%s\\%s.ini"), GetFolderDir(), ExtraFolderData[id]->m_szTitle);
 
-	fp = _wfopen(fname, TEXT("r"));
+	fp = wfopen(fname, TEXT("r"));
 	if (fp == NULL)
 		return FALSE;
 
@@ -2746,7 +2751,7 @@ BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder)
 	snwprintf(fname, ARRAY_LENGTH(fname),
 		TEXT("%s\\%s.ini"), folder_dirw, extra_folder->m_szTitle);
 
-	fp = _wfopen(fname, TEXT("wt"));
+	fp = wfopen(fname, TEXT("wt"));
 	if (fp == NULL)
 	   error = TRUE;
 	else

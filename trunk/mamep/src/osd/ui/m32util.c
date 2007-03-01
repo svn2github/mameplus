@@ -562,22 +562,22 @@ int GetPatchCount(const char *game_name, const char *patch_name)
 
 	if (game_name && patch_name)
 	{
-		struct _wfinddata_t c_file;
-		long hFile;
 		WCHAR szFilename[MAX_PATH];
+		WIN32_FIND_DATAW ffd;
+		HANDLE hFile;
 
 		swprintf(szFilename, TEXT("%s\\%s\\%s.dat"), GetPatchDir(), _Unicode(game_name), _Unicode(patch_name));
-		hFile = _wfindfirst(szFilename, &c_file);
-		if (hFile != -1L)
+		hFile = FindFirstFileW(szFilename, &ffd);
+		if (hFile != INVALID_HANDLE_VALUE)
 		{
 			int Done = 0;
 
 			while (!Done)
 			{
 				Count++;
-				Done = _wfindnext(hFile, &c_file);
+				Done = !FindNextFileW(hFile, &ffd);
 			}
-			_findclose(hFile);
+			FindClose(hFile);
 		}
 	}
 	return Count;
@@ -585,13 +585,13 @@ int GetPatchCount(const char *game_name, const char *patch_name)
 
 int GetPatchFilename(char *patch_name, const char *game_name, const int patch_index)
 {
-	struct _wfinddata_t c_file;
-	long hFile;
+	WIN32_FIND_DATAW ffd;
+	HANDLE hFile;
 	WCHAR szFilename[MAX_PATH];
 
 	swprintf(szFilename, TEXT("%s\\%s\\*.dat"), GetPatchDir(), _Unicode(game_name));
-	hFile = _wfindfirst(szFilename, &c_file);
-	if (hFile != -1L)
+	hFile = FindFirstFileW(szFilename, &ffd);
+	if (hFile != INVALID_HANDLE_VALUE)
 	{
 		int Done = 0;
 		int Count = 0;
@@ -600,14 +600,14 @@ int GetPatchFilename(char *patch_name, const char *game_name, const int patch_in
 		{
 			if (Count == patch_index)
 			{
-				strcpy(patch_name, _String(c_file.name));
+				strcpy(patch_name, _String(ffd.cFileName));
 				patch_name[strlen(patch_name)-4] = 0;	// To trim the ext ".dat"
 				break;
 			}
 			Count++;
-			Done = _wfindnext(hFile, &c_file);
+			Done = !FindNextFileW(hFile, &ffd);
 		}
-		_findclose(hFile);
+		FindClose(hFile);
 		return -1;
 	}
 	return 0;
@@ -695,7 +695,7 @@ LPWSTR GetPatchDesc(const char *game_name, const char *patch_name)
 
 	swprintf(szFilename, TEXT("%s\\%s\\%s.dat"), GetPatchDir(), _Unicode(game_name), _Unicode(patch_name));
 
-	if ((fp = _wfopen(szFilename, TEXT("r"))) != NULL)
+	if ((fp = wfopen(szFilename, TEXT("r"))) != NULL)
 	{
 		/* Get localized desc */
 		desc = GetPatchDescByLangcode(fp, GetLangcode());

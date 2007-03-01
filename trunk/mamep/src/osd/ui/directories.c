@@ -678,17 +678,12 @@ static BOOL Directories_OnEndLabelEditW(HWND hDlg, NMHDR* pNMHDR)
 
 	if (pItem->pszText != NULL)
 	{
-		struct _stat file_stat;
-
 		/* Don't allow empty entries. */
 		if (!lstrcmp(pItem->pszText, TEXT("")))
-		{
 			return FALSE;
-		}
 
 		/* Check validity of edited directory. */
-		if (_wstat(pItem->pszText, &file_stat) == 0
-		&&	(file_stat.st_mode & S_IFDIR))
+		if (GetFileAttributes(pItem->pszText) & FILE_ATTRIBUTE_DIRECTORY)
 		{
 			bResult = TRUE;
 		}

@@ -21,10 +21,14 @@
 ***************************************************************************/
 #define WIN32_LEAN_AND_MEAN
 #define UNICODE
+
+#ifdef _MSC_VER
 #if _MSC_VER >= 1400
 // mamep:for VC2005
 #define _CRT_NON_CONFORMING_SWPRINTFS 
 #endif
+#endif
+
 #define NONAMELESSUNION 1
 #include <windows.h>
 #include <windowsx.h>

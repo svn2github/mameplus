@@ -40,5 +40,7 @@ BOOL ComboBox_SetTextA(HWND hwndCtl, LPCSTR lpsz);
 #undef GetModuleHandle
 #define GetModuleHandle GetModuleHandleA
 
+FILE *wfopen(const WCHAR *, const WCHAR *);
+
 WCHAR *w_lang_message(int msgcat, const WCHAR *str);
-char *mb_lang_message(int msgcat, const char *str);
+//char *mb_lang_message(int msgcat, const char *str);

@@ -1544,7 +1544,7 @@ void SetIniDir(const WCHAR* path)
 			LoadGameOptions(i);
 	}
 
-	_wmkdir(path);
+	CreateDirectoryW(path, NULL);
 }
 
 const WCHAR* GetCtrlrDir(void)
@@ -2826,7 +2826,7 @@ static void generate_default_ctrlr(void)
 
 	if (DoCreate)
 	{
-		_wmkdir(ctrlrpath);
+		CreateDirectoryW(ctrlrpath, NULL);
 
 		filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
 		if (filerr == FILERR_NONE)
@@ -3524,11 +3524,11 @@ static int options_save_driver_config(int driver_index)
 	if (driver_variables[driver_index].use_default)
 #endif /* USE_IPS */
 	{
-		_wunlink(fname);
+		DeleteFileW(fname);
 		return 0;
 	}
 
-	_wmkdir(settings.inipath);
+	CreateDirectoryW(settings.inipath, NULL);
 
 	stemp = utf8_from_wstring(fname);
 	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
@@ -3579,11 +3579,11 @@ static int options_save_alt_config(alt_options_type *alt_option)
 	if (alt_option->variable->use_default && !alt_option->has_bios)
 #endif /* USE_IPS */
 	{
-		_wunlink(fname);
+		DeleteFileW(fname);
 		return 0;
 	}
 
-	_wmkdir(settings.inipath);
+	CreateDirectoryW(settings.inipath, NULL);
 
 	stemp = utf8_from_wstring(fname);
 	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
@@ -3611,8 +3611,10 @@ static int options_save_winui_config(void)
 	WCHAR fname[MAX_PATH];
 	char *stemp;
 
+	CreateDirectoryW(settings.inipath, NULL);
+
 	lstrcpy(fname, settings.inipath);
-	lstrcat(fname, TEXT(PATH_SEPARATOR) TEXT_WINUI_INI);
+	lstrcat(fname, strlower(TEXT(PATH_SEPARATOR) TEXT_WINUI_INI));
 
 	stemp = utf8_from_wstring(fname);
 	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);

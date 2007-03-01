@@ -31,6 +31,7 @@
 #endif
 
 #define snwprintf _snwprintf
+
 #if _MSC_VER >= 1400
 // mamep:for VC2005
 #define _CRT_NON_CONFORMING_SWPRINTFS 
@@ -1350,10 +1351,23 @@ HICON FormatICOInMemoryToHICON(PBYTE ptrBuffer, UINT nBufferSize)
 	return hIcon;
 }
 
+static BOOL isFileExist(const WCHAR *fname)
+{
+	WIN32_FIND_DATAW FindData;
+	HANDLE hFile;
+
+	hFile = FindFirstFileW(fname, &FindData);
+	if (hFile == INVALID_HANDLE_VALUE)
+		return FALSE;
+
+	FindClose(hFile);
+
+	return !(FindData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY);
+}
+
 HICON LoadIconFromFile(const char *iconname)
 {
 	HICON hIcon = 0;
-	struct _stat file_stat;
 	WCHAR *iconnamew = _Unicode(iconname);
 	WCHAR tmpStr[MAX_PATH];
 	char *stemp;
@@ -1362,15 +1376,15 @@ HICON LoadIconFromFile(const char *iconname)
 	zip_error ziperr;
 
 	swprintf(tmpStr, TEXT("%s") TEXT(PATH_SEPARATOR) TEXT("%s.ico"), GetIconsDir(), iconnamew);
-	if (_wstat(tmpStr, &file_stat) == 0 && (hIcon = ExtractIconW(hInst, tmpStr, 0)) != 0)
+	if (isFileExist(tmpStr) && (hIcon = ExtractIconW(hInst, tmpStr, 0)) != 0)
 		return hIcon;
 
 	swprintf(tmpStr, TEXT("%s") TEXT(PATH_SEPARATOR) TEXT("%s.ico"), GetImgDir(), iconnamew);
-	if (_wstat(tmpStr, &file_stat) == 0 && (hIcon = ExtractIconW(hInst, tmpStr, 0)) != 0)
+	if (isFileExist(tmpStr) && (hIcon = ExtractIconW(hInst, tmpStr, 0)) != 0)
 		return hIcon;
 
 	swprintf(tmpStr, TEXT("%s") TEXT(PATH_SEPARATOR) TEXT("icons.zip"), GetIconsDir());
-	if (_wstat(tmpStr, &file_stat) != 0)
+	if (!isFileExist(tmpStr))
 		return NULL;
 
 	stemp = utf8_from_wstring(tmpStr);
@@ -2028,8 +2042,8 @@ static void ResetBackground(const WCHAR *szFile)
 
 static void RandomSelectBackground(void)
 {
-	struct _wfinddata_t c_file;
-	long hFile;
+	WIN32_FIND_DATAW ffd;
+	HANDLE hFile;
 	WCHAR szFile[MAX_PATH];
 	int count=0;
 	const WCHAR *szDir = GetBgDir();
@@ -2040,32 +2054,32 @@ static void RandomSelectBackground(void)
 
 	lstrcpy(szFile, szDir);
 	lstrcat(szFile, TEXT("\\*.bmp"));
-	hFile = _wfindfirst(szFile, &c_file);
-	if (hFile != -1L)
+	hFile = FindFirstFileW(szFile, &ffd);
+	if (hFile != INVALID_HANDLE_VALUE)
 	{
 		int Done = 0;
 		while (!Done && count < MAX_BGFILES)
 		{
-			memcpy(buf + count * _MAX_FNAME, c_file.name, _MAX_FNAME * sizeof (*buf));
+			memcpy(buf + count * _MAX_FNAME, ffd.cFileName, _MAX_FNAME * sizeof (*buf));
 			count++;
-			Done = _wfindnext(hFile, &c_file);
+			Done = !FindNextFileW(hFile, &ffd);
 		}
-		_findclose(hFile);
+		FindClose(hFile);
 	}
 
 	lstrcpy(szFile, szDir);
 	lstrcat(szFile, TEXT("\\*.png"));
-	hFile = _wfindfirst(szFile, &c_file);
-	if (hFile != -1L)
+	hFile = FindFirstFileW(szFile, &ffd);
+	if (hFile != INVALID_HANDLE_VALUE)
 	{
 		int Done = 0;
 		while (!Done && count < MAX_BGFILES)
 		{
-			memcpy(buf + count * _MAX_FNAME, c_file.name, _MAX_FNAME * sizeof (*buf));
+			memcpy(buf + count * _MAX_FNAME, ffd.cFileName, _MAX_FNAME * sizeof (*buf));
 			count++;
-			Done = _wfindnext(hFile, &c_file);
+			Done = !FindNextFileW(hFile, &ffd);
 		}
-		_findclose(hFile);
+		FindClose(hFile);
 	}
 
 	if (count)
@@ -4530,7 +4544,7 @@ static int MMO2LST(void)
 		FILE* fp = NULL;
 		int i;
 
-		fp = _wfopen(filename, TEXT("wt"));
+		fp = wfopen(filename, TEXT("wt"));
 		if (fp == NULL)
 		{
 			SetStatusBarTextFW(0, _UIW(TEXT("Could not create '%s'")), filename);

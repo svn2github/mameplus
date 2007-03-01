@@ -635,6 +635,19 @@ BOOL ComboBox_SetTextA(HWND hwndCtl, LPCSTR lpsz)
 }
 
 
+#undef _wfopen
+FILE *wfopen(const WCHAR *fname, const WCHAR *mode)
+{
+	if (OnNT())
+		return _wfopen(fname, mode);
+	else
+	{
+		const char *_fname = _String(fname);
+		const char *_mode = _String(mode);
+		return fopen(_fname, _mode);
+	}
+}
+
 
 static int wcmp(const void *p1, const void *p2)
 {
