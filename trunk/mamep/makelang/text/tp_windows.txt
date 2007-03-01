@@ -670,18 +670,6 @@ Invalid %s value %s; reverting to keyboard\n
 Invalid video value %s; reverting to gdi\n
 
 
-# osd/windows/input.c: 2373, 2416
-J%d %s
-
-
-# osd/windows/input.c: 2385
-J%d %s +
-
-
-# osd/windows/input.c: 2383
-J%d %s -
-
-
 # osd/windows/input.c: 2442
 J%d %s D
 
@@ -956,10 +944,6 @@ aspect ratio of the second screen; 'auto' here will try to make a best guess
 
 # osd/windows/config.c: 253
 aspect ratio of the third screen; 'auto' here will try to make a best guess
-
-
-# osd/windows/config.c: 237, 238, 239, 240, 242, 243, 244, 245, 247, 248, 249, 250, 252, 253, 254, 255, 257, 258, 259, 260, 353, 1015, 1025 osd/windows/video.c: 435, 542, 1111, 1113, 1134, 1136 osd/windows/window.c: 840, 840, 844
-auto
 
 
 # osd/windows/config.c: 149

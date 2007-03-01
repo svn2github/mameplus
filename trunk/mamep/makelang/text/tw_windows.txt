@@ -40,7 +40,7 @@
 
 # osd/windows/fronthlp.c: 634
  NO GOOD DUMP KNOWN
- 已知尚無正確的
+ 已知尚無正確的 DUMP
 
 # osd/windows/fronthlp.c: 805
 %d romsets found, %d were OK.\n
@@ -616,7 +616,7 @@ Illegal value for %s = %s\n
 
 # osd/windows/config.c: 1076
 Input file is for game '%s', not for current game '%s'\n
-輸入檔是屬於遊戲 '%s'，不是目前的遊戲 '%s'\n
+輸入檔是屬於遊戲 '%s'，而不是目前的遊戲 '%s'\n
 
 # osd/windows/input.c: 2368
 Input:  Axis %d (%s)%s\n
@@ -669,18 +669,6 @@ Invalid %s value %s; reverting to keyboard\n
 # osd/windows/video.c: 1035
 Invalid video value %s; reverting to gdi\n
 無效的視訊值 %s; 還原成 gdi\n
-
-# osd/windows/input.c: 2373, 2416
-J%d %s
-J%d %s
-
-# osd/windows/input.c: 2385
-J%d %s +
-J%d %s +
-
-# osd/windows/input.c: 2383
-J%d %s -
-J%d %s -
 
 # osd/windows/input.c: 2442
 J%d %s D
@@ -958,10 +946,6 @@ aspect ratio of the second screen; 'auto' here will try to make a best guess
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 第三個畫面的長寬比例; 設為 auto 將試著找出最佳設定
 
-# osd/windows/config.c: 237, 238, 239, 240, 242, 243, 244, 245, 247, 248, 249, 250, 252, 253, 254, 255, 257, 258, 259, 260, 353, 1015, 1025 osd/windows/video.c: 435, 542, 1111, 1113, 1134, 1136 osd/windows/window.c: 840, 840, 844
-auto
-auto
-
 # osd/windows/config.c: 149
 automatic pause when playback is finished
 輸入檔播放結束時自動暫停
@@ -1132,11 +1116,11 @@ enable automatic restore at startup, and automatic save at exit time
 
 # osd/windows/config.c: 285
 enable backdrops if artwork is enabled and available
-啟用背景圖 (如果 Artwork 已啟用且有效)
+啟用背景圖 (如果 Artwork 已啟用且可用)
 
 # osd/windows/config.c: 287
 enable bezels if artwork is enabled and available
-啟用外框圖 (如果 Artwork 已啟用且有效)
+啟用外框圖 (如果 Artwork 已啟用且可用)
 
 # osd/windows/config.c: 233
 enable bilinear filtering on screen output
@@ -1176,7 +1160,7 @@ enable multithreading; this enables rendering and blitting on a separate thread
 
 # osd/windows/config.c: 286
 enable overlays if artwork is enabled and available
-啟用覆疊圖 (如果 Artwork 已啟用且有效)
+啟用覆疊圖 (如果 Artwork 已啟用且可用)
 
 # osd/windows/config.c: 306
 enable pointing stick input
@@ -1248,23 +1232,23 @@ error: invalid value for palette: %s\n
 
 # osd/windows/config.c: 237
 explicit name of all screen; 'auto' here will try to make a best guess
-明確指定全部畫面名稱; 設為 auto 將試著找出最佳設定
+全部畫面的詳細名稱; 設為 auto 將試著找出最佳設定
 
 # osd/windows/config.c: 242
 explicit name of the first screen; 'auto' here will try to make a best guess
-明確指定第一個畫面名稱; 設為 auto 將試著找出最佳設定
+第一個畫面的詳細名稱; 設為 auto 將試著找出最佳設定
 
 # osd/windows/config.c: 257
 explicit name of the fourth screen; 'auto' here will try to make a best guess
-明確指定第四個畫面名稱; 設為 auto 將試著找出最佳設定
+第四個畫面的詳細名稱; 設為 auto 將試著找出最佳設定
 
 # osd/windows/config.c: 247
 explicit name of the second screen; 'auto' here will try to make a best guess
-明確指定第二個畫面名稱; 設為 auto 將試著找出最佳設定
+第二個畫面的詳細名稱; 設為 auto 將試著找出最佳設定
 
 # osd/windows/config.c: 252
 explicit name of the third screen; 'auto' here will try to make a best guess
-明確指定第三個畫面名稱; 設為 auto 將試著找出最佳設定
+第三個畫面的詳細名稱; 設為 auto 將試著找出最佳設定
 
 # osd/windows/config.c: 223
 flip screen left-right
@@ -1288,11 +1272,11 @@ font special color
 
 # osd/windows/video.c: 430
 frame:%d %s%2d%4d%%%4d/%d fps
-frame:%d %s%2d%4d%%%4d/%d fps
+畫格:%d %s%2d%4d%%%4d/%d fps
 
 # osd/windows/video.c: 426
 frame:%d Paused
-frame:%d 暫停
+畫格:%d 暫停
 
 # osd/windows/video.c: 435
 fskp
@@ -1404,43 +1388,43 @@ preconfigure for specified controller
 
 # osd/windows/config.c: 239
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
-設定全部畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
+全部畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
 # osd/windows/config.c: 244
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-設定第一個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
+第一個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
 # osd/windows/config.c: 259
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-設定第四個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
+第四個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
 # osd/windows/config.c: 249
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-設定第二個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
+第二個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
 # osd/windows/config.c: 254
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-設定第三個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
+第三個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
 # osd/windows/config.c: 240
 preferred view for all screens
-設定全部畫面的檢視方式
+全部畫面的檢視方式
 
 # osd/windows/config.c: 245
 preferred view for the first screen
-設定第一個畫面的檢視方式
+第一個畫面的檢視方式
 
 # osd/windows/config.c: 260
 preferred view for the fourth screen
-設定第四個畫面的檢視方式
+第四個畫面的檢視方式
 
 # osd/windows/config.c: 250
 preferred view for the second screen
-設定第二個畫面的檢視方式
+第二個畫面的檢視方式
 
 # osd/windows/config.c: 255
 preferred view for the third screen
-設定第三個畫面的檢視方式
+第三個畫面的檢視方式
 
 # osd/windows/config.c: 147
 quit game with confirmation

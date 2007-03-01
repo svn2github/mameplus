@@ -2148,7 +2148,7 @@ static void update_joystick_axes(void)
 			{
 				static const char *axistypes[] = { "invalid", "digital", "analog" };
 				joystick_type[joynum][axis] = newtype;
-				verbose_printf(_WINDOWS("Input: Joystick %d axis %d is now %s\n"), joynum, axis, axistypes[newtype]);
+				verbose_printf(_WINDOWS("Input: Joystick %d axis %d is now %s\n"), joynum, axis, _WINDOWS(axistypes[newtype]));
 			}
 		}
 }
@@ -2365,7 +2365,7 @@ static void init_joycodes(void)
 				char *utf8_name = utf8_from_tstring(instance.tszName);
 				if (utf8_name != NULL)
 				{
-					verbose_printf("Input:  Axis %d (%s)%s\n", axis, utf8_name, joystick_digital[stick][axis] ? " - digital" : "");
+					verbose_printf(_WINDOWS("Input:  Axis %d (%s)%s\n"), axis, utf8_name, joystick_digital[stick][axis] ? _WINDOWS(" - digital") : "");
 
 					// add analog axis
 					if (!joystick_digital[stick][axis])
@@ -2435,19 +2435,19 @@ static void init_joycodes(void)
 				if (utf8_name != NULL)
 				{
 					// add up direction
-					sprintf(tempname, "J%d %s U", stick + 1, utf8_name);
+					sprintf(tempname, _WINDOWS("J%d %s U"), stick + 1, utf8_name);
 					add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_POV_UP, pov), CODE_OTHER_DIGITAL);
 
 					// add down direction
-					sprintf(tempname, "J%d %s D", stick + 1, utf8_name);
+					sprintf(tempname, _WINDOWS("J%d %s D"), stick + 1, utf8_name);
 					add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_POV_DOWN, pov), CODE_OTHER_DIGITAL);
 
 					// add left direction
-					sprintf(tempname, "J%d %s L", stick + 1, utf8_name);
+					sprintf(tempname, _WINDOWS("J%d %s L"), stick + 1, utf8_name);
 					add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_POV_LEFT, pov), CODE_OTHER_DIGITAL);
 
 					// add right direction
-					sprintf(tempname, "J%d %s R", stick + 1, utf8_name);
+					sprintf(tempname, _WINDOWS("J%d %s R"), stick + 1, utf8_name);
 					add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_POV_RIGHT, pov), CODE_OTHER_DIGITAL);
 
 					free(utf8_name);

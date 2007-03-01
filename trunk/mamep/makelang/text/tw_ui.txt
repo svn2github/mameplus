@@ -2424,7 +2424,7 @@ Use Local Language Game List
 
 # osd/ui/mame32.rc: 771
 Use RDTSC timing system
-使用 RDTSC 時序系統
+使用 RDTSC 計時系統
 
 # osd/ui/mame32.rc: 982
 Use TreeView in property pages

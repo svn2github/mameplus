@@ -678,7 +678,7 @@ BCD
 BIOS
 BIOS
 
-# emu/ui.c: 2398
+# emu/ui.c: 2503
 Beam Width
 光束寬度
 
@@ -1298,7 +1298,7 @@ Error: Failed to save state
 Error: Unable to save state due to illegal registrations. See error.log for details.
 錯誤: 無法儲存狀態，因為非法記錄。請查閱\ error.log 以取得詳細資料。
 
-# emu/ui.c: 1447
+# emu/ui.c: 1552
 Error: illegal caption file
 錯誤: 非法字幕檔
 
@@ -1538,11 +1538,11 @@ Home
 Hong Kong
 香港版
 
-# emu/ui.c: 2349
+# emu/ui.c: 2454
 Horiz position
 水平位置
 
-# emu/ui.c: 2315
+# emu/ui.c: 2420
 Horiz stretch
 水平延展
 
@@ -1850,11 +1850,11 @@ Load Selected Card
 Load State
 載入狀態
 
-# emu/ui.c: 1962
+# emu/ui.c: 2067
 Load cancelled
 已取消載入
 
-# emu/ui.c: 1993
+# emu/ui.c: 2098
 Load from position %c
 載入位置 %c
 
@@ -3694,15 +3694,15 @@ Previous values already restored
 Program Space
 程式容量
 
-# emu/ui.c: 2007
+# emu/ui.c: 2112
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 離開遊戲?\n\n按一下確定鍵離開遊戲，\n按一下取消鍵繼續執行。
 
-# emu/ui.c: 1844
+# emu/ui.c: 1949
 REC START
 錄製開始
 
-# emu/ui.c: 1849
+# emu/ui.c: 1954
 REC STOP
 錄製停止
 
@@ -3850,11 +3850,11 @@ Save Snapshot
 Save State
 儲存狀態
 
-# emu/ui.c: 1960
+# emu/ui.c: 2065
 Save cancelled
 已取消儲存
 
-# emu/ui.c: 1988
+# emu/ui.c: 2093
 Save to position %c
 儲存位置 %c
 
@@ -3866,7 +3866,7 @@ Screen
 Screen #
 畫面 #
 
-# emu/ui.c: 2248, 2265, 2282, 2298, 2315, 2332, 2349, 2366
+# emu/ui.c: 2353, 2370, 2387, 2403, 2420, 2437, 2454, 2471
 Screen %d %s %.3f
 畫面 %d %s %.3f
 
@@ -3934,11 +3934,11 @@ Select Search
 Select a value
 選擇一個值
 
-# emu/ui.c: 1953
+# emu/ui.c: 2058
 Select position to load from
 選擇要載入的位置
 
-# emu/ui.c: 1951
+# emu/ui.c: 2056
 Select position to save to
 選擇要儲存的位置
 
@@ -4682,11 +4682,11 @@ Vector Game
 Version
 版本
 
-# emu/ui.c: 2366
+# emu/ui.c: 2471
 Vert position
 垂直位置
 
-# emu/ui.c: 2332
+# emu/ui.c: 2437
 Vert stretch
 垂直延展
 
