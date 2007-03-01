@@ -91,4 +91,4 @@
 #define _wstat  	!win9x_doesnt_has_it!
 #define _wunlink	!win9x_doesnt_has_it!
 #define _wfopen 	!win9x_doesnt_has_it!
-#define _wgetcwd()	!win9x_doesnt_has_it!
+#define _wgetcwd	!win9x_doesnt_has_it!
