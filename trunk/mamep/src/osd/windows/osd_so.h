@@ -62,13 +62,15 @@
 		extern SHAREDOBJ_FUNC(const char *)cputype_shortname(int cputype);
 
 		#include "datafile.h"
-		extern SHAREDOBJ_FUNC(int) load_driver_history (const game_driver *drv, char *buffer, int bufsize);
+		extern SHAREDOBJ_FUNC(void) datafile_init(void);
+		extern SHAREDOBJ_FUNC(void) datafile_exit(void);
+		extern SHAREDOBJ_FUNC(int)  load_driver_history (const game_driver *drv, char *buffer, int bufsize);
 		#ifdef STORY_DATAFILE
-		extern SHAREDOBJ_FUNC(int) load_driver_story (const game_driver *drv, char *buffer, int bufsize);
+		extern SHAREDOBJ_FUNC(int)  load_driver_story (const game_driver *drv, char *buffer, int bufsize);
 		#endif /* STORY_DATAFILE */
-		extern SHAREDOBJ_FUNC(int) load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize);
-		extern SHAREDOBJ_FUNC(int) load_driver_drivinfo (const game_driver *drv, char *buffer, int bufsize);
-		extern SHAREDOBJ_FUNC(int) load_driver_statistics (char *buffer, int bufsize);
+		extern SHAREDOBJ_FUNC(int)  load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize);
+		extern SHAREDOBJ_FUNC(int)  load_driver_drivinfo (const game_driver *drv, char *buffer, int bufsize);
+		extern SHAREDOBJ_FUNC(int)  load_driver_statistics (char *buffer, int bufsize);
 
 		extern SHAREDOBJ_DATA const char *localized_directory;
 		extern SHAREDOBJ_DATA const char *history_filename;

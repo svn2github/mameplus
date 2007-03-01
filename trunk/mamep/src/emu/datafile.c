@@ -108,8 +108,47 @@ typedef struct
 	const char *name;
 	int index;
 } driver_data_type;
+
+typedef struct
+{
+	const char *srcdriver;
+	int index;
+} srcdriver_data_type;
+
 static driver_data_type *sorted_drivers = NULL;
+static srcdriver_data_type *sorted_srcdrivers = NULL;
+
 static int num_games;
+
+static void flush_index(void);
+
+
+/****************************************************************************
+ *      startup and shutdown functions
+ ****************************************************************************/
+
+void datafile_init(void)
+{
+	while (drivers[num_games] != NULL)
+		num_games++;
+}
+
+void datafile_exit(void)
+{
+	flush_index();
+
+	if (sorted_drivers == NULL)
+	{
+		free(sorted_drivers);
+		sorted_drivers = NULL;
+	}
+
+	if (sorted_srcdrivers)
+	{
+		free(sorted_srcdrivers);
+		sorted_srcdrivers = NULL;
+	}
+}
 
 
 /**************************************************************************
@@ -168,15 +207,6 @@ static int GetGameNameIndex(const char *name)
  *      Create an array with sorted sourcedrivers for the function
  *      index_datafile_drivinfo to speed up the datafile access
  ****************************************************************************/
-
-typedef struct
-{
-	const char *srcdriver;
-	int index;
-} srcdriver_data_type;
-static srcdriver_data_type *sorted_srcdrivers = NULL;
-static int num_games;
-
 
 static int SrcDriverDataCompareFunc(const void *arg1,const void *arg2)
 {
@@ -707,10 +737,6 @@ static int index_datafile (struct tDatafileIndex **_index)
 	int count = 0;
 	UINT32 token = TOKEN_SYMBOL;
 
-	num_games = 0;
-	while (drivers[num_games] != NULL)
-		num_games++;
-
 	/* rewind file */
 	if (ParseSeek (0L, SEEK_SET)) return 0;
 
@@ -877,15 +903,51 @@ static void free_menuidx(struct tMenuIndex **_index)
 }
 #endif /* CMD_LIST */
 
+static void flush_index(void)
+{
+	int i;
+
+	for (i = 0; i < FILE_TYPEMAX; i++)
+	{
+		if (i & FILE_ROOT)
+			continue;
+
+		if (hist_idx[i])
+		{
+			free(hist_idx[i]);
+			hist_idx[i] = 0;
+		}
+
+#ifdef STORY_DATAFILE
+		if (story_idx[i])
+		{
+			free(story_idx[i]);
+			story_idx[i] = 0;
+		}
+#endif /* STORY_DATAFILE */
+
+		if (mame_idx[i])
+		{
+			free(mame_idx[i]);
+			mame_idx[i] = 0;
+		}
+
+#ifdef CMD_LIST
+		if (cmnd_idx[i])
+		{
+			free_menuidx(&menu_idx);
+			free(cmnd_idx[i]);
+			cmnd_idx[i] = 0;
+		}
+#endif /* CMD_LIST */
+	}
+}
+
 static int index_datafile_drivinfo (struct tDatafileIndex **_index)
 {
 	struct tDatafileIndex *idx;
 	int count = 0;
 	UINT32 token = TOKEN_SYMBOL;
-
-	num_games = 0;
-	while (drivers[num_games] != NULL)
-		num_games++;
 
 	/* rewind file */
 	if (ParseSeek (0L, SEEK_SET)) return 0;
@@ -1354,46 +1416,9 @@ static void flush_index_if_needed(void)
 	static int oldLangCode = -1;
 
 	if (oldLangCode != options.langcode)
-	{
-		int i;
+		flush_index();
 
-		for (i = 0; i < FILE_TYPEMAX; i++)
-		{
-			if (i & FILE_ROOT)
-				continue;
-
-			if (hist_idx[i])
-			{
-				free(hist_idx[i]);
-				hist_idx[i] = 0;
-			}
-
-#ifdef STORY_DATAFILE
-			if (story_idx[i])
-			{
-				free(story_idx[i]);
-				story_idx[i] = 0;
-			}
-#endif /* STORY_DATAFILE */
-
-			if (mame_idx[i])
-			{
-				free(mame_idx[i]);
-				mame_idx[i] = 0;
-			}
-
-#ifdef CMD_LIST
-			if (cmnd_idx[i])
-			{
-				free_menuidx(&menu_idx);
-				free(cmnd_idx[i]);
-				cmnd_idx[i] = 0;
-			}
-#endif /* CMD_LIST */
-		}
-
-		oldLangCode = options.langcode;
-	}
+	oldLangCode = options.langcode;
 }
 
 /**************************************************************************

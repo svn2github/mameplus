@@ -1922,6 +1922,28 @@ static void build_driversw(void)
 	}
 }
 
+static void free_driversw(void)
+{
+	int i;
+
+	for (i = 0; i < game_count; i++)
+	{
+		free(driversw[i]);
+
+		free(driversw[i]->name);
+		free(driversw[i]->description);
+		free(driversw[i]->modify_the);
+
+		free(driversw[i]->manufacturer);
+		free(driversw[i]->year);
+
+		free(driversw[i]->source_file);
+	}
+
+	free(driversw);
+	driversw = NULL;
+}
+
 static void ChangeLanguage(int id)
 {
 	int nGame = Picker_GetSelectedItem(hwndList);
@@ -2183,6 +2205,8 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 
 	/* initialize sound information */
 	sndintrf_init(NULL);
+
+	datafile_init();
 
 	wndclass.style         = CS_HREDRAW | CS_VREDRAW;
 	wndclass.lpfnWndProc   = MameWindowProc;
@@ -2529,6 +2553,8 @@ static void Win32UI_exit(void)
 {
 	DragAcceptFiles(hMain, FALSE);
 
+	datafile_exit();
+
 	if (g_bDoBroadcast == TRUE)
 	{
         ATOM a = GlobalAddAtomA("");
@@ -2598,6 +2624,7 @@ static void Win32UI_exit(void)
 	HelpExit();
 
 	free(sort_index);
+
 	free(driversw);
 
 #ifdef DRIVER_SWITCH

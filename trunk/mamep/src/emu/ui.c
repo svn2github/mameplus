@@ -306,6 +306,8 @@ int ui_init(running_machine *machine)
 	ui_menu_init(machine);
 	ui_gfx_init(machine);
 
+	datafile_init();
+
 	/* reset globals */
 	single_step = FALSE;
 	ui_set_handler(handler_messagebox, 0);
@@ -324,6 +326,8 @@ int ui_init(running_machine *machine)
 
 static void ui_exit(running_machine *machine)
 {
+	datafile_exit();
+
 	/* free the font */
 	if (ui_font != NULL)
 		render_font_free(ui_font);

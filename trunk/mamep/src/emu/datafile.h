@@ -11,6 +11,9 @@
 #ifndef __DATAFILE_H__
 #define __DATAFILE_H__
 
+extern void datafile_init(void);
+extern void datafile_exit(void);
+
 extern int load_driver_history(const game_driver *drv, char *buffer, int bufsize);
 #ifdef STORY_DATAFILE
 extern int load_driver_story(const game_driver *drv, char *buffer, int bufsize);
