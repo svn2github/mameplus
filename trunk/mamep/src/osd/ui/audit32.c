@@ -344,8 +344,8 @@ INT_PTR CALLBACK GameAuditDialogProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lPa
 	case WM_TIMER:
 		KillTimer(hDlg, 0);
 		{
-			const WCHAR *lpStatus;
 			int iStatus;
+			const WCHAR *lpStatus;
 
 			iStatus = Mame32VerifyRomSet(rom_index);
 			lpStatus = DriverUsesRoms(rom_index) ? StatusString(iStatus) : _UIW(TEXT("None required"));

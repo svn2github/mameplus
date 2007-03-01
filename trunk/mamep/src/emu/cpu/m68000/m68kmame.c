@@ -60,7 +60,6 @@ static const struct m68k_memory_interface interface_d8 =
 	writelong_d8
 };
 
-
 /****************************************************************************
  * 16-bit data memory interface
  ****************************************************************************/
@@ -366,7 +365,6 @@ static offs_t m68020_dasm(char *buffer, offs_t pc, const UINT8 *oprom, const UIN
 /****************************************************************************
  * M680EC20 section
  ****************************************************************************/
-
 #if HAS_M68EC020
 
 static void m68ec020_init(int index, int clock, const void *config, int (*irqcallback)(int))
@@ -385,6 +383,7 @@ static offs_t m68ec020_dasm(char *buffer, offs_t pc, const UINT8 *oprom, const U
 	return m68k_disassemble_raw(buffer, pc, oprom, opram, M68K_CPU_TYPE_68EC020);
 }
 #endif /* MAME_DEBUG */
+
 #endif /* HAS_M68EC020 */
 
 /****************************************************************************
@@ -489,7 +488,6 @@ static void m68000_set_info(UINT32 state, cpuinfo *info)
 		case CPUINFO_PTR_M68K_TAS_CALLBACK:			m68k_set_tas_instr_callback((int (*)(void))(info->f));		break;
 	}
 }
-
 
 /**************************************************************************
  * Generic get_info
@@ -808,7 +806,6 @@ void m68008c_get_info(UINT32 state, cpuinfo *info)
 
 #endif
 
-
 /**************************************************************************
  * CPU-specific set_info
  **************************************************************************/
@@ -850,6 +847,7 @@ void m68010c_get_info(UINT32 state, cpuinfo *info)
 		default:										m68000c_get_info(state, info);			break;
 	}
 }
+
 #endif
 
 /**************************************************************************
@@ -1089,6 +1087,7 @@ void m68ec020c_get_info(UINT32 state, cpuinfo *info)
 		default:										m68020c_get_info(state, info);			break;
 	}
 }
+
 #endif
 
 /**************************************************************************
@@ -1290,4 +1289,5 @@ void m68040c_get_info(UINT32 state, cpuinfo *info)
 		case CPUINFO_STR_REGISTER + M68K_VBR:			sprintf(info->s, "VBR:%08X", m68k_get_reg(NULL, M68K_REG_VBR)); break;
 	}
 }
+
 #endif
