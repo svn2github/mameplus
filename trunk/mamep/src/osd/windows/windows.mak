@@ -322,7 +322,7 @@ $(WINOBJ)/scale/hlq_mmx.o: $(WINSRC)/scale/hlq.c
 	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -Wno-unused-variable -mmmx -DINTERP_MMX -c $< -o $@
 endif
 
-OSOBJS += $(VCOBJS)
+OSDOBJS += $(VCOBJS)
 CLIOBJS = $(WINOBJ)/climain.o
 
 # add debug-specific files
@@ -335,11 +335,9 @@ endif
 ifeq ($DONT_USE_DLL,)
 # non-UI builds need a stub resource file
 ifeq ($(WINUI),)
-OSOBJS += $(WINOBJ)/mame.res
+OSDOBJS += $(WINOBJ)/mame.res
 endif
 endif
-
-$(LIBOSD): $(OSDOBJS)
 
 # add resource file
 CLIOBJS += $(WINOBJ)/mame.res
@@ -373,6 +371,8 @@ ifneq ($(WINUI),)
 CFLAGS += -DWINUI=1
 include $(WINSRC)/../ui/ui.mak
 endif
+
+$(LIBOSD): $(OSDOBJS)
 
 
 
