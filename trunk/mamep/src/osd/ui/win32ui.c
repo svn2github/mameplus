@@ -31,6 +31,10 @@
 #endif
 
 #define snwprintf _snwprintf
+#if _MSC_VER >= 1400
+// mamep:for VC2005
+#define _CRT_NON_CONFORMING_SWPRINTFS 
+#endif
 #endif
 
 #define WIN32_LEAN_AND_MEAN

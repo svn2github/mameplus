@@ -20,6 +20,10 @@
 
 #define WIN32_LEAN_AND_MEAN
 #define UNICODE
+#if _MSC_VER >= 1400
+// mamep:for VC2005
+#define _CRT_NON_CONFORMING_SWPRINTFS 
+#endif
 #include <windows.h>
 #include <windowsx.h>
 #include <shellapi.h>
