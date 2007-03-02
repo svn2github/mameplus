@@ -7210,7 +7210,7 @@ static void UpdateMenu(HMENU hMenu)
 
 void InitTreeContextMenu(HMENU hTreeMenu)
 {
-	MENUITEMINFOA mii;
+	MENUITEMINFOW mii;
 	HMENU hMenu;
 	int i;
 
@@ -7222,7 +7222,7 @@ void InitTreeContextMenu(HMENU hTreeMenu)
 
 	hMenu = GetSubMenu(hTreeMenu, 0);
 
-	if (GetMenuItemInfoA(hMenu,3,TRUE,&mii) == FALSE)
+	if (GetMenuItemInfoW(hMenu,3,TRUE,&mii) == FALSE)
 	{
 		dprintf("can't find show folders context menu");
 		return;
@@ -7240,17 +7240,17 @@ void InitTreeContextMenu(HMENU hTreeMenu)
 	{
 		mii.fMask = MIIM_TYPE | MIIM_ID;
 		mii.fType = MFT_STRING;
-		mii.dwTypeData = (char *)g_folderData[i].m_lpTitle;
-		mii.cch = strlen(mii.dwTypeData);
+		mii.dwTypeData = (void *)g_folderData[i].m_lpTitle;
+		mii.cch = lstrlen(mii.dwTypeData);
 		mii.wID = ID_CONTEXT_SHOW_FOLDER_START + g_folderData[i].m_nFolderId;
 
 
 		// menu in resources has one empty item (needed for the submenu to setup properly)
 		// so overwrite this one, append after
 		if (i == 0)
-			SetMenuItemInfoA(hMenu,ID_CONTEXT_SHOW_FOLDER_START,FALSE,&mii);
+			SetMenuItemInfoW(hMenu,ID_CONTEXT_SHOW_FOLDER_START,FALSE,&mii);
 		else
-			InsertMenuItemA(hMenu,i,FALSE,&mii);
+			InsertMenuItemW(hMenu,i,FALSE,&mii);
 	}
 
 }
