@@ -2689,12 +2689,28 @@ static void build_default_bios(void)
 				if (default_bios[n].drv == NULL)
 				{
 					int alt_index = bsearch_alt_option(GetFilename(driversw[driver_index]->source_file));
+					const bios_entry *biosinfo;
+					int count;
 
 					assert(0 <= alt_index && alt_index < num_alt_options);
+
+					biosinfo = drivers[driver_index]->bios;
+
+					for (count = 0; !BIOSENTRY_ISEND(&biosinfo[count]); count++)
+						;
+
+					if (count == 1)
+					{
+						dprintf("BIOS: skip %s [%s]", drivers[driver_index]->description, drivers[driver_index]->name);
+						break;
+					}
+					else
+						dprintf("BIOS %d: %d in %s [%s]", n, count, drivers[driver_index]->description, drivers[driver_index]->name);
 
 					default_bios[n].drv = drivers[driver_index];
 					default_bios[n].alt_option = &alt_options[alt_index];
 					default_bios[n].alt_option->has_bios = TRUE;
+
 					break;
 				}
 				else if (default_bios[n].drv == drivers[driver_index])
@@ -2702,7 +2718,6 @@ static void build_default_bios(void)
 			}
 		}
 	}
-
 }
 
 static void build_alt_options(void)
