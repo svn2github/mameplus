@@ -227,32 +227,31 @@ BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type
 	const WCHAR *basedir = NULL;
 	char *fname;
 	char *utf8filename;
-	char *utf8basedir;
 
 	switch (pic_type)
 	{
 	case TAB_SCREENSHOT :
-		basedir = GetImgDir();
+		basedir = GetImgDirs();
 		zip_name = TEXT("snap");
 		break;
 	case TAB_FLYER :
-		basedir = GetFlyerDir();
+		basedir = GetFlyerDirs();
 		zip_name = TEXT("flyers");
 		break;
 	case TAB_CABINET :
-		basedir = GetCabinetDir();
+		basedir = GetCabinetDirs();
 		zip_name = TEXT("cabinets");
 		break;
 	case TAB_MARQUEE :
-		basedir = GetMarqueeDir();
+		basedir = GetMarqueeDirs();
 		zip_name =TEXT( "marquees");
 		break;
 	case TAB_TITLE :
-		basedir = GetTitlesDir();
+		basedir = GetTitlesDirs();
 		zip_name = TEXT("titles");
 		break;
 	case TAB_CONTROL_PANEL :
-		basedir = GetControlPanelDir();
+		basedir = GetControlPanelDirs();
 		zip_name = TEXT("cpanel");
 		break;
 	case BACKGROUND :
@@ -270,19 +269,20 @@ BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type
 		return FALSE;
 	}
 
+	options_set_wstring(OPTION_SNAPSHOT_DIRECTORY, basedir);
+
 	utf8filename = utf8_from_wstring(filename);
-	utf8basedir = utf8_from_wstring(basedir);
 
 	// look for the raw file
-	fname = assemble_4_strings(utf8basedir, PATH_SEPARATOR, utf8filename, ".png");
-	filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &mfile);
+	fname = assemble_2_strings(utf8filename, ".png");
+	filerr = mame_fopen(SEARCHPATH_SCREENSHOT, fname, OPEN_FLAG_READ, &mfile);
 	free(fname);
 
 	if (filerr != FILERR_NONE)
 	{
 		// and look for the zip
-		fname = assemble_6_strings(utf8basedir, PATH_SEPARATOR, utf8filename, PATH_SEPARATOR, utf8filename, ".png");
-		filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &mfile);
+		fname = assemble_4_strings(utf8filename, PATH_SEPARATOR, utf8filename, ".png");
+		filerr = mame_fopen(SEARCHPATH_SCREENSHOT, fname, OPEN_FLAG_READ, &mfile);
 		free(fname);
 	}
 
@@ -290,14 +290,13 @@ BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type
 	{
 		// and look for the zip
 		char *utf8zip_name = utf8_from_wstring(zip_name);
-		fname = assemble_6_strings(utf8basedir, PATH_SEPARATOR, utf8zip_name, PATH_SEPARATOR, utf8filename, ".png");
-		filerr = mame_fopen(SEARCHPATH_RAW, fname, OPEN_FLAG_READ, &mfile);
+		fname = assemble_4_strings(utf8zip_name, PATH_SEPARATOR, utf8filename, ".png");
+		filerr = mame_fopen(SEARCHPATH_SCREENSHOT, fname, OPEN_FLAG_READ, &mfile);
 		free(fname);
 		free(utf8zip_name);
 	}
 
 	free(utf8filename);
-	free(utf8basedir);
 
 	if (filerr != FILERR_NONE)
 		return FALSE;

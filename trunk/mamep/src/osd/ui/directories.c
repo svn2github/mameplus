@@ -262,10 +262,13 @@ static void UpdateDirectoryList(HWND hDlg)
 
 static void Directories_OnSelChange(HWND hDlg)
 {
+	int nType;
+
 	UpdateDirectoryList(hDlg);
 	
-	if (ComboBox_GetCurSel(GetDlgItem(hDlg, IDC_DIR_COMBO)) == 0
-	||	ComboBox_GetCurSel(GetDlgItem(hDlg, IDC_DIR_COMBO)) == 1)
+	nType = ComboBox_GetCurSel(GetDlgItem(hDlg, IDC_DIR_COMBO));
+
+	if (IsMultiDir(nType))
 	{
 		EnableWindow(GetDlgItem(hDlg, IDC_DIR_DELETE), TRUE);
 		EnableWindow(GetDlgItem(hDlg, IDC_DIR_INSERT), TRUE);
@@ -835,7 +838,10 @@ static BOOL BrowseForDirectoryA(HWND hwnd, const WCHAR* pStartDir, WCHAR* pResul
 	if (!SUCCEEDED(SHGetMalloc(&piMalloc)))
 		return FALSE;
 
-	strcpy(startDir, _String(pStartDir));
+	if (pStartDir)
+		strcpy(startDir, _String(pStartDir));
+	else
+		*startDir = '\0';
 
 	Info.hwndOwner		= hwnd;
 	Info.pidlRoot		= NULL;
@@ -877,7 +883,10 @@ static BOOL BrowseForDirectoryW(HWND hwnd, const WCHAR* pStartDir, WCHAR* pResul
 	if (!SUCCEEDED(SHGetMalloc(&piMalloc)))
 		return FALSE;
 
-	lstrcpy(startDir, pStartDir);
+	if (pStartDir)
+		lstrcpy(startDir, pStartDir);
+	else
+		*startDir = '\0';
 
 	Info.hwndOwner		= hwnd;
 	Info.pidlRoot		= NULL;

@@ -104,37 +104,37 @@ FILTER_ITEM g_filterList[] =
 
 const DIRECTORYINFO g_directoryInfo[] =
 {
-	{ TEXT("ROMs"),                  GetRomDirs,         SetRomDirs,         TRUE,  DIRDLG_ROMS },
-	{ TEXT("Samples"),               GetSampleDirs,      SetSampleDirs,      TRUE,  DIRDLG_SAMPLES },
-	{ TEXT("Ini Files"),             GetIniDir,          SetIniDir,          FALSE, DIRDLG_INI },
-	{ TEXT("Translation Files"),     GetTranslationDir,  SetTranslationDir,  FALSE, 0 },
-	{ TEXT("Localized Files"),       GetLocalizedDir,    SetLocalizedDir,    FALSE, 0 },
+	{ TEXT("ROMs"),                  GetRomDirs,          SetRomDirs,          TRUE,  DIRDLG_ROMS },
+	{ TEXT("Samples"),               GetSampleDirs,       SetSampleDirs,       TRUE,  DIRDLG_SAMPLES },
+	{ TEXT("Ini Files"),             GetIniDir,           SetIniDir,           FALSE, DIRDLG_INI },
+	{ TEXT("Translation Files"),     GetTranslationDir,   SetTranslationDir,   FALSE, 0 },
+	{ TEXT("Localized Files"),       GetLocalizedDir,     SetLocalizedDir,     FALSE, 0 },
 #ifdef USE_IPS
-	{ TEXT("IPS Files"),             GetPatchDir,        SetPatchDir,        FALSE, 0 },
+	{ TEXT("IPS Files"),             GetPatchDir,         SetPatchDir,         FALSE, 0 },
 #endif /* USE_IPS */
-	{ TEXT("Config"),                GetCfgDir,          SetCfgDir,          FALSE, DIRDLG_CFG },
+	{ TEXT("Config"),                GetCfgDir,           SetCfgDir,           FALSE, DIRDLG_CFG },
 #ifdef USE_HISCORE
-	{ TEXT("High Scores"),           GetHiDir,           SetHiDir,           FALSE, DIRDLG_HI },
+	{ TEXT("High Scores"),           GetHiDir,            SetHiDir,            FALSE, DIRDLG_HI },
 #endif /* USE_HISCORE */
-	{ TEXT("Snapshots"),             GetImgDir,          SetImgDir,          FALSE, DIRDLG_IMG },
-	{ TEXT("Input Files (*.inp)"),   GetInpDir,          SetInpDir,          FALSE, DIRDLG_INP },
-	{ TEXT("State"),                 GetStateDir,        SetStateDir,        FALSE, 0 },
-	{ TEXT("Artwork"),               GetArtDir,          SetArtDir,          FALSE, 0 },
-	{ TEXT("Memory Card"),           GetMemcardDir,      SetMemcardDir,      FALSE, 0 },
-	{ TEXT("Flyers"),                GetFlyerDir,        SetFlyerDir,        FALSE, 0 },
-	{ TEXT("Cabinets"),              GetCabinetDir,      SetCabinetDir,      FALSE, 0 },
-	{ TEXT("Marquees"),              GetMarqueeDir,      SetMarqueeDir,      FALSE, 0 },
-	{ TEXT("Titles"),                GetTitlesDir,       SetTitlesDir,       FALSE, 0 },
-	{ TEXT("Control Panels"),        GetControlPanelDir, SetControlPanelDir, FALSE, 0 },
-	{ TEXT("NVRAM"),                 GetNvramDir,        SetNvramDir,        FALSE, 0 },
-	{ TEXT("Controller Files"),      GetCtrlrDir,        SetCtrlrDir,        FALSE, DIRDLG_CTRLR },
-	{ TEXT("Hard Drive Difference"), GetDiffDir,         SetDiffDir,         FALSE, 0 },
-	{ TEXT("Icons"),                 GetIconsDir,        SetIconsDir,        FALSE, 0 },
-	{ TEXT("Background Images"),     GetBgDir,           SetBgDir,           FALSE, 0 },
-	{ TEXT("Comment Files"),         GetCommentDir,      SetCommentDir,      FALSE, DIRDLG_COMMENT },
-	{ TEXT("External Folder List"),  GetFolderDir,       SetFolderDir,       FALSE, 0 },
+	{ TEXT("Snapshots"),             GetImgDirs,          SetImgDirs,          TRUE,  DIRDLG_IMG },
+	{ TEXT("Input Files (*.inp)"),   GetInpDir,           SetInpDir,           FALSE, DIRDLG_INP },
+	{ TEXT("State"),                 GetStateDir,         SetStateDir,         FALSE, 0 },
+	{ TEXT("Artwork"),               GetArtDir,           SetArtDir,           FALSE, 0 },
+	{ TEXT("Memory Card"),           GetMemcardDir,       SetMemcardDir,       FALSE, 0 },
+	{ TEXT("Flyers"),                GetFlyerDirs,        SetFlyerDirs,        TRUE,  0 },
+	{ TEXT("Cabinets"),              GetCabinetDirs,      SetCabinetDirs,      TRUE,  0 },
+	{ TEXT("Marquees"),              GetMarqueeDirs,      SetMarqueeDirs,      TRUE,  0 },
+	{ TEXT("Titles"),                GetTitlesDirs,       SetTitlesDirs,       TRUE,  0 },
+	{ TEXT("Control Panels"),        GetControlPanelDirs, SetControlPanelDirs, TRUE,  0 },
+	{ TEXT("NVRAM"),                 GetNvramDir,         SetNvramDir,         FALSE, 0 },
+	{ TEXT("Controller Files"),      GetCtrlrDir,         SetCtrlrDir,         FALSE, DIRDLG_CTRLR },
+	{ TEXT("Hard Drive Difference"), GetDiffDir,          SetDiffDir,          FALSE, 0 },
+	{ TEXT("Icons"),                 GetIconsDirs,        SetIconsDirs,        TRUE,  0 },
+	{ TEXT("Background Images"),     GetBgDir,            SetBgDir,            FALSE, 0 },
+	{ TEXT("Comment Files"),         GetCommentDir,       SetCommentDir,       FALSE, DIRDLG_COMMENT },
+	{ TEXT("External Folder List"),  GetFolderDir,        SetFolderDir,        FALSE, 0 },
 #ifdef USE_VIEW_PCBINFO
-	{ TEXT("PCB Info Files"),        GetPcbinfoDir,      SetPcbinfoDir,      FALSE, 0 },
+	{ TEXT("PCB Info Files"),        GetPcbinfoDir,       SetPcbinfoDir,       FALSE, 0 },
 #endif /* USE_VIEW_PCBINFO */
 	{ NULL }
 };

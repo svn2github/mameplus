@@ -1365,60 +1365,102 @@ static BOOL isFileExist(const WCHAR *fname)
 	return !(FindData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY);
 }
 
-HICON LoadIconFromFile(const char *iconname)
+static HICON ExtractIconFromZip(const WCHAR *zipname, const WCHAR *iconname)
 {
-	HICON hIcon = 0;
-	WCHAR *iconnamew = _Unicode(iconname);
-	WCHAR tmpStr[MAX_PATH];
-	char *stemp;
-	const zip_file_header *entry;
 	zip_file *zip;
 	zip_error ziperr;
+	const zip_file_header *entry;
+	HICON hIcon = NULL;
+	char *stemp;
 
-	swprintf(tmpStr, TEXT("%s") TEXT(PATH_SEPARATOR) TEXT("%s.ico"), GetIconsDir(), iconnamew);
-	if (isFileExist(tmpStr) && (hIcon = ExtractIconW(hInst, tmpStr, 0)) != 0)
-		return hIcon;
-
-	swprintf(tmpStr, TEXT("%s") TEXT(PATH_SEPARATOR) TEXT("%s.ico"), GetImgDir(), iconnamew);
-	if (isFileExist(tmpStr) && (hIcon = ExtractIconW(hInst, tmpStr, 0)) != 0)
-		return hIcon;
-
-	swprintf(tmpStr, TEXT("%s") TEXT(PATH_SEPARATOR) TEXT("icons.zip"), GetIconsDir());
-	if (!isFileExist(tmpStr))
-		return NULL;
-
-	stemp = utf8_from_wstring(tmpStr);
+	stemp = utf8_from_wstring(zipname);
 	ziperr = zip_file_open(stemp, &zip);
 	free(stemp);
 
-	if (ziperr == ZIPERR_NONE)
+	if (ziperr != ZIPERR_NONE)
+		return NULL;
+
+	stemp = utf8_from_wstring(iconname);
+
+	for (entry = zip_file_first_file(zip); entry; entry = zip_file_next_file(zip))
+		if (mame_stricmp(entry->filename, stemp) == 0)
+			break;
+	free(stemp);
+
+	if (entry)
 	{
-		char iconfile[256];
+		UINT8 *data = (UINT8 *)malloc(entry->uncompressed_length);
 
-		sprintf(iconfile, "%s.ico", iconname);
-
-		for (entry = zip_file_first_file(zip); entry; entry = zip_file_next_file(zip))
-			if (mame_stricmp(entry->filename, iconfile) == 0)
-				break;
-
-		if (entry)
+		if (data != NULL)
 		{
-			UINT8 *data = (UINT8 *)malloc(entry->uncompressed_length);
+			ziperr = zip_file_decompress(zip, data, entry->uncompressed_length);
+			if (ziperr == ZIPERR_NONE)
+				hIcon = FormatICOInMemoryToHICON(data, entry->uncompressed_length);
 
-			if (data != NULL)
-			{
-				ziperr = zip_file_decompress(zip, data, entry->uncompressed_length);
-				if (ziperr == ZIPERR_NONE)
-					hIcon = FormatICOInMemoryToHICON(data, entry->uncompressed_length);
-
-				free(data);
-			}
+			free(data);
 		}
-
-		zip_file_close(zip);
 	}
 
+	zip_file_close(zip);
+
 	return hIcon;
+}
+
+HICON LoadIconFromFile(const char *iconname)
+{
+	static const WCHAR* (*GetDirsFunc[])(void) =
+	{
+		GetIconsDirs,
+		GetImgDirs,
+		NULL
+	};
+
+	WCHAR iconfile[MAX_PATH];
+	int is_zipfile;
+	int i;
+
+	swprintf(iconfile, TEXT("%s.ico"), _Unicode(iconname));
+
+	for (is_zipfile = 0; is_zipfile < 2; is_zipfile++)
+	{
+		for (i = 0; GetDirsFunc[i]; i++)
+		{
+			WCHAR *paths = wcsdup(GetDirsFunc[i]());
+			WCHAR *p;
+
+			for (p = wcstok(paths, TEXT(";")); p; p =wcstok(NULL, TEXT(";")))
+			{
+				WCHAR tmpStr[MAX_PATH];
+				HICON hIcon = 0;
+
+				lstrcpy(tmpStr, p);
+				lstrcat(tmpStr, TEXT(PATH_SEPARATOR));
+
+				if (!is_zipfile)
+					lstrcat(tmpStr, iconfile);
+				else
+					lstrcat(tmpStr, TEXT("icons.zip"));
+
+				if (!isFileExist(tmpStr))
+					continue;
+
+				if (!is_zipfile)
+					hIcon = ExtractIconW(hInst, tmpStr, 0);
+				else
+					hIcon = ExtractIconFromZip(tmpStr, iconfile);
+
+				if (hIcon)
+				{
+					free(paths);
+					return hIcon;
+				}
+			}
+
+			free(paths);
+		}
+	}
+
+	return NULL;
 }
 
 /* Return the number of games currently displayed */

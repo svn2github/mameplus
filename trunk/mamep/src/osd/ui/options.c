@@ -1616,12 +1616,12 @@ void SetInpDir(const WCHAR* path)
 		settings.input_directory = wcsdup(path);
 }
 
-const WCHAR* GetImgDir(void)
+const WCHAR* GetImgDirs(void)
 {
 	return settings.snapshot_directory;
 }
 
-void SetImgDir(const WCHAR* path)
+void SetImgDirs(const WCHAR* path)
 {
 	FreeIfAllocatedW(&settings.snapshot_directory);
 
@@ -1668,12 +1668,12 @@ void SetMemcardDir(const WCHAR* path)
 		settings.memcard_directory = wcsdup(path);
 }
 
-const WCHAR* GetFlyerDir(void)
+const WCHAR* GetFlyerDirs(void)
 {
 	return settings.flyer_directory;
 }
 
-void SetFlyerDir(const WCHAR* path)
+void SetFlyerDirs(const WCHAR* path)
 {
 	FreeIfAllocatedW(&settings.flyer_directory);
 
@@ -1681,12 +1681,12 @@ void SetFlyerDir(const WCHAR* path)
 		settings.flyer_directory = wcsdup(path);
 }
 
-const WCHAR* GetCabinetDir(void)
+const WCHAR* GetCabinetDirs(void)
 {
 	return settings.cabinet_directory;
 }
 
-void SetCabinetDir(const WCHAR* path)
+void SetCabinetDirs(const WCHAR* path)
 {
 	FreeIfAllocatedW(&settings.cabinet_directory);
 
@@ -1694,12 +1694,12 @@ void SetCabinetDir(const WCHAR* path)
 		settings.cabinet_directory = wcsdup(path);
 }
 
-const WCHAR* GetMarqueeDir(void)
+const WCHAR* GetMarqueeDirs(void)
 {
 	return settings.marquee_directory;
 }
 
-void SetMarqueeDir(const WCHAR* path)
+void SetMarqueeDirs(const WCHAR* path)
 {
 	FreeIfAllocatedW(&settings.marquee_directory);
 
@@ -1707,12 +1707,12 @@ void SetMarqueeDir(const WCHAR* path)
 		settings.marquee_directory = wcsdup(path);
 }
 
-const WCHAR* GetTitlesDir(void)
+const WCHAR* GetTitlesDirs(void)
 {
 	return settings.title_directory;
 }
 
-void SetTitlesDir(const WCHAR* path)
+void SetTitlesDirs(const WCHAR* path)
 {
 	FreeIfAllocatedW(&settings.title_directory);
 
@@ -1720,12 +1720,12 @@ void SetTitlesDir(const WCHAR* path)
 		settings.title_directory = wcsdup(path);
 }
 
-const WCHAR* GetControlPanelDir(void)
+const WCHAR* GetControlPanelDirs(void)
 {
 	return settings.cpanel_directory;
 }
 
-void SetControlPanelDir(const WCHAR* path)
+void SetControlPanelDirs(const WCHAR* path)
 {
 	FreeIfAllocatedW(&settings.cpanel_directory);
 	if (path != NULL)
@@ -1799,12 +1799,12 @@ void SetLocalizedDir(const WCHAR* path)
 		settings.localized_directory = wcsdup(path);
 }
 
-const WCHAR* GetIconsDir(void)
+const WCHAR* GetIconsDirs(void)
 {
 	return settings.icon_directory;
 }
 
-void SetIconsDir(const WCHAR* path)
+void SetIconsDirs(const WCHAR* path)
 {
 	FreeIfAllocatedW(&settings.icon_directory);
 

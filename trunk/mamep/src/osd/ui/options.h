@@ -523,8 +523,8 @@ void SetStateDir(const WCHAR* path);
 const WCHAR* GetArtDir(void);
 void SetArtDir(const WCHAR* path);
 
-const WCHAR* GetImgDir(void);
-void SetImgDir(const WCHAR* path);
+const WCHAR* GetImgDirs(void);
+void SetImgDirs(const WCHAR* path);
 
 const WCHAR* GetDiffDir(void);
 void SetDiffDir(const WCHAR* path);
@@ -583,23 +583,23 @@ void SetUseLangList(BOOL is_use);
 
 
 /*----------------------------------------*/
-const WCHAR* GetFlyerDir(void);
-void SetFlyerDir(const WCHAR* path);
+const WCHAR* GetFlyerDirs(void);
+void SetFlyerDirs(const WCHAR* path);
 
-const WCHAR* GetCabinetDir(void);
-void SetCabinetDir(const WCHAR* path);
+const WCHAR* GetCabinetDirs(void);
+void SetCabinetDirs(const WCHAR* path);
 
-const WCHAR* GetMarqueeDir(void);
-void SetMarqueeDir(const WCHAR* path);
+const WCHAR* GetMarqueeDirs(void);
+void SetMarqueeDirs(const WCHAR* path);
 
-const WCHAR* GetTitlesDir(void);
-void SetTitlesDir(const WCHAR* path);
+const WCHAR* GetTitlesDirs(void);
+void SetTitlesDirs(const WCHAR* path);
 
-const WCHAR* GetControlPanelDir(void);
-void SetControlPanelDir(const WCHAR* path);
+const WCHAR* GetControlPanelDirs(void);
+void SetControlPanelDirs(const WCHAR* path);
 
-const WCHAR* GetIconsDir(void);
-void SetIconsDir(const WCHAR* path);
+const WCHAR* GetIconsDirs(void);
+void SetIconsDirs(const WCHAR* path);
 
 const WCHAR* GetBgDir(void);
 void SetBgDir(const WCHAR* path);
