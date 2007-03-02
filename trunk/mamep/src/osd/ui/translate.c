@@ -596,14 +596,14 @@ int ComboBox_GetLBTextA(HWND hwndCtl, int nIndex, LPSTR lpszBuffer)
 
 int ComboBox_GetLBTextLenA(HWND hwndCtl, int nIndex)
 {
-	static LPSTR buf;
+	static WCHAR *buf;
 
 	if (buf)
 		free(buf);
 	buf = malloc((ComboBox_GetLBTextLenW(hwndCtl, nIndex) + 1) * sizeof (*buf));
 
-	ComboBox_GetLBTextA(hwndCtl, nIndex, buf);
-	return strlen(buf);
+	ComboBox_GetLBTextW(hwndCtl, nIndex, buf);
+	return strlen(_String(buf));
 }
 
 int ComboBox_GetTextA(HWND hwndCtl, LPSTR lpch, int cchMax)
