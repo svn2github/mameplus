@@ -556,7 +556,7 @@ int DriverParentIndex(int driver_index)
 }
 
 #ifdef USE_IPS
-int GetPatchCount(const char *game_name, const char *patch_name)
+int GetPatchCount(const WCHAR *game_name, const WCHAR *patch_name)
 {
 	int Count = 0;
 
@@ -566,7 +566,7 @@ int GetPatchCount(const char *game_name, const char *patch_name)
 		WIN32_FIND_DATAW ffd;
 		HANDLE hFile;
 
-		swprintf(szFilename, TEXT("%s\\%s\\%s.dat"), GetPatchDir(), _Unicode(game_name), _Unicode(patch_name));
+		swprintf(szFilename, TEXT("%s\\%s\\%s.dat"), GetPatchDir(), game_name, patch_name);
 		hFile = FindFirstFileW(szFilename, &ffd);
 		if (hFile != INVALID_HANDLE_VALUE)
 		{
@@ -583,13 +583,13 @@ int GetPatchCount(const char *game_name, const char *patch_name)
 	return Count;
 }
 
-int GetPatchFilename(char *patch_name, const char *game_name, const int patch_index)
+int GetPatchFilename(WCHAR *patch_name, const WCHAR *game_name, const int patch_index)
 {
 	WIN32_FIND_DATAW ffd;
 	HANDLE hFile;
 	WCHAR szFilename[MAX_PATH];
 
-	swprintf(szFilename, TEXT("%s\\%s\\*.dat"), GetPatchDir(), _Unicode(game_name));
+	swprintf(szFilename, TEXT("%s\\%s\\*.dat"), GetPatchDir(), game_name);
 	hFile = FindFirstFileW(szFilename, &ffd);
 	if (hFile != INVALID_HANDLE_VALUE)
 	{
@@ -600,8 +600,8 @@ int GetPatchFilename(char *patch_name, const char *game_name, const int patch_in
 		{
 			if (Count == patch_index)
 			{
-				strcpy(patch_name, _String(ffd.cFileName));
-				patch_name[strlen(patch_name)-4] = 0;	// To trim the ext ".dat"
+				lstrcpy(patch_name, ffd.cFileName);
+				patch_name[lstrlen(patch_name) - 4] = '\0';	// To trim the ext ".dat"
 				break;
 			}
 			Count++;
@@ -687,13 +687,13 @@ static LPWSTR GetPatchDescByLangcode(FILE *fp, int langcode)
 		return NULL;
 }
 
-LPWSTR GetPatchDesc(const char *game_name, const char *patch_name)
+LPWSTR GetPatchDesc(const WCHAR *game_name, const WCHAR *patch_name)
 {
 	FILE *fp;
 	LPWSTR desc = NULL;
 	WCHAR szFilename[MAX_PATH];
 
-	swprintf(szFilename, TEXT("%s\\%s\\%s.dat"), GetPatchDir(), _Unicode(game_name), _Unicode(patch_name));
+	swprintf(szFilename, TEXT("%s\\%s\\%s.dat"), GetPatchDir(), game_name, patch_name);
 
 	if ((fp = wfopen(szFilename, TEXT("r"))) != NULL)
 	{

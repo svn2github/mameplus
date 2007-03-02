@@ -773,7 +773,7 @@ HTREEITEM prev_drag_drop_target; /* which tree view item we're currently highlig
 static BOOL g_in_treeview_edit = FALSE;
 
 #ifdef USE_IPS
-static char *g_IPSMenuSelectName;
+static WCHAR * g_IPSMenuSelectName;
 #endif /* USE_IPS */
 
 typedef struct
@@ -2136,7 +2136,7 @@ void SetMainTitle(void)
 static void TabSelectionChanged(void)
 {
 #ifdef USE_IPS
-	FreeIfAllocated(&g_IPSMenuSelectName);
+	FreeIfAllocatedW(&g_IPSMenuSelectName);
 #endif /* USE_IPS */
 
 	UpdateScreenShot();
@@ -2649,7 +2649,7 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 	char		szClass[128];
 	
 #ifdef USE_IPS
-	static char patch_name[MAX_PATCHNAME];
+	static WCHAR patch_name[MAX_PATCHNAME];
 #endif /* USE_IPS */
 
 	switch (message)
@@ -2705,23 +2705,23 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 		//menu closed, do not UpdateScreenShot() for EditControl scrolling
 		if ((int)(HIWORD(wParam)) == 0xFFFF)
 		{
-			FreeIfAllocated(&g_IPSMenuSelectName);
+			FreeIfAllocatedW(&g_IPSMenuSelectName);
 			dprintf("menusele: clear");
 			return 0;
 		}
 
 		i = (int)(LOWORD(wParam)) - ID_PLAY_PATCH;
-		if (i >= 0 && i < MAX_PATCHES && GetPatchFilename(patch_name, drivers[Picker_GetSelectedItem(hwndList)]->name, i))
+		if (i >= 0 && i < MAX_PATCHES && GetPatchFilename(patch_name, driversw[Picker_GetSelectedItem(hwndList)]->name, i))
 		{
-			FreeIfAllocated(&g_IPSMenuSelectName);
-			g_IPSMenuSelectName = strdup(patch_name);
-			dprintf("menusele: %d %s, updateSS", (int)(LOWORD(wParam)), patch_name);
+			FreeIfAllocatedW(&g_IPSMenuSelectName);
+			g_IPSMenuSelectName = _wcsdup(patch_name);
+			dwprintf(TEXT("menusele: %d %s, updateSS"), (int)(LOWORD(wParam)), patch_name);
 			UpdateScreenShot();
 		}
 		else if (g_IPSMenuSelectName)
 		{
-			FreeIfAllocated(&g_IPSMenuSelectName);
-			dprintf("menusele:none, updateSS");
+			FreeIfAllocatedW(&g_IPSMenuSelectName);
+			dwprintf(TEXT("menusele:none, updateSS"));
 			UpdateScreenShot();
 		}
 #endif /* USE_IPS */
@@ -3741,7 +3741,7 @@ static void UpdateHistory(void)
 		if (g_IPSMenuSelectName)
 		{
 			WCHAR *p = NULL;
-			histText = GetPatchDesc(drivers[Picker_GetSelectedItem(hwndList)]->name, g_IPSMenuSelectName);
+			histText = GetPatchDesc(driversw[Picker_GetSelectedItem(hwndList)]->name, g_IPSMenuSelectName);
 			if(histText && (p = wcschr(histText, '/')))	// no category
 				histText = p + 1;
 		}
@@ -4781,26 +4781,26 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 	if ((id >= ID_PLAY_PATCH) && (id < ID_PLAY_PATCH + MAX_PATCHES))
 	{
 		int  nGame = Picker_GetSelectedItem(hwndList);
-		char patch_filename[MAX_PATCHNAME];
+		WCHAR patch_filename[MAX_PATCHNAME];
 
-		if (GetPatchFilename(patch_filename, drivers[nGame]->name, id-ID_PLAY_PATCH))
+		if (GetPatchFilename(patch_filename, driversw[nGame]->name, id-ID_PLAY_PATCH))
 		{
 			options_type* pOpts = GetGameOptions(nGame);
-			static char new_opt[MAX_PATCHNAME * MAX_PATCHES];
+			static WCHAR new_opt[MAX_PATCHNAME * MAX_PATCHES];
 
 			new_opt[0] = '\0';
 
 			if (pOpts->ips)
 			{
-				char *temp = strdup(pOpts->ips);
-				char *token = NULL;
+				WCHAR *temp = _wcsdup(pOpts->ips);
+				WCHAR *token = NULL;
 
 				if (temp)
-					token = strtok(temp, ",");
+					token = wcstok(temp, TEXT(","));
 
 				while (token)
 				{
-					if (!strcmp(patch_filename, token))
+					if (!lstrcmp(patch_filename, token))
 					{
 						dprintf("dup!");
 						patch_filename[0] = '\0';
@@ -4808,11 +4808,11 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 					else
 					{
 						if (new_opt[0] != '\0')
-							strcat(new_opt, ",");
-						strcat(new_opt, token);
+							lstrcat(new_opt, TEXT(","));
+						lstrcat(new_opt, token);
 					}
 
-					token = strtok(NULL, ",");
+					token = wcstok(NULL, TEXT(","));
 				}
 
 				free(temp);
@@ -4821,13 +4821,13 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 			if (patch_filename[0] != '\0')
 			{
 				if (new_opt[0] != '\0')
-					strcat(new_opt, ",");
-				strcat(new_opt, patch_filename);
+					lstrcat(new_opt, TEXT(","));
+				lstrcat(new_opt, patch_filename);
 			}
 
-			FreeIfAllocated(&pOpts->ips);
+			FreeIfAllocatedW(&pOpts->ips);
 			if (new_opt[0] != '\0')
-				pOpts->ips = mame_strdup(new_opt);
+				pOpts->ips = wcsdup(new_opt);
 
 			SaveGameOptions(nGame);
 		}
@@ -4835,7 +4835,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 	}
 	else if (g_IPSMenuSelectName && id != IDC_HISTORY)
 	{
-		FreeIfAllocated(&g_IPSMenuSelectName);
+		FreeIfAllocatedW(&g_IPSMenuSelectName);
 		UpdateScreenShot();
 	}
 #endif /* USE_IPS */
@@ -6897,37 +6897,35 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 	if (have_selection)
 	{
 		options_type* pOpts = GetGameOptions(nGame);
-		int  patch_count = GetPatchCount(drivers[nGame]->name, "*");
-		int  i;
+		int  patch_count = GetPatchCount(driversw[nGame]->name, TEXT("*"));
 		
-		WCHAR patch_category[128];
-		char patch_filename[MAX_PATCHNAME];
-		WCHAR wbuf[MAX_PATCHNAME * MAX_PATCHES];
-		char buf[MAX_PATCHNAME * MAX_PATCHES];
-		WCHAR *wp = NULL;
-		char *p = NULL;
-
 		if (patch_count > MAX_PATCHES)
 			patch_count = MAX_PATCHES;
 
 		while (patch_count--)
 		{
-			if (GetPatchFilename(patch_filename, drivers[nGame]->name, patch_count))
+			WCHAR patch_filename[MAX_PATCHNAME];
+
+			if (GetPatchFilename(patch_filename, driversw[nGame]->name, patch_count))
 			{
-				LPWSTR patch_desc = GetPatchDesc(drivers[nGame]->name, patch_filename);
+				WCHAR wbuf[MAX_PATCHNAME * MAX_PATCHES];
+				WCHAR *wp = NULL;
+				LPWSTR patch_desc = GetPatchDesc(driversw[nGame]->name, patch_filename);
 
 				if (patch_desc && patch_desc[0])
 					//has lang specific ips desc, get the first line as display name
 					snwprintf(wbuf, ARRAY_LENGTH(wbuf), TEXT("   %s"), wcstok(patch_desc, TEXT("\r\n")));
 				else
 					//otherwise, use .dat filename instead
-					snwprintf(wbuf, ARRAY_LENGTH(wbuf), TEXT("   %s"), _Unicode(patch_filename));
+					snwprintf(wbuf, ARRAY_LENGTH(wbuf), TEXT("   %s"), patch_filename);
 
 				// patch_count--, add menu items in reversed order
 				if(!(wp = wcschr(wbuf,'/')))	// no category
 					InsertMenu(hMenu, 1, MF_BYPOSITION, ID_PLAY_PATCH + patch_count, ConvertAmpersandString(wbuf));
 				else	// has category
 				{
+					int  i;
+
 					*wp = '\0';
 					
 					for (i=1; i<GetMenuItemCount(hMenu); i++)	// do not create submenu if exists
@@ -6935,6 +6933,8 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 						hSubMenu = GetSubMenu(hMenu, i);
 						if (hSubMenu)
 						{
+							WCHAR patch_category[128];
+
 							GetMenuString(hMenu, i, patch_category, 127, MF_BYPOSITION);
 							if (!wcscmp(patch_category, wbuf))
 								break;
@@ -6954,16 +6954,19 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 
 				if (pOpts->ips != NULL)
 				{
-					strcpy(buf, pOpts->ips);
-					p = strtok(buf, ",");
-					for (i = 0; i < MAX_PATCHES && p; i++)
+					int  i;
+
+					lstrcpy(wbuf, pOpts->ips);
+					wp = wcstok(wbuf, TEXT(","));
+
+					for (i = 0; i < MAX_PATCHES && wp; i++)
 					{
-						if (!strcmp(patch_filename, p))
+						if (!lstrcmp(patch_filename, wp))
 						{
 							CheckMenuItem(hMenu,ID_PLAY_PATCH + patch_count, MF_BYCOMMAND | MF_CHECKED);
 							break;
 						}
-						p = strtok(NULL, ",");
+						wp = wcstok(NULL, TEXT(","));
 					}
 				}
 			}

@@ -78,7 +78,7 @@ typedef struct
 	char*	bios;
 	BOOL	cheat;
 #ifdef USE_IPS
-	char*	ips;
+	WCHAR*	ips;
 #endif /* USE_IPS */
 	BOOL	confirm_quit;
 #ifdef AUTO_PAUSE_PLAYBACK

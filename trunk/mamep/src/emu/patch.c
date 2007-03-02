@@ -3,7 +3,6 @@
 #include "hash.h"
 
 
-#define UTF8_SIGNATURE	"\xef\xbb\xbf"
 #define IPS_SIGNATURE	"PATCH"
 #define IPS_TAG_EOF	"EOF"
 #define INDEX_EXT	".dat"
@@ -251,10 +250,6 @@ static int parse_ips_patch(ips_entry **ips_p, const char *patch_name, rom_load_d
 			const char *ips_dir;
 			char *ips_name;
 			char *crc;
-
-			// skip UTF-8 sig
-			if (strncmp(p, UTF8_SIGNATURE, strlen(UTF8_SIGNATURE)) == 0)
-				p += strlen(UTF8_SIGNATURE);
 
 			if (p[0] == '[')	// '['
 				break;

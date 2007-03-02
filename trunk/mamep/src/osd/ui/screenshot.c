@@ -75,20 +75,20 @@ BOOL ScreenShotLoaded(void)
 }
 
 #ifdef MESS
-static BOOL LoadSoftwareScreenShot(const game_driver *drv, LPCSTR lpSoftwareName, int nType)
+static BOOL LoadSoftwareScreenShot(const WCHAR *drv_name, const WCHAR *lpSoftwareName, int nType)
 {
-	char *s = alloca(strlen(drv->name) + 1 + strlen(lpSoftwareName) + 5);
-	sprintf(s, "%s/%s.png", drv->name, lpSoftwareName);
+	WCHAR *s = alloca((lstrlen(drv_name) + 1 + lstrlen(lpSoftwareName) + 5) * sizeof (*s));
+	swprintf(s, TEXT("%s/%s.png"), drv_name, lpSoftwareName);
 	return LoadDIB(s, &m_hDIB, &m_hPal, nType);
 }
 #endif /* MESS */
 
 /* Allow us to pre-load the DIB once for future draws */
 #ifdef MESS
-BOOL LoadScreenShotEx(int nGame, LPCSTR lpSoftwareName, int nType)
+BOOL LoadScreenShotEx(int nGame, const WCHAR *lpSoftwareName, int nType)
 #else /* !MESS */
 #ifdef USE_IPS
-BOOL LoadScreenShot(int nGame, const char *lpIPSName, int nType)
+BOOL LoadScreenShot(int nGame, const WCHAR *lpIPSName, int nType)
 #else /* USE_IPS */
 BOOL LoadScreenShot(int nGame, int nType)
 #endif /* USE_IPS */
@@ -96,7 +96,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 {
 	BOOL loaded = FALSE;
 	int nParentIndex = GetParentIndex(drivers[nGame]);
-	WCHAR buf [MAX_PATH];
+	WCHAR buf[MAX_PATH];
 
 	/* No need to reload the same one again */
 #ifndef MESS
@@ -111,10 +111,10 @@ BOOL LoadScreenShot(int nGame, int nType)
 #ifdef MESS
 	if (lpSoftwareName)
 	{
-		loaded = LoadSoftwareScreenShot(drivers[nGame], lpSoftwareName, nType);
+		loaded = LoadSoftwareScreenShot(driversw[nGame]->name, lpSoftwareName, nType);
 		if (!loaded && DriverIsClone(nGame) == TRUE)
 		{
-			loaded = LoadSoftwareScreenShot(drivers[nParentIndex], lpSoftwareName, nType);
+			loaded = LoadSoftwareScreenShot(driversw[nParentIndex]->name, lpSoftwareName, nType);
 		}
 	}
 	if (!loaded)
@@ -125,7 +125,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 #ifdef USE_IPS
 		if (lpIPSName)
 		{
-			wsprintf(buf, TEXT("%s/%s"), wdrv, _Unicode(lpIPSName));
+			wsprintf(buf, TEXT("%s/%s"), wdrv, lpIPSName);
 			dwprintf(TEXT("found ipsname: %s"), buf);
 		}
 		else
@@ -146,7 +146,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 #ifdef USE_IPS
 		if (lpIPSName)
 		{
-			wsprintf(buf, TEXT("%s/%s"), wdrv, _Unicode(lpIPSName));
+			wsprintf(buf, TEXT("%s/%s"), wdrv, lpIPSName);
 			dwprintf(TEXT("found clone ipsname: %s"), buf);
 		}
 		else
@@ -161,7 +161,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 
 #ifdef USE_IPS
 			if (lpIPSName)
-				swprintf(buf, TEXT("%s/%s"), wdrv, _Unicode(lpIPSName));
+				swprintf(buf, TEXT("%s/%s"), wdrv, lpIPSName);
 			else
 #endif /* USE_IPS */
 				lstrcpy(buf, wdrv);

@@ -710,7 +710,7 @@ static options_type * GetAltOptions(alt_options_type *alt_option)
 
 #ifdef USE_IPS
 		// HACK: DO NOT INHERIT IPS CONFIGURATION
-		char *ips = alt_option->option->ips;
+		WCHAR *ips = alt_option->option->ips;
 
 		alt_option->option->ips = NULL;
 #endif /* USE_IPS */
@@ -800,7 +800,7 @@ options_type * GetGameOptions(int driver_index)
 		options_type *opt = GetParentOptions(driver_index);
 #ifdef USE_IPS
 		// HACK: DO NOT INHERIT IPS CONFIGURATION
-		char *ips = driver_options[driver_index].ips;
+		WCHAR *ips = driver_options[driver_index].ips;
 
 		driver_options[driver_index].ips = NULL;
 #endif /* USE_IPS */
@@ -2844,7 +2844,7 @@ static options_type *update_driver_use_default(int driver_index)
 	options_type *opt = GetParentOptions(driver_index);
 #ifdef USE_IPS
 	// HACK: DO NOT INHERIT IPS CONFIGURATION
-	char *ips;
+	WCHAR *ips;
 #endif /* USE_IPS */
 
 	if (opt == &driver_options[driver_index])
@@ -2873,7 +2873,7 @@ static options_type *update_alt_use_default(alt_options_type *alt_option)
 	char *bios;
 #ifdef USE_IPS
 	// HACK: DO NOT INHERIT IPS CONFIGURATION
-	char *ips;
+	WCHAR *ips;
 #endif /* USE_IPS */
 
 	// try vector.ini
@@ -4104,13 +4104,13 @@ INLINE void _options_get_float_min_max(float *p, const char *name, float min, fl
 //============================================================
 
 #ifdef USE_IPS
-#define _options_get_ips		_options_get_string_allow_null
-#define options_set_ips			options_set_string_allow_null
-#define options_copy_ips		options_copy_string_allow_null
-#define options_free_ips		options_free_string_allow_null
+#define _options_get_ips		_options_get_wstring_allow_null
+#define options_set_ips			options_set_wstring_allow_null
+#define options_copy_ips		options_copy_wstring_allow_null
+#define options_free_ips		options_free_wstring_allow_null
 #define _options_compare_ips(s1,s2)	do { ; } while (0)
 
-INLINE BOOL options_compare_ips(const char *s1, const char *s2)
+INLINE BOOL options_compare_ips(const WCHAR *s1, const WCHAR *s2)
 {
 	if (s1)
 		return TRUE;
