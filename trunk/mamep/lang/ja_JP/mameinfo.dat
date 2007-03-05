@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.112u2      #
+#     Mameinfo.dat日本語版 v0.112u4      #
 #                                        #
-#           February 24, 2007            #
+#             March 5, 2007              #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,19 +12,65 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：849 翻訳済：835
-# 追加項目：338 合計：1187
+# Tester報告：858 翻訳済：844
+# 追加項目：338 合計：1196
 #
 
 
-$info=minigolf
+$info=calorie
 $mame
 [バグ]
 
-- デジタルコントロールが正しく動作しない。
-特に、ボールを指定された方向kに一回だけ打ったあと、キー入力を受け付けない。
+- 一番下のUnknownのDIPスイッチは、残ライフの無限設定。 calorie0112u4gra, Machone
 
-テストメニューでは正しく反応する。 minigolf0112u2gra, twisty
+$end
+
+$info=darkseal
+$mame
+[バグ]
+
+- 武器を使うとその動作中、BGMのテンポが上がる。
+かなり前から起きていたが、最近はテンポの上がり方が大きい。 darkseal0112u4gre, Tafoid /  ChewChew
+
+$end
+
+$info=exerion
+$mame
+[バグ]
+
+- ボーナス面後、残機がいくらあってもゲームが終了する。 exerion0112u4yel, Krusty104 / tafoid
+
+$end
+
+$info=fastlane
+$mame
+[バグ]
+
+- 二番目と三番目のUnknownのDIPスイッチは難易度の設定：
+
+OFF-OFF: Easy
+
+ON-OFF: Medium
+
+OFF-ON: Hard
+
+ON-ON: Hardest
+
+
+また一番下のUnknownはコンティニュー設定：
+
+OFFは3回、ONは何回でもOK fastlane0112u4gra, Machone
+
+
+- ボーナスアイテムを取っても、いつも「No Bonus」にしかならない。 fastlane061gre, Kale
+
+$end
+
+$info=diamond
+$mame
+[バグ]
+
+- DSW2の1-4はプレイヤーのエネルギーの減り具合を設定する。 diamond0112u4gra, Machone
 
 $end
 
@@ -53,7 +99,7 @@ $info=airattck
 $mame
 [バグ]
 
-- 音が出ない。 airattck0112u1yel, Iaspis
+- 音が出ない。 airattck0112u1yel, Iaspis / twisty / Mamesick
 
 
 - nmk16.cゲームでプライオリティ不具合がある。
@@ -70,6 +116,14 @@ $mame
 
 - ゲーム中に画面中央に青いドットが表示される。
 クローン版elim4では起きない。 elim2055gre, Fever
+
+$end
+
+$info=powerbls
+$mame
+[バグ]
+
+- gdbのデバッグビルドで、-autosave指定のステート読み込み時にクラッシュする。 powerbls0112u4red, Firewave
 
 $end
 
@@ -594,21 +648,13 @@ $mame
 
 $end
 
-$info=ghouls
-$mame
-[バグ]
-
-- 1面のボス手前、前半クリア時の背景が表示されない。その他表示系の不具合多数。 ghouls097u4yel, Kold666 / MKL
-
-$end
-
 $info=qadj
 $mame
 [バグ]
 
 - 忍者を選んでプレイすると、
 歩くアニメーションのところで化けが出る。
-英語版の方では起きない。 qadj37b5gre, MC68K
+英語版の方では起きない。 qadj37b5gre, MC68K / sjyune
 
 $end
 
@@ -1013,14 +1059,6 @@ $mame
 
 - 画面の下部分のスクロールがおかしい。
 画面の上部分に表示されるはずの情報もそこに表示されている。 topsecex37b5gre, YMI / TriggerFin / Pi
-
-$end
-
-$info=fastlane
-$mame
-[バグ]
-
-- ボーナスアイテムを取っても、いつも「No Bonus」にしかならない。 fastlane061gre, Kale
 
 $end
 
@@ -3634,14 +3672,6 @@ $mame
 
 $end
 
-$info=chainrec
-$mame
-[バグ]
-
-- デバッグビルド、またはgdbでスクリーンショットを撮ろうとするとクラッシュする。 chainrec0112red, Firewave
-
-$end
-
 $info=simpsons
 $mame
 [バグ]
@@ -3792,30 +3822,11 @@ $mame
 
 $end
 
-$info=powerbls
-$mame
-[バグ]
-
-- デバッグビルドでクラッシュが起こる。またgdbでスクリーンショットを撮ろうとしてもクラッシュする。 powerbls0112red, Firewave
-
-$end
-
 $info=nratechu
 $mame
 [バグ]
 
 - キャラを打ったときに、プレイヤー1のスプライトの上部分が切れる。 nratechu0104u1gre, king_krm
-
-$end
-
-$info=empcity
-$mame
-[バグ]
-
-- ゲームの速度が遅い。
-敵の攻撃を余裕でかわせ過ぎで、こんなにゆっくりドンパチするゲームではない。
-ただ何％の時が実機の速さなのか？ってのはちょっと難しい。
-でもMAMEで100％動作してるあの状態は実機の半分程度だと思われる。 empcity36finalyel, Fujix (KYS/Takashi/ pata/j-ichi)
 
 $end
 
@@ -4171,16 +4182,6 @@ $mame
 2) 1Pスタートx3　サービス　1Pスタート
 
 (by Mhk)
-
-$end
-
-$info=dleague
-$mame
-[バグ]
-
-- gdb内ではスクリーンショットを撮るとクラッシュする。
-またgdb外では起動時にクラッシュする。
-全ての環境では起きない。 dleague0106u3red, Firewave
 
 $end
 
@@ -4949,9 +4950,6 @@ $mame
 - ゲーム速度が遅い。ゲーム内のタイマーで1秒進むのに、実際には2秒くらいかかっている。 hotchase060gre, Kale
 
 
-- UnknownのDIPスイッチ2-7はアトラクトモードのサウンドON/OFF。 hotchase0111u2gra, Speedfreak / Machone
-
-
 - 1面の最初でバリアが壊れる音がしているのに、バリア自体は変化しない。 hotchase060gre_, DCisTHEbest
 
 $end
@@ -5468,15 +5466,6 @@ $mame
 
 $end
 
-$info=aztarac
-$mame
-[バグ]
-
-- マウス操作で、アナログスティックとダイヤルの両方が動いてしまうが、本来は自機と砲台の回転としてそれぞれ独立して動作しなければいけない。
-このためにプレイができない状態。 aztarac064gra, MarcoNadal / uRebelScum
-
-$end
-
 $info=gimeabrk
 $mame
 [バグ]
@@ -5686,14 +5675,6 @@ $mame
 
 $end
 
-$info=bigtwin
-$mame
-[バグ]
-
-- 5つめのUnknownのDIPスイッチはデモサウンドの切り替え。 bigtwin0111u4gra, Speedfreak
-
-$end
-
 $info=quasar
 $mame
 [バグ]
@@ -5707,25 +5688,6 @@ $mame
 [バグ]
 
 - 画面反転のDIPスイッチが動作しない。プレイヤー2のスタートボタンがマッピングされていない。 realbrk0111u4gra, Speedfreak
-
-$end
-
-$info=rockrage
-$mame
-[バグ]
-
-- Coin 3はServiceキー。 rockrage0111u5gra, Speedfreak
-
-
-- 2番目と3番目のUnknownのDIPスイッチは、難易度の設定：
-
-OFF OFF: easy
-
-ON OFF: medium
-
-OFF ON: hard
-
-ON ON: hardest rockrage0111u6gra, Machone
 
 $end
 
@@ -9589,4 +9551,5 @@ $mame
 (by Mhk)
 
 $end
+
 
