@@ -374,8 +374,8 @@ BOOL GetBroadcast(void);
 void SetRandomBackground(BOOL random_bg);
 BOOL GetRandomBackground(void);
 
-void SetSavedFolderID(UINT val);
-UINT GetSavedFolderID(void);
+void SetSavedFolderPath(const char *path);
+const char *GetSavedFolderPath(void);
 
 void SetShowScreenShot(BOOL val);
 BOOL GetShowScreenShot(void);
@@ -426,8 +426,8 @@ COLORREF GetCustomColor(int iIndex);
 void SetListFont(LOGFONTW *font);
 void GetListFont(LOGFONTW *font);
 
-DWORD GetFolderFlags(const WCHAR *folderName);
-void  SetFolderFlags(const WCHAR *folderName, DWORD dwFlags);
+void SaveFolderFlags(const char *path, DWORD flags);
+DWORD LoadFolderFlags(const char *path);
 
 void SetUseBrokenIcon(BOOL use_broken_icon);
 BOOL GetUseBrokenIcon(void);

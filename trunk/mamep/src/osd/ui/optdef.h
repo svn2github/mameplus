@@ -312,7 +312,7 @@ START_OPT_FUNC_WINUI
 #ifdef IMAGE_MENU
 	DEFINE_OPT(imagemenu_style,      imagemenu_style)
 #endif /* IMAGE_MENU */
-	DEFINE_OPT(int_positive,         folder_id)
+	DEFINE_OPT(string,               folder_current)
 	DEFINE_OPT(bool,                 use_broken_icon)
 
 // LIST FONT OPTIONS

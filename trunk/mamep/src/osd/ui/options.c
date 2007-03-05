@@ -78,7 +78,7 @@ typedef struct
 
 typedef struct
 {
-	INT      folder_id;
+	char*    folder_current;
 	BOOL     view;
 	BOOL     show_folderlist;
 	LPBITS   folder_hide;
@@ -374,7 +374,7 @@ static void  LoadAltOptions(alt_options_type *alt_option);
 
 static BOOL  IsOptionEqual(options_type *o1, options_type *o2);
 
-static void  set_folder_flag(f_flag *flag, const char *folderName, DWORD dwFlags);
+static void  set_folder_flag(f_flag *flag, const char *folderPath, DWORD dwFlags);
 static void  free_folder_flag(f_flag *flag);
 
 
@@ -1094,14 +1094,15 @@ BOOL GetRandomBackground(void)
 	return settings.random_bg;
 }
 
-void SetSavedFolderID(UINT val)
+void SetSavedFolderPath(const char *path)
 {
-	settings.folder_id = val;
+	FreeIfAllocated(&settings.folder_current);
+	settings.folder_current = strdup(path);
 }
 
-UINT GetSavedFolderID(void)
+const char *GetSavedFolderPath(void)
 {
-	return settings.folder_id;
+	return settings.folder_current;
 }
 
 void SetShowScreenShot(BOOL val)
@@ -2454,16 +2455,13 @@ char* GetVersionString(void)
 	return build_version;
 }
 
-void SetFolderFlags(const WCHAR *folderName, DWORD dwFlags)
+void SaveFolderFlags(const char *path, DWORD flags)
 {
-	const char *s = _String(folderName);
-
-	set_folder_flag(&settings.folder_flag, s, dwFlags);
+	set_folder_flag(&settings.folder_flag, path, flags);
 }
 
-DWORD GetFolderFlags(const WCHAR *folderName)
+DWORD LoadFolderFlags(const char *path)
 {
-	const char *s = _String(folderName);
 	int i;
 
 	if (settings.folder_flag.entry == NULL)
@@ -2471,7 +2469,7 @@ DWORD GetFolderFlags(const WCHAR *folderName)
 
 	for (i = 0; i < settings.folder_flag.num; i++)
 		if (settings.folder_flag.entry[i].name
-		 && strcmp(s, settings.folder_flag.entry[i].name) == 0)
+		 && strcmp(settings.folder_flag.entry[i].name, path) == 0)
 			return settings.folder_flag.entry[i].flags;
 
 	return 0;
@@ -2937,7 +2935,7 @@ static void validate_driver_option(options_type *opt)
 	//	FreeIfAllocated(&opt->screen);
 }
 
-static void set_folder_flag(f_flag *flag, const char *folderName, DWORD dwFlags)
+static void set_folder_flag(f_flag *flag, const char *path, DWORD dwFlags)
 {
 	int i;
 
@@ -2955,8 +2953,7 @@ static void set_folder_flag(f_flag *flag, const char *folderName, DWORD dwFlags)
 	}
 
 	for (i = 0; i < flag->num; i++)
-		if (flag->entry[i].name
-		 && strcmp(flag->entry[i].name, folderName) == 0)
+		if (flag->entry[i].name && strcmp(flag->entry[i].name, path) == 0)
 		{
 			if (dwFlags == 0)
 			{
@@ -2992,7 +2989,7 @@ static void set_folder_flag(f_flag *flag, const char *folderName, DWORD dwFlags)
 		flag->num += ALLOC_FOLDERFLAG;
 	}
 
-	flag->entry[i].name = strdup(folderName);
+	flag->entry[i].name = strdup(path);
 	flag->entry[i].flags = dwFlags;
 }
 
@@ -3115,7 +3112,7 @@ const options_entry winui_opts[] =
 	{ "imagemenu_style",             "0",                          0,                 "current menu style"},
 #endif /* IMAGE_MENU */
 	{ "sort_reverse",                "0",                          OPTION_BOOLEAN,    "sort descending"},
-	{ "folder_id",                   "0",                          0,                 "last selected folder id"},
+	{ "folder_current",              "/",                          0,                 "last selected folder id"},
 	{ "use_broken_icon",             "1",                          OPTION_BOOLEAN,    "use broken icon for not working games"},
 
 	{ NULL,                          NULL,                         OPTION_HEADER,     "LIST FONT OPTIONS"},
@@ -5075,24 +5072,37 @@ INLINE void _options_get_folder_flag(f_flag *flags, const char *name)
 
 INLINE void options_set_folder_flag(const char *name, const f_flag *flags)
 {
-	char buf[1024];
-	char *p;
+	char *buf;
+	int size;
+	int len;
 	int i;
 
-	p = buf;
+	size = 1024;
+	buf = malloc(size * sizeof (*buf));
+	*buf = '\0';
+	len = 0;
+
 	for (i = 0; i < flags->num; i++)
 		if (flags->entry[i].name != NULL)
 		{
-			if (p != buf)
-				*p++ = ',';
+			DWORD dwFlags = flags->entry[i].flags;
+			if (dwFlags == 0)
+				continue;
 
-			sprintf(p, "%s,%ld", flags->entry[i].name, flags->entry[i].flags);
+			if (len + strlen(flags->entry[i].name) + 16 > size)
+			{
+				size += 1024;
+				buf = realloc(buf, size * sizeof (*buf));
+			}
 
-			p += strlen(p);
+			if (len)
+				buf[len++] = ',';
+
+			len += sprintf(buf + len, "%s,%ld", flags->entry[i].name, dwFlags);
 		}
-	*p = '\0';
 
 	options_set_string("folder_flag", buf);
+	free(buf);
 }
 
 INLINE void options_copy_folder_flag(const f_flag *src, f_flag *dest)

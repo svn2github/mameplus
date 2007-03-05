@@ -176,6 +176,7 @@ typedef struct
     DWORD       m_dwFlags;        // Misc flags
     LPBITS      m_lpGameBits;     // Game bits, represent game indices
     LPWSTR      m_lpOriginalTitle;// String contains the original folder name
+    LPSTR       m_lpPath;         // fullpath to use save/load settings
 } TREEFOLDER, *LPTREEFOLDER;
 
 typedef struct
@@ -192,14 +193,8 @@ void FreeFolders(void);
 void ResetFilters(void);
 void InitTree(LPFOLDERDATA lpFolderData, LPFILTER_ITEM lpFilterList);
 void SetCurrentFolder(LPTREEFOLDER lpFolder);
-UINT GetCurrentFolderID(void);
-
 LPTREEFOLDER GetCurrentFolder(void);
-/*
-int GetNumFolders(void);
-*/
 LPTREEFOLDER GetFolder(UINT nFolder);
-LPTREEFOLDER GetFolderByID(UINT nID);
 
 BOOL IsSourceFolder(LPTREEFOLDER lpFolder);
 BOOL IsVectorFolder(LPTREEFOLDER lpFolder);
@@ -230,6 +225,6 @@ HIMAGELIST GetTreeViewIconList(void);
 int GetTreeViewIconIndex(int icon_id);
 
 void ResetTreeViewFolders(void);
-void SelectTreeViewFolder(int folder_id);
+void SelectTreeViewFolder(LPTREEFOLDER lpFolder);
 
 #endif /* TREEVIEW_H */

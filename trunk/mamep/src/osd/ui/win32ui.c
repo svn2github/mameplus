@@ -2651,7 +2651,7 @@ static void Win32UI_exit(void)
 	DirectInputClose();
 	DirectDraw_Close();
 
-	SetSavedFolderID(GetCurrentFolderID());
+	SetSavedFolderPath(GetCurrentFolder()->m_lpPath);
 
 	SaveOptions();
 
@@ -7257,14 +7257,14 @@ void InitTreeContextMenu(HMENU hTreeMenu)
 
 void ToggleShowFolder(int folder)
 {
-	int current_id = GetCurrentFolderID();
+	LPTREEFOLDER current_folder = GetCurrentFolder();
 
 	SetWindowRedraw(hwndList,FALSE);
 
 	SetShowFolder(folder,!GetShowFolder(folder));
 
 	ResetTreeViewFolders();
-	SelectTreeViewFolder(current_id);
+	SelectTreeViewFolder(current_folder);
 
 	SetWindowRedraw(hwndList,TRUE);
 }
@@ -7643,7 +7643,7 @@ void RemoveGameCustomFolder(int driver_index)
 	
 	for (i=0;i<num_folders;i++)
 	{
-		if (folders[i]->m_dwFlags & F_CUSTOM && folders[i]->m_nFolderId == GetCurrentFolderID())
+		if ((folders[i]->m_dwFlags & F_CUSTOM) && folders[i] == GetCurrentFolder())
 		{
 			int current_pick_index;
 

@@ -142,8 +142,7 @@ static const WCHAR *TrimManufacturer(const WCHAR *s);
 static void         CreateAllChildFolders(void);
 static BOOL         AddFolder(LPTREEFOLDER lpFolder);
 static LPTREEFOLDER NewFolder(const WCHAR *lpTitle, UINT nCategoryID, BOOL bTranslate, 
-                              UINT nFolderId, int nParent, UINT nIconId,
-                              DWORD dwFlags);
+                              UINT nFolderId, int nParent, UINT nIconId);
 static void         DeleteFolder(LPTREEFOLDER lpFolder);
 
 static LRESULT CALLBACK TreeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -219,14 +218,12 @@ void ResetFilters(void)
 
 	if (treeFolders != 0)
 	{
-		for (i = 0; i < (int)numFolders; i++)
+		for (i = 0; i < numFolders; i++)
 		{
 			treeFolders[i]->m_dwFlags &= ~F_MASK;
 
 			/* Save the filters to the ini file */
-			SetFolderFlags(treeFolders[i]->m_lpOriginalTitle?
-					treeFolders[i]->m_lpOriginalTitle:
-					treeFolders[i]->m_lpTitle, 0);
+			SaveFolderFlags(treeFolders[i]->m_lpPath, 0);
 		}
 	}
 }
@@ -264,36 +261,9 @@ LPTREEFOLDER GetCurrentFolder(void)
 	return lpCurrentFolder;
 }
 
-UINT GetCurrentFolderID(void)
-{
-	return nCurrentFolder;
-}
-
-/*
-int GetNumFolders(void)
-{
-	return numFolders;
-}
-*/
-
 LPTREEFOLDER GetFolder(UINT nFolder)
 {
 	return (nFolder < numFolders) ? treeFolders[nFolder] : NULL;
-}
-
-LPTREEFOLDER GetFolderByID(UINT nID)
-{
-	UINT i;
-
-	for (i = 0; i < numFolders; i++)
-	{
-		if (treeFolders[i]->m_nFolderId == nID)
-		{
-			return treeFolders[i];
-		}
-	}
-
-	return (LPTREEFOLDER)0;
 }
 
 BOOL IsSourceFolder(LPTREEFOLDER lpFolder)
@@ -531,8 +501,7 @@ void CreateSourceFolders(int parent_index)
 		{
 			// nope, it's a source file we haven't seen before, make it.
 			LPTREEFOLDER lpTemp;
-			lpTemp = NewFolder(s, 0, FALSE, next_folder_id++, parent_index, IDI_SOURCE,
-			                   GetFolderFlags(s));
+			lpTemp = NewFolder(s, 0, FALSE, next_folder_id++, parent_index, IDI_SOURCE);
 			AddFolder(lpTemp);
 			AddGame(lpTemp,jj);
 		}
@@ -574,8 +543,7 @@ void CreateManufacturerFolders(int parent_index)
 				if (i == start_folder-1)
 				{
 					// nope, it's a manufacturer we haven't seen before, make it.
-					lpTemp = NewFolder(t, lstrcmp(s, TEXT("<unknown>")) ? UI_MSG_MANUFACTURE : 0, TRUE, next_folder_id++, parent_index, IDI_MANUFACTURER,
-					                   GetFolderFlags(s));
+					lpTemp = NewFolder(t, lstrcmp(s, TEXT("<unknown>")) ? UI_MSG_MANUFACTURE : 0, TRUE, next_folder_id++, parent_index, IDI_MANUFACTURER);
 					AddFolder(lpTemp);
 					AddGame(lpTemp,jj);
 				}
@@ -956,8 +924,7 @@ void CreateCPUFolders(int parent_index)
 			continue;
 		}
 
-		lpTemp = NewFolder(name, 0, FALSE, next_folder_id++, parent_index, IDI_CPU,
-		                   GetFolderFlags(name));
+		lpTemp = NewFolder(name, 0, FALSE, next_folder_id++, parent_index, IDI_CPU);
 		AddFolder(lpTemp);
 		map[i] = treeFolders[nFolder++];
 	}
@@ -1018,8 +985,7 @@ void CreateSoundFolders(int parent_index)
 			continue;
 		}
 
-		lpTemp = NewFolder(name, 0, FALSE, next_folder_id++, parent_index, IDI_SND,
-		                   GetFolderFlags(name));
+		lpTemp = NewFolder(name, 0, FALSE, next_folder_id++, parent_index, IDI_SND);
 		AddFolder(lpTemp);
 		map[i] = treeFolders[nFolder++];
 	}
@@ -1057,12 +1023,10 @@ void CreateOrientationFolders(int parent_index)
 	// create our two subfolders
 	LPTREEFOLDER lpVert, lpHorz;
 
-	lpVert = NewFolder(TEXT("Vertical"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER,
-	                   GetFolderFlags(TEXT("Vertical")));
+	lpVert = NewFolder(TEXT("Vertical"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER);
 	AddFolder(lpVert);
 
-	lpHorz = NewFolder(TEXT("Horizontal"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER,
-	                   GetFolderFlags(TEXT("Horizontal")));
+	lpHorz = NewFolder(TEXT("Horizontal"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER);
 	AddFolder(lpHorz);
 
 	// no games in top level folder
@@ -1120,8 +1084,7 @@ void CreateDeficiencyFolders(int parent_index)
 	{
 		LPTREEFOLDER lpTemp;
 
-		lpTemp = NewFolder(deficiency_names[i], 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER,
-		                   GetFolderFlags(deficiency_names[i]));
+		lpTemp = NewFolder(deficiency_names[i], 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER);
 		AddFolder(lpTemp);
 		map[i] = treeFolders[nFolder++];
 	}
@@ -1149,11 +1112,9 @@ void CreateDumpingFolders(int parent_index)
 
 	// create our two subfolders
 	LPTREEFOLDER lpBad, lpNo;
-	lpBad = NewFolder(TEXT("Bad Dump"), 0, TRUE, next_folder_id, parent_index, IDI_FOLDER,
- 					   GetFolderFlags(TEXT("Bad Dump")));
+	lpBad = NewFolder(TEXT("Bad Dump"), 0, TRUE, next_folder_id, parent_index, IDI_FOLDER);
 	AddFolder(lpBad);
-	lpNo = NewFolder(TEXT("No Dump"), 0, TRUE, next_folder_id, parent_index, IDI_FOLDER,
- 					   GetFolderFlags(TEXT("No Dump")));
+	lpNo = NewFolder(TEXT("No Dump"), 0, TRUE, next_folder_id, parent_index, IDI_FOLDER);
 	AddFolder(lpNo);
 
 	// no games in top level folder
@@ -1229,8 +1190,7 @@ void CreateYearFolders(int parent_index)
 			// nope, it's a year we haven't seen before, make it.
 			LPTREEFOLDER lpTemp;
 
-			lpTemp = NewFolder(s, 0, !lstrcmp(s, TEXT("<unknown>")), next_folder_id++, parent_index, IDI_YEAR,
-			                   GetFolderFlags(s));
+			lpTemp = NewFolder(s, 0, !lstrcmp(s, TEXT("<unknown>")), next_folder_id++, parent_index, IDI_YEAR);
 			AddFolder(lpTemp);
 			AddGame(lpTemp,jj);
 		}
@@ -1277,8 +1237,7 @@ void CreateBIOSFolders(int parent_index)
 		if (i == start_folder-1)
 		{
 			LPTREEFOLDER lpTemp;
-			lpTemp = NewFolder(driversw[nParentIndex]->description, 0, FALSE, next_folder_id++, parent_index, IDI_BIOS,
-			                   GetFolderFlags(driversw[nParentIndex]->description));
+			lpTemp = NewFolder(driversw[nParentIndex]->description, 0, FALSE, next_folder_id++, parent_index, IDI_BIOS);
 			AddFolder(lpTemp);
 			AddGame(lpTemp,jj);
 		}
@@ -1296,11 +1255,9 @@ void CreateResolutionFolders(int parent_index)
 
 	// create our two subfolders
 	LPTREEFOLDER lpVectorV, lpVectorH;
-	lpVectorV = NewFolder(TEXT("Vector (V)"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER,
- 			      GetFolderFlags(TEXT("Vector (V)")));
+	lpVectorV = NewFolder(TEXT("Vector (V)"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER);
 	AddFolder(lpVectorV);
-	lpVectorH = NewFolder(TEXT("Vector (H)"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER,
- 			      GetFolderFlags(TEXT("Vector (H)")));
+	lpVectorH = NewFolder(TEXT("Vector (H)"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER);
 	AddFolder(lpVectorH);
 
 	// no games in top level folder
@@ -1346,8 +1303,7 @@ void CreateResolutionFolders(int parent_index)
 		if (i == start_folder-1)
 		{
 			LPTREEFOLDER lpTemp;
-			lpTemp = NewFolder(Resolution, 0, FALSE, next_folder_id++, parent_index, IDI_FOLDER,
-					   GetFolderFlags(Resolution));
+			lpTemp = NewFolder(Resolution, 0, FALSE, next_folder_id++, parent_index, IDI_FOLDER);
 			AddFolder(lpTemp);
 			AddGame(lpTemp,jj);
 		}
@@ -1386,8 +1342,7 @@ void CreateFPSFolders(int parent_index)
 
 			swprintf(buf, TEXT("%f Hz"), f);
 
-			lpTemp = NewFolder(buf, 0, FALSE, next_folder_id++, parent_index, IDI_FOLDER,
-			                   GetFolderFlags(buf));
+			lpTemp = NewFolder(buf, 0, FALSE, next_folder_id++, parent_index, IDI_FOLDER);
 			AddFolder(lpTemp);
 			map[nFPS] = treeFolders[nFolder++];
 			fps[nFPS++] = f;
@@ -1405,11 +1360,9 @@ void CreateSaveStateFolders(int parent_index)
 
 	// create our two subfolders
 	LPTREEFOLDER lpSupported, lpUnsupported;
-	lpSupported = NewFolder(TEXT("Supported"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER,
- 					   GetFolderFlags(TEXT("Supported")));
+	lpSupported = NewFolder(TEXT("Supported"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER);
 	AddFolder(lpSupported);
-	lpUnsupported = NewFolder(TEXT("Unsupported"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER,
- 					   GetFolderFlags(TEXT("Unsupported")));
+	lpUnsupported = NewFolder(TEXT("Unsupported"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER);
 	AddFolder(lpUnsupported);
 
 	// no games in top level folder
@@ -1493,8 +1446,7 @@ void CreateControlFolders(int parent_index)
 	{
 		LPTREEFOLDER lpTemp;
 
-		lpTemp = NewFolder(ctrl_names[i], 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER,
-		                   GetFolderFlags(ctrl_names[i]));
+		lpTemp = NewFolder(ctrl_names[i], 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER);
 		AddFolder(lpTemp);
 		map[i] = treeFolders[nFolder++];
 	}
@@ -1810,7 +1762,7 @@ void ResetTreeViewFolders(void)
 	}
 }
 
-void SelectTreeViewFolder(int folder_id)
+void SelectTreeViewFolder(LPTREEFOLDER lpFolder)
 {
 	HWND hTreeView = GetTreeView();
 	HTREEITEM hti;
@@ -1828,7 +1780,7 @@ void SelectTreeViewFolder(int folder_id)
 		tvi.mask = TVIF_PARAM;
 		TreeView_GetItem(hTreeView,&tvi);
 
-		if (((LPTREEFOLDER)tvi.lParam)->m_nFolderId == folder_id)
+		if ((LPTREEFOLDER)tvi.lParam == lpFolder)
 		{
 			TreeView_SelectItem(hTreeView,tvi.hItem);
 			SetCurrentFolder((LPTREEFOLDER)tvi.lParam);
@@ -1860,6 +1812,20 @@ void SelectTreeViewFolder(int folder_id)
 
 }
 
+static void SelectTreeViewFolderPath(const char *path)
+{
+	int i;
+
+	for (i = 0; i < numFolders; i++)
+		if (strcmp(treeFolders[i]->m_lpPath, path) == 0)
+		{
+			SelectTreeViewFolder(treeFolders[i]);
+			return;
+		}
+
+	SelectTreeViewFolder(0);
+}
+
 /* Add a folder to the list.  Does not allocate */
 static BOOL AddFolder(LPTREEFOLDER lpFolder)
 {
@@ -1877,11 +1843,27 @@ static BOOL AddFolder(LPTREEFOLDER lpFolder)
 
 /* Allocate and initialize a NEW TREEFOLDER */
 static LPTREEFOLDER NewFolder(const WCHAR *lpTitle, UINT nCategoryID, BOOL bTranslate, 
-					   UINT nFolderId, int nParent, UINT nIconId, DWORD dwFlags)
+					   UINT nFolderId, int nParent, UINT nIconId)
 {
 	LPTREEFOLDER lpFolder = (LPTREEFOLDER)malloc(sizeof(TREEFOLDER));
+	const char *title = _String(lpTitle);
 
 	memset(lpFolder, '\0', sizeof (TREEFOLDER));
+
+	if (nParent == -1)
+	{
+		int len = 1 + strlen(title) + 1;
+
+		lpFolder->m_lpPath = malloc(len * sizeof (*lpFolder->m_lpPath));
+		snprintf(lpFolder->m_lpPath, len, "/%s", title);
+	}
+	else
+	{
+		int len = strlen(treeFolders[nParent]->m_lpPath) + 1 + strlen(title) + 1;
+
+		lpFolder->m_lpPath = malloc(len * sizeof (*lpFolder->m_lpPath));
+		snprintf(lpFolder->m_lpPath, len, "%s/%s", treeFolders[nParent]->m_lpPath, title);
+	}
 
 	if (bTranslate)
 	{
@@ -1897,7 +1879,7 @@ static LPTREEFOLDER NewFolder(const WCHAR *lpTitle, UINT nCategoryID, BOOL bTran
 	lpFolder->m_nFolderId = nFolderId;
 	lpFolder->m_nParent = nParent;
 	lpFolder->m_nIconId = nIconId;
-	lpFolder->m_dwFlags = dwFlags;
+	lpFolder->m_dwFlags = LoadFolderFlags(lpFolder->m_lpPath);
 
 	return lpFolder;
 }
@@ -1908,15 +1890,13 @@ static void DeleteFolder(LPTREEFOLDER lpFolder)
 	if (lpFolder)
 	{
 		if (lpFolder->m_lpGameBits)
-		{
 			DeleteBits(lpFolder->m_lpGameBits);
-			lpFolder->m_lpGameBits = 0;
-		}
-		free(lpFolder->m_lpTitle);
-		lpFolder->m_lpTitle = 0;
+
+		FreeIfAllocatedW(&lpFolder->m_lpTitle);
 		FreeIfAllocatedW(&lpFolder->m_lpOriginalTitle);
+		FreeIfAllocated(&lpFolder->m_lpPath);
+
 		free(lpFolder);
-		lpFolder = 0;
 	}
 }
 
@@ -1924,7 +1904,6 @@ static void DeleteFolder(LPTREEFOLDER lpFolder)
 BOOL InitFolders(void)
 {
 	int             i = 0;
-	DWORD           dwFolderFlags;
 	LPFOLDERDATA    fData = 0;
 	BOOL            doCreateFavorite;
 
@@ -1956,11 +1935,9 @@ BOOL InitFolders(void)
 	for (i = 0; g_lpFolderData[i].m_lpTitle; i++)
 	{
 		fData = &g_lpFolderData[i];
-		/* get the saved folder flags */
-		dwFolderFlags = GetFolderFlags(fData->m_lpTitle);
+
 		/* create the folder */
-		AddFolder(NewFolder(fData->m_lpTitle, 0, TRUE, fData->m_nFolderId, -1,
-		                    fData->m_nIconId, dwFolderFlags));
+		AddFolder(NewFolder(fData->m_lpTitle, 0, TRUE, fData->m_nFolderId, -1, fData->m_nIconId));
 	}
 
 	numExtraFolders = InitExtraFolders();
@@ -2003,12 +1980,14 @@ BOOL InitFolders(void)
 		LPEXFOLDERDATA fExData = ExtraFolderData[i];
 		LPTREEFOLDER   lpFolder;
 
-		// OR in the saved folder flags
-		dwFolderFlags = fExData->m_dwFlags | GetFolderFlags(fExData->m_szTitle);
 		// create the folder
 		//dprintf("creating top level custom folder with icon %i",fExData->m_nIconId);
 		lpFolder = NewFolder(fExData->m_szTitle,UI_MSG_EXTRA + (fExData->m_nFolderId - MAX_FOLDERS),TRUE,fExData->m_nFolderId,fExData->m_nParent,
-		                    fExData->m_nIconId,dwFolderFlags);
+		                    fExData->m_nIconId);
+
+		// OR in the saved folder flags
+		lpFolder->m_dwFlags |= fExData->m_dwFlags;
+
 		AddFolder(lpFolder);
 
 		if (doCreateFavorite && i == numExtraFolders - 1)
@@ -2026,7 +2005,7 @@ BOOL InitFolders(void)
 
 	ResetTreeViewFolders();
 
-	SelectTreeViewFolder(GetSavedFolderID());
+	SelectTreeViewFolderPath(GetSavedFolderPath());
 
 	return TRUE;
 }
@@ -2533,9 +2512,10 @@ BOOL TryAddExtraFolderAndChildren(int parent_index)
 					current_id = next_folder_id++;
 					/* create a new folder with this name,
 					   and the flags for this folder as read from the registry */
-					lpTemp = NewFolder(foldername,UI_MSG_EXTRA + (ExtraFolderData[id]->m_nFolderId - MAX_FOLDERS),TRUE,current_id,parent_index,
-					                   ExtraFolderData[id]->m_nSubIconId,
-					                   GetFolderFlags(foldername) | F_CUSTOM);
+					lpTemp = NewFolder(foldername, UI_MSG_EXTRA + (ExtraFolderData[id]->m_nFolderId - MAX_FOLDERS),
+					                   TRUE, current_id, parent_index, ExtraFolderData[id]->m_nSubIconId);
+
+					lpFolder->m_dwFlags |= F_CUSTOM;
 
 					AddFolder(lpTemp);
 				}

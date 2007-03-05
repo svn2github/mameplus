@@ -565,9 +565,7 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 			folder->m_dwFlags |= dwFilters;
 
 			// Save the filters to the ini file
-			SetFolderFlags(folder->m_lpOriginalTitle?
-					folder->m_lpOriginalTitle:
-					folder->m_lpTitle, dwFilters);
+			SaveFolderFlags(folder->m_lpPath, dwFilters);
 
 			EndDialog(hDlg, 1);
 			return TRUE;
