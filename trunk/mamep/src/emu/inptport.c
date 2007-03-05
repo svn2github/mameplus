@@ -292,7 +292,7 @@ static input_bit_info *custom_button_info[MAX_PLAYERS][MAX_CUSTOM_BUTTONS];
 #ifdef USE_SHOW_INPUT_LOG
 UINT8 command_buffer[COMMAND_LOG_BUFSIZE];
 int show_input_log  = 0;
-int command_counter = 0;
+double command_time_last_uptate;
 static void make_input_log(void);
 #endif /* USE_SHOW_INPUT_LOG */
 
@@ -1032,10 +1032,10 @@ static const input_port_default_entry default_ports_builtin[] =
 #endif /* CMD_LIST */
 #ifdef USE_SHOW_TIME
 	INPUT_PORT_DIGITAL_DEF( 0, IPG_UI,      UI_TIME,             "Show Current Time",	SEQ_DEF_0 )
-#endif
+#endif /* USE_SHOW_TIME */
 #ifdef USE_SHOW_INPUT_LOG
 	INPUT_PORT_DIGITAL_DEF( 0, IPG_UI,      UI_SHOW_INPUT_LOG,   "Show Button Input",	SEQ_DEF_0 )
-#endif
+#endif /* USE_SHOW_INPUT_LOG */
 
 	INPUT_PORT_DIGITAL_DEF( 0, IPG_UI,      UI_UP,               "UI Up",				SEQ_DEF_3(KEYCODE_UP, CODE_OR, JOYCODE_1_UP) )
 	INPUT_PORT_DIGITAL_DEF( 0, IPG_UI,      UI_DOWN,             "UI Down",				SEQ_DEF_3(KEYCODE_DOWN, CODE_OR, JOYCODE_1_DOWN) )
@@ -3868,8 +3868,9 @@ static void make_input_log(void)
 			{
 				char colorbutton = '0';
 				copy_command_buffer(colorbutton + now_dir);
-				command_counter = 60;
 				old_dir = now_dir;
+
+				command_time_last_uptate = timer_get_time();
 			}
 		}
 	}
@@ -3954,9 +3955,10 @@ static void make_input_log(void)
 				if (now_btn & 1 << (normal_buttons + 1))
 					copy_command_buffer('s');
 
-				command_counter = 60;
 				old_btn = now_btn;
 				now_btn = 0;
+
+				command_time_last_uptate = timer_get_time();
 			}
 		}
 	}

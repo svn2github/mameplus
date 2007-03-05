@@ -90,9 +90,9 @@ struct _slider_state
 ***************************************************************************/
 
 #ifdef USE_SHOW_INPUT_LOG
-extern int show_input_log;
 extern UINT8 command_buffer[COMMAND_LOG_BUFSIZE];
-extern int command_counter;
+extern int show_input_log;
+extern double command_time_last_uptate;
 #endif /* USE_SHOW_INPUT_LOG */
 
 
@@ -1475,6 +1475,9 @@ static void display_input_log(void)
 	int sz;
 	int i;
 
+	if (!command_buffer[0])
+		return;
+
 	width = 0.0f;
 
 	for (i = 0; command_buffer[i]; i += sz)
@@ -1507,8 +1510,10 @@ static void display_input_log(void)
 	ui_draw_box(0.0f, 1.0f - ui_get_line_height(), 1.0f, 1.0f, UI_FILLCOLOR);
 	ui_draw_text_bk(command_buffer + i, 0.0f, 1.0f - ui_get_line_height(), 0);
 
-	if (--command_counter == 0)
-		memset(command_buffer, 0, sizeof command_buffer);
+	if (command_time_last_uptate + TIME_IN_SEC(1) < timer_get_time())
+		command_buffer[0] = '\0';
+	if (command_time_last_uptate > timer_get_time() + TIME_IN_SEC(1))
+		command_time_last_uptate = timer_get_time();
 }
 #endif /* USE_SHOW_INPUT_LOG */
 
@@ -1944,7 +1949,7 @@ static UINT32 handler_ingame(UINT32 state)
 	}
 
 	/* show popup message if input exist any log */
-	if (show_input_log && command_counter)
+	if (show_input_log)
 		display_input_log();
 #endif /* USE_SHOW_INPUT_LOG */
 
