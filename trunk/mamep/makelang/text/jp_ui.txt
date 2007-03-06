@@ -1651,7 +1651,7 @@ Playback a recorded game
 保存した入力を再現します
 
 # osd/ui/win32ui.c: 867
-Playcount
+Played
 プレイ回数
 
 # osd/ui/treeview.c: 1439
@@ -2191,7 +2191,7 @@ Sort items by name
 名前で整列します
 
 # osd/ui/mame32.rc: 1564
-Sort items by playcount
+Sort items by number of plays
 プレイ回数で整列します
 
 # osd/ui/mame32.rc: 1564
@@ -2539,7 +2539,7 @@ by &Name
 名前(&N)
 
 # osd/ui/mame32.rc: 109
-by &Playcount
+by Times &Played
 プレイ回数(&P)
 
 # osd/ui/mame32.rc: 110

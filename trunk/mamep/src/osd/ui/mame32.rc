@@ -106,7 +106,7 @@ BEGIN
             MENUITEM "by &Description",             ID_VIEW_BYGAME
             MENUITEM "by &Name",                    ID_VIEW_BYDIRECTORY
             MENUITEM "by &Manufacturer",            ID_VIEW_BYMANUFACTURER
-            MENUITEM "by &Playcount",               ID_VIEW_BYTIMESPLAYED
+            MENUITEM "by Times &Played",            ID_VIEW_BYTIMESPLAYED
             MENUITEM "by &Type",                    ID_VIEW_BYTYPE
             MENUITEM "by &Year",                    ID_VIEW_BYYEAR
         END
@@ -1125,11 +1125,13 @@ BEGIN
     GROUPBOX        "Number of screens",IDC_STATIC,55,45,150,32
     CONTROL         "NumscreensSlider",IDC_NUMSCREENS,"msctls_trackbar32",
                     TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,60,60,120,10
-    CTEXT           "1",IDC_NUMSCREENSDISP,185,60,17,10,SS_CENTERIMAGE | NOT WS_GROUP
+    CTEXT           "1",IDC_NUMSCREENSDISP,185,60,17,10,SS_CENTERIMAGE | NOT 
+                    WS_GROUP
     GROUPBOX        "Screen",IDC_SCREENTEXT,55,80,150,125
     COMBOBOX        IDC_SCREEN,61,96,137,100,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP,0,HIDC_SCREEN
-    LTEXT           "Aspect ratio",IDC_ASPECTRATIOTEXT,61,118,58,12,SS_CENTERIMAGE
+    LTEXT           "Aspect ratio",IDC_ASPECTRATIOTEXT,61,118,58,12,
+                    SS_CENTERIMAGE | NOT WS_GROUP
     EDITTEXT        IDC_ASPECTRATION,144,118,22,12,ES_RIGHT | ES_AUTOHSCROLL | 
                     ES_NUMBER,0,HIDC_ASPECTRATION
     CTEXT           ":",IDC_ASPECTRATIOTEXT2,168,118,8,12,SS_CENTERIMAGE | NOT WS_GROUP
@@ -1138,9 +1140,6 @@ BEGIN
     LTEXT           "Size:",IDC_STATIC,61,141,58,10,SS_CENTERIMAGE | NOT WS_GROUP
     COMBOBOX        IDC_SIZES,144,138,54,172,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP,0,HIDC_SIZES
-    LTEXT           "Depth:",IDC_RESDEPTHTEXT,61,162,58,10,SS_CENTERIMAGE | NOT WS_GROUP
-    COMBOBOX        IDC_RESDEPTH,144,159,54,63,CBS_DROPDOWNLIST | WS_VSCROLL | 
-                    WS_TABSTOP
     LTEXT           "Refresh:",IDC_REFRESHTEXT,61,182,58,10,SS_CENTERIMAGE | NOT WS_GROUP
     COMBOBOX        IDC_REFRESH,144,180,54,76,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP,0,HIDC_REFRESH
@@ -1566,7 +1565,7 @@ BEGIN
     ID_VIEW_BYMANUFACTURER  "Sort items by manufacturer"
     ID_VIEW_BYYEAR          "Sort items by year"
     ID_VIEW_BYTYPE          "Sort items by type"
-    ID_VIEW_BYTIMESPLAYED   "Sort items by playcount"
+    ID_VIEW_BYTIMESPLAYED   "Sort by number of plays"
     ID_VIEW_LINEUPICONS     "Arranges icons in a grid"
     ID_UPDATE_GAMELIST      "Refresh game list"
     ID_SORT_ASCENDING       "Sort column in ascending (A-Z) order"
@@ -1637,4 +1636,5 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
+
 

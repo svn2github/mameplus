@@ -869,13 +869,14 @@ const WCHAR* column_names[COLUMN_MAX] =
 	TEXT("Name"),
 	TEXT("Type"),
 	TEXT("Trackball"),
-	TEXT("Playcount"),
+	TEXT("Played"),
 	TEXT("Manufacturer"),
 	TEXT("Year"),
 	TEXT("Clone Of"),
 	TEXT("Driver"),
 	TEXT("Play Time")
 };
+
 
 /***************************************************************************
     Message Macros

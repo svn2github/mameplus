@@ -18,7 +18,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-
 #include <assert.h>
 #include <stdio.h>
 #include <math.h>
@@ -662,4 +661,5 @@ static void ExitJoystick(joystick_type *joystick)
 		joystick->name = NULL;
 	}
 }
+
 

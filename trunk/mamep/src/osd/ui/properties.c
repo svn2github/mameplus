@@ -143,12 +143,11 @@ static void FullScreenBrightnessSelectionChange(HWND hwnd);
 static void FullScreenContrastSelectionChange(HWND hwnd);
 static void JDZSelectionChange(HWND hwnd);
 static void JSATSelectionChange(HWND hwnd);
-static void ResDepthSelectionChange(HWND hWnd, HWND hWndCtrl);
 static void RefreshSelectionChange(HWND hWnd, HWND hWndCtrl);
 static void VolumeSelectionChange(HWND hwnd);
 static void AudioLatencySelectionChange(HWND hwnd);
 static void ThreadPrioritySelectionChange(HWND hwnd);
-static void UpdateDisplayModeUI(HWND hwnd, DWORD dwDepth, DWORD dwRefresh);
+static void UpdateDisplayModeUI(HWND hwnd, DWORD dwRefresh);
 static void InitializeDisplayModeUI(HWND hwnd);
 static void InitializeSoundUI(HWND hwnd);
 static void InitializeSkippingUI(HWND hwnd);
@@ -156,7 +155,6 @@ static void InitializeRotateUI(HWND hwnd);
 static void InitializeScreenUI(HWND hwnd);
 static void InitializeD3DVersionUI(HWND hwnd);
 static void InitializeVideoUI(HWND hwnd);
-static void InitializeResDepthUI(HWND hwnd);
 static void InitializeRefreshUI(HWND hwnd);
 static void InitializeDefaultInputUI(HWND hWnd);
 static void InitializeAnalogAxesUI(HWND hWnd);
@@ -459,17 +457,17 @@ static const struct
 
 typedef HTHEME (WINAPI *OpenThemeProc)(HWND hwnd, LPCWSTR pszClassList);
 
+HMODULE hThemes;
 OpenThemeProc fnOpenTheme;
 FARPROC fnIsThemed;
 
 void PropertiesInit(void)
 {
-	HMODULE hThemes = LoadLibraryA("uxtheme.dll");
+	hThemes = LoadLibraryA("uxtheme.dll");
 
 	if (hThemes)
 	{
 		fnIsThemed = GetProcAddress(hThemes,"IsAppThemed");
-		FreeLibrary(hThemes);
 	}
 	bThemeActive = FALSE;
 }
@@ -1873,33 +1871,25 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 		changed = ReadControl(hDlg, wID);
 		break;
 
-	case IDC_RESDEPTH:
-		if (wNotifyCode == LBN_SELCHANGE)
+	case IDC_D3D_VERSION:
+		if (wNotifyCode == CBN_SELCHANGE)
 		{
-			ResDepthSelectionChange(hDlg, hWndCtrl);
 			changed = TRUE;
 		}
 		break;
 
-			case IDC_D3D_VERSION:
-				if (wNotifyCode == CBN_SELCHANGE)
-				{
-					changed = TRUE;
-				}
-				break;
-
-			case IDC_PADDLE:
-			case IDC_ADSTICK:
-			case IDC_PEDAL:
-			case IDC_DIAL:
-			case IDC_TRACKBALL:
-			case IDC_LIGHTGUNDEVICE:
-			case IDC_POSITIONALEVICE:
-				if (wNotifyCode == CBN_SELCHANGE)
-				{
-					changed = TRUE;
-				}
-				break;
+	case IDC_PADDLE:
+	case IDC_ADSTICK:
+	case IDC_PEDAL:
+	case IDC_DIAL:
+	case IDC_TRACKBALL:
+	case IDC_LIGHTGUNDEVICE:
+	case IDC_POSITIONALEVICE:
+		if (wNotifyCode == CBN_SELCHANGE)
+		{
+			changed = TRUE;
+		}
+		break;
 
 	case IDC_REFRESH:
 		if (wNotifyCode == LBN_SELCHANGE)
@@ -2184,31 +2174,36 @@ static INT_PTR HandleGameOptionsCtlColor(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 	if( Msg == WM_CTLCOLORSTATIC )
 	{
 
-		//	SetBkColor((HDC)wParam,GetSysColor(COLOR_3DFACE) );
-		if( fnIsThemed && fnIsThemed() )
+	//	SetBkColor((HDC)wParam,GetSysColor(COLOR_3DFACE) );
+		if( hThemes )
 		{
-			HWND hWnd = PropSheet_GetTabControl(GetParent(hDlg));
-			// Set the background mode to transparent
-			SetBkMode((HDC)wParam, TRANSPARENT);
-
-			// Get the controls window dimensions
-			GetWindowRect((HWND)lParam, &rc);
-
-			// Map the coordinates to coordinates with the upper left corner of dialog control as base
-			MapWindowPoints(NULL, hWnd, (LPPOINT)(&rc), 2);
-
-			// Adjust the position of the brush for this control (else we see the top left of the brush as background)
-			SetBrushOrgEx((HDC)wParam, -rc.left, -rc.top, NULL);
-
-			// Return the brush
-			return (INT_PTR)(hBkBrush);
+		    if( fnIsThemed && fnIsThemed() )
+		    {
+			    HWND hWnd = PropSheet_GetTabControl(GetParent(hDlg));
+			    // Set the background mode to transparent
+			    SetBkMode((HDC)wParam, TRANSPARENT);
+    
+			    // Get the controls window dimensions
+			    GetWindowRect((HWND)lParam, &rc);
+    
+			    // Map the coordinates to coordinates with the upper left corner of dialog control as base
+			    MapWindowPoints(NULL, hWnd, (LPPOINT)(&rc), 2);
+    
+			    // Adjust the position of the brush for this control (else we see the top left of the brush as background)
+			    SetBrushOrgEx((HDC)wParam, -rc.left, -rc.top, NULL);
+    
+			    // Return the brush
+			    return (INT_PTR)(hBkBrush);
+		    }
+		    else
+		    {
+			    SetBkColor((HDC) wParam,GetSysColor(COLOR_3DFACE) );
+		    }
+	    }
+	    else
+				SetBkColor((HDC) wParam,GetSysColor(COLOR_3DFACE) );
 		}
 		else
-		{
-			SetBkColor((HDC) wParam,GetSysColor(COLOR_3DFACE) );
-		}
-	}
-	else
 		SetBkColor((HDC)wParam,RGB(255,255,255) );
 	UnrealizeObject(background_brush);
 	return (DWORD)background_brush;
@@ -2369,27 +2364,6 @@ static void PropToOptions(HWND hWnd, options_type *o)
 				sprintf(buffer, "%dx%d", 0, 0); // auto
 			}
 		}   
-
-		/* resolution depth */
-		hCtrl = GetDlgItem(hWnd, IDC_RESDEPTH);
-		if (hCtrl)
-		{
-			int nResDepth = 0;
-
-			nIndex = ComboBox_GetCurSel(hCtrl);
-			if (nIndex != CB_ERR)
-				nResDepth = ComboBox_GetItemData(hCtrl, nIndex);
-
-			switch (nResDepth)
-			{
-			default:
-			case 0:  strcat(buffer, "x0"); break;
-			case 16: strcat(buffer, "x16"); break;
-			case 24: strcat(buffer, "x24"); break;
-			case 32: strcat(buffer, "x32"); break;
-			}
-		}
-
 
 		/* refresh */
 		hCtrl = GetDlgItem(hWnd, IDC_REFRESH);
@@ -2558,13 +2532,13 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 		w = h = 0;
 	}
 	else
-	if (sscanf(o->resolution0, "%dx%dx%d@%d", &w, &h, &d, &r) < 2)
+	if (sscanf(o->resolution0, "%dx%d@%d", &w, &h, &r) < 2)
 	{
-		w = h = d = r = 0;
+		w = h = r = 0;
 	}
 
 	/* Setup sizes list based on depth. */
-	UpdateDisplayModeUI(hWnd, d, r);
+	UpdateDisplayModeUI(hWnd, r);
 
 	/* Screen size drop down list */
 	hCtrl = GetDlgItem(hWnd, IDC_SIZES);
@@ -2600,42 +2574,6 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 						nSelection = nCount;
 						break;
 					}
-				}
-			}
-			ComboBox_SetCurSel(hCtrl, nSelection);
-		}
-	}
-
-	/* Screen depth drop down list */
-	hCtrl = GetDlgItem(hWnd, IDC_RESDEPTH);
-	if (hCtrl)
-	{
-		if (d == 0)
-		{
-			/* default to auto */
-			ComboBox_SetCurSel(hCtrl, 0);
-		}
-		else
-		{
-			/* Select the mode in the list. */
-			int nSelection = 0;
-			int nCount = 0;
-
-			/* Get the number of items in the control */
-			nCount = ComboBox_GetCount(hCtrl);
-
-			while (0 < nCount--)
-			{
-				int nDepth;
-
-				/* Get the screen depth */
-				nDepth = ComboBox_GetItemData(hCtrl, nCount);
-
-				/* If we match, set nSelection to the right value */
-				if (d == nDepth)
-				{
-					nSelection = nCount;
-					break;
 				}
 			}
 			ComboBox_SetCurSel(hCtrl, nSelection);
@@ -3001,22 +2939,20 @@ static void SetPropEnabledControls(HWND hWnd)
 	}
 
 	EnableWindow(GetDlgItem(hWnd, IDC_MAXIMIZE),               in_window);
-	EnableWindow(GetDlgItem(hWnd, IDC_RESDEPTH),               !in_window);
-	EnableWindow(GetDlgItem(hWnd, IDC_RESDEPTHTEXT),           !in_window);
 
-	EnableWindow(GetDlgItem(hWnd, IDC_WAITVSYNC),              ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_TRIPLE_BUFFER),          ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_PRESCALE),               ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_PRESCALEDISP),           ddraw || d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_PRESCALETEXT),           ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_WAITVSYNC),              !gdi);
+	EnableWindow(GetDlgItem(hWnd, IDC_TRIPLE_BUFFER),          !gdi);
+	EnableWindow(GetDlgItem(hWnd, IDC_PRESCALE),               !gdi);
+	EnableWindow(GetDlgItem(hWnd, IDC_PRESCALEDISP),           !gdi);
+	EnableWindow(GetDlgItem(hWnd, IDC_PRESCALETEXT),           !gdi);
 	EnableWindow(GetDlgItem(hWnd, IDC_HWSTRETCH),              ddraw && DirectDraw_HasHWStretch());
-	EnableWindow(GetDlgItem(hWnd, IDC_SWITCHRES),              !in_window && (ddraw || d3d));
-	EnableWindow(GetDlgItem(hWnd, IDC_SYNCREFRESH),            ddraw || d3d);
+	EnableWindow(GetDlgItem(hWnd, IDC_SWITCHRES),              !in_window && !gdi);
+	EnableWindow(GetDlgItem(hWnd, IDC_SYNCREFRESH),            !gdi);
 	EnableWindow(GetDlgItem(hWnd, IDC_REFRESH),                !in_window && ((ddraw && DirectDraw_HasRefresh()) || d3d));
 	EnableWindow(GetDlgItem(hWnd, IDC_REFRESHTEXT),            !in_window && ((ddraw && DirectDraw_HasRefresh()) || d3d));
-	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMA),                !in_window && (ddraw || d3d));
-	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMATEXT),            !in_window && (ddraw || d3d));
-	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMADISP),            !in_window && (ddraw || d3d));
+	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMA),                !in_window && !gdi);
+	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMATEXT),            !in_window && !gdi);
+	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMADISP),            !in_window && !gdi);
 	EnableWindow(GetDlgItem(hWnd, IDC_FSBRIGHTNESS),           !in_window);
 	EnableWindow(GetDlgItem(hWnd, IDC_FSBRIGHTNESSTEXT),       !in_window);
 	EnableWindow(GetDlgItem(hWnd, IDC_FSBRIGHTNESSDISP),       !in_window);
@@ -3852,7 +3788,6 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_ASPECTRATIOD,  DM_NONE, CT_NONE,     &pGameOpts->aspect0,       DM_STRING, &pGameOpts->aspect0,     0, 0, 0);
 	DataMapAdd(IDC_ASPECTRATION,  DM_NONE, CT_NONE,     &pGameOpts->aspect0,       DM_STRING, &pGameOpts->aspect0,     0, 0, 0);
 	DataMapAdd(IDC_SIZES,         DM_NONE, CT_NONE,     &pGameOpts->resolution0,   DM_STRING, &pGameOpts->resolution0, 0, 0, 0);
-	DataMapAdd(IDC_RESDEPTH,      DM_NONE, CT_NONE,     &pGameOpts->resolution0,   DM_STRING, &pGameOpts->resolution0, 0, 0, 0);
 	DataMapAdd(IDC_REFRESH,       DM_NONE, CT_NONE,     &pGameOpts->resolution0,   DM_STRING, &pGameOpts->resolution0, 0, 0, 0);
 #ifdef USE_SCALE_EFFECTS
 	DataMapAdd(IDC_SCALEEFFECT,   DM_INT,  CT_COMBOBOX, &g_nScaleEffectIndex,      DM_STRING, &pGameOpts->scale_effect,0, 0, AssignScaleEffect);
@@ -4033,18 +3968,6 @@ BOOL IsControlOptionValue(HWND hDlg,HWND hwnd_ctrl, options_type *opts )
 
 		return xx1 == xx2 && yy1 == yy2;
 	}
-	case IDC_RESDEPTH :
-	{
-		int temp,d1=0,d2=0;
-
-		if (strcmp(pGameOpts->resolution0,"auto") != 0)
-			sscanf(pGameOpts->resolution0,"%d x %d x %d",&temp,&temp,&d1);
-
-		if (strcmp(opts->resolution0,"auto") != 0)
-			sscanf(opts->resolution0,"%d x %d x %d",&temp,&temp,&d2);
-
-		return d1 == d2;
-	}
 	case IDC_ROTATE :
 	{
 		ReadControl(hDlg,control_id);
@@ -4120,7 +4043,6 @@ static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled)
 /* Moved here cause it's called in a few places */
 static void InitializeOptions(HWND hDlg)
 {
-	InitializeResDepthUI(hDlg);
 	InitializeRefreshUI(hDlg);
 	InitializeDisplayModeUI(hDlg);
 	InitializeSoundUI(hDlg);
@@ -4519,32 +4441,6 @@ static void JSATSelectionChange(HWND hwnd)
 	Static_SetTextA(GetDlgItem(hwnd, IDC_JSATDISP), buf);
 }
 
-/* Handle changes to the Color Depth drop down */
-static void ResDepthSelectionChange(HWND hWnd, HWND hWndCtrl)
-{
-	int nCurSelection;
-
-	nCurSelection = ComboBox_GetCurSel(hWndCtrl);
-	if (nCurSelection != CB_ERR)
-	{
-		HWND hRefreshCtrl;
-		int nResDepth = 0;
-		int nRefresh  = 0;
-
-		nResDepth = ComboBox_GetItemData(hWndCtrl, nCurSelection);
-
-		hRefreshCtrl = GetDlgItem(hWnd, IDC_REFRESH);
-		if (hRefreshCtrl)
-		{
-			nCurSelection = ComboBox_GetCurSel(hRefreshCtrl);
-			if (nCurSelection != CB_ERR)
-				nRefresh = ComboBox_GetItemData(hRefreshCtrl, nCurSelection);
-		}
-
-		UpdateDisplayModeUI(hWnd, nResDepth, nRefresh);
-	}
-}
-
 /* Handle changes to the Refresh drop down */
 static void RefreshSelectionChange(HWND hWnd, HWND hWndCtrl)
 {
@@ -4553,21 +4449,11 @@ static void RefreshSelectionChange(HWND hWnd, HWND hWndCtrl)
 	nCurSelection = ComboBox_GetCurSel(hWndCtrl);
 	if (nCurSelection != CB_ERR)
 	{
-		HWND hResDepthCtrl;
-		int nResDepth = 0;
 		int nRefresh  = 0;
 
 		nRefresh = ComboBox_GetItemData(hWndCtrl, nCurSelection);
 
-		hResDepthCtrl = GetDlgItem(hWnd, IDC_RESDEPTH);
-		if (hResDepthCtrl)
-		{
-			nCurSelection = ComboBox_GetCurSel(hResDepthCtrl);
-			if (nCurSelection != CB_ERR)
-				nResDepth = ComboBox_GetItemData(hResDepthCtrl, nCurSelection);
-		}
-
-		UpdateDisplayModeUI(hWnd, nResDepth, nRefresh);
+		UpdateDisplayModeUI(hWnd, nRefresh);
 	}
 }
 
@@ -4627,7 +4513,7 @@ static void ThreadPrioritySelectionChange(HWND hwnd)
 }
 
 /* Adjust possible choices in the Screen Size drop down */
-static void UpdateDisplayModeUI(HWND hwnd, DWORD dwDepth, DWORD dwRefresh)
+static void UpdateDisplayModeUI(HWND hwnd, DWORD dwRefresh)
 {
 	int                   i;
 	char                  buf[100];
@@ -4662,7 +4548,7 @@ static void UpdateDisplayModeUI(HWND hwnd, DWORD dwDepth, DWORD dwRefresh)
 
 	for (i = 0; i < pDisplayModes->m_nNumModes; i++)
 	{
-		if ((pDisplayModes->m_Modes[i].m_dwBPP     == dwDepth   || dwDepth   == 0)
+		if ((pDisplayModes->m_Modes[i].m_dwBPP == 32 ) // Only 32 bit depth supported by core
 		&&  (pDisplayModes->m_Modes[i].m_dwRefresh == dwRefresh || dwRefresh == 0))
 		{
 			sprintf(buf, "%lu x %lu", pDisplayModes->m_Modes[i].m_dwWidth,
@@ -4685,7 +4571,7 @@ static void UpdateDisplayModeUI(HWND hwnd, DWORD dwDepth, DWORD dwRefresh)
 /* Initialize the Display options to auto mode */
 static void InitializeDisplayModeUI(HWND hwnd)
 {
-	UpdateDisplayModeUI(hwnd, 0, 0);
+	UpdateDisplayModeUI(hwnd, 0);
 }
 
 /* Initialize the sound options */
@@ -4743,45 +4629,6 @@ static void InitializeRotateUI(HWND hwnd)
 	}
 }
 
-/* Populate the resolution depth drop down */
-static void InitializeResDepthUI(HWND hwnd)
-{
-	HWND hCtrl = GetDlgItem(hwnd, IDC_RESDEPTH);
-
-	if (hCtrl)
-	{
-		struct tDisplayModes* pDisplayModes;
-		int nCount = 0;
-		int i;
-
-		/* Remove all items in the list. */
-		ComboBox_ResetContent(hCtrl);
-
-		ComboBox_AddString(hCtrl, _UIW(TEXT("Auto")));
-		ComboBox_SetItemData(hCtrl, nCount++, 0);
-
-		pDisplayModes = DirectDraw_GetDisplayModes();
-
-		for (i = 0; i < pDisplayModes->m_nNumModes; i++)
-		{
-			if (pDisplayModes->m_Modes[i].m_dwBPP == 16
-			||  pDisplayModes->m_Modes[i].m_dwBPP == 24
-			||  pDisplayModes->m_Modes[i].m_dwBPP == 32)
-			{
-				WCHAR buf[16];
-
-				swprintf(buf, _UIW(TEXT("%li bit")), pDisplayModes->m_Modes[i].m_dwBPP);
-
-				if (ComboBox_FindString(hCtrl, 0, buf) == CB_ERR)
-				{
-					ComboBox_InsertString(hCtrl, nCount, buf);
-					ComboBox_SetItemData(hCtrl, nCount++, pDisplayModes->m_Modes[i].m_dwBPP);
-				}
-			}
-		}
-	}
-}
-
 /* Populate the Video Mode drop down */
 static void InitializeVideoUI(HWND hwnd)
 {
@@ -4798,7 +4645,6 @@ static void InitializeVideoUI(HWND hwnd)
 		}
 	}
 }
-
 
 
 
@@ -5022,7 +4868,6 @@ static void InitializeEffectUI(HWND hwnd)
 	}
 }
 
-
 static void InitializeControllerMappingUI(HWND hwnd)
 {
 	int i;
@@ -5134,15 +4979,16 @@ static void InitializeDefaultBIOSUI(HWND hwnd)
 void UpdateBackgroundBrush(HWND hwndTab)
 {
 	// Check if the application is themed
-	if(fnIsThemed)
-		bThemeActive = fnIsThemed();
-
+    if (hThemes)
+    {
+	    if(fnIsThemed)
+		    bThemeActive = fnIsThemed();
+    }
 	// Destroy old brush
 	if (hBkBrush)
-	{
 		DeleteObject(hBkBrush);
-		hBkBrush = NULL;
-	}
+
+	hBkBrush = NULL;
 
 	// Only do this if the theme is active
 	if (bThemeActive)

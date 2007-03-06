@@ -1647,7 +1647,7 @@ Playback a recorded game
 播放已記錄的遊戲
 
 # osd/ui/win32ui.c: 867
-Playcount
+Played
 執行次數
 
 # osd/ui/treeview.c: 1439
@@ -2187,7 +2187,7 @@ Sort items by name
 依名稱排列項目
 
 # osd/ui/mame32.rc: 1564
-Sort items by playcount
+Sort items by number of plays
 依執行次數排列項目
 
 # osd/ui/mame32.rc: 1564
@@ -2535,7 +2535,7 @@ by &Name
 依名稱(&N)
 
 # osd/ui/mame32.rc: 109
-by &Playcount
+by Times &Played
 依執行次數(&P)
 
 # osd/ui/mame32.rc: 110

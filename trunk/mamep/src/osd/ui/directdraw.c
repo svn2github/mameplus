@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #define WIN32_LEAN_AND_MEAN
+
 #include <windows.h>
 
 #if !defined(__GNUC__)
@@ -421,5 +422,6 @@ static void CalculateDisplayModes(void)
 	if (g_pDirectDraw2)
 		IDirectDraw2_EnumDisplayModes(g_pDirectDraw2, 0, NULL, &g_DisplayModes, EnumDisplayModesCallback);
 }
+
 
 

@@ -290,10 +290,11 @@ INLINE int is_breakable_char(unicode_char ch)
 }
 
 
-//mamep: check double width character: is it enough to check only BMP?
+//mamep: check double width character. 
+//mame core does not support surrogate pairs U+10000-U+10FFFF
 INLINE int is_double_size_char(unicode_char uchar)
 {
-	//	Plane 0 (0000-FFF): Basic Multilingual Plane (BMP)
+	//	Plane 0 (0000-FFFF): Basic Multilingual Plane (BMP)
 	if (uchar > 0x1000)
 		return 1;
 

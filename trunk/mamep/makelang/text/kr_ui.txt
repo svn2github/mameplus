@@ -1623,7 +1623,7 @@ Playback a recorded game
 입력을 저장한 리플레이 파일을 재생
 
 # osd/ui/win32ui.c: 867
-Playcount
+Played
 실행
 
 # osd/ui/treeview.c: 1438
@@ -2155,7 +2155,7 @@ Sort items by name
 이름으로 정렬
 
 # osd/ui/mame32.rc: 1556
-Sort items by playcount
+Sort items by number of plays
 실행 횟수로 정렬
 
 # osd/ui/mame32.rc: 1556
@@ -2511,7 +2511,7 @@ by &Name
 게임 이름(&N)
 
 # osd/ui/mame32.rc: 109
-by &Playcount
+by Times &Played
 실행 횟수(&P)
 
 # osd/ui/mame32.rc: 110

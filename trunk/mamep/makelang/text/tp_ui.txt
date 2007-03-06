@@ -1651,7 +1651,7 @@ Playback a recorded game
 
 
 # osd/ui/win32ui.c: 867
-Playcount
+Played
 
 
 # osd/ui/treeview.c: 1439
@@ -2191,7 +2191,7 @@ Sort items by name
 
 
 # osd/ui/mame32.rc: 1564
-Sort items by playcount
+Sort items by number of plays
 
 
 # osd/ui/mame32.rc: 1564
@@ -2539,7 +2539,7 @@ by &Name
 
 
 # osd/ui/mame32.rc: 109
-by &Playcount
+by Times &Played
 
 
 # osd/ui/mame32.rc: 110

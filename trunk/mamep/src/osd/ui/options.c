@@ -2917,7 +2917,7 @@ static options_type *update_alt_use_default(alt_options_type *alt_option)
 
 static void validate_resolution(char **p)
 {
-	if (strcmp(*p, "0x0x0@0") == 0)
+	if (strcmp(*p, "0x0@0") == 0)
 	{
 		FreeIfAllocated(p);
 		*p = strdup("auto");
@@ -4458,10 +4458,10 @@ INLINE void _options_get_resolution(char **p, const char *name)
 
 	if (stemp && *stemp)
 	{
-		int width, height, depth, refresh;
+		int width, height, refresh;
 
 		if (strcmp(stemp, "auto") == 0
-		 || sscanf(stemp, "%dx%dx%d@%d", &width, &height, &depth, &refresh) >= 2)
+		 || sscanf(stemp, "%dx%d@%d", &width, &height, &refresh) >= 2)
 		{
 			FreeIfAllocated(p);
 			*p = strdup(stemp);
@@ -4772,9 +4772,11 @@ INLINE void options_copy_list_fontface(const LOGFONTW *src, LOGFONTW *dest)
 #define options_copy_imagemenu_style		options_copy_int
 #define options_free_imagemenu_style		options_free_int
 #define options_compare_imagemenu_style	options_compare_int
+#endif /* IMAGE_MENU */
+
 
 //============================================================
-#endif /* IMAGE_MENU */
+
 
 INLINE void _options_get_ui_joy(int *array, const char *name)
 {
