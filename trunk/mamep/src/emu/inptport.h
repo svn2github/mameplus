@@ -17,6 +17,10 @@
 #include "memory.h"
 #include "input.h"
 
+#ifdef USE_SHOW_INPUT_LOG
+#include "unicode.h"
+#endif /* USE_SHOW_INPUT_LOG */
+
 #ifdef MESS
 #include "unicode.h"
 #endif
@@ -39,10 +43,6 @@
 #ifdef USE_CUSTOM_BUTTON
 #define MAX_CUSTOM_BUTTONS	4
 #endif /* USE_CUSTOM_BUTTON */
-
-#ifdef USE_SHOW_INPUT_LOG
-#define COMMAND_LOG_BUFSIZE	128
-#endif /* USE_SHOW_INPUT_LOG */
 
 #define IP_ACTIVE_HIGH		0x00000000
 #define IP_ACTIVE_LOW		0xffffffff
@@ -860,11 +860,23 @@ struct _inp_header
 #define DEF_STR(str_num) ((const char *)INPUT_STRING_##str_num)
 
 
-
 #ifdef USE_CUSTOM_BUTTON
 extern UINT16 custom_button[MAX_PLAYERS][MAX_CUSTOM_BUTTONS];
 extern int custom_buttons;
 #endif /* USE_CUSTOM_BUTTON */
+
+#ifdef USE_SHOW_INPUT_LOG
+typedef struct _input_log input_log;
+struct _input_log
+{
+	unicode_char code;
+	double time;
+};
+
+extern input_log command_buffer[];
+extern int show_input_log;
+#endif /* USE_SHOW_INPUT_LOG */
+
 
 /***************************************************************************
     FUNCTION PROTOTYPES

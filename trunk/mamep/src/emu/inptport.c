@@ -290,9 +290,11 @@ static input_bit_info *custom_button_info[MAX_PLAYERS][MAX_CUSTOM_BUTTONS];
  **********************************************/
 
 #ifdef USE_SHOW_INPUT_LOG
-UINT8 command_buffer[COMMAND_LOG_BUFSIZE];
-int show_input_log  = 0;
-double command_time_last_uptate;
+#define COMMAND_LOG_BUFSIZE	128
+
+input_log command_buffer[COMMAND_LOG_BUFSIZE];
+int show_input_log;
+
 static void make_input_log(void);
 #endif /* USE_SHOW_INPUT_LOG */
 
@@ -3768,32 +3770,34 @@ UINT32 get_crosshair_pos(int port_num, UINT8 player, UINT8 axis)
 #ifdef USE_SHOW_INPUT_LOG
 INLINE void copy_command_buffer(char log)
 {
+	char buf[UTF8_CHAR_MAX + 1];
+	unicode_char uchar;
 	int len;
 
-	len = strlen(command_buffer);
-	while (len >= ARRAY_LENGTH(command_buffer) - UTF8_CHAR_MAX - 1)
+	for (len = 0; command_buffer[len].code; len++)
+		;
+
+	if (len >= ARRAY_LENGTH(command_buffer) - 1)
 	{
-		unicode_char uchar;
-		int uwidth;
 		int i;
 
-		uwidth = uchar_from_utf8(&uchar, command_buffer, ARRAY_LENGTH(command_buffer));
-		if (uwidth == -1)
-		{
-			len = 0;
-			break;
-		}
+		for (i = 0; command_buffer[i + 1].code; i++)
+			command_buffer[i] = command_buffer[i + 1];
 
-		len -= uwidth;
-		for (i = 0; i < len; i++)
-			command_buffer[i] = command_buffer[i + uwidth];
+		command_buffer[--len].code = '\0';
 	}
 
-	command_buffer[len++] = '_';
-	command_buffer[len++] = log;
-	command_buffer[len] = '\0';
+	buf[0] = '_';
+	buf[1] = log;
+	buf[2] = '\0';
+	convert_command_glyph(buf, ARRAY_LENGTH(buf));
 
-	convert_command_glyph(command_buffer, ARRAY_LENGTH(command_buffer));
+	if (uchar_from_utf8(&uchar, buf, ARRAY_LENGTH(buf)) == -1)
+		return;
+
+	command_buffer[len].code = uchar;
+	command_buffer[len].time = timer_get_time();
+	command_buffer[++len].code = '\0';
 }
 
 static void make_input_log(void)
@@ -3869,8 +3873,6 @@ static void make_input_log(void)
 				char colorbutton = '0';
 				copy_command_buffer(colorbutton + now_dir);
 				old_dir = now_dir;
-
-				command_time_last_uptate = timer_get_time();
 			}
 		}
 	}
@@ -3957,8 +3959,6 @@ static void make_input_log(void)
 
 				old_btn = now_btn;
 				now_btn = 0;
-
-				command_time_last_uptate = timer_get_time();
 			}
 		}
 	}

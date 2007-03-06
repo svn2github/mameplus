@@ -86,18 +86,6 @@ struct _slider_state
 
 
 /***************************************************************************
-    EXTERNAL VARIABLES
-***************************************************************************/
-
-#ifdef USE_SHOW_INPUT_LOG
-extern UINT8 command_buffer[COMMAND_LOG_BUFSIZE];
-extern int show_input_log;
-extern double command_time_last_uptate;
-#endif /* USE_SHOW_INPUT_LOG */
-
-
-
-/***************************************************************************
     GLOBAL VARIABLES
 ***************************************************************************/
 
@@ -1471,50 +1459,66 @@ static void display_time(void)
 #ifdef USE_SHOW_INPUT_LOG
 static void display_input_log(void)
 {
-	float width;
-	unicode_char uchar;
-	int sz;
+	double time_now = timer_get_time();
+	double time_display = TIME_IN_SEC(1.0f);
+	double time_fadeout = TIME_IN_SEC(1.0f);
+	float curx;
 	int i;
 
-	if (!command_buffer[0])
+	if (!command_buffer[0].code)
 		return;
 
-	width = 0.0f;
-
-	for (i = 0; command_buffer[i]; i += sz)
+	// adjust time for load state
 	{
-		sz = uchar_from_utf8(&uchar, command_buffer + i, ARRAY_LENGTH(command_buffer) - i);
-		if (sz == -1)
-		{
-			command_buffer[i] = '\0';
-			break;
-		}
+		double max = 0.0f;
+		int i;
 
-		width += ui_get_char_width(uchar);
+		for (i = 0; command_buffer[i].code; i++)
+			if (max < command_buffer[i].time)
+				max = command_buffer[i].time;
+
+		if (max > time_now)
+		{
+			double adjust = max - time_now;
+
+			for (i = 0; command_buffer[i].code; i++)
+				command_buffer[i].time -= adjust;
+		}
 	}
 
-	for (i = 0; command_buffer[i]; i += sz)
+	// find position to start display
+	curx = 1.0f - UI_LINE_WIDTH;
+	for (i = 0; command_buffer[i].code; i++)
+		curx -= ui_get_char_width(command_buffer[i].code);
+
+	for (i = 0; command_buffer[i].code; i++)
 	{
-		if (width < 1.0f)
+		if (curx >= UI_LINE_WIDTH)
 			break;
 
-		sz = uchar_from_utf8(&uchar, command_buffer + i, ARRAY_LENGTH(command_buffer) - i);
-		if (sz == -1)
-		{
-			command_buffer[i] = '\0';
-			break;
-		}
-
-		width -= ui_get_char_width(uchar);
+		curx += ui_get_char_width(command_buffer[i].code);
 	}
 
 	ui_draw_box(0.0f, 1.0f - ui_get_line_height(), 1.0f, 1.0f, UI_FILLCOLOR);
-	ui_draw_text_bk(command_buffer + i, 0.0f, 1.0f - ui_get_line_height(), 0);
 
-	if (command_time_last_uptate + TIME_IN_SEC(1) < timer_get_time())
-		command_buffer[0] = '\0';
-	if (command_time_last_uptate > timer_get_time() + TIME_IN_SEC(1))
-		command_time_last_uptate = timer_get_time();
+	for (; command_buffer[i].code; i++)
+	{
+		double rate = time_now - command_buffer[i].time;
+
+		if (rate < time_display + time_fadeout)
+		{
+			int level = 255 - ((rate - time_display) / time_fadeout) * 255;
+			rgb_t fgcolor;
+
+			if (level > 255)
+				level = 255;
+
+			fgcolor = MAKE_ARGB(255, level, level, level);
+
+			render_ui_add_char(curx, 1.0f - ui_get_line_height(), ui_get_line_height(), render_get_ui_aspect(), fgcolor, ui_font, command_buffer[i].code);
+		}
+		curx += ui_get_char_width(command_buffer[i].code);
+	}
 }
 #endif /* USE_SHOW_INPUT_LOG */
 
@@ -1946,7 +1950,7 @@ static UINT32 handler_ingame(UINT32 state)
 	if (input_ui_pressed(IPT_UI_SHOW_INPUT_LOG))
 	{
 		show_input_log ^= 1;
-		memset(command_buffer, 0, COMMAND_LOG_BUFSIZE);
+		command_buffer[0].code = '\0';
 	}
 
 	/* show popup message if input exist any log */
