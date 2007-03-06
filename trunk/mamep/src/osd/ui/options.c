@@ -2663,6 +2663,7 @@ static int bsearch_alt_option(const WCHAR *name)
 
 static void build_default_bios(void)
 {
+	const game_driver *last_skip = NULL;
 	int i;
 
 	for (i = 0; i < num_drivers; i++)
@@ -2682,6 +2683,9 @@ static void build_default_bios(void)
 				driver_index = parent_index;
 			}
 
+			if (last_skip == drivers[driver_index])
+				continue;
+
 			for (n = 0; n < MAX_SYSTEM_BIOS; n++)
 			{
 				if (default_bios[n].drv == NULL)
@@ -2699,7 +2703,8 @@ static void build_default_bios(void)
 
 					if (count == 1)
 					{
-						dprintf("BIOS: skip %s [%s]", drivers[driver_index]->description, drivers[driver_index]->name);
+						dprintf("BIOS skip: %s [%s]", drivers[driver_index]->description, drivers[driver_index]->name);
+						last_skip = drivers[driver_index];
 						break;
 					}
 					else
