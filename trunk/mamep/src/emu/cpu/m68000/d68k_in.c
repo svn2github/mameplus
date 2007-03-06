@@ -989,7 +989,7 @@ _resolve_link(&link1);
 
 	_cmp_r32_imm(REG_EAX, 0x99);
 
-	update_flag = m68kdrc_update_vncz_check();
+	update_flag = m68kdrc_update_vncxz_check();
 	if (update_flag)
 	{
 		_setcc_r8(COND_G, REG_BH);
@@ -1057,7 +1057,7 @@ _resolve_link(&link1);
 
 	_cmp_r32_imm(REG_EAX, 0x99);
 
-	update_flag = m68kdrc_update_vncz_check();
+	update_flag = m68kdrc_update_vncxz_check();
 	if (update_flag)
 	{
 		_setcc_r8(COND_G, REG_BH);
@@ -1127,7 +1127,7 @@ _resolve_link(&link1);
 
 	_cmp_r32_imm(REG_EAX, 0x99);
 
-	update_flag = m68kdrc_update_vncz_check();
+	update_flag = m68kdrc_update_vncxz_check();
 	if (update_flag)
 	{
 		_setcc_r8(COND_G, REG_BH);
@@ -1197,7 +1197,7 @@ _resolve_link(&link1);
 
 	_cmp_r32_imm(REG_EAX, 0x99);
 
-	update_flag = m68kdrc_update_vncz_check();
+	update_flag = m68kdrc_update_vncxz_check();
 	if (update_flag)
 	{
 		_setcc_r8(COND_G, REG_BH);
@@ -1267,7 +1267,7 @@ _resolve_link(&link1);
 
 	_cmp_r32_imm(REG_EAX, 0x99);
 
-	update_flag = m68kdrc_update_vncz_check();
+	update_flag = m68kdrc_update_vncxz_check();
 	if (update_flag)
 	{
 		_setcc_r8(COND_G, REG_BH);
@@ -13751,7 +13751,7 @@ M68KMAKE_OP(sbcd, 8, rr, .)
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
-	update_flag = m68kdrc_update_vncz_check();
+	update_flag = m68kdrc_update_vncxz_check();
 
 	_mov_r8_m8abs(REG_CL, &DY);
 	_mov_r8_r8(REG_CH, REG_CL);
@@ -13764,7 +13764,8 @@ M68KMAKE_OP(sbcd, 8, rr, .)
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
 	_sbb_r32_r32(REG_EAX, REG_ECX);
 
-	_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);	/* Undefined in Motorola's M68000PM/AD rev.1 and safer to assume cleared. */
+	if (update_flag)
+		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);	/* Undefined in Motorola's M68000PM/AD rev.1 and safer to assume cleared. */
 
 	_movzx_r32_r8(REG_EBX, REG_AH);
 	_movzx_r32_r8(REG_EAX, REG_AL);
@@ -13837,7 +13838,9 @@ M68KMAKE_OP(sbcd, 8, mm, ax7)
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
 	_sbb_r32_r32(REG_EAX, REG_ECX);
 
-	_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);	/* Undefined in Motorola's M68000PM/AD rev.1 and safer to assume cleared. */
+	update_flag = m68kdrc_update_vncxz_check();
+	if (update_flag)
+		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);	/* Undefined in Motorola's M68000PM/AD rev.1 and safer to assume cleared. */
 
 	_movzx_r32_r8(REG_EBX, REG_AH);
 	_movzx_r32_r8(REG_EAX, REG_AL);
@@ -13855,7 +13858,6 @@ _resolve_link(&link1);
 
 	_shl_r32_imm(REG_EBX, 7);
 
-	update_flag = m68kdrc_update_vncz_check();
 	if (update_flag)
 		_mov_m8abs_r8(&FLAG_N, REG_BL);		/* Undefined in Motorola's M68000PM/AD rev.1 and safer to follow carry. */
 
@@ -13912,7 +13914,9 @@ M68KMAKE_OP(sbcd, 8, mm, ay7)
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
 	_sbb_r32_r32(REG_EAX, REG_ECX);
 
-	_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);	/* Undefined in Motorola's M68000PM/AD rev.1 and safer to assume cleared. */
+	update_flag = m68kdrc_update_vncxz_check();
+	if (update_flag)
+		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);	/* Undefined in Motorola's M68000PM/AD rev.1 and safer to assume cleared. */
 
 	_movzx_r32_r8(REG_EBX, REG_AH);
 	_movzx_r32_r8(REG_EAX, REG_AL);
@@ -13930,7 +13934,6 @@ _resolve_link(&link1);
 
 	_shl_r32_imm(REG_EBX, 7);
 
-	update_flag = m68kdrc_update_vncz_check();
 	if (update_flag)
 		_mov_m8abs_r8(&FLAG_N, REG_BL);		/* Undefined in Motorola's M68000PM/AD rev.1 and safer to follow carry. */
 
@@ -13987,7 +13990,9 @@ M68KMAKE_OP(sbcd, 8, mm, axy7)
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
 	_sbb_r32_r32(REG_EAX, REG_ECX);
 
-	_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);	/* Undefined in Motorola's M68000PM/AD rev.1 and safer to assume cleared. */
+	update_flag = m68kdrc_update_vncxz_check();
+	if (update_flag)
+		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);	/* Undefined in Motorola's M68000PM/AD rev.1 and safer to assume cleared. */
 
 	_movzx_r32_r8(REG_EBX, REG_AH);
 	_movzx_r32_r8(REG_EAX, REG_AL);
@@ -14005,7 +14010,6 @@ _resolve_link(&link1);
 
 	_shl_r32_imm(REG_EBX, 7);
 
-	update_flag = m68kdrc_update_vncz_check();
 	if (update_flag)
 		_mov_m8abs_r8(&FLAG_N, REG_BL);		/* Undefined in Motorola's M68000PM/AD rev.1 and safer to follow carry. */
 
@@ -14062,7 +14066,9 @@ M68KMAKE_OP(sbcd, 8, mm, .)
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
 	_sbb_r32_r32(REG_EAX, REG_ECX);
 
-	_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);	/* Undefined in Motorola's M68000PM/AD rev.1 and safer to assume cleared. */
+	update_flag = m68kdrc_update_vncxz_check();
+	if (update_flag)
+		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);	/* Undefined in Motorola's M68000PM/AD rev.1 and safer to assume cleared. */
 
 	_movzx_r32_r8(REG_EBX, REG_AH);
 	_movzx_r32_r8(REG_EAX, REG_AL);
@@ -14080,7 +14086,6 @@ _resolve_link(&link1);
 
 	_shl_r32_imm(REG_EBX, 7);
 
-	update_flag = m68kdrc_update_vncz_check();
 	if (update_flag)
 		_mov_m8abs_r8(&FLAG_N, REG_BL);		/* Undefined in Motorola's M68000PM/AD rev.1 and safer to follow carry. */
 
