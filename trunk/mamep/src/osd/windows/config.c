@@ -460,7 +460,7 @@ int cli_frontend_init(int argc, char **argv)
 
 	// parse the command line first; if we fail here, we're screwed
 	if (options_parse_command_line(argc, argv))
-		exit(1);
+		exit(MAMERR_INVALID_CONFIG);
 
 	// now parse the core set of INI files
 	parse_ini_file(CONFIGNAME);
@@ -533,7 +533,7 @@ int cli_frontend_init(int argc, char **argv)
 	if (gamename == NULL)
 	{
 		display_help();
-		exit(1);
+		exit(MAMERR_INVALID_CONFIG);
 	}
 
 	// if we don't have a valid driver selected, offer some suggestions
@@ -547,7 +547,7 @@ int cli_frontend_init(int argc, char **argv)
 			if (matches[drvnum] != -1)
 				faprintf(stderr, "%-10s%s\n", drivers[matches[drvnum]]->name, options.use_lang_list ?
 					_LST(drivers[matches[drvnum]]->description) : drivers[matches[drvnum]]->description);
-		exit(1);
+		exit(MAMERR_NO_SUCH_GAME);
 	}
 
 	// extract the directory name
@@ -652,7 +652,7 @@ static void execute_simple_commands(void)
 	{
 		setup_language();
 		display_help();
-		exit(0);
+		exit(MAMERR_NONE);
 	}
 
 	// showusage?
@@ -661,7 +661,7 @@ static void execute_simple_commands(void)
 		setup_language();
 		mame_printf_info(_WINDOWS("Usage: mame [game] [options]\n\nOptions:\n"));
 		options_output_help();
-		exit(0);
+		exit(MAMERR_NONE);
 	}
 
 	// validate?
@@ -721,20 +721,20 @@ static void execute_commands(const char *argv0)
 		if (filerr)
 		{
 			faprintf(stderr, _WINDOWS("Unable to create file %s\n"), basename);
-			exit(1);
+			exit(MAMERR_FATALERROR);
 		}
 
 		// output the configuration and exit cleanly
 		options_output_ini_mame_file(file);
 		mame_fclose(file);
-		exit(0);
+		exit(MAMERR_NONE);
 	}
 
 	// showconfig?
 	if (options_get_bool("showconfig"))
 	{
 		options_output_ini_file(stdout);
-		exit(0);
+		exit(MAMERR_NONE);
 	}
 
 	// frontend options?

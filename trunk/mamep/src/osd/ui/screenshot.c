@@ -44,7 +44,7 @@
 
 static BOOL     AllocatePNG(png_info *p, HGLOBAL *phDIB, HPALETTE* pPal);
 
-static int png_read_bitmap(LPVOID mfile, HGLOBAL *phDIB, HPALETTE *pPAL);
+static int png_read_png_bitmap(LPVOID mfile, HGLOBAL *phDIB, HPALETTE *pPAL);
 /***************************************************************************
     Static global variables
 ***************************************************************************/
@@ -301,7 +301,7 @@ BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type
 	if (filerr != FILERR_NONE)
 		return FALSE;
 
-	success = png_read_bitmap(mame_core_file(mfile), phDIB, pPal);
+	success = png_read_png_bitmap(mame_core_file(mfile), phDIB, pPal);
 
 	mame_fclose(mfile);
 
@@ -466,7 +466,7 @@ BOOL AllocatePNG(png_info *p, HGLOBAL *phDIB, HPALETTE *pPal)
 }
 
 /* Copied and modified from png.c */
-static int png_read_bitmap(LPVOID mfile, HGLOBAL *phDIB, HPALETTE *pPAL)
+static int png_read_png_bitmap(LPVOID mfile, HGLOBAL *phDIB, HPALETTE *pPAL)
 {
 	png_info p;
 	UINT32 i;
