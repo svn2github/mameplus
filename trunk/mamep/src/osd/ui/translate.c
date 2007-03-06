@@ -100,7 +100,7 @@ void GetTranslatedFont(LOGFONTW *logfont)
 		break;
 	}
 
-	lstrcpy(logfont->lfFaceName, _UIW(TEXT("MS Sans Serif")));
+	wcscpy(logfont->lfFaceName, _UIW(TEXT("MS Sans Serif")));
 }
 
 
@@ -336,7 +336,7 @@ static void translate_richedit20(HWND hControl)
 	cfm.cbSize = sizeof (cfm);
 	cfm.dwMask = CFM_CHARSET | CFM_FACE;
 	cfm.bCharSet = logfont.lfCharSet;
-	lstrcpy(cfm.szFaceName, logfont.lfFaceName);
+	wcscpy(cfm.szFaceName, logfont.lfFaceName);
 
 	SendMessage(hControl, EM_SETCHARFORMAT, SCF_DEFAULT, (LPARAM)&cfm);
 }
@@ -427,7 +427,7 @@ void TranslateTreeFolders(HWND hWnd)
         Unicode Handlers
  */
 
-#define TEMP_STRING_POOL_ENTRIES 16
+#define TEMP_STRING_POOL_ENTRIES 32
 
 LPWSTR _Unicode(const char *s)
 {
@@ -651,7 +651,7 @@ FILE *wfopen(const WCHAR *fname, const WCHAR *mode)
 
 static int wcmp(const void *p1, const void *p2)
 {
-	return lstrcmp(p1, p2);
+	return wcscmp(p1, p2);
 }
 
 WCHAR *w_lang_message(int msgcat, const WCHAR *str)

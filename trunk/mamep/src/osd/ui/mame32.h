@@ -84,6 +84,17 @@
 #endif
 
 
+// It seems that functions lstr...() don't work properly on win9x.
+// Anyway we'd better to use functions wcs...() instead of them.
+#undef lstrcpy
+#define lstrcpy		!use_wcscpy_win9x_doesnt_work_properly!
+#undef lstrcpyn
+#define lstrcpyn	!use_wcsncpy_win9x_doesnt_work_properly!
+#undef lstrcmp
+#define lstrcmp		!use_wcscmp_win9x_doesnt_work_properly!
+#undef lstrcmpi
+#define lstrcmpi	!use_wcsicmp_win9x_doesnt_work_properly!
+
 #include <wchar.h>
 #define _wfindfirst	!win9x_doesnt_has_it!
 #define _wfindnext	!win9x_doesnt_has_it!

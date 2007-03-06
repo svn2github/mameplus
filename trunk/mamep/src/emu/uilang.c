@@ -142,7 +142,7 @@ static void load_mmo(int msgcat)
 	if (p->header.dummy)
 		goto mmo_readerr;
 
-	if (p->header.version != 2)
+	if (p->header.version != 3)
 		goto mmo_readerr;
 
 	p->mmo_index = malloc(p->header.num_msg * sizeof p->mmo_index[0]);

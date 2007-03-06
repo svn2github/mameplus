@@ -166,7 +166,7 @@ static void DirInfo_SetDir(tDirInfo *pInfo, int nType, int nItem, const WCHAR* p
 	if (IsMultiDir(nType))
 	{
 		assert(nItem >= 0);
-		lstrcpy(DirInfo_Path(pInfo, nType, nItem), pText);
+		wcscpy(DirInfo_Path(pInfo, nType, nItem), pText);
 		DirInfo_SetModified(pInfo, nType, TRUE);
 	}
 	else
@@ -322,7 +322,7 @@ static BOOL Directories_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
 		if (g_directoryInfo[i].bMulti)
 		{
 			/* Copy the string to our own buffer so that we can mutilate it */
-			lstrcpy(buf, s);
+			wcscpy(buf, s);
 
 			g_pDirInfo[i].m_Path = malloc(sizeof(tPath));
 			if (!g_pDirInfo[i].m_Path)
@@ -332,7 +332,7 @@ static BOOL Directories_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
 			token = wcstok(buf, TEXT(";"));
 			while ((DirInfo_NumDir(g_pDirInfo, i) < MAX_DIRS) && token)
 			{
-				lstrcpy(DirInfo_Path(g_pDirInfo, i, DirInfo_NumDir(g_pDirInfo, i)), token);
+				wcscpy(DirInfo_Path(g_pDirInfo, i, DirInfo_NumDir(g_pDirInfo, i)), token);
 				DirInfo_NumDir(g_pDirInfo, i)++;
 				token = wcstok(NULL, TEXT(";"));
 			}
@@ -456,10 +456,10 @@ static void Directories_OnInsert(HWND hDlg)
 				return;
 
 			for (i = DirInfo_NumDir(g_pDirInfo, nType); nItem < i; i--)
-				lstrcpy(DirInfo_Path(g_pDirInfo, nType, i),
+				wcscpy(DirInfo_Path(g_pDirInfo, nType, i),
 					   DirInfo_Path(g_pDirInfo, nType, i - 1));
 
-			lstrcpy(DirInfo_Path(g_pDirInfo, nType, nItem), buf);
+			wcscpy(DirInfo_Path(g_pDirInfo, nType, nItem), buf);
 			DirInfo_NumDir(g_pDirInfo, nType)++;
 			DirInfo_SetModified(g_pDirInfo, nType, TRUE);
 		}
@@ -527,10 +527,10 @@ static void Directories_OnDelete(HWND hDlg)
 	if (IsMultiDir(nType))
 	{
 		for (i = nItem; i < DirInfo_NumDir(g_pDirInfo, nType) - 1; i++)
-			lstrcpy(DirInfo_Path(g_pDirInfo, nType, i),
+			wcscpy(DirInfo_Path(g_pDirInfo, nType, i),
 				   DirInfo_Path(g_pDirInfo, nType, i + 1));
 
-		lstrcpy(DirInfo_Path(g_pDirInfo, nType, DirInfo_NumDir(g_pDirInfo, nType) - 1), TEXT(""));
+		wcscpy(DirInfo_Path(g_pDirInfo, nType, DirInfo_NumDir(g_pDirInfo, nType) - 1), TEXT(""));
 		DirInfo_NumDir(g_pDirInfo, nType)--;
 
 		DirInfo_SetModified(g_pDirInfo, nType, TRUE);
@@ -622,10 +622,10 @@ static BOOL Directories_OnEndLabelEditA(HWND hDlg, NMHDR* pNMHDR)
 					return FALSE;
 
 				for (i = DirInfo_NumDir(g_pDirInfo, nType); pItem->iItem < i; i--)
-					lstrcpy(DirInfo_Path(g_pDirInfo, nType, i),
+					wcscpy(DirInfo_Path(g_pDirInfo, nType, i),
 						   DirInfo_Path(g_pDirInfo, nType, i - 1));
 
-				lstrcpy(DirInfo_Path(g_pDirInfo, nType, pItem->iItem), _Unicode(pItem->pszText));
+				wcscpy(DirInfo_Path(g_pDirInfo, nType, pItem->iItem), _Unicode(pItem->pszText));
 
 				DirInfo_SetModified(g_pDirInfo, nType, TRUE);
 				DirInfo_NumDir(g_pDirInfo, nType)++;
@@ -682,7 +682,7 @@ static BOOL Directories_OnEndLabelEditW(HWND hDlg, NMHDR* pNMHDR)
 	if (pItem->pszText != NULL)
 	{
 		/* Don't allow empty entries. */
-		if (!lstrcmp(pItem->pszText, TEXT("")))
+		if (!wcscmp(pItem->pszText, TEXT("")))
 			return FALSE;
 
 		/* Check validity of edited directory. */
@@ -712,10 +712,10 @@ static BOOL Directories_OnEndLabelEditW(HWND hDlg, NMHDR* pNMHDR)
 					return FALSE;
 
 				for (i = DirInfo_NumDir(g_pDirInfo, nType); pItem->iItem < i; i--)
-					lstrcpy(DirInfo_Path(g_pDirInfo, nType, i),
+					wcscpy(DirInfo_Path(g_pDirInfo, nType, i),
 						   DirInfo_Path(g_pDirInfo, nType, i - 1));
 
-				lstrcpy(DirInfo_Path(g_pDirInfo, nType, pItem->iItem), pItem->pszText);
+				wcscpy(DirInfo_Path(g_pDirInfo, nType, pItem->iItem), pItem->pszText);
 
 				DirInfo_SetModified(g_pDirInfo, nType, TRUE);
 				DirInfo_NumDir(g_pDirInfo, nType)++;
@@ -884,7 +884,7 @@ static BOOL BrowseForDirectoryW(HWND hwnd, const WCHAR* pStartDir, WCHAR* pResul
 		return FALSE;
 
 	if (pStartDir)
-		lstrcpy(startDir, pStartDir);
+		wcscpy(startDir, pStartDir);
 	else
 		*startDir = '\0';
 

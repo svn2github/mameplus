@@ -281,7 +281,7 @@ BOOL IsVectorFolder(LPTREEFOLDER lpFolder)
 	if (lpFolder->m_lpOriginalTitle)
 		name = lpFolder->m_lpOriginalTitle;
 
-	return lstrcmp(name, TEXT("Vector")) == 0;
+	return wcscmp(name, TEXT("Vector")) == 0;
 }
 
 LPTREEFOLDER GetSourceFolder(int driver_index)
@@ -300,7 +300,7 @@ LPTREEFOLDER GetSourceFolder(int driver_index)
 		if (lpFolder->m_lpOriginalTitle)
 			name = lpFolder->m_lpOriginalTitle;
 
-		if (lstrcmp(name, source_name) == 0)
+		if (wcscmp(name, source_name) == 0)
 			return lpFolder;
 	}
 
@@ -491,7 +491,7 @@ void CreateSourceFolders(int parent_index)
 		// (likely to be the previous one, so start at the end)
 		for (i=numFolders-1;i>=start_folder;i--)
 		{
-			if (lstrcmp(treeFolders[i]->m_lpTitle, s) == 0)
+			if (wcscmp(treeFolders[i]->m_lpTitle, s) == 0)
 			{
 				AddGame(treeFolders[i],jj);
 				break;
@@ -543,7 +543,7 @@ void CreateManufacturerFolders(int parent_index)
 				if (i == start_folder-1)
 				{
 					// nope, it's a manufacturer we haven't seen before, make it.
-					lpTemp = NewFolder(t, lstrcmp(s, TEXT("<unknown>")) ? UI_MSG_MANUFACTURE : 0, TRUE, next_folder_id++, parent_index, IDI_MANUFACTURER);
+					lpTemp = NewFolder(t, wcscmp(s, TEXT("<unknown>")) ? UI_MSG_MANUFACTURE : 0, TRUE, next_folder_id++, parent_index, IDI_MANUFACTURER);
 					AddFolder(lpTemp);
 					AddGame(lpTemp,jj);
 				}
@@ -708,7 +708,7 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						lstrcpyn(strTemp2, s, lstrlen(s) - j);
+						wcsncpy(strTemp2, s, lstrlen(s) - j);
 					}
 				}
 				break;
@@ -727,7 +727,7 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						lstrcpyn(strTemp2, s, lstrlen(s) - j);	
+						wcsncpy(strTemp2, s, lstrlen(s) - j);	
 					}
 				}
 				break;
@@ -745,7 +745,7 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						lstrcpyn(strTemp2, s, lstrlen(s) - j);	
+						wcsncpy(strTemp2, s, lstrlen(s) - j);	
 					}
 				}
 				break;
@@ -763,7 +763,7 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						lstrcpyn(strTemp2, s, lstrlen(s) - j);	
+						wcsncpy(strTemp2, s, lstrlen(s) - j);	
 					}
 				}
 				break;
@@ -779,7 +779,7 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						lstrcpyn(strTemp2, s, lstrlen(s) - j);	
+						wcsncpy(strTemp2, s, lstrlen(s) - j);	
 					}
 				}
 				break;
@@ -795,7 +795,7 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						lstrcpyn(strTemp2, s, lstrlen(s) - j);	
+						wcsncpy(strTemp2, s, lstrlen(s) - j);	
 					}
 				}
 				break;
@@ -810,7 +810,7 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						lstrcpyn(strTemp2, s, lstrlen(s) - j);	
+						wcsncpy(strTemp2, s, lstrlen(s) - j);	
 					}
 				}
 				break;
@@ -826,7 +826,7 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						lstrcpyn(strTemp2, s, lstrlen(s) - j);	
+						wcsncpy(strTemp2, s, lstrlen(s) - j);	
 					}
 				}
 				break;
@@ -843,7 +843,7 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						lstrcpyn(strTemp2, s, lstrlen(s) - j);	
+						wcsncpy(strTemp2, s, lstrlen(s) - j);	
 					}
 				}
 				break;
@@ -859,7 +859,7 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						lstrcpyn(strTemp2, s, lstrlen(s) - j);	
+						wcsncpy(strTemp2, s, lstrlen(s) - j);	
 					}
 				}
 				break;
@@ -874,7 +874,7 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						lstrcpyn(strTemp2, s, lstrlen(s) - j);	
+						wcsncpy(strTemp2, s, lstrlen(s) - j);	
 					}
 				}
 				break;
@@ -904,18 +904,19 @@ void CreateCPUFolders(int parent_index)
 	// no games in top level folder
 	SetAllBits(lpFolder->m_lpGameBits,FALSE);
 
-	for ( i= 0; i < CPU_COUNT; i++)
+	for (i = 0; i < CPU_COUNT; i++)
 	{
 		LPTREEFOLDER lpTemp;
-		WCHAR name[256];
+		char name[256];
 		int jj;
 
-		lstrcpy(name, _Unicode(cputype_shortname(i)));
+		strcpy(name, cputype_shortname(i));
+
 		if (name[0] == '\0')
 			continue;
 
 		for (jj = 0; jj < i; jj++)
-			if (!lstrcmp(name, _Unicode(cputype_shortname(jj))))
+			if (!strcmp(name, cputype_shortname(jj)))
 				break;
 
 		if (i != jj)
@@ -924,7 +925,7 @@ void CreateCPUFolders(int parent_index)
 			continue;
 		}
 
-		lpTemp = NewFolder(name, 0, FALSE, next_folder_id++, parent_index, IDI_CPU);
+		lpTemp = NewFolder(_Unicode(name), 0, FALSE, next_folder_id++, parent_index, IDI_CPU);
 		AddFolder(lpTemp);
 		map[i] = treeFolders[nFolder++];
 	}
@@ -963,7 +964,7 @@ void CreateSoundFolders(int parent_index)
 	for (i = 0; i < SOUND_COUNT; i++)
 	{
 		LPTREEFOLDER lpTemp;
-		WCHAR name[256];
+		char name[256];
 		int jj;
 
 		if (i == SOUND_FILTER_VOLUME
@@ -971,12 +972,12 @@ void CreateSoundFolders(int parent_index)
 		 || i == SOUND_FILTER_LOWPASS)
 			continue;
 
-		lstrcpy(name, _Unicode(sndtype_shortname(i)));
+		strcpy(name, sndtype_shortname(i));
 		if (name[0] == '\0')
 			continue;
 
 		for (jj = 0; jj < i; jj++)
-			if (!lstrcmp(name, _Unicode(sndtype_shortname(jj))))
+			if (!strcmp(name, sndtype_shortname(jj)))
 				break;
 
 		if (i != jj)
@@ -985,7 +986,7 @@ void CreateSoundFolders(int parent_index)
 			continue;
 		}
 
-		lpTemp = NewFolder(name, 0, FALSE, next_folder_id++, parent_index, IDI_SND);
+		lpTemp = NewFolder(_Unicode(name), 0, FALSE, next_folder_id++, parent_index, IDI_SND);
 		AddFolder(lpTemp);
 		map[i] = treeFolders[nFolder++];
 	}
@@ -1167,7 +1168,7 @@ void CreateYearFolders(int parent_index)
 	for (jj = 0; jj < nGames; jj++)
 	{
 		WCHAR s[100];
-		lstrcpy(s, driversw[jj]->year);
+		wcscpy(s, driversw[jj]->year);
 
 		if (s[0] == '\0')
 			continue;
@@ -1190,7 +1191,7 @@ void CreateYearFolders(int parent_index)
 			// nope, it's a year we haven't seen before, make it.
 			LPTREEFOLDER lpTemp;
 
-			lpTemp = NewFolder(s, 0, !lstrcmp(s, TEXT("<unknown>")), next_folder_id++, parent_index, IDI_YEAR);
+			lpTemp = NewFolder(s, 0, !wcscmp(s, TEXT("<unknown>")), next_folder_id++, parent_index, IDI_YEAR);
 			AddFolder(lpTemp);
 			AddGame(lpTemp,jj);
 		}
@@ -1227,7 +1228,7 @@ void CreateBIOSFolders(int parent_index)
 
 		for (i = numFolders-1; i >= start_folder; i--)
 		{
-			if (lstrcmp(treeFolders[i]->m_lpTitle, driversw[nParentIndex]->description) == 0)
+			if (wcscmp(treeFolders[i]->m_lpTitle, driversw[nParentIndex]->description) == 0)
 			{
 				AddGame(treeFolders[i],jj);
 				break;
@@ -1294,7 +1295,7 @@ void CreateResolutionFolders(int parent_index)
 
 		for (i=numFolders-1;i>=start_folder;i--)
 		{
-			if (lstrcmp(treeFolders[i]->m_lpTitle, Resolution) == 0)
+			if (wcscmp(treeFolders[i]->m_lpTitle, Resolution) == 0)
 			{
 				AddGame(treeFolders[i],jj);
 				break;
@@ -1959,7 +1960,7 @@ BOOL InitFolders(void)
 		char *subname = strdup(extFavorite.sub_icon);
 
 		filename = malloc(lstrlen(title) * sizeof (*filename) + sizeof (TEXT(".ini")));
-		lstrcpy(filename, title);
+		wcscpy(filename, title);
 		lstrcat(filename, TEXT(".ini"));
 
 		SetExtraIcons(rootname, &rooticon);
@@ -2329,7 +2330,7 @@ static int InitExtraFolders(void)
 
 	CreateDirectoryW(dir, NULL);
 
-	lstrcpy(path, dir);
+	wcscpy(path, dir);
 	lstrcat(path, TEXT("\\*"));
 	hFile = FindFirstFileW(path, &ffd);
 	if (hFile == INVALID_HANDLE_VALUE)
@@ -2347,7 +2348,7 @@ static int InitExtraFolders(void)
 		if ((ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0)
 			goto skip_it;
 
-		lstrcpy(path, dir);
+		wcscpy(path, dir);
 		lstrcat(path, TEXT("\\"));
 		lstrcat(path, ffd.cFileName);
 		if ((fp = wfopen(path, TEXT("r"))) == NULL)

@@ -129,7 +129,7 @@ void __cdecl dprintf(const char* fmt, ...)
 
 	_vsnprintf(buf, ARRAY_LENGTH(buf), fmt, va);
 
-	OutputDebugString(_Unicode(buf));
+	OutputDebugStringA(buf);
 
 	va_end(va);
 }
@@ -143,7 +143,7 @@ void __cdecl dwprintf(const WCHAR* fmt, ...)
 
 	_vsnwprintf(buf, ARRAY_LENGTH(buf), fmt, va);
 
-	OutputDebugString(buf);
+	OutputDebugStringW(buf);
 
 	va_end(va);
 }
@@ -314,7 +314,7 @@ const WCHAR * strlower(const WCHAR *s)
 {
 	static WCHAR buf[100 * 1024];
 
-	lstrcpy(buf, s);
+	wcscpy(buf, s);
 	_wcslwr(buf);
 
 	return buf;
@@ -600,7 +600,7 @@ int GetPatchFilename(WCHAR *patch_name, const WCHAR *game_name, const int patch_
 		{
 			if (Count == patch_index)
 			{
-				lstrcpy(patch_name, ffd.cFileName);
+				wcscpy(patch_name, ffd.cFileName);
 				patch_name[lstrlen(patch_name) - 4] = '\0';	// To trim the ext ".dat"
 				break;
 			}

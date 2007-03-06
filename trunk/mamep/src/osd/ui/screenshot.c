@@ -131,7 +131,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 		else
 #endif /* USE_IPS */
 		{
-			lstrcpy(buf, wdrv);
+			wcscpy(buf, wdrv);
 			dwprintf(TEXT("not found ipsname: %s"), buf);
 		}
 
@@ -151,7 +151,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 		}
 		else
 #endif /* USE_IPS */
-			lstrcpy(buf, wdrv);
+			wcscpy(buf, wdrv);
 
 		loaded = LoadDIB(buf, &m_hDIB, &m_hPal, nType);
 		nParentIndex = GetParentIndex(drivers[nParentIndex]);
@@ -164,7 +164,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 				swprintf(buf, TEXT("%s/%s"), wdrv, lpIPSName);
 			else
 #endif /* USE_IPS */
-				lstrcpy(buf, wdrv);
+				wcscpy(buf, wdrv);
 
 			loaded = LoadDIB(buf, &m_hDIB, &m_hPal, nType);
 		}

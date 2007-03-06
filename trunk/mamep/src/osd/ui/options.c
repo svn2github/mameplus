@@ -1529,7 +1529,7 @@ const WCHAR* GetIniDir(void)
 
 void SetIniDir(const WCHAR* path)
 {
-	if (!lstrcmp(path, settings.inipath))
+	if (!wcscmp(path, settings.inipath))
 		return;
 
 	FreeIfAllocatedW(&settings.inipath);
@@ -2500,7 +2500,7 @@ static void InvalidateGameOptionsInDriver(const WCHAR *name)
 		if (driver_variables[i].alt_index != -1)
 			continue;
 
-		if (lstrcmp(GetDriverFilename(i), name) == 0)
+		if (wcscmp(GetDriverFilename(i), name) == 0)
 		{
 			driver_variables[i].use_default = TRUE;
 			driver_variables[i].options_loaded = FALSE;
@@ -2601,7 +2601,7 @@ static int regist_alt_option(const WCHAR *name)
 		if (name == alt_options[s + n2].name)
 			return -1;
 
-		result = lstrcmp(name, alt_options[s + n2].name);
+		result = wcscmp(name, alt_options[s + n2].name);
 		if (!result)
 		{
 			alt_options[s + n2].name = name;
@@ -2645,7 +2645,7 @@ static int bsearch_alt_option(const WCHAR *name)
 		int n2 = n / 2;
 		int result;
 
-		result = lstrcmp(name, alt_options[s + n2].name);
+		result = wcscmp(name, alt_options[s + n2].name);
 		if (!result)
 			return s + n2;
 
@@ -2823,7 +2823,7 @@ static void generate_default_ctrlr(void)
 	char *stemp;
 	BOOL DoCreate;
 
-	lstrcpy(fname, ctrlrpath);
+	wcscpy(fname, ctrlrpath);
 	lstrcat(fname, TEXT(PATH_SEPARATOR));
 	lstrcat(fname, _Unicode(ctrlr));
 	lstrcat(fname, TEXT(".cfg"));
@@ -3336,7 +3336,7 @@ static int options_load_default_config(void)
 	char *stemp;
 	int retval = 0;
 
-	lstrcpy(fname, get_base_config_directory());
+	wcscpy(fname, get_base_config_directory());
 	lstrcat(fname, TEXT(PATH_SEPARATOR) TEXT_MAME_INI);
 
 	stemp = utf8_from_wstring(fname);
@@ -3374,7 +3374,7 @@ static int options_load_driver_config(int driver_index)
 	driver_variables[driver_index].options_loaded = TRUE;
 	driver_variables[driver_index].use_default = TRUE;
 
-	lstrcpy(fname, settings.inipath);
+	wcscpy(fname, settings.inipath);
 	lstrcat(fname, TEXT(PATH_SEPARATOR));
 	lstrcat(fname, driversw[driver_index]->name);
 	lstrcat(fname, TEXT(".ini"));
@@ -3411,13 +3411,13 @@ static int options_load_alt_config(alt_options_type *alt_option)
 	alt_option->variable->options_loaded = TRUE;
 	alt_option->variable->use_default = TRUE;
 
-	lstrcpy(fname, settings.inipath);
+	wcscpy(fname, settings.inipath);
 	lstrcat(fname, TEXT(PATH_SEPARATOR));
 	lstrcat(fname, alt_option->name);
 	lstrcat(fname, TEXT(".ini"));
 	len = lstrlen(fname);
 	if (len > 6 && fname[len - 6] == '.' && fname[len - 5] == 'c')
-		lstrcpy(fname + len - 6, TEXT(".ini"));
+		wcscpy(fname + len - 6, TEXT(".ini"));
 
 	stemp = utf8_from_wstring(fname);
 	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
@@ -3447,7 +3447,7 @@ static int options_load_winui_config(void)
 	char *stemp;
 	int retval;
 
-	lstrcpy(fname, settings.inipath);
+	wcscpy(fname, settings.inipath);
 	lstrcat(fname, TEXT(PATH_SEPARATOR) TEXT_WINUI_INI);
 
 	stemp = utf8_from_wstring(fname);
@@ -3482,7 +3482,7 @@ static int options_save_default_config(void)
 
 	validate_driver_option(&global);
 
-	lstrcpy(fname, get_base_config_directory());
+	wcscpy(fname, get_base_config_directory());
 	lstrcat(fname, TEXT(PATH_SEPARATOR) TEXT_MAME_INI);
 
 	stemp = utf8_from_wstring(fname);
@@ -3524,7 +3524,7 @@ static int options_save_driver_config(int driver_index)
 	if (parent == NULL)
 		return 0;
 
-	lstrcpy(fname, settings.inipath);
+	wcscpy(fname, settings.inipath);
 	lstrcat(fname, TEXT(PATH_SEPARATOR));
 	lstrcat(fname, strlower(driversw[driver_index]->name));
 	lstrcat(fname, TEXT(".ini"));
@@ -3575,14 +3575,14 @@ static int options_save_alt_config(alt_options_type *alt_option)
 
 	parent = update_alt_use_default(alt_option);
 
-	lstrcpy(fname, settings.inipath);
+	wcscpy(fname, settings.inipath);
 	lstrcat(fname, TEXT(PATH_SEPARATOR));
 	lstrcat(fname, strlower(alt_option->name));
 	lstrcat(fname, TEXT(".ini"));
 
 	len = lstrlen(fname);
 	if (len > 6 && fname[len - 6] == '.' && fname[len - 5] == 'c')
-		lstrcpy(fname + len - 6, TEXT(".ini"));
+		wcscpy(fname + len - 6, TEXT(".ini"));
 
 #ifdef USE_IPS
 	// HACK: DO NOT INHERIT IPS CONFIGURATION
@@ -3625,7 +3625,7 @@ static int options_save_winui_config(void)
 
 	CreateDirectoryW(settings.inipath, NULL);
 
-	lstrcpy(fname, settings.inipath);
+	wcscpy(fname, settings.inipath);
 	lstrcat(fname, strlower(TEXT(PATH_SEPARATOR) TEXT_WINUI_INI));
 
 	stemp = utf8_from_wstring(fname);
@@ -3658,7 +3658,16 @@ WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(void))
 	int pModuleLen;
 	int len;
 
-	GetModuleFileNameW(GetModuleHandle(NULL), pModule, _MAX_PATH);
+	if (OnNT())
+		GetModuleFileNameW(GetModuleHandle(NULL), pModule, _MAX_PATH);
+	else
+	{
+		char pModuleA[_MAX_PATH];
+
+		GetModuleFileNameA(GetModuleHandle(NULL), pModuleA, _MAX_PATH);
+		wcscpy(pModule, _Unicode(pModuleA));
+	}
+
 	pModuleLen = lstrlen(pModule) + 10 + strlen(drivers[driver_index]->name);
 
 	opt = GetGameOptions(driver_index);
@@ -3906,7 +3915,7 @@ INLINE void options_copy_wstring(const WCHAR *src, WCHAR **dest)
 }
 
 #define options_free_wstring			FreeIfAllocatedW
-#define _options_compare_wstring(s1,s2)		do { if (lstrcmp(s1, s2) != 0) return TRUE; } while (0)
+#define _options_compare_wstring(s1,s2)		do { if (wcscmp(s1, s2) != 0) return TRUE; } while (0)
 
 INLINE BOOL options_compare_wstring(const WCHAR *s1, const WCHAR *s2)
 {
@@ -3968,7 +3977,7 @@ INLINE void options_copy_wstring_allow_null(const WCHAR *src, WCHAR **dest)
 }
 
 #define options_free_wstring_allow_null			FreeIfAllocatedW
-#define _options_compare_wstring_allow_null(s1,s2)	do { if (s1 != s2) { if (!s1 || !s2) return TRUE; if (lstrcmp(s1, s2) != 0) return TRUE; } } while (0)
+#define _options_compare_wstring_allow_null(s1,s2)	do { if (s1 != s2) { if (!s1 || !s2) return TRUE; if (wcscmp(s1, s2) != 0) return TRUE; } } while (0)
 
 INLINE BOOL options_compare_wstring_allow_null(const WCHAR *s1, const WCHAR *s2)
 {
@@ -4684,7 +4693,7 @@ INLINE void _options_get_list_fontface(LOGFONTW *f, const char *name)
 		return;
 	}
 
-	lstrcpy(f->lfFaceName, stemp);
+	wcscpy(f->lfFaceName, stemp);
 	free((void *)stemp);
 }
 
@@ -4731,7 +4740,7 @@ INLINE void options_copy_list_font(const LOGFONTW *src, LOGFONTW *dest)
 
 INLINE void options_copy_list_fontface(const LOGFONTW *src, LOGFONTW *dest)
 {
-	lstrcpy(dest->lfFaceName, src->lfFaceName);
+	wcscpy(dest->lfFaceName, src->lfFaceName);
 }
 
 #define options_free_list_font(p)

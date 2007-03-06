@@ -98,7 +98,7 @@ static int cmp_msgdatau(const void *a, const void *b)
 
 static int cmp_msgdataw(const void *a, const void *b)
 {
-	return lstrcmp(((struct msgdataw *)a)->id, ((struct msgdataw *)b)->id);
+	return wcscmp(((struct msgdataw *)a)->id, ((struct msgdataw *)b)->id);
 }
 
 static int write_mmo(void)
@@ -108,7 +108,7 @@ static int write_mmo(void)
 	int offset = 0;
 
 	header.dummy = 0;
-	header.version = 2;
+	header.version = 3;
 	header.num_msg = num_msgtable;
 
 	// number of msgdata

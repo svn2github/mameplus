@@ -121,7 +121,7 @@ INT_PTR CALLBACK ResetDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 			if (resetFilters || resetGames || resetUI || resetDefaults)
 			{
 				WCHAR temp[1024];
-				lstrcpy(temp, _UIW(TEXT(MAME32NAME) TEXT(" will now reset the selected\n")
+				wcscpy(temp, _UIW(TEXT(MAME32NAME) TEXT(" will now reset the selected\n")
 					TEXT("items to the original, installation\n")
 					TEXT("settings then exit.\n\n")));
 				lstrcat(temp, _UIW(TEXT("The new settings will take effect\n")
@@ -825,8 +825,8 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			font.lfClipPrecision = CLIP_DEFAULT_PRECIS;
 			font.lfQuality = DEFAULT_QUALITY;
 			font.lfPitchAndFamily = FIXED_PITCH;
-			lstrcpy(font.lfFaceName, TEXT("Courier New"));
-//			lstrcpy(font.lfFaceName, TEXT("FixedSys"));
+			wcscpy(font.lfFaceName, TEXT("Courier New"));
+//			wcscpy(font.lfFaceName, TEXT("FixedSys"));
 
 			hPcbFont = CreateFontIndirectW(&font);
 
@@ -841,9 +841,9 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			nGame = lvi.lParam;
 			nParentIndex = GetParentRomSetIndex(drivers[nGame]);
 			if (nParentIndex >= 0)
-				lstrcpy(szGame, driversw[nParentIndex]->name);
+				wcscpy(szGame, driversw[nParentIndex]->name);
 			else
-				lstrcpy(szGame, driversw[nGame]->name);
+				wcscpy(szGame, driversw[nGame]->name);
 
 			swprintf(buf, TEXT("%s\\%s.txt"), szDir, szGame);
 

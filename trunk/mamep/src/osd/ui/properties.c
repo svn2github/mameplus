@@ -630,7 +630,7 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, int game_num, HICON hIco
 	{
 		pGameOpts = GetFolderOptions(g_pFolder);
 		g_bUseDefaults = GetFolderUsesDefaults(g_pFolder);
-		if (!lstrcmp(g_pFolder, TEXT("Vector")))
+		if (!wcscmp(g_pFolder, TEXT("Vector")))
 			g_nPropertyMode = SOURCE_VECTOR;
 		else
 			g_nPropertyMode = SOURCE_FOLDER;
@@ -751,7 +751,7 @@ static LPCWSTR GameInfoSound(int nIndex)
 		if (count > 1)
 			swprintf(&buf[lstrlen(buf)], TEXT("%dx"), count);
 
-		lstrcpy(&buf[lstrlen(buf)], _Unicode(sndtype_name(sound_type)));
+		wcscpy(&buf[lstrlen(buf)], _Unicode(sndtype_name(sound_type)));
 
 		if (clock)
 		{
@@ -844,10 +844,10 @@ static LPCWSTR GameInfoInput(int nIndex)
 				/* if control not defined, start it off as horizontal 2-way */
 				if (!control)
 					control = _UIW(TEXT("Joystick 2-Way"));
-				else if (lstrcmp(control, _UIW(TEXT("Joystick 2-Way"))) == 0)
+				else if (wcscmp(control, _UIW(TEXT("Joystick 2-Way"))) == 0)
 					;
 				/* if already defined as vertical, make it 4 or 8 way */
-				else if (lstrcmp(control, _UIW(TEXT("Joystick 2-Way Vertical"))) == 0)
+				else if (wcscmp(control, _UIW(TEXT("Joystick 2-Way Vertical"))) == 0)
 				{
 					if (input->way == 4)
 						control = _UIW(TEXT("Joystick 4-Way"));
@@ -867,10 +867,10 @@ static LPCWSTR GameInfoInput(int nIndex)
 				/* if control not defined, start it off as vertical 2-way */
 				if (!control)
 					control = _UIW(TEXT("Joystick 2-Way Vertical"));
-				else if (lstrcmp(control, _UIW(TEXT("Joystick 2-Way Vertical"))) == 0)
+				else if (wcscmp(control, _UIW(TEXT("Joystick 2-Way Vertical"))) == 0)
 					;
 				/* if already defined as horiz, make it 4 or 8way */
-				else if (lstrcmp(control, _UIW(TEXT("Joystick 2-Way")))==0)
+				else if (wcscmp(control, _UIW(TEXT("Joystick 2-Way")))==0)
 				{
 					if (input->way == 4)
 						control = _UIW(TEXT("Joystick 4-Way"));
@@ -892,10 +892,10 @@ static LPCWSTR GameInfoInput(int nIndex)
 				/* if control not defined, start it off as vertical 2way */
 				if (!control)
 					control = _UIW(TEXT("Double Joystick 2-Way Vertical"));
-				else if (lstrcmp(control, _UIW(TEXT("Double Joystick 2-Way Vertical"))) == 0)
+				else if (wcscmp(control, _UIW(TEXT("Double Joystick 2-Way Vertical"))) == 0)
 					;
 				/* if already defined as horiz, make it 4 or 8 way */
-				else if (lstrcmp(control, _UIW(TEXT("Double Joystick 2-Way"))) == 0)
+				else if (wcscmp(control, _UIW(TEXT("Double Joystick 2-Way"))) == 0)
 				{
 					if (input->way == 4)
 						control = _UIW(TEXT("Double Joystick 4-Way"));
@@ -917,10 +917,10 @@ static LPCWSTR GameInfoInput(int nIndex)
 				/* if control not defined, start it off as horiz 2-way */
 				if (!control)
 					control = _UIW(TEXT("Double Joystick 2-Way"));
-				else if (lstrcmp(control, _UIW(TEXT("Double Joystick 2-Way"))) == 0)
+				else if (wcscmp(control, _UIW(TEXT("Double Joystick 2-Way"))) == 0)
 					;
 				/* if already defined as vertical, make it 4 or 8 way */
-				else if (lstrcmp(control, _UIW(TEXT("Double Joystick 2-Way Vertical"))) == 0)
+				else if (wcscmp(control, _UIW(TEXT("Double Joystick 2-Way Vertical"))) == 0)
 				{
 					if (input->way == 4)
 						control = _UIW(TEXT("Double Joystick 4-Way"));
@@ -1024,7 +1024,7 @@ static LPCWSTR GameInfoInput(int nIndex)
 	if (control == NULL) control = TEXT("");
 
 	if (nplayer<1)
-		lstrcpy(buf, _UIW(TEXT("Unknown")));
+		wcscpy(buf, _UIW(TEXT("Unknown")));
 	else
 	if ((nbutton<1) && (nplayer>1))
 		swprintf(buf, _UIW(TEXT("%s (%d players)")), control, nplayer);
@@ -1070,15 +1070,15 @@ LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus)
 
 	if (bRomStatus && IsAuditResultKnown(audit_result) == FALSE)
 	{
-		lstrcpy(buffer, _UIW(TEXT("Unknown")));
+		wcscpy(buffer, _UIW(TEXT("Unknown")));
 	}
 
 	else if (!bRomStatus || IsAuditResultYes(audit_result))
 	{
 		if (DriverIsBroken(driver_index))
-			lstrcpy(buffer, _UIW(TEXT("Not working")));
+			wcscpy(buffer, _UIW(TEXT("Not working")));
 		else
-			lstrcpy(buffer, _UIW(TEXT("Working")));
+			wcscpy(buffer, _UIW(TEXT("Working")));
 
 		//the Flags are checked in the order of "noticability"
 		//1) visible deficiencies
@@ -1454,7 +1454,7 @@ static void AdjustChildWindows(HWND hWnd)
 	DWORD dwStyle;
 
 	GetClassName(hWnd, szClass, ARRAY_LENGTH(szClass));
-	if (!lstrcmp(szClass, TEXT("Button")))
+	if (!wcscmp(szClass, TEXT("Button")))
 	{
 		dwStyle = GetWindowLong(hWnd, GWL_STYLE);
 		if (((dwStyle & BS_GROUPBOX) == BS_GROUPBOX) && (dwStyle & WS_TABSTOP))
@@ -3409,7 +3409,7 @@ static void AssignInput(HWND hWnd)
 	}
 	pGameOpts->ctrlr = (char *)malloc(new_length + 1);
 	ComboBox_GetLBTextA(hWnd, g_nInputIndex, pGameOpts->ctrlr);
-	if (lstrcmp(_Unicode(pGameOpts->ctrlr), _UIW(TEXT("Standard"))) == 0)
+	if (wcscmp(_Unicode(pGameOpts->ctrlr), _UIW(TEXT("Standard"))) == 0)
 	{
 		FreeIfAllocated(&pGameOpts->ctrlr);
 		pGameOpts->ctrlr = mame_strdup("Standard");
@@ -3613,7 +3613,7 @@ static void AssignEffect(HWND hWnd)
 	}
 	pGameOpts->effect = (char *)malloc(new_length + 1);
 	ComboBox_GetLBTextA(hWnd, g_nEffectIndex, pGameOpts->effect);
-	if (lstrcmp(_Unicode(pGameOpts->effect), _UIW(TEXT("None"))) == 0)
+	if (wcscmp(_Unicode(pGameOpts->effect), _UIW(TEXT("None"))) == 0)
 	{
 		FreeIfAllocated(&pGameOpts->effect);
 		pGameOpts->effect = mame_strdup("none");
@@ -3731,7 +3731,7 @@ static void ResetDataMap(void)
 	else if (IS_FOLDER)
 	{
 		for (i = 0; drivers[i]; i++)
-			if (!lstrcmp(GetDriverFilename(i), g_pFolder) && drivers[i]->bios)
+			if (!wcscmp(GetDriverFilename(i), g_pFolder) && drivers[i]->bios)
 			{
 				g_biosinfo = drivers[i]->bios;
 				break;
@@ -4952,7 +4952,7 @@ static void InitializeDefaultInputUI(HWND hwnd)
 			do 
 			{
 				// copy the filename
-				lstrcpy(root, FindFileData.cFileName);
+				wcscpy(root, FindFileData.cFileName);
 
 				// find the extension
 				_wsplitpath(FindFileData.cFileName, NULL, NULL, NULL, ext);
@@ -5000,7 +5000,7 @@ static void InitializeEffectUI(HWND hwnd)
 			do 
 			{
 				// copy the filename
-				lstrcpy(root, FindFileData.cFileName);
+				wcscpy(root, FindFileData.cFileName);
 
 				// find the extension
 				_wsplitpath(FindFileData.cFileName, NULL, NULL, NULL, ext);

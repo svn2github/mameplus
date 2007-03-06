@@ -1079,35 +1079,62 @@ static int RunMAME(int nGameIndex)
 
 #else
 	DWORD               dwExitCode = 0;
-	STARTUPINFOW        si;
 	PROCESS_INFORMATION pi;
 	WCHAR *pCmdLine;
 	HWND hGameWnd = NULL;
 	long lGameWndStyle = 0;
+	BOOL process_created = FALSE;
 
 	pCmdLine = OptionsGetCommandLine(nGameIndex, override_options);
 
-	ZeroMemory(&si, sizeof(si));
 	ZeroMemory(&pi, sizeof(pi));
-	si.cb = sizeof(si);
 
-	if (!CreateProcessW(NULL,
-	                    pCmdLine,
-	                    NULL,		  /* Process handle not inheritable. */
-	                    NULL,		  /* Thread handle not inheritable. */
-	                    TRUE,		  /* Handle inheritance.  */
-	                    0,			  /* Creation flags. */
-	                    NULL,		  /* Use parent's environment block.  */
-	                    NULL,		  /* Use parent's starting directory.  */
-	                    &si,		  /* STARTUPINFO */
-	                    &pi))		  /* PROCESS_INFORMATION */
+	if (OnNT())
+	{
+		STARTUPINFOW        si;
+
+		ZeroMemory(&si, sizeof(si));
+		si.cb = sizeof(si);
+
+		if (CreateProcessW(NULL,
+		                    pCmdLine,
+		                    NULL,		  /* Process handle not inheritable. */
+		                    NULL,		  /* Thread handle not inheritable. */
+		                    TRUE,		  /* Handle inheritance.  */
+		                    0,			  /* Creation flags. */
+		                    NULL,		  /* Use parent's environment block.  */
+		                    NULL,		  /* Use parent's starting directory.  */
+		                    &si,		  /* STARTUPINFO */
+		                    &pi))		  /* PROCESS_INFORMATION */
+			process_created  = TRUE;
+	}
+	else
+	{
+		STARTUPINFOA        si;
+
+		ZeroMemory(&si, sizeof(si));
+		si.cb = sizeof(si);
+
+		if (CreateProcessA(NULL,
+		                    _String(pCmdLine),
+		                    NULL,		  /* Process handle not inheritable. */
+		                    NULL,		  /* Thread handle not inheritable. */
+		                    TRUE,		  /* Handle inheritance.  */
+		                    0,			  /* Creation flags. */
+		                    NULL,		  /* Use parent's environment block.  */
+		                    NULL,		  /* Use parent's starting directory.  */
+		                    &si,		  /* STARTUPINFO */
+		                    &pi))		  /* PROCESS_INFORMATION */
+			process_created  = TRUE;
+	}
+
+	if (!process_created)
 	{
 		dprintf("CreateProcess failed.");
 		dwExitCode = GetLastError();
 	}
 	else
 	{
-
 		ShowWindow(hMain, SW_HIDE);
 		SendIconToProcess(&pi, nGameIndex);
 		if( ! GetGameCaption() )
@@ -1433,7 +1460,7 @@ HICON LoadIconFromFile(const char *iconname)
 				WCHAR tmpStr[MAX_PATH];
 				HICON hIcon = 0;
 
-				lstrcpy(tmpStr, p);
+				wcscpy(tmpStr, p);
 				lstrcat(tmpStr, TEXT(PATH_SEPARATOR));
 
 				if (!is_zipfile)
@@ -2098,7 +2125,7 @@ static void ResetBackground(const WCHAR *szFile)
 	WCHAR szDestFile[MAX_PATH];
 
 	/* The MAME core load the .png file first, so we only need replace this file */
-	lstrcpy(szDestFile, GetBgDir());
+	wcscpy(szDestFile, GetBgDir());
 	lstrcat(szDestFile, TEXT("\\bkground.png"));
 	SetFileAttributes(szDestFile, FILE_ATTRIBUTE_NORMAL);
 	CopyFile(szFile, szDestFile, FALSE);
@@ -2116,7 +2143,7 @@ static void RandomSelectBackground(void)
 	if (buf == NULL)
 		return;
 
-	lstrcpy(szFile, szDir);
+	wcscpy(szFile, szDir);
 	lstrcat(szFile, TEXT("\\*.bmp"));
 	hFile = FindFirstFileW(szFile, &ffd);
 	if (hFile != INVALID_HANDLE_VALUE)
@@ -2131,7 +2158,7 @@ static void RandomSelectBackground(void)
 		FindClose(hFile);
 	}
 
-	lstrcpy(szFile, szDir);
+	wcscpy(szFile, szDir);
 	lstrcat(szFile, TEXT("\\*.png"));
 	hFile = FindFirstFileW(szFile, &ffd);
 	if (hFile != INVALID_HANDLE_VALUE)
@@ -2149,7 +2176,7 @@ static void RandomSelectBackground(void)
 	if (count)
 	{
 		srand( (unsigned)time( NULL ) );
-		lstrcpy(szFile, szDir);
+		wcscpy(szFile, szDir);
 		lstrcat(szFile, TEXT("\\"));
 		lstrcat(szFile, buf + (rand() % count) * _MAX_FNAME);
 		ResetBackground(szFile);
@@ -2302,7 +2329,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 
 	HelpInit();
 
-	lstrcpy(last_directory, GetInpDir());
+	wcscpy(last_directory, GetInpDir());
 	hMain = CreateDialog(hInstance, MAKEINTRESOURCE(IDD_MAIN), 0, NULL);
 	if (hMain == NULL)
 	{
@@ -2939,7 +2966,7 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 			{
 				char fileNameA[MAX_PATH];
 				DragQueryFileA(hDrop, 0, fileNameA, MAX_PATH);
-				lstrcpy(fileName, _Unicode(fileNameA));
+				wcscpy(fileName, _Unicode(fileNameA));
 			}
 			DragFinish(hDrop);
 
@@ -3522,11 +3549,11 @@ static void CopyToolTipTextW(LPTOOLTIPTEXTW lpttt)
 		/* Check for valid parameter */
 		if (iButton > NUM_TOOLTIPS)
 		{
-			lstrcpy(String, _UIW(TEXT("Invalid Button Index")));
+			wcscpy(String, _UIW(TEXT("Invalid Button Index")));
 		}
 		else
 		{
-			lstrcpy(String, (id==IDC_USE_LIST && GetLangcode()==UI_LANG_EN_US) ?
+			wcscpy(String, (id==IDC_USE_LIST && GetLangcode()==UI_LANG_EN_US) ?
 			       _UIW(TEXT("Modify 'The'")) : _UIW(szTbStrings[iButton]));
 		}
 	}
@@ -3538,12 +3565,12 @@ static void CopyToolTipTextW(LPTOOLTIPTEXTW lpttt)
 			SendMessage(hStatusBar, SB_GETTEXTA, (WPARAM)iButton, (LPARAM)(LPSTR) &String);
 		else
 			//for first pane we get the Status directly, to get the line breaks
-			lstrcpy(String, GameInfoStatus(Picker_GetSelectedItem(hwndList), FALSE));
+			wcscpy(String, GameInfoStatus(Picker_GetSelectedItem(hwndList), FALSE));
 	}
 	else
-		lstrcpy(String, _UIW(TEXT("Invalid Button Index")));
+		wcscpy(String, _UIW(TEXT("Invalid Button Index")));
 
-	lstrcpy(lpttt->lpszText, String);
+	wcscpy(lpttt->lpszText, String);
 }
 
 static void CopyToolTipTextA(LPTOOLTIPTEXTA lpttt)
@@ -4603,7 +4630,7 @@ static int MMO2LST(void)
 	WCHAR filename[MAX_PATH];
 
 	swprintf(filename, TEXT_MAME32NAME TEXT("%s"), _Unicode(ui_lang_info[options.langcode].shortname));
-	lstrcpy(filename, strlower(filename));
+	wcscpy(filename, strlower(filename));
 
 	if (!CommonFileDialog(TRUE, filename, FILETYPE_GAMELIST_FILES))
 		return 1;
@@ -4842,7 +4869,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 
 				while (token)
 				{
-					if (!lstrcmp(patch_filename, token))
+					if (!wcscmp(patch_filename, token))
 					{
 						dprintf("dup!");
 						patch_filename[0] = '\0';
@@ -6014,7 +6041,7 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 		break;
 
 	case COLUMN_SRCDRIVERS:
-		value = lstrcmpi(GetDriverFilename(index1), GetDriverFilename(index2));
+		value = wcscmpi(GetDriverFilename(index1), GetDriverFilename(index2));
 		if (value == 0)
 			return GamePicker_Compare(hwndPicker, index1, index2, COLUMN_GAMES);
 
@@ -6082,7 +6109,7 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 		else if (name1 == NULL)
 			value = 1;
 		else
-			value = lstrcmpi(name1, name2);
+			value = wcscmpi(name1, name2);
 		break;
 
 	default :
@@ -6147,7 +6174,7 @@ static BOOL CommonFileDialogW(BOOL open_for_write, WCHAR *filename, int filetype
 	WCHAR title[256];
 	WCHAR ext[256];
 
-	lstrcpy(fn, filename);
+	wcscpy(fn, filename);
 
 	of.lStructSize       = sizeof(of);
 	of.hwndOwner         = hMain;
@@ -6167,7 +6194,7 @@ static BOOL CommonFileDialogW(BOOL open_for_write, WCHAR *filename, int filetype
 
 		if (cfg_data[filetype].title_save)
 		{
-			lstrcpy(title, _UIW(cfg_data[filetype].title_save));
+			wcscpy(title, _UIW(cfg_data[filetype].title_save));
 			of.lpstrTitle = title;
 		}
 	}
@@ -6178,27 +6205,27 @@ static BOOL CommonFileDialogW(BOOL open_for_write, WCHAR *filename, int filetype
 
 		if (cfg_data[filetype].title_load)
 		{
-			lstrcpy(title, _UIW(cfg_data[filetype].title_load));
+			wcscpy(title, _UIW(cfg_data[filetype].title_load));
 			of.lpstrTitle = title;
 		}
 	}
 
 	if (cfg_data[filetype].dir)
 	{
-		lstrcpy(dir, cfg_data[filetype].dir());
+		wcscpy(dir, cfg_data[filetype].dir());
 		of.lpstrInitialDir = dir;
 	}
 
 	if (cfg_data[filetype].ext)
 	{
-		lstrcpy(ext, cfg_data[filetype].ext);
+		wcscpy(ext, cfg_data[filetype].ext);
 		of.lpstrDefExt = ext;
 	}
 
 	s = cfg_data[filetype].filter;
 	for (p = buf; *s; s += lstrlen(s) + 1)
 	{
-		lstrcpy(p, _UIW(s));
+		wcscpy(p, _UIW(s));
 		p += lstrlen(p) + 1;
 	}
 	*p = '\0';
@@ -6220,7 +6247,7 @@ static BOOL CommonFileDialogW(BOOL open_for_write, WCHAR *filename, int filetype
 	success = cfd(&of);
 	if (success)
 	{
-		lstrcpy(filename, fn);
+		wcscpy(filename, fn);
 	}
 	return success;
 }
@@ -6310,7 +6337,7 @@ static BOOL CommonFileDialogA(BOOL open_for_write, WCHAR *filename, int filetype
 
 	success = cfd(&of);
 	if (success)
-		lstrcpy(filename, _Unicode(fn));
+		wcscpy(filename, _Unicode(fn));
 
 	return success;
 }
@@ -6389,7 +6416,7 @@ static void MamePlayBackGame(const WCHAR *fname_playback)
 
 	if (fname_playback)
 	{
-		lstrcpy(filename, fname_playback);
+		wcscpy(filename, fname_playback);
 	}
 	else
 	{
@@ -6397,7 +6424,7 @@ static void MamePlayBackGame(const WCHAR *fname_playback)
 
 		nGame = Picker_GetSelectedItem(hwndList);
 		if (nGame != -1)
-			lstrcpy(filename, driversw[nGame]->name);
+			wcscpy(filename, driversw[nGame]->name);
 
 		if (!CommonFileDialog(FALSE, filename, FILETYPE_INPUT_FILES)) return;
 	}
@@ -6417,9 +6444,9 @@ static void MamePlayBackGame(const WCHAR *fname_playback)
 
 		_wsplitpath(filename, drive, dir, bare_fname, ext);
 
-		lstrcpy(path, drive);
+		wcscpy(path, drive);
 		lstrcat(path, dir);
-		lstrcpy(fname, bare_fname);
+		wcscpy(fname, bare_fname);
 		lstrcat(fname, TEXT(".inp"));
 		if (path[lstrlen(path)-1] == TEXT(PATH_SEPARATOR[0]))
 			path[lstrlen(path)-1] = 0; // take off trailing back slash
@@ -6482,7 +6509,7 @@ static void MameLoadState(const WCHAR *fname_state)
 		int  i;
 		WCHAR bare_fname[_MAX_FNAME];
 
-		lstrcpy(filename, fname_state);
+		wcscpy(filename, fname_state);
 
 		_wsplitpath(fname_state, NULL, NULL, bare_fname, NULL);
 		cPos = wcschr(bare_fname, TEXT('-'));
@@ -6491,7 +6518,7 @@ static void MameLoadState(const WCHAR *fname_state)
 		selected_filename[iPos] = '\0';
 
 		for (i = 0; drivers[i] != 0; i++) // find game and play it
-			if (!lstrcmp(driversw[i]->name, selected_filename))
+			if (!wcscmp(driversw[i]->name, selected_filename))
 			{
 				nGame = i;
 				break;
@@ -6509,8 +6536,8 @@ static void MameLoadState(const WCHAR *fname_state)
 		nGame = Picker_GetSelectedItem(hwndList);
 		if (nGame != -1)
 		{
-			lstrcpy(filename, driversw[nGame]->name);
-			lstrcpy(selected_filename, filename);
+			wcscpy(filename, driversw[nGame]->name);
+			wcscpy(selected_filename, filename);
 		}
 		if (!CommonFileDialog(FALSE, filename, FILETYPE_SAVESTATE_FILES)) return;
 	}
@@ -6533,9 +6560,9 @@ static void MameLoadState(const WCHAR *fname_state)
 		_wsplitpath(filename, drive, dir, bare_fname, ext);
 
 		// parse path
-		lstrcpy(path, drive);
+		wcscpy(path, drive);
 		lstrcat(path, dir);
-		lstrcpy(fname, bare_fname);
+		wcscpy(fname, bare_fname);
 		lstrcat(fname, TEXT(".sta"));
 		if (path[lstrlen(path)-1] == TEXT(PATH_SEPARATOR[0]))
 			path[lstrlen(path)-1] = 0; // take off trailing back slash
@@ -6555,7 +6582,7 @@ static void MameLoadState(const WCHAR *fname_state)
 			iPos = cPos ? cPos - bare_fname : lstrlen(bare_fname);
 			wcsncpy(romname, bare_fname, iPos );
 			romname[iPos] = '\0';
-			if (lstrcmp(selected_filename,romname) != 0)
+			if (wcscmp(selected_filename,romname) != 0)
 			{
 				MameMessageBoxW(_UIW(TEXT("'%s' is not a valid savestate file for game '%s'.")), filename, selected_filename);
 				return;
@@ -6603,7 +6630,7 @@ static void MamePlayRecordGame(void)
 	*filename = 0;
 
 	nGame = Picker_GetSelectedItem(hwndList);
-	lstrcpy(filename, driversw[nGame]->name);
+	wcscpy(filename, driversw[nGame]->name);
 
 	if (CommonFileDialog(TRUE, filename, FILETYPE_INPUT_FILES))
 	{
@@ -6616,9 +6643,9 @@ static void MamePlayRecordGame(void)
 
 		_wsplitpath(filename, drive, dir, bare_fname, ext);
 
-		lstrcpy(path, drive);
+		wcscpy(path, drive);
 		lstrcat(path, dir);
-		lstrcpy(fname, bare_fname);
+		wcscpy(fname, bare_fname);
 		lstrcat(fname, TEXT(".inp"));
 		if (path[lstrlen(path)-1] == TEXT(PATH_SEPARATOR[0]))
 			path[lstrlen(path)-1] = 0; // take off trailing back slash
@@ -6650,7 +6677,7 @@ static void MamePlayRecordWave(void)
 	*filename = 0;
 
 	nGame = Picker_GetSelectedItem(hwndList);
-	lstrcpy(filename, driversw[nGame]->name);
+	wcscpy(filename, driversw[nGame]->name);
 
 	if (CommonFileDialog(TRUE, filename, FILETYPE_WAVE_FILES))
 	{
@@ -6667,7 +6694,7 @@ static void MamePlayRecordMNG(void)
 	*filename = 0;
 
 	nGame = Picker_GetSelectedItem(hwndList);
-	lstrcpy(filename, driversw[nGame]->name);
+	wcscpy(filename, driversw[nGame]->name);
 
 	if (CommonFileDialog(TRUE, filename, FILETYPE_MNG_FILES))
 	{
@@ -6998,12 +7025,12 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 				{
 					int  i;
 
-					lstrcpy(wbuf, pOpts->ips);
+					wcscpy(wbuf, pOpts->ips);
 					wp = wcstok(wbuf, TEXT(","));
 
 					for (i = 0; i < MAX_PATCHES && wp; i++)
 					{
-						if (!lstrcmp(patch_filename, wp))
+						if (!wcscmp(patch_filename, wp))
 						{
 							CheckMenuItem(hMenu,ID_PLAY_PATCH + patch_count, MF_BYCOMMAND | MF_CHECKED);
 							break;

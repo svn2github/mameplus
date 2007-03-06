@@ -717,7 +717,7 @@ void Picker_SetSelectedItem(HWND hWnd, int nItem)
 
 
 
-static const WCHAR *Picker_CallGetItemString(HWND hwndPicker,
+static void Picker_CallGetItemString(HWND hwndPicker,
 	int nItem, int nColumn, WCHAR *pszBuffer, UINT nBufferLength)
 {
 	// this call wraps the pfnGetItemString callback to properly set up the
@@ -726,14 +726,17 @@ static const WCHAR *Picker_CallGetItemString(HWND hwndPicker,
 	const WCHAR *s;
 
 	pPickerInfo = GetPickerInfo(hwndPicker);
-	pszBuffer[0] = '\0';
 	s = NULL;
 
 	if (pPickerInfo->pCallbacks->pfnGetItemString)
+	{
 		s = pPickerInfo->pCallbacks->pfnGetItemString(hwndPicker, nItem, nColumn);
-	if (!s)
-		s = pszBuffer;
-	return s;
+		if (s)
+		{
+			wcsncpy(pszBuffer, s, nBufferLength - 1);
+			pszBuffer[nBufferLength - 1] = '\0';
+		}
+	}
 }
 
 
@@ -817,7 +820,6 @@ static int CALLBACK Picker_CompareProc(LPARAM index1, LPARAM index2, LPARAM nPar
 	BOOL bCallCompare = TRUE;
 	int nResult = 0, nParent1, nParent2;
 	WCHAR szBuffer1[256], szBuffer2[256];
-	const WCHAR *s1, *s2;
 
 	if (pcpp->nViewMode == VIEW_GROUPED)
 	{
@@ -893,11 +895,11 @@ static int CALLBACK Picker_CompareProc(LPARAM index1, LPARAM index2, LPARAM nPar
 		else
 		{
 			// no default sort proc, just get the string and compare them
-			s1 = Picker_CallGetItemString(pcpp->hwndPicker, index1, pcpp->nSortColumn,
+			Picker_CallGetItemString(pcpp->hwndPicker, index1, pcpp->nSortColumn,
 				szBuffer1, ARRAY_LENGTH(szBuffer1));
-			s2 = Picker_CallGetItemString(pcpp->hwndPicker, index2, pcpp->nSortColumn,
+			Picker_CallGetItemString(pcpp->hwndPicker, index2, pcpp->nSortColumn,
 				szBuffer2, ARRAY_LENGTH(szBuffer2));
-			nResult = lstrcmpi(s1, s2);
+			nResult = wcscmpi(szBuffer1, szBuffer2);
 		}
 
 		if (pcpp->bReverse)
@@ -1080,9 +1082,9 @@ BOOL Picker_HandleNotify(LPNMHDR lpNmHdr)
 				{
 					// retrieve item text
 					nColumn = Picker_GetRealColumnFromViewColumn(hWnd, pDispInfo->item.iSubItem);
-					lstrcpy(szBuffer, pDispInfo->item.pszText);
-
-					pDispInfo->item.pszText = (WCHAR *)Picker_CallGetItemString(hWnd, nItem, nColumn, szBuffer, ARRAY_LENGTH(szBuffer));
+					wcscpy(szBuffer, pDispInfo->item.pszText);
+					Picker_CallGetItemString(hWnd, nItem, nColumn, szBuffer, ARRAY_LENGTH(szBuffer));
+					pDispInfo->item.pszText = szBuffer;
 
 					bResult = TRUE;
 				}
@@ -1093,7 +1095,6 @@ BOOL Picker_HandleNotify(LPNMHDR lpNmHdr)
 			{
 				LV_DISPINFOA *pDispInfo;
 				WCHAR szBuffer[256];
-				const WCHAR *s;
 
 				pDispInfo = (LV_DISPINFOA *) lpNmHdr;
 				nItem = (int) pDispInfo->item.lParam;
@@ -1118,11 +1119,10 @@ BOOL Picker_HandleNotify(LPNMHDR lpNmHdr)
 				{
 					// retrieve item text
 					nColumn = Picker_GetRealColumnFromViewColumn(hWnd, pDispInfo->item.iSubItem);
-					lstrcpy(szBuffer, _Unicode(pDispInfo->item.pszText));
+					wcscpy(szBuffer, _Unicode(pDispInfo->item.pszText));
+					Picker_CallGetItemString(hWnd, nItem, nColumn, szBuffer, ARRAY_LENGTH(szBuffer));
+					pDispInfo->item.pszText = _String(szBuffer);
 
-					s = (Picker_CallGetItemString(hWnd, nItem, nColumn, szBuffer, ARRAY_LENGTH(szBuffer)));
-
-					pDispInfo->item.pszText = _String(s);
 					bResult = TRUE;
 				}
 			}
@@ -1215,11 +1215,11 @@ static const WCHAR* MakeShortString(HDC hDC, const WCHAR* lpszLong, int nColumnL
 	if (nStringLen == 0 || size.cx + nOffset <= nColumnLen)
 		return lpszLong;
 
-	lstrcpy(szThreeDots, TEXT("..."));
+	wcscpy(szThreeDots, TEXT("..."));
 	GetTextExtentPoint32(hDC, szThreeDots, lstrlen(szThreeDots), &size);
 	nAddLen = size.cx;
 
-	lstrcpy(szShort, lpszLong);
+	wcscpy(szShort, lpszLong);
 	for (i = nStringLen - 1; i > 0; i--)
 	{
 		szShort[i] = 0;
@@ -1304,7 +1304,7 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 
 	/* Labels are offset by a certain amount */
 	/* This offset is related to the width of a space character */
-	lstrcpy(szBuff, TEXT(" "));
+	wcscpy(szBuff, TEXT(" "));
 	GetTextExtentPoint32(hDC, szBuff, 1 , &size);
 	offset = size.cx;
 
