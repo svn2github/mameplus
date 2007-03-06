@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.112u4      #
+#      Mameinfo.dat日本語版 v0.113       #
 #                                        #
-#             March 5, 2007              #
+#             March 6, 2007              #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,18 +12,10 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：858 翻訳済：844
+# Tester報告：858 翻訳済：843
 # 追加項目：338 合計：1196
 #
 
-
-$info=calorie
-$mame
-[バグ]
-
-- 一番下のUnknownのDIPスイッチは、残ライフの無限設定。 calorie0112u4gra, Machone
-
-$end
 
 $info=darkseal
 $mame
@@ -39,38 +31,6 @@ $mame
 [バグ]
 
 - ボーナス面後、残機がいくらあってもゲームが終了する。 exerion0112u4yel, Krusty104 / tafoid
-
-$end
-
-$info=fastlane
-$mame
-[バグ]
-
-- 二番目と三番目のUnknownのDIPスイッチは難易度の設定：
-
-OFF-OFF: Easy
-
-ON-OFF: Medium
-
-OFF-ON: Hard
-
-ON-ON: Hardest
-
-
-また一番下のUnknownはコンティニュー設定：
-
-OFFは3回、ONは何回でもOK fastlane0112u4gra, Machone
-
-
-- ボーナスアイテムを取っても、いつも「No Bonus」にしかならない。 fastlane061gre, Kale
-
-$end
-
-$info=diamond
-$mame
-[バグ]
-
-- DSW2の1-4はプレイヤーのエネルギーの減り具合を設定する。 diamond0112u4gra, Machone
 
 $end
 
@@ -1059,6 +1019,14 @@ $mame
 
 - 画面の下部分のスクロールがおかしい。
 画面の上部分に表示されるはずの情報もそこに表示されている。 topsecex37b5gre, YMI / TriggerFin / Pi
+
+$end
+
+$info=fastlane
+$mame
+[バグ]
+
+- ボーナスアイテムを取っても、いつも「No Bonus」にしかならない。 fastlane061gre, Kale
 
 $end
 
@@ -5868,30 +5836,6 @@ $mame
 
 - 筐体のDIP設定が反転している。
 アップライトにすると、プレイヤー2の時に画面が反転し、操作もP1とP2で分離する。 spaceskr0111u1gra, Speedfreak / Fujix
-
-$end
-
-$info=qcrayon
-$mame
-[バグ]
-
-- DIPスイッチの一番下の「Unused」は、
-コントロール方式の切り替え。
-OFFの場合デフォルトどおり1レバー+1ボタン+スタートボタンという構成だが、
-ONにすると、4ボタン+スタートボタンという構成になり、一部のミニゲームも変更される。
-MAMEのもともとのコントロール設定との対応は次の通り：
-
-レバー上 → ボタン1
-
-レバー下 → ボタン2
-
-レバー右 → ボタン3
-
-レバー左 → ボタン4
-
-ボタン1 → スタートボタン
-
-スタートボタン　→ 使用しない qcrayon237b9gra, Fujix / stephh (ほしけん)
 
 $end
 

@@ -169,6 +169,9 @@ int audit_samples(int game, audit_record **audit)
 	int sndnum, sampnum;
 	int records = 0;
 
+	//mamep:fixed crash
+	if (!mame_stricmp(gamedrv->name, "bowl3d")) return 0;
+
 	/* count the number of sample records attached to this driver */
 	expand_machine_driver(gamedrv->drv, &config);
 #if HAS_SAMPLES
