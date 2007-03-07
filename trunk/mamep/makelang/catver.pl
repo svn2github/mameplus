@@ -5,7 +5,7 @@ $dir = '..';
 $mameexe = 'mamep';
 
 $textdir = "text";
-$folderdir = "$dir/folders";
+$folderdir = "$dir/dirs/folders";
 
 %EXTRA = (
 	'plus' => 'Plus!',
