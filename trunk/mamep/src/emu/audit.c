@@ -234,11 +234,11 @@ int audit_samples(int game, audit_record **audit)
 					record->name = intf->samplenames[sampnum];
 					if (filerr == FILERR_NONE)
 					{
-						set_status(record, AUDIT_STATUS_GOOD, SUBSTATUS_GOOD);
+						set_status(record++, AUDIT_STATUS_GOOD, SUBSTATUS_GOOD);
 						mame_fclose(file);
 					}
 					else
-						set_status(record, AUDIT_STATUS_NOT_FOUND, SUBSTATUS_NOT_FOUND);
+						set_status(record++, AUDIT_STATUS_NOT_FOUND, SUBSTATUS_NOT_FOUND);
 				}
 		}
 
