@@ -1206,7 +1206,7 @@ static const WCHAR* MakeShortString(HDC hDC, const WCHAR* lpszLong, int nColumnL
 {
 	static WCHAR szShort[MAX_PATH];
 	static WCHAR szThreeDots[4];
-	int nStringLen = lstrlen(lpszLong);
+	int nStringLen = wcslen(lpszLong);
 	int nAddLen;
 	SIZE size;
 	int i;
@@ -1216,7 +1216,7 @@ static const WCHAR* MakeShortString(HDC hDC, const WCHAR* lpszLong, int nColumnL
 		return lpszLong;
 
 	wcscpy(szThreeDots, TEXT("..."));
-	GetTextExtentPoint32(hDC, szThreeDots, lstrlen(szThreeDots), &size);
+	GetTextExtentPoint32(hDC, szThreeDots, wcslen(szThreeDots), &size);
 	nAddLen = size.cx;
 
 	wcscpy(szShort, lpszLong);
@@ -1228,7 +1228,7 @@ static const WCHAR* MakeShortString(HDC hDC, const WCHAR* lpszLong, int nColumnL
 			break;
 	}
 
-	lstrcat(szShort, szThreeDots);
+	wcscat(szShort, szThreeDots);
 
 	return szShort;
 }
@@ -1561,7 +1561,7 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 		rcItem.left   = rcItem.right;
 		rcItem.right += lvc.cx;
 
-		nRetLen = lstrlen(szBuff);
+		nRetLen = wcslen(szBuff);
 		if (nRetLen == 0)
 			continue;
 

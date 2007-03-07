@@ -124,9 +124,9 @@ INT_PTR CALLBACK ResetDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 				wcscpy(temp, _UIW(TEXT(MAME32NAME) TEXT(" will now reset the selected\n")
 					TEXT("items to the original, installation\n")
 					TEXT("settings then exit.\n\n")));
-				lstrcat(temp, _UIW(TEXT("The new settings will take effect\n")
+				wcscat(temp, _UIW(TEXT("The new settings will take effect\n")
 					TEXT("the next time ") TEXT_MAME32NAME TEXT(" is run.\n\n")));
-				lstrcat(temp, _UIW(TEXT("Do you wish to continue?")));
+				wcscat(temp, _UIW(TEXT("Do you wish to continue?")));
 
 				if (MessageBox(hDlg, temp, _UIW(TEXT("Restore Settings")), IDOK) == IDOK)
 				{
@@ -434,7 +434,7 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 						{
 							/*Add a Specifier to the Checkbox to show it was inherited from the parent*/
 							Edit_GetText(GetDlgItem(hDlg, IDC_FILTER_CLONES), strText, 250);
-							lstrcat(strText, TEXT(" (*)"));
+							wcscat(strText, TEXT(" (*)"));
 							Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_CLONES), strText);
 							bShowExplanation = TRUE;
 						}
@@ -442,7 +442,7 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 						{
 							/*Add a Specifier to the Checkbox to show it was inherited from the parent*/
 							Edit_GetText(GetDlgItem(hDlg, IDC_FILTER_NONWORKING), strText, 250);
-							lstrcat(strText, TEXT(" (*)"));
+							wcscat(strText, TEXT(" (*)"));
 							Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_NONWORKING), strText);
 							bShowExplanation = TRUE;
 						}
@@ -450,7 +450,7 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 						{
 							/*Add a Specifier to the Checkbox to show it was inherited from the parent*/
 							Edit_GetText(GetDlgItem(hDlg, IDC_FILTER_UNAVAILABLE), strText, 250);
-							lstrcat(strText, TEXT(" (*)"));
+							wcscat(strText, TEXT(" (*)"));
 							Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_UNAVAILABLE), strText);
 							bShowExplanation = TRUE;
 						}
@@ -458,7 +458,7 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 						{
 							/*Add a Specifier to the Checkbox to show it was inherited from the parent*/
 							Edit_GetText(GetDlgItem(hDlg, IDC_FILTER_VECTOR), strText, 250);
-							lstrcat(strText, TEXT(" (*)"));
+							wcscat(strText, TEXT(" (*)"));
 							Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_VECTOR), strText);
 							bShowExplanation = TRUE;
 						}
@@ -466,7 +466,7 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 						{
 							/*Add a Specifier to the Checkbox to show it was inherited from the parent*/
 							Edit_GetText(GetDlgItem(hDlg, IDC_FILTER_RASTER), strText, 250);
-							lstrcat(strText, TEXT(" (*)"));
+							wcscat(strText, TEXT(" (*)"));
 							Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_RASTER), strText);
 							bShowExplanation = TRUE;
 						}
@@ -474,7 +474,7 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 						{
 							/*Add a Specifier to the Checkbox to show it was inherited from the parent*/
 							Edit_GetText(GetDlgItem(hDlg, IDC_FILTER_ORIGINALS), strText, 250);
-							lstrcat(strText, TEXT(" (*)"));
+							wcscat(strText, TEXT(" (*)"));
 							Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_ORIGINALS), strText);
 							bShowExplanation = TRUE;
 						}
@@ -482,7 +482,7 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 						{
 							/*Add a Specifier to the Checkbox to show it was inherited from the parent*/
 							Edit_GetText(GetDlgItem(hDlg, IDC_FILTER_WORKING), strText, 250);
-							lstrcat(strText, TEXT(" (*)"));
+							wcscat(strText, TEXT(" (*)"));
 							Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_WORKING), strText);
 							bShowExplanation = TRUE;
 						}
@@ -490,7 +490,7 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 						{
 							/*Add a Specifier to the Checkbox to show it was inherited from the parent*/
 							Edit_GetText(GetDlgItem(hDlg, IDC_FILTER_AVAILABLE), strText, 250);
-							lstrcat(strText, TEXT(" (*)"));
+							wcscat(strText, TEXT(" (*)"));
 							Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_AVAILABLE), strText);
 							bShowExplanation = TRUE;
 						}

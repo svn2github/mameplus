@@ -133,12 +133,12 @@ static int write_mmo(void)
 		// offset of wid
 		if (fwrite(&offset, sizeof offset, 1, out) != 1)
 			return 1;
-		offset += (lstrlen(msgtablew[i].id) + 1) * sizeof (*msgtablew[i].id);
+		offset += (wcslen(msgtablew[i].id) + 1) * sizeof (*msgtablew[i].id);
 
 		// offset of wstr
 		if (fwrite(&offset, sizeof offset, 1, out) != 1)
 			return 1;
-		offset += (lstrlen(msgtablew[i].str) + 1) * sizeof (*msgtablew[i].str);
+		offset += (wcslen(msgtablew[i].str) + 1) * sizeof (*msgtablew[i].str);
 	}
 
 	// total bytes of both id and str
@@ -152,9 +152,9 @@ static int write_mmo(void)
 			return 1;
 		if (fwrite(msgtableu[i].str, strlen(msgtableu[i].str) + 1, 1, out) != 1)
 			return 1;
-		if (fwrite(msgtablew[i].id, (lstrlen(msgtablew[i].id) + 1) * sizeof (*msgtablew[i].id), 1, out) != 1)
+		if (fwrite(msgtablew[i].id, (wcslen(msgtablew[i].id) + 1) * sizeof (*msgtablew[i].id), 1, out) != 1)
 			return 1;
-		if (fwrite(msgtablew[i].str, (lstrlen(msgtablew[i].str) + 1) * sizeof (*msgtablew[i].str), 1, out) != 1)
+		if (fwrite(msgtablew[i].str, (wcslen(msgtablew[i].str) + 1) * sizeof (*msgtablew[i].str), 1, out) != 1)
 			return 1;
 	}
 

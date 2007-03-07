@@ -276,7 +276,7 @@ void DisplayTextFile(HWND hWnd, const WCHAR *cName)
 
 LPWSTR MyStrStrI(LPCWSTR pStr, LPCWSTR pSrch)
 {
-	int len = lstrlen(pSrch);
+	int len = wcslen(pSrch);
 
 	while (*pStr)
 	{
@@ -601,7 +601,7 @@ int GetPatchFilename(WCHAR *patch_name, const WCHAR *game_name, const int patch_
 			if (Count == patch_index)
 			{
 				wcscpy(patch_name, ffd.cFileName);
-				patch_name[lstrlen(patch_name) - 4] = '\0';	// To trim the ext ".dat"
+				patch_name[wcslen(patch_name) - 4] = '\0';	// To trim the ext ".dat"
 				break;
 			}
 			Count++;

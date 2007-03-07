@@ -699,17 +699,17 @@ static LPCWSTR GameInfoCPU(int nIndex)
 	while (i < MAX_CPU && drv.cpu[i].cpu_type)
 	{
 		if (drv.cpu[i].cpu_clock >= 1000000)
-			swprintf(&buf[lstrlen(buf)], TEXT("%s %d.%06d MHz"),
+			swprintf(&buf[wcslen(buf)], TEXT("%s %d.%06d MHz"),
 					_Unicode(cputype_name(drv.cpu[i].cpu_type)),
 					drv.cpu[i].cpu_clock / 1000000,
 					drv.cpu[i].cpu_clock % 1000000);
 		else
-			swprintf(&buf[lstrlen(buf)], TEXT("%s %d.%03d kHz"),
+			swprintf(&buf[wcslen(buf)], TEXT("%s %d.%03d kHz"),
 					_Unicode(cputype_name(drv.cpu[i].cpu_type)),
 					drv.cpu[i].cpu_clock / 1000,
 					drv.cpu[i].cpu_clock % 1000);
 
-		lstrcat(buf, TEXT("\n"));
+		wcscat(buf, TEXT("\n"));
 
 		i++;
 	}
@@ -747,23 +747,23 @@ static LPCWSTR GameInfoSound(int nIndex)
 		}
 
 		if (count > 1)
-			swprintf(&buf[lstrlen(buf)], TEXT("%dx"), count);
+			swprintf(&buf[wcslen(buf)], TEXT("%dx"), count);
 
-		wcscpy(&buf[lstrlen(buf)], _Unicode(sndtype_name(sound_type)));
+		wcscpy(&buf[wcslen(buf)], _Unicode(sndtype_name(sound_type)));
 
 		if (clock)
 		{
 			if (clock >= 1000000)
-				swprintf(&buf[lstrlen(buf)], TEXT(" %d.%06d MHz"),
+				swprintf(&buf[wcslen(buf)], TEXT(" %d.%06d MHz"),
 						clock / 1000000,
 						clock % 1000000);
 			else
-				swprintf(&buf[lstrlen(buf)], TEXT(" %d.%03d kHz"),
+				swprintf(&buf[wcslen(buf)], TEXT(" %d.%03d kHz"),
 						clock / 1000,
 						clock % 1000);
 		}
 
-		lstrcat(buf, TEXT("\n"));
+		wcscat(buf, TEXT("\n"));
 	}
 
 	return buf;
@@ -1084,38 +1084,38 @@ LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus)
 		//3) other deficiencies
 		if (drivers[driver_index]->flags & GAME_UNEMULATED_PROTECTION)
 		{
-			lstrcat(buffer, TEXT("\r\n"));
-			lstrcat(buffer, _UIW(TEXT("Game protection isn't fully emulated")));
+			wcscat(buffer, TEXT("\r\n"));
+			wcscat(buffer, _UIW(TEXT("Game protection isn't fully emulated")));
 		}
 		if (drivers[driver_index]->flags & GAME_WRONG_COLORS)
 		{
-			lstrcat(buffer, TEXT("\r\n"));
-			lstrcat(buffer, _UIW(TEXT("Colors are completely wrong")));
+			wcscat(buffer, TEXT("\r\n"));
+			wcscat(buffer, _UIW(TEXT("Colors are completely wrong")));
 		}
 		if (drivers[driver_index]->flags & GAME_IMPERFECT_COLORS)
 		{
-			lstrcat(buffer, TEXT("\r\n"));
-			lstrcat(buffer, _UIW(TEXT("Colors aren't 100% accurate")));
+			wcscat(buffer, TEXT("\r\n"));
+			wcscat(buffer, _UIW(TEXT("Colors aren't 100% accurate")));
 		}
 		if (drivers[driver_index]->flags & GAME_IMPERFECT_GRAPHICS)
 		{
-			lstrcat(buffer, TEXT("\r\n"));
-			lstrcat(buffer, _UIW(TEXT("Video emulation isn't 100% accurate")));
+			wcscat(buffer, TEXT("\r\n"));
+			wcscat(buffer, _UIW(TEXT("Video emulation isn't 100% accurate")));
 		}
 		if (drivers[driver_index]->flags & GAME_NO_SOUND)
 		{
-			lstrcat(buffer, TEXT("\r\n"));
-			lstrcat(buffer, _UIW(TEXT("Game lacks sound")));
+			wcscat(buffer, TEXT("\r\n"));
+			wcscat(buffer, _UIW(TEXT("Game lacks sound")));
 		}
 		if (drivers[driver_index]->flags & GAME_IMPERFECT_SOUND)
 		{
-			lstrcat(buffer, TEXT("\r\n"));
-			lstrcat(buffer, _UIW(TEXT("Sound emulation isn't 100% accurate")));
+			wcscat(buffer, TEXT("\r\n"));
+			wcscat(buffer, _UIW(TEXT("Sound emulation isn't 100% accurate")));
 		}
 		if (drivers[driver_index]->flags & GAME_NO_COCKTAIL)
 		{
-			lstrcat(buffer, TEXT("\r\n"));
-			lstrcat(buffer, _UIW(TEXT("Screen flipping is not supported")));
+			wcscat(buffer, TEXT("\r\n"));
+			wcscat(buffer, _UIW(TEXT("Screen flipping is not supported")));
 		}
 	}
 	else
@@ -1285,7 +1285,7 @@ static void UpdateSheetCaption(HWND hWnd)
 			memcpy(&rc, &rect, sizeof(RECT));
 			rc.left += 5;
 
-			DrawText(hDC, (LPCTSTR)szText, lstrlen((LPTSTR)szText), &rc, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
+			DrawText(hDC, (LPCTSTR)szText, wcslen((LPTSTR)szText), &rc, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
 
 			SelectObject(hDC, hOldFont);
 			DeleteObject(hFontCaption);
@@ -4733,22 +4733,22 @@ static void InitializeAnalogAxesUI(HWND hwnd)
 		//add two Columns...
 		column.mask = LVCF_TEXT | LVCF_WIDTH |LVCF_SUBITEM;
 		column.pszText = _UIW(TEXT("Joystick"));
-		column.cchTextMax = lstrlen(column.pszText);
+		column.cchTextMax = wcslen(column.pszText);
 		column.iSubItem = 0;
 		column.cx = 100;
 		res = ListView_InsertColumn(hCtrl,0, &column );
 		column.pszText = _UIW(TEXT("Axis"));
-		column.cchTextMax = lstrlen(column.pszText);
+		column.cchTextMax = wcslen(column.pszText);
 		column.iSubItem = 1;
 		column.cx = 100;
 		res = ListView_InsertColumn(hCtrl,1, &column );
 		column.pszText = _UIW(TEXT("JoystickId"));
-		column.cchTextMax = lstrlen(column.pszText);
+		column.cchTextMax = wcslen(column.pszText);
 		column.iSubItem = 2;
 		column.cx = 70;
 		res = ListView_InsertColumn(hCtrl,2, &column );
 		column.pszText = _UIW(TEXT("AxisId"));
-		column.cchTextMax = lstrlen(column.pszText);
+		column.cchTextMax = wcslen(column.pszText);
 		column.iSubItem = 3;
 		column.cx = 50;
 		res = ListView_InsertColumn(hCtrl,3, &column );
@@ -4759,7 +4759,7 @@ static void InitializeAnalogAxesUI(HWND hwnd)
 		{
 			item.iItem = iEntryCounter;
 			item.pszText = _Unicode(DIJoystick_GetPhysicalJoystickName(i));
-			item.cchTextMax = lstrlen(item.pszText);
+			item.cchTextMax = wcslen(item.pszText);
 
 			for (j = 0; j < DIJoystick_GetNumPhysicalJoystickAxes(i); j++)
 			{
@@ -4807,7 +4807,7 @@ static void InitializeDefaultInputUI(HWND hwnd)
 				if (wcsicmp(ext, TEXT(".cfg")) == 0)
 				{
 					// and strip off the extension
-					root[lstrlen(root) - 4] = '\0';
+					root[wcslen(root) - 4] = '\0';
 
 					if (wcsicmp(root, TEXT("Standard")) == 0)
 						continue;
@@ -4855,7 +4855,7 @@ static void InitializeEffectUI(HWND hwnd)
 				if (wcsicmp(ext, TEXT(".png")) == 0)
 				{
 					// and strip off the extension
-					root[lstrlen(root) - 4] = '\0';
+					root[wcslen(root) - 4] = '\0';
 
 					// add it as an option
 					ComboBox_AddStringW(hCtrl, root);

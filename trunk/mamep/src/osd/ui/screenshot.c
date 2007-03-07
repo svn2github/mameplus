@@ -77,7 +77,7 @@ BOOL ScreenShotLoaded(void)
 #ifdef MESS
 static BOOL LoadSoftwareScreenShot(const WCHAR *drv_name, const WCHAR *lpSoftwareName, int nType)
 {
-	WCHAR *s = alloca((lstrlen(drv_name) + 1 + lstrlen(lpSoftwareName) + 5) * sizeof (*s));
+	WCHAR *s = alloca((wcslen(drv_name) + 1 + wcslen(lpSoftwareName) + 5) * sizeof (*s));
 	swprintf(s, TEXT("%s/%s.png"), drv_name, lpSoftwareName);
 	return LoadDIB(s, &m_hDIB, &m_hPal, nType);
 }

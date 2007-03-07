@@ -2801,10 +2801,10 @@ static const WCHAR *get_base_config_directory(void)
 
 	GetModuleFileNameW(GetModuleHandle(NULL), full, _MAX_PATH);
 	_wsplitpath(full, path, dir, NULL, NULL);
-	lstrcat(path, dir);
+	wcscat(path, dir);
 
-	if (path[lstrlen(path) - 1] == *PATH_SEPARATOR)
-		path[lstrlen(path) - 1] = '\0';
+	if (path[wcslen(path) - 1] == *PATH_SEPARATOR)
+		path[wcslen(path) - 1] = '\0';
 
 	return path;
 }
@@ -2829,9 +2829,9 @@ static void generate_default_ctrlr(void)
 	BOOL DoCreate;
 
 	wcscpy(fname, ctrlrpath);
-	lstrcat(fname, TEXT(PATH_SEPARATOR));
-	lstrcat(fname, _Unicode(ctrlr));
-	lstrcat(fname, TEXT(".cfg"));
+	wcscat(fname, TEXT(PATH_SEPARATOR));
+	wcscat(fname, _Unicode(ctrlr));
+	wcscat(fname, TEXT(".cfg"));
 
 	stemp = utf8_from_wstring(fname);
 	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
@@ -3342,7 +3342,7 @@ static int options_load_default_config(void)
 	int retval = 0;
 
 	wcscpy(fname, get_base_config_directory());
-	lstrcat(fname, TEXT(PATH_SEPARATOR) TEXT_MAME_INI);
+	wcscat(fname, TEXT(PATH_SEPARATOR) TEXT_MAME_INI);
 
 	stemp = utf8_from_wstring(fname);
 	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
@@ -3380,9 +3380,9 @@ static int options_load_driver_config(int driver_index)
 	driver_variables[driver_index].use_default = TRUE;
 
 	wcscpy(fname, settings.inipath);
-	lstrcat(fname, TEXT(PATH_SEPARATOR));
-	lstrcat(fname, driversw[driver_index]->name);
-	lstrcat(fname, TEXT(".ini"));
+	wcscat(fname, TEXT(PATH_SEPARATOR));
+	wcscat(fname, driversw[driver_index]->name);
+	wcscat(fname, TEXT(".ini"));
 
 	stemp = utf8_from_wstring(fname);
 	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
@@ -3417,10 +3417,10 @@ static int options_load_alt_config(alt_options_type *alt_option)
 	alt_option->variable->use_default = TRUE;
 
 	wcscpy(fname, settings.inipath);
-	lstrcat(fname, TEXT(PATH_SEPARATOR));
-	lstrcat(fname, alt_option->name);
-	lstrcat(fname, TEXT(".ini"));
-	len = lstrlen(fname);
+	wcscat(fname, TEXT(PATH_SEPARATOR));
+	wcscat(fname, alt_option->name);
+	wcscat(fname, TEXT(".ini"));
+	len = wcslen(fname);
 	if (len > 6 && fname[len - 6] == '.' && fname[len - 5] == 'c')
 		wcscpy(fname + len - 6, TEXT(".ini"));
 
@@ -3453,7 +3453,7 @@ static int options_load_winui_config(void)
 	int retval;
 
 	wcscpy(fname, settings.inipath);
-	lstrcat(fname, TEXT(PATH_SEPARATOR) TEXT_WINUI_INI);
+	wcscat(fname, TEXT(PATH_SEPARATOR) TEXT_WINUI_INI);
 
 	stemp = utf8_from_wstring(fname);
 	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
@@ -3488,7 +3488,7 @@ static int options_save_default_config(void)
 	validate_driver_option(&global);
 
 	wcscpy(fname, get_base_config_directory());
-	lstrcat(fname, TEXT(PATH_SEPARATOR) TEXT_MAME_INI);
+	wcscat(fname, TEXT(PATH_SEPARATOR) TEXT_MAME_INI);
 
 	stemp = utf8_from_wstring(fname);
 	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
@@ -3530,9 +3530,9 @@ static int options_save_driver_config(int driver_index)
 		return 0;
 
 	wcscpy(fname, settings.inipath);
-	lstrcat(fname, TEXT(PATH_SEPARATOR));
-	lstrcat(fname, strlower(driversw[driver_index]->name));
-	lstrcat(fname, TEXT(".ini"));
+	wcscat(fname, TEXT(PATH_SEPARATOR));
+	wcscat(fname, strlower(driversw[driver_index]->name));
+	wcscat(fname, TEXT(".ini"));
 
 #ifdef USE_IPS
 	// HACK: DO NOT INHERIT IPS CONFIGURATION
@@ -3581,11 +3581,11 @@ static int options_save_alt_config(alt_options_type *alt_option)
 	parent = update_alt_use_default(alt_option);
 
 	wcscpy(fname, settings.inipath);
-	lstrcat(fname, TEXT(PATH_SEPARATOR));
-	lstrcat(fname, strlower(alt_option->name));
-	lstrcat(fname, TEXT(".ini"));
+	wcscat(fname, TEXT(PATH_SEPARATOR));
+	wcscat(fname, strlower(alt_option->name));
+	wcscat(fname, TEXT(".ini"));
 
-	len = lstrlen(fname);
+	len = wcslen(fname);
 	if (len > 6 && fname[len - 6] == '.' && fname[len - 5] == 'c')
 		wcscpy(fname + len - 6, TEXT(".ini"));
 
@@ -3631,7 +3631,7 @@ static int options_save_winui_config(void)
 	CreateDirectoryW(settings.inipath, NULL);
 
 	wcscpy(fname, settings.inipath);
-	lstrcat(fname, strlower(TEXT(PATH_SEPARATOR) TEXT_WINUI_INI));
+	wcscat(fname, strlower(TEXT(PATH_SEPARATOR) TEXT_WINUI_INI));
 
 	stemp = utf8_from_wstring(fname);
 	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
@@ -3673,7 +3673,7 @@ WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(void))
 		wcscpy(pModule, _Unicode(pModuleA));
 	}
 
-	pModuleLen = lstrlen(pModule) + 10 + strlen(drivers[driver_index]->name);
+	pModuleLen = wcslen(pModule) + 10 + strlen(drivers[driver_index]->name);
 
 	opt = GetGameOptions(driver_index);
 
@@ -3693,13 +3693,13 @@ WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(void))
 	options_output_command_line_marked(p);
 	wopts = wstring_from_utf8(p);
 	free(p);
-	len = lstrlen(wopts);
+	len = wcslen(wopts);
 
 	result = malloc((pModuleLen + len + 1) * sizeof (*result));
 	wsprintf(result, TEXT("\"%s\" %s -norc "), pModule, driversw[driver_index]->name);
 
 	if (len != 0)
-		lstrcat(result, wopts);
+		wcscat(result, wopts);
 	else
 		result[pModuleLen - 1] = '\0';
 
@@ -4692,7 +4692,7 @@ INLINE void _options_get_list_fontface(LOGFONTW *f, const char *name)
 	if (stemp == NULL)
 		return;
 
-	if (*stemp == '\0' || lstrlen(stemp) + 1 > ARRAY_LENGTH(f->lfFaceName))
+	if (*stemp == '\0' || wcslen(stemp) + 1 > ARRAY_LENGTH(f->lfFaceName))
 	{
 		free((void *)stemp);
 		return;

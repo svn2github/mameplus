@@ -213,7 +213,7 @@ static WCHAR* FixSlash(WCHAR* s)
 	int len = 0;
 	
 	if (s)
-		len = lstrlen(s);
+		len = wcslen(s);
 
 	if (len && s[len - 1] == *PATH_SEPARATOR)
 		s[len - 1] = '\0';
@@ -393,10 +393,10 @@ static int RetrieveDirList(int nDir, int nFlagResult, void (*SetTheseDirs)(const
 		for (i = 0; i < nPaths; i++)
 		{
 
-			lstrcat(buf, FixSlash(DirInfo_Path(g_pDirInfo, nDir, i)));
+			wcscat(buf, FixSlash(DirInfo_Path(g_pDirInfo, nDir, i)));
 
 			if (i < nPaths - 1)
-				lstrcat(buf, TEXT(";"));
+				wcscat(buf, TEXT(";"));
 		}
 		SetTheseDirs(buf);
 

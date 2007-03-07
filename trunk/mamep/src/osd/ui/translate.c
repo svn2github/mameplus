@@ -200,7 +200,7 @@ static void TranslateMenuRecurse(HMENU hMenu)
 		mii.cbSize     = sizeof(MENUITEMINFO);
 		mii.fMask      = MIIM_STRING | MIIM_FTYPE;
 		mii.dwTypeData = p;
-		mii.cch        = lstrlen(mii.dwTypeData);
+		mii.cch        = wcslen(mii.dwTypeData);
 
 		SetMenuItemInfo(hMenu, i, TRUE, &mii);
 	}

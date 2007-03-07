@@ -528,7 +528,7 @@ void CreateManufacturerFolders(int parent_index)
 			const WCHAR *s = ParseManufacturer(manufacturer, &iChars);
 			manufacturer += iChars;
 			//shift to next start char
-			if (s != NULL && lstrlen(s) > 0)
+			if (s != NULL && wcslen(s) > 0)
  			{
 				const WCHAR *t = TrimManufacturer(s);
 				for (i = numFolders-1; i >= start_folder; i--)
@@ -562,7 +562,7 @@ static const WCHAR *ParseManufacturer(const WCHAR *s, int *pParsedChars )
 
 	if (*s == '?' || *s == '<' || s[3] == '?')
 	{
-		(*pParsedChars) = lstrlen(s);
+		(*pParsedChars) = wcslen(s);
 		return TEXT("<unknown>");
 	}
 
@@ -616,7 +616,7 @@ static const WCHAR *ParseManufacturer(const WCHAR *s, int *pParsedChars )
 	*ptmp = '\0';
 
 	t = tmp;
-	if (tmp[0] == '(' || tmp[lstrlen(tmp)-1] == ')' || tmp[0] == ',')
+	if (tmp[0] == '(' || tmp[wcslen(tmp)-1] == ')' || tmp[0] == ',')
 	{
 		ptmp = wcschr(tmp,'(');
 		if (ptmp == NULL)
@@ -685,10 +685,10 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 	strTemp2[0] = '\0';
 
 	//start analyzing from the back, as these are usually suffixes
-	for (i = lstrlen(s)-1; i >= 0; i--)
+	for (i = wcslen(s)-1; i >= 0; i--)
 	{
 		
-		l = lstrlen(strTemp);
+		l = wcslen(strTemp);
 
 		for (k = l; k >= 0; k--)
 			strTemp[k+1] = strTemp[k];
@@ -702,13 +702,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 				if (_wcsnicmp(strTemp, TEXT("co"), 2) == 0)
 				{
 					j = l;
-					while (s[lstrlen(s)-j-1] == ' ' || s[lstrlen(s)-j-1] == ',')
+					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
 						j++;
 
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						wcsncpy(strTemp2, s, lstrlen(s) - j);
+						wcsncpy(strTemp2, s, wcslen(s) - j);
 					}
 				}
 				break;
@@ -721,13 +721,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 				{
 					j = l;
 
-					while (s[lstrlen(s)-j-1] == ' ' || s[lstrlen(s)-j-1] == ',')
+					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
 						j++;
 
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						wcsncpy(strTemp2, s, lstrlen(s) - j);	
+						wcsncpy(strTemp2, s, wcslen(s) - j);	
 					}
 				}
 				break;
@@ -739,13 +739,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 				{
 					j = l;
 
-					while (s[lstrlen(s)-j-1] == ' ' || s[lstrlen(s)-j-1] == ',')
+					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
 						j++;
 
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						wcsncpy(strTemp2, s, lstrlen(s) - j);	
+						wcsncpy(strTemp2, s, wcslen(s) - j);	
 					}
 				}
 				break;
@@ -757,13 +757,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 				{
 					j = l;
 
-					while (s[lstrlen(s)-j-1] == ' ' || s[lstrlen(s)-j-1] == ',')
+					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
 						j++;
 
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						wcsncpy(strTemp2, s, lstrlen(s) - j);	
+						wcsncpy(strTemp2, s, wcslen(s) - j);	
 					}
 				}
 				break;
@@ -773,13 +773,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 				{
 					j = l;
 
-					while (s[lstrlen(s)-j-1] == ' ' || s[lstrlen(s)-j-1] == ',')
+					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
 						j++;
 
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						wcsncpy(strTemp2, s, lstrlen(s) - j);	
+						wcsncpy(strTemp2, s, wcslen(s) - j);	
 					}
 				}
 				break;
@@ -789,13 +789,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 				{
 					j = l;
 
-					while (s[lstrlen(s)-j-1] == ' ' || s[lstrlen(s)-j-1] == ',')
+					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
 						j++;
 
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						wcsncpy(strTemp2, s, lstrlen(s) - j);	
+						wcsncpy(strTemp2, s, wcslen(s) - j);	
 					}
 				}
 				break;
@@ -804,13 +804,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 				{
 					j = l;
 
-					while (s[lstrlen(s)-j-1] == ' ' || s[lstrlen(s)-j-1] == ',')
+					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
 						j++;
 
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						wcsncpy(strTemp2, s, lstrlen(s) - j);	
+						wcsncpy(strTemp2, s, wcslen(s) - j);	
 					}
 				}
 				break;
@@ -820,13 +820,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 				{
 					j = l;
 
-					while (s[lstrlen(s)-j-1] == ' ' || s[lstrlen(s)-j-1] == ',')
+					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
 						j++;
 
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						wcsncpy(strTemp2, s, lstrlen(s) - j);	
+						wcsncpy(strTemp2, s, wcslen(s) - j);	
 					}
 				}
 				break;
@@ -837,13 +837,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 				{
 					j = l;
 
-					while (s[lstrlen(s)-j-1] == ' ' || s[lstrlen(s)-j-1] == ',')
+					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
 						j++;
 
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						wcsncpy(strTemp2, s, lstrlen(s) - j);	
+						wcsncpy(strTemp2, s, wcslen(s) - j);	
 					}
 				}
 				break;
@@ -853,13 +853,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 				{
 					j = l;
 
-					while (s[lstrlen(s)-j-1] == ' ' || s[lstrlen(s)-j-1] == ',')
+					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
 						j++;
 
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						wcsncpy(strTemp2, s, lstrlen(s) - j);	
+						wcsncpy(strTemp2, s, wcslen(s) - j);	
 					}
 				}
 				break;
@@ -868,13 +868,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 				{
 					j = l;
 
-					while (s[lstrlen(s)-j-1] == ' ' || s[lstrlen(s)-j-1] == ',')
+					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
 						j++;
 
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						wcsncpy(strTemp2, s, lstrlen(s) - j);	
+						wcsncpy(strTemp2, s, wcslen(s) - j);	
 					}
 				}
 				break;
@@ -883,7 +883,7 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 		}
 	}
 
-	if (lstrlen(strTemp2) == 0)
+	if (wcslen(strTemp2) == 0)
 		return s;
 
 	return strTemp2;
@@ -1959,9 +1959,9 @@ BOOL InitFolders(void)
 		char *rootname = strdup(extFavorite.root_icon);
 		char *subname = strdup(extFavorite.sub_icon);
 
-		filename = malloc(lstrlen(title) * sizeof (*filename) + sizeof (TEXT(".ini")));
+		filename = malloc(wcslen(title) * sizeof (*filename) + sizeof (TEXT(".ini")));
 		wcscpy(filename, title);
-		lstrcat(filename, TEXT(".ini"));
+		wcscat(filename, TEXT(".ini"));
 
 		SetExtraIcons(rootname, &rooticon);
 		SetExtraIcons(subname, &subicon);
@@ -2331,7 +2331,7 @@ static int InitExtraFolders(void)
 	CreateDirectoryW(dir, NULL);
 
 	wcscpy(path, dir);
-	lstrcat(path, TEXT("\\*"));
+	wcscat(path, TEXT("\\*"));
 	hFile = FindFirstFileW(path, &ffd);
 	if (hFile == INVALID_HANDLE_VALUE)
 		done = TRUE;
@@ -2349,8 +2349,8 @@ static int InitExtraFolders(void)
 			goto skip_it;
 
 		wcscpy(path, dir);
-		lstrcat(path, TEXT("\\"));
-		lstrcat(path, ffd.cFileName);
+		wcscat(path, TEXT("\\"));
+		wcscat(path, ffd.cFileName);
 		if ((fp = wfopen(path, TEXT("r"))) == NULL)
 			goto skip_it;
 

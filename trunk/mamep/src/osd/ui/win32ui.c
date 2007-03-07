@@ -1462,12 +1462,12 @@ HICON LoadIconFromFile(const char *iconname)
 				HICON hIcon = 0;
 
 				wcscpy(tmpStr, p);
-				lstrcat(tmpStr, TEXT(PATH_SEPARATOR));
+				wcscat(tmpStr, TEXT(PATH_SEPARATOR));
 
 				if (!is_zipfile)
-					lstrcat(tmpStr, iconfile);
+					wcscat(tmpStr, iconfile);
 				else
-					lstrcat(tmpStr, TEXT("icons.zip"));
+					wcscat(tmpStr, TEXT("icons.zip"));
 
 				if (!isFileExist(tmpStr))
 					continue;
@@ -2127,7 +2127,7 @@ static void ResetBackground(const WCHAR *szFile)
 
 	/* The MAME core load the .png file first, so we only need replace this file */
 	wcscpy(szDestFile, GetBgDir());
-	lstrcat(szDestFile, TEXT("\\bkground.png"));
+	wcscat(szDestFile, TEXT("\\bkground.png"));
 	SetFileAttributes(szDestFile, FILE_ATTRIBUTE_NORMAL);
 	CopyFile(szFile, szDestFile, FALSE);
 }
@@ -2145,7 +2145,7 @@ static void RandomSelectBackground(void)
 		return;
 
 	wcscpy(szFile, szDir);
-	lstrcat(szFile, TEXT("\\*.bmp"));
+	wcscat(szFile, TEXT("\\*.bmp"));
 	hFile = FindFirstFileW(szFile, &ffd);
 	if (hFile != INVALID_HANDLE_VALUE)
 	{
@@ -2160,7 +2160,7 @@ static void RandomSelectBackground(void)
 	}
 
 	wcscpy(szFile, szDir);
-	lstrcat(szFile, TEXT("\\*.png"));
+	wcscat(szFile, TEXT("\\*.png"));
 	hFile = FindFirstFileW(szFile, &ffd);
 	if (hFile != INVALID_HANDLE_VALUE)
 	{
@@ -2178,8 +2178,8 @@ static void RandomSelectBackground(void)
 	{
 		srand( (unsigned)time( NULL ) );
 		wcscpy(szFile, szDir);
-		lstrcat(szFile, TEXT("\\"));
-		lstrcat(szFile, buf + (rand() % count) * _MAX_FNAME);
+		wcscat(szFile, TEXT("\\"));
+		wcscat(szFile, buf + (rand() % count) * _MAX_FNAME);
 		ResetBackground(szFile);
 	}
 
@@ -3894,14 +3894,14 @@ static void DisableSelection(void)
 	mmi.fMask          = MIIM_TYPE;
 	mmi.fType          = MFT_STRING;
 	mmi.dwTypeData     = _UIW(TEXT("&Play"));
-	mmi.cch            = lstrlen(mmi.dwTypeData);
+	mmi.cch            = wcslen(mmi.dwTypeData);
 	SetMenuItemInfo(hMenu, ID_FILE_PLAY, FALSE, &mmi);
 
 	mmi.cbSize         = sizeof(mmi);
 	mmi.fMask          = MIIM_TYPE;
 	mmi.fType          = MFT_STRING;
 	mmi.dwTypeData     = _UIW(TEXT("Propert&ies for Driver"));
-	mmi.cch            = lstrlen(mmi.dwTypeData);
+	mmi.cch            = wcslen(mmi.dwTypeData);
 	SetMenuItemInfo(hMenu, ID_FOLDER_SOURCEPROPERTIES, FALSE, &mmi);
 
 	EnableMenuItem(hMenu, ID_FILE_PLAY, 		   MF_GRAYED);
@@ -3938,7 +3938,7 @@ static void EnableSelection(int nGame)
 	mmi.fMask          = MIIM_TYPE;
 	mmi.fType          = MFT_STRING;
 	mmi.dwTypeData     = buf;
-	mmi.cch            = lstrlen(mmi.dwTypeData);
+	mmi.cch            = wcslen(mmi.dwTypeData);
 	SetMenuItemInfo(hMenu, ID_FILE_PLAY, FALSE, &mmi);
 
 	snwprintf(buf, ARRAY_LENGTH(buf),
@@ -3947,7 +3947,7 @@ static void EnableSelection(int nGame)
 	mmi.fMask          = MIIM_TYPE;
 	mmi.fType          = MFT_STRING;
 	mmi.dwTypeData     = buf;
-	mmi.cch            = lstrlen(mmi.dwTypeData);
+	mmi.cch            = wcslen(mmi.dwTypeData);
 	SetMenuItemInfo(hMenu, ID_FOLDER_SOURCEPROPERTIES, FALSE, &mmi);
 
 	pText = UseLangList() ?
@@ -4120,7 +4120,7 @@ static BOOL TreeViewNotify(LPNMHDR nm)
 
 		g_in_treeview_edit = FALSE;
 
-		if (ptvdi->item.pszText == NULL || lstrlen(ptvdi->item.pszText) == 0)
+		if (ptvdi->item.pszText == NULL || wcslen(ptvdi->item.pszText) == 0)
 			return FALSE;
 
 		return TryRenameCustomFolder(folder, ptvdi->item.pszText);
@@ -4878,8 +4878,8 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 					else
 					{
 						if (new_opt[0] != '\0')
-							lstrcat(new_opt, TEXT(","));
-						lstrcat(new_opt, token);
+							wcscat(new_opt, TEXT(","));
+						wcscat(new_opt, token);
 					}
 
 					token = wcstok(NULL, TEXT(","));
@@ -4891,8 +4891,8 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 			if (patch_filename[0] != '\0')
 			{
 				if (new_opt[0] != '\0')
-					lstrcat(new_opt, TEXT(","));
-				lstrcat(new_opt, patch_filename);
+					wcscat(new_opt, TEXT(","));
+				wcscat(new_opt, patch_filename);
 			}
 
 			FreeIfAllocatedW(&pOpts->ips);
@@ -6224,10 +6224,10 @@ static BOOL CommonFileDialogW(BOOL open_for_write, WCHAR *filename, int filetype
 	}
 
 	s = cfg_data[filetype].filter;
-	for (p = buf; *s; s += lstrlen(s) + 1)
+	for (p = buf; *s; s += wcslen(s) + 1)
 	{
 		wcscpy(p, _UIW(s));
-		p += lstrlen(p) + 1;
+		p += wcslen(p) + 1;
 	}
 	*p = '\0';
 
@@ -6315,7 +6315,7 @@ static BOOL CommonFileDialogA(BOOL open_for_write, WCHAR *filename, int filetype
 	}
 
 	s = cfg_data[filetype].filter;
-	for (p = buf; *s; s += lstrlen(s) + 1)
+	for (p = buf; *s; s += wcslen(s) + 1)
 	{
 		strcpy(p, _String(_UIW(s)));
 		p += strlen(p) + 1;
@@ -6446,11 +6446,11 @@ static void MamePlayBackGame(const WCHAR *fname_playback)
 		_wsplitpath(filename, drive, dir, bare_fname, ext);
 
 		wcscpy(path, drive);
-		lstrcat(path, dir);
+		wcscat(path, dir);
 		wcscpy(fname, bare_fname);
-		lstrcat(fname, TEXT(".inp"));
-		if (path[lstrlen(path)-1] == TEXT(PATH_SEPARATOR[0]))
-			path[lstrlen(path)-1] = 0; // take off trailing back slash
+		wcscat(fname, TEXT(".inp"));
+		if (path[wcslen(path)-1] == TEXT(PATH_SEPARATOR[0]))
+			path[wcslen(path)-1] = 0; // take off trailing back slash
 
 		options_set_wstring(SEARCHPATH_INPUTLOG, path);
 		stemp = utf8_from_wstring(fname);
@@ -6514,7 +6514,7 @@ static void MameLoadState(const WCHAR *fname_state)
 
 		_wsplitpath(fname_state, NULL, NULL, bare_fname, NULL);
 		cPos = wcschr(bare_fname, TEXT('-'));
-		iPos = cPos ? cPos - bare_fname : lstrlen(bare_fname);
+		iPos = cPos ? cPos - bare_fname : wcslen(bare_fname);
 		wcsncpy(selected_filename, bare_fname, iPos );
 		selected_filename[iPos] = '\0';
 
@@ -6562,11 +6562,11 @@ static void MameLoadState(const WCHAR *fname_state)
 
 		// parse path
 		wcscpy(path, drive);
-		lstrcat(path, dir);
+		wcscat(path, dir);
 		wcscpy(fname, bare_fname);
-		lstrcat(fname, TEXT(".sta"));
-		if (path[lstrlen(path)-1] == TEXT(PATH_SEPARATOR[0]))
-			path[lstrlen(path)-1] = 0; // take off trailing back slash
+		wcscat(fname, TEXT(".sta"));
+		if (path[wcslen(path)-1] == TEXT(PATH_SEPARATOR[0]))
+			path[wcslen(path)-1] = 0; // take off trailing back slash
 
 #ifdef MESS
 		{
@@ -6580,7 +6580,7 @@ static void MameLoadState(const WCHAR *fname_state)
 			WCHAR romname[MAX_PATH];
 
 			cPos = wcschr(bare_fname, '-' );
-			iPos = cPos ? cPos - bare_fname : lstrlen(bare_fname);
+			iPos = cPos ? cPos - bare_fname : wcslen(bare_fname);
 			wcsncpy(romname, bare_fname, iPos );
 			romname[iPos] = '\0';
 			if (wcscmp(selected_filename,romname) != 0)
@@ -6645,11 +6645,11 @@ static void MamePlayRecordGame(void)
 		_wsplitpath(filename, drive, dir, bare_fname, ext);
 
 		wcscpy(path, drive);
-		lstrcat(path, dir);
+		wcscat(path, dir);
 		wcscpy(fname, bare_fname);
-		lstrcat(fname, TEXT(".inp"));
-		if (path[lstrlen(path)-1] == TEXT(PATH_SEPARATOR[0]))
-			path[lstrlen(path)-1] = 0; // take off trailing back slash
+		wcscat(fname, TEXT(".inp"));
+		if (path[wcslen(path)-1] == TEXT(PATH_SEPARATOR[0]))
+			path[wcslen(path)-1] = 0; // take off trailing back slash
 
 		g_pRecordName = fname;
 		override_playback_directory = path;
@@ -7132,7 +7132,7 @@ static void UpdateMenu(HMENU hMenu)
 		mItem.fMask      = MIIM_TYPE;
 		mItem.fType      = MFT_STRING;
 		mItem.dwTypeData = buf;
-		mItem.cch        = lstrlen(mItem.dwTypeData);
+		mItem.cch        = wcslen(mItem.dwTypeData);
 
 		SetMenuItemInfo(hMenu, ID_FILE_PLAY, FALSE, &mItem);
 
@@ -7143,7 +7143,7 @@ static void UpdateMenu(HMENU hMenu)
 		mItem.fMask      = MIIM_TYPE;
 		mItem.fType      = MFT_STRING;
 		mItem.dwTypeData = buf;
-		mItem.cch        = lstrlen(mItem.dwTypeData);
+		mItem.cch        = wcslen(mItem.dwTypeData);
 
 		SetMenuItemInfo(hMenu, ID_FOLDER_SOURCEPROPERTIES, FALSE, &mItem);
 
@@ -7157,7 +7157,7 @@ static void UpdateMenu(HMENU hMenu)
 		mItem.fMask      = MIIM_TYPE;
 		mItem.fType      = MFT_STRING;
 		mItem.dwTypeData = buf;
-		mItem.cch        = lstrlen(mItem.dwTypeData);
+		mItem.cch        = wcslen(mItem.dwTypeData);
 
 		SetMenuItemInfo(hMenu, ID_FILE_PLAY, FALSE, &mItem);
 
@@ -7167,7 +7167,7 @@ static void UpdateMenu(HMENU hMenu)
 		mItem.fMask      = MIIM_TYPE;
 		mItem.fType      = MFT_STRING;
 		mItem.dwTypeData = buf;
-		mItem.cch        = lstrlen(mItem.dwTypeData);
+		mItem.cch        = wcslen(mItem.dwTypeData);
 
 		SetMenuItemInfo(hMenu, ID_FOLDER_SOURCEPROPERTIES, FALSE, &mItem);
 
@@ -7269,7 +7269,7 @@ void InitTreeContextMenu(HMENU hTreeMenu)
 		mii.fMask = MIIM_TYPE | MIIM_ID;
 		mii.fType = MFT_STRING;
 		mii.dwTypeData = (void *)g_folderData[i].m_lpTitle;
-		mii.cch = lstrlen(mii.dwTypeData);
+		mii.cch = wcslen(mii.dwTypeData);
 		mii.wID = ID_CONTEXT_SHOW_FOLDER_START + g_folderData[i].m_nFolderId;
 
 

@@ -94,6 +94,10 @@
 #define lstrcmp		!use_wcscmp_win9x_doesnt_work_properly!
 #undef lstrcmpi
 #define lstrcmpi	!use_wcsicmp_win9x_doesnt_work_properly!
+#undef lstrlen
+#define lstrlen		!use_wcslen_win9x_doesnt_work_properly!
+#undef lstrcat
+#define lstrcat		!use_wcscat_win9x_doesnt_work_properly!
 
 #include <wchar.h>
 #define _wfindfirst	!win9x_doesnt_has_it!
