@@ -169,9 +169,6 @@ int audit_samples(int game, audit_record **audit)
 	int sndnum, sampnum;
 	int records = 0;
 
-	//mamep:fixed crash
-	if (!mame_stricmp(gamedrv->name, "bowl3d")) return 0;
-
 	/* count the number of sample records attached to this driver */
 	expand_machine_driver(gamedrv->drv, &config);
 #if HAS_SAMPLES
@@ -205,6 +202,9 @@ int audit_samples(int game, audit_record **audit)
 		{
 			struct Samplesinterface *intf = (struct Samplesinterface *)config.sound[sndnum].config;
 			const char *sharedname = NULL;
+
+			if (intf->samplenames == NULL)
+				continue;
 
 			/* iterate over samples in this entry */
 			for (sampnum = 0; intf->samplenames[sampnum] != NULL; sampnum++)
