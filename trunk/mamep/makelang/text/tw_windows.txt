@@ -494,7 +494,7 @@ DirectDraw: 警告 - 裝置不支援全螢幕 gamma 值修正。\n
 DirectInput: Using DirectInput %d\n
 DirectInput: 正在使用 DirectInput %d\n
 
-# osd/windows/sound.c: 397
+# osd/windows/sound.c: 405
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: 主要緩衝: %d Hz, %d 位元, %d 聲道\n
 
@@ -502,15 +502,15 @@ DirectSound: 主要緩衝: %d Hz, %d 位元, %d 聲道\n
 ERROR     %s\n
 錯誤      %s\n
 
-# osd/windows/sound.c: 411
+# osd/windows/sound.c: 419
 Error creating DirectSound stream buffer: %08x\n
 建立 DirectSound 串流緩衝時發生錯誤: %08x\n
 
-# osd/windows/sound.c: 285
+# osd/windows/sound.c: 293
 Error creating DirectSound: %08x\n
 建立 DirectSound 時發生錯誤: %08x\n
 
-# osd/windows/sound.c: 378
+# osd/windows/sound.c: 386
 Error creating primary DirectSound buffer: %08x\n
 建立主要 DirectSound 緩衝時發生錯誤: %08x\n
 
@@ -518,7 +518,7 @@ Error creating primary DirectSound buffer: %08x\n
 Error creating vertex buffer (%08X)
 建立頂點緩衝時發生錯誤 (%08X)
 
-# osd/windows/sound.c: 294
+# osd/windows/sound.c: 302
 Error getting DirectSound capabilities: %08x\n
 取得 DirectSound 功\能時發生錯誤: %08x\n
 
@@ -534,23 +534,23 @@ Error getting identifier for device\n
 Error getting mode for adapter #%d\n
 為介面卡取得模式時發生錯誤 #%d\n
 
-# osd/windows/sound.c: 394
+# osd/windows/sound.c: 402
 Error getting primary DirectSound buffer format: %08x\n
 取得主要 DirectSound 緩衝格式時發生錯誤: %08x\n
 
-# osd/windows/sound.c: 419
+# osd/windows/sound.c: 427
 Error locking DirectSound stream buffer: %08x\n
 鎖定 DirectSound 串流緩衝時發生錯誤: %08x\n
 
-# osd/windows/sound.c: 332
+# osd/windows/sound.c: 340
 Error playing: %08x\n
 執行時發生錯誤: %08x\n
 
-# osd/windows/sound.c: 302
+# osd/windows/sound.c: 310
 Error setting DirectSound cooperative level: %08x\n
 設定 DirectSound cooperative level 時發生錯誤: %08x\n
 
-# osd/windows/sound.c: 386
+# osd/windows/sound.c: 394
 Error setting primary DirectSound buffer format: %08x\n
 設定主要 DirectSound 緩衝格式時發生錯誤: %08x\n
 
@@ -586,7 +586,7 @@ Failed to open file for playback
 Failed to open file for recording
 無法開啟檔案來記錄
 
-# osd/windows/input.c: 2992
+# osd/windows/input.c: 2939
 Fast Forward
 快轉
 
@@ -650,7 +650,7 @@ Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 輸入: 鍵盤=%d  滑鼠=%d  搖桿=%d 光線槍=%d\n
 
-# osd/windows/input.c: 3328
+# osd/windows/input.c: 3275
 Input: Using RAWMOUSE for Mouse input\n
 輸入: 正在使用 RAWMOUSE 於滑鼠輸入\n
 
@@ -766,11 +766,11 @@ SOUND OPTIONS
 STATE/PLAYBACK OPTIONS
 狀態/播放 選項
 
-# osd/windows/sound.c: 148
+# osd/windows/sound.c: 152
 Sound buffer: overflows=%d underflows=%d\n
 聲音緩衝: overflows=%d underflows=%d\n
 
-# osd/windows/sound.c: 144
+# osd/windows/sound.c: 148
 Sound: buffer overflows=%d underflows=%d\n
 聲音: 緩衝 overflows=%d underflows=%d\n
 
@@ -822,7 +822,7 @@ Texture too big! (wanted: %dx%d, max is %dx%d)\n
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
 這是用來驅動 \"%s\" 所需要的 ROM 清單。\n名稱            大小 檢查碼\n
 
-# osd/windows/input.c: 2974
+# osd/windows/input.c: 2921
 Toggle Fullscreen
 切換全螢幕
 
@@ -1348,7 +1348,7 @@ number of screens to create; usually, you want just one
 
 # osd/windows/config.c: 333
 offscreen shots reload
-射擊畫面外區域即重新載入
+射擊畫面外區域即重新填補
 
 # osd/windows/config.c: 173
 optional filename to write a MNG movie of the current session
@@ -1570,7 +1570,7 @@ show this help
 skip displaying the information screen at startup
 啟動時略過顯示資訊畫面
 
-# osd/windows/config.c: 291, 914
+# osd/windows/config.c: 291, 914 osd/windows/sound.c: 107
 sound
 聲音
 
