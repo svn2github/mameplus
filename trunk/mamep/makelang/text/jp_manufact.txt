@@ -814,7 +814,7 @@ Ashby Computers and Graphics LTD.
 Associated Overseas MFR, Inc
 
 
-# Quintoon (UK, Game Card 95-750-203)
+# A Question of Sport
 BFM
 
 
@@ -1902,6 +1902,10 @@ Sage's Creation
 Sai-Mate
 
 
+# Snooker 10 (Ver 1.11)
+Sandiy
+
+
 # Puzzle Star (Sang Ho Soft)
 Sang Ho Soft
 
@@ -1918,7 +1922,7 @@ Seatongrove Ltd
 Sega Sports
 
 
-# Panic Road
+# Seibu Cup Soccer
 Seibu
 
 

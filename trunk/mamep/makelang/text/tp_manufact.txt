@@ -214,7 +214,7 @@ Athena
 Atlus
 
 
-# Quintoon (UK, Game Card 95-750-203)
+# A Question of Sport
 BFM
 
 
@@ -1658,6 +1658,10 @@ Sammy Industries
 Sammy Industries Japan
 
 
+# Snooker 10 (Ver 1.11)
+Sandiy
+
+
 # Puzzle Star (Sang Ho Soft)
 Sang Ho Soft
 
@@ -1686,7 +1690,7 @@ Sega
 Sega Sports
 
 
-# Panic Road
+# Seibu Cup Soccer
 Seibu
 
 
