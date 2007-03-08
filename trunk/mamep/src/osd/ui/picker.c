@@ -209,7 +209,8 @@ static BOOL ListViewNeedToolTipTextW(HWND hWnd, LPTOOLTIPTEXTW lpttt)
 	wcscpy(szBuffer, lpttt->szText);
 	Picker_CallGetItemString(hWnd, iItem, nColumn, szBuffer, ARRAY_LENGTH(szBuffer));
 
-	wcscpy(lpttt->szText, szBuffer);
+	wcsncpy(lpttt->szText, szBuffer, ARRAY_LENGTH(lpttt->szText) - 1);
+	lpttt->szText[ARRAY_LENGTH(lpttt->szText) - 1] = '\0';
 
 	return TRUE;
 }
@@ -246,7 +247,8 @@ static BOOL ListViewNeedToolTipTextA(HWND hWnd, LPTOOLTIPTEXTA lpttt)
 	wcscpy(szBuffer, _Unicode(lpttt->szText));
 	Picker_CallGetItemString(hWnd, iItem, nColumn, szBuffer, ARRAY_LENGTH(szBuffer));
 
-	strcpy(lpttt->szText, _String(szBuffer));
+	strncpy(lpttt->szText, _String(szBuffer), ARRAY_LENGTH(lpttt->szText) - 1);
+	lpttt->szText[ARRAY_LENGTH(lpttt->szText) - 1] = '\0';
 
 	return TRUE;
 }
@@ -1145,7 +1147,6 @@ BOOL Picker_HandleNotify(LPNMHDR lpNmHdr)
 		case LVN_GETDISPINFOW:
 			{
 				LV_DISPINFOW *pDispInfo;
-				static WCHAR szBuffer[256];
 
 				pDispInfo = (LV_DISPINFOW *) lpNmHdr;
 				nItem = (int) pDispInfo->item.lParam;
@@ -1168,6 +1169,8 @@ BOOL Picker_HandleNotify(LPNMHDR lpNmHdr)
 
 				if (pDispInfo->item.mask & LVIF_TEXT)
 				{
+					static WCHAR szBuffer[256];
+
 					// retrieve item text
 					nColumn = Picker_GetRealColumnFromViewColumn(hWnd, pDispInfo->item.iSubItem);
 					wcscpy(szBuffer, pDispInfo->item.pszText);
@@ -1182,7 +1185,6 @@ BOOL Picker_HandleNotify(LPNMHDR lpNmHdr)
 		case LVN_GETDISPINFOA:
 			{
 				LV_DISPINFOA *pDispInfo;
-				static WCHAR szBuffer[256];
 
 				pDispInfo = (LV_DISPINFOA *) lpNmHdr;
 				nItem = (int) pDispInfo->item.lParam;
@@ -1205,11 +1207,17 @@ BOOL Picker_HandleNotify(LPNMHDR lpNmHdr)
 
 				if (pDispInfo->item.mask & LVIF_TEXT)
 				{
+					WCHAR szBuffer[256];
+					static char szBufferA[ARRAY_LENGTH(szBuffer) * 2];
+
 					// retrieve item text
 					nColumn = Picker_GetRealColumnFromViewColumn(hWnd, pDispInfo->item.iSubItem);
 					wcscpy(szBuffer, _Unicode(pDispInfo->item.pszText));
 					Picker_CallGetItemString(hWnd, nItem, nColumn, szBuffer, ARRAY_LENGTH(szBuffer));
-					pDispInfo->item.pszText = _String(szBuffer);
+
+					strncpy(szBufferA, _String(szBuffer), ARRAY_LENGTH(szBufferA) - 1);
+					szBufferA[ARRAY_LENGTH(szBufferA) - 1] = '\0';
+					pDispInfo->item.pszText = szBufferA;
 
 					bResult = TRUE;
 				}
