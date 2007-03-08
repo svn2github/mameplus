@@ -194,7 +194,7 @@ static BOOL ListViewNeedToolTipTextW(HWND hWnd, LPTOOLTIPTEXTW lpttt)
 	ScreenToClient(hWnd, &pt);
 
 	lvht.pt = pt;
-	if (!ListView_SubItemHitTest(hWnd, &lvht))
+	if (!ListView_SubItemHitTest(hWnd, &lvht) || lvht.iItem == -1)
 	{
 		lpttt->szText[0] = '\0';
 		return TRUE;
@@ -231,7 +231,7 @@ static BOOL ListViewNeedToolTipTextA(HWND hWnd, LPTOOLTIPTEXTA lpttt)
 	ScreenToClient(hWnd, &pt);
 
 	lvht.pt = pt;
-	if (!ListView_SubItemHitTest(hWnd, &lvht))
+	if (!ListView_SubItemHitTest(hWnd, &lvht) || lvht.iItem == -1)
 	{
 		lpttt->szText[0] = '\0';
 		return TRUE;
