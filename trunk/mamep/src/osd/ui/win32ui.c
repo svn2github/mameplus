@@ -3027,25 +3027,24 @@ static long WINAPI MameWindowProc(HWND hWnd, UINT message, UINT wParam, LONG lPa
 		if (wParam) // the message was NOT sent by a menu
 		{
 		    LPMEASUREITEMSTRUCT lpmis = (LPMEASUREITEMSTRUCT) lParam;
-    
+
 		    // tell the list view that each row (item) should be just taller than our font
-    
-		    //DefWindowProc(hWnd, message, wParam, lParam);
+    		    //DefWindowProc(hWnd, message, wParam, lParam);
 		    //dprintf("default row height calculation gives %u\n",lpmis->itemHeight);
-    
+
 		    TEXTMETRIC tm;
 		    HDC hDC = GetDC(NULL);
 		    HFONT hFontOld = (HFONT)SelectObject(hDC,hFont);
-    
+
 		    GetTextMetrics(hDC,&tm);
-		    
+
 		    lpmis->itemHeight = tm.tmHeight + tm.tmExternalLeading + 1;
 		    if (lpmis->itemHeight < 17)
 			    lpmis->itemHeight = 17;
 		    //dprintf("we would do %u\n",tm.tmHeight + tm.tmExternalLeading + 1);
 		    SelectObject(hDC,hFontOld);
 		    ReleaseDC(NULL,hDC);
-    
+
 		    return TRUE;
 		}
 		else
@@ -3563,7 +3562,7 @@ static void CopyToolTipTextW(LPTOOLTIPTEXTW lpttt)
 		//Statusbar
 		SendMessage(lpttt->hdr.hwndFrom, TTM_SETMAXTIPWIDTH, 0, 200);
 		if (iButton != 1)
-			SendMessage(hStatusBar, SB_GETTEXTA, (WPARAM)iButton, (LPARAM)(LPSTR) &String);
+			SendMessage(hStatusBar, SB_GETTEXTW, (WPARAM)iButton, (LPARAM) &String);
 		else
 			//for first pane we get the Status directly, to get the line breaks
 			wcscpy(String, GameInfoStatus(Picker_GetSelectedItem(hwndList), FALSE));
@@ -4113,9 +4112,8 @@ static BOOL TreeViewNotify(LPNMHDR nm)
 		return TRUE;
 	    }
 	case TVN_ENDLABELEDITW :
-	case TVN_ENDLABELEDITA :
 	    {
-		TV_DISPINFO *ptvdi = (TV_DISPINFO *)nm;
+		TV_DISPINFOW *ptvdi = (TV_DISPINFOW *)nm;
 		LPTREEFOLDER folder = (LPTREEFOLDER)ptvdi->item.lParam;
 
 		g_in_treeview_edit = FALSE;
@@ -4124,6 +4122,18 @@ static BOOL TreeViewNotify(LPNMHDR nm)
 			return FALSE;
 
 		return TryRenameCustomFolder(folder, ptvdi->item.pszText);
+	    }
+	case TVN_ENDLABELEDITA :
+	    {
+		TV_DISPINFOA *ptvdi = (TV_DISPINFOA *)nm;
+		LPTREEFOLDER folder = (LPTREEFOLDER)ptvdi->item.lParam;
+
+		g_in_treeview_edit = FALSE;
+
+		if (ptvdi->item.pszText == NULL || strlen(ptvdi->item.pszText) == 0)
+			return FALSE;
+
+		return TryRenameCustomFolder(folder, _Unicode(ptvdi->item.pszText));
 	    }
 	}
 	return FALSE;
@@ -4753,7 +4763,7 @@ static void PickFont(void)
 	GetListFont(&font);
 	font.lfQuality = DEFAULT_QUALITY;
 
-	cf.lStructSize = sizeof(CHOOSEFONT);
+	cf.lStructSize = sizeof(cf);
 	cf.hwndOwner   = hMain;
 	cf.lpLogFont   = &font;
 	cf.lpfnHook = &CFHookProc;
@@ -4808,7 +4818,7 @@ static void PickColor(COLORREF *cDefault)
 	for (i=0;i<16;i++)
 		choice_colors[i] = GetCustomColor(i);
  
-	cc.lStructSize = sizeof(CHOOSECOLOR);
+	cc.lStructSize = sizeof(cc);
 	cc.hwndOwner   = hMain;
 	cc.rgbResult   = *cDefault;
 	cc.lpCustColors = choice_colors;
@@ -7333,11 +7343,11 @@ static LRESULT CALLBACK PictureFrameWndProc(HWND hWnd, UINT uMsg, WPARAM wParam,
 	switch (uMsg)
 	{
 	case WM_MOUSEMOVE:
-    {
+	{
 		if (MouseHasBeenMoved())
 			ShowCursor(TRUE);
 		break;
-    }
+	}
 
 	case WM_NCHITTEST :
 	{

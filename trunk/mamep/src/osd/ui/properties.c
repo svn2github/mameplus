@@ -1537,7 +1537,7 @@ static int GetSheetPageTreeCurSelText(LPWSTR lpszText, int iBufSize)
 
 	item.hItem      = hItem;
 	item.mask  	    = TVIF_TEXT;
-	item.pszText    = (LPTSTR)lpszText;
+	item.pszText    = lpszText;
 	item.cchTextMax = iBufSize;
 
 	SendMessage(hSheetTreeCtrl, TVM_GETITEM, 0, (LPARAM)&item);
@@ -1613,7 +1613,7 @@ void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 	item.mask    = TCIF_TEXT;
 	item.iImage  = 0;
 	item.lParam  = 0;
-	item.pszText = (LPTSTR)TEXT("");
+	item.pszText = TEXT("");
 	SendMessage(hTempTab, TCM_INSERTITEM, 0, (LPARAM)&item);
 
 	SendMessage(hTempTab, TCM_GETITEMRECT, 0, (LPARAM)&rcTabCaption);
@@ -1690,7 +1690,7 @@ void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 		memset(&ti, 0, sizeof(TCITEM));
 		ti.mask       = TCIF_TEXT|TCIF_IMAGE;
 		ti.cchTextMax = ARRAY_LENGTH(szText);
-		ti.pszText    = (LPTSTR)szText;
+		ti.pszText    = szText;
 
 		SendMessage(hTabWnd, TCM_GETITEM, nPage, (LPARAM)&ti);
 
@@ -1703,7 +1703,7 @@ void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 		tvis.hParent             = TVI_ROOT;
 		tvis.hInsertAfter        = TVI_LAST;
 		lpTvItem->mask           = TVIF_TEXT;
-		lpTvItem->pszText        = (LPTSTR)szText;
+		lpTvItem->pszText        = szText;
 		lpTvItem->iImage         = 0;
 		lpTvItem->iSelectedImage = 0;
 		lpTvItem->state          = 0;

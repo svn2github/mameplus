@@ -87,6 +87,10 @@ struct PickerInfo
 };
 
 
+static void Picker_CallGetItemString(HWND hwndPicker,
+	int nItem, int nColumn, WCHAR *pszBuffer, UINT nBufferLength);
+
+
 static struct PickerInfo *GetPickerInfo(HWND hWnd)
 {
 	LONG_PTR l;
@@ -173,6 +177,79 @@ static BOOL ListViewOnErase(HWND hWnd, HDC hDC)
 }
 
 
+static BOOL ListViewNeedToolTipTextW(HWND hWnd, LPTOOLTIPTEXTW lpttt)
+{
+	DWORD dwPos;
+	POINT pt;
+	LV_HITTESTINFO lvht;
+	LV_ITEM lvi;
+	int iItem;
+	int nColumn;
+	WCHAR szBuffer[256];
+
+	dwPos = GetMessagePos();
+	pt.x = LOWORD(dwPos);
+	pt.y = HIWORD(dwPos);
+
+	ScreenToClient(hWnd, &pt);
+
+	lvht.pt = pt;
+	if (!ListView_SubItemHitTest(hWnd, &lvht))
+	{
+		lpttt->szText[0] = '\0';
+		return TRUE;
+	}
+
+	lvi.iItem = lvht.iItem;
+	lvi.mask = LVIF_PARAM;
+	ListView_GetItem(hWnd, &lvi);
+
+	iItem = lvi.lParam;
+	nColumn = Picker_GetRealColumnFromViewColumn(hWnd, lvht.iSubItem);
+	wcscpy(szBuffer, lpttt->szText);
+	Picker_CallGetItemString(hWnd, iItem, nColumn, szBuffer, ARRAY_LENGTH(szBuffer));
+
+	wcscpy(lpttt->szText, szBuffer);
+
+	return TRUE;
+}
+
+static BOOL ListViewNeedToolTipTextA(HWND hWnd, LPTOOLTIPTEXTA lpttt)
+{
+	DWORD dwPos;
+	POINT pt;
+	LV_HITTESTINFO lvht;
+	LV_ITEM lvi;
+	int iItem;
+	int nColumn;
+	WCHAR szBuffer[256];
+
+	dwPos = GetMessagePos();
+	pt.x = LOWORD(dwPos);
+	pt.y = HIWORD(dwPos);
+
+	ScreenToClient(hWnd, &pt);
+
+	lvht.pt = pt;
+	if (!ListView_SubItemHitTest(hWnd, &lvht))
+	{
+		lpttt->szText[0] = '\0';
+		return TRUE;
+	}
+
+	lvi.iItem = lvht.iItem;
+	lvi.mask = LVIF_PARAM;
+	ListView_GetItem(hWnd, &lvi);
+
+	iItem = lvi.lParam;
+	nColumn = Picker_GetRealColumnFromViewColumn(hWnd, lvht.iSubItem);
+	wcscpy(szBuffer, _Unicode(lpttt->szText));
+	Picker_CallGetItemString(hWnd, iItem, nColumn, szBuffer, ARRAY_LENGTH(szBuffer));
+
+	strcpy(lpttt->szText, _String(szBuffer));
+
+	return TRUE;
+}
 
 static BOOL ListViewNotify(HWND hWnd, LPNMHDR lpNmHdr)
 {
@@ -182,8 +259,10 @@ static BOOL ListViewNotify(HWND hWnd, LPNMHDR lpNmHdr)
 
 	// This code is for using bitmap in the background
 	// Invalidate the right side of the control when a column is resized			
-	if (lpNmHdr->code == HDN_ITEMCHANGINGA || lpNmHdr->code == HDN_ITEMCHANGINGW)
+	switch (lpNmHdr->code)
 	{
+	case HDN_ITEMCHANGINGA:
+	case HDN_ITEMCHANGINGW:
 		dwPos = GetMessagePos();
 		pt.x = LOWORD(dwPos);
 		pt.y = HIWORD(dwPos);
@@ -192,7 +271,16 @@ static BOOL ListViewNotify(HWND hWnd, LPNMHDR lpNmHdr)
 		ScreenToClient(hWnd, &pt);
 		rcClient.left = pt.x;
 		InvalidateRect(hWnd, &rcClient, FALSE);
+
+		break;
+
+	case TTN_NEEDTEXTW:
+		return ListViewNeedToolTipTextW(hWnd, (LPTOOLTIPTEXTW)lpNmHdr);
+
+	case TTN_NEEDTEXTA:
+		return ListViewNeedToolTipTextA(hWnd, (LPTOOLTIPTEXTA)lpNmHdr);
 	}
+
 	return FALSE;
 }
 
@@ -275,7 +363,7 @@ static LRESULT CALLBACK ListViewWndProc(HWND hWnd, UINT message, WPARAM wParam, 
 
 	switch(message)
 	{
-	    case WM_MOUSEMOVE:
+		case WM_MOUSEMOVE:
 			if (MouseHasBeenMoved())
 				ShowCursor(TRUE);
 			break;
@@ -979,7 +1067,7 @@ int Picker_InsertItemSorted(HWND hwndPicker, int nParam)
 	lvi.iItem	 = nLow;
 	lvi.iSubItem = 0;
 	lvi.lParam	 = nParam;
-	lvi.pszText  = LPSTR_TEXTCALLBACK;
+	lvi.pszText  = LPSTR_TEXTCALLBACKW;
 	lvi.iImage	 = I_IMAGECALLBACK;
 
 	return ListView_InsertItem(hwndPicker, &lvi);
@@ -1057,7 +1145,7 @@ BOOL Picker_HandleNotify(LPNMHDR lpNmHdr)
 		case LVN_GETDISPINFOW:
 			{
 				LV_DISPINFOW *pDispInfo;
-				WCHAR szBuffer[256];
+				static WCHAR szBuffer[256];
 
 				pDispInfo = (LV_DISPINFOW *) lpNmHdr;
 				nItem = (int) pDispInfo->item.lParam;
@@ -1094,7 +1182,7 @@ BOOL Picker_HandleNotify(LPNMHDR lpNmHdr)
 		case LVN_GETDISPINFOA:
 			{
 				LV_DISPINFOA *pDispInfo;
-				WCHAR szBuffer[256];
+				static WCHAR szBuffer[256];
 
 				pDispInfo = (LV_DISPINFOA *) lpNmHdr;
 				nItem = (int) pDispInfo->item.lParam;
@@ -1248,7 +1336,7 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 	COLORREF    clrImage = GetSysColor(COLOR_WINDOW);
 	static TCHAR szBuff[MAX_PATH];
 	BOOL        bFocus = (GetFocus() == hWnd);
-	LPCTSTR     pszText;
+	LPCWSTR     pszText;
 	UINT        nStateImageMask;
 	BOOL        bSelected;
 	LV_COLUMN   lvc;
