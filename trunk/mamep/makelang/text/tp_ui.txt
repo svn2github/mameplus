@@ -403,7 +403,7 @@ Artwork options
 
 
 # osd/ui/mame32.rc: 1133
-Aspect ratio
+Aspect ratio:
 
 
 # osd/ui/mame32.rc: 643
@@ -2560,5 +2560,37 @@ by Times &Played
 
 # osd/ui/win32ui.h: 20
 type a keyword
+
+
+# osd/ui/mame32.rc: 0
+Number of output windows
+
+
+# osd/ui/mame32.rc: 0
+Per-window options
+
+
+# osd/ui/mame32.rc: 0
+Configure for
+
+
+# osd/ui/mame32.rc: 0
+Physical monitor:
+
+
+# osd/ui/mame32.rc: 0
+Resolution:
+
+
+# osd/ui/mame32.rc: 0
+View:
+
+
+#
+Pixel Aspect
+
+
+#
+Cocktail
 
 

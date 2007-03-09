@@ -83,6 +83,7 @@
 #define IDD_INTERFACE_OPTIONS           173
 #define IDD_PROP_HISTORY                176
 #define IDD_ROM_ERROR                   177
+#define IDD_LANGUAGE                    0	// N/A
 #define IDD_ERROR                       179
 #define IDR_CONTEXT_SCREENSHOT          181
 #define IDI_HEADER_UP                   182
@@ -90,6 +91,7 @@
 #define IDD_PROP_DIRECT3D               184
 #define IDD_PROP_CONTROLLER             185
 #define IDD_PROP_SCREEN                 187
+#define IDI_SOUNDTAB                    0	// N/A
 #define IDD_PALETTE                     190 // UI_COLOR_PALETTE
 #define IDD_PROP_BIOS                   191
 #define IDD_PCBINFO                     192 // USE_VIEW_PCBINFO
@@ -129,36 +131,43 @@
 #define IDC_FRAMESKIP                   1009
 #define IDC_ROTATE                      1010
 #define IDC_HELP_TEXT                   1011
-#define IDC_SCREEN                      1011
-#define IDC_TAB                         1012
-#define IDC_NUMSCREENS                  1013
-#define IDC_CHEAT                       1014
-#define IDC_LOG                         1015
-#define IDC_SLEEP                       1016
-#define IDC_BACKDROPS                   1017
+#define IDC_SCREEN                      1012
+#define IDC_TAB                         1013
+#define IDC_VIEW                        1014
+#define IDC_SCREEN2                     0	 // not used in QA
+#define IDC_SCREENSELECT                1015
+#define IDC_CHEAT                       1016
+#define IDC_LOG                         1020
 #define IDC_ARTWORK_CROP                1018
 #define IDC_OVERLAYS                    1019
 #define IDC_BEZELS                      1021
+#define IDC_SLEEP                       1022
 #define IDC_GAMMA                       1023
 #define IDC_BRIGHTCORRECT               1024
 #define IDC_USE_DEFAULT                 1025
 #define IDC_CONTRAST                    1026
 #define IDC_SAMPLERATE                  1027
-#define IDC_DEPTH                       1028
+#define IDC_NUMSCREENS                  1028
 #define IDC_ANTIALIAS                   1029
 #define IDC_BEAM                        1030
 #define IDC_FLICKER                     1031
 #define IDC_FLIPX                       1032
 #define IDC_FLIPY                       1033
-#define IDC_CONTRASTDISP                1034
+#define IDC_BACKDROPS                   1017
 #define IDC_DIRECTX_HELP                1035
+#define IDC_FLICKERDISP                 1088
 #define IDB_WEB_PAGE                    1036
+#define IDC_FSCONTRAST                  1053
 #define IDC_ROMS_PROGRESS               1037
+#define IDC_CONTRASTDISP                1034
 #define IDC_ROMS_CORRECT                1038
+#define IDC_FSCONTRASTDISP              1081
 #define IDC_ROMS_INCORRECT              1039
+#define IDC_NUMSCREENSDISP              1104
 #define IDC_ROMS_TOTAL                  1040
 #define IDC_SAMPLES_PROGRESS            1041
 #define IDC_SAMPLES_CORRECT             1042
+#define IDC_BEAMDISP                    1090
 #define IDC_SAMPLES_INCORRECT           1043
 #define IDC_SAMPLES_TOTAL               1044
 #define IDC_AUDIT_DETAILS               1045
@@ -169,7 +178,6 @@
 #define IDC_DIR_INSERT                  1050
 #define IDC_DIR_DELETE                  1051
 #define IDC_FLICKERTEXT                 1052
-#define IDC_FSCONTRAST                  1053
 #define IDC_SSFRAME                     1054
 #define IDC_PRESCALE                    1055
 #define IDC_SSNONE                      1056
@@ -195,17 +203,19 @@
 #define IDC_PROP_COLORS                 1076
 #define IDC_PROP_ROMS                   1077
 #define IDC_PROP_SAMPLES                1078
+#define IDC_PROP_SAVESTATE              1116
 #define IDC_PROP_CLONEOF_TEXT           1079
 #define IDC_PROP_CLONEOF                1080
-#define IDC_FSCONTRASTDISP              1081
+#define IDC_DEPTH                       0	 // not used in QA
 #define IDC_VERSION                     1082
+#define IDC_ARTWORK                     0	 // N/A
 #define IDC_FSGAMMA                     1084
 #define IDC_GAMMADISP                   1085
+#define IDC_FSBRIGHTNESS                1186
 #define IDC_FSGAMMADISP                 1086
-#define IDC_BRIGHTCORRECTDISP           1087
-#define IDC_FLICKERDISP                 1088
 #define IDC_PRESCALEDISP                1089
-#define IDC_BEAMDISP                    1090
+#define IDC_BRIGHTCORRECTDISP           1087
+#define IDC_FSBRIGHTNESSDISP            1187
 #define IDC_AUTOFRAMESKIP               1091
 #define IDC_TREE                        1092
 #define IDC_WINDOWED                    1093
@@ -219,11 +229,10 @@
 #define IDC_FILTER_UNAVAILABLE          1101
 #define IDC_FILTER_NONWORKING           1102
 #define IDC_FILTER_CLONES               1103
-#define IDC_NUMSCREENSDISP              1104
 #define IDC_RESET_GAMES                 1105
 #define IDC_RESET_UI                    1106
 #define IDC_RESET_FILTERS               1107
-#define IDC_LOAD_PROGRESS               1108
+#define IDC_RESET_EFFECT                0	 // N/A
 #define IDC_RESET_DEFAULT               1109
 #define IDC_FILTER_ORIGINALS            1110
 #define IDC_FILTER_WORKING              1111
@@ -231,7 +240,6 @@
 #define IDC_CONFIGURETEXT               1113
 #define IDC_JOYMAPTEXT                  1114
 #define IDC_START_GAME_CHECK            1115
-#define IDC_PROP_SAVESTATE              1116
 #define IDC_VOLUME                      1117
 #define IDC_VOLUMEDISP                  1118
 #define IDC_PROP_HISTORY                1119
@@ -241,7 +249,9 @@
 #define IDC_TRIPLE_BUFFER               1123
 #define IDC_LOAD_ROMNAME                1124
 #define IDC_DEFAULT_INPUT               1125
-#define IDC_EFFECT                      1126 // visual effects
+#define IDC_LANGUAGECHECK               0	 // N/A
+#define IDC_LANGUAGEBROWSE              0	 // N/A
+#define IDC_LANGUAGEEDIT                0	 // N/A
 #define IDC_FILTER_EDIT                 1129
 #define IDC_ABOUT                       1130
 #define IDC_PROP_DISPLAY                1131
@@ -255,25 +265,25 @@
 #define IDC_USE_STICKPOINT              1142
 #define IDC_USE_MOUSE                   1143
 #define IDC_THROTTLE                    1144
-#define IDC_RESDEPTH                    1145
 #define IDC_VOLUMETEXT                  1146
-#define IDC_RESDEPTHTEXT                1147
 #define IDC_REFRESH                     1148
 #define IDC_REFRESHTEXT                 1149
+#define IDC_EFFECT                      1126
 #define IDC_FSGAMMATEXT                 1151
 #define IDC_STEADYKEY                   1152
 #define IDC_ASPECTRATIO                 1153
 #define IDC_ASPECTRATION                1154
 #define IDC_ASPECTRATIOD                1155
 #define IDC_ASPECTRATIOTEXT             1156
+#define IDC_ASPECTRATIOTEXT2            1166
 #define IDC_JOY_GUI                     1157
 #define IDC_BROADCAST                   1158
 #define IDC_JDZ                         1160
 #define IDC_JDZDISP                     1161
 #define IDC_JDZTEXT                     1162
+#define IDC_AUDIO_LATENCY_DISP          1192
 #define IDC_PLAY_GAME                   1164
 #define IDC_LIGHTGUN                    1165
-#define IDC_ASPECTRATIOTEXT2            1166
 #define IDC_SSTAB                       1167
 #define IDC_GAME_ICON                   1168
 #define IDC_RANDOM_BG                   1169
@@ -290,18 +300,11 @@
 #define IDC_PAUSEBRIGHT                 1180
 #define IDC_PAUSEBRIGHTDISP             1181
 #define IDC_HIGH_PRIORITY               1182
+#define IDC_BIOS                        1204
 #define IDC_D3D_FILTER                  1183
+#define IDC_HIDE_MOUSE                  1205
 #define IDC_AUDIO_LATENCY               1184
 #define IDC_D3D_VERSION                 1185
-#define IDC_FSBRIGHTNESS                1186
-#define IDC_FSBRIGHTNESSDISP            1187
-#define IDC_D3D_TEXT                    1188
-#define IDC_DDRAW_TEXT                  1189
-#define IDC_PRESCALETEXT                1190
-
-#define IDC_AUDIO_LATENCY_DISP          1192
-#define IDC_BIOS                        1204
-#define IDC_HIDE_MOUSE                  1205
 #define IDC_AUDIT_DETAILS_PROP          1206
 #define IDC_CYCLETIME                   1210
 #define IDC_CYCLETIMESEC                1211
@@ -319,7 +322,6 @@
 #define IDC_GAME_CAPTION                1224
 #define IDC_SCREENSHOT_BORDERSIZE       1225
 #define IDC_SCREENSHOT_BORDERCOLOR      1226
-#define IDC_FSCONTRASTTEXT              1227
 #define IDC_CYCLETIMESECTXT             1230
 #define IDC_SCREENSHOT_BORDERSIZETXT    1232
 #define IDC_PADDLE                      1234
@@ -328,16 +330,25 @@
 #define IDC_DIAL                        1237
 #define IDC_TRACKBALL                   1238
 #define IDC_LIGHTGUNDEVICE              1239
-#define IDC_POSITIONALEVICE             1240
 #define IDC_ANALOG_AXES_TEXT            1241
 #define IDC_ANALOG_AXES                 1242
 #define IDC_HIGH_PRIORITY_TEXT          1243
 #define IDC_HIGH_PRIORITYTXT            1244
-#define IDC_DISPLAY_SPLASH_SCREEN       1245
-#define IDC_FSBRIGHTNESSTEXT            1246
-#define IDC_VIDEO_MODE                  1247
-#define IDC_SHOW_TREE_SHEET             1248 // USE_TREE_SHEET
+#define IDC_SELECT_EFFECT               0	 // N/A
 #define IDC_MULTITHREAD_RENDERING       1249
+#define IDC_ASPECT                      1253
+#define IDC_RESOLUTION                  0	 // not used in QA
+#define IDC_LOAD_PROGRESS               1108
+#define IDC_FSBRIGHTNESSTEXT            1246
+#define IDC_FSCONTRASTTEXT              1227
+#define IDC_VIDEO_MODE                  1247
+#define IDC_SCREENSELECTTEXT            1254
+#define IDC_D3D_TEXT                    1188
+#define IDC_DDRAW_TEXT                  1189
+#define IDC_PRESCALETEXT                1190
+#define IDC_POSITIONALEVICE             1240
+#define IDC_DISPLAY_SPLASH_SCREEN       1245
+#define IDC_SHOW_TREE_SHEET             1248 // USE_TREE_SHEET
 #define IDC_JSAT                        1250
 #define IDC_JSATDISP                    1251
 #define IDC_JSATTEXT                    1252
@@ -345,7 +356,6 @@
 #define ID_CONTEXT_SHOW_FOLDER_START    39000
 #define ID_CONTEXT_SHOW_FOLDER_END      39200
 
-#define IDC_EFFECTOVERRIDES             1301
 #define IDC_AUTO_PAUSE_PLAYBACK         1302 // USE_AUTO_PAUSE_PLAYBACK
 #define IDC_CONFIRM_QUIT                1304 // confirm_quit
 #define IDC_M68K_CORE                   1305 // ks hcmame s switch m68k core
@@ -457,24 +467,25 @@
 #define ID_VIEW_BYCLONE                 40040
 #define ID_VIEW_BYSRCDRIVERS            40041
 #define ID_VIEW_BYPLAYTIME              40042
-#define ID_VIEW_LINEUPICONS             40044
-#define ID_UPDATE_GAMELIST              40045
-#define ID_SORT_ASCENDING               40046
-#define ID_SORT_DESCENDING              40047
+#define ID_VIEW_LINEUPICONS             40043
+#define ID_UPDATE_GAMELIST              40044
+#define ID_SORT_ASCENDING               40045
+#define ID_SORT_DESCENDING              40046
 #define ID_CUSTOMIZE_FIELDS             40048
 #define ID_GAME_PROPERTIES              40049
 #define ID_VIEW_PAGETAB                 40050
 #define ID_VIEW_FOLDERS                 40051
-#define ID_VIEW_SHOWPICTURES            40052	// status bar (ID_VIEW_PAGETAB + 2)
 #define ID_VIEW_TOOLBARS                40056
+#define ID_VIEW_SHOWPICTURES            40052	// status bar (ID_VIEW_PAGETAB + 2)
 #define ID_VIEW_STATUS                  40053
-#define ID_CONTEXT_RENAME_CUSTOM        40054
 #define ID_CONTEXT_FILTERS              40055
+#define ID_CONTEXT_RENAME_CUSTOM        40054
 #define ID_CONTEXT_ADD_CUSTOM           40061
 #define ID_CONTEXT_SHOW_FOLDER          40057	// status bar (ID_CONTEXT_RENAME_CUSTOM + 3, ID_CONTEXT_FILTERS + 2)
 #define ID_CONTEXT_REMOVE_CUSTOM        40058
 #define ID_GAME_AUDIT                   40059
 #define ID_CONTEXT_SELECT_RANDOM        40060
+#define ID_OPTIONS_LANGUAGE             0	  // N/A
 #define ID_VIEW_TAB_SCREENSHOT          40062
 #define ID_VIEW_TAB_FLYER               40063
 #define ID_VIEW_TAB_CABINET             40064
@@ -510,6 +521,7 @@
 #define ID_UI_HISTORY_DOWN              40094
 #define ID_FILE_LOADSTATE               40095
 #define ID_FOLDER_SOURCEPROPERTIES      40096
+#define ID_FOLDER_VECTORPROPERTIES      40097
 #define ID_OPTIONS_PALETTE              40098 // UI_COLOR_PALETTE
 #define ID_OPTIONS_MMO2LST              40099
 #define ID_VIEW_PCBINFO                 40100 // USE_VIEW_PCBINFO
