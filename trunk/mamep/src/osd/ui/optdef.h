@@ -106,10 +106,9 @@ START_OPT_FUNC_DRIVER
 // PERFORMANCE OPTIONS
 	DEFINE_OPT(bool,                 autoframeskip)
 	DEFINE_OPT(frameskip,            frameskip)
-	DEFINE_OPT(int_positive,         frames_to_run)
+	DEFINE_OPT(int_positive,         seconds_to_run)
 	DEFINE_OPT(bool,                 throttle)
 	DEFINE_OPT(bool,                 sleep)
-	DEFINE_OPT(bool,                 rdtsc)
 	DEFINE_OPT(priority,             priority)
 	DEFINE_OPT(bool,                 multithreading)
 

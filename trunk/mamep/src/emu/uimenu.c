@@ -2154,9 +2154,9 @@ static UINT32 menu_scale_effect(UINT32 state)
 	/* handle actions */
 	if (input_ui_pressed(IPT_UI_SELECT))
 	{
-		video_exit_scale_effect();
+		video_exit_scale_effect(Machine);
 		scale_decode(scale_name(selected)); 
-		video_init_scale_effect();
+		video_init_scale_effect(Machine);
 	}
 
 	return selected;

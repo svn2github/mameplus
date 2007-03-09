@@ -111,10 +111,9 @@ typedef struct
 //
 	BOOL	autoframeskip;
 	int	frameskip;
-	int	frames_to_run;
+	int	seconds_to_run;
 	BOOL	throttle;
 	BOOL	sleep;
-	BOOL	rdtsc;
 	int	priority;
 	BOOL	multithreading;
 //

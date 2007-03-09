@@ -383,7 +383,6 @@ static DWORD dwHelpIDs[] =
 	IDC_DUAL_LIGHTGUN,      HIDC_DUAL_LIGHTGUN,
 	IDC_RELOAD,             HIDC_RELOAD,
 	IDC_STEADYKEY,          HIDC_STEADYKEY,
-	IDC_OLD_TIMING,         HIDC_OLD_TIMING,
 	IDC_JOY_GUI,            HIDC_JOY_GUI,
 	IDC_RANDOM_BG,          HIDC_RANDOM_BG,
 	IDC_SKIP_GAME_INFO,     HIDC_SKIP_GAME_INFO,
@@ -4058,7 +4057,6 @@ static void BuildDataMap(void)
 /*	DataMapAdd(IDC_DEBUG,       DM_BOOL, CT_BUTTON,   &pGameOpts->mame_debug,    DM_BOOL, &pGameOpts->mame_debug,    0, 0, 0); */
 	DataMapAdd(IDC_LOG,           DM_BOOL, CT_BUTTON,   &pGameOpts->log,      DM_BOOL, &pGameOpts->log,      0, 0, 0);
 	DataMapAdd(IDC_SLEEP,         DM_BOOL, CT_BUTTON,   &pGameOpts->sleep,         DM_BOOL, &pGameOpts->sleep,         0, 0, 0);
-	DataMapAdd(IDC_OLD_TIMING,    DM_BOOL, CT_BUTTON,   &pGameOpts->rdtsc,    DM_BOOL, &pGameOpts->rdtsc,    0, 0, 0);
 	DataMapAdd(IDC_HIGH_PRIORITY, DM_INT,  CT_SLIDER,   &g_nPriorityIndex,         DM_INT,  &pGameOpts->priority,      0, 0, AssignPriority);
 	DataMapAdd(IDC_HIGH_PRIORITYTXT,DM_NONE,CT_NONE,    NULL,                      DM_INT,  &pGameOpts->priority,      0, 0, 0);
 	DataMapAdd(IDC_SKIP_GAME_INFO,DM_BOOL,CT_BUTTON,    &pGameOpts->skip_gameinfo, DM_BOOL, &pGameOpts->skip_gameinfo, 0, 0, 0);

@@ -133,6 +133,8 @@ $(LIBSOUND): $(SOUNDOBJS)
 # additional dependencies
 #-------------------------------------------------
 
+#fixme: $(EMUOBJ)/rendfont.o:	$(EMUOBJ)/uismall.fh
+
 $(EMUOBJ)/video.o:		$(EMUSRC)/rendersw.c
 
 

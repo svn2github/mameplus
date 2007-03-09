@@ -7041,6 +7041,7 @@ Other Sun games
 
 	/* Bell Fruit Cobra Hardware */
 	DRIVER( qos )		/* 1992 BFM */
+	DRIVER( qosa )		/* 1992 BFM */
 
 	/* Scorpion 2+Video Board Games */
 	DRIVER( qntoondo )	/* 1993 */
@@ -7345,6 +7346,7 @@ Other Sun games
 	DRIVER( pitbossm )	/* (c) 1994 Merit */
 	DRIVER( megat3 )	/* (c) 1995 Merit */
 	DRIVER( megat5 )	/* (c) 1997 Merit */
+	DRIVER( megat6 )	/* (c) 1998 Merit */
 	DRIVER( suprgolf )	/* (c) 19?? Nasco */
 	DRIVER( hotblock )	/* (c) 1993 Nics? / Nix? */
 	DRIVER( pntnpuzl )	/* Century? */

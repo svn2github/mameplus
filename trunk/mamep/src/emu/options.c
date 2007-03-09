@@ -138,6 +138,13 @@ static const options_entry core_options[] =
 	{ "hiscore_file",               "hiscore.dat",OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* USE_HISCORE */
 
+	{ NULL,                          NULL,        OPTION_HEADER,     "CORE PERFORMANCE OPTIONS" },
+	{ "autoframeskip;afs",           "0",         OPTION_BOOLEAN,    "enable automatic frameskip selection" },
+	{ "frameskip;fs",                "0",         0,                 "set frameskip to fixed value, 0-12 (autoframeskip must be disabled)" },
+	{ "seconds_to_run;str",          "0",         0,                 "number of emulated seconds to run before automatically exiting" },
+	{ "throttle",                    "1",         OPTION_BOOLEAN,    "enable throttling to keep game running in sync with real time" },
+	{ "sleep",                       "1",         OPTION_BOOLEAN,    "enable sleeping, which gives time back to other applications when idle" },
+
 	{ NULL }
 };
 
