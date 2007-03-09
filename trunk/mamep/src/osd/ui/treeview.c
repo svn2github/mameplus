@@ -2513,7 +2513,10 @@ BOOL TryAddExtraFolderAndChildren(int parent_index)
 						break;
 
 				if (*p)
+				{
+					current_id = -1;
 					continue;
+				}
 
 				/* it it [ROOT_FOLDER]? */
 				if (!strcmp(name, "ROOT_FOLDER"))
