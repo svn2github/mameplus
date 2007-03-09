@@ -2293,10 +2293,22 @@ static BOOL RegistExtraFolder(const WCHAR *name, LPEXFOLDERDATA *fExData, int ms
 		if (*fExData)
 		{
 			char *utf8title;
+			int i;
 
 			*ext = '\0';
 
 			utf8title = utf8_from_wstring(name);
+
+			// drop DBCS filename
+			for (i = 0; utf8title[i]; i++)
+				if (utf8title[i] & 0x80)
+				{
+					free(*fExData);
+					free(utf8title);
+					*fExData = NULL;
+					return FALSE;
+				}
+
 			assign_msg_catategory(msgcat, utf8title);
 			free(utf8title);
 
@@ -2473,7 +2485,7 @@ BOOL TryAddExtraFolderAndChildren(int parent_index)
 	if (fp == NULL)
 		return FALSE;
 
-	while ( fgets(readbuf, 256, fp) )
+	while (fgets(readbuf, 256, fp))
 	{
 		/* do we have [...] ? */
 
@@ -2481,9 +2493,7 @@ BOOL TryAddExtraFolderAndChildren(int parent_index)
 		{
 			p = strchr(readbuf, ']');
 			if (p == NULL)
-			{
 				continue;
-			}
 
 			*p = '\0';
 			name = &readbuf[1];
@@ -2497,13 +2507,19 @@ BOOL TryAddExtraFolderAndChildren(int parent_index)
 			}
 			else
 			{
-				/* it it [ROOT_FOLDER]? */
+				/* drop DBCS folder */
+				for (p = name; *p; p++)
+					if (*p & 0x80)
+						break;
 
+				if (*p)
+					continue;
+
+				/* it it [ROOT_FOLDER]? */
 				if (!strcmp(name, "ROOT_FOLDER"))
 				{
 					current_id = lpFolder->m_nFolderId;
 					lpTemp = lpFolder;
-
 				}
 				else
 				{
@@ -2534,7 +2550,7 @@ BOOL TryAddExtraFolderAndChildren(int parent_index)
 			}
 
 			/* IMPORTANT: This assumes that all driver names are lowercase! */
-			strlwr( name );
+			strlwr(name);
 
 			if (lpTemp == NULL)
 			{
@@ -2543,14 +2559,12 @@ BOOL TryAddExtraFolderAndChildren(int parent_index)
 				current_id = lpFolder->m_nFolderId;
 				lpTemp = lpFolder;
 			}
-			AddGame(lpTemp,GetGameNameIndex(name));
+			AddGame(lpTemp, GetGameNameIndex(name));
 		}
 	}
 
-	if ( fp )
-	{
-		fclose( fp );
-	}
+	if (fp)
+		fclose(fp);
 
 	return TRUE;
 }
