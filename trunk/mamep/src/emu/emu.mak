@@ -137,6 +137,8 @@ $(LIBSOUND): $(SOUNDOBJS)
 
 $(EMUOBJ)/video.o:		$(EMUSRC)/rendersw.c
 
+$(EMUOBJ)/datafile.o:		$(EMUSRC)/statistics.h
+
 
 
 #-------------------------------------------------
