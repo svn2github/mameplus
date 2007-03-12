@@ -762,6 +762,10 @@ CORE FILENAME OPTIONS
 CORE OUTPUT DIRECTORY OPTIONS
 
 
+# emu/options.c: 141
+CORE PERFORMANCE OPTIONS
+
+
 # emu/options.c: 90
 CORE SEARCH PATH OPTIONS
 
@@ -5120,6 +5124,10 @@ not
 
 # emu/cheat.c: 2294
 null name
+
+
+# emu/options.c: 144
+number of emulated seconds to run before automatically exiting
 
 
 # emu/input.c: 1069

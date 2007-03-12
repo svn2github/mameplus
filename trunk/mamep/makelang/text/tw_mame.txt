@@ -1,6 +1,6 @@
 # emu/datafile.c: 2443
           DIAL:  %4d\n
-          轉盤:  %4d\n
+        方向盤:  %4d\n
 
 # emu/datafile.c: 2449
          OTHER:  %4d\n
@@ -16,7 +16,7 @@
 
 # emu/romload.c: 294
        FOUND: %s\n
-       找到: %s\n
+        找到: %s\n
 
 # emu/datafile.c: 2434
        JOY2WAY:  %4d\n
@@ -36,7 +36,7 @@
 
 # emu/datafile.c: 2437
       JOY16WAY:  %4d\n
-   16 方向搖桿:  %4d\n
+      16 方向搖桿:  %4d\n
 
 # emu/datafile.c: 2446
       LIGHTGUN:  %4d\n
@@ -56,7 +56,7 @@
 
 # emu/romload.c: 288
     EXPECTED: %s\n
-    需要: %s\n
+        需要: %s\n
 
 # emu/datafile.c: 2464
     NO BUTTONS:  %4d\n
@@ -64,7 +64,7 @@
 
 # emu/audit.c: 310
    FOUND: %s\n
-    找到: %s\n
+   找到: %s\n
 
 # emu/datafile.c: 2266
  %4d HARDDISK\n
@@ -76,7 +76,7 @@
 
 # emu/datafile.c: 2258
  %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
- %4d PLAYCHOICE + %4d\n %4d DECO 卡匣  + %4d\n %4d CVS        + %4d\n
+ %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
 
 # emu/datafile.c: 2260
  %4d RASTER     + %4d\n %4d VECTOR     + %4d\n
@@ -116,7 +116,7 @@
 
 # emu/cheat.c: 2627, 2786
 %d cheats saved
-%d 個作弊碼已儲存
+已儲存 %d 個作弊碼
 
 # emu/cheat.c: 5255, 5784, 6242
 %d results found
@@ -132,7 +132,7 @@
 
 # emu/romload.c: 927
 %s CHD NEEDS REDUMP\n
-%s 的 CHD 需要重新 DUMP\n
+%s CHD 需要重新 DUMP\n
 
 # emu/uimenu.c: 131
 %s Dec
@@ -148,19 +148,19 @@
 
 # emu/romload.c: 256
 %s NOT FOUND (NO GOOD DUMP KNOWN)\n
-找不到 %s (已知尚無正確的 DUMP)\n
+%s 找不到 (已知尚無正確的 DUMP)\n
 
 # emu/romload.c: 263, 901
 %s NOT FOUND\n
-找不到 %s \n
+%s 找不到\n
 
 # emu/romload.c: 365
 %s ROM NEEDS REDUMP\n
-%s 的 ROM 需要重新 DUMP\n
+%s ROM 需要重新 DUMP\n
 
 # emu/romload.c: 899, 948, 962
 %s UNSUPPORTED CHD VERSION\n
-%s 是尚未支援的 CHD 版本\n
+%s 不支援的 CHD 版本\n
 
 # emu/romload.c: 356, 921
 %s WRONG CHECKSUMS:\n
@@ -168,7 +168,7 @@
 
 # emu/romload.c: 342
 %s WRONG LENGTH (expected: %08x found: %08x)\n
-%s 錯誤的長度 (需要: %08x  找到: %08x)\n
+%s 錯誤的長度 (需要: %08x 找到: %08x)\n
 
 # emu/cheat.c: 2610
 %s activated
@@ -666,6 +666,10 @@ Autofire Setting
 Automatic
 自動
 
+# emu/video.c: 421
+Average speed: %.2f%% (%d seconds)\n
+平均速度: %.2f%% (%d 秒)\n
+
 # emu/cheat.c: 9059
 BANK%.2d
 BANK%.2d
@@ -722,10 +726,6 @@ Brightness
 Button 1
 按鈕 1
 
-# mame/layout/cardline.lay: 83 mame/layout/funworld.lay: 73
-Button Lamps
-按鈕燈光
-
 # emu/cheat.c: 3579
 Byte Length
 位元組長度
@@ -741,6 +741,10 @@ CORE FILENAME OPTIONS
 # emu/options.c: 101
 CORE OUTPUT DIRECTORY OPTIONS
 核心輸出目錄選項
+
+# emu/options.c: 141
+CORE PERFORMANCE OPTIONS
+核心效能選項
 
 # emu/options.c: 90
 CORE SEARCH PATH OPTIONS
@@ -892,7 +896,7 @@ Color Overlay
 
 # emu/uitext.c: 69
 Command List not available
-沒有可供查看的指令清單
+沒有可供查看的出招表
 
 # emu/cheat.c: 2870, 2943, 3166
 Comment
@@ -944,11 +948,11 @@ Contrast
 
 # mame/drivers/brkthru.c: 237, 282 mame/drivers/metro.c: 2376 mame/drivers/st0016.c: 452 mame/drivers/tail2nos.c: 204 
 Control Panel
-控制器
+控制面板
 
 # mame/drivers/changela.c: 963 mame/drivers/nbmj8891.c: 1071, 1167 mame/drivers/taitosj.c: 1768 mame/drivers/tumbleb.c: 1547 
 Control Type
-控制器類型
+控制類型
 
 # emu/inptport.c: 449
 Controller
@@ -980,7 +984,7 @@ Create New Card
 
 # emu/uimenu.c: 1482
 Crop to Screen
-裁切成原始畫面大小
+裁切至原始畫面大小
 
 # emu/cheat.c: 5840
 Current Data
@@ -1010,7 +1014,7 @@ Data
 Data Shift
 資料移位
 
-# emu/cheat.c: 7661 mame/drivers/aerofgt.c: 579, 656 mame/drivers/cinemat.c: 919 mame/drivers/psikyo4.c: 578, 622, 697 mame/drivers/psikyosh.c: 656 
+# emu/cheat.c: 7661 mame/drivers/aerofgt.c: 579, 656 mame/drivers/cinemat.c: 919 mame/drivers/psikyo4.c: 578, 622, 697 mame/drivers/psikyosh.c: 653 
 Debug
 除錯
 
@@ -1168,7 +1172,7 @@ Double Up
 
 # emu/uitext.c: 235
 Driver Configuration
-驅動程式設定
+驅動設定
 
 # emu/uitext.c: 66
 Driverinfo not available
@@ -1212,7 +1216,7 @@ ERROR: required files are missing, the game cannot be run.
 
 # emu/audit.c: 308
 EXPECTED: %s\n
-    需要: %s\n
+需要: %s\n
 
 # emu/inptport.c: 429
 Easier
@@ -1312,7 +1316,7 @@ Error: option %s expected a parameter\n
 
 # emu/options.c: 468
 Error: unknown option: %s\n
-錯誤: 未知選項: %s\n
+錯誤: 未知的選項: %s\n
 
 # emu/inptport.c: 416
 Europe
@@ -1560,7 +1564,7 @@ Horizontally
 
 # emu/uitext.c: 29
 IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
-如果您沒有在此模擬器上執行 \"%s\" 的合法權利，請按 ESC 鍵。
+如果您沒有在本模擬器上執行 \"%s\" 的合法權力，請按 ESC 鍵。
 
 # emu/datafile.c: 2279
 IMPERFECT COLORS   : %3d  %3d\n
@@ -1641,10 +1645,6 @@ Input (general)
 # emu/uitext.c: 104
 Input (this game)
 輸入設定(本遊戲)
-
-# mame/drivers/funworld.c: 874, 1184 
-Insert
-插入
 
 # emu/inptport.c: 413
 International
@@ -1888,7 +1888,7 @@ MAME 統計
 
 # emu/mame.c: 190
 MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n
-MAME 是一套模擬器︰ 或多或少忠實的重現了部分業務機台的性能，但是沒有軟體的硬體\n是毫無用處的，所以必須要有 ROM 映像檔配合執行，這種 ROM 檔跟其它任何一種商業軟\n體一樣都具有版權，因此如果您並不擁有原始機台而去使用它們，乃是違法的行為。不言\n而喻，這些 ROM 檔不能連同 MAME 一起散佈，將 MAME 和 ROM 映像檔一起散佈的行為已\n經違反了著作權法，應該盡速向這些作者回報，以便採取適當的法律措施。\n
+MAME 是一套模擬器︰ 或多或少忠實的重現了幾部業務機台的性能，但是沒有軟體的硬體\n是毫無用處的，所以必須要有 ROM 映像檔配合執行，這種 ROM 檔跟其它任何一種商業軟\n體一樣都具有版權，因此如果您並不擁有原始機台而去使用它們，乃是違法的行為。不言\n而喻，這些 ROM 檔不能連同 MAME 一起散佈，將 MAME 和 ROM 映像檔一起散佈的行為已\n經違反了著作權法，應該盡速向這些作者回報，以便採取適當的法律措施。\n
 
 # emu/datafile.c: 1498
 MAMEInfo:\n
@@ -2212,7 +2212,7 @@ Other Controls
 
 # emu/uitext.c: 30
 Otherwise, type OK or move the joystick left then right to continue
-否則，請鍵入 OK 或移動搖桿左、右兩方向繼續
+否則，請鍵入 OK 或移動搖桿的左右方向繼續
 
 # emu/uitext.c: 59
 Overclock
@@ -3704,7 +3704,7 @@ Program Space
 
 # emu/ui.c: 2171
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
-離開遊戲? \n\n按一下確定鍵離開遊戲， \n按一下取消鍵繼續執行。 
+離開遊戲?\n\n按一下確定鍵離開遊戲，\n按一下取消鍵繼續執行。
 
 # emu/ui.c: 1969
 REC START
@@ -3712,7 +3712,7 @@ REC START
 
 # emu/ui.c: 1974
 REC STOP
-停止錄製
+錄製停止
 
 # emu/cheat.c: 5976
 RHS
@@ -3812,7 +3812,7 @@ Right Half
 
 # mame/layout/rocknms.lay: 29
 Rockn Megasession Custom
-Rockn Megasession 自訂畫面
+Rockn Megasession 自訂
 
 # mame/drivers/system24.c: 1887
 Ron
@@ -3908,11 +3908,11 @@ Search Speed
 
 # emu/cheat.c: 1723
 Search a Cheat (Advanced Mode)
-搜尋作弊碼(進階模式)
+搜尋作弊碼 (進階模式)
 
 # emu/cheat.c: 1719
 Search a Cheat (Classic Mode)
-搜尋作弊碼(傳統模式)
+搜尋作弊碼 (傳統模式)
 
 # emu/cheat.c: 1715
 Search a Cheat (Minimum Mode)
@@ -4016,11 +4016,11 @@ Show Cheat List
 
 # emu/inptport.c: 1033
 Show Command
-顯示指令清單
+顯示出招表
 
 # emu/uitext.c: 123
 Show Command List
-顯示指令清單
+顯示出招表
 
 # emu/inptport.c: 1036
 Show Current Time
@@ -4384,7 +4384,7 @@ Type
 
 # emu/uitext.c: 92
 Type OK or move the joystick left then right to continue
-請鍵入 OK 或移動搖桿左、右兩方向繼續
+請鍵入 OK 或移動搖桿的左右方向繼續
 
 # emu/inptport.c: 1051
 UI Cancel
@@ -4424,7 +4424,7 @@ UI Page Up
 
 # emu/inptport.c: 1055
 UI Previous Group
-選單 前一組
+選單 上一組
 
 # emu/inptport.c: 1045
 UI Right
@@ -4832,7 +4832,7 @@ X 座標
 
 # emu/cheat.c: 7208 mame/machine/scudsp.c: 883
 XOR
-XOR 值
+XOR
 
 # emu/uitext.c: 195
 Y Position
@@ -4861,6 +4861,10 @@ Zoom Auto
 # emu/datafile.c: 2388
 \n   TOTAL: %4d\n
 \n    總計: %4d\n
+
+# emu/video.c: 1126
+\n%d partial updates
+\n%d 部分更新
 
 # emu/datafile.c: 1612, 1630
 \nORIGINAL:\n
@@ -4904,7 +4908,7 @@ Zoom Auto
 
 # emu/datafile.c: 2481
 \n\nFRAMES PER SECOND (%d): (ALL)\n\n
-\n\n每秒畫面格數 (%d) : (總計)\n\n
+\n\n每秒畫格數 (%d) : (總計)\n\n
 
 # emu/datafile.c: 2270
 \n\nGAME INFO FLAGS   : ORIG CLNS\n\n
@@ -4916,7 +4920,7 @@ Zoom Auto
 
 # emu/datafile.c: 2565
 \n\nRESOLUTION & PALETTESIZE: (ALL)\n    (%d)          (%d)\n\n
-\n\n解析度和色盤大小       : (總計)\n   (%d)          (%d)\n\n
+\n\n解析度和色盤大小       : (總計)\n    (%d)          (%d)\n\n
 
 # emu/datafile.c: 2334
 \n\nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d KB (UNCOMPRESSED)\n%d KB + %d KB MERGED\n
@@ -4932,7 +4936,7 @@ Zoom Auto
 
 # emu/datafile.c: 2594
 \n\nVERSION - DRIVERS - SUPPORT:\n\n
-\n\n版本   -   驅動  -   支援:\n\n
+\n\n版本   -   驅動   -   支援:\n\n
 
 # emu/datafile.c: 2469
 \n\nVIDEO NEEDS... : ORIG   CLNS\n\n
@@ -4958,6 +4962,10 @@ activation key saved
 assert: %s:%d: %s
 判斷: %s:%d: %s
 
+# emu/video.c: 1114
+auto%2d/%d
+自動%2d/%d
+
 # emu/cheat.c: 2346
 cheat database not found
 找不到作弊碼資料庫
@@ -4968,11 +4976,11 @@ cheat filename
 
 # emu/options.c: 131
 command list database name
-指令清單資料庫名稱
+出招表資料庫名稱
 
 # emu/info.c: 90 
 dial
-轉盤
+方向盤
 
 # emu/options.c: 115
 directory for ips files
@@ -4980,7 +4988,7 @@ IPS 檔案的目錄
 
 # emu/options.c: 119
 directory for localized data files
-本地化語言資料檔的目錄
+當地化語言資料檔的目錄
 
 # emu/options.c: 112
 directory for translation table data
@@ -5000,11 +5008,11 @@ directory to save hard drive image difference files
 
 # emu/options.c: 107
 directory to save hiscores
-儲存高分記錄檔的目錄
+儲存高分檔的目錄
 
 # emu/options.c: 105
 directory to save input device logs
-儲存輸入裝置日誌檔的目錄
+儲存輸入裝置記錄的目錄
 
 # emu/options.c: 104
 directory to save memory card contents
@@ -5020,7 +5028,7 @@ directory to save screenshots
 
 # emu/options.c: 109
 directory to save states
-設定儲存狀態檔案的目錄
+儲存狀態的目錄
 
 # emu/debug/debugcmd.c: 1069, 1253
 disabled
@@ -5028,19 +5036,27 @@ disabled
 
 # emu/options.c: 142
 enable automatic frameskip selection
-啟用自動畫面省略選擇
+啟用自動省略畫格
 
 # emu/options.c: 146
 enable sleeping, which gives time back to other applications when idle
-閒置時啟用睡眠，可將資源釋放給其他應用程式
+啟用休眠，可在閒置時釋放佔用中的系統資源給其它應用程式
 
 # emu/options.c: 145
 enable throttling to keep game running in sync with real time
-啟用調節功\能保持遊戲執行時與真實時間同步
+啟用限制速度以維持即時同步執行遊戲
 
 # emu/debug/debugcmd.c: 1069, 1253
 enabled
 啟用
+
+# emu/video.c: 1110
+fast 
+快轉 
+
+# emu/video.c: 1102
+frame:%d 
+畫格%d 
 
 # emu/options.c: 136
 high score database name
@@ -5086,6 +5102,10 @@ not
 null name
 空的名稱
 
+# emu/options.c: 144
+number of emulated seconds to run before automatically exiting
+在自動結束之前執行的模擬秒數
+
 # emu/input.c: 1069
 or
 或
@@ -5108,31 +5128,35 @@ paddle
 
 # emu/options.c: 91
 path to ROMsets and hard disk images
-設定 ROM 集合及 CHD 檔的路徑
+ROM 集合和 CHD 檔案的路徑
 
 # emu/options.c: 96
 path to artwork files
-設定 Artwork 檔案的路徑
+Artwork 檔案的路徑
 
 # emu/options.c: 97
 path to controller definitions
-設定控制器定義檔的路徑
+控制器定義檔的路徑
 
 # emu/options.c: 99
 path to font files
-設定字型檔的路徑
+字型檔的路徑
 
 # emu/options.c: 93
 path to hash files
-設定 HASH 檔案的路徑
+HASH 檔案的路徑
 
 # emu/options.c: 98
 path to ini files
-設定 INI 檔案的路徑
+INI 檔案的路徑
 
 # emu/options.c: 95
 path to samplesets
-設定樣本檔集合的路徑
+樣本檔集合的路徑
+
+# emu/video.c: 1106
+paused
+暫停
 
 # emu/info.c: 90 
 pedal
@@ -5152,7 +5176,7 @@ saved all memory regions
 
 # emu/video.c: 1767
 scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
-影像增強 \"%s\" 無法支援 15 位元及 32 位元的色深，故停用影像增強。
+影像增強 \"%s\" 無法支援 15 位元和 32 位元的色深。已停用影像增強。
 
 # emu/cheat.c: 11674
 set %s
@@ -5160,7 +5184,11 @@ set %s
 
 # emu/options.c: 143
 set frameskip to fixed value, 0-12 (autoframeskip must be disabled)
-設定畫格省略數為 0-12 之固定值（自動畫格省略將停用） 
+設定畫格省略修正值 0-12 (必須停用自動省略畫格)
+
+# emu/video.c: 1118
+skip %d/%d
+skip %d/%d
 
 # emu/uitext.c: 47 mame/drivers/harddriv.c: 3257 mame/drivers/segas16b.c: 942, 1023 
 sound
@@ -5206,35 +5234,15 @@ Adder,VFD and Lamp Matrix
 Adder,VFD and Lamps
 
 
-# emu/video.c: 421
-Average speed: %.2f%% (%d seconds)\n
-
-
 # mame/drivers/coinmstr.c: 185 
 Bookkeeping
 
 
-# emu/video.c: 1126
-\n%d partial updates
+# mame/layout/cardline.lay: 83 mame/layout/funworld.lay: 73
+Button Lamps
 
 
-# emu/video.c: 1114
-auto%2d/%d
-
-
-# emu/video.c: 1110
-fast 
-
-
-# emu/video.c: 1102
-frame:%d 
-
-
-# emu/video.c: 1106
-paused
-
-
-# emu/video.c: 1118
-skip %d/%d
+# mame/drivers/funworld.c: 874, 1184 
+Insert
 
 

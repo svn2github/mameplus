@@ -464,7 +464,7 @@ DirectDraw: 無法找到 DirectDrawEnumerateExA\n
 
 # osd/windows/drawdd.c: 382, 418, 1168
 DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
-DirectDraw: 未知目標模式: R=%08X G=%08X B=%08X\n
+DirectDraw: 未知的目標模式: R=%08X G=%08X B=%08X\n
 
 # osd/windows/drawdd.c: 227
 DirectDraw: Using DirectDraw 7\n
@@ -480,7 +480,7 @@ DirectDraw: 警告 - 裝置可能無法正常配合 DirectDraw 描繪\n
 
 # osd/windows/drawdd.c: 599
 DirectDraw: Warning - device does not support full screen gamma correction.\n
-DirectDraw: 警告 - 裝置不支援全畫面 gamma 值修正。\n
+DirectDraw: 警告 - 裝置不支援全螢幕 gamma 值修正。\n
 
 # osd/windows/input.c: 1432
 DirectInput: Using DirectInput %d\n
@@ -556,7 +556,7 @@ Error: A8R8G8B8 format textures not supported\n
 
 # osd/windows/drawd3d.c: 646
 Error: Device does not meet minimum requirements for Direct3D rendering\n
-錯誤: 裝置未達使用 Direct3D 描繪的最低需求\n
+錯誤: 裝置未達到 Direct3D 描繪的最低要求\n
 
 # osd/windows/drawd3d.c: 688
 Error: unable to configure a screen texture format\n
@@ -568,7 +568,7 @@ FRONTEND COMMANDS
 
 # osd/windows/config.c: 257
 FULL SCREEN OPTIONS
-全畫面顯示選項
+全螢幕選項
 
 # osd/windows/config.c: 1057
 Failed to open file for playback
@@ -608,7 +608,7 @@ Illegal value for %s = %s\n
 
 # osd/windows/config.c: 1070
 Input file is for game '%s', not for current game '%s'\n
-輸入檔是屬於遊戲 '%s'，不是目前的遊戲 '%s'\n
+輸入檔是屬於遊戲 '%s'，而不是目前的遊戲 '%s'\n
 
 # osd/windows/input.c: 2368
 Input:  Axis %d (%s)%s\n
@@ -616,23 +616,23 @@ Input:  Axis %d (%s)%s\n
 
 # osd/windows/input.c: 2206
 Input: %s: %s\n
-輸入: %s: %s\n
+輸入: %s: %s\n 
 
 # osd/windows/input.c: 1058
 Input: Autoenabling joysticks due to presence of a %s\n
-輸入: 因 %s 存在，自動啟用搖桿\n
+輸入: 自動啟用搖桿，因為存在一個 %s\n
 
 # osd/windows/input.c: 1065
 Input: Autoenabling lightguns due to presence of a %s\n
-輸入: 因 %s 存在，自動啟用光線槍\n
+輸入: 自動啟用光線槍，因為存在一個 %s\n
 
 # osd/windows/input.c: 1051
 Input: Autoenabling mice due to presence of a %s\n
-輸入: 因 %s 存在，自動啟用滑鼠\n
+輸入: 自動啟用滑鼠，因為存在一個 %s\n
 
 # osd/windows/input.c: 2151
 Input: Joystick %d axis %d is now %s\n
-輸入: 搖桿 %d 軸 %d 目前是 %s\n
+輸入: 搖桿 %d 軸 %d 目前是%s\n
 
 # osd/windows/input.c: 2349
 Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
@@ -640,7 +640,7 @@ Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 
 # osd/windows/input.c: 1507
 Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
-輸入: 鍵盤=%d  滑鼠=%d  搖桿=%d  光線槍=%d\n
+輸入: 鍵盤=%d  滑鼠=%d  搖桿=%d 光線槍=%d\n
 
 # osd/windows/input.c: 3275
 Input: Using RAWMOUSE for Mouse input\n
@@ -648,7 +648,7 @@ Input: Using RAWMOUSE for Mouse input\n
 
 # osd/windows/input.c: 1509
 Input: \"%s\" controller support enabled\n
-輸入: 已啟用\"%s\" 控制器支援\n 
+輸入: 已啟用 \"%s\" 控制器支援\n
 
 # osd/windows/input.c: 1889
 Invalid %s value %s; reverting to all -- valid values are:\n
@@ -696,7 +696,7 @@ Lightgun on Mouse %d
 
 # osd/windows/config.c: 758
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
-M.A.M.E. v%s - Multiple Arcade Machine Emulator\n著作權 (C) 1997-2007 為 Nicola Salmoria 及 MAME 團隊所有\n\n
+M.A.M.E. v%s - Multiple Arcade Machine Emulator\n著作權 (C) 1997-2007 隸屬於 Nicola Salmoria 與 MAME 團隊\n\n
 
 # osd/windows/window.c: 618
 MAME: %s [%s] - Screen %d
@@ -736,7 +736,7 @@ PARTKNOWN %s\n
 
 # osd/windows/config.c: 230
 PER-WINDOW VIDEO OPTIONS
-每個視窗的視訊選項
+各個視窗的視訊選項
 
 # osd/windows/config.c: 1076
 Playing back previously recorded game %s\n
@@ -812,7 +812,7 @@ This is the list of the ROMs required for driver \"%s\".\nName            Size C
 
 # osd/windows/input.c: 2921
 Toggle Fullscreen
-切換全畫面顯示
+切換全螢幕
 
 # osd/windows/fronthlp.c: 946
 UNKNOWN   %s\n
@@ -852,7 +852,7 @@ Unknown texture blendmode=%d format=%d\n
 
 # osd/windows/config.c: 761
 Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the file windows.txt\n
-用法:   MAME 遊戲名稱 [選項]\n\n        MAME -showusage    列出選項的簡短描述\n        MAME -showconfig   列出設定選項的清單\n        MAME -createconfig 建立 mame.ini 檔案\n\n關於使用方式指令集，請參閱\ windows.txt 檔案\n
+用法:  MAME 遊戲名稱 [選項]\n\n        MAME -showusage    列出選項的簡短描述\n        MAME -showconfig   列出設定選項的清單\n        MAME -createconfig 建立 mame.ini 檔案\n\n關於使用方式指令集，請參閱\ windows.txt 檔案\n
 
 # osd/windows/config.c: 656
 Usage: mame [game] [options]\n\nOptions:\n
@@ -877,6 +877,14 @@ VIDEO ROTATION OPTIONS
 # osd/windows/video.c: 280
 Video: Monitor %p = \"%s\" %s\n
 視訊: 顯示器 %p = \"%s\" %s\n
+
+# osd/windows/config.c: 190
+WINDOWS PERFORMANCE OPTIONS
+WUNDOWS 效能選項
+
+# osd/windows/video.c: 468
+Warning: -video none doesn't make much sense without -seconds_to_run\n
+警告: -video 參數為 none 時無法判斷 -seconds_to_run 值\n
 
 # osd/windows/drawd3d.c: 650
 Warning: Device may not perform well for Direct3D rendering\n
@@ -928,15 +936,15 @@ automatic pause when playback is finished
 
 # osd/windows/config.c: 215
 automatically rotate screen clockwise 90 degrees if vertical
-如為垂直畫面，自動順時針旋轉畫面 90 度
+如果是垂直遊戲，自動順時針旋轉畫面 90 度
 
 # osd/windows/config.c: 216
 automatically rotate screen counterclockwise 90 degrees if vertical
-如為垂直畫面，自動逆時針旋轉畫面 90 度
+如果是垂直遊戲，自動逆時針旋轉畫面 90 度
 
 # osd/windows/config.c: 260
 brightness value in full screen mode
-全畫面模式的亮度值
+全螢幕模式亮度值
 
 # osd/windows/config.c: 363
 button color (aqua)
@@ -980,7 +988,7 @@ button color (yellow)
 
 # osd/windows/config.c: 329
 center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
-搖桿的中心無反應區域，在此範圍的變化將被忽略 (0.0 - 1.0)
+搖桿的中心無反應區範圍，在此範圍的變化將被忽略 (0.0 - 1.0)
 
 # osd/windows/config.c: 155
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
@@ -1000,7 +1008,7 @@ constrain to the proper aspect ratio
 
 # osd/windows/config.c: 261
 contrast value in full screen mode
-全畫面模式的對比值
+全螢幕模式對比值
 
 # osd/windows/config.c: 108
 create the default configuration file
@@ -1016,19 +1024,19 @@ cursor color
 
 # osd/windows/config.c: 266
 default game screen brightness correction
-預設遊戲畫面亮度值修正
+預設的遊戲畫面亮度值修正
 
 # osd/windows/config.c: 267
 default game screen contrast correction
-預設遊戲畫面對比值修正
+預設的遊戲畫面對比值修正
 
 # osd/windows/config.c: 268
 default game screen gamma correction
-預設遊戲畫面 Gamma 值修正
+預設的遊戲畫面 Gamma 值修正
 
 # osd/windows/config.c: 199
 default to maximized windows; otherwise, windows will be minimized
-預設視窗最大化；否則將採用視窗最小化模式
+預設成視窗最大化; 否則將採用視窗最小化模式
 
 # osd/windows/input.c: 1443
 dial
@@ -1052,35 +1060,35 @@ driver sourcefile
 
 # osd/windows/config.c: 337
 enable (keyboard|mouse|joystick) if a dial control is present
-如果轉盤控制器存在時, 啟用 (鍵盤|滑鼠|搖桿)
+啟用 (keyboard|mouse|joystick) 如果方向盤控制器存在
 
 # osd/windows/config.c: 339
 enable (keyboard|mouse|joystick) if a lightgun control is present
-如果光線槍控制器存在時, 啟用 (鍵盤|滑鼠|搖桿)
+啟用 (keyboard|mouse|joystick) 如果光線槍控制器存在
 
 # osd/windows/config.c: 342
 enable (keyboard|mouse|joystick) if a mouse control is present
-如果滑鼠控制器存在時, 啟用 (鍵盤|滑鼠|搖桿)
+啟用 (keyboard|mouse|joystick) 如果滑鼠控制器存在
 
 # osd/windows/config.c: 334
 enable (keyboard|mouse|joystick) if a paddle control is present
-如果操縱桿控制器存在時，啟用 (鍵盤|滑鼠|搖桿)
+啟用 (keyboard|mouse|joystick) 如果操縱桿控制器存在
 
 # osd/windows/config.c: 336
 enable (keyboard|mouse|joystick) if a pedal control is present
-如果踏板控制器存在時，啟用 (鍵盤|滑鼠|搖桿)
+啟用 (keyboard|mouse|joystick) 如果踏板控制器存在
 
 # osd/windows/config.c: 340
 enable (keyboard|mouse|joystick) if a positional control is present
-如果指向裝置控制器存在時，啟用 (鍵盤|滑鼠|搖桿)
+啟用 (keyboard|mouse|joystick) 如果定位控制器存在
 
 # osd/windows/config.c: 338
 enable (keyboard|mouse|joystick) if a trackball control is present
-如果軌跡球控制器存在時，啟用 (鍵盤|滑鼠|搖桿)
+啟用 (keyboard|mouse|joystick) 如果軌跡球控制器存在
 
 # osd/windows/config.c: 335
 enable (keyboard|mouse|joystick) if an analog joystick control is present
-如果類比搖桿控制器存在時，啟用 (鍵盤|滑鼠|搖桿)
+啟用 (keyboard|mouse|joystick) 如果類比搖桿控制器存在
 
 # osd/windows/config.c: 170
 enable automatic restore at startup, and automatic save at exit time
@@ -1088,11 +1096,11 @@ enable automatic restore at startup, and automatic save at exit time
 
 # osd/windows/config.c: 279
 enable backdrops if artwork is enabled and available
-啟用背景圖 (如果 Artwork 已啟用且有效)
+啟用背景圖 (如果 Artwork 已啟用且可用)
 
 # osd/windows/config.c: 281
 enable bezels if artwork is enabled and available
-啟用外框圖 (如果 Artwork 已啟用且有效)
+啟用外框圖 (如果 Artwork 已啟用且可用)
 
 # osd/windows/config.c: 227
 enable bilinear filtering on screen output
@@ -1108,7 +1116,7 @@ enable dual lightgun input
 
 # osd/windows/config.c: 222
 enable hardware stretching
-啟用硬體畫面延伸
+啟用硬體延展
 
 # osd/windows/config.c: 324
 enable joystick input
@@ -1132,11 +1140,11 @@ enable multithreading; this enables rendering and blitting on a separate thread
 
 # osd/windows/config.c: 280
 enable overlays if artwork is enabled and available
-啟用覆疊圖 (如果 Artwork 已啟用且有效)
+啟用覆疊圖 (如果 Artwork 已啟用且可用)
 
 # osd/windows/config.c: 300
 enable pointing stick input
-啟用指標控制桿輸入
+啟用指點桿輸入
 
 # osd/windows/config.c: 259
 enable resolution switching
@@ -1164,15 +1172,15 @@ enable using the start of VBLANK for throttling instead of the game time
 
 # osd/windows/config.c: 207
 enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
-啟用畫面翻轉之前等待 VBLANK ；降低破損效果
+啟用畫面翻轉之前等待 VBLANK 開始; 降低破損效果
 
 # osd/windows/config.c: 198
 enable window mode; otherwise, full screen mode is assumed
-啟用視窗模式；否則將採用全畫面模式
+啟用視窗模式; 否則將採用全螢幕模式
 
 # osd/windows/config.c: 182
 enable/disable debugger
-啟用/停用 除錯器
+啟用/停用 除錯程式
 
 # osd/windows/config.c: 348
 enable/disable local language game list
@@ -1236,7 +1244,7 @@ font special color
 
 # osd/windows/config.c: 262
 gamma value in full screen mode
-全畫面模式的 Gamma 值
+全螢幕模式 Gamma 值
 
 # osd/windows/config.c: 178
 generate an error.log file
@@ -1276,7 +1284,7 @@ list available devices
 
 # osd/windows/config.c: 121
 list optional samples for a driver
-依驅動程式列出非必要的樣本檔
+列出指定驅動的非必要樣本檔
 
 # osd/windows/config.c: 120
 list required roms for a driver
@@ -1292,11 +1300,11 @@ name of a PNG file to use for visual effects, or 'none'
 
 # osd/windows/config.c: 197
 number of screens to create; usually, you want just one
-建立的畫面總數，通常設為一個
+要建立的畫面總數; 通常設為一個
 
 # osd/windows/config.c: 327
 offscreen shots reload
-射擊畫面外區域即重新裝填
+射擊畫面外區域即重新填補
 
 # osd/windows/config.c: 173
 optional filename to write a MNG movie of the current session
@@ -1336,43 +1344,43 @@ preconfigure for specified controller
 
 # osd/windows/config.c: 233
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
-設定全部畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
+全部畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
 # osd/windows/config.c: 238
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-設定第一個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
+第一個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
 # osd/windows/config.c: 253
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-設定第四個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
+第四個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
 # osd/windows/config.c: 243
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-設定第二個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
+第二個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
 # osd/windows/config.c: 248
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-設定第三個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
+第三個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
 # osd/windows/config.c: 234
 preferred view for all screens
-設定全部畫面的檢視方式
+全部畫面的檢視方式
 
 # osd/windows/config.c: 239
 preferred view for the first screen
-設定第一個畫面的檢視方式
+第一個畫面的檢視方式
 
 # osd/windows/config.c: 254
 preferred view for the fourth screen
-設定第四個畫面的檢視方式
+第四個畫面的檢視方式
 
 # osd/windows/config.c: 244
 preferred view for the second screen
-設定第二個畫面的檢視方式
+第二個畫面的檢視方式
 
 # osd/windows/config.c: 249
 preferred view for the third screen
-設定第三個畫面的檢視方式
+第三個畫面的檢視方式
 
 # osd/windows/config.c: 147
 quit game with confirmation
@@ -1396,11 +1404,11 @@ ROM 集合 %s
 
 # osd/windows/fronthlp.c: 796
 romset \"%8s\" not found!\n
-找不到 \"%8s\" 的 ROM 集合!\n
+ROM 集合 \"%8s\" 找不到!\n
 
 # osd/windows/fronthlp.c: 798
 romset \"%8s\" not supported!\n
-不支援 \"%8s\" 的 ROM 集合!\n
+ROM 集合 \"%8s\" 未支援!\n
 
 # osd/windows/config.c: 213
 rotate screen clockwise 90 degrees
@@ -1420,11 +1428,11 @@ sampleset %s
 
 # osd/windows/fronthlp.c: 892
 sampleset \"%8s\" not found!\n
-找不到 \"%8s\" 的樣本集合!\n
+樣本檔集合 \"%8s\" 找不到!\n
 
 # osd/windows/fronthlp.c: 894
 sampleset \"%8s\" not supported!\n
-不支援 \"%8s\" 的樣本集合!\n
+樣本檔集合 \"%8s\" 未支援!\n
 
 # osd/windows/config.c: 169
 saved state to load
@@ -1524,11 +1532,11 @@ sound volume in decibels (-32 min, 0 max)
 
 # osd/windows/config.c: 226
 specify the preferred Direct3D version (8 or 9)
-指定偏好的 Direct3D 版本 (8 或 9)
+指定喜好的 Direct3D 版本 (8 或 9)
 
 # osd/windows/config.c: 135
 switch drivers
-切換驅動程式
+驅動開關
 
 # osd/windows/config.c: 191
 thread priority for the main game thread; range from -15 to 1
@@ -1544,7 +1552,7 @@ transparency of UI background [0 - 255]
 
 # osd/windows/config.c: 976
 unable to open log file
-無法開啟日誌檔
+無法開啟記錄檔
 
 # osd/windows/config.c: 272
 use antialiasing when drawing vectors
@@ -1565,8 +1573,4 @@ window background color
 # osd/windows/config.c: 115
 year, manufacturer and full name
 年代，製造廠商和完整名稱
-
-# osd/windows/video.c: 468
-Warning: -video none doesn't make much sense without -seconds_to_run\n
-
 

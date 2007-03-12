@@ -320,6 +320,7 @@ BOOL PropSheetFilter_BIOS(void)
 static DWORD dwHelpIDs[] =
 {
 
+	IDC_JDZ,				HIDC_JDZ,
 	IDC_ANTIALIAS,          HIDC_ANTIALIAS,
 	IDC_ARTWORK_CROP,		HIDC_ARTWORK_CROP,
 	IDC_ASPECTRATIOD,       HIDC_ASPECTRATIOD,
@@ -403,6 +404,7 @@ static DWORD dwHelpIDs[] =
 	IDC_LIGHTGUNDEVICE,		HIDC_LIGHTGUNDEVICE,
 	IDC_ENABLE_AUTOSAVE,    HIDC_ENABLE_AUTOSAVE,
 	IDC_MULTITHREAD_RENDERING,    HIDC_MULTITHREAD_RENDERING,
+	IDC_JSAT,				HIDC_JSAT,
 	0,                      0
 };
 
@@ -3074,7 +3076,7 @@ static void SetPropEnabledControls(HWND hWnd)
 	BOOL d3d = FALSE;
 	BOOL gdi = FALSE;
 	BOOL useart = TRUE;
-	//BOOL multimon = (DirectDraw_GetNumDisplays() >= 2);
+//	BOOL multimon = (DirectDraw_GetNumDisplays() >= 2);
 	int joystick_attached = 0;
 	int in_window = 0;
 #ifdef JOYSTICK_ID
@@ -3135,8 +3137,7 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_FSCONTRASTTEXT),         !in_window);
 	EnableWindow(GetDlgItem(hWnd, IDC_FSCONTRASTDISP),         !in_window);
 
-//	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT),        !g_bAutoAspect[g_nSelectScreenIndex]);
-	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT2),       !g_bAutoAspect[g_nSelectScreenIndex]);
+	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT),        !g_bAutoAspect[g_nSelectScreenIndex]);
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATION),           !g_bAutoAspect[g_nSelectScreenIndex]);
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOD),           !g_bAutoAspect[g_nSelectScreenIndex]);
 
@@ -3152,7 +3153,7 @@ static void SetPropEnabledControls(HWND hWnd)
 
 	EnableWindow(GetDlgItem(hWnd, IDC_NUMSCREENS),                 (ddraw || d3d) && multimon);
 	EnableWindow(GetDlgItem(hWnd, IDC_NUMSCREENSDISP),             (ddraw || d3d) && multimon);
-	EnableWindow(GetDlgItem(hWnd, IDC_SCREENSELECT),           (ddraw || d3d) && multimon);
+	EnableWindow(GetDlgItem(hWnd, IDC_SCREENSELECT),               (ddraw || d3d) && multimon);
 	EnableWindow(GetDlgItem(hWnd, IDC_SCREENSELECTTEXT),           (ddraw || d3d) && multimon);
 */
 #ifdef TRANS_UI
@@ -3162,19 +3163,6 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_TRANSPARENCY),           useart);
 	EnableWindow(GetDlgItem(hWnd, IDC_TRANSPARENCYDISP),       useart);
 #endif /* TRANS_UI */
-
-	/* Artwork options */
-/*
-	hCtrl = GetDlgItem(hWnd, IDC_ARTWORK);
-
-	useart = Button_GetCheck(hCtrl);
-
-	EnableWindow(GetDlgItem(hWnd, IDC_ARTWORK_CROP),           useart);
-	EnableWindow(GetDlgItem(hWnd, IDC_BACKDROPS),              useart);
-	EnableWindow(GetDlgItem(hWnd, IDC_BEZELS),                 useart);
-	EnableWindow(GetDlgItem(hWnd, IDC_OVERLAYS),               useart);
-	EnableWindow(GetDlgItem(hWnd, IDC_ARTMISCTEXT),            useart);
-*/
 
 	/* Joystick options */
 	hCtrl = GetDlgItem(hWnd, IDC_JOYSTICK);
@@ -5004,7 +4992,7 @@ static void UpdateRefreshUI(HWND hwnd)
 				// I have some devmode "vga" which specifes 1 Hz, which is probably bogus, so we filter it out
 				char buf[16];
 
-				sprintf(buf, "%li Hz", devmode.dmDisplayFrequency);
+				sprintf(buf, "%li", devmode.dmDisplayFrequency);
 
 				if (ComboBox_FindStringA(hCtrl, 0, buf) == CB_ERR)
 				{

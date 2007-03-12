@@ -878,6 +878,10 @@ VIDEO ROTATION OPTIONS
 Video: Monitor %p = \"%s\" %s\n
 
 
+# osd/windows/config.c: 190
+WINDOWS PERFORMANCE OPTIONS
+
+
 # osd/windows/video.c: 468
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 
