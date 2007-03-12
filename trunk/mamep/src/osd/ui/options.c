@@ -2931,10 +2931,11 @@ static void validate_resolution(char **p)
 
 static void validate_driver_option(options_type *opt)
 {
-	validate_resolution(&opt->resolution0);
-	validate_resolution(&opt->resolution1);
-	validate_resolution(&opt->resolution2);
-	validate_resolution(&opt->resolution3);
+	validate_resolution(&opt->resolution);
+	validate_resolution(&opt->resolutions[0]);
+	validate_resolution(&opt->resolutions[1]);
+	validate_resolution(&opt->resolutions[2]);
+	validate_resolution(&opt->resolutions[3]);
 
 	//if (DirectDraw_GetNumDisplays() < 2)
 	//	FreeIfAllocated(&opt->screen);
@@ -5147,6 +5148,7 @@ INLINE void options_copy_folder_flag(const f_flag *src, f_flag *dest)
 #undef DEFINE_OPT_CSV
 #undef DEFINE_OPT_STRUCT
 #undef DEFINE_OPT_ARRAY
+#undef DEFINE_OPT_N
 
 #define START_OPT_FUNC_CORE	static void options_get_core(settings_type *p) {
 #define END_OPT_FUNC_CORE	}
@@ -5158,6 +5160,7 @@ INLINE void options_copy_folder_flag(const f_flag *src, f_flag *dest)
 #define DEFINE_OPT_CSV(type,name)	_options_get_csv_##type((p->name), ARRAY_LENGTH(p->name), #name);
 #define DEFINE_OPT_STRUCT		DEFINE_OPT
 #define DEFINE_OPT_ARRAY(type,name)	_options_get_##type((p->name), #name);
+#define DEFINE_OPT_N(type,name,n)	_options_get_##type(&(p->name##s[n]), #name#n);
 #include "optdef.h"
 
 
@@ -5171,6 +5174,7 @@ INLINE void options_copy_folder_flag(const f_flag *src, f_flag *dest)
 #undef DEFINE_OPT_CSV
 #undef DEFINE_OPT_STRUCT
 #undef DEFINE_OPT_ARRAY
+#undef DEFINE_OPT_N
 
 #define START_OPT_FUNC_CORE	static void options_set_core(const settings_type *p) {
 #define END_OPT_FUNC_CORE	}
@@ -5182,6 +5186,7 @@ INLINE void options_copy_folder_flag(const f_flag *src, f_flag *dest)
 #define DEFINE_OPT_CSV(type,name)	options_set_csv_##type(#name, (p->name), ARRAY_LENGTH(p->name));
 #define DEFINE_OPT_STRUCT(type,name)	options_set_##type(#name, (&p->name));
 #define DEFINE_OPT_ARRAY(type,name)	options_set_##type(#name, (p->name));
+#define DEFINE_OPT_N(type,name,n)	options_set_##type(#name#n, (p->name##s[n]));
 #include "optdef.h"
 
 
@@ -5195,6 +5200,7 @@ INLINE void options_copy_folder_flag(const f_flag *src, f_flag *dest)
 #undef DEFINE_OPT_CSV
 #undef DEFINE_OPT_STRUCT
 #undef DEFINE_OPT_ARRAY
+#undef DEFINE_OPT_N
 
 #define START_OPT_FUNC_CORE	static void options_free_string_core(settings_type *p) {
 #define END_OPT_FUNC_CORE	}
@@ -5206,6 +5212,7 @@ INLINE void options_copy_folder_flag(const f_flag *src, f_flag *dest)
 #define DEFINE_OPT_CSV(type,name)	options_free_csv_##type((p->name), ARRAY_LENGTH(p->name));
 #define DEFINE_OPT_STRUCT		DEFINE_OPT
 #define DEFINE_OPT_ARRAY(type,name)	options_free_##type(p->name);
+#define DEFINE_OPT_N(type,name,n)	options_free_##type(&(p->name##s[n]));
 #include "optdef.h"
 
 
@@ -5219,6 +5226,7 @@ INLINE void options_copy_folder_flag(const f_flag *src, f_flag *dest)
 #undef DEFINE_OPT_CSV
 #undef DEFINE_OPT_STRUCT
 #undef DEFINE_OPT_ARRAY
+#undef DEFINE_OPT_N
 
 #define START_OPT_FUNC_CORE	static void options_duplicate_core(const settings_type *source, settings_type *dest) {
 #define END_OPT_FUNC_CORE	}
@@ -5230,6 +5238,7 @@ INLINE void options_copy_folder_flag(const f_flag *src, f_flag *dest)
 #define DEFINE_OPT_CSV(type,name)	options_copy_csv_##type((source->name), (dest->name), ARRAY_LENGTH(dest->name));
 #define DEFINE_OPT_STRUCT(type,name)	options_copy_##type((&source->name), (&dest->name));
 #define DEFINE_OPT_ARRAY(type,name)	options_copy_##type((source->name), (dest->name));
+#define DEFINE_OPT_N(type,name,n)	options_copy_##type((source->name##s[n]), &(dest->name##s[n]));
 #include "optdef.h"
 
 
@@ -5243,11 +5252,13 @@ INLINE void options_copy_folder_flag(const f_flag *src, f_flag *dest)
 #undef DEFINE_OPT_CSV
 #undef DEFINE_OPT_STRUCT
 #undef DEFINE_OPT_ARRAY
+#undef DEFINE_OPT_N
 
 #define START_OPT_FUNC_DRIVER	static BOOL options_compare_driver(const options_type *p1, const options_type *p2) {
 #define END_OPT_FUNC_DRIVER	return 0; \
 				}
 #define DEFINE_OPT(type,name)	_options_compare_##type((p1->name), (p2->name));
+#define DEFINE_OPT_N(type,name,n)	_options_compare_##type((p1->name##s[n]), (p2->name##s[n]));
 #include "optdef.h"
 
 #undef START_OPT_FUNC_CORE
@@ -5260,12 +5271,14 @@ INLINE void options_copy_folder_flag(const f_flag *src, f_flag *dest)
 #undef DEFINE_OPT_CSV
 #undef DEFINE_OPT_STRUCT
 #undef DEFINE_OPT_ARRAY
+#undef DEFINE_OPT_N
 
 #define START_OPT_FUNC_CORE	static void options_set_mark_core(const settings_type *p, const settings_type *ref) {
 #define END_OPT_FUNC_CORE	}
 #define START_OPT_FUNC_DRIVER	static void options_set_mark_driver(const options_type *p, const options_type *ref) {
 #define END_OPT_FUNC_DRIVER	}
 #define DEFINE_OPT(type,name)	do { if (options_compare_##type((p->name), (ref->name))) options_set_##type(#name, (p->name)); } while (0);
+#define DEFINE_OPT_N(type,name,n)	do { if (options_compare_##type((p->name##s[n]), (ref->name##s[n]))) options_set_##type(#name#n, (p->name##s[n])); } while (0);	
 #include "optdef.h"
 
 /* End of options.c */

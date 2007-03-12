@@ -159,22 +159,10 @@ typedef struct
 	char*	aspect;
 	char*	resolution;
 	char*	view;
-	char*	screen0;
-	char*	aspect0;
-	char*	resolution0;
-	char*	view0;
-	char*	screen1;
-	char*	aspect1;
-	char*	resolution1;
-	char*	view1;
-	char*	screen2;
-	char*	aspect2;
-	char*	resolution2;
-	char*	view2;
-	char*	screen3;
-	char*	aspect3;
-	char*	resolution3;
-	char*	view3;
+	char*	screens[4];
+	char*	aspects[4];
+	char*	resolutions[4];
+	char*	views[4];
 //
 // FULL SCREEN OPTIONS
 //

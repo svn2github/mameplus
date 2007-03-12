@@ -206,6 +206,8 @@ static BOOL orig_uses_defaults;
 static options_type* pGameOpts = NULL;
 static const bios_entry *g_biosinfo = NULL;
 static int  default_bios_index[MAX_SYSTEM_BIOS];
+static char *g_sMonitorDeviceString[MAX_SCREENS + 2];
+static char *g_sMonitorDeviceName[MAX_SCREENS + 2];
 
 static int  g_nGame            = 0;
 static const WCHAR *g_pFolder  = NULL;
@@ -506,6 +508,38 @@ void PropertiesInit(void)
 		fnIsThemed = GetProcAddress(hThemes,"IsAppThemed");
 	}
 	bThemeActive = FALSE;
+
+	// mamep: Enumulate all monitors on start up
+	{
+		DISPLAY_DEVICEA dd;
+		int iMonitors;
+		int i;
+
+		iMonitors = GetSystemMetrics(SM_CMONITORS); // this gets the count of monitors attached
+		if (iMonitors > MAX_SCREENS);
+			iMonitors = MAX_SCREENS;
+
+		ZeroMemory(&dd, sizeof(dd));
+		dd.cb = sizeof(dd);
+
+		g_sMonitorDeviceString[0] = NULL;
+		g_sMonitorDeviceName[0] = strdup("auto");
+
+		for (i = 0; i < iMonitors; i++)
+		{
+			if (!EnumDisplayDevicesA(NULL, i, &dd, 0))
+				break;
+
+			if (!(dd.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER))
+			{
+				g_sMonitorDeviceString[i + 1] = strdup(dd.DeviceString);
+				g_sMonitorDeviceName[i + 1] = strdup(dd.DeviceName);
+			}
+		}
+
+		g_sMonitorDeviceString[i] = NULL;
+		g_sMonitorDeviceName[i] = NULL;
+	}
 }
 
 DWORD GetHelpIDs(void)
@@ -1914,7 +1948,7 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 			nCurSelection = ComboBox_GetCurSel(GetDlgItem(hDlg,IDC_SCREENSELECT));
 			if (nCurSelection != CB_ERR)
 				g_nSelectScreenIndex = ComboBox_GetItemData(GetDlgItem(hDlg,IDC_SCREENSELECT), nCurSelection);
-			changed = TRUE;
+			//changed = TRUE; /* just select which to configure, not changed params */
 			//Load settings for new Index
 			OptionsToProp( hDlg, pGameOpts );
 		}
@@ -2360,6 +2394,7 @@ static void PropToOptions(HWND hWnd, options_type *o)
 	HWND hCtrl2;
 	HWND hCtrl3;
 	int  nIndex;
+	int  nCurScreen = 0;
 
 	if (IS_GAME)
 		SetGameUsesDefaults(g_nGame,g_bUseDefaults);
@@ -2401,6 +2436,15 @@ static void PropToOptions(HWND hWnd, options_type *o)
 	}
 #endif /* DRIVER_SWITCH */
 
+	/* get current screen number */
+	hCtrl = GetDlgItem(hWnd, IDC_SCREENSELECT);
+	if (hCtrl)
+	{
+		nCurScreen = ComboBox_GetCurSel(hCtrl);
+		if (nCurScreen == CB_ERR)
+			nCurScreen = 0;
+	}
+
 	/* resolution size */
 	hCtrl = GetDlgItem(hWnd, IDC_SIZES);
 	if (hCtrl)
@@ -2409,7 +2453,7 @@ static void PropToOptions(HWND hWnd, options_type *o)
 
 		/* Screen size control */
 		nIndex = ComboBox_GetCurSel(hCtrl);
-		
+
 		if (nIndex == 0)
 			sprintf(buffer, "%dx%d", 0, 0); // auto
 		else
@@ -2425,7 +2469,7 @@ static void PropToOptions(HWND hWnd, options_type *o)
 			{
 				sprintf(buffer, "%dx%d", 0, 0); // auto
 			}
-		}   
+		}
 
 		/* refresh */
 		hCtrl = GetDlgItem(hWnd, IDC_REFRESH);
@@ -2437,8 +2481,8 @@ static void PropToOptions(HWND hWnd, options_type *o)
 
 		if (strcmp(buffer,"0x0@0") == 0)
 			sprintf(buffer,"auto");
-		FreeIfAllocated(&o->resolution0);	//fixme
-		o->resolution0 = mame_strdup(buffer);	//fixme
+		FreeIfAllocated(&o->resolutions[nCurScreen]);
+		o->resolutions[nCurScreen] = mame_strdup(buffer);
 	}
 
 	/* aspect ratio */
@@ -2450,8 +2494,8 @@ static void PropToOptions(HWND hWnd, options_type *o)
 		BOOL bAutoAspect = Button_GetCheck(hCtrl3);
 		if( bAutoAspect )
 		{
-			FreeIfAllocated(&o->aspect0);	//fixme
-			o->aspect0 = mame_strdup("auto");	//fixme
+			FreeIfAllocated(&o->aspects[nCurScreen]);
+			o->aspects[nCurScreen] = mame_strdup("auto");
 		}
 		else
 		{
@@ -2472,8 +2516,8 @@ static void PropToOptions(HWND hWnd, options_type *o)
 			}
 
 			snprintf(buffer, ARRAY_LENGTH(buffer), "%d:%d", n, d);
-			FreeIfAllocated(&o->aspect0);	//fixme
-			o->aspect0 = mame_strdup(buffer);	//fixme
+			FreeIfAllocated(&o->aspects[nCurScreen]);
+			o->aspects[nCurScreen] = mame_strdup(buffer);
 		}
 	}
 	/*analog axes*/
@@ -2598,12 +2642,12 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 	/* video */
 
 	/* get desired resolution */
-	if (mame_stricmp(o->resolution0, "auto") == 0)	//fixme: screen_params[g_nSelectScreenIndex]
+	if (mame_stricmp(o->resolutions[g_nSelectScreenIndex], "auto") == 0)
 	{
 		w = h = r = 0;
 	}
 	else
-	if (sscanf(o->resolution0, "%dx%d@%d", &w, &h, &r) < 2)	//fixme: screen_params[g_nSelectScreenIndex]
+	if (sscanf(o->resolutions[g_nSelectScreenIndex], "%dx%d@%d", &w, &h, &r) < 2)
 	{
 		w = h = r = 0;
 	}
@@ -2716,7 +2760,7 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 			const char* ptr = (const char*)ComboBox_GetItemData(hCtrl, nCount);
         
 			/* If we match, set nSelection to the right value */
-			if (strcmp (o->view0, ptr ) == 0)	//fixme: screen_params[g_nSelectScreenIndex]
+			if (strcmp (o->views[g_nSelectScreenIndex], ptr ) == 0)
 				break;
 		}
 		ComboBox_SetCurSel(hCtrl, nCount);
@@ -2725,7 +2769,7 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 	hCtrl = GetDlgItem(hWnd, IDC_ASPECT);
 	if (hCtrl)
 	{
-		if( strcmp( o->aspect0, "auto") == 0)	//fixme: screen_params[g_nSelectScreenIndex]
+		if( strcmp( o->aspects[g_nSelectScreenIndex], "auto") == 0)
 		{
 			Button_SetCheck(hCtrl, TRUE);
 			g_bAutoAspect[g_nSelectScreenIndex] = TRUE;
@@ -2772,9 +2816,9 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 	{
 		n = 0;
 		d = 0;
-		if(o->aspect0)	//fixme: screen_params[g_nSelectScreenIndex]
+		if(o->aspects[g_nSelectScreenIndex])
 		{
-			if (sscanf(o->aspect0, "%d:%d", &n, &d) == 2 && n != 0 && d != 0)	//fixme: screen_params[g_nSelectScreenIndex]
+			if (sscanf(o->aspects[g_nSelectScreenIndex], "%d:%d", &n, &d) == 2 && n != 0 && d != 0)
 			{
 				sprintf(buf, "%d", n);
 				Edit_SetTextA(hCtrl, buf);
@@ -3443,19 +3487,16 @@ static void AssignRotate(HWND hWnd)
 
 static void AssignScreen(HWND hWnd)
 {
-	const char* ptr = NULL;
+	int nIndex = CB_ERR;
 
-	if( ComboBox_GetCount(hWnd) > 0 )
-	{
-		if( g_nScreenIndex != CB_ERR )
-			ptr = (const char*)ComboBox_GetItemData(hWnd, g_nScreenIndex);
-	}
-	FreeIfAllocated(&pGameOpts->screen0);	//fixme: screen_params[g_nSelectScreenIndex]
-	if (ptr != NULL)
-		pGameOpts->screen0 = mame_strdup(ptr);	//fixme
-	else
-		//default to auto
-		pGameOpts->screen0 = mame_strdup("auto");	//fixme
+	if (ComboBox_GetCount(hWnd) > 0)
+		nIndex = ComboBox_GetCurSel(hWnd);
+
+	if (nIndex == CB_ERR)
+		nIndex = 0;
+
+	FreeIfAllocated(&pGameOpts->screens[g_nSelectScreenIndex]);
+	pGameOpts->screens[g_nSelectScreenIndex] = mame_strdup(g_sMonitorDeviceName[nIndex]);
 }
 
 static void AssignView(HWND hWnd)
@@ -3470,12 +3511,12 @@ static void AssignView(HWND hWnd)
 	
 	}
 
-	FreeIfAllocated(&pGameOpts->view0);	//fixme
+	FreeIfAllocated(&pGameOpts->views[g_nSelectScreenIndex]);
 	if( ptr != NULL )
-		pGameOpts->view0 = mame_strdup(ptr);	//fixme
+		pGameOpts->views[g_nSelectScreenIndex] = mame_strdup(ptr);
 	else
 		//default to auto
-		pGameOpts->view0= mame_strdup("auto");	//fixme
+		pGameOpts->views[g_nSelectScreenIndex]= mame_strdup("auto");
 }
 
 
@@ -3757,40 +3798,36 @@ static void ResetDataMap(void)
 	//TODO HOW DO VIEWS work, where do I get the input for the combo from ???	
 	for (i = 0; i < NUMVIDEO; i++)
 	{
-		if( pGameOpts->view0 != NULL )//fixme: screen_params[g_nSelectScreenIndex]
+		if( pGameOpts->views[g_nSelectScreenIndex] != NULL )
 		{
-			if (!mame_stricmp(pGameOpts->view0, ""))//fixme
+			if (!mame_stricmp(pGameOpts->views[g_nSelectScreenIndex], ""))
 				g_nViewIndex = i;
 		}
 	}	
 	g_nScreenIndex = 0;
-	if (pGameOpts->screen0 == NULL //fixme
-		|| (mame_stricmp(pGameOpts->screen0,"") == 0 )//fixme
-		|| (mame_stricmp(pGameOpts->screen0,"auto") == 0 ) )//fixme
+	if (pGameOpts->screens[g_nSelectScreenIndex] == NULL
+		|| (mame_stricmp(pGameOpts->screens[g_nSelectScreenIndex],"") == 0 )
+		|| (mame_stricmp(pGameOpts->screens[g_nSelectScreenIndex],"auto") == 0 ) )
 	{
-		FreeIfAllocated(&pGameOpts->screen0);//fixme
-		pGameOpts->screen0 = mame_strdup("auto");//fixme
+		FreeIfAllocated(&pGameOpts->screens[g_nSelectScreenIndex]);
+		pGameOpts->screens[g_nSelectScreenIndex] = mame_strdup("auto");
 		g_nScreenIndex = 0;
 	}
 	else
 	{
 		//get the selected Index
-		int iMonitors;
-		DISPLAY_DEVICEA dd;
-		int i= 0;
-		//enumerating the Monitors
-		iMonitors = GetSystemMetrics(SM_CMONITORS); // this gets the count of monitors attached
-		ZeroMemory(&dd, sizeof(dd));
-		dd.cb = sizeof(dd);
-		for(i=0; EnumDisplayDevicesA(NULL, i, &dd, 0); i++)
-		{
-			if( !(dd.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER) )
+		int i;
+
+		g_nScreenIndex = 0;
+		// To account for "Auto" on first index
+		for (i = 1; g_sMonitorDeviceString[i]; i++)
+			if (mame_stricmp(pGameOpts->screens[g_nSelectScreenIndex], g_sMonitorDeviceString[i]) == 0)
 			{
-				if ( mame_stricmp(pGameOpts->screen0,dd.DeviceName) == 0 )//fixme
-					g_nScreenIndex = i+1; // To account for "Auto" on first index
+				g_nScreenIndex = i;
+				break;
 			}
-		}
 	}
+
 	g_nRotateIndex = 0;
 	if (pGameOpts->ror == TRUE && pGameOpts->rol == FALSE)
 		g_nRotateIndex = 1;
@@ -3866,7 +3903,7 @@ static void ResetDataMap(void)
 	g_nViewIndex = 0;
 	for (i = 0; i < NUMVIEW; i++)
 	{
-		if (!mame_stricmp(pGameOpts->view0, g_ComboBoxView[i].m_pData))//fixme
+		if (!mame_stricmp(pGameOpts->views[g_nSelectScreenIndex], g_ComboBoxView[i].m_pData))
 			g_nViewIndex = i;
 	}
 	g_nD3DVersionIndex = 0;
@@ -3964,10 +4001,10 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_FSCONTRASTDISP,DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->full_screen_contrast, 0, 0, 0);
 	/* pGameOpts->frames_to_display */
 	DataMapAdd(IDC_EFFECT,        DM_INT,  CT_COMBOBOX, &g_nEffectIndex,           DM_STRING, &pGameOpts->effect,      0, 0, AssignEffect);
-	DataMapAdd(IDC_ASPECTRATIOD,  DM_NONE, CT_NONE,     &pGameOpts->aspect0,       DM_STRING, &pGameOpts->aspect0,     0, 0, 0);	//fixme: screen_params[g_nSelectScreenIndex]
-	DataMapAdd(IDC_ASPECTRATION,  DM_NONE, CT_NONE,     &pGameOpts->aspect0,       DM_STRING, &pGameOpts->aspect0,     0, 0, 0);	//fixme: screen_params[g_nSelectScreenIndex]
-	DataMapAdd(IDC_SIZES,         DM_NONE, CT_NONE,     &pGameOpts->resolution0,   DM_STRING, &pGameOpts->resolution0, 0, 0, 0);	//fixme: screen_params[g_nSelectScreenIndex]
-	DataMapAdd(IDC_REFRESH,       DM_NONE, CT_NONE,     &pGameOpts->resolution0,   DM_STRING, &pGameOpts->resolution0, 0, 0, 0);	//fixme: screen_params[g_nSelectScreenIndex]
+	DataMapAdd(IDC_ASPECTRATIOD,  DM_NONE, CT_NONE,     &pGameOpts->aspects[g_nSelectScreenIndex],     DM_STRING, &pGameOpts->aspects[g_nSelectScreenIndex],     0, 0, 0);
+	DataMapAdd(IDC_ASPECTRATION,  DM_NONE, CT_NONE,     &pGameOpts->aspects[g_nSelectScreenIndex],     DM_STRING, &pGameOpts->aspects[g_nSelectScreenIndex],     0, 0, 0);
+	DataMapAdd(IDC_SIZES,         DM_NONE, CT_NONE,     &pGameOpts->resolutions[g_nSelectScreenIndex], DM_STRING, &pGameOpts->resolutions[g_nSelectScreenIndex], 0, 0, 0);
+	DataMapAdd(IDC_REFRESH,       DM_NONE, CT_NONE,     &pGameOpts->resolutions[g_nSelectScreenIndex], DM_STRING, &pGameOpts->resolutions[g_nSelectScreenIndex], 0, 0, 0);
 #ifdef USE_SCALE_EFFECTS
 	DataMapAdd(IDC_SCALEEFFECT,   DM_INT,  CT_COMBOBOX, &g_nScaleEffectIndex,      DM_STRING, &pGameOpts->scale_effect,0, 0, AssignScaleEffect);
 #endif /* USE_SCALE_EFFECTS */
@@ -4019,8 +4056,8 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_ROTATE,           DM_INT,  CT_COMBOBOX, &g_nRotateIndex,        DM_INT,   &pGameOpts->ror,              0, 0, AssignRotate);
 	DataMapAdd(IDC_FLIPX,            DM_BOOL, CT_BUTTON,   &pGameOpts->flipx,      DM_BOOL,  &pGameOpts->flipx,            0, 0, 0);
 	DataMapAdd(IDC_FLIPY,            DM_BOOL, CT_BUTTON,   &pGameOpts->flipy,      DM_BOOL,  &pGameOpts->flipy,            0, 0, 0);
-	DataMapAdd(IDC_SCREEN,           DM_INT,  CT_COMBOBOX, &g_nScreenIndex,        DM_STRING,&pGameOpts->screen0,          0, 0, AssignScreen);	//fixme: screen_params[g_nSelectScreenIndex]
-	DataMapAdd(IDC_VIEW,             DM_INT,  CT_COMBOBOX, &g_nViewIndex,		   DM_STRING, &pGameOpts->view0,           0, 0, AssignView);//fixme
+	DataMapAdd(IDC_SCREEN,           DM_INT,  CT_COMBOBOX, &g_nScreenIndex,        DM_STRING,&pGameOpts->screens[g_nSelectScreenIndex], 0, 0, AssignScreen);
+	DataMapAdd(IDC_VIEW,             DM_INT,  CT_COMBOBOX, &g_nViewIndex,          DM_STRING,&pGameOpts->views[g_nSelectScreenIndex],   0, 0, AssignView);
 	/* debugres */
 	DataMapAdd(IDC_GAMMA,         DM_INT,  CT_SLIDER,   &g_nGammaIndex,            DM_FLOAT, &pGameOpts->gamma,            0, 0, AssignGamma);
 	DataMapAdd(IDC_GAMMADISP,     DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->gamma,            0, 0, 0);
@@ -4121,8 +4158,8 @@ BOOL IsControlOptionValue(HWND hDlg,HWND hwnd_ctrl, options_type *opts )
 	{
 		int n1=0, n2=0;
 
-		sscanf(pGameOpts->aspect0,"%i",&n1);	//fixme: screen_params[g_nSelectScreenIndex]
-		sscanf(opts->aspect0,"%i",&n2);	//fixme: screen_params[g_nSelectScreenIndex]
+		sscanf(pGameOpts->aspects[g_nSelectScreenIndex],"%i",&n1);
+		sscanf(opts->aspects[g_nSelectScreenIndex],"%i",&n2);
 
 		return n1 == n2;
 	}
@@ -4130,8 +4167,8 @@ BOOL IsControlOptionValue(HWND hDlg,HWND hwnd_ctrl, options_type *opts )
 	{
 		int temp, d1=0, d2=0;
 
-		sscanf(pGameOpts->aspect0,"%i:%i",&temp,&d1);	//fixme: screen_params[g_nSelectScreenIndex]
-		sscanf(opts->aspect0,"%i:%i",&temp,&d2);	//fixme: screen_params[g_nSelectScreenIndex]
+		sscanf(pGameOpts->aspects[g_nSelectScreenIndex],"%i:%i",&temp,&d1);
+		sscanf(opts->aspects[g_nSelectScreenIndex],"%i:%i",&temp,&d2);
 
 		return d1 == d2;
 	}
@@ -4139,12 +4176,12 @@ BOOL IsControlOptionValue(HWND hDlg,HWND hwnd_ctrl, options_type *opts )
 	{
 		int x1=0,y1=0,x2=0,y2=0;
 
-		if (strcmp(pGameOpts->resolution0,"auto") == 0 &&	//fixme: screen_params[g_nSelectScreenIndex]
-			strcmp(opts->resolution0,"auto") == 0)	//fixme: screen_params[g_nSelectScreenIndex]
+		if (strcmp(pGameOpts->resolutions[g_nSelectScreenIndex],"auto") == 0 &&
+			strcmp(opts->resolutions[g_nSelectScreenIndex],"auto") == 0)
 			return TRUE;
 
-			sscanf(pGameOpts->resolution0,"%d x %d",&x1,&y1);	//fixme: screen_params[g_nSelectScreenIndex]
-			sscanf(opts->resolution0,"%d x %d",&x2,&y2);	//fixme: screen_params[g_nSelectScreenIndex]
+			sscanf(pGameOpts->resolutions[g_nSelectScreenIndex],"%d x %d",&x1,&y1);
+			sscanf(opts->resolutions[g_nSelectScreenIndex],"%d x %d",&x2,&y2);
 
 		return x1 == x2 && y1 == y2;
 	}
@@ -4701,13 +4738,14 @@ static void UpdateDisplayModeUI(HWND hwnd, DWORD dwRefresh)
 {
 	int                   i;
 	char                  buf[100];
-	char                  buffer[100];
 	int                   nPick;
 	int                   nCount = 0;
 	int                   nSelection = 0;
 	DWORD                 w = 0, h = 0;
 	HWND                  hCtrl = GetDlgItem(hwnd, IDC_SIZES);
 	DEVMODEA devmode;
+	int                   iCurScreen;
+	const char           *devicename;
 
 	if (!hCtrl)
 		return;
@@ -4730,14 +4768,23 @@ static void UpdateDisplayModeUI(HWND hwnd, DWORD dwRefresh)
 	ComboBox_AddString(hCtrl, _UIW(TEXT("Auto")));
 	//retrieve the screen Infos
 	devmode.dmSize = sizeof(devmode);
-	ComboBox_GetTextA(GetDlgItem(hwnd, IDC_SCREEN), buffer, ARRAY_LENGTH(buffer)-1);
-	for(i=0; EnumDisplaySettingsA(buffer, i, &devmode); i++)
+
+	/* get monitor name to enumulate */
+	iCurScreen = ComboBox_GetCurSel(GetDlgItem(hwnd, IDC_SCREEN));
+	if (iCurScreen == CB_ERR)
+		iCurScreen = 0;
+	if (iCurScreen)
+		devicename = g_sMonitorDeviceName[iCurScreen];
+	else
+		devicename = NULL;	/* auto */
+
+	for (i = 0; EnumDisplaySettingsA(devicename, i, &devmode); i++)
 	{
 		if ((devmode.dmBitsPerPel == 32 ) // Only 32 bit depth supported by core
 		&&  (devmode.dmDisplayFrequency == dwRefresh || dwRefresh == 0))
 		{
 			sprintf(buf, "%li x %li", devmode.dmPelsWidth,
-									  devmode.dmPelsHeight);
+			                          devmode.dmPelsHeight);
 
 			if (ComboBox_FindStringA(hCtrl, 0, buf) == CB_ERR)
 			{
@@ -4892,32 +4939,22 @@ static void InitializeSelectScreenUI(HWND hwnd)
 
 static void UpdateScreenUI(HWND hwnd)
 {
-	int iMonitors;
-	DISPLAY_DEVICEA dd;
-	int i= 0;
-	int nSelection  = 0;
 	HWND hCtrl = GetDlgItem(hwnd, IDC_SCREEN);
 	if (hCtrl)
 	{
+		int i= 0;
+		int nSelection  = 0;
+
 		/* Remove all items in the list. */
 		ComboBox_ResetContent(hCtrl);
 		ComboBox_InsertString(hCtrl, 0, _UIW(TEXT("Auto")));
-		ComboBox_SetItemData( hCtrl, 0, (const char*)mame_strdup("auto"));
 
-		//Dynamically populate it, by enumerating the Monitors
-		iMonitors = GetSystemMetrics(SM_CMONITORS); // this gets the count of monitors attached
-		ZeroMemory(&dd, sizeof(dd));
-		dd.cb = sizeof(dd);
-		for(i=0; EnumDisplayDevicesA(NULL, i, &dd, 0); i++)
+		//we have to add 1 to account for the "auto" entry
+		for (i = 1; g_sMonitorDeviceName[i]; i++)
 		{
-			if( !(dd.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER) )
-			{
-				//we have to add 1 to account for the "auto" entry
-				ComboBox_InsertStringA(hCtrl, i+1, dd.DeviceString); //mamp: use DeviceString
-				ComboBox_SetItemData( hCtrl, i+1, dd.DeviceName);
-				if (strcmp (pGameOpts->screen0 , dd.DeviceName ) == 0)//fixme
-					nSelection = i+1;
-			}
+			ComboBox_InsertStringA(hCtrl, i, g_sMonitorDeviceString[i]); //mamp: use DeviceString
+			if (strcmp(pGameOpts->screens[g_nSelectScreenIndex], g_sMonitorDeviceName[i]) == 0)
+				nSelection = i;
 		}
 		ComboBox_SetCurSel(hCtrl, nSelection);
 	}
@@ -4933,13 +4970,14 @@ static void InitializeScreenUI(HWND hwnd)
 static void UpdateRefreshUI(HWND hwnd)
 {
 	HWND hCtrl = GetDlgItem(hwnd, IDC_REFRESH);
-	char buffer[50];
 
 	if (hCtrl)
 	{
 		int nCount = 0;
 		int i;
 		DEVMODEA devmode;
+		int iCurScreen;
+		const char *devicename;
 
 		/* Remove all items in the list. */
 		ComboBox_ResetContent(hCtrl);
@@ -4949,9 +4987,17 @@ static void UpdateRefreshUI(HWND hwnd)
 
 		//retrieve the screen Infos
 		devmode.dmSize = sizeof(devmode);
-		ComboBox_GetTextA(GetDlgItem(hwnd, IDC_SCREEN), buffer, sizeof(buffer)-1);
 
-		for (i = 0; EnumDisplaySettingsA(buffer, i, &devmode); i++)
+		/* get monitor name to enumulate */
+		iCurScreen = ComboBox_GetCurSel(GetDlgItem(hwnd, IDC_SCREEN));
+		if (iCurScreen == CB_ERR)
+			iCurScreen = 0;
+		if (iCurScreen)
+			devicename = g_sMonitorDeviceName[iCurScreen];
+		else
+			devicename = NULL;	/* auto */
+
+		for (i = 0; EnumDisplaySettingsA(devicename, i, &devmode); i++)
 		{
 			if (devmode.dmDisplayFrequency >= 10 ) 
 			{

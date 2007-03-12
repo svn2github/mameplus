@@ -1022,7 +1022,7 @@ Enforce aspect ratio
 Error
 
 
-# osd/ui/treeview.c: 2741
+# osd/ui/treeview.c: 2744
 Error finding custom file name to save
 
 
@@ -1034,11 +1034,11 @@ Error log (for developers)
 Error searching for custom folder
 
 
-# osd/ui/treeview.c: 2669
+# osd/ui/treeview.c: 2672
 Error while renaming custom file %s to %s
 
 
-# osd/ui/treeview.c: 2813
+# osd/ui/treeview.c: 2816
 Error while saving custom file %s
 
 
@@ -1894,6 +1894,22 @@ Scale screen
 Screen
 
 
+# osd/ui/properties.c: 437
+Screen 0
+
+
+# osd/ui/properties.c: 438
+Screen 1
+
+
+# osd/ui/properties.c: 439
+Screen 2
+
+
+# osd/ui/properties.c: 440
+Screen 3
+
+
 # osd/ui/win32ui.c: 3454
 Screen flip support is missing
 
@@ -2414,11 +2430,11 @@ Type
 Unable to Load Riched32.dll
 
 
-# osd/ui/treeview.c: 2680
+# osd/ui/treeview.c: 2683
 Unable to add game to non-custom folder
 
 
-# osd/ui/treeview.c: 2697
+# osd/ui/treeview.c: 2700
 Unable to remove game from non-custom folder
 
 

@@ -1022,7 +1022,7 @@ Enforce aspect ratio
 Error
 エラー
 
-# osd/ui/treeview.c: 2741
+# osd/ui/treeview.c: 2744
 Error finding custom file name to save
 保存するカスタムファイルが見つかりません
 
@@ -1034,11 +1034,11 @@ Error log (for developers)
 Error searching for custom folder
 カスタムフォルダが見つかりません
 
-# osd/ui/treeview.c: 2669
+# osd/ui/treeview.c: 2672
 Error while renaming custom file %s to %s
 カスタムファイルの名前を %s から %s への変更でエラーが発生しました
 
-# osd/ui/treeview.c: 2813
+# osd/ui/treeview.c: 2816
 Error while saving custom file %s
 カスタムファイル %s の保存でエラーが発生しました
 
@@ -1894,6 +1894,22 @@ Scale screen
 Screen
 画面
 
+# osd/ui/properties.c: 437
+Screen 0
+画面 0
+
+# osd/ui/properties.c: 438
+Screen 1
+画面 1
+
+# osd/ui/properties.c: 439
+Screen 2
+画面 2
+
+# osd/ui/properties.c: 440
+Screen 3
+画面 3
+
 # osd/ui/win32ui.c: 3454
 Screen flip support is missing
 カクテルモードの画面反転に未対応
@@ -2414,11 +2430,11 @@ Type
 Unable to Load Riched32.dll
 Riched32.dllが読み込めません
 
-# osd/ui/treeview.c: 2680
+# osd/ui/treeview.c: 2683
 Unable to add game to non-custom folder
 カスタムフォルダ以外にはゲームを追加出来ません
 
-# osd/ui/treeview.c: 2697
+# osd/ui/treeview.c: 2700
 Unable to remove game from non-custom folder
 カスタムフォルダ以外からゲームを削除出来ません
 
