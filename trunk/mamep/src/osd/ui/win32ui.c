@@ -1894,6 +1894,7 @@ typedef struct
 typedef struct
 {
 	const WCHAR *str;
+	const WCHAR *str2;
 	int index;
 } sort_comapre_t;
 
@@ -1902,7 +1903,11 @@ static sort_index_t *sort_index;
 
 static int sort_comapre_str(const void *p1, const void *p2)
 {
-	return wcsicmp(((const sort_comapre_t *)p1)->str, ((const sort_comapre_t *)p2)->str);
+	int result = wcsicmp(((const sort_comapre_t *)p1)->str, ((const sort_comapre_t *)p2)->str);
+	if (result)
+		return result;
+
+	return wcsicmp(((const sort_comapre_t *)p1)->str2, ((const sort_comapre_t *)p2)->str2);
 }
 
 static void build_sort_index(void)
@@ -1926,6 +1931,7 @@ static void build_sort_index(void)
 	{
 		ptemp[i].index = i;
 		ptemp[i].str = driversw[i]->modify_the;
+		ptemp[i].str2 = driversw[i]->description;
 	}
 
 	qsort(ptemp, game_count, sizeof (*ptemp), sort_comapre_str);
@@ -1948,13 +1954,30 @@ static void build_sort_readings(void)
 	for (i = 0; i < game_count; i++)
 	{
 		WCHAR *r;
+		WCHAR *r2;
 
 		r = _READINGSW(driversw[i]->description);
-		if (r == driversw[i]->description)
+		if (r != driversw[i]->description)
+		{
+			r2 = _LSTW(driversw[i]->description);
+		}
+		else
+		{
 			r = _LSTW(driversw[i]->description);
+			if (r != driversw[i]->description)
+			{
+				r2 = driversw[i]->modify_the;
+			}
+			else
+			{
+				r = driversw[i]->modify_the;
+				r2 = driversw[i]->description;
+			}
+		}
 
 		ptemp[i].index = i;
 		ptemp[i].str = r;
+		ptemp[i].str2 = r2;
 	}
 
 	qsort(ptemp, game_count, sizeof (*ptemp), sort_comapre_str);
