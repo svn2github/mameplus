@@ -736,7 +736,7 @@ PARTKNOWN %s\n
 
 # osd/windows/config.c: 230
 PER-WINDOW VIDEO OPTIONS
-各個視窗的視訊選項
+各個畫面的視訊選項
 
 # osd/windows/config.c: 1076
 Playing back previously recorded game %s\n
@@ -884,7 +884,7 @@ WUNDOWS 效能選項
 
 # osd/windows/video.c: 468
 Warning: -video none doesn't make much sense without -seconds_to_run\n
-警告: -video 參數為 none 時無法判斷 -seconds_to_run 值\n
+警告: -video 參數為 none 時無法判斷 -seconds_to_run 選項\n
 
 # osd/windows/drawd3d.c: 650
 Warning: Device may not perform well for Direct3D rendering\n
@@ -936,11 +936,11 @@ automatic pause when playback is finished
 
 # osd/windows/config.c: 215
 automatically rotate screen clockwise 90 degrees if vertical
-如果是垂直遊戲，自動順時針旋轉畫面 90 度
+如果是垂直畫面，自動順時針旋轉畫面 90 度
 
 # osd/windows/config.c: 216
 automatically rotate screen counterclockwise 90 degrees if vertical
-如果是垂直遊戲，自動逆時針旋轉畫面 90 度
+如果是垂直畫面，自動逆時針旋轉畫面 90 度
 
 # osd/windows/config.c: 260
 brightness value in full screen mode
@@ -1024,15 +1024,15 @@ cursor color
 
 # osd/windows/config.c: 266
 default game screen brightness correction
-預設的遊戲畫面亮度值修正
+預設遊戲畫面亮度值修正
 
 # osd/windows/config.c: 267
 default game screen contrast correction
-預設的遊戲畫面對比值修正
+預設遊戲畫面對比值修正
 
 # osd/windows/config.c: 268
 default game screen gamma correction
-預設的遊戲畫面 Gamma 值修正
+預設遊戲畫面 Gamma 值修正
 
 # osd/windows/config.c: 199
 default to maximized windows; otherwise, windows will be minimized
@@ -1300,7 +1300,7 @@ name of a PNG file to use for visual effects, or 'none'
 
 # osd/windows/config.c: 197
 number of screens to create; usually, you want just one
-要建立的畫面總數; 通常設為一個
+建立的畫面總數; 通常設為一個
 
 # osd/windows/config.c: 327
 offscreen shots reload

@@ -896,7 +896,7 @@ Color Overlay
 
 # emu/uitext.c: 69
 Command List not available
-沒有可供查看的出招表
+沒有可供查看的招式表
 
 # emu/cheat.c: 2870, 2943, 3166
 Comment
@@ -4016,11 +4016,11 @@ Show Cheat List
 
 # emu/inptport.c: 1033
 Show Command
-顯示出招表
+顯示招式表
 
 # emu/uitext.c: 123
 Show Command List
-顯示出招表
+顯示招式表
 
 # emu/inptport.c: 1036
 Show Current Time
@@ -4976,7 +4976,7 @@ cheat filename
 
 # emu/options.c: 131
 command list database name
-出招表資料庫名稱
+招式表資料庫名稱
 
 # emu/info.c: 90 
 dial
@@ -5028,7 +5028,7 @@ directory to save screenshots
 
 # emu/options.c: 109
 directory to save states
-儲存狀態的目錄
+儲存狀態檔的目錄
 
 # emu/debug/debugcmd.c: 1069, 1253
 disabled
@@ -5044,7 +5044,7 @@ enable sleeping, which gives time back to other applications when idle
 
 # emu/options.c: 145
 enable throttling to keep game running in sync with real time
-啟用限制速度以維持即時同步執行遊戲
+啟用限制速度以維持遊戲即時同步執行
 
 # emu/debug/debugcmd.c: 1069, 1253
 enabled
@@ -5184,7 +5184,7 @@ set %s
 
 # emu/options.c: 143
 set frameskip to fixed value, 0-12 (autoframeskip must be disabled)
-設定畫格省略修正值 0-12 (必須停用自動省略畫格)
+設定省略畫格固定值 0-12 (必須停用自動省略畫格)
 
 # emu/video.c: 1118
 skip %d/%d
