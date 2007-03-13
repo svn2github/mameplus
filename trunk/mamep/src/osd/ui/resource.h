@@ -275,7 +275,6 @@
 #define IDC_ASPECTRATION                1154
 #define IDC_ASPECTRATIOD                1155
 #define IDC_ASPECTRATIOTEXT             1156
-#define IDC_ASPECTRATIOTEXT2            1166
 #define IDC_JOY_GUI                     1157
 #define IDC_BROADCAST                   1158
 #define IDC_JDZ                         1160

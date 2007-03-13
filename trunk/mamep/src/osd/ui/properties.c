@@ -325,8 +325,6 @@ static DWORD dwHelpIDs[] =
 	IDC_ARTWORK_CROP,		HIDC_ARTWORK_CROP,
 	IDC_ASPECTRATIOD,       HIDC_ASPECTRATIOD,
 	IDC_ASPECTRATION,       HIDC_ASPECTRATION,
-	IDC_ASPECTRATIOTEXT,    HIDC_ASPECTRATION,
-	IDC_ASPECTRATIOTEXT2,   HIDC_ASPECTRATION,
 	IDC_AUTOFRAMESKIP,      HIDC_AUTOFRAMESKIP,
 	IDC_BACKDROPS,			HIDC_BACKDROPS,
 	IDC_BEAM,               HIDC_BEAM,
@@ -481,7 +479,7 @@ static const struct
 {
 	{"mame",		IDC_DRV_MAME},
 	{"plus",		IDC_DRV_PLUS},
-	{"homebrew",	IDC_DRV_HOMEBREW},
+	{"homebrew",		IDC_DRV_HOMEBREW},
 	{"neod",		IDC_DRV_NEOD},
 #ifndef NEOCPSMAME
 	{"noncpu",		IDC_DRV_NONCPU},
@@ -2483,8 +2481,8 @@ static void PropToOptions(HWND hWnd, options_type *o)
 
 		if (strcmp(buffer,"0x0@0") == 0)
 			sprintf(buffer,"auto");
-		FreeIfAllocated(&o->resolutions[nCurScreen]);
-		o->resolutions[nCurScreen] = mame_strdup(buffer);
+		FreeIfAllocated(&o->resolutions[g_nSelectScreenIndex]);
+		o->resolutions[g_nSelectScreenIndex] = mame_strdup(buffer);
 	}
 
 	/* aspect ratio */
@@ -2496,8 +2494,8 @@ static void PropToOptions(HWND hWnd, options_type *o)
 		BOOL bAutoAspect = Button_GetCheck(hCtrl3);
 		if( bAutoAspect )
 		{
-			FreeIfAllocated(&o->aspects[nCurScreen]);
-			o->aspects[nCurScreen] = mame_strdup("auto");
+			FreeIfAllocated(&o->aspects[g_nSelectScreenIndex]);
+			o->aspects[g_nSelectScreenIndex] = mame_strdup("auto");
 		}
 		else
 		{
@@ -2518,8 +2516,8 @@ static void PropToOptions(HWND hWnd, options_type *o)
 			}
 
 			snprintf(buffer, ARRAY_LENGTH(buffer), "%d:%d", n, d);
-			FreeIfAllocated(&o->aspects[nCurScreen]);
-			o->aspects[nCurScreen] = mame_strdup(buffer);
+			FreeIfAllocated(&o->aspects[g_nSelectScreenIndex]);
+			o->aspects[g_nSelectScreenIndex] = mame_strdup(buffer);
 		}
 	}
 	/*analog axes*/
@@ -3125,8 +3123,8 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_HWSTRETCH),              ddraw && DirectDraw_HasHWStretch());
 	EnableWindow(GetDlgItem(hWnd, IDC_SWITCHRES),              !in_window && !gdi);
 	EnableWindow(GetDlgItem(hWnd, IDC_SYNCREFRESH),            !gdi);
-	EnableWindow(GetDlgItem(hWnd, IDC_REFRESH),                !in_window && ((ddraw && DirectDraw_HasRefresh()) || d3d));
-	EnableWindow(GetDlgItem(hWnd, IDC_REFRESHTEXT),            !in_window && ((ddraw && DirectDraw_HasRefresh()) || d3d));
+//	EnableWindow(GetDlgItem(hWnd, IDC_REFRESH),                !in_window && !gdi);
+//	EnableWindow(GetDlgItem(hWnd, IDC_REFRESHTEXT),            !in_window && !gdi);
 	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMA),                !in_window && !gdi);
 	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMATEXT),            !in_window && !gdi);
 	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMADISP),            !in_window && !gdi);
@@ -3175,7 +3173,7 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_JSATTEXT),               joystick_attached);
 	EnableWindow(GetDlgItem(hWnd, IDC_JSATDISP),               joystick_attached);
 	EnableWindow(GetDlgItem(hWnd, IDC_JSAT),                   joystick_attached);
-	EnableWindow(GetDlgItem(hWnd, IDC_ANALOG_AXES),		         joystick_attached);
+	EnableWindow(GetDlgItem(hWnd, IDC_ANALOG_AXES),	           joystick_attached);
 	EnableWindow(GetDlgItem(hWnd, IDC_ANALOG_AXES_TEXT),       joystick_attached);
 #ifdef JOYSTICK_ID
 	if (Button_GetCheck(GetDlgItem(hWnd, IDC_JOYSTICK)) && DIJoystick.Available())
