@@ -340,6 +340,11 @@ static void fm_update(int channel)
 			{
 //logerror("channel %d address %04x token %02x\n",channel,fm->current,read8(fm->current));
 				token = read8(fm->current++);
+				if (channel < 3 || !(NMK004_state.fm_control[channel-3].flags & FM_FLAG_ACTIVE))
+				{
+					YM2203_control_port_0_w(0, 0x28);	// keyon/off
+					YM2203_write_port_0_w(0, channel % 3);
+				}
 
 				if (token == 0x0ef || (token & 0xf0) == 0xf0)
 				{
@@ -354,11 +359,6 @@ static void fm_update(int channel)
 						case 0xf0:	// slot (for keyon ym2203 command)
 							fm->flags |= FM_FLAG_MUST_SEND_CONFIGURATION;
 							fm->slot = read8(fm->current++);
-							if (channel < 3 || !(NMK004_state.fm_control[channel-3].flags & FM_FLAG_ACTIVE))
-							{
-								YM2203_control_port_0_w(0, 0x28);	// keyon/off
-								YM2203_write_port_0_w(0, channel % 3);
-							}
 							break;
 
 						case 0xf1:	// sound shape
