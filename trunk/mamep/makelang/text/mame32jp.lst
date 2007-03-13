@@ -2296,14 +2296,14 @@ sgemfh	ポケットファイター / Super Gem Fighter -Mini Mix (ラテン版 970904)	ぽけっ
 vhunt2r1	ヴァンパイアハンター2 -ダークストーカーズリベンジ (日本版 970913)	ばんぱいあ_2はんたー2	Capcom
 vhunt2	ヴァンパイアハンター2 -ダークストーカーズリベンジ (日本版 970929)	ばんぱいあ_2はんたー2	Capcom
 vsav2	ヴァンパイアセイヴァー2 -ザ・ロードオブヴァンパイア (日本版 970913)	ばんぱいあ_3せいばー_2	Capcom
-mvsc	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (欧州版 980112)	まーぶるばーさすかぷこん	Capcom
-mvscu	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (USA版 980123)	まーぶるばーさすかぷこん	Capcom
-mvscj	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (日本版 980123)	まーぶるばーさすかぷこん	Capcom
-mvscjr1	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (日本版 980112)	まーぶるばーさすかぷこん	Capcom
-mvsca	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (アジア版 980123)	まーぶるばーさすかぷこん	Capcom
-mvscar1	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (アジア版 980112)	まーぶるばーさすかぷこん	Capcom
-mvsch	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (ラテン版 980123)	まーぶるばーさすかぷこん	Capcom
-mvscb	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (ブラジル版 980123)	まーぶるばーさすかぷこん	Capcom
+mvsc	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (欧州版 980112)	まーぶるばーさすかぷこん_1	Capcom
+mvscu	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (USA版 980123)	まーぶるばーさすかぷこん_1	Capcom
+mvscj	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (日本版 980123)	まーぶるばーさすかぷこん_1	Capcom
+mvscjr1	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (日本版 980112)	まーぶるばーさすかぷこん_1	Capcom
+mvsca	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (アジア版 980123)	まーぶるばーさすかぷこん_1	Capcom
+mvscar1	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (アジア版 980112)	まーぶるばーさすかぷこん_1	Capcom
+mvsch	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (ラテン版 980123)	まーぶるばーさすかぷこん_1	Capcom
+mvscb	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (ブラジル版 980123)	まーぶるばーさすかぷこん_1	Capcom
 sfa3	ストリートファイターZERO3 / Street Fighter Alpha 3 (USA版 980904)	すとりーとふぁいたー_6ぜろ_3	Capcom
 sfa3r1	ストリートファイターZERO3 / Street Fighter Alpha 3 (USA版 980629)	すとりーとふぁいたー_6ぜろ_3	Capcom
 sfa3b	ストリートファイターZERO3 / Street Fighter Alpha 3 (ブラジル版 980629)	すとりーとふぁいたー_6ぜろ_3	Capcom
@@ -2429,10 +2429,10 @@ tekken3	鉄拳3 (TET1/VER.E1)	てっけん_3	Namco
 tekken3a	鉄拳3 (TET2/VER.B)	てっけん_3	Namco
 tekken3b	鉄拳3 (TET2/VER.A)	てっけん_3	Namco
 lbgrande	リベログランデ (LG2/VER.A)	りべろぐらんで	Namco
-soulclbr	ソウルキャリバー (SOC14/VER.C)	そうるきゃりばー	Namco
-soulclba	ソウルキャリバー (SOC11/VER.C)	そうるきゃりばー	Namco
-soulclbb	ソウルキャリバー (SOC11/VER.B)	そうるきゃりばー	Namco
-soulclbc	ソウルキャリバー (SOC11/VER.A2)	そうるきゃりばー	Namco
+soulclbr	ソウルキャリバー (SOC14/VER.C)	そうるきゃりばー_1	Namco
+soulclba	ソウルキャリバー (SOC11/VER.C)	そうるきゃりばー_1	Namco
+soulclbb	ソウルキャリバー (SOC11/VER.B)	そうるきゃりばー_1	Namco
+soulclbc	ソウルキャリバー (SOC11/VER.A2)	そうるきゃりばー_1	Namco
 ehrgeiz	エアガイツ -God Bless The Ring (EG3/VER.A)	えあがいつ	Square/Namco
 ehrgeiza	エアガイツ -God Bless The Ring (EG2/VER.A)	えあがいつ	Square/Namco
 mdhorse	ダービークイズ マイドリームホース (MDH1/VER.A2)	だーびーくいずまいどりーむほーす	Namco
@@ -3923,7 +3923,7 @@ rungunu	スラムダンク -B･Ball Show Time / Run and Gun (ver UAB 1993 10.12)	すらむ
 rungunua	スラムダンク -B･Ball Show Time / Run and Gun (ver UBA 1993 10.8)	すらむだんく_1	Konami
 slmdunkj	スラムダンク -B･Ball Show Time (ver JAA 1993 10.8)	すらむだんく_1	Konami
 dbz	ドラゴンボールZ	どらごんぼーるぜっと_1	Banpresto
-dbz2	ドラゴンボールZ 2 -スーパーバトル	どらごんぼーるぜっと_2すーぱーばとる	Banpresto
+dbz2	ドラゴンボールZ 2 -スーパーバトル	どらごんぼーるぜっと_2	Banpresto
 bishi	ビシバシチャンプ -ミニゲーム選手権 (ver JAA)	びしばしちゃんぷ	Konami
 sbishi	スーパービシバシチャンプ (ver JAA)	すーぱーびしばしちゃんぷ	Konami
 overdriv	オーバードライブ	おーばーどらいぶ	Konami
@@ -3965,8 +3965,8 @@ rushhero	ラッシングヒーローズ (ver UAB)	らっしんぐひーろーず	Konami
 qdrmfgp	クイズ ドレミファグランプリ (日本版)	くいずどれみふぁぐらんぷり_1	Konami
 qdrmfgp2	クイズ ドレミファグランプリ2 -新曲入荷だよ (日本版)	くいずどれみふぁぐらんぷり_2	Konami
 bm1stmix	ビートマニア (ver JA-B)	びーとまにあ_1_1	Konami
-bm2ndmix	ビートマニア 2nd MIX (ver JA-B)	びーとまにあ_1_2_みっくす	Konami
-bm2ndmxa	ビートマニア 2nd MIX (ver JA-A)	びーとまにあ_1_2_みっくす	Konami
+bm2ndmix	ビートマニア 2nd MIX (ver JA-B)	びーとまにあ_1_2_せかんどみっくす	Konami
+bm2ndmxa	ビートマニア 2nd MIX (ver JA-A)	びーとまにあ_1_2_せかんどみっくす	Konami
 bm3rdmix	ビートマニア 3rd MIX (ver JA-B)	びーとまにあ_1_3_さーどみっくす	Konami
 bm3rdmxa	ビートマニア 3rd MIX (ver JA-A)	びーとまにあ_1_3_さーどみっくす	Konami
 bmcompmx	ビートマニア complete MIX (ver JA-B)	びーとまにあ_2_1_こんぷりーとみっくす_1	Konami
@@ -6091,7 +6091,8 @@ aplatoon	プラトーン (USA版 ver ??)	ぷらとーん	Nova?
 zortonbr	ゾートンブラザース (Los Justicieros)	ぞーとんぶらざーす	Web Picmatic
 crysking	ザ・クリスタルオブキングス	ざくりすたるおぶきんぐす	Brezzasoft
 evosocc	エボリューションサッカー	えぼりゅーしょんさっかー	Evoga
-qos	ア・クエスチョン・オブ・スポーツ	あくえすちょんおぶすぽーつ	BFM
+qos	ア・クエスチョン・オブ・スポーツ (39-960-099)	あくえすちょんおぶすぽーつ	BFM
+qosa	ア・クエスチョン・オブ・スポーツ (39-960-089)	あくえすちょんおぶすぽーつ	BFM
 qntoondo	クイントゥーン (オランダ版 Game Card 95-750-136)	くいんとぅーん	BFM/ELAM
 quintoon	クイントゥーン (UK版 Game Card 95-750-203)	くいんとぅーん	BFM
 qntoond	クイントゥーン (オランダ版 Game Card 95-750-243)	くいんとぅーん	BFM/ELAM
@@ -6379,8 +6380,9 @@ couplei	ザ・カップルズ (set 3)	ざかっぷるず	Merit
 pitboss2	ピットボス II	ぴっとぼす_2	Merit
 spitboss	スーパーピットボス	すーぱーぴっとぼす	Merit
 pitbossm	ピットボス メガスター	ぴっとぼす_3めがすたー	Merit
-megat3	メガタッチ3	めがたっち_3	Merit
-megat5	メガタッチ5	めがたっち_5	Merit
+megat3	メガタッチ3	めがたっち_3_すりー	Merit
+megat5	メガタッチ5	めがたっち_5_ふぁいぶ	Merit
+megat6	メガタッチ6	めがたっち_6_しっくす	Merit
 suprgolf	スーパークラウンズゴルフ	すーぱーくらうんずごるふ	Nasco/Face?
 hotblock	ホットブロックス -テトリックスII	ほっとぶろっくす	Nics? / Nix?
 pntnpuzl	ペイント&パズル	ぺいんとあんどぱずる	Century?
@@ -6538,7 +6540,7 @@ sfz2aad	ストリートファイターZERO2 Alpha (アジア版 960826 Phoenix Edition)	すとり
 xmvsfu1d	X-MEN VS. ストリートファイター (USA版 961004 Phoenix Edition)	えっくすめん_3ばーさすすとりーとふぁいたー	hack
 batcird	バトルサーキット (欧州版 970319 Phoenix Edition)	ばとるさーきっと	hack
 vsavd	ヴァンパイアセイヴァー -ザ・ロードオブヴァンパイア (欧州版 970519 Phoenix Edition)	ばんぱいあ_3せいばー_1	hack
-mvscud	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (USA版 9810123 Phoenix Edition)	まーぶるばーさすかぷこん	hack
+mvscud	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (USA版 9810123 Phoenix Edition)	まーぶるばーさすかぷこん_1	hack
 sfa3d	ストリートファイターZERO3 / Street Fighter Alpha 3 (USA版 980904 Phoenix Edition)	すとりーとふぁいたー_6ぜろ_3	hack
 gwingjd	ギガウイング (日本版 990223 Phoenix Edition)	ぎがういんぐ	hack
 1944d	1944 -ザ・ループマスター (USA版 000620 Phoenix Edition)	いちきゅうよん_4よん	hack
