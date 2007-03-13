@@ -26,7 +26,7 @@ ABM Games
 AC
 AC
 
-# Starspinner (Dutch/Nederlands)
+# Sidewinder
 ACE
 ACE
 
@@ -37,6 +37,10 @@ ACE International
 # World Heroes 2
 ADK
 ADK
+
+# Backgammon
+ADP
+ADP
 
 # Omotesandou (Japan 890215)
 ANIME TEC
@@ -134,6 +138,10 @@ Amenip Nova Games Ltd.
 Ameri
 Ameri
 
+# Mad Dog McCree v1C board rev.A
+American Laser Games
+American Laser Games
+
 # Krazy Bowl
 American Sammy
 American Sammy
@@ -149,6 +157,10 @@ Amtec
 # Minesweeper
 Amutech
 Amutech
+
+# Live Quiz Show
+Andamiro
+Andamiro
 
 # Otona no Mahjong (Japan 880628)
 Apple
@@ -174,6 +186,10 @@ Art & Magic
 Artic
 Artic
 
+# Tower & Shaft
+Aruze
+Aruze
+
 # Dingo (encrypted)
 Ashby Computers and Graphics LTD.
 Ashby Computers and Graphics LTD.
@@ -198,7 +214,7 @@ Athena
 Atlus
 Atlus
 
-# Quintoon (UK, Game Card 95-750-203)
+# A Question of Sport
 BFM
 BFM
 
@@ -250,13 +266,17 @@ Bee-Oh
 Blastar
 Blastar
 
-# Big Boy
-Bonanza
-Bonanza
+# Golden Poker Double Up (Big Boy)
+Bonanza Enterprises, Ltd
+Bonanza Enterprises, Ltd
 
 # Super Glob (Pac-Man hardware) German
 Bootleg
 Bootleg
+
+# Sky Lancer (Bordun International)
+Bordun International
+Bordun International
 
 # The Crystal of Kings
 Brezzasoft
@@ -270,6 +290,14 @@ Buena Vista Interactive
 Bullet-Proof Software
 Bullet-Proof Software
 
+# Cuore 1 (Italia)
+C.M.C.
+C.M.C.
+
+# Candy Puzzle (v1.0)
+CD Express
+CD Express
+
 # Herbie at the Olympics (DK conversion)
 CVS
 CVS
@@ -278,11 +306,11 @@ CVS
 Capcom
 Capcom
 
-# Progear (US 010117)
+# Progear (USA 010117)
 Capcom, supported by Cave
 Capcom, supported by Cave
 
-# Giga Wing (US 990222)
+# Giga Wing (USA 990222)
 Capcom, supported by Takumi
 Capcom, supported by Takumi
 
@@ -326,6 +354,10 @@ Chaos
 Chuo Co. Ltd
 Chuo Co. Ltd
 
+# Altair
+Cidelsa
+Cidelsa
+
 # Cerberus
 Cinematronics
 Cinematronics
@@ -338,9 +370,13 @@ Coastal Amusements
 Codemasters
 Codemasters
 
-# Quizmaster
+# Trail Blazer
 Coinmaster
 Coinmaster
+
+# Joker Poker
+Coinmaster-Gaming, Ltd
+Coinmaster-Gaming, Ltd
 
 # Gulf War II
 Comad
@@ -418,7 +454,7 @@ Danbi & F2 System
 Data Amusement
 Data Amusement
 
-# Suikoenbu (J 950314 V2.001)
+# Cobra Command
 Data East
 Data East
 
@@ -433,6 +469,10 @@ Data East Pinball
 # Zoar
 Data East USA
 Data East USA
+
+# Rock Duck (prototype?)
+Datel SAS
+Datel SAS
 
 # Flashback - The Quest for Identity (U) [!]
 Delphine
@@ -462,7 +502,7 @@ Digitrex Techstar
 Dino Dini
 Dino Dini
 
-# Great Circus Mystery, The - Starring Mickey & Minnie (U) [!]
+# The Great Circus Mystery - Starring Mickey & Minnie (U) [!]
 Disney
 Disney
 
@@ -558,6 +598,10 @@ ESD
 ETM
 ETM
 
+# Shooting Master (EVG)
+EVG
+EVG
+
 # King of Dynast Gear (version 1.8)
 EZ Graphics
 EZ Graphics
@@ -606,7 +650,7 @@ Electrocoin
 Electronic Arts
 Electronic Arts
 
-# Twins
+# Twins (set 1)
 Electronic Devices
 Electronic Devices
 
@@ -622,7 +666,7 @@ Electronic Devices S.R.L.
 Electronic Projects
 Electronic Projects
 
-# Twin Brats
+# Twin Brats (set 1)
 Elettronica Video-Games S.R.L.
 Elettronica Video-Games S.R.L.
 
@@ -682,6 +726,10 @@ Etona
 Evoga
 Evoga
 
+# Royal Card (Slovakia, encrypted)
+Evona Electronic
+Evona Electronic
+
 # Grand Cross
 Excellent System
 Excellent System
@@ -737,10 +785,6 @@ Fun World
 # Go Go! Mile Smile
 Fuuki
 Fuuki
-
-# Selection (Version 40.02TMB) set 1
-G.E.I.
-G.E.I.
 
 # Flame Gunner
 GAPS Inc.
@@ -910,13 +954,17 @@ IGS
 Icarus
 Icarus
 
-# Magic Card II (Bulgaria)
+# Magic Card II (Bulgaria, bootleg)
 Impera
 Impera
 
 # Capcom Bowling (set 1)
 Incredible Technologies
 Incredible Technologies
+
+# Pango Fun (Italy)
+InfoCube
+InfoCube
 
 # Jolly Card (Austria, Fun World, bootleg)
 Inter Games
@@ -950,6 +998,10 @@ Island Design
 Italian bootleg
 Italian bootleg
 
+# Major Havoc (Return to Vax)
+JMA
+JMA
+
 # Poker Night
 JMK
 JMK
@@ -981,6 +1033,10 @@ Joyland
 # Kaitei Takara Sagashi (K'K-Tokki)
 K.K. Tokki
 K.K. Tokki
+
+# Puzzle King (includes bootleg of Snow Bros.)
+K1 Soft
+K1 Soft
 
 # Diamond Run
 KH Video
@@ -1094,6 +1150,10 @@ Leprechaun
 Limenko
 Limenko
 
+# Quizmaster (German)
+Loewen Spielautomaten
+Loewen Spielautomaten
+
 # Star Wars Trilogy (ver A)
 LucasArts
 LucasArts
@@ -1206,7 +1266,7 @@ Mirco
 Mitchell
 Mitchell
 
-# Mighty! Pang (Japan 001011)
+# Mighty! Pang (USA 001010)
 Mitchell, distributed by Capcom
 Mitchell, distributed by Capcom
 
@@ -1294,6 +1354,10 @@ Nics
 Nics?
 Nics?
 
+# Monster Zero
+Nihon
+Nihon
+
 # Pocket Gal Deluxe (Japan v3.00)
 Nihon System
 Nihon System
@@ -1325,6 +1389,10 @@ Nova Games Ltd.
 # Zarya Vostoka
 Nova Games of Canada
 Nova Games of Canada
+
+# Platoon V.?.? US
+Nova?
+Nova?
 
 # Rallys (bootleg?)
 Novar
@@ -1446,7 +1514,11 @@ Playtronic SRL
 Poby
 Poby
 
-# Pagemaster, The (U) [!]
+# Thunder Heroes
+Primetek Investments
+Primetek Investments
+
+# The Pagemaster (U) [!]
 Probe
 Probe
 
@@ -1486,7 +1558,7 @@ Rait Electronics Ltd
 Raizing
 Raizing
 
-# Dimahoo (US 000121)
+# Dimahoo (USA 000121)
 Raizing, distributed by Capcom
 Raizing, distributed by Capcom
 
@@ -1510,7 +1582,7 @@ Raster Elite
 Rastersoft
 Rastersoft
 
-# Earth Defend, The (Unl) [!]
+# The Earth Defend (Unl) [!]
 Realtec
 Realtec
 
@@ -1537,6 +1609,10 @@ Ryoto Electric Co.
 # Go 2000
 SA
 SA
+
+# Trivia (sms)
+SMS MFG CORP
+SMS MFG CORP
 
 # Safari Rally (Japan)
 SNK
@@ -1582,6 +1658,10 @@ Sammy Industries
 Sammy Industries Japan
 Sammy Industries Japan
 
+# Snooker 10 (Ver 1.11)
+Sandiy
+Sandiy
+
 # Puzzle Star (Sang Ho Soft)
 Sang Ho Soft
 Sang Ho Soft
@@ -1606,7 +1686,11 @@ Seatongrove Ltd
 Sega
 Sega
 
-# Panic Road
+# NBA Action (U) [!]
+Sega Sports
+Sega Sports
+
+# Seibu Cup Soccer
 Seibu
 Seibu
 
@@ -1698,6 +1782,10 @@ Sisteme
 Soft
 Soft
 
+# Disco Boy
+Soft Art Co.
+Soft Art Co.
+
 # Jolly Card (Croatia)
 Soft Design
 Soft Design
@@ -1737,6 +1825,10 @@ Status Games
 # Armored Car (set 1)
 Stern
 Stern
+
+# Cliff Hanger
+Stern Electronics
+Stern Electronics
 
 # Pisces
 Subelectro
@@ -1785,6 +1877,14 @@ Sunsoft
 # Othello Derby (Japan)
 Sunwise
 Sunwise
+
+# Stelle e Cubi (Italy)
+Sure
+Sure
+
+# Snow Brothers 3 - Magical Adventure
+Syrmex
+Syrmex
 
 # Idol-Mahjong Housoukyoku (Japan)
 System Service
@@ -1930,7 +2030,7 @@ Tecnosoft
 Tehkan
 Tehkan
 
-# Beam Invader
+# Beam Invader (set 1)
 Tekunon Kougyou
 Tekunon Kougyou
 
@@ -1965,6 +2065,10 @@ Tiertex
 # Area 51 (Time Warner License)
 Time Warner
 Time Warner
+
+# Fishin' Frenzy (prototype)
+Time Warner Interactive
+Time Warner Interactive
 
 # Performan (Japan)
 Toaplan
@@ -2070,6 +2174,10 @@ Veltmeijer Automaten
 Venture Line
 Venture Line
 
+# Joker Card (Ver.A267BC, encrypted)
+Vesely Svet
+Vesely Svet
+
 # Socket (U) [!]
 Vic Tokai
 Vic Tokai
@@ -2114,6 +2222,10 @@ Visco
 Vision
 Vision
 
+# Alpha One (Vision Electronics / Kyle Hodgetts)
+Vision Electronics
+Vision Electronics
+
 # Ambush (Volt Elec co-ltd)
 Volt Elec co-ltd
 Volt Elec co-ltd
@@ -2133,6 +2245,10 @@ WSAC Systems?
 # Shienryu (JUET 961226 V1.000)
 Warashi
 Warashi
+
+# Zorton Brothers (Los Justicieros)
+Web Picmatic
+Web Picmatic
 
 # Sukeban Jansi Ryuko (set 1, System 16A, FD1089B 317-5021)
 White Board
@@ -2158,7 +2274,7 @@ Wintechno
 Wisdom Tree
 Wisdom Tree
 
-# Zan Yasha Enbuden (J) [!]
+# Zan - Yasha Enbukyoku / Zan Yasha Enbuden (J) [!]
 Wolfteam
 Wolfteam
 
@@ -2229,6 +2345,10 @@ Zaccaria
 # Quasar
 Zelco
 Zelco
+
+# Deal 'Em (MPU4 Conversion Kit)
+Zenitone
+Zenitone
 
 # Space Attack II
 Zenitone-Microsec Ltd
