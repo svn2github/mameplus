@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#      Mameinfo.dat日本語版 v0.113       #
+#     Mameinfo.dat日本語版 v0.113u1      #
 #                                        #
-#             March 6, 2007              #
+#             March 11, 2007             #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,80 +12,10 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：858 翻訳済：843
-# 追加項目：338 合計：1196
+# Tester報告：830 翻訳済：811
+# 追加項目：338 合計：1168
 #
 
-
-$info=darkseal
-$mame
-[バグ]
-
-- 武器を使うとその動作中、BGMのテンポが上がる。
-かなり前から起きていたが、最近はテンポの上がり方が大きい。 darkseal0112u4gre, Tafoid /  ChewChew
-
-$end
-
-$info=exerion
-$mame
-[バグ]
-
-- ボーナス面後、残機がいくらあってもゲームが終了する。 exerion0112u4yel, Krusty104 / tafoid
-
-$end
-
-$info=legendoh
-$mame
-[バグ]
-
-- タイトル画面以外ではコインをいれることができない。
-さらに、Push Startと表示されているときは、コインだけでなくスタートボタンも効かない。 legendoh0112u2gra, F1ReB4LL
-
-$end
-
-$info=sb2003
-$mame
-[バグ]
-
-- ゲームを始めるとコイン入力とスタートボタンの入力を受け付けなくなる。コンティニューカウント中も続くのでコンティニューできない。 sb2003_0112u2gra, Firewave / etabeta
-
-
-- 入力が効かず、5キーと6キーでコインを入れることもできない。
-.nvファイルが無いときは正常に動作する。 sb2003_108u3gra, Nathan G / stephh
-
-$end
-
-$info=airattck
-$mame
-[バグ]
-
-- 音が出ない。 airattck0112u1yel, Iaspis / twisty / Mamesick
-
-
-- nmk16.cゲームでプライオリティ不具合がある。
-Reipが何年か前に修正しようとしたが複雑すぎて無理だったらしい。 nmk16_0111u1gre, robiza / Kold666
-
-$end
-
-$info=elim2
-$mame
-[バグ]
-
-- [Possible] ベクター描画は以前、わざとラフになるように書き直されたが、TAFAなどのフライヤーと比べると、ラフすぎる模様。 elim2 _0112u2gre, Luigi30 / Twisty
-
-
-- ゲーム中に画面中央に青いドットが表示される。
-クローン版elim4では起きない。 elim2055gre, Fever
-
-$end
-
-$info=powerbls
-$mame
-[バグ]
-
-- gdbのデバッグビルドで、-autosave指定のステート読み込み時にクラッシュする。 powerbls0112u4red, Firewave
-
-$end
 
 $info=actfancr
 $mame
@@ -698,6 +628,15 @@ $mame
 
 $end
 
+$info=darkseal
+$mame
+[バグ]
+
+- 武器を使うとその動作中、BGMのテンポが上がる。
+かなり前から起きていたが、最近はテンポの上がり方が大きい。 darkseal0112u4gre, Tafoid /  ChewChew
+
+$end
+
 $info=lottof2
 $mame
 [バグ]
@@ -997,6 +936,14 @@ $mame
 [バグ]
 
 - 起動時にクラッシュする。0.111では動作する。 ertictac0111u4red, Tafoid
+
+$end
+
+$info=exerion
+$mame
+[バグ]
+
+- ボーナス面後、残機がいくらあってもゲームが終了する。 exerion0112u4yel, Krusty104 / tafoid
 
 $end
 
@@ -2729,6 +2676,18 @@ vsgradus: 星が自機の手前に表示される。 vsnes37b11gre, Sports Dude 
 
 $end
 
+$info=airattck
+$mame
+[バグ]
+
+- 音が出ない。 airattck0112u1yel, Iaspis / twisty / Mamesick
+
+
+- nmk16.cゲームでプライオリティ不具合がある。
+Reipが何年か前に修正しようとしたが複雑すぎて無理だったらしい。 nmk16_0111u1gre, robiza / Kold666
+
+$end
+
 $info=gunnail
 $mame
 [バグ]
@@ -3259,6 +3218,18 @@ $mame
 
 $end
 
+$info=elim2
+$mame
+[バグ]
+
+- ゲーム中に画面中央に青いドットが表示される。
+クローン版elim4では起きない。 elim2055gre, Fever
+
+
+- [Possible] ベクター描画は以前、わざとラフになるように書き直されたが、TAFAなどのフライヤーと比べると、ラフすぎる模様。 elim2 _0112u2gre, Luigi30 / Twisty
+
+$end
+
 $info=zektor
 $mame
 [バグ]
@@ -3482,14 +3453,6 @@ $mame
 - エンディングだけで使われている、読みにくいフォントについて。
 表示される文字は青いが、グラフィックセットの方では黒バックの黄色文字で、
 こちらの方が正しいと思われる。 thunderl055ora, TriggerFin
-
-$end
-
-$info=twineagl
-$mame
-[バグ]
-
-- アトラクトモードでの当たり判定がない。 twineagl058gre, Smitdogg
 
 $end
 
@@ -3787,6 +3750,14 @@ $mame
 [バグ]
 
 - 各面のゴールのときに、仲間が非現実的な反応をする(新しい面のスタート時もある)。 srumbler236b3gre, YMI
+
+$end
+
+$info=powerbls
+$mame
+[バグ]
+
+- gdbのデバッグビルドで、-autosave指定のステート読み込み時にクラッシュする。 powerbls0112u4red, Firewave
 
 $end
 
@@ -5444,14 +5415,6 @@ $mame
 
 $end
 
-$info=sfootbal
-$mame
-[バグ]
-
-- どの方向を入力してもキャラクタが左下に移動してしまう。0.85で入力系が新しくなってから発生している。 sfootbal0106u4gra, fossil
-
-$end
-
 $info=bking
 $mame
 [バグ]
@@ -5521,6 +5484,27 @@ $mame
 
 - 銃のリロードができない。最近、MAMEがバージョンアップするたびに、画面外の部分がどんどん小さくなっていて、ついにどこを撃ってもリロードできなくなった。
 チートを使うしかない。 le2085u2gra, Karasu
+
+$end
+
+$info=legendoh
+$mame
+[バグ]
+
+- タイトル画面以外ではコインをいれることができない。
+さらに、Push Startと表示されているときは、コインだけでなくスタートボタンも効かない。 legendoh0112u2gra, F1ReB4LL
+
+$end
+
+$info=sb2003
+$mame
+[バグ]
+
+- ゲームを始めるとコイン入力とスタートボタンの入力を受け付けなくなる。コンティニューカウント中も続くのでコンティニューできない。 sb2003_0112u2gra, Firewave / etabeta
+
+
+- 入力が効かず、5キーと6キーでコインを入れることもできない。
+.nvファイルが無いときは正常に動作する。 sb2003_108u3gra, Nathan G / stephh
 
 $end
 
@@ -5675,24 +5659,6 @@ $mame
 
 $end
 
-$info=janptr96
-$mame
-[バグ]
-
-- DIPスイッチ“Maximum Bet”の修正：
-
-PORT_DIPNAME( 0xc0, 0xc0, "Maximum Bet" )
-
-PORT_DIPSETTING( 0x00, "20" )
-
-PORT_DIPSETTING( 0x40, "10" )
-
-PORT_DIPSETTING( 0x80, "5" )
-
-PORT_DIPSETTING( 0xc0, "1" ) janptr96_0110u4gra, J.J.Boy
-
-$end
-
 $info=rpunch
 $mame
 [バグ]
@@ -5776,14 +5742,6 @@ $mame
 [バグ]
 
 - ボタン3がマッピングされているが、入力テストには現われない。 penbros0111u5gra, Speedfreak
-
-$end
-
-$info=dokidoki
-$mame
-[バグ]
-
-- 下から2つ目のUnknown DIPスイッチはデモサウンドの有無。 dokidoki0111u5gra, Speedfreak
 
 $end
 
