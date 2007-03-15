@@ -36,10 +36,12 @@
 #define CACHED_HEADER_SIZE		16
 #define CACHED_BDF_HASH_SIZE	1024
 
-//mamep: for color glyph
-#ifdef UI_COLOR_DISPLAY
 //mamep: command.dat symbols assigned to Unicode PUA U+E000
 #define COMMAND_UNICODE	(0xe000)
+#define MAX_GLYPH_FONT	(150)
+
+//mamep: for color glyph
+#ifdef UI_COLOR_DISPLAY
 #define COLOR_BUTTONS	(90)
 #endif /* UI_COLOR_DISPLAY */
 
@@ -139,7 +141,7 @@ INLINE render_font_char *get_char(render_font *font, unicode_char chnum)
 	if (chtable == NULL)
 	{
 		//mamep: make table for command glyph
-		if (chnum >= COMMAND_UNICODE && chnum < COMMAND_UNICODE + COLOR_BUTTONS)
+		if (chnum >= COMMAND_UNICODE && chnum < COMMAND_UNICODE + MAX_GLYPH_FONT)
 		{
 			chtable = malloc_or_die(256 * sizeof(font->chars[0][0]));
 			memset(chtable, 0, 256 * sizeof(font->chars[0][0]));
@@ -153,39 +155,33 @@ INLINE render_font_char *get_char(render_font *font, unicode_char chnum)
 	ch = &chtable[chnum % 256];
 	if (ch->bitmap == NULL)
 	{
-		//mamep: command glyph support
-		if (chnum >= COMMAND_UNICODE && chnum < COMMAND_UNICODE + COLOR_BUTTONS)
-		{
 //mamep: color glyph
 #ifdef UI_COLOR_DISPLAY
-#include "cmd_table.c"
+		#include "cmd_table.c"
 
+		if (chnum >= COMMAND_UNICODE && chnum < COMMAND_UNICODE + COLOR_BUTTONS)
 			ch->color = color_table[chnum - COMMAND_UNICODE];
 #endif /* UI_COLOR_DISPLAY */
 
-			//mamep: stretch command glyph
-			if (font->cmd)
-			{
-				render_font_char *glyph_ch = get_char(font->cmd, chnum);
-				float scale = font->height / font->cmd->height;
+		//mamep: command glyph support
+		if (font->cmd && chnum >= COMMAND_UNICODE && chnum < COMMAND_UNICODE + MAX_GLYPH_FONT)
+		{
+			render_font_char *glyph_ch = get_char(font->cmd, chnum);
+			float scale = font->height / font->cmd->height;
 
-				ch->width = (int)(glyph_ch->width * scale + 0.5f);
-				ch->xoffs = (int)(glyph_ch->xoffs * scale + 0.5f);
-				ch->yoffs = (int)(glyph_ch->yoffs * scale + 0.5f);
-				ch->bmwidth = (int)(glyph_ch->bmwidth * scale + 0.5f);
-				ch->bmheight = (int)(glyph_ch->bmheight * scale + 0.5f);
+			ch->width = (int)(glyph_ch->width * scale + 0.5f);
+			ch->xoffs = (int)(glyph_ch->xoffs * scale + 0.5f);
+			ch->yoffs = (int)(glyph_ch->yoffs * scale + 0.5f);
+			ch->bmwidth = (int)(glyph_ch->bmwidth * scale + 0.5f);
+			ch->bmheight = (int)(glyph_ch->bmheight * scale + 0.5f);
 
-				ch->bitmap = bitmap_alloc(ch->bmwidth, ch->bmheight, BITMAP_FORMAT_ARGB32);
-				render_texture_hq_scale(ch->bitmap, glyph_ch->bitmap, NULL, NULL);
+			ch->bitmap = bitmap_alloc(ch->bmwidth, ch->bmheight, BITMAP_FORMAT_ARGB32);
+			render_texture_hq_scale(ch->bitmap, glyph_ch->bitmap, NULL, NULL);
 
-				ch->texture = render_texture_alloc(ch->bitmap, NULL, 0, TEXFORMAT_ARGB32, render_texture_hq_scale, NULL);
-
-				/* return the resulting character */
-				return ch;
-			}
+			ch->texture = render_texture_alloc(ch->bitmap, NULL, 0, TEXFORMAT_ARGB32, render_texture_hq_scale, NULL);
 		}
-
-		render_font_char_expand(font, ch);
+		else
+			render_font_char_expand(font, ch);
 	}
 
 	/* return the resulting character */
