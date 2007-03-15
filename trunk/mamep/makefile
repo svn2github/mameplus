@@ -523,9 +523,9 @@ include $(SRC)/osd/$(MAMEOS)/$(MAMEOS).mak
 
 # then the various core pieces
 include $(SRC)/$(TARGET)/$(SUBTARGET).mak
+include $(SRC)/tools/tools.mak
 include $(SRC)/emu/emu.mak
 include $(SRC)/lib/lib.mak
-include $(SRC)/tools/tools.mak
 
 # combine the various definitions to one
 CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS)
@@ -669,10 +669,9 @@ $(OBJ)/%.lh: $(SRC)/%.lay $(FILE2STR)
 	@echo Converting $<...
 	@$(FILE2STR) $< $@ layout_$(basename $(notdir $<))
 
-$(OBJ)/%.fh: $(SRC)/%.png $(PNG2BDC)
+$(OBJ)/%.fh: $(OBJ)/%.bdc $(FILE2STR)
 	@echo Converting $<...
-	@$(PNG2BDC) $< $(OBJ)/temp.bdc
-	@$(FILE2STR) $(OBJ)/temp.bdc $@ font_$(basename $(notdir $<)) UINT8
+	@$(FILE2STR) $< $@ font_$(basename $(notdir $<)) UINT8
 
 $(OBJ)/%.a:
 	@echo Archiving $@...

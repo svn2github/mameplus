@@ -27,10 +27,12 @@ OBJDIRS += \
 # into the root
 FILE2STR = $(OBJ)/file2str$(EXE)
 PNG2BDC = $(OBJ)/png2bdc$(EXE)
+PNGS2BDC = $(OBJ)/pngs2bdc$(EXE)
 
 TOOLS += \
 	$(FILE2STR) \
 	$(PNG2BDC) \
+	$(PNGS2BDC) \
 	romcmp$(EXE) \
 	chdman$(EXE) \
 	jedutil$(EXE) \
@@ -60,6 +62,19 @@ PNG2BDCOBJS = \
 	$(TOOLSOBJ)/png2bdc.o \
 
 $(PNG2BDC): $(PNG2BDCOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB) $(EXPAT)
+	@echo Linking $@...
+	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
+
+
+
+#-------------------------------------------------
+# pngs2bdc
+#-------------------------------------------------
+
+PNGS2BDCOBJS = \
+	$(TOOLSOBJ)/pngs2bdc.o \
+
+$(PNGS2BDC): $(PNGS2BDCOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB) $(EXPAT)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 

@@ -133,7 +133,7 @@ $(LIBSOUND): $(SOUNDOBJS)
 # additional dependencies
 #-------------------------------------------------
 
-#fixme: $(EMUOBJ)/rendfont.o:	$(EMUOBJ)/uismall.fh
+$(EMUOBJ)/rendfont.o:		$(EMUOBJ)/uismall10.fh $(EMUOBJ)/uismall14.fh $(EMUOBJ)/uicmd10.fh $(EMUOBJ)/uicmd14.fh
 
 $(EMUOBJ)/video.o:		$(EMUSRC)/rendersw.c
 
@@ -161,3 +161,32 @@ $(EMUOBJ)/rendlay.o:	$(EMUOBJ)/layout/dualhovu.lh \
 						$(EMUOBJ)/layout/voffff20.lh \
 
 $(EMUOBJ)/video.o:		$(EMUOBJ)/layout/snap.lh
+
+
+
+#-------------------------------------------------
+# embedded font
+#-------------------------------------------------
+
+$(EMUOBJ)/uismall10.bdc: $(PNGS2BDC) \
+		$(SRC)/emu/font/uismall.png \
+		$(SRC)/emu/font/cp1250.png
+	@echo Generating $@...
+	@$^ $@
+
+$(EMUOBJ)/uismall14.bdc: $(PNGS2BDC) \
+		$(SRC)/emu/font/cp1252.png \
+		$(SRC)/emu/font/cp932.png \
+		$(SRC)/emu/font/cp936.png \
+		$(SRC)/emu/font/cp949.png \
+		$(SRC)/emu/font/cp950.png
+	@echo Generating $@...
+	@$^ $@
+
+$(EMUOBJ)/uicmd10.bdc: $(PNGS2BDC) $(SRC)/emu/font/cmd10.png
+	@echo Generating $@...
+	@$^ $@
+
+$(EMUOBJ)/uicmd14.bdc: $(PNGS2BDC) $(SRC)/emu/font/cmd14.png
+	@echo Generating $@...
+	@$^ $@
