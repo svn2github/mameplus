@@ -15,25 +15,25 @@ extern const UINT16 uifontmap_cp950[];
 
 struct ui_lang_info_t ui_lang_info[UI_LANG_MAX] =
 {
-	{  "en_US", "US", "English (United States)",1252 },
-	{  "ja_JP", "JP", "Japanese",				932,  { UI_LANG_ZH_TW, UI_LANG_KO_KR, UI_LANG_ZH_CN, UI_LANG_JA_JP } },
-	{  "zh_CN", "CN", "Chinese (PRC)",			936,  { UI_LANG_KO_KR, UI_LANG_ZH_TW, UI_LANG_JA_JP, UI_LANG_ZH_CN } },
-	{  "zh_TW", "TW", "Chinese (Taiwan)",		950,  { UI_LANG_KO_KR, UI_LANG_ZH_CN, UI_LANG_JA_JP, UI_LANG_ZH_TW } },
-	{  "ko_KR", "KR", "Korean",					949,  { UI_LANG_ZH_TW, UI_LANG_ZH_CN, UI_LANG_JA_JP, UI_LANG_KO_KR } },
-	{  "fr_FR", "FR", "French",					1252 },
-	{  "es_ES", "ES", "Spanish",				1252 },
-	{  "it_IT", "IT", "Italian",				1252 },
-	{  "de_DE", "DE", "German",					1252 },
+	{  "en_US", "US", "English (United States)",	1252 },
+	{  "ja_JP", "JP", "Japanese",			932 },
+	{  "zh_CN", "CN", "Chinese (PRC)",		936 },
+	{  "zh_TW", "TW", "Chinese (Taiwan)",		950 },
+	{  "ko_KR", "KR", "Korean",			949 },
+	{  "fr_FR", "FR", "French",			1252 },
+	{  "es_ES", "ES", "Spanish",			1252 },
+	{  "it_IT", "IT", "Italian",			1252 },
+	{  "de_DE", "DE", "German",			1252 },
 	{  "pt_BR", "BR", "Portuguese (Brazil)",	1252 },
-	{  "pl_PL", "PL", "Polish",					1250 },
-	{  "hu_HU", "HU", "Hungarian",				1250 },
+	{  "pl_PL", "PL", "Polish",			1250 },
+	{  "hu_HU", "HU", "Hungarian",			1250 },
 };
 
-static struct ui_lang_filename
+static struct
 {
 	const char *filename;
 	int dont_free;
-} mmo_filename[UI_MSG_MAX] =
+} mmo_config[UI_MSG_MAX] =
 {
 	{ "mame",     1 },
 	{ "lst",      1 },
@@ -71,6 +71,7 @@ struct mmo {
 
 static int current_lang = UI_LANG_EN_US;
 static struct mmo mmo_table[UI_LANG_MAX][UI_MSG_MAX];
+static int mmo_disabled[UI_MSG_MAX];
 
 
 int lang_find_langname(const char *name)
@@ -100,22 +101,29 @@ int lang_find_codepage(int cp)
 	return -1;
 }
 
-void set_langcode(int langcode)
+
+void lang_set_langcode(int langcode)
 {
 	current_lang = langcode;
 }
 
 
+int lang_get_langcode(void)
+{
+	return current_lang;
+}
+
+
 void assign_msg_catategory(int msgcat, const char *name)
 {
-	mmo_filename[msgcat].filename = mame_strdup(name);
+	mmo_config[msgcat].filename = mame_strdup(name);
 }
 
 
 static void load_mmo(int msgcat)
 {
 	struct mmo *p = &mmo_table[current_lang][msgcat];
-	mame_file_error filerr;
+	file_error filerr;
 	mame_file *file;
 	char *fname;
 	int str_size;
@@ -125,10 +133,10 @@ static void load_mmo(int msgcat)
 	if (p->status != MMO_NOT_LOADED)
 		return;
 
-	if (!mmo_filename[msgcat].filename)
+	if (!mmo_config[msgcat].filename)
 		return;
 
-	fname = assemble_4_strings(ui_lang_info[current_lang].name, "/", mmo_filename[msgcat].filename, ".mmo");
+	fname = assemble_4_strings(ui_lang_info[current_lang].name, "/", mmo_config[msgcat].filename, ".mmo");
 	filerr = mame_fopen(SEARCHPATH_TRANSLATION, fname, OPEN_FLAG_READ, &file);
 	free(fname);
 
@@ -218,6 +226,9 @@ char *lang_message(int msgcat, const char *str)
 	struct mmo_data q;
 	struct mmo_data *mmo;
 
+	if (mmo_disabled[msgcat])
+		return (char *)str;
+
 	switch (p->status)
 	{
 		case MMO_NOT_LOADED:
@@ -267,6 +278,16 @@ void *lang_messagew(int msgcat, const void *str, int (*cmpw)(const void *, const
 	return (void *)str;
 }
 
+void lang_message_enable(int msgcat, int enable)
+{
+	mmo_disabled[msgcat] = !enable;
+}
+
+int lang_message_is_enabled(int msgcat)
+{
+	return !mmo_disabled[msgcat];
+}
+
 void ui_lang_shutdown(void)
 {
 	int i;
@@ -292,10 +313,10 @@ void ui_lang_shutdown(void)
 			}
 		}
 
-		if (!mmo_filename[i].dont_free && mmo_filename[i].filename)
+		if (!mmo_config[i].dont_free && mmo_config[i].filename)
 		{
-			free((char *)mmo_filename[i].filename);
-			mmo_filename[i].filename = NULL;
+			free((char *)mmo_config[i].filename);
+			mmo_config[i].filename = NULL;
 		}
 	}
 }

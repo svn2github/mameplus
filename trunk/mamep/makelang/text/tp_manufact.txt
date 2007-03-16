@@ -1714,6 +1714,10 @@ SemiCom
 Semicom
 
 
+# Hex Pool (Senko)
+Senko
+
+
 # Special Forces
 Senko Industries
 
@@ -1738,7 +1742,7 @@ Seta
 Seta Kikaku Corp.
 
 
-# Hex Pool
+# Hex Pool (Shinkai)
 Shinkai
 
 

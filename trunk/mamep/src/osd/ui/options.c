@@ -904,10 +904,10 @@ void SetLangcode(int langcode)
 	settings.langcode = langcode;
 
 	/* apply to options.langcode for datafile.c */
-	options.langcode = GetLangcode();
+	lang_set_langcode(langcode);
 	/* apply for osd core functions */
-	set_osdcore_acp(ui_lang_info[options.langcode].codepage);
-	InitTranslator(options.langcode);
+	set_osdcore_acp(ui_lang_info[langcode].codepage);
+	InitTranslator(langcode);
 }
 
 BOOL UseLangList(void)
@@ -920,7 +920,8 @@ void SetUseLangList(BOOL is_use)
     settings.use_lang_list = is_use;
 
     /* apply to options.use_lang_list for datafile.c */
-    options.use_lang_list = is_use;
+    lang_message_enable(UI_MSG_LIST, is_use);
+    lang_message_enable(UI_MSG_MANUFACTURE, is_use);
 }
 
 const WCHAR * GetImageTabLongName(int tab_index)
@@ -2823,7 +2824,7 @@ static void generate_default_ctrlr(void)
 	const WCHAR *ctrlrpath = GetCtrlrDir();
 	const char *ctrlr = backup.global.ctrlr;
 	mame_file *file;
-	mame_file_error filerr;
+	file_error filerr;
 	WCHAR fname[MAX_PATH];
 	char *stemp;
 	BOOL DoCreate;
@@ -3337,7 +3338,7 @@ static void options_free_entry_winui(void)
 static int options_load_default_config(void)
 {
 	mame_file *file;
-	mame_file_error filerr;
+	file_error filerr;
 	WCHAR fname[MAX_PATH];
 	char *stemp;
 	int retval = 0;
@@ -3369,7 +3370,7 @@ static int options_load_driver_config(int driver_index)
 {
 	int alt_index = driver_variables[driver_index].alt_index;
 	mame_file *file;
-	mame_file_error filerr;
+	file_error filerr;
 	WCHAR fname[MAX_PATH];
 	char *stemp;
 	int retval;
@@ -3408,7 +3409,7 @@ static int options_load_driver_config(int driver_index)
 static int options_load_alt_config(alt_options_type *alt_option)
 {
 	mame_file *file;
-	mame_file_error filerr;
+	file_error filerr;
 	WCHAR fname[MAX_PATH];
 	char *stemp;
 	int len;
@@ -3448,7 +3449,7 @@ static int options_load_alt_config(alt_options_type *alt_option)
 static int options_load_winui_config(void)
 {
 	mame_file *file;
-	mame_file_error filerr;
+	file_error filerr;
 	WCHAR fname[MAX_PATH];
 	char *stemp;
 	int retval;
@@ -3482,7 +3483,7 @@ static int options_load_winui_config(void)
 static int options_save_default_config(void)
 {
 	mame_file *file;
-	mame_file_error filerr;
+	file_error filerr;
 	WCHAR fname[MAX_PATH];
 	char *stemp;
 
@@ -3515,7 +3516,7 @@ static int options_save_driver_config(int driver_index)
 {
 	int alt_index = driver_variables[driver_index].alt_index;
 	mame_file *file;
-	mame_file_error filerr;
+	file_error filerr;
 	WCHAR fname[MAX_PATH];
 	char *stemp;
 	options_type *parent;
@@ -3570,7 +3571,7 @@ static int options_save_driver_config(int driver_index)
 static int options_save_alt_config(alt_options_type *alt_option)
 {
 	mame_file *file;
-	mame_file_error filerr;
+	file_error filerr;
 	WCHAR fname[MAX_PATH];
 	char *stemp;
 	options_type *parent;
@@ -3625,7 +3626,7 @@ static int options_save_alt_config(alt_options_type *alt_option)
 static int options_save_winui_config(void)
 {
 	mame_file *file;
-	mame_file_error filerr;
+	file_error filerr;
 	WCHAR fname[MAX_PATH];
 	char *stemp;
 

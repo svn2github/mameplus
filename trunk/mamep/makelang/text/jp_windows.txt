@@ -1,36 +1,36 @@
-# osd/windows/input.c: 1891
+# osd/windows/input.c: 1911
          all -- all axes on all joysticks are digital\n
          all -- 全てのジョイスティックの全ての軸をデジタルにします\n
 
-# osd/windows/input.c: 1897
+# osd/windows/input.c: 1917
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
          j1,j2a2 -- 全てのジョイスティック1の軸とジョイスティック2の軸2をデジタルにします\n
 
-# osd/windows/input.c: 1895
+# osd/windows/input.c: 1915
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
          j1a5a6 -- ジョイスティック1の軸5と6をデジタルにします\n
 
-# osd/windows/input.c: 1892
+# osd/windows/input.c: 1912
          j<N> -- all axes on joystick <N> are digital\n
          j<N> -- ジョイスティック<N>の全ての軸をデジタルにします\n
 
-# osd/windows/input.c: 1893
+# osd/windows/input.c: 1913
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
          j<N>a<M> -- ジョイスティック<N>の軸<M>をデジタルにします\n
 
-# osd/windows/input.c: 1890
+# osd/windows/input.c: 1910
          none -- no axes on any joysticks are digital\n
          none -- 全てのジョイスティックの軸をデジタルにしません\n
 
-# osd/windows/input.c: 1894
+# osd/windows/input.c: 1914
     Multiple axes can be specified for one joystick:\n
     一つのジョイスティックの複数の軸を指定する事が出来ます:\n
 
-# osd/windows/input.c: 1896
+# osd/windows/input.c: 1916
     Multiple joysticks can be specified separated by commas:\n
     コンマで区切る事で複数のジョイスティック指定する事が出来ます:\n
 
-# osd/windows/input.c: 2368
+# osd/windows/input.c: 2391
  - digital
  - デジタル
 
@@ -50,7 +50,7 @@
 %d samplesets found, %d were OK.\n
 %d個のサンプルセットが見つかり、%d個がOKです。\n
 
-# osd/windows/input.c: 2293
+# osd/windows/input.c: 2316
 %s Button %d
 %s ボタン %d
 
@@ -58,77 +58,61 @@
 (BAD) 
 (異常) 
 
-# osd/windows/config.c: 185, 186
-(debugger-only command)
-(デバッガ用コマンド)
-
-# osd/windows/config.c: 145, 151, 157, 163, 164, 292, 302, 314, 315, 316, 317, 318, 319, 320, 321, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383
+# osd/windows/config.c: 190, 210, 211, 212, 213, 214, 215, 216, 217
 (disabled by compiling option)
 (コンパイル時に無効化)
 
-# osd/windows/video.c: 280
+# osd/windows/video.c: 273
 (primary)
 (プライマリ)
 
-# osd/windows/config.c: 277
-ARTWORK OPTIONS
-アートワーク設定
-
-# osd/windows/config.c: 333
+# osd/windows/config.c: 220
 AUTOMATIC DEVICE SELECTION OPTIONS
-自動デバイス選択設定
+自動デバイス選択オプション
 
-# osd/windows/config.c: 107
+# osd/windows/config.c: 86
 CONFIGURATION COMMANDS
 設定コマンド
 
-# osd/windows/config.c: 131
+# osd/windows/config.c: 110
 CONFIGURATION OPTIONS
-コンフィグ設定
+設定オプション
 
-# osd/windows/config.c: 102
+# osd/windows/config.c: 81
 CORE COMMANDS
 コアコマンド
 
-# osd/windows/config.c: 346
-CORE LANGUAGE OPTIONS
-コアの言語設定
-
-# osd/windows/config.c: 351
-CORE PALETTE OPTIONS
-コアのパレット設定
-
-# osd/windows/config.c: 119
+# osd/windows/config.c: 98
 CRC-32s
 CRC-32
 
-# osd/windows/input.c: 1321
+# osd/windows/input.c: 1336
 Can't set axis mode for Joystick %d - %s\n
 ジョイスティック%d - %sの軸を設定出来ません
 
-# osd/windows/input.c: 1345
+# osd/windows/input.c: 1361
 Can't set deadzone for Joystick %d - %s\n
 ジョイスティック%d - %sの内側しきい値を設定出来ません
 
-# osd/windows/input.c: 1335
+# osd/windows/input.c: 1351
 Can't set range for Joystick %d - %s\n
 ジョイスティック%d - %sの範囲を設定出来ません
 
-# osd/windows/input.c: 1356
+# osd/windows/input.c: 1372
 Can't set saturation for Joystick %d - %s\n
 ジョイスティック%d - %sの外側しきい値を設定出来ません
 
-# osd/windows/config.c: 177
+# osd/windows/config.c: 114
 DEBUGGING OPTIONS
-デバッガ設定
+デバッガオプション
 
-# osd/windows/config.c: 225
+# osd/windows/config.c: 140
 DIRECT3D-SPECIFIC OPTIONS
-Direct3D固有設定
+Direct3D固有オプション
 
-# osd/windows/config.c: 221
+# osd/windows/config.c: 136
 DIRECTDRAW-SPECIFIC OPTIONS
-DirectDraw固有設定
+DirectDraw固有オプション
 
 # osd/windows/drawd3d.c: 1119
 Device %s currently in an unsupported mode\n
@@ -142,19 +126,19 @@ Direct3D: アダプタ#%dを%sに設定しています\n
 Direct3D: Device created at %dx%d\n
 Direct3D: デバイスを%dx%dで作成しました\n
 
-# osd/windows/drawd3d.c: 587, 2082
+# osd/windows/drawd3d.c: 587, 2083
 Direct3D: Error %08X during device begin_scene call\n
 Direct3D: デバイスのbegin_scene呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 1571, 2131
+# osd/windows/drawd3d.c: 1572, 2132
 Direct3D: Error %08X during device draw_primitive call\n
 Direct3D: デバイスのdraw_primitive呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 616, 2135
+# osd/windows/drawd3d.c: 616, 2136
 Direct3D: Error %08X during device end_scene call\n
 Direct3D: デバイスのend_scene呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2075
+# osd/windows/drawd3d.c: 2076
 Direct3D: Error %08X during device get_render_target call\n
 Direct3D: デバイスのget_render_target呼び出しでエラー%08Xが発生しました\n
 
@@ -166,15 +150,15 @@ Direct3D: デバイスのpresent呼び出しでエラー%08Xが発生しました\n
 Direct3D: Error %08X during device set_render_state call\n
 Direct3D: デバイスのset_render_state呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2077, 2139
+# osd/windows/drawd3d.c: 2078, 2140
 Direct3D: Error %08X during device set_render_target call\n
 Direct3D: デバイスのset_render_target呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 1543, 2129
+# osd/windows/drawd3d.c: 1544, 2130
 Direct3D: Error %08X during device set_stream_source call\n
 Direct3D: デバイスのset_stream_source呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 263, 2088
+# osd/windows/drawd3d.c: 263, 2089
 Direct3D: Error %08X during device set_texture call\n
 Direct3D: デバイスのset_texture呼び出しでエラー%08Xが発生しました\n
 
@@ -182,7 +166,7 @@ Direct3D: デバイスのset_texture呼び出しでエラー%08Xが発生しました\n
 Direct3D: Error %08X during device set_texture_stage_state call\n
 Direct3D: デバイスのset_texture_stage_state呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2063
+# osd/windows/drawd3d.c: 2064
 Direct3D: Error %08X during device stretct_rect call\n
 Direct3D: デバイスのstretct_rect呼び出しでエラー%08Xが発生しました\n
 
@@ -190,19 +174,19 @@ Direct3D: デバイスのstretct_rect呼び出しでエラー%08Xが発生しました\n
 Direct3D: Error %08X during get_caps_dword call\n
 Direct3D: get_caps_dword呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2042
+# osd/windows/drawd3d.c: 2043
 Direct3D: Error %08X during texture get_surface_level call\n
 Direct3D: テクスチャのget_surface_level呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2018
+# osd/windows/drawd3d.c: 2019
 Direct3D: Error %08X during texture unlock_rect call\n
 Direct3D: テクスチャのunlock_rect呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2092
+# osd/windows/drawd3d.c: 2093
 Direct3D: Error %08X during vertex buffer lock call\n
 Direct3D: 頂点バッファのlock呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 1538, 2124
+# osd/windows/drawd3d.c: 1539, 2125
 Direct3D: Error %08X during vertex buffer unlock call\n
 Direct3D: 頂点バッファのunlock呼び出しでエラー%08Xが発生しました\n
 
@@ -246,11 +230,11 @@ Direct3D: Direct3D8の初期化中にエラーが発生しました\n
 Direct3D: Error attempting to initialize Direct3D9\n
 Direct3D: Direct3D9の初期化中にエラーが発生しました\n
 
-# osd/windows/drawd3d.c: 1261
+# osd/windows/drawd3d.c: 1262
 Direct3D: Mode selected = %4dx%4d@%3dHz\n
 Direct3D: 選択されたモードは%4dx%4d@%3dHz\n
 
-# osd/windows/drawd3d.c: 1205
+# osd/windows/drawd3d.c: 1206
 Direct3D: Selecting video mode...\n
 Direct3D: 描画モードを選択中です...\n
 
@@ -330,7 +314,7 @@ Direct3D: 警告: デバイスはフルスクリーンでのガンマ補正をサポートしていません\n
 Direct3D: YUV format = %s\n
 Direct3D: YUV 形式 = %s\n
 
-# osd/windows/drawd3d.c: 1642
+# osd/windows/drawd3d.c: 1643
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 Direct3D: %dx%dから%dx%dにプリスケールを調整しました\n
 
@@ -342,151 +326,151 @@ Direct3D: デバイスのリソ\ース再生成が失敗しました。
 Direct3D: resetting device\n
 Direct3D: デバイスをリセットしています\n
 
-# osd/windows/drawdd.c: 789
+# osd/windows/drawdd.c: 790
 DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 DirectDraw: %sバッファを作成しました: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 
-# osd/windows/drawdd.c: 1126
+# osd/windows/drawdd.c: 1127
 DirectDraw: Configuring device %s\n
 DirectDraw: デバイス%sを設定中\n
 
-# osd/windows/drawdd.c: 616
+# osd/windows/drawdd.c: 617
 DirectDraw: Error %08X attempting to set gamma correction.\n
 DirectDraw: ガンマ補正の設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 495
+# osd/windows/drawdd.c: 496
 DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
 DirectDraw: 描画モードを%dx%d@%dに設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1086
+# osd/windows/drawdd.c: 1087
 DirectDraw: Error %08X blitting to the screen\n
 DirectDraw: 画面への描画でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1053, 1062, 1071, 1080
+# osd/windows/drawdd.c: 1054, 1063, 1072, 1081
 DirectDraw: Error %08X clearing the screen\n
 DirectDraw: 画面の消去でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 774
+# osd/windows/drawdd.c: 775
 DirectDraw: Error %08X creating %s surface\n
 DirectDraw: %sバッファの作成でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 815
+# osd/windows/drawdd.c: 816
 DirectDraw: Error %08X creating clipper\n
 DirectDraw: クリッパーの作成でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 460, 1115
+# osd/windows/drawdd.c: 461, 1116
 DirectDraw: Error %08X during DirectDrawCreateEx call\n
 DirectDraw: DirectDrawCreateEx呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1212
+# osd/windows/drawdd.c: 1213
 DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
 DirectDraw: 呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1324
+# osd/windows/drawdd.c: 1326
 DirectDraw: Error %08X during EnumDisplayModes call\n
 DirectDraw: EnumDisplayModes呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 716
+# osd/windows/drawdd.c: 717
 DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
 DirectDraw: IDirectDraw7_GetCaps呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 485
+# osd/windows/drawdd.c: 486
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW)呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 479
+# osd/windows/drawdd.c: 480
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW)呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 782
+# osd/windows/drawdd.c: 783
 DirectDraw: Error %08X getting %s surface desciption\n
 DirectDraw: %sバッファの詳細を取得でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 544
+# osd/windows/drawdd.c: 545
 DirectDraw: Error %08X getting attached back surface\n
 DirectDraw: 割り当てられた裏画面バッファの取得でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1134
+# osd/windows/drawdd.c: 1135
 DirectDraw: Error %08X getting current display mode\n
 DirectDraw: 現在の画面モード取得でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 353
+# osd/windows/drawdd.c: 354
 DirectDraw: Error %08X locking blit surface\n
 DirectDraw: blitバッファのロックでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 823
+# osd/windows/drawdd.c: 824
 DirectDraw: Error %08X setting clipper hwnd\n
 DirectDraw: ウィンドウのクリッパー設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 831
+# osd/windows/drawdd.c: 832
 DirectDraw: Error %08X setting clipper on primary surface\n
 DirectDraw: primaryバッファのクリッパー設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 426
+# osd/windows/drawdd.c: 427
 DirectDraw: Error %08X unlocking blit surface\n
 DirectDraw: blitバッファのアンロックでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 432, 1092
+# osd/windows/drawdd.c: 433, 1093
 DirectDraw: Error %08X waiting for VBLANK\n
 DirectDraw: VBLANK待ちでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 468
+# osd/windows/drawdd.c: 469
 DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
 DirectDraw: エラー: デバイスはDirectDraw描画に必要最小限の要件をサポートしていません\n
 
-# osd/windows/drawdd.c: 347
+# osd/windows/drawdd.c: 348
 DirectDraw: Lost surfaces; deleting and retrying next frame\n
 DirectDraw: バッファの消失。次のフレームに削除してやり直します\n
 
-# osd/windows/drawdd.c: 1325
+# osd/windows/drawdd.c: 1327
 DirectDraw: Mode selected = %4dx%4d@%3dHz\n
 DirectDraw: 選択されたモードは%4dx%4d@%3dHz\n
 
-# osd/windows/drawdd.c: 927
+# osd/windows/drawdd.c: 928
 DirectDraw: New blit size = %dx%d\n
 DirectDraw: 新しいバッファサイズは%dx%d\n
 
-# osd/windows/drawdd.c: 1322
+# osd/windows/drawdd.c: 1324
 DirectDraw: Selecting video mode...\n
 DirectDraw: 描画モードを選択中です...\n
 
-# osd/windows/drawdd.c: 196
+# osd/windows/drawdd.c: 197
 DirectDraw: Unable to access ddraw.dll\n
 DirectDraw: ddraw.dllにアクセス出来ません\n
 
-# osd/windows/drawdd.c: 204
+# osd/windows/drawdd.c: 205
 DirectDraw: Unable to find DirectDrawCreateEx\n
 DirectDraw: DirectDrawCreateExを見つける事が出来ません\n
 
-# osd/windows/drawdd.c: 214
+# osd/windows/drawdd.c: 215
 DirectDraw: Unable to find DirectDrawEnumerateExA\n
 DirectDraw: DirectDrawEnumerateExAを見つける事が出来ません\n
 
-# osd/windows/drawdd.c: 382, 418, 1168
+# osd/windows/drawdd.c: 383, 419, 1169
 DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
 DirectDraw: 不明な画面モード: R=%08X G=%08X B=%08X\n
 
-# osd/windows/drawdd.c: 227
+# osd/windows/drawdd.c: 228
 DirectDraw: Using DirectDraw 7\n
 DirectDraw: DirectDraw 7を使用します\n
 
-# osd/windows/drawdd.c: 723
+# osd/windows/drawdd.c: 724
 DirectDraw: Warning - Device does not support hardware stretching\n
 DirectDraw: 警告: デバイスはハードウェア拡大表\示をサポートしていません\n
 
-# osd/windows/drawdd.c: 472
+# osd/windows/drawdd.c: 473
 DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
 DirectDraw: 警告: デバイスはDirectDraw描画にあまり適していないかも知れません\n
 
-# osd/windows/drawdd.c: 599
+# osd/windows/drawdd.c: 600
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: 警告: デバイスはフルスクリーンのガンマ補正をサポートしていません。\n
 
-# osd/windows/input.c: 1432
+# osd/windows/input.c: 1452
 DirectInput: Using DirectInput %d\n
 DirectInput: DirectInput %dを使用します\n
 
-# osd/windows/sound.c: 405
+# osd/windows/sound.c: 371
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: サウンドバッファ: %d Hz, %d ビット, %d チャンネル\n
 
@@ -494,15 +478,15 @@ DirectSound: サウンドバッファ: %d Hz, %d ビット, %d チャンネル\n
 ERROR     %s\n
 エラー    %s\n
 
-# osd/windows/sound.c: 419
+# osd/windows/sound.c: 385
 Error creating DirectSound stream buffer: %08x\n
 DirectSoundのストリームバッファを生成出来ません: %08x\n
 
-# osd/windows/sound.c: 293
+# osd/windows/sound.c: 259
 Error creating DirectSound: %08x\n
 DirectSoundの作成が出来ません: %08x\n
 
-# osd/windows/sound.c: 386
+# osd/windows/sound.c: 352
 Error creating primary DirectSound buffer: %08x\n
 DirectSoundのプライマリバッファを生成出来ません: %08x\n
 
@@ -510,7 +494,7 @@ DirectSoundのプライマリバッファを生成出来ません: %08x\n
 Error creating vertex buffer (%08X)
 頂点バッファの作成でエラーが発生しました(%08X)
 
-# osd/windows/sound.c: 302
+# osd/windows/sound.c: 268
 Error getting DirectSound capabilities: %08x\n
 DirectSoundの情報が取得出来ません: %08x\n
 
@@ -518,7 +502,7 @@ DirectSoundの情報が取得出来ません: %08x\n
 Error getting identifier for adapter #%d\n
 アダプタ#%dの識別情報の取得でエラーが発生しました\n
 
-# osd/windows/drawdd.c: 1123
+# osd/windows/drawdd.c: 1124
 Error getting identifier for device\n
 デバイスの識別情報の取得でエラーが発生しました\n
 
@@ -526,23 +510,23 @@ Error getting identifier for device\n
 Error getting mode for adapter #%d\n
 アダプタ#%dのモードの取得でエラーが発生しました\n
 
-# osd/windows/sound.c: 402
+# osd/windows/sound.c: 368
 Error getting primary DirectSound buffer format: %08x\n
 DirectSoundのプライマリバッファの形式が取得出来ません: %08x\n
 
-# osd/windows/sound.c: 427
+# osd/windows/sound.c: 393
 Error locking DirectSound stream buffer: %08x\n
 DirectSoundのストリームバッファをロック出来ません: %08x\n
 
-# osd/windows/sound.c: 340
+# osd/windows/sound.c: 306
 Error playing: %08x\n
 サウンドが再生出来ません: %08x\n
 
-# osd/windows/sound.c: 310
+# osd/windows/sound.c: 276
 Error setting DirectSound cooperative level: %08x\n
 DirectSoundの初期化に失敗しました: %08x\n
 
-# osd/windows/sound.c: 394
+# osd/windows/sound.c: 360
 Error setting primary DirectSound buffer format: %08x\n
 DirectSoundのプライマリバッファの形式が設定出来ません: %08x\n
 
@@ -562,119 +546,103 @@ Error: Device does not meet minimum requirements for Direct3D rendering\n
 Error: unable to configure a screen texture format\n
 エラー: 画面テクスチャ形式の設定が出来ません\n
 
-# osd/windows/config.c: 113
+# osd/windows/config.c: 92
 FRONTEND COMMANDS
 フロントエンドコマンド
 
-# osd/windows/config.c: 257
+# osd/windows/config.c: 172
 FULL SCREEN OPTIONS
-フルスクリーン設定
+フルスクリーンオプション
 
-# osd/windows/config.c: 1057
-Failed to open file for playback
-再生ファイルが読み込めません
-
-# osd/windows/config.c: 1107
-Failed to open file for recording
-入力を保存するファイルが作成できません
-
-# osd/windows/input.c: 2939
+# osd/windows/input.c: 2975
 Fast Forward
 早送り
-
-# osd/windows/config.c: 265
-GAME SCREEN OPTIONS
-ゲーム画面設定
 
 # osd/windows/fronthlp.c: 590, 666
 Game \"%s\" not supported!\n
 「%s」というゲームには対応していません！\n
 
-# osd/windows/config.c: 297
+# osd/windows/config.c: 184
 INPUT DEVICE OPTIONS
-入力デバイス設定
+入力デバイスオプション
 
-# osd/windows/video.c: 555
+# osd/windows/video.c: 541
 Illegal aspect ratio value for %s = %s\n
 %sの値%sは不正なアスペクト比です\n
 
-# osd/windows/video.c: 578
+# osd/windows/video.c: 564
 Illegal resolution value for %s = %s\n
 %sの値%sは不正な解像度です\n
 
-# osd/windows/config.c: 824, 946, 957
+# osd/windows/config.c: 624
 Illegal value for %s = %s\n
 %sの値%sは不正です\n
 
-# osd/windows/config.c: 1070
-Input file is for game '%s', not for current game '%s'\n
-ゲーム「%s」の入力ファイルは選択されたゲーム「%s」の物ではありません\n
-
-# osd/windows/input.c: 2368
+# osd/windows/input.c: 2391
 Input:  Axis %d (%s)%s\n
 入力:  軸%d (%s)%s\n
 
-# osd/windows/input.c: 2206
+# osd/windows/input.c: 2229
 Input: %s: %s\n
 入力: %s: %s\n
 
-# osd/windows/input.c: 1058
+# osd/windows/input.c: 1071
 Input: Autoenabling joysticks due to presence of a %s\n
 入力: %sが存在するためジョイスティックを自動的に有効にします\n
 
-# osd/windows/input.c: 1065
+# osd/windows/input.c: 1078
 Input: Autoenabling lightguns due to presence of a %s\n
 入力: %sが存在するため光線銃を自動的に有効にします\n
 
-# osd/windows/input.c: 1051
+# osd/windows/input.c: 1064
 Input: Autoenabling mice due to presence of a %s\n
 入力: %sが存在するためマウスを自動的に有効にします\n
 
-# osd/windows/input.c: 2151
+# osd/windows/input.c: 2174
 Input: Joystick %d axis %d is now %s\n
 入力: ジョイスティック%d 軸%d は%sです\n
 
-# osd/windows/input.c: 2349
+# osd/windows/input.c: 2372
 Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 入力: ジョイスティック%d: %s (%d個の軸、%d個のボタン、%d個の視点)\n
 
-# osd/windows/input.c: 1507
+# osd/windows/input.c: 1527
 Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 入力: キーボード=%d  マウス=%d  ジョイスティック=%d  光線銃=%d\n
 
-# osd/windows/input.c: 3275
+# osd/windows/input.c: 3311
 Input: Using RAWMOUSE for Mouse input\n
 入力: マウスの入力にRAWMOUSEを使用します\n
 
-# osd/windows/input.c: 1509
+# osd/windows/input.c: 1529
 Input: \"%s\" controller support enabled\n
 入力: コントローラ「%s」のサポートが有効です\n
 
-# osd/windows/input.c: 1889
+# osd/windows/input.c: 1909
 Invalid %s value %s; reverting to all -- valid values are:\n
 %sの値%sは不正です。全の値を復元します。有効な値:\n
 
-# osd/windows/input.c: 1810
+# osd/windows/input.c: 1830
 Invalid %s value %s; reverting to keyboard\n
 %sの値%sは不正です。キーボードに復元します\n
 
-# osd/windows/video.c: 472
+# osd/windows/video.c: 458
 Invalid video value %s; reverting to gdi\n
 ビデオの値%sは不正です。GDIに復元します\n
 
-# osd/windows/input.c: 2442
+# osd/windows/input.c: 2492
 J%d %s D
 J%d %s 下
 
-# osd/windows/input.c: 2446
+# osd/windows/input.c: 2496
 J%d %s L
 J%d %s 左
 
-# osd/windows/input.c: 2450
+# osd/windows/input.c: 2500
 J%d %s R
 J%d %s 右
 
-# osd/windows/input.c: 2438
+# osd/windows/input.c: 2488
 J%d %s U
 J%d %s 上
 
@@ -682,35 +650,31 @@ J%d %s 上
 KNOWN     %s\n
 判明      %s\n
 
-# osd/windows/input.c: 2337
+# osd/windows/input.c: 2360
 Lightgun %d 
 光線銃 %d 
 
-# osd/windows/input.c: 2827
+# osd/windows/input.c: 2863
 Lightgun not supported in windowed mode
 ウインドウモードでは光線銃はサポートされません
 
-# osd/windows/input.c: 2335
+# osd/windows/input.c: 2358
 Lightgun on Mouse %d 
 マウス %d の光線銃
 
-# osd/windows/config.c: 758
+# osd/windows/config.c: 558
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
 
-# osd/windows/window.c: 618
+# osd/windows/window.c: 616
 MAME: %s [%s] - Screen %d
 MAME: %s「%s」- 画面%d
 
-# osd/windows/config.c: 139
-MISC OPTIONS
-その他の設定
-
-# osd/windows/input.c: 2203
+# osd/windows/input.c: 2226
 Mouse 
 マウス
 
-# osd/windows/input.c: 2201
+# osd/windows/input.c: 2224
 Mouse %d 
 マウス%d
 
@@ -734,75 +698,63 @@ Name:    Clone of:\n
 PARTKNOWN %s\n
 一部判明  %s\n
 
-# osd/windows/config.c: 230
+# osd/windows/config.c: 145
 PER-WINDOW VIDEO OPTIONS
-ウィンドウ毎の画面設定
-
-# osd/windows/config.c: 1076
-Playing back previously recorded game %s\n
-以前に記録されたゲーム「%s」を再生します\n
+ウィンドウ毎の画面オプション
 
 # osd/windows/drawd3d.c: 1142
 Proposed video mode not supported on device %s\n
 指定された画面モードはデバイス%sではサポートされていません\n
 
-# osd/windows/config.c: 284
-SOUND OPTIONS
-音声設定
-
-# osd/windows/config.c: 168
-STATE/PLAYBACK OPTIONS
-ステート/再生設定
-
-# osd/windows/sound.c: 152
+# osd/windows/sound.c: 123
 Sound buffer: overflows=%d underflows=%d\n
 サウンドバッファ: オーバフロー=%d アンダーフロー=%d\n
 
-# osd/windows/sound.c: 148
+# osd/windows/sound.c: 119
 Sound: buffer overflows=%d underflows=%d\n
 サウンド: バッファ オーバフロー=%d アンダーフロー=%d\n
 
-# osd/windows/input.c: 2272
+# osd/windows/input.c: 2295
 Stick %d %s +
 スティック %d %s +
 
-# osd/windows/input.c: 2265
+# osd/windows/input.c: 2288
 Stick %d %s -
 スティック %d %s -
 
-# osd/windows/input.c: 2274
+# osd/windows/input.c: 2297
 Stick %s +
 スティック %s +
 
-# osd/windows/input.c: 2267
+# osd/windows/input.c: 2290
 Stick %s -
 スティック %s -
 
-# osd/windows/input.c: 2238
+# osd/windows/input.c: 2261
 Stick%sX+
 スティック%sX+
 
-# osd/windows/input.c: 2236
+# osd/windows/input.c: 2259
 Stick%sX-
 スティック%sX-
 
-# osd/windows/input.c: 2242
+# osd/windows/input.c: 2265
 Stick%sY+
 スティック%sY+
 
-# osd/windows/input.c: 2240
+# osd/windows/input.c: 2263
 Stick%sY-
 スティック%sY-
 
-# osd/windows/input.c: 2246
+# osd/windows/input.c: 2269
 Stick%sZ+
 スティック%sZ+
 
-# osd/windows/input.c: 2244
+# osd/windows/input.c: 2267
 Stick%sZ-
 スティック%sZ-
 
-# osd/windows/drawd3d.c: 1779
+# osd/windows/drawd3d.c: 1780
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 テクスチャが大きすぎます!(要求: %dx%d、最大: %dx%d)\n
 
@@ -810,7 +762,7 @@ Texture too big! (wanted: %dx%d, max is %dx%d)\n
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
 これはドライバ「%s」に必要なROMのリストです。\n名前          サイズ チェックサム\n
 
-# osd/windows/input.c: 2921
+# osd/windows/input.c: 2957
 Toggle Fullscreen
 フルスクリーン切り替え
 
@@ -822,7 +774,7 @@ UNKNOWN   %s\n
 Unable to close the keyboard device. (error %d)\n
 キーボードディバイスがクローズ出来ません。(エラー %d)\n
 
-# osd/windows/config.c: 717
+# osd/windows/config.c: 517
 Unable to create file %s\n
 ファイル%sが作成出来ません\n
 
@@ -834,11 +786,11 @@ Direct3Dデバイスを作成出来ません(%08X)\n
 Unable to initialize Direct3D.\n
 Direct3Dを初期化出来ません。\n
 
-# osd/windows/drawdd.c: 270
+# osd/windows/drawdd.c: 271
 Unable to initialize DirectDraw.\n
 DirectDrawを初期化出来ません\n
 
-# osd/windows/video.c: 523
+# osd/windows/video.c: 509
 Unable to load PNG file '%s'\n
 PNGファイル「%s」を読み込めません\n
 
@@ -846,39 +798,39 @@ PNGファイル「%s」を読み込めません\n
 Unable to open the keyboard device. (error %d)\n
 キーボードディバイスがオープン出来ません。(エラー %d)\n
 
-# osd/windows/drawd3d.c: 1993
+# osd/windows/drawd3d.c: 1994
 Unknown texture blendmode=%d format=%d\n
 不明なテクスチャブレンドモード=%d 形式=%d\n
 
-# osd/windows/config.c: 761
+# osd/windows/config.c: 561
 Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the file windows.txt\n
 使用法:  MAME ゲーム名 [オプション]\n\n         MAME -showusage    オプションを簡単に一覧表\示\n         MAME -showconfig   オプションの設定値を一覧表\示\n         MAME -createconfig mame.iniを生成\n\n詳しい使用法については、windows.txtを参照下さい\n
 
-# osd/windows/config.c: 656
+# osd/windows/config.c: 456
 Usage: mame [game] [options]\n\nOptions:\n
 使用法: mame [ゲーム名] [オプション]\n\nオプション:\n
 
-# osd/windows/video.c: 425
+# osd/windows/video.c: 418
 Using %s scale effect\n
 スケールエフェクト %s を使用します\n
 
-# osd/windows/config.c: 271
-VECTOR RENDERING OPTIONS
-ベクタ描画設定
-
-# osd/windows/config.c: 195
-VIDEO OPTIONS
-ビデオ設定
-
-# osd/windows/config.c: 211
-VIDEO ROTATION OPTIONS
-画面回転設定
-
-# osd/windows/video.c: 280
+# osd/windows/video.c: 273
 Video: Monitor %p = \"%s\" %s\n
 ビデオ: モニタ %p = 「%s」%s\n
 
-# osd/windows/video.c: 468
+# osd/windows/config.c: 119
+WINDOWS PERFORMANCE OPTIONS
+Windows版パフォーマンスオプション
+
+# osd/windows/config.c: 180
+WINDOWS SOUND OPTIONS
+Windows版サウンドオプション
+
+# osd/windows/config.c: 124
+WINDOWS VIDEO OPTIONS
+Windows版ビデオオプション
+
+# osd/windows/video.c: 454
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 警告: -video none は -seconds_to_run オプション無しでは無意味です\n
 
@@ -886,377 +838,221 @@ Warning: -video none doesn't make much sense without -seconds_to_run\n
 Warning: Device may not perform well for Direct3D rendering\n
 警告: デバイスのDirect3D描画パフォーマンスはあまり良くありません\n
 
-# osd/windows/config.c: 537
+# osd/windows/config.c: 349
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n「%s」に似たゲームは下記の通りです\nサポートされているゲーム (似ているもの順):\n\n
 
-# osd/windows/config.c: 114
+# osd/windows/config.c: 93
 all available info on driver in XML format
 存在する全てのドライバ情報をXML形式で出力
 
-# osd/windows/config.c: 206
-amount to scale the screen brightness when paused
-ポーズ時の画面の明るさ
-
-# osd/windows/input.c: 2149
+# osd/windows/input.c: 2172
 analog
 アナログ
 
-# osd/windows/input.c: 1440
+# osd/windows/input.c: 1460
 analog joystick
 アナログジョイスティック
 
-# osd/windows/config.c: 232
+# osd/windows/config.c: 147
 aspect ratio for all screens; 'auto' here will try to make a best guess
 全ての画面のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/config.c: 237
+# osd/windows/config.c: 152
 aspect ratio of the first screen; 'auto' here will try to make a best guess
 １画面目のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/config.c: 252
+# osd/windows/config.c: 167
 aspect ratio of the fourth screen; 'auto' here will try to make a best guess
 ４画面目のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/config.c: 242
+# osd/windows/config.c: 157
 aspect ratio of the second screen; 'auto' here will try to make a best guess
 ２画面目のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/config.c: 247
+# osd/windows/config.c: 162
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 ３画面目のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/config.c: 149
-automatic pause when playback is finished
-再生終了時に自動停止
-
-# osd/windows/config.c: 215
-automatically rotate screen clockwise 90 degrees if vertical
-垂直型画面の場合は自動で時計回りに90度回転します
-
-# osd/windows/config.c: 216
-automatically rotate screen counterclockwise 90 degrees if vertical
-垂直型画面の場合は自動で反時計回りに90度回転します
-
-# osd/windows/config.c: 260
+# osd/windows/config.c: 175
 brightness value in full screen mode
 フルスクリーン画面での明るさ
 
-# osd/windows/config.c: 363
-button color (aqua)
-ボタン (S 0r 7)
-
-# osd/windows/config.c: 360
-button color (blue)
-ボタン (D or 4)
-
-# osd/windows/config.c: 359
-button color (green)
-ボタン (C or 3)
-
-# osd/windows/config.c: 366
-button color (lime)
-ボタン (10)
-
-# osd/windows/config.c: 365
-button color (navy)
-ボタン (9)
-
-# osd/windows/config.c: 362
-button color (pink)
-ボタン (P or 6)
-
-# osd/windows/config.c: 361
-button color (purple)
-ボタン (K or 5)
-
-# osd/windows/config.c: 357
-button color (red)
-ボタン (A or 1)
-
-# osd/windows/config.c: 364
-button color (silver)
-ボタン (8)
-
-# osd/windows/config.c: 358
-button color (yellow)
-ボタン (B or 2)
-
-# osd/windows/config.c: 329
+# osd/windows/config.c: 196
 center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
 ジョイスティックの入力を無視する領域の内側しきい値 (0.0 中央、1.0 外)
 
-# osd/windows/config.c: 155
-change m68k core (0:C, 1:DRC, 2:ASM+DRC)
-M68Kコアを変更 (0:C、1:DRC、2:ASM+DRC)
-
-# osd/windows/config.c: 124
+# osd/windows/config.c: 103
 compare files with known MAME roms
 ファイルを既知のMAME romと比較する
 
-# osd/windows/config.c: 125
+# osd/windows/config.c: 104
 compare files with known MAME roms (brief)
 ファイルを既知のMAME romと比較する (大まかに)
 
-# osd/windows/config.c: 200
+# osd/windows/config.c: 129
 constrain to the proper aspect ratio
 適切なアスペクト比に制限します
 
-# osd/windows/config.c: 261
+# osd/windows/config.c: 176
 contrast value in full screen mode
 フルスクリーン画面の値を制限します
 
-# osd/windows/config.c: 108
+# osd/windows/config.c: 87
 create the default configuration file
 デフォルト設定ファイルを作成
 
-# osd/windows/config.c: 278
-crop artwork to game screen size
-アートワークをゲーム画面サイズでカットします
-
-# osd/windows/config.c: 367
-cursor color
-カーソ\ル
-
-# osd/windows/config.c: 266
-default game screen brightness correction
-デフォルトのゲーム画面の明るさ訂正値
-
-# osd/windows/config.c: 267
-default game screen contrast correction
-デフォルトのゲーム画面のコントラスト値
-
-# osd/windows/config.c: 268
-default game screen gamma correction
-デフォルトのゲーム画面のガンマ補正値
-
-# osd/windows/config.c: 199
+# osd/windows/config.c: 128
 default to maximized windows; otherwise, windows will be minimized
 デフォルトでウィンドウを最大化。無効な場合はウィンドウは最小化されます
 
-# osd/windows/input.c: 1443
+# osd/windows/input.c: 1463
 dial
 ダイアル
 
-# osd/windows/config.c: 331 osd/windows/input.c: 1942, 2149
+# osd/windows/config.c: 198 osd/windows/input.c: 1961, 2172
 digital
 デジタル
 
-# osd/windows/config.c: 180
+# osd/windows/config.c: 116
 display additional diagnostic information
 起動時に診断用の情報を表\示
 
-# osd/windows/config.c: 109
+# osd/windows/config.c: 88
 display running parameters
 実行中のパラメータを表\示
 
-# osd/windows/config.c: 117
+# osd/windows/config.c: 96
 driver sourcefile
 ドライバのソ\ースファイル名を表\示
 
-# osd/windows/config.c: 337
+# osd/windows/config.c: 224
 enable (keyboard|mouse|joystick) if a dial control is present
 ダイヤルを使用する場合に(keyboard|mouse|joystick)を有効
 
-# osd/windows/config.c: 339
+# osd/windows/config.c: 226
 enable (keyboard|mouse|joystick) if a lightgun control is present
 光線中を使用する場合に(keyboard|mouse|joystick)を有効
 
-# osd/windows/config.c: 342
+# osd/windows/config.c: 229
 enable (keyboard|mouse|joystick) if a mouse control is present
 マウスを使用する場合に(keyboard|mouse|joystick)を有効
 
-# osd/windows/config.c: 334
+# osd/windows/config.c: 221
 enable (keyboard|mouse|joystick) if a paddle control is present
 パドルが存在するときに有効 (keyboard|mouse|joystick)
 
-# osd/windows/config.c: 336
+# osd/windows/config.c: 223
 enable (keyboard|mouse|joystick) if a pedal control is present
 ペダルを使用する場合に(keyboard|mouse|joystick)を有効
 
-# osd/windows/config.c: 340
+# osd/windows/config.c: 227
 enable (keyboard|mouse|joystick) if a positional control is present
 座標コントロールが存在する場合に有効 (keyboard|mouse|joystick)
 
-# osd/windows/config.c: 338
+# osd/windows/config.c: 225
 enable (keyboard|mouse|joystick) if a trackball control is present
 トラックボールを使用する場合に(keyboard|mouse|joystick)を有効
 
-# osd/windows/config.c: 335
+# osd/windows/config.c: 222
 enable (keyboard|mouse|joystick) if an analog joystick control is present
 アナログスティックを使用する場合に(keyboard|mouse|joystick)を有効
 
-# osd/windows/config.c: 170
-enable automatic restore at startup, and automatic save at exit time
-起動時に自動的にステートを読み込み、終了時に自動的に保存します
-
-# osd/windows/config.c: 279
-enable backdrops if artwork is enabled and available
-アートワークが使用可能\な場合にバックドロップを有効
-
-# osd/windows/config.c: 281
-enable bezels if artwork is enabled and available
-アートワークが使用可能\な場合にベゼルを有効
-
-# osd/windows/config.c: 227
+# osd/windows/config.c: 142
 enable bilinear filtering on screen output
 画面の出力にバイリニアフィルタを有効
 
-# osd/windows/config.c: 141
-enable cheat subsystem
-チートシステムを有効
-
-# osd/windows/config.c: 326
+# osd/windows/config.c: 193
 enable dual lightgun input
 デュアル光線銃を使用
 
-# osd/windows/config.c: 222
+# osd/windows/config.c: 137
 enable hardware stretching
 ハードウェア拡大表\示を有効
 
-# osd/windows/config.c: 324
+# osd/windows/config.c: 186
 enable joystick input
 ジョイスティックを使用
 
-# osd/windows/config.c: 325
+# osd/windows/config.c: 192
 enable lightgun input
 光線銃を使用
 
-# osd/windows/config.c: 132
+# osd/windows/config.c: 111
 enable loading of configuration files
 設定ファイルの読み込みを有効
 
-# osd/windows/config.c: 323
+# osd/windows/config.c: 185
 enable mouse input
 マウスまたはトラックボールを使用
 
-# osd/windows/config.c: 192
+# osd/windows/config.c: 121
 enable multithreading; this enables rendering and blitting on a separate thread
 マルチスレッドを有効。これは描画処理でのスレッド分割を有効にします
 
-# osd/windows/config.c: 280
-enable overlays if artwork is enabled and available
-アートワークが使用可能\な場合にオーバレイを有効
-
-# osd/windows/config.c: 300
+# osd/windows/config.c: 188
 enable pointing stick input
 スティック型マウスを使用
 
-# osd/windows/config.c: 259
+# osd/windows/config.c: 174
 enable resolution switching
 解像度の切り替えを有効
 
-# osd/windows/config.c: 285
-enable sound output
-サウンドを有効
-
-# osd/windows/config.c: 328
+# osd/windows/config.c: 195
 enable steadykey support
 ボタンの同時押し認識を容易にする
 
-# osd/windows/config.c: 287
-enable the use of external samples if available
-存在する場合、外部サンプルファイルを有効にする
-
-# osd/windows/config.c: 258
+# osd/windows/config.c: 173
 enable triple buffering
 トリプルバッファリングを有効
 
-# osd/windows/config.c: 208
+# osd/windows/config.c: 133
 enable using the start of VBLANK for throttling instead of the game time
 速度制限をゲームの実時間の代わりにVBLANK開始で行う
 
-# osd/windows/config.c: 207
+# osd/windows/config.c: 132
 enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
 画面反転の前にVBLANK開始を待つ。画面のちらつきが減少します
 
-# osd/windows/config.c: 198
+# osd/windows/config.c: 127
 enable window mode; otherwise, full screen mode is assumed
 ウィンドウモードを有効。無効な場合は当然フルスクリーンです
 
-# osd/windows/config.c: 182
-enable/disable debugger
-デバッガの有効・無効
-
-# osd/windows/config.c: 348
-enable/disable local language game list
-ローカライズされたゲームリストを有効
-
-# osd/windows/config.c: 290
-enable/disable volume auto adjust
-自動音量調整機能\を有効
-
-# osd/windows/config.c: 330
+# osd/windows/config.c: 197
 end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
 ジョイスティックの入力を無視する領域の外側しきい値 (0.0 中央、1.0 外)
 
-# osd/windows/config.c: 1020
+# osd/windows/config.c: 688
 error: invalid value for language: %s\nUse %s\n
 エラー: 不正な言語指定: %s\n%sを使用します\n
 
-# osd/windows/config.c: 1144
-error: invalid value for palette: %s\n
-エラー: 不正なパレット指定: %s\n
-
-# osd/windows/config.c: 231
+# osd/windows/config.c: 146
 explicit name of all screen; 'auto' here will try to make a best guess
 明示的に全ての画面の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/config.c: 236
+# osd/windows/config.c: 151
 explicit name of the first screen; 'auto' here will try to make a best guess
 明示的に１画面目の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/config.c: 251
+# osd/windows/config.c: 166
 explicit name of the fourth screen; 'auto' here will try to make a best guess
 明示的に４画面目の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/config.c: 241
+# osd/windows/config.c: 156
 explicit name of the second screen; 'auto' here will try to make a best guess
 明示的に２画面目の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/config.c: 246
+# osd/windows/config.c: 161
 explicit name of the third screen; 'auto' here will try to make a best guess
 明示的に４画面目の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/config.c: 217
-flip screen left-right
-左右反転
-
-# osd/windows/config.c: 218
-flip screen upside-down
-上下反転
-
-# osd/windows/config.c: 353
-font blank color
-フォント (空白)
-
-# osd/windows/config.c: 354
-font normal color
-フォント (通常)
-
-# osd/windows/config.c: 355
-font special color
-フォント (特殊)
-
-# osd/windows/config.c: 262
+# osd/windows/config.c: 177
 gamma value in full screen mode
 フルスクリーンのガンマ補正値
 
-# osd/windows/config.c: 178
-generate an error.log file
-error.logファイルを生成
-
-# osd/windows/config.c: 204
-image enhancement effect
-イメージを向上させるエフェクト
-
-# osd/windows/input.c: 2149
+# osd/windows/input.c: 2172
 invalid
 不正
-
-# osd/windows/config.c: 143
-ips datfile name
-IPSデータファイル名
 
 # osd/windows/fronthlp.c: 771, 867
 is bad\n
@@ -1270,127 +1066,103 @@ is best available\n
 is good\n
 は正常です\n
 
-# osd/windows/input.c: 1441, 1806, 1909
+# osd/windows/input.c: 1461, 1826, 1929
 lightgun
 光線銃
 
-# osd/windows/config.c: 127
+# osd/windows/config.c: 106
 list available devices
 存在するデバイスのリストを表\示
 
-# osd/windows/config.c: 121
+# osd/windows/config.c: 100
 list optional samples for a driver
 ドライバの外部サンプルのリストを表\示
 
-# osd/windows/config.c: 120
+# osd/windows/config.c: 99
 list required roms for a driver
 ドライバに必要なROMのリスト
 
-# osd/windows/config.c: 331
+# osd/windows/config.c: 198
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 特定のジョイスティックや軸をデジタルに設定 (none|all|j<N>*|j<N>a<M>[,...])
 
-# osd/windows/config.c: 202
+# osd/windows/config.c: 131
 name of a PNG file to use for visual effects, or 'none'
 視覚効果で使用するPNGファイル名、または「none」
 
-# osd/windows/config.c: 197
+# osd/windows/config.c: 126
 number of screens to create; usually, you want just one
 生成する画面の数を指定。通常は１です
 
-# osd/windows/config.c: 327
+# osd/windows/config.c: 194
 offscreen shots reload
 画面外のショットを割り当てる
 
-# osd/windows/config.c: 173
-optional filename to write a MNG movie of the current session
-指定したファイル名で現在のセッションをMNGムービーに記録
-
-# osd/windows/config.c: 174
-optional filename to write a WAV file of the current session
-指定したファイル名で現在のセッションをWAVサウンドに記録
-
-# osd/windows/config.c: 179
+# osd/windows/config.c: 115
 output error.log data to the system debugger
 error.logデータをシステムデバッガに出力
 
-# osd/windows/input.c: 1439
+# osd/windows/input.c: 1459
 paddle
 パドル
 
-# osd/windows/input.c: 1442
+# osd/windows/input.c: 1462
 pedal
 ペダル
 
-# osd/windows/config.c: 104
+# osd/windows/config.c: 83
 perform driver validation on all game drivers
 全てのゲームドライバで妥当性チェックを実行
 
-# osd/windows/config.c: 171
-playback an input file
-入力の再現するファイル名
-
-# osd/windows/input.c: 1445
+# osd/windows/input.c: 1465
 positional
 座標
 
-# osd/windows/config.c: 298
-preconfigure for specified controller
-コントローラの指定
-
-# osd/windows/config.c: 233
+# osd/windows/config.c: 148
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
 全ての画面の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/config.c: 238
+# osd/windows/config.c: 153
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 １画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/config.c: 253
+# osd/windows/config.c: 168
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 ４画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/config.c: 243
+# osd/windows/config.c: 158
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 ２画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/config.c: 248
+# osd/windows/config.c: 163
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 ３画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/config.c: 234
+# osd/windows/config.c: 149
 preferred view for all screens
 全ての画面のビューを指定
 
-# osd/windows/config.c: 239
+# osd/windows/config.c: 154
 preferred view for the first screen
 １画面目のビューを指定
 
-# osd/windows/config.c: 254
+# osd/windows/config.c: 169
 preferred view for the fourth screen
 ４画面目のビューを指定
 
-# osd/windows/config.c: 244
+# osd/windows/config.c: 159
 preferred view for the second screen
 ２画面目のビューを指定
 
-# osd/windows/config.c: 249
+# osd/windows/config.c: 164
 preferred view for the third screen
 ３画面目のビューを指定
 
-# osd/windows/config.c: 147
-quit game with confirmation
-ゲーム終了時に確認する
-
-# osd/windows/config.c: 172
-record an input file
-入力を保存するファイル名
-
-# osd/windows/config.c: 122
+# osd/windows/config.c: 101
 report romsets that have problems
 問題のあるROMファイルを報告
 
-# osd/windows/config.c: 123
+# osd/windows/config.c: 102
 report samplesets that have problems
 問題のあるサンプルファイルを報告
 
@@ -1406,18 +1178,6 @@ romset \"%8s\" not found!\n
 romset \"%8s\" not supported!\n
 ロムセット「%8s」は対応していません!\n
 
-# osd/windows/config.c: 213
-rotate screen clockwise 90 degrees
-時計回りに90度回転
-
-# osd/windows/config.c: 214
-rotate screen counterclockwise 90 degrees
-反時計回りに90度回転
-
-# osd/windows/config.c: 212
-rotate the game screen according to the game's orientation needs it
-必要に応じてゲームの画面向きに従いゲーム画面を回転する
-
 # osd/windows/fronthlp.c: 861
 sampleset %s 
 サンプルセット%s
@@ -1430,143 +1190,83 @@ sampleset \"%8s\" not found!\n
 sampleset \"%8s\" not supported!\n
 サンプルセット「%8s」は対応していません!\n
 
-# osd/windows/config.c: 169
-saved state to load
-保存したステートを読み込む
-
-# osd/windows/config.c: 201
+# osd/windows/config.c: 130
 scale screen rendering by this amount in software
 指定した割合でソ\フトウェアによる画面描画スケーリングを実行
 
-# osd/windows/config.c: 183
-script for debugger
-デバッガ用のスクリプト
-
-# osd/windows/config.c: 140
-select the system BIOS to use
-使用するシステムBIOSを選択する
-
-# osd/windows/config.c: 347
-select translation language
-使用する言語を選択
-
-# osd/windows/config.c: 294
+# osd/windows/config.c: 181
 set audio latency (increase to reduce glitches)
 オーディオのレイテンシを指定
 
-# osd/windows/config.c: 305
+# osd/windows/config.c: 201
 set joystick ID (Player1)
 ジョイスティックIDを指定 (プレイヤー1)
 
-# osd/windows/config.c: 306
+# osd/windows/config.c: 202
 set joystick ID (Player2)
 ジョイスティックIDを指定 (プレイヤー2)
 
-# osd/windows/config.c: 307
+# osd/windows/config.c: 203
 set joystick ID (Player3)
 ジョイスティックIDを指定 (プレイヤー3)
 
-# osd/windows/config.c: 308
+# osd/windows/config.c: 204
 set joystick ID (Player4)
 ジョイスティックIDを指定 (プレイヤー4)
 
-# osd/windows/config.c: 309
+# osd/windows/config.c: 205
 set joystick ID (Player5)
 ジョイスティックIDを指定 (プレイヤー5)
 
-# osd/windows/config.c: 310
+# osd/windows/config.c: 206
 set joystick ID (Player6)
 ジョイスティックIDを指定 (プレイヤー6)
 
-# osd/windows/config.c: 311
+# osd/windows/config.c: 207
 set joystick ID (Player7)
 ジョイスティックIDを指定 (プレイヤー7)
 
-# osd/windows/config.c: 312
+# osd/windows/config.c: 208
 set joystick ID (Player8)
 ジョイスティックIDを指定 (プレイヤー8)
 
-# osd/windows/config.c: 286
-set sound output sample rate
-出力するサウンドのサンプルレートを設定
-
-# osd/windows/config.c: 273
-set vector beam width
-ベクタのビーム幅を設定
-
-# osd/windows/config.c: 274
-set vector flicker effect
-ベクタのフリッカエフェクトを設定
-
-# osd/windows/config.c: 116
+# osd/windows/config.c: 95
 short name, full name
 ゲームディレクトリ名＋ゲームのフルネームを表\示
 
-# osd/windows/config.c: 118
+# osd/windows/config.c: 97
 show clones
 ゲームのクローン版を表\示
 
-# osd/windows/config.c: 103
+# osd/windows/config.c: 82
 show help message
 ヘルプの表\示
 
-# osd/windows/config.c: 110
+# osd/windows/config.c: 89
 show this help
 このヘルプを表\示
 
-# osd/windows/config.c: 133
-skip displaying the information screen at startup
-起動時の情報表\示画面をスキップする
-
-# osd/windows/config.c: 285, 908 osd/windows/sound.c: 107
+# osd/windows/sound.c: 92
 sound
 音源
 
-# osd/windows/config.c: 288
-sound volume in decibels (-32 min, 0 max)
-サウンドの音量をデシベルで指定(最小は-32、最大は0)
-
-# osd/windows/config.c: 226
+# osd/windows/config.c: 141
 specify the preferred Direct3D version (8 or 9)
 優先されるDirect3Dのバージョンを指定
 
-# osd/windows/config.c: 135
-switch drivers
-使用するドライバの変更
-
-# osd/windows/config.c: 191
+# osd/windows/config.c: 120
 thread priority for the main game thread; range from -15 to 1
 メインのゲームスレッドのプライオリティを指定。-15から1の範囲で指定
 
-# osd/windows/input.c: 1444
+# osd/windows/input.c: 1464
 trackball
 トラックボール
 
-# osd/windows/config.c: 161
-transparency of UI background [0 - 255]
-UIの背景の透明度 [0 - 255]
+# osd/windows/config.c: 125
+video output method: none, gdi, ddraw, or d3d
+ビデオ描画方法: none、gdi、ddrawまたはd3d
 
-# osd/windows/config.c: 976
-unable to open log file
-ログファイルが開けません
-
-# osd/windows/config.c: 272
-use antialiasing when drawing vectors
-ベクタの描画にアンチエイリアスを使用
-
-# osd/windows/config.c: 160
-use transparent background for UI text
-UIテキストの背景を半透明にする
-
-# osd/windows/config.c: 196
-video output method: gdi, ddraw, or d3d
-ビデオ描画方法: gdi、ddrawまたはd3d
-
-# osd/windows/config.c: 356
-window background color
-ウィンドウ 背景色
-
-# osd/windows/config.c: 115
+# osd/windows/config.c: 94
 year, manufacturer and full name
 サポートゲーム、製造年、メーカーのリストを表\示
 

@@ -17,11 +17,11 @@
 #include "ui.h"
 
 //mamep: embedded CJK and non-CJK font
-#include "uismall10.fh"
+#include "uismall11.fh"
 #include "uismall14.fh"
 
 //mamep: embedded command glyph
-#include "uicmd10.fh"
+#include "uicmd11.fh"
 #include "uicmd14.fh"
 
 
@@ -197,7 +197,7 @@ INLINE render_font_char *get_char(render_font *font, unicode_char chnum)
 //mamep: allocate command glyph font
 static render_font *render_font_alloc_command_glyph(int height)
 {
-	mame_file_error filerr;
+	file_error filerr;
 	mame_file *ramfile;
 	render_font *font;
 
@@ -211,7 +211,7 @@ static render_font *render_font_alloc_command_glyph(int height)
 	if (height >= 14)
 		filerr = mame_fopen_ram(font_uicmd14, sizeof(font_uicmd14), OPEN_FLAG_READ, &ramfile);
 	else
-		filerr = mame_fopen_ram(font_uicmd10, sizeof(font_uicmd10), OPEN_FLAG_READ, &ramfile);
+		filerr = mame_fopen_ram(font_uicmd11, sizeof(font_uicmd11), OPEN_FLAG_READ, &ramfile);
 
 	if (filerr == FILERR_NONE)
 	{
@@ -229,7 +229,7 @@ static render_font *render_font_alloc_command_glyph(int height)
 
 render_font *render_font_alloc(const char *filename)
 {
-	mame_file_error filerr;
+	file_error filerr;
 	mame_file *ramfile;
 	render_font *font;
 
@@ -253,7 +253,7 @@ render_font *render_font_alloc(const char *filename)
 	/* load the raw data instead */
 
 	//mamep: embedded CJK font
-	switch (options.langcode)
+	switch (lang_get_langcode())
 	{
 	case UI_LANG_JA_JP:
 	case UI_LANG_ZH_CN:
@@ -263,7 +263,7 @@ render_font *render_font_alloc(const char *filename)
 		break;
 
 	default:
-		filerr = mame_fopen_ram(font_uismall10, sizeof(font_uismall10), OPEN_FLAG_READ, &ramfile);
+		filerr = mame_fopen_ram(font_uismall11, sizeof(font_uismall11), OPEN_FLAG_READ, &ramfile);
 	}
 
 	if (filerr == FILERR_NONE)
@@ -545,7 +545,7 @@ float render_font_get_utf8string_width(render_font *font, float height, float as
 
 static int render_font_load_cached_bdf(render_font *font, const char *filename)
 {
-	mame_file_error filerr;
+	file_error filerr;
 	char *cachedname = NULL;
 	char *data = NULL;
 	mame_file *cachefile;
@@ -823,7 +823,7 @@ error:
 
 static int render_font_save_cached(render_font *font, const char *filename, UINT32 hash)
 {
-	mame_file_error filerr;
+	file_error filerr;
 	render_font_char *ch;
 	UINT32 bytes_written;
 	UINT8 *tempbuffer;

@@ -362,7 +362,7 @@ void winwindow_process_events(int ingame)
 #if defined(MAME_DEBUG)
 	if (ingame)
 	{
-		is_debugger_visible = (options.mame_debug && debugwin_is_debugger_visible());
+		is_debugger_visible = (Machine != NULL && Machine->debug_mode && debugwin_is_debugger_visible());
 		debugwin_update_during_game();
 	}
 #endif
@@ -489,7 +489,7 @@ void winwindow_toggle_full_screen(void)
 
 #ifdef MAME_DEBUG
 	// if we are in debug mode, never go full screen
-	if (options.mame_debug)
+	if (options_get_bool(OPTION_DEBUG))
 		return;
 #endif
 
@@ -599,8 +599,6 @@ int winwindow_video_window_create(int index, win_monitor_info *monitor, const wi
 	window->target = render_target_alloc(NULL, 0);
 	if (window->target == NULL)
 		goto error;
-	render_target_set_orientation(window->target, video_orientation);
-	render_target_set_layer_config(window->target, video_config.layerconfig);
 
 	// set the specific view
 	sprintf(option, "view%d", index);
@@ -613,9 +611,9 @@ int winwindow_video_window_create(int index, win_monitor_info *monitor, const wi
 
 	// make the window title
 	if (video_config.numscreens == 1)
-		sprintf(buf, APPNAME ": %s [%s]", (options.use_lang_list ? _LST(Machine->gamedrv->description) : Machine->gamedrv->description), Machine->gamedrv->name);
+		sprintf(buf, APPNAME ": %s [%s]", _LST(Machine->gamedrv->description), Machine->gamedrv->name);
 	else
-		sprintf(buf, _WINDOWS(APPNAME ": %s [%s] - Screen %d"), (options.use_lang_list ? _LST(Machine->gamedrv->description) : Machine->gamedrv->description), Machine->gamedrv->name, index);
+		sprintf(buf, _WINDOWS(APPNAME ": %s [%s] - Screen %d"), _LST(Machine->gamedrv->description), Machine->gamedrv->name, index);
 	MultiByteToWideChar(CP_UTF8, 0, buf, -1, window->title, sizeof window->title);
 
 	// set the initial maximized state

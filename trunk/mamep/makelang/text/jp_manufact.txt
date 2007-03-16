@@ -1938,6 +1938,10 @@ SemiCom
 Semicom
 
 
+# Hex Pool (Senko)
+Senko
+
+
 # Special Forces
 Senko Industries
 
@@ -1954,7 +1958,7 @@ Sente
 Seta Kikaku Corp.
 
 
-# Hex Pool
+# Hex Pool (Shinkai)
 Shinkai
 
 

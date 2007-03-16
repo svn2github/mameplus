@@ -38,6 +38,7 @@ TOOLS += \
 	jedutil$(EXE) \
 	makemeta$(EXE) \
 	regrep$(EXE) \
+	srcclean$(EXE) \
 
 
 
@@ -141,5 +142,18 @@ REGREPOBJS = \
 	$(TOOLSOBJ)/regrep.o \
 
 regrep$(EXE): $(REGREPOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB) $(EXPAT)
+	@echo Linking $@...
+	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
+
+
+
+#-------------------------------------------------
+# srcclean
+#-------------------------------------------------
+
+SRCCLEANOBJS = \
+	$(TOOLSOBJ)/srcclean.o \
+
+srcclean$(EXE): $(SRCCLEANOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB) $(EXPAT)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@

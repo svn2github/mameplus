@@ -105,7 +105,7 @@
 
 		#include "fileio.h"
 		extern SHAREDOBJ_FUNC(int)             mame_faccess(const char *filename, int filetype);
-		extern SHAREDOBJ_FUNC(mame_file_error) mame_fopen(const char *searchpath, const char *filename, UINT32 openflags, mame_file **file);
+		extern SHAREDOBJ_FUNC(file_error)      mame_fopen(const char *searchpath, const char *filename, UINT32 openflags, mame_file **file);
 		extern SHAREDOBJ_FUNC(UINT32)          mame_fread(mame_file *file, void *buffer, UINT32 length);
 		extern SHAREDOBJ_FUNC(UINT32)          mame_fwrite(mame_file *file, const void *buffer, UINT32 length);
 		extern SHAREDOBJ_FUNC(UINT32)          mame_fread_swap(mame_file *file, void *buffer, UINT32 length);
@@ -144,8 +144,8 @@
 		extern SHAREDOBJ_FUNC(png_error) png_filter(png_info *p);
 		extern SHAREDOBJ_FUNC(png_error) png_write_bitmap(core_file *fp, png_info *info, bitmap_t *bitmap, int palette_length, const UINT32 *palette);
 
-		#include "../../emu/input.h"
-		SHAREDOBJ_FUNC(int)  code_init(running_machine *machine);
+		#include "emu/input.h"
+		SHAREDOBJ_FUNC(void) code_init(running_machine *machine);
 		SHAREDOBJ_FUNC(void) seq_copy(input_seq *seqdst, const input_seq *seqsrc);
 		SHAREDOBJ_FUNC(int)  string_to_seq(const char *string, input_seq *seq);
 
@@ -207,11 +207,14 @@
 		extern SHAREDOBJ_FUNC(const zip_file_header *)zip_file_next_file(zip_file *zip);
 		extern SHAREDOBJ_FUNC(zip_error)              zip_file_decompress(zip_file *zip, void *buffer, UINT32 length);
 
+		#include "uilang.h"
 		extern SHAREDOBJ_DATA         struct ui_lang_info_t ui_lang_info[UI_LANG_MAX];
 		extern SHAREDOBJ_FUNC(int)    lang_find_langname(const char *name);
 		extern SHAREDOBJ_FUNC(int)    lang_find_codepage(int cp);
-		extern SHAREDOBJ_FUNC(void)   set_langcode(int langcode);
+		extern SHAREDOBJ_FUNC(void)   lang_set_langcode(int langcode);
 		extern SHAREDOBJ_FUNC(void)   assign_msg_catategory(int msgcat, const char *name);
+		extern SHAREDOBJ_FUNC(void)   lang_message_enable(int msgcat, int enable);
+		extern SHAREDOBJ_FUNC(int)    lang_message_is_enabled(int msgcat);
 		extern SHAREDOBJ_FUNC(void *) lang_messagew(int msgcat, const void *str, int (*cmpw)(const void *, const void *));
 		extern SHAREDOBJ_FUNC(void)   ui_lang_shutdown(void);
 

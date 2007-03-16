@@ -157,26 +157,27 @@ void CLIB_DECL debugload(const char *string, ...)
 
 /*-------------------------------------------------
     determine_bios_rom - determine system_bios
-    from SystemBios structure and options.bios
+    from SystemBios structure and OPTION_BIOS
 -------------------------------------------------*/
 
 int determine_bios_rom(const bios_entry *bios)
 {
+	const char *specbios = options_get_string(OPTION_BIOS);
 	const bios_entry *firstbios = bios;
 
 	/* set to default */
 	int bios_no = 0;
 
-	/* Not system_bios_0 and options.bios is set  */
-	if(bios && (options.bios != NULL))
+	/* Not system_bios_0 and bios is set  */
+	if (bios && (specbios != NULL))
 	{
 		/* Allow '-bios n' to still be used */
-		while(!BIOSENTRY_ISEND(bios))
+		while (!BIOSENTRY_ISEND(bios))
 		{
 			char bios_number[3];
 			sprintf(bios_number, "%d", bios->value);
 
-			if(!strcmp(bios_number, options.bios))
+			if (!strcmp(bios_number, specbios))
 				bios_no = bios->value;
 
 			bios++;
@@ -185,9 +186,9 @@ int determine_bios_rom(const bios_entry *bios)
 		bios = firstbios;
 
 		/* Test for bios short names */
-		while(!BIOSENTRY_ISEND(bios))
+		while (!BIOSENTRY_ISEND(bios))
 		{
-			if(!strcmp(bios->_name, options.bios))
+			if (!strcmp(bios->_name, specbios))
 				bios_no = bios->value;
 
 			bios++;
@@ -210,7 +211,7 @@ static int count_roms(const rom_entry *romp)
 	const rom_entry *region, *rom;
 	int count = 0;
 
-	/* determine the correct biosset to load based on options.bios string */
+	/* determine the correct biosset to load based on OPTION_BIOS string */
 	int this_bios = determine_bios_rom(Machine->gamedrv->bios);
 
 	/* loop over regions, then over files */
@@ -480,7 +481,7 @@ static void region_post_process(rom_load_data *romdata, const rom_entry *regiond
 
 static int open_rom_file(rom_load_data *romdata, const rom_entry *romp)
 {
-	mame_file_error filerr = FILERR_NOT_FOUND;
+	file_error filerr = FILERR_NOT_FOUND;
 	const game_driver *drv;
 
 	++romdata->romsloaded;
@@ -989,6 +990,9 @@ void rom_init(running_machine *machine, const rom_entry *romp)
 	const rom_entry *region;
 	static rom_load_data romdata;
 	int regnum;
+#ifdef USE_IPS
+	const char *patchname = options_get_string("ips");
+#endif /* USE_IPS */
 
 	/* if no roms, bail */
 	if (romp == NULL)
@@ -1007,13 +1011,13 @@ void rom_init(running_machine *machine, const rom_entry *romp)
 	/* reset the disk list */
 	memset(disk_handle, 0, sizeof(disk_handle));
 
-	/* determine the correct biosset to load based on options.bios string */
+	/* determine the correct biosset to load based on OPTION_BIOS string */
 	system_bios = determine_bios_rom(Machine->gamedrv->bios);
 
 #ifdef USE_IPS
-	if (options.patchname)
+	if (patchname && *patchname)
 	{
-		if (!open_ips_entry(options.patchname, &romdata, romp))
+		if (!open_ips_entry(patchname, &romdata, romp))
 			return display_rom_load_results(&romdata);
 	}
 #endif /* USE_IPS */
@@ -1059,7 +1063,7 @@ void rom_init(running_machine *machine, const rom_entry *romp)
 	}
 
 #ifdef USE_IPS
-	if (options.patchname)
+	if (patchname && *patchname)
 	{
 		if (!close_ips_entry(&romdata))
 			return display_rom_load_results(&romdata);

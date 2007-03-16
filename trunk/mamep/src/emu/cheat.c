@@ -1521,7 +1521,7 @@ void cheat_init(running_machine *machine)
 	InitStringTable();
 
 	periodic_timer = timer_alloc(cheat_periodic);
-	timer_adjust(periodic_timer, TIME_IN_HZ(Machine->screen[0].refresh), 0, TIME_IN_HZ(Machine->screen[0].refresh));
+	mame_timer_adjust(periodic_timer, make_mame_time(0, Machine->screen[0].refresh), 0, make_mame_time(0, Machine->screen[0].refresh));
 
 	add_exit_callback(machine, cheat_exit);
 }
@@ -9489,7 +9489,7 @@ static void HandleLocalCommandCheat(UINT32 type, UINT32 address, UINT32 data, UI
 static void LoadCheatFile(char * fileName)
 {
 	mame_file	* theFile;
-	mame_file_error filerr;
+	file_error filerr;
 	char		formatString[256];
 	char		oldFormatString[256];
 	char		buf[2048];
@@ -9789,7 +9789,7 @@ static void SaveCheat(CheatEntry * entry, int selection, int saveCode)
 		};
 
 	mame_file * theFile;
-	mame_file_error filerr;
+	file_error filerr;
 	UINT32	i;
 	char	buf[4096];
 
@@ -11446,7 +11446,7 @@ static void cheat_periodicAction(CheatAction * action)
 				/* ----- keep if one shot + restore prevous value + delay !=0 ----- */
 				cheat_periodicOperation(action);
 
-				if(action->frameTimer >= (parameter * Machine->screen[0].refresh))
+				if(action->frameTimer >= (parameter * SUBSECONDS_TO_HZ(Machine->screen[0].refresh)))
 				{
 					action->frameTimer = 0;
 
@@ -11458,7 +11458,7 @@ static void cheat_periodicAction(CheatAction * action)
 			else
 			{
 				/* ----- otherwise, delay ----- */
-				if(action->frameTimer >= (parameter * Machine->screen[0].refresh))
+				if(action->frameTimer >= (parameter * SUBSECONDS_TO_HZ(Machine->screen[0].refresh)))
 				{
 					action->frameTimer = 0;
 
@@ -11497,7 +11497,7 @@ static void cheat_periodicAction(CheatAction * action)
 
 				if(currentValue != action->lastValue)
 				{
-					action->frameTimer = parameter * Machine->screen[0].refresh;
+					action->frameTimer = parameter * SUBSECONDS_TO_HZ(Machine->screen[0].refresh);
 
 					action->flags |= kActionFlag_WasModified;
 				}

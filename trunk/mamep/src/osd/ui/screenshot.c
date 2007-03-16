@@ -221,7 +221,7 @@ void FreeScreenShot(void)
 BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type)
 {
 	mame_file *mfile;
-	mame_file_error filerr;
+	file_error filerr;
 	BOOL success;
 	const WCHAR *zip_name = NULL;
 	const WCHAR *basedir = NULL;

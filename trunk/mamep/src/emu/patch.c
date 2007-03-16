@@ -77,7 +77,7 @@ static UINT32 get_rom_total_length(const rom_entry *romp)
 static int load_ips_file(ips_chunk **p, const char *ips_dir, const char *ips_name, rom_load_data *romdata, UINT32 length)
 {
 	mame_file *file;
-	mame_file_error filerr;
+	file_error filerr;
 	char *fname;
 	UINT32 pos = 0;
 	UINT8 buffer[8];
@@ -220,7 +220,7 @@ static int parse_ips_patch(ips_entry **ips_p, const char *patch_name, rom_load_d
 {
 	UINT8 buffer[1024];
 	mame_file *fpDat;
-	mame_file_error filerr;
+	file_error filerr;
 	char *fname;
 	int result = 0;
 

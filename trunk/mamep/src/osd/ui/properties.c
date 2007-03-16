@@ -3860,8 +3860,9 @@ static void ResetDataMap(void)
 	g_nBiosIndex = 0;
 	if (g_biosinfo)
 	{
-		options.bios = pGameOpts->bios;
+		options_set_string(OPTION_BIOS, pGameOpts->bios);
 		g_nBiosIndex = determine_bios_rom(g_biosinfo);
+		options_set_string(OPTION_BIOS, NULL);
 	}
 
 	if (IS_GLOBAL)
@@ -3872,10 +3873,12 @@ static void ResetDataMap(void)
 
 			if (drv)
 			{
-				options.bios = strdup(GetDefaultBios(i));
+				char *bios = strdup(GetDefaultBios(i));
+
+				options_set_string(OPTION_BIOS, bios);
 				default_bios_index[i] = determine_bios_rom(drv->bios);
-				free(options.bios);
-				options.bios = NULL;
+				options_set_string(OPTION_BIOS, NULL);
+				free(bios);
 			}
 		}
 	}

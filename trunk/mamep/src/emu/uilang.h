@@ -42,7 +42,6 @@ struct ui_lang_info_t
 	const char *shortname;
 	const char *description;
 	int         codepage;
-	UINT8         fontoverride[4];
 };
 
 
@@ -51,10 +50,13 @@ extern struct ui_lang_info_t ui_lang_info[UI_LANG_MAX];
 extern int lang_find_langname(const char *name);
 extern int lang_find_codepage(int cp);
 
-extern void set_langcode(int langcode);
+extern void lang_set_langcode(int langcode);
+extern int lang_get_langcode(void);
 extern void assign_msg_catategory(int msgcat, const char *name);
 extern char *lang_message(int msgcat, const char *str);
 extern void *lang_messagew(int msgcat, const void *str, int (*mmo_cmpw)(const void *a, const void *b));
+extern void lang_message_enable(int msgcat, int enable);
+extern int lang_message_is_enabled(int msgcat);
 extern void ui_lang_shutdown(void);
 
 #endif

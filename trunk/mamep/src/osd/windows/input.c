@@ -39,6 +39,10 @@
 #include "video.h"
 #include "strconv.h"
 
+// set to 1 if you want to use the built-in DX handling
+// for joystick range, deadzone and saturation
+// the non-DX code is mainly a reference for porting to another OS
+#define USE_DX_JOY_HANDLING 1
 
 //============================================================
 //  IMPORTS
@@ -173,6 +177,8 @@ static osd_ticks_t			last_poll;
 // Controller override options
 static float				joy_deadzone;
 static float				joy_saturation;
+static int					use_joy_deadzone;
+static int					use_joy_saturation;
 static int					use_joystick;
 static int					use_lightgun;
 static int					use_lightgun_dual;
@@ -228,6 +234,13 @@ static UINT8				joystick_type[MAX_JOYSTICKS][MAX_AXES];
 #ifdef JOYSTICK_ID
 static int					joyid[8];
 #endif /* JOYSTICK_ID */
+
+#if !USE_DX_JOY_HANDLING
+static LONG					joystick_deadzone_bottom[MAX_JOYSTICKS][MAX_AXES];
+static LONG					joystick_deadzone_top[MAX_JOYSTICKS][MAX_AXES];
+static LONG					joystick_saturation_bottom[MAX_JOYSTICKS][MAX_AXES];
+static LONG					joystick_saturation_top[MAX_JOYSTICKS][MAX_AXES];
+#endif	/* !USE_DX_JOY_HANDLING */
 
 // gun states
 static INT32				gun_axis[MAX_DX_LIGHTGUNS][2];
@@ -1280,7 +1293,9 @@ setup_sys_mouse:
 
 static BOOL CALLBACK enum_joystick_callback(LPCDIDEVICEINSTANCE instance, LPVOID ref)
 {
+#if USE_DX_JOY_HANDLING
 	DIPROPRANGE range;
+#endif
 	HRESULT result = DI_OK;
 	DWORD flags;
 	char *utf8_instance_name;
@@ -1322,6 +1337,7 @@ static BOOL CALLBACK enum_joystick_callback(LPCDIDEVICEINSTANCE instance, LPVOID
 		goto cant_set_axis_mode;
 	}
 
+#if USE_DX_JOY_HANDLING
 	// set range
 	range.diph.dwSize = sizeof(range);
 	range.diph.dwHeaderSize = sizeof(range.diph);
@@ -1337,7 +1353,7 @@ static BOOL CALLBACK enum_joystick_callback(LPCDIDEVICEINSTANCE instance, LPVOID
 	}
 
 	// set deadzone
-	if (joy_deadzone > 0 && joy_deadzone <= 1)
+	if (use_joy_deadzone)
 	{
 		result = set_DI_Dword_Property(joystick_device[joystick_count], DIPROP_DEADZONE, 0, DIPH_DEVICE, 10000 * joy_deadzone);
 	 	if (result != DI_OK)
@@ -1348,7 +1364,7 @@ static BOOL CALLBACK enum_joystick_callback(LPCDIDEVICEINSTANCE instance, LPVOID
 	}
 
 	// set saturation
-	if (joy_saturation > joy_deadzone && joy_saturation < 1)
+	if (use_joy_saturation)
 	{
 		result = set_DI_Dword_Property(joystick_device[joystick_count], DIPROP_SATURATION, 0, DIPH_DEVICE, 10000 * joy_saturation);
 	 	if (result != DI_OK)
@@ -1357,6 +1373,7 @@ static BOOL CALLBACK enum_joystick_callback(LPCDIDEVICEINSTANCE instance, LPVOID
 			goto cant_set_saturation;
 		}
 	}
+#endif	/* USE_DX_JOY_HANDLING */
 
 	// attempt to set the data format
 	result = IDirectInputDevice_SetDataFormat(joystick_device[joystick_count], &c_dfDIJoystick);
@@ -1377,12 +1394,14 @@ static BOOL CALLBACK enum_joystick_callback(LPCDIDEVICEINSTANCE instance, LPVOID
 	joystick_count++;
 	return DIENUM_CONTINUE;
 
-cant_set_coop_level:
-cant_set_format:
-cant_set_axis_mode:
+#if USE_DX_JOY_HANDLING
 cant_set_range:
 cant_set_deadzone:
 cant_set_saturation:
+#endif
+cant_set_coop_level:
+cant_set_format:
+cant_set_axis_mode:
 cant_get_caps:
 cant_alloc_memory:
 	if (joystick_device2[joystick_count])
@@ -1401,6 +1420,7 @@ out_of_joysticks:
 
 int wininput_init(running_machine *machine)
 {
+	const char *controller = options_get_string(OPTION_CTRLR);
 	const input_port_entry *inp;
 	HRESULT result;
 
@@ -1505,8 +1525,8 @@ int wininput_init(running_machine *machine)
 
 	// print the results
 	verbose_printf(_WINDOWS("Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n"), keyboard_count, mouse_count, joystick_count, lightgun_count);
-	if (options.controller)
-		verbose_printf(_WINDOWS("Input: \"%s\" controller support enabled\n"), options.controller);
+	if (controller)
+		verbose_printf(_WINDOWS("Input: \"%s\" controller support enabled\n"), controller);
 	return 0;
 
 cant_init_joystick:
@@ -1912,7 +1932,6 @@ static void extract_input_config(void)
 	steadykey = options_get_bool("steadykey");
 	joy_deadzone = options_get_float("joy_deadzone");
 	joy_saturation = options_get_float("joy_saturation");
-	options.controller = options_get_string("ctrlr");
 #ifdef USE_JOY_MOUSE_MOVE
 	use_stickpoint = options_get_bool("stickpoint");
 #endif /* USE_JOY_MOUSE_MOVE */
@@ -1940,6 +1959,10 @@ static void extract_input_config(void)
 	parse_analog_select(ANALOG_TYPE_MOUSE, "mouse_device");
 #endif
 	parse_digital("digital");
+
+	/* only use joystick handling values if they are good */
+	use_joy_deadzone = joy_deadzone > 0 && joy_deadzone <= 1;
+	use_joy_saturation = joy_deadzone >= 0 && joy_saturation > joy_deadzone && joy_saturation < 1;
 }
 
 
@@ -2112,7 +2135,7 @@ static void update_joystick_axes(void)
 
 			/* if we've only ever seen one value here, or if we've been stuck at the same value for a long */
 			/* time (1 minute), mark the axis as dead or invalid */
-			if (history[1].count == 0 || history[0].count > Machine->screen[0].refresh * 60)
+			if (history[1].count == 0 || history[0].count > SUBSECONDS_TO_HZ(Machine->screen[0].refresh) * 60)
 				newtype = AXIS_TYPE_INVALID;
 
 			/* scan the history and count unique values; if we get more than 3, it's analog */
@@ -2385,13 +2408,40 @@ static void init_joycodes(void)
 					sprintf(tempname, "J%d %s +", stick + 1, utf8_name);
 					add_joylist_entry(tempname, JOYCODE(stick, CODETYPE_AXIS_POS, axis), CODE_OTHER_DIGITAL);
 
-/* this can be removed if no problems are found with the DX internal range */
 					// get the axis range while we're here
 					joystick_range[stick][axis].diph.dwSize = sizeof(DIPROPRANGE);
 					joystick_range[stick][axis].diph.dwHeaderSize = sizeof(joystick_range[stick][axis].diph);
 					joystick_range[stick][axis].diph.dwObj = offsetof(DIJOYSTATE, lX) + axis * sizeof(LONG);
 					joystick_range[stick][axis].diph.dwHow = DIPH_BYOFFSET;
 					result = IDirectInputDevice_GetProperty(joystick_device[stick], DIPROP_RANGE, &joystick_range[stick][axis].diph);
+
+#if !USE_DX_JOY_HANDLING
+					// setup deadzone and saturation based on joystick range
+					{
+						// use temporary variable to make code more readable
+						LONG top = joystick_range[stick][axis].lMax;
+						LONG bottom = joystick_range[stick][axis].lMin;
+						LONG middle;
+
+						middle = (top - bottom) / 2 - bottom;
+
+						if (!use_joy_deadzone)
+							joy_deadzone = 0;
+						if (!use_joy_saturation)
+							joy_saturation = 1;
+
+						// setup deadzone values so they don't have to keep being re-calculated
+						joystick_deadzone_bottom[stick][axis] = (bottom - middle) * joy_deadzone + middle;
+						joystick_deadzone_top[stick][axis] = (top - middle) * joy_deadzone + middle;
+
+						// setup saturation values so they don't have to keep being re-calculated
+						// these values are adjusted so the middle is 0 to save future calculation steps
+						// this means we must subtract the middle from the axis data before testing
+						// and have adjusted the axis to the deadzone
+						joystick_saturation_bottom[stick][axis] = (bottom - middle) * joy_saturation + middle - joystick_deadzone_bottom[stick][axis];
+						joystick_saturation_top[stick][axis] = (top - middle) * joy_saturation + middle - joystick_deadzone_top[stick][axis];
+					}
+#endif /* !USE_DX_JOY_HANDLING */
 
 					free(utf8_name);
 				}
@@ -2470,6 +2520,10 @@ static INT32 get_joycode_value(os_code joycode)
 	int joynum = JOYNUM(joycode);
 	DWORD pov;
 
+#ifdef JOYSTICK_ID
+	joynum = joyid[joynum];
+#endif /* JOYSTICK_ID */
+
 	// switch off the type
 	switch (codetype)
 	{
@@ -2502,11 +2556,9 @@ static INT32 get_joycode_value(os_code joycode)
 			return mouse_state[joynum].rgbButtons[joyindex] >> 7;
 
 		case CODETYPE_BUTTON:
-#ifdef JOYSTICK_ID
-			return joystick_state[joyid[joynum]].rgbButtons[joyindex] >> 7;
-#else /* JOYSTICK_ID */
 			return joystick_state[joynum].rgbButtons[joyindex] >> 7;
-#endif /* JOYSTICK_ID */
+
+#if USE_DX_JOY_HANDLING
 
 		case CODETYPE_AXIS_POS:
 			return ((LONG *)&joystick_state[joynum].lX)[joyindex] > 0;
@@ -2514,66 +2566,42 @@ static INT32 get_joycode_value(os_code joycode)
 		case CODETYPE_AXIS_NEG:
 			return ((LONG *)&joystick_state[joynum].lX)[joyindex] < 0;
 
-/* this can be removed if no problems are found with the DX internal deadzone */
-#if 0
-		case CODETYPE_AXIS_POS:
-		case CODETYPE_AXIS_NEG:
-		{
-#ifdef JOYSTICK_ID
-			LONG val = ((LONG *)&joystick_state[joyid[joynum]].lX)[joyindex];
-			LONG top = joystick_range[joyid[joynum]][joyindex].lMax;
-			LONG bottom = joystick_range[joyid[joynum]][joyindex].lMin;
-#else /* JOYSTICK_ID */
-			LONG val = ((LONG *)&joystick_state[joynum].lX)[joyindex];
-			LONG top = joystick_range[joynum][joyindex].lMax;
-			LONG bottom = joystick_range[joynum][joyindex].lMin;
-#endif /* JOYSTICK_ID */
-			LONG middle = (top + bottom) / 2;
+#else
 
-			// watch for movement greater "joy_deadzone" along either axis
-			// FIXME in the two-axis joystick case, we need to find out
-			// the angle. Anything else is unprecise.
-			if (codetype == CODETYPE_AXIS_POS)
-				return (val > middle + ((top - middle) * joy_deadzone));
-			else
-				return (val < middle - ((middle - bottom) * joy_deadzone));
-		}
-#endif
+		// watch for movement greater "joy_deadzone" along either axis
+		// FIXME in the two-axis joystick case, we need to find out
+		// the angle. Anything else is unprecise.
+
+		// OR NOT. joystick jitter affects the 2 axis seperately.
+		// there is not less jitter on the angles.
+		// so IMHO the deadzone should be square just like DX does.
+		// and like this code does. D.R.
+		case CODETYPE_AXIS_POS:
+				return (((LONG *)&joystick_state[joynum].lX)[joyindex] > joystick_deadzone_top[joynum][joyindex]);
+
+		case CODETYPE_AXIS_NEG:
+				return (((LONG *)&joystick_state[joynum].lX)[joyindex] < joystick_deadzone_bottom[joynum][joyindex]);
+
+#endif	/* USE_DX_JOY_HANDLING */
 
 		// anywhere from 0-45 (315) deg to 0+45 (45) deg
 		case CODETYPE_POV_UP:
-#ifdef JOYSTICK_ID
-			pov = joystick_state[joyid[joynum]].rgdwPOV[joyindex];
-#else /* JOYSTICK_ID */
 			pov = joystick_state[joynum].rgdwPOV[joyindex];
-#endif /* JOYSTICK_ID */
 			return ((pov & 0xffff) != 0xffff && (pov >= 31500 || pov <= 4500));
 
 		// anywhere from 90-45 (45) deg to 90+45 (135) deg
 		case CODETYPE_POV_RIGHT:
-#ifdef JOYSTICK_ID
-			pov = joystick_state[joyid[joynum]].rgdwPOV[joyindex];
-#else /* JOYSTICK_ID */
 			pov = joystick_state[joynum].rgdwPOV[joyindex];
-#endif /* JOYSTICK_ID */
 			return ((pov & 0xffff) != 0xffff && (pov >= 4500 && pov <= 13500));
 
 		// anywhere from 180-45 (135) deg to 180+45 (225) deg
 		case CODETYPE_POV_DOWN:
-#ifdef JOYSTICK_ID
-			pov = joystick_state[joyid[joynum]].rgdwPOV[joyindex];
-#else /* JOYSTICK_ID */
 			pov = joystick_state[joynum].rgdwPOV[joyindex];
-#endif /* JOYSTICK_ID */
 			return ((pov & 0xffff) != 0xffff && (pov >= 13500 && pov <= 22500));
 
 		// anywhere from 270-45 (225) deg to 270+45 (315) deg
 		case CODETYPE_POV_LEFT:
-#ifdef JOYSTICK_ID
-			pov = joystick_state[joyid[joynum]].rgdwPOV[joyindex];
-#else /* JOYSTICK_ID */
 			pov = joystick_state[joynum].rgdwPOV[joyindex];
-#endif /* JOYSTICK_ID */
 			return ((pov & 0xffff) != 0xffff && (pov >= 22500 && pov <= 31500));
 
 #ifdef USE_JOY_MOUSE_MOVE
@@ -2618,7 +2646,6 @@ static INT32 get_joycode_value(os_code joycode)
 		case CODETYPE_JOYAXIS:
 		case CODETYPE_JOYAXIS_NEG:
 		case CODETYPE_JOYAXIS_POS:
-		{
 			if (joystick_type[joynum][joyindex] != AXIS_TYPE_ANALOG)
 				return ANALOG_VALUE_INVALID;
 
@@ -2626,8 +2653,11 @@ static INT32 get_joycode_value(os_code joycode)
 				return 0;
 			else
 			{
-				/* scaling and deadzone are handled by DX */
 				LONG val = ((LONG *)&joystick_state[joynum].lX)[joyindex];
+
+#if USE_DX_JOY_HANDLING
+
+				/* scaling, deadzone and saturation are handled by DX */
 				if (codetype == CODETYPE_JOYAXIS)
 					return val;
 
@@ -2637,47 +2667,53 @@ static INT32 get_joycode_value(os_code joycode)
 					val = (val > 0) ? val : 0;
 
 				return val * 2 + ANALOG_VALUE_MIN;
-			}
 
+#else
 
-/* this can be removed if no problems are found with the DX internal scaling */
-#if 0
-			{
-				LONG val = ((LONG *)&joystick_state[joynum].lX)[joyindex];
-				LONG top = joystick_range[joynum][joyindex].lMax;
-				LONG bottom = joystick_range[joynum][joyindex].lMin;
-				LONG range, middle;
+				LONG range;
 
-				if (!use_joystick)
-					return 0;
+				/* adjust for deadzone */
+				if (val > joystick_deadzone_top[joynum][joyindex])
+					val -= joystick_deadzone_top[joynum][joyindex];
+				else if (val < joystick_deadzone_bottom[joynum][joyindex])
+					val -= joystick_deadzone_bottom[joynum][joyindex];
+				else
+					/* just move value to center */
+					val = 0;
 
-				range = top - bottom;
-				middle = range / 2;
-
+				// range is based on saturation
 				switch (codetype)
 				{
 					case CODETYPE_JOYAXIS:
-						val -= bottom;
+						val -= joystick_saturation_bottom[joynum][joyindex];
+						range = joystick_saturation_top[joynum][joyindex] - joystick_saturation_bottom[joynum][joyindex];
 						break;
 
 					case CODETYPE_JOYAXIS_NEG:
-						val = middle - val;
-						range = middle - bottom;
+						val = -val;
+						range = -joystick_saturation_bottom[joynum][joyindex];
 						break;
 
 					case CODETYPE_JOYAXIS_POS:
-						val -= middle;
-						range = top - middle;
+						range = joystick_saturation_top[joynum][joyindex];
 						break;
+
+					default:
+						range = 0;
 				}
+
+				/* clip half axis if needed */
 				if (val < 0) val = 0;
+
+				/* scale values to MAME range */
 				val = (INT64)(val) * (INT64)(ANALOG_VALUE_MAX - ANALOG_VALUE_MIN) / (INT64)(range) + ANALOG_VALUE_MIN;
 				if (val < ANALOG_VALUE_MIN) val = ANALOG_VALUE_MIN;
 				if (val > ANALOG_VALUE_MAX) val = ANALOG_VALUE_MAX;
 				return val;
+
+#endif	/* USE_DX_JOY_HANDLING */
+
 			}
-#endif
-		}
 
 		// analog mouse axis
 		case CODETYPE_MOUSEAXIS:

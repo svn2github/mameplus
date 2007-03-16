@@ -203,6 +203,7 @@ void tms7000_exl_get_info(UINT32 state, cpuinfo *info);
 void sm8500_get_info(UINT32 state, cpuinfo *info);
 void v30mz_get_info(UINT32 state, cpuinfo *info);
 void mb88_get_info(UINT32 state, cpuinfo *info);
+void ssp1610_get_info(UINT32 state, cpuinfo *info);
 
 
 
@@ -801,6 +802,9 @@ static const struct
 #endif
 #if (HAS_MB8844)
 	{ CPU_MB8844, mb88_get_info },
+#endif
+#if (HAS_SSP1610)
+	{ CPU_SSP1610, ssp1610_get_info },
 #endif
 };
 

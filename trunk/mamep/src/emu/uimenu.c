@@ -272,7 +272,6 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected, menu_au
 	int visible_lines;
 	int top_line;
 	int itemnum, linenum;
-	rgb_t itembarfg = ui_get_rgb_color(CURSOR_COLOR);
 
 	/* the left/right gutters are the max of all stuff that might go in there */
 	gutter_width = MAX(left_hilight_width, right_hilight_width);
@@ -369,12 +368,7 @@ void ui_menu_draw(const ui_menu_item *items, int numitems, int selected, menu_au
 		if (itemnum == selected)
 #ifdef UI_COLOR_DISPLAY
 			//mamep: draw a selected bar
-			ui_draw_box(	visible_left, line_y,
-							visible_left + visible_width, line_y + ui_get_line_height(),
-							MAKE_ARGB(	options.ui_transparency / 2,
-										RGB_RED(itembarfg),
-										RGB_GREEN(itembarfg),
-										RGB_BLUE(itembarfg)));
+			ui_draw_box(visible_left, line_y, visible_left + visible_width, line_y + ui_get_line_height(), ui_get_rgb_color(CURSOR_COLOR));
 #else /* UI_COLOR_DISPLAY */
 			itemfg = MENU_SELECTCOLOR;
 #endif /* UI_COLOR_DISPLAY */
@@ -794,7 +788,7 @@ do { \
 #endif /* USE_SCALE_EFFECTS */
 
 	/* add cheat menu */
-	if (options.cheat)
+	if (options_get_bool(OPTION_CHEAT))
 		ADD_MENU(UI_cheat, menu_cheat, 1);
 
 	/* add memory card menu */
@@ -1688,9 +1682,9 @@ static UINT32 menu_autofire(UINT32 state)
 	ui_menu_item item_list[200];
 	int selected = state;
 	int menu_items = 0;
+	int item_autofire_delay;
 	input_port_entry *entry[200];
 	input_port_entry *in;
-	int autofire_delay;
 	int players = 0;
 	int i;
 
@@ -1730,12 +1724,12 @@ static UINT32 menu_autofire(UINT32 state)
 	if (menu_items == 0)
 		return ui_menu_stack_pop();
 
-	autofire_delay = menu_items;
+	item_autofire_delay = menu_items;
 
 	for (i = 0; i < players; i++)
 	{
 		item_list[menu_items].text = menu_string_pool_add("P%d %s", i + 1, ui_getstring(UI_autofiredelay));
-		item_list[menu_items++].subtext = menu_string_pool_add("%d", options.autofiredelay[i]);
+		item_list[menu_items++].subtext = menu_string_pool_add("%d", get_autofiredelay(i));
 	}
 
 	item_list[menu_items++].text = ui_getstring (UI_returntomain);
@@ -1746,24 +1740,29 @@ static UINT32 menu_autofire(UINT32 state)
 	if (ui_menu_generic_keys(&selected, menu_items))
 		return selected;
 
-	if (selected >= autofire_delay && selected < autofire_delay + players)
+	if (selected >= item_autofire_delay && selected < item_autofire_delay + players)
 	{
-		i = selected - autofire_delay;
+		int autofire_delay;
+
+		i = selected - item_autofire_delay;
+		autofire_delay = get_autofiredelay(i);
 
 		if (input_ui_pressed_repeat(IPT_UI_RIGHT,8))
 		{
-			options.autofiredelay[i]++;
-			if (options.autofiredelay[i] > 99)
-				options.autofiredelay[i] = 99;
+			autofire_delay++;
+			if (autofire_delay > 99)
+				autofire_delay = 99;
 		}
 		if (input_ui_pressed_repeat(IPT_UI_LEFT,8))
 		{
-			options.autofiredelay[i]--;
-			if (options.autofiredelay[i] < 1)
-				options.autofiredelay[i] = 1;
+			autofire_delay--;
+			if (autofire_delay < 1)
+				autofire_delay = 1;
 		}
+
+		set_autofiredelay(i, autofire_delay);
 	}
-	else if (selected < autofire_delay)
+	else if (selected < item_autofire_delay)
 	{
 		int selected_value = entry[selected]->autofire_setting;
 

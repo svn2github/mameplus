@@ -194,7 +194,7 @@ static void hiscore_load (void)
 {
 	if (is_highscore_enabled())
 	{
-		mame_file_error filerr;
+		file_error filerr;
 		mame_file *f;
 		char *fname;
 		fname = assemble_2_strings(Machine->basename, ".hi");
@@ -230,7 +230,7 @@ static void hiscore_save (void)
 {
 	if (is_highscore_enabled())
 	{
-		mame_file_error filerr;
+		file_error filerr;
 		mame_file *f;
 		char *fname;
 		fname = assemble_2_strings(Machine->basename, ".hi");
@@ -294,7 +294,7 @@ void hiscore_close (running_machine *machine)
 void hiscore_init (running_machine *machine, const char *name)
 {
 	memory_range *mem_range = state.mem_range;
-	mame_file_error filerr;
+	file_error filerr;
 	mame_file *f;
 	const char *db_filename = options_get_string(OPTION_HISCORE_FILE);
 

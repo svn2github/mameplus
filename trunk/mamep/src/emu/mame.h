@@ -174,7 +174,10 @@ struct _running_machine
 	/* input-related information */
 	input_port_entry *		input_ports;		/* the input ports definition from the driver is copied here and modified */
 	mame_file *				record_file;		/* recording file (NULL if not recording) */
-	mame_file *				playback_file;		/* playback file (NULL if not recording) */
+	mame_file *				playback_file;		/* playback file (NULL if not playing) */
+#ifdef INP_CAPTION
+	mame_file *				caption_file;		/* caption file for playback (NULL if not playing) */
+#endif /* INP_CAPTION */
 
 	/* debugger-related information */
 	int						debug_mode;			/* was debug mode enabled? */
@@ -242,73 +245,18 @@ struct ImageFile
 /* The host platform should fill these fields with the preferences specified in the GUI */
 /* or on the commandline. */
 typedef struct _global_options global_options;
+#ifdef MESS
+typedef struct _global_options global_options;
 struct _global_options
 {
-	mame_file *	record;			/* handle to file to record input to */
-	mame_file *	playback;		/* handle to file to playback input from */
-#ifdef INP_CAPTION
-	mame_file *	caption;		/* handle to file to playback caption from */
-#endif /* INP_CAPTION */
-	mame_file *	language_file;	/* handle to file for localization */
-	mame_file *	logfile;		/* handle to file for debug logging */
-
-	UINT8		mame_debug;		/* 1 to enable debugging */
-	UINT8		cheat;			/* 1 to enable cheating */
-	int			use_lang_list;
-	int			langcode;
-	UINT8 		skip_disclaimer;/* 1 to skip the disclaimer screen at startup */
-	UINT8 		skip_gameinfo;	/* 1 to skip the game info screen at startup */
-	UINT8 		skip_warnings;	/* 1 to skip the warnings screen at startup */
-
-	int			samplerate;		/* sound sample playback rate, in Hz */
-	UINT8		use_samples;	/* 1 to enable external .wav samples */
-#ifdef USE_VOLUME_AUTO_ADJUST
-	int			use_volume_adjust;
-#endif /* USE_VOLUME_AUTO_ADJUST */
-
-	float		brightness;		/* default brightness of the display */
-	float		contrast;		/* default brightness of the display */
-	float		gamma;			/* default gamma correction of the display */
-	float		pause_bright;	/* fractional brightness when in pause */
-
-	int			beam;			/* vector beam width */
-	float		vector_flicker;	/* vector beam flicker effect control */
-	UINT8 		antialias;		/* 1 to enable antialiasing on vectors */
-
-	const char * savegame;		/* string representing a savegame to load; if one length then interpreted as a character */
-	UINT8		auto_save;		/* 1 to automatically save/restore at startup/quitting time */
-	char *		bios;			/* specify system bios (if used), 0 is default */
-
-#ifdef USE_IPS
-	const char * patchname;		/* International Patching System */
-#endif /* USE_IPS */
-	int			confirm_quit;	/* 1 for confirm before exiting game */
-#ifdef AUTO_PAUSE_PLAYBACK
-	int			auto_pause_playback;	/* 1 for automatic pause when playback is finished */
-#endif /* AUTO_PAUSE_PLAYBACK */
-#if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-	int m68k_core;			/* ks hcmame s switch m68k core */
-#endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
-#ifdef TRANS_UI
-	int			use_transui;	/* 1 to use transparent background for UI text */
-	int			ui_transparency;	/* transparency of UI background */
-#endif /* TRANS_UI */
-#ifdef UI_COLOR_DISPLAY
-	UINT8		uicolortable[MAX_COLORTABLE][3];	/* palette options for UI */
-#endif /* UI_COLOR_DISPLAY */
-	int			autofiredelay[MAX_PLAYERS];	/* autofire delay */
-
-	const char *controller;	/* controller-specific cfg to load */
-
-#ifdef MESS
 	UINT32	ram;
 	struct ImageFile image_files[32];
 	int		image_count;
 	int		disable_normal_ui;
 	int		min_width;		/* minimum width for the display */
 	int		min_height;		/* minimum height for the display */
-#endif /* MESS */
 };
+#endif /* MESS */
 
 
 
@@ -316,7 +264,10 @@ struct _global_options
     GLOBALS
 ***************************************************************************/
 
+#ifdef MESS
 extern global_options options;
+#endif
+
 extern running_machine *Machine;
 extern const char *mame_disclaimer;
 extern char giant_string_buffer[];

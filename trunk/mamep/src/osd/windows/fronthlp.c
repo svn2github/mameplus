@@ -67,7 +67,7 @@ static void namecopy(char *name_ref,const char *desc)
 {
 	char name[200];
 
-	if (options.use_lang_list)
+	if (lang_message_is_enabled(UI_MSG_LIST))
 	{
 		strcpy(name, _LST(desc));
 		if (strstr(name," (")) *strstr(name," (") = 0;
@@ -109,7 +109,7 @@ static void match_roms(const game_driver *driver, const char *hash, int length, 
 				{
 					if (*found != 0)
 						faprintf(output, "             ");
-					faprintf(output, "= %s%-12s  %s\n",baddump ? _WINDOWS("(BAD) ") : "",ROM_GETNAME(rom),(options.use_lang_list ? _LST(driver->description) : driver->description));
+					faprintf(output, "= %s%-12s  %s\n",baddump ? _WINDOWS("(BAD) ") : "",ROM_GETNAME(rom),_LST(driver->description));
 				}
 				(*found)++;
 			}
@@ -420,7 +420,7 @@ int frontend_listfull(FILE *output)
 
 			faprintf(output, "%-10s", drivers[drvindex]->name);
 
-			if (options.use_lang_list)
+			if (lang_message_is_enabled(UI_MSG_LIST))
 			{
 				strcpy(name, _LST(drivers[drvindex]->description));
 				faprintf(output, "\"%s\"\n", name);
@@ -462,9 +462,9 @@ int frontend_listgames(FILE *output)
 		{
 			char name[200];
 
-			faprintf(output, "%-5s%-36s ",drivers[drvindex]->year, (options.use_lang_list ? _MANUFACT(drivers[drvindex]->manufacturer) : drivers[drvindex]->manufacturer));
+			faprintf(output, "%-5s%-36s ",drivers[drvindex]->year, _MANUFACT(drivers[drvindex]->manufacturer));
 
-			if (options.use_lang_list)
+			if (lang_message_is_enabled(UI_MSG_LIST))
 			{
 				strcpy(name, _LST(drivers[drvindex]->description));
 				faprintf(output, "\"%s\"\n", name);
@@ -561,7 +561,7 @@ int frontend_listcrc(FILE *output)
 
 				/* if we have a CRC, display it */
 				if (hash_data_extract_printable_checksum(ROM_GETHASHDATA(rom), HASH_CRC, hashbuf))
-					faprintf(output, "%s %-12s %s\n", hashbuf, ROM_GETNAME(rom), (options.use_lang_list ? _LST(drivers[drvindex]->description) : drivers[drvindex]->description));
+					faprintf(output, "%s %-12s %s\n", hashbuf, ROM_GETNAME(rom), _LST(drivers[drvindex]->description));
 			}
 	}
 

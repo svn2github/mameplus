@@ -29,6 +29,7 @@
                 - calls sndintrf_init() [sndintrf.c] to determine which sound chips are available
                 - calls fileio_init() [fileio.c] to initialize file I/O info
                 - calls config_init() [config.c] to initialize configuration system
+                - calls output_init() [output.c] to initialize the output system
                 - calls state_init() [state.c] to initialize save state system
                 - calls state_save_allow_registration() [state.c] to allow registrations
                 - calls drawgfx_init() [drawgfx.c] to initialize rendering globals
@@ -37,23 +38,23 @@
                 - calls ui_init() [ui.c] to initialize the user interface
                 - calls generic_machine_init() [machine/generic.c] to initialize generic machine structures
                 - calls generic_video_init() [video/generic.c] to initialize generic video structures
+                - calls timer_init() [timer.c] to reset the timer system
                 - calls osd_init() [osdepend.h] to do platform-specific initialization
                 - calls code_init() [input.c] to initialize the input system
                 - calls input_port_init() [inptport.c] to set up the input ports
                 - calls rom_init() [romload.c] to load the game's ROMs
-                - calls timer_init() [timer.c] to reset the timer system
                 - calls memory_init() [memory.c] to process the game's memory maps
                 - calls cpuexec_init() [cpuexec.c] to initialize the CPUs
                 - calls cpuint_init() [cpuint.c] to initialize the CPU interrupts
 // USE_HISCORE
                 - calls hiscore_init() [hiscore.c] to initialize the hiscores
-                - calls saveload_init() [mame.c] to set up for save/load
                 - calls the driver's DRIVER_INIT callback
-                - calls sound_init() [sound.c] to start the audio system
                 - calls video_init() [video.c] to start the video system
-                - calls cheat_init() [cheat.c] to initialize the cheat system
+                - calls sound_init() [sound.c] to start the audio system
                 - calls the driver's MACHINE_START, SOUND_START, and VIDEO_START callbacks
                 - disposes of regions marked as disposable
+                - calls saveload_init() [mame.c] to set up for save/load
+                - calls cheat_init() [cheat.c] to initialize the cheat system
                 - calls mame_debug_init() [debugcpu.c] to set up the debugger
 
             - calls config_load_settings() [config.c] to load the configuration file
@@ -144,6 +145,7 @@ struct _mame_private
 	UINT8			exit_pending;
 	char *			saveload_pending_file;
 	mame_timer *	soft_reset_timer;
+	mame_file *		logfile;
 
 	/* callbacks */
 	callback_item *	reset_callback_list;
@@ -178,8 +180,10 @@ struct _mame_private
 /* the active machine */
 running_machine *Machine;
 
+#ifdef MESS
 /* various game options filled in by the OSD */
 global_options options;
+#endif
 
 /* output channels */
 static output_callback output_cb[OUTPUT_CHANNEL_COUNT];
@@ -270,6 +274,7 @@ int run_game(int game)
 {
 	running_machine *machine;
 	int error = MAMERR_NONE;
+	int firstrun = TRUE;
 	mame_private *mame;
 	callback_item *cb;
 
@@ -310,8 +315,12 @@ int run_game(int game)
 
 			/* if we have a logfile, set up the callback */
 			mame->logerror_callback_list = NULL;
-			if (options.logfile)
+			if (options_get_bool(OPTION_LOG))
+			{
+				file_error filerr = mame_fopen(SEARCHPATH_DEBUGLOG, "error.log", OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &mame->logfile);
+				assert_always(filerr == FILERR_NONE, "unable to open log file");
 				add_logerror_callback(machine, logfile_callback);
+			}
 
 			/* then finish setting up our local machine */
 			init_machine(machine);
@@ -321,10 +330,9 @@ int run_game(int game)
 			nvram_load();
 
 			/* display the startup screens */
-			ui_display_startup_screens(!settingsloaded && !options.skip_disclaimer, !options.skip_warnings, !options.skip_gameinfo);
-
-			/* ensure we don't show the opening screens on a reset */
-			options.skip_disclaimer = options.skip_warnings = options.skip_gameinfo = TRUE;
+			if (firstrun)
+				ui_display_startup_screens(!settingsloaded);
+			firstrun = FALSE;
 
 			/* start resource tracking; note that soft_reset assumes it can */
 			/* call end_resource_tracking followed by begin_resource_tracking */
@@ -363,7 +371,7 @@ int run_game(int game)
 
 			/* save the NVRAM and configuration */
 			nvram_save();
-			if (!Machine->playback_file)
+			if (!machine->playback_file)
 			config_save_settings();
 		}
 		mame->fatal_error_jmpbuf_valid = FALSE;
@@ -374,6 +382,10 @@ int run_game(int game)
 
 		/* close all inner resource tracking */
 		exit_resource_tracking();
+
+		/* close the logfile */
+		if (mame->logfile != NULL)
+			mame_fclose(mame->logfile);
 
 		/* free our callback lists */
 		free_callback_list(&mame->exit_callback_list);
@@ -484,7 +496,7 @@ void mame_schedule_exit(running_machine *machine)
 	mame->exit_pending = TRUE;
 
 	/* if we're autosaving on exit, schedule a save as well */
-	if (options.auto_save && (machine->gamedrv->flags & GAME_SUPPORTS_SAVE))
+	if (options_get_bool(OPTION_AUTOSAVE) && (machine->gamedrv->flags & GAME_SUPPORTS_SAVE))
 		mame_schedule_save(machine, machine->gamedrv->name);
 }
 
@@ -1064,8 +1076,9 @@ void add_logerror_callback(running_machine *machine, void (*callback)(running_ma
 
 static void logfile_callback(running_machine *machine, const char *buffer)
 {
-	if (options.logfile)
-		mame_fputs(options.logfile, buffer);
+	mame_private *mame = machine->mame_data;
+	if (mame->logfile != NULL)
+		mame_fputs(mame->logfile, buffer);
 }
 
 
@@ -1147,10 +1160,8 @@ static running_machine *create_machine(int game)
 		machine->screen[scrnum] = machine->drv->screen[scrnum].defstate;
 
 	/* convert some options into live state */
-	machine->sample_rate = options.samplerate;
-	machine->record_file = options.record;
-	machine->playback_file = options.playback;
-	machine->debug_mode = options.mame_debug;
+	machine->sample_rate = options_get_int_range(OPTION_SAMPLERATE, 1000, 1000000);
+	machine->debug_mode = options_get_bool(OPTION_DEBUG);
 
 	return machine;
 
@@ -1197,6 +1208,28 @@ static void m68kcore_init(running_machine *machine)
 	static const char *names[] = { "C", "DRC", "ASM" };
 	cpu_config *cpu_ptr = machine->drv->cpu;
 	int cpunum, type;
+	const char *stemp = options_get_string("m68k_core");
+	int m68k_core = 0;
+
+	if (stemp != NULL)
+	{
+		if (mame_stricmp(stemp, "c") == 0)
+			m68k_core = 0;
+		else if (mame_stricmp(stemp, "drc") == 0)
+			m68k_core = 1;
+		else if (mame_stricmp(stemp, "asm") == 0)
+			m68k_core = 2;
+		else
+		{
+			m68k_core = options_get_int("m68k_core");
+
+			if (m68k_core < 0 || m68k_core > 2)
+			{
+				mame_printf_error(_("Illegal value for %s = %s\n"), "m68k_core", stemp);
+				m68k_core = 0;
+			}
+		}
+	}
 
 	for (cpunum = 0; cpunum < MAX_CPU; cpunum++)
 	{
@@ -1204,7 +1237,7 @@ static void m68kcore_init(running_machine *machine)
 #if (HAS_M68000)
 		if(type == CPU_M68000)
 		{
-			switch (options.m68k_core)
+			switch (m68k_core)
 			{
 			case 2:
 #if (HAS_M68000ASM)
@@ -1229,7 +1262,7 @@ static void m68kcore_init(running_machine *machine)
 #if (HAS_M68008)
 		if(type == CPU_M68008)
 		{
-			switch (options.m68k_core)
+			switch (m68k_core)
 			{
 			case 2:
 #if (HAS_M68000ASM)
@@ -1254,7 +1287,7 @@ static void m68kcore_init(running_machine *machine)
 #if (HAS_M68010)
 		if(type == CPU_M68010)
 		{
-			switch (options.m68k_core)
+			switch (m68k_core)
 			{
 			case 2:
 #if (HAS_M68010ASM)
@@ -1279,7 +1312,7 @@ static void m68kcore_init(running_machine *machine)
 #if (HAS_M68EC020)
 		if(type == CPU_M68EC020)
 		{
-			switch (options.m68k_core)
+			switch (m68k_core)
 			{
 			case 2:
 #if (HAS_M68020ASM)
@@ -1304,7 +1337,7 @@ static void m68kcore_init(running_machine *machine)
 #if (HAS_M68020)
 		if(type == CPU_M68020)
 		{
-			switch (options.m68k_core)
+			switch (m68k_core)
 			{
 			case 2:
 #if (HAS_M68020ASM)
@@ -1329,7 +1362,7 @@ static void m68kcore_init(running_machine *machine)
 #if (HAS_M68040)
 		if(type == CPU_M68040)
 		{
-			switch (options.m68k_core)
+			switch (m68k_core)
 			{
 			case 2:
 #if (HAS_M68040ASM)
@@ -1385,46 +1418,33 @@ static void init_machine(running_machine *machine)
 	generic_video_init(machine);
 	mame->rand_seed = 0x9d14abd7;
 
-	/* initialize the base time (if not doing record/playback) */
-	if (!Machine->record_file && !Machine->playback_file)
-		time(&mame->base_time);
-	else
-		mame->base_time = 0;
-
-	/* init the osd layer */
-	if (osd_init(machine) != 0)
-		fatalerror("osd_init failed");
-
-	/* initialize the input system */
-	/* this must be done before the input ports are initialized */
-	if (code_init(machine) != 0)
-		fatalerror("code_init failed");
-
-	/* initialize the input ports for the game */
-	/* this must be done before memory_init in order to allow specifying */
-	/* callbacks based on input port tags */
-	if (input_port_init(machine, machine->gamedrv->ipt) != 0)
-		fatalerror("input_port_init failed");
-
-	/* load the ROMs if we have some */
-	/* this must be done before memory_init in order to allocate memory regions */
-	rom_init(machine, machine->gamedrv->rom);
-
 	/* initialize the timers and allocate a soft_reset timer */
 	/* this must be done before cpu_init so that CPU's can allocate timers */
 	timer_init(machine);
 	mame->soft_reset_timer = timer_alloc(soft_reset);
 
-	/* initialize the memory system for this game */
-	/* this must be done before cpu_init so that set_context can look up the opcode base */
-	if (memory_init(machine) != 0)
-		fatalerror("memory_init failed");
+	/* init the osd layer */
+	if (osd_init(machine) != 0)
+		fatalerror("osd_init failed");
 
-	/* now set up all the CPUs */
-	if (cpuexec_init(machine) != 0)
-		fatalerror("cpuexec_init failed");
-	if (cpuint_init(machine) != 0)
-		fatalerror("cpuint_init failed");
+	/* initialize the input system and input ports for the game */
+	/* this must be done before memory_init in order to allow specifying */
+	/* callbacks based on input port tags */
+	code_init(machine);
+	input_port_init(machine, machine->gamedrv->ipt);
+
+	/* initialize the base time (if not doing record/playback) */
+	if (machine->record_file == NULL && machine->playback_file == NULL)
+		time(&mame->base_time);
+	else
+		mame->base_time = 0;
+
+	/* first load ROMs, then populate memory, and finally initialize CPUs */
+	/* these operations must proceed in this order */
+	rom_init(machine, machine->gamedrv->rom);
+	memory_init(machine);
+	cpuexec_init(machine);
+	cpuint_init(machine);
 
 #ifdef MESS
 	/* initialize the devices */
@@ -1436,9 +1456,6 @@ static void init_machine(running_machine *machine)
 	hiscore_init(machine, machine->gamedrv->name);
 #endif /* USE_HISCORE */
 
-	/* start the save/load system */
-	saveload_init(machine);
-
 	/* call the game driver's init function */
 	/* this is where decryption is done and memory maps are altered */
 	/* so this location in the init order is important */
@@ -1446,17 +1463,9 @@ static void init_machine(running_machine *machine)
 	if (machine->gamedrv->driver_init != NULL)
 		(*machine->gamedrv->driver_init)(machine);
 
-	/* start the audio system */
-	if (sound_init(machine) != 0)
-		fatalerror("sound_init failed");
-
-	/* start the video hardware */
-	if (video_init(machine) != 0)
-		fatalerror("video_init failed");
-
-	/* start the cheat engine */
-	if (options.cheat)
-		cheat_init(machine);
+	/* start the video and audio hardware */
+	video_init(machine);
+	sound_init(machine);
 
 	/* call the driver's _START callbacks */
 	if (machine->drv->machine_start != NULL && (*machine->drv->machine_start)(machine) != 0)
@@ -1470,6 +1479,11 @@ static void init_machine(running_machine *machine)
 	for (num = 0; num < MAX_MEMORY_REGIONS; num++)
 		if (mame->mem_region[num].flags & ROMREGION_DISPOSE)
 			free_memory_region(machine, num);
+
+	/* initialize miscellaneous systems */
+	saveload_init(machine);
+	if (options_get_bool(OPTION_CHEAT))
+		cheat_init(machine);
 
 #ifdef MAME_DEBUG
 	/* initialize the debugger */
@@ -1558,22 +1572,24 @@ static void free_callback_list(callback_item **cb)
 
 static void saveload_init(running_machine *machine)
 {
+	const char *savegame = options_get_string(OPTION_STATE);
+
 	/* if we're coming in with a savegame request, process it now */
-	if (options.savegame)
+	if (savegame != NULL && savegame[0] != 0)
 	{
 		char name[20];
 
-		if (strlen(options.savegame) == 1)
+		if (strlen(savegame) == 1)
 		{
-			sprintf(name, "%s-%c.sta", machine->gamedrv->name, options.savegame[0]);
+			sprintf(name, "%s-%c", machine->gamedrv->name, savegame[0]);
 			mame_schedule_load(machine, name);
 		}
 		else
-			mame_schedule_load(machine, options.savegame);
+			mame_schedule_load(machine, savegame);
 	}
 
 	/* if we're in autosave mode, schedule a load */
-	else if (options.auto_save && (machine->gamedrv->flags & GAME_SUPPORTS_SAVE))
+	else if (options_get_bool(OPTION_AUTOSAVE) && (machine->gamedrv->flags & GAME_SUPPORTS_SAVE))
 		mame_schedule_load(machine, machine->gamedrv->name);
 }
 
@@ -1585,7 +1601,7 @@ static void saveload_init(running_machine *machine)
 static void handle_save(running_machine *machine)
 {
 	mame_private *mame = machine->mame_data;
-	mame_file_error filerr;
+	file_error filerr;
 	mame_file *file;
 
 	/* if no name, bail */
@@ -1670,7 +1686,7 @@ cancel:
 static void handle_load(running_machine *machine)
 {
 	mame_private *mame = machine->mame_data;
-	mame_file_error filerr;
+	file_error filerr;
 	mame_file *file;
 
 	/* if no name, bail */

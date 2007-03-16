@@ -797,7 +797,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			char *stemp;
 			const WCHAR *szDir = GetPcbinfoDir();
 			mame_file *mfile;
-			mame_file_error filerr;
+			file_error filerr;
 			long filelen;
 			int nParentIndex = -1;
 			char *PcbData;

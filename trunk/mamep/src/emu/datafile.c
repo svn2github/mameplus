@@ -691,7 +691,7 @@ static void ParseClose(void)
  ****************************************************************************/
 static UINT8 ParseOpen(const char *pszFilename)
 {
-	mame_file_error filerr;
+	file_error filerr;
 
 	/* Open file up in binary mode */
 	filerr = mame_fopen(SEARCHPATH_DATAFILE, pszFilename, OPEN_FLAG_READ, &fp);
@@ -1324,7 +1324,7 @@ static int load_datafile (const game_driver *drv, char *buffer, int bufsize,
 	{
 		sprintf(filename, "%s\\%s\\",
 	        	options_get_string(OPTION_LOCALIZED_DIRECTORY),
-			ui_lang_info[options.langcode].name);
+			ui_lang_info[lang_get_langcode()].name);
 	}
 
 	base = filename + strlen(filename);
@@ -1415,10 +1415,12 @@ static void flush_index_if_needed(void)
 {
 	static int oldLangCode = -1;
 
-	if (oldLangCode != options.langcode)
+	if (oldLangCode != lang_get_langcode())
+	{
 		flush_index();
 
-	oldLangCode = options.langcode;
+		oldLangCode = lang_get_langcode();
+	}
 }
 
 /**************************************************************************
@@ -1504,9 +1506,7 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 	      GAME_IMPERFECT_COLORS | GAME_NO_SOUND | GAME_IMPERFECT_SOUND | GAME_NO_COCKTAIL))
 	{
 		strcat(buffer, _("GAME: "));
-		strcat(buffer, options.use_lang_list?
-			_LST(drv->description):
-			drv->description);
+		strcat(buffer, _LST(drv->description));
 		strcat(buffer, "\n");
 
 		if (drv->flags & GAME_NOT_WORKING)
@@ -1610,17 +1610,13 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 	if (clone_of && !(clone_of->flags & NOT_A_DRIVER))
 	{
 		strcat(buffer, _("\nORIGINAL:\n"));
-		strcat(buffer, options.use_lang_list?
-			_LST(clone_of->description):
-			clone_of->description);
+		strcat(buffer, _LST(clone_of->description));
 		strcat(buffer, _("\n\nCLONES:\n"));
 		for (i = 0; drivers[i]; i++)
 		{
 			if (!mame_stricmp (drv->parent, drivers[i]->parent)) 
 			{
-				strcat(buffer, options.use_lang_list?
-					_LST(drivers[i]->description):
-					drivers[i]->description);
+				strcat(buffer, _LST(drivers[i]->description));
 				strcat(buffer, "\n");
 			}
 		}
@@ -1628,17 +1624,13 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 	else
 	{
 		strcat(buffer, _("\nORIGINAL:\n"));
-		strcat(buffer, options.use_lang_list?
-			_LST(drv->description):
-			drv->description);
+		strcat(buffer, _LST(drv->description));
 		strcat(buffer, _("\n\nCLONES:\n"));
 		for (i = 0; drivers[i]; i++)
 		{
 			if (!mame_stricmp (drv->name, drivers[i]->parent)) 
 			{
-				strcat(buffer, options.use_lang_list?
-					_LST(drivers[i]->description):
-					drivers[i]->description);
+				strcat(buffer, _LST(drivers[i]->description));
 				strcat(buffer, "\n");
 			}
 		}
@@ -2657,7 +2649,7 @@ static int find_command (const game_driver *drv)
 		{
 			sprintf(filename, "%s\\%s\\",
 		        	options_get_string(OPTION_LOCALIZED_DIRECTORY),
-				ui_lang_info[options.langcode].name);
+				ui_lang_info[lang_get_langcode()].name);
 		}
 
 		base = filename + strlen(filename);

@@ -2252,7 +2252,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 #ifdef DRIVER_SWITCH
 	{
 		mame_file *file;
-		mame_file_error filerr;
+		file_error filerr;
 
 		options_init(windows_opts);
 
@@ -4663,7 +4663,7 @@ static int MMO2LST(void)
 {
 	WCHAR filename[MAX_PATH];
 
-	swprintf(filename, TEXT_MAME32NAME TEXT("%s"), _Unicode(ui_lang_info[options.langcode].shortname));
+	swprintf(filename, TEXT_MAME32NAME TEXT("%s"), _Unicode(ui_lang_info[GetLangcode()].shortname));
 	wcscpy(filename, strlower(filename));
 
 	if (!CommonFileDialog(TRUE, filename, FILETYPE_GAMELIST_FILES))
@@ -6466,7 +6466,7 @@ static void MamePlayBackGame(const WCHAR *fname_playback)
 	if (*filename)
 	{
 		mame_file* pPlayBack;
-		mame_file_error filerr;
+		file_error filerr;
 		WCHAR drive[_MAX_DRIVE];
 		WCHAR dir[_MAX_DIR];
 		WCHAR bare_fname[_MAX_FNAME];
@@ -6579,7 +6579,7 @@ static void MameLoadState(const WCHAR *fname_state)
 	if (*filename)
 	{
 		mame_file* pSaveState;
-		mame_file_error filerr;
+		file_error filerr;
 		WCHAR drive[_MAX_DRIVE];
 		WCHAR dir[_MAX_DIR];
 		WCHAR ext[_MAX_EXT];
@@ -7548,7 +7548,7 @@ static INT_PTR CALLBACK LoadProgressDialogProc(HWND hDlg, UINT Msg, WPARAM wPara
 		WCHAR buf[256];
 		
 		TranslateDialog(hDlg, lParam, TRUE);
-		swprintf(buf, _UIW(TEXT("Loading %s")), options.use_lang_list ?
+		swprintf(buf, _UIW(TEXT("Loading %s")), UseLangList() ?
 			_LSTW(driversw[GetDriverIndex(Machine->gamedrv)]->description) : driversw[GetDriverIndex(Machine->gamedrv)]->modify_the);
 		SetWindowText(hDlg, buf);
 		
@@ -7593,7 +7593,7 @@ int UpdateLoadProgress(const char* name, const rom_load_data *romdata)
 
 	if (hWndLoad == NULL)
 	{
-		InitTranslator(options.langcode);
+		InitTranslator(GetLangcode());
 		hWndLoad = CreateDialog(GetModuleHandle(NULL),
 		                        MAKEINTRESOURCE(IDD_LOAD_PROGRESS),
 		                        hMain,

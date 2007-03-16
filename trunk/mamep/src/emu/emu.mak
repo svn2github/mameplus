@@ -133,7 +133,7 @@ $(LIBSOUND): $(SOUNDOBJS)
 # additional dependencies
 #-------------------------------------------------
 
-$(EMUOBJ)/rendfont.o:		$(EMUOBJ)/uismall10.fh $(EMUOBJ)/uismall14.fh $(EMUOBJ)/uicmd10.fh $(EMUOBJ)/uicmd14.fh
+$(EMUOBJ)/rendfont.o:		$(EMUOBJ)/uismall11.fh $(EMUOBJ)/uismall14.fh $(EMUOBJ)/uicmd11.fh $(EMUOBJ)/uicmd14.fh
 
 $(EMUOBJ)/video.o:		$(EMUSRC)/rendersw.c
 
@@ -168,7 +168,7 @@ $(EMUOBJ)/video.o:		$(EMUOBJ)/layout/snap.lh
 # embedded font
 #-------------------------------------------------
 
-$(EMUOBJ)/uismall10.bdc: $(PNGS2BDC) \
+$(EMUOBJ)/uismall11.bdc: $(PNGS2BDC) \
 		$(SRC)/emu/font/uismall.png \
 		$(SRC)/emu/font/cp1250.png
 	@echo Generating $@...
@@ -183,7 +183,7 @@ $(EMUOBJ)/uismall14.bdc: $(PNGS2BDC) \
 	@echo Generating $@...
 	@$^ $@
 
-$(EMUOBJ)/uicmd10.bdc: $(PNGS2BDC) $(SRC)/emu/font/cmd10.png
+$(EMUOBJ)/uicmd11.bdc: $(PNGS2BDC) $(SRC)/emu/font/cmd11.png
 	@echo Generating $@...
 	@$^ $@
 

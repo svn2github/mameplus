@@ -98,6 +98,7 @@
 #include "profiler.h"
 #include "ui.h"
 #include <math.h>
+#include <ctype.h>
 
 #include "rendfont.h"
 
@@ -264,6 +265,7 @@ static UINT8 ui_memory[__ipt_max];
 /* XML attributes for the different types */
 static const char *seqtypestrings[] = { "standard", "decrement", "increment" };
 
+static int autofiredelay[MAX_PLAYERS];
 static input_port_info *autofire_toggle_port;
 static int normal_buttons;
 static int players;
@@ -1106,6 +1108,9 @@ static int default_ports_lookup[__ipt_max][MAX_PLAYERS];
     FUNCTION PROTOTYPES
 ***************************************************************************/
 
+static void setup_playback(running_machine *machine);
+static void setup_record(running_machine *machine);
+static void input_port_exit(running_machine *machine);
 static void input_port_load(int config_type, xml_data_node *parentnode);
 static void input_port_save(int config_type, xml_data_node *parentnode);
 static void update_digital_joysticks(void);
@@ -1125,12 +1130,15 @@ static int auto_pressed(input_bit_info *info);
  *
  *************************************/
 
-int input_port_init(running_machine *machine, const input_port_token *ipt)
+void input_port_init(running_machine *machine, const input_port_token *ipt)
 {
 	int ipnum, player;
 
+	/* add an exit callback */
+	add_exit_callback(machine, input_port_exit);
+
 	for (player = 0; player < MAX_PLAYERS; player++)
-		options.autofiredelay[player] = 1;
+		autofiredelay[player] = 1;
 
 #ifdef USE_CUSTOM_BUTTON
 	memset(custom_button, 0, sizeof(custom_button));
@@ -1154,20 +1162,16 @@ int input_port_init(running_machine *machine, const input_port_token *ipt)
 	memset(port_info, 0, sizeof(port_info));
 
 	/* if we have inputs, process them now */
-	if (ipt)
+	if (ipt != NULL)
 	{
 		input_port_entry *port;
 		int portnum;
 
 		/* allocate input ports */
 		Machine->input_ports = input_port_allocate(ipt, NULL);
-		if (!Machine->input_ports)
-			return 1;
 
 		/* allocate default input ports */
 		input_ports_default = input_port_allocate(ipt, NULL);
-		if (!input_ports_default)
-			return 1;
 
 		/* identify all the tagged ports up front so the memory system can access them */
 		portnum = 0;
@@ -1189,7 +1193,124 @@ int input_port_init(running_machine *machine, const input_port_token *ipt)
 	/* register callbacks for when we load configurations */
 	config_register("input", input_port_load, input_port_save);
 
-	return 0;
+	/* open playback and record files if specified */
+	setup_playback(machine);
+	setup_record(machine);
+}
+
+
+/*************************************
+ *
+ *  Set up for playback
+ *
+ *************************************/
+
+static void setup_playback(running_machine *machine)
+{
+	const char *filename = options_get_string(OPTION_PLAYBACK);
+	inp_header inp_header;
+	file_error filerr;
+
+	/* if no file, nothing to do */
+	if (filename == NULL || filename[0] == 0)
+		return;
+
+	filerr = FILERR_FAILURE;
+	if (strlen(filename) > 4 && mame_stricmp(filename + strlen(filename) - 4, ".zip") == 0)
+	{
+		char *fname = mame_strdup(filename);
+
+		if (fname)
+		{
+			strcpy(fname + strlen(fname) - 4, ".inp");
+			filerr = mame_fopen(SEARCHPATH_INPUTLOG, fname, OPEN_FLAG_READ, &machine->playback_file);
+			free(fname);
+		}
+	}
+	if (filerr != FILERR_NONE)
+	/* open the playback file */
+	filerr = mame_fopen(SEARCHPATH_INPUTLOG, filename, OPEN_FLAG_READ, &machine->playback_file);
+	assert_always(filerr == FILERR_NONE, "Failed to open file for playback");
+
+	/* read playback header */
+	mame_fread(machine->playback_file, &inp_header, sizeof(inp_header));
+
+	/* if the first byte is not alphanumeric, it's an old INP file with no header */
+	if (!isalnum(inp_header.name[0]))
+		mame_fseek(machine->playback_file, 0, SEEK_SET);
+
+	/* else verify the header against the current game */
+	else if (strcmp(machine->gamedrv->name, inp_header.name) != 0)
+		fatalerror("Input file is for " GAMENOUN " '%s', not for current " GAMENOUN " '%s'\n", inp_header.name, machine->gamedrv->name);
+
+	/* otherwise, print a message indicating what's happening */
+	else
+		mame_printf_info("Playing back previously recorded " GAMENOUN " %s\n", machine->gamedrv->name);
+
+#ifdef INP_CAPTION
+	if (strlen(filename) > 4)
+	{
+		char *fname = mame_strdup(filename);
+
+		if (fname)
+		{
+			strcpy(fname + strlen(fname) - 4, ".cap");
+			mame_fopen(SEARCHPATH_INPUTLOG, fname, OPEN_FLAG_READ, &machine->caption_file);
+			free(fname);
+		}
+	}
+#endif /* INP_CAPTION */
+}
+
+
+/*************************************
+ *
+ *  Set up for recording
+ *
+ *************************************/
+
+static void setup_record(running_machine *machine)
+{
+	const char *filename = options_get_string(OPTION_RECORD);
+	inp_header inp_header;
+	file_error filerr;
+
+	/* if no file, nothing to do */
+	if (filename == NULL || filename[0] == 0)
+		return;
+
+	/* open the record file  */
+	filerr = mame_fopen(SEARCHPATH_INPUTLOG, filename, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &machine->record_file);
+	assert_always(filerr == FILERR_NONE, "Failed to open file for recording");
+
+	/* create a header */
+	memset(&inp_header, 0, sizeof(inp_header));
+	strcpy(inp_header.name, machine->gamedrv->name);
+	mame_fwrite(machine->record_file, &inp_header, sizeof(inp_header));
+}
+
+
+
+/*************************************
+ *
+ *  Input port exit
+ *
+ *************************************/
+
+void input_port_exit(running_machine *machine)
+{
+	/* close any playback or recording files */
+#ifdef INP_CAPTION
+	if (machine->caption_file != NULL)
+		mame_fclose(machine->caption_file);
+	machine->caption_file = NULL;
+#endif /* INP_CAPTION */
+	if (machine->playback_file != NULL)
+		mame_fclose(machine->playback_file);
+	machine->playback_file = NULL;
+	if (machine->record_file != NULL)
+		mame_fclose(machine->record_file);
+	machine->record_file = NULL;
 }
 
 
@@ -1715,7 +1836,7 @@ static void input_port_load(int config_type, xml_data_node *parentnode)
 			int player = xml_get_attribute_int(portnode, "player", 0);
 
 			if (player > 0 && player <= MAX_PLAYERS)
-				options.autofiredelay[player - 1] = xml_get_attribute_int(portnode, "delay", 1);
+				autofiredelay[player - 1] = xml_get_attribute_int(portnode, "delay", 1);
 		}
 	}
 
@@ -1869,13 +1990,13 @@ static void save_game_inputs(xml_data_node *parentnode)
 
 	for (portnum = 0; portnum < MAX_PLAYERS; portnum++)
 	{
-		if (options.autofiredelay[portnum] != 1)
+		if (autofiredelay[portnum] != 1)
 		{
 			xml_data_node *childnode = xml_add_child(parentnode, "autofire", NULL);
 			if (childnode)
 			{
 				xml_set_attribute_int(childnode, "player", portnum + 1);
-				xml_set_attribute_int(childnode, "delay", options.autofiredelay[portnum]);
+				xml_set_attribute_int(childnode, "delay", autofiredelay[portnum]);
 			}
 		}
 	}
@@ -2872,7 +2993,7 @@ profiler_mark(PROFILER_INPUT);
 		}
 
 		/* if this is an autorepeat case, set a 1x delay and leave pressed = 1 */
-		else if (++counter > keydelay * speed * Machine->screen[0].refresh / 60)
+		else if (++counter > keydelay * speed * SUBSECONDS_TO_HZ(Machine->screen[0].refresh) / 60)
 		{
 			keydelay = 1;
 			counter = 0;
@@ -2916,12 +3037,11 @@ static void update_playback_record(int portnum, UINT32 portvalue)
 		{
 			mame_fclose(Machine->playback_file);
 			Machine->playback_file = NULL;
-			options.playback = NULL;
 
 			popmessage(_("End of playback"));
 
 #ifdef AUTO_PAUSE_PLAYBACK
-			if (options.auto_pause_playback)
+			if (options_get_bool("auto_pause_playback"))
 				ui_auto_pause();
 #endif /* AUTO_PAUSE_PLAYBACK */
 		}
@@ -3028,7 +3148,7 @@ profiler_mark(PROFILER_INPUT);
 				{
 					if (seq_pressed(input_port_seq(info->port, SEQ_TYPE_STANDARD)))
 					{
-						if (info->autopressed > options.autofiredelay[port->player])
+						if (info->autopressed > autofiredelay[port->player])
 							info->autopressed = 0;
 
 						info->autopressed++;
@@ -3693,9 +3813,9 @@ static int auto_pressed(input_bit_info *info)
 	{
 		if (pressed)
 		{
-			if (info->autopressed > options.autofiredelay[port->player])
+			if (info->autopressed > autofiredelay[port->player])
 				info->autopressed = 0;
-			else if (info->autopressed > options.autofiredelay[port->player] / 2)
+			else if (info->autopressed > autofiredelay[port->player] / 2)
 				pressed = 0;
 
 			info->autopressed++;
@@ -3705,6 +3825,16 @@ static int auto_pressed(input_bit_info *info)
 	}
 
 	return pressed;
+}
+
+int get_autofiredelay(int player)
+{
+	return autofiredelay[player];
+}
+
+void set_autofiredelay(int player, int delay)
+{
+	autofiredelay[player] = delay;
 }
 
 

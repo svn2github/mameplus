@@ -197,7 +197,7 @@ int Mame32VerifyRomSet(int game)
 
 	// apply selecting BIOS
 	game_options = GetGameOptions(game);
-	options.bios = game_options->bios;
+	options_set_string(OPTION_BIOS, game_options->bios);
 
 	audit_records = audit_images(game, AUDIT_VALIDATE_FAST, &audit);
 	res = ProcessAuditResults(game, audit, audit_records);

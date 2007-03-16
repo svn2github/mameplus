@@ -86,6 +86,11 @@ static const options_entry core_options[] =
 	// unadorned options - only a single one supported at the moment
 	{ "<UNADORNED0>",                NULL,        0,                 NULL },
 
+#ifdef DRIVER_SWITCH
+	{ NULL,                          NULL,        OPTION_HEADER,     "CORE CONFIGURATION OPTIONS" },
+	{ "driver_config",               "mame,plus", 0,                 "switch drivers"},
+#endif /* DRIVER_SWITCH */
+
 	// file and directory options
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE SEARCH PATH OPTIONS" },
 	{ "rompath;rp;biospath;bp",      "roms",      0,                 "path to ROMsets and hard disk images" },
@@ -138,12 +143,143 @@ static const options_entry core_options[] =
 	{ "hiscore_file",               "hiscore.dat",OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* USE_HISCORE */
 
+	{ NULL,                          NULL,        OPTION_HEADER,     "CORE STATE/PLAYBACK OPTIONS" },
+	{ "state",                       NULL,        0,                 "saved state to load" },
+	{ "autosave",                    "0",         OPTION_BOOLEAN,    "enable automatic restore at startup, and automatic save at exit time" },
+	{ "playback;pb",                 NULL,        0,                 "playback an input file" },
+	{ "record;rec",                  NULL,        0,                 "record an input file" },
+	{ "mngwrite",                    NULL,        0,                 "optional filename to write a MNG movie of the current session" },
+	{ "wavwrite",                    NULL,        0,                 "optional filename to write a WAV file of the current session" },
+
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE PERFORMANCE OPTIONS" },
 	{ "autoframeskip;afs",           "0",         OPTION_BOOLEAN,    "enable automatic frameskip selection" },
 	{ "frameskip;fs",                "0",         0,                 "set frameskip to fixed value, 0-12 (autoframeskip must be disabled)" },
 	{ "seconds_to_run;str",          "0",         0,                 "number of emulated seconds to run before automatically exiting" },
 	{ "throttle",                    "1",         OPTION_BOOLEAN,    "enable throttling to keep game running in sync with real time" },
 	{ "sleep",                       "1",         OPTION_BOOLEAN,    "enable sleeping, which gives time back to other applications when idle" },
+
+	{ NULL,                          NULL,        OPTION_HEADER,     "CORE ROTATION OPTIONS" },
+	{ "rotate",                      "1",         OPTION_BOOLEAN,    "rotate the game screen according to the game's orientation needs it" },
+	{ "ror",                         "0",         OPTION_BOOLEAN,    "rotate screen clockwise 90 degrees" },
+	{ "rol",                         "0",         OPTION_BOOLEAN,    "rotate screen counterclockwise 90 degrees" },
+	{ "autoror",                     "0",         OPTION_BOOLEAN,    "automatically rotate screen clockwise 90 degrees if vertical" },
+	{ "autorol",                     "0",         OPTION_BOOLEAN,    "automatically rotate screen counterclockwise 90 degrees if vertical" },
+	{ "flipx",                       "0",         OPTION_BOOLEAN,    "flip screen left-right" },
+	{ "flipy",                       "0",         OPTION_BOOLEAN,    "flip screen upside-down" },
+
+	{ NULL,                          NULL,        OPTION_HEADER,     "CORE ARTWORK OPTIONS" },
+	{ "artwork_crop;artcrop",        "0",         OPTION_BOOLEAN,    "crop artwork to game screen size" },
+	{ "use_backdrops;backdrop",      "1",         OPTION_BOOLEAN,    "enable backdrops if artwork is enabled and available" },
+	{ "use_overlays;overlay",        "1",         OPTION_BOOLEAN,    "enable overlays if artwork is enabled and available" },
+	{ "use_bezels;bezel",            "1",         OPTION_BOOLEAN,    "enable bezels if artwork is enabled and available" },
+
+	{ NULL,                          NULL,        OPTION_HEADER,     "CORE SCREEN OPTIONS" },
+	{ "brightness",                  "1.0",       0,                 "default game screen brightness correction" },
+	{ "contrast",                    "1.0",       0,                 "default game screen contrast correction" },
+	{ "gamma",                       "1.0",       0,                 "default game screen gamma correction" },
+	{ "pause_brightness",            "0.65",      0,                 "amount to scale the screen brightness when paused" },
+#ifdef USE_SCALE_EFFECTS
+	{ "scale_effect",                "none",      0,                 "image enhancement effect" },
+#endif /* USE_SCALE_EFFECTS */
+
+	{ NULL,                          NULL,        OPTION_HEADER,     "CORE VECTOR OPTIONS" },
+	{ "antialias;aa",                "1",         OPTION_BOOLEAN,    "use antialiasing when drawing vectors" },
+	{ "beam",                        "1.0",       0,                 "set vector beam width" },
+	{ "flicker",                     "0",         0,                 "set vector flicker effect" },
+
+	{ NULL,                          NULL,        OPTION_HEADER,     "CORE SOUND OPTIONS" },
+	{ "sound",                       "1",         OPTION_BOOLEAN,    "enable sound output" },
+	{ "samplerate;sr",               "48000",     0,                 "set sound output sample rate" },
+	{ "samples",                     "1",         OPTION_BOOLEAN,    "enable the use of external samples if available" },
+	{ "volume;vol",                  "0",         0,                 "sound volume in decibels (-32 min, 0 max)" },
+#ifdef USE_VOLUME_AUTO_ADJUST
+	{ "volume_adjust",               "0",         OPTION_BOOLEAN,    "enable/disable volume auto adjust" },
+#else /* USE_VOLUME_AUTO_ADJUST */
+	{ "volume_adjust",               "0",         OPTION_DEPRECATED, "(disabled by compiling option)" },
+#endif /* USE_VOLUME_AUTO_ADJUST */
+
+	{ NULL,                          NULL,        OPTION_HEADER,     "CORE INPUT OPTIONS" },
+	{ "ctrlr",                       "Standard",  0,                 "preconfigure for specified controller" },
+
+	{ NULL,                          NULL,        OPTION_HEADER,     "CORE DEBUGGING OPTIONS" },
+	{ "log",                         "0",         OPTION_BOOLEAN,    "generate an error.log file" },
+#ifdef MAME_DEBUG
+	{ "debug;d",                     "1",         OPTION_BOOLEAN,    "enable/disable debugger" },
+	{ "debugscript",                 NULL,        0,                 "script for debugger" },
+#else
+	{ "debug;d",                     "1",         OPTION_DEPRECATED, "(debugger-only command)" },
+	{ "debugscript",                 NULL,        OPTION_DEPRECATED, "(debugger-only command)" },
+#endif
+
+	{ NULL,                          NULL,        OPTION_HEADER,     "CORE MISC OPTIONS" },
+	{ "bios",                        "default",   0,                 "select the system BIOS to use" },
+	{ "cheat;c",                     "0",         OPTION_BOOLEAN,    "enable cheat subsystem" },
+	{ "skip_gameinfo",               "0",         OPTION_BOOLEAN,    "skip displaying the information screen at startup" },
+#ifdef USE_IPS
+	{ "ips",                         NULL,        0,                 "ips datfile name"},
+#else /* USE_IPS */
+	{ "ips",                         NULL,        OPTION_DEPRECATED, "(disabled by compiling option)" },
+#endif /* USE_IPS */
+	{ "confirm_quit",                "1",         OPTION_BOOLEAN,    "quit game with confirmation" },
+#ifdef AUTO_PAUSE_PLAYBACK
+	{ "auto_pause_playback",         "0",         OPTION_BOOLEAN,    "automatic pause when playback is finished" },
+#else /* AUTO_PAUSE_PLAYBACK */
+	{ "auto_pause_playback",         "0",         OPTION_DEPRECATED, "(disabled by compiling option)" },
+#endif /* AUTO_PAUSE_PLAYBACK */
+#if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
+	/* ks hcmame s switch m68k core */
+	{ "m68k_core",                   "c",         0,                 "change m68k core (0:C, 1:DRC, 2:ASM+DRC)" },
+#else /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
+	{ "m68k_core",                   "c",         OPTION_DEPRECATED, "(disabled by compiling option)" },
+#endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
+#ifdef TRANS_UI
+	{ "use_trans_ui",                "1",         OPTION_BOOLEAN,    "use transparent background for UI text" },
+	{ "ui_transparency",             "224",       0,                 "transparency of UI background [0 - 255]" },
+#else /* TRANS_UI */
+	{ "use_trans_ui",                "1",         OPTION_DEPRECATED, "(disabled by compiling option)" },
+	{ "ui_transparency",             "224",       OPTION_DEPRECATED, "(disabled by compiling option)" },
+#endif /* TRANS_UI */
+
+	// palette options
+	{ NULL,                          NULL,        OPTION_HEADER,     "CORE PALETTE OPTIONS" },
+#ifdef UI_COLOR_DISPLAY
+	{ "font_blank",                  "0,0,0",       0,               "font blank color" },
+	{ "font_normal",                 "255,255,255", 0,               "font normal color" },
+	{ "font_special",                "247,203,0",   0,               "font special color" },
+	{ "system_background",           "16,16,48",    0,               "window background color" },
+	{ "button_red",                  "255,64,64",   0,               "button color (red)" },
+	{ "button_yellow",               "255,238,0",   0,               "button color (yellow)" },
+	{ "button_green",                "0,255,64",    0,               "button color (green)" },
+	{ "button_blue",                 "0,170,255",   0,               "button color (blue)" },
+	{ "button_purple",               "170,0,255",   0,               "button color (purple)" },
+	{ "button_pink",                 "255,0,170",   0,               "button color (pink)" },
+	{ "button_aqua",                 "0,255,204",   0,               "button color (aqua)" },
+	{ "button_silver",               "255,0,255",   0,               "button color (silver)" },
+	{ "button_navy",                 "255,160,0",   0,               "button color (navy)" },
+	{ "button_lime",                 "190,190,190", 0,               "button color (lime)" },
+	{ "cursor",                      "60,120,240",  0,               "cursor color" },
+#else /* UI_COLOR_DISPLAY */
+	{ "font_blank",                  "0,0,0",       OPTION_DEPRECATED, "(disabled by compiling option)" },
+	{ "font_normal",                 "255,255,255", OPTION_DEPRECATED, "(disabled by compiling option)" },
+	{ "font_special",                "247,203,0",   OPTION_DEPRECATED, "(disabled by compiling option)" },
+	{ "system_background",           "16,16,48",    OPTION_DEPRECATED, "(disabled by compiling option)" },
+	{ "button_red",                  "255,64,64",   OPTION_DEPRECATED, "(disabled by compiling option)" },
+	{ "button_yellow",               "255,238,0",   OPTION_DEPRECATED, "(disabled by compiling option)" },
+	{ "button_green",                "0,255,64",    OPTION_DEPRECATED, "(disabled by compiling option)" },
+	{ "button_blue",                 "0,170,255",   OPTION_DEPRECATED, "(disabled by compiling option)" },
+	{ "button_purple",               "170,0,255",   OPTION_DEPRECATED, "(disabled by compiling option)" },
+	{ "button_pink",                 "255,0,170",   OPTION_DEPRECATED, "(disabled by compiling option)" },
+	{ "button_aqua",                 "0,255,204",   OPTION_DEPRECATED, "(disabled by compiling option)" },
+	{ "button_silver",               "255,0,255",   OPTION_DEPRECATED, "(disabled by compiling option)" },
+	{ "button_navy",                 "255,160,0",   OPTION_DEPRECATED, "(disabled by compiling option)" },
+	{ "button_lime",                 "190,190,190", OPTION_DEPRECATED, "(disabled by compiling option)" },
+	{ "cursor",                      "60,120,240",  OPTION_DEPRECATED, "(disabled by compiling option)" },
+#endif /* UI_COLOR_DISPLAY */
+
+	// language options
+	{ NULL,                          NULL,        OPTION_HEADER,     "CORE LANGUAGE OPTIONS" },
+	{ "language;lang",               "auto",      0,                 "select translation language" },
+	{ "use_lang_list",               "1",         OPTION_BOOLEAN,    "enable/disable local language game list" },
 
 	{ NULL }
 };
