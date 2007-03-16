@@ -1,4 +1,4 @@
-# osd/ui/properties.c: 1127
+# osd/ui/properties.c: 1125
 %d colors 
 %d 色 
 
@@ -6,11 +6,11 @@
 %d games
 %d 個遊戲
 
-# osd/ui/properties.c: 876
+# osd/ui/properties.c: 874
 %d x %d (H) %f Hz (%d colors)
 %d x %d (H) %f Hz (%d 色)
 
-# osd/ui/properties.c: 869
+# osd/ui/properties.c: 867
 %d x %d (V) %f Hz (%d colors)
 %d x %d (V) %f Hz (%d 色)
 
@@ -22,31 +22,31 @@
 %dx%d (V)
 %dx%d (V)
 
-# osd/ui/properties.c: 1103
+# osd/ui/properties.c: 1101
 %s (%d player)
 %s (%d 玩家)
 
-# osd/ui/properties.c: 1114
+# osd/ui/properties.c: 1112
 %s (%d player, %d button)
 %s (%d 玩家, %d 按鈕)
 
-# osd/ui/properties.c: 1112
+# osd/ui/properties.c: 1110
 %s (%d player, %d buttons)
 %s (%d 玩家, %d 按鈕)
 
-# osd/ui/properties.c: 1100
+# osd/ui/properties.c: 1098
 %s (%d players)
 %s (%d 玩家)
 
-# osd/ui/properties.c: 1109
+# osd/ui/properties.c: 1107
 %s (%d players, %d button)
 %s (%d 玩家, %d 按鈕)
 
-# osd/ui/properties.c: 1106
+# osd/ui/properties.c: 1104
 %s (%d players, %d buttons)
 %s (%d 玩家, %d 按鈕)
 
-# osd/ui/properties.c: 1241
+# osd/ui/properties.c: 1239
 %s\nThis is also global driver options in the %s
 %s\n這也是 %s 的通用驅動選項
 
@@ -314,7 +314,7 @@ A sharing violation occurred.
 A&udit
 驗證(&U)
 
-# osd/ui/properties.c: 1050 osd/ui/treeview.c: 1429
+# osd/ui/properties.c: 1048 osd/ui/treeview.c: 1429
 AD Stick
 AD 搖桿
 
@@ -378,7 +378,7 @@ Allow restoring options to 'sane' values.
 Allows filtering out games from a folder
 允許\自資料夾篩選出遊戲
 
-# osd/ui/properties.c: 4845
+# osd/ui/properties.c: 4846
 Anti-clockwise
 逆時針
 
@@ -418,15 +418,15 @@ Audit ROM and samples sets
 Audit complete.\n
 驗證完成。\n
 
-# osd/ui/properties.c: 454, 4756, 4938, 4973
+# osd/ui/properties.c: 452, 4757, 4939, 4974
 Auto
 自動
 
-# osd/ui/properties.c: 4848
+# osd/ui/properties.c: 4849
 Auto anti-clockwise
 自動逆時針
 
-# osd/ui/properties.c: 4847
+# osd/ui/properties.c: 4848
 Auto clockwise
 自動順時針
 
@@ -450,11 +450,11 @@ Available
 Available fields:
 可用的欄位:
 
-# osd/ui/properties.c: 5032
+# osd/ui/properties.c: 5033
 Axis
 軸
 
-# osd/ui/properties.c: 5042
+# osd/ui/properties.c: 5043
 AxisId
 軸 ID
 
@@ -462,7 +462,7 @@ AxisId
 BIOS
 BIOS
 
-# osd/ui/properties.c: 1197
+# osd/ui/properties.c: 1195
 BIOS missing
 BIOS 遺失
 
@@ -630,7 +630,7 @@ Checking...
 Christopher Kirmse and Michael Soderstrom
 Christopher Kirmse 與 Michael Soderstrom
 
-# osd/ui/properties.c: 4844
+# osd/ui/properties.c: 4845
 Clockwise
 順時針
 
@@ -646,15 +646,15 @@ Clone of:
 Clones
 仿製版
 
-# osd/ui/properties.c: 457
+# osd/ui/properties.c: 455
 Cocktail
 檯面型
 
-# osd/ui/properties.c: 1165
+# osd/ui/properties.c: 1163
 Colors are completely wrong
 色彩是完全錯誤的
 
-# osd/ui/properties.c: 1170
+# osd/ui/properties.c: 1168
 Colors aren't 100% accurate
 色彩尚未達到 100% 精確
 
@@ -782,11 +782,11 @@ Customize interface options.
 Customize which columns are used in the game list
 自訂遊戲清單中所顯示的欄位
 
-# osd/ui/properties.c: 4843
+# osd/ui/properties.c: 4844
 Default
 預設
 
-# osd/ui/properties.c: 639
+# osd/ui/properties.c: 637
 Default Game
 預設遊戲
 
@@ -810,7 +810,7 @@ Description
 Details
 詳細資料
 
-# osd/ui/properties.c: 1042 osd/ui/treeview.c: 1431
+# osd/ui/properties.c: 1040 osd/ui/treeview.c: 1431
 Dial
 方向盤
 
@@ -822,7 +822,7 @@ Dial device
 Digital joystick axes
 數位搖桿或軸
 
-# osd/ui/mame32.rc: 665 osd/ui/properties.c: 419
+# osd/ui/mame32.rc: 665 osd/ui/properties.c: 417
 Direct3D
 Direct3D
 
@@ -914,23 +914,23 @@ Double Joy 4-Way
 Double Joy 8-Way
 8 方向雙搖桿
 
-# osd/ui/properties.c: 975, 1000
+# osd/ui/properties.c: 973, 998
 Double Joystick 16-Way
 16 方向雙搖桿
 
-# osd/ui/properties.c: 968, 989, 990
+# osd/ui/properties.c: 966, 987, 988
 Double Joystick 2-Way
 2 方向雙搖桿
 
-# osd/ui/properties.c: 964, 965, 993
+# osd/ui/properties.c: 962, 963, 991
 Double Joystick 2-Way Vertical
 垂直 2 方向雙搖桿
 
-# osd/ui/properties.c: 971, 996
+# osd/ui/properties.c: 969, 994
 Double Joystick 4-Way
 4 方向雙搖桿
 
-# osd/ui/properties.c: 977, 1002
+# osd/ui/properties.c: 975, 1000
 Double Joystick 8-Way
 8 方向雙搖桿
 
@@ -938,7 +938,7 @@ Double Joystick 8-Way
 Draw antialiased vectors
 描繪反鋸齒向量圖形
 
-# osd/ui/properties.c: 4821
+# osd/ui/properties.c: 4822
 Draw every frame
 描繪出全部畫格
 
@@ -1014,7 +1014,7 @@ Enable steadykey support
 Enforce aspect ratio
 強制長寬比例
 
-# osd/ui/audit32.c: 113 osd/ui/properties.c: 659, 750, 1747
+# osd/ui/audit32.c: 113 osd/ui/properties.c: 657, 748, 1745
 Error
 錯誤
 
@@ -1046,7 +1046,7 @@ Exit the application
 External Folder List
 外部資料夾清單
 
-# osd/ui/options.c: 3132
+# osd/ui/options.c: 3133
 FOLDER LIST HIDE OPTIONS
 資料夾清單隱藏選項
 
@@ -1118,15 +1118,15 @@ Full screen contrast
 Full screen gamma
 全螢幕 Gamma 值
 
-# osd/ui/options.c: 3078
+# osd/ui/options.c: 3079
 GENERAL OPTIONS
 一般選項
 
-# osd/ui/options.c: 3136
+# osd/ui/options.c: 3137
 GUI JOYSTICK OPTIONS
 GUI 搖桿選項
 
-# osd/ui/options.c: 3151
+# osd/ui/options.c: 3152
 GUI KEYBOARD OPTIONS
 GUI 鍵盤選項
 
@@ -1154,11 +1154,11 @@ Game filters
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 遊戲篩選程式能夠在各個資料夾中\n自訂隱藏所符合篩選條件的遊戲。
 
-# osd/ui/properties.c: 1180
+# osd/ui/properties.c: 1178
 Game lacks sound
 遊戲缺少聲音
 
-# osd/ui/properties.c: 1160
+# osd/ui/properties.c: 1158
 Game protection isn't fully emulated
 遊戲的保護尚未完全模擬
 
@@ -1174,15 +1174,15 @@ Gamma 值修正
 General
 一般
 
-# osd/ui/properties.c: 1243
+# osd/ui/properties.c: 1241
 Global driver options\nCustom options used by all games in the %s
 通用驅動選項\n供 %s 全部遊戲使用的自訂選項
 
-# osd/ui/properties.c: 1223
+# osd/ui/properties.c: 1221
 Global game options\nDefault options used by all games
 通用遊戲選項\n供全部遊戲使用的預設選項
 
-# osd/ui/properties.c: 1226
+# osd/ui/properties.c: 1224
 Global vector options\nCustom options used by all games in the Vector
 通用向量選項\n供向量全部遊戲使用的自訂選項
 
@@ -1194,7 +1194,7 @@ Go to Microsoft's DirectX Web Page
 Gray
 灰階
 
-# osd/ui/options.c: 463, 3111 osd/ui/win32ui.c: 715
+# osd/ui/options.c: 463, 3112 osd/ui/win32ui.c: 715
 Grouped
 群組
 
@@ -1230,7 +1230,7 @@ Horizontal
 How cheats work
 如何使用作弊引擎
 
-# osd/ui/options.c: 3058
+# osd/ui/options.c: 3059
 INTERFACE OPTIONS
 介面選項
 
@@ -1306,27 +1306,27 @@ Joy 4-Way
 Joy 8-Way
 8 方向搖桿
 
-# osd/ui/properties.c: 469, 5027
+# osd/ui/properties.c: 467, 5028
 Joystick
 搖桿
 
-# osd/ui/properties.c: 927, 950
+# osd/ui/properties.c: 925, 948
 Joystick 16-Way
 16 方向搖桿
 
-# osd/ui/properties.c: 916, 917, 943
+# osd/ui/properties.c: 914, 915, 941
 Joystick 2-Way
 2 方向搖桿
 
-# osd/ui/properties.c: 920, 939, 940
+# osd/ui/properties.c: 918, 937, 938
 Joystick 2-Way Vertical
 垂直 2 方向搖桿
 
-# osd/ui/properties.c: 923, 946
+# osd/ui/properties.c: 921, 944
 Joystick 4-Way
 4 方向搖桿
 
-# osd/ui/properties.c: 929, 952
+# osd/ui/properties.c: 927, 950
 Joystick 8-Way
 8 方向搖桿
 
@@ -1338,11 +1338,11 @@ Joystick deadzone
 Joystick saturation
 搖桿的飽和值
 
-# osd/ui/properties.c: 5037
+# osd/ui/properties.c: 5038
 JoystickId
 搖桿 ID
 
-# osd/ui/properties.c: 467
+# osd/ui/properties.c: 465
 Keyboard
 鍵盤
 
@@ -1350,11 +1350,11 @@ Keyboard
 L&arge Icons
 大圖示(&A)
 
-# osd/ui/options.c: 3124
+# osd/ui/options.c: 3125
 LIST FONT OPTIONS
 清單字型選項
 
-# osd/ui/options.c: 3110
+# osd/ui/options.c: 3111
 LISTVIEW OPTIONS
 清單檢視模式選項
 
@@ -1362,7 +1362,7 @@ LISTVIEW OPTIONS
 Large Icons
 大圖示
 
-# osd/ui/layout.c: 79 osd/ui/properties.c: 470, 1054 osd/ui/treeview.c: 1433
+# osd/ui/layout.c: 79 osd/ui/properties.c: 468, 1052 osd/ui/treeview.c: 1433
 Lightgun
 光線槍
 
@@ -1426,7 +1426,7 @@ MAME32 版本作者
 MAME32 will now reset the selected\nitems to the original, installation\nsettings then exit.\n\n
 MAME32 現在將會重設選取的\n項目回到原始安裝設定值\n，然後結束程式。\n\n
 
-# osd/ui/mame32.rc: 399, 423, 434, 466, 486, 509, 548, 567, 618, 655, 711, 758, 819, 847, 874, 911, 936, 953, 1017, 1045, 1060, 1116, 1160, 1216 osd/ui/options.c: 3126 osd/ui/translate.c: 103
+# osd/ui/mame32.rc: 399, 423, 434, 466, 486, 509, 548, 567, 618, 655, 711, 758, 819, 847, 874, 911, 936, 953, 1017, 1045, 1060, 1116, 1160, 1216 osd/ui/options.c: 3127 osd/ui/translate.c: 103
 MS Sans Serif
 新細明體
 
@@ -1458,7 +1458,7 @@ Miscellaneous
 Missing Sound
 缺少聲音
 
-# osd/ui/properties.c: 468
+# osd/ui/properties.c: 466
 Mouse
 滑鼠
 
@@ -1522,7 +1522,7 @@ Non-CPU
 Non-Wor&king
 不可執行(&k)
 
-# osd/ui/dialogs.c: 222 osd/ui/properties.c: 3730, 4846, 5130, 5376 
+# osd/ui/dialogs.c: 222 osd/ui/properties.c: 3728, 4847, 5131, 5377 
 None
 無
 
@@ -1538,7 +1538,7 @@ Not Working
 Not found
 找不到
 
-# osd/ui/properties.c: 1149
+# osd/ui/properties.c: 1147
 Not working
 不可執行
 
@@ -1586,7 +1586,7 @@ Overlays
 P&layback Input...
 播放輸入檔(&L)...
 
-# osd/ui/options.c: 3045
+# osd/ui/options.c: 3046
 PATH AND DIRECTORY OPTIONS
 路徑及目錄選項
 
@@ -1598,7 +1598,7 @@ PCB 資訊
 PCB Info Files
 PCB 資訊檔
 
-# osd/ui/properties.c: 1039 osd/ui/treeview.c: 1430
+# osd/ui/properties.c: 1037 osd/ui/treeview.c: 1430
 Paddle
 操縱桿
 
@@ -1634,11 +1634,11 @@ Per-screen video options
 Physical monitor:
 實體顯示器:
 
-# osd/ui/properties.c: 456
+# osd/ui/properties.c: 454
 Pixel Aspect
 像素長寬
 
-# osd/ui/options.c: 3207 osd/ui/win32ui.c: 877
+# osd/ui/options.c: 3208 osd/ui/win32ui.c: 877
 Play Time
 執行時間
 
@@ -1718,7 +1718,7 @@ Propert&ies for %s
 Propert&ies for Driver
 驅動內容(&I)
 
-# osd/ui/properties.c: 658, 749
+# osd/ui/properties.c: 656, 747
 Propery Sheet Error %d %X
 內容表錯誤 %d %X
 
@@ -1742,7 +1742,7 @@ ROM 檢查:
 ROMs
 ROM
 
-# osd/ui/properties.c: 1199
+# osd/ui/properties.c: 1197
 ROMs missing
 ROM 檔遺失
 
@@ -1766,7 +1766,7 @@ Record a game for later playback
 Refresh game list
 重新整理遊戲清單
 
-# osd/ui/options.c: 1540
+# osd/ui/options.c: 1541
 Reload configurations
 重新載入設定
 
@@ -1886,19 +1886,19 @@ Scale screen
 Screen
 畫面
 
-# osd/ui/properties.c: 441
+# osd/ui/properties.c: 439
 Screen 0
 畫面 0
 
-# osd/ui/properties.c: 442
+# osd/ui/properties.c: 440
 Screen 1
 畫面 1
 
-# osd/ui/properties.c: 443
+# osd/ui/properties.c: 441
 Screen 2
 畫面 2
 
-# osd/ui/properties.c: 444
+# osd/ui/properties.c: 442
 Screen 3
 畫面 3
 
@@ -1906,7 +1906,7 @@ Screen 3
 Screen flip support is missing
 尚未支援畫面翻轉
 
-# osd/ui/properties.c: 1190
+# osd/ui/properties.c: 1188
 Screen flipping is not supported
 尚未支援畫面翻轉
 
@@ -2130,47 +2130,47 @@ Show palette for:
 Show these fields in this order:
 按照這個順序顯示欄位:
 
-# osd/ui/properties.c: 4822
+# osd/ui/properties.c: 4823
 Skip 1 of 12 frames
 每 12 畫格省略 1 個
 
-# osd/ui/properties.c: 4831
+# osd/ui/properties.c: 4832
 Skip 10 of 12 frames
 每 12 畫格省略 10 個
 
-# osd/ui/properties.c: 4832
+# osd/ui/properties.c: 4833
 Skip 11 of 12 frames
 每 12 畫格省略 11 個
 
-# osd/ui/properties.c: 4823
+# osd/ui/properties.c: 4824
 Skip 2 of 12 frames
 每 12 畫格省略 2 個
 
-# osd/ui/properties.c: 4824
+# osd/ui/properties.c: 4825
 Skip 3 of 12 frames
 每 12 畫格省略 3 個
 
-# osd/ui/properties.c: 4825
+# osd/ui/properties.c: 4826
 Skip 4 of 12 frames
 每 12 畫格省略 4 個
 
-# osd/ui/properties.c: 4826
+# osd/ui/properties.c: 4827
 Skip 5 of 12 frames
 每 12 畫格省略 5 個
 
-# osd/ui/properties.c: 4827
+# osd/ui/properties.c: 4828
 Skip 6 of 12 frames
 每 12 畫格省略 6 個
 
-# osd/ui/properties.c: 4828
+# osd/ui/properties.c: 4829
 Skip 7 of 12 frames
 每 12 畫格省略 7 個
 
-# osd/ui/properties.c: 4829
+# osd/ui/properties.c: 4830
 Skip 8 of 12 frames
 每 12 畫格省略 8 個
 
-# osd/ui/properties.c: 4830
+# osd/ui/properties.c: 4831
 Skip 9 of 12 frames
 每 12 畫格省略 9 個
 
@@ -2238,7 +2238,7 @@ Sort items by year
 Sound
 聲音
 
-# osd/ui/properties.c: 1185
+# osd/ui/properties.c: 1183
 Sound emulation isn't 100% accurate
 聲音模擬尚未達到 100% 精確
 
@@ -2254,7 +2254,7 @@ Sounds (*.wav)
 St&ory
 故事(&O)
 
-# osd/ui/properties.c: 455, 3521, 3526, 3529, 3780, 3783, 5082, 5104 
+# osd/ui/properties.c: 453, 3519, 3524, 3527, 3778, 3781, 5083, 5105
 Standard
 標準
 
@@ -2282,7 +2282,7 @@ Story
 Stretch using hardware
 使用硬體延展
 
-# osd/ui/properties.c: 1272 osd/ui/treeview.c: 1364
+# osd/ui/properties.c: 1270 osd/ui/treeview.c: 1364
 Supported
 已支援
 
@@ -2346,7 +2346,7 @@ Toggle Screen Shot
 Total:
 總數:
 
-# osd/ui/layout.c: 78 osd/ui/properties.c: 1046 osd/ui/treeview.c: 1432 osd/ui/win32ui.c: 871
+# osd/ui/layout.c: 78 osd/ui/properties.c: 1044 osd/ui/treeview.c: 1432 osd/ui/win32ui.c: 871
 Trackball
 軌跡球
 
@@ -2442,7 +2442,7 @@ Unavailable
 Unemulated Protection
 未模擬保護
 
-# osd/ui/audit32.c: 489 osd/ui/properties.c: 1097, 1143 
+# osd/ui/audit32.c: 489 osd/ui/properties.c: 1095, 1141 
 Unknown
 未知的
 
@@ -2450,7 +2450,7 @@ Unknown
 Unknown error.
 未知的錯誤。
 
-# osd/ui/properties.c: 1274 osd/ui/treeview.c: 1366
+# osd/ui/properties.c: 1272 osd/ui/treeview.c: 1366
 Unsupported
 未支援
 
@@ -2474,7 +2474,7 @@ Use various icon for Not Working game
 Use volume auto adjust
 使用音量自動調整
 
-# osd/ui/layout.c: 71 osd/ui/mame32.rc: 819 osd/ui/options.c: 774, 2738 osd/ui/properties.c: 703 osd/ui/treeview.c: 284 osd/ui/win32ui.c: 5653
+# osd/ui/layout.c: 71 osd/ui/mame32.rc: 819 osd/ui/options.c: 774, 2739 osd/ui/properties.c: 701 osd/ui/treeview.c: 284 osd/ui/win32ui.c: 5653
 Vector
 向量
 
@@ -2482,7 +2482,7 @@ Vector
 Vector (H)
 向量 (H)
 
-# osd/ui/properties.c: 861
+# osd/ui/properties.c: 859
 Vector (H) %f Hz (%d colors)
 Vector (H) %f Hz (%d 色)
 
@@ -2490,7 +2490,7 @@ Vector (H) %f Hz (%d 色)
 Vector (V)
 向量 (V)
 
-# osd/ui/properties.c: 856
+# osd/ui/properties.c: 854
 Vector (V) %f Hz (%d colors)
 Vector (V) %f Hz (%d 色)
 
@@ -2498,7 +2498,7 @@ Vector (V) %f Hz (%d 色)
 Vertical
 垂直
 
-# osd/ui/properties.c: 1175
+# osd/ui/properties.c: 1173
 Video emulation isn't 100% accurate
 視訊模擬尚未達到 100% 精確
 
@@ -2530,7 +2530,7 @@ Volume attenuation
 WARNING: the game might not run correctly.
 警告: 這個遊戲可能無法正確執行。
 
-# osd/ui/options.c: 3103
+# osd/ui/options.c: 3104
 WINDOW POSITION OPTIONS
 視窗位置選項
 
@@ -2546,7 +2546,7 @@ MAME 的新增異動
 Window background
 視窗的背景色
 
-# osd/ui/layout.c: 66 osd/ui/properties.c: 1151
+# osd/ui/layout.c: 66 osd/ui/properties.c: 1149
 Working
 可以執行
 
