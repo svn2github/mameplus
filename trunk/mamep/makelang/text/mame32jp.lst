@@ -170,7 +170,8 @@ hunchbkg	ƒnƒ“ƒ`ƒoƒbƒN (Galaxian hardware)	‚Í‚ñ‚¿‚Î‚Á‚­	Century Electronics
 harem	ƒn[ƒŒƒ€	‚Í[‚ê‚Ş	I.G.R.
 tazzmang	ƒ^ƒYƒ}ƒjƒA (Galaxian Hardware)	‚½‚¸‚Ü‚É‚ 	bootleg
 racknrol	ƒ‰ƒbƒN{ƒ[ƒ‹	‚ç‚Á‚­‚Õ‚ç‚·‚ë[‚é	Status (Shinkai License)
-hexpool	ƒwƒbƒNƒXƒv[ƒ‹	‚Ö‚Á‚­‚·‚Õ[‚é	Shinkai
+hexpool	ƒwƒbƒNƒXƒv[ƒ‹ (Shinkai)	‚Ö‚Á‚­‚·‚Õ[‚é	Shinkai
+hexpoola	ƒwƒbƒNƒXƒv[ƒ‹ (Senko)	‚Ö‚Á‚­‚·‚Õ[‚é	Senko
 trvchlng	ƒgƒŠƒrƒAƒ`ƒƒƒŒƒ“ƒW	‚Æ‚è‚Ñ‚ _2_‚¿‚á‚ê‚ñ‚¶	Joyland (Senko License)
 luctoday	ƒ‰ƒbƒL[ƒgƒDƒfƒC	‚ç‚Á‚«[‚Æ‚£‚Å‚¢	Sigma
 chewing	ƒ`ƒ…[ƒCƒ“ƒOƒKƒ€	‚¿‚ã[‚¢‚ñ‚®‚ª‚Ş	unknown
@@ -330,6 +331,7 @@ kodure	q˜A‚ê˜T (“ú–{”Å)	‚±‚Ã‚ê‚¨‚¨‚©‚İ	Nichibutsu
 armedf	ƒA[ƒ€ƒhF	‚ [‚Ş‚Ç‚Ó‚§[‚ß[‚µ‚å‚ñ	Nichibutsu
 cclimbr2	ƒNƒŒƒCƒW[ƒNƒ‰ƒCƒ}[2 (“ú–{”Å)	‚­‚ê‚¢‚¶[‚­‚ç‚¢‚Ü[_2	Nichibutsu
 cclmbr2a	ƒNƒŒƒCƒW[ƒNƒ‰ƒCƒ}[2 (“ú–{”Å harder)	‚­‚ê‚¢‚¶[‚­‚ç‚¢‚Ü[_2	Nichibutsu
+skyrobo	í‚¦IƒrƒbƒOƒtƒ@ƒCƒ^[ / Sky Robo	‚½‚½‚©‚¦‚Ñ‚Á‚®‚Ó‚Ÿ‚¢‚½[	Nichibutsu
 bigfghtr	í‚¦IƒrƒbƒOƒtƒ@ƒCƒ^[	‚½‚½‚©‚¦‚Ñ‚Á‚®‚Ó‚Ÿ‚¢‚½[	Nichibutsu
 hyhoo	‘‰Ÿ‚µ‘ÎíƒNƒCƒY ƒnƒCƒz[ (“ú–{”Å)	‚Í‚â‚¨‚µ‚½‚¢‚¹‚ñ‚­‚¢‚¸‚Í‚¢‚Ù[_1	Nichibutsu
 hyhoo2	‘‰Ÿ‚µ‘ÎíƒNƒCƒY ƒnƒCƒz[2 (“ú–{”Å)	‚Í‚â‚¨‚µ‚½‚¢‚¹‚ñ‚­‚¢‚¸‚Í‚¢‚Ù[_2	Nichibutsu
@@ -1140,7 +1142,7 @@ sfootbal	ƒXƒgƒŠ[ƒgƒtƒbƒgƒ{[ƒ‹	‚·‚Æ‚è[‚Æ‚Ó‚Á‚Æ‚Ú[‚é	Bally/Sente
 spiker	ƒXƒpƒCƒJ[	‚·‚Ï‚¢‚©[	Bally/Sente
 stompin	ƒXƒgƒ“ƒsƒ“	‚·‚Æ‚ñ‚Ò‚ñ	Bally/Sente
 rescraid	ƒŒƒXƒLƒ…[ƒŒƒCƒ_[	‚ê‚·‚«‚ã[‚ê‚¢‚¾[	Bally/Midway
-rescrdsa	ƒŒƒXƒLƒ…[ƒŒƒCƒ_[ (Stand-Alone)	‚ê‚·‚«‚ã[‚ê‚¢‚¾[	Bally/Midway
+rescrdsa	ƒŒƒXƒLƒ…[ƒŒƒCƒ_[ (stand-alone)	‚ê‚·‚«‚ã[‚ê‚¢‚¾[	Bally/Midway
 grudge	ƒOƒ‰ƒbƒWƒ}ƒbƒ` (prototype)	‚®‚ç‚Á‚¶‚Ü‚Á‚¿	Bally/Midway
 shrike	ƒVƒ…ƒ‰ƒCƒNEƒAƒ”ƒFƒ“ƒWƒƒ[ (prototype)	‚µ‚ã‚ç‚¢‚­‚ ‚×‚ñ‚¶‚á[	Bally/Sente
 gridlee	ƒOƒŠƒbƒhƒŠ[	‚®‚è‚Á‚Ç‚è[	Videa
@@ -3130,11 +3132,13 @@ critcrsh	ƒ^ƒ^ƒRƒbƒg / Critter Crusher (‰¢B / ƒAƒWƒA”Å 951204 ver 1.000)	‚½‚½‚±‚
 sfish2	ƒXƒ|[ƒcƒtƒBƒbƒVƒ“ƒO2 (USA / ‰¢B / ‘ä˜p”Å 951106 ver 1.10e)	‚·‚Û[‚Â‚Ó‚¡‚Á‚µ‚ñ‚®2	Sega
 sfish2j	ƒXƒ|[ƒcƒtƒBƒbƒVƒ“ƒO2 (“ú–{”Å 951201 ver 1.100)	‚·‚Û[‚Â‚Ó‚¡‚Á‚µ‚ñ‚®2	Sega
 daytona	ƒfƒCƒgƒiUSA (“ú–{”Å)	‚Å‚¢‚Æ‚È‚ä[‚¦‚·‚¦[_1	Sega
+daytonas	ƒfƒCƒgƒiUSA (With Saturn Adverts)	‚Å‚¢‚Æ‚È‚ä[‚¦‚·‚¦[_1	Sega
 daytonat	ƒfƒCƒgƒiUSA (“ú–{”Å Turbo hack)	‚Å‚¢‚Æ‚È‚ä[‚¦‚·‚¦[_1	Sega
 daytonam	ƒfƒCƒgƒiUSA (“ú–{”Å To The MAXX)	‚Å‚¢‚Æ‚È‚ä[‚¦‚·‚¦[_1	Sega
 desert	ƒfƒU[ƒgƒ^ƒ“ƒN	‚Å‚´[‚Æ‚½‚ñ‚­	Sega/Martin Marietta
 vcop	ƒo[ƒ`ƒƒƒRƒbƒv	‚Î[‚¿‚á‚±‚Á‚Õ_1	Sega
 manxtt	ƒ}ƒ“ƒNƒXTT ƒX[ƒp[ƒoƒCƒN	‚Ü‚ñ‚­‚·‚Ä‚¡[‚Ä‚¡[‚·[‚Ï[‚Î‚¢‚­	Sega
+motoraid	ƒ‚[ƒ^[ƒŒƒCƒh	‚à[‚½[‚ê‚¢‚Ç	Sega
 srallyc	ƒZƒKƒ‰ƒŠ[Eƒ`ƒƒƒ“ƒsƒIƒ“ƒVƒbƒv	‚¹‚ª‚ç‚è[_1‚¿‚á‚ñ‚Ò‚¨‚ñ‚µ‚Á‚Õ	Sega
 vf2	ƒo[ƒ`ƒƒƒtƒ@ƒCƒ^[2 (ver 2.1)	‚Î[‚¿‚á‚Ó‚Ÿ‚¢‚½[_2	Sega
 vf2b	ƒo[ƒ`ƒƒƒtƒ@ƒCƒ^[2 (ver B)	‚Î[‚¿‚á‚Ó‚Ÿ‚¢‚½[_2	Sega
@@ -3504,11 +3508,12 @@ rohga2	ƒEƒ‹ƒtƒtƒ@ƒ“ƒO <˜T‰å> -‹ó‰å2001 / Rohga -Armor Force (ƒAƒWƒA / ‰¢B”Å ver
 rohgah	ƒEƒ‹ƒtƒtƒ@ƒ“ƒO <˜T‰å> -‹ó‰å2001 / Rohga -Armor Force (`”Å ver 3.0)	‚¤‚é‚Ó‚Ó‚Ÿ‚ñ‚®	Data East Corporation
 rohgau	ƒEƒ‹ƒtƒtƒ@ƒ“ƒO <˜T‰å> -‹ó‰å2001 / Rohga -Armor Force (USA”Å ver 1.0)	‚¤‚é‚Ó‚Ó‚Ÿ‚ñ‚®	Data East Corporation
 schmeisr	ƒVƒ…ƒ}ƒCƒU[ƒƒ{ (“ú–{”Å)	‚µ‚ã‚Ü‚¢‚´[‚ë‚Ú	Hot B
-captaven	ƒLƒƒƒvƒeƒ“ƒAƒƒŠƒJ ƒAƒ“ƒh ƒW ƒAƒxƒ“ƒWƒƒ[ƒY (ƒAƒWƒA”Å rev 1.9)	‚«‚á‚Õ‚Ä‚ñ‚ ‚ß‚è‚©‚ ‚ñ‚Ç‚¶‚ ‚×‚ñ‚¶‚á[‚¸	Data East Corporation
+captaven	ƒLƒƒƒvƒeƒ“ƒAƒƒŠƒJ ƒAƒ“ƒh ƒW ƒAƒxƒ“ƒWƒƒ[ƒY (ƒAƒWƒA”Å rev 1.4)	‚«‚á‚Õ‚Ä‚ñ‚ ‚ß‚è‚©‚ ‚ñ‚Ç‚¶‚ ‚×‚ñ‚¶‚á[‚¸	Data East Corporation
 captavna	ƒLƒƒƒvƒeƒ“ƒAƒƒŠƒJ ƒAƒ“ƒh ƒW ƒAƒxƒ“ƒWƒƒ[ƒY (ƒAƒWƒA”Å rev 1.0)	‚«‚á‚Õ‚Ä‚ñ‚ ‚ß‚è‚©‚ ‚ñ‚Ç‚¶‚ ‚×‚ñ‚¶‚á[‚¸	Data East Corporation
 captavne	ƒLƒƒƒvƒeƒ“ƒAƒƒŠƒJ ƒAƒ“ƒh ƒW ƒAƒxƒ“ƒWƒƒ[ƒY (UK”Å rev 1.4)	‚«‚á‚Õ‚Ä‚ñ‚ ‚ß‚è‚©‚ ‚ñ‚Ç‚¶‚ ‚×‚ñ‚¶‚á[‚¸	Data East Corporation
 captavnu	ƒLƒƒƒvƒeƒ“ƒAƒƒŠƒJ ƒAƒ“ƒh ƒW ƒAƒxƒ“ƒWƒƒ[ƒY (USA”Å rev 1.9)	‚«‚á‚Õ‚Ä‚ñ‚ ‚ß‚è‚©‚ ‚ñ‚Ç‚¶‚ ‚×‚ñ‚¶‚á[‚¸	Data East Corporation
 captavuu	ƒLƒƒƒvƒeƒ“ƒAƒƒŠƒJ ƒAƒ“ƒh ƒW ƒAƒxƒ“ƒWƒƒ[ƒY (USA”Å rev 1.6)	‚«‚á‚Õ‚Ä‚ñ‚ ‚ß‚è‚©‚ ‚ñ‚Ç‚¶‚ ‚×‚ñ‚¶‚á[‚¸	Data East Corporation
+captavua	ƒLƒƒƒvƒeƒ“ƒAƒƒŠƒJ ƒAƒ“ƒh ƒW ƒAƒxƒ“ƒWƒƒ[ƒY (USA”Å rev 1.4)	‚«‚á‚Õ‚Ä‚ñ‚ ‚ß‚è‚©‚ ‚ñ‚Ç‚¶‚ ‚×‚ñ‚¶‚á[‚¸	Data East Corporation
 captavnj	ƒLƒƒƒvƒeƒ“ƒAƒƒŠƒJ ƒAƒ“ƒh ƒW ƒAƒxƒ“ƒWƒƒ[ƒY (“ú–{”Å rev 0.2)	‚«‚á‚Õ‚Ä‚ñ‚ ‚ß‚è‚©‚ ‚ñ‚Ç‚¶‚ ‚×‚ñ‚¶‚á[‚¸	Data East Corporation
 tumblep	ƒ^ƒ“ƒuƒ‹ƒ|ƒbƒv (ŠCŠO”Å)	‚½‚ñ‚Ô‚é‚Û‚Á‚Õ	Data East Corporation
 tumblepj	ƒ^ƒ“ƒuƒ‹ƒ|ƒbƒv (“ú–{”Å)	‚½‚ñ‚Ô‚é‚Û‚Á‚Õ	Data East Corporation
@@ -3973,13 +3978,21 @@ bmcompmx	ƒr[ƒgƒ}ƒjƒA complete MIX (ver JA-B)	‚Ñ[‚Æ‚Ü‚É‚ _2_1_‚±‚ñ‚Õ‚è[‚Æ‚İ‚Á‚
 hmcompmx	ƒr[ƒgƒ}ƒjƒA complete MIX / Hiphopmania Complete MIX (ver UA-B)	‚Ñ[‚Æ‚Ü‚É‚ _2_1_‚±‚ñ‚Õ‚è[‚Æ‚İ‚Á‚­‚·_1	Konami
 bm4thmix	ƒr[ƒgƒ}ƒjƒA 4th MIX -The beat goes on (ver JA-A)	‚Ñ[‚Æ‚Ü‚É‚ _1_4_‚Ó‚§[‚·‚İ‚Á‚­‚·	Konami
 bm5thmix	ƒr[ƒgƒ}ƒjƒA 5th MIX -Time to get down (ver JA-A)	‚Ñ[‚Æ‚Ü‚É‚ _1_5_‚Ó‚¡‚Ó‚·‚İ‚Á‚­‚·	Konami
+bmclubmx	ƒr[ƒgƒ}ƒjƒA Club MIX (ver JA-A)	‚Ñ[‚Æ‚Ü‚É‚ _2_5_‚­‚ç‚Ô‚İ‚Á‚­‚·	Konami
 bmcorerm	ƒr[ƒgƒ}ƒjƒA CORE REMIX (ver JA-A)	‚Ñ[‚Æ‚Ü‚É‚ _2_3_‚±‚ ‚è‚İ‚Á‚­‚·	Konami
 bmdct	ƒr[ƒgƒ}ƒjƒA featuring Dreams Come True (ver JA-A)	‚Ñ[‚Æ‚Ü‚É‚ _2_4_‚Ó‚¡[‚¿‚á‚è‚ñ‚®‚Ç‚è[‚Ş‚¸‚©‚Ş‚Æ‚£‚é[	Konami
 bmcompm2	ƒr[ƒgƒ}ƒjƒA complete MIX2 (ver JA-A)	‚Ñ[‚Æ‚Ü‚É‚ _2_2_‚±‚ñ‚Õ‚è[‚Æ‚İ‚Á‚­‚·_2	Konami
 hmcompm2	ƒr[ƒgƒ}ƒjƒA complete MIX2 / Hiphopmania Complete MIX 2 (ver UA-A)	‚Ñ[‚Æ‚Ü‚É‚ _2_2_‚±‚ñ‚Õ‚è[‚Æ‚İ‚Á‚­‚·_2	Konami
 bm6thmix	ƒr[ƒgƒ}ƒjƒA 6th MIX -The UK underground music (ver JA-A)	‚Ñ[‚Æ‚Ü‚É‚ _1_6_‚µ‚Á‚­‚·‚·‚İ‚Á‚­‚·	Konami
+bm7thmix	ƒr[ƒgƒ}ƒjƒA 7th MIX (ver JA-B)	‚Ñ[‚Æ‚Ü‚É‚ _1_7_‚¹‚Ô‚ñ‚·‚·‚İ‚Á‚­‚·	Konami
+bmfinal	ƒr[ƒgƒ}ƒjƒA THE FINAL (ver JA-A)	‚Ñ[‚Æ‚Ü‚É‚ _2_6_‚´‚Ó‚Ÿ‚¢‚È‚é	Konami
+popn1	ƒ|ƒbƒvƒ“ƒ~ƒ…[ƒWƒbƒN (ver JA-A)	‚Û‚Á‚Õ‚ñ‚İ‚ã[‚¶‚Á‚­_1	Konami
+popn2	ƒ|ƒbƒvƒ“ƒ~ƒ…[ƒWƒbƒN2 (ver JA-A)	‚Û‚Á‚Õ‚ñ‚İ‚ã[‚¶‚Á‚­_2	Konami
+popn3	ƒ|ƒbƒvƒ“ƒ~ƒ…[ƒWƒbƒN3 (ver JA-A)	‚Û‚Á‚Õ‚ñ‚İ‚ã[‚¶‚Á‚­_3	Konami
+popnstex	ƒ|ƒbƒvƒ“ƒXƒe[ƒW EX (ver JB-A)	‚Û‚Á‚Õ‚ñ‚·‚Ä[‚¶_2_‚¢[‚¦‚Á‚­‚·	Konami
 ppp	ƒpƒ‰ƒpƒ‰ƒpƒ‰ƒ_ƒCƒX	‚Ï‚ç‚Ï‚ç‚Ï‚ç‚¾‚¢‚·	Konami
 ppd	ƒpƒ‰ƒpƒ‰ƒ_ƒ“ƒVƒ“ƒO	‚Ï‚ç‚Ï‚ç‚¾‚ñ‚µ‚ñ‚®	Konami
+ppp11	ƒpƒ‰ƒpƒ‰ƒpƒ‰ƒ_ƒCƒX (ver 1.1)	‚Ï‚ç‚Ï‚ç‚Ï‚ç‚¾‚¢‚·	Konami
 kbm	ƒL[ƒ{[ƒhƒ}ƒjƒA	‚«[‚Ú[‚Ç‚Ü‚É‚ _1	Konami
 kbm2nd	ƒL[ƒ{[ƒhƒ}ƒjƒA 2nd Mix	‚«[‚Ú[‚Ç‚Ü‚É‚ _2_‚¹‚©‚ñ‚Ç‚İ‚Á‚­‚·	Konami
 kbm3rd	ƒL[ƒ{[ƒhƒ}ƒjƒA 3rd Mix	‚«[‚Ú[‚Ç‚Ü‚É‚ _3_‚³[‚Ç‚İ‚Á‚­‚·	Konami

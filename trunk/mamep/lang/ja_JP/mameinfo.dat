@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.113u1      #
+#     Mameinfo.dat日本語版 v0.113u2      #
 #                                        #
-#             March 11, 2007             #
+#             March 17, 2007             #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,10 +12,48 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：830 翻訳済：811
-# 追加項目：338 合計：1168
+# Tester報告：834 翻訳済：815
+# 追加項目：338 合計：1172
 #
 
+
+$info=fghthist
+$mame
+[情報]
+
+- テストモードに入るには、両方のスタートボタン押しながらリセットする。
+
+
+[バグ]
+
+- キャラクタ選択後にクラッシュする。 fghthist0113u2red, F1ReB4lLL / twisty
+
+$end
+
+$info=eprom
+$mame
+[バグ]
+
+- アトラクトモードでのボイスがきちんと再生されない。 eprom0113u2gre, Lord Nightmare / Zsolt Vasvari
+
+
+- すごくマイナーな表示不具合が2カ所にある。
+エミュレーションのバグかどうかはわからないが、
+色がランダムに変わったり、白い点が現れる箇所がある。 eprom060gre, Darkk
+
+$end
+
+$info=legendoh
+$mame
+[バグ]
+
+- クレジットが1つしか入らず、スタートボタンを押してもゲームが始まらない。 legendoh0113u2yel, maxholz
+
+
+- タイトル画面以外ではコインをいれることができない。
+さらに、Push Startと表示されているときは、コインだけでなくスタートボタンも効かない。 legendoh0112u2gra, F1ReB4LL
+
+$end
 
 $info=actfancr
 $mame
@@ -1092,15 +1130,6 @@ $mame
 
 $end
 
-$info=jumpbug
-$mame
-[バグ]
-
-- かなり長い間、敵爆発音、
-ドル袋・ダイア取得音、火山爆発音、ピラミッド内部のいろいろ効果音が鳴らない。 jumpbug36rc1gre, Fujix (まーくん2)
-
-$end
-
 $info=kingball
 $mame
 [バグ]
@@ -1275,14 +1304,6 @@ $mame
 
 - Q*bertのサウンドROMが使われているため、一部の音が出ない。
 面クリア時にトランポリンではねる声など。サウンドコードは29から31が鳴っていない。 qbertqub0109u4gre, sxevious
-
-$end
-
-$info=gridlee
-$mame
-[バグ]
-
-- ゲームスタートでクラッシュ。 gridlee0111u3red, Tafoid
 
 $end
 
@@ -5487,15 +5508,6 @@ $mame
 
 $end
 
-$info=legendoh
-$mame
-[バグ]
-
-- タイトル画面以外ではコインをいれることができない。
-さらに、Push Startと表示されているときは、コインだけでなくスタートボタンも効かない。 legendoh0112u2gra, F1ReB4LL
-
-$end
-
 $info=sb2003
 $mame
 [バグ]
@@ -6102,16 +6114,6 @@ $mame
 
 - 2面の初めから画面の後ろ側に中ボスが見えている。
 他の面でも同様の現象あり。 superx074u1gre, MAMEjong
-
-$end
-
-$info=eprom
-$mame
-[バグ]
-
-- すごくマイナーな表示不具合が2カ所にある。
-エミュレーションのバグかどうかはわからないが、
-色がランダムに変わったり、白い点が現れる箇所がある。 eprom060gre, Darkk
 
 $end
 
@@ -7219,14 +7221,6 @@ DIPスイッチはない。
 - 倍率有効時間表示：
 
 コイン投入後、どれかボタンを押しながらスタート
-
-$end
-
-$info=fghthist
-$mame
-[情報]
-
-- テストモードに入るには、両方のスタートボタン押しながらリセットする。
 
 $end
 
