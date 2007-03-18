@@ -4535,6 +4535,12 @@ INLINE void _options_get_langcode(int *p, const char *name)
 	else
 		langcode = stricmp(langname, "auto") ? lang_find_langname(langname) : -1;
 
+	if (langcode < 0)
+	{
+		langcode = lang_find_codepage(GetACP());
+		langcode = langcode < 0 ? UI_LANG_EN_US : langcode;
+	}
+
 	*p = langcode;
 }
 
