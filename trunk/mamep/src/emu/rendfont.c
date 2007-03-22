@@ -238,11 +238,33 @@ render_font *render_font_alloc(const char *filename)
 	memset(font, 0, sizeof(*font));
 
 	/* attempt to load the cached version of the font first */
-	if (filename != NULL && render_font_load_cached_bdf(font, filename) == 0)
+	if (filename != NULL)
 	{
-		//mamep: allocate command glyph font
-		font->cmd = render_font_alloc_command_glyph(font->height);
-		return font;
+		int loaded = 0;
+		char *filename_local = assemble_3_strings(ui_lang_info[lang_get_langcode()].name, "/", filename);
+	mame_printf_warning("%s\n", filename_local);
+	 	if (filename_local != NULL && render_font_load_cached_bdf(font, filename_local) == 0)
+			loaded++;
+		else
+		{
+			/* if we failed, clean up and realloc */
+			render_font_free(font);
+			font = malloc_or_die(sizeof(*font));
+			memset(font, 0, sizeof(*font));
+
+			if (render_font_load_cached_bdf(font, filename) == 0)
+				loaded++;
+		}
+
+		if (filename_local)
+			free(filename_local);
+
+		if (loaded)
+		{
+			//mamep: allocate command glyph font
+			font->cmd = render_font_alloc_command_glyph(font->height);
+			return font;
+		}
 	}
 
 	/* if we failed, clean up and realloc */

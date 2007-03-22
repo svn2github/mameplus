@@ -2394,7 +2394,6 @@ static void PropToOptions(HWND hWnd, options_type *o)
 	HWND hCtrl2;
 	HWND hCtrl3;
 	int  nIndex;
-	int  nCurScreen = 0;
 
 	if (IS_GAME)
 		SetGameUsesDefaults(g_nGame,g_bUseDefaults);
@@ -2435,15 +2434,6 @@ static void PropToOptions(HWND hWnd, options_type *o)
 		}
 	}
 #endif /* DRIVER_SWITCH */
-
-	/* get current screen number */
-	hCtrl = GetDlgItem(hWnd, IDC_SCREENSELECT);
-	if (hCtrl)
-	{
-		nCurScreen = ComboBox_GetCurSel(hCtrl);
-		if (nCurScreen == CB_ERR)
-			nCurScreen = 0;
-	}
 
 	/* resolution size */
 	hCtrl = GetDlgItem(hWnd, IDC_SIZES);
