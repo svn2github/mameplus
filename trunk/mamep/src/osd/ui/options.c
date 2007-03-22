@@ -538,9 +538,6 @@ void OptionsInit()
 	options_get_core(&settings);
 	options_get_driver(&global);
 
-	/* Setup default font */
-	GetTranslatedFont(&settings.list_logfont);
-
 	default_variables.play_count  = 0;
 	default_variables.play_time = 0;
 	default_variables.rom_audit_results = UNKNOWN;
@@ -570,6 +567,10 @@ void OptionsInit()
 	LoadOptions();
 
 	unify_alt_options();
+
+	// apply default font if needed
+	if (settings.list_logfont.lfFaceName[0] == '\0')
+		GetTranslatedFont(&settings.list_logfont);
 
 	// have our mame core (file code) know about our rom path
 	// this leaks a little, but the win32 file core writes to this string
@@ -869,59 +870,34 @@ void ResetGUI(void)
 
 int GetLangcode(void)
 {
-	if (settings.langcode < 0)
-	{
-		int langcode = lang_find_codepage(GetACP());
-		return langcode < 0 ? UI_LANG_EN_US : langcode;
-	}
-
 	return settings.langcode;
 }
 
 void SetLangcode(int langcode)
 {
-	if (langcode >= UI_LANG_MAX)
-		langcode = -1;
-	else if (langcode >= 0)
-	{
-		UINT codepage = ui_lang_info[langcode].codepage;
-
-		if (OnNT())
-		{
-			if (!IsValidCodePage(codepage))
-			{
-				fprintf(stderr, "codepage %d is not supported\n", ui_lang_info[langcode].codepage);
-				langcode = -1;
-			}
-		}
-		else if ((langcode != UI_LANG_EN_US) && (codepage != GetACP()))
-		{
-			fprintf(stderr, "codepage %d is not supported\n", ui_lang_info[langcode].codepage);
-			langcode = -1;
-		}
-	}
-
 	settings.langcode = langcode;
 
-	/* apply to options.langcode for datafile.c */
+	/* apply to emulator core for datafile.c */
 	lang_set_langcode(langcode);
+
 	/* apply for osd core functions */
 	set_osdcore_acp(ui_lang_info[langcode].codepage);
+
 	InitTranslator(langcode);
 }
 
 BOOL UseLangList(void)
 {
-    return settings.use_lang_list;
+	return settings.use_lang_list;
 }
 
 void SetUseLangList(BOOL is_use)
 {
-    settings.use_lang_list = is_use;
+	settings.use_lang_list = is_use;
 
-    /* apply to options.use_lang_list for datafile.c */
-    lang_message_enable(UI_MSG_LIST, is_use);
-    lang_message_enable(UI_MSG_MANUFACTURE, is_use);
+	/* apply to emulator core for datafile.c */
+	lang_message_enable(UI_MSG_LIST, is_use);
+	lang_message_enable(UI_MSG_MANUFACTURE, is_use);
 }
 
 const WCHAR * GetImageTabLongName(int tab_index)
@@ -3124,7 +3100,7 @@ const options_entry winui_opts[] =
 
 	{ NULL,                          NULL,                         OPTION_HEADER,     "LIST FONT OPTIONS"},
 	{ "list_font",                   "-8,0,0,0,400,0,0,0,0,0,0,0,0", 0,               "game list font size"},
-	{ "list_fontface",               "MS Sans Serif",              0,                 "game list font face"},
+	{ "list_fontface",               "",                           0,                 "game list font face"},
 	{ "font_color",                  "-1",                         0,                 "game list font color"},
 	{ "clone_color",                 "8421504",                    0,                 "clone game list font color"},
 	{ "broken_color",                "202",                        0,                 "broken game list font color"},
@@ -4528,18 +4504,33 @@ INLINE void _options_get_resolution(char **p, const char *name)
 INLINE void _options_get_langcode(int *p, const char *name)
 {
 	const char *langname = options_get_string("language");
-	int langcode;
+	int langcode = mame_stricmp(langname, "auto") ?
+		lang_find_langname(langname) :
+		lang_find_codepage(GetOEMCP());
 
-	if (langname == NULL)
-		langcode = -1;
+	if (langcode >= 0 && langcode < UI_LANG_MAX)
+	{
+		UINT codepage = ui_lang_info[langcode].codepage;
+
+		if (OnNT())
+		{
+			if (!IsValidCodePage(codepage))
+			{
+				dprintf("codepage %d is not supported\n", ui_lang_info[langcode].codepage);
+				langcode = -1;
+			}
+		}
+		else if ((langcode != UI_LANG_EN_US) && (codepage != GetOEMCP()))
+		{
+				dprintf("codepage %d is not supported\n", ui_lang_info[langcode].codepage);
+			langcode = -1;
+		}
+	}
 	else
-		langcode = stricmp(langname, "auto") ? lang_find_langname(langname) : -1;
+		langcode = -1;
 
 	if (langcode < 0)
-	{
-		langcode = lang_find_codepage(GetACP());
-		langcode = langcode < 0 ? UI_LANG_EN_US : langcode;
-	}
+		langcode = UI_LANG_EN_US;
 
 	*p = langcode;
 }

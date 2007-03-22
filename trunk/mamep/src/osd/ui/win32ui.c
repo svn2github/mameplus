@@ -2053,7 +2053,7 @@ static void ChangeLanguage(int id)
 		if (OnNT())
 			EnableMenuItem(GetMenu(hMain), i + ID_LANGUAGE_ENGLISH_US, IsValidCodePage(cp) ? MF_ENABLED : MF_GRAYED);
 		else
-			EnableMenuItem(GetMenu(hMain), i + ID_LANGUAGE_ENGLISH_US, (i == UI_LANG_EN_US || cp == GetACP()) ? MF_ENABLED : MF_GRAYED);
+			EnableMenuItem(GetMenu(hMain), i + ID_LANGUAGE_ENGLISH_US, (i == UI_LANG_EN_US || cp == GetOEMCP()) ? MF_ENABLED : MF_GRAYED);
 	}
 
 	if (id)
@@ -8083,7 +8083,7 @@ void SwitchFullScreenMode(void)
 			if (OnNT())
 				EnableMenuItem(GetMenu(hMain), i + ID_LANGUAGE_ENGLISH_US, IsValidCodePage(cp) ? MF_ENABLED : MF_GRAYED);
 			else
-				EnableMenuItem(GetMenu(hMain), i + ID_LANGUAGE_ENGLISH_US, (i == UI_LANG_EN_US || cp == GetACP()) ? MF_ENABLED : MF_GRAYED);
+				EnableMenuItem(GetMenu(hMain), i + ID_LANGUAGE_ENGLISH_US, (i == UI_LANG_EN_US || cp == GetOEMCP()) ? MF_ENABLED : MF_GRAYED);
 		}
 
 		// Add frame to dialog again
