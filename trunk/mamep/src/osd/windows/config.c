@@ -22,6 +22,7 @@
 #include "rendutil.h"
 #include "debug/debugcpu.h"
 #include "debug/debugcon.h"
+#include "emuopts.h"
 
 // MAMEOS headers
 #include "winmain.h"
@@ -75,7 +76,7 @@ static char *extract_path(const char *name, char *dest, int destsize);
 //============================================================
 
 // struct definitions
-const options_entry windows_opts[] =
+const options_entry mame_win_options[] =
 {
 	// core commands
 	{ NULL,                       NULL,       OPTION_HEADER,     "CORE COMMANDS" },
@@ -251,6 +252,17 @@ INLINE int is_directory_separator(char c)
 
 
 //============================================================
+//  win_options_init
+//============================================================
+
+void win_options_init(void)
+{
+	mame_options_init(mame_win_options);
+}
+
+
+
+//============================================================
 //  cli_frontend_init
 //============================================================
 
@@ -263,13 +275,13 @@ int cli_frontend_init(int argc, char **argv)
 	int drvnum = -1;
 
 	// initialize the options manager
-	options_init(windows_opts);
+	win_options_init();
 #ifdef MESS
 	win_mess_options_init();
 #endif // MESS
 
 	// parse the command line first; if we fail here, we're screwed
-	if (options_parse_command_line(argc, argv))
+	if (options_parse_command_line(mame_options(), argc, argv))
 		exit(MAMERR_INVALID_CONFIG);
 
 	// now parse the core set of INI files
@@ -281,7 +293,7 @@ int cli_frontend_init(int argc, char **argv)
 
 	// reparse the command line to ensure its options override all
 	// note that we re-fetch the gamename here as it will get overridden
-	options_parse_command_line(argc, argv);
+	options_parse_command_line(mame_options(), argc, argv);
 	setup_language();
 
 #ifdef DRIVER_SWITCH
@@ -292,7 +304,7 @@ int cli_frontend_init(int argc, char **argv)
 	execute_simple_commands();
 
 	// find out what game we might be referring to
-	gamename = options_get_string(OPTION_GAMENAME);
+	gamename = options_get_string(mame_options(), OPTION_GAMENAME);
 	if (gamename != NULL)
 		drvnum = driver_get_index(extract_base_name(gamename, basename, ARRAY_LENGTH(basename)));
 
@@ -321,7 +333,7 @@ int cli_frontend_init(int argc, char **argv)
 
 #ifdef USE_IPS
 		// HACK: DO NOT INHERIT IPS CONFIGURATION
-		options_set_string("ips", NULL);
+		options_set_string(mame_options(), "ips", NULL);
 #endif /* USE_IPS */
 
 		parse_ini_file(driver->name);
@@ -329,7 +341,7 @@ int cli_frontend_init(int argc, char **argv)
 
 	// reparse the command line to ensure its options override all
 	// note that we re-fetch the gamename here as it will get overridden
-	options_parse_command_line(argc, argv);
+	options_parse_command_line(mame_options(), argc, argv);
 	setup_language();
 
 	// execute any commands specified
@@ -360,31 +372,27 @@ int cli_frontend_init(int argc, char **argv)
 	if (buffer[0] != 0)
 	{
 		// okay, we got one; prepend it to the rompath
-		const char *rompath = options_get_string("rompath");
+		const char *rompath = options_get_string(mame_options(), "rompath");
 		if (rompath == NULL)
-			options_set_string("rompath", buffer);
+			options_set_string(mame_options(), "rompath", buffer);
 		else
 		{
 			char *newpath = malloc_or_die(strlen(rompath) + strlen(buffer) + 2);
 			sprintf(newpath, "%s;%s", buffer, rompath);
-			options_set_string("rompath", newpath);
+			options_set_string(mame_options(), "rompath", newpath);
 			free(newpath);
 		}
 	}
 
-#ifdef MESS
-	win_mess_extract_options();
-#endif /* MESS */
-
 	// debugging options
 {
 	extern int verbose;
-	verbose = options_get_bool("verbose");
+	verbose = options_get_bool(mame_options(), "verbose");
 }
 
 	// thread priority
-	if (!options_get_bool(OPTION_DEBUG))
-		SetThreadPriority(GetCurrentThread(), options_get_int_range("priority", -15, 1));
+	if (!options_get_bool(mame_options(), OPTION_DEBUG))
+		SetThreadPriority(GetCurrentThread(), options_get_int_range(mame_options(), "priority", -15, 1));
 
 	return drvnum;
 }
@@ -402,7 +410,7 @@ void cli_frontend_exit(void)
 #endif /* DRIVER_SWITCH */
 
 	// free the options that we added previously
-	options_free_entries();
+	options_free(mame_options());
 }
 
 
@@ -418,7 +426,7 @@ static void parse_ini_file(const char *name)
 	char *fname;
 
 	// don't parse if it has been disabled
-	if (!options_get_bool("readconfig"))
+	if (!options_get_bool(mame_options(), "readconfig"))
 		return;
 
 	// open the file; if we fail, that's ok
@@ -429,8 +437,19 @@ static void parse_ini_file(const char *name)
 		return;
 
 	// parse the file and close it
-	options_parse_ini_file(file);
+	options_parse_ini_file(mame_options(), mame_core_file(file));
 	mame_fclose(file);
+}
+
+
+
+//============================================================
+//  mame_puts_info
+//============================================================
+
+static void mame_puts_info(const char *s)
+{
+	mame_printf_info("%s", s);
 }
 
 
@@ -442,7 +461,7 @@ static void parse_ini_file(const char *name)
 static void execute_simple_commands(void)
 {
 	// help?
-	if (options_get_bool("help"))
+	if (options_get_bool(mame_options(), "help"))
 	{
 		setup_language();
 		display_help();
@@ -450,16 +469,16 @@ static void execute_simple_commands(void)
 	}
 
 	// showusage?
-	if (options_get_bool("showusage"))
+	if (options_get_bool(mame_options(), "showusage"))
 	{
 		setup_language();
-		mame_printf_info(_WINDOWS("Usage: mame [game] [options]\n\nOptions:\n"));
-		options_output_help();
+		mame_printf_info(_WINDOWS("Usage: %s [%s] [options]\n\nOptions:\n"), APPNAME_LOWER, GAMENOUN);
+		options_output_help(mame_options(), mame_puts_info);
 		exit(MAMERR_NONE);
 	}
 
 	// validate?
-	if (options_get_bool("validate"))
+	if (options_get_bool(mame_options(), "validate"))
 	{
 		extern int mame_validitychecks(int game);
 		exit(mame_validitychecks(-1));
@@ -500,7 +519,7 @@ static void execute_commands(const char *argv0)
 	int i;
 
 	// createconfig?
-	if (options_get_bool("createconfig"))
+	if (options_get_bool(mame_options(), "createconfig"))
 	{
 		char basename[128];
 		mame_file *file;
@@ -519,21 +538,21 @@ static void execute_commands(const char *argv0)
 		}
 
 		// output the configuration and exit cleanly
-		options_output_ini_mame_file(file);
+		options_output_ini_file(mame_options(), mame_core_file(file));
 		mame_fclose(file);
 		exit(MAMERR_NONE);
 	}
 
 	// showconfig?
-	if (options_get_bool("showconfig"))
+	if (options_get_bool(mame_options(), "showconfig"))
 	{
-		options_output_ini_file(stdout);
+		options_output_ini_stdfile(mame_options(), stdout);
 		exit(MAMERR_NONE);
 	}
 
 	// frontend options?
 	for (i = 0; i < ARRAY_LENGTH(frontend_options); i++)
-		if (options_get_bool(frontend_options[i].option))
+		if (options_get_bool(mame_options(), frontend_options[i].option))
 		{
 			int result;
 
@@ -594,7 +613,7 @@ void assign_drivers(void)
 	int i, n;
 
 #ifndef TINY_NAME
-	const char *drv_option = options_get_string("driver_config");
+	const char *drv_option = options_get_string(mame_options(), "driver_config");
 	if (drv_option)
 	{
 		char *temp = mame_strdup(drv_option);
@@ -672,7 +691,8 @@ void assign_drivers(void)
 
 static void setup_language(void)
 {
-	const char *langname = options_get_string("language");
+	const char *langname = options_get_string(mame_options(), "language");
+	int use_lang_list =options_get_bool(mame_options(), "use_lang_list");
 
 	int langcode = mame_stricmp(langname, "auto") ?
 		lang_find_langname(langname) :
@@ -692,8 +712,8 @@ static void setup_language(void)
 	lang_set_langcode(langcode);
 	set_osdcore_acp(ui_lang_info[langcode].codepage);
 
-	lang_message_enable(UI_MSG_LIST, options_get_bool("use_lang_list"));
-	lang_message_enable(UI_MSG_MANUFACTURE, options_get_bool("use_lang_list"));
+	lang_message_enable(UI_MSG_LIST, use_lang_list);
+	lang_message_enable(UI_MSG_MANUFACTURE, use_lang_list);
 }
 
 

@@ -162,7 +162,7 @@ void CLIB_DECL debugload(const char *string, ...)
 
 int determine_bios_rom(const bios_entry *bios)
 {
-	const char *specbios = options_get_string(OPTION_BIOS);
+	const char *specbios = options_get_string(mame_options(), OPTION_BIOS);
 	const bios_entry *firstbios = bios;
 
 	/* set to default */
@@ -991,7 +991,7 @@ void rom_init(running_machine *machine, const rom_entry *romp)
 	static rom_load_data romdata;
 	int regnum;
 #ifdef USE_IPS
-	const char *patchname = options_get_string("ips");
+	const char *patchname = options_get_string(mame_options(), "ips");
 #endif /* USE_IPS */
 
 	/* if no roms, bail */

@@ -81,7 +81,6 @@
 
 		#include "mame.h"
 		extern SHAREDOBJ_DATA char            build_version[];
-		extern SHAREDOBJ_DATA global_options  options;
 		extern SHAREDOBJ_DATA running_machine *Machine;
 		extern SHAREDOBJ_FUNC(void)	expand_machine_driver(void (*constructor)(machine_config *), machine_config *output);
 		extern SHAREDOBJ_FUNC(int)	mame_validitychecks(int game);
@@ -162,31 +161,30 @@
 		extern SHAREDOBJ_FUNC(int) state_save_check_file(mame_file *file, const char *gamename, int validate_signature, void (CLIB_DECL *errormsg)(const char *fmt, ...));
 
 		#include "options.h"
-		extern SHAREDOBJ_FUNC(void)         options_init(const options_entry *entrylist);
-		extern SHAREDOBJ_FUNC(void)         options_add_entries(const options_entry *entrylist);
-		extern SHAREDOBJ_FUNC(void)         options_set_option_default_value(const char *name, const char *defvalue);
-		extern SHAREDOBJ_FUNC(void)         options_set_option_callback(const char *name, void (*callback)(const char *arg));
+		extern SHAREDOBJ_FUNC(int)          options_add_entries(core_options *opts, const options_entry *entrylist);
+		extern SHAREDOBJ_FUNC(int)          options_set_option_default_value(core_options *opts, const char *name, const char *defvalue);
+		extern SHAREDOBJ_FUNC(int)          options_set_option_callback(core_options *opts, const char *name, void (*callback)(core_options *opts, const char *arg));
 		extern SHAREDOBJ_FUNC(void)         options_free_entries(void);
-		extern SHAREDOBJ_FUNC(int)          options_parse_command_line(int argc, char **argv);
-		extern SHAREDOBJ_FUNC(int)          options_parse_ini_file(mame_file *inifile);
-		extern SHAREDOBJ_FUNC(int)          options_output_command_line_marked(char *buf);
-		extern SHAREDOBJ_FUNC(void)         options_output_ini_file(FILE *inifile);
-		extern SHAREDOBJ_FUNC(void)         options_output_ini_mame_file(mame_file *inifile);
-		extern SHAREDOBJ_FUNC(void)         options_output_ini_file_marked(FILE *inifile);
-		extern SHAREDOBJ_FUNC(void)         options_output_ini_mame_file_marked(mame_file *inifile);
-
-		extern SHAREDOBJ_FUNC(void)         options_output_help(void);
-		extern SHAREDOBJ_FUNC(const char *) options_get_string(const char * name);
-		extern SHAREDOBJ_FUNC(int)          options_get_bool(const char * name);
-		extern SHAREDOBJ_FUNC(int)          options_get_int(const char * name);
-		extern SHAREDOBJ_FUNC(float)        options_get_float(const char * name);
-		extern SHAREDOBJ_FUNC(void)         options_set_string(const char * name, const char *value);
-		extern SHAREDOBJ_FUNC(void)         options_set_bool(const char * name, int value);
-		extern SHAREDOBJ_FUNC(void)         options_set_int(const char * name, int value);
-		extern SHAREDOBJ_FUNC(void)         options_set_float(const char * name, float value);
-		extern SHAREDOBJ_FUNC(void)         options_clear_output_mark(void);
-		extern SHAREDOBJ_FUNC(void *)       options_get_datalist(void);
-		extern SHAREDOBJ_FUNC(void)         options_set_datalist(void *);
+		extern SHAREDOBJ_FUNC(int)          options_parse_command_line(core_options *opts, int argc, char **argv);
+		extern SHAREDOBJ_FUNC(int)          options_parse_ini_file(core_options *opts, core_file *inifile);
+		extern SHAREDOBJ_FUNC(int)          options_output_command_line_marked(core_options *opts, char *buf);
+		extern SHAREDOBJ_FUNC(void)         options_output_ini_file(core_options *opts, core_file *inifile);
+		extern SHAREDOBJ_FUNC(void)         options_output_ini_stdfile(core_options *opts, FILE *inifile);
+		extern SHAREDOBJ_FUNC(void)         options_output_ini_file_marked(core_options *opts, core_file *inifile);
+		extern SHAREDOBJ_FUNC(void)         options_output_ini_stdfile_marked(core_options *opts, FILE *inifile);
+		extern SHAREDOBJ_FUNC(void)         options_output_help(core_options *opts, void (*output)(const char *s));
+		extern SHAREDOBJ_FUNC(const char *) options_get_string(core_options *opts, const char *name);
+		extern SHAREDOBJ_FUNC(int)          options_get_bool(core_options *opts, const char *name);
+		extern SHAREDOBJ_FUNC(int)          options_get_int(core_options *opts, const char *name);
+		extern SHAREDOBJ_FUNC(float)        options_get_float(core_options *opts, const char *name);
+		extern SHAREDOBJ_FUNC(int)          options_get_int_range(core_options *opts, const char *name, int minval, int maxval);
+		extern SHAREDOBJ_FUNC(float)        options_get_float_range(core_options *opts, const char *name, float minval, float maxval);
+		extern SHAREDOBJ_FUNC(UINT32)       options_get_seqid(core_options *opts, const char *name);
+		extern SHAREDOBJ_FUNC(void)         options_set_string(core_options *opts, const char *name, const char *value);
+		extern SHAREDOBJ_FUNC(void)         options_set_bool(core_options *opts, const char *name, int value);
+		extern SHAREDOBJ_FUNC(void)         options_set_int(core_options *opts, const char *name, int value);
+		extern SHAREDOBJ_FUNC(void)         options_set_float(core_options *opts, const char *name, float value);
+		extern SHAREDOBJ_FUNC(void)         options_clear_output_mark(core_options *opts);
 
 		#include "restrack.h"
 		extern SHAREDOBJ_FUNC(void)   add_free_resources_callback(void (*callback)(void));
@@ -239,7 +237,7 @@
 		extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 
 		// in windows/config.c
-		extern SHAREDOBJ_DATA const options_entry windows_opts[];
+		extern SHAREDOBJ_DATA const options_entry mame_win_options[];
 		#ifdef DRIVER_SWITCH
 		extern SHAREDOBJ_FUNC(void) assign_drivers(void);
 		#endif /* DRIVER_SWITCH */
@@ -314,7 +312,7 @@
 
 		// in windows/config.c
 		#include "emu/options.h"
-		extern const options_entry windows_opts[];
+		extern const options_entry mame_win_options[];
 		#ifdef DRIVER_SWITCH
 		extern void assign_drivers(void);
 		#endif /* DRIVER_SWITCH */
@@ -378,7 +376,7 @@
 	#else
 	#include "options.h"
 	#endif /* _MSC_VER */
-	extern const options_entry windows_opts[];
+	extern const options_entry mame_win_options[];
 	#ifdef DRIVER_SWITCH
 	extern void assign_drivers(void);
 	#endif /* DRIVER_SWITCH */

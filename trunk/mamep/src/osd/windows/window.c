@@ -213,7 +213,7 @@ int winwindow_init(running_machine *machine)
 	size_t temp;
 
 	// determine if we are using multithreading or not
-	multithreading_enabled = options_get_bool("multithreading");
+	multithreading_enabled = options_get_bool(mame_options(), "multithreading");
 
 	// get the main thread ID before anything else
 	main_threadid = GetCurrentThreadId();
@@ -489,7 +489,7 @@ void winwindow_toggle_full_screen(void)
 
 #ifdef MAME_DEBUG
 	// if we are in debug mode, never go full screen
-	if (options_get_bool(OPTION_DEBUG))
+	if (options_get_bool(mame_options(), OPTION_DEBUG))
 		return;
 #endif
 
@@ -602,7 +602,7 @@ int winwindow_video_window_create(int index, win_monitor_info *monitor, const wi
 
 	// set the specific view
 	sprintf(option, "view%d", index);
-	set_starting_view(index, window, options_get_string(option));
+	set_starting_view(index, window, options_get_string(mame_options(), option));
 
 	// remember the current values in case they change
 	window->targetview = render_target_get_view(window->target);
@@ -617,7 +617,7 @@ int winwindow_video_window_create(int index, win_monitor_info *monitor, const wi
 	MultiByteToWideChar(CP_UTF8, 0, buf, -1, window->title, sizeof window->title);
 
 	// set the initial maximized state
-	window->startmaximized = options_get_bool("maximize");
+	window->startmaximized = options_get_bool(mame_options(), "maximize");
 
 	// finish the window creation on the window thread
 	if (multithreading_enabled)
@@ -839,7 +839,7 @@ static int create_window_class(void)
 
 static void set_starting_view(int index, win_window_info *window, const char *view)
 {
-	const char *defview = options_get_string("view");
+	const char *defview = options_get_string(mame_options(), "view");
 	int viewindex = -1;
 
 	assert(GetCurrentThreadId() == main_threadid);

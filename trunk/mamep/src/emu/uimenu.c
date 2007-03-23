@@ -788,7 +788,7 @@ do { \
 #endif /* USE_SCALE_EFFECTS */
 
 	/* add cheat menu */
-	if (options_get_bool(OPTION_CHEAT))
+	if (options_get_bool(mame_options(), OPTION_CHEAT))
 		ADD_MENU(UI_cheat, menu_cheat, 1);
 
 	/* add memory card menu */

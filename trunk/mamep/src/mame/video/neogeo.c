@@ -439,8 +439,6 @@ WRITE16_HANDLER( neogeo_setpalbank1_16_w )
 
 READ16_HANDLER( neogeo_paletteram16_r )
 {
-	offset &=0xfff; // mirrored
-
 	return neogeo_paletteram16[offset];
 }
 
@@ -448,8 +446,6 @@ WRITE16_HANDLER( neogeo_paletteram16_w )
 {
 	UINT16 oldword, newword;
 	int r,g,b;
-
-	offset &=0xfff; // mirrored
 
 	oldword = newword = neogeo_paletteram16[offset];
 	COMBINE_DATA(&newword);

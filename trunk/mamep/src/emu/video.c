@@ -290,11 +290,11 @@ void video_init(running_machine *machine)
 	global.speed_percent = 1.0;
 
 	/* extract global configuration settings */
-	global.sleep = options_get_bool(OPTION_SLEEP);
-	global.throttle = options_get_bool(OPTION_THROTTLE);
-	global.auto_frameskip = options_get_bool(OPTION_AUTOFRAMESKIP);
-	global.frameskip_level = options_get_int_range(OPTION_FRAMESKIP, 0, MAX_FRAMESKIP);
-	global.seconds_to_run = options_get_int(OPTION_SECONDS_TO_RUN);
+	global.sleep = options_get_bool(mame_options(), OPTION_SLEEP);
+	global.throttle = options_get_bool(mame_options(), OPTION_THROTTLE);
+	global.auto_frameskip = options_get_bool(mame_options(), OPTION_AUTOFRAMESKIP);
+	global.frameskip_level = options_get_int_range(mame_options(), OPTION_FRAMESKIP, 0, MAX_FRAMESKIP);
+	global.seconds_to_run = options_get_int(mame_options(), OPTION_SECONDS_TO_RUN);
 
 	/* allocate memory for our private data */
 	viddata = machine->video_data = auto_malloc(sizeof(*viddata));
@@ -364,7 +364,7 @@ void video_init(running_machine *machine)
 #endif /* USE_SCALE_EFFECTS */
 
 	/* start recording movie if specified */
-	filename = options_get_string(OPTION_MNGWRITE);
+	filename = options_get_string(mame_options(), OPTION_MNGWRITE);
 	if (filename != NULL)
 		video_movie_begin_recording(machine, 0, filename);
 }
@@ -728,6 +728,30 @@ void video_screen_set_visarea(int scrnum, int min_x, int max_x, int min_y, int m
 
 
 /*-------------------------------------------------
+    video_screen_exists - returns whether a given
+    screen exists
+-------------------------------------------------*/
+
+int video_screen_exists(int scrnum)
+{
+	return (scrnum >= 0 && scrnum < MAX_SCREENS && Machine->drv->screen[scrnum].tag != NULL);
+}
+
+
+/*-------------------------------------------------
+    get_screen_info - accessor function to get
+    private data for a screen
+-------------------------------------------------*/
+
+static internal_screen_info *get_screen_info(running_machine *machine, int scrnum)
+{
+	video_private *viddata = machine->video_data;
+	assert_always(video_screen_exists(scrnum), "Invalid screen");
+	return &viddata->scrinfo[scrnum];
+}
+
+
+/*-------------------------------------------------
     video_screen_update_partial - perform a partial
     update from the last scanline up to and
     including the specified scanline
@@ -735,8 +759,7 @@ void video_screen_set_visarea(int scrnum, int min_x, int max_x, int min_y, int m
 
 void video_screen_update_partial(int scrnum, int scanline)
 {
-	video_private *viddata = Machine->video_data;
-	internal_screen_info *info = &viddata->scrinfo[scrnum];
+	internal_screen_info *info = get_screen_info(Machine, scrnum);
 	rectangle clip = info->state->visarea;
 
 	LOG_PARTIAL_UPDATES(("Partial: video_screen_update_partial(%d,%d): ", scrnum, scanline));
@@ -801,8 +824,7 @@ void video_screen_update_partial(int scrnum, int scanline)
 
 int video_screen_get_vpos(int scrnum)
 {
-	video_private *viddata = Machine->video_data;
-	internal_screen_info *info = &viddata->scrinfo[scrnum];
+	internal_screen_info *info = get_screen_info(Machine, scrnum);
 	subseconds_t delta = mame_time_to_subseconds(sub_mame_times(mame_timer_get_time(), info->vblank_time));
 	int vpos;
 
@@ -825,8 +847,7 @@ int video_screen_get_vpos(int scrnum)
 
 int video_screen_get_hpos(int scrnum)
 {
-	video_private *viddata = Machine->video_data;
-	internal_screen_info *info = &viddata->scrinfo[scrnum];
+	internal_screen_info *info = get_screen_info(Machine, scrnum);
 	subseconds_t delta = mame_time_to_subseconds(sub_mame_times(mame_timer_get_time(), info->vblank_time));
 	int vpos;
 
@@ -851,8 +872,7 @@ int video_screen_get_hpos(int scrnum)
 
 int video_screen_get_vblank(int scrnum)
 {
-	video_private *viddata = Machine->video_data;
-	internal_screen_info *info = &viddata->scrinfo[scrnum];
+	internal_screen_info *info = get_screen_info(Machine, scrnum);
 	int vpos = video_screen_get_vpos(scrnum);
 	return (vpos < info->state->visarea.min_y || vpos > info->state->visarea.max_y);
 }
@@ -865,8 +885,7 @@ int video_screen_get_vblank(int scrnum)
 
 int video_screen_get_hblank(int scrnum)
 {
-	video_private *viddata = Machine->video_data;
-	internal_screen_info *info = &viddata->scrinfo[scrnum];
+	internal_screen_info *info = get_screen_info(Machine, scrnum);
 	int hpos = video_screen_get_hpos(scrnum);
 	return (hpos < info->state->visarea.min_x || hpos > info->state->visarea.max_x);
 }
@@ -880,8 +899,7 @@ int video_screen_get_hblank(int scrnum)
 
 mame_time video_screen_get_time_until_pos(int scrnum, int vpos, int hpos)
 {
-	video_private *viddata = Machine->video_data;
-	internal_screen_info *info = &viddata->scrinfo[scrnum];
+	internal_screen_info *info = get_screen_info(Machine, scrnum);
 	subseconds_t curdelta = mame_time_to_subseconds(sub_mame_times(mame_timer_get_time(), info->vblank_time));
 	subseconds_t targetdelta;
 
@@ -909,8 +927,7 @@ mame_time video_screen_get_time_until_pos(int scrnum, int vpos, int hpos)
 
 mame_time video_screen_get_scan_period(int scrnum)
 {
-	video_private *viddata = Machine->video_data;
-	internal_screen_info *info = &viddata->scrinfo[scrnum];
+	internal_screen_info *info = get_screen_info(Machine, scrnum);
 	return make_mame_time(0, info->scantime);
 }
 

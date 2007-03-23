@@ -19,7 +19,7 @@
 #include "osdcore.h"
 #include "corefile.h"
 #include "mame.h"
-#include "options.h"
+#include "emuopts.h"
 
 
 

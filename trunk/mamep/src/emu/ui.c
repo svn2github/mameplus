@@ -337,12 +337,12 @@ static void setup_palette(void)
 	ui_transparency = 255;
 
 #ifdef TRANS_UI
-	if (options_get_bool("use_trans_ui"))
+	if (options_get_bool(mame_options(), "use_trans_ui"))
 	{
-		ui_transparency = options_get_int("ui_transparency");
+		ui_transparency = options_get_int(mame_options(), "ui_transparency");
 		if (ui_transparency < 0 || ui_transparency > 255)
 		{
-			mame_printf_error(_("Illegal value for %s = %s\n"), "ui_transparency", options_get_string("ui_transparency"));
+			mame_printf_error(_("Illegal value for %s = %s\n"), "ui_transparency", options_get_string(mame_options(), "ui_transparency"));
 			ui_transparency = 224;
 		}
 	}
@@ -350,7 +350,7 @@ static void setup_palette(void)
 
 	for (i = 0; palette_decode_table[i].name; i++)
 	{
-		const char *value = options_get_string(palette_decode_table[i].name);
+		const char *value = options_get_string(mame_options(), palette_decode_table[i].name);
 		int col = palette_decode_table[i].color;
 		int r = palette_decode_table[i].defval[0];
 		int g = palette_decode_table[i].defval[1];
@@ -482,10 +482,14 @@ int ui_display_startup_screens(int show_disclaimer)
 #else
 	const int maxstate = 3;
 #endif
-	int str = options_get_int(OPTION_SECONDS_TO_RUN);
-	int show_gameinfo = (str > 0 && str < 60*5) ? FALSE : !options_get_bool(OPTION_SKIP_GAMEINFO);
-	int show_warnings = (str > 0 && str < 60*5) ? FALSE : TRUE;
+	int str = options_get_int(mame_options(), OPTION_SECONDS_TO_RUN);
+	int show_gameinfo = !options_get_bool(mame_options(), OPTION_SKIP_GAMEINFO);
+	int show_warnings = TRUE;
 	int state;
+
+	/* disable everything if we are using -str */
+	if (str > 0 && str < 60*5)
+		show_gameinfo = show_warnings = show_disclaimer = FALSE;
 
 	/* initialize the on-screen display system */
 	slider_init();
@@ -595,7 +599,7 @@ void ui_update_and_render(void)
 	/* if we're paused, dim the whole screen */
 	if (mame_get_phase(Machine) >= MAME_PHASE_RESET && (single_step || mame_is_paused(Machine)))
 	{
-		int alpha = (1.0f - options_get_float_range(OPTION_PAUSE_BRIGHTNESS, 0.0f, 1.0f)) * 255.0f;
+		int alpha = (1.0f - options_get_float_range(mame_options(), OPTION_PAUSE_BRIGHTNESS, 0.0f, 1.0f)) * 255.0f;
 		if (alpha > 255)
 			alpha = 255;
 		if (alpha >= 0)
@@ -1907,7 +1911,7 @@ static UINT32 handler_ingame(UINT32 state)
 		ui_draw_text_full(profiler_get_text(), 0.0f, 0.0f, 1.0f, 0, JUSTIFY_LEFT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, ui_bgcolor, NULL, NULL);
 
 	/* let the cheat engine display its stuff */
-	if (options_get_bool(OPTION_CHEAT))
+	if (options_get_bool(mame_options(), OPTION_CHEAT))
 		cheat_display_watches();
 
 	/* display any popup messages */
@@ -1924,7 +1928,7 @@ static UINT32 handler_ingame(UINT32 state)
 	}
 
 #ifdef MESS
-	if (options.disable_normal_ui || ((Machine->gamedrv->flags & GAME_COMPUTER) && !mess_ui_active()))
+	if (mess_disable_builtin_ui())
 		return 0;
 #endif
 
@@ -1936,7 +1940,7 @@ static UINT32 handler_ingame(UINT32 state)
 	if (input_ui_pressed(IPT_UI_CONFIGURE))
 		return ui_set_handler(ui_menu_ui_handler, 0);
 
-	if (options_get_bool(OPTION_CHEAT) && input_ui_pressed(IPT_UI_CHEAT))
+	if (options_get_bool(mame_options(), OPTION_CHEAT) && input_ui_pressed(IPT_UI_CHEAT))
 		return ui_set_handler(ui_menu_ui_handler, SHORTCUT_MENU_CHEAT);
 
 #ifdef CMD_LIST
@@ -2249,7 +2253,7 @@ static UINT32 handler_confirm_quit(UINT32 state)
 		"Press Select key/button to quit,\n"
 		"Cancel key/button to continue.";
 
-	if (!options_get_bool("confirm_quit"))
+	if (!options_get_bool(mame_options(), "confirm_quit"))
 	{
 		mame_schedule_exit(Machine);
 		return UI_HANDLER_CANCEL;
@@ -2301,7 +2305,7 @@ static void slider_init(void)
 		if ((in->type & 0xff) == IPT_ADJUSTER)
 			slider_config(&slider_list[slider_count++], 0, in->default_value >> 8, 100, 1, slider_adjuster, in - Machine->input_ports);
 
-	if (options_get_bool(OPTION_CHEAT))
+	if (options_get_bool(mame_options(), OPTION_CHEAT))
 	{
 		/* add CPU overclocking */
 		numitems = cpu_gettotalcpu();
@@ -2721,7 +2725,7 @@ static void build_bgtexture(running_machine *machine)
 	int i;
 
 #ifdef TRANS_UI
-	if (options_get_bool("use_trans_ui"))
+	if (options_get_bool(mame_options(), "use_trans_ui"))
 		a = ui_transparency;
 #endif /* TRANS_UI */
 

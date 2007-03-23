@@ -265,12 +265,14 @@ enum
 	GEN_VDP = 3   // Genesis VDP running in SMS2 Mode
 };
 
-int sms_vdp_null_irq_callback(int status)
+//mamep: resolve conflict with drivers/sms.c
+static int sms_vdp_null_irq_callback(int status)
 {
 	return -1;
 }
 
-int sms_vdp_cpu0_irq_callback(int status)
+//mamep: resolve conflict with drivers/sms.c
+static int sms_vdp_cpu0_irq_callback(int status)
 {
 	if (status==1)
 	{
@@ -332,7 +334,8 @@ struct sms_vdp
 
 
 
-void *start_vdp(int type)
+//mamep: resolve conflict with drivers/sms.c
+static void *start_vdp(int type)
 {
 	struct sms_vdp *chip;
 
@@ -428,7 +431,8 @@ static WRITE8_HANDLER( z80_unmapped_w )
 	printf("unmapped z80 write %04x\n",offset);
 }
 
-void sn76496_write(UINT8 data)
+//mamep: resolve conflict with drivers/sms.c
+static void sn76496_write(UINT8 data)
 {
 	SN76496_0_w(0, data & 0xff);
 }
@@ -528,7 +532,8 @@ UINT8 ioport_gg00_r(void)
 }
 
 
-UINT8 vcounter_r(struct sms_vdp *chip)
+//mamep: resolve conflict with drivers/sms.c
+static UINT8 vcounter_r(struct sms_vdp *chip)
 {
 //	return vc_pal_224[sms_scanline_counter%(sizeof vc_pal_224)];
 	UINT8 retvalue;
@@ -541,7 +546,8 @@ UINT8 vcounter_r(struct sms_vdp *chip)
 }
 
 
-UINT8 vdp_data_r(struct sms_vdp *chip)
+//mamep: resolve conflict with drivers/sms.c
+static UINT8 vdp_data_r(struct sms_vdp *chip)
 {
 	UINT8 retdata = chip->readbuf;
 	chip->readbuf = SMS_VDP_VRAM(chip->addr_reg);
@@ -549,7 +555,8 @@ UINT8 vdp_data_r(struct sms_vdp *chip)
 	return retdata;
 }
 
-void vdp_data_w(UINT8 data, struct sms_vdp* chip)
+//mamep: resolve conflict with drivers/sms.c
+static void vdp_data_w(UINT8 data, struct sms_vdp* chip)
 {
 	/* data writes clear the pending flag */
 	chip->cmd_pend = 0;
@@ -613,7 +620,8 @@ void vdp_data_w(UINT8 data, struct sms_vdp* chip)
 
 }
 
-UINT8 vdp_ctrl_r(struct sms_vdp *chip)
+//mamep: resolve conflict with drivers/sms.c
+static UINT8 vdp_ctrl_r(struct sms_vdp *chip)
 {
 	UINT8 retvalue;
 
@@ -634,13 +642,15 @@ UINT8 vdp_ctrl_r(struct sms_vdp *chip)
 }
 
 /* check me */
-void vdp_update_code_addr_regs(struct sms_vdp *chip)
+//mamep: resolve conflict with drivers/sms.c
+static void vdp_update_code_addr_regs(struct sms_vdp *chip)
 {
 	chip->addr_reg = ((chip->cmd_part2&0x3f)<<8) | chip->cmd_part1;
 	chip->cmd_reg = (chip->cmd_part2&0xc0)>>6;
 }
 
-void vdp_set_register(struct sms_vdp *chip)
+//mamep: resolve conflict with drivers/sms.c
+static void vdp_set_register(struct sms_vdp *chip)
 {
 	UINT8 reg = chip->cmd_part2&0x0f;
 	chip->regs[reg] = chip->cmd_part1;
@@ -677,7 +687,8 @@ void vdp_set_register(struct sms_vdp *chip)
 //	printf("VDP: setting register %01x to %02x\n",reg, chip->cmd_part1);
 }
 
-void vdp_ctrl_w(UINT8 data, struct sms_vdp *chip)
+//mamep: resolve conflict with drivers/sms.c
+static void vdp_ctrl_w(UINT8 data, struct sms_vdp *chip)
 {
 	if (chip->cmd_pend)
 	{ /* Part 2 of a command word write */
@@ -738,32 +749,38 @@ READ8_HANDLER( sms_ioport_gg00_r )
 
 
 
-READ8_HANDLER( sms_vcounter_r )
+//mamep: resolve conflict with drivers/sms.c
+static READ8_HANDLER( sms_vcounter_r )
 {
 	return vcounter_r(vdp1);
 }
 
-READ8_HANDLER( sms_vdp_data_r )
+//mamep: resolve conflict with drivers/sms.c
+static READ8_HANDLER( sms_vdp_data_r )
 {
 	return vdp_data_r(vdp1);
 }
 
-WRITE8_HANDLER( sms_vdp_data_w )
+//mamep: resolve conflict with drivers/sms.c
+static WRITE8_HANDLER( sms_vdp_data_w )
 {
 	vdp_data_w(data, vdp1);
 }
 
-READ8_HANDLER( sms_vdp_ctrl_r )
+//mamep: resolve conflict with drivers/sms.c
+static READ8_HANDLER( sms_vdp_ctrl_r )
 {
 	return vdp_ctrl_r(vdp1);
 }
 
-WRITE8_HANDLER( sms_vdp_ctrl_w )
+//mamep: resolve conflict with drivers/sms.c
+static WRITE8_HANDLER( sms_vdp_ctrl_w )
 {
 	vdp_ctrl_w(data, vdp1);
 }
 
-WRITE8_HANDLER( sms_sn76496_w )
+//mamep: resolve conflict with drivers/sms.c
+static WRITE8_HANDLER( sms_sn76496_w )
 {
 	sn76496_write(data);
 }
@@ -961,7 +978,8 @@ void init_megatech_map(void)
 	smsgg_backupram = NULL;
 }
 
-void draw_tile_line(int drawxpos, int tileline, UINT16 tiledata, UINT8* linebuf, struct sms_vdp* chip)
+//mamep: resolve conflict with drivers/sms.c
+static void draw_tile_line(int drawxpos, int tileline, UINT16 tiledata, UINT8* linebuf, struct sms_vdp* chip)
 {
 	int xx;
 	UINT32 gfxdata;
@@ -1015,7 +1033,8 @@ void draw_tile_line(int drawxpos, int tileline, UINT16 tiledata, UINT8* linebuf,
 	}
 }
 
-void sms_render_spriteline(int scanline, struct sms_vdp* chip)
+//mamep: resolve conflict with drivers/sms.c
+static void sms_render_spriteline(int scanline, struct sms_vdp* chip)
 {
 	int spritenum;
 	int height = 8;
@@ -1136,7 +1155,8 @@ void sms_render_spriteline(int scanline, struct sms_vdp* chip)
 	}
 }
 
-void sms_render_tileline(int scanline, struct sms_vdp* chip)
+//mamep: resolve conflict with drivers/sms.c
+static void sms_render_tileline(int scanline, struct sms_vdp* chip)
 {
 	int column = 0;
 	int count = 32;
@@ -1189,7 +1209,8 @@ void sms_render_tileline(int scanline, struct sms_vdp* chip)
 
 }
 
-void sms_copy_to_renderbuffer(int scanline, struct sms_vdp* chip)
+//mamep: resolve conflict with drivers/sms.c
+static void sms_copy_to_renderbuffer(int scanline, struct sms_vdp* chip)
 {
 	int x;
 	UINT16* lineptr = BITMAP_ADDR16(chip->r_bitmap, scanline, 0);
@@ -1230,7 +1251,8 @@ void sms_copy_to_renderbuffer(int scanline, struct sms_vdp* chip)
 
 }
 
-void sms_draw_scanline(int scanline, struct sms_vdp* chip)
+//mamep: resolve conflict with drivers/sms.c
+static void sms_draw_scanline(int scanline, struct sms_vdp* chip)
 {
 
 	if (scanline>=0 && scanline<sms_mode_table[chip->screen_mode].sms2_height)
@@ -1323,7 +1345,8 @@ static void sms_scanline_timer_callback(void* param)
 	}
 }
 
-void show_tiles(struct sms_vdp* chip)
+//mamep: resolve conflict with drivers/sms.c
+static void show_tiles(struct sms_vdp* chip)
 {
 	int x,y,xx,yy;
 	UINT16 count = 0;
@@ -1391,7 +1414,8 @@ void show_tiles(struct sms_vdp* chip)
  Even though some games set bit 7, it does nothing.
  */
 
-void end_of_frame(struct sms_vdp *chip)
+//mamep: resolve conflict with drivers/sms.c
+static void end_of_frame(struct sms_vdp *chip)
 {
 	UINT8 m1 = (chip->regs[0x1]&0x10)>>4;
 	UINT8 m2 = (chip->regs[0x0]&0x02)>>1;
@@ -1432,13 +1456,15 @@ void end_of_frame(struct sms_vdp *chip)
 	timer_adjust_ptr(chip->sms_scanline_timer,  TIME_NOW, 0);
 }
 
-VIDEO_EOF(sms)
+//mamep: resolve conflict with drivers/sms.c
+static VIDEO_EOF(sms)
 {
 	end_of_frame(vdp1);
 	if (SMS_PAUSE_BUTTON) cpunum_set_input_line(0,INPUT_LINE_NMI,PULSE_LINE);
 }
 
-VIDEO_START(sms)
+//mamep: resolve conflict with drivers/sms.c
+static VIDEO_START(sms)
 {
 
 //	vdp->is_pal = 1;
@@ -1471,7 +1497,8 @@ VIDEO_UPDATE(sms)
 	return 0;
 }
 
-MACHINE_RESET(sms)
+//mamep: resolve conflict with drivers/sms.c
+static MACHINE_RESET(sms)
 {
 	timer_adjust_ptr(vdp1->sms_scanline_timer,  TIME_NOW, 0);
 }

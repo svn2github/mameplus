@@ -389,7 +389,7 @@ void romident(const char *name, FILE *output)
 
 int frontend_listxml(FILE *output)
 {
-	const char *gamename = options_get_string(OPTION_GAMENAME);
+	const char *gamename = options_get_string(mame_options(), OPTION_GAMENAME);
 
 	/* a NULL gamename == '*' */
 	if (gamename == NULL)
@@ -402,7 +402,7 @@ int frontend_listxml(FILE *output)
 
 int frontend_listfull(FILE *output)
 {
-	const char *gamename = options_get_string(OPTION_GAMENAME);
+	const char *gamename = options_get_string(mame_options(), OPTION_GAMENAME);
 	int drvindex, count = 0;
 
 	/* a NULL gamename == '*' */
@@ -450,7 +450,7 @@ int frontend_listfull(FILE *output)
 
 int frontend_listgames(FILE *output)
 {
-	const char *gamename = options_get_string(OPTION_GAMENAME);
+	const char *gamename = options_get_string(mame_options(), OPTION_GAMENAME);
 	int drvindex, count = 0;
 
 	/* a NULL gamename == '*' */
@@ -493,7 +493,7 @@ int frontend_listgames(FILE *output)
 
 int frontend_listsource(FILE *output)
 {
-	const char *gamename = options_get_string(OPTION_GAMENAME);
+	const char *gamename = options_get_string(mame_options(), OPTION_GAMENAME);
 	int drvindex, count = 0;
 
 	/* a NULL gamename == '*' */
@@ -515,7 +515,7 @@ int frontend_listsource(FILE *output)
 
 int frontend_listclones(FILE *output)
 {
-	const char *gamename = options_get_string(OPTION_GAMENAME);
+	const char *gamename = options_get_string(mame_options(), OPTION_GAMENAME);
 	int drvindex, count = 0;
 
 	/* a NULL gamename == '*' */
@@ -571,7 +571,7 @@ int frontend_listcrc(FILE *output)
 
 int frontend_listroms(FILE *output)
 {
-	const char *gamename = options_get_string(OPTION_GAMENAME);
+	const char *gamename = options_get_string(mame_options(), OPTION_GAMENAME);
 	const rom_entry *region, *rom, *chunk;
 	const game_driver **gamedrv;
 
@@ -643,7 +643,7 @@ int frontend_listroms(FILE *output)
 
 int frontend_listsamples(FILE *output)
 {
-	const char *gamename = options_get_string(OPTION_GAMENAME);
+	const char *gamename = options_get_string(mame_options(), OPTION_GAMENAME);
 	const game_driver **gamedrv;
 
 #if (HAS_SAMPLES)
@@ -711,7 +711,7 @@ void CLIB_DECL verify_printf(const char *fmt, ...)
 
 int frontend_verifyroms(FILE *output)
 {
-	const char *gamename = options_get_string(OPTION_GAMENAME);
+	const char *gamename = options_get_string(mame_options(), OPTION_GAMENAME);
 	int correct = 0;
 	int incorrect = 0;
 	int checked = 0;
@@ -811,7 +811,7 @@ int frontend_verifyroms(FILE *output)
 
 int frontend_verifysamples(FILE *output)
 {
-	const char *gamename = options_get_string(OPTION_GAMENAME);
+	const char *gamename = options_get_string(mame_options(), OPTION_GAMENAME);
 	int correct = 0;
 	int incorrect = 0;
 	int checked = 0;
@@ -906,7 +906,7 @@ int frontend_verifysamples(FILE *output)
 
 int frontend_romident(FILE *output)
 {
-	const char *gamename = options_get_string(OPTION_GAMENAME);
+	const char *gamename = options_get_string(mame_options(), OPTION_GAMENAME);
 
 	/* a NULL gamename == '*' */
 	if (gamename == NULL)
@@ -929,7 +929,7 @@ int frontend_romident(FILE *output)
 
 int frontend_isknown(FILE *output)
 {
-	const char *gamename = options_get_string(OPTION_GAMENAME);
+	const char *gamename = options_get_string(mame_options(), OPTION_GAMENAME);
 
 	/* a NULL gamename == '*' */
 	if (gamename == NULL)
