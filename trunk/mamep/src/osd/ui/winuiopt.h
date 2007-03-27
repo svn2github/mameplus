@@ -64,19 +64,74 @@ typedef struct
 
 typedef struct
 {
-//
-// CONFIGURATION OPTIONS
-//
-	BOOL	readconfig;
-	BOOL	skip_gameinfo;
+// CORE CONFIGURATION OPTIONS
 #ifdef DRIVER_SWITCH
 	char*	driver_config;
 #endif /* DRIVER_SWITCH */
-//
-// MISC OPTIONS
-//
+
+// CORE STATE/PLAYBACK OPTIONS
+	WCHAR*	state;
+	BOOL	autosave;
+	WCHAR*	playback;
+	WCHAR*	record;
+	WCHAR*	mngwrite;
+	WCHAR*	wavwrite;
+
+// CORE PERFORMANCE OPTIONS
+	BOOL	autoframeskip;
+	int	frameskip;
+	int	seconds_to_run;
+	BOOL	throttle;
+	BOOL	sleep;
+
+// CORE ROTATION OPTIONS
+	BOOL	rotate;
+	BOOL	ror;
+	BOOL	rol;
+	BOOL	autoror;
+	BOOL	autorol;
+	BOOL	flipx;
+	BOOL	flipy;
+
+// CORE ARTWORK OPTIONS
+	BOOL	artwork_crop;
+	BOOL	use_backdrops;
+	BOOL	use_overlays;
+	BOOL	use_bezels;
+
+// CORE SCREEN OPTIONS
+	float	brightness;
+	float	contrast;      /* "1.0", 0.5, 2.0 */
+	float	gamma;         /* "1.0", 0.5, 3.0 */
+	float	pause_brightness;
+#ifdef USE_SCALE_EFFECTS
+	char*	scale_effect;
+#endif /* USE_SCALE_EFFECTS */
+
+// CORE VECTOR OPTIONS
+	BOOL	antialias;
+	float	beam;
+	float	flicker;
+
+// CORE SOUND OPTIONS
+	BOOL	sound;
+	int	samplerate;
+	BOOL	samples;
+	int	volume;
+#ifdef USE_VOLUME_AUTO_ADJUST
+	BOOL	volume_adjust;
+#endif /* USE_VOLUME_AUTO_ADJUST */
+
+// CORE INPUT OPTIONS
+	char*	ctrlr;
+
+// CORE DEBUGGING OPTIONS
+	BOOL	log;
+
+// CORE MISC OPTIONS
 	char*	bios;
 	BOOL	cheat;
+	BOOL	skip_gameinfo;
 #ifdef USE_IPS
 	WCHAR*	ips;
 #endif /* USE_IPS */
@@ -91,34 +146,19 @@ typedef struct
 	BOOL	use_trans_ui;
 	int	ui_transparency;
 #endif /* TRANS_UI */
-//
-// STATE/PLAYBACK OPTIONS
-//
-	WCHAR*	state;
-	BOOL	autosave;
-	WCHAR*	playback;
-	WCHAR*	record;
-	WCHAR*	mngwrite;
-	WCHAR*	wavwrite;
-//
+
+// CONFIGURATION OPTIONS
+	BOOL	readconfig;
+
 // DEBUGGING OPTIONS
-//
-	BOOL	log;
 	BOOL	oslog;
 	BOOL	verbose;
-//
-// PERFORMANCE OPTIONS
-//
-	BOOL	autoframeskip;
-	int	frameskip;
-	int	seconds_to_run;
-	BOOL	throttle;
-	BOOL	sleep;
+
+// WINDOWS PERFORMANCE OPTIONS
 	int	priority;
 	BOOL	multithreading;
-//
-// VIDEO OPTIONS
-//
+
+// WINDOWS VIDEO OPTIONS
 	char*	video;
 	int	numscreens;
 	BOOL	window;
@@ -126,35 +166,17 @@ typedef struct
 	BOOL	keepaspect;
 	int	prescale;
 	char*	effect;
-#ifdef USE_SCALE_EFFECTS
-	char*	scale_effect;
-#endif /* USE_SCALE_EFFECTS */
-	float	pause_brightness;
 	BOOL	waitvsync;
 	BOOL	syncrefresh;
-//
-// VIDEO ROTATION OPTIONS
-//
-	BOOL	rotate;
-	BOOL	ror;
-	BOOL	rol;
-	BOOL	autoror;
-	BOOL	autorol;
-	BOOL	flipx;
-	BOOL	flipy;
 
-//
 // DIRECTDRAW-SPECIFIC OPTIONS
-//
 	BOOL	hwstretch;
-//
+
 // DIRECT3D-SPECIFIC OPTIONS
-//
 	int	d3dversion;
 	BOOL	filter;
-//
+
 // PER-WINDOW VIDEO OPTIONS
-//
 	char*	screen;
 	char*	aspect;
 	char*	resolution;
@@ -163,52 +185,30 @@ typedef struct
 	char*	aspects[4];
 	char*	resolutions[4];
 	char*	views[4];
-//
+
 // FULL SCREEN OPTIONS
-//
 	BOOL	triplebuffer;
 	BOOL	switchres;
 	float	full_screen_brightness;
 	float	full_screen_contrast;
 	float	full_screen_gamma;
-//
-// GAME SCREEN OPTIONS
-//
-	float	brightness;
-	float	contrast;      /* "1.0", 0.5, 2.0 */
-	float	gamma;         /* "1.0", 0.5, 3.0 */
 
-//
-// VECTOR RENDERING OPTIONS
-//
-	BOOL	antialias;
-	float	beam;
-	float	flicker;
-//
-// ARTWORK OPTIONS
-//
-	BOOL	artwork_crop;
-	BOOL	use_backdrops;
-	BOOL	use_overlays;
-	BOOL	use_bezels;
-//
-// SOUND OPTIONS
-//
-	BOOL	sound;
-	int	samplerate;
-	BOOL	samples;
-	int	volume;
-#ifdef USE_VOLUME_AUTO_ADJUST
-	BOOL	volume_adjust;
-#endif /* USE_VOLUME_AUTO_ADJUST */
+// WINDOWS SOUND OPTIONS
 	int	audio_latency;
-//
+
 // INPUT DEVICE OPTIONS
-//
-	char*	ctrlr;
+	BOOL	mouse;
+	BOOL	joystick;
 #ifdef USE_JOY_MOUSE_MOVE
 	BOOL	stickpoint;
 #endif /* USE_JOY_MOUSE_MOVE */
+	BOOL	lightgun;
+	BOOL	dual_lightgun;
+	BOOL	offscreen_reload;
+	BOOL	steadykey;
+	float	joy_deadzone;
+	float	joy_saturation;
+	char*	digital;
 #ifdef JOYSTICK_ID
 	int	joyid1;
 	int	joyid2;
@@ -219,18 +219,8 @@ typedef struct
 	int	joyid7;
 	int	joyid8;
 #endif /* JOYSTICK_ID */
-	BOOL	mouse;
-	BOOL	joystick;
-	BOOL	lightgun;
-	BOOL	dual_lightgun;
-	BOOL	offscreen_reload;
-	BOOL	steadykey;
-	float	joy_deadzone;
-	float	joy_saturation;
-	char*	digital;
-//
+
 // AUTOMATIC DEVICE SELECTION OPTIONS
-//
 	char*	paddle_device;
 	char*	adstick_device;
 	char*	pedal_device;
@@ -239,6 +229,7 @@ typedef struct
 	char*	lightgun_device;
 	char*	positional_device;
 } options_type;
+
 
 // List of artwork types to display in the screen shot area
 enum
@@ -275,8 +266,22 @@ enum
 void OptionsInit(void);
 void OptionsExit(void);
 
-/* set unicode string that is encoded with UTF-8 internally */
-void options_set_wstring(const char *name, const WCHAR *value);
+void set_core_input_directory(const WCHAR *dir);
+void set_core_state_directory(const WCHAR *dir);
+void set_core_input_directory(const WCHAR *dir);
+void set_core_snapshot_directory(const WCHAR *dir);
+void set_core_localized_directory(const WCHAR *dir);
+void set_core_state(const WCHAR *name);
+void set_core_playback(const WCHAR *name);
+void set_core_record(const WCHAR *name);
+void set_core_mngwrite(const WCHAR *filename);
+void set_core_wavwrite(const WCHAR *filename);
+void set_core_history_filename(const WCHAR *filename);
+#ifdef STORY_DATAFILE
+void set_core_story_filename(const WCHAR *filename);
+#endif /* STORY_DATAFILE */
+void set_core_mameinfo_filename(const WCHAR *filename);
+void set_core_bios(const char *bios); 
 
 #ifdef UNICODE
 WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(void));

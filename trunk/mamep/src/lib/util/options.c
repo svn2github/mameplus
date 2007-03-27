@@ -18,6 +18,9 @@
 
 
 
+#define HIGH_SPEED_HACK
+
+
 /***************************************************************************
     CONSTANTS
 ***************************************************************************/
@@ -331,8 +334,10 @@ int options_add_entries(core_options *opts, const options_entry *entrylist)
 	/* loop over entries until we hit a NULL name */
 	for ( ; entrylist->name != NULL || (entrylist->flags & OPTION_HEADER); entrylist++)
 	{
+#ifndef HIGH_SPEED_HACK
 		options_data *match = NULL;
 		int i;
+#endif
 
 		/* allocate a new item */
 		options_data *data = pool_malloc(opts->pool, sizeof(*data));
@@ -344,6 +349,7 @@ int options_add_entries(core_options *opts, const options_entry *entrylist)
 		if (entrylist->name != NULL)
 			separate_names(opts, entrylist->name, data->names, ARRAY_LENGTH(data->names));
 
+#ifndef HIGH_SPEED_HACK
 		/* do we match an existing entry? */
 		for (i = 0; i < ARRAY_LENGTH(data->names) && match == NULL; i++)
 			if (data->names[i] != NULL)
@@ -370,6 +376,7 @@ int options_add_entries(core_options *opts, const options_entry *entrylist)
 
 		/* otherwise, finish making the new entry */
 		else
+#endif
 		{
 			/* copy the flags, and set the value equal to the default */
 			data->flags = entrylist->flags;
@@ -380,9 +387,10 @@ int options_add_entries(core_options *opts, const options_entry *entrylist)
 			/* fill it in and add to the end of the list */
 			*(opts->datalist_nextptr) = data;
 			opts->datalist_nextptr = &data->next;
+
+			opts->find_cache_dirty = TRUE;
 		}
 	}
-	opts->find_cache_dirty = TRUE;
 	return TRUE;
 }
 
@@ -498,7 +506,7 @@ int options_parse_ini_file(core_options *opts, core_file *inifile)
 	/* loop over data */
 	while (core_fgets(buffer, ARRAY_LENGTH(buffer), inifile) != NULL)
 	{
-		char *optionname, *optiondata, *temp;
+		unsigned char *optionname, *optiondata, *temp;
 		options_data *data;
 		int inquotes = FALSE;
 
@@ -654,7 +662,7 @@ void options_output_ini_file(core_options *opts, core_file *inifile)
 	{
 		/* header: just print */
 		if ((data->flags & OPTION_HEADER) != 0)
-			core_fprintf(inifile, "\n#\n# %s\n#\n", data->description);
+			core_fprintf(inifile, "\n#\n# %s\n#\n", translate_description(data));
 
 		/* skip UNADORNED options */
 		else if (data->description == NULL)
@@ -662,6 +670,40 @@ void options_output_ini_file(core_options *opts, core_file *inifile)
 
 		/* otherwise, output entries for all non-deprecated and non-command items */
 		else if ((data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
+		{
+			if (data->data == NULL)
+				core_fprintf(inifile, "# %-23s <NULL> (not set)\n", data->names[0]);
+			else if (strchr(data->data, ' ') != NULL || strchr(data->data, '#') != NULL)
+				core_fprintf(inifile, "%-25s \"%s\"\n", data->names[0], data->data);
+			else
+				core_fprintf(inifile, "%-25s %s\n", data->names[0], data->data);
+		}
+	}
+}
+
+
+/*-------------------------------------------------
+    options_output_ini_file_marked - output the
+    current marked state to an INI file
+-------------------------------------------------*/
+
+void options_output_ini_file_marked(core_options *opts, core_file *inifile)
+{
+	options_data *data;
+
+	/* loop over all items */
+	for (data = opts->datalist; data != NULL; data = data->next)
+	{
+		/* header: just print */
+		if ((data->flags & OPTION_HEADER) != 0)
+			core_fprintf(inifile, "\n#\n# %s\n#\n", translate_description(data));
+
+		/* skip UNADORNED options */
+		else if (data->description == NULL)
+			;
+
+		/* otherwise, output entries for all non-deprecated and non-command items */
+		else if (data->mark && (data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
 		{
 			if (data->data == NULL)
 				core_fprintf(inifile, "# %-23s <NULL> (not set)\n", data->names[0]);
@@ -696,40 +738,6 @@ void options_output_ini_stdfile(core_options *opts, FILE *inifile)
 
 		/* otherwise, output entries for all non-deprecated and non-command items */
 		else if ((data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
-		{
-			if (data->data == NULL)
-				fprintf(inifile, "# %-23s <NULL> (not set)\n", data->names[0]);
-			else if (strchr(data->data, ' ') != NULL || strchr(data->data, '#') != NULL)
-				fprintf(inifile, "%-25s \"%s\"\n", data->names[0], data->data);
-			else
-				fprintf(inifile, "%-25s %s\n", data->names[0], data->data);
-		}
-	}
-}
-
-
-/*-------------------------------------------------
-    options_output_ini_stdfile_marked - output the
-    current marked state to an INI file
--------------------------------------------------*/
-
-void options_output_ini_stdfile_marked(core_options *opts, FILE *inifile)
-{
-	options_data *data;
-
-	/* loop over all items */
-	for (data = opts->datalist; data != NULL; data = data->next)
-	{
-		/* header: just print */
-		if ((data->flags & OPTION_HEADER) != 0)
-			fprintf(inifile, "\n#\n# %s\n#\n", data->description);
-
-		/* skip UNADORNED options */
-		else if (data->description == NULL)
-			;
-
-		/* otherwise, output entries for all non-deprecated and non-command items */
-		else if (data->mark && (data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL | OPTION_COMMAND)) == 0 && data->names[0][0] != 0)
 		{
 			if (data->data == NULL)
 				fprintf(inifile, "# %-23s <NULL> (not set)\n", data->names[0]);
@@ -1065,32 +1073,9 @@ void options_set_float(core_options *opts, const char *name, float value)
     matches the given string
 -------------------------------------------------*/
 
-#if 1
 static options_data *find_entry_data(core_options *opts, const char *string, int is_command_line)
 {
-	struct find_cache_entry temp, *result;
-	int has_no_prefix;
-
-	assert_always(opts->datalist_nextptr != NULL, "Missing call to options_init()!");
-
-	/* determine up front if we should look for "no" boolean options */
-	has_no_prefix = (is_command_line && string[0] == 'n' && string[1] == 'o');
-
-	if (opts->find_cache_dirty)
-		generate_find_cache(opts);
-
-	temp.name = has_no_prefix ? &string[2] : &string[0];
-
-	result = bsearch(&temp, opts->find_cache.cache, opts->find_cache.count, sizeof (*opts->find_cache.cache), compare_entry);
-	if (result)
-		return result->data;
-
-	return NULL;
-}
-
-#else
-static options_data *find_entry_data(core_options *opts, const char *string, int is_command_line)
-{
+#ifndef HIGH_SPEED_HACK
 	options_data *data;
 	int has_no_prefix;
 
@@ -1110,10 +1095,26 @@ static options_data *find_entry_data(core_options *opts, const char *string, int
 					return data;
 		}
 
+#else
+	struct find_cache_entry temp, *result;
+	int has_no_prefix;
+
+	/* determine up front if we should look for "no" boolean options */
+	has_no_prefix = (is_command_line && string[0] == 'n' && string[1] == 'o');
+
+	if (opts->find_cache_dirty)
+		generate_find_cache(opts);
+
+	temp.name = has_no_prefix ? &string[2] : &string[0];
+
+	result = bsearch(&temp, opts->find_cache.cache, opts->find_cache.count, sizeof (*opts->find_cache.cache), compare_entry);
+	if (result)
+		return result->data;
+#endif
+
 	/* didn't find it at all */
 	return NULL;
 }
-#endif
 
 
 /*-------------------------------------------------
@@ -1136,10 +1137,15 @@ static void update_data(core_options *opts, options_data *data, const char *newd
 	if (datastart != dataend && *datastart == '"' && *dataend == '"')
 		datastart++, dataend--;
 
-	/* allocate a copy of the data */
-	if (data->data)
-		pool_realloc(opts->pool, (void *)data->data, 0);
-	data->data = copy_string(opts, datastart, dataend + 1);
+	if (data->data == NULL
+	 || strncmp(data->data, datastart, dataend - datastart + 1) != 0
+	 || data->data[dataend - datastart + 1] != '\0')
+	{
+		/* allocate a copy of the data */
+		if (data->data)
+			pool_realloc(opts->pool, (void *)data->data, 0);
+		data->data = copy_string(opts, datastart, dataend + 1);
+	}
 
 	/* bump the seqid and clear the error reporting */
 	data->seqid++;

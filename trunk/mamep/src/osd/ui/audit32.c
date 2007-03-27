@@ -43,7 +43,7 @@
 #include "resource.h"
 
 #include "bitmask.h"
-#include "options.h"
+#include "winuiopt.h"
 #include "..\windows\config.h"
 #include "m32util.h"
 #include "audit32.h"
@@ -197,7 +197,7 @@ int Mame32VerifyRomSet(int game)
 
 	// apply selecting BIOS
 	game_options = GetGameOptions(game);
-	options_set_string(OPTION_BIOS, game_options->bios);
+	set_core_bios(game_options->bios);
 
 	audit_records = audit_images(game, AUDIT_VALIDATE_FAST, &audit);
 	res = ProcessAuditResults(game, audit, audit_records);

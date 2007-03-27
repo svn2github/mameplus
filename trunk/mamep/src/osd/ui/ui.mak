@@ -43,7 +43,7 @@ TMPOBJS = \
 	$(GUIOBJ)/history.o \
 	$(GUIOBJ)/dialogs.o \
 	$(GUIOBJ)/win32ui.o \
-	$(GUIOBJ)/options.o \
+	$(GUIOBJ)/winuiopt.o \
 	$(GUIOBJ)/layout.o \
 	$(GUIOBJ)/translate.o
 

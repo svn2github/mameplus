@@ -33,7 +33,7 @@
 #include "screenshot.h"
 #include "file.h"
 #include "bitmask.h"
-#include "options.h"
+#include "winuiopt.h"
 #include "m32util.h"
 #include "win32ui.h"
 #include "translate.h"
@@ -269,7 +269,7 @@ BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type
 		return FALSE;
 	}
 
-	options_set_wstring(OPTION_SNAPSHOT_DIRECTORY, basedir);
+	set_core_snapshot_directory(basedir);
 
 	utf8filename = utf8_from_wstring(filename);
 

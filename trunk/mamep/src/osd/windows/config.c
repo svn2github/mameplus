@@ -27,6 +27,7 @@
 // MAMEOS headers
 #include "winmain.h"
 #include "video.h"
+#include "osd_so.h"
 
 
 //============================================================

@@ -85,9 +85,8 @@ int options_parse_command_line(core_options *opts, int argc, char **argv);
 int options_parse_ini_file(core_options *opts, core_file *inifile);
 int options_output_command_line_marked(core_options *opts, char *buf);
 void options_output_ini_file(core_options *opts, core_file *inifile);
-void options_output_ini_stdfile(core_options *opts, FILE *inifile);
 void options_output_ini_file_marked(core_options *opts, core_file *inifile);
-void options_output_ini_stdfile_marked(core_options *opts, FILE *inifile);
+void options_output_ini_stdfile(core_options *opts, FILE *inifile);
 void options_output_help(core_options *opts, void (*output)(const char *s));
 
 int options_copy(core_options *dest_opts, core_options *src_opts);

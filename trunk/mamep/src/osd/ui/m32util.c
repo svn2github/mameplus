@@ -34,7 +34,7 @@
 
 #ifdef USE_IPS
 #include "bitmask.h"
-#include "options.h"
+#include "winuiopt.h"
 #include "patch.h"
 #endif /* USE_IPS */
 

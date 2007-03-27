@@ -27,7 +27,7 @@
 #include <driver.h>
 #include "m32util.h"
 #include "bitmask.h"
-#include "options.h"
+#include "winuiopt.h"
 #include "translate.h"
 
 #include "history.h"
@@ -52,12 +52,12 @@ LPCWSTR GetGameHistory(int driver_index)
 
 	historyBuf[0] = '\0';
 
-	options_set_wstring(OPTION_LOCALIZED_DIRECTORY, GetLocalizedDir());
-	options_set_wstring(OPTION_HISTORY_FILE, GetHistoryFile());
+	set_core_localized_directory(GetLocalizedDir());
+	set_core_history_filename(GetHistoryFile());
 #ifdef STORY_DATAFILE
-	options_set_wstring(OPTION_STORY_FILE, GetStoryFile());
+	set_core_story_filename(GetStoryFile());
 #endif /* STORY_DATAFILE */
-	options_set_wstring(OPTION_MAMEINFO_FILE, GetMAMEInfoFile());
+	set_core_mameinfo_filename(GetMAMEInfoFile());
 
 	*dataBuf = 0;
 	if (load_driver_history(drivers[driver_index], dataBuf, ARRAY_LENGTH(dataBuf)) == 0)
@@ -103,10 +103,8 @@ LPCWSTR GetGameStory(int driver_index)
 
 	historyBuf[0] = '\0';
 
-	options_set_wstring(OPTION_LOCALIZED_DIRECTORY, GetLocalizedDir());
-#ifdef STORY_DATAFILE
-	options_set_wstring(OPTION_STORY_FILE, GetStoryFile());
-#endif /* STORY_DATAFILE */
+	set_core_localized_directory(GetLocalizedDir());
+	set_core_story_filename(GetStoryFile());
 
 	*dataBuf = 0;
 	if (load_driver_story(drivers[driver_index], dataBuf, ARRAY_LENGTH(dataBuf)) == 0)

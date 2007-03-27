@@ -13,6 +13,7 @@
 #include "mame.h"
 #include "fileio.h"
 #include "emuopts.h"
+#include "osd_so.h"
 
 #include <ctype.h>
 
@@ -43,26 +44,26 @@ const options_entry mame_core_options[] =
 	{ "ctrlrpath;ctrlr_directory",   "ctrlr",     0,                 "path to controller definitions" },
 	{ "inipath",                     "ini",       0,                 "path to ini files" },
 	{ "fontpath",                    ".;lang",    0,                 "path to font files" },
+	{ "translation_directory",       "lang",      0,                 "directory for translation table data" },
+	{ "localized_directory",         "lang",      0,                 "directory for localized data files" },
+#ifdef USE_IPS
+	{ "ips_directory",               "ips",       0,                 "directory for ips files" },
+#else /* USE_IPS */
+	{ "ips_directory",               "ips",       OPTION_DEPRECATED, "(disabled by compiling option)" },
+#endif /* USE_IPS */
 
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE OUTPUT DIRECTORY OPTIONS" },
 	{ "cfg_directory",               "cfg",       0,                 "directory to save configurations" },
 	{ "nvram_directory",             "nvram",     0,                 "directory to save nvram contents" },
 	{ "memcard_directory",           "memcard",   0,                 "directory to save memory card contents" },
 	{ "input_directory",             "inp",       0,                 "directory to save input device logs" },
-#ifdef USE_HISCORE
-	{ "hiscore_directory",           "hi",        0,                 "directory to save hiscores" },
-#endif /* USE_HISCORE */
 	{ "state_directory",             "sta",       0,                 "directory to save states" },
 	{ "snapshot_directory",          "snap",      0,                 "directory to save screenshots" },
 	{ "diff_directory",              "diff",      0,                 "directory to save hard drive image difference files" },
-	{ "translation_directory",       "lang",      0,                 "directory for translation table data" },
 	{ "comment_directory",           "comments",  0,                 "directory to save debugger comments" },
-#ifdef USE_IPS
-	{ "ips_directory",               "ips",       0,                 "directory for ips files" },
-#else /* USE_IPS */
-	{ "ips_directory",               "ips",       OPTION_DEPRECATED, "(disabled by compiling option)" },
-#endif /* USE_IPS */
-	{ "localized_directory",         "lang",      0,                 "directory for localized data files" },
+#ifdef USE_HISCORE
+	{ "hiscore_directory",           "hi",        0,                 "directory to save hiscores" },
+#endif /* USE_HISCORE */
 
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE FILENAME OPTIONS" },
 	{ "cheat_file",                  "cheat.dat", 0,                 "cheat filename" },

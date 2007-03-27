@@ -48,7 +48,7 @@
 #include "audit.h"
 #include "audit32.h"
 #include "bitmask.h"
-#include "options.h"
+#include "winuiopt.h"
 #include "file.h"
 #include "resource.h"
 #include "DIJoystick.h"     /* For DIJoystick avalibility. */
@@ -3850,9 +3850,9 @@ static void ResetDataMap(void)
 	g_nBiosIndex = 0;
 	if (g_biosinfo)
 	{
-		options_set_string(OPTION_BIOS, pGameOpts->bios);
+		set_core_bios(pGameOpts->bios);
 		g_nBiosIndex = determine_bios_rom(g_biosinfo);
-		options_set_string(OPTION_BIOS, NULL);
+		set_core_bios(NULL);
 	}
 
 	if (IS_GLOBAL)
@@ -3865,9 +3865,9 @@ static void ResetDataMap(void)
 			{
 				char *bios = strdup(GetDefaultBios(i));
 
-				options_set_string(OPTION_BIOS, bios);
+				set_core_bios(bios);
 				default_bios_index[i] = determine_bios_rom(drv->bios);
-				options_set_string(OPTION_BIOS, NULL);
+				set_core_bios(NULL);
 				free(bios);
 			}
 		}

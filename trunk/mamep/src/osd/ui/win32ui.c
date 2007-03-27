@@ -77,7 +77,7 @@
 #include "Splitters.h"
 #include "help.h"
 #include "history.h"
-#include "options.h"
+#include "winuiopt.h"
 #include "dialogs.h"
 #include "windows/input.h"
 #include "windows/config.h"
@@ -925,18 +925,20 @@ static BOOL WaitWithMessageLoop(HANDLE hEvent)
 static void override_options(void)
 {
 	if (override_playback_directory)
-		options_set_wstring("input_directory", override_playback_directory);
+		set_core_input_directory(override_playback_directory);
+	if (override_savestate_directory)
+		set_core_state_directory(override_savestate_directory);
 
 	if (g_pSaveStateName)
-		options_set_wstring("state", g_pSaveStateName);
+		set_core_state(g_pSaveStateName);
 	if (g_pPlayBkName)
-		options_set_wstring("pb", g_pPlayBkName);
+		set_core_playback(g_pPlayBkName);
 	if (g_pRecordName)
-		options_set_wstring("rec", g_pRecordName);
+		set_core_record(g_pRecordName);
 	if (g_pRecordMNGName)
-		options_set_wstring("mngwrite", g_pRecordMNGName);
+		set_core_mngwrite(g_pRecordMNGName);
 	if (g_pRecordWaveName)
-		options_set_wstring("wavwrite", g_pRecordWaveName);
+		set_core_wavwrite(g_pRecordWaveName);
 }
 
 static int RunMAME(int nGameIndex)
@@ -2254,17 +2256,18 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 		mame_file *file;
 		file_error filerr;
 
-		options_init(windows_opts);
+		win_options_init();
 
 		filerr = mame_fopen(SEARCHPATH_RAW, CONFIGNAME ".ini", OPEN_FLAG_READ, &file);
 		if (filerr == FILERR_NONE)
 		{
-			options_parse_ini_file(file);
+			options_parse_ini_file(mame_options(), mame_core_file(file));
 			mame_fclose(file);
 		}
 
 		assign_drivers();
-		options_free_entries();
+
+		options_free(mame_options());
 	}
 #endif /* DRIVER_SWITCH */
 
@@ -6485,11 +6488,11 @@ static void MamePlayBackGame(const WCHAR *fname_playback)
 		if (path[wcslen(path)-1] == TEXT(PATH_SEPARATOR[0]))
 			path[wcslen(path)-1] = 0; // take off trailing back slash
 
-		options_set_wstring(SEARCHPATH_INPUTLOG, path);
+		set_core_input_directory(path);
 		stemp = utf8_from_wstring(fname);
 		filerr = mame_fopen(SEARCHPATH_INPUTLOG, stemp, OPEN_FLAG_READ, &pPlayBack);
 		free(stemp);
-		options_set_wstring(SEARCHPATH_INPUTLOG, GetInpDir());
+		set_core_input_directory(GetInpDir());
 
 		if (filerr != FILERR_NONE)
 		{
@@ -6621,7 +6624,7 @@ static void MameLoadState(const WCHAR *fname_state)
 				MameMessageBoxW(_UIW(TEXT("'%s' is not a valid savestate file for game '%s'.")), filename, selected_filename);
 				return;
 			}
-			options_set_wstring(SEARCHPATH_STATE, path);
+			set_core_state_directory(path);
 			state_fname = fname;
 		}
 #endif // MESS
@@ -6629,7 +6632,7 @@ static void MameLoadState(const WCHAR *fname_state)
 		stemp = utf8_from_wstring(state_fname);
 		filerr = mame_fopen(SEARCHPATH_STATE, stemp, OPEN_FLAG_READ, &pSaveState);
 		free(stemp);
-		options_set_wstring(SEARCHPATH_STATE, GetStateDir());
+		set_core_state_directory(GetStateDir());
 		if (filerr != FILERR_NONE)
 		{
 			MameMessageBoxW(_UIW(TEXT("Could not open '%s' as a valid savestate file.")), filename);

@@ -50,7 +50,7 @@
 #include "TreeView.h"
 #include "resource.h"
 #include "properties.h"
-#include "options.h"
+#include "winuiopt.h"
 #include "help.h"
 #include "dialogs.h"
 #include "translate.h"

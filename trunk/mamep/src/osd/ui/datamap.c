@@ -13,7 +13,7 @@
 #include "resource.h"
 #include "m32util.h"
 #include "bitmask.h"
-#include "options.h"
+#include "winuiopt.h"
 #include "DataMap.h"
 
 #define MAX_CTRLS	128
