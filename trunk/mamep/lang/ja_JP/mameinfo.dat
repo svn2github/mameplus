@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.113u2      #
+#     Mameinfo.dat日本語版 v0.113u3      #
 #                                        #
-#             March 17, 2007             #
+#             March 23, 2007             #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：834 翻訳済：815
-# 追加項目：338 合計：1172
+# Tester報告：841 翻訳済：822
+# 追加項目：338 合計：1179
 #
 
 
@@ -30,28 +30,45 @@ $mame
 
 $end
 
-$info=eprom
+$info=starblad
 $mame
 [バグ]
 
-- アトラクトモードでのボイスがきちんと再生されない。 eprom0113u2gre, Lord Nightmare / Zsolt Vasvari
-
-
-- すごくマイナーな表示不具合が2カ所にある。
-エミュレーションのバグかどうかはわからないが、
-色がランダムに変わったり、白い点が現れる箇所がある。 eprom060gre, Darkk
+- 0.113から、F3でリセットするとMAMEがクラッシュする。 starblad0113u3red, Heihachi_73 / twisty
 
 $end
 
-$info=legendoh
+$info=shanghai
 $mame
 [バグ]
 
-- クレジットが1つしか入らず、スタートボタンを押してもゲームが始まらない。 legendoh0113u2yel, maxholz
+- 0.112u2以前と比べると、サウンドがいろいろおかしくなっている。 shanghaic0113u3gre, Tafoid
 
 
-- タイトル画面以外ではコインをいれることができない。
-さらに、Push Startと表示されているときは、コインだけでなくスタートボタンも効かない。 legendoh0112u2gra, F1ReB4LL
+- カーソルの手を一番右側に持っていって上下に動かすと、
+画面左端でも黒い線が上下に動く。
+恐らく、手のスプライトの一部か？ shanghai37b16gre1, Gmitra
+
+
+- コインを2つ入れてリセットすると、
+MAMEのメッセージで「unsupported commnad undef (0000)」などと表示される。
+mamewでのみ起こるようだ。 shanghai37b16gre2, Gmitra
+
+$end
+
+$info=shangha2
+$mame
+[バグ]
+
+- 0.112u2以前と比べると、サウンドがいろいろおかしくなっている。 shanghaic0113u3gre, Tafoid
+
+$end
+
+$info=diehard
+$mame
+[バグ]
+
+- 起動時にクラッシュする。 diehard0113u3red, Swossino / Fujix / twisty / Tafoid / Haze
 
 $end
 
@@ -3566,21 +3583,6 @@ $mame
 
 $end
 
-$info=shanghai
-$mame
-[バグ]
-
-- カーソルの手を一番右側に持っていって上下に動かすと、
-画面左端でも黒い線が上下に動く。
-恐らく、手のスプライトの一部か？ shanghai37b16gre1, Gmitra
-
-
-- コインを2つ入れてリセットすると、
-MAMEのメッセージで「unsupported commnad undef (0000)」などと表示される。
-mamewでのみ起こるようだ。 shanghai37b16gre2, Gmitra
-
-$end
-
 $info=chinhero
 $mame
 [バグ]
@@ -5508,6 +5510,15 @@ $mame
 
 $end
 
+$info=legendoh
+$mame
+[バグ]
+
+- タイトル画面以外ではコインをいれることができない。
+さらに、Push Startと表示されているときは、コインだけでなくスタートボタンも効かない。 legendoh0112u2gra, F1ReB4LL
+
+$end
+
 $info=sb2003
 $mame
 [バグ]
@@ -6114,6 +6125,16 @@ $mame
 
 - 2面の初めから画面の後ろ側に中ボスが見えている。
 他の面でも同様の現象あり。 superx074u1gre, MAMEjong
+
+$end
+
+$info=eprom
+$mame
+[バグ]
+
+- すごくマイナーな表示不具合が2カ所にある。
+エミュレーションのバグかどうかはわからないが、
+色がランダムに変わったり、白い点が現れる箇所がある。 eprom060gre, Darkk
 
 $end
 
