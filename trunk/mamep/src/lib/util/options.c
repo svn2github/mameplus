@@ -19,6 +19,7 @@
 
 
 #define HIGH_SPEED_HACK
+#define FAKE_MEMORY_POOL
 
 
 /***************************************************************************
@@ -27,6 +28,28 @@
 
 #define MAX_ENTRY_NAMES		4
 
+
+
+/***************************************************************************
+    Fake memory pool to speed up
+***************************************************************************/
+
+#ifdef FAKE_MEMORY_POOL
+static memory_pool *fake_pool_create(void (*fail)(const char *message));
+static void fake_pool_clear(memory_pool *pool);
+static void fake_pool_free(memory_pool *pool);
+
+static void *fake_pool_malloc_file_line(memory_pool *pool, size_t size, const char *file, int line) ATTR_MALLOC;
+static void *fake_pool_realloc_file_line(memory_pool *pool, void *ptr, size_t size, const char *file, int line);
+static char *fake_pool_strdup_file_line(memory_pool *pool, const char *str, const char *file, int line);
+
+#define pool_create		fake_pool_create
+#define pool_clear		fake_pool_clear
+#define pool_free		fake_pool_free
+#define pool_malloc_file_line	fake_pool_malloc_file_line
+#define pool_realloc_file_line	fake_pool_realloc_file_line
+#define pool_strdup_file_line	fake_pool_strdup_file_line
+#endif /* FAKE_MEMORY_POOL */
 
 
 /***************************************************************************
@@ -337,7 +360,7 @@ int options_add_entries(core_options *opts, const options_entry *entrylist)
 #ifndef HIGH_SPEED_HACK
 		options_data *match = NULL;
 		int i;
-#endif
+#endif /* HIGH_SPEED_HACK */
 
 		/* allocate a new item */
 		options_data *data = pool_malloc(opts->pool, sizeof(*data));
@@ -376,7 +399,7 @@ int options_add_entries(core_options *opts, const options_entry *entrylist)
 
 		/* otherwise, finish making the new entry */
 		else
-#endif
+#endif /* HIGH_SPEED_HACK */
 		{
 			/* copy the flags, and set the value equal to the default */
 			data->flags = entrylist->flags;
@@ -1095,7 +1118,7 @@ static options_data *find_entry_data(core_options *opts, const char *string, int
 					return data;
 		}
 
-#else
+#else /* HIGH_SPEED_HACK */
 	struct find_cache_entry temp, *result;
 	int has_no_prefix;
 
@@ -1110,7 +1133,7 @@ static options_data *find_entry_data(core_options *opts, const char *string, int
 	result = bsearch(&temp, opts->find_cache.cache, opts->find_cache.count, sizeof (*opts->find_cache.cache), compare_entry);
 	if (result)
 		return result->data;
-#endif
+#endif /* HIGH_SPEED_HACK */
 
 	/* didn't find it at all */
 	return NULL;
@@ -1137,9 +1160,11 @@ static void update_data(core_options *opts, options_data *data, const char *newd
 	if (datastart != dataend && *datastart == '"' && *dataend == '"')
 		datastart++, dataend--;
 
+#if 0
 	if (data->data == NULL
 	 || strncmp(data->data, datastart, dataend - datastart + 1) != 0
 	 || data->data[dataend - datastart + 1] != '\0')
+#endif
 	{
 		/* allocate a copy of the data */
 		if (data->data)
@@ -1183,3 +1208,86 @@ const options_entry *options_get_next_entry(core_options *opts, const options_en
 {
 	return NULL;
 }
+
+
+/***************************************************************************
+    Fake memory pool to speed up
+***************************************************************************/
+
+#ifdef FAKE_MEMORY_POOL
+struct _memory_pool
+{
+	void (*fail)(const char *message);
+};
+
+static memory_pool *fake_pool_create(void (*fail)(const char *message))
+{
+	memory_pool *p = malloc(sizeof *p);
+	p->fail = fail;
+	return p;
+}
+
+static void fake_pool_clear(memory_pool *pool)
+{
+}
+
+static void fake_pool_free(memory_pool *pool)
+{
+	free(pool);
+}
+
+static void *fake_pool_malloc_file_line(memory_pool *pool, size_t size, const char *file, int line)
+{
+	void *p = malloc(size);
+
+	if (p == NULL)
+	{
+		char buf[256];
+
+		sprintf(buf, "malloc: Failed to allocate %u bytes (%s:%d)", size, file, line);
+		pool->fail(buf);
+	}
+
+	return p;
+}
+
+static void *fake_pool_realloc_file_line(memory_pool *pool, void *ptr, size_t size, const char *file, int line)
+{
+	void *p;
+
+	if (size == 0)
+	{
+		free(ptr);
+		return NULL;
+	}
+
+	p = realloc(ptr, size);
+	if (p == NULL)
+	{
+		char buf[256];
+
+		sprintf(buf, "realloc: Failed to allocate %u bytes (%s:%d)", size, file, line);
+		pool->fail(buf);
+	}
+
+	return p;
+}
+
+static char *fake_pool_strdup_file_line(memory_pool *pool, const char *str, const char *file, int line)
+{
+	int len = strlen(str) + 1;
+	char *p = malloc(len);
+
+	if (p == NULL)
+	{
+		char buf[256];
+
+		sprintf(buf, "strdup: Failed to allocate %u bytes (%s:%d)", len, file, line);
+		pool->fail(buf);
+	}
+
+	strcpy(p, str);
+
+	return p;
+}
+#endif /* FAKE_MEMORY_POOL */
