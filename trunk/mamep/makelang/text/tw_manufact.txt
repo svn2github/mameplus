@@ -6,7 +6,7 @@
 Bootleg
 µsª©
 
-# Intersecti
+# Mahjong Dunhuang
 Unknown
 ¥¼ª¾ªº
 
@@ -410,6 +410,10 @@ Comad
 Comad & New Japan System
 
 
+# Funny Bubble (Comad version)
+Comad Industry Co Ltd
+
+
 # Puyo Puyo Sun (J 961115 V0.001)
 Compile
 
@@ -422,7 +426,7 @@ Comsoft
 Core
 
 
-# SWAT
+# SWAT (315-5048)
 Coreland
 
 
@@ -974,12 +978,20 @@ IDSA
 IGS
 
 
+# Dou Di Zhu
+IGS?
+
+
 # See See Find Out
 Icarus
 
 
 # Magic Card II (Bulgaria, bootleg)
 Impera
+
+
+# Funny Bubble
+In Chang Electronic Co
 
 
 # Capcom Bowling (set 1)
@@ -2276,6 +2288,10 @@ Web Picmatic
 
 # Sukeban Jansi Ryuko (set 1, System 16A, FD1089B 317-5021)
 White Board
+
+
+# DakkoChan House (MC-8123, 317-0014)
+Whiteboard
 
 
 # Hit the Ice (US)
