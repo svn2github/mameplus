@@ -1,8 +1,8 @@
 # osd/ui/mame32.rc: 417
                                 
-Traducido por Juanen <juanenrak@gmail.com> 15-03-2007
+Traducido por Juanen <juanenrak@gmail.com> 26-03-2007
 
-# osd/ui/properties.c: 1127
+# osd/ui/properties.c: 1125
 %d colors 
 %d colores 
 
@@ -10,11 +10,11 @@ Traducido por Juanen <juanenrak@gmail.com> 15-03-2007
 %d games
 %d juegos
 
-# osd/ui/properties.c: 876
+# osd/ui/properties.c: 874
 %d x %d (H) %f Hz (%d colors)
 %d x %d (H) %f Hz (%d colores)
 
-# osd/ui/properties.c: 869
+# osd/ui/properties.c: 867
 %d x %d (V) %f Hz (%d colors)
 %d x %d (V) %f Hz (%d colores)
 
@@ -26,31 +26,31 @@ Traducido por Juanen <juanenrak@gmail.com> 15-03-2007
 %dx%d (V)
 %dx%d (Vertical)
 
-# osd/ui/properties.c: 1103
+# osd/ui/properties.c: 1101
 %s (%d player)
 %s (%d jugador)
 
-# osd/ui/properties.c: 1114
+# osd/ui/properties.c: 1112
 %s (%d player, %d button)
 %s (%d jugador, %d botón)
 
-# osd/ui/properties.c: 1112
+# osd/ui/properties.c: 1110
 %s (%d player, %d buttons)
 %s (%d jugador, %d botones)
 
-# osd/ui/properties.c: 1100
+# osd/ui/properties.c: 1098
 %s (%d players)
 %s (%d jugadores)
 
-# osd/ui/properties.c: 1109
+# osd/ui/properties.c: 1107
 %s (%d players, %d button)
 %s (%d jugadores, %d botón)
 
-# osd/ui/properties.c: 1106
+# osd/ui/properties.c: 1104
 %s (%d players, %d buttons)
 %s (%d jugadores, %d botones)
 
-# osd/ui/properties.c: 1241
+# osd/ui/properties.c: 1239
 %s\nThis is also global driver options in the %s
 %s\nEsto es también opciones globales de driver en el %s
 
@@ -318,7 +318,7 @@ Ocurrió una violación compartida.
 A&udit
 Verificar J&uego Seleccionado
 
-# osd/ui/properties.c: 1050 osd/ui/treeview.c: 1429
+# osd/ui/properties.c: 1048 osd/ui/treeview.c: 1429
 AD Stick
 Palanca de Vuelo
 
@@ -382,7 +382,7 @@ Permitir restaurar opciones para 'arreglar' valores.
 Allows filtering out games from a folder
 Permitir filtrar juegos desde una carpeta
 
-# osd/ui/properties.c: 4845
+# osd/ui/properties.c: 4846
 Anti-clockwise
 Sentido anti-horario
 
@@ -422,15 +422,15 @@ Verificar las ROMs y muestras de sonido
 Audit complete.\n
 Verificación completada.\n
 
-# osd/ui/properties.c: 454, 4756, 4938, 4973
+# osd/ui/properties.c: 452, 4757, 4939, 4974
 Auto
 Automático
 
-# osd/ui/properties.c: 4848
+# osd/ui/properties.c: 4849
 Auto anti-clockwise
 Sentido anti-horario automático
 
-# osd/ui/properties.c: 4847
+# osd/ui/properties.c: 4848
 Auto clockwise
 Sentido horario automático
 
@@ -454,11 +454,11 @@ Disponibles
 Available fields:
 Campos disponibles:
 
-# osd/ui/properties.c: 5032
+# osd/ui/properties.c: 5033
 Axis
 Ejes
 
-# osd/ui/properties.c: 5042
+# osd/ui/properties.c: 5043
 AxisId
 EjesId
 
@@ -466,7 +466,7 @@ EjesId
 BIOS
 BIOS
 
-# osd/ui/properties.c: 1197
+# osd/ui/properties.c: 1195
 BIOS missing
 BIOS no disponible
 
@@ -634,7 +634,7 @@ Verificando...
 Christopher Kirmse and Michael Soderstrom
 Christopher Kirmse y Michael Soderstrom
 
-# osd/ui/properties.c: 4844
+# osd/ui/properties.c: 4845
 Clockwise
 Sentido horario
 
@@ -650,15 +650,15 @@ Clon de:
 Clones
 Clones
 
-# osd/ui/properties.c: 457
+# osd/ui/properties.c: 455
 Cocktail
 Cóctel
 
-# osd/ui/properties.c: 1165
+# osd/ui/properties.c: 1163
 Colors are completely wrong
 Los colores son completamente falsos
 
-# osd/ui/properties.c: 1170
+# osd/ui/properties.c: 1168
 Colors aren't 100% accurate
 Los colores no son 100% exactos
 
@@ -786,11 +786,11 @@ Modificar las opciones de la interfaz.
 Customize which columns are used in the game list
 Modificar aquellas columnas que son usadas en la lista de juegos
 
-# osd/ui/properties.c: 4843
+# osd/ui/properties.c: 4844
 Default
 Por defecto
 
-# osd/ui/properties.c: 639
+# osd/ui/properties.c: 637
 Default Game
 Juego por Defecto
 
@@ -814,7 +814,7 @@ Descripción
 Details
 Detalles
 
-# osd/ui/properties.c: 1042 osd/ui/treeview.c: 1431
+# osd/ui/properties.c: 1040 osd/ui/treeview.c: 1431
 Dial
 Volante
 
@@ -826,7 +826,7 @@ Dispositivo - Volante / Rueda
 Digital joystick axes
 Ejes joystick digital
 
-# osd/ui/mame32.rc: 665 osd/ui/properties.c: 419
+# osd/ui/mame32.rc: 665 osd/ui/properties.c: 417
 Direct3D
 Direct3D
 
@@ -918,23 +918,23 @@ Doble Joystick - 4 Direcciones
 Double Joy 8-Way
 Doble Joystick - 8 Direcciones
 
-# osd/ui/properties.c: 975, 1000
+# osd/ui/properties.c: 973, 998
 Double Joystick 16-Way
 Doble Joystick 16-Ejes
 
-# osd/ui/properties.c: 968, 989, 990
+# osd/ui/properties.c: 966, 987, 988
 Double Joystick 2-Way
 Doble Joystick 2-Ejes
 
-# osd/ui/properties.c: 964, 965, 993
+# osd/ui/properties.c: 962, 963, 991
 Double Joystick 2-Way Vertical
 Doble Joystick 2-Ejes Verticales
 
-# osd/ui/properties.c: 971, 996
+# osd/ui/properties.c: 969, 994
 Double Joystick 4-Way
 Doble Joystick 4-Ejes
 
-# osd/ui/properties.c: 977, 1002
+# osd/ui/properties.c: 975, 1000
 Double Joystick 8-Way
 Doble Joystick 8-Ejes
 
@@ -942,7 +942,7 @@ Doble Joystick 8-Ejes
 Draw antialiased vectors
 Dibujar vectores suavizados
 
-# osd/ui/properties.c: 4821
+# osd/ui/properties.c: 4822
 Draw every frame
 Dibujar cada imagen
 
@@ -1018,7 +1018,7 @@ Habilitar soporte steadykey
 Enforce aspect ratio
 Respetar aspecto
 
-# osd/ui/audit32.c: 113 osd/ui/properties.c: 659, 750, 1747
+# osd/ui/audit32.c: 113 osd/ui/properties.c: 657, 748, 1745
 Error
 Error
 
@@ -1050,7 +1050,7 @@ Salir de la aplicación
 External Folder List
 Lista de Carpetas Externas
 
-# osd/ui/options.c: 3132
+# osd/ui/options.c: 3133
 FOLDER LIST HIDE OPTIONS
 OCULTAR LISTA DE OPCIONES DE CARPETA
 
@@ -1122,15 +1122,15 @@ Contraste a Pantalla Completa
 Full screen gamma
 Pantalla completa gamma
 
-# osd/ui/options.c: 3078
+# osd/ui/options.c: 3079
 GENERAL OPTIONS
 OPCIONES GENERALES
 
-# osd/ui/options.c: 3136
+# osd/ui/options.c: 3137
 GUI JOYSTICK OPTIONS
 OPCIONES DE JOYSTICK
 
-# osd/ui/options.c: 3151
+# osd/ui/options.c: 3152
 GUI KEYBOARD OPTIONS
 OPCIONES DE TECLADO
 
@@ -1158,11 +1158,11 @@ Filtros de juegos
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 Los filtros de los juegos permiten visualizar los juegos en diferentes carpetas ocultando juegos que indican los filtros aplicados.
 
-# osd/ui/properties.c: 1180
+# osd/ui/properties.c: 1178
 Game lacks sound
 El juego carece de sonido
 
-# osd/ui/properties.c: 1160
+# osd/ui/properties.c: 1158
 Game protection isn't fully emulated
 La protección del juego no está totalmente emulada
 
@@ -1178,15 +1178,15 @@ Corrección Gamma
 General
 General
 
-# osd/ui/properties.c: 1243
+# osd/ui/properties.c: 1241
 Global driver options\nCustom options used by all games in the %s
 Opciones globales de driver\nOpciones personalizadas usados por todos los juegos en el %s
 
-# osd/ui/properties.c: 1223
+# osd/ui/properties.c: 1221
 Global game options\nDefault options used by all games
 Opciones globales del juego\nOpciones por defecto utilizados por todos los juegos
 
-# osd/ui/properties.c: 1226
+# osd/ui/properties.c: 1224
 Global vector options\nCustom options used by all games in the Vector
 Opciones globales de vector\nOpciones personalizadas usados por todos los juegos vectoriales
 
@@ -1198,7 +1198,7 @@ Ir a la página de DirectX de Microsoft Corporation
 Gray
 Gris
 
-# osd/ui/options.c: 463, 3111 osd/ui/win32ui.c: 715
+# osd/ui/options.c: 463, 3112 osd/ui/win32ui.c: 715
 Grouped
 Agrupado
 
@@ -1234,7 +1234,7 @@ Horizontal
 How cheats work
 Cómo funcionan los trucos
 
-# osd/ui/options.c: 3058
+# osd/ui/options.c: 3059
 INTERFACE OPTIONS
 OPCIONES DE INTERFAZ
 
@@ -1310,27 +1310,27 @@ Joystick - 4 Direcciones
 Joy 8-Way
 Joystick - 8 Direcciones
 
-# osd/ui/properties.c: 469, 5027
+# osd/ui/properties.c: 467, 5028
 Joystick
 Joystick
 
-# osd/ui/properties.c: 927, 950
+# osd/ui/properties.c: 925, 948
 Joystick 16-Way
 Joystick 16-ejes
 
-# osd/ui/properties.c: 916, 917, 943
+# osd/ui/properties.c: 914, 915, 941
 Joystick 2-Way
 Joystick 2-Ejes
 
-# osd/ui/properties.c: 920, 939, 940
+# osd/ui/properties.c: 918, 937, 938
 Joystick 2-Way Vertical
 Joystick 2-Ejes Verticales
 
-# osd/ui/properties.c: 923, 946
+# osd/ui/properties.c: 921, 944
 Joystick 4-Way
 Joystick 4-Ejes
 
-# osd/ui/properties.c: 929, 952
+# osd/ui/properties.c: 927, 950
 Joystick 8-Way
 Joystick 8-Ejes
 
@@ -1342,11 +1342,11 @@ Punto muerto de Joystick
 Joystick saturation
 Saturación de Joystick
 
-# osd/ui/properties.c: 5037
+# osd/ui/properties.c: 5038
 JoystickId
 JoystickId
 
-# osd/ui/properties.c: 467
+# osd/ui/properties.c: 465
 Keyboard
 Teclado
 
@@ -1354,11 +1354,11 @@ Teclado
 L&arge Icons
 Ic&onos Gr&andes
 
-# osd/ui/options.c: 3124
+# osd/ui/options.c: 3125
 LIST FONT OPTIONS
 OPCIONES DE LISTA DE FUENTES
 
-# osd/ui/options.c: 3110
+# osd/ui/options.c: 3111
 LISTVIEW OPTIONS
 OPCIONES DE VISOR DE LISTA
 
@@ -1366,7 +1366,7 @@ OPCIONES DE VISOR DE LISTA
 Large Icons
 Iconos Grandes
 
-# osd/ui/layout.c: 79 osd/ui/properties.c: 470, 1054 osd/ui/treeview.c: 1433
+# osd/ui/layout.c: 79 osd/ui/properties.c: 468, 1052 osd/ui/treeview.c: 1433
 Lightgun
 Pistola
 
@@ -1430,7 +1430,7 @@ Versión de MAME32 por
 MAME32 will now reset the selected\nitems to the original, installation\nsettings then exit.\n\n
 MAME32 reiniciara ahora el selecccionado\narticulo para el original, instalación\nconfiguraciónes cuando cierre la aplicación.\n\n
 
-# osd/ui/mame32.rc: 399, 423, 434, 466, 486, 509, 548, 567, 618, 655, 711, 758, 819, 847, 874, 911, 936, 953, 1017, 1045, 1060, 1116, 1160, 1216 osd/ui/options.c: 3126 osd/ui/translate.c: 103
+# osd/ui/mame32.rc: 399, 423, 434, 466, 486, 509, 548, 567, 618, 655, 711, 758, 819, 847, 874, 911, 936, 953, 1017, 1045, 1060, 1116, 1160, 1216 osd/ui/options.c: 3127 osd/ui/translate.c: 103
 MS Sans Serif
 MS Sans Serif
 
@@ -1462,7 +1462,7 @@ Varios
 Missing Sound
 Sonido Perdido
 
-# osd/ui/properties.c: 468
+# osd/ui/properties.c: 466
 Mouse
 Ratón
 
@@ -1526,7 +1526,7 @@ No CPU
 Non-Wor&king
 No Funcionan
 
-# osd/ui/dialogs.c: 222 osd/ui/properties.c: 3730, 4846, 5130, 5376 
+# osd/ui/dialogs.c: 222 osd/ui/properties.c: 3728, 4847, 5131, 5377 
 None
 Ninguno
 
@@ -1542,7 +1542,7 @@ No Funcionan
 Not found
 No encontrado
 
-# osd/ui/properties.c: 1149
+# osd/ui/properties.c: 1147
 Not working
 No Funciona
 
@@ -1590,7 +1590,7 @@ Cubiertas
 P&layback Input...
 Rep&roducir Entrada...
 
-# osd/ui/options.c: 3045
+# osd/ui/options.c: 3046
 PATH AND DIRECTORY OPTIONS
 OPNIONES DE CARPETAS Y RUTAS
 
@@ -1602,7 +1602,7 @@ Información de PCB
 PCB Info Files
 Archivos de Información de PCB
 
-# osd/ui/properties.c: 1039 osd/ui/treeview.c: 1430
+# osd/ui/properties.c: 1037 osd/ui/treeview.c: 1430
 Paddle
 Paleta
 
@@ -1638,11 +1638,11 @@ Opciones de Per-screen
 Physical monitor:
 Monitor físico:
 
-# osd/ui/properties.c: 456
+# osd/ui/properties.c: 454
 Pixel Aspect
 Aspecto píxel
 
-# osd/ui/options.c: 3207 osd/ui/win32ui.c: 877
+# osd/ui/options.c: 3208 osd/ui/win32ui.c: 877
 Play Time
 Tiempo de Juego
 
@@ -1708,7 +1708,7 @@ Players 8
 
 # osd/ui/mame32.rc: 1085
 Positional device
-Dispositivo posicional
+Dispositivo - Posicional
 
 # osd/ui/mame32.rc: 67, 200
 Pr&operties
@@ -1722,7 +1722,7 @@ Prop&iedades para %s
 Propert&ies for Driver
 Prop&iedades para Driver
 
-# osd/ui/properties.c: 658, 749
+# osd/ui/properties.c: 656, 747
 Propery Sheet Error %d %X
 Error de las Propiedades %d %X
 
@@ -1746,7 +1746,7 @@ Verificación de ROM:
 ROMs
 ROMs
 
-# osd/ui/properties.c: 1199
+# osd/ui/properties.c: 1197
 ROMs missing
 ROMs perdidas
 
@@ -1770,7 +1770,7 @@ Grabar un juego por última reproducción
 Refresh game list
 Actualizar la lista de juegos
 
-# osd/ui/options.c: 1540
+# osd/ui/options.c: 1541
 Reload configurations
 Recargar configuraciones
 
@@ -1800,11 +1800,11 @@ Reiniciar &Tiempo de Juego
 
 # osd/ui/mame32.rc: 993
 Reset all Play Times
-Reiniciar todos los Tiempos de Juego
+Reiniciar todos los tiempos de juego
 
 # osd/ui/mame32.rc: 991
 Reset all Playcounts
-Reiniciar todas las Partidas Jugadas
+Reiniciar todas las partidas jugadas
 
 # osd/ui/mame32.rc: 1544
 Reset play time of currently selected game
@@ -1890,19 +1890,19 @@ Escalado de pantalla
 Screen
 Pantalla
 
-# osd/ui/properties.c: 441
+# osd/ui/properties.c: 439
 Screen 0
 Pantalla 0
 
-# osd/ui/properties.c: 442
+# osd/ui/properties.c: 440
 Screen 1
 Pantalla 1
 
-# osd/ui/properties.c: 443
+# osd/ui/properties.c: 441
 Screen 2
 Pantalla 2
 
-# osd/ui/properties.c: 444
+# osd/ui/properties.c: 442
 Screen 3
 Pantalla 3
 
@@ -1910,7 +1910,7 @@ Pantalla 3
 Screen flip support is missing
 Soporte de pantalla perdido
 
-# osd/ui/properties.c: 1190
+# osd/ui/properties.c: 1188
 Screen flipping is not supported
 Giro de pantalla no soportado
 
@@ -2020,11 +2020,11 @@ Seleccionar los títulos de imagen
 
 # osd/ui/mame32.rc: 986
 Set Game List Not Working Color
-Seleccionar Color para Lista de Juegos que No Funcionan
+Seleccionar color para lista de juegos que no funcionan
 
 # osd/ui/mame32.rc: 1007
 Set Screenshot Border Color
-Determinar Color del Borde de la Captura
+Determinar color del borde de la captura
 
 # osd/ui/mame32.rc: 1499
 Set default game options
@@ -2048,7 +2048,7 @@ Cambiar el color de las fuentes para los juegos clones
 
 # osd/ui/mame32.rc: 988
 Show Game Ca&ption
-Mostrar Título de Juego
+Mostrar título del juego
 
 # osd/ui/mame32.rc: 1008
 Show History on Tab
@@ -2134,47 +2134,47 @@ Mostrar paleta para:
 Show these fields in this order:
 Mostrar campos en este orden:
 
-# osd/ui/properties.c: 4822
+# osd/ui/properties.c: 4823
 Skip 1 of 12 frames
 Saltar 1 de 12 imágenes
 
-# osd/ui/properties.c: 4831
+# osd/ui/properties.c: 4832
 Skip 10 of 12 frames
 Saltar 10 de 12 imágenes
 
-# osd/ui/properties.c: 4832
+# osd/ui/properties.c: 4833
 Skip 11 of 12 frames
 Saltar 11 de 12 imágenes
 
-# osd/ui/properties.c: 4823
+# osd/ui/properties.c: 4824
 Skip 2 of 12 frames
 Saltar 2 de 12 imágenes
 
-# osd/ui/properties.c: 4824
+# osd/ui/properties.c: 4825
 Skip 3 of 12 frames
 Saltar 3 de 12 imágenes
 
-# osd/ui/properties.c: 4825
+# osd/ui/properties.c: 4826
 Skip 4 of 12 frames
 Saltar 4 de 12 imágenes
 
-# osd/ui/properties.c: 4826
+# osd/ui/properties.c: 4827
 Skip 5 of 12 frames
 Saltar 5 de 12 imágenes
 
-# osd/ui/properties.c: 4827
+# osd/ui/properties.c: 4828
 Skip 6 of 12 frames
 Saltar 6 de 12 imágenes
 
-# osd/ui/properties.c: 4828
+# osd/ui/properties.c: 4829
 Skip 7 of 12 frames
 Saltar 7 de 12 imágenes
 
-# osd/ui/properties.c: 4829
+# osd/ui/properties.c: 4830
 Skip 8 of 12 frames
 Saltar 8 de 12 imágenes
 
-# osd/ui/properties.c: 4830
+# osd/ui/properties.c: 4831
 Skip 9 of 12 frames
 Saltar 9 de 12 imágenes
 
@@ -2242,7 +2242,7 @@ Ordenar los objetos por año
 Sound
 Sonido
 
-# osd/ui/properties.c: 1185
+# osd/ui/properties.c: 1183
 Sound emulation isn't 100% accurate
 La emulación de sonido no es 100% exacta
 
@@ -2258,7 +2258,7 @@ Sonidos (*.wav)
 St&ory
 Relat&os
 
-# osd/ui/properties.c: 455, 3521, 3526, 3529, 3780, 3783, 5082, 5104 
+# osd/ui/properties.c: 453, 3519, 3524, 3527, 3778, 3781, 5083, 5105
 Standard
 Standard
 
@@ -2286,7 +2286,7 @@ Relatos
 Stretch using hardware
 Estirar usando hardware
 
-# osd/ui/properties.c: 1272 osd/ui/treeview.c: 1364
+# osd/ui/properties.c: 1270 osd/ui/treeview.c: 1364
 Supported
 Soportados
 
@@ -2350,7 +2350,7 @@ Abrir/Cerrar Capturas de Pantallas
 Total:
 Total:
 
-# osd/ui/layout.c: 78 osd/ui/properties.c: 1046 osd/ui/treeview.c: 1432 osd/ui/win32ui.c: 871
+# osd/ui/layout.c: 78 osd/ui/properties.c: 1044 osd/ui/treeview.c: 1432 osd/ui/win32ui.c: 871
 Trackball
 Trackball
 
@@ -2446,7 +2446,7 @@ No Disponibles
 Unemulated Protection
 Protección no Emulada
 
-# osd/ui/audit32.c: 489 osd/ui/properties.c: 1097, 1143 
+# osd/ui/audit32.c: 489 osd/ui/properties.c: 1095, 1141 
 Unknown
 Desconocido
 
@@ -2454,7 +2454,7 @@ Desconocido
 Unknown error.
 Error desconocido.
 
-# osd/ui/properties.c: 1274 osd/ui/treeview.c: 1366
+# osd/ui/properties.c: 1272 osd/ui/treeview.c: 1366
 Unsupported
 No Soportados
 
@@ -2472,13 +2472,13 @@ Usar muestras de sonido
 
 # osd/ui/mame32.rc: 984
 Use various icon for Not Working game
-Usar varios iconos para juegos que No Funcionan
+Usar varios iconos para juegos que no funcionan
 
 # osd/ui/mame32.rc: 632
 Use volume auto adjust
 Usar ajuste automático de volumen
 
-# osd/ui/layout.c: 71 osd/ui/mame32.rc: 819 osd/ui/options.c: 774, 2738 osd/ui/properties.c: 703 osd/ui/treeview.c: 284 osd/ui/win32ui.c: 5653
+# osd/ui/layout.c: 71 osd/ui/mame32.rc: 819 osd/ui/options.c: 774, 2739 osd/ui/properties.c: 701 osd/ui/treeview.c: 284 osd/ui/win32ui.c: 5653
 Vector
 Vectorial
 
@@ -2486,7 +2486,7 @@ Vectorial
 Vector (H)
 Vectorial (Horizontal)
 
-# osd/ui/properties.c: 861
+# osd/ui/properties.c: 859
 Vector (H) %f Hz (%d colors)
 Vector (H) %f Hz (%d colores)
 
@@ -2494,7 +2494,7 @@ Vector (H) %f Hz (%d colores)
 Vector (V)
 Vectorial (Vertical)
 
-# osd/ui/properties.c: 856
+# osd/ui/properties.c: 854
 Vector (V) %f Hz (%d colors)
 Vector (V) %f Hz (%d colores)
 
@@ -2502,7 +2502,7 @@ Vector (V) %f Hz (%d colores)
 Vertical
 Vertical
 
-# osd/ui/properties.c: 1175
+# osd/ui/properties.c: 1173
 Video emulation isn't 100% accurate
 La emulación del vídeo no es 100% exacta
 
@@ -2534,7 +2534,7 @@ Control de atenuación
 WARNING: the game might not run correctly.
 ADVERTENCIA: el juego podría no funcionar correctamente.
 
-# osd/ui/options.c: 3103
+# osd/ui/options.c: 3104
 WINDOW POSITION OPTIONS
 OPCIONES DE POSISCIÓN DE VENTANA 
 
@@ -2550,7 +2550,7 @@ Qué hay de nuevo en MAME
 Window background
 Fondo de ventana
 
-# osd/ui/layout.c: 66 osd/ui/properties.c: 1151
+# osd/ui/layout.c: 66 osd/ui/properties.c: 1149
 Working
 Funcionan
 
@@ -2596,5 +2596,5 @@ por Veces &Jugadas
 
 # osd/ui/win32ui.h: 20
 type a keyword
-teclea una palabra
+buscar un juego en el listado
 

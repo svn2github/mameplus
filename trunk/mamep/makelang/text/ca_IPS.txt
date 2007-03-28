@@ -1,0 +1,28 @@
+# Title
+IPS
+IPS
+
+# 35
+Neo-Geo
+Neo-Geo
+
+# 20
+CPS1
+
+
+# 30
+CPS2
+
+
+# 14
+Misc
+
+
+# 93
+PGM
+
+
+# 7
+Translation
+
+

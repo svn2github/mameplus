@@ -96,17 +96,19 @@
 #define IDD_PROP_BIOS                   191
 #define IDD_PCBINFO                     192 // USE_VIEW_PCBINFO
 #define IDB_TOOLBAR_US                  193
-#define IDB_TOOLBAR_JP                  194
-#define IDB_TOOLBAR_CN                  195
-#define IDB_TOOLBAR_TW                  196
-#define IDB_TOOLBAR_KR                  197
-#define IDB_TOOLBAR_FR                  198
-#define IDB_TOOLBAR_ES                  199
-#define IDB_TOOLBAR_IT                  200
-#define IDB_TOOLBAR_DE                  201
-#define IDB_TOOLBAR_BR                  202
+#define IDB_TOOLBAR_CN                  194
+#define IDB_TOOLBAR_TW                  195
+#define IDB_TOOLBAR_FR                  196
+#define IDB_TOOLBAR_DE                  197
+#define IDB_TOOLBAR_IT                  198
+#define IDB_TOOLBAR_JP                  199
+#define IDB_TOOLBAR_KR                  200
+#define IDB_TOOLBAR_ES                  201
+#define IDB_TOOLBAR_CA                  202
 #define IDB_TOOLBAR_PL                  203
-#define IDB_TOOLBAR_HU                  204
+#define IDB_TOOLBAR_PT                  204
+#define IDB_TOOLBAR_BR                  205
+#define IDB_TOOLBAR_HU                  206
 #define IDB_SPLASH                      210
 #define IDI_INFO                        701
 #define IDI_LARGE                       702
@@ -533,17 +535,19 @@
 #define ID_STYLE_OFFICE2007             40195 // IMAGE_MENU
 
 #define ID_LANGUAGE_ENGLISH_US          40201
-#define ID_LANGUAGE_JAPANESE            40202
-#define ID_LANGUAGE_SMPL_CHINESE        40203
-#define ID_LANGUAGE_TRAD_CHINESE        40204
-#define ID_LANGUAGE_KOREAN              40205
-#define ID_LANGUAGE_FRENCH              40206
-#define ID_LANGUAGE_SPANISH             40207
-#define ID_LANGUAGE_ITALIAN             40208
-#define ID_LANGUAGE_GERMAN              40209
-#define ID_LANGUAGE_PORTUGUESE_BRA      40210
+#define ID_LANGUAGE_SMPL_CHINESE        40202
+#define ID_LANGUAGE_TRAD_CHINESE        40203
+#define ID_LANGUAGE_FRENCH              40204
+#define ID_LANGUAGE_GERMAN              40205
+#define ID_LANGUAGE_ITALIAN             40206
+#define ID_LANGUAGE_JAPANESE            40207
+#define ID_LANGUAGE_KOREAN              40208
+#define ID_LANGUAGE_SPANISH             40209
+#define ID_LANGUAGE_CATALAN             40210
 #define ID_LANGUAGE_POLISH              40211
-#define ID_LANGUAGE_HUNGARIAN           40212
+#define ID_LANGUAGE_PORTUGUESE_PT       40212
+#define ID_LANGUAGE_PORTUGUESE_BRA      40213
+#define ID_LANGUAGE_HUNGARIAN           40214
 
 #define ID_PLAY_PATCH                   40300	// USE_IPS
 

@@ -1,36 +1,36 @@
-# osd/windows/input.c: 1911
+# osd/windows/input.c: 1915
          all -- all axes on all joysticks are digital\n
          all -- 全てのジョイスティックの全ての軸をデジタルにします\n
 
-# osd/windows/input.c: 1917
+# osd/windows/input.c: 1921
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
          j1,j2a2 -- 全てのジョイスティック1の軸とジョイスティック2の軸2をデジタルにします\n
 
-# osd/windows/input.c: 1915
+# osd/windows/input.c: 1919
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
          j1a5a6 -- ジョイスティック1の軸5と6をデジタルにします\n
 
-# osd/windows/input.c: 1912
+# osd/windows/input.c: 1916
          j<N> -- all axes on joystick <N> are digital\n
          j<N> -- ジョイスティック<N>の全ての軸をデジタルにします\n
 
-# osd/windows/input.c: 1913
+# osd/windows/input.c: 1917
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
          j<N>a<M> -- ジョイスティック<N>の軸<M>をデジタルにします\n
 
-# osd/windows/input.c: 1910
+# osd/windows/input.c: 1914
          none -- no axes on any joysticks are digital\n
          none -- 全てのジョイスティックの軸をデジタルにしません\n
 
-# osd/windows/input.c: 1914
+# osd/windows/input.c: 1918
     Multiple axes can be specified for one joystick:\n
     一つのジョイスティックの複数の軸を指定する事が出来ます:\n
 
-# osd/windows/input.c: 1916
+# osd/windows/input.c: 1920
     Multiple joysticks can be specified separated by commas:\n
     コンマで区切る事で複数のジョイスティック指定する事が出来ます:\n
 
-# osd/windows/input.c: 2391
+# osd/windows/input.c: 2396
  - digital
  - デジタル
 
@@ -50,7 +50,7 @@
 %d samplesets found, %d were OK.\n
 %d個のサンプルセットが見つかり、%d個がOKです。\n
 
-# osd/windows/input.c: 2316
+# osd/windows/input.c: 2321
 %s Button %d
 %s ボタン %d
 
@@ -58,7 +58,7 @@
 (BAD) 
 (異常) 
 
-# osd/windows/config.c: 190, 210, 211, 212, 213, 214, 215, 216, 217
+# osd/windows/config.c: 192, 212, 213, 214, 215, 216, 217, 218, 219
 (disabled by compiling option)
 (コンパイル時に無効化)
 
@@ -66,51 +66,51 @@
 (primary)
 (プライマリ)
 
-# osd/windows/config.c: 220
+# osd/windows/config.c: 222
 AUTOMATIC DEVICE SELECTION OPTIONS
 自動デバイス選択オプション
 
-# osd/windows/config.c: 86
+# osd/windows/config.c: 88
 CONFIGURATION COMMANDS
 設定コマンド
 
-# osd/windows/config.c: 110
+# osd/windows/config.c: 112
 CONFIGURATION OPTIONS
 設定オプション
 
-# osd/windows/config.c: 81
+# osd/windows/config.c: 83
 CORE COMMANDS
 コアコマンド
 
-# osd/windows/config.c: 98
+# osd/windows/config.c: 100
 CRC-32s
 CRC-32
 
-# osd/windows/input.c: 1336
+# osd/windows/input.c: 1340
 Can't set axis mode for Joystick %d - %s\n
 ジョイスティック%d - %sの軸を設定出来ません
 
-# osd/windows/input.c: 1361
+# osd/windows/input.c: 1365
 Can't set deadzone for Joystick %d - %s\n
 ジョイスティック%d - %sの内側しきい値を設定出来ません
 
-# osd/windows/input.c: 1351
+# osd/windows/input.c: 1355
 Can't set range for Joystick %d - %s\n
 ジョイスティック%d - %sの範囲を設定出来ません
 
-# osd/windows/input.c: 1372
+# osd/windows/input.c: 1376
 Can't set saturation for Joystick %d - %s\n
 ジョイスティック%d - %sの外側しきい値を設定出来ません
 
-# osd/windows/config.c: 114
+# osd/windows/config.c: 116
 DEBUGGING OPTIONS
 デバッガオプション
 
-# osd/windows/config.c: 140
+# osd/windows/config.c: 142
 DIRECT3D-SPECIFIC OPTIONS
 Direct3D固有オプション
 
-# osd/windows/config.c: 136
+# osd/windows/config.c: 138
 DIRECTDRAW-SPECIFIC OPTIONS
 DirectDraw固有オプション
 
@@ -466,7 +466,7 @@ DirectDraw: 警告: デバイスはDirectDraw描画にあまり適していないかも知れません\n
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: 警告: デバイスはフルスクリーンのガンマ補正をサポートしていません。\n
 
-# osd/windows/input.c: 1452
+# osd/windows/input.c: 1456
 DirectInput: Using DirectInput %d\n
 DirectInput: DirectInput %dを使用します\n
 
@@ -546,15 +546,15 @@ Error: Device does not meet minimum requirements for Direct3D rendering\n
 Error: unable to configure a screen texture format\n
 エラー: 画面テクスチャ形式の設定が出来ません\n
 
-# osd/windows/config.c: 92
+# osd/windows/config.c: 94
 FRONTEND COMMANDS
 フロントエンドコマンド
 
-# osd/windows/config.c: 172
+# osd/windows/config.c: 174
 FULL SCREEN OPTIONS
 フルスクリーンオプション
 
-# osd/windows/input.c: 2975
+# osd/windows/input.c: 2980
 Fast Forward
 早送り
 
@@ -562,7 +562,7 @@ Fast Forward
 Game \"%s\" not supported!\n
 「%s」というゲームには対応していません！\n
 
-# osd/windows/config.c: 184
+# osd/windows/config.c: 186
 INPUT DEVICE OPTIONS
 入力デバイスオプション
 
@@ -574,55 +574,55 @@ Illegal aspect ratio value for %s = %s\n
 Illegal resolution value for %s = %s\n
 %sの値%sは不正な解像度です\n
 
-# osd/windows/config.c: 624
+# osd/windows/config.c: 644
 Illegal value for %s = %s\n
 %sの値%sは不正です\n
 
-# osd/windows/input.c: 2391
+# osd/windows/input.c: 2396
 Input:  Axis %d (%s)%s\n
 入力:  軸%d (%s)%s\n
 
-# osd/windows/input.c: 2229
+# osd/windows/input.c: 2234
 Input: %s: %s\n
 入力: %s: %s\n
 
-# osd/windows/input.c: 1071
+# osd/windows/input.c: 1075
 Input: Autoenabling joysticks due to presence of a %s\n
 入力: %sが存在するためジョイスティックを自動的に有効にします\n
 
-# osd/windows/input.c: 1078
+# osd/windows/input.c: 1082
 Input: Autoenabling lightguns due to presence of a %s\n
 入力: %sが存在するため光線銃を自動的に有効にします\n
 
-# osd/windows/input.c: 1064
+# osd/windows/input.c: 1068
 Input: Autoenabling mice due to presence of a %s\n
 入力: %sが存在するためマウスを自動的に有効にします\n
 
-# osd/windows/input.c: 2174
+# osd/windows/input.c: 2179
 Input: Joystick %d axis %d is now %s\n
 入力: ジョイスティック%d 軸%d は%sです\n
 
-# osd/windows/input.c: 2372
+# osd/windows/input.c: 2377
 Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 入力: ジョイスティック%d: %s (%d個の軸、%d個のボタン、%d個の視点)\n
 
-# osd/windows/input.c: 1527
+# osd/windows/input.c: 1531
 Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 入力: キーボード=%d  マウス=%d  ジョイスティック=%d  光線銃=%d\n
 
-# osd/windows/input.c: 3311
+# osd/windows/input.c: 3316
 Input: Using RAWMOUSE for Mouse input\n
 入力: マウスの入力にRAWMOUSEを使用します\n
 
-# osd/windows/input.c: 1529
+# osd/windows/input.c: 1533
 Input: \"%s\" controller support enabled\n
 入力: コントローラ「%s」のサポートが有効です\n
 
-# osd/windows/input.c: 1909
+# osd/windows/input.c: 1913
 Invalid %s value %s; reverting to all -- valid values are:\n
 %sの値%sは不正です。全の値を復元します。有効な値:\n
 
-# osd/windows/input.c: 1830
+# osd/windows/input.c: 1834
 Invalid %s value %s; reverting to keyboard\n
 %sの値%sは不正です。キーボードに復元します\n
 
@@ -630,19 +630,19 @@ Invalid %s value %s; reverting to keyboard\n
 Invalid video value %s; reverting to gdi\n
 ビデオの値%sは不正です。GDIに復元します\n
 
-# osd/windows/input.c: 2492
+# osd/windows/input.c: 2497
 J%d %s D
 J%d %s 下
 
-# osd/windows/input.c: 2496
+# osd/windows/input.c: 2501
 J%d %s L
 J%d %s 左
 
-# osd/windows/input.c: 2500
+# osd/windows/input.c: 2505
 J%d %s R
 J%d %s 右
 
-# osd/windows/input.c: 2488
+# osd/windows/input.c: 2493
 J%d %s U
 J%d %s 上
 
@@ -650,19 +650,19 @@ J%d %s 上
 KNOWN     %s\n
 判明      %s\n
 
-# osd/windows/input.c: 2360
+# osd/windows/input.c: 2365
 Lightgun %d 
 光線銃 %d 
 
-# osd/windows/input.c: 2863
+# osd/windows/input.c: 2868
 Lightgun not supported in windowed mode
 ウインドウモードでは光線銃はサポートされません
 
-# osd/windows/input.c: 2358
+# osd/windows/input.c: 2363
 Lightgun on Mouse %d 
 マウス %d の光線銃
 
-# osd/windows/config.c: 558
+# osd/windows/config.c: 578
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
 
@@ -670,11 +670,11 @@ M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nico
 MAME: %s [%s] - Screen %d
 MAME: %s「%s」- 画面%d
 
-# osd/windows/input.c: 2226
+# osd/windows/input.c: 2231
 Mouse 
 マウス
 
-# osd/windows/input.c: 2224
+# osd/windows/input.c: 2229
 Mouse %d 
 マウス%d
 
@@ -698,7 +698,7 @@ Name:    Clone of:\n
 PARTKNOWN %s\n
 一部判明  %s\n
 
-# osd/windows/config.c: 145
+# osd/windows/config.c: 147
 PER-WINDOW VIDEO OPTIONS
 ウィンドウ毎の画面オプション
 
@@ -714,43 +714,43 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 サウンド: バッファ オーバフロー=%d アンダーフロー=%d\n
 
-# osd/windows/input.c: 2295
+# osd/windows/input.c: 2300
 Stick %d %s +
 スティック %d %s +
 
-# osd/windows/input.c: 2288
+# osd/windows/input.c: 2293
 Stick %d %s -
 スティック %d %s -
 
-# osd/windows/input.c: 2297
+# osd/windows/input.c: 2302
 Stick %s +
 スティック %s +
 
-# osd/windows/input.c: 2290
+# osd/windows/input.c: 2295
 Stick %s -
 スティック %s -
 
-# osd/windows/input.c: 2261
+# osd/windows/input.c: 2266
 Stick%sX+
 スティック%sX+
 
-# osd/windows/input.c: 2259
+# osd/windows/input.c: 2264
 Stick%sX-
 スティック%sX-
 
-# osd/windows/input.c: 2265
+# osd/windows/input.c: 2270
 Stick%sY+
 スティック%sY+
 
-# osd/windows/input.c: 2263
+# osd/windows/input.c: 2268
 Stick%sY-
 スティック%sY-
 
-# osd/windows/input.c: 2269
+# osd/windows/input.c: 2274
 Stick%sZ+
 スティック%sZ+
 
-# osd/windows/input.c: 2267
+# osd/windows/input.c: 2272
 Stick%sZ-
 スティック%sZ-
 
@@ -762,7 +762,7 @@ Texture too big! (wanted: %dx%d, max is %dx%d)\n
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
 これはドライバ「%s」に必要なROMのリストです。\n名前          サイズ チェックサム\n
 
-# osd/windows/input.c: 2957
+# osd/windows/input.c: 2962
 Toggle Fullscreen
 フルスクリーン切り替え
 
@@ -774,7 +774,7 @@ UNKNOWN   %s\n
 Unable to close the keyboard device. (error %d)\n
 キーボードディバイスがクローズ出来ません。(エラー %d)\n
 
-# osd/windows/config.c: 517
+# osd/windows/config.c: 537
 Unable to create file %s\n
 ファイル%sが作成出来ません\n
 
@@ -802,13 +802,9 @@ Unable to open the keyboard device. (error %d)\n
 Unknown texture blendmode=%d format=%d\n
 不明なテクスチャブレンドモード=%d 形式=%d\n
 
-# osd/windows/config.c: 561
+# osd/windows/config.c: 581
 Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the file windows.txt\n
 使用法:  MAME ゲーム名 [オプション]\n\n         MAME -showusage    オプションを簡単に一覧表\示\n         MAME -showconfig   オプションの設定値を一覧表\示\n         MAME -createconfig mame.iniを生成\n\n詳しい使用法については、windows.txtを参照下さい\n
-
-# osd/windows/config.c: 456
-Usage: mame [game] [options]\n\nOptions:\n
-使用法: mame [ゲーム名] [オプション]\n\nオプション:\n
 
 # osd/windows/video.c: 418
 Using %s scale effect\n
@@ -818,15 +814,15 @@ Using %s scale effect\n
 Video: Monitor %p = \"%s\" %s\n
 ビデオ: モニタ %p = 「%s」%s\n
 
-# osd/windows/config.c: 119
+# osd/windows/config.c: 121
 WINDOWS PERFORMANCE OPTIONS
 Windows版パフォーマンスオプション
 
-# osd/windows/config.c: 180
+# osd/windows/config.c: 182
 WINDOWS SOUND OPTIONS
 Windows版サウンドオプション
 
-# osd/windows/config.c: 124
+# osd/windows/config.c: 126
 WINDOWS VIDEO OPTIONS
 Windows版ビデオオプション
 
@@ -838,219 +834,219 @@ Warning: -video none doesn't make much sense without -seconds_to_run\n
 Warning: Device may not perform well for Direct3D rendering\n
 警告: デバイスのDirect3D描画パフォーマンスはあまり良くありません\n
 
-# osd/windows/config.c: 349
+# osd/windows/config.c: 362
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n「%s」に似たゲームは下記の通りです\nサポートされているゲーム (似ているもの順):\n\n
 
-# osd/windows/config.c: 93
+# osd/windows/config.c: 95
 all available info on driver in XML format
 存在する全てのドライバ情報をXML形式で出力
 
-# osd/windows/input.c: 2172
+# osd/windows/input.c: 2177
 analog
 アナログ
 
-# osd/windows/input.c: 1460
+# osd/windows/input.c: 1464
 analog joystick
 アナログジョイスティック
 
-# osd/windows/config.c: 147
+# osd/windows/config.c: 149
 aspect ratio for all screens; 'auto' here will try to make a best guess
 全ての画面のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/config.c: 152
+# osd/windows/config.c: 154
 aspect ratio of the first screen; 'auto' here will try to make a best guess
 １画面目のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/config.c: 167
+# osd/windows/config.c: 169
 aspect ratio of the fourth screen; 'auto' here will try to make a best guess
 ４画面目のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/config.c: 157
+# osd/windows/config.c: 159
 aspect ratio of the second screen; 'auto' here will try to make a best guess
 ２画面目のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/config.c: 162
+# osd/windows/config.c: 164
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 ３画面目のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/config.c: 175
+# osd/windows/config.c: 177
 brightness value in full screen mode
 フルスクリーン画面での明るさ
 
-# osd/windows/config.c: 196
+# osd/windows/config.c: 198
 center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
 ジョイスティックの入力を無視する領域の内側しきい値 (0.0 中央、1.0 外)
 
-# osd/windows/config.c: 103
+# osd/windows/config.c: 105
 compare files with known MAME roms
 ファイルを既知のMAME romと比較する
 
-# osd/windows/config.c: 104
+# osd/windows/config.c: 106
 compare files with known MAME roms (brief)
 ファイルを既知のMAME romと比較する (大まかに)
 
-# osd/windows/config.c: 129
+# osd/windows/config.c: 131
 constrain to the proper aspect ratio
 適切なアスペクト比に制限します
 
-# osd/windows/config.c: 176
+# osd/windows/config.c: 178
 contrast value in full screen mode
 フルスクリーン画面の値を制限します
 
-# osd/windows/config.c: 87
+# osd/windows/config.c: 89
 create the default configuration file
 デフォルト設定ファイルを作成
 
-# osd/windows/config.c: 128
+# osd/windows/config.c: 130
 default to maximized windows; otherwise, windows will be minimized
 デフォルトでウィンドウを最大化。無効な場合はウィンドウは最小化されます
 
-# osd/windows/input.c: 1463
+# osd/windows/input.c: 1467
 dial
 ダイアル
 
-# osd/windows/config.c: 198 osd/windows/input.c: 1961, 2172
+# osd/windows/config.c: 200 osd/windows/input.c: 1966, 2177
 digital
 デジタル
 
-# osd/windows/config.c: 116
+# osd/windows/config.c: 118
 display additional diagnostic information
 起動時に診断用の情報を表\示
 
-# osd/windows/config.c: 88
+# osd/windows/config.c: 90
 display running parameters
 実行中のパラメータを表\示
 
-# osd/windows/config.c: 96
+# osd/windows/config.c: 98
 driver sourcefile
 ドライバのソ\ースファイル名を表\示
 
-# osd/windows/config.c: 224
+# osd/windows/config.c: 226
 enable (keyboard|mouse|joystick) if a dial control is present
 ダイヤルを使用する場合に(keyboard|mouse|joystick)を有効
 
-# osd/windows/config.c: 226
+# osd/windows/config.c: 228
 enable (keyboard|mouse|joystick) if a lightgun control is present
 光線中を使用する場合に(keyboard|mouse|joystick)を有効
 
-# osd/windows/config.c: 229
+# osd/windows/config.c: 231
 enable (keyboard|mouse|joystick) if a mouse control is present
 マウスを使用する場合に(keyboard|mouse|joystick)を有効
 
-# osd/windows/config.c: 221
+# osd/windows/config.c: 223
 enable (keyboard|mouse|joystick) if a paddle control is present
 パドルが存在するときに有効 (keyboard|mouse|joystick)
 
-# osd/windows/config.c: 223
+# osd/windows/config.c: 225
 enable (keyboard|mouse|joystick) if a pedal control is present
 ペダルを使用する場合に(keyboard|mouse|joystick)を有効
 
-# osd/windows/config.c: 227
+# osd/windows/config.c: 229
 enable (keyboard|mouse|joystick) if a positional control is present
 座標コントロールが存在する場合に有効 (keyboard|mouse|joystick)
 
-# osd/windows/config.c: 225
+# osd/windows/config.c: 227
 enable (keyboard|mouse|joystick) if a trackball control is present
 トラックボールを使用する場合に(keyboard|mouse|joystick)を有効
 
-# osd/windows/config.c: 222
+# osd/windows/config.c: 224
 enable (keyboard|mouse|joystick) if an analog joystick control is present
 アナログスティックを使用する場合に(keyboard|mouse|joystick)を有効
 
-# osd/windows/config.c: 142
+# osd/windows/config.c: 144
 enable bilinear filtering on screen output
 画面の出力にバイリニアフィルタを有効
 
-# osd/windows/config.c: 193
+# osd/windows/config.c: 195
 enable dual lightgun input
 デュアル光線銃を使用
 
-# osd/windows/config.c: 137
+# osd/windows/config.c: 139
 enable hardware stretching
 ハードウェア拡大表\示を有効
 
-# osd/windows/config.c: 186
+# osd/windows/config.c: 188
 enable joystick input
 ジョイスティックを使用
 
-# osd/windows/config.c: 192
+# osd/windows/config.c: 194
 enable lightgun input
 光線銃を使用
 
-# osd/windows/config.c: 111
+# osd/windows/config.c: 113
 enable loading of configuration files
 設定ファイルの読み込みを有効
 
-# osd/windows/config.c: 185
+# osd/windows/config.c: 187
 enable mouse input
 マウスまたはトラックボールを使用
 
-# osd/windows/config.c: 121
+# osd/windows/config.c: 123
 enable multithreading; this enables rendering and blitting on a separate thread
 マルチスレッドを有効。これは描画処理でのスレッド分割を有効にします
 
-# osd/windows/config.c: 188
+# osd/windows/config.c: 190
 enable pointing stick input
 スティック型マウスを使用
 
-# osd/windows/config.c: 174
+# osd/windows/config.c: 176
 enable resolution switching
 解像度の切り替えを有効
 
-# osd/windows/config.c: 195
+# osd/windows/config.c: 197
 enable steadykey support
 ボタンの同時押し認識を容易にする
 
-# osd/windows/config.c: 173
+# osd/windows/config.c: 175
 enable triple buffering
 トリプルバッファリングを有効
 
-# osd/windows/config.c: 133
+# osd/windows/config.c: 135
 enable using the start of VBLANK for throttling instead of the game time
 速度制限をゲームの実時間の代わりにVBLANK開始で行う
 
-# osd/windows/config.c: 132
+# osd/windows/config.c: 134
 enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
 画面反転の前にVBLANK開始を待つ。画面のちらつきが減少します
 
-# osd/windows/config.c: 127
+# osd/windows/config.c: 129
 enable window mode; otherwise, full screen mode is assumed
 ウィンドウモードを有効。無効な場合は当然フルスクリーンです
 
-# osd/windows/config.c: 197
+# osd/windows/config.c: 199
 end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
 ジョイスティックの入力を無視する領域の外側しきい値 (0.0 中央、1.0 外)
 
-# osd/windows/config.c: 688
+# osd/windows/config.c: 709
 error: invalid value for language: %s\nUse %s\n
 エラー: 不正な言語指定: %s\n%sを使用します\n
 
-# osd/windows/config.c: 146
+# osd/windows/config.c: 148
 explicit name of all screen; 'auto' here will try to make a best guess
 明示的に全ての画面の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/config.c: 151
+# osd/windows/config.c: 153
 explicit name of the first screen; 'auto' here will try to make a best guess
 明示的に１画面目の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/config.c: 166
+# osd/windows/config.c: 168
 explicit name of the fourth screen; 'auto' here will try to make a best guess
 明示的に４画面目の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/config.c: 156
+# osd/windows/config.c: 158
 explicit name of the second screen; 'auto' here will try to make a best guess
 明示的に２画面目の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/config.c: 161
+# osd/windows/config.c: 163
 explicit name of the third screen; 'auto' here will try to make a best guess
 明示的に４画面目の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/config.c: 177
+# osd/windows/config.c: 179
 gamma value in full screen mode
 フルスクリーンのガンマ補正値
 
-# osd/windows/input.c: 2172
+# osd/windows/input.c: 2177
 invalid
 不正
 
@@ -1066,103 +1062,103 @@ is best available\n
 is good\n
 は正常です\n
 
-# osd/windows/input.c: 1461, 1826, 1929
+# osd/windows/input.c: 1465, 1830, 1933
 lightgun
 光線銃
 
-# osd/windows/config.c: 106
+# osd/windows/config.c: 108
 list available devices
 存在するデバイスのリストを表\示
 
-# osd/windows/config.c: 100
+# osd/windows/config.c: 102
 list optional samples for a driver
 ドライバの外部サンプルのリストを表\示
 
-# osd/windows/config.c: 99
+# osd/windows/config.c: 101
 list required roms for a driver
 ドライバに必要なROMのリスト
 
-# osd/windows/config.c: 198
+# osd/windows/config.c: 200
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 特定のジョイスティックや軸をデジタルに設定 (none|all|j<N>*|j<N>a<M>[,...])
 
-# osd/windows/config.c: 131
+# osd/windows/config.c: 133
 name of a PNG file to use for visual effects, or 'none'
 視覚効果で使用するPNGファイル名、または「none」
 
-# osd/windows/config.c: 126
+# osd/windows/config.c: 128
 number of screens to create; usually, you want just one
 生成する画面の数を指定。通常は１です
 
-# osd/windows/config.c: 194
+# osd/windows/config.c: 196
 offscreen shots reload
 画面外のショットを割り当てる
 
-# osd/windows/config.c: 115
+# osd/windows/config.c: 117
 output error.log data to the system debugger
 error.logデータをシステムデバッガに出力
 
-# osd/windows/input.c: 1459
+# osd/windows/input.c: 1463
 paddle
 パドル
 
-# osd/windows/input.c: 1462
+# osd/windows/input.c: 1466
 pedal
 ペダル
 
-# osd/windows/config.c: 83
+# osd/windows/config.c: 85
 perform driver validation on all game drivers
 全てのゲームドライバで妥当性チェックを実行
 
-# osd/windows/input.c: 1465
+# osd/windows/input.c: 1469
 positional
 座標
 
-# osd/windows/config.c: 148
+# osd/windows/config.c: 150
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
 全ての画面の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/config.c: 153
+# osd/windows/config.c: 155
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 １画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/config.c: 168
+# osd/windows/config.c: 170
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 ４画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/config.c: 158
+# osd/windows/config.c: 160
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 ２画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/config.c: 163
+# osd/windows/config.c: 165
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 ３画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/config.c: 149
+# osd/windows/config.c: 151
 preferred view for all screens
 全ての画面のビューを指定
 
-# osd/windows/config.c: 154
+# osd/windows/config.c: 156
 preferred view for the first screen
 １画面目のビューを指定
 
-# osd/windows/config.c: 169
+# osd/windows/config.c: 171
 preferred view for the fourth screen
 ４画面目のビューを指定
 
-# osd/windows/config.c: 159
+# osd/windows/config.c: 161
 preferred view for the second screen
 ２画面目のビューを指定
 
-# osd/windows/config.c: 164
+# osd/windows/config.c: 166
 preferred view for the third screen
 ３画面目のビューを指定
 
-# osd/windows/config.c: 101
+# osd/windows/config.c: 103
 report romsets that have problems
 問題のあるROMファイルを報告
 
-# osd/windows/config.c: 102
+# osd/windows/config.c: 104
 report samplesets that have problems
 問題のあるサンプルファイルを報告
 
@@ -1190,59 +1186,59 @@ sampleset \"%8s\" not found!\n
 sampleset \"%8s\" not supported!\n
 サンプルセット「%8s」は対応していません!\n
 
-# osd/windows/config.c: 130
+# osd/windows/config.c: 132
 scale screen rendering by this amount in software
 指定した割合でソ\フトウェアによる画面描画スケーリングを実行
 
-# osd/windows/config.c: 181
+# osd/windows/config.c: 183
 set audio latency (increase to reduce glitches)
 オーディオのレイテンシを指定
 
-# osd/windows/config.c: 201
+# osd/windows/config.c: 203
 set joystick ID (Player1)
 ジョイスティックIDを指定 (プレイヤー1)
 
-# osd/windows/config.c: 202
+# osd/windows/config.c: 204
 set joystick ID (Player2)
 ジョイスティックIDを指定 (プレイヤー2)
 
-# osd/windows/config.c: 203
+# osd/windows/config.c: 205
 set joystick ID (Player3)
 ジョイスティックIDを指定 (プレイヤー3)
 
-# osd/windows/config.c: 204
+# osd/windows/config.c: 206
 set joystick ID (Player4)
 ジョイスティックIDを指定 (プレイヤー4)
 
-# osd/windows/config.c: 205
+# osd/windows/config.c: 207
 set joystick ID (Player5)
 ジョイスティックIDを指定 (プレイヤー5)
 
-# osd/windows/config.c: 206
+# osd/windows/config.c: 208
 set joystick ID (Player6)
 ジョイスティックIDを指定 (プレイヤー6)
 
-# osd/windows/config.c: 207
+# osd/windows/config.c: 209
 set joystick ID (Player7)
 ジョイスティックIDを指定 (プレイヤー7)
 
-# osd/windows/config.c: 208
+# osd/windows/config.c: 210
 set joystick ID (Player8)
 ジョイスティックIDを指定 (プレイヤー8)
 
-# osd/windows/config.c: 95
+# osd/windows/config.c: 97
 short name, full name
 ゲームディレクトリ名＋ゲームのフルネームを表\示
 
-# osd/windows/config.c: 97
+# osd/windows/config.c: 99
 show clones
 ゲームのクローン版を表\示
 
-# osd/windows/config.c: 82
+# osd/windows/config.c: 84
 show help message
 ヘルプの表\示
 
-# osd/windows/config.c: 89
+# osd/windows/config.c: 91
 show this help
 このヘルプを表\示
 
@@ -1250,23 +1246,23 @@ show this help
 sound
 音源
 
-# osd/windows/config.c: 141
+# osd/windows/config.c: 143
 specify the preferred Direct3D version (8 or 9)
 優先されるDirect3Dのバージョンを指定
 
-# osd/windows/config.c: 120
+# osd/windows/config.c: 122
 thread priority for the main game thread; range from -15 to 1
 メインのゲームスレッドのプライオリティを指定。-15から1の範囲で指定
 
-# osd/windows/input.c: 1464
+# osd/windows/input.c: 1468
 trackball
 トラックボール
 
-# osd/windows/config.c: 125
+# osd/windows/config.c: 127
 video output method: none, gdi, ddraw, or d3d
 ビデオ描画方法: none、gdi、ddrawまたはd3d
 
-# osd/windows/config.c: 94
+# osd/windows/config.c: 96
 year, manufacturer and full name
 サポートゲーム、製造年、メーカーのリストを表\示
 

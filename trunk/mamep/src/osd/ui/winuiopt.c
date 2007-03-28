@@ -3092,12 +3092,8 @@ static void LoadDefaultOptions(void)
 
 static void LoadOptions(void)
 {
-dwprintf(TEXT("settings.rompath: %s"), settings.rompath);
-dwprintf(TEXT("backup.settings.rompath: %s"), backup.settings.rompath);
 	LoadDefaultOptions();
 	options_load_winui_config();
-dwprintf(TEXT("settings.rompath: %s"), settings.rompath);
-dwprintf(TEXT("backup.settings.rompath: %s"), backup.settings.rompath);
 
 	set_core_translation_directory(settings.translation_directory);
 	SetLangcode(settings.langcode);

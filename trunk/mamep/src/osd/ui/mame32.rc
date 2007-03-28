@@ -152,13 +152,15 @@ BEGIN
             MENUITEM "Chinese (Taiwan)",            ID_LANGUAGE_TRAD_CHINESE
             MENUITEM "French",                      ID_LANGUAGE_FRENCH
             MENUITEM "German",                      ID_LANGUAGE_GERMAN
-            MENUITEM "Hungarian",                   ID_LANGUAGE_HUNGARIAN
             MENUITEM "Italian",                     ID_LANGUAGE_ITALIAN
             MENUITEM "Japanese",                    ID_LANGUAGE_JAPANESE
             MENUITEM "Korean",                      ID_LANGUAGE_KOREAN
-            MENUITEM "Polish",                      ID_LANGUAGE_POLISH
-            MENUITEM "Portuguese (Brazil)",         ID_LANGUAGE_PORTUGUESE_BRA
             MENUITEM "Spanish",                     ID_LANGUAGE_SPANISH
+            MENUITEM "Catalan",                     ID_LANGUAGE_CATALAN
+            MENUITEM "Polish",                      ID_LANGUAGE_POLISH
+            MENUITEM "Portuguese (Portugal)",       ID_LANGUAGE_PORTUGUESE_PT
+            MENUITEM "Portuguese (Brazil)",         ID_LANGUAGE_PORTUGUESE_BRA
+            MENUITEM "Hungarian",                   ID_LANGUAGE_HUNGARIAN
         END
     END
     POPUP "&Help"
@@ -1434,16 +1436,18 @@ IDB_ABOUT               BITMAP  DISCARDABLE     "res\\about.bmp"
 IDB_ABOUT               BITMAP  DISCARDABLE     "res\\abouthazemd.bmp"
 #endif
 IDB_TOOLBAR_US          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
-IDB_TOOLBAR_JP          BITMAP  DISCARDABLE     "res\\toolbarj.bmp"
-IDB_TOOLBAR_TW          BITMAP  DISCARDABLE     "res\\toolbarc.bmp"
 IDB_TOOLBAR_CN          BITMAP  DISCARDABLE     "res\\toolbarc.bmp"
-IDB_TOOLBAR_KR          BITMAP  DISCARDABLE     "res\\toolbark.bmp"
+IDB_TOOLBAR_TW          BITMAP  DISCARDABLE     "res\\toolbarc.bmp"
 IDB_TOOLBAR_FR          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
-IDB_TOOLBAR_ES          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
-IDB_TOOLBAR_IT          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
 IDB_TOOLBAR_DE          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
-IDB_TOOLBAR_BR          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
+IDB_TOOLBAR_IT          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
+IDB_TOOLBAR_JP          BITMAP  DISCARDABLE     "res\\toolbarj.bmp"
+IDB_TOOLBAR_KR          BITMAP  DISCARDABLE     "res\\toolbark.bmp"
+IDB_TOOLBAR_ES          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
+IDB_TOOLBAR_CA          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
 IDB_TOOLBAR_PL          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
+IDB_TOOLBAR_PT          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
+IDB_TOOLBAR_BR          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
 IDB_TOOLBAR_HU          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
 #ifdef USE_SHOW_SPLASH_SCREEN
 IDB_SPLASH              BITMAP  DISCARDABLE     "res\\splash.bmp"
@@ -1616,16 +1620,18 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     ID_LANGUAGE_ENGLISH_US   "Translate into English (US)"
-    ID_LANGUAGE_JAPANESE     "Translate into Japanese"
     ID_LANGUAGE_SMPL_CHINESE "Translate into Simplified Chinese"
     ID_LANGUAGE_TRAD_CHINESE "Translate into Traditional Chinese"
-    ID_LANGUAGE_KOREAN       "Translate into Korean"
     ID_LANGUAGE_FRENCH       "Translate into French"
-    ID_LANGUAGE_SPANISH      "Translate into Spanish"
-    ID_LANGUAGE_ITALIAN      "Translate into Italian"
     ID_LANGUAGE_GERMAN       "Translate into German"
-    ID_LANGUAGE_PORTUGUESE_BRA "Translate into Portuguese (BRA)"
+    ID_LANGUAGE_ITALIAN      "Translate into Italian"
+    ID_LANGUAGE_JAPANESE     "Translate into Japanese"
+    ID_LANGUAGE_KOREAN       "Translate into Korean"
+    ID_LANGUAGE_SPANISH      "Translate into Spanish"
+    ID_LANGUAGE_CATALAN      "Translate into Catalan"
     ID_LANGUAGE_POLISH       "Translate into Polish"
+    ID_LANGUAGE_PORTUGUESE_PT "Translate into Portuguese (PT)"
+    ID_LANGUAGE_PORTUGUESE_BRA "Translate into Portuguese (BRA)"
     ID_LANGUAGE_HUNGARIAN    "Translate into Hungarian"
 END
 

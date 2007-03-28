@@ -16,16 +16,18 @@ extern const UINT16 uifontmap_cp950[];
 struct ui_lang_info_t ui_lang_info[UI_LANG_MAX] =
 {
 	{  "en_US", "US", "English (United States)",	1252 },
-	{  "ja_JP", "JP", "Japanese",			932 },
 	{  "zh_CN", "CN", "Chinese (PRC)",		936 },
 	{  "zh_TW", "TW", "Chinese (Taiwan)",		950 },
-	{  "ko_KR", "KR", "Korean",			949 },
 	{  "fr_FR", "FR", "French",			1252 },
-	{  "es_ES", "ES", "Spanish",			1252 },
-	{  "it_IT", "IT", "Italian",			1252 },
 	{  "de_DE", "DE", "German",			1252 },
-	{  "pt_BR", "BR", "Portuguese (Brazil)",	1252 },
+	{  "it_IT", "IT", "Italian",			1252 },
+	{  "ja_JP", "JP", "Japanese",			932 },
+	{  "ko_KR", "KR", "Korean",			949 },
+	{  "es_ES", "ES", "Spanish",			1252 },
+	{  "ca_ES", "CA", "Catalan",			1252 },
 	{  "pl_PL", "PL", "Polish",			1250 },
+	{  "pt_PT", "PT", "Portuguese (Portugal)",	1252 },
+	{  "pt_BR", "BR", "Portuguese (Brazil)",	1252 },
 	{  "hu_HU", "HU", "Hungarian",			1250 },
 };
 

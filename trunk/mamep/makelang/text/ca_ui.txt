@@ -1,4 +1,4 @@
-# osd/ui/mame32.rc: 419
+# osd/ui/mame32.rc: 417
                                 
 
 
@@ -6,7 +6,7 @@
 %d colors 
 
 
-# osd/ui/win32ui.c: 264, 3769
+# osd/ui/win32ui.c: 264, 3766
 %d games
 
 
@@ -54,7 +54,7 @@
 %s\nThis is also global driver options in the %s
 
 
-# osd/ui/mame32.rc: 174
+# osd/ui/mame32.rc: 172
 &About
 
 
@@ -62,15 +62,15 @@
 &About MAME32
 
 
-# osd/ui/mame32.rc: 64, 186
+# osd/ui/mame32.rc: 64, 184
 &Add to Custom Folder...
 
 
-# osd/ui/mame32.rc: 923
+# osd/ui/mame32.rc: 921
 &All games to use default options
 
 
-# osd/ui/mame32.rc: 230
+# osd/ui/mame32.rc: 228
 &Audit
 
 
@@ -82,23 +82,23 @@
 &Background Image...
 
 
-# osd/ui/mame32.rc: 969
+# osd/ui/mame32.rc: 967
 &Broadcast selected game to all windows
 
 
-# osd/ui/mame32.rc: 87, 246, 259
+# osd/ui/mame32.rc: 87, 244, 257
 &Cabinet
 
 
-# osd/ui/mame32.rc: 440, 907, 932, 949, 1013, 1041
+# osd/ui/mame32.rc: 438, 905, 930, 947, 1011, 1039
 &Cancel
 
 
-# osd/ui/audit32.c: 450 osd/ui/mame32.rc: 1221
+# osd/ui/audit32.c: 450 osd/ui/mame32.rc: 1219
 &Close
 
 
-# osd/ui/mame32.rc: 168
+# osd/ui/mame32.rc: 166
 &Contents\tF1
 
 
@@ -106,7 +106,7 @@
 &Continue
 
 
-# osd/ui/mame32.rc: 188, 222
+# osd/ui/mame32.rc: 186, 220
 &Custom Filters...
 
 
@@ -114,11 +114,11 @@
 &Custom Filters...\tCtrl+F
 
 
-# osd/ui/mame32.rc: 920
+# osd/ui/mame32.rc: 918
 &Default game options
 
 
-# osd/ui/mame32.rc: 903
+# osd/ui/mame32.rc: 901
 &Description filter
 
 
@@ -142,11 +142,11 @@
 &File
 
 
-# osd/ui/mame32.rc: 86, 245, 258
+# osd/ui/mame32.rc: 86, 243, 256
 &Flyer
 
 
-# osd/ui/mame32.rc: 926
+# osd/ui/mame32.rc: 924
 &Folder 'filters'
 
 
@@ -158,11 +158,11 @@
 &Grouped
 
 
-# osd/ui/mame32.rc: 42, 166
+# osd/ui/mame32.rc: 42, 164
 &Help
 
 
-# osd/ui/mame32.rc: 92, 251, 263
+# osd/ui/mame32.rc: 92, 249, 261
 &History
 
 
@@ -178,11 +178,11 @@
 &List
 
 
-# osd/ui/mame32.rc: 172
+# osd/ui/mame32.rc: 170
 &Mame Release Notes
 
 
-# osd/ui/mame32.rc: 88, 247, 260
+# osd/ui/mame32.rc: 88, 245, 258
 &Marquee
 
 
@@ -190,11 +190,11 @@
 &Menu Style
 
 
-# osd/ui/mame32.rc: 171
+# osd/ui/mame32.rc: 169
 &New Game Changes
 
 
-# osd/ui/mame32.rc: 404, 906, 931, 948, 1012, 1040
+# osd/ui/mame32.rc: 402, 904, 929, 946, 1010, 1038
 &OK
 
 
@@ -206,7 +206,7 @@
 &Palette Setting...
 
 
-# osd/ui/audit32.c: 315 osd/ui/mame32.rc: 439
+# osd/ui/audit32.c: 315 osd/ui/mame32.rc: 437
 &Pause
 
 
@@ -214,19 +214,19 @@
 &Picture Area\tAlt+P
 
 
-# osd/ui/mame32.rc: 52, 182 osd/ui/win32ui.c: 3921
+# osd/ui/mame32.rc: 52, 180 osd/ui/win32ui.c: 3918
 &Play
 
 
-# osd/ui/win32ui.c: 263, 3958, 7162, 7190
+# osd/ui/win32ui.c: 263, 3955, 7159, 7187
 &Play %s
 
 
-# osd/ui/mame32.rc: 232
+# osd/ui/mame32.rc: 230
 &Properties
 
 
-# osd/ui/mame32.rc: 891
+# osd/ui/mame32.rc: 889
 &Raster Graphics
 
 
@@ -234,7 +234,7 @@
 &Refresh\tF5
 
 
-# osd/ui/mame32.rc: 221
+# osd/ui/mame32.rc: 219
 &Rename
 
 
@@ -242,19 +242,19 @@
 &Reset to Default...
 
 
-# osd/ui/mame32.rc: 959
+# osd/ui/mame32.rc: 957
 &Search for new games on start
 
 
-# osd/ui/mame32.rc: 62, 190
+# osd/ui/mame32.rc: 62, 188
 &Select Random Game
 
 
-# osd/ui/mame32.rc: 224
+# osd/ui/mame32.rc: 222
 &Show Folders
 
 
-# osd/ui/mame32.rc: 85, 244, 257
+# osd/ui/mame32.rc: 85, 242, 255
 &Snapshot
 
 
@@ -262,7 +262,7 @@
 &Status bar\tAlt+S
 
 
-# osd/ui/mame32.rc: 89, 248, 261
+# osd/ui/mame32.rc: 89, 246, 259
 &Title
 
 
@@ -270,19 +270,19 @@
 &Toolbar\tAlt+T
 
 
-# osd/ui/mame32.rc: 169
+# osd/ui/mame32.rc: 167
 &Troubleshooting
 
 
-# osd/ui/mame32.rc: 888
+# osd/ui/mame32.rc: 886
 &Unavailable
 
 
-# osd/ui/mame32.rc: 917
+# osd/ui/mame32.rc: 915
 &User Interface (Fonts, Colors, Sizes)
 
 
-# osd/ui/mame32.rc: 880
+# osd/ui/mame32.rc: 878
 &Vector Graphics
 
 
@@ -290,19 +290,19 @@
 &View
 
 
-# osd/ui/mame32.rc: 897
+# osd/ui/mame32.rc: 895
 &Working
 
 
-# osd/ui/win32ui.c: 6624
+# osd/ui/win32ui.c: 6621
 '%s' is not a valid savestate file for game '%s'.
 
 
-# osd/ui/mame32.rc: 899
+# osd/ui/mame32.rc: 897
 (*) = inherited from parent folder
 
 
-# osd/ui/mame32.rc: 497
+# osd/ui/mame32.rc: 495
 <- Remove
 
 
@@ -314,7 +314,7 @@
 A sharing violation occurred.
 
 
-# osd/ui/mame32.rc: 199
+# osd/ui/mame32.rc: 197
 A&udit
 
 
@@ -322,7 +322,7 @@ A&udit
 AD Stick
 
 
-# osd/ui/mame32.rc: 1072
+# osd/ui/mame32.rc: 1070
 ADStick device
 
 
@@ -330,27 +330,27 @@ ADStick device
 About
 
 
-# osd/ui/mame32.rc: 401
+# osd/ui/mame32.rc: 399
 About MAME32
 
 
-# osd/ui/mame32.rc: 496
+# osd/ui/mame32.rc: 494
 Add ->
 
 
-# osd/ui/mame32.rc: 1047
+# osd/ui/mame32.rc: 1045
 Add Game To Custom Folder
 
 
-# osd/ui/mame32.rc: 1546
+# osd/ui/mame32.rc: 1544
 Add currently selected game to a custom folder
 
 
-# osd/ui/mame32.rc: 413
+# osd/ui/mame32.rc: 411
 Additional MAME32 code by
 
 
-# osd/ui/mame32.rc: 657
+# osd/ui/mame32.rc: 655
 Advanced
 
 
@@ -366,23 +366,23 @@ All Games
 All files (*.*)
 
 
-# osd/ui/mame32.rc: 962
+# osd/ui/mame32.rc: 960
 Allow game selection by a &joystick (requires restart)
 
 
-# osd/ui/mame32.rc: 965
+# osd/ui/mame32.rc: 963
 Allow game selection by custom &key sequences
 
 
-# osd/ui/mame32.rc: 1528
+# osd/ui/mame32.rc: 1526
 Allow restoring options to 'sane' values.
 
 
-# osd/ui/mame32.rc: 1546
+# osd/ui/mame32.rc: 1544
 Allows filtering out games from a folder
 
 
-# osd/ui/properties.c: 4836
+# osd/ui/properties.c: 4846
 Anti-clockwise
 
 
@@ -390,7 +390,7 @@ Anti-clockwise
 Arrange &Icons
 
 
-# osd/ui/mame32.rc: 1483, 1572
+# osd/ui/mame32.rc: 1481, 1570
 Arranges icons in a grid
 
 
@@ -398,23 +398,23 @@ Arranges icons in a grid
 Artwork
 
 
-# osd/ui/mame32.rc: 798
+# osd/ui/mame32.rc: 796
 Artwork options
 
 
-# osd/ui/mame32.rc: 1137
+# osd/ui/mame32.rc: 1135
 Aspect ratio:
 
 
-# osd/ui/mame32.rc: 645
+# osd/ui/mame32.rc: 643
 Audio latency
 
 
-# osd/ui/mame32.rc: 550
+# osd/ui/mame32.rc: 548
 Audit
 
 
-# osd/ui/mame32.rc: 1528, 1564, 1564
+# osd/ui/mame32.rc: 1526, 1562, 1562
 Audit ROM and samples sets
 
 
@@ -422,27 +422,27 @@ Audit ROM and samples sets
 Audit complete.\n
 
 
-# osd/ui/properties.c: 452, 4747, 4929, 4964
+# osd/ui/properties.c: 452, 4757, 4939, 4974
 Auto
 
 
-# osd/ui/properties.c: 4839
+# osd/ui/properties.c: 4849
 Auto anti-clockwise
 
 
-# osd/ui/properties.c: 4838
+# osd/ui/properties.c: 4848
 Auto clockwise
 
 
-# osd/ui/mame32.rc: 783
+# osd/ui/mame32.rc: 781
 Auto pause when playback is finished
 
 
-# osd/ui/mame32.rc: 775
+# osd/ui/mame32.rc: 773
 Auto restore and save (only if available)
 
 
-# osd/ui/mame32.rc: 596, 1138
+# osd/ui/mame32.rc: 594, 1136
 Automatic
 
 
@@ -450,19 +450,19 @@ Automatic
 Available
 
 
-# osd/ui/mame32.rc: 491
+# osd/ui/mame32.rc: 489
 Available fields:
 
 
-# osd/ui/properties.c: 5023
+# osd/ui/properties.c: 5033
 Axis
 
 
-# osd/ui/properties.c: 5033
+# osd/ui/properties.c: 5043
 AxisId
 
 
-# osd/ui/layout.c: 59, 86 osd/ui/mame32.rc: 811
+# osd/ui/layout.c: 59, 86 osd/ui/mame32.rc: 809
 BIOS
 
 
@@ -470,7 +470,7 @@ BIOS
 BIOS missing
 
 
-# osd/ui/mame32.rc: 799
+# osd/ui/mame32.rc: 797
 Backdrops
 
 
@@ -486,7 +486,7 @@ Bad Dump
 Basic
 
 
-# osd/ui/mame32.rc: 831
+# osd/ui/mame32.rc: 829
 Beam width
 
 
@@ -494,19 +494,19 @@ Beam width
 Best available
 
 
-# osd/ui/mame32.rc: 801
+# osd/ui/mame32.rc: 799
 Bezels
 
 
-# osd/ui/mame32.rc: 992
+# osd/ui/mame32.rc: 990
 Bookkeeping
 
 
-# osd/ui/mame32.rc: 604
+# osd/ui/mame32.rc: 602
 Brightness Correction
 
 
-# osd/ui/mame32.rc: 481
+# osd/ui/mame32.rc: 479
 Browse...
 
 
@@ -590,7 +590,7 @@ Buttons 8
 Buttons 9
 
 
-# osd/ui/mame32.rc: 883
+# osd/ui/mame32.rc: 881
 C&lones
 
 
@@ -598,7 +598,7 @@ C&lones
 CPU
 
 
-# osd/ui/dialogs.c: 212 osd/ui/winuiopt.c: 429
+# osd/ui/dialogs.c: 212 osd/ui/options.c: 429
 Cabinet
 
 
@@ -606,7 +606,7 @@ Cabinet
 Cabinets
 
 
-# osd/ui/mame32.rc: 480, 506, 1057
+# osd/ui/mame32.rc: 478, 504, 1055
 Cancel
 
 
@@ -614,7 +614,7 @@ Cancel
 Cannot Move Selected Item
 
 
-# osd/ui/mame32.rc: 916
+# osd/ui/mame32.rc: 914
 Categories
 
 
@@ -626,15 +626,15 @@ Changing this item is not permitted
 Checking Game %s - %s
 
 
-# osd/ui/mame32.rc: 558, 560
+# osd/ui/mame32.rc: 556, 558
 Checking...
 
 
-# osd/ui/mame32.rc: 322, 414
+# osd/ui/mame32.rc: 320, 412
 Christopher Kirmse and Michael Soderstrom
 
 
-# osd/ui/properties.c: 4835
+# osd/ui/properties.c: 4845
 Clockwise
 
 
@@ -642,7 +642,7 @@ Clockwise
 Clone Of
 
 
-# osd/ui/mame32.rc: 544
+# osd/ui/mame32.rc: 542
 Clone of:
 
 
@@ -662,7 +662,7 @@ Colors are completely wrong
 Colors aren't 100% accurate
 
 
-# osd/ui/mame32.rc: 537
+# osd/ui/mame32.rc: 535
 Colors:
 
 
@@ -674,39 +674,39 @@ Comment Files
 Config
 
 
-# osd/ui/mame32.rc: 1131
+# osd/ui/mame32.rc: 1129
 Configure for:
 
 
-# osd/ui/mame32.rc: 1475
+# osd/ui/mame32.rc: 1473
 Contains commands for displaying help
 
 
-# osd/ui/mame32.rc: 1475
+# osd/ui/mame32.rc: 1473
 Contains commands for manupulating the view
 
 
-# osd/ui/mame32.rc: 1483
+# osd/ui/mame32.rc: 1481
 Contains commands for sorting by various columns
 
 
-# osd/ui/mame32.rc: 1475
+# osd/ui/mame32.rc: 1473
 Contains commands for user interface options
 
 
-# osd/ui/mame32.rc: 1475
+# osd/ui/mame32.rc: 1473
 Contains commands for working with the selected items
 
 
-# osd/ui/mame32.rc: 609
+# osd/ui/mame32.rc: 607
 Contrast Correction
 
 
-# osd/ui/mame32.rc: 90, 249, 262
+# osd/ui/mame32.rc: 90, 247, 260
 Control &Panel
 
 
-# osd/ui/dialogs.c: 218 osd/ui/winuiopt.c: 432
+# osd/ui/dialogs.c: 218 osd/ui/options.c: 432
 Control Panel
 
 
@@ -718,7 +718,7 @@ Control Panels
 Control Type
 
 
-# osd/ui/mame32.rc: 534
+# osd/ui/mame32.rc: 532
 Control Type:
 
 
@@ -726,35 +726,35 @@ Control Type:
 Controller Files
 
 
-# osd/ui/mame32.rc: 1091
+# osd/ui/mame32.rc: 1089
 Controller ID layout
 
 
-# osd/ui/mame32.rc: 1062
+# osd/ui/mame32.rc: 1060
 Controller Mapping
 
 
-# osd/ui/mame32.rc: 713
+# osd/ui/mame32.rc: 711
 Controllers
 
 
-# osd/ui/mame32.rc: 408
+# osd/ui/mame32.rc: 406
 Copyright (C) 1997-2007 The MAME Team
 
 
-# osd/ui/mame32.rc: 443, 453
+# osd/ui/mame32.rc: 441, 451
 Correct:
 
 
-# osd/ui/win32ui.c: 6499
+# osd/ui/win32ui.c: 6496
 Could not open '%s' as a valid input file.
 
 
-# osd/ui/win32ui.c: 6565, 6638
+# osd/ui/win32ui.c: 6562, 6635
 Could not open '%s' as a valid savestate file.
 
 
-# osd/ui/mame32.rc: 805
+# osd/ui/mame32.rc: 803
 Crop artwork
 
 
@@ -762,31 +762,31 @@ Crop artwork
 Cursor
 
 
-# osd/ui/win32ui.c: 4743, 4771
+# osd/ui/win32ui.c: 4740, 4768
 Custom
 
 
-# osd/ui/mame32.rc: 958
+# osd/ui/mame32.rc: 956
 Custom Options
 
 
-# osd/ui/mame32.rc: 130, 213
+# osd/ui/mame32.rc: 130, 211
 Customi&ze Fields...
 
 
-# osd/ui/mame32.rc: 488
+# osd/ui/mame32.rc: 486
 Customize Fields
 
 
-# osd/ui/mame32.rc: 1528
+# osd/ui/mame32.rc: 1526
 Customize interface options.
 
 
-# osd/ui/mame32.rc: 1483, 1546
+# osd/ui/mame32.rc: 1481, 1544
 Customize which columns are used in the game list
 
 
-# osd/ui/properties.c: 4834
+# osd/ui/properties.c: 4844
 Default
 
 
@@ -798,11 +798,11 @@ Default Game
 Default Game &Options...
 
 
-# osd/ui/mame32.rc: 746
+# osd/ui/mame32.rc: 744
 Default input layout
 
 
-# osd/ui/mame32.rc: 483
+# osd/ui/mame32.rc: 481
 Delete
 
 
@@ -810,7 +810,7 @@ Delete
 Description
 
 
-# osd/ui/mame32.rc: 459, 561 osd/ui/win32ui.c: 714 osd/ui/winuiopt.c: 462
+# osd/ui/mame32.rc: 457, 559 osd/ui/options.c: 462 osd/ui/win32ui.c: 714
 Details
 
 
@@ -818,23 +818,23 @@ Details
 Dial
 
 
-# osd/ui/mame32.rc: 1078
+# osd/ui/mame32.rc: 1076
 Dial device
 
 
-# osd/ui/mame32.rc: 749
+# osd/ui/mame32.rc: 747
 Digital joystick axes
 
 
-# osd/ui/mame32.rc: 667 osd/ui/properties.c: 417
+# osd/ui/mame32.rc: 665 osd/ui/properties.c: 417
 Direct3D
 
 
-# osd/ui/mame32.rc: 468
+# osd/ui/mame32.rc: 466
 Directories
 
 
-# osd/ui/mame32.rc: 474
+# osd/ui/mame32.rc: 472
 Directories:
 
 
@@ -850,51 +850,51 @@ Directory name:
 Disabled
 
 
-# osd/ui/mame32.rc: 569
+# osd/ui/mame32.rc: 567
 Display
 
 
-# osd/ui/mame32.rc: 1528
+# osd/ui/mame32.rc: 1526
 Display help contents
 
 
-# osd/ui/mame32.rc: 1483, 1501
+# osd/ui/mame32.rc: 1481, 1499
 Display items by using large icons.
 
 
-# osd/ui/mame32.rc: 1483, 1501
+# osd/ui/mame32.rc: 1481, 1499
 Display items by using small icons.
 
 
-# osd/ui/mame32.rc: 978
+# osd/ui/mame32.rc: 976
 Display splash screen on start
 
 
-# osd/ui/mame32.rc: 1516
+# osd/ui/mame32.rc: 1514
 Display the driver properties of the selected game
 
 
-# osd/ui/mame32.rc: 1564
+# osd/ui/mame32.rc: 1562
 Display the properties of the currently selected folder
 
 
-# osd/ui/mame32.rc: 1546
+# osd/ui/mame32.rc: 1544
 Display the properties of the selected items
 
 
-# osd/ui/mame32.rc: 1483, 1501
+# osd/ui/mame32.rc: 1481, 1499
 Displays detailed information about each item in the window.
 
 
-# osd/ui/mame32.rc: 1501
+# osd/ui/mame32.rc: 1499
 Displays detailed information and group items in the window by parent.
 
 
-# osd/ui/mame32.rc: 1483, 1501
+# osd/ui/mame32.rc: 1481, 1499
 Displays items in a list.
 
 
-# osd/ui/mame32.rc: 1501
+# osd/ui/mame32.rc: 1499
 Displays program and copyright information
 
 
@@ -938,27 +938,27 @@ Double Joystick 4-Way
 Double Joystick 8-Way
 
 
-# osd/ui/mame32.rc: 828
+# osd/ui/mame32.rc: 826
 Draw antialiased vectors
 
 
-# osd/ui/properties.c: 4812
+# osd/ui/properties.c: 4822
 Draw every frame
 
 
-# osd/ui/layout.c: 57 osd/ui/mame32.rc: 1162 osd/ui/win32ui.c: 876
+# osd/ui/layout.c: 57 osd/ui/mame32.rc: 1160 osd/ui/win32ui.c: 876
 Driver
 
 
-# osd/ui/mame32.rc: 1170
+# osd/ui/mame32.rc: 1168
 Driver options
 
 
-# osd/ui/mame32.rc: 542
+# osd/ui/mame32.rc: 540
 Driver:
 
 
-# osd/ui/mame32.rc: 736
+# osd/ui/mame32.rc: 734
 Dual lightgun
 
 
@@ -970,51 +970,51 @@ Dumping Status
 E&xit
 
 
-# osd/ui/win32ui.c: 7637
+# osd/ui/win32ui.c: 7634
 ERROR: required files are missing, the game cannot be run.
 
 
-# osd/ui/mame32.rc: 989
+# osd/ui/mame32.rc: 987
 Emulation
 
 
-# osd/ui/mame32.rc: 668
+# osd/ui/mame32.rc: 666
 Enable Bilinear Filtering
 
 
-# osd/ui/mame32.rc: 767
+# osd/ui/mame32.rc: 765
 Enable game cheats
 
 
-# osd/ui/mame32.rc: 720
+# osd/ui/mame32.rc: 718
 Enable joystick input
 
 
-# osd/ui/mame32.rc: 732
+# osd/ui/mame32.rc: 730
 Enable lightgun input
 
 
-# osd/ui/mame32.rc: 723
+# osd/ui/mame32.rc: 721
 Enable mouse input
 
 
-# osd/ui/mame32.rc: 777
+# osd/ui/mame32.rc: 775
 Enable multithreading
 
 
-# osd/ui/mame32.rc: 728
+# osd/ui/mame32.rc: 726
 Enable pointing stick input
 
 
-# osd/ui/mame32.rc: 628
+# osd/ui/mame32.rc: 626
 Enable sound and sound CPUs
 
 
-# osd/ui/mame32.rc: 725
+# osd/ui/mame32.rc: 723
 Enable steadykey support
 
 
-# osd/ui/mame32.rc: 580
+# osd/ui/mame32.rc: 578
 Enforce aspect ratio
 
 
@@ -1026,11 +1026,11 @@ Error
 Error finding custom file name to save
 
 
-# osd/ui/mame32.rc: 769
+# osd/ui/mame32.rc: 767
 Error log (for developers)
 
 
-# osd/ui/win32ui.c: 7732
+# osd/ui/win32ui.c: 7729
 Error searching for custom folder
 
 
@@ -1042,7 +1042,7 @@ Error while renaming custom file %s to %s
 Error while saving custom file %s
 
 
-# osd/ui/mame32.rc: 1501
+# osd/ui/mame32.rc: 1499
 Exit the application
 
 
@@ -1050,7 +1050,7 @@ Exit the application
 External Folder List
 
 
-# osd/ui/winuiopt.c: 3194
+# osd/ui/options.c: 3133
 FOLDER LIST HIDE OPTIONS
 
 
@@ -1062,7 +1062,7 @@ FPS
 Failed
 
 
-# osd/ui/audit32.c: 255 osd/ui/mame32.rc: 436
+# osd/ui/audit32.c: 255 osd/ui/mame32.rc: 434
 File Audit
 
 
@@ -1070,19 +1070,19 @@ File Audit
 Filters for %s Folder
 
 
-# osd/ui/mame32.rc: 835
+# osd/ui/mame32.rc: 833
 Flicker
 
 
-# osd/ui/mame32.rc: 589
+# osd/ui/mame32.rc: 587
 Flip screen left-right
 
 
-# osd/ui/mame32.rc: 587
+# osd/ui/mame32.rc: 585
 Flip screen upside-down
 
 
-# osd/ui/dialogs.c: 210 osd/ui/winuiopt.c: 428
+# osd/ui/dialogs.c: 210 osd/ui/options.c: 428
 Flyer
 
 
@@ -1106,35 +1106,35 @@ Font (normal)
 Font (special)
 
 
-# osd/ui/mame32.rc: 595
+# osd/ui/mame32.rc: 593
 Frame skipping
 
 
-# osd/ui/mame32.rc: 698
+# osd/ui/mame32.rc: 696
 Full screen brightness
 
 
-# osd/ui/mame32.rc: 702
+# osd/ui/mame32.rc: 700
 Full screen contrast
 
 
-# osd/ui/mame32.rc: 694
+# osd/ui/mame32.rc: 692
 Full screen gamma
 
 
-# osd/ui/winuiopt.c: 3140
+# osd/ui/options.c: 3079
 GENERAL OPTIONS
 
 
-# osd/ui/winuiopt.c: 3198
+# osd/ui/options.c: 3137
 GUI JOYSTICK OPTIONS
 
 
-# osd/ui/winuiopt.c: 3213
+# osd/ui/options.c: 3152
 GUI KEYBOARD OPTIONS
 
 
-# osd/ui/mame32.rc: 876
+# osd/ui/mame32.rc: 874
 Game Filters
 
 
@@ -1150,11 +1150,11 @@ Game List &Font...
 Game List Files (*.lst)
 
 
-# osd/ui/mame32.rc: 879
+# osd/ui/mame32.rc: 877
 Game filters
 
 
-# osd/ui/mame32.rc: 901
+# osd/ui/mame32.rc: 899
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 
 
@@ -1166,15 +1166,15 @@ Game lacks sound
 Game protection isn't fully emulated
 
 
-# osd/ui/win32ui.c: 3521
+# osd/ui/win32ui.c: 3518
 Game search %d%% complete
 
 
-# osd/ui/mame32.rc: 600
+# osd/ui/mame32.rc: 598
 Gamma Correction
 
 
-# osd/ui/mame32.rc: 511
+# osd/ui/mame32.rc: 509
 General
 
 
@@ -1190,7 +1190,7 @@ Global game options\nDefault options used by all games
 Global vector options\nCustom options used by all games in the Vector
 
 
-# osd/ui/mame32.rc: 428
+# osd/ui/mame32.rc: 426
 Go to Microsoft's DirectX Web Page
 
 
@@ -1198,7 +1198,7 @@ Go to Microsoft's DirectX Web Page
 Gray
 
 
-# osd/ui/win32ui.c: 715 osd/ui/winuiopt.c: 463, 3173
+# osd/ui/options.c: 463, 3112 osd/ui/win32ui.c: 715
 Grouped
 
 
@@ -1210,7 +1210,7 @@ Hard Drive Difference
 Help
 
 
-# osd/ui/mame32.rc: 971
+# osd/ui/mame32.rc: 969
 Hide &mouse cursor (requires restart)
 
 
@@ -1218,11 +1218,11 @@ Hide &mouse cursor (requires restart)
 High Scores
 
 
-# osd/ui/winuiopt.c: 434, 437
+# osd/ui/options.c: 434, 437
 History
 
 
-# osd/ui/mame32.rc: 1175
+# osd/ui/mame32.rc: 1173
 Homebrew
 
 
@@ -1230,11 +1230,11 @@ Homebrew
 Horizontal
 
 
-# osd/ui/mame32.rc: 1528
+# osd/ui/mame32.rc: 1526
 How cheats work
 
 
-# osd/ui/winuiopt.c: 3120
+# osd/ui/options.c: 3059
 INTERFACE OPTIONS
 
 
@@ -1246,7 +1246,7 @@ IPS Files
 Icons
 
 
-# osd/ui/mame32.rc: 678
+# osd/ui/mame32.rc: 676
 Image Enhancement
 
 
@@ -1270,11 +1270,11 @@ Imperfect Graphics
 Imperfect Sound
 
 
-# osd/ui/mame32.rc: 445, 454
+# osd/ui/mame32.rc: 443, 452
 Incorrect:
 
 
-# osd/ui/mame32.rc: 973
+# osd/ui/mame32.rc: 971
 Inheritable Filters
 
 
@@ -1286,11 +1286,11 @@ Ini Files
 Input Files (*.inp)
 
 
-# osd/ui/mame32.rc: 482
+# osd/ui/mame32.rc: 480
 Insert
 
 
-# osd/ui/mame32.rc: 955
+# osd/ui/mame32.rc: 953
 Interface Options
 
 
@@ -1310,7 +1310,7 @@ Joy 4-Way
 Joy 8-Way
 
 
-# osd/ui/properties.c: 467, 5018
+# osd/ui/properties.c: 467, 5028
 Joystick
 
 
@@ -1334,15 +1334,15 @@ Joystick 4-Way
 Joystick 8-Way
 
 
-# osd/ui/mame32.rc: 738
+# osd/ui/mame32.rc: 736
 Joystick deadzone
 
 
-# osd/ui/mame32.rc: 742
+# osd/ui/mame32.rc: 740
 Joystick saturation
 
 
-# osd/ui/properties.c: 5028
+# osd/ui/properties.c: 5038
 JoystickId
 
 
@@ -1354,15 +1354,15 @@ Keyboard
 L&arge Icons
 
 
-# osd/ui/winuiopt.c: 3186
+# osd/ui/options.c: 3125
 LIST FONT OPTIONS
 
 
-# osd/ui/winuiopt.c: 3172
+# osd/ui/options.c: 3111
 LISTVIEW OPTIONS
 
 
-# osd/ui/win32ui.c: 711 osd/ui/winuiopt.c: 459
+# osd/ui/options.c: 459 osd/ui/win32ui.c: 711
 Large Icons
 
 
@@ -1370,7 +1370,7 @@ Large Icons
 Lightgun
 
 
-# osd/ui/mame32.rc: 1084
+# osd/ui/mame32.rc: 1082
 Lightgun device
 
 
@@ -1378,7 +1378,7 @@ Lightgun device
 Line &Up Icons
 
 
-# osd/ui/win32ui.c: 713 osd/ui/winuiopt.c: 461
+# osd/ui/options.c: 461 osd/ui/win32ui.c: 713
 List
 
 
@@ -1386,11 +1386,11 @@ List
 Loa&d Savestate...
 
 
-# osd/ui/win32ui.c: 7554
+# osd/ui/win32ui.c: 7551
 Loading %s
 
 
-# osd/ui/mame32.rc: 1614
+# osd/ui/mame32.rc: 1612
 Localize GUI and MAME core.
 
 
@@ -1398,7 +1398,7 @@ Localize GUI and MAME core.
 Localized Files
 
 
-# osd/ui/mame32.rc: 808
+# osd/ui/mame32.rc: 806
 M68000 CPU Core
 
 
@@ -1406,7 +1406,7 @@ M68000 CPU Core
 MAME input files (*.inp,*.zip)
 
 
-# osd/ui/mame32.rc: 1528
+# osd/ui/mame32.rc: 1526
 MAME release notes
 
 
@@ -1418,11 +1418,11 @@ MAME savestate files (*.sta)
 MAME32 PCB Info: %s [%s]
 
 
-# osd/ui/winuiopt.c: 514
+# osd/ui/options.c: 514
 MAME32 has changed *.ini file directory.\n\nWould you like to migrate old configurations to the new directory?
 
 
-# osd/ui/mame32.rc: 410
+# osd/ui/mame32.rc: 408
 MAME32 version by
 
 
@@ -1430,11 +1430,11 @@ MAME32 version by
 MAME32 will now reset the selected\nitems to the original, installation\nsettings then exit.\n\n
 
 
-# osd/ui/mame32.rc: 401, 425, 436, 468, 488, 511, 550, 569, 620, 657, 713, 760, 821, 849, 876, 913, 938, 955, 1019, 1047, 1062, 1118, 1162, 1218 osd/ui/translate.c: 103
+# osd/ui/mame32.rc: 399, 423, 434, 466, 486, 509, 548, 567, 618, 655, 711, 758, 819, 847, 874, 911, 936, 953, 1017, 1045, 1060, 1116, 1160, 1216 osd/ui/options.c: 3127 osd/ui/translate.c: 103
 MS Sans Serif
 
 
-# osd/ui/mame32.rc: 518
+# osd/ui/mame32.rc: 516
 Manufactured:
 
 
@@ -1442,7 +1442,7 @@ Manufactured:
 Manufacturer
 
 
-# osd/ui/dialogs.c: 214 osd/ui/winuiopt.c: 430
+# osd/ui/dialogs.c: 214 osd/ui/options.c: 430
 Marquee
 
 
@@ -1454,7 +1454,7 @@ Marquees
 Memory Card
 
 
-# osd/ui/mame32.rc: 760
+# osd/ui/mame32.rc: 758
 Miscellaneous
 
 
@@ -1466,7 +1466,7 @@ Missing Sound
 Mouse
 
 
-# osd/ui/mame32.rc: 504
+# osd/ui/mame32.rc: 502
 Move Down
 
 
@@ -1474,7 +1474,7 @@ Move Down
 Move Item
 
 
-# osd/ui/mame32.rc: 503
+# osd/ui/mame32.rc: 501
 Move Up
 
 
@@ -1486,15 +1486,15 @@ NVRAM
 Name
 
 
-# osd/ui/mame32.rc: 1177
+# osd/ui/mame32.rc: 1175
 Neogeo Decrypted
 
 
-# osd/ui/mame32.rc: 1528
+# osd/ui/mame32.rc: 1526
 New game changes
 
 
-# osd/ui/audit32.c: 135 osd/ui/win32ui.c: 5666
+# osd/ui/audit32.c: 135 osd/ui/win32ui.c: 5663
 No
 
 
@@ -1510,23 +1510,23 @@ No Dump
 No PCB Info available for this game.
 
 
-# osd/ui/win32ui.c: 3940
+# osd/ui/win32ui.c: 3937
 No Selection
 
 
-# osd/ui/mame32.rc: 975
+# osd/ui/mame32.rc: 973
 No offset for clones missing parent in view
 
 
-# osd/ui/mame32.rc: 1182
+# osd/ui/mame32.rc: 1180
 Non-CPU
 
 
-# osd/ui/mame32.rc: 885
+# osd/ui/mame32.rc: 883
 Non-Wor&king
 
 
-# osd/ui/dialogs.c: 222 osd/ui/properties.c: 3718, 4837, 5121, 5367 
+# osd/ui/dialogs.c: 222 osd/ui/properties.c: 3728, 4847, 5131, 5377 
 None
 
 
@@ -1546,11 +1546,11 @@ Not found
 Not working
 
 
-# osd/ui/mame32.rc: 1126
+# osd/ui/mame32.rc: 1124
 Number of screens to create
 
 
-# osd/ui/mame32.rc: 479, 505, 1056
+# osd/ui/mame32.rc: 477, 503, 1054
 OK
 
 
@@ -1566,11 +1566,11 @@ Office 2007
 Office XP
 
 
-# osd/ui/mame32.rc: 734
+# osd/ui/mame32.rc: 732
 Offscreen shots reload
 
 
-# osd/ui/mame32.rc: 894
+# osd/ui/mame32.rc: 892
 Ori&ginals
 
 
@@ -1582,7 +1582,7 @@ Orientation
 Originals
 
 
-# osd/ui/mame32.rc: 803
+# osd/ui/mame32.rc: 801
 Overlays
 
 
@@ -1590,11 +1590,11 @@ Overlays
 P&layback Input...
 
 
-# osd/ui/winuiopt.c: 3107
+# osd/ui/options.c: 3046
 PATH AND DIRECTORY OPTIONS
 
 
-# osd/ui/mame32.rc: 1218
+# osd/ui/mame32.rc: 1216
 PCB Info
 
 
@@ -1606,11 +1606,11 @@ PCB Info Files
 Paddle
 
 
-# osd/ui/mame32.rc: 1069
+# osd/ui/mame32.rc: 1067
 Paddle device
 
 
-# osd/ui/mame32.rc: 1019
+# osd/ui/mame32.rc: 1017
 Palette
 
 
@@ -1618,7 +1618,7 @@ Palette
 Passed
 
 
-# osd/ui/mame32.rc: 591
+# osd/ui/mame32.rc: 589
 Pause Brightness
 
 
@@ -1626,15 +1626,15 @@ Pause Brightness
 Pedal
 
 
-# osd/ui/mame32.rc: 1075
+# osd/ui/mame32.rc: 1073
 Pedal device
 
 
-# osd/ui/mame32.rc: 1130
+# osd/ui/mame32.rc: 1128
 Per-screen video options
 
 
-# osd/ui/mame32.rc: 1134
+# osd/ui/mame32.rc: 1132
 Physical monitor:
 
 
@@ -1642,15 +1642,15 @@ Physical monitor:
 Pixel Aspect
 
 
-# osd/ui/win32ui.c: 877 osd/ui/winuiopt.c: 3269
+# osd/ui/options.c: 3208 osd/ui/win32ui.c: 877
 Play Time
 
 
-# osd/ui/mame32.rc: 1523
+# osd/ui/mame32.rc: 1521
 Play a game starting with the given savestate
 
 
-# osd/ui/mame32.rc: 54, 184
+# osd/ui/mame32.rc: 54, 182
 Play and &Record Input...
 
 
@@ -1662,11 +1662,11 @@ Play and Record &MNG Video...
 Play and Record &WAV Sound...
 
 
-# osd/ui/mame32.rc: 1501
+# osd/ui/mame32.rc: 1499
 Play currently selected game
 
 
-# osd/ui/mame32.rc: 1528
+# osd/ui/mame32.rc: 1526
 Playback a recorded game
 
 
@@ -1706,19 +1706,19 @@ Players 7
 Players 8
 
 
-# osd/ui/mame32.rc: 1087
+# osd/ui/mame32.rc: 1085
 Positional device
 
 
-# osd/ui/mame32.rc: 67, 202
+# osd/ui/mame32.rc: 67, 200
 Pr&operties
 
 
-# osd/ui/win32ui.c: 3970, 7176, 7200
+# osd/ui/win32ui.c: 3967, 7173, 7197
 Propert&ies for %s
 
 
-# osd/ui/mame32.rc: 66, 201 osd/ui/win32ui.c: 3928
+# osd/ui/mame32.rc: 66, 199 osd/ui/win32ui.c: 3925
 Propert&ies for Driver
 
 
@@ -1726,23 +1726,23 @@ Propert&ies for Driver
 Propery Sheet Error %d %X
 
 
-# osd/ui/mame32.rc: 780
+# osd/ui/mame32.rc: 778
 Quit game with confirmation
 
 
-# osd/ui/mame32.rc: 65, 187
+# osd/ui/mame32.rc: 65, 185
 R&emove From This Folder
 
 
-# osd/ui/mame32.rc: 1025
+# osd/ui/mame32.rc: 1023
 RGB setting:
 
 
-# osd/ui/mame32.rc: 557
+# osd/ui/mame32.rc: 555
 ROM check:
 
 
-# osd/ui/layout.c: 107 osd/ui/mame32.rc: 444 osd/ui/win32ui.c: 867
+# osd/ui/layout.c: 107 osd/ui/mame32.rc: 442 osd/ui/win32ui.c: 867
 ROMs
 
 
@@ -1750,67 +1750,67 @@ ROMs
 ROMs missing
 
 
-# osd/ui/mame32.rc: 1546
+# osd/ui/mame32.rc: 1544
 Randomly select a game.
 
 
-# osd/ui/layout.c: 70 osd/ui/win32ui.c: 5658
+# osd/ui/layout.c: 70 osd/ui/win32ui.c: 5655
 Raster
 
 
-# osd/ui/win32ui.c: 3702
+# osd/ui/win32ui.c: 3699
 Ready
 
 
-# osd/ui/mame32.rc: 1528
+# osd/ui/mame32.rc: 1526
 Record a game for later playback
 
 
-# osd/ui/mame32.rc: 1483, 1572
+# osd/ui/mame32.rc: 1481, 1570
 Refresh game list
 
 
-# osd/ui/winuiopt.c: 1602
+# osd/ui/options.c: 1541
 Reload configurations
 
 
-# osd/ui/mame32.rc: 1546
+# osd/ui/mame32.rc: 1544
 Remove currently selected game from this folder
 
 
-# osd/ui/mame32.rc: 1546
+# osd/ui/mame32.rc: 1544
 Rename currently selected folder
 
 
-# osd/ui/mame32.rc: 192
+# osd/ui/mame32.rc: 190
 Rese&t Playcount
 
 
-# osd/ui/mame32.rc: 613, 650, 706, 753, 814, 840, 1111, 1155, 1210
+# osd/ui/mame32.rc: 611, 648, 704, 751, 812, 838, 1109, 1153, 1208
 Reset
 
 
-# osd/ui/mame32.rc: 913
+# osd/ui/mame32.rc: 911
 Reset Options
 
 
-# osd/ui/mame32.rc: 193
+# osd/ui/mame32.rc: 191
 Reset Pla&y Time
 
 
-# osd/ui/mame32.rc: 995
+# osd/ui/mame32.rc: 993
 Reset all Play Times
 
 
-# osd/ui/mame32.rc: 993
+# osd/ui/mame32.rc: 991
 Reset all Playcounts
 
 
-# osd/ui/mame32.rc: 1546
+# osd/ui/mame32.rc: 1544
 Reset play time of currently selected game
 
 
-# osd/ui/mame32.rc: 1546
+# osd/ui/mame32.rc: 1544
 Reset playcount of currently selected game
 
 
@@ -1818,11 +1818,11 @@ Reset playcount of currently selected game
 Resolution
 
 
-# osd/ui/mame32.rc: 1145
+# osd/ui/mame32.rc: 1143
 Resolution:
 
 
-# osd/ui/mame32.rc: 614, 651, 707, 754, 815, 841, 1112, 1156, 1211
+# osd/ui/mame32.rc: 612, 649, 705, 752, 813, 839, 1110, 1154, 1209
 Restore Default Settings
 
 
@@ -1830,15 +1830,15 @@ Restore Default Settings
 Restore Settings
 
 
-# osd/ui/mame32.rc: 584
+# osd/ui/mame32.rc: 582
 Rotation
 
 
-# osd/ui/mame32.rc: 576
+# osd/ui/mame32.rc: 574
 Run in a window
 
 
-# osd/ui/mame32.rc: 83, 242
+# osd/ui/mame32.rc: 83, 240
 S&how Pictures
 
 
@@ -1846,19 +1846,19 @@ S&how Pictures
 S&mall Icons
 
 
-# osd/ui/mame32.rc: 998
+# osd/ui/mame32.rc: 996
 S&tretch screenshot larger than natural size
 
 
-# osd/ui/mame32.rc: 559
+# osd/ui/mame32.rc: 557
 Sample check:
 
 
-# osd/ui/mame32.rc: 637
+# osd/ui/mame32.rc: 635
 Sample rate
 
 
-# osd/ui/layout.c: 83, 108 osd/ui/mame32.rc: 450 osd/ui/win32ui.c: 868
+# osd/ui/layout.c: 83, 108 osd/ui/mame32.rc: 448 osd/ui/win32ui.c: 868
 Samples
 
 
@@ -1866,27 +1866,27 @@ Samples
 Save State
 
 
-# osd/ui/mame32.rc: 540
+# osd/ui/mame32.rc: 538
 Save State:
 
 
-# osd/ui/mame32.rc: 1516
+# osd/ui/mame32.rc: 1514
 Save game list in specified lst file
 
 
-# osd/ui/mame32.rc: 1528
+# osd/ui/mame32.rc: 1526
 Save sound in wav file
 
 
-# osd/ui/mame32.rc: 1528
+# osd/ui/mame32.rc: 1526
 Save video in specified mng file
 
 
-# osd/ui/mame32.rc: 690
+# osd/ui/mame32.rc: 688
 Scale screen
 
 
-# osd/ui/mame32.rc: 1118
+# osd/ui/mame32.rc: 1116
 Screen
 
 
@@ -1906,7 +1906,7 @@ Screen 2
 Screen 3
 
 
-# osd/ui/win32ui.c: 3480
+# osd/ui/win32ui.c: 3477
 Screen flip support is missing
 
 
@@ -1914,23 +1914,23 @@ Screen flip support is missing
 Screen flipping is not supported
 
 
-# osd/ui/mame32.rc: 1125
+# osd/ui/mame32.rc: 1123
 Screen setting
 
 
-# osd/ui/mame32.rc: 531
+# osd/ui/mame32.rc: 529
 Screen:
 
 
-# osd/ui/mame32.rc: 997
+# osd/ui/mame32.rc: 995
 Screenshot Area
 
 
-# osd/ui/mame32.rc: 1005
+# osd/ui/mame32.rc: 1003
 Screenshot Bordersize
 
 
-# osd/ui/mame32.rc: 1001
+# osd/ui/mame32.rc: 999
 Screenshot Cycletime in Seconds
 
 
@@ -1938,7 +1938,7 @@ Screenshot Cycletime in Seconds
 Screenshot Ta&b\tAlt+B
 
 
-# osd/ui/mame32.rc: 967
+# osd/ui/mame32.rc: 965
 Select &random background image on start
 
 
@@ -1950,7 +1950,7 @@ Select Item
 Select a Background Image
 
 
-# osd/ui/mame32.rc: 1516
+# osd/ui/mame32.rc: 1514
 Select a background image file
 
 
@@ -1978,219 +1978,219 @@ Select a savestate file
 Select a sound file to record
 
 
-# osd/ui/mame32.rc: 1546
+# osd/ui/mame32.rc: 1544
 Select fullscreen or window mode in GUI
 
 
-# osd/ui/mame32.rc: 1600
+# osd/ui/mame32.rc: 1598
 Select the cabinet image
 
 
-# osd/ui/mame32.rc: 1600
+# osd/ui/mame32.rc: 1598
 Select the control panel image
 
 
-# osd/ui/mame32.rc: 1600
+# osd/ui/mame32.rc: 1598
 Select the flyer image
 
 
-# osd/ui/mame32.rc: 1600
+# osd/ui/mame32.rc: 1598
 Select the history information
 
 
-# osd/ui/mame32.rc: 1600
+# osd/ui/mame32.rc: 1598
 Select the marquee image
 
 
-# osd/ui/mame32.rc: 929
+# osd/ui/mame32.rc: 927
 Select the options to be restored to the default settings.  The options will be restored when MAME32 is run next.
 
 
-# osd/ui/mame32.rc: 1600
+# osd/ui/mame32.rc: 1598
 Select the screen shot image
 
 
-# osd/ui/mame32.rc: 1608
+# osd/ui/mame32.rc: 1606
 Select the story information
 
 
-# osd/ui/mame32.rc: 1600
+# osd/ui/mame32.rc: 1598
 Select the title image
 
 
-# osd/ui/mame32.rc: 988
+# osd/ui/mame32.rc: 986
 Set Game List Not Working Color
 
 
-# osd/ui/mame32.rc: 1009
+# osd/ui/mame32.rc: 1007
 Set Screenshot Border Color
 
 
-# osd/ui/mame32.rc: 1501
+# osd/ui/mame32.rc: 1499
 Set default game options
 
 
-# osd/ui/mame32.rc: 1501
+# osd/ui/mame32.rc: 1499
 Set directory configuration
 
 
-# osd/ui/mame32.rc: 1501
+# osd/ui/mame32.rc: 1499
 Set game list and folder list font
 
 
-# osd/ui/mame32.rc: 1514
+# osd/ui/mame32.rc: 1512
 Set in-game UI color palette
 
 
-# osd/ui/mame32.rc: 1501
+# osd/ui/mame32.rc: 1499
 Set list font color for clone games
 
 
-# osd/ui/mame32.rc: 990
+# osd/ui/mame32.rc: 988
 Show Game Ca&ption
 
 
-# osd/ui/mame32.rc: 1010
+# osd/ui/mame32.rc: 1008
 Show History on Tab
 
 
-# osd/ui/mame32.rc: 240
+# osd/ui/mame32.rc: 238
 Show Tab &Control
 
 
-# osd/ui/mame32.rc: 471
+# osd/ui/mame32.rc: 469
 Show directories for:
 
 
-# osd/ui/mame32.rc: 1562
+# osd/ui/mame32.rc: 1560
 Show game PCB information
 
 
-# osd/ui/mame32.rc: 1564
+# osd/ui/mame32.rc: 1562
 Show or hide folder
 
 
-# osd/ui/mame32.rc: 1586
+# osd/ui/mame32.rc: 1584
 Show or hide the cabinet image
 
 
-# osd/ui/mame32.rc: 1586
+# osd/ui/mame32.rc: 1584
 Show or hide the control panel image
 
 
-# osd/ui/mame32.rc: 1586
+# osd/ui/mame32.rc: 1584
 Show or hide the flyer image
 
 
-# osd/ui/mame32.rc: 1483, 1546
+# osd/ui/mame32.rc: 1481, 1544
 Show or hide the folder list
 
 
-# osd/ui/mame32.rc: 1586
+# osd/ui/mame32.rc: 1584
 Show or hide the history information
 
 
-# osd/ui/mame32.rc: 1586
+# osd/ui/mame32.rc: 1584
 Show or hide the marquee image
 
 
-# osd/ui/mame32.rc: 1528
+# osd/ui/mame32.rc: 1526
 Show or hide the picture area
 
 
-# osd/ui/mame32.rc: 1546, 1614
+# osd/ui/mame32.rc: 1544, 1612
 Show or hide the pictures
 
 
-# osd/ui/mame32.rc: 1586
+# osd/ui/mame32.rc: 1584
 Show or hide the screen shot image
 
 
-# osd/ui/mame32.rc: 1546
+# osd/ui/mame32.rc: 1544
 Show or hide the screen shot tab
 
 
-# osd/ui/mame32.rc: 1483, 1546
+# osd/ui/mame32.rc: 1481, 1544
 Show or hide the status bar
 
 
-# osd/ui/mame32.rc: 1594
+# osd/ui/mame32.rc: 1592
 Show or hide the story information
 
 
-# osd/ui/mame32.rc: 1586
+# osd/ui/mame32.rc: 1584
 Show or hide the title image
 
 
-# osd/ui/mame32.rc: 1483, 1546
+# osd/ui/mame32.rc: 1481, 1544
 Show or hide the toolbar
 
 
-# osd/ui/mame32.rc: 1022
+# osd/ui/mame32.rc: 1020
 Show palette for:
 
 
-# osd/ui/mame32.rc: 498
+# osd/ui/mame32.rc: 496
 Show these fields in this order:
 
 
-# osd/ui/properties.c: 4813
+# osd/ui/properties.c: 4823
 Skip 1 of 12 frames
 
 
-# osd/ui/properties.c: 4822
+# osd/ui/properties.c: 4832
 Skip 10 of 12 frames
 
 
-# osd/ui/properties.c: 4823
+# osd/ui/properties.c: 4833
 Skip 11 of 12 frames
 
 
-# osd/ui/properties.c: 4814
+# osd/ui/properties.c: 4824
 Skip 2 of 12 frames
 
 
-# osd/ui/properties.c: 4815
+# osd/ui/properties.c: 4825
 Skip 3 of 12 frames
 
 
-# osd/ui/properties.c: 4816
+# osd/ui/properties.c: 4826
 Skip 4 of 12 frames
 
 
-# osd/ui/properties.c: 4817
+# osd/ui/properties.c: 4827
 Skip 5 of 12 frames
 
 
-# osd/ui/properties.c: 4818
+# osd/ui/properties.c: 4828
 Skip 6 of 12 frames
 
 
-# osd/ui/properties.c: 4819
+# osd/ui/properties.c: 4829
 Skip 7 of 12 frames
 
 
-# osd/ui/properties.c: 4820
+# osd/ui/properties.c: 4830
 Skip 8 of 12 frames
 
 
-# osd/ui/properties.c: 4821
+# osd/ui/properties.c: 4831
 Skip 9 of 12 frames
 
 
-# osd/ui/mame32.rc: 773
+# osd/ui/mame32.rc: 771
 Skip game info
 
 
-# osd/ui/mame32.rc: 771
+# osd/ui/mame32.rc: 769
 Sleep when possible
 
 
-# osd/ui/win32ui.c: 712 osd/ui/winuiopt.c: 460
+# osd/ui/options.c: 460 osd/ui/win32ui.c: 712
 Small Icons
 
 
-# osd/ui/dialogs.c: 208 osd/ui/winuiopt.c: 427
+# osd/ui/dialogs.c: 208 osd/ui/options.c: 427
 Snapshot
 
 
@@ -2198,47 +2198,47 @@ Snapshot
 Snapshots
 
 
-# osd/ui/mame32.rc: 210
+# osd/ui/mame32.rc: 208
 Sort &Ascending
 
 
-# osd/ui/mame32.rc: 211
+# osd/ui/mame32.rc: 209
 Sort &Descending
 
 
-# osd/ui/mame32.rc: 1572
+# osd/ui/mame32.rc: 1570
 Sort by number of plays
 
 
-# osd/ui/mame32.rc: 1572
+# osd/ui/mame32.rc: 1570
 Sort column in ascending (A-Z) order
 
 
-# osd/ui/mame32.rc: 1572
+# osd/ui/mame32.rc: 1570
 Sort column in descending (Z-A) order
 
 
-# osd/ui/mame32.rc: 1572
+# osd/ui/mame32.rc: 1570
 Sort items by game description
 
 
-# osd/ui/mame32.rc: 1572
+# osd/ui/mame32.rc: 1570
 Sort items by manufacturer
 
 
-# osd/ui/mame32.rc: 1572
+# osd/ui/mame32.rc: 1570
 Sort items by name
 
 
-# osd/ui/mame32.rc: 1572
+# osd/ui/mame32.rc: 1570
 Sort items by type
 
 
-# osd/ui/mame32.rc: 1572
+# osd/ui/mame32.rc: 1570
 Sort items by year
 
 
-# osd/ui/layout.c: 62 osd/ui/mame32.rc: 620
+# osd/ui/layout.c: 62 osd/ui/mame32.rc: 618
 Sound
 
 
@@ -2246,7 +2246,7 @@ Sound
 Sound emulation isn't 100% accurate
 
 
-# osd/ui/mame32.rc: 527
+# osd/ui/mame32.rc: 525
 Sound:
 
 
@@ -2254,15 +2254,15 @@ Sound:
 Sounds (*.wav)
 
 
-# osd/ui/mame32.rc: 94, 253, 265
+# osd/ui/mame32.rc: 94, 251, 263
 St&ory
 
 
-# osd/ui/properties.c: 453, 3509, 3514, 3517, 3768, 3771, 5073, 5095
+# osd/ui/properties.c: 453, 3519, 3524, 3527, 3778, 3781, 5083, 5105
 Standard
 
 
-# osd/ui/mame32.rc: 578
+# osd/ui/mame32.rc: 576
 Start out maximized
 
 
@@ -2270,7 +2270,7 @@ Start out maximized
 State
 
 
-# osd/ui/mame32.rc: 520
+# osd/ui/mame32.rc: 518
 Status:
 
 
@@ -2278,11 +2278,11 @@ Status:
 Stereo
 
 
-# osd/ui/winuiopt.c: 435
+# osd/ui/options.c: 435
 Story
 
 
-# osd/ui/mame32.rc: 673
+# osd/ui/mame32.rc: 671
 Stretch using hardware
 
 
@@ -2290,11 +2290,11 @@ Stretch using hardware
 Supported
 
 
-# osd/ui/mame32.rc: 688
+# osd/ui/mame32.rc: 686
 Switch resolutions to fit
 
 
-# osd/ui/mame32.rc: 684
+# osd/ui/mame32.rc: 682
 Sync to monitor refresh
 
 
@@ -2322,15 +2322,15 @@ There is no application associated with the given filename extension.
 There was not enough memory to complete the operation.
 
 
-# osd/ui/mame32.rc: 794
+# osd/ui/mame32.rc: 792
 Thread priority
 
 
-# osd/ui/mame32.rc: 582
+# osd/ui/mame32.rc: 580
 Throttle
 
 
-# osd/ui/dialogs.c: 216 osd/ui/winuiopt.c: 431
+# osd/ui/dialogs.c: 216 osd/ui/options.c: 431
 Title
 
 
@@ -2346,7 +2346,7 @@ Toggle Folder List
 Toggle Screen Shot
 
 
-# osd/ui/mame32.rc: 446, 455
+# osd/ui/mame32.rc: 444, 453
 Total:
 
 
@@ -2354,63 +2354,55 @@ Total:
 Trackball
 
 
-# osd/ui/mame32.rc: 1081
+# osd/ui/mame32.rc: 1079
 Trackball device
 
 
-# osd/ui/mame32.rc: 1620
-Translate into Catalan
-
-
-# osd/ui/mame32.rc: 1620
+# osd/ui/mame32.rc: 1618
 Translate into English (US)
 
 
-# osd/ui/mame32.rc: 1620
+# osd/ui/mame32.rc: 1618
 Translate into French
 
 
-# osd/ui/mame32.rc: 1620
+# osd/ui/mame32.rc: 1618
 Translate into German
 
 
-# osd/ui/mame32.rc: 1620
+# osd/ui/mame32.rc: 1618
 Translate into Hungarian
 
 
-# osd/ui/mame32.rc: 1620
+# osd/ui/mame32.rc: 1618
 Translate into Italian
 
 
-# osd/ui/mame32.rc: 1620
+# osd/ui/mame32.rc: 1618
 Translate into Japanese
 
 
-# osd/ui/mame32.rc: 1620
+# osd/ui/mame32.rc: 1618
 Translate into Korean
 
 
-# osd/ui/mame32.rc: 1620
+# osd/ui/mame32.rc: 1618
 Translate into Polish
 
 
-# osd/ui/mame32.rc: 1620
+# osd/ui/mame32.rc: 1618
 Translate into Portuguese (BRA)
 
 
-# osd/ui/mame32.rc: 1620
-Translate into Portuguese (PT)
-
-
-# osd/ui/mame32.rc: 1620
+# osd/ui/mame32.rc: 1618
 Translate into Simplified Chinese
 
 
-# osd/ui/mame32.rc: 1620
+# osd/ui/mame32.rc: 1618
 Translate into Spanish
 
 
-# osd/ui/mame32.rc: 1620
+# osd/ui/mame32.rc: 1618
 Translate into Traditional Chinese
 
 
@@ -2418,15 +2410,15 @@ Translate into Traditional Chinese
 Translation Files
 
 
-# osd/ui/mame32.rc: 788
+# osd/ui/mame32.rc: 786
 Transparent in-game UI
 
 
-# osd/ui/mame32.rc: 686
+# osd/ui/mame32.rc: 684
 Triple buffering
 
 
-# osd/ui/mame32.rc: 1528
+# osd/ui/mame32.rc: 1526
 Troubleshooting Documentation
 
 
@@ -2470,23 +2462,23 @@ Unsupported
 Use Local Language Game List
 
 
-# osd/ui/mame32.rc: 982
+# osd/ui/mame32.rc: 980
 Use TreeView in property pages
 
 
-# osd/ui/mame32.rc: 631
+# osd/ui/mame32.rc: 629
 Use samples
 
 
-# osd/ui/mame32.rc: 986
+# osd/ui/mame32.rc: 984
 Use various icon for Not Working game
 
 
-# osd/ui/mame32.rc: 634
+# osd/ui/mame32.rc: 632
 Use volume auto adjust
 
 
-# osd/ui/layout.c: 71 osd/ui/mame32.rc: 821 osd/ui/properties.c: 701 osd/ui/treeview.c: 284 osd/ui/win32ui.c: 5656 osd/ui/winuiopt.c: 860, 2800
+# osd/ui/layout.c: 71 osd/ui/mame32.rc: 819 osd/ui/options.c: 774, 2739 osd/ui/properties.c: 701 osd/ui/treeview.c: 284 osd/ui/win32ui.c: 5653
 Vector
 
 
@@ -2514,7 +2506,7 @@ Vertical
 Video emulation isn't 100% accurate
 
 
-# osd/ui/mame32.rc: 664
+# osd/ui/mame32.rc: 662
 Video output method
 
 
@@ -2522,35 +2514,35 @@ Video output method
 Videos (*.mng)
 
 
-# osd/ui/mame32.rc: 196
+# osd/ui/mame32.rc: 194
 View PC&B Info
 
 
-# osd/ui/mame32.rc: 1152
+# osd/ui/mame32.rc: 1150
 View:
 
 
-# osd/ui/mame32.rc: 675
+# osd/ui/mame32.rc: 673
 Visual Effects
 
 
-# osd/ui/mame32.rc: 641
+# osd/ui/mame32.rc: 639
 Volume attenuation
 
 
-# osd/ui/win32ui.c: 7640
+# osd/ui/win32ui.c: 7637
 WARNING: the game might not run correctly.
 
 
-# osd/ui/winuiopt.c: 3165
+# osd/ui/options.c: 3104
 WINDOW POSITION OPTIONS
 
 
-# osd/ui/mame32.rc: 682
+# osd/ui/mame32.rc: 680
 Wait for vertical sync
 
 
-# osd/ui/mame32.rc: 1528
+# osd/ui/mame32.rc: 1526
 What's new in MAME
 
 
@@ -2570,11 +2562,11 @@ Wrong Colors
 Year
 
 
-# osd/ui/audit32.c: 131 osd/ui/win32ui.c: 5664
+# osd/ui/audit32.c: 131 osd/ui/win32ui.c: 5661
 Yes
 
 
-# osd/ui/mame32.rc: 418
+# osd/ui/mame32.rc: 416
 and John Hardy IV
 
 
