@@ -1275,9 +1275,15 @@ static void *fake_pool_realloc_file_line(memory_pool *pool, void *ptr, size_t si
 
 static char *fake_pool_strdup_file_line(memory_pool *pool, const char *str, const char *file, int line)
 {
-	int len = strlen(str) + 1;
-	char *p = malloc(len);
+	int len;
+	char *p;
 
+	if (str == NULL)
+		return NULL;
+
+	len = strlen(str) + 1;
+
+	p = malloc(len);
 	if (p == NULL)
 	{
 		char buf[256];
@@ -1285,8 +1291,8 @@ static char *fake_pool_strdup_file_line(memory_pool *pool, const char *str, cons
 		sprintf(buf, "strdup: Failed to allocate %u bytes (%s:%d)", len, file, line);
 		pool->fail(buf);
 	}
-
-	strcpy(p, str);
+	else
+		strcpy(p, str);
 
 	return p;
 }
