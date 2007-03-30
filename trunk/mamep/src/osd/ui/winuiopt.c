@@ -330,6 +330,7 @@ static void  build_alt_options(void);
 static void  unify_alt_options(void);
 
 static void  generate_default_ctrlr(void);
+static void  generate_default_dirs(void);
 
 static void  options_create_entry_cli(void);
 static void  options_create_entry_winui(void);
@@ -579,6 +580,7 @@ void OptionsInit()
 	SetHashPath(settings.mess.hashdir);
 #endif
 
+	generate_default_dirs();
 	generate_default_ctrlr();
 }
 
@@ -1607,7 +1609,7 @@ void SetIniDir(const WCHAR* path)
 			LoadGameOptions(i);
 	}
 
-	CreateDirectoryW(path, NULL);
+	create_path_recursive(path);
 }
 
 const WCHAR* GetCtrlrDir(void)
@@ -2871,6 +2873,42 @@ static const WCHAR *get_base_config_directory(void)
 	return path;
 }
 
+static void generate_default_dirs(void)
+{
+	static const WCHAR* (*GetDirsFunc[])(void) =
+	{
+		GetRomDirs,
+		GetSampleDirs,
+		GetArtDir,
+		//fixme: fontpath
+		GetTranslationDir,
+		GetLocalizedDir,
+		GetPatchDir,
+		GetImgDirs,
+		GetFlyerDirs,
+		GetCabinetDirs,
+		GetMarqueeDirs,
+		GetTitlesDirs,
+		GetControlPanelDirs,
+		GetIconsDirs,
+		GetBgDir,
+		GetPcbinfoDir,
+		NULL
+	};
+	
+	int i;
+	for (i = 0; GetDirsFunc[i]; i++)
+	{
+		WCHAR *paths = wcsdup(GetDirsFunc[i]());
+		WCHAR *p;
+		{
+			for (p = wcstok(paths, TEXT(";")); p; p =wcstok(NULL, TEXT(";")))
+			create_path_recursive(p);
+		}
+		free(paths);
+	};
+}
+
 static void generate_default_ctrlr(void)
 {
 	static const char *default_ctrlr = 
@@ -2906,7 +2944,7 @@ static void generate_default_ctrlr(void)
 
 	if (DoCreate)
 	{
-		CreateDirectoryW(ctrlrpath, NULL);
+		create_path_recursive(ctrlrpath);
 
 		filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
 		if (filerr == FILERR_NONE)
@@ -3603,7 +3641,7 @@ static int options_save_driver_config(int driver_index)
 		return 0;
 	}
 
-	CreateDirectoryW(settings.inipath, NULL);
+	create_path_recursive(settings.inipath);
 
 	stemp = utf8_from_wstring(fname);
 	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
@@ -3656,7 +3694,7 @@ static int options_save_alt_config(alt_options_type *alt_option)
 		return 0;
 	}
 
-	CreateDirectoryW(settings.inipath, NULL);
+	create_path_recursive(settings.inipath);
 
 	stemp = utf8_from_wstring(fname);
 	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
@@ -3682,7 +3720,7 @@ static int options_save_winui_config(void)
 	WCHAR fname[MAX_PATH];
 	char *stemp;
 
-	CreateDirectoryW(settings.inipath, NULL);
+	create_path_recursive(settings.inipath);
 
 	wcscpy(fname, settings.inipath);
 	wcscat(fname, strlower(TEXT(PATH_SEPARATOR) TEXT_WINUI_INI));

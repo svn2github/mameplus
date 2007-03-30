@@ -29,7 +29,7 @@
 //  PROTOTYPES
 //============================================================
 
-// move to osd_so.h
+// moved to osd_so.h
 //extern const int win_key_trans_table[][4];
 
 extern int win_use_mouse;

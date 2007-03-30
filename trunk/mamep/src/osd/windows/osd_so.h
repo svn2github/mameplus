@@ -1,6 +1,8 @@
 #ifndef __OSD_SO_H
 #define __OSD_SO_H
 
+#include <windows.h>
+
 #ifndef DONT_USE_DLL
 	#ifdef SHAREDOBJ_IMPORT
 	#define SHAREDOBJ_FUNC(x)	__declspec(dllimport) x __cdecl
@@ -364,6 +366,9 @@
 
 	// in windows/window.c
 	extern SHAREDOBJ_FUNC(void) winwindow_exit(running_machine *machine);
+
+	// in windows/winfile.c
+	extern SHAREDOBJ_FUNC(DWORD) create_path_recursive(const TCHAR *path);
 
 	// in windows/winmain.c
 	extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);

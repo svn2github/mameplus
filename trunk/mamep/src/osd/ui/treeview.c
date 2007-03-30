@@ -2340,7 +2340,7 @@ static int InitExtraFolders(void)
 
 	memset(ExtraFolderData, 0, MAX_EXTRA_FOLDERS * sizeof(LPEXFOLDERDATA));
 
-	CreateDirectoryW(dir, NULL);
+	create_path_recursive(dir);
 
 	wcscpy(path, dir);
 	wcscat(path, TEXT("\\*"));

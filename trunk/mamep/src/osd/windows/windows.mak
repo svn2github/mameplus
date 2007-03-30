@@ -159,6 +159,7 @@ else
 endif
 
 
+
 #-------------------------------------------------
 # nasm for Windows (but not cygwin) has a "w"
 # at the end
@@ -183,34 +184,20 @@ CURPATH = ./
 
 
 #-------------------------------------------------
-# OSD core library
+# Windows-specific debug objects and flags
 #-------------------------------------------------
 
-OSDCOREOBJS = \
-	$(WINOBJ)/main.o	\
-	$(WINOBJ)/strconv.o	\
-	$(WINOBJ)/windir.o \
-	$(WINOBJ)/winfile.o \
-	$(WINOBJ)/winmisc.o \
-	$(WINOBJ)/winsync.o \
-	$(WINOBJ)/wintime.o \
-	$(WINOBJ)/winutil.o \
-	$(WINOBJ)/winwork.o \
-
-# if malloc debugging is enabled, include the necessary code
-ifneq ($(findstring MALLOC_DEBUG,$(DEFS)),)
-OSDCOREOBJS += \
-	$(WINOBJ)/winalloc.o
-endif
-
-# remove main.o from OSDCOREOBJS
-ifneq ($(WINUI),)
-ifneq ($(NO_DLL),)
-OSDCOREOBJS := $(OSDCOREOBJS:$(WINOBJ)/main.o=)
+# debug build: enable guard pages on all memory allocations
+ifneq ($(DEBUG),)
+ifeq ($(WINUI),)
+DEFS += -DMALLOC_DEBUG
+LDFLAGS += -Wl,--allow-multiple-definition
 endif
 endif
 
-$(LIBOCORE): $(OSDCOREOBJS)
+ifdef UNICODE
+DEFS += -DUNICODE -D_UNICODE
+endif
 
 
 
@@ -258,6 +245,38 @@ endif
 ifneq ($(USE_JOYSTICK_ID),)
 DEFS += -DJOYSTICK_ID
 endif
+
+
+#-------------------------------------------------
+# OSD core library
+#-------------------------------------------------
+
+OSDCOREOBJS = \
+	$(WINOBJ)/main.o	\
+	$(WINOBJ)/strconv.o	\
+	$(WINOBJ)/windir.o \
+	$(WINOBJ)/winfile.o \
+	$(WINOBJ)/winmisc.o \
+	$(WINOBJ)/winsync.o \
+	$(WINOBJ)/wintime.o \
+	$(WINOBJ)/winutil.o \
+	$(WINOBJ)/winwork.o \
+
+# if malloc debugging is enabled, include the necessary code
+ifneq ($(findstring MALLOC_DEBUG,$(DEFS)),)
+OSDCOREOBJS += \
+	$(WINOBJ)/winalloc.o
+endif
+
+# remove main.o from OSDCOREOBJS
+ifneq ($(WINUI),)
+ifneq ($(NO_DLL),)
+OSDCOREOBJS := $(OSDCOREOBJS:$(WINOBJ)/main.o=)
+endif
+endif
+
+$(LIBOCORE): $(OSDCOREOBJS)
+
 
 
 #-------------------------------------------------
@@ -341,24 +360,6 @@ endif
 
 # add resource file
 CLIOBJS += $(WINOBJ)/mame.res
-
-
-
-#-------------------------------------------------
-# Windows-specific debug objects and flags
-#-------------------------------------------------
-
-# debug build: enable guard pages on all memory allocations
-ifneq ($(DEBUG),)
-ifeq ($(WINUI),)
-DEFS += -DMALLOC_DEBUG
-LDFLAGS += -Wl,--allow-multiple-definition
-endif
-endif
-
-ifdef UNICODE
-DEFS += -DUNICODE -D_UNICODE
-endif
 
 
 

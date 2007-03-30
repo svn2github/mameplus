@@ -9,6 +9,8 @@
 
 // standard windows headers
 #define WIN32_LEAN_AND_MEAN
+#define UNICODE
+#define _UNICODE
 #include <windows.h>
 #include <winioctl.h>
 #include <tchar.h>
@@ -36,7 +38,7 @@ struct _osd_file
 //  FUNCTION PROTOTYPES
 //============================================================
 
-static DWORD create_path_recursive(TCHAR *path);
+DWORD create_path_recursive(const TCHAR *path);
 static file_error win_error_to_file_error(DWORD error);
 
 
@@ -308,7 +310,7 @@ int osd_uchar_from_osdchar(UINT32 *uchar, const char *osdchar, size_t count)
 //  create_path_recursive
 //============================================================
 
-static DWORD create_path_recursive(TCHAR *path)
+DWORD create_path_recursive(const TCHAR *path)
 {
 	TCHAR *sep = _tcsrchr(path, '\\');
 	file_error filerr;
