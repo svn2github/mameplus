@@ -242,7 +242,8 @@ render_font *render_font_alloc(const char *filename)
 	{
 		int loaded = 0;
 		char *filename_local = assemble_3_strings(ui_lang_info[lang_get_langcode()].name, "/", filename);
-	mame_printf_warning("%s\n", filename_local);
+//	mame_printf_warning("%s\n", filename_local);
+
 	 	if (filename_local != NULL && render_font_load_cached_bdf(font, filename_local) == 0)
 			loaded++;
 		else

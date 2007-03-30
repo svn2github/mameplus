@@ -1262,6 +1262,10 @@ Midway
 Midway Games
 
 
+# Wonder League Star (Korea)
+Mijin
+
+
 # Truco Clemente
 Miky SRL
 
@@ -1528,6 +1532,10 @@ Poby
 
 # Thunder Heroes
 Primetek Investments
+
+
+# Spotty (Ver. 2.0.2)
+Prince Co.
 
 
 # The Pagemaster (U) [!]

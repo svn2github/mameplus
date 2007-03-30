@@ -30,7 +30,7 @@
     DEBUGGING
 ***************************************************************************/
 
-#define LOG_THROTTLE				(1)
+#define LOG_THROTTLE				(0)
 #define LOG_PARTIAL_UPDATES(x)		/* logerror x */
 
 
@@ -56,7 +56,7 @@ struct _internal_screen_info
 	screen_state *			state;				/* pointer to visible state in Machine structure */
 
 	/* textures and bitmaps */
-	render_texture *		texture;			/* texture for the screen bitmap */
+	render_texture *		texture[2];			/* 2x textures for the screen bitmap */
 	mame_bitmap *			bitmap[2];			/* 2x bitmaps for rendering */
 	UINT8					curbitmap;			/* current bitmap index */
 	bitmap_format			format;				/* format of bitmap for this screen */
@@ -398,8 +398,10 @@ static void video_exit(running_machine *machine)
 	for (scrnum = 0; scrnum < MAX_SCREENS; scrnum++)
 	{
 		internal_screen_info *info = &viddata->scrinfo[scrnum];
-		if (info->texture != NULL)
-			render_texture_free(info->texture);
+		if (info->texture[0] != NULL)
+			render_texture_free(info->texture[0]);
+		if (info->texture[1] != NULL)
+			render_texture_free(info->texture[1]);
 		if (info->bitmap[0] != NULL)
 			bitmap_free(info->bitmap[0]);
 		if (info->bitmap[1] != NULL)
@@ -656,8 +658,10 @@ void video_screen_configure(int scrnum, int width, int height, const rectangle *
 			bitmap_format screen_format = info->state->format;
 
 			/* free what we have currently */
-			if (info->texture != NULL)
-				render_texture_free(info->texture);
+			if (info->texture[0] != NULL)
+				render_texture_free(info->texture[0]);
+			if (info->texture[1] != NULL)
+				render_texture_free(info->texture[1]);
 			if (info->bitmap[0] != NULL)
 				bitmap_free(info->bitmap[0]);
 			if (info->bitmap[1] != NULL)
@@ -680,7 +684,8 @@ void video_screen_configure(int scrnum, int width, int height, const rectangle *
 			/* allocate new stuff */
 			info->bitmap[0] = bitmap_alloc(curwidth, curheight, screen_format);
 			info->bitmap[1] = bitmap_alloc(curwidth, curheight, screen_format);
-			info->texture = render_texture_alloc(info->bitmap[0], visarea, info->config->palette_base, info->format, NULL, NULL);
+			info->texture[0] = render_texture_alloc(info->bitmap[0], visarea, info->config->palette_base, info->format, NULL, NULL);
+			info->texture[1] = render_texture_alloc(info->bitmap[1], visarea, info->config->palette_base, info->format, NULL, NULL);
 		}
 	}
 
@@ -694,8 +699,8 @@ void video_screen_configure(int scrnum, int width, int height, const rectangle *
 	info->scantime = refresh / height;
 	info->pixeltime = refresh / (height * width);
 
-	/* recompute scanline timing */
-	cpu_compute_scanline_timing();
+	/* recompute the VBLANK timing */
+	cpu_compute_vblank_timing();
 }
 
 
@@ -1054,6 +1059,7 @@ static void finish_screen_updates(running_machine *machine)
 			/* only update if empty and not a vector game; otherwise assume the driver did it directly */
 			if ((machine->drv->video_attributes & (VIDEO_TYPE_VECTOR | VIDEO_SELF_RENDER)) == 0)
 			{
+				render_texture *texture = screen->texture[screen->curbitmap];
 				mame_bitmap *bitmap = screen->bitmap[screen->curbitmap];
 
 				/* if we're not skipping the frame and if the screen actually changed, then update the texture */
@@ -1067,13 +1073,13 @@ static void finish_screen_updates(running_machine *machine)
 						texture_set_scalebitmap(machine, scrnum, &fixedvis);
 					else
 #endif /* USE_SCALE_EFFECTS */
-						render_texture_set_bitmap(screen->texture, bitmap, &fixedvis, machine->drv->screen[scrnum].palette_base, screen->format);
+						render_texture_set_bitmap(texture, bitmap, &fixedvis, machine->drv->screen[scrnum].palette_base, screen->format);
 					screen->curbitmap = 1 - screen->curbitmap;
 				}
 
 				/* create an empty container with a single quad */
 				render_container_empty(render_container_get_screen(scrnum));
-				render_screen_add_quad(scrnum, 0.0f, 0.0f, 1.0f, 1.0f, MAKE_ARGB(0xff,0xff,0xff,0xff), screen->texture, PRIMFLAG_BLENDMODE(BLENDMODE_NONE) | PRIMFLAG_SCREENTEX(1));
+				render_screen_add_quad(scrnum, 0.0f, 0.0f, 1.0f, 1.0f, MAKE_ARGB(0xff,0xff,0xff,0xff), texture, PRIMFLAG_BLENDMODE(BLENDMODE_NONE) | PRIMFLAG_SCREENTEX(1));
 			}
 
 			/* update our movie recording state */
@@ -1857,7 +1863,7 @@ static void free_scalebitmap(running_machine *machine)
 			internal_screen_info *info = &viddata->scrinfo[scrnum];
 			int bank;
 
-			render_texture_set_bitmap(info->texture, info->bitmap[info->curbitmap], NULL, machine->drv->screen[scrnum].palette_base, info->format);
+			render_texture_set_bitmap(info->texture[info->curbitmap], info->bitmap[info->curbitmap], NULL, machine->drv->screen[scrnum].palette_base, info->format);
 
 			info->changed &= ~UPDATE_HAS_NOT_CHANGED;
 
@@ -2020,7 +2026,7 @@ static void texture_set_scalebitmap(running_machine *machine, int scrnum, const 
 	}
 	viddata->scale_dirty[curbank] = 0;
 
-	render_texture_set_bitmap(info->texture, dst, &fixedvis, 0, (scale_depth == 32) ? TEXFORMAT_RGB32 : TEXFORMAT_RGB15);
+	render_texture_set_bitmap(info->texture[curbank], dst, &fixedvis, 0, (scale_depth == 32) ? TEXFORMAT_RGB32 : TEXFORMAT_RGB15);
 }
 #endif /* USE_SCALE_EFFECTS */
 

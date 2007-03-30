@@ -229,6 +229,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( luctoday )	/* 1980 Sigma */
 	DRIVER( chewing )	/* ?? unknown */
 	DRIVER( catacomb )	/* 1982 MTM Games */
+	DRIVER( ckongg )        /* 1981 bootleg */
 
 	/* Has some similarities with Moon Cresta but Board is very different */
 	DRIVER( rockclim )	/* (c)1981 Taito */
@@ -5714,6 +5715,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( hiimpacp )	/* (c) 1990 Williams */
 	DRIVER( shimpact )	/* (c) 1991 Midway */
 	DRIVER( shimpacp )	/* (c) 1991 Midway */
+	DRIVER( shimpap4 )	/* (c) 1991 Midway */
 	DRIVER( strkforc )	/* (c) 1991 Midway */
 	DRIVER( mk )		/* (c) 1992 Midway */
 	DRIVER( mkr4 )		/* (c) 1992 Midway */
@@ -7344,7 +7346,7 @@ Other Sun games
 	DRIVER( malzak2 )	/* (c) 1980? Kitronix */
 	DRIVER( supertnk )	/* (c) 1981 VIDEO GAMES GmbH, W.-GERMANY */
 	DRIVER( crospang )	/* (c) 1998 F2 System */
-	DRIVER( heuksua )	/* (c) 1998 Oksan / F2 System */
+	DRIVER( heuksun )	/* (c) 1998 Oksan / F2 System */
 	DRIVER( bestri )	/* (c) F2 System */
 	DRIVER( funybubl )	/* (c) 1999 In Chang Electronic Co */
 	DRIVER( funybubc )	/* (c) 1999 Comad Industries */
@@ -7495,6 +7497,7 @@ Other Sun games
 	DRIVER( legendoh )	/* (c) 2000 Limenko */
 	DRIVER( sb2003 )	/* (c) 2003 Limenko */
 	DRIVER( sb2003a )	/* (c) 2003 Limenko */
+	DRIVER( spotty )	/* (c) 2001 Prince Co. */
 	DRIVER( carrera )	/* (c) 19?? BS Electronics */
 	DRIVER( pmpoker )	/* (c) 198? PlayMan? */
 	DRIVER( goldnpkr )	/* (c) 198? Bonanza? */

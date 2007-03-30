@@ -1421,8 +1421,8 @@ CPUOBJS += $(CPUOBJ)/ssp1610/ssp1610.o
 DBGOBJS += $(CPUOBJ)/ssp1610/ssp1610d.o
 endif
 
-$(CPUOBJ)/ssp1610/ssp1610.o:	$(CPUSRC)/mips/ssp1610.c \
-								$(CPUSRC)/mips/ssp1610.h
+$(CPUOBJ)/ssp1610/ssp1610.o:	$(CPUSRC)/ssp1610/ssp1610.c \
+								$(CPUSRC)/ssp1610/ssp1610.h
 
 
 

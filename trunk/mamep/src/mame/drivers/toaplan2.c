@@ -253,11 +253,7 @@ To Do / Unknowns:
     - Fixeight bootleg text in sound check mode does not display properly
         with the CPU set to 10MHz (ok at 16MHz). Possible error in video_count_r routine.
 
-    - Need to sort out the video status register. Currently should be enabled
-        by defining T2_VIDEO_CONTROL but sprite lag needs to be re-synched.
-        VIDEO_UPDATE should probably be AFTER Vblank.
-        Where did the magical '262' IRQ/Sec for the 68K come from? Probably
-        should be 256. CPU interleave on BBAKRAID is 262 aswell - why?
+    - Need to sort out the video status register.
     - Batrider IRQ4 being activated at EOF is rubish. It's sound related -
         maybe acknowledgement from the Z80 when its NMI has completed (port 46)
 
@@ -307,15 +303,11 @@ size_t batrider_paletteram16_size;
 int toaplan2_sub_cpu = 0;
 static int mcu_data = 0;
 static int video_status;
-static int prev_scanline;
 static INT8 old_p1_paddle_h;			/* For Ghox */
 static INT8 old_p2_paddle_h;
 static int current_bank = 2;			/* Z80 bank used in Battle Garegga and Batrider */
 static int raizing_Z80_busreq;
 static int bbakraid_unlimited_ver;
-
-static int current_scanline = 0;
-static int vblank_irq;
 
 /**************** Video stuff ******************/
 WRITE16_HANDLER( toaplan2_0_voffs_w );
@@ -555,46 +547,26 @@ static DRIVER_INIT( bbakradu )
   Toaplan games
 ***************************************************************************/
 
-#define T2_VIDEO_CONTROL 0		/* Need to adjust the sprite lag.. */
-
 READ16_HANDLER( toaplan2_inputport_0_word_r )
 {
-#if T2_VIDEO_CONTROL
-	return cpu_getvblank();
-#else
-	int retval = vblank_irq;
-	return retval;
-#endif
+	return ((video_screen_get_vpos(0) + 15) % 262) >= 245;
 }
 
-static void toaplan2_irq(int irq_line)
+
+static void toaplan2_raise_irq(int irq_line)
 {
-#if T2_VIDEO_CONTROL
-	int vpos = cpu_getscanline();
-	if (vpos == 240) cpunum_set_input_line(0, irq_line, HOLD_LINE);
-	vblank_irq = 0; //Remove
-//  logerror("IRQ: scanline=%04x iloop=%04x beampos=%04x\n",vpos,cpu_getiloops(),video_screen_get_hpos(0));
-#else
-	if (cpu_getiloops() == 0) current_scanline = 255;
-
-	if (current_scanline == 245)
-	{
-		cpunum_set_input_line(0, irq_line, HOLD_LINE);
-		vblank_irq = 1;
-	}
-
-	current_scanline++;
-	if (current_scanline > 261)
-	{
-		current_scanline = 0;
-		vblank_irq = 0;
-	}
-#endif
+	cpunum_set_input_line(0, irq_line, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( toaplan2_vblank_irq2 ) { toaplan2_irq(2); }
-static INTERRUPT_GEN( toaplan2_vblank_irq3 ) { toaplan2_irq(3); }
-static INTERRUPT_GEN( toaplan2_vblank_irq4 ) { toaplan2_irq(4); }
+static void toaplan2_vblank_irq(int irq_line)
+{
+	/* the IRQ appears to fire at line 0xe6 */
+	mame_timer_set(video_screen_get_time_until_pos(0, 0xe6, 0), irq_line, toaplan2_raise_irq);
+}
+
+static INTERRUPT_GEN( toaplan2_vblank_irq2 ) { toaplan2_vblank_irq(2); }
+static INTERRUPT_GEN( toaplan2_vblank_irq3 ) { toaplan2_vblank_irq(3); }
+static INTERRUPT_GEN( toaplan2_vblank_irq4 ) { toaplan2_vblank_irq(4); }
 
 static READ16_HANDLER( video_count_r )
 {
@@ -604,47 +576,24 @@ static READ16_HANDLER( video_count_r )
 	/* +---------+---------+--------+---------------------------+ */
 	/*************** Control Signals are active low ***************/
 
-#if T2_VIDEO_CONTROL
 	int hpos = video_screen_get_hpos(0);
-	int vpos = cpu_getscanline();
+	int vpos = video_screen_get_vpos(0);
 	video_status = 0xff00;						/* Set signals inactive */
+
+	vpos = (vpos + 15) % 262;
 
 	if ((hpos > 325) && (hpos < 380))
 		video_status &= ~0x8000;
-	if ((vpos >= 242) && (vpos <= 245))
+	if ((vpos >= 247) && (vpos <= 250))
 		video_status &= ~0x4000;
-	if (cpu_getvblank())
+	if (vpos >= 245)
 		video_status &= ~0x0100;
 	if (vpos < 256)
 		video_status |= (vpos & 0xff);
 	else
 		video_status |= 0xff;
 
-	current_scanline = prev_scanline = vpos; //Remove
-	logerror("VC: scanline=%04x iloop=%04x beampos=%04x VBL=%04x\n",vpos,cpu_getiloops(),hpos,cpu_getvblank());
-#else
-//  logerror("Was VS=%04x  Vbl=%02x  VS=%04x - ",video_status,vblank_irq,prev_scanline );
-
-	video_status = 0xff00;						/* Set signals inactive */
-	if ((current_scanline & 0x100) == 0) {
-		video_status |= (current_scanline & 0xff);	/* Scanline */
-	}
-	else {
-		video_status |= 0xff;
-	}
-	if (vblank_irq) {
-		video_status &= ~0x0100;
-	}
-	if (prev_scanline != current_scanline) {
-		video_status &= ~0x8000;				/* Activate H-Sync Clk */
-	}
-	if ((current_scanline >= 247) && (current_scanline <= 250)) {
-		video_status &= ~0x4000;				/* Activate V-Sync Clk */
-	}
-	prev_scanline = current_scanline;
-
-//  logerror("Now VC=%04x  Vbl=%02x  VS=%04x  HS=%04x\n",video_status,vblank_irq,cpu_getscanline(),video_screen_get_hpos(0) );
-#endif
+	logerror("VC: vpos=%04x hpos=%04x VBL=%04x\n",vpos,hpos,video_screen_get_vblank(0));
 
 	return video_status;
 }
@@ -3315,7 +3264,7 @@ static MACHINE_DRIVER_START( tekipaki )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 10000000)			/* 10MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(tekipaki_68k_mem, 0)
-	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,262)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,1)
 
 #if HD64x180
 	MDRV_CPU_ADD(Z180, 10000000)			/* HD647180 CPU actually */
@@ -3323,14 +3272,13 @@ static MACHINE_DRIVER_START( tekipaki )
 #endif
 
 	MDRV_SCREEN_REFRESH_RATE(60)
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 
 	MDRV_MACHINE_RESET(toaplan2)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_SCREEN_SIZE(432, 262)
 	MDRV_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048)
@@ -3353,7 +3301,7 @@ static MACHINE_DRIVER_START( ghox )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 10000000)			/* 10MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(ghox_68k_mem, 0)
-	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,262)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,1)
 
 #if HD64x180
 	MDRV_CPU_ADD(Z180, 10000000)			/* HD647180 CPU actually */
@@ -3361,14 +3309,13 @@ static MACHINE_DRIVER_START( ghox )
 #endif
 
 	MDRV_SCREEN_REFRESH_RATE(60)
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 
 	MDRV_MACHINE_RESET(ghox)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_SCREEN_SIZE(432, 262)
 	MDRV_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048)
@@ -3390,7 +3337,7 @@ static MACHINE_DRIVER_START( dogyuun )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 16000000)			/* 16MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(dogyuun_68k_mem, 0)
-	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,262)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,1)
 
 #if V25
 	MDRV_CPU_ADD(Z180, 16000000)			/* NEC V25+ type Toaplan marked CPU ??? */
@@ -3399,14 +3346,13 @@ static MACHINE_DRIVER_START( dogyuun )
 #endif
 
 	MDRV_SCREEN_REFRESH_RATE( (27000000.0 / 4) / (432 * 263) )
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 
 	MDRV_MACHINE_RESET(dogyuun)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_SCREEN_SIZE(432, 262)
 	MDRV_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MDRV_GFXDECODE(gfxdecodeinfo_2)
 	MDRV_PALETTE_LENGTH(2048)
@@ -3432,7 +3378,7 @@ static MACHINE_DRIVER_START( kbash )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 16000000)			/* 16MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(kbash_68k_mem, 0)
-	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,262)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,1)
 
 #if V25
 	MDRV_CPU_ADD(Z180, 16000000)			/* NEC V25+ type Toaplan marked CPU ??? */
@@ -3441,14 +3387,13 @@ static MACHINE_DRIVER_START( kbash )
 #endif
 
 	MDRV_SCREEN_REFRESH_RATE(60)
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 
 	MDRV_MACHINE_RESET(toaplan2)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_SCREEN_SIZE(432, 262)
 	MDRV_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048)
@@ -3473,17 +3418,16 @@ static MACHINE_DRIVER_START( kbash2 )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 16000000)			/* 16MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(kbash2_68k_mem, 0)
-	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,262)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,1)
 
 	MDRV_SCREEN_REFRESH_RATE(60)
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 
 	MDRV_MACHINE_RESET(toaplan2)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_SCREEN_SIZE(432, 262)
 	MDRV_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048)
@@ -3510,17 +3454,16 @@ static MACHINE_DRIVER_START( truxton2 )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 16000000)			/* 16MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(truxton2_68k_mem, 0)
-	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq2,262)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq2,1)
 
 	MDRV_SCREEN_REFRESH_RATE( (27000000.0 / 4) / (432 * 263) )
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 
 	MDRV_MACHINE_RESET(toaplan2)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_SCREEN_SIZE(432, 262)
 	MDRV_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MDRV_GFXDECODE(truxton2_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048)
@@ -3546,13 +3489,12 @@ static MACHINE_DRIVER_START( pipibibs )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 10000000)			/* 10MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(pipibibs_68k_mem, 0)
-	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,262)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,1)
 
 	MDRV_CPU_ADD(Z80,27000000/8)			/* ??? 3.37MHz , 27MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(sound_z80_mem, 0)
 
 	MDRV_SCREEN_REFRESH_RATE(60)
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 	MDRV_INTERLEAVE(10)
 
 	MDRV_MACHINE_RESET(toaplan2)
@@ -3560,7 +3502,7 @@ static MACHINE_DRIVER_START( pipibibs )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_SCREEN_SIZE(432, 262)
 	MDRV_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048)
@@ -3583,14 +3525,13 @@ static MACHINE_DRIVER_START( whoopee )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 10000000)			/* 10MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(tekipaki_68k_mem, 0)
-	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,262)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,1)
 
 	MDRV_CPU_ADD(Z80, 27000000/8)			/* This should be a HD647180 */
 											/* Change this to 10MHz when HD647180 gets dumped. 10MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(sound_z80_mem, 0)
 
 	MDRV_SCREEN_REFRESH_RATE(60)
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 	MDRV_INTERLEAVE(10)
 
 	MDRV_MACHINE_RESET(toaplan2)
@@ -3598,7 +3539,7 @@ static MACHINE_DRIVER_START( whoopee )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_SCREEN_SIZE(432, 262)
 	MDRV_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048)
@@ -3621,13 +3562,12 @@ static MACHINE_DRIVER_START( pipibibi )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 10000000)			/* 10MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(pipibibi_68k_mem, 0)
-	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,262)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,1)
 
 	MDRV_CPU_ADD(Z80,27000000/8)			/* ??? 3.37MHz */
 	MDRV_CPU_PROGRAM_MAP(sound_z80_mem, 0)
 
 	MDRV_SCREEN_REFRESH_RATE(60)
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 	MDRV_INTERLEAVE(10)
 
 	MDRV_MACHINE_RESET(toaplan2)
@@ -3635,7 +3575,7 @@ static MACHINE_DRIVER_START( pipibibi )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_SCREEN_SIZE(432, 262)
 	MDRV_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048)
@@ -3658,7 +3598,7 @@ static MACHINE_DRIVER_START( fixeight )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 16000000)			/* 16MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(fixeight_68k_mem, 0)
-	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,262)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,1)
 
 #if V25
 	MDRV_CPU_ADD(Z180, 16000000)			/* NEC V25+ type Toaplan marked CPU ??? */
@@ -3667,7 +3607,6 @@ static MACHINE_DRIVER_START( fixeight )
 #endif
 
 	MDRV_SCREEN_REFRESH_RATE( (27000000.0 / 4) / (432 * 263) )
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 
 	MDRV_MACHINE_RESET(toaplan2)
 //  MDRV_NVRAM_HANDLER(fixeight)        /* See 37B6 code */
@@ -3675,7 +3614,7 @@ static MACHINE_DRIVER_START( fixeight )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_SCREEN_SIZE(432, 262)
 	MDRV_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MDRV_GFXDECODE(truxton2_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048)
@@ -3700,17 +3639,16 @@ static MACHINE_DRIVER_START( fixeighb )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 10000000)			/* 10MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(fixeighb_68k_mem, 0)
-	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq2,262)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq2,1)
 
 	MDRV_SCREEN_REFRESH_RATE(60)
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 
 	MDRV_MACHINE_RESET(toaplan2)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_SCREEN_SIZE(432, 262)
 	MDRV_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MDRV_GFXDECODE(fixeighb_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048)
@@ -3733,7 +3671,7 @@ static MACHINE_DRIVER_START( vfive )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 10000000)			/* 10MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(vfive_68k_mem, 0)
-	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,262)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,1)
 
 #if V25
 	MDRV_CPU_ADD(Z180, 10000000)			/* NEC V25+ type Toaplan marked CPU ??? */
@@ -3742,14 +3680,13 @@ static MACHINE_DRIVER_START( vfive )
 #endif
 
 	MDRV_SCREEN_REFRESH_RATE( (27000000.0 / 4) / (432 * 263) )
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 
 	MDRV_MACHINE_RESET(vfive)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_SCREEN_SIZE(432, 262)
 	MDRV_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048)
@@ -3771,7 +3708,7 @@ static MACHINE_DRIVER_START( batsugun )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000,32000000/2)			/* 16MHz , 32MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(batsugun_68k_mem, 0)
-	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,262)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,1)
 
 #if V25
 	MDRV_CPU_ADD(Z180, 32000000/2)			/* NEC V25+ type Toaplan marked CPU ??? */
@@ -3780,14 +3717,13 @@ static MACHINE_DRIVER_START( batsugun )
 #endif
 
 	MDRV_SCREEN_REFRESH_RATE(60)
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 
 	MDRV_MACHINE_RESET(toaplan2)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_SCREEN_SIZE(432, 262)
 	MDRV_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MDRV_GFXDECODE(gfxdecodeinfo_2)
 	MDRV_PALETTE_LENGTH(2048)
@@ -3813,17 +3749,16 @@ static MACHINE_DRIVER_START( snowbro2 )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 16000000)
 	MDRV_CPU_PROGRAM_MAP(snowbro2_68k_mem, 0)
-	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,262)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,1)
 
 	MDRV_SCREEN_REFRESH_RATE(60)
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 
 	MDRV_MACHINE_RESET(toaplan2)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_SCREEN_SIZE(432, 262)
 	MDRV_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048)
@@ -3849,13 +3784,12 @@ static MACHINE_DRIVER_START( mahoudai )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000,32000000/2)			/* 16MHz , 32MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(mahoudai_68k_mem, 0)
-	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,262)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,1)
 
 	MDRV_CPU_ADD(Z80,32000000/8)			/* 4MHz , 32MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(raizing_sound_z80_mem, 0)
 
 	MDRV_SCREEN_REFRESH_RATE(60)
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 	MDRV_INTERLEAVE(10)
 
 	MDRV_MACHINE_RESET(toaplan2)
@@ -3863,7 +3797,7 @@ static MACHINE_DRIVER_START( mahoudai )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_SCREEN_SIZE(432, 262)
 	MDRV_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MDRV_GFXDECODE(raizing_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048)
@@ -3889,13 +3823,12 @@ static MACHINE_DRIVER_START( shippumd )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000,32000000/2)			/* 16MHz , 32MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(shippumd_68k_mem, 0)
-	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,262)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,1)
 
 	MDRV_CPU_ADD(Z80,32000000/8)			/* 4MHz , 32MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(raizing_sound_z80_mem, 0)
 
 	MDRV_SCREEN_REFRESH_RATE(60)
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 	MDRV_INTERLEAVE(10)
 
 	MDRV_MACHINE_RESET(toaplan2)
@@ -3903,7 +3836,7 @@ static MACHINE_DRIVER_START( shippumd )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_SCREEN_SIZE(432, 262)
 	MDRV_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MDRV_GFXDECODE(raizing_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048)
@@ -3929,13 +3862,12 @@ static MACHINE_DRIVER_START( battleg )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000,32000000/2)			/* 16MHz , 32MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(battleg_68k_mem, 0)
-	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,262)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,1)
 
 	MDRV_CPU_ADD(Z80,32000000/8)			/* 4MHz , 32MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(battleg_sound_z80_mem, 0)
 
 	MDRV_SCREEN_REFRESH_RATE(60)
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 	MDRV_INTERLEAVE(10)
 
 	MDRV_MACHINE_RESET(toaplan2)
@@ -3943,7 +3875,7 @@ static MACHINE_DRIVER_START( battleg )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_SCREEN_SIZE(432, 262)
 	MDRV_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MDRV_GFXDECODE(raizing_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048)
@@ -3969,14 +3901,13 @@ static MACHINE_DRIVER_START( batrider )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000,32000000/2)			/* 16MHz , 32MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(batrider_68k_mem, 0)
-	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq2,262)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq2,1)
 
 	MDRV_CPU_ADD(Z80,32000000/8)			/* 4MHz , 32MHz Oscillator */
 	MDRV_CPU_PROGRAM_MAP(batrider_sound_z80_mem, 0)
 	MDRV_CPU_IO_MAP(batrider_sound_z80_port, 0)
 
 	MDRV_SCREEN_REFRESH_RATE(60)
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 	MDRV_INTERLEAVE(10)
 
 	MDRV_MACHINE_RESET(batrider)
@@ -3984,7 +3915,7 @@ static MACHINE_DRIVER_START( batrider )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_SCREEN_SIZE(432, 262)
 	MDRV_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MDRV_GFXDECODE(batrider_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048)
@@ -4013,14 +3944,13 @@ static MACHINE_DRIVER_START( bbakraid )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000,32000000/2)
 	MDRV_CPU_PROGRAM_MAP(bbakraid_68k_mem, 0)
-	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq3,262)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq3,1)
 
 	MDRV_CPU_ADD(Z80,32000000/4)
 	MDRV_CPU_PROGRAM_MAP(bbakraid_sound_z80_mem, 0)
 	MDRV_CPU_IO_MAP(bbakraid_sound_z80_port, 0)
 	MDRV_CPU_PERIODIC_INT(bbakraid_snd_interrupt, TIME_IN_HZ(388))
 	MDRV_SCREEN_REFRESH_RATE(60)
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 	MDRV_INTERLEAVE(262)
 
 	MDRV_MACHINE_RESET(toaplan2)
@@ -4029,7 +3959,7 @@ static MACHINE_DRIVER_START( bbakraid )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_SCREEN_SIZE(432, 262)
 	MDRV_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MDRV_GFXDECODE(batrider_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(2048)

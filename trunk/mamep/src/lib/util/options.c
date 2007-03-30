@@ -18,10 +18,6 @@
 
 
 
-#define HIGH_SPEED_HACK
-#define FAKE_MEMORY_POOL
-
-
 /***************************************************************************
     CONSTANTS
 ***************************************************************************/
@@ -31,36 +27,26 @@
 
 
 /***************************************************************************
-    Fake memory pool to speed up
-***************************************************************************/
-
-#ifdef FAKE_MEMORY_POOL
-static memory_pool *fake_pool_create(void (*fail)(const char *message));
-static void fake_pool_clear(memory_pool *pool);
-static void fake_pool_free(memory_pool *pool);
-
-static void *fake_pool_malloc_file_line(memory_pool *pool, size_t size, const char *file, int line) ATTR_MALLOC;
-static void *fake_pool_realloc_file_line(memory_pool *pool, void *ptr, size_t size, const char *file, int line);
-static char *fake_pool_strdup_file_line(memory_pool *pool, const char *str, const char *file, int line);
-
-#define pool_create		fake_pool_create
-#define pool_clear		fake_pool_clear
-#define pool_free		fake_pool_free
-#define pool_malloc_file_line	fake_pool_malloc_file_line
-#define pool_realloc_file_line	fake_pool_realloc_file_line
-#define pool_strdup_file_line	fake_pool_strdup_file_line
-#endif /* FAKE_MEMORY_POOL */
-
-
-/***************************************************************************
     TYPE DEFINITIONS
 ***************************************************************************/
 
+/* forward reference */
 typedef struct _options_data options_data;
+
+typedef struct _options_data_link options_data_link;
+struct _options_data_link
+{
+	options_data_link *		next;				/* link to the next data */
+	const char *			name;				/* name under the current link */
+	options_data *			data;				/* link to actual data */
+};
+
+
+
 struct _options_data
 {
-	options_data *			next;				/* link to the next data */
 	const char *			names[MAX_ENTRY_NAMES]; /* array of possible names */
+	options_data *			next;				/* link to the next data */
 	UINT32					flags;				/* flags from the entry */
 	UINT32					seqid;				/* sequence ID; bumped on each change */
 	int						error_reported;		/* have we reported an error on this option yet? */
@@ -68,22 +54,19 @@ struct _options_data
 	const char *			defdata;			/* default data for this item */
 	const char *			description;		/* description for this item */
 	void					(*callback)(core_options *opts, const char *arg);	/* callback to be invoked when parsing */
+	options_data_link		links[MAX_ENTRY_NAMES]; /* array of links */
 	int					mark;
 };
 
 
-struct find_cache_entry
+typedef struct _options_hash_header options_hash_header;
+struct _options_hash_header
 {
-	const char *name;
-	options_data *data;
+	/* linked list containing option data */
+	options_data_link *datalist;
+	options_data_link **datalist_nextptr;
 };
 
-struct _find_cache
-{
-	struct find_cache_entry *cache;
-	int count;
-	int len;
-};
 
 
 struct _core_options
@@ -91,12 +74,12 @@ struct _core_options
 	memory_pool *pool;
 	void (*output[OPTMSG_COUNT])(const char *s);
 
-	/* linked list containing option data */
+	/* linked list, for sequential iteration */
 	options_data *datalist;
 	options_data **datalist_nextptr;
 
-	struct _find_cache find_cache;
-	int find_cache_dirty;
+	/* hashtable, for fast lookup */
+	options_hash_header hashtable[101];
 };
 
 
@@ -162,6 +145,23 @@ static void message(core_options *opts, options_message msgtype, const char *for
 
 
 /*-------------------------------------------------
+    hash_value - computes the hash value for a string
+-------------------------------------------------*/
+
+static UINT32 hash_value(core_options *opts, const char *str)
+{
+    UINT32 hash = 5381;
+    int c;
+
+    while((c = *str++) != '\0')
+        hash = ((hash << 5) + hash) + c;
+
+    return hash % ARRAY_LENGTH(opts->hashtable);
+}
+
+
+
+/*-------------------------------------------------
     output_printf - outputs an arbitrary message
     to a callback
 -------------------------------------------------*/
@@ -179,61 +179,6 @@ static void output_printf(void (*output)(const char *s), const char *format, ...
 }
 
 
-
-/*-------------------------------------------------
-    generate_find_cache
--------------------------------------------------*/
-
-static int compare_entry(const void *compare1, const void *compare2)
-{
-	const struct find_cache_entry *p1 = (const struct find_cache_entry *)compare1;
-	const struct find_cache_entry *p2 = (const struct find_cache_entry *)compare2;
-
-	return strcmp(p1->name, p2->name);
-}
-
-static void generate_find_cache(core_options *opts)
-{
-	struct find_cache_entry *p;
-	options_data *data;
-
-	opts->find_cache_dirty = 0;
-	opts->find_cache.len = 256;
-
-	if (opts->find_cache.cache == NULL)
-		opts->find_cache.cache = pool_malloc(opts->pool, opts->find_cache.len * sizeof (*opts->find_cache.cache));
-	else
-		opts->find_cache.cache = pool_realloc(opts->pool, opts->find_cache.cache, opts->find_cache.len * sizeof (*opts->find_cache.cache));
-
-	p = opts->find_cache.cache;
-	opts->find_cache.count = 0;
-
-	/* scan all entries */
-	for (data = opts->datalist; data != NULL; data = data->next)
-		if (!(data->flags & OPTION_HEADER))
-		{
-			int namenum;
-
-			/* loop over names */
-			for (namenum = 0; namenum < ARRAY_LENGTH(data->names); namenum++)
-				if (data->names[namenum] != NULL)
-				{
-					if (opts->find_cache.count >= opts->find_cache.len)
-					{
-						opts->find_cache.len *= 2;
-						opts->find_cache.cache = pool_realloc(opts->pool, opts->find_cache.cache, opts->find_cache.len * sizeof (*opts->find_cache.cache));
-						p = opts->find_cache.cache + opts->find_cache.count;
-					}
-
-					p->data = data;
-					p->name = data->names[namenum];
-					p++;
-					opts->find_cache.count++;
-				}
-		}
-
-	qsort(opts->find_cache.cache, opts->find_cache.count, sizeof (*opts->find_cache.cache), compare_entry);
-}
 
 /*-------------------------------------------------
     copy_string - allocate a copy of a string
@@ -298,6 +243,7 @@ core_options *options_create(void (*fail)(const char *message))
 {
 	memory_pool *pool;
 	core_options *opts;
+	int i;
 
 	/* create a pool for this option block */
 	pool = pool_create(fail);
@@ -313,6 +259,8 @@ core_options *options_create(void (*fail)(const char *message))
 	memset(opts, '\0', sizeof(*opts));
 	opts->pool = pool;
 	opts->datalist_nextptr = &opts->datalist;
+	for (i = 0; i < ARRAY_LENGTH(opts->hashtable); i++)
+		opts->hashtable[i].datalist_nextptr = &opts->hashtable[i].datalist;
 	return opts;
 
 error:
@@ -357,10 +305,8 @@ int options_add_entries(core_options *opts, const options_entry *entrylist)
 	/* loop over entries until we hit a NULL name */
 	for ( ; entrylist->name != NULL || (entrylist->flags & OPTION_HEADER); entrylist++)
 	{
-#ifndef HIGH_SPEED_HACK
 		options_data *match = NULL;
 		int i;
-#endif /* HIGH_SPEED_HACK */
 
 		/* allocate a new item */
 		options_data *data = pool_malloc(opts->pool, sizeof(*data));
@@ -372,7 +318,6 @@ int options_add_entries(core_options *opts, const options_entry *entrylist)
 		if (entrylist->name != NULL)
 			separate_names(opts, entrylist->name, data->names, ARRAY_LENGTH(data->names));
 
-#ifndef HIGH_SPEED_HACK
 		/* do we match an existing entry? */
 		for (i = 0; i < ARRAY_LENGTH(data->names) && match == NULL; i++)
 			if (data->names[i] != NULL)
@@ -399,7 +344,6 @@ int options_add_entries(core_options *opts, const options_entry *entrylist)
 
 		/* otherwise, finish making the new entry */
 		else
-#endif /* HIGH_SPEED_HACK */
 		{
 			/* copy the flags, and set the value equal to the default */
 			data->flags = entrylist->flags;
@@ -407,11 +351,30 @@ int options_add_entries(core_options *opts, const options_entry *entrylist)
 			data->defdata = copy_string(opts, entrylist->defvalue, NULL);
 			data->description = entrylist->description;
 
-			/* fill it in and add to the end of the list */
+			/* fill it in and add to the end of each of the lists */
 			*(opts->datalist_nextptr) = data;
 			opts->datalist_nextptr = &data->next;
 
-			opts->find_cache_dirty = TRUE;
+			for (i = 0; i < ARRAY_LENGTH(data->names); i++)
+			{
+				if (data->names[i] != NULL)
+				{
+					int hash_entry;
+					options_hash_header *header;
+
+					/* set up link */
+					data->links[i].data = data;
+					data->links[i].name = data->names[i];
+
+					/* identify hash header */
+					hash_entry = hash_value(opts, data->names[i]);
+					header = &opts->hashtable[hash_entry];
+
+					/* and link in the link */
+					*(header->datalist_nextptr) = &data->links[i];
+					header->datalist_nextptr = &data->links[i].next;
+				}
+			}
 		}
 	}
 	return TRUE;
@@ -1098,42 +1061,30 @@ void options_set_float(core_options *opts, const char *name, float value)
 
 static options_data *find_entry_data(core_options *opts, const char *string, int is_command_line)
 {
-#ifndef HIGH_SPEED_HACK
-	options_data *data;
-	int has_no_prefix;
+	int hash_entry;
+	options_hash_header *header;
+	options_data_link *link;
 
-	/* determine up front if we should look for "no" boolean options */
-	has_no_prefix = (is_command_line && string[0] == 'n' && string[1] == 'o');
+	/* determine which hash entry we should be looking up under */
+	hash_entry = hash_value(opts, string);
+	header = &opts->hashtable[hash_entry];
 
 	/* scan all entries */
-	for (data = opts->datalist; data != NULL; data = data->next)
-		if (!(data->flags & OPTION_HEADER))
+	for (link = header->datalist; link != NULL; link = link->next)
+		if (!(link->data->flags & OPTION_HEADER))
 		{
-			const char *compareme = (has_no_prefix && (data->flags & OPTION_BOOLEAN)) ? &string[2] : &string[0];
-			int namenum;
-
-			/* loop over names */
-			for (namenum = 0; namenum < ARRAY_LENGTH(data->names); namenum++)
-				if (data->names[namenum] != NULL && strcmp(compareme, data->names[namenum]) == 0)
-					return data;
+			/* compare name */
+			if ((link->name != NULL) && strcmp(string, link->name) == 0)
+				return link->data;
 		}
 
-#else /* HIGH_SPEED_HACK */
-	struct find_cache_entry temp, *result;
-	int has_no_prefix;
-
-	/* determine up front if we should look for "no" boolean options */
-	has_no_prefix = (is_command_line && string[0] == 'n' && string[1] == 'o');
-
-	if (opts->find_cache_dirty)
-		generate_find_cache(opts);
-
-	temp.name = has_no_prefix ? &string[2] : &string[0];
-
-	result = bsearch(&temp, opts->find_cache.cache, opts->find_cache.count, sizeof (*opts->find_cache.cache), compare_entry);
-	if (result)
-		return result->data;
-#endif /* HIGH_SPEED_HACK */
+	/* havn't found it?  if we are prefixed with "no", then try to search for that */
+	if (is_command_line && string[0] == 'n' && string[1] == 'o')
+	{
+		options_data *data = find_entry_data(opts, &string[2], FALSE);
+		if ((data != NULL) && (data->flags & OPTION_BOOLEAN))
+			return data;
+	}
 
 	/* didn't find it at all */
 	return NULL;
@@ -1208,92 +1159,3 @@ const options_entry *options_get_next_entry(core_options *opts, const options_en
 {
 	return NULL;
 }
-
-
-/***************************************************************************
-    Fake memory pool to speed up
-***************************************************************************/
-
-#ifdef FAKE_MEMORY_POOL
-struct _memory_pool
-{
-	void (*fail)(const char *message);
-};
-
-static memory_pool *fake_pool_create(void (*fail)(const char *message))
-{
-	memory_pool *p = malloc(sizeof *p);
-	p->fail = fail;
-	return p;
-}
-
-static void fake_pool_clear(memory_pool *pool)
-{
-}
-
-static void fake_pool_free(memory_pool *pool)
-{
-	free(pool);
-}
-
-static void *fake_pool_malloc_file_line(memory_pool *pool, size_t size, const char *file, int line)
-{
-	void *p = malloc(size);
-
-	if (p == NULL)
-	{
-		char buf[256];
-
-		sprintf(buf, "malloc: Failed to allocate %u bytes (%s:%d)", size, file, line);
-		pool->fail(buf);
-	}
-
-	return p;
-}
-
-static void *fake_pool_realloc_file_line(memory_pool *pool, void *ptr, size_t size, const char *file, int line)
-{
-	void *p;
-
-	if (size == 0)
-	{
-		free(ptr);
-		return NULL;
-	}
-
-	p = realloc(ptr, size);
-	if (p == NULL)
-	{
-		char buf[256];
-
-		sprintf(buf, "realloc: Failed to allocate %u bytes (%s:%d)", size, file, line);
-		pool->fail(buf);
-	}
-
-	return p;
-}
-
-static char *fake_pool_strdup_file_line(memory_pool *pool, const char *str, const char *file, int line)
-{
-	int len;
-	char *p;
-
-	if (str == NULL)
-		return NULL;
-
-	len = strlen(str) + 1;
-
-	p = malloc(len);
-	if (p == NULL)
-	{
-		char buf[256];
-
-		sprintf(buf, "strdup: Failed to allocate %u bytes (%s:%d)", len, file, line);
-		pool->fail(buf);
-	}
-	else
-		strcpy(p, str);
-
-	return p;
-}
-#endif /* FAKE_MEMORY_POOL */
