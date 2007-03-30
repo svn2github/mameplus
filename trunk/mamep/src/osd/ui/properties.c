@@ -1,3 +1,4 @@
+//mamep: mame32 v113u3
 /***************************************************************************
 
   M.A.M.E.32  -  Multiple Arcade Machine Emulator for Win32
@@ -509,14 +510,14 @@ void PropertiesInit(void)
 	}
 	bThemeActive = FALSE;
 
-	// mamep: Enumulate all monitors on start up
+	// mamep: enumerate all monitors on start up
 	{
 		DISPLAY_DEVICEA dd;
 		int iMonitors;
 		int i;
 
-		iMonitors = GetSystemMetrics(SM_CMONITORS); // this gets the count of monitors attached
-		if (iMonitors > MAX_SCREENS);
+		iMonitors = DirectDraw_GetNumDisplays(); // this gets the count of monitors attached
+		if (iMonitors > MAX_SCREENS)
 			iMonitors = MAX_SCREENS;
 
 		ZeroMemory(&dd, sizeof(dd));
@@ -527,18 +528,12 @@ void PropertiesInit(void)
 
 		for (i = 0; i < iMonitors; i++)
 		{
-			if (!EnumDisplayDevicesA(NULL, i, &dd, 0))
-				break;
-
-			if (!(dd.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER))
-			{
-				g_sMonitorDeviceString[i + 1] = strdup(dd.DeviceString);
-				g_sMonitorDeviceName[i + 1] = strdup(dd.DeviceName);
-			}
+			g_sMonitorDeviceString[i + 1] = strdup(DirectDraw_GetDisplayName(i));
+			g_sMonitorDeviceName[i + 1] = strdup(DirectDraw_GetDisplayDriver(i));
 		}
 
-		g_sMonitorDeviceString[i] = NULL;
-		g_sMonitorDeviceName[i] = NULL;
+		g_sMonitorDeviceString[i + 1] = NULL;
+		g_sMonitorDeviceName[i + 1] = NULL;
 	}
 }
 
@@ -867,14 +862,14 @@ static LPCWSTR GameInfoScreen(int nIndex)
 			swprintf(buf, _UIW(TEXT("%d x %d (V) %f Hz (%d colors)")),
 				drv.screen[0].defstate.visarea.max_y - drv.screen[0].defstate.visarea.min_y + 1,
 				drv.screen[0].defstate.visarea.max_x - drv.screen[0].defstate.visarea.min_x + 1,
-				drv.screen[0].defstate.refresh, drv.total_colors);
+				SUBSECONDS_TO_HZ(drv.screen[0].defstate.refresh), drv.total_colors);
 		}
 		else
 		{
 			swprintf(buf, _UIW(TEXT("%d x %d (H) %f Hz (%d colors)")),
 				drv.screen[0].defstate.visarea.max_x - drv.screen[0].defstate.visarea.min_x + 1,
 				drv.screen[0].defstate.visarea.max_y - drv.screen[0].defstate.visarea.min_y + 1,
-				drv.screen[0].defstate.refresh, drv.total_colors);
+				SUBSECONDS_TO_HZ(drv.screen[0].defstate.refresh), drv.total_colors);
 		}
 	}
 	return buf;
@@ -4748,7 +4743,7 @@ static void UpdateDisplayModeUI(HWND hwnd, DWORD dwRefresh)
 	//retrieve the screen Infos
 	devmode.dmSize = sizeof(devmode);
 
-	/* get monitor name to enumulate */
+	/* get monitor name to enumerate */
 	iCurScreen = ComboBox_GetCurSel(GetDlgItem(hwnd, IDC_SCREEN));
 	if (iCurScreen == CB_ERR)
 		iCurScreen = 0;
@@ -4931,7 +4926,7 @@ static void UpdateScreenUI(HWND hwnd)
 		//we have to add 1 to account for the "auto" entry
 		for (i = 1; g_sMonitorDeviceName[i]; i++)
 		{
-			ComboBox_InsertStringA(hCtrl, i, g_sMonitorDeviceString[i]); //mamp: use DeviceString
+			ComboBox_InsertStringA(hCtrl, i, g_sMonitorDeviceString[i]); //mamep: use DeviceString
 			if (strcmp(pGameOpts->screens[g_nSelectScreenIndex], g_sMonitorDeviceName[i]) == 0)
 				nSelection = i;
 		}
@@ -4967,7 +4962,7 @@ static void UpdateRefreshUI(HWND hwnd)
 		//retrieve the screen Infos
 		devmode.dmSize = sizeof(devmode);
 
-		/* get monitor name to enumulate */
+		/* get monitor name to enumerate */
 		iCurScreen = ComboBox_GetCurSel(GetDlgItem(hwnd, IDC_SCREEN));
 		if (iCurScreen == CB_ERR)
 			iCurScreen = 0;
