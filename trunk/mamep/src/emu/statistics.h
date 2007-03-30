@@ -1,5 +1,6 @@
 static const char *stat_versions[] =
 {
+	"0.113u4    March     29th 2007",
 	"0.113u3    March     22nd 2007",
 	"0.113u2    March     15th 2007",
 	"0.113u1    March      9th 2007",
@@ -372,6 +373,7 @@ static const char *stat_versions[] =
 
 static const char *stat_history[] =
 {
+	"0.113u4    913    6583  +3",
 	"0.113u3    913    6580  +31",
 	"0.113u2    907    6549  +13",
 	"0.113u1    907    6536  +2",
@@ -745,6 +747,6 @@ static const char *stat_newgames[] =
 	"2004:   65      +  675",
 	"2005:   70      +  563",
 	"2006:   39      +  458",
-	"2007:   23      +  179",
+	"2007:   23      +  182",
 	0
 };
