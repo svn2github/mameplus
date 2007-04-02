@@ -17,10 +17,10 @@
 
 // MAME headers
 #include "osdcore.h"
-#include "osd_so.h"
 
 // MAMEOS headers
 #include "strconv.h"
+#include "osd_so.h"
 
 
 //============================================================
