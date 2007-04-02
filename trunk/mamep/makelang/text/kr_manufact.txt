@@ -10,7 +10,7 @@ Bootleg
 Italian bootleg
 이탈리아 해적판
 
-# Intersecti
+# Mahjong Dunhuang
 Unknown
 알수없음
 
@@ -58,7 +58,7 @@ ABM Games
 AC
 
 
-# Starspinner (Dutch/Nederlands)
+# Sidewinder
 ACE
 
 
@@ -246,7 +246,7 @@ Athena
 Atlus
 
 
-# Quintoon (UK, Game Card 95-750-203)
+# A Question of Sport (39-960-099)
 BFM
 
 
@@ -414,6 +414,10 @@ Comad
 Comad & New Japan System
 
 
+# Funny Bubble (Comad version)
+Comad Industry Co Ltd
+
+
 # Puyo Puyo Sun (J 961115 V0.001)
 Compile
 
@@ -426,7 +430,7 @@ Comsoft
 Core
 
 
-# SWAT
+# SWAT (315-5048)
 Coreland
 
 
@@ -530,7 +534,7 @@ Digitrex Techstar
 Dino Dini
 
 
-# Great Circus Mystery, The - Starring Mickey & Minnie (U) [!]
+# The Great Circus Mystery - Starring Mickey & Minnie (U) [!]
 Disney
 
 
@@ -978,12 +982,20 @@ IDSA
 IGS
 
 
+# Dou Di Zhu
+IGS?
+
+
 # See See Find Out
 Icarus
 
 
 # Magic Card II (Bulgaria, bootleg)
 Impera
+
+
+# Funny Bubble
+In Chang Electronic Co
 
 
 # Capcom Bowling (set 1)
@@ -1274,6 +1286,10 @@ Midway
 Midway Games
 
 
+# Wonder League Star (Korea)
+Mijin
+
+
 # Truco Clemente
 Miky SRL
 
@@ -1542,7 +1558,11 @@ Poby
 Primetek Investments
 
 
-# Pagemaster, The (U) [!]
+# Spotty (Ver. 2.0.2)
+Prince Co.
+
+
+# The Pagemaster (U) [!]
 Probe
 
 
@@ -1606,7 +1626,7 @@ Raster Elite
 Rastersoft
 
 
-# Earth Defend, The (Unl) [!]
+# The Earth Defend (Unl) [!]
 Realtec
 
 
@@ -1682,6 +1702,10 @@ Sammy Industries
 Sammy Industries Japan
 
 
+# Snooker 10 (Ver 1.11)
+Sandiy
+
+
 # Puzzle Star (Sang Ho Soft)
 Sang Ho Soft
 
@@ -1710,7 +1734,7 @@ Sega
 Sega Sports
 
 
-# Panic Road
+# Seibu Cup Soccer
 Seibu
 
 
@@ -1732,6 +1756,10 @@ SemiCom
 
 # Cool Minigame Collection
 Semicom
+
+
+# Hex Pool (Senko)
+Senko
 
 
 # Special Forces
@@ -1758,7 +1786,7 @@ Seta
 Seta Kikaku Corp.
 
 
-# Hex Pool
+# Hex Pool (Shinkai)
 Shinkai
 
 
@@ -2268,6 +2296,10 @@ Web Picmatic
 
 # Sukeban Jansi Ryuko (set 1, System 16A, FD1089B 317-5021)
 White Board
+
+
+# DakkoChan House (MC-8123, 317-0014)
+Whiteboard
 
 
 # Hit the Ice (US)

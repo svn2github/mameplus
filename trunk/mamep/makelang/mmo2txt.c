@@ -49,7 +49,7 @@ static int load_mmo(const char *filename)
 	if (fread(&header, sizeof header, 1, fp) != 1)
 		goto mmo_readerr;
 
-	if (header.version != 2)
+	if (header.version != 2 && header.version != 3)
 		goto mmo_readerr;
 
 	mmo_index = malloc(header.num_msg * sizeof mmo_index[0]);
