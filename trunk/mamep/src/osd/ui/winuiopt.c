@@ -49,13 +49,11 @@
 #ifdef IMAGE_MENU
 #include "imagemenu.h"
 #endif /* IMAGE_MENU */
-#include "osd_so.h"
-
+	
 #ifdef _MSC_VER
 #define snprintf _snprintf
 #endif
 
-DWORD create_path_recursive(const TCHAR *path);
 
 /***************************************************************************
     Internal structures
