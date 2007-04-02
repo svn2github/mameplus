@@ -1900,7 +1900,7 @@ static UINT32 handler_ingame(UINT32 state)
 	/* first draw the FPS counter */
 	if (showfps || osd_ticks() < showfps_end)
 	{
-		ui_draw_text_full(video_get_speed_text(), 0.0f, 0.0f, 1.0f, 0,
+		ui_draw_text_full_fontwith(video_get_speed_text(), 0.0f, 0.0f, 1.0f, 1, 0,
 					JUSTIFY_RIGHT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, ui_bgcolor, NULL, NULL);
 	}
 	else
