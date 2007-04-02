@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.113u3      #
+#     Mameinfo.dat日本語版 v0.113u4      #
 #                                        #
-#             March 23, 2007             #
+#             April 1, 2007              #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：841 翻訳済：822
-# 追加項目：338 合計：1179
+# Tester報告：849 翻訳済：830
+# 追加項目：338 合計：1187
 #
 
 
@@ -35,6 +35,17 @@ $mame
 [バグ]
 
 - 0.113から、F3でリセットするとMAMEがクラッシュする。 starblad0113u3red, Heihachi_73 / twisty
+
+$end
+
+$info=pacland
+$mame
+[バグ]
+
+- 起動時にノイズが出る。0.89から。 pacland0113u4gre, Kold666
+
+
+- 実機ではクレジットを99まで投入できる。MAMEでは9まで。 pacland0109u4gre, Kold666
 
 $end
 
@@ -64,11 +75,55 @@ $mame
 
 $end
 
-$info=diehard
+$info=stactics
+$mame
+[情報]
+
+- サウンドにはSN76447とディスクリート回路が必要。
+
+
+[バグ]
+
+- 参照用の実機からの録音。 stactics0113u4ora, Gyrovision
+
+$end
+
+$info=suratk
 $mame
 [バグ]
 
-- 起動時にクラッシュする。 diehard0113u3red, Swossino / Fujix / twisty / Tafoid / Haze
+- キャラクタROMテストに失敗する。 suratk0113u4gre, Kold666
+
+$end
+
+$info=kyustrkr
+$mame
+[バグ]
+
+- [possible] 得点の数字で「0」の一部が欠けて表示される。吸い出しミスか？ kyustrkr0113u4gre, twisty
+
+$end
+
+$info=battleg
+$mame
+[バグ]
+
+- ランダムにクラッシュする。また、プレイ後にMAMEを終了させると、Access Violationのエラーが出る。 battleg0113u4red, Iaspis / twisty
+
+
+[TIPS]
+
+- 魔法大作戦キャラの出し方：
+
+コイン投入後、上上下下左右左右ABCスタートと入力
+
+$end
+
+$info=monymony
+$mame
+[バグ]
+
+- 鮫かワニにプレイヤーが食われるときのプライオリティがおかしい。 monymony0113u4gre, Lord Nightmare
 
 $end
 
@@ -2813,14 +2868,6 @@ $mame
 
 $end
 
-$info=pacland
-$mame
-[バグ]
-
-- 実機ではクレジットを99まで投入できる。MAMEでは9まで。 pacland0109u4gre, Kold666
-
-$end
-
 $info=mspacmab
 $mame
 [バグ]
@@ -3364,14 +3411,6 @@ $mame
 
 
 - アトラクトモード2周目以降、ハイスコア画面にドクロが残って表示される。 lghost098u1gre2, Karasu
-
-$end
-
-$info=hangonjr
-$mame
-[バグ]
-
-- ゲームオーバー後、変な矢印軍団が下から現れる。 hangonjr37b16gre, Smitdogg
 
 $end
 
@@ -4488,22 +4527,6 @@ $mame
 4面：ボス戦で現れる戦車を色が変化するまで待ってボムで一気に破壊する
 
 5面：移動する床に乗っている敵を、床が止まるまで破壊しない
-
-$end
-
-$info=battlega
-$mame
-[バグ]
-
-- battlegaとbattlegcで、起動時のテストに失敗する。右キーを押していればパスする。 battlega097yel, Zaphod
-
-$end
-
-$info=battlegc
-$mame
-[バグ]
-
-- battlegaとbattlegcで、起動時のテストに失敗する。右キーを押していればパスする。 battlega097yel, Zaphod
 
 $end
 
@@ -7953,14 +7976,6 @@ $mame
 
 $end
 
-$info=stactics
-$mame
-[情報]
-
-- サウンドにはSN76447とディスクリート回路が必要。
-
-$end
-
 $info=stargate
 $mame
 [情報]
@@ -8508,16 +8523,6 @@ $mame
 - 魔法大作戦とバトルガレッガキャラの出し方：
 
 コイン投入後、上上下下左右左右ABスタートと入力。“エクセレント”と言われれば成功
-
-$end
-
-$info=battleg
-$mame
-[TIPS]
-
-- 魔法大作戦キャラの出し方：
-
-コイン投入後、上上下下左右左右ABCスタートと入力
 
 $end
 
