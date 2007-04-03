@@ -332,7 +332,7 @@ int cli_frontend_init(int argc, char **argv)
 
 #ifdef USE_IPS
 		// HACK: DO NOT INHERIT IPS CONFIGURATION
-		options_set_string(mame_options(), "ips", NULL);
+		options_set_string(mame_options(), OPTION_IPS, NULL);
 #endif /* USE_IPS */
 
 		parse_ini_file(driver->name);
@@ -612,7 +612,7 @@ void assign_drivers(void)
 	int i, n;
 
 #ifndef TINY_NAME
-	const char *drv_option = options_get_string(mame_options(), "driver_config");
+	const char *drv_option = options_get_string(mame_options(), OPTION_DRIVER_CONFIG);
 	if (drv_option)
 	{
 		char *temp = mame_strdup(drv_option);
@@ -639,7 +639,7 @@ void assign_drivers(void)
 						}
 
 					if (!drivers_table[i].name)
-						faprintf(stderr, _WINDOWS("Illegal value for %s = %s\n"), "driver_config", s);
+						faprintf(stderr, _WINDOWS("Illegal value for %s = %s\n"), OPTION_DRIVER_CONFIG, s);
 				}
 				free(s);
 
@@ -690,8 +690,8 @@ void assign_drivers(void)
 
 static void setup_language(void)
 {
-	const char *langname = options_get_string(mame_options(), "language");
-	int use_lang_list =options_get_bool(mame_options(), "use_lang_list");
+	const char *langname = options_get_string(mame_options(), OPTION_LANGUAGE);
+	int use_lang_list =options_get_bool(mame_options(), OPTION_USE_LANG_LIST);
 
 	int langcode = mame_stricmp(langname, "auto") ?
 		lang_find_langname(langname) :

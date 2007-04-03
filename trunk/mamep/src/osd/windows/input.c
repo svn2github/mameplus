@@ -1931,7 +1931,7 @@ static void extract_input_config(void)
 	joy_deadzone = options_get_float(mame_options(), WINOPTION_JOY_DEADZONE);
 	joy_saturation = options_get_float(mame_options(), WINOPTION_JOY_SATURATION);
 #ifdef USE_JOY_MOUSE_MOVE
-	use_stickpoint = options_get_bool(mame_options(), "stickpoint");
+	use_stickpoint = options_get_bool(mame_options(), WINOPTION_STICKPOINT);
 #endif /* USE_JOY_MOUSE_MOVE */
 #ifdef JOYSTICK_ID
 	{

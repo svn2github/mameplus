@@ -314,21 +314,21 @@ static void setup_palette(void)
 		UINT8 defval[3];
 	} palette_decode_table[] =
 	{
-		{ "font_blank",         FONT_COLOR_BLANK,         { 0,0,0 } },
-		{ "font_normal",        FONT_COLOR_NORMAL,        { 255,255,255 } },
-		{ "font_special",       FONT_COLOR_SPECIAL,       { 247,203,0 } },
-		{ "system_background",  SYSTEM_COLOR_BACKGROUND,  { 16,16,48 } },
-		{ "button_red",         BUTTON_COLOR_RED,         { 255,64,64 } },
-		{ "button_yellow",      BUTTON_COLOR_YELLOW,      { 255,238,0 } },
-		{ "button_green",       BUTTON_COLOR_GREEN,       { 0,255,64 } },
-		{ "button_blue",        BUTTON_COLOR_BLUE,        { 0,170,255 } },
-		{ "button_purple",      BUTTON_COLOR_PURPLE,      { 170,0,255 } },
-		{ "button_pink",        BUTTON_COLOR_PINK,        { 255,0,170 } },
-		{ "button_aqua",        BUTTON_COLOR_AQUA,        { 0,255,204 } },
-		{ "button_silver",      BUTTON_COLOR_SILVER,      { 255,0,255 } },
-		{ "button_navy",        BUTTON_COLOR_NAVY,        { 255,160,0 } },
-		{ "button_lime",        BUTTON_COLOR_LIME,        { 190,190,190 } },
-		{ "cursor",             CURSOR_COLOR,             { 60,120,240 } },
+		{ OPTION_FONT_BLANK,         FONT_COLOR_BLANK,         { 0,0,0 } },
+		{ OPTION_FONT_NORMAL,        FONT_COLOR_NORMAL,        { 255,255,255 } },
+		{ OPTION_FONT_SPECIAL,       FONT_COLOR_SPECIAL,       { 247,203,0 } },
+		{ OPTION_SYSTEM_BACKGROUND,  SYSTEM_COLOR_BACKGROUND,  { 16,16,48 } },
+		{ OPTION_BUTTON_RED,         BUTTON_COLOR_RED,         { 255,64,64 } },
+		{ OPTION_BUTTON_YELLOW,      BUTTON_COLOR_YELLOW,      { 255,238,0 } },
+		{ OPTION_BUTTON_GREEN,       BUTTON_COLOR_GREEN,       { 0,255,64 } },
+		{ OPTION_BUTTON_BLUE,        BUTTON_COLOR_BLUE,        { 0,170,255 } },
+		{ OPTION_BUTTON_PURPLE,      BUTTON_COLOR_PURPLE,      { 170,0,255 } },
+		{ OPTION_BUTTON_PINK,        BUTTON_COLOR_PINK,        { 255,0,170 } },
+		{ OPTION_BUTTON_AQUA,        BUTTON_COLOR_AQUA,        { 0,255,204 } },
+		{ OPTION_BUTTON_SILVER,      BUTTON_COLOR_SILVER,      { 255,0,255 } },
+		{ OPTION_BUTTON_NAVY,        BUTTON_COLOR_NAVY,        { 255,160,0 } },
+		{ OPTION_BUTTON_LIME,        BUTTON_COLOR_LIME,        { 190,190,190 } },
+		{ OPTION_CURSOR,             CURSOR_COLOR,             { 60,120,240 } },
 		{ NULL }
 	};
 
@@ -337,12 +337,12 @@ static void setup_palette(void)
 	ui_transparency = 255;
 
 #ifdef TRANS_UI
-	if (options_get_bool(mame_options(), "use_trans_ui"))
+	if (options_get_bool(mame_options(), OPTION_USE_TRANS_UI))
 	{
-		ui_transparency = options_get_int(mame_options(), "ui_transparency");
+		ui_transparency = options_get_int(mame_options(), OPTION_UI_TRANSPARENCY);
 		if (ui_transparency < 0 || ui_transparency > 255)
 		{
-			mame_printf_error(_("Illegal value for %s = %s\n"), "ui_transparency", options_get_string(mame_options(), "ui_transparency"));
+			mame_printf_error(_("Illegal value for %s = %s\n"), OPTION_UI_TRANSPARENCY, options_get_string(mame_options(), OPTION_UI_TRANSPARENCY));
 			ui_transparency = 224;
 		}
 	}
@@ -2253,7 +2253,7 @@ static UINT32 handler_confirm_quit(UINT32 state)
 		"Press Select key/button to quit,\n"
 		"Cancel key/button to continue.";
 
-	if (!options_get_bool(mame_options(), "confirm_quit"))
+	if (!options_get_bool(mame_options(), OPTION_CONFIRM_QUIT))
 	{
 		mame_schedule_exit(Machine);
 		return UI_HANDLER_CANCEL;
@@ -2725,7 +2725,7 @@ static void build_bgtexture(running_machine *machine)
 	int i;
 
 #ifdef TRANS_UI
-	if (options_get_bool(mame_options(), "use_trans_ui"))
+	if (options_get_bool(mame_options(), OPTION_USE_TRANS_UI))
 		a = ui_transparency;
 #endif /* TRANS_UI */
 

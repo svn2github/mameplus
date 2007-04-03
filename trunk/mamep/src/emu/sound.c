@@ -779,7 +779,7 @@ static void sound_update(int param)
 
 	/* now downmix the final result */
 #ifdef USE_VOLUME_AUTO_ADJUST
-	if (options_get_bool(mame_options(), "volume_adjust"))
+	if (options_get_bool(mame_options(), OPTION_VOLUME_ADJUST))
 	{
 		have_sample = 0;
 
@@ -908,7 +908,7 @@ static void mixer_update(void *param, stream_sample_t **inputs, stream_sample_t 
 
 	/* loop over samples */
 #ifdef USE_VOLUME_AUTO_ADJUST
-	if (options_get_bool(mame_options(), "volume_adjust"))
+	if (options_get_bool(mame_options(), OPTION_VOLUME_ADJUST))
 	{
 		have_sample = 0;
 

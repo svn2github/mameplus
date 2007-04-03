@@ -1242,7 +1242,7 @@ static void m68kcore_init(running_machine *machine)
 	static const char *names[] = { "C", "DRC", "ASM" };
 	cpu_config *cpu_ptr = machine->drv->cpu;
 	int cpunum, type;
-	const char *stemp = options_get_string(mame_options(), "m68k_core");
+	const char *stemp = options_get_string(mame_options(), OPTION_M68K_CORE);
 	int m68k_core = 0;
 
 	if (stemp != NULL)
@@ -1255,11 +1255,11 @@ static void m68kcore_init(running_machine *machine)
 			m68k_core = 2;
 		else
 		{
-			m68k_core = options_get_int(mame_options(), "m68k_core");
+			m68k_core = options_get_int(mame_options(), OPTION_M68K_CORE);
 
 			if (m68k_core < 0 || m68k_core > 2)
 			{
-				mame_printf_error(_("Illegal value for %s = %s\n"), "m68k_core", stemp);
+				mame_printf_error(_("Illegal value for %s = %s\n"), OPTION_M68K_CORE, stemp);
 				m68k_core = 0;
 			}
 		}

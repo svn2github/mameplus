@@ -438,7 +438,7 @@ INLINE void _options_get_m68k_core(core_options *opts, int *p, const char *name)
 			*p= 2;
 		else
 		{
-			int value = options_get_int(opts, "m68k_core");
+			int value = options_get_int(opts, OPTION_M68K_CORE);
 
 			if (value >= 0 && value <= 2)
 				*p = value;
@@ -799,7 +799,7 @@ INLINE void _options_get_resolution(core_options *opts, char **p, const char *na
 
 INLINE void _options_get_langcode(core_options *opts, int *p, const char *name)
 {
-	const char *langname = options_get_string(opts, "language");
+	const char *langname = options_get_string(opts, OPTION_LANGUAGE);
 	int langcode = mame_stricmp(langname, "auto") ?
 		lang_find_langname(langname) :
 		lang_find_codepage(GetOEMCP());
@@ -833,7 +833,7 @@ INLINE void _options_get_langcode(core_options *opts, int *p, const char *name)
 
 INLINE void options_set_langcode(core_options *opts, const char *name, int langcode)
 {
-	options_set_string(opts, "language", langcode < 0 ? "auto" : ui_lang_info[langcode].name);
+	options_set_string(opts, OPTION_LANGUAGE, langcode < 0 ? "auto" : ui_lang_info[langcode].name);
 }
 
 #define options_copy_langcode		options_copy_int
@@ -890,7 +890,7 @@ INLINE void _options_get_palette(core_options *opts, char **p, const char *name)
 
 INLINE void _options_get_list_mode(core_options *opts, int *view, const char *name)
 {
-	const char *stemp = options_get_string(opts, "list_mode");
+	const char *stemp = options_get_string(opts, GUIOPTION_LIST_MODE);
 	int i;
 
 	if (stemp == NULL)
@@ -904,7 +904,7 @@ INLINE void _options_get_list_mode(core_options *opts, int *view, const char *na
 		}
 }
 
-#define options_set_list_mode(opts,name,view)	options_set_string(opts, "list_mode", view_modes[view])
+#define options_set_list_mode(opts,name,view)	options_set_string(opts, GUIOPTION_LIST_MODE, view_modes[view])
 #define options_copy_list_mode			options_copy_int
 #define options_free_list_mode(p)
 
@@ -913,7 +913,7 @@ INLINE void _options_get_list_mode(core_options *opts, int *view, const char *na
 
 INLINE void _options_get_list_font(core_options *opts, LOGFONTW *f, const char *name)
 {
-	const char *stemp = options_get_string(opts, "list_font");
+	const char *stemp = options_get_string(opts, GUIOPTION_LIST_FONT);
 	LONG temp[13];
 	char buf[256];
 	char *p;
@@ -982,7 +982,7 @@ INLINE void _options_get_list_font(core_options *opts, LOGFONTW *f, const char *
 
 INLINE void _options_get_list_fontface(core_options *opts, LOGFONTW *f, const char *name)
 {
-	const WCHAR *stemp = options_get_wstring(opts, "list_fontface");
+	const WCHAR *stemp = options_get_wstring(opts, GUIOPTION_LIST_FONTFACE);
 
 	if (stemp == NULL)
 		return;
@@ -1016,10 +1016,10 @@ INLINE void options_set_list_font(core_options *opts, const char *name, const LO
 	             f->lfQuality,
 	             f->lfPitchAndFamily);
 
-	options_set_string(opts, "list_font", buf);
+	options_set_string(opts, GUIOPTION_LIST_FONT, buf);
 }
 
-#define options_set_list_fontface(opts,name,f)	options_set_wstring(opts, "list_fontface", (f)->lfFaceName)
+#define options_set_list_fontface(opts,name,f)	options_set_wstring(opts, GUIOPTION_LIST_FONTFACE, (f)->lfFaceName)
 
 INLINE void options_copy_list_font(const LOGFONTW *src, LOGFONTW *dest)
 {
@@ -1412,7 +1412,7 @@ INLINE void options_set_folder_flag(core_options *opts, const char *name, const 
 			len += sprintf(buf + len, "%s,%ld", flags->entry[i].name, dwFlags);
 		}
 
-	options_set_string(opts, "folder_flag", buf);
+	options_set_string(opts, GUIOPTION_FOLDER_FLAG, buf);
 	free(buf);
 }
 

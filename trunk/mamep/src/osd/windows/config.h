@@ -48,6 +48,9 @@
 #define WINOPTION_CTRLR					"ctrlr"
 #define WINOPTION_MOUSE					"mouse"
 #define WINOPTION_JOYSTICK				"joystick"
+#ifdef USE_JOY_MOUSE_MOVE
+#define WINOPTION_STICKPOINT			"stickpoint"
+#endif /* USE_JOY_MOUSE_MOVE */
 #define WINOPTION_JOY_DEADZONE			"joy_deadzone"
 #define WINOPTION_JOY_SATURATION		"joy_saturation"
 #define WINOPTION_STEADYKEY				"steadykey"

@@ -3041,7 +3041,7 @@ static void update_playback_record(int portnum, UINT32 portvalue)
 			popmessage(_("End of playback"));
 
 #ifdef AUTO_PAUSE_PLAYBACK
-			if (options_get_bool(mame_options(), "auto_pause_playback"))
+			if (options_get_bool(mame_options(), OPTION_AUTO_PAUSE_PLAYBACK))
 				ui_auto_pause();
 #endif /* AUTO_PAUSE_PLAYBACK */
 		}

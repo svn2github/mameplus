@@ -410,7 +410,7 @@ static void extract_video_config(void)
 	const char *stemp;
 
 #ifdef USE_SCALE_EFFECTS
-	stemp = options_get_string(mame_options(), "scale_effect");
+	stemp = options_get_string(mame_options(), OPTION_SCALE_EFFECT);
 	if (stemp)
 	{
 		scale_decode(stemp);

@@ -20,6 +20,12 @@
 #define MAX_GAMEDESC 256
 
 
+#define GUIOPTION_LIST_MODE	"list_mode"
+#define GUIOPTION_LIST_FONT	"list_font"
+#define GUIOPTION_LIST_FONTFACE	"list_fontface"
+#define GUIOPTION_FOLDER_FLAG	"folder_flag"
+
+
 enum 
 {
 	COLUMN_GAMES = 0,

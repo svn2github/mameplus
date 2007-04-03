@@ -991,7 +991,7 @@ void rom_init(running_machine *machine, const rom_entry *romp)
 	static rom_load_data romdata;
 	int regnum;
 #ifdef USE_IPS
-	const char *patchname = options_get_string(mame_options(), "ips");
+	const char *patchname = options_get_string(mame_options(), OPTION_IPS);
 #endif /* USE_IPS */
 
 	/* if no roms, bail */

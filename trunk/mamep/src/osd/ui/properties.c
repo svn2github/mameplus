@@ -2606,7 +2606,7 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 						}
 
 					if (!drivers_table[i].name)
-						dwprintf(_WINDOWSW(TEXT("Illegal value for %s = %s\n")), TEXT("driver_config"), _Unicode(s));
+						dwprintf(_WINDOWSW(TEXT("Illegal value for %s = %s\n")), TEXT(OPTION_DRIVER_CONFIG), _Unicode(s));
 				}
 				free(s);
 
