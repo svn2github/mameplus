@@ -249,8 +249,8 @@ VIDEO_START( nemesis )
 
 	blank_characterdata = auto_malloc(32*8/8*(2048+1));
 	memset(blank_characterdata,0x00,32*8/8*(2048+1));
-	decodechar(Machine->gfx[0],0x800,(UINT8 *)blank_characterdata,
-					Machine->drv->gfxdecodeinfo[0].gfxlayout);
+	decodechar(machine->gfx[0],0x800,(UINT8 *)blank_characterdata,
+					machine->drv->gfxdecodeinfo[0].gfxlayout);
 
 	flipscreen = 0;
 	tilemap_flip = 0;
@@ -531,7 +531,7 @@ VIDEO_UPDATE( nemesis )
 	update_gfx();
 
 	fillbitmap(priority_bitmap,0,cliprect);
-	fillbitmap(bitmap,Machine->pens[0],cliprect);
+	fillbitmap(bitmap,machine->pens[0],cliprect);
 
 	tilemap_set_scrolly( background, 0, (nemesis_yscroll[0x180] & 0xff) );
 
@@ -560,7 +560,7 @@ VIDEO_UPDATE( salamand )
 	update_gfx();
 
 	fillbitmap(priority_bitmap,0,cliprect);
-	fillbitmap(bitmap,Machine->pens[0],cliprect);
+	fillbitmap(bitmap,machine->pens[0],cliprect);
 
 	clip.min_x = 0;
 	clip.max_x = 255;

@@ -39,7 +39,7 @@ MACHINE_RESET( neogeo )
 	memset (neogeo_ram16, 0, 0x10000);
 
 #ifdef USE_NEOGEO_HACKS
-	if (Machine->gamedrv->bios)
+	if (machine->gamedrv->bios)
 	{
 		if (system_bios == NEOGEO_BIOS_EURO)
 		{
@@ -111,12 +111,12 @@ MACHINE_RESET( neogeo )
 	}
 #endif /* USE_NEOGEO_HACKS */
 
-	mame_get_base_datetime(Machine, &systime);
+	mame_get_base_datetime(machine, &systime);
 
 	/* Disable Real Time Clock if the user selects to record or playback an .inp file   */
 	/* This is needed in order to playback correctly an .inp on several games,as these  */
 	/* use the RTC of the NEC pd4990a as pseudo-random number generator   -kal 8 apr 02 */
-	if( Machine->record_file != NULL || Machine->playback_file != NULL )
+	if( machine->record_file != NULL || machine->playback_file != NULL )
 	{
 		pd4990a.seconds = 0;
 		pd4990a.minutes = 0;
@@ -144,15 +144,15 @@ MACHINE_RESET( neogeo )
 
 	/* not ideal having these here, but they need to be checked every reset at least */
 	/* the rom banking is tied directly to the dipswitch?, or is there a bank write somewhere? */
-	if (!strcmp(Machine->gamedrv->name,"ms5pcb") ||
-		!strcmp(Machine->gamedrv->name,"svcpcb") ||
-		!strcmp(Machine->gamedrv->name,"svcpcba"))
+	if (!strcmp(machine->gamedrv->name,"ms5pcb") ||
+		!strcmp(machine->gamedrv->name,"svcpcb") ||
+		!strcmp(machine->gamedrv->name,"svcpcba"))
 	{
 		int harddip3 = readinputportbytag("HARDDIP")&1;
 		memcpy(memory_region( REGION_USER1 ),memory_region( REGION_USER1 )+0x20000+harddip3*0x20000, 0x20000);
 	}
 	/* a jumper pad on th PCB acts as a ROM overlay and is used to select the game language as opposed to the BIOS */
-	if (!strcmp(Machine->gamedrv->name,"kog"))
+	if (!strcmp(machine->gamedrv->name,"kog"))
 	{
 		int jumper = readinputportbytag("JUMPER");
 		memory_region(REGION_CPU1)[0x1FFFFC/2] = jumper;
@@ -170,7 +170,7 @@ DRIVER_INIT( neogeo )
 	int tileno,numtiles;
 
 #ifdef USE_NEOGEO_HACKS
-	system_bios = determine_bios_rom(Machine->gamedrv->bios);
+	system_bios = determine_bios_rom(machine->gamedrv->bios);
 #endif /* USE_NEOGEO_HACKS */
 
 	numtiles = memory_region_length(REGION_GFX3)/128;
@@ -254,7 +254,7 @@ DRIVER_INIT( neogeo )
 
 
 	/* irritating maze uses a trackball */
-	if (!strcmp(Machine->gamedrv->name,"irrmaze"))
+	if (!strcmp(machine->gamedrv->name,"irrmaze"))
 	{
 		neogeo_has_trackball = 1;
 
@@ -284,7 +284,7 @@ DRIVER_INIT( neogeo )
 		neogeo_has_trackball = 0;
 
 #ifdef USE_NEOGEO_HACKS
-		if (Machine->gamedrv->bios)
+		if (machine->gamedrv->bios)
 		{
 			if (system_bios == NEOGEO_BIOS_EURO)
 			{

@@ -269,7 +269,7 @@ int osd_init(running_machine *machine)
 		result = win_parallel_init();
 #endif
 
-	if (options_get_bool(mame_options(), "oslog"))
+	if (options_get_bool(mame_options(), WINOPTION_OSLOG))
 		add_logerror_callback(machine, output_oslog);
 
 	return result;

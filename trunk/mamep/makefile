@@ -279,7 +279,7 @@ endif
 # compile-time definitions
 #-------------------------------------------------
 
-DEFS = -DX86_ASM -DLSB_FIRST -DINLINE="static __inline__" -Dasm=__asm__ -DCRLF=3 -DXML_STATIC -Drestrict=__restrict
+DEFS = -DLSB_FIRST -DINLINE="static __inline__" -DCRLF=3 -DXML_STATIC -Drestrict=__restrict
 
 ifneq ($(PTR64),)
 DEFS += -DPTR64

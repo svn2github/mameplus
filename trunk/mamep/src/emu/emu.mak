@@ -137,7 +137,7 @@ $(EMUOBJ)/rendfont.o:		$(EMUOBJ)/uismall11.fh $(EMUOBJ)/uismall14.fh $(EMUOBJ)/u
 
 $(EMUOBJ)/video.o:		$(EMUSRC)/rendersw.c
 
-$(EMUOBJ)/datafile.o:		$(EMUSRC)/statistics.h
+$(EMUOBJ)/datafile.o:		$(MAMESRC)/statistics.h
 
 
 
