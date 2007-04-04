@@ -596,6 +596,12 @@ void ui_update_and_render(void)
 	/* always start clean */
 	render_container_empty(render_container_get_ui());
 
+	if (auto_pause)
+	{
+		auto_pause = 0;
+		mame_pause(Machine, TRUE);
+	}
+
 	/* if we're paused, dim the whole screen */
 	if (mame_get_phase(Machine) >= MAME_PHASE_RESET && (single_step || mame_is_paused(Machine)))
 	{
