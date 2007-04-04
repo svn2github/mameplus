@@ -1,3 +1,11 @@
+# 14
+Misc
+Verschiedenes
+
+# 35
+Neo-Geo
+Neo-Geo
+
 # 20
 CPS1
 
@@ -8,14 +16,6 @@ CPS2
 
 # Title
 IPS
-
-
-# 14
-Misc
-
-
-# 35
-Neo-Geo
 
 
 # 93

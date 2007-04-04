@@ -214,7 +214,7 @@ Athena
 Atlus
 
 
-# A Question of Sport
+# A Question of Sport (39-960-099)
 BFM
 
 
@@ -386,6 +386,10 @@ Comad
 Comad & New Japan System
 
 
+# Funny Bubble (Comad version)
+Comad Industry Co Ltd
+
+
 # Puyo Puyo Sun (J 961115 V0.001)
 Compile
 
@@ -398,7 +402,7 @@ Comsoft
 Core
 
 
-# SWAT
+# SWAT (315-5048)
 Coreland
 
 
@@ -950,12 +954,20 @@ IDSA
 IGS
 
 
+# Dou Di Zhu
+IGS?
+
+
 # See See Find Out
 Icarus
 
 
 # Magic Card II (Bulgaria, bootleg)
 Impera
+
+
+# Funny Bubble
+In Chang Electronic Co
 
 
 # Capcom Bowling (set 1)
@@ -1250,6 +1262,10 @@ Midway
 Midway Games
 
 
+# Wonder League Star (Korea)
+Mijin
+
+
 # Truco Clemente
 Miky SRL
 
@@ -1518,6 +1534,10 @@ Poby
 Primetek Investments
 
 
+# Spotty (Ver. 2.0.2)
+Prince Co.
+
+
 # The Pagemaster (U) [!]
 Probe
 
@@ -1714,6 +1734,10 @@ SemiCom
 Semicom
 
 
+# Hex Pool (Senko)
+Senko
+
+
 # Special Forces
 Senko Industries
 
@@ -1738,7 +1762,7 @@ Seta
 Seta Kikaku Corp.
 
 
-# Hex Pool
+# Hex Pool (Shinkai)
 Shinkai
 
 
@@ -2134,7 +2158,7 @@ Universal Video Spiel
 Uniwang
 
 
-# Intersecti
+# Mahjong Dunhuang
 Unknown
 
 
@@ -2252,6 +2276,10 @@ Web Picmatic
 
 # Sukeban Jansi Ryuko (set 1, System 16A, FD1089B 317-5021)
 White Board
+
+
+# DakkoChan House (MC-8123, 317-0014)
+Whiteboard
 
 
 # Hit the Ice (US)
