@@ -550,7 +550,7 @@ static READ16_HANDLER( neo_control_16_r )
 	/* the vertical counter chain goes from 0xf8 - 0x1ff */
 	v_counter = video_screen_get_vpos(0) + 0x100;
 
-	if (v_counter > 0x200)
+	if (v_counter >= 0x200)
 	{
 		v_counter = v_counter - 0x108;
 	}
