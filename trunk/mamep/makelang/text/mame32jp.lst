@@ -176,7 +176,7 @@ trvchlng	ƒgƒŠƒrƒAƒ`ƒƒƒŒƒ“ƒW	‚Æ‚è‚Ñ‚ _2_‚¿‚á‚ê‚ñ‚¶	Joyland (Senko License)
 luctoday	ƒ‰ƒbƒL[ƒgƒDƒfƒC	‚ç‚Á‚«[‚Æ‚£‚Å‚¢	Sigma
 chewing	ƒ`ƒ…[ƒCƒ“ƒOƒKƒ€	‚¿‚ã[‚¢‚ñ‚®‚ª‚Ş	unknown
 catacomb	ƒJƒ^ƒRƒ“ƒx	‚©‚½‚±‚ñ‚×	MTM Games
-ckongg	ƒNƒŒ[ƒW[ƒRƒ“ƒO (galaxian)	‚­‚ê[‚¶[‚±‚ñ‚®	bootleg
+ckongg	ƒhƒ“ƒL[ƒRƒ“ƒO / Crazy Kong (galaxian)	‚Ç‚ñ‚«[‚±‚ñ‚®_1	bootleg
 rockclim	ƒƒbƒNƒNƒ‰ƒCƒ}[	‚ë‚Á‚­‚­‚ç‚¢‚Ü[	Taito
 scramble	ƒXƒNƒ‰ƒ“ƒuƒ‹	‚·‚­‚ç‚ñ‚Ô‚é	Konami
 scrambls	ƒXƒNƒ‰ƒ“ƒuƒ‹ (Stern)	‚·‚­‚ç‚ñ‚Ô‚é	[Konami] (Stern license)
@@ -2490,10 +2490,10 @@ ddrja	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ (GC845 ver JAB)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_
 ddra	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ (GN845 ver AAA)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_1_1	Konami
 fbait2bc	ƒoƒXƒAƒ“ƒOƒ‰[2 / Fisherman's Bait 2 - A Bass Challenge (GE865 ver UAB)	‚Î‚·‚ ‚ñ‚®‚ç[_2	Konami
 drmn	ƒhƒ‰ƒ€ƒ}ƒjƒA (GQ881 ver JAD)	‚Ç‚ç‚Ş‚Ü‚É‚ _1	Konami
-gtrfrks	ƒMƒ^[ƒtƒŠ[ƒNƒX (GQ886 ver EAC)	‚¬‚½[‚Ó‚è[‚­‚·	Konami
-gtrfrksu	ƒMƒ^[ƒtƒŠ[ƒNƒX (GQ886 ver UAC)	‚¬‚½[‚Ó‚è[‚­‚·	Konami
-gtrfrksj	ƒMƒ^[ƒtƒŠ[ƒNƒX (GQ886 ver JAC)	‚¬‚½[‚Ó‚è[‚­‚·	Konami
-gtrfrksa	ƒMƒ^[ƒtƒŠ[ƒNƒX (GQ886 ver AAC)	‚¬‚½[‚Ó‚è[‚­‚·	Konami
+gtrfrks	ƒMƒ^[ƒtƒŠ[ƒNƒX (GQ886 ver EAC)	‚¬‚½[‚Ó‚è[‚­‚·_1	Konami
+gtrfrksu	ƒMƒ^[ƒtƒŠ[ƒNƒX (GQ886 ver UAC)	‚¬‚½[‚Ó‚è[‚­‚·_1	Konami
+gtrfrksj	ƒMƒ^[ƒtƒŠ[ƒNƒX (GQ886 ver JAC)	‚¬‚½[‚Ó‚è[‚­‚·_1	Konami
+gtrfrksa	ƒMƒ^[ƒtƒŠ[ƒNƒX (GQ886 ver AAC)	‚¬‚½[‚Ó‚è[‚­‚·_1	Konami
 fbaitmc	ƒtƒBƒbƒVƒƒ[ƒ}ƒ“ƒYƒxƒCƒg -Marlin Challenge (GX889 ver EA)	‚Ó‚¡‚Á‚µ‚á[‚Ü‚ñ‚¸‚×‚¢‚Æ_1	Konami
 fbaitmcu	ƒtƒBƒbƒVƒƒ[ƒ}ƒ“ƒYƒxƒCƒg -Marlin Challenge (GX889 ver UA)	‚Ó‚¡‚Á‚µ‚á[‚Ü‚ñ‚¸‚×‚¢‚Æ_1	Konami
 fbaitmcj	ƒtƒBƒbƒVƒƒ[ƒ}ƒ“ƒYƒxƒCƒg -Marlin Challenge (GX889 ver JA)	‚Ó‚¡‚Á‚µ‚á[‚Ü‚ñ‚¸‚×‚¢‚Æ_1	Konami
@@ -3529,6 +3529,7 @@ jumppop	ƒWƒƒƒ“ƒsƒ“ƒOƒ|ƒbƒv	‚¶‚á‚ñ‚Ò‚ñ‚®‚Û‚Á‚Õ	ESD
 pangpang	ƒpƒ“ƒpƒ“	‚Ï‚ñ‚Ï‚ñ	Dong Gue La Mi Ltd.
 sdfight	SDƒtƒ@ƒCƒ^[ (ŠØ‘”Å)	‚¦‚·‚Å‚¡[‚Ó‚Ÿ‚¢‚½[	SemiCom
 wlstar	ƒƒ“ƒ_[ƒŠ[ƒOƒXƒ^[ -‘±ƒ}ƒWƒbƒNƒ{[ƒ‹ƒtƒ@ƒCƒeƒBƒ“ƒO (ŠØ‘”Å)	‚í‚ñ‚¾[‚è[‚®‚·‚½[	Mijin
+wondl96	ƒƒ“ƒ_[ƒŠ[ƒO '96 (ŠØ‘”Å)	‚í‚ñ‚¾[‚è[‚®_96_‚È‚¢‚ñ‚Ä‚¡[‚ñ‚µ‚Á‚­‚·	SemiCom
 fncywld	ƒtƒ@ƒ“ƒV[ƒ[ƒ‹ƒh -Earth of Crisis	‚Ó‚Ÿ‚ñ‚µ[‚í[‚é‚Ç	Unico
 htchctch	ƒnƒbƒ`ƒLƒƒƒbƒ`	‚Í‚Á‚¿‚«‚á‚Á‚¿	SemiCom
 cookbib	ƒNƒbƒL[&ƒrƒr	‚­‚Á‚«[‚ ‚ñ‚Ç‚Ñ‚Ñ_1	SemiCom
@@ -3979,8 +3980,7 @@ qdrmfgp2	ƒNƒCƒY ƒhƒŒƒ~ƒtƒ@ƒOƒ‰ƒ“ƒvƒŠ2 -V‹È“ü‰×‚¾‚æ (“ú–{”Å)	‚­‚¢‚¸‚Ç‚ê‚İ‚Ó‚Ÿ‚®‚
 bm1stmix	ƒr[ƒgƒ}ƒjƒA (ver JA-B)	‚Ñ[‚Æ‚Ü‚É‚ _1_1	Konami
 bm2ndmix	ƒr[ƒgƒ}ƒjƒA 2nd MIX (ver JA-B)	‚Ñ[‚Æ‚Ü‚É‚ _1_2_‚¹‚©‚ñ‚Ç‚İ‚Á‚­‚·	Konami
 bm2ndmxa	ƒr[ƒgƒ}ƒjƒA 2nd MIX (ver JA-A)	‚Ñ[‚Æ‚Ü‚É‚ _1_2_‚¹‚©‚ñ‚Ç‚İ‚Á‚­‚·	Konami
-bm3rdmix	ƒr[ƒgƒ}ƒjƒA 3rd MIX (ver JA-B)	‚Ñ[‚Æ‚Ü‚É‚ _1_3_‚³[‚Ç‚İ‚Á‚­‚·	Konami
-bm3rdmxa	ƒr[ƒgƒ}ƒjƒA 3rd MIX (ver JA-A)	‚Ñ[‚Æ‚Ü‚É‚ _1_3_‚³[‚Ç‚İ‚Á‚­‚·	Konami
+bm3rdmix	ƒr[ƒgƒ}ƒjƒA 3rd MIX (ver JA-A)	‚Ñ[‚Æ‚Ü‚É‚ _1_3_‚³[‚Ç‚İ‚Á‚­‚·	Konami
 bmcompmx	ƒr[ƒgƒ}ƒjƒA complete MIX (ver JA-B)	‚Ñ[‚Æ‚Ü‚É‚ _2_1_‚±‚ñ‚Õ‚è[‚Æ‚İ‚Á‚­‚·_1	Konami
 hmcompmx	ƒr[ƒgƒ}ƒjƒA complete MIX / Hiphopmania Complete MIX (ver UA-B)	‚Ñ[‚Æ‚Ü‚É‚ _2_1_‚±‚ñ‚Õ‚è[‚Æ‚İ‚Á‚­‚·_1	Konami
 bm4thmix	ƒr[ƒgƒ}ƒjƒA 4th MIX -The beat goes on (ver JA-A)	‚Ñ[‚Æ‚Ü‚É‚ _1_4_‚Ó‚§[‚·‚İ‚Á‚­‚·	Konami
@@ -3992,11 +3992,6 @@ bmcompm2	ƒr[ƒgƒ}ƒjƒA complete MIX2 (ver JA-A)	‚Ñ[‚Æ‚Ü‚É‚ _2_2_‚±‚ñ‚Õ‚è[‚Æ‚İ‚Á
 hmcompm2	ƒr[ƒgƒ}ƒjƒA complete MIX2 / Hiphopmania Complete MIX 2 (ver UA-A)	‚Ñ[‚Æ‚Ü‚É‚ _2_2_‚±‚ñ‚Õ‚è[‚Æ‚İ‚Á‚­‚·_2	Konami
 bm6thmix	ƒr[ƒgƒ}ƒjƒA 6th MIX -The UK underground music (ver JA-A)	‚Ñ[‚Æ‚Ü‚É‚ _1_6_‚µ‚Á‚­‚·‚·‚İ‚Á‚­‚·	Konami
 bm7thmix	ƒr[ƒgƒ}ƒjƒA 7th MIX (ver JA-B)	‚Ñ[‚Æ‚Ü‚É‚ _1_7_‚¹‚Ô‚ñ‚·‚·‚İ‚Á‚­‚·	Konami
-bmfinal	ƒr[ƒgƒ}ƒjƒA THE FINAL (ver JA-A)	‚Ñ[‚Æ‚Ü‚É‚ _2_6_‚´‚Ó‚Ÿ‚¢‚È‚é	Konami
-popn1	ƒ|ƒbƒvƒ“ƒ~ƒ…[ƒWƒbƒN (ver JA-A)	‚Û‚Á‚Õ‚ñ‚İ‚ã[‚¶‚Á‚­_1	Konami
-popn2	ƒ|ƒbƒvƒ“ƒ~ƒ…[ƒWƒbƒN2 (ver JA-A)	‚Û‚Á‚Õ‚ñ‚İ‚ã[‚¶‚Á‚­_2	Konami
-popn3	ƒ|ƒbƒvƒ“ƒ~ƒ…[ƒWƒbƒN3 (ver JA-A)	‚Û‚Á‚Õ‚ñ‚İ‚ã[‚¶‚Á‚­_3	Konami
-popnstex	ƒ|ƒbƒvƒ“ƒXƒe[ƒW EX (ver JB-A)	‚Û‚Á‚Õ‚ñ‚·‚Ä[‚¶_2_‚¢[‚¦‚Á‚­‚·	Konami
 ppp	ƒpƒ‰ƒpƒ‰ƒpƒ‰ƒ_ƒCƒX	‚Ï‚ç‚Ï‚ç‚Ï‚ç‚¾‚¢‚·	Konami
 ppd	ƒpƒ‰ƒpƒ‰ƒ_ƒ“ƒVƒ“ƒO	‚Ï‚ç‚Ï‚ç‚¾‚ñ‚µ‚ñ‚®	Konami
 ppp11	ƒpƒ‰ƒpƒ‰ƒpƒ‰ƒ_ƒCƒX (ver 1.1)	‚Ï‚ç‚Ï‚ç‚Ï‚ç‚¾‚¢‚·	Konami
@@ -4916,7 +4911,6 @@ tharrier	ƒ^ƒXƒNƒtƒH[ƒXƒnƒŠƒA[	‚½‚·‚­‚Ó‚§[‚·‚Í‚è‚ [	UPL (American Sammy licen
 tharierj	ƒ^ƒXƒNƒtƒH[ƒXƒnƒŠƒA[ (“ú–{”Å)	‚½‚·‚­‚Ó‚§[‚·‚Í‚è‚ [	UPL
 mustang	US AAF ƒ€ƒXƒ^ƒ“ƒO (“ú–{”Å)	‚ä[‚¦‚·‚¦[‚¦[‚¦‚Ó‚Ş‚·‚½‚ñ‚®	UPL
 mustangs	US AAF ƒ€ƒXƒ^ƒ“ƒO (Seoul Trading)	‚ä[‚¦‚·‚¦[‚¦[‚¦‚Ó‚Ş‚·‚½‚ñ‚®	UPL (Seoul Trading license)
-mustangb	US AAF ƒ€ƒXƒ^ƒ“ƒO (ŠC‘¯”Å)	‚ä[‚¦‚·‚¦[‚¦[‚¦‚Ó‚Ş‚·‚½‚ñ‚®	bootleg
 bioship	‰F’ˆíŠÍƒSƒ‚ƒ‰ / Bio-ship Paladin	‚¤‚¿‚ã‚¤‚¹‚ñ‚©‚ñ‚²‚à‚ç	UPL (American Sammy license)
 sbsgomo	‰F’ˆíŠÍƒSƒ‚ƒ‰	‚¤‚¿‚ã‚¤‚¹‚ñ‚©‚ñ‚²‚à‚ç	UPL
 vandyke	ƒoƒ“ƒ_ƒCƒN (“ú–{”Å)	‚Î‚ñ‚¾‚¢‚­	UPL
@@ -4931,7 +4925,6 @@ bjtwin	ƒ{ƒ“ƒWƒƒƒbƒN ƒcƒCƒ“	‚Ú‚ñ‚¶‚á‚Á‚­‚Â‚¢‚ñ	NMK
 tdragon2	ƒTƒ“ƒ_[ƒhƒ‰ƒSƒ“2 <—‹—´2>	‚³‚ñ‚¾[‚Ç‚ç‚²‚ñ_2	NMK
 bigbang	ƒTƒ“ƒ_[ƒhƒ‰ƒSƒ“2 <—‹—´2> / Big Bang -Power Shooting	‚³‚ñ‚¾[‚Ç‚ç‚²‚ñ_2	NMK
 tdragon	ƒTƒ“ƒ_[ƒhƒ‰ƒSƒ“ <—‹—´>	‚³‚ñ‚¾[‚Ç‚ç‚²‚ñ_1	NMK (Tecmo license)
-tdragonb	ƒTƒ“ƒ_[ƒhƒ‰ƒSƒ“ <—‹—´> (ŠC‘¯”Å)	‚³‚ñ‚¾[‚Ç‚ç‚²‚ñ_1	NMK / Tecmo
 hachamf	ƒnƒ`ƒƒƒƒ`ƒƒƒtƒ@ƒCƒ^[ -‚©‚í‚¤‚»&‚Â‚¿‚Ô‚½ƒCƒ“	‚Í‚¿‚á‚ß‚¿‚á‚Ó‚Ÿ‚¢‚½[	NMK
 macross	’´‹ó—vÇƒ}ƒNƒƒX	‚¿‚å‚¤‚¶‚­‚¤‚æ‚¤‚³‚¢‚Ü‚­‚ë‚·_1	Banpresto
 riot	—‹ça“l	‚ç‚¢‚ ‚Á‚Æ	NMK
@@ -4940,16 +4933,19 @@ macross2	’´‹ó—vÇƒ}ƒNƒƒX II	‚¿‚å‚¤‚¶‚­‚¤‚æ‚¤‚³‚¢‚Ü‚­‚ë‚·_2	Banpresto
 sabotenb	ƒTƒ{ƒeƒ“ƒ{ƒ“ƒo[ƒY (set 1)	‚³‚Ú‚Ä‚ñ‚Ú‚ñ‚Î[‚¸	NMK / Tecmo
 sabotnba	ƒTƒ{ƒeƒ“ƒ{ƒ“ƒo[ƒY (set 2)	‚³‚Ú‚Ä‚ñ‚Ú‚ñ‚Î[‚¸	NMK / Tecmo
 nouryoku	”]—ÍŒüãˆÏˆõ‰ï	‚Ì‚¤‚è‚å‚­‚±‚¤‚¶‚å‚¤‚¢‚¢‚ñ‚©‚¢	Tecmo
-manybloc	ƒƒj[ƒuƒƒbƒN	‚ß‚É[‚Ô‚ë‚Á‚­	Bee-Oh
-ssmissin	S.S.ƒ~ƒbƒVƒ‡ƒ“(“Á–½)	‚¦‚·‚¦‚·‚İ‚Á‚µ‚å‚ñ	Comad
-airattck	‹óP -Air Attack	‚­‚¤‚µ‚ã‚¤	Comad
 raphero	ƒ‰ƒsƒbƒhƒq[ƒ[ (“ú–{”Å?)	‚ç‚Ò‚Á‚Ç‚Ğ[‚ë[	Media Trading Corp
-ddealer	ƒ_ƒuƒ‹ƒfƒB[ƒ‰[	‚¾‚Ô‚é‚Å‚¡[‚ç[	NMK
+mustangb	US AAF ƒ€ƒXƒ^ƒ“ƒO (ŠC‘¯”Å)	‚ä[‚¦‚·‚¦[‚¦[‚¦‚Ó‚Ş‚·‚½‚ñ‚®	bootleg
+tdragonb	ƒTƒ“ƒ_[ƒhƒ‰ƒSƒ“ <—‹—´> (ŠC‘¯”Å)	‚³‚ñ‚¾[‚Ç‚ç‚²‚ñ_1	NMK / Tecmo
+ssmissin	S.S.ƒ~ƒbƒVƒ‡ƒ“(“Á–½)	‚¦‚·‚¦‚·‚İ‚Á‚µ‚å‚ñ	Comad
+airattck	‹óP -Air Attack (set 1)	‚­‚¤‚µ‚ã‚¤	Comad
+airattca	‹óP -Air Attack (set 2)	‚­‚¤‚µ‚ã‚¤	Comad
+manybloc	ƒƒj[ƒuƒƒbƒN	‚ß‚É[‚Ô‚ë‚Á‚­	Bee-Oh
 daireika	–ƒ‘å—ìŠE	‚Ü[‚¶‚á‚ñ‚¾‚¢‚ê‚¢‚©‚¢	Jaleco / NMK
 mjzoomin	–ƒ‚¿‚á‚ñ‚Ë‚éƒY[ƒ€ƒCƒ“I	‚Ü[‚¶‚á‚ñ‚¿‚á‚ñ‚Ë‚é‚¸[‚Ş‚¢‚ñ	Jaleco
 kakumei	–ƒŠv–½	‚Ü[‚¶‚á‚ñ‚©‚­‚ß‚¢_1	Jaleco
 kakumei2	–ƒŠv–½II -ƒvƒŠƒ“ƒZƒXƒŠ[ƒO	‚Ü[‚¶‚á‚ñ‚©‚­‚ß‚¢_2	Jaleco
 suchipi	ƒAƒCƒhƒ‹mƒX[ƒ`[ƒpƒCƒXƒyƒVƒƒƒ‹	‚ ‚¢‚Ç‚é‚¶‚á‚ñ‚µ‚·[‚¿[‚Ï‚¢_1‚·‚Ø‚µ‚á‚é	Jaleco
+ddealer	ƒ_ƒuƒ‹ƒfƒB[ƒ‰[	‚¾‚Ô‚é‚Å‚¡[‚ç[	NMK
 quizpani	ƒNƒCƒY‚Ï‚É‚­‚é‚Ó‚Ÿ‚ñ‚½‚¶`	‚­‚¢‚¸‚Ï‚É‚­‚é‚Ó‚Ÿ‚ñ‚½‚¶[	NMK
 acommand	ƒGƒCƒŠƒAƒ“ƒRƒ}ƒ“ƒh	‚¦‚¢‚è‚ ‚ñ‚±‚Ü‚ñ‚Ç	Jaleco
 macrossp	ƒ}ƒNƒƒXƒvƒ‰ƒX	‚Ü‚­‚ë‚·‚Õ‚ç‚·	Banpresto
