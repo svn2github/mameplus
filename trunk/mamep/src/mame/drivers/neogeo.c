@@ -8570,8 +8570,8 @@ ROM_START( pnyaad ) /* Decrypted C ROMs Version -  Encrypted Sound */
 
 	ROM_REGION( 0x1000000, REGION_GFX3, 0 )
 	/* Decrypted */
-	ROM_LOAD16_BYTE( "267-c1d.bin", 0x0000000, 0x800000, CRC(2bd02a33) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "267-c2d.bin", 0x0000001, 0x800000, CRC(8fb27b0b) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "267-c1d.bin", 0x0000000, 0x800000, CRC(75fa4f27) SHA1(05f39dc5bedfecff67a9e5bd0bb8d09d93168f58) )
+	ROM_LOAD16_BYTE( "267-c2d.bin", 0x0000001, 0x800000, CRC(02345689) SHA1(d40c425e73fd8dc0b0f66bf72a79f66b3bf390e1) )
 ROM_END
 
 ROM_START( mslug5d )
