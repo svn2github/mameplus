@@ -386,6 +386,10 @@ Comad
 Comad & New Japan System
 Comad & New Japan System
 
+# Funny Bubble (Comad version)
+Comad Industry Co Ltd
+Comad Industry Co Ltd
+
 # Puyo Puyo Sun (J 961115 V0.001)
 Compile
 Compile
@@ -398,7 +402,7 @@ Comsoft
 Core
 Core
 
-# SWAT
+# SWAT (315-5048)
 Coreland
 Coreland
 
@@ -950,6 +954,10 @@ IDSA
 IGS
 IGS
 
+# Dou Di Zhu
+IGS?
+IGS?
+
 # See See Find Out
 Icarus
 Icarus
@@ -957,6 +965,10 @@ Icarus
 # Magic Card II (Bulgaria, bootleg)
 Impera
 Impera
+
+# Funny Bubble
+In Chang Electronic Co
+In Chang Electronic Co
 
 # Capcom Bowling (set 1)
 Incredible Technologies
@@ -1250,6 +1262,10 @@ Midway
 Midway Games
 Midway Games
 
+# Wonder League Star (Korea)
+Mijin
+Mijin
+
 # Truco Clemente
 Miky SRL
 Miky SRL
@@ -1517,6 +1533,10 @@ Poby
 # Thunder Heroes
 Primetek Investments
 Primetek Investments
+
+# Spotty (Ver. 2.0.2)
+Prince Co.
+Prince Co.
 
 # The Pagemaster (U) [!]
 Probe
@@ -2138,7 +2158,7 @@ Universal Video Spiel
 Uniwang
 Uniwang
 
-# Intersecti
+# Mahjong Dunhuang
 Unknown
 Unknown
 
@@ -2257,6 +2277,10 @@ Web Picmatic
 # Sukeban Jansi Ryuko (set 1, System 16A, FD1089B 317-5021)
 White Board
 White Board
+
+# DakkoChan House (MC-8123, 317-0014)
+Whiteboard
+Whiteboard
 
 # Hit the Ice (US)
 Williams
