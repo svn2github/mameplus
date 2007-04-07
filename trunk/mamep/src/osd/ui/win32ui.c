@@ -94,6 +94,10 @@
 #include "DirectInput.h"
 #include "DIJoystick.h"     /* For DIJoystick avalibility. */
 
+#ifdef _MSC_VER
+#define wcscmpi _wcsicmp
+#endif
+
 #ifndef LVS_EX_LABELTIP
 #define LVS_EX_LABELTIP         0x00004000 // listview unfolds partly hidden labels if it does not have infotip text
 #endif // LVS_EX_LABELTIP

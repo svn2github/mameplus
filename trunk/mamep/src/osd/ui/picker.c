@@ -38,6 +38,10 @@
 #include "translate.h"
 
 
+#ifdef _MSC_VER
+#define wcscmpi _wcsicmp
+#endif
+
 // fix warning: cast does not match function type
 #if defined(__GNUC__) && defined(ListView_GetHeader)
 #undef ListView_GetHeader
