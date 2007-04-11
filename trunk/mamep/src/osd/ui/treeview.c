@@ -2535,7 +2535,7 @@ BOOL TryAddExtraFolderAndChildren(int parent_index)
 					lpTemp = NewFolder(foldername, UI_MSG_EXTRA + (ExtraFolderData[id]->m_nFolderId - MAX_FOLDERS),
 					                   TRUE, current_id, parent_index, ExtraFolderData[id]->m_nSubIconId);
 
-					lpFolder->m_dwFlags |= F_CUSTOM;
+					lpTemp->m_dwFlags |= F_CUSTOM;
 
 					AddFolder(lpTemp);
 				}
