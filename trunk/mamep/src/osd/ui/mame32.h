@@ -89,7 +89,6 @@
 
 // for VC2005
 #if _MSC_VER >= 1400
-#define _CRT_NON_CONFORMING_SWPRINTFS 
 #define wcsdup _wcsdup
 #define wcsicmp _wcsicmp
 #define strdup _strdup

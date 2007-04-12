@@ -16,6 +16,11 @@
 
  ***************************************************************************/
 
+// for VC2005
+#if _MSC_VER >= 1400
+#define _CRT_NON_CONFORMING_SWPRINTFS 
+#endif
+
 #define WIN32_LEAN_AND_MEAN
 #define UNICODE
 #include <windows.h>

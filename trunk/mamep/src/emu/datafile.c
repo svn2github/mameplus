@@ -17,6 +17,11 @@
 #include "hash.h"
 #include "statistics.h"
 
+// for VC2005
+#if _MSC_VER >= 1400
+#define strlwr _strlwr
+#endif
+
 
 /****************************************************************************
  *      token parsing constants
