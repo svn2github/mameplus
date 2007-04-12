@@ -18,7 +18,7 @@
 #include "statistics.h"
 
 // for VC2005
-#if _MSC_VER >= 1400
+#if defined(_MSC_VER) && _MSC_VER >= 1400
 #define strlwr _strlwr
 #endif
 

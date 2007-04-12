@@ -17,7 +17,7 @@
  ***************************************************************************/
 
 // for VC2005
-#if _MSC_VER >= 1400
+#if defined(_MSC_VER) && _MSC_VER >= 1400
 #define _CRT_NON_CONFORMING_SWPRINTFS 
 #endif
 
