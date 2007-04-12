@@ -98,11 +98,6 @@ typedef HANDLE HTHEME;
 #define DISPLAY_DEVICE_MIRRORING_DRIVER    0x00000008
 #endif
 
-#ifdef _MSC_VER
-#define snprintf _snprintf
-#define snwprintf _snwprintf
-#endif
-
 #define FOLDER_OPTIONS	-2
 #define GLOBAL_OPTIONS	-1
 

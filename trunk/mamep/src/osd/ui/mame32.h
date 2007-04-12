@@ -86,6 +86,8 @@
 
 #ifdef _MSC_VER
 #define wcscmpi _wcsicmp
+#define snprintf _snprintf
+#define snwprintf _snwprintf
 
 // for VC2005
 #if _MSC_VER >= 1400

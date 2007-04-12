@@ -18,16 +18,13 @@
 
 ***************************************************************************/
 
-#define WIN32_LEAN_AND_MEAN
-#define UNICODE
-
-#ifdef _MSC_VER
+// for VC2005
 #if _MSC_VER >= 1400
-// mamep:for VC2005
 #define _CRT_NON_CONFORMING_SWPRINTFS 
 #endif
-#endif
 
+#define WIN32_LEAN_AND_MEAN
+#define UNICODE
 #include <windows.h>
 #include <windowsx.h>
 #include <shellapi.h>
@@ -59,11 +56,6 @@
 #if _MSC_VER > 1200
 #define HAS_DUMMYUNIONNAME
 #endif
-#endif
-
-#ifdef _MSC_VER
-#define snprintf _snprintf
-#define snwprintf _snwprintf
 #endif
 
 #define MAX_EXTRA_FOLDERS 256

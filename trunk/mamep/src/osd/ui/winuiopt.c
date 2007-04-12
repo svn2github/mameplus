@@ -54,10 +54,6 @@
 #ifdef IMAGE_MENU
 #include "imagemenu.h"
 #endif /* IMAGE_MENU */
-	
-#ifdef _MSC_VER
-#define snprintf _snprintf
-#endif
 
 
 /***************************************************************************

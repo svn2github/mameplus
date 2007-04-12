@@ -44,18 +44,12 @@
 #include "help.h"
 #include "audit32.h"
 #include "screenshot.h"
-#include "mame32.h"
 #include "properties.h"
 #include "dialogs.h"
 #ifdef USE_VIEW_PCBINFO
 #include "file.h"
 #endif /* USE_VIEW_PCBINFO */
 #include "translate.h"
-
-#ifdef _MSC_VER
-#define snprintf _snprintf
-#define snwprintf _snwprintf
-#endif
 
 #define FILTERTEXT_LEN 256
 

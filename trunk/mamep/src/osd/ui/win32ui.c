@@ -30,10 +30,8 @@
 #define NONAMELESSUNION
 #endif
 
-#define snwprintf _snwprintf
-
+// for VC2005
 #if _MSC_VER >= 1400
-// mamep:for VC2005
 #define _CRT_NON_CONFORMING_SWPRINTFS 
 #endif
 #endif

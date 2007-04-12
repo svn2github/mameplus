@@ -34,6 +34,7 @@
 #include <stdio.h>
 #include <richedit.h>
 
+#include "mame32.h"
 #include "screenshot.h"
 #include "win32ui.h"
 
@@ -49,11 +50,6 @@
 #include "audit32.h"
 #include "Properties.h"
 #include "translate.h"
-
-#ifdef _MSC_VER
-#define snprintf _snprintf
-#define snwprintf _snwprintf
-#endif
 
 /***************************************************************************
     function prototypes
