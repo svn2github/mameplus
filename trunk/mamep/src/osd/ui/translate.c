@@ -49,11 +49,6 @@
 
 #define NUM_POPSTR	4
 
-#if _MSC_VER >= 1400
-// for VC2005
-#define wcsdup _wcsdup
-#endif
-
 static struct {
 	HMENU hMenu;
 	UINT  uiString;

@@ -103,12 +103,6 @@ typedef HANDLE HTHEME;
 #define snwprintf _snwprintf
 #endif
 
-#if _MSC_VER >= 1400
-// for VC2005
-#define strdup _strdup
-#define wcsicmp _wcsicmp
-#endif
-
 #define FOLDER_OPTIONS	-2
 #define GLOBAL_OPTIONS	-1
 

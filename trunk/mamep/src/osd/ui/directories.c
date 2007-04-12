@@ -32,11 +32,6 @@
 #include "m32util.h"
 #include "translate.h"
 
-#if _MSC_VER >= 1400
-// for VC2005
-#define wcsdup _wcsdup
-#endif
-
 #if defined(__GNUC__)
 /* fix warning: cast does not match function type */
 #undef ListView_GetEditControl

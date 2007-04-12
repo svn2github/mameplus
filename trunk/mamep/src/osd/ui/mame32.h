@@ -84,6 +84,23 @@
 #endif
 
 
+#ifdef _MSC_VER
+#define wcscmpi _wcsicmp
+
+// for VC2005
+#if _MSC_VER >= 1400
+#define _CRT_NON_CONFORMING_SWPRINTFS 
+#define wcsdup _wcsdup
+#define wcsicmp _wcsicmp
+#define strdup _strdup
+#define stricmp _stricmp
+#define strlwr _strlwr
+#define itoa _itoa
+#endif
+
+#endif
+
+
 // It seems that functions lstr...() don't work properly on win9x.
 // Anyway we'd better to use functions wcs...() instead of them.
 #undef lstrcpy

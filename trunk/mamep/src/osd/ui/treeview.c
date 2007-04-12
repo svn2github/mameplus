@@ -66,14 +66,6 @@
 #define snwprintf _snwprintf
 #endif
 
-#if _MSC_VER >= 1400
-// for VC2005
-#define wcsdup _wcsdup
-#define strdup _strdup
-#define wcsicmp _wcsicmp
-#define strlwr _strlwr
-#endif
-
 #define MAX_EXTRA_FOLDERS 256
 
 /***************************************************************************
