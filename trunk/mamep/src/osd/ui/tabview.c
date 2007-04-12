@@ -38,6 +38,11 @@
 #define snprintf _snprintf
 #endif
 
+#if _MSC_VER >= 1400
+// for VC2005
+#define stricmp _stricmp
+#endif
+
 
 struct TabViewInfo
 {

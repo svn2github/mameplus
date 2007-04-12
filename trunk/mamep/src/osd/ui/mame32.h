@@ -100,10 +100,17 @@
 #define lstrcat		!use_wcscat_win9x_doesnt_work_properly!
 
 #include <wchar.h>
+#undef _wfindfirst
 #define _wfindfirst	!win9x_doesnt_has_it!
+#undef _wfindnext
 #define _wfindnext	!win9x_doesnt_has_it!
+#undef _wmkdir
 #define _wmkdir 	!win9x_doesnt_has_it!
+#undef _wstat
 #define _wstat  	!win9x_doesnt_has_it!
+#undef _wunlink
 #define _wunlink	!win9x_doesnt_has_it!
+#undef _wfopen
 #define _wfopen 	!win9x_doesnt_has_it!
+#undef _wgetcwd
 #define _wgetcwd	!win9x_doesnt_has_it!
