@@ -1657,6 +1657,7 @@ ROM_END
 ROM_START( playch10 )
     BIOS_CPU
 	BIOS_GFX
+    ROM_REGION( 0x100, REGION_USER1, ROMREGION_ERASE00 )
 ROM_END
 
 /******************************************************************************/
@@ -1665,7 +1666,7 @@ ROM_END
 /* A dummy driver, so that the bios can be debugged, and to serve as */
 /* parent for the other drivers, so that we do not have to include */
 /* them in every zip file */
-GAMEB( 1986, playch10, 0, playch10, playch10, playch10, 0, ROT0, "Nintendo of America", "PlayChoice-10 BIOS", NOT_A_DRIVER )
+GAMEB( 1986, playch10, 0, playch10, playch10, playch10, playch10, ROT0, "Nintendo of America", "PlayChoice-10 BIOS", NOT_A_DRIVER )
 
 /******************************************************************************/
 

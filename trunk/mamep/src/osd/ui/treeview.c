@@ -1304,8 +1304,8 @@ void CreateFPSFolders(int parent_index)
 	int nGames = GetNumGames();
 	int nFolder = numFolders;
 	LPTREEFOLDER lpFolder = treeFolders[parent_index];
-	LPTREEFOLDER map[60];
-	float fps[60];
+	LPTREEFOLDER map[80];
+	float fps[80];
 	int nFPS = 0;
 
 	// no games in top level folder
@@ -1318,7 +1318,7 @@ void CreateFPSFolders(int parent_index)
 		machine_config drv;
 
 		expand_machine_driver(drivers[i]->drv,&drv);
-		f = drv.screen[0].defstate.refresh;
+		f = SUBSECONDS_TO_HZ(drv.screen[0].defstate.refresh);
 
 		for (jj = 0; jj < nFPS; jj++)
 			if (fps[jj] == f)
@@ -1327,6 +1327,9 @@ void CreateFPSFolders(int parent_index)
 		if (nFPS == jj)
 		{
 			WCHAR buf[50];
+
+			assert(nFPS + 1 < ARRAY_LENGTH(fps));
+			assert(nFPS + 1 < ARRAY_LENGTH(map));
 
 			swprintf(buf, TEXT("%f Hz"), f);
 

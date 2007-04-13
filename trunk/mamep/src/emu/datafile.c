@@ -13,14 +13,10 @@
 #include <ctype.h>
 #include "driver.h"
 #include "osd_cpu.h"
+#include "timer.h"
 #include "datafile.h"
 #include "hash.h"
 #include "statistics.h"
-
-// for VC2005
-#if defined(_MSC_VER) && _MSC_VER >= 1400
-#define strlwr _strlwr
-#endif
 
 
 /****************************************************************************
@@ -223,7 +219,14 @@ static int GetSrcDriverIndex(const char *srcdriver)
 {
 	srcdriver_data_type *srcdriver_index_info;
 	srcdriver_data_type key;
-	key.srcdriver = srcdriver;
+	unsigned char *s = mame_strdup(srcdriver);
+	int i;
+
+	if (s == NULL)
+		return -1;
+
+	for (i = 0; s[i]; i++)
+		s[i] = tolower(s[i]);
 
 	if (sorted_srcdrivers == NULL)
 	{
@@ -239,8 +242,10 @@ static int GetSrcDriverIndex(const char *srcdriver)
 		qsort(sorted_srcdrivers,num_games,sizeof(srcdriver_data_type),SrcDriverDataCompareFunc);
 	}
 
+	key.srcdriver = s;
 	srcdriver_index_info = bsearch(&key, sorted_srcdrivers, num_games, sizeof(srcdriver_data_type),
 	                               SrcDriverDataCompareFunc);
+	free(s);
 
 	if (srcdriver_index_info == NULL)
 		return -1;
@@ -982,7 +987,6 @@ static int index_datafile_drivinfo (struct tDatafileIndex **_index)
 				while (count < num_games && !done && TOKEN_SYMBOL == token)
 				{
 					int src_index;
-					strlwr(s);
 					src_index = GetSrcDriverIndex(s);
 					if (src_index >= 0)
 					{
@@ -1716,9 +1720,10 @@ int load_driver_statistics (char *buffer, int bufsize)
 	static int flags[20], romsize[10];
 	static int numcpu[4][CPU_COUNT], numsnd[4][SOUND_COUNT], sumcpu[MAX_CPU+1], sumsound[MAX_SOUND+1];
 	static int resx[400], resy[400], resnum[400];
-	static int palett[300], palettnum[300], control[35];
-	static int fpsnum[60];
-	float fps[60];
+	static int palett[300], palettnum[300];
+	static int control[35];
+	static int fpsnum[80];
+	float fps[80];
 
 	*buffer = 0;
 
@@ -1763,7 +1768,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 		else
 		{
 			/* Store all resolutions, without the Vector games */
-			for (n = 0; n < 200; n++)
+			for (n = 0; n < ARRAY_LENGTH(resnum) / 2; n++)
 			{
 				if (resx[n] == x && resy[n] == y)
 				{
@@ -1785,7 +1790,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 
 		/* Calc all palettesize numbers */
 		x = drv.total_colors;
-		for (n = 0; n < 150; n++)
+		for (n = 0; n < ARRAY_LENGTH(palett) / 2; n++)
 		{
 			if (palett[n] == x)
 			{
@@ -1980,8 +1985,8 @@ int load_driver_statistics (char *buffer, int bufsize)
 
 
 		/* Calc all Frames_Per_Second numbers */
-		fps[0] = drv.screen[0].defstate.refresh;
-		for (n = 1; n < 60; n++)
+		fps[0] = SUBSECONDS_TO_HZ(drv.screen[0].defstate.refresh);
+		for (n = 1; n < ARRAY_LENGTH(fps); n++)
 		{
 			if (fps[n] == fps[0])
 			{
@@ -2477,7 +2482,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 	/* FRAMES_PER_SECOND: Sort and print all fps */
 	sprintf(name,_("\n\nFRAMES PER SECOND (%d): (ALL)\n\n"), fpsnum[0]);
 	strcat(buffer, name);
-	for (y = 1; y < 60; y++)
+	for (y = 1; y < ARRAY_LENGTH(fps); y++)
 	{
 		fps[0] = 199;
 		for (n = 1; n < 50; n++)
@@ -2486,7 +2491,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 				fps[0] = fps[n];
 		}
 
-		for (n = 1; n < 60; n++)	/* Print fps and number*/
+		for (n = 1; n < ARRAY_LENGTH(fps); n++)	/* Print fps and number*/
 		{
 			if (fps[0] == fps[n])
 			{
@@ -2504,30 +2509,30 @@ int load_driver_statistics (char *buffer, int bufsize)
 
 	/* RESOLUTION: Sort all games resolutions by x and y */
 	cl = 0;
-	for (all = 0; all < 200; all++)
+	for (all = 0; all < ARRAY_LENGTH(resnum) / 2; all++)
 	{
 		x = 999;
-		for (n = 0; n < 200; n++)
+		for (n = 0; n < ARRAY_LENGTH(resnum) / 2; n++)
 		{
 			if (resx[n] && x > resx[n])
 				x = resx[n];
 		}
 
 		y = 999;
-		for (n = 0; n < 200; n++)
+		for (n = 0; n < ARRAY_LENGTH(resnum) / 2; n++)
 		{
 			if (x == resx[n] && y > resy[n])
 				y = resy[n];
 		}
 
-		for (n = 0; n < 200; n++)
+		for (n = 0; n < ARRAY_LENGTH(resnum) / 2; n++)
 		{
 			if (x == resx[n] && y == resy[n])
 			{
 				/* Store all sorted resolutions in the higher array */
-				resx[200+cl] = resx[n];
-				resy[200+cl] = resy[n];
-				resnum[200+cl] = resnum[n];
+				resx[ARRAY_LENGTH(resnum) / 2 + cl] = resx[n];
+				resy[ARRAY_LENGTH(resnum) / 2 + cl] = resy[n];
+				resnum[ARRAY_LENGTH(resnum) / 2 + cl] = resnum[n];
 				cl++;
 				resx[n] = 0, resy[n] = 0, resnum[n] = 0;
 			}
@@ -2537,21 +2542,21 @@ int load_driver_statistics (char *buffer, int bufsize)
 
 	/* PALETTESIZE: Sort the palettesizes */
 	x = 0;
-	for (y = 0; y < 150; y++)
+	for (y = 0; y < ARRAY_LENGTH(palett) / 2; y++)
 	{
 		i = 99999;
-		for (n = 0; n < 150; n++)
+		for (n = 0; n < ARRAY_LENGTH(palett) / 2; n++)
 		{
 			if (palett[n] && i > palett[n])
 				i = palett[n];
 		}
 
-		for (n = 0; n < 150; n++)	/* Store all sorted resolutions in the higher array */
+		for (n = 0; n < ARRAY_LENGTH(palett) / 2; n++)	/* Store all sorted resolutions in the higher array */
 		{
 			if (i == palett[n])
 			{
-				palett[150+x] = palett[n];
-				palettnum[150+x] = palettnum[n];
+				palett[ARRAY_LENGTH(palett) / 2 + x] = palett[n];
+				palettnum[ARRAY_LENGTH(palett) / 2 + x] = palettnum[n];
 				x++;
 				palett[n] = 0, palettnum[n] = 0;
 			}
@@ -2561,22 +2566,23 @@ int load_driver_statistics (char *buffer, int bufsize)
 	/* RESOLUTION & PALETTESIZE: Print all resolutions and palettesizes */
 	sprintf(name,_("\n\nRESOLUTION & PALETTESIZE: (ALL)\n    (%d)          (%d)\n\n"), cl, x);
 	strcat(buffer, name);
-	for (n = 0; n < 200; n++)
+	for (n = 0; n < ARRAY_LENGTH(resnum) / 2; n++)
 	{
 
-		if (resx[n+200])
+		if (resx[n + ARRAY_LENGTH(resnum) / 2])
 		{
-			sprintf(name, "  %dx%d: %3d    ", resx[n+200], resy[n+200], resnum[n+200]);
+			sprintf(name, "  %dx%d: %3d    ", resx[n + ARRAY_LENGTH(resnum) / 2], resy[n + ARRAY_LENGTH(resnum) / 2], resnum[n + ARRAY_LENGTH(resnum) / 2]);
 			strcat(buffer, name);
 		}
 
-		if (n < 150 && palett[n+150])
+		if (n < ARRAY_LENGTH(palett) / 2 && palett[n + ARRAY_LENGTH(palett) / 2])
 		{
-			sprintf(name, "%5d: %3d\n", palett[n+150], palettnum[n+150]);
+			sprintf(name, "%5d: %3d\n", palett[n + ARRAY_LENGTH(palett) / 2], palettnum[n + ARRAY_LENGTH(palett) / 2]);
 			strcat(buffer, name);
 		}
 		else
-			if (resx[n+200])	strcat(buffer, "\n");
+			if (resx[n + ARRAY_LENGTH(resnum) / 2])
+				strcat(buffer, "\n");
 
 	}
 
