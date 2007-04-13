@@ -7,6 +7,11 @@
 //
 //============================================================
 
+// mamep: for VC2005
+#if defined(_MSC_VER) && _MSC_VER >= 1400
+#define _CRT_NON_CONFORMING_SWPRINTFS 
+#endif
+
 #ifdef MALLOC_DEBUG
 #include <stdlib.h>
 

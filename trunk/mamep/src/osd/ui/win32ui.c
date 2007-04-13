@@ -26,14 +26,8 @@
 #define MULTISESSION 0
 
 #ifdef _MSC_VER
-#ifndef NONAMELESSUNION
+#undef NONAMELESSUNION
 #define NONAMELESSUNION
-#endif
-
-// for VC2005
-#if _MSC_VER >= 1400
-#define _CRT_NON_CONFORMING_SWPRINTFS 
-#endif
 #endif
 
 #define WIN32_LEAN_AND_MEAN
