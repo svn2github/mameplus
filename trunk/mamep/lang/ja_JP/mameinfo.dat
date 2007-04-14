@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.113u4      #
+#     Mameinfo.dat日本語版 v0.114u1      #
 #                                        #
-#             April 1, 2007              #
+#             April 13, 2007             #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,120 +12,10 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：849 翻訳済：830
-# 追加項目：338 合計：1187
+# Tester報告：853 翻訳済：837
+# 追加項目：338 合計：1191
 #
 
-
-$info=fghthist
-$mame
-[情報]
-
-- テストモードに入るには、両方のスタートボタン押しながらリセットする。
-
-
-[バグ]
-
-- キャラクタ選択後にクラッシュする。 fghthist0113u2red, F1ReB4lLL / twisty
-
-$end
-
-$info=starblad
-$mame
-[バグ]
-
-- 0.113から、F3でリセットするとMAMEがクラッシュする。 starblad0113u3red, Heihachi_73 / twisty
-
-$end
-
-$info=pacland
-$mame
-[バグ]
-
-- 起動時にノイズが出る。0.89から。 pacland0113u4gre, Kold666
-
-
-- 実機ではクレジットを99まで投入できる。MAMEでは9まで。 pacland0109u4gre, Kold666
-
-$end
-
-$info=shanghai
-$mame
-[バグ]
-
-- 0.112u2以前と比べると、サウンドがいろいろおかしくなっている。 shanghaic0113u3gre, Tafoid
-
-
-- カーソルの手を一番右側に持っていって上下に動かすと、
-画面左端でも黒い線が上下に動く。
-恐らく、手のスプライトの一部か？ shanghai37b16gre1, Gmitra
-
-
-- コインを2つ入れてリセットすると、
-MAMEのメッセージで「unsupported commnad undef (0000)」などと表示される。
-mamewでのみ起こるようだ。 shanghai37b16gre2, Gmitra
-
-$end
-
-$info=shangha2
-$mame
-[バグ]
-
-- 0.112u2以前と比べると、サウンドがいろいろおかしくなっている。 shanghaic0113u3gre, Tafoid
-
-$end
-
-$info=stactics
-$mame
-[情報]
-
-- サウンドにはSN76447とディスクリート回路が必要。
-
-
-[バグ]
-
-- 参照用の実機からの録音。 stactics0113u4ora, Gyrovision
-
-$end
-
-$info=suratk
-$mame
-[バグ]
-
-- キャラクタROMテストに失敗する。 suratk0113u4gre, Kold666
-
-$end
-
-$info=kyustrkr
-$mame
-[バグ]
-
-- [possible] 得点の数字で「0」の一部が欠けて表示される。吸い出しミスか？ kyustrkr0113u4gre, twisty
-
-$end
-
-$info=battleg
-$mame
-[バグ]
-
-- ランダムにクラッシュする。また、プレイ後にMAMEを終了させると、Access Violationのエラーが出る。 battleg0113u4red, Iaspis / twisty
-
-
-[TIPS]
-
-- 魔法大作戦キャラの出し方：
-
-コイン投入後、上上下下左右左右ABCスタートと入力
-
-$end
-
-$info=monymony
-$mame
-[バグ]
-
-- 鮫かワニにプレイヤーが食われるときのプライオリティがおかしい。 monymony0113u4gre, Lord Nightmare
-
-$end
 
 $info=actfancr
 $mame
@@ -1659,6 +1549,18 @@ $mame
 
 $end
 
+$info=legendoh
+$mame
+[バグ]
+
+- MAMEの速度が100%でも、ゲーム速度が異常に遅い。 legendoh0114yel, twisty
+
+
+- タイトル画面以外ではコインをいれることができない。
+さらに、Push Startと表示されているときは、コインだけでなくスタートボタンも効かない。 legendoh0112u2gra, F1ReB4LL
+
+$end
+
 $info=looping
 $mame
 [バグ]
@@ -1852,9 +1754,6 @@ $end
 $info=maniach
 $mame
 [バグ]
-
-- クレジットを入れた後リセットすると、ゲームが起動しなくなり、MAMEを終了しなければいけない。 maniach236b10gre, Bugfinder
-
 
 - コイン投入後、画面上部が化ける。 maniach37b11gre, Labrat / Sixtoe
 
@@ -2592,6 +2491,48 @@ $mame
 
 $end
 
+$info=bubbletr
+$mame
+[バグ]
+
+- グラフィックの表示領域が間違っている。 namcos2_0114yel, Augusto / Fujix
+
+$end
+
+$info=gollygho
+$mame
+[情報]
+
+- 銃のキャリブレーションモードは9(サービスキー)を押しながらF2。
+
+
+[バグ]
+
+- グラフィックの表示領域が間違っている。 namcos2_0114yel, Augusto / Fujix
+
+$end
+
+$info=luckywld
+$mame
+[バグ]
+
+- グラフィックの表示領域が間違っている。 namcos2_0114yel, Augusto / Fujix
+
+$end
+
+$info=sgunner
+$mame
+[情報]
+
+- 銃のキャリブレーションは9(サービスキー)を押しながらF2。
+
+
+[バグ]
+
+- グラフィックの表示領域が間違っている。 namcos2_0114yel, Augusto / Fujix
+
+$end
+
 $info=sgunner2
 $mame
 [情報]
@@ -2601,8 +2542,19 @@ $mame
 
 [バグ]
 
+- グラフィックの表示領域が間違っている。 namcos2_0114yel, Augusto / Fujix
+
+
 - ゲーム中のマシンガンの音が出ていない。デモのときには鳴っている。
 その他、爆発音、ボイスなども鳴っていないようだ。 sgunner2062gre, Nerox91
+
+$end
+
+$info=suzuk8h2
+$mame
+[バグ]
+
+- グラフィックの表示領域が間違っている。 namcos2_0114yel, Augusto / Fujix
 
 $end
 
@@ -2610,7 +2562,26 @@ $info=suzuka8h
 $mame
 [バグ]
 
+- グラフィックの表示領域が間違っている。 namcos2_0114yel, Augusto / Fujix
+
+
 - 先日オリジナル筐体（オーストラリア版が無いとすれば海外版）を確認したところ、タイトル画面でもBGMが流れていた。 suzuka8h074u2gre, jonwil
+
+$end
+
+$info=ordyne
+$mame
+[バグ]
+
+- グラフィックの表示領域が間違っている。 namcos2_0114yel, Augusto / Fujix
+
+$end
+
+$info=starblad
+$mame
+[バグ]
+
+- 0.113から、F3でリセットするとMAMEがクラッシュする。 starblad0113u3red, Heihachi_73 / twisty
 
 $end
 
@@ -2619,17 +2590,6 @@ $mame
 [バグ]
 
 - マシンによってはレース中にMAMEがクラッシュすることがある。 acedrvrw0103u4red, Firewave / Twisty
-
-$end
-
-$info=blkpnthr
-$mame
-[バグ]
-
-- デモであきらかに問題があるようだ。
-最初の敵2体にはヒットするが、
-そのあと2体には当らず、それにすぐやられてしまう。
-どうやら、デモのゲームスピードが合ってないようだ。 blkpnthr37b11gre, YMI
 
 $end
 
@@ -2719,6 +2679,17 @@ $mame
 お互いに離れてズームアウトして、
 ジャンプをしたときのワープのようなエフェクトがかかるが、MAMEでは見られない。接近戦のときの表示は正確。Galfordsの面でよくわかる。 samsho337b16gre, Mr_Plough
 
+
+- 背景がアニメーションしない。shamsho3のタイトル画面でよくわかる。 samsho3_0114yel, HyperYagami / twisty
+
+$end
+
+$info=samsho4
+$mame
+[バグ]
+
+- 背景がアニメーションしない。shamsho3のタイトル画面でよくわかる。 samsho3_0114yel, HyperYagami / twisty
+
 $end
 
 $info=sdodgeb
@@ -2766,6 +2737,25 @@ excitbkj: 日本版の方は色がおかしい。またネームエントリー�
 3面の色がexcitebkと違う。5面の色が反転。
 
 vsgradus: 星が自機の手前に表示される。 vsnes37b11gre, Sports Dude / The tECHIDNA / gregf / labrat127 / Kurushimi / M.A.S.H. / Richter_X / BSR / John L.
+
+$end
+
+$info=darius2
+$mame
+[バグ]
+
+- 特定の敵のミサイルが表示されない。0.111u1から。 darius2_0114gre, Jonesey / twisty /etabeta
+
+
+[TIPS]
+
+- 面セレクトコマンド：
+
+1) サービススイッチ(9キー)を押しながらリセット
+
+2) 1Pスタートx3　サービス　1Pスタート
+
+(by Mhk)
 
 $end
 
@@ -2865,6 +2855,17 @@ $mame
 [バグ]
 
 - ゲーム終了時、マップが表示された後に“volume error”が出てリセットがかかる。 overdriv37b13gre, Sports Dude
+
+$end
+
+$info=pacland
+$mame
+[バグ]
+
+- 実機ではクレジットを99まで投入できる。MAMEでは9まで。 pacland0109u4gre, Kold666
+
+
+- 起動時にノイズが出る。0.89から。 pacland0113u4gre, Kold666/etabeta
 
 $end
 
@@ -2978,6 +2979,25 @@ $mame
 [バグ]
 
 - マップモードとVS画面のBGMがリピートされる。 powerina37b4gre, Takuma Sakazaki
+
+$end
+
+$info=powerins
+$mame
+[バグ]
+
+- キャラクタ選択のBGMが鳴らない。また、対戦した後では、ワールドマップやVS画面の音がならなくなる。 powerins0114yel, Kin
+
+
+[TIPS]
+
+- 拡張サービスモードの入り方：
+
+1) 1Pと2Pの全キーと1Pと2Pのスタートを押して起動(リセット)
+
+2) 2Pボタン3+2PスタートかF2キーを押す
+
+(from オン氏)
 
 $end
 
@@ -3566,6 +3586,32 @@ $mame
 
 $end
 
+$info=shanghai
+$mame
+[バグ]
+
+- 0.112u2以前と比べると、サウンドがいろいろおかしくなっている。 shanghaic0113u3gre, Tafoid
+
+
+- カーソルの手を一番右側に持っていって上下に動かすと、
+画面左端でも黒い線が上下に動く。
+恐らく、手のスプライトの一部か？ shanghai37b16gre1, Gmitra
+
+
+- コインを2つ入れてリセットすると、
+MAMEのメッセージで「unsupported commnad undef (0000)」などと表示される。
+mamewでのみ起こるようだ。 shanghai37b16gre2, Gmitra
+
+$end
+
+$info=shangha2
+$mame
+[バグ]
+
+- 0.112u2以前と比べると、サウンドがいろいろおかしくなっている。 shanghaic0113u3gre, Tafoid
+
+$end
+
 $info=blocken
 $mame
 [バグ]
@@ -3862,6 +3908,14 @@ $mame
 [バグ]
 
 - 速度制限をONにしてコインを入れ、ゲームを始めようとすると固まる。 hotsmash0110u4red, Jason / Tafoid
+
+$end
+
+$info=suratk
+$mame
+[バグ]
+
+- キャラクタROMテストに失敗する。 suratk0113u4gre, Kold666
 
 $end
 
@@ -4493,6 +4547,21 @@ MAMEでは青いままになっている。 truxton0106u7gre, Kold666
 
 $end
 
+$info=batrider
+$mame
+[バグ]
+
+- アトラクトモードをそのままにしておくと、デモプレイの手前でクラッシュする。起きないマシンもある。 batrider0114red, JonteP
+
+
+[TIPS]
+
+- 魔法大作戦とバトルガレッガキャラの出し方：
+
+コイン投入後、上上下下左右左右ABスタートと入力。“エクセレント”と言われれば成功
+
+$end
+
 $info=batsugun
 $mame
 [バグ]
@@ -4527,6 +4596,21 @@ $mame
 4面：ボス戦で現れる戦車を色が変化するまで待ってボムで一気に破壊する
 
 5面：移動する床に乗っている敵を、床が止まるまで破壊しない
+
+$end
+
+$info=battleg
+$mame
+[バグ]
+
+- ランダムにクラッシュする。また、プレイ後にMAMEを終了させると、Access Violationのエラーが出る。 battleg0113u4red, Iaspis / twisty
+
+
+[TIPS]
+
+- 魔法大作戦キャラの出し方：
+
+コイン投入後、上上下下左右左右ABCスタートと入力
 
 $end
 
@@ -5041,6 +5125,22 @@ $mame
 
 $end
 
+$info=monymony
+$mame
+[バグ]
+
+- 鮫かワニにプレイヤーが食われるときのプライオリティがおかしい。 monymony0113u4gre, Lord Nightmare
+
+$end
+
+$info=congo
+$mame
+[バグ]
+
+- サンプルサウンドが正しく再生されていない。0.107u2から。 congo0113gre, Gyrovision
+
+$end
+
 $info=beastrzb
 $mame
 [バグ]
@@ -5300,6 +5400,27 @@ MAMEではjumpingの方が速すぎる。
 
 $end
 
+$info=rollace
+$mame
+[バグ]
+
+- 資料用の実機からのサウンド録音。 rollace0114ora, Kold666
+
+$end
+
+$info=stactics
+$mame
+[情報]
+
+- サウンドにはSN76447とディスクリート回路が必要。
+
+
+[バグ]
+
+- 参照用の実機からの録音。 stactics0113u4ora, Gyrovision
+
+$end
+
 $info=cubybop
 $mame
 [バグ]
@@ -5524,21 +5645,20 @@ $mame
 
 $end
 
+$info=gijoe
+$mame
+[バグ]
+
+- プレイ人数のDIP設定で、4 Playersは2 Players。 gijoe0114gra, Augusto / twisty
+
+$end
+
 $info=le2
 $mame
 [バグ]
 
 - 銃のリロードができない。最近、MAMEがバージョンアップするたびに、画面外の部分がどんどん小さくなっていて、ついにどこを撃ってもリロードできなくなった。
 チートを使うしかない。 le2085u2gra, Karasu
-
-$end
-
-$info=legendoh
-$mame
-[バグ]
-
-- タイトル画面以外ではコインをいれることができない。
-さらに、Push Startと表示されているときは、コインだけでなくスタートボタンも効かない。 legendoh0112u2gra, F1ReB4LL
 
 $end
 
@@ -5595,6 +5715,17 @@ $mame
 [バグ]
 
 - アクセル、ブレーキ、シフトが動作しない。 finallap097u2gra, fostar
+
+$end
+
+$info=livegal
+$mame
+[バグ]
+
+- クレジットを入れると「1人プレイのスタートを押す」ように表示されるが、スタートできない。
+さらにクレジットを入れて、2Pスタートを押すと2人プレイでゲームを始めることができる。
+
+テストモードで1Pスタートを押すと、SIDE-1 2PLAYが反応する。2PスタートはSIDE-1 BET。 livegal0114gra, nitrousoxide82
 
 $end
 
@@ -5857,6 +5988,14 @@ $mame
 
 $end
 
+$info=futspy
+$mame
+[バグ]
+
+- 実機と比較すると、上下の操作逆転している。 futspy0114gra, Kold666
+
+$end
+
 $info=gunfight
 $mame
 [バグ]
@@ -6051,6 +6190,14 @@ $mame
 [TIPS]
 
 - 合計で1997クレジット以上投入されるとタイトル画面左側に女の子と犬が表示され、各ゲームにスペシャルチームが一つずつ追加される。
+
+$end
+
+$info=pzloop2
+$mame
+[バグ]
+
+- [possible]　効果音が左スピーカーからしか再生されない。BGMは両方から聞こえる。 pzloop2 _0114gre, ChaotiX
 
 $end
 
@@ -6342,6 +6489,17 @@ $mame
 [バグ]
 
 - naughtybではアイテムを取ることが出来ない。 naughtyb37b9gre, The Dog
+
+$end
+
+$info=blkpnthr
+$mame
+[バグ]
+
+- デモであきらかに問題があるようだ。
+最初の敵2体にはヒットするが、
+そのあと2体には当らず、それにすぐやられてしまう。
+どうやら、デモのゲームスピードが合ってないようだ。 blkpnthr37b11gre, YMI
 
 $end
 
@@ -6686,6 +6844,14 @@ $mame
 [バグ]
 
 - 3面のはじめで、最初のエレベータに移動すると背景がジャンプする。本来はスクロールする。 elvactr062gre, Nerox91
+
+$end
+
+$info=kyustrkr
+$mame
+[バグ]
+
+- [possible] 得点の数字で「0」の一部が欠けて表示される。吸い出しミスか？ kyustrkr0113u4gre, twisty
 
 $end
 
@@ -7268,6 +7434,14 @@ DIPスイッチはない。
 
 $end
 
+$info=fghthist
+$mame
+[情報]
+
+- テストモードに入るには、両方のスタートボタン押しながらリセットする。
+
+$end
+
 $info=fhboxers
 $mame
 [情報]
@@ -7344,14 +7518,6 @@ $mame
 [情報]
 
 - コンティニューするには、コインを入れてショットボタンを押しながらスタートキー（1キー）押す。
-
-$end
-
-$info=gollygho
-$mame
-[情報]
-
-- 銃のキャリブレーションモードは9(サービスキー)を押しながらF2。
 
 $end
 
@@ -7874,14 +8040,6 @@ $mame
 [情報]
 
 - 初回起動時、フラッシュROMの更新に5分くらいかかる。
-
-$end
-
-$info=sgunner
-$mame
-[情報]
-
-- 銃のキャリブレーションは9(サービスキー)を押しながらF2。
 
 $end
 
@@ -8516,16 +8674,6 @@ $mame
 
 $end
 
-$info=batrider
-$mame
-[TIPS]
-
-- 魔法大作戦とバトルガレッガキャラの出し方：
-
-コイン投入後、上上下下左右左右ABスタートと入力。“エクセレント”と言われれば成功
-
-$end
-
 $info=cadash
 $mame
 [TIPS]
@@ -8596,20 +8744,6 @@ $mame
 - スタッフクレジット表示：
 
 ゲーム中ではないときに視点1と視点3のキーを押し続ける。
-
-$end
-
-$info=darius2
-$mame
-[TIPS]
-
-- 面セレクトコマンド：
-
-1) サービススイッチ(9キー)を押しながらリセット
-
-2) 1Pスタートx3　サービス　1Pスタート
-
-(by Mhk)
 
 $end
 
@@ -9175,20 +9309,6 @@ $mame
 2) 1Pスタートx3　サービス　1Pスタート
 
 (by Mhk)
-
-$end
-
-$info=powerins
-$mame
-[TIPS]
-
-- 拡張サービスモードの入り方：
-
-1) 1Pと2Pの全キーと1Pと2Pのスタートを押して起動(リセット)
-
-2) 2Pボタン3+2PスタートかF2キーを押す
-
-(from オン氏)
 
 $end
 
