@@ -272,6 +272,7 @@ endif
 ifneq ($(WINUI),)
 ifneq ($(NO_DLL),)
 OSDCOREOBJS := $(OSDCOREOBJS:$(WINOBJ)/main.o=)
+OSDMAIN = $(WINOBJ)/main.o
 endif
 endif
 
@@ -381,7 +382,7 @@ $(LIBOSD): $(OSDOBJS)
 # rule for making the ledutil sample
 #-------------------------------------------------
 
-ledutil$(EXE): $(WINOBJ)/ledutil.o $(LIBOCORE)
+ledutil$(EXE): $(WINOBJ)/ledutil.o $(OSDMAIN) $(LIBOCORE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) -mwindows $(OSDBGLDFLAGS) $^ $(LIBS) -o $@
 

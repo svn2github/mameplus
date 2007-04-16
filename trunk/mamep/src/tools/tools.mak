@@ -88,7 +88,7 @@ $(PNGS2BDC): $(PNGS2BDCOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB) $(EXPAT)
 ROMCMPOBJS = \
 	$(TOOLSOBJ)/romcmp.o \
 
-romcmp$(EXE): $(ROMCMPOBJS) $(LIBUTIL) $(ZLIB) $(EXPAT) $(LIBOCORE)
+romcmp$(EXE): $(ROMCMPOBJS) $(LIBUTIL) $(ZLIB) $(EXPAT) $(OSDMAIN) $(LIBOCORE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
@@ -102,7 +102,7 @@ CHDMANOBJS = \
 	$(TOOLSOBJ)/chdman.o \
 	$(TOOLSOBJ)/chdcd.o \
 
-chdman$(EXE): $(VERSIONOBJ) $(CHDMANOBJS) $(LIBUTIL) $(ZLIB) $(EXPAT) $(LIBOCORE)
+chdman$(EXE): $(VERSIONOBJ) $(CHDMANOBJS) $(LIBUTIL) $(ZLIB) $(EXPAT) $(OSDMAIN) $(LIBOCORE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
