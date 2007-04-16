@@ -164,10 +164,10 @@ static const UINT8 skiptable[FRAMESKIP_LEVELS][FRAMESKIP_LEVELS] =
 };
 
 #ifdef USE_SCALE_EFFECTS
-int use_work_bitmap;
-int scale_depth;
-int scale_xsize;
-int scale_ysize;
+static int use_work_bitmap;
+static int scale_depth;
+static int scale_xsize;
+static int scale_ysize;
 #endif /* USE_SCALE_EFFECTS */
 
 
@@ -1884,12 +1884,12 @@ static void free_scalebitmap(running_machine *machine)
 			internal_screen_info *screen = &viddata->scrinfo[scrnum];
 			int bank;
 
-			render_texture_set_bitmap(screen->texture[screen->curbitmap], screen->bitmap[screen->curbitmap], NULL, machine->drv->screen[scrnum].palette_base, screen->format);
-
 			screen->changed &= ~UPDATE_HAS_NOT_CHANGED;
 
 			for (bank = 0; bank < 2; bank++)
 			{
+				render_texture_set_bitmap(screen->texture[bank], screen->bitmap[bank], NULL, machine->drv->screen[scrnum].palette_base, screen->format);
+
 				if (screen->scale_bitmap[bank])
 				{
 					bitmap_free(screen->scale_bitmap[bank]);
