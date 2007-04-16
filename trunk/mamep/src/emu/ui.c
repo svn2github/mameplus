@@ -666,6 +666,10 @@ float ui_get_line_height(void)
 	/* get info about the UI target */
 	render_target_get_bounds(render_get_ui_target(), &target_pixel_width, &target_pixel_height, &target_aspect);
 
+	/* mamep: to avoid division by zero */
+	if (target_pixel_height == 0)
+		return 0.0f;
+
 	/* compute the font pixel height at the nominal size */
 	one_to_one_line_height = (float)raw_font_pixel_height / (float)target_pixel_height;
 
