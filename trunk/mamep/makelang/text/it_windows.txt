@@ -1,1624 +1,1268 @@
-# windows/input.c: 906
+# osd/windows/input.c: 1916
          all -- all axes on all joysticks are digital\n
-         tutti -- tutti gli assi su tutte le leve sono digitali\n
+         tutti -- tutti gli assi su tutti i joysticks sono digitali\n
 
-# windows/input.c: 912
+# osd/windows/input.c: 1922
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
-         j1,j2a2 -- tutti gli assi della leva 1 e l'asse 2 della leva 2 sono digitali\n
+         j1,j2a2 -- tutti gli assi del joystick 1 e l'asse 2 del joystick 2 sono digitali\n
 
-# windows/input.c: 910
+# osd/windows/input.c: 1920
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
-         j1a5a6 -- assi 5 e 6 sulla leva 1 sono digitali\n
+         j1a5a6 -- assi 5 e 6 sul joystick 1 sono digitali\n
 
-# windows/input.c: 907
+# osd/windows/input.c: 1917
          j<N> -- all axes on joystick <N> are digital\n
-         j<N> -- tutti gli assi della leva <N> sono digitali\n
+         j<N> -- tutti gli assi del joystick <N> sono digitali\n
 
-# windows/input.c: 908
+# osd/windows/input.c: 1918
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
-         j<N>a<M> -- asse <M> su leva <N> è digitale\n
+         j<N>a<M> -- asse <M> sul joystick <N> è digitale\n
 
-# windows/input.c: 905
+# osd/windows/input.c: 1915
          none -- no axes on any joysticks are digital\n
-         nessuno -- nessun asse di alcuna leva è digitale\n
+         nessuno -- nessun asse di alcun joystick è digitale\n
 
-# windows/fronthlp.c: 458
-        MAME -createconfig to create a mame.ini\n\n
-        MAME -createconfig per creare un mame.ini\n\n
-
-# windows/fronthlp.c: 457
-        MAME -showconfig   for a list of configuration options\n
-        MAME -showconfig   per la lista delle opzioni di configurazione\n
-
-# windows/fronthlp.c: 456
-        MAME -showusage    for a brief list of options\n
-        MAME -showusage    per una breve lista delle opzioni\n
-
-# windows/input.c: 909
+# osd/windows/input.c: 1919
     Multiple axes can be specified for one joystick:\n
-    Assi multipli possono essere specificati per una leva:\n
+    Assi multipli possono essere specificati per un joystick:\n
 
-# windows/input.c: 911
+# osd/windows/input.c: 1921
     Multiple joysticks can be specified separated by commas:\n
-    Multiple leve possono specificarsi separate da virgole:\n
+    Molti joysticks possono specificarsi separandoli dalle virgole:\n
 
-# windows/rc.c: 328, 395
-   ignoring line\n
-   sto ignorando la lenea\n
-
-# windows/input.c: 1906
-  Axis %d (%s)%s\n
-  Asse %d (%s)%s\n
-
-# windows/config.c: 545
- %s running parameters
- %s parametri funzionanti
-
-# windows/wind3d.c: 636
- (%.2lfMB video memory available)
- (%.2lfMB memoria video disponibili)
-
-# windows/input.c: 1906
+# osd/windows/input.c: 2397
  - digital
  - digitale
 
-# windows/fronthlp.c: 757
-%d %s found, %d were OK.\n
-%d %s trovato, %d era OK.\n
-
-# windows/wind3d.c: 1633
-%s surface created: %s (%s)\n
-%s superficie creata: %s (%s)\n
-
-# windows/fronthlp.c: 194
+# osd/windows/fronthlp.c: 112
 (BAD) 
-(SCORRETTA) 
+(ERRATA) 
 
-# windows/video.c: 222
-(dd) stretch video using the hardware
-(dd) stira il video usando l'hardware
+# osd/windows/config.c: 101
+CRC-32s
+CRC-32s
 
-# windows/input.c: 945
-Autoenabling joysticks due to presence of a %s\n
-Autoabilitazione leve a seguito della presenza di %s\n
-
-# windows/input.c: 953
-Autoenabling lightguns due to presence of a %s\n
-Autoabilitazione pistole dovuta alla presenza di %s\n
-
-# windows/input.c: 937
-Autoenabling mice due to presence of a %s\n
-Autoabilitazione mouse dovuta alla presenza di %s\n
-
-# windows/video.c: 695
-Average FPS: %f (%d frames)\n
-FPS Stimato: %f (%d quadri)\n
-
-# windows/wind3d.c: 2658 windows/winddraw.c: 1456, 1763
-Avg Flip = %d
-Flip Stim= %d
-
-# windows/wind3d.c: 1004 windows/winddraw.c: 576
-Best mode = %dx%dx%d @ %d Hz\n
-Modalità migliore = %dx%dx%d @ %d Hz\n
-
-# windows/wind3d.c: 1006 windows/winddraw.c: 578
-Best mode = %dx%dx%d @ default Hz\n
-Modo migliore = %dx%dx%d @ predefinito Hz\n
-
-# windows/winddraw.c: 885
-Blit surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
-Superfice Blit creata: %dx%dx%d (R=%08x G=%08x B=%08x)\n
-
-# windows/wind3d.c: 1637
-Blit surface created: %s\n
-Superficie blit creata: %s\n
-
-# windows/wind3d.c: 771
-Blitter initialisation complete (%.2lfMB video memory free)\n
-Inizializzazione blitter completa (%.2lfMB meoria video liberi)\n
-
-# windows/config.c: 292
-Configuration options
-Opzioni configurazione
-
-# windows/fronthlp.c: 777
+# osd/windows/fronthlp.c: 944
 ERROR     %s\n
 ERRORE    %s\n
 
-# windows/video.c: 541
-Enumerating video device %s\n
-Enumerazione periferica video %s\n
-
-# windows/wind3d.c: 715
-Error creating Direct3D7 device: %08x\n
-Errore creando device Direct3D7: %08x\n 
-
-# windows/wind3d.c: 620
-Error creating Direct3D7: %08x\n
-Errore creando Direct3D7: %08x\n
-
-# windows/wind3d.c: 613
-Error creating DirectDraw7: %08x\n
-Errore creando DirectDraw7: %08x\n
-
-# windows/winddraw.c: 250
-Error creating DirectDraw: %08x\n
-Errore creando DirectDraw: %08x\n
-
-# windows/sound.c: 632
-Error creating DirectSound buffer: %08x\n
-Errore creando buffer DirectSound : %08x\n
-
-# windows/sound.c: 490
+# osd/windows/sound.c: 260
 Error creating DirectSound: %08x\n
-Errore creando DirectSound: %08x\n
+Errore creazione DirectSound: %08x\n
 
-# windows/wind3d.c: 1238
-Error creating RGB effects surface: %08x\n
-Errore creando superficie effetti RGB: %08x\n
-
-# windows/wind3d.c: 1168
-Error creating back surface: %08x\n
-Errore creando la superficie back: %08x\n
-
-# windows/wind3d.c: 1467 windows/winddraw.c: 868
-Error creating blit surface: %08x\n
-Errore creando la superfice blit : %08x\n
-
-# windows/wind3d.c: 1716 windows/winddraw.c: 959
-Error creating clipper: %08x\n
-Errore creando clipper: %08x\n
-
-# windows/rc.c: 957
-Error creating dir %s
-Errore creando la cartella %s
-
-# windows/wind3d.c: 1576
-Error creating preprocess surface: %08x\n
-Errore creando superfice preprocessi: %08x\n
-
-# windows/sound.c: 597
-Error creating primary buffer: %08x\n
-Errore creando il buffer primario: %08x\n
-
-# windows/wind3d.c: 1117 windows/winddraw.c: 647
-Error creating primary surface: %08x\n
-Errore creando la superfice primaria: %08x\n
-
-# windows/wind3d.c: 1597 windows/winddraw.c: 739
-Error creating scale surface: %08x\n
-Errore creando superfice scalata: %08x\n
-
-# windows/wind3d.c: 1268, 1276
-Error creating scanline surface[%d]: %08x\n
-Errore creando la superficie x lineescansione[%d]: %08x\n
-
-# windows/wind3d.c: 1492
-Error creating texture surface: %08x\n
-Errore creando la superfice trame: %08x\n
-
-# windows/video.c: 617
-Error enumerating DirectDraw: %08x\n
-Errore enumerando DirectDraw: %08x\n
-
-# windows/wind3d.c: 997 windows/winddraw.c: 569
-Error enumerating modes: %08x\n
-Errore enumerando le modalità: %08x\n
-
-# windows/winddraw.c: 265
-Error getting DirectDraw capabilities: %08x\n
-Errore acquisendo le capacità DirectDraw capabilities: %08x\n
-
-# windows/sound.c: 499
+# osd/windows/sound.c: 269
 Error getting DirectSound capabilities: %08x\n
 Errore acquisendo le capacità DirectSound: %08x\n
 
-# windows/wind3d.c: 1179 windows/winddraw.c: 684
-Error getting attached back surface: %08x\n
-Errore acquisendo la superfice connesa posteriore: %08x\n
-
-# windows/wind3d.c: 1609, 1618 windows/winddraw.c: 876
-Error getting blit surface desc: %08x\n
-Errore acquisendo desc superficie blit: %08x\n
-
-# windows/wind3d.c: 978, 1027 windows/winddraw.c: 547, 602
-Error getting display mode: %08x\n
-Errore acquisendo la modalità schermo: %08x\n
-
-# windows/sound.c: 613
-Error getting primary format: %08x\n
-Errore acquisendo il formato primario: %08x\n
-
-# windows/wind3d.c: 1125 windows/winddraw.c: 655
-Error getting primary surface desc: %08x\n
-Errore acquisendo la desc. superficie primaria: %08x\n
-
-# windows/winddraw.c: 747
-Error getting scale surface desc: %08x\n
-Errore acquisendo desc sup. scal: %08x\n
-
-# windows/wind3d.c: 606
-Error importing DirectDrawCreateEx() function\n
-Errore importando la funzione DirectDrawCreateEx()\n
-
-# windows/wind3d.c: 599
-Error importing ddraw.dll\n
-Errore importando ddraw.dll\n
-
-# windows/wind3d.c: 677 windows/winddraw.c: 241
-Error initialising software scale effects\n
-Errore inizializzando effetti scalatura software\n
-
-# windows/sound.c: 640
-Error locking stream buffer: %08x\n
-Errore bloccando lo stream buffer: %08x\n
-
-# windows/rc.c: 965
-Error opening %s
-Errore aprendo %s
-
-# windows/sound.c: 544
+# osd/windows/sound.c: 307
 Error playing: %08x\n
 Errore eseguendo: %08x\n
 
-# windows/sound.c: 507
+# osd/windows/sound.c: 277
 Error setting DirectSound cooperative level: %08x\n
 Errore impostando livello cooperativo DirectSound: %08x\n
 
-# windows/wind3d.c: 1724 windows/winddraw.c: 967
-Error setting clipper hwnd: %08x\n
-Errore impostando clipper hwnd: %08x\n
-
-# windows/wind3d.c: 1732 windows/winddraw.c: 975
-Error setting clipper on primary surface: %08x\n
-Errore impostando il clipper sula superfice primaria: %08x\n
-
-# windows/wind3d.c: 692 windows/winddraw.c: 280
-Error setting cooperative level: %08x\n
-Errore impostando livello cooperativo: %08x\n
-
-# windows/wind3d.c: 1698 windows/winddraw.c: 941
-Error setting gamma ramp: %08x\n
-Errore impostando la ramp gamma: %08x\n
-
-# windows/wind3d.c: 1016 windows/winddraw.c: 591
-Error setting mode: %08x\n
-Errore impostando modo: %08x\n
-
-# windows/sound.c: 605
-Error setting primary format: %08x\n
-Errore impostando formato primario: %08x\n
-
-# windows/wind3d.c: 260
-Error: 3D hardware can't render scanlines (no support for multi-texturing)\n
-Errore: l'3D hardware non puo tracciare lineescansione (nom è supportato la multi-trama)\n
-
-# windows/wind3d.c: 377
-Error: RGB effects (multiply & add mode) not supported\n
-Errore: effetti RGB (multiplicazione & modo aggiunta) non supportati\n
-
-# windows/wind3d.c: 364
-Error: RGB effects (multiply mode) not supported\n
-Errore: Effetti RGB (modalità moltiplica) non supportati\n
-
-# windows/wind3d.c: 1416
-Error: required texture size too large (max: %ix%i, need %ix%i)\n
-Errore: richiesta trama troppo larga (mass: %ix%i, neces %ix%i)\n
-
-# windows/fronthlp.c: 459
-For usage instructions, please consult the file windows.txt\n
-Per le istruzioni d'uso, prego consultare l'archivio windows.txt\n
-
-# windows/fronthlp.c: 67
-Frontend Related
-Relativo al Frontend
-
-# windows/window.c: 734
-Full Screen\tAlt+Enter
-Schermo Pieno\tAlt+Invio
-
-# windows/fronthlp.c: 515
+# osd/windows/fronthlp.c: 590, 666
 Game \"%s\" not supported!\n
 Gioco \"%s\" non supportato!\n
 
-# windows/winddraw.c: 273
-Hardware stretching supported\n
-Supportato stiramento hardware\n
+# osd/windows/input.c: 2498
+J%d %s D
+J%d %s G
 
-# windows/wind3d.c: 633
-Initialising DirectDraw & Direct3D 7 blitter
-Inizializzazione blitter DirectDraw & Direct3D 7
+# osd/windows/input.c: 2502
+J%d %s L
+J%d %s S
 
-# windows/input.c: 226
-Input device options
-Opzioni periferica d'entrata
+# osd/windows/input.c: 2506
+J%d %s R
+J%d %s D
 
-# windows/input.c: 1744
-Joystick %d axis %d is now %s\n
-Leva %d asse %d è ora %s\n
+# osd/windows/input.c: 2494
+J%d %s U
+J%d %s S
 
-# windows/input.c: 1889
-Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
-Leva %d: %s (%d assi, %d pulsanti, %d POVs)\n
-
-# windows/fronthlp.c: 778
+# osd/windows/fronthlp.c: 945
 KNOWN     %s\n
 CONOSCIUTO %s\n
 
-# windows/input.c: 1260
-Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
-Tastiera=%d  Mice=%d  Leve=%d  Pistole=%d\n
-
-# windows/input.c: 234
-LED mode (ps/2|usb)
-Modo LED (ps/2|usb)
-
-# windows/config.c: 299
-Language options
-Opzioni linguaggio
-
-# windows/input.c: 1878
-Lightgun %d X
-Pistola %d X
-
-# windows/input.c: 1880
-Lightgun %d Y
-Pistole %d Y
-
-# windows/input.c: 2235
+# osd/windows/input.c: 2869
 Lightgun not supported in windowed mode
-Pistola non supportata nel modo finestra
+Pistola non supportata in modalità finestra
 
-# windows/fronthlp.c: 452
-M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2005 by Nicola Salmoria and the MAME Team\n\n
-M.A.M.E. v%s - Multiple Arcade Machine Emulator\nDiritti (C) 1997-2005 di Nicola Salmoria e del Gruppo MAME\n\n
-
-# windows/blit.c: 1156
-MMX not supported\n
-MMX non supportato\n
-
-# windows/blit.c: 1154
-MMX supported\n
-MMX supportato\n
-
-# windows/config.c: 251
-Mame CORE misc options
-Mame CORE opzioni varie
-
-# windows/video.c: 257
-Mame CORE palette options
-Mame CORE opzioni tavolozza
-
-# windows/config.c: 241
-Mame CORE sound options
-Mame CORE opzioni sonore
-
-# windows/config.c: 233
-Mame CORE vector game options
-Mame CORE opzioni giochi vettoriali
-
-# windows/config.c: 220
-Mame CORE video options
-Mame CORE opzioni video
-
-# windows/wind3d.c: 1633
-Managed texture
-Trame gestite
-
-# windows/fronthlp.c: 235
+# osd/windows/fronthlp.c: 188 
 NO MATCH\n
 NON CORRISPONDENTE\n
 
-# windows/fronthlp.c: 230
+# osd/windows/fronthlp.c: 180
 NOT A ROM\n
 NON UNA ROM\n
 
-# windows/fronthlp.c: 485
+# osd/windows/fronthlp.c: 413
 Name:     Description:\n
 Nome:     Descrizione:\n
 
-# windows/fronthlp.c: 618
+# osd/windows/fronthlp.c: 526
 Name:    Clone of:\n
 Nome:    Clone di:\n
 
-# windows/video.c: 267
-OSD bar color (dark)
-OSD barra colori(scura)
-
-# windows/video.c: 268
-OSD bar color (default)
-OSD barra colori (default)
-
-# windows/video.c: 266
-OSD bar color (light)
-OSD barra colori (chiara)
-
-# windows/video.c: 265
-OSD bar color (medium)
-OSD barra colori (media)
-
-# windows/fileio.c: 379
-Out of memory!\n
-Memoria Esaurita!\n
-
-# windows/fronthlp.c: 780
+# osd/windows/fronthlp.c: 947
 PARTKNOWN %s\n
 PARTECONOSCIUTA %s\n
 
-# windows/config.c: 440
-Parsing %s : ERROR\n
-Analizzato %s : ERRORE\n
-
-# windows/config.c: 450
-Parsing %s : N/A\n
-Analizzato %s : N/A\n
-
-# windows/config.c: 445
-Parsing %s : OK\n
-Analizzato %s : OK\n
-
-# windows/config.c: 593
-Playing back previously recorded game %s (%s) [press return]\n
-Riproduci un gioco precedentemente registrato %s (%s) [premi invio]\n
-
-# windows/wind3d.c: 1642
-Pre-process texture surface created: %s\n
-Creata superficie pre-processo trama: %s\n
-
-# windows/sound.c: 617
-Primary buffer: %d Hz, %d bits, %d channels\n
-Buffer primario: %d Hz, %d bits, %d canali\n
-
-# windows/winddraw.c: 668
-Primary surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
-Superficie primaria creata: %dx%dx%d (R=%08x G=%08x B=%08x)\n
-
-# windows/wind3d.c: 1143
-Primary surface created: %s (%s)\n
-Superficie primaria creata: %s (%s)\n
-
-# windows/wind3d.c: 1247
-RGB effects surface created: %s\n
-Superficie effetti RGB creata: %s\n
-
-# windows/wind3dfx.c: 815
-RGB pattern has a wrong filesize (expected %i bytes, found %i)\n
-La mappa RGB ha un'errata dim archivio (attesi %i bytes, trovati %i)\n
-
-# windows/winddraw.c: 1386, 1464, 1771
-Recreating surfaces\n
-Ricreate superfici\n
-
-# windows/wind3d.c: 1136
-Rendering to an off-screen surface and using blt()\n
-Disegnando su una superficie fuori-schermo e usando blt()\n
-
-# windows/wind3d.c: 2316, 2680
-Restoring surfaces\n
-Ristabilisco le superfici\n
-
-# windows/blit.c: 1152
-SSE supported\n
-SSE supportato\n
-
-# windows/blit.c: 1150
-SSE2 supported\n
-SSE2 supportato\n
-
-# windows/video.c: 240
-SaI scale effect
-Effetto scalatura SaI
-
-# windows/winddraw.c: 753
-Scale surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
-Superfice scal. creata: %dx%dx%d (R=%08x G=%08x B=%08x)\n
-
-# windows/wind3d.c: 1285
-Scanline surface[%i] created: %s\n
-Superficie interlinea[%i] creata: %s\n
-
-# windows/video.c: 629
-Screen %s not found\n
-Scehermo %s non trovato\n
-
-# windows/sound.c: 233, 237
+# osd/windows/sound.c: 124
 Sound buffer: overflows=%d underflows=%d\n
 Buffer sonoro: overflows=%d underflows=%d\n 
 
-# windows/input.c: 1822
+# osd/windows/input.c: 2301
 Stick %d %s +
 Leva  %d %s +
 
-# windows/input.c: 1815
+# osd/windows/input.c: 2294
 Stick %d %s -
 Leva  %d %s -
 
-# windows/input.c: 1824
+# osd/windows/input.c: 2303
 Stick %s +
 Leva  %s +
 
-# windows/input.c: 1817
+# osd/windows/input.c: 2296
 Stick %s -
 Leva  %s -
 
-# windows/wind3d.c: 1633
-Texture
-Trama  
-
-# windows/input.c: 2386
-Toggle fullscreen
-Acc/Speg Schermopieno
-
-# windows/fronthlp.c: 779
+# osd/windows/fronthlp.c: 946
 UNKNOWN   %s\n
 SCONOSCIUTO   %s\n
 
-# windows/wind3d.c: 2671
-Unable to blt RGB effect to back_surface: %08x\n
-Incapace di applicare effetti RGB blt alla superficie_back: %08x\n
-
-# windows/wind3d.c: 2638
-Unable to blt back_surface to primary_surface: %08x\n
-Incapace di blt la back_surface alla primary_surface: %08x\n
-
-# windows/wind3d.c: 2264
-Unable to blt blit_surface to texture_surface: %08x\n
-Incapace di blt la blit_surface alla superfice_trame: %08x\n
-
-# windows/wind3d.c: 2241
-Unable to blt scale_surface to texture_surface: %08x\n
-Incapace di blt scale_surface a texture_surface: %08x\n
-
-# windows/winddraw.c: 1428
-Unable to blt target_surface: %08x\n
-Incapace di blt target_surface: %08x\n
-
-# windows/input.c: 2654, 2661
+# osd/windows/ledutil.c: 568, 574
 Unable to close the keyboard device. (error %d)\n
-Incapace di chiudere la periferica tastiera. (errore %d)\n
+Impossibile chiudere la periferica tastiera. (errore %d)\n
 
-# windows/wind3dfx.c: 806
-Unable to find RGB effects pattern\n
-Incapace di trovare la mappatura degli effetti RGB\n
-
-# windows/wind3d.c: 2098, 2189, 2211 windows/winddraw.c: 1228, 1301
-Unable to lock blit_surface: %08x\n
-Incapace di bloccare la superfice blit: %08x\n 
-
-# windows/winddraw.c: 1598, 1706
-Unable to lock target_surface: %08x\n
-Incapace di bloccare la superfice bersaglio: %08x\n 
-
-# windows/input.c: 2605, 2615
+# osd/windows/ledutil.c: 532, 540
 Unable to open the keyboard device. (error %d)\n
-Incapace di aprire la periferica tastiera. (errore %d)\n
+Impossibile aprire la periferica tastiera. (errore %d)\n
 
-# windows/wind3d.c: 2598
-Unable to render to back_surface: %08x\n
-Incapace di tracciare sulla back_surface: %08x\n
-
-# windows/wind3d.c: 2485
-Unable to render to preprocess texture: %08x\n
-Incapace tracciare a mappa preprocesso: %08x\n
-
-# windows/fronthlp.c: 455
-Usage:  MAME gamename [options]\n\n
-Uso: MAME nomegioco: [opzioni]\n\n
-
-# windows/config.c: 552
-Usage: %s [game] [options]\nOptions:\n
-Uso: %s [gioco] [opzioni]\nOpzioni:\n
-
-# windows/wind3d.c: 683
-Using %s pre-scale effect\n
-Usando l'effetto %s di pre-scalatura\n
-
-# windows/winddraw.c: 295
+# osd/windows/video.c: 419
 Using %s scale effect\n
-Usando %s effet. scal.\n
+Usando %s effetto scal.\n
 
-# windows/input.c: 1194
-Using DirectInput %d\n
-Usando DirectInput %d\n
-
-# windows/wind3d.c: 1138
-Using a %s buffer and pageflipping\n
-Usindo un %s buffer e pageflipping\n
-
-# windows/wind3d.c: 340
-Warning: anisotropic (mag) filtering not supported, falling back to bi-linear\n
-Attenzione: filtro asintropico (mag) non supportato, ritorno al bi-lineare\n
-
-# windows/wind3d.c: 349
-Warning: anisotropic (min) filtering not supported, falling back to bi-linear\n
-Attenzione: filtro asintropico (min) non supportato, ritorno al bi-lineare\n
-
-# windows/wind3d.c: 1676 windows/winddraw.c: 919
-Warning: could not create gamma control to change brightness: %08x\n
-Attenzione: non posso creare il controllo gamma per cambiare la luminosità: %08x\n
-
-# windows/wind3d.c: 312
-Warning: flat bi-cubic filtering not supported, falling back to bi-linear\n
-Attenzione: filtraggio bi-cubico piano non supportato, torno al bi-lineare\n
-
-# windows/wind3d.c: 326
-Warning: gaussian bi-cubic filtering not supported, falling back to bi-linear\n
-Attenzione: filtro bi-cubico gaussiano non supportato, ritorno al bi-lineare\n
-
-# windows/window.c: 654
-Warning: hardware-accelerated blitting-effects selected, but currently disabled\n         use the -direct3d option to enable hardware acceleration\n
-Attenzione: selezionati effetti blitting accelerati hardware, ma ccorrentemente disabilitati\n         usa l'opzione -direct3d per abilitare l'accelerazione hardware\n
-
-# windows/window.c: 648
-Warning: non-hardware-accelerated blitting-effects engine enabled\n         use the -d3deffect option to enable hardware acceleration\n
-Attenzione: motore per effetti blitting senza accelerazione hardware attivo\n            usa l'opzione-d3deffect  per attivare l'accelerazione hardware\n
-
-# windows/wind3d.c: 1527
-Warning: required texture size too large for prescale, disabling prescale\n
-Attenzione: richieste dime. trama troppo larga per prescalatura, disabilito prescalatura\n
-
-# windows/winddraw.c: 698
-Warning: scale effect %s is disabled.\n
-Attenzione: l'effetto scalatura %s è disbilitato.\n
-
-# windows/wind3d.c: 272
-Warning: using fall-back method for scanline blending.\n
-Attenzione: sto usando il metodo precedente per il blending delle lineescansione.\n 
-
-# windows/wind3dfx.c: 196
-Windows Direct3D 2D video options
-Windows Direct3D 2D opzioni video
-
-# windows/video.c: 245
-Windows misc options
-Varie opzioni Windows
-
-# windows/fileio.c: 123
-Windows path and directory options
-Opzioni percoso Windows e cartelle
-
-# windows/sound.c: 126
-Windows sound options
-Opzioni suono Windows
-
-# windows/video.c: 214
-Windows video options
-Opzioni video Windows
-
-# windows/fronthlp.c: 750
-\"%8s\" not found!\n
-\"%8s\" non trovato!\n
-
-# windows/fronthlp.c: 752
-\"%8s\" not supported!\n
-\"%8s\" non supportato!\n
-
-# windows/input.c: 1262
-\"%s\" controller support enabled\n
-\"%s\" supporto controllo abilitato\n
-
-# windows/config.c: 611
+# osd/windows/config.c: 360
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
-\n\"%s\" approssivativamente corrispondoni ai seguenti\ngiochi supportati (prima le migliori corrispondenze):\n\n
+\n\"%s\" approssimativamente corrispondono ai seguenti\ngiochi supportati (prima le migliori corrispondenze):\n\n
 
-# windows/wind3dfx.c: 207
-additional customised settings (undocumented)
-impostazioni addizionali personalizzate (non documentate)
-
-# windows/config.c: 230
-additional pause brightness
-pausa addizinale luminosità
-
-# windows/fronthlp.c: 73
+# osd/windows/config.c: 96
 all available info on driver in XML format
 tutte le informazioni disponibili sul driver in formato XML
 
-# windows/video.c: 246
-allow MAME to give back time to the system when it's not needed
-permette al MAME di restituire cicli al sistema se non necessari
-
-# windows/input.c: 1741
+# osd/windows/input.c: 2178
 analog
 analogico
 
-# windows/input.c: 1202
+# osd/windows/input.c: 1465
 analog joystick
-leva analogica
+joystick analogica
 
-# windows/config.c: 257
-artwork resolution (0 for auto)
-risoluzione fondali (0 per automatica)
-
-# windows/video.c: 232
-attempt to match the game's refresh rate
-prova a rispettare li rinfresco del gioco
-
-# windows/config.c: 225
-automatically rotate screen anti-clockwise for vertical games
-ruota automaticamente lo schermo in senso anti-orario per i giochi verticali
-
-# windows/config.c: 224
-automatically rotate screen clockwise for vertical games
-ruota automaticamente schermo in senso orario con giochi verticali
-
-# windows/config.c: 229
-brightness correction
-correzione luminosità
-
-# windows/video.c: 275
-button color (aqua)
-colore pulsante (acqua)
-
-# windows/video.c: 272
-button color (blue)
-colore pulsante (blu)
-
-# windows/video.c: 271
-button color (green)
-colore pulsante (verde)
-
-# windows/video.c: 278
-button color (lime)
-colore pulsante (lime)
-
-# windows/video.c: 277
-button color (navy)
-colore pulsante (navy)
-
-# windows/video.c: 274
-button color (pink)
-colore pulsante (rosa)
-
-# windows/video.c: 273
-button color (purple)
-colore pulsante (porpora)
-
-# windows/video.c: 269
-button color (red)
-colore pulsante (rosso)
-
-# windows/video.c: 276
-button color (silver)
-colore pulsante (argento)
-
-# windows/video.c: 270
-button color (yellow)
-colore pulsante (giallo)
-
-# windows/config.c: 279
-change m68k core (0:C, 1:DRC, 2:ASM+DRC)
-cambia nucleo m68k (0:C, 1:DRC, 2:ASM+DRC)
-
-# windows/config.c: 266
-change system bios
-Cambia bios sistema
-
-# windows/fileio.c: 151
-cheat filename
-nome archivio trucchi
-
-# windows/fronthlp.c: 86
+# osd/windows/config.c: 106
 compare files with known MAME roms
-confronta archivi con ROM conosciute MAME
+confronta i files con ROM conosciute MAME
 
-# windows/fronthlp.c: 87
+# osd/windows/config.c: 107
 compare files with known MAME roms (brief)
-confronta archivi con ROM conosciute MAME (breve)
+confronta i files con ROM conosciute MAME (breve)
 
-# windows/config.c: 293
+# osd/windows/config.c: 90
 create the default configuration file
-crea un archivio configurazione predefinito
+crea un file di configurazione predefinito
 
-# windows/config.c: 256
-crop artwork to game screen only
-taglia fondali al solo schermo gioco
-
-# windows/video.c: 279
-cursor color
-colore cursore
-
-# windows/wind3dfx.c: 206
-customised blitting effects preset
-insiemi effetti blitting personalizzati
-
-# windows/input.c: 254, 1205
+# osd/windows/input.c: 1468
 dial
 chiama
 
-# windows/input.c: 260, 1741
+# osd/windows/config.c: 201 osd/windows/config.h: 44 osd/windows/input.c: 1967, 2178
 digital
 digitale
 
-# windows/fileio.c: 143
-directory for Artwork (Overlays etc.)
-cartella per Fondali (Overlays etc.)
-
-# windows/fileio.c: 145
-directory for hard drive image difference files
-cartella per gli archivi delle differenze immagini dischi fissi
-
-# windows/fileio.c: 148
-directory for ips files
-cartella per archivi ips
-
-# windows/fileio.c: 150
-directory for localized language files
-cartella per archivi linguaggi localizzati
-
-# windows/fileio.c: 144
-directory for screenshots (.png format)
-cartella per le copieschermo (formato .png)
-
-# windows/fileio.c: 137
-directory to save configurations
-cartella per salvare le configurazioni
-
-# windows/fileio.c: 146
-directory to save controller definitions
-cartella per salvare le definizioni dei controlli
-
-# windows/fileio.c: 141
-directory to save hiscores
-cartella per salvare i punteggi massimi
-
-# windows/fileio.c: 140
-directory to save input device logs
-cartella per salvare i tracciati periferica entrata
-
-# windows/fileio.c: 139
-directory to save memory card contents
-cartella per salvare i contenuti delle carte di memoria
-
-# windows/fileio.c: 138
-directory to save nvram contents
-cartella per salvare i contenuti nvram (ram non volatile)
-
-# windows/fileio.c: 142
-directory to save states
-cartella per salvare stati
-
-# windows/config.c: 297
+# osd/windows/config.c: 119
 display additional diagnostic information
-mostra informazioni diagnostiche addizionali
+mostra informazioni diagnostiche aggiuntive
 
-# windows/config.c: 294
-display running parameters in rc style
-mostra i parametri di funzionamento in stile rc
-
-# windows/config.c: 221
-do not apply rotation
-non applicare rotazione
-
-# windows/wind3d.c: 1138
-double
-doppia
-
-# windows/config.c: 234
-draw antialiased vectors
-disegna vettori non scalettati
-
-# windows/config.c: 235
-draw translucent vectors
-disegna vettori traslucenti
-
-# windows/fronthlp.c: 76
+# osd/windows/config.c: 99
 driver sourcefile
-archivio sorgente driver
+file driver sorgente
 
-# windows/video.c: 227
-emulate win_old_scanlines
-emula vecchie interlinee windows
-
-# windows/input.c: 251
+# osd/windows/config.c: 224
 enable (keyboard|mouse|joystick) if a paddle control is present
-abilita (tastiera|mouse|leva|pistola) se è presente un controllo a manopola
+attiva (tastiera|mouse|joystick) se è presente un controllo manopola
 
-# windows/input.c: 254
-enable (keyboard|mouse|joystick|lightgun) if a dial control is present
-abilita (tastiera|mouse|leva|pistola) se è presente un controllo a chiamata
-
-# windows/input.c: 256
-enable (keyboard|mouse|joystick|lightgun) if a lightgun control is present
-abilita (tastiera|mouse|leva|pistola) se è presente un controllo a pistol
-
-# windows/input.c: 258
-enable (keyboard|mouse|joystick|lightgun) if a mouse control is present
-abilita (tastiera|mouse|leva|pistola) se è presente un controllo a mouse
-
-# windows/input.c: 253
-enable (keyboard|mouse|joystick|lightgun) if a pedal control is present
-abilita (tastiera|mouse|leva|pistola) se è presente un controllo a pedale
-
-# windows/input.c: 255
-enable (keyboard|mouse|joystick|lightgun) if a trackball control is present
-abilita (tastiera|mouse|leva|pistola) se è presente un controllo a sfera
-
-# windows/input.c: 252
-enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is present
-abilita (tastiera|mouse|leva|pistola) se è presente un controllo a leva analogica
-
-# windows/config.c: 268
-enable automatic restore at startup and save at exit
-abilita recupero automatico avvio e salvataggio uscita
-
-# windows/input.c: 230
+# osd/windows/config.c: 196
 enable dual lightgun input
-abilita entrata doppia pistola
+attiva input doppia pistola
 
-# windows/input.c: 228
+# osd/windows/config.c: 189
 enable joystick input
-abilita l'entrata leva analogica
+attiva input joystick
 
-# windows/input.c: 233
-enable keyboard LED emulation
-abilita l'emulazione LED tastiera
-
-# windows/input.c: 229
+# osd/windows/config.c: 195
 enable lightgun input
-abilita l'entrata pistola
+attiva input pistola
 
-# windows/input.c: 227
+# osd/windows/config.c: 188
 enable mouse input
-abilita l'entrata mouse
+attiva input mouse
 
-# windows/input.c: 239
+# osd/windows/config.c: 191
 enable pointing stick input
-abilita entrata leva puntamento
+attiva entrata leva di puntamento
 
-# windows/wind3dfx.c: 203
-enable rotation of effects for rotated games
-abilita la rotazione effetti per i giochi ruotati
-
-# windows/input.c: 232
+# osd/windows/config.c: 198
 enable steadykey support
-abilita il supporto steadykey
+attiva il supporto steadykey
 
-# windows/config.c: 258
-enable/disable cheat subsystem
-abilita/disabilita il sottosistema trucchi
-
-# windows/config.c: 259
-enable/disable debugger (only if available)
-abilita/disbilita debugger (solo se disponibile)
-
-# windows/config.c: 296
-enable/disable loading of configfiles
-abilita/disabilita la lettura degli archivi configurazione
-
-# windows/config.c: 301
-enable/disable local language game list
-abilita/disabilita lista linguaggi giochi locale
-
-# windows/config.c: 244
-enable/disable sound and sound CPUs
-abilita/disabilita suoni e CPU sonore
-
-# windows/config.c: 247
-enable/disable volume auto adjust
-abilita/disabilita autoregolazione volume
-
-# windows/video.c: 231
-enforce aspect ratio
-forza rapporto proporzioni
-
-# windows/rc.c: 719, 822, 834
-error invalid value for %s: %s\n
-errore valore non valido per %s: %s\n
-
-# windows/config.c: 493
-error on rc creation\n
-errore nella creazione rc\n
-
-# windows/config.c: 502
-error while parsing cmdline\n
-errore durante l'analisi della linea comandi\n
-
-# windows/rc.c: 315, 382
-error: %s requires an argument, on line %d of file: %s\n
-errore: %s richiede un argomento, alla linea %d dell'archivio: %s\n
-
-# windows/rc.c: 571
-error: %s requires an argument\n
-errore: %s richiede un argomento\n
-
-# windows/rc.c: 848
-error: couldn't open file: %s\n
-errore: non posso aprire l'archivio: %s\n
-
-# windows/config.c: 857
-error: duplicate gamename: %s\n
-errore: nomegioco dupplicato: %s\n
-
-# windows/rc.c: 358
-error: garbage \"%s\" on line %d of file: %s\n
-errore: spazzatura \"%s\" alla linea %d dell'archivio: %s\n
-
-# windows/input.c: 824
-error: invalid value for %s: %s\n
-errore: valore non valido per %s: %s\n
-
-# windows/video.c: 421
-error: invalid value for aspect ratio: %s\n
-errore: valore non valido per rapporto proporzioni: %s\n
-
-# windows/video.c: 318
-error: invalid value for cleanstretch: %s\n
-errore: valore invalido x cleanstretch: %s\n
-
-# windows/wind3dfx.c: 300
-error: invalid value for d3dprescale: %s\n
-errore: val scorretto per d3dprescale: %s\n
-
-# windows/input.c: 904
-error: invalid value for digital: %s -- valid values are:\n
-errore: valore non valido per digitale: %s -- i valori validi sono:\n
-
-# windows/video.c: 400
-error: invalid value for effect: %s\n
-errore: valore non valido per l'effetto: %s\n
-
-# windows/video.c: 375
-error: invalid value for frames_to_run: %s\n
-errore: valore invalido per frames_to_run: %s\n
-
-# windows/config.c: 185
+# osd/windows/config.c: 707
 error: invalid value for language: %s\nUse %s\n
-errore: valore non valido per il linguaggio: %s\nUsa %s\n
+errore: valore non valido per la lingua: %s\nUsa %s\n
 
-# windows/input.c: 799
-error: invalid value for led_mode: %s\n
-errore: valore non valido per led_mode: %s\n
-
-# windows/video.c: 449
-error: invalid value for palette: %s\n
-errore: valore non valido per la tavolozza: %s\n
-
-# windows/video.c: 343, 353
-error: invalid value for resolution: %s\n
-errore: valore non valido per la risoluzione: %s\n
-
-# windows/rc.c: 806
-error: malloc failed for %s\n
-errore: malloc fallita per %s\n
-
-# windows/rc.c: 161
-error: malloc failed for: struct rc_struct\n
-errore: malloc fallita per: struct rc_struct\n
-
-# windows/rc.c: 604
-error: malloc failed in rc_parse_commadline\n
-errore: malloc fallita in rc_parse_commadline\n
-
-# windows/rc.c: 201
-error: malloc failed in rc_register_option\n
-errore: malloc fallita in rc_register_option\n
-
-# windows/config.c: 1015
-error: malloc failed in win_dirname\n
-errore: malloc fallita in win_dirname\n
-
-# windows/config.c: 1055
-error: malloc failed in win_strip_extension\n
-errore: malloc fallita in win_strip_extension\n
-
-# windows/rc.c: 321, 388
-error: trailing garbage: \"%s\" on line: %d of file: %s\n
-errore: trailing spazzatura: \"%s\" alla linea: %d dell'archivio: %s\n
-
-# windows/rc.c: 309, 376
-error: unknown option %s, on line %d of file: %s\n
-errore: opzione sconosciuta %s, alla linea %d dell'archivio: %s\n
-
-# windows/rc.c: 587, 739, 761, 785
-error: unknown option %s\n
-erore: opzione sconosciuta %s\n
-
-# windows/rc.c: 861
-error: unknown option type: %d, this should not happen!\n
-errore: tipo opzione sconosciuto: %d, questo non dovrebbe accadere!\n
-
-# windows/config.c: 568
-failed to open %s for playback\n
-fallita apertura di %s per riproduzione\n
-
-# windows/config.c: 673
-failed to open %s for recording\n
-fallita apertura di %s per registrazione\n
-
-# windows/wind3dfx.c: 201
-feedback strength
-forza ritorno
-
-# windows/config.c: 227
-flip screen left-right
-ribalta schermo sinistra-destra
-
-# windows/config.c: 226
-flip screen upside-down
-ribalta schermo alto-basso
-
-# windows/video.c: 258
-font blank color
-fonte colore nero
-
-# windows/video.c: 259
-font normal color
-fonte colore normale
-
-# windows/video.c: 260
-font special color
-fonte colore speciale
-
-# windows/wind3dfx.c: 197
-force specific zoom level
-forza un'ingrandimento specifico
-
-# windows/config.c: 228
-gamma correction
-correzione gamma
-
-# windows/config.c: 263
-generate error.log
-genera error.log
-
-# windows/video.c: 248
-increase thread priority
-incrementa la priorità processo
-
-# windows/rc.c: 253
-info: trying to parse: %s\n
-informazioni: provo ad analizzare: %s\n
-
-# windows/wind3dfx.c: 199
-interpolation method
-metodo interpolazione
-
-# windows/input.c: 1741
+# osd/windows/input.c: 2178
 invalid
-invalido
+non valido
 
-# windows/config.c: 270
-ips datfile name
-nome archivio dati ips
-
-# windows/fronthlp.c: 720
+# osd/windows/fronthlp.c: 771, 867
 is bad\n
-è sbagliato\n
+è errato\n
 
-# windows/fronthlp.c: 730
+# osd/windows/fronthlp.c: 781, 877
 is best available\n
 è il migliore disponibile\n
 
-# windows/fronthlp.c: 725
+# osd/windows/fronthlp.c: 776, 872
 is good\n
 è corretto\n
 
-# windows/fronthlp.c: 735
-is missing optional files\n
-è mancante degli archivi opzionali\n
-
-# windows/input.c: 229, 820, 1203
+# osd/windows/config.h: 44 osd/windows/input.c: 1466, 1831
 lightgun
 pistola
 
-# windows/fronthlp.c: 83
+# osd/windows/config.c: 103
 list optional samples for a driver
 lista campioni audio opzionali per il driver
 
-# windows/fronthlp.c: 82
+# osd/windows/config.c: 102
 list required roms for a driver
 lista roms richieste per il driver
 
-# windows/climain.c: 30
-loading %-12s\r
-sto leggendo %-12s\r
-
-# windows/input.c: 260
+# osd/windows/config.c: 201
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
-segna alcune leve o assi come digitali (nessuno|tutti|j<N>*|j<N>a<M>[,...])
+segna alcuni joysticks o assi come digitali (nessuno|tutti|j<N>*|j<N>a<M>[,...])
 
-# windows/input.c: 235
-minimal analog value for digital input
-valore analogico minimo per l'entrata digitale
-
-# windows/rc.c: 660, 697
-no help available
-aiuto non disponibile
-
-# windows/input.c: 231
+# osd/windows/config.c: 197
 offscreen shots reload
-ricarica colpi fuorischermo
+ricarica colpi offscreen
 
-# windows/config.c: 264
-output error log to debugger
-invio il tracciato errori al debugger
-
-# windows/input.c: 251, 1201
+# osd/windows/input.c: 1464
 paddle
 manopola
 
-# windows/fileio.c: 133, 135
-path to ini files
-percorso per archivi ini
-
-# windows/fileio.c: 125
-path to romsets
-percorso per insiemi roms
-
-# windows/fileio.c: 131
-path to samplesets
-percorso per insiemi campioni audio
-
-# windows/input.c: 253, 1204
+# osd/windows/input.c: 1467
 pedal
 pedale
 
-# windows/config.c: 261
-playback an input file
-riproduci un archivio entrate
-
-# windows/input.c: 236
-preconfigure for specified controller
-preconfigura per un controllo specifico
-
-# windows/video.c: 247
-prefer RDTSC over QueryPerformanceCounter for timing
-preferisci RDTSC a QueryPerformanceCounter per le temporizzazioni
-
-# windows/wind3dfx.c: 204
-prescale effect
-effetto prescalatura
-
-# windows/config.c: 262
-record an input file
-registra un archivio entrate
-
-# windows/fronthlp.c: 84
+# osd/windows/config.c: 104
 report romsets that have problems
-documenta insiemi roms che hanno problemi
+rapporto romsets che hanno problemi
 
-# windows/fronthlp.c: 85
+# osd/windows/config.c: 105
 report samplesets that have problems
-documenta insiemi campioni audio che hanno problemi
+rapporto samplesets che hanno problemi
 
-# windows/fronthlp.c: 748
-romset
-insieme rom
-
-# windows/fronthlp.c: 688
+# osd/windows/fronthlp.c: 762
 romset %s 
-insieme rom %s
+romset %s
 
-# windows/fronthlp.c: 758
-romsets
-insiemi rom
-
-# windows/config.c: 223
-rotate screen anti-clockwise
-ruota lo schermo in senso anti-orario
-
-# windows/config.c: 222
-rotate screen clockwise
-ruoto lo schermo in senso orario
-
-# windows/video.c: 219
-run in a window/run on full screen
-esegui in una finestra/esegui a schermo pieno
-
-# windows/config.c: 620
-running %s (%s) [press return]
-sto avviando %s (%s) [premi invio]
-
-# windows/fronthlp.c: 748
-sampleset
-insieme campioni audio
-
-# windows/fronthlp.c: 711
+# osd/windows/fronthlp.c: 861
 sampleset %s 
-insiemecampaudio %s 
+sampleset %s 
 
-# windows/fronthlp.c: 758
-samplesets
-insiemi campioni audio
-
-# windows/sound.c: 128
-save sound in wav file
-salva suono in archivo wav
-
-# windows/wind3d.c: 1648
-scale effects surface created: %s\n
-effetti scalatura superfice creati: %s\n
-
-# windows/wind3dfx.c: 202
-scanline intensity
-intensità interlinee
-
-# windows/config.c: 260
-script for debugger (only if available)
-script per debugger (solo se disponibile)
-
-# windows/config.c: 300
-select translation language
-scegli il linguaggio di traduzione
-
-# windows/sound.c: 127
+# osd/windows/config.c: 184
 set audio latency (increase to reduce glitches)
 imposta latenza audio (aumenta per ridurre salti)
 
-# windows/config.c: 236
-set beam width in vector games
-seleziona larghezza raggio nei giochi vettoriali
-
-# windows/config.c: 237
-set flickering in vector games
-imposta lo sfarfallamento per i giochi vettoriali
-
-# windows/video.c: 216
-set frameskip explicitly (autoframeskip needs to be off)
-seleziona esplicitamente i saltaquadri (il saltaquadri automatico deve essere spento)
-
-# windows/config.c: 238
-set intensity in vector games
-imposta intensità nei giochi vettoriali
-
-# windows/input.c: 242
+# osd/windows/config.c: 204
 set joystick ID (Player1)
-imposta ID leva analogica (Giocatore1)
+imposta ID joystick (Giocatore1)
 
-# windows/input.c: 243
+# osd/windows/config.c: 205
 set joystick ID (Player2)
-imposta ID leva analogica (Giocatore 2)
+imposta ID joystick (Giocatore 2)
 
-# windows/input.c: 244
+# osd/windows/config.c: 206
 set joystick ID (Player3)
-imposta ID leva analogica (Giocatore3)
+imposta ID joystick (Giocatore3)
 
-# windows/input.c: 245
+# osd/windows/config.c: 207
 set joystick ID (Player4)
-imposta ID leva analogica (Giocatore 4)
+imposta ID joystick (Giocatore 4)
 
-# windows/input.c: 246
+# osd/windows/config.c: 208
 set joystick ID (Player5)
-imposta ID leva (Giocatore5) 
+imposta ID joystick (Giocatore5) 
 
-# windows/input.c: 247
+# osd/windows/config.c: 209
 set joystick ID (Player6)
-imposta ID leva (Giocatore6)
+imposta ID joystick (Giocatore6)
 
-# windows/input.c: 248
+# osd/windows/config.c: 210
 set joystick ID (Player7)
-imposta ID leva (Giocatore7)
+imposta ID joystick (Giocatore7)
 
-# windows/input.c: 249
+# osd/windows/config.c: 211
 set joystick ID (Player8)
-imposta ID leva (Giocatore8)
+imposta ID joystick (Giocatore8)
 
-# windows/video.c: 225
-set resolution
-imposta la risoluzione
-
-# windows/config.c: 242
-set samplerate
-imposta la frequenza campioni audio
-
-# windows/video.c: 226
-set specific monitor refresh rate
-imposta frequenza aggiornamento specifica x monitor
-
-# windows/video.c: 235
-sets the brightness in full screen mode
-imposta la luminosità nella modalita schemo pieno
-
-# windows/video.c: 236
-sets the number of frames to run within the game
-imposta il numero di quadri da utilizzare nel gioco
-
-# windows/fronthlp.c: 74
+# osd/windows/config.c: 98
 short name, full name
 nome breve, nome completo
 
-# windows/fronthlp.c: 77
+# osd/windows/config.c: 100
 show clones
 mostra cloni
 
-# windows/fronthlp.c: 69, 70
+# osd/windows/config.c: 85
 show help message
 mostra messaggio aiuto
 
-# windows/config.c: 295
+# osd/windows/config.c: 92
 show this help
 mostra quest'aiuto
 
-# windows/config.c: 265
-skip displaying the game info screen
-salta lo schermo introduttivo gioco
-
-# windows/video.c: 215
-skip frames to speed up emulation
-salta quadri per accelerare emulazione
-
-# windows/config.c: 244 
+# osd/windows/sound.c: 93
 sound
 suono
 
-# windows/video.c: 238
-specify an alternate monitor aspect ratio
-specifica un rapporto schermo alternativo
-
-# windows/video.c: 237
-specify the blitting effect
-specifica l'effetto blitting
-
-# windows/wind3dfx.c: 205
-specify the blitting effects
-specifica gli effetti blitting
-
-# windows/video.c: 223
-specify which screen to use
-specifica che schermo usare
-
-# windows/video.c: 230
-start out maximized
-parti massimizzato
-
-# windows/config.c: 267
-state to load
-stato da caricare
-
-# windows/video.c: 224
-stretch to integer ratios
-stira a ratei interi
-
-# windows/video.c: 229
-switch color depths to best fit
-commuta i colori al numero che meglio s'adatta
-
-# windows/video.c: 228
-switch resolutions to best fit
-commuta la risoluzione alla migliore possibile
-
-# windows/video.c: 233
-syncronize only to the monitor refresh
-sincronizza al solo rinfresco dello schermo
-
-# windows/video.c: 234
-throttle speed to the game's framerate
-accelera velocità alla velocità schermo del gioco
-
-# windows/input.c: 255, 1206
+# osd/windows/input.c: 1469
 trackball
 sfera
 
-# windows/config.c: 283
-transparency of UI background [0 - 255]
-trasparenza dell'Interf.Graf [0 - 255]
-
-# windows/wind3d.c: 1138
-triple
-tripla
-
-# windows/video.c: 218
-triple buffering (only if fullscreen)
-Buffering triplo (solo se schermo pieno)
-
-# windows/config.c: 165
-unable to open log file\n
-incapace di aprire l'archivio traccia\n
-
-# windows/video.c: 221
-use Direct3D for rendering
-usa Direct3D per tracciamento
-
-# windows/video.c: 220
-use DirectDraw for rendering
-usa DirectDraw per il tracciamneto
-
-# windows/wind3dfx.c: 198
-use DirectX texture management
-usa gestione mappe DirectX
-
-# windows/config.c: 252
-use additional game artwork (sets default for specific options below)
-usa fondali addizionali (imposta le condiz predefinite per le opzioni sottostanti)
-
-# windows/config.c: 253
-use backdrop artwork
-usa fondali sfondo
-
-# windows/config.c: 255
-use bezel artwork
-usa fondali bezel
-
-# windows/config.c: 254
-use overlay artwork
-usa fondali sovrapposti
-
-# windows/config.c: 243
-use samples
-usa campioni audio
-
-# windows/config.c: 282
-use transparent background for UI text
-usa sfondo trasparente per testo Interf Graf
-
-# windows/config.c: 245
-volume (range [-32,0])
-volume (variazione [-32,0])
-
-# windows/video.c: 217
-wait for vertical sync (reduces tearing)
-attendi sincronismo verticale (riduce strappi)
-
-# windows/video.c: 261
-window background color
-colore sfondo finestra
-
-# windows/video.c: 264
-window frame color (dark)
-colore riquadro finestra (scuro)
-
-# windows/video.c: 263
-window frame color (light)
-colore riquadro finestra (leggero)
-
-# windows/video.c: 262
-window frame color (medium)
-colore riquadro finestra (medio)
-
-# windows/fronthlp.c: 75
+# osd/windows/config.c: 97
 year, manufacturer and full name
 anno, produttore e nome completo
 
-# windows/fronthlp.c: 78
-CRC-32s
+# osd/windows/fronthlp.c: 628
+ BAD
+ ERRATA
 
+# osd/windows/fronthlp.c: 634
+ NO GOOD DUMP KNOWN
+ NON ESISTE UN DUMP VALIDO
 
-# windows/input.c: 1965
-J%d %s D
+# osd/windows/fronthlp.c: 805
+%d romsets found, %d were OK.\n
+%d romsets trovati, %d sono OK.\n
 
+# osd/windows/fronthlp.c: 901
+%d samplesets found, %d were OK.\n
+%d samplesets trovati, %d sono OK.\n
 
-# windows/input.c: 1969
-J%d %s L
+# osd/windows/input.c: 2322
+%s Button %d
+%s Pulsante %d
 
+# osd/windows/config.c: 193, 213, 214, 215, 216, 217, 218, 219, 220
+(disabled by compiling option)
+(disattivato dall'opzione di compilazione)
 
-# windows/input.c: 1973
-J%d %s R
+# osd/windows/video.c: 274
+(primary)
+(primario)
 
+# osd/windows/config.c: 223
+AUTOMATIC DEVICE SELECTION OPTIONS
+OPZIONI SELEZIONE AUTOMATICA PERIFERICA
 
-# windows/input.c: 1961
-J%d %s U
+# osd/windows/config.c: 89
+CONFIGURATION COMMANDS
+COMANDI DI CONFIGURAZIONE
 
+# osd/windows/config.c: 113
+CONFIGURATION OPTIONS
+OPZIONI DI CONFIGURAZIONE
 
-# windows/input.c: 1855, 1865
-Mouse %d %s
+# osd/windows/config.c: 84
+CORE COMMANDS
+COMANDI NUCLEO
 
+# osd/windows/input.c: 1341
+Can't set axis mode for Joystick %d - %s\n
+Impossibile impostare la modalità assi per il Joystick %d - %s\n
 
-# windows/input.c: 1793
-Mouse %d X
+# osd/windows/input.c: 1366
+Can't set deadzone for Joystick %d - %s\n
+Impossibile impostare la zona morta per il Joystick %d - %s\n
 
+# osd/windows/input.c: 1356
+Can't set range for Joystick %d - %s\n
+Impossibile impostare il raggio per il Joystick %d - %s\n
 
-# windows/input.c: 1795
-Mouse %d Y
+# osd/windows/input.c: 1377
+Can't set saturation for Joystick %d - %s\n
+Impossibile impostare la saturazione per il Joystick %d - %s\n
 
+# osd/windows/config.c: 117
+DEBUGGING OPTIONS
+OPZIONI DI DEBUG
 
-# windows/input.c: 1797
-Mouse %d Z
+# osd/windows/config.c: 143
+DIRECT3D-SPECIFIC OPTIONS
+OPZIONI SPECIFICHE DEL DIRECT3D
 
+# osd/windows/config.c: 139
+DIRECTDRAW-SPECIFIC OPTIONS
+OPZIONI SPECIFICHE DEL DIRECTDRAW
 
-# windows/input.c: 1857, 1867
-Mouse %s
+# osd/windows/drawd3d.c: 1120
+Device %s currently in an unsupported mode\n
+La periferica %s è in una modalità non supportata\n
 
+# osd/windows/drawd3d.c: 1093
+Direct3D: Configuring adapter #%d = %s\n
+Direct3D: Configurazione adattatore #%d = %s\n
 
-# windows/config.c: 275
-automatic pause when playback is finished
+# osd/windows/drawd3d.c: 718
+Direct3D: Device created at %dx%d\n
+Direct3D: Periferica creata a %dx%d\n
 
+# osd/windows/drawd3d.c: 588, 2295
+Direct3D: Error %08X during device begin_scene call\n
+Direct3D: Errore %08X durante la chiamata di periferica begin_scene\n
 
-# windows/config.c: 273
-confirm before exiting game
+# osd/windows/drawd3d.c: 1573, 2344
+Direct3D: Error %08X during device draw_primitive call\n
+Direct3D: Errore %08X durante la chiamata di periferica draw_primitive\n
 
+# osd/windows/drawd3d.c: 617, 2348
+Direct3D: Error %08X during device end_scene call\n
+Direct3D: Errore %08X durante la chiamata di periferica end_scene\n
 
-# windows/config.c: 272
-disable second monitor emulation
+# osd/windows/drawd3d.c: 2288
+Direct3D: Error %08X during device get_render_target call\n
+Direct3D: Errore %08X durante la chiamata di periferica get_render_target\n
 
+# osd/windows/drawd3d.c: 623
+Direct3D: Error %08X during device present call\n
+Direct3D: Errore %08X durante la chiamata di periferica presente\n
+
+# osd/windows/drawd3d.c: 332, 339, 346, 353
+Direct3D: Error %08X during device set_render_state call\n
+Direct3D: Errore %08X durante la chiamata di periferica set_render_state\n
+
+# osd/windows/drawd3d.c: 2290, 2352
+Direct3D: Error %08X during device set_render_target call\n
+Direct3D: Errore %08X durante la chiamata di periferica set_render_target\n
+
+# osd/windows/drawd3d.c: 1545, 2342
+Direct3D: Error %08X during device set_stream_source call\n
+Direct3D: Errore %08X durante la chiamata di periferica set_stream_source\n
+
+# osd/windows/drawd3d.c: 264, 2301
+Direct3D: Error %08X during device set_texture call\n
+Direct3D: Errore %08X durante la chiamata di periferica set_texture\n
+
+# osd/windows/drawd3d.c: 276, 278, 290, 292, 304
+Direct3D: Error %08X during device set_texture_stage_state call\n
+Direct3D: Errore %08X durante la chiamata di periferica set_texture_stage_state\n
+
+# osd/windows/drawd3d.c: 2276
+Direct3D: Error %08X during device stretct_rect call\n
+Direct3D: Errore %08X durante la chiamata di periferica stretct_rect\n
+
+# osd/windows/drawd3d.c: 889, 891, 893, 895, 899, 913, 927, 941, 967, 991, 1005, 1018, 1025
+Direct3D: Error %08X during get_caps_dword call\n
+Direct3D: Errore %08X durante la chiamata get_caps_dword\n
+
+# osd/windows/drawd3d.c: 2255
+Direct3D: Error %08X during texture get_surface_level call\n
+Direct3D: Errore %08X durante la chiamata texture get_surface_level\n
+
+# osd/windows/drawd3d.c: 2231
+Direct3D: Error %08X during texture unlock_rect call\n
+Direct3D: Errore %08X durante la chiamata texture unlock_rect call\n
+
+# osd/windows/drawd3d.c: 2305
+Direct3D: Error %08X during vertex buffer lock call\n
+Direct3D: Errore %08X durante la chiamata vertice buffer bloccato\n
+
+# osd/windows/drawd3d.c: 1540, 2337
+Direct3D: Error %08X during vertex buffer unlock call\n
+Direct3D: Errore %08X durante la chiamata vertice buffer sbloccato\n
+
+# osd/windows/drawd3d.c: 954
+Direct3D: Error - Device does not support dest alpha blending with inverted source alpha\n
+Direct3D: Errore - La periferica non supporta dest. alpha blending con fonte alpha invertita\n
+
+# osd/windows/drawd3d.c: 949
+Direct3D: Error - Device does not support dest alpha blending with one\n
+Direct3D: Errore - La periferica non supporta dest. alpha blending con uno\n
+
+# osd/windows/drawd3d.c: 944
+Direct3D: Error - Device does not support dest alpha blending with zero\n
+Direct3D: Errore - La periferica non supporta dest. alpha blending con zero\n
+
+# osd/windows/drawd3d.c: 902
+Direct3D: Error - Device does not support immediate presentations\n
+Direct3D: Errore - La periferica non supporta le presentazioni immediate\n
+
+# osd/windows/drawd3d.c: 907
+Direct3D: Error - Device does not support per-refresh presentations\n
+Direct3D: Errore - La periferica non supporta le presentazione per-aggiornamento\n
+
+# osd/windows/drawd3d.c: 935
+Direct3D: Error - Device does not support source alpha blending with destination color\n
+Direct3D: Errore - La periferica non supporta fonte alpha blending con colore di destinazione\n
+
+# osd/windows/drawd3d.c: 930
+Direct3D: Error - Device does not support source alpha blending with source alpha\n
+Direct3D: Errore - La periferica non supporta fonte alpha blending con fonte alpha\n
+
+# osd/windows/drawd3d.c: 961
+Direct3D: Error - Device does not support texture alpha\n
+Direct3D: Errore - La periferica non supporta le texture alpha\n
+
+# osd/windows/d3d8intf.c: 101
+Direct3D: Error attempting to initialize Direct3D8\n
+Direct3D: Errore nel tentativo di inizializzare le Direct3D8\n
+
+# osd/windows/d3d9intf.c: 99
+Direct3D: Error attempting to initialize Direct3D9\n
+Direct3D: Errore nel tentativo di inizializzare le Direct3D9\n
+
+# osd/windows/drawd3d.c: 1263
+Direct3D: Mode selected = %4dx%4d@%3dHz\n
+Direct3D: Modalità selezionata = %4dx%4d@%3dHz\n
+
+# osd/windows/drawd3d.c: 1207
+Direct3D: Selecting video mode...\n
+Direct3D: Selezione modalità video...\n
+
+# osd/windows/d3d8intf.c: 83
+Direct3D: Unable to access d3d8.dll\n
+Direct3D: Impossibile accedere a d3d8.dll\n
+
+# osd/windows/d3d9intf.c: 81
+Direct3D: Unable to access d3d9.dll\n
+Direct3D: Impossibile accedere a d3d9.dll\n
+
+# osd/windows/d3d8intf.c: 91
+Direct3D: Unable to find Direct3DCreate8\n
+Direct3D: Impossibile trovare Direct3DCreate8\n
+
+# osd/windows/d3d9intf.c: 89
+Direct3D: Unable to find Direct3DCreate9\n
+Direct3D: Impossibile trovare Direct3DCreate9\n
+
+# osd/windows/d3d8intf.c: 114
+Direct3D: Using Direct3D 8\n
+Direct3D: Uso delle Direct3D 8\n
+
+# osd/windows/d3d9intf.c: 112
+Direct3D: Using Direct3D 9\n
+Direct3D: Uso delle Direct3D 9\n
+
+# osd/windows/drawd3d.c: 1027
+Direct3D: Using StretchRect for prescaling\n
+Direct3D: Uso di StretchRect per il prescaling\n
+
+# osd/windows/drawd3d.c: 1021
+Direct3D: Using dynamic textures\n
+Direct3D: Uso di delle textures dinamiche\n
+
+# osd/windows/drawd3d.c: 975
+Direct3D: Warning - Device does not support bilinear texture filtering for magnification\n
+Direct3D: Attenzione - La periferica non supporta il filtro texture bilineare per ingrandimento\n
+
+# osd/windows/drawd3d.c: 985
+Direct3D: Warning - Device does not support bilinear texture filtering for minification\n
+Direct3D: Attenzione - La periferica non supporta il filtro texture bilineare per zoom -\n
+
+# osd/windows/drawd3d.c: 921
+Direct3D: Warning - Device does not support hardware rasterization\n
+Direct3D: Attenzione - La periferica non supporta la rasterizzazione hardware\n
+
+# osd/windows/drawd3d.c: 970
+Direct3D: Warning - Device does not support point-sample texture filtering for magnification\n
+Direct3D: Attenzione - La periferica non supporta il filtro texture point-sample per ingrandimento\n
+
+# osd/windows/drawd3d.c: 980
+Direct3D: Warning - Device does not support point-sample texture filtering for minification\n
+Direct3D: Attenzione - La periferica non supporta il filtro texture point-sample per zoom -\n
+
+# osd/windows/drawd3d.c: 916
+Direct3D: Warning - Device does not support queued rendering after a page flip\n
+Direct3D: Attenzione - La periferica non supporta la coda rendering dopo ribaltamento di pagina\n
+
+# osd/windows/drawd3d.c: 994
+Direct3D: Warning - Device does not support texture clamping\n
+Direct3D: Attenzione - La periferica non supporta il texture clamping\n
+
+# osd/windows/drawd3d.c: 1008
+Direct3D: Warning - Device does not support texture modulation\n
+Direct3D: Attenzione - La periferica non supporta il texture modulation\n
+
+# osd/windows/drawd3d.c: 999
+Direct3D: Warning - Device does not support texture wrapping\n
+Direct3D: Attenzione - La periferica non supporta il texture wrapping\n
+
+# osd/windows/drawd3d.c: 734
+Direct3D: Warning - device does not support full screen gamma correction.\n
+Direct3D: Attenzione - La periferica non supporta la correzione gamma a Tutto Schermo.\n
+
+# osd/windows/drawd3d.c: 671
+Direct3D: YUV format = %s\n
+Direct3D: formato YUV = %s\n
+
+# osd/windows/drawd3d.c: 1644
+Direct3D: adjusting prescale from %dx%d to %dx%d\n
+Direct3D: sistemazione prescale da %dx%d a %dx%d\n
+
+# osd/windows/drawd3d.c: 1063
+Direct3D: failed to recreate resources for device; failing permanently\n
+Direct3D: impossibile ricreare le risorse per la periferica; errore permanente\n
+
+# osd/windows/drawd3d.c: 1050
+Direct3D: resetting device\n
+Direct3D: periferica resettata\n
+
+# osd/windows/drawdd.c: 791
+DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
+DirectDraw: %s superficie creata: %dx%dx%d (R=%08X G=%08X B=%08X)\n
+
+# osd/windows/drawdd.c: 1128
+DirectDraw: Configuring device %s\n
+DirectDraw: Configurazione periferica %s\n
+
+# osd/windows/drawdd.c: 618
+DirectDraw: Error %08X attempting to set gamma correction.\n
+DirectDraw: Errore %08X nel tentativo di impostare la correzione gamma.\n
+
+# osd/windows/drawdd.c: 497
+DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
+DirectDraw: Errore %08X nel tentativo di impostare la chiamata modalità video %dx%d@%d\n
+
+# osd/windows/drawdd.c: 1088
+DirectDraw: Error %08X blitting to the screen\n
+DirectDraw: Errore %08X blitting su schermo\n
+
+# osd/windows/drawdd.c: 1055, 1064, 1073, 1082
+DirectDraw: Error %08X clearing the screen\n
+DirectDraw: Errore %08X pulizia dello schermo\n
+
+# osd/windows/drawdd.c: 776
+DirectDraw: Error %08X creating %s surface\n
+DirectDraw: Errore %08X creazione superficie %s\n
+
+# osd/windows/drawdd.c: 817
+DirectDraw: Error %08X creating clipper\n
+DirectDraw: Errore %08X creazione clipper\n
+
+# osd/windows/drawdd.c: 462, 1117
+DirectDraw: Error %08X during DirectDrawCreateEx call\n
+DirectDraw: Errore %08X durante la chiamata DirectDrawCreateEx\n
+
+# osd/windows/drawdd.c: 1214
+DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
+DirectDraw: Errore %08X durante la chiamata DirectDrawEnumerateEx\n
+
+# osd/windows/drawdd.c: 1327
+DirectDraw: Error %08X during EnumDisplayModes call\n
+DirectDraw: Errore %08X durante la chiamata EnumDisplayModes\n
+
+# osd/windows/drawdd.c: 718
+DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
+DirectDraw: Errore %08X durante la chiamata IDirectDraw7_GetCaps\n
+
+# osd/windows/drawdd.c: 487
+DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
+DirectDraw: Errore %08X durante la chiamata IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW)\n
+
+# osd/windows/drawdd.c: 481
+DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
+DirectDraw: Errore %08X durante la chiamata IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW)\n
+
+# osd/windows/drawdd.c: 784
+DirectDraw: Error %08X getting %s surface desciption\n
+DirectDraw: Errore %08X rilevazione descrizione superficie %s\n
+
+# osd/windows/drawdd.c: 546
+DirectDraw: Error %08X getting attached back surface\n
+DirectDraw: Errore %08X rilevazione superficie posteriore allegata\n
+
+# osd/windows/drawdd.c: 1136
+DirectDraw: Error %08X getting current display mode\n
+DirectDraw: Errore %08X rilevazione attuale modalità visualizzazione\n
+
+# osd/windows/drawdd.c: 355
+DirectDraw: Error %08X locking blit surface\n
+DirectDraw: Errore %08X bloccando la superficie blit\n
+
+# osd/windows/drawdd.c: 825
+DirectDraw: Error %08X setting clipper hwnd\n
+DirectDraw: Errore %08X impostando il clipper hwnd\n
+
+# osd/windows/drawdd.c: 833
+DirectDraw: Error %08X setting clipper on primary surface\n
+DirectDraw: Errore %08X impostando il clipper sulla superficie primaria\n
+
+# osd/windows/drawdd.c: 428
+DirectDraw: Error %08X unlocking blit surface\n
+DirectDraw: Errore %08X sbloccando la superficie blit\n
+
+# osd/windows/drawdd.c: 434, 1094
+DirectDraw: Error %08X waiting for VBLANK\n
+DirectDraw: Errore %08X in attesa del VBLANK\n
+
+# osd/windows/drawdd.c: 470
+DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
+DirectDraw: Errore - La periferica non ha i requisiti minimi per il rendering DirectDraw\n
+
+# osd/windows/drawdd.c: 349
+DirectDraw: Lost surfaces; deleting and retrying next frame\n
+DirectDraw: Superfici perse; eliminazione e riprova del frame successivo\n
+
+# osd/windows/drawdd.c: 1328
+DirectDraw: Mode selected = %4dx%4d@%3dHz\n
+DirectDraw: Modalità selezionata = %4dx%4d@%3dHz\n
+
+# osd/windows/drawdd.c: 929
+DirectDraw: New blit size = %dx%d\n
+DirectDraw: Nuova dimensione blit = %dx%d\n
+
+# osd/windows/drawdd.c: 1325
+DirectDraw: Selecting video mode...\n
+DirectDraw: Selezione modalità video...\n
+
+# osd/windows/drawdd.c: 198
+DirectDraw: Unable to access ddraw.dll\n
+DirectDraw: Impossibile accedere a ddraw.dll\n
+
+# osd/windows/drawdd.c: 206
+DirectDraw: Unable to find DirectDrawCreateEx\n
+DirectDraw: Impossibile trovare DirectDrawCreateEx\n
+
+# osd/windows/drawdd.c: 216
+DirectDraw: Unable to find DirectDrawEnumerateExA\n
+DirectDraw: Impossibile trovare DirectDrawEnumerateExA\n
+
+# osd/windows/drawdd.c: 384, 420, 1170
+DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
+DirectDraw: Modalità target sconosciuta: R=%08X G=%08X B=%08X\n
+
+# osd/windows/drawdd.c: 229
+DirectDraw: Using DirectDraw 7\n
+DirectDraw: Uso delle DirectDraw 7\n
+
+# osd/windows/drawdd.c: 725
+DirectDraw: Warning - Device does not support hardware stretching\n
+DirectDraw: Attenzione - La periferica non supporta l'allargamento hardware\n
+
+# osd/windows/drawdd.c: 474
+DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
+DirectDraw: Attenzione - La periferica non può gestire il rendering DirectDraw\n
+
+# osd/windows/drawdd.c: 601
+DirectDraw: Warning - device does not support full screen gamma correction.\n
+DirectDraw: Attenzione - La periferica non supporta la correzione gamma a Tutto Schermo.\n
+
+# osd/windows/input.c: 1457
+DirectInput: Using DirectInput %d\n
+DirectInput: Uso delle DirectInput %d\n
+
+# osd/windows/sound.c: 372
+DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
+DirectSound: Buffer primario: %d Hz, %d bits, %d canali\n
+
+# osd/windows/sound.c: 386
+Error creating DirectSound stream buffer: %08x\n
+Errore nella creazione del buffer del flusso DirectSound: %08x\n
+
+# osd/windows/sound.c: 353
+Error creating primary DirectSound buffer: %08x\n
+Errore nella creazione del buffer primario DirectSound: %08x\n
+
+# osd/windows/drawd3d.c: 768
+Error creating vertex buffer (%08X)
+Errore nella creazione del buffer vertice (%08X)
+
+# osd/windows/drawd3d.c: 1090
+Error getting identifier for adapter #%d\n
+Errore nella rilevazione dell'identificatore per l'adattatore #%d\n
+
+# osd/windows/drawdd.c: 1125
+Error getting identifier for device\n
+Errore nella rilevazione dell'identificatore per la periferica\n
+
+# osd/windows/drawd3d.c: 1099
+Error getting mode for adapter #%d\n
+Errore nella rilevazione della modalità dell'adattatore #%d\n
+
+# osd/windows/sound.c: 369
+Error getting primary DirectSound buffer format: %08x\n
+Errore nella rilevazione del formato del buffer primario DirectSound: %08x\n
+
+# osd/windows/sound.c: 394
+Error locking DirectSound stream buffer: %08x\n
+Errore nel bloccaggio del buffer del flusso DirectSound: %08x\n
+
+# osd/windows/sound.c: 361
+Error setting primary DirectSound buffer format: %08x\n
+Errore nell'impostare il formato del buffer primario DirectSound: %08x\n
+
+# osd/windows/drawd3d.c: 776
+Error setting vertex shader (%08X)
+Errore nell'impostare il vertex shader (%08X)
+
+# osd/windows/drawd3d.c: 657
+Error: A8R8G8B8 format textures not supported\n
+Errore: il formato textures A8R8G8B8 non è supportato\n
+
+# osd/windows/drawd3d.c: 647
+Error: Device does not meet minimum requirements for Direct3D rendering\n
+Errore: La periferica non ha i requisiti minimi per il rendering Direct3D\n
+
+# osd/windows/drawd3d.c: 689
+Error: unable to configure a screen texture format\n
+Errore: impossibile configurare il formato delle textures dello schermo\n
+
+# osd/windows/config.c: 95
+FRONTEND COMMANDS
+COMANDI FRONTEND
+
+# osd/windows/config.c: 175
+FULL SCREEN OPTIONS
+OPZIONI TUTTO SCHERMO
+
+# osd/windows/input.c: 2981
+Fast Forward
+Avanti Veloce
+
+# osd/windows/config.c: 187
+INPUT DEVICE OPTIONS
+OPZIONI PERIFERICA INPUT	
+
+# osd/windows/video.c: 542
+Illegal aspect ratio value for %s = %s\n
+Valore dei rapporti aspetto errato per %s = %s\n
+
+# osd/windows/video.c: 565
+Illegal resolution value for %s = %s\n
+Valore della risoluzione errato per %s = %s\n
+
+# osd/windows/config.c: 642
+Illegal value for %s = %s\n
+Valore errato per %s = %s\n
+
+# osd/windows/input.c: 2397
+Input:  Axis %d (%s)%s\n
+Input:  Assi %d (%s)%s\n
+
+# osd/windows/input.c: 2235
+Input: %s: %s\n
+Input: %s: %s\n
+
+# osd/windows/input.c: 1076
+Input: Autoenabling joysticks due to presence of a %s\n
+Input: Attiva automat. i joysticks se è presente %s\n
+
+# osd/windows/input.c: 1083
+Input: Autoenabling lightguns due to presence of a %s\n
+Input: Attiva automat. le pistole se è presente %s\n
+
+# osd/windows/input.c: 1069
+Input: Autoenabling mice due to presence of a %s\n
+Input: Attiva automat. i mouse se è presente %s\n
+
+# osd/windows/input.c: 2180
+Input: Joystick %d axis %d is now %s\n
+Input: Joystick %d assi %d ora è %s\n
+
+# osd/windows/input.c: 2378
+Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
+Input: Joystick %d: %s (%d assi, %d pulsanti, %d POVs)\n
+
+# osd/windows/input.c: 1532
+Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
+Input: Tastiere=%d  Mouse=%d  Joysticks=%d  Pistole=%d\n
+
+# osd/windows/input.c: 3317
+Input: Using RAWMOUSE for Mouse input\n
+Input: Usare RAWMOUSE come input Mouse\n
+
+# osd/windows/input.c: 1534
+Input: \"%s\" controller support enabled\n
+Input: \"%s\" attivato support controller\n
+
+# osd/windows/input.c: 1914
+Invalid %s value %s; reverting to all -- valid values are:\n
+%s non valido, valore %s; inverti tutto -- il valore giusto è:\n
+
+# osd/windows/input.c: 1835
+Invalid %s value %s; reverting to keyboard\n
+%s non valido, valore %s; ritorna alla tastiera\n
+
+# osd/windows/video.c: 459
+Invalid video value %s; reverting to gdi\n
+Valore video errato %s; ritorno al gdi\n
+
+# osd/windows/input.c: 2366
+Lightgun %d 
+Pistola %d
+
+# osd/windows/input.c: 2364
+Lightgun on Mouse %d 
+Pistola su Mouse %d
+
+# osd/windows/config.c: 576
+M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
+M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 di Nicola Salmoria e il MAME Team\n\n
+
+# osd/windows/window.c: 617
+MAME: %s [%s] - Screen %d
+MAME: %s [%s] - Schermo %d
+
+# osd/windows/input.c: 2232
+Mouse 
+Mouse 
+
+# osd/windows/input.c: 2230
+Mouse %d 
+Mouse %d
+
+# osd/windows/config.c: 148
+PER-WINDOW VIDEO OPTIONS
+OPZIONI VIDEO PER-FINESTRA
+
+# osd/windows/drawd3d.c: 1143
+Proposed video mode not supported on device %s\n
+Modalità video indicata non supportata dalla periferica %s\n
+
+# osd/windows/sound.c: 120
+Sound: buffer overflows=%d underflows=%d\n
+Audio: buffer overflows=%d underflows=%d\n
+
+# osd/windows/input.c: 2267
+Stick%sX+
+Leva%sX+
+
+# osd/windows/input.c: 2265
+Stick%sX-
+Leva%sX-
+
+# osd/windows/input.c: 2271
+Stick%sY+
+Leva%sY+
+
+# osd/windows/input.c: 2269
+Stick%sY-
+Leva%sY-
+
+# osd/windows/input.c: 2275
+Stick%sZ+
+Leva%sZ+
+
+# osd/windows/input.c: 2273
+Stick%sZ-
+Leva%sZ-
+
+# osd/windows/drawd3d.c: 1781
+Texture too big! (wanted: %dx%d, max is %dx%d)\n
+Texture troppo grande! (voluta: %dx%d, il max è %dx%d)\n
+
+# osd/windows/fronthlp.c: 595
+This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
+Questa è la lista delle ROMs necessaria per il driver \"%s\".\nNome            Dimens. Checksum\n
+
+# osd/windows/input.c: 2963
+Toggle Fullscreen
+Vai a Tutto Schermo
+
+# osd/windows/config.c: 535
+Unable to create file %s\n
+Impossibile creare il file %s\n
+
+# osd/windows/drawd3d.c: 715
+Unable to create the Direct3D device (%08X)\n
+Impossibile creare la perifierica Direct3D (%08X)\n
+
+# osd/windows/drawd3d.c: 435, 496
+Unable to initialize Direct3D.\n
+Impossibile inizializzare Direct3D.\n
+
+# osd/windows/drawdd.c: 272
+Unable to initialize DirectDraw.\n
+Impossibile inizializzare DirectDraw.\n
+
+# osd/windows/video.c: 510
+Unable to load PNG file '%s'\n
+Impossibile caricare il file PNG '%s'\n
+
+# osd/windows/drawd3d.c: 2218
+Unknown texture blendmode=%d format=%d\n
+Modalità texture blend sconosciuta=%d formato=%d\n
+
+# osd/windows/config.c: 579
+Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the file windows.txt\n
+Uso:  MAME gamename [options]\n\n        MAME -showusage    per una breve lista delle opzioni\n        MAME -showconfig   per una lista delle opzioni di configurazione\n        MAME -createconfig per creare un mame.ini\n\nPer l'utilizzo delle istruzioni, consultare il file windows.txt\n
+
+# osd/windows/video.c: 274
+Video: Monitor %p = \"%s\" %s\n
+Video: Monitor %p = \"%s\" %s\n
+
+# osd/windows/config.c: 122
+WINDOWS PERFORMANCE OPTIONS
+WINDOWS OPZIONI PRESTAZIONI
+
+# osd/windows/config.c: 183
+WINDOWS SOUND OPTIONS
+WINDOWS OPZIONI AUDIO
+
+# osd/windows/config.c: 127
+WINDOWS VIDEO OPTIONS
+WINDOWS OPZIONI VIDEO
+
+# osd/windows/video.c: 455
+Warning: -video none doesn't make much sense without -seconds_to_run\n
+Attenzione: -nessun video può essere ben impostato senza -seconds_to_run\n
+
+# osd/windows/drawd3d.c: 651
+Warning: Device may not perform well for Direct3D rendering\n
+Attenzione: La periferica potrebbe non gestire bene il rendering Direct3D\n
+
+# osd/windows/config.c: 150
+aspect ratio for all screens; 'auto' here will try to make a best guess
+rapporti aspetto per tutti gli schermi; 'auto' cercherà la soluzione ottimale
+
+# osd/windows/config.c: 155
+aspect ratio of the first screen; 'auto' here will try to make a best guess
+rapporti aspetto per il primo schermo; 'auto' cercherà la soluzione ottimale
+
+# osd/windows/config.c: 170
+aspect ratio of the fourth screen; 'auto' here will try to make a best guess
+rapporti aspetto per il quarto schermo; 'auto' cercherà la soluzione ottimale
+
+# osd/windows/config.c: 160
+aspect ratio of the second screen; 'auto' here will try to make a best guess
+rapporti aspetto per il secondo schermo; 'auto' cercherà la soluzione ottimale
+
+# osd/windows/config.c: 165
+aspect ratio of the third screen; 'auto' here will try to make a best guess
+rapporti aspetto per il terzo schermo; 'auto' cercherà la soluzione ottimale
+
+# osd/windows/config.c: 178
+brightness value in full screen mode
+valore delle luminosità in modalità Tutto Schermo
+
+# osd/windows/config.c: 199
+center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
+centra lo spazio della zona morta del joystick e ignora i cambiamenti (0.0 centrato, 1.0 fine)
+
+# osd/windows/config.c: 132
+constrain to the proper aspect ratio
+obbliga l'utilizzo dei rapporti aspetto corretti
+
+# osd/windows/config.c: 179
+contrast value in full screen mode
+valore del contrasto in modalità Tutto Schermo
+
+# osd/windows/config.c: 131
+default to maximized windows; otherwise, windows will be minimized
+predefinito per le finestre ingrandite; oppure le finestre saranno ridotte a icona
+
+# osd/windows/config.c: 91
+display running parameters
+mostra i parametri di esecuzione
+
+# osd/windows/config.c: 227
+enable (keyboard|mouse|joystick) if a dial control is present
+attiva (tastiera|mouse|joystick) se è presente un controllo chiamata
+
+# osd/windows/config.c: 229
+enable (keyboard|mouse|joystick) if a lightgun control is present
+attiva (tastiera|mouse|joystick) se è presente un controllo pistola
+
+# osd/windows/config.c: 232
+enable (keyboard|mouse|joystick) if a mouse control is present
+attiva (tastiera|mouse|joystick) se è presente un controllo mouse
+
+# osd/windows/config.c: 226
+enable (keyboard|mouse|joystick) if a pedal control is present
+attiva (tastiera|mouse|joystick) se è presente un controllo pedale
+
+# osd/windows/config.c: 230
+enable (keyboard|mouse|joystick) if a positional control is present
+attiva (tastiera|mouse|joystick) se è presente un controllo posizionale
+
+# osd/windows/config.c: 228
+enable (keyboard|mouse|joystick) if a trackball control is present
+attiva (tastiera|mouse|joystick) se è presente un controllo sfera
+
+# osd/windows/config.c: 225
+enable (keyboard|mouse|joystick) if an analog joystick control is present
+attiva (tastiera|mouse|joystick) se è presente un controllo joystick analogico
+
+# osd/windows/config.c: 145
+enable bilinear filtering on screen output
+attiva il filtro bilineare sull'uscita schermo
+
+# osd/windows/config.c: 140
+enable hardware stretching
+attiva l'allargamento hardware
+
+# osd/windows/config.c: 114
+enable loading of configuration files
+attiva il caricamento dei files di configurazione
+
+# osd/windows/config.c: 124
+enable multithreading; this enables rendering and blitting on a separate thread
+attiva il multithreading; questo attiverà il rendering e il blitting su due processi separati
+
+# osd/windows/config.c: 177
+enable resolution switching
+attiva scambio di risoluzione
+
+# osd/windows/config.c: 176
+enable triple buffering
+attiva triplo buffering
+
+# osd/windows/config.c: 136
+enable using the start of VBLANK for throttling instead of the game time
+attiva usando l'inizio di VBLANK per accelerare al posto del tempo di gioco
+
+# osd/windows/config.c: 135
+enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
+attiva l'attesa per l'inizio di VBLANK prima del flipping degli schermi; riduce gli effetti 'strappo'
+
+# osd/windows/config.c: 130
+enable window mode; otherwise, full screen mode is assumed
+attiva la modalità finestra; oppure, sarà attivata le modalità a Tutto Schermo
+
+# osd/windows/config.c: 200
+end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
+fine dello spazio di saturazione degli assi per il joystick e ignora i cambiamenti (0.0 centrato, 1.0 fine)
+
+# osd/windows/config.c: 149
+explicit name of all screen; 'auto' here will try to make a best guess
+inserisce il nome per tutti gli schermi; 'auto' cercherà la soluzione ottimale
+
+# osd/windows/config.c: 154
+explicit name of the first screen; 'auto' here will try to make a best guess
+inserisce il nome del primo schermo; 'auto' cercherà la soluzione ottimale
+
+# osd/windows/config.c: 169
+explicit name of the fourth screen; 'auto' here will try to make a best guess
+inserisce il nome del quarto schermo; 'auto' cercherà la soluzione ottimale
+
+# osd/windows/config.c: 159
+explicit name of the second screen; 'auto' here will try to make a best guess
+inserisce il nome del secondo schermo; 'auto' cercherà la soluzione ottimale
+
+# osd/windows/config.c: 164
+explicit name of the third screen; 'auto' here will try to make a best guess
+inserisce il nome del terzo schermo; 'auto' cercherà la soluzione ottimale
+
+# osd/windows/config.c: 180
+gamma value in full screen mode
+valore della gamma in modalità a Tutto Schermo
+
+# osd/windows/config.c: 109
+list available devices
+lista periferiche disponibili
+
+# osd/windows/config.c: 134
+name of a PNG file to use for visual effects, or 'none'
+nome del file PNG usato per gli effetti visivi, o 'nessuno'
+
+# osd/windows/config.c: 129
+number of screens to create; usually, you want just one
+numero degli schermi da creare; normalmente è solo uno
+
+# osd/windows/config.c: 118
+output error.log data to the system debugger
+uscita dati error.log come debugger di sistema
+
+# osd/windows/config.c: 86
+perform driver validation on all game drivers
+esegue una convalida del driver su tutti i drivers dei giochi
+
+# osd/windows/input.c: 1470
+positional
+posizionale
+
+# osd/windows/config.c: 151
+preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
+risoluzione preferita per tutti gli schermi; il formato è <width>x<height>[@<refreshrate>] o 'auto'
+
+# osd/windows/config.c: 156
+preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
+risoluzione preferita del primo schermo; il formato è <width>x<height>[@<refreshrate>] o 'auto'
+
+# osd/windows/config.c: 171
+preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
+risoluzione preferita del quarto schermo; il formato è <width>x<height>[@<refreshrate>] o 'auto'
+
+# osd/windows/config.c: 161
+preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
+risoluzione preferita del secondo schermo; il formato è <width>x<height>[@<refreshrate>] o 'auto'
+
+# osd/windows/config.c: 166
+preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
+risoluzione preferita del terzo schermo; il formato è <width>x<height>[@<refreshrate>] o 'auto'
+
+# osd/windows/config.c: 152
+preferred view for all screens
+visuale preferita per tutti gli schermi
+
+# osd/windows/config.c: 157
+preferred view for the first screen
+visuale preferita per il primo schermo
+
+# osd/windows/config.c: 172
+preferred view for the fourth screen
+visuale preferita per il quarto schermo
+
+# osd/windows/config.c: 162
+preferred view for the second screen
+visuale preferita per il secondo schermo
+
+# osd/windows/config.c: 167
+preferred view for the third screen
+visuale preferita per il terzo schermo
+
+# osd/windows/fronthlp.c: 796
+romset \"%8s\" not found!\n
+romset \"%8s\" non trovato!\n
+
+# osd/windows/fronthlp.c: 798
+romset \"%8s\" not supported!\n
+romset \"%8s\" non supportato!\n
+
+# osd/windows/fronthlp.c: 892
+sampleset \"%8s\" not found!\n
+sampleset \"%8s\" non trovato!\n
+
+# osd/windows/fronthlp.c: 894
+sampleset \"%8s\" not supported!\n
+sampleset \"%8s\" non supportato!\n
+
+# osd/windows/config.c: 133
+scale screen rendering by this amount in software
+scalare rendering dello schermo di questo numero in software
+
+# osd/windows/config.c: 144
+specify the preferred Direct3D version (8 or 9)
+specificare la versione Direct3D preferita (8 o 9)
+
+# osd/windows/config.c: 123
+thread priority for the main game thread; range from -15 to 1
+priorità del processo per il gioco principale; varia da -15 a 1
+
+# osd/windows/config.c: 128
+video output method: none, gdi, ddraw, or d3d
+metodo di uscita video: nessuno, gdi, ddraw, o d3d
 

@@ -1,28 +1,28 @@
+# 20
+CPS1
+CPS1
+
+# 30
+CPS2
+CPS2
+
+# Title
+IPS
+IPS
+
 # 14
 Misc
 Varie
 
-# 7
-Translation
-Traduzioni
-
-# 20
-CPS1
-
-
-# 30
-CPS2
-
-
-# Title
-IPS
-
-
 # 35
 Neo-Geo
-
+Neo-Geo
 
 # 93
 PGM
+PGM
 
+# 7
+Translation
+Traduzioni
 

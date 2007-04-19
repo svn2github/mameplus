@@ -1336,59 +1336,59 @@ ano, fabricante e nome completo
 
 # windows/input.c: 906
          all -- all axes on all joysticks are digital\n
-
+         all -- todos os axes em todos os joysticks são digitais\n
 
 # windows/input.c: 912
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
-
+         j1,j2a2 -- todos os axes do joystick 1 e axis 2 dos joystick 2 são digitais\n
 
 # windows/input.c: 910
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
-
+         j1a5a6 -- axes 5 e 6 do joystick 1 são digitais\n
 
 # windows/input.c: 907
          j<N> -- all axes on joystick <N> are digital\n
-
+         j<N> -- todos os axes do joystick <N> são digitais\n
 
 # windows/input.c: 908
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
-
+         j<N>a<M> -- axis <M> do joystick <N> é digital\n
 
 # windows/input.c: 905
          none -- no axes on any joysticks are digital\n
-
+         none -- nenhum axe em qualquer joystick é digital\n
 
 # windows/input.c: 909
     Multiple axes can be specified for one joystick:\n
-
+    Múltiplos axes podem ser especificados para um joystick:\n
 
 # windows/input.c: 911
     Multiple joysticks can be specified separated by commas:\n
-
+    Múltiplos joysticks podem ser especificados separados por vírgulas:\n
 
 # windows/input.c: 1906
   Axis %d (%s)%s\n
-
+  Axis %d (%s)%s\n
 
 # windows/input.c: 1906
  - digital
-
+ - digital
 
 # windows/input.c: 945
 Autoenabling joysticks due to presence of a %s\n
-
+Auto-habilitando joysticks devido a presença de %s\n
 
 # windows/input.c: 953
 Autoenabling lightguns due to presence of a %s\n
-
+Auto-habilitando lightguns devido a presença de %s\n
 
 # windows/input.c: 937
 Autoenabling mice due to presence of a %s\n
-
+Auto-habilitando mouse devido a presença de %s\n
 
 # windows/video.c: 541
 Enumerating video device %s\n
-
+Enumerando dispositivo de vídeo %s\n
 
 # windows/video.c: 617
 Error enumerating DirectDraw: %08x\n
@@ -1396,229 +1396,229 @@ Error enumerating DirectDraw: %08x\n
 
 # windows/fronthlp.c: 459
 For usage instructions, please consult the file windows.txt\n
-
+Para instruções de uso, favor consultar o arquivo windows.txt\n
 
 # windows/input.c: 1744
 Joystick %d axis %d is now %s\n
-
+Joystick %d axis %d é agora %s\n
 
 # windows/input.c: 1889
 Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
-
+Joystick %d: %s (%d axes, %d botões, %d POVs)\n
 
 # windows/input.c: 1260
 Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
-
+Teclados=%d  Mouses=%d  Joysticks=%d  Lightguns=%d\n
 
 # windows/input.c: 1878
 Lightgun %d X
-
+Lightgun %d X
 
 # windows/input.c: 1880
 Lightgun %d Y
-
+Lightgun %d Y
 
 # windows/input.c: 1793
 Mouse %d X
-
+Mouse %d X
 
 # windows/input.c: 1795
 Mouse %d Y
-
+Mouse %d Y
 
 # windows/input.c: 1797
 Mouse %d Z
-
+Mouse %d Z
 
 # windows/config.c: 440
 Parsing %s : ERROR\n
-
+Lendo %s : ERRO\n
 
 # windows/config.c: 450
 Parsing %s : N/A\n
-
+Lendo %S : N/A\n
 
 # windows/config.c: 445
 Parsing %s : OK\n
-
+Lendo %s : OK\n
 
 # windows/video.c: 629
 Screen %s not found\n
-
+Tela %s não encontrada\n
 
 # windows/video.c: 245
 Windows misc options
-
+Opções mistas de windows
 
 # windows/input.c: 1741
 analog
-
+analógido
 
 # windows/input.c: 1202
 analog joystick
-
+joystick analógido
 
 # windows/config.c: 275
 automatic pause when playback is finished
-
+pausa automática when playback finalizar
 
 # windows/config.c: 273
 confirm before exiting game
-
+conformar antes de sair do jogo
 
 # windows/input.c: 254, 1205
 dial
-
+dial
 
 # windows/input.c: 260, 1741
 digital
-
+digital
 
 # windows/fileio.c: 148
 directory for ips files
-
+diretório para arquivos ips
 
 # windows/fileio.c: 150
 directory for localized language files
-
+diretório para arquivos localizados de idioma
 
 # windows/config.c: 272
 disable second monitor emulation
-
+desabilitar a emulação do segundo monitor
 
 # windows/input.c: 251
 enable (keyboard|mouse|joystick) if a paddle control is present
-
+habilitar (teclado|mouse|joystick) se um controle paddle estiver presente
 
 # windows/input.c: 254
 enable (keyboard|mouse|joystick|lightgun) if a dial control is present
-
+habilitar (teclado|mouse|joystick|lightgun) se um controle dial estiver presente
 
 # windows/input.c: 256
 enable (keyboard|mouse|joystick|lightgun) if a lightgun control is present
-
+habilitar (teclado|mouse|joystick|lightgun) se um controle lightgun estiver presente
 
 # windows/input.c: 258
 enable (keyboard|mouse|joystick|lightgun) if a mouse control is present
-
+habilitar (teclado|mouse|joystick|lightgun) se um controle mouse estiver presente
 
 # windows/input.c: 253
 enable (keyboard|mouse|joystick|lightgun) if a pedal control is present
-
+habilitar (teclado|mouse|joystick|lightgun) se um controle pedal estiver presente
 
 # windows/input.c: 255
 enable (keyboard|mouse|joystick|lightgun) if a trackball control is present
-
+habilitar (teclado|mouse|joystick|lightgun) se um controle trackball estiver presente
 
 # windows/input.c: 252
 enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is present
-
+habilitar (teclado|mouse|joystick|lightgun) se um joystick analógico estiver presente
 
 # windows/config.c: 268
 enable automatic restore at startup and save at exit
-
+habilitar restauração automática na inicialização e salvar ao sair
 
 # windows/input.c: 239
 enable pointing stick input
-
+habilitar pointing stick input
 
 # windows/config.c: 301
 enable/disable local language game list
-
+habilitar/desabilitar lista de idiomas localizados
 
 # windows/config.c: 247
 enable/disable volume auto adjust
-
+habilitar/desabilitar auto ajuste de volume
 
 # windows/input.c: 824
 error: invalid value for %s: %s\n
-
+erro: valor inválido para %s: %s\n
 
 # windows/video.c: 318
 error: invalid value for cleanstretch: %s\n
-
+erro: valor inválido para cleanstretch: %s\n
 
 # windows/input.c: 904
 error: invalid value for digital: %s -- valid values are:\n
-
+erro: valor inválido para digital: %s -- valores válidos são:\n
 
 # windows/video.c: 375
 error: invalid value for frames_to_run: %s\n
-
+erro: valor inválido para frames_to_run: %s\n
 
 # windows/input.c: 799
 error: invalid value for led_mode: %s\n
-
+erro: valor inválido para led_mode: %s\n
 
 # windows/rc.c: 806
 error: malloc failed for %s\n
-
+erro: malloc falhou para %s\n
 
 # windows/rc.c: 161
 error: malloc failed for: struct rc_struct\n
-
+erro: malloc falhou para: struct rc_struct\n
 
 # windows/rc.c: 604
 error: malloc failed in rc_parse_commadline\n
-
+erro: malloc falhou em rc_parse_commadline\n
 
 # windows/rc.c: 201
 error: malloc failed in rc_register_option\n
-
+erro: malloc falhou em rc_register_option\n
 
 # windows/config.c: 1015
 error: malloc failed in win_dirname\n
-
+erro: malloc falhou em win_dirname\n
 
 # windows/config.c: 1055
 error: malloc failed in win_strip_extension\n
-
+erro: malloc falhou em win_strip_extension\n
 
 # windows/rc.c: 861
 error: unknown option type: %d, this should not happen!\n
-
+erro: tipo de opção desconhecido: %d, isso não deveria acontecer!\n
 
 # windows/input.c: 1741
 invalid
-
+inválido
 
 # windows/config.c: 270
 ips datfile name
-
+nome datfile ips
 
 # windows/fronthlp.c: 735
 is missing optional files\n
-
+está faltando arquivos opcionais\n
 
 # windows/input.c: 229, 820, 1203
 lightgun
-
+lightgun
 
 # windows/input.c: 260
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
-
+marcar certos joysticks ou axes como digital (none|all|j<N>*|j<N>a<M>[,...])
 
 # windows/input.c: 251, 1201
 paddle
-
+paddle
 
 # windows/input.c: 253, 1204
 pedal
-
+pedal
 
 # windows/sound.c: 128
 save sound in wav file
-
+salvar som em arquivo wav
 
 # windows/config.c: 260
 script for debugger (only if available)
-
+script para debugger (somente se disponível)
 
 # windows/video.c: 223
 specify which screen to use
-
+especificar qual tela usar
 
 # windows/input.c: 255, 1206
 trackball
-
+trackball
 

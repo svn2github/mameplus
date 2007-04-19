@@ -52,7 +52,7 @@
 
 # audit.c: 488, 525
    FOUND: 
-ENCONTRADO: 
+   ENCONTRADO: 
 
 # datafile.c: 2977
  %4d HARDDISK\n
@@ -948,7 +948,7 @@ Erro: Falha ao salvar o state
 
 # usrintrf.c: 1528
 Error: illegal caption file
-Erro: título do arquivo ilegal
+Erro: título de arquivo ilegal
 
 # inptport.c: 403
 Europe
@@ -3344,7 +3344,7 @@ Upright 1
 
 # ui_text.c: 28
 Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.
-O usi de emuladores em conjunto de ROMs que você não possui é proibido por leis de copyright.
+O uso de emuladores em conjunto de ROMs que você não possui é proibido por leis de copyright.
 
 # cheat.c: 3524
 User Select
@@ -3512,7 +3512,7 @@ Seus arquivos de sistema parecem estar corrompidos, favor checar
 
 # datafile.c: 2967
 \n\n %4d GAMES (ALL)\n %4d ORIGINALS  + %4d CLNS\n %4d NEOGEO     + %4d\n
-\n\n %4d JGOS (TODOS)\n %4d ORIGINAIS + %4d CLNS\n %4d NEOGEO     + %4d\n
+\n\n %4d JOGOS (TODOS)\n %4d ORIGINAIS + %4d CLNS\n %4d NEOGEO     + %4d\n
 
 # datafile.c: 3133
 \n\nCABINET INPUT CONTROL: (ALL)\n\n
@@ -3656,1129 +3656,1129 @@ valores restaurados
 
 # datafile.c: 3156
          PEDAL:  %4d\n
-
+         PEDAL:  %4d\n
 
 # datafile.c: 3154
       AD STICK:  %4d\n
-
+      AD STICK:  %4d\n
 
 # datafile.c: 3078
  GAMES WITH  %d CPUs: %4d\n
-
+ JOGOS COM  %d CPUs: %4d\n
 
 # audit.c: 467
 %-8s: %-12s %7d bytes NOT FOUND (BIOS)\n
-
+%-8s: %-12s %7d bytes NÃO ENCONTRADOS (BIOS)\n
 
 # audit.c: 462
 %-8s: %-12s %7d bytes NOT FOUND (shared with parent)\n
-
+%-8s: %-12s %7d bytes NÃO ECONTRADOS (compartilhado com parente)\n
 
 # usrintrf.c: 2061, 2206
 %s Analog
-
+%s Analógico
 
 # usrintrf.c: 2068, 2210
 %s Dec
-
+%s Dec
 
 # usrintrf.c: 2075, 2214
 %s Inc
-
+%s Inc
 
 # ui_text.c: 161
 (Card may already exist)
-
+(Card pode existir)
 
 # usrintrf.c: 3446
 (H)
-
+(H)
 
 # usrintrf.c: 3446
 (V)
-
+(V)
 
 # cheat.c: 934
 ---> <ENTER> To Edit <---
-
+---> <ENTER> To Editar <---
 
 # inptport.c: 371
 1 Coin/1 Credit
-
+1 Ficha/1 Crédito
 
 # inptport.c: 377
 1 Coin/2 Credits
-
+1 Ficha/2 Créditos
 
 # inptport.c: 380
 1 Coin/3 Credits
-
+1 Ficha/3 Créditos
 
 # inptport.c: 383
 1 Coin/4 Credits
-
+1 Ficha/4 Créditos
 
 # inptport.c: 384
 1 Coin/5 Credits
-
+1 Ficha/5 Créditos
 
 # inptport.c: 385
 1 Coin/6 Credits
-
+1 Ficha/6 Créditos
 
 # inptport.c: 386
 1 Coin/7 Credits
-
+1 Ficha/7 Créditos
 
 # inptport.c: 387
 1 Coin/8 Credits
-
+1 Ficha/8 Crédito
 
 # inptport.c: 388
 1 Coin/9 Credits
-
+1 Ficha/9 Créditos
 
 # inptport.c: 364
 2 Coins/1 Credit
-
+2 Fichas/1 Crédito
 
 # inptport.c: 370
 2 Coins/2 Credits
-
+2 Fichas/2 Créditos
 
 # inptport.c: 374
 2 Coins/3 Credits
-
+2 Fichas/3 Créditos
 
 # inptport.c: 376
 2 Coins/4 Credits
-
+2 Fichas/4 Créditos
 
 # inptport.c: 378
 2 Coins/5 Credits
-
+2 Fichas/5 Créditos
 
 # inptport.c: 379
 2 Coins/6 Credits
-
+2 Fichas/6 Créditos
 
 # inptport.c: 381
 2 Coins/7 Credits
-
+2 Fichas/7 Créditos
 
 # inptport.c: 382
 2 Coins/8 Credits
-
+2 Fichas/8 Créditos
 
 # inptport.c: 361
 3 Coins/1 Credit
-
+3 Fichas/1 Crédito
 
 # inptport.c: 366
 3 Coins/2 Credits
-
+3 Fichas/2 Créditos
 
 # inptport.c: 369
 3 Coins/3 Credits
-
+3 Fichas/3 Créditos
 
 # inptport.c: 373
 3 Coins/4 Credits
-
+3 Fichas/4 Créditos
 
 # inptport.c: 360
 4 Coins/1 Credit
-
+4 Fichas/1 Crédito
 
 # inptport.c: 363
 4 Coins/2 Credits
-
+4 Fichas/2 Créditos
 
 # inptport.c: 367
 4 Coins/3 Credits
-
+4 Fichas/3 Créditos
 
 # inptport.c: 368
 4 Coins/4 Credits
-
+4 Fichas/4 Créditos
 
 # inptport.c: 372
 4 Coins/5 Credits
-
+4 Fichas/5 Créditos
 
 # inptport.c: 375
 4 Coins/7 Credits
-
+4 Fichas/7 Créditos
 
 # inptport.c: 359
 5 Coins/1 Credit
-
+5 Fichas/1 Crédito
 
 # inptport.c: 365
 5 Coins/3 Credits
-
+5 Fichas/3 Créditos
 
 # inptport.c: 358
 6 Coins/1 Credit
-
+6 Fichas/1 Crédito
 
 # inptport.c: 357
 7 Coins/1 Credit
-
+7 Fichas/1 Crédito
 
 # inptport.c: 356
 8 Coins/1 Credit
-
+8 Fichas/1 Crédito
 
 # inptport.c: 362
 8 Coins/3 Credits
-
+8 Fichas/3 Créditos
 
 # inptport.c: 355
 9 Coins/1 Credit
-
+9 Fichas/1 Crédito
 
 # inptport.c: 450 sound/ay8910.c: 672
 Alternate
-
+Alternativo
 
 # cheat.c: 930
 Always have
-
+Sempre tem
 
 # ui_text.c: 128
 Autocenter Speed
-
+Velocidade Autocenter
 
 # drivers/playch10.c: 468 
 BIOS
-
+BIOS
 
 # drivers/bmcbowl.c: 376 drivers/cherrym.c: 181 drivers/lvcards.c: 215, 299 drivers/magic10.c: 221 drivers/sderby.c: 144
 Bet
-
+Apostar
 
 # inptport.c: 818
 Bill 1
-
+Conta 1
 
 # drivers/lvcards.c: 206, 290 drivers/royalmah.c: 1092 drivers/vsnes.c: 1887, 1916
 Black
-
+Preto
 
 # inptport.c: 978
 Break in Debugger
-
+Pausa em Debugger
 
 # drivers/m107.c: 297 drivers/m92.c: 1021 drivers/usgames.c: 139 
 Button 1
-
+Botão 1
 
 # ui_text.c: 152
 Card Number:
-
+Número do Cartão:
 
 # drivers/lvcards.c: 392
 Coinout Sensor
-
+Sensor de Fichas
 
 # drivers/bfm_sc2.c: 1731, 1822, 1934, 2356 drivers/itech8.c: 1431 drivers/magic10.c: 154, 222 drivers/sderby.c: 145
 Collect
-
+Coletar
 
 # inptport.c: 435
 Continue Price
-
+Continua Preço
 
 # inptport.c: 440
 Continues
-
+Continues
 
 # drivers/changela.c: 962 drivers/nbmj8891.c: 1072, 1168 drivers/taitosj.c: 1748 drivers/tumbleb.c: 1258 
 Control Type
-
+Tipo de Controle
 
 # inptport.c: 436
 Controller
-
+Controlador
 
 # drivers/fantland.c: 584 inptport.c: 431 vidhrdw/fantland.c: 136
 Controls
-
+Controles
 
 # config.c: 141, 145
 Could not load controller file %s.cfg\n
-
+Não foi possível carregar arquivo de controle %s.cfg\n
 
 # ui_text.c: 155
 Create New Card
-
+Criar Novo Card
 
 # drivers/cinemat.c: 253, 848 drivers/mcr.c: 393, 969
 DIAL
-
+DIAL
 
 # ui_text.c: 226
 Decoding Graphics
-
+Decodificando Gráficos
 
 # ui_text.c: 127
 Digital Speed
-
+Velocidade Digital
 
 # inptport.c: 827
 Door Interlock
-
+Trava de Porta
 
 # drivers/cherrym.c: 179 drivers/nbmj8891.c: 1426
 Double Up
-
+Double Up
 
 # cheat.c: 926
 Drain all Energy Now! PL1
-
+Drenar toda Energia Agora! Jogador 1
 
 # cheat.c: 927
 Drain all Energy Now! PL2
-
+Drenar toda Energia Agora! Jogador 2
 
 # inptport.c: 432
 Dual
-
+Dual
 
 # inptport.c: 416
 Easier
-
+Fácil
 
 # inptport.c: 415
 Easiest
-
+Mais Fácil
 
 # drivers/djmain.c: 500 
 Effect
-
+Efeito
 
 # ui_text.c: 154
 Eject Current Card
-
+Ejetar Card Atual
 
 # drivers/segaybd.c: 795 
 Error
-
+Erro
 
 # ui_text.c: 160
 Error creating memory card
-
+Erro criando memory card
 
 # ui_text.c: 156
 Error loading memory card
-
+Error carregando memory card
 
 # cpuexec.c: 593
 Error: Unable to save state due to illegal registrations. See error.log for details.
-
+Erro: Não foi possível executar save state devido a registradoes ilegais. Veja error.log para detalhes.
 
 # cheat.c: 933
 Finish this
-
+Terminar isso
 
 # ui_text.c: 117
 Game Story
-
+Estória do Jogo
 
 # inptport.c: 434
 Game Time
-
+Tempo de Jogo
 
 # drivers/midzeus.c: 1228 
 General
-
+Geral
 
 # cheat.c: 931
 Get
-
+Pegar
 
 # inptport.c: 421
 Harder
-
+Difícil
 
 # inptport.c: 427
 Higher
-
+Alto
 
 # inptport.c: 428
 Highest
-
+Bem Alto
 
 # inptport.c: 406
 Hispanic
-
+Hispânico
 
 # drivers/lvcards.c: 381
 Hit
-
+Acertar
 
 # drivers/funworld.c: 466, 524 drivers/ltcasino.c: 103, 475 drivers/lvcards.c: 209, 293
 Hold 1
-
+Segurar 1
 
 # drivers/ltcasino.c: 104, 476 drivers/lvcards.c: 210, 294
 Hold 2
-
+Segurar 2
 
 # drivers/funworld.c: 476, 534 drivers/ltcasino.c: 105, 477 drivers/lvcards.c: 211, 295
 Hold 3
-
+Segurar 3
 
 # drivers/ltcasino.c: 106, 478 drivers/lvcards.c: 212, 296
 Hold 4
-
+Segurar 4
 
 # drivers/ltcasino.c: 107, 479 drivers/lvcards.c: 213, 297
 Hold 5
-
+Segurar 5
 
 # drivers/lvcards.c: 288, 371
 Hopper Reset
-
+Resetar Hopper
 
 # cheat.c: 915
 Infinite Ammo
-
+Munição Inifita
 
 # cheat.c: 916
 Infinite Ammo PL1
-
+Munição Inifita Jogador 1
 
 # cheat.c: 917
 Infinite Ammo PL2
-
+Munição Inifita Jogador 2
 
 # cheat.c: 918
 Infinite Bombs
-
+Bombas Infinitas
 
 # cheat.c: 919
 Infinite Bombs PL1
-
+Bombas Infinitas Jogador 1
 
 # cheat.c: 920
 Infinite Bombs PL2
-
+Bombas Infinitas Jogador 2
 
 # cheat.c: 910
 Infinite Energy
-
+Energia Infinita
 
 # cheat.c: 911
 Infinite Energy PL1
-
+Energia Infinita Jogador 1
 
 # cheat.c: 912
 Infinite Energy PL2
-
+Energia Infinita Jogador 2
 
 # cheat.c: 901 drivers/cinemat.c: 950 drivers/clshroad.c: 219 drivers/galaxian.c: 3150 drivers/ginganin.c: 232 drivers/hal21.c: 417 drivers/jack.c: 653 drivers/prehisle.c: 158 drivers/vicdual.c: 540, 917
 Infinite Lives
-
+Vidas Infinitas
 
 # cheat.c: 902
 Infinite Lives PL1
-
+Vidas Infinitas Jogador 1
 
 # cheat.c: 903
 Infinite Lives PL2
-
+Vidas Infinitas Jogador 2
 
 # cheat.c: 921
 Infinite Smart Bombs
-
+Bombas Inteligentes Infinitas
 
 # cheat.c: 922
 Infinite Smart Bombs PL1
-
+Bombas Inteligentes Infinitas Jogador 1
 
 # cheat.c: 923
 Infinite Smart Bombs PL2
-
+Bombas Inteligentes Infinitas Jogador 2
 
 # cheat.c: 904 drivers/vsnes.c: 851
 Infinite Time
-
+Tempo Infinito
 
 # cheat.c: 905
 Infinite Time PL1
-
+Tempo Infinito Jogador 1
 
 # cheat.c: 906
 Infinite Time PL2
-
+Tempo Infinito Jogador 2
 
 # drivers/funworld.c: 507 
 Insert
-
+Inserir
 
 # inptport.c: 400
 International
-
+Internacional
 
 # cheat.c: 908
 Invincibility PL1
-
+Invencibilidade Jogador 1
 
 # cheat.c: 909
 Invincibility PL2
-
+Invencibilidade Jogador 2
 
 # inptport.c: 438 
 Joystick
-
+Joystick
 
 # drivers/ddenlovr.c: 3630, 3857 drivers/ltcasino.c: 566 drivers/rbmk.c: 133 drivers/ssv.c: 1471, 1587, 1869 inptport.c: 975 
 Keyboard
-
+Teclado
 
 # inptport.c: 442
 Level Select
-
+Selecione Nível
 
 # inptport.c: 437
 Light Gun
-
+Light Gun
 
 # drivers/fantland.c: 587 
 Lightgun
-
+Lightgun
 
 # ui_text.c: 153
 Load Selected Card
-
+Carregar Card Selecionado
 
 # cheat.c: 932
 Lose
-
+Perdeu
 
 # drivers/lvcards.c: 285 drivers/macs.c: 342, 432 drivers/vroulet.c: 141
 Memory Reset
-
+Resetar Memória
 
 # ui_text.c: 159
 Memory card created
-
+Memory Card criado
 
 # ui_text.c: 158
 Memory card ejected
-
+Memory card ejetado
 
 # ui_text.c: 157
 Memory card loaded
-
+Memory card carregado
 
 # drivers/astrocde.c: 309, 388 drivers/jack.c: 684 drivers/thepit.c: 549
 Monitor
-
+Monitor
 
 # inptport.c: 957
 Mouse X
-
+Mouse X
 
 # inptport.c: 958
 Mouse X 2
-
+Mouse X 2
 
 # inptport.c: 959
 Mouse X 3
-
+Mouse X 3
 
 # inptport.c: 960
 Mouse X 4
-
+Mouse X 4
 
 # inptport.c: 961
 Mouse X 5
-
+Mouse X 5
 
 # inptport.c: 962
 Mouse X 6
-
+Mouse X 6
 
 # inptport.c: 963
 Mouse X 7
-
+Mouse X 7
 
 # inptport.c: 964
 Mouse X 8
-
+Mouse X 8
 
 # inptport.c: 966
 Mouse Y
-
+Mouse Y
 
 # inptport.c: 967
 Mouse Y 2
-
+Mouse Y 2
 
 # inptport.c: 968
 Mouse Y 3
-
+Mouse Y 3
 
 # inptport.c: 969
 Mouse Y 4
-
+Mouse Y 4
 
 # inptport.c: 970
 Mouse Y 5
-
+Mouse Y 5
 
 # inptport.c: 971
 Mouse Y 6
-
+Mouse Y 6
 
 # inptport.c: 972
 Mouse Y 7
-
+Mouse Y 7
 
 # inptport.c: 973
 Mouse Y 8
-
+Mouse Y 8
 
 # debug/mamedbg.c: 4403 
 Not found
-
+Não encontrado
 
 # ui_text.c: 91
 One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.
-
+Um ou mais ROMs/CHDs para esse jogo estão incorretos. O jogo pode não rodar corretamente.
 
 # ui_text.c: 142
 Other Controls
-
+Outros Controles
 
 # ui_text.c: 30
 Otherwise, type OK or move the joystick left then right to continue
-
+Senão, digite OK ou mova o joystick para esquerda e direita para continuar
 
 # drivers/cherrym.c: 178 drivers/neogeo.c: 1248
 P1 Big
-
+Jogador 1 Grande
 
 # inptport.c: 504
 P1 Mahjong A
-
+Jogador 1 Mahjong A
 
 # inptport.c: 505
 P1 Mahjong B
-
+Jogador 1 Mahjong B
 
 # inptport.c: 526
 P1 Mahjong Bet
-
+Jogador Mahjong Apostar
 
 # includes/nb1413m3.h: 163 inptport.c: 531
 P1 Mahjong Big
-
+Jogador 1 Mahjong Grande
 
 # inptport.c: 506
 P1 Mahjong C
-
+Jogador 1 Mahjong C
 
 # inptport.c: 523
 P1 Mahjong Chi
-
+Jogador 1 Mahjong Chi
 
 # inptport.c: 507
 P1 Mahjong D
-
+Jogador 1 Mahjong D
 
 # inptport.c: 529
 P1 Mahjong Double Up
-
+Jogador 1 Mahjong Double Up
 
 # inptport.c: 508
 P1 Mahjong E
-
+Jogador 1 Mahjong E
 
 # inptport.c: 509
 P1 Mahjong F
-
+Jogador 1 Mahjong F
 
 # inptport.c: 530
 P1 Mahjong Flip Flop
-
+Jogador 1 Mahjong Flip Flop
 
 # inptport.c: 510
 P1 Mahjong G
-
+Jogador 1 Mahjong G
 
 # inptport.c: 511
 P1 Mahjong H
-
+Jogador 1 Mahjong H
 
 # inptport.c: 512
 P1 Mahjong I
-
+Jogador 1 Mahjong I
 
 # inptport.c: 513
 P1 Mahjong J
-
+Jogador 1 Mahjong J
 
 # inptport.c: 514
 P1 Mahjong K
-
+Jogador 1 Mahjong K
 
 # inptport.c: 521
 P1 Mahjong Kan
-
+Jogador 1 Mahjong Kan
 
 # inptport.c: 515
 P1 Mahjong L
-
+Jogador 1 Mahjong L
 
 # inptport.c: 527
 P1 Mahjong Last Chance
-
+Jogador 1 Mahjong Última Chance
 
 # inptport.c: 516
 P1 Mahjong M
-
+Jogador 1 Mahjong M
 
 # inptport.c: 517
 P1 Mahjong N
-
+Jogador 1 Mahjong N
 
 # inptport.c: 518
 P1 Mahjong O
-
+Jogador 1 Mahjong O
 
 # inptport.c: 519
 P1 Mahjong P
-
+Jogador 1 Mahjong P
 
 # inptport.c: 522
 P1 Mahjong Pon
-
+Jogador 1 Mahjong Pon
 
 # inptport.c: 520
 P1 Mahjong Q
-
+Jogador 1 Mahjong Q
 
 # inptport.c: 524
 P1 Mahjong Reach
-
+Jogador 1 Mahjong Alcançar
 
 # inptport.c: 525
 P1 Mahjong Ron
-
+Jogador 1 Mahjong Ron
 
 # inptport.c: 528
 P1 Mahjong Score
-
+Jogador 1 Mahjong Score
 
 # includes/nb1413m3.h: 163 inptport.c: 532
 P1 Mahjong Small
-
+Jogador 1 Mahjong Pequeno
 
 # inptport.c: 849
 P1 Pedal 3
-
+Jogador 1 Pedal 3
 
 # drivers/cherrym.c: 182 drivers/neogeo.c: 1249
 P1 Small
-
+Jogador 1 Pequeno
 
 # inptport.c: 539
 P1 Toggle Autofire
-
+Jogador 1 Alternar Autotiro
 
 # inptport.c: 566
 P2 Mahjong A
-
+Jogador 2 Mahjong A
 
 # inptport.c: 567
 P2 Mahjong B
-
+Jogador 2 Mahjong B
 
 # inptport.c: 588
 P2 Mahjong Bet
-
+Jogador 2 Mahjong Apostar
 
 # includes/nb1413m3.h: 218 inptport.c: 593
 P2 Mahjong Big
-
+Jogador 2 Mahjong Grande
 
 # inptport.c: 568
 P2 Mahjong C
-
+Jogador 2 Mahjong C
 
 # inptport.c: 585
 P2 Mahjong Chi
-
+Jogador 2 Mahjong Chi
 
 # inptport.c: 569
 P2 Mahjong D
-
+Jogador 2 Mahjong D
 
 # inptport.c: 591
 P2 Mahjong Double Up
-
+Jogador 2 Mahjong Double Up
 
 # inptport.c: 570
 P2 Mahjong E
-
+Jogador 2 Mahjong E
 
 # inptport.c: 571
 P2 Mahjong F
-
+Jogador 2 Mahjong F
 
 # inptport.c: 592
 P2 Mahjong Flip Flop
-
+Jogador 2 Mahjong Flip Flop
 
 # inptport.c: 572
 P2 Mahjong G
-
+Jogador 2 Mahjong G
 
 # inptport.c: 573
 P2 Mahjong H
-
+Jogador 2 Mahjong H
 
 # inptport.c: 574
 P2 Mahjong I
-
+Jogador 2 Mahjong I
 
 # inptport.c: 575
 P2 Mahjong J
-
+Jogador 2 Mahjong J
 
 # inptport.c: 576
 P2 Mahjong K
-
+Jogador 2 Mahjong K
 
 # inptport.c: 583
 P2 Mahjong Kan
-
+Jogador 2 Mahjong Kan
 
 # inptport.c: 577
 P2 Mahjong L
-
+Jogador 2 Mahjong L
 
 # inptport.c: 589
 P2 Mahjong Last Chance
-
+Jogador 2 Mahjong Última Chance
 
 # inptport.c: 578
 P2 Mahjong M
-
+Jogador 2 Mahjong M
 
 # inptport.c: 579
 P2 Mahjong N
-
+Jogador 2 Mahjong N
 
 # inptport.c: 580
 P2 Mahjong O
-
+Jogador 2 Mahjong O
 
 # inptport.c: 581
 P2 Mahjong P
-
+Jogador 2 Mahjong P
 
 # inptport.c: 584
 P2 Mahjong Pon
-
+Jogador 2 Mahjong Pon
 
 # inptport.c: 582
 P2 Mahjong Q
-
+Jogador 2 Mahjong Q
 
 # inptport.c: 586
 P2 Mahjong Reach
-
+Jogador 2 Mahjong Alcançar
 
 # inptport.c: 587
 P2 Mahjong Ron
-
+Jogador 2 Mahjong Ron
 
 # inptport.c: 590
 P2 Mahjong Score
-
+Jogador 2 Mahjong Score
 
 # includes/nb1413m3.h: 218 inptport.c: 594
 P2 Mahjong Small
-
+Jogador 2 Mahjong Pequeno
 
 # inptport.c: 850
 P2 Pedal 3
-
+Jogador 2 Pedal 3
 
 # inptport.c: 601
 P2 Toggle Autofire
-
+Jogador 2 Alternar Autotiro
 
 # inptport.c: 851
 P3 Pedal 3
-
+Jogador 3 Pedal 3
 
 # inptport.c: 633
 P3 Toggle Autofire
-
+Jogador 3 Alternar Autotiro
 
 # inptport.c: 852
 P4 Pedal 3
-
+Jogador 4 Pedal 3
 
 # inptport.c: 666
 P4 Toggle Autofire
-
+Jogador 4 Alternar Autotiro
 
 # inptport.c: 853
 P5 Pedal 3
-
+Jogador 5 Pedal 3
 
 # inptport.c: 699
 P5 Toggle Autofire
-
+Jogador 5 Alternar Autotiro
 
 # inptport.c: 854
 P6 Pedal 3
-
+Jogador 6 Pedal 3
 
 # inptport.c: 732
 P6 Toggle Autofire
-
+Jogador 6 Alternar Autotiro
 
 # inptport.c: 855
 P7 Pedal 3
-
+Jogador 7 Pedal 3
 
 # inptport.c: 765
 P7 Toggle Autofire
-
+Jogador 7 Alternar Autotiro
 
 # inptport.c: 856
 P8 Pedal 3
-
+Jogador 8 Pedal 3
 
 # inptport.c: 798
 P8 Toggle Autofire
-
+Jogador 8 Alternar Autotiro
 
 # drivers/cherrym.c: 200 drivers/csk.c: 283, 368, 443, 513 drivers/ddenlovr.c: 4034, 4585 drivers/funworld.c: 482, 516, 540, 574 drivers/neogeo.c: 1256 drivers/rcasino.c: 215 drivers/royalmah.c: 604, 779, 954 drivers/vroulet.c: 146
 Payout
-
+Pagar
 
 # drivers/turbo.c: 468 
 Pedal
-
+Pedal
 
 # ui_text.c: 134
 Player 1 Controls
-
+Jogador 1 Controles
 
 # ui_text.c: 135
 Player 2 Controls
-
+Jogador 2 Controles
 
 # ui_text.c: 136
 Player 3 Controls
-
+Jogador 3 Controles
 
 # ui_text.c: 137
 Player 4 Controls
-
+Jogador 4 Controles
 
 # ui_text.c: 138
 Player 5 Controls
-
+Jogador 5 Controles
 
 # ui_text.c: 139
 Player 6 Controls
-
+Jogador 6 Controles
 
 # ui_text.c: 140
 Player 7 Controls
-
+Jogador 7 Controles
 
 # ui_text.c: 141
 Player 8 Controls
-
+Jogador 8 Controles
 
 # inptport.c: 430
 Players
-
+Jogadores
 
 # common.c: 915
 REC START
-
+INICIAR GRAVAÇÃO
 
 # common.c: 922
 REC STOP (%d frames)
-
+PARAR GRAVAÇÃO (%d frames)
 
 # inptport.c: 988
 Record Movie
-
+Gravar Filme
 
 # drivers/drgnmst.c: 292 drivers/exidy440.c: 1066 drivers/fuukifg3.c: 344 drivers/itech8.c: 1247 drivers/kinst.c: 482 drivers/lvcards.c: 205, 289 drivers/powerins.c: 240 drivers/relief.c: 261 drivers/stfight.c: 367 drivers/taito_z.c: 2915, 2983
 Red
-
+Vermelho
 
 # ui_text.c: 225
 Refresh rate
-
+Taxa de atualização
 
 # ui_text.c: 143
 Return to Groups
-
+Retornar para Grupos
 
 # cpuexec.c: 721
 Save/load capability not implemented for this game. See error.log for details.
-
+Capacidade de salvar/carregar não implementada para este jogo. Veja error.log para detalhes.
 
 # cheat.c: 924
 Select Score PL1
-
+Selecionar Score Jogador 1
 
 # cheat.c: 925
 Select Score PL2
-
+Selecionar Score Jogador 2
 
 # cheat.c: 914
 Select current level
-
+Selecionar nível atual
 
 # cheat.c: 913
 Select next level
-
+Selecionar próximo nível
 
 # drivers/djmain.c: 500 drivers/pgm.c: 541 drivers/wallc.c: 190 inptport.c: 825
 Service
-
+Serviço
 
 # inptport.c: 995
 Show Current Time
-
+Mostrar Tempo Atual
 
 # inptport.c: 998
 Show Input Log
-
+Mostrar Log de Input
 
 # inptport.c: 433
 Single
-
+Único
 
 # drivers/getrivia.c: 265 drivers/lvcards.c: 380
 Stand
-
+Ficar
 
 # drivers/funworld.c: 495, 553 
 State
-
+State
 
 # cpuexec.c: 626
 State successfully saved.\nWarning: Save states are not officially supported for this game.
-
+State salvo com sucesso.\nAviso: Save states não é oficialmente suportado para este jogo.
 
 # drivers/csk.c: 370, 515 drivers/goldstar.c: 118 drivers/mjkjidai.c: 251
 Statistics
-
+Estatísticas
 
 # ui_text.c: 63
 Story not available
-
+Story não disponível
 
 # drivers/bmcbowl.c: 382
 Take
-
+Pegar
 
 # drivers/dbz2.c: 280, 373 inptport.c: 396
 Test
-
+Teste
 
 # ui_text.c: 92
 Type OK or move the joystick left then right to continue
-
+Digite OK ou mova o joystick para esquerda e direita para continuar
 
 # inptport.c: 1009
 UI Clear
-
+Interface de Usuário Clear
 
 # inptport.c: 1006
 UI End
-
+Interface de Usuário End
 
 # inptport.c: 1005
 UI Home
-
+Interface de Usuário Home
 
 # inptport.c: 1027
 UI Toggle Lock Scroll
-
+Interface de Usuário Alternar Lock Scroll
 
 # cpuexec.c: 580
 Unable to save due to pending anonymous timers. See error.log for details.
-
+Não foi possível salvar devido a timers desconhecidos. Veja error.log para detalhes.
 
 # ui_text.c: 146
 Uptime
-
+Tempo ligado
 
 # ui_text.c: 133
 User Interface
-
+Interface de Usuário
 
 # inptport.c: 414
 Very Easy
-
+Bem Fácil
 
 # inptport.c: 423
 Very Hard
-
+Bem Difícil
 
 # inptport.c: 424
 Very Low
-
+Bem Baixo
 
 # inptport.c: 828
 Volume Down
-
+Baixar Volume
 
 # inptport.c: 829
 Volume Up
-
+Aumentar Volume
 
 # cheat.c: 928
 Watch me for good answer
-
+Me avise quando tiver boa resposta
 
 # drivers/harddriv.c: 750
 Zoom
-
+Zoom
 
 # datafile.c: 3116
 \n    SNDINTRF:  (1)  (2)  (3)  (4)\n\n
-
+\n    SNDINTRF:  (1)  (2)  (3)  (4)\n\n
 
 # datafile.c: 2140
 \nStory:\n
-
+\nStory:\n
 
 # info.c: 263 
 dial
-
+dial
 
 # memory.c: 3101 
 invalid
-
+inválido
 
 # info.c: 275 
 lightgun
-
+lightgun
 
 # info.c: 260 
 paddle
-
+paddle
 
 # info.c: 267 
 trackball
-
+trackball
 
