@@ -153,9 +153,6 @@ typedef struct
 	int	ui_transparency;
 #endif /* TRANS_UI */
 
-// CONFIGURATION OPTIONS
-	BOOL	readconfig;
-
 // DEBUGGING OPTIONS
 	BOOL	oslog;
 	BOOL	verbose;

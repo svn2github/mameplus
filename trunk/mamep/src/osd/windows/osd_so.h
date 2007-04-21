@@ -34,6 +34,7 @@
 		extern SHAREDOBJ_DATA const game_driver * const noncpudrivers[];
 		extern SHAREDOBJ_DATA const game_driver * const hazemddrivers[];
 		#endif /* NEOCPSMAME */
+		extern SHAREDOBJ_FUNC(void) assign_drivers(void);
 		#endif /* DRIVER_SWITCH */
 		extern SHAREDOBJ_FUNC(const game_driver *) driver_get_clone(const game_driver *driver);
 
@@ -83,7 +84,7 @@
 		extern SHAREDOBJ_DATA char            build_version[];
 		extern SHAREDOBJ_DATA running_machine *Machine;
 		extern SHAREDOBJ_FUNC(void)	expand_machine_driver(void (*constructor)(machine_config *), machine_config *output);
-		extern SHAREDOBJ_FUNC(int)	mame_validitychecks(int game);
+		extern SHAREDOBJ_FUNC(int)	mame_validitychecks(const game_driver *curdriver);
 		extern SHAREDOBJ_FUNC(void)	mame_set_output_channel(output_channel channel, output_callback callback, void *param, output_callback *prevcb, void **prevparam);
 		extern SHAREDOBJ_FUNC(void)	mame_null_output_callback(void *param, const char *format, va_list argptr);
 
@@ -92,6 +93,9 @@
 		extern SHAREDOBJ_FUNC(int)    core_strnicmp(const char *s1, const char *s2, size_t n);
 		extern SHAREDOBJ_FUNC(char *) core_strdup(const char *str);
 		extern SHAREDOBJ_FUNC(char *) core_strtrim(const char *str);
+
+		#include "osdcore.h"
+		extern SHAREDOBJ_FUNC(int)   osd_get_default_codepage(void);
 
 		#include "osdepend.h"
 		extern SHAREDOBJ_FUNC(void) logerror(const char *text,...);
@@ -244,13 +248,8 @@
 		extern SHAREDOBJ_FUNC(unsigned long) create_path_recursive(const unsigned short *path);
 
 		// in windows/winmain.c
+		extern SHAREDOBJ_DATA const options_entry mame_win_options[];
 		extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
-
-		// in windows/config.c
-		extern SHAREDOBJ_FUNC(void) win_options_init(void);
-		#ifdef DRIVER_SWITCH
-		extern SHAREDOBJ_FUNC(void) assign_drivers(void);
-		#endif /* DRIVER_SWITCH */
 
 		// in windows/strconv.c
 		extern SHAREDOBJ_FUNC(void)            set_osdcore_acp(int cp);
@@ -287,6 +286,7 @@
 		extern const game_driver * const noncpudrivers[];
 		extern const game_driver * const hazemddrivers[];
 		#endif /* NEOCPSMAME */
+		extern SHAREDOBJ_FUNC(void) assign_drivers(void);
 		#endif /* DRIVER_SWITCH */
 
 		// in datafile.c
@@ -313,6 +313,7 @@
 		extern SHAREDOBJ_FUNC(unsigned long) create_path_recursive(const unsigned short *path);
 
 		// in windows/winmain.c
+		extern SHAREDOBJ_DATA const options_entry mame_win_options[];
 		extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 
 		// in windows/strconv.c
@@ -322,12 +323,6 @@
 		extern char *utf8_from_astring(const char *s);
 		extern unsigned short *wstring_from_utf8(const char *s);
 		extern char *utf8_from_wstring(const unsigned short *s);
-
-		// in windows/config.c
-		extern void win_options_init(void);
-		#ifdef DRIVER_SWITCH
-		extern void assign_drivers(void);
-		#endif /* DRIVER_SWITCH */
 
 	#endif /* _MSC_VER */
 
@@ -349,6 +344,7 @@
 	extern const game_driver * const noncpudrivers[];
 	extern const game_driver * const hazemddrivers[];
 	#endif /* NEOCPSMAME */
+	extern SHAREDOBJ_FUNC(void) assign_drivers(void);
 	#endif /* DRIVER_SWITCH */
 
 	// in datafile.c
@@ -375,6 +371,7 @@
 	extern SHAREDOBJ_FUNC(unsigned long) create_path_recursive(const unsigned short *path);
 
 	// in windows/winmain.c
+	extern SHAREDOBJ_DATA const options_entry mame_win_options[];
 	extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 
 	// in windows/strconv.c
@@ -384,12 +381,6 @@
 	extern char *utf8_from_astring(const char *s);
 	extern unsigned short *wstring_from_utf8(const char *s);
 	extern char *utf8_from_wstring(const unsigned short *s);
-
-	// in windows/config.c
-	extern void win_options_init(void);
-	#ifdef DRIVER_SWITCH
-	extern void assign_drivers(void);
-	#endif /* DRIVER_SWITCH */
 
 #endif /* !DONT_USE_DLL */
 

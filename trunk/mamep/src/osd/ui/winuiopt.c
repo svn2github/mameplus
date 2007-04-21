@@ -3407,7 +3407,7 @@ static void memory_error(const char *message)
 
 static void options_create_entry_cli(void)
 {
-	win_options_init();
+	mame_options_init(mame_win_options);
 
 	options_set_output_callback(mame_options(), OPTMSG_INFO, debug_printf);
 	options_set_output_callback(mame_options(), OPTMSG_WARNING, debug_printf);

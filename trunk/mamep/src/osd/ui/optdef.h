@@ -150,9 +150,6 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(ui_transparency,      ui_transparency)
 #endif /* TRANS_UI */
 
-// CONFIGURATION OPTIONS
-	DEFINE_OPT(bool,                 readconfig)
-
 // DEBUGGING OPTIONS
 	DEFINE_OPT(bool,                 oslog)
 	DEFINE_OPT(bool,                 verbose)

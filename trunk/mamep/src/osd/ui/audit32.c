@@ -38,7 +38,7 @@
 
 #include "bitmask.h"
 #include "winuiopt.h"
-#include "..\windows\config.h"
+#include "winmain.h"
 #include "m32util.h"
 #include "audit32.h"
 #include "Properties.h"

@@ -72,7 +72,7 @@
 #include "winuiopt.h"
 #include "dialogs.h"
 #include "windows/input.h"
-#include "windows/config.h"
+#include "winmain.h"
 #include "windows/window.h"
 #ifdef UI_COLOR_PALETTE
 #include "paletteedit.h"
@@ -2231,7 +2231,6 @@ static void TabSelectionChanged(void)
 
 static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	extern int mame_validitychecks(int);
 	WNDCLASS wndclass;
 	RECT     rect;
 	int      i;
@@ -2248,7 +2247,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 		mame_file *file;
 		file_error filerr;
 
-		win_options_init();
+		mame_options_init(mame_win_options);
 
 		filerr = mame_fopen(SEARCHPATH_RAW, CONFIGNAME ".ini", OPEN_FLAG_READ, &file);
 		if (filerr == FILERR_NONE)
@@ -2627,7 +2626,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	}
 
 #ifdef MAME_DEBUG
-	if (mame_validitychecks(-1))
+	if (mame_validitychecks(NULL))
 	{
 		MessageBoxA(hMain, MAMENAME " has failed its validity checks.  The GUI will "
 			"still work, but emulations will fail to execute", MAMENAME, MB_OK);

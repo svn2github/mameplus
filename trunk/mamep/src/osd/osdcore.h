@@ -777,4 +777,5 @@ void osd_break_into_debugger(const char *message);
 
 
 
+int osd_get_default_codepage(void);
 #endif	/* __OSDEPEND_H__ */

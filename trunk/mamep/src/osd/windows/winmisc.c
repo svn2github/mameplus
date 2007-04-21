@@ -63,3 +63,13 @@ void osd_break_into_debugger(const char *message)
 		DebugBreak();
 	}
 }
+
+
+//============================================================
+//  osd_get_default_codepage
+//============================================================
+
+int osd_get_default_codepage(void)
+{
+	return GetOEMCP();
+}
