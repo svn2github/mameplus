@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.114u1      #
+#     Mameinfo.dat日本語版 v0.114u2      #
 #                                        #
-#             April 13, 2007             #
+#             April 20, 2007             #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,10 +12,158 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：853 翻訳済：837
-# 追加項目：338 合計：1191
+# Tester報告：861 翻訳済：845
+# 追加項目：338 合計：1199
 #
 
+
+$info=gng
+$mame
+[情報]
+
+- コンティニューするには、コインを入れてショットボタンを押しながらスタートキー（1キー）押す。
+
+
+[バグ]
+
+- BGMのテンポがゲームの負荷によって変わってしまう。1943では連射するとBGMが遅くなる。他のゲームも同様。 ym2203slowdown0114u2gre, Augusto / Machone
+
+$end
+
+$info=commando
+$mame
+[情報]
+
+- 起動メッセージ表示中に、発射ボタンを押すとテスト画面に入れる。
+
+
+[バグ]
+
+- BGMのテンポがゲームの負荷によって変わってしまう。1943では連射するとBGMが遅くなる。他のゲームも同様。 ym2203slowdown0114u2gre, Augusto / Machone
+
+$end
+
+$info=gunsmoke
+$mame
+[バグ]
+
+- BGMのテンポがゲームの負荷によって変わってしまう。1943では連射するとBGMが遅くなる。他のゲームも同様。 ym2203slowdown0114u2gre, Augusto / Machone
+
+$end
+
+$info=1943
+$mame
+[情報]
+
+- テストメニューの4～7番目の項目にアクセスするには、5キーを押しながらリセットする。
+
+
+[バグ]
+
+- BGMのテンポがゲームの負荷によって変わってしまう。1943では連射するとBGMが遅くなる。他のゲームも同様。 ym2203slowdown0114u2gre, Augusto / Machone
+
+
+[TIPS]
+
+- 面開始時の武器選択コマンド：
+
+1面…1P下＋2P A（小ショットガン）
+
+2面…1P A＋2P B（大ショットガン）
+
+3面…1P右上＋AB＋2P下＋B（レーザー）
+
+4面…1P左下＋B＋2P左上（大ショットガン）
+
+5面…1P A＋2P上（3ウェイ）
+
+
+6面…1P左＋2P右＋B（オート）
+
+7面…1P左上＋2P下（シェル）
+
+8面…1P左＋AB＋2P AB（3ウェイ）
+
+9面…1P左下＋AB＋2P右下＋AB（レーザー）
+
+10面…1P上＋B＋2P右下（シェル）
+
+
+11面…1P左上＋2P右＋A（オート）
+
+12面…1P右＋AB＋2P右上＋AB（3ウェイ）
+
+13面…1P上＋2P下（オート）
+
+14面…1P左上＋AB＋2P右＋AB（レーザー）
+
+15面…1P右下＋A＋2P左下＋A（シェル）
+
+16面…1P右＋A＋2P右上＋A（オート）
+
+$end
+
+$info=sidearms
+$mame
+[バグ]
+
+- BGMのテンポがゲームの負荷によって変わってしまう。1943では連射するとBGMが遅くなる。他のゲームも同様。 ym2203slowdown0114u2gre, Augusto / Machone
+
+$end
+
+$info=hginga
+$mame
+[バグ]
+
+- Player 1 BETキー定義がダブっている。
+上の方はPlayer 2用の模様。 hginga0114u2gra, uRebelScum
+
+$end
+
+$info=gogomile
+$mame
+[バグ]
+
+- コンティニュー画面でコインを入れることが出来ない。 gogomile0114u2gre, Justin Kerk
+
+$end
+
+$info=ckongg
+$mame
+[バグ]
+
+- Player 1の操作は4方向だが、Player 2は8方向になっている。 ckongg0114u2gra, uRebelScum
+
+$end
+
+$info=gauntlet
+$mame
+[情報]
+
+- スタートボタンは、ポーション用のキーに使う。
+
+
+[バグ]
+
+- nvファイルがある状態で起動すると、各プレイヤーにクレジットが1つ入った状態になる。 gauntlet0114u2gre, Machone
+
+$end
+
+$info=rampage
+$mame
+[バグ]
+
+- プレイヤー3が4方向入力になっている。プレイヤー1と2は8方向。 rampage0114u2gra, uRebelScum
+
+$end
+
+$info=ssf2ghw
+$mame
+[バグ]
+
+- 画面に何も表示されない。音は鳴る。 ssf2ghw0114u1yel, R. Belmont
+
+$end
 
 $info=actfancr
 $mame
@@ -446,18 +594,6 @@ $mame
 - cojag.cバグ
 
 area51はリセット時にクラッシュ。またmaxforceはリセット時にエラー。 cojagc062red, luigi30 / Oxygen / Smitdogg
-
-$end
-
-$info=freezeat
-$mame
-[バグ]
-
-- サービスモードで言語を英語に設定してMAMEを再起動したあと、アトラクトモードを動作させておく。
-最初のデモはBlumpy対Prissyのバトルで、15秒くらい経過するとサウンドが消える。
-
-もう一度サービスモードに入って音量を調節するか、リセットしないと音が出ない。
-音が出てない間はCPUの負荷が約2倍になる。 freezeat0110u4yel, Tafoid
 
 $end
 
@@ -1456,9 +1592,6 @@ $info=sonofphx
 $mame
 [バグ]
 
-- 1面でやられると、赤いゴミが画面の左下に表示される。 sonofphx0101u5gre, RansAckeR / Haze
-
-
 - 4面の夜の山のステージでボス登場時、
 山の手前にボスが表示されてからスクロールしてゆく。
 このバグは4面をプレイすると簡単にわかる(チート有り)。
@@ -1468,6 +1601,9 @@ $mame
 - このゲームがparentになっているが、
 実はこのゲームはbootleg。
 リパルス(repulse)もしくは99(99lstwar)がオリジナル。 sonofphx37b6ora, Fujix (nastyj)
+
+
+- 1面でやられると、赤いゴミが画面の左下に表示される。 sonofphx0101u5gre, RansAckeR / Haze
 
 $end
 
@@ -1566,9 +1702,6 @@ $mame
 [バグ]
 
 - ゲームの第2部に入って、ターミナルを破壊したあと、効果音が再生されない。 looping0101u5, RansAckeR
-
-
-- カクテルモードの2P時、反転した画面が乱れている。 looping0111u3yel, Speedfreak
 
 
 - ボイスの中に、途切れたり鳴らないものがある。
@@ -2071,9 +2204,6 @@ $info=jdreddp
 $mame
 [バグ]
 
-- アトラクトモードでコインを入れると画面最上部のラインがちらつく。また“credits:”の最後の文字も同様。 jdreddp0102gre1, RansAckeR
-
-
 - 一部の面で画面の一番下のラインに本来一番上にあるラインが表示される。
 背景が激しく動くシーンでよくわかる。 jdreddp060gre_1, Smitdogg
 
@@ -2081,45 +2211,10 @@ $mame
 - マンホールと後ろ側を歩く女の人のプライオリティがおかしい。 jdreddp060gre_2, DCisTHEbest
 
 
+- アトラクトモードでコインを入れると画面最上部のラインがちらつく。また“credits:”の最後の文字も同様。 jdreddp0102gre1, RansAckeR
+
+
 - 下水道のリフトに乗ると、リフトの床が消える。 jdreddp0102gre2, RansAckeR
-
-$end
-
-$info=mk
-$mame
-[バグ]
-
-- アトラクトモード内の漫画本の宣伝が表示されなくなっている。
-
-【更新】0.74u2までは、起動時のセルフテストと宣伝が両方とも表示された。
-
-0.75から0.77で、宣伝のみが表示されなくなった。
-
-0.78から両方とも表示されなくなった。 mk095gre, A. Bousiges / WilliamBR / RansAckeR
-
-
-- スイッチテストでグラフィックがずれてる。以前は“Misaligned blit to: 0006f34c”というメッセージが出ていた。
-
-【更新】0.59までは正常に動作していた。
-0.60以降のnvramを使って0.59以前で動作させると、同じ問題が起こる。 mk095u6gre, BSR / RansAckeR
-
-
-- Diagnostic/Switchテストで下パンチと下キックを調べても、音だけ鳴って表示(丸印)が出ない。
-
-注：mkla1, mkla2, mkla3, mkla4では正しく動作する。 mk056gre, wyrdbug / TriggerFin
-
-
-- コンティニューをしないでアトラクトモードを見ていると、ハイスコアやキャラ紹介の文字が表示されない。
-また、ボーナス画面でも線が変なところに表示される。 mk062gre, WilliamBR / Bugfinder / Thenasty / Reznor007
-
-
-- モータルコンバット系の縦解像度について。
-最低でもサービスモードについては恐らく間違っている。
-サービスモードに入って、いろいろメニューを開いてみると分かる。
-
-● mk, mk2, mk3：game adjustments / standard pricing
-
-● umk3：メインメニュー mk237b5gre, IF
 
 $end
 
@@ -2168,20 +2263,9 @@ $mame
 
 $end
 
-$info=openice
-$mame
-[バグ]
-
-- 画面の一番下にあるはずの1ドット分のラインが画面一番上に表示されている。 openice093u2gre, qapo
-
-$end
-
 $info=rmpgwt
 $mame
 [バグ]
-
-- いろんな面でランダムに固まる。 BGMは鳴り続けることもある。 rmpgwt060gre, mack1 / Smitdogg / Taucher0815 / Darkk
-
 
 - ゲーム中、画面一番下にあるはずの横1ラインが画面の上に表示されている。 rmpgwt077gre, Sune_S
 
@@ -2220,20 +2304,6 @@ $mame
 
 $end
 
-$info=revx
-$mame
-[バグ]
-
-- 面クリア後の集計画面で、面の終わりのメニューが表示されない。表示されるのは、真っ黒画面の上にステータスバーのみ。 revx060gre, Nerox91
-
-
-- 「DCSサウンドシステムについて」
-
-サービスモードで音量調節後にゲームを一旦終了して、再起動しても設定した音量にならない。
-ところがサービスモードを開くと、見た目は設定通りになっている。 dcs057ora, Karasu / Smitdogg
-
-$end
-
 $info=narc
 $mame
 [バグ]
@@ -2261,40 +2331,6 @@ $mame
 
 
 - ファイナル版でプレイしたが、常にノイズが入っている。 DACサウンドの問題だと思われる。 narc36finalgre, Lord Caos / Suppi-Chan
-
-$end
-
-$info=smashtv
-$mame
-[バグ]
-
-- F3キーでリセット後、画面の描画がおかしくなる。 smashtv098u1gre, Pr3tty F1y / nintendont / nitrousoxide82
-
-$end
-
-$info=term2
-$mame
-[バグ]
-
-- テストモードで、カーソルを上下に移動したときの右の説明が部分が正しく描画されない。 term20103u4gre, cpukett
-
-
-- テストモードで画面反転の設定をしても文字が左右に反転するだけ。 term20104u2gre, Luigi30
-
-
-- アイテム箱から出てくる武器冷やし器や、再チャージの動作が速すぎる。
-実機では3～4秒かかる。 term2056ora, dwidel
-
-
-- スカイネットを破壊した後の画像が左右反転している。前からあったバグ。 term2054gre, BSR
-
-$end
-
-$info=totcarn
-$mame
-[バグ]
-
-- リセットをかけると、表示がおかしくなる。 totcarn063gre1, fandemame
 
 $end
 
@@ -2917,14 +2953,6 @@ $mame
 
 $end
 
-$info=pkscram
-$mame
-[バグ]
-
-- アトラクトモード中にフリーズする。0.109から。 pkscram0111u4red, Speedfreak / Tafoid
-
-$end
-
 $info=pc_ngaid
 $mame
 [バグ]
@@ -2956,21 +2984,6 @@ $mame
 
 - 上画面のゲーム解説部分で、
 キャラクターの色が化けている。 pc_smb37b14gre, Kurushimi / BMF
-
-$end
-
-$info=policetr
-$mame
-[バグ]
-
-- F2キーでテストモードに入り、"Setting"の中の"Verify and Calibrate Guns"を選ぶ。
-次にプレイヤーのカーソルを左端いっぱいに持っていくと"Current Calibration Values"と表示される。
-ここで、ショットボタンを押すとエラーが起きる。 policetr059yel, El Condor / Randolph
-
-
-- Act-Labs製の光線銃を使っているとき、狙っているところ全然違う場所に当たることがしばしば。
-
-調べたところ、外れた弾は画面の端に当たっているもよう。 lightguns062ora, Smitdogg / uRebelScum
 
 $end
 
@@ -3439,22 +3452,6 @@ $mame
 [バグ]
 
 - DIPスイッチをONにしてもデモサウンドが出ない。 gprider1097gre, SportsDude
-
-$end
-
-$info=smgp
-$mame
-[バグ]
-
-- タイトル画面一番左のラインがきちんと描画されていない。 smgp0102gre, RansAckeR
-
-$end
-
-$info=rfjetus
-$mame
-[バグ]
-
-- 起動後、黒画面しか表示されない。NVファイルを再作成してもFFというデータしか記録されない。 rfjetus0101u5red, Firewave
 
 $end
 
@@ -5149,32 +5146,6 @@ $mame
 
 $end
 
-$info=psyforce
-$mame
-[バグ]
-
-- キャラクタを選択するとMAMEがフリーズする。
-フリープレイ設定時には、スタートキーを押すとフリーズする。 psyforce0105u5red, Suutaroka / Speedfreak
-
-$end
-
-$info=raystorm
-$mame
-[バグ]
-
-- デモをそのまま走らせているとMAMEがフリーズする。
-raystorjでは起きない。 raystorm0111u1red, Speedfreak
-
-$end
-
-$info=sfex
-$mame
-[バグ]
-
-- ダルシムを選択するとVS画面のあとにMAMEがフリーズする。 sfex20103red, king_krm
-
-$end
-
 $info=sncwgltd
 $mame
 [バグ]
@@ -5232,6 +5203,18 @@ $mame
 
 $end
 
+$info=term2
+$mame
+[バグ]
+
+- アイテム箱から出てくる武器冷やし器や、再チャージの動作が速すぎる。
+実機では3～4秒かかる。 term2056ora, dwidel
+
+
+- スカイネットを破壊した後の画像が左右反転している。前からあったバグ。 term2054gre, BSR
+
+$end
+
 $info=gaiapols
 $mame
 [バグ]
@@ -5275,6 +5258,17 @@ $mame
 
 - Set 2のROMが不良で起動時にエラーが出て動作しない。
 チェックをパスできないならば動作不可に設定したほうがいい。 freezea2_0110u2ora, Haze
+
+$end
+
+$info=revx
+$mame
+[バグ]
+
+- 「DCSサウンドシステムについて」
+
+サービスモードで音量調節後にゲームを一旦終了して、再起動しても設定した音量にならない。
+ところがサービスモードを開くと、見た目は設定通りになっている。 dcs057ora, Karasu / Smitdogg
 
 $end
 
@@ -5325,6 +5319,16 @@ $mame
 [バグ]
 
 - キー設定で、P1 SoftがP2 Softになっている。 hstennis0103u2ora, Fujix
+
+$end
+
+$info=policetr
+$mame
+[バグ]
+
+- Act-Labs製の光線銃を使っているとき、狙っているところ全然違う場所に当たることがしばしば。
+
+調べたところ、外れた弾は画面の端に当たっているもよう。 lightguns062ora, Smitdogg / uRebelScum
 
 $end
 
@@ -6427,6 +6431,29 @@ $mame
 
 $end
 
+$info=mk
+$mame
+[バグ]
+
+- Diagnostic/Switchテストで下パンチと下キックを調べても、音だけ鳴って表示(丸印)が出ない。
+
+注：mkla1, mkla2, mkla3, mkla4では正しく動作する。 mk056gre, wyrdbug / TriggerFin
+
+
+- コンティニューをしないでアトラクトモードを見ていると、ハイスコアやキャラ紹介の文字が表示されない。
+また、ボーナス画面でも線が変なところに表示される。 mk062gre, WilliamBR / Bugfinder / Thenasty / Reznor007
+
+
+- モータルコンバット系の縦解像度について。
+最低でもサービスモードについては恐らく間違っている。
+サービスモードに入って、いろいろメニューを開いてみると分かる。
+
+● mk, mk2, mk3：game adjustments / standard pricing
+
+● umk3：メインメニュー mk237b5gre, IF
+
+$end
+
 $info=strkforc
 $mame
 [バグ]
@@ -6712,6 +6739,14 @@ $mame
 [バグ]
 
 - [Possilbe] ゲーム中以外の画面に、ゲーム中の画面が下側に残って表示される。 toutrun0108u2gre, Kekule
+
+$end
+
+$info=smgp
+$mame
+[バグ]
+
+- タイトル画面一番左のラインがきちんと描画されていない。 smgp0102gre, RansAckeR
 
 $end
 
@@ -7006,53 +7041,6 @@ $mame
 
 $end
 
-$info=1943
-$mame
-[情報]
-
-- テストメニューの4～7番目の項目にアクセスするには、5キーを押しながらリセットする。
-
-
-[TIPS]
-
-- 面開始時の武器選択コマンド：
-
-1面…1P下＋2P A（小ショットガン）
-
-2面…1P A＋2P B（大ショットガン）
-
-3面…1P右上＋AB＋2P下＋B（レーザー）
-
-4面…1P左下＋B＋2P左上（大ショットガン）
-
-5面…1P A＋2P上（3ウェイ）
-
-
-6面…1P左＋2P右＋B（オート）
-
-7面…1P左上＋2P下（シェル）
-
-8面…1P左＋AB＋2P AB（3ウェイ）
-
-9面…1P左下＋AB＋2P右下＋AB（レーザー）
-
-10面…1P上＋B＋2P右下（シェル）
-
-
-11面…1P左上＋2P右＋A（オート）
-
-12面…1P右＋AB＋2P右上＋AB（3ウェイ）
-
-13面…1P上＋2P下（オート）
-
-14面…1P左上＋AB＋2P右＋AB（レーザー）
-
-15面…1P右下＋A＋2P左下＋A（シェル）
-
-16面…1P右＋A＋2P右上＋A（オート）
-
-$end
-
 $info=alibaba
 $mame
 [情報]
@@ -7286,14 +7274,6 @@ $mame
 
 $end
 
-$info=commando
-$mame
-[情報]
-
-- 起動メッセージ表示中に、発射ボタンを押すとテスト画面に入れる。
-
-$end
-
 $info=cracksht
 $mame
 [情報]
@@ -7494,14 +7474,6 @@ $mame
 
 $end
 
-$info=gauntlet
-$mame
-[情報]
-
-- スタートボタンは、ポーション用のキーに使う。
-
-$end
-
 $info=gigawing
 $mame
 [情報]
@@ -7510,14 +7482,6 @@ $mame
 
 
 - 背景と比べるとスプライトの描画が1フレームずれる。
-
-$end
-
-$info=gng
-$mame
-[情報]
-
-- コンティニューするには、コインを入れてショットボタンを押しながらスタートキー（1キー）押す。
 
 $end
 
