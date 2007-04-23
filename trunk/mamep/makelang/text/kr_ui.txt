@@ -2,55 +2,55 @@
                                 
 한국어 : 과자두개 / 사부 / exako
 
-# osd/ui/properties.c: 1120
+# osd/ui/properties.c: 1108
 %d colors 
 %d 컬러
 
-# osd/ui/win32ui.c: 264, 3769
+# osd/ui/win32ui.c: 256, 3760
 %d games
 %d 게임
 
-# osd/ui/properties.c: 869
+# osd/ui/properties.c: 857
 %d x %d (H) %f Hz (%d colors)
 %d x %d (H) %f Hz (%d 색상)
 
-# osd/ui/properties.c: 862
+# osd/ui/properties.c: 850
 %d x %d (V) %f Hz (%d colors)
 %d x %d (V) %f Hz (%d 색상)
 
-# osd/ui/treeview.c: 1291
+# osd/ui/treeview.c: 1278
 %dx%d (H)
 %dx%d (H)
 
-# osd/ui/treeview.c: 1285
+# osd/ui/treeview.c: 1272
 %dx%d (V)
 %dx%d (V)
 
-# osd/ui/properties.c: 1096
+# osd/ui/properties.c: 1084
 %s (%d player)
 %s (%d 플레이어)
 
-# osd/ui/properties.c: 1107
+# osd/ui/properties.c: 1095
 %s (%d player, %d button)
 %s (%d 플레이어, %d 버튼)
 
-# osd/ui/properties.c: 1105
+# osd/ui/properties.c: 1093
 %s (%d player, %d buttons)
 %s (%d 플레이어, %d 버튼)
 
-# osd/ui/properties.c: 1093
+# osd/ui/properties.c: 1081
 %s (%d players)
 %s (%d 플레이어)
 
-# osd/ui/properties.c: 1102
+# osd/ui/properties.c: 1090
 %s (%d players, %d button)
 %s (%d 플레이어, %d 버튼)
 
-# osd/ui/properties.c: 1099
+# osd/ui/properties.c: 1087
 %s (%d players, %d buttons)
 %s (%d 플레이어, %d 버튼)
 
-# osd/ui/properties.c: 1234
+# osd/ui/properties.c: 1222
 %s\nThis is also global driver options in the %s
 %s\n 이것은 %s의 전체 드라이버 옵션이기도 합니다
 
@@ -94,7 +94,7 @@ MAME32 정보(&A)
 &Cancel
 취소(&C)
 
-# osd/ui/audit32.c: 450 osd/ui/mame32.rc: 1221
+# osd/ui/audit32.c: 439 osd/ui/mame32.rc: 1221
 &Close
 닫기(&C)
 
@@ -102,7 +102,7 @@ MAME32 정보(&A)
 &Contents\tF1
 내용(&C)\tF1
 
-# osd/ui/audit32.c: 320
+# osd/ui/audit32.c: 309
 &Continue
 계속(&C)
 
@@ -206,7 +206,7 @@ Mame 릴리즈 일지(&M)
 &Palette Setting...
 팔레트 설정(&P)...
 
-# osd/ui/audit32.c: 315 osd/ui/mame32.rc: 439
+# osd/ui/audit32.c: 304 osd/ui/mame32.rc: 439
 &Pause
 일시정지(&P)
 
@@ -214,11 +214,11 @@ Mame 릴리즈 일지(&M)
 &Picture Area\tAlt+P
 화면 영역(&P)\tAlt+P
 
-# osd/ui/mame32.rc: 52, 182 osd/ui/win32ui.c: 3921
+# osd/ui/mame32.rc: 52, 182 osd/ui/win32ui.c: 3912
 &Play
 실행(&P)
 
-# osd/ui/win32ui.c: 263, 3958, 7162, 7190
+# osd/ui/win32ui.c: 255, 3949, 7153, 7181
 &Play %s
 실행(&P) %s
 
@@ -294,7 +294,7 @@ Mame 릴리즈 일지(&M)
 &Working
 실행 가능(&W)
 
-# osd/ui/win32ui.c: 6624
+# osd/ui/win32ui.c: 6615
 '%s' is not a valid savestate file for game '%s'.
 '%s' 는 게임 '%s'의 올바른 상태저장 파일이 아닙니다
 
@@ -306,7 +306,7 @@ Mame 릴리즈 일지(&M)
 <- Remove
 <- 제거
 
-# osd/ui/treeview.c: 546, 566, 1194
+# osd/ui/treeview.c: 533, 553, 1181
 <unknown>
 <미확인>
 
@@ -318,7 +318,7 @@ A sharing violation occurred.
 A&udit
 검사(&U)
 
-# osd/ui/properties.c: 1043 osd/ui/treeview.c: 1429
+# osd/ui/properties.c: 1031 osd/ui/treeview.c: 1419
 AD Stick
 AD 스틱
 
@@ -326,7 +326,7 @@ AD 스틱
 ADStick device
 AD스틱 장치
 
-# osd/ui/win32ui.c: 716
+# osd/ui/win32ui.c: 708
 About
 MAME32 정보
 
@@ -354,7 +354,7 @@ Additional MAME32 code by
 Advanced
 고급
 
-# osd/ui/dialogs.c: 220
+# osd/ui/dialogs.c: 214
 All
 전체
 
@@ -362,7 +362,7 @@ All
 All Games
 모든 게임
 
-# osd/ui/win32ui.c: 804, 811, 818, 825
+# osd/ui/win32ui.c: 796, 803, 810, 817
 All files (*.*)
 모든 파일 (*.*)
 
@@ -382,7 +382,7 @@ Allow restoring options to 'sane' values.
 Allows filtering out games from a folder
 폴더에서 게임을 필터링하여 목록에 표시되지 않게합니다.
 
-# osd/ui/properties.c: 4831
+# osd/ui/properties.c: 4819
 Anti-clockwise
 반시계 방향
 
@@ -416,21 +416,21 @@ Audit
 
 # osd/ui/mame32.rc: 1530, 1566, 1566
 Audit ROM and samples sets
-롬과 샘플 세트를 검사
+롬과 샘플세트를 검사
 
-# osd/ui/audit32.c: 449
+# osd/ui/audit32.c: 438
 Audit complete.\n
 검사 완료.\n
 
-# osd/ui/properties.c: 453, 4742, 4924, 4959
+# osd/ui/properties.c: 441, 4730, 4912, 4947
 Auto
 자동
 
-# osd/ui/properties.c: 4834
+# osd/ui/properties.c: 4822
 Auto anti-clockwise
 자동 반시계방향
 
-# osd/ui/properties.c: 4833
+# osd/ui/properties.c: 4821
 Auto clockwise
 자동 시계방향
 
@@ -454,11 +454,11 @@ Available
 Available fields:
 사용가능한 필드:
 
-# osd/ui/properties.c: 5018
+# osd/ui/properties.c: 5006
 Axis
 축
 
-# osd/ui/properties.c: 5028
+# osd/ui/properties.c: 5016
 AxisId
 축ID
 
@@ -466,7 +466,7 @@ AxisId
 BIOS
 바이오스
 
-# osd/ui/properties.c: 1190
+# osd/ui/properties.c: 1178
 BIOS missing
 바이오스 없음
 
@@ -478,7 +478,7 @@ Backdrops
 Background Images
 배경 이미지
 
-# osd/ui/treeview.c: 1116
+# osd/ui/treeview.c: 1103
 Bad Dump
 잘못된 덤프
 
@@ -490,7 +490,7 @@ Basic
 Beam width
 빔 너비
 
-# osd/ui/audit32.c: 498
+# osd/ui/audit32.c: 487
 Best available
 최적롬 사용가능
 
@@ -550,43 +550,43 @@ Button (P or 6)
 Button (S or 7)
 버튼 (S 또는 7)
 
-# osd/ui/treeview.c: 1409
+# osd/ui/treeview.c: 1399
 Button 1
 버튼 1
 
-# osd/ui/treeview.c: 1418
+# osd/ui/treeview.c: 1408
 Buttons 10
 버튼 10
 
-# osd/ui/treeview.c: 1410
+# osd/ui/treeview.c: 1400
 Buttons 2
 버튼 2
 
-# osd/ui/treeview.c: 1411
+# osd/ui/treeview.c: 1401
 Buttons 3
 버튼 3
 
-# osd/ui/treeview.c: 1412
+# osd/ui/treeview.c: 1402
 Buttons 4
 버튼 4
 
-# osd/ui/treeview.c: 1413
+# osd/ui/treeview.c: 1403
 Buttons 5
 버튼 5
 
-# osd/ui/treeview.c: 1414
+# osd/ui/treeview.c: 1404
 Buttons 6
 버튼 6
 
-# osd/ui/treeview.c: 1415
+# osd/ui/treeview.c: 1405
 Buttons 7
 버튼 7
 
-# osd/ui/treeview.c: 1416
+# osd/ui/treeview.c: 1406
 Buttons 8
 버튼 8
 
-# osd/ui/treeview.c: 1417
+# osd/ui/treeview.c: 1407
 Buttons 9
 버튼 9
 
@@ -598,7 +598,7 @@ C&lones
 CPU
 CPU
 
-# osd/ui/dialogs.c: 212 osd/ui/winuiopt.c: 429
+# osd/ui/dialogs.c: 206 osd/ui/winuiopt.c: 426
 Cabinet
 캐비넷
 
@@ -622,7 +622,7 @@ Categories
 Changing this item is not permitted
 이 항목을 바꿀 수 없음
 
-# osd/ui/audit32.c: 238, 248
+# osd/ui/audit32.c: 227, 237
 Checking Game %s - %s
 게임 검사 %s - %s
 
@@ -634,11 +634,11 @@ Checking...
 Christopher Kirmse and Michael Soderstrom
 Christopher Kirmse, Michael Soderstrom
 
-# osd/ui/properties.c: 4830
+# osd/ui/properties.c: 4818
 Clockwise
 시계방향
 
-# osd/ui/win32ui.c: 875
+# osd/ui/win32ui.c: 867
 Clone Of
 부모롬 이름
 
@@ -650,15 +650,15 @@ Clone of:
 Clones
 클론
 
-# osd/ui/properties.c: 456
+# osd/ui/properties.c: 444
 Cocktail
 칵테일
 
-# osd/ui/properties.c: 1158
+# osd/ui/properties.c: 1146
 Colors are completely wrong
 색상이 완전히 잘못 출력됩니다
 
-# osd/ui/properties.c: 1163
+# osd/ui/properties.c: 1151
 Colors aren't 100% accurate
 색상이 100% 정확하지 않습니다
 
@@ -706,7 +706,7 @@ Contrast Correction
 Control &Panel
 조종장치(&P)
 
-# osd/ui/dialogs.c: 218 osd/ui/winuiopt.c: 432
+# osd/ui/dialogs.c: 212 osd/ui/winuiopt.c: 429
 Control Panel
 조종장치
 
@@ -742,11 +742,11 @@ Controllers
 Correct:
 정상:
 
-# osd/ui/win32ui.c: 6499
+# osd/ui/win32ui.c: 6490
 Could not open '%s' as a valid input file.
 리플레이 파일 '%s' 를 열 수 없음
 
-# osd/ui/win32ui.c: 6565, 6638
+# osd/ui/win32ui.c: 6556, 6629
 Could not open '%s' as a valid savestate file.
 상태저장 파일 '%s'를 열 수 없음
 
@@ -758,7 +758,7 @@ Crop artwork
 Cursor
 커서
 
-# osd/ui/win32ui.c: 4743, 4771
+# osd/ui/win32ui.c: 4734, 4762
 Custom
 사용자 설정
 
@@ -782,11 +782,11 @@ Customize interface options.
 Customize which columns are used in the game list
 게임목록에서 사용될 열을 지정
 
-# osd/ui/properties.c: 4829
+# osd/ui/properties.c: 4817
 Default
 기본값
 
-# osd/ui/properties.c: 632
+# osd/ui/properties.c: 620
 Default Game
 기본 게임
 
@@ -802,15 +802,15 @@ Default input layout
 Delete
 삭제
 
-# osd/ui/win32ui.c: 866
+# osd/ui/win32ui.c: 858
 Description
 설명
 
-# osd/ui/mame32.rc: 459, 561 osd/ui/win32ui.c: 714 osd/ui/winuiopt.c: 462
+# osd/ui/mame32.rc: 459, 561 osd/ui/win32ui.c: 706 osd/ui/winuiopt.c: 459
 Details
 자세히
 
-# osd/ui/properties.c: 1035 osd/ui/treeview.c: 1431
+# osd/ui/properties.c: 1023 osd/ui/treeview.c: 1421
 Dial
 다이얼
 
@@ -822,7 +822,7 @@ Dial device
 Digital joystick axes
 디지털 조이스틱 축
 
-# osd/ui/mame32.rc: 667 osd/ui/properties.c: 418
+# osd/ui/mame32.rc: 667 osd/ui/properties.c: 406
 Direct3D
 Direct3D
 
@@ -894,43 +894,43 @@ Displays items in a list.
 Displays program and copyright information
 프로그램과 저작권 정보를 보여줍니다.
 
-# osd/ui/dialogs.c: 129
+# osd/ui/dialogs.c: 123
 Do you wish to continue?
 계속합니까?
 
-# osd/ui/treeview.c: 1427
+# osd/ui/treeview.c: 1417
 Double Joy 16-Way
 16방향 2 조이스틱
 
-# osd/ui/treeview.c: 1424
+# osd/ui/treeview.c: 1414
 Double Joy 2-Way
 2방향 2 조이스틱
 
-# osd/ui/treeview.c: 1425
+# osd/ui/treeview.c: 1415
 Double Joy 4-Way
 4방향 2 조이스틱
 
-# osd/ui/treeview.c: 1426
+# osd/ui/treeview.c: 1416
 Double Joy 8-Way
 8방향 2 조이스틱
 
-# osd/ui/properties.c: 968, 993
+# osd/ui/properties.c: 956, 981
 Double Joystick 16-Way
 16방향 2 조이스틱
 
-# osd/ui/properties.c: 961, 982, 983
+# osd/ui/properties.c: 949, 970, 971
 Double Joystick 2-Way
 2방향 2 조이스틱
 
-# osd/ui/properties.c: 957, 958, 986
+# osd/ui/properties.c: 945, 946, 974
 Double Joystick 2-Way Vertical
 수직 2방향 2 조이스틱
 
-# osd/ui/properties.c: 964, 989
+# osd/ui/properties.c: 952, 977
 Double Joystick 4-Way
 4방향 2 조이스틱
 
-# osd/ui/properties.c: 970, 995
+# osd/ui/properties.c: 958, 983
 Double Joystick 8-Way
 8방향 2 조이스틱
 
@@ -938,11 +938,11 @@ Double Joystick 8-Way
 Draw antialiased vectors
 안티앨리어싱된 벡터 사용
 
-# osd/ui/properties.c: 4807
+# osd/ui/properties.c: 4795
 Draw every frame
-프레임생략 하지않음
+모든 프레임 표시
 
-# osd/ui/layout.c: 57 osd/ui/mame32.rc: 1162 osd/ui/win32ui.c: 876
+# osd/ui/layout.c: 57 osd/ui/mame32.rc: 1162 osd/ui/win32ui.c: 868
 Driver
 드라이버
 
@@ -966,7 +966,7 @@ Dumping Status
 E&xit
 종료(&X)
 
-# osd/ui/win32ui.c: 7637
+# osd/ui/win32ui.c: 7628
 ERROR: required files are missing, the game cannot be run.
 오류: 파일이 부족합니다. 게임을 실행할수 없습니다.
 
@@ -1014,11 +1014,11 @@ Enable steadykey support
 Enforce aspect ratio
 강제 화면비율유지
 
-# osd/ui/audit32.c: 113 osd/ui/properties.c: 652, 743, 1740
+# osd/ui/audit32.c: 102 osd/ui/properties.c: 640, 731, 1728
 Error
 오류
 
-# osd/ui/treeview.c: 2744
+# osd/ui/treeview.c: 2734
 Error finding custom file name to save
 저장할 파일을 찾지 못함
 
@@ -1026,15 +1026,15 @@ Error finding custom file name to save
 Error log (for developers)
 오류 기록 (개발자용)
 
-# osd/ui/win32ui.c: 7732
+# osd/ui/win32ui.c: 7723
 Error searching for custom folder
 사용자 지정 폴더의 검색오류
 
-# osd/ui/treeview.c: 2672
+# osd/ui/treeview.c: 2662
 Error while renaming custom file %s to %s
 사용자 파일 이름을 %s 에서 %s로 변경 실패
 
-# osd/ui/treeview.c: 2816
+# osd/ui/treeview.c: 2806
 Error while saving custom file %s
 사용자 파일 %s 저장 실패
 
@@ -1046,7 +1046,7 @@ Exit the application
 External Folder List
 외부 폴더 목록
 
-# osd/ui/winuiopt.c: 3194
+# osd/ui/winuiopt.c: 3228
 FOLDER LIST HIDE OPTIONS
 폴더 목록 숨김 옵션
 
@@ -1054,15 +1054,15 @@ FOLDER LIST HIDE OPTIONS
 FPS
 FPS
 
-# osd/ui/audit32.c: 506
+# osd/ui/audit32.c: 495
 Failed
 실패
 
-# osd/ui/audit32.c: 255 osd/ui/mame32.rc: 436
+# osd/ui/audit32.c: 244 osd/ui/mame32.rc: 436
 File Audit
 파일 검사
 
-# osd/ui/dialogs.c: 419
+# osd/ui/dialogs.c: 413
 Filters for %s Folder
 %s 폴더의 필터
 
@@ -1078,7 +1078,7 @@ Flip screen left-right
 Flip screen upside-down
 상하 화면반전
 
-# osd/ui/dialogs.c: 210 osd/ui/winuiopt.c: 428
+# osd/ui/dialogs.c: 204 osd/ui/winuiopt.c: 425
 Flyer
 포스터
 
@@ -1104,7 +1104,7 @@ Font (special)
 
 # osd/ui/mame32.rc: 595
 Frame skipping
-프레임 생략
+프레임스킵
 
 # osd/ui/mame32.rc: 698
 Full screen brightness
@@ -1118,15 +1118,15 @@ Full screen contrast
 Full screen gamma
 전체 화면 감마
 
-# osd/ui/winuiopt.c: 3140
+# osd/ui/winuiopt.c: 3174
 GENERAL OPTIONS
 일반 옵션
 
-# osd/ui/winuiopt.c: 3198
+# osd/ui/winuiopt.c: 3232
 GUI JOYSTICK OPTIONS
 GUI 조이스틱 옵션
 
-# osd/ui/winuiopt.c: 3213
+# osd/ui/winuiopt.c: 3247
 GUI KEYBOARD OPTIONS
 GUI 키보드 옵션
 
@@ -1142,7 +1142,7 @@ Game List &Clone Color...
 Game List &Font...
 게임목록 글꼴, 색상(&F)...
 
-# osd/ui/win32ui.c: 839
+# osd/ui/win32ui.c: 831
 Game List Files (*.lst)
 게임 목록 파일 (*.lst)
 
@@ -1154,15 +1154,15 @@ Game filters
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 선택한 항목의 게임을 필터링하여 목록에 표시하지 않습니다.
 
-# osd/ui/properties.c: 1173
+# osd/ui/properties.c: 1161
 Game lacks sound
 사운드를 지원하지 못함
 
-# osd/ui/properties.c: 1153
+# osd/ui/properties.c: 1141
 Game protection isn't fully emulated
 게임 암호화가가 완전히 에뮬레이트되지 않음
 
-# osd/ui/win32ui.c: 3521
+# osd/ui/win32ui.c: 3512
 Game search %d%% complete
 게임 찾기 %d%% 완료
 
@@ -1174,15 +1174,15 @@ Gamma Correction
 General
 일반
 
-# osd/ui/properties.c: 1236
+# osd/ui/properties.c: 1224
 Global driver options\nCustom options used by all games in the %s
 전체 드라이버 설정\n%s에 포함된 모든 게임에 사용될 사용자 설정
 
-# osd/ui/properties.c: 1216
+# osd/ui/properties.c: 1204
 Global game options\nDefault options used by all games
 전체 게임 설정\n모든 게임에 기본으로 사용될 설정
 
-# osd/ui/properties.c: 1219
+# osd/ui/properties.c: 1207
 Global vector options\nCustom options used by all games in the Vector
 전체 벡터 설정\n모든 벡터게임에 사용될 사용자 설정
 
@@ -1194,7 +1194,7 @@ Go to Microsoft's DirectX Web Page
 Gray
 회색
 
-# osd/ui/win32ui.c: 715 osd/ui/winuiopt.c: 463, 3173
+# osd/ui/win32ui.c: 707 osd/ui/winuiopt.c: 460, 3207
 Grouped
 그룹화
 
@@ -1202,7 +1202,7 @@ Grouped
 Hard Drive Difference
 하드 드라이브 게임실행 임시파일
 
-# osd/ui/win32ui.c: 717
+# osd/ui/win32ui.c: 709
 Help
 도움말
 
@@ -1214,7 +1214,7 @@ Hide &mouse cursor (requires restart)
 High Scores
 고득점
 
-# osd/ui/winuiopt.c: 434, 437
+# osd/ui/winuiopt.c: 431, 434
 History
 역사
 
@@ -1222,7 +1222,7 @@ History
 Homebrew
 홈브류
 
-# osd/ui/treeview.c: 1030
+# osd/ui/treeview.c: 1017
 Horizontal
 가로화면
 
@@ -1230,7 +1230,7 @@ Horizontal
 How cheats work
 치트 동작법
 
-# osd/ui/winuiopt.c: 3120
+# osd/ui/winuiopt.c: 3154
 INTERFACE OPTIONS
 인터페이스 옵션
 
@@ -1246,7 +1246,7 @@ Icons
 Image Enhancement
 이미지 개선
 
-# osd/ui/win32ui.c: 832
+# osd/ui/win32ui.c: 824
 Image Files (*.png,*.bmp)
 이미지 파일 (*.png,*.bmp)
 
@@ -1254,15 +1254,15 @@ Image Files (*.png,*.bmp)
 Imperfect
 불완전
 
-# osd/ui/treeview.c: 1068
+# osd/ui/treeview.c: 1055
 Imperfect Colors
 불완전한 색상
 
-# osd/ui/treeview.c: 1069
+# osd/ui/treeview.c: 1056
 Imperfect Graphics
 불완전한 그래픽
 
-# osd/ui/treeview.c: 1071
+# osd/ui/treeview.c: 1058
 Imperfect Sound
 불완전한 사운드
 
@@ -1290,43 +1290,43 @@ Insert
 Interface Options
 인터페이스 옵션
 
-# osd/ui/treeview.c: 1422
+# osd/ui/treeview.c: 1412
 Joy 16-Way
 16방향 조이스틱
 
-# osd/ui/treeview.c: 1419
+# osd/ui/treeview.c: 1409
 Joy 2-Way
 2방향 조이스틱
 
-# osd/ui/treeview.c: 1420
+# osd/ui/treeview.c: 1410
 Joy 4-Way
 4방향 조이스틱
 
-# osd/ui/treeview.c: 1421
+# osd/ui/treeview.c: 1411
 Joy 8-Way
 8방향 조이스틱
 
-# osd/ui/properties.c: 468, 5013
+# osd/ui/properties.c: 456, 5001
 Joystick
 조이스틱
 
-# osd/ui/properties.c: 920, 943
+# osd/ui/properties.c: 908, 931
 Joystick 16-Way
 16방향 조이스틱
 
-# osd/ui/properties.c: 909, 910, 936
+# osd/ui/properties.c: 897, 898, 924
 Joystick 2-Way
 2방향 조이스틱
 
-# osd/ui/properties.c: 913, 932, 933
+# osd/ui/properties.c: 901, 920, 921
 Joystick 2-Way Vertical
 수직 2방향 조이스틱
 
-# osd/ui/properties.c: 916, 939
+# osd/ui/properties.c: 904, 927
 Joystick 4-Way
 4방향 조이스틱
 
-# osd/ui/properties.c: 922, 945
+# osd/ui/properties.c: 910, 933
 Joystick 8-Way
 8방향 조이스틱
 
@@ -1338,11 +1338,11 @@ Joystick deadzone
 Joystick saturation
 조이스틱 감도
 
-# osd/ui/properties.c: 5023
+# osd/ui/properties.c: 5011
 JoystickId
 조이스틱ID
 
-# osd/ui/properties.c: 466
+# osd/ui/properties.c: 454
 Keyboard
 키보드
 
@@ -1350,19 +1350,19 @@ Keyboard
 L&arge Icons
 큰 아이콘(&A)
 
-# osd/ui/winuiopt.c: 3186
+# osd/ui/winuiopt.c: 3220
 LIST FONT OPTIONS
 목록 폰트 옵션
 
-# osd/ui/winuiopt.c: 3172
+# osd/ui/winuiopt.c: 3206
 LISTVIEW OPTIONS
 목록보기 옵션
 
-# osd/ui/win32ui.c: 711 osd/ui/winuiopt.c: 459
+# osd/ui/win32ui.c: 703 osd/ui/winuiopt.c: 456
 Large Icons
 큰 아이콘
 
-# osd/ui/layout.c: 79 osd/ui/properties.c: 469, 1047 osd/ui/treeview.c: 1433
+# osd/ui/layout.c: 79 osd/ui/properties.c: 457, 1035 osd/ui/treeview.c: 1423
 Lightgun
 라이트건
 
@@ -1374,7 +1374,7 @@ Lightgun device
 Line &Up Icons
 아이콘 줄맞춤(&U)
 
-# osd/ui/win32ui.c: 713 osd/ui/winuiopt.c: 461
+# osd/ui/win32ui.c: 705 osd/ui/winuiopt.c: 458
 List
 간단히
 
@@ -1382,7 +1382,7 @@ List
 Loa&d Savestate...
 상태저장 파일 불러오기(&D)...
 
-# osd/ui/win32ui.c: 7554
+# osd/ui/win32ui.c: 7545
 Loading %s
 읽는중 %s
 
@@ -1398,7 +1398,7 @@ Localized Files
 M68000 CPU Core
 M68000 CPU 코어
 
-# osd/ui/win32ui.c: 804
+# osd/ui/win32ui.c: 796
 MAME input files (*.inp,*.zip)
 MAME 입력 파일 (*.inp,*.zip)
 
@@ -1406,15 +1406,15 @@ MAME 입력 파일 (*.inp,*.zip)
 MAME release notes
 MAME 발표 일지
 
-# osd/ui/win32ui.c: 811
+# osd/ui/win32ui.c: 803
 MAME savestate files (*.sta)
 MAMEW 상태저장 파일 (*.sta)
 
-# osd/ui/dialogs.c: 876
+# osd/ui/dialogs.c: 870
 MAME32 PCB Info: %s [%s]
 MAME32 PCB 정보: %s [%s]
 
-# osd/ui/winuiopt.c: 514
+# osd/ui/winuiopt.c: 511
 MAME32 has changed *.ini file directory.\n\nWould you like to migrate old configurations to the new directory?
 MAME32 의 *.ini 파일 디렉토리가 바뀌었습니다.\n\n예전 설정들을 새로운 디렉토리로 옮길까요?
 
@@ -1422,7 +1422,7 @@ MAME32 의 *.ini 파일 디렉토리가 바뀌었습니다.\n\n예전 설정들을 새로운 디렉토리로
 MAME32 version by
 MAME32 버전 제작자
 
-# osd/ui/dialogs.c: 124
+# osd/ui/dialogs.c: 118
 MAME32 will now reset the selected\nitems to the original, installation\nsettings then exit.\n\n
 MAME32가 선택된 항목을\n설치 초기값으로 되돌린 후\n종료할 것입니다.\n\n
 
@@ -1434,11 +1434,11 @@ MS Sans Serif
 Manufactured:
 제작사:
 
-# osd/ui/layout.c: 55 osd/ui/win32ui.c: 873
+# osd/ui/layout.c: 55 osd/ui/win32ui.c: 865
 Manufacturer
 제작사
 
-# osd/ui/dialogs.c: 214 osd/ui/winuiopt.c: 430
+# osd/ui/dialogs.c: 208 osd/ui/winuiopt.c: 427
 Marquee
 간판
 
@@ -1454,11 +1454,11 @@ Memory Card
 Miscellaneous
 기타
 
-# osd/ui/treeview.c: 1070
+# osd/ui/treeview.c: 1057
 Missing Sound
 사운드 없음
 
-# osd/ui/properties.c: 467
+# osd/ui/properties.c: 455
 Mouse
 마우스
 
@@ -1478,7 +1478,7 @@ Move Up
 NVRAM
 NVRAM
 
-# osd/ui/win32ui.c: 869
+# osd/ui/win32ui.c: 861
 Name
 이름
 
@@ -1490,23 +1490,23 @@ Neogeo 비암호화
 New game changes
 새로 추가된 게임과 변경된 게임들의 정보
 
-# osd/ui/audit32.c: 135 osd/ui/win32ui.c: 5666
+# osd/ui/audit32.c: 124 osd/ui/win32ui.c: 5657
 No
 아니오
 
-# osd/ui/treeview.c: 1072
+# osd/ui/treeview.c: 1059
 No Cocktail
 칵테일 없음
 
-# osd/ui/treeview.c: 1118
+# osd/ui/treeview.c: 1105
 No Dump
 덤프되지 않음
 
-# osd/ui/dialogs.c: 920
+# osd/ui/dialogs.c: 914
 No PCB Info available for this game.
 현재 게임에 대한 PCB 정보가 없습니다.
 
-# osd/ui/win32ui.c: 3940
+# osd/ui/win32ui.c: 3931
 No Selection
 선택되지 않음
 
@@ -1522,11 +1522,11 @@ Non-CPU
 Non-Wor&king
 실행 불가능(&K)
 
-# osd/ui/dialogs.c: 222 osd/ui/properties.c: 3713, 4832, 5116, 5362 
+# osd/ui/dialogs.c: 216 osd/ui/properties.c: 3701, 4820, 5104, 5350 
 None
 없음
 
-# osd/ui/audit32.c: 359, 363
+# osd/ui/audit32.c: 348, 352
 None required
 필요 없음
 
@@ -1534,11 +1534,11 @@ None required
 Not Working
 실행 불가능
 
-# osd/ui/audit32.c: 502
+# osd/ui/audit32.c: 491
 Not found
 파일 없음
 
-# osd/ui/properties.c: 1142
+# osd/ui/properties.c: 1130
 Not working
 실행 불가능
 
@@ -1586,7 +1586,7 @@ Overlays
 P&layback Input...
 리플레이 재생(&l)...
 
-# osd/ui/winuiopt.c: 3107
+# osd/ui/winuiopt.c: 3141
 PATH AND DIRECTORY OPTIONS
 경로 및 디렉토리 옵션
 
@@ -1598,7 +1598,7 @@ PCB 정보
 PCB Info Files
 PCB 정보 파일
 
-# osd/ui/properties.c: 1032 osd/ui/treeview.c: 1430
+# osd/ui/properties.c: 1020 osd/ui/treeview.c: 1420
 Paddle
 핸들
 
@@ -1610,7 +1610,7 @@ Paddle device
 Palette
 팔레트
 
-# osd/ui/audit32.c: 494
+# osd/ui/audit32.c: 483
 Passed
 통과
 
@@ -1618,7 +1618,7 @@ Passed
 Pause Brightness
 정지화면 밝기조절
 
-# osd/ui/treeview.c: 1434
+# osd/ui/treeview.c: 1424
 Pedal
 페달
 
@@ -1634,11 +1634,11 @@ Per-screen video options
 Physical monitor:
 물리적 모니터:
 
-# osd/ui/properties.c: 455
+# osd/ui/properties.c: 443
 Pixel Aspect
 픽셀비율
 
-# osd/ui/win32ui.c: 877 osd/ui/winuiopt.c: 3269
+# osd/ui/win32ui.c: 869 osd/ui/winuiopt.c: 3303
 Play Time
 플레이 시간
 
@@ -1666,39 +1666,39 @@ Play currently selected game
 Playback a recorded game
 입력을 저장한 리플레이 파일을 재생
 
-# osd/ui/win32ui.c: 872
+# osd/ui/win32ui.c: 864
 Played
 실행
 
-# osd/ui/treeview.c: 1401
+# osd/ui/treeview.c: 1391
 Player 1
 플레이어 1
 
-# osd/ui/treeview.c: 1402
+# osd/ui/treeview.c: 1392
 Players 2
 플레이어 2
 
-# osd/ui/treeview.c: 1403
+# osd/ui/treeview.c: 1393
 Players 3
 플레이어 3
 
-# osd/ui/treeview.c: 1404
+# osd/ui/treeview.c: 1394
 Players 4
 플레이어 4
 
-# osd/ui/treeview.c: 1405
+# osd/ui/treeview.c: 1395
 Players 5
 플레이어 5
 
-# osd/ui/treeview.c: 1406
+# osd/ui/treeview.c: 1396
 Players 6
 플레이어 6
 
-# osd/ui/treeview.c: 1407
+# osd/ui/treeview.c: 1397
 Players 7
 플레이어 7
 
-# osd/ui/treeview.c: 1408
+# osd/ui/treeview.c: 1398
 Players 8
 플레이어 8
 
@@ -1710,15 +1710,15 @@ Positional device
 Pr&operties
 등록정보(&O)
 
-# osd/ui/win32ui.c: 3970, 7176, 7200
+# osd/ui/win32ui.c: 3961, 7167, 7191
 Propert&ies for %s
 %s 등록정보(&I)
 
-# osd/ui/mame32.rc: 66, 201 osd/ui/win32ui.c: 3928
+# osd/ui/mame32.rc: 66, 201 osd/ui/win32ui.c: 3919
 Propert&ies for Driver
 드라이버 등록정보
 
-# osd/ui/properties.c: 651, 742
+# osd/ui/properties.c: 639, 730
 Propery Sheet Error %d %X
 등록정보 시트 오류 %d %X
 
@@ -1738,11 +1738,11 @@ RGB 설정:
 ROM check:
 롬 검사:
 
-# osd/ui/layout.c: 107 osd/ui/mame32.rc: 444 osd/ui/win32ui.c: 867
+# osd/ui/layout.c: 107 osd/ui/mame32.rc: 444 osd/ui/win32ui.c: 859
 ROMs
 롬
 
-# osd/ui/properties.c: 1192
+# osd/ui/properties.c: 1180
 ROMs missing
 롬파일 없음
 
@@ -1750,11 +1750,11 @@ ROMs missing
 Randomly select a game.
 무작위로 게임을 선택함.
 
-# osd/ui/layout.c: 70 osd/ui/win32ui.c: 5658
+# osd/ui/layout.c: 70 osd/ui/win32ui.c: 5649
 Raster
 래스터
 
-# osd/ui/win32ui.c: 3702
+# osd/ui/win32ui.c: 3693
 Ready
 준비됨
 
@@ -1766,7 +1766,7 @@ Record a game for later playback
 Refresh game list
 게임 목록을 갱신
 
-# osd/ui/winuiopt.c: 1602
+# osd/ui/winuiopt.c: 1600
 Reload configurations
 환경설정을 다시 불러옴
 
@@ -1822,7 +1822,7 @@ Resolution:
 Restore Default Settings
 기본 설정으로 복원
 
-# osd/ui/dialogs.c: 131
+# osd/ui/dialogs.c: 125
 Restore Settings
 설정 되돌림
 
@@ -1854,7 +1854,7 @@ Sample check:
 Sample rate
 샘플 레이트
 
-# osd/ui/layout.c: 83, 108 osd/ui/mame32.rc: 450 osd/ui/win32ui.c: 868
+# osd/ui/layout.c: 83, 108 osd/ui/mame32.rc: 450 osd/ui/win32ui.c: 860
 Samples
 샘플
 
@@ -1886,27 +1886,27 @@ Scale screen
 Screen
 화면
 
-# osd/ui/properties.c: 440
+# osd/ui/properties.c: 428
 Screen 0
 스크린 0
 
-# osd/ui/properties.c: 441
+# osd/ui/properties.c: 429
 Screen 1
 스크린 1
 
-# osd/ui/properties.c: 442
+# osd/ui/properties.c: 430
 Screen 2
 스크린 2
 
-# osd/ui/properties.c: 443
+# osd/ui/properties.c: 431
 Screen 3
 스크린 3
 
-# osd/ui/win32ui.c: 3480
+# osd/ui/win32ui.c: 3471
 Screen flip support is missing
 화면 뒤집기 지원기능이 없음
 
-# osd/ui/properties.c: 1183
+# osd/ui/properties.c: 1171
 Screen flipping is not supported
 화면 뒤집기가 지원되지 않음
 
@@ -1942,7 +1942,7 @@ Select &random background image on start
 Select Item
 항목 선택
 
-# osd/ui/win32ui.c: 833
+# osd/ui/win32ui.c: 825
 Select a Background Image
 배경 이미지 선택
 
@@ -1950,27 +1950,27 @@ Select a Background Image
 Select a background image file
 배경 이미지 파일을 선택
 
-# osd/ui/win32ui.c: 806
+# osd/ui/win32ui.c: 798
 Select a file to record
 기록할 파일 선택
 
-# osd/ui/win32ui.c: 840
+# osd/ui/win32ui.c: 832
 Select a folder to save game list
 게임 목록 저장 폴더 선택
 
-# osd/ui/win32ui.c: 827
+# osd/ui/win32ui.c: 819
 Select a mng file to record
 기록할 mng 파일 선택
 
-# osd/ui/win32ui.c: 805
+# osd/ui/win32ui.c: 797
 Select a recorded file
 기록된 파일 선택
 
-# osd/ui/win32ui.c: 812
+# osd/ui/win32ui.c: 804
 Select a savestate file
 상태저장 파일 선택
 
-# osd/ui/win32ui.c: 820
+# osd/ui/win32ui.c: 812
 Select a sound file to record
 기록할 사운드 파일 선택
 
@@ -2130,49 +2130,49 @@ Show palette for:
 Show these fields in this order:
 다음 순서로 필드표시:
 
-# osd/ui/properties.c: 4808
+# osd/ui/properties.c: 4796
 Skip 1 of 12 frames
-12 프레임중 1 프레임 생략
+12 프레임중 1 프레임 스킵
 
-# osd/ui/properties.c: 4817
+# osd/ui/properties.c: 4805
 Skip 10 of 12 frames
-12 프레임중 10 프레임 생략
+12 프레임중 10 프레임 스킵
 
-# osd/ui/properties.c: 4818
+# osd/ui/properties.c: 4806
 Skip 11 of 12 frames
-12 프레임중 11 프레임 생략
+12 프레임중 11 프레임 스킵
 
-# osd/ui/properties.c: 4809
+# osd/ui/properties.c: 4797
 Skip 2 of 12 frames
-12 프레임중 2 프레임 생략
+12 프레임중 2 프레임 스킵
 
-# osd/ui/properties.c: 4810
+# osd/ui/properties.c: 4798
 Skip 3 of 12 frames
-12 프레임중 3 프레임 생략
+12 프레임중 3 프레임 스킵
 
-# osd/ui/properties.c: 4811
+# osd/ui/properties.c: 4799
 Skip 4 of 12 frames
-12 프레임중 4 프레임 생략
+12 프레임중 4 프레임 스킵
 
-# osd/ui/properties.c: 4812
+# osd/ui/properties.c: 4800
 Skip 5 of 12 frames
-12 프레임중 5 프레임 생략
+12 프레임중 5 프레임 스킵
 
-# osd/ui/properties.c: 4813
+# osd/ui/properties.c: 4801
 Skip 6 of 12 frames
-12 프레임중 6 프레임 생략
+12 프레임중 6 프레임 스킵
 
-# osd/ui/properties.c: 4814
+# osd/ui/properties.c: 4802
 Skip 7 of 12 frames
-12 프레임중 7 프레임 생략
+12 프레임중 7 프레임 스킵
 
-# osd/ui/properties.c: 4815
+# osd/ui/properties.c: 4803
 Skip 8 of 12 frames
-12 프레임중 8 프레임 생략
+12 프레임중 8 프레임 스킵
 
-# osd/ui/properties.c: 4816
+# osd/ui/properties.c: 4804
 Skip 9 of 12 frames
-12 프레임중 9 프레임 생략
+12 프레임중 9 프레임 스킵
 
 # osd/ui/mame32.rc: 773
 Skip game info
@@ -2182,11 +2182,11 @@ Skip game info
 Sleep when possible
 가능할시 슬립모드 사용
 
-# osd/ui/win32ui.c: 712 osd/ui/winuiopt.c: 460
+# osd/ui/win32ui.c: 704 osd/ui/winuiopt.c: 457
 Small Icons
 작은 아이콘
 
-# osd/ui/dialogs.c: 208 osd/ui/winuiopt.c: 427
+# osd/ui/dialogs.c: 202 osd/ui/winuiopt.c: 424
 Snapshot
 스냅샷
 
@@ -2238,7 +2238,7 @@ Sort items by year
 Sound
 사운드
 
-# osd/ui/properties.c: 1178
+# osd/ui/properties.c: 1166
 Sound emulation isn't 100% accurate
 사운드 에뮬레이션이 100% 정확하지 않습니다
 
@@ -2246,7 +2246,7 @@ Sound emulation isn't 100% accurate
 Sound:
 사운드:
 
-# osd/ui/win32ui.c: 818
+# osd/ui/win32ui.c: 810
 Sounds (*.wav)
 사운드 (*.wav)
 
@@ -2254,7 +2254,7 @@ Sounds (*.wav)
 St&ory
 줄거리(&O)
 
-# osd/ui/properties.c: 454, 3504, 3509, 3512, 3763, 3766, 5068, 5090
+# osd/ui/properties.c: 442, 3492, 3497, 3500, 3751, 3754, 5056, 5078
 Standard
 표준
 
@@ -2274,7 +2274,7 @@ Status:
 Stereo
 스테레오
 
-# osd/ui/winuiopt.c: 435
+# osd/ui/winuiopt.c: 432
 Story
 줄거리
 
@@ -2282,7 +2282,7 @@ Story
 Stretch using hardware
 하드웨어 화면 늘리기
 
-# osd/ui/properties.c: 1265 osd/ui/treeview.c: 1364
+# osd/ui/properties.c: 1253 osd/ui/treeview.c: 1354
 Supported
 지원됨
 
@@ -2294,7 +2294,7 @@ Switch resolutions to fit
 Sync to monitor refresh
 모니터 주사율 동기화
 
-# osd/ui/dialogs.c: 127
+# osd/ui/dialogs.c: 121
 The new settings will take effect\nthe next time MAME32 is run.\n\n
 새로운 설정은\n 다음 MAME32 실행시 적용됩니다.\n\n
 
@@ -2326,7 +2326,7 @@ Thread priority
 Throttle
 감속기능
 
-# osd/ui/dialogs.c: 216 osd/ui/winuiopt.c: 431
+# osd/ui/dialogs.c: 210 osd/ui/winuiopt.c: 428
 Title
 타이틀
 
@@ -2334,11 +2334,11 @@ Title
 Titles
 타이틀
 
-# osd/ui/win32ui.c: 709
+# osd/ui/win32ui.c: 701
 Toggle Folder List
 탐색 창을 보이거나 숨깁니다
 
-# osd/ui/win32ui.c: 710
+# osd/ui/win32ui.c: 702
 Toggle Screen Shot
 스크린샷을 표시하거나 숨깁니다
 
@@ -2346,13 +2346,17 @@ Toggle Screen Shot
 Total:
 전체:
 
-# osd/ui/layout.c: 78 osd/ui/properties.c: 1039 osd/ui/treeview.c: 1432 osd/ui/win32ui.c: 871
+# osd/ui/layout.c: 78 osd/ui/properties.c: 1027 osd/ui/treeview.c: 1422 osd/ui/win32ui.c: 863
 Trackball
 트랙볼
 
 # osd/ui/mame32.rc: 1081
 Trackball device
 트랙볼 장치
+
+# osd/ui/mame32.rc: 1622
+Translate into Catalan
+카탈로니아어로 번역
 
 # osd/ui/mame32.rc: 1622
 Translate into English (US)
@@ -2391,6 +2395,10 @@ Translate into Portuguese (BRA)
 포르투칼어로 번역
 
 # osd/ui/mame32.rc: 1622
+Translate into Portuguese (PT)
+포르투칼어로 번역
+
+# osd/ui/mame32.rc: 1622
 Translate into Simplified Chinese
 중국어(간체)로 번역
 
@@ -2418,19 +2426,19 @@ Triple buffering
 Troubleshooting Documentation
 문제해결 문서
 
-# osd/ui/win32ui.c: 870
+# osd/ui/win32ui.c: 862
 Type
 유형
 
-# osd/ui/audit32.c: 113
+# osd/ui/audit32.c: 102
 Unable to Load Riched32.dll
 Riched32.dll 을 불러올 수 없습니다
 
-# osd/ui/treeview.c: 2683
+# osd/ui/treeview.c: 2673
 Unable to add game to non-custom folder
 사용자 지정이 아닌 폴더에는 게임을 추가하지 못합니다
 
-# osd/ui/treeview.c: 2700
+# osd/ui/treeview.c: 2690
 Unable to remove game from non-custom folder
 사용자 지정이 아닌 폴더에서는 게임을 제거하지 못합니다
 
@@ -2438,11 +2446,11 @@ Unable to remove game from non-custom folder
 Unavailable
 미보유 게임
 
-# osd/ui/treeview.c: 1066
+# osd/ui/treeview.c: 1053
 Unemulated Protection
 암호화 에뮬레이트 못함
 
-# osd/ui/audit32.c: 489 osd/ui/properties.c: 1090, 1136 
+# osd/ui/audit32.c: 478 osd/ui/properties.c: 1078, 1124 
 Unknown
 미확인
 
@@ -2450,11 +2458,11 @@ Unknown
 Unknown error.
 알려지지 않은 오류.
 
-# osd/ui/properties.c: 1267 osd/ui/treeview.c: 1366
+# osd/ui/properties.c: 1255 osd/ui/treeview.c: 1356
 Unsupported
 지원안됨
 
-# osd/ui/win32ui.c: 718
+# osd/ui/win32ui.c: 710
 Use Local Language Game List
 게임 목록에 지역 언어를 사용
 
@@ -2474,31 +2482,31 @@ Use various icon for Not Working game
 Use volume auto adjust
 자동 볼륨 조절 사용
 
-# osd/ui/layout.c: 71 osd/ui/mame32.rc: 821 osd/ui/properties.c: 696 osd/ui/treeview.c: 284 osd/ui/win32ui.c: 5656 osd/ui/winuiopt.c: 860, 2800
+# osd/ui/layout.c: 71 osd/ui/mame32.rc: 821 osd/ui/properties.c: 684 osd/ui/treeview.c: 271 osd/ui/win32ui.c: 5647 osd/ui/winuiopt.c: 858, 2798
 Vector
 벡터
 
-# osd/ui/treeview.c: 1261
+# osd/ui/treeview.c: 1248
 Vector (H)
 벡터 (H)
 
-# osd/ui/properties.c: 854
+# osd/ui/properties.c: 842
 Vector (H) %f Hz (%d colors)
 벡터 (H) %f Hz (%d 색상)
 
-# osd/ui/treeview.c: 1259
+# osd/ui/treeview.c: 1246
 Vector (V)
 벡터 (V)
 
-# osd/ui/properties.c: 849
+# osd/ui/properties.c: 837
 Vector (V) %f Hz (%d colors)
 벡터 (V) %f Hz (%d 색상)
 
-# osd/ui/treeview.c: 1027
+# osd/ui/treeview.c: 1014
 Vertical
 세로화면
 
-# osd/ui/properties.c: 1168
+# osd/ui/properties.c: 1156
 Video emulation isn't 100% accurate
 비디오 에뮬레이션이 100% 정확하지 않습니다
 
@@ -2506,7 +2514,7 @@ Video emulation isn't 100% accurate
 Video output method
 비디오 출력 방법
 
-# osd/ui/win32ui.c: 825
+# osd/ui/win32ui.c: 817
 Videos (*.mng)
 비디오 (*.mng)
 
@@ -2526,11 +2534,11 @@ Visual Effects
 Volume attenuation
 볼륨 감소
 
-# osd/ui/win32ui.c: 7640
+# osd/ui/win32ui.c: 7631
 WARNING: the game might not run correctly.
 주의: 이 게임은 올바르게 동작하지 않을수 있습니다.
 
-# osd/ui/winuiopt.c: 3165
+# osd/ui/winuiopt.c: 3199
 WINDOW POSITION OPTIONS
 윈도우 위치 옵션
 
@@ -2546,19 +2554,19 @@ MAME 새 소식
 Window background
 윈도우 배경화면
 
-# osd/ui/layout.c: 66 osd/ui/properties.c: 1144
+# osd/ui/layout.c: 66 osd/ui/properties.c: 1132
 Working
 실행 가능
 
-# osd/ui/treeview.c: 1067
+# osd/ui/treeview.c: 1054
 Wrong Colors
 잘못된 색상
 
-# osd/ui/layout.c: 56 osd/ui/win32ui.c: 874
+# osd/ui/layout.c: 56 osd/ui/win32ui.c: 866
 Year
 제작년도
 
-# osd/ui/audit32.c: 131 osd/ui/win32ui.c: 5664
+# osd/ui/audit32.c: 120 osd/ui/win32ui.c: 5655
 Yes
 예
 
@@ -2596,13 +2604,5 @@ type a keyword
 
 # osd/ui/mame32.rc: 408
 Copyright (C) 1997-2007 The MAME Team
-
-
-# osd/ui/mame32.rc: 1622
-Translate into Catalan
-
-
-# osd/ui/mame32.rc: 1622
-Translate into Portuguese (PT)
 
 

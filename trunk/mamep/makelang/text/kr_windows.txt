@@ -1,64 +1,44 @@
-# osd/windows/input.c: 1916
+# osd/windows/input.c: 1909
          all -- all axes on all joysticks are digital\n
          all -- 모든 조이스틱의 모든 축이 디지탈 입력\n
 
-# osd/windows/input.c: 1922
+# osd/windows/input.c: 1915
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
          j1,j2a2 -- 조이스틱1의 모든 축과 조이스틱2의 축2가 디지탈 입력\n
 
-# osd/windows/input.c: 1920
+# osd/windows/input.c: 1913
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
          j1a5a6 -- 조이스틱1의 축 5, 6이 디지탈 입력\n
 
-# osd/windows/input.c: 1917
+# osd/windows/input.c: 1910
          j<N> -- all axes on joystick <N> are digital\n
          j<N> -- 조이스틱<N>의 모든 축이 디지탈 입력\n
 
-# osd/windows/input.c: 1918
+# osd/windows/input.c: 1911
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
          j<N>a<M> -- 조이스틱<N>의 축 <M>이 디지탈 입력\n
 
-# osd/windows/input.c: 1915
+# osd/windows/input.c: 1908
          none -- no axes on any joysticks are digital\n
          none -- 조이스틱상의 어떤 축도 디지탈 입력이 아님\n
 
-# osd/windows/input.c: 1919
+# osd/windows/input.c: 1912
     Multiple axes can be specified for one joystick:\n
     하나의 조이스틱에 여러개의 축 지정이 가능:\n
 
-# osd/windows/input.c: 1921
+# osd/windows/input.c: 1914
     Multiple joysticks can be specified separated by commas:\n
     여러개의 조이스틱을 콤마로 구분해 지정 가능:\n
 
-# osd/windows/input.c: 2397
+# osd/windows/input.c: 2390
  - digital
  - 디지탈
 
-# osd/windows/fronthlp.c: 628
- BAD
- 잘못된 롬
-
-# osd/windows/fronthlp.c: 634
- NO GOOD DUMP KNOWN
- 정확하게 덤프된 롬 없음
-
-# osd/windows/fronthlp.c: 805
-%d romsets found, %d were OK.\n
-%d 롬세트 발견, %d 정상\n
-
-# osd/windows/fronthlp.c: 901
-%d samplesets found, %d were OK.\n
-%d 샘플세트 발견, %d 정상\n
-
-# osd/windows/input.c: 2322
+# osd/windows/input.c: 2315
 %s Button %d
 %s 버튼 %d
 
-# osd/windows/fronthlp.c: 112
-(BAD) 
-(불량)
-
-# osd/windows/config.c: 193, 213, 214, 215, 216, 217, 218, 219, 220
+# osd/windows/winmain.c: 206, 226, 227, 228, 229, 230, 231, 232, 233
 (disabled by compiling option)
 (컴파일 옵션에서 제외됨)
 
@@ -66,25 +46,9 @@
 (primary)
 (주요)
 
-# osd/windows/config.c: 223
+# osd/windows/winmain.c: 236
 AUTOMATIC DEVICE SELECTION OPTIONS
 장치 자동 선택 옵션
-
-# osd/windows/config.c: 89
-CONFIGURATION COMMANDS
-설정 명령
-
-# osd/windows/config.c: 113
-CONFIGURATION OPTIONS
-설정 옵션
-
-# osd/windows/config.c: 84
-CORE COMMANDS
-코어 명령
-
-# osd/windows/config.c: 101
-CRC-32s
-CRC-32s
 
 # osd/windows/input.c: 1341
 Can't set axis mode for Joystick %d - %s\n
@@ -102,15 +66,15 @@ Can't set range for Joystick %d - %s\n
 Can't set saturation for Joystick %d - %s\n
 조이스틱 %d 의 감도를 설정할 수 없음 - %s\n
 
-# osd/windows/config.c: 117
+# osd/windows/winmain.c: 130
 DEBUGGING OPTIONS
 디버그 옵션
 
-# osd/windows/config.c: 143
+# osd/windows/winmain.c: 156
 DIRECT3D-SPECIFIC OPTIONS
 DIRECT3D-전용 옵션
 
-# osd/windows/config.c: 139
+# osd/windows/winmain.c: 152
 DIRECTDRAW-SPECIFIC OPTIONS
 DIRECTDRAW-전용 옵션
 
@@ -454,55 +418,103 @@ DirectDraw: 알 수 없는 target mode: R=%08X G=%08X B=%08X\n
 DirectDraw: Using DirectDraw 7\n
 DirectDraw: DirectDraw 7 사용\n
 
+# osd/windows/drawdd.c: 725
+DirectDraw: Warning - Device does not support hardware stretching\n
+DirectDraw: 경고 - 장치가 하드웨어 늘리기를 지원하지 않습니다\n
+
+# osd/windows/drawdd.c: 474
+DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
+DirectDraw: 경고 - 장치가 DirectDraw 랜더링을 수행하지 못할 수 있습니다\n
+
+# osd/windows/drawdd.c: 601
+DirectDraw: Warning - device does not support full screen gamma correction.\n
+DirectDraw: 경고 - 장치가 전체화면 감마 수정을 지원하지 않습니다\n
+
 # osd/windows/input.c: 1457
 DirectInput: Using DirectInput %d\n
 DirectInput: %d DirectInput 사용 \n
 
-# osd/windows/sound.c: 372
+# osd/windows/sound.c: 373
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: 주 버퍼: %d Hz, %d 비트, %d 체널\n
 
-# osd/windows/fronthlp.c: 944
-ERROR     %s\n
-오류     %s\n
+# osd/windows/sound.c: 387
+Error creating DirectSound stream buffer: %08x\n
+DirectSound 스트림 버퍼 생성 오류: %08x\n
 
-# osd/windows/sound.c: 260
+# osd/windows/sound.c: 261
 Error creating DirectSound: %08x\n
 DirectSound 생성 오류: %08x\n
 
-# osd/windows/sound.c: 269
+# osd/windows/sound.c: 354
+Error creating primary DirectSound buffer: %08x\n
+주 DirectSound 버퍼 생성 오류: %08x\n
+
+# osd/windows/drawd3d.c: 768
+Error creating vertex buffer (%08X)
+vertex 버퍼 생성 중 오류 (%08X)
+
+# osd/windows/sound.c: 270
 Error getting DirectSound capabilities: %08x\n
 DirectSound 가능기능 가져오기 실패: %08x\n
 
-# osd/windows/sound.c: 307
+# osd/windows/drawd3d.c: 1090
+Error getting identifier for adapter #%d\n
+아답터 #%d identifier 획득 오류\n
+
+# osd/windows/drawdd.c: 1125
+Error getting identifier for device\n
+장치 identifier 획득 오류\n
+
+# osd/windows/drawd3d.c: 1099
+Error getting mode for adapter #%d\n
+아답터 #%d 모드 획득 오류\n
+
+# osd/windows/sound.c: 370
+Error getting primary DirectSound buffer format: %08x\n
+주 DirectSound 버퍼 포맷 획득 오류: %08x\n
+
+# osd/windows/sound.c: 395
+Error locking DirectSound stream buffer: %08x\n
+주 DirectSound 스트림 버퍼 잠금 오류: %08x\n
+
+# osd/windows/sound.c: 308
 Error playing: %08x\n
 실행 오류: %08x\n
 
-# osd/windows/sound.c: 277
+# osd/windows/sound.c: 278
 Error setting DirectSound cooperative level: %08x\n
 DirectSound 보조레벨 설정 실패: %08x\n
+
+# osd/windows/sound.c: 362
+Error setting primary DirectSound buffer format: %08x\n
+주 DirectSound 버퍼 포맷 설정 오류: %08x\n
+
+# osd/windows/drawd3d.c: 776
+Error setting vertex shader (%08X)
+vertex shader 설정 오류 (%08X)
+
+# osd/windows/drawd3d.c: 657
+Error: A8R8G8B8 format textures not supported\n
+오류: A8R8G8B8 포맷 텍스쳐가 지원되지 않습니다\n
+
+# osd/windows/drawd3d.c: 647
+Error: Device does not meet minimum requirements for Direct3D rendering\n
+오류: 장치가 Direct3D 렌더링을 위한 최소 요구사항을 만족하지 못합니다\n
 
 # osd/windows/drawd3d.c: 689
 Error: unable to configure a screen texture format\n
 오류: 화면 텍스터 포맷을 설정 할 수 없습니다\n
 
-# osd/windows/config.c: 95
-FRONTEND COMMANDS
-프론트엔드 명령
-
-# osd/windows/config.c: 175
+# osd/windows/winmain.c: 188
 FULL SCREEN OPTIONS
 전체 화면 옵션
 
-# osd/windows/input.c: 2981
+# osd/windows/input.c: 2974
 Fast Forward
 고속 모드
 
-# osd/windows/fronthlp.c: 590, 666
-Game \"%s\" not supported!\n
-게임 \"%s\" 는 지원되지 않습니다\n
-
-# osd/windows/config.c: 187
+# osd/windows/winmain.c: 200
 INPUT DEVICE OPTIONS
 입력 장치 옵션
 
@@ -514,15 +526,11 @@ Illegal aspect ratio value for %s = %s\n
 Illegal resolution value for %s = %s\n
 잘못된 해상도 값 %s = %s\n
 
-# osd/windows/config.c: 642
-Illegal value for %s = %s\n
-잘못된 값 %s = %s\n
-
-# osd/windows/input.c: 2397
+# osd/windows/input.c: 2390
 Input:  Axis %d (%s)%s\n
 입력: 축 %d (%s)%s\n
 
-# osd/windows/input.c: 2235
+# osd/windows/input.c: 2228
 Input: %s: %s\n
 입력: %s: %s\n
 
@@ -538,11 +546,11 @@ Input: Autoenabling lightguns due to presence of a %s\n
 Input: Autoenabling mice due to presence of a %s\n
 입력: %s 유무에 따라 마우스 자동 사용\n
 
-# osd/windows/input.c: 2180
+# osd/windows/input.c: 2173
 Input: Joystick %d axis %d is now %s\n
 입력: 조이스틱 %d 축 %d 이 %s 로 설정됨\n
 
-# osd/windows/input.c: 2378
+# osd/windows/input.c: 2371
 Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 입력: 조이스틱 %d: %s (%d 축, %d 버튼, %d POV)\n
 
@@ -550,7 +558,7 @@ Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 입력: 키보드=%d  마우스=%d  조이스틱=%d  라이트건=%d\n
 
-# osd/windows/input.c: 3317
+# osd/windows/input.c: 3310
 Input: Using RAWMOUSE for Mouse input\n
 입력: 마우스 입력에 RAWMOUSE 사용\n
 
@@ -558,11 +566,11 @@ Input: Using RAWMOUSE for Mouse input\n
 Input: \"%s\" controller support enabled\n
 입력: \"%s\" 콘트롤러 지원 사용\n
 
-# osd/windows/input.c: 1914
+# osd/windows/input.c: 1907
 Invalid %s value %s; reverting to all -- valid values are:\n
 잘못된 %s 값 %s;전체 복구 - 정상 값:\n
 
-# osd/windows/input.c: 1835
+# osd/windows/input.c: 1828
 Invalid %s value %s; reverting to keyboard\n
 잘못된 %s 값 %s;키보드로 복구\n
 
@@ -570,75 +578,47 @@ Invalid %s value %s; reverting to keyboard\n
 Invalid video value %s; reverting to gdi\n
 잘못된 비디오 값 %s;GDI로 복구\n
 
-# osd/windows/input.c: 2498
+# osd/windows/input.c: 2491
 J%d %s D
 J%d %s 하
 
-# osd/windows/input.c: 2502
+# osd/windows/input.c: 2495
 J%d %s L
 J%d %s 좌
 
-# osd/windows/input.c: 2506
+# osd/windows/input.c: 2499
 J%d %s R
 J%d %s 우
 
-# osd/windows/input.c: 2494
+# osd/windows/input.c: 2487
 J%d %s U
 J%d %s 상
 
-# osd/windows/fronthlp.c: 945
-KNOWN     %s\n
-알려짐     %s\n
-
-# osd/windows/input.c: 2366
+# osd/windows/input.c: 2359
 Lightgun %d 
 라이트건 %d
 
-# osd/windows/input.c: 2869
+# osd/windows/input.c: 2862
 Lightgun not supported in windowed mode
 라이트건은 창모드에서 지원되지 않습니다.
 
-# osd/windows/input.c: 2364
+# osd/windows/input.c: 2357
 Lightgun on Mouse %d 
 라이트건 모드 마우스 %d
 
-# osd/windows/config.c: 576
-M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
-M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
-
-# osd/windows/window.c: 617
+# osd/windows/window.c: 618
 MAME: %s [%s] - Screen %d
 MAME: %s [%s] - Screen %d
 
-# osd/windows/input.c: 2232
+# osd/windows/input.c: 2225
 Mouse 
 마우스
 
-# osd/windows/input.c: 2230
+# osd/windows/input.c: 2223
 Mouse %d 
 마우스 %d
 
-# osd/windows/fronthlp.c: 188 
-NO MATCH\n
-맞지 않음\n
-
-# osd/windows/fronthlp.c: 180
-NOT A ROM\n
-롬이 아님\n
-
-# osd/windows/fronthlp.c: 413
-Name:     Description:\n
-이름:     설명:\n
-
-# osd/windows/fronthlp.c: 526
-Name:    Clone of:\n
-이름:    부모롬 이름:\n
-
-# osd/windows/fronthlp.c: 947
-PARTKNOWN %s\n
-부분 알려짐 %s\n
-
-# osd/windows/config.c: 148
+# osd/windows/winmain.c: 161
 PER-WINDOW VIDEO OPTIONS
 윈도우별 비디오 옵션
 
@@ -646,51 +626,51 @@ PER-WINDOW VIDEO OPTIONS
 Proposed video mode not supported on device %s\n
 설정한 비디오 모드는 %s 장치에서 지원되지 않습니다\n
 
-# osd/windows/sound.c: 124
+# osd/windows/sound.c: 125
 Sound buffer: overflows=%d underflows=%d\n
 사운드 버퍼: 오버플로=%d 언더플로=%d\n
 
-# osd/windows/sound.c: 120
+# osd/windows/sound.c: 121
 Sound: buffer overflows=%d underflows=%d\n
 사운드: 버퍼 오버플로우=%d 언더플로우=%d\n
 
-# osd/windows/input.c: 2301
+# osd/windows/input.c: 2294
 Stick %d %s +
 스틱 %d %s +
 
-# osd/windows/input.c: 2294
+# osd/windows/input.c: 2287
 Stick %d %s -
 스틱 %d %s -
 
-# osd/windows/input.c: 2303
+# osd/windows/input.c: 2296
 Stick %s +
 스틱 %s +
 
-# osd/windows/input.c: 2296
+# osd/windows/input.c: 2289
 Stick %s -
 스틱 %s -
 
-# osd/windows/input.c: 2267
+# osd/windows/input.c: 2260
 Stick%sX+
 스틱%sX+
 
-# osd/windows/input.c: 2265
+# osd/windows/input.c: 2258
 Stick%sX-
 스틱%sX-
 
-# osd/windows/input.c: 2271
+# osd/windows/input.c: 2264
 Stick%sY+
 스틱%sY+
 
-# osd/windows/input.c: 2269
+# osd/windows/input.c: 2262
 Stick%sY-
 스틱%sY-
 
-# osd/windows/input.c: 2275
+# osd/windows/input.c: 2268
 Stick%sZ+
 스틱%sZ+
 
-# osd/windows/input.c: 2273
+# osd/windows/input.c: 2266
 Stick%sZ-
 스틱%sZ-
 
@@ -698,25 +678,13 @@ Stick%sZ-
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 덱스처가 너무 큽니다! (기대값: %dx%d, 최대는 %dx%d)\n
 
-# osd/windows/fronthlp.c: 595
-This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
-드라이버가 필요한 롬 목록입니다 \"%s\".\n이름            크기 체크섬\n
-
-# osd/windows/input.c: 2963
+# osd/windows/input.c: 2956
 Toggle Fullscreen
 전체화면 전환
-
-# osd/windows/fronthlp.c: 946
-UNKNOWN   %s\n
-미확인   %s\n
 
 # osd/windows/ledutil.c: 568, 574
 Unable to close the keyboard device. (error %d)\n
 키보드 장치 닫기 실패 (오류 %d)\n
-
-# osd/windows/config.c: 535
-Unable to create file %s\n
-%s 파일을 생성할 수 없습니다\n
 
 # osd/windows/drawd3d.c: 715
 Unable to create the Direct3D device (%08X)\n
@@ -742,10 +710,6 @@ Unable to open the keyboard device. (error %d)\n
 Unknown texture blendmode=%d format=%d\n
 알 수 없는 texture blendmode=%d format=%d\n
 
-# osd/windows/config.c: 579
-Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the file windows.txt\n
-사용법:  MAME 게임명 [옵션]\n\n        MAME -showusage    간단한 옵션 목록\n        MAME -showconfig   설정 옵션 목록\n        MAME -createconfig  mame.ini생성\n\n사용법 설명은, windows.txt 파일을 참고하십시오\n
-
 # osd/windows/video.c: 419
 Using %s scale effect\n
 %s 크기조절 효과 사용\n
@@ -754,31 +718,27 @@ Using %s scale effect\n
 Video: Monitor %p = \"%s\" %s\n
 비디오: 모니터 %p = \"%s\" %s\n
 
-# osd/windows/config.c: 122
+# osd/windows/winmain.c: 135
 WINDOWS PERFORMANCE OPTIONS
 윈도우 성능 옵션
 
-# osd/windows/config.c: 183
+# osd/windows/winmain.c: 196
 WINDOWS SOUND OPTIONS
 윈도우 사운드 옵션
 
-# osd/windows/config.c: 127
+# osd/windows/winmain.c: 140
 WINDOWS VIDEO OPTIONS
 윈도우 비디오 옵션
+
+# osd/windows/video.c: 455
+Warning: -video none doesn't make much sense without -seconds_to_run\n
+경고: -video none 는 -seconds_to_run 없이는 사용 불가\n
 
 # osd/windows/drawd3d.c: 651
 Warning: Device may not perform well for Direct3D rendering\n
 경고: 장치가 Direct3D 렌더링을 잘 지원하지 못합니다\n
 
-# osd/windows/config.c: 360
-\n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
-\n\"%s\" 는 대체로 다음과 같은 지원 게임과\n일치합니다. (최적맞춤 우선):\n\n
-
-# osd/windows/config.c: 96
-all available info on driver in XML format
-이용가능한 모든 드라이버 정보(XML)
-
-# osd/windows/input.c: 2178
+# osd/windows/input.c: 2171
 analog
 아날로그
 
@@ -786,211 +746,167 @@ analog
 analog joystick
 아날로그 조이스틱
 
-# osd/windows/config.c: 150
+# osd/windows/winmain.c: 163
 aspect ratio for all screens; 'auto' here will try to make a best guess
 전체 스크린 화면 비율; '자동'설정하면 최적값을 찾습니다
 
-# osd/windows/config.c: 155
+# osd/windows/winmain.c: 168
 aspect ratio of the first screen; 'auto' here will try to make a best guess
 첫 번째 스크린 화면 비율; '자동'설정하면 최적값을 찾습니다
 
-# osd/windows/config.c: 170
+# osd/windows/winmain.c: 183
 aspect ratio of the fourth screen; 'auto' here will try to make a best guess
 두 번째 스크린 화면 비율; '자동'설정하면 최적값을 찾습니다
 
-# osd/windows/config.c: 160
+# osd/windows/winmain.c: 173
 aspect ratio of the second screen; 'auto' here will try to make a best guess
 세 번째 스크린 화면 비율; '자동'설정하면 최적값을 찾습니다
 
-# osd/windows/config.c: 165
+# osd/windows/winmain.c: 178
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 네 번째 스크린 화면 비율; '자동'설정하면 최적값을 찾습니다
 
-# osd/windows/config.c: 178
+# osd/windows/winmain.c: 191
 brightness value in full screen mode
 전체화면 밝기
 
-# osd/windows/config.c: 106
-compare files with known MAME roms
-알려진 MAME 롬과 비교
+# osd/windows/winmain.c: 212
+center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
+조이스틱 데드존 (0.0 가운데, 1.0 끝)
 
-# osd/windows/config.c: 107
-compare files with known MAME roms (brief)
-알려진 MAME 롬과 비교 (간단하게)
-
-# osd/windows/config.c: 132
+# osd/windows/winmain.c: 145
 constrain to the proper aspect ratio
 화면 비 유지
 
-# osd/windows/config.c: 179
+# osd/windows/winmain.c: 192
 contrast value in full screen mode
 전체 화면 모드에서 대비값
 
-# osd/windows/config.c: 90
-create the default configuration file
-기본 설정 파일을 생성
+# osd/windows/winmain.c: 144
+default to maximized windows; otherwise, windows will be minimized
+창크기 최대화를 기본으로; 반대는 창크기 최소화
 
 # osd/windows/input.c: 1468
 dial
 다이얼
 
-# osd/windows/config.c: 201 osd/windows/config.h: 44 osd/windows/input.c: 1967, 2178
+# osd/windows/input.c: 1960, 2171 osd/windows/winmain.c: 214 osd/windows/winmain.h: 51
 digital
 디지탈
 
-# osd/windows/config.c: 119
+# osd/windows/winmain.c: 132
 display additional diagnostic information
 추가 진단 정보 표시
 
-# osd/windows/config.c: 91
-display running parameters
-실행중 파라메터 표시
-
-# osd/windows/config.c: 99
-driver sourcefile
-드라이버 소스파일
-
-# osd/windows/config.c: 227
+# osd/windows/winmain.c: 240
 enable (keyboard|mouse|joystick) if a dial control is present
 다이얼 조종장치가 설정되었을때 (키보드|마우스|조이스틱) 사용
 
-# osd/windows/config.c: 229
+# osd/windows/winmain.c: 242
 enable (keyboard|mouse|joystick) if a lightgun control is present
 라이트건 조종장치가 설정되었을때 (키보드|마우스|조이스틱) 사용
 
-# osd/windows/config.c: 232
+# osd/windows/winmain.c: 245
 enable (keyboard|mouse|joystick) if a mouse control is present
 마우스 조종장치가 설정되었을때 (키보드|마우스|조이스틱) 사용
 
-# osd/windows/config.c: 224
+# osd/windows/winmain.c: 237
 enable (keyboard|mouse|joystick) if a paddle control is present
 핸들 기능이 있을시 (키보드|마우스|조이스틱)활성화
 
-# osd/windows/config.c: 226
+# osd/windows/winmain.c: 239
 enable (keyboard|mouse|joystick) if a pedal control is present
 패달 조종장치가 설정되었을때 (키보드|마우스|조이스틱) 사용
 
-# osd/windows/config.c: 230
+# osd/windows/winmain.c: 243
 enable (keyboard|mouse|joystick) if a positional control is present
 포지셔널 조종장치가 설정되었을때 (키보드|마우스|조이스틱) 사용
 
-# osd/windows/config.c: 228
+# osd/windows/winmain.c: 241
 enable (keyboard|mouse|joystick) if a trackball control is present
 트랙볼 조종장치가 설정되었을때 (키보드|마우스|조이스틱) 사용
 
-# osd/windows/config.c: 225
+# osd/windows/winmain.c: 238
 enable (keyboard|mouse|joystick) if an analog joystick control is present
 아날로그 조종장치가 설정되었을때 (키보드|마우스|조이스틱) 사용
 
-# osd/windows/config.c: 145
+# osd/windows/winmain.c: 158
 enable bilinear filtering on screen output
 화면 출력에 바이라이너 필터링 사용
 
-# osd/windows/config.c: 196
+# osd/windows/winmain.c: 209
 enable dual lightgun input
 듀얼 라이트건 입력 활성화
 
-# osd/windows/config.c: 140
+# osd/windows/winmain.c: 153
 enable hardware stretching
 하드웨어 늘리기 사용
 
-# osd/windows/config.c: 189
+# osd/windows/winmain.c: 202
 enable joystick input
 조이스틱 입력 활성화
 
-# osd/windows/config.c: 195
+# osd/windows/winmain.c: 208
 enable lightgun input
 라이트건 입력 활성화
 
-# osd/windows/config.c: 114
-enable loading of configuration files
-설정 파일 불러오기 사용
-
-# osd/windows/config.c: 188
+# osd/windows/winmain.c: 201
 enable mouse input
 마우스 입력 활성화
 
-# osd/windows/config.c: 124
+# osd/windows/winmain.c: 137
 enable multithreading; this enables rendering and blitting on a separate thread
 렘더링과 블리팅을 분리된 스레드에서 실행하도록 멀티 스레딩 사용
 
-# osd/windows/config.c: 191
+# osd/windows/winmain.c: 204
 enable pointing stick input
 포인트 스틱 입력 활성화
 
-# osd/windows/config.c: 177
+# osd/windows/winmain.c: 190
 enable resolution switching
 해상도 변경 사용
 
-# osd/windows/config.c: 198
+# osd/windows/winmain.c: 211
 enable steadykey support
 스태디키 지원 활성화
 
-# osd/windows/config.c: 176
+# osd/windows/winmain.c: 189
 enable triple buffering
 트리플 버퍼링 사용
 
-# osd/windows/config.c: 130
+# osd/windows/winmain.c: 143
 enable window mode; otherwise, full screen mode is assumed
 윈도우 모드 사용; 설정하지 않으면 전체화면으로 설정됨
 
-# osd/windows/config.c: 707
-error: invalid value for language: %s\nUse %s\n
-오류: 잘못된 언어 값: %s\nUse %s\n
-
-# osd/windows/config.c: 180
+# osd/windows/winmain.c: 193
 gamma value in full screen mode
 전체 화면 감마 값
 
-# osd/windows/input.c: 2178
+# osd/windows/input.c: 2171
 invalid
 잘못됨
 
-# osd/windows/fronthlp.c: 771, 867
-is bad\n
-가 잘못됨\n
-
-# osd/windows/fronthlp.c: 781, 877
-is best available\n
-가 최적으로 사용가능\n
-
-# osd/windows/fronthlp.c: 776, 872
-is good\n
-가 좋음\n
-
-# osd/windows/config.h: 44 osd/windows/input.c: 1466, 1831
+# osd/windows/input.c: 1466, 1824 osd/windows/winmain.h: 51
 lightgun
 라이트건
 
-# osd/windows/config.c: 109
-list available devices
-이용 가능한 장치 목록
-
-# osd/windows/config.c: 103
-list optional samples for a driver
-부가 샘플 목록
-
-# osd/windows/config.c: 102
-list required roms for a driver
-드라이버의 필요 롬 목록
-
-# osd/windows/config.c: 201
+# osd/windows/winmain.c: 214
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 조이스틱 혹은 축을 디지탈로 표시 (없음|모두|j<N>*|j<N>a<M>[,...])
 
-# osd/windows/config.c: 134
+# osd/windows/winmain.c: 147
 name of a PNG file to use for visual effects, or 'none'
 화면 효과를 위한 PNG 파일 이름
 
-# osd/windows/config.c: 129
+# osd/windows/winmain.c: 142
 number of screens to create; usually, you want just one
 생성할 화면 수;보통 1로 설정
 
-# osd/windows/config.c: 197
+# osd/windows/winmain.c: 210
 offscreen shots reload
 화면 밖에서 재장전
 
-# osd/windows/config.c: 118
+# osd/windows/winmain.c: 131
 output error.log data to the system debugger
 error.log 데이터를 시스템 디버거에 출력
 
@@ -1002,151 +918,95 @@ paddle
 pedal
 페달
 
-# osd/windows/config.c: 86
-perform driver validation on all game drivers
-모든 게임 드라이버에 대해 확인작업 수행
-
 # osd/windows/input.c: 1470
 positional
 위치표시
 
-# osd/windows/config.c: 151
+# osd/windows/winmain.c: 164
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
 모든 화면에서 선호하는 해상도; 형식: <폭>x<높이>[@<리프레시 레이트>] 또는 'auto'
 
-# osd/windows/config.c: 156
+# osd/windows/winmain.c: 169
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 첫 번째 화면에서 선호하는 해상도; 형식: <폭>x<높이>[@<리프레시 레이트>] 또는 'auto'
 
-# osd/windows/config.c: 171
+# osd/windows/winmain.c: 184
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 네 번째 화면에서 선호하는 해상도; 형식: <폭>x<높이>[@<리프레시 레이트>] 또는 'auto'
 
-# osd/windows/config.c: 161
+# osd/windows/winmain.c: 174
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 두 번째 화면에서 선호하는 해상도; 형식: <폭>x<높이>[@<리프레시 레이트>] 또는 'auto'
 
-# osd/windows/config.c: 166
+# osd/windows/winmain.c: 179
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 세 번째 화면에서 선호하는 해상도; 형식: <폭>x<높이>[@<리프레시 레이트>] 또는 'auto'
 
-# osd/windows/config.c: 152
+# osd/windows/winmain.c: 165
 preferred view for all screens
 모든 화면에서 선호하는 보기
 
-# osd/windows/config.c: 157
+# osd/windows/winmain.c: 170
 preferred view for the first screen
 첫 번째 화면에서 선호하는 보기
 
-# osd/windows/config.c: 172
+# osd/windows/winmain.c: 185
 preferred view for the fourth screen
 네 번째 화면에서 선호하는 보기
 
-# osd/windows/config.c: 162
+# osd/windows/winmain.c: 175
 preferred view for the second screen
 두 번째 화면에서 선호하는 보기
 
-# osd/windows/config.c: 167
+# osd/windows/winmain.c: 180
 preferred view for the third screen
 세 번째 화면에서 선호하는 보기
 
-# osd/windows/config.c: 104
-report romsets that have problems
-문제가 있는 롬세트 보고
-
-# osd/windows/config.c: 105
-report samplesets that have problems
-문제가 있는 셈플세트 보고
-
-# osd/windows/fronthlp.c: 762
-romset %s 
-롬 세트 %s 
-
-# osd/windows/fronthlp.c: 796
-romset \"%8s\" not found!\n
-롬세트 \"%8s\" 찾지 못함!\n
-
-# osd/windows/fronthlp.c: 798
-romset \"%8s\" not supported!\n
-롬세트 \"%8s\" 지원 안됨!\n
-
-# osd/windows/fronthlp.c: 861
-sampleset %s 
-샘플세트 %s 
-
-# osd/windows/fronthlp.c: 892
-sampleset \"%8s\" not found!\n
-샘플세트 \"%8s\" 찾지 못함!\n
-
-# osd/windows/fronthlp.c: 894
-sampleset \"%8s\" not supported!\n
-샘플세트 \"%8s\\ 지원 안됨!\n
-
-# osd/windows/config.c: 133
+# osd/windows/winmain.c: 146
 scale screen rendering by this amount in software
 프로그램 상 화면 렌더링 크기
 
-# osd/windows/config.c: 184
+# osd/windows/winmain.c: 197
 set audio latency (increase to reduce glitches)
 오디오 레이턴시 설정 (증가시 잡음감소)
 
-# osd/windows/config.c: 204
+# osd/windows/winmain.c: 217
 set joystick ID (Player1)
 조이스틱 ID 설정 (플레이어1)
 
-# osd/windows/config.c: 205
+# osd/windows/winmain.c: 218
 set joystick ID (Player2)
 조이스틱 ID 설정 (플레이어2)
 
-# osd/windows/config.c: 206
+# osd/windows/winmain.c: 219
 set joystick ID (Player3)
 조이스틱 ID 설정 (플레이어3)
 
-# osd/windows/config.c: 207
+# osd/windows/winmain.c: 220
 set joystick ID (Player4)
 조이스틱 ID 설정 (플레이어4)
 
-# osd/windows/config.c: 208
+# osd/windows/winmain.c: 221
 set joystick ID (Player5)
 조이스틱 ID 설정 (플레이어5)
 
-# osd/windows/config.c: 209
+# osd/windows/winmain.c: 222
 set joystick ID (Player6)
 조이스틱 ID 설정 (플레이어6)
 
-# osd/windows/config.c: 210
+# osd/windows/winmain.c: 223
 set joystick ID (Player7)
 조이스틱 ID 설정 (플레이어7)
 
-# osd/windows/config.c: 211
+# osd/windows/winmain.c: 224
 set joystick ID (Player8)
 조이스틱 ID 설정 (플레이어8)
 
-# osd/windows/config.c: 98
-short name, full name
-짧은 이름, 전체 이름
-
-# osd/windows/config.c: 100
-show clones
-클론 표시
-
-# osd/windows/config.c: 85
-show help message
-도움말 표시
-
-# osd/windows/config.c: 92
-show this help
-이 도움말을 보임
-
-# osd/windows/sound.c: 93
-sound
-사운드
-
-# osd/windows/config.c: 144
+# osd/windows/winmain.c: 157
 specify the preferred Direct3D version (8 or 9)
 사용할 Direct3D 버전 지정 (8 또는 9)
 
-# osd/windows/config.c: 123
+# osd/windows/winmain.c: 136
 thread priority for the main game thread; range from -15 to 1
 기본 게임 스레드의 우선 순위; -15 에서 1 범위
 
@@ -1154,115 +1014,43 @@ thread priority for the main game thread; range from -15 to 1
 trackball
 트랙볼
 
-# osd/windows/config.c: 128
+# osd/windows/winmain.c: 141
 video output method: none, gdi, ddraw, or d3d
 비디오 출력 방법: none, gdi, ddraw, 또는 d3d
 
-# osd/windows/config.c: 97
-year, manufacturer and full name
-제작년도, 제작사와 전체 이름
-
-# osd/windows/drawdd.c: 725
-DirectDraw: Warning - Device does not support hardware stretching\n
+# osd/windows/winmain.c: 521
+M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\nM.A.M.E. is a console application, you should launch it from a command prompt.\n\nUsage:\tMAME gamename [options]\n\n\tMAME -showusage\t\tfor a brief list of options\n\tMAME -showconfig\t\tfor a list of configuration options\n\tMAME -createconfig\tto create a mame.ini\n\nPlease consult the documentation for more information.\n\nWould you like to open the documentation now?
 
 
-# osd/windows/drawdd.c: 474
-DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
-
-
-# osd/windows/drawdd.c: 601
-DirectDraw: Warning - device does not support full screen gamma correction.\n
-
-
-# osd/windows/sound.c: 386
-Error creating DirectSound stream buffer: %08x\n
-
-
-# osd/windows/sound.c: 353
-Error creating primary DirectSound buffer: %08x\n
-
-
-# osd/windows/drawd3d.c: 768
-Error creating vertex buffer (%08X)
-
-
-# osd/windows/drawd3d.c: 1090
-Error getting identifier for adapter #%d\n
-
-
-# osd/windows/drawdd.c: 1125
-Error getting identifier for device\n
-
-
-# osd/windows/drawd3d.c: 1099
-Error getting mode for adapter #%d\n
-
-
-# osd/windows/sound.c: 369
-Error getting primary DirectSound buffer format: %08x\n
-
-
-# osd/windows/sound.c: 394
-Error locking DirectSound stream buffer: %08x\n
-
-
-# osd/windows/sound.c: 361
-Error setting primary DirectSound buffer format: %08x\n
-
-
-# osd/windows/drawd3d.c: 776
-Error setting vertex shader (%08X)
-
-
-# osd/windows/drawd3d.c: 657
-Error: A8R8G8B8 format textures not supported\n
-
-
-# osd/windows/drawd3d.c: 647
-Error: Device does not meet minimum requirements for Direct3D rendering\n
-
-
-# osd/windows/video.c: 455
-Warning: -video none doesn't make much sense without -seconds_to_run\n
-
-
-# osd/windows/config.c: 199
-center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
-
-
-# osd/windows/config.c: 131
-default to maximized windows; otherwise, windows will be minimized
-
-
-# osd/windows/config.c: 136
+# osd/windows/winmain.c: 149
 enable using the start of VBLANK for throttling instead of the game time
 
 
-# osd/windows/config.c: 135
+# osd/windows/winmain.c: 148
 enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
 
 
-# osd/windows/config.c: 200
+# osd/windows/winmain.c: 213
 end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
 
 
-# osd/windows/config.c: 149
+# osd/windows/winmain.c: 162
 explicit name of all screen; 'auto' here will try to make a best guess
 
 
-# osd/windows/config.c: 154
+# osd/windows/winmain.c: 167
 explicit name of the first screen; 'auto' here will try to make a best guess
 
 
-# osd/windows/config.c: 169
+# osd/windows/winmain.c: 182
 explicit name of the fourth screen; 'auto' here will try to make a best guess
 
 
-# osd/windows/config.c: 159
+# osd/windows/winmain.c: 172
 explicit name of the second screen; 'auto' here will try to make a best guess
 
 
-# osd/windows/config.c: 164
+# osd/windows/winmain.c: 177
 explicit name of the third screen; 'auto' here will try to make a best guess
 
 
