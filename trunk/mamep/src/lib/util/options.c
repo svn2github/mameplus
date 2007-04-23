@@ -135,7 +135,7 @@ static void message(core_options *opts, options_message msgtype, const char *for
 	if (opts->output[msgtype])
 	{
 		va_start(argptr, format);
-		vsprintf(buf, format, argptr);
+		vsprintf(buf, _(format), argptr);
 		va_end(argptr);
 
 		opts->output[msgtype](buf);

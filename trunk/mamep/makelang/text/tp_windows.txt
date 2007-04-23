@@ -1,64 +1,44 @@
-# osd/windows/input.c: 1916
+# osd/windows/input.c: 1909
          all -- all axes on all joysticks are digital\n
 
 
-# osd/windows/input.c: 1922
+# osd/windows/input.c: 1915
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
 
 
-# osd/windows/input.c: 1920
+# osd/windows/input.c: 1913
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
 
 
-# osd/windows/input.c: 1917
+# osd/windows/input.c: 1910
          j<N> -- all axes on joystick <N> are digital\n
 
 
-# osd/windows/input.c: 1918
+# osd/windows/input.c: 1911
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
 
 
-# osd/windows/input.c: 1915
+# osd/windows/input.c: 1908
          none -- no axes on any joysticks are digital\n
 
 
-# osd/windows/input.c: 1919
+# osd/windows/input.c: 1912
     Multiple axes can be specified for one joystick:\n
 
 
-# osd/windows/input.c: 1921
+# osd/windows/input.c: 1914
     Multiple joysticks can be specified separated by commas:\n
 
 
-# osd/windows/input.c: 2397
+# osd/windows/input.c: 2390
  - digital
 
 
-# osd/windows/fronthlp.c: 628
- BAD
-
-
-# osd/windows/fronthlp.c: 634
- NO GOOD DUMP KNOWN
-
-
-# osd/windows/fronthlp.c: 805
-%d romsets found, %d were OK.\n
-
-
-# osd/windows/fronthlp.c: 901
-%d samplesets found, %d were OK.\n
-
-
-# osd/windows/input.c: 2322
+# osd/windows/input.c: 2315
 %s Button %d
 
 
-# osd/windows/fronthlp.c: 112
-(BAD) 
-
-
-# osd/windows/config.c: 193, 213, 214, 215, 216, 217, 218, 219, 220
+# osd/windows/winmain.c: 206, 226, 227, 228, 229, 230, 231, 232, 233
 (disabled by compiling option)
 
 
@@ -66,24 +46,8 @@
 (primary)
 
 
-# osd/windows/config.c: 223
+# osd/windows/winmain.c: 236
 AUTOMATIC DEVICE SELECTION OPTIONS
-
-
-# osd/windows/config.c: 89
-CONFIGURATION COMMANDS
-
-
-# osd/windows/config.c: 113
-CONFIGURATION OPTIONS
-
-
-# osd/windows/config.c: 84
-CORE COMMANDS
-
-
-# osd/windows/config.c: 101
-CRC-32s
 
 
 # osd/windows/input.c: 1341
@@ -102,15 +66,15 @@ Can't set range for Joystick %d - %s\n
 Can't set saturation for Joystick %d - %s\n
 
 
-# osd/windows/config.c: 117
+# osd/windows/winmain.c: 130
 DEBUGGING OPTIONS
 
 
-# osd/windows/config.c: 143
+# osd/windows/winmain.c: 156
 DIRECT3D-SPECIFIC OPTIONS
 
 
-# osd/windows/config.c: 139
+# osd/windows/winmain.c: 152
 DIRECTDRAW-SPECIFIC OPTIONS
 
 
@@ -470,23 +434,19 @@ DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectInput: Using DirectInput %d\n
 
 
-# osd/windows/sound.c: 372
+# osd/windows/sound.c: 373
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 
 
-# osd/windows/fronthlp.c: 944
-ERROR     %s\n
-
-
-# osd/windows/sound.c: 386
+# osd/windows/sound.c: 387
 Error creating DirectSound stream buffer: %08x\n
 
 
-# osd/windows/sound.c: 260
+# osd/windows/sound.c: 261
 Error creating DirectSound: %08x\n
 
 
-# osd/windows/sound.c: 353
+# osd/windows/sound.c: 354
 Error creating primary DirectSound buffer: %08x\n
 
 
@@ -494,7 +454,7 @@ Error creating primary DirectSound buffer: %08x\n
 Error creating vertex buffer (%08X)
 
 
-# osd/windows/sound.c: 269
+# osd/windows/sound.c: 270
 Error getting DirectSound capabilities: %08x\n
 
 
@@ -510,23 +470,23 @@ Error getting identifier for device\n
 Error getting mode for adapter #%d\n
 
 
-# osd/windows/sound.c: 369
+# osd/windows/sound.c: 370
 Error getting primary DirectSound buffer format: %08x\n
 
 
-# osd/windows/sound.c: 394
+# osd/windows/sound.c: 395
 Error locking DirectSound stream buffer: %08x\n
 
 
-# osd/windows/sound.c: 307
+# osd/windows/sound.c: 308
 Error playing: %08x\n
 
 
-# osd/windows/sound.c: 277
+# osd/windows/sound.c: 278
 Error setting DirectSound cooperative level: %08x\n
 
 
-# osd/windows/sound.c: 361
+# osd/windows/sound.c: 362
 Error setting primary DirectSound buffer format: %08x\n
 
 
@@ -546,23 +506,15 @@ Error: Device does not meet minimum requirements for Direct3D rendering\n
 Error: unable to configure a screen texture format\n
 
 
-# osd/windows/config.c: 95
-FRONTEND COMMANDS
-
-
-# osd/windows/config.c: 175
+# osd/windows/winmain.c: 188
 FULL SCREEN OPTIONS
 
 
-# osd/windows/input.c: 2981
+# osd/windows/input.c: 2974
 Fast Forward
 
 
-# osd/windows/fronthlp.c: 590, 666
-Game \"%s\" not supported!\n
-
-
-# osd/windows/config.c: 187
+# osd/windows/winmain.c: 200
 INPUT DEVICE OPTIONS
 
 
@@ -574,15 +526,11 @@ Illegal aspect ratio value for %s = %s\n
 Illegal resolution value for %s = %s\n
 
 
-# osd/windows/config.c: 642
-Illegal value for %s = %s\n
-
-
-# osd/windows/input.c: 2397
+# osd/windows/input.c: 2390
 Input:  Axis %d (%s)%s\n
 
 
-# osd/windows/input.c: 2235
+# osd/windows/input.c: 2228
 Input: %s: %s\n
 
 
@@ -598,11 +546,11 @@ Input: Autoenabling lightguns due to presence of a %s\n
 Input: Autoenabling mice due to presence of a %s\n
 
 
-# osd/windows/input.c: 2180
+# osd/windows/input.c: 2173
 Input: Joystick %d axis %d is now %s\n
 
 
-# osd/windows/input.c: 2378
+# osd/windows/input.c: 2371
 Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 
 
@@ -610,7 +558,7 @@ Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 
 
-# osd/windows/input.c: 3317
+# osd/windows/input.c: 3310
 Input: Using RAWMOUSE for Mouse input\n
 
 
@@ -618,11 +566,11 @@ Input: Using RAWMOUSE for Mouse input\n
 Input: \"%s\" controller support enabled\n
 
 
-# osd/windows/input.c: 1914
+# osd/windows/input.c: 1907
 Invalid %s value %s; reverting to all -- valid values are:\n
 
 
-# osd/windows/input.c: 1835
+# osd/windows/input.c: 1828
 Invalid %s value %s; reverting to keyboard\n
 
 
@@ -630,75 +578,51 @@ Invalid %s value %s; reverting to keyboard\n
 Invalid video value %s; reverting to gdi\n
 
 
-# osd/windows/input.c: 2498
+# osd/windows/input.c: 2491
 J%d %s D
 
 
-# osd/windows/input.c: 2502
+# osd/windows/input.c: 2495
 J%d %s L
 
 
-# osd/windows/input.c: 2506
+# osd/windows/input.c: 2499
 J%d %s R
 
 
-# osd/windows/input.c: 2494
+# osd/windows/input.c: 2487
 J%d %s U
 
 
-# osd/windows/fronthlp.c: 945
-KNOWN     %s\n
-
-
-# osd/windows/input.c: 2366
+# osd/windows/input.c: 2359
 Lightgun %d 
 
 
-# osd/windows/input.c: 2869
+# osd/windows/input.c: 2862
 Lightgun not supported in windowed mode
 
 
-# osd/windows/input.c: 2364
+# osd/windows/input.c: 2357
 Lightgun on Mouse %d 
 
 
-# osd/windows/config.c: 576
-M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
+# osd/windows/winmain.c: 521
+M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\nM.A.M.E. is a console application, you should launch it from a command prompt.\n\nUsage:\tMAME gamename [options]\n\n\tMAME -showusage\t\tfor a brief list of options\n\tMAME -showconfig\t\tfor a list of configuration options\n\tMAME -createconfig\tto create a mame.ini\n\nPlease consult the documentation for more information.\n\nWould you like to open the documentation now?
 
 
-# osd/windows/window.c: 617
+# osd/windows/window.c: 618
 MAME: %s [%s] - Screen %d
 
 
-# osd/windows/input.c: 2232
+# osd/windows/input.c: 2225
 Mouse 
 
 
-# osd/windows/input.c: 2230
+# osd/windows/input.c: 2223
 Mouse %d 
 
 
-# osd/windows/fronthlp.c: 188 
-NO MATCH\n
-
-
-# osd/windows/fronthlp.c: 180
-NOT A ROM\n
-
-
-# osd/windows/fronthlp.c: 413
-Name:     Description:\n
-
-
-# osd/windows/fronthlp.c: 526
-Name:    Clone of:\n
-
-
-# osd/windows/fronthlp.c: 947
-PARTKNOWN %s\n
-
-
-# osd/windows/config.c: 148
+# osd/windows/winmain.c: 161
 PER-WINDOW VIDEO OPTIONS
 
 
@@ -706,51 +630,51 @@ PER-WINDOW VIDEO OPTIONS
 Proposed video mode not supported on device %s\n
 
 
-# osd/windows/sound.c: 124
+# osd/windows/sound.c: 125
 Sound buffer: overflows=%d underflows=%d\n
 
 
-# osd/windows/sound.c: 120
+# osd/windows/sound.c: 121
 Sound: buffer overflows=%d underflows=%d\n
 
 
-# osd/windows/input.c: 2301
+# osd/windows/input.c: 2294
 Stick %d %s +
 
 
-# osd/windows/input.c: 2294
+# osd/windows/input.c: 2287
 Stick %d %s -
 
 
-# osd/windows/input.c: 2303
+# osd/windows/input.c: 2296
 Stick %s +
 
 
-# osd/windows/input.c: 2296
+# osd/windows/input.c: 2289
 Stick %s -
 
 
-# osd/windows/input.c: 2267
+# osd/windows/input.c: 2260
 Stick%sX+
 
 
-# osd/windows/input.c: 2265
+# osd/windows/input.c: 2258
 Stick%sX-
 
 
-# osd/windows/input.c: 2271
+# osd/windows/input.c: 2264
 Stick%sY+
 
 
-# osd/windows/input.c: 2269
+# osd/windows/input.c: 2262
 Stick%sY-
 
 
-# osd/windows/input.c: 2275
+# osd/windows/input.c: 2268
 Stick%sZ+
 
 
-# osd/windows/input.c: 2273
+# osd/windows/input.c: 2266
 Stick%sZ-
 
 
@@ -758,24 +682,12 @@ Stick%sZ-
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 
 
-# osd/windows/fronthlp.c: 595
-This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
-
-
-# osd/windows/input.c: 2963
+# osd/windows/input.c: 2956
 Toggle Fullscreen
-
-
-# osd/windows/fronthlp.c: 946
-UNKNOWN   %s\n
 
 
 # osd/windows/ledutil.c: 568, 574
 Unable to close the keyboard device. (error %d)\n
-
-
-# osd/windows/config.c: 535
-Unable to create file %s\n
 
 
 # osd/windows/drawd3d.c: 715
@@ -802,10 +714,6 @@ Unable to open the keyboard device. (error %d)\n
 Unknown texture blendmode=%d format=%d\n
 
 
-# osd/windows/config.c: 579
-Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the file windows.txt\n
-
-
 # osd/windows/video.c: 419
 Using %s scale effect\n
 
@@ -814,15 +722,15 @@ Using %s scale effect\n
 Video: Monitor %p = \"%s\" %s\n
 
 
-# osd/windows/config.c: 122
+# osd/windows/winmain.c: 135
 WINDOWS PERFORMANCE OPTIONS
 
 
-# osd/windows/config.c: 183
+# osd/windows/winmain.c: 196
 WINDOWS SOUND OPTIONS
 
 
-# osd/windows/config.c: 127
+# osd/windows/winmain.c: 140
 WINDOWS VIDEO OPTIONS
 
 
@@ -834,15 +742,7 @@ Warning: -video none doesn't make much sense without -seconds_to_run\n
 Warning: Device may not perform well for Direct3D rendering\n
 
 
-# osd/windows/config.c: 360
-\n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
-
-
-# osd/windows/config.c: 96
-all available info on driver in XML format
-
-
-# osd/windows/input.c: 2178
+# osd/windows/input.c: 2171
 analog
 
 
@@ -850,55 +750,43 @@ analog
 analog joystick
 
 
-# osd/windows/config.c: 150
+# osd/windows/winmain.c: 163
 aspect ratio for all screens; 'auto' here will try to make a best guess
 
 
-# osd/windows/config.c: 155
+# osd/windows/winmain.c: 168
 aspect ratio of the first screen; 'auto' here will try to make a best guess
 
 
-# osd/windows/config.c: 170
+# osd/windows/winmain.c: 183
 aspect ratio of the fourth screen; 'auto' here will try to make a best guess
 
 
-# osd/windows/config.c: 160
+# osd/windows/winmain.c: 173
 aspect ratio of the second screen; 'auto' here will try to make a best guess
 
 
-# osd/windows/config.c: 165
+# osd/windows/winmain.c: 178
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 
 
-# osd/windows/config.c: 178
+# osd/windows/winmain.c: 191
 brightness value in full screen mode
 
 
-# osd/windows/config.c: 199
+# osd/windows/winmain.c: 212
 center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
 
 
-# osd/windows/config.c: 106
-compare files with known MAME roms
-
-
-# osd/windows/config.c: 107
-compare files with known MAME roms (brief)
-
-
-# osd/windows/config.c: 132
+# osd/windows/winmain.c: 145
 constrain to the proper aspect ratio
 
 
-# osd/windows/config.c: 179
+# osd/windows/winmain.c: 192
 contrast value in full screen mode
 
 
-# osd/windows/config.c: 90
-create the default configuration file
-
-
-# osd/windows/config.c: 131
+# osd/windows/winmain.c: 144
 default to maximized windows; otherwise, windows will be minimized
 
 
@@ -906,195 +794,155 @@ default to maximized windows; otherwise, windows will be minimized
 dial
 
 
-# osd/windows/config.c: 201 osd/windows/config.h: 44 osd/windows/input.c: 1967, 2178
+# osd/windows/input.c: 1960, 2171 osd/windows/winmain.c: 214 osd/windows/winmain.h: 51
 digital
 
 
-# osd/windows/config.c: 119
+# osd/windows/winmain.c: 132
 display additional diagnostic information
 
 
-# osd/windows/config.c: 91
-display running parameters
-
-
-# osd/windows/config.c: 99
-driver sourcefile
-
-
-# osd/windows/config.c: 227
+# osd/windows/winmain.c: 240
 enable (keyboard|mouse|joystick) if a dial control is present
 
 
-# osd/windows/config.c: 229
+# osd/windows/winmain.c: 242
 enable (keyboard|mouse|joystick) if a lightgun control is present
 
 
-# osd/windows/config.c: 232
+# osd/windows/winmain.c: 245
 enable (keyboard|mouse|joystick) if a mouse control is present
 
 
-# osd/windows/config.c: 224
+# osd/windows/winmain.c: 237
 enable (keyboard|mouse|joystick) if a paddle control is present
 
 
-# osd/windows/config.c: 226
+# osd/windows/winmain.c: 239
 enable (keyboard|mouse|joystick) if a pedal control is present
 
 
-# osd/windows/config.c: 230
+# osd/windows/winmain.c: 243
 enable (keyboard|mouse|joystick) if a positional control is present
 
 
-# osd/windows/config.c: 228
+# osd/windows/winmain.c: 241
 enable (keyboard|mouse|joystick) if a trackball control is present
 
 
-# osd/windows/config.c: 225
+# osd/windows/winmain.c: 238
 enable (keyboard|mouse|joystick) if an analog joystick control is present
 
 
-# osd/windows/config.c: 145
+# osd/windows/winmain.c: 158
 enable bilinear filtering on screen output
 
 
-# osd/windows/config.c: 196
+# osd/windows/winmain.c: 209
 enable dual lightgun input
 
 
-# osd/windows/config.c: 140
+# osd/windows/winmain.c: 153
 enable hardware stretching
 
 
-# osd/windows/config.c: 189
+# osd/windows/winmain.c: 202
 enable joystick input
 
 
-# osd/windows/config.c: 195
+# osd/windows/winmain.c: 208
 enable lightgun input
 
 
-# osd/windows/config.c: 114
-enable loading of configuration files
-
-
-# osd/windows/config.c: 188
+# osd/windows/winmain.c: 201
 enable mouse input
 
 
-# osd/windows/config.c: 124
+# osd/windows/winmain.c: 137
 enable multithreading; this enables rendering and blitting on a separate thread
 
 
-# osd/windows/config.c: 191
+# osd/windows/winmain.c: 204
 enable pointing stick input
 
 
-# osd/windows/config.c: 177
+# osd/windows/winmain.c: 190
 enable resolution switching
 
 
-# osd/windows/config.c: 198
+# osd/windows/winmain.c: 211
 enable steadykey support
 
 
-# osd/windows/config.c: 176
+# osd/windows/winmain.c: 189
 enable triple buffering
 
 
-# osd/windows/config.c: 136
+# osd/windows/winmain.c: 149
 enable using the start of VBLANK for throttling instead of the game time
 
 
-# osd/windows/config.c: 135
+# osd/windows/winmain.c: 148
 enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
 
 
-# osd/windows/config.c: 130
+# osd/windows/winmain.c: 143
 enable window mode; otherwise, full screen mode is assumed
 
 
-# osd/windows/config.c: 200
+# osd/windows/winmain.c: 213
 end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
 
 
-# osd/windows/config.c: 707
-error: invalid value for language: %s\nUse %s\n
-
-
-# osd/windows/config.c: 149
+# osd/windows/winmain.c: 162
 explicit name of all screen; 'auto' here will try to make a best guess
 
 
-# osd/windows/config.c: 154
+# osd/windows/winmain.c: 167
 explicit name of the first screen; 'auto' here will try to make a best guess
 
 
-# osd/windows/config.c: 169
+# osd/windows/winmain.c: 182
 explicit name of the fourth screen; 'auto' here will try to make a best guess
 
 
-# osd/windows/config.c: 159
+# osd/windows/winmain.c: 172
 explicit name of the second screen; 'auto' here will try to make a best guess
 
 
-# osd/windows/config.c: 164
+# osd/windows/winmain.c: 177
 explicit name of the third screen; 'auto' here will try to make a best guess
 
 
-# osd/windows/config.c: 180
+# osd/windows/winmain.c: 193
 gamma value in full screen mode
 
 
-# osd/windows/input.c: 2178
+# osd/windows/input.c: 2171
 invalid
 
 
-# osd/windows/fronthlp.c: 771, 867
-is bad\n
-
-
-# osd/windows/fronthlp.c: 781, 877
-is best available\n
-
-
-# osd/windows/fronthlp.c: 776, 872
-is good\n
-
-
-# osd/windows/config.h: 44 osd/windows/input.c: 1466, 1831
+# osd/windows/input.c: 1466, 1824 osd/windows/winmain.h: 51
 lightgun
 
 
-# osd/windows/config.c: 109
-list available devices
-
-
-# osd/windows/config.c: 103
-list optional samples for a driver
-
-
-# osd/windows/config.c: 102
-list required roms for a driver
-
-
-# osd/windows/config.c: 201
+# osd/windows/winmain.c: 214
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 
 
-# osd/windows/config.c: 134
+# osd/windows/winmain.c: 147
 name of a PNG file to use for visual effects, or 'none'
 
 
-# osd/windows/config.c: 129
+# osd/windows/winmain.c: 142
 number of screens to create; usually, you want just one
 
 
-# osd/windows/config.c: 197
+# osd/windows/winmain.c: 210
 offscreen shots reload
 
 
-# osd/windows/config.c: 118
+# osd/windows/winmain.c: 131
 output error.log data to the system debugger
 
 
@@ -1106,151 +954,95 @@ paddle
 pedal
 
 
-# osd/windows/config.c: 86
-perform driver validation on all game drivers
-
-
 # osd/windows/input.c: 1470
 positional
 
 
-# osd/windows/config.c: 151
+# osd/windows/winmain.c: 164
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
 
 
-# osd/windows/config.c: 156
+# osd/windows/winmain.c: 169
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 
 
-# osd/windows/config.c: 171
+# osd/windows/winmain.c: 184
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 
 
-# osd/windows/config.c: 161
+# osd/windows/winmain.c: 174
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 
 
-# osd/windows/config.c: 166
+# osd/windows/winmain.c: 179
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 
 
-# osd/windows/config.c: 152
+# osd/windows/winmain.c: 165
 preferred view for all screens
 
 
-# osd/windows/config.c: 157
+# osd/windows/winmain.c: 170
 preferred view for the first screen
 
 
-# osd/windows/config.c: 172
+# osd/windows/winmain.c: 185
 preferred view for the fourth screen
 
 
-# osd/windows/config.c: 162
+# osd/windows/winmain.c: 175
 preferred view for the second screen
 
 
-# osd/windows/config.c: 167
+# osd/windows/winmain.c: 180
 preferred view for the third screen
 
 
-# osd/windows/config.c: 104
-report romsets that have problems
-
-
-# osd/windows/config.c: 105
-report samplesets that have problems
-
-
-# osd/windows/fronthlp.c: 762
-romset %s 
-
-
-# osd/windows/fronthlp.c: 796
-romset \"%8s\" not found!\n
-
-
-# osd/windows/fronthlp.c: 798
-romset \"%8s\" not supported!\n
-
-
-# osd/windows/fronthlp.c: 861
-sampleset %s 
-
-
-# osd/windows/fronthlp.c: 892
-sampleset \"%8s\" not found!\n
-
-
-# osd/windows/fronthlp.c: 894
-sampleset \"%8s\" not supported!\n
-
-
-# osd/windows/config.c: 133
+# osd/windows/winmain.c: 146
 scale screen rendering by this amount in software
 
 
-# osd/windows/config.c: 184
+# osd/windows/winmain.c: 197
 set audio latency (increase to reduce glitches)
 
 
-# osd/windows/config.c: 204
+# osd/windows/winmain.c: 217
 set joystick ID (Player1)
 
 
-# osd/windows/config.c: 205
+# osd/windows/winmain.c: 218
 set joystick ID (Player2)
 
 
-# osd/windows/config.c: 206
+# osd/windows/winmain.c: 219
 set joystick ID (Player3)
 
 
-# osd/windows/config.c: 207
+# osd/windows/winmain.c: 220
 set joystick ID (Player4)
 
 
-# osd/windows/config.c: 208
+# osd/windows/winmain.c: 221
 set joystick ID (Player5)
 
 
-# osd/windows/config.c: 209
+# osd/windows/winmain.c: 222
 set joystick ID (Player6)
 
 
-# osd/windows/config.c: 210
+# osd/windows/winmain.c: 223
 set joystick ID (Player7)
 
 
-# osd/windows/config.c: 211
+# osd/windows/winmain.c: 224
 set joystick ID (Player8)
 
 
-# osd/windows/config.c: 98
-short name, full name
-
-
-# osd/windows/config.c: 100
-show clones
-
-
-# osd/windows/config.c: 85
-show help message
-
-
-# osd/windows/config.c: 92
-show this help
-
-
-# osd/windows/sound.c: 93
-sound
-
-
-# osd/windows/config.c: 144
+# osd/windows/winmain.c: 157
 specify the preferred Direct3D version (8 or 9)
 
 
-# osd/windows/config.c: 123
+# osd/windows/winmain.c: 136
 thread priority for the main game thread; range from -15 to 1
 
 
@@ -1258,11 +1050,7 @@ thread priority for the main game thread; range from -15 to 1
 trackball
 
 
-# osd/windows/config.c: 128
+# osd/windows/winmain.c: 141
 video output method: none, gdi, ddraw, or d3d
-
-
-# osd/windows/config.c: 97
-year, manufacturer and full name
 
 

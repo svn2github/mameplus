@@ -170,7 +170,7 @@ Apple
 Arcadia Systems
 
 
-# Street Fighter EX (USA 961219)
+# Street Fighter EX (EURO 961219)
 Arika
 
 
@@ -1262,7 +1262,7 @@ Midway
 Midway Games
 
 
-# Wonder League Star (Korea)
+# Wonder League Star - Sok-Magicball Fighting (Korea)
 Mijin
 
 
@@ -1412,6 +1412,10 @@ Nova?
 
 # Rallys (bootleg?)
 Novar
+
+
+# Filetto (v1.05 901009)
+Novarmatic
 
 
 # American Poker II (set 1)
@@ -1750,6 +1754,10 @@ Sensible Software
 Sente
 
 
+# Quiz Olympic
+Seoul Coin Corp.
+
+
 # Vastar (set 1)
 Sesame Japan
 
@@ -1828,6 +1836,10 @@ Space
 
 # Evil Stone
 Spacy Industrial, Ltd.
+
+
+# Mahjong Dunhuang
+Spirit
 
 
 # Pele's World Tournament Soccer (UE) [!]
@@ -2158,7 +2170,7 @@ Universal Video Spiel
 Uniwang
 
 
-# Mahjong Dunhuang
+# Intersecti
 Unknown
 
 

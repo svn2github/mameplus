@@ -178,6 +178,8 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 	mame_options_init(osd_options);
 	options_add_entries(mame_options(), cli_options);
 
+	setup_language(); 
+
 	/* parse the command line first; if we fail here, we're screwed */
 	if (options_parse_command_line(mame_options(), argc, argv))
 	{
@@ -186,6 +188,7 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 	}
 
 	/* now parse the core set of INI files */
+	setup_language(); 
 	parse_ini_file(CONFIGNAME);
 	parse_ini_file(exename);
 #ifdef MAME_DEBUG
@@ -194,8 +197,10 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 
 	// reparse the command line to ensure its options override all
 	// note that we re-fetch the gamename here as it will get overridden
+	setup_language(); 
 	options_parse_command_line(mame_options(), argc, argv);
 	setup_language(); 
+
 #ifdef DRIVER_SWITCH
 	assign_drivers();
 #endif /* DRIVER_SWITCH */ 
@@ -349,7 +354,6 @@ static int execute_simple_commands(const char *exename)
 	/* help? */
 	if (options_get_bool(mame_options(), CLIOPTION_HELP))
 	{
-		setup_language();
 		display_help();
 		return MAMERR_NONE;
 	}
@@ -358,7 +362,7 @@ static int execute_simple_commands(const char *exename)
 	if (options_get_bool(mame_options(), CLIOPTION_SHOWUSAGE))
 	{
 		setup_language();
-		mame_printf_info(_("Usage: %s [%s] [options]\n\nOptions:\n"), exename, GAMENOUN);
+		mame_printf_info(_("Usage: %s [%s] [options]\n\nOptions:\n"), exename, _(GAMENOUN));
 		options_output_help(mame_options(), help_output);
 		return MAMERR_NONE;
 	}
@@ -1088,7 +1092,7 @@ static int info_verifysamples(const char *gamename)
 	/* otherwise, print a summary */
 	else
 	{
-		mame_printf_info("%d samplesets found, %d were OK.\n", correct + incorrect, correct);
+		mame_printf_info(_("%d samplesets found, %d were OK.\n"), correct + incorrect, correct);
 		return (incorrect > 0) ? MAMERR_MISSING_FILES : MAMERR_NONE;
 	}
 }

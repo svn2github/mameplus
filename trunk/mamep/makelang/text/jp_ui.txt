@@ -2,55 +2,55 @@
                                 
 Japanese game list by ‰´A‚Ô‚ë‚ñ
 
-# osd/ui/properties.c: 1120
+# osd/ui/properties.c: 1108
 %d colors 
 %d F 
 
-# osd/ui/win32ui.c: 264, 3769
+# osd/ui/win32ui.c: 256, 3760
 %d games
 %d ƒQ[ƒ€
 
-# osd/ui/properties.c: 869
+# osd/ui/properties.c: 857
 %d x %d (H) %f Hz (%d colors)
 %d x %d (‰¡) %f Hz (%d F)
 
-# osd/ui/properties.c: 862
+# osd/ui/properties.c: 850
 %d x %d (V) %f Hz (%d colors)
 %d x %d (c) %f Hz (%d F)
 
-# osd/ui/treeview.c: 1291
+# osd/ui/treeview.c: 1278
 %dx%d (H)
 %dx%d (H)
 
-# osd/ui/treeview.c: 1285
+# osd/ui/treeview.c: 1272
 %dx%d (V)
 %dx%d (V)
 
-# osd/ui/properties.c: 1096
+# osd/ui/properties.c: 1084
 %s (%d player)
 %s (%d ƒvƒŒƒCƒ„[)
 
-# osd/ui/properties.c: 1107
+# osd/ui/properties.c: 1095
 %s (%d player, %d button)
 %s (%d ƒvƒŒƒCƒ„[A%d ƒ{ƒ^ƒ“)
 
-# osd/ui/properties.c: 1105
+# osd/ui/properties.c: 1093
 %s (%d player, %d buttons)
 %s (%d ƒvƒŒƒCƒ„[A%d ƒ{ƒ^ƒ“)
 
-# osd/ui/properties.c: 1093
+# osd/ui/properties.c: 1081
 %s (%d players)
 %s (%d ƒvƒŒƒCƒ„[)
 
-# osd/ui/properties.c: 1102
+# osd/ui/properties.c: 1090
 %s (%d players, %d button)
 %s (%d ƒvƒŒƒCƒ„[A%d ƒ{ƒ^ƒ“)
 
-# osd/ui/properties.c: 1099
+# osd/ui/properties.c: 1087
 %s (%d players, %d buttons)
 %s (%d ƒvƒŒƒCƒ„[A%d ƒ{ƒ^ƒ“)
 
-# osd/ui/properties.c: 1234
+# osd/ui/properties.c: 1222
 %s\nThis is also global driver options in the %s
 %s\n‚»‚µ‚Ä‚±‚ê‚Íƒhƒ‰ƒCƒo%s‚ÌƒOƒ[ƒoƒ‹ƒIƒvƒVƒ‡ƒ“‚Å‚·
 
@@ -94,7 +94,7 @@ MAME32‚É‚Â‚¢‚Ä(&A)
 &Cancel
 ƒLƒƒƒ“ƒZƒ‹(&C)
 
-# osd/ui/audit32.c: 450 osd/ui/mame32.rc: 1221
+# osd/ui/audit32.c: 439 osd/ui/mame32.rc: 1221
 &Close
 •Â‚¶‚é(&C)
 
@@ -102,7 +102,7 @@ MAME32‚É‚Â‚¢‚Ä(&A)
 &Contents\tF1
 ƒwƒ‹ƒvƒRƒ“ƒeƒ“ƒc(&H)\tF1
 
-# osd/ui/audit32.c: 320
+# osd/ui/audit32.c: 309
 &Continue
 Œp‘±(&P)
 
@@ -206,7 +206,7 @@ MAME32‚É‚Â‚¢‚Ä(&A)
 &Palette Setting...
 ƒpƒŒƒbƒgİ’è(&P)...
 
-# osd/ui/audit32.c: 315 osd/ui/mame32.rc: 439
+# osd/ui/audit32.c: 304 osd/ui/mame32.rc: 439
 &Pause
 ˆê’â~(&P)
 
@@ -214,11 +214,11 @@ MAME32‚É‚Â‚¢‚Ä(&A)
 &Picture Area\tAlt+P
 ‰æ‘œƒGƒŠƒA(&P)\tAlt+P
 
-# osd/ui/mame32.rc: 52, 182 osd/ui/win32ui.c: 3921
+# osd/ui/mame32.rc: 52, 182 osd/ui/win32ui.c: 3912
 &Play
 ƒvƒŒƒC(&P)
 
-# osd/ui/win32ui.c: 263, 3958, 7162, 7190
+# osd/ui/win32ui.c: 255, 3949, 7153, 7181
 &Play %s
 ƒvƒŒƒC(&P) %s
 
@@ -294,7 +294,7 @@ MAME32‚É‚Â‚¢‚Ä(&A)
 &Working
 “®ì‰Â(&W)
 
-# osd/ui/win32ui.c: 6624
+# osd/ui/win32ui.c: 6615
 '%s' is not a valid savestate file for game '%s'.
 '%s'‚ÍƒQ[ƒ€'%s'‚É“KØ‚ÈƒXƒe[ƒg‚Å‚Í‚ ‚è‚Ü‚¹‚ñB
 
@@ -306,7 +306,7 @@ MAME32‚É‚Â‚¢‚Ä(&A)
 <- Remove
 <- íœ
 
-# osd/ui/treeview.c: 546, 566, 1194
+# osd/ui/treeview.c: 533, 553, 1181
 <unknown>
 <•s–¾>
 
@@ -318,7 +318,7 @@ A sharing violation occurred.
 A&udit
 ŠÄ¸(&U)
 
-# osd/ui/properties.c: 1043 osd/ui/treeview.c: 1429
+# osd/ui/properties.c: 1031 osd/ui/treeview.c: 1419
 AD Stick
 ƒAƒiƒƒOƒXƒeƒBƒbƒN
 
@@ -326,7 +326,7 @@ AD Stick
 ADStick device
 ADƒXƒeƒBƒbƒNƒfƒoƒCƒX
 
-# osd/ui/win32ui.c: 716
+# osd/ui/win32ui.c: 708
 About
 ‚±‚Ìƒ\\ƒtƒgƒEƒFƒA‚É‚Â‚¢‚Ä
 
@@ -354,7 +354,7 @@ Additional MAME32 code by
 Advanced
 ‚“x‚Èİ’è
 
-# osd/ui/dialogs.c: 220
+# osd/ui/dialogs.c: 214
 All
 ‘S‚Ä
 
@@ -362,7 +362,7 @@ All
 All Games
 ‘SƒQ[ƒ€
 
-# osd/ui/win32ui.c: 804, 811, 818, 825
+# osd/ui/win32ui.c: 796, 803, 810, 817
 All files (*.*)
 ‘S‚Ä‚Ìƒtƒ@ƒCƒ‹ (*.*)
 
@@ -382,7 +382,7 @@ Allow restoring options to 'sane' values.
 Allows filtering out games from a folder
 ƒtƒHƒ‹ƒ_‚É‘Î‚µ‚ÄƒtƒBƒ‹ƒ^ƒŠƒ“ƒO‚ğİ’è‚µ‚Ü‚·
 
-# osd/ui/properties.c: 4831
+# osd/ui/properties.c: 4819
 Anti-clockwise
 ”½Œv‰ñ‚è
 
@@ -418,19 +418,19 @@ Audit
 Audit ROM and samples sets
 ƒƒ€ƒtƒ@ƒCƒ‹‚ÆƒTƒ“ƒvƒ‹ƒtƒ@ƒCƒ‹‚ğŠÄ¸‚µ‚Ü‚·
 
-# osd/ui/audit32.c: 449
+# osd/ui/audit32.c: 438
 Audit complete.\n
 ƒ`ƒFƒbƒNI—¹\n
 
-# osd/ui/properties.c: 453, 4742, 4924, 4959
+# osd/ui/properties.c: 441, 4730, 4912, 4947
 Auto
 ©“®
 
-# osd/ui/properties.c: 4834
+# osd/ui/properties.c: 4822
 Auto anti-clockwise
 ©“®“I‚É”½Œv‰ñ‚è
 
-# osd/ui/properties.c: 4833
+# osd/ui/properties.c: 4821
 Auto clockwise
 ©“®“I‚ÉŒv‰ñ‚è
 
@@ -454,11 +454,11 @@ Available
 Available fields:
 —˜—p‰Â”\\ƒtƒB[ƒ‹ƒh:
 
-# osd/ui/properties.c: 5018
+# osd/ui/properties.c: 5006
 Axis
 ²
 
-# osd/ui/properties.c: 5028
+# osd/ui/properties.c: 5016
 AxisId
 ²ID
 
@@ -466,7 +466,7 @@ AxisId
 BIOS
 BIOS
 
-# osd/ui/properties.c: 1190
+# osd/ui/properties.c: 1178
 BIOS missing
 BIOS ‚ª‚ ‚è‚Ü‚¹‚ñ
 
@@ -478,7 +478,7 @@ Backdrops
 Background Images
 ”wŒi‰æ‘œ
 
-# osd/ui/treeview.c: 1116
+# osd/ui/treeview.c: 1103
 Bad Dump
 ‹zo‚µ•s—Ç
 
@@ -490,7 +490,7 @@ Basic
 Beam width
 ƒr[ƒ€
 
-# osd/ui/audit32.c: 498
+# osd/ui/audit32.c: 487
 Best available
 Å—Ç‚Ìó‘Ô‚Å‚·
 
@@ -550,43 +550,43 @@ Button (P or 6)
 Button (S or 7)
 ƒ{ƒ^ƒ“ (S or 7)
 
-# osd/ui/treeview.c: 1409
+# osd/ui/treeview.c: 1399
 Button 1
 ƒ{ƒ^ƒ“ 1
 
-# osd/ui/treeview.c: 1418
+# osd/ui/treeview.c: 1408
 Buttons 10
 ƒ{ƒ^ƒ“ 10
 
-# osd/ui/treeview.c: 1410
+# osd/ui/treeview.c: 1400
 Buttons 2
 ƒ{ƒ^ƒ“ 2
 
-# osd/ui/treeview.c: 1411
+# osd/ui/treeview.c: 1401
 Buttons 3
 ƒ{ƒ^ƒ“ 3
 
-# osd/ui/treeview.c: 1412
+# osd/ui/treeview.c: 1402
 Buttons 4
 ƒ{ƒ^ƒ“ 4
 
-# osd/ui/treeview.c: 1413
+# osd/ui/treeview.c: 1403
 Buttons 5
 ƒ{ƒ^ƒ“ 5
 
-# osd/ui/treeview.c: 1414
+# osd/ui/treeview.c: 1404
 Buttons 6
 ƒ{ƒ^ƒ“ 6
 
-# osd/ui/treeview.c: 1415
+# osd/ui/treeview.c: 1405
 Buttons 7
 ƒ{ƒ^ƒ“ 7
 
-# osd/ui/treeview.c: 1416
+# osd/ui/treeview.c: 1406
 Buttons 8
 ƒ{ƒ^ƒ“ 8
 
-# osd/ui/treeview.c: 1417
+# osd/ui/treeview.c: 1407
 Buttons 9
 ƒ{ƒ^ƒ“ 9
 
@@ -598,7 +598,7 @@ C&lones
 CPU
 CPU
 
-# osd/ui/dialogs.c: 212 osd/ui/winuiopt.c: 429
+# osd/ui/dialogs.c: 206 osd/ui/winuiopt.c: 426
 Cabinet
 â‘Ì
 
@@ -622,7 +622,7 @@ Categories
 Changing this item is not permitted
 ‚±‚ÌƒAƒCƒeƒ€‚Ì•ÏX‚Í‹–‰Â‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ
 
-# osd/ui/audit32.c: 238, 248
+# osd/ui/audit32.c: 227, 237
 Checking Game %s - %s
 ƒ`ƒFƒbƒN’† ƒQ[ƒ€ %s - %s
 
@@ -634,11 +634,11 @@ Checking...
 Christopher Kirmse and Michael Soderstrom
 Christopher Kirmse and Michael Soderstrom
 
-# osd/ui/properties.c: 4830
+# osd/ui/properties.c: 4818
 Clockwise
 Œv‰ñ‚è
 
-# osd/ui/win32ui.c: 875
+# osd/ui/win32ui.c: 867
 Clone Of
 Œ´ì
 
@@ -650,15 +650,15 @@ Clone of:
 Clones
 ƒNƒ[ƒ“
 
-# osd/ui/properties.c: 456
+# osd/ui/properties.c: 444
 Cocktail
 ƒJƒNƒeƒ‹
 
-# osd/ui/properties.c: 1158
+# osd/ui/properties.c: 1146
 Colors are completely wrong
 F‚ªÄŒ»‚³‚ê‚È‚¢
 
-# osd/ui/properties.c: 1163
+# osd/ui/properties.c: 1151
 Colors aren't 100% accurate
 F‚ÌÄŒ»‚ª•sŠ®‘S
 
@@ -706,7 +706,7 @@ Contrast Correction
 Control &Panel
 ƒRƒ“ƒpƒl(&P)
 
-# osd/ui/dialogs.c: 218 osd/ui/winuiopt.c: 432
+# osd/ui/dialogs.c: 212 osd/ui/winuiopt.c: 429
 Control Panel
 ƒRƒ“ƒpƒl
 
@@ -746,11 +746,11 @@ Copyright (C) 1997-2007 The MAME Team
 Correct:
 ³í:
 
-# osd/ui/win32ui.c: 6499
+# osd/ui/win32ui.c: 6490
 Could not open '%s' as a valid input file.
 u%sv‚ğ—LŒø‚ÈÄ¶ƒtƒ@ƒCƒ‹‚Æ‚µ‚ÄƒI[ƒvƒ“‚Å‚«‚Ü‚¹‚ñ
 
-# osd/ui/win32ui.c: 6565, 6638
+# osd/ui/win32ui.c: 6556, 6629
 Could not open '%s' as a valid savestate file.
 '%s'‚Í³í‚ÈƒXƒe[ƒg‚Æ‚µ‚ÄŠJ‚¯‚Ü‚¹‚ñB
 
@@ -762,7 +762,7 @@ Crop artwork
 Cursor
 ƒJ[ƒ\\ƒ‹
 
-# osd/ui/win32ui.c: 4743, 4771
+# osd/ui/win32ui.c: 4734, 4762
 Custom
 ƒJƒXƒ^ƒ€
 
@@ -786,11 +786,11 @@ Customize interface options.
 Customize which columns are used in the game list
 ƒQ[ƒ€ƒŠƒXƒg‚É—p‚¢‚é•\\¦€–Ú‚ğİ’è‚µ‚Ü‚·
 
-# osd/ui/properties.c: 4829
+# osd/ui/properties.c: 4817
 Default
 ƒfƒtƒHƒ‹ƒg
 
-# osd/ui/properties.c: 632
+# osd/ui/properties.c: 620
 Default Game
 •W€‚ÌƒQ[ƒ€
 
@@ -806,15 +806,15 @@ Default input layout
 Delete
 íœ
 
-# osd/ui/win32ui.c: 866
+# osd/ui/win32ui.c: 858
 Description
 ƒQ[ƒ€
 
-# osd/ui/mame32.rc: 459, 561 osd/ui/win32ui.c: 714 osd/ui/winuiopt.c: 462
+# osd/ui/mame32.rc: 459, 561 osd/ui/win32ui.c: 706 osd/ui/winuiopt.c: 459
 Details
 Ú×
 
-# osd/ui/properties.c: 1035 osd/ui/treeview.c: 1431
+# osd/ui/properties.c: 1023 osd/ui/treeview.c: 1421
 Dial
 ƒ_ƒCƒ„ƒ‹
 
@@ -826,7 +826,7 @@ Dial device
 Digital joystick axes
 ƒfƒWƒ^ƒ‹ƒXƒeƒBƒbƒN‚Ì²
 
-# osd/ui/mame32.rc: 667 osd/ui/properties.c: 418
+# osd/ui/mame32.rc: 667 osd/ui/properties.c: 406
 Direct3D
 Direct3D
 
@@ -898,43 +898,43 @@ Displays items in a list.
 Displays program and copyright information
 ƒvƒƒOƒ‰ƒ€î•ñ‚¨‚æ‚Ñ’˜ìŒ î•ñ‚ğ•\\¦‚µ‚Ü‚·
 
-# osd/ui/dialogs.c: 129
+# osd/ui/dialogs.c: 123
 Do you wish to continue?
 ‘±‚¯‚Ü‚·‚©H
 
-# osd/ui/treeview.c: 1427
+# osd/ui/treeview.c: 1417
 Double Joy 16-Way
 16•ûŒüƒfƒ…ƒAƒ‹ƒXƒeƒBƒbƒN
 
-# osd/ui/treeview.c: 1424
+# osd/ui/treeview.c: 1414
 Double Joy 2-Way
 2•ûŒüƒfƒ…ƒAƒ‹ƒXƒeƒBƒbƒN
 
-# osd/ui/treeview.c: 1425
+# osd/ui/treeview.c: 1415
 Double Joy 4-Way
 4•ûŒüƒfƒ…ƒAƒ‹ƒXƒeƒBƒbƒN
 
-# osd/ui/treeview.c: 1426
+# osd/ui/treeview.c: 1416
 Double Joy 8-Way
 8•ûŒüƒfƒ…ƒAƒ‹ƒXƒeƒBƒbƒN
 
-# osd/ui/properties.c: 968, 993
+# osd/ui/properties.c: 956, 981
 Double Joystick 16-Way
 16•ûŒüƒfƒ…ƒAƒ‹ƒXƒeƒBƒbƒN
 
-# osd/ui/properties.c: 961, 982, 983
+# osd/ui/properties.c: 949, 970, 971
 Double Joystick 2-Way
 ‚Q•ûŒüƒfƒ…ƒAƒ‹ƒXƒeƒBƒbƒN
 
-# osd/ui/properties.c: 957, 958, 986
+# osd/ui/properties.c: 945, 946, 974
 Double Joystick 2-Way Vertical
 ‚Q•ûŒüƒfƒ…ƒAƒ‹ƒXƒeƒBƒbƒN c
 
-# osd/ui/properties.c: 964, 989
+# osd/ui/properties.c: 952, 977
 Double Joystick 4-Way
 ‚S•ûŒüƒfƒ…ƒAƒ‹ƒXƒeƒBƒbƒN
 
-# osd/ui/properties.c: 970, 995
+# osd/ui/properties.c: 958, 983
 Double Joystick 8-Way
 ‚W•ûŒüƒfƒ…ƒAƒ‹ƒXƒeƒBƒbƒN
 
@@ -942,11 +942,11 @@ Double Joystick 8-Way
 Draw antialiased vectors
 ƒAƒ“ƒ`ƒGƒCƒŠƒAƒX
 
-# osd/ui/properties.c: 4807
+# osd/ui/properties.c: 4795
 Draw every frame
 ƒtƒŒ[ƒ€ƒXƒLƒbƒv‚È‚µ
 
-# osd/ui/layout.c: 57 osd/ui/mame32.rc: 1162 osd/ui/win32ui.c: 876
+# osd/ui/layout.c: 57 osd/ui/mame32.rc: 1162 osd/ui/win32ui.c: 868
 Driver
 ƒhƒ‰ƒCƒo
 
@@ -970,7 +970,7 @@ Dumping Status
 E&xit
 I—¹(&X)
 
-# osd/ui/win32ui.c: 7637
+# osd/ui/win32ui.c: 7628
 ERROR: required files are missing, the game cannot be run.
 ƒGƒ‰[: •K—v‚Èƒtƒ@ƒCƒ‹‚ª•s‘«‚µ‚Ä‚¢‚Ü‚·B ‚±‚ÌƒQ[ƒ€‚ÍÀso—ˆ‚Ü‚¹‚ñB
 
@@ -1018,11 +1018,11 @@ Enable steadykey support
 Enforce aspect ratio
 •\\¦”ä—¦‚ğŒÅ’è
 
-# osd/ui/audit32.c: 113 osd/ui/properties.c: 652, 743, 1740
+# osd/ui/audit32.c: 102 osd/ui/properties.c: 640, 731, 1728
 Error
 ƒGƒ‰[
 
-# osd/ui/treeview.c: 2744
+# osd/ui/treeview.c: 2734
 Error finding custom file name to save
 •Û‘¶‚·‚éƒJƒXƒ^ƒ€ƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ
 
@@ -1030,15 +1030,15 @@ Error finding custom file name to save
 Error log (for developers)
 ƒGƒ‰[ƒƒO‚ğo—Í(ŠJ”­ÒŒü‚¯)
 
-# osd/ui/win32ui.c: 7732
+# osd/ui/win32ui.c: 7723
 Error searching for custom folder
 ƒJƒXƒ^ƒ€ƒtƒHƒ‹ƒ_‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ
 
-# osd/ui/treeview.c: 2672
+# osd/ui/treeview.c: 2662
 Error while renaming custom file %s to %s
 ƒJƒXƒ^ƒ€ƒtƒ@ƒCƒ‹‚Ì–¼‘O‚ğ %s ‚©‚ç %s ‚Ö‚Ì•ÏX‚ÅƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½
 
-# osd/ui/treeview.c: 2816
+# osd/ui/treeview.c: 2806
 Error while saving custom file %s
 ƒJƒXƒ^ƒ€ƒtƒ@ƒCƒ‹ %s ‚Ì•Û‘¶‚ÅƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½
 
@@ -1050,7 +1050,7 @@ Exit the application
 External Folder List
 ŠO•”ƒtƒHƒ‹ƒ_ƒŠƒXƒg
 
-# osd/ui/winuiopt.c: 3194
+# osd/ui/winuiopt.c: 3228
 FOLDER LIST HIDE OPTIONS
 ƒtƒHƒ‹ƒ_ƒŠƒXƒg”ñ•\\¦ƒIƒvƒVƒ‡ƒ“
 
@@ -1058,15 +1058,15 @@ FOLDER LIST HIDE OPTIONS
 FPS
 FPS
 
-# osd/ui/audit32.c: 506
+# osd/ui/audit32.c: 495
 Failed
 ˆÙí‚Å‚·
 
-# osd/ui/audit32.c: 255 osd/ui/mame32.rc: 436
+# osd/ui/audit32.c: 244 osd/ui/mame32.rc: 436
 File Audit
 ƒtƒ@ƒCƒ‹ŠÄ¸
 
-# osd/ui/dialogs.c: 419
+# osd/ui/dialogs.c: 413
 Filters for %s Folder
 u%svƒtƒHƒ‹ƒ_‚ÌƒtƒBƒ‹ƒ^
 
@@ -1082,7 +1082,7 @@ Flip screen left-right
 Flip screen upside-down
 ã‰º”½“]
 
-# osd/ui/dialogs.c: 210 osd/ui/winuiopt.c: 428
+# osd/ui/dialogs.c: 204 osd/ui/winuiopt.c: 425
 Flyer
 Lƒ|ƒXƒ^[
 
@@ -1122,15 +1122,15 @@ Full screen contrast
 Full screen gamma
 ƒtƒ‹ƒXƒNƒŠ[ƒ“‚ÌƒKƒ“ƒ}’l
 
-# osd/ui/winuiopt.c: 3140
+# osd/ui/winuiopt.c: 3174
 GENERAL OPTIONS
 ˆê”ÊƒIƒvƒVƒ‡ƒ“
 
-# osd/ui/winuiopt.c: 3198
+# osd/ui/winuiopt.c: 3232
 GUI JOYSTICK OPTIONS
 GUIƒWƒ‡ƒCƒXƒeƒBƒbƒNƒIƒvƒVƒ‡ƒ“
 
-# osd/ui/winuiopt.c: 3213
+# osd/ui/winuiopt.c: 3247
 GUI KEYBOARD OPTIONS
 GUIƒL[ƒ{[ƒhƒIƒvƒVƒ‡ƒ“
 
@@ -1146,7 +1146,7 @@ Game List &Clone Color...
 Game List &Font...
 ƒQ[ƒ€ƒŠƒXƒgƒtƒHƒ“ƒg(&F)...
 
-# osd/ui/win32ui.c: 839
+# osd/ui/win32ui.c: 831
 Game List Files (*.lst)
 ƒQ[ƒ€ƒŠƒXƒgƒtƒ@ƒCƒ‹ (*.lst)
 
@@ -1158,15 +1158,15 @@ Game filters
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 ‰º‹L‚æ‚è‘I‘ğ‚³‚ê‚½€–Ú‚ğƒŠƒXƒgã”ñ•\\¦‚É‚µ‚Ü‚·
 
-# osd/ui/properties.c: 1173
+# osd/ui/properties.c: 1161
 Game lacks sound
 ƒTƒEƒ“ƒh‚ª–¢‘Î‰
 
-# osd/ui/properties.c: 1153
+# osd/ui/properties.c: 1141
 Game protection isn't fully emulated
 ƒvƒƒeƒNƒg‚Ì‚½‚ß“®ì‚ª•sŠ®‘S
 
-# osd/ui/win32ui.c: 3521
+# osd/ui/win32ui.c: 3512
 Game search %d%% complete
 ƒQ[ƒ€‚ÌŒŸõ %d%% Š®—¹
 
@@ -1178,15 +1178,15 @@ Gamma Correction
 General
 ‘S”Ê
 
-# osd/ui/properties.c: 1236
+# osd/ui/properties.c: 1224
 Global driver options\nCustom options used by all games in the %s
 ƒOƒ[ƒoƒ‹ƒhƒ‰ƒCƒoƒIƒvƒVƒ‡ƒ“‚Å‚·B\n%s‚Ì‘SƒQ[ƒ€‚ÌƒJƒXƒ^ƒ€İ’è‚Æ‚µ‚Äg—p‚³‚ê‚Ü‚·B
 
-# osd/ui/properties.c: 1216
+# osd/ui/properties.c: 1204
 Global game options\nDefault options used by all games
 ƒOƒ[ƒoƒ‹ƒQ[ƒ€ƒIƒvƒVƒ‡ƒ“‚Å‚·B\n‘SƒQ[ƒ€‚ÌƒfƒtƒHƒ‹ƒgİ’è‚Æ‚µ‚Äg—p‚³‚ê‚Ü‚·B
 
-# osd/ui/properties.c: 1219
+# osd/ui/properties.c: 1207
 Global vector options\nCustom options used by all games in the Vector
 ƒOƒ[ƒoƒ‹ƒxƒNƒ^ƒIƒvƒVƒ‡ƒ“‚Å‚·B\nƒxƒNƒ^‚Ì‘SƒQ[ƒ€‚ÌƒJƒXƒ^ƒ€İ’è‚Æ‚µ‚Äg—p‚³‚ê‚Ü‚·B
 
@@ -1198,7 +1198,7 @@ Microsoft's DirectX Webƒy[ƒW‚ğ•\\¦
 Gray
 ƒOƒŒ[
 
-# osd/ui/win32ui.c: 715 osd/ui/winuiopt.c: 463, 3173
+# osd/ui/win32ui.c: 707 osd/ui/winuiopt.c: 460, 3207
 Grouped
 ƒOƒ‹[ƒv‰»
 
@@ -1206,7 +1206,7 @@ Grouped
 Hard Drive Difference
 ƒn[ƒhƒfƒBƒXƒN·•ªƒtƒ@ƒCƒ‹
 
-# osd/ui/win32ui.c: 717
+# osd/ui/win32ui.c: 709
 Help
 ƒwƒ‹ƒv
 
@@ -1218,7 +1218,7 @@ Hide &mouse cursor (requires restart)
 High Scores
 ƒnƒCƒXƒRƒA
 
-# osd/ui/winuiopt.c: 434, 437
+# osd/ui/winuiopt.c: 431, 434
 History
 ƒQ[ƒ€‚Ì—ğj
 
@@ -1226,7 +1226,7 @@ History
 Homebrew
 ©‰Æ»
 
-# osd/ui/treeview.c: 1030
+# osd/ui/treeview.c: 1017
 Horizontal
 ‰¡Œ^
 
@@ -1234,7 +1234,7 @@ Horizontal
 How cheats work
 ƒ`[ƒg‚Ìg—p•û–@‚ğà–¾‚µ‚Ü‚·
 
-# osd/ui/winuiopt.c: 3120
+# osd/ui/winuiopt.c: 3154
 INTERFACE OPTIONS
 ƒCƒ“ƒ^[ƒtƒFƒCƒXƒIƒvƒVƒ‡ƒ“
 
@@ -1250,7 +1250,7 @@ Icons
 Image Enhancement
 ƒCƒ[ƒW‚ğŒüã
 
-# osd/ui/win32ui.c: 832
+# osd/ui/win32ui.c: 824
 Image Files (*.png,*.bmp)
 ‰æ‘œƒtƒ@ƒCƒ‹ (*.png,*.bmp)
 
@@ -1258,15 +1258,15 @@ Image Files (*.png,*.bmp)
 Imperfect
 •sŠ®‘S‚È“®ì
 
-# osd/ui/treeview.c: 1068
+# osd/ui/treeview.c: 1055
 Imperfect Colors
 F‚ÌÄŒ»‚ª•sŠ®‘S
 
-# osd/ui/treeview.c: 1069
+# osd/ui/treeview.c: 1056
 Imperfect Graphics
 ‰æ‘œ‚ÌÄŒ»‚ª•sŠ®‘S
 
-# osd/ui/treeview.c: 1071
+# osd/ui/treeview.c: 1058
 Imperfect Sound
 ‰¹‚ÌÄŒ»‚ª•sŠ®‘S
 
@@ -1294,43 +1294,43 @@ Insert
 Interface Options
 ƒCƒ“ƒ^[ƒtƒFƒCƒXƒIƒvƒVƒ‡ƒ“
 
-# osd/ui/treeview.c: 1422
+# osd/ui/treeview.c: 1412
 Joy 16-Way
 16•ûŒüƒXƒeƒBƒbƒN
 
-# osd/ui/treeview.c: 1419
+# osd/ui/treeview.c: 1409
 Joy 2-Way
 2•ûŒüƒXƒeƒBƒbƒN
 
-# osd/ui/treeview.c: 1420
+# osd/ui/treeview.c: 1410
 Joy 4-Way
 4•ûŒüƒXƒeƒBƒbƒN
 
-# osd/ui/treeview.c: 1421
+# osd/ui/treeview.c: 1411
 Joy 8-Way
 8•ûŒüƒXƒeƒBƒbƒN
 
-# osd/ui/properties.c: 468, 5013
+# osd/ui/properties.c: 456, 5001
 Joystick
 ƒWƒ‡ƒCƒXƒeƒBƒbƒN
 
-# osd/ui/properties.c: 920, 943
+# osd/ui/properties.c: 908, 931
 Joystick 16-Way
 16•ûŒüƒXƒeƒBƒbƒN
 
-# osd/ui/properties.c: 909, 910, 936
+# osd/ui/properties.c: 897, 898, 924
 Joystick 2-Way
 ‚Q•ûŒüƒXƒeƒBƒbƒN
 
-# osd/ui/properties.c: 913, 932, 933
+# osd/ui/properties.c: 901, 920, 921
 Joystick 2-Way Vertical
 ‚Q•ûŒüƒXƒeƒBƒbƒN c
 
-# osd/ui/properties.c: 916, 939
+# osd/ui/properties.c: 904, 927
 Joystick 4-Way
 ‚S•ûŒüƒXƒeƒBƒbƒN
 
-# osd/ui/properties.c: 922, 945
+# osd/ui/properties.c: 910, 933
 Joystick 8-Way
 ‚W•ûŒüƒXƒeƒBƒbƒN
 
@@ -1342,11 +1342,11 @@ Joystick deadzone
 Joystick saturation
 ƒWƒ‡ƒCƒXƒeƒBƒbƒNŠO‘¤‚µ‚«‚¢’l
 
-# osd/ui/properties.c: 5023
+# osd/ui/properties.c: 5011
 JoystickId
 ƒWƒ‡ƒCƒXƒeƒBƒbƒNID
 
-# osd/ui/properties.c: 466
+# osd/ui/properties.c: 454
 Keyboard
 ƒL[ƒ{[ƒh
 
@@ -1354,19 +1354,19 @@ Keyboard
 L&arge Icons
 ‘å‚«‚ÈƒAƒCƒRƒ“(&A)
 
-# osd/ui/winuiopt.c: 3186
+# osd/ui/winuiopt.c: 3220
 LIST FONT OPTIONS
 ƒŠƒXƒgƒtƒHƒ“ƒgƒIƒvƒVƒ‡ƒ“
 
-# osd/ui/winuiopt.c: 3172
+# osd/ui/winuiopt.c: 3206
 LISTVIEW OPTIONS
 ƒŠƒXƒgƒrƒ…[ƒIƒvƒVƒ‡ƒ“
 
-# osd/ui/win32ui.c: 711 osd/ui/winuiopt.c: 459
+# osd/ui/win32ui.c: 703 osd/ui/winuiopt.c: 456
 Large Icons
 ‘å‚«‚ÈƒAƒCƒRƒ“
 
-# osd/ui/layout.c: 79 osd/ui/properties.c: 469, 1047 osd/ui/treeview.c: 1433
+# osd/ui/layout.c: 79 osd/ui/properties.c: 457, 1035 osd/ui/treeview.c: 1423
 Lightgun
 Œõüe
 
@@ -1378,7 +1378,7 @@ Lightgun device
 Line &Up Icons
 ƒAƒCƒRƒ“‚Ì®—ñ(&U)
 
-# osd/ui/win32ui.c: 713 osd/ui/winuiopt.c: 461
+# osd/ui/win32ui.c: 705 osd/ui/winuiopt.c: 458
 List
 ƒŠƒXƒg
 
@@ -1386,7 +1386,7 @@ List
 Loa&d Savestate...
 ƒXƒe[ƒg‚ğ“Ç‚İ‚Ş(&D)...
 
-# osd/ui/win32ui.c: 7554
+# osd/ui/win32ui.c: 7545
 Loading %s
 ƒ[ƒh’† %s
 
@@ -1402,7 +1402,7 @@ Localized Files
 M68000 CPU Core
 M68000 CPUƒRƒA
 
-# osd/ui/win32ui.c: 804
+# osd/ui/win32ui.c: 796
 MAME input files (*.inp,*.zip)
 MAMEÄ¶ƒtƒ@ƒCƒ‹ (*.inp,*.zip)
 
@@ -1410,15 +1410,15 @@ MAMEÄ¶ƒtƒ@ƒCƒ‹ (*.inp,*.zip)
 MAME release notes
 MAMEƒŠƒŠ[ƒXƒm[ƒg‚ğ•\\¦‚µ‚Ü‚·
 
-# osd/ui/win32ui.c: 811
+# osd/ui/win32ui.c: 803
 MAME savestate files (*.sta)
 MAMEƒXƒe[ƒgƒtƒ@ƒCƒ‹ (*.sta)
 
-# osd/ui/dialogs.c: 876
+# osd/ui/dialogs.c: 870
 MAME32 PCB Info: %s [%s]
 MAME32 PCB î•ñ: %s [%s]
 
-# osd/ui/winuiopt.c: 514
+# osd/ui/winuiopt.c: 511
 MAME32 has changed *.ini file directory.\n\nWould you like to migrate old configurations to the new directory?
 MAME32‚ÍINIƒtƒ@ƒCƒ‹‚ÌƒfƒBƒŒƒNƒgƒŠ‚ğ•ÏX‚µ‚Ü‚µ‚½B\n\nŒÃ‚¢İ’èƒtƒ@ƒCƒ‹‚ğV‚µ‚¢ƒfƒBƒŒƒNƒgƒŠ‚ÉˆÚs‚³‚¹‚Ü‚µ‚å‚¤‚©H
 
@@ -1426,7 +1426,7 @@ MAME32‚ÍINIƒtƒ@ƒCƒ‹‚ÌƒfƒBƒŒƒNƒgƒŠ‚ğ•ÏX‚µ‚Ü‚µ‚½B\n\nŒÃ‚¢İ’èƒtƒ@ƒCƒ‹‚ğV‚µ‚¢ƒfƒ
 MAME32 version by
 MAME32 version by
 
-# osd/ui/dialogs.c: 124
+# osd/ui/dialogs.c: 118
 MAME32 will now reset the selected\nitems to the original, installation\nsettings then exit.\n\n
 MAME32‚Í‘I‘ğ‚³‚ê‚½€–Ú‚ğƒfƒtƒHƒ‹ƒg’l‚ÉƒŠƒZƒbƒg‚µAİ’è•Û‘¶ŒãI—¹‚µ‚Ü‚·B\n\n
 
@@ -1438,11 +1438,11 @@ MS Sans Serif
 Manufactured:
 »‘¢Œ³:
 
-# osd/ui/layout.c: 55 osd/ui/win32ui.c: 873
+# osd/ui/layout.c: 55 osd/ui/win32ui.c: 865
 Manufacturer
 »‘¢Œ³
 
-# osd/ui/dialogs.c: 214 osd/ui/winuiopt.c: 430
+# osd/ui/dialogs.c: 208 osd/ui/winuiopt.c: 427
 Marquee
 ƒ}[ƒL[
 
@@ -1458,11 +1458,11 @@ Memory Card
 Miscellaneous
 ‚»‚Ì‘¼
 
-# osd/ui/treeview.c: 1070
+# osd/ui/treeview.c: 1057
 Missing Sound
 ƒTƒEƒ“ƒh–³‚µ
 
-# osd/ui/properties.c: 467
+# osd/ui/properties.c: 455
 Mouse
 ƒ}ƒEƒX
 
@@ -1482,7 +1482,7 @@ Move Up
 NVRAM
 NVRAMƒtƒ@ƒCƒ‹
 
-# osd/ui/win32ui.c: 869
+# osd/ui/win32ui.c: 861
 Name
 –¼‘O
 
@@ -1494,23 +1494,23 @@ Neogeo Decrypted
 New game changes
 V‚µ‚¢ƒQ[ƒ€‚Ì•ÏX“_‚ğ•\\¦‚µ‚Ü‚·
 
-# osd/ui/audit32.c: 135 osd/ui/win32ui.c: 5666
+# osd/ui/audit32.c: 124 osd/ui/win32ui.c: 5657
 No
 ‚¢‚¢‚¦
 
-# osd/ui/treeview.c: 1072
+# osd/ui/treeview.c: 1059
 No Cocktail
 ƒJƒNƒeƒ‹ƒ‚[ƒh–¢‘Î‰
 
-# osd/ui/treeview.c: 1118
+# osd/ui/treeview.c: 1105
 No Dump
 –¢ƒ_ƒ“ƒv
 
-# osd/ui/dialogs.c: 920
+# osd/ui/dialogs.c: 914
 No PCB Info available for this game.
 ‚±‚ÌƒQ[ƒ€‚ÉPCBî•ñ‚ª‚ ‚è‚Ü‚¹‚ñB
 
-# osd/ui/win32ui.c: 3940
+# osd/ui/win32ui.c: 3931
 No Selection
 ‘I‘ğ‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ
 
@@ -1526,11 +1526,11 @@ CPU–¢g—p
 Non-Wor&king
 “®ì•s‰Â(&K)
 
-# osd/ui/dialogs.c: 222 osd/ui/properties.c: 3713, 4832, 5116, 5362 
+# osd/ui/dialogs.c: 216 osd/ui/properties.c: 3701, 4820, 5104, 5350 
 None
 ‚È‚µ
 
-# osd/ui/audit32.c: 359, 363
+# osd/ui/audit32.c: 348, 352
 None required
 •K—v‚ ‚è‚Ü‚¹‚ñ
 
@@ -1538,11 +1538,11 @@ None required
 Not Working
 “®ì•s‰Â
 
-# osd/ui/audit32.c: 502
+# osd/ui/audit32.c: 491
 Not found
 Œ©‚Â‚©‚è‚Ü‚¹‚ñ
 
-# osd/ui/properties.c: 1142
+# osd/ui/properties.c: 1130
 Not working
 “®ì•s‰Â
 
@@ -1590,7 +1590,7 @@ Overlays
 P&layback Input...
 “ü—Í‚ÌÄŒ»(&L)...
 
-# osd/ui/winuiopt.c: 3107
+# osd/ui/winuiopt.c: 3141
 PATH AND DIRECTORY OPTIONS
 ƒpƒX‚ÆƒfƒBƒŒƒNƒgƒŠƒIƒvƒVƒ‡ƒ“
 
@@ -1602,7 +1602,7 @@ PCBî•ñ
 PCB Info Files
 PCBî•ñƒtƒ@ƒCƒ‹
 
-# osd/ui/properties.c: 1032 osd/ui/treeview.c: 1430
+# osd/ui/properties.c: 1020 osd/ui/treeview.c: 1420
 Paddle
 ƒpƒhƒ‹
 
@@ -1614,7 +1614,7 @@ Paddle device
 Palette
 ƒpƒŒƒbƒgİ’è
 
-# osd/ui/audit32.c: 494
+# osd/ui/audit32.c: 483
 Passed
 ³í‚Å‚·
 
@@ -1622,7 +1622,7 @@ Passed
 Pause Brightness
 ƒ|[ƒY’†‚Ì–¾‚é‚³
 
-# osd/ui/treeview.c: 1434
+# osd/ui/treeview.c: 1424
 Pedal
 ƒyƒ_ƒ‹
 
@@ -1638,11 +1638,11 @@ Per-screen video options
 Physical monitor:
 •¨—“I‚Èƒ‚ƒjƒ^:
 
-# osd/ui/properties.c: 455
+# osd/ui/properties.c: 443
 Pixel Aspect
 ƒsƒNƒZƒ‹‚ÌƒAƒXƒyƒNƒg
 
-# osd/ui/win32ui.c: 877 osd/ui/winuiopt.c: 3269
+# osd/ui/win32ui.c: 869 osd/ui/winuiopt.c: 3303
 Play Time
 ƒvƒŒƒCŠÔ
 
@@ -1670,39 +1670,39 @@ Play currently selected game
 Playback a recorded game
 •Û‘¶‚µ‚½“ü—Í‚ğÄŒ»‚µ‚Ü‚·
 
-# osd/ui/win32ui.c: 872
+# osd/ui/win32ui.c: 864
 Played
 ƒvƒŒƒC‰ñ”
 
-# osd/ui/treeview.c: 1401
+# osd/ui/treeview.c: 1391
 Player 1
 ƒvƒŒƒCƒ„[ 1
 
-# osd/ui/treeview.c: 1402
+# osd/ui/treeview.c: 1392
 Players 2
 ƒvƒŒƒCƒ„[ 2
 
-# osd/ui/treeview.c: 1403
+# osd/ui/treeview.c: 1393
 Players 3
 ƒvƒŒƒCƒ„[ 3
 
-# osd/ui/treeview.c: 1404
+# osd/ui/treeview.c: 1394
 Players 4
 ƒvƒŒƒCƒ„[ 4
 
-# osd/ui/treeview.c: 1405
+# osd/ui/treeview.c: 1395
 Players 5
 ƒvƒŒƒCƒ„[ 5
 
-# osd/ui/treeview.c: 1406
+# osd/ui/treeview.c: 1396
 Players 6
 ƒvƒŒƒCƒ„[ 6
 
-# osd/ui/treeview.c: 1407
+# osd/ui/treeview.c: 1397
 Players 7
 ƒvƒŒƒCƒ„[ 7
 
-# osd/ui/treeview.c: 1408
+# osd/ui/treeview.c: 1398
 Players 8
 ƒvƒŒƒCƒ„[ 8
 
@@ -1714,15 +1714,15 @@ Positional device
 Pr&operties
 ƒvƒƒpƒeƒB(&O)
 
-# osd/ui/win32ui.c: 3970, 7176, 7200
+# osd/ui/win32ui.c: 3961, 7167, 7191
 Propert&ies for %s
 %s‚ÌƒvƒƒpƒeƒB(&I)
 
-# osd/ui/mame32.rc: 66, 201 osd/ui/win32ui.c: 3928
+# osd/ui/mame32.rc: 66, 201 osd/ui/win32ui.c: 3919
 Propert&ies for Driver
 ƒhƒ‰ƒCƒo‚ÌƒvƒƒpƒeƒB(&i)
 
-# osd/ui/properties.c: 651, 742
+# osd/ui/properties.c: 639, 730
 Propery Sheet Error %d %X
 ƒvƒƒpƒeƒBƒV[ƒg‚ÌƒGƒ‰[‚Å‚· %d %X
 
@@ -1742,11 +1742,11 @@ RGBİ’è:
 ROM check:
 ƒƒ€ƒtƒ@ƒCƒ‹:
 
-# osd/ui/layout.c: 107 osd/ui/mame32.rc: 444 osd/ui/win32ui.c: 867
+# osd/ui/layout.c: 107 osd/ui/mame32.rc: 444 osd/ui/win32ui.c: 859
 ROMs
 ROM
 
-# osd/ui/properties.c: 1192
+# osd/ui/properties.c: 1180
 ROMs missing
 ROM‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ
 
@@ -1754,11 +1754,11 @@ ROM‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ
 Randomly select a game.
 ƒQ[ƒ€‚ğƒ‰ƒ“ƒ_ƒ€‚É‘I‘ğ‚µ‚Ü‚·
 
-# osd/ui/layout.c: 70 osd/ui/win32ui.c: 5658
+# osd/ui/layout.c: 70 osd/ui/win32ui.c: 5649
 Raster
 ƒ‰ƒXƒ^
 
-# osd/ui/win32ui.c: 3702
+# osd/ui/win32ui.c: 3693
 Ready
 ‹N“®’†
 
@@ -1770,7 +1770,7 @@ Record a game for later playback
 Refresh game list
 ƒQ[ƒ€ƒŠƒXƒg‚ğÅV‚Ìî•ñ‚ÉXV‚µ‚Ü‚·
 
-# osd/ui/winuiopt.c: 1602
+# osd/ui/winuiopt.c: 1600
 Reload configurations
 İ’è‚ÌÄ“Ç‚İ‚İ
 
@@ -1826,7 +1826,7 @@ Resolution:
 Restore Default Settings
 ƒfƒtƒHƒ‹ƒgİ’è‚É–ß‚·
 
-# osd/ui/dialogs.c: 131
+# osd/ui/dialogs.c: 125
 Restore Settings
 İ’è‚Ì‰Šú‰»
 
@@ -1858,7 +1858,7 @@ Sample check:
 Sample rate
 ƒTƒ“ƒvƒ‹ƒŒ[ƒg
 
-# osd/ui/layout.c: 83, 108 osd/ui/mame32.rc: 450 osd/ui/win32ui.c: 868
+# osd/ui/layout.c: 83, 108 osd/ui/mame32.rc: 450 osd/ui/win32ui.c: 860
 Samples
 ƒTƒ“ƒvƒ‹ƒtƒ@ƒCƒ‹
 
@@ -1890,27 +1890,27 @@ Scale screen
 Screen
 ‰æ–Ê
 
-# osd/ui/properties.c: 440
+# osd/ui/properties.c: 428
 Screen 0
 ‰æ–Ê 0
 
-# osd/ui/properties.c: 441
+# osd/ui/properties.c: 429
 Screen 1
 ‰æ–Ê 1
 
-# osd/ui/properties.c: 442
+# osd/ui/properties.c: 430
 Screen 2
 ‰æ–Ê 2
 
-# osd/ui/properties.c: 443
+# osd/ui/properties.c: 431
 Screen 3
 ‰æ–Ê 3
 
-# osd/ui/win32ui.c: 3480
+# osd/ui/win32ui.c: 3471
 Screen flip support is missing
 ƒJƒNƒeƒ‹ƒ‚[ƒh‚Ì‰æ–Ê”½“]‚É–¢‘Î‰
 
-# osd/ui/properties.c: 1183
+# osd/ui/properties.c: 1171
 Screen flipping is not supported
 ƒJƒNƒeƒ‹ƒ‚[ƒh‚Ì‰æ–Ê”½“]‚É–¢‘Î‰
 
@@ -1946,7 +1946,7 @@ Select &random background image on start
 Select Item
 €–Ú‚Ì‘I‘ğ
 
-# osd/ui/win32ui.c: 833
+# osd/ui/win32ui.c: 825
 Select a Background Image
 ”wŒi‰æ‘œ‚ğ‘I‘ğ
 
@@ -1954,27 +1954,27 @@ Select a Background Image
 Select a background image file
 ”wŒi‰æ‘œ‚ğ‘I‘ğ‚µ‚Ü‚·
 
-# osd/ui/win32ui.c: 806
+# osd/ui/win32ui.c: 798
 Select a file to record
 ‹L˜^‚·‚éƒtƒ@ƒCƒ‹‚ğ‘I‘ğ
 
-# osd/ui/win32ui.c: 840
+# osd/ui/win32ui.c: 832
 Select a folder to save game list
 ƒQ[ƒ€ƒŠƒXƒg‚ğ•Û‘¶‚·‚éƒtƒHƒ‹ƒ_‚ğ‘I‘ğ
 
-# osd/ui/win32ui.c: 827
+# osd/ui/win32ui.c: 819
 Select a mng file to record
 ‹L˜^‚·‚é“®‰æƒtƒ@ƒCƒ‹‚ğ‘I‘ğ
 
-# osd/ui/win32ui.c: 805
+# osd/ui/win32ui.c: 797
 Select a recorded file
 ‹L˜^‚³‚ê‚½ƒtƒ@ƒCƒ‹‚ğ‘I‘ğ
 
-# osd/ui/win32ui.c: 812
+# osd/ui/win32ui.c: 804
 Select a savestate file
 ƒXƒe[ƒgƒtƒ@ƒCƒ‹‚ğ‘I‘ğ
 
-# osd/ui/win32ui.c: 820
+# osd/ui/win32ui.c: 812
 Select a sound file to record
 ‹L˜^‚·‚éƒTƒEƒ“ƒhƒtƒ@ƒCƒ‹‚ğ‘I‘ğ
 
@@ -2134,47 +2134,47 @@ Show palette for:
 Show these fields in this order:
 •\\¦İ’èÏ‚İƒtƒB[ƒ‹ƒh:
 
-# osd/ui/properties.c: 4808
+# osd/ui/properties.c: 4796
 Skip 1 of 12 frames
 12ƒtƒŒ[ƒ€‚É1‰ñƒXƒLƒbƒv
 
-# osd/ui/properties.c: 4817
+# osd/ui/properties.c: 4805
 Skip 10 of 12 frames
 12ƒtƒŒ[ƒ€‚É10‰ñƒXƒLƒbƒv
 
-# osd/ui/properties.c: 4818
+# osd/ui/properties.c: 4806
 Skip 11 of 12 frames
 12ƒtƒŒ[ƒ€‚É11‰ñƒXƒLƒbƒv
 
-# osd/ui/properties.c: 4809
+# osd/ui/properties.c: 4797
 Skip 2 of 12 frames
 12ƒtƒŒ[ƒ€‚É2‰ñƒXƒLƒbƒv
 
-# osd/ui/properties.c: 4810
+# osd/ui/properties.c: 4798
 Skip 3 of 12 frames
 12ƒtƒŒ[ƒ€‚É3‰ñƒXƒLƒbƒv
 
-# osd/ui/properties.c: 4811
+# osd/ui/properties.c: 4799
 Skip 4 of 12 frames
 12ƒtƒŒ[ƒ€‚É4‰ñƒXƒLƒbƒv
 
-# osd/ui/properties.c: 4812
+# osd/ui/properties.c: 4800
 Skip 5 of 12 frames
 12ƒtƒŒ[ƒ€‚É5‰ñƒXƒLƒbƒv
 
-# osd/ui/properties.c: 4813
+# osd/ui/properties.c: 4801
 Skip 6 of 12 frames
 12ƒtƒŒ[ƒ€‚É6‰ñƒXƒLƒbƒv
 
-# osd/ui/properties.c: 4814
+# osd/ui/properties.c: 4802
 Skip 7 of 12 frames
 12ƒtƒŒ[ƒ€‚É7‰ñƒXƒLƒbƒv
 
-# osd/ui/properties.c: 4815
+# osd/ui/properties.c: 4803
 Skip 8 of 12 frames
 12ƒtƒŒ[ƒ€‚É8‰ñƒXƒLƒbƒv
 
-# osd/ui/properties.c: 4816
+# osd/ui/properties.c: 4804
 Skip 9 of 12 frames
 12ƒtƒŒ[ƒ€‚É9‰ñƒXƒLƒbƒv
 
@@ -2186,11 +2186,11 @@ Skip game info
 Sleep when possible
 ƒAƒCƒhƒ‹‚ÉCPU‚ğŠJ•ú
 
-# osd/ui/win32ui.c: 712 osd/ui/winuiopt.c: 460
+# osd/ui/win32ui.c: 704 osd/ui/winuiopt.c: 457
 Small Icons
 ¬‚³‚ÈƒAƒCƒRƒ“
 
-# osd/ui/dialogs.c: 208 osd/ui/winuiopt.c: 427
+# osd/ui/dialogs.c: 202 osd/ui/winuiopt.c: 424
 Snapshot
 ƒXƒNƒŠ[ƒ“ƒVƒ‡ƒbƒg
 
@@ -2242,7 +2242,7 @@ Sort items by year
 Sound
 ƒTƒEƒ“ƒh
 
-# osd/ui/properties.c: 1178
+# osd/ui/properties.c: 1166
 Sound emulation isn't 100% accurate
 ‰¹‚ÌÄŒ»‚ª•sŠ®‘S
 
@@ -2250,7 +2250,7 @@ Sound emulation isn't 100% accurate
 Sound:
 ƒTƒEƒ“ƒh:
 
-# osd/ui/win32ui.c: 818
+# osd/ui/win32ui.c: 810
 Sounds (*.wav)
 ƒTƒEƒ“ƒh (*.wav)
 
@@ -2258,7 +2258,7 @@ Sounds (*.wav)
 St&ory
 ƒXƒg[ƒŠ[(&O)
 
-# osd/ui/properties.c: 454, 3504, 3509, 3512, 3763, 3766, 5068, 5090
+# osd/ui/properties.c: 442, 3492, 3497, 3500, 3751, 3754, 5056, 5078
 Standard
 •W€
 
@@ -2278,7 +2278,7 @@ Status:
 Stereo
 ƒXƒeƒŒƒI
 
-# osd/ui/winuiopt.c: 435
+# osd/ui/winuiopt.c: 432
 Story
 ƒXƒg[ƒŠ[
 
@@ -2286,7 +2286,7 @@ Story
 Stretch using hardware
 ƒn[ƒhƒEƒFƒAŠg‘å•\\¦
 
-# osd/ui/properties.c: 1265 osd/ui/treeview.c: 1364
+# osd/ui/properties.c: 1253 osd/ui/treeview.c: 1354
 Supported
 ‘Î‰
 
@@ -2298,7 +2298,7 @@ Switch resolutions to fit
 Sync to monitor refresh
 ƒ‚ƒjƒ^‚Æ“¯Šú
 
-# osd/ui/dialogs.c: 127
+# osd/ui/dialogs.c: 121
 The new settings will take effect\nthe next time MAME32 is run.\n\n
 V‚µ‚¢İ’è‚ÍŸ‰ñ‚ÌMAME32‹N“®‚É”½‰f‚³‚ê‚Ü‚·B\n\n
 
@@ -2330,7 +2330,7 @@ Thread priority
 Throttle
 ‘¬“x§ŒÀ‚ğ—LŒø
 
-# osd/ui/dialogs.c: 216 osd/ui/winuiopt.c: 431
+# osd/ui/dialogs.c: 210 osd/ui/winuiopt.c: 428
 Title
 ƒ^ƒCƒgƒ‹‰æ–Ê
 
@@ -2338,11 +2338,11 @@ Title
 Titles
 ƒ^ƒCƒgƒ‹‰æ–Ê
 
-# osd/ui/win32ui.c: 709
+# osd/ui/win32ui.c: 701
 Toggle Folder List
 ƒtƒHƒ‹ƒ_ƒŠƒXƒg
 
-# osd/ui/win32ui.c: 710
+# osd/ui/win32ui.c: 702
 Toggle Screen Shot
 ƒXƒNƒŠ[ƒ“ƒVƒ‡ƒbƒg
 
@@ -2350,7 +2350,7 @@ Toggle Screen Shot
 Total:
 ‡Œv:
 
-# osd/ui/layout.c: 78 osd/ui/properties.c: 1039 osd/ui/treeview.c: 1432 osd/ui/win32ui.c: 871
+# osd/ui/layout.c: 78 osd/ui/properties.c: 1027 osd/ui/treeview.c: 1422 osd/ui/win32ui.c: 863
 Trackball
 ƒgƒ‰ƒbƒNƒ{[ƒ‹
 
@@ -2430,19 +2430,19 @@ Triple buffering
 Troubleshooting Documentation
 ƒgƒ‰ƒuƒ‹ƒVƒ…[ƒeƒBƒ“ƒOî•ñ‚ğ•\\¦‚µ‚Ü‚·
 
-# osd/ui/win32ui.c: 870
+# osd/ui/win32ui.c: 862
 Type
 í•Ê
 
-# osd/ui/audit32.c: 113
+# osd/ui/audit32.c: 102
 Unable to Load Riched32.dll
 Riched32.dll‚ª“Ç‚İ‚ß‚Ü‚¹‚ñ
 
-# osd/ui/treeview.c: 2683
+# osd/ui/treeview.c: 2673
 Unable to add game to non-custom folder
 ƒJƒXƒ^ƒ€ƒtƒHƒ‹ƒ_ˆÈŠO‚É‚ÍƒQ[ƒ€‚ğ’Ç‰Áo—ˆ‚Ü‚¹‚ñ
 
-# osd/ui/treeview.c: 2700
+# osd/ui/treeview.c: 2690
 Unable to remove game from non-custom folder
 ƒJƒXƒ^ƒ€ƒtƒHƒ‹ƒ_ˆÈŠO‚©‚çƒQ[ƒ€‚ğíœo—ˆ‚Ü‚¹‚ñ
 
@@ -2450,11 +2450,11 @@ Unable to remove game from non-custom folder
 Unavailable
 –¢Š—L‚ÌƒQ[ƒ€
 
-# osd/ui/treeview.c: 1066
+# osd/ui/treeview.c: 1053
 Unemulated Protection
 ƒvƒƒeƒNƒg‚ÌÄŒ»‚ª•sŠ®‘S
 
-# osd/ui/audit32.c: 489 osd/ui/properties.c: 1090, 1136 
+# osd/ui/audit32.c: 478 osd/ui/properties.c: 1078, 1124 
 Unknown
 •s–¾
 
@@ -2462,11 +2462,11 @@ Unknown
 Unknown error.
 Œ´ˆö•s–¾‚ÌƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½B
 
-# osd/ui/properties.c: 1267 osd/ui/treeview.c: 1366
+# osd/ui/properties.c: 1255 osd/ui/treeview.c: 1356
 Unsupported
 –¢‘Î‰
 
-# osd/ui/win32ui.c: 718
+# osd/ui/win32ui.c: 710
 Use Local Language Game List
 “ú–{ŒêƒQ[ƒ€ƒŠƒXƒg‚ğg—p‚·‚é
 
@@ -2486,31 +2486,31 @@ Use various icon for Not Working game
 Use volume auto adjust
 ©“®‰¹—Ê’²®‹@”\\‚ğg—p
 
-# osd/ui/layout.c: 71 osd/ui/mame32.rc: 821 osd/ui/properties.c: 696 osd/ui/treeview.c: 284 osd/ui/win32ui.c: 5656 osd/ui/winuiopt.c: 860, 2800
+# osd/ui/layout.c: 71 osd/ui/mame32.rc: 821 osd/ui/properties.c: 684 osd/ui/treeview.c: 271 osd/ui/win32ui.c: 5647 osd/ui/winuiopt.c: 858, 2798
 Vector
 ƒxƒNƒ^
 
-# osd/ui/treeview.c: 1261
+# osd/ui/treeview.c: 1248
 Vector (H)
 ƒxƒNƒ^ (H)
 
-# osd/ui/properties.c: 854
+# osd/ui/properties.c: 842
 Vector (H) %f Hz (%d colors)
 ƒxƒNƒ^ (‰¡) %f Hz (%d F)
 
-# osd/ui/treeview.c: 1259
+# osd/ui/treeview.c: 1246
 Vector (V)
 ƒxƒNƒ^ (V)
 
-# osd/ui/properties.c: 849
+# osd/ui/properties.c: 837
 Vector (V) %f Hz (%d colors)
 ƒxƒNƒ^ (c) %f Hz (%d F)
 
-# osd/ui/treeview.c: 1027
+# osd/ui/treeview.c: 1014
 Vertical
 cŒ^
 
-# osd/ui/properties.c: 1168
+# osd/ui/properties.c: 1156
 Video emulation isn't 100% accurate
 ‰æ‘œ‚ÌÄŒ»‚ª•sŠ®‘S
 
@@ -2518,7 +2518,7 @@ Video emulation isn't 100% accurate
 Video output method
 ‰æ–Ê•`‰æ•û®
 
-# osd/ui/win32ui.c: 825
+# osd/ui/win32ui.c: 817
 Videos (*.mng)
 ƒrƒfƒI (*.mng)
 
@@ -2538,11 +2538,11 @@ Visual Effects
 Volume attenuation
 ƒ{ƒŠƒ…[ƒ€
 
-# osd/ui/win32ui.c: 7640
+# osd/ui/win32ui.c: 7631
 WARNING: the game might not run correctly.
 Œx: ‚±‚ÌƒQ[ƒ€‚Í³í‚ÉÀso—ˆ‚Ü‚¹‚ñB
 
-# osd/ui/winuiopt.c: 3165
+# osd/ui/winuiopt.c: 3199
 WINDOW POSITION OPTIONS
 ƒEƒBƒ“ƒhƒEˆÊ’uƒIƒvƒVƒ‡ƒ“
 
@@ -2558,19 +2558,19 @@ MAME‚ÌV‚µ‚¢‹@”\\‚ğ•\\¦‚µ‚Ü‚·
 Window background
 ƒEƒBƒ“ƒhƒE ”wŒiF
 
-# osd/ui/layout.c: 66 osd/ui/properties.c: 1144
+# osd/ui/layout.c: 66 osd/ui/properties.c: 1132
 Working
 “®ì‰Â
 
-# osd/ui/treeview.c: 1067
+# osd/ui/treeview.c: 1054
 Wrong Colors
 F‚ªÄŒ»‚³‚ê‚È‚¢
 
-# osd/ui/layout.c: 56 osd/ui/win32ui.c: 874
+# osd/ui/layout.c: 56 osd/ui/win32ui.c: 866
 Year
 »‘¢”N
 
-# osd/ui/audit32.c: 131 osd/ui/win32ui.c: 5664
+# osd/ui/audit32.c: 120 osd/ui/win32ui.c: 5655
 Yes
 ‚Í‚¢
 

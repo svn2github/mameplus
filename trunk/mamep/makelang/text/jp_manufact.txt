@@ -582,7 +582,7 @@ Unico
 Universal
 ユニバーサル
 
-# Mahjong Dunhuang
+# Intersecti
 Unknown
 不明
 
@@ -786,7 +786,7 @@ Apple
 Arcadia Systems
 
 
-# Street Fighter EX (USA 961219)
+# Street Fighter EX (EURO 961219)
 Arika
 
 
@@ -1610,7 +1610,7 @@ Midway
 Midway Games
 
 
-# Wonder League Star (Korea)
+# Wonder League Star - Sok-Magicball Fighting (Korea)
 Mijin
 
 
@@ -1708,6 +1708,10 @@ Nova?
 
 # Rallys (bootleg?)
 Novar
+
+
+# Filetto (v1.05 901009)
+Novarmatic
 
 
 # American Poker II (set 1)
@@ -1974,6 +1978,10 @@ Sensible Software
 Sente
 
 
+# Quiz Olympic
+Seoul Coin Corp.
+
+
 # Speed Attack!
 Seta Kikaku Corp.
 
@@ -2032,6 +2040,10 @@ South West Research
 
 # Evil Stone
 Spacy Industrial, Ltd.
+
+
+# Mahjong Dunhuang
+Spirit
 
 
 # Pele's World Tournament Soccer (UE) [!]
