@@ -4389,10 +4389,10 @@ int megadrive_z80irq_hpos = 320;
 	switch (MEGADRIVE_REG0C_RS0 | (MEGADRIVE_REG0C_RS1 << 1))
 	{
 		 /* note, add 240 mode + init new timings! */
-		case 0:scr_width = 256;break;// configure_screen(0, 256-1, megadrive_visible_scanlines-1,(double)megadriv_framerate); break;
-		case 1:scr_width = 256;break;// configure_screen(0, 256-1, megadrive_visible_scanlines-1,(double)megadriv_framerate); mame_printf_debug("invalid screenmode!\n"); break;
-		case 2:scr_width = 320;break;// configure_screen(0, 320-1, megadrive_visible_scanlines-1,(double)megadriv_framerate); break; /* technically invalid, but used in rare cases */
-		case 3:scr_width = 320;break;// configure_screen(0, 320-1, megadrive_visible_scanlines-1,(double)megadriv_framerate); break;
+		case 0:scr_width = 256;break;// configure_screen(0, 256-1, megadrive_visible_scanlines-1,HZ_TO_SUBSECONDS((double)megadriv_framerate)); break;
+		case 1:scr_width = 256;break;// configure_screen(0, 256-1, megadrive_visible_scanlines-1,HZ_TO_SUBSECONDS((double)megadriv_framerate)); mame_printf_debug("invalid screenmode!\n"); break;
+		case 2:scr_width = 320;break;// configure_screen(0, 320-1, megadrive_visible_scanlines-1,HZ_TO_SUBSECONDS((double)megadriv_framerate)); break; /* technically invalid, but used in rare cases */
+		case 3:scr_width = 320;break;// configure_screen(0, 320-1, megadrive_visible_scanlines-1,HZ_TO_SUBSECONDS((double)megadriv_framerate)); break;
 	}
 //  mame_printf_debug("my mode %02x", megadrive_vdp_register[0x0c]);
 

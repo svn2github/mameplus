@@ -1133,8 +1133,7 @@ static void end_of_frame(struct sms_vdp *chip)
 		visarea.min_y = 0;
 		visarea.max_y = sms_mode_table[chip->screen_mode].sms2_height-1;
 
-		// this doesn't seem to be allowed in 113u2
-		//video_screen_configure(0, 256, sms_mode_table[chip->screen_mode].sms2_height, &visarea, chip->sms_framerate);
+		video_screen_configure(0, 256, sms_mode_table[chip->screen_mode].sms2_height, &visarea, HZ_TO_SUBSECONDS(chip->sms_framerate));
 	}
 	else /* 160x144 */
 	{
@@ -1144,8 +1143,7 @@ static void end_of_frame(struct sms_vdp *chip)
 		visarea.min_y = (192-144)/2;
 		visarea.max_y = (192-144)/2+144-1;
 
-		// this doesn't seem to be allowed in 113u2
-		//video_screen_configure(0, 256, sms_mode_table[chip->screen_mode].sms2_height, &visarea, chip->sms_framerate);
+		video_screen_configure(0, 256, sms_mode_table[chip->screen_mode].sms2_height, &visarea, HZ_TO_SUBSECONDS(chip->sms_framerate));
 
 	}
 

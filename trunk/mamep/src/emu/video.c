@@ -709,6 +709,12 @@ void video_screen_configure(int scrnum, int width, int height, const rectangle *
 	/* recompute the VBLANK timing */
 	cpu_compute_vblank_timing();
 
+	//mamep: fix ssf2ghw0114u1yel
+	if (info->last_partial_scan >= info->state->height)
+		/* reset partial updates and the update timer */
+		scanline0_callback(0);
+	else
+
 	/* reset the update timer */
 	mame_timer_adjust(info->scanline0_timer, video_screen_get_time_until_pos(scrnum, 0, 0), scrnum, time_zero);
 }

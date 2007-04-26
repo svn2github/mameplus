@@ -265,13 +265,13 @@ enum
 	GEN_VDP = 3   // Genesis VDP running in SMS2 Mode
 };
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static int sms_vdp_null_irq_callback(int status)
 {
 	return -1;
 }
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static int sms_vdp_cpu0_irq_callback(int status)
 {
 	if (status==1)
@@ -334,7 +334,7 @@ struct sms_vdp
 
 
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static void *start_vdp(int type)
 {
 	struct sms_vdp *chip;
@@ -431,7 +431,7 @@ static WRITE8_HANDLER( z80_unmapped_w )
 	printf("unmapped z80 write %04x\n",offset);
 }
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static void sn76496_write(UINT8 data)
 {
 	SN76496_0_w(0, data & 0xff);
@@ -532,7 +532,7 @@ UINT8 ioport_gg00_r(void)
 }
 
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static UINT8 vcounter_r(struct sms_vdp *chip)
 {
 //	return vc_pal_224[sms_scanline_counter%(sizeof vc_pal_224)];
@@ -546,7 +546,7 @@ static UINT8 vcounter_r(struct sms_vdp *chip)
 }
 
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static UINT8 vdp_data_r(struct sms_vdp *chip)
 {
 	UINT8 retdata = chip->readbuf;
@@ -555,7 +555,7 @@ static UINT8 vdp_data_r(struct sms_vdp *chip)
 	return retdata;
 }
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static void vdp_data_w(UINT8 data, struct sms_vdp* chip)
 {
 	/* data writes clear the pending flag */
@@ -620,7 +620,7 @@ static void vdp_data_w(UINT8 data, struct sms_vdp* chip)
 
 }
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static UINT8 vdp_ctrl_r(struct sms_vdp *chip)
 {
 	UINT8 retvalue;
@@ -642,14 +642,14 @@ static UINT8 vdp_ctrl_r(struct sms_vdp *chip)
 }
 
 /* check me */
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static void vdp_update_code_addr_regs(struct sms_vdp *chip)
 {
 	chip->addr_reg = ((chip->cmd_part2&0x3f)<<8) | chip->cmd_part1;
 	chip->cmd_reg = (chip->cmd_part2&0xc0)>>6;
 }
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static void vdp_set_register(struct sms_vdp *chip)
 {
 	UINT8 reg = chip->cmd_part2&0x0f;
@@ -687,7 +687,7 @@ static void vdp_set_register(struct sms_vdp *chip)
 //	printf("VDP: setting register %01x to %02x\n",reg, chip->cmd_part1);
 }
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static void vdp_ctrl_w(UINT8 data, struct sms_vdp *chip)
 {
 	if (chip->cmd_pend)
@@ -749,37 +749,37 @@ READ8_HANDLER( sms_ioport_gg00_r )
 
 
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static READ8_HANDLER( sms_vcounter_r )
 {
 	return vcounter_r(vdp1);
 }
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static READ8_HANDLER( sms_vdp_data_r )
 {
 	return vdp_data_r(vdp1);
 }
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static WRITE8_HANDLER( sms_vdp_data_w )
 {
 	vdp_data_w(data, vdp1);
 }
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static READ8_HANDLER( sms_vdp_ctrl_r )
 {
 	return vdp_ctrl_r(vdp1);
 }
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static WRITE8_HANDLER( sms_vdp_ctrl_w )
 {
 	vdp_ctrl_w(data, vdp1);
 }
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static WRITE8_HANDLER( sms_sn76496_w )
 {
 	sn76496_write(data);
@@ -978,7 +978,7 @@ void init_megatech_map(void)
 	smsgg_backupram = NULL;
 }
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static void draw_tile_line(int drawxpos, int tileline, UINT16 tiledata, UINT8* linebuf, struct sms_vdp* chip)
 {
 	int xx;
@@ -1033,7 +1033,7 @@ static void draw_tile_line(int drawxpos, int tileline, UINT16 tiledata, UINT8* l
 	}
 }
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static void sms_render_spriteline(int scanline, struct sms_vdp* chip)
 {
 	int spritenum;
@@ -1155,7 +1155,7 @@ static void sms_render_spriteline(int scanline, struct sms_vdp* chip)
 	}
 }
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static void sms_render_tileline(int scanline, struct sms_vdp* chip)
 {
 	int column = 0;
@@ -1209,7 +1209,7 @@ static void sms_render_tileline(int scanline, struct sms_vdp* chip)
 
 }
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static void sms_copy_to_renderbuffer(int scanline, struct sms_vdp* chip)
 {
 	int x;
@@ -1251,7 +1251,7 @@ static void sms_copy_to_renderbuffer(int scanline, struct sms_vdp* chip)
 
 }
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static void sms_draw_scanline(int scanline, struct sms_vdp* chip)
 {
 
@@ -1345,7 +1345,7 @@ static void sms_scanline_timer_callback(void* param)
 	}
 }
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static void show_tiles(struct sms_vdp* chip)
 {
 	int x,y,xx,yy;
@@ -1414,7 +1414,7 @@ static void show_tiles(struct sms_vdp* chip)
  Even though some games set bit 7, it does nothing.
  */
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static void end_of_frame(struct sms_vdp *chip)
 {
 	UINT8 m1 = (chip->regs[0x1]&0x10)>>4;
@@ -1433,7 +1433,7 @@ static void end_of_frame(struct sms_vdp *chip)
 		visarea.min_y = 0;
 		visarea.max_y = sms_mode_table[chip->screen_mode].sms2_height-1;
 
-		video_screen_configure(0, 256, sms_mode_table[chip->screen_mode].sms2_height, &visarea, chip->sms_framerate);
+		video_screen_configure(0, 256, sms_mode_table[chip->screen_mode].sms2_height, &visarea, HZ_TO_SUBSECONDS(chip->sms_framerate));
 	}
 	else /* 160x144 */
 	{
@@ -1443,7 +1443,7 @@ static void end_of_frame(struct sms_vdp *chip)
 		visarea.min_y = (192-144)/2;
 		visarea.max_y = (192-144)/2+144-1;
 
-		video_screen_configure(0, 256, sms_mode_table[chip->screen_mode].sms2_height, &visarea, chip->sms_framerate);
+		video_screen_configure(0, 256, sms_mode_table[chip->screen_mode].sms2_height, &visarea, HZ_TO_SUBSECONDS(chip->sms_framerate));
 
 	}
 
@@ -1456,14 +1456,14 @@ static void end_of_frame(struct sms_vdp *chip)
 	timer_adjust_ptr(chip->sms_scanline_timer,  TIME_NOW, 0);
 }
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static VIDEO_EOF(sms)
 {
 	end_of_frame(vdp1);
 	if (SMS_PAUSE_BUTTON) cpunum_set_input_line(0,INPUT_LINE_NMI,PULSE_LINE);
 }
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static VIDEO_START(sms)
 {
 
@@ -1497,7 +1497,7 @@ VIDEO_UPDATE(sms)
 	return 0;
 }
 
-//mamep: resolve conflict with drivers/sms.c
+//mamep: resolve conflict with drivers/segae.c
 static MACHINE_RESET(sms)
 {
 	timer_adjust_ptr(vdp1->sms_scanline_timer,  TIME_NOW, 0);
