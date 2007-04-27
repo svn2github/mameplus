@@ -82,7 +82,7 @@ START_OPT_FUNC_DRIVER
 
 // CORE PERFORMANCE OPTIONS
 	DEFINE_OPT(bool,                 autoframeskip)
-	DEFINE_OPT(frameskip,            frameskip)
+	DEFINE_OPT(int,                  frameskip)
 	DEFINE_OPT(int_positive,         seconds_to_run)
 	DEFINE_OPT(bool,                 throttle)
 	DEFINE_OPT(bool,                 sleep)
@@ -103,10 +103,10 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(bool,                 use_bezels)
 
 // CORE SCREEN OPTIONS
-	DEFINE_OPT(brightness,           brightness)
-	DEFINE_OPT(contrast,             contrast)
-	DEFINE_OPT(gamma,                gamma)
-	DEFINE_OPT(pause_brightness,     pause_brightness)
+	DEFINE_OPT(float,                brightness)
+	DEFINE_OPT(float,                contrast)
+	DEFINE_OPT(float,                gamma)
+	DEFINE_OPT(float,                pause_brightness)
 #ifdef USE_SCALE_EFFECTS
 	DEFINE_OPT(string_allow_null,    scale_effect)
 #endif /* USE_SCALE_EFFECTS */
@@ -118,7 +118,7 @@ START_OPT_FUNC_DRIVER
 
 // CORE SOUND OPTIONS
 	DEFINE_OPT(bool,                 sound)
-	DEFINE_OPT(samplerate,           samplerate)
+	DEFINE_OPT(int,                  samplerate)
 	DEFINE_OPT(bool,                 samples)
 	DEFINE_OPT(volume,               volume)
 #ifdef USE_VOLUME_AUTO_ADJUST
@@ -155,12 +155,12 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(bool,                 verbose)
 
 // WINDOWS PERFORMANCE OPTIONS
-	DEFINE_OPT(priority,             priority)
+	DEFINE_OPT(int,                  priority)
 	DEFINE_OPT(bool,                 multithreading)
 
 // WINDOWS VIDEO OPTIONS
 	DEFINE_OPT(video,                video)
-	DEFINE_OPT(numscreens,           numscreens)
+	DEFINE_OPT(int,                  numscreens)
 	DEFINE_OPT(bool,                 window)
 	DEFINE_OPT(bool,                 maximize)
 	DEFINE_OPT(bool,                 keepaspect)
@@ -173,7 +173,7 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(bool,                 hwstretch)
 
 // DIRECT3D-SPECIFIC OPTIONS
-	DEFINE_OPT(d3dversion,           d3dversion)
+	DEFINE_OPT(int,                  d3dversion)
 	DEFINE_OPT(bool,                 filter)
 
 // PER-WINDOW VIDEO OPTIONS
@@ -201,12 +201,12 @@ START_OPT_FUNC_DRIVER
 // FULL SCREEN OPTIONS
 	DEFINE_OPT(bool,                 triplebuffer)
 	DEFINE_OPT(bool,                 switchres)
-	DEFINE_OPT(brightness,           full_screen_brightness)
-	DEFINE_OPT(contrast,             full_screen_contrast)
-	DEFINE_OPT(gamma,                full_screen_gamma)
+	DEFINE_OPT(float,                full_screen_brightness)
+	DEFINE_OPT(float,                full_screen_contrast)
+	DEFINE_OPT(float,                full_screen_gamma)
 
 // WINDOWS SOUND OPTIONS
-	DEFINE_OPT(audio_latency,        audio_latency)
+	DEFINE_OPT(int,                  audio_latency)
 
 // INPUT DEVICE OPTIONS
 	DEFINE_OPT(bool,                 mouse)

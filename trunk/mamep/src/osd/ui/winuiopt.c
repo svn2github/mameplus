@@ -3430,7 +3430,7 @@ static void options_create_entry_winui(void)
 
 static void options_free_entry_cli(void)
 {
-	options_free(mame_options());
+	mame_options_exit();
 }
 
 static void options_free_entry_winui(void)

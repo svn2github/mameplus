@@ -2258,7 +2258,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 
 		assign_drivers();
 
-		options_free(mame_options());
+		mame_options_exit();
 	}
 #endif /* DRIVER_SWITCH */
 

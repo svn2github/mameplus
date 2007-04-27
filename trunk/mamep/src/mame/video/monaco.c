@@ -4,6 +4,8 @@
 #include "video/generic.h"
 #include "monaco.h"
 
+#define plot_pixel(bitmap,x,y,col)	do { *BITMAP_ADDR16(bitmap, y, x) = col; } while (0)
+
 struct monaco_gfx monaco_gfx;
 
 static gfx_element *led_font;

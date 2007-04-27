@@ -469,7 +469,7 @@ $(MAMEOBJ)/alba.a: \
 
 $(MAMEOBJ)/alliedl.a: \
 	$(DRIVERS)/ace.o \
-	$(DRIVERS)/clayshoo.o $(MACHINE)/clayshoo.o $(VIDEO)/clayshoo.o \
+	$(DRIVERS)/clayshoo.o $(MACHINE)/clayshoo.o \
 
 $(MAMEOBJ)/alpha.a: \
 	$(DRIVERS)/alpha68k.o $(VIDEO)/alpha68k.o \
@@ -499,7 +499,7 @@ $(MAMEOBJ)/atari.a: \
 	$(DRIVERS)/atarisy1.o $(VIDEO)/atarisy1.o \
 	$(DRIVERS)/atarisy2.o $(VIDEO)/atarisy2.o \
 	$(DRIVERS)/atetris.o $(VIDEO)/atetris.o \
-	$(DRIVERS)/avalnche.o $(MACHINE)/avalnche.o $(AUDIO)/avalnche.o $(VIDEO)/avalnche.o \
+	$(DRIVERS)/avalnche.o $(AUDIO)/avalnche.o \
 	$(DRIVERS)/badlands.o $(VIDEO)/badlands.o \
 	$(DRIVERS)/batman.o $(VIDEO)/batman.o \
 	$(DRIVERS)/beathead.o $(VIDEO)/beathead.o \

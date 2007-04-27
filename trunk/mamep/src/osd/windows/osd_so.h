@@ -194,7 +194,8 @@
 		extern SHAREDOBJ_FUNC(void)           options_clear_output_mark(core_options *opts);
 
 		#include "emuopts.h"
- 		extern SHAREDOBJ_FUNC(void)           mame_options_init(const options_entry *entries);
+		extern SHAREDOBJ_FUNC(void)           mame_options_init(const options_entry *entries);
+		extern SHAREDOBJ_FUNC(void)           mame_options_exit(void);
 		extern SHAREDOBJ_FUNC(core_options *) mame_options(void);
 
 		#include "restrack.h"
@@ -248,6 +249,7 @@
 		extern SHAREDOBJ_FUNC(unsigned long) create_path_recursive(const unsigned short *path);
 
 		// in windows/winmain.c
+		#include "winmain.h"
 		extern SHAREDOBJ_DATA const options_entry mame_win_options[];
 		extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 
@@ -313,6 +315,7 @@
 		extern SHAREDOBJ_FUNC(unsigned long) create_path_recursive(const unsigned short *path);
 
 		// in windows/winmain.c
+		#include "winmain.h"
 		extern SHAREDOBJ_DATA const options_entry mame_win_options[];
 		extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 
@@ -371,6 +374,7 @@
 	extern SHAREDOBJ_FUNC(unsigned long) create_path_recursive(const unsigned short *path);
 
 	// in windows/winmain.c
+	#include "winmain.h"
 	extern SHAREDOBJ_DATA const options_entry mame_win_options[];
 	extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 

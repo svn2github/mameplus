@@ -373,32 +373,12 @@ INLINE void _options_get_float_min_max(core_options *opts, float *p, const char 
 
 //============================================================
 
-#define _options_get_samplerate(opts,p,name)	_options_get_int_min_max(opts, p, name, 5000, 50000)
-#define options_set_samplerate		options_set_int
-#define options_copy_samplerate		options_copy_int
-#define options_free_samplerate		options_free_int
-#define _options_compare_samplerate	_options_compare_int
-#define options_compare_samplerate	options_compare_int
-
-
-//============================================================
-
 #define _options_get_volume(opts,p,name)	_options_get_int_min_max(opts, p, name, -32, 0)
 #define options_set_volume		options_set_int
 #define options_copy_volume		options_copy_int
 #define options_free_volume		options_free_int
 #define _options_compare_volume		_options_compare_int
 #define options_compare_volume		options_compare_int
-
-
-//============================================================
-
-#define _options_get_audio_latency(opts,p,name)	_options_get_int_min_max(opts, p, name, 1, 4)
-#define options_set_audio_latency		options_set_int
-#define options_copy_audio_latency		options_copy_int
-#define options_free_audio_latency		options_free_int
-#define _options_compare_audio_latency		_options_compare_int
-#define options_compare_audio_latency		options_compare_int
 
 
 //============================================================
@@ -480,46 +460,6 @@ INLINE void options_set_m68k_core(core_options *opts, const char *name, int valu
 #define _options_compare_ui_transparency	_options_compare_int
 #define options_compare_ui_transparency		options_compare_int
 #endif /* TRANS_UI */
-
-
-//============================================================
-
-#define _options_get_brightness(opts,p,name)	_options_get_float_min_max(opts, p, name, 0.1f, 2.0f)
-#define options_set_brightness		options_set_float
-#define options_copy_brightness		options_copy_float
-#define options_free_brightness		options_free_float
-#define _options_compare_brightness	_options_compare_float
-#define options_compare_brightness	options_compare_float
-
-
-//============================================================
-
-#define _options_get_contrast(opts,p,name)	_options_get_float_min_max(opts, p, name, 0.1f, 2.0f)
-#define options_set_contrast		options_set_float
-#define options_copy_contrast		options_copy_float
-#define options_free_contrast		options_free_float
-#define _options_compare_contrast	_options_compare_float
-#define options_compare_contrast	options_compare_float
-
-
-//============================================================
-
-#define _options_get_pause_brightness(opts,p,name)	_options_get_float_min_max(opts, p, name, 0.0f, 1.0f)
-#define options_set_pause_brightness		options_set_float
-#define options_copy_pause_brightness		options_copy_float
-#define options_free_pause_brightness		options_free_float
-#define _options_compare_pause_brightness	_options_compare_float
-#define options_compare_pause_brightness	options_compare_float
-
-
-//============================================================
-
-#define _options_get_gamma(opts,p,name)	_options_get_float_min_max(opts, p, name, 0.1f, 3.0f);
-#define options_set_gamma		options_set_float
-#define options_copy_gamma		options_copy_float
-#define options_free_gamma		options_free_float
-#define _options_compare_gamma	_options_compare_float
-#define options_compare_gamma	options_compare_float
 
 
 //============================================================
@@ -753,46 +693,6 @@ INLINE void _options_get_resolution(core_options *opts, char **p, const char *na
 #define options_free_resolution		options_free_string
 #define _options_compare_resolution	_options_compare_string
 #define options_compare_resolution	options_compare_string
-
-
-//============================================================
-
-#define _options_get_frameskip(opts,p,name)	_options_get_int_min_max(opts, p, name, 0, FRAMESKIP_LEVELS - 1)
-#define options_set_frameskip		options_set_int
-#define options_copy_frameskip		options_copy_int
-#define options_free_frameskip		options_free_int
-#define _options_compare_frameskip	_options_compare_int
-#define options_compare_frameskip	options_compare_int
-
-
-//============================================================
-
-#define _options_get_priority(opts,p,name)	_options_get_int_min_max(opts, p, name, -15, 1)
-#define options_set_priority		options_set_int
-#define options_copy_priority		options_copy_int
-#define options_free_priority		options_free_int
-#define _options_compare_priority	_options_compare_int
-#define options_compare_priority	options_compare_int
-
-
-//============================================================
-
-#define _options_get_numscreens(opts,p,name)	_options_get_int_min_max(opts, p, name, 1, MAX_WINDOWS)
-#define options_set_numscreens		options_set_int
-#define options_copy_numscreens		options_copy_int
-#define options_free_numscreens		options_free_int
-#define _options_compare_numscreens	_options_compare_int
-#define options_compare_numscreens	options_compare_int
-
-
-//============================================================
-
-#define _options_get_d3dversion(opts,p,name)	_options_get_int_min_max(opts, p, name, 8, 9)
-#define options_set_d3dversion		options_set_int
-#define options_copy_d3dversion		options_copy_int
-#define options_free_d3dversion		options_free_int
-#define _options_compare_d3dversion	_options_compare_int
-#define options_compare_d3dversion	options_compare_int
 
 
 //============================================================

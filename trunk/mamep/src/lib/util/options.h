@@ -58,6 +58,14 @@ enum _options_message
 };
 typedef enum _options_message options_message;
 
+enum _options_range_type
+{
+	OPTION_RANGE_NONE,
+	OPTION_RANGE_INT,
+	OPTION_RANGE_FLOAT
+};
+typedef enum _options_range_type options_range_type;
+
 
 
 /***************************************************************************
@@ -96,8 +104,6 @@ const char *options_get_string(core_options *opts, const char *name);
 int options_get_bool(core_options *opts, const char *name);
 int options_get_int(core_options *opts, const char *name);
 float options_get_float(core_options *opts, const char *name);
-int options_get_int_range(core_options *opts, const char *name, int minval, int maxval);
-float options_get_float_range(core_options *opts, const char *name, float minval, float maxval);
 UINT32 options_get_seqid(core_options *opts, const char *name);
 
 void options_set_string(core_options *opts, const char *name, const char *value);
@@ -106,5 +112,10 @@ void options_set_int(core_options *opts, const char *name, int value);
 void options_set_float(core_options *opts, const char *name, float value);
 
 void options_clear_output_mark(core_options *opts);
+
+/* calls to query information about an option's range */
+options_range_type options_get_range_type(core_options *opts, const char *name);
+void options_get_range_int(core_options *opts, const char *name, int *minval, int *maxval);
+void options_get_range_float(core_options *opts, const char *name, float *minval, float *maxval);
 
 #endif /* __OPTIONS_H__ */

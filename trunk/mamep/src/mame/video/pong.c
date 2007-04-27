@@ -13,6 +13,8 @@
 #include "ui.h"
 #endif
 
+#define plot_pixel(bitmap,x,y,col)	do { *BITMAP_ADDR16(bitmap, y, x) = col; } while (0)
+
 extern int pong_hit_sound;
 extern int pong_vblank_sound;
 extern int pong_score_sound;
