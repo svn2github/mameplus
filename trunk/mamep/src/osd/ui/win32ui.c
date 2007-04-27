@@ -5788,12 +5788,24 @@ static void AddDriverIcon(int nItem,int default_icon_index)
 {
 	HICON hIcon = 0;
 	int nParentIndex = GetParentIndex(drivers[nItem]);
+	char* game_name = (char *)drivers[nItem]->name;
 
 	/* if already set to rom or clone icon, we've been here before */
 	if (icon_index[nItem] == 1 || icon_index[nItem] == 3)
 		return;
 
-	hIcon = LoadIconFromFile((char *)drivers[nItem]->name);
+	hIcon = LoadIconFromFile(game_name);
+	
+	if (hIcon == NULL)
+	{
+		if (strstr(game_name, "g_") == game_name)
+			hIcon = LoadIconFromFile("g_games");
+		else if (strstr(game_name, "gg_") == game_name)
+			hIcon = LoadIconFromFile("gg_games");
+		else if (strstr(game_name, "s_") == game_name)
+			hIcon = LoadIconFromFile("s_games");
+	}
+	
 	if (hIcon == NULL && nParentIndex >= 0)
 	{
 		hIcon = LoadIconFromFile((char *)drivers[nItem]->parent);
