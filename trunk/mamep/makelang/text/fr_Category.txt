@@ -76,7 +76,7 @@ Combat / 3D
 
 # 793
 Fighter / Field
-Combat / Champ
+Combat / Champs
 
 # 809
 Fighter / Misc.
@@ -84,7 +84,7 @@ Combat / Divers
 
 # 816
 Fighter / Multiplay
-Combat / Multi joueur
+Combat / Multi-joueur
 
 # 823
 Fighter / Versus
@@ -148,11 +148,11 @@ Labyrinthe / Petit Shooter *Adulte*
 
 # 1823
 Maze / Surround
-Labyrinthe / Entouré
+Labyrinthe / Encerclé
 
 # 1837
 Mini-Games
-Mini jeux
+Mini-jeux
 
 # 1874
 Misc.
@@ -200,11 +200,11 @@ Plate Forme / Combat en Scrollant
 
 # 2255
 Platform / Run Jump
-Plate Forme / Course et Saut
+Plate Forme / Course de Saut
 
 # 2478
 Platform / Run Jump *Mature*
-Plate Forme / Course et Saut *Adulte*
+Plate Forme / Course de Saut *Adulte*
 
 # 2484
 Platform / Run Jump Scrolling
@@ -252,7 +252,7 @@ Puzzle / Hors ligne *Adulte*
 
 # 3060
 Puzzle / Sliding
-Puzzle / Glissade
+Puzzle / Glisse
 
 # 3075
 Puzzle / Toss
@@ -344,7 +344,7 @@ Tir / Champ
 
 # 3652
 Shooter / Field *Mature*
-Tir / Chamap *Adulte*
+Tir / Champ *Adulte*
 
 # 3660
 Shooter / Flying
@@ -444,7 +444,7 @@ Sports / Course à pied
 
 # 5424
 Sports / Multiplay
-Sports / Multi jeu
+Sports / Multi-jeu
 
 # 5434
 Sports / Pool
@@ -452,11 +452,11 @@ Sports / Billard
 
 # 5470
 Sports / Pool *Mature*
-Sports / Piscine *Adulte*
+Sports / Billard *Adulte*
 
 # 5482
 Sports / Shuffleboard
-Sports / Palet
+Sports / Jeu de palet
 
 # 5496
 Sports / Skiing
@@ -524,7 +524,7 @@ Casino
 
 # 820
 Fighter / Third Person
-
+Combat / 3ème personne
 
 # 2768
 Puzzle
@@ -540,15 +540,15 @@ Puzzle / Match
 
 # 3070
 Puzzle / Sliding *Mature*
-
+Puzzle / Glissant *Adulte*
 
 # 3140
 Quiz / Corean
-
+Quiz / Koréen
 
 # 3207
 Quiz / German
-
+Quiz / Allemand
 
 # 4997
 Sports
@@ -568,11 +568,11 @@ Sports / Bowling
 
 # 5242
 Sports / Football Amer.
-
+Sports / Football Amércain
 
 # 5288
 Sports / Football Rugby
-
+Sports / Rugby
 
 # 5293
 Sports / Golf
@@ -584,7 +584,7 @@ Sports / Handball
 
 # 5387
 Sports / Hang Gliding
-
+Sports / Parapente
 
 # 5392
 Sports / Hockey
@@ -596,11 +596,11 @@ Sports / Ping pong
 
 # 5488
 Sports / Skateboarding
-
+Sports / Skateboard
 
 # 5515
 Sports / SkyDiving
-
+Sports / Chute libre
 
 # 5607
 Sports / Sumo

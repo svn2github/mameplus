@@ -3300,11 +3300,11 @@ Stéréo
 
 # cheat.c: 2536
 there are no cheats for this game
-Il n'y a pas de cheats pour ce jeu
+Aucun cheats pour ce jeu
 
 # cheat.c: 2002
 there are no old values
-Il n'y a pas d'anciennes valeurs
+Aucune valeurs anciennes
 
 # cheat.c: 2548
 unzip it and place it in the MAME directory
@@ -3356,7 +3356,7 @@ Valeurs restorées
 
 # cheat.c: 934
 ---> <ENTER> To Edit <---
-
+---> <ENTER> pour Editer <---
 
 # inptport.c: 371
 1 Coin/1 Credit
@@ -3664,7 +3664,7 @@ DIAL
 
 # ui_text.c: 226
 Decoding Graphics
-
+Décodage des graphismes
 
 # ui_text.c: 181
 Description
@@ -3792,75 +3792,75 @@ Horizontal
 
 # cheat.c: 915
 Infinite Ammo
-
+Munition infini
 
 # cheat.c: 916
 Infinite Ammo PL1
-
+Munition infini PL1
 
 # cheat.c: 917
 Infinite Ammo PL2
-
+Munition infini PL2
 
 # cheat.c: 918
 Infinite Bombs
-
+Bombe infini
 
 # cheat.c: 919
 Infinite Bombs PL1
-
+Bombe infini PL1
 
 # cheat.c: 920
 Infinite Bombs PL2
-
+Bombe infini PL2
 
 # cheat.c: 910
 Infinite Energy
-
+Energie infini
 
 # cheat.c: 911
 Infinite Energy PL1
-
+Energie infini PL1
 
 # cheat.c: 912
 Infinite Energy PL2
-
+Energie infini PL2
 
 # cheat.c: 901 drivers/cinemat.c: 950 drivers/clshroad.c: 219 drivers/galaxian.c: 3150 drivers/ginganin.c: 232 drivers/hal21.c: 417 drivers/jack.c: 653 drivers/prehisle.c: 158 drivers/vicdual.c: 540, 917
 Infinite Lives
-
+Vie infini
 
 # cheat.c: 902
 Infinite Lives PL1
-
+Vie infini PL1
 
 # cheat.c: 903
 Infinite Lives PL2
-
+Vie infini PL2
 
 # cheat.c: 921
 Infinite Smart Bombs
-
+Bombe intelligente infini
 
 # cheat.c: 922
 Infinite Smart Bombs PL1
-
+Bombe intelligente infini PL1
 
 # cheat.c: 923
 Infinite Smart Bombs PL2
-
+Bombe intelligente infini PL2
 
 # cheat.c: 904 drivers/vsnes.c: 851
 Infinite Time
-
+Temps infini
 
 # cheat.c: 905
 Infinite Time PL1
-
+Temps infini PL1
 
 # cheat.c: 906
 Infinite Time PL2
-
+Temps infini PL2
 
 # inptport.c: 400
 International
@@ -3868,11 +3868,11 @@ International
 
 # cheat.c: 908
 Invincibility PL1
-
+Invincibilité PL1
 
 # cheat.c: 909
 Invincibility PL2
-
+Invincibilité PL2
 
 # inptport.c: 438 
 Joystick
@@ -3948,67 +3948,67 @@ Mono
 
 # inptport.c: 957
 Mouse X
-
+Souris X
 
 # inptport.c: 958
 Mouse X 2
-
+Souris X 2
 
 # inptport.c: 959
 Mouse X 3
-
+Souris X 3
 
 # inptport.c: 960
 Mouse X 4
-
+Souris X 4
 
 # inptport.c: 961
 Mouse X 5
-
+Souris X 5
 
 # inptport.c: 962
 Mouse X 6
-
+Souris X 6
 
 # inptport.c: 963
 Mouse X 7
-
+Souris X 7
 
 # inptport.c: 964
 Mouse X 8
-
+Souris X 8
 
 # inptport.c: 966
 Mouse Y
-
+Souris Y
 
 # inptport.c: 967
 Mouse Y 2
-
+Souris Y 2
 
 # inptport.c: 968
 Mouse Y 3
-
+Souris Y 3
 
 # inptport.c: 969
 Mouse Y 4
-
+Souris Y 4
 
 # inptport.c: 970
 Mouse Y 5
-
+Souris Y 5
 
 # inptport.c: 971
 Mouse Y 6
-
+Souris Y 6
 
 # inptport.c: 972
 Mouse Y 7
-
+Souris Y 7
 
 # inptport.c: 973
 Mouse Y 8
-
+Souris Y 8
 
 # ui_text.c: 39
 NA
@@ -4708,7 +4708,7 @@ USA
 
 # cpuexec.c: 580
 Unable to save due to pending anonymous timers. See error.log for details.
-
+Ne peut pas sauvegarder à cause de compteurs anonymes en suspend. Consultez error.log pour plus de détails.
 
 # ui_text.c: 146
 Uptime
@@ -4756,7 +4756,7 @@ Zoom
 
 # datafile.c: 2140
 \nStory:\n
-
+\nHistoire :\n
 
 # datafile.c: 2291, 2309
 \n\nCLONES:\n
