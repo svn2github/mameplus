@@ -62,7 +62,7 @@ const game_driver * const plusdrivers[] =
 	DRIVER( avspd )		/* 20/05/1994 (c) 1994 (Euro) Phoenix Edition */
 	DRIVER( ringdstd )	/* 02/09/1994 (c) 1994 (Euro) Phoenix Edition */
 	DRIVER( xmcotad )	/* 05/01/1995 (c) 1994 (Euro) Phoenix Edition */
-	DRIVER( nwarrd )	/* 06/04/1995 (c) 1995 (US) Phoenix Edition */
+	DRIVER( nwarrud )	/* 06/04/1995 (c) 1995 (US) Phoenix Edition */
 	DRIVER( sfad )		/* 27/07/1995 (c) 1995 (Euro) Phoenix Edition */
 	DRIVER( 19xxd )		/* 07/12/1995 (c) 1996 (US) Phoenix Edition */
 	DRIVER( ddsomud )	/* 19/06/1996 (c) 1996 (US) Phoenix Edition */

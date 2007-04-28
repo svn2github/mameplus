@@ -7386,7 +7386,7 @@ ROM_START( mvscud )
 	ROM_LOAD16_WORD_SWAP( "mvc.12m",   0x400000, 0x400000, CRC(7ccb1896) SHA1(74caadf3282fcc6acffb1bbe3734106f81124121) )
 ROM_END
 
-ROM_START( nwarrd )
+ROM_START( nwarrud )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "vphud.03f", 0x000000, 0x80000, CRC(20d4d5a8) SHA1(420396c77a9f77feaba4be2e0faaab995842fb57) )
 	ROM_LOAD16_WORD_SWAP( "vphud.04c", 0x080000, 0x80000, CRC(61be9b42) SHA1(679381f279f51f28fdc4c4dbefabe6139855303b) )
@@ -7949,7 +7949,7 @@ GAME( 1993, ddtodd,   ddtod,   phoenix, ddtod,   cps2, ROT0,   "hack", "Dungeons
 GAME( 1994, xmcotad,  xmcota,  phoenix, ssf2,    cps2, ROT0,   "hack", "X-Men: Children of the Atom (Euro 950105 Phoenix Edition)", 0 )
 GAME( 1994, avspd,    avsp,    phoenix, avsp,    cps2, ROT0,   "hack", "Alien vs. Predator (Euro 940520 Phoenix Edition)", 0 )
 GAME( 1994, ringdstd, ringdest,phoenix, ssf2,    cps2, ROT0,   "hack", "Ring of Destruction: Slammasters II (Euro 940902 Phoenix Edition)", 0 )
-GAME( 1995, nwarrd,   nwarr,   phoenix, ssf2,    cps2, ROT0,   "hack", "Night Warriors: Darkstalkers' Revenge (USA 950406 Phoenix Edition)", 0 )
+GAME( 1995, nwarrud,  nwarr,   phoenix, ssf2,    cps2, ROT0,   "hack", "Night Warriors: Darkstalkers' Revenge (USA 950406 Phoenix Edition)", 0 )
 GAME( 1995, sfad,     sfa,     phoenix, ssf2,    cps2, ROT0,   "hack", "Street Fighter Alpha: Warriors' Dreams (Euro 950727 Phoenix Edition)", 0 )
 GAME( 1996, 19xxd,    19xx,    phoenix, 19xx,    cps2, ROT270, "hack", "19XX: The War Against Destiny (USA 951207 Phoenix Edition)", 0 )
 GAME( 1996, ddsomud,  ddsom,   phoenix, ddtod,   cps2, ROT0,   "hack", "Dungeons & Dragons: Shadow over Mystara (USA 960619 Phoenix Edition)", 0 )
