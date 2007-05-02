@@ -170,7 +170,7 @@ Apple
 Arcadia Systems
 Arcadia Systems
 
-# Street Fighter EX (USA 961219)
+# Street Fighter EX (EURO 961219)
 Arika
 Arika
 
@@ -1262,7 +1262,7 @@ Midway
 Midway Games
 Midway Games
 
-# Wonder League Star (Korea)
+# Wonder League Star - Sok-Magicball Fighting (Korea)
 Mijin
 Mijin
 
@@ -2158,7 +2158,7 @@ Universal Video Spiel
 Uniwang
 Uniwang
 
-# Mahjong Dunhuang
+# Intersecti
 Unknown
 Unknown
 
@@ -2433,4 +2433,16 @@ homebrew
 # Chewing Gum
 unknown
 desconocido
+
+# Filetto (v1.05 901009)
+Novarmatic
+
+
+# Quiz Olympic
+Seoul Coin Corp.
+
+
+# Mahjong Dunhuang
+Spirit
+
 
