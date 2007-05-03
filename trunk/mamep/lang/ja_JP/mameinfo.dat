@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.114u2      #
+#     Mameinfo.dat日本語版 v0.114u3      #
 #                                        #
-#             April 20, 2007             #
+#             April 27, 2007             #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,10 +12,18 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：861 翻訳済：845
-# 追加項目：338 合計：1199
+# Tester報告：866 翻訳済：851
+# 追加項目：338 合計：1204
 #
 
+
+$info=sstrangr
+$mame
+[バグ]
+
+- 0.113u2での変更により、グラフィックが大きく乱れている。 sstrangr0114u2yel, RansAckeR / Haze
+
+$end
 
 $info=gng
 $mame
@@ -149,6 +157,22 @@ $mame
 
 $end
 
+$info=kdeadeye
+$mame
+[バグ]
+
+- デバッグビルドでクラッシュする。GAME_NOT_WORKINGフラグはついているが、以前はクラッシュしなかった。 konamigv0114u2red, Firewave
+
+$end
+
+$info=btchamp
+$mame
+[バグ]
+
+- デバッグビルドでクラッシュする。GAME_NOT_WORKINGフラグはついているが、以前はクラッシュしなかった。 konamigv0114u2red, Firewave
+
+$end
+
 $info=rampage
 $mame
 [バグ]
@@ -157,11 +181,43 @@ $mame
 
 $end
 
-$info=ssf2ghw
+$info=rfjetus
 $mame
 [バグ]
 
-- 画面に何も表示されない。音は鳴る。 ssf2ghw0114u1yel, R. Belmont
+- デバッグビルドでクラッシュする。 rfjetus0114u2red, Firewave
+
+$end
+
+$info=cotton2
+$mame
+[バグ]
+
+- サクセス製のST-Vゲームが起動時にクラッシュする。 successstv0114u2red, Radwar /  JonteP / R.Belmont
+
+$end
+
+$info=othellos
+$mame
+[バグ]
+
+- サクセス製のST-Vゲームが起動時にクラッシュする。 successstv0114u2red, Radwar /  JonteP / R.Belmont
+
+$end
+
+$info=grdforce
+$mame
+[バグ]
+
+- サクセス製のST-Vゲームが起動時にクラッシュする。 successstv0114u2red, Radwar /  JonteP / R.Belmont
+
+$end
+
+$info=cottonbm
+$mame
+[バグ]
+
+- サクセス製のST-Vゲームが起動時にクラッシュする。 successstv0114u2red, Radwar /  JonteP / R.Belmont
 
 $end
 
@@ -491,15 +547,6 @@ $mame
 [バグ]
 
 - 1面で火炎放射器を持った敵が炎を出している間、BGMが早送りになる。 cbuster0104u2gre, Jonah1976 / king_krm / Twisty
-
-$end
-
-$info=cannonb
-$mame
-[バグ]
-
-- 筐体設定のDIPスイッチ（カクテル・アップライト）が動作せず、常にカクテルモードになっている。
-ただし、プレイヤー2の操作はアップライトで、テキストが反転している。 cannonb078u6yel, Nomax / The tECHIDNA
 
 $end
 
@@ -2934,14 +2981,6 @@ $mame
 
 - ゲームオーバーになったあとのデモ画面で、
 3行あるうちの一番下の行が消えずに残ってしまう。 phoenix055gre, zaxxon1
-
-$end
-
-$info=hatris
-$mame
-[バグ]
-
-- 画面反転の設定をすると、全て左上にずれて表示される。 hatris0111u4gre, Speedfreak
 
 $end
 
