@@ -315,7 +315,6 @@
 		extern SHAREDOBJ_FUNC(unsigned long) create_path_recursive(const unsigned short *path);
 
 		// in windows/winmain.c
-		#include "winmain.h"
 		extern SHAREDOBJ_DATA const options_entry mame_win_options[];
 		extern SHAREDOBJ_FUNC(int) main_(int argc, char **argv);
 
