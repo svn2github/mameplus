@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.114u3      #
+#     Mameinfo.dat日本語版 v0.114u4      #
 #                                        #
-#             April 27, 2007             #
+#              May 6, 2007               #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,18 +12,10 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：866 翻訳済：851
-# 追加項目：338 合計：1204
+# Tester報告：869 翻訳済：852
+# 追加項目：338 合計：1207
 #
 
-
-$info=sstrangr
-$mame
-[バグ]
-
-- 0.113u2での変更により、グラフィックが大きく乱れている。 sstrangr0114u2yel, RansAckeR / Haze
-
-$end
 
 $info=gng
 $mame
@@ -34,7 +26,9 @@ $mame
 
 [バグ]
 
-- BGMのテンポがゲームの負荷によって変わってしまう。1943では連射するとBGMが遅くなる。他のゲームも同様。 ym2203slowdown0114u2gre, Augusto / Machone
+- BGMのテンポがゲームの負荷によって変わってしまう。1943では連射するとBGMが遅くなる。他のゲームも同様。
+
+0.111u5でZ80のIRQが書き直されてから発生。 ym2203slowdown0114u2gre, Augusto / Machone
 
 $end
 
@@ -47,7 +41,9 @@ $mame
 
 [バグ]
 
-- BGMのテンポがゲームの負荷によって変わってしまう。1943では連射するとBGMが遅くなる。他のゲームも同様。 ym2203slowdown0114u2gre, Augusto / Machone
+- BGMのテンポがゲームの負荷によって変わってしまう。1943では連射するとBGMが遅くなる。他のゲームも同様。
+
+0.111u5でZ80のIRQが書き直されてから発生。 ym2203slowdown0114u2gre, Augusto / Machone
 
 $end
 
@@ -55,7 +51,9 @@ $info=gunsmoke
 $mame
 [バグ]
 
-- BGMのテンポがゲームの負荷によって変わってしまう。1943では連射するとBGMが遅くなる。他のゲームも同様。 ym2203slowdown0114u2gre, Augusto / Machone
+- BGMのテンポがゲームの負荷によって変わってしまう。1943では連射するとBGMが遅くなる。他のゲームも同様。
+
+0.111u5でZ80のIRQが書き直されてから発生。 ym2203slowdown0114u2gre, Augusto / Machone
 
 $end
 
@@ -68,7 +66,9 @@ $mame
 
 [バグ]
 
-- BGMのテンポがゲームの負荷によって変わってしまう。1943では連射するとBGMが遅くなる。他のゲームも同様。 ym2203slowdown0114u2gre, Augusto / Machone
+- BGMのテンポがゲームの負荷によって変わってしまう。1943では連射するとBGMが遅くなる。他のゲームも同様。
+
+0.111u5でZ80のIRQが書き直されてから発生。 ym2203slowdown0114u2gre, Augusto / Machone
 
 
 [TIPS]
@@ -115,16 +115,9 @@ $info=sidearms
 $mame
 [バグ]
 
-- BGMのテンポがゲームの負荷によって変わってしまう。1943では連射するとBGMが遅くなる。他のゲームも同様。 ym2203slowdown0114u2gre, Augusto / Machone
+- BGMのテンポがゲームの負荷によって変わってしまう。1943では連射するとBGMが遅くなる。他のゲームも同様。
 
-$end
-
-$info=hginga
-$mame
-[バグ]
-
-- Player 1 BETキー定義がダブっている。
-上の方はPlayer 2用の模様。 hginga0114u2gra, uRebelScum
+0.111u5でZ80のIRQが書き直されてから発生。 ym2203slowdown0114u2gre, Augusto / Machone
 
 $end
 
@@ -133,27 +126,6 @@ $mame
 [バグ]
 
 - コンティニュー画面でコインを入れることが出来ない。 gogomile0114u2gre, Justin Kerk
-
-$end
-
-$info=ckongg
-$mame
-[バグ]
-
-- Player 1の操作は4方向だが、Player 2は8方向になっている。 ckongg0114u2gra, uRebelScum
-
-$end
-
-$info=gauntlet
-$mame
-[情報]
-
-- スタートボタンは、ポーション用のキーに使う。
-
-
-[バグ]
-
-- nvファイルがある状態で起動すると、各プレイヤーにクレジットが1つ入った状態になる。 gauntlet0114u2gre, Machone
 
 $end
 
@@ -173,11 +145,18 @@ $mame
 
 $end
 
-$info=rampage
+$info=term2
 $mame
 [バグ]
 
-- プレイヤー3が4方向入力になっている。プレイヤー1と2は8方向。 rampage0114u2gra, uRebelScum
+- 撃っても敵に当たらない。 term2_0114u4yel, CokeDealer
+
+
+- アイテム箱から出てくる武器冷やし器や、再チャージの動作が速すぎる。
+実機では3～4秒かかる。 term2056ora, dwidel
+
+
+- スカイネットを破壊した後の画像が左右反転している。前からあったバグ。 term2054gre, BSR
 
 $end
 
@@ -186,38 +165,6 @@ $mame
 [バグ]
 
 - デバッグビルドでクラッシュする。 rfjetus0114u2red, Firewave
-
-$end
-
-$info=cotton2
-$mame
-[バグ]
-
-- サクセス製のST-Vゲームが起動時にクラッシュする。 successstv0114u2red, Radwar /  JonteP / R.Belmont
-
-$end
-
-$info=othellos
-$mame
-[バグ]
-
-- サクセス製のST-Vゲームが起動時にクラッシュする。 successstv0114u2red, Radwar /  JonteP / R.Belmont
-
-$end
-
-$info=grdforce
-$mame
-[バグ]
-
-- サクセス製のST-Vゲームが起動時にクラッシュする。 successstv0114u2red, Radwar /  JonteP / R.Belmont
-
-$end
-
-$info=cottonbm
-$mame
-[バグ]
-
-- サクセス製のST-Vゲームが起動時にクラッシュする。 successstv0114u2red, Radwar /  JonteP / R.Belmont
 
 $end
 
@@ -2917,9 +2864,6 @@ $info=omegrace
 $mame
 [バグ]
 
-- 音程が高すぎる。ゲーム速度は問題ない。 omegrace0101u2gre, mamemaster256
-
-
 - 最初の何面かをクリアして"First Droid Wave Complete"のメッセージが出ててプレイヤーが増えるとBGMがその後変になる。 omegrace0104u9gre, tamacula
 
 $end
@@ -2981,14 +2925,6 @@ $mame
 
 - ゲームオーバーになったあとのデモ画面で、
 3行あるうちの一番下の行が消えずに残ってしまう。 phoenix055gre, zaxxon1
-
-$end
-
-$info=pipedrm
-$mame
-[バグ]
-
-- 画面反転時に表示不具合がでる。 pipedrm0111u4gre, Speedfreak
 
 $end
 
@@ -4008,9 +3944,6 @@ $info=astormbl
 $mame
 [バグ]
 
-- グラフィックがかなりやばくなっている。0.95くらいではまだ起きてなくて、0.101あたりから。 astormbl0101u2yel, John L.
-
-
 - 後半のシューティング面（車屋や工場の中）で、死んだモンスターのスプライトが間違った場所に現れる。 astormbl336b4gre, YMI
 
 
@@ -4521,9 +4454,6 @@ $end
 $info=ssriders
 $mame
 [バグ]
-
-- インターミッション時にスナップショットを撮ると、アルファブレンディングがされない。 ssriders062gre, NeoGouki
-
 
 - 斜め移動時に、キャラクタがぶれる(多分プライオリティのせい。
 
@@ -5239,18 +5169,6 @@ $mame
 [バグ]
 
 - World版のコンティニュー画面がドイツ語で表示される。 fantasy0105u3ora, cpukett / Twisty / Luigi30 / RansAckeR
-
-$end
-
-$info=term2
-$mame
-[バグ]
-
-- アイテム箱から出てくる武器冷やし器や、再チャージの動作が速すぎる。
-実機では3～4秒かかる。 term2056ora, dwidel
-
-
-- スカイネットを破壊した後の画像が左右反転している。前からあったバグ。 term2054gre, BSR
 
 $end
 
@@ -7510,6 +7428,14 @@ $mame
 [情報]
 
 - 初回起動時、"NVRAM test fail"と表示されるが１キーを押すと進む。NVRAMは自動的に初期化される。
+
+$end
+
+$info=gauntlet
+$mame
+[情報]
+
+- スタートボタンは、ポーション用のキーに使う。
 
 $end
 

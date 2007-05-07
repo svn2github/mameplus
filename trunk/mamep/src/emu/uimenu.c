@@ -1990,7 +1990,7 @@ static UINT32 menu_command(UINT32 state)
 	}
 	else
 	{
-		char buf[80];
+		char buf[120];
 		int res;
 
 		strcpy(buf, "\t");
@@ -2085,7 +2085,7 @@ static UINT32 menu_command_contents(UINT32 state)
 		ui_draw_message_window_fixed_width(bufptr);
 	else
 	{
-		char buf[80];
+		char buf[120];
 
 		strcpy(buf, "\t");
 		strcat(buf, ui_getstring(UI_commandmissing));
