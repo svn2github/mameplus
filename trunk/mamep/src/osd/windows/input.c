@@ -1066,21 +1066,21 @@ static void autoselect_analog_devices(const input_port_entry *inp, int type1, in
 			if (analog_type[anatype] == SELECT_TYPE_MOUSE && !win_use_mouse)
 			{
 				win_use_mouse = 1;
-				verbose_printf(_WINDOWS("Input: Autoenabling mice due to presence of a %s\n"), ananame);
+				mame_printf_verbose(_WINDOWS("Input: Autoenabling mice due to presence of a %s\n"), ananame);
 			}
 
 			// autoenable joystick devices
 			if (analog_type[anatype] == SELECT_TYPE_JOYSTICK && !use_joystick)
 			{
 				use_joystick = 1;
-				verbose_printf(_WINDOWS("Input: Autoenabling joysticks due to presence of a %s\n"), ananame);
+				mame_printf_verbose(_WINDOWS("Input: Autoenabling joysticks due to presence of a %s\n"), ananame);
 			}
 
 			// autoenable lightgun devices
 			if (analog_type[anatype] == SELECT_TYPE_LIGHTGUN && !use_lightgun)
 			{
 				use_lightgun = 1;
-				verbose_printf(_WINDOWS("Input: Autoenabling lightguns due to presence of a %s\n"), ananame);
+				mame_printf_verbose(_WINDOWS("Input: Autoenabling lightguns due to presence of a %s\n"), ananame);
 			}
 
 			// all done
@@ -1454,7 +1454,7 @@ int wininput_init(running_machine *machine)
 				goto cant_create_dinput;
 		}
 	}
-	verbose_printf(_WINDOWS("DirectInput: Using DirectInput %d\n"), dinput_version >> 8);
+	mame_printf_verbose(_WINDOWS("DirectInput: Using DirectInput %d\n"), dinput_version >> 8);
 
 	// enable devices based on autoselect
 	if (Machine != NULL && Machine->gamedrv != NULL)
@@ -1529,9 +1529,9 @@ int wininput_init(running_machine *machine)
 	memset(&codelist[total_codes], 0, sizeof(codelist[total_codes]));
 
 	// print the results
-	verbose_printf(_WINDOWS("Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n"), keyboard_count, mouse_count, joystick_count, lightgun_count);
+	mame_printf_verbose(_WINDOWS("Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n"), keyboard_count, mouse_count, joystick_count, lightgun_count);
 	if (controller)
-		verbose_printf(_WINDOWS("Input: \"%s\" controller support enabled\n"), controller);
+		mame_printf_verbose(_WINDOWS("Input: \"%s\" controller support enabled\n"), controller);
 	return 0;
 
 cant_init_joystick:
@@ -2170,7 +2170,7 @@ static void update_joystick_axes(void)
 			{
 				static const char *axistypes[] = { "invalid", "digital", "analog" };
 				joystick_type[joynum][axis] = newtype;
-				verbose_printf(_WINDOWS("Input: Joystick %d axis %d is now %s\n"), joynum, axis, _WINDOWS(axistypes[newtype]));
+				mame_printf_verbose(_WINDOWS("Input: Joystick %d axis %d is now %s\n"), joynum, axis, _WINDOWS(axistypes[newtype]));
 			}
 		}
 }
@@ -2225,7 +2225,7 @@ static void init_joycodes(void)
 			sprintf(mousename, _WINDOWS("Mouse "));
 
 		// log the info
-		verbose_printf(_WINDOWS("Input: %s: %s\n"), mousename, mouse_name[mouse]);
+		mame_printf_verbose(_WINDOWS("Input: %s: %s\n"), mousename, mouse_name[mouse]);
 
 		// add analog axes (fix me -- should enumerate these)
 		sprintf(tempname, "%sX", mousename);
@@ -2368,7 +2368,7 @@ static void init_joycodes(void)
 	for (stick = 0; stick < joystick_count; stick++)
 	{
 		// log the info
-		verbose_printf(_WINDOWS("Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n"), stick + 1, joystick_name[stick], (int)joystick_caps[stick].dwAxes, (int)joystick_caps[stick].dwButtons, (int)joystick_caps[stick].dwPOVs);
+		mame_printf_verbose(_WINDOWS("Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n"), stick + 1, joystick_name[stick], (int)joystick_caps[stick].dwAxes, (int)joystick_caps[stick].dwButtons, (int)joystick_caps[stick].dwPOVs);
 
 		// loop over all axes
 		for (axis = 0; axis < MAX_AXES; axis++)
@@ -2387,7 +2387,7 @@ static void init_joycodes(void)
 				char *utf8_name = utf8_from_tstring(instance.tszName);
 				if (utf8_name != NULL)
 				{
-					verbose_printf(_WINDOWS("Input:  Axis %d (%s)%s\n"), axis, utf8_name, joystick_digital[stick][axis] ? _WINDOWS(" - digital") : "");
+					mame_printf_verbose(_WINDOWS("Input:  Axis %d (%s)%s\n"), axis, utf8_name, joystick_digital[stick][axis] ? _WINDOWS(" - digital") : "");
 
 					// add analog axis
 					if (!joystick_digital[stick][axis])
@@ -2608,7 +2608,7 @@ static INT32 get_joycode_value(os_code joycode)
 		case CODETYPE_MOUSEAXIS_POS:
 		case CODETYPE_MOUSEAXIS_NEG:
 			if ((joyindex==0 && mouse_state[joynum].lX != 0) || (joyindex==1 && mouse_state[joynum].lY != 0))
-				verbose_printf("(%d)X=%3ld:Y=%3ld\n", joyindex, mouse_state[joynum].lX, mouse_state[joynum].lY);
+				mame_printf_verbose("(%d)X=%3ld:Y=%3ld\n", joyindex, mouse_state[joynum].lX, mouse_state[joynum].lY);
 
 			if (win_use_raw_mouse)
 			{
@@ -3307,7 +3307,7 @@ static BOOL init_raw_mouse(void)
 	if (!register_raw_mouse())
 		goto cant_init_raw_input;
 
-	verbose_printf(_WINDOWS("Input: Using RAWMOUSE for Mouse input\n"));
+	mame_printf_verbose(_WINDOWS("Input: Using RAWMOUSE for Mouse input\n"));
 	mouse_num_of_buttons = 5;
 
 	// override lightgun settings.  Not needed with RAWinput.

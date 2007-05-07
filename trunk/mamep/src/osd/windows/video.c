@@ -271,7 +271,7 @@ static void init_monitors(void)
 			char *utf8_device = utf8_from_tstring(monitor->info.szDevice);
 			if (utf8_device != NULL)
 			{
-				verbose_printf(_WINDOWS("Video: Monitor %p = \"%s\" %s\n"), monitor->handle, utf8_device, (monitor == primary_monitor) ? "(primary)" : "");
+				mame_printf_verbose(_WINDOWS("Video: Monitor %p = \"%s\" %s\n"), monitor->handle, utf8_device, (monitor == primary_monitor) ? "(primary)" : "");
 				free(utf8_device);
 			}
 		}
@@ -416,7 +416,7 @@ static void extract_video_config(void)
 		scale_decode(stemp);
 
 		if (scale_effect.effect)
-			verbose_printf(_WINDOWS("Using %s scale effect\n"), scale_desc(scale_effect.effect));
+			mame_printf_verbose(_WINDOWS("Using %s scale effect\n"), scale_desc(scale_effect.effect));
 	}
 #endif /* USE_SCALE_EFFECTS */
 

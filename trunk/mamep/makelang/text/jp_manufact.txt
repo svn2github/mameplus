@@ -898,12 +898,12 @@ CD Express
 CVS
 
 
+# Gaming Draw Poker
+Cal Omega
+
+
 # Progear (USA 010117)
 Capcom, supported by Cave
-
-
-# 906III Video Poker
-Casino Electronics Inc.
 
 
 # Cool Pool

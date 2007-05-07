@@ -4595,6 +4595,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 
 	/* GX Type 1 */
 	DRIVER( racinfrc )	/* GX250 (c) 1994 */
+	DRIVER( racinfru )	/* GX250 (c) 1994 */
 	DRIVER( opengolf )	/* GX218 (c) 1994 */
 	DRIVER( opengol2 )	/* GX218 (c) 1994 */
 	DRIVER( ggreats2 )	/* GX218 (c) 1994 */
@@ -5173,7 +5174,12 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( area51a )	/* 136105           (c) 1995 */
 	DRIVER( fishfren )	/* (proto)          (c) 1995 */
 	DRIVER( freezeat )	/* (proto)          (c) 1996 */
+	DRIVER( freezejp )	/* (proto)          (c) 1996 */
 	DRIVER( freezea2 )	/* (proto)          (c) 1996 */
+	DRIVER( freezea3 )	/* (proto)          (c) 1996 */
+	DRIVER( freezea4 )	/* (proto)          (c) 1996 */
+	DRIVER( freezea5 )	/* (proto)          (c) 1996 */
+	DRIVER( freezea6 )	/* (proto)          (c) 1996 */
 	DRIVER( area51mx )	/* 136105           (c) 1998 */
 	DRIVER( a51mxr3k )	/*     ??           (c) 1998 */
 	DRIVER( maxforce )	/*     ??           (c) 1996 */
@@ -7545,7 +7551,6 @@ Other Sun games
 	DRIVER( sidewndr )	/* (c) 1981? ACE */
 	DRIVER( spellbnd )	/* (c) 1981? ACE */
 	DRIVER( starspnr )	/* (c) 1982? ACE */
-	DRIVER( vp906iii )	/* (c) 1985 Casino Electronics Inc. */
 	DRIVER( attckufo )	/* (c) 1980 Ryoto Electric Co. */
 	DRIVER( fortecar )
 	DRIVER( jackpool )	/* (c) 1997 Electronic Projects */
@@ -7592,6 +7597,7 @@ Other Sun games
  	DRIVER( goldnpkb )	/* (c) 1981 Bonanza */
 	DRIVER( jokerpkr )	/* (c) 198? Coinmaster-Gaming */
 	DRIVER( pottnpkr )	/* (c) 198? ???? */
+	DRIVER( gdrawpkr )	/* (c) 1981 Cal Omega / Casino Electronics Inc. */
 	DRIVER( altair )	/* (c) 1981 Cidelsa */
 	DRIVER( destryer )	/* (c) 1981 Cidelsa */
 	DRIVER( destryea )	/* (c) 1981 Cidelsa */

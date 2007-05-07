@@ -70,7 +70,6 @@
 #define WINOPTION_AUDIO_LATENCY			"audio_latency"
 #define WINOPTION_PRIORITY				"priority"
 #define WINOPTION_MULTITHREADING		"multithreading"
-#define WINOPTION_VERBOSE				"verbose"
 #define WINOPTION_OSLOG					"oslog"
 
 
@@ -87,8 +86,11 @@ extern const options_entry mame_win_options[];
 //  FUNCTION PROTOTYPES
 //============================================================
 
+// mamep: function mame_printf_verbose() is not in osd core
+#if 0
 // use if you want to print something with the verbose flag
-void CLIB_DECL verbose_printf(const char *text, ...) ATTR_PRINTF(1,2);
+void CLIB_DECL mame_printf_verbose(const char *text, ...) ATTR_PRINTF(1,2);
+#endif
 
 int CLIB_DECL faprintf(FILE *f, const char *fmt, ...) ATTR_PRINTF(2,3);
 

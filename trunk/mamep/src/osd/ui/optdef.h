@@ -130,6 +130,7 @@ START_OPT_FUNC_DRIVER
 
 // CORE DEBUGGING OPTIONS
 	DEFINE_OPT(bool,                 log)
+	DEFINE_OPT(bool,                 verbose)
 
 // CORE MISC OPTIONS
 	DEFINE_OPT(string,               bios)
@@ -152,7 +153,6 @@ START_OPT_FUNC_DRIVER
 
 // DEBUGGING OPTIONS
 	DEFINE_OPT(bool,                 oslog)
-	DEFINE_OPT(bool,                 verbose)
 
 // WINDOWS PERFORMANCE OPTIONS
 	DEFINE_OPT(int,                  priority)

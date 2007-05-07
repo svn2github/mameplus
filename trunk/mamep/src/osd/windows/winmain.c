@@ -129,7 +129,6 @@ const options_entry mame_win_options[] =
 	// debugging options
 	{ NULL,                       NULL,       OPTION_HEADER,     "DEBUGGING OPTIONS" },
 	{ "oslog",                    "0",        OPTION_BOOLEAN,    "output error.log data to the system debugger" },
-	{ "verbose;v",                "0",        OPTION_BOOLEAN,    "display additional diagnostic information" },
 
 	// performance options
 	{ NULL,                       NULL,       OPTION_HEADER,     "WINDOWS PERFORMANCE OPTIONS" },
@@ -318,6 +317,7 @@ int utf8_main(int argc, char **argv)
 #ifdef MAME_DEBUG
 	mame_set_output_channel(OUTPUT_CHANNEL_DEBUG, win_mame_file_output_callback, stdout, NULL, NULL);
 #endif
+	mame_set_output_channel(OUTPUT_CHANNEL_VERBOSE, win_mame_file_output_callback, stdout, NULL, NULL);
 	mame_set_output_channel(OUTPUT_CHANNEL_LOG, win_mame_file_output_callback, stderr, NULL, NULL);
 
 	// parse config and cmdline options
@@ -346,12 +346,6 @@ static void output_oslog(running_machine *machine, const char *buffer)
 int osd_init(running_machine *machine)
 {
 	int result = 0;
-
-	// debugging options
-{
-	extern int verbose;
-	verbose = options_get_bool(mame_options(), WINOPTION_VERBOSE);
-}
 
 	// thread priority
 	if (!options_get_bool(mame_options(), OPTION_DEBUG))
@@ -407,29 +401,6 @@ static void osd_exit(running_machine *machine)
 	winwindow_process_events(0);
 }
 
-
-
-//============================================================
-//  verbose_printf
-//============================================================
-
-void CLIB_DECL verbose_printf(const char *text, ...)
-{
-	if (verbose)
-	{
-		char buf[5000];
-		CHAR *s;
-		va_list arg;
-
-		/* dump to the buffer */
-		va_start(arg, text);
-		vsnprintf(buf, ARRAY_LENGTH(buf), text, arg);
-		s = astring_from_utf8(buf);
-		fputs(s, stdout);
-		free(s);
-		va_end(arg);
-	}
-}
 
 
 //============================================================

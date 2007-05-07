@@ -133,6 +133,7 @@ typedef struct
 
 // CORE DEBUGGING OPTIONS
 	BOOL	log;
+	BOOL	verbose;
 
 // CORE MISC OPTIONS
 	char*	bios;
@@ -155,7 +156,6 @@ typedef struct
 
 // DEBUGGING OPTIONS
 	BOOL	oslog;
-	BOOL	verbose;
 
 // WINDOWS PERFORMANCE OPTIONS
 	int	priority;

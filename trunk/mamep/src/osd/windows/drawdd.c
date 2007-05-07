@@ -195,7 +195,7 @@ int drawdd_init(win_draw_callbacks *callbacks)
 	dllhandle = LoadLibrary(TEXT("ddraw.dll"));
 	if (dllhandle == NULL)
 	{
-		verbose_printf(_WINDOWS("DirectDraw: Unable to access ddraw.dll\n"));
+		mame_printf_verbose(_WINDOWS("DirectDraw: Unable to access ddraw.dll\n"));
 		return 1;
 	}
 
@@ -203,7 +203,7 @@ int drawdd_init(win_draw_callbacks *callbacks)
 	directdrawcreateex = (directdrawcreateex_ptr)GetProcAddress(dllhandle, "DirectDrawCreateEx");
 	if (directdrawcreateex == NULL)
 	{
-		verbose_printf(_WINDOWS("DirectDraw: Unable to find DirectDrawCreateEx\n"));
+		mame_printf_verbose(_WINDOWS("DirectDraw: Unable to find DirectDrawCreateEx\n"));
 		FreeLibrary(dllhandle);
 		dllhandle = NULL;
 		return 1;
@@ -213,7 +213,7 @@ int drawdd_init(win_draw_callbacks *callbacks)
 	directdrawenumerateex = (directdrawenumerateex_ptr)GetProcAddress(dllhandle, "DirectDrawEnumerateExA");
 	if (directdrawenumerateex == NULL)
 	{
-		verbose_printf(_WINDOWS("DirectDraw: Unable to find DirectDrawEnumerateExA\n"));
+		mame_printf_verbose(_WINDOWS("DirectDraw: Unable to find DirectDrawEnumerateExA\n"));
 		FreeLibrary(dllhandle);
 		dllhandle = NULL;
 		return 1;
@@ -226,7 +226,7 @@ int drawdd_init(win_draw_callbacks *callbacks)
 	callbacks->window_draw = drawdd_window_draw;
 	callbacks->window_destroy = drawdd_window_destroy;
 
-	verbose_printf(_WINDOWS("DirectDraw: Using DirectDraw 7\n"));
+	mame_printf_verbose(_WINDOWS("DirectDraw: Using DirectDraw 7\n"));
 	return 0;
 }
 
@@ -346,13 +346,13 @@ static int drawdd_window_draw(win_window_info *window, HDC dc, int update)
 	result = IDirectDrawSurface7_Lock(dd->blit, NULL, &dd->blitdesc, DDLOCK_WAIT, NULL);
 	if (result == DDERR_SURFACELOST)
 	{
-		verbose_printf(_WINDOWS("DirectDraw: Lost surfaces; deleting and retrying next frame\n"));
+		mame_printf_verbose(_WINDOWS("DirectDraw: Lost surfaces; deleting and retrying next frame\n"));
 		ddraw_delete_surfaces(window);
 		return 1;
 	}
 	if (result != DD_OK)
 	{
-		verbose_printf(_WINDOWS("DirectDraw: Error %08X locking blit surface\n"), (int)result);
+		mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X locking blit surface\n"), (int)result);
 		return 1;
 	}
 
@@ -381,7 +381,7 @@ static int drawdd_window_draw(win_window_info *window, HDC dc, int update)
 			case 0xf800:		drawdd_rgb565_draw_primitives(window->primlist->head, dd->membuffer, dd->blitwidth, dd->blitheight, dd->blitwidth);	break;
 			case 0x7c00:		drawdd_rgb555_draw_primitives(window->primlist->head, dd->membuffer, dd->blitwidth, dd->blitheight, dd->blitwidth);	break;
 			default:
-				verbose_printf(_WINDOWS("DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n"), (int)dd->blitdesc.ddpfPixelFormat.dwRBitMask, (int)dd->blitdesc.ddpfPixelFormat.dwGBitMask, (int)dd->blitdesc.ddpfPixelFormat.dwBBitMask);
+				mame_printf_verbose(_WINDOWS("DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n"), (int)dd->blitdesc.ddpfPixelFormat.dwRBitMask, (int)dd->blitdesc.ddpfPixelFormat.dwGBitMask, (int)dd->blitdesc.ddpfPixelFormat.dwBBitMask);
 				break;
 		}
 
@@ -417,7 +417,7 @@ static int drawdd_window_draw(win_window_info *window, HDC dc, int update)
 			case 0xf800:		drawdd_rgb565_nr_draw_primitives(window->primlist->head, dd->blitdesc.lpSurface, dd->blitwidth, dd->blitheight, dd->blitdesc.lPitch / 2);	break;
 			case 0x7c00:		drawdd_rgb555_nr_draw_primitives(window->primlist->head, dd->blitdesc.lpSurface, dd->blitwidth, dd->blitheight, dd->blitdesc.lPitch / 2);	break;
 			default:
-				verbose_printf(_WINDOWS("DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n"), (int)dd->blitdesc.ddpfPixelFormat.dwRBitMask, (int)dd->blitdesc.ddpfPixelFormat.dwGBitMask, (int)dd->blitdesc.ddpfPixelFormat.dwBBitMask);
+				mame_printf_verbose(_WINDOWS("DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n"), (int)dd->blitdesc.ddpfPixelFormat.dwRBitMask, (int)dd->blitdesc.ddpfPixelFormat.dwGBitMask, (int)dd->blitdesc.ddpfPixelFormat.dwBBitMask);
 				break;
 		}
 	}
@@ -425,13 +425,13 @@ static int drawdd_window_draw(win_window_info *window, HDC dc, int update)
 
 	// unlock and blit
 	result = IDirectDrawSurface7_Unlock(dd->blit, NULL);
-	if (result != DD_OK) verbose_printf(_WINDOWS("DirectDraw: Error %08X unlocking blit surface\n"), (int)result);
+	if (result != DD_OK) mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X unlocking blit surface\n"), (int)result);
 
 	// sync to VBLANK
 	if ((video_config.waitvsync || video_config.syncrefresh) && video_get_throttle() && (!window->fullscreen || dd->back == NULL))
 	{
 		result = IDirectDraw7_WaitForVerticalBlank(dd->ddraw, DDWAITVB_BLOCKBEGIN, NULL);
-		if (result != DD_OK) verbose_printf(_WINDOWS("DirectDraw: Error %08X waiting for VBLANK\n"), (int)result);
+		if (result != DD_OK) mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X waiting for VBLANK\n"), (int)result);
 	}
 
 	// complete the blitting
@@ -459,7 +459,7 @@ static int ddraw_create(win_window_info *window)
 	result = (*directdrawcreateex)(dd->adapter_ptr, (LPVOID *)&dd->ddraw, &IID_IDirectDraw7, NULL);
 	if (result != DD_OK)
 	{
-		verbose_printf(_WINDOWS("DirectDraw: Error %08X during DirectDrawCreateEx call\n"), (int)result);
+		mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X during DirectDrawCreateEx call\n"), (int)result);
 		goto error;
 	}
 
@@ -471,20 +471,20 @@ static int ddraw_create(win_window_info *window)
 		goto error;
 	}
 	if (verify == 1)
-		verbose_printf(_WINDOWS("DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n"));
+		mame_printf_verbose(_WINDOWS("DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n"));
 
 	// set the cooperative level
 	// for non-window modes, we will use full screen here
 	result = IDirectDraw7_SetCooperativeLevel(dd->ddraw, win_window_list->hwnd, DDSCL_SETFOCUSWINDOW);
 	if (result != DD_OK)
 	{
-		verbose_printf(_WINDOWS("DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n"), (int)result);
+		mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n"), (int)result);
 		goto error;
 	}
 	result = IDirectDraw7_SetCooperativeLevel(dd->ddraw, window->hwnd, DDSCL_SETDEVICEWINDOW | (window->fullscreen ? DDSCL_FULLSCREEN | DDSCL_EXCLUSIVE : DDSCL_NORMAL));
 	if (result != DD_OK)
 	{
-		verbose_printf(_WINDOWS("DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n"), (int)result);
+		mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n"), (int)result);
 		goto error;
 	}
 
@@ -494,7 +494,7 @@ static int ddraw_create(win_window_info *window)
 		result = IDirectDraw7_SetDisplayMode(dd->ddraw, dd->width, dd->height, 32, dd->refresh, 0);
 		if (result != DD_OK)
 		{
-			verbose_printf(_WINDOWS("DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n"), (int)result, dd->width, dd->height, dd->refresh);
+			mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n"), (int)result, dd->width, dd->height, dd->refresh);
 			goto error;
 		}
 	}
@@ -543,7 +543,7 @@ static int ddraw_create_surfaces(win_window_info *window)
 		result = IDirectDrawSurface7_GetAttachedSurface(dd->primary, &caps, &dd->back);
 		if (result != DD_OK)
 		{
-			verbose_printf(_WINDOWS("DirectDraw: Error %08X getting attached back surface\n"), (int)result);
+			mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X getting attached back surface\n"), (int)result);
 			goto error;
 		}
 	}
@@ -615,7 +615,7 @@ static int ddraw_create_surfaces(win_window_info *window)
 				// attempt to set it
 				result = IDirectDrawGammaControl_SetGammaRamp(dd->gamma, 0, &ramp);
 				if (result != DD_OK)
-					verbose_printf(_WINDOWS("DirectDraw: Error %08X attempting to set gamma correction.\n"), (int)result);
+					mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X attempting to set gamma correction.\n"), (int)result);
 			}
 		}
 	}
@@ -715,14 +715,14 @@ static int ddraw_verify_caps(dd_info *dd)
 	result = IDirectDraw7_GetCaps(dd->ddraw, &dd->ddcaps, &dd->helcaps);
 	if (result != DD_OK)
 	{
-		verbose_printf(_WINDOWS("DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n"), (int)result);
+		mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n"), (int)result);
 		return 1;
 	}
 
 	// determine if hardware stretching is available
 	if ((dd->ddcaps.dwCaps & DDCAPS_BLTSTRETCH) == 0)
 	{
-		verbose_printf(_WINDOWS("DirectDraw: Warning - Device does not support hardware stretching\n"));
+		mame_printf_verbose(_WINDOWS("DirectDraw: Warning - Device does not support hardware stretching\n"));
 		retval = 1;
 	}
 
@@ -773,7 +773,7 @@ static HRESULT create_surface(dd_info *dd, DDSURFACEDESC2 *desc, IDirectDrawSurf
 	result = IDirectDraw7_CreateSurface(dd->ddraw, desc, surface, NULL);
 	if (result != DD_OK)
 	{
-		verbose_printf(_WINDOWS("DirectDraw: Error %08X creating %s surface\n"), (int)result, type);
+		mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X creating %s surface\n"), (int)result, type);
 		return result;
 	}
 
@@ -781,14 +781,14 @@ static HRESULT create_surface(dd_info *dd, DDSURFACEDESC2 *desc, IDirectDrawSurf
 	result = IDirectDrawSurface7_GetSurfaceDesc(*surface, desc);
 	if (result != DD_OK)
 	{
-		verbose_printf(_WINDOWS("DirectDraw: Error %08X getting %s surface desciption\n"), (int)result, type);
+		mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X getting %s surface desciption\n"), (int)result, type);
 		IDirectDrawSurface7_Release(*surface);
 		*surface = NULL;
 		return result;
 	}
 
 	// print out the good stuff
-	verbose_printf(_WINDOWS("DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n"),
+	mame_printf_verbose(_WINDOWS("DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n"),
 				type,
 				(int)desc->dwWidth,
 				(int)desc->dwHeight,
@@ -814,7 +814,7 @@ static int create_clipper(win_window_info *window)
 	result = IDirectDraw7_CreateClipper(dd->ddraw, 0, &dd->clipper, NULL);
 	if (result != DD_OK)
 	{
-		verbose_printf(_WINDOWS("DirectDraw: Error %08X creating clipper\n"), (int)result);
+		mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X creating clipper\n"), (int)result);
 		return 1;
 	}
 
@@ -822,7 +822,7 @@ static int create_clipper(win_window_info *window)
 	result = IDirectDrawClipper_SetHWnd(dd->clipper, 0, window->hwnd);
 	if (result != DD_OK)
 	{
-		verbose_printf(_WINDOWS("DirectDraw: Error %08X setting clipper hwnd\n"), (int)result);
+		mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X setting clipper hwnd\n"), (int)result);
 		return 1;
 	}
 
@@ -830,7 +830,7 @@ static int create_clipper(win_window_info *window)
 	result = IDirectDrawSurface7_SetClipper(dd->primary, dd->clipper);
 	if (result != DD_OK)
 	{
-		verbose_printf(_WINDOWS("DirectDraw: Error %08X setting clipper on primary surface\n"), (int)result);
+		mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X setting clipper on primary surface\n"), (int)result);
 		return 1;
 	}
 	return 0;
@@ -926,7 +926,7 @@ static void compute_blit_surface_size(win_window_info *window)
 	{
 		// force some updates
 		update_outer_rects(dd);
-		verbose_printf(_WINDOWS("DirectDraw: New blit size = %dx%d\n"), newwidth, newheight);
+		mame_printf_verbose(_WINDOWS("DirectDraw: New blit size = %dx%d\n"), newwidth, newheight);
 	}
 	dd->blitwidth = newwidth;
 	dd->blitheight = newheight;
@@ -1052,7 +1052,7 @@ static void blit_to_primary(win_window_info *window, int srcwidth, int srcheight
 			clear = outer;
 			clear.right = dest.left;
 			result = IDirectDrawSurface_Blt(target, &clear, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &blitfx);
-			if (result != DD_OK) verbose_printf(_WINDOWS("DirectDraw: Error %08X clearing the screen\n"), (int)result);
+			if (result != DD_OK) mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X clearing the screen\n"), (int)result);
 		}
 
 		// clear the right edge
@@ -1061,7 +1061,7 @@ static void blit_to_primary(win_window_info *window, int srcwidth, int srcheight
 			clear = outer;
 			clear.left = dest.right;
 			result = IDirectDrawSurface_Blt(target, &clear, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &blitfx);
-			if (result != DD_OK) verbose_printf(_WINDOWS("DirectDraw: Error %08X clearing the screen\n"), (int)result);
+			if (result != DD_OK) mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X clearing the screen\n"), (int)result);
 		}
 
 		// clear the top edge
@@ -1070,7 +1070,7 @@ static void blit_to_primary(win_window_info *window, int srcwidth, int srcheight
 			clear = outer;
 			clear.bottom = dest.top;
 			result = IDirectDrawSurface_Blt(target, &clear, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &blitfx);
-			if (result != DD_OK) verbose_printf(_WINDOWS("DirectDraw: Error %08X clearing the screen\n"), (int)result);
+			if (result != DD_OK) mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X clearing the screen\n"), (int)result);
 		}
 
 		// clear the bottom edge
@@ -1079,19 +1079,19 @@ static void blit_to_primary(win_window_info *window, int srcwidth, int srcheight
 			clear = outer;
 			clear.top = dest.bottom;
 			result = IDirectDrawSurface_Blt(target, &clear, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &blitfx);
-			if (result != DD_OK) verbose_printf(_WINDOWS("DirectDraw: Error %08X clearing the screen\n"), (int)result);
+			if (result != DD_OK) mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X clearing the screen\n"), (int)result);
 		}
 	}
 
 	// do the blit
 	result = IDirectDrawSurface7_Blt(target, &dest, dd->blit, &source, DDBLT_WAIT, NULL);
-	if (result != DD_OK) verbose_printf(_WINDOWS("DirectDraw: Error %08X blitting to the screen\n"), (int)result);
+	if (result != DD_OK) mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X blitting to the screen\n"), (int)result);
 
 	// page flip if triple buffered
 	if (window->fullscreen && dd->back != NULL)
 	{
 		result = IDirectDrawSurface7_Flip(dd->primary, NULL, DDFLIP_WAIT);
-		if (result != DD_OK) verbose_printf(_WINDOWS("DirectDraw: Error %08X waiting for VBLANK\n"), (int)result);
+		if (result != DD_OK) mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X waiting for VBLANK\n"), (int)result);
 	}
 }
 
@@ -1114,7 +1114,7 @@ static int config_adapter_mode(win_window_info *window)
 	result = (*directdrawcreateex)(dd->adapter_ptr, (LPVOID *)&dd->ddraw, &IID_IDirectDraw7, NULL);
 	if (result != DD_OK)
 	{
-		verbose_printf(_WINDOWS("DirectDraw: Error %08X during DirectDrawCreateEx call\n"), (int)result);
+		mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X during DirectDrawCreateEx call\n"), (int)result);
 		return 1;
 	}
 
@@ -1125,7 +1125,7 @@ static int config_adapter_mode(win_window_info *window)
 		faprintf(stderr, _WINDOWS("Error getting identifier for device\n"));
 		return 1;
 	}
-	verbose_printf(_WINDOWS("DirectDraw: Configuring device %s\n"), identifier.szDescription);
+	mame_printf_verbose(_WINDOWS("DirectDraw: Configuring device %s\n"), identifier.szDescription);
 
 	// get the current display mode
 	memset(&dd->origmode, 0, sizeof(dd->origmode));
@@ -1133,7 +1133,7 @@ static int config_adapter_mode(win_window_info *window)
 	result = IDirectDraw7_GetDisplayMode(dd->ddraw, &dd->origmode);
 	if (result != DD_OK)
 	{
-		verbose_printf(_WINDOWS("DirectDraw: Error %08X getting current display mode\n"), (int)result);
+		mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X getting current display mode\n"), (int)result);
 		IDirectDraw7_Release(dd->ddraw);
 		return 1;
 	}
@@ -1167,7 +1167,7 @@ static int config_adapter_mode(win_window_info *window)
 				break;
 
 			default:
-				verbose_printf(_WINDOWS("DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n"), (int)dd->origmode.ddpfPixelFormat.dwRBitMask, (int)dd->origmode.ddpfPixelFormat.dwGBitMask, (int)dd->origmode.ddpfPixelFormat.dwBBitMask);
+				mame_printf_verbose(_WINDOWS("DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n"), (int)dd->origmode.ddpfPixelFormat.dwRBitMask, (int)dd->origmode.ddpfPixelFormat.dwGBitMask, (int)dd->origmode.ddpfPixelFormat.dwBBitMask);
 				return 1;
 		}
 	}
@@ -1211,7 +1211,7 @@ static void get_adapter_for_monitor(dd_info *dd, win_monitor_info *monitor)
 	memset(&einfo, 0, sizeof(einfo));
 	einfo.monitor = monitor;
 	result = (*directdrawenumerateex)(monitor_enum_callback, &einfo, DDENUM_ATTACHEDSECONDARYDEVICES);
-	if (result != DD_OK) verbose_printf(_WINDOWS("DirectDraw: Error %08X during DirectDrawEnumerateEx call\n"), (int)result);
+	if (result != DD_OK) mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X during DirectDrawEnumerateEx call\n"), (int)result);
 
 	// set up the adapter
 	if (einfo.foundit && einfo.guid_ptr != NULL)
@@ -1269,7 +1269,7 @@ static HRESULT WINAPI enum_modes_callback(LPDDSURFACEDESC2 desc, LPVOID context)
 	final_score = size_score + refresh_score;
 
 	// best so far?
-	verbose_printf("  %4dx%4d@%3dHz -> %f\n", (int)desc->dwWidth, (int)desc->dwHeight, (int)desc->dwRefreshRate, final_score * 1000.0f);
+	mame_printf_verbose("  %4dx%4d@%3dHz -> %f\n", (int)desc->dwWidth, (int)desc->dwHeight, (int)desc->dwRefreshRate, final_score * 1000.0f);
 	if (final_score > einfo->best_score)
 	{
 		einfo->best_score = final_score;
@@ -1322,10 +1322,10 @@ static void pick_best_mode(win_window_info *window)
 	einfo.best_score = 0.0f;
 
 	// enumerate the modes
-	verbose_printf(_WINDOWS("DirectDraw: Selecting video mode...\n"));
+	mame_printf_verbose(_WINDOWS("DirectDraw: Selecting video mode...\n"));
 	result = IDirectDraw7_EnumDisplayModes(dd->ddraw, DDEDM_REFRESHRATES, NULL, &einfo, enum_modes_callback);
-	if (result != DD_OK) verbose_printf(_WINDOWS("DirectDraw: Error %08X during EnumDisplayModes call\n"), (int)result);
-	verbose_printf(_WINDOWS("DirectDraw: Mode selected = %4dx%4d@%3dHz\n"), dd->width, dd->height, dd->refresh);
+	if (result != DD_OK) mame_printf_verbose(_WINDOWS("DirectDraw: Error %08X during EnumDisplayModes call\n"), (int)result);
+	mame_printf_verbose(_WINDOWS("DirectDraw: Mode selected = %4dx%4d@%3dHz\n"), dd->width, dd->height, dd->refresh);
 }
 
 

@@ -1998,8 +1998,6 @@ int K052109_vh_start(int gfx_memory_region,int plane0,int plane1,int plane2,int 
 
 	/* decode the graphics */
 	Machine->gfx[gfx_index] = allocgfx(&charlayout);
-	if (!Machine->gfx[gfx_index])
-		return 1;
 	decodegfx(Machine->gfx[gfx_index], memory_region(gfx_memory_region), 0, Machine->gfx[gfx_index]->total_elements);
 
 	/* set the color information */
@@ -2473,8 +2471,6 @@ int K051960_vh_start(int gfx_memory_region,int plane0,int plane1,int plane2,int 
 
 	/* decode the graphics */
 	Machine->gfx[gfx_index] = allocgfx(&spritelayout);
-	if (!Machine->gfx[gfx_index])
-		return 1;
 	decodegfx(Machine->gfx[gfx_index], memory_region(gfx_memory_region), 0, Machine->gfx[gfx_index]->total_elements);
 
 	/* set the color information */
@@ -2987,8 +2983,6 @@ int K053245_vh_start(int chip, int gfx_memory_region,int plane0,int plane1,int p
 
 	/* decode the graphics */
 	Machine->gfx[gfx_index] = allocgfx(&spritelayout);
-	if (!Machine->gfx[gfx_index])
-		return 1;
 	decodegfx(Machine->gfx[gfx_index], memory_region(gfx_memory_region), 0, Machine->gfx[gfx_index]->total_elements);
 
 	/* set the color information */
@@ -3745,8 +3739,6 @@ int K053247_vh_start(int gfx_memory_region, int dx, int dy, int plane0,int plane
 
 	/* decode the graphics */
 	Machine->gfx[gfx_index] = allocgfx(&spritelayout);
-	if (!Machine->gfx[gfx_index])
-		return 1;
 	decodegfx(Machine->gfx[gfx_index], memory_region(gfx_memory_region), 0, Machine->gfx[gfx_index]->total_elements);
 
 	/* set the color information */
@@ -5835,7 +5827,7 @@ int K056832_vh_start(int gfx_memory_region, int bpp, int big, int (*scrolld)[4][
 
 	for (i=0; i<K056832_PAGE_COUNT; i++)
 	{
-		if (!(tmap = K056832_tilemap[i])) return 1;
+		tmap = K056832_tilemap[i];
 
 		K056832_pixmap[i] = tilemap_get_pixmap(tmap);
 
