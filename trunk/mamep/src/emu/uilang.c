@@ -25,11 +25,11 @@ struct ui_lang_info_t ui_lang_info[UI_LANG_MAX] =
 	{  "ko_KR", "KR", "Korean",			949 },
 	{  "es_ES", "ES", "Spanish",			1252 },
 	{  "ca_ES", "CA", "Catalan",			1252 },
+	{  "va_ES", "VA", "Valencian",			1252 },
 	{  "pl_PL", "PL", "Polish",			1250 },
 	{  "pt_PT", "PT", "Portuguese (Portugal)",	1252 },
 	{  "pt_BR", "BR", "Portuguese (Brazil)",	1252 },
 	{  "hu_HU", "HU", "Hungarian",			1250 },
-	{  "va_ES", "VA", "Valencian",			1252 },
 };
 
 static struct

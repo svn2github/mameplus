@@ -105,11 +105,11 @@
 #define IDB_TOOLBAR_KR                  200
 #define IDB_TOOLBAR_ES                  201
 #define IDB_TOOLBAR_CA                  202
-#define IDB_TOOLBAR_PL                  203
-#define IDB_TOOLBAR_PT                  204
-#define IDB_TOOLBAR_BR                  205
-#define IDB_TOOLBAR_HU                  206
-#define IDB_TOOLBAR_VA                  207
+#define IDB_TOOLBAR_VA                  203
+#define IDB_TOOLBAR_PL                  204
+#define IDB_TOOLBAR_PT                  205
+#define IDB_TOOLBAR_BR                  206
+#define IDB_TOOLBAR_HU                  207
 #define IDB_SPLASH                      210
 #define IDI_INFO                        701
 #define IDI_LARGE                       702
@@ -545,11 +545,11 @@
 #define ID_LANGUAGE_KOREAN              40208
 #define ID_LANGUAGE_SPANISH             40209
 #define ID_LANGUAGE_CATALAN             40210
-#define ID_LANGUAGE_POLISH              40211
-#define ID_LANGUAGE_PORTUGUESE_PT       40212
-#define ID_LANGUAGE_PORTUGUESE_BRA      40213
-#define ID_LANGUAGE_HUNGARIAN           40214
-#define ID_LANGUAGE_VALENCIAN           40215
+#define ID_LANGUAGE_VALENCIAN           40211
+#define ID_LANGUAGE_POLISH              40212
+#define ID_LANGUAGE_PORTUGUESE_PT       40213
+#define ID_LANGUAGE_PORTUGUESE_BRA      40214
+#define ID_LANGUAGE_HUNGARIAN           40215
 
 #define ID_PLAY_PATCH                   40300	// USE_IPS
 
