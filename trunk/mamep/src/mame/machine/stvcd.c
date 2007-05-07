@@ -33,7 +33,11 @@
 #if 0
 #define CDROM_LOG printf
 #else
+#ifdef _MSC_VER
+INLINE void CDROM_LOG(const char *fmt, ...) {}
+#else
 #define CDROM_LOG(...)
+#endif
 #endif
 
 static cdrom_file *cdrom = (cdrom_file *)NULL;

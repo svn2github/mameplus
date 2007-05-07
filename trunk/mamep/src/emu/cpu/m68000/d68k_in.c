@@ -292,6 +292,11 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 M68KMAKE_OPCODE_HANDLER_HEADER
 
 #include "d68kcpu.h"
+
+#ifdef _MSC_VER
+#pragma warning(disable:4701)	// "local variable may be used without having been initialized"
+#endif /* _MSC_VER */
+
 extern void m68040drc_fpu_op0(drc_core *drcp);
 extern void m68040drc_fpu_op1(drc_core *drcp);
 
