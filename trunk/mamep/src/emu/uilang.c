@@ -29,6 +29,7 @@ struct ui_lang_info_t ui_lang_info[UI_LANG_MAX] =
 	{  "pt_PT", "PT", "Portuguese (Portugal)",	1252 },
 	{  "pt_BR", "BR", "Portuguese (Brazil)",	1252 },
 	{  "hu_HU", "HU", "Hungarian",			1250 },
+	{  "va_ES", "VA", "Valencian",			1252 },
 };
 
 static struct

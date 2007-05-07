@@ -161,6 +161,7 @@ BEGIN
             MENUITEM "Portuguese (Portugal)",       ID_LANGUAGE_PORTUGUESE_PT
             MENUITEM "Portuguese (Brazil)",         ID_LANGUAGE_PORTUGUESE_BRA
             MENUITEM "Hungarian",                   ID_LANGUAGE_HUNGARIAN
+            MENUITEM "Valencian",                   ID_LANGUAGE_VALENCIAN
         END
     END
     POPUP "&Help"
@@ -1449,6 +1450,7 @@ IDB_TOOLBAR_PL          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
 IDB_TOOLBAR_PT          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
 IDB_TOOLBAR_BR          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
 IDB_TOOLBAR_HU          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
+IDB_TOOLBAR_VA          BITMAP  DISCARDABLE     "res\\toolbar.bmp"
 #ifdef USE_SHOW_SPLASH_SCREEN
 IDB_SPLASH              BITMAP  DISCARDABLE     "res\\splash.bmp"
 #endif /* USE_SHOW_SPLASH_SCREEN */
@@ -1633,6 +1635,7 @@ BEGIN
     ID_LANGUAGE_PORTUGUESE_PT "Translate into Portuguese (PT)"
     ID_LANGUAGE_PORTUGUESE_BRA "Translate into Portuguese (BRA)"
     ID_LANGUAGE_HUNGARIAN    "Translate into Hungarian"
+    ID_LANGUAGE_VALENCIAN    "Translate into Valencian"
 END
 
 #endif    // English (USA) resources

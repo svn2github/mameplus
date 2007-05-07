@@ -21,6 +21,7 @@ enum {
 	UI_LANG_PT_PT,
 	UI_LANG_PT_BR,
 	UI_LANG_HU_HU,
+	UI_LANG_VA_ES,
 	UI_LANG_MAX
 };
 

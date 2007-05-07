@@ -109,6 +109,7 @@
 #define IDB_TOOLBAR_PT                  204
 #define IDB_TOOLBAR_BR                  205
 #define IDB_TOOLBAR_HU                  206
+#define IDB_TOOLBAR_VA                  207
 #define IDB_SPLASH                      210
 #define IDI_INFO                        701
 #define IDI_LARGE                       702
@@ -548,6 +549,7 @@
 #define ID_LANGUAGE_PORTUGUESE_PT       40212
 #define ID_LANGUAGE_PORTUGUESE_BRA      40213
 #define ID_LANGUAGE_HUNGARIAN           40214
+#define ID_LANGUAGE_VALENCIAN           40215
 
 #define ID_PLAY_PATCH                   40300	// USE_IPS
 

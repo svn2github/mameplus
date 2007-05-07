@@ -11,3 +11,4 @@ call rebuild-kr.bat
 call rebuild-pl.bat
 call rebuild-pt.bat
 call rebuild-tw.bat
+call rebuild-va.bat

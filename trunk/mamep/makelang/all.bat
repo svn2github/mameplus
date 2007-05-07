@@ -11,3 +11,4 @@ call kr.bat
 call pl.bat
 call pt.bat
 call tw.bat
+call va.bat

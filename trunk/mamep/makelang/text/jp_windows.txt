@@ -794,7 +794,7 @@ default to maximized windows; otherwise, windows will be minimized
 dial
 ダイアル
 
-# osd/windows/input.c: 1960, 2171 osd/windows/winmain.c: 214 osd/windows/winmain.h: 51
+# osd/windows/input.c: 1960, 2171 osd/windows/winmain.c: 214 osd/windows/winmain.h: 53
 digital
 デジタル
 
@@ -922,7 +922,7 @@ gamma value in full screen mode
 invalid
 不正
 
-# osd/windows/input.c: 1466, 1824 osd/windows/winmain.h: 51
+# osd/windows/input.c: 1466, 1824 osd/windows/winmain.h: 53
 lightgun
 光線銃
 

@@ -90,7 +90,7 @@
  (%d bytes)
  (%d バイト)
 
-# emu/clifront.c: 864
+# emu/clifront.c: 872
  BAD
  不良
 
@@ -114,7 +114,7 @@
  GAMES WITH  %d SNDINTRF: %4d\n
  %d個の音源使用ゲーム: %4d\n
 
-# emu/clifront.c: 870
+# emu/clifront.c: 878
  NO GOOD DUMP KNOWN
  正常なダンプは存在しません
 
@@ -130,11 +130,11 @@
 %d results found
 %d個の結果が見つかりました
 
-# emu/clifront.c: 1014
+# emu/clifront.c: 1022
 %d romsets found, %d were OK.\n
 %d個のロムセットが見つかり、%d個が正常です。\n
 
-# emu/clifront.c: 1091
+# emu/clifront.c: 1099
 %d samplesets found, %d were OK.\n
 %d個のサンプルセットが見つかり、%d個が正常です。\n
 
@@ -222,7 +222,7 @@
 %sWrong version in save file (%d, 1 expected)
 %s保存したファイルのバージョンが違います (%d、正常値 1)
 
-# emu/clifront.c: 1375
+# emu/clifront.c: 1383
 (BAD) 
 (異常) 
 
@@ -726,7 +726,7 @@ Beam Width
 Beginner
 初心者
 
-# mame/drivers/bmcbowl.c: 375 mame/drivers/cardline.c: 130 mame/drivers/cherrym.c: 176 mame/drivers/limenko.c: 426 mame/drivers/lvcards.c: 218, 302 mame/drivers/magic10.c: 216 mame/drivers/nmg5.c: 685 mame/drivers/pmpoker.c: 612, 702 mame/drivers/sderby.c: 173 mame/drivers/witch.c: 552
+# mame/drivers/bmcbowl.c: 374 mame/drivers/cardline.c: 130 mame/drivers/cherrym.c: 176 mame/drivers/limenko.c: 426 mame/drivers/lvcards.c: 218, 302 mame/drivers/magic10.c: 216 mame/drivers/nmg5.c: 685 mame/drivers/pmpoker.c: 612, 702 mame/drivers/sderby.c: 173 mame/drivers/witch.c: 552
 Bet
 賭ける
 
@@ -778,11 +778,11 @@ Byte Length
 COMM Setting
 COMMセッティング
 
-# emu/clifront.c: 88
+# emu/clifront.c: 92
 CONFIGURATION COMMANDS
 設定コマンド
 
-# emu/clifront.c: 111
+# emu/clifront.c: 115
 CONFIGURATION OPTIONS
 設定オプション
 
@@ -790,7 +790,7 @@ CONFIGURATION OPTIONS
 CORE ARTWORK OPTIONS
 コアのアートワークオプション
 
-# emu/clifront.c: 83
+# emu/clifront.c: 87
 CORE COMMANDS
 コアコマンド
 
@@ -862,7 +862,7 @@ CPU
 CPU%.2d 
 CPU%.2d 
 
-# emu/clifront.c: 100
+# emu/clifront.c: 104
 CRC-32s
 CRC-32の値を表\示
 
@@ -1234,11 +1234,11 @@ Dial V 8
 Difficulty
 難易度
 
-# mame/drivers/cps1.c: 2603 mame/drivers/pipedrm.c: 439 mame/drivers/speedbal.c: 125
+# mame/drivers/cps1.c: 2603 mame/drivers/pipedrm.c: 445 mame/drivers/speedbal.c: 125
 Difficulty 1
 難易度 1
 
-# mame/drivers/cps1.c: 2612 mame/drivers/hcastle.c: 165 mame/drivers/pipedrm.c: 444 mame/drivers/speedbal.c: 130
+# mame/drivers/cps1.c: 2612 mame/drivers/hcastle.c: 165 mame/drivers/pipedrm.c: 450 mame/drivers/speedbal.c: 130
 Difficulty 2
 難易度 2
 
@@ -1402,15 +1402,15 @@ Error loading memory card
 Error: 
 エラー: 
 
-# emu/mame.c: 1784, 1788
+# emu/mame.c: 1774, 1778
 Error: Failed to load state
 エラー: ステートの読み込みが失敗しました
 
-# emu/mame.c: 1706
+# emu/mame.c: 1696
 Error: Failed to save state
 エラー: ステートの保存が失敗しました
 
-# emu/mame.c: 1669
+# emu/mame.c: 1659
 Error: Unable to save state due to illegal registrations. See error.log for details.
 エラー: 不正な登録のためステートを保存する事が出来ません。詳細はerror.logをご覧下さい。
 
@@ -1418,11 +1418,11 @@ Error: Unable to save state due to illegal registrations. See error.log for deta
 Error: illegal caption file
 エラー: 不正なキャプションファイルです
 
-# lib/util/options.c: 468
+# lib/util/options.c: 489
 Error: option %s expected a parameter\n
 Error: オプション「%s」には引数が必要です\n
 
-# lib/util/options.c: 449
+# lib/util/options.c: 470
 Error: unknown option: %s\n
 Error: オプション「%s」はありません\n
 
@@ -1434,7 +1434,7 @@ Europe
 Expert
 エキスパート
 
-# emu/clifront.c: 94
+# emu/clifront.c: 98
 FRONTEND COMMANDS
 フロントエンドコマンド
 
@@ -1506,7 +1506,7 @@ Free
 Free Play
 フリープレイ
 
-# mame/drivers/1942.c: 213 mame/drivers/1943.c: 147 mame/drivers/40love.c: 1081 mame/drivers/aerofgt.c: 775 mame/drivers/airbustr.c: 490 mame/drivers/alpha68k.c: 1164, 1490, 1543, 1595, 1650, 1676, 1776 mame/drivers/atetris.c: 227, 253 mame/drivers/baraduke.c: 254, 327 mame/drivers/battlex.c: 115 mame/drivers/bbusters.c: 469, 550 mame/drivers/bionicc.c: 245 mame/drivers/blktiger.c: 208 mame/drivers/bwing.c: 289 mame/drivers/compgolf.c: 134 mame/drivers/cps1.c: 668, 836, 954, 1004, 1088, 1159, 1257, 1426, 1516, 1597, 1689, 1793, 1888, 1978, 2060, 2143, 2237, 2299, 2424, 2527, 2635, 2754, 2863, 2955, 3048, 3105, 3165, 3218, 3263, 3316, 3368, 3422, 3465, 3566, 3666, 3770, 3869, 3929 mame/drivers/dec8.c: 1243, 1674 mame/drivers/docastle.c: 341 mame/drivers/exedexes.c: 137 mame/drivers/fcrash.c: 288 mame/drivers/findout.c: 420 mame/drivers/flstory.c: 524 mame/drivers/funkybee.c: 146, 207 mame/drivers/funkyjet.c: 221, 299 mame/drivers/galaga.c: 1023, 1099, 1170, 1244, 1374, 1613, 1672 mame/drivers/gunsmoke.c: 191 mame/drivers/hal21.c: 418 mame/drivers/higemaru.c: 80 mame/drivers/ikki.c: 119 mame/drivers/jcross.c: 195 mame/drivers/karnov.c: 593 mame/drivers/kingobox.c: 289, 375 mame/drivers/kyugo.c: 227, 258, 295, 326, 356, 386, 416 mame/drivers/ladybug.c: 164, 437 mame/drivers/laserbat.c: 376 mame/drivers/legionna.c: 2841, 2929 mame/drivers/lsasquad.c: 321, 475 mame/drivers/mainsnk.c: 195 mame/drivers/mappy.c: 981, 1114, 1245, 1306, 1374 mame/drivers/markham.c: 143 mame/drivers/marvins.c: 269, 358, 449 mame/drivers/midas.c: 414 mame/drivers/midtunit.c: 343 mame/drivers/midvunit.c: 582 mame/drivers/mitchell.c: 617 mame/drivers/ms32.c: 751, 821, 888 mame/drivers/mugsmash.c: 297, 379 mame/drivers/munchmo.c: 200 mame/drivers/mwarr.c: 209 mame/drivers/namcond1.c: 110 mame/drivers/namcos1.c: 599, 639, 661, 698, 760, 782, 796, 869, 879, 901, 911 mame/drivers/namcos12.c: 1411 mame/drivers/namcos86.c: 569, 659, 729, 807, 886, 965 mame/drivers/neogeo.c: 943, 1091 mame/drivers/nycaptor.c: 721 mame/drivers/ohmygod.c: 292 mame/drivers/onetwo.c: 171 mame/drivers/pacland.c: 331 mame/drivers/pandoras.c: 287 mame/drivers/prehisle.c: 156 mame/drivers/pturn.c: 420 mame/drivers/rollrace.c: 150 mame/drivers/rungun.c: 385 mame/drivers/sauro.c: 247 mame/drivers/scobra.c: 745 mame/drivers/seta2.c: 552 mame/drivers/sf.c: 337, 515, 653 mame/drivers/sgladiat.c: 285 mame/drivers/shootout.c: 167 mame/drivers/sidearms.c: 248 mame/drivers/skykid.c: 167, 246 mame/drivers/snk.c: 2949, 3005, 3081, 3138, 3195, 3266, 3353, 3407, 3465, 3493, 3553, 3624, 3680, 3757, 3822, 3927, 4051, 4192 mame/drivers/snk68.c: 259, 406, 443, 594 mame/drivers/sonson.c: 195 mame/drivers/ssrj.c: 134 mame/drivers/starwars.c: 260, 337 mame/drivers/statriv2.c: 432 mame/drivers/strnskil.c: 197 mame/drivers/superqix.c: 605, 743 mame/drivers/suprnova.c: 555, 630 mame/drivers/tceptor.c: 367, 423 mame/drivers/tmnt.c: 1930, 2016, 2216 mame/drivers/toypop.c: 408, 493 mame/drivers/tsamurai.c: 472, 665 mame/drivers/tumbleb.c: 1465 mame/drivers/vastar.c: 233 mame/drivers/zaccaria.c: 410, 519 mame/drivers/zn.c: 3091 mame/drivers/zodiack.c: 203
+# mame/drivers/1942.c: 213 mame/drivers/1943.c: 147 mame/drivers/40love.c: 1081 mame/drivers/aerofgt.c: 775 mame/drivers/airbustr.c: 490 mame/drivers/alpha68k.c: 1164, 1490, 1543, 1595, 1650, 1676, 1776 mame/drivers/atetris.c: 227, 253 mame/drivers/baraduke.c: 254, 327 mame/drivers/battlex.c: 115 mame/drivers/bbusters.c: 469, 550 mame/drivers/bionicc.c: 245 mame/drivers/blktiger.c: 208 mame/drivers/bwing.c: 289 mame/drivers/compgolf.c: 134 mame/drivers/cps1.c: 668, 836, 954, 1004, 1088, 1159, 1257, 1426, 1516, 1597, 1689, 1793, 1888, 1978, 2060, 2143, 2237, 2299, 2424, 2527, 2635, 2754, 2863, 2955, 3048, 3105, 3165, 3218, 3263, 3316, 3368, 3422, 3465, 3566, 3666, 3770, 3869, 3929 mame/drivers/dec8.c: 1243, 1674 mame/drivers/docastle.c: 341 mame/drivers/exedexes.c: 137 mame/drivers/fcrash.c: 288 mame/drivers/findout.c: 420 mame/drivers/flstory.c: 524 mame/drivers/funkybee.c: 146, 207 mame/drivers/funkyjet.c: 221, 299 mame/drivers/galaga.c: 1023, 1099, 1170, 1244, 1374, 1613, 1672 mame/drivers/gunsmoke.c: 191 mame/drivers/hal21.c: 418 mame/drivers/higemaru.c: 80 mame/drivers/ikki.c: 119 mame/drivers/jcross.c: 195 mame/drivers/karnov.c: 593 mame/drivers/kingobox.c: 289, 375 mame/drivers/kyugo.c: 227, 258, 295, 326, 356, 386, 416 mame/drivers/ladybug.c: 164, 437 mame/drivers/laserbat.c: 376 mame/drivers/legionna.c: 2841, 2929 mame/drivers/lsasquad.c: 321, 475 mame/drivers/mainsnk.c: 195 mame/drivers/mappy.c: 981, 1114, 1245, 1306, 1374 mame/drivers/markham.c: 143 mame/drivers/marvins.c: 269, 358, 449 mame/drivers/midas.c: 414 mame/drivers/midtunit.c: 343 mame/drivers/midvunit.c: 582 mame/drivers/mitchell.c: 617 mame/drivers/ms32.c: 751, 821, 888 mame/drivers/mugsmash.c: 297, 379 mame/drivers/munchmo.c: 200 mame/drivers/mwarr.c: 209 mame/drivers/namcond1.c: 110 mame/drivers/namcos1.c: 599, 639, 661, 698, 760, 782, 796, 869, 879, 901, 911 mame/drivers/namcos12.c: 1411 mame/drivers/namcos86.c: 569, 659, 729, 807, 886, 965 mame/drivers/neogeo.c: 943, 1091 mame/drivers/nycaptor.c: 721 mame/drivers/ohmygod.c: 292 mame/drivers/onetwo.c: 192 mame/drivers/pacland.c: 331 mame/drivers/pandoras.c: 287 mame/drivers/prehisle.c: 156 mame/drivers/pturn.c: 420 mame/drivers/rollrace.c: 150 mame/drivers/rungun.c: 385 mame/drivers/sauro.c: 247 mame/drivers/scobra.c: 745 mame/drivers/seta2.c: 552 mame/drivers/sf.c: 337, 515, 653 mame/drivers/sgladiat.c: 285 mame/drivers/shootout.c: 167 mame/drivers/sidearms.c: 248 mame/drivers/skykid.c: 167, 246 mame/drivers/snk.c: 2949, 3005, 3081, 3138, 3195, 3266, 3353, 3407, 3465, 3493, 3553, 3624, 3680, 3757, 3822, 3927, 4051, 4192 mame/drivers/snk68.c: 259, 406, 443, 594 mame/drivers/sonson.c: 195 mame/drivers/ssrj.c: 134 mame/drivers/starwars.c: 260, 337 mame/drivers/statriv2.c: 432 mame/drivers/strnskil.c: 197 mame/drivers/superqix.c: 605, 743 mame/drivers/suprnova.c: 555, 630 mame/drivers/tceptor.c: 367, 423 mame/drivers/tmnt.c: 1930, 2016, 2216 mame/drivers/toypop.c: 408, 493 mame/drivers/tsamurai.c: 472, 665 mame/drivers/tumbleb.c: 1465 mame/drivers/vastar.c: 233 mame/drivers/zaccaria.c: 410, 519 mame/drivers/zn.c: 3091 mame/drivers/zodiack.c: 203
 Freeze
 動きを止める
 
@@ -1610,7 +1610,7 @@ Harder
 Hardest
 最も困難
 
-# mame/drivers/ddenlovr.c: 3250 mame/drivers/shanghai.c: 913 
+# mame/drivers/ddenlovr.c: 3250 mame/drivers/shanghai.c: 914 
 Help
 ヘルプ
 
@@ -1718,19 +1718,27 @@ Ignore Decrement
 Ignore Decrement By
 この値まで減少を無視
 
-# lib/util/options.c: 859
+# lib/util/options.c: 880
 Illegal boolean value for %s; reverting to %d\n
 「%s」は不正な論理値です。%dに戻します。\n
 
-# lib/util/options.c: 917, 988
+# lib/util/options.c: 1086
+Illegal float value for %s; keeping value of %s\n
+「%s」は不正な実数値です。値%sを保持します。\n
+
+# lib/util/options.c: 938
 Illegal float value for %s; reverting to %f\n
 「%s」は不正な実数値です。%fに戻します。\n
 
-# lib/util/options.c: 888, 947
+# lib/util/options.c: 1068
+Illegal integer value for %s; keeping value of %s\n
+「%s」は不正な整数値です。値%sを保持します。\n
+
+# lib/util/options.c: 909
 Illegal integer value for %s; reverting to %d\n
 「%s」は不正な整数値です。%dに戻します。\n
 
-# emu/clifront.c: 526 emu/mame.c: 1262 emu/ui.c: 345 
+# emu/clifront.c: 534 emu/mame.c: 1262 emu/ui.c: 345 
 Illegal value for %s = %s\n
 不正な値 %s = %s\n
 
@@ -1782,13 +1790,13 @@ Insert
 International
 インターナショナル
 
-# lib/util/options.c: 957
-Invalid %s value (must be between %d and %d); reverting to %d\n
-「%s」は不正な値です(%dから%dの間でなければなりません)。%dに戻します。\n
+# lib/util/options.c: 1092
+Invalid %s value (must be between %f and %f); keeping value of %s\n
+「%s」は不正な値です(%fから%fまでの間でなければなりません)。値%sを保持します。\n
 
-# lib/util/options.c: 998
-Invalid %s value (must be between %f and %f); reverting to %f\n
-「%s」は不正な値です(%fから%fの間でなければなりません)。%fに戻します。\n
+# lib/util/options.c: 1074
+Invalid %s value (must be between %i and %i); keeping value of %s\n
+「%s」は不正な値です(%iから%iまでの間でなければなりません)。値%sを保持します。\n
 
 # mame/drivers/ajax.c: 171 mame/drivers/taito_z.c: 2922, 2939, 2990, 3007
 Inverted
@@ -2014,7 +2022,7 @@ Location
 Low
 低い
 
-# emu/clifront.c: 459
+# emu/clifront.c: 467
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
 
@@ -2218,7 +2226,7 @@ NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 NO GOOD DUMP KNOWN\n
 正常なダンプは不明です\n
 
-# emu/clifront.c: 1314 tools/romcmp.c: 464
+# emu/clifront.c: 1322 tools/romcmp.c: 464
 NO MATCH\n
 マッチしません\n
 
@@ -2230,7 +2238,7 @@ NO SOUND           : %3d  %3d\n
 NON-WORKING        : %3d  %3d\n
 動作不可           : %3d  %3d\n
 
-# emu/clifront.c: 1308
+# emu/clifront.c: 1316
 NOT A ROM\n
 ROMではありません\n
 
@@ -2258,11 +2266,11 @@ NOT FOUND\n
 Name
 名前
 
-# emu/clifront.c: 643
+# emu/clifront.c: 651
 Name:     Description:\n
 名前:     詳細:\n
 
-# emu/clifront.c: 766
+# emu/clifront.c: 774
 Name:    Clone of:\n
 名前:    クローン:\n
 
@@ -3994,7 +4002,7 @@ SHADOWS        : %3d  + %3d\n
 Samples
 サンプル
 
-# emu/clifront.c: 929
+# emu/clifront.c: 937
 Samples not supported in this build\n
 このビルドではサンプルはサポートされていません\n
 
@@ -4262,15 +4270,15 @@ Start a New Cheat Search
 State
 ステート
 
-# emu/mame.c: 1781
+# emu/mame.c: 1771
 State successfully loaded.
 ステートを正常に読み込みました。
 
-# emu/mame.c: 1703
+# emu/mame.c: 1693
 State successfully saved.
 ステートを正常に保存しました。
 
-# emu/mame.c: 1701
+# emu/mame.c: 1691
 State successfully saved.\nWarning: Save states are not officially supported for this game.
 ステートを正常に保存しました。\n警告: このゲームはステートセーブを公式にサポートしていません。
 
@@ -4290,7 +4298,7 @@ Status (bits or flags)
 Stereo
 ステレオ
 
-# mame/drivers/bmcbowl.c: 371 mame/drivers/holeland.c: 145, 213 mame/drivers/limenko.c: 427 mame/drivers/pgm.c: 895, 992, 1082, 1174, 1270, 1361 mame/drivers/popper.c: 277 mame/drivers/toaplan2.c: 2026 mame/drivers/turbo.c: 893
+# mame/drivers/bmcbowl.c: 370 mame/drivers/holeland.c: 145, 213 mame/drivers/limenko.c: 427 mame/drivers/pgm.c: 895, 992, 1082, 1174, 1270, 1361 mame/drivers/popper.c: 277 mame/drivers/toaplan2.c: 2026 mame/drivers/turbo.c: 893
 Stop
 停止
 
@@ -4322,7 +4330,7 @@ THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't both
 Taiwan
 台湾
 
-# mame/drivers/bmcbowl.c: 381 mame/drivers/dwarfd.c: 452 mame/drivers/witch.c: 549
+# mame/drivers/bmcbowl.c: 380 mame/drivers/dwarfd.c: 452 mame/drivers/witch.c: 549
 Take
 取得
 
@@ -4334,7 +4342,7 @@ Territory
 Test
 テスト
 
-# mame/drivers/aleck64.c: 264 mame/drivers/btime.c: 772 mame/drivers/coinmstr.c: 267 mame/drivers/ddenlovr.c: 3290 mame/drivers/ertictac.c: 228 mame/drivers/funworld.c: 1234 mame/drivers/galpani3.c: 146 mame/drivers/halleys.c: 1702 mame/drivers/homedata.c: 957 mame/drivers/hornet.c: 770, 818 mame/drivers/jchan.c: 730 mame/drivers/koikoi.c: 164 mame/drivers/laserbas.c: 117 mame/drivers/macs.c: 256 mame/drivers/megasys1.c: 1142, 1301 mame/drivers/mw8080bw.c: 382, 774, 1241, 2191 mame/drivers/nwk-tr.c: 859 mame/drivers/nycaptor.c: 612 mame/drivers/ohmygod.c: 192 mame/drivers/panicr.c: 261 mame/drivers/quasar.c: 318 mame/drivers/quizo.c: 188 mame/drivers/raiden2.c: 980, 1059, 1108 mame/drivers/segas16a.c: 1494 mame/drivers/segas16b.c: 2838 mame/drivers/seicross.c: 188 mame/drivers/snk.c: 3767, 3832 mame/drivers/ssfindo.c: 555 mame/drivers/st0016.c: 408, 497 mame/drivers/suprnova.c: 621 mame/drivers/system1.c: 2037, 2226 mame/drivers/vegas.c: 2069
+# mame/drivers/aleck64.c: 264 mame/drivers/btime.c: 772 mame/drivers/coinmstr.c: 267 mame/drivers/ddenlovr.c: 3290 mame/drivers/ertictac.c: 228 mame/drivers/funworld.c: 1234 mame/drivers/galpani3.c: 146 mame/drivers/halleys.c: 1702 mame/drivers/homedata.c: 957 mame/drivers/hornet.c: 770, 818 mame/drivers/jchan.c: 730 mame/drivers/koikoi.c: 164 mame/drivers/laserbas.c: 115 mame/drivers/macs.c: 256 mame/drivers/megasys1.c: 1142, 1301 mame/drivers/mw8080bw.c: 382, 774, 1241, 2191 mame/drivers/nwk-tr.c: 864 mame/drivers/nycaptor.c: 612 mame/drivers/ohmygod.c: 192 mame/drivers/panicr.c: 261 mame/drivers/quasar.c: 318 mame/drivers/quizo.c: 188 mame/drivers/raiden2.c: 980, 1059, 1108 mame/drivers/segas16a.c: 1494 mame/drivers/segas16b.c: 2838 mame/drivers/seicross.c: 188 mame/drivers/snk.c: 3767, 3832 mame/drivers/ssfindo.c: 555 mame/drivers/st0016.c: 408, 497 mame/drivers/suprnova.c: 621 mame/drivers/system1.c: 2037, 2226 mame/drivers/vegas.c: 2069
 Test Mode
 テストモード
 
@@ -4406,7 +4414,7 @@ There are known problems with this game:
 There are working clones of this game. They are:
 このゲームには以下の動作可能\なクローンが存在します:
 
-# emu/clifront.c: 831
+# emu/clifront.c: 839
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
 これはドライバ「%s」に必要なROMのリストです。\n名前          サイズ チェックサム\n
 
@@ -4426,7 +4434,7 @@ Tilt
 Time
 時間
 
-# mame/drivers/chinagat.c: 438 mame/drivers/ddragon.c: 789 mame/drivers/fuukifg3.c: 420 mame/drivers/jollyjgr.c: 176 mame/drivers/m62.c: 718, 769, 821, 873 mame/drivers/megaplay.c: 192 mame/drivers/metro.c: 2774 mame/drivers/quizdna.c: 150, 238, 340 mame/drivers/segae.c: 1302 mame/drivers/segas16a.c: 999, 1024 mame/drivers/segas16b.c: 1926 mame/drivers/shisen.c: 139 mame/drivers/st0016.c: 425 mame/drivers/system16.c: 646 mame/drivers/taito_f2.c: 2021, 3213 mame/drivers/toaplan2.c: 2928, 3044 mame/drivers/vsnes.c: 1472, 1780
+# mame/drivers/chinagat.c: 438 mame/drivers/ddragon.c: 789 mame/drivers/fuukifg3.c: 420 mame/drivers/jollyjgr.c: 176 mame/drivers/m62.c: 718, 769, 821, 873 mame/drivers/megaplay.c: 192 mame/drivers/metro.c: 2774 mame/drivers/quizdna.c: 150, 238, 340 mame/drivers/segae.c: 1300 mame/drivers/segas16a.c: 999, 1024 mame/drivers/segas16b.c: 1926 mame/drivers/shisen.c: 139 mame/drivers/st0016.c: 425 mame/drivers/system16.c: 646 mame/drivers/taito_f2.c: 2021, 3213 mame/drivers/toaplan2.c: 2928, 3044 mame/drivers/vsnes.c: 1472, 1780
 Timer
 時間
 
@@ -4630,15 +4638,15 @@ US
 USA
 アメリカ
 
-# emu/clifront.c: 422
+# emu/clifront.c: 430
 Unable to create file %s.ini\n
 ファイル%s.iniが作成出来ません\n
 
-# emu/mame.c: 1740
+# emu/mame.c: 1730
 Unable to load due to pending anonymous timers. See error.log for details.
 何かのタイマーが保留中のためステートを読み込むことが出来ません。詳細はerror.logをご覧下さい。
 
-# emu/mame.c: 1654
+# emu/mame.c: 1644
 Unable to save due to pending anonymous timers. See error.log for details.
 何かのタイマーが保留中のためステートを保存する事が出来ません。詳細はerror.logをご覧下さい。
 
@@ -4654,15 +4662,15 @@ Unable to start sound emulation
 Unable to start video emulation
 ビデオエミュレーションを開始する事が出来ません。
 
-# lib/util/options.c: 849
+# lib/util/options.c: 870
 Unexpected boolean option %s queried\n
 論理値オプション%sが不正です\n
 
-# lib/util/options.c: 907, 978
+# lib/util/options.c: 928
 Unexpected float option %s queried\n
 実数値オプション%sが不正です\n
 
-# lib/util/options.c: 878, 937
+# lib/util/options.c: 899
 Unexpected integer option %s queried\n
 整数値オプション%sが不正です\n
 
@@ -4814,11 +4822,11 @@ Uptime
 Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.
 所有していないROMをエミュレータで使用することは、著作権法によって禁じられています。
 
-# emu/clifront.c: 462
+# emu/clifront.c: 470
 Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the file windows.txt\n
 使用法:  MAME ゲーム名 [オプション]\n\n         MAME -showusage    オプションを簡単に一覧表\示\n         MAME -showconfig   オプションの設定値を一覧表\示\n         MAME -createconfig mame.iniを生成\n\n詳しい使用法については、windows.txtを参照下さい\n
 
-# emu/clifront.c: 361
+# emu/clifront.c: 369
 Usage: %s [%s] [options]\n\nOptions:\n
 使用法: %s [%s] [オプション]\n\nオプション:\n
 
@@ -4934,11 +4942,11 @@ WRONG COLORS       : %3d  %3d\n
 Wait
 ウエイト
 
-# lib/util/options.c: 516
+# lib/util/options.c: 537
 Warning: invalid line in INI: %s
 警告: INIファイルに不正な行があります: %s
 
-# lib/util/options.c: 538
+# lib/util/options.c: 559
 Warning: unknown option in INI: %s\n
 警告: INIファイルに不明なオプションがあります: %s
 
@@ -5034,7 +5042,7 @@ Zoom Auto
 \n   TOTAL: %4d\n
 \n    合計: %4d\n
 
-# emu/video.c: 1165
+# emu/video.c: 1169
 \n%d partial updates
 \n%d部分更新
 
@@ -5062,7 +5070,7 @@ Zoom Auto
 \nWARNING: FPS number too high!\n
 \n警告: FPSの値が大きすぎます！\n
 
-# emu/clifront.c: 273
+# emu/clifront.c: 282
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n「%s」に似たゲームは下記の通りです\nサポートされているゲーム (似ているもの順):\n\n
 
@@ -5134,7 +5142,7 @@ Zoom Auto
 activation key saved
 アクティベーションキーが保存されました
 
-# emu/clifront.c: 95
+# emu/clifront.c: 99
 all available info on driver in XML format
 存在する全てのドライバ情報をXML形式で出力
 
@@ -5146,7 +5154,7 @@ amount to scale the screen brightness when paused
 assert: %s:%d: %s
 アサート: %s:%d: %s
 
-# emu/video.c: 1153
+# emu/video.c: 1157
 auto%2d/%d
 自動%2d/%d
 
@@ -5218,11 +5226,11 @@ cheat filename
 command list database name
 コマンドリストデータベースのファイル名
 
-# emu/clifront.c: 105
+# emu/clifront.c: 109
 compare files with known MAME roms
 ファイルを既知のMAME ROMと比較する
 
-# emu/clifront.c: 89
+# emu/clifront.c: 93
 create the default configuration file
 デフォルト設定ファイルを作成
 
@@ -5302,11 +5310,11 @@ directory to save states
 disabled
 無効
 
-# emu/clifront.c: 90
+# emu/clifront.c: 94
 display running parameters
 実行中のパラメータを表\示
 
-# emu/clifront.c: 98
+# emu/clifront.c: 102
 driver sourcefile
 ドライバのソ\ースファイル名を表\示
 
@@ -5330,7 +5338,7 @@ enable bezels if artwork is enabled and available
 enable cheat subsystem
 チートシステムを有効
 
-# emu/clifront.c: 112
+# emu/clifront.c: 116
 enable loading of configuration files
 設定ファイルの読み込みを有効
 
@@ -5370,7 +5378,7 @@ enable/disable volume auto adjust
 enabled
 有効
 
-# emu/clifront.c: 589
+# emu/clifront.c: 597
 error: invalid value for language: %s\nUse %s\n
 エラー: 不正な言語指定: %s\n%sを使用します\n
 
@@ -5378,7 +5386,7 @@ error: invalid value for language: %s\nUse %s\n
 error: invalid value for palette: %s\n
 エラー: 不正なパレット指定: %s\n
 
-# emu/video.c: 1149
+# emu/video.c: 1153
 fast 
 高速
 
@@ -5402,11 +5410,11 @@ font normal color
 font special color
 フォント (特殊)
 
-# emu/video.c: 1141
+# emu/video.c: 1145
 frame:%d 
 フレーム:%d
 
-# emu/clifront.c: 361 emu/info.c: 25 mame/drivers/ksys573.c: 3098, 3113 
+# emu/clifront.c: 369 emu/info.c: 25 mame/drivers/ksys573.c: 3098, 3113 
 game
 ゲーム名
 
@@ -5434,15 +5442,15 @@ invalid
 ips datfile name
 IPSデータファイル名
 
-# emu/clifront.c: 981, 1061
+# emu/clifront.c: 989, 1069
 is bad\n
 は異常です\n
 
-# emu/clifront.c: 991, 1071
+# emu/clifront.c: 999, 1079
 is best available\n
 は現状では最良な状態です\n
 
-# emu/clifront.c: 986, 1066
+# emu/clifront.c: 994, 1074
 is good\n
 は正常です\n
 
@@ -5450,15 +5458,15 @@ is good\n
 lightgun
 光線銃
 
-# emu/clifront.c: 107
+# emu/clifront.c: 111
 list available devices
 存在するデバイスのリストを表\示
 
-# emu/clifront.c: 102
+# emu/clifront.c: 106
 list optional samples for a driver
 ドライバの外部サンプルのリストを表\示
 
-# emu/clifront.c: 101
+# emu/clifront.c: 105
 list required roms for a driver
 ドライバに必要なROMのリストを表\示
 
@@ -5550,7 +5558,7 @@ iniファイルへのパスを指定
 path to samplesets
 サンプルファイルへのパスを指定
 
-# emu/video.c: 1145
+# emu/video.c: 1149
 paused
 中断
 
@@ -5558,7 +5566,7 @@ paused
 pedal
 ペダル
 
-# emu/clifront.c: 85
+# emu/clifront.c: 89
 perform driver validation on all game drivers
 全てのゲームドライバで妥当性チェックを実行
 
@@ -5582,23 +5590,23 @@ record an input file
 region invalidated - %d results remain
 不正な領域 - %d個の結果が残っています
 
-# emu/clifront.c: 103
+# emu/clifront.c: 107
 report romsets that have problems
 問題のあるROMセットを報告
 
-# emu/clifront.c: 104
+# emu/clifront.c: 108
 report samplesets that have problems
 問題のあるサンプルセットを報告
 
-# emu/clifront.c: 972
+# emu/clifront.c: 980
 romset %s 
 ROMセット%s
 
-# emu/clifront.c: 1005
+# emu/clifront.c: 1013
 romset \"%s\" not found!\n
 ロムセット「%s」は見つかりません!\n
 
-# emu/clifront.c: 1007
+# emu/clifront.c: 1015
 romset \"%s\" not supported!\n
 ロムセット「%s」は対応していません!\n
 
@@ -5618,15 +5626,15 @@ rotate the game screen according to the game's orientation needs it
 s%d
 画面%d
 
-# emu/clifront.c: 1055
+# emu/clifront.c: 1063
 sampleset %s 
 サンプルセット%s
 
-# emu/clifront.c: 1082
+# emu/clifront.c: 1090
 sampleset \"%s\" not found!\n
 サンプルセット「%s」は見つかりません!\n
 
-# emu/clifront.c: 1084
+# emu/clifront.c: 1092
 sampleset \"%s\" not supported!\n
 サンプルセット「%s」は対応していません!\n
 
@@ -5638,7 +5646,7 @@ saved all memory regions
 saved state to load
 保存したステートを読み込む
 
-# emu/video.c: 1814
+# emu/video.c: 1818
 scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
 スケールエフェクト「%s」は15ビットカラー、32ビットカラー共にサポートされていません。スケールエフェクトを無効にします。
 
@@ -5674,23 +5682,23 @@ set vector beam width
 set vector flicker effect
 ベクタのフリッカエフェクトを設定
 
-# emu/clifront.c: 97
+# emu/clifront.c: 101
 short name, full name
 ゲームディレクトリ名＋ゲームのフルネームを表\示
 
-# emu/clifront.c: 99
+# emu/clifront.c: 103
 show clones
 ゲームのクローン版を表\示
 
-# emu/clifront.c: 84
+# emu/clifront.c: 88
 show help message
 ヘルプの表\示
 
-# emu/clifront.c: 91
+# emu/clifront.c: 95
 show this help
 このヘルプを表\示
 
-# emu/video.c: 1157
+# emu/video.c: 1161
 skip %d/%d
 スキップ %d/%d
 
@@ -5758,7 +5766,7 @@ values restored
 window background color
 ウィンドウ 背景色
 
-# emu/clifront.c: 96
+# emu/clifront.c: 100
 year, manufacturer and full name
 サポートゲーム、製造年、メーカーのリストを表\示
 
