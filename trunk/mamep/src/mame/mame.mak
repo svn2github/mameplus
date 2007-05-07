@@ -1622,6 +1622,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/sprcros2.o $(VIDEO)/sprcros2.o \
 	$(DRIVERS)/ssfindo.o \
 	$(DRIVERS)/ssingles.o \
+	$(DRIVERS)/sstrangr.o \
 	$(DRIVERS)/steaser.o \
 	$(DRIVERS)/statriv2.o \
 	$(DRIVERS)/supertnk.o \
@@ -1705,6 +1706,10 @@ $(DRIVERS)/meadows.o:	$(LAYOUT)/deadeye.lh \
 						$(LAYOUT)/gypsyjug.lh
 
 $(DRIVERS)/nbmj8688.o:	$(LAYOUT)/nbmj8688.lh
+
+$(DRIVERS)/pmpoker.o:	$(LAYOUT)/pmpoker.lh \
+			$(LAYOUT)/goldnpkr.lh \
+			$(LAYOUT)/pottnpkr.lh
 
 $(DRIVERS)/sbrkout.o:	$(LAYOUT)/sbrkout.lh
 
