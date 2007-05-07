@@ -1893,7 +1893,7 @@ static UINT32 menu_document_contents(UINT32 state)
 		ui_draw_message_window(bufptr);
 	else
 	{
-		char msg[80];
+		char msg[120];
 
 		strcpy(msg, "\t");
 

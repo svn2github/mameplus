@@ -1603,6 +1603,7 @@ UINT32 cheat_menu(UINT32 state)
 		kMenu_Options,
 		kMenu_Return,
 
+		kMenu_Terminator,
 		kMenu_Max
 	};
 
