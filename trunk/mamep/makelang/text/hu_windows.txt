@@ -1,1624 +1,1056 @@
-# windows/input.c: 906
+# osd/windows/input.c: 1909
          all -- all axes on all joysticks are digital\n
          mind -- joystick-ek iránygombjai mind digitálisak\n
 
-# windows/input.c: 912
+# osd/windows/input.c: 1915
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
          j1,j2a2 -- minden joystick 1 irány és a 2 irány a joystick 2-nél digitális\n
 
-# windows/input.c: 910
+# osd/windows/input.c: 1913
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
 
-# windows/input.c: 907
+# osd/windows/input.c: 1910
          j<N> -- all axes on joystick <N> are digital\n
          j<N> -- minden irány az <N> joystick-en digitális\n
 
-# windows/input.c: 908
+# osd/windows/input.c: 1911
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
          j<N>a<M> -- az <M> irány az <N> joystick-en digitális\n
 
-# windows/input.c: 905
+# osd/windows/input.c: 1908
          none -- no axes on any joysticks are digital\n
          nincs -- egyik irány sem digitális a joystick-eken\n
 
-# windows/fronthlp.c: 458
-        MAME -createconfig to create a mame.ini\n\n
-        MAME -createconfig mame.ini lérehozása\n\n
-
-# windows/fronthlp.c: 457
-        MAME -showconfig   for a list of configuration options\n
-        MAME -showconfig   beállítási lehetõségek listájához\n
-
-# windows/fronthlp.c: 456
-        MAME -showusage    for a brief list of options\n
-        MAME -showusage    beállítások rövid listájához\n
-
-# windows/input.c: 909
+# osd/windows/input.c: 1912
     Multiple axes can be specified for one joystick:\n
     Többféle irány az joystick függõ:\n
 
-# windows/input.c: 911
+# osd/windows/input.c: 1914
     Multiple joysticks can be specified separated by commas:\n
     Többfunkciós joystick-ek vesszõk által különülnek el:\n
 
-# windows/rc.c: 328, 395
-   ignoring line\n
-   sorok kihagyása\n
-
-# windows/input.c: 1906
-  Axis %d (%s)%s\n
-  Tengely %d (%s)%s\n
-
-# windows/config.c: 545
- %s running parameters
- %s paraméterek futtatása
-
-# windows/wind3d.c: 636
- (%.2lfMB video memory available)
- (%.2lfMB videó memória áll rendelkezésre)
-
-# windows/input.c: 1906
+# osd/windows/input.c: 2390
  - digital
  - digitális
 
-# windows/fronthlp.c: 757
-%d %s found, %d were OK.\n
-%d %s található, %d rendben volt.\n
-
-# windows/wind3d.c: 1633
-%s surface created: %s (%s)\n
-%s felület létrehozva : %s (%s)\n
-
-# windows/fronthlp.c: 194
-(BAD) 
-(ROSSZ)
-
-# windows/video.c: 222
-(dd) stretch video using the hardware
-(dd) kép nyújtása hardvert használ
-
-# windows/input.c: 945
-Autoenabling joysticks due to presence of a %s\n
-Joystick-ek autómatikusan elérhetõk a következõ végett %s\n 
-
-# windows/input.c: 953
-Autoenabling lightguns due to presence of a %s\n
-Fénypisztolyok autómatikusan elérhetõk a következõ végett %s\n
-
-# windows/input.c: 937
-Autoenabling mice due to presence of a %s\n
-Egerek autómatikusan elérhetõk a következõ végett %s\n
-
-# windows/video.c: 695
-Average FPS: %f (%d frames)\n
-Átlagos FPS: %f (%d képkocka)\n
-
-# windows/wind3d.c: 2658 windows/winddraw.c: 1456, 1763
-Avg Flip = %d
-Tükrözés átlag = %d
-
-# windows/wind3d.c: 1004 windows/winddraw.c: 576
-Best mode = %dx%dx%d @ %d Hz\n
-Legjobb mód = %dx%dx%d @ %d Hz\n
-
-# windows/wind3d.c: 1006 windows/winddraw.c: 578
-Best mode = %dx%dx%d @ default Hz\n
-Legjobb mód = %dx%dx%d @ alap Hz\n
-
-# windows/winddraw.c: 885
-Blit surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
-Blit felület létrehozva: %dx%dx%d (R=%08x G=%08x B=%08x)\n
-
-# windows/wind3d.c: 1637
-Blit surface created: %s\n
-Blit felület létrehozva: %s\n
-
-# windows/wind3d.c: 771
-Blitter initialisation complete (%.2lfMB video memory free)\n
-Blitter elõkészítése kész (%.2lfMB videó memória szabad)\n
-
-# windows/fronthlp.c: 78
-CRC-32s
-CRC-32s
-
-# windows/config.c: 292
-Configuration options
-Beállítási opciók
-
-# windows/fronthlp.c: 777
-ERROR     %s\n
-HIBA    %s\n
-
-# windows/video.c: 541
-Enumerating video device %s\n
-Beszámított képi eszköz %s\n
-
-# windows/wind3d.c: 715
-Error creating Direct3D7 device: %08x\n
-Hiba a Direct3D7 illesztés létrehozásánál: %08x\n
-
-# windows/wind3d.c: 620
-Error creating Direct3D7: %08x\n
-Hiba a Direct3D7 létrehozásánál: %08x\n
-
-# windows/wind3d.c: 613
-Error creating DirectDraw7: %08x\n
-Hiba a DirectDraw7 létrehozásánál: %08x\n
-
-# windows/winddraw.c: 250
-Error creating DirectDraw: %08x\n
-Hiba a DirectDraw létrehozásánál: %08x\n
-
-# windows/sound.c: 632
-Error creating DirectSound buffer: %08x\n
-Hiba a DirectSound tároló létrehozásánál: %08x\n
-
-# windows/sound.c: 490
+# osd/windows/sound.c: 261
 Error creating DirectSound: %08x\n
 Hiba a DirectSound létrehozásánál: %08x\n
 
-# windows/wind3d.c: 1238
-Error creating RGB effects surface: %08x\n
-Hiba az RGB effekt-felület létrehozásánál: %08x\n
-
-# windows/wind3d.c: 1168
-Error creating back surface: %08x\n
-Hiba a háttér felület létrehozásánál: %08x\n
-
-# windows/wind3d.c: 1467 windows/winddraw.c: 868
-Error creating blit surface: %08x\n
-Hiba a blit felület létrehozásánál: %08x\n
-
-# windows/wind3d.c: 1716 windows/winddraw.c: 959
-Error creating clipper: %08x\n
-Hiba a daraboló létrehozásánál: %08x\n
-
-# windows/rc.c: 957
-Error creating dir %s
-Hiba a mappa létrehozásánál %s
-
-# windows/wind3d.c: 1576
-Error creating preprocess surface: %08x\n
-Hiba az elõfeldolgozási felület létrehozásánál: %08x\n
-
-# windows/sound.c: 597
-Error creating primary buffer: %08x\n
-Hiba az elsõdleges tároló letrehozásánál: %08x\n
-
-# windows/wind3d.c: 1117 windows/winddraw.c: 647
-Error creating primary surface: %08x\n
-Hiba az elsõdleges felület létrehozásánál: %08x\n
-
-# windows/wind3d.c: 1597 windows/winddraw.c: 739
-Error creating scale surface: %08x\n
-Hiba a beosztási felület létrehozásánál: %08x\n
-
-# windows/wind3d.c: 1268, 1276
-Error creating scanline surface[%d]: %08x\n
-Hiba a sormegjelenítési felület létrehozásánál[%d]: %08x\n
-
-# windows/wind3d.c: 1492
-Error creating texture surface: %08x\n
-Hiba a szövegfelület létrehozásánál: %08x\n
-
-# windows/video.c: 617
-Error enumerating DirectDraw: %08x\n
-Hiba a DirectDraw számításakor: %08x\n
-
-# windows/wind3d.c: 997 windows/winddraw.c: 569
-Error enumerating modes: %08x\n
-Hibás felsorolási módok: %08x\n
-
-# windows/winddraw.c: 265
-Error getting DirectDraw capabilities: %08x\n
-Hiba a DirectDraw képességek élérésénél: %08x\n
-
-# windows/sound.c: 499
+# osd/windows/sound.c: 270
 Error getting DirectSound capabilities: %08x\n
 Hiba DirectSound képességek elérésénél: %08x\n
 
-# windows/wind3d.c: 1179 windows/winddraw.c: 684
-Error getting attached back surface: %08x\n
-Hiba a visszacsatolt felület elérésénél: %08x\n
-
-# windows/wind3d.c: 1609, 1618 windows/winddraw.c: 876
-Error getting blit surface desc: %08x\n
-Hiba a blit felület leírás elérésénél: %08x\n
-
-# windows/wind3d.c: 978, 1027 windows/winddraw.c: 547, 602
-Error getting display mode: %08x\n
-Hiba a kijelzõ mód elérésénél: %08x\n
-
-# windows/sound.c: 613
-Error getting primary format: %08x\n
-Hiba az elsõdleges formátum elérésénél: %08x\n
-
-# windows/wind3d.c: 1125 windows/winddraw.c: 655
-Error getting primary surface desc: %08x\n
-Hiba az elsõdleges formátum leírás elérésénél: %08x\n
-
-# windows/winddraw.c: 747
-Error getting scale surface desc: %08x\n
-Hiba a beosztási felület leírás elérésénél: %08x\n
-
-# windows/wind3d.c: 606
-Error importing DirectDrawCreateEx() function\n
-Hiba a  DirectDrawCreateEx() funkció behozatalánál\n
-
-# windows/wind3d.c: 599
-Error importing ddraw.dll\n
-Hiba a ddraw.dll behozatalánál\n
-
-# windows/wind3d.c: 677 windows/winddraw.c: 241
-Error initialising software scale effects\n
-Hiba a szoftver beosztási effektek inicializálásánál\n
-
-# windows/sound.c: 640
-Error locking stream buffer: %08x\n
-Hiba a folyamat tároló zárolásánál: %08x\n
-
-# windows/rc.c: 965
-Error opening %s
-Hiba a megnyitáskor %s
-
-# windows/sound.c: 544
+# osd/windows/sound.c: 308
 Error playing: %08x\n
 Hiba a játékban: %08x\n
 
-# windows/sound.c: 507
+# osd/windows/sound.c: 278
 Error setting DirectSound cooperative level: %08x\n
 Hiba a DirectSound összehangolási szintjén: %08x\n
 
-# windows/wind3d.c: 1724 windows/winddraw.c: 967
-Error setting clipper hwnd: %08x\n
-Hiba a vágó beállításánál hwnd: %08x\n
+# osd/windows/input.c: 2974
+Fast Forward
+Gyors elõre
 
-# windows/wind3d.c: 1732 windows/winddraw.c: 975
-Error setting clipper on primary surface: %08x\n
-Hiba a daraboló állításánál az elsõdleges felületen: %08x\n
-
-# windows/wind3d.c: 692 windows/winddraw.c: 280
-Error setting cooperative level: %08x\n
-Hiba az összehangolási szint állításánál: %08x\n
-
-# windows/wind3d.c: 1698 windows/winddraw.c: 941
-Error setting gamma ramp: %08x\n
-Hiba a fényátjáró állításánál: %08x\n
-
-# windows/wind3d.c: 1016 windows/winddraw.c: 591
-Error setting mode: %08x\n
-Hiba a beállítási módban: %08x\n
-
-# windows/sound.c: 605
-Error setting primary format: %08x\n
-Hiba az elsõdleges formátum állításánál: %08x\n
-
-# windows/wind3d.c: 260
-Error: 3D hardware can't render scanlines (no support for multi-texturing)\n
-Hiba: 3D-s hardver nem hoz létre képsorokat (nincs multi-textúra támogatottság)\n
-
-# windows/wind3d.c: 377
-Error: RGB effects (multiply & add mode) not supported\n
-Hiba: RGB effektek (sokszorozás & hozzáadás mód) nem támogatottak\n 
-
-# windows/wind3d.c: 364
-Error: RGB effects (multiply mode) not supported\n
-Hiba: RGB effektek (sokszorozás mód) nem támogatottak\n
-
-# windows/wind3d.c: 1416
-Error: required texture size too large (max: %ix%i, need %ix%i)\n
-Hiba: a kívánt textúra mérete túl nagy (maximum: %ix%i, szükséges %ix%i)\n
-
-# windows/fronthlp.c: 459
-For usage instructions, please consult the file windows.txt\n
-Használati utasításért, keresse a windows.txt fájlt\n
-
-# windows/fronthlp.c: 67
-Frontend Related
-Megjelenés kapcsolódik
-
-# windows/window.c: 734
-Full Screen\tAlt+Enter
-Teljes képernyõ\tAlt+Enter
-
-# windows/fronthlp.c: 515
-Game \"%s\" not supported!\n
-Játék \"%s\" nem támogatott!\n
-
-# windows/winddraw.c: 273
-Hardware stretching supported\n
-Hardveres képátméretezés támogatott\n
-
-# windows/wind3d.c: 633
-Initialising DirectDraw & Direct3D 7 blitter
-DirectDraw és Direct3D 7 blitter inicializálása
-
-# windows/input.c: 226
-Input device options
-Bemeneti eszköz állítása
-
-# windows/input.c: 1965
+# osd/windows/input.c: 2491
 J%d %s D
 J%d %s D
 
-# windows/input.c: 1969
+# osd/windows/input.c: 2495
 J%d %s L
 J%d %s L
 
-# windows/input.c: 1973
+# osd/windows/input.c: 2499
 J%d %s R
 J%d %s R
 
-# windows/input.c: 1961
+# osd/windows/input.c: 2487
 J%d %s U
 J%d %s U
 
-# windows/input.c: 1744
-Joystick %d axis %d is now %s\n
-Joystick %d tengely %d most %s\n
-
-# windows/input.c: 1889
-Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
-Joystick %d: %s (%d irányok, %d gombok, %d POV-ok)\n
-
-# windows/fronthlp.c: 778
-KNOWN     %s\n
-ISMERT   %s\n
-
-# windows/input.c: 1260
-Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
-Billentyûzetek=%d  Egerek=%d  Joystick-ek=%d  Fénypisztolyok=%d\n
-
-# windows/input.c: 234
-LED mode (ps/2|usb)
-LED mód (ps/2|usb)
-
-# windows/config.c: 299
-Language options
-Nyelv válsztás
-
-# windows/input.c: 1878
-Lightgun %d X
-Fénypisztoly %d X
-
-# windows/input.c: 1880
-Lightgun %d Y
-Fénypisztoly %d Y
-
-# windows/input.c: 2235
+# osd/windows/input.c: 2862
 Lightgun not supported in windowed mode
 Fénypisztoly ablak módban nem használható
 
-# windows/fronthlp.c: 452
-M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2005 by Nicola Salmoria and the MAME Team\n\n
-M.A.M.E. v%s - Multiple Arcade Machine Emulator\nSzerzõi jog: (C) 1997-2005 Nicola Salmoria és a MAME készítõi csapat\n\n
-
-# windows/blit.c: 1156
-MMX not supported\n
-MMX nem támogatott\n
-
-# windows/blit.c: 1154
-MMX supported\n
-MMX támogatott\n
-
-# windows/config.c: 251
-Mame CORE misc options
-Mame MAG különféle beállításai
-
-# windows/video.c: 257
-Mame CORE palette options
-Mame MAG paletta beállítások
-
-# windows/config.c: 241
-Mame CORE sound options
-Mame MAG hang beállítások
-
-# windows/config.c: 233
-Mame CORE vector game options
-Mame MAG vektor játék beállítások
-
-# windows/config.c: 220
-Mame CORE video options
-Mame MAG kép beállítások
-
-# windows/wind3d.c: 1633
-Managed texture
-Textúra kezelés
-
-# windows/input.c: 1855, 1865
-Mouse %d %s
-Egér %d %s
-
-# windows/input.c: 1793
-Mouse %d X
-Egér %d X
-
-# windows/input.c: 1795
-Mouse %d Y
-Egér %d Y
-
-# windows/input.c: 1797
-Mouse %d Z
-Egér %d Z
-
-# windows/input.c: 1857, 1867
-Mouse %s
-Egér %s
-
-# windows/fronthlp.c: 235
-NO MATCH\n
-NEM EGYEZIK\n
-
-# windows/fronthlp.c: 230
-NOT A ROM\n
-NEM EGY ROM\n
-
-# windows/fronthlp.c: 485
-Name:     Description:\n
-Név:     Leírás:\n
-
-# windows/fronthlp.c: 618
-Name:    Clone of:\n
-Név:    Klón:\n
-
-# windows/video.c: 267
-OSD bar color (dark)
-OSD kijelzõ szín (sötét)
-
-# windows/video.c: 268
-OSD bar color (default)
-OSD kijelzõ szín (normál)
-
-# windows/video.c: 266
-OSD bar color (light)
-OSD kijelzõ szín (világos)
-
-# windows/video.c: 265
-OSD bar color (medium)
-OSD kijelzõ szín (közepes)
-
-# windows/fileio.c: 379
-Out of memory!\n
-Kevés a memória!\n
-
-# windows/fronthlp.c: 780
-PARTKNOWN %s\n
-RÉSZLEGESEN ISMERT %s\n
-
-# windows/config.c: 440
-Parsing %s : ERROR\n
-Elemzés %s : HIBA\n
-
-# windows/config.c: 450
-Parsing %s : N/A\n
-Elemzés %s : N/A\n
-
-# windows/config.c: 445
-Parsing %s : OK\n
-Parsing %s : RENDBEN\n
-
-# windows/config.c: 593
-Playing back previously recorded game %s (%s) [press return]\n
-Az elõzõleg rögzített játék visszajátszásához %s (%s) [nyomjon Enter-t]\n
-
-# windows/wind3d.c: 1642
-Pre-process texture surface created: %s\n
-Elõfeldolgozási textúra felület létrehozva: %s\n
-
-# windows/sound.c: 617
-Primary buffer: %d Hz, %d bits, %d channels\n
-Elsõdleges tároló: %d Hz, %d bitek, %d csatornák\n
-
-# windows/winddraw.c: 668
-Primary surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
-Elsõdleges felület kialakítva: %dx%dx%d (R=%08x G=%08x B=%08x)\n
-
-# windows/wind3d.c: 1143
-Primary surface created: %s (%s)\n
-Elsõdleges felület kialakítva: %s (%s)\n
-
-# windows/wind3d.c: 1247
-RGB effects surface created: %s\n
-RGB effektek felület kialakítva: %s\n
-
-# windows/wind3dfx.c: 815
-RGB pattern has a wrong filesize (expected %i bytes, found %i)\n
-RGB minta mérete nem megfelelõ (elvárt %i bájt, talált %i)\n
-
-# windows/winddraw.c: 1386, 1464, 1771
-Recreating surfaces\n
-Felületek újraalkotása\n
-
-# windows/wind3d.c: 1136
-Rendering to an off-screen surface and using blt()\n
-Képernyõn kívüli felület létrehozása és használata  blt()\n
-
-# windows/wind3d.c: 2316, 2680
-Restoring surfaces\n
-Felületek visszaállítása\n
-
-# windows/blit.c: 1152
-SSE supported\n
-SSE supported\n
-
-# windows/blit.c: 1150
-SSE2 supported\n
-SSE2 supported\n
-
-# windows/video.c: 240
-SaI scale effect
-SaI scale effect
-
-# windows/winddraw.c: 753
-Scale surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
-Scale surface created: %dx%dx%d (R=%08x G=%08x B=%08x)\n
-
-# windows/wind3d.c: 1285
-Scanline surface[%i] created: %s\n
-Scanline surface[%i] created: %s\n
-
-# windows/video.c: 629
-Screen %s not found\n
-Képernyõ %s nem található\n
-
-# windows/sound.c: 233, 237
+# osd/windows/sound.c: 125
 Sound buffer: overflows=%d underflows=%d\n
 Hang-puffer: overflows=%d underflows=%d\n
 
-# windows/input.c: 1822
+# osd/windows/input.c: 2294
 Stick %d %s +
 Kar %d %s +
 
-# windows/input.c: 1815
+# osd/windows/input.c: 2287
 Stick %d %s -
 Kar %d %s -
 
-# windows/input.c: 1824
+# osd/windows/input.c: 2296
 Stick %s +
 Kar %s +
 
-# windows/input.c: 1817
+# osd/windows/input.c: 2289
 Stick %s -
 Kar %s -
 
-# windows/wind3d.c: 1633
-Texture
-Textúra
-
-# windows/input.c: 2386
-Toggle fullscreen
+# osd/windows/input.c: 2956
+Toggle Fullscreen
 Teljes képernyõre váltás
 
-# windows/fronthlp.c: 779
-UNKNOWN   %s\n
-ISMERETLEN   %s\n
-
-# windows/wind3d.c: 2671
-Unable to blt RGB effect to back_surface: %08x\n
-Unable to blt RGB effect to back_surface: %08x\n
-
-# windows/wind3d.c: 2638
-Unable to blt back_surface to primary_surface: %08x\n
-Unable to blt back_surface to primary_surface: %08x\n
-
-# windows/wind3d.c: 2264
-Unable to blt blit_surface to texture_surface: %08x\n
-Unable to blt blit_surface to texture_surface: %08x\n
-
-# windows/wind3d.c: 2241
-Unable to blt scale_surface to texture_surface: %08x\n
-Unable to blt scale_surface to texture_surface: %08x\n
-
-# windows/winddraw.c: 1428
-Unable to blt target_surface: %08x\n
-Unable to blt target_surface: %08x\n
-
-# windows/input.c: 2654, 2661
+# osd/windows/ledutil.c: 568, 574
 Unable to close the keyboard device. (error %d)\n
 Billentyûzet kikapcsolása sikertelen. (hiba %d)\n
 
-# windows/wind3dfx.c: 806
-Unable to find RGB effects pattern\n
-RGB effekt minta keresése sikertelen\n
-
-# windows/wind3d.c: 2098, 2189, 2211 windows/winddraw.c: 1228, 1301
-Unable to lock blit_surface: %08x\n
-blit_surface zárolása sikertelen: %08x\n
-
-# windows/winddraw.c: 1598, 1706
-Unable to lock target_surface: %08x\n
-target_surface zárolása sikertelen: %08x\n
-
-# windows/input.c: 2605, 2615
+# osd/windows/ledutil.c: 532, 540
 Unable to open the keyboard device. (error %d)\n
 Billentyûzet alkalmazása sikertelen. (hiba %d)\n
 
-# windows/wind3d.c: 2598
-Unable to render to back_surface: %08x\n
-Unable to render to back_surface: %08x\n
-
-# windows/wind3d.c: 2485
-Unable to render to preprocess texture: %08x\n
-Unable to render to preprocess texture: %08x\n
-
-# windows/fronthlp.c: 455
-Usage:  MAME gamename [options]\n\n
-Használat:  MAME játéknév [beállítások]\n\n
-
-# windows/config.c: 552
-Usage: %s [game] [options]\nOptions:\n
-Használat: %s [játék] [beállítások]\nbeállítások:\n
-
-# windows/wind3d.c: 683
-Using %s pre-scale effect\n
-Elõfelosztási %s effekt használata\n 
-
-# windows/winddraw.c: 295
+# osd/windows/video.c: 419
 Using %s scale effect\n
 Felosztási  %s effekt használata\n
 
-# windows/input.c: 1194
-Using DirectInput %d\n
-DirectInput használata %d\n 
-
-# windows/wind3d.c: 1138
-Using a %s buffer and pageflipping\n
-Letároló és %s lap tükrözés használata\n 
-
-# windows/wind3d.c: 340
-Warning: anisotropic (mag) filtering not supported, falling back to bi-linear\n
-Figyelem: anisotropic (mag) szûrés nem támogatott, visszakapcsolva bi-linear-ra\n
-
-# windows/wind3d.c: 349
-Warning: anisotropic (min) filtering not supported, falling back to bi-linear\n
-Figyelem: anisotropic (min) szûrés nem támogatott, visszakapcsolva bi-linear-ra\n
-
-# windows/wind3d.c: 1676 windows/winddraw.c: 919
-Warning: could not create gamma control to change brightness: %08x\n
-Figyelem: sötétség ellenõrzés létrehozása sikertelen a fényerõ állításához: %08x\n
-
-# windows/wind3d.c: 312
-Warning: flat bi-cubic filtering not supported, falling back to bi-linear\n
-Figyelem: flat bi-cubic szûrés nem támogatott, visszakapcsolva bi-linear-ra\n 
-
-# windows/wind3d.c: 326
-Warning: gaussian bi-cubic filtering not supported, falling back to bi-linear\n
-Figyelem: gaussian bi-cubic szûrés nem támogatott, visszakapcsolva bi-linear-ra\n
-
-# windows/window.c: 654
-Warning: hardware-accelerated blitting-effects selected, but currently disabled\n         use the -direct3d option to enable hardware acceleration\n
-Warning: hardware-accelerated blitting-effects selected, but currently disabled\n         use the -direct3d option to enable hardware acceleration\n
-
-# windows/window.c: 648
-Warning: non-hardware-accelerated blitting-effects engine enabled\n         use the -d3deffect option to enable hardware acceleration\n
-Warning: non-hardware-accelerated blitting-effects engine enabled\n         use the -d3deffect option to enable hardware acceleration\n
-
-# windows/wind3d.c: 1527
-Warning: required texture size too large for prescale, disabling prescale\n
-Figyelem: a kívánt textúra mérete túl nagy az elõértékeléshez, elõértékelés kikapcsolva\n
-
-# windows/winddraw.c: 698
-Warning: scale effect %s is disabled.\n
-Figyelem: kiértékelt effekt %s kikapcsolva.\n
-
-# windows/wind3d.c: 272
-Warning: using fall-back method for scanline blending.\n
-Figyelem: visszatérõ eljárás alkalmazása a képsor keveredéshez.\n
-
-# windows/wind3dfx.c: 196
-Windows Direct3D 2D video options
-Windows Direct3D 2D képi beállítások
-
-# windows/video.c: 245
-Windows misc options
-Egyéb Windows beállítások
-
-# windows/fileio.c: 123
-Windows path and directory options
-Windows helye és mappa beállítások
-
-# windows/sound.c: 126
-Windows sound options
-windows hang beállítások
-
-# windows/video.c: 214
-Windows video options
-windows képi beállítások
-
-# windows/fronthlp.c: 750
-\"%8s\" not found!\n
-\"%8s\" nem található!\n
-
-# windows/fronthlp.c: 752
-\"%8s\" not supported!\n
-\"%8s\" nem támogatott!\n
-
-# windows/input.c: 1262
-\"%s\" controller support enabled\n
-\"%s\" játékirányító alkalmazása bekapcsolva\n
-
-# windows/config.c: 611
-\n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
-\n\"%s\" hozzávetõlegesen megegyezik a\ntámogatott játékokkal (leginkább hasonlót elõször):\n\n
-
-# windows/wind3dfx.c: 207
-additional customised settings (undocumented)
-kiegészítõ egyedi beállítások (nem dokumentált)
-
-# windows/config.c: 230
-additional pause brightness
-kiegészítõ fényerõ szüneteltetés
-
-# windows/fronthlp.c: 73
-all available info on driver in XML format
-minden elérhetõ információ a meghajtóban XML formátumban
-
-# windows/video.c: 246
-allow MAME to give back time to the system when it's not needed
-lehetõvé teszi hogy MAME idõt adjon vissza a rendszernek ha nem szükséges
-
-# windows/input.c: 1741
+# osd/windows/input.c: 2171
 analog
 analóg
 
-# windows/input.c: 1202
+# osd/windows/input.c: 1465
 analog joystick
 analóg joystick
 
-# windows/config.c: 257
-artwork resolution (0 for auto)
-képalkotás felbontás (0 - automata)
-
-# windows/video.c: 232
-attempt to match the game's refresh rate
-kísérlet a játék képfrissítésének elérésére
-
-# windows/config.c: 225
-automatically rotate screen anti-clockwise for vertical games
-automatikus képforgatás órajárásával ellentétesen a függõleges játékokhoz
-
-# windows/config.c: 224
-automatically rotate screen clockwise for vertical games
-automatikus képforgatás órajárásával megegyezõen a függõleges játékokhoz
-
-# windows/config.c: 229
-brightness correction
-fényerõ állítás
-
-# windows/video.c: 275
-button color (aqua)
-gomb szín (vízszínû)
-
-# windows/video.c: 272
-button color (blue)
-gomb szín (kék)
-
-# windows/video.c: 271
-button color (green)
-gomb szín (zöld)
-
-# windows/video.c: 278
-button color (lime)
-gomb szín (zölessárga)
-
-# windows/video.c: 277
-button color (navy)
-gomb szín (matrózkék)
-
-# windows/video.c: 274
-button color (pink)
-gomb szín (rózsaszín)
-
-# windows/video.c: 273
-button color (purple)
-gomb szín (lila)
-
-# windows/video.c: 269
-button color (red)
-gomb szín (vörös)
-
-# windows/video.c: 276
-button color (silver)
-gomb szín (ezüst)
-
-# windows/video.c: 270
-button color (yellow)
-gomb szín (sárga)
-
-# windows/config.c: 279
-change m68k core (0:C, 1:DRC, 2:ASM+DRC)
-m68k mag (0:C, 1:DRC, 2:ASM+DRC) megváltoztatása
-
-# windows/config.c: 266
-change system bios
-rendszer bios változtatása
-
-# windows/fileio.c: 151
-cheat filename
-csalás fájlnév
-
-# windows/fronthlp.c: 86
-compare files with known MAME roms
-fájlok összehasonlítása az ismert MAME ROM-okkal
-
-# windows/fronthlp.c: 87
-compare files with known MAME roms (brief)
-fájlok összehasonlítása az ismert MAME ROM-okkal (röviden)
-
-# windows/config.c: 293
-create the default configuration file
-az alapbeállítási fájl létrehozása
-
-# windows/config.c: 256
-crop artwork to game screen only
-a képalkotás vágása csak a játék képernyõre
-
-# windows/video.c: 279
-cursor color
-kurzor szín
-
-# windows/wind3dfx.c: 206
-customised blitting effects preset
-egyedi blitting effekt beállítások
-
-# windows/input.c: 254, 1205
+# osd/windows/input.c: 1468
 dial
 dial
 
-# windows/input.c: 260, 1741
+# osd/windows/input.c: 1960, 2171 osd/windows/winmain.c: 214 osd/windows/winmain.h: 51
 digital
 digitális
 
-# windows/fileio.c: 143
-directory for Artwork (Overlays etc.)
-képalkotások könyvtár (Átlátszó stb.)
-
-# windows/fileio.c: 145
-directory for hard drive image difference files
-merevlemez kép eltérés fájlok mappája
-
-# windows/fileio.c: 148
-directory for ips files
-IPS fájlok könyvtára
-
-# windows/fileio.c: 150
-directory for localized language files
-nyelvi fájlok helyének könyvtára
-
-# windows/fileio.c: 144
-directory for screenshots (.png format)
-pillanatképek mappa (.png formátum)
-
-# windows/fileio.c: 137
-directory to save configurations
-beállítások mentése mappa
-
-# windows/fileio.c: 146
-directory to save controller definitions
-játékirányító leírások mentés mappa
-
-# windows/fileio.c: 141
-directory to save hiscores
-magas pontok mentése mappa
-
-# windows/fileio.c: 140
-directory to save input device logs
-bemeneti eszköz bejegyzések mentés mappa
-
-# windows/fileio.c: 139
-directory to save memory card contents
-memória kártya tartalmának mentése mappa
-
-# windows/fileio.c: 138
-directory to save nvram contents
-NVRAM tartalom mentése mappa
-
-# windows/fileio.c: 142
-directory to save states
-állások mentése mappa
-
-# windows/config.c: 297
+# osd/windows/winmain.c: 132
 display additional diagnostic information
 kisegítõ diagnosztikai információk megjelenítése
 
-# windows/config.c: 294
-display running parameters in rc style
-futó paraméterek megjelenítése rc stílusban
-
-# windows/config.c: 221
-do not apply rotation
-forgatás letíltása
-
-# windows/wind3d.c: 1138
-double
-kettõs
-
-# windows/config.c: 234
-draw antialiased vectors
-élsímított vektorok megjelenítése
-
-# windows/config.c: 235
-draw translucent vectors
-átlátszó vektorok megjelenítése
-
-# windows/fronthlp.c: 76
-driver sourcefile
-driver forrásfájl
-
-# windows/video.c: 227
-emulate win_old_scanlines
-emulálás win_old_scanlines
-
-# windows/input.c: 251
+# osd/windows/winmain.c: 237
 enable (keyboard|mouse|joystick) if a paddle control is present
 mûködik a (billentyûzet|egér|joystick) ha van paddle irányító
 
-# windows/input.c: 254
-enable (keyboard|mouse|joystick|lightgun) if a dial control is present
-mûködik a (billentyûzet|egér|joystick|fénypisztoly) ha van dial irányító
-
-# windows/input.c: 256
-enable (keyboard|mouse|joystick|lightgun) if a lightgun control is present
-mûködik a (billentyûzet|egér|joystick|fénypisztoly) ha van fénypisztoly irányító
-
-# windows/input.c: 258
-enable (keyboard|mouse|joystick|lightgun) if a mouse control is present
-mûködik a (billentyûzet|egér|joystick|fénypisztoly) ha van egér irányító
-
-# windows/input.c: 253
-enable (keyboard|mouse|joystick|lightgun) if a pedal control is present
-mûködik a (billentyûzet|egér|joystick|fénypisztoly) ha van gázpedál irányító
-
-# windows/input.c: 255
-enable (keyboard|mouse|joystick|lightgun) if a trackball control is present
-mûködik a (billentyûzet|egér|joystick|fénypisztoly) ha van gázpedál irányító
-
-# windows/input.c: 252
-enable (keyboard|mouse|joystick|lightgun) if an analog joystick control is present
-mûködik a (billentyûzet|egér|joystick|fénypisztoly) ha van analóg joystick irányító
-
-# windows/config.c: 268
-enable automatic restore at startup and save at exit
-automatikus betöltés induláskor és mentés kilépéskor bekapcsolva
-
-# windows/input.c: 230
+# osd/windows/winmain.c: 209
 enable dual lightgun input
 kettõs fénypisztoly használat
 
-# windows/input.c: 228
+# osd/windows/winmain.c: 202
 enable joystick input
 joystick használat
 
-# windows/input.c: 233
-enable keyboard LED emulation
-billentyûzet LED emuláció használat
-
-# windows/input.c: 229
+# osd/windows/winmain.c: 208
 enable lightgun input
 fénypisztoly használat
 
-# windows/input.c: 227
+# osd/windows/winmain.c: 201
 enable mouse input
 egér használat
 
-# windows/input.c: 239
+# osd/windows/winmain.c: 204
 enable pointing stick input
 pointing stick irányító bekapcsolva
 
-# windows/wind3dfx.c: 203
-enable rotation of effects for rotated games
-effektek forgatása bekapcsolva a forgatott játékoknál
-
-# windows/input.c: 232
+# osd/windows/winmain.c: 211
 enable steadykey support
 állandó billentyûk használata
 
-# windows/config.c: 258
-enable/disable cheat subsystem
-csalás kisegítõrendszer be/kikapcsolva
-
-# windows/config.c: 259
-enable/disable debugger (only if available)
-hibakeresõ be/kikapcsolva (csak ha elérhetõ)
-
-# windows/config.c: 296
-enable/disable loading of configfiles
-be/kikapcsolva a beállítási fájl betöltése
-
-# windows/config.c: 301
-enable/disable local language game list
-helyi nyelvi játéklista bekapcsolva/kikapcsolva
-
-# windows/config.c: 244
-enable/disable sound and sound CPUs
-hang és processzor hangok be/kikapcsolása
-
-# windows/config.c: 247
-enable/disable volume auto adjust
-bekapcsolva/kikapcsolva az automatikus hangszabályozás
-
-# windows/video.c: 231
-enforce aspect ratio
-képarány kényszerítése
-
-# windows/rc.c: 719, 822, 834
-error invalid value for %s: %s\n
-hiba - érvénytelen érték %s: %s\n
-
-# windows/config.c: 493
-error on rc creation\n
-hiba az rc létrehozásánál\n
-
-# windows/config.c: 502
-error while parsing cmdline\n
-hiba végrehajtáskor cmdline\n
-
-# windows/rc.c: 315, 382
-error: %s requires an argument, on line %d of file: %s\n
-hiba: %s szükséges egy bizonyítás, a fájl %d sorban: %s\n
-
-# windows/rc.c: 571
-error: %s requires an argument\n
-hiba: %s szükséges egy bizonyítás\n
-
-# windows/rc.c: 848
-error: couldn't open file: %s\n
-hiba: a fájl nem nyitható meg: %s\n
-
-# windows/config.c: 857
-error: duplicate gamename: %s\n
-hiba: játéknév kétszer szerepel: %s\n
-
-# windows/rc.c: 358
-error: garbage \"%s\" on line %d of file: %s\n
-hiba: felesleg \"%s\" a fájl %d sorokban: %s\n
-
-# windows/input.c: 824
-error: invalid value for %s: %s\n
-hiba: érvénytelen érték a következõhöz %s: %s\n
-
-# windows/video.c: 421
-error: invalid value for aspect ratio: %s\n
-hiba: érvénytelen képarány érték: %s\n
-
-# windows/video.c: 318
-error: invalid value for cleanstretch: %s\n
-hiba: érvénytelen érték a képi nyújtáshoz: %s\n
-
-# windows/wind3dfx.c: 300
-error: invalid value for d3dprescale: %s\n
-hiba: érvénytelen érték a d3d elõméréshez: %s\n
-
-# windows/input.c: 904
-error: invalid value for digital: %s -- valid values are:\n
-hiba: érvénytelen digitális érték: %s -- érvényes értékek a következõk:\n
-
-# windows/video.c: 400
-error: invalid value for effect: %s\n
-hiba: érvénytelen effekt érték: %s\n
-
-# windows/video.c: 375
-error: invalid value for frames_to_run: %s\n
-hiba: érvénytelen érték frames_to_run: %s\n
-
-# windows/config.c: 185
-error: invalid value for language: %s\nUse %s\n
-hiba: érvénytelen nyelvi meghatározás: %s\nhasználat %s\n
-
-# windows/input.c: 799
-error: invalid value for led_mode: %s\n
-hiba: érvénytelen érték a következõhöz led_mode: %s\n
-
-# windows/video.c: 449
-error: invalid value for palette: %s\n
-hiba: érvénytelen paletta érték: %s\n
-
-# windows/video.c: 343, 353
-error: invalid value for resolution: %s\n
-hiba: érvénytelen képfelbontási érték: %s\n
-
-# windows/rc.c: 806
-error: malloc failed for %s\n
-error: malloc failed for %s\n
-
-# windows/rc.c: 161
-error: malloc failed for: struct rc_struct\n
-error: malloc failed for: struct rc_struct\n
-
-# windows/rc.c: 604
-error: malloc failed in rc_parse_commadline\n
-error: malloc failed in rc_parse_commadline\n
-
-# windows/rc.c: 201
-error: malloc failed in rc_register_option\n
-error: malloc failed in rc_register_option\n
-
-# windows/config.c: 1015
-error: malloc failed in win_dirname\n
-error: malloc failed in win_dirname\n
-
-# windows/config.c: 1055
-error: malloc failed in win_strip_extension\n
-error: malloc failed in win_strip_extension\n
-
-# windows/rc.c: 321, 388
-error: trailing garbage: \"%s\" on line: %d of file: %s\n
-hiba: felesleg követése: \"%s\" a fájl: %d vonalban: %s\n
-
-# windows/rc.c: 309, 376
-error: unknown option %s, on line %d of file: %s\n
-hiba: ismeretlen beállítás %s, a fájl %d von vonalban: %s\n
-
-# windows/rc.c: 587, 739, 761, 785
-error: unknown option %s\n
-hiba: ismeretlen beállítás %s\n
-
-# windows/rc.c: 861
-error: unknown option type: %d, this should not happen!\n
-hiba: ismeretlen beállítási típus: %d, ez nem történhet meg!\n
-
-# windows/config.c: 568
-failed to open %s for playback\n
-sikertelen a megnyitás %s a lejátszáshoz\n
-
-# windows/config.c: 673
-failed to open %s for recording\n
-sikertelen a megnyitás %s a rögzítéshez\n
-
-# windows/wind3dfx.c: 201
-feedback strength
-visszacsatolás erõssége
-
-# windows/config.c: 227
-flip screen left-right
-a kép bal-jobb oldal cseréje
-
-# windows/config.c: 226
-flip screen upside-down
-a kép fejjel lefelé fordítása
-
-# windows/video.c: 258
-font blank color
-üres betûszín
-
-# windows/video.c: 259
-font normal color
-normál betûszín
-
-# windows/video.c: 260
-font special color
-különleges betûszín
-
-# windows/wind3dfx.c: 197
-force specific zoom level
-speciális nagyítás szintjének kényszerítése
-
-# windows/config.c: 228
-gamma correction
-sötétség állítása
-
-# windows/config.c: 263
-generate error.log
-error.log készítése
-
-# windows/video.c: 248
-increase thread priority
-az alkalmazás elsõbbségének növelése
-
-# windows/rc.c: 253
-info: trying to parse: %s\n
-infó: elemzési próba: %s\n
-
-# windows/wind3dfx.c: 199
-interpolation method
-beszúrásos eljárás
-
-# windows/input.c: 1741
+# osd/windows/input.c: 2171
 invalid
 érvénytelen
 
-# windows/config.c: 270
-ips datfile name
-ips adatfájl név
-
-# windows/fronthlp.c: 720
-is bad\n
-rossz\n
-
-# windows/fronthlp.c: 730
-is best available\n
-a legjobb meglévõ\n
-
-# windows/fronthlp.c: 725
-is good\n
-jó\n
-
-# windows/fronthlp.c: 735
-is missing optional files\n
-szükséges beállítási fájok hiányoznak\n
-
-# windows/input.c: 229, 820, 1203
+# osd/windows/input.c: 1466, 1824 osd/windows/winmain.h: 51
 lightgun
 fénypisztoly
 
-# windows/fronthlp.c: 83
-list optional samples for a driver
-driverhez választható minták listája
-
-# windows/fronthlp.c: 82
-list required roms for a driver
-driverhez szükséges ROM-ok listája
-
-# windows/climain.c: 30
-loading %-12s\r
-betöltés %-12s\r
-
-# windows/input.c: 260
+# osd/windows/winmain.c: 214
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 a meglévõ joystick-ek vagy irányok bejegyzése digitálisként (nincs|mind|j<N>*|j<N>a<M>[,...])
 
-# windows/input.c: 235
-minimal analog value for digital input
-legkevesebb analóg érték a digitális bemenethez
-
-# windows/rc.c: 660, 697
-no help available
-súgó nem elérhetõ
-
-# windows/input.c: 231
+# osd/windows/winmain.c: 210
 offscreen shots reload
 képernyõn kívüli lövések újratöltése
 
-# windows/config.c: 264
-output error log to debugger
-kimeneti hiba bejegyzés a hibakeresõhöz
-
-# windows/input.c: 251, 1201
+# osd/windows/input.c: 1464
 paddle
 paddle
 
-# windows/fileio.c: 133, 135
-path to ini files
-ini fájl elérése
-
-# windows/fileio.c: 125
-path to romsets
-ROM készletek elérése
-
-# windows/fileio.c: 131
-path to samplesets
-minta készletek elérése
-
-# windows/input.c: 253, 1204
+# osd/windows/input.c: 1467
 pedal
 gázpedál
 
-# windows/config.c: 261
-playback an input file
-egy bemeneti fájl visszajátszása
-
-# windows/input.c: 236
-preconfigure for specified controller
-újraállítás egy meghatározott irányítóhoz
-
-# windows/video.c: 247
-prefer RDTSC over QueryPerformanceCounter for timing
-RDTSC elõnyben részesítése QueryPerformanceCounter-rel szemben idõzítéshez
-
-# windows/wind3dfx.c: 204
-prescale effect
-elõre kiértékelt effektek
-
-# windows/config.c: 262
-record an input file
-egy bemeneti fájl rögzítése
-
-# windows/fronthlp.c: 84
-report romsets that have problems
-jelentés a problémás ROM készletekrõl
-
-# windows/fronthlp.c: 85
-report samplesets that have problems
-jelentés a problémás minta készletekrõl
-
-# windows/fronthlp.c: 748
-romset
-rom készlet
-
-# windows/fronthlp.c: 688
-romset %s 
-rom készlet %s
-
-# windows/fronthlp.c: 758
-romsets
-rom készletek
-
-# windows/config.c: 223
-rotate screen anti-clockwise
-kép forgatása óramutató járásával ellentétesen
-
-# windows/config.c: 222
-rotate screen clockwise
-kép forgatása óramutató járásával megfelelõen
-
-# windows/video.c: 219
-run in a window/run on full screen
-ablakban futtatás/teljes képernyõn futtatás
-
-# windows/config.c: 620
-running %s (%s) [press return]
-futtatás %s (%s) [nyomjon ENTER-t]
-
-# windows/fronthlp.c: 748
-sampleset
-minta készlet
-
-# windows/fronthlp.c: 711
-sampleset %s 
-minta készlet %s
-
-# windows/fronthlp.c: 758
-samplesets
-minta készletek
-
-# windows/sound.c: 128
-save sound in wav file
-hang mentése wav fájlként
-
-# windows/wind3d.c: 1648
-scale effects surface created: %s\n
-beosztási effektek felülete létrehozva: %s\n
-
-# windows/wind3dfx.c: 202
-scanline intensity
-képsor megjelenítés erõssége
-
-# windows/config.c: 260
-script for debugger (only if available)
-szkript a hibakeresõhöz (csak ha rendelkezésre áll)
-
-# windows/config.c: 300
-select translation language
-fordított nyelv kiválasztása
-
-# windows/sound.c: 127
+# osd/windows/winmain.c: 197
 set audio latency (increase to reduce glitches)
 hang lecsengés állítása (növelés a hibák csökkentéséhez)
 
-# windows/config.c: 236
-set beam width in vector games
-sugárzási távolság beállítása a vektor játékokban
-
-# windows/config.c: 237
-set flickering in vector games
-villogás beállítása a vektor játékokban
-
-# windows/video.c: 216
-set frameskip explicitly (autoframeskip needs to be off)
-képkocka átugrás egyértelmû beállítása (automata átugrást kikapcsolni)
-
-# windows/config.c: 238
-set intensity in vector games
-intenzítás beállítása a vektor játékokban
-
-# windows/input.c: 242
+# osd/windows/winmain.c: 217
 set joystick ID (Player1)
 beállítás joystick ID (1 játékos)
 
-# windows/input.c: 243
+# osd/windows/winmain.c: 218
 set joystick ID (Player2)
 beállítás joystick ID (2 játékos)
 
-# windows/input.c: 244
+# osd/windows/winmain.c: 219
 set joystick ID (Player3)
 beállítás joystick ID (3 játékos)
 
-# windows/input.c: 245
+# osd/windows/winmain.c: 220
 set joystick ID (Player4)
 beállítás joystick ID (4 játékos)
 
-# windows/input.c: 246
+# osd/windows/winmain.c: 221
 set joystick ID (Player5)
 beállítás joystick ID (5 játékos)
 
-# windows/input.c: 247
+# osd/windows/winmain.c: 222
 set joystick ID (Player6)
 beállítás joystick ID (6 játékos)
 
-# windows/input.c: 248
+# osd/windows/winmain.c: 223
 set joystick ID (Player7)
 beállítás joystick ID (7 játékos)
 
-# windows/input.c: 249
+# osd/windows/winmain.c: 224
 set joystick ID (Player8)
 beállítás joystick ID (8 játékos)
 
-# windows/video.c: 225
-set resolution
-képfelbontás állítása
-
-# windows/config.c: 242
-set samplerate
-mintavétel bellítása
-
-# windows/video.c: 226
-set specific monitor refresh rate
-kijelölt monitor képfrissítés állítása
-
-# windows/video.c: 235
-sets the brightness in full screen mode
-fényerõ beállítás teljes képernyõn
-
-# windows/video.c: 236
-sets the number of frames to run within the game
-játékban alkalmazott képkockák számának megadása
-
-# windows/fronthlp.c: 74
-short name, full name
-rövid név, teljes név
-
-# windows/fronthlp.c: 77
-show clones
-klnónok megjelenítése
-
-# windows/fronthlp.c: 69, 70
-show help message
-súgó üzenetek megjelenítése
-
-# windows/config.c: 295
-show this help
-súgó megjelenítése
-
-# windows/config.c: 265
-skip displaying the game info screen
-játék infó kijelzésének mellõzése
-
-# windows/video.c: 215
-skip frames to speed up emulation
-képkockák átugrása az emuláció gyorsításához
-
-# windows/config.c: 244 
-sound
-hang
-
-# windows/video.c: 238
-specify an alternate monitor aspect ratio
-egy választható monitor képarányának meghatározása
-
-# windows/video.c: 237
-specify the blitting effect
-a blitting effekt meghatározása
-
-# windows/wind3dfx.c: 205
-specify the blitting effects
-a blitting effektek meghatározása
-
-# windows/video.c: 223
-specify which screen to use
-határozza meg a használni kívánt megjelenítõt
-
-# windows/video.c: 230
-start out maximized
-Indítás teljes méretrõl
-
-# windows/config.c: 267
-state to load
-állás a betöltéshez
-
-# windows/video.c: 224
-stretch to integer ratios
-kibõvítés egész értékekre
-
-# windows/video.c: 229
-switch color depths to best fit
-színmélység legjobbra állítása
-
-# windows/video.c: 228
-switch resolutions to best fit
-képfelbontás legjobbra állítása
-
-# windows/video.c: 233
-syncronize only to the monitor refresh
-igazítás kizárólag a monitor frissítéséhez
-
-# windows/video.c: 234
-throttle speed to the game's framerate
-sebesség igazítása a játék képfrekvenciájához
-
-# windows/input.c: 255, 1206
+# osd/windows/input.c: 1469
 trackball
 hanyattegér
 
-# windows/config.c: 283
-transparency of UI background [0 - 255]
-áttlátszó háttér használata [0 - 255]
-
-# windows/wind3d.c: 1138
-triple
-háromszoros
-
-# windows/video.c: 218
-triple buffering (only if fullscreen)
-háromszoros letárolás (csak teljes képernyõ esetén)
-
-# windows/config.c: 165
-unable to open log file\n
-log fájl megnyitása sikertelen\n
-
-# windows/video.c: 221
-use Direct3D for rendering
-Direct3D  használata megjelenítéshez
-
-# windows/video.c: 220
-use DirectDraw for rendering
-DirectDraw használata megjelenítéshez
-
-# windows/wind3dfx.c: 198
-use DirectX texture management
-DirectX textúra megjelenítés használata
-
-# windows/config.c: 252
-use additional game artwork (sets default for specific options below)
-kiegészítõ játék artwork használata (alapbeállítások a kiválasztott opciókhoz)
-
-# windows/config.c: 253
-use backdrop artwork
-háttér képalkotás használata
-
-# windows/config.c: 255
-use bezel artwork
-ablak képalkotás használata
-
-# windows/config.c: 254
-use overlay artwork
-átlátszó képalkotás használata
-
-# windows/config.c: 243
-use samples
-minták használata
-
-# windows/config.c: 282
-use transparent background for UI text
-átlátszó háttér használata a feliratokban
-
-# windows/config.c: 245
-volume (range [-32,0])
-hangerõ (érték [-32,0])
-
-# windows/video.c: 217
-wait for vertical sync (reduces tearing)
-Függõleges szinkronizálás (csökkenõ szaggatás)
-
-# windows/video.c: 261
-window background color
-ablak háttér szín
-
-# windows/video.c: 264
-window frame color (dark)
-ablak képkocka szín (sötét)
-
-# windows/video.c: 263
-window frame color (light)
-ablak képkocka szín (világos)
-
-# windows/video.c: 262
-window frame color (medium)
-ablak képkocka szín (közepes)
-
-# windows/fronthlp.c: 75
-year, manufacturer and full name
-év, gyártó és teljes név
-
-# windows/config.c: 275
-automatic pause when playback is finished
+# osd/windows/input.c: 2315
+%s Button %d
 
 
-# windows/config.c: 273
-confirm before exiting game
+# osd/windows/winmain.c: 206, 226, 227, 228, 229, 230, 231, 232, 233
+(disabled by compiling option)
 
 
-# windows/config.c: 272
-disable second monitor emulation
+# osd/windows/video.c: 274
+(primary)
+
+
+# osd/windows/winmain.c: 236
+AUTOMATIC DEVICE SELECTION OPTIONS
+
+
+# osd/windows/input.c: 1341
+Can't set axis mode for Joystick %d - %s\n
+
+
+# osd/windows/input.c: 1366
+Can't set deadzone for Joystick %d - %s\n
+
+
+# osd/windows/input.c: 1356
+Can't set range for Joystick %d - %s\n
+
+
+# osd/windows/input.c: 1377
+Can't set saturation for Joystick %d - %s\n
+
+
+# osd/windows/winmain.c: 130
+DEBUGGING OPTIONS
+
+
+# osd/windows/winmain.c: 156
+DIRECT3D-SPECIFIC OPTIONS
+
+
+# osd/windows/winmain.c: 152
+DIRECTDRAW-SPECIFIC OPTIONS
+
+
+# osd/windows/drawd3d.c: 1120
+Device %s currently in an unsupported mode\n
+
+
+# osd/windows/drawd3d.c: 1093
+Direct3D: Configuring adapter #%d = %s\n
+
+
+# osd/windows/drawd3d.c: 718
+Direct3D: Device created at %dx%d\n
+
+
+# osd/windows/drawd3d.c: 588, 2295
+Direct3D: Error %08X during device begin_scene call\n
+
+
+# osd/windows/drawd3d.c: 1573, 2344
+Direct3D: Error %08X during device draw_primitive call\n
+
+
+# osd/windows/drawd3d.c: 617, 2348
+Direct3D: Error %08X during device end_scene call\n
+
+
+# osd/windows/drawd3d.c: 2288
+Direct3D: Error %08X during device get_render_target call\n
+
+
+# osd/windows/drawd3d.c: 623
+Direct3D: Error %08X during device present call\n
+
+
+# osd/windows/drawd3d.c: 332, 339, 346, 353
+Direct3D: Error %08X during device set_render_state call\n
+
+
+# osd/windows/drawd3d.c: 2290, 2352
+Direct3D: Error %08X during device set_render_target call\n
+
+
+# osd/windows/drawd3d.c: 1545, 2342
+Direct3D: Error %08X during device set_stream_source call\n
+
+
+# osd/windows/drawd3d.c: 264, 2301
+Direct3D: Error %08X during device set_texture call\n
+
+
+# osd/windows/drawd3d.c: 276, 278, 290, 292, 304
+Direct3D: Error %08X during device set_texture_stage_state call\n
+
+
+# osd/windows/drawd3d.c: 2276
+Direct3D: Error %08X during device stretct_rect call\n
+
+
+# osd/windows/drawd3d.c: 889, 891, 893, 895, 899, 913, 927, 941, 967, 991, 1005, 1018, 1025
+Direct3D: Error %08X during get_caps_dword call\n
+
+
+# osd/windows/drawd3d.c: 2255
+Direct3D: Error %08X during texture get_surface_level call\n
+
+
+# osd/windows/drawd3d.c: 2231
+Direct3D: Error %08X during texture unlock_rect call\n
+
+
+# osd/windows/drawd3d.c: 2305
+Direct3D: Error %08X during vertex buffer lock call\n
+
+
+# osd/windows/drawd3d.c: 1540, 2337
+Direct3D: Error %08X during vertex buffer unlock call\n
+
+
+# osd/windows/drawd3d.c: 954
+Direct3D: Error - Device does not support dest alpha blending with inverted source alpha\n
+
+
+# osd/windows/drawd3d.c: 949
+Direct3D: Error - Device does not support dest alpha blending with one\n
+
+
+# osd/windows/drawd3d.c: 944
+Direct3D: Error - Device does not support dest alpha blending with zero\n
+
+
+# osd/windows/drawd3d.c: 902
+Direct3D: Error - Device does not support immediate presentations\n
+
+
+# osd/windows/drawd3d.c: 907
+Direct3D: Error - Device does not support per-refresh presentations\n
+
+
+# osd/windows/drawd3d.c: 935
+Direct3D: Error - Device does not support source alpha blending with destination color\n
+
+
+# osd/windows/drawd3d.c: 930
+Direct3D: Error - Device does not support source alpha blending with source alpha\n
+
+
+# osd/windows/drawd3d.c: 961
+Direct3D: Error - Device does not support texture alpha\n
+
+
+# osd/windows/d3d8intf.c: 101
+Direct3D: Error attempting to initialize Direct3D8\n
+
+
+# osd/windows/d3d9intf.c: 99
+Direct3D: Error attempting to initialize Direct3D9\n
+
+
+# osd/windows/drawd3d.c: 1263
+Direct3D: Mode selected = %4dx%4d@%3dHz\n
+
+
+# osd/windows/drawd3d.c: 1207
+Direct3D: Selecting video mode...\n
+
+
+# osd/windows/d3d8intf.c: 83
+Direct3D: Unable to access d3d8.dll\n
+
+
+# osd/windows/d3d9intf.c: 81
+Direct3D: Unable to access d3d9.dll\n
+
+
+# osd/windows/d3d8intf.c: 91
+Direct3D: Unable to find Direct3DCreate8\n
+
+
+# osd/windows/d3d9intf.c: 89
+Direct3D: Unable to find Direct3DCreate9\n
+
+
+# osd/windows/d3d8intf.c: 114
+Direct3D: Using Direct3D 8\n
+
+
+# osd/windows/d3d9intf.c: 112
+Direct3D: Using Direct3D 9\n
+
+
+# osd/windows/drawd3d.c: 1027
+Direct3D: Using StretchRect for prescaling\n
+
+
+# osd/windows/drawd3d.c: 1021
+Direct3D: Using dynamic textures\n
+
+
+# osd/windows/drawd3d.c: 975
+Direct3D: Warning - Device does not support bilinear texture filtering for magnification\n
+
+
+# osd/windows/drawd3d.c: 985
+Direct3D: Warning - Device does not support bilinear texture filtering for minification\n
+
+
+# osd/windows/drawd3d.c: 921
+Direct3D: Warning - Device does not support hardware rasterization\n
+
+
+# osd/windows/drawd3d.c: 970
+Direct3D: Warning - Device does not support point-sample texture filtering for magnification\n
+
+
+# osd/windows/drawd3d.c: 980
+Direct3D: Warning - Device does not support point-sample texture filtering for minification\n
+
+
+# osd/windows/drawd3d.c: 916
+Direct3D: Warning - Device does not support queued rendering after a page flip\n
+
+
+# osd/windows/drawd3d.c: 994
+Direct3D: Warning - Device does not support texture clamping\n
+
+
+# osd/windows/drawd3d.c: 1008
+Direct3D: Warning - Device does not support texture modulation\n
+
+
+# osd/windows/drawd3d.c: 999
+Direct3D: Warning - Device does not support texture wrapping\n
+
+
+# osd/windows/drawd3d.c: 734
+Direct3D: Warning - device does not support full screen gamma correction.\n
+
+
+# osd/windows/drawd3d.c: 671
+Direct3D: YUV format = %s\n
+
+
+# osd/windows/drawd3d.c: 1644
+Direct3D: adjusting prescale from %dx%d to %dx%d\n
+
+
+# osd/windows/drawd3d.c: 1063
+Direct3D: failed to recreate resources for device; failing permanently\n
+
+
+# osd/windows/drawd3d.c: 1050
+Direct3D: resetting device\n
+
+
+# osd/windows/drawdd.c: 791
+DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
+
+
+# osd/windows/drawdd.c: 1128
+DirectDraw: Configuring device %s\n
+
+
+# osd/windows/drawdd.c: 618
+DirectDraw: Error %08X attempting to set gamma correction.\n
+
+
+# osd/windows/drawdd.c: 497
+DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
+
+
+# osd/windows/drawdd.c: 1088
+DirectDraw: Error %08X blitting to the screen\n
+
+
+# osd/windows/drawdd.c: 1055, 1064, 1073, 1082
+DirectDraw: Error %08X clearing the screen\n
+
+
+# osd/windows/drawdd.c: 776
+DirectDraw: Error %08X creating %s surface\n
+
+
+# osd/windows/drawdd.c: 817
+DirectDraw: Error %08X creating clipper\n
+
+
+# osd/windows/drawdd.c: 462, 1117
+DirectDraw: Error %08X during DirectDrawCreateEx call\n
+
+
+# osd/windows/drawdd.c: 1214
+DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
+
+
+# osd/windows/drawdd.c: 1327
+DirectDraw: Error %08X during EnumDisplayModes call\n
+
+
+# osd/windows/drawdd.c: 718
+DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
+
+
+# osd/windows/drawdd.c: 487
+DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
+
+
+# osd/windows/drawdd.c: 481
+DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
+
+
+# osd/windows/drawdd.c: 784
+DirectDraw: Error %08X getting %s surface desciption\n
+
+
+# osd/windows/drawdd.c: 546
+DirectDraw: Error %08X getting attached back surface\n
+
+
+# osd/windows/drawdd.c: 1136
+DirectDraw: Error %08X getting current display mode\n
+
+
+# osd/windows/drawdd.c: 355
+DirectDraw: Error %08X locking blit surface\n
+
+
+# osd/windows/drawdd.c: 825
+DirectDraw: Error %08X setting clipper hwnd\n
+
+
+# osd/windows/drawdd.c: 833
+DirectDraw: Error %08X setting clipper on primary surface\n
+
+
+# osd/windows/drawdd.c: 428
+DirectDraw: Error %08X unlocking blit surface\n
+
+
+# osd/windows/drawdd.c: 434, 1094
+DirectDraw: Error %08X waiting for VBLANK\n
+
+
+# osd/windows/drawdd.c: 470
+DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
+
+
+# osd/windows/drawdd.c: 349
+DirectDraw: Lost surfaces; deleting and retrying next frame\n
+
+
+# osd/windows/drawdd.c: 1328
+DirectDraw: Mode selected = %4dx%4d@%3dHz\n
+
+
+# osd/windows/drawdd.c: 929
+DirectDraw: New blit size = %dx%d\n
+
+
+# osd/windows/drawdd.c: 1325
+DirectDraw: Selecting video mode...\n
+
+
+# osd/windows/drawdd.c: 198
+DirectDraw: Unable to access ddraw.dll\n
+
+
+# osd/windows/drawdd.c: 206
+DirectDraw: Unable to find DirectDrawCreateEx\n
+
+
+# osd/windows/drawdd.c: 216
+DirectDraw: Unable to find DirectDrawEnumerateExA\n
+
+
+# osd/windows/drawdd.c: 384, 420, 1170
+DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
+
+
+# osd/windows/drawdd.c: 229
+DirectDraw: Using DirectDraw 7\n
+
+
+# osd/windows/drawdd.c: 725
+DirectDraw: Warning - Device does not support hardware stretching\n
+
+
+# osd/windows/drawdd.c: 474
+DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
+
+
+# osd/windows/drawdd.c: 601
+DirectDraw: Warning - device does not support full screen gamma correction.\n
+
+
+# osd/windows/input.c: 1457
+DirectInput: Using DirectInput %d\n
+
+
+# osd/windows/sound.c: 373
+DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
+
+
+# osd/windows/sound.c: 387
+Error creating DirectSound stream buffer: %08x\n
+
+
+# osd/windows/sound.c: 354
+Error creating primary DirectSound buffer: %08x\n
+
+
+# osd/windows/drawd3d.c: 768
+Error creating vertex buffer (%08X)
+
+
+# osd/windows/drawd3d.c: 1090
+Error getting identifier for adapter #%d\n
+
+
+# osd/windows/drawdd.c: 1125
+Error getting identifier for device\n
+
+
+# osd/windows/drawd3d.c: 1099
+Error getting mode for adapter #%d\n
+
+
+# osd/windows/sound.c: 370
+Error getting primary DirectSound buffer format: %08x\n
+
+
+# osd/windows/sound.c: 395
+Error locking DirectSound stream buffer: %08x\n
+
+
+# osd/windows/sound.c: 362
+Error setting primary DirectSound buffer format: %08x\n
+
+
+# osd/windows/drawd3d.c: 776
+Error setting vertex shader (%08X)
+
+
+# osd/windows/drawd3d.c: 657
+Error: A8R8G8B8 format textures not supported\n
+
+
+# osd/windows/drawd3d.c: 647
+Error: Device does not meet minimum requirements for Direct3D rendering\n
+
+
+# osd/windows/drawd3d.c: 689
+Error: unable to configure a screen texture format\n
+
+
+# osd/windows/winmain.c: 188
+FULL SCREEN OPTIONS
+
+
+# osd/windows/winmain.c: 200
+INPUT DEVICE OPTIONS
+
+
+# osd/windows/video.c: 542
+Illegal aspect ratio value for %s = %s\n
+
+
+# osd/windows/video.c: 565
+Illegal resolution value for %s = %s\n
+
+
+# osd/windows/input.c: 2390
+Input:  Axis %d (%s)%s\n
+
+
+# osd/windows/input.c: 2228
+Input: %s: %s\n
+
+
+# osd/windows/input.c: 1076
+Input: Autoenabling joysticks due to presence of a %s\n
+
+
+# osd/windows/input.c: 1083
+Input: Autoenabling lightguns due to presence of a %s\n
+
+
+# osd/windows/input.c: 1069
+Input: Autoenabling mice due to presence of a %s\n
+
+
+# osd/windows/input.c: 2173
+Input: Joystick %d axis %d is now %s\n
+
+
+# osd/windows/input.c: 2371
+Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
+
+
+# osd/windows/input.c: 1532
+Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
+
+
+# osd/windows/input.c: 3310
+Input: Using RAWMOUSE for Mouse input\n
+
+
+# osd/windows/input.c: 1534
+Input: \"%s\" controller support enabled\n
+
+
+# osd/windows/input.c: 1907
+Invalid %s value %s; reverting to all -- valid values are:\n
+
+
+# osd/windows/input.c: 1828
+Invalid %s value %s; reverting to keyboard\n
+
+
+# osd/windows/video.c: 459
+Invalid video value %s; reverting to gdi\n
+
+
+# osd/windows/input.c: 2359
+Lightgun %d 
+
+
+# osd/windows/input.c: 2357
+Lightgun on Mouse %d 
+
+
+# osd/windows/winmain.c: 521
+M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\nM.A.M.E. is a console application, you should launch it from a command prompt.\n\nUsage:\tMAME gamename [options]\n\n\tMAME -showusage\t\tfor a brief list of options\n\tMAME -showconfig\t\tfor a list of configuration options\n\tMAME -createconfig\tto create a mame.ini\n\nPlease consult the documentation for more information.\n\nWould you like to open the documentation now?
+
+
+# osd/windows/window.c: 618
+MAME: %s [%s] - Screen %d
+
+
+# osd/windows/input.c: 2225
+Mouse 
+
+
+# osd/windows/input.c: 2223
+Mouse %d 
+
+
+# osd/windows/winmain.c: 161
+PER-WINDOW VIDEO OPTIONS
+
+
+# osd/windows/drawd3d.c: 1143
+Proposed video mode not supported on device %s\n
+
+
+# osd/windows/sound.c: 121
+Sound: buffer overflows=%d underflows=%d\n
+
+
+# osd/windows/input.c: 2260
+Stick%sX+
+
+
+# osd/windows/input.c: 2258
+Stick%sX-
+
+
+# osd/windows/input.c: 2264
+Stick%sY+
+
+
+# osd/windows/input.c: 2262
+Stick%sY-
+
+
+# osd/windows/input.c: 2268
+Stick%sZ+
+
+
+# osd/windows/input.c: 2266
+Stick%sZ-
+
+
+# osd/windows/drawd3d.c: 1781
+Texture too big! (wanted: %dx%d, max is %dx%d)\n
+
+
+# osd/windows/drawd3d.c: 715
+Unable to create the Direct3D device (%08X)\n
+
+
+# osd/windows/drawd3d.c: 435, 496
+Unable to initialize Direct3D.\n
+
+
+# osd/windows/drawdd.c: 272
+Unable to initialize DirectDraw.\n
+
+
+# osd/windows/video.c: 510
+Unable to load PNG file '%s'\n
+
+
+# osd/windows/drawd3d.c: 2218
+Unknown texture blendmode=%d format=%d\n
+
+
+# osd/windows/video.c: 274
+Video: Monitor %p = \"%s\" %s\n
+
+
+# osd/windows/winmain.c: 135
+WINDOWS PERFORMANCE OPTIONS
+
+
+# osd/windows/winmain.c: 196
+WINDOWS SOUND OPTIONS
+
+
+# osd/windows/winmain.c: 140
+WINDOWS VIDEO OPTIONS
+
+
+# osd/windows/video.c: 455
+Warning: -video none doesn't make much sense without -seconds_to_run\n
+
+
+# osd/windows/drawd3d.c: 651
+Warning: Device may not perform well for Direct3D rendering\n
+
+
+# osd/windows/winmain.c: 163
+aspect ratio for all screens; 'auto' here will try to make a best guess
+
+
+# osd/windows/winmain.c: 168
+aspect ratio of the first screen; 'auto' here will try to make a best guess
+
+
+# osd/windows/winmain.c: 183
+aspect ratio of the fourth screen; 'auto' here will try to make a best guess
+
+
+# osd/windows/winmain.c: 173
+aspect ratio of the second screen; 'auto' here will try to make a best guess
+
+
+# osd/windows/winmain.c: 178
+aspect ratio of the third screen; 'auto' here will try to make a best guess
+
+
+# osd/windows/winmain.c: 191
+brightness value in full screen mode
+
+
+# osd/windows/winmain.c: 212
+center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
+
+
+# osd/windows/winmain.c: 145
+constrain to the proper aspect ratio
+
+
+# osd/windows/winmain.c: 192
+contrast value in full screen mode
+
+
+# osd/windows/winmain.c: 144
+default to maximized windows; otherwise, windows will be minimized
+
+
+# osd/windows/winmain.c: 240
+enable (keyboard|mouse|joystick) if a dial control is present
+
+
+# osd/windows/winmain.c: 242
+enable (keyboard|mouse|joystick) if a lightgun control is present
+
+
+# osd/windows/winmain.c: 245
+enable (keyboard|mouse|joystick) if a mouse control is present
+
+
+# osd/windows/winmain.c: 239
+enable (keyboard|mouse|joystick) if a pedal control is present
+
+
+# osd/windows/winmain.c: 243
+enable (keyboard|mouse|joystick) if a positional control is present
+
+
+# osd/windows/winmain.c: 241
+enable (keyboard|mouse|joystick) if a trackball control is present
+
+
+# osd/windows/winmain.c: 238
+enable (keyboard|mouse|joystick) if an analog joystick control is present
+
+
+# osd/windows/winmain.c: 158
+enable bilinear filtering on screen output
+
+
+# osd/windows/winmain.c: 153
+enable hardware stretching
+
+
+# osd/windows/winmain.c: 137
+enable multithreading; this enables rendering and blitting on a separate thread
+
+
+# osd/windows/winmain.c: 190
+enable resolution switching
+
+
+# osd/windows/winmain.c: 189
+enable triple buffering
+
+
+# osd/windows/winmain.c: 149
+enable using the start of VBLANK for throttling instead of the game time
+
+
+# osd/windows/winmain.c: 148
+enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
+
+
+# osd/windows/winmain.c: 143
+enable window mode; otherwise, full screen mode is assumed
+
+
+# osd/windows/winmain.c: 213
+end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
+
+
+# osd/windows/winmain.c: 162
+explicit name of all screen; 'auto' here will try to make a best guess
+
+
+# osd/windows/winmain.c: 167
+explicit name of the first screen; 'auto' here will try to make a best guess
+
+
+# osd/windows/winmain.c: 182
+explicit name of the fourth screen; 'auto' here will try to make a best guess
+
+
+# osd/windows/winmain.c: 172
+explicit name of the second screen; 'auto' here will try to make a best guess
+
+
+# osd/windows/winmain.c: 177
+explicit name of the third screen; 'auto' here will try to make a best guess
+
+
+# osd/windows/winmain.c: 193
+gamma value in full screen mode
+
+
+# osd/windows/winmain.c: 147
+name of a PNG file to use for visual effects, or 'none'
+
+
+# osd/windows/winmain.c: 142
+number of screens to create; usually, you want just one
+
+
+# osd/windows/winmain.c: 131
+output error.log data to the system debugger
+
+
+# osd/windows/input.c: 1470
+positional
+
+
+# osd/windows/winmain.c: 164
+preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
+
+
+# osd/windows/winmain.c: 169
+preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
+
+
+# osd/windows/winmain.c: 184
+preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
+
+
+# osd/windows/winmain.c: 174
+preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
+
+
+# osd/windows/winmain.c: 179
+preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
+
+
+# osd/windows/winmain.c: 165
+preferred view for all screens
+
+
+# osd/windows/winmain.c: 170
+preferred view for the first screen
+
+
+# osd/windows/winmain.c: 185
+preferred view for the fourth screen
+
+
+# osd/windows/winmain.c: 175
+preferred view for the second screen
+
+
+# osd/windows/winmain.c: 180
+preferred view for the third screen
+
+
+# osd/windows/winmain.c: 146
+scale screen rendering by this amount in software
+
+
+# osd/windows/winmain.c: 157
+specify the preferred Direct3D version (8 or 9)
+
+
+# osd/windows/winmain.c: 136
+thread priority for the main game thread; range from -15 to 1
+
+
+# osd/windows/winmain.c: 141
+video output method: none, gdi, ddraw, or d3d
 
 

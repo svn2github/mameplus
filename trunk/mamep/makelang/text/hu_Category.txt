@@ -6,15 +6,15 @@ Labda & ütõ
 Breakout
 Faltörõ
 
-# 91
+# 99
 Breakout *Mature*
 Faltörõ *felnõtt*
 
-# 101
+# 110
 Casino
 Kaszinó
 
-# 139
+# 221
 Casino *Mature*
 Kaszinó *felnõtt*
 
@@ -22,599 +22,603 @@ Kaszinó *felnõtt*
 Category
 Kategória
 
-# 146
+# 238
 Climbing
 Mászás
 
-# 163
+# 255
 Driving
 Vezetés / Felülnézet
 
-# 191
+# 283
 Driving / 1st Person
 Vezetés / Sofõrnézet
 
-# 246
+# 343
 Driving / Boat
 Vezetés / Hajó
 
-# 251
+# 349
+Driving / Plane
+Vezetés / Repülõs
+
+# 354
 Driving / Race
 Vezetés / Verseny
 
-# 306
+# 413
 Driving / Race (chase view)
 Vezetés / Verseny (gépnézet)
 
-# 398
+# 549
 Driving / Race (chase view) Bike
 Vezetés / Motorverseny (gépnézet)
 
-# 427
+# 583
 Driving / Race 1st P Bike
 Vezetés / Motorverseny (belsõ nézet)
 
-# 434
+# 590
 Driving / Race 1st Person
 Vezetés / Verseny (belsõ nézet)
 
-# 450
+# 611
 Driving / Race Bike
 Vezetés / Motorverseny
 
-# 467
+# 628
 Driving / Race Track
 Vezetés / Körverseny
 
-# 501
+# 666
 Fighter / 2.5D
 Verekedés / 2.5D
 
-# 730
+# 930
 Fighter / 2D
 Verekedés / 2D
 
-# 785
+# 984
 Fighter / 3D
 Verekedés / 3D
 
-# 793
+# 993
 Fighter / Field
 Verekedés / Terep
 
-# 809
+# 1008
 Fighter / Misc.
 Verekedés / Különféle
 
-# 816
+# 1015
 Fighter / Multiplay
 Verekedés / Többjátékos
 
-# 823
+# 1019
 Fighter / Versus
 Verekedés / Ellenféllel
 
-# 1289
+# 1532
 Fighter / Versus *Mature*
 Verekedés / Ellenféllel *felnõtt*
 
-# 1293
+# 1536
 Fighter / Versus Co-op
 Verekedés / Ellenféllel csapatban
 
-# 1311
+# 1556
 Fighter / Vertical
 Verekedés / Függõleges pálya
 
-# 1335
+# 1580
 Maze
 Labirintus
 
-# 1572
+# 1836
 Maze *Mature*
 Labirintus *felnõtt*
 
-# 1575
+# 1840
 Maze / Digging
 Labirintus / Ásás
 
-# 1606
+# 1874
 Maze / Digging *Mature*
 Labirintus / Ásás *felnõtt*
 
-# 1609
+# 1877
 Maze / Driving
 Labirintus / Vezetés
 
-# 1633
+# 1903
 Maze / Fighter
 Labirintus / Verekedés
 
-# 1662
+# 1933
 Maze / Outline
 Labirintus / Vonalhúzó
 
-# 1679
+# 1951
 Maze / Outline *Mature*
 Labirintus / Vonalhúzó 	*felnõtt*
 
-# 1682
+# 1954
 Maze / Shooter Large
 Labirintus / Lövõs (nagy)
 
-# 1758
+# 2031
 Maze / Shooter Small
 Labirintus / Lövõs (kicsi)
 
-# 1819
+# 2092
 Maze / Shooter Small *Mature*
 Labirintus / Lövõs (kicsi) *felnõtt*
 
-# 1823
+# 2096
 Maze / Surround
 Labirintus / Menekülés
 
-# 1837
+# 2110
 Mini-Games
 Mini-játékok
 
-# 1874
+# 2151
 Misc.
 Különféle
 
-# 1947
+# 2231
 Misc. *Mature*
 Különféle *felnõtt*
 
-# 1956
-Misc. Betting
-Különféle tétjáték
-
-# 1983
-Misc. Betting *Mature*
-Különféle tétjáték *felnõtt* 
-
-# 1992
+# 2240
 Multiplay
 Több játék
 
-# 2025
+# 2287
 Multiplay *Mature*
 Több játék *felnõtt*
 
-# 2034
+# 2299
+Not Classified
+Nem kategorizált
+
+# 2379
 Pinball
 Flipper
 
-# 2050
+# 2398
 Pinball *Mature*
 Flipper *felnõtt*
 
-# 2056
+# 2404
 Pinball / Pachinko *Mature*
 Flipper / Pachinko *felnõtt*
 
-# 2062
+# 2410
 Platform / Fighter
 Platform / Verekedés
 
-# 2083
+# 2431
 Platform / Fighter Scrolling
 Platform / Verekedés (scroll)
 
-# 2255
+# 2611
 Platform / Run Jump
 Platform / Ugrálós
 
-# 2478
+# 2863
 Platform / Run Jump *Mature*
 Platform / Ugrálós *felnõtt*
 
-# 2484
+# 2869
 Platform / Run Jump Scrolling
 Platform / Ugrálós (scroll)
 
-# 2556
+# 2944
 Platform / Shooter
 Platform / Lövõs
 
-# 2573
+# 2962
 Platform / Shooter Scrolling
 Platform / Lövõs (scroll)
 
-# 2768
+# 3173
 Puzzle
 Kirakó
 
-# 2807
+# 3221
 Puzzle *Mature*
 Kirakó *felnõtt*
 
-# 2813
+# 3227
 Puzzle / Cards
 Kirakó / Kártya
 
-# 2816
+# 3230
 Puzzle / Cards *Mature*
 Kirakó / Kártya  *felnõtt*
 
-# 2828
+# 3242
 Puzzle / Drop
 Kirakó / Ejtés
 
-# 2945
+# 3372
 Puzzle / Drop *Mature*
 Kirakó / Ejtés *felnõtt*
 
-# 2961
+# 3390
 Puzzle / Match
 Kirakó / Táblás
 
-# 2983
+# 3421
 Puzzle / Match *Mature*
 Kirakó / Táblás *felnõtt*
 
-# 3009
+# 3454
 Puzzle / Maze
 Kirakó / Labirintus
 
-# 3023
+# 3469
 Puzzle / Outline
 Kirakó / Vonalhúzó
 
-# 3038
+# 3484
 Puzzle / Outline *Mature*
 Kirakó / Vonalhúzó *felnõtt*
 
-# 3060
+# 3516
 Puzzle / Sliding
 Kirakó / Tologató
 
-# 3070
+# 3527
 Puzzle / Sliding *Mature*
 Kirakó / Tologató *felnõtt*
 
-# 3075
+# 3533
 Puzzle / Toss
 Kirakó / Dobás
 
-# 3126
+# 3590
 Puzzle / Toss *Mature*
 Kirakó / Dobás *felnõtt*
 
-# 3136
+# 3601
 Quiz / Chinese
 Kvíz / Kínai
 
-# 3143
+# 3605
 Quiz / English
 Kvíz / Angol
 
-# 3188
+# 3663
 Quiz / English *Mature*
 Kvíz / Angol *felnõtt*
 
-# 3203
+# 3679
 Quiz / French
 Kvíz / Francia
 
-# 3210
+# 3683
+Quiz / German
+Kvíz / Német
+
+# 3687
 Quiz / Italian
 Kvíz / Olasz
 
-# 3215
+# 3695
 Quiz / Japanese
 Kvíz / Japán
 
-# 3273
+# 3754
 Quiz / Japanese *Mature*
 Kvíz / Japán *felnõtt*
 
-# 3278
+# 3761
+Quiz / Korean
+Quiz / Koreai
+
+# 3765
 Quiz / Music English
 Kvíz / Zene angol
 
-# 3282
+# 3769
 Quiz / Music Japanese
 Kvíz / Zene japán
 
-# 3286
+# 3773
+Quiz / Spanish
+Quiz / Spanyol
+
+# 3777
 Rhythm
 Ritmus
 
-# 3309
+# 3793
+Rhythm / Dance
+Ritmus / Tánc
+
+# 3833
+Rhythm / Instruments
+Ritmus / Hangszerek
+
+# 3865
 Shooter / 1st Person
 Lövõs / Belsõ nézet
 
-# 3331
+# 3881
 Shooter / 3rd Person
 Lövõs / Külsõ nézet
 
-# 3369
+# 3923
 Shooter / Command
 Lövõs / Parancsnok
 
-# 3396
+# 3951
 Shooter / Driving
 Lövõs / Vezetés
 
-# 3405
+# 3960
 Shooter / Driving (chase view)
 Lövõs / Vezetés (gépnézet)
 
-# 3445
+# 4002
 Shooter / Driving 1st Person
 Lövõs / Vezetés (belsõ nézet)
 
-# 3453
+# 4010
 Shooter / Driving Diagonal
 Lövõs / Vezetés átlósan
 
-# 3458
+# 4015
 Shooter / Driving Horizontal
 Lövõs / Vezetés függõlegesen
 
-# 3472
+# 4029
 Shooter / Driving Vertical
 Lövõs / Vezetés vízszintesen
 
-# 3522
+# 4081
 Shooter / Field
 Lövõs / Mezõ
 
-# 3652
+# 4219
 Shooter / Field *Mature*
 Lövõs / Mezõ *felnõtt*
 
-# 3660
+# 4227
 Shooter / Flying
 Lövõs / Repülés
 
-# 3709
+# 4279
 Shooter / Flying (chase view)
 Lövõs / Repülés (gépnézet)
 
-# 3738
+# 4312
 Shooter / Flying 1st Person
 Lövõs / Repülés (belsõ nézet)
 
-# 3770
+# 4350
 Shooter / Flying Diagonal
 Lövõs / Repülés átlós
 
-# 3778
+# 4358
 Shooter / Flying Horizontal
 Lövõs / Repülés függõleges
 
-# 3980
+# 4581
 Shooter / Flying Horizontal *Mature*
 Lövõs / Repülés függõleges *felnõtt*
 
-# 3983
+# 4584
 Shooter / Flying Vertical
 Lövõs / Repülés vízszintes
 
-# 4373
+# 4993
 Shooter / Flying Vertical *Mature*
 Lövõs / Repülés vízszintes *felnõtt*
 
-# 4376
+# 4996
 Shooter / Gallery
 Lövõs / Céllövölde
 
-# 4722
+# 5369
 Shooter / Gallery *Mature*
 Lövõs / Céllövölde *felnõtt*
 
-# 4725
+# 5373
 Shooter / Gun
 Lövõs / Fegyver
 
-# 4829
+# 5530
 Shooter / Misc.
 Lövõs / Különféle
 
-# 4845
+# 5548
 Shooter / Misc. Horizontal
 Lövõs / Különféle függõleges
 
-# 4867
+# 5570
 Shooter / Misc. Vertical
 Lövõs / Különféle vízszintes
 
-# 4886
+# 5592
 Shooter / Versus
 Lövõs / Párbaj
 
-# 4895
+# 5605
 Shooter / Walking
 Lövõs / Mászka
 
-# 4997
+# 5712
 Sports
 Sport
 
-# 5021
+# 5736
 Sports / Armwrestling
 Sport / Szkander
 
-# 5025
+# 5741
 Sports / Baseball
 Sport / Baseball
 
-# 5102
+# 5822
 Sports / Basketball
 Sport / Kosárlabda
 
-# 5153
+# 5874
 Sports / Bowling
 Sport / Teke
 
-# 5185
+# 5908
 Sports / Boxing
 Sport / Box
 
-# 5221
+# 5944
 Sports / Bull Fighting
 Sport / Bikaviadal
 
-# 5225
+# 5948
 Sports / Darts
 Sport / Dart
 
-# 5232
+# 5955
 Sports / Dodgeball
 Sport / Kidobós
 
-# 5237
+# 5960
 Sports / Fishing
 Sport / Horgászat
 
-# 5242
+# 5976
 Sports / Football Amer.
 Sport / Amerikai foci
 
-# 5288
+# 6029
 Sports / Football Rugby
 Sport / Rögbi
 
-# 5293
+# 6034
 Sports / Golf
 Sport / Golf
 
-# 5387
+# 6131
+Sports / Handball
+Sport / Kézilabda
+
+# 6135
 Sports / Hang Gliding
 Sport / Sárkányrepülés
 
-# 5392
+# 6141
 Sports / Hockey
 Sport / Jéghoki
 
-# 5407
+# 6157
 Sports / Horse Racing
 Sport / Lóverseny
 
-# 5419
+# 6172
 Sports / Horseshoes
 Sport / Patkódobás
 
-# 5424
+# 6177
 Sports / Multiplay
 Sport / Több játék
 
-# 5434
+# 6185
+Sports / Ping pong
+Sport / Pingpong
+
+# 6190
 Sports / Pool
 Sport / Biliárd
 
-# 5470
+# 6228
 Sports / Pool *Mature*
 Sport / Biliárd *felnõtt*
 
-# 5482
+# 6242
 Sports / Shuffleboard
 Sport / Koronglökés
 
-# 5488
+# 6248
 Sports / Skateboarding
 Sport / Gördeszka
 
-# 5496
+# 6257
 Sports / Skiing
 Sport / Síelés
 
-# 5515
+# 6281
 Sports / SkyDiving
 Sport / Ejtõernyõ
 
-# 5519
+# 6285
 Sports / Soccer
 Sport / Foci
 
-# 5607
+# 6387
 Sports / Sumo
 Sport / Szumó
 
-# 5610
+# 6390
 Sports / Swimming
 Sport / Úszás
 
-# 5621
+# 6401
 Sports / Tennis
 Sport / Tenisz
 
-# 5651
+# 6432
 Sports / Track & Field
 Sport / Atlétika
 
-# 5688
+# 6469
 Sports / VolleyBall
 Sport / Röplabda
 
-# 5712
+# 6497
+Sports / Wrestling
+Sport / Pankráció
+
+# 6547
 Tabletop
 Táblás
 
-# 5718
+# 6554
 Tabletop *Mature*
 Táblás *felnõtt*
 
-# 5721
+# 6557
 Tabletop / Hanafuda
 Táblás / Hanafuda
 
-# 5725
+# 6565
 Tabletop / Hanafuda *Mature*
 Táblás / Hanafuda *felnõtt*
 
-# 5744
+# 6585
 Tabletop / Mahjong
 Táblás / Madzsong
 
-# 5762
+# 6617
 Tabletop / Mahjong *Mature*
 Táblás / Madzsong *felnõtt*
 
-# 5974
+# 6847
 Tabletop / Othello
 Táblás / Othello
 
-# 5980
+# 6853
 Tabletop / Othello *Mature*
 Táblás / Othello *felnõtt*
 
-# 5983
+# 6856
 Tabletop / Renju
 Táblás / Renju
 
-# 5987
+# 6861
 Tabletop / Shougi
 Táblás / Shougi
-
-# 5995
-Unplayable
-Nem játszható
-
-# 6294
-Wrestling
-Pankráció
-
-# 820
-Fighter / Third Person
-
-
-# 3140
-Quiz / Corean
-
-
-# 3207
-Quiz / German
-
-
-# 5384
-Sports / Handball
-
-
-# 5431
-Sports / Ping pong
-
 
