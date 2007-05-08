@@ -2929,7 +2929,7 @@ dunkshot	ダンクショット (FD1089 317-0022)	だんくしょっと	Sega
 eswat	サイバーポリス E-スワット (海外版 set 3 FD1094 317-0130)	さいばーぽりすいーすわっと	Sega
 eswatu	サイバーポリス E-スワット (USA版 set 2 FD1094 317-0129)	さいばーぽりすいーすわっと	Sega
 eswatj	サイバーポリス E-スワット (日本版 set 1 FD1094 317-0128)	さいばーぽりすいーすわっと	Sega
-exctleag	エキサイトリーグ (FD1094 317-0079?)	えきさいとりーぐ	Sega
+exctleag	エキサイトリーグ (FD1094 317-0079)	えきさいとりーぐ	Sega
 fpoint	フラッシュポイント (日本版 set 2 FD1094 317-0127A)	ふらっしゅぽいんと	Sega
 fpoint1	フラッシュポイント (日本版 set 1 FD1094 317-0127A)	ふらっしゅぽいんと	Sega
 goldnaxe	ゴールデンアックス (USA版 set 6 8751 317-123A)	ごーるでんあっくす_1	Sega
@@ -2954,7 +2954,7 @@ shinobi3	忍 (set 3 System16B MC-8123B 317-0054)	しのび	Sega
 shinobi2	忍 (set 2 System16B FD1094 317-0049)	しのび	Sega
 sonicbom	ソニックブーム (FD1094 317-0053)	そにっくぶーむ	Sega
 sjryuko	スケバン雀士竜子 (set 2 System16B FD1089B 317-5021)	すけばんじゃんしりゅうこ	White Board
-suprleag	スーパーリーグ (FD1094 317-0045?)	すーぱーりーぐ	Sega
+suprleag	スーパーリーグ (FD1094 317-0045)	すーぱーりーぐ	Sega
 tetris2	テトリス (日本版 set 2 System16B FD1094 317-0092)	てとりす_1_2sega	Sega
 tetris1	テトリス (日本版 set 1 System16B FD1094 317-0091)	てとりす_1_2sega	Sega
 timescan	タイムスキャナー (set 2 System16B)	たいむすきゃなー	Sega
@@ -4005,7 +4005,8 @@ gradius3	グラディウスIII -伝説から神話へ (日本版)	ぐらでぃうす_3	Konami
 grdius3a	グラディウスIII -伝説から神話へ (アジア版)	ぐらでぃうす_3	Konami
 grdius3e	グラディウスIII -伝説から神話へ (海外版?)	ぐらでぃうす_3	Konami
 plygonet	ポリネットウォリアーズ / Polygonet Commanders (ver UAA)	ぽりねっとうぉりあーず	Konami
-racinfrc	レーシンフォース (ver UAB)	れーしんふぉーす	Konami
+racinfrc	レーシンフォース (ver EAC)	れーしんふぉーす	Konami
+racinfru	レーシンフォース (ver UAB)	れーしんふぉーす	Konami
 opengolf	ゴルフィンググレイツ2 / Konami's Open Golf Championship (ver EAE)	ごるふぃんぐぐれいつ_2	Konami
 opengol2	ゴルフィンググレイツ2 / Konami's Open Golf Championship (ver EAD)	ごるふぃんぐぐれいつ_2	Konami
 ggreats2	ゴルフィンググレイツ2 (ver JAC)	ごるふぃんぐぐれいつ_2	Konami
@@ -4492,8 +4493,13 @@ area51	エリア51 (R3000)	えりあ51_1	Atari Games
 area51t	エリア51 (Time Warner License)	えりあ51_1	Time Warner
 area51a	エリア51 (Atari Games License)	えりあ51_1	Atari Games
 fishfren	フィッシンフレンジー (prototype)	ふぃっしんふれんじー	Time Warner Interactive
-freezeat	フリーズ (Atari prototype)	ふりーず_atari	Atari Games
-freezea2	フリーズ (Atari prototype set 2)	ふりーず_atari	Atari Games
+freezeat	フリーズ (Atari prototype English voice 96/10/25)	ふりーず_atari	Atari Games
+freezejp	フリーズ (Atari prototype Japanese voice 96/10/25)	ふりーず_atari	Atari Games
+freezea2	フリーズ (Atari prototype 96/10/18)	ふりーず_atari	Atari Games
+freezea3	フリーズ (Atari prototype 96/10/07)	ふりーず_atari	Atari Games
+freezea4	フリーズ (Atari prototype 96/10/03)	ふりーず_atari	Atari Games
+freezea5	フリーズ (Atari prototype 96/09/20 AMOA-96)	ふりーず_atari	Atari Games
+freezea6	フリーズ (Atari prototype 96/09/07 Jamma-96)	ふりーず_atari	Atari Games
 area51mx	エリア51／マキシマムフォース デュオ ver 2.0	えりあ51_3まきしまむふぉーすでゅお	Atari Games
 a51mxr3k	エリア51／マキシマムフォース デュオ (R3000)	えりあ51_3まきしまむふぉーすでゅお	Atari Games
 maxforce	マキシマムフォース (ver 1.05)	まきしまむふぉーす	Atari Games
@@ -5243,6 +5249,7 @@ viprp1j	バイパーフェイズ1 (日本版 new ver)	ばいぱーふぇいず1	Seibu Kaihatsu
 viprp1s	バイパーフェイズ1 (スイス版 new ver)	ばいぱーふぇいず1	Seibu Kaihatsu
 viprp1o	バイパーフェイズ1 (日本版)	ばいぱーふぇいず1	Seibu Kaihatsu
 viprp1ot	バイパーフェイズ1 (ドイツ版)	ばいぱーふぇいず1	Seibu Kaihatsu (Tuning License)
+viprp1hk	バイパーフェイズ1 (香港版 Metrotainment license)	ばいぱーふぇいず1	Seibu Kaihatsu (Metrotainment License)
 ejanhs	E雀ハイスクール (日本版)	いーじゃんはいすくーる	Seibu Kaihatsu
 rdft	ライデンファイターズ (日本版 set 1)	らいでん_4ふぁいたーず_1	Seibu Kaihatsu
 rdftu	ライデンファイターズ (USA版)	らいでん_4ふぁいたーず_1	Seibu Kaihatsu (Fabtek license)
@@ -6405,8 +6412,8 @@ sbugger	スペースバガー (set 1)	すぺーすばがー	Game-A-Tron
 sbuggera	スペースバガー (set 2)	すぺーすばがー	Game-A-Tron
 portrait	ポートレート (set 1)	ぽーとれーと	Olympia
 portrata	ポートレート (set 2)	ぽーとれーと	Olympia
-enigma2	エニグマ2	えにぐま2	GamePlan (Zilec Electronics license)
-enigma2a	エニグマ2 (Space Invaders hardware)	えにぐま2	Zilec Electronics
+enigma2	エニグマII	えにぐま2	GamePlan (Zilec Electronics license)
+enigma2a	エニグマII (Space Invaders hardware)	えにぐま2	Zilec Electronics
 ltcasino	リトルカジノ	りとるかじの_1	Digital Controls Inc.
 mv4in1	リトルカジノ / Mini Vegas 4in1	りとるかじの_1	Entertainment Enterprises
 ltcasin2	リトルカジノ2	りとるかじの_2	Digital Controls Inc.
@@ -6551,7 +6558,6 @@ lucky8	ラッキー8ラインズ	らっきーえいとらいんず	Falcon
 sidewndr	サイドワインダー	さいどわいんだー	ACE
 spellbnd	スペルバウンド	すぺるばうんど	ACE
 starspnr	スタースピナー (オランダ版)	すたーすぴなー	ACE
-vp906iii	906III ビデオポーカー	ないんてぃーんはんどれっとしっくすすりーびでおぽーかー	Casino Electronics Inc.
 attckufo	アタックUFO	あたっくゆーえふおー	Ryoto Electric Co.
 fortecar	フォルテカード	ふぉるてかーど	unknown
 jackpool	ジャックポットプール (イタリア版) (海賊版)	じゃっくぽっとぷーる	Electronic Projects
@@ -6593,11 +6599,12 @@ sb2003	スーパーバブル2003 (海外版 ver 1.0)	すーぱーばぶる2003	Limenko
 sb2003a	スーパーバブル2003 (アジア版 ver 1.0)	すーぱーばぶる2003	Limenko
 spotty	スポッティー (ver 2.0.2)	すぽってぃー	Prince Co.
 carrera	カレラ (ver 6.7)	かれら	BS Electronics
-pmpoker	プレイマンポーカー (ドイツ版)	ぷれいまんぽーかー	PlayMan?
+pmpoker	プレイマンポーカー (ドイツ版)	ぷれいまんぽーかー	PlayMan
 goldnpkr	ゴールデンポーカーダブルアップ (big boy)	ごーるでんぽーかーだぶるあっぷ	Bonanza Enterprises, Ltd
 goldnpkb	ゴールデンポーカーダブルアップ (mini boy)	ごーるでんぽーかーだぶるあっぷ	Bonanza Enterprises, Ltd
-jokerpkr	ジョーカーポーカー	じょーかーぽーかー	Coinmaster-Gaming, Ltd
+jokerpkr	ジョーカーポーカー	じょーかーぽーかー	Bootleg in Coinmaster hardware
 pottnpkr	ジャックポッテンズポーカー	じゃっくぽってんずぽーかー	Unknown
+gdrawpkr	ゲーミングドローポーカー	げーみんぐどろーぽーかー	Cal Omega / Casino Electronics Inc.
 altair	アルタイル	あるたいる	Cidelsa
 destryer	デストロイヤー (Cidelsa set 1)	ですとろいやー	Cidelsa
 destryea	デストロイヤー (Cidelsa set 2)	ですとろいやー	Cidelsa
@@ -6642,7 +6649,7 @@ ddtodd	ダンジョンズ&ドラゴンズ -タワーオブドゥーム (欧州版 940412 Phoenix Editio
 avspd	エイリアン VS. プレデター (欧州版 940520 Phoenix Edition)	えいりあんばーさすぷれでたー	hack
 ringdstd	スーパーマッスルボマー -インターナショナル・ブロウアウト / Ring of Destruction -Slam Masters II (欧州版 940902 Phoenix Edition)	すーぱーまっするぼまー	hack
 xmcotad	X-MEN -チルドレンオブジアトム (欧州版 950105 Phoenix Edition)	えっくすめん_2	hack
-nwarrd	ヴァンパイアハンター -ダークストーカーズリベンジ / Night Warriors -Darkstalkers' Revenge (USA版 950406 Phoenix Edition)	ばんぱいあ_2はんたー	hack
+nwarrud	ヴァンパイアハンター -ダークストーカーズリベンジ / Night Warriors -Darkstalkers' Revenge (USA版 950406 Phoenix Edition)	ばんぱいあ_2はんたー	hack
 sfad	ストリートファイターZERO / Street Fighter Alpha -Warriors' Dreams (欧州版 950727 Phoenix Edition)	すとりーとふぁいたー_6ぜろ_1	hack
 19xxd	19XX -The War Against Destiny (USA版 951207 Phoenix Edition)	ないんてぃーんだぶるえっくす	hack
 ddsomud	ダンジョンズ&ドラゴンズ -シャドーオーバーミスタラ (USA版 960619 Phoenix Edition)	だんじょんずあんどどらごんず_2しゃどーおーばーみすたら	hack
