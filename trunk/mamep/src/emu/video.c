@@ -1894,7 +1894,8 @@ static void free_scalebitmap(running_machine *machine)
 
 			for (bank = 0; bank < 2; bank++)
 			{
-				render_texture_set_bitmap(screen->texture[bank], screen->bitmap[bank], NULL, machine->drv->screen[scrnum].palette_base, screen->format);
+				if ((screen->texture[bank]) && (screen->bitmap[bank]))
+					render_texture_set_bitmap(screen->texture[bank], screen->bitmap[bank], NULL, machine->drv->screen[scrnum].palette_base, screen->format);
 
 				if (screen->scale_bitmap[bank])
 				{
