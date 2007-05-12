@@ -326,6 +326,10 @@ CD Express
 CVS
 
 
+# Gaming Draw Poker
+Cal Omega
+
+
 # 1942 (PlayChoice-10)
 Capcom
 
@@ -336,10 +340,6 @@ Capcom, supported by Cave
 
 # Giga Wing (USA 990222)
 Capcom, supported by Takumi
-
-
-# 906III Video Poker
-Casino Electronics Inc.
 
 
 # Cool Pool
