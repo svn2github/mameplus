@@ -299,10 +299,15 @@ BOOL PropSheetFilter_Vector(void)
 
 BOOL PropSheetFilter_BIOS(void)
 {
+#ifdef DRIVER_SWITCH
+	// driver switch config is in bios page
+	return IS_GLOBAL;
+#else /* DRIVER_SWITCH */
 	if (IS_GLOBAL)
 		return (GetSystemBiosInfo(0) != NULL);
 
 	return 0;
+#endif /* DRIVER_SWITCH */
 }
 
 /* Help IDs */
