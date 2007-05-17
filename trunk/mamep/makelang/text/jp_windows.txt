@@ -38,7 +38,7 @@
 %s Button %d
 %s ボタン %d
 
-# osd/windows/winmain.c: 205, 225, 226, 227, 228, 229, 230, 231, 232
+# osd/windows/winmain.c: 206, 226, 227, 228, 229, 230, 231, 232, 233
 (disabled by compiling option)
 (コンパイル時に無効化)
 
@@ -46,7 +46,7 @@
 (primary)
 (プライマリ)
 
-# osd/windows/winmain.c: 235
+# osd/windows/winmain.c: 236
 AUTOMATIC DEVICE SELECTION OPTIONS
 自動デバイス選択オプション
 
@@ -66,15 +66,15 @@ Can't set range for Joystick %d - %s\n
 Can't set saturation for Joystick %d - %s\n
 ジョイスティック%d - %sの外側しきい値を設定出来ません
 
-# osd/windows/winmain.c: 130
+# osd/windows/winmain.c: 131
 DEBUGGING OPTIONS
 デバッガオプション
 
-# osd/windows/winmain.c: 155
+# osd/windows/winmain.c: 156
 DIRECT3D-SPECIFIC OPTIONS
 Direct3D固有オプション
 
-# osd/windows/winmain.c: 151
+# osd/windows/winmain.c: 152
 DIRECTDRAW-SPECIFIC OPTIONS
 DirectDraw固有オプション
 
@@ -506,7 +506,7 @@ Error: Device does not meet minimum requirements for Direct3D rendering\n
 Error: unable to configure a screen texture format\n
 エラー: 画面テクスチャ形式の設定が出来ません\n
 
-# osd/windows/winmain.c: 187
+# osd/windows/winmain.c: 188
 FULL SCREEN OPTIONS
 フルスクリーンオプション
 
@@ -514,7 +514,7 @@ FULL SCREEN OPTIONS
 Fast Forward
 早送り
 
-# osd/windows/winmain.c: 199
+# osd/windows/winmain.c: 200
 INPUT DEVICE OPTIONS
 入力デバイスオプション
 
@@ -606,11 +606,11 @@ Lightgun not supported in windowed mode
 Lightgun on Mouse %d 
 マウス %d の光線銃
 
-# osd/windows/winmain.c: 492
+# osd/windows/winmain.c: 493
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\nM.A.M.E. is a console application, you should launch it from a command prompt.\n\nUsage:\tMAME gamename [options]\n\n\tMAME -showusage\t\tfor a brief list of options\n\tMAME -showconfig\t\tfor a list of configuration options\n\tMAME -createconfig\tto create a mame.ini\n\nPlease consult the documentation for more information.\n\nWould you like to open the documentation now?
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\nM.A.M.E. is a console application, you should launch it from a command prompt.\n\nUsage:\tMAME gamename [options]\n\n\tMAME -showusage\t\tfor a brief list of options\n\tMAME -showconfig\t\tfor a list of configuration options\n\tMAME -createconfig\tto create a mame.ini\n\nPlease consult the documentation for more information.\n\nWould you like to open the documentation now?
 
-# osd/windows/window.c: 618
+# osd/windows/window.c: 621
 MAME: %s [%s] - Screen %d
 MAME: %s「%s」- 画面%d
 
@@ -622,7 +622,7 @@ Mouse
 Mouse %d 
 マウス%d
 
-# osd/windows/winmain.c: 160
+# osd/windows/winmain.c: 161
 PER-WINDOW VIDEO OPTIONS
 ウィンドウ毎の画面オプション
 
@@ -722,15 +722,15 @@ Using %s scale effect\n
 Video: Monitor %p = \"%s\" %s\n
 ビデオ: モニタ %p = 「%s」%s\n
 
-# osd/windows/winmain.c: 134
+# osd/windows/winmain.c: 135
 WINDOWS PERFORMANCE OPTIONS
 Windows版パフォーマンスオプション
 
-# osd/windows/winmain.c: 195
+# osd/windows/winmain.c: 196
 WINDOWS SOUND OPTIONS
 Windows版サウンドオプション
 
-# osd/windows/winmain.c: 139
+# osd/windows/winmain.c: 140
 WINDOWS VIDEO OPTIONS
 Windows版ビデオオプション
 
@@ -750,43 +750,43 @@ analog
 analog joystick
 アナログジョイスティック
 
-# osd/windows/winmain.c: 162
+# osd/windows/winmain.c: 163
 aspect ratio for all screens; 'auto' here will try to make a best guess
 全ての画面のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 167
+# osd/windows/winmain.c: 168
 aspect ratio of the first screen; 'auto' here will try to make a best guess
 １画面目のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 182
+# osd/windows/winmain.c: 183
 aspect ratio of the fourth screen; 'auto' here will try to make a best guess
 ４画面目のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 172
+# osd/windows/winmain.c: 173
 aspect ratio of the second screen; 'auto' here will try to make a best guess
 ２画面目のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 177
+# osd/windows/winmain.c: 178
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 ３画面目のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 190
+# osd/windows/winmain.c: 191
 brightness value in full screen mode
 フルスクリーン画面での明るさ
 
-# osd/windows/winmain.c: 211
+# osd/windows/winmain.c: 212
 center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
 ジョイスティックの入力を無視する領域の内側しきい値 (0.0 中央、1.0 外)
 
-# osd/windows/winmain.c: 144
+# osd/windows/winmain.c: 145
 constrain to the proper aspect ratio
 適切なアスペクト比に制限します
 
-# osd/windows/winmain.c: 191
+# osd/windows/winmain.c: 192
 contrast value in full screen mode
 フルスクリーン画面の値を制限します
 
-# osd/windows/winmain.c: 143
+# osd/windows/winmain.c: 144
 default to maximized windows; otherwise, windows will be minimized
 デフォルトでウィンドウを最大化。無効な場合はウィンドウは最小化されます
 
@@ -794,123 +794,123 @@ default to maximized windows; otherwise, windows will be minimized
 dial
 ダイアル
 
-# osd/windows/input.c: 1960, 2171 osd/windows/winmain.c: 213 osd/windows/winmain.h: 53
+# osd/windows/input.c: 1960, 2171 osd/windows/winmain.c: 214 osd/windows/winmain.h: 53
 digital
 デジタル
 
-# osd/windows/winmain.c: 239
+# osd/windows/winmain.c: 240
 enable (keyboard|mouse|joystick) if a dial control is present
 ダイヤルを使用する場合に(keyboard|mouse|joystick)を有効
 
-# osd/windows/winmain.c: 241
+# osd/windows/winmain.c: 242
 enable (keyboard|mouse|joystick) if a lightgun control is present
 光線中を使用する場合に(keyboard|mouse|joystick)を有効
 
-# osd/windows/winmain.c: 244
+# osd/windows/winmain.c: 245
 enable (keyboard|mouse|joystick) if a mouse control is present
 マウスを使用する場合に(keyboard|mouse|joystick)を有効
 
-# osd/windows/winmain.c: 236
+# osd/windows/winmain.c: 237
 enable (keyboard|mouse|joystick) if a paddle control is present
 パドルが存在するときに有効 (keyboard|mouse|joystick)
 
-# osd/windows/winmain.c: 238
+# osd/windows/winmain.c: 239
 enable (keyboard|mouse|joystick) if a pedal control is present
 ペダルを使用する場合に(keyboard|mouse|joystick)を有効
 
-# osd/windows/winmain.c: 242
+# osd/windows/winmain.c: 243
 enable (keyboard|mouse|joystick) if a positional control is present
 座標コントロールが存在する場合に有効 (keyboard|mouse|joystick)
 
-# osd/windows/winmain.c: 240
+# osd/windows/winmain.c: 241
 enable (keyboard|mouse|joystick) if a trackball control is present
 トラックボールを使用する場合に(keyboard|mouse|joystick)を有効
 
-# osd/windows/winmain.c: 237
+# osd/windows/winmain.c: 238
 enable (keyboard|mouse|joystick) if an analog joystick control is present
 アナログスティックを使用する場合に(keyboard|mouse|joystick)を有効
 
-# osd/windows/winmain.c: 157
+# osd/windows/winmain.c: 158
 enable bilinear filtering on screen output
 画面の出力にバイリニアフィルタを有効
 
-# osd/windows/winmain.c: 208
+# osd/windows/winmain.c: 209
 enable dual lightgun input
 デュアル光線銃を使用
 
-# osd/windows/winmain.c: 152
+# osd/windows/winmain.c: 153
 enable hardware stretching
 ハードウェア拡大表\示を有効
 
-# osd/windows/winmain.c: 201
+# osd/windows/winmain.c: 202
 enable joystick input
 ジョイスティックを使用
 
-# osd/windows/winmain.c: 207
+# osd/windows/winmain.c: 208
 enable lightgun input
 光線銃を使用
 
-# osd/windows/winmain.c: 200
+# osd/windows/winmain.c: 201
 enable mouse input
 マウスまたはトラックボールを使用
 
-# osd/windows/winmain.c: 136
+# osd/windows/winmain.c: 137
 enable multithreading; this enables rendering and blitting on a separate thread
 マルチスレッドを有効。これは描画処理でのスレッド分割を有効にします
 
-# osd/windows/winmain.c: 203
+# osd/windows/winmain.c: 204
 enable pointing stick input
 スティック型マウスを使用
 
-# osd/windows/winmain.c: 189
+# osd/windows/winmain.c: 190
 enable resolution switching
 解像度の切り替えを有効
 
-# osd/windows/winmain.c: 210
+# osd/windows/winmain.c: 211
 enable steadykey support
 ボタンの同時押し認識を容易にする
 
-# osd/windows/winmain.c: 188
+# osd/windows/winmain.c: 189
 enable triple buffering
 トリプルバッファリングを有効
 
-# osd/windows/winmain.c: 148
+# osd/windows/winmain.c: 149
 enable using the start of VBLANK for throttling instead of the game time
 速度制限をゲームの実時間の代わりにVBLANK開始で行う
 
-# osd/windows/winmain.c: 147
+# osd/windows/winmain.c: 148
 enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
 画面反転の前にVBLANK開始を待つ。画面のちらつきが減少します
 
-# osd/windows/winmain.c: 142
+# osd/windows/winmain.c: 143
 enable window mode; otherwise, full screen mode is assumed
 ウィンドウモードを有効。無効な場合は当然フルスクリーンです
 
-# osd/windows/winmain.c: 212
+# osd/windows/winmain.c: 213
 end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
 ジョイスティックの入力を無視する領域の外側しきい値 (0.0 中央、1.0 外)
 
-# osd/windows/winmain.c: 161
+# osd/windows/winmain.c: 162
 explicit name of all screen; 'auto' here will try to make a best guess
 明示的に全ての画面の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 166
+# osd/windows/winmain.c: 167
 explicit name of the first screen; 'auto' here will try to make a best guess
 明示的に１画面目の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 181
+# osd/windows/winmain.c: 182
 explicit name of the fourth screen; 'auto' here will try to make a best guess
 明示的に４画面目の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 171
+# osd/windows/winmain.c: 172
 explicit name of the second screen; 'auto' here will try to make a best guess
 明示的に２画面目の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 176
+# osd/windows/winmain.c: 177
 explicit name of the third screen; 'auto' here will try to make a best guess
 明示的に４画面目の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 192
+# osd/windows/winmain.c: 193
 gamma value in full screen mode
 フルスクリーンのガンマ補正値
 
@@ -922,23 +922,23 @@ invalid
 lightgun
 光線銃
 
-# osd/windows/winmain.c: 213
+# osd/windows/winmain.c: 214
 mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
 特定のジョイスティックや軸をデジタルに設定 (none|all|j<N>*|j<N>a<M>[,...])
 
-# osd/windows/winmain.c: 146
+# osd/windows/winmain.c: 147
 name of a PNG file to use for visual effects, or 'none'
 視覚効果で使用するPNGファイル名、または「none」
 
-# osd/windows/winmain.c: 141
+# osd/windows/winmain.c: 142
 number of screens to create; usually, you want just one
 生成する画面の数を指定。通常は１です
 
-# osd/windows/winmain.c: 209
+# osd/windows/winmain.c: 210
 offscreen shots reload
 画面外のショットを割り当てる
 
-# osd/windows/winmain.c: 131
+# osd/windows/winmain.c: 132
 output error.log data to the system debugger
 error.logデータをシステムデバッガに出力
 
@@ -954,91 +954,91 @@ pedal
 positional
 座標
 
-# osd/windows/winmain.c: 163
+# osd/windows/winmain.c: 164
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
 全ての画面の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/winmain.c: 168
+# osd/windows/winmain.c: 169
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 １画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/winmain.c: 183
+# osd/windows/winmain.c: 184
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 ４画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/winmain.c: 173
+# osd/windows/winmain.c: 174
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 ２画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/winmain.c: 178
+# osd/windows/winmain.c: 179
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 ３画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/winmain.c: 164
+# osd/windows/winmain.c: 165
 preferred view for all screens
 全ての画面のビューを指定
 
-# osd/windows/winmain.c: 169
+# osd/windows/winmain.c: 170
 preferred view for the first screen
 １画面目のビューを指定
 
-# osd/windows/winmain.c: 184
+# osd/windows/winmain.c: 185
 preferred view for the fourth screen
 ４画面目のビューを指定
 
-# osd/windows/winmain.c: 174
+# osd/windows/winmain.c: 175
 preferred view for the second screen
 ２画面目のビューを指定
 
-# osd/windows/winmain.c: 179
+# osd/windows/winmain.c: 180
 preferred view for the third screen
 ３画面目のビューを指定
 
-# osd/windows/winmain.c: 145
+# osd/windows/winmain.c: 146
 scale screen rendering by this amount in software
 指定した割合でソ\フトウェアによる画面描画スケーリングを実行
 
-# osd/windows/winmain.c: 196
+# osd/windows/winmain.c: 197
 set audio latency (increase to reduce glitches)
 オーディオのレイテンシを指定
 
-# osd/windows/winmain.c: 216
+# osd/windows/winmain.c: 217
 set joystick ID (Player1)
 ジョイスティックIDを指定 (プレイヤー1)
 
-# osd/windows/winmain.c: 217
+# osd/windows/winmain.c: 218
 set joystick ID (Player2)
 ジョイスティックIDを指定 (プレイヤー2)
 
-# osd/windows/winmain.c: 218
+# osd/windows/winmain.c: 219
 set joystick ID (Player3)
 ジョイスティックIDを指定 (プレイヤー3)
 
-# osd/windows/winmain.c: 219
+# osd/windows/winmain.c: 220
 set joystick ID (Player4)
 ジョイスティックIDを指定 (プレイヤー4)
 
-# osd/windows/winmain.c: 220
+# osd/windows/winmain.c: 221
 set joystick ID (Player5)
 ジョイスティックIDを指定 (プレイヤー5)
 
-# osd/windows/winmain.c: 221
+# osd/windows/winmain.c: 222
 set joystick ID (Player6)
 ジョイスティックIDを指定 (プレイヤー6)
 
-# osd/windows/winmain.c: 222
+# osd/windows/winmain.c: 223
 set joystick ID (Player7)
 ジョイスティックIDを指定 (プレイヤー7)
 
-# osd/windows/winmain.c: 223
+# osd/windows/winmain.c: 224
 set joystick ID (Player8)
 ジョイスティックIDを指定 (プレイヤー8)
 
-# osd/windows/winmain.c: 156
+# osd/windows/winmain.c: 157
 specify the preferred Direct3D version (8 or 9)
 優先されるDirect3Dのバージョンを指定
 
-# osd/windows/winmain.c: 135
+# osd/windows/winmain.c: 136
 thread priority for the main game thread; range from -15 to 1
 メインのゲームスレッドのプライオリティを指定。-15から1の範囲で指定
 
@@ -1046,7 +1046,7 @@ thread priority for the main game thread; range from -15 to 1
 trackball
 トラックボール
 
-# osd/windows/winmain.c: 140
+# osd/windows/winmain.c: 141
 video output method: none, gdi, ddraw, or d3d
 ビデオ描画方法: none、gdi、ddrawまたはd3d
 

@@ -1,5 +1,5 @@
 # Generate new mo files
-#	usage: makemo.pl [lang]
+#	usage: makemo.pl [lang] [codepage]
 #
 #	eg: makemo.pl tw
 #	 - Read text files that start with "tw_" and "mame32tw.lst"
@@ -66,6 +66,8 @@ $mo_ext = "mmo";
 
 #$format_cmd = "$podir/msgfmt";
 #$mo_ext = "mo";
+
+$CRLF = "\r\n";
 
 &MakeListFiles;
 &MakeMoFiles;
@@ -149,13 +151,14 @@ sub MakeListFiles
 
 
 	open (OUT, ">$podir/lst.po") || die "$!";
+	binmode(OUT);
 	foreach (sort keys %DESC)
 	{
 		next if $DESC{$_} eq $_;
 
-		print OUT "# $NAME{$_}\n";
-		print OUT "msgid  \"$_\"\n";
-		print OUT "msgstr \"$DESC{$_}\"\n\n";
+		print OUT "# $NAME{$_}$CRLF";
+		print OUT "msgid  \"$_\"$CRLF";
+		print OUT "msgstr \"$DESC{$_}\"$CRLF$CRLF";
 	}
 	close (OUT);
 
@@ -164,13 +167,14 @@ sub MakeListFiles
 	if ($lang eq 'jp')
 	{
 		open (OUT, ">$podir/readings.po") || die "$!";
+		binmode(OUT);
 		foreach (sort keys %READINGS)
 		{
 			next if $READINGS{$_} eq $_;
 
-			print OUT "# $NAME{$_}\n";
-			print OUT "msgid  \"$_\"\n";
-			print OUT "msgstr \"$READINGS{$_}\"\n\n";
+			print OUT "# $NAME{$_}$CRLF";
+			print OUT "msgid  \"$_\"$CRLF";
+			print OUT "msgstr \"$READINGS{$_}\"$CRLF$CRLF";
 		}
 		close (OUT);
 
@@ -185,6 +189,7 @@ sub MakeMoFiles
 	closedir (DIR);
 
 	open (NOTFOUND, ">$textdir/_$lang" . "_no_in_tp.txt") || die "$!";
+	binmode(NOTFOUND);
 	foreach (sort @dirs)
 	{
 		next unless /^$lang[_](.*)\.txt$/;
@@ -263,6 +268,7 @@ sub MakeMo
 
 	open (IN, "$textdir/$textfile") || die "$!";
 	open (OUT, ">$podir/$target.po") || die "$!";
+	binmode(OUT);
 	while (<IN>)
 	{
 		s/[\r\n]+$//;
@@ -304,9 +310,9 @@ sub MakeMo
 
 		if ($TEMPLATE{$text} eq '')
 		{
-			print NOTFOUND "# $comment ($textfile)\n";
-			print NOTFOUND "$text\n";
-			print NOTFOUND "$translated\n\n";
+			print NOTFOUND "# $comment ($textfile)$CRLF";
+			print NOTFOUND "$text$CRLF";
+			print NOTFOUND "$translated$CRLF$CRLF";
 			next;
 		}
 
@@ -344,9 +350,9 @@ sub MakeMo
 
 		#if ($text ne $translated)
 		{
-			print OUT "$TEMPLATE{$text}\n";
-			print OUT "msgid  \"$text\"\n";
-			print OUT "msgstr \"$translated\"\n\n";
+			print OUT "$TEMPLATE{$text}$CRLF";
+			print OUT "msgid  \"$text\"$CRLF";
+			print OUT "msgstr \"$translated\"$CRLF$CRLF";
 		}
 
 		undef $comment;
@@ -358,18 +364,19 @@ sub MakeMo
 	rename ("$textdir/$textfile", "$textdir/bak/$textfile");
 
 	open (OUT, ">$textdir/$textfile") || die "$!";
+	binmode(OUT);
 	foreach (sort keys %TRANSLATED)
 	{
-		print OUT "$TEMPLATE{$_}\n";
-		print OUT "$_\n";
-		print OUT "$TRANSLATED{$_}\n\n";
+		print OUT "$TEMPLATE{$_}$CRLF";
+		print OUT "$_$CRLF";
+		print OUT "$TRANSLATED{$_}$CRLF$CRLF";
 	}
 	foreach (sort keys %TEMPLATE)
 	{
 		next if $TRANSLATED{$_} ne '';
 
-		print OUT "$TEMPLATE{$_}\n";
-		print OUT "$_\n\n\n";
+		print OUT "$TEMPLATE{$_}$CRLF";
+		print OUT "$_$CRLF$CRLF$CRLF";
 	}
 	close (OUT);
 
