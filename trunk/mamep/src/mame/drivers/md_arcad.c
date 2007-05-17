@@ -34,7 +34,7 @@ DRIVER_INIT( topshoot )
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400004, 0x400005, 0, 0, topshoot_unk_r);
 //	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0xa10000, 0xa1001f, 0, 0, topshoot_unk_r);
 
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 }
 
 

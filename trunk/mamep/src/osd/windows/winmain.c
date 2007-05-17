@@ -33,6 +33,7 @@
 #include "config.h"
 #include "osdepend.h"
 #include "strconv.h"
+#include "winutf8.h"
 #include "winutil.h"
 #include "osd_so.h"
 

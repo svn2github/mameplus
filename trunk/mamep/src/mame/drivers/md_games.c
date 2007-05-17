@@ -6795,26 +6795,26 @@ void init_backupram(int backupram_base, int length)
 
 DRIVER_INIT( g_hb95 )
 {
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 	init_backupram(0x300000,0x10000);
 }
 
 DRIVER_INIT( g_dino )
 {
-	init_megadrie(machine);
+	driver_init_megadrie(machine);
 	init_backupram(0x200000,0x2000);
 }
 
 DRIVER_INIT( g_buck )
 {
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 	init_backupram(0x200000,0x10000);
 }
 
 
 DRIVER_INIT( g_nh98 )
 {
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 	init_backupram(0x200000,0x10000);
 }
 
@@ -6822,19 +6822,19 @@ DRIVER_INIT( g_nh98 )
 
 DRIVER_INIT( g_wrom2 )
 {
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 	init_backupram(0x200000,0x2000);
 }
 
 DRIVER_INIT( g_caeno2 )
 {
-	init_megadrij(machine);
+	driver_init_megadrij(machine);
 	init_backupram(0x200000,0x2000);
 }
 
 DRIVER_INIT( megadriv_backup_0x200000_0x800 )
 {
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 	init_backupram(0x200000,0x800);
 }
 
@@ -6842,7 +6842,7 @@ DRIVER_INIT( megadriv_backup_0x200000_0x800 )
 
 DRIVER_INIT( megadrie_backup_0x200000_0x4000 )
 {
-	init_megadrie(machine);
+	driver_init_megadrie(machine);
 	init_backupram(0x200000,0x4000);
 }
 
@@ -6850,32 +6850,32 @@ DRIVER_INIT( megadrie_backup_0x200000_0x4000 )
 
 DRIVER_INIT( megadriv_backup_0x200000_0x4000 )
 {
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 	init_backupram(0x200000,0x4000);
 }
 
 DRIVER_INIT( megadrij_backup_0x200000_0x4000 )
 {
-	init_megadrij(machine);
+	driver_init_megadrij(machine);
 	init_backupram(0x200000,0x4000);
 }
 
 
 DRIVER_INIT( megadriv_backup_0x200000_0x10000 )
 {
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 	init_backupram(0x200000,0x10000);
 }
 
 DRIVER_INIT( megadrie_backup_0x200000_0x10000 )
 {
-	init_megadrie(machine);
+	driver_init_megadrie(machine);
 	init_backupram(0x200000,0x10000);
 }
 
 DRIVER_INIT( megadrij_backup_0x200000_0x10000 )
 {
-	init_megadrij(machine);
+	driver_init_megadrij(machine);
 	init_backupram(0x200000,0x10000);
 }
 
@@ -6937,37 +6937,37 @@ void init_sks3_backupram(int backupram_base, int length)
 
 DRIVER_INIT( g_sks3 )
 {
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 	init_sks3_backupram(0x200000,0x400);
 }
 
 DRIVER_INIT( g_sks3e)
 {
-	init_megadrie(machine);
+	driver_init_megadrie(machine);
 	init_sks3_backupram(0x200000,0x400);
 }
 
 DRIVER_INIT( g_sks3j )
 {
-	init_megadrij(machine);
+	driver_init_megadrij(machine);
 	init_sks3_backupram(0x200000,0x400);
 }
 
 DRIVER_INIT( g_pst4 )
 {
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 	init_sks3_backupram(0x200000,0x4000);
 }
 
 DRIVER_INIT( g_pst4j )
 {
-	init_megadrij(machine);
+	driver_init_megadrij(machine);
 	init_sks3_backupram(0x200000,0x4000);
 }
 
 DRIVER_INIT( g_gameno )
 {
-	init_megadrij(machine);
+	driver_init_megadrij(machine);
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x000000, 0x3fffff, 0, 0, MRA16_BANK5);
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x000000, 0x3fffff, 0, 0, MWA16_BANK5);
 
@@ -6981,7 +6981,7 @@ DRIVER_INIT( _32x )
 {
 	memory_set_bankptr( 2, memory_region( REGION_USER1 ) );
 	memory_set_bankptr( 4, memory_region( REGION_USER1 ) );
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 }
 
 
@@ -7025,7 +7025,7 @@ DRIVER_INIT( g_ssf2 )
 	UINT8 *ROM = memory_region(REGION_CPU1);
 	memcpy(ROM + 0x00000, ROM + 0x400000, 0x400000); /* copy 1st 4meg (it checksums this before writing bank regs)*/
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0xA130F0, 0xA130FF, 0, 0, megadriv_ssf2_bank_w);
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 }
 
 DRIVER_INIT( g_ssf2e )
@@ -7033,7 +7033,7 @@ DRIVER_INIT( g_ssf2e )
 	UINT8 *ROM = memory_region(REGION_CPU1);
 	memcpy(ROM + 0x00000, ROM + 0x400000, 0x400000); /* copy 1st 4meg (it checksums this before writing bank regs)*/
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0xA130F0, 0xA130FF, 0, 0, megadriv_ssf2_bank_w);
-	init_megadrie(machine);
+	driver_init_megadrie(machine);
 }
 
 DRIVER_INIT( g_ssf2j )
@@ -7041,7 +7041,7 @@ DRIVER_INIT( g_ssf2j )
 	UINT8 *ROM = memory_region(REGION_CPU1);
 	memcpy(ROM + 0x00000, ROM + 0x400000, 0x400000); /* copy 1st 4meg (it checksums this before writing bank regs)*/
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0xA130F0, 0xA130FF, 0, 0, megadriv_ssf2_bank_w);
-	init_megadrij(machine);
+	driver_init_megadrij(machine);
 }
 
 
@@ -7058,13 +7058,13 @@ READ16_HANDLER( radicav1_bank_select )
 DRIVER_INIT( radicav1 )
 {
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0xa13000, 0xa1307f, 0, 0, radicav1_bank_select );
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 }
 
 DRIVER_INIT( radicasf )
 {
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0xa13000, 0xa1307f, 0, 0, radicav1_bank_select );
-	init_megadrie(machine);
+	driver_init_megadrie(machine);
 }
 
 
@@ -7093,7 +7093,7 @@ DRIVER_INIT( g_virrac )
 
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x30fe02, 0x30fe03, 0, 0, virrac_status_r );
 
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 
 
 }

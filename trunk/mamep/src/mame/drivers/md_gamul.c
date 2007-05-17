@@ -129,7 +129,7 @@ DRIVER_INIT( g_l3alt )
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x600000, 0x6fffff, 0, 0, g_l3alt_prot_r );
 
 
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 
 }
 
@@ -148,7 +148,7 @@ DRIVER_INIT( g_kaiju )
 	// 00770076
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x700000, 0x7fffff, 0, 0, g_kaiju_bank_w );
 
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 }
 
 /* Top Fighter - there is more to this.. No display at startup etc.. */
@@ -249,7 +249,7 @@ DRIVER_INIT( g_topfig )
 
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x700000, 0x7fffff, 0, 0, g_topfig_bank_w );
 
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 
 
 }
@@ -359,7 +359,7 @@ DRIVER_INIT( g_chifi3 )
 	UINT8 *ROM = memory_region(REGION_CPU1);
 	memcpy(ROM + 0x00000, ROM + 0x400000, 0x400000); /* default rom */
 
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400000, 0x4fffff, 0, 0, g_chifi3_prot_r );
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x600000, 0x6fffff, 0, 0, g_chifi3_bank_w );
@@ -381,7 +381,7 @@ WRITE16_HANDLER( squirrel_king_extra_w )
 
 DRIVER_INIT( g_squi )
 {
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400000, 0x400007, 0, 0, squirrel_king_extra_r);
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400000, 0x400007, 0, 0, squirrel_king_extra_w);
@@ -404,7 +404,7 @@ READ16_HANDLER( bugl_extra_r )
 
 DRIVER_INIT( g_sbub )
 {
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400000, 0x400001, 0, 0, sbub_extra1_r);
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400002, 0x400003, 0, 0, sbub_extra2_r);
@@ -423,7 +423,7 @@ READ16_HANDLER( rx3_extra_r )
 
 DRIVER_INIT( g_smb2 )
 {
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0xA13000, 0xA13001, 0, 0, smb2_extra_r);
 
@@ -431,13 +431,13 @@ DRIVER_INIT( g_smb2 )
 
 DRIVER_INIT( g_bugl )
 {
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0xA13000, 0xA13001, 0, 0, bugl_extra_r);
 }
 
 DRIVER_INIT( g_rx3 )
 {
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0xA13000, 0xA13001, 0, 0, rx3_extra_r);
 }
 
@@ -456,7 +456,7 @@ DRIVER_INIT( g_12i1 )
 	memcpy(ROM + 0x00000, ROM + 0x400000, 0x400000); /* default rom */
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0xA13000, 0xA1303f, 0, 0, g_12i1_bank_w);
 
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 }
 
 
@@ -526,7 +526,7 @@ DRIVER_INIT( g_dte )
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x402000, 0x402001, 0, 0, realtec_402000_w);
 	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x404000, 0x404001, 0, 0, realtec_404000_w);
 
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 }
 
 UINT16 lion2_prot1_data, lion2_prot2_data;
@@ -558,7 +558,7 @@ DRIVER_INIT( g_lionk2 )
 	memory_install_write16_handler(0,ADDRESS_SPACE_PROGRAM, 0x400004, 0x400005, 0, 0, lion2_prot2_w );
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400006, 0x400007, 0, 0, lion2_prot2_r );
 
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 
 }
 
@@ -593,7 +593,7 @@ DRIVER_INIT( g_elfwor )
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400002, 0x400003, 0, 0, elfwor_0x400002_r );
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400006, 0x400007, 0, 0, elfwor_0x400006_r );
 
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 }
 
 
@@ -612,7 +612,7 @@ DRIVER_INIT( g_mjlovr )
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400000, 0x400001, 0, 0, mjlovr_prot_1_r );
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x401000, 0x401001, 0, 0, mjlovr_prot_2_r );
 
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 }
 
 READ16_HANDLER( smbro_prot_r )
@@ -624,7 +624,7 @@ DRIVER_INIT( g_smbro )
 {
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0xa13000, 0xa13001, 0, 0, smbro_prot_r );
 
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 
 }
 
@@ -655,7 +655,7 @@ DRIVER_INIT( g_pockm )
 	ROM[0x0dd49c/2] = 0x6002;
 
 
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 
 }
 
@@ -677,7 +677,7 @@ DRIVER_INIT( g_pockm2 )
 	ROM[0x7E300/2] = 0x60FE;
 
 
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 
 }
 
@@ -695,7 +695,7 @@ DRIVER_INIT( g_mulan )
 
 	ROM[0x06036/2] = 0xE000;
 
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 }
 
 
@@ -732,7 +732,7 @@ DRIVER_INIT( g_kof98 )
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x4a8820, 0x4a8821, 0, 0, g_kof98_0a_r );
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x4f8820, 0x4f8821, 0, 0, g_kof98_00_r );
 
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 }
 
 
@@ -753,7 +753,7 @@ READ16_HANDLER( smous_prot_r )
 DRIVER_INIT( g_smous )
 {
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400000, 0x400007, 0, 0, smous_prot_r );
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 }
 
 
@@ -782,7 +782,7 @@ DRIVER_INIT( g_kof99 )
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0xA1303e, 0xA1303f, 0, 0, kof99_00A1303E_r );
 
 
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 
 }
 
@@ -818,7 +818,7 @@ DRIVER_INIT( g_soulb )
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400004, 0x400005, 0, 0, soulb_0x400004_r );
 
 
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 
 }
 
@@ -1251,7 +1251,7 @@ DRIVER_INIT( g_redclf )
 	}
 	memcpy(ROM + 0x00000, ROM + 0x400004, 0x200000); /* default rom */
 
-	init_megadriv(machine);
+	driver_init_megadriv(machine);
 
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400000, 0x400001, 0, 0, redclif_prot2_r );
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400004, 0x400005, 0, 0, redclif_prot_r );

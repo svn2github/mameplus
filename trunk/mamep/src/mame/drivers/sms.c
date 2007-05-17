@@ -3522,7 +3522,7 @@ static DRIVER_INIT( standagg )
 
 static DRIVER_INIT( gg_popil )
 {
-	init_standagg(machine);
+	driver_init_standagg(machine);
 	smsgg_backupram = auto_malloc(0x2000);
 	memset(smsgg_backupram, 0xff, 0x2000);
 }

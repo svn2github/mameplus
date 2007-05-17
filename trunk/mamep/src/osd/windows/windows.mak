@@ -259,6 +259,7 @@ OSDCOREOBJS = \
 	$(WINOBJ)/winmisc.o \
 	$(WINOBJ)/winsync.o \
 	$(WINOBJ)/wintime.o \
+	$(WINOBJ)/winutf8.o \
 	$(WINOBJ)/winutil.o \
 	$(WINOBJ)/winwork.o \
 
