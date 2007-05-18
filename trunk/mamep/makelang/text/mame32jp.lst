@@ -1076,6 +1076,7 @@ gorfpgm1	ゴーフ (program 1)	ごーふ	Midway
 robby	ロビーロト	ろびーろと	Bally Midway
 demndrgn	デーモンズ&ドラゴンズ (prototype)	でーもんずあんどどらごんず	Bally Midway
 profpac	プロフェッサーパックマン	ぷろふぇっさーぱっくまん	Bally Midway
+tenpindx	テンピンデラックス	てんぴんでらっくす	Bally Midway
 solarfox	ソーラーフォックス (upright)	そーらーふぉっくす	Bally Midway
 kick	キックマン (upright)	きっくまん	Midway
 kicka	キックマン (cocktail)	きっくまん	Midway
@@ -3486,7 +3487,8 @@ lastmsno	ラストミッション (USA版 rev 5)	らすとみっしょん	Data East USA
 lastmsnj	ラストミッション (日本版)	らすとみっしょん	Data East Corporation
 shackled	ブレイウッド / Shackled (USA版)	ぶれいうっど	Data East USA
 breywood	ブレイウッド (日本版 rev 2)	ぶれいうっど	Data East Corporation
-csilver	キャプテンシルバー (日本版)	きゃぷてんしるばー	Data East Corporation
+csilver	キャプテンシルバー (海外版)	きゃぷてんしるばー	Data East Corporation
+csilverj	キャプテンシルバー (日本版)	きゃぷてんしるばー	Data East Corporation
 ghostb	迷宮ハンターG / Real Ghost Busters (USA版 2 players)	めいきゅうはんたーじー	Data East USA
 ghostb3	迷宮ハンターG / Real Ghost Busters (USA版 3 players)	めいきゅうはんたーじー	Data East USA
 meikyuh	迷宮ハンターG (日本版 set 1)	めいきゅうはんたーじー	Data East Corporation
@@ -6229,6 +6231,11 @@ quickjac	クイックジャック	くいっくじゃっく	ADP
 skattv	スカットTV	すかっとてぃーびー	ADP
 skattva	スカットTV (ver TS3)	すかっとてぃーびー	ADP
 fashiong	ファッションギャンブラー	ふぁっしょんぎゃんぶらー	ADP
+cluedo	クルード (prod 2D)	くるーど	JPM
+cluedo2c	クルード (prod 2C)	くるーど	JPM
+trivialp	トリビアルパースート (prod 1D)	とりびあるぱーすーと	JPM
+scrabble	スクラブル (rev F)	すくらぶる	JPM
+hngmnjpm	ハングマン (JPM)	はんぐまん	JPM
 astinvad	カミカゼ / Astro Invader	かみかぜ	Stern
 kosmokil	カミカゼ / Kosmo Killer	かみかぜ	bootleg
 kamikaze	カミカゼ	かみかぜ	Leijac
@@ -6592,7 +6599,7 @@ sexyboom	セクシーブーン	せくしーぶーん	Sang Ho Soft
 sfkick	スーパーフリーキック	すーぱーふりーきっく	HEC
 spinkick	スピンキック	すぴんきっく	HEC
 7mezzo	セッテ エ メッツォ	せってえめっつぉ	Unknown
-magicfly	マジックフライ (ver 0.3)	まじっくふらい	P&amp;A Games
+magicfly	マジックフライ	まじっくふらい	P&amp;A Games
 dynabomb	ダイナマイトボンバー (韓国版 rev 1.5)	だいなまいとぼんばー	Limenko
 legendoh	レジェンドオブヒーローズ	れじぇんどおぶひーろーず	Limenko
 sb2003	スーパーバブル2003 (海外版 ver 1.0)	すーぱーばぶる2003	Limenko
