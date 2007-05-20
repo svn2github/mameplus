@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.114u4      #
+#      Mameinfo.dat日本語版 v0.115       #
 #                                        #
-#              May 6, 2007               #
+#              May 14, 2007              #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,112 +12,25 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：869 翻訳済：852
-# 追加項目：338 合計：1207
+# Tester報告：881 翻訳済：868
+# 追加項目：339 合計：1220
 #
 
 
-$info=gng
+$info=oigas
 $mame
-[情報]
-
-- コンティニューするには、コインを入れてショットボタンを押しながらスタートキー（1キー）押す。
-
-
 [バグ]
 
-- BGMのテンポがゲームの負荷によって変わってしまう。1943では連射するとBGMが遅くなる。他のゲームも同様。
-
-0.111u5でZ80のIRQが書き直されてから発生。 ym2203slowdown0114u2gre, Augusto / Machone
+- キーボードでパドル操作する場合、右キーを押すとボールと同じX軸の位置にジャンプする。
+右キーを押しっぱなしにすれば、ボールが落ちることはない。 oigas0115gra, Tafoid
 
 $end
 
-$info=commando
-$mame
-[情報]
-
-- 起動メッセージ表示中に、発射ボタンを押すとテスト画面に入れる。
-
-
-[バグ]
-
-- BGMのテンポがゲームの負荷によって変わってしまう。1943では連射するとBGMが遅くなる。他のゲームも同様。
-
-0.111u5でZ80のIRQが書き直されてから発生。 ym2203slowdown0114u2gre, Augusto / Machone
-
-$end
-
-$info=gunsmoke
+$info=nekkyoku
 $mame
 [バグ]
 
-- BGMのテンポがゲームの負荷によって変わってしまう。1943では連射するとBGMが遅くなる。他のゲームも同様。
-
-0.111u5でZ80のIRQが書き直されてから発生。 ym2203slowdown0114u2gre, Augusto / Machone
-
-$end
-
-$info=1943
-$mame
-[情報]
-
-- テストメニューの4～7番目の項目にアクセスするには、5キーを押しながらリセットする。
-
-
-[バグ]
-
-- BGMのテンポがゲームの負荷によって変わってしまう。1943では連射するとBGMが遅くなる。他のゲームも同様。
-
-0.111u5でZ80のIRQが書き直されてから発生。 ym2203slowdown0114u2gre, Augusto / Machone
-
-
-[TIPS]
-
-- 面開始時の武器選択コマンド：
-
-1面…1P下＋2P A（小ショットガン）
-
-2面…1P A＋2P B（大ショットガン）
-
-3面…1P右上＋AB＋2P下＋B（レーザー）
-
-4面…1P左下＋B＋2P左上（大ショットガン）
-
-5面…1P A＋2P上（3ウェイ）
-
-
-6面…1P左＋2P右＋B（オート）
-
-7面…1P左上＋2P下（シェル）
-
-8面…1P左＋AB＋2P AB（3ウェイ）
-
-9面…1P左下＋AB＋2P右下＋AB（レーザー）
-
-10面…1P上＋B＋2P右下（シェル）
-
-
-11面…1P左上＋2P右＋A（オート）
-
-12面…1P右＋AB＋2P右上＋AB（3ウェイ）
-
-13面…1P上＋2P下（オート）
-
-14面…1P左上＋AB＋2P右＋AB（レーザー）
-
-15面…1P右下＋A＋2P左下＋A（シェル）
-
-16面…1P右＋A＋2P右上＋A（オート）
-
-$end
-
-$info=sidearms
-$mame
-[バグ]
-
-- BGMのテンポがゲームの負荷によって変わってしまう。1943では連射するとBGMが遅くなる。他のゲームも同様。
-
-0.111u5でZ80のIRQが書き直されてから発生。 ym2203slowdown0114u2gre, Augusto / Machone
+- 起動時にクラッシュする。 nekkyoku0115red, Firewave / Justin Kerk
 
 $end
 
@@ -129,42 +42,125 @@ $mame
 
 $end
 
-$info=kdeadeye
+$info=slikshot
 $mame
 [バグ]
 
-- デバッグビルドでクラッシュする。GAME_NOT_WORKINGフラグはついているが、以前はクラッシュしなかった。 konamigv0114u2red, Firewave
+- MAMEの照準表示が更新されてから、照準が表示されなくなった。 slikshot0115gra, maddog77
 
 $end
 
-$info=btchamp
+$info=missile
 $mame
 [バグ]
 
-- デバッグビルドでクラッシュする。GAME_NOT_WORKINGフラグはついているが、以前はクラッシュしなかった。 konamigv0114u2red, Firewave
+- グラフィック表示がかなりおかしくなっている。 missile0115yel, John IV / Twisty
 
 $end
 
-$info=term2
+$info=finalapr
 $mame
 [バグ]
 
-- 撃っても敵に当たらない。 term2_0114u4yel, CokeDealer
-
-
-- アイテム箱から出てくる武器冷やし器や、再チャージの動作が速すぎる。
-実機では3～4秒かかる。 term2056ora, dwidel
-
-
-- スカイネットを破壊した後の画像が左右反転している。前からあったバグ。 term2054gre, BSR
+- 道路部分のグラフィックが緑色になっている。 finalapr0115gre, hotgraphics
 
 $end
 
-$info=rfjetus
+$info=nss_smw
 $mame
 [バグ]
 
-- デバッグビルドでクラッシュする。 rfjetus0114u2red, Firewave
+- プログラムROM(IC1)のサイズは、正確には今の半分(4Mbit)。 nss_smw0115ora, Heihachi_73 / The Guru
+
+$end
+
+$info=punchout
+$mame
+[バグ]
+
+- サウンドチャンネルが一つ鳴らなくなっている。 punchout0115gre, MARBIN
+
+
+- 実機ではタイトルロゴやテキストの色が上下で違う。 spnchout0102u2gre, MaximRecoil / Red Raphael
+
+
+- 上モニターのIDカードと下モニターのキャラクタの髪の色は同じになる。 punchout0107u3gre, Kold666
+
+$end
+
+$info=spnchout
+$mame
+[バグ]
+
+- サウンドチャンネルが一つ鳴らなくなっている。 punchout0115gre, MARBIN
+
+
+- 実機ではタイトルロゴやテキストの色が上下で違う。 spnchout0102u2gre, MaximRecoil / Red Raphael
+
+
+- Dragon Chanのキックの効果音が実機と異なる。
+最後の音は風切り音にならないといけない。 spnchout0106u10gre, MaximRecoil
+
+$end
+
+$info=armwrest
+$mame
+[バグ]
+
+- サウンドチャンネルが一つ鳴らなくなっている。 punchout0115gre, MARBIN
+
+
+- 最初のボーナス面でグラフィック化けあり。また、5面と9面の後のボーナス面では、お金の袋が表示されずプレイできない。 armwrest35b9yel, Sardius / BSR / Karasu
+
+
+- DIPスイッチ情報。
+本家参照。 armwrest37b14gra, stephh
+
+$end
+
+$info=scregg
+$mame
+[バグ]
+
+- ROMロード後にクラッシュする。0.114u4で、6502CPUの変更があってから起こるようになった。 scregg0115red, Firewave / Tafoid
+
+$end
+
+$info=eggs
+$mame
+[バグ]
+
+- ROMロード後にクラッシュする。0.114u4で、6502CPUの変更があってから起こるようになった。 scregg0115red, Firewave / Tafoid
+
+$end
+
+$info=dommy
+$mame
+[バグ]
+
+- ROMロード後にクラッシュする。0.114u4で、6502CPUの変更があってから起こるようになった。 scregg0115red, Firewave / Tafoid
+
+$end
+
+$info=rockduck
+$mame
+[バグ]
+
+- ROMロード後にクラッシュする。0.114u4で、6502CPUの変更があってから起こるようになった。 scregg0115red, Firewave / Tafoid
+
+$end
+
+$info=brival
+$mame
+[バグ]
+
+- ランダムにクラッシュする。再現方法：
+
+1) Shingenでプレイ
+
+2) Mr. Chinを倒す
+
+3) Asukaの面の前でクラッシュする brival0115red, J.J.Boy / twisty
 
 $end
 
@@ -568,29 +564,6 @@ $mame
 
 $end
 
-$info=area51
-$mame
-[バグ]
-
-- cojag.cバグ
-
-area51はリセット時にクラッシュ。またmaxforceはリセット時にエラー。 cojagc062red, luigi30 / Oxygen / Smitdogg
-
-
-- 言語設定オプションが動作していない。 area51083yel, El Condor / Luigi30
-
-$end
-
-$info=maxforce
-$mame
-[バグ]
-
-- cojag.cバグ
-
-area51はリセット時にクラッシュ。またmaxforceはリセット時にエラー。 cojagc062red, luigi30 / Oxygen / Smitdogg
-
-$end
-
 $info=combasc
 $mame
 [バグ]
@@ -923,14 +896,6 @@ $mame
 
 $end
 
-$info=diverboy
-$mame
-[バグ]
-
-- 音にプチノイズが入る。 diverboy0102gre, qapo
-
-$end
-
 $info=dkong
 $mame
 [バグ]
@@ -1061,14 +1026,6 @@ EPROMはそれぞれ違うがPROMは同一。（MAMEでは同一のPROMを読み
 
 $end
 
-$info=ertictac
-$mame
-[バグ]
-
-- 起動時にクラッシュする。0.111では動作する。 ertictac0111u4red, Tafoid
-
-$end
-
 $info=exerion
 $mame
 [バグ]
@@ -1087,15 +1044,6 @@ $mame
 [バグ]
 
 - 斜めに飛んでる間、タカが点滅か完全に消えてしまう。 mtrap37b14gre, Kurushimi
-
-$end
-
-$info=topsecex
-$mame
-[バグ]
-
-- 画面の下部分のスクロールがおかしい。
-画面の上部分に表示されるはずの情報もそこに表示されている。 topsecex37b5gre, YMI / TriggerFin / Pi
 
 $end
 
@@ -2180,20 +2128,6 @@ $mame
 
 $end
 
-$info=mhavoc
-$mame
-[バグ]
-
-- ソース書き直しから、3面の緑色のベクターが正しく表示されず、かわりに紫→白→赤→青→紫の順に点滅する。 mhavoc0111u4gre, ArcadeDude
-
-
-- mhavoc.c全ゲーム：
-
-グラフィックの表示位置が違っているものがある。
-このバグ自体は新しいものではない。 mhavoc057gre, Smitdogg
-
-$end
-
 $info=jdreddp
 $mame
 [バグ]
@@ -2325,6 +2259,24 @@ $mame
 
 
 - ファイナル版でプレイしたが、常にノイズが入っている。 DACサウンドの問題だと思われる。 narc36finalgre, Lord Caos / Suppi-Chan
+
+$end
+
+$info=term2
+$mame
+[バグ]
+
+- テストモードで、カーソルを上下に移動したときの右の説明が部分が正しく描画されない。 term20103u4gre, cpukett
+
+
+- テストモードで画面反転の設定をしても文字が左右に反転するだけ。 term20104u2gre, Luigi30
+
+
+- アイテム箱から出てくる武器冷やし器や、再チャージの動作が速すぎる。
+実機では3～4秒かかる。 term2056ora, dwidel
+
+
+- スカイネットを破壊した後の画像が左右反転している。前からあったバグ。 term2054gre, BSR
 
 $end
 
@@ -2970,25 +2922,6 @@ $mame
 
 $end
 
-$info=powerins
-$mame
-[バグ]
-
-- キャラクタ選択のBGMが鳴らない。また、対戦した後では、ワールドマップやVS画面の音がならなくなる。 powerins0114yel, Kin
-
-
-[TIPS]
-
-- 拡張サービスモードの入り方：
-
-1) 1Pと2Pの全キーと1Pと2Pのスタートを押して起動(リセット)
-
-2) 2Pボタン3+2PスタートかF2キーを押す
-
-(from オン氏)
-
-$end
-
 $info=btlkroad
 $mame
 [情報]
@@ -3056,41 +2989,6 @@ $mame
 81610：全データ消去
 
 12345：ハイスコア消去
-
-$end
-
-$info=armwrest
-$mame
-[バグ]
-
-- 最初のボーナス面でグラフィック化けあり。また、5面と9面の後のボーナス面では、お金の袋が表示されずプレイできない。 armwrest35b9yel, Sardius / BSR / Karasu
-
-
-- DIPスイッチ情報。
-本家参照。 armwrest37b14gra, stephh
-
-$end
-
-$info=spnchout
-$mame
-[バグ]
-
-- 実機ではタイトルロゴやテキストの色が上下で違う。 spnchout0102u2gre, MaximRecoil / Red Raphael
-
-
-- Dragon Chanのキックの効果音が実機と異なる。
-最後の音は風切り音にならないといけない。 spnchout0106u10gre, MaximRecoil
-
-$end
-
-$info=punchout
-$mame
-[バグ]
-
-- 実機ではタイトルロゴやテキストの色が上下で違う。 spnchout0102u2gre, MaximRecoil / Red Raphael
-
-
-- 上モニターのIDカードと下モニターのキャラクタの髪の色は同じになる。 punchout0107u3gre, Kold666
 
 $end
 
@@ -3323,12 +3221,18 @@ $mame
 
 $end
 
-$info=zektor
+$info=columns2
 $mame
 [バグ]
 
-- クローン版のいくつかでボイスの速度が速すぎで音程も高い。 segac076u1gre, Bugfinder
+- GAME OVERの文字が落ちてくるときに、
+フィールド右下部分に化けが出る。 columns237b10gre, Das/ TriggerFin
 
+$end
+
+$info=zektor
+$mame
+[バグ]
 
 - カクテルモードは正常に動作しない。
 また2プレイヤーはスコア表示のところまで飛んでしまう。 zektor36finalgre, Frotz
@@ -3336,23 +3240,6 @@ $mame
 
 - プレイヤー2の操作が分かれていない。
 そのため、プレイヤー1の操作でプレイしなければいけない。 zektor055gra, Karasu
-
-$end
-
-$info=spacfury
-$mame
-[バグ]
-
-- クローン版のいくつかでボイスの速度が速すぎで音程も高い。 segac076u1gre, Bugfinder
-
-$end
-
-$info=columns2
-$mame
-[バグ]
-
-- GAME OVERの文字が落ちてくるときに、
-フィールド右下部分に化けが出る。 columns237b10gre, Das/ TriggerFin
 
 $end
 
@@ -4997,19 +4884,6 @@ $mame
 
 $end
 
-$info=sinistar
-$mame
-[情報]
-
-- 初回起動時に、"factory setting restored"と表示されるので、F2キーを押して進む。
-
-
-[バグ]
-
-- オープニング、スタートアップなどのBGMがかからない。 sinistar099u2gre, Trebor
-
-$end
-
 $info=stinger
 $mame
 [バグ]
@@ -6105,6 +5979,14 @@ CPU0を135%に設定するとこれらは解決する。実機との比較が必
 
 $end
 
+$info=area51
+$mame
+[バグ]
+
+- 言語設定オプションが動作していない。 area51083yel, El Condor / Luigi30
+
+$end
+
 $info=contrab
 $mame
 [バグ]
@@ -6377,6 +6259,17 @@ $mame
 
 - テストモード内の「Player Inputs」の「Oil　Slick
 」ボタンを押すと、アートワークの「Missile」ランプが点灯する。逆に「Missile」を押すと「Oil Slick」のランプがつく。 spyhut061gre, Nerox91
+
+$end
+
+$info=mhavoc
+$mame
+[バグ]
+
+- mhavoc.c全ゲーム：
+
+グラフィックの表示位置が違っているものがある。
+このバグ自体は新しいものではない。 mhavoc057gre, Smitdogg
 
 $end
 
@@ -6998,6 +6891,53 @@ $mame
 
 $end
 
+$info=1943
+$mame
+[情報]
+
+- テストメニューの4～7番目の項目にアクセスするには、5キーを押しながらリセットする。
+
+
+[TIPS]
+
+- 面開始時の武器選択コマンド：
+
+1面…1P下＋2P A（小ショットガン）
+
+2面…1P A＋2P B（大ショットガン）
+
+3面…1P右上＋AB＋2P下＋B（レーザー）
+
+4面…1P左下＋B＋2P左上（大ショットガン）
+
+5面…1P A＋2P上（3ウェイ）
+
+
+6面…1P左＋2P右＋B（オート）
+
+7面…1P左上＋2P下（シェル）
+
+8面…1P左＋AB＋2P AB（3ウェイ）
+
+9面…1P左下＋AB＋2P右下＋AB（レーザー）
+
+10面…1P上＋B＋2P右下（シェル）
+
+
+11面…1P左上＋2P右＋A（オート）
+
+12面…1P右＋AB＋2P右上＋AB（3ウェイ）
+
+13面…1P上＋2P下（オート）
+
+14面…1P左上＋AB＋2P右＋AB（レーザー）
+
+15面…1P右下＋A＋2P左下＋A（シェル）
+
+16面…1P右＋A＋2P右上＋A（オート）
+
+$end
+
 $info=alibaba
 $mame
 [情報]
@@ -7231,6 +7171,14 @@ $mame
 
 $end
 
+$info=commando
+$mame
+[情報]
+
+- 起動メッセージ表示中に、発射ボタンを押すとテスト画面に入れる。
+
+$end
+
 $info=cracksht
 $mame
 [情報]
@@ -7340,7 +7288,7 @@ $info=ejanhs
 $mame
 [情報]
 
-- 初回起動時、フラッシュROMの更新に5分くらいかかる。
+- 初回起動時、フラッシュROMの更新に数分かかる。
 
 $end
 
@@ -7447,6 +7395,14 @@ $mame
 
 
 - 背景と比べるとスプライトの描画が1フレームずれる。
+
+$end
+
+$info=gng
+$mame
+[情報]
+
+- コンティニューするには、コインを入れてショットボタンを押しながらスタートキー（1キー）押す。
 
 $end
 
@@ -7881,7 +7837,7 @@ $info=rdft
 $mame
 [情報]
 
-- 初回起動時、フラッシュROMの更新に5分くらいかかる。
+- 初回起動時、フラッシュROMの更新に数分かかる。
 
 
 - スレイブを出すにはテストモードに入り、ADJUST TIMER→SET TO MEMORYを選ぶ。
@@ -7892,7 +7848,7 @@ $info=rdft2
 $mame
 [情報]
 
-- 初回起動時、フラッシュROMの更新に5分くらいかかる。
+- 初回起動時、フラッシュROMの更新に数分かかる。
 
 $end
 
@@ -7900,7 +7856,7 @@ $info=rfjet
 $mame
 [情報]
 
-- 初回起動時、フラッシュROMの更新に5分くらいかかる。
+- 初回起動時、フラッシュROMの更新に数分かかる。
 
 $end
 
@@ -7968,7 +7924,7 @@ $info=senkyu
 $mame
 [情報]
 
-- 初回起動時、フラッシュROMの更新に5分くらいかかる。
+- 初回起動時、フラッシュROMの更新に数分かかる。
 
 $end
 
@@ -7994,6 +7950,14 @@ $mame
 [情報]
 
 - EEPROMをリセットするには、起動直後にF2キーを押し続ける。
+
+$end
+
+$info=sinistar
+$mame
+[情報]
+
+- 初回起動時に、"factory setting restored"と表示されるので、F2キーを押して進む。
 
 $end
 
@@ -8217,7 +8181,7 @@ $info=viprp1
 $mame
 [情報]
 
-- 初回起動時、フラッシュROMの更新に5分くらいかかる。
+- 初回起動時、フラッシュROMの更新に数分かかる。
 
 $end
 
@@ -8226,6 +8190,14 @@ $mame
 [情報]
 
 - 起動するにはF2キーでサービスモードに入り、“System Assignment”内の“Cabinet Type”を1Pに設定する。
+
+$end
+
+$info=whitch
+$mame
+[情報]
+
+-
 
 $end
 
@@ -9238,6 +9210,20 @@ $mame
 2) 1Pスタートx3　サービス　1Pスタート
 
 (by Mhk)
+
+$end
+
+$info=powerins
+$mame
+[TIPS]
+
+- 拡張サービスモードの入り方：
+
+1) 1Pと2Pの全キーと1Pと2Pのスタートを押して起動(リセット)
+
+2) 2Pボタン3+2PスタートかF2キーを押す
+
+(from オン氏)
 
 $end
 
