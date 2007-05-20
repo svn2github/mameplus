@@ -3143,7 +3143,10 @@ static void SetPropEnabledControls(HWND hWnd)
 	/* Joystick options */
 	hCtrl = GetDlgItem(hWnd, IDC_JOYSTICK);
 
-	joystick_attached = Button_GetCheck(hCtrl);
+	if (hCtrl)
+		joystick_attached = Button_GetCheck(hCtrl);
+	else
+		joystick_attached = pGameOpts->joystick;
 
 	EnableWindow(GetDlgItem(hWnd, IDC_JDZTEXT),                joystick_attached);
 	EnableWindow(GetDlgItem(hWnd, IDC_JDZDISP),                joystick_attached);
@@ -3154,7 +3157,7 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_ANALOG_AXES),	           joystick_attached);
 	EnableWindow(GetDlgItem(hWnd, IDC_ANALOG_AXES_TEXT),       joystick_attached);
 #ifdef JOYSTICK_ID
-	if (Button_GetCheck(GetDlgItem(hWnd, IDC_JOYSTICK)) && DIJoystick.Available())
+	if (joystick_attached && DIJoystick.Available())
 	{
 		EnableWindow(GetDlgItem(hWnd, IDC_JOYIDTEXT),  TRUE);
 
