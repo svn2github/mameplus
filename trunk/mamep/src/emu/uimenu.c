@@ -1890,7 +1890,18 @@ static UINT32 menu_document_contents(UINT32 state)
 
 	/* draw the text */
 	if (bufptr)
-		ui_draw_message_window(bufptr);
+	{
+		switch (dattype)
+		{
+		//case UI_mameinfo:
+		//case UI_drivinfo:
+		case UI_statistics:
+			ui_draw_message_window_fixed_width(bufptr);
+			break;
+		default:
+			ui_draw_message_window(bufptr);
+		}
+	}
 	else
 	{
 		char msg[120];

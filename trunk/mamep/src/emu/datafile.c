@@ -1569,9 +1569,10 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 			for (chunk = rom_first_chunk(rom); chunk; chunk = rom_next_chunk(chunk))
 				length += ROM_GETLENGTH(chunk);
 
-			sprintf(name," %-12s ",ROM_GETNAME(rom));
-			strcat(buffer, name);
-			sprintf(name,"%6x ",length);
+			//sprintf(name," %-12s ",ROM_GETNAME(rom));
+			//strcat(buffer, name);
+			//sprintf(name,"%6x ",length);
+			sprintf(name," %s %08x ",ROM_GETNAME(rom),length);
 			strcat(buffer, name);
 			switch (ROMREGION_GETTYPE(region))
 			{
@@ -1610,7 +1611,8 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 			case REGION_USER8: strcat(buffer, "usr8"); break;
 			}
 
-		sprintf(name," %7x\n",ROM_GETOFFSET(rom));
+		//sprintf(name," %7x\n",ROM_GETOFFSET(rom));
+		sprintf(name," %08x\n",ROM_GETOFFSET(rom));
 		strcat(buffer, name);
 
 		}
@@ -1688,9 +1690,7 @@ int load_driver_drivinfo (const game_driver *drv, char *buffer, int bufsize)
 	{
 		if (!mame_stricmp (drv->source_file, drivers[i]->source_file)) 
 		{
-			strcat(buffer, options.use_lang_list?
-				_LST(drivers[i]->description)):
-				drivers[i]->description);
+			strcat(buffer, _LST(drivers[i]->description));
 			strcat(buffer,"\n");
 		}
 	}
@@ -1722,8 +1722,8 @@ int load_driver_statistics (char *buffer, int bufsize)
 	static int resx[400], resy[400], resnum[400];
 	static int palett[300], palettnum[300];
 	static int control[35];
-	static int fpsnum[80];
-	float fps[80];
+	static int fpsnum[256];
+	float fps[256];
 
 	*buffer = 0;
 
@@ -2503,7 +2503,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 
 	}
 
-	if (fpsnum[0] > 58)
+	if (fpsnum[0] > ARRAY_LENGTH(fps) - 4)
 		strcat(buffer, "\nWARNING: FPS number too high!\n");
 
 
