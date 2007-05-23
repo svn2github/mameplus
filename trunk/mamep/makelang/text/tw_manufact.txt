@@ -298,6 +298,10 @@ Blastar
 Bonanza Enterprises, Ltd
 
 
+# Joker-Poker
+Bootleg in Coinmaster hardware
+
+
 # Sky Lancer (Bordun International)
 Bordun International
 
@@ -396,10 +400,6 @@ Codemasters
 
 # Trail Blazer
 Coinmaster
-
-
-# Joker Poker
-Coinmaster-Gaming, Ltd
 
 
 # Gulf War II
@@ -1042,6 +1042,10 @@ JMA
 JMK
 
 
+# Cluedo (prod. 2D)
+JPM
+
+
 # Check Man (Japan)
 Jaleco
 
@@ -1498,7 +1502,7 @@ Outer Limits
 P & P Marketing
 
 
-# Magic Fly (Ver 0.3)
+# Magic Fly
 P&A Games
 
 
@@ -1539,7 +1543,7 @@ Philko
 
 
 # PlayMan Poker (Germany)
-PlayMan?
+PlayMan
 
 
 # Super Slam (set 1)
