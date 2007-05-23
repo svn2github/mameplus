@@ -382,7 +382,7 @@ Allow restoring options to 'sane' values.
 Allows filtering out games from a folder
 
 
-# osd/ui/properties.c: 4824
+# osd/ui/properties.c: 4827
 Anti-clockwise
 
 
@@ -422,15 +422,15 @@ Audit ROM and samples sets
 Audit complete.\n
 
 
-# osd/ui/properties.c: 446, 4735, 4917, 4952
+# osd/ui/properties.c: 446, 4738, 4920, 4955
 Auto
 
 
-# osd/ui/properties.c: 4827
+# osd/ui/properties.c: 4830
 Auto anti-clockwise
 
 
-# osd/ui/properties.c: 4826
+# osd/ui/properties.c: 4829
 Auto clockwise
 
 
@@ -454,11 +454,11 @@ Available
 Available fields:
 
 
-# osd/ui/properties.c: 5011
+# osd/ui/properties.c: 5014
 Axis
 
 
-# osd/ui/properties.c: 5021
+# osd/ui/properties.c: 5024
 AxisId
 
 
@@ -634,7 +634,7 @@ Checking...
 Christopher Kirmse and Michael Soderstrom
 
 
-# osd/ui/properties.c: 4823
+# osd/ui/properties.c: 4826
 Clockwise
 
 
@@ -786,7 +786,7 @@ Customize interface options.
 Customize which columns are used in the game list
 
 
-# osd/ui/properties.c: 4822
+# osd/ui/properties.c: 4825
 Default
 
 
@@ -942,7 +942,7 @@ Double Joystick 8-Way
 Draw antialiased vectors
 
 
-# osd/ui/properties.c: 4800
+# osd/ui/properties.c: 4803
 Draw every frame
 
 
@@ -1310,7 +1310,7 @@ Joy 4-Way
 Joy 8-Way
 
 
-# osd/ui/properties.c: 461, 5006
+# osd/ui/properties.c: 461, 5009
 Joystick
 
 
@@ -1342,7 +1342,7 @@ Joystick deadzone
 Joystick saturation
 
 
-# osd/ui/properties.c: 5016
+# osd/ui/properties.c: 5019
 JoystickId
 
 
@@ -1526,7 +1526,7 @@ Non-CPU
 Non-Wor&king
 
 
-# osd/ui/dialogs.c: 216 osd/ui/properties.c: 3706, 4825, 5109, 5355 
+# osd/ui/dialogs.c: 216 osd/ui/properties.c: 3709, 4828, 5112, 5358 
 None
 
 
@@ -2134,47 +2134,47 @@ Show palette for:
 Show these fields in this order:
 
 
-# osd/ui/properties.c: 4801
+# osd/ui/properties.c: 4804
 Skip 1 of 12 frames
 
 
-# osd/ui/properties.c: 4810
+# osd/ui/properties.c: 4813
 Skip 10 of 12 frames
 
 
-# osd/ui/properties.c: 4811
+# osd/ui/properties.c: 4814
 Skip 11 of 12 frames
 
 
-# osd/ui/properties.c: 4802
+# osd/ui/properties.c: 4805
 Skip 2 of 12 frames
 
 
-# osd/ui/properties.c: 4803
+# osd/ui/properties.c: 4806
 Skip 3 of 12 frames
 
 
-# osd/ui/properties.c: 4804
+# osd/ui/properties.c: 4807
 Skip 4 of 12 frames
 
 
-# osd/ui/properties.c: 4805
+# osd/ui/properties.c: 4808
 Skip 5 of 12 frames
 
 
-# osd/ui/properties.c: 4806
+# osd/ui/properties.c: 4809
 Skip 6 of 12 frames
 
 
-# osd/ui/properties.c: 4807
+# osd/ui/properties.c: 4810
 Skip 7 of 12 frames
 
 
-# osd/ui/properties.c: 4808
+# osd/ui/properties.c: 4811
 Skip 8 of 12 frames
 
 
-# osd/ui/properties.c: 4809
+# osd/ui/properties.c: 4812
 Skip 9 of 12 frames
 
 
@@ -2258,7 +2258,7 @@ Sounds (*.wav)
 St&ory
 
 
-# osd/ui/properties.c: 447, 3497, 3502, 3505, 3756, 3759, 5061, 5083
+# osd/ui/properties.c: 447, 3500, 3505, 3508, 3759, 3762, 5064, 5086
 Standard
 
 

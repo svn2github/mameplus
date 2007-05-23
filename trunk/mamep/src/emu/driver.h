@@ -39,7 +39,7 @@
 #define VIDEO_UPDATE(name)		UINT32 video_update_##name(running_machine *machine, int screen, mame_bitmap *bitmap, const rectangle *cliprect)
 
 /* NULL versions */
-#define driver_init_NULL				NULL
+#define driver_init_NULL		NULL
 #define nvram_handler_NULL 		NULL
 #define memcard_handler_NULL	NULL
 #define machine_start_NULL 		NULL
@@ -435,6 +435,12 @@ struct _game_driver
 	screen->defstate.visarea.min_y = (miny);							\
 	screen->defstate.visarea.max_y = (maxy);							\
 
+#define MDRV_SCREEN_DEFAULT_POSITION(_xscale, _xoffs, _yscale, _yoffs)	\
+	screen->xoffset = (_xoffs);											\
+	screen->xscale = (_xscale);											\
+	screen->yoffset = (_yoffs);											\
+	screen->yscale = (_yscale);											\
+
 
 /* add/remove speakers */
 #define MDRV_SPEAKER_ADD(tag, x, y, z)									\
@@ -513,8 +519,8 @@ game_driver driver_##NAME =					\
 	#YEAR,									\
 	COMPANY,								\
 	construct_##MACHINE,					\
-	ipt_##INPUT,					\
-	driver_init_##INIT,							\
+	ipt_##INPUT,							\
+	driver_init_##INIT,						\
 	rom_##NAME,								\
 	(MONITOR)|(FLAGS),						\
 	NULL									\
@@ -531,8 +537,8 @@ game_driver driver_##NAME =					\
 	#YEAR,									\
 	COMPANY,								\
 	construct_##MACHINE,					\
-	ipt_##INPUT,					\
-	driver_init_##INIT,							\
+	ipt_##INPUT,							\
+	driver_init_##INIT,						\
 	rom_##NAME,								\
 	(MONITOR)|(FLAGS),						\
 	NULL									\
@@ -549,8 +555,8 @@ game_driver driver_##NAME =					\
 	#YEAR,									\
 	COMPANY,								\
 	construct_##MACHINE,					\
-	ipt_##INPUT,					\
-	driver_init_##INIT,							\
+	ipt_##INPUT,							\
+	driver_init_##INIT,						\
 	rom_##NAME,								\
 	(MONITOR)|(FLAGS),						\
 	&LAYOUT[0]								\

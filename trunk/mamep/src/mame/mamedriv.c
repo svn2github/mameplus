@@ -1057,6 +1057,10 @@ const game_driver * const mamedrivers[] =
 	DRIVER( smgolfb )	/* (c) 1985 Nintendo */
 	DRIVER( vsbbaljb )	/* (c) 1984 Nintendo */
 
+	/* NES-based hacks */
+	DRIVER( multigam )	/* 1992 */
+	DRIVER( cham24 )	/* 2002 */
+
 	/* Nintendo Super System Games */
 	DRIVER( nss )
 	DRIVER( nss_ssoc )	/* 1992 Human Inc. */

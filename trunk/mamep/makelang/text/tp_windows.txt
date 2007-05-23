@@ -891,7 +891,7 @@ end of axis saturation range for joystick where change is ignored (0.0 center, 1
 
 
 # osd/windows/winmain.c: 162
-explicit name of all screen; 'auto' here will try to make a best guess
+explicit name of all screens; 'auto' here will try to make a best guess
 
 
 # osd/windows/winmain.c: 167
