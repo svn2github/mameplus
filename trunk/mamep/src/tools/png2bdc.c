@@ -340,6 +340,9 @@ static int bitmap_to_chars(bitmap_t *bitmap, render_font *font)
 					break;
 				}
 
+			// mamep: skip char which code is already registered
+			if (ch->width <= 0)
+			{
 			/* print info */
 //          printf("  Character %X - width = %d\n", chstart, colend - colstart + 1);
 
@@ -362,6 +365,7 @@ static int bitmap_to_chars(bitmap_t *bitmap, render_font *font)
 			ch->yoffs = font->yoffs;
 			ch->bmwidth = ch->bitmap->width;
 			ch->bmheight = ch->bitmap->height;
+			}
 
 			/* next character */
 			chstart++;

@@ -169,13 +169,13 @@ $(EMUOBJ)/video.o:		$(EMUOBJ)/layout/snap.lh
 # embedded font
 #-------------------------------------------------
 
-$(EMUOBJ)/uismall11.bdc: $(PNGS2BDC) \
+$(EMUOBJ)/uismall11.bdc: $(PNG2BDC) \
 		$(SRC)/emu/font/uismall.png \
 		$(SRC)/emu/font/cp1250.png
 	@echo Generating $@...
 	@$^ $@
 
-$(EMUOBJ)/uismall14.bdc: $(PNGS2BDC) \
+$(EMUOBJ)/uismall14.bdc: $(PNG2BDC) \
 		$(SRC)/emu/font/cp1252.png \
 		$(SRC)/emu/font/cp932.png \
 		$(SRC)/emu/font/cp936.png \
@@ -184,10 +184,10 @@ $(EMUOBJ)/uismall14.bdc: $(PNGS2BDC) \
 	@echo Generating $@...
 	@$^ $@
 
-$(EMUOBJ)/uicmd11.bdc: $(PNGS2BDC) $(SRC)/emu/font/cmd11.png
+$(EMUOBJ)/uicmd11.bdc: $(PNG2BDC) $(SRC)/emu/font/cmd11.png
 	@echo Generating $@...
 	@$^ $@
 
-$(EMUOBJ)/uicmd14.bdc: $(PNGS2BDC) $(SRC)/emu/font/cmd14.png
+$(EMUOBJ)/uicmd14.bdc: $(PNG2BDC) $(SRC)/emu/font/cmd14.png
 	@echo Generating $@...
 	@$^ $@
