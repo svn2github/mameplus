@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#      Mameinfo.dat日本語版 v0.115       #
+#     Mameinfo.dat日本語版 v0.115u1      #
 #                                        #
-#              May 14, 2007              #
+#              May 22, 2007              #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,155 +12,67 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：881 翻訳済：868
-# 追加項目：339 合計：1220
+# Tester報告：839 翻訳済：821
+# 追加項目：341 合計：1180
 #
 
 
-$info=oigas
+$info=mtetrisc
 $mame
 [バグ]
 
-- キーボードでパドル操作する場合、右キーを押すとボールと同じX軸の位置にジャンプする。
-右キーを押しっぱなしにすれば、ボールが落ちることはない。 oigas0115gra, Tafoid
+- 起動時にクラッシュする。 mtetrisc0115u1red, etabeta
 
 $end
 
-$info=nekkyoku
+$info=hoops96
 $mame
 [バグ]
 
-- 起動時にクラッシュする。 nekkyoku0115red, Firewave / Justin Kerk
+- 起動時にテストキーを押してオプションリセットするとクラッシュする。 hoops96_0115u1red, Fujix
+
+
+- テストモード以外では右スピーカーからしか音が出ない。 hoops960103u4gre, Twisty
 
 $end
 
-$info=gogomile
+$info=gunforc2
 $mame
 [バグ]
 
-- コンティニュー画面でコインを入れることが出来ない。 gogomile0114u2gre, Justin Kerk
+- 画面にスコアや残り時間などが表示されない。 gunforc2_0115u1gre, robiza
 
 $end
 
-$info=slikshot
+$info=rtypeleo
 $mame
 [バグ]
 
-- MAMEの照準表示が更新されてから、照準が表示されなくなった。 slikshot0115gra, maddog77
+- 2面の背景の上部分がラインスクロールしていないため、切り替え部分が見えてしまう。 rtypeleo0115u1gre, robiza
 
 $end
 
-$info=missile
+$info=connect4
 $mame
 [バグ]
 
-- グラフィック表示がかなりおかしくなっている。 missile0115yel, John IV / Twisty
+- 操作が効かない。ドライバ自体がタイミングの深刻な問題を持っているため、他にもいろいろな不具合がある。 connect4_0115u1ora, Luigi30 /  JWallace
 
 $end
 
-$info=finalapr
+$info=pignewta
 $mame
 [バグ]
 
-- 道路部分のグラフィックが緑色になっている。 finalapr0115gre, hotgraphics
+- 0.107u3から操作がおかしい。pignewtの方は問題ない。 pignewta0115u1gra, ShimaPong
 
 $end
 
-$info=nss_smw
+$info=wwestern
 $mame
 [バグ]
 
-- プログラムROM(IC1)のサイズは、正確には今の半分(4Mbit)。 nss_smw0115ora, Heihachi_73 / The Guru
-
-$end
-
-$info=punchout
-$mame
-[バグ]
-
-- サウンドチャンネルが一つ鳴らなくなっている。 punchout0115gre, MARBIN
-
-
-- 実機ではタイトルロゴやテキストの色が上下で違う。 spnchout0102u2gre, MaximRecoil / Red Raphael
-
-
-- 上モニターのIDカードと下モニターのキャラクタの髪の色は同じになる。 punchout0107u3gre, Kold666
-
-$end
-
-$info=spnchout
-$mame
-[バグ]
-
-- サウンドチャンネルが一つ鳴らなくなっている。 punchout0115gre, MARBIN
-
-
-- 実機ではタイトルロゴやテキストの色が上下で違う。 spnchout0102u2gre, MaximRecoil / Red Raphael
-
-
-- Dragon Chanのキックの効果音が実機と異なる。
-最後の音は風切り音にならないといけない。 spnchout0106u10gre, MaximRecoil
-
-$end
-
-$info=armwrest
-$mame
-[バグ]
-
-- サウンドチャンネルが一つ鳴らなくなっている。 punchout0115gre, MARBIN
-
-
-- 最初のボーナス面でグラフィック化けあり。また、5面と9面の後のボーナス面では、お金の袋が表示されずプレイできない。 armwrest35b9yel, Sardius / BSR / Karasu
-
-
-- DIPスイッチ情報。
-本家参照。 armwrest37b14gra, stephh
-
-$end
-
-$info=scregg
-$mame
-[バグ]
-
-- ROMロード後にクラッシュする。0.114u4で、6502CPUの変更があってから起こるようになった。 scregg0115red, Firewave / Tafoid
-
-$end
-
-$info=eggs
-$mame
-[バグ]
-
-- ROMロード後にクラッシュする。0.114u4で、6502CPUの変更があってから起こるようになった。 scregg0115red, Firewave / Tafoid
-
-$end
-
-$info=dommy
-$mame
-[バグ]
-
-- ROMロード後にクラッシュする。0.114u4で、6502CPUの変更があってから起こるようになった。 scregg0115red, Firewave / Tafoid
-
-$end
-
-$info=rockduck
-$mame
-[バグ]
-
-- ROMロード後にクラッシュする。0.114u4で、6502CPUの変更があってから起こるようになった。 scregg0115red, Firewave / Tafoid
-
-$end
-
-$info=brival
-$mame
-[バグ]
-
-- ランダムにクラッシュする。再現方法：
-
-1) Shingenでプレイ
-
-2) Mr. Chinを倒す
-
-3) Asukaの面の前でクラッシュする brival0115red, J.J.Boy / twisty
+- 起動後クレジットを入れずにステート保存する。一旦MAMEを終了させて、再スタート後ステートをロードすると、クレジットを受け付けない。 wwestern0115u1yel, fossil / Waremonger
 
 $end
 
@@ -800,14 +712,6 @@ $mame
 
 $end
 
-$info=dragngun
-$mame
-[バグ]
-
-- ラスボスの体力の減り方が異常に早い。体力が無くなると、座り込んでゲームが進まなくなる。 dragngun067yel, Darkk
-
-$end
-
 $info=fghthstu
 $mame
 [バグ]
@@ -848,14 +752,6 @@ $mame
 
 - 2回目のゲーム開始時、
 1回目とは色が変わってしまう。 csuperas37b13gre2, Steveir
-
-$end
-
-$info=hoops96
-$mame
-[バグ]
-
-- テストモード以外では右スピーカーからしか音が出ない。 hoops960103u4gre, Twisty
 
 $end
 
@@ -1112,6 +1008,14 @@ $mame
 
 【0.61更新】実際には以前のフリーズ後も面が続く。
 その後ある場所までいくとフリーズするが、サウンドは鳴り続ける。 funkyjet055yel, Karasu
+
+$end
+
+$info=gogomile
+$mame
+[バグ]
+
+- コンティニュー画面でコインを入れることが出来ない。 gogomile0114u2gre, Justin Kerk
 
 $end
 
@@ -1713,32 +1617,6 @@ $mame
 [バグ]
 
 - m72.cゲーム：　サンプルサウンドの音程が低い。 m72_0106u11gre, Stefan Lindberg
-
-$end
-
-$info=majtitl2
-$mame
-[バグ]
-
-- スプライトプライオリティに不具合あり。
-最初のホールを終えるところでよく分かる。
-画面真ん中のテキストが背景の木にかくれている、などなど。 m92c053gre2, Abbe
-
-$end
-
-$info=mysticri
-$mame
-[バグ]
-
-- 特に5面でスプライトの重ね合わせバグあり。 mysticri36rc2gre, Lord Caos
-
-$end
-
-$info=uccopsj
-$mame
-[バグ]
-
-- アトラクトモードで、プレイヤーが動かない。プロテクトのせい？ uccopsj065gre, J.J.Boy
 
 $end
 
@@ -2348,6 +2226,14 @@ $mame
 
 $end
 
+$info=finalapr
+$mame
+[バグ]
+
+- 道路部分のグラフィックが緑色になっている。 finalapr0115gre, hotgraphics
+
+$end
+
 $info=cgangpzl
 $mame
 [バグ]
@@ -2453,7 +2339,7 @@ $info=kyukaidk
 $mame
 [バグ]
 
-- サウンドの一部が変。わかりやすいところは、審判の声がちゃんとでていないところ。BGMも。 kyukaidk37b6gre, Fujix (みーしょう)
+- サウンドの一部が変。わかりやすいところは、審判の声がちゃんとでていないところ。BGMも。 kyukaidk37b6gre, Fujix / Phil Bennett (みーしょう)
 
 $end
 
@@ -2473,48 +2359,6 @@ $mame
 
 $end
 
-$info=bubbletr
-$mame
-[バグ]
-
-- グラフィックの表示領域が間違っている。 namcos2_0114yel, Augusto / Fujix
-
-$end
-
-$info=gollygho
-$mame
-[情報]
-
-- 銃のキャリブレーションモードは9(サービスキー)を押しながらF2。
-
-
-[バグ]
-
-- グラフィックの表示領域が間違っている。 namcos2_0114yel, Augusto / Fujix
-
-$end
-
-$info=luckywld
-$mame
-[バグ]
-
-- グラフィックの表示領域が間違っている。 namcos2_0114yel, Augusto / Fujix
-
-$end
-
-$info=sgunner
-$mame
-[情報]
-
-- 銃のキャリブレーションは9(サービスキー)を押しながらF2。
-
-
-[バグ]
-
-- グラフィックの表示領域が間違っている。 namcos2_0114yel, Augusto / Fujix
-
-$end
-
 $info=sgunner2
 $mame
 [情報]
@@ -2524,19 +2368,8 @@ $mame
 
 [バグ]
 
-- グラフィックの表示領域が間違っている。 namcos2_0114yel, Augusto / Fujix
-
-
 - ゲーム中のマシンガンの音が出ていない。デモのときには鳴っている。
 その他、爆発音、ボイスなども鳴っていないようだ。 sgunner2062gre, Nerox91
-
-$end
-
-$info=suzuk8h2
-$mame
-[バグ]
-
-- グラフィックの表示領域が間違っている。 namcos2_0114yel, Augusto / Fujix
 
 $end
 
@@ -2544,18 +2377,7 @@ $info=suzuka8h
 $mame
 [バグ]
 
-- グラフィックの表示領域が間違っている。 namcos2_0114yel, Augusto / Fujix
-
-
 - 先日オリジナル筐体（オーストラリア版が無いとすれば海外版）を確認したところ、タイトル画面でもBGMが流れていた。 suzuka8h074u2gre, jonwil
-
-$end
-
-$info=ordyne
-$mame
-[バグ]
-
-- グラフィックの表示領域が間違っている。 namcos2_0114yel, Augusto / Fujix
 
 $end
 
@@ -2992,6 +2814,50 @@ $mame
 
 $end
 
+$info=armwrest
+$mame
+[バグ]
+
+- 最初のボーナス面でグラフィック化けあり。また、5面と9面の後のボーナス面では、お金の袋が表示されずプレイできない。 armwrest35b9yel, Sardius / BSR / Karasu
+
+
+- サウンドチャンネルが一つ鳴らなくなっている。 punchout0115gre, MARBIN
+
+
+- DIPスイッチ情報。
+本家参照。 armwrest37b14gra, stephh
+
+$end
+
+$info=punchout
+$mame
+[バグ]
+
+- サウンドチャンネルが一つ鳴らなくなっている。 punchout0115gre, MARBIN
+
+
+- 実機ではタイトルロゴやテキストの色が上下で違う。 spnchout0102u2gre, MaximRecoil / Red Raphael
+
+
+- 上モニターのIDカードと下モニターのキャラクタの髪の色は同じになる。 punchout0107u3gre, Kold666
+
+$end
+
+$info=spnchout
+$mame
+[バグ]
+
+- サウンドチャンネルが一つ鳴らなくなっている。 punchout0115gre, MARBIN
+
+
+- 実機ではタイトルロゴやテキストの色が上下で違う。 spnchout0102u2gre, MaximRecoil / Red Raphael
+
+
+- Dragon Chanのキックの効果音が実機と異なる。
+最後の音は風切り音にならないといけない。 spnchout0106u10gre, MaximRecoil
+
+$end
+
 $info=quantum
 $mame
 [バグ]
@@ -3306,6 +3172,20 @@ $mame
 
 
 - アトラクトモード2周目以降、ハイスコア画面にドクロが残って表示される。 lghost098u1gre2, Karasu
+
+$end
+
+$info=brival
+$mame
+[バグ]
+
+- ランダムにクラッシュする。再現方法：
+
+1) Shingenでプレイ
+
+2) Mr. Chinを倒す
+
+3) Asukaの面の前でクラッシュする brival0115red, J.J.Boy / twisty
 
 $end
 
@@ -5171,6 +5051,14 @@ $mame
 
 $end
 
+$info=nss_smw
+$mame
+[バグ]
+
+- プログラムROM(IC1)のサイズは、正確には今の半分(4Mbit)。 nss_smw0115ora, Heihachi_73 / The Guru
+
+$end
+
 $info=shangon3
 $mame
 [バグ]
@@ -5480,11 +5368,28 @@ $mame
 
 $end
 
+$info=oigas
+$mame
+[バグ]
+
+- キーボードでパドル操作する場合、右キーを押すとボールと同じX軸の位置にジャンプする。
+右キーを押しっぱなしにすれば、ボールが落ちることはない。 oigas0115gra, Tafoid
+
+$end
+
 $info=gijoe
 $mame
 [バグ]
 
 - プレイ人数のDIP設定で、4 Playersは2 Players。 gijoe0114gra, Augusto / twisty
+
+$end
+
+$info=slikshot
+$mame
+[バグ]
+
+- MAMEの照準表示が更新されてから、照準が表示されなくなった。 slikshot0115gra, maddog77
 
 $end
 
@@ -6938,6 +6843,19 @@ $mame
 
 $end
 
+$info=20pacgal
+$mame
+[情報]
+
+- スタートボタンは4つあり、2つはミズパックマン、残りはギャラガ用。
+
+
+- オリジナルのパックマンを有効にする方法：
+
+コイン投入後、上上上下下下左右左右左と入力する
+
+$end
+
 $info=alibaba
 $mame
 [情報]
@@ -7403,6 +7321,14 @@ $mame
 [情報]
 
 - コンティニューするには、コインを入れてショットボタンを押しながらスタートキー（1キー）押す。
+
+$end
+
+$info=gollygho
+$mame
+[情報]
+
+- 銃のキャリブレーションモードは9(サービスキー)を押しながらF2。
 
 $end
 
@@ -7928,6 +7854,14 @@ $mame
 
 $end
 
+$info=sgunner
+$mame
+[情報]
+
+- 銃のキャリブレーションは9(サービスキー)を押しながらF2。
+
+$end
+
 $info=showdown
 $mame
 [情報]
@@ -8197,7 +8131,7 @@ $info=whitch
 $mame
 [情報]
 
--
+- 初回起動時にRAM ERRORと表示されるので、F1キーを押してNV RAMを初期化すると進む。
 
 $end
 
