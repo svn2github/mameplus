@@ -712,6 +712,12 @@ float ui_get_char_width(unicode_char ch)
 	return render_font_get_char_width(ui_font, ui_get_line_height(), render_get_ui_aspect(), ch);
 }
 
+//mamep: to render as fixed with font
+float ui_get_char_width_no_margin(unicode_char ch)
+{
+	return render_font_get_char_width_no_margin(ui_font, ui_get_line_height(), render_get_ui_aspect(), ch);
+}
+
 
 /*-------------------------------------------------
     ui_get_string_width - return the width of a
@@ -813,7 +819,7 @@ void ui_draw_text_full_fontwith(const char *origs, float x, float y, float wrapw
 			if (scharcount == -1)
 				break;
 
-			scharwidth = ui_get_char_width(schar);
+			scharwidth = ui_get_char_width_no_margin(schar);
 			if (is_double_size_char(schar))
 			{
 				if (fontwidth_db < scharwidth)
