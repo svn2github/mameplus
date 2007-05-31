@@ -287,11 +287,18 @@ INLINE int is_breakable_char(unicode_char ch)
 //mame core does not support surrogate pairs U+10000-U+10FFFF
 INLINE int is_double_size_char(unicode_char uchar)
 {
-	//	Plane 0 (0000-FFFF): Basic Multilingual Plane (BMP)
-	if (uchar > 0x1000)
-		return 1;
+	if (uchar < 0x1000)
+		return 0;
 
-	return 0;
+	//	Halfwidth CJK Chars
+	if (uchar >= 0xff61 && uchar <= 0xffdc)
+		return 0;
+
+	//	Halfwidth Symbols Variants
+	if (uchar >= 0xffe8 && uchar <= 0xffee)
+		return 0;
+
+	return 1;
 }
 
 

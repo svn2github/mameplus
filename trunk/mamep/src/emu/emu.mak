@@ -178,6 +178,7 @@ $(EMUOBJ)/uismall11.bdc: $(PNG2BDC) \
 $(EMUOBJ)/uismall14.bdc: $(PNG2BDC) \
 		$(SRC)/emu/font/cp1252.png \
 		$(SRC)/emu/font/cp932.png \
+		$(SRC)/emu/font/cp932hw.png \
 		$(SRC)/emu/font/cp936.png \
 		$(SRC)/emu/font/cp949.png \
 		$(SRC)/emu/font/cp950.png
