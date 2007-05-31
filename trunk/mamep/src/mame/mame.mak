@@ -469,7 +469,7 @@ $(MAMEOBJ)/alba.a: \
 
 $(MAMEOBJ)/alliedl.a: \
 	$(DRIVERS)/ace.o \
-	$(DRIVERS)/clayshoo.o $(MACHINE)/clayshoo.o \
+	$(DRIVERS)/clayshoo.o \
 
 $(MAMEOBJ)/alpha.a: \
 	$(DRIVERS)/alpha68k.o $(VIDEO)/alpha68k.o \
@@ -1281,7 +1281,7 @@ $(MAMEOBJ)/snk.a: \
 
 $(MAMEOBJ)/stern.a: \
 	$(DRIVERS)/astinvad.o $(AUDIO)/astinvad.o $(VIDEO)/astinvad.o \
-	$(DRIVERS)/berzerk.o $(MACHINE)/berzerk.o $(AUDIO)/berzerk.o $(VIDEO)/berzerk.o \
+	$(DRIVERS)/berzerk.o $(AUDIO)/berzerk.o \
 	$(DRIVERS)/cliffhgr.o $(AUDIO)/cliffhgr.o \
 	$(DRIVERS)/mazerbla.o \
 	$(DRIVERS)/supdrapo.o \
@@ -1569,6 +1569,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/go2000.o \
 	$(DRIVERS)/good.o \
 	$(DRIVERS)/gotcha.o $(VIDEO)/gotcha.o \
+	$(DRIVERS)/gstream.o \
 	$(DRIVERS)/gumbo.o $(VIDEO)/gumbo.o \
 	$(DRIVERS)/gunpey.o \
 	$(DRIVERS)/hexa.o $(VIDEO)/hexa.o \

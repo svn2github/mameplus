@@ -31,7 +31,7 @@
     CONSTANTS
 ***************************************************************************/
 
-#define MAX_INPUT_PORTS		30
+#define MAX_INPUT_PORTS		32
 #define MAX_PLAYERS			8
 #define MAX_BITS_PER_PORT	32
 
