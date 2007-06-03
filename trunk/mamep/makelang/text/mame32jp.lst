@@ -941,7 +941,8 @@ supxevs	VS.スーパーゼビウス ガンプの謎	ばーさすすーぱーぜびうすがんぷのなぞ	Namc
 vsfdf	VS.フリーダムフォース	ばーさすふりーだむふぉーす	Sunsoft
 smgolfb	VS.ゴルフ / Stroke & Match Golf (men ver set 2)	ばーさすごるふ	Nintendo
 vsbbaljb	VS.ベースボール (日本版 set 3)	ばーさすべーすぼーる	Nintendo of America
-multigam	マルチゲーム	まるちげーむ	unknown
+multigam	マルチゲーム (set 1)	まるちげーむ	unknown
+multigmb	マルチゲーム (set 2)	まるちげーむ	unknown
 cham24	カメレオン24	かめれおん24	bootleg
 nss_ssoc	スーパーフォーメーションサッカー / Super Soccer (Nintendo Super System)	すーぱーふぉーめーしょんさっかー	Human Inc.
 nss_actr	アクトレイザー (Nintendo Super System)	あくとれいざー	Enix
@@ -2237,6 +2238,7 @@ mshb	マーヴル・スーパーヒーローズ (ブラジル版 951117)	まーぶるすーぱーひーろーず
 19xxjr1	19XX -The War Against Destiny (日本版 951207)	ないんてぃーんだぶるえっくす	Capcom
 19xxa	19XX -The War Against Destiny (アジア版 951207)	ないんてぃーんだぶるえっくす	Capcom
 19xxh	19XX -The War Against Destiny (ラテン版 951218)	ないんてぃーんだぶるえっくす	Capcom
+19xxb	19XX -The War Against Destiny (ブラジル版 951218)	ないんてぃーんだぶるえっくす	Capcom
 ddsom	ダンジョンズ&ドラゴンズ -シャドーオーバーミスタラ (欧州版 960619)	だんじょんずあんどどらごんず_2しゃどーおーばーみすたら	Capcom
 ddsomr1	ダンジョンズ&ドラゴンズ -シャドーオーバーミスタラ (欧州版 960223)	だんじょんずあんどどらごんず_2しゃどーおーばーみすたら	Capcom
 ddsomr2	ダンジョンズ&ドラゴンズ -シャドーオーバーミスタラ (欧州版 960209)	だんじょんずあんどどらごんず_2しゃどーおーばーみすたら	Capcom
@@ -2798,8 +2800,10 @@ upndownu	アップンダウン (not encrypted)	あっぷんだうん	Sega
 mrviking	ミスターバイキング (315-5041)	みすたーばいきんぐ	Sega
 mrvikngj	ミスターバイキング (日本版 315-5041)	みすたーばいきんぐ	Sega
 swat	スワット (315-5048)	すわっと	Coreland / Sega
-flicky	フリッキー (315-5051 128k ver)	ふりっきー	Sega
-flickyo	フリッキー (315-5051 64k ver)	ふりっきー	Sega
+flicky	フリッキー (128k ver System 2 315-5051)	ふりっきー	Sega
+flicks2	フリッキー (128k ver System 2 not encrypted)	ふりっきー	Sega
+flickyo	フリッキー (64k ver System 1 315-5051 set 1)	ふりっきー	Sega
+flicks1	フリッキー (64k ver System 1 315-5051 set 2)	ふりっきー	Sega
 wmatch	ウォーターマッチ (315-5064)	うぉーたーまっち	Sega
 bullfgt	ザ・闘牛 / Bullfight (315-5065)	ざとうぎゅう	Coreland / Sega
 thetogyu	ザ・闘牛 (日本版 315-5065)	ざとうぎゅう	Coreland / Sega
@@ -3341,10 +3345,10 @@ csmash	コズミックスマッシュ (日本 / USA / 海外 / 韓国 / オーストラリア版)	こずみ
 vs2_2k	バーチャストライカー2 バージョン2000 (日本 / USA / 海外 / 韓国 / オーストラリア版)	ばーちゃすとらいかー_2_4ばーじょん2000	Sega
 vs2_2ka	バーチャストライカー2 バージョン2000 (set 2) (日本 / USA / 海外 / 韓国 / オーストラリア版)	ばーちゃすとらいかー_2_4ばーじょん2000	Sega
 cspike	ガンスパイク (日本 / USA / 海外/ 韓国 / オーストラリア版)	がんすぱいく	Psikyo / Capcom
-capsnk	カプコンVS. SNK ミレニアムファイト2000 (日本 / USA / 海外 / 韓国 / オーストラリア版)	かぷこんばーさすえすえぬけいみれにあむふぁいと2000	Capcom / SNK
+capsnk	カプコン VS. SNK ミレニアムファイト2000 (日本 / USA / 海外 / 韓国 / オーストラリア版)	かぷこんばーさすえすえぬけいみれにあむふぁいと2000	Capcom / SNK
 derbyoc	ダービーオーナーズクラブ (日本 / USA / 海外 / 韓国 / オーストラリア版)	だーびーおーなーずくらぶ_1	Sega
 dybb99	ダイナマイトベースボール99 (日本 / USA / 海外 / 韓国 / オーストラリア版)	だいなまいとべーすぼーる_2_99	Sega
-gram2000	ジャイアントグラム2000 全日本プロレス3 (日本 / USA / 海外 / 韓国 / オーストラリア版)	じゃいあんとぐらむ_3_2000_ぜんにほんぷろれす3	Sega
+gram2000	ジャイアントグラム2000 全日本プロレス3 -栄光の勇者達 (日本 / USA / 海外 / 韓国 / オーストラリア版)	じゃいあんとぐらむ_3_2000_ぜんにほんぷろれす3	Sega
 ggram2	ジャイアントグラム 全日本プロレス2 (日本 / USA / 海外 / 韓国 / オーストラリア版)	じゃいあんとぐらむ_2_ぜんにほんぷろれす2	Sega
 hmgeo	ヘビーメタルジオマトリックス (日本 / USA / 欧州/ アジア / オーストラリア版)	へびーめたるじおまとりっくす	Capcom
 gwing2	ギガウィング2 (日本 / USA / 海外 / 韓国 / オーストラリア版)	ぎがうぃんぐ_2	Takumi / Capcom
@@ -3355,13 +3359,13 @@ pstone2	パワーストーン2 (日本 / USA / 欧州 / アジア / オーストラリア版)	ぱわーす
 otrigger	アウトトリガー (日本 / USA / 海外/ 韓国 / オーストラリア版)	あうととりがー	Sega
 samba	サンバdeアミーゴ (日本版)	さんばであみーご	Sega
 slasho	スラッシュアウト (日本 / USA / 海外 / 韓国 / オーストラリア版)	すらっしゅあうと	Sega
-spawn	スポーン (日本 / USA / 欧州 / アジア / オーストラリア版)	すぽーん	Capcom
+spawn	スポーン -In The Demon's Hand (日本 / USA / 欧州 / アジア / オーストラリア版)	すぽーん	Capcom
 virnba	バーチャNBA (日本 / USA / 海外 / 韓国 / オーストラリア版)	ばーちゃえぬびーえー	Sega
 vtennis	パワースマッシュ (日本 / USA / 海外 / 韓国 / オーストラリア版)	ぱわーすまっしゅ	Sega
 zombrvn	ゾンビリベンジ (日本 / USA / 欧州 / 韓国 / オーストラリア版)	ぞんびりべんじ	Sega
 doa2	デッドオアアライブ2 (日本 / USA / 海外 / 韓国 / オーストラリア版)	でっどおああらいぶ_2_1	Tecmo
 doa2m	デッドオアアライブ2 ミレニアム (日本 / USA / 海外 / 韓国 / オーストラリア版)	でっどおああらいぶ_2_2みれにあむ	Tecmo
-dybbnao	ダイナマイトベースボールNaomi (日本版)	だいなまいとべーすぼーる_1_なおみ	Sega
+dybbnao	ダイナマイトベースボール ナオミ -SEGA Professional Baseball (日本版)	だいなまいとべーすぼーる_1_なおみ	Sega
 hshavoc	キャプテンラング / High Seas Havoc	きゃぷてんらんぐ	Data East
 lnc	ロックンチェイス	ろっくんちぇいす	Data East Corporation
 zoar	ミッションX / Zoar	みっしょんえっくす	Data East USA
@@ -4068,8 +4072,8 @@ popn7	ポップンミュージック7	ぽっぷんみゅーじっく_7	Konami
 fiveside	ファイブ ア サイドサッカー (ver UAA)	ふぁいぶあさいどさっかー	Konami
 thunderh	オペレーションサンダーハリケーン (ver UAA)	おぺれーしょんさんだーはりけーん	Konami
 slrasslt	ソーラーアサルト (ver UAA)	そーらーあさると	Konami
-gticlub	GTIクラブ -Rally Cote D'azur (ver AAA)	じーてぃーあいくらぶ	Konami
-gticlubj	GTIクラブ -Rally Cote D'azur (ver JAA)	じーてぃーあいくらぶ	Konami
+gticlub	GTIクラブ -Rally Cote D'azur (ver AAA)	じーてぃーあいくらぶ_1	Konami
+gticlubj	GTIクラブ -Rally Cote D'azur (ver JAA)	じーてぃーあいくらぶ_1	Konami
 hangplt	ハングパイロット	はんぐぱいろっと	Konami
 nbapbp	NBAプレイバイプレイ	えぬびーえーぷれいばいぷれい	Konami
 gradius4	グラディウスIV -復活	ぐらでぃうす_4	Konami
@@ -4939,7 +4943,7 @@ supdrapo	スーパードローポーカー	すーぱーどろーぽーかー	Stern
 cliffhgr	クリフハンガー	くりふはんがー	Stern Electronics
 cliffhga	クリフハンガー (alt)	くりふはんがー	Stern Electronics
 goaltogo	ゴールトゥーゴー	ごーるとぅーごー	Stern Electronics
-toratora	トラトラ	とらとら	GamePlan
+toratora	トラトラ (prototype?)	とらとら	GamePlan
 megatack	メガタック	めがたっく	GamePlan (Centuri license)
 killcom	キラーコメット	きらーこめっと	GamePlan (Centuri license)
 challeng	チャレンジャー	ちゃれんじゃー	GamePlan (Centuri license)
@@ -4993,8 +4997,9 @@ acrobatm	アクロバットミッション	あくろばっとみっしょん	UPL (Taito license)
 strahl	鋼鉄要塞シュトラール (日本版 set 1)	こうてつようさいしゅとらーる	UPL
 strahla	鋼鉄要塞シュトラール (日本版 set 2)	こうてつようさいしゅとらーる	UPL
 bjtwin	ボンジャック ツイン	ぼんじゃっくついん	NMK
-tdragon2	サンダードラゴン2 <雷龍2>	さんだーどらごん_2	NMK
-bigbang	サンダードラゴン2 <雷龍2> / Big Bang -Power Shooting	さんだーどらごん_2	NMK
+tdragon2	サンダードラゴン2 <雷龍2> (9th Nov 1993)	さんだーどらごん_2	NMK
+tdragn2a	サンダードラゴン2 <雷龍2> (1st Oct 1993)	さんだーどらごん_2	NMK
+bigbang	サンダードラゴン2 <雷龍2> / Big Bang -Power Shooting (9th Nov 1993)	さんだーどらごん_2	NMK
 tdragon	サンダードラゴン <雷龍>	さんだーどらごん_1	NMK (Tecmo license)
 hachamf	ハチャメチャファイター -かわうそ&つちぶたイン	はちゃめちゃふぁいたー	NMK
 macross	超時空要塞マクロス	ちょうじくうようさいまくろす_1	Banpresto
@@ -6520,8 +6525,8 @@ dambust	ダムバスター (UK版)	だむばすたー	South West Research
 dambustr	ダムバスター (USA版)	だむばすたー	South West Research
 gunpey	グンペイ	ぐんぺい	Banpresto
 spaceg	スペースゲリラ	すぺーすげりら	Omori
-wldarrow	ワイルドアロー	わいるどあろー	Meyco Games
-unkmeyco	<名称不明> Meyco game	めいしょうふめい	Meyco Games
+wldarrow	ワイルドアロー (standard v4.8)	わいるどあろー	Meyco Games
+mdrawpkr	ドローポーカージョーカーズワイルド	どろーぽーかーじょーかーずわいるど	Meyco Games
 laserbas	フューチャーフラッシュ / Laser Base (set 1)	ふゅーちゃーふらっしゅ	Amstar/HOEI
 laserbsa	フューチャーフラッシュ / Laser Base (set 2)	ふゅーちゃーふらっしゅ	Amstar/HOEI
 futflash	フューチャーフラッシュ	ふゅーちゃーふらっしゅ	HOEI
@@ -6633,6 +6638,7 @@ koikoi	恋来パート2	こいこいぱーと_2	Kiwako
 good	グッド (韓国版)	ぐっど	unknown
 filetto	フィレット (ver 1.05 901009)	ふぃれっと	Novarmatic
 quizo	クイズオリンピック	くいずおりんぴっく	Seoul Coin Corp.
+gstream	G-ストリーム G2020	じーすとりーむじー2020	Oriental Soft Japan
 knightsh	ナイツ オブ ザ ラウンド -円卓の騎士 (ハック)	ないつおぶざらうんど	hack / bootleg
 knightsb	ナイツ オブ ザ ラウンド -円卓の騎士 (海賊版)	ないつおぶざらうんど	bootleg
 sf2m8	ストリートファイターII' -チャンピオンエディション (M8)	すとりーとふぁいたー_2_2だっしゅ	hack / bootleg

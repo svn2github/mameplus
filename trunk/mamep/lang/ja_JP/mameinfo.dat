@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.115u1      #
+#     Mameinfo.dat日本語版 v0.115u3      #
 #                                        #
-#              May 22, 2007              #
+#              May 31, 2007              #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：839 翻訳済：821
-# 追加項目：341 合計：1180
+# Tester報告：843 翻訳済：828
+# 追加項目：341 合計：1184
 #
 
 
@@ -22,6 +22,14 @@ $mame
 [バグ]
 
 - 起動時にクラッシュする。 mtetrisc0115u1red, etabeta
+
+$end
+
+$info=seawolf2
+$mame
+[バグ]
+
+- 照準が画面に表示されない。画面の上端にほんのちょっとだけ見える。 seawolf2_0115u2gra, Mr. Do
 
 $end
 
@@ -36,11 +44,19 @@ $mame
 
 $end
 
+$info=loht
+$mame
+[バグ]
+
+- 画面にスコアが表示されない。 loht0115u2gre, robiza
+
+$end
+
 $info=gunforc2
 $mame
 [バグ]
 
-- 画面にスコアや残り時間などが表示されない。 gunforc2_0115u1gre, robiza
+- 画面にスコアや残り時間などが表示されない。0.114u1から。 gunforc2_0115u1gre, robiza
 
 $end
 
@@ -48,23 +64,15 @@ $info=rtypeleo
 $mame
 [バグ]
 
-- 2面の背景の上部分がラインスクロールしていないため、切り替え部分が見えてしまう。 rtypeleo0115u1gre, robiza
+- 2面の背景の上部分がラインスクロールしていないため、切り替え部分が見えてしまう。0.114u1から発生。 rtypeleo0115u1gre, robiza
 
 $end
 
-$info=connect4
+$info=finalapr
 $mame
 [バグ]
 
-- 操作が効かない。ドライバ自体がタイミングの深刻な問題を持っているため、他にもいろいろな不具合がある。 connect4_0115u1ora, Luigi30 /  JWallace
-
-$end
-
-$info=pignewta
-$mame
-[バグ]
-
-- 0.107u3から操作がおかしい。pignewtの方は問題ない。 pignewta0115u1gra, ShimaPong
+- 背景がおかしくなっている。 finalapr0115u2gre, robiza
 
 $end
 
@@ -709,6 +717,14 @@ $mame
 [バグ]
 
 - どのボタンを押してもコンティニュー機能が動作しない。 shackled083yel, Twisty / TriggerFin
+
+$end
+
+$info=dragngun
+$mame
+[バグ]
+
+- ラスボスの体力の減り方が異常に早い。体力が無くなると、座り込んでゲームが進まなくなる。 dragngun067yel, Darkk
 
 $end
 
@@ -2226,14 +2242,6 @@ $mame
 
 $end
 
-$info=finalapr
-$mame
-[バグ]
-
-- 道路部分のグラフィックが緑色になっている。 finalapr0115gre, hotgraphics
-
-$end
-
 $info=cgangpzl
 $mame
 [バグ]
@@ -2969,14 +2977,6 @@ $mame
 [バグ]
 
 - イニシャル入力時、カーソルの表示位置と実際の位置がずれているため、別の文字が入力される。 rollrace37b12gre, SportsDude
-
-$end
-
-$info=speakres
-$mame
-[バグ]
-
-- 自機がやられたときの音がずっと鳴り続ける。 speakres0112yel, Taofid /  Gyrovision
 
 $end
 
@@ -4898,7 +4898,7 @@ $info=hanakanz
 $mame
 [バグ]
 
-- ゲームのイントロで“0cd80: warrning unknown pixel command 03”のメッセージが出る。 hanakanz0103u4ora, king_krm
+- ゲームのイントロで“0cd80: warrning unknown pixel command 03”のメッセージが出る。 hanakanz0103u4ora, king_krm / Luigi30
 
 $end
 
@@ -4906,7 +4906,7 @@ $info=hkagerou
 $mame
 [バグ]
 
-- ゲームプレイ中に“5eedf3: warrning unknown pixel command 03”のメッセージが出る。 hkagerou0103u4ora, king_krm
+- ゲームプレイ中に“5eedf3: warrning unknown pixel command 03”のメッセージが出る。 hkagerou0103u4ora, king_krm / Luigi30
 
 $end
 
@@ -6566,15 +6566,6 @@ $mame
 - 1面の炎のところに来ると、
 炎の一部が近づくと突然現れる。
 オリジナルのバグだろうか？ myhero37b15gre, Kale
-
-$end
-
-$info=upndown
-$mame
-[バグ]
-
-- フレームスキップを6, 8, 9, 10, 11などにして、
-60をfps数で割り切れる数にすると、自車の当たり判定が無くなってしまうことがある。 upndown37b8gre, Fujix (toriaezu/ ほしけん)
 
 $end
 
