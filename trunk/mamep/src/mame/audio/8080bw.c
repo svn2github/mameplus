@@ -107,7 +107,7 @@ static const char *lrescue_sample_names[] =
 	"shootingstar.wav",
 	"stepl.wav",
 	"steph.wav",
-	0       /* end of array */
+	0
 };
 
 struct Samplesinterface lrescue_samples_interface =
@@ -883,7 +883,7 @@ MACHINE_START( schaser )
 {
 	schaser_effect_555_timer = mame_timer_alloc(schaser_effect_555_cb);
 
-	return machine_start_mw8080bw(machine);
+	machine_start_mw8080bw(machine);
 }
 
 

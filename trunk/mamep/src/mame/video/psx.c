@@ -1018,7 +1018,6 @@ INLINE void decode_tpage( struct PSXGPU *p_psxgpu, UINT32 tpage )
 	} \
 	if( psxgpu.n_ix != 0 ) \
 	{ \
-		n_u |= 1; \
 		n_du = -1; \
 	} \
 	else \
