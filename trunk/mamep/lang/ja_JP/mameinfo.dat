@@ -2,7 +2,7 @@
 #                                        #
 #     Mameinfo.dat日本語版 v0.115u3      #
 #                                        #
-#              May 31, 2007              #
+#              June 3, 2007              #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：843 翻訳済：828
-# 追加項目：341 合計：1184
+# Tester報告：845 翻訳済：828
+# 追加項目：341 合計：1186
 #
 
 
@@ -30,6 +30,14 @@ $mame
 [バグ]
 
 - 照準が画面に表示されない。画面の上端にほんのちょっとだけ見える。 seawolf2_0115u2gra, Mr. Do
+
+$end
+
+$info=9ballsht
+$mame
+[バグ]
+
+- グラフィックに縦線が現われる。 9ballsht0115u3gre, russ h.
 
 $end
 
@@ -73,6 +81,20 @@ $mame
 [バグ]
 
 - 背景がおかしくなっている。 finalapr0115u2gre, robiza
+
+$end
+
+$info=nitrobal
+$mame
+[バグ]
+
+- グラフィックが大幅に乱れている。 nitrobal0115u3yel, Tafoid
+
+
+- 画面反転を有効にするとグラフィックがおかしくなる。 nitrobal0111u5gre, Speedfreak
+
+
+- プライオリティ問題あり。最初の扉を開けて次のエリアに進んだところなど。またテキストレイヤーも化けて表示される。 nitrobal068gre, Firewave / robiza
 
 $end
 
@@ -2844,10 +2866,10 @@ $mame
 - サウンドチャンネルが一つ鳴らなくなっている。 punchout0115gre, MARBIN
 
 
-- 実機ではタイトルロゴやテキストの色が上下で違う。 spnchout0102u2gre, MaximRecoil / Red Raphael
-
-
 - 上モニターのIDカードと下モニターのキャラクタの髪の色は同じになる。 punchout0107u3gre, Kold666
+
+
+- 実機ではタイトルロゴやテキストの色が上下で違う。 spnchout0102u2gre, MaximRecoil / Red Raphael
 
 $end
 
@@ -2858,29 +2880,11 @@ $mame
 - サウンドチャンネルが一つ鳴らなくなっている。 punchout0115gre, MARBIN
 
 
-- 実機ではタイトルロゴやテキストの色が上下で違う。 spnchout0102u2gre, MaximRecoil / Red Raphael
-
-
 - Dragon Chanのキックの効果音が実機と異なる。
 最後の音は風切り音にならないといけない。 spnchout0106u10gre, MaximRecoil
 
-$end
 
-$info=quantum
-$mame
-[バグ]
-
-- なぜ起きているのかははっきりはわからないが、
-実機と比較すると、MAMEの方が少し遅いようだ。
-大体10～20%くらいで、よくわかるところは敵に当たったときの動作：
-
-* 敵に当たる→ドカンという音とチャージする音
-
-* 当たった場所に全部のオブジェクトが集まる
-
-* そこからドットが広がりながら、爆発音2回
-
-それぞれの間隔が約10～20%くらい、MAMEの方が遅い。 quantum055yel, Dorsola
+- 実機ではタイトルロゴやテキストの色が上下で違う。 spnchout0102u2gre, MaximRecoil / Red Raphael
 
 $end
 
@@ -2940,17 +2944,6 @@ $mame
 [バグ]
 
 - 実機では、ミスをすると、蛇が完全に消えるまで長い爆発音が聞こえる。 nibbler0103u3gre, Kold666 / Derrick Renaud / Gyrovision
-
-$end
-
-$info=nitrobal
-$mame
-[バグ]
-
-- 画面反転を有効にするとグラフィックがおかしくなる。 nitrobal0111u5gre, Speedfreak
-
-
-- プライオリティ問題あり。最初の扉を開けて次のエリアに進んだところなど。またテキストレイヤーも化けて表示される。 nitrobal068gre, Firewave / robiza
 
 $end
 
@@ -3071,7 +3064,7 @@ $mame
 [バグ]
 
 - ゲーム開始時、マザーシップが少しの間ちらついてしまう。
-また、ゲーム開始後もシールドが画面に現れると同じ現象が起こる。 theend37b4gre, Frotz
+また、ゲーム開始後もシールドが画面に現れると同じ現象が起こる。 theend37b4gre, Frotz / Tafoid
 
 $end
 
