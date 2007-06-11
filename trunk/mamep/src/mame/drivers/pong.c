@@ -43,9 +43,9 @@ static int pong_video[] = {
 
 static PALETTE_INIT( pong )
 {
-	palette_set_color(machine, 0,0x00,0x00,0x00); /* black */
-	palette_set_color(machine, 1,0xff,0xff,0xff); /* white (1k resistor) */
-	palette_set_color(machine, 2,0xd4,0xd4,0xd4); /* slightly darker white (1.2k resistor) */
+	palette_set_color_rgb(machine, 0,0x00,0x00,0x00); /* black */
+	palette_set_color_rgb(machine, 1,0xff,0xff,0xff); /* white (1k resistor) */
+	palette_set_color_rgb(machine, 2,0xd4,0xd4,0xd4); /* slightly darker white (1.2k resistor) */
 	memcpy(colortable,colortable_source,sizeof(colortable_source));
 }
 

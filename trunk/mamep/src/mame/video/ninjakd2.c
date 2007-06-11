@@ -34,8 +34,6 @@ VIDEO_START( ninjakd2 )
 	state_save_register_global(sprite_overdraw_enabled);
 	state_save_register_global(ninjakd2_scrollx);
 	state_save_register_global(ninjakd2_scrolly);
-
-	return 0;
 }
 
 WRITE8_HANDLER( ninjakd2_bgvideoram_w )

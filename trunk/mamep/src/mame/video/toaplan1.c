@@ -167,7 +167,7 @@ int	toaplan_dbg_priority = 0;
 int	toaplan_dbg_layer[4] = {1,1,1,1};
 #endif
 
-static int toaplan1_tile_buffers_alloc(void)
+static void toaplan1_tile_buffers_alloc(void)
 {
 	int i;
 
@@ -196,8 +196,6 @@ static int toaplan1_tile_buffers_alloc(void)
 	max_list_size[16] = 65536;
 	tile_list[16]=(tile_struct *)auto_malloc(max_list_size[16]*sizeof(tile_struct));
 	memset(tile_list[16],0,max_list_size[16]*sizeof(tile_struct));
-
-	return 0;
 }
 
 
@@ -205,9 +203,7 @@ static int toaplan1_tile_buffers_alloc(void)
 VIDEO_START( rallybik )
 {
 
-	if( toaplan1_tile_buffers_alloc() ){
-		return 1;
-	}
+	toaplan1_tile_buffers_alloc();
 
 	num_tiles = (machine->screen[0].width/8+1)*(machine->screen[0].height/8);
 
@@ -221,8 +217,6 @@ VIDEO_START( rallybik )
 
 	bcu_flipscreen = 0;
 	toaplan1_reset = 0;
-
-	return 0;
 
 }
 
@@ -244,9 +238,7 @@ VIDEO_START( toaplan1 )
 	toaplan1_buffered_spritesizeram16 = auto_malloc(TOAPLAN1_SPRITESIZERAM_SIZE);
 	memset(toaplan1_buffered_spritesizeram16,0,TOAPLAN1_SPRITESIZERAM_SIZE);
 
-	if( toaplan1_tile_buffers_alloc() ){
-		return 1;
-	}
+	toaplan1_tile_buffers_alloc();
 
 	num_tiles = (machine->screen[0].width/8+1)*(machine->screen[0].height/8);
 
@@ -261,8 +253,6 @@ VIDEO_START( toaplan1 )
 	bcu_flipscreen = 0;
 	fcu_flipscreen = 0;
 	toaplan1_reset = 1;
-
-	return 0;
 }
 
 

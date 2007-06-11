@@ -353,7 +353,7 @@ VIDEO_UPDATE(system24);
 
 static int fdc_status, fdc_track, fdc_sector, fdc_data;
 static int fdc_phys_track, fdc_irq, fdc_drq, fdc_span, fdc_index_count;
-static unsigned char *fdc_pt;
+static UINT8 *fdc_pt;
 static int track_size;
 static int fdc_pt_off;
 
@@ -784,7 +784,7 @@ static UINT8 quizmeku_mlt[8] = { 0, 3, 2, 4, 6, 1, 7, 5 };
 static UINT8   dcclub_mlt[8] = { 4, 3, 7, 0, 2, 6, 1, 5 };
 
 static UINT8 mlatch;
-static const unsigned char *mlatch_table;
+static const UINT8 *mlatch_table;
 
 static READ16_HANDLER( mlatch_r )
 {
@@ -795,7 +795,7 @@ static WRITE16_HANDLER( mlatch_w )
 {
 	if(ACCESSING_LSB) {
 		int i;
-		unsigned char mxor = 0;
+		UINT8 mxor = 0;
 		if(!mlatch_table) {
 			logerror("Protection: magic latch accessed but no table loaded (%d:%x)\n", cpu_getactivecpu(), activecpu_get_pc());
 			return;
