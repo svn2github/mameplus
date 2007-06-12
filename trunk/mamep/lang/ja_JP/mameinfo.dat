@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.115u3      #
+#      Mameinfo.dat日本語版 v0.116       #
 #                                        #
-#              June 3, 2007              #
+#             June 12, 2007              #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：845 翻訳済：828
-# 追加項目：341 合計：1186
+# Tester報告：852 翻訳済：835
+# 追加項目：341 合計：1193
 #
 
 
@@ -25,19 +25,11 @@ $mame
 
 $end
 
-$info=seawolf2
+$info=area51mx
 $mame
 [バグ]
 
-- 照準が画面に表示されない。画面の上端にほんのちょっとだけ見える。 seawolf2_0115u2gra, Mr. Do
-
-$end
-
-$info=9ballsht
-$mame
-[バグ]
-
-- グラフィックに縦線が現われる。 9ballsht0115u3gre, russ h.
+- Access Violationエラーでランダムにクラッシュする。 area51mx0115u4red, The Monk
 
 $end
 
@@ -56,7 +48,26 @@ $info=loht
 $mame
 [バグ]
 
-- 画面にスコアが表示されない。 loht0115u2gre, robiza
+- スコアやその他の情報が表示されない。 m72_0115u3yel, robiza / Fujix
+
+
+- 画面にスコアや残り時間などが表示されない。0.114u1から。 gunforc2_0115u1gre, robiza
+
+$end
+
+$info=hharry
+$mame
+[バグ]
+
+- スコアやその他の情報が表示されない。 m72_0115u3yel, robiza / Fujix
+
+$end
+
+$info=bchopper
+$mame
+[バグ]
+
+- スコアやその他の情報が表示されない。 m72_0115u3yel, robiza / Fujix
 
 $end
 
@@ -84,6 +95,19 @@ $mame
 
 $end
 
+$info=twinbee
+$mame
+[情報]
+
+- 画面が明るいのはオリジナル通り。ガンマを0.5程度に下げると正しい表示になる。
+
+
+[バグ]
+
+- ボイスがおかしくなっている。 twinbee0115u3gre, Kold666
+
+$end
+
 $info=nitrobal
 $mame
 [バグ]
@@ -95,6 +119,14 @@ $mame
 
 
 - プライオリティ問題あり。最初の扉を開けて次のエリアに進んだところなど。またテキストレイヤーも化けて表示される。 nitrobal068gre, Firewave / robiza
+
+$end
+
+$info=vaportrx
+$mame
+[バグ]
+
+- レース後のリザルト画面でクラッシュする。 vaportrx0115u4red, Radwar
 
 $end
 
@@ -726,14 +758,6 @@ $mame
 
 $end
 
-$info=oscar
-$mame
-[バグ]
-
-- カクテルモードをONにして2人プレーにすると、プレイヤー2のときのキャラクタの動作がものすごく遅くなる。 oscar0111u3yel, Speedfreak
-
-$end
-
 $info=shackled
 $mame
 [バグ]
@@ -771,25 +795,6 @@ $mame
 [バグ]
 
 - ゴールキーパーに近づくとフィールドが逆さまに表示される。 cfghtice097u3gre, qapo
-
-$end
-
-$info=csuperas
-$mame
-[バグ]
-
-- スプライト、キャラクタ、タイルが白黒になっている。 csuperas0104u7gre, M.A.S.H.
-
-
-- 基地から発進し、一旦星空部分にでて、
-再び基地部分を表示、さらにもう一度
-基地をスクロールアウトさせると、
-5秒から10秒くらいの間隔で、
-フィールド部分がずれ続ける。 csuperas37b13gre1, Steveir
-
-
-- 2回目のゲーム開始時、
-1回目とは色が変わってしまう。 csuperas37b13gre2, Steveir
 
 $end
 
@@ -871,25 +876,6 @@ BGMが鳴らない。
 
 $end
 
-$info=bluehawk
-$mame
-[バグ]
-
-- 戦車が建物から現れるときに、建物のてっぺんから現れる。 bluehawk37b6gre, Jonemaan / DCisTHEbest
-
-$end
-
-$info=lastday
-$mame
-[バグ]
-
-- 1面で、船やタンクが鉄橋や高架橋の上に表示されてしまう。 lastday37b6gre, Jonemaan
-
-
-- [possible] テストモードで5キーを押すとCoin B、6キーを押すとCoin Aが反応する。 lastday0106u7gra, cpukett
-
-$end
-
 $info=jantouki
 $mame
 [バグ]
@@ -957,14 +943,6 @@ EPROMはそれぞれ違うがPROMは同一。（MAMEでは同一のPROMを読み
 
 
 - 実機の背景表示は少しゆがんでいる。 splndrbt0110u2_2, Kold666
-
-$end
-
-$info=exerion
-$mame
-[バグ]
-
-- ボーナス面後、残機がいくらあってもゲームが終了する。 exerion0112u4yel, Krusty104 / tafoid
 
 $end
 
@@ -1806,9 +1784,6 @@ $mame
 
 - ボーナス面で、缶をシャッフルする前にテーブルをたたく音がしない。また、ゲーム全体の音がずれていたり、おかしくなっている。
 0.98u1より発生。 tapper0102gre2, Old Wolf / BSR
-
-
-- 最初の2面で、上二段の客の目が血走っている。0.98u1から起きている。 tapper0102gre3, BSR
 
 $end
 
@@ -2851,7 +2826,7 @@ $mame
 - 最初のボーナス面でグラフィック化けあり。また、5面と9面の後のボーナス面では、お金の袋が表示されずプレイできない。 armwrest35b9yel, Sardius / BSR / Karasu
 
 
-- サウンドチャンネルが一つ鳴らなくなっている。 punchout0115gre, MARBIN
+- サウンドチャンネルが一つ鳴らなくなっている。 punchout0115gre, MARBIN / Kold666
 
 
 - DIPスイッチ情報。
@@ -2863,7 +2838,7 @@ $info=punchout
 $mame
 [バグ]
 
-- サウンドチャンネルが一つ鳴らなくなっている。 punchout0115gre, MARBIN
+- サウンドチャンネルが一つ鳴らなくなっている。 punchout0115gre, MARBIN / Kold666
 
 
 - 上モニターのIDカードと下モニターのキャラクタの髪の色は同じになる。 punchout0107u3gre, Kold666
@@ -2877,7 +2852,7 @@ $info=spnchout
 $mame
 [バグ]
 
-- サウンドチャンネルが一つ鳴らなくなっている。 punchout0115gre, MARBIN
+- サウンドチャンネルが一つ鳴らなくなっている。 punchout0115gre, MARBIN / Kold666
 
 
 - Dragon Chanのキックの効果音が実機と異なる。
@@ -5505,14 +5480,6 @@ ROM/RAMテストの直後に例外エラーでゲームが落ちる。
 
 $end
 
-$info=ojankoc
-$mame
-[バグ]
-
-- 操作系に問題がある。0.92u2000で麻雀操作の更新があってから。例えばコインを入れると勝手にゲームが始まりCPUキャラを選べない。またAボタンの動作に問題がある。 ojankoc0102u3gra, ShimaPong
-
-$end
-
 $info=opwolf
 $mame
 [バグ]
@@ -6027,6 +5994,30 @@ $mame
 
 - エンディングのヒーローの名前が呼ばれるシーンで、
 表示されているヒーローと名前のボイスがずれている。 captaven058gre_8, Karasu
+
+$end
+
+$info=csuperas
+$mame
+[バグ]
+
+- 基地から発進し、一旦星空部分にでて、
+再び基地部分を表示、さらにもう一度
+基地をスクロールアウトさせると、
+5秒から10秒くらいの間隔で、
+フィールド部分がずれ続ける。 csuperas37b13gre1, Steveir
+
+
+- 2回目のゲーム開始時、
+1回目とは色が変わってしまう。 csuperas37b13gre2, Steveir
+
+$end
+
+$info=lastday
+$mame
+[バグ]
+
+- [possible] テストモードで5キーを押すとCoin B、6キーを押すとCoin Aが反応する。 lastday0106u7gra, cpukett
 
 $end
 
@@ -7576,14 +7567,6 @@ $mame
 $end
 
 $info=nemesis
-$mame
-[情報]
-
-- 画面が明るいのはオリジナル通り。ガンマを0.5程度に下げると正しい表示になる。
-
-$end
-
-$info=twinbee
 $mame
 [情報]
 
