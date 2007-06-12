@@ -1483,7 +1483,8 @@ bonzeadv	地獄めぐり / Bonze Adventure (海外版 newer)	じごくめぐり	Taito Corporat
 bonzeado	地獄めぐり / Bonze Adventure (海外版 older)	じごくめぐり	Taito Corporation Japan
 bonzeadu	地獄めぐり / Bonze Adventure (USA版)	じごくめぐり	Taito America Corporation
 jigkmgri	地獄めぐり (日本版)	じごくめぐり	Taito Corporation
-asuka	飛鳥&飛鳥 (日本版)	あすかあんどあすか	Taito Corporation
+asuka	飛鳥&飛鳥 (海外版)	あすかあんどあすか	Taito Corporation
+asukaj	飛鳥&飛鳥 (日本版)	あすかあんどあすか	Taito Corporation
 mofflott	メイズオブフロット (日本版)	めいずおぶふろっと	Taito Corporation
 cadash	カダッシュ (海外版)	かだっしゅ	Taito Corporation Japan
 cadashj	カダッシュ (日本版)	かだっしゅ	Taito Corporation
@@ -1897,8 +1898,9 @@ guwange	ぐわんげ (日本版)	ぐわんげ	Atlus/Cave
 gaia	ガイアクルセイダーズ	がいあくるせいだーず	Noise Factory
 theroes	サンダーヒーローズ	さんだーひーろーず	Primetek Investments
 korokoro	コロコロクエスト (日本版)	ころころくえすと	Takumi
-gyrodine	ジャイロダイン	じゃいろだいん	Taito Corporation
-gyrodinc	ジャイロダイン (Crux)	じゃいろだいん	Taito Corporation (Crux license)
+gyrodine	ジャイロダイン (Taito Corporation license)	じゃいろだいん	Crux (Taito Corporation license)
+gyrodinc	ジャイロダイン	じゃいろだいん	Crux
+buzzard	ジャイロダイン / Buzzard	じゃいろだいん	Crux
 sonofphx	リパルス / Son of Phoenix	りぱるす	Associated Overseas MFR, Inc
 repulse	リパルス	りぱるす	Sega
 99lstwar	リパルス / '99 The Last War	りぱるす	Proma
@@ -3429,8 +3431,8 @@ afire	アストロファイター / Astro Fire	あすとろふぁいたー	Rene Pierre
 acombat	アストロファイター / Astro Combat (newer cb)	あすとろふぁいたー	bootleg
 acombato	アストロファイター / Astro Combat (older pz)	あすとろふぁいたー	bootleg
 sstarbtl	アストロファイター / Super Star Battle	あすとろふぁいたー	bootleg
-tomahawk	トマホーク777 (rev 1)	とまほーく777	Data East
-tomahaw5	トマホーク777 (rev 5)	とまほーく777	Data East
+tomahawk	トマホーク777 (rev 5)	とまほーく777	Data East
+tomahaw1	トマホーク777 (rev 1)	とまほーく777	Data East
 progolf	プロゴルフ (set 1)	ぷろごるふ	Data East Corporation
 progolfa	プロゴルフ (set 2)	ぷろごるふ	Data East Corporation
 prosoccr	プロサッカー	ぷろさっかー	Data East Corporation
@@ -6638,7 +6640,7 @@ koikoi	恋来パート2	こいこいぱーと_2	Kiwako
 good	グッド (韓国版)	ぐっど	unknown
 filetto	フィレット (ver 1.05 901009)	ふぃれっと	Novarmatic
 quizo	クイズオリンピック	くいずおりんぴっく	Seoul Coin Corp.
-gstream	G-ストリーム G2020	じーすとりーむじー2020	Oriental Soft Japan
+gstream	Gストリーム -G2020	じーすとりーむ	Oriental Soft Japan
 knightsh	ナイツ オブ ザ ラウンド -円卓の騎士 (ハック)	ないつおぶざらうんど	hack / bootleg
 knightsb	ナイツ オブ ザ ラウンド -円卓の騎士 (海賊版)	ないつおぶざらうんど	bootleg
 sf2m8	ストリートファイターII' -チャンピオンエディション (M8)	すとりーとふぁいたー_2_2だっしゅ	hack / bootleg
