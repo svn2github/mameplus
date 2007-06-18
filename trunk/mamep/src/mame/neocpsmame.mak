@@ -35,6 +35,7 @@ OBJDIRS += \
 
 CPUS += Z80
 CPUS += M68000
+CPUS += SH2
 
 
 
@@ -80,6 +81,7 @@ DRVLIBS += \
 
 $(MAMEOBJ)/shared.a: \
 	$(MACHINE)/pd4990a.o \
+	$(VIDEO)/res_net.o \
 
 
 #-------------------------------------------------
@@ -89,11 +91,12 @@ $(MAMEOBJ)/shared.a: \
 $(MAMEOBJ)/capcom.a: \
 	$(DRIVERS)/cps1.o $(VIDEO)/cps1.o \
 	$(DRIVERS)/cps2.o \
+	$(DRIVERS)/cps3.o \
 	$(MACHINE)/cps2crpt.o \
 	$(MACHINE)/kabuki.o \
 
 $(MAMEOBJ)/neogeo.a: \
-	$(DRIVERS)/neogeo.o $(MACHINE)/neogeo.o $(VIDEO)/neogeo.o \
+	$(DRIVERS)/neogeo.o $(VIDEO)/neogeo.o \
 	$(MACHINE)/neoboot.o \
 	$(MACHINE)/neocrypt.o \
 	$(MACHINE)/neoprot.o \
