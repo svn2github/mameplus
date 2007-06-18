@@ -2631,7 +2631,6 @@ V-V                           TP-027
 	DRIVER( hsf2j )		/* 22/12/2003 (c) 2003 Hyper Street Fighter 2 (Japan) */
 	DRIVER( hsf2 )		/* 02/02/2004 (c) 2004 Hyper Street Fighter 2 (Asia) */
 
-#ifndef NEOCPSMAME
 	/* Capcom CPS3 games */
 	DRIVER( warzard )	/* 10/1996 Warzard */
 	DRIVER( sfiii )		/* 02/1997 Street Fighter III - New Generation */
@@ -2641,6 +2640,7 @@ V-V                           TP-027
 	DRIVER( sfiii2 )	/* ??/???? Street Fighter 3: Second Impact ~giant attack~ */
 	DRIVER( sfiii3 )	/* ??/???? Street Fighter 3: Third Strike ~fight to the finish~ */
 
+#ifndef NEOCPSMAME
 	/* Capcom ZN1 */
 	DRIVER( cpzn1 )
 	DRIVER( ts2 )		/* Battle Arena Toshinden 2 (USA 951124) */
