@@ -1807,7 +1807,8 @@ int load_driver_statistics (char *buffer, int bufsize)
 		}
 
 
-		if (!mame_stricmp (drivers[i]->source_file+17, "neogeo.c"))
+		if (!mame_stricmp (drivers[i]->source_file+17, "neogeo.c")
+		 || !mame_stricmp (drivers[i]->source_file+17, "neodrvr.c"))
 		{
 			neo++;
 			if (clone) neoc++;
@@ -2005,7 +2006,8 @@ int load_driver_statistics (char *buffer, int bufsize)
 
 
 		/* Calc number of various info 'flags' in original and clone games */
-		if (mame_stricmp (drivers[i]->source_file+17, "neogeo.c"))
+		if (mame_stricmp (drivers[i]->source_file+17, "neogeo.c")
+		 || mame_stricmp (drivers[i]->source_file+17, "neodrvr.c"))
 		{
 			if (drivers[i]->flags & GAME_NOT_WORKING)
 			{
@@ -2310,7 +2312,8 @@ int load_driver_statistics (char *buffer, int bufsize)
 
 				if (clone_of && !(clone_of->flags & NOT_A_DRIVER))
 					cl++;
-				if (!mame_stricmp (drivers[i]->source_file+17, "neogeo.c"))
+				if (!mame_stricmp (drivers[i]->source_file+17, "neogeo.c")
+				 || !mame_stricmp (drivers[i]->source_file+17, "neodrvr.c"))
 				{
 					neo++;
 					if (clone_of && !(clone_of->flags & NOT_A_DRIVER))

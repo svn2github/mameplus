@@ -282,6 +282,8 @@ struct _rom_load_data
 		ROMBX_LOAD(name, offset, length, hash, 0, bios+1) /* Note '+1' */
 #define ROM_LOAD16_BYTE_BIOS(bios,name,offset,length,hash) \
 		ROMBX_LOAD(name, offset, length, hash, ROM_SKIP(1), bios+1)
+#define ROM_LOAD16_WORD_BIOS(bios,name,offset,length,hash) \
+		ROMBX_LOAD(name, offset, length, hash, 0, bios+1) /* Note '+1' */
 #define ROM_LOAD16_WORD_SWAP_BIOS(bios,name,offset,length,hash) \
 		ROMBX_LOAD(name, offset, length, hash, ROM_GROUPWORD | ROM_REVERSE, bios+1) /* Note '+1' */
 
