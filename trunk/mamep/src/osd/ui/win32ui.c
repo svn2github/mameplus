@@ -328,8 +328,6 @@ static BOOL             CommonFileDialogA(BOOL open_for_write, WCHAR *filename, 
 static BOOL             CommonFileDialog(BOOL open_for_write, WCHAR *filename, int filetype);
 static void             MamePlayGame(void);
 static void             MamePlayGameWithOptions(int nGame);
-static INT_PTR CALLBACK LoadProgressDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam);
-static int              UpdateLoadProgress(const char* name, const rom_load_data *romdata);
 static BOOL             GameCheck(void);
 static BOOL             FolderCheck(void);
 
@@ -544,9 +542,6 @@ static HWND hwndList  = NULL;
 static HWND hTreeView = NULL;
 static HWND hProgWnd  = NULL;
 static HWND hTabCtrl  = NULL;
-
-static BOOL g_bAbortLoading = FALSE; /* doesn't work right */
-static BOOL g_bCloseLoading = FALSE;
 
 static HINSTANCE hInst = NULL;
 
@@ -1187,7 +1182,7 @@ int WinMain_(HINSTANCE    hInstance,
                    LPSTR        lpCmdLine,
                    int          nCmdShow)
 {
-	dprintf("MAME32 starting");
+	dprintf("MAME32 starting\n");
 
 	use_gui_romloading = TRUE;
 
@@ -6756,8 +6751,6 @@ static void MamePlayGameWithOptions(int nGame)
 	if (GetCycleScreenshot() > 0)
 		KillTimer(hMain, SCREENSHOT_TIMER);
 
-	g_bAbortLoading = FALSE;
-
 	in_emulation = TRUE;
 
 	if (RunMAME(nGame) == 0)
@@ -7543,156 +7536,6 @@ static LRESULT CALLBACK PictureWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 	}
 
 	return CallWindowProc(g_lpPictureWndProc, hWnd, uMsg, wParam, lParam);
-}
-
-static INT_PTR CALLBACK LoadProgressDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
-{
-	switch (Msg)
-	{
-	case WM_INITDIALOG :
-	{
-		WCHAR buf[256];
-		
-		TranslateDialog(hDlg, lParam, TRUE);
-		swprintf(buf, _UIW(TEXT("Loading %s")), UseLangList() ?
-			_LSTW(driversw[GetDriverIndex(Machine->gamedrv)]->description) : driversw[GetDriverIndex(Machine->gamedrv)]->modify_the);
-		SetWindowText(hDlg, buf);
-		
-		g_bCloseLoading = FALSE;
-		g_bAbortLoading = FALSE;
-
-		return 1;
-	}
-
-	case WM_CLOSE:
-		if (!g_bCloseLoading)
-			g_bAbortLoading = TRUE;
-		EndDialog(hDlg, 0);
-		return 1;
-
-	case WM_COMMAND:
-		if (LOWORD(wParam) == IDCANCEL)
-		{
-			g_bAbortLoading = TRUE;
-			EndDialog(hDlg, IDCANCEL);
-			return 1;
-		}
-		if (LOWORD(wParam) == IDOK)
-		{
-			g_bCloseLoading = TRUE;
-			EndDialog(hDlg, IDOK);
-			return 1;
-		}
-	}
-	return 0;
-}
-
-int UpdateLoadProgress(const char* name, const rom_load_data *romdata)
-{
-	static HWND hWndLoad = 0;
-	MSG Msg;
-
-	int current = romdata->romsloaded;
-	int total = romdata->romstotal;
-
-	//dprintf("updateloadprogress %s %u %u %08x\n",name,current,total,hWndLoad);
-
-	if (hWndLoad == NULL)
-	{
-		InitTranslator(GetLangcode());
-		hWndLoad = CreateDialog(GetModuleHandle(NULL),
-		                        MAKEINTRESOURCE(IDD_LOAD_PROGRESS),
-		                        hMain,
-		                        LoadProgressDialogProc);
-
-		EnableWindow(GetDlgItem(hWndLoad,IDOK),FALSE);
-		EnableWindow(GetDlgItem(hWndLoad,IDCANCEL),TRUE);
-
-		ShowWindow(hWndLoad,SW_SHOW);
-	}
-
-	SetWindowText(GetDlgItem(hWndLoad, IDC_LOAD_STATUS),
-				  _Unicode(ConvertToWindowsNewlines(romdata->errorbuf)));
-
-	SendDlgItemMessage(hWndLoad, IDC_LOAD_PROGRESS, PBM_SETRANGE, 0, MAKELPARAM(0, total));
-	SendDlgItemMessage(hWndLoad, IDC_LOAD_PROGRESS, PBM_SETPOS, current, 0);
-
-	if (name == NULL)
-	{
-		// final call to us
-		SetWindowText(GetDlgItem(hWndLoad, IDC_LOAD_ROMNAME), TEXT(""));
-		if (romdata->errors > 0)
-		{
-
-			/*
-			  Shows the load progress dialog if there is an error while
-			  loading the game.
-			*/
-
-			ShowWindow(hWndLoad, SW_SHOW);
-
-			EnableWindow(GetDlgItem(hWndLoad,IDOK),TRUE);
-			if (romdata->errors != 0)
-				EnableWindow(GetDlgItem(hWndLoad,IDCANCEL),FALSE);
-			SetFocus(GetDlgItem(hWndLoad,IDOK));
-			if (romdata->errors)
-				SetWindowText(GetDlgItem(hWndLoad,IDC_ERROR_TEXT),
-							  _UIW(TEXT("ERROR: required files are missing, the game cannot be run.")));
-			else
-				SetWindowText(GetDlgItem(hWndLoad,IDC_ERROR_TEXT),
-							  _UIW(TEXT("WARNING: the game might not run correctly.")));
-		}
-	}
-	else
-		SetWindowText(GetDlgItem(hWndLoad, IDC_LOAD_ROMNAME), _Unicode(name));
-
-	if (name == NULL && romdata->errors > 0)
-	{
-		winwindow_exit(NULL);
-		ShowCursor(TRUE);
-
-		while (GetMessage(&Msg, NULL, 0, 0))
-		{
-			if (!IsDialogMessage(hWndLoad, &Msg))
-			{
-				TranslateMessage(&Msg);
-				DispatchMessage(&Msg);
-			}
-
-			// make sure the user clicks-through on an error/warning
-			if (g_bCloseLoading || g_bAbortLoading)
-				break;
-		}
-
-	}
-
-	if (name == NULL)
-	{
-		DestroyWindow(hWndLoad);
-		hWndLoad = NULL;
-	}
-
-	// take care of any pending messages
-	while (PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE))
-	{
-		if (!IsDialogMessage(hWndLoad, &Msg))
-		{
-			TranslateMessage(&Msg);
-			DispatchMessage(&Msg);
-		}
-	}
-
-	// if abort with a warning, gotta exit abruptly
-	if (name == NULL && g_bAbortLoading && romdata->errors == 0)
-		return 1;
-
-	// if abort along the way, tell 'em
-	if (g_bAbortLoading && name != NULL)
-	{
-		return 1;
-	}
-
-	return 0;
 }
 
 void RemoveCurrentGameCustomFolder(void)

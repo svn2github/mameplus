@@ -250,7 +250,6 @@
 #define IDC_SAMPLES                     1121
 #define IDC_ERROR_DETAILS               1122
 #define IDC_TRIPLE_BUFFER               1123
-#define IDC_LOAD_ROMNAME                1124
 #define IDC_DEFAULT_INPUT               1125
 #define IDC_LANGUAGECHECK               0	 // N/A
 #define IDC_LANGUAGEBROWSE              0	 // N/A
@@ -292,8 +291,6 @@
 #define IDC_CUSTOM_TREE                 1170
 #define IDC_CUSTOMFILEBROWSE            1171
 #define IDC_CUSTOMFILE_GAME             1172
-#define IDC_LOAD_STATUS                 1173
-#define IDC_ERROR_TEXT                  1174
 #define IDC_ARTMISCTEXT                 1175
 #define IDC_ENABLE_AUTOSAVE             1176
 #define IDC_SKIP_GAME_INFO              1177
@@ -339,7 +336,6 @@
 #define IDC_MULTITHREAD_RENDERING       1249
 #define IDC_ASPECT                      1253
 #define IDC_RESOLUTION                  0	 // not used in QA
-#define IDC_LOAD_PROGRESS               1108
 #define IDC_FSBRIGHTNESSTEXT            1246
 #define IDC_FSCONTRASTTEXT              1227
 #define IDC_VIDEO_MODE                  1247
