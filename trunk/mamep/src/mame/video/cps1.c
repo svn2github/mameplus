@@ -390,8 +390,6 @@ static struct CPS1config cps1_config_table[]=
 	{"punishrj",QSOUND_3, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"slammast",QSOUND_4, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"slammasu",QSOUND_4, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
-	{"slammasa",QSOUND_4, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
-	{"slammash",QSOUND_4, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"mbomberj",QSOUND_4, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"mbombrd", QSOUND_5, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"mbombrdj",QSOUND_5, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
@@ -407,7 +405,7 @@ static struct CPS1config cps1_config_table[]=
 	{"pang3",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 5 },	/* EEPROM port is among the CPS registers */
 	{"pang3j",  NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 5 },	/* EEPROM port is among the CPS registers */
 
-    /* CPS2 games */
+	/* CPS2 games */
 	{"cps2",    NOBATTRY, 4,4,4, 0x0000,0xffff,0x0000,0xffff },
 	{"ssf2",    NOBATTRY, 4,4,0, 0x0000,0xffff,0x0000,0xffff },
 	{"ssf2u",   NOBATTRY, 4,4,0, 0x0000,0xffff,0x0000,0xffff },
@@ -434,7 +432,7 @@ static struct CPS1config cps1_config_table[]=
 	{"hsf2",    NOBATTRY, 4,4,0, 0x0000,0xffff,0x0000,0xffff, 9 },
 	{"hsf2j",   NOBATTRY, 4,4,0, 0x0000,0xffff,0x0000,0xffff, 9 },
 
-    /* CPS2 Phoenix Edition games */
+	/* CPS2 Phoenix Edition games */
 	{"xmcotad", NOBATTRY, 4,4,4, 0x0000,0xffff,0x0000,0xffff, 8 },
 	{"hsf2d",   NOBATTRY, 4,4,0, 0x0000,0xffff,0x0000,0xffff, 9 },
 	{0}		/* End of table */

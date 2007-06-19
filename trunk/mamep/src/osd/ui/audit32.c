@@ -177,6 +177,35 @@ static int ProcessAuditResults(int game, audit_record *audit, int audit_records)
 }
 
 // Verifies the ROM set while calling SetRomAuditResults
+static BOOL RomsetNotExist(int game)
+{
+	if (!DriverUsesRoms(game) || DriverIsHarddisk(game))
+		return FALSE;
+
+	file_error filerr;
+	mame_file *file;
+	char *fname;
+
+	// open the file if we can
+	fname = assemble_2_strings(drivers[game]->name, ".zip");
+	filerr = mame_fopen(SEARCHPATH_ROM, fname, OPEN_FLAG_READ, &file);
+	free(fname);
+	if (filerr == FILERR_NONE)
+		return FALSE;
+
+	// open the parent file
+	if (drivers[game]->parent == NULL)
+		return TRUE;
+
+	fname = assemble_2_strings(drivers[game]->parent, ".zip");
+	filerr = mame_fopen(SEARCHPATH_ROM, fname, OPEN_FLAG_READ, &file);
+	free(fname);
+	if (filerr == FILERR_NONE)
+		return FALSE;
+
+	return TRUE;
+}
+
 int Mame32VerifyRomSet(int game)
 {
 	audit_record *audit;
@@ -188,6 +217,15 @@ int Mame32VerifyRomSet(int game)
 	game_options = GetGameOptions(game);
 	set_core_bios(game_options->bios);
 
+	// if rom file dosen't exist, do not verify it
+	if (RomsetNotExist(game))
+	{
+		res = ProcessAuditResults(game, NULL, 0);
+		SetRomAuditResults(game, res);
+		return res;
+	}
+
+	// audit rom
 	audit_records = audit_images(game, AUDIT_VALIDATE_FAST, &audit);
 	res = ProcessAuditResults(game, audit, audit_records);
 	if (audit_records > 0)
