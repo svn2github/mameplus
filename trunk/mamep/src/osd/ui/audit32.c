@@ -176,36 +176,35 @@ static int ProcessAuditResults(int game, audit_record *audit, int audit_records)
 	return res;
 }
 
-// Verifies the ROM set while calling SetRomAuditResults
 static BOOL RomsetNotExist(int game)
 {
+	// skip non cpu or chd
 	if (!DriverUsesRoms(game) || DriverIsHarddisk(game))
 		return FALSE;
 
-	file_error filerr;
-	mame_file *file;
-	char *fname;
+	const game_driver *drv;
+	// find the file
+	for (drv = drivers[game]; drv != NULL; drv = driver_get_clone(drv))
+	{
+		file_error filerr;
+		mame_file *file;
+		char *fname;
 
-	// open the file if we can
-	fname = assemble_2_strings(drivers[game]->name, ".zip");
-	filerr = mame_fopen(SEARCHPATH_ROM, fname, OPEN_FLAG_READ, &file);
-	free(fname);
-	if (filerr == FILERR_NONE)
-		return FALSE;
-
-	// open the parent file
-	if (drivers[game]->parent == NULL)
-		return TRUE;
-
-	fname = assemble_2_strings(drivers[game]->parent, ".zip");
-	filerr = mame_fopen(SEARCHPATH_ROM, fname, OPEN_FLAG_READ, &file);
-	free(fname);
-	if (filerr == FILERR_NONE)
-		return FALSE;
+		// open the file if we can
+		fname = assemble_2_strings(drv->name, ".zip");
+		filerr = mame_fopen(SEARCHPATH_ROM, fname, OPEN_FLAG_READ, &file);
+		free(fname);
+		if (filerr == FILERR_NONE)
+		{
+			mame_fclose(file);
+			return FALSE;
+		}
+	}
 
 	return TRUE;
 }
 
+// Verifies the ROM set while calling SetRomAuditResults
 int Mame32VerifyRomSet(int game)
 {
 	audit_record *audit;
@@ -217,15 +216,16 @@ int Mame32VerifyRomSet(int game)
 	game_options = GetGameOptions(game);
 	set_core_bios(game_options->bios);
 
-	// if rom file dosen't exist, do not verify it
+	// if zipped rom file dosen't exist, do not verify it
+	// but the non zipped romset in a directory will not be verified
 	if (RomsetNotExist(game))
 	{
-		res = ProcessAuditResults(game, NULL, 0);
+		res = NOTFOUND;
 		SetRomAuditResults(game, res);
 		return res;
 	}
 
-	// audit rom
+	// audit romset
 	audit_records = audit_images(game, AUDIT_VALIDATE_FAST, &audit);
 	res = ProcessAuditResults(game, audit, audit_records);
 	if (audit_records > 0)
