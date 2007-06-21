@@ -9138,7 +9138,7 @@ GAMEB( 2000, mslug3d,  mslug3,   neogeo, neogeo_s, neogeo,  mslug3d,  ROT0, "SNK
 GAMEB( 2000, kof2000d, kof2000,  neogeo, neogeo_s, neogeo,  kof2000d, ROT0, "SNK", "The King of Fighters 2000 (decrypted C)", 0 )
 GAMEB( 2001, zupapad,  zupapa,   neogeo, neogeo_s, neogeo,  zupapad,  ROT0, "SNK", "Zupapa! (custom decrypted C)", 0 )
 GAMEB( 2001, sengok3d, sengoku3, neogeo, neogeo,   neogeo,  sengo3d,  ROT0, "SNK", "Sengoku 3 (decrypted C)", 0 )
-GAMEB( 2001, kof2001d, neogeo_s, neogeo, neogeo_s, neogeo,  gfxdec52, ROT0, "Eolith / SNK", "The King of Fighters 2001 (decrypted C)", 0 )
+GAMEB( 2001, kof2001d, kof2001, neogeo, neogeo_s, neogeo,  gfxdec52, ROT0, "Eolith / SNK", "The King of Fighters 2001 (decrypted C)", 0 )
 GAMEB( 2002, kof2002d, kof2002,	 neogeo, neogeo_s, neogeo,  kof2002d, ROT0, "Eolith / Playmore", "The King of Fighters 2002 (decrypted C)", 0 )
 GAMEB( 2000, nitdd,    nitd,     neogeo, neogeo,   neogeo,  nitdd,    ROT0, "Eleven / Gavaking", "Nightmare in the Dark (decrypted C)", 0 )
 GAMEB( 1999, s1945pd,  s1945p,   neogeo, neogeo,   neogeo,  gfxdec42, ROT0, "Psikyo", "Strikers 1945 Plus (decrypted C)", 0 )
