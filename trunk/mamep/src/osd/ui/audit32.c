@@ -178,11 +178,12 @@ static int ProcessAuditResults(int game, audit_record *audit, int audit_records)
 
 static BOOL RomsetNotExist(int game)
 {
+	const game_driver *drv;
+
 	// skip non cpu or chd
 	if (!DriverUsesRoms(game) || DriverIsHarddisk(game))
 		return FALSE;
 
-	const game_driver *drv;
 	// find the file
 	for (drv = drivers[game]; drv != NULL; drv = driver_get_clone(drv))
 	{

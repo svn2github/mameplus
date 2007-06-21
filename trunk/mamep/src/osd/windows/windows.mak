@@ -47,8 +47,8 @@
 # object and source roots
 #-------------------------------------------------
 
-WINSRC = $(SRC)/osd/$(MAMEOS)
-WINOBJ = $(OBJ)/osd/$(MAMEOS)
+WINSRC = $(SRC)/osd/$(OSD)
+WINOBJ = $(OBJ)/osd/$(OSD)
 
 OBJDIRS += $(WINOBJ)
 
@@ -207,7 +207,6 @@ endif
 
 # add our prefix files to the mix
 CFLAGS += -mwindows -include $(WINSRC)/winprefix.h
-CFLAGSOSDEPEND += -Wno-strict-aliasing
 
 ifneq ($(NO_FORCEINLINE),)
 DEFS += -DNO_FORCEINLINE
@@ -334,11 +333,11 @@ $(WINOBJ)/scale/2xsaimmx.o: $(WINSRC)/scale/2xsaimmx.asm
 
 $(WINOBJ)/scale/hlq.o: $(WINSRC)/scale/hlq.c
 	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -Wno-unused-variable -mno-mmx -UINTERP_MMX -c $< -o $@
+	$(CC) $(CDEFS) $(CFLAGS) -Wno-strict-aliasing -Wno-unused-variable -mno-mmx -UINTERP_MMX -c $< -o $@
 
 $(WINOBJ)/scale/hlq_mmx.o: $(WINSRC)/scale/hlq.c
 	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -Wno-unused-variable -mmmx -DINTERP_MMX -c $< -o $@
+	$(CC) $(CDEFS) $(CFLAGS) -Wno-strict-aliasing -Wno-unused-variable -mmmx -DINTERP_MMX -c $< -o $@
 endif
 
 OSDOBJS += $(VCOBJS)

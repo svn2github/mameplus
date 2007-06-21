@@ -22,7 +22,7 @@ include config.def
 # specify core target: mame, mess, etc.
 # specify subtarget: mame, mess, tiny, etc.
 # build rules will be included from 
-# $(TARGET)/$(SUBTARGET).mak
+# src/$(TARGET)/$(SUBTARGET).mak
 #-------------------------------------------------
 
 ifneq ($(HAZEMD),)
@@ -40,19 +40,19 @@ endif
 endif
 endif
 
-ifndef SUBTARGET
+ifeq ($(SUBTARGET),)
 SUBTARGET = $(TARGET)
 endif
 
 
 #-------------------------------------------------
-# specify operating system: windows, msdos, etc.
-# build rules will be includes from 
-# src/osd/$(MAMEOS)/$(MAMEOS).mak
+# specify OSD layer: windows, sdl, etc.
+# build rules will be included from 
+# src/osd/$(OSD)/$(OSD).mak
 #-------------------------------------------------
 
-ifeq ($(MAMEOS),)
-MAMEOS = windows
+ifeq ($(OSD),)
+OSD = windows
 endif
 
 ifneq ($(NO_DLL),)
@@ -66,6 +66,22 @@ ifneq ($(NO_DLL),)
 else
 # always define WINUI = 1 for mamelib.dll
     WINUI=1
+endif
+
+
+
+#-------------------------------------------------
+# specify OS target, which further differentiates
+# the underlying OS; supported values are:
+# win32, unix, macosx, os2
+#-------------------------------------------------
+
+ifeq ($(TARGETOS),)
+ifeq ($(OSD),windows)
+TARGETOS = win32
+else
+TARGETOS = unix
+endif
 endif
 
 
@@ -112,6 +128,9 @@ X86_M68K_DRC = 1
 # P4 = 1
 # PM = 1
 # AMD64 = 1
+# G4 = 1
+# G5 = 1
+# CELL = 1
 
 # uncomment next line if you are building for a 64-bit target
 # PTR64 = 1
@@ -169,7 +188,14 @@ endif
 #-------------------------------------------------
 
 # extension for executables
+EXE = 
+
+ifeq ($(TARGETOS),win32)
 EXE = .exe
+endif
+ifeq ($(TARGETOS),os2)
+EXE = .exe
+endif
 
 # compiler, linker and utilities
 ifneq ($(USE_XGCC),)
@@ -183,27 +209,23 @@ else
     XCC = @gcc
     LD = @gcc
 endif
-MD = -mkdir.exe
+MD = -mkdir$(EXE)
 RM = @rm -f
 
 WINDOWS_PROGRAM = -mwindows
 CONSOLE_PROGRAM = -mconsole
 
-ifneq ($(I686),)
-    P6OPT = ppro
-else
-    P6OPT = notppro
-endif
-
 
 
 #-------------------------------------------------
-# form the name of the executable
+# based on the architecture, determine suffixes
+# and endianness
 #-------------------------------------------------
 
-ifeq ($(MAMEOS),msdos)
-    PREFIX = d
-endif
+# by default, don't compile for a specific target CPU
+# and assume little-endian (x86)
+ARCH = 
+ENDIAN = little
 
 COMPILER_SUFFIX =
 XEXTRA_SUFFIX = $(EXTRA_SUFFIX)
@@ -225,6 +247,9 @@ endif
 ifneq ($(I686),)
     ARCHSUFFIX = pp
     ARCH = -march=i686 -mmmx
+    P6OPT = ppro
+else
+    P6OPT = notppro
 endif
 
 ifneq ($(P4),)
@@ -242,7 +267,40 @@ ifneq ($(PM),)
     ARCH = -march=pentiumm
 endif
 
-NAME = $(PREFIX)$(SUBTARGET)$(SUFFIX)$(ARCHSUFFIX)$(XEXTRA_SUFFIX)$(COMPILER_SUFFIX)
+ifdef G4
+    ARCHSUFFIX = g4
+    ARCH = -mcpu=G4
+    ENDIAN = big
+endif
+
+ifdef G5
+    ARCHSUFFIX = g5
+    ARCH = -mcpu=G5
+    ENDIAN = big
+endif
+
+ifdef CELL
+    ARCHSUFFIX = cbe
+    ARCH = 
+    ENDIAN = big
+endif
+
+
+#-------------------------------------------------
+# form the name of the executable
+#-------------------------------------------------
+
+# the name is just 'target' if no subtarget; otherwise it is
+# the concatenation of the two (e.g., mametiny)
+ifeq ($(TARGET),$(SUBTARGET))
+    NAME = $(TARGET)
+else
+    NAME = $(TARGET)$(SUBTARGET)
+endif
+
+# fullname is prefix+name+suffix
+FULLNAME = $(PREFIX)$(SUBTARGET)$(SUFFIX)$(ARCHSUFFIX)$(XEXTRA_SUFFIX)$(COMPILER_SUFFIX)
+
 ifeq ($(NO_DLL),)
     LIBNAME = $(PREFIX)$(SUBTARGET)$(SUFFIX)$(ARCHSUFFIX)$(XEXTRA_SUFFIX)lib$(COMPILER_SUFFIX)
     GUINAME = $(PREFIX)$(SUBTARGET)$(SUFFIX)$(ARCHSUFFIX)$(XEXTRA_SUFFIX)gui$(COMPILER_SUFFIX)
@@ -250,22 +308,16 @@ endif
 
 # debug builds just get the 'd' suffix and nothing more
 ifneq ($(DEBUG),)
-    NAME = $(PREFIX)$(SUBTARGET)$(SUFFIX)$(XEXTRA_SUFFIX)d
+    FULLNAME = $(PREFIX)$(SUBTARGET)$(SUFFIX)$(XEXTRA_SUFFIX)d
     ifeq ($(NO_DLL),)
         LIBNAME = $(PREFIX)$(SUBTARGET)$(SUFFIX)$(XEXTRA_SUFFIX)libd
         GUINAME = $(PREFIX)$(SUBTARGET)$(SUFFIX)$(XEXTRA_SUFFIX)guid
     endif
 endif
 
-
-# build the targets in different object dirs, since mess changes
-# some structures and thus they can't be linked against each other.
-OBJ = obj/$(NAME)
-
-SRC = src
-
+# add an EXE suffix to get the final emulator name
 ifneq ($(NO_DLL),)
-    EMULATOR = $(NAME)$(EXE)
+    EMULATOR = $(FULLNAME)$(EXE)
 else
     EMULATORDLL = $(LIBNAME).dll
     EMULATORCLI = $(NAME)$(EXE)
@@ -276,19 +328,55 @@ endif
 
 
 #-------------------------------------------------
+# source and object locations
+#-------------------------------------------------
+
+# all sources are under the src/ directory
+SRC = src
+
+# build the targets in different object dirs, so they can co-exist
+OBJ = obj/$(OSD)/$(FULLNAME)
+
+
+
+#-------------------------------------------------
 # compile-time definitions
 #-------------------------------------------------
 
-DEFS = -DLSB_FIRST -DINLINE="static __inline__" -DCRLF=3 -DXML_STATIC -Drestrict=__restrict
+# CR/LF setup: use both on win32/os2, CR only on everything else
+DEFS = -DCRLF=2
+  
+ifeq ($(TARGETOS),win32)
+DEFS = -DCRLF=3
+endif
+ifeq ($(TARGETOS),os2)
+DEFS = -DCRLF=3
+endif
 
+# map the INLINE to something digestible by GCC
+DEFS += -DINLINE="static __inline__"
+
+# define LSB_FIRST if we are a little-endian target
+ifeq ($(ENDIAN),little)
+DEFS += -DLSB_FIRST
+endif
+
+# define PTR64 if we are a 64-bit target
 ifneq ($(PTR64),)
 DEFS += -DPTR64
 endif
 
+# MAME Plus! specific options
+DEFS += -DXML_STATIC -Drestrict=__restrict
+
+# define MAME_DEBUG if we are a debugging build
 ifneq ($(DEBUG),)
-DEFS += -DMAME_DEBUG
+    DEFS += -DMAME_DEBUG
+else
+    DEFS += -DNDEBUG 
 endif
 
+# define VOODOO_DRC if we are building the DRC Voodoo engine
 ifneq ($(X86_VOODOO_DRC),)
 DEFS += -DVOODOO_DRC
 endif
@@ -378,21 +466,11 @@ endif
 
 
 #-------------------------------------------------
-# compile and linking flags
+# compile flags
 #-------------------------------------------------
 
-CFLAGS = \
-	-std=gnu89 \
-	-I$(SRC) \
-	-I$(SRC)/$(TARGET) \
-	-I$(SRC)/$(TARGET)/includes \
-	-I$(OBJ)/$(TARGET)/layout \
-	-I$(SRC)/emu \
-	-I$(OBJ)/emu \
-	-I$(OBJ)/emu/layout \
-	-I$(SRC)/lib/util \
-	-I$(SRC)/osd \
-	-I$(SRC)/osd/$(MAMEOS) \
+# we compile to C89 standard with GNU extensions
+CFLAGS = -std=gnu89
 
 ifneq ($(W_ERROR),)
     CFLAGS += -Werror
@@ -400,11 +478,14 @@ else
     CFLAGS += -Wno-error
 endif
 
+# add -g if we need symbols
 ifdef SYMBOLS
 CFLAGS += -g
 endif
 
-CFLAGS += -Wall \
+# add a basic set of warnings
+CFLAGS += \
+	-Wall \
 	-Wno-unused-functions \
 	-Wpointer-arith \
 	-Wbad-function-cast \
@@ -413,10 +494,11 @@ CFLAGS += -Wall \
 	-Wundef \
 #	-Wformat-security \
 	-Wwrite-strings \
-	-Wdeclaration-after-statement
+	-Wno-unused-function \
 
-ifneq ($(OPTIMIZE),0)
-CFLAGS += -DNDEBUG $(ARCH) -fno-strict-aliasing
+# this warning is not supported on the os2 compilers
+ifneq ($(TARGETOS),os2)
+CFLAGS += -Wdeclaration-after-statement
 endif
 
 ifneq ($(I686),)
@@ -424,17 +506,51 @@ ifneq ($(I686),)
 #    CFLAGS += -fno-builtin -fno-omit-frame-pointer 
 endif
 
+# add the optimization flag
 CFLAGS += -O$(OPTIMIZE)
 
-# extra options needed *only* for the osd files
-CFLAGSOSDEPEND = $(CFLAGS)
+# if we are optimizing, include optimization options
+# and make all errors into warnings
+ifneq ($(OPTIMIZE),0)
+CFLAGS += -Werror $(ARCH) -fno-strict-aliasing
+endif
 
+
+
+#-------------------------------------------------
+# include paths
+#-------------------------------------------------
+
+# add core include paths
+CFLAGS += \
+	-I$(SRC)/$(TARGET) \
+	-I$(SRC)/$(TARGET)/includes \
+	-I$(OBJ)/$(TARGET)/layout \
+	-I$(SRC)/emu \
+	-I$(OBJ)/emu \
+	-I$(OBJ)/emu/layout \
+	-I$(SRC)/lib/util \
+	-I$(SRC)/osd \
+	-I$(SRC)/osd/$(OSD) \
+	-I$(SRC) \
+
+
+
+#-------------------------------------------------
+# linking flags
+#-------------------------------------------------
+
+# LDFLAGS are used generally; LDFLAGSEMULATOR are additional
+# flags only used when linking the core emulator
 LDFLAGS = -Lextra/lib
+LDFLAGSEMULATOR =
 
+# strip symbols and other metadata in non-symbols builds
 ifeq ($(SYMBOLS),)
     LDFLAGS += -s
 endif
 
+# output a map file (emulator only)
 ifneq ($(MAP),)
     MAPFLAGS = -Wl,-Map,$(NAME).map
     MAPDLLFLAGS = -Wl,-Map,$(LIBNAME).map
@@ -445,6 +561,11 @@ else
     MAPDLLFLAGS =
     MAPCLIFLAGS =
     MAPGUIFLAGS =
+endif
+
+# any reason why this doesn't work for all cases?
+ifeq ($(TARGETOS),macosx)
+LDFLAGSEMULATOR += -Xlinker -all_load
 endif
 
 
@@ -518,8 +639,8 @@ all: maketree emulator tools
 # include the various .mak files
 #-------------------------------------------------
 
-# include OS-specific rules first
-include $(SRC)/osd/$(MAMEOS)/$(MAMEOS).mak
+# include OSD-specific rules first
+include $(SRC)/osd/$(OSD)/$(OSD).mak
 
 # then the various core pieces
 include $(SRC)/$(TARGET)/$(SUBTARGET).mak
@@ -649,10 +770,6 @@ endif
 # generic rules
 #-------------------------------------------------
 
-$(OBJ)/osd/$(MAMEOS)/%.o: $(SRC)/osd/$(MAMEOS)/%.c | $(OSPREBUILD)
-	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -c $< -o $@
-
 $(OBJ)/%.o: $(SRC)/%.c | $(OSPREBUILD)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
@@ -681,3 +798,9 @@ $(OBJ)/%.a:
 %$(EXE):
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(CONSOLE_PROGRAM) $^ $(LIBS) -o $@
+
+ifeq ($(TARGETOS),macosx)
+$(OBJ)/%.o: $(SRC)/%.m | $(OSPREBUILD)
+	@echo Objective-C compiling $<...
+	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
+endif

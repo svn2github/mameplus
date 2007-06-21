@@ -334,7 +334,6 @@ struct sms_vdp
 
 
 
-//mamep: resolve conflict with drivers/segae.c
 static void *start_vdp(int type)
 {
 	struct sms_vdp *chip;
@@ -532,7 +531,6 @@ UINT8 ioport_gg00_r(void)
 }
 
 
-//mamep: resolve conflict with drivers/segae.c
 static UINT8 vcounter_r(struct sms_vdp *chip)
 {
 //	return vc_pal_224[sms_scanline_counter%(sizeof vc_pal_224)];
@@ -546,7 +544,6 @@ static UINT8 vcounter_r(struct sms_vdp *chip)
 }
 
 
-//mamep: resolve conflict with drivers/segae.c
 static UINT8 vdp_data_r(struct sms_vdp *chip)
 {
 	UINT8 retdata = chip->readbuf;
@@ -555,7 +552,6 @@ static UINT8 vdp_data_r(struct sms_vdp *chip)
 	return retdata;
 }
 
-//mamep: resolve conflict with drivers/segae.c
 static void vdp_data_w(UINT8 data, struct sms_vdp* chip)
 {
 	/* data writes clear the pending flag */
@@ -620,7 +616,6 @@ static void vdp_data_w(UINT8 data, struct sms_vdp* chip)
 
 }
 
-//mamep: resolve conflict with drivers/segae.c
 static UINT8 vdp_ctrl_r(struct sms_vdp *chip)
 {
 	UINT8 retvalue;
@@ -642,14 +637,12 @@ static UINT8 vdp_ctrl_r(struct sms_vdp *chip)
 }
 
 /* check me */
-//mamep: resolve conflict with drivers/segae.c
 static void vdp_update_code_addr_regs(struct sms_vdp *chip)
 {
 	chip->addr_reg = ((chip->cmd_part2&0x3f)<<8) | chip->cmd_part1;
 	chip->cmd_reg = (chip->cmd_part2&0xc0)>>6;
 }
 
-//mamep: resolve conflict with drivers/segae.c
 static void vdp_set_register(struct sms_vdp *chip)
 {
 	UINT8 reg = chip->cmd_part2&0x0f;
@@ -687,7 +680,6 @@ static void vdp_set_register(struct sms_vdp *chip)
 //	printf("VDP: setting register %01x to %02x\n",reg, chip->cmd_part1);
 }
 
-//mamep: resolve conflict with drivers/segae.c
 static void vdp_ctrl_w(UINT8 data, struct sms_vdp *chip)
 {
 	if (chip->cmd_pend)
@@ -782,7 +774,7 @@ static WRITE8_HANDLER( sms_vdp_ctrl_w )
 //mamep: resolve conflict with drivers/segae.c
 static WRITE8_HANDLER( sms_sn76496_w )
 {
-	sn76496_write(data);
+	SN76496_0_w(0, data & 0xff);
 }
 
 void init_ports_standard(void)
@@ -978,7 +970,6 @@ void init_megatech_map(void)
 	smsgg_backupram = NULL;
 }
 
-//mamep: resolve conflict with drivers/segae.c
 static void draw_tile_line(int drawxpos, int tileline, UINT16 tiledata, UINT8* linebuf, struct sms_vdp* chip)
 {
 	int xx;
@@ -1345,7 +1336,6 @@ static void sms_scanline_timer_callback(void* param)
 	}
 }
 
-//mamep: resolve conflict with drivers/segae.c
 static void show_tiles(struct sms_vdp* chip)
 {
 	int x,y,xx,yy;
@@ -1414,7 +1404,6 @@ static void show_tiles(struct sms_vdp* chip)
  Even though some games set bit 7, it does nothing.
  */
 
-//mamep: resolve conflict with drivers/segae.c
 static void end_of_frame(struct sms_vdp *chip)
 {
 	UINT8 m1 = (chip->regs[0x1]&0x10)>>4;

@@ -6,10 +6,9 @@ GUIOBJ = $(OBJ)/osd/ui
 
 OBJDIRS += $(GUIOBJ)
 
-# use CFLAGSOSDEPEND
 $(GUIOBJ)/%.o: $(GUISRC)/%.c
 	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -c $< -o $@
+	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
 
 ifneq ($(USE_IMAGE_MENU),)
 $(GUIOBJ)/%.o: $(GUISRC)/%.cpp
