@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#      Mameinfo.dat日本語版 v0.116       #
+#     Mameinfo.dat日本語版 v0.116u1      #
 #                                        #
-#             June 12, 2007              #
+#             June 16, 2007              #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,129 +12,48 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：852 翻訳済：835
-# 追加項目：341 合計：1193
+# Tester報告：837 翻訳済：809
+# 追加項目：341 合計：1178
 #
 
 
-$info=mtetrisc
+$info=svcpcb
 $mame
 [バグ]
 
-- 起動時にクラッシュする。 mtetrisc0115u1red, etabeta
+- NeoGeo系の単体基板タイトルがクラッシュする。 neodriv0116u1red, r0ast3r
 
 $end
 
-$info=area51mx
+$info=ms5pcb
 $mame
 [バグ]
 
-- Access Violationエラーでランダムにクラッシュする。 area51mx0115u4red, The Monk
+- NeoGeo系の単体基板タイトルがクラッシュする。 neodriv0116u1red, r0ast3r
 
 $end
 
-$info=hoops96
+$info=kf2k3pcb
 $mame
 [バグ]
 
-- 起動時にテストキーを押してオプションリセットするとクラッシュする。 hoops96_0115u1red, Fujix
-
-
-- テストモード以外では右スピーカーからしか音が出ない。 hoops960103u4gre, Twisty
+- NeoGeo系の単体基板タイトルがクラッシュする。 neodriv0116u1red, r0ast3r
 
 $end
 
-$info=loht
+$info=strhoop
 $mame
 [バグ]
 
-- スコアやその他の情報が表示されない。 m72_0115u3yel, robiza / Fujix
-
-
-- 画面にスコアや残り時間などが表示されない。0.114u1から。 gunforc2_0115u1gre, robiza
+- 起動時にリセットを繰り返す。 strhoop0116u1red, Osso
 
 $end
 
-$info=hharry
+$info=wb3
 $mame
 [バグ]
 
-- スコアやその他の情報が表示されない。 m72_0115u3yel, robiza / Fujix
-
-$end
-
-$info=bchopper
-$mame
-[バグ]
-
-- スコアやその他の情報が表示されない。 m72_0115u3yel, robiza / Fujix
-
-$end
-
-$info=gunforc2
-$mame
-[バグ]
-
-- 画面にスコアや残り時間などが表示されない。0.114u1から。 gunforc2_0115u1gre, robiza
-
-$end
-
-$info=rtypeleo
-$mame
-[バグ]
-
-- 2面の背景の上部分がラインスクロールしていないため、切り替え部分が見えてしまう。0.114u1から発生。 rtypeleo0115u1gre, robiza
-
-$end
-
-$info=finalapr
-$mame
-[バグ]
-
-- 背景がおかしくなっている。 finalapr0115u2gre, robiza
-
-$end
-
-$info=twinbee
-$mame
-[情報]
-
-- 画面が明るいのはオリジナル通り。ガンマを0.5程度に下げると正しい表示になる。
-
-
-[バグ]
-
-- ボイスがおかしくなっている。 twinbee0115u3gre, Kold666
-
-$end
-
-$info=nitrobal
-$mame
-[バグ]
-
-- グラフィックが大幅に乱れている。 nitrobal0115u3yel, Tafoid
-
-
-- 画面反転を有効にするとグラフィックがおかしくなる。 nitrobal0111u5gre, Speedfreak
-
-
-- プライオリティ問題あり。最初の扉を開けて次のエリアに進んだところなど。またテキストレイヤーも化けて表示される。 nitrobal068gre, Firewave / robiza
-
-$end
-
-$info=vaportrx
-$mame
-[バグ]
-
-- レース後のリザルト画面でクラッシュする。 vaportrx0115u4red, Radwar
-
-$end
-
-$info=wwestern
-$mame
-[バグ]
-
-- 起動後クレジットを入れずにステート保存する。一旦MAMEを終了させて、再スタート後ステートをロードすると、クレジットを受け付けない。 wwestern0115u1yel, fossil / Waremonger
+- 画面右端の黒い部分が左にすこしずれていて、背景が見えている。 wb3_0116u1gre, Kold666
 
 $end
 
@@ -171,6 +90,14 @@ $mame
 
 
 - プレイヤー2でプレイすると、文字を選んだときの画面がきちんと描画されない。 popspops0103u1gre2, king_krm
+
+$end
+
+$info=mtetrisc
+$mame
+[バグ]
+
+- 起動時にクラッシュする。 mtetrisc0115u1red, etabeta
 
 $end
 
@@ -342,14 +269,6 @@ $mame
 
 - 最終面のラスボスで、ボスが山の向こうに行っても見えてしまう。
 1面の潜水艦と同じ現象。 battlera37b3gre, Lord Caos
-
-$end
-
-$info=bldwolf
-$mame
-[バグ]
-
-- 赤い下矢印が化けている。上下の部分が逆。 bldwolf061gre, Kale
 
 $end
 
@@ -535,6 +454,14 @@ $mame
 
 
 - ディスクチェックのスループットが3999KB/secに固定されているが、実機ではもっと速く、6500KB/secくらい。 a51mxr3k071u2gre2, Reznor007 / Luigi30
+
+$end
+
+$info=area51mx
+$mame
+[バグ]
+
+- Access Violationエラーでランダムにクラッシュする。 area51mx0115u4red, The Monk
 
 $end
 
@@ -798,6 +725,17 @@ $mame
 
 $end
 
+$info=hoops96
+$mame
+[バグ]
+
+- テストモード以外では右スピーカーからしか音が出ない。 hoops960103u4gre, Twisty
+
+
+- 起動時にテストキーを押してオプションリセットするとクラッシュする。 hoops96_0115u1red, Fujix
+
+$end
+
 $info=logicpro
 $mame
 [バグ]
@@ -832,33 +770,6 @@ $mame
 
 - Loraが勝った画面に、小さい表示化け問題あり。
 キャラクタの真ん中が１ピクセル空いている。 karianx055gre, Fever
-
-$end
-
-$info=dkong
-$mame
-[バグ]
-
-- スタートアップ音が間違っている(マリオのジャンプ音が正しい)。
-マリオが歩くときの音はわずかに音程が上下しなければいけない(高、中、低を繰り返す)。これは私の持っている基板で確認したもの。
-
-以下はドンキーコングの起動時の流れ：
-
-基板の電源を入れると、VRAMの内容がゴミ表示される。このときの表示は逆さま。
-マリオのジャンプ音が聞こえて、タイトルが表示される。ゲーム中にリセットすると、
-VRAMに最後に残っていたものが逆さまに表示される。
-それからマリオのジャンプ音で、通常のタイトル画面が出る。(これらのバグは本当に長い間、ほったらかしだ)。 dkong36b15gre, MC68K
-
-
-[TIPS]
-
-- 当時のプレイヤー名はまだ「マリオ」ではなく大工の「ジャンプマン」。マリオはドンキーコングJr.から。
-
-
-- US版の面構成は1-4-1-3-4-1-2-3-4。
-
-
-- 旧バージョンではハシゴにいると樽は落ちてこないが、新バージョンで改良されている。
 
 $end
 
@@ -1048,7 +959,7 @@ $info=bosco
 $mame
 [バグ]
 
-- タイトル画面の左端に灰色部分が残る。 bosco080u1gre, Prophet
+- タイトル画面の左端に灰色部分が残る。 bosco080u1gre, Prophet / Tafoid
 
 
 [TIPS]
@@ -1081,7 +992,7 @@ $info=galaxian
 $mame
 [バグ]
 
-- オリジナル基板に比べると、バックの効果音のテンポが遅い。ちょうど半分の速度。そのほかの効果音などは問題ない。 galaxian0103u3gre, dropdeadhippie
+- オリジナル基板に比べると、バックの効果音のテンポが遅い。ちょうど半分の速度。そのほかの効果音などは問題ない。 galaxian0103u3gre, dropdeadhippie / Tafoid
 
 
 - 「サンプル情報の間違い」
@@ -1096,7 +1007,7 @@ $mame
 
 - キングが「Help」から「Bye Bye」と言うまでの間、
 音楽にノイズが入る。
-0.57から。 kingball058gre, Jonemaan
+0.57から。 kingball058gre, Jonemaan / Tafoid
 
 
 - ショットと壁の一部が左右にぶれている。 kingball071u2gre, AdamA / TriggerFin
@@ -1118,7 +1029,7 @@ b16以降のデモでは、(1+2)+3号機のドッキング時に、(1+2)号機�
 
 これはオリジナルのデモと異なり、SPARCADEやGalemuのデモと同じで、この２つのエミュレータは256x256の画面モード。
 0.36b14以前は解像度がオリジナルのゲームと同じ256x224であったのに対して、
-0.36b16以降は256x256になっているものと思われる。 mooncrsb055gre, Fujix (kamo'n)
+0.36b16以降は256x256になっているものと思われる。 mooncrsb055gre, Fujix / Tafoid (kamo'n)
 
 
 - 「サンプル情報の間違い」
@@ -1633,6 +1544,49 @@ $mame
 [バグ]
 
 - m72.cゲーム：　サンプルサウンドの音程が低い。 m72_0106u11gre, Stefan Lindberg
+
+$end
+
+$info=loht
+$mame
+[バグ]
+
+- スコアやその他の情報が表示されない。 m72_0115u3yel, robiza / Fujix
+
+
+- 画面にスコアや残り時間などが表示されない。0.114u1から。 gunforc2_0115u1gre, robiza
+
+$end
+
+$info=hharry
+$mame
+[バグ]
+
+- スコアやその他の情報が表示されない。 m72_0115u3yel, robiza / Fujix
+
+$end
+
+$info=bchopper
+$mame
+[バグ]
+
+- スコアやその他の情報が表示されない。 m72_0115u3yel, robiza / Fujix
+
+$end
+
+$info=gunforc2
+$mame
+[バグ]
+
+- 画面にスコアや残り時間などが表示されない。0.114u1から。 gunforc2_0115u1gre, robiza
+
+$end
+
+$info=rtypeleo
+$mame
+[バグ]
+
+- 2面の背景の上部分がラインスクロールしていないため、切り替え部分が見えてしまう。0.114u1から発生。 rtypeleo0115u1gre, robiza
 
 $end
 
@@ -2239,6 +2193,14 @@ $mame
 
 $end
 
+$info=finalapr
+$mame
+[バグ]
+
+- 背景がおかしくなっている。 finalapr0115u2gre, robiza
+
+$end
+
 $info=cgangpzl
 $mame
 [バグ]
@@ -2402,6 +2364,19 @@ $mame
 
 $end
 
+$info=twinbee
+$mame
+[情報]
+
+- 画面が明るいのはオリジナル通り。ガンマを0.5程度に下げると正しい表示になる。
+
+
+[バグ]
+
+- ボイスがおかしくなっている。 twinbee0115u3gre, Kold666
+
+$end
+
 $info=2020bb
 $mame
 [バグ]
@@ -2416,14 +2391,6 @@ $mame
 [バグ]
 
 - 難易度を8にしてゲームに戻り、ゲームを始めると“IRQ2 enabled, need raster driver”と表示され画面が真っ黒になる。他の難易度は問題ない。 aof2099red, Twisty / cpukett / Kitsune Sniper
-
-$end
-
-$info=blazstar
-$mame
-[バグ]
-
-- 2面の背景アニメーションがちらつく。 blazstar0103u4gre, Pr3tty F1y /
 
 $end
 
@@ -2922,6 +2889,20 @@ $mame
 
 $end
 
+$info=nitrobal
+$mame
+[バグ]
+
+- 画面反転を有効にするとグラフィックがおかしくなる。 nitrobal0111u5gre, Speedfreak
+
+
+- グラフィックが大幅に乱れている。 nitrobal0115u3yel, Tafoid
+
+
+- プライオリティ問題あり。最初の扉を開けて次のエリアに進んだところなど。またテキストレイヤーも化けて表示される。 nitrobal068gre, Firewave / robiza
+
+$end
+
 $info=rohga
 $mame
 [バグ]
@@ -3043,6 +3024,14 @@ $mame
 
 $end
 
+$info=vaportrx
+$mame
+[バグ]
+
+- レース後のリザルト画面でクラッシュする。 vaportrx0115u4red, Radwar
+
+$end
+
 $info=elim2
 $mame
 [バグ]
@@ -3069,7 +3058,7 @@ $mame
 [バグ]
 
 - カクテルモードは正常に動作しない。
-また2プレイヤーはスコア表示のところまで飛んでしまう。 zektor36finalgre, Frotz
+また2プレイヤーはスコア表示のところまで飛んでしまう。 zektor36finalgre, Frotz / Tafoid
 
 
 - プレイヤー2の操作が分かれていない。
@@ -3724,6 +3713,14 @@ $mame
 
 $end
 
+$info=wwestern
+$mame
+[バグ]
+
+- 起動後クレジットを入れずにステート保存する。一旦MAMEを終了させて、再スタート後ステートをロードすると、クレジットを受け付けない。 wwestern0115u1yel, fossil / Waremonger
+
+$end
+
 $info=ashura
 $mame
 [バグ]
@@ -4304,7 +4301,7 @@ $info=battleg
 $mame
 [バグ]
 
-- ランダムにクラッシュする。また、プレイ後にMAMEを終了させると、Access Violationのエラーが出る。 battleg0113u4red, Iaspis / twisty
+- ランダムにクラッシュする。また、プレイ後にMAMEを終了させると、Access Violationのエラーが出る。 battleg0113u4red, Iaspis / twisty / AWJ
 
 
 [TIPS]
@@ -8576,6 +8573,20 @@ $mame
 4) 下x2 右x1 左x2 下x2 左x3 上x2 を押す
 
 5) サービスキー(9キー)をもう一度押す
+
+$end
+
+$info=dkong
+$mame
+[TIPS]
+
+- 当時のプレイヤー名はまだ「マリオ」ではなく大工の「ジャンプマン」。マリオはドンキーコングJr.から。
+
+
+- US版の面構成は1-4-1-3-4-1-2-3-4。
+
+
+- 旧バージョンではハシゴにいると樽は落ちてこないが、新バージョンで改良されている。
 
 $end
 
